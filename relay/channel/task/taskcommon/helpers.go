@@ -4,10 +4,10 @@ import (
 	"encoding/base64"
 	"fmt"
 
-	"github.com/QuantumNous/new-api/common"
-	"github.com/QuantumNous/new-api/model"
-	relaycommon "github.com/QuantumNous/new-api/relay/common"
-	"github.com/QuantumNous/new-api/setting/system_setting"
+	"github.com/cinagroup/cinatoken/common"
+	"github.com/cinagroup/cinatoken/model"
+	relaycommon "github.com/cinagroup/cinatoken/relay/common"
+	"github.com/cinagroup/cinatoken/setting/system_setting"
 	"github.com/gin-gonic/gin"
 )
 

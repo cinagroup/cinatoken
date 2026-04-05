@@ -10,8 +10,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/QuantumNous/new-api/common"
-	"github.com/QuantumNous/new-api/model"
+	"github.com/cinagroup/cinatoken/common"
+	"github.com/cinagroup/cinatoken/model"
 
 	"github.com/samber/lo"
 
@@ -19,12 +19,12 @@ import (
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/pkg/errors"
 
-	"github.com/QuantumNous/new-api/constant"
-	"github.com/QuantumNous/new-api/dto"
-	"github.com/QuantumNous/new-api/relay/channel"
-	taskcommon "github.com/QuantumNous/new-api/relay/channel/task/taskcommon"
-	relaycommon "github.com/QuantumNous/new-api/relay/common"
-	"github.com/QuantumNous/new-api/service"
+	"github.com/cinagroup/cinatoken/constant"
+	"github.com/cinagroup/cinatoken/dto"
+	"github.com/cinagroup/cinatoken/relay/channel"
+	taskcommon "github.com/cinagroup/cinatoken/relay/channel/task/taskcommon"
+	relaycommon "github.com/cinagroup/cinatoken/relay/common"
+	"github.com/cinagroup/cinatoken/service"
 )
 
 // ============================

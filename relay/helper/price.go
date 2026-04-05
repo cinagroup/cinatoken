@@ -3,12 +3,12 @@ package helper
 import (
 	"fmt"
 
-	"github.com/QuantumNous/new-api/common"
-	"github.com/QuantumNous/new-api/logger"
-	relaycommon "github.com/QuantumNous/new-api/relay/common"
-	"github.com/QuantumNous/new-api/setting/operation_setting"
-	"github.com/QuantumNous/new-api/setting/ratio_setting"
-	"github.com/QuantumNous/new-api/types"
+	"github.com/cinagroup/cinatoken/common"
+	"github.com/cinagroup/cinatoken/logger"
+	relaycommon "github.com/cinagroup/cinatoken/relay/common"
+	"github.com/cinagroup/cinatoken/setting/operation_setting"
+	"github.com/cinagroup/cinatoken/setting/ratio_setting"
+	"github.com/cinagroup/cinatoken/types"
 
 	"github.com/gin-gonic/gin"
 )

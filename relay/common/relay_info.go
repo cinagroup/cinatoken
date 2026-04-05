@@ -7,12 +7,12 @@ import (
 	"strings"
 	"time"
 
-	"github.com/QuantumNous/new-api/common"
-	"github.com/QuantumNous/new-api/constant"
-	"github.com/QuantumNous/new-api/dto"
-	relayconstant "github.com/QuantumNous/new-api/relay/constant"
-	"github.com/QuantumNous/new-api/setting/model_setting"
-	"github.com/QuantumNous/new-api/types"
+	"github.com/cinagroup/cinatoken/common"
+	"github.com/cinagroup/cinatoken/constant"
+	"github.com/cinagroup/cinatoken/dto"
+	relayconstant "github.com/cinagroup/cinatoken/relay/constant"
+	"github.com/cinagroup/cinatoken/setting/model_setting"
+	"github.com/cinagroup/cinatoken/types"
 
 	"github.com/gin-gonic/gin"
 	"github.com/gorilla/websocket"

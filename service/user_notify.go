@@ -8,10 +8,10 @@ import (
 	"net/url"
 	"strings"
 
-	"github.com/QuantumNous/new-api/common"
-	"github.com/QuantumNous/new-api/dto"
-	"github.com/QuantumNous/new-api/model"
-	"github.com/QuantumNous/new-api/setting/system_setting"
+	"github.com/cinagroup/cinatoken/common"
+	"github.com/cinagroup/cinatoken/dto"
+	"github.com/cinagroup/cinatoken/model"
+	"github.com/cinagroup/cinatoken/setting/system_setting"
 )
 
 func NotifyRootUser(t string, subject string, content string) {

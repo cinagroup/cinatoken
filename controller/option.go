@@ -5,13 +5,13 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/QuantumNous/new-api/common"
-	"github.com/QuantumNous/new-api/model"
-	"github.com/QuantumNous/new-api/setting"
-	"github.com/QuantumNous/new-api/setting/console_setting"
-	"github.com/QuantumNous/new-api/setting/operation_setting"
-	"github.com/QuantumNous/new-api/setting/ratio_setting"
-	"github.com/QuantumNous/new-api/setting/system_setting"
+	"github.com/cinagroup/cinatoken/common"
+	"github.com/cinagroup/cinatoken/model"
+	"github.com/cinagroup/cinatoken/setting"
+	"github.com/cinagroup/cinatoken/setting/console_setting"
+	"github.com/cinagroup/cinatoken/setting/operation_setting"
+	"github.com/cinagroup/cinatoken/setting/ratio_setting"
+	"github.com/cinagroup/cinatoken/setting/system_setting"
 
 	"github.com/gin-gonic/gin"
 )

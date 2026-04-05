@@ -8,15 +8,15 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/QuantumNous/new-api/common"
+	"github.com/cinagroup/cinatoken/common"
 
-	"github.com/QuantumNous/new-api/constant"
-	"github.com/QuantumNous/new-api/dto"
-	"github.com/QuantumNous/new-api/model"
-	"github.com/QuantumNous/new-api/relay/channel"
-	"github.com/QuantumNous/new-api/relay/channel/task/taskcommon"
-	relaycommon "github.com/QuantumNous/new-api/relay/common"
-	"github.com/QuantumNous/new-api/service"
+	"github.com/cinagroup/cinatoken/constant"
+	"github.com/cinagroup/cinatoken/dto"
+	"github.com/cinagroup/cinatoken/model"
+	"github.com/cinagroup/cinatoken/relay/channel"
+	"github.com/cinagroup/cinatoken/relay/channel/task/taskcommon"
+	relaycommon "github.com/cinagroup/cinatoken/relay/common"
+	"github.com/cinagroup/cinatoken/service"
 
 	"github.com/gin-gonic/gin"
 	"github.com/pkg/errors"

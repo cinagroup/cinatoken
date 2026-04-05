@@ -5,7 +5,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/QuantumNous/new-api/dto"
+	"github.com/cinagroup/cinatoken/dto"
 	"github.com/stretchr/testify/require"
 )
 

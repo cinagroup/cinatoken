@@ -6,8 +6,8 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/QuantumNous/new-api/common"
-	"github.com/QuantumNous/new-api/dto"
+	"github.com/cinagroup/cinatoken/common"
+	"github.com/cinagroup/cinatoken/dto"
 	"github.com/samber/lo"
 )
 

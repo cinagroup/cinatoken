@@ -6,12 +6,12 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/QuantumNous/new-api/dto"
-	"github.com/QuantumNous/new-api/relay/channel"
-	"github.com/QuantumNous/new-api/relay/channel/openai"
-	relaycommon "github.com/QuantumNous/new-api/relay/common"
-	relayconstant "github.com/QuantumNous/new-api/relay/constant"
-	"github.com/QuantumNous/new-api/types"
+	"github.com/cinagroup/cinatoken/dto"
+	"github.com/cinagroup/cinatoken/relay/channel"
+	"github.com/cinagroup/cinatoken/relay/channel/openai"
+	relaycommon "github.com/cinagroup/cinatoken/relay/common"
+	relayconstant "github.com/cinagroup/cinatoken/relay/constant"
+	"github.com/cinagroup/cinatoken/types"
 
 	"github.com/gin-gonic/gin"
 )

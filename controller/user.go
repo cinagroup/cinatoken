@@ -10,15 +10,15 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/QuantumNous/new-api/common"
-	"github.com/QuantumNous/new-api/dto"
-	"github.com/QuantumNous/new-api/i18n"
-	"github.com/QuantumNous/new-api/logger"
-	"github.com/QuantumNous/new-api/model"
-	"github.com/QuantumNous/new-api/service"
-	"github.com/QuantumNous/new-api/setting"
+	"github.com/cinagroup/cinatoken/common"
+	"github.com/cinagroup/cinatoken/dto"
+	"github.com/cinagroup/cinatoken/i18n"
+	"github.com/cinagroup/cinatoken/logger"
+	"github.com/cinagroup/cinatoken/model"
+	"github.com/cinagroup/cinatoken/service"
+	"github.com/cinagroup/cinatoken/setting"
 
-	"github.com/QuantumNous/new-api/constant"
+	"github.com/cinagroup/cinatoken/constant"
 
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"

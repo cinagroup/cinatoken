@@ -1,8 +1,8 @@
 package middleware
 
 import (
-	"github.com/QuantumNous/new-api/common"
-	"github.com/QuantumNous/new-api/service"
+	"github.com/cinagroup/cinatoken/common"
+	"github.com/cinagroup/cinatoken/service"
 	"github.com/gin-gonic/gin"
 )
 

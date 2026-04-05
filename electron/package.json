@@ -1,7 +1,7 @@
 {
-  "name": "new-api-electron",
+  "name": "cinatoken-electron",
   "version": "1.0.0",
-  "description": "New API - AI Model Gateway Desktop Application",
+  "description": "CINATOKEN - AI Model Gateway Desktop Application",
   "main": "main.js",
   "scripts": {
     "start-app": "electron .",
@@ -18,10 +18,10 @@
     "openai",
     "claude"
   ],
-  "author": "QuantumNous",
+  "author": "cinagroup",
   "repository": {
     "type": "git",
-    "url": "https://github.com/QuantumNous/new-api"
+    "url": "https://github.com/cinagroup/cinatoken"
   },
   "devDependencies": {
     "cross-env": "^7.0.3",
@@ -57,8 +57,8 @@
       ],
       "extraResources": [
         {
-          "from": "../new-api",
-          "to": "bin/new-api"
+          "from": "../cinatoken",
+          "to": "bin/cinatoken"
         },
         {
           "from": "../web/dist",
@@ -74,8 +74,8 @@
       ],
       "extraResources": [
         {
-          "from": "../new-api.exe",
-          "to": "bin/new-api.exe"
+          "from": "../cinatoken.exe",
+          "to": "bin/cinatoken.exe"
         }
       ]
     },
@@ -88,8 +88,8 @@
       "category": "Development",
       "extraResources": [
         {
-          "from": "../new-api",
-          "to": "bin/new-api"
+          "from": "../cinatoken",
+          "to": "bin/cinatoken"
         }
       ]
     },
