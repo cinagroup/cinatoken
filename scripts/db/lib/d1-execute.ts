@@ -11,7 +11,7 @@ export interface D1ExecutionConfig {
 	persistTo: string;
 }
 
-export const DEFAULT_D1_DATABASE_NAME = process.env.D1_DATABASE_NAME?.trim() || 'octafuse-gateway';
+export const DEFAULT_D1_DATABASE_NAME = process.env.D1_DATABASE_NAME?.trim() || 'cinatoken';
 export const DEFAULT_D1_PERSIST_TO = process.env.D1_PERSIST_TO ?? '../.wrangler/state';
 
 export function parseD1ExecutionConfig(args: string[]): D1ExecutionConfig {

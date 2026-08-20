@@ -31,7 +31,7 @@ export const AUDIO_TRANSCRIPTIONS_BODY_TEMPLATE = `{
 /** 默认使用 OpenAI 与 DashScope Qwen TTS 都支持的 WAV，避免模板直接触发上游格式错误。 */
 export const AUDIO_SPEECH_BODY_TEMPLATE = `{
   "model": "<auto>",
-  "input": "你好，欢迎使用 OctaFuse Gateway。",
+  "input": "你好，欢迎使用 cinatoken Gateway。",
   "voice": "alloy",
   "response_format": "wav",
   "speed": 1

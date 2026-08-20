@@ -6,6 +6,15 @@ import type { AdminPrincipal } from '@/lib/admin-principal';
 export type AdminBindings = {
 	DB?: D1Database;
 	ASSETS?: unknown;
+	CINAAUTH_AUTH_SERVICE?: Fetcher;
+	CINAAUTH_ISSUER?: string;
+	CINAAUTH_ACCOUNT_ORIGIN?: string;
+	CINATOKEN_APP_ORIGIN?: string;
+	CINATOKEN_OIDC_CLIENT_ID?: string;
+	CINATOKEN_REQUIRED_ROLES?: string;
+	CINATOKEN_OIDC_CLIENT_SECRET?: string;
+	CINATOKEN_OIDC_BRIDGE_SECRET?: string;
+	CINATOKEN_OIDC_TRANSACTION_SECRET?: string;
 	/** Node / 自托管 Postgres：与 `@octafuse/proxy` 一致，使用 `DATABASE_URL`。 */
 	DATABASE_URL?: string;
 	/** 与 `DATABASE_URL` 命名对齐；Node 下省略视为 `postgres`（见 `@octafuse/core`）。 */

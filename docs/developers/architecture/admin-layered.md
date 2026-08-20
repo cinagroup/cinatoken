@@ -1,4 +1,4 @@
-# Admin 分层约束（Octafuse）
+# Admin 分层约束（cinatoken）
 
 本文说明 **`packages/admin`** 内管理 API 的分层边界，以及与 **`@octafuse/core`** 的关系，供开发与 code review 对齐。
 

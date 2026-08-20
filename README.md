@@ -1,24 +1,28 @@
-# Octafuse Gateway
+<p align="center">
+  <img src="./packages/admin/public/brand/logo.png" alt="cinatoken logo" width="160" />
+</p>
+
+# cinatoken Gateway
 
 [![License: AGPL v3](https://img.shields.io/badge/License-AGPL%20v3-blue.svg)](./LICENSE)
-[![Release](https://img.shields.io/github/v/release/OctaFuse/octafuse-gateway?sort=semver&display_name=tag&color=2f80ed)](https://github.com/OctaFuse/octafuse-gateway/releases)
-[![Package Versions](https://github.com/OctaFuse/octafuse-gateway/actions/workflows/verify-package-versions.yml/badge.svg)](https://github.com/OctaFuse/octafuse-gateway/actions/workflows/verify-package-versions.yml)
+[![Release](https://img.shields.io/github/v/release/cinagroup/cinatoken?sort=semver&display_name=tag&color=2f80ed)](https://github.com/cinagroup/cinatoken/releases)
+[![Package Versions](https://github.com/cinagroup/cinatoken/actions/workflows/verify-package-versions.yml/badge.svg)](https://github.com/cinagroup/cinatoken/actions/workflows/verify-package-versions.yml)
 [![Node.js](https://img.shields.io/badge/Node.js-20%2B-339933?logo=node.js&logoColor=white)](./.nvmrc)
 [![Cloudflare Workers](https://img.shields.io/badge/Cloudflare-Workers%20%2B%20D1-F38020?logo=cloudflare&logoColor=white)](./docs/operators/deployment/cloudflare-quickstart.md)
 [![Docker](https://img.shields.io/badge/Docker-optional-2496ED?logo=docker&logoColor=white)](./docs/operators/deployment/docker.md)
 
-**Octafuse Gateway** 是面向 Agent 的可自托管开源 AI 网关。它将不同供应商的文本、图像、语音与工具能力汇聚到统一入口，支持 Chat Completions、OpenAI Responses API、图像生成与编辑、ASR、TTS、实时语音和智能体工具（Agent Tools），也可以接入自建或私有部署的 AI 服务。通过统一的路由、密钥、预算、计费和审计，Octafuse 帮助个人与团队集中管理和调度分散的 AI 资源。它不只是转发模型请求，更是面向 Agent 的可发现、可调用、可治理、可持续扩展的 AI 能力底座。
+**cinatoken Gateway** 是面向 Agent 的可自托管开源 AI 网关。它将不同供应商的文本、图像、语音与工具能力汇聚到统一入口，支持 Chat Completions、OpenAI Responses API、图像生成与编辑、ASR、TTS、实时语音和智能体工具（Agent Tools），也可以接入自建或私有部署的 AI 服务。通过统一的路由、密钥、预算、计费和审计，cinatoken 帮助个人与团队集中管理和调度分散的 AI 资源。它不只是转发模型请求，更是面向 Agent 的可发现、可调用、可治理、可持续扩展的 AI 能力底座。
 
-**语言：** [中文](./README.md) · [English](./README.en.md) · [日本語](./README.ja.md) · [한국어](./README.ko.md) · **官网：** [octafuse.dev](https://octafuse.dev/)
+**语言：** [中文](./README.md) · [English](./README.en.md) · [日本語](./README.ja.md) · [한국어](./README.ko.md) · **仓库：** [cinagroup/cinatoken](https://github.com/cinagroup/cinatoken)
 
 ## 核心能力
 
-Octafuse Gateway 的核心目标是**构建统一超级个体（OPC）或企业内部的 AI 能力中枢**。通过 Octafuse 将你所持有的各种模态的 AI 能力和多种多样的工具能力实现统一接入、分发、计费等企业级管理控制。
+cinatoken Gateway 的核心目标是**构建统一超级个体（OPC）或企业内部的 AI 能力中枢**。通过 cinatoken 将你所持有的各种模态的 AI 能力和多种多样的工具能力实现统一接入、分发、计费等企业级管理控制。
 
 所以它具备以下这些核心能力：
 
-1. 供应商（Provider）接入：支持接入任意模型厂商或聚合平台的模型服务。同时，内置大量导入模板（含各种 Coding/Token Plan），无需复制黏贴各平台的接入端点，直接一键导入，然后复制对应的 API 密钥（ApiKey）即可完成接入。支持一键导入的完整列表见官网 [Providers Catalog](https://octafuse.dev/zh/catalog/providers/)，若有希望加入预置供应商的厂商，欢迎提交 PR。
-2. AI模型接入：需要提供哪些 AI 模型的接入，也可以通过预置的模型数据直接导入，无需配置各种模型参数、价格等基本信息。支持一键导入的模型列表见官网 [Models Catalog](https://octafuse.dev/zh/catalog/models/)；若希望接入新的模型，欢迎提交 PR。
+1. 供应商（Provider）接入：支持接入任意模型厂商或聚合平台的模型服务。同时，内置大量导入模板（含各种 Coding/Token Plan），无需复制黏贴各平台的接入端点，直接一键导入，然后复制对应的 API 密钥（ApiKey）即可完成接入。完整列表见仓库内的 [Provider 导入目录](./packages/admin/lib/provider-import-presets.json)，若有希望加入预置供应商的厂商，欢迎提交 PR。
+2. AI模型接入：需要提供哪些 AI 模型的接入，也可以通过预置的模型数据直接导入，无需配置各种模型参数、价格等基本信息。完整列表见仓库内的 [模型预设目录](./packages/admin/lib/model-presets/)；若希望接入新的模型，欢迎提交 PR。
 3. 多协议接入：AI 模型全协议接入，目前支持:
     - OpenAI 端点：
       - Chat Completions：`POST /v1/chat/completions`
@@ -35,13 +39,13 @@ Octafuse Gateway 的核心目标是**构建统一超级个体（OPC）或企业�
     - 深度搜索（`POST /v1/tools/web-deep-search`，搜+读一体）：Firecrawl Search、Jina Search
     - AI 率检测（`POST /v1/tools/ai-detection`）：当前已实现腾讯云 TMS，并预留多引擎扩展目录
     - 更多工具持续接入中，也欢迎 PR 继续丰富智能体常用工具。
-5. AI 能力统一出口：与所有网关一样，它是请求的中枢，即使能力汇总的地方，也是能力集中分发的地方。上面所有接入的 AI 能力都通过Octafuse Gateway 部署后的地址提供统一的接入 BaseUrl。换言之，上面你接入的各种平台、工具的 BaseUrl都不需要记了，只需要记住网关的即可。
+5. AI 能力统一出口：与所有网关一样，它是请求的中枢，即使能力汇总的地方，也是能力集中分发的地方。上面所有接入的 AI 能力都通过cinatoken Gateway 部署后的地址提供统一的接入 BaseUrl。换言之，上面你接入的各种平台、工具的 BaseUrl都不需要记了，只需要记住网关的即可。
 6. 多样的路由策略：当一个模型我们有多个资源的时候，为了更高效的使用资源，可以根据情况配置不同的路由策略。目前支持四种策略：
     - hash_affinity：默认策略；同用户、模型、协议稳定首选上游，**缓存命中率高**，适合依赖 Prompt Cache、会话连续性的场景；短时流量不一定完全均匀
     - weighted_random：按权重加权随机分流，**负载均衡性高**，适合按比例分摊成本或 A/B；同一用户可能频繁切换供应商，缓存命中率较低
     - weight_priority：按权重从高到低固定排序，结果可预测，适合同层明确主备；首选供应商会承担大部分流量
     - weighted_round_robin：按权重轮转分摊，流量更均匀；计数器按运行实例维护，多实例间不保证全局同步
-7. 用户管理与记账一体化：有了统一接入点之后，剩下用户管理、额度管理、成本管理一堆下游的功能。Octafuse 提供了一套企业化的管理机制，包括：
+7. 用户管理与记账一体化：有了统一接入点之后，剩下用户管理、额度管理、成本管理一堆下游的功能。cinatoken 提供了一套企业化的管理机制，包括：
     - 支持系统（External system）、用户（User）、API 密钥三层维度：每个用户因为有一个External system字段，所以可以区分不同的系统或者团队。用户下面是 API 密钥，真正调用 Gateway 能力通过 API 密钥完成鉴权、扣费和审计。
     - 三账本设计：每一个调用对于计费涵盖三个费用计算，包括：目录价（模型/工具标准价）、成本价（实际采购价格）、用户价（用户扣除额度）
     - 分时倍率：有的模型有峰谷计费的设计，利用分时倍率可以更精准的计算成本数据；同时如果对外服务，也可以更配置灵活的计价方案来支持运营促销
@@ -63,9 +67,9 @@ Octafuse Gateway 的核心目标是**构建统一超级个体（OPC）或企业�
 
 ## 与其他开源 AI Gateway 的差异
 
-[New API](https://github.com/QuantumNous/new-api)、[LiteLLM](https://github.com/BerriAI/litellm)、[Sub2API](https://github.com/Wei-Shaw/sub2api) 和 [Bifrost](https://github.com/maximhq/bifrost) 都是成熟且各有所长的开源 AI Gateway。Octafuse 更关注 **Agent 能力交付与 AI 资源运营**，主要差异集中在以下五个方向：
+[New API](https://github.com/QuantumNous/new-api)、[LiteLLM](https://github.com/BerriAI/litellm)、[Sub2API](https://github.com/Wei-Shaw/sub2api) 和 [Bifrost](https://github.com/maximhq/bifrost) 都是成熟且各有所长的开源 AI Gateway。cinatoken 更关注 **Agent 能力交付与 AI 资源运营**，主要差异集中在以下五个方向：
 
-| 重点方向 | Octafuse 内建机制 | 适合场景 |
+| 重点方向 | cinatoken 内建机制 | 适合场景 |
 |---|---|---|
 | Agent 能力 | 联网搜索、网页抓取、深度搜索，以及工具调用日志与计费 | 为 Agent 同时提供模型与工具 |
 | 资源接入 | 供应商 / 模型预设、多协议端点和一键导入 | 统一管理分散的 AI 资源 |
@@ -85,7 +89,7 @@ Octafuse Gateway 的核心目标是**构建统一超级个体（OPC）或企业�
 
 ### 能力接入与 Agent
 
-| 细分能力 | Octafuse | New API | LiteLLM | Sub2API | Bifrost |
+| 细分能力 | cinatoken | New API | LiteLLM | Sub2API | Bifrost |
 |---|:---:|:---:|:---:|:---:|:---:|
 | 供应商 / 模型预设与一键导入 | ✅ | 🟡 | 🟡 | 🟡 | 🟡 |
 | OpenAI、Anthropic、Gemini 主流协议接入 | ✅ | ✅ | ✅ | ✅ | ✅ |
@@ -96,7 +100,7 @@ Octafuse Gateway 的核心目标是**构建统一超级个体（OPC）或企业�
 
 ### 路由与治理
 
-| 细分能力 | Octafuse | New API | LiteLLM | Sub2API | Bifrost |
+| 细分能力 | cinatoken | New API | LiteLLM | Sub2API | Bifrost |
 |---|:---:|:---:|:---:|:---:|:---:|
 | 协议 / operation 级请求入口与独立路由池 | ✅ | 🟠 | 🟡 | 🟡 | 🟡 |
 | 多策略分流与分层覆盖 | ✅ | 🟡 | ✅ | 🟡 | 🟡 |
@@ -107,7 +111,7 @@ Octafuse Gateway 的核心目标是**构建统一超级个体（OPC）或企业�
 
 ### 计费
 
-| 细分能力 | Octafuse | New API | LiteLLM | Sub2API | Bifrost |
+| 细分能力 | cinatoken | New API | LiteLLM | Sub2API | Bifrost |
 |---|:---:|:---:|:---:|:---:|:---:|
 | 目录价、供应成本、用户扣费三账本 | ✅ | ⚪ | ⚪ | ✅ | ⚪ |
 | 按业务时区的分时计价倍率 | ✅ | ⚪ | ⚪ | 🟡 | ⚪ |
@@ -116,7 +120,7 @@ Octafuse Gateway 的核心目标是**构建统一超级个体（OPC）或企业�
 
 ### 运维与部署
 
-| 细分能力 | Octafuse | New API | LiteLLM | Sub2API | Bifrost |
+| 细分能力 | cinatoken | New API | LiteLLM | Sub2API | Bifrost |
 |---|:---:|:---:|:---:|:---:|:---:|
 | 管理后台 | ✅ | ✅ | ✅ | ✅ | ✅ |
 | 管理 API | ✅ | ✅ | ✅ | ✅ | ✅ |
@@ -127,13 +131,13 @@ Octafuse Gateway 的核心目标是**构建统一超级个体（OPC）或企业�
 | Docker 自托管部署 | ✅ | ✅ | ✅ | ✅ | ✅ |
 | Cloudflare Workers 边缘部署 | ✅ | ⚪ | ⚪ | ⚪ | ⚪ |
 
-<sup>1</sup> Octafuse 支持 DashScope 原生实时 ASR / TTS，并可将 OpenAI 兼容的 ASR / TTS 请求跨协议路由至 DashScope。
+<sup>1</sup> cinatoken 支持 DashScope 原生实时 ASR / TTS，并可将 OpenAI 兼容的 ASR / TTS 请求跨协议路由至 DashScope。
 <br />
-<sup>2</sup> Octafuse 当前已覆盖文本、图像、ASR、TTS 与实时语音；视频等能力尚未纳入统一请求入口。
+<sup>2</sup> cinatoken 当前已覆盖文本、图像、ASR、TTS 与实时语音；视频等能力尚未纳入统一请求入口。
 
 </details>
 
-评价基于各项目当前公开仓库与官方文档，重点衡量“是否内建并形成完整机制”，不评价性能、社区规模、商业支持或二次开发潜力。这是围绕 Octafuse 产品定位的能力比较，不是对各项目全部功能的综合排名。各项目持续演进，具体能力和授权范围请以其最新官方文档为准。
+评价基于各项目当前公开仓库与官方文档，重点衡量“是否内建并形成完整机制”，不评价性能、社区规模、商业支持或二次开发潜力。这是围绕 cinatoken 产品定位的能力比较，不是对各项目全部功能的综合排名。各项目持续演进，具体能力和授权范围请以其最新官方文档为准。
 
 
 ## 快速开始
@@ -141,8 +145,8 @@ Octafuse Gateway 的核心目标是**构建统一超级个体（OPC）或企业�
 需要 **Node.js 20+**。代理服务（Proxy）与管理后台需**两个终端**同时运行。
 
 ```bash
-git clone https://github.com/OctaFuse/octafuse-gateway.git
-cd octafuse-gateway
+git clone https://github.com/cinagroup/cinatoken.git
+cd cinatoken
 npm install
 npm run db:migrate
 ```

@@ -5,17 +5,17 @@
 	"scripts": {
 		"dev": "next dev",
 		"dev:node": "dotenv -c -- next dev -p 8789",
-		"build": "npm run cf-typegen && next build && node ./scripts/link-standalone-next.mjs",
-		"build:docker": "next build && node ./scripts/link-standalone-next.mjs",
+		"build": "npm run cf-typegen && next build --webpack && node ./scripts/link-standalone-next.mjs",
+		"build:docker": "next build --webpack && node ./scripts/link-standalone-next.mjs",
 		"build:cf": "npm run cf-typegen && opennextjs-cloudflare build",
 		"start": "next start",
 		"lint": "eslint .",
 		"preview": "node ./scripts/ensure-dev-vars.mjs && npm run build:cf && wrangler dev worker.ts --port 8789 --persist-to ../../.wrangler/state",
 		"deploy": "npm run build:cf && wrangler deploy worker.ts",
-		"cf-typegen": "wrangler types --env-interface CloudflareEnv cloudflare-env.d.ts",
+		"cf-typegen": "wrangler types --env-interface CloudflareEnv cloudflare-env.d.ts --include-runtime false",
 		"typecheck": "tsc -p tsconfig.json --noEmit",
 		"pretest:unit": "npm run build:node-index -w @octafuse/core",
-		"test:unit": "tsx --test lib/admin-nav.test.ts lib/summarize-charged-cost-factors.test.ts lib/services/admin/*.test.ts lib/playground/proxy-response-headers.test.ts lib/dashscope-realtime-client.test.ts lib/pricing-ui-image.test.ts lib/image-generations.test.ts lib/simulator/endpoint.test.ts lib/playground/sse-event-summary.test.ts lib/playground/response-observations.test.ts lib/playground/samples/index.test.ts app/gateway/simulator/simulator-utils.test.ts app/gateway/playground/playground-utils.test.ts app/gateway/routes/route-utils.test.ts app/gateway/routes/route-strategy-meta.test.ts app/gateway/providers/provider-utils.test.ts app/gateway/tools/components/provider-card-state.test.ts app/gateway/request-logs/request-log-display.test.ts"
+		"test:unit": "tsx --test lib/admin-nav.test.ts lib/cinaauth/*.test.ts lib/summarize-charged-cost-factors.test.ts lib/services/admin/*.test.ts lib/playground/proxy-response-headers.test.ts lib/dashscope-realtime-client.test.ts lib/pricing-ui-image.test.ts lib/image-generations.test.ts lib/simulator/endpoint.test.ts lib/playground/sse-event-summary.test.ts lib/playground/response-observations.test.ts lib/playground/samples/index.test.ts app/gateway/simulator/simulator-utils.test.ts app/gateway/playground/playground-utils.test.ts app/gateway/routes/route-utils.test.ts app/gateway/routes/route-strategy-meta.test.ts app/gateway/providers/provider-utils.test.ts app/gateway/tools/components/provider-card-state.test.ts app/gateway/request-logs/request-log-display.test.ts"
 	},
 	"dependencies": {
 		"@heroicons/react": "^2.2.0",
@@ -27,6 +27,7 @@
 		"hono": "^4.12.9",
 		"next": "^16.1.6",
 		"next-intl": "^4.13.1",
+		"oauth4webapi": "^3.8.5",
 		"react": "^19.2.4",
 		"react-dom": "^19.2.4",
 		"recharts": "^2.15.4",

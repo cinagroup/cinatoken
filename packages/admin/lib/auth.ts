@@ -93,8 +93,11 @@ export async function authenticateAdminRequest(
  * - 未设置或 `0`/`false`/`no`/`off` → false（默认；明文 HTTP 可登录）
  * - `1`/`true`/`yes`/`on` → true（已部署 HTTPS 时可选用，限制 Cookie 仅经 HTTPS 回传）
  */
-export function resolveCookieSecure(): boolean {
-  const raw = process.env.ADMIN_COOKIE_SECURE?.trim().toLowerCase();
+export function resolveCookieSecure(request?: Request): boolean {
+	const requestEnv = request as (Request & { env?: CloudflareEnv }) | undefined;
+	const raw = (requestEnv?.env?.ADMIN_COOKIE_SECURE ?? process.env.ADMIN_COOKIE_SECURE)
+		?.trim()
+		.toLowerCase();
   if (raw === '1' || raw === 'true' || raw === 'yes' || raw === 'on') {
     return true;
   }

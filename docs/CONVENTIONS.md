@@ -1,8 +1,8 @@
-# 文档边界与敏感信息规范（Octafuse Gateway）
+# 文档边界与敏感信息规范（cinatoken Gateway）
 
 本文是仓库内**文档分层**与**示例脱敏**的单一参考。所有 PR 在改动 `README*.md`、`docs/**`、`examples/**`、`docker/**` 中的文档/示例时，应以本文为准。
 
-> 目标：本仓作为 Gateway 技术文档的单一事实来源；官网仓库 `octafuse-website` 负责品牌、导航、SEO、多语言呈现与面向使用者的轻量摘要，并通过 `sync/contract.json` 生成技术参考入口；同时杜绝把任何运行环境的真实密钥、Webhook、连接串写进 Git。
+> 目标：本仓作为 Gateway 技术文档的单一事实来源；如后续建立独立官网，其仓库负责品牌、导航、SEO、多语言呈现与面向使用者的轻量摘要，并通过受控清单生成技术参考入口；同时杜绝把任何运行环境的真实密钥、Webhook、连接串写进 Git。
 
 ## 1. 文档分层规则
 
@@ -38,7 +38,7 @@
 
 ### L3 · 品牌叙事 / 客户化 / 区域专属（不入本仓）
 
-不放入本仓；适合放到独立的 `octafuse-website` 站点或外部 wiki。本仓内只保留入口或最小说明，避免污染开源仓。
+不放入本仓；适合放到独立官网或外部 wiki。本仓内只保留入口或最小说明，避免污染开源仓。
 
 | 类别 | 处置 |
 |------|------|
@@ -72,16 +72,16 @@
 | `docker/examples/*.example` 与 `docker/deploy/.env.example` | L2 | 占位模板，**不**含真实值 |
 | README 中的“品牌段落 / 推广链接” | L3（候选） | 后续可拆到独立站 |
 
-## 1.1 与官网仓库的关系
+## 1.1 与独立官网的关系
 
-`octafuse-gateway` 与 `octafuse-website` 的边界如下：
+`cinatoken` 与未来独立官网的边界如下：
 
 | 内容 | 维护位置 |
 |------|----------|
 | API、部署、迁移、架构、计费、审计、时间语义、本地开发 | 本仓 `docs/**` |
-| 官网首页、品牌表达、SEO、截图包装、多语言路由 | `octafuse-website` |
+| 官网首页、品牌表达、SEO、截图包装、多语言路由 | 独立官网仓库 |
 | 面向使用者的轻量任务摘要 | 两边可有入口，但以本仓 `docs/users/**` 为技术事实来源 |
-| 官网技术参考页 | `octafuse-website/sync/contract.json` 生成，只列本仓白名单链接 |
+| 官网技术参考页 | 由官网受控清单生成，只列本仓白名单链接 |
 
 规则：
 
@@ -103,8 +103,8 @@
 | 用户 API Key（`sk-…`） | `sk-your-api-key`、`sk-xxx`、`sk-xxx...` |
 | Admin API Key（运行时） | `<ADMIN_API_KEY>` 或 `sk-admin-xxx` |
 | 控制台密码 | `change-me`、`replace-me`、`changeme`（任选其一，跨文件保持一致） |
-| Postgres / MySQL 用户名 | `gateway_user`、`postgres`、`octafuse`（仅限本机/容器内默认用户；勿写真实生产用户名） |
-| Postgres / MySQL 密码 | `change-me`（与控制台密码区分）；compose 内置库可用 `postgres` / `octafuse` 等本机默认值 |
+| Postgres / MySQL 用户名 | `gateway_user`、`postgres`、`cinatoken`（仅限本机/容器内默认用户；勿写真实生产用户名） |
+| Postgres / MySQL 密码 | `change-me`（与控制台密码区分）；compose 内置库可用 `postgres` / `cinatoken` 等本机默认值 |
 | 数据库主机 | `db.example.com`、`127.0.0.1`、`postgres`（容器服务名） |
 | Proxy / Admin 公网域名 | `gateway.example.com`、`gateway-admin.example.com`（多环境/多部署可加后缀，如 `gateway-staging.example.com`） |
 | 镜像仓库命名空间 | `your-org`、`your-repo`、`example-org`、`<owner>`、`<repo>` |
@@ -171,6 +171,6 @@
 
 ## 5. 后续演进
 
-- 当 L3 候选项足够多、或开始有外部撰稿/翻译协作时，将相关内容沉淀到独立 `octafuse-website` 仓库；本文表格即为迁移清单初稿。
+- 当 L3 候选项足够多、或开始有外部撰稿/翻译协作时，将相关内容沉淀到独立官网仓库；本文表格即为迁移清单初稿。
 - 当某条新规则在多次 PR 中被反复提示，应反向沉淀进 §2.1 / §2.2，使审查可机械化。
 - 与 SECURITY 流程的关系：本文管“**写进 Git 之前**的预防”；[`SECURITY.md`](../SECURITY.md) 管“**事后**的漏洞与泄露报告”，二者互补，请勿混用。

@@ -7,8 +7,8 @@
 		"ko": "한국어"
 	},
 	"metadata": {
-		"title": "Octafuse Gateway · Admin",
-		"description": "Octafuse Gateway の運用コンソール：API Key、アップストリーム Provider、モデル、Route、分析を管理します。AGPLv3 ライセンス。"
+		"title": "cinatoken Gateway · Admin",
+		"description": "cinatoken Gateway の運用コンソール：API Key、アップストリーム Provider、モデル、Route、分析を管理します。AGPLv3 ライセンス。"
 	},
 	"home": {
 		"metadata": {
@@ -45,47 +45,19 @@
 			"title": "ビルダーのための AI ケイパビリティゲートウェイ",
 			"description": "柔軟な接続、インテリジェントなルーティング、コスト制御、エンドツーエンドの可観測性。",
 			"items": {
-				"protocols": {
-					"title": "統一プロトコル",
-					"description": "一つの Gateway Base URL からモデル推論、メディア機能、エージェントツールを利用できます。",
-					"detail": "Chat · Responses · Images · Audio · Tools"
-				},
-				"routing": {
-					"title": "インテリジェントルーティング",
-					"description": "各リクエスト入口をルートプールへ送り、複数のアップストリーム間で安全にフェイルオーバーします。",
-					"detail": "優先度 · Weight · フェイルオーバー · Sticky routing"
-				},
-				"budgets": {
-					"title": "予算とキー",
-					"description": "利用者ごとにキーを発行し、期間予算と実使用量でコストを管理します。",
-					"detail": "ユーザー · API Key · 期間予算 · 3 つの台帳"
-				},
-				"observability": {
-					"title": "ログと分析",
-					"description": "呼び出し経路と予算イベントを記録し、利用量、コスト、品質を多角的に確認します。",
-					"detail": "リクエストログ · 監査ログ · モデル/Provider/ユーザー分析"
-				}
+				"protocols": { "title": "統一プロトコル", "description": "一つの Gateway Base URL からモデル推論、メディア機能、エージェントツールを利用できます。", "detail": "Chat · Responses · Images · Audio · Tools" },
+				"routing": { "title": "インテリジェントルーティング", "description": "各リクエスト入口をルートプールへ送り、複数のアップストリーム間で安全にフェイルオーバーします。", "detail": "優先度 · Weight · フェイルオーバー · Sticky routing" },
+				"budgets": { "title": "予算とキー", "description": "利用者ごとにキーを発行し、期間予算と実使用量でコストを管理します。", "detail": "ユーザー · API Key · 期間予算 · 3 つの台帳" },
+				"observability": { "title": "ログと分析", "description": "呼び出し経路と予算イベントを記録し、利用量、コスト、品質を多角的に確認します。", "detail": "リクエストログ · 監査ログ · モデル/Provider/ユーザー分析" }
 			}
 		},
 		"steps": {
 			"title": "Provider から安定した呼び出しまで、4 ステップ",
 			"items": {
-				"providers": {
-					"title": "Provider を接続",
-					"description": "アップストリームのエンドポイントと認証情報を設定"
-				},
-				"routes": {
-					"title": "モデルとルートを公開",
-					"description": "プロトコル入口、ルートプール、フェイルオーバーを定義"
-				},
-				"keys": {
-					"title": "ユーザーキーを発行",
-					"description": "ユーザー、プロジェクト、顧客ごとに API Key と予算を割り当て"
-				},
-				"observe": {
-					"title": "すべての呼び出しを観測",
-					"description": "ログ、監査、分析で継続的に改善"
-				}
+				"providers": { "title": "Provider を接続", "description": "アップストリームのエンドポイントと認証情報を設定" },
+				"routes": { "title": "モデルとルートを公開", "description": "プロトコル入口、ルートプール、フェイルオーバーを定義" },
+				"keys": { "title": "ユーザーキーを発行", "description": "ユーザー、プロジェクト、顧客ごとに API Key と予算を割り当て" },
+				"observe": { "title": "すべての呼び出しを観測", "description": "ログ、監査、分析で継続的に改善" }
 			}
 		},
 		"deployment": {
@@ -99,14 +71,13 @@
 			"console": "コンソールへ",
 			"deploymentDocs": "デプロイドキュメントを見る"
 		},
-		"footer": {
-			"description": "AI ケイパビリティゲートウェイと運用コントロールプレーン"
-		}
+		"footer": { "description": "AI ケイパビリティゲートウェイと運用コントロールプレーン" }
 	},
 	"brand": {
-		"wordmark": "Octafuse",
-		"product": "Octafuse Gateway",
-		"loginHeading": "Octafuse Gateway",
+		"wordmark": "cinatoken",
+		"product": "cinatoken Gateway",
+		"loginHeading": "cinatoken Gateway",
+		"logoAlt": "cinatoken ロゴ",
 		"sidebarSubtitle": "Gateway · Admin",
 		"github": "GitHub",
 		"docs": "Docs",
@@ -197,10 +168,11 @@
 		"kindAudio": "音声"
 	},
 	"auth": {
-		"username": "ユーザー名",
-		"password": "パスワード",
-		"login": "ログイン",
-		"loggingIn": "ログイン中...",
+		"cinaAuthDescription": "統合 CinaAuth アカウントで cinatoken 管理コンソールに安全にログインします。",
+		"continueWithCinaAuth": "CinaAuth でログイン",
+		"createAccount": "CinaAuth アカウントを作成",
+		"roleRequirement": "コンソールにアクセスできるのは super_admin または security_admin のみです。通常の新規アカウントに管理権限は付与されません。",
+		"loginError": "CinaAuth ログインが完了していないか、このアカウントに cinatoken 管理権限がありません。",
 		"loggingOut": "ログアウト中...",
 		"logout": "ログアウト"
 	},

@@ -17,6 +17,10 @@ export async function generateMetadata(): Promise<Metadata> {
 			template: `%s · ${appTitle}`,
 		},
 		description: t('description'),
+		icons: {
+			icon: [{ url: '/favicon.ico', type: 'image/x-icon' }],
+			shortcut: '/favicon.ico',
+		},
 		robots: 'noindex, nofollow',
 	};
 }

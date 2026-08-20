@@ -7,8 +7,8 @@
 		"ko": "한국어"
 	},
 	"metadata": {
-		"title": "Octafuse Gateway · Admin",
-		"description": "Octafuse Gateway 운영 콘솔: API Key, 업스트림 Provider, 모델, Route 및 분석. AGPLv3 라이선스로 제공됩니다."
+		"title": "cinatoken Gateway · Admin",
+		"description": "cinatoken Gateway 운영 콘솔: API Key, 업스트림 Provider, 모델, Route 및 분석. AGPLv3 라이선스로 제공됩니다."
 	},
 	"home": {
 		"metadata": {
@@ -45,47 +45,19 @@
 			"title": "빌더를 위한 AI 기능 게이트웨이",
 			"description": "유연한 연결, 지능형 라우팅, 비용 제어, 엔드투엔드 관측성.",
 			"items": {
-				"protocols": {
-					"title": "통합 프로토콜",
-					"description": "하나의 Gateway Base URL로 모델 추론, 미디어 기능, 에이전트 도구를 사용합니다.",
-					"detail": "Chat · Responses · Images · Audio · Tools"
-				},
-				"routing": {
-					"title": "지능형 라우팅",
-					"description": "각 요청 진입점을 라우트 풀로 보내고 여러 업스트림 대상 간에 안전하게 장애 조치합니다.",
-					"detail": "우선순위 · 가중치 · 장애 조치 · 고정 라우팅"
-				},
-				"budgets": {
-					"title": "예산과 키",
-					"description": "실제 사용자에게 별도 키를 발급하고 주기 예산과 실제 사용량으로 비용을 제어합니다.",
-					"detail": "사용자 · API Key · 주기 예산 · 3개 원장"
-				},
-				"observability": {
-					"title": "로그와 분석",
-					"description": "호출 경로와 예산 이벤트를 기록하고 사용량, 비용, 품질을 여러 관점에서 확인합니다.",
-					"detail": "요청 로그 · 감사 로그 · 모델/Provider/사용자 분석"
-				}
+				"protocols": { "title": "통합 프로토콜", "description": "하나의 Gateway Base URL로 모델 추론, 미디어 기능, 에이전트 도구를 사용합니다.", "detail": "Chat · Responses · Images · Audio · Tools" },
+				"routing": { "title": "지능형 라우팅", "description": "각 요청 진입점을 라우트 풀로 보내고 여러 업스트림 대상 간에 안전하게 장애 조치합니다.", "detail": "우선순위 · 가중치 · 장애 조치 · 고정 라우팅" },
+				"budgets": { "title": "예산과 키", "description": "실제 사용자에게 별도 키를 발급하고 주기 예산과 실제 사용량으로 비용을 제어합니다.", "detail": "사용자 · API Key · 주기 예산 · 3개 원장" },
+				"observability": { "title": "로그와 분석", "description": "호출 경로와 예산 이벤트를 기록하고 사용량, 비용, 품질을 여러 관점에서 확인합니다.", "detail": "요청 로그 · 감사 로그 · 모델/Provider/사용자 분석" }
 			}
 		},
 		"steps": {
 			"title": "Provider 연결부터 안정적인 호출까지 4단계",
 			"items": {
-				"providers": {
-					"title": "Provider 연결",
-					"description": "업스트림 엔드포인트와 자격 증명 구성"
-				},
-				"routes": {
-					"title": "모델과 라우트 게시",
-					"description": "프로토콜 진입점, 라우트 풀, 장애 조치 정의"
-				},
-				"keys": {
-					"title": "사용자 키 발급",
-					"description": "사용자, 프로젝트, 고객별 API Key와 예산 할당"
-				},
-				"observe": {
-					"title": "모든 호출 관측",
-					"description": "로그, 감사, 분석으로 지속적으로 개선"
-				}
+				"providers": { "title": "Provider 연결", "description": "업스트림 엔드포인트와 자격 증명 구성" },
+				"routes": { "title": "모델과 라우트 게시", "description": "프로토콜 진입점, 라우트 풀, 장애 조치 정의" },
+				"keys": { "title": "사용자 키 발급", "description": "사용자, 프로젝트, 고객별 API Key와 예산 할당" },
+				"observe": { "title": "모든 호출 관측", "description": "로그, 감사, 분석으로 지속적으로 개선" }
 			}
 		},
 		"deployment": {
@@ -99,14 +71,13 @@
 			"console": "콘솔 열기",
 			"deploymentDocs": "배포 문서 보기"
 		},
-		"footer": {
-			"description": "AI 기능 게이트웨이 및 운영 제어 플레인"
-		}
+		"footer": { "description": "AI 기능 게이트웨이 및 운영 제어 플레인" }
 	},
 	"brand": {
-		"wordmark": "Octafuse",
-		"product": "Octafuse Gateway",
-		"loginHeading": "Octafuse Gateway",
+		"wordmark": "cinatoken",
+		"product": "cinatoken Gateway",
+		"loginHeading": "cinatoken Gateway",
+		"logoAlt": "cinatoken 로고",
 		"sidebarSubtitle": "Gateway · Admin",
 		"github": "GitHub",
 		"docs": "Docs",
@@ -197,10 +168,11 @@
 		"kindAudio": "오디오"
 	},
 	"auth": {
-		"username": "사용자 이름",
-		"password": "비밀번호",
-		"login": "로그인",
-		"loggingIn": "로그인 중...",
+		"cinaAuthDescription": "통합 CinaAuth 계정으로 cinatoken 운영 콘솔에 안전하게 로그인하세요.",
+		"continueWithCinaAuth": "CinaAuth로 로그인",
+		"createAccount": "CinaAuth 계정 만들기",
+		"roleRequirement": "super_admin 또는 security_admin 역할만 콘솔에 접근할 수 있습니다. 일반 신규 계정에는 관리자 권한이 부여되지 않습니다.",
+		"loginError": "CinaAuth 로그인이 완료되지 않았거나 이 계정에 cinatoken 관리자 권한이 없습니다.",
 		"loggingOut": "로그아웃 중...",
 		"logout": "로그아웃"
 	},

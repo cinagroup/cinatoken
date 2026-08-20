@@ -1,10 +1,10 @@
-# AGENTS.md — `@octafuse/admin` (octafuse)
+# AGENTS.md — `@octafuse/admin` (cinatoken)
 
 ## Overview
 
 Gateway **Admin** console: API keys, providers, models, routes, `system_config`, request logs, budget audit, analytics. Stack: **Next.js 16 + OpenNext on Cloudflare**.
 
-This package lives in the **`octafuse`** monorepo and **binds to D1** via `wrangler.jsonc` (`DB`). Public admin HTTP APIs are **`/api/admin/*`** (internal Hono uses **`/admin/*`**). The **`@octafuse/proxy` Worker does not expose admin routes**.
+This package lives in the **`cinatoken`** monorepo and **binds to D1** via `wrangler.jsonc` (`DB`). Public admin HTTP APIs are **`/api/admin/*`** (internal Hono uses **`/admin/*`**). The **`@octafuse/proxy` Worker does not expose admin routes**.
 
 **Out of scope for this app**: desktop client version feeds, plugin catalogs, user-growth analytics in a separate billing/portal product—the Admin here is **gateway operations only**.
 
@@ -53,7 +53,7 @@ After a remote deploy (`deploy:*` / `db:migrate:remote`) on this machine, run **
 | `ADMIN_USERNAME` | Console login username; in **`wrangler.jsonc`** `vars` for Cloudflare (placeholder `admin` ok). |
 | `ADMIN_PASSWORD` | Console login password; **do not** commit in `wrangler.jsonc`. Local: **`packages/admin/.dev.vars`** (see `.dev.vars.example`; `npm run preview` / `dev:admin` auto-creates with **`admin` / `admin`** via `scripts/ensure-dev-vars.mjs` if missing). Production: Worker **Secret** — `npx wrangler secret put ADMIN_PASSWORD --name <ADMIN_WORKER_NAME>`. |
 | `ADMIN_COOKIE_SECURE` | Optional hardening. Unset by default (**no** `Secure` on `admin_session`, so plain HTTP works). Set `1`/`true`/`yes`/`on` only if Admin is already served over HTTPS and you want the browser to send the session cookie on HTTPS only — see [`docs/operators/deployment/docker.md`](../../docs/operators/deployment/docker.md) §7.3. |
-| D1 `DB` | Shared logical DB `octafuse` with Proxy |
+| D1 `DB` | Shared logical DB `cinatoken` with Proxy |
 | `DATABASE_URL` | **Node / self-hosted Postgres only** (same name as `@octafuse/proxy` Node; do not use on Cloudflare Workers D1 mode) |
 | `DATABASE_DRIVER` | **Node / self-hosted**: same semantics as Proxy (`@octafuse/core`); omit → `postgres`; invalid or inconsistent with `DATABASE_URL` → **error** |
 
@@ -61,7 +61,7 @@ Downstream portals: set **`GATEWAY_MASTER_URL`** to this app’s origin, create 
 
 ## Monorepo build notes
 
-- `next.config.mjs` sets `output: 'standalone'`, `outputFileTracingRoot`, and `turbopack.root` to the **`octafuse` root** so hoisted `next` resolves.
+- `next.config.mjs` sets `output: 'standalone'`, `outputFileTracingRoot`, and `turbopack.root` to the **`cinatoken` root** so hoisted `next` resolves.
 - After `npm run build`, **`scripts/link-standalone-next.mjs`** fixes standalone layout for OpenNext under workspaces (nested `.next` paths).
 
 ## Response shape

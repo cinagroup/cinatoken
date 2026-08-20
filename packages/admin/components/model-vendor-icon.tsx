@@ -1,7 +1,7 @@
 /**
  * Gateway Vendor / Provider 产品图标。
  *
- * 与 octafuse-website Catalog 使用相同的单色 SVG、品牌色与 Mask 渲染方式：
+ * 与产品目录使用相同的单色 SVG、品牌色与 Mask 渲染方式：
  * - Vendor / Model 默认按 vendor key 展示；
  * - Provider 可通过 iconKey 使用产品级 Logo（MiMo、Qwen、Vertex AI 等）；
  * - 未知项使用文字缩写，不依赖占位图片。

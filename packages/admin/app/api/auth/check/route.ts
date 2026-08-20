@@ -1,34 +1,35 @@
 /**
- * 供前端校验数据库中的真实 Session（含过期时间）。
+ * 供前端校验数据库中的真实 Session，并实时复核 CinaAuth 管理角色。
  */
-import { cookies } from 'next/headers';
-import { hashSessionToken } from '@/lib/auth';
+import { authenticateAdminRequest } from '@/lib/auth';
 import { resolveAdminRequestRuntime } from '@/lib/admin-request-runtime';
+import { verifyCinaAuthConsolePrincipal } from '@/lib/cinaauth/principal';
 
 export const dynamic = 'force-dynamic';
 
-export async function GET() {
+export async function GET(request: Request) {
   try {
-    const cookieStore = await cookies();
-    const sessionToken = cookieStore.get('admin_session');
+		const { bindings, storage } = await resolveAdminRequestRuntime(request);
+		const principal = await authenticateAdminRequest(request, storage.repositories);
+		const verified = principal
+			? await verifyCinaAuthConsolePrincipal(request, principal, bindings)
+			: null;
+		if (verified) {
+			return Response.json(
+				{ authenticated: true, principalType: verified.type },
+				{ headers: { 'Cache-Control': 'no-store' } },
+			);
+		}
 
-    if (sessionToken && sessionToken.value) {
-      const { storage } = await resolveAdminRequestRuntime();
-      const session = await storage.repositories.adminAccess.getValidSession(
-        await hashSessionToken(sessionToken.value),
-        new Date().toISOString()
-      );
-      if (session) return Response.json({ authenticated: true, username: session.username });
-    }
-
-    return Response.json({
-      authenticated: false,
-    });
+		return Response.json(
+			{ authenticated: false },
+			{ headers: { 'Cache-Control': 'no-store' } },
+		);
   } catch (error) {
     console.error('Auth check error:', error);
     return Response.json(
       { authenticated: false },
-      { status: 500 }
+			{ status: 500, headers: { 'Cache-Control': 'no-store' } }
     );
   }
 }

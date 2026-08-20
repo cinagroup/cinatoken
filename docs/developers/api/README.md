@@ -1,4 +1,4 @@
-# Octafuse API 文档
+# cinatoken API 文档
 
 多协议 AI 能力网关：提供 OpenAI、Anthropic、Gemini 兼容推理，Images、Audio Transcriptions、Agent Tools、用户 API Key、公开能力目录、用量与日志。实现分布在 **`packages/proxy`**（用户协议）、**`packages/admin`**（管理协议）、**`packages/tool-engines`**（Tools 上游引擎客户端，source-only）与共享库 **`packages/core`**。
 

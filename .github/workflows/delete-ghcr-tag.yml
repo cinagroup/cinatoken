@@ -28,9 +28,9 @@ jobs:
             const want = new Set([tag, bare, `v${bare}`]);
             const org = context.repo.owner;
             const pkgs = [
-              'octafuse-gateway-proxy',
-              'octafuse-gateway-admin',
-              'octafuse-gateway-migrate',
+              'cinatoken-proxy',
+              'cinatoken-admin',
+              'cinatoken-migrate',
             ];
             for (const name of pkgs) {
               core.info(`Scanning ${org}/${name} for tags ${[...want].join(', ')}`);

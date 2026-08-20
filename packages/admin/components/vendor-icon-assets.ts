@@ -1,5 +1,5 @@
 /**
- * Vendor / Provider SVG assets from the same package used by octafuse-website.
+ * Vendor / Provider SVG assets shared with the product catalog.
  *
  * Explicit static imports let Next emit content-hashed files under `/_next/static/media`;
  * no duplicated files or manual cache version is needed in `public/vendors`.

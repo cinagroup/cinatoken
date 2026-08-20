@@ -1,5 +1,5 @@
 # 仅 gateway-admin（外置 Postgres）。适合：管理 UI 单独部署或与 proxy 分集群。
-# 迁移：使用 `--profile migrate` 的 migrate 服务（octafuse-migrate）。
+# 迁移：使用 `--profile migrate` 的 migrate 服务（cinatoken-migrate）。
 # Usage:
 #   cp env.admin.example .env
 #   docker compose --env-file .env -f gateway.admin.yml --profile migrate run --rm migrate

@@ -27,7 +27,7 @@ This requires an Active Web Search provider configured in **Admin → Tools → 
 curl -sS http://127.0.0.1:8787/v1/tools/web-search \
   -H "Authorization: Bearer sk-your-api-key" \
   -H "Content-Type: application/json" \
-  -d '{"query":"Octafuse Gateway","count":5}'
+  -d '{"query":"cinatoken Gateway","count":5}'
 ```
 
 ## Admin API (master key)

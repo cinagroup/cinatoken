@@ -9,7 +9,7 @@ import { spawnSync } from "node:child_process";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
-/** 仓库根目录（octafuse/） */
+/** 仓库根目录（cinatoken/） */
 export const PROJECT_ROOT = join(__dirname, "..", "..", "..");
 
 /** 与根目录 `db:migrate` / `db:query:remote` 共用 */
@@ -20,7 +20,7 @@ export const REMOTE_DATA_DIR = join(PROJECT_ROOT, "data", "remote");
 
 /** 与 wrangler.jsonc 中 database_name 一致 */
 export const DEFAULT_DATABASE_NAME =
-	process.env.D1_DATABASE_NAME?.trim() || "octafuse-gateway";
+	process.env.D1_DATABASE_NAME?.trim() || "cinatoken";
 
 /**
  * 本地执行时间，精确到秒，文件名安全（无冒号）

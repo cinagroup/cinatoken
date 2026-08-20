@@ -1,6 +1,6 @@
 # 系统集成指南
 
-本文面向把 Octafuse Gateway 接入自有门户、后台、SaaS 或自动化脚本的开发者。
+本文面向把 cinatoken Gateway 接入自有门户、后台、SaaS 或自动化脚本的开发者。
 
 ## 两个 Base URL
 

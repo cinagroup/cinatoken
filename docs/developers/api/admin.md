@@ -2,7 +2,7 @@
 
 后台 Console Session 与具名 Admin API Key 共用的管理 API。
 
-## 部署与路径（Octafuse）
+## 部署与路径（cinatoken）
 
 - **对外 URL**：`{GATEWAY_MASTER_URL}/api/admin/...`（Admin Pages 根 URL；外部集成方约定使用同名环境变量。例如创建 Key：`POST .../api/admin/keys`）。由 **Admin Pages**（`packages/admin`）提供，**Proxy Worker 不提供 `/admin`**。
 - **本文档中的路径**：一律指内部 Hono 挂载路径 **`/admin/...`**（与实现代码一致）；集成时请将前缀换成 **`/api/admin`**。

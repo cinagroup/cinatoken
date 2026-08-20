@@ -118,7 +118,7 @@ export function createProxyApp(resolveStorage: StorageResolver, options?: ProxyA
 	app.route('/v1/tools/pricing', toolsPricingRoutes);
 	app.route('/catalog', catalogRoutes);
 
-	app.get('/', (c) => c.json({ name: 'octafuse-proxy', version: proxyAppVersion }));
+	app.get('/', (c) => c.json({ name: 'cinatoken-proxy', version: proxyAppVersion }));
 
 	return app;
 }

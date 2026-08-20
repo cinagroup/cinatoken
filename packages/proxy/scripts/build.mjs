@@ -19,6 +19,8 @@ const bundleWorkspacePackages = {
 	name: 'bundle-workspace-packages',
 	setup(build) {
 		build.onResolve({ filter: /^[^./]/ }, (args) => {
+			// Windows entry points are absolute `C:\\...` paths and are not bare imports.
+			if (args.kind === 'entry-point') return undefined;
 			if (args.path.startsWith('@octafuse/')) {
 				return undefined;
 			}

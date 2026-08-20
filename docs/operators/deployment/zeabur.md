@@ -1,6 +1,6 @@
 # Zeabur 部署（Docker + Postgres）
 
-本文说明在 [Zeabur](https://zeabur.com) 上部署 **octafuse-gateway** 的代理服务（Proxy）、管理后台（Admin）与数据库迁移的正确方式。
+本文说明在 [Zeabur](https://zeabur.com) 上部署 **cinatoken** 的代理服务（Proxy）、管理后台（Admin）与数据库迁移的正确方式。
 
 > **推荐（方式 0）**：在 **代理服务或管理后台** 常驻 Service 上设置 **`AUTO_MIGRATE=1`**，容器启动时自动执行幂等迁移，**无需**单独的 migrate Service 或 Suspend 操作。见 §3 方式 0。
 >
@@ -66,7 +66,7 @@ DATABASE_URL=postgresql://user:pass@host:5432/db?options=-c%20timezone%3DUTC
 
 ```bash
 # 仓库根目录；镜像 tag 与 proxy/admin 保持一致
-export GATEWAY_MIGRATE_IMAGE=ghcr.io/octafuse/octafuse-gateway-migrate:latest
+export GATEWAY_MIGRATE_IMAGE=ghcr.io/cinagroup/cinatoken-migrate:latest
 export DATABASE_URL='postgresql://user:pass@host:5432/db?options=-c%20timezone%3DUTC'
 export DATABASE_DRIVER=postgres
 
@@ -149,9 +149,9 @@ DATABASE_URL=postgresql://user:pass@host:5432/db?options=-c%20timezone%3DUTC
 
 | Service | 镜像示例 |
 |---------|----------|
-| proxy | `ghcr.io/octafuse/octafuse-gateway-proxy:v2.0.0` |
-| admin | `ghcr.io/octafuse/octafuse-gateway-admin:v2.0.0` |
-| migrate | `ghcr.io/octafuse/octafuse-gateway-migrate:v2.0.0` |
+| proxy | `ghcr.io/cinagroup/cinatoken-proxy:v2.0.0` |
+| admin | `ghcr.io/cinagroup/cinatoken-admin:v2.0.0` |
+| migrate | `ghcr.io/cinagroup/cinatoken-migrate:v2.0.0` |
 
 在 Zeabur 选择 **Docker Images** 创建代理服务 / 管理后台常驻 Service；migrate 按 §3 方式 A 或 B 处理。
 

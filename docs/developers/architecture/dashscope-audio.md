@@ -1,6 +1,6 @@
 # DashScope 原生音频接入方案
 
-本文定义 Octafuse Gateway 接入阿里云百炼 DashScope 语音识别（ASR）与语音合成（TTS）的协议边界、路由拓扑和分阶段验收标准。
+本文定义 cinatoken Gateway 接入阿里云百炼 DashScope 语音识别（ASR）与语音合成（TTS）的协议边界、路由拓扑和分阶段验收标准。
 
 ## 设计原则
 

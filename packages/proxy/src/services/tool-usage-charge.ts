@@ -122,7 +122,7 @@ export async function chargeToolUsage(params: ChargeToolUsageParams): Promise<{ 
 			/** 引擎 id；Request Logs ROUTE 列第二行展示（不再重复写 tool id） */
 			providerModelName: toolProvider || params.toolId,
 			modelName: params.toolId,
-			providerName: 'OctaFuse Tools',
+			providerName: 'cinatoken Tools',
 			requestBody: params.requestBody ?? null,
 			upstreamRequestBody: null,
 			requestProtocol: 'openai',

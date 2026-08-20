@@ -3,12 +3,12 @@
 	// 仅用于 `wrangler d1 migrations *`（在仓库根执行 `npm run db:migrate*`）；勿用于 `wrangler deploy`。
 	// 与 dev:proxy/dev:admin 共用 .wrangler/state，但有无 database_id 会指向不同本地 SQLite；见 docs/developers/local-development.md §1。
 	"$schema": "../../node_modules/wrangler/config-schema.json",
-	"name": "octafuse-d1-migrations",
-	"compatibility_date": "2025-04-01",
+	"name": "cinatoken-d1-migrations",
+	"compatibility_date": "2026-08-20",
 	"d1_databases": [
 		{
 			"binding": "DB",
-			"database_name": "octafuse-gateway",
+			"database_name": "cinatoken",
 			"migrations_dir": "./migrations-d1"
 		}
 	]

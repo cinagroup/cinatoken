@@ -8,6 +8,7 @@ import { handleGatewayApiError } from './api-error';
 import type { AdminBindings } from './admin-env';
 import { getAdminApp } from './admin-app';
 import { resolveAdminStorageContext } from './storage-context';
+import { verifyCinaAuthConsolePrincipal } from './cinaauth/principal';
 
 function rewriteToInternalAdminPath(request: Request): Request {
 	const url = new URL(request.url);
@@ -26,9 +27,21 @@ export async function handleAdminRealtimeUpgrade(
 		const runtimeBindings: AdminBindings = {
 			DB: env.DB,
 			ASSETS: env.ASSETS,
+			CINAAUTH_AUTH_SERVICE: env.CINAAUTH_AUTH_SERVICE,
+			CINAAUTH_ISSUER: env.CINAAUTH_ISSUER,
+			CINAAUTH_ACCOUNT_ORIGIN: env.CINAAUTH_ACCOUNT_ORIGIN,
+			CINATOKEN_APP_ORIGIN: env.CINATOKEN_APP_ORIGIN,
+			CINATOKEN_OIDC_CLIENT_ID: env.CINATOKEN_OIDC_CLIENT_ID,
+			CINATOKEN_REQUIRED_ROLES: env.CINATOKEN_REQUIRED_ROLES,
+			CINATOKEN_OIDC_CLIENT_SECRET: env.CINATOKEN_OIDC_CLIENT_SECRET,
+			CINATOKEN_OIDC_BRIDGE_SECRET: env.CINATOKEN_OIDC_BRIDGE_SECRET,
+			CINATOKEN_OIDC_TRANSACTION_SECRET: env.CINATOKEN_OIDC_TRANSACTION_SECRET,
 		};
 		const storage = await resolveAdminStorageContext(runtimeBindings, 'cloudflare');
-		const principal = await authenticateAdminRequest(request, storage.repositories);
+		const authenticated = await authenticateAdminRequest(request, storage.repositories);
+		const principal = authenticated
+			? await verifyCinaAuthConsolePrincipal(request, authenticated, runtimeBindings)
+			: null;
 		if (!principal) return Response.json({ success: false, message: 'Unauthorized' }, { status: 401 });
 
 		const appBindings: AdminBindings = {

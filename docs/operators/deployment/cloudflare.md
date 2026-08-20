@@ -1,6 +1,6 @@
 # 线上部署：Cloudflare（代理服务 Worker + 管理后台 + D1）
 
-本文说明 **octafuse-gateway** 在 Cloudflare 上的运维路径：**本地 D1 开发**、**dev 演示（octafuse.dev）**、**生产 Git 自动部署**。
+本文说明 **cinatoken** 在 Cloudflare 上的运维路径：**本地 D1 开发**、**dev 演示**、**生产 Git 自动部署**。
 
 **外部用户首次上云**（推荐）：[cloudflare-quickstart.md](./cloudflare-quickstart.md)（`npm run bootstrap:cloudflare`）。本页不替代该 quickstart。
 
@@ -36,20 +36,20 @@
 
 ---
 
-## 2. dev 演示部署（example.env · octafuse.dev）
+## 2. dev 演示部署（example.env · 自有域名）
 
 长期公共测试环境，配置见 [`cloudflare-worker/example.env`](../../../cloudflare-worker/example.env)：
 
 | 角色 | 域名 | Worker |
 |------|------|--------|
-| 代理服务（Proxy） | `https://test-api.octafuse.dev` | `octafuse-gateway-proxy-dev` |
-| 管理后台（Admin） | `https://test-admin.octafuse.dev` | `octafuse-gateway-admin-dev` |
-| D1 | — | `octafuse-gateway-dev` |
+| 代理服务（Proxy） | `https://api.example.com` | `cinatoken-proxy-dev` |
+| 管理后台（Admin） | `https://admin.example.com` | `cinatoken-admin-dev` |
+| D1 | — | `cinatoken-dev` |
 
 **首次（CLI）**：
 
 ```bash
-npx wrangler d1 create octafuse-gateway-dev
+npx wrangler d1 create cinatoken-dev
 # 更新 example.env 中 D1_DATABASE_ID
 npx dotenv -e ./cloudflare-worker/example.env -- npm run db:migrate:remote
 npx dotenv -e ./cloudflare-worker/example.env -- npm run deploy:proxy
@@ -68,8 +68,8 @@ dev 演示**仅 CLI 发版**（有新 SQL 时先 `db:migrate:remote`）；生产
 
 | 场景 | Worker / D1 命名 | 自定义域 |
 |------|------------------|----------|
-| 默认生产（示例） | `octafuse-gateway-proxy` / `-admin`，D1 `octafuse-gateway` | 常见为 Cloudflare Dashboard 绑定，wrangler 不写 `routes` |
-| dev 演示 | `*-dev`，D1 `octafuse-gateway-dev` | `test-api.octafuse.dev` 等（见 `example.env`） |
+| 默认生产（示例） | `cinatoken-proxy` / `-admin`，D1 `cinatoken` | 常见为 Cloudflare Dashboard 绑定，wrangler 不写 `routes` |
+| dev 演示 | `*-dev`，D1 `cinatoken-dev` | 替换为自有测试域名（见 `example.env`） |
 | 自有 fork / 第二实例 | 自定 Worker 名与 D1 名，避免与同账号其它实例冲突 | 可选 `PROXY_CUSTOM_DOMAIN` / `ADMIN_CUSTOM_DOMAIN` |
 
 本地 CLI：复制 [`example.env`](../../../cloudflare-worker/example.env) 为 gitignore 的 `cloudflare-worker/<name>.env`，填生产值后 `dotenv -e ... deploy:*`（与 Build variables 同名同值）。首次也可直接用 [cloudflare-quickstart.md](./cloudflare-quickstart.md)。
@@ -169,7 +169,7 @@ npx dotenv -e ./cloudflare-worker/<instance>.env -- npm run deploy:admin
 
 ```bash
 npx wrangler login
-npx wrangler d1 create octafuse-gateway-dev   # 或你的生产 D1 名
+npx wrangler d1 create cinatoken-dev   # 或你的生产 D1 名
 npx wrangler d1 list
 ```
 

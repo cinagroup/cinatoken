@@ -17,8 +17,18 @@ interface RequestWithCloudflare extends Request {
 interface GlobalWithCloudflare {
 	ASSETS?: CloudflareEnv['ASSETS'];
 	DB?: D1Database;
+	CINAAUTH_AUTH_SERVICE?: Fetcher;
+	CINAAUTH_ISSUER?: string;
+	CINAAUTH_ACCOUNT_ORIGIN?: string;
+	CINATOKEN_APP_ORIGIN?: string;
+	CINATOKEN_OIDC_CLIENT_ID?: string;
+	CINATOKEN_REQUIRED_ROLES?: string;
+	CINATOKEN_OIDC_CLIENT_SECRET?: string;
+	CINATOKEN_OIDC_BRIDGE_SECRET?: string;
+	CINATOKEN_OIDC_TRANSACTION_SECRET?: string;
 	ADMIN_USERNAME?: string;
 	ADMIN_PASSWORD?: string;
+	ADMIN_COOKIE_SECURE?: string;
 }
 
 interface ProcessWithEnv {
@@ -48,19 +58,34 @@ export function getCloudflareEnv(request?: Request): CloudflareEnv | undefined {
 
 	if (typeof globalThis !== 'undefined') {
 		const globalEnv = globalThis as unknown as GlobalWithCloudflare;
-		if (globalEnv.ASSETS || globalEnv.DB) {
+		if (globalEnv.ASSETS || globalEnv.DB || globalEnv.CINAAUTH_AUTH_SERVICE) {
 			return {
 				ASSETS: globalEnv.ASSETS,
 				DB: globalEnv.DB,
-				ADMIN_USERNAME: globalEnv.ADMIN_USERNAME as string,
-				ADMIN_PASSWORD: globalEnv.ADMIN_PASSWORD as string,
+				CINAAUTH_AUTH_SERVICE: globalEnv.CINAAUTH_AUTH_SERVICE,
+				CINAAUTH_ISSUER: globalEnv.CINAAUTH_ISSUER,
+				CINAAUTH_ACCOUNT_ORIGIN: globalEnv.CINAAUTH_ACCOUNT_ORIGIN,
+				CINATOKEN_APP_ORIGIN: globalEnv.CINATOKEN_APP_ORIGIN,
+				CINATOKEN_OIDC_CLIENT_ID: globalEnv.CINATOKEN_OIDC_CLIENT_ID,
+				CINATOKEN_REQUIRED_ROLES: globalEnv.CINATOKEN_REQUIRED_ROLES,
+				CINATOKEN_OIDC_CLIENT_SECRET: globalEnv.CINATOKEN_OIDC_CLIENT_SECRET,
+				CINATOKEN_OIDC_BRIDGE_SECRET: globalEnv.CINATOKEN_OIDC_BRIDGE_SECRET,
+				CINATOKEN_OIDC_TRANSACTION_SECRET: globalEnv.CINATOKEN_OIDC_TRANSACTION_SECRET,
+				ADMIN_USERNAME: globalEnv.ADMIN_USERNAME,
+				ADMIN_PASSWORD: globalEnv.ADMIN_PASSWORD,
+				ADMIN_COOKIE_SECURE: globalEnv.ADMIN_COOKIE_SECURE,
 			} as CloudflareEnv;
 		}
 	}
 
 	if (typeof process !== 'undefined') {
 		const proc = process as unknown as ProcessWithEnv;
-		if (proc.env?.ADMIN_USERNAME || proc.env?.ADMIN_PASSWORD) {
+		if (
+			proc.env?.CINAAUTH_ISSUER ||
+			proc.env?.CINATOKEN_OIDC_CLIENT_ID ||
+			proc.env?.ADMIN_USERNAME ||
+			proc.env?.ADMIN_PASSWORD
+		) {
 			return proc.env as CloudflareEnv;
 		}
 	}

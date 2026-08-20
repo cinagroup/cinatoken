@@ -1,4 +1,4 @@
-# 用户与 API Key 数据模型（Octafuse Gateway）
+# 用户与 API Key 数据模型（cinatoken Gateway）
 
 网关将**预算与周期**全部放在 **`users`**；**`api_keys`** 仅保存密钥材料、显示名、状态与 per-key `metadata`，通过 **`user_id`** 归属用户。三存储引擎（D1 / PostgreSQL / MySQL）的 DDL 以各自目录下的 **`0001_baseline.sql`** 为权威。
 

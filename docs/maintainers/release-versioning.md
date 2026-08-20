@@ -1,6 +1,6 @@
 # 版本治理与发版（长期维护）
 
-本文约定 **Octafuse Gateway** 单仓（`octafuse` + `@octafuse/core` / `@octafuse/proxy` / `@octafuse/admin`）的版本线、Git 标签、镜像与 GitHub Release 的关系，便于长期运维与回滚。
+本文约定 **cinatoken Gateway** 单仓（`cinatoken` + `@octafuse/core` / `@octafuse/proxy` / `@octafuse/admin`）的版本线、Git 标签、镜像与 GitHub Release 的关系，便于长期运维与回滚。
 
 ## 核心原则
 
@@ -14,7 +14,7 @@
 | **热修分支**       | 当前稳定版 patch 从 `main` 创建临时 **`hotfix/X.Y.Z`**，完成后先合入 `main` 发版，再同步到 `develop`                                                    |
 | **对外制品**       | **proxy / admin / migrate** 三镜像 **同一 tag** 发布；生产可追溯 **digest**                                                                             |
 | **变更记录**       | [Changesets](https://github.com/changesets/changesets) → 合并入根目录 **`CHANGELOG.md`**                                                                |
-| **npm workspaces** | 根目录 `package.json` 含 **`"."`**，使 **`octafuse`** 与 **`packages/*`** 一并被工具识别，从而纳入 Changesets **fixed** 组（与 `@octafuse/*` 同版本）。 |
+| **npm workspaces** | 根目录 `package.json` 含 **`"."`**，使 **`cinatoken`** 与 **`packages/*`** 一并被工具识别，从而纳入 Changesets **fixed** 组（与 `@octafuse/*` 同版本）。 |
 
 详细操作入口见仓库 **[`.changeset/README.md`](../../.changeset/README.md)**。
 
@@ -47,7 +47,7 @@ flowchart LR
 
 ### 预发验证 / 非正式部署
 
-需要在发版前把某一提交部署到预发或其它环境试用时，直接在 **Actions → Octafuse Docker Images → Run workflow** 选择 `develop` 或指定提交运行 `workflow_dispatch`，然后部署生成的 **commit SHA tag / digest**。该路径不创建 Git tag、GitHub Release，也不消费 changeset。
+需要在发版前把某一提交部署到预发或其它环境试用时，直接在 **Actions → cinatoken Docker Images → Run workflow** 选择 `develop` 或指定提交运行 `workflow_dispatch`，然后部署生成的 **commit SHA tag / digest**。该路径不创建 Git tag、GitHub Release，也不消费 changeset。
 
 不要为了临时部署把开发分支合入 `main`。否则后续从 `main` 发布的 patch 会同时包含这些未正式发布的功能，`2.3.x` 与 `2.4.0` 的版本边界将失效。若只需试用部分提交，可从目标稳定提交创建短期部署分支并 cherry-pick，仍使用 SHA/digest 部署。
 
@@ -78,16 +78,16 @@ flowchart LR
   DOCKER --> REL
 ```
 
-**并发**：`octafuse-docker-images.yml` 已配置 `concurrency`（`group: octafuse-docker-images-${{ github.ref }}`，`cancel-in-progress: false`）。同一 ref（如同一 `v*` tag）的重复触发会**串行**执行，避免并行推送互相覆盖 digest。
+**并发**：`cinatoken-docker-images.yml` 已配置 `concurrency`（`group: cinatoken-docker-images-${{ github.ref }}`，`cancel-in-progress: false`）。同一 ref（如同一 `v*` tag）的重复触发会**串行**执行，避免并行推送互相覆盖 digest。
 
 1. **`.github/workflows/release.yml`**（`push` → `main`）
 
    - 若有未消费的 `.changeset/*.md`：打开 **「chore: version packages」** PR（更新版本、`CHANGELOG.md`）。
    - 若无待处理 changeset 且版本已更新：`changesets/action` 的 **`publish`** 步骤执行 **`npm run ci:changeset-tag-push`**（`changeset tag` + 推送 **`vX.Y.Z`**）。
    - **不在此 workflow 创建 GitHub Release**（避免与 digest 说明重复）。
-   - **Docker 触发**：若使用 **`CHANGESETS_GITHUB_TOKEN`（PAT）** 打 tag，GitHub 会把 **`push` tags** 交给下游，**`octafuse-docker-images`** 会按 tag 自动跑。若仅用默认 **`GITHUB_TOKEN`** 打 tag，**不会**自动触发其它 workflow（[官方说明](https://docs.github.com/en/actions/using-workflows/triggering-a-workflow#triggering-a-workflow-from-a-workflow)）；此时 **Release** 会在检测到 **`GITHUB_SHA` 上有 `v*` tag** 后，用 **`gh workflow run`** 主动触发 **Octafuse Docker Images**（需 workflow 已授予 **`actions: write`**，本仓已加）。
+   - **Docker 触发**：若使用 **`CHANGESETS_GITHUB_TOKEN`（PAT）** 打 tag，GitHub 会把 **`push` tags** 交给下游，**`cinatoken-docker-images`** 会按 tag 自动跑。若仅用默认 **`GITHUB_TOKEN`** 打 tag，**不会**自动触发其它 workflow（[官方说明](https://docs.github.com/en/actions/using-workflows/triggering-a-workflow#triggering-a-workflow-from-a-workflow)）；此时 **Release** 会在检测到 **`GITHUB_SHA` 上有 `v*` tag** 后，用 **`gh workflow run`** 主动触发 **cinatoken Docker Images**（需 workflow 已授予 **`actions: write`**，本仓已加）。
 
-2. **`.github/workflows/octafuse-docker-images.yml`**（**`push` → `tags/v*`**，或由 Release **dispatch**；或 **`workflow_dispatch`**）
+2. **`.github/workflows/cinatoken-docker-images.yml`**（**`push` → `tags/v*`**，或由 Release **dispatch**；或 **`workflow_dispatch`**）
 
    - 构建并推送 **GHCR** 三镜像。
    - 在 **tag 发版**路径下创建/更新 **GitHub Release**：正文由 **`npm run release:notes`**（`scripts/release/render-release-notes.mjs`）生成——**本次更新 / 变更内容 / 升级说明** + **容器镜像**（三个官方 tag，不折叠）+ 相关链接；优先读取可选覆盖文件 **`docs/releases/X.Y.Z.md`**，否则从 **`CHANGELOG.md`** 对应段落规范化（去掉 `Patch Changes` 与 commit/`Thanks @` 前缀）。
@@ -102,7 +102,7 @@ flowchart LR
 | 1. 功能与贡献 PR 合并到 **`develop`**                                                     | 贡献者 / 维护者 | 下一版本持续集成；不会触发 Release workflow                                                                                                                        |
 | 2. 发布前补齐并审核 `.changeset/*.md`，从 **`develop`**（或 `release/X.Y.Z`）PR 到 `main` | 维护者          | 合并后 **Release** 跑完 → 出现 **Version Packages** PR（`changeset-release/main` → `main`）                                                                        |
 | 3. 审核并 **合并 Version PR** 到 **`main`**                                               | 维护者          | **Release** 再跑 → **`npm run ci:changeset-tag-push`** 推 **`vX.Y.Z`** → **Docker** 跑（PAT 直推 tag）或由 **Release** dispatch **Docker**（仅 `GITHUB_TOKEN` 时） |
-| 4. 等 **Octafuse Docker Images** 绿                                                       | CI              | **GHCR** 有对应 tag 的镜像；**GitHub Release** 列出三个官方镜像 tag                                                                                                 |
+| 4. 等 **cinatoken Docker Images** 绿                                                       | CI              | **GHCR** 有对应 tag 的镜像；**GitHub Release** 列出三个官方镜像 tag                                                                                                 |
 | 5. 部署并回同步                                                                           | 维护者 / 运维   | 用镜像 tag 或 digest 更新环境；将 `main` 同步回 `develop`，删除已完成的 `release/X.Y.Z`                                                                            |
 
 **仅把代码推上 `main`、且没有待处理 changeset、也没有合并 Version PR** 时：不会打新 tag，**Docker 不会为「发版」自动跑**（这是预期），但这些代码仍会进入下一次从 `main` 产生的正式版本。因此只允许明确准备随下一次稳定版发布的代码进入 `main`。日常开发和临时部署使用 `develop` + **`workflow_dispatch`**。
@@ -129,7 +129,7 @@ flowchart LR
    - **Fine-grained**：该仓库 **Contents: Read and write**、**Pull requests: Read and write**、**Metadata: Read**。
 2. 在仓库 **Settings** → **Secrets and variables** → **Actions** 中新增 secret：**`CHANGESETS_GITHUB_TOKEN`**，值为上述 PAT。
 3. **`.github/workflows/release.yml`** 已配置：`GITHUB_TOKEN` 优先使用 **`secrets.CHANGESETS_GITHUB_TOKEN`**，未设置时回退 **`secrets.GITHUB_TOKEN`**。
-4. **必读**：`changesets/action` 与 **`scripts/ci/push-root-release-tag.mjs`** 里的 `git push` 依赖 **`actions/checkout@v4` 的 `token`**。本仓已设为 `token: ${{ secrets.CHANGESETS_GITHUB_TOKEN || secrets.GITHUB_TOKEN }}`。若只把 PAT 写在 `env.GITHUB_TOKEN` 而 **checkout 仍用默认凭据**，`git push` tag 仍会走默认 **`GITHUB_TOKEN`**，**不会**链式触发 **Octafuse Docker Images**（dispatch 步骤还会因「已配 PAT」而跳过），表现为 **PAT 已配但 Docker 不跑**。
+4. **必读**：`changesets/action` 与 **`scripts/ci/push-root-release-tag.mjs`** 里的 `git push` 依赖 **`actions/checkout@v4` 的 `token`**。本仓已设为 `token: ${{ secrets.CHANGESETS_GITHUB_TOKEN || secrets.GITHUB_TOKEN }}`。若只把 PAT 写在 `env.GITHUB_TOKEN` 而 **checkout 仍用默认凭据**，`git push` tag 仍会走默认 **`GITHUB_TOKEN`**，**不会**链式触发 **cinatoken Docker Images**（dispatch 步骤还会因「已配 PAT」而跳过），表现为 **PAT 已配但 Docker 不跑**。
 
 ### 本次失败后的补救
 
@@ -138,7 +138,7 @@ flowchart LR
 ### Tag 未上 GitHub / Release 成功但无 `v*` 且无 Docker
 
 1. **`changesets/action` + `createGithubReleases: false`**：上游实现里 **`git.pushTag` 与创建 GitHub Release 绑在一起**；为 false 时即使用 `changeset tag` 打出了**本地** tag，也不会替你 `git push`。本仓库用 **`npm run ci:changeset-tag-push`**（`changeset tag` + `scripts/ci/push-root-release-tag.mjs`）在 CI 里显式推送 **`vX.Y.Z`**。
-   - 补充：默认 **`privatePackages.tag` 为 `false`** 时，`changeset tag` **可能不会**生成 **`v*`**（仅 private workspace 时常见）。`push-root-release-tag.mjs` 会在缺少 **`vX.Y.Z`** 时于当前 **HEAD**（或已存在的 `octafuse@X.Y.Z` 等标签指向的提交）**补打** **`vX.Y.Z`** 再推送。若希望 Changesets 自行生成 `name@version` 类标签，可在 **`.changeset/config.json`** 设置 `"privatePackages": { "tag": true }`（可选）。
+   - 补充：默认 **`privatePackages.tag` 为 `false`** 时，`changeset tag` **可能不会**生成 **`v*`**（仅 private workspace 时常见）。`push-root-release-tag.mjs` 会在缺少 **`vX.Y.Z`** 时于当前 **HEAD**（或已存在的 `cinatoken@X.Y.Z` 等标签指向的提交）**补打** **`vX.Y.Z`** 再推送。若希望 Changesets 自行生成 `name@version` 类标签，可在 **`.changeset/config.json`** 设置 `"privatePackages": { "tag": true }`（可选）。
 2. **日志已跑 `changeset tag` 但后续仍报 HEAD 无 semver tag**：多为 **远端已有同名 `vX.Y.Z`**，`changeset tag` 会整段跳过（不写本地 tag）——需 **bump 新版本**（新 changeset + 再走 Version PR）或 **谨慎**处理远端错误 tag 后再跑一次 Release。
 3. **PAT 已配但 Docker 仍未跑**：核对 **`release.yml`** 中 **`actions/checkout`** 是否传入 **`token: ${{ secrets.CHANGESETS_GITHUB_TOKEN || secrets.GITHUB_TOKEN }}`**（见上文「做法 B」第 4 条）。
 
@@ -194,7 +194,7 @@ npm run release:notes -- --version X.Y.Z
 | ------------------- | ------------------------------------------------------------------------------------------------------------------------------------ |
 | **生产回滚**        | 使用上一稳定 **`vX.Y.Z`** 镜像 tag 拉取部署；需要可复现固定时，从 GHCR 包页核对 **digest** 后再按 digest 拉取。 |
 | **标签错误**        | **勿**在已推送公共镜像后改写远程 tag；应发 **新版本** 或 **新 tag** 并更新部署文档。                                                 |
-| **仅验证镜像**      | 仍可使用 **Actions → Octafuse Docker Images → Run workflow**（`workflow_dispatch`），不依赖发版标签；**不会**自动写 GitHub Release。 |
+| **仅验证镜像**      | 仍可使用 **Actions → cinatoken Docker Images → Run workflow**（`workflow_dispatch`），不依赖发版标签；**不会**自动写 GitHub Release。 |
 | **CI 版本校验失败** | 检查四个 `package.json` 的 `version` 是否一致；标签推送时检查 **`v`** + `version` 是否与 **`github.ref_name`** 一致。                |
 
 ## Semver 与破坏性变更

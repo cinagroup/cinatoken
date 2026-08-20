@@ -2,10 +2,10 @@
 	"$schema": "https://unpkg.com/@changesets/config@3.1.1/schema.json",
 	"changelog": [
 		"@changesets/changelog-github",
-		{ "repo": "OctaFuse/octafuse-gateway" }
+		{ "repo": "cinagroup/cinatoken" }
 	],
 	"commit": false,
-	"fixed": [["octafuse", "@octafuse/core", "@octafuse/tool-engines", "@octafuse/proxy", "@octafuse/admin"]],
+	"fixed": [["cinatoken", "@octafuse/core", "@octafuse/tool-engines", "@octafuse/proxy", "@octafuse/admin"]],
 	"linked": [],
 	"access": "restricted",
 	"baseBranch": "main",

@@ -8,6 +8,7 @@ import type { AdminBindings } from '@/lib/admin-env';
 import { getAdminApp } from '@/lib/admin-app';
 import { handleGatewayApiError } from '@/lib/api-error';
 import { resolveAdminRequestRuntime } from '@/lib/admin-request-runtime';
+import { verifyCinaAuthConsolePrincipal } from '@/lib/cinaauth/principal';
 import { getBearerKeyPrefix, logAdminAuthEvent } from '@/lib/security-log';
 
 export const dynamic = 'force-dynamic';
@@ -27,7 +28,10 @@ async function handle(request: Request): Promise<Response> {
 	try {
 		const { bindings: runtimeBindings, storage, ctx } = await resolveAdminRequestRuntime(request);
 		const { repositories } = storage;
-		const principal = await authenticateAdminRequest(request, repositories);
+		const authenticated = await authenticateAdminRequest(request, repositories);
+		const principal = authenticated
+			? await verifyCinaAuthConsolePrincipal(request, authenticated, runtimeBindings)
+			: null;
 		if (!principal) {
 			logAdminAuthEvent('admin.auth.unauthorized', request, {
 				keyPrefix: getBearerKeyPrefix(request),

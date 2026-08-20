@@ -1,4 +1,4 @@
-# 部署文档索引（Octafuse）
+# 部署文档索引（cinatoken）
 
 多运行时（Cloudflare / Node）与多数据库（D1 / Postgres / MySQL）的架构总览见 **[runtime-data.md](../../developers/architecture/runtime-data.md)**（部署模式矩阵 SSOT）。
 

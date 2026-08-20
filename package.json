@@ -1,10 +1,10 @@
 {
-	"name": "octafuse",
+	"name": "cinatoken",
 	"version": "2.6.0",
 	"private": true,
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/OctaFuse/octafuse-gateway.git"
+		"url": "https://github.com/cinagroup/cinatoken.git"
 	},
 	"type": "module",
 	"workspaces": [

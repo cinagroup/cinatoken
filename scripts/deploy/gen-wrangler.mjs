@@ -27,16 +27,16 @@ function trimEnv(key) {
 
 function resolveNames() {
 	const d1DatabaseName =
-		trimEnv("D1_DATABASE_NAME") || "octafuse-gateway";
+		trimEnv("D1_DATABASE_NAME") || "cinatoken";
 
 	return {
 		proxyWorkerName:
-			trimEnv("PROXY_WORKER_NAME") || "octafuse-gateway-proxy",
+			trimEnv("PROXY_WORKER_NAME") || "cinatoken-proxy",
 		adminWorkerName:
-			trimEnv("ADMIN_WORKER_NAME") || "octafuse-gateway-admin",
+			trimEnv("ADMIN_WORKER_NAME") || "cinatoken-admin",
 		d1MigrationsWorkerName:
 			trimEnv("D1_MIGRATIONS_WORKER_NAME") ||
-			"octafuse-d1-migrations",
+			"cinatoken-d1-migrations",
 		d1DatabaseName,
 		d1DatabaseId: trimEnv("D1_DATABASE_ID"),
 		proxyCustomDomain: trimEnv("PROXY_CUSTOM_DOMAIN"),
@@ -44,14 +44,57 @@ function resolveNames() {
 	};
 }
 
-/** Strip // and block comments so JSONC base templates parse. */
+/** Strip JSONC comments without treating `//` inside strings as comments. */
 function parseJsonc(text) {
-	const withoutBlock = text.replace(/\/\*[\s\S]*?\*\//g, "");
-	const lines = withoutBlock.split("\n").map((line) => {
-		const idx = line.indexOf("//");
-		return idx >= 0 ? line.slice(0, idx) : line;
-	});
-	return JSON.parse(lines.join("\n"));
+	let output = "";
+	let inString = false;
+	let escaped = false;
+	let inLineComment = false;
+	let inBlockComment = false;
+	for (let index = 0; index < text.length; index += 1) {
+		const character = text[index];
+		const next = text[index + 1];
+		if (inLineComment) {
+			if (character === "\n" || character === "\r") {
+				inLineComment = false;
+				output += character;
+			}
+			continue;
+		}
+		if (inBlockComment) {
+			if (character === "*" && next === "/") {
+				inBlockComment = false;
+				index += 1;
+			} else if (character === "\n" || character === "\r") {
+				output += character;
+			}
+			continue;
+		}
+		if (inString) {
+			output += character;
+			if (escaped) escaped = false;
+			else if (character === "\\") escaped = true;
+			else if (character === '"') inString = false;
+			continue;
+		}
+		if (character === '"') {
+			inString = true;
+			output += character;
+			continue;
+		}
+		if (character === "/" && next === "/") {
+			inLineComment = true;
+			index += 1;
+			continue;
+		}
+		if (character === "/" && next === "*") {
+			inBlockComment = true;
+			index += 1;
+			continue;
+		}
+		output += character;
+	}
+	return JSON.parse(output);
 }
 
 function readBase(relativePath) {
@@ -98,7 +141,7 @@ function generateProxy(names) {
 	const routes = customDomainRoutes(names.proxyCustomDomain);
 	if (routes) {
 		config.routes = routes;
-	} else {
+	} else if (!Array.isArray(base.routes) || base.routes.length === 0) {
 		delete config.routes;
 	}
 
@@ -122,7 +165,7 @@ function generateAdmin(names) {
 	const routes = customDomainRoutes(names.adminCustomDomain);
 	if (routes) {
 		config.routes = routes;
-	} else {
+	} else if (!Array.isArray(base.routes) || base.routes.length === 0) {
 		delete config.routes;
 	}
 
