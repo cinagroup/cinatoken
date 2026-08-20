@@ -25,6 +25,12 @@
 			"docs": "문서",
 			"console": "콘솔 열기"
 		},
+		"theme": {
+			"label": "표시 모드",
+			"light": "라이트",
+			"dark": "다크",
+			"system": "시스템"
+		},
 		"hero": {
 			"titleLine1": "모든 AI 기능을 연결하는",
 			"titleLine2": "하나의 게이트웨이",
@@ -39,7 +45,8 @@
 			"images": "Images",
 			"tools": "Tools",
 			"request": "요청",
-			"response": "응답"
+			"response": "응답",
+			"routeStable": "라우트 안정"
 		},
 		"features": {
 			"title": "빌더를 위한 AI 기능 게이트웨이",

@@ -25,6 +25,12 @@
 			"docs": "ドキュメント",
 			"console": "コンソールへ"
 		},
+		"theme": {
+			"label": "表示モード",
+			"light": "ライト",
+			"dark": "ダーク",
+			"system": "システム"
+		},
 		"hero": {
 			"titleLine1": "すべての AI 機能を、",
 			"titleLine2": "一つの入口から",
@@ -39,7 +45,8 @@
 			"images": "Images",
 			"tools": "Tools",
 			"request": "リクエスト",
-			"response": "レスポンス"
+			"response": "レスポンス",
+			"routeStable": "ルート安定"
 		},
 		"features": {
 			"title": "ビルダーのための AI ケイパビリティゲートウェイ",
