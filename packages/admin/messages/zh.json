@@ -10,6 +10,99 @@
 		"title": "Octafuse Gateway · 管理后台",
 		"description": "Octafuse Gateway 运营控制台：API Key、上游供应商、模型、路由与分析。基于 AGPLv3 许可。"
 	},
+	"home": {
+		"metadata": {
+			"title": "cinatoken · AI 能力网关",
+			"description": "统一接入模型、图片、音频与智能体工具，并通过路由、预算、日志和分析稳定运行 AI 调用。"
+		},
+		"logoAlt": "cinatoken 标志",
+		"nav": {
+			"label": "首页导航",
+			"homeLabel": "返回 cinatoken 首页",
+			"features": "功能",
+			"architecture": "架构",
+			"deployment": "部署",
+			"docs": "文档",
+			"console": "进入控制台"
+		},
+		"hero": {
+			"titleLine1": "一个入口，",
+			"titleLine2": "连接你的全部 AI 能力",
+			"description": "统一接入模型、图片、音频与智能体工具，用可控路由、预算和可观测性稳定运行每一次调用。",
+			"console": "进入控制台",
+			"docs": "查看文档"
+		},
+		"demo": {
+			"tabsLabel": "API 示例",
+			"chat": "Chat",
+			"responses": "Responses",
+			"images": "Images",
+			"tools": "Tools",
+			"request": "请求",
+			"response": "响应"
+		},
+		"features": {
+			"title": "为构建者设计的 AI 能力网关",
+			"description": "灵活接入、智能路由、可控成本、全链路可观测。",
+			"items": {
+				"protocols": {
+					"title": "统一协议",
+					"description": "使用一个 Gateway Base URL 接入模型推理、媒体能力与智能体工具。",
+					"detail": "Chat · Responses · Images · Audio · Tools"
+				},
+				"routing": {
+					"title": "智能路由",
+					"description": "按请求入口进入路由池，在多个上游目标之间稳定选路并自动故障转移。",
+					"detail": "优先级 · 权重 · 故障转移 · 粘性路由"
+				},
+				"budgets": {
+					"title": "预算与密钥",
+					"description": "面向实际使用方签发独立密钥，按周期预算和真实用量控制成本。",
+					"detail": "用户 · API Key · 周期预算 · 三账本"
+				},
+				"observability": {
+					"title": "日志与分析",
+					"description": "记录调用链路和预算事件，从多维度观察用量、成本和运行质量。",
+					"detail": "请求日志 · 审计日志 · 模型/供应商/用户分析"
+				}
+			}
+		},
+		"steps": {
+			"title": "从供应商到稳定调用，只需四步",
+			"items": {
+				"providers": {
+					"title": "连接供应商",
+					"description": "配置上游端点与密钥"
+				},
+				"routes": {
+					"title": "发布模型与路由",
+					"description": "定义协议入口、路由池与故障转移"
+				},
+				"keys": {
+					"title": "签发用户密钥",
+					"description": "按用户、项目或客户分配 API Key 与预算"
+				},
+				"observe": {
+					"title": "观察每次调用",
+					"description": "通过日志、审计与分析持续优化"
+				}
+			}
+		},
+		"deployment": {
+			"title": "在你的基础设施上运行",
+			"cloudflare": "使用 Workers 与 D1 在 Cloudflare 上部署代理服务和管理后台。",
+			"docker": "使用 Postgres 或 MySQL 自托管，掌控数据面和运行环境。"
+		},
+		"cta": {
+			"title": "准备好统一你的 AI 能力了吗？",
+			"description": "从一个入口开始，逐步接入模型、媒体能力与智能体工具。",
+			"console": "进入控制台",
+			"deploymentDocs": "查看部署文档"
+		},
+		"footer": {
+			"description": "AI 能力网关与运营控制面"
+		}
+	},
 	"brand": {
 		"wordmark": "Octafuse",
 		"product": "Octafuse Gateway",

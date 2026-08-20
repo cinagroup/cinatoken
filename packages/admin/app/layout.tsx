@@ -31,7 +31,7 @@ export default async function RootLayout({
 
 	return (
 		<html lang={locale} data-scroll-behavior="smooth">
-			<body className="font-sans h-dvh overflow-hidden">
+			<body className="min-h-screen bg-white font-sans">
 				<NextIntlClientProvider locale={locale} messages={messages}>
 					<DocumentTitle />
 					<AuthWrapper>{children}</AuthWrapper>
