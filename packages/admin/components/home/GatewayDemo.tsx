@@ -103,11 +103,11 @@ function CodeBlock({ lines }: { lines: DemoLine[] }) {
 
 export default function GatewayDemo() {
 	const t = useTranslations('home.demo');
-	const [activeId, setActiveId] = useState<DemoId>('responses');
-	const activeDemo = DEMOS.find((demo) => demo.id === activeId) ?? DEMOS[1];
+	const [activeId, setActiveId] = useState<DemoId>('chat');
+	const activeDemo = DEMOS.find((demo) => demo.id === activeId) ?? DEMOS[0];
 
 	return (
-		<div className="w-full overflow-hidden rounded-2xl border border-slate-700/80 bg-[#101923] shadow-[0_28px_70px_-36px_rgba(15,23,42,0.7)]">
+		<div className="w-full overflow-hidden rounded-2xl border border-zinc-700 bg-black shadow-[0_30px_100px_-55px_rgba(14,165,233,0.45)]">
 			<div className="flex items-center gap-1 overflow-x-auto border-b border-white/10 px-3 sm:px-5" role="tablist" aria-label={t('tabsLabel')}>
 				{DEMOS.map((demo) => {
 					const selected = demo.id === activeId;
@@ -118,39 +118,45 @@ export default function GatewayDemo() {
 							role="tab"
 							aria-selected={selected}
 							onClick={() => setActiveId(demo.id)}
-							className={`relative shrink-0 px-3 py-4 text-xs font-semibold tracking-wide transition-colors sm:px-4 ${selected ? 'text-cyan-300' : 'text-slate-400 hover:text-slate-200'}`}
+							className={`relative shrink-0 px-3 py-4 text-xs font-medium transition-colors sm:px-4 ${selected ? 'text-white' : 'text-zinc-500 hover:text-zinc-200'}`}
 						>
 							{t(demo.id)}
-							{selected ? <span className="absolute inset-x-2 bottom-0 h-0.5 bg-cyan-400" /> : null}
+							{selected ? <span className="absolute inset-x-2 bottom-0 h-px bg-sky-400 shadow-[0_0_8px_rgba(56,189,248,0.9)]" /> : null}
 						</button>
 					);
 				})}
-				<div className="ml-auto hidden items-center gap-2 pl-4 sm:flex">
+				<div className="ml-auto hidden items-center gap-2 pl-5 sm:flex">
 					<span className="h-1.5 w-1.5 rounded-full bg-emerald-400 shadow-[0_0_10px_rgba(52,211,153,0.7)]" />
-					<span className="font-mono text-[10px] uppercase tracking-[0.18em] text-slate-400">200 OK</span>
+					<span className="font-mono text-[10px] tracking-[0.12em] text-zinc-500">200 OK</span>
 				</div>
 			</div>
 
 			<div className="flex items-center gap-3 border-b border-white/10 px-5 py-3.5">
-				<span className="rounded-md bg-cyan-400/10 px-2 py-1 font-mono text-[10px] font-bold tracking-wide text-cyan-300">POST</span>
-				<code className="truncate font-mono text-xs text-slate-200 sm:text-sm">{activeDemo.endpoint}</code>
+				<span className="font-mono text-[10px] font-medium tracking-[0.12em] text-sky-400">POST</span>
+				<code className="truncate font-mono text-[11px] text-zinc-400 sm:text-xs">https://api.cinatoken.com{activeDemo.endpoint}</code>
 			</div>
 
-			<div className="grid min-h-[430px] grid-rows-2 font-mono">
-				<div className="px-5 py-5 sm:px-6">
-					<p className="mb-3 font-sans text-[10px] font-bold uppercase tracking-[0.2em] text-slate-500">{t('request')}</p>
-					<div className="mb-2 text-[11px] text-slate-400 sm:text-xs">
+			<div className="grid min-h-[310px] font-mono md:grid-cols-2">
+				<div className="border-b border-white/10 px-5 py-5 sm:px-6 md:border-b-0 md:border-r">
+					<p className="mb-3 font-sans text-[10px] font-semibold uppercase tracking-[0.18em] text-zinc-600">{t('request')}</p>
+					<div className="mb-2 text-[11px] text-zinc-500 sm:text-xs">
 						<span className="text-cyan-300">curl</span> -X POST {activeDemo.endpoint}
 					</div>
 					<CodeBlock lines={activeDemo.request} />
 				</div>
-				<div className="border-t border-white/10 bg-white/[0.025] px-5 py-5 sm:px-6">
+				<div className="bg-white/[0.018] px-5 py-5 sm:px-6">
 					<div className="mb-3 flex items-center justify-between">
-						<p className="font-sans text-[10px] font-bold uppercase tracking-[0.2em] text-slate-500">{t('response')}</p>
+						<p className="font-sans text-[10px] font-semibold uppercase tracking-[0.18em] text-zinc-600">{t('response')}</p>
 						<span className="font-mono text-[10px] text-emerald-300 sm:hidden">200 OK</span>
 					</div>
 					<CodeBlock lines={activeDemo.response} />
 				</div>
+			</div>
+
+			<div className="flex flex-wrap items-center gap-x-8 gap-y-2 border-t border-white/10 px-5 py-3 font-mono text-[10px] text-zinc-600 sm:px-6">
+				<span className="text-emerald-400">200 OK</span>
+				<span>238 ms</span>
+				<span>cinatoken · {t('routeStable')}</span>
 			</div>
 		</div>
 	);

@@ -25,6 +25,12 @@
 			"docs": "Docs",
 			"console": "Open console"
 		},
+		"theme": {
+			"label": "Color mode",
+			"light": "Light",
+			"dark": "Dark",
+			"system": "System"
+		},
 		"hero": {
 			"titleLine1": "One gateway for",
 			"titleLine2": "every AI capability",
@@ -39,7 +45,8 @@
 			"images": "Images",
 			"tools": "Tools",
 			"request": "Request",
-			"response": "Response"
+			"response": "Response",
+			"routeStable": "route stable"
 		},
 		"features": {
 			"title": "An AI capability gateway built for builders",

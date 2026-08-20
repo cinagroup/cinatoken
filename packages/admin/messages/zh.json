@@ -25,9 +25,15 @@
 			"docs": "文档",
 			"console": "进入控制台"
 		},
+		"theme": {
+			"label": "显示模式",
+			"light": "浅色",
+			"dark": "深色",
+			"system": "跟随系统"
+		},
 		"hero": {
 			"titleLine1": "一个入口，",
-			"titleLine2": "连接你的全部 AI 能力",
+			"titleLine2": "连接你的全部 AI\u00a0能力",
 			"description": "统一接入模型、图片、音频与智能体工具，用可控路由、预算和可观测性稳定运行每一次调用。",
 			"console": "进入控制台",
 			"docs": "查看文档"
@@ -39,7 +45,8 @@
 			"images": "Images",
 			"tools": "Tools",
 			"request": "请求",
-			"response": "响应"
+			"response": "响应",
+			"routeStable": "路由稳定"
 		},
 		"features": {
 			"title": "为构建者设计的 AI 能力网关",
