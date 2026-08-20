@@ -1,4 +1,4 @@
-# 运行时与数据存储架构（Octafuse）
+# 运行时与数据存储架构（cinatoken）
 
 `@octafuse/core` 承载统一的类型、仓储与领域逻辑；**对外交付形态**由两套正交选择决定：
 
@@ -50,7 +50,7 @@ flowchart TB
   subgraph cf ["Cloudflare 路径"]
     W["Worker: packages/proxy"]
     P["OpenNext Admin: packages/admin"]
-    D1[(D1 octafuse-gateway)]
+    D1[(D1 cinatoken)]
     W --> D1
     P --> D1
   end

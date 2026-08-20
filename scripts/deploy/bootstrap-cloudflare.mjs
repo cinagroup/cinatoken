@@ -10,7 +10,7 @@
  *
  * Options:
  *   --instance <name>           Env file basename (default: interactive / "default")
- *   --prefix <prefix>           Worker/D1 name prefix (default: octafuse-gateway)
+ *   --prefix <prefix>           Worker/D1 name prefix (default: cinatoken)
  *   --proxy-domain <host>       Optional custom domain for Proxy
  *   --admin-domain <host>       Optional custom domain for Admin
  *   --admin-password-env <VAR>  Read ADMIN_PASSWORD from that env var (non-interactive)
@@ -45,7 +45,7 @@ First-time Cloudflare deploy (Proxy + Admin + shared D1).
 Options:
   --instance <name>           cloudflare-worker/<name>.env (default: default)
   --prefix <prefix>           Names: <prefix>-proxy / -admin / D1 <prefix>
-                              (default: octafuse-gateway)
+                              (default: cinatoken)
   --proxy-domain <host>       Optional Proxy custom domain
   --admin-domain <host>       Optional Admin custom domain
   --admin-password-env <VAR>  Password from process.env[VAR] (no prompt)
@@ -143,9 +143,9 @@ async function main() {
 		prefix = interactive
 			? await promptLine(
 					"Resource name prefix (Workers + D1)",
-					"octafuse-gateway",
+					"cinatoken",
 				)
-			: "octafuse-gateway";
+			: "cinatoken";
 	}
 
 	const baseNames = namesFromPrefix(prefix);

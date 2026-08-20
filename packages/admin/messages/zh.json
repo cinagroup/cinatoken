@@ -7,8 +7,8 @@
 		"ko": "한국어"
 	},
 	"metadata": {
-		"title": "Octafuse Gateway · 管理后台",
-		"description": "Octafuse Gateway 运营控制台：API Key、上游供应商、模型、路由与分析。基于 AGPLv3 许可。"
+		"title": "cinatoken Gateway · 管理后台",
+		"description": "cinatoken Gateway 运营控制台：API Key、上游供应商、模型、路由与分析。基于 AGPLv3 许可。"
 	},
 	"home": {
 		"metadata": {
@@ -70,22 +70,10 @@
 		"steps": {
 			"title": "从供应商到稳定调用，只需四步",
 			"items": {
-				"providers": {
-					"title": "连接供应商",
-					"description": "配置上游端点与密钥"
-				},
-				"routes": {
-					"title": "发布模型与路由",
-					"description": "定义协议入口、路由池与故障转移"
-				},
-				"keys": {
-					"title": "签发用户密钥",
-					"description": "按用户、项目或客户分配 API Key 与预算"
-				},
-				"observe": {
-					"title": "观察每次调用",
-					"description": "通过日志、审计与分析持续优化"
-				}
+				"providers": { "title": "连接供应商", "description": "配置上游端点与密钥" },
+				"routes": { "title": "发布模型与路由", "description": "定义协议入口、路由池与故障转移" },
+				"keys": { "title": "签发用户密钥", "description": "按用户、项目或客户分配 API Key 与预算" },
+				"observe": { "title": "观察每次调用", "description": "通过日志、审计与分析持续优化" }
 			}
 		},
 		"deployment": {
@@ -104,9 +92,10 @@
 		}
 	},
 	"brand": {
-		"wordmark": "Octafuse",
-		"product": "Octafuse Gateway",
-		"loginHeading": "Octafuse Gateway",
+		"wordmark": "cinatoken",
+		"product": "cinatoken Gateway",
+		"loginHeading": "cinatoken Gateway",
+		"logoAlt": "cinatoken 标志",
 		"sidebarSubtitle": "Gateway · 管理后台",
 		"github": "GitHub",
 		"docs": "Docs",
@@ -197,10 +186,11 @@
 		"kindAudio": "音频"
 	},
 	"auth": {
-		"username": "用户名",
-		"password": "密码",
-		"login": "登录",
-		"loggingIn": "登录中...",
+		"cinaAuthDescription": "使用统一的 CinaAuth 账户安全登录 cinatoken 管理控制台。",
+		"continueWithCinaAuth": "使用 CinaAuth 登录",
+		"createAccount": "注册 CinaAuth 账户",
+		"roleRequirement": "控制台仅允许 super_admin 或 security_admin 角色访问；普通新注册账户不会获得管理权限。",
+		"loginError": "CinaAuth 登录未完成，或当前账户没有 cinatoken 管理权限。",
 		"loggingOut": "退出中...",
 		"logout": "退出登录"
 	},

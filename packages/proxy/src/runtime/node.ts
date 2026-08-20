@@ -60,7 +60,7 @@ function printNodeStartupBanner(
 	const lines = [
 		'',
 		'────────────────────────────────────────────────────────────',
-		`  octafuse · gateway-proxy · ${runtimeLabel}`,
+		`  cinatoken · gateway-proxy · ${runtimeLabel}`,
 		'────────────────────────────────────────────────────────────',
 		`  服务地址       ${base}`,
 		`  健康检查       GET  ${base}/health`,

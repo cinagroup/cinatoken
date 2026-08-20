@@ -13,14 +13,14 @@ services:
   mysql:
     image: mysql:8.4
     environment:
-      MYSQL_ROOT_PASSWORD: octafuse_root
-      MYSQL_DATABASE: octafuse
-      MYSQL_USER: octafuse
-      MYSQL_PASSWORD: octafuse
+      MYSQL_ROOT_PASSWORD: cinatoken_root
+      MYSQL_DATABASE: cinatoken
+      MYSQL_USER: cinatoken
+      MYSQL_PASSWORD: cinatoken
     ports:
       - "${MYSQL_HOST_PORT:-3306}:3306"
     volumes:
-      - octafuse_mysql:/var/lib/mysql
+      - cinatoken_mysql:/var/lib/mysql
     command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
     healthcheck:
       test:
@@ -30,8 +30,8 @@ services:
           "ping",
           "-h",
           "127.0.0.1",
-          "-uoctafuse",
-          "-poctafuse",
+          "-ucinatoken",
+          "-pcinatoken",
         ]
       interval: 5s
       timeout: 5s
@@ -45,7 +45,7 @@ services:
       dockerfile: Dockerfile.migrate
     environment:
       DATABASE_DRIVER: mysql
-      DATABASE_URL: mysql://octafuse:octafuse@mysql:3306/octafuse
+      DATABASE_URL: mysql://cinatoken:cinatoken@mysql:3306/cinatoken
     depends_on:
       mysql:
         condition: service_healthy
@@ -59,7 +59,7 @@ services:
       - "${GATEWAY_PROXY_HOST_PORT:-8787}:8787"
     environment:
       DATABASE_DRIVER: mysql
-      DATABASE_URL: mysql://octafuse:octafuse@mysql:3306/octafuse
+      DATABASE_URL: mysql://cinatoken:cinatoken@mysql:3306/cinatoken
       PORT: "8787"
     depends_on:
       mysql:
@@ -85,7 +85,7 @@ services:
       - "${GATEWAY_ADMIN_HOST_PORT:-8789}:8789"
     environment:
       DATABASE_DRIVER: mysql
-      DATABASE_URL: mysql://octafuse:octafuse@mysql:3306/octafuse
+      DATABASE_URL: mysql://cinatoken:cinatoken@mysql:3306/cinatoken
       PORT: "8789"
       ADMIN_USERNAME: admin
       ADMIN_PASSWORD: "changeme"
@@ -108,4 +108,4 @@ services:
       start_period: 40s
 
 volumes:
-  octafuse_mysql:
+  cinatoken_mysql:

@@ -1,4 +1,4 @@
-# Contributing to Octafuse Gateway
+# Contributing to cinatoken Gateway
 
 Thanks for your interest in improving this project.
 
@@ -25,7 +25,7 @@ All participants are expected to follow the [Contributor Covenant Code of Conduc
 
 ## Releases (maintainers)
 
-This repo uses **[Changesets](https://github.com/changesets/changesets)** in **fixed** mode: one shared version for `octafuse`, `@octafuse/core`, `@octafuse/proxy`, and `@octafuse/admin`.
+This repo uses **[Changesets](https://github.com/changesets/changesets)** in **fixed** mode: one shared version for `cinatoken`, `@octafuse/core`, `@octafuse/proxy`, and `@octafuse/admin`.
 
 - Contributors normally target **`develop`**. For user-visible changes, run `npx changeset` and commit the generated `.changeset/*.md` with the PR; maintainers may allow deferring it until release preparation.
 - Maintainers merge release-ready **`develop`** (or a temporary `release/X.Y.Z` branch) into **`main`**. GitHub Actions then opens a **Version Packages** PR; review and merge it.

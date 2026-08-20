@@ -1,5 +1,5 @@
 # gateway-admin — Next.js standalone 多阶段（运行层仅含 standalone + static）
-# Build: docker build -f Dockerfile.admin -t octafuse-admin:latest .
+# Build: docker build -f Dockerfile.admin -t cinatoken-admin:latest .
 # Base: Node 22 on Alpine 3.22, pinned digest for reproducible builds / scanner baselines.
 # Bump digest: docker buildx imagetools inspect docker.io/library/node:22-alpine3.22
 ARG NODE_IMAGE=node:22-alpine3.22@sha256:b77017c37f430e4466ff497058948a2f16e8b59779600d53711eeb7b999b0f4e

@@ -5,8 +5,8 @@
 个人与小流量通常可在 Cloudflare Workers / D1 **免费额度**内完成部署与日常使用。不用 Cloudflare 时，见 [operators/deployment/](../operators/deployment/)（含 [Docker](../operators/deployment/docker.md)）。
 
 ```bash
-git clone https://github.com/OctaFuse/octafuse-gateway.git
-cd octafuse-gateway
+git clone https://github.com/cinagroup/cinatoken.git
+cd cinatoken
 ```
 
 ## 1. 本机启动（本地 D1）

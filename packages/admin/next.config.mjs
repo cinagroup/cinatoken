@@ -5,7 +5,7 @@ import { fileURLToPath } from 'url';
 const withNextIntl = createNextIntlPlugin('./lib/i18n.ts');
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-/** npm workspace 根（`octafuse/`），与 hoist 的 `next` 一致 */
+/** npm workspace 根（`cinatoken/`），与 hoist 的 `next` 一致 */
 const workspaceRoot = path.join(__dirname, '../..');
 
 /** Admin/OpenNext 的 `node` 条件会解析到过期的 `core/dist`；强制根导入走 src。 */

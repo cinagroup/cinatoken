@@ -108,7 +108,7 @@ export function buildDashScopeRealtimeTtsTemplate(providerModelName?: string | n
 					enable_ssml: false,
 				},
 				// 调试台约定：这里的 text 只作为编辑器输入，发送时会移入 continue-task。
-				input: { text: '你好，欢迎使用 OctaFuse Gateway。' },
+				input: { text: '你好，欢迎使用 cinatoken Gateway。' },
 			},
 		},
 		null,
@@ -121,7 +121,7 @@ export function buildDashScopeSpeechBodyTemplate(providerModelName?: string | nu
 	return JSON.stringify(
 		{
 			model: '<auto>',
-			input: '你好，欢迎使用 OctaFuse Gateway。',
+			input: '你好，欢迎使用 cinatoken Gateway。',
 			voice: dashScopeTtsVoiceForModel(providerModelName),
 			response_format: 'wav',
 			speed: 1,

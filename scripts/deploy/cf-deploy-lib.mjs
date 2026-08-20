@@ -412,7 +412,7 @@ export async function promptYesNo(question, defaultYes = true) {
 
 /**
  * Build default Worker / D1 names from a prefix.
- * @param {string} prefix e.g. octafuse-gateway
+ * @param {string} prefix e.g. cinatoken
  */
 export function namesFromPrefix(prefix) {
 	const p = prefix.replace(/\/+$/, "").trim();

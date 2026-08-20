@@ -1,4 +1,4 @@
-# `scripts/` (Octafuse)
+# `scripts/` (cinatoken)
 
 Non-runtime helpers: smoke tests, DB migration / reconciliation tooling, and dev UX scripts. Business logic lives in **`packages/core`**, **`packages/proxy`**, **`packages/admin`**.
 

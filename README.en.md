@@ -1,24 +1,28 @@
-# Octafuse Gateway
+<p align="center">
+  <img src="./packages/admin/public/brand/logo.png" alt="cinatoken logo" width="160" />
+</p>
+
+# cinatoken Gateway
 
 [![License: AGPL v3](https://img.shields.io/badge/License-AGPL%20v3-blue.svg)](./LICENSE)
-[![Release](https://img.shields.io/github/v/release/OctaFuse/octafuse-gateway?sort=semver&display_name=tag&color=2f80ed)](https://github.com/OctaFuse/octafuse-gateway/releases)
-[![Package Versions](https://github.com/OctaFuse/octafuse-gateway/actions/workflows/verify-package-versions.yml/badge.svg)](https://github.com/OctaFuse/octafuse-gateway/actions/workflows/verify-package-versions.yml)
+[![Release](https://img.shields.io/github/v/release/cinagroup/cinatoken?sort=semver&display_name=tag&color=2f80ed)](https://github.com/cinagroup/cinatoken/releases)
+[![Package Versions](https://github.com/cinagroup/cinatoken/actions/workflows/verify-package-versions.yml/badge.svg)](https://github.com/cinagroup/cinatoken/actions/workflows/verify-package-versions.yml)
 [![Node.js](https://img.shields.io/badge/Node.js-20%2B-339933?logo=node.js&logoColor=white)](./.nvmrc)
 [![Cloudflare Workers](https://img.shields.io/badge/Cloudflare-Workers%20%2B%20D1-F38020?logo=cloudflare&logoColor=white)](./docs/operators/deployment/cloudflare-quickstart.md)
 [![Docker](https://img.shields.io/badge/Docker-optional-2496ED?logo=docker&logoColor=white)](./docs/operators/deployment/docker.md)
 
-**Octafuse Gateway** is a self-hostable, open-source AI gateway built for agents. It brings together multi-provider models, OpenAI Responses, image generation and editing, ASR / TTS / realtime speech, Agent Tools, and self-hosted or privately deployed AI services behind a single endpoint. Centralized routing, key management, budgets, usage tracking, and auditing make these resources easier to operate, orchestrate, and govern. More than a model proxy, Octafuse provides a centralized, extensible foundation for discovering, invoking, and managing AI capabilities.
+**cinatoken Gateway** is a self-hostable, open-source AI gateway built for agents. It brings together multi-provider models, OpenAI Responses, image generation and editing, ASR / TTS / realtime speech, Agent Tools, and self-hosted or privately deployed AI services behind a single endpoint. Centralized routing, key management, budgets, usage tracking, and auditing make these resources easier to operate, orchestrate, and govern. More than a model proxy, cinatoken provides a centralized, extensible foundation for discovering, invoking, and managing AI capabilities.
 
-**Languages:** [中文](./README.md) · [English](./README.en.md) · [日本語](./README.ja.md) · [한국어](./README.ko.md) · **Website:** [octafuse.dev](https://octafuse.dev/en/)
+**Languages:** [中文](./README.md) · [English](./README.en.md) · [日本語](./README.ja.md) · [한국어](./README.ko.md) · **Repository:** [cinagroup/cinatoken](https://github.com/cinagroup/cinatoken)
 
 ## Core Capabilities
 
-Octafuse Gateway is designed to serve as a **unified AI capability hub for one-person companies (OPCs) and enterprises**. It brings multimodal AI resources and tool capabilities under one entry point with enterprise-grade distribution, billing, and operational control.
+cinatoken Gateway is designed to serve as a **unified AI capability hub for one-person companies (OPCs) and enterprises**. It brings multimodal AI resources and tool capabilities under one entry point with enterprise-grade distribution, billing, and operational control.
 
 Its core capabilities include:
 
-1. Provider onboarding: Connect model vendors and aggregation platforms. A large preset catalog, including Coding / Token Plans, lets you import endpoints with one click and then add the corresponding API key. See the [Providers Catalog](https://octafuse.dev/en/catalog/providers/); PRs for additional preset Providers are welcome.
-2. AI model onboarding: Import models from built-in catalog data without manually configuring common parameters and pricing. See the [Models Catalog](https://octafuse.dev/en/catalog/models/); PRs for additional models are welcome.
+1. Provider onboarding: Connect model vendors and aggregation platforms. A large preset catalog, including Coding / Token Plans, lets you import endpoints with one click and then add the corresponding API key. See the repository's [provider import catalog](./packages/admin/lib/provider-import-presets.json); PRs for additional preset Providers are welcome.
+2. AI model onboarding: Import models from built-in catalog data without manually configuring common parameters and pricing. See the repository's [model preset catalog](./packages/admin/lib/model-presets/); PRs for additional models are welcome.
 3. Multi-protocol access:
     - OpenAI endpoints:
       - Chat Completions: `POST /v1/chat/completions`
@@ -35,7 +39,7 @@ Its core capabilities include:
     - Deep search (`POST /v1/tools/web-deep-search`, search + read): Firecrawl Search, Jina Search
     - AI-content detection (`POST /v1/tools/ai-detection`): Tencent Cloud TMS is implemented, with a multi-engine catalog ready for expansion
     - More Agent tools are planned, and contributions are welcome.
-5. Unified AI capability endpoint: All connected models, platforms, and tools are exposed through the deployed Octafuse Gateway Base URL, so clients only need to remember one endpoint.
+5. Unified AI capability endpoint: All connected models, platforms, and tools are exposed through the deployed cinatoken Gateway Base URL, so clients only need to remember one endpoint.
 6. Multiple routing strategies: When a model has several upstream resources, choose the strategy that best matches the workload:
     - `hash_affinity`: Default; keeps the same user, model, and protocol on a stable upstream for a **high prompt-cache hit rate** and session continuity, though short-term traffic may be uneven
     - `weighted_random`: Weighted random distribution with **strong load balancing**, suitable for proportional cost allocation or A/B testing; users may switch Providers more often, reducing cache hits
@@ -55,9 +59,9 @@ Its core capabilities include:
 
 ## How It Differs from Other Open-Source AI Gateways
 
-[New API](https://github.com/QuantumNous/new-api), [LiteLLM](https://github.com/BerriAI/litellm), [Sub2API](https://github.com/Wei-Shaw/sub2api), and [Bifrost](https://github.com/maximhq/bifrost) are mature open-source AI gateways with different strengths. Octafuse focuses more specifically on **Agent capability delivery and AI resource operations**, with its main differences concentrated in five areas:
+[New API](https://github.com/QuantumNous/new-api), [LiteLLM](https://github.com/BerriAI/litellm), [Sub2API](https://github.com/Wei-Shaw/sub2api), and [Bifrost](https://github.com/maximhq/bifrost) are mature open-source AI gateways with different strengths. cinatoken focuses more specifically on **Agent capability delivery and AI resource operations**, with its main differences concentrated in five areas:
 
-| Focus area | Built-in Octafuse mechanism | Best suited for |
+| Focus area | Built-in cinatoken mechanism | Best suited for |
 |---|---|---|
 | Agent capabilities | Web search, web fetch, deep search, plus tool invocation logs and billing | Serving models and tools to Agents through one gateway |
 | Resource onboarding | Provider / model presets, multi-protocol endpoints, and one-click import | Managing distributed AI resources centrally |
@@ -77,7 +81,7 @@ Its core capabilities include:
 
 ### Onboarding and Agent capabilities
 
-| Capability | Octafuse | New API | LiteLLM | Sub2API | Bifrost |
+| Capability | cinatoken | New API | LiteLLM | Sub2API | Bifrost |
 |---|:---:|:---:|:---:|:---:|:---:|
 | Provider / model presets and one-click import | ✅ | 🟡 | 🟡 | 🟡 | 🟡 |
 | Native protocol and multimodal coverage | 🟡¹ | ✅ | ✅ | ✅ | ✅ |
@@ -86,7 +90,7 @@ Its core capabilities include:
 
 ### Routing and governance
 
-| Capability | Octafuse | New API | LiteLLM | Sub2API | Bifrost |
+| Capability | cinatoken | New API | LiteLLM | Sub2API | Bifrost |
 |---|:---:|:---:|:---:|:---:|:---:|
 | Protocol / operation-level request surfaces and independent route pools | ✅ | 🟠 | 🟡 | 🟡 | 🟡 |
 | Multiple distribution strategies and layered overrides | ✅ | 🟡 | ✅ | 🟡 | 🟡 |
@@ -97,7 +101,7 @@ Its core capabilities include:
 
 ### Billing
 
-| Capability | Octafuse | New API | LiteLLM | Sub2API | Bifrost |
+| Capability | cinatoken | New API | LiteLLM | Sub2API | Bifrost |
 |---|:---:|:---:|:---:|:---:|:---:|
 | Three ledgers: catalog price, provider cost, and user charge | ✅ | ⚪ | ⚪ | ✅ | ⚪ |
 | Business-timezone time-of-day multipliers | ✅ | ⚪ | ⚪ | 🟡 | ⚪ |
@@ -106,7 +110,7 @@ Its core capabilities include:
 
 ### Operations and deployment
 
-| Capability | Octafuse | New API | LiteLLM | Sub2API | Bifrost |
+| Capability | cinatoken | New API | LiteLLM | Sub2API | Bifrost |
 |---|:---:|:---:|:---:|:---:|:---:|
 | Admin console | ✅ | ✅ | ✅ | ✅ | ✅ |
 | Management API | ✅ | ✅ | ✅ | ✅ | ✅ |
@@ -117,19 +121,19 @@ Its core capabilities include:
 | Docker self-hosting | ✅ | ✅ | ✅ | ✅ | ✅ |
 | Cloudflare Workers edge deployment | ✅ | ⚪ | ⚪ | ⚪ | ⚪ |
 
-<sup>1</sup> Octafuse's native protocol and multimodal coverage is still being expanded.
+<sup>1</sup> cinatoken's native protocol and multimodal coverage is still being expanded.
 
 </details>
 
-Ratings are based on each project's current public repository and official documentation, with emphasis on whether the capability is built in as a cohesive mechanism. Performance, community size, commercial support, and custom-development potential are out of scope. This comparison reflects Octafuse's product positioning rather than ranking every feature across all projects. Refer to each project's latest official documentation for current capabilities and licensing.
+Ratings are based on each project's current public repository and official documentation, with emphasis on whether the capability is built in as a cohesive mechanism. Performance, community size, commercial support, and custom-development potential are out of scope. This comparison reflects cinatoken's product positioning rather than ranking every feature across all projects. Refer to each project's latest official documentation for current capabilities and licensing.
 
 ## Quick Start
 
 Requires **Node.js 20+**. Run Proxy and Admin concurrently in **two terminals**.
 
 ```bash
-git clone https://github.com/OctaFuse/octafuse-gateway.git
-cd octafuse-gateway
+git clone https://github.com/cinagroup/cinatoken.git
+cd cinatoken
 npm install
 npm run db:migrate
 ```

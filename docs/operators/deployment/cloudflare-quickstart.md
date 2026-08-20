@@ -1,6 +1,6 @@
-# 从零部署 Octafuse Gateway 到 Cloudflare Workers
+# 从零部署 cinatoken Gateway 到 Cloudflare Workers
 
-本文面向第一次接触 Octafuse Gateway 的部署者，从一个 Cloudflare 账号开始，完成以下完整链路：
+本文面向第一次接触 cinatoken Gateway 的部署者，从一个 Cloudflare 账号开始，完成以下完整链路：
 
 1. 获取并确认最新版代码；
 2. 创建共享 D1 数据库；
@@ -29,7 +29,7 @@ Operator
 
 ## 版本基线
 
-当前仓库版本为 **Octafuse Gateway 2.3.0**，D1 迁移共 **21 个**（截至 `0021_route_strategy_display_ids.sql`）。跨版本升级必须按编号应用全部未执行迁移；从 1.11.x 升级先阅读 [2.0 升级指南](../migrations/single-provider-key-cutover.md)，从 2.2.0 升级 2.3.0 见 [迁移与切换索引](../README.md#迁移与切换)（0020 → 0021）。
+当前仓库版本为 **cinatoken Gateway 2.3.0**，D1 迁移共 **21 个**（截至 `0021_route_strategy_display_ids.sql`）。跨版本升级必须按编号应用全部未执行迁移；从 1.11.x 升级先阅读 [2.0 升级指南](../migrations/single-provider-key-cutover.md)，从 2.2.0 升级 2.3.0 见 [迁移与切换索引](../README.md#迁移与切换)（0020 → 0021）。
 
 下列构建体积来自 2026-07-24 对 `1.10.2` 的历史实测，仅用于量级参考；当前部署应以本次终端输出为准：
 
@@ -76,8 +76,8 @@ npm --version
 ## 2. 获取最新版并安装锁定依赖
 
 ```bash
-git clone https://github.com/OctaFuse/octafuse-gateway.git
-cd octafuse-gateway
+git clone https://github.com/cinagroup/cinatoken.git
+cd cinatoken
 npm ci
 ```
 
@@ -122,15 +122,15 @@ npx wrangler whoami
 | 名称 | 作用 | 示例 |
 |------|------|------|
 | Instance name | 本地私有配置文件名：`cloudflare-worker/<instance>.env` | `production` |
-| Prefix | Cloudflare 资源前缀 | `my-octafuse` |
+| Prefix | Cloudflare 资源前缀 | `my-cinatoken` |
 
-如果 Prefix 为 `my-octafuse`，脚本会创建：
+如果 Prefix 为 `my-cinatoken`，脚本会创建：
 
 ```text
-D1:            my-octafuse
-Proxy Worker:  my-octafuse-proxy
-Admin Worker:  my-octafuse-admin
-Migration name: my-octafuse-d1-migrations
+D1:            my-cinatoken
+Proxy Worker:  my-cinatoken-proxy
+Admin Worker:  my-cinatoken-admin
+Migration name: my-cinatoken-d1-migrations
 ```
 
 最后一个名称只写入迁移配置，**不会**创建第三个 Worker。
@@ -138,9 +138,9 @@ Migration name: my-octafuse-d1-migrations
 同一账号部署测试、预发布和生产时，请使用不同 Prefix，例如：
 
 ```text
-my-octafuse-test
-my-octafuse-staging
-my-octafuse-prod
+my-cinatoken-test
+my-cinatoken-staging
+my-cinatoken-prod
 ```
 
 ---
@@ -156,7 +156,7 @@ npm run bootstrap:cloudflare
 按提示填写：
 
 1. **Instance name**：例如 `production`；
-2. **Prefix**：例如 `my-octafuse-prod`；
+2. **Prefix**：例如 `my-cinatoken-prod`；
 3. **Custom domains**：第一次选 `N`；
 4. D1 迁移确认：输入 `y`；
 5. **ADMIN_PASSWORD**：输入一个强密码。
@@ -172,7 +172,7 @@ export BOOTSTRAP_ADMIN_PASSWORD='replace-with-a-long-random-password'
 
 npm run bootstrap:cloudflare -- \
   --instance production \
-  --prefix my-octafuse-prod \
+  --prefix my-cinatoken-prod \
   --admin-password-env BOOTSTRAP_ADMIN_PASSWORD \
   --yes
 
@@ -184,7 +184,7 @@ unset BOOTSTRAP_ADMIN_PASSWORD
 若同时省略 `--admin-password-env`，脚本会为了避免把默认弱密码写入生产而跳过 Secret 设置；此时必须手动执行：
 
 ```bash
-npx wrangler secret put ADMIN_PASSWORD --name my-octafuse-prod-admin
+npx wrangler secret put ADMIN_PASSWORD --name my-cinatoken-prod-admin
 ```
 
 ### 引导脚本实际执行了什么
@@ -214,11 +214,11 @@ https://<prefix>-proxy.<account-subdomain>.workers.dev
 https://<prefix>-admin.<account-subdomain>.workers.dev
 ```
 
-例如 Prefix 为 `my-octafuse-prod`：
+例如 Prefix 为 `my-cinatoken-prod`：
 
 ```env
-GATEWAY_URL=https://my-octafuse-prod-proxy.<account-subdomain>.workers.dev
-GATEWAY_MASTER_URL=https://my-octafuse-prod-admin.<account-subdomain>.workers.dev
+GATEWAY_URL=https://my-cinatoken-prod-proxy.<account-subdomain>.workers.dev
+GATEWAY_MASTER_URL=https://my-cinatoken-prod-admin.<account-subdomain>.workers.dev
 ```
 
 `<account-subdomain>` 不是 Account ID。请复制 Wrangler 的真实输出，或打开 Cloudflare Dashboard → Workers & Pages → 对应 Worker 查看 URL。
@@ -303,7 +303,7 @@ npx dotenv -e ./cloudflare-worker/production.env -- \
   npm run gen:wrangler -- --remote
 
 npx dotenv -e ./cloudflare-worker/production.env -- \
-  npx wrangler d1 execute my-octafuse-prod \
+  npx wrangler d1 execute my-cinatoken-prod \
   --remote \
   --config ./packages/core/wrangler.d1.jsonc \
   --command 'SELECT COUNT(*) AS applied FROM d1_migrations;'
@@ -430,7 +430,7 @@ curl -sS "$GATEWAY_URL/catalog/models"
 完整 Key 通常只展示一次。下文把它记为：
 
 ```bash
-export OCTAFUSE_API_KEY='sk-your-user-key'
+export CINATOKEN_API_KEY='sk-your-user-key'
 ```
 
 不要用主密钥代替用户 Key 调用代理服务。
@@ -443,7 +443,7 @@ export OCTAFUSE_API_KEY='sk-your-user-key'
 
 ```bash
 curl -sS "$GATEWAY_URL/v1/models" \
-  -H "Authorization: Bearer $OCTAFUSE_API_KEY"
+  -H "Authorization: Bearer $CINATOKEN_API_KEY"
 ```
 
 ### 10.2 OpenAI-compatible Chat Completions
@@ -452,14 +452,14 @@ curl -sS "$GATEWAY_URL/v1/models" \
 
 ```bash
 curl -sS "$GATEWAY_URL/v1/chat/completions" \
-  -H "Authorization: Bearer $OCTAFUSE_API_KEY" \
+  -H "Authorization: Bearer $CINATOKEN_API_KEY" \
   -H 'Content-Type: application/json' \
   -d '{
     "model": "your-model-id",
     "messages": [
       {
         "role": "user",
-        "content": "Say hello from Octafuse Gateway."
+        "content": "Say hello from cinatoken Gateway."
       }
     ]
   }'
@@ -471,11 +471,11 @@ curl -sS "$GATEWAY_URL/v1/chat/completions" \
 
 ```bash
 curl -sS "$GATEWAY_URL/v1/responses" \
-  -H "Authorization: Bearer $OCTAFUSE_API_KEY" \
+  -H "Authorization: Bearer $CINATOKEN_API_KEY" \
   -H 'Content-Type: application/json' \
   -d '{
     "model": "your-model-id",
-    "input": [{"role": "user", "content": "Say hello from Octafuse Responses."}],
+    "input": [{"role": "user", "content": "Say hello from cinatoken Responses."}],
     "stream": false
   }'
 ```
@@ -486,9 +486,9 @@ curl -sS "$GATEWAY_URL/v1/responses" \
 
 ```bash
 curl -sS "$GATEWAY_URL/v1/tools/web-search" \
-  -H "Authorization: Bearer $OCTAFUSE_API_KEY" \
+  -H "Authorization: Bearer $CINATOKEN_API_KEY" \
   -H 'Content-Type: application/json' \
-  -d '{"query":"Octafuse Gateway","count":5}'
+  -d '{"query":"cinatoken Gateway","count":5}'
 ```
 
 如果返回上游响应，部署与配置已经从零到一完成。随后可在管理后台的 **请求日志（Request Logs）**、**分析（Analytics）** 和用户预算页面查看这次调用。

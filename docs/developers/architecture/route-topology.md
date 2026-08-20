@@ -1,6 +1,6 @@
 # 路由拓扑：请求入口 → 路由池 → 上游目标
 
-Octafuse Gateway 2.0 在原有 `models` / `model_routes` 之上增加显式路由拓扑，把“客户端如何进入模型”和“请求最终发往哪个上游”拆开表示：
+cinatoken Gateway 2.0 在原有 `models` / `model_routes` 之上增加显式路由拓扑，把“客户端如何进入模型”和“请求最终发往哪个上游”拆开表示：
 
 ```text
 model + route_group + request protocol + operation

@@ -1,5 +1,5 @@
 # gateway-migrate — 一次性 Postgres / MySQL 迁移 Job（不含 proxy / admin 应用代码）
-# Build: docker build -f Dockerfile.migrate -t octafuse-migrate:latest .
+# Build: docker build -f Dockerfile.migrate -t cinatoken-migrate:latest .
 # Base: Node 22 on Alpine 3.22, pinned digest (see Dockerfile.admin).
 ARG NODE_IMAGE=node:22-alpine3.22@sha256:b77017c37f430e4466ff497058948a2f16e8b59779600d53711eeb7b999b0f4e
 

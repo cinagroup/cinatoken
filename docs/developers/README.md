@@ -4,7 +4,7 @@
 
 - 想把 Gateway 接入自己门户、后台、SaaS 或自动化系统的集成开发者。
 - 想基于本仓做二次开发的开发者。
-- 想给 Octafuse Gateway 提交开源贡献的贡献者。
+- 想给 cinatoken Gateway 提交开源贡献的贡献者。
 
 ## 路线
 

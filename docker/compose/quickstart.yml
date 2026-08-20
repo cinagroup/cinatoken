@@ -20,13 +20,13 @@ services:
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: octafuse
+      POSTGRES_DB: cinatoken
     ports:
       - "${POSTGRES_HOST_PORT:-5432}:5432"
     volumes:
-      - octafuse_quickstart_pg:/var/lib/postgresql/data
+      - cinatoken_quickstart_pg:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres -d octafuse"]
+      test: ["CMD-SHELL", "pg_isready -U postgres -d cinatoken"]
       interval: 5s
       timeout: 3s
       retries: 10
@@ -37,7 +37,7 @@ services:
       dockerfile: Dockerfile.migrate
     environment:
       DATABASE_DRIVER: postgres
-      DATABASE_URL: postgres://postgres:postgres@postgres:5432/octafuse
+      DATABASE_URL: postgres://postgres:postgres@postgres:5432/cinatoken
     depends_on:
       postgres:
         condition: service_healthy
@@ -51,7 +51,7 @@ services:
       - "${GATEWAY_PROXY_HOST_PORT:-8787}:8787"
     environment:
       DATABASE_DRIVER: postgres
-      DATABASE_URL: postgres://postgres:postgres@postgres:5432/octafuse
+      DATABASE_URL: postgres://postgres:postgres@postgres:5432/cinatoken
       PORT: "8787"
     depends_on:
       postgres:
@@ -79,7 +79,7 @@ services:
       - "${GATEWAY_ADMIN_HOST_PORT:-8789}:8789"
     environment:
       DATABASE_DRIVER: postgres
-      DATABASE_URL: postgres://postgres:postgres@postgres:5432/octafuse
+      DATABASE_URL: postgres://postgres:postgres@postgres:5432/cinatoken
       PORT: "8789"
       ADMIN_USERNAME: admin
       ADMIN_PASSWORD: "changeme"
@@ -104,4 +104,4 @@ services:
       start_period: 40s
 
 volumes:
-  octafuse_quickstart_pg:
+  cinatoken_quickstart_pg:

@@ -1,6 +1,6 @@
 # Proxy 请求处理逻辑
 
-本文档描述 **octafuse-gateway** `packages/proxy` 在收到一次 AI 推理请求后，从 HTTP 入口到上游供应商调用、故障转移（Failover）、异步记账的完整处理路径。
+本文档描述 **cinatoken** `packages/proxy` 在收到一次 AI 推理请求后，从 HTTP 入口到上游供应商调用、故障转移（Failover）、异步记账的完整处理路径。
 
 **适用路由**（三协议共用同一调度内核，差异仅在协议过滤与 egress driver）：
 

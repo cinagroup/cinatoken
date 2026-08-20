@@ -34,7 +34,7 @@ function refExists(ref) {
 
 if (!refExists(`refs/tags/${vTag}`)) {
 	const candidates = [
-		`octafuse@${version}`,
+		`cinatoken@${version}`,
 		`@octafuse/core@${version}`,
 		`@octafuse/proxy@${version}`,
 		`@octafuse/admin@${version}`,

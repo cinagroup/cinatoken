@@ -30,13 +30,13 @@ describe('matchAdminNavRoute', () => {
 describe('formatAdminDocumentTitle', () => {
 	it('puts the page function before the product title', () => {
 		assert.equal(
-			formatAdminDocumentTitle('Simulator', 'Octafuse Gateway · Admin'),
-			'Simulator · Octafuse Gateway · Admin',
+			formatAdminDocumentTitle('Simulator', 'cinatoken Gateway · Admin'),
+			'Simulator · cinatoken Gateway · Admin',
 		);
 	});
 
 	it('falls back to the product title when the page is unknown', () => {
-		assert.equal(formatAdminDocumentTitle(null, 'Octafuse Gateway · Admin'), 'Octafuse Gateway · Admin');
-		assert.equal(formatAdminDocumentTitle('  ', 'Octafuse Gateway · Admin'), 'Octafuse Gateway · Admin');
+		assert.equal(formatAdminDocumentTitle(null, 'cinatoken Gateway · Admin'), 'cinatoken Gateway · Admin');
+		assert.equal(formatAdminDocumentTitle('  ', 'cinatoken Gateway · Admin'), 'cinatoken Gateway · Admin');
 	});
 });

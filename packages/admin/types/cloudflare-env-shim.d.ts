@@ -9,8 +9,18 @@ declare namespace Cloudflare {
 	interface Env {
 		DB: D1Database;
 		ASSETS: Fetcher;
-		ADMIN_USERNAME: string;
-		ADMIN_PASSWORD: string;
+		CINAAUTH_AUTH_SERVICE: Fetcher;
+		CINAAUTH_ISSUER: string;
+		CINAAUTH_ACCOUNT_ORIGIN: string;
+		CINATOKEN_APP_ORIGIN: string;
+		CINATOKEN_OIDC_CLIENT_ID: string;
+		CINATOKEN_REQUIRED_ROLES: string;
+		CINATOKEN_OIDC_CLIENT_SECRET: string;
+		CINATOKEN_OIDC_BRIDGE_SECRET: string;
+		CINATOKEN_OIDC_TRANSACTION_SECRET: string;
+		ADMIN_USERNAME?: string;
+		ADMIN_PASSWORD?: string;
+		ADMIN_COOKIE_SECURE?: string;
 		DATABASE_URL?: string;
 		DATABASE_DRIVER?: string;
 	}

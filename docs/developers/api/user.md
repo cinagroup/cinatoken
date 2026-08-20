@@ -987,7 +987,7 @@ Content-Type: application/json
 curl -sS "$GATEWAY_URL/v1/audio/speech" \
   -H "Authorization: Bearer $USER_API_KEY" \
   -H "Content-Type: application/json" \
-  -d '{"model":"your-tts-model","input":"你好，Octafuse。","voice":"your-voice"}' \
+  -d '{"model":"your-tts-model","input":"你好，cinatoken。","voice":"your-voice"}' \
   --output speech.mp3
 ```
 

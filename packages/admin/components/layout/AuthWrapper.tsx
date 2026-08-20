@@ -1,17 +1,18 @@
 'use client';
 
 /**
- * 根级鉴权壳：未登录时展示登录表单；已登录则渲染 `Sidebar` + 子页面。
- * 会话依赖 `/api/auth/check` 与 `admin_session` cookie。
+ * 根级鉴权壳：未登录时进入 CinaAuth；已登录则渲染 `Sidebar` + 子页面。
+ * 本地会话依赖 `/api/auth/check`，管理权限由服务端向 CinaAuth 实时复核。
  */
 import { useState, useEffect, useCallback, ReactNode } from 'react';
+import Image from 'next/image';
 import { useTranslations } from 'next-intl';
 import { usePathname } from 'next/navigation';
 import BrandExternalLinks from '@/components/layout/BrandExternalLinks';
 import LocaleSwitcher from '@/components/layout/LocaleSwitcher';
 import { BusinessTimezoneProvider } from '@/components/BusinessTimezoneProvider';
 import { ADMIN_SESSION_EXPIRED_EVENT_NAME } from '@/lib/admin-session-events';
-import { readApiJson, readJson } from '@/lib/api-json';
+import { readJson } from '@/lib/api-json';
 import Sidebar from './Sidebar';
 
 interface Props {
@@ -26,8 +27,6 @@ export default function AuthWrapper({ children }: Props) {
   const tCommon = useTranslations('common');
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
   const [loginError, setLoginError] = useState('');
 
   const checkAuth = useCallback(async () => {
@@ -53,6 +52,11 @@ export default function AuthWrapper({ children }: Props) {
   }, [checkAuth]);
 
   useEffect(() => {
+		const authError = new URLSearchParams(window.location.search).get('auth_error');
+		if (authError) setLoginError(t('loginError'));
+	}, [t]);
+
+  useEffect(() => {
     const onSessionExpired = () => {
       void fetch('/api/auth/logout', { method: 'POST' });
       setIsAuthenticated(false);
@@ -72,35 +76,6 @@ export default function AuthWrapper({ children }: Props) {
     return () => document.removeEventListener('visibilitychange', onVisible);
   }, [checkAuth]);
 
-  const handleLogin = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoginError('');
-    setIsLoading(true);
-
-    try {
-      const response = await fetch('/api/auth/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ username, password }),
-      });
-
-      const data = await readApiJson(response);
-
-      if (data.success) {
-        setIsAuthenticated(true);
-      } else {
-        setLoginError(data.message || tCommon('loginFailed'));
-      }
-    } catch (error) {
-      setLoginError(tCommon('networkError'));
-      console.error('Login error:', error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
   if (isPublicHome) {
     return <>{children}</>;
   }
@@ -119,55 +94,48 @@ export default function AuthWrapper({ children }: Props) {
     return (
       <div className="flex items-center justify-center h-screen bg-gray-50">
         <div className="w-full max-w-md rounded-lg bg-white p-8 shadow-md">
-          <div className="mb-6 flex items-start justify-between gap-3">
-            <div className="min-w-0">
-              <h1 className="text-2xl font-bold text-gray-800">{tBrand('loginHeading')}</h1>
-              <p className="mt-1 text-xs text-gray-500">{tBrand('operatorConsole')}</p>
-            </div>
-            <LocaleSwitcher variant="login" />
-          </div>
-          <form onSubmit={handleLogin}>
-            <div className="mb-4">
-              <label htmlFor="username" className="block text-sm font-medium text-gray-700 mb-2">
-                {t('username')}
-              </label>
-              <input
-                id="username"
-                type="text"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900"
-                required
-                autoComplete="username"
+          <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+            <div className="flex min-w-0 items-center gap-3">
+              <Image
+                src="/brand/logo.png"
+                alt={tBrand('logoAlt')}
+                width={52}
+                height={52}
+                priority
+                className="h-[52px] w-[52px] shrink-0 rounded-lg"
               />
-            </div>
-            <div className="mb-6">
-              <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-2">
-                {t('password')}
-              </label>
-              <input
-                id="password"
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900"
-                required
-                autoComplete="current-password"
-              />
-            </div>
-            {loginError && (
-              <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-md text-red-600 text-sm">
-                {loginError}
+              <div className="min-w-0 flex-1">
+                <h1 className="text-xl font-bold leading-tight text-gray-800 sm:text-2xl">
+                  {tBrand('loginHeading')}
+                </h1>
+                <p className="mt-1 text-xs text-gray-500">{tBrand('operatorConsole')}</p>
               </div>
-            )}
-            <button
-              type="submit"
-              disabled={isLoading}
-              className="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              {isLoading ? t('loggingIn') : t('login')}
-            </button>
-          </form>
+            </div>
+            <div className="self-end sm:self-auto">
+              <LocaleSwitcher variant="login" />
+            </div>
+          </div>
+		  <p className="mb-5 text-sm leading-6 text-gray-600">{t('cinaAuthDescription')}</p>
+			{loginError && (
+			  <div className="mb-4 rounded-md border border-red-200 bg-red-50 p-3 text-sm text-red-600">
+				{loginError}
+			  </div>
+			)}
+		  <div className="space-y-3">
+			<a
+			  href="/api/auth/cinaauth/login?callbackURL=%2Fdashboard"
+			  className="flex w-full items-center justify-center rounded-md bg-cyan-600 px-4 py-2.5 font-medium text-white transition-colors hover:bg-cyan-700 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:ring-offset-2"
+			>
+			  {t('continueWithCinaAuth')}
+			</a>
+			<a
+			  href="/api/auth/cinaauth/register?callbackURL=%2Fdashboard"
+			  className="flex w-full items-center justify-center rounded-md border border-gray-300 bg-white px-4 py-2.5 font-medium text-gray-700 transition-colors hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:ring-offset-2"
+			>
+			  {t('createAccount')}
+			</a>
+		  </div>
+		  <p className="mt-4 text-xs leading-5 text-gray-500">{t('roleRequirement')}</p>
           <div className="mt-6 border-t border-gray-100 pt-4">
             <BrandExternalLinks variant="login" />
           </div>

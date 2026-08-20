@@ -58,13 +58,13 @@ describe('DashScope ASR request mapping', () => {
 		assert.equal(audioUploadToDataUrl(request().file), 'data:audio/wav;base64,AQID');
 		const body = buildDashScopeSyncAsrBody(
 			route({ customParams: { asr_options: { enable_itn: true } } }),
-			request({ language: 'zh', prompt: 'Octafuse' }),
+			request({ language: 'zh', prompt: 'cinatoken' }),
 		);
 		assert.deepEqual(body, {
 			model: 'qwen3-asr-flash',
 			input: {
 				messages: [
-					{ role: 'system', content: [{ text: 'Octafuse' }] },
+					{ role: 'system', content: [{ text: 'cinatoken' }] },
 					{ role: 'user', content: [{ audio: 'data:audio/wav;base64,AQID' }] },
 				],
 			},
@@ -106,7 +106,7 @@ describe('DashScope ASR request mapping', () => {
 				customParams: { enable_words: true, channel_id: [0] },
 			}),
 			'https://audio.example/sample.wav',
-			request({ language: 'zh', prompt: 'Octafuse' }),
+			request({ language: 'zh', prompt: 'cinatoken' }),
 		);
 		assert.deepEqual(body, {
 			model: 'qwen3-asr-flash-filetrans',
@@ -115,7 +115,7 @@ describe('DashScope ASR request mapping', () => {
 				context: [
 					{
 						role: 'user',
-						content: [{ type: 'input_text', text: 'Octafuse' }],
+						content: [{ type: 'input_text', text: 'cinatoken' }],
 					},
 				],
 			},

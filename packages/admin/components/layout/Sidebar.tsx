@@ -4,6 +4,7 @@
  * 左侧导航：Dashboard、推理与路由、Tools、分析、系统集成、系统（含 Config 与 Logout）；底部外链与版本号。
  */
 import Link from 'next/link';
+import Image from 'next/image';
 import BrandExternalLinks from '@/components/layout/BrandExternalLinks';
 import LocaleSwitcher from '@/components/layout/LocaleSwitcher';
 import { usePathname, useRouter } from 'next/navigation';
@@ -80,10 +81,20 @@ export default function Sidebar() {
       <div className="flex h-full flex-col">
       {/* Logo / Brand + locale */}
       <div className="flex h-16 items-center justify-between gap-2 bg-gray-950 px-4 leading-tight">
-        <Link href="/dashboard" className="min-w-0 block hover:opacity-90">
-          <span className="block truncate text-lg font-bold tracking-tight text-white">{tBrand('wordmark')}</span>
-          <span className="block truncate text-[11px] font-medium uppercase tracking-wider text-gray-400">
-            {tBrand('sidebarSubtitle')}
+        <Link href="/dashboard" className="flex min-w-0 items-center gap-2.5 hover:opacity-90">
+          <Image
+            src="/brand/logo.png"
+            alt={tBrand('logoAlt')}
+            width={38}
+            height={38}
+            priority
+            className="h-[38px] w-[38px] shrink-0 rounded-md"
+          />
+          <span className="min-w-0">
+            <span className="block truncate text-lg font-bold tracking-tight text-white">{tBrand('wordmark')}</span>
+            <span className="block truncate text-[11px] font-medium uppercase tracking-wider text-gray-400">
+              {tBrand('sidebarSubtitle')}
+            </span>
           </span>
         </Link>
         <LocaleSwitcher variant="header" />

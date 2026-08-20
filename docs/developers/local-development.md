@@ -1,4 +1,4 @@
-# 本地开发与测试：Octafuse
+# 本地开发与测试：cinatoken
 
 本文说明如何在本地组合 **Proxy Worker**、**Admin（OpenNext）** 与 **D1**，以及可选 **Node + Postgres** 或 **Node + MySQL**。整体「运行时 × 数据库」矩阵见 **[architecture/runtime-data.md](./architecture/runtime-data.md)**（canonical）。
 
@@ -25,7 +25,7 @@
 仓库根目录：
 
 - **持久化**：`./.wrangler/state`（与根脚本中 `--persist-to` 保持一致）。
-- **D1 逻辑库名**：默认 `octafuse-gateway`（`npm install` / `postinstall` 会通过 `gen:wrangler` 生成 `packages/proxy/wrangler.jsonc`；模板见 `wrangler.base.jsonc`）。
+- **D1 逻辑库名**：默认 `cinatoken`（`npm install` / `postinstall` 会通过 `gen:wrangler` 生成 `packages/proxy/wrangler.jsonc`；模板见 `wrangler.base.jsonc`）。
 
 ```bash
 npm install
@@ -43,8 +43,8 @@ npm run dev:proxy    # http://127.0.0.1:8787
 
 | `wrangler.jsonc` | 本地 D1 标识（wrangler 日志） | 典型场景 |
 |------------------|-------------------------------|----------|
-| **无** `database_id` | `octafuse-gateway (DB)` | 纯本地开发；`npm run db:migrate` 迁移的是这套 |
-| **有** `database_id` | `octafuse-gateway (<UUID>)` | 执行过 `deploy:*` / `db:migrate:remote`（带 `cloudflare-worker/*.env`）之后 |
+| **无** `database_id` | `cinatoken (DB)` | 纯本地开发；`npm run db:migrate` 迁移的是这套 |
+| **有** `database_id` | `cinatoken (<UUID>)` | 执行过 `deploy:*` / `db:migrate:remote`（带 `cloudflare-worker/*.env`）之后 |
 
 因此会出现：**迁移已成功，但 dev 里看不到数据**（或 provider 数量对不上）——不是路径错了，而是 **migrate 与 dev 读到了两套本地 D1**。
 

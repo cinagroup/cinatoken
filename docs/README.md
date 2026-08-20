@@ -1,4 +1,4 @@
-# Octafuse Gateway 文档
+# cinatoken Gateway 文档
 
 这套文档按读者任务组织。先选择自己的角色，再进入对应目录。
 
@@ -46,6 +46,6 @@
 ## 文档规范
 
 - 文档边界、敏感信息和占位符规则见 [CONVENTIONS.md](./CONVENTIONS.md)。
-- 官网仓库 `octafuse-website` 负责展示与轻量摘要；技术参考入口由官网的 `sync/contract.json` 从本仓白名单生成。
+- 如后续建立独立官网，其仓库负责展示与轻量摘要；技术参考入口应从本仓受控清单生成。
 - 示例 HTTP 请求集中放在 [examples/](../examples/)；文档中只保留最小必要片段。
 - 截图等静态资源放在 [assets/](./assets/)。

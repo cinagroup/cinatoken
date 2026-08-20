@@ -1,24 +1,28 @@
-# Octafuse Gateway
+<p align="center">
+  <img src="./packages/admin/public/brand/logo.png" alt="cinatoken logo" width="160" />
+</p>
+
+# cinatoken Gateway
 
 [![License: AGPL v3](https://img.shields.io/badge/License-AGPL%20v3-blue.svg)](./LICENSE)
-[![Release](https://img.shields.io/github/v/release/OctaFuse/octafuse-gateway?sort=semver&display_name=tag&color=2f80ed)](https://github.com/OctaFuse/octafuse-gateway/releases)
-[![Package Versions](https://github.com/OctaFuse/octafuse-gateway/actions/workflows/verify-package-versions.yml/badge.svg)](https://github.com/OctaFuse/octafuse-gateway/actions/workflows/verify-package-versions.yml)
+[![Release](https://img.shields.io/github/v/release/cinagroup/cinatoken?sort=semver&display_name=tag&color=2f80ed)](https://github.com/cinagroup/cinatoken/releases)
+[![Package Versions](https://github.com/cinagroup/cinatoken/actions/workflows/verify-package-versions.yml/badge.svg)](https://github.com/cinagroup/cinatoken/actions/workflows/verify-package-versions.yml)
 [![Node.js](https://img.shields.io/badge/Node.js-20%2B-339933?logo=node.js&logoColor=white)](./.nvmrc)
 [![Cloudflare Workers](https://img.shields.io/badge/Cloudflare-Workers%20%2B%20D1-F38020?logo=cloudflare&logoColor=white)](./docs/operators/deployment/cloudflare-quickstart.md)
 [![Docker](https://img.shields.io/badge/Docker-optional-2496ED?logo=docker&logoColor=white)](./docs/operators/deployment/docker.md)
 
-**Octafuse Gateway** は、Agent 向けに設計されたセルフホスト可能なオープンソース AI Gateway です。複数の Provider が提供するモデル、OpenAI Responses、画像生成・編集、ASR / TTS / リアルタイム音声、Agent Tools、さらに自社運用またはプライベート環境に展開した AI サービスを統合し、分散した AI リソースを単一のエントリーポイントに集約します。Route、キー、予算、使用量、監査を一元管理することで、リソースの運用、振り分け、制御を効率化します。単なるモデルリクエストの中継にとどまらず、Agent に必要なリソースや機能を、検出・呼び出し・管理できる拡張可能な形で提供します。
+**cinatoken Gateway** は、Agent 向けに設計されたセルフホスト可能なオープンソース AI Gateway です。複数の Provider が提供するモデル、OpenAI Responses、画像生成・編集、ASR / TTS / リアルタイム音声、Agent Tools、さらに自社運用またはプライベート環境に展開した AI サービスを統合し、分散した AI リソースを単一のエントリーポイントに集約します。Route、キー、予算、使用量、監査を一元管理することで、リソースの運用、振り分け、制御を効率化します。単なるモデルリクエストの中継にとどまらず、Agent に必要なリソースや機能を、検出・呼び出し・管理できる拡張可能な形で提供します。
 
-**言語：** [中文](./README.md) · [English](./README.en.md) · [日本語](./README.ja.md) · [한국어](./README.ko.md) · **公式サイト：** [octafuse.dev](https://octafuse.dev/en/)
+**言語：** [中文](./README.md) · [English](./README.en.md) · [日本語](./README.ja.md) · [한국어](./README.ko.md) · **リポジトリ：** [cinagroup/cinatoken](https://github.com/cinagroup/cinatoken)
 
 ## 主な機能
 
-Octafuse Gateway の中核的な目標は、**一人会社（OPC）や企業向けの統合 AI 機能ハブを構築すること**です。保有するマルチモーダル AI リソースと多様なツールを一元的に接続し、配信、課金、運用管理までを統合します。
+cinatoken Gateway の中核的な目標は、**一人会社（OPC）や企業向けの統合 AI 機能ハブを構築すること**です。保有するマルチモーダル AI リソースと多様なツールを一元的に接続し、配信、課金、運用管理までを統合します。
 
 主な機能は次のとおりです。
 
-1. Provider の接続：任意のモデルベンダーや集約プラットフォームを接続できます。Coding / Token Plan を含む多数のプリセットからエンドポイントをワンクリックでインポートし、対応する API Key を追加するだけで利用できます。対応一覧は [Providers Catalog](https://octafuse.dev/en/catalog/providers/) を参照してください。新しい Provider の PR も歓迎します。
-2. AI モデルの接続：組み込みのモデルデータからインポートでき、一般的なモデルパラメータや価格を個別に設定する必要がありません。対応一覧は [Models Catalog](https://octafuse.dev/en/catalog/models/) を参照してください。新しいモデルの PR も歓迎します。
+1. Provider の接続：任意のモデルベンダーや集約プラットフォームを接続できます。Coding / Token Plan を含む多数のプリセットからエンドポイントをワンクリックでインポートし、対応する API Key を追加するだけで利用できます。対応一覧はリポジトリ内の [Provider インポートカタログ](./packages/admin/lib/provider-import-presets.json) を参照してください。新しい Provider の PR も歓迎します。
+2. AI モデルの接続：組み込みのモデルデータからインポートでき、一般的なモデルパラメータや価格を個別に設定する必要がありません。対応一覧はリポジトリ内の [モデルプリセット](./packages/admin/lib/model-presets/) を参照してください。新しいモデルの PR も歓迎します。
 3. 複数プロトコルへの対応：
     - OpenAI エンドポイント：
       - Chat Completions：`POST /v1/chat/completions`
@@ -35,7 +39,7 @@ Octafuse Gateway の中核的な目標は、**一人会社（OPC）や企業向�
     - 深掘り検索（`POST /v1/tools/web-deep-search`、検索 + 読み取り）：Firecrawl Search、Jina Search
     - AI 生成テキスト検出（`POST /v1/tools/ai-detection`）：Tencent Cloud TMS を実装済みで、複数エンジンへ拡張できるカタログを用意しています
     - Agent 向けツールは今後も追加予定で、PR も歓迎します。
-5. AI 機能の統一エンドポイント：接続したモデル、プラットフォーム、ツールは、デプロイ済み Octafuse Gateway の Base URL から提供されます。クライアントが覚える接続先は 1 つだけです。
+5. AI 機能の統一エンドポイント：接続したモデル、プラットフォーム、ツールは、デプロイ済み cinatoken Gateway の Base URL から提供されます。クライアントが覚える接続先は 1 つだけです。
 6. 複数のルーティング戦略：同じモデルに複数のアップストリームリソースがある場合、用途に応じて次の戦略を選択できます。
     - `hash_affinity`：既定の戦略。同一ユーザー、モデル、プロトコルを安定して同じアップストリームに割り当て、**Prompt Cache のヒット率を高める**ため、キャッシュやセッション継続性を重視する用途に適します。短時間のトラフィックは完全に均等にならない場合があります
     - `weighted_random`：重みに応じてランダムに分配し、**高い負荷分散性**を実現します。コストの比率配分や A/B テストに適しますが、同じユーザーでも Provider が頻繁に変わり、キャッシュヒット率が下がる可能性があります
@@ -55,9 +59,9 @@ Octafuse Gateway の中核的な目標は、**一人会社（OPC）や企業向�
 
 ## 他のオープンソース AI Gateway との違い
 
-[New API](https://github.com/QuantumNous/new-api)、[LiteLLM](https://github.com/BerriAI/litellm)、[Sub2API](https://github.com/Wei-Shaw/sub2api)、[Bifrost](https://github.com/maximhq/bifrost) は、それぞれ異なる強みを持つ成熟したオープンソース AI Gateway です。Octafuse は **Agent 機能の提供と AI リソース運用**をより重視しており、主な違いは次の 5 つの領域にあります。
+[New API](https://github.com/QuantumNous/new-api)、[LiteLLM](https://github.com/BerriAI/litellm)、[Sub2API](https://github.com/Wei-Shaw/sub2api)、[Bifrost](https://github.com/maximhq/bifrost) は、それぞれ異なる強みを持つ成熟したオープンソース AI Gateway です。cinatoken は **Agent 機能の提供と AI リソース運用**をより重視しており、主な違いは次の 5 つの領域にあります。
 
-| 重点領域 | Octafuse の組み込み機構 | 適した用途 |
+| 重点領域 | cinatoken の組み込み機構 | 適した用途 |
 |---|---|---|
 | Agent 機能 | Web 検索、Web 取得、深掘り検索、ツール呼び出しログと課金 | 1 つの Gateway から Agent にモデルとツールを提供 |
 | リソース接続 | Provider / モデルプリセット、マルチプロトコルエンドポイント、ワンクリックインポート | 分散した AI リソースの一元管理 |
@@ -77,7 +81,7 @@ Octafuse Gateway の中核的な目標は、**一人会社（OPC）や企業向�
 
 ### 接続と Agent 機能
 
-| 機能の評価項目 | Octafuse | New API | LiteLLM | Sub2API | Bifrost |
+| 機能の評価項目 | cinatoken | New API | LiteLLM | Sub2API | Bifrost |
 |---|:---:|:---:|:---:|:---:|:---:|
 | Provider / モデルプリセットとワンクリックインポート | ✅ | 🟡 | 🟡 | 🟡 | 🟡 |
 | ネイティブプロトコルとマルチモーダル対応 | 🟡¹ | ✅ | ✅ | ✅ | ✅ |
@@ -86,7 +90,7 @@ Octafuse Gateway の中核的な目標は、**一人会社（OPC）や企業向�
 
 ### ルーティングとガバナンス
 
-| 機能の評価項目 | Octafuse | New API | LiteLLM | Sub2API | Bifrost |
+| 機能の評価項目 | cinatoken | New API | LiteLLM | Sub2API | Bifrost |
 |---|:---:|:---:|:---:|:---:|:---:|
 | プロトコル / operation 単位のリクエスト入口と独立 Route Pool | ✅ | 🟠 | 🟡 | 🟡 | 🟡 |
 | 複数の分配戦略と階層別オーバーライド | ✅ | 🟡 | ✅ | 🟡 | 🟡 |
@@ -97,7 +101,7 @@ Octafuse Gateway の中核的な目標は、**一人会社（OPC）や企業向�
 
 ### 課金
 
-| 機能の評価項目 | Octafuse | New API | LiteLLM | Sub2API | Bifrost |
+| 機能の評価項目 | cinatoken | New API | LiteLLM | Sub2API | Bifrost |
 |---|:---:|:---:|:---:|:---:|:---:|
 | カタログ価格、Provider 原価、ユーザー請求の 3 台帳 | ✅ | ⚪ | ⚪ | ✅ | ⚪ |
 | 業務タイムゾーンに基づく時間帯別倍率 | ✅ | ⚪ | ⚪ | 🟡 | ⚪ |
@@ -106,7 +110,7 @@ Octafuse Gateway の中核的な目標は、**一人会社（OPC）や企業向�
 
 ### 運用とデプロイ
 
-| 機能の評価項目 | Octafuse | New API | LiteLLM | Sub2API | Bifrost |
+| 機能の評価項目 | cinatoken | New API | LiteLLM | Sub2API | Bifrost |
 |---|:---:|:---:|:---:|:---:|:---:|
 | 管理画面 | ✅ | ✅ | ✅ | ✅ | ✅ |
 | 管理 API | ✅ | ✅ | ✅ | ✅ | ✅ |
@@ -117,19 +121,19 @@ Octafuse Gateway の中核的な目標は、**一人会社（OPC）や企業向�
 | Docker セルフホスト | ✅ | ✅ | ✅ | ✅ | ✅ |
 | Cloudflare Workers エッジデプロイ | ✅ | ⚪ | ⚪ | ⚪ | ⚪ |
 
-<sup>1</sup> Octafuse のネイティブプロトコルとマルチモーダル対応は引き続き拡充中です。
+<sup>1</sup> cinatoken のネイティブプロトコルとマルチモーダル対応は引き続き拡充中です。
 
 </details>
 
-評価は各プロジェクトの現在の公開リポジトリと公式ドキュメントに基づき、機能が一体的な仕組みとして組み込まれているかを重視しています。性能、コミュニティ規模、商用サポート、追加開発の可能性は評価対象外です。この比較は Octafuse の製品ポジショニングに沿ったものであり、各プロジェクトの全機能を総合的に順位付けするものではありません。最新の機能とライセンスについては、各プロジェクトの公式ドキュメントを確認してください。
+評価は各プロジェクトの現在の公開リポジトリと公式ドキュメントに基づき、機能が一体的な仕組みとして組み込まれているかを重視しています。性能、コミュニティ規模、商用サポート、追加開発の可能性は評価対象外です。この比較は cinatoken の製品ポジショニングに沿ったものであり、各プロジェクトの全機能を総合的に順位付けするものではありません。最新の機能とライセンスについては、各プロジェクトの公式ドキュメントを確認してください。
 
 ## クイックスタート
 
 **Node.js 20+** が必要です。Proxy と Admin は、**2 つのターミナル**で同時に起動してください。
 
 ```bash
-git clone https://github.com/OctaFuse/octafuse-gateway.git
-cd octafuse-gateway
+git clone https://github.com/cinagroup/cinatoken.git
+cd cinatoken
 npm install
 npm run db:migrate
 ```

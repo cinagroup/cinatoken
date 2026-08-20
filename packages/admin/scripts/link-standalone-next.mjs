@@ -27,9 +27,12 @@ try {
 			fs.rmSync(linkNext, { recursive: true, force: true });
 		}
 	}
-	const relative = path.relative(standaloneDir, nestedNext);
-	fs.symlinkSync(relative, linkNext, 'dir');
-	console.log('[link-standalone-next] linked', linkNext, '->', relative);
+	const target = process.platform === 'win32'
+		? nestedNext
+		: path.relative(standaloneDir, nestedNext);
+	// NTFS directory junctions do not require Developer Mode or elevated symlink rights.
+	fs.symlinkSync(target, linkNext, process.platform === 'win32' ? 'junction' : 'dir');
+	console.log('[link-standalone-next] linked', linkNext, '->', target);
 } catch (e) {
 	console.error('[link-standalone-next] failed', e);
 	process.exit(1);

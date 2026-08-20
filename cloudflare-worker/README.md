@@ -16,7 +16,7 @@
 
 | 文件 | 是否提交 Git | 用途 |
 |------|--------------|------|
-| [`example.env`](./example.env) | ✅ | **dev 演示** canonical（`octafuse.dev`） |
+| [`example.env`](./example.env) | ✅ | **dev 演示**模板（请替换为自有域名） |
 | 自建 `cloudflare-worker/<name>.env` | ❌ gitignore | **生产**本地 CLI 或 Dashboard 配置备份 |
 | Cloudflare **Build variables** | ❌ 仅 Dashboard | **生产** Git 自动部署（与实例 `.env` 同名变量） |
 

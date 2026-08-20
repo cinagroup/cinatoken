@@ -62,9 +62,9 @@
 典型未压缩体积：**proxy** 常见约 **一百多 MB**；**admin** 因 Next standalone 与 trace 较大，常见约 **两百 MB 量级**；**migrate** 最小。若仍见 **~1GB+** 单层或总量异常，多为旧版单阶段镜像或本地缓存标签，请 `docker build --no-cache` 重建后对比 `docker image ls` / `docker history`。
 
 ```bash
-docker build -f Dockerfile.proxy -t octafuse-proxy:local .
-docker build -f Dockerfile.admin -t octafuse-admin:local .
-docker build -f Dockerfile.migrate -t octafuse-migrate:local .
+docker build -f Dockerfile.proxy -t cinatoken-proxy:local .
+docker build -f Dockerfile.admin -t cinatoken-admin:local .
+docker build -f Dockerfile.migrate -t cinatoken-migrate:local .
 ```
 
 单独运行示例：
@@ -72,22 +72,22 @@ docker build -f Dockerfile.migrate -t octafuse-migrate:local .
 ```bash
 docker run --rm -p 8787:8787 \
   -e DATABASE_DRIVER=postgres \
-  -e DATABASE_URL='postgres://user:pass@host:5432/octafuse' \
-  octafuse-proxy:local
+  -e DATABASE_URL='postgres://user:pass@host:5432/cinatoken' \
+  cinatoken-proxy:local
 
 docker run --rm -p 8789:8789 \
   -e DATABASE_DRIVER=postgres \
-  -e DATABASE_URL='postgres://user:pass@host:5432/octafuse' \
+  -e DATABASE_URL='postgres://user:pass@host:5432/cinatoken' \
   -e ADMIN_USERNAME=admin \
   -e ADMIN_PASSWORD='replace-me' \
-  octafuse-admin:local
+  cinatoken-admin:local
 ```
 
 （首次使用前须对该库执行 [§5](#5-数据库迁移与校验postgres)。）
 
 ## GitHub Actions（GHCR 构建与推送）
 
-**CI 镜像发布**由 **[`.github/workflows/octafuse-docker-images.yml`](../../../.github/workflows/octafuse-docker-images.yml)** 负责：**`runs-on: ubuntu-latest`**，**QEMU + Buildx** 多架构。镜像的 `org.opencontainers.image.description` 由该 workflow 里 **`docker/metadata-action` 的 `labels:`** 显式写入（避免沿用 GitHub 仓库 **About** 栏里尚未更新的历史描述）。
+**CI 镜像发布**由 **[`.github/workflows/cinatoken-docker-images.yml`](../../../.github/workflows/cinatoken-docker-images.yml)** 负责：**`runs-on: ubuntu-latest`**，**QEMU + Buildx** 多架构。镜像的 `org.opencontainers.image.description` 由该 workflow 里 **`docker/metadata-action` 的 `labels:`** 显式写入（避免沿用 GitHub 仓库 **About** 栏里尚未更新的历史描述）。
 
 - **正式发布（推荐）**：合并 Version PR 后，**[`.github/workflows/release.yml`](../../../.github/workflows/release.yml)** 通过 Changesets 的 **`publish`** 步骤执行 **`npm run ci:changeset-tag-push`**（`changeset tag` + 推送 **`vX.Y.Z`**），从而触发本 workflow：构建 **proxy / admin / migrate**、`linux/amd64` + `linux/arm64`，并在 **GitHub Release** 正文中写入各镜像 **digest**。流程总览见 **[release-versioning.md](../../maintainers/release-versioning.md)**。
 - **应急 / 验证**：仍可使用 **`workflow_dispatch`** 在 Actions 里手动勾选镜像与架构；**不会**自动创建 GitHub Release。
@@ -98,21 +98,21 @@ docker run --rm -p 8789:8789 \
 
 推送后的 **GHCR** 镜像名（`github.repository` 转小写，与 workflow 中 `repository_lc` 一致）。本仓库官方镜像为：
 
-- `ghcr.io/octafuse/octafuse-gateway-proxy:vX.Y.Z`
-- `ghcr.io/octafuse/octafuse-gateway-admin:vX.Y.Z`
-- `ghcr.io/octafuse/octafuse-gateway-migrate:vX.Y.Z`
+- `ghcr.io/cinagroup/cinatoken-proxy:vX.Y.Z`
+- `ghcr.io/cinagroup/cinatoken-admin:vX.Y.Z`
+- `ghcr.io/cinagroup/cinatoken-migrate:vX.Y.Z`
 
 fork 或其它 GitHub 仓库发布时，格式为 `ghcr.io/<owner>/<repo>-{proxy,admin,migrate}:<tag>`。
 
 若将镜像同步到自建 Harbor 或其它私有 OCI registry，可在该侧做 **mirror / retag**，各 `docker/examples/env.*.example` 中注释给出了与发版一致的示例镜像名（固定 tag），格式如：
 
-- `registry.example.com/example-org/octafuse-gateway-proxy:v2.0.0`
-- `registry.example.com/example-org/octafuse-gateway-admin:v2.0.0`
-- `registry.example.com/example-org/octafuse-gateway-migrate:v2.0.0`
+- `registry.example.com/example-org/cinatoken-proxy:v2.0.0`
+- `registry.example.com/example-org/cinatoken-admin:v2.0.0`
+- `registry.example.com/example-org/cinatoken-migrate:v2.0.0`
 
-在 GitHub：**Actions** → **Octafuse Docker Images (GH hosted Ubuntu)** → **Run workflow**（手动路径）。该 workflow 已声明 **`permissions: packages: write`**；若组织策略限制默认 `GITHUB_TOKEN`，请在仓库 **设置（Settings）→ Actions → General** 中放行对 **Packages** 的写入，或改用具备 `write:packages` 的 **PAT** 并配置为 secret。
+在 GitHub：**Actions** → **cinatoken Docker Images (GH hosted Ubuntu)** → **Run workflow**（手动路径）。该 workflow 已声明 **`permissions: packages: write`**；若组织策略限制默认 `GITHUB_TOKEN`，请在仓库 **设置（Settings）→ Actions → General** 中放行对 **Packages** 的写入，或改用具备 `write:packages` 的 **PAT** 并配置为 secret。
 
-`docker/examples/env.*.example` 里的 **GHCR** 示例已指向官方 `ghcr.io/octafuse/octafuse-gateway-*`；fork 或其它仓库请改前缀。若使用其它镜像仓库，按各模板文件内注释替换为 `registry.example.com/<namespace>/...`，一般只随版本改 **tag**。
+`docker/examples/env.*.example` 里的 **GHCR** 示例已指向官方 `ghcr.io/cinagroup/cinatoken-*`；fork 或其它仓库请改前缀。若使用其它镜像仓库，按各模板文件内注释替换为 `registry.example.com/<namespace>/...`，一般只随版本改 **tag**。
 
 ## 4. Docker Compose 样例
 
@@ -169,8 +169,8 @@ docker compose --env-file .env.gateway -f gateway.compose.yml up -d
 docker run --rm -p 8787:8787 \
   -e AUTO_MIGRATE=1 \
   -e DATABASE_DRIVER=postgres \
-  -e DATABASE_URL='postgres://user:pass@host:5432/octafuse' \
-  octafuse-proxy:local
+  -e DATABASE_URL='postgres://user:pass@host:5432/cinatoken' \
+  cinatoken-proxy:local
 ```
 
 - **默认关闭**：未设置 `AUTO_MIGRATE` 时，入口脚本跳过迁移，行为与旧版一致。
@@ -222,7 +222,7 @@ SELECT NOW() AS now_local, UTC_TIMESTAMP() AS now_utc;
 本机（可读 `.env`）：
 
 ```bash
-export DATABASE_URL='mysql://user:pass@host:3306/octafuse'
+export DATABASE_URL='mysql://user:pass@host:3306/cinatoken'
 export DATABASE_DRIVER=mysql
 npm run db:migrate:mysql
 ```
@@ -310,7 +310,7 @@ gateway-admin.example.com {
 
 ## 8. 如何更新版本
 
-升级前阅读目标版本 [GitHub Release](https://github.com/OctaFuse/octafuse-gateway/releases) / `CHANGELOG.md` 中的 **升级说明**（破坏性变更、必做迁移、维护窗口）。推荐顺序：**先 migrate，再滚动重启代理服务 / 管理后台**；或仅在一侧开启 `AUTO_MIGRATE=1`（见 §5）。
+升级前阅读目标版本 [GitHub Release](https://github.com/cinagroup/cinatoken/releases) / `CHANGELOG.md` 中的 **升级说明**（破坏性变更、必做迁移、维护窗口）。推荐顺序：**先 migrate，再滚动重启代理服务 / 管理后台**；或仅在一侧开启 `AUTO_MIGRATE=1`（见 §5）。
 
 ### 8.1 预构建镜像（GHCR / 私有 registry）
 

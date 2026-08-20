@@ -8,8 +8,8 @@ import { useTranslations } from 'next-intl';
 import type { SimpleIcon } from 'simple-icons';
 import { siGithub } from 'simple-icons';
 import {
-	OCTAFUSE_GITHUB_DOCS_INDEX,
-	OCTAFUSE_GITHUB_REPO_WEB,
+	CINATOKEN_GITHUB_DOCS_INDEX,
+	CINATOKEN_GITHUB_REPO_WEB,
 } from '@/lib/brand';
 
 /** GitHub mark: use currentColor so it follows link text on dark sidebar (brand hex is near-black). */
@@ -42,7 +42,7 @@ export default function BrandExternalLinks({ variant }: { variant: Variant }) {
 	return (
 		<div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2">
 			<a
-				href={OCTAFUSE_GITHUB_REPO_WEB}
+				href={CINATOKEN_GITHUB_REPO_WEB}
 				target="_blank"
 				rel="noopener noreferrer"
 				className={cls}
@@ -51,7 +51,7 @@ export default function BrandExternalLinks({ variant }: { variant: Variant }) {
 				{tBrand('github')}
 			</a>
 			<a
-				href={OCTAFUSE_GITHUB_DOCS_INDEX}
+				href={CINATOKEN_GITHUB_DOCS_INDEX}
 				target="_blank"
 				rel="noopener noreferrer"
 				className={cls}

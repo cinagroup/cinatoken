@@ -7,8 +7,8 @@
 		"ko": "한국어"
 	},
 	"metadata": {
-		"title": "Octafuse Gateway · Admin",
-		"description": "Operator console for Octafuse Gateway: API keys, upstream providers, models, routes, and analytics. Licensed under AGPLv3."
+		"title": "cinatoken Gateway · Admin",
+		"description": "Operator console for cinatoken Gateway: API keys, upstream providers, models, routes, and analytics. Licensed under AGPLv3."
 	},
 	"home": {
 		"metadata": {
@@ -70,22 +70,10 @@
 		"steps": {
 			"title": "From provider to reliable traffic in four steps",
 			"items": {
-				"providers": {
-					"title": "Connect providers",
-					"description": "Configure upstream endpoints and credentials"
-				},
-				"routes": {
-					"title": "Publish models and routes",
-					"description": "Define protocol surfaces, route pools, and failover"
-				},
-				"keys": {
-					"title": "Issue user keys",
-					"description": "Assign API keys and budgets by user, project, or customer"
-				},
-				"observe": {
-					"title": "Observe every call",
-					"description": "Continuously improve with logs, audits, and analytics"
-				}
+				"providers": { "title": "Connect providers", "description": "Configure upstream endpoints and credentials" },
+				"routes": { "title": "Publish models and routes", "description": "Define protocol surfaces, route pools, and failover" },
+				"keys": { "title": "Issue user keys", "description": "Assign API keys and budgets by user, project, or customer" },
+				"observe": { "title": "Observe every call", "description": "Continuously improve with logs, audits, and analytics" }
 			}
 		},
 		"deployment": {
@@ -104,9 +92,10 @@
 		}
 	},
 	"brand": {
-		"wordmark": "Octafuse",
-		"product": "Octafuse Gateway",
-		"loginHeading": "Octafuse Gateway",
+		"wordmark": "cinatoken",
+		"product": "cinatoken Gateway",
+		"loginHeading": "cinatoken Gateway",
+		"logoAlt": "cinatoken logo",
 		"sidebarSubtitle": "Gateway · Admin",
 		"github": "GitHub",
 		"docs": "Docs",
@@ -197,10 +186,11 @@
 		"kindAudio": "Audio"
 	},
 	"auth": {
-		"username": "Username",
-		"password": "Password",
-		"login": "Login",
-		"loggingIn": "Logging in...",
+		"cinaAuthDescription": "Sign in to the cinatoken operator console with your unified CinaAuth account.",
+		"continueWithCinaAuth": "Continue with CinaAuth",
+		"createAccount": "Create a CinaAuth account",
+		"roleRequirement": "Only super_admin or security_admin roles can access the console. New standard accounts receive no admin access.",
+		"loginError": "CinaAuth sign-in did not complete, or this account lacks cinatoken admin access.",
 		"loggingOut": "Logging out...",
 		"logout": "Logout"
 	},

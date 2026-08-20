@@ -1,13 +1,13 @@
 # 合并到 main 后：若有待处理 .changeset，则打开「Version Packages」PR；
 # 若无待处理 changeset 且版本已更新，则执行 `changeset tag` 推送 vX.Y.Z（触发镜像构建）。
-# 不在此 workflow 创建 GitHub Release（由 octafuse-docker-images 在推送镜像后写入 digest）。
+# 不在此 workflow 创建 GitHub Release（由 cinatoken-docker-images 在推送镜像后写入 digest）。
 #
 # 注意：用默认 GITHUB_TOKEN 执行 `changeset tag` 的 git push **不会**触发其它 workflow（GitHub 限制）。
 # 因此当未配置 CHANGESETS_GITHUB_TOKEN 时，本 workflow 在检测到 HEAD 有 v* tag 后会 `gh workflow run` 主动触发 Docker；
 # 若已配置 PAT，则由 tag 的 push 正常触发 Docker，本步骤会跳过以免重复构建。
 #
 # **必读**：`CHANGESETS_GITHUB_TOKEN` 必须同时被下方 `actions/checkout` 的 `token` 引用；否则 `git push` tag
-# 仍走默认 GITHUB_TOKEN，下游 **Octafuse Docker Images** 不会被触发（dispatch 步骤会因「已配 PAT」而跳过）。
+# 仍走默认 GITHUB_TOKEN，下游 **cinatoken Docker Images** 不会被触发（dispatch 步骤会因「已配 PAT」而跳过）。
 #
 # 若出现「GitHub Actions is not permitted to create or approve pull requests」：
 # 1) 仓库 Settings → Actions → General → Workflow permissions：勾选「Allow GitHub Actions to create and approve pull requests」；
@@ -101,5 +101,5 @@ jobs:
               exit 0
               ;;
           esac
-          echo "Dispatching Octafuse Docker Images workflow for ref ${TAG}"
-          gh workflow run octafuse-docker-images.yml --ref "${TAG}" -R "${GITHUB_REPOSITORY}"
+          echo "Dispatching cinatoken Docker Images workflow for ref ${TAG}"
+          gh workflow run cinatoken-docker-images.yml --ref "${TAG}" -R "${GITHUB_REPOSITORY}"

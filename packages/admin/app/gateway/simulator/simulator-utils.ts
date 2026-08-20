@@ -67,14 +67,14 @@ export const OPENAI_RESPONSES_BODY_TEMPLATE = `{
 /** Agent Tools request body templates（对齐 Proxy `/v1/tools/*` 入参）。 */
 export const TOOL_BODY_TEMPLATES: Record<GatewayToolId, string> = {
 	'web-search': `{
-  "query": "OctaFuse Gateway",
+  "query": "cinatoken Gateway",
   "count": 5
 }`,
 	'web-fetch': `{
   "url": "https://example.com"
 }`,
 	'web-deep-search': `{
-  "query": "OctaFuse Gateway architecture",
+  "query": "cinatoken Gateway architecture",
   "count": 3
 }`,
 	'ai-detection': `{

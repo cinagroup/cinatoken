@@ -1,8 +1,8 @@
-# Octafuse Gateway：Docker Compose 示例
+# cinatoken Gateway：Docker Compose 示例
 
-预构建镜像见 `.github/workflows/octafuse-docker-images.yml`（命名：`ghcr.io/<github.repository 小写>-{proxy,admin,migrate}`，例如 **`ghcr.io/octafuse/octafuse-gateway-proxy`**）。
+预构建镜像见 `.github/workflows/cinatoken-docker-images.yml`（命名：`ghcr.io/<github.repository 小写>-{proxy,admin,migrate}`，例如 **`ghcr.io/cinagroup/cinatoken-proxy`**）。
 
-**与镜像实现一致的行为**（详见 [docs/operators/deployment/docker.md](../../docs/operators/deployment/docker.md) §3、§5）：**proxy** 仅含 **已编译** 的 core/proxy（`node packages/proxy/dist/runtime/node.js`），**不**含 DB 迁移 CLI；**migrate** 使用 **`packages/core/dist/migrate/cli.js`**（与 **`octafuse-migrate`**、根目录 **`npm run db:migrate:pg`** 同源）。镜像内**不**再依赖 `tsx`。**`scripts/db/`**（D1 远程导出、`cutover/` 等）仅在宿主机克隆仓库后用于运维，**不**打入 proxy 镜像。
+**与镜像实现一致的行为**（详见 [docs/operators/deployment/docker.md](../../docs/operators/deployment/docker.md) §3、§5）：**proxy** 仅含 **已编译** 的 core/proxy（`node packages/proxy/dist/runtime/node.js`），**不**含 DB 迁移 CLI；**migrate** 使用 **`packages/core/dist/migrate/cli.js`**（与 **`cinatoken-migrate`**、根目录 **`npm run db:migrate:pg`** 同源）。镜像内**不**再依赖 `tsx`。**`scripts/db/`**（D1 远程导出、`cutover/` 等）仅在宿主机克隆仓库后用于运维，**不**打入 proxy 镜像。
 
 **宿主机端口**：示例里默认将 **proxy 映射到 `18787`、admin 映射到 `18789`**（可通过 `GATEWAY_PROXY_PORT` / `GATEWAY_ADMIN_PORT` 覆盖）；容器内进程仍为 **8787** / **8789**。
 
@@ -32,11 +32,11 @@ docker login registry.example.com -u YOUR_REGISTRY_USERNAME
 | **同机同时启动 Proxy + Admin**（仍连接外置 Postgres） | [`gateway.compose.yml`](./gateway.compose.yml) | [`env.compose.external.example`](./env.compose.external.example) |
 | **Zeabur（容器平台）** | 见 [zeabur.md](../../docs/operators/deployment/zeabur.md) | [`env.zeabur.example`](./env.zeabur.example) |
 
-首次建库或发版后需要迁移时，使用 `--profile migrate`（**octafuse-migrate** 镜像，环境变量 **`GATEWAY_MIGRATE_IMAGE`**）。生产推荐固定为「**先 migrate，再启动服务**」。
+首次建库或发版后需要迁移时，使用 `--profile migrate`（**cinatoken-migrate** 镜像，环境变量 **`GATEWAY_MIGRATE_IMAGE`**）。生产推荐固定为「**先 migrate，再启动服务**」。
 
 ### 仅 Admin（外置库）
 
-在 **`octafuse-gateway` 仓库根目录**执行（下同）：
+在 **`cinatoken` 仓库根目录**执行（下同）：
 
 ```bash
 cp docker/examples/env.admin.example docker/deploy/.env.gateway
@@ -60,7 +60,7 @@ docker compose --env-file docker/deploy/.env.gateway -f docker/examples/gateway.
 
 ## 本地测试（`docker/examples` 编排 + `docker/deploy` 环境）
 
-在 **`octafuse-gateway` 仓库根目录**执行以下命令。将环境变量放在 **`docker/deploy/.env.local`**（从本目录 `env.*.example` 复制后编辑；勿提交密钥），或任意路径的 env 文件，作为 **`--env-file`**。变量需包含：`GATEWAY_PROXY_IMAGE`、`GATEWAY_ADMIN_IMAGE`、`GATEWAY_MIGRATE_IMAGE`（跑 migrate profile 时）、`DATABASE_URL`、`ADMIN_USERNAME` / `ADMIN_PASSWORD`（admin 相关）、以及可选的 `GATEWAY_PROXY_PORT` / `GATEWAY_ADMIN_PORT`。本机 Postgres 在宿主机、容器连库时通常将 `DATABASE_URL` 主机写成 `host.docker.internal`（见 [docker/deploy/README.md](../deploy/README.md)）。
+在 **`cinatoken` 仓库根目录**执行以下命令。将环境变量放在 **`docker/deploy/.env.local`**（从本目录 `env.*.example` 复制后编辑；勿提交密钥），或任意路径的 env 文件，作为 **`--env-file`**。变量需包含：`GATEWAY_PROXY_IMAGE`、`GATEWAY_ADMIN_IMAGE`、`GATEWAY_MIGRATE_IMAGE`（跑 migrate profile 时）、`DATABASE_URL`、`ADMIN_USERNAME` / `ADMIN_PASSWORD`（admin 相关）、以及可选的 `GATEWAY_PROXY_PORT` / `GATEWAY_ADMIN_PORT`。本机 Postgres 在宿主机、容器连库时通常将 `DATABASE_URL` 主机写成 `host.docker.internal`（见 [docker/deploy/README.md](../deploy/README.md)）。
 
 将 `docker/deploy/.env.local` 换成你的实际 env 路径即可。
 

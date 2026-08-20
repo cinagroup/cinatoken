@@ -70,7 +70,7 @@ curl -sS http://localhost:8787/v1/audio/transcriptions \
 curl -sS http://localhost:8787/v1/audio/speech \
   -H "Authorization: Bearer sk-your-api-key" \
   -H "Content-Type: application/json" \
-  -d '{"model":"your-tts-model","input":"你好，Octafuse。","voice":"your-voice"}' \
+  -d '{"model":"your-tts-model","input":"你好，cinatoken。","voice":"your-voice"}' \
   --output speech.mp3
 ```
 
@@ -82,7 +82,7 @@ DashScope 原生实时 ASR / TTS 使用 `/v1/dashscope/realtime` WebSocket 入�
 curl -sS http://localhost:8787/v1/tools/web-search \
   -H "Authorization: Bearer sk-your-api-key" \
   -H "Content-Type: application/json" \
-  -d '{"query":"OctaFuse gateway","count":5}'
+  -d '{"query":"cinatoken gateway","count":5}'
 ```
 
 ## Anthropic 兼容
