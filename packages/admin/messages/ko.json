@@ -10,6 +10,99 @@
 		"title": "Octafuse Gateway · Admin",
 		"description": "Octafuse Gateway 운영 콘솔: API Key, 업스트림 Provider, 모델, Route 및 분석. AGPLv3 라이선스로 제공됩니다."
 	},
+	"home": {
+		"metadata": {
+			"title": "cinatoken · AI 기능 게이트웨이",
+			"description": "모델, 이미지, 오디오, 에이전트 도구를 하나의 게이트웨이에 연결하고 라우팅, 예산, 로그, 분석으로 안정적으로 운영합니다."
+		},
+		"logoAlt": "cinatoken 로고",
+		"nav": {
+			"label": "홈페이지 탐색",
+			"homeLabel": "cinatoken 홈으로 돌아가기",
+			"features": "기능",
+			"architecture": "아키텍처",
+			"deployment": "배포",
+			"docs": "문서",
+			"console": "콘솔 열기"
+		},
+		"hero": {
+			"titleLine1": "모든 AI 기능을 연결하는",
+			"titleLine2": "하나의 게이트웨이",
+			"description": "모델, 이미지, 오디오, 에이전트 도구를 통합하고 제어 가능한 라우팅, 예산, 관측성으로 모든 호출을 안정적으로 운영하세요.",
+			"console": "콘솔 열기",
+			"docs": "문서 보기"
+		},
+		"demo": {
+			"tabsLabel": "API 예제",
+			"chat": "Chat",
+			"responses": "Responses",
+			"images": "Images",
+			"tools": "Tools",
+			"request": "요청",
+			"response": "응답"
+		},
+		"features": {
+			"title": "빌더를 위한 AI 기능 게이트웨이",
+			"description": "유연한 연결, 지능형 라우팅, 비용 제어, 엔드투엔드 관측성.",
+			"items": {
+				"protocols": {
+					"title": "통합 프로토콜",
+					"description": "하나의 Gateway Base URL로 모델 추론, 미디어 기능, 에이전트 도구를 사용합니다.",
+					"detail": "Chat · Responses · Images · Audio · Tools"
+				},
+				"routing": {
+					"title": "지능형 라우팅",
+					"description": "각 요청 진입점을 라우트 풀로 보내고 여러 업스트림 대상 간에 안전하게 장애 조치합니다.",
+					"detail": "우선순위 · 가중치 · 장애 조치 · 고정 라우팅"
+				},
+				"budgets": {
+					"title": "예산과 키",
+					"description": "실제 사용자에게 별도 키를 발급하고 주기 예산과 실제 사용량으로 비용을 제어합니다.",
+					"detail": "사용자 · API Key · 주기 예산 · 3개 원장"
+				},
+				"observability": {
+					"title": "로그와 분석",
+					"description": "호출 경로와 예산 이벤트를 기록하고 사용량, 비용, 품질을 여러 관점에서 확인합니다.",
+					"detail": "요청 로그 · 감사 로그 · 모델/Provider/사용자 분석"
+				}
+			}
+		},
+		"steps": {
+			"title": "Provider 연결부터 안정적인 호출까지 4단계",
+			"items": {
+				"providers": {
+					"title": "Provider 연결",
+					"description": "업스트림 엔드포인트와 자격 증명 구성"
+				},
+				"routes": {
+					"title": "모델과 라우트 게시",
+					"description": "프로토콜 진입점, 라우트 풀, 장애 조치 정의"
+				},
+				"keys": {
+					"title": "사용자 키 발급",
+					"description": "사용자, 프로젝트, 고객별 API Key와 예산 할당"
+				},
+				"observe": {
+					"title": "모든 호출 관측",
+					"description": "로그, 감사, 분석으로 지속적으로 개선"
+				}
+			}
+		},
+		"deployment": {
+			"title": "자체 인프라에서 실행",
+			"cloudflare": "Workers와 D1을 사용해 Proxy와 관리 콘솔을 Cloudflare에 배포합니다.",
+			"docker": "Postgres 또는 MySQL로 셀프 호스팅하고 데이터 플레인과 런타임을 직접 제어합니다."
+		},
+		"cta": {
+			"title": "AI 기능을 통합할 준비가 되셨나요?",
+			"description": "하나의 진입점에서 시작해 모델, 미디어 기능, 에이전트 도구를 단계적으로 추가하세요.",
+			"console": "콘솔 열기",
+			"deploymentDocs": "배포 문서 보기"
+		},
+		"footer": {
+			"description": "AI 기능 게이트웨이 및 운영 제어 플레인"
+		}
+	},
 	"brand": {
 		"wordmark": "Octafuse",
 		"product": "Octafuse Gateway",

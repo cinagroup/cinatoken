@@ -6,6 +6,7 @@
  */
 import { useState, useEffect, useCallback, ReactNode } from 'react';
 import { useTranslations } from 'next-intl';
+import { usePathname } from 'next/navigation';
 import BrandExternalLinks from '@/components/layout/BrandExternalLinks';
 import LocaleSwitcher from '@/components/layout/LocaleSwitcher';
 import { BusinessTimezoneProvider } from '@/components/BusinessTimezoneProvider';
@@ -18,6 +19,8 @@ interface Props {
 }
 
 export default function AuthWrapper({ children }: Props) {
+  const pathname = usePathname();
+  const isPublicHome = pathname === '/';
   const t = useTranslations('auth');
   const tBrand = useTranslations('brand');
   const tCommon = useTranslations('common');
@@ -28,6 +31,11 @@ export default function AuthWrapper({ children }: Props) {
   const [loginError, setLoginError] = useState('');
 
   const checkAuth = useCallback(async () => {
+    if (isPublicHome) {
+      setIsLoading(false);
+      return;
+    }
+
     try {
       const response = await fetch('/api/auth/check');
       const data = await readJson<{ authenticated: boolean }>(response);
@@ -38,7 +46,7 @@ export default function AuthWrapper({ children }: Props) {
     } finally {
       setIsLoading(false);
     }
-  }, []);
+  }, [isPublicHome]);
 
   useEffect(() => {
     checkAuth();
@@ -92,6 +100,10 @@ export default function AuthWrapper({ children }: Props) {
       setIsLoading(false);
     }
   };
+
+  if (isPublicHome) {
+    return <>{children}</>;
+  }
 
   // Loading state - full screen
   if (isLoading && !isAuthenticated) {

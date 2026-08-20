@@ -1,9 +1,20 @@
-/**
- * 根路径兜底：正常请求由 `next.config.mjs` 的 `redirects()` 在路由层转到 `/dashboard`。
- * 保留本页以免部分运行时（如部分 OpenNext 路径）未应用 config redirect。
- */
-import { redirect } from 'next/navigation';
+import type { Metadata } from 'next';
+import { getTranslations } from 'next-intl/server';
+import PublicHome from '@/components/home/PublicHome';
+
+export async function generateMetadata(): Promise<Metadata> {
+	const t = await getTranslations('home.metadata');
+
+	return {
+		title: t('title'),
+		description: t('description'),
+		robots: {
+			index: true,
+			follow: true,
+		},
+	};
+}
 
 export default function HomePage() {
-	redirect('/dashboard');
+	return <PublicHome />;
 }
