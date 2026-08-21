@@ -1,5 +1,5 @@
 import { sql } from 'drizzle-orm';
-import { mysqlTable, text, timestamp, int, decimal, double, varchar, uniqueIndex, check } from 'drizzle-orm/mysql-core';
+import { mysqlTable, text, timestamp, int, decimal, double, varchar, uniqueIndex, check, bigint } from 'drizzle-orm/mysql-core';
 
 /**
  * PK / UNIQUE / FK 列宽与 migrations-mysql/0001_baseline.sql 对齐。
@@ -95,6 +95,8 @@ export const providersTable = mysqlTable('providers', {
 	/** `active` | `disabled` */
 	status: varchar('status', { length: COL.STATUS }).notNull().default('active'),
 	description: text('description'),
+	/** 非空时该 provider 接受对应用户共享密钥池注入（openai/anthropic/zhipu/deepseek） */
+	sharedChannelType: varchar('shared_channel_type', { length: COL.VENDOR }),
 	createdAt: timestamp('created_at', { fsp: 6, mode: 'string' }).notNull(),
 });
 
@@ -282,6 +284,122 @@ export const adminSessionsTable = mysqlTable('admin_sessions', {
 	expiresAt: timestamp('expires_at', { fsp: 6, mode: 'string' }).notNull(),
 });
 
+/** 用户门户会话（`user_session` Cookie），独立于 admin_sessions。 */
+export const portalSessionsTable = mysqlTable('portal_sessions', {
+	tokenHash: varchar('token_hash', { length: 64 }).primaryKey(),
+	/** CinaAuth OIDC `sub` */
+	subject: varchar('subject', { length: 255 }).notNull(),
+	email: varchar('email', { length: 512 }).notNull(),
+	createdAt: timestamp('created_at', { fsp: 6, mode: 'string' }).notNull(),
+	expiresAt: timestamp('expires_at', { fsp: 6, mode: 'string' }).notNull(),
+});
+
+/** 卖家上架的个人上游 API Key（官方渠道白名单）。 */
+export const sharedKeysTable = mysqlTable(
+	'shared_keys',
+	{
+		id: varchar('id', { length: 128 }).primaryKey(),
+		sellerUserId: varchar('seller_user_id', { length: COL.USER_ID }).notNull(),
+		channelType: varchar('channel_type', { length: COL.VENDOR }).notNull(),
+		apiKey: text('api_key').notNull(),
+		keyFingerprint: varchar('key_fingerprint', { length: 128 }).notNull(),
+		label: varchar('label', { length: COL.NAME }),
+		status: varchar('status', { length: COL.STATUS }).notNull().default('validating'),
+		sellerPriority: int('seller_priority').notNull().default(0),
+		weight: int('weight').notNull().default(1),
+		inputPrice: decimal('input_price', { precision: 18, scale: 6 }).notNull().default('0'),
+		outputPrice: decimal('output_price', { precision: 18, scale: 6 }).notNull().default('0'),
+		cacheReadPrice: decimal('cache_read_price', { precision: 18, scale: 6 }),
+		cacheWritePrice: decimal('cache_write_price', { precision: 18, scale: 6 }),
+		validatedAt: timestamp('validated_at', { fsp: 6, mode: 'string' }),
+		lastUsedAt: timestamp('last_used_at', { fsp: 6, mode: 'string' }),
+		lastFailureAt: timestamp('last_failure_at', { fsp: 6, mode: 'string' }),
+		failureReason: text('failure_reason'),
+		servedInputTokens: bigint('served_input_tokens', { mode: 'number' }).notNull().default(0),
+		servedOutputTokens: bigint('served_output_tokens', { mode: 'number' }).notNull().default(0),
+		earnedTotal: decimal('earned_total', { precision: 18, scale: 6 }).notNull().default('0'),
+		createdAt: timestamp('created_at', { fsp: 6, mode: 'string' }).notNull(),
+		updatedAt: timestamp('updated_at', { fsp: 6, mode: 'string' }).notNull(),
+	},
+	(t) => [
+		uniqueIndex('uk_shared_keys_seller_fingerprint').on(t.sellerUserId, t.keyFingerprint),
+	]
+);
+
+/** 按请求结算的卖家收益流水；`request_log_id` 幂等。 */
+export const sharedKeyEarningsTable = mysqlTable(
+	'shared_key_earnings',
+	{
+		id: varchar('id', { length: 128 }).primaryKey(),
+		requestLogId: varchar('request_log_id', { length: 128 }).notNull(),
+		sharedKeyId: varchar('shared_key_id', { length: 128 }).notNull(),
+		sellerUserId: varchar('seller_user_id', { length: COL.USER_ID }).notNull(),
+		inputTokens: int('input_tokens').notNull().default(0),
+		outputTokens: int('output_tokens').notNull().default(0),
+		cacheReadTokens: int('cache_read_tokens').notNull().default(0),
+		cacheWriteTokens: int('cache_write_tokens').notNull().default(0),
+		grossAmount: decimal('gross_amount', { precision: 18, scale: 6 }).notNull().default('0'),
+		platformFee: decimal('platform_fee', { precision: 18, scale: 6 }).notNull().default('0'),
+		netAmount: decimal('net_amount', { precision: 18, scale: 6 }).notNull().default('0'),
+		currency: varchar('currency', { length: 16 }).notNull().default('USD'),
+		createdAt: timestamp('created_at', { fsp: 6, mode: 'string' }).notNull(),
+	},
+	(t) => [uniqueIndex('uk_shared_key_earnings_request_log').on(t.requestLogId)]
+);
+
+/** 卖家账本（1:1 users）。 */
+export const userEarningsTable = mysqlTable('user_earnings', {
+	userId: varchar('user_id', { length: COL.USER_ID }).primaryKey(),
+	balance: decimal('balance', { precision: 18, scale: 6 }).notNull().default('0'),
+	lockedAmount: decimal('locked_amount', { precision: 18, scale: 6 }).notNull().default('0'),
+	lifetimeEarned: decimal('lifetime_earned', { precision: 18, scale: 6 }).notNull().default('0'),
+	lifetimeWithdrawn: decimal('lifetime_withdrawn', { precision: 18, scale: 6 }).notNull().default('0'),
+	contributionValue: decimal('contribution_value', { precision: 18, scale: 6 }).notNull().default('0'),
+	walletAddress: varchar('wallet_address', { length: 128 }),
+	walletVerifiedAt: timestamp('wallet_verified_at', { fsp: 6, mode: 'string' }),
+	highestBadgeTier: int('highest_badge_tier').notNull().default(0),
+	updatedAt: timestamp('updated_at', { fsp: 6, mode: 'string' }).notNull(),
+});
+
+/** 链上 CINA-C 自动提现单。 */
+export const withdrawalsTable = mysqlTable('withdrawals', {
+	id: varchar('id', { length: 128 }).primaryKey(),
+	userId: varchar('user_id', { length: COL.USER_ID }).notNull(),
+	amount: decimal('amount', { precision: 18, scale: 6 }).notNull(),
+	fee: decimal('fee', { precision: 18, scale: 6 }).notNull().default('0'),
+	netAmount: decimal('net_amount', { precision: 18, scale: 6 }).notNull(),
+	currency: varchar('currency', { length: 16 }).notNull().default('USD'),
+	walletAddress: varchar('wallet_address', { length: 128 }).notNull(),
+	status: varchar('status', { length: COL.STATUS }).notNull().default('requested'),
+	tokenAmount: decimal('token_amount', { precision: 18, scale: 6 }),
+	txHash: varchar('tx_hash', { length: 128 }),
+	chainId: int('chain_id'),
+	failureReason: text('failure_reason'),
+	createdAt: timestamp('created_at', { fsp: 6, mode: 'string' }).notNull(),
+	updatedAt: timestamp('updated_at', { fsp: 6, mode: 'string' }).notNull(),
+	confirmedAt: timestamp('confirmed_at', { fsp: 6, mode: 'string' }),
+});
+
+/** cinachain CinaBadge 位阶徽章铸造记录。 */
+export const nftMintsTable = mysqlTable(
+	'nft_mints',
+	{
+		id: varchar('id', { length: 128 }).primaryKey(),
+		userId: varchar('user_id', { length: COL.USER_ID }).notNull(),
+		badgeTokenId: int('badge_token_id').notNull(),
+		tierName: varchar('tier_name', { length: COL.VENDOR }).notNull(),
+		walletAddress: varchar('wallet_address', { length: 128 }).notNull(),
+		status: varchar('status', { length: COL.STATUS }).notNull().default('pending'),
+		txHash: varchar('tx_hash', { length: 128 }),
+		chainId: int('chain_id'),
+		valueSnapshot: decimal('value_snapshot', { precision: 18, scale: 6 }).notNull().default('0'),
+		failureReason: text('failure_reason'),
+		createdAt: timestamp('created_at', { fsp: 6, mode: 'string' }).notNull(),
+		confirmedAt: timestamp('confirmed_at', { fsp: 6, mode: 'string' }),
+	},
+	(t) => [uniqueIndex('uk_nft_mints_user_badge').on(t.userId, t.badgeTokenId)]
+);
+
 export const mysqlCoreSchema = {
 	usersTable,
 	apiKeysTable,
@@ -295,4 +413,10 @@ export const mysqlCoreSchema = {
 	userAuditLogsTable,
 	adminApiKeysTable,
 	adminSessionsTable,
+	portalSessionsTable,
+	sharedKeysTable,
+	sharedKeyEarningsTable,
+	userEarningsTable,
+	withdrawalsTable,
+	nftMintsTable,
 };

@@ -62,6 +62,8 @@ export const providersTable = sqliteTable('providers', {
 	/** `active` | `disabled` */
 	status: text('status').notNull().default('active'),
 	description: text('description'),
+	/** 非空时该 provider 接受对应用户共享密钥池注入（openai/anthropic/zhipu/deepseek） */
+	sharedChannelType: text('shared_channel_type'),
 	createdAt: text('created_at').notNull().default(sql`CURRENT_TIMESTAMP`),
 });
 
@@ -251,6 +253,122 @@ export const adminSessionsTable = sqliteTable('admin_sessions', {
 	expiresAt: text('expires_at').notNull(),
 });
 
+/** 用户门户会话（`user_session` Cookie），独立于 admin_sessions。 */
+export const portalSessionsTable = sqliteTable('portal_sessions', {
+	tokenHash: text('token_hash').primaryKey(),
+	/** CinaAuth OIDC `sub` */
+	subject: text('subject').notNull(),
+	email: text('email').notNull(),
+	createdAt: text('created_at').notNull().default(sql`CURRENT_TIMESTAMP`),
+	expiresAt: text('expires_at').notNull(),
+});
+
+/** 卖家上架的个人上游 API Key（官方渠道白名单）。 */
+export const sharedKeysTable = sqliteTable(
+	'shared_keys',
+	{
+		id: text('id').primaryKey(),
+		sellerUserId: text('seller_user_id').notNull(),
+		channelType: text('channel_type').notNull(),
+		apiKey: text('api_key').notNull(),
+		keyFingerprint: text('key_fingerprint').notNull(),
+		label: text('label'),
+		status: text('status').notNull().default('validating'),
+		sellerPriority: integer('seller_priority').notNull().default(0),
+		weight: integer('weight').notNull().default(1),
+		inputPrice: real('input_price').notNull().default(0),
+		outputPrice: real('output_price').notNull().default(0),
+		cacheReadPrice: real('cache_read_price'),
+		cacheWritePrice: real('cache_write_price'),
+		validatedAt: text('validated_at'),
+		lastUsedAt: text('last_used_at'),
+		lastFailureAt: text('last_failure_at'),
+		failureReason: text('failure_reason'),
+		servedInputTokens: integer('served_input_tokens').notNull().default(0),
+		servedOutputTokens: integer('served_output_tokens').notNull().default(0),
+		earnedTotal: real('earned_total').notNull().default(0),
+		createdAt: text('created_at').notNull().default(sql`CURRENT_TIMESTAMP`),
+		updatedAt: text('updated_at').notNull().default(sql`CURRENT_TIMESTAMP`),
+	},
+	(t) => [
+		uniqueIndex('uk_shared_keys_seller_fingerprint').on(t.sellerUserId, t.keyFingerprint),
+	]
+);
+
+/** 按请求结算的卖家收益流水；`request_log_id` 幂等。 */
+export const sharedKeyEarningsTable = sqliteTable(
+	'shared_key_earnings',
+	{
+		id: text('id').primaryKey(),
+		requestLogId: text('request_log_id').notNull(),
+		sharedKeyId: text('shared_key_id').notNull(),
+		sellerUserId: text('seller_user_id').notNull(),
+		inputTokens: integer('input_tokens').notNull().default(0),
+		outputTokens: integer('output_tokens').notNull().default(0),
+		cacheReadTokens: integer('cache_read_tokens').notNull().default(0),
+		cacheWriteTokens: integer('cache_write_tokens').notNull().default(0),
+		grossAmount: real('gross_amount').notNull().default(0),
+		platformFee: real('platform_fee').notNull().default(0),
+		netAmount: real('net_amount').notNull().default(0),
+		currency: text('currency').notNull().default('USD'),
+		createdAt: text('created_at').notNull().default(sql`CURRENT_TIMESTAMP`),
+	},
+	(t) => [uniqueIndex('uk_shared_key_earnings_request_log').on(t.requestLogId)]
+);
+
+/** 卖家账本（1:1 users）。 */
+export const userEarningsTable = sqliteTable('user_earnings', {
+	userId: text('user_id').primaryKey(),
+	balance: real('balance').notNull().default(0),
+	lockedAmount: real('locked_amount').notNull().default(0),
+	lifetimeEarned: real('lifetime_earned').notNull().default(0),
+	lifetimeWithdrawn: real('lifetime_withdrawn').notNull().default(0),
+	contributionValue: real('contribution_value').notNull().default(0),
+	walletAddress: text('wallet_address'),
+	walletVerifiedAt: text('wallet_verified_at'),
+	highestBadgeTier: integer('highest_badge_tier').notNull().default(0),
+	updatedAt: text('updated_at').notNull().default(sql`CURRENT_TIMESTAMP`),
+});
+
+/** 链上 CINA-C 自动提现单。 */
+export const withdrawalsTable = sqliteTable('withdrawals', {
+	id: text('id').primaryKey(),
+	userId: text('user_id').notNull(),
+	amount: real('amount').notNull(),
+	fee: real('fee').notNull().default(0),
+	netAmount: real('net_amount').notNull(),
+	currency: text('currency').notNull().default('USD'),
+	walletAddress: text('wallet_address').notNull(),
+	status: text('status').notNull().default('requested'),
+	tokenAmount: real('token_amount'),
+	txHash: text('tx_hash'),
+	chainId: integer('chain_id'),
+	failureReason: text('failure_reason'),
+	createdAt: text('created_at').notNull().default(sql`CURRENT_TIMESTAMP`),
+	updatedAt: text('updated_at').notNull().default(sql`CURRENT_TIMESTAMP`),
+	confirmedAt: text('confirmed_at'),
+});
+
+/** cinachain CinaBadge 位阶徽章铸造记录。 */
+export const nftMintsTable = sqliteTable(
+	'nft_mints',
+	{
+		id: text('id').primaryKey(),
+		userId: text('user_id').notNull(),
+		badgeTokenId: integer('badge_token_id').notNull(),
+		tierName: text('tier_name').notNull(),
+		walletAddress: text('wallet_address').notNull(),
+		status: text('status').notNull().default('pending'),
+		txHash: text('tx_hash'),
+		chainId: integer('chain_id'),
+		valueSnapshot: real('value_snapshot').notNull().default(0),
+		failureReason: text('failure_reason'),
+		createdAt: text('created_at').notNull().default(sql`CURRENT_TIMESTAMP`),
+		confirmedAt: text('confirmed_at'),
+	},
+	(t) => [uniqueIndex('uk_nft_mints_user_badge').on(t.userId, t.badgeTokenId)]
+);
+
 export const d1CoreSchema = {
 	usersTable,
 	apiKeysTable,
@@ -264,4 +382,10 @@ export const d1CoreSchema = {
 	userAuditLogsTable,
 	adminApiKeysTable,
 	adminSessionsTable,
+	portalSessionsTable,
+	sharedKeysTable,
+	sharedKeyEarningsTable,
+	userEarningsTable,
+	withdrawalsTable,
+	nftMintsTable,
 };

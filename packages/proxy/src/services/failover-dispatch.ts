@@ -13,6 +13,11 @@ import type { UsageFromStream } from './proxy';
 import { EMPTY_USAGE } from './proxy';
 import { buildRouteAttemptPlan } from './route-attempt-planner';
 import {
+	circuitKeyForRoute,
+	expandAttemptsWithSharedKeys,
+	parseSharedKeyId,
+} from './shared-key-pool';
+import {
 	getProviderCircuitRemainingMs,
 	markProviderFailure,
 	markProviderSuccess,
@@ -143,6 +148,7 @@ function emptyRoute(protocol: UpstreamProtocol): RouteResult {
 		adapter: 'passthrough',
 		providerEndpoints: {},
 		providerApiKey: '',
+		providerSharedChannelType: null,
 		priceOverrideRaw: null,
 		routeMeteredProfileJson: null,
 		routeChargedProfileJson: null,
@@ -259,7 +265,10 @@ export async function failoverDispatch(
 		Date.now(),
 		tierStrategies
 	);
-	const attempts = mergeStickyIntoAttempts(plan.attempts, stickyRoute);
+	// 共享渠道 route 展开为「用户共享 key 固定序列 + provider 自有 key 兜底」；
+	// 共享 key 的熔断走复合键（见 circuitKeyForRoute），坏 key 不波及 provider。
+	const expandedAttempts = await expandAttemptsWithSharedKeys(repos, plan.attempts);
+	const attempts = mergeStickyIntoAttempts(expandedAttempts, stickyRoute);
 
 	if (attempts.length === 0) {
 		return {
@@ -290,9 +299,9 @@ export async function failoverDispatch(
 		const isStickyAttempt =
 			Boolean(stickyRoute) && route.targetId === stickyRoute!.targetId && attemptIndex === 0;
 
-		if (getProviderCircuitRemainingMs(route.providerId) > 0) {
+		if (getProviderCircuitRemainingMs(circuitKeyForRoute(route)) > 0) {
 			console.warn(
-				`[Gateway Proxy] provider cooling down mid-request, skipping providerId=${route.providerId}`
+				`[Gateway Proxy] provider cooling down mid-request, skipping providerId=${route.providerId} key=${route.providerKeyId ?? '-'}`
 			);
 			continue;
 		}
@@ -347,7 +356,7 @@ export async function failoverDispatch(
 
 		if (isSuccessfulDispatchResponse(response)) {
 			timing?.markFinalAttempt(timingAttempt);
-			markProviderSuccess(route.providerId);
+			markProviderSuccess(circuitKeyForRoute(route));
 			if (stickySession) {
 				if (isStickyAttempt && stickySession.bindingToken) {
 					scheduleStickyTouchIfNeeded(repos, stickySession);
@@ -403,8 +412,20 @@ export async function failoverDispatch(
 		}
 
 		if (classification.failureKind) {
+			// 共享 key 鉴权失败：永久移出池（DB 置 invalid），仅复合键短熔断
+			const sharedKeyId = parseSharedKeyId(route.providerKeyId);
+			if (sharedKeyId && classification.alertOnKeySwitch) {
+				const failureReason = `upstream auth rejected (HTTP ${response.status})`;
+				void repos.sharedKeys
+					.markSharedKeyFailure(sharedKeyId, failureReason, new Date().toISOString())
+					.catch((err) => {
+						console.warn(
+							`[Gateway SharedKeys] disable failed keyId=${sharedKeyId} error=${err instanceof Error ? err.message : String(err)}`
+						);
+					});
+			}
 			const circuitResult = markProviderFailure(
-				route.providerId,
+				circuitKeyForRoute(route),
 				classification.failureKind,
 				classification.failureKind === 'rate_limit'
 					? parseRetryAfterMs(response.headers.get('retry-after'))

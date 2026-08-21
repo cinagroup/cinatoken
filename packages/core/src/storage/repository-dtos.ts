@@ -92,6 +92,8 @@ export interface ProviderAdminRow {
 	/** `active` | `disabled` */
 	status?: string;
 	description: string | null;
+	/** 非空时该 provider 接受对应用户共享密钥池注入（openai/anthropic/zhipu/deepseek）。 */
+	shared_channel_type?: string | null;
 	created_at: string;
 	/** `model_routes` 引用该 provider 的总数（列表/详情附带）。 */
 	routes_count?: number;

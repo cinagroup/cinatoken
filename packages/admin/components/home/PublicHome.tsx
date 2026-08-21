@@ -118,6 +118,9 @@ export default async function PublicHome() {
 					<div className="ml-auto flex items-center gap-2.5">
 						<HomeThemeSwitcher />
 						<LocaleSwitcher variant="login" />
+						<Link href="/account" className="home-muted home-hover-text inline-flex h-9 items-center justify-center whitespace-nowrap rounded-lg border border-transparent px-3 text-xs font-medium transition sm:px-4 sm:text-sm">
+							{t('nav.portal')}
+						</Link>
 						<Link href="/dashboard" className="home-console-button inline-flex h-9 items-center justify-center whitespace-nowrap rounded-lg border px-3 text-xs font-medium transition sm:px-4 sm:text-sm">
 							{t('nav.console')}
 						</Link>

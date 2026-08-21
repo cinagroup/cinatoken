@@ -40,6 +40,11 @@ export interface RouteResult {
 	 */
 	providerEndpoints: ProviderEndpointsMap;
 	providerApiKey: string;
+	/**
+	 * `providers.shared_channel_type`：非空表示该 provider 接受用户共享密钥池注入
+	 * （openai/anthropic/zhipu/deepseek）；dispatch 阶段按固定顺序替换 `providerApiKey`。
+	 */
+	providerSharedChannelType: string | null;
 	/** 原始 `model_routes.price_override` JSON，供审计与嵌套 profile 解析 */
 	priceOverrideRaw: string | null;
 	/** 自 `price_override.metered` 解析出的 JSON 字符串（无则 null）；供应侧 `metered_cost` */
@@ -73,7 +78,11 @@ function parseJsonObject(raw: string | null | undefined): Record<string, unknown
 
 async function routeRowToResult(repos: GatewayRepositories, route: ModelRouteRow): Promise<RouteResult | null> {
 	const provider = await repos.providers.getProviderById(route.provider_id);
-	if (!provider || provider.status === 'disabled' || !provider.api_key) {
+	if (!provider || provider.status === 'disabled') {
+		return null;
+	}
+	// 共享渠道 provider 允许无自有 api_key（纯靠用户共享密钥池）
+	if (!provider.api_key && !provider.shared_channel_type) {
 		return null;
 	}
 	const protocol = normalizeUpstreamProtocol(route.upstream_protocol);
@@ -103,7 +112,8 @@ async function routeRowToResult(repos: GatewayRepositories, route: ModelRouteRow
 		upstreamOperation: route.upstream_operation ?? '*',
 		adapter: route.adapter ?? 'passthrough',
 		providerEndpoints,
-		providerApiKey: provider.api_key,
+		providerApiKey: provider.api_key ?? '',
+		providerSharedChannelType: provider.shared_channel_type ?? null,
 		priceOverrideRaw: route.price_override,
 		routeMeteredProfileJson: extractMeteredProfileFromPriceOverrideJson(route.price_override),
 		routeChargedProfileJson: extractChargedProfileFromPriceOverrideJson(route.price_override),
@@ -113,7 +123,7 @@ async function routeRowToResult(repos: GatewayRepositories, route: ModelRouteRow
 		routeWeight,
 		providerKeyId: provider.id,
 		providerKeyLabel: provider.name,
-		providerKeyFingerprint: fingerprintProviderApiKey(provider.api_key),
+		providerKeyFingerprint: fingerprintProviderApiKey(provider.api_key ?? ''),
 	};
 }
 

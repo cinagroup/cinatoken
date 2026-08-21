@@ -23,7 +23,8 @@
 			"architecture": "架构",
 			"deployment": "部署",
 			"docs": "文档",
-			"console": "进入控制台"
+			"console": "进入控制台",
+			"portal": "用户中心"
 		},
 		"theme": {
 			"label": "显示模式",
@@ -33,7 +34,7 @@
 		},
 		"hero": {
 			"titleLine1": "一个入口，",
-			"titleLine2": "连接你的全部 AI\u00a0能力",
+			"titleLine2": "连接你的全部 AI 能力",
 			"description": "统一接入模型、图片、音频与智能体工具，用可控路由、预算和可观测性稳定运行每一次调用。",
 			"console": "进入控制台",
 			"docs": "查看文档"
@@ -77,10 +78,22 @@
 		"steps": {
 			"title": "从供应商到稳定调用，只需四步",
 			"items": {
-				"providers": { "title": "连接供应商", "description": "配置上游端点与密钥" },
-				"routes": { "title": "发布模型与路由", "description": "定义协议入口、路由池与故障转移" },
-				"keys": { "title": "签发用户密钥", "description": "按用户、项目或客户分配 API Key 与预算" },
-				"observe": { "title": "观察每次调用", "description": "通过日志、审计与分析持续优化" }
+				"providers": {
+					"title": "连接供应商",
+					"description": "配置上游端点与密钥"
+				},
+				"routes": {
+					"title": "发布模型与路由",
+					"description": "定义协议入口、路由池与故障转移"
+				},
+				"keys": {
+					"title": "签发用户密钥",
+					"description": "按用户、项目或客户分配 API Key 与预算"
+				},
+				"observe": {
+					"title": "观察每次调用",
+					"description": "通过日志、审计与分析持续优化"
+				}
 			}
 		},
 		"deployment": {
@@ -229,7 +242,10 @@
 			"userUsage": "用户用量",
 			"reliability": "可靠性",
 			"config": "配置",
-			"adminApiKeys": "集成密钥"
+			"adminApiKeys": "集成密钥",
+			"sharedKeys": "共享密钥池",
+			"withdrawals": "提现管理",
+			"nftMints": "NFT 铸造"
 		},
 		"version": "v{version}"
 	},
@@ -532,7 +548,10 @@
 			"apiKeyEditHint": "留空保持当前密钥；填写新值则替换。",
 			"capModelsGenerate": "models.generate (/v1beta/models/'{model}:{action}') — 流式 + 非流式",
 			"legacyPerActionNotice": "该 Provider 仍保留无法安全合并的 generateContent / streamGenerateContent 覆盖项。保存时原样写回。复核后可改为单一 '{action}' 模板。"
-		}
+		},
+		"sharedChannel": "用户共享渠道",
+		"sharedChannelNone": "不开放共享",
+		"sharedChannelHint": "选择官方渠道后，用户可在门户上架该渠道的个人 API Key 注入本 provider 调度池；可不填自有 API Key"
 	},
 	"models": {
 		"title": "模型",
@@ -1849,7 +1868,10 @@
 		"activate": "激活",
 		"deactivate": "吊销",
 		"empty": "暂无集成密钥",
-		"status": { "active": "有效", "revoked": "已吊销" }
+		"status": {
+			"active": "有效",
+			"revoked": "已吊销"
+		}
 	},
 	"config": {
 		"title": "系统配置",
@@ -2168,5 +2190,223 @@
 		"cost": "成本：{amount}",
 		"providerLabel": "供应商：{id}",
 		"stdMetered": "标准 {std} · 成本 {metered}"
+	},
+	"portal": {
+		"portalTitle": "cinatoken 用户中心",
+		"loginHeading": "cinatoken 用户中心",
+		"loginSubtitle": "共享 API Key · 出售 token · 铸造贡献 NFT",
+		"loginDescription": "使用 CinaAuth 账户登录用户中心，上架你的官方渠道 API Key、设定 token 单价并按贡献铸造 cinachain 徽章。",
+		"backToHome": "返回首页",
+		"nav": {
+			"overview": "总览",
+			"keys": "我的共享密钥",
+			"earnings": "收益",
+			"withdraw": "提现",
+			"nft": "贡献 NFT",
+			"settings": "设置"
+		},
+		"common": {
+			"loading": "加载中...",
+			"submitting": "提交中...",
+			"prevPage": "上一页",
+			"nextPage": "下一页"
+		},
+		"overview": {
+			"title": "总览",
+			"subtitle": "余额、贡献值与共享密钥概览",
+			"balance": "可提现余额",
+			"lockedShort": "提现锁定",
+			"locked": "（提现锁定 ${amount}）",
+			"contribution": "累计贡献值",
+			"activeKeys": "活跃共享密钥",
+			"totalKeys": "共 {count} 把",
+			"lifetimeEarned": "累计收益",
+			"withdrawn": "已提现 ${amount}",
+			"nextTier": "距 {tier} 位阶还需 ${threshold}（{progress}%）",
+			"mintableBadge": "有 {count} 个位阶徽章可铸造",
+			"recentKeys": "共享密钥（最近）",
+			"noKeys": "还没有上架共享密钥，去",
+			"servedTokens": "累计服务 tokens",
+			"earned": "累计收益"
+		},
+		"keys": {
+			"title": "我的共享密钥",
+			"subtitle": "仅支持 OpenAI / Anthropic / 智谱 / DeepSeek 官方渠道的个人 API Key",
+			"formTitle": "上架新密钥",
+			"channel": "渠道",
+			"apiKey": "API Key",
+			"apiKeyPlaceholder": "粘贴你的官方渠道 API Key（仅限官方直发）",
+			"labelOptional": "备注（可选）",
+			"inputPrice": "输入单价",
+			"outputPrice": "输出单价",
+			"weight": "权重 (1-100)",
+			"weightHint": "同优先级层内按权重从高到低固定排序调度",
+			"limitsHint": "单价上限：输入 ≤ ${input}、输出 ≤ ${output} / 1M tokens；平台佣金 {commission}%（按应得计提）",
+			"submit": "上架并校验",
+			"submitFailed": "上架失败",
+			"createdActive": "上架成功，密钥校验通过，已进入调度池",
+			"createdInvalid": "密钥校验未通过：{reason}",
+			"createdValidating": "已提交，校验暂时不可用，稍后可在列表中重新校验",
+			"updated": "已更新",
+			"updateFailed": "更新失败",
+			"revalidated": "已重新校验",
+			"confirmDelete": "确定删除该共享密钥？",
+			"deleted": "已删除",
+			"empty": "暂无共享密钥",
+			"key": "密钥",
+			"status": "状态",
+			"pricing": "单价 ($/1M)",
+			"priceCell": "入 ${input} / 出 ${output}",
+			"usage": "用量",
+			"tokensCell": "入 {input} / 出 {output}",
+			"actions": "操作",
+			"pause": "暂停",
+			"resume": "恢复",
+			"revalidate": "重新校验",
+			"delete": "删除",
+			"status_validating": "校验中",
+			"status_active": "活跃",
+			"status_paused": "已暂停",
+			"status_invalid": "已失效",
+			"status_disabled": "已停用"
+		},
+		"earnings": {
+			"title": "收益",
+			"subtitle": "每次请求服务你的共享密钥后实时结算的流水",
+			"empty": "暂无收益记录",
+			"time": "时间",
+			"tokens": "tokens",
+			"gross": "应得",
+			"fee": "平台佣金",
+			"net": "实得",
+			"totalEntries": "共 {total} 条"
+		},
+		"withdraw": {
+			"title": "提现",
+			"subtitle": "余额自动兑换为 cinachain 上的 CINA-C（Base Sepolia）到账你的钱包",
+			"walletLabel": "收款钱包地址 (EVM)",
+			"walletHint": "用于接收 CINA-C 与贡献徽章；仅做地址格式校验",
+			"saveWallet": "保存钱包",
+			"walletSaved": "钱包已保存",
+			"walletSaveFailed": "钱包保存失败",
+			"amountLabel": "提现金额 ($)",
+			"submit": "发起提现",
+			"submitted": "提现已提交，链上到账后状态自动更新",
+			"submitFailed": "提现失败",
+			"needWallet": "请先绑定收款钱包地址",
+			"history": "提现记录",
+			"empty": "暂无提现记录",
+			"tokenAmount": "到账 {amount} CINA-C",
+			"viewTx": "查看交易",
+			"status_requested": "处理中",
+			"status_processing": "处理中",
+			"status_submitted": "链上确认中",
+			"status_confirmed": "已完成",
+			"status_failed": "失败（已退回余额）"
+		},
+		"nft": {
+			"title": "贡献 NFT",
+			"subtitle": "按共享 token 的累计贡献值铸造 cinachain CinaBadge 灵魂绑定位阶徽章",
+			"contributionHint": "贡献值 = 历次共享服务实得收益之和",
+			"chainNotConfigured": "铸造通道尚未配置（管理员未设置 cinachain 参数），暂时无法铸造",
+			"threshold": "门槛：${threshold}",
+			"mint": "铸造徽章",
+			"minted": "已铸造",
+			"mintSubmitted": "铸造已提交，链上确认后自动更新",
+			"mintFailed": "铸造失败",
+			"progress": "{percent}%",
+			"history": "铸造记录",
+			"empty": "暂无铸造记录",
+			"tier_Bronze": "青铜",
+			"tier_Silver": "白银",
+			"tier_Gold": "黄金",
+			"tier_Platinum": "铂金",
+			"status_pending": "铸造中",
+			"status_submitted": "链上确认中",
+			"status_confirmed": "已上链",
+			"status_failed": "失败"
+		},
+		"settings": {
+			"title": "设置",
+			"subtitle": "网关调用密钥与账户资料",
+			"gatewayKeys": "我的网关调用密钥 (sk-)",
+			"gatewayKeysHint": "用于调用 cinatoken 网关 API（/v1/chat/completions 等），消耗账户预算",
+			"keyName": "密钥名称",
+			"createKey": "创建密钥",
+			"keyOnce": "密钥明文仅显示这一次，请立即保存：",
+			"keyCreateFailed": "创建失败",
+			"noKeys": "暂无网关密钥",
+			"confirmRevoke": "确定吊销该密钥？吊销后立即失效。",
+			"revoke": "吊销",
+			"walletSection": "收款钱包",
+			"walletValue": "当前绑定：{wallet}",
+			"walletNone": "未绑定",
+			"profileSection": "账户资料",
+			"profileHint": "登录凭据与资料由 CinaAuth 统一管理",
+			"accountCenter": "账户中心"
+		}
+	},
+	"sharedKeysPage": {
+		"title": "共享密钥池",
+		"subtitle": "用户上架的官方渠道个人 API Key；同优先级层内按权重降序调度",
+		"loadFailed": "加载共享密钥失败",
+		"updateFailed": "更新失败",
+		"confirmDelete": "确定删除该共享密钥？",
+		"filterAll": "全部状态",
+		"filterActive": "活跃",
+		"filterValidating": "校验中",
+		"filterPaused": "已暂停",
+		"filterInvalid": "已失效",
+		"filterDisabled": "已停用",
+		"seller": "卖家",
+		"channel": "渠道",
+		"key": "密钥",
+		"status": "状态",
+		"pricing": "单价 ($/1M)",
+		"priceCell": "入 ${input} / 出 ${output}",
+		"priority": "优先级",
+		"weight": "权重",
+		"usage": "用量",
+		"actions": "操作",
+		"disable": "停用",
+		"enable": "启用",
+		"delete": "删除",
+		"empty": "暂无共享密钥"
+	},
+	"withdrawalsPage": {
+		"title": "提现管理",
+		"subtitle": "链上 CINA-C 自动提现；requested/processing 状态可驳回并退款",
+		"loadFailed": "加载提现记录失败",
+		"processFailed": "处理失败",
+		"processPending": "处理待提现",
+		"rejectFailed": "驳回失败",
+		"rejectPrompt": "驳回原因（将退款给用户）",
+		"reject": "驳回",
+		"filterAll": "全部状态",
+		"time": "时间",
+		"user": "用户",
+		"amount": "金额",
+		"netCell": "实付 ${net} → ${token} CINA-C",
+		"wallet": "钱包",
+		"status": "状态",
+		"tx": "交易",
+		"actions": "操作",
+		"empty": "暂无提现记录"
+	},
+	"nftMintsPage": {
+		"title": "NFT 铸造",
+		"subtitle": "cinachain CinaBadge 位阶徽章铸造记录（贡献值达标后用户自铸）",
+		"loadFailed": "加载铸造记录失败",
+		"processFailed": "处理失败",
+		"processPending": "处理待铸造",
+		"filterAll": "全部状态",
+		"time": "时间",
+		"user": "用户",
+		"tier": "位阶",
+		"wallet": "钱包",
+		"value": "贡献值快照",
+		"status": "状态",
+		"tx": "交易",
+		"empty": "暂无铸造记录"
 	}
 }

@@ -21,6 +21,7 @@ export async function saveProvider(
 		description: formData.description,
 		endpoints: formDataToEndpointsMap(formData),
 		status: formData.status === 'disabled' ? 'disabled' : 'active',
+		shared_channel_type: formData.shared_channel_type || null,
 	};
 
 	const apiKey = formData.api_key.trim();
@@ -36,8 +37,8 @@ export async function saveProvider(
 			body: JSON.stringify(payload),
 		});
 	} else {
-		if (!apiKey) {
-			return { success: false, message: 'api_key is required' };
+		if (!apiKey && !formData.shared_channel_type) {
+			return { success: false, message: 'api_key is required (or select a shared channel)' };
 		}
 		payload.api_key = apiKey;
 		if (formData.id.trim()) {

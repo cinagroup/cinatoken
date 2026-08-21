@@ -86,10 +86,12 @@ export type ProtocolEndpointForm = {
 export type ProviderFormData = {
 	id: string;
 	name: string;
-	/** 创建必填；编辑时空 = 不改 */
+	/** 创建必填（标记共享渠道时可空）；编辑时空 = 不改 */
 	api_key: string;
 	/** `active` | `disabled` */
 	status: 'active' | 'disabled';
+	/** 用户共享密钥注入渠道（openai/anthropic/zhipu/deepseek；空 = 不参与） */
+	shared_channel_type: string;
 	openai: ProtocolEndpointForm;
 	anthropic: ProtocolEndpointForm;
 	gemini: ProtocolEndpointForm;
@@ -130,6 +132,7 @@ export const EMPTY_PROVIDER_FORM: ProviderFormData = {
 	name: '',
 	api_key: '',
 	status: 'disabled',
+	shared_channel_type: '',
 	openai: { ...EMPTY_PROTOCOL_FORM },
 	anthropic: { ...EMPTY_PROTOCOL_FORM },
 	gemini: { ...EMPTY_PROTOCOL_FORM },

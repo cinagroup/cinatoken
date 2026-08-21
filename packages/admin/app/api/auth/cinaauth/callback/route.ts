@@ -19,12 +19,18 @@ import {
 } from '@/lib/cinaauth/transaction';
 import { resolveAdminRequestRuntime } from '@/lib/admin-request-runtime';
 import { logAdminAuthEvent } from '@/lib/security-log';
+import { PORTAL_SESSION_TTL_MS, USER_SESSION_COOKIE, upsertPortalUser } from '@/lib/user-auth';
 
 export const dynamic = 'force-dynamic';
 
 type BridgeResponse = {
 	ok?: boolean;
 	user?: { id?: string; email?: string | null; role?: string | null };
+};
+
+type UserInfoResponse = {
+	sub?: string;
+	email?: string | null;
 };
 
 const clearTransactionCookie = (response: NextResponse): void => {
@@ -37,14 +43,68 @@ const clearTransactionCookie = (response: NextResponse): void => {
 	});
 };
 
-const fail = (request: NextRequest, error: string): NextResponse => {
-	const url = new URL('/', request.url);
+const fail = (request: NextRequest, error: string, fallbackPath = '/'): NextResponse => {
+	const url = new URL(fallbackPath, request.url);
 	url.searchParams.set('auth_error', error);
 	const response = NextResponse.redirect(url, 302);
 	clearTransactionCookie(response);
 	response.headers.set('Cache-Control', 'no-store');
 	return response;
 };
+
+/**
+ * 门户（普通用户）会话：不校验管理员角色，走标准 OIDC userinfo 取 sub/email，
+ * upsert `users` 行后签发独立 `user_session`（24h）。
+ */
+async function completePortalLogin(
+	request: NextRequest,
+	accessToken: string,
+	subject: string,
+	callbackPath: string,
+): Promise<NextResponse> {
+	const config = getCinaAuthConfig(request);
+	const userinfoRequest = new Request(`${config.issuer}/api/auth/oauth2/userinfo`, {
+		method: 'GET',
+		headers: { authorization: `Bearer ${accessToken}`, origin: config.appOrigin },
+		cache: 'no-store',
+	});
+	const userinfoResponse = await fetchCinaAuth(userinfoRequest, request);
+	const userinfo = (await userinfoResponse.json().catch(() => null)) as UserInfoResponse | null;
+	if (!userinfoResponse.ok || userinfo?.sub !== subject) {
+		return fail(request, 'portal_userinfo_failed', '/account');
+	}
+	const email = userinfo.email?.trim() || `${subject}@cinaauth.invalid`;
+
+	const { storage } = await resolveAdminRequestRuntime(request);
+	const { repositories } = storage;
+	const userId = await upsertPortalUser(repositories.users, subject, email);
+	await repositories.portalLedger.ensureUserEarnings(userId);
+
+	const sessionToken = generateSessionToken();
+	const now = new Date();
+	const expiresAt = new Date(now.getTime() + PORTAL_SESSION_TTL_MS);
+	await repositories.portalAccess.deleteExpiredSessions(now.toISOString());
+	await repositories.portalAccess.insertSession({
+		tokenHash: await hashSessionToken(sessionToken),
+		subject,
+		email,
+		createdAt: now.toISOString(),
+		expiresAt: expiresAt.toISOString(),
+	});
+
+	const destination = new URL(callbackPath, config.appOrigin);
+	const response = NextResponse.redirect(destination, 302);
+	clearTransactionCookie(response);
+	response.cookies.set(USER_SESSION_COOKIE, sessionToken, {
+		httpOnly: true,
+		secure: true,
+		sameSite: 'lax',
+		path: '/',
+		expires: expiresAt,
+	});
+	response.headers.set('Cache-Control', 'no-store');
+	return response;
+}
 
 /** Completes OIDC, checks the live CinaAuth role, and creates a local console session. */
 export async function GET(request: NextRequest): Promise<NextResponse> {
@@ -69,6 +129,16 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
 			clientSecret: secrets.clientSecret,
 			sourceRequest: request,
 		});
+
+		if (transaction.intent === 'portal') {
+			return await completePortalLogin(
+				request,
+				tokens.accessToken,
+				tokens.subject,
+				transaction.callbackPath,
+			);
+		}
+
 		const bridgeRequest = new Request(
 			`${config.issuer}/api/auth/cinatoken-oidc/session`,
 			{

@@ -1,5 +1,6 @@
 /** 管理后台 `providers` CRUD：单键 `api_key` + `status`，`endpoints` JSON 校验与持久化。 */
 import type { GatewayRepositories } from '@octafuse/core';
+import { isSharedKeyChannelType } from '@octafuse/core';
 import {
 	serializeProviderEndpoints,
 	validateAndNormalizeProviderEndpoints,
@@ -42,6 +43,18 @@ function normalizeProviderStatus(raw: unknown): 'active' | 'disabled' {
 	throw badRequest('status must be active or disabled');
 }
 
+/** 共享渠道白名单校验：空 = 关闭共享注入。 */
+function normalizeSharedChannelType(raw: unknown): string | null {
+	if (raw === undefined || raw === null || raw === '') return null;
+	if (typeof raw !== 'string') throw badRequest('shared_channel_type must be a string');
+	const trimmed = raw.trim();
+	if (trimmed === '') return null;
+	if (!isSharedKeyChannelType(trimmed)) {
+		throw badRequest('shared_channel_type must be one of: openai, anthropic, zhipu, deepseek');
+	}
+	return trimmed;
+}
+
 /** 列表/详情脱敏：明文 `api_key` → masked；附带 `has_pending_key` 与路由计数。 */
 function enrichProviderRow(provider: AdminProviderRow): AdminProviderRow {
 	const plaintext = typeof provider.api_key === 'string' ? provider.api_key : '';
@@ -65,7 +78,8 @@ export async function listProvidersService(repos: GatewayRepositories): Promise<
 }
 
 /**
- * 创建供应商；可指定 `id`，冲突抛 `conflict`；`api_key` 必填；协议 endpoints 均可为空。
+ * 创建供应商；可指定 `id`，冲突抛 `conflict`；`api_key` 必填（标记为共享渠道时可省略，
+ * 由用户共享密钥池提供服务）；协议 endpoints 均可为空。
  */
 export async function createProviderService(
 	repos: GatewayRepositories,
@@ -74,10 +88,11 @@ export async function createProviderService(
 	const customId = String(body.id ?? '').trim();
 	const name = String(body.name ?? '');
 	const apiKey = String(body.api_key ?? '').trim();
+	const sharedChannelType = normalizeSharedChannelType(body.shared_channel_type);
 	if (!name) {
 		throw badRequest('name is required');
 	}
-	if (!apiKey) {
+	if (!apiKey && !sharedChannelType) {
 		throw badRequest('api_key is required');
 	}
 
@@ -96,6 +111,7 @@ export async function createProviderService(
 		description: body.description,
 		apiKey,
 		status,
+		sharedChannelType,
 	});
 
 	return { id };
@@ -152,6 +168,9 @@ export async function updateProviderService(
 		if (apiKey) {
 			patch.api_key = apiKey;
 		}
+	}
+	if (body.shared_channel_type !== undefined) {
+		patch.shared_channel_type = normalizeSharedChannelType(body.shared_channel_type);
 	}
 
 	if (Object.keys(patch).length === 0) return;

@@ -43,6 +43,19 @@ import type {
 	AdminSessionRow,
 	InsertAdminApiKeyParams,
 } from '../db/admin-access-types';
+import type {
+	InsertNftMintParams,
+	InsertSharedKeyEarningParams,
+	InsertSharedKeyParams,
+	InsertWithdrawalParams,
+	NftMintRow,
+	PortalSessionRow,
+	SharedKeyEarningRow,
+	SharedKeyRow,
+	UpdateSharedKeyPatch,
+	UserEarningsRow,
+	WithdrawalRow,
+} from '../db/shared-keys-types';
 
 export interface AdminAccessRepository {
 	listApiKeys(): Promise<AdminApiKeyRow[]>;
@@ -331,6 +344,8 @@ export interface ProvidersRepository {
 		description: unknown;
 		apiKey?: string;
 		status?: string;
+		/** 非空 = 接受用户共享密钥池注入的官方渠道。 */
+		sharedChannelType?: string | null;
 	}): Promise<void>;
 	updateProviderByPatch(id: string, body: Record<string, unknown>): Promise<number>;
 	deleteProviderById(id: string): Promise<number>;
@@ -395,4 +410,75 @@ export interface SystemConfigRepository {
 	upsertSystemConfigValue(key: string, value: string): Promise<void>;
 	getConfig(key: string): Promise<string | null>;
 	getAllConfig(): Promise<Record<string, string>>;
+}
+
+/** 用户门户会话（`user_session` Cookie）。 */
+export interface PortalAccessRepository {
+	insertSession(session: PortalSessionRow): Promise<void>;
+	getValidSession(tokenHash: string, nowIso: string): Promise<PortalSessionRow | null>;
+	deleteSession(tokenHash: string): Promise<void>;
+	deleteExpiredSessions(nowIso: string): Promise<void>;
+}
+
+/** 卖家共享密钥（上架/调度/停用）。 */
+export interface SharedKeysRepository {
+	insertSharedKey(params: InsertSharedKeyParams): Promise<void>;
+	getSharedKeyById(id: string): Promise<SharedKeyRow | null>;
+	listSharedKeysBySeller(sellerUserId: string): Promise<SharedKeyRow[]>;
+	listAllSharedKeys(options?: { status?: string; channelType?: string }): Promise<SharedKeyRow[]>;
+	/** 调度候选：指定渠道全部 active key，已按固定顺序排好（seller_priority DESC → weight DESC → id ASC）。 */
+	listActiveSharedKeysByChannel(channelType: string): Promise<SharedKeyRow[]>;
+	updateSharedKey(id: string, patch: UpdateSharedKeyPatch): Promise<boolean>;
+	/** 上游 401/403 或校验失败：置 invalid 并记录原因。 */
+	markSharedKeyFailure(id: string, reason: string, nowIso: string): Promise<void>;
+	deleteSharedKey(id: string): Promise<boolean>;
+	/** 收益入账后累计使用统计（与收益事务同批执行）。 */
+	addSharedKeyUsage(id: string, inputTokens: number, outputTokens: number, netAmount: number, nowIso: string): Promise<void>;
+}
+
+/** 门户账本：卖家收益、余额、提现、NFT 铸造。 */
+export interface PortalLedgerRepository {
+	getUserEarnings(userId: string): Promise<UserEarningsRow | null>;
+	/** 幂等建立 1:1 账本行（首次登录/首次上架时调用）。 */
+	ensureUserEarnings(userId: string): Promise<void>;
+	updateWallet(userId: string, walletAddress: string | null, verifiedAtIso: string | null): Promise<void>;
+	/** 幂等插入收益流水；重复 `request_log_id` 返回 false。 */
+	insertEarning(params: InsertSharedKeyEarningParams): Promise<boolean>;
+	/** 收益入账：balance/contribution_value/lifetime_earned 增加 net（与请求计费同批/独立事务均可）。 */
+	creditEarningBalance(sellerUserId: string, netAmount: number, nowIso: string): Promise<void>;
+	listEarningsBySeller(sellerUserId: string, page: number, pageSize: number): Promise<{ rows: SharedKeyEarningRow[]; total: number }>;
+	insertWithdrawal(params: InsertWithdrawalParams): Promise<void>;
+	getWithdrawal(id: string): Promise<WithdrawalRow | null>;
+	/** requested | processing | submitted 任一状态的进行中提现单。 */
+	getActiveWithdrawalByUser(userId: string): Promise<WithdrawalRow | null>;
+	listWithdrawalsByUser(userId: string, page: number, pageSize: number): Promise<{ rows: WithdrawalRow[]; total: number }>;
+	listAllWithdrawals(status?: string): Promise<WithdrawalRow[]>;
+	/** 条件锁定：balance -= amount, locked_amount += amount（WHERE balance >= amount）。失败返回 false。 */
+	lockBalanceForWithdrawal(userId: string, amount: number, nowIso: string): Promise<boolean>;
+	/** 提现确认：locked_amount -= amount, lifetime_withdrawn += amount, status=confirmed。 */
+	settleWithdrawalConfirmed(id: string, userId: string, amount: number, nowIso: string): Promise<void>;
+	/** 提现失败/驳回：locked_amount -= amount, balance += amount, status=failed。 */
+	refundWithdrawal(id: string, userId: string, amount: number, reason: string, nowIso: string): Promise<void>;
+	updateWithdrawalStatus(
+		id: string,
+		patch: {
+			status?: string;
+			txHash?: string | null;
+			chainId?: number | null;
+			tokenAmount?: number | null;
+			failureReason?: string | null;
+			nowIso: string;
+			/** CAS 条件：仅当当前 status 等于该值才更新（并发处理器防双铸）。 */
+			expectedStatus?: string;
+		}
+	): Promise<boolean>;
+	/** 幂等创建铸造记录；UNIQUE(user_id, badge_token_id) 冲突返回 false。 */
+	insertNftMint(params: InsertNftMintParams): Promise<boolean>;
+	getNftMintsByUser(userId: string): Promise<NftMintRow[]>;
+	listAllNftMints(status?: string): Promise<NftMintRow[]>;
+	updateNftMintStatus(
+		id: string,
+		patch: { status?: string; txHash?: string | null; chainId?: number | null; failureReason?: string | null; confirmedAt?: string | null }
+	): Promise<boolean>;
+	setHighestBadgeTier(userId: string, tier: number, nowIso: string): Promise<void>;
 }

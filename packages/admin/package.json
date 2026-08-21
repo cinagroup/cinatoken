@@ -31,7 +31,8 @@
 		"react": "^19.2.4",
 		"react-dom": "^19.2.4",
 		"recharts": "^2.15.4",
-		"simple-icons": "^16.13.0"
+		"simple-icons": "^16.13.0",
+		"viem": "^2.55.19"
 	},
 	"devDependencies": {
 		"@cloudflare/workers-types": "^4.20260305.0",

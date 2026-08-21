@@ -12,6 +12,11 @@ import { createD1RoutePoolStickyBindingsRepository } from '../db/d1/route-pool-s
 import { createD1UserAuditLogsRepository } from '../db/d1/user-audit-logs.impl';
 import { createD1UsersRepository } from '../db/d1/users.impl';
 import { createD1AdminAccessRepository } from '../db/d1/admin-access.impl';
+import {
+	createD1PortalAccessRepository,
+	createD1PortalLedgerRepository,
+	createD1SharedKeysRepository,
+} from '../db/d1/portal-marketplace.impl';
 
 export function createD1Repositories(client: GatewayDatabaseClient): GatewayRepositories {
 	if (client.driver !== 'd1') {
@@ -31,5 +36,8 @@ export function createD1Repositories(client: GatewayDatabaseClient): GatewayRepo
 		userAuditLogs: createD1UserAuditLogsRepository(client),
 		routePoolSticky: createD1RoutePoolStickyBindingsRepository(client),
 		adminAccess: createD1AdminAccessRepository(client),
+		portalAccess: createD1PortalAccessRepository(client),
+		sharedKeys: createD1SharedKeysRepository(client),
+		portalLedger: createD1PortalLedgerRepository(client),
 	};
 }

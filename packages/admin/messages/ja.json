@@ -23,7 +23,8 @@
 			"architecture": "アーキテクチャ",
 			"deployment": "デプロイ",
 			"docs": "ドキュメント",
-			"console": "コンソールへ"
+			"console": "コンソールへ",
+			"portal": "ユーザーセンター"
 		},
 		"theme": {
 			"label": "表示モード",
@@ -52,19 +53,47 @@
 			"title": "ビルダーのための AI ケイパビリティゲートウェイ",
 			"description": "柔軟な接続、インテリジェントなルーティング、コスト制御、エンドツーエンドの可観測性。",
 			"items": {
-				"protocols": { "title": "統一プロトコル", "description": "一つの Gateway Base URL からモデル推論、メディア機能、エージェントツールを利用できます。", "detail": "Chat · Responses · Images · Audio · Tools" },
-				"routing": { "title": "インテリジェントルーティング", "description": "各リクエスト入口をルートプールへ送り、複数のアップストリーム間で安全にフェイルオーバーします。", "detail": "優先度 · Weight · フェイルオーバー · Sticky routing" },
-				"budgets": { "title": "予算とキー", "description": "利用者ごとにキーを発行し、期間予算と実使用量でコストを管理します。", "detail": "ユーザー · API Key · 期間予算 · 3 つの台帳" },
-				"observability": { "title": "ログと分析", "description": "呼び出し経路と予算イベントを記録し、利用量、コスト、品質を多角的に確認します。", "detail": "リクエストログ · 監査ログ · モデル/Provider/ユーザー分析" }
+				"protocols": {
+					"title": "統一プロトコル",
+					"description": "一つの Gateway Base URL からモデル推論、メディア機能、エージェントツールを利用できます。",
+					"detail": "Chat · Responses · Images · Audio · Tools"
+				},
+				"routing": {
+					"title": "インテリジェントルーティング",
+					"description": "各リクエスト入口をルートプールへ送り、複数のアップストリーム間で安全にフェイルオーバーします。",
+					"detail": "優先度 · Weight · フェイルオーバー · Sticky routing"
+				},
+				"budgets": {
+					"title": "予算とキー",
+					"description": "利用者ごとにキーを発行し、期間予算と実使用量でコストを管理します。",
+					"detail": "ユーザー · API Key · 期間予算 · 3 つの台帳"
+				},
+				"observability": {
+					"title": "ログと分析",
+					"description": "呼び出し経路と予算イベントを記録し、利用量、コスト、品質を多角的に確認します。",
+					"detail": "リクエストログ · 監査ログ · モデル/Provider/ユーザー分析"
+				}
 			}
 		},
 		"steps": {
 			"title": "Provider から安定した呼び出しまで、4 ステップ",
 			"items": {
-				"providers": { "title": "Provider を接続", "description": "アップストリームのエンドポイントと認証情報を設定" },
-				"routes": { "title": "モデルとルートを公開", "description": "プロトコル入口、ルートプール、フェイルオーバーを定義" },
-				"keys": { "title": "ユーザーキーを発行", "description": "ユーザー、プロジェクト、顧客ごとに API Key と予算を割り当て" },
-				"observe": { "title": "すべての呼び出しを観測", "description": "ログ、監査、分析で継続的に改善" }
+				"providers": {
+					"title": "Provider を接続",
+					"description": "アップストリームのエンドポイントと認証情報を設定"
+				},
+				"routes": {
+					"title": "モデルとルートを公開",
+					"description": "プロトコル入口、ルートプール、フェイルオーバーを定義"
+				},
+				"keys": {
+					"title": "ユーザーキーを発行",
+					"description": "ユーザー、プロジェクト、顧客ごとに API Key と予算を割り当て"
+				},
+				"observe": {
+					"title": "すべての呼び出しを観測",
+					"description": "ログ、監査、分析で継続的に改善"
+				}
 			}
 		},
 		"deployment": {
@@ -78,7 +107,9 @@
 			"console": "コンソールへ",
 			"deploymentDocs": "デプロイドキュメントを見る"
 		},
-		"footer": { "description": "AI ケイパビリティゲートウェイと運用コントロールプレーン" }
+		"footer": {
+			"description": "AI ケイパビリティゲートウェイと運用コントロールプレーン"
+		}
 	},
 	"brand": {
 		"wordmark": "cinatoken",
@@ -211,7 +242,10 @@
 			"userUsage": "ユーザー使用量",
 			"reliability": "信頼性",
 			"config": "設定",
-			"adminApiKeys": "連携キー"
+			"adminApiKeys": "連携キー",
+			"sharedKeys": "共有キープール",
+			"withdrawals": "出金管理",
+			"nftMints": "NFT ミント"
 		},
 		"version": "v{version}"
 	},
@@ -514,7 +548,10 @@
 			"apiKeyEditHint": "空欄で現行キーを維持。新しい値を入力すると置換します。",
 			"capModelsGenerate": "models.generate (/v1beta/models/'{model}:{action}') — ストリーム + 非ストリーム",
 			"legacyPerActionNotice": "このプロバイダーには安全に統合できない generateContent / streamGenerateContent の個別上書きが残っています。保存時はそのまま保持されます。確認後に単一の '{action}' テンプレートへ変更してください。"
-		}
+		},
+		"sharedChannel": "User shared channel",
+		"sharedChannelNone": "Not shared",
+		"sharedChannelHint": "Users can list personal official-channel API keys that join this provider dispatch pool; provider api_key becomes optional"
 	},
 	"models": {
 		"title": "モデル",
@@ -1831,7 +1868,10 @@
 		"activate": "有効化",
 		"deactivate": "失効",
 		"empty": "連携キーはありません",
-		"status": { "active": "有効", "revoked": "失効済み" }
+		"status": {
+			"active": "有効",
+			"revoked": "失効済み"
+		}
 	},
 	"config": {
 		"title": "システム設定",
@@ -2150,5 +2190,223 @@
 		"cost": "コスト：{amount}",
 		"providerLabel": "Provider：{id}",
 		"stdMetered": "標準 {std} · 計量 {metered}"
+	},
+	"portal": {
+		"portalTitle": "cinatoken ユーザーセンター",
+		"loginHeading": "cinatoken ユーザーセンター",
+		"loginSubtitle": "API Key 共有 · トークン販売 ・ 貢献 NFT ミント",
+		"loginDescription": "Sign in with your CinaAuth account to list official-channel API keys, set token prices, and mint cinachain badges by contribution.",
+		"backToHome": "Back to home",
+		"nav": {
+			"overview": "Overview",
+			"keys": "My Shared Keys",
+			"earnings": "Earnings",
+			"withdraw": "Withdraw",
+			"nft": "Contribution NFT",
+			"settings": "Settings"
+		},
+		"common": {
+			"loading": "Loading...",
+			"submitting": "Submitting...",
+			"prevPage": "Previous",
+			"nextPage": "Next"
+		},
+		"overview": {
+			"title": "Overview",
+			"subtitle": "Balance, contribution value and shared keys at a glance",
+			"balance": "Withdrawable balance",
+			"lockedShort": "Locked in withdrawal",
+			"locked": "(${amount} locked)",
+			"contribution": "Contribution value",
+			"activeKeys": "Active shared keys",
+			"totalKeys": "{count} total",
+			"lifetimeEarned": "Lifetime earned",
+			"withdrawn": "${amount} withdrawn",
+			"nextTier": "{threshold} more to {tier} ({progress}%)",
+			"mintableBadge": "{count} badge tier(s) ready to mint",
+			"recentKeys": "Shared keys (recent)",
+			"noKeys": "No shared keys yet — go to",
+			"servedTokens": "Tokens served",
+			"earned": "Earned"
+		},
+		"keys": {
+			"title": "My Shared Keys",
+			"subtitle": "Personal API keys from official channels only (OpenAI / Anthropic / Zhipu / DeepSeek)",
+			"formTitle": "List a new key",
+			"channel": "Channel",
+			"apiKey": "API Key",
+			"apiKeyPlaceholder": "Paste your official-channel API key",
+			"labelOptional": "Label (optional)",
+			"inputPrice": "Input price",
+			"outputPrice": "Output price",
+			"weight": "Weight (1-100)",
+			"weightHint": "Within the same priority tier, keys are served in fixed weight-descending order",
+			"limitsHint": "Price caps: input <= ${input}, output <= ${output} / 1M tokens; platform commission {commission}%",
+			"submit": "List & validate",
+			"submitFailed": "Failed to list key",
+			"createdActive": "Listed — key validated and now serving traffic",
+			"createdInvalid": "Key validation failed: {reason}",
+			"createdValidating": "Submitted; validation unavailable right now, retry from the list later",
+			"updated": "Updated",
+			"updateFailed": "Update failed",
+			"revalidated": "Re-validated",
+			"confirmDelete": "Delete this shared key?",
+			"deleted": "Deleted",
+			"empty": "No shared keys yet",
+			"key": "Key",
+			"status": "Status",
+			"pricing": "Price ($/1M)",
+			"priceCell": "in ${input} / out ${output}",
+			"usage": "Usage",
+			"tokensCell": "in {input} / out {output}",
+			"actions": "Actions",
+			"pause": "Pause",
+			"resume": "Resume",
+			"revalidate": "Re-validate",
+			"delete": "Delete",
+			"status_validating": "Validating",
+			"status_active": "Active",
+			"status_paused": "Paused",
+			"status_invalid": "Invalid",
+			"status_disabled": "Disabled"
+		},
+		"earnings": {
+			"title": "Earnings",
+			"subtitle": "Settled per request served by your shared keys",
+			"empty": "No earnings yet",
+			"time": "Time",
+			"tokens": "Tokens",
+			"gross": "Gross",
+			"fee": "Commission",
+			"net": "Net",
+			"totalEntries": "{total} entries"
+		},
+		"withdraw": {
+			"title": "Withdraw",
+			"subtitle": "Balance is automatically converted to CINA-C on cinachain (Base Sepolia) and sent to your wallet",
+			"walletLabel": "Payout wallet (EVM)",
+			"walletHint": "Receives CINA-C and contribution badges; format-checked only",
+			"saveWallet": "Save wallet",
+			"walletSaved": "Wallet saved",
+			"walletSaveFailed": "Failed to save wallet",
+			"amountLabel": "Amount ($)",
+			"submit": "Request withdrawal",
+			"submitted": "Submitted — status updates automatically once confirmed on-chain",
+			"submitFailed": "Withdrawal failed",
+			"needWallet": "Bind a payout wallet first",
+			"history": "Withdrawal history",
+			"empty": "No withdrawals yet",
+			"tokenAmount": "{amount} CINA-C",
+			"viewTx": "View tx",
+			"status_requested": "Processing",
+			"status_processing": "Processing",
+			"status_submitted": "Confirming",
+			"status_confirmed": "Completed",
+			"status_failed": "Failed (refunded)"
+		},
+		"nft": {
+			"title": "Contribution NFT",
+			"subtitle": "Mint cinachain CinaBadge soulbound tier badges by cumulative contribution value",
+			"contributionHint": "Contribution value = sum of net earnings from your shared keys",
+			"chainNotConfigured": "Minting is not configured yet (missing cinachain env) — please contact the operator",
+			"threshold": "Threshold: ${threshold}",
+			"mint": "Mint badge",
+			"minted": "Minted",
+			"mintSubmitted": "Mint submitted — updates automatically once confirmed on-chain",
+			"mintFailed": "Mint failed",
+			"progress": "{percent}%",
+			"history": "Mint history",
+			"empty": "No mints yet",
+			"tier_Bronze": "Bronze",
+			"tier_Silver": "Silver",
+			"tier_Gold": "Gold",
+			"tier_Platinum": "Platinum",
+			"status_pending": "Minting",
+			"status_submitted": "Confirming",
+			"status_confirmed": "On-chain",
+			"status_failed": "Failed"
+		},
+		"settings": {
+			"title": "Settings",
+			"subtitle": "Gateway keys and profile",
+			"gatewayKeys": "My gateway keys (sk-)",
+			"gatewayKeysHint": "Call the cinatoken gateway API (/v1/chat/completions etc.); usage bills your account budget",
+			"keyName": "Key name",
+			"createKey": "Create key",
+			"keyOnce": "The plaintext key is shown only once — save it now:",
+			"keyCreateFailed": "Failed to create key",
+			"noKeys": "No gateway keys",
+			"confirmRevoke": "Revoke this key? It stops working immediately.",
+			"revoke": "Revoke",
+			"walletSection": "Payout wallet",
+			"walletValue": "Current: {wallet}",
+			"walletNone": "not bound",
+			"profileSection": "Profile",
+			"profileHint": "Credentials and profile are managed by CinaAuth",
+			"accountCenter": "Account Center"
+		}
+	},
+	"sharedKeysPage": {
+		"title": "Shared Key Pool",
+		"subtitle": "User-listed personal API keys from official channels; served in weight-descending order within each priority tier",
+		"loadFailed": "Failed to load shared keys",
+		"updateFailed": "Update failed",
+		"confirmDelete": "Delete this shared key?",
+		"filterAll": "All statuses",
+		"filterActive": "Active",
+		"filterValidating": "Validating",
+		"filterPaused": "Paused",
+		"filterInvalid": "Invalid",
+		"filterDisabled": "Disabled",
+		"seller": "Seller",
+		"channel": "Channel",
+		"key": "Key",
+		"status": "Status",
+		"pricing": "Price ($/1M)",
+		"priceCell": "in ${input} / out ${output}",
+		"priority": "Priority",
+		"weight": "Weight",
+		"usage": "Usage",
+		"actions": "Actions",
+		"disable": "Disable",
+		"enable": "Enable",
+		"delete": "Delete",
+		"empty": "No shared keys"
+	},
+	"withdrawalsPage": {
+		"title": "Withdrawals",
+		"subtitle": "On-chain CINA-C withdrawals; requested/processing can be rejected and refunded",
+		"loadFailed": "Failed to load withdrawals",
+		"processFailed": "Processing failed",
+		"processPending": "Process pending",
+		"rejectFailed": "Reject failed",
+		"rejectPrompt": "Rejection reason (will be refunded to the user)",
+		"reject": "Reject",
+		"filterAll": "All statuses",
+		"time": "Time",
+		"user": "User",
+		"amount": "Amount",
+		"netCell": "net ${net} -> ${token} CINA-C",
+		"wallet": "Wallet",
+		"status": "Status",
+		"tx": "Tx",
+		"actions": "Actions",
+		"empty": "No withdrawals"
+	},
+	"nftMintsPage": {
+		"title": "NFT Mints",
+		"subtitle": "cinachain CinaBadge tier mint records (user-minted after contribution threshold)",
+		"loadFailed": "Failed to load mints",
+		"processFailed": "Processing failed",
+		"processPending": "Process pending",
+		"filterAll": "All statuses",
+		"time": "Time",
+		"user": "User",
+		"tier": "Tier",
+		"wallet": "Wallet",
+		"value": "Value snapshot",
+		"status": "Status",
+		"tx": "Tx",
+		"empty": "No mints"
 	}
 }

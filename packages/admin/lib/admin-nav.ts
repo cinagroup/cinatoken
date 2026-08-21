@@ -11,6 +11,7 @@ export type AdminNavNameKey =
 	| 'simulator'
 	| 'users'
 	| 'apiKeys'
+	| 'sharedKeys'
 	| 'requestLogs'
 	| 'auditLogs'
 	| 'toolsConfig'
@@ -20,6 +21,8 @@ export type AdminNavNameKey =
 	| 'userUsage'
 	| 'reliability'
 	| 'adminApiKeys'
+	| 'withdrawals'
+	| 'nftMints'
 	| 'config';
 
 export type AdminNavGroupKey =
@@ -61,6 +64,7 @@ export const ADMIN_NAV_GROUPS: AdminNavGroup[] = [
 		items: [
 			{ nameKey: 'users', href: '/gateway/users' },
 			{ nameKey: 'apiKeys', href: '/gateway/keys' },
+			{ nameKey: 'sharedKeys', href: '/gateway/shared-keys' },
 			{ nameKey: 'requestLogs', href: '/gateway/request-logs' },
 			{ nameKey: 'auditLogs', href: '/gateway/audit-logs' },
 		],
@@ -87,7 +91,11 @@ export const ADMIN_NAV_GROUPS: AdminNavGroup[] = [
 	},
 	{
 		groupKey: 'system',
-		items: [{ nameKey: 'config', href: '/gateway/config' }],
+		items: [
+			{ nameKey: 'withdrawals', href: '/gateway/withdrawals' },
+			{ nameKey: 'nftMints', href: '/gateway/nft-mints' },
+			{ nameKey: 'config', href: '/gateway/config' },
+		],
 	},
 ];
 

@@ -9,6 +9,9 @@ export function GET(request: NextRequest): NextResponse {
 	url.searchParams.set('mode', 'register');
 	const callbackURL = request.nextUrl.searchParams.get('callbackURL');
 	if (callbackURL) url.searchParams.set('callbackURL', callbackURL);
+	if (request.nextUrl.searchParams.get('intent') === 'portal') {
+		url.searchParams.set('intent', 'portal');
+	}
 	const response = NextResponse.redirect(url, 302);
 	response.headers.set('Cache-Control', 'no-store');
 	return response;

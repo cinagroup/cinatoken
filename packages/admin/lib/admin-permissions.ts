@@ -22,6 +22,11 @@ export function getAdminAuthorizationDecision(method: string, pathname: string):
 		return { kind: 'permission', permission: 'providers.secrets.read' };
 	}
 	if (pathname.startsWith('/admin/providers')) return readOrWrite(normalizedMethod, 'providers');
+	// 用户共享密钥池治理（挂靠 providers 权限域）
+	if (pathname.startsWith('/admin/shared-keys')) return readOrWrite(normalizedMethod, 'providers');
+	// 门户账本：提现 / NFT 铸造（挂靠 users 权限域）
+	if (pathname.startsWith('/admin/withdrawals')) return readOrWrite(normalizedMethod, 'users');
+	if (pathname.startsWith('/admin/nft-mints')) return readOrWrite(normalizedMethod, 'users');
 	if (pathname.startsWith('/admin/models')) return readOrWrite(normalizedMethod, 'models');
 	if (pathname.startsWith('/admin/routes')) return readOrWrite(normalizedMethod, 'routes');
 	if (/^\/admin\/users\/[^/]+\/(?:logs|audit-logs)(?:\/|$)/.test(pathname)) {
