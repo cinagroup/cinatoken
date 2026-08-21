@@ -7,7 +7,7 @@
  * net 入账 `user_earnings.balance / contribution_value / lifetime_earned`。
  */
 import type { GatewayRepositories } from '@octafuse/core';
-import { getSystemConfigValue, roundGatewayMoney } from '@octafuse/core';
+import { roundGatewayMoney } from '@octafuse/core';
 import { parseSharedKeyId } from './shared-key-pool';
 
 const DEFAULT_COMMISSION_RATE = 0.1;
@@ -57,7 +57,7 @@ export async function settleSharedKeyEarning(
 
 	let commissionRate = DEFAULT_COMMISSION_RATE;
 	try {
-		const raw = await getSystemConfigValue(repos, 'SHARED_KEY_COMMISSION_RATE');
+		const raw = await repos.systemConfig.getConfig('SHARED_KEY_COMMISSION_RATE');
 		const parsed = raw === null ? NaN : Number(raw);
 		if (Number.isFinite(parsed) && parsed >= 0 && parsed <= 0.9) commissionRate = parsed;
 	} catch {

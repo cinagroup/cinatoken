@@ -56,6 +56,12 @@ export function markSharedKeyCooldown(sharedKeyId: string, cooldownMs: number, n
 	cooldownByKey.set(sharedKeyId, now + cooldownMs);
 }
 
+/** 测试用：清空进程级冷却状态。 */
+export function resetSharedKeyPoolStateForTests(): void {
+	cooldownByKey.clear();
+	lastCooldownPurge = 0;
+}
+
 /** 拉取指定渠道的有序候选（固定排序；读取失败不阻塞请求 → 空池）。 */
 export async function loadOrderedSharedKeys(
 	repos: GatewayRepositories,

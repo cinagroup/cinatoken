@@ -19,6 +19,7 @@
 | 理解 Gateway 能力和核心概念 | [users/features.md](./users/features.md) |
 | 部署后在管理后台配置供应商（Provider）、路由（Routes）、用户 API 密钥 | [users/configuration.md](./users/configuration.md) |
 | 把已有 AI 客户端接到 Gateway | [users/connect-clients.md](./users/connect-clients.md) |
+| 用户门户：共享个人 API Key 出售 token、收益提现、贡献 NFT | [users/portal.md](./users/portal.md) |
 | 用 Gateway 接入自己的门户、后台或 SaaS | [developers/integration.md](./developers/integration.md) |
 | 查代理服务（Proxy）/ 管理后台 API | [developers/api/README.md](./developers/api/README.md) |
 | 本地二开或贡献代码 | [developers/local-development.md](./developers/local-development.md) |
