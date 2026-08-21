@@ -21,7 +21,8 @@ interface Props {
 
 export default function AuthWrapper({ children }: Props) {
   const pathname = usePathname();
-  const isPublicHome = pathname === '/';
+  // 门户分区自带独立会话（user_session）与登录界面，不走管理台鉴权
+  const isPublicHome = pathname === '/' || pathname.startsWith('/account');
   const t = useTranslations('auth');
   const tBrand = useTranslations('brand');
   const tCommon = useTranslations('common');

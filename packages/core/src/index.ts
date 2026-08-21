@@ -44,6 +44,8 @@ export * from './db/model-modalities';
 export * from './db/request-log-status-filter';
 export * from './db/system-config-types';
 export * from './db/admin-access-types';
+export * from './db/shared-keys-types';
+export * from './shared-channels';
 
 export * from './lib/business-timezone';
 export * from './lib/billing-currency';

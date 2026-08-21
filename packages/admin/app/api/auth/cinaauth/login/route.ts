@@ -25,13 +25,17 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
 	try {
 		const config = getCinaAuthConfig(request);
 		const { transactionSecret } = getCinaAuthSecrets(request);
+		const intent: 'admin' | 'portal' =
+			request.nextUrl.searchParams.get('intent') === 'portal' ? 'portal' : 'admin';
 		const transaction = {
 			state: oauth.generateRandomState(),
 			nonce: oauth.generateRandomNonce(),
 			codeVerifier: oauth.generateRandomCodeVerifier(),
 			callbackPath: sanitizeCinaAuthCallbackPath(
 				request.nextUrl.searchParams.get('callbackURL'),
+				intent === 'portal' ? '/account' : '/dashboard',
 			),
+			intent,
 			createdAt: Date.now(),
 		};
 		const [authorizationServer, transactionCookie] = await Promise.all([

@@ -8,6 +8,8 @@ export type CinatokenOidcTransaction = {
 	codeVerifier: string;
 	callbackPath: string;
 	createdAt: number;
+	/** 会话去向：`admin`（默认，管理台会话）或 `portal`（普通用户门户会话）。 */
+	intent?: 'admin' | 'portal';
 };
 
 const bytesToBase64Url = (bytes: Uint8Array): string => {
@@ -43,18 +45,24 @@ const isTransaction = (value: unknown): value is CinatokenOidcTransaction => {
 		typeof candidate.nonce === 'string' &&
 		typeof candidate.codeVerifier === 'string' &&
 		typeof candidate.callbackPath === 'string' &&
-		typeof candidate.createdAt === 'number'
+		typeof candidate.createdAt === 'number' &&
+		(candidate.intent === undefined ||
+			candidate.intent === 'admin' ||
+			candidate.intent === 'portal')
 	);
 };
 
-export const sanitizeCinaAuthCallbackPath = (value: string | null | undefined): string => {
-	if (!value?.startsWith('/') || value.startsWith('//')) return '/dashboard';
+export const sanitizeCinaAuthCallbackPath = (
+	value: string | null | undefined,
+	fallback = '/dashboard',
+): string => {
+	if (!value?.startsWith('/') || value.startsWith('//')) return fallback;
 	try {
 		const url = new URL(value, 'https://cinatoken.com');
-		if (url.origin !== 'https://cinatoken.com') return '/dashboard';
+		if (url.origin !== 'https://cinatoken.com') return fallback;
 		return `${url.pathname}${url.search}${url.hash}`;
 	} catch {
-		return '/dashboard';
+		return fallback;
 	}
 };
 
@@ -94,7 +102,13 @@ export const openCinaAuthTransaction = async (
 		if (!isTransaction(parsed)) return null;
 		const age = now - parsed.createdAt;
 		if (age < 0 || age > TRANSACTION_MAX_AGE_MS) return null;
-		return { ...parsed, callbackPath: sanitizeCinaAuthCallbackPath(parsed.callbackPath) };
+		return {
+			...parsed,
+			callbackPath: sanitizeCinaAuthCallbackPath(
+				parsed.callbackPath,
+				parsed.intent === 'portal' ? '/account' : '/dashboard',
+			),
+		};
 	} catch {
 		return null;
 	}
