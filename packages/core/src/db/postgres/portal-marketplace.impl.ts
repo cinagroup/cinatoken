@@ -320,7 +320,10 @@ export function createPostgresPortalLedgerRepository(db: PostgresDatabaseClient)
 			if (patch.tokenAmount !== undefined) set.tokenAmount = patch.tokenAmount == null ? null : String(patch.tokenAmount);
 			if (patch.failureReason !== undefined) set.failureReason = patch.failureReason;
 			const rows = await drizzle.update(withdrawalsTable).set(set)
-				.where(eq(withdrawalsTable.id, id)).returning({ id: withdrawalsTable.id });
+				.where(patch.expectedStatus
+					? and(eq(withdrawalsTable.id, id), eq(withdrawalsTable.status, patch.expectedStatus))
+					: eq(withdrawalsTable.id, id))
+				.returning({ id: withdrawalsTable.id });
 			return rows.length > 0;
 		},
 		async insertNftMint(params: InsertNftMintParams) {

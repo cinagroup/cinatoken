@@ -26,7 +26,13 @@ export async function processPendingWithdrawals(
 
 	for (const withdrawal of pending) {
 		if (withdrawal.status === 'submitted' && withdrawal.txHash) {
-			// 已广播：等待回执
+			// 已广播：CAS 认领（并发触发防重复结算回执），等待回执
+			const claimed = await repositories.portalLedger.updateWithdrawalStatus(withdrawal.id, {
+				status: 'processing',
+				expectedStatus: 'submitted',
+				nowIso: new Date().toISOString(),
+			});
+			if (!claimed) continue;
 			try {
 				const receipt = await waitForCinachainReceipt(withdrawal.txHash as `0x${string}`);
 				if (receipt.status === 'success') {
@@ -48,7 +54,10 @@ export async function processPendingWithdrawals(
 					failed += 1;
 				}
 			} catch (error) {
-				// 回执超时：保留 submitted，等下轮处理
+				// 回执超时：回退 submitted，等下轮处理
+				await repositories.portalLedger
+					.updateWithdrawalStatus(withdrawal.id, { status: 'submitted', expectedStatus: 'processing', nowIso: new Date().toISOString() })
+					.catch(() => undefined);
 				console.error(
 					JSON.stringify({
 						level: 'error',
@@ -64,6 +73,7 @@ export async function processPendingWithdrawals(
 
 		const claimed = await repositories.portalLedger.updateWithdrawalStatus(withdrawal.id, {
 			status: 'processing',
+			expectedStatus: 'requested',
 			nowIso: new Date().toISOString(),
 		});
 		if (!claimed) continue;

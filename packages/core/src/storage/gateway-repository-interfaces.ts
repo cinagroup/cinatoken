@@ -461,7 +461,16 @@ export interface PortalLedgerRepository {
 	refundWithdrawal(id: string, userId: string, amount: number, reason: string, nowIso: string): Promise<void>;
 	updateWithdrawalStatus(
 		id: string,
-		patch: { status?: string; txHash?: string | null; chainId?: number | null; tokenAmount?: number | null; failureReason?: string | null; nowIso: string }
+		patch: {
+			status?: string;
+			txHash?: string | null;
+			chainId?: number | null;
+			tokenAmount?: number | null;
+			failureReason?: string | null;
+			nowIso: string;
+			/** CAS 条件：仅当当前 status 等于该值才更新（并发处理器防双铸）。 */
+			expectedStatus?: string;
+		}
 	): Promise<boolean>;
 	/** 幂等创建铸造记录；UNIQUE(user_id, badge_token_id) 冲突返回 false。 */
 	insertNftMint(params: InsertNftMintParams): Promise<boolean>;

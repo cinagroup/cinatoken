@@ -377,7 +377,9 @@ export function createD1PortalLedgerRepository(db: D1DatabaseClient): PortalLedg
 			if (patch.chainId !== undefined) { sets.push('chain_id = ?'); values.push(patch.chainId); }
 			if (patch.tokenAmount !== undefined) { sets.push('token_amount = ?'); values.push(patch.tokenAmount); }
 			if (patch.failureReason !== undefined) { sets.push('failure_reason = ?'); values.push(patch.failureReason); }
-			const result = await raw.prepare(`UPDATE withdrawals SET ${sets.join(', ')} WHERE id = ?`)
+			const whereStatus = patch.expectedStatus ? ' AND status = ?' : '';
+			if (patch.expectedStatus !== undefined) values.push(patch.expectedStatus);
+			const result = await raw.prepare(`UPDATE withdrawals SET ${sets.join(', ')} WHERE id = ?${whereStatus}`)
 				.bind(...values, id).run();
 			return Number(result.meta.changes ?? 0) > 0;
 		},

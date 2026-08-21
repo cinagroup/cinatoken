@@ -535,8 +535,10 @@ export function createMySqlPortalLedgerRepository(db: MySqlDatabaseClient): Port
 			if (patch.chainId !== undefined) { sets.push('chain_id = ?'); values.push(patch.chainId); }
 			if (patch.tokenAmount !== undefined) { sets.push('token_amount = ?'); values.push(patch.tokenAmount); }
 			if (patch.failureReason !== undefined) { sets.push('failure_reason = ?'); values.push(patch.failureReason); }
+			const whereStatus = patch.expectedStatus ? ' AND status = ?' : '';
+			if (patch.expectedStatus !== undefined) values.push(patch.expectedStatus);
 			const [result] = await pool.execute<ResultSetHeader>(
-				`UPDATE withdrawals SET ${sets.join(', ')} WHERE id = ?`,
+				`UPDATE withdrawals SET ${sets.join(', ')} WHERE id = ?${whereStatus}`,
 				[...values, id]
 			);
 			return result.affectedRows > 0;
