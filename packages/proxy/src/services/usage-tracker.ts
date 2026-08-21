@@ -35,6 +35,7 @@ import {
 } from '@octafuse/core';
 import type { UsageFromStream } from './proxy';
 import { fireGatewayErrorWebhooks } from './alert-webhook';
+import { settleSharedKeyEarning } from './shared-key-earnings';
 import type { GatewayCircuitAlertEvent } from './circuit-alert-types';
 import type { RequestTimingSnapshot } from './request-timing';
 
@@ -394,4 +395,16 @@ export async function recordUsage(
 			);
 		});
 	}
+
+	// 共享密钥收益结算（`sharedkey:` 前缀识别；幂等于 request_log_id）
+	await settleSharedKeyEarning(repos, {
+		requestLogId: id,
+		providerKeyId: params.provider_key_id ?? null,
+		usage: {
+			input_tokens: params.usage.input_tokens,
+			output_tokens: params.usage.output_tokens,
+			cache_read_tokens: params.usage.cache_read_tokens,
+			cache_write_tokens: params.usage.cache_write_tokens,
+		},
+	});
 }
