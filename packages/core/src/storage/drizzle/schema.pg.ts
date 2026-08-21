@@ -1,5 +1,5 @@
 import { sql } from 'drizzle-orm';
-import { pgTable, text, timestamp, integer, numeric, real, boolean, uniqueIndex, check } from 'drizzle-orm/pg-core';
+import { pgTable, text, timestamp, integer, numeric, real, boolean, uniqueIndex, check, bigint } from 'drizzle-orm/pg-core';
 
 export const usersTable = pgTable(
 	'users',
@@ -66,6 +66,8 @@ export const providersTable = pgTable('providers', {
 	/** `active` | `disabled` */
 	status: text('status').notNull().default('active'),
 	description: text('description'),
+	/** 非空时该 provider 接受对应用户共享密钥池注入（openai/anthropic/zhipu/deepseek） */
+	sharedChannelType: text('shared_channel_type'),
 	createdAt: timestamp('created_at', { withTimezone: true, mode: 'string' }).notNull(),
 });
 
@@ -253,6 +255,129 @@ export const adminSessionsTable = pgTable('admin_sessions', {
 	expiresAt: timestamp('expires_at', { withTimezone: true, mode: 'string' }).notNull(),
 });
 
+/** 用户门户会话（`user_session` Cookie），独立于 admin_sessions。 */
+export const portalSessionsTable = pgTable('portal_sessions', {
+	tokenHash: text('token_hash').primaryKey(),
+	/** CinaAuth OIDC `sub` */
+	subject: text('subject').notNull(),
+	email: text('email').notNull(),
+	createdAt: timestamp('created_at', { withTimezone: true, mode: 'string' }).notNull(),
+	expiresAt: timestamp('expires_at', { withTimezone: true, mode: 'string' }).notNull(),
+});
+
+/** 卖家上架的个人上游 API Key（官方渠道白名单）。 */
+export const sharedKeysTable = pgTable(
+	'shared_keys',
+	{
+		id: text('id').primaryKey(),
+		sellerUserId: text('seller_user_id').notNull().references(() => usersTable.id, { onDelete: 'cascade' }),
+		/** openai | anthropic | zhipu | deepseek */
+		channelType: text('channel_type').notNull(),
+		apiKey: text('api_key').notNull(),
+		keyFingerprint: text('key_fingerprint').notNull(),
+		label: text('label'),
+		/** validating | active | paused | invalid | disabled */
+		status: text('status').notNull().default('validating'),
+		sellerPriority: integer('seller_priority').notNull().default(0),
+		weight: integer('weight').notNull().default(1),
+		inputPrice: numeric('input_price', { precision: 18, scale: 6 }).notNull().default('0'),
+		outputPrice: numeric('output_price', { precision: 18, scale: 6 }).notNull().default('0'),
+		cacheReadPrice: numeric('cache_read_price', { precision: 18, scale: 6 }),
+		cacheWritePrice: numeric('cache_write_price', { precision: 18, scale: 6 }),
+		validatedAt: timestamp('validated_at', { withTimezone: true, mode: 'string' }),
+		lastUsedAt: timestamp('last_used_at', { withTimezone: true, mode: 'string' }),
+		lastFailureAt: timestamp('last_failure_at', { withTimezone: true, mode: 'string' }),
+		failureReason: text('failure_reason'),
+		servedInputTokens: bigint('served_input_tokens', { mode: 'number' }).notNull().default(0),
+		servedOutputTokens: bigint('served_output_tokens', { mode: 'number' }).notNull().default(0),
+		earnedTotal: numeric('earned_total', { precision: 18, scale: 6 }).notNull().default('0'),
+		createdAt: timestamp('created_at', { withTimezone: true, mode: 'string' }).notNull(),
+		updatedAt: timestamp('updated_at', { withTimezone: true, mode: 'string' }).notNull(),
+	},
+	(t) => [
+		uniqueIndex('uk_shared_keys_seller_fingerprint').on(t.sellerUserId, t.keyFingerprint),
+	]
+);
+
+/** 按请求结算的卖家收益流水；`request_log_id` 幂等。 */
+export const sharedKeyEarningsTable = pgTable(
+	'shared_key_earnings',
+	{
+		id: text('id').primaryKey(),
+		requestLogId: text('request_log_id').notNull(),
+		sharedKeyId: text('shared_key_id').notNull(),
+		sellerUserId: text('seller_user_id').notNull(),
+		inputTokens: integer('input_tokens').notNull().default(0),
+		outputTokens: integer('output_tokens').notNull().default(0),
+		cacheReadTokens: integer('cache_read_tokens').notNull().default(0),
+		cacheWriteTokens: integer('cache_write_tokens').notNull().default(0),
+		grossAmount: numeric('gross_amount', { precision: 18, scale: 6 }).notNull().default('0'),
+		platformFee: numeric('platform_fee', { precision: 18, scale: 6 }).notNull().default('0'),
+		netAmount: numeric('net_amount', { precision: 18, scale: 6 }).notNull().default('0'),
+		currency: text('currency').notNull().default('USD'),
+		createdAt: timestamp('created_at', { withTimezone: true, mode: 'string' }).notNull(),
+	},
+	(t) => [uniqueIndex('uk_shared_key_earnings_request_log').on(t.requestLogId)]
+);
+
+/** 卖家账本（1:1 users）。 */
+export const userEarningsTable = pgTable('user_earnings', {
+	userId: text('user_id').primaryKey().references(() => usersTable.id, { onDelete: 'cascade' }),
+	balance: numeric('balance', { precision: 18, scale: 6 }).notNull().default('0'),
+	lockedAmount: numeric('locked_amount', { precision: 18, scale: 6 }).notNull().default('0'),
+	lifetimeEarned: numeric('lifetime_earned', { precision: 18, scale: 6 }).notNull().default('0'),
+	lifetimeWithdrawn: numeric('lifetime_withdrawn', { precision: 18, scale: 6 }).notNull().default('0'),
+	contributionValue: numeric('contribution_value', { precision: 18, scale: 6 }).notNull().default('0'),
+	walletAddress: text('wallet_address'),
+	walletVerifiedAt: timestamp('wallet_verified_at', { withTimezone: true, mode: 'string' }),
+	highestBadgeTier: integer('highest_badge_tier').notNull().default(0),
+	updatedAt: timestamp('updated_at', { withTimezone: true, mode: 'string' }).notNull(),
+});
+
+/** 链上 CINA-C 自动提现单。 */
+export const withdrawalsTable = pgTable(
+	'withdrawals',
+	{
+		id: text('id').primaryKey(),
+		userId: text('user_id').notNull().references(() => usersTable.id, { onDelete: 'cascade' }),
+		amount: numeric('amount', { precision: 18, scale: 6 }).notNull(),
+		fee: numeric('fee', { precision: 18, scale: 6 }).notNull().default('0'),
+		netAmount: numeric('net_amount', { precision: 18, scale: 6 }).notNull(),
+		currency: text('currency').notNull().default('USD'),
+		walletAddress: text('wallet_address').notNull(),
+		/** requested | processing | submitted | confirmed | failed */
+		status: text('status').notNull().default('requested'),
+		tokenAmount: numeric('token_amount', { precision: 18, scale: 6 }),
+		txHash: text('tx_hash'),
+		chainId: integer('chain_id'),
+		failureReason: text('failure_reason'),
+		createdAt: timestamp('created_at', { withTimezone: true, mode: 'string' }).notNull(),
+		updatedAt: timestamp('updated_at', { withTimezone: true, mode: 'string' }).notNull(),
+		confirmedAt: timestamp('confirmed_at', { withTimezone: true, mode: 'string' }),
+	}
+);
+
+/** cinachain CinaBadge 位阶徽章铸造记录。 */
+export const nftMintsTable = pgTable(
+	'nft_mints',
+	{
+		id: text('id').primaryKey(),
+		userId: text('user_id').notNull().references(() => usersTable.id, { onDelete: 'cascade' }),
+		badgeTokenId: integer('badge_token_id').notNull(),
+		tierName: text('tier_name').notNull(),
+		walletAddress: text('wallet_address').notNull(),
+		/** pending | submitted | confirmed | failed */
+		status: text('status').notNull().default('pending'),
+		txHash: text('tx_hash'),
+		chainId: integer('chain_id'),
+		valueSnapshot: numeric('value_snapshot', { precision: 18, scale: 6 }).notNull().default('0'),
+		failureReason: text('failure_reason'),
+		createdAt: timestamp('created_at', { withTimezone: true, mode: 'string' }).notNull(),
+		confirmedAt: timestamp('confirmed_at', { withTimezone: true, mode: 'string' }),
+	},
+	(t) => [uniqueIndex('uk_nft_mints_user_badge').on(t.userId, t.badgeTokenId)]
+);
+
 export const pgCoreSchema = {
 	usersTable,
 	apiKeysTable,
@@ -266,4 +391,10 @@ export const pgCoreSchema = {
 	userAuditLogsTable,
 	adminApiKeysTable,
 	adminSessionsTable,
+	portalSessionsTable,
+	sharedKeysTable,
+	sharedKeyEarningsTable,
+	userEarningsTable,
+	withdrawalsTable,
+	nftMintsTable,
 };

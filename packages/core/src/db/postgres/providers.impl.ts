@@ -21,6 +21,7 @@ function mapPgProviderRow(r: {
 	apiKey: string;
 	status: string;
 	description: string | null;
+	sharedChannelType?: string | null;
 	createdAt: string;
 }): ProviderRow {
 	return {
@@ -30,6 +31,7 @@ function mapPgProviderRow(r: {
 		api_key: r.apiKey,
 		status: r.status,
 		description: r.description,
+		shared_channel_type: r.sharedChannelType ?? null,
 		created_at: r.createdAt,
 	};
 }
@@ -47,16 +49,17 @@ export function createPostgresProvidersRepository(db: PostgresDatabaseClient): P
 					api_key: string;
 					status: string;
 					description: string | null;
+					shared_channel_type: string | null;
 					created_at: string;
 					routes_count: number;
 					active_routes_count: number;
 				}>
 			>`
-		SELECT p.id, p.name, p.endpoints, p.api_key, p.status, p.description, p.created_at::text,
-			(SELECT COUNT(*)::int FROM model_routes WHERE provider_id = p.id) AS routes_count,
-			(SELECT COUNT(*)::int FROM model_routes WHERE provider_id = p.id AND status = 'active') AS active_routes_count
-		FROM providers p ORDER BY p.created_at DESC
-	`;
+			SELECT p.id, p.name, p.endpoints, p.api_key, p.status, p.description, p.shared_channel_type, p.created_at::text,
+				(SELECT COUNT(*)::int FROM model_routes WHERE provider_id = p.id) AS routes_count,
+				(SELECT COUNT(*)::int FROM model_routes WHERE provider_id = p.id AND status = 'active') AS active_routes_count
+			FROM providers p ORDER BY p.created_at DESC
+		`;
 			return rows.map((r) => ({
 				id: r.id,
 				name: r.name,
@@ -64,6 +67,7 @@ export function createPostgresProvidersRepository(db: PostgresDatabaseClient): P
 				api_key: r.api_key,
 				status: r.status,
 				description: r.description,
+				shared_channel_type: r.shared_channel_type,
 				created_at: r.created_at,
 				routes_count: Number(r.routes_count ?? 0),
 				active_routes_count: Number(r.active_routes_count ?? 0),
@@ -82,6 +86,7 @@ export function createPostgresProvidersRepository(db: PostgresDatabaseClient): P
 			description: unknown;
 			apiKey?: string;
 			status?: string;
+			sharedChannelType?: string | null;
 		}): Promise<void> {
 			const now = new Date().toISOString();
 			await drizzle.insert(pgProvidersTable).values({
@@ -91,6 +96,7 @@ export function createPostgresProvidersRepository(db: PostgresDatabaseClient): P
 				apiKey: params.apiKey ?? '',
 				status: params.status ?? 'active',
 				description: params.description == null ? null : String(params.description),
+				sharedChannelType: params.sharedChannelType ?? null,
 				createdAt: now,
 			});
 		},
@@ -131,16 +137,17 @@ export function createPostgresProvidersRepository(db: PostgresDatabaseClient): P
 					api_key: string;
 					status: string;
 					description: string | null;
+					shared_channel_type: string | null;
 					created_at: string;
 					routes_count: number;
 					active_routes_count: number;
 				}>
 			>`
-		SELECT p.id, p.name, p.endpoints, p.api_key, p.status, p.description, p.created_at::text,
-			(SELECT COUNT(*)::int FROM model_routes WHERE provider_id = p.id) AS routes_count,
-			(SELECT COUNT(*)::int FROM model_routes WHERE provider_id = p.id AND status = 'active') AS active_routes_count
-		FROM providers p WHERE p.id = ${id}
-	`;
+			SELECT p.id, p.name, p.endpoints, p.api_key, p.status, p.description, p.shared_channel_type, p.created_at::text,
+				(SELECT COUNT(*)::int FROM model_routes WHERE provider_id = p.id) AS routes_count,
+				(SELECT COUNT(*)::int FROM model_routes WHERE provider_id = p.id AND status = 'active') AS active_routes_count
+			FROM providers p WHERE p.id = ${id}
+		`;
 			const r = rows[0];
 			if (!r) return null;
 			return {
@@ -150,6 +157,7 @@ export function createPostgresProvidersRepository(db: PostgresDatabaseClient): P
 				api_key: r.api_key,
 				status: r.status,
 				description: r.description,
+				shared_channel_type: r.shared_channel_type,
 				created_at: r.created_at,
 				routes_count: Number(r.routes_count ?? 0),
 				active_routes_count: Number(r.active_routes_count ?? 0),

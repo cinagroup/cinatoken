@@ -90,6 +90,8 @@ export interface ProviderRow {
   /** `active` | `disabled`；disabled 不参与调度。 */
   status?: ProviderStatus | string;
   description: string | null;
+  /** 非空时该 provider 接受对应用户共享密钥池注入（openai/anthropic/zhipu/deepseek）。 */
+  shared_channel_type?: string | null;
   created_at: string;
 }
 
