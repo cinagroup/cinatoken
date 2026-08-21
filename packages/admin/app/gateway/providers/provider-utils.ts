@@ -121,6 +121,7 @@ export function providerToFormData(
 	return {
 		api_key: "",
 		status: provider.status === "disabled" ? "disabled" : "active",
+		shared_channel_type: provider.shared_channel_type ?? "",
 		openai: protocolFormFromConfig(map.openai),
 		anthropic: protocolFormFromConfig(map.anthropic),
 		gemini: protocolFormFromConfig(map.gemini),

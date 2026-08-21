@@ -327,8 +327,8 @@ export function useProvidersPageState() {
 	}, [importSelected, refreshProviders]);
 
 	const handleSave = useCallback(async () => {
-		if (!editingProvider && !formData.api_key.trim()) {
-			setSaveError('API key is required');
+		if (!editingProvider && !formData.api_key.trim() && !formData.shared_channel_type) {
+			setSaveError('API key is required (or select a shared channel)');
 			return;
 		}
 		setSaveError('');

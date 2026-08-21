@@ -137,6 +137,8 @@ export interface GatewayProvider {
   api_key?: string;
   /** `active` | `disabled` */
   status?: string;
+  /** 非空 = 接受用户共享密钥池注入的官方渠道（openai/anthropic/zhipu/deepseek） */
+  shared_channel_type?: string | null;
   description: string | null;
   created_at: string;
   has_pending_key?: boolean;

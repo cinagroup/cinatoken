@@ -524,6 +524,25 @@ export function ProviderModal(props: ProviderModalProps) {
 										{editingProvider ? t("apiKeyEditHint") : t("apiKeyHint")}
 									</p>
 								</div>
+								<div>
+									<label className="mb-1 block text-sm font-medium text-gray-700">
+										{t("sharedChannel")}
+									</label>
+									<select
+										value={formData.shared_channel_type}
+										onChange={(e) =>
+											onFormChange({ ...formData, shared_channel_type: e.target.value })
+										}
+										className="w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+									>
+										<option value="">{t("sharedChannelNone")}</option>
+										<option value="openai">OpenAI (ChatGPT)</option>
+										<option value="anthropic">Anthropic (Claude)</option>
+										<option value="zhipu">Zhipu GLM</option>
+										<option value="deepseek">DeepSeek</option>
+									</select>
+									<p className="mt-1 text-xs text-gray-500">{t("sharedChannelHint")}</p>
+								</div>
 							</div>
 							<div className="flex min-h-0 flex-col">
 								<div>

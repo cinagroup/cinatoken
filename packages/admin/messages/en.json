@@ -242,7 +242,10 @@
 			"userUsage": "User Usage",
 			"reliability": "Reliability",
 			"config": "Config",
-			"adminApiKeys": "Integration Keys"
+			"adminApiKeys": "Integration Keys",
+			"sharedKeys": "Shared Key Pool",
+			"withdrawals": "Withdrawals",
+			"nftMints": "NFT Mints"
 		},
 		"version": "v{version}"
 	},
@@ -545,7 +548,10 @@
 			"apiKeyEditHint": "Leave blank to keep the current key. Enter a new value to replace it.",
 			"capModelsGenerate": "models.generate (/v1beta/models/'{model}:{action}') — stream + non-stream",
 			"legacyPerActionNotice": "This provider still has separate generateContent / streamGenerateContent overrides that cannot be safely merged. They are preserved as-is on save. Clear them in the database or set a single '{action}' template after review."
-		}
+		},
+		"sharedChannel": "User shared channel",
+		"sharedChannelNone": "Not shared",
+		"sharedChannelHint": "Users can list personal official-channel API keys that join this provider dispatch pool; provider api_key becomes optional"
 	},
 	"models": {
 		"title": "Models",
@@ -2339,5 +2345,68 @@
 			"profileHint": "Credentials and profile are managed by CinaAuth",
 			"accountCenter": "Account Center"
 		}
+	},
+	"sharedKeysPage": {
+		"title": "Shared Key Pool",
+		"subtitle": "User-listed personal API keys from official channels; served in weight-descending order within each priority tier",
+		"loadFailed": "Failed to load shared keys",
+		"updateFailed": "Update failed",
+		"confirmDelete": "Delete this shared key?",
+		"filterAll": "All statuses",
+		"filterActive": "Active",
+		"filterValidating": "Validating",
+		"filterPaused": "Paused",
+		"filterInvalid": "Invalid",
+		"filterDisabled": "Disabled",
+		"seller": "Seller",
+		"channel": "Channel",
+		"key": "Key",
+		"status": "Status",
+		"pricing": "Price ($/1M)",
+		"priceCell": "in ${input} / out ${output}",
+		"priority": "Priority",
+		"weight": "Weight",
+		"usage": "Usage",
+		"actions": "Actions",
+		"disable": "Disable",
+		"enable": "Enable",
+		"delete": "Delete",
+		"empty": "No shared keys"
+	},
+	"withdrawalsPage": {
+		"title": "Withdrawals",
+		"subtitle": "On-chain CINA-C withdrawals; requested/processing can be rejected and refunded",
+		"loadFailed": "Failed to load withdrawals",
+		"processFailed": "Processing failed",
+		"processPending": "Process pending",
+		"rejectFailed": "Reject failed",
+		"rejectPrompt": "Rejection reason (will be refunded to the user)",
+		"reject": "Reject",
+		"filterAll": "All statuses",
+		"time": "Time",
+		"user": "User",
+		"amount": "Amount",
+		"netCell": "net ${net} -> ${token} CINA-C",
+		"wallet": "Wallet",
+		"status": "Status",
+		"tx": "Tx",
+		"actions": "Actions",
+		"empty": "No withdrawals"
+	},
+	"nftMintsPage": {
+		"title": "NFT Mints",
+		"subtitle": "cinachain CinaBadge tier mint records (user-minted after contribution threshold)",
+		"loadFailed": "Failed to load mints",
+		"processFailed": "Processing failed",
+		"processPending": "Process pending",
+		"filterAll": "All statuses",
+		"time": "Time",
+		"user": "User",
+		"tier": "Tier",
+		"wallet": "Wallet",
+		"value": "Value snapshot",
+		"status": "Status",
+		"tx": "Tx",
+		"empty": "No mints"
 	}
 }

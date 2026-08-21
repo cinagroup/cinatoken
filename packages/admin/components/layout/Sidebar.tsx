@@ -27,6 +27,8 @@ import {
   Cog6ToothIcon,
   WrenchScrewdriverIcon,
   QueueListIcon,
+  BanknotesIcon,
+  SparklesIcon,
 } from '@heroicons/react/24/outline';
 import { useState } from 'react';
 import { ADMIN_NAV_GROUPS, type AdminNavNameKey } from '@/lib/admin-nav';
@@ -50,6 +52,9 @@ const NAV_ICONS: Record<AdminNavNameKey, React.ComponentType<{ className?: strin
   userUsage: UsersIcon,
   reliability: ShieldCheckIcon,
   adminApiKeys: KeyIcon,
+  sharedKeys: ArrowsRightLeftIcon,
+  withdrawals: BanknotesIcon,
+  nftMints: SparklesIcon,
   config: Cog6ToothIcon,
 };
 

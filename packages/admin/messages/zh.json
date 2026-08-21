@@ -242,7 +242,10 @@
 			"userUsage": "用户用量",
 			"reliability": "可靠性",
 			"config": "配置",
-			"adminApiKeys": "集成密钥"
+			"adminApiKeys": "集成密钥",
+			"sharedKeys": "共享密钥池",
+			"withdrawals": "提现管理",
+			"nftMints": "NFT 铸造"
 		},
 		"version": "v{version}"
 	},
@@ -545,7 +548,10 @@
 			"apiKeyEditHint": "留空保持当前密钥；填写新值则替换。",
 			"capModelsGenerate": "models.generate (/v1beta/models/'{model}:{action}') — 流式 + 非流式",
 			"legacyPerActionNotice": "该 Provider 仍保留无法安全合并的 generateContent / streamGenerateContent 覆盖项。保存时原样写回。复核后可改为单一 '{action}' 模板。"
-		}
+		},
+		"sharedChannel": "用户共享渠道",
+		"sharedChannelNone": "不开放共享",
+		"sharedChannelHint": "选择官方渠道后，用户可在门户上架该渠道的个人 API Key 注入本 provider 调度池；可不填自有 API Key"
 	},
 	"models": {
 		"title": "模型",
@@ -2339,5 +2345,68 @@
 			"profileHint": "登录凭据与资料由 CinaAuth 统一管理",
 			"accountCenter": "账户中心"
 		}
+	},
+	"sharedKeysPage": {
+		"title": "共享密钥池",
+		"subtitle": "用户上架的官方渠道个人 API Key；同优先级层内按权重降序调度",
+		"loadFailed": "加载共享密钥失败",
+		"updateFailed": "更新失败",
+		"confirmDelete": "确定删除该共享密钥？",
+		"filterAll": "全部状态",
+		"filterActive": "活跃",
+		"filterValidating": "校验中",
+		"filterPaused": "已暂停",
+		"filterInvalid": "已失效",
+		"filterDisabled": "已停用",
+		"seller": "卖家",
+		"channel": "渠道",
+		"key": "密钥",
+		"status": "状态",
+		"pricing": "单价 ($/1M)",
+		"priceCell": "入 ${input} / 出 ${output}",
+		"priority": "优先级",
+		"weight": "权重",
+		"usage": "用量",
+		"actions": "操作",
+		"disable": "停用",
+		"enable": "启用",
+		"delete": "删除",
+		"empty": "暂无共享密钥"
+	},
+	"withdrawalsPage": {
+		"title": "提现管理",
+		"subtitle": "链上 CINA-C 自动提现；requested/processing 状态可驳回并退款",
+		"loadFailed": "加载提现记录失败",
+		"processFailed": "处理失败",
+		"processPending": "处理待提现",
+		"rejectFailed": "驳回失败",
+		"rejectPrompt": "驳回原因（将退款给用户）",
+		"reject": "驳回",
+		"filterAll": "全部状态",
+		"time": "时间",
+		"user": "用户",
+		"amount": "金额",
+		"netCell": "实付 ${net} → ${token} CINA-C",
+		"wallet": "钱包",
+		"status": "状态",
+		"tx": "交易",
+		"actions": "操作",
+		"empty": "暂无提现记录"
+	},
+	"nftMintsPage": {
+		"title": "NFT 铸造",
+		"subtitle": "cinachain CinaBadge 位阶徽章铸造记录（贡献值达标后用户自铸）",
+		"loadFailed": "加载铸造记录失败",
+		"processFailed": "处理失败",
+		"processPending": "处理待铸造",
+		"filterAll": "全部状态",
+		"time": "时间",
+		"user": "用户",
+		"tier": "位阶",
+		"wallet": "钱包",
+		"value": "贡献值快照",
+		"status": "状态",
+		"tx": "交易",
+		"empty": "暂无铸造记录"
 	}
 }
