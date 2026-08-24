@@ -20,6 +20,22 @@ export type SignerEnv = {
 const BADGE_ABI = parseAbi(['function mint(address to, uint256 tokenId, uint256 amount) external']);
 const CREDIT_ABI = parseAbi(['function mintTo(address to, uint256 amount) external']);
 
+export function encodeCreditMint(to: `0x${string}`, amount: bigint) {
+	return encodeFunctionData({
+		abi: CREDIT_ABI,
+		functionName: 'mintTo',
+		args: [to, amount],
+	});
+}
+
+export function encodeBadgeMint(to: `0x${string}`, tokenId: number) {
+	return encodeFunctionData({
+		abi: BADGE_ABI,
+		functionName: 'mint',
+		args: [to, BigInt(tokenId), 1n],
+	});
+}
+
 function runtime(env: SignerEnv) {
 	const chainId = Number(env.CINACHAIN_CHAIN_ID);
 	if (!Number.isSafeInteger(chainId) || chainId <= 0) throw new Error('Invalid CINACHAIN_CHAIN_ID');
@@ -58,11 +74,7 @@ export function prepareCredit(env: SignerEnv, to: `0x${string}`, amount: bigint)
 	return prepareContractTransaction(
 		env,
 		env.CINACREDIT_CONTRACT_ADDRESS as `0x${string}`,
-		encodeFunctionData({
-			abi: CREDIT_ABI,
-			functionName: 'mintTo',
-			args: [to, amount],
-		}),
+		encodeCreditMint(to, amount),
 	);
 }
 
@@ -70,11 +82,7 @@ export function prepareBadge(env: SignerEnv, to: `0x${string}`, tokenId: number)
 	return prepareContractTransaction(
 		env,
 		env.CINABADGE_CONTRACT_ADDRESS as `0x${string}`,
-		encodeFunctionData({
-		abi: BADGE_ABI,
-		functionName: 'mint',
-		args: [to, BigInt(tokenId), 1n],
-		}),
+		encodeBadgeMint(to, tokenId),
 	);
 }
 

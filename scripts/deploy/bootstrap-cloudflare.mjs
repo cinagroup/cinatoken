@@ -24,6 +24,7 @@ import {
 	assertWranglerLoggedIn,
 	ensureD1Database,
 	ensureQueue,
+	ensureWorkerSecretTarget,
 	envPathForInstance,
 	log,
 	logError,
@@ -122,8 +123,6 @@ async function main() {
 		return;
 	}
 
-	assertWranglerLoggedIn();
-
 	const interactive = process.stdin.isTTY && !args.yes;
 
 	let instance =
@@ -145,6 +144,25 @@ async function main() {
 	}
 
 	const baseNames = namesFromPrefix(prefix);
+	const requiredSecretNames = [
+		"SHARED_KEY_ENCRYPTION_SECRET",
+		"CINATOKEN_OIDC_CLIENT_SECRET",
+		"CINATOKEN_OIDC_BRIDGE_SECRET",
+		"CINATOKEN_OIDC_TRANSACTION_SECRET",
+		"CINACHAIN_RPC_URL",
+		"CINACHAIN_MINTER_PRIVATE_KEY",
+		"CINABADGE_CONTRACT_ADDRESS",
+		"CINACREDIT_CONTRACT_ADDRESS",
+	];
+	if (!args.skipSecret && !interactive) {
+		const missing = requiredSecretNames.filter((name) => !process.env[name]);
+		if (missing.length > 0) {
+			throw new Error(
+				`Non-interactive bootstrap requires secret values in process environment: ${missing.join(", ")}`,
+			);
+		}
+	}
+	assertWranglerLoggedIn();
 	let proxyDomain =
 		typeof args.proxyDomain === "string" ? args.proxyDomain : "";
 	let adminDomain =
@@ -222,9 +240,6 @@ async function main() {
 		vars.ADMIN_CUSTOM_DOMAIN = names.adminCustomDomain;
 	}
 
-	log("Applying remote D1 migrations…");
-	runNpmWithEnv(vars, ["db:migrate:remote"]);
-
 	const secretTargets = [
 		[names.proxyWorkerName, ["SHARED_KEY_ENCRYPTION_SECRET"]],
 		[names.adminWorkerName, [
@@ -241,30 +256,24 @@ async function main() {
 		]],
 	];
 	if (args.skipSecret) {
-		log("Resources and migrations are ready; deployment stopped before secret provisioning.");
+		log("Resources are ready; deployment stopped before secret provisioning and migrations.");
 		log("Set the required Worker secrets, then run: npm run deploy:cloudflare -- " + instance);
 		return;
 	}
-	if (!interactive) {
-		const missing = secretTargets.flatMap(([, namesForWorker]) => namesForWorker)
-			.filter((name, index, all) => all.indexOf(name) === index)
-			.filter((name) => !process.env[name]);
-		if (missing.length > 0) {
-			throw new Error(
-				`Non-interactive bootstrap requires secret values in process environment: ${missing.join(", ")}`,
-			);
-		}
-	}
 	for (const [workerName, namesForWorker] of secretTargets) {
+		ensureWorkerSecretTarget(workerName);
 		for (const secretName of namesForWorker) {
 			putWorkerSecret(workerName, secretName, process.env[secretName]);
 		}
 	}
 
-	log("Deploying isolated Chain Worker…");
-	runNpmWithEnv(vars, ["deploy:chain"]);
+	log("Applying remote D1 migrations after all required Worker secrets are present…");
+	runNpmWithEnv(vars, ["db:migrate:remote"]);
+
 	log("Deploying Proxy Worker (usually under a minute)…");
 	runNpmWithEnv(vars, ["deploy:proxy"]);
+	log("Deploying isolated Chain Worker…");
+	runNpmWithEnv(vars, ["deploy:chain"]);
 	log("Deploying unified console Worker (OpenNext build)…");
 	runNpmWithEnv(vars, ["deploy:admin"]);
 

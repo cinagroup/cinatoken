@@ -11,6 +11,7 @@
  *   --migrate-only      Only remote D1 migrate
  *   --proxy-only        Only deploy Proxy Worker
  *   --admin-only        Only deploy Admin Worker
+ *   --preflight-only    Validate auth, config and required remote secret names; no writes
  *   --show-master-key   Print remote system_config.MASTER_KEY (no deploy)
  *   --help, -h
  *
@@ -39,6 +40,7 @@ Options:
   --proxy-only        Only deploy Proxy Worker
   --admin-only        Only deploy Admin Worker
   --chain-only        Only deploy Chain Worker
+  --preflight-only    Validate config and secret names without changing Cloudflare
   --show-master-key   Print remote MASTER_KEY (no deploy)
   --help, -h          Show this help
 
@@ -66,6 +68,7 @@ function main() {
 	let doAdmin = true;
 	let doChain = true;
 	let showMasterKey = false;
+	let preflightOnly = false;
 
 	for (const arg of argv) {
 		if (arg === instance) {
@@ -96,6 +99,9 @@ function main() {
 				doProxy = false;
 				doAdmin = false;
 				doChain = true;
+				break;
+			case "--preflight-only":
+				preflightOnly = true;
 				break;
 			case "--show-master-key":
 				showMasterKey = true;
@@ -146,13 +152,12 @@ function main() {
 		return;
 	}
 
-	if (doMigrate) {
-		runNpmWithEnv(vars, ["db:migrate:remote"]);
-	}
-	if (doAdmin || doChain) {
-		const resourcePrefix = vars.D1_DATABASE_NAME || "cinatoken";
-		ensureQueue(vars.CHAIN_JOB_DLQ_NAME || `${resourcePrefix}-chain-jobs-dlq`);
-		ensureQueue(vars.CHAIN_JOB_QUEUE_NAME || `${resourcePrefix}-chain-jobs`);
+	// Fail closed before migrations or partial deployment. Secret values remain
+	// opaque; only the required remote names are inspected.
+	if (doProxy) {
+		assertWorkerSecrets(vars.PROXY_WORKER_NAME || "cinatoken-proxy", [
+			"SHARED_KEY_ENCRYPTION_SECRET",
+		]);
 	}
 	if (doChain) {
 		assertWorkerSecrets(vars.CHAIN_WORKER_NAME || "cinatoken-chain-worker", [
@@ -161,13 +166,6 @@ function main() {
 			"CINABADGE_CONTRACT_ADDRESS",
 			"CINACREDIT_CONTRACT_ADDRESS",
 		]);
-		runNpmWithEnv(vars, ["deploy:chain"]);
-	}
-	if (doProxy) {
-		assertWorkerSecrets(vars.PROXY_WORKER_NAME || "cinatoken-proxy", [
-			"SHARED_KEY_ENCRYPTION_SECRET",
-		]);
-		runNpmWithEnv(vars, ["deploy:proxy"]);
 	}
 	if (doAdmin) {
 		assertWorkerSecrets(vars.ADMIN_WORKER_NAME || "cinatoken-admin", [
@@ -176,6 +174,27 @@ function main() {
 			"CINATOKEN_OIDC_TRANSACTION_SECRET",
 			"SHARED_KEY_ENCRYPTION_SECRET",
 		]);
+	}
+	if (preflightOnly) {
+		log(`${instance} preflight passed; no resources were changed.`);
+		return;
+	}
+
+	if (doMigrate) {
+		runNpmWithEnv(vars, ["db:migrate:remote"]);
+	}
+	if (doAdmin || doChain) {
+		const resourcePrefix = vars.D1_DATABASE_NAME || "cinatoken";
+		ensureQueue(vars.CHAIN_JOB_DLQ_NAME || `${resourcePrefix}-chain-jobs-dlq`);
+		ensureQueue(vars.CHAIN_JOB_QUEUE_NAME || `${resourcePrefix}-chain-jobs`);
+	}
+	if (doProxy) {
+		runNpmWithEnv(vars, ["deploy:proxy"]);
+	}
+	if (doChain) {
+		runNpmWithEnv(vars, ["deploy:chain"]);
+	}
+	if (doAdmin) {
 		runNpmWithEnv(vars, ["deploy:admin"]);
 	}
 

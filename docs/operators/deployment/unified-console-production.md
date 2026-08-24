@@ -55,6 +55,17 @@ Use `wrangler secret put` or a secret manager integration. Do not place these va
 
 ## Migration preflight
 
+Before provisioning the Queue consumer, prove that both configured contracts contain bytecode,
+use the intended chain, and are owned by the Chain Worker signer. The private key is read only
+from the process environment and is never accepted as a command-line argument:
+
+```bash
+npm run preflight:chain -- \
+  --env-file <public-chain-env> \
+  --deployment <deployment-json> \
+  --require-private-key
+```
+
 1. Export or snapshot D1 using the existing operations procedure.
 2. Confirm no user already has more than one active withdrawal before migration `0029` adds its partial unique index:
 
@@ -85,7 +96,9 @@ For an existing production instance:
 npm run deploy:cloudflare -- production --migrate
 ```
 
-The command applies migrations, ensures both Queues exist, verifies required secret names, deploys Chain first, then Proxy and Admin. The Admin producer is not deployed before the consumer and outbox schema exist.
+The command ensures both Queues exist, verifies required secret names, applies migrations, then deploys Proxy, Chain, and Admin. Proxy goes first to minimize the mixed-version accounting window after migration `0029`; Admin remains last so its Queue producer is never deployed before the consumer and outbox schema exist.
+
+For a Worker that does not exist yet, first-time bootstrap deploys an inactive shell with no `workers.dev` or custom-domain route. The shell returns 503 if invoked internally and exists only so Wrangler can accept secrets through standard input. All required Worker secrets are provisioned before D1 migrations; the normal deploy then replaces the shell.
 
 ## Acceptance gates
 

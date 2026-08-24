@@ -125,7 +125,7 @@ export function runNpmWithEnv(vars, extraArgs) {
 
 /**
  * @param {string[]} wranglerArgs
- * @param {{ env?: Record<string, string>, input?: string, capture?: boolean }} [opts]
+ * @param {{ env?: Record<string, string>, input?: string, capture?: boolean, allowFailure?: boolean }} [opts]
  */
 export function runWrangler(wranglerArgs, opts = {}) {
 	const env = { ...process.env, ...(opts.env || {}) };
@@ -146,19 +146,17 @@ export function runWrangler(wranglerArgs, opts = {}) {
 			encoding: opts.capture ? "utf8" : undefined,
 		},
 	);
-	if ((result.status ?? 1) !== 0) {
+	if ((result.status ?? 1) !== 0 && !opts.allowFailure) {
 		throw commandFailure(
 			result,
 			`npx wrangler ${wranglerArgs.join(" ")}`,
 		);
 	}
-	if (opts.capture) {
-		return {
-			stdout: (result.stdout || "").toString(),
-			stderr: (result.stderr || "").toString(),
-		};
-	}
-	return { stdout: "", stderr: "" };
+	return {
+		stdout: opts.capture ? (result.stdout || "").toString() : "",
+		stderr: opts.capture ? (result.stderr || "").toString() : "",
+		status: result.status ?? 1,
+	};
 }
 
 export function assertWranglerLoggedIn() {
@@ -346,6 +344,42 @@ export function putWorkerSecret(workerName, secretName, value) {
 		log(`Enter ${secretName} for ${workerName} when Wrangler prompts (not stored)…`);
 		runWrangler(args);
 	}
+}
+
+/** Return whether a Worker already has at least one deployed version. */
+export function workerExists(workerName) {
+	const args = ["deployments", "list", "--name", workerName, "--json"];
+	const result = runWrangler(args, { capture: true, allowFailure: true });
+	if (result.status === 0) {
+		return true;
+	}
+	const combined = `${result.stdout}\n${result.stderr}`;
+	if (/not found|does not exist/i.test(combined)) {
+		return false;
+	}
+	throw new Error(
+		`Unable to determine whether Worker ${workerName} exists.\n${combined.trim()}`,
+	);
+}
+
+/**
+ * Wrangler can only write a secret after the target Worker exists. Create an
+ * inactive, no-route 503 Worker for first-time bootstrap; the real deploy
+ * replaces it only after all required secrets are present.
+ */
+export function ensureWorkerSecretTarget(workerName) {
+	if (workerExists(workerName)) {
+		log(`Reusing existing Worker secret target "${workerName}"`);
+		return;
+	}
+	log(`Creating inactive secret bootstrap Worker "${workerName}"…`);
+	runWrangler([
+		"deploy",
+		"--config",
+		"./scripts/deploy/wrangler.secret-bootstrap.jsonc",
+		"--name",
+		workerName,
+	]);
 }
 
 export function listWorkerSecretNames(workerName) {

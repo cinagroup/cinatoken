@@ -5,6 +5,8 @@
 	"type": "module",
 	"scripts": {
 		"cf-typegen": "wrangler types --env-interface ChainWorkerEnv worker-configuration.d.ts --include-runtime false",
+		"preflight:contracts": "node scripts/preflight-contracts.mjs",
+		"test:unit": "tsx --test src/*.test.ts && node --test scripts/*.test.mjs",
 		"typecheck": "tsc -p tsconfig.json --noEmit",
 		"deploy": "npm run cf-typegen && wrangler deploy"
 	},
@@ -15,6 +17,7 @@
 	"devDependencies": {
 		"@cloudflare/workers-types": "^5.20260823.1",
 		"@types/node": "^25.5.0",
+		"tsx": "^4.21.0",
 		"typescript": "^5.7.2",
 		"wrangler": "^4.125.0"
 	}
