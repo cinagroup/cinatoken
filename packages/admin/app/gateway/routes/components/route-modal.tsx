@@ -1040,7 +1040,7 @@ export function RouteModal(props: Props) {
 									{isDeleting ? tCommon('deleting') : t('deleteRoute')}
 								</button>
 								<Link
-									href={`/gateway/playground?routeId=${encodeURIComponent(editingRoute.id)}`}
+									href={`/admin/playground?routeId=${encodeURIComponent(editingRoute.id)}`}
 									className="inline-flex items-center gap-1.5 rounded-md border border-gray-300 bg-white px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
 								>
 									<BeakerIcon className="h-4 w-4" aria-hidden />

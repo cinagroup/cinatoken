@@ -466,7 +466,7 @@ export default function GatewayUserDetailPage() {
       const res = await fetch(`/api/admin/users/${encodeURIComponent(userId)}`, { method: 'DELETE' });
       const data = await readApiJson(res);
       if (data.success) {
-        window.location.href = '/gateway/users';
+        window.location.href = '/admin/users';
       } else {
         alert(data.message || t('errors.deleteFailed'));
       }
@@ -581,7 +581,7 @@ export default function GatewayUserDetailPage() {
   if (loadError) {
     return (
       <div className="p-8">
-        <Link href="/gateway/users" className="text-sm text-blue-600 hover:underline">{t('backUsers')}</Link>
+        <Link href="/admin/users" className="text-sm text-blue-600 hover:underline">{t('backUsers')}</Link>
         <p className="mt-4 text-red-600">{loadError}</p>
       </div>
     );
@@ -590,7 +590,7 @@ export default function GatewayUserDetailPage() {
   if (!user) {
     return (
       <div className="p-8">
-        <Link href="/gateway/users" className="text-sm text-blue-600 hover:underline">{t('backUsers')}</Link>
+        <Link href="/admin/users" className="text-sm text-blue-600 hover:underline">{t('backUsers')}</Link>
         <div className="mt-8 text-gray-600">{tCommon('loadingEllipsis')}</div>
       </div>
     );
@@ -599,7 +599,7 @@ export default function GatewayUserDetailPage() {
   return (
     <div className="p-8">
       <div className="mb-6">
-        <Link href="/gateway/users" className="text-sm text-blue-600 hover:underline">{t('backUsers')}</Link>
+        <Link href="/admin/users" className="text-sm text-blue-600 hover:underline">{t('backUsers')}</Link>
         <h1 className="text-2xl font-bold text-gray-900 mt-2">{t('detailTitle')}</h1>
         <p className="text-sm text-gray-500 font-mono mt-1 break-all">{user.id}</p>
       </div>
@@ -994,7 +994,7 @@ export default function GatewayUserDetailPage() {
         <div className="mb-3 flex items-center justify-between">
           <h2 className="text-lg font-semibold text-gray-900">{t('detailSections.recentRequestLogs')}</h2>
           <Link
-            href={`/gateway/request-logs?user_email=${encodeURIComponent(user.email)}`}
+            href={`/admin/request-logs?user_email=${encodeURIComponent(user.email)}`}
             className="text-sm text-blue-600 hover:underline"
           >
             {tCommon('more')}
@@ -1057,7 +1057,7 @@ export default function GatewayUserDetailPage() {
         <div className="mb-3 flex items-center justify-between">
           <h2 className="text-lg font-semibold text-gray-900">{t('detailSections.userAuditLogs')}</h2>
           <Link
-            href={`/gateway/audit-logs?user_id=${encodeURIComponent(user.id)}`}
+            href={`/admin/audit-logs?user_id=${encodeURIComponent(user.id)}`}
             className="text-sm text-blue-600 hover:underline"
           >
             {tCommon('more')}

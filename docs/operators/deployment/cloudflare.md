@@ -2,6 +2,8 @@
 
 本文说明 **cinatoken** 在 Cloudflare 上的运维路径：**本地 D1 开发**、**dev 演示**、**生产 Git 自动部署**。
 
+统一用户/管理员控制台、Chain Worker、Queues、整数账本与生产验收以 [unified-console-production.md](./unified-console-production.md) 为准。
+
 **外部用户首次上云**（推荐）：[cloudflare-quickstart.md](./cloudflare-quickstart.md)（`npm run bootstrap:cloudflare`）。本页不替代该 quickstart。
 
 实例 env 文件约定：[cloudflare-worker/README.md](../../../cloudflare-worker/README.md)。表结构以 **`packages/core/migrations-d1/`** 为准。Docker 自托管见 [docker.md](./docker.md)。
@@ -78,7 +80,9 @@ dev 演示**仅 CLI 发版**（有新 SQL 时先 `db:migrate:remote`）；生产
 
 | 变量 | 说明 |
 |------|------|
-| `PROXY_WORKER_NAME` / `ADMIN_WORKER_NAME` | **须与 Cloudflare Dashboard 中的 Worker 名一致** |
+| `PROXY_WORKER_NAME` / `ADMIN_WORKER_NAME` / `CHAIN_WORKER_NAME` | **须与 Cloudflare Dashboard 中的 Worker 名一致** |
+| `CHAIN_JOB_QUEUE_NAME` / `CHAIN_JOB_DLQ_NAME` | 链上任务 Queue 与死信 Queue；每个实例必须独立 |
+| `CINACHAIN_CHAIN_ID` | 钱包签名与 Chain Worker 必须使用同一链 ID |
 | `D1_DATABASE_NAME` | D1 逻辑名 |
 | `D1_DATABASE_ID` | 远程 deploy / migrate **必填**。写入生成的 `wrangler.jsonc` 后，本机 `dev:proxy`/`dev:admin` 会连**另一套**本地 D1；继续本地开发前执行 `npm run gen:wrangler`（见 [local-development.md §1](../../developers/local-development.md#️-本地-d1-与-database_id远程-deploy-后必读)） |
 | `D1_MIGRATIONS_WORKER_NAME` | 可选；仅 `wrangler d1 migrations` 配置名，**无需建 Worker** |
@@ -123,7 +127,7 @@ Cloudflare Dashboard → Worker → **设置（Settings）→ 构建（Builds）
 
 - `npm ci` → `postinstall` → `gen:wrangler` 会读 **Build variables** 生成 `wrangler.jsonc`。
 - **D1 迁移不在 Git 流水线**：有新 SQL 时手动 `npm run db:migrate:remote`（带实例 env 或 export 变量）后再 push。
-- **管理后台**：`ADMIN_PASSWORD` 用 Worker **Secrets**（`npx wrangler secret put ADMIN_PASSWORD --name <ADMIN_WORKER_NAME>`）。
+- **统一控制台**：使用 CinaAuth；必需 Secret 与隔离的 Chain Worker Secret 见生产 runbook，Cloudflare 生产不再使用 `ADMIN_PASSWORD` 登录。
 - 可选：`WRANGLER_SEND_METRICS=false`。
 
 ### Build watch paths（减少无关 push 触发部署）
@@ -180,7 +184,7 @@ npx wrangler d1 list
 ## 6. 迁移与发布顺序
 
 1. 有待执行迁移：`npx dotenv -e ./cloudflare-worker/<x>.env -- npm run db:migrate:remote`
-2. `git push`（Workers Builds）或本地 `deploy:proxy` / `deploy:admin`
+2. 先部署 Chain consumer，再部署 Proxy 与统一控制台；推荐使用 `npm run deploy:cloudflare -- <instance> --migrate`
 
 先迁移、再发依赖新 schema 的 Worker。
 

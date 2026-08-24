@@ -12,6 +12,8 @@ test("generated Wrangler configs preserve HTTPS values and Workers Routes", () =
 	delete env.D1_DATABASE_ID;
 	delete env.PROXY_CUSTOM_DOMAIN;
 	delete env.ADMIN_CUSTOM_DOMAIN;
+	delete env.CHAIN_JOB_QUEUE_NAME;
+	delete env.CHAIN_JOB_DLQ_NAME;
 	const result = spawnSync(process.execPath, ["scripts/deploy/gen-wrangler.mjs"], {
 		cwd: root,
 		env,
@@ -24,6 +26,9 @@ test("generated Wrangler configs preserve HTTPS values and Workers Routes", () =
 	const proxy = JSON.parse(
 		readFileSync(join(root, "packages/proxy/wrangler.jsonc"), "utf8"),
 	);
+	const chain = JSON.parse(
+		readFileSync(join(root, "packages/chain-worker/wrangler.jsonc"), "utf8"),
+	);
 	assert.equal(admin.vars.CINAAUTH_ISSUER, "https://auth.cinaseek.ai");
 	assert.deepEqual(admin.routes, [
 		{ pattern: "cinatoken.com/*", zone_name: "cinatoken.com" },
@@ -31,4 +36,8 @@ test("generated Wrangler configs preserve HTTPS values and Workers Routes", () =
 	assert.deepEqual(proxy.routes, [
 		{ pattern: "api.cinatoken.com/*", zone_name: "cinatoken.com" },
 	]);
+	assert.equal(admin.queues.producers[0].queue, "cinatoken-chain-jobs");
+	assert.equal(chain.queues.consumers[0].queue, "cinatoken-chain-jobs");
+	assert.equal(chain.queues.consumers[0].dead_letter_queue, "cinatoken-chain-jobs-dlq");
+	assert.equal(chain.queues.consumers[0].max_concurrency, 1);
 });

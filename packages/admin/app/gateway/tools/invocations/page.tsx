@@ -104,7 +104,7 @@ export default function GatewayToolInvocationsPage() {
 		if (filterStatus) q.set('status', filterStatus);
 		if (rangeValue.start_date) q.set('start_date', rangeValue.start_date);
 		if (rangeValue.end_date) q.set('end_date', rangeValue.end_date);
-		return `/gateway/request-logs?${q.toString()}`;
+		return `/admin/request-logs?${q.toString()}`;
 	}, [toolFilter, filterStatus, rangeValue.start_date, rangeValue.end_date]);
 
 	const fetchLogs = useCallback(async () => {
@@ -161,7 +161,7 @@ export default function GatewayToolInvocationsPage() {
 					<p className="mt-1 max-w-3xl text-sm text-gray-500">{t('invocations.subtitle')}</p>
 				</div>
 				<div className="flex flex-wrap items-center gap-3">
-					<Link href="/gateway/tools" className="text-sm font-medium text-blue-600 hover:underline">
+					<Link href="/admin/tools" className="text-sm font-medium text-blue-600 hover:underline">
 						{t('invocations.configureTools')}
 					</Link>
 					<Link

@@ -52,56 +52,56 @@ export const ADMIN_NAV_GROUPS: AdminNavGroup[] = [
 	{
 		groupKey: 'inference',
 		items: [
-			{ nameKey: 'providers', href: '/gateway/providers' },
-			{ nameKey: 'models', href: '/gateway/models' },
-			{ nameKey: 'routes', href: '/gateway/routes' },
-			{ nameKey: 'playground', href: '/gateway/playground' },
-			{ nameKey: 'simulator', href: '/gateway/simulator' },
+			{ nameKey: 'providers', href: '/admin/providers' },
+			{ nameKey: 'models', href: '/admin/models' },
+			{ nameKey: 'routes', href: '/admin/routes' },
+			{ nameKey: 'playground', href: '/admin/playground' },
+			{ nameKey: 'simulator', href: '/admin/simulator' },
 		],
 	},
 	{
 		groupKey: 'user',
 		items: [
-			{ nameKey: 'users', href: '/gateway/users' },
-			{ nameKey: 'apiKeys', href: '/gateway/keys' },
-			{ nameKey: 'sharedKeys', href: '/gateway/shared-keys' },
-			{ nameKey: 'requestLogs', href: '/gateway/request-logs' },
-			{ nameKey: 'auditLogs', href: '/gateway/audit-logs' },
+			{ nameKey: 'users', href: '/admin/users' },
+			{ nameKey: 'apiKeys', href: '/admin/keys' },
+			{ nameKey: 'sharedKeys', href: '/admin/shared-keys' },
+			{ nameKey: 'requestLogs', href: '/admin/request-logs' },
+			{ nameKey: 'auditLogs', href: '/admin/audit-logs' },
 		],
 	},
 	{
 		groupKey: 'tools',
 		items: [
-			{ nameKey: 'toolsConfig', href: '/gateway/tools' },
-			{ nameKey: 'toolInvocations', href: '/gateway/tools/invocations' },
+			{ nameKey: 'toolsConfig', href: '/admin/tools' },
+			{ nameKey: 'toolInvocations', href: '/admin/tools/invocations' },
 		],
 	},
 	{
 		groupKey: 'analytics',
 		items: [
-			{ nameKey: 'modelUsage', href: '/gateway/analytics/models' },
-			{ nameKey: 'providerUsage', href: '/gateway/analytics/providers' },
-			{ nameKey: 'userUsage', href: '/gateway/analytics/users' },
-			{ nameKey: 'reliability', href: '/gateway/analytics/reliability' },
+			{ nameKey: 'modelUsage', href: '/admin/analytics/models' },
+			{ nameKey: 'providerUsage', href: '/admin/analytics/providers' },
+			{ nameKey: 'userUsage', href: '/admin/analytics/users' },
+			{ nameKey: 'reliability', href: '/admin/analytics/reliability' },
 		],
 	},
 	{
 		groupKey: 'integration',
-		items: [{ nameKey: 'adminApiKeys', href: '/gateway/admin-api-keys' }],
+		items: [{ nameKey: 'adminApiKeys', href: '/admin/admin-api-keys' }],
 	},
 	{
 		groupKey: 'system',
 		items: [
-			{ nameKey: 'withdrawals', href: '/gateway/withdrawals' },
-			{ nameKey: 'nftMints', href: '/gateway/nft-mints' },
-			{ nameKey: 'config', href: '/gateway/config' },
+			{ nameKey: 'withdrawals', href: '/admin/withdrawals' },
+			{ nameKey: 'nftMints', href: '/admin/nft-mints' },
+			{ nameKey: 'config', href: '/admin/config' },
 		],
 	},
 ];
 
 export const ADMIN_NAV_ROUTES: AdminNavRoute[] = ADMIN_NAV_GROUPS.flatMap((group) => group.items);
 
-/** 最长前缀匹配，避免 `/gateway/tools/invocations` 落到 Configuration。 */
+/** 最长前缀匹配，避免 `/admin/tools/invocations` 落到 Configuration。 */
 export function matchAdminNavRoute(pathname: string): AdminNavRoute | null {
 	const path = pathname.split('?')[0] || '/';
 	let best: AdminNavRoute | null = null;

@@ -55,12 +55,6 @@ export function createAdminApp(): Hono<AdminEnv> {
 			if (principal.type !== 'console') {
 				return c.json({ success: false, message: 'Forbidden', required_permission: 'console_session' }, 403);
 			}
-			if (c.req.path.startsWith('/admin/access-keys') && ['POST', 'PUT', 'PATCH', 'DELETE'].includes(c.req.method.toUpperCase())) {
-				const origin = c.req.header('origin');
-				if (!origin || origin !== new URL(c.req.url).origin) {
-					return c.json({ success: false, message: 'Forbidden: invalid Origin' }, 403);
-				}
-			}
 			return next();
 		}
 		if (decision.kind === 'authenticated') return next();

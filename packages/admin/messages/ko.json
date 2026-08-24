@@ -2214,6 +2214,10 @@
 		"stdMetered": "표준 {std} · 계측 {metered}"
 	},
 	"portal": {
+		"metadata": {
+			"title": "cinatoken · 계정 센터",
+			"description": "CinaToken 공유 키, 수익, 지갑, 출금, 기여 NFT 및 게이트웨이 키를 관리합니다."
+		},
 		"portalTitle": "cinatoken 사용자 센터",
 		"loginHeading": "cinatoken 사용자 센터",
 		"loginSubtitle": "API Key 공유 · 토큰 판매 · 기여 NFT 민트",
@@ -2307,10 +2311,10 @@
 			"title": "Withdraw",
 			"subtitle": "Balance is automatically converted to CINA-C on cinachain (Base Sepolia) and sent to your wallet",
 			"walletLabel": "Payout wallet (EVM)",
-			"walletHint": "Receives CINA-C and contribution badges; format-checked only",
+			"walletHint": "지갑을 연결하고 일회용 SIWE 메시지에 서명하여 소유권을 확인합니다",
 			"saveWallet": "Save wallet",
-			"walletSaved": "Wallet saved",
-			"walletSaveFailed": "Failed to save wallet",
+			"walletSaved": "지갑 소유권을 확인하고 저장했습니다",
+			"walletSaveFailed": "지갑 확인에 실패했습니다. 대상 지갑을 연결하고 서명을 완료하세요.",
 			"amountLabel": "Amount ($)",
 			"submit": "Request withdrawal",
 			"submitted": "Submitted — status updates automatically once confirmed on-chain",

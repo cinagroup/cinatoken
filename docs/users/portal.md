@@ -1,8 +1,8 @@
 # 用户门户（共享密钥市场 + 贡献 NFT）
 
-普通用户的独立 Web 账户中心：`/account`。与管理台（`/gateway/*`）共用部署但会话完全隔离
-（`user_session` Cookie + `portal_sessions` 表），登录走同一个 CinaAuth OIDC 客户端，但
-**不要求管理员角色**（标准 `/oauth2/userinfo`，任何未封禁用户可登录）。
+普通用户账户中心：`/account`；管理员功能整合在同一壳层的 `/admin/*`，旧 `/gateway/*`
+保留兼容。两者使用统一的 `cinatoken_session`，但权限能力由服务端生成；普通用户不获得
+`admin.console`，管理员能力还需要 CinaAuth 实时角色复核。
 
 ## 功能总览
 
@@ -46,24 +46,23 @@
 - 贡献 NFT：`contribution_value` 达到 `NFT_TIER_THRESHOLDS`（默认 10/50/200/1000 →
   CinaBadge tokenId 200-203）即可自铸；每档一次（UNIQUE(user_id, badge_token_id)）。
 
-## 环境变量（管理/门户侧链上操作）
+## 环境变量（隔离 Chain Worker）
 
 ```
 CINACHAIN_RPC_URL=https://sepolia.base.org      # 默认值
 CINACHAIN_CHAIN_ID=84532                        # Base Sepolia
 CINABADGE_CONTRACT_ADDRESS=0x72cc9adb6c877d233e9843ee2d00424b9766d0cf
 CINACREDIT_CONTRACT_ADDRESS=0x78f5aebc75b7d197b10622cccabe8429617836d7
-CINACHAIN_MINTER_PRIVATE_KEY=0x...              # owner EOA，仅服务端 secret
+CINACHAIN_MINTER_PRIVATE_KEY=0x...              # 仅 Chain Worker secret
 ```
 
 首次启用需用 owner key 创建 200-203 位阶（一次性）：
 `node scripts/cinachain/setup-tier-badges.mjs`。
 
-## 已知限制（V1）
+## 生产边界
 
-- 门户会话不做 CinaAuth 实时封禁/角色复查（bridge 仅管理员）；依赖 24h TTL，后续可在
-  cinaauth 增加无角色 bridge。
-- 共享密钥明文存储（与 `providers.api_key` 现状一致）；加密存储列为后续加固。
-- 卖家收益结算与请求日志插入为相邻语句而非同一事务（幂等键保证不重发；极端故障可能漏记
-  单条收益，可由 request_log_id 对账补录）。
-- Base Sepolia 为测试网；生产需在 cinachain 侧部署主网合约并切换上述环境变量。
+- 共享密钥以 AES-GCM 加密存储；Admin 与 Proxy 必须共享同一加密 Secret。
+- 收益与提现使用整数微单位和幂等账本；链上操作经 Queue 与签名交易 outbox 执行。
+- Base Sepolia 为测试网；主网上线必须部署并审计主网合约、切换 chain ID 与地址，完成独立灰度。
+- 完整密钥、迁移、验收和事故处置见
+  [unified-console-production.md](../operators/deployment/unified-console-production.md)。

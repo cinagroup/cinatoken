@@ -30,7 +30,7 @@ export default function AccountSettingsPage() {
   const load = useCallback(async () => {
     try {
       const [keysRes, walletRes] = await Promise.all([
-        fetch('/api/user/gateway-keys', { cache: 'no-store' }),
+		fetch('/api/user/gateway-keys', { cache: 'no-store' }),
         fetch('/api/user/wallet', { cache: 'no-store' }),
       ]);
       const keysData = await readPortalJson<GatewayKeyRow[]>(keysRes);
@@ -47,7 +47,7 @@ export default function AccountSettingsPage() {
   }, [load]);
 
   const createKey = async () => {
-    const response = await fetch('/api/user/gateway-keys', {
+	const response = await fetch('/api/user/gateway-keys', {
       method: 'POST',
       headers: { 'content-type': 'application/json' },
       body: JSON.stringify({ name: newKeyName || null }),
@@ -64,7 +64,7 @@ export default function AccountSettingsPage() {
 
   const revokeKey = async (id: string) => {
     if (!window.confirm(t('settings.confirmRevoke'))) return;
-    const response = await fetch(`/api/user/gateway-keys/${id}`, { method: 'DELETE' });
+	const response = await fetch(`/api/user/gateway-keys/${id}`, { method: 'DELETE' });
     if (response.ok) await load();
   };
 

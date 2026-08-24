@@ -3,7 +3,7 @@
 /**
  * `system_config`：`BUSINESS_TIMEZONE`、`BILLING_CURRENCY`、
  * `ROUTE_STRATEGY`、错误 Webhook 均为专用卡片；敏感字段支持 Show/Hide。
- * 产品工具配置见 `/gateway/tools`。
+ * 产品工具配置见 `/admin/tools`。
  */
 import { useState, useEffect, useCallback, useRef } from 'react';
 import {

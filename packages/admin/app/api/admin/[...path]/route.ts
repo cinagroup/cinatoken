@@ -10,6 +10,7 @@ import { handleGatewayApiError } from '@/lib/api-error';
 import { resolveAdminRequestRuntime } from '@/lib/admin-request-runtime';
 import { verifyCinaAuthConsolePrincipal } from '@/lib/cinaauth/principal';
 import { getBearerKeyPrefix, logAdminAuthEvent } from '@/lib/security-log';
+import { rejectInvalidAdminMutationOrigin } from '@/lib/browser-mutation';
 
 export const dynamic = 'force-dynamic';
 
@@ -40,6 +41,8 @@ async function handle(request: Request): Promise<Response> {
 			});
 			return Response.json({ success: false, message: 'Unauthorized' }, { status: 401 });
 		}
+		const originRejection = rejectInvalidAdminMutationOrigin(request, principal.type);
+		if (originRejection) return originRejection;
 
 		const internalReq = rewriteToInternalAdminPath(request);
 		const app = getAdminApp();

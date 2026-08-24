@@ -6,8 +6,6 @@ import { Hono } from 'hono';
 import { roundGatewayMoney } from '@octafuse/core';
 import type { UserEnv } from '@/lib/user-env';
 import { loadPortalMarketplaceConfig } from '@/lib/portal-config';
-import { processPendingWithdrawals } from '@/lib/services/withdrawal-processor';
-import { isCinachainConfigured } from '@/lib/cinachain';
 
 export const userWithdrawalsRoutes = new Hono<UserEnv>();
 
@@ -37,17 +35,13 @@ userWithdrawalsRoutes.post('/', async (c) => {
 	if (amount < config.withdrawalMinAmount) {
 		return c.json({ success: false, message: `最低提现金额为 ${config.withdrawalMinAmount}` }, 400);
 	}
-	if (!isCinachainConfigured()) {
+	if (!c.env.CHAIN_JOBS) {
 		return c.json({ success: false, message: '提现通道未配置（请联系管理员）' }, 503);
 	}
 
 	const earnings = await repositories.portalLedger.getUserEarnings(principal.userId);
 	if (!earnings || !earnings.walletAddress) {
 		return c.json({ success: false, message: '请先绑定收款钱包地址' }, 400);
-	}
-	const active = await repositories.portalLedger.getActiveWithdrawalByUser(principal.userId);
-	if (active) {
-		return c.json({ success: false, message: '已有进行中的提现单，请等待完成后再次发起' }, 409);
 	}
 	// 单日次数限制（含终态）
 	const history = await repositories.portalLedger.listWithdrawalsByUser(principal.userId, 1, 100);
@@ -68,17 +62,8 @@ userWithdrawalsRoutes.post('/', async (c) => {
 	const tokenAmount = roundGatewayMoney(netAmount * config.withdrawalTokenRate);
 	const nowIso = new Date().toISOString();
 
-	const locked = await repositories.portalLedger.lockBalanceForWithdrawal(
-		principal.userId,
-		amount,
-		nowIso
-	);
-	if (!locked) {
-		return c.json({ success: false, message: '余额不足' }, 400);
-	}
-
 	const id = crypto.randomUUID();
-	await repositories.portalLedger.insertWithdrawal({
+	const creation = await repositories.portalLedger.createWithdrawalWithBalanceLock({
 		id,
 		userId: principal.userId,
 		amount,
@@ -89,18 +74,14 @@ userWithdrawalsRoutes.post('/', async (c) => {
 		tokenAmount,
 		nowIso,
 	});
+	if (creation === 'active_withdrawal_exists') {
+		return c.json({ success: false, message: '已有进行中的提现单，请等待完成后再次发起' }, 409);
+	}
+	if (creation === 'insufficient_balance') {
+		return c.json({ success: false, message: '余额不足' }, 400);
+	}
 
-	// fire-and-forget：Node 直接跑；Workers 由 waitUntil 兜底（catch-all 层传入）
-	void processPendingWithdrawals(repositories).catch((error) => {
-		console.error(
-			JSON.stringify({
-				level: 'error',
-				message: 'portal.withdrawal_background_failed',
-				withdrawalId: id,
-				error: error instanceof Error ? error.message : 'unknown',
-			})
-		);
-	});
+	await c.env.CHAIN_JOBS.send({ kind: 'withdrawal', id });
 
 	const created = await repositories.portalLedger.getWithdrawal(id);
 	return c.json({ success: true, data: created });

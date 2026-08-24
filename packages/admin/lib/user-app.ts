@@ -3,7 +3,6 @@
  * 与管理台 `/admin/*` 共享存储绑定但会话/权限完全独立（`user_session`）。
  */
 import { Hono } from 'hono';
-import { cors } from 'hono/cors';
 import { logger } from 'hono/logger';
 import type { StorageContext } from '@octafuse/core';
 import type { UserEnv } from '@/lib/user-env';
@@ -16,19 +15,36 @@ import { userWalletRoutes } from '@/lib/routes/user/wallet';
 import { userWithdrawalsRoutes } from '@/lib/routes/user/withdrawals';
 import { userNftRoutes } from '@/lib/routes/user/nft';
 import { userGatewayKeysRoutes } from '@/lib/routes/user/gateway-keys';
+import type { AccountCapability } from '@/lib/unified-session';
+
+export type PortalMeData = {
+	userId: string;
+	subject: string;
+	email: string;
+	isAdmin: boolean;
+	capabilities: AccountCapability[];
+};
+
+export function createPortalMeResponse(principal: PortalMeData): {
+	success: true;
+	data: PortalMeData;
+} {
+	return {
+		success: true,
+		data: {
+			userId: principal.userId,
+			subject: principal.subject,
+			email: principal.email,
+			isAdmin: principal.isAdmin,
+			capabilities: [...principal.capabilities],
+		},
+	};
+}
 
 export function createUserApp(): Hono<UserEnv> {
 	const app = new Hono<UserEnv>();
 
 	app.use('*', logger());
-	app.use(
-		'*',
-		cors({
-			origin: '*',
-			allowMethods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
-			allowHeaders: ['Content-Type', 'Authorization'],
-		})
-	);
 
 	app.use('*', async (c, next) => {
 		const { repositories } = await resolveAdminStorageContext(c.env);
@@ -41,14 +57,7 @@ export function createUserApp(): Hono<UserEnv> {
 
 	app.get('/user/me', (c) => {
 		const principal = c.get('principal');
-		return c.json({
-			success: true,
-			user: {
-				userId: principal.userId,
-				subject: principal.subject,
-				email: principal.email,
-			},
-		});
+		return c.json(createPortalMeResponse(principal));
 	});
 
 	app.post('/user/auth/logout', async (c) => {
@@ -56,12 +65,18 @@ export function createUserApp(): Hono<UserEnv> {
 		const token = getUserSessionToken(c.req.raw);
 		if (token) {
 			const { hashSessionToken } = await import('@/lib/auth');
-			await repositories.portalAccess.deleteSession(await hashSessionToken(token));
+			const tokenHash = await hashSessionToken(token);
+			await Promise.all([
+				repositories.portalAccess.deleteSession(tokenHash),
+				repositories.adminAccess.deleteSession(tokenHash),
+			]);
 		}
 		c.header(
 			'Set-Cookie',
-			`${USER_SESSION_COOKIE}=; Path=/; HttpOnly; SameSite=Lax; Max-Age=0`,
+			`cinatoken_session=; Path=/; HttpOnly; SameSite=Lax; Max-Age=0`,
 		);
+		c.header('Set-Cookie', `${USER_SESSION_COOKIE}=; Path=/; HttpOnly; SameSite=Lax; Max-Age=0`, { append: true });
+		c.header('Set-Cookie', 'admin_session=; Path=/; HttpOnly; SameSite=Lax; Max-Age=0', { append: true });
 		return c.json({ success: true });
 	});
 

@@ -12,7 +12,8 @@
 		"packages/core",
 		"packages/tool-engines",
 		"packages/proxy",
-		"packages/admin"
+		"packages/admin",
+		"packages/chain-worker"
 	],
 	"scripts": {
 		"postinstall": "npm run gen:wrangler",
@@ -26,6 +27,7 @@
 		"dev:admin:node": "dotenv -c -- npm run dev:node -w @octafuse/admin",
 		"deploy:proxy": "npm run gen:wrangler -- --remote && npm run deploy -w @octafuse/proxy",
 		"deploy:admin": "npm run build -w @octafuse/core && npm run gen:wrangler -- --remote && npm run deploy -w @octafuse/admin",
+		"deploy:chain": "npm run build -w @octafuse/core && npm run gen:wrangler -- --remote && npm run deploy -w @cinatoken/chain-worker",
 		"bootstrap:cloudflare": "node scripts/deploy/bootstrap-cloudflare.mjs",
 		"deploy:cloudflare": "node scripts/deploy/deploy-instance.mjs",
 		"db:migrate": "npm run gen:wrangler && node scripts/deploy/wrangler-d1-cli.mjs migrations apply --local --persist-to .wrangler/state",
@@ -44,7 +46,8 @@
 		"test:gateway:sql-storage-smoke": "dotenv -c -- tsx scripts/smoke/test-storage-concurrent-charge.ts",
 		"test:deploy": "node --test scripts/deploy/*.test.mjs",
 		"verify:proxy-bundle": "node scripts/ci/verify-proxy-bundle-externals.mjs",
-		"test:unit": "npm run test:deploy && npm run test:unit -w @octafuse/core && npm run test:unit -w @octafuse/proxy && npm run test:unit -w @octafuse/admin"
+		"test:d1-portal-ledger": "node scripts/ci/verify-d1-portal-ledger.mjs",
+		"test:unit": "npm run test:deploy && npm run test:d1-portal-ledger && npm run test:unit -w @octafuse/core && npm run test:unit -w @octafuse/proxy && npm run test:unit -w @octafuse/admin"
 	},
 	"devDependencies": {
 		"@changesets/changelog-github": "^0.5.1",
@@ -53,6 +56,6 @@
 		"dotenv-cli": "^11.0.0",
 		"tsx": "^4.21.0",
 		"typescript": "^5.7.2",
-		"wrangler": "^4.107.0"
+		"wrangler": "^4.125.0"
 	}
 }

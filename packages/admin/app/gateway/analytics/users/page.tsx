@@ -230,7 +230,7 @@ export default function UserUsagePage() {
                         >
                           <span className="w-4 text-gray-400">{isExpanded ? '▾' : '▸'}</span>
                           <Link
-                            href={`/gateway/request-logs?${logQuery.toString()}`}
+                            href={`/admin/request-logs?${logQuery.toString()}`}
                             className="hover:underline"
                             onClick={(event) => event.stopPropagation()}
                           >
@@ -301,7 +301,7 @@ export default function UserUsagePage() {
                                       <tr key={`${r.user_email}\t${modelRow.model_id}\t${modelRow.route_group}`} className="hover:bg-gray-50">
                                         <td className="px-3 py-2 text-sm">
                                           <Link
-                                            href={`/gateway/request-logs?${modelLogQuery.toString()}`}
+                                            href={`/admin/request-logs?${modelLogQuery.toString()}`}
                                             className="text-blue-600 hover:underline"
                                             onClick={(event) => event.stopPropagation()}
                                           >

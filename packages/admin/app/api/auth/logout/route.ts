@@ -2,21 +2,32 @@
  * 登出：删除 `admin_session` cookie。
  */
 import { cookies } from 'next/headers';
-import { hashSessionToken } from '@/lib/auth';
+import { getSessionToken, hashSessionToken } from '@/lib/auth';
 import { resolveAdminRequestRuntime } from '@/lib/admin-request-runtime';
 import { logAdminAuthEvent } from '@/lib/security-log';
+import { rejectInvalidBrowserMutationOrigin } from '@/lib/browser-mutation';
+import { CINATOKEN_SESSION_COOKIE } from '@/lib/unified-session';
 
 export const dynamic = 'force-dynamic';
 
 export async function POST(request: Request) {
   try {
+    const originRejection = rejectInvalidBrowserMutationOrigin(request);
+    if (originRejection) return originRejection;
+
     const cookieStore = await cookies();
-    const token = cookieStore.get('admin_session')?.value;
+    const token = getSessionToken(request);
     if (token) {
-      const { storage } = await resolveAdminRequestRuntime();
-      await storage.repositories.adminAccess.deleteSession(await hashSessionToken(token));
+      const { storage } = await resolveAdminRequestRuntime(request);
+      const tokenHash = await hashSessionToken(token);
+      await Promise.all([
+        storage.repositories.adminAccess.deleteSession(tokenHash),
+        storage.repositories.portalAccess.deleteSession(tokenHash),
+      ]);
     }
+    cookieStore.delete(CINATOKEN_SESSION_COOKIE);
     cookieStore.delete('admin_session');
+    cookieStore.delete('user_session');
 
     logAdminAuthEvent('admin.auth.logout', request);
 

@@ -2214,6 +2214,10 @@
 		"stdMetered": "標準 {std} · 計量 {metered}"
 	},
 	"portal": {
+		"metadata": {
+			"title": "cinatoken · アカウントセンター",
+			"description": "CinaToken の共有キー、収益、ウォレット、出金、貢献 NFT、ゲートウェイキーを管理します。"
+		},
 		"portalTitle": "cinatoken ユーザーセンター",
 		"loginHeading": "cinatoken ユーザーセンター",
 		"loginSubtitle": "API Key 共有 · トークン販売 ・ 貢献 NFT ミント",
@@ -2307,10 +2311,10 @@
 			"title": "Withdraw",
 			"subtitle": "Balance is automatically converted to CINA-C on cinachain (Base Sepolia) and sent to your wallet",
 			"walletLabel": "Payout wallet (EVM)",
-			"walletHint": "Receives CINA-C and contribution badges; format-checked only",
+			"walletHint": "ウォレットを接続し、一度限りの SIWE メッセージに署名して所有権を検証します",
 			"saveWallet": "Save wallet",
-			"walletSaved": "Wallet saved",
-			"walletSaveFailed": "Failed to save wallet",
+			"walletSaved": "ウォレットの所有権を検証して保存しました",
+			"walletSaveFailed": "ウォレットの検証に失敗しました。対象ウォレットを接続して署名してください。",
 			"amountLabel": "Amount ($)",
 			"submit": "Request withdrawal",
 			"submitted": "Submitted — status updates automatically once confirmed on-chain",

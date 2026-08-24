@@ -23,6 +23,10 @@ type WithdrawalRow = {
   confirmedAt: string | null;
 };
 
+type Eip1193Provider = {
+  request(input: { method: string; params?: unknown[] }): Promise<unknown>;
+};
+
 const EXPLORER = 'https://sepolia.basescan.org/tx/';
 
 export default function AccountWithdrawPage() {
@@ -64,18 +68,47 @@ export default function AccountWithdrawPage() {
   }, [load]);
 
   const saveWallet = async () => {
-    const response = await fetch('/api/user/wallet', {
-      method: 'POST',
-      headers: { 'content-type': 'application/json' },
-      body: JSON.stringify({ walletAddress: walletInput.trim() }),
-    });
-    const data = await readPortalJson<unknown>(response);
-    if (!response.ok || !data?.success) {
-      setMessage({ kind: 'err', text: data?.message ?? t('withdraw.walletSaveFailed') });
-      return;
+    try {
+      const provider = (window as typeof window & { ethereum?: Eip1193Provider }).ethereum;
+      if (!provider) throw new Error('wallet_provider_missing');
+      const accounts = (await provider.request({ method: 'eth_requestAccounts' })) as string[];
+      const address = accounts[0]?.trim();
+      if (!address) throw new Error('wallet_account_missing');
+      if (walletInput.trim() && walletInput.trim().toLowerCase() !== address.toLowerCase()) {
+        throw new Error('wallet_account_mismatch');
+      }
+      const challengeResponse = await fetch('/api/user/wallet/challenge', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ walletAddress: address }),
+      });
+      const challenge = await readPortalJson<{ message: string; challengeToken: string }>(challengeResponse);
+      if (!challengeResponse.ok || !challenge?.success || !challenge.data) {
+        throw new Error(challenge?.message ?? 'wallet_challenge_failed');
+      }
+      const signature = await provider.request({
+        method: 'personal_sign',
+        params: [challenge.data.message, address],
+      });
+      if (typeof signature !== 'string') throw new Error('wallet_signature_missing');
+      const verifyResponse = await fetch('/api/user/wallet/verify', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({
+          challengeToken: challenge.data.challengeToken,
+          signature,
+        }),
+      });
+      const verified = await readPortalJson<unknown>(verifyResponse);
+      if (!verifyResponse.ok || !verified?.success) {
+        throw new Error(verified?.message ?? 'wallet_verification_failed');
+      }
+      setWalletInput(address);
+      setMessage({ kind: 'ok', text: t('withdraw.walletSaved') });
+      await load();
+    } catch {
+      setMessage({ kind: 'err', text: t('withdraw.walletSaveFailed') });
     }
-    setMessage({ kind: 'ok', text: t('withdraw.walletSaved') });
-    await load();
   };
 
   const submit = async (event: React.FormEvent) => {

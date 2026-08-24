@@ -1104,7 +1104,7 @@ export default function GatewayToolsConfigPage() {
 						)}
 					</button>
 					<Link
-						href="/gateway/tools/invocations"
+						href="/admin/tools/invocations"
 						className="text-sm font-medium text-blue-600 hover:underline"
 					>
 						{t('config.viewInvocations')}
@@ -1193,14 +1193,14 @@ export default function GatewayToolsConfigPage() {
 				}
 				playgroundHref={
 					drawer?.tool === 'webSearch'
-						? `/gateway/playground?mode=tools&tool=web-search&provider=${encodeURIComponent(webSearchSelected)}`
+						? `/admin/playground?mode=tools&tool=web-search&provider=${encodeURIComponent(webSearchSelected)}`
 						: drawer?.tool === 'webFetch'
-							? `/gateway/playground?mode=tools&tool=web-fetch&provider=${encodeURIComponent(webFetchSelected)}`
+							? `/admin/playground?mode=tools&tool=web-fetch&provider=${encodeURIComponent(webFetchSelected)}`
 							: drawer?.tool === 'webDeepSearch'
-								? `/gateway/playground?mode=tools&tool=web-deep-search&provider=${encodeURIComponent(webDeepSearchSelected)}`
+								? `/admin/playground?mode=tools&tool=web-deep-search&provider=${encodeURIComponent(webDeepSearchSelected)}`
 								: drawer?.tool === 'aiDetection' &&
 									  isAiDetectionImplementedProvider(aiDetectionSelected)
-									? `/gateway/playground?mode=tools&tool=ai-detection&provider=${encodeURIComponent(aiDetectionSelected)}`
+									? `/admin/playground?mode=tools&tool=ai-detection&provider=${encodeURIComponent(aiDetectionSelected)}`
 									: null
 				}
 				playgroundLabel={t('config.testInPlayground')}

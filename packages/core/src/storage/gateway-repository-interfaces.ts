@@ -429,6 +429,8 @@ export interface SharedKeysRepository {
 	/** 调度候选：指定渠道全部 active key，已按固定顺序排好（seller_priority DESC → weight DESC → id ASC）。 */
 	listActiveSharedKeysByChannel(channelType: string): Promise<SharedKeyRow[]>;
 	updateSharedKey(id: string, patch: UpdateSharedKeyPatch): Promise<boolean>;
+	/** Internal encryption migration/write path; never exposed to an HTTP route. */
+	replaceSharedKeySecret?(id: string, protectedSecret: string): Promise<boolean>;
 	/** 上游 401/403 或校验失败：置 invalid 并记录原因。 */
 	markSharedKeyFailure(id: string, reason: string, nowIso: string): Promise<void>;
 	deleteSharedKey(id: string): Promise<boolean>;
@@ -444,16 +446,25 @@ export interface PortalLedgerRepository {
 	updateWallet(userId: string, walletAddress: string | null, verifiedAtIso: string | null): Promise<void>;
 	/** 幂等插入收益流水；重复 `request_log_id` 返回 false。 */
 	insertEarning(params: InsertSharedKeyEarningParams): Promise<boolean>;
+	/**
+	 * 幂等写入收益流水并在同一数据库事务中增加卖家余额。
+	 * 重复 `request_log_id` 不得再次入账。
+	 */
+	recordEarningAndCredit(params: InsertSharedKeyEarningParams): Promise<boolean>;
 	/** 收益入账：balance/contribution_value/lifetime_earned 增加 net（与请求计费同批/独立事务均可）。 */
 	creditEarningBalance(sellerUserId: string, netAmount: number, nowIso: string): Promise<void>;
 	listEarningsBySeller(sellerUserId: string, page: number, pageSize: number): Promise<{ rows: SharedKeyEarningRow[]; total: number }>;
 	insertWithdrawal(params: InsertWithdrawalParams): Promise<void>;
+	/** Atomically creates the withdrawal and locks its balance. */
+	createWithdrawalWithBalanceLock(
+		params: InsertWithdrawalParams,
+	): Promise<'created' | 'insufficient_balance' | 'active_withdrawal_exists'>;
 	getWithdrawal(id: string): Promise<WithdrawalRow | null>;
 	/** requested | processing | submitted 任一状态的进行中提现单。 */
 	getActiveWithdrawalByUser(userId: string): Promise<WithdrawalRow | null>;
 	listWithdrawalsByUser(userId: string, page: number, pageSize: number): Promise<{ rows: WithdrawalRow[]; total: number }>;
 	listAllWithdrawals(status?: string): Promise<WithdrawalRow[]>;
-	/** 条件锁定：balance -= amount, locked_amount += amount（WHERE balance >= amount）。失败返回 false。 */
+	/** @deprecated Use createWithdrawalWithBalanceLock for new callers. */
 	lockBalanceForWithdrawal(userId: string, amount: number, nowIso: string): Promise<boolean>;
 	/** 提现确认：locked_amount -= amount, lifetime_withdrawn += amount, status=confirmed。 */
 	settleWithdrawalConfirmed(id: string, userId: string, amount: number, nowIso: string): Promise<void>;
@@ -478,7 +489,14 @@ export interface PortalLedgerRepository {
 	listAllNftMints(status?: string): Promise<NftMintRow[]>;
 	updateNftMintStatus(
 		id: string,
-		patch: { status?: string; txHash?: string | null; chainId?: number | null; failureReason?: string | null; confirmedAt?: string | null }
+		patch: {
+			status?: string;
+			txHash?: string | null;
+			chainId?: number | null;
+			failureReason?: string | null;
+			confirmedAt?: string | null;
+			expectedStatus?: string;
+		}
 	): Promise<boolean>;
 	setHighestBadgeTier(userId: string, tier: number, nowIso: string): Promise<void>;
 }

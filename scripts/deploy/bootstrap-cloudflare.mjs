@@ -2,7 +2,7 @@
 /**
  * First-time Cloudflare bootstrap for external self-hosters:
  * login check → create/reuse D1 → write instance env → migrate → deploy
- * proxy + admin → ADMIN_PASSWORD secret → print downstream hints.
+ * Queue resources + proxy + admin + isolated Chain Worker → print hints.
  *
  * Usage (repo root):
  *   npm run bootstrap:cloudflare
@@ -13,10 +13,9 @@
  *   --prefix <prefix>           Worker/D1 name prefix (default: cinatoken)
  *   --proxy-domain <host>       Optional custom domain for Proxy
  *   --admin-domain <host>       Optional custom domain for Admin
- *   --admin-password-env <VAR>  Read ADMIN_PASSWORD from that env var (non-interactive)
  *   --reuse-d1                  Fail if D1 name missing (do not create)
  *   --d1-id <uuid>              Use this D1 id (skip create/list match by name)
- *   --skip-secret               Do not set ADMIN_PASSWORD Worker secret
+ *   --skip-secret               Stop after resources/migrations; provision secrets later
  *   --yes, -y                   Accept bootstrap defaults (migration still confirms on a TTY)
  *   --help, -h
  */
@@ -24,6 +23,7 @@ import { existsSync } from "node:fs";
 import {
 	assertWranglerLoggedIn,
 	ensureD1Database,
+	ensureQueue,
 	envPathForInstance,
 	log,
 	logError,
@@ -32,7 +32,7 @@ import {
 	printLocalDevHint,
 	promptLine,
 	promptYesNo,
-	putAdminPasswordSecret,
+	putWorkerSecret,
 	runNpmWithEnv,
 	writeInstanceEnvFile,
 } from "./cf-deploy-lib.mjs";
@@ -40,7 +40,7 @@ import {
 function usage() {
 	console.log(`Usage: npm run bootstrap:cloudflare -- [options]
 
-First-time Cloudflare deploy (Proxy + Admin + shared D1).
+First-time Cloudflare deploy (Proxy + unified console + Chain Worker + shared D1).
 
 Options:
   --instance <name>           cloudflare-worker/<name>.env (default: default)
@@ -48,10 +48,9 @@ Options:
                               (default: cinatoken)
   --proxy-domain <host>       Optional Proxy custom domain
   --admin-domain <host>       Optional Admin custom domain
-  --admin-password-env <VAR>  Password from process.env[VAR] (no prompt)
   --reuse-d1                  Require existing D1 with that name
   --d1-id <uuid>              Use existing D1 id directly
-  --skip-secret               Skip wrangler secret put ADMIN_PASSWORD
+  --skip-secret               Stop after resources/migrations; provision secrets later
   --yes, -y                   Accept bootstrap defaults; migration still confirms on a TTY
   --help, -h
 
@@ -105,9 +104,6 @@ function parseArgs(argv) {
 				break;
 			case "--admin-domain":
 				out.adminDomain = next();
-				break;
-			case "--admin-password-env":
-				out.adminPasswordEnv = next();
 				break;
 			case "--d1-id":
 				out.d1Id = next();
@@ -204,11 +200,17 @@ async function main() {
 	};
 
 	writeInstanceEnvFile(instance, names);
+	ensureQueue(names.chainJobDlqName);
+	ensureQueue(names.chainJobQueueName);
 
 	/** @type {Record<string, string>} */
 	const vars = {
 		PROXY_WORKER_NAME: names.proxyWorkerName,
 		ADMIN_WORKER_NAME: names.adminWorkerName,
+		CHAIN_WORKER_NAME: names.chainWorkerName,
+		CHAIN_JOB_QUEUE_NAME: names.chainJobQueueName,
+		CHAIN_JOB_DLQ_NAME: names.chainJobDlqName,
+		CINACHAIN_CHAIN_ID: process.env.CINACHAIN_CHAIN_ID || "84532",
 		D1_DATABASE_NAME: names.d1DatabaseName,
 		D1_DATABASE_ID: names.d1DatabaseId,
 		D1_MIGRATIONS_WORKER_NAME: names.d1MigrationsWorkerName,
@@ -223,39 +225,48 @@ async function main() {
 	log("Applying remote D1 migrations…");
 	runNpmWithEnv(vars, ["db:migrate:remote"]);
 
-	log("Deploying Proxy Worker (usually under a minute)…");
-	runNpmWithEnv(vars, ["deploy:proxy"]);
-
-	log(
-		"Deploying Admin Worker (OpenNext build — often several minutes on first run)…",
-	);
-	runNpmWithEnv(vars, ["deploy:admin"]);
-
-	if (!args.skipSecret) {
-		let password;
-		if (typeof args.adminPasswordEnv === "string") {
-			password = process.env[args.adminPasswordEnv];
-			if (!password) {
-				logError(
-					`Environment variable ${args.adminPasswordEnv} is empty or unset`,
-				);
-				process.exit(1);
-			}
-		} else if (!interactive && args.yes) {
-			log(
-				"Non-interactive (--yes) without --admin-password-env: skipping secret put. Set later with:",
+	const secretTargets = [
+		[names.proxyWorkerName, ["SHARED_KEY_ENCRYPTION_SECRET"]],
+		[names.adminWorkerName, [
+			"CINATOKEN_OIDC_CLIENT_SECRET",
+			"CINATOKEN_OIDC_BRIDGE_SECRET",
+			"CINATOKEN_OIDC_TRANSACTION_SECRET",
+			"SHARED_KEY_ENCRYPTION_SECRET",
+		]],
+		[names.chainWorkerName, [
+			"CINACHAIN_RPC_URL",
+			"CINACHAIN_MINTER_PRIVATE_KEY",
+			"CINABADGE_CONTRACT_ADDRESS",
+			"CINACREDIT_CONTRACT_ADDRESS",
+		]],
+	];
+	if (args.skipSecret) {
+		log("Resources and migrations are ready; deployment stopped before secret provisioning.");
+		log("Set the required Worker secrets, then run: npm run deploy:cloudflare -- " + instance);
+		return;
+	}
+	if (!interactive) {
+		const missing = secretTargets.flatMap(([, namesForWorker]) => namesForWorker)
+			.filter((name, index, all) => all.indexOf(name) === index)
+			.filter((name) => !process.env[name]);
+		if (missing.length > 0) {
+			throw new Error(
+				`Non-interactive bootstrap requires secret values in process environment: ${missing.join(", ")}`,
 			);
-			log(
-				`  npx wrangler secret put ADMIN_PASSWORD --name ${names.adminWorkerName}`,
-			);
-			password = undefined;
-			args.skipSecret = true;
-		}
-
-		if (!args.skipSecret) {
-			putAdminPasswordSecret(names.adminWorkerName, password);
 		}
 	}
+	for (const [workerName, namesForWorker] of secretTargets) {
+		for (const secretName of namesForWorker) {
+			putWorkerSecret(workerName, secretName, process.env[secretName]);
+		}
+	}
+
+	log("Deploying isolated Chain Worker…");
+	runNpmWithEnv(vars, ["deploy:chain"]);
+	log("Deploying Proxy Worker (usually under a minute)…");
+	runNpmWithEnv(vars, ["deploy:proxy"]);
+	log("Deploying unified console Worker (OpenNext build)…");
+	runNpmWithEnv(vars, ["deploy:admin"]);
 
 	const proxyUrl = names.proxyCustomDomain
 		? `https://${names.proxyCustomDomain}`

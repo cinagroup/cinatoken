@@ -453,7 +453,7 @@ export default function GatewayUsersPage() {
                 </tr>
               ))}
             {users.map((u) => {
-              const detailHref = `/gateway/users/${encodeURIComponent(u.id)}`;
+              const detailHref = `/admin/users/${encodeURIComponent(u.id)}`;
               const meta = summarizeMetadata(u.metadata);
               const factors = summarizeChargedCostFactors(u.charged_cost_factors);
               const disabled = u.status !== 'active';

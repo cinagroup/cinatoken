@@ -115,13 +115,13 @@ export default function DashboardPage() {
 					<div className="text-sm text-gray-500 mb-1">{t('apiKeys')}</div>
 					<div className="text-2xl font-bold text-gray-900">{gateway?.keysTotal ?? 0}</div>
 					<div className="text-xs text-gray-500 mt-1">{t('enabledCount', { count: gateway?.keysActive ?? 0 })}</div>
-					<Link href="/gateway/keys" className="text-sm text-blue-600 hover:underline mt-2 inline-block">{t('keysLink')}</Link>
+					<Link href="/admin/keys" className="text-sm text-blue-600 hover:underline mt-2 inline-block">{t('keysLink')}</Link>
 				</div>
 				<div className="bg-white rounded-lg shadow-md p-5">
 					<div className="text-sm text-gray-500 mb-1">{t('accounts')}</div>
 					<div className="text-2xl font-bold text-gray-900">{gateway?.accountsTotal ?? 0}</div>
 					<div className="text-xs text-gray-500 mt-1">{t('enabledCount', { count: gateway?.accountsActive ?? 0 })}</div>
-					<Link href="/gateway/users" className="text-sm text-blue-600 hover:underline mt-2 inline-block">{t('usersLink')}</Link>
+					<Link href="/admin/users" className="text-sm text-blue-600 hover:underline mt-2 inline-block">{t('usersLink')}</Link>
 				</div>
 				<div className="bg-white rounded-lg shadow-md p-5">
 					<div className="text-sm text-gray-500 mb-1">{t('todayRequests')}</div>
@@ -189,17 +189,17 @@ export default function DashboardPage() {
 								{(kpi?.errorRate ?? gateway?.errorRate ?? 0).toFixed(2)}%
 							</div>
 						</div>
-						<Link href="/gateway/request-logs?status=error" className="text-sm text-blue-600 hover:underline">{t('viewErrorLogs')}</Link>
+						<Link href="/admin/request-logs?status=error" className="text-sm text-blue-600 hover:underline">{t('viewErrorLogs')}</Link>
 					</div>
 					<div className="flex flex-wrap gap-x-3 gap-y-1 mt-2">
-						<Link href="/gateway/analytics/providers" className="text-sm text-blue-600 hover:underline">{t('providerUsageLink')}</Link>
-						<Link href="/gateway/analytics/reliability" className="text-sm text-blue-600 hover:underline">{t('reliabilityLink')}</Link>
+						<Link href="/admin/analytics/providers" className="text-sm text-blue-600 hover:underline">{t('providerUsageLink')}</Link>
+						<Link href="/admin/analytics/reliability" className="text-sm text-blue-600 hover:underline">{t('reliabilityLink')}</Link>
 					</div>
 				</div>
 				<div className="bg-white rounded-lg shadow-md p-6">
 					<div className="text-sm text-gray-500 mb-1">{t('requestsRange', { range: rangeLabel })}</div>
 					<div className="text-2xl font-bold text-gray-900">{kpi?.totalRequests?.toLocaleString() ?? 0}</div>
-					<Link href="/gateway/analytics/models" className="text-sm text-blue-600 hover:underline mt-2 inline-block">{t('modelUsageLink')}</Link>
+					<Link href="/admin/analytics/models" className="text-sm text-blue-600 hover:underline mt-2 inline-block">{t('modelUsageLink')}</Link>
 				</div>
 			</div>
 
@@ -228,7 +228,7 @@ export default function DashboardPage() {
 					) : (
 						<div className="text-gray-500 text-sm">{tCommon('noRecentRequests')}</div>
 					)}
-					<Link href="/gateway/request-logs" className="text-sm text-blue-600 hover:underline mt-4 inline-block">{tCommon('viewAll')}</Link>
+					<Link href="/admin/request-logs" className="text-sm text-blue-600 hover:underline mt-4 inline-block">{tCommon('viewAll')}</Link>
 				</div>
 
 				<div className="bg-white rounded-lg shadow-md p-6">

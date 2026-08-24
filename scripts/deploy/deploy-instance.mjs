@@ -19,6 +19,8 @@
 import { existsSync } from "node:fs";
 import {
 	assertWranglerLoggedIn,
+	assertWorkerSecrets,
+	ensureQueue,
 	envPathForInstance,
 	fetchRemoteMasterKey,
 	log,
@@ -36,6 +38,7 @@ Options:
   --migrate-only      Only remote D1 migrate
   --proxy-only        Only deploy Proxy Worker
   --admin-only        Only deploy Admin Worker
+  --chain-only        Only deploy Chain Worker
   --show-master-key   Print remote MASTER_KEY (no deploy)
   --help, -h          Show this help
 
@@ -61,6 +64,7 @@ function main() {
 	let doMigrate = false;
 	let doProxy = true;
 	let doAdmin = true;
+	let doChain = true;
 	let showMasterKey = false;
 
 	for (const arg of argv) {
@@ -76,19 +80,28 @@ function main() {
 				doMigrate = true;
 				doProxy = false;
 				doAdmin = false;
+				doChain = false;
 				break;
 			case "--proxy-only":
 				doProxy = true;
 				doAdmin = false;
+				doChain = false;
 				break;
 			case "--admin-only":
 				doProxy = false;
 				doAdmin = true;
+				doChain = false;
+				break;
+			case "--chain-only":
+				doProxy = false;
+				doAdmin = false;
+				doChain = true;
 				break;
 			case "--show-master-key":
 				showMasterKey = true;
 				doProxy = false;
 				doAdmin = false;
+				doChain = false;
 				doMigrate = false;
 				break;
 			case "--help":
@@ -136,15 +149,38 @@ function main() {
 	if (doMigrate) {
 		runNpmWithEnv(vars, ["db:migrate:remote"]);
 	}
+	if (doAdmin || doChain) {
+		const resourcePrefix = vars.D1_DATABASE_NAME || "cinatoken";
+		ensureQueue(vars.CHAIN_JOB_DLQ_NAME || `${resourcePrefix}-chain-jobs-dlq`);
+		ensureQueue(vars.CHAIN_JOB_QUEUE_NAME || `${resourcePrefix}-chain-jobs`);
+	}
+	if (doChain) {
+		assertWorkerSecrets(vars.CHAIN_WORKER_NAME || "cinatoken-chain-worker", [
+			"CINACHAIN_RPC_URL",
+			"CINACHAIN_MINTER_PRIVATE_KEY",
+			"CINABADGE_CONTRACT_ADDRESS",
+			"CINACREDIT_CONTRACT_ADDRESS",
+		]);
+		runNpmWithEnv(vars, ["deploy:chain"]);
+	}
 	if (doProxy) {
+		assertWorkerSecrets(vars.PROXY_WORKER_NAME || "cinatoken-proxy", [
+			"SHARED_KEY_ENCRYPTION_SECRET",
+		]);
 		runNpmWithEnv(vars, ["deploy:proxy"]);
 	}
 	if (doAdmin) {
+		assertWorkerSecrets(vars.ADMIN_WORKER_NAME || "cinatoken-admin", [
+			"CINATOKEN_OIDC_CLIENT_SECRET",
+			"CINATOKEN_OIDC_BRIDGE_SECRET",
+			"CINATOKEN_OIDC_TRANSACTION_SECRET",
+			"SHARED_KEY_ENCRYPTION_SECRET",
+		]);
 		runNpmWithEnv(vars, ["deploy:admin"]);
 	}
 
 	log(`${instance} done.`);
-	if (doProxy || doAdmin) {
+	if (doProxy || doAdmin || doChain) {
 		printLocalDevHint();
 	}
 }

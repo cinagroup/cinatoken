@@ -1,0 +1,21 @@
+{
+	"name": "@cinatoken/chain-worker",
+	"version": "2.8.0",
+	"private": true,
+	"type": "module",
+	"scripts": {
+		"cf-typegen": "wrangler types --env-interface ChainWorkerEnv worker-configuration.d.ts --include-runtime false",
+		"typecheck": "tsc -p tsconfig.json --noEmit",
+		"deploy": "npm run cf-typegen && wrangler deploy"
+	},
+	"dependencies": {
+		"@octafuse/core": "*",
+		"viem": "^2.55.19"
+	},
+	"devDependencies": {
+		"@cloudflare/workers-types": "^5.20260823.1",
+		"@types/node": "^25.5.0",
+		"typescript": "^5.7.2",
+		"wrangler": "^4.125.0"
+	}
+}

@@ -7,13 +7,15 @@
 import { useState, useEffect, useCallback, ReactNode } from 'react';
 import Image from 'next/image';
 import { useTranslations } from 'next-intl';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import BrandExternalLinks from '@/components/layout/BrandExternalLinks';
 import LocaleSwitcher from '@/components/layout/LocaleSwitcher';
 import { BusinessTimezoneProvider } from '@/components/BusinessTimezoneProvider';
 import { ADMIN_SESSION_EXPIRED_EVENT_NAME } from '@/lib/admin-session-events';
 import { readJson } from '@/lib/api-json';
 import Sidebar from './Sidebar';
+import ConsoleThemeToggle from '@/components/unified/ConsoleThemeToggle';
+import AdminMobileHeader from './AdminMobileHeader';
 
 interface Props {
   children: ReactNode;
@@ -21,7 +23,8 @@ interface Props {
 
 export default function AuthWrapper({ children }: Props) {
   const pathname = usePathname();
-  // 门户分区自带独立会话（user_session）与登录界面，不走管理台鉴权
+  const router = useRouter();
+  // 门户分区使用统一会话，但不要求管理员能力。
   const isPublicHome = pathname === '/' || pathname.startsWith('/account');
   const t = useTranslations('auth');
   const tBrand = useTranslations('brand');
@@ -37,6 +40,16 @@ export default function AuthWrapper({ children }: Props) {
     }
 
     try {
+	  if (pathname === '/dashboard' || pathname.startsWith('/admin') || pathname.startsWith('/gateway')) {
+        const accountResponse = await fetch('/api/user/me', { cache: 'no-store' });
+        if (accountResponse.ok) {
+          const account = await readJson<{ success: boolean; data?: { isAdmin: boolean } }>(accountResponse);
+          if (account.data && !account.data.isAdmin) {
+            router.replace('/account');
+            return;
+          }
+        }
+      }
       const response = await fetch('/api/auth/check');
       const data = await readJson<{ authenticated: boolean }>(response);
       setIsAuthenticated(data.authenticated);
@@ -46,7 +59,7 @@ export default function AuthWrapper({ children }: Props) {
     } finally {
       setIsLoading(false);
     }
-  }, [isPublicHome]);
+  }, [isPublicHome, pathname, router]);
 
   useEffect(() => {
     checkAuth();
@@ -84,7 +97,7 @@ export default function AuthWrapper({ children }: Props) {
   // Loading state - full screen
   if (isLoading && !isAuthenticated) {
     return (
-      <div className="flex items-center justify-center h-screen bg-gray-50">
+	  <div className="console-shell flex items-center justify-center h-screen bg-gray-50">
         <div className="text-gray-600">{tCommon('loading')}</div>
       </div>
     );
@@ -93,7 +106,7 @@ export default function AuthWrapper({ children }: Props) {
   // Not authenticated - show login page (no sidebar)
   if (!isAuthenticated) {
     return (
-      <div className="flex items-center justify-center h-screen bg-gray-50">
+	  <div className="console-shell flex items-center justify-center h-screen bg-gray-50 px-4">
         <div className="w-full max-w-md rounded-lg bg-white p-8 shadow-md">
           <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
             <div className="flex min-w-0 items-center gap-3">
@@ -112,7 +125,8 @@ export default function AuthWrapper({ children }: Props) {
                 <p className="mt-1 text-xs text-gray-500">{tBrand('operatorConsole')}</p>
               </div>
             </div>
-            <div className="self-end sm:self-auto">
+			<div className="flex self-end items-center gap-2 sm:self-auto">
+			  <ConsoleThemeToggle />
               <LocaleSwitcher variant="login" />
             </div>
           </div>
@@ -148,11 +162,14 @@ export default function AuthWrapper({ children }: Props) {
   // Authenticated - show dashboard layout with sidebar
   return (
     <BusinessTimezoneProvider>
-      <div className="flex h-dvh overflow-hidden">
+	  <div className="console-shell flex min-h-dvh lg:h-dvh lg:overflow-hidden">
         <Sidebar />
-        <main className="flex-1 min-h-0 overflow-y-auto bg-gray-50">
-          {children}
-        </main>
+		<div className="flex min-w-0 flex-1 flex-col">
+		  <AdminMobileHeader />
+		  <main id="main-content" className="min-h-0 flex-1 lg:overflow-y-auto" style={{ background: 'var(--console-bg)' }}>
+			{children}
+		  </main>
+		</div>
       </div>
     </BusinessTimezoneProvider>
   );

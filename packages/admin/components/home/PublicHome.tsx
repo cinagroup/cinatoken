@@ -17,6 +17,7 @@ import LocaleSwitcher from '@/components/layout/LocaleSwitcher';
 import { CINATOKEN_GITHUB_DOCS_INDEX, CINATOKEN_GITHUB_REPO_WEB } from '@/lib/brand';
 import GatewayDemo from './GatewayDemo';
 import HomeThemeSwitcher from './HomeThemeSwitcher';
+import FrontendAttribution from '@/components/unified/FrontendAttribution';
 
 type IconComponent = ComponentType<SVGProps<SVGSVGElement>>;
 
@@ -265,6 +266,9 @@ export default async function PublicHome() {
 						<a href={CINATOKEN_GITHUB_DOCS_INDEX} target="_blank" rel="noreferrer" className="home-hover-text transition">{t('nav.docs')}</a>
 					</div>
 					<p className="home-faint text-xs sm:ml-8">© 2026 CinaGroup</p>
+				</div>
+				<div className="home-faint mx-auto mt-5 max-w-[1360px] border-t pt-5" style={{ borderColor: 'var(--home-border)' }}>
+					<FrontendAttribution />
 				</div>
 			</footer>
 			</div>

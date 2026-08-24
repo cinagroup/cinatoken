@@ -4,8 +4,7 @@
 import { Hono } from 'hono';
 import type { UserEnv } from '@/lib/user-env';
 import { loadPortalMarketplaceConfig } from '@/lib/portal-config';
-import { computeTierEligibility, processPendingNftMints, syncHighestBadgeTier } from '@/lib/services/nft-mint-service';
-import { isCinachainConfigured } from '@/lib/cinachain';
+import { computeTierEligibility } from '@/lib/services/nft-mint-service';
 
 export const userNftRoutes = new Hono<UserEnv>();
 
@@ -25,7 +24,7 @@ userNftRoutes.get('/tiers', async (c) => {
 			highestBadgeTier: earnings?.highestBadgeTier ?? 0,
 			tiers,
 			mints,
-			chainConfigured: isCinachainConfigured(),
+			chainConfigured: Boolean(c.env.CHAIN_JOBS),
 		},
 	});
 });
@@ -38,7 +37,7 @@ userNftRoutes.post('/mint', async (c) => {
 	if (!Number.isInteger(badgeTokenId)) {
 		return c.json({ success: false, message: '无效的位阶' }, 400);
 	}
-	if (!isCinachainConfigured()) {
+	if (!c.env.CHAIN_JOBS) {
 		return c.json({ success: false, message: '铸造通道未配置（请联系管理员）' }, 503);
 	}
 
@@ -73,18 +72,7 @@ userNftRoutes.post('/mint', async (c) => {
 		return c.json({ success: false, message: '该位阶已铸造过' }, 409);
 	}
 
-	void processPendingNftMints(repositories)
-		.then(() => syncHighestBadgeTier(repositories, principal.userId, config.nftTiers))
-		.catch((error) => {
-			console.error(
-				JSON.stringify({
-					level: 'error',
-					message: 'portal.nft_background_failed',
-					mintId: id,
-					error: error instanceof Error ? error.message : 'unknown',
-				})
-			);
-		});
+	await c.env.CHAIN_JOBS.send({ kind: 'nft_mint', id });
 
 	const mints = await repositories.portalLedger.getNftMintsByUser(principal.userId);
 	const created = mints.find((mint) => mint.id === id) ?? null;

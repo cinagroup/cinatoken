@@ -2214,6 +2214,10 @@
 		"stdMetered": "标准 {std} · 成本 {metered}"
 	},
 	"portal": {
+		"metadata": {
+			"title": "cinatoken · 用户中心",
+			"description": "管理 CinaToken 共享密钥、收益、钱包、提现、贡献 NFT 与网关调用密钥。"
+		},
 		"portalTitle": "cinatoken 用户中心",
 		"loginHeading": "cinatoken 用户中心",
 		"loginSubtitle": "共享 API Key · 出售 token · 铸造贡献 NFT",
@@ -2307,10 +2311,10 @@
 			"title": "提现",
 			"subtitle": "余额自动兑换为 cinachain 上的 CINA-C（Base Sepolia）到账你的钱包",
 			"walletLabel": "收款钱包地址 (EVM)",
-			"walletHint": "用于接收 CINA-C 与贡献徽章；仅做地址格式校验",
+			"walletHint": "连接钱包并签署一次性 SIWE 消息以验证所有权；用于接收 CINA-C 与贡献徽章",
 			"saveWallet": "保存钱包",
-			"walletSaved": "钱包已保存",
-			"walletSaveFailed": "钱包保存失败",
+			"walletSaved": "钱包所有权已验证并保存",
+			"walletSaveFailed": "钱包验证失败，请确认已连接目标钱包并完成签名",
 			"amountLabel": "提现金额 ($)",
 			"submit": "发起提现",
 			"submitted": "提现已提交，链上到账后状态自动更新",

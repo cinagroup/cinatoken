@@ -4,21 +4,21 @@ import { formatAdminDocumentTitle, matchAdminNavRoute } from './admin-nav';
 
 describe('matchAdminNavRoute', () => {
 	it('matches exact sidebar paths', () => {
-		assert.equal(matchAdminNavRoute('/gateway/simulator')?.nameKey, 'simulator');
+		assert.equal(matchAdminNavRoute('/admin/simulator')?.nameKey, 'simulator');
 		assert.equal(matchAdminNavRoute('/dashboard')?.nameKey, 'dashboard');
 	});
 
 	it('prefers the longest href so nested tools pages win', () => {
-		assert.equal(matchAdminNavRoute('/gateway/tools')?.nameKey, 'toolsConfig');
-		assert.equal(matchAdminNavRoute('/gateway/tools/invocations')?.nameKey, 'toolInvocations');
+		assert.equal(matchAdminNavRoute('/admin/tools')?.nameKey, 'toolsConfig');
+		assert.equal(matchAdminNavRoute('/admin/tools/invocations')?.nameKey, 'toolInvocations');
 	});
 
 	it('treats user detail as Users', () => {
-		assert.equal(matchAdminNavRoute('/gateway/users/abc-123')?.nameKey, 'users');
+		assert.equal(matchAdminNavRoute('/admin/users/abc-123')?.nameKey, 'users');
 	});
 
 	it('does not confuse analytics users with the Users page', () => {
-		assert.equal(matchAdminNavRoute('/gateway/analytics/users')?.nameKey, 'userUsage');
+		assert.equal(matchAdminNavRoute('/admin/analytics/users')?.nameKey, 'userUsage');
 	});
 
 	it('returns null for unknown paths', () => {

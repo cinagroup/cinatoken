@@ -17,11 +17,15 @@
 	"d1_databases": [
 		{
 			"binding": "DB",
-			"database_name": "cinatoken"
+			"database_name": "cinatoken",
+			"migrations_dir": "../core/migrations-d1"
 		}
 	],
 	"observability": {
 		"enabled": true,
 		"head_sampling_rate": 1
+	},
+	"secrets": {
+		"required": ["SHARED_KEY_ENCRYPTION_SECRET"]
 	}
 }

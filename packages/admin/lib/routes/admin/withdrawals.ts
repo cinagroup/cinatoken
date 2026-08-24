@@ -5,8 +5,6 @@ import { Hono } from 'hono';
 import type { AdminEnv } from '@/lib/admin-env';
 import { requireAdminPrincipal } from '@/lib/middleware/admin-auth';
 import { handleAdminRouteError } from './error-response';
-import { processPendingWithdrawals } from '@/lib/services/withdrawal-processor';
-import { isCinachainConfigured } from '@/lib/cinachain';
 
 export const adminWithdrawalsRoutes = new Hono<AdminEnv>();
 
@@ -27,12 +25,17 @@ adminWithdrawalsRoutes.get('/', async (c) => {
 adminWithdrawalsRoutes.post('/process', async (c) => {
 	try {
 		const repos = c.get('repositories');
-		if (!isCinachainConfigured()) {
+		if (!c.env.CHAIN_JOBS) {
 			return c.json({ success: false, message: 'cinachain env not configured' }, 503);
 		}
 		const limit = Math.min(20, Math.max(1, Number(c.req.query('limit') ?? '5') || 5));
-		const result = await processPendingWithdrawals(repos, limit);
-		return c.json({ success: true, data: result });
+		const pending = (await repos.portalLedger.listAllWithdrawals())
+			.filter((row) => row.status === 'requested' || row.status === 'submitted')
+			.slice(0, limit);
+		await c.env.CHAIN_JOBS.sendBatch(
+			pending.map((row) => ({ body: { kind: 'withdrawal' as const, id: row.id } })),
+		);
+		return c.json({ success: true, data: { queued: pending.length } });
 	} catch (error) {
 		return handleAdminRouteError(c, error, 'Failed to process withdrawals');
 	}

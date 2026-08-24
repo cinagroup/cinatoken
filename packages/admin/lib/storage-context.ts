@@ -1,5 +1,9 @@
 import type { D1Database } from '@cloudflare/workers-types';
 import type { StorageContext } from '@octafuse/core/storage/context';
+import {
+	assertSharedKeyEncryptionSecret,
+	createEncryptedSharedKeysRepository,
+} from '@octafuse/core';
 import { initD1Drizzle } from '@octafuse/core/storage/drizzle/client-d1';
 import { createD1Repositories } from '@octafuse/core/storage/repositories-d1';
 import {
@@ -33,6 +37,19 @@ function createAdminD1StorageContext(db: D1Database): StorageContext {
 	return { client, repositories: createD1Repositories(client) };
 }
 
+function protectSharedKeys(storage: StorageContext, bindings?: AdminBindings): StorageContext {
+	const secret = assertSharedKeyEncryptionSecret(
+		bindings?.SHARED_KEY_ENCRYPTION_SECRET ?? process.env.SHARED_KEY_ENCRYPTION_SECRET,
+	);
+	return {
+		...storage,
+		repositories: {
+			...storage.repositories,
+			sharedKeys: createEncryptedSharedKeysRepository(storage.repositories.sharedKeys, secret),
+		},
+	};
+}
+
 export async function resolveAdminStorageContext(
 	bindings?: AdminBindings,
 	mode: RuntimeMode = 'auto'
@@ -46,7 +63,7 @@ export async function resolveAdminStorageContext(
 			DB: bindings.DB,
 			DATABASE_DRIVER: bindings.DATABASE_DRIVER,
 		});
-		return createAdminD1StorageContext(cfg.db);
+		return protectSharedKeys(createAdminD1StorageContext(cfg.db), bindings);
 	}
 
 	const isCloudflareMode = mode === 'cloudflare' || (mode === 'auto' && Boolean(bindings?.ASSETS));
@@ -68,5 +85,5 @@ export async function resolveAdminStorageContext(
 			throw err;
 		});
 	}
-	return nodeStoragePromise;
+	return protectSharedKeys(await nodeStoragePromise, bindings);
 }

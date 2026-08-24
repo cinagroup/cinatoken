@@ -1,5 +1,7 @@
 # 从零部署 cinatoken Gateway 到 Cloudflare Workers
 
+> **统一控制台迁移提示：** Cloudflare 登录现使用 CinaAuth，不再使用本页旧版 `ADMIN_PASSWORD` 步骤。新的三 Worker、Queues、必需 Secrets、迁移和验收流程见 [unified-console-production.md](./unified-console-production.md)。本页以下双 Worker 内容只用于识别和升级历史部署。
+
 本文面向第一次接触 cinatoken Gateway 的部署者，从一个 Cloudflare 账号开始，完成以下完整链路：
 
 1. 获取并确认最新版代码；
