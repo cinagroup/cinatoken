@@ -263,10 +263,23 @@ export function ensureD1Database(databaseName, opts = {}) {
 
 /** @returns {Array<{ name: string }>} */
 export function listQueues() {
-	const { stdout } = runWrangler(["queues", "list", "--json"], { capture: true });
-	const parsed = JSON.parse(stdout.trim() || "[]");
-	const rows = Array.isArray(parsed) ? parsed : Array.isArray(parsed?.result) ? parsed.result : [];
-	return rows.map((row) => ({ name: String(row.name || row.queue_name || "") }));
+	const { stdout } = runWrangler(["queues", "list"], { capture: true });
+	return parseQueueList(stdout);
+}
+
+/** Parse the stable Wrangler table without depending on a removed --json flag. */
+export function parseQueueList(output) {
+	const rows = [];
+	for (const line of output.split(/\r?\n/u)) {
+		const columns = line.split("│").map((value) => value.trim());
+		if (columns.length < 4 || !/^[0-9a-f]{32}$/iu.test(columns[1] || "")) {
+			continue;
+		}
+		if (columns[2]) {
+			rows.push({ name: columns[2] });
+		}
+	}
+	return rows;
 }
 
 /** Create a Queue once; existing resources are reused without mutation. */

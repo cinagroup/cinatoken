@@ -37,9 +37,15 @@ D1_DATABASE_NAME=cinatoken
 D1_DATABASE_ID=<uuid>
 D1_MIGRATIONS_WORKER_NAME=cinatoken-d1-migrations
 CINACHAIN_CHAIN_ID=84532
-PROXY_CUSTOM_DOMAIN=api.cinatoken.com
-ADMIN_CUSTOM_DOMAIN=cinatoken.com
+# Only set these while creating new Wrangler-managed Custom Domains:
+# PROXY_CUSTOM_DOMAIN=api.cinatoken.com
+# ADMIN_CUSTOM_DOMAIN=cinatoken.com
 ```
+
+The current production hostnames are already bound through Cloudflare Dashboard/existing
+proxied DNS, so leave both custom-domain variables unset during routine deploys. Setting
+them instructs Wrangler to create or replace Custom Domain DNS records and will fail closed
+when an externally managed record already exists.
 
 Use chain ID `84532` only for Base Sepolia. A mainnet launch requires reviewed mainnet contracts, an explicit mainnet chain ID, funded signer operations, monitoring, and a separate staging rehearsal. Never silently reuse testnet contract addresses on mainnet.
 
