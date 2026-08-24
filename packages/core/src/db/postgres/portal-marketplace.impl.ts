@@ -162,6 +162,12 @@ export function createPostgresSharedKeysRepository(db: PostgresDatabaseClient): 
 				.where(eq(sharedKeysTable.id, id)).returning({ id: sharedKeysTable.id });
 			return rows.length > 0;
 		},
+		async replaceSharedKeySecret(id, protectedSecret) {
+			const rows = await drizzle.update(sharedKeysTable)
+				.set({ apiKey: protectedSecret, updatedAt: new Date().toISOString() })
+				.where(eq(sharedKeysTable.id, id)).returning({ id: sharedKeysTable.id });
+			return rows.length > 0;
+		},
 		async markSharedKeyFailure(id, reason, nowIso) {
 			await drizzle.update(sharedKeysTable)
 				.set({ status: 'invalid', failureReason: reason, lastFailureAt: nowIso, updatedAt: nowIso })
@@ -221,6 +227,35 @@ export function createPostgresPortalLedgerRepository(db: PostgresDatabaseClient)
 			}).onConflictDoNothing({ target: sharedKeyEarningsTable.requestLogId }).returning({ id: sharedKeyEarningsTable.id });
 			return rows.length > 0;
 		},
+		async recordEarningAndCredit(params: InsertSharedKeyEarningParams) {
+			let inserted = false;
+			await db.raw.begin(async (tx) => {
+				const rows = await tx<{ id: string }[]>`
+					INSERT INTO shared_key_earnings
+					  (id, request_log_id, shared_key_id, seller_user_id, input_tokens, output_tokens,
+					   cache_read_tokens, cache_write_tokens, gross_amount, platform_fee, net_amount,
+					   currency, created_at)
+					VALUES
+					  (${params.id}, ${params.requestLogId}, ${params.sharedKeyId}, ${params.sellerUserId},
+					   ${params.inputTokens}, ${params.outputTokens}, ${params.cacheReadTokens},
+					   ${params.cacheWriteTokens}, ${params.grossAmount}, ${params.platformFee},
+					   ${params.netAmount}, ${params.currency}, ${params.nowIso})
+					ON CONFLICT (request_log_id) DO NOTHING
+					RETURNING id
+				`;
+				if (rows.length === 0) return;
+				await tx`
+					UPDATE user_earnings
+					SET balance = balance + ${params.netAmount},
+					    lifetime_earned = lifetime_earned + ${params.netAmount},
+					    contribution_value = contribution_value + ${params.netAmount},
+					    updated_at = ${params.nowIso}
+					WHERE user_id = ${params.sellerUserId}
+				`;
+				inserted = true;
+			});
+			return inserted;
+		},
 		async creditEarningBalance(sellerUserId, netAmount, nowIso) {
 			await drizzle.update(userEarningsTable).set({
 				balance: sql`${userEarningsTable.balance} + CAST(${netAmount} AS numeric)`,
@@ -253,6 +288,42 @@ export function createPostgresPortalLedgerRepository(db: PostgresDatabaseClient)
 				createdAt: params.nowIso,
 				updatedAt: params.nowIso,
 			});
+		},
+		async createWithdrawalWithBalanceLock(params) {
+			let outcome: 'created' | 'insufficient_balance' | 'active_withdrawal_exists' = 'created';
+			await db.raw.begin(async (tx) => {
+				const active = await tx<{ id: string }[]>`
+					SELECT id FROM withdrawals
+					WHERE user_id = ${params.userId}
+					  AND status IN ('requested', 'processing', 'submitted')
+					LIMIT 1 FOR UPDATE
+				`;
+				if (active.length > 0) {
+					outcome = 'active_withdrawal_exists';
+					return;
+				}
+				const locked = await tx<{ user_id: string }[]>`
+					UPDATE user_earnings
+					SET balance = balance - ${params.amount},
+					    locked_amount = locked_amount + ${params.amount},
+					    updated_at = ${params.nowIso}
+					WHERE user_id = ${params.userId} AND balance >= ${params.amount}
+					RETURNING user_id
+				`;
+				if (locked.length === 0) {
+					outcome = 'insufficient_balance';
+					return;
+				}
+				await tx`
+					INSERT INTO withdrawals
+					  (id, user_id, amount, fee, net_amount, currency, wallet_address, status,
+					   token_amount, created_at, updated_at)
+					VALUES (${params.id}, ${params.userId}, ${params.amount}, ${params.fee},
+					        ${params.netAmount}, ${params.currency}, ${params.walletAddress},
+					        'requested', ${params.tokenAmount}, ${params.nowIso}, ${params.nowIso})
+				`;
+			});
+			return outcome;
 		},
 		async getWithdrawal(id) {
 			const row = await drizzle.select().from(withdrawalsTable).where(eq(withdrawalsTable.id, id)).limit(1);
@@ -294,23 +365,44 @@ export function createPostgresPortalLedgerRepository(db: PostgresDatabaseClient)
 			return rows.length > 0;
 		},
 		async settleWithdrawalConfirmed(id, userId, amount, nowIso) {
-			await drizzle.update(userEarningsTable).set({
-				lockedAmount: sql`${userEarningsTable.lockedAmount} - CAST(${amount} AS numeric)`,
-				lifetimeWithdrawn: sql`${userEarningsTable.lifetimeWithdrawn} + CAST(${amount} AS numeric)`,
-				updatedAt: nowIso,
-			}).where(eq(userEarningsTable.userId, userId));
-			await drizzle.update(withdrawalsTable).set({ status: 'confirmed', confirmedAt: nowIso, updatedAt: nowIso })
-				.where(eq(withdrawalsTable.id, id));
+			void amount;
+			await db.raw.begin(async (tx) => {
+				const rows = await tx<{ amount: string }[]>`
+					UPDATE withdrawals
+					SET status = 'confirmed', confirmed_at = ${nowIso}, updated_at = ${nowIso}
+					WHERE id = ${id} AND user_id = ${userId}
+					  AND status IN ('requested', 'processing', 'submitted')
+					RETURNING amount
+				`;
+				if (rows.length === 0) return;
+				await tx`
+					UPDATE user_earnings
+					SET locked_amount = locked_amount - ${rows[0].amount},
+					    lifetime_withdrawn = lifetime_withdrawn + ${rows[0].amount},
+					    updated_at = ${nowIso}
+					WHERE user_id = ${userId} AND locked_amount >= ${rows[0].amount}
+				`;
+			});
 		},
 		async refundWithdrawal(id, userId, amount, reason, nowIso) {
-			await drizzle.update(userEarningsTable).set({
-				lockedAmount: sql`${userEarningsTable.lockedAmount} - CAST(${amount} AS numeric)`,
-				balance: sql`${userEarningsTable.balance} + CAST(${amount} AS numeric)`,
-				updatedAt: nowIso,
-			}).where(eq(userEarningsTable.userId, userId));
-			await drizzle.update(withdrawalsTable)
-				.set({ status: 'failed', failureReason: reason, updatedAt: nowIso })
-				.where(eq(withdrawalsTable.id, id));
+			void amount;
+			await db.raw.begin(async (tx) => {
+				const rows = await tx<{ amount: string }[]>`
+					UPDATE withdrawals
+					SET status = 'failed', failure_reason = ${reason}, updated_at = ${nowIso}
+					WHERE id = ${id} AND user_id = ${userId}
+					  AND status IN ('requested', 'processing', 'submitted')
+					RETURNING amount
+				`;
+				if (rows.length === 0) return;
+				await tx`
+					UPDATE user_earnings
+					SET locked_amount = locked_amount - ${rows[0].amount},
+					    balance = balance + ${rows[0].amount},
+					    updated_at = ${nowIso}
+					WHERE user_id = ${userId} AND locked_amount >= ${rows[0].amount}
+				`;
+			});
 		},
 		async updateWithdrawalStatus(id, patch) {
 			const set: Record<string, unknown> = { updatedAt: patch.nowIso };
@@ -360,7 +452,10 @@ export function createPostgresPortalLedgerRepository(db: PostgresDatabaseClient)
 			if (patch.confirmedAt !== undefined) set.confirmedAt = patch.confirmedAt;
 			if (Object.keys(set).length === 0) return false;
 			const rows = await drizzle.update(nftMintsTable).set(set)
-				.where(eq(nftMintsTable.id, id)).returning({ id: nftMintsTable.id });
+				.where(patch.expectedStatus
+					? and(eq(nftMintsTable.id, id), eq(nftMintsTable.status, patch.expectedStatus))
+					: eq(nftMintsTable.id, id))
+				.returning({ id: nftMintsTable.id });
 			return rows.length > 0;
 		},
 		async setHighestBadgeTier(userId, tier, nowIso) {

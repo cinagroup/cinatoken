@@ -170,6 +170,11 @@ export function createD1SharedKeysRepository(db: D1DatabaseClient): SharedKeysRe
 				.bind(...values, id).run();
 			return Number(result.meta.changes ?? 0) > 0;
 		},
+		async replaceSharedKeySecret(id, protectedSecret) {
+			const result = await raw.prepare("UPDATE shared_keys SET api_key = ?, updated_at = datetime('now') WHERE id = ?")
+				.bind(protectedSecret, id).run();
+			return Number(result.meta.changes ?? 0) > 0;
+		},
 		async markSharedKeyFailure(id, reason, nowIso) {
 			await raw.prepare(`UPDATE shared_keys SET status = 'invalid', failure_reason = ?, last_failure_at = ?, updated_at = ? WHERE id = ?`)
 				.bind(reason, nowIso, nowIso, id).run();
@@ -194,16 +199,17 @@ export function createD1PortalLedgerRepository(db: D1DatabaseClient): PortalLedg
 	const raw = db.raw;
 	return {
 		async getUserEarnings(userId) {
-			const row = await raw.prepare(`SELECT user_id, balance, locked_amount, lifetime_earned, lifetime_withdrawn,
-          contribution_value, wallet_address, wallet_verified_at, highest_badge_tier, updated_at
-          FROM user_earnings WHERE user_id = ?`).bind(userId)
+			const row = await raw.prepare(`SELECT user_id, balance_micros, locked_amount_micros,
+		  lifetime_earned_micros, lifetime_withdrawn_micros, contribution_value_micros,
+		  wallet_address, wallet_verified_at, highest_badge_tier, updated_at
+		  FROM user_earnings WHERE user_id = ?`).bind(userId)
 				.first<{
 					user_id: string;
-					balance: number;
-					locked_amount: number;
-					lifetime_earned: number;
-					lifetime_withdrawn: number;
-					contribution_value: number;
+					balance_micros: number;
+					locked_amount_micros: number;
+					lifetime_earned_micros: number;
+					lifetime_withdrawn_micros: number;
+					contribution_value_micros: number;
 					wallet_address: string | null;
 					wallet_verified_at: string | null;
 					highest_badge_tier: number;
@@ -212,11 +218,11 @@ export function createD1PortalLedgerRepository(db: D1DatabaseClient): PortalLedg
 			if (!row) return null;
 			return {
 				userId: row.user_id,
-				balance: Number(row.balance),
-				lockedAmount: Number(row.locked_amount),
-				lifetimeEarned: Number(row.lifetime_earned),
-				lifetimeWithdrawn: Number(row.lifetime_withdrawn),
-				contributionValue: Number(row.contribution_value),
+				balance: Number(row.balance_micros) / 1_000_000,
+				lockedAmount: Number(row.locked_amount_micros) / 1_000_000,
+				lifetimeEarned: Number(row.lifetime_earned_micros) / 1_000_000,
+				lifetimeWithdrawn: Number(row.lifetime_withdrawn_micros) / 1_000_000,
+				contributionValue: Number(row.contribution_value_micros) / 1_000_000,
 				walletAddress: row.wallet_address,
 				walletVerifiedAt: row.wallet_verified_at,
 				highestBadgeTier: row.highest_badge_tier,
@@ -255,12 +261,28 @@ export function createD1PortalLedgerRepository(db: D1DatabaseClient): PortalLedg
 				).run();
 			return Number(result.meta.changes ?? 0) > 0;
 		},
+		async recordEarningAndCredit(params: InsertSharedKeyEarningParams) {
+			// Migration 0029 owns the balance update and immutable ledger append in
+			// an AFTER INSERT trigger. INSERT OR IGNORE makes request_log_id the
+			// idempotency key, so duplicate delivery cannot credit twice.
+			return this.insertEarning(params);
+		},
 		async creditEarningBalance(sellerUserId, netAmount, nowIso) {
+			const amountMicros = Math.round(netAmount * 1_000_000);
 			await raw.prepare(`UPDATE user_earnings
-          SET balance = balance + ?, lifetime_earned = lifetime_earned + ?,
-              contribution_value = contribution_value + ?, updated_at = ?
-          WHERE user_id = ?`)
-				.bind(netAmount, netAmount, netAmount, nowIso, sellerUserId).run();
+		  SET balance_micros = balance_micros + ?,
+		      lifetime_earned_micros = lifetime_earned_micros + ?,
+		      contribution_value_micros = contribution_value_micros + ?,
+		      balance = CAST(balance_micros + ? AS REAL) / 1000000.0,
+		      lifetime_earned = CAST(lifetime_earned_micros + ? AS REAL) / 1000000.0,
+		      contribution_value = CAST(contribution_value_micros + ? AS REAL) / 1000000.0,
+		      updated_at = ?
+		  WHERE user_id = ?`)
+				.bind(
+					amountMicros, amountMicros, amountMicros,
+					amountMicros, amountMicros, amountMicros,
+					nowIso, sellerUserId,
+				).run();
 		},
 		async listEarningsBySeller(sellerUserId, page, pageSize) {
 			const offset = (page - 1) * pageSize;
@@ -282,8 +304,9 @@ export function createD1PortalLedgerRepository(db: D1DatabaseClient): PortalLedg
 		},
 		async insertWithdrawal(params: InsertWithdrawalParams) {
 			await raw.prepare(`INSERT INTO withdrawals
-          (id, user_id, amount, fee, net_amount, currency, wallet_address, status, token_amount, created_at, updated_at)
-          VALUES (?, ?, ?, ?, ?, ?, ?, 'requested', ?, ?, ?)`)
+          (id, user_id, amount, fee, net_amount, currency, wallet_address, status, token_amount,
+           amount_micros, fee_micros, net_amount_micros, created_at, updated_at)
+          VALUES (?, ?, ?, ?, ?, ?, ?, 'requested', ?, ?, ?, ?, ?, ?)`)
 				.bind(
 					params.id,
 					params.userId,
@@ -293,9 +316,25 @@ export function createD1PortalLedgerRepository(db: D1DatabaseClient): PortalLedg
 					params.currency,
 					params.walletAddress,
 					params.tokenAmount,
+					Math.round(params.amount * 1_000_000),
+					Math.round(params.fee * 1_000_000),
+					Math.round(params.netAmount * 1_000_000),
 					params.nowIso,
 					params.nowIso
 				).run();
+		},
+		async createWithdrawalWithBalanceLock(params) {
+			try {
+				await this.insertWithdrawal(params);
+				return 'created';
+			} catch (error) {
+				const message = error instanceof Error ? error.message : String(error);
+				if (message.includes('active_withdrawal_exists') || message.includes('UNIQUE constraint failed')) {
+					return 'active_withdrawal_exists';
+				}
+				if (message.includes('insufficient_balance')) return 'insufficient_balance';
+				throw error;
+			}
 		},
 		async getWithdrawal(id) {
 			const row = await raw.prepare(`SELECT id, user_id, amount, fee, net_amount, currency, wallet_address, status,
@@ -354,19 +393,17 @@ export function createD1PortalLedgerRepository(db: D1DatabaseClient): PortalLedg
 			return Number(result.meta.changes ?? 0) > 0;
 		},
 		async settleWithdrawalConfirmed(id, userId, amount, nowIso) {
-			await raw.prepare(`UPDATE user_earnings
-          SET locked_amount = locked_amount - ?, lifetime_withdrawn = lifetime_withdrawn + ?, updated_at = ?
-          WHERE user_id = ?`)
-				.bind(amount, amount, nowIso, userId).run();
-			await raw.prepare('UPDATE withdrawals SET status = \'confirmed\', confirmed_at = ?, updated_at = ? WHERE id = ?')
+			void userId;
+			void amount;
+			await raw.prepare(`UPDATE withdrawals SET status = 'confirmed', confirmed_at = ?, updated_at = ?
+          WHERE id = ? AND status IN ('requested', 'processing', 'submitted')`)
 				.bind(nowIso, nowIso, id).run();
 		},
 		async refundWithdrawal(id, userId, amount, reason, nowIso) {
-			await raw.prepare(`UPDATE user_earnings
-          SET locked_amount = locked_amount - ?, balance = balance + ?, updated_at = ?
-          WHERE user_id = ?`)
-				.bind(amount, amount, nowIso, userId).run();
-			await raw.prepare(`UPDATE withdrawals SET status = 'failed', failure_reason = ?, updated_at = ? WHERE id = ?`)
+			void userId;
+			void amount;
+			await raw.prepare(`UPDATE withdrawals SET status = 'failed', failure_reason = ?, updated_at = ?
+          WHERE id = ? AND status IN ('requested', 'processing', 'submitted')`)
 				.bind(reason, nowIso, id).run();
 		},
 		async updateWithdrawalStatus(id, patch) {
@@ -378,9 +415,8 @@ export function createD1PortalLedgerRepository(db: D1DatabaseClient): PortalLedg
 			if (patch.tokenAmount !== undefined) { sets.push('token_amount = ?'); values.push(patch.tokenAmount); }
 			if (patch.failureReason !== undefined) { sets.push('failure_reason = ?'); values.push(patch.failureReason); }
 			const whereStatus = patch.expectedStatus ? ' AND status = ?' : '';
-			if (patch.expectedStatus !== undefined) values.push(patch.expectedStatus);
 			const result = await raw.prepare(`UPDATE withdrawals SET ${sets.join(', ')} WHERE id = ?${whereStatus}`)
-				.bind(...values, id).run();
+				.bind(...values, id, ...(patch.expectedStatus !== undefined ? [patch.expectedStatus] : [])).run();
 			return Number(result.meta.changes ?? 0) > 0;
 		},
 		async insertNftMint(params: InsertNftMintParams) {
@@ -418,8 +454,9 @@ export function createD1PortalLedgerRepository(db: D1DatabaseClient): PortalLedg
 			if (patch.failureReason !== undefined) { sets.push('failure_reason = ?'); values.push(patch.failureReason); }
 			if (patch.confirmedAt !== undefined) { sets.push('confirmed_at = ?'); values.push(patch.confirmedAt); }
 			if (sets.length === 0) return false;
-			const result = await raw.prepare(`UPDATE nft_mints SET ${sets.join(', ')} WHERE id = ?`)
-				.bind(...values, id).run();
+			const whereStatus = patch.expectedStatus ? ' AND status = ?' : '';
+			const result = await raw.prepare(`UPDATE nft_mints SET ${sets.join(', ')} WHERE id = ?${whereStatus}`)
+				.bind(...values, id, ...(patch.expectedStatus !== undefined ? [patch.expectedStatus] : [])).run();
 			return Number(result.meta.changes ?? 0) > 0;
 		},
 		async setHighestBadgeTier(userId, tier, nowIso) {

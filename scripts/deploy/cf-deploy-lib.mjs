@@ -125,7 +125,7 @@ export function runNpmWithEnv(vars, extraArgs) {
 
 /**
  * @param {string[]} wranglerArgs
- * @param {{ env?: Record<string, string>, input?: string, capture?: boolean }} [opts]
+ * @param {{ env?: Record<string, string>, input?: string, capture?: boolean, allowFailure?: boolean }} [opts]
  */
 export function runWrangler(wranglerArgs, opts = {}) {
 	const env = { ...process.env, ...(opts.env || {}) };
@@ -146,19 +146,17 @@ export function runWrangler(wranglerArgs, opts = {}) {
 			encoding: opts.capture ? "utf8" : undefined,
 		},
 	);
-	if ((result.status ?? 1) !== 0) {
+	if ((result.status ?? 1) !== 0 && !opts.allowFailure) {
 		throw commandFailure(
 			result,
 			`npx wrangler ${wranglerArgs.join(" ")}`,
 		);
 	}
-	if (opts.capture) {
-		return {
-			stdout: (result.stdout || "").toString(),
-			stderr: (result.stderr || "").toString(),
-		};
-	}
-	return { stdout: "", stderr: "" };
+	return {
+		stdout: opts.capture ? (result.stdout || "").toString() : "",
+		stderr: opts.capture ? (result.stderr || "").toString() : "",
+		status: result.status ?? 1,
+	};
 }
 
 export function assertWranglerLoggedIn() {
@@ -263,11 +261,45 @@ export function ensureD1Database(databaseName, opts = {}) {
 	return id;
 }
 
+/** @returns {Array<{ name: string }>} */
+export function listQueues() {
+	const { stdout } = runWrangler(["queues", "list"], { capture: true });
+	return parseQueueList(stdout);
+}
+
+/** Parse the stable Wrangler table without depending on a removed --json flag. */
+export function parseQueueList(output) {
+	const rows = [];
+	for (const line of output.split(/\r?\n/u)) {
+		const columns = line.split("│").map((value) => value.trim());
+		if (columns.length < 4 || !/^[0-9a-f]{32}$/iu.test(columns[1] || "")) {
+			continue;
+		}
+		if (columns[2]) {
+			rows.push({ name: columns[2] });
+		}
+	}
+	return rows;
+}
+
+/** Create a Queue once; existing resources are reused without mutation. */
+export function ensureQueue(queueName) {
+	if (listQueues().some((queue) => queue.name === queueName)) {
+		log(`Reusing existing Queue "${queueName}"`);
+		return;
+	}
+	log(`Creating Queue "${queueName}"…`);
+	runWrangler(["queues", "create", queueName]);
+}
+
 /**
  * @param {string} instance
  * @param {{
  *   proxyWorkerName: string,
  *   adminWorkerName: string,
+ *   chainWorkerName: string,
+ *   chainJobQueueName: string,
+ *   chainJobDlqName: string,
  *   d1DatabaseName: string,
  *   d1DatabaseId: string,
  *   d1MigrationsWorkerName: string,
@@ -287,6 +319,10 @@ export function writeInstanceEnvFile(instance, names) {
 		``,
 		`PROXY_WORKER_NAME=${names.proxyWorkerName}`,
 		`ADMIN_WORKER_NAME=${names.adminWorkerName}`,
+		`CHAIN_WORKER_NAME=${names.chainWorkerName}`,
+		`CHAIN_JOB_QUEUE_NAME=${names.chainJobQueueName}`,
+		`CHAIN_JOB_DLQ_NAME=${names.chainJobDlqName}`,
+		`CINACHAIN_CHAIN_ID=84532`,
 		``,
 		`D1_DATABASE_NAME=${names.d1DatabaseName}`,
 		`D1_DATABASE_ID=${names.d1DatabaseId}`,
@@ -313,13 +349,69 @@ export function writeInstanceEnvFile(instance, names) {
  * @param {string} adminWorkerName
  * @param {string | undefined} password  if omitted, wrangler prompts interactively
  */
-export function putAdminPasswordSecret(adminWorkerName, password) {
-	const args = ["secret", "put", "ADMIN_PASSWORD", "--name", adminWorkerName];
-	if (password !== undefined && password !== "") {
-		runWrangler(args, { input: `${password}\n` });
+export function putWorkerSecret(workerName, secretName, value) {
+	const args = ["secret", "put", secretName, "--name", workerName];
+	if (value !== undefined && value !== "") {
+		runWrangler(args, { input: `${value}\n` });
 	} else {
-		log("Enter ADMIN_PASSWORD when wrangler prompts (not stored in .env)…");
+		log(`Enter ${secretName} for ${workerName} when Wrangler prompts (not stored)…`);
 		runWrangler(args);
+	}
+}
+
+/** Return whether a Worker already has at least one deployed version. */
+export function workerExists(workerName) {
+	const args = ["deployments", "list", "--name", workerName, "--json"];
+	const result = runWrangler(args, { capture: true, allowFailure: true });
+	if (result.status === 0) {
+		return true;
+	}
+	const combined = `${result.stdout}\n${result.stderr}`;
+	if (/not found|does not exist/i.test(combined)) {
+		return false;
+	}
+	throw new Error(
+		`Unable to determine whether Worker ${workerName} exists.\n${combined.trim()}`,
+	);
+}
+
+/**
+ * Wrangler can only write a secret after the target Worker exists. Create an
+ * inactive, no-route 503 Worker for first-time bootstrap; the real deploy
+ * replaces it only after all required secrets are present.
+ */
+export function ensureWorkerSecretTarget(workerName) {
+	if (workerExists(workerName)) {
+		log(`Reusing existing Worker secret target "${workerName}"`);
+		return;
+	}
+	log(`Creating inactive secret bootstrap Worker "${workerName}"…`);
+	runWrangler([
+		"deploy",
+		"--config",
+		"./scripts/deploy/wrangler.secret-bootstrap.jsonc",
+		"--name",
+		workerName,
+	]);
+}
+
+export function listWorkerSecretNames(workerName) {
+	const { stdout } = runWrangler(["secret", "list", "--name", workerName, "--format", "json"], {
+		capture: true,
+	});
+	const parsed = JSON.parse(stdout.trim() || "[]");
+	const rows = Array.isArray(parsed) ? parsed : Array.isArray(parsed?.result) ? parsed.result : [];
+	return rows.map((row) => String(row.name || row.key || "")).filter(Boolean);
+}
+
+export function assertWorkerSecrets(workerName, requiredNames) {
+	const existing = new Set(listWorkerSecretNames(workerName));
+	const missing = requiredNames.filter((name) => !existing.has(name));
+	if (missing.length > 0) {
+		throw new Error(
+			`Worker ${workerName} is missing required secrets: ${missing.join(", ")}. ` +
+			`Provision them with Wrangler before deployment; values must never be stored in the instance env file.`,
+		);
 	}
 }
 
@@ -419,6 +511,9 @@ export function namesFromPrefix(prefix) {
 	return {
 		proxyWorkerName: `${p}-proxy`,
 		adminWorkerName: `${p}-admin`,
+		chainWorkerName: `${p}-chain-worker`,
+		chainJobQueueName: `${p}-chain-jobs`,
+		chainJobDlqName: `${p}-chain-jobs-dlq`,
 		d1DatabaseName: p,
 		d1MigrationsWorkerName: `${p}-d1-migrations`,
 	};
@@ -453,5 +548,5 @@ export function printDownstreamHints({
 		`GATEWAY_MASTER_KEY=<from D1 system_config.MASTER_KEY — rotate it in Admin Config; explicit recovery: npm run deploy:cloudflare -- <instance> --show-master-key>`,
 	);
 	console.log("");
-	log("Verify: GET $GATEWAY_URL/health · open $GATEWAY_MASTER_URL and sign in with ADMIN_PASSWORD");
+	log("Verify: GET $GATEWAY_URL/health · open $GATEWAY_MASTER_URL and sign in through CinaAuth");
 }

@@ -190,6 +190,13 @@ export function createMySqlSharedKeysRepository(db: MySqlDatabaseClient): Shared
 			);
 			return result.affectedRows > 0;
 		},
+		async replaceSharedKeySecret(id, protectedSecret) {
+			const [result] = await pool.execute<ResultSetHeader>(
+				'UPDATE shared_keys SET api_key = ?, updated_at = CURRENT_TIMESTAMP(6) WHERE id = ?',
+				[protectedSecret, id],
+			);
+			return result.affectedRows > 0;
+		},
 		async markSharedKeyFailure(id, reason, nowIso) {
 			await pool.execute<ResultSetHeader>(
 				`UPDATE shared_keys SET status = 'invalid', failure_reason = ?, last_failure_at = ?, updated_at = ? WHERE id = ?`,
@@ -408,6 +415,43 @@ export function createMySqlPortalLedgerRepository(db: MySqlDatabaseClient): Port
 				throw error;
 			}
 		},
+		async recordEarningAndCredit(params: InsertSharedKeyEarningParams) {
+			const connection = await pool.getConnection();
+			try {
+				await connection.beginTransaction();
+				const [result] = await connection.execute<ResultSetHeader>(
+					`INSERT IGNORE INTO shared_key_earnings
+					  (id, request_log_id, shared_key_id, seller_user_id, input_tokens, output_tokens,
+					   cache_read_tokens, cache_write_tokens, gross_amount, platform_fee, net_amount,
+					   currency, created_at)
+					 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+					[
+						params.id, params.requestLogId, params.sharedKeyId, params.sellerUserId,
+						params.inputTokens, params.outputTokens, params.cacheReadTokens,
+						params.cacheWriteTokens, params.grossAmount, params.platformFee,
+						params.netAmount, params.currency, params.nowIso,
+					],
+				);
+				if (result.affectedRows === 0) {
+					await connection.rollback();
+					return false;
+				}
+				await connection.execute<ResultSetHeader>(
+					`UPDATE user_earnings
+					 SET balance = balance + ?, lifetime_earned = lifetime_earned + ?,
+					     contribution_value = contribution_value + ?, updated_at = ?
+					 WHERE user_id = ?`,
+					[params.netAmount, params.netAmount, params.netAmount, params.nowIso, params.sellerUserId],
+				);
+				await connection.commit();
+				return true;
+			} catch (error) {
+				await connection.rollback();
+				throw error;
+			} finally {
+				connection.release();
+			}
+		},
 		async creditEarningBalance(sellerUserId, netAmount, nowIso) {
 			await pool.execute<ResultSetHeader>(
 				`UPDATE user_earnings
@@ -452,6 +496,50 @@ export function createMySqlPortalLedgerRepository(db: MySqlDatabaseClient): Port
 					params.nowIso,
 				]
 			);
+		},
+		async createWithdrawalWithBalanceLock(params) {
+			const connection = await pool.getConnection();
+			try {
+				await connection.beginTransaction();
+				const [balanceRows] = await connection.execute<RowDataPacket[]>(
+					'SELECT balance FROM user_earnings WHERE user_id = ? FOR UPDATE',
+					[params.userId],
+				);
+				if (!balanceRows[0] || Number(balanceRows[0].balance) < params.amount) {
+					await connection.rollback();
+					return 'insufficient_balance';
+				}
+				const [activeRows] = await connection.execute<RowDataPacket[]>(
+					`SELECT id FROM withdrawals WHERE user_id = ?
+					 AND status IN ('requested', 'processing', 'submitted') LIMIT 1 FOR UPDATE`,
+					[params.userId],
+				);
+				if (activeRows.length > 0) {
+					await connection.rollback();
+					return 'active_withdrawal_exists';
+				}
+				await connection.execute<ResultSetHeader>(
+					`UPDATE user_earnings SET balance = balance - ?, locked_amount = locked_amount + ?, updated_at = ?
+					 WHERE user_id = ?`,
+					[params.amount, params.amount, params.nowIso, params.userId],
+				);
+				await connection.execute<ResultSetHeader>(
+					`INSERT INTO withdrawals
+					 (id, user_id, amount, fee, net_amount, currency, wallet_address, status, token_amount, created_at, updated_at)
+					 VALUES (?, ?, ?, ?, ?, ?, ?, 'requested', ?, ?, ?)`,
+					[
+						params.id, params.userId, params.amount, params.fee, params.netAmount,
+						params.currency, params.walletAddress, params.tokenAmount, params.nowIso, params.nowIso,
+					],
+				);
+				await connection.commit();
+				return 'created';
+			} catch (error) {
+				await connection.rollback();
+				throw error;
+			} finally {
+				connection.release();
+			}
 		},
 		async getWithdrawal(id) {
 			const [rows] = await pool.execute<RowDataPacket[]>(
@@ -504,28 +592,70 @@ export function createMySqlPortalLedgerRepository(db: MySqlDatabaseClient): Port
 			return result.affectedRows > 0;
 		},
 		async settleWithdrawalConfirmed(id, userId, amount, nowIso) {
-			await pool.execute<ResultSetHeader>(
-				`UPDATE user_earnings
-          SET locked_amount = locked_amount - ?, lifetime_withdrawn = lifetime_withdrawn + ?, updated_at = ?
-          WHERE user_id = ?`,
-				[amount, amount, nowIso, userId]
-			);
-			await pool.execute<ResultSetHeader>(
-				`UPDATE withdrawals SET status = 'confirmed', confirmed_at = ?, updated_at = ? WHERE id = ?`,
-				[nowIso, nowIso, id]
-			);
+			void amount;
+			const connection = await pool.getConnection();
+			try {
+				await connection.beginTransaction();
+				const [rows] = await connection.execute<RowDataPacket[]>(
+					`SELECT amount FROM withdrawals WHERE id = ? AND user_id = ?
+					 AND status IN ('requested', 'processing', 'submitted') FOR UPDATE`,
+					[id, userId],
+				);
+				if (!rows[0]) {
+					await connection.rollback();
+					return;
+				}
+				const canonicalAmount = Number(rows[0].amount);
+				await connection.execute<ResultSetHeader>(
+					`UPDATE user_earnings SET locked_amount = locked_amount - ?,
+					 lifetime_withdrawn = lifetime_withdrawn + ?, updated_at = ?
+					 WHERE user_id = ? AND locked_amount >= ?`,
+					[canonicalAmount, canonicalAmount, nowIso, userId, canonicalAmount],
+				);
+				await connection.execute<ResultSetHeader>(
+					`UPDATE withdrawals SET status = 'confirmed', confirmed_at = ?, updated_at = ? WHERE id = ?`,
+					[nowIso, nowIso, id],
+				);
+				await connection.commit();
+			} catch (error) {
+				await connection.rollback();
+				throw error;
+			} finally {
+				connection.release();
+			}
 		},
 		async refundWithdrawal(id, userId, amount, reason, nowIso) {
-			await pool.execute<ResultSetHeader>(
-				`UPDATE user_earnings
-          SET locked_amount = locked_amount - ?, balance = balance + ?, updated_at = ?
-          WHERE user_id = ?`,
-				[amount, amount, nowIso, userId]
-			);
-			await pool.execute<ResultSetHeader>(
-				`UPDATE withdrawals SET status = 'failed', failure_reason = ?, updated_at = ? WHERE id = ?`,
-				[reason, nowIso, id]
-			);
+			void amount;
+			const connection = await pool.getConnection();
+			try {
+				await connection.beginTransaction();
+				const [rows] = await connection.execute<RowDataPacket[]>(
+					`SELECT amount FROM withdrawals WHERE id = ? AND user_id = ?
+					 AND status IN ('requested', 'processing', 'submitted') FOR UPDATE`,
+					[id, userId],
+				);
+				if (!rows[0]) {
+					await connection.rollback();
+					return;
+				}
+				const canonicalAmount = Number(rows[0].amount);
+				await connection.execute<ResultSetHeader>(
+					`UPDATE user_earnings SET locked_amount = locked_amount - ?,
+					 balance = balance + ?, updated_at = ?
+					 WHERE user_id = ? AND locked_amount >= ?`,
+					[canonicalAmount, canonicalAmount, nowIso, userId, canonicalAmount],
+				);
+				await connection.execute<ResultSetHeader>(
+					`UPDATE withdrawals SET status = 'failed', failure_reason = ?, updated_at = ? WHERE id = ?`,
+					[reason, nowIso, id],
+				);
+				await connection.commit();
+			} catch (error) {
+				await connection.rollback();
+				throw error;
+			} finally {
+				connection.release();
+			}
 		},
 		async updateWithdrawalStatus(id, patch) {
 			const sets: string[] = ['updated_at = ?'];
@@ -536,10 +666,9 @@ export function createMySqlPortalLedgerRepository(db: MySqlDatabaseClient): Port
 			if (patch.tokenAmount !== undefined) { sets.push('token_amount = ?'); values.push(patch.tokenAmount); }
 			if (patch.failureReason !== undefined) { sets.push('failure_reason = ?'); values.push(patch.failureReason); }
 			const whereStatus = patch.expectedStatus ? ' AND status = ?' : '';
-			if (patch.expectedStatus !== undefined) values.push(patch.expectedStatus);
 			const [result] = await pool.execute<ResultSetHeader>(
 				`UPDATE withdrawals SET ${sets.join(', ')} WHERE id = ?${whereStatus}`,
-				[...values, id]
+				[...values, id, ...(patch.expectedStatus !== undefined ? [patch.expectedStatus] : [])]
 			);
 			return result.affectedRows > 0;
 		},
@@ -582,9 +711,10 @@ export function createMySqlPortalLedgerRepository(db: MySqlDatabaseClient): Port
 			if (patch.failureReason !== undefined) { sets.push('failure_reason = ?'); values.push(patch.failureReason); }
 			if (patch.confirmedAt !== undefined) { sets.push('confirmed_at = ?'); values.push(patch.confirmedAt); }
 			if (sets.length === 0) return false;
+			const whereStatus = patch.expectedStatus ? ' AND status = ?' : '';
 			const [result] = await pool.execute<ResultSetHeader>(
-				`UPDATE nft_mints SET ${sets.join(', ')} WHERE id = ?`,
-				[...values, id]
+				`UPDATE nft_mints SET ${sets.join(', ')} WHERE id = ?${whereStatus}`,
+				[...values, id, ...(patch.expectedStatus !== undefined ? [patch.expectedStatus] : [])]
 			);
 			return result.affectedRows > 0;
 		},

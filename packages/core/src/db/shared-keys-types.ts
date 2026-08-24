@@ -178,7 +178,7 @@ export interface InsertWithdrawalParams {
 	nowIso: string;
 }
 
-export type NftMintStatus = 'pending' | 'submitted' | 'confirmed' | 'failed';
+export type NftMintStatus = 'pending' | 'processing' | 'submitted' | 'confirmed' | 'failed';
 
 export interface NftMintRow {
 	id: string;

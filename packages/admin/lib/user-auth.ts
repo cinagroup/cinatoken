@@ -8,6 +8,11 @@
  */
 import type { GatewayRepositories } from '@octafuse/core';
 import { hashSessionToken } from '@/lib/auth';
+import {
+	getAccountCapabilities,
+	getSessionCookieToken,
+	type AccountCapability,
+} from '@/lib/unified-session';
 
 export const USER_SESSION_COOKIE = 'user_session';
 export const PORTAL_SESSION_TTL_MS = 24 * 60 * 60 * 1000;
@@ -19,6 +24,8 @@ export type UserPrincipal = {
 	/** CinaAuth OIDC `sub` */
 	subject: string;
 	email: string;
+	isAdmin: boolean;
+	capabilities: AccountCapability[];
 };
 
 type PortalAuthenticationRepositories = {
@@ -27,13 +34,7 @@ type PortalAuthenticationRepositories = {
 };
 
 export function getUserSessionToken(request: Request): string | null {
-	const cookieHeader = request.headers.get('cookie');
-	if (!cookieHeader) return null;
-	for (const part of cookieHeader.split(';')) {
-		const [name, ...rest] = part.trim().split('=');
-		if (name === USER_SESSION_COOKIE) return decodeURIComponent(rest.join('='));
-	}
-	return null;
+	return getSessionCookieToken(request, USER_SESSION_COOKIE);
 }
 
 /**
@@ -75,5 +76,11 @@ export async function authenticateUserRequest(
 	if (!session) return null;
 	const user = await repositories.users.getByExternalPair(PORTAL_EXTERNAL_SYSTEM, session.subject);
 	if (!user || user.status === 'disabled') return null;
-	return { userId: user.id, subject: session.subject, email: user.email };
+	return {
+		userId: user.id,
+		subject: session.subject,
+		email: user.email,
+		isAdmin: false,
+		capabilities: getAccountCapabilities(false),
+	};
 }

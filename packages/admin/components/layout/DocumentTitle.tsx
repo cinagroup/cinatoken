@@ -14,14 +14,20 @@ export default function DocumentTitle() {
 	const locale = useLocale();
 	const tMeta = useTranslations('metadata');
 	const tHome = useTranslations('home.metadata');
+	const tPortal = useTranslations('portal.metadata');
 	const tSidebar = useTranslations('sidebar');
 
 	useLayoutEffect(() => {
 		const isHome = pathname === '/';
+		const isPortal = pathname === '/account' || pathname?.startsWith('/account/');
 		const app = tMeta('title');
-		const match = isHome ? null : matchAdminNavRoute(pathname ?? '');
+		const match = isHome || isPortal ? null : matchAdminNavRoute(pathname ?? '');
 		const page = match ? tSidebar(`nav.${match.nameKey}`) : null;
-		const desired = isHome ? tHome('title') : formatAdminDocumentTitle(page, app);
+		const desired = isHome
+			? tHome('title')
+			: isPortal
+				? tPortal('title')
+				: formatAdminDocumentTitle(page, app);
 
 		const apply = () => {
 			if (document.title !== desired) {
@@ -39,7 +45,7 @@ export default function DocumentTitle() {
 		const observer = new MutationObserver(apply);
 		observer.observe(titleEl, { subtree: true, childList: true, characterData: true });
 		return () => observer.disconnect();
-	}, [locale, pathname, tHome, tMeta, tSidebar]);
+	}, [locale, pathname, tHome, tMeta, tPortal, tSidebar]);
 
 	return null;
 }

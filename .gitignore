@@ -24,6 +24,7 @@ data/
 packages/proxy/wrangler.jsonc
 packages/admin/wrangler.jsonc
 packages/core/wrangler.d1.jsonc
+packages/chain-worker/wrangler.jsonc
 
 # Per-instance Cloudflare Worker deploy env (committed example: cloudflare-worker/example.env)
 cloudflare-worker/*.env

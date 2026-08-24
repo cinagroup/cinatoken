@@ -272,11 +272,11 @@ describe("simulator-utils", () => {
 				routeGroup: "vip",
 				protocol: "openai",
 			}),
-			"/gateway/request-logs?api_key_id=k1&model_id=m1&route_group=vip&protocol=openai"
+			"/admin/request-logs?api_key_id=k1&model_id=m1&route_group=vip&protocol=openai"
 		);
 		assert.equal(
 			buildRequestLogsHref({ routeGroup: "default" }),
-			"/gateway/request-logs"
+			"/admin/request-logs"
 		);
 	});
 

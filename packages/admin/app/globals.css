@@ -262,3 +262,53 @@ html[data-home-theme='light'] .home-surface {
     transition-duration: 0.01ms !important;
   }
 }
+
+/* Unified console tokens adapted from cinatoken-go/web/default. */
+:root {
+  --console-bg: #f7f8fa;
+  --console-panel: #ffffff;
+  --console-panel-subtle: #f2f4f7;
+  --console-border: #e4e7ec;
+  --console-text: #101828;
+  --console-muted: #667085;
+  --console-accent: #0891b2;
+  --console-accent-soft: #ecfeff;
+  --console-shadow: 0 1px 2px rgb(16 24 40 / 4%), 0 8px 24px rgb(16 24 40 / 5%);
+}
+
+html[data-console-theme='dark'] {
+  --console-bg: #09090b;
+  --console-panel: #121316;
+  --console-panel-subtle: #1b1d22;
+  --console-border: #2b2e35;
+  --console-text: #f5f7fa;
+  --console-muted: #98a2b3;
+  --console-accent: #22d3ee;
+  --console-accent-soft: #083344;
+  --console-shadow: 0 1px 2px rgb(0 0 0 / 28%), 0 12px 30px rgb(0 0 0 / 22%);
+  color-scheme: dark;
+}
+
+.console-shell { background: var(--console-bg); color: var(--console-text); }
+.console-panel { background: var(--console-panel); border-color: var(--console-border); }
+.console-muted { color: var(--console-muted); }
+.console-nav-link { color: var(--console-muted); }
+.console-nav-link:hover { background: var(--console-panel-subtle); color: var(--console-text); }
+.console-nav-link[data-active='true'] { background: var(--console-accent-soft); color: var(--console-accent); }
+.console-theme-toggle { display: inline-flex; gap: 0.125rem; padding: 0.1875rem; border: 1px solid var(--console-border); border-radius: 0.625rem; background: var(--console-panel-subtle); }
+.console-theme-toggle-button { display: grid; place-items: center; width: 1.75rem; height: 1.75rem; border-radius: 0.4375rem; color: var(--console-muted); }
+.console-theme-toggle-button[aria-pressed='true'] { background: var(--console-panel); color: var(--console-text); box-shadow: 0 1px 2px rgb(0 0 0 / 12%); }
+
+html[data-console-theme='dark'] .console-shell .bg-white { background-color: var(--console-panel) !important; }
+html[data-console-theme='dark'] .console-shell .bg-gray-50 { background-color: var(--console-bg) !important; }
+html[data-console-theme='dark'] .console-shell .bg-gray-100 { background-color: var(--console-panel-subtle) !important; }
+html[data-console-theme='dark'] .console-shell .border-gray-50,
+html[data-console-theme='dark'] .console-shell .border-gray-100,
+html[data-console-theme='dark'] .console-shell .border-gray-200,
+html[data-console-theme='dark'] .console-shell .border-gray-300 { border-color: var(--console-border) !important; }
+html[data-console-theme='dark'] .console-shell .text-gray-900,
+html[data-console-theme='dark'] .console-shell .text-gray-800,
+html[data-console-theme='dark'] .console-shell .text-gray-700 { color: var(--console-text) !important; }
+html[data-console-theme='dark'] .console-shell .text-gray-600,
+html[data-console-theme='dark'] .console-shell .text-gray-500,
+html[data-console-theme='dark'] .console-shell .text-gray-400 { color: var(--console-muted) !important; }

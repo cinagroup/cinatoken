@@ -1,0 +1,43 @@
+{
+	"$schema": "../../node_modules/wrangler/config-schema.json",
+	"name": "cinatoken-chain-worker",
+	"main": "src/index.ts",
+	"compatibility_date": "2026-08-20",
+	"compatibility_flags": ["nodejs_compat"],
+	"workers_dev": false,
+	"d1_databases": [
+		{
+			"binding": "DB",
+			"database_name": "cinatoken",
+			"migrations_dir": "../core/migrations-d1"
+		}
+	],
+	"queues": {
+		"consumers": [
+			{
+				"queue": "cinatoken-chain-jobs",
+				"max_batch_size": 1,
+				"max_batch_timeout": 5,
+				"max_retries": 8,
+				"retry_delay": 30,
+				"dead_letter_queue": "cinatoken-chain-jobs-dlq",
+				"max_concurrency": 1
+			}
+		]
+	},
+	"observability": {
+		"enabled": true,
+		"head_sampling_rate": 1
+	},
+	"secrets": {
+		"required": [
+			"CINACHAIN_RPC_URL",
+			"CINACHAIN_MINTER_PRIVATE_KEY",
+			"CINABADGE_CONTRACT_ADDRESS",
+			"CINACREDIT_CONTRACT_ADDRESS"
+		]
+	},
+	"vars": {
+		"CINACHAIN_CHAIN_ID": "84532"
+	}
+}

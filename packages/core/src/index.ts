@@ -10,6 +10,7 @@ export * from './gcp-service-account-token';
 export * from './vertex-openai-model';
 export * from './route-topology';
 export * from './realtime-protocol';
+export * from './chain-jobs';
 
 export * from './storage/context';
 export * from './storage/database-client';
@@ -57,6 +58,7 @@ export * from './lib/ai-detection-system-config';
 export * from './lib/tool-pricing';
 export * from './lib/route-strategy-system-config';
 export * from './lib/money-precision';
+export * from './lib/shared-key-encryption';
 export * from './lib/string-utils';
 export * from './lib/time-format';
 export * from './lib/resolve-me-metadata';

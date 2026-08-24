@@ -33,6 +33,8 @@ import {
 import { useState } from 'react';
 import { ADMIN_NAV_GROUPS, type AdminNavNameKey } from '@/lib/admin-nav';
 import { adminAppVersion } from '@/lib/app-version';
+import ConsoleThemeToggle from '@/components/unified/ConsoleThemeToggle';
+import FrontendAttribution from '@/components/unified/FrontendAttribution';
 
 const NAV_ICONS: Record<AdminNavNameKey, React.ComponentType<{ className?: string }>> = {
   dashboard: HomeIcon,
@@ -58,10 +60,17 @@ const NAV_ICONS: Record<AdminNavNameKey, React.ComponentType<{ className?: strin
   config: Cog6ToothIcon,
 };
 
-export default function Sidebar() {
+export default function Sidebar({
+  mobile = false,
+  onNavigate,
+}: {
+  mobile?: boolean;
+  onNavigate?: () => void;
+} = {}) {
   const t = useTranslations('sidebar');
   const tBrand = useTranslations('brand');
   const tAuth = useTranslations('auth');
+  const tPortalSettings = useTranslations('portal.settings');
   const pathname = usePathname();
   const router = useRouter();
   const [isLoggingOut, setIsLoggingOut] = useState(false);
@@ -82,11 +91,14 @@ export default function Sidebar() {
   };
 
   return (
-    <aside className="sticky top-0 h-dvh w-64 shrink-0 bg-gray-900">
+    <aside
+      className={`console-panel h-dvh w-64 shrink-0 border-r ${mobile ? '' : 'sticky top-0 hidden lg:block'}`}
+      style={{ borderColor: 'var(--console-border)' }}
+    >
       <div className="flex h-full flex-col">
       {/* Logo / Brand + locale */}
-      <div className="flex h-16 items-center justify-between gap-2 bg-gray-950 px-4 leading-tight">
-        <Link href="/dashboard" className="flex min-w-0 items-center gap-2.5 hover:opacity-90">
+      <div className="flex h-16 items-center justify-between gap-2 border-b px-4 leading-tight" style={{ borderColor: 'var(--console-border)' }}>
+        <Link href="/dashboard" onClick={onNavigate} className="flex min-w-0 items-center gap-2.5 hover:opacity-90">
           <Image
             src="/brand/logo.png"
             alt={tBrand('logoAlt')}
@@ -96,8 +108,8 @@ export default function Sidebar() {
             className="h-[38px] w-[38px] shrink-0 rounded-md"
           />
           <span className="min-w-0">
-            <span className="block truncate text-lg font-bold tracking-tight text-white">{tBrand('wordmark')}</span>
-            <span className="block truncate text-[11px] font-medium uppercase tracking-wider text-gray-400">
+            <span className="block truncate text-lg font-bold tracking-tight">{tBrand('wordmark')}</span>
+            <span className="console-muted block truncate text-[11px] font-medium uppercase tracking-wider">
               {tBrand('sidebarSubtitle')}
             </span>
           </span>
@@ -109,33 +121,34 @@ export default function Sidebar() {
       <nav className="flex-1 space-y-5 overflow-y-auto px-3 py-3">
         {ADMIN_NAV_GROUPS.map((group) => (
           <div key={group.groupKey}>
-            <h3 className="mb-1 px-3 text-xs font-semibold uppercase tracking-wider text-gray-500">
+            <h3 className="console-muted mb-1 px-3 text-xs font-semibold uppercase tracking-wider">
               {t(`groups.${group.groupKey}`)}
             </h3>
             <div className="space-y-px">
               {group.items.map((item) => {
                 const isActive =
                   pathname === item.href ||
-                  (item.href === '/gateway/users' &&
-                    (pathname === '/gateway/users' || pathname?.startsWith('/gateway/users/'))) ||
-                  (item.href === '/gateway/tools' && pathname === '/gateway/tools');
+                  (item.href === '/admin/users' &&
+                    (pathname === '/admin/users' || pathname?.startsWith('/admin/users/'))) ||
+                  (item.href === '/admin/tools' && pathname === '/admin/tools');
                 const Icon = NAV_ICONS[item.nameKey];
 
                 return (
                   <Link
                     key={item.nameKey}
                     href={item.href}
+					onClick={onNavigate}
                     className={`
                       group flex items-center rounded-md px-3 py-2 text-sm font-medium
                       ${isActive
-                        ? 'bg-gray-800 text-white'
-                        : 'text-gray-300 hover:bg-gray-800 hover:text-white'
+                        ? 'bg-cyan-50 text-cyan-700'
+                        : 'console-nav-link'
                       }
                     `}
                   >
                     <Icon className={`
                       mr-3 h-5 w-5 flex-shrink-0
-                      ${isActive ? 'text-white' : 'text-gray-400 group-hover:text-white'}
+                      ${isActive ? 'text-cyan-700' : 'console-muted'}
                     `} />
                     {t(`nav.${item.nameKey}`)}
                   </Link>
@@ -146,9 +159,9 @@ export default function Sidebar() {
                   type="button"
                   onClick={handleLogout}
                   disabled={isLoggingOut}
-                  className="group flex w-full items-center rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-800 hover:text-white disabled:cursor-not-allowed disabled:opacity-50"
+                  className="console-nav-link group flex w-full items-center rounded-md px-3 py-2 text-sm font-medium disabled:cursor-not-allowed disabled:opacity-50"
                 >
-                  <ArrowLeftStartOnRectangleIcon className="mr-3 h-5 w-5 flex-shrink-0 text-gray-400 group-hover:text-white" />
+                  <ArrowLeftStartOnRectangleIcon className="console-muted mr-3 h-5 w-5 flex-shrink-0" />
                   {isLoggingOut ? tAuth('loggingOut') : tAuth('logout')}
                 </button>
               )}
@@ -158,9 +171,14 @@ export default function Sidebar() {
       </nav>
 
       {/* Footer: links + version */}
-      <div className="space-y-3 border-t border-gray-800 p-4">
+      <div className="space-y-3 border-t p-4" style={{ borderColor: 'var(--console-border)' }}>
+		<Link href="/account" onClick={onNavigate} className="console-nav-link flex items-center rounded-md px-2 py-1.5 text-xs font-medium">
+          {tBrand('product')} · {tPortalSettings('accountCenter')}
+        </Link>
+        <ConsoleThemeToggle />
         <BrandExternalLinks variant="sidebar" />
-        <p className="text-center text-xs text-gray-500">{t('version', { version: adminAppVersion })}</p>
+        <p className="console-muted text-center text-xs">{t('version', { version: adminAppVersion })}</p>
+        <div className="console-muted"><FrontendAttribution compact /></div>
       </div>
       </div>
     </aside>

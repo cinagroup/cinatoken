@@ -28,6 +28,7 @@ import type { DashScopeRealtimeNodeDispatch } from './services/egress/dashscope-
 /** Cloudflare Worker bindings：D1 `DB`。Postgres 见 `src/runtime/node.ts`。 */
 export type GatewayBindings = {
 	DB?: D1Database;
+	SHARED_KEY_ENCRYPTION_SECRET?: string;
 	/** 可选；仅允许 `d1` 或省略。 */
 	DATABASE_DRIVER?: string;
 	/** Node upgrade 请求临时注入的实时 WebSocket 调度器；不作为 Worker binding。 */

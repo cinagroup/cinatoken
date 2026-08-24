@@ -1070,7 +1070,7 @@ export default function GatewayAuditLogsPage() {
                           <div className="mt-0.5 flex items-baseline gap-1 min-w-0 font-mono text-xs">
                             <span className="shrink-0 text-gray-600">{t('labels.user')}</span>
                             <Link
-                              href={`/gateway/users/${encodeURIComponent(item.user_id)}`}
+                              href={`/admin/users/${encodeURIComponent(item.user_id)}`}
                               className="min-w-0 truncate text-blue-600 hover:underline"
                               title={item.user_id}
                             >

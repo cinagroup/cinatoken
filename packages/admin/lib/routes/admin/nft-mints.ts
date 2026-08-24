@@ -5,8 +5,6 @@ import { Hono } from 'hono';
 import type { AdminEnv } from '@/lib/admin-env';
 import { requireAdminPrincipal } from '@/lib/middleware/admin-auth';
 import { handleAdminRouteError } from './error-response';
-import { processPendingNftMints } from '@/lib/services/nft-mint-service';
-import { isCinachainConfigured } from '@/lib/cinachain';
 
 export const adminNftMintsRoutes = new Hono<AdminEnv>();
 
@@ -26,12 +24,15 @@ adminNftMintsRoutes.get('/', async (c) => {
 adminNftMintsRoutes.post('/process', async (c) => {
 	try {
 		const repos = c.get('repositories');
-		if (!isCinachainConfigured()) {
+		if (!c.env.CHAIN_JOBS) {
 			return c.json({ success: false, message: 'cinachain env not configured' }, 503);
 		}
 		const limit = Math.min(20, Math.max(1, Number(c.req.query('limit') ?? '5') || 5));
-		const result = await processPendingNftMints(repos, limit);
-		return c.json({ success: true, data: result });
+		const pending = (await repos.portalLedger.listAllNftMints('pending')).slice(0, limit);
+		await c.env.CHAIN_JOBS.sendBatch(
+			pending.map((row) => ({ body: { kind: 'nft_mint' as const, id: row.id } })),
+		);
+		return c.json({ success: true, data: { queued: pending.length } });
 	} catch (error) {
 		return handleAdminRouteError(c, error, 'Failed to process nft mints');
 	}

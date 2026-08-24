@@ -7,6 +7,10 @@ import { getUserApp } from '@/lib/user-app';
 import { handleGatewayApiError } from '@/lib/api-error';
 import { resolveAdminRequestRuntime } from '@/lib/admin-request-runtime';
 import { authenticateUserRequest } from '@/lib/user-auth';
+import { rejectInvalidBrowserMutationOrigin } from '@/lib/browser-mutation';
+import { authenticateAdminRequest } from '@/lib/auth';
+import { verifyCinaAuthConsolePrincipal } from '@/lib/cinaauth/principal';
+import { getAccountCapabilities } from '@/lib/unified-session';
 
 export const dynamic = 'force-dynamic';
 
@@ -23,11 +27,27 @@ function rewriteToInternalUserPath(request: Request): Request {
 
 async function handle(request: Request): Promise<Response> {
 	try {
+		const originRejection = rejectInvalidBrowserMutationOrigin(request);
+		if (originRejection) return originRejection;
+
 		const { bindings: runtimeBindings, storage, ctx } = await resolveAdminRequestRuntime(request);
 		const { repositories } = storage;
-		const principal = await authenticateUserRequest(request, repositories);
+		let principal = await authenticateUserRequest(request, repositories);
 		if (!principal) {
 			return Response.json({ success: false, message: 'Unauthorized' }, { status: 401 });
+		}
+		if (new URL(request.url).pathname === '/api/user/me') {
+			const adminAuthentication = await authenticateAdminRequest(request, repositories);
+			const adminPrincipal = adminAuthentication
+				? await verifyCinaAuthConsolePrincipal(request, adminAuthentication, runtimeBindings)
+				: null;
+			if (adminPrincipal?.type === 'console') {
+				principal = {
+					...principal,
+					isAdmin: true,
+					capabilities: getAccountCapabilities(true),
+				};
+			}
 		}
 
 		const internalReq = rewriteToInternalUserPath(request);

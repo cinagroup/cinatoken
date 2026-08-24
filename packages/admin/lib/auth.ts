@@ -4,6 +4,7 @@
 import type { GatewayRepositories } from '@octafuse/core';
 import type { AdminPrincipal } from '@/lib/admin-principal';
 import { parseAdminPermissions } from '@/lib/admin-principal';
+import { getSessionCookieToken } from '@/lib/unified-session';
 
 type AdminAuthenticationRepositories = {
 	adminAccess: Pick<
@@ -51,13 +52,7 @@ export async function timingSafeEqualSecret(left: string, right: string): Promis
 }
 
 export function getSessionToken(request: Request): string | null {
-	const cookieHeader = request.headers.get('cookie');
-	if (!cookieHeader) return null;
-	for (const part of cookieHeader.split(';')) {
-		const [name, ...rest] = part.trim().split('=');
-		if (name === 'admin_session') return decodeURIComponent(rest.join('='));
-	}
-	return null;
+	return getSessionCookieToken(request, 'admin_session');
 }
 
 export async function authenticateAdminRequest(

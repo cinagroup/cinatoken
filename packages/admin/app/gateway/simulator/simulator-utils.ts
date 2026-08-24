@@ -495,7 +495,7 @@ export function buildRequestLogsHref(opts: {
 	if (rg && rg !== 'default') sp.set('route_group', rg);
 	if (opts.protocol) sp.set('protocol', opts.protocol);
 	const q = sp.toString();
-	return q ? `/gateway/request-logs?${q}` : '/gateway/request-logs';
+	return q ? `/admin/request-logs?${q}` : '/admin/request-logs';
 }
 
 /** Tools Invocations；可选按 tool id 筛选（页面读 `?tool=`）。 */
@@ -504,7 +504,7 @@ export function buildToolsInvocationsHref(opts?: { toolId?: string }): string {
 	const tool = opts?.toolId ? findGatewayToolById(opts.toolId) : undefined;
 	if (tool) sp.set('tool', tool.id);
 	const q = sp.toString();
-	return q ? `/gateway/tools/invocations?${q}` : '/gateway/tools/invocations';
+	return q ? `/admin/tools/invocations?${q}` : '/admin/tools/invocations';
 }
 
 export function listGatewayTools(): readonly GatewayToolDefinition[] {

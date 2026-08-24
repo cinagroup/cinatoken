@@ -196,7 +196,7 @@ export default function ReliabilityPage() {
       <div>
         <h2 className="text-lg font-semibold text-gray-900 mb-4 flex items-center justify-between">
           {t('recentErrors')}
-          <Link href="/gateway/request-logs?status=error" className="text-sm text-blue-600 hover:underline">{t('viewAllErrors')}</Link>
+          <Link href="/admin/request-logs?status=error" className="text-sm text-blue-600 hover:underline">{t('viewAllErrors')}</Link>
         </h2>
         <div className="bg-white rounded-lg shadow-md overflow-hidden">
           <div className="overflow-x-auto">

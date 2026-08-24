@@ -48,6 +48,8 @@ services:
       DATABASE_DRIVER: postgres
       DATABASE_URL: postgres://postgres:postgres@postgres:5432/cinatoken
       PORT: "8787"
+      # Local smoke fixture only; production must use a secret manager.
+      SHARED_KEY_ENCRYPTION_SECRET: "docker-smoke-shared-key-encryption-fixture-v1"
     depends_on:
       postgres:
         condition: service_healthy
@@ -76,6 +78,8 @@ services:
       PORT: "8789"
       ADMIN_USERNAME: admin
       ADMIN_PASSWORD: "changeme"
+      # Must match Proxy for the shared-key marketplace in this isolated fixture.
+      SHARED_KEY_ENCRYPTION_SECRET: "docker-smoke-shared-key-encryption-fixture-v1"
       # 可选加固：已用 HTTPS 访问 Admin 时可取消注释（见 docs/operators/deployment/docker.md §7.3）
       # ADMIN_COOKIE_SECURE: "1"
     depends_on:

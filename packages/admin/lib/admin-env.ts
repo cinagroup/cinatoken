@@ -1,5 +1,5 @@
 import type { D1Database } from '@cloudflare/workers-types';
-import type { GatewayRepositories, StorageContext } from '@octafuse/core';
+import type { ChainJobMessage, GatewayRepositories, StorageContext } from '@octafuse/core';
 import type { AdminPrincipal } from '@/lib/admin-principal';
 
 /** Admin Hono 应用：Cloudflare 绑定与请求级变量。 */
@@ -15,6 +15,8 @@ export type AdminBindings = {
 	CINATOKEN_OIDC_CLIENT_SECRET?: string;
 	CINATOKEN_OIDC_BRIDGE_SECRET?: string;
 	CINATOKEN_OIDC_TRANSACTION_SECRET?: string;
+	SHARED_KEY_ENCRYPTION_SECRET?: string;
+	CHAIN_JOBS?: Queue<ChainJobMessage>;
 	/** Node / 自托管 Postgres：与 `@octafuse/proxy` 一致，使用 `DATABASE_URL`。 */
 	DATABASE_URL?: string;
 	/** 与 `DATABASE_URL` 命名对齐；Node 下省略视为 `postgres`（见 `@octafuse/core`）。 */

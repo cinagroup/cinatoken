@@ -1,6 +1,8 @@
 import {
 	createMySqlStorageContext,
 	createPostgresStorageContext,
+	createEncryptedSharedKeysRepository,
+	assertSharedKeyEncryptionSecret,
 	resolveNodeDatabaseConfig,
 	type StorageContext,
 } from '@octafuse/core';
@@ -28,7 +30,15 @@ async function resolveNodeStorage(): Promise<StorageContext> {
 			throw err;
 		});
 	}
-	return nodeStoragePromise;
+	const storage = await nodeStoragePromise;
+	const secret = assertSharedKeyEncryptionSecret(process.env.SHARED_KEY_ENCRYPTION_SECRET);
+	return {
+		...storage,
+		repositories: {
+			...storage.repositories,
+			sharedKeys: createEncryptedSharedKeysRepository(storage.repositories.sharedKeys, secret),
+		},
+	};
 }
 
 export function createNodeApp() {
@@ -100,10 +110,10 @@ export async function startNodeServer(port = Number(process.env.PORT ?? 8787)): 
 
 	printNodeStartupBanner(port, dbKind, redactedUrl);
 
-	process.on('unhandledRejection', (reason) => {
+	process.on('unhandledRejection', (reason: unknown) => {
 		console.error('[Gateway Proxy] unhandledRejection', reason);
 	});
-	process.on('uncaughtException', (err) => {
+	process.on('uncaughtException', (err: Error) => {
 		console.error('[Gateway Proxy] uncaughtException', err);
 	});
 

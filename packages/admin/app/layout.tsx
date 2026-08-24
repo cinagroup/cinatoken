@@ -7,6 +7,23 @@ import { NextIntlClientProvider } from 'next-intl';
 import { getLocale, getMessages, getTranslations } from 'next-intl/server';
 import AuthWrapper from '@/components/layout/AuthWrapper';
 import DocumentTitle from '@/components/layout/DocumentTitle';
+import { ConsoleThemeProvider } from '@/components/unified/ConsoleThemeProvider';
+
+const CONSOLE_THEME_BOOTSTRAP = `(() => {
+	let stored = null;
+	try { stored = localStorage.getItem('cinatoken.home-theme.v1'); } catch {}
+	if (stored !== 'light' && stored !== 'dark' && stored !== 'system') {
+		stored = (document.cookie || '').split('; ')
+			.find((entry) => entry.startsWith('cinatoken_home_theme='))
+			?.slice('cinatoken_home_theme='.length) ?? null;
+	}
+	const preference = stored === 'light' || stored === 'dark' || stored === 'system' ? stored : 'system';
+	const resolved = preference === 'system'
+		? (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light')
+		: preference;
+	document.documentElement.dataset.consoleThemePreference = preference;
+	document.documentElement.dataset.consoleTheme = resolved;
+})();`;
 
 export async function generateMetadata(): Promise<Metadata> {
 	const t = await getTranslations('metadata');
@@ -34,11 +51,16 @@ export default async function RootLayout({
 	const messages = await getMessages();
 
 	return (
-		<html lang={locale} data-scroll-behavior="smooth">
+		<html lang={locale} data-scroll-behavior="smooth" suppressHydrationWarning>
+			<head>
+				<script dangerouslySetInnerHTML={{ __html: CONSOLE_THEME_BOOTSTRAP }} />
+			</head>
 			<body className="min-h-screen bg-white font-sans">
 				<NextIntlClientProvider locale={locale} messages={messages}>
-					<DocumentTitle />
-					<AuthWrapper>{children}</AuthWrapper>
+					<ConsoleThemeProvider>
+						<DocumentTitle />
+						<AuthWrapper>{children}</AuthWrapper>
+					</ConsoleThemeProvider>
 				</NextIntlClientProvider>
 			</body>
 		</html>

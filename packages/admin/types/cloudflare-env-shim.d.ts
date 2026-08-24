@@ -18,6 +18,8 @@ declare namespace Cloudflare {
 		CINATOKEN_OIDC_CLIENT_SECRET: string;
 		CINATOKEN_OIDC_BRIDGE_SECRET: string;
 		CINATOKEN_OIDC_TRANSACTION_SECRET: string;
+		SHARED_KEY_ENCRYPTION_SECRET: string;
+		CHAIN_JOBS: Queue<import('@octafuse/core').ChainJobMessage>;
 		ADMIN_USERNAME?: string;
 		ADMIN_PASSWORD?: string;
 		ADMIN_COOKIE_SECURE?: string;

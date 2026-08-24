@@ -1,9 +1,13 @@
 import { NextResponse } from 'next/server';
 import { isLocale, LOCALE_COOKIE, type Locale } from '@/lib/locale';
+import { rejectInvalidBrowserMutationOrigin } from '@/lib/browser-mutation';
 
 const ONE_YEAR_SECONDS = 60 * 60 * 24 * 365;
 
 export async function POST(request: Request) {
+	const originRejection = rejectInvalidBrowserMutationOrigin(request);
+	if (originRejection) return originRejection;
+
 	let body: { locale?: string };
 	try {
 		body = (await request.json()) as { locale?: string };

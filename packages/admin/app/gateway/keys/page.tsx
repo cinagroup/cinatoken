@@ -561,9 +561,9 @@ export default function GatewayKeysPage() {
                   ? formatGatewayMoneyCode(key.budget_max, billingCurrency, 2)
                   : tCommon('noLimit');
               const periodActive = Boolean(key.budget_period && key.budget_period !== 'none');
-              const userHref = `/gateway/users/${encodeURIComponent(key.user_id)}`;
-              const logsHref = `/gateway/request-logs?api_key_id=${encodeURIComponent(key.id)}`;
-              const auditHref = `/gateway/audit-logs?api_key_id=${encodeURIComponent(key.id)}`;
+              const userHref = `/admin/users/${encodeURIComponent(key.user_id)}`;
+              const logsHref = `/admin/request-logs?api_key_id=${encodeURIComponent(key.id)}`;
+              const auditHref = `/admin/audit-logs?api_key_id=${encodeURIComponent(key.id)}`;
               return (
               <tr
                 key={key.id}
@@ -791,13 +791,13 @@ export default function GatewayKeysPage() {
                   <ul className="mt-2 list-disc space-y-1 pl-5 text-slate-600">
                     <li>
                       {t('create.existingHelp1')}{' '}
-                      <Link href="/gateway/users" className="text-blue-700 underline">
+                      <Link href="/admin/users" className="text-blue-700 underline">
                         Users
                       </Link>{' '}
                     </li>
                     <li>
                       {t('create.existingHelp2')}{' '}
-                      <Link href="/gateway/users" className="text-blue-700 underline">
+                      <Link href="/admin/users" className="text-blue-700 underline">
                         Users
                       </Link>
                     </li>
@@ -815,7 +815,7 @@ export default function GatewayKeysPage() {
                     </li>
                     <li>
                       {t('create.externalHelp2')}{' '}
-                      <Link href="/gateway/users" className="text-blue-700 underline">
+                      <Link href="/admin/users" className="text-blue-700 underline">
                         Users
                       </Link>
                     </li>
@@ -986,12 +986,12 @@ export default function GatewayKeysPage() {
                     </div>
                   </ReadonlyRow>
                   <ReadonlyRow label={t('fields.userIdAuth')}>
-                    <Link href={`/gateway/users/${encodeURIComponent(selectedKey.user_id)}`} className="font-mono text-xs text-blue-600 hover:underline break-all">
+                    <Link href={`/admin/users/${encodeURIComponent(selectedKey.user_id)}`} className="font-mono text-xs text-blue-600 hover:underline break-all">
                       {selectedKey.user_id}
                     </Link>
                   </ReadonlyRow>
                   <ReadonlyRow label={t('fields.userEmail')}>
-                    <Link href={`/gateway/users/${encodeURIComponent(selectedKey.user_id)}`} className="text-sm text-blue-600 hover:underline break-all">
+                    <Link href={`/admin/users/${encodeURIComponent(selectedKey.user_id)}`} className="text-sm text-blue-600 hover:underline break-all">
                       {selectedKey.user_email || selectedKey.user_id}
                     </Link>
                   </ReadonlyRow>
@@ -1024,13 +1024,13 @@ export default function GatewayKeysPage() {
                 </div>
                 <div className="flex flex-wrap gap-x-4 gap-y-1 text-sm">
                   <a
-                    href={`/gateway/request-logs?api_key_id=${selectedKey.id}`}
+                    href={`/admin/request-logs?api_key_id=${selectedKey.id}`}
                     className="font-medium text-blue-600 hover:text-blue-800"
                   >
                     {t('links.requestLogsForKey')}
                   </a>
                   <a
-                    href={`/gateway/audit-logs?api_key_id=${selectedKey.id}`}
+                    href={`/admin/audit-logs?api_key_id=${selectedKey.id}`}
                     className="font-medium text-blue-600 hover:text-blue-800"
                   >
                     {t('links.auditLogsForKey')}

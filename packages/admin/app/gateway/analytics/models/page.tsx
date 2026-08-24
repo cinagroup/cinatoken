@@ -344,7 +344,7 @@ export default function ModelUsagePage() {
                                       <tr key={`${key}\t${providerRow.provider_id}`} className="hover:bg-gray-50">
                                         <td className="px-3 py-2 text-sm">
                                           <Link
-                                            href={`/gateway/request-logs?${providerLogQuery.toString()}`}
+                                            href={`/admin/request-logs?${providerLogQuery.toString()}`}
                                             className="text-blue-600 hover:underline"
                                             onClick={(event) => event.stopPropagation()}
                                           >

@@ -7,7 +7,7 @@
 		"dev:node": "dotenv -c -- next dev -p 8789",
 		"build": "npm run cf-typegen && next build --webpack && node ./scripts/link-standalone-next.mjs",
 		"build:docker": "next build --webpack && node ./scripts/link-standalone-next.mjs",
-		"build:cf": "npm run cf-typegen && opennextjs-cloudflare build",
+		"build:cf": "npm run cf-typegen && node ./scripts/build-cloudflare.mjs",
 		"start": "next start",
 		"lint": "eslint .",
 		"preview": "node ./scripts/ensure-dev-vars.mjs && npm run build:cf && wrangler dev worker.ts --port 8789 --persist-to ../../.wrangler/state",
@@ -15,9 +15,11 @@
 		"cf-typegen": "wrangler types --env-interface CloudflareEnv cloudflare-env.d.ts --include-runtime false",
 		"typecheck": "tsc -p tsconfig.json --noEmit",
 		"pretest:unit": "npm run build:node-index -w @octafuse/core",
-		"test:unit": "tsx --test lib/admin-nav.test.ts lib/cinaauth/*.test.ts lib/summarize-charged-cost-factors.test.ts lib/services/admin/*.test.ts lib/playground/proxy-response-headers.test.ts lib/dashscope-realtime-client.test.ts lib/pricing-ui-image.test.ts lib/image-generations.test.ts lib/simulator/endpoint.test.ts lib/playground/sse-event-summary.test.ts lib/playground/response-observations.test.ts lib/playground/samples/index.test.ts app/gateway/simulator/simulator-utils.test.ts app/gateway/playground/playground-utils.test.ts app/gateway/routes/route-utils.test.ts app/gateway/routes/route-strategy-meta.test.ts app/gateway/providers/provider-utils.test.ts app/gateway/tools/components/provider-card-state.test.ts app/gateway/request-logs/request-log-display.test.ts"
+		"test:unit": "tsx --test lib/admin-nav.test.ts lib/browser-mutation.test.ts lib/cinaauth/*.test.ts lib/evm-signature.test.ts lib/portal-contract.test.ts lib/unified-session.test.ts lib/wallet-challenge.test.ts lib/summarize-charged-cost-factors.test.ts lib/services/admin/*.test.ts lib/playground/proxy-response-headers.test.ts lib/dashscope-realtime-client.test.ts lib/pricing-ui-image.test.ts lib/image-generations.test.ts lib/simulator/endpoint.test.ts lib/playground/sse-event-summary.test.ts lib/playground/response-observations.test.ts lib/playground/samples/index.test.ts app/gateway/simulator/simulator-utils.test.ts app/gateway/playground/playground-utils.test.ts app/gateway/routes/route-utils.test.ts app/gateway/routes/route-strategy-meta.test.ts app/gateway/providers/provider-utils.test.ts app/gateway/tools/components/provider-card-state.test.ts app/gateway/request-logs/request-log-display.test.ts"
 	},
 	"dependencies": {
+		"@noble/curves": "^1.9.7",
+		"@noble/hashes": "^1.8.0",
 		"@heroicons/react": "^2.2.0",
 		"@lobehub/icons-static-svg": "1.94.0",
 		"@octafuse/core": "*",
@@ -31,11 +33,10 @@
 		"react": "^19.2.4",
 		"react-dom": "^19.2.4",
 		"recharts": "^2.15.4",
-		"simple-icons": "^16.13.0",
-		"viem": "^2.55.19"
+		"simple-icons": "^16.13.0"
 	},
 	"devDependencies": {
-		"@cloudflare/workers-types": "^4.20260305.0",
+		"@cloudflare/workers-types": "^5.20260823.1",
 		"@types/node": "^20.11.0",
 		"@types/react": "^18.3.0",
 		"@types/react-dom": "^18.3.0",
@@ -46,6 +47,7 @@
 		"postcss": "^8.4.35",
 		"tailwindcss": "^3.4.1",
 		"typescript": "^5.7.2",
-		"wrangler": "^4.107.0"
+		"viem": "^2.55.19",
+		"wrangler": "^4.125.0"
 	}
 }

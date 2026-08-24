@@ -15,7 +15,7 @@ describe('CinaAuth OIDC transaction', () => {
 			state: 'state-value',
 			nonce: 'nonce-value',
 			codeVerifier: 'code-verifier-value',
-			callbackPath: '/gateway/routes?tab=active',
+			callbackPath: '/admin/routes?tab=active',
 			createdAt,
 		};
 		const sealed = await sealCinaAuthTransaction(transaction, secret);

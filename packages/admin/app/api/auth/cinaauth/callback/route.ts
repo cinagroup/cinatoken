@@ -20,6 +20,7 @@ import {
 import { resolveAdminRequestRuntime } from '@/lib/admin-request-runtime';
 import { logAdminAuthEvent } from '@/lib/security-log';
 import { PORTAL_SESSION_TTL_MS, USER_SESSION_COOKIE, upsertPortalUser } from '@/lib/user-auth';
+import { CINATOKEN_SESSION_COOKIE } from '@/lib/unified-session';
 
 export const dynamic = 'force-dynamic';
 
@@ -95,13 +96,15 @@ async function completePortalLogin(
 	const destination = new URL(callbackPath, config.appOrigin);
 	const response = NextResponse.redirect(destination, 302);
 	clearTransactionCookie(response);
-	response.cookies.set(USER_SESSION_COOKIE, sessionToken, {
+	response.cookies.set(CINATOKEN_SESSION_COOKIE, sessionToken, {
 		httpOnly: true,
 		secure: true,
 		sameSite: 'lax',
 		path: '/',
 		expires: expiresAt,
 	});
+	response.cookies.delete(USER_SESSION_COOKIE);
+	response.cookies.delete('admin_session');
 	response.headers.set('Cache-Control', 'no-store');
 	return response;
 }
@@ -170,10 +173,28 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
 		const expiresAt = new Date(now.getTime() + 8 * 60 * 60 * 1000);
 		const username = cinaAuthSessionUsername(tokens.subject);
 		const { storage } = await resolveAdminRequestRuntime(request);
-		await storage.repositories.adminAccess.deleteExpiredSessions(now.toISOString());
+		const email = body.user.email?.trim() || `${tokens.subject}@cinaauth.invalid`;
+		const userId = await upsertPortalUser(
+			storage.repositories.users,
+			tokens.subject,
+			email,
+		);
+		await storage.repositories.portalLedger.ensureUserEarnings(userId);
+		await Promise.all([
+			storage.repositories.adminAccess.deleteExpiredSessions(now.toISOString()),
+			storage.repositories.portalAccess.deleteExpiredSessions(now.toISOString()),
+		]);
+		const tokenHash = await hashSessionToken(sessionToken);
 		await storage.repositories.adminAccess.insertSession({
-			tokenHash: await hashSessionToken(sessionToken),
+			tokenHash,
 			username,
+			createdAt: now.toISOString(),
+			expiresAt: expiresAt.toISOString(),
+		});
+		await storage.repositories.portalAccess.insertSession({
+			tokenHash,
+			subject: tokens.subject,
+			email,
 			createdAt: now.toISOString(),
 			expiresAt: expiresAt.toISOString(),
 		});
@@ -181,13 +202,15 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
 		const destination = new URL(transaction.callbackPath, config.appOrigin);
 		const response = NextResponse.redirect(destination, 302);
 		clearTransactionCookie(response);
-		response.cookies.set('admin_session', sessionToken, {
+		response.cookies.set(CINATOKEN_SESSION_COOKIE, sessionToken, {
 			httpOnly: true,
 			secure: true,
-			sameSite: 'strict',
+			sameSite: 'lax',
 			path: '/',
 			expires: expiresAt,
 		});
+		response.cookies.delete(USER_SESSION_COOKIE);
+		response.cookies.delete('admin_session');
 		response.headers.set('Cache-Control', 'no-store');
 		logAdminAuthEvent('admin.auth.login', request, { username });
 		return response;

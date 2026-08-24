@@ -71,7 +71,7 @@ export async function settleSharedKeyEarning(
 
 	try {
 		await repos.portalLedger.ensureUserEarnings(key.sellerUserId);
-		const inserted = await repos.portalLedger.insertEarning({
+		const inserted = await repos.portalLedger.recordEarningAndCredit({
 			id: crypto.randomUUID(),
 			requestLogId: params.requestLogId,
 			sharedKeyId: key.id,
@@ -87,7 +87,6 @@ export async function settleSharedKeyEarning(
 			nowIso,
 		});
 		if (!inserted) return; // 幂等：同请求日志已结算
-		await repos.portalLedger.creditEarningBalance(key.sellerUserId, net, nowIso);
 		await repos.sharedKeys.addSharedKeyUsage(key.id, params.usage.input_tokens ?? 0, params.usage.output_tokens ?? 0, net, nowIso);
 	} catch (error) {
 		console.warn(

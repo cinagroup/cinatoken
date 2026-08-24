@@ -22,9 +22,18 @@
 	"d1_databases": [
 		{
 			"binding": "DB",
-			"database_name": "cinatoken"
+			"database_name": "cinatoken",
+			"migrations_dir": "../core/migrations-d1"
 		}
 	],
+	"queues": {
+		"producers": [
+			{
+				"binding": "CHAIN_JOBS",
+				"queue": "cinatoken-chain-jobs"
+			}
+		]
+	},
 	"observability": {
 		"enabled": true,
 		"head_sampling_rate": 1
@@ -39,7 +48,8 @@
 		"required": [
 			"CINATOKEN_OIDC_CLIENT_SECRET",
 			"CINATOKEN_OIDC_BRIDGE_SECRET",
-			"CINATOKEN_OIDC_TRANSACTION_SECRET"
+			"CINATOKEN_OIDC_TRANSACTION_SECRET",
+			"SHARED_KEY_ENCRYPTION_SECRET"
 		]
 	},
 	"vars": {

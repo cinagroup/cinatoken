@@ -28,12 +28,20 @@ function trimEnv(key) {
 function resolveNames() {
 	const d1DatabaseName =
 		trimEnv("D1_DATABASE_NAME") || "cinatoken";
+	const chainWorkerName =
+		trimEnv("CHAIN_WORKER_NAME") || "cinatoken-chain-worker";
 
 	return {
 		proxyWorkerName:
 			trimEnv("PROXY_WORKER_NAME") || "cinatoken-proxy",
 		adminWorkerName:
 			trimEnv("ADMIN_WORKER_NAME") || "cinatoken-admin",
+		chainWorkerName,
+		chainJobQueueName:
+			trimEnv("CHAIN_JOB_QUEUE_NAME") || `${d1DatabaseName}-chain-jobs`,
+		chainJobDlqName:
+			trimEnv("CHAIN_JOB_DLQ_NAME") || `${d1DatabaseName}-chain-jobs-dlq`,
+		cinachainChainId: trimEnv("CINACHAIN_CHAIN_ID") || "84532",
 		d1MigrationsWorkerName:
 			trimEnv("D1_MIGRATIONS_WORKER_NAME") ||
 			"cinatoken-d1-migrations",
@@ -160,6 +168,17 @@ function generateAdmin(names) {
 				names.d1DatabaseId,
 			),
 		],
+		queues: {
+			...base.queues,
+			producers: base.queues.producers.map((producer) => ({
+				...producer,
+				queue: names.chainJobQueueName,
+			})),
+		},
+		vars: {
+			...base.vars,
+			CINACHAIN_CHAIN_ID: names.cinachainChainId,
+		},
 	};
 
 	const routes = customDomainRoutes(names.adminCustomDomain);
@@ -170,6 +189,34 @@ function generateAdmin(names) {
 	}
 
 	writeJson("packages/admin/wrangler.jsonc", config);
+}
+
+function generateChain(names) {
+	const base = readBase("packages/chain-worker/wrangler.base.jsonc");
+	const config = {
+		...base,
+		name: names.chainWorkerName,
+		d1_databases: [
+			applyD1Binding(
+				base.d1_databases[0],
+				names.d1DatabaseName,
+				names.d1DatabaseId,
+			),
+		],
+		queues: {
+			...base.queues,
+			consumers: base.queues.consumers.map((consumer) => ({
+				...consumer,
+				queue: names.chainJobQueueName,
+				dead_letter_queue: names.chainJobDlqName,
+			})),
+		},
+		vars: {
+			...base.vars,
+			CINACHAIN_CHAIN_ID: names.cinachainChainId,
+		},
+	};
+	writeJson("packages/chain-worker/wrangler.jsonc", config);
 }
 
 function generateD1(names) {
@@ -210,10 +257,11 @@ function main() {
 
 	generateProxy(names);
 	generateAdmin(names);
+	generateChain(names);
 	generateD1(names);
 
 	console.log(
-		`gen-wrangler: proxy=${names.proxyWorkerName} admin=${names.adminWorkerName} d1=${names.d1DatabaseName}` +
+		`gen-wrangler: proxy=${names.proxyWorkerName} admin=${names.adminWorkerName} chain=${names.chainWorkerName} queue=${names.chainJobQueueName} d1=${names.d1DatabaseName}` +
 			(names.d1DatabaseId ? ` id=${names.d1DatabaseId}` : " (local, no database_id)"),
 	);
 

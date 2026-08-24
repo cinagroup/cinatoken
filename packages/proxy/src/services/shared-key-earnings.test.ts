@@ -58,13 +58,11 @@ function makeRepos(options: {
 		},
 		portalLedger: {
 			async ensureUserEarnings() {},
-			async insertEarning(params: EarnCall) {
+			async recordEarningAndCredit(params: EarnCall) {
 				if (options.duplicate) return false;
 				state.earnings.push(params);
+				state.credits.push({ sellerUserId: params.sellerUserId, netAmount: params.netAmount });
 				return true;
-			},
-			async creditEarningBalance(sellerUserId: string, netAmount: number) {
-				state.credits.push({ sellerUserId, netAmount });
 			},
 		},
 	} as unknown as GatewayRepositories;
