@@ -21,6 +21,7 @@ import {
 	resolveSupplierBillingPrices,
 	roundGatewayMoney,
 	scaleBillingPrices,
+	toScheduleAudit,
 	applyUserChargedCostFactor,
 	attachUserChargedFactorToPricingAudit,
 	lookupUserChargedCostFactor,
@@ -101,15 +102,7 @@ function applyRouteFactorsToSide(options: {
 			...options.catalog.audit,
 			source: 'model_x_factor',
 			base_factor: options.baseFactor,
-			schedule: {
-				timezone: sch.timezone,
-				local_time: sch.localTime,
-				evaluated_at_utc: sch.evaluatedAtUtc,
-				factor: sch.factor,
-				window: sch.window
-					? { start: sch.window.start, end: sch.window.end, factor: sch.window.factor }
-					: null,
-			},
+			schedule: toScheduleAudit(sch),
 			effective_factor: effective,
 			prices,
 		},
@@ -132,7 +125,7 @@ export async function recordUsage(
 		provider_name?: string | null;
 		request_body?: string | null;
 		upstream_request_body?: string | null;
-		request_protocol: 'openai' | 'anthropic' | 'gemini';
+		request_protocol: UpstreamProtocol;
 		request_operation?: string | null;
 		upstream_protocol: UpstreamProtocol;
 		upstream_operation?: string | null;
@@ -157,7 +150,7 @@ export async function recordUsage(
 		route_metered_profile_json?: string | null;
 		/** @deprecated Ignored; nested charged tiers are not used for billing. */
 		route_charged_profile_json?: string | null;
-		/** 请求进入 Gateway 的时间；每日时段倍率在该时刻锁定。 */
+		/** 请求进入 Gateway 的时间；分时时段倍率在该时刻锁定。 */
 		request_started_at_ms?: number;
 		route_group: string;
 		status: 'success' | 'error' | 'incomplete' | 'cancelled';

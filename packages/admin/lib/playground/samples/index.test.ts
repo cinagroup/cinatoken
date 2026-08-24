@@ -18,9 +18,9 @@ describe('playground samples', () => {
 			for (const sampleId of PLAYGROUND_LLM_SAMPLE_IDS) {
 				const rules = sampleRoutes[family][sampleId];
 				assert.ok(rules.length > 0, `${family}.${sampleId} has no routes`);
-				const defaultRule = rules.at(-1);
+				const lastRule = rules[rules.length - 1];
 				assert.equal(
-					defaultRule && 'when' in defaultRule ? defaultRule.when : undefined,
+					lastRule && 'when' in lastRule ? lastRule.when : undefined,
 					undefined,
 					`${family}.${sampleId} needs a default route`,
 				);

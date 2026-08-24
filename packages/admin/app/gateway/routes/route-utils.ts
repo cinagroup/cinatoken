@@ -23,6 +23,7 @@ import {
 	type ProviderEndpointCapability,
 } from '@octafuse/core/provider-endpoints';
 import {
+	DASHSCOPE_MULTIMODAL_GENERATION_PATH,
 	isDashScopeRealtimeAsrModelOperationCompatible,
 	isRouteAdapterCompatible,
 	REQUEST_OPERATIONS_BY_PROTOCOL,
@@ -30,7 +31,9 @@ import {
 } from '@octafuse/core/route-topology';
 import {
 	findDailyWindowOverlap,
+	formatIsoWeekdaysHint,
 	mergeScheduleSidesToSharedWindows,
+	normalizeIsoWeekdays,
 	normalizeScheduleFactor,
 	parseHhMmToMinutes,
 	parseRouteBaseFactors,
@@ -111,7 +114,7 @@ export function requestSurfacePath(protocol: string, operation: string, modelId?
 			'audio.speech.stream': '/v1/audio/speech',
 			'audio.speech.multimodal': '/v1/audio/speech',
 			'audio.transcriptions': '/v1/audio/transcriptions',
-			'audio.transcriptions.multimodal': '/v1/audio/transcriptions',
+			'audio.transcriptions.multimodal': DASHSCOPE_MULTIMODAL_GENERATION_PATH,
 			'audio.transcriptions.async': '/v1/audio/transcriptions',
 		};
 		return operation === '*' ? '/*' : paths[operation] ?? `/${operation}`;
@@ -502,16 +505,8 @@ export function buildRoutePriceOverride(formData: RouteFormData): Record<string,
 	if (scheduleWindows.length > 0) {
 		priceOverride.schedule = {
 			mode: 'override',
-			charged: scheduleWindows.map((w) => ({
-				start: w.start,
-				end: w.end,
-				factor: w.charged_factor,
-			})),
-			metered: scheduleWindows.map((w) => ({
-				start: w.start,
-				end: w.end,
-				factor: w.metered_factor,
-			})),
+			charged: scheduleWindows.map((w) => persistScheduleSideWindow(w, w.charged_factor)),
+			metered: scheduleWindows.map((w) => persistScheduleSideWindow(w, w.metered_factor)),
 		};
 	}
 	return priceOverride;
@@ -531,6 +526,36 @@ export function formatRoutePriceOverridePreview(formData: RouteFormData): {
 	}
 }
 
+function persistableScheduleDays(days: number[] | undefined): number[] | undefined {
+	if (!days || days.length === 0) {
+		return undefined;
+	}
+	const normalized = normalizeIsoWeekdays(days);
+	if (normalized === null) {
+		return undefined;
+	}
+	return normalized;
+}
+
+function persistScheduleSideWindow(
+	w: Pick<SharedScheduleWindow, 'start' | 'end' | 'days'>,
+	factor: number,
+): DailyScheduleWindow {
+	const days = persistableScheduleDays(w.days);
+	return days ? { start: w.start, end: w.end, factor, days } : { start: w.start, end: w.end, factor };
+}
+
+function parseFormScheduleDays(days: number[] | undefined, index: number): number[] | undefined {
+	if (!days || days.length === 0) {
+		return undefined;
+	}
+	const normalized = normalizeIsoWeekdays(days);
+	if (normalized === null) {
+		throw new Error(`Schedule window ${index + 1}: days must be a non-empty unique array of integers 1–7`);
+	}
+	return normalized;
+}
+
 function validateSharedScheduleWindows(windows: RouteScheduleFormSide): SharedScheduleWindow[] {
 	const cleaned: SharedScheduleWindow[] = [];
 	for (let i = 0; i < windows.length; i++) {
@@ -547,15 +572,17 @@ function validateSharedScheduleWindows(windows: RouteScheduleFormSide): SharedSc
 				`Schedule window ${i + 1}: start must be HH:mm, end may also be 24:00, and duration must be non-zero`,
 			);
 		}
+		const days = parseFormScheduleDays(w.days, i);
 		cleaned.push({
 			start,
 			end,
 			charged_factor: parseSharedWindowFactor(w.charged_factor, 'Charged factor', i),
 			metered_factor: parseSharedWindowFactor(w.metered_factor, 'Metered factor', i),
+			...(days ? { days } : {}),
 		});
 	}
 	const overlap = findDailyWindowOverlap(
-		cleaned.map((w) => ({ start: w.start, end: w.end, factor: w.charged_factor })),
+		cleaned.map((w) => ({ start: w.start, end: w.end, factor: w.charged_factor, days: w.days })),
 	);
 	if (overlap) {
 		throw new Error(`Schedule: ${overlap}`);
@@ -598,6 +625,7 @@ export function buildFormDataFromRoute(route: GatewayModelRoute, _models: Gatewa
 			end: w.end,
 			charged_factor: formatScheduleFactorText(w.charged_factor),
 			metered_factor: formatScheduleFactorText(w.metered_factor),
+			days: w.days ?? [],
 		})),
 	};
 }
@@ -658,16 +686,17 @@ export function requestOperationsForModel(
 	if (model && isAudioTranscriptionModel(model)) {
 		if (protocol === 'openai') return ['audio.transcriptions'];
 		if (protocol === 'dashscope') {
-			const operations = [
+			const realtimeOperations = [
 				'audio.transcriptions.realtime.inference',
 				'audio.transcriptions.realtime.session',
 			];
-			// 供应商模型填写后只展示其真实协议，避免 Fun-ASR 被误配到 Qwen3 session。
-			return providerModelName.trim()
-				? operations.filter((operation) =>
+			const compatibleRealtime = providerModelName.trim()
+				? realtimeOperations.filter((operation) =>
 						isDashScopeRealtimeAsrModelOperationCompatible(providerModelName, operation),
 				  )
-				: operations;
+				: realtimeOperations;
+			// 同步 HTTP 透传始终可选；实时 operation 按供应商模型族过滤。
+			return ['audio.transcriptions.multimodal', ...compatibleRealtime];
 		}
 		return [];
 	}
@@ -686,7 +715,43 @@ export function requestOperationsForModel(
 	return REQUEST_OPERATIONS_BY_PROTOCOL[protocol];
 }
 
+export type DashScopeAsrRoutePreset = 'flash-convert' | 'flash-passthrough' | 'filetrans';
 export type DashScopeTtsRoutePreset = 'realtime' | 'nonrealtime';
+
+/**
+ * 将 DashScope ASR 的用户意图转换为完整路由拓扑。
+ * flash 转换保持 OpenAI 兼容入口；透传使用原生 multimodal HTTP；filetrans 走异步 submit/poll。
+ */
+export function applyDashScopeAsrRoutePreset(formData: RouteFormData, preset: DashScopeAsrRoutePreset): RouteFormData {
+	if (preset === 'flash-convert') {
+		return {
+			...formData,
+			request_protocol: 'openai',
+			request_operation: 'audio.transcriptions',
+			upstream_protocol: 'dashscope',
+			upstream_operation: 'audio.transcriptions.multimodal',
+			adapter: 'dashscope-asr-qwen-audio-file',
+		};
+	}
+	if (preset === 'flash-passthrough') {
+		return {
+			...formData,
+			request_protocol: 'dashscope',
+			request_operation: 'audio.transcriptions.multimodal',
+			upstream_protocol: 'dashscope',
+			upstream_operation: 'audio.transcriptions.multimodal',
+			adapter: 'passthrough',
+		};
+	}
+	return {
+		...formData,
+		request_protocol: 'openai',
+		request_operation: 'audio.transcriptions',
+		upstream_protocol: 'dashscope',
+		upstream_operation: 'audio.transcriptions.async',
+		adapter: 'dashscope-asr-file-async',
+	};
+}
 
 /**
  * 将 DashScope TTS 的用户意图转换为完整路由拓扑。
@@ -737,6 +802,9 @@ export function upstreamOperationsForProviderModel(
 		}
 		if (protocol === 'dashscope') {
 			const operations: string[] = [];
+			if (capabilities.has('audio.transcriptions.multimodal')) {
+				operations.push('audio.transcriptions.multimodal');
+			}
 			if (capabilities.has('audio.transcriptions') && capabilities.has('audio.transcriptions.tasks')) {
 				operations.push('audio.transcriptions.async');
 			}
@@ -1186,10 +1254,16 @@ export type ScheduleWindowGroup = {
 	factor: number;
 };
 
+function formatScheduleRangeWithDays(start: string, end: string, days?: number[]): string {
+	const range = formatScheduleRange(start, end);
+	const daysHint = formatIsoWeekdaysHint(days);
+	return daysHint ? `${daysHint} ${range}` : range;
+}
+
 export function groupScheduleWindows(windows: DailyScheduleWindow[]): ScheduleWindowGroup[] {
 	const groups: ScheduleWindowGroup[] = [];
 	for (const w of windows) {
-		const range = formatScheduleRange(w.start, w.end);
+		const range = formatScheduleRangeWithDays(w.start, w.end, w.days);
 		const last = groups[groups.length - 1];
 		if (last && last.factor === w.factor) {
 			last.ranges.push(range);
@@ -1201,7 +1275,9 @@ export function groupScheduleWindows(windows: DailyScheduleWindow[]): ScheduleWi
 }
 
 export function scheduleWindowShapeKey(windows: DailyScheduleWindow[]): string {
-	return windows.map((w) => `${w.start.slice(0, 5)}|${w.end.slice(0, 5)}`).join(',');
+	return windows
+		.map((w) => `${w.start.slice(0, 5)}|${w.end.slice(0, 5)}|${(w.days ?? []).join('.')}`)
+		.join(',');
 }
 
 /** Format schedule windows for tooltips, e.g. `9:00-12:00, 14:00-18:00 ×2`. */
@@ -1230,7 +1306,7 @@ export function formatSharedScheduleWindowsHint(windows: SharedScheduleWindow[])
 	if (windows.length === 0) return null;
 	return windows
 		.map((w) => {
-			const range = formatScheduleRange(w.start, w.end);
+			const range = formatScheduleRangeWithDays(w.start, w.end, w.days);
 			const same = w.charged_factor === w.metered_factor;
 			if (same) {
 				return `${range} ${formatFactorMultiplier(w.charged_factor)}`;
