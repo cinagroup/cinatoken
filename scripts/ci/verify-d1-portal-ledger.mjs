@@ -10,7 +10,13 @@ const database = new DatabaseSync(':memory:');
 database.exec('PRAGMA foreign_keys = ON');
 
 for (const file of readdirSync(migrationsDirectory).filter((name) => name.endsWith('.sql')).sort()) {
-	database.exec(readFileSync(join(migrationsDirectory, file), 'utf8'));
+	const sql = readFileSync(join(migrationsDirectory, file), 'utf8');
+	assert.doesNotMatch(
+		sql,
+		/\bSELECT\s+CASE\b/iu,
+		`${file} contains an unparenthesized SELECT CASE that Wrangler can misparse inside a trigger`,
+	);
+	database.exec(sql);
 }
 
 database.prepare('INSERT INTO users (id, email) VALUES (?, ?)')

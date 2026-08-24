@@ -68,21 +68,21 @@ CREATE TRIGGER withdrawals_validate_lock_before_insert
 BEFORE INSERT ON withdrawals
 WHEN NEW.status = 'requested'
 BEGIN
-  SELECT CASE
+  SELECT (CASE
     WHEN EXISTS (
       SELECT 1 FROM withdrawals
       WHERE user_id = NEW.user_id
         AND status IN ('requested', 'processing', 'submitted')
     ) THEN RAISE(ABORT, 'active_withdrawal_exists')
-  END;
-  SELECT CASE
+  END);
+  SELECT (CASE
     WHEN NOT EXISTS (
       SELECT 1 FROM user_earnings
       WHERE user_id = NEW.user_id
         AND balance_micros >= NEW.amount_micros
         AND NEW.amount_micros > 0
     ) THEN RAISE(ABORT, 'insufficient_balance')
-  END;
+  END);
 END;
 
 CREATE TRIGGER withdrawals_lock_after_insert
