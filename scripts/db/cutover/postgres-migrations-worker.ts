@@ -32,6 +32,7 @@ import migration0027 from '../../../packages/core/migrations-postgres/0027_user_
 import migration0028 from '../../../packages/core/migrations-postgres/0028_portal_marketplace_config.sql';
 import migration0029 from '../../../packages/core/migrations-postgres/0029_portal_integer_ledger.sql';
 import migration0030 from '../../../packages/core/migrations-postgres/0030_chain_job_transactions.sql';
+import migration0031 from '../../../packages/core/migrations-postgres/0031_ledger_integrity_guards.sql';
 
 interface MigrationEnv {
 	MIGRATOR_HYPERDRIVE: { readonly connectionString: string };
@@ -70,6 +71,7 @@ const MIGRATIONS = [
 	['0028_portal_marketplace_config.sql', migration0028],
 	['0029_portal_integer_ledger.sql', migration0029],
 	['0030_chain_job_transactions.sql', migration0030],
+	['0031_ledger_integrity_guards.sql', migration0031],
 ] as const;
 
 export default {

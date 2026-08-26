@@ -606,12 +606,17 @@ export function createMySqlPortalLedgerRepository(db: MySqlDatabaseClient): Port
 					return;
 				}
 				const canonicalAmount = Number(rows[0].amount);
-				await connection.execute<ResultSetHeader>(
+				const [settled] = await connection.execute<ResultSetHeader>(
 					`UPDATE user_earnings SET locked_amount = locked_amount - ?,
 					 lifetime_withdrawn = lifetime_withdrawn + ?, updated_at = ?
 					 WHERE user_id = ? AND locked_amount >= ?`,
 					[canonicalAmount, canonicalAmount, nowIso, userId, canonicalAmount],
 				);
+				if (settled.affectedRows === 0) {
+					// 守卫未生效（锁定余额不足/行缺失）：不得仍标记终态（审计 M6，对齐 PG RAISE 语义）
+					await connection.rollback();
+					throw new Error('insufficient_locked_balance');
+				}
 				await connection.execute<ResultSetHeader>(
 					`UPDATE withdrawals SET status = 'confirmed', confirmed_at = ?, updated_at = ? WHERE id = ?`,
 					[nowIso, nowIso, id],
@@ -639,12 +644,16 @@ export function createMySqlPortalLedgerRepository(db: MySqlDatabaseClient): Port
 					return;
 				}
 				const canonicalAmount = Number(rows[0].amount);
-				await connection.execute<ResultSetHeader>(
+				const [refunded] = await connection.execute<ResultSetHeader>(
 					`UPDATE user_earnings SET locked_amount = locked_amount - ?,
 					 balance = balance + ?, updated_at = ?
 					 WHERE user_id = ? AND locked_amount >= ?`,
 					[canonicalAmount, canonicalAmount, nowIso, userId, canonicalAmount],
 				);
+				if (refunded.affectedRows === 0) {
+					await connection.rollback();
+					throw new Error('insufficient_locked_balance');
+				}
 				await connection.execute<ResultSetHeader>(
 					`UPDATE withdrawals SET status = 'failed', failure_reason = ?, updated_at = ? WHERE id = ?`,
 					[reason, nowIso, id],
