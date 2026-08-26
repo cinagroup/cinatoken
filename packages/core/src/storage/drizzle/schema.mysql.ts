@@ -76,6 +76,7 @@ export const usersTable = mysqlTable(
 export const apiKeysTable = mysqlTable('api_keys', {
 	id: varchar('id', { length: COL.ID }).primaryKey(),
 	key: varchar('key', { length: COL.KEY }).notNull(),
+	keyHash: varchar('key_hash', { length: 80 }),
 	userId: varchar('user_id', { length: COL.USER_ID }).notNull(),
 	name: varchar('name', { length: COL.NAME }),
 	status: varchar('status', { length: COL.STATUS }).notNull().default('active'),
@@ -268,6 +269,7 @@ export const adminApiKeysTable = mysqlTable('admin_api_keys', {
 	name: varchar('name', { length: 255 }).notNull().unique(),
 	description: text('description'),
 	secretKey: varchar('secret_key', { length: COL.KEY }).notNull().unique(),
+	secretKeyHash: varchar('secret_key_hash', { length: 80 }),
 	keyPrefix: varchar('key_prefix', { length: 32 }).notNull(),
 	permissionsJson: text('permissions_json').notNull(),
 	status: varchar('status', { length: COL.STATUS }).notNull().default('active'),

@@ -6,7 +6,7 @@ import type { InsertRequestLogParams } from '../request-logs-types';
 import type { InsertKeyParams } from '../api-keys-types';
 
 export interface ApiKeysD1Statements {
-	buildInsertApiKeyStatement(db: D1Database, params: InsertKeyParams): D1PreparedStatement;
+	buildInsertApiKeyStatement(db: D1Database, params: InsertKeyParams): Promise<D1PreparedStatement>;
 }
 
 export interface RequestLogsD1Statements {

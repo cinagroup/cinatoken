@@ -67,10 +67,12 @@ export async function createApiKeyWithAuditD1(
 	}
 ): Promise<void> {
 	const auditRow = userBudgetAuditToInsertRowForCreateKey(params.insert.userId, params.audit);
-	await ensureD1Batch(client, [
+	// 审计 M2-3：key 插入语句现需异步计算 key_hash，先构建再批量执行。
+	const [keyStatement, auditStatement] = await Promise.all([
 		buildInsertApiKeyStatement(client.raw, params.insert),
 		buildInsertUserAuditLogStatement(client.raw, auditRow),
 	]);
+	await ensureD1Batch(client, [keyStatement, auditStatement]);
 }
 
 export async function updateUserBudgetWithAuditTxD1(

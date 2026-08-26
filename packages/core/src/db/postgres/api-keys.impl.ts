@@ -5,6 +5,7 @@ import { and, asc, count, desc, eq, gt, isNotNull, isNull, like, lte, sql } from
 import type { ApiKeyRow, ResolvedGatewayKeyRow } from '../../types';
 import { roundGatewayMoney } from '../../lib/money-precision';
 import type { PostgresDatabaseClient } from '../../storage/database-client';
+import { hashLookupKey } from '../../lib/key-hash';
 import type { ApiKeysRepository } from '../../storage/gateway-repository-interfaces';
 import { apiKeysTable as pgApiKeysTable, usersTable as pgUsersTable } from '../../storage/drizzle/schema.pg';
 import type { BudgetFilter, InsertKeyParams } from '../api-keys-types';
@@ -165,12 +166,25 @@ export function createPostgresApiKeysRepository(db: PostgresDatabaseClient): Api
 		},
 
 		async getApiKeyWithUserByKey(key: string): Promise<ResolvedGatewayKeyRow | null> {
+			// 审计 M2-3：哈希优先查找；miss 回退明文（迁移窗口），命中即惰性回填。
+			const keyHash = await hashLookupKey(key);
+			const byHash = await drizzle
+				.select(resolvedCols)
+				.from(pgApiKeysTable)
+				.innerJoin(pgUsersTable, eq(pgApiKeysTable.userId, pgUsersTable.id))
+				.where(and(eq(pgApiKeysTable.keyHash, keyHash), eq(pgApiKeysTable.status, 'active')))
+				.limit(1);
+			if (byHash[0]) return mapPgResolvedRow(byHash[0]);
 			const rows = await drizzle
 				.select(resolvedCols)
 				.from(pgApiKeysTable)
 				.innerJoin(pgUsersTable, eq(pgApiKeysTable.userId, pgUsersTable.id))
 				.where(and(eq(pgApiKeysTable.key, key), eq(pgApiKeysTable.status, 'active')))
 				.limit(1);
+			if (rows[0]) {
+				await drizzle.update(pgApiKeysTable).set({ keyHash })
+					.where(eq(pgApiKeysTable.id, rows[0].id));
+			}
 			return rows[0] ? mapPgResolvedRow(rows[0]) : null;
 		},
 
@@ -198,6 +212,7 @@ export function createPostgresApiKeysRepository(db: PostgresDatabaseClient): Api
 			await drizzle.insert(pgApiKeysTable).values({
 				id: params.id,
 				key: params.key,
+				keyHash: await hashLookupKey(params.key),
 				userId: params.userId,
 				name: params.name ?? null,
 				status,

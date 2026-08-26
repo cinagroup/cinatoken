@@ -1,5 +1,6 @@
 import type { D1DatabaseClient } from '../../storage/database-client';
 import type { AdminAccessRepository } from '../../storage/gateway-repository-interfaces';
+import { hashLookupKey } from '../../lib/key-hash';
 import type {
 	AdminApiKeyRow,
 	AdminApiKeyStatus,
@@ -67,14 +68,21 @@ export function createD1AdminAccessRepository(db: D1DatabaseClient): AdminAccess
 			return row ? mapKey(row) : null;
 		},
 		async getActiveApiKeyBySecret(secretKey) {
+			// 审计 M2-2：哈希优先查找；miss 回退明文（迁移窗口），命中即惰性回填。
+			const hash = await hashLookupKey(secretKey);
+			const byHash = await raw.prepare(`SELECT ${KEY_COLUMNS} FROM admin_api_keys WHERE secret_key_hash = ? AND status = 'active'`).bind(hash).first<KeySqlRow>();
+			if (byHash) return mapKey(byHash);
 			const row = await raw.prepare(`SELECT ${KEY_COLUMNS} FROM admin_api_keys WHERE secret_key = ? AND status = 'active'`).bind(secretKey).first<KeySqlRow>();
-			return row ? mapKey(row) : null;
+			if (!row) return null;
+			await raw.prepare('UPDATE admin_api_keys SET secret_key_hash = ? WHERE id = ?').bind(hash, row.id).run();
+			return mapKey(row);
 		},
 		async insertApiKey(params) {
+			const secretHash = await hashLookupKey(params.secretKey);
 			await raw.prepare(`INSERT INTO admin_api_keys
-          (id, name, description, secret_key, key_prefix, permissions_json, status, created_at, updated_at)
-          VALUES (?, ?, ?, ?, ?, ?, 'active', datetime('now'), datetime('now'))`)
-				.bind(params.id, params.name, params.description ?? null, params.secretKey, params.keyPrefix, params.permissionsJson)
+          (id, name, description, secret_key, key_prefix, permissions_json, secret_key_hash, status, created_at, updated_at)
+          VALUES (?, ?, ?, ?, ?, ?, ?, 'active', datetime('now'), datetime('now'))`)
+				.bind(params.id, params.name, params.description ?? null, params.secretKey, secretHash, params.keyPrefix, params.permissionsJson)
 				.run();
 		},
 		async updateApiKey(id, patch) {

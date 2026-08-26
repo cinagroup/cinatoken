@@ -4,6 +4,7 @@
 import type { D1Database, D1PreparedStatement } from '@cloudflare/workers-types';
 import type { ApiKeyRow, ResolvedGatewayKeyRow } from '../../types';
 import { roundGatewayMoney } from '../../lib/money-precision';
+import { hashLookupKey } from '../../lib/key-hash';
 import type { D1DatabaseClient } from '../../storage/database-client';
 import type { ApiKeysRepository } from '../../storage/gateway-repository-interfaces';
 import type { ApiKeysD1Statements } from './d1-repository-extras';
@@ -69,14 +70,16 @@ function mapResolvedRow(r: ResolvedSqlRow): ResolvedGatewayKeyRow {
 	};
 }
 
-export function buildInsertApiKeyStatement(db: D1Database, params: InsertKeyParams): D1PreparedStatement {
+export async function buildInsertApiKeyStatement(db: D1Database, params: InsertKeyParams): Promise<D1PreparedStatement> {
 	const status = params.status ?? 'active';
+	// 审计 M2-3：新写入同步落哈希（认证路径哈希优先）。
+	const keyHash = await hashLookupKey(params.key);
 	return db
 		.prepare(
-			`INSERT INTO api_keys (id, key, user_id, name, status, metadata, created_at, updated_at)
-       VALUES (?, ?, ?, ?, ?, ?, datetime('now'), datetime('now'))`
+			`INSERT INTO api_keys (id, key, key_hash, user_id, name, status, metadata, created_at, updated_at)
+       VALUES (?, ?, ?, ?, ?, ?, ?, datetime('now'), datetime('now'))`
 		)
-		.bind(params.id, params.key, params.userId, params.name ?? null, status, params.metadata ?? null);
+		.bind(params.id, params.key, keyHash, params.userId, params.name ?? null, status, params.metadata ?? null);
 }
 
 export function createD1ApiKeysRepository(db: D1DatabaseClient): ApiKeysRepository & ApiKeysD1Statements {
@@ -107,11 +110,20 @@ export function createD1ApiKeysRepository(db: D1DatabaseClient): ApiKeysReposito
 		},
 
 		async getApiKeyWithUserByKey(key: string): Promise<ResolvedGatewayKeyRow | null> {
+			// 审计 M2-3：哈希优先查找；miss 回退明文（迁移窗口），命中即惰性回填。
+			const keyHash = await hashLookupKey(key);
+			const byHash = await raw
+				.prepare(`${resolvedSelect} WHERE k.key_hash = ? AND k.status = ?`)
+				.bind(keyHash, 'active')
+				.first<ResolvedSqlRow>();
+			if (byHash) return mapResolvedRow(byHash);
 			const row = await raw
 				.prepare(`${resolvedSelect} WHERE k.key = ? AND k.status = ?`)
 				.bind(key, 'active')
 				.first<ResolvedSqlRow>();
-			return row ? mapResolvedRow(row) : null;
+			if (!row) return null;
+			await raw.prepare('UPDATE api_keys SET key_hash = ? WHERE id = ?').bind(keyHash, row.id).run();
+			return mapResolvedRow(row);
 		},
 
 		async getApiKeyWithUserById(id: string): Promise<ResolvedGatewayKeyRow | null> {
@@ -135,7 +147,7 @@ export function createD1ApiKeysRepository(db: D1DatabaseClient): ApiKeysReposito
 		},
 
 		async insertApiKey(params: InsertKeyParams): Promise<void> {
-			await buildInsertApiKeyStatement(raw, params).run();
+			await (await buildInsertApiKeyStatement(raw, params)).run();
 		},
 
 		async revokeApiKey(id: string): Promise<boolean> {

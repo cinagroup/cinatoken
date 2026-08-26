@@ -4,6 +4,7 @@
 import { and, asc, count, desc, eq, gt, isNotNull, isNull, like, lte, sql } from 'drizzle-orm';
 import type { ApiKeyRow, ResolvedGatewayKeyRow } from '../../types';
 import { roundGatewayMoney } from '../../lib/money-precision';
+import { hashLookupKey } from '../../lib/key-hash';
 import type { MySqlDatabaseClient } from '../../storage/database-client';
 import type { ApiKeysRepository } from '../../storage/gateway-repository-interfaces';
 import { apiKeysTable as myApiKeysTable, usersTable as myUsersTable } from '../../storage/drizzle/schema.mysql';
@@ -165,12 +166,25 @@ export function createMySqlApiKeysRepository(db: MySqlDatabaseClient): ApiKeysRe
 		},
 
 		async getApiKeyWithUserByKey(key: string): Promise<ResolvedGatewayKeyRow | null> {
+			// 审计 M2-3：哈希优先查找；miss 回退明文（迁移窗口），命中即惰性回填。
+			const keyHash = await hashLookupKey(key);
+			const byHash = await drizzle
+				.select(resolvedCols)
+				.from(myApiKeysTable)
+				.innerJoin(myUsersTable, eq(myApiKeysTable.userId, myUsersTable.id))
+				.where(and(eq(myApiKeysTable.keyHash, keyHash), eq(myApiKeysTable.status, 'active')))
+				.limit(1);
+			if (byHash[0]) return mapMyResolvedRow(byHash[0]);
 			const rows = await drizzle
 				.select(resolvedCols)
 				.from(myApiKeysTable)
 				.innerJoin(myUsersTable, eq(myApiKeysTable.userId, myUsersTable.id))
 				.where(and(eq(myApiKeysTable.key, key), eq(myApiKeysTable.status, 'active')))
 				.limit(1);
+			if (rows[0]) {
+				await drizzle.update(myApiKeysTable).set({ keyHash })
+					.where(eq(myApiKeysTable.id, rows[0].id));
+			}
 			return rows[0] ? mapMyResolvedRow(rows[0]) : null;
 		},
 
@@ -198,6 +212,7 @@ export function createMySqlApiKeysRepository(db: MySqlDatabaseClient): ApiKeysRe
 			await drizzle.insert(myApiKeysTable).values({
 				id: params.id,
 				key: params.key,
+				keyHash: await hashLookupKey(params.key),
 				userId: params.userId,
 				name: params.name ?? null,
 				status,

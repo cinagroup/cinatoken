@@ -47,6 +47,7 @@ export const usersTable = pgTable(
 export const apiKeysTable = pgTable('api_keys', {
 	id: text('id').primaryKey(),
 	key: text('key').notNull(),
+	keyHash: text('key_hash'),
 	userId: text('user_id').notNull(),
 	name: text('name'),
 	status: text('status').notNull().default('active'),
@@ -239,6 +240,7 @@ export const adminApiKeysTable = pgTable('admin_api_keys', {
 	name: text('name').notNull().unique(),
 	description: text('description'),
 	secretKey: text('secret_key').notNull().unique(),
+	secretKeyHash: text('secret_key_hash'),
 	keyPrefix: text('key_prefix').notNull(),
 	permissionsJson: text('permissions_json').notNull().default('[]'),
 	status: text('status').notNull().default('active'),

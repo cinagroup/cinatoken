@@ -6,6 +6,7 @@ import {
 	adminSessionsTable,
 } from '../../storage/drizzle/schema.pg';
 import type { AdminApiKeyRow, AdminSessionRow } from '../admin-access-types';
+import { hashLookupKey } from '../../lib/key-hash';
 
 function mapKey(row: typeof adminApiKeysTable.$inferSelect): AdminApiKeyRow {
 	return { ...row, status: row.status === 'revoked' ? 'revoked' : 'active' };
@@ -26,13 +27,21 @@ export function createPostgresAdminAccessRepository(db: PostgresDatabaseClient):
 			return row[0] ? mapKey(row[0]) : null;
 		},
 		async getActiveApiKeyBySecret(secretKey) {
+			// 审计 M2-2：哈希优先查找；miss 回退明文（迁移窗口），命中即惰性回填。
+			const hash = await hashLookupKey(secretKey);
+			const byHash = await drizzle.select().from(adminApiKeysTable)
+				.where(and(eq(adminApiKeysTable.secretKeyHash, hash), eq(adminApiKeysTable.status, 'active'))).limit(1);
+			if (byHash[0]) return mapKey(byHash[0]);
 			const row = await drizzle.select().from(adminApiKeysTable)
 				.where(and(eq(adminApiKeysTable.secretKey, secretKey), eq(adminApiKeysTable.status, 'active'))).limit(1);
-			return row[0] ? mapKey(row[0]) : null;
+			if (!row[0]) return null;
+			await drizzle.update(adminApiKeysTable).set({ secretKeyHash: hash })
+				.where(eq(adminApiKeysTable.id, row[0].id));
+			return mapKey(row[0]);
 		},
 		async insertApiKey(params) {
 			const now = new Date().toISOString();
-			await drizzle.insert(adminApiKeysTable).values({ ...params, description: params.description ?? null, status: 'active', createdAt: now, updatedAt: now });
+			await drizzle.insert(adminApiKeysTable).values({ ...params, secretKeyHash: await hashLookupKey(params.secretKey), description: params.description ?? null, status: 'active', createdAt: now, updatedAt: now });
 		},
 		async updateApiKey(id, patch) {
 			if (Object.keys(patch).length === 0) return false;
