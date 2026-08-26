@@ -78,6 +78,25 @@ function extractApiKey(c: { req: { header: (name: string) => string | undefined;
   return null;
 }
 
+/** 认证失败限速：每 IP 计数（Workers ratelimit binding，per-colo 尽力而为）。
+ * 超限返回 429，未超限返回 null（走常规 401）；限速器缺失/故障时静默跳过。 */
+async function throttleAuthFailure(c: { env: Env['Bindings']; req: { header(name: string): string | undefined }; json(body: unknown, status: 429, headers: Record<string, string>): Response }): Promise<Response | null> {
+  const limiter = c.env.RATE_LIMITER;
+  if (!limiter) return null;
+  const ip = c.req.header('CF-Connecting-IP') ?? 'unknown';
+  try {
+    const { success } = await limiter.limit({ key: ip });
+    if (success) return null;
+    return c.json(
+      { error: { message: 'Too many failed authentication attempts', type: 'rate_limit_error' } },
+      429,
+      { 'Retry-After': '60' },
+    );
+  } catch {
+    return null;
+  }
+}
+
 /**
  * 校验 API Key 并注入上下文；未授权返回 401，超额预算返回 403（部分路由豁免，见内联注释）。
  */
@@ -85,7 +104,7 @@ export const requireApiKey = createMiddleware<Env>(async (c, next) => {
   const key = extractApiKey(c);
   if (!key) {
     console.warn('[Gateway Auth] 401: missing API key in supported auth locations');
-    return gatewayErrorJson(c, {
+    return (await throttleAuthFailure(c)) ?? gatewayErrorJson(c, {
       status: 401,
       code: GatewayErrorCode.authFailed,
       message: 'Missing or invalid API key',
@@ -96,7 +115,7 @@ export const requireApiKey = createMiddleware<Env>(async (c, next) => {
   const authResult = await authenticateApiKey(repos, key);
   if (!authResult) {
     console.warn(`[Gateway Auth] 401 API key not found keyPrefix=${maskKey(key)}`);
-    return gatewayErrorJson(c, {
+    return (await throttleAuthFailure(c)) ?? gatewayErrorJson(c, {
       status: 401,
       code: GatewayErrorCode.authFailed,
       message: 'Invalid API key',

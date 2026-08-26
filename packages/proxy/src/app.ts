@@ -4,6 +4,7 @@ import { Hono } from 'hono';
 import type { Context, MiddlewareHandler } from 'hono';
 import { cors } from 'hono/cors';
 import { logger } from 'hono/logger';
+import { bodyLimit } from 'hono/body-limit';
 import type { ApiKeyContext } from './middleware/auth';
 import { healthRoutes } from './routes/health';
 import { chatRoutes } from './routes/v1/chat';
@@ -36,6 +37,8 @@ export type GatewayBindings = {
 	CINATOKEN_MAINTENANCE_MODE?: string;
 	/** Node upgrade 请求临时注入的实时 WebSocket 调度器；不作为 Worker binding。 */
 	NODE_REALTIME_DISPATCH?: DashScopeRealtimeNodeDispatch;
+	/** Workers rate-limiting binding（wrangler.base.jsonc ratelimits）。认证失败限速；未注入时跳过。 */
+	RATE_LIMITER?: { limit(options: { key: string }): Promise<{ success: boolean }> };
 };
 
 export type Env = {
@@ -64,6 +67,10 @@ export function createProxyApp(resolveStorage: StorageResolver, options?: ProxyA
 	}
 
 	app.use('*', logger());
+	// Unbounded c.req.json()/parseBody() on the Node runtime is a memory-DoS
+	// vector (Workers platforms cap bodies natively). 50 MiB covers large
+	// model payloads incl. image multipart uploads.
+	app.use('*', bodyLimit({ maxSize: 50 * 1024 * 1024 }));
 	app.use(
 		'*',
 		cors({

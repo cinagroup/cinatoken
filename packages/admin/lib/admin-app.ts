@@ -2,6 +2,7 @@
  * 管理 API Hono 子应用：内部路由为 `/admin/*`；由 Next 对外暴露为 `/api/admin/*`。
  */
 import { Hono } from 'hono';
+import { bodyLimit } from 'hono/body-limit';
 import { cors } from 'hono/cors';
 import { logger } from 'hono/logger';
 import type { AdminEnv } from '@/lib/admin-env';
@@ -31,10 +32,21 @@ export function createAdminApp(): Hono<AdminEnv> {
 	const app = new Hono<AdminEnv>();
 
 	app.use('*', logger());
+	// Admin API is JSON-only — keep bodies small (Node runtime memory safety).
+	app.use('*', bodyLimit({ maxSize: 2 * 1024 * 1024 }));
+	// CORS 收敛：配置了 CINATOKEN_APP_ORIGIN（逗号分隔）则仅放行这些来源；
+	// 未配置时保持 '*'（兼容既有跨源 SDK/脚本用法），但不反射凭据。
 	app.use(
 		'*',
 		cors({
-			origin: '*',
+			origin: (origin, c) => {
+				const allowed = (c.env?.CINATOKEN_APP_ORIGIN ?? process.env.CINATOKEN_APP_ORIGIN ?? '')
+					.split(',')
+					.map((value: string) => value.trim())
+					.filter(Boolean);
+				if (allowed.length === 0) return origin ?? '*';
+				return allowed.includes(origin) ? origin : allowed[0];
+			},
 			allowMethods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
 			allowHeaders: ['Content-Type', 'Authorization'],
 		})
@@ -44,7 +56,28 @@ export function createAdminApp(): Hono<AdminEnv> {
 		const { repositories } = await resolveAdminStorageContext(c.env);
 		c.set('repositories', repositories);
 		const principal = c.env.ADMIN_PRINCIPAL;
-		if (!principal) return c.json({ success: false, message: 'Unauthorized' }, 401);
+		if (!principal) {
+			// 认证失败限速（Workers ratelimit binding，per-colo 尽力而为）；
+			// 限速器缺失/故障时保持常规 401 语义。
+			const limiter = c.env.RATE_LIMITER;
+			if (limiter) {
+				try {
+					const { success } = await limiter.limit({
+						key: c.req.header('CF-Connecting-IP') ?? 'unknown',
+					});
+					if (!success) {
+						return c.json(
+							{ success: false, message: 'Too many failed authentication attempts' },
+							429,
+							{ 'Retry-After': '60' },
+						);
+					}
+				} catch {
+					// 限速器故障不得阻断正常 401
+				}
+			}
+			return c.json({ success: false, message: 'Unauthorized' }, 401);
+		}
 		c.set('principal', principal);
 		await next();
 	});

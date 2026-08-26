@@ -8,6 +8,15 @@
 	"name": "cinatoken-admin",
 	"compatibility_date": "2026-08-24",
 	"compatibility_flags": ["nodejs_compat"],
+	// 管理面认证失败限速（每 IP 20 次/分钟）
+	"ratelimits": [
+		{
+			"name": "AUTH_RATE_LIMITER",
+			"namespace_id": "2002",
+			"simple": { "limit": 20, "period": 60 }
+		}
+	],
+
 	"workers_dev": false,
 	"routes": [
 		{

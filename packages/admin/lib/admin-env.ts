@@ -23,6 +23,8 @@ export type AdminBindings = {
 	CINATOKEN_OIDC_TRANSACTION_SECRET?: string;
 	SHARED_KEY_ENCRYPTION_SECRET?: string;
 	CHAIN_JOBS?: Queue<ChainJobMessage>;
+	/** Workers rate-limiting binding（wrangler.base.jsonc ratelimits）。认证失败限速；未注入时跳过。 */
+	RATE_LIMITER?: { limit(options: { key: string }): Promise<{ success: boolean }> };
 	/** Node / 自托管数据库使用 `DATABASE_URL`；Cloudflare Postgres 只使用 `HYPERDRIVE`。 */
 	DATABASE_URL?: string;
 	/** Node 下省略视为 `postgres`；Cloudflare 下省略保持 D1，显式 `postgres` 才切 Hyperdrive。 */
