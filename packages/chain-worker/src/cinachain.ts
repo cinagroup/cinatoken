@@ -44,10 +44,26 @@ function runtime(env: SignerEnv) {
 	const transport = http(env.CINACHAIN_RPC_URL);
 	return {
 		chain,
+		chainId,
 		account,
 		publicClient: createPublicClient({ chain, transport }),
 		walletClient: createWalletClient({ chain, transport, account }),
 	};
+}
+
+/** Runtime guard: a wrong or compromised CINACHAIN_RPC_URL yields wrong
+ *  nonces/gas and — worst case — fabricated receipts that settle withdrawals
+ *  with no actual mint. Refuse to sign or trust receipts until the endpoint
+ *  self-reports the configured chain id. */
+async function verifiedRuntime(env: SignerEnv) {
+	const clients = runtime(env);
+	const actual = await clients.publicClient.getChainId();
+	if (actual !== clients.chainId) {
+		throw new Error(
+			`CINACHAIN_RPC_URL chain id mismatch: endpoint reported ${actual}, expected ${clients.chainId} (CINACHAIN_CHAIN_ID)`,
+		);
+	}
+	return clients;
 }
 
 export type PreparedChainTransaction = {
@@ -60,7 +76,7 @@ async function prepareContractTransaction(
 	address: `0x${string}`,
 	data: `0x${string}`,
 ): Promise<PreparedChainTransaction> {
-	const clients = runtime(env);
+	const clients = await verifiedRuntime(env);
 	const request = await clients.walletClient.prepareTransactionRequest({
 		account: clients.account,
 		to: address,
@@ -90,11 +106,11 @@ export async function broadcastPreparedTransaction(
 	env: SignerEnv,
 	rawTransaction: `0x${string}`,
 ) {
-	return runtime(env).publicClient.sendRawTransaction({ serializedTransaction: rawTransaction });
+	return (await verifiedRuntime(env)).publicClient.sendRawTransaction({ serializedTransaction: rawTransaction });
 }
 
 export async function waitForReceipt(env: SignerEnv, hash: `0x${string}`) {
-	const { publicClient } = runtime(env);
+	const { publicClient } = await verifiedRuntime(env);
 	const receipt = await publicClient.waitForTransactionReceipt({
 		hash,
 		confirmations: 1,

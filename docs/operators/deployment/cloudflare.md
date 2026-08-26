@@ -86,6 +86,8 @@ dev 演示**仅 CLI 发版**（有新 SQL 时先 `db:migrate:remote`）；生产
 | `D1_DATABASE_NAME` | D1 逻辑名 |
 | `D1_DATABASE_ID` | 远程 deploy / migrate **必填**。写入生成的 `wrangler.jsonc` 后，本机 `dev:proxy`/`dev:admin` 会连**另一套**本地 D1；继续本地开发前执行 `npm run gen:wrangler`（见 [local-development.md §1](../../developers/local-development.md#️-本地-d1-与-database_id远程-deploy-后必读)） |
 | `D1_MIGRATIONS_WORKER_NAME` | 可选；仅 `wrangler d1 migrations` 配置名，**无需建 Worker** |
+| `HYPERDRIVE_ID` | 可选；把同一个 Hyperdrive 绑定加入 Proxy、Admin/Portal、Chain Worker。仅设置此项不会切库 |
+| `DATABASE_DRIVER` | Cloudflare 省略/`d1` → D1；`postgres` → Hyperdrive。选择 Postgres 时 `HYPERDRIVE_ID` 必填；三个 Worker 必须一致 |
 | `PROXY_CUSTOM_DOMAIN` / `ADMIN_CUSTOM_DOMAIN` | 可选 |
 
 ---
@@ -112,6 +114,8 @@ Cloudflare Dashboard → Worker → **设置（Settings）→ 构建（Builds）
 | `D1_DATABASE_NAME` | ✅ | D1 逻辑名 |
 | `D1_DATABASE_ID` | ✅ | `npx wrangler d1 list`；**只放 Cloudflare Dashboard** |
 | `D1_MIGRATIONS_WORKER_NAME` | 可选 | 仅迁移脚本配置名 |
+| `HYPERDRIVE_ID` | PG 灰度时必填 | `npx wrangler hyperdrive list`；三个 Worker 使用同一个配置 ID |
+| `DATABASE_DRIVER` | PG 切换时必填 | 先预置 `HYPERDRIVE_ID`，完成迁移/对账/隔离探针后才设为 `postgres` |
 | `PROXY_CUSTOM_DOMAIN` / `ADMIN_CUSTOM_DOMAIN` | 可选 | 写入 wrangler `routes` |
 
 ### 构建 / 部署命令
@@ -127,6 +131,7 @@ Cloudflare Dashboard → Worker → **设置（Settings）→ 构建（Builds）
 
 - `npm ci` → `postinstall` → `gen:wrangler` 会读 **Build variables** 生成 `wrangler.jsonc`。
 - **D1 迁移不在 Git 流水线**：有新 SQL 时手动 `npm run db:migrate:remote`（带实例 env 或 export 变量）后再 push。
+- **PostgreSQL 迁移也不在 Worker 部署流水线**：通过受控迁移 Job 注入 `DATABASE_URL` 执行 `npm run db:migrate:pg`；Worker 本身只接收 Hyperdrive 绑定，连接串不进入 Build variables。
 - **统一控制台**：使用 CinaAuth；必需 Secret 与隔离的 Chain Worker Secret 见生产 runbook，Cloudflare 生产不再使用 `ADMIN_PASSWORD` 登录。
 - 可选：`WRANGLER_SEND_METRICS=false`。
 

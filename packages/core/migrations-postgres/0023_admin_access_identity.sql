@@ -1,5 +1,5 @@
 -- Named Admin API keys and persistent console sessions.
-SET search_path TO octafuse_gateway;
+SET search_path TO cinatoken_gateway;
 
 CREATE TABLE IF NOT EXISTS admin_api_keys (
 	id TEXT PRIMARY KEY,

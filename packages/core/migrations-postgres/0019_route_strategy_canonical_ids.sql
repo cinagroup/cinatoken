@@ -1,7 +1,7 @@
 -- Hard cutover: rename route strategy IDs to descriptive snake_case.
 -- affinity → cache_affinity, strict → fixed_order, round_robin → weighted_round_robin
 -- weighted_random unchanged. No legacy aliases in application code after this migration.
-SET search_path TO octafuse_gateway;
+SET search_path TO cinatoken_gateway;
 
 -- 1) Global default
 UPDATE system_config

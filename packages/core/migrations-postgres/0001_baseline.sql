@@ -1,10 +1,10 @@
 -- Postgres baseline schema（本文件位于 packages/core/migrations-postgres/，与 migrations-d1/ 下 D1 链并列）。
 -- Tables/columns/indexes align with packages/core/migrations-d1/0001_baseline.sql (D1 baseline).
 -- Nullability, defaults, and PG types align with packages/core/src/storage/drizzle/schema.pg.ts.
--- New Postgres databases should start from this file.
+-- New Postgres databases should start from this file after the migration runner
+-- has created the isolated schema and assigned it to the migrator role.
 
-CREATE SCHEMA IF NOT EXISTS octafuse_gateway;
-SET search_path TO octafuse_gateway;
+SET search_path TO cinatoken_gateway;
 
 -- 唯一约束（语义层面两组）：
 --   1) (external_system, external_user_id) — 多上游幂等。二者须同空或同非空。

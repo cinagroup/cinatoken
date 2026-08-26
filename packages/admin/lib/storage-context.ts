@@ -1,11 +1,9 @@
-import type { D1Database } from '@cloudflare/workers-types';
 import type { StorageContext } from '@octafuse/core/storage/context';
 import {
 	assertSharedKeyEncryptionSecret,
 	createEncryptedSharedKeysRepository,
 } from '@octafuse/core';
-import { initD1Drizzle } from '@octafuse/core/storage/drizzle/client-d1';
-import { createD1Repositories } from '@octafuse/core/storage/repositories-d1';
+import { createWorkerStorageContext } from '@octafuse/core/storage/context';
 import {
 	resolveNodeDatabaseConfig,
 	resolveWorkerDatabaseConfig,
@@ -26,15 +24,6 @@ function getNodeDatabaseEnv(bindings?: AdminBindings): {
 		DATABASE_URL: dbUrl,
 		DATABASE_DRIVER: driver,
 	};
-}
-
-function createAdminD1StorageContext(db: D1Database): StorageContext {
-	const client = {
-		driver: 'd1' as const,
-		raw: db,
-		drizzle: initD1Drizzle(db),
-	};
-	return { client, repositories: createD1Repositories(client) };
 }
 
 function protectSharedKeys(storage: StorageContext, bindings?: AdminBindings): StorageContext {
@@ -58,17 +47,16 @@ export async function resolveAdminStorageContext(
 		return bindings.STORAGE_CONTEXT;
 	}
 
-	if (bindings?.DB) {
-		const cfg = resolveWorkerDatabaseConfig({
-			DB: bindings.DB,
-			DATABASE_DRIVER: bindings.DATABASE_DRIVER,
-		});
-		return protectSharedKeys(createAdminD1StorageContext(cfg.db), bindings);
-	}
-
-	const isCloudflareMode = mode === 'cloudflare' || (mode === 'auto' && Boolean(bindings?.ASSETS));
+	const isCloudflareMode =
+		mode === 'cloudflare' ||
+		(mode === 'auto' && Boolean(bindings?.DB || bindings?.HYPERDRIVE || bindings?.ASSETS));
 	if (isCloudflareMode) {
-		throw new Error('Cloudflare runtime requires D1 binding `DB`; Postgres fallback is disabled.');
+		const cfg = resolveWorkerDatabaseConfig({
+			DB: bindings?.DB,
+			HYPERDRIVE: bindings?.HYPERDRIVE,
+			DATABASE_DRIVER: bindings?.DATABASE_DRIVER,
+		});
+		return protectSharedKeys(await createWorkerStorageContext(cfg), bindings);
 	}
 
 	const nodeEnv = getNodeDatabaseEnv(bindings);

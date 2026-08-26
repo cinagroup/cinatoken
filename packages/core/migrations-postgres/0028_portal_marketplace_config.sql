@@ -1,5 +1,5 @@
 -- Shared-key marketplace & portal ledger runtime config defaults.
-SET search_path TO octafuse_gateway;
+SET search_path TO cinatoken_gateway;
 
 INSERT INTO system_config (key, value, description, updated_at) VALUES
   ('SHARED_KEY_ENABLED_CHANNELS', '', '允许共享的官方渠道（逗号分隔 openai,anthropic,zhipu,deepseek；空=全部）', CURRENT_TIMESTAMP),

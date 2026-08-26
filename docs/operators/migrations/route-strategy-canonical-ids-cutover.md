@@ -77,12 +77,12 @@ WHERE route_policy IS NOT NULL
   );
 ```
 
-### Postgres（`search_path` / schema：`octafuse_gateway`）
+### Postgres（`search_path` / schema：`cinatoken_gateway`）
 
 与上相同，先执行：
 
 ```sql
-SET search_path TO octafuse_gateway;
+SET search_path TO cinatoken_gateway;
 ```
 
 ### MySQL

@@ -14,6 +14,8 @@ on:
       - "packages/tool-engines/**"
       - "packages/proxy/**"
       - "packages/admin/**"
+      - "scripts/db/**"
+      - "scripts/ci/verify-postgres-migration-contract.mjs"
       - "package.json"
       - "package-lock.json"
       - ".github/workflows/docker-compose-smoke.yml"
@@ -28,6 +30,8 @@ on:
       - "packages/tool-engines/**"
       - "packages/proxy/**"
       - "packages/admin/**"
+      - "scripts/db/**"
+      - "scripts/ci/verify-postgres-migration-contract.mjs"
       - "package.json"
       - "package-lock.json"
       - ".github/workflows/docker-compose-smoke.yml"
@@ -48,10 +52,129 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
-      - name: Build and start postgres + proxy + admin
+      - name: Start postgres
         run: |
           set -euo pipefail
-          docker compose -f docker/compose/node-pg.yml up -d --build postgres gateway-proxy gateway-admin
+          docker compose -f docker/compose/node-pg.yml up -d postgres
+
+      - name: Verify legacy schema rename and migration idempotency
+        run: |
+          set -euo pipefail
+          docker compose -f docker/compose/node-pg.yml exec -T postgres \
+            psql -v ON_ERROR_STOP=1 -U postgres -d cinatoken \
+            -c 'CREATE SCHEMA octafuse_gateway'
+          docker compose -f docker/compose/node-pg.yml --profile migrate \
+            run --rm --build migrate
+          docker compose -f docker/compose/node-pg.yml --profile migrate \
+            run --rm migrate
+
+          docker compose -f docker/compose/node-pg.yml exec -T postgres \
+            psql -v ON_ERROR_STOP=1 -U postgres -d cinatoken <<'SQL'
+          DO $verify$
+          BEGIN
+            IF to_regnamespace('cinatoken_gateway') IS NULL THEN
+              RAISE EXCEPTION 'cinatoken_gateway schema was not created';
+            END IF;
+            IF to_regnamespace('octafuse_gateway') IS NOT NULL THEN
+              RAISE EXCEPTION 'legacy octafuse_gateway schema was not renamed';
+            END IF;
+            IF (SELECT COUNT(*) FROM cinatoken_gateway.schema_migrations) <> 30 THEN
+              RAISE EXCEPTION 'expected 30 PostgreSQL migrations';
+            END IF;
+            IF to_regclass('cinatoken_gateway.portal_ledger_entries') IS NULL
+               OR to_regclass('cinatoken_gateway.chain_job_transactions') IS NULL THEN
+              RAISE EXCEPTION 'ledger or chain outbox table is missing';
+            END IF;
+            IF (
+              SELECT COUNT(*)
+              FROM pg_trigger t
+              JOIN pg_class c ON c.oid = t.tgrelid
+              JOIN pg_namespace n ON n.oid = c.relnamespace
+              WHERE n.nspname = 'cinatoken_gateway'
+                AND c.relname IN ('shared_key_earnings', 'withdrawals')
+                AND NOT t.tgisinternal
+            ) <> 5 THEN
+              RAISE EXCEPTION 'expected five portal ledger triggers';
+            END IF;
+          END
+          $verify$;
+
+          SET search_path TO cinatoken_gateway;
+          INSERT INTO users (id, email) VALUES ('pg-smoke-user', 'pg-smoke@example.com');
+          INSERT INTO user_earnings (user_id) VALUES ('pg-smoke-user');
+          INSERT INTO shared_keys
+            (id, seller_user_id, channel_type, api_key, key_fingerprint, status)
+          VALUES
+            ('pg-smoke-key', 'pg-smoke-user', 'openai', 'encrypted-fixture', 'fixture-fingerprint', 'active');
+          INSERT INTO api_key_request_logs (id, user_id)
+          VALUES ('pg-smoke-request', 'pg-smoke-user');
+          INSERT INTO shared_key_earnings
+            (id, request_log_id, shared_key_id, seller_user_id, gross_amount, net_amount)
+          VALUES
+            ('pg-smoke-earning', 'pg-smoke-request', 'pg-smoke-key', 'pg-smoke-user', 1.234567, 1.234567);
+
+          INSERT INTO withdrawals
+            (id, user_id, amount, fee, net_amount, amount_micros, fee_micros,
+             net_amount_micros, wallet_address, token_amount)
+          VALUES
+            ('pg-smoke-withdrawal-1', 'pg-smoke-user', 0.2, 0, 0.2,
+             200000, 0, 200000, '0x0000000000000000000000000000000000000001', 0.2);
+          UPDATE withdrawals
+          SET status = 'confirmed', confirmed_at = NOW(), updated_at = NOW()
+          WHERE id = 'pg-smoke-withdrawal-1';
+
+          INSERT INTO withdrawals
+            (id, user_id, amount, fee, net_amount, amount_micros, fee_micros,
+             net_amount_micros, wallet_address, token_amount)
+          VALUES
+            ('pg-smoke-withdrawal-2', 'pg-smoke-user', 0.1, 0, 0.1,
+             100000, 0, 100000, '0x0000000000000000000000000000000000000001', 0.1);
+
+          DO $ledger$
+          BEGIN
+            BEGIN
+              INSERT INTO withdrawals
+                (id, user_id, amount, fee, net_amount, amount_micros, fee_micros,
+                 net_amount_micros, wallet_address, token_amount)
+              VALUES
+                ('pg-smoke-withdrawal-duplicate', 'pg-smoke-user', 0.1, 0, 0.1,
+                 100000, 0, 100000, '0x0000000000000000000000000000000000000001', 0.1);
+              RAISE EXCEPTION 'second active withdrawal unexpectedly succeeded';
+            EXCEPTION
+              WHEN raise_exception OR unique_violation THEN
+                IF SQLERRM = 'second active withdrawal unexpectedly succeeded' THEN
+                  RAISE;
+                END IF;
+            END;
+          END
+          $ledger$;
+
+          UPDATE withdrawals
+          SET status = 'failed', failure_reason = 'smoke-refund', updated_at = NOW()
+          WHERE id = 'pg-smoke-withdrawal-2';
+
+          DO $assertions$
+          DECLARE
+            account user_earnings%ROWTYPE;
+          BEGIN
+            SELECT * INTO STRICT account FROM user_earnings WHERE user_id = 'pg-smoke-user';
+            IF account.balance_micros <> 1034567
+               OR account.locked_amount_micros <> 0
+               OR account.lifetime_earned_micros <> 1234567
+               OR account.lifetime_withdrawn_micros <> 200000 THEN
+              RAISE EXCEPTION 'portal ledger balances are inconsistent: %', row_to_json(account);
+            END IF;
+            IF (SELECT COUNT(*) FROM portal_ledger_entries WHERE user_id = 'pg-smoke-user') <> 5 THEN
+              RAISE EXCEPTION 'expected five portal ledger entries';
+            END IF;
+          END
+          $assertions$;
+          SQL
+
+      - name: Build and start proxy + admin
+        run: |
+          set -euo pipefail
+          docker compose -f docker/compose/node-pg.yml up -d --build gateway-proxy gateway-admin
 
       - name: Wait for proxy health
         run: |

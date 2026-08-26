@@ -28,14 +28,18 @@ export async function resolveAdminRequestRuntime(request?: Request): Promise<{
 
 	const requestEnv = request as RequestWithCloudflare | undefined;
 	const cloudflareRuntime = hasCloudflareContext || Boolean(
-		env?.DB || env?.ASSETS || requestEnv?.ctx?.cloudflare?.env || requestEnv?.env?.DB || requestEnv?.env?.ASSETS
+		env?.DB ||
+			env?.HYPERDRIVE ||
+			env?.ASSETS ||
+			requestEnv?.ctx?.cloudflare?.env ||
+			requestEnv?.env?.DB ||
+			requestEnv?.env?.HYPERDRIVE ||
+			requestEnv?.env?.ASSETS
 	);
-	if (cloudflareRuntime && !env?.DB) {
-		throw new Error('Cloudflare runtime requires D1 binding `DB`.');
-	}
 
 	const bindings: AdminBindings = {
 		DB: env?.DB,
+		HYPERDRIVE: env?.HYPERDRIVE,
 		ASSETS: env?.ASSETS,
 		CINAAUTH_AUTH_SERVICE: env?.CINAAUTH_AUTH_SERVICE,
 		CINAAUTH_ISSUER: env?.CINAAUTH_ISSUER,

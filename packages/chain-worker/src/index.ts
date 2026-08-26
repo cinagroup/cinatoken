@@ -1,9 +1,10 @@
 import {
-	createD1StorageContext,
+	createWorkerStorageContext,
 	isChainJobMessage,
 	resolveWorkerDatabaseConfig,
 	type ChainJobMessage,
 	type GatewayRepositories,
+	type HyperdriveBinding,
 } from '@octafuse/core';
 import {
 	broadcastPreparedTransaction,
@@ -13,106 +14,121 @@ import {
 	type PreparedChainTransaction,
 	type SignerEnv,
 } from './cinachain';
+import {
+	createChainTransactionOutbox,
+	type ChainTransactionOutbox,
+	type StoredChainTransaction,
+} from './transaction-outbox';
 
 export interface ChainWorkerEnv extends SignerEnv {
-	DB: D1Database;
+	DB?: D1Database;
+	HYPERDRIVE?: HyperdriveBinding;
+	DATABASE_DRIVER?: string;
 }
 
 type JobKind = ChainJobMessage['kind'];
-type StoredTransaction = PreparedChainTransaction & { chainId: number };
 
 const nowIso = () => new Date().toISOString();
 
 async function getStoredTransaction(
-	env: ChainWorkerEnv,
+	outbox: ChainTransactionOutbox,
 	jobKind: JobKind,
 	jobId: string,
-): Promise<StoredTransaction | null> {
-	const row = await env.DB.prepare(`SELECT tx_hash, raw_transaction, chain_id
-	  FROM chain_job_transactions WHERE job_kind = ? AND job_id = ?`)
-		.bind(jobKind, jobId)
-		.first<{ tx_hash: string; raw_transaction: string; chain_id: number }>();
-	return row
-		? {
-			hash: row.tx_hash as `0x${string}`,
-			rawTransaction: row.raw_transaction as `0x${string}`,
-			chainId: Number(row.chain_id),
-		}
-		: null;
+): Promise<StoredChainTransaction | null> {
+	return outbox.get(jobKind, jobId);
 }
 
 async function persistPreparedTransaction(
+	outbox: ChainTransactionOutbox,
 	env: ChainWorkerEnv,
 	jobKind: JobKind,
 	jobId: string,
 	prepared: PreparedChainTransaction,
-): Promise<StoredTransaction> {
+): Promise<StoredChainTransaction> {
 	const chainId = Number(env.CINACHAIN_CHAIN_ID);
-	await env.DB.prepare(`INSERT OR IGNORE INTO chain_job_transactions
-	  (job_kind, job_id, tx_hash, raw_transaction, chain_id, created_at)
-	  VALUES (?, ?, ?, ?, ?, ?)`)
-		.bind(jobKind, jobId, prepared.hash, prepared.rawTransaction, chainId, nowIso())
-		.run();
-	const stored = await getStoredTransaction(env, jobKind, jobId);
-	if (!stored) throw new Error(`Failed to persist ${jobKind} transaction ${jobId}`);
-	return stored;
+	return outbox.persist(jobKind, jobId, prepared, chainId, nowIso());
 }
 
 async function broadcastStoredTransaction(
+	outbox: ChainTransactionOutbox,
 	env: ChainWorkerEnv,
 	jobKind: JobKind,
 	jobId: string,
-	transaction: StoredTransaction,
+	transaction: StoredChainTransaction,
 ): Promise<void> {
 	try {
 		await broadcastPreparedTransaction(env, transaction.rawTransaction);
-		await env.DB.prepare(`UPDATE chain_job_transactions
-		  SET broadcast_at = COALESCE(broadcast_at, ?) WHERE job_kind = ? AND job_id = ?`)
-			.bind(nowIso(), jobKind, jobId)
-			.run();
+		await outbox.markBroadcast(jobKind, jobId, nowIso());
 	} catch (error) {
 		// A retry may rebroadcast a transaction the RPC node already knows. Only
 		// treat that as success when the deterministic hash has a receipt.
 		try {
 			await waitForReceipt(env, transaction.hash);
-			await env.DB.prepare(`UPDATE chain_job_transactions
-			  SET broadcast_at = COALESCE(broadcast_at, ?) WHERE job_kind = ? AND job_id = ?`)
-				.bind(nowIso(), jobKind, jobId)
-				.run();
+			await outbox.markBroadcast(jobKind, jobId, nowIso());
 		} catch {
 			throw error;
 		}
 	}
 }
 
-async function flushUnbroadcastTransactions(env: ChainWorkerEnv): Promise<void> {
-	const rows = await env.DB.prepare(`SELECT job_kind, job_id, tx_hash, raw_transaction, chain_id
-	  FROM chain_job_transactions WHERE broadcast_at IS NULL ORDER BY created_at, job_kind, job_id LIMIT 10`)
-		.all<{
-			job_kind: JobKind;
-			job_id: string;
-			tx_hash: string;
-			raw_transaction: string;
-			chain_id: number;
-		}>();
-	for (const row of rows.results ?? []) {
-		await broadcastStoredTransaction(env, row.job_kind, row.job_id, {
-			hash: row.tx_hash as `0x${string}`,
-			rawTransaction: row.raw_transaction as `0x${string}`,
-			chainId: Number(row.chain_id),
-		});
+/** Terminal-job rows must never be (re)broadcast: the withdrawal/mint they
+ *  were signed for was refunded or already settled, so broadcasting would
+ *  double-pay (refund + on-chain mint). Cancel them instead. */
+async function cancelIfTerminal(
+	repositories: GatewayRepositories,
+	outbox: ChainTransactionOutbox,
+	row: { jobKind: JobKind; jobId: string },
+): Promise<boolean> {
+	if (row.jobKind === 'withdrawal') {
+		const withdrawal = await repositories.portalLedger.getWithdrawal(row.jobId);
+		const terminal = !withdrawal || withdrawal.status === 'confirmed' || withdrawal.status === 'failed';
+		if (!terminal) return false;
+	} else {
+		// listAllNftMints is the established lookup; fetched lazily per flush pass
+		const mints = await repositories.portalLedger.listAllNftMints();
+		const mint = mints.find((candidate) => candidate.id === row.jobId);
+		const terminal = !mint || mint.status === 'confirmed' || mint.status === 'failed';
+		if (!terminal) return false;
 	}
+	await outbox.cancel(row.jobKind, row.jobId);
+	console.warn(JSON.stringify({
+		level: 'warn',
+		message: 'cinatoken.chain_outbox_row_cancelled',
+		kind: row.jobKind,
+		jobId: row.jobId,
+		reason: 'job reached terminal status before broadcast',
+	}));
+	return true;
+}
+
+async function flushUnbroadcastTransactions(
+	repositories: GatewayRepositories,
+	outbox: ChainTransactionOutbox,
+	env: ChainWorkerEnv,
+): Promise<void> {
+	// Drain fully (bounded): signing a new transaction while older rows remain
+	// unbroadcast would supersede their nonces and strand them forever.
+	for (let pass = 0; pass < 100; pass++) {
+		const rows = await outbox.listUnbroadcast(10);
+		if (rows.length === 0) return;
+		for (const row of rows) {
+			if (await cancelIfTerminal(repositories, outbox, row)) continue;
+			await broadcastStoredTransaction(outbox, env, row.jobKind, row.jobId, row.transaction);
+		}
+	}
+	throw new Error('flushUnbroadcastTransactions exceeded 100 passes — unbroadcast rows not draining');
 }
 
 async function processWithdrawal(
 	repositories: GatewayRepositories,
+	outbox: ChainTransactionOutbox,
 	env: ChainWorkerEnv,
 	id: string,
 ): Promise<void> {
 	const withdrawal = await repositories.portalLedger.getWithdrawal(id);
 	if (!withdrawal || withdrawal.status === 'confirmed' || withdrawal.status === 'failed') return;
 
-	let stored = await getStoredTransaction(env, 'withdrawal', id);
+	let stored = await getStoredTransaction(outbox, 'withdrawal', id);
 	if (!stored && withdrawal.txHash) {
 		// Compatibility with transactions submitted before the durable outbox.
 		const status = await waitForReceipt(env, withdrawal.txHash as `0x${string}`);
@@ -142,6 +158,7 @@ async function processWithdrawal(
 		}
 		const tokenMicros = BigInt(Math.round((withdrawal.tokenAmount ?? withdrawal.netAmount) * 1_000_000));
 		stored = await persistPreparedTransaction(
+			outbox,
 			env,
 			'withdrawal',
 			id,
@@ -160,7 +177,7 @@ async function processWithdrawal(
 		expectedStatus: 'processing',
 		nowIso: nowIso(),
 	});
-	await broadcastStoredTransaction(env, 'withdrawal', id, stored);
+	await broadcastStoredTransaction(outbox, env, 'withdrawal', id, stored);
 	const status = await waitForReceipt(env, stored.hash);
 	if (status === 'success') {
 		await repositories.portalLedger.settleWithdrawalConfirmed(
@@ -176,13 +193,14 @@ async function processWithdrawal(
 
 async function processNftMint(
 	repositories: GatewayRepositories,
+	outbox: ChainTransactionOutbox,
 	env: ChainWorkerEnv,
 	id: string,
 ): Promise<void> {
 	const mint = (await repositories.portalLedger.listAllNftMints()).find((row) => row.id === id);
 	if (!mint || mint.status === 'confirmed' || mint.status === 'failed') return;
 
-	let stored = await getStoredTransaction(env, 'nft_mint', id);
+	let stored = await getStoredTransaction(outbox, 'nft_mint', id);
 	if (!stored && mint.txHash) {
 		const status = await waitForReceipt(env, mint.txHash as `0x${string}`);
 		await repositories.portalLedger.updateNftMintStatus(
@@ -209,6 +227,7 @@ async function processNftMint(
 			throw new Error(`NFT mint ${id} has no durable transaction in status ${mint.status}`);
 		}
 		stored = await persistPreparedTransaction(
+			outbox,
 			env,
 			'nft_mint',
 			id,
@@ -222,7 +241,7 @@ async function processNftMint(
 		chainId: stored.chainId,
 		expectedStatus: 'processing',
 	});
-	await broadcastStoredTransaction(env, 'nft_mint', id, stored);
+	await broadcastStoredTransaction(outbox, env, 'nft_mint', id, stored);
 	const status = await waitForReceipt(env, stored.hash);
 	await repositories.portalLedger.updateNftMintStatus(
 		id,
@@ -237,14 +256,17 @@ async function processNftMint(
 }
 
 async function processJob(message: ChainJobMessage, env: ChainWorkerEnv): Promise<void> {
+	const storage = await createWorkerStorageContext(resolveWorkerDatabaseConfig(env));
+	const outbox = createChainTransactionOutbox(storage.client);
 	// Preserve EOA nonce ordering after a crash between outbox persistence and
-	// broadcast. No new transaction is signed while an older row is unbroadcast.
-	await flushUnbroadcastTransactions(env);
-	const storage = createD1StorageContext(resolveWorkerDatabaseConfig(env).db);
+	// broadcast. No new transaction is signed while an older row is unbroadcast;
+	// rows whose job reached a terminal state (refunded/failed/confirmed) are
+	// cancelled instead of broadcast to prevent double-pay.
+	await flushUnbroadcastTransactions(storage.repositories, outbox, env);
 	if (message.kind === 'withdrawal') {
-		await processWithdrawal(storage.repositories, env, message.id);
+		await processWithdrawal(storage.repositories, outbox, env, message.id);
 	} else {
-		await processNftMint(storage.repositories, env, message.id);
+		await processNftMint(storage.repositories, outbox, env, message.id);
 	}
 }
 

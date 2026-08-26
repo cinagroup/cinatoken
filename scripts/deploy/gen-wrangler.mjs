@@ -25,6 +25,27 @@ function trimEnv(key) {
 	return typeof v === "string" ? v.trim() : "";
 }
 
+function resolveWorkerDatabaseDriver() {
+	const raw = trimEnv("DATABASE_DRIVER").toLowerCase();
+	if (!raw) return "";
+	if (raw === "d1") return "d1";
+	if (raw === "postgres" || raw === "postgresql") return "postgres";
+	console.error(
+		`gen-wrangler: unsupported Cloudflare DATABASE_DRIVER="${raw}". Expected d1 or postgres.`,
+	);
+	process.exit(1);
+}
+
+function resolveMaintenanceMode() {
+	const raw = trimEnv("CINATOKEN_MAINTENANCE_MODE").toLowerCase();
+	if (!raw || raw === "false") return false;
+	if (raw === "true") return true;
+	console.error(
+		`gen-wrangler: unsupported CINATOKEN_MAINTENANCE_MODE="${raw}". Expected true or false.`,
+	);
+	process.exit(1);
+}
+
 function resolveNames() {
 	const d1DatabaseName =
 		trimEnv("D1_DATABASE_NAME") || "cinatoken";
@@ -47,6 +68,9 @@ function resolveNames() {
 			"cinatoken-d1-migrations",
 		d1DatabaseName,
 		d1DatabaseId: trimEnv("D1_DATABASE_ID"),
+		hyperdriveId: trimEnv("HYPERDRIVE_ID"),
+		databaseDriver: resolveWorkerDatabaseDriver(),
+		maintenanceMode: resolveMaintenanceMode(),
 		proxyCustomDomain: trimEnv("PROXY_CUSTOM_DOMAIN"),
 		adminCustomDomain: trimEnv("ADMIN_CUSTOM_DOMAIN"),
 	};
@@ -133,9 +157,38 @@ function customDomainRoutes(domain) {
 	return [{ pattern: domain, custom_domain: true }];
 }
 
+function applyWorkerDatabaseRuntime(config, names) {
+	const next = { ...config };
+	if (names.databaseDriver === "postgres" && names.hyperdriveId) {
+		next.hyperdrive = [{ binding: "HYPERDRIVE", id: names.hyperdriveId }];
+	} else {
+		delete next.hyperdrive;
+	}
+
+	const vars = { ...(config.vars ?? {}) };
+	if (names.databaseDriver) {
+		vars.DATABASE_DRIVER = names.databaseDriver;
+	} else {
+		delete vars.DATABASE_DRIVER;
+	}
+	if (Object.keys(vars).length > 0) next.vars = vars;
+	else delete next.vars;
+	return next;
+}
+
+function applyHttpMaintenanceMode(config, names) {
+	const next = { ...config };
+	const vars = { ...(config.vars ?? {}) };
+	if (names.maintenanceMode) vars.CINATOKEN_MAINTENANCE_MODE = "true";
+	else delete vars.CINATOKEN_MAINTENANCE_MODE;
+	if (Object.keys(vars).length > 0) next.vars = vars;
+	else delete next.vars;
+	return next;
+}
+
 function generateProxy(names) {
 	const base = readBase("packages/proxy/wrangler.base.jsonc");
-	const config = {
+	const config = applyHttpMaintenanceMode(applyWorkerDatabaseRuntime({
 		...base,
 		name: names.proxyWorkerName,
 		d1_databases: [
@@ -145,7 +198,7 @@ function generateProxy(names) {
 				names.d1DatabaseId,
 			),
 		],
-	};
+	}, names), names);
 	const routes = customDomainRoutes(names.proxyCustomDomain);
 	if (routes) {
 		config.routes = routes;
@@ -158,7 +211,7 @@ function generateProxy(names) {
 
 function generateAdmin(names) {
 	const base = readBase("packages/admin/wrangler.base.jsonc");
-	const config = {
+	const config = applyHttpMaintenanceMode(applyWorkerDatabaseRuntime({
 		...base,
 		name: names.adminWorkerName,
 		d1_databases: [
@@ -179,7 +232,7 @@ function generateAdmin(names) {
 			...base.vars,
 			CINACHAIN_CHAIN_ID: names.cinachainChainId,
 		},
-	};
+	}, names), names);
 
 	const routes = customDomainRoutes(names.adminCustomDomain);
 	if (routes) {
@@ -193,7 +246,7 @@ function generateAdmin(names) {
 
 function generateChain(names) {
 	const base = readBase("packages/chain-worker/wrangler.base.jsonc");
-	const config = {
+	const config = applyWorkerDatabaseRuntime({
 		...base,
 		name: names.chainWorkerName,
 		d1_databases: [
@@ -215,7 +268,7 @@ function generateChain(names) {
 			...base.vars,
 			CINACHAIN_CHAIN_ID: names.cinachainChainId,
 		},
-	};
+	}, names);
 	writeJson("packages/chain-worker/wrangler.jsonc", config);
 }
 
@@ -248,8 +301,19 @@ function validateRemote(names) {
 	process.exit(1);
 }
 
+function validateWorkerDatabaseRuntime(names) {
+	if (names.databaseDriver === "postgres" && !names.hyperdriveId) {
+		console.error(
+			"gen-wrangler: HYPERDRIVE_ID is required when DATABASE_DRIVER=postgres. " +
+				"The Worker connection string must come from the HYPERDRIVE binding.",
+		);
+		process.exit(1);
+	}
+}
+
 function main() {
 	const names = resolveNames();
+	validateWorkerDatabaseRuntime(names);
 
 	if (REMOTE) {
 		validateRemote(names);
@@ -262,7 +326,11 @@ function main() {
 
 	console.log(
 		`gen-wrangler: proxy=${names.proxyWorkerName} admin=${names.adminWorkerName} chain=${names.chainWorkerName} queue=${names.chainJobQueueName} d1=${names.d1DatabaseName}` +
-			(names.d1DatabaseId ? ` id=${names.d1DatabaseId}` : " (local, no database_id)"),
+			(names.d1DatabaseId ? ` id=${names.d1DatabaseId}` : " (local, no database_id)") +
+			(names.hyperdriveId
+				? ` hyperdrive=${names.hyperdriveId} driver=${names.databaseDriver || "d1 (staged target, unbound)"}`
+				: "") +
+			(names.maintenanceMode ? " maintenance=true" : ""),
 	);
 
 	if (REMOTE && names.d1DatabaseId) {

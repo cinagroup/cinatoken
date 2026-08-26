@@ -1,7 +1,7 @@
 -- v2.2.0: Collapse Gemini generateContent / streamGenerateContent into models.generate.
 -- Conflict rule: keep generateContent's pool; demote the other pool to inactive with
 -- a [v220-conflict] name prefix (targets retained). Wildcard (*) surfaces are untouched.
-SET search_path TO octafuse_gateway;
+SET search_path TO cinatoken_gateway;
 
 -- 1) Same (model_id, route_group) with both legacy ops on DIFFERENT pools:
 --    delete stream surface; demote its pool.

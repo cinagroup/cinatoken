@@ -136,11 +136,28 @@ function main() {
 		logError("D1_DATABASE_ID and D1_DATABASE_NAME are required in the env file");
 		process.exit(1);
 	}
+	const rawDatabaseDriver = (vars.DATABASE_DRIVER || "").trim().toLowerCase();
+	const databaseDriver = rawDatabaseDriver === "postgresql" ? "postgres" : rawDatabaseDriver;
+	if (databaseDriver && databaseDriver !== "d1" && databaseDriver !== "postgres") {
+		logError("Cloudflare DATABASE_DRIVER must be d1 or postgres");
+		process.exit(1);
+	}
+	if (databaseDriver === "postgres" && !vars.HYPERDRIVE_ID) {
+		logError("HYPERDRIVE_ID is required when DATABASE_DRIVER=postgres");
+		process.exit(1);
+	}
 
 	assertWranglerLoggedIn();
 
 	log(`Instance: ${instance}`);
 	log(`Config: cloudflare-worker/${instance}.env`);
+	log(
+		databaseDriver === "postgres"
+			? `Database: Hyperdrive Postgres (${vars.HYPERDRIVE_ID}) with D1 retained for rollback`
+			: vars.HYPERDRIVE_ID
+				? `Database: D1 (Hyperdrive ${vars.HYPERDRIVE_ID} is staged but inactive)`
+				: "Database: D1",
+	);
 
 	if (showMasterKey) {
 		const key = fetchRemoteMasterKey(vars);
@@ -181,6 +198,9 @@ function main() {
 	}
 
 	if (doMigrate) {
+		if (databaseDriver === "postgres") {
+			log("--migrate applies only the retained D1 rollback database; run db:migrate:pg separately before cutover.");
+		}
 		runNpmWithEnv(vars, ["db:migrate:remote"]);
 	}
 	if (doAdmin || doChain) {

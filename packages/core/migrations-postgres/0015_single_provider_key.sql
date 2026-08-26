@@ -1,5 +1,5 @@
 -- Single provider key: fold provider_api_keys into providers; route weight + route_policy.
-SET search_path TO octafuse_gateway;
+SET search_path TO cinatoken_gateway;
 
 ALTER TABLE providers ADD COLUMN IF NOT EXISTS api_key TEXT NOT NULL DEFAULT '';
 ALTER TABLE providers ADD COLUMN IF NOT EXISTS status TEXT NOT NULL DEFAULT 'active';

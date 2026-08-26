@@ -27,6 +27,8 @@ export function getAdminAuthorizationDecision(method: string, pathname: string):
 	// 门户账本：提现 / NFT 铸造（挂靠 users 权限域）
 	if (pathname.startsWith('/admin/withdrawals')) return readOrWrite(normalizedMethod, 'users');
 	if (pathname.startsWith('/admin/nft-mints')) return readOrWrite(normalizedMethod, 'users');
+	// 门户账本：共享密钥收益补偿（挂靠 users 权限域）
+	if (pathname.startsWith('/admin/earnings')) return readOrWrite(normalizedMethod, 'users');
 	if (pathname.startsWith('/admin/models')) return readOrWrite(normalizedMethod, 'models');
 	if (pathname.startsWith('/admin/routes')) return readOrWrite(normalizedMethod, 'routes');
 	if (/^\/admin\/users\/[^/]+\/(?:logs|audit-logs)(?:\/|$)/.test(pathname)) {

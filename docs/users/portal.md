@@ -51,13 +51,17 @@
 ```
 CINACHAIN_RPC_URL=https://sepolia.base.org      # 默认值
 CINACHAIN_CHAIN_ID=84532                        # Base Sepolia
-CINABADGE_CONTRACT_ADDRESS=0x72cc9adb6c877d233e9843ee2d00424b9766d0cf
-CINACREDIT_CONTRACT_ADDRESS=0x78f5aebc75b7d197b10622cccabe8429617836d7
+CINABADGE_CONTRACT_ADDRESS=0x0a32fc1302bf7765b386de5eae857c26d6c8e0ce  # 2026-08-22 合约集；消耗位阶 100-104 + 贡献位阶 105-108
+CINACREDIT_CONTRACT_ADDRESS=0x22f3e0aaa4785169d2c227d37df17c168fbae85a  # CinaCreditV2（2026-08-26 部署，角色分离 + permit）
 CINACHAIN_MINTER_PRIVATE_KEY=0x...              # 仅 Chain Worker secret
 ```
 
-首次启用需用 owner key 创建 200-203 位阶（一次性）：
-`node scripts/cinachain/setup-tier-badges.mjs`。
+贡献位阶 105-108（Contributor Bronze/Silver/Gold/Platinum）已由 cinachain 仓库的
+`setup-contributor-badges` 在链上创建（幂等，可重复执行）；本仓库的
+`scripts/cinachain/setup-tier-badges.mjs` 已废弃——CinaBadge 的 ID 由合约递增分配，
+重跑会在新合约上创建出 109-112 等错误位阶。tier → tokenId 映射见
+`packages/admin/lib/portal-config.ts`（运行时可用 `system_config` 的
+`NFT_TIER_THRESHOLDS` 覆盖，无需重部署）。
 
 ## 生产边界
 

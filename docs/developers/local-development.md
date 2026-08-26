@@ -127,7 +127,7 @@ npx dotenv -e ./cloudflare-worker/<name>.env -- npm run db:migrate:remote
 
 ## 5. 可选：Node + Postgres（Proxy）
 
-Cloudflare Worker **只连 D1**。Postgres 路径使用 **`packages/proxy`** 内 Node 入口（与 Worker 共用 `createProxyApp`，**不包含 `/admin`**）。
+仓库默认本地 Worker 路径仍使用 D1。Postgres 的常规本地开发使用 **`packages/proxy`** 内 Node 入口（与 Worker 共用 `createProxyApp`，**不包含 `/admin`**）。Cloudflare Hyperdrive 的本地演练须在隔离数据库上设置 Wrangler 约定的 `CLOUDFLARE_HYPERDRIVE_LOCAL_CONNECTION_STRING_HYPERDRIVE`；不要把连接串写入 `wrangler.jsonc`，也不要用 `wrangler dev --remote` 探测生产库。
 
 **推荐（在仓库根维护一份 `.env`）**：
 

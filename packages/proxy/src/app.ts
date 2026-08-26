@@ -1,5 +1,5 @@
 import type { D1Database } from '@cloudflare/workers-types';
-import type { GatewayRepositories, StorageContext } from '@octafuse/core';
+import type { GatewayRepositories, HyperdriveBinding, StorageContext } from '@octafuse/core';
 import { Hono } from 'hono';
 import type { Context, MiddlewareHandler } from 'hono';
 import { cors } from 'hono/cors';
@@ -25,12 +25,15 @@ import { dashScopeMultimodalRoutes } from './routes/v1/dashscope-multimodal';
 import { proxyAppVersion } from './app-version';
 import type { DashScopeRealtimeNodeDispatch } from './services/egress/dashscope-realtime-driver';
 
-/** Cloudflare Worker bindings：D1 `DB`。Postgres 见 `src/runtime/node.ts`。 */
+/** Cloudflare Worker bindings：D1 `DB`，或显式选择 Hyperdrive Postgres。 */
 export type GatewayBindings = {
 	DB?: D1Database;
+	HYPERDRIVE?: HyperdriveBinding;
 	SHARED_KEY_ENCRYPTION_SECRET?: string;
-	/** 可选；仅允许 `d1` 或省略。 */
+	/** 省略时保持 D1；只有 `postgres` 会切换到 `HYPERDRIVE`。 */
 	DATABASE_DRIVER?: string;
+	/** 最终数据库切换窗口内，在任何存储访问之前拒绝外部 HTTP 流量。 */
+	CINATOKEN_MAINTENANCE_MODE?: string;
 	/** Node upgrade 请求临时注入的实时 WebSocket 调度器；不作为 Worker binding。 */
 	NODE_REALTIME_DISPATCH?: DashScopeRealtimeNodeDispatch;
 };
@@ -48,7 +51,7 @@ export type StorageResolver = (context: Context<Env>) => Promise<StorageContext>
 export type ProxyAppOptions = {
 	/**
 	 * 在所有其它中间件（含 logger / CORS / 存储）之前执行。
-	 * Worker 场景下用于尽早校验 D1 绑定：Cloudflare 仅在请求进入 fetch 时注入 `env`，无独立「进程启动」钩子，故最早失败点为首个请求的此处。
+	 * Worker 场景下用于尽早校验数据库绑定：Cloudflare 仅在请求进入 fetch 时注入 `env`，无独立「进程启动」钩子，故最早失败点为首个请求的此处。
 	 */
 	beforeAll?: MiddlewareHandler<Env>;
 };

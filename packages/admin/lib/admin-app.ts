@@ -21,6 +21,7 @@ import { adminRequestLogsRoutes } from '@/lib/routes/admin/request-logs';
 import { adminStatsRoutes } from '@/lib/routes/admin/stats';
 import { adminAccessKeysRoutes } from '@/lib/routes/admin/access-keys';
 import { adminSharedKeysRoutes } from '@/lib/routes/admin/shared-keys';
+import { adminEarningsRoutes } from '@/lib/routes/admin/earnings';
 import { adminWithdrawalsRoutes } from '@/lib/routes/admin/withdrawals';
 import { adminNftMintsRoutes } from '@/lib/routes/admin/nft-mints';
 import { getAdminAuthorizationDecision } from '@/lib/admin-permissions';
@@ -82,6 +83,7 @@ export function createAdminApp(): Hono<AdminEnv> {
 	app.route('/admin/access-keys', adminAccessKeysRoutes);
 	app.route('/admin/shared-keys', adminSharedKeysRoutes);
 	app.route('/admin/withdrawals', adminWithdrawalsRoutes);
+	app.route('/admin/earnings', adminEarningsRoutes);
 	app.route('/admin/nft-mints', adminNftMintsRoutes);
 
 	app.get('/admin', (c) => c.json({ name: 'octafuse-admin-api', version: adminAppVersion }));

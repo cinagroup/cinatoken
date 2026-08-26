@@ -12,6 +12,10 @@ import { parseSharedKeyId } from './shared-key-pool';
 
 const DEFAULT_COMMISSION_RATE = 0.1;
 const TOKENS_PER_MILLION = 1_000_000;
+const SETTLE_ATTEMPTS = 3;
+const RETRY_BASE_DELAY_MS = 250;
+
+const sleep = (ms: number) => new Promise<void>((resolve) => setTimeout(resolve, ms));
 
 export type SharedKeyEarningUsage = {
 	input_tokens: number;
@@ -69,28 +73,50 @@ export async function settleSharedKeyEarning(
 	const net = roundGatewayMoney(grossR - fee);
 	const nowIso = new Date().toISOString();
 
-	try {
-		await repos.portalLedger.ensureUserEarnings(key.sellerUserId);
-		const inserted = await repos.portalLedger.recordEarningAndCredit({
-			id: crypto.randomUUID(),
+	// The earning write is NOT in the same transaction as the request-log
+	// insert, so a persistent failure here would silently under-credit the
+	// seller (the buyer is already charged). Retry transient errors, then
+	// emit a structured, alertable event — the row stays recoverable by
+	// re-running settlement (idempotent on request_log_id).
+	let lastError: unknown = null;
+	for (let attempt = 1; attempt <= SETTLE_ATTEMPTS; attempt++) {
+		try {
+			await repos.portalLedger.ensureUserEarnings(key.sellerUserId);
+			const inserted = await repos.portalLedger.recordEarningAndCredit({
+				id: crypto.randomUUID(),
+				requestLogId: params.requestLogId,
+				sharedKeyId: key.id,
+				sellerUserId: key.sellerUserId,
+				inputTokens: params.usage.input_tokens ?? 0,
+				outputTokens: params.usage.output_tokens ?? 0,
+				cacheReadTokens: params.usage.cache_read_tokens ?? 0,
+				cacheWriteTokens: params.usage.cache_write_tokens ?? 0,
+				grossAmount: grossR,
+				platformFee: fee,
+				netAmount: net,
+				currency: 'USD',
+				nowIso,
+			});
+			if (!inserted) return; // 幂等：同请求日志已结算
+			await repos.sharedKeys.addSharedKeyUsage(key.id, params.usage.input_tokens ?? 0, params.usage.output_tokens ?? 0, net, nowIso);
+			return;
+		} catch (error) {
+			lastError = error;
+			if (attempt < SETTLE_ATTEMPTS) await sleep(RETRY_BASE_DELAY_MS * attempt);
+		}
+	}
+	console.error(
+		JSON.stringify({
+			level: 'error',
+			message: 'cinatoken.shared_key_earning_lost',
 			requestLogId: params.requestLogId,
 			sharedKeyId: key.id,
 			sellerUserId: key.sellerUserId,
-			inputTokens: params.usage.input_tokens ?? 0,
-			outputTokens: params.usage.output_tokens ?? 0,
-			cacheReadTokens: params.usage.cache_read_tokens ?? 0,
-			cacheWriteTokens: params.usage.cache_write_tokens ?? 0,
 			grossAmount: grossR,
 			platformFee: fee,
 			netAmount: net,
-			currency: 'USD',
-			nowIso,
-		});
-		if (!inserted) return; // 幂等：同请求日志已结算
-		await repos.sharedKeys.addSharedKeyUsage(key.id, params.usage.input_tokens ?? 0, params.usage.output_tokens ?? 0, net, nowIso);
-	} catch (error) {
-		console.warn(
-			`[Gateway SharedKeys] earning settlement failed keyId=${key.id} requestLogId=${params.requestLogId} error=${error instanceof Error ? error.message : String(error)}`
-		);
-	}
+			attempts: SETTLE_ATTEMPTS,
+			error: lastError instanceof Error ? lastError.message : String(lastError),
+		}),
+	);
 }

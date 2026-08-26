@@ -3,13 +3,23 @@ import type { DatabaseDriver } from './database-client';
 
 /**
  * Proxy / Admin 运行时共用的数据库解析结果。
- * - Cloudflare Worker：仅 `d1`
+ * - Cloudflare Worker：`d1` 或 Hyperdrive `postgres`
  * - Node：`postgres` / `mysql`（连接串）
  */
 export type RuntimeDatabaseConfig =
 	| { driver: 'd1'; db: D1Database }
 	| { driver: 'postgres'; connectionString: string }
 	| { driver: 'mysql'; connectionString: string };
+
+/** Worker 运行时实际使用的最小 Hyperdrive 绑定契约。 */
+export interface HyperdriveBinding {
+	readonly connectionString: string;
+}
+
+/** Cloudflare HTTP Workers only enter the cutover maintenance gate on an exact true value. */
+export function isGatewayMaintenanceMode(value: string | undefined): boolean {
+	return value?.trim().toLowerCase() === 'true';
+}
 
 function parseDatabaseDriver(rawDriver: string | undefined, fallback: DatabaseDriver): DatabaseDriver {
 	if (!rawDriver || rawDriver.trim() === '') {
@@ -62,28 +72,35 @@ function assertDriverUrlConsistency(driver: 'postgres' | 'mysql', connectionStri
 }
 
 /**
- * Cloudflare Worker：仅支持 D1（`DB` 绑定）。Postgres 请使用各包的 Node 入口。
+ * Cloudflare Worker：默认使用 D1；只有显式设置 `DATABASE_DRIVER=postgres`
+ * 才会使用 Hyperdrive，避免仅添加双绑定时意外切换生产数据面。
+ * Worker 不接受 `DATABASE_URL`，Postgres 连接串只能来自 Hyperdrive 绑定。
  */
 export function resolveWorkerDatabaseConfig(bindings: {
 	DB?: D1Database;
+	HYPERDRIVE?: HyperdriveBinding;
 	DATABASE_DRIVER?: string;
-}): Extract<RuntimeDatabaseConfig, { driver: 'd1' }> {
+}): Extract<RuntimeDatabaseConfig, { driver: 'd1' | 'postgres' }> {
 	const raw = bindings.DATABASE_DRIVER?.trim();
 	if (raw) {
 		const n = raw.toLowerCase();
 		if (n === 'postgres' || n === 'postgresql') {
-			throw new Error(
-				'Workers do not support Postgres. Use D1 binding "DB" on Cloudflare, or run the gateway with Node for Postgres.'
-			);
+			const connectionString = bindings.HYPERDRIVE?.connectionString?.trim();
+			if (!connectionString) {
+				throw new Error(
+					'Workers with DATABASE_DRIVER=postgres require Hyperdrive binding "HYPERDRIVE".'
+				);
+			}
+			return { driver: 'postgres', connectionString };
 		}
 		if (n === 'mysql' || n === 'mysql2') {
 			throw new Error(
-				'Workers do not support MySQL. Use D1 binding "DB" on Cloudflare, or run the gateway with Node for MySQL.'
+				'Workers do not support MySQL in this deployment. Use D1 or Hyperdrive Postgres, or run the gateway with Node for MySQL.'
 			);
 		}
 		if (n !== 'd1') {
 			throw new Error(
-				`Unsupported database driver "${raw}" for Workers. Use D1 only (omit DATABASE_DRIVER or set d1).`
+				`Unsupported database driver "${raw}" for Workers. Expected "d1" or "postgres".`
 			);
 		}
 	}

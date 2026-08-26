@@ -1,9 +1,12 @@
 import { spawnSync } from 'node:child_process';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { createRequire } from 'node:module';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const PROJECT_ROOT = join(__dirname, '..', '..', '..');
+const require = createRequire(import.meta.url);
+const WRANGLER_BIN = join(dirname(require.resolve('wrangler/package.json')), 'bin', 'wrangler.js');
 
 export interface D1ExecutionConfig {
 	databaseName: string;
@@ -13,6 +16,10 @@ export interface D1ExecutionConfig {
 
 export const DEFAULT_D1_DATABASE_NAME = process.env.D1_DATABASE_NAME?.trim() || 'cinatoken';
 export const DEFAULT_D1_PERSIST_TO = process.env.D1_PERSIST_TO ?? '../.wrangler/state';
+
+export function resolveWranglerCommand(): { command: string; argsPrefix: string[] } {
+	return { command: process.execPath, argsPrefix: [WRANGLER_BIN] };
+}
 
 export function parseD1ExecutionConfig(args: string[]): D1ExecutionConfig {
 	const sourceArg = args.find((arg) => arg.startsWith('--d1-source='))?.split('=')[1];
@@ -29,7 +36,7 @@ export function runD1ExecuteJson(
 	sqlText: string,
 	config: D1ExecutionConfig
 ): Record<string, unknown>[] {
-	const args = ['wrangler', 'd1', 'execute', config.databaseName];
+	const args = ['d1', 'execute', config.databaseName];
 	if (config.source === 'remote') {
 		args.push('--remote');
 	} else {
@@ -37,7 +44,8 @@ export function runD1ExecuteJson(
 	}
 	args.push('--command', sqlText, '--json');
 
-	const result = spawnSync('npx', args, {
+	const wrangler = resolveWranglerCommand();
+	const result = spawnSync(wrangler.command, [...wrangler.argsPrefix, ...args], {
 		cwd: PROJECT_ROOT,
 		encoding: 'utf-8',
 		shell: false,

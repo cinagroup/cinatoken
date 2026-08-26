@@ -21,15 +21,15 @@ export type PortalMarketplaceConfig = {
 	withdrawalTokenRate: number;
 	/** 单日提现次数上限。 */
 	withdrawalDailyLimit: number;
-	/** NFT 位阶：贡献值阈值 → CinaBadge tokenId（从 200 起，避开 billing 的 100-104）。 */
+	/** NFT 位阶：贡献值阈值 → CinaBadge tokenId（105-108 贡献位阶，与 billing 消耗位阶 100-104 分段；ID 由合约递增分配，已由 cinachain 仓库的 setup-contributor-badges 创建）。 */
 	nftTiers: Array<{ badgeTokenId: number; tierName: string; threshold: number }>;
 };
 
 export const NFT_TIER_DEFAULTS: PortalMarketplaceConfig['nftTiers'] = [
-	{ badgeTokenId: 200, tierName: 'Bronze', threshold: 10 },
-	{ badgeTokenId: 201, tierName: 'Silver', threshold: 50 },
-	{ badgeTokenId: 202, tierName: 'Gold', threshold: 200 },
-	{ badgeTokenId: 203, tierName: 'Platinum', threshold: 1000 },
+	{ badgeTokenId: 105, tierName: 'Bronze', threshold: 10 },
+	{ badgeTokenId: 106, tierName: 'Silver', threshold: 50 },
+	{ badgeTokenId: 107, tierName: 'Gold', threshold: 200 },
+	{ badgeTokenId: 108, tierName: 'Platinum', threshold: 1000 },
 ];
 
 const parseNumber = (raw: string | null, fallback: number): number => {

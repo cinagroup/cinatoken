@@ -3,7 +3,7 @@
 `@octafuse/core` 承载统一的类型、仓储与领域逻辑；**对外交付形态**由两套正交选择决定：
 
 1. **运行时**：**Cloudflare 边缘**（Worker / Pages + OpenNext）或 **Node.js**（本机/Docker/K8s 等）。
-2. **数据存储**：**D1**（SQLite、Cloudflare 绑定）、**PostgreSQL** 或 **MySQL 8**（均通过 Node 侧 **`DATABASE_URL`** + **`DATABASE_DRIVER`** 选择；Worker 仅 D1）。
+2. **数据存储**：**D1**（SQLite、Cloudflare 绑定）、**PostgreSQL** 或 **MySQL 8**。Node 侧通过 **`DATABASE_URL`** + **`DATABASE_DRIVER`** 选择；Cloudflare 侧默认 D1，也可由 **Hyperdrive** 连接 PostgreSQL。
 
 二者组合后得到下文的「部署模式」。同一业务语义下，D1、Postgres 与 MySQL 使用**各自迁移目录**保持 schema 对齐（见文末）。
 
@@ -13,11 +13,12 @@
 
 | 组件 | Cloudflare 运行时 | Node 运行时 | 数据库 |
 |------|-------------------|-------------|--------|
-| **代理服务（Proxy）**（`packages/proxy`） | Worker：`npm run dev:proxy` / `deploy:proxy`；**仅绑定 D1**，不用 `DATABASE_URL` | `npm run dev:proxy:node`（`packages/proxy/src/runtime/node.ts`）；**Postgres 或 MySQL**（`DATABASE_DRIVER` + `DATABASE_URL`） | **D1 ⊕ Postgres ⊕ MySQL**（同进程不能混用） |
-| **管理后台（Admin）**（`packages/admin`） | OpenNext + wrangler：`npm run dev:admin` / `deploy:admin`；**绑定同一 D1** | 本地开发：`npm run dev:admin:node`（或 `packages/admin` 内 `npm run dev:node`，`:8789`）；生产：`next start` / Docker：需 **`DATABASE_URL`** + **`DATABASE_DRIVER`**（与 Node 代理服务同语义；Postgres 可省略驱动，**MySQL 须 `mysql`**）与 **`ADMIN_*`** | **D1 ⊕ Postgres ⊕ MySQL 二选一** |
-| **Core**（`packages/core`） | 被 Worker / Pages 以 `d1` 驱动引用 | 被 Node 以 `postgres` / `mysql` 驱动引用 | 迁移见下 |
+| **代理服务（Proxy）**（`packages/proxy`） | Worker：默认 `DB`（D1）；`DATABASE_DRIVER=postgres` 时使用 `HYPERDRIVE`，不用 `DATABASE_URL` | `npm run dev:proxy:node`；**Postgres 或 MySQL**（`DATABASE_DRIVER` + `DATABASE_URL`） | **D1 ⊕ Postgres ⊕ MySQL**（单个运行时只选一个） |
+| **管理后台（Admin/Portal）**（`packages/admin`） | OpenNext + Wrangler；与 Proxy 使用同一 D1 或同一 Hyperdrive | `next start` / Docker：`DATABASE_URL` + `DATABASE_DRIVER` | **D1 ⊕ Postgres ⊕ MySQL** |
+| **Chain Worker**（`packages/chain-worker`） | 与 Admin 共用 D1 或 Hyperdrive；链上 Outbox 与门户账本不可拆库 | — | **D1 ⊕ Postgres** |
+| **Core**（`packages/core`） | 被 Worker 以 `d1` / `postgres` 驱动引用 | 被 Node 以 `postgres` / `mysql` 驱动引用 | 迁移见下 |
 
-> **约束**：Cloudflare Worker **不能**直连外部 Postgres/MySQL；若在边缘保留 Worker，则数据库只能是 **D1**。要用 Postgres 或 MySQL，代理服务 / 管理后台须在 **Node** 跑（例如 Docker 自托管，见 [docker.md](../../operators/deployment/docker.md)）。
+> **约束**：Cloudflare Worker 不使用 `DATABASE_URL` 直连数据库。PostgreSQL 必须来自 Wrangler `HYPERDRIVE` 绑定；本项目的 Cloudflare MySQL 路径仍禁用。Proxy、Admin/Portal 与 Chain Worker 必须原子地选择同一数据面。
 
 ---
 
@@ -26,6 +27,7 @@
 | 模式 | 代理服务 | 管理后台 | 数据库 | 典型场景 |
 |------|---------|--------|--------|----------|
 | **A. Cloudflare 全托管（默认）** | Worker | Pages（OpenNext） | **共用 D1** | 生产默认；运维最简单 |
+| **A′. Cloudflare + Hyperdrive** | Worker | OpenNext Worker | **共用 PostgreSQL `cinatoken_gateway`** | D1→PG 迁移完成后的目标拓扑；须按切换 runbook 放行 |
 | **B. Hybrid** | **Node**（容器/VPS） | 仍为 **Cloudflare Pages** | 代理服务=**Postgres**，管理后台=**D1**（两库需分别迁移/对齐，适合分阶段上 PG） | 推理侧先行迁 PG，管理端仍在 CF |
 | **C. Full Node + Postgres** | Node | Node（Next 容器等） | **同一 Postgres** | 全自托管、与 K8s/Docker 一致；见 Docker 文档 |
 | **C′. Full Node + MySQL 8** | Node | Node（Next 容器等） | **同一 MySQL** | 与 C 相同交付形态；迁移目录 `migrations-mysql/` |
@@ -51,8 +53,11 @@ flowchart TB
     W["Worker: packages/proxy"]
     P["OpenNext Admin: packages/admin"]
     D1[(D1 cinatoken)]
+    PG[(Hyperdrive → Postgres)]
     W --> D1
     P --> D1
+    W -. 显式切换 .-> PG
+    P -. 显式切换 .-> PG
   end
 
   subgraph node ["Node 路径"]
@@ -69,7 +74,7 @@ flowchart TB
   logic -.-> NA
 ```
 
-> 图中 **cf** 与 **node** 为并列交付方式；生产一般只选其中一条「竖条」（全 D1 或全关系型 PG/MySQL），Hybrid 则代理服务与管理后台分别落在不同竖条（含两套存储）时需严格约定账号与迁移顺序。
+> Cloudflare 内部的 D1 与 Hyperdrive PostgreSQL 也是互斥数据面；双绑定只用于安全预置与回滚准备，不代表双写。
 
 ---
 

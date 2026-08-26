@@ -1,7 +1,8 @@
 import {
 	assertSharedKeyEncryptionSecret,
-	createD1StorageContext,
 	createEncryptedSharedKeysRepository,
+	createWorkerStorageContext,
+	isGatewayMaintenanceMode,
 	resolveWorkerDatabaseConfig,
 	type StorageContext,
 } from '@octafuse/core';
@@ -10,7 +11,7 @@ import { createProxyApp, type Env } from '../app';
 
 async function resolveWorkersStorage(context: Context<Env>): Promise<StorageContext> {
 	const config = resolveWorkerDatabaseConfig(context.env);
-	const storage = createD1StorageContext(config.db);
+	const storage = await createWorkerStorageContext(config);
 	const secret = assertSharedKeyEncryptionSecret(context.env.SHARED_KEY_ENCRYPTION_SECRET);
 	return {
 		...storage,
@@ -22,7 +23,18 @@ async function resolveWorkersStorage(context: Context<Env>): Promise<StorageCont
 }
 
 export const workerApp = createProxyApp(resolveWorkersStorage, {
-	beforeAll: (c, next) => {
+	beforeAll: async (c, next) => {
+		if (isGatewayMaintenanceMode(c.env.CINATOKEN_MAINTENANCE_MODE)) {
+			return c.json({
+				error: {
+					message: 'CinaToken is temporarily unavailable for scheduled maintenance.',
+					type: 'maintenance_mode',
+				},
+			}, 503, {
+				'Cache-Control': 'no-store',
+				'Retry-After': '60',
+			});
+		}
 		resolveWorkerDatabaseConfig(c.env);
 		assertSharedKeyEncryptionSecret(c.env.SHARED_KEY_ENCRYPTION_SECRET);
 		return next();

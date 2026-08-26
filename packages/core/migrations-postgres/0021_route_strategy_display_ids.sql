@@ -2,7 +2,7 @@
 -- cache_affinity → hash_affinity, fixed_order → weight_priority
 -- weighted_random / weighted_round_robin unchanged.
 -- No legacy aliases in application code after this migration.
-SET search_path TO octafuse_gateway;
+SET search_path TO cinatoken_gateway;
 
 -- 1) Global default
 UPDATE system_config

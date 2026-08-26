@@ -1,7 +1,7 @@
 -- Optional dev/demo seed (idempotent). Requires 0001_baseline.sql applied.
 -- Single source of truth for default keys/values: keep aligned with D1 `migrations-d1/0002_seed.sql`.
 
-SET search_path TO octafuse_gateway;
+SET search_path TO cinatoken_gateway;
 
 INSERT INTO system_config (key, value, description, updated_at) VALUES
   (

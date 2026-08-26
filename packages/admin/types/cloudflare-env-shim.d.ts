@@ -8,6 +8,7 @@
 declare namespace Cloudflare {
 	interface Env {
 		DB: D1Database;
+		HYPERDRIVE?: import('@octafuse/core').HyperdriveBinding;
 		ASSETS: Fetcher;
 		CINAAUTH_AUTH_SERVICE: Fetcher;
 		CINAAUTH_ISSUER: string;
@@ -25,6 +26,7 @@ declare namespace Cloudflare {
 		ADMIN_COOKIE_SECURE?: string;
 		DATABASE_URL?: string;
 		DATABASE_DRIVER?: string;
+		CINATOKEN_MAINTENANCE_MODE?: string;
 	}
 }
 

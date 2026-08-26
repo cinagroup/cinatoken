@@ -4,7 +4,23 @@ import process from 'node:process';
 import { createPublicClient, getAddress, http, parseAbi } from 'viem';
 import { privateKeyToAccount } from 'viem/accounts';
 
+// CinaCredit V1 (and CinaBadge) authorize minting via Ownable.owner();
+// CinaCreditV2 is AccessControl-based with a MINTER_ROLE. The preflight must
+// accept both models — a V1-style owner() read reverts on V2.
 const ownerAbi = parseAbi(['function owner() view returns (address)']);
+const accessControlAbi = parseAbi([
+	'function MINTER_ROLE() view returns (bytes32)',
+	'function hasRole(bytes32 role, address account) view returns (bool)',
+]);
+
+/** Format-guard so a malformed key never surfaces inside a viem error message. */
+function minterAccount(privateKey) {
+	try {
+		return privateKeyToAccount(privateKey);
+	} catch {
+		throw new Error('CINACHAIN_MINTER_PRIVATE_KEY is malformed (expected 0x + 64 hex chars)');
+	}
+}
 
 function argument(name) {
 	const index = process.argv.indexOf(name);
@@ -65,7 +81,7 @@ async function main() {
 		deployment.deployer;
 	if (!privateKey && !declaredMinter) throw new Error('A declared minter address is missing');
 	const minterAddress = privateKey
-		? privateKeyToAccount(privateKey).address
+		? minterAccount(privateKey).address
 		: getAddress(declaredMinter);
 	const badgeAddress = contractAddress(
 		deployment,
@@ -89,16 +105,36 @@ async function main() {
 		['CinaBadge', badgeAddress],
 		['CinaCredit', creditAddress],
 	]) {
-		const [bytecode, owner] = await Promise.all([
-			client.getBytecode({ address }),
-			client.readContract({ address, abi: ownerAbi, functionName: 'owner' }),
-		]);
+		const bytecode = await client.getBytecode({ address });
 		if (!bytecode || bytecode === '0x') throw new Error(`${name} has no deployed bytecode`);
-		const normalizedOwner = getAddress(owner);
-		if (normalizedOwner !== minterAddress) {
+
+		let owner = null;
+		try {
+			owner = getAddress(await client.readContract({ address, abi: ownerAbi, functionName: 'owner' }));
+		} catch {
+			// No owner() — AccessControl model (CinaCreditV2): require MINTER_ROLE.
+			const role = await client.readContract({ address, abi: accessControlAbi, functionName: 'MINTER_ROLE' });
+			const granted = await client.readContract({
+				address,
+				abi: accessControlAbi,
+				functionName: 'hasRole',
+				args: [role, minterAddress],
+			});
+			if (!granted) {
+				throw new Error(`${name}: configured minter ${minterAddress} lacks MINTER_ROLE`);
+			}
+			contracts[name] = {
+				address,
+				accessModel: 'access-control',
+				mintRole: 'MINTER_ROLE',
+				bytecodePresent: true,
+			};
+			continue;
+		}
+		if (owner !== minterAddress) {
 			throw new Error(`${name} owner does not match the configured minter address`);
 		}
-		contracts[name] = { address, owner: normalizedOwner, bytecodePresent: true };
+		contracts[name] = { address, owner, accessModel: 'ownable', bytecodePresent: true };
 	}
 
 	console.log(

@@ -1,5 +1,5 @@
 -- Provider sticky routing (Route Pool level): config columns + shared bindings table.
-SET search_path TO octafuse_gateway;
+SET search_path TO cinatoken_gateway;
 
 ALTER TABLE route_pools ADD COLUMN IF NOT EXISTS sticky_enabled BOOLEAN NOT NULL DEFAULT FALSE;
 ALTER TABLE route_pools ADD COLUMN IF NOT EXISTS sticky_idle_ttl_seconds INTEGER NOT NULL DEFAULT 3600;

@@ -73,10 +73,10 @@ const nextConfig = {
 			// Exact match (`$`) so `@octafuse/core/lib/...` still uses package exports → src.
 			// Avoids OpenNext/webpack `node` condition resolving a stale `core/dist`.
 			'@octafuse/core$': coreSrcIndex,
-			// D1 is mandatory in the Worker runtime. Keep Node database drivers available
-			// for local/standalone builds without shipping their unreachable code to Workers.
+			// MySQL is unsupported in the Worker runtime. PostgreSQL must stay bundled for
+			// Hyperdrive deployments; replacing it with `false` creates an empty module.
 			...(isCloudflareBuild
-				? { 'mysql2$': false, 'mysql2/promise$': false, 'postgres$': false }
+				? { 'mysql2$': false, 'mysql2/promise$': false }
 				: {}),
 		};
 		return config;

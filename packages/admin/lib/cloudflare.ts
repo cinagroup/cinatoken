@@ -3,6 +3,7 @@
  * 按优先级尝试：`getCloudflareContext` → `request.ctx` → `globalThis` → `process.env`，兼容 `next dev` 与 Pages 预览。
  */
 import type { D1Database } from '@cloudflare/workers-types';
+import type { HyperdriveBinding } from '@octafuse/core';
 import { getCloudflareContext } from '@opennextjs/cloudflare';
 
 interface RequestWithCloudflare extends Request {
@@ -17,6 +18,7 @@ interface RequestWithCloudflare extends Request {
 interface GlobalWithCloudflare {
 	ASSETS?: CloudflareEnv['ASSETS'];
 	DB?: D1Database;
+	HYPERDRIVE?: HyperdriveBinding;
 	CINAAUTH_AUTH_SERVICE?: Fetcher;
 	CINAAUTH_ISSUER?: string;
 	CINAAUTH_ACCOUNT_ORIGIN?: string;
@@ -26,6 +28,8 @@ interface GlobalWithCloudflare {
 	CINATOKEN_OIDC_CLIENT_SECRET?: string;
 	CINATOKEN_OIDC_BRIDGE_SECRET?: string;
 	CINATOKEN_OIDC_TRANSACTION_SECRET?: string;
+	SHARED_KEY_ENCRYPTION_SECRET?: string;
+	DATABASE_DRIVER?: string;
 	ADMIN_USERNAME?: string;
 	ADMIN_PASSWORD?: string;
 	ADMIN_COOKIE_SECURE?: string;
@@ -58,10 +62,11 @@ export function getCloudflareEnv(request?: Request): CloudflareEnv | undefined {
 
 	if (typeof globalThis !== 'undefined') {
 		const globalEnv = globalThis as unknown as GlobalWithCloudflare;
-		if (globalEnv.ASSETS || globalEnv.DB || globalEnv.CINAAUTH_AUTH_SERVICE) {
+		if (globalEnv.ASSETS || globalEnv.DB || globalEnv.HYPERDRIVE || globalEnv.CINAAUTH_AUTH_SERVICE) {
 			return {
 				ASSETS: globalEnv.ASSETS,
 				DB: globalEnv.DB,
+				HYPERDRIVE: globalEnv.HYPERDRIVE,
 				CINAAUTH_AUTH_SERVICE: globalEnv.CINAAUTH_AUTH_SERVICE,
 				CINAAUTH_ISSUER: globalEnv.CINAAUTH_ISSUER,
 				CINAAUTH_ACCOUNT_ORIGIN: globalEnv.CINAAUTH_ACCOUNT_ORIGIN,
@@ -71,6 +76,8 @@ export function getCloudflareEnv(request?: Request): CloudflareEnv | undefined {
 				CINATOKEN_OIDC_CLIENT_SECRET: globalEnv.CINATOKEN_OIDC_CLIENT_SECRET,
 				CINATOKEN_OIDC_BRIDGE_SECRET: globalEnv.CINATOKEN_OIDC_BRIDGE_SECRET,
 				CINATOKEN_OIDC_TRANSACTION_SECRET: globalEnv.CINATOKEN_OIDC_TRANSACTION_SECRET,
+				SHARED_KEY_ENCRYPTION_SECRET: globalEnv.SHARED_KEY_ENCRYPTION_SECRET,
+				DATABASE_DRIVER: globalEnv.DATABASE_DRIVER,
 				ADMIN_USERNAME: globalEnv.ADMIN_USERNAME,
 				ADMIN_PASSWORD: globalEnv.ADMIN_PASSWORD,
 				ADMIN_COOKIE_SECURE: globalEnv.ADMIN_COOKIE_SECURE,

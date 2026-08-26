@@ -45,7 +45,7 @@ PRAGMA table_info(route_pools);
 -- Postgres
 SELECT column_name, data_type
 FROM information_schema.columns
-WHERE table_schema = 'octafuse_gateway' AND table_name = 'route_pools';
+WHERE table_schema = 'cinatoken_gateway' AND table_name = 'route_pools';
 ```
 
 应出现 `tier_strategies`。

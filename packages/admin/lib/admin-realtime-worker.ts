@@ -26,6 +26,7 @@ export async function handleAdminRealtimeUpgrade(
 	try {
 		const runtimeBindings: AdminBindings = {
 			DB: env.DB,
+			HYPERDRIVE: env.HYPERDRIVE,
 			ASSETS: env.ASSETS,
 			CINAAUTH_AUTH_SERVICE: env.CINAAUTH_AUTH_SERVICE,
 			CINAAUTH_ISSUER: env.CINAAUTH_ISSUER,
@@ -36,6 +37,8 @@ export async function handleAdminRealtimeUpgrade(
 			CINATOKEN_OIDC_CLIENT_SECRET: env.CINATOKEN_OIDC_CLIENT_SECRET,
 			CINATOKEN_OIDC_BRIDGE_SECRET: env.CINATOKEN_OIDC_BRIDGE_SECRET,
 			CINATOKEN_OIDC_TRANSACTION_SECRET: env.CINATOKEN_OIDC_TRANSACTION_SECRET,
+			SHARED_KEY_ENCRYPTION_SECRET: env.SHARED_KEY_ENCRYPTION_SECRET,
+			DATABASE_DRIVER: env.DATABASE_DRIVER,
 		};
 		const storage = await resolveAdminStorageContext(runtimeBindings, 'cloudflare');
 		const authenticated = await authenticateAdminRequest(request, storage.repositories);

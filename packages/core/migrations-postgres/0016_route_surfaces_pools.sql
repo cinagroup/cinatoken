@@ -1,5 +1,5 @@
 -- Route topology v2. Historical rows are preserved through wildcard surfaces.
-SET search_path TO octafuse_gateway;
+SET search_path TO cinatoken_gateway;
 
 CREATE TABLE IF NOT EXISTS route_pools (
   id TEXT PRIMARY KEY,

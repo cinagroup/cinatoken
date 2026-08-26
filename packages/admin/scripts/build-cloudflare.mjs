@@ -1,6 +1,7 @@
 import { spawn } from 'node:child_process';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { verifyCloudflarePostgresBundle } from './verify-cloudflare-postgres-bundle.mjs';
 
 const scriptDir = path.dirname(fileURLToPath(import.meta.url));
 const cli = path.resolve(
@@ -17,11 +18,21 @@ child.once('error', (error) => {
 	console.error(error);
 	process.exitCode = 1;
 });
-child.once('exit', (code, signal) => {
+child.once('exit', async (code, signal) => {
 	if (signal) {
 		console.error(`OpenNext terminated by ${signal}`);
 		process.exitCode = 1;
 		return;
 	}
-	process.exitCode = code ?? 1;
+	if ((code ?? 1) !== 0) {
+		process.exitCode = code ?? 1;
+		return;
+	}
+	try {
+		await verifyCloudflarePostgresBundle(path.resolve(scriptDir, '..'));
+		process.exitCode = 0;
+	} catch (error) {
+		console.error(error);
+		process.exitCode = 1;
+	}
 });

@@ -1,5 +1,5 @@
 -- User portal: shared-key marketplace, seller earnings, on-chain withdrawals, CinaBadge mints.
-SET search_path TO octafuse_gateway;
+SET search_path TO cinatoken_gateway;
 
 -- Providers opted into the user shared-key pool (openai|anthropic|zhipu|deepseek); NULL = not eligible.
 ALTER TABLE providers ADD COLUMN IF NOT EXISTS shared_channel_type TEXT;

@@ -19,6 +19,7 @@ docker/local
 docker/test
 
 data/
+.migration-backups/
 
 # Generated Wrangler configs (source: *.base.jsonc + npm run gen:wrangler)
 packages/proxy/wrangler.jsonc

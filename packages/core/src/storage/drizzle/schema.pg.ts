@@ -1,5 +1,5 @@
 import { sql } from 'drizzle-orm';
-import { pgTable, text, timestamp, integer, numeric, real, boolean, uniqueIndex, check, bigint } from 'drizzle-orm/pg-core';
+import { pgTable, text, timestamp, integer, numeric, real, boolean, uniqueIndex, check, bigint, primaryKey } from 'drizzle-orm/pg-core';
 
 export const usersTable = pgTable(
 	'users',
@@ -328,11 +328,34 @@ export const userEarningsTable = pgTable('user_earnings', {
 	lifetimeEarned: numeric('lifetime_earned', { precision: 18, scale: 6 }).notNull().default('0'),
 	lifetimeWithdrawn: numeric('lifetime_withdrawn', { precision: 18, scale: 6 }).notNull().default('0'),
 	contributionValue: numeric('contribution_value', { precision: 18, scale: 6 }).notNull().default('0'),
+	/** Canonical monetary state; NUMERIC columns above are compatibility projections. */
+	balanceMicros: bigint('balance_micros', { mode: 'bigint' }).notNull().default(sql`0`),
+	lockedAmountMicros: bigint('locked_amount_micros', { mode: 'bigint' }).notNull().default(sql`0`),
+	lifetimeEarnedMicros: bigint('lifetime_earned_micros', { mode: 'bigint' }).notNull().default(sql`0`),
+	lifetimeWithdrawnMicros: bigint('lifetime_withdrawn_micros', { mode: 'bigint' }).notNull().default(sql`0`),
+	contributionValueMicros: bigint('contribution_value_micros', { mode: 'bigint' }).notNull().default(sql`0`),
 	walletAddress: text('wallet_address'),
 	walletVerifiedAt: timestamp('wallet_verified_at', { withTimezone: true, mode: 'string' }),
 	highestBadgeTier: integer('highest_badge_tier').notNull().default(0),
 	updatedAt: timestamp('updated_at', { withTimezone: true, mode: 'string' }).notNull(),
 });
+
+/** Append-only balance journal. Mutations are owned by database triggers. */
+export const portalLedgerEntriesTable = pgTable(
+	'portal_ledger_entries',
+	{
+		id: text('id').primaryKey(),
+		userId: text('user_id').notNull().references(() => usersTable.id, { onDelete: 'cascade' }),
+		kind: text('kind').notNull(),
+		amountMicros: bigint('amount_micros', { mode: 'bigint' }).notNull(),
+		balanceAfterMicros: bigint('balance_after_micros', { mode: 'bigint' }).notNull(),
+		lockedAfterMicros: bigint('locked_after_micros', { mode: 'bigint' }).notNull(),
+		referenceType: text('reference_type').notNull(),
+		referenceId: text('reference_id').notNull(),
+		createdAt: timestamp('created_at', { withTimezone: true, mode: 'string' }).notNull(),
+	},
+	(t) => [uniqueIndex('portal_ledger_entries_reference_unique').on(t.referenceType, t.referenceId, t.kind)]
+);
 
 /** 链上 CINA-C 自动提现单。 */
 export const withdrawalsTable = pgTable(
@@ -343,6 +366,9 @@ export const withdrawalsTable = pgTable(
 		amount: numeric('amount', { precision: 18, scale: 6 }).notNull(),
 		fee: numeric('fee', { precision: 18, scale: 6 }).notNull().default('0'),
 		netAmount: numeric('net_amount', { precision: 18, scale: 6 }).notNull(),
+		amountMicros: bigint('amount_micros', { mode: 'bigint' }).notNull().default(sql`0`),
+		feeMicros: bigint('fee_micros', { mode: 'bigint' }).notNull().default(sql`0`),
+		netAmountMicros: bigint('net_amount_micros', { mode: 'bigint' }).notNull().default(sql`0`),
 		currency: text('currency').notNull().default('USD'),
 		walletAddress: text('wallet_address').notNull(),
 		/** requested | processing | submitted | confirmed | failed */
@@ -378,6 +404,21 @@ export const nftMintsTable = pgTable(
 	(t) => [uniqueIndex('uk_nft_mints_user_badge').on(t.userId, t.badgeTokenId)]
 );
 
+/** Signed transaction outbox used by the at-least-once chain queue consumer. */
+export const chainJobTransactionsTable = pgTable(
+	'chain_job_transactions',
+	{
+		jobKind: text('job_kind').notNull(),
+		jobId: text('job_id').notNull(),
+		txHash: text('tx_hash').notNull().unique(),
+		rawTransaction: text('raw_transaction').notNull(),
+		chainId: integer('chain_id').notNull(),
+		createdAt: timestamp('created_at', { withTimezone: true, mode: 'string' }).notNull(),
+		broadcastAt: timestamp('broadcast_at', { withTimezone: true, mode: 'string' }),
+	},
+	(t) => [primaryKey({ columns: [t.jobKind, t.jobId] })]
+);
+
 export const pgCoreSchema = {
 	usersTable,
 	apiKeysTable,
@@ -395,6 +436,8 @@ export const pgCoreSchema = {
 	sharedKeysTable,
 	sharedKeyEarningsTable,
 	userEarningsTable,
+	portalLedgerEntriesTable,
 	withdrawalsTable,
 	nftMintsTable,
+	chainJobTransactionsTable,
 };

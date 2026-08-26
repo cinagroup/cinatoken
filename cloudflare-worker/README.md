@@ -1,6 +1,6 @@
 # Cloudflare Worker 部署配置
 
-本目录存放 **Wrangler / Workers Builds** 用的实例变量（Worker 名、D1、`routes`）。**不**用于 Node + Postgres 本地开发——见仓库根 [`.env.example`](../.env.example)。
+本目录存放 **Wrangler / Workers Builds** 用的实例变量（Worker 名、D1、可选 Hyperdrive、`routes`）。Node 直连 Postgres/MySQL 仍使用仓库根 [`.env.example`](../.env.example)。
 
 | 你要做的事 | 文档 |
 |------------|------|
@@ -44,6 +44,9 @@ npm run deploy:cloudflare -- <instance>               # 仅双 Worker
 | `D1_DATABASE_NAME` | D1 逻辑名 |
 | `D1_DATABASE_ID` | 远程 deploy / migrate **必填**；proxy 与 admin **共用**。本地 CLI deploy 写入 wrangler 后，继续 `dev:proxy`/`dev:admin` 前须 `npm run gen:wrangler`（见 [local-development.md §1](../docs/developers/local-development.md#️-本地-d1-与-database_id远程-deploy-后必读)） |
 | `D1_MIGRATIONS_WORKER_NAME` | 仅写入 `wrangler.d1.jsonc` 的项目名；**无需**单独建 Worker |
+| `HYPERDRIVE_ID` | 可选；为 Proxy、Admin/Portal、Chain Worker 生成同一个 `HYPERDRIVE` 绑定。单独设置只会预置绑定，不会切库 |
+| `DATABASE_DRIVER` | Cloudflare 省略或 `d1` 时继续使用 D1；显式 `postgres` 时必须同时提供 `HYPERDRIVE_ID`，三个 Worker 一起切到 Hyperdrive Postgres。Cloudflare 不支持本项目的 MySQL 路径 |
+| `CINATOKEN_MAINTENANCE_MODE` | 仅 `true`/`false`；`true` 时 Proxy/Admin 在数据库访问前返回 503。最终 ETL 还必须移除 Chain Queue consumer |
 | `PROXY_CUSTOM_DOMAIN` / `ADMIN_CUSTOM_DOMAIN` | 可选；写入 wrangler `routes` |
 
 实现：`npm run gen:wrangler` → [`scripts/deploy/gen-wrangler.mjs`](../scripts/deploy/gen-wrangler.mjs)。
@@ -64,7 +67,7 @@ Catalog 按引擎保存 API Key 与按次单价；每种工具只启用一个 Ac
 
 | | `cloudflare-worker/` | 根 `.env.example` → `.env` |
 |--|----------------------|----------------------------|
-| 用途 | Cloudflare 部署 / 远程 D1 | Node + Postgres/MySQL、Docker、冒烟 |
+| 用途 | Cloudflare 部署 / 远程 D1 / Hyperdrive Postgres | Node 直连 Postgres/MySQL、Docker、冒烟 |
 | 典型命令 | `deploy:proxy`、`db:migrate:remote` | `dev:proxy:node`、`db:migrate:pg` |
 
 两者互不替代。

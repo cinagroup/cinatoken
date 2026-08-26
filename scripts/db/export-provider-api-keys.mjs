@@ -30,7 +30,25 @@ async function exportPostgres() {
 	const { default: postgres } = await import('postgres');
 	const sql = postgres(url, { max: 1 });
 	try {
-		await sql`SET search_path TO octafuse_gateway`;
+		const [schemas] = await sql`
+			SELECT
+				to_regclass('cinatoken_gateway.provider_api_keys') IS NOT NULL AS canonical,
+				to_regclass('octafuse_gateway.provider_api_keys') IS NOT NULL AS legacy
+		`;
+		if (schemas.canonical && schemas.legacy) {
+			throw new Error(
+				'provider_api_keys exists in both cinatoken_gateway and octafuse_gateway; reconcile manually before export'
+			);
+		}
+		const sourceSchema = schemas.canonical
+			? 'cinatoken_gateway, public'
+			: schemas.legacy
+				? 'octafuse_gateway, public'
+				: null;
+		if (!sourceSchema) {
+			throw new Error('provider_api_keys was not found in the canonical or legacy PostgreSQL schema');
+		}
+		await sql`SELECT set_config('search_path', ${sourceSchema}, false)`;
 		const rows = await sql`
 			SELECT id, provider_id, label, api_key, status, weight, priority, limit_config,
 			       created_at::text AS created_at, updated_at::text AS updated_at

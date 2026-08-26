@@ -54,8 +54,9 @@ After a remote deploy (`deploy:*` / `db:migrate:remote`) on this machine, run **
 | `ADMIN_PASSWORD` | Console login password; **do not** commit in `wrangler.jsonc`. Local: **`packages/admin/.dev.vars`** (see `.dev.vars.example`; `npm run preview` / `dev:admin` auto-creates with **`admin` / `admin`** via `scripts/ensure-dev-vars.mjs` if missing). Production: Worker **Secret** — `npx wrangler secret put ADMIN_PASSWORD --name <ADMIN_WORKER_NAME>`. |
 | `ADMIN_COOKIE_SECURE` | Optional hardening. Unset by default (**no** `Secure` on `admin_session`, so plain HTTP works). Set `1`/`true`/`yes`/`on` only if Admin is already served over HTTPS and you want the browser to send the session cookie on HTTPS only — see [`docs/operators/deployment/docker.md`](../../docs/operators/deployment/docker.md) §7.3. |
 | D1 `DB` | Shared logical DB `cinatoken` with Proxy |
-| `DATABASE_URL` | **Node / self-hosted Postgres only** (same name as `@octafuse/proxy` Node; do not use on Cloudflare Workers D1 mode) |
-| `DATABASE_DRIVER` | **Node / self-hosted**: same semantics as Proxy (`@octafuse/core`); omit → `postgres`; invalid or inconsistent with `DATABASE_URL` → **error** |
+| `DATABASE_URL` | **Node / self-hosted only** (never use for Cloudflare Worker database access) |
+| `HYPERDRIVE` | Cloudflare Postgres binding; generated from `HYPERDRIVE_ID`, never from a committed connection string |
+| `DATABASE_DRIVER` | Node: omit → `postgres`; Cloudflare: omit → D1, explicit `postgres` → `HYPERDRIVE`; invalid or missing companion binding/URL → **error** |
 
 Downstream portals: set **`GATEWAY_MASTER_URL`** to this app’s origin, create a named least-privilege key in **Integration Keys**, then call **`/api/admin/...`** with `Authorization: Bearer <ADMIN_API_KEY>`.
 
