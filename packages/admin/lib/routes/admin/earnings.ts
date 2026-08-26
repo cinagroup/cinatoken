@@ -8,7 +8,7 @@
 import { Hono } from 'hono';
 import type { AdminEnv } from '@/lib/admin-env';
 import { requireAdminPrincipal } from '@/lib/middleware/admin-auth';
-import { settleSharedKeyEarning } from '@octafuse/core';
+import { settleSharedKeyEarning } from '@octafuse/core/services/shared-key-earnings';
 import { handleAdminRouteError } from './error-response';
 
 export const adminEarningsRoutes = new Hono<AdminEnv>();

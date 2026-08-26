@@ -84,7 +84,8 @@ export async function settleSharedKeyEarning(
 		((params.usage.output_tokens ?? 0) / TOKENS_PER_MILLION) * key.outputPrice +
 		((params.usage.cache_read_tokens ?? 0) / TOKENS_PER_MILLION) * (key.cacheReadPrice ?? 0) +
 		((params.usage.cache_write_tokens ?? 0) / TOKENS_PER_MILLION) * (key.cacheWritePrice ?? 0);
-	if (gross <= 0) return 'zero-gross';
+	// 审计 M10：非有限数在此拦截（roundGatewayMoney 会把 NaN/∞ 静默映射为 0）
+	if (!Number.isFinite(gross) || gross <= 0) return 'zero-gross';
 
 	let commissionRate = DEFAULT_COMMISSION_RATE;
 	try {
@@ -95,9 +96,11 @@ export async function settleSharedKeyEarning(
 		// 配置读取失败按默认佣金
 	}
 
+	// 审计 M10：佣金向上取整到 6dp（平台有利方向），净值 = 总额 − 佣金的精确差值
+	// （两个 6dp 数相减无需再取整）—— 恒有 fee + net === gross。
 	const grossR = roundGatewayMoney(gross);
-	const fee = roundGatewayMoney(grossR * commissionRate);
-	const net = roundGatewayMoney(grossR - fee);
+	const fee = Math.ceil(grossR * commissionRate * 1_000_000) / 1_000_000;
+	const net = grossR - fee;
 	const nowIso = new Date().toISOString();
 
 	// The earning write is NOT in the same transaction as the request-log
