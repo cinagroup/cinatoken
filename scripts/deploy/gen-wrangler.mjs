@@ -258,10 +258,22 @@ function generateChain(names) {
 		],
 		queues: {
 			...base.queues,
-			consumers: base.queues.consumers.map((consumer) => ({
-				...consumer,
+			// The primary consumer is renamed to the deployment queue name and
+			// always carries the DLQ; the DLQ's own consumer (terminal triage,
+			// max_retries: 0) is renamed to the DLQ name and must NOT receive a
+			// dead_letter_queue of its own.
+			consumers: base.queues.consumers.map((consumer) =>
+				consumer.queue === 'cinatoken-chain-jobs-dlq'
+					? { ...consumer, queue: names.chainJobDlqName }
+					: {
+							...consumer,
+							queue: names.chainJobQueueName,
+							dead_letter_queue: names.chainJobDlqName,
+						},
+			),
+			producers: (base.queues.producers ?? []).map((producer) => ({
+				...producer,
 				queue: names.chainJobQueueName,
-				dead_letter_queue: names.chainJobDlqName,
 			})),
 		},
 		vars: {

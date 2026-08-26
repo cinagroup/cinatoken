@@ -23,8 +23,22 @@
 				"retry_delay": 30,
 				"dead_letter_queue": "cinatoken-chain-jobs-dlq",
 				"max_concurrency": 1
+			},
+			{
+				"queue": "cinatoken-chain-jobs-dlq",
+				"max_batch_size": 10,
+				"max_retries": 0
+			}
+		],
+		"producers": [
+			{
+				"binding": "CHAIN_JOBS",
+				"queue": "cinatoken-chain-jobs"
 			}
 		]
+	},
+	"triggers": {
+		"crons": ["*/5 * * * *", "0 * * * *"]
 	},
 	"observability": {
 		"enabled": true,

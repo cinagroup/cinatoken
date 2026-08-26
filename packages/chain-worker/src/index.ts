@@ -24,11 +24,155 @@ export interface ChainWorkerEnv extends SignerEnv {
 	DB?: D1Database;
 	HYPERDRIVE?: HyperdriveBinding;
 	DATABASE_DRIVER?: string;
+	/** Producer binding for the chain-jobs queue (re-drive from the sweeper). */
+	CHAIN_JOBS?: Queue<ChainJobMessage>;
+	CHAIN_JOB_QUEUE_DLQ?: string;
 }
 
 type JobKind = ChainJobMessage['kind'];
 
 const nowIso = () => new Date().toISOString();
+
+const SWEEP_REQUESTED_STALE_MS = 5 * 60 * 1000;
+const SWEEP_INFLIGHT_STALE_MS = 10 * 60 * 1000;
+const SWEEP_MAX_REQUEUES = 20;
+const CHAIN_JOB_DLQ_DEFAULT = 'cinatoken-chain-jobs-dlq';
+
+function staleSince(iso: string | null | undefined, staleMs: number): boolean {
+	if (!iso) return false;
+	const ts = Date.parse(iso);
+	return Number.isFinite(ts) && Date.now() - ts > staleMs;
+}
+
+/**
+ * Cron sweeper: without traffic, a crash between withdrawal insert (locked
+ * funds) and queue send, or a dropped/underpriced transaction, would strand
+ * jobs forever — queue messages only fire on new activity. Re-drive stale
+ * jobs (processing is CAS/idempotent) and drain the outbox. Bounded per run.
+ */
+async function sweepStaleJobs(env: ChainWorkerEnv): Promise<void> {
+	if (!env.CHAIN_JOBS) {
+		console.warn(JSON.stringify({
+			level: 'warn',
+			message: 'cinatoken.chain_sweep_skipped',
+			reason: 'CHAIN_JOBS producer binding missing',
+		}));
+		return;
+	}
+	const storage = await createWorkerStorageContext(resolveWorkerDatabaseConfig(env));
+	const outbox = createChainTransactionOutbox(storage.client);
+	await flushUnbroadcastTransactions(storage.repositories, outbox, env);
+
+	const stale: ChainJobMessage[] = [];
+	const withdrawals = await storage.repositories.portalLedger.listAllWithdrawals();
+	for (const row of withdrawals) {
+		if (stale.length >= SWEEP_MAX_REQUEUES) break;
+		if (row.status === 'requested' && staleSince(row.updatedAt ?? row.createdAt, SWEEP_REQUESTED_STALE_MS)) {
+			stale.push({ kind: 'withdrawal', id: row.id });
+		} else if (
+			(row.status === 'processing' || row.status === 'submitted') &&
+			staleSince(row.updatedAt ?? row.createdAt, SWEEP_INFLIGHT_STALE_MS)
+		) {
+			stale.push({ kind: 'withdrawal', id: row.id });
+		}
+	}
+	const mints = await storage.repositories.portalLedger.listAllNftMints();
+	for (const row of mints) {
+		if (stale.length >= SWEEP_MAX_REQUEUES) break;
+		if (
+			(row.status === 'pending' || row.status === 'processing' || row.status === 'submitted') &&
+			staleSince(row.createdAt, SWEEP_INFLIGHT_STALE_MS)
+		) {
+			stale.push({ kind: 'nft_mint', id: row.id });
+		}
+	}
+	if (stale.length > 0) {
+		await env.CHAIN_JOBS.sendBatch(stale.map((body) => ({ body })));
+	}
+	console.log(JSON.stringify({
+		level: 'info',
+		message: 'cinatoken.chain_sweep_completed',
+		requeued: stale.length,
+	}));
+}
+
+type ReconciliationDrift = {
+	check: 'earnings_vs_journal' | 'locked_vs_active_withdrawals' | 'terminal_with_outbox';
+	ids: string[];
+};
+
+async function fetchIds(client: unknown, sqlText: string): Promise<string[]> {
+	// driver-specific row extraction (D1 {results} vs postgres-js array)
+	const driver = (client as { driver?: string }).driver;
+	if (driver === 'postgres') {
+		const rows = await (client as { raw: { unsafe: (q: string) => Promise<Array<Record<string, unknown>>> } }).raw.unsafe(sqlText);
+		return rows.map((row) => String(row.user_id ?? row.job_id ?? ''));
+	}
+	const db = (client as { raw: { prepare: (q: string) => { all: () => Promise<{ results?: Array<Record<string, unknown>> }> } } }).raw;
+	const rows = (await db.prepare(sqlText).all()).results ?? [];
+	return rows.map((row) => String(row.user_id ?? row.job_id ?? ''));
+}
+
+/**
+ * 小时对账（审计 M7）：验证收益入账、锁定资金与 outbox 三方一致 ——
+ * sum(shared_key_earnings) ↔ user_earnings、sum(活跃提现) ↔ locked、
+ * 终态任务 ↔ 无未取消 outbox 行。漂移发 error 级结构化事件供告警。
+ * 只读，不改任何数据；H1 的 flush 修复与 M6 的触发器守卫是其前置。
+ */
+async function runLedgerReconciliation(env: ChainWorkerEnv): Promise<void> {
+	const storage = await createWorkerStorageContext(resolveWorkerDatabaseConfig(env));
+	const client = storage.client;
+	const isPostgres = client.driver === 'postgres';
+	// SQLite ROUND 对 REAL 可用；PG 需先转 numeric 才能 ROUND。
+	const roundNet = isPostgres
+		? 'SUM(CAST(ROUND(CAST(net_amount AS numeric) * 1000000) AS bigint))'
+		: 'SUM(CAST(ROUND(net_amount * 1000000) AS INTEGER))';
+
+	const drifts: ReconciliationDrift[] = [];
+	const checks: Array<{ check: ReconciliationDrift['check']; sqlText: string }> = [
+		{
+			check: 'earnings_vs_journal',
+			sqlText: `SELECT ue.user_id FROM user_earnings ue
+				LEFT JOIN (SELECT seller_user_id AS uid, ${roundNet} AS net
+					FROM shared_key_earnings GROUP BY seller_user_id) j ON j.uid = ue.user_id
+				WHERE ue.lifetime_earned_micros <> COALESCE(j.net, 0) LIMIT 20`,
+		},
+		{
+			check: 'locked_vs_active_withdrawals',
+			sqlText: `SELECT ue.user_id FROM user_earnings ue
+				LEFT JOIN (SELECT user_id AS uid, SUM(amount_micros) AS locked FROM withdrawals
+					WHERE status IN ('requested','processing','submitted') GROUP BY user_id) a ON a.uid = ue.user_id
+				WHERE ue.locked_amount_micros <> COALESCE(a.locked, 0) LIMIT 20`,
+		},
+		{
+			check: 'terminal_with_outbox',
+			sqlText: `SELECT cjt.job_id FROM chain_job_transactions cjt
+				JOIN withdrawals w ON w.id = cjt.job_id AND cjt.job_kind = 'withdrawal'
+				WHERE w.status IN ('confirmed','failed') LIMIT 20`,
+		},
+	];
+	for (const { check, sqlText } of checks) {
+		try {
+			const ids = await fetchIds(client, sqlText);
+			if (ids.length > 0) drifts.push({ check, ids });
+		} catch (error) {
+			console.error(JSON.stringify({
+				level: 'error',
+				message: 'cinatoken.ledger_reconciliation_check_failed',
+				check,
+				error: error instanceof Error ? error.message : String(error),
+			}));
+		}
+	}
+	const event = {
+		level: drifts.length > 0 ? ('error' as const) : ('info' as const),
+		message: 'cinatoken.ledger_integrity',
+		ok: drifts.length === 0,
+		drifts,
+	};
+	if (drifts.length > 0) console.error(JSON.stringify(event));
+	else console.log(JSON.stringify(event));
+}
 
 async function getStoredTransaction(
 	outbox: ChainTransactionOutbox,
@@ -156,7 +300,33 @@ async function processWithdrawal(
 		} else if (withdrawal.status !== 'processing') {
 			throw new Error(`Withdrawal ${id} has no durable transaction in status ${withdrawal.status}`);
 		}
-		const tokenMicros = BigInt(Math.round((withdrawal.tokenAmount ?? withdrawal.netAmount) * 1_000_000));
+		// Unit guard: tokenAmount is the mint quantity (amount × rate), stored
+		// at withdrawal creation. Never fall back to the USD netAmount — a NULL
+		// or non-positive tokenAmount is a data/config defect (e.g. rate=0)
+		// that would mint the wrong unit or nothing while fully debiting the
+		// balance. Nothing is signed yet, so refund immediately.
+		const tokenAmount = withdrawal.tokenAmount;
+		if (tokenAmount === null || tokenAmount <= 0 || !Number.isFinite(tokenAmount)) {
+			await repositories.portalLedger.refundWithdrawal(
+				id, withdrawal.userId, withdrawal.amount,
+				`invalid tokenAmount (${tokenAmount}) — refusing to mint, refunded`, nowIso(),
+			);
+			console.error(JSON.stringify({
+				level: 'error',
+				message: 'cinatoken.withdrawal_invalid_token_amount',
+				withdrawalId: id,
+				tokenAmount,
+			}));
+			return;
+		}
+		const tokenMicros = BigInt(Math.round(tokenAmount * 1_000_000));
+		if (tokenMicros <= 0n) {
+			await repositories.portalLedger.refundWithdrawal(
+				id, withdrawal.userId, withdrawal.amount,
+				`tokenAmount rounds to zero micro-units (${tokenAmount}) — refunded`, nowIso(),
+			);
+			return;
+		}
 		stored = await persistPreparedTransaction(
 			outbox,
 			env,
@@ -274,7 +444,31 @@ export default {
 	async fetch(): Promise<Response> {
 		return Response.json({ name: 'cinatoken-chain-worker', status: 'ok' });
 	},
+	async scheduled(controller: ScheduledController, env: ChainWorkerEnv): Promise<void> {
+		void controller;
+		// 每小时整点跑账本对账（审计 M7），其余 cron（*/5）跑停滞任务清扫。
+		if (controller.cron === '0 * * * *') {
+			await runLedgerReconciliation(env);
+			return;
+		}
+		await sweepStaleJobs(env);
+	},
 	async queue(batch: MessageBatch<unknown>, env: ChainWorkerEnv): Promise<void> {
+		// DLQ consumer: the job exhausted its retries. Never re-drive or
+		// auto-refund here — the persisted transaction's fate is unknown
+		// (broadcast-but-unmined vs never-sent); emit a critical alert event
+		// for manual triage (admin /admin/withdrawals, /admin/nft-mints).
+		const dlqName = env.CHAIN_JOB_QUEUE_DLQ || CHAIN_JOB_DLQ_DEFAULT;
+		if (batch.queue === dlqName) {
+			console.error(JSON.stringify({
+				level: 'error',
+				message: 'cinatoken.chain_job_dead_letter',
+				queue: batch.queue,
+				jobs: batch.messages.map((message) => message.body),
+			}));
+			for (const message of batch.messages) message.ack();
+			return;
+		}
 		for (const message of batch.messages) {
 			if (!isChainJobMessage(message.body)) {
 				message.ack();
