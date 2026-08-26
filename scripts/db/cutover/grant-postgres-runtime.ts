@@ -46,6 +46,14 @@ export async function grantPostgresRuntime(env: NodeJS.ProcessEnv = process.env)
 				GRANT SELECT, INSERT, UPDATE, DELETE
 					ON ALL TABLES IN SCHEMA ${GATEWAY_SCHEMA} TO ${GATEWAY_RUNTIME_ROLE};
 				REVOKE ALL ON TABLE ${GATEWAY_SCHEMA}.schema_migrations FROM ${GATEWAY_RUNTIME_ROLE};
+
+				// 审计 M8：append-only 账本表收回 UPDATE/DELETE（应用与触发器仅 INSERT/SELECT；
+				// 无任何更新/删除路径 —— 收回后，被攻陷的 worker 也无法改写历史流水）
+				REVOKE UPDATE, DELETE ON TABLE
+					${GATEWAY_SCHEMA}.api_key_request_logs,
+					${GATEWAY_SCHEMA}.shared_key_earnings,
+					${GATEWAY_SCHEMA}.portal_ledger_entries
+				FROM ${GATEWAY_RUNTIME_ROLE};
 				GRANT USAGE, SELECT, UPDATE
 					ON ALL SEQUENCES IN SCHEMA ${GATEWAY_SCHEMA} TO ${GATEWAY_RUNTIME_ROLE};
 				REVOKE EXECUTE ON ALL FUNCTIONS IN SCHEMA ${GATEWAY_SCHEMA} FROM PUBLIC;

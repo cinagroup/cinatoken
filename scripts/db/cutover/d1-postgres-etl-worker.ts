@@ -14,6 +14,9 @@ interface EtlWorkerEnv {
 	SOURCE_DB: D1Database;
 	MIGRATOR_HYPERDRIVE: { readonly connectionString: string };
 	PREFLIGHT_TOKEN?: string;
+	/** 运维显式证明（仅获批的切换窗口注入）：源库已冻结 / 目标已离线。缺任一即拒绝 /etl（审计 M9）。 */
+	ETL_ATTEST_SOURCE_FROZEN?: string;
+	ETL_ATTEST_TARGET_OFFLINE?: string;
 }
 
 interface D1ColumnInfo {
@@ -341,8 +344,18 @@ export default {
 		}
 		try {
 			if (path === '/etl') {
+				// 审计 M9：此前无条件 TRUNCATE+关触发器，却硬编码返回 source_frozen/target_offline=true。
+				// 现要求运维在 Worker 上显式注入两项证明变量（获批窗口内）；缺任一即拒绝执行。
+				const sourceFrozen = env.ETL_ATTEST_SOURCE_FROZEN === 'true';
+				const targetOffline = env.ETL_ATTEST_TARGET_OFFLINE === 'true';
+				if (!sourceFrozen || !targetOffline) {
+					return Response.json({ ok: false, error: 'etl_attestation_missing', source_frozen: sourceFrozen, target_offline: targetOffline }, {
+						status: 409,
+						headers: { 'Cache-Control': 'no-store' },
+					});
+				}
 				const counts = await runEtl(env);
-				return Response.json({ ok: true, source_frozen: true, target_offline: true, counts }, {
+				return Response.json({ ok: true, source_frozen: sourceFrozen, target_offline: targetOffline, counts }, {
 					headers: { 'Cache-Control': 'no-store' },
 				});
 			}
