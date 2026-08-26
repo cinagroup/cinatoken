@@ -1,6 +1,7 @@
 import {
 	createMySqlStorageContext,
 	createPostgresStorageContext,
+	createEncryptedProvidersRepository,
 	createEncryptedSharedKeysRepository,
 	assertSharedKeyEncryptionSecret,
 	resolveNodeDatabaseConfig,
@@ -37,6 +38,7 @@ async function resolveNodeStorage(): Promise<StorageContext> {
 		repositories: {
 			...storage.repositories,
 			sharedKeys: createEncryptedSharedKeysRepository(storage.repositories.sharedKeys, secret),
+			providers: createEncryptedProvidersRepository(storage.repositories.providers, secret),
 		},
 	};
 }

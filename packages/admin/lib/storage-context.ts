@@ -2,6 +2,7 @@ import type { StorageContext } from '@octafuse/core/storage/context';
 import {
 	assertSharedKeyEncryptionSecret,
 	createEncryptedSharedKeysRepository,
+	createEncryptedProvidersRepository,
 } from '@octafuse/core';
 import { createWorkerStorageContext } from '@octafuse/core/storage/context';
 import {
@@ -35,6 +36,7 @@ function protectSharedKeys(storage: StorageContext, bindings?: AdminBindings): S
 		repositories: {
 			...storage.repositories,
 			sharedKeys: createEncryptedSharedKeysRepository(storage.repositories.sharedKeys, secret),
+			providers: createEncryptedProvidersRepository(storage.repositories.providers, secret),
 		},
 	};
 }

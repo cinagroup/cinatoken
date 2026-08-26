@@ -1,5 +1,6 @@
 import {
 	assertSharedKeyEncryptionSecret,
+	createEncryptedProvidersRepository,
 	createEncryptedSharedKeysRepository,
 	createWorkerStorageContext,
 	isGatewayMaintenanceMode,
@@ -18,6 +19,7 @@ async function resolveWorkersStorage(context: Context<Env>): Promise<StorageCont
 		repositories: {
 			...storage.repositories,
 			sharedKeys: createEncryptedSharedKeysRepository(storage.repositories.sharedKeys, secret),
+			providers: createEncryptedProvidersRepository(storage.repositories.providers, secret),
 		},
 	};
 }
