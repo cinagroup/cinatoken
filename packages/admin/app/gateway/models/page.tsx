@@ -7,6 +7,7 @@
  */
 import { Suspense } from 'react';
 import { useTranslations } from 'next-intl';
+import { GatewaySetupGuide } from '@/components/gateway/GatewaySetupGuide';
 import { useModelsPageState } from './use-models-page-state';
 import { ModelAddCard } from './components/model-add-card';
 import { ModelCard } from './components/model-card';
@@ -40,6 +41,8 @@ function ModelsContent() {
 					{t('subtitle', { product: tBrand('product') })}
 				</p>
 			</div>
+
+			<GatewaySetupGuide activeStep="model" />
 
 			<ModelFilterSidebar
 				modelCount={state.models.length}

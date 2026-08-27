@@ -381,9 +381,33 @@
 		"continueWithCinaAuth": "使用 CinaAuth 登录",
 		"createAccount": "注册 CinaAuth 账户",
 		"roleRequirement": "控制台仅允许 super_admin 或 security_admin 角色访问；普通新注册账户不会获得管理权限。",
-		"loginError": "CinaAuth 登录未完成，或当前账户没有 cinatoken 管理权限。",
+		"loginError": "CinaAuth 登录未完成，请重试；若问题持续，请检查授权服务状态。",
+		"adminForbidden": "登录已完成，但当前账户不是 cinatoken 管理员。",
+		"adminForbiddenHelp": "请让现有 super_admin 在 CinaAuth 管理后台为该账户分配 super_admin 或 security_admin，随后重新登录。普通账户可继续进入用户中心。",
+		"manageCinaAuthRoles": "前往 CinaAuth 管理后台",
+		"continueToUserCenter": "进入普通用户中心",
 		"loggingOut": "退出中...",
 		"logout": "退出登录"
+	},
+	"gatewaySetup": {
+		"title": "真实模型上线流程",
+		"description": "模型 API 地址属于供应商，不属于模型条目。依次完成供应商凭据与 Base URL、模型定义、路由绑定，模型才会在网关中可用。",
+		"badge": "3 步完成",
+		"stepLabel": "第 {step} 步",
+		"steps": {
+			"provider": {
+				"title": "供应商与 API 地址",
+				"description": "填写上游 API Key、Base URL，并启用供应商。"
+			},
+			"model": {
+				"title": "真实模型定义",
+				"description": "导入目录模型，或填写真实 model id 与计费信息。"
+			},
+			"route": {
+				"title": "绑定并发布路由",
+				"description": "选择供应商、协议及上游模型名，保存为可用路由。"
+			}
+		}
 	},
 	"sidebar": {
 		"groups": {

@@ -381,9 +381,33 @@
 		"continueWithCinaAuth": "CinaAuth でログイン",
 		"createAccount": "CinaAuth アカウントを作成",
 		"roleRequirement": "コンソールにアクセスできるのは super_admin または security_admin のみです。通常の新規アカウントに管理権限は付与されません。",
-		"loginError": "CinaAuth ログインが完了していないか、このアカウントに cinatoken 管理権限がありません。",
+		"loginError": "CinaAuth のサインインが完了しませんでした。再試行し、続く場合は認証サービスを確認してください。",
+		"adminForbidden": "サインインは完了しましたが、このアカウントは cinatoken 管理者ではありません。",
+		"adminForbiddenHelp": "既存の super_admin に CinaAuth 管理画面で super_admin または security_admin を付与してもらい、再度サインインしてください。通常アカウントはユーザーセンターを利用できます。",
+		"manageCinaAuthRoles": "CinaAuth 管理画面を開く",
+		"continueToUserCenter": "ユーザーセンターへ進む",
 		"loggingOut": "ログアウト中...",
 		"logout": "ログアウト"
+	},
+	"gatewaySetup": {
+		"title": "実モデルの公開手順",
+		"description": "モデル API アドレスはモデルではなくプロバイダーに設定します。認証情報と Base URL、モデル定義、ルートの順に設定してください。",
+		"badge": "3 ステップ",
+		"stepLabel": "ステップ {step}",
+		"steps": {
+			"provider": {
+				"title": "プロバイダーと API アドレス",
+				"description": "API Key と Base URL を設定し、プロバイダーを有効化します。"
+			},
+			"model": {
+				"title": "実モデルの定義",
+				"description": "カタログから取り込むか、実際の model ID と料金を入力します。"
+			},
+			"route": {
+				"title": "ルートの関連付けと公開",
+				"description": "プロバイダー、プロトコル、上流モデル名を選択します。"
+			}
+		}
 	},
 	"sidebar": {
 		"groups": {

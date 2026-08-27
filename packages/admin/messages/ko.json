@@ -381,9 +381,33 @@
 		"continueWithCinaAuth": "CinaAuth로 로그인",
 		"createAccount": "CinaAuth 계정 만들기",
 		"roleRequirement": "super_admin 또는 security_admin 역할만 콘솔에 접근할 수 있습니다. 일반 신규 계정에는 관리자 권한이 부여되지 않습니다.",
-		"loginError": "CinaAuth 로그인이 완료되지 않았거나 이 계정에 cinatoken 관리자 권한이 없습니다.",
+		"loginError": "CinaAuth 로그인이 완료되지 않았습니다. 다시 시도하고 문제가 계속되면 인증 서비스를 확인하세요.",
+		"adminForbidden": "로그인은 완료됐지만 이 계정은 cinatoken 관리자가 아닙니다.",
+		"adminForbiddenHelp": "기존 super_admin이 CinaAuth 관리 콘솔에서 이 계정에 super_admin 또는 security_admin을 부여한 뒤 다시 로그인하세요. 일반 계정은 사용자 센터를 이용할 수 있습니다.",
+		"manageCinaAuthRoles": "CinaAuth 관리자 열기",
+		"continueToUserCenter": "사용자 센터로 이동",
 		"loggingOut": "로그아웃 중...",
 		"logout": "로그아웃"
+	},
+	"gatewaySetup": {
+		"title": "실제 모델 출시 절차",
+		"description": "모델 API 주소는 모델 레코드가 아니라 공급자에 설정합니다. 공급자 자격 증명과 Base URL, 모델 정의, 라우트를 순서대로 구성하세요.",
+		"badge": "3단계 설정",
+		"stepLabel": "{step}단계",
+		"steps": {
+			"provider": {
+				"title": "공급자와 API 주소",
+				"description": "업스트림 API Key와 Base URL을 입력하고 공급자를 활성화합니다."
+			},
+			"model": {
+				"title": "실제 모델 정의",
+				"description": "카탈로그에서 가져오거나 실제 model ID와 요금을 입력합니다."
+			},
+			"route": {
+				"title": "라우트 연결 및 게시",
+				"description": "공급자, 프로토콜, 업스트림 모델명을 선택합니다."
+			}
+		}
 	},
 	"sidebar": {
 		"groups": {

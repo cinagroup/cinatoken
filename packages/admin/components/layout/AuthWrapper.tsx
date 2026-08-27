@@ -32,7 +32,7 @@ export default function AuthWrapper({ children }: Props) {
   const tCommon = useTranslations('common');
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
-  const [loginError, setLoginError] = useState('');
+  const [loginErrorCode, setLoginErrorCode] = useState('');
 
   const checkAuth = useCallback(async () => {
     if (isPublicHome) {
@@ -66,10 +66,10 @@ export default function AuthWrapper({ children }: Props) {
     checkAuth();
   }, [checkAuth]);
 
-  useEffect(() => {
+	useEffect(() => {
 		const authError = new URLSearchParams(window.location.search).get('auth_error');
-		if (authError) setLoginError(t('loginError'));
-	}, [t]);
+		if (authError) setLoginErrorCode(authError);
+	}, []);
 
   useEffect(() => {
     const onSessionExpired = () => {
@@ -132,11 +132,32 @@ export default function AuthWrapper({ children }: Props) {
             </div>
           </div>
 		  <p className="mb-5 text-sm leading-6 text-gray-600">{t('cinaAuthDescription')}</p>
-			{loginError && (
-			  <div className="mb-4 rounded-md border border-red-200 bg-red-50 p-3 text-sm text-red-600">
-				{loginError}
+			{loginErrorCode === 'admin_forbidden' ? (
+			  <div className="mb-4 rounded-md border border-amber-200 bg-amber-50 p-3 text-sm text-amber-950">
+				<p className="font-medium">{t('adminForbidden')}</p>
+				<p className="mt-1 text-xs leading-5 text-amber-800">{t('adminForbiddenHelp')}</p>
+				<div className="mt-3 flex flex-col gap-2 sm:flex-row">
+				  <a
+					href="https://admin.cinaseek.ai"
+					target="_blank"
+					rel="noreferrer"
+					className="inline-flex items-center justify-center rounded-md border border-amber-300 bg-white px-3 py-2 text-xs font-semibold text-amber-900 hover:bg-amber-100"
+				  >
+					{t('manageCinaAuthRoles')}
+				  </a>
+				  <a
+					href="/api/auth/cinaauth/login?intent=portal&callbackURL=%2Faccount"
+					className="inline-flex items-center justify-center rounded-md px-3 py-2 text-xs font-semibold text-amber-900 hover:bg-amber-100"
+				  >
+					{t('continueToUserCenter')}
+				  </a>
+				</div>
 			  </div>
-			)}
+			) : loginErrorCode ? (
+			  <div className="mb-4 rounded-md border border-red-200 bg-red-50 p-3 text-sm text-red-600">
+				{t('loginError')}
+			  </div>
+			) : null}
 		  <div className="space-y-3">
 			<a
 			  href="/api/auth/cinaauth/login?callbackURL=%2Fdashboard"

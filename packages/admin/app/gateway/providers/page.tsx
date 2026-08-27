@@ -6,6 +6,7 @@
  */
 import { Suspense } from 'react';
 import { useTranslations } from 'next-intl';
+import { GatewaySetupGuide } from '@/components/gateway/GatewaySetupGuide';
 import { ProviderAddCard } from './components/provider-add-card';
 import { ProviderCard } from './components/provider-card';
 import { ProviderImportModal } from './components/provider-import-modal';
@@ -39,6 +40,8 @@ function ProvidersContent() {
 				</p>
 				<p className="mt-1 text-xs text-gray-400">{t('importHint')}</p>
 			</div>
+
+			<GatewaySetupGuide activeStep="provider" />
 
 			<ProviderToolbar
 				providerSearch={state.providerSearch}

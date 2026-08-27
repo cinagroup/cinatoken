@@ -6,6 +6,7 @@
  */
 import { Suspense, useCallback, useMemo, useSyncExternalStore } from 'react';
 import { useTranslations } from 'next-intl';
+import { GatewaySetupGuide } from '@/components/gateway/GatewaySetupGuide';
 import { ModelModal } from '../models/components/model-modal';
 import { useRoutesPageState } from './use-routes-page-state';
 import { RouteFilterSidebar } from './components/route-filter-sidebar';
@@ -103,6 +104,8 @@ function RoutesContent() {
 				<h1 className="text-2xl font-bold text-gray-900 sm:text-3xl">{t('title')}</h1>
 				<p className="mt-1 text-sm text-gray-500">{t('subtitle')}</p>
 			</div>
+
+			<GatewaySetupGuide activeStep="route" />
 
 			<RouteFilterSidebar
 				visibleModelCount={state.visibleModelCount}

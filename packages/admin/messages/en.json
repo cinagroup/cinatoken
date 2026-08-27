@@ -381,9 +381,33 @@
 		"continueWithCinaAuth": "Continue with CinaAuth",
 		"createAccount": "Create a CinaAuth account",
 		"roleRequirement": "Only super_admin or security_admin roles can access the console. New standard accounts receive no admin access.",
-		"loginError": "CinaAuth sign-in did not complete, or this account lacks cinatoken admin access.",
+		"loginError": "CinaAuth sign-in did not complete. Try again, and check the authorization service if the problem continues.",
+		"adminForbidden": "Sign-in completed, but this account is not a cinatoken administrator.",
+		"adminForbiddenHelp": "Ask an existing super_admin to grant this account super_admin or security_admin in the CinaAuth admin console, then sign in again. Standard accounts can continue to the user center.",
+		"manageCinaAuthRoles": "Open CinaAuth admin",
+		"continueToUserCenter": "Continue to user center",
 		"loggingOut": "Logging out...",
 		"logout": "Logout"
+	},
+	"gatewaySetup": {
+		"title": "Launch a real model",
+		"description": "The model API address belongs to the provider, not the model record. Configure provider credentials and Base URL, define the model, then bind both with a route.",
+		"badge": "3-step setup",
+		"stepLabel": "Step {step}",
+		"steps": {
+			"provider": {
+				"title": "Provider and API address",
+				"description": "Set the upstream API key and Base URL, then enable the provider."
+			},
+			"model": {
+				"title": "Real model definition",
+				"description": "Import a catalog model or enter its real model ID and pricing."
+			},
+			"route": {
+				"title": "Bind and publish a route",
+				"description": "Choose the provider, protocol, and upstream model name."
+			}
+		}
 	},
 	"sidebar": {
 		"groups": {
