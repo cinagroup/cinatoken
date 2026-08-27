@@ -135,5 +135,6 @@ assert.match(hyperdriveAccessProbe, /migratorContractPassed/u);
 assert.match(hyperdriveAccessProbe, /runtimeContractPassed/u);
 assert.match(hyperdriveAccessProbe, /migrations_select/u);
 assert.match(hyperdriveAccessProbe, /users_truncate/u);
+assert.match(hyperdriveAccessProbe, /migration_count === '34'/u);
 
 console.log('PostgreSQL cinatoken_gateway migration contract: PASS');

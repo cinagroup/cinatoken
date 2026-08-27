@@ -49,7 +49,7 @@ function migratorContractPassed(row: MigratorProbe | undefined): boolean {
 		!row.can_create_role &&
 		row.schema_usage &&
 		row.schema_create &&
-		row.migration_count === '30' &&
+		row.migration_count === '34' &&
 		row.latest_migration_applied;
 }
 
