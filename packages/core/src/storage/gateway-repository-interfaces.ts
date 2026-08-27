@@ -20,6 +20,7 @@ import type {
 	AdminApiKeyListItem,
 	EntityCountSnapshot,
 	ModelAnalyticsRow,
+	PublicModelAnalyticsRow,
 	ModelProviderReliabilityRow,
 	ModelRouteDetailRow,
 	ModelRouteJoinRow,
@@ -86,6 +87,8 @@ export interface AdminAccessRepository {
 /** 管理端分析聚合 */
 export interface AdminAnalyticsRepository {
 	queryModelAnalytics(options: { start: string; end: string; tag?: string; providerId?: string; userEmail?: string }): Promise<ModelAnalyticsRow[]>;
+	/** 公开排行专用：只读按日、按模型预聚合表，禁止回退扫描原始请求日志。 */
+	queryPublicModelAnalytics(options: { startDate: string; endDate: string }): Promise<PublicModelAnalyticsRow[]>;
 	queryDistinctModelTags(): Promise<string[]>;
 	queryUserAnalytics(options: { start: string; end: string; email?: string }): Promise<UserAnalyticsRow[]>;
 	queryProviderAnalytics(options: { start: string; end: string; tag?: string; modelId?: string; routeGroup?: string }): Promise<ProviderAnalyticsRow[]>;
@@ -133,6 +136,8 @@ export interface ApiKeysRepository {
 	deleteApiKeyHard(id: string, secretKey: string): Promise<boolean>;
 	updateApiKeyStatusById(id: string, status: string): Promise<boolean>;
 	setApiKeyMetadataById(id: string, metadataJson: string | null): Promise<boolean>;
+	/** Idempotent online migration: replace legacy plaintext bearer values with hash references. */
+	scrubLegacyApiKeySecrets(limit?: number): Promise<{ scrubbed: number; remaining: number }>;
 	updateApiKeyName(id: string, name: string | null): Promise<boolean>;
 	getAllApiKeys(options?: {
 		email?: string;

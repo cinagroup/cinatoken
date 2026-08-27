@@ -82,6 +82,13 @@ export async function listAdminKeys(
 	};
 }
 
+export async function scrubLegacyGatewayKeySecrets(
+	repos: GatewayRepositories,
+	limit?: number
+): Promise<{ scrubbed: number; remaining: number }> {
+	return repos.apiKeys.scrubLegacyApiKeySecrets(limit);
+}
+
 /**
  * 在已有用户下新建密钥；无 `user_id` 时须提供 `external_system` + `external_user_id` + `email` 以幂等取/建用户。
  */

@@ -10,5 +10,5 @@ export interface ApiKeysD1Statements {
 }
 
 export interface RequestLogsD1Statements {
-	buildInsertRequestLogStatement(db: D1Database, params: InsertRequestLogParams): D1PreparedStatement;
+	buildInsertRequestLogStatement(db: D1Database, params: InsertRequestLogParams, createdAtIso?: string): D1PreparedStatement;
 }

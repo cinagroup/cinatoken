@@ -39,6 +39,10 @@ import { fireGatewayErrorWebhooks } from './alert-webhook';
 import { settleSharedKeyEarning } from './shared-key-earnings';
 import type { GatewayCircuitAlertEvent } from './circuit-alert-types';
 import type { RequestTimingSnapshot } from './request-timing';
+import {
+	applyRequestBodyLoggingPolicy,
+	type RequestBodyLoggingMode,
+} from './request-body-log-policy';
 
 const TOKENS_PER_MILLION = 1_000_000;
 
@@ -125,6 +129,7 @@ export async function recordUsage(
 		provider_name?: string | null;
 		request_body?: string | null;
 		upstream_request_body?: string | null;
+		request_body_logging_mode?: RequestBodyLoggingMode;
 		request_protocol: UpstreamProtocol;
 		request_operation?: string | null;
 		upstream_protocol: UpstreamProtocol;
@@ -287,8 +292,14 @@ export async function recordUsage(
 			providerModelName: params.provider_model_name ?? null,
 			modelName: params.model_name ?? null,
 			providerName: params.provider_name ?? null,
-			requestBody: params.request_body ?? null,
-			upstreamRequestBody: params.upstream_request_body ?? null,
+			requestBody: applyRequestBodyLoggingPolicy(
+				params.request_body,
+				params.request_body_logging_mode
+			),
+			upstreamRequestBody: applyRequestBodyLoggingPolicy(
+				params.upstream_request_body,
+				params.request_body_logging_mode
+			),
 			requestProtocol: params.request_protocol,
 			requestOperation: params.request_operation ?? null,
 			upstreamProtocol: params.upstream_protocol,

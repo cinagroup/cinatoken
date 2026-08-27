@@ -76,6 +76,7 @@ assert.deepEqual(actualTables, [
 	'model_routes',
 	'route_pool_sticky_bindings',
 	'api_key_request_logs',
+	'public_model_daily_stats',
 	'system_config',
 	'user_audit_logs',
 	'admin_api_keys',
@@ -99,7 +100,7 @@ for (const safetyContract of [
 	'ENABLE TRIGGER USER',
 	'pg_advisory_xact_lock',
 	'ETL_EXCLUDED_SESSION_TABLES.map',
-	'0030_chain_job_transactions.sql',
+	'0034_public_model_daily_stats.sql',
 ]) {
 	assert.ok(etl.includes(safetyContract), `ETL is missing safety contract: ${safetyContract}`);
 }
@@ -109,6 +110,7 @@ assert.match(reconcile, /Postgres\(\$\{TARGET_SCHEMA\}\)/u);
 assert.match(reconcile, /target:portal_sessions_invalidated/u);
 assert.match(reconcile, /target:portal_ledger_triggers_enabled/u);
 assert.match(reconcile, /user_earnings:sum_\$\{column\}/u);
+assert.match(reconcile, /public_model_daily_stats:sum_\$\{column\}/u);
 
 const hyperdriveMigrationWorker = read('scripts/db/cutover/postgres-migrations-worker.ts');
 for (const file of postgresMigrations) {

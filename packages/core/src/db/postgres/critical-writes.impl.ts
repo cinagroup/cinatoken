@@ -5,7 +5,9 @@ import { and, eq, sql } from 'drizzle-orm';
 import type { InsertUserAuditLogParams } from '../user-audit-logs-types';
 import type { InsertUserBudgetAuditLogParams } from '../user-budget-audit-params';
 import type { InsertKeyParams } from '../api-keys-types';
+import { prepareGatewayApiKeyForStorage } from '../../lib/key-hash';
 import type { InsertRequestLogParams } from '../request-logs-types';
+import { toPublicModelDailyStatsDelta } from '../public-model-daily-stats';
 import {
 	userBudgetAuditToInsertRowForBudgetTx,
 	userBudgetAuditToInsertRowForCreateKey,
@@ -18,6 +20,7 @@ import { nowIso, parseMoney } from '../../storage/critical-write-paths-utils';
 import {
 	apiKeysTable as pgApiKeysTable,
 	apiKeyRequestLogsTable as pgRequestLogsTable,
+	publicModelDailyStatsTable as pgPublicModelDailyStatsTable,
 	systemConfigTable as pgSystemConfigTable,
 	userAuditLogsTable as pgUserAuditLogsTable,
 	usersTable as pgUsersTable,
@@ -64,11 +67,14 @@ export async function createApiKeyWithAuditPg(
 ): Promise<void> {
 	const now = nowIso();
 	const auditRow = userBudgetAuditToInsertRowForCreateKey(params.insert.userId, params.audit);
+	const preparedKey = await prepareGatewayApiKeyForStorage(params.insert.key);
 	await client.drizzle.transaction(async (tx) => {
 		const status = params.insert.status ?? 'active';
 		await tx.insert(pgApiKeysTable).values({
 			id: params.insert.id,
-			key: params.insert.key,
+			key: preparedKey.storageKey,
+			keyHash: preparedKey.keyHash,
+			keyPreview: preparedKey.keyPreview,
 			userId: params.insert.userId,
 			name: params.insert.name ?? null,
 			status,
@@ -184,6 +190,7 @@ export async function insertRequestUsageAndChargeTxPg(
 	const charged = roundGatewayMoney(params.chargedCost);
 	const afterSpent = roundGatewayMoney(params.beforeSpent + charged);
 	const now = nowIso();
+	const delta = toPublicModelDailyStatsDelta(params.requestLog, now);
 	await client.drizzle.transaction(async (tx) => {
 		await tx.insert(pgRequestLogsTable).values({
 			id: params.requestLog.id,
@@ -242,6 +249,36 @@ export async function insertRequestUsageAndChargeTxPg(
 			audioCharacters: params.requestLog.audioCharacters ?? null,
 			createdAt: now,
 		});
+		await tx
+			.insert(pgPublicModelDailyStatsTable)
+			.values({
+				statDate: delta.statDate,
+				modelId: delta.modelId,
+				shard: delta.shard,
+				requestCount: delta.requestCount,
+				successCount: delta.successCount,
+				errorCount: delta.errorCount,
+				outputTokens: delta.outputTokens,
+				latencyTotalMs: delta.latencyTotalMs,
+				latencySampleCount: delta.latencySampleCount,
+				updatedAt: now,
+			})
+			.onConflictDoUpdate({
+				target: [
+					pgPublicModelDailyStatsTable.statDate,
+					pgPublicModelDailyStatsTable.modelId,
+					pgPublicModelDailyStatsTable.shard,
+				],
+				set: {
+					requestCount: sql`${pgPublicModelDailyStatsTable.requestCount} + excluded.request_count`,
+					successCount: sql`${pgPublicModelDailyStatsTable.successCount} + excluded.success_count`,
+					errorCount: sql`${pgPublicModelDailyStatsTable.errorCount} + excluded.error_count`,
+					outputTokens: sql`${pgPublicModelDailyStatsTable.outputTokens} + excluded.output_tokens`,
+					latencyTotalMs: sql`${pgPublicModelDailyStatsTable.latencyTotalMs} + excluded.latency_total_ms`,
+					latencySampleCount: sql`${pgPublicModelDailyStatsTable.latencySampleCount} + excluded.latency_sample_count`,
+					updatedAt: now,
+				},
+			});
 		if (!params.shouldChargeBudget) {
 			return;
 		}

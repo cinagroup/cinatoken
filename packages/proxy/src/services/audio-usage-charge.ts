@@ -49,6 +49,10 @@ import type { GatewayCircuitAlertEvent } from './circuit-alert-types';
 import { fireGatewayErrorWebhooks } from './alert-webhook';
 import type { RequestTimingSnapshot } from './request-timing';
 import { resolveAudioBillingDuration } from './egress/audio-duration';
+import {
+	applyRequestBodyLoggingPolicy,
+	type RequestBodyLoggingMode,
+} from './request-body-log-policy';
 
 export type AudioBillingParams = {
 	modelPricingProfileJson?: string | null;
@@ -568,6 +572,7 @@ export type RecordAudioUsageParams = {
 	providerName?: string | null;
 	requestBody?: string | null;
 	upstreamRequestBody?: string | null;
+	requestBodyLoggingMode?: RequestBodyLoggingMode;
 	requestProtocol: UpstreamProtocol;
 	requestOperation?: string | null;
 	upstreamProtocol: UpstreamProtocol;
@@ -689,8 +694,14 @@ export async function recordAudioUsage(params: RecordAudioUsageParams): Promise<
 			providerModelName: params.providerModelName ?? null,
 			modelName: params.modelName ?? null,
 			providerName: params.providerName ?? null,
-			requestBody: params.requestBody ?? null,
-			upstreamRequestBody: params.upstreamRequestBody ?? null,
+			requestBody: applyRequestBodyLoggingPolicy(
+				params.requestBody,
+				params.requestBodyLoggingMode
+			),
+			upstreamRequestBody: applyRequestBodyLoggingPolicy(
+				params.upstreamRequestBody,
+				params.requestBodyLoggingMode
+			),
 			requestProtocol: params.requestProtocol,
 			requestOperation: params.requestOperation ?? null,
 			upstreamProtocol: params.upstreamProtocol,

@@ -3,6 +3,7 @@
  */
 import type { Context } from 'hono';
 import type { GatewayRepositories, UpstreamProtocol } from '@octafuse/core';
+import type { Env } from '../app';
 import type { ApiKeyContext } from '../middleware/auth';
 import { scheduleBackgroundWork } from '../runtime/schedule-background-work';
 import { EMPTY_USAGE } from './proxy';
@@ -46,8 +47,8 @@ export type UserModelCircuitTriggerOptions = {
 /**
  * 若当前 user+model 处于熔断窗口，记录短路日志并返回短路 Response；否则 null。
  */
-export function maybeBlockUserModelCircuit(
-	c: Context,
+export function maybeBlockUserModelCircuit<E extends Env>(
+	c: Context<E>,
 	repos: GatewayRepositories,
 	apiKey: ApiKeyContext,
 	ctx: UserModelCircuitRouteContext
@@ -72,6 +73,7 @@ export function maybeBlockUserModelCircuit(
 			provider_id: GATEWAY_PROVIDER_ID,
 			model_name: ctx.modelNameForLog,
 			request_body: ctx.requestBodyForLog,
+			request_body_logging_mode: c.get('requestBodyLoggingMode'),
 			request_protocol: ctx.requestProtocol,
 			upstream_protocol: ctx.requestProtocol,
 			usage: EMPTY_USAGE,

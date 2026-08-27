@@ -122,7 +122,7 @@ export default {
 						(SELECT COUNT(*)::TEXT FROM cinatoken_gateway.schema_migrations) AS migration_count,
 						EXISTS (
 							SELECT 1 FROM cinatoken_gateway.schema_migrations
-							WHERE version = '0030_chain_job_transactions.sql'
+							WHERE version = '0034_public_model_daily_stats.sql'
 						) AS latest_migration_applied
 				`,
 				runtime<RuntimeProbe[]>`

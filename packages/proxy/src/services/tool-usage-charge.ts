@@ -14,6 +14,10 @@ import {
 	type GatewayRepositories,
 	type ToolUnitPrices,
 } from '@octafuse/core';
+import {
+	applyRequestBodyLoggingPolicy,
+	type RequestBodyLoggingMode,
+} from './request-body-log-policy';
 
 export type ChargeToolUsageParams = {
 	repos: GatewayRepositories;
@@ -36,6 +40,7 @@ export type ChargeToolUsageParams = {
 	latencyMs: number;
 	/** 工具入参 JSON（如 query） */
 	requestBody?: string | null;
+	requestBodyLoggingMode?: RequestBodyLoggingMode;
 	/**
 	 * 工具出参摘要 JSON（如搜索结果 title/url）。
 	 * 复用 `api_key_request_logs.raw_usage`；工具无 token usage。
@@ -123,7 +128,10 @@ export async function chargeToolUsage(params: ChargeToolUsageParams): Promise<{ 
 			providerModelName: toolProvider || params.toolId,
 			modelName: params.toolId,
 			providerName: 'cinatoken Tools',
-			requestBody: params.requestBody ?? null,
+			requestBody: applyRequestBodyLoggingPolicy(
+				params.requestBody,
+				params.requestBodyLoggingMode
+			),
 			upstreamRequestBody: null,
 			requestProtocol: 'openai',
 			/**

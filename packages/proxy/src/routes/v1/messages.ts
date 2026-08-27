@@ -291,6 +291,7 @@ messagesRoutes.post('/', async (c) => {
           provider_name: chosenRoute.providerName,
           request_body: requestBodyForLog,
           upstream_request_body: upstreamRequestBodyForLog,
+          request_body_logging_mode: c.get('requestBodyLoggingMode'),
           request_protocol: 'anthropic',
           request_operation: 'messages',
           upstream_protocol: chosenRoute.upstreamProtocol,

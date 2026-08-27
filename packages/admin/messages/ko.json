@@ -111,6 +111,177 @@
 			"description": "AI 기능 게이트웨이 및 운영 제어 플레인"
 		}
 	},
+	"publicNav": {
+		"label": "공개 탐색",
+		"homeLabel": "cinatoken 홈으로 돌아가기",
+		"models": "모델",
+		"providers": "공급자",
+		"rankings": "순위",
+		"benchmarks": "벤치마크",
+		"chat": "채팅",
+		"features": "기능",
+		"docs": "문서",
+		"portal": "사용자 포털",
+		"console": "콘솔"
+	},
+	"publicModels": {
+		"metadata": {
+			"title": "모델",
+			"description": "cinatoken 게이트웨이에서 현재 사용할 수 있는 AI 모델을 살펴보세요."
+		},
+		"eyebrow": "실시간 게이트웨이 카탈로그",
+		"title": "모델",
+		"description": "cinatoken에 현재 게시된 모든 모델을 살펴보고 기능과 가격을 비교한 뒤 하나의 호환 API로 호출하세요.",
+		"getKey": "API 키 받기",
+		"byVendor": "{vendor} 제공",
+		"contextValue": "{value} 컨텍스트",
+		"searchPlaceholder": "모델, 공급자 또는 기능 검색",
+		"searchLabel": "모델 카탈로그 검색",
+		"clearSearch": "검색 지우기",
+		"outputLabel": "출력 유형으로 필터링",
+		"outputs": {
+			"all": "모든 모델",
+			"text": "텍스트",
+			"image": "이미지",
+			"video": "비디오",
+			"audio": "오디오"
+		},
+		"filters": {
+			"title": "필터",
+			"clear": "모두 지우기",
+			"providers": "공급자",
+			"input": "입력 모달리티",
+			"protocol": "프로토콜",
+			"context": "최소 컨텍스트",
+			"close": "필터 닫기",
+			"show": "모델 {count}개 보기"
+		},
+		"context": {
+			"all": "전체",
+			"128k": "128K+",
+			"1m": "1M+"
+		},
+		"modalities": {
+			"text": "텍스트",
+			"image": "이미지",
+			"audio": "오디오",
+			"video": "비디오",
+			"file": "파일"
+		},
+		"results": {
+			"count": "모델 {count}개"
+		},
+		"sort": {
+			"label": "모델 정렬",
+			"newest": "최신순",
+			"context": "컨텍스트 큰 순",
+			"price": "입력 가격 낮은 순",
+			"name": "이름"
+		},
+		"columns": {
+			"model": "모델",
+			"provider": "공급자",
+			"context": "컨텍스트",
+			"released": "출시일",
+			"pricing": "입력 / 출력"
+		},
+		"view": {
+			"label": "모델 표시 형식",
+			"list": "목록 보기",
+			"table": "표 보기"
+		},
+		"pricing": {
+			"unavailable": "가격 미등록",
+			"perImage": "/ 이미지",
+			"perSecond": "/ 초",
+			"perCharacter": "/ 문자",
+			"perMillion": "/ 100만 token",
+			"inputOutput": "게이트웨이 결제 통화 기준 카탈로그 가격"
+		},
+		"unavailable": {
+			"title": "모델 카탈로그를 일시적으로 사용할 수 없습니다",
+			"description": "게이트웨이 응답이 없어 캐시되거나 임의로 만든 모델 데이터는 표시하지 않습니다."
+		},
+		"empty": {
+			"title": "필터와 일치하는 모델이 없습니다",
+			"description": "검색 범위를 넓히거나 활성 필터를 지워보세요."
+		}
+	},
+	"publicModelDetail": {
+		"metadata": {
+			"fallbackTitle": "모델",
+			"title": "{model} — 모델 상세",
+			"description": "{vendor}의 {model} 기능, 가격 및 API 호환성을 확인하세요."
+		},
+		"back": "모든 모델",
+		"noDescription": "이 모델의 공개 설명이 없습니다.",
+		"pricingTitle": "가격",
+		"pricingDescription": "게이트웨이가 게시한 카탈로그 요금입니다. 계정별 조정이 적용될 수 있습니다.",
+		"pricingUnavailable": "공개 카탈로그 가격이 없습니다.",
+		"tier": "사용량 구간",
+		"input": "입력 / 100만 token",
+		"output": "출력 / 100만 token",
+		"allTokens": "모든 token",
+		"upToTokens": "{count}까지",
+		"perMillionHint": "가격은 100만 token당 {currency}로 표시됩니다.",
+		"perImage": "이미지당",
+		"perSecond": "초당",
+		"perCharacter": "문자당",
+		"apiTitle": "이 모델 호출하기",
+		"apiDescription": "권장 호환 프로토콜: {protocol}.",
+		"capabilitiesTitle": "모델 정보",
+		"context": "컨텍스트 창",
+		"maxOutput": "최대 출력",
+		"released": "출시일",
+		"routeGroups": "라우트 그룹",
+		"modalities": "모달리티",
+		"inputModalities": "입력: {values}",
+		"outputModalities": "출력: {values}",
+		"getKey": "API 키 받기",
+		"docs": "API 문서 읽기",
+		"unavailableTitle": "모델 상세 정보를 일시적으로 사용할 수 없습니다",
+		"unavailableDescription": "게이트웨이에서 검증된 모델 레코드를 반환하지 않아 캐시나 임의 상세 정보는 표시하지 않습니다."
+	},
+	"publicProviders": {
+		"metadata": { "title": "공급자", "description": "cinatoken에서 현재 사용할 수 있는 AI 공급자를 살펴보세요." },
+		"title": "공급자",
+		"description": "cinatoken의 활성 모델 카탈로그를 제공하는 공급자와 실시간 프로토콜 및 모달리티 범위를 살펴보세요.",
+		"getKey": "API 키 받기",
+		"searchPlaceholder": "공급자 또는 기능 검색",
+		"searchLabel": "공급자 검색",
+		"clearSearch": "검색 지우기",
+		"sortLabel": "공급자 정렬",
+		"sort": { "models": "모델 많은 순", "name": "이름", "newest": "최신 출시" },
+		"filters": { "title": "필터", "clear": "모두 지우기", "protocols": "프로토콜", "inputs": "입력 모달리티", "outputs": "출력 모달리티", "close": "필터 닫기", "show": "공급자 {count}개 보기" },
+		"columns": { "provider": "공급자", "models": "모델", "protocols": "프로토콜", "inputs": "입력", "outputs": "출력", "latest": "최신 출시" },
+		"count": "공급자 {count}개",
+		"modelCount": "모델 {count}개",
+		"models": "모델",
+		"latest": "최신 출시",
+		"unavailable": { "title": "공급자 카탈로그를 일시적으로 사용할 수 없습니다", "description": "게이트웨이가 공급자 집계를 반환하지 않아 자리 표시자 데이터는 표시하지 않습니다." },
+		"empty": { "title": "검색과 일치하는 공급자가 없습니다", "description": "더 넓은 검색어를 사용해 보세요." }
+	},
+	"publicCompare": {
+		"metadata": { "title": "모델 비교", "description": "cinatoken 공개 모델을 나란히 비교합니다." },
+		"title": "모델 비교", "description": "실제 게시 데이터를 사용해 기능, 컨텍스트, 프로토콜 및 가격을 비교합니다.", "getKey": "API 키 받기", "pickerLabel": "비교할 모델 선택", "pickerPlaceholder": "다른 모델 선택", "add": "모델 추가", "attribute": "속성", "remove": "{model} 제거", "unavailable": "모델 카탈로그를 일시적으로 사용할 수 없습니다.", "empty": "비교할 모델을 하나 이상 선택하세요.", "priceHint": "카탈로그 가격은 {currency}이며 입출력 요금은 100만 token 기준입니다.",
+		"rows": { "provider": "공급자", "modelId": "모델 ID", "context": "컨텍스트", "maxOutput": "최대 출력", "input": "입력 모달리티", "output": "출력 모달리티", "protocols": "프로토콜", "released": "출시일", "price": "입력 / 출력 가격" }
+	},
+	"publicRankings": {
+		"metadata": { "title": "모델 순위", "description": "cinatoken의 개인정보 보호 사용량 및 신뢰성 순위입니다." },
+		"title": "모델 순위", "description": "게시 모델의 사용량, 신뢰성, 낮은 지연 시간을 확인하세요.", "browseModels": "모델 보기", "privacyNote": "{count}건 이상인 집계 행만 게시하며 사용자, 비용, 라우트, 오류 세부 정보는 공개하지 않습니다.",
+		"ranges": { "7d": "7일", "30d": "30일", "90d": "90일" }, "metrics": { "popular": "인기", "reliable": "신뢰성", "latency": "낮은 지연" }, "columns": { "model": "모델", "requests": "요청", "success": "성공률", "latency": "평균 지연", "output": "출력 token" },
+		"unavailable": { "title": "순위를 일시적으로 사용할 수 없습니다", "description": "검증된 집계 텔레메트리가 반환되지 않았습니다." }, "empty": { "title": "공개 데이터가 아직 부족합니다", "description": "이 기간에 {count}건 개인정보 임계값에 도달한 모델이 없습니다." }
+	},
+	"publicBenchmarks": {
+		"metadata": { "title": "게이트웨이 벤치마크", "description": "cinatoken에서 관측한 지연 및 신뢰성 지표입니다." },
+		"title": "게이트웨이 벤치마크", "description": "게시 모델의 운영 관측 성능입니다. 합성 지능 평가가 아닌 게이트웨이 전달 지표입니다.", "browseModels": "모델 보기", "privacyNote": "{count}건 이상인 집계 행만 게시하며 사용자, 비용, 라우트, 오류 세부 정보는 공개하지 않습니다.",
+		"ranges": { "7d": "7일", "30d": "30일", "90d": "90일" }, "metrics": { "popular": "호출량", "reliable": "신뢰성", "latency": "지연" }, "columns": { "model": "모델", "requests": "요청", "success": "성공률", "latency": "평균 지연", "output": "출력 token" },
+		"unavailable": { "title": "벤치마크를 일시적으로 사용할 수 없습니다", "description": "검증된 집계 텔레메트리가 반환되지 않았습니다." }, "empty": { "title": "벤치마크 데이터가 아직 부족합니다", "description": "이 기간에 {count}건 개인정보 임계값에 도달한 모델이 없습니다." }
+	},
+	"publicChat": {
+		"metadata": { "title": "채팅", "description": "비공개 브라우저 세션에서 cinatoken 텍스트 모델을 호출합니다." },
+		"title": "채팅", "description": "OpenAI 호환 게이트웨이에서 게시된 텍스트 모델을 테스트합니다.", "newChat": "새 채팅", "model": "모델", "apiKey": "API 키", "keySafety": "이 페이지 메모리에만 보관되고 cinatoken이 API로 전달합니다. 인터페이스는 키를 저장하지 않습니다.", "getKey": "키 만들기 또는 관리", "clear": "대화 지우기", "emptyTitle": "대화 시작", "emptyDescription": "모델을 선택하고 API 키와 메시지를 입력하세요. 응답은 실제 게이트웨이에서 옵니다.", "catalogUnavailable": "모델 카탈로그를 사용할 수 없어 채팅을 시작할 수 없습니다.", "noModels": "현재 게시된 OpenAI 호환 텍스트 모델이 없습니다.", "thinking": "생성 중…", "prompt": "cinatoken에 메시지", "promptLabel": "채팅 메시지", "send": "메시지 보내기", "disclaimer": "모델 출력은 부정확할 수 있습니다. 중요한 정보는 확인하세요.", "requestFailed": "요청 실패({status}).", "invalidResponse": "게이트웨이가 어시스턴트 텍스트를 반환하지 않았습니다.", "networkError": "게이트웨이에 연결할 수 없습니다."
+	},
 	"brand": {
 		"wordmark": "cinatoken",
 		"product": "cinatoken Gateway",
@@ -1570,6 +1741,7 @@
 			"metadataJson": "Metadata (JSON)",
 			"name": "이름",
 			"secretKey": "Secret Key",
+			"keyPreview": "Key 미리보기",
 			"status": "상태",
 			"userIdAuth": "User ID (auth)",
 			"budgetReadonly": "예산 (읽기 전용)",
@@ -1589,7 +1761,8 @@
 		"help": {
 			"userEmail": "일치 또는 생성에 필요합니다. 외부 ID 쌍이 이미 있으면 저장된 이메일을 덮어쓰지 않습니다.",
 			"metadata": "Key에 저장되며 GET /v1/me에서 반환됩니다. 없으면 비워 두세요.",
-			"editMetadata": "이 Key에 저장되는 전체 JSON입니다. 비워 두면 삭제됩니다. 설정된 값은 GET /v1/me에 표시됩니다."
+			"editMetadata": "이 Key에 저장되는 전체 JSON입니다. 비워 두면 삭제됩니다. 설정된 값은 GET /v1/me에 표시됩니다.",
+			"keyPreview": "전체 시크릿은 생성 시 한 번만 표시됩니다. 이 미리보기는 인증에 사용할 수 없습니다."
 		},
 		"links": {
 			"requestLogsForKey": "이 Key의 요청 로그 보기 →",

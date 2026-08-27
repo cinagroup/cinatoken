@@ -59,6 +59,8 @@ Use chain ID `84532` only for Base Sepolia. A mainnet launch requires reviewed m
 
 Use `wrangler secret put` or a secret manager integration. Do not place these values in `cloudflare-worker/*.env`, command-line arguments, GitHub Actions logs, or tracked files. The deployment CLI checks secret names before it deploys; it never reads their values.
 
+`REQUEST_BODY_LOGGING` is a non-secret Proxy variable and defaults to `off`. Keep it off in production unless an approved incident or audit workflow explicitly requires request payloads. The only opt-in value is `redacted`; it stores the existing redacted and truncated representation, which can still contain sensitive prompt text, so access control and retention limits remain mandatory.
+
 ## Migration preflight
 
 Before provisioning the Queue consumer, prove that both configured contracts contain bytecode,
@@ -85,6 +87,8 @@ npm run preflight:chain -- \
 
 3. Resolve every returned row through an audited refund or settlement decision. Do not delete financial rows to make the index pass.
 4. Run `npm run test:d1-portal-ledger`; it applies the complete migration chain to SQLite and validates earning idempotency, integer balance locking, duplicate-active rejection, settlement, and immutable ledger entries.
+5. Apply the Gateway Key hash/preview migration before deploying code that writes the new format. After Admin is live, call `POST /api/admin/keys/maintenance/scrub-legacy-secrets` in bounded batches with a `user_keys.write` principal until `remaining` is zero.
+6. Verify the data plane directly: `SELECT COUNT(*) FROM api_keys WHERE key NOT LIKE 'hashref:sha256:%';` must return `0`. Lists and detail APIs must expose only `key_preview`, while a newly created Key must authenticate using the one-time secret.
 
 ## Staged release
 
@@ -120,9 +124,11 @@ For a Worker that does not exist yet, first-time bootstrap deploys an inactive s
 ## Rollback and incident response
 
 - Worker code can roll back through Cloudflare deployment history. Database migrations `0029` and `0030` are additive and are not rolled back destructively.
+- After legacy Gateway Key secrets are scrubbed, do not roll back Proxy/Admin earlier than the hash-aware release; plaintext-only authentication cannot read `hashref:` rows.
 - Before code rollback, pause Queue delivery. A pre-migration Worker must not process rows created by the new state machine.
 - Preserve `portal_ledger_entries`, withdrawals, earnings, and `chain_job_transactions` for reconciliation. Never purge the Queue or DLQ during an unresolved financial incident.
 - If the signer may be compromised, pause delivery, revoke the contract minter role, rotate the signer, then audit every outbox hash before resuming.
 - If `SHARED_KEY_ENCRYPTION_SECRET` is lost, encrypted shared keys are unrecoverable; disable the affected pool and have sellers re-enroll keys.
+- If request bodies were enabled, set `REQUEST_BODY_LOGGING=off` first, then preserve or delete existing rows only according to the approved retention and incident procedure.
 
 The public attribution and `NOTICE.frontend` are release requirements, not optional branding elements.

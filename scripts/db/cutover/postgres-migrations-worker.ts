@@ -34,6 +34,8 @@ import migration0029 from '../../../packages/core/migrations-postgres/0029_porta
 import migration0030 from '../../../packages/core/migrations-postgres/0030_chain_job_transactions.sql';
 import migration0031 from '../../../packages/core/migrations-postgres/0031_ledger_integrity_guards.sql';
 import migration0032 from '../../../packages/core/migrations-postgres/0032_key_hash_lookup.sql';
+import migration0033 from '../../../packages/core/migrations-postgres/0033_gateway_key_secret_removal.sql';
+import migration0034 from '../../../packages/core/migrations-postgres/0034_public_model_daily_stats.sql';
 
 interface MigrationEnv {
 	MIGRATOR_HYPERDRIVE: { readonly connectionString: string };
@@ -74,6 +76,8 @@ const MIGRATIONS = [
 	['0030_chain_job_transactions.sql', migration0030],
 	['0031_ledger_integrity_guards.sql', migration0031],
 	['0032_key_hash_lookup.sql', migration0032],
+	['0033_gateway_key_secret_removal.sql', migration0033],
+	['0034_public_model_daily_stats.sql', migration0034],
 ] as const;
 
 export default {

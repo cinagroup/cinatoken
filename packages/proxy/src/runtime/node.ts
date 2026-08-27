@@ -16,6 +16,7 @@ import {
 	createNodeWebSocketServer,
 	type NodeWebSocket,
 } from './node-realtime';
+import { createInMemoryPublicStatsRuntimeGuard } from '../services/public-stats-runtime-guard';
 
 let nodeStoragePromise: Promise<StorageContext> | null = null;
 
@@ -44,7 +45,10 @@ async function resolveNodeStorage(): Promise<StorageContext> {
 }
 
 export function createNodeApp() {
-	return createProxyApp(async () => resolveNodeStorage());
+	return createProxyApp(async () => resolveNodeStorage(), {
+		requestBodyLogging: process.env.REQUEST_BODY_LOGGING,
+		publicStatsRuntime: createInMemoryPublicStatsRuntimeGuard(),
+	});
 }
 
 function redactDatabaseConnectionUrl(connectionString: string): string {

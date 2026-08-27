@@ -8,12 +8,17 @@
 	"main": "src/index.ts",
 	"compatibility_date": "2026-08-24",
 	"compatibility_flags": ["nodejs_compat", "enable_request_signal"],
-	// 认证失败限速（每 IP 30 次/分钟，per-colo 尽力而为；binding 未注入时中间件自动跳过）
+	// 认证失败按调用方限速；公开统计只在缓存未命中时按固定路由键限速。
 	"ratelimits": [
 		{
 			"name": "AUTH_RATE_LIMITER",
 			"namespace_id": "2001",
 			"simple": { "limit": 30, "period": 60 }
+		},
+		{
+			"name": "PUBLIC_STATS_RATE_LIMITER",
+			"namespace_id": "2002",
+			"simple": { "limit": 12, "period": 60 }
 		}
 	],
 
@@ -24,6 +29,9 @@
 			"zone_name": "cinatoken.com"
 		}
 	],
+	"vars": {
+		"REQUEST_BODY_LOGGING": "off"
+	},
 	"d1_databases": [
 		{
 			"binding": "DB",

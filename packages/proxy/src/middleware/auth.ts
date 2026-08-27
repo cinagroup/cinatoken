@@ -81,7 +81,7 @@ function extractApiKey(c: { req: { header: (name: string) => string | undefined;
 /** 认证失败限速：每 IP 计数（Workers ratelimit binding，per-colo 尽力而为）。
  * 超限返回 429，未超限返回 null（走常规 401）；限速器缺失/故障时静默跳过。 */
 async function throttleAuthFailure(c: { env: Env['Bindings']; req: { header(name: string): string | undefined }; json(body: unknown, status: 429, headers: Record<string, string>): Response }): Promise<Response | null> {
-  const limiter = c.env.RATE_LIMITER;
+  const limiter = c.env.AUTH_RATE_LIMITER ?? c.env.RATE_LIMITER;
   if (!limiter) return null;
   const ip = c.req.header('CF-Connecting-IP') ?? 'unknown';
   try {

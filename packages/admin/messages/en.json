@@ -111,6 +111,177 @@
 			"description": "AI capability gateway and operations control plane"
 		}
 	},
+	"publicNav": {
+		"label": "Public navigation",
+		"homeLabel": "Back to the cinatoken homepage",
+		"models": "Models",
+		"providers": "Providers",
+		"rankings": "Rankings",
+		"benchmarks": "Benchmarks",
+		"chat": "Chat",
+		"features": "Features",
+		"docs": "Docs",
+		"portal": "User Portal",
+		"console": "Console"
+	},
+	"publicModels": {
+		"metadata": {
+			"title": "Models",
+			"description": "Explore the AI models currently available through the cinatoken gateway."
+		},
+		"eyebrow": "Live gateway catalog",
+		"title": "Models",
+		"description": "Explore every model currently published through cinatoken, compare capabilities and pricing, then call it through one compatible API.",
+		"getKey": "Get an API key",
+		"byVendor": "by {vendor}",
+		"contextValue": "{value} context",
+		"searchPlaceholder": "Search models, providers, or capabilities",
+		"searchLabel": "Search the model catalog",
+		"clearSearch": "Clear search",
+		"outputLabel": "Filter by output type",
+		"outputs": {
+			"all": "All models",
+			"text": "Text",
+			"image": "Image",
+			"video": "Video",
+			"audio": "Audio"
+		},
+		"filters": {
+			"title": "Filters",
+			"clear": "Clear all",
+			"providers": "Providers",
+			"input": "Input modalities",
+			"protocol": "Protocols",
+			"context": "Minimum context",
+			"close": "Close filters",
+			"show": "Show {count} models"
+		},
+		"context": {
+			"all": "Any",
+			"128k": "128K+",
+			"1m": "1M+"
+		},
+		"modalities": {
+			"text": "Text",
+			"image": "Image",
+			"audio": "Audio",
+			"video": "Video",
+			"file": "File"
+		},
+		"results": {
+			"count": "{count} models"
+		},
+		"sort": {
+			"label": "Sort models",
+			"newest": "Newest",
+			"context": "Context: high to low",
+			"price": "Input price: low to high",
+			"name": "Name"
+		},
+		"columns": {
+			"model": "Model",
+			"provider": "Provider",
+			"context": "Context",
+			"released": "Released",
+			"pricing": "Input / output"
+		},
+		"view": {
+			"label": "Models display format",
+			"list": "List view",
+			"table": "Table view"
+		},
+		"pricing": {
+			"unavailable": "Not listed",
+			"perImage": "/ image",
+			"perSecond": "/ second",
+			"perCharacter": "/ character",
+			"perMillion": "/ 1M tokens",
+			"inputOutput": "Catalog price in billing currency"
+		},
+		"unavailable": {
+			"title": "The model catalog is temporarily unavailable",
+			"description": "The gateway did not return a catalog response. No cached or invented model data is shown."
+		},
+		"empty": {
+			"title": "No models match these filters",
+			"description": "Try a broader search or clear the active filters."
+		}
+	},
+	"publicModelDetail": {
+		"metadata": {
+			"fallbackTitle": "Model",
+			"title": "{model} — Model details",
+			"description": "View {model} by {vendor}, including capabilities, pricing, and API compatibility."
+		},
+		"back": "All models",
+		"noDescription": "No public description is available for this model.",
+		"pricingTitle": "Pricing",
+		"pricingDescription": "Catalog rates published by the gateway. Account-specific adjustments may apply.",
+		"pricingUnavailable": "No public catalog price is listed.",
+		"tier": "Usage tier",
+		"input": "Input / 1M tokens",
+		"output": "Output / 1M tokens",
+		"allTokens": "All tokens",
+		"upToTokens": "Up to {count}",
+		"perMillionHint": "Prices are shown in {currency} per one million tokens.",
+		"perImage": "per image",
+		"perSecond": "per second",
+		"perCharacter": "per character",
+		"apiTitle": "Call this model",
+		"apiDescription": "Recommended compatible protocol: {protocol}.",
+		"capabilitiesTitle": "Model information",
+		"context": "Context window",
+		"maxOutput": "Maximum output",
+		"released": "Released",
+		"routeGroups": "Route groups",
+		"modalities": "Modalities",
+		"inputModalities": "Input: {values}",
+		"outputModalities": "Output: {values}",
+		"getKey": "Get an API key",
+		"docs": "Read the API docs",
+		"unavailableTitle": "Model details are temporarily unavailable",
+		"unavailableDescription": "The gateway did not return a verified model record. No cached or invented details are shown."
+	},
+	"publicProviders": {
+		"metadata": { "title": "Providers", "description": "Explore the AI providers currently available through cinatoken." },
+		"title": "Providers",
+		"description": "Browse the providers behind cinatoken's active model catalog, with live protocol and modality coverage.",
+		"getKey": "Get an API key",
+		"searchPlaceholder": "Search providers or capabilities",
+		"searchLabel": "Search providers",
+		"clearSearch": "Clear search",
+		"sortLabel": "Sort providers",
+		"sort": { "models": "Most models", "name": "Name", "newest": "Newest release" },
+		"filters": { "title": "Filters", "clear": "Clear all", "protocols": "Protocols", "inputs": "Input modalities", "outputs": "Output modalities", "close": "Close filters", "show": "Show {count} providers" },
+		"columns": { "provider": "Provider", "models": "Models", "protocols": "Protocols", "inputs": "Input", "outputs": "Output", "latest": "Latest release" },
+		"count": "{count} providers",
+		"modelCount": "{count} models",
+		"models": "Models",
+		"latest": "Latest release",
+		"unavailable": { "title": "The provider catalog is temporarily unavailable", "description": "The gateway did not return provider aggregates, so no placeholder data is shown." },
+		"empty": { "title": "No providers match this search", "description": "Try a broader search term." }
+	},
+	"publicCompare": {
+		"metadata": { "title": "Compare models", "description": "Compare published cinatoken models side by side." },
+		"title": "Compare models", "description": "Compare capabilities, context, protocols, and catalog pricing using live published model data.", "getKey": "Get an API key", "pickerLabel": "Choose a model to compare", "pickerPlaceholder": "Choose another model", "add": "Add model", "attribute": "Attribute", "remove": "Remove {model}", "unavailable": "The model catalog is temporarily unavailable.", "empty": "Choose at least one model to compare.", "priceHint": "Catalog prices are shown in {currency}; input and output rates are per one million tokens.",
+		"rows": { "provider": "Provider", "modelId": "Model ID", "context": "Context", "maxOutput": "Maximum output", "input": "Input modalities", "output": "Output modalities", "protocols": "Protocols", "released": "Released", "price": "Input / output price" }
+	},
+	"publicRankings": {
+		"metadata": { "title": "Model rankings", "description": "Privacy-safe usage and reliability rankings from the cinatoken gateway." },
+		"title": "Model rankings", "description": "See which published models are used most, respond reliably, and return fastest across the cinatoken gateway.", "browseModels": "Browse models", "privacyNote": "Only aggregate rows with at least {count} requests are published. No user, cost, route, or error details are exposed.",
+		"ranges": { "7d": "7 days", "30d": "30 days", "90d": "90 days" }, "metrics": { "popular": "Popular", "reliable": "Reliable", "latency": "Low latency" }, "columns": { "model": "Model", "requests": "Requests", "success": "Success rate", "latency": "Average latency", "output": "Output tokens" },
+		"unavailable": { "title": "Rankings are temporarily unavailable", "description": "The gateway did not return verified aggregate telemetry." }, "empty": { "title": "Not enough public data yet", "description": "No model reached the {count}-request privacy threshold in this window." }
+	},
+	"publicBenchmarks": {
+		"metadata": { "title": "Gateway benchmarks", "description": "Observed cinatoken gateway latency and reliability metrics." },
+		"title": "Gateway benchmarks", "description": "Observed production performance for published models. These are gateway delivery metrics, not synthetic intelligence evaluations.", "browseModels": "Browse models", "privacyNote": "Only aggregate rows with at least {count} requests are published. No user, cost, route, or error details are exposed.",
+		"ranges": { "7d": "7 days", "30d": "30 days", "90d": "90 days" }, "metrics": { "popular": "Volume", "reliable": "Reliability", "latency": "Latency" }, "columns": { "model": "Model", "requests": "Requests", "success": "Success rate", "latency": "Average latency", "output": "Output tokens" },
+		"unavailable": { "title": "Benchmarks are temporarily unavailable", "description": "The gateway did not return verified aggregate telemetry." }, "empty": { "title": "Not enough benchmark data yet", "description": "No model reached the {count}-request privacy threshold in this window." }
+	},
+	"publicChat": {
+		"metadata": { "title": "Chat", "description": "Call cinatoken text models from a private browser session." },
+		"title": "Chat", "description": "Test a published text model through the OpenAI-compatible gateway.", "newChat": "New chat", "model": "Model", "apiKey": "API key", "keySafety": "Kept only in this page memory and forwarded by cinatoken to its API. It is never stored by this interface.", "getKey": "Create or manage keys", "clear": "Clear conversation", "emptyTitle": "Start a conversation", "emptyDescription": "Choose a model, enter your API key, and send a message. Responses come from the live gateway.", "catalogUnavailable": "The model catalog is unavailable, so chat cannot start.", "noModels": "No OpenAI-compatible text model is currently published.", "thinking": "Generating…", "prompt": "Message cinatoken", "promptLabel": "Chat message", "send": "Send message", "disclaimer": "Model output can be inaccurate. Review important information.", "requestFailed": "Request failed ({status}).", "invalidResponse": "The gateway returned no assistant text.", "networkError": "The request could not reach the gateway."
+	},
 	"brand": {
 		"wordmark": "cinatoken",
 		"product": "cinatoken Gateway",
@@ -1570,6 +1741,7 @@
 			"metadataJson": "Metadata (JSON)",
 			"name": "Name",
 			"secretKey": "Secret key",
+			"keyPreview": "Key preview",
 			"status": "Status",
 			"userIdAuth": "User ID (auth)",
 			"budgetReadonly": "Budget (read-only)",
@@ -1589,7 +1761,8 @@
 		"help": {
 			"userEmail": "Required for match-or-create. Not used to overwrite email when the external pair already exists.",
 			"metadata": "Stored on the key and returned by GET /v1/me. Leave empty for none.",
-			"editMetadata": "Full JSON stored on this key; cleared if empty. Shown on GET /v1/me."
+			"editMetadata": "Full JSON stored on this key; cleared if empty. Shown on GET /v1/me.",
+			"keyPreview": "The full secret is shown only once when created. This preview cannot be used for authentication."
 		},
 		"links": {
 			"requestLogsForKey": "Request logs for this key →",

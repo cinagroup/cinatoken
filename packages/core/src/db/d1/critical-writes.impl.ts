@@ -15,9 +15,10 @@ import { buildInsertApiKeyStatement } from './api-keys.impl';
 import type { InsertKeyParams } from '../api-keys-types';
 import { buildInsertRequestLogStatement } from './request-logs.impl';
 import type { InsertRequestLogParams } from '../request-logs-types';
+import { toPublicModelDailyStatsDelta } from '../public-model-daily-stats';
 import { roundGatewayMoney } from '../../lib/money-precision';
 import type { D1DatabaseClient } from '../../storage/database-client';
-import { parseMoney } from '../../storage/critical-write-paths-utils';
+import { nowIso, parseMoney } from '../../storage/critical-write-paths-utils';
 import {
 	systemConfigTable as d1SystemConfigTable,
 	usersTable as d1UsersTable,
@@ -171,7 +172,31 @@ export async function insertRequestUsageAndChargeTxD1(
 ): Promise<void> {
 	const charged = roundGatewayMoney(params.chargedCost);
 	const afterSpent = roundGatewayMoney(params.beforeSpent + charged);
-	const statements: D1PreparedStatement[] = [buildInsertRequestLogStatement(client.raw, params.requestLog)];
+	const now = nowIso();
+	const delta = toPublicModelDailyStatsDelta(params.requestLog, now);
+	const statements: D1PreparedStatement[] = [
+		buildInsertRequestLogStatement(client.raw, params.requestLog, now),
+		client.raw
+			.prepare(
+				`INSERT INTO public_model_daily_stats (
+					stat_date, model_id, shard, request_count, success_count, error_count,
+					output_tokens, latency_total_ms, latency_sample_count, updated_at
+				) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+				ON CONFLICT(stat_date, model_id, shard) DO UPDATE SET
+					request_count = request_count + excluded.request_count,
+					success_count = success_count + excluded.success_count,
+					error_count = error_count + excluded.error_count,
+					output_tokens = output_tokens + excluded.output_tokens,
+					latency_total_ms = latency_total_ms + excluded.latency_total_ms,
+					latency_sample_count = latency_sample_count + excluded.latency_sample_count,
+					updated_at = excluded.updated_at`
+			)
+			.bind(
+				delta.statDate, delta.modelId, delta.shard, delta.requestCount,
+				delta.successCount, delta.errorCount, delta.outputTokens,
+				delta.latencyTotalMs, delta.latencySampleCount, now
+			),
+	];
 	if (params.shouldChargeBudget) {
 		statements.push(
 			client.raw

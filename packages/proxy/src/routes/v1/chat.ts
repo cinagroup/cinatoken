@@ -296,6 +296,7 @@ chatRoutes.post('/', async (c) => {
           provider_name: chosenRoute.providerName,
           request_body: requestBodyForLog,
           upstream_request_body: upstreamRequestBodyForLog,
+          request_body_logging_mode: c.get('requestBodyLoggingMode'),
           request_protocol: 'openai',
           request_operation: 'chat',
           upstream_protocol: chosenRoute.upstreamProtocol,

@@ -107,6 +107,7 @@ function recordRealtimeUsage(params: {
 					modelName: modelDisplayName(model, baseModelId),
 					providerName: route.providerName,
 					requestBody: JSON.stringify({ kind: 'dashscope_realtime', operation }),
+					requestBodyLoggingMode: c.get('requestBodyLoggingMode'),
 					requestProtocol: 'dashscope',
 					requestOperation: operation,
 					upstreamProtocol: route.upstreamProtocol,

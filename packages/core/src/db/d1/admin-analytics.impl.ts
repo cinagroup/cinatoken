@@ -7,6 +7,7 @@ import type { D1DatabaseClient } from '../../storage/database-client';
 import type { AdminAnalyticsRepository } from '../../storage/gateway-repository-interfaces';
 import type {
 	ModelAnalyticsRow,
+	PublicModelAnalyticsRow,
 	ModelProviderReliabilityRow,
 	ProviderAnalyticsRow,
 	ProviderReliabilityRow,
@@ -63,6 +64,27 @@ export function createD1AdminAnalyticsRepository(db: D1DatabaseClient): AdminAna
 				)
 				.bind(...bindValues)
 				.all<ModelAnalyticsRow>();
+			return rows.results ?? [];
+		},
+
+		async queryPublicModelAnalytics(options: { startDate: string; endDate: string }): Promise<PublicModelAnalyticsRow[]> {
+			const rows = await raw
+				.prepare(
+					`SELECT
+						model_id,
+						SUM(request_count) AS request_count,
+						SUM(success_count) AS success_count,
+						SUM(error_count) AS error_count,
+						SUM(output_tokens) AS output_tokens,
+						CASE WHEN SUM(latency_sample_count) > 0
+							THEN CAST(SUM(latency_total_ms) AS REAL) / SUM(latency_sample_count)
+							ELSE NULL END AS avg_latency_ms
+					 FROM public_model_daily_stats
+					 WHERE stat_date >= ? AND stat_date <= ?
+					 GROUP BY model_id`
+				)
+				.bind(options.startDate, options.endDate)
+				.all<PublicModelAnalyticsRow>();
 			return rows.results ?? [];
 		},
 

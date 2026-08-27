@@ -17,7 +17,7 @@ export type ApiKeyBudgetAuditEventType =
 
 export type ApiKeyBudgetAuditActorType = 'system' | 'admin' | 'service';
 
-/** `api_keys` 表行（密钥明文存库；预算在 `users`）。 */
+/** `api_keys` 表行；`key` 仅为安全预览，Bearer 全文只在创建时返回。预算在 `users`。 */
 export interface ApiKeyRow {
 	id: string;
 	key: string;

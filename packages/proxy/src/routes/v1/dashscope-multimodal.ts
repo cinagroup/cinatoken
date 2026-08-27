@@ -328,6 +328,7 @@ async function finalizeMultimodalResponse(params: {
 				modelName: modelNameForLog,
 				providerName: chosenRoute.providerName,
 				requestBody: requestBodyForLog,
+				requestBodyLoggingMode: c.get('requestBodyLoggingMode'),
 				requestProtocol: 'dashscope',
 				requestOperation: 'audio.transcriptions.multimodal',
 				upstreamProtocol: chosenRoute.upstreamProtocol,

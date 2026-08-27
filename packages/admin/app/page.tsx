@@ -6,7 +6,7 @@ export async function generateMetadata(): Promise<Metadata> {
 	const t = await getTranslations('home.metadata');
 
 	return {
-		title: t('title'),
+		title: { absolute: t('title') },
 		description: t('description'),
 		robots: {
 			index: true,

@@ -77,6 +77,7 @@ export const apiKeysTable = mysqlTable('api_keys', {
 	id: varchar('id', { length: COL.ID }).primaryKey(),
 	key: varchar('key', { length: COL.KEY }).notNull(),
 	keyHash: varchar('key_hash', { length: 80 }),
+	keyPreview: varchar('key_preview', { length: 64 }),
 	userId: varchar('user_id', { length: COL.USER_ID }).notNull(),
 	name: varchar('name', { length: COL.NAME }),
 	status: varchar('status', { length: COL.STATUS }).notNull().default('active'),
@@ -236,6 +237,27 @@ export const apiKeyRequestLogsTable = mysqlTable('api_key_request_logs', {
 	audioCharacters: int('audio_characters'),
 	createdAt: timestamp('created_at', { fsp: 6, mode: 'string' }).notNull(),
 });
+
+/** 匿名公开排行专用的分片日汇总；公开请求不得回退扫描 api_key_request_logs。 */
+export const publicModelDailyStatsTable = mysqlTable(
+	'public_model_daily_stats',
+	{
+		statDate: varchar('stat_date', { length: 10 }).notNull(),
+		modelId: varchar('model_id', { length: COL.MODEL_ID }).notNull(),
+		shard: int('shard').notNull(),
+		requestCount: bigint('request_count', { mode: 'number' }).notNull().default(0),
+		successCount: bigint('success_count', { mode: 'number' }).notNull().default(0),
+		errorCount: bigint('error_count', { mode: 'number' }).notNull().default(0),
+		outputTokens: bigint('output_tokens', { mode: 'number' }).notNull().default(0),
+		latencyTotalMs: bigint('latency_total_ms', { mode: 'number' }).notNull().default(0),
+		latencySampleCount: bigint('latency_sample_count', { mode: 'number' }).notNull().default(0),
+		updatedAt: timestamp('updated_at', { fsp: 6, mode: 'string' }).notNull(),
+	},
+	(t) => [
+		uniqueIndex('uk_public_model_daily_stats').on(t.statDate, t.modelId, t.shard),
+		check('public_model_daily_stats_shard_chk', sql`shard >= 0 AND shard < 16`),
+	]
+);
 
 export const systemConfigTable = mysqlTable('system_config', {
 	key: varchar('key', { length: COL.SYSCONFIG_KEY }).primaryKey(),
@@ -411,6 +433,7 @@ export const mysqlCoreSchema = {
 	modelSurfacesTable,
 	modelRoutesTable,
 	apiKeyRequestLogsTable,
+	publicModelDailyStatsTable,
 	systemConfigTable,
 	userAuditLogsTable,
 	adminApiKeysTable,

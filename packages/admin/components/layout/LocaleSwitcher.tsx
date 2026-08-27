@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation';
 import { useEffect, useRef, useState, useTransition } from 'react';
 import { locales, type Locale } from '@/lib/locale';
 
-type Variant = 'header' | 'login';
+type Variant = 'header' | 'login' | 'public';
 
 const LOCALE_FLAG: Record<Locale, string> = {
 	en: '🇺🇸',
@@ -20,16 +20,20 @@ const triggerClass: Record<Variant, string> = {
 		'inline-flex items-center gap-1.5 rounded-md px-1.5 py-1 text-gray-300 outline-none transition-colors hover:bg-gray-800 hover:text-white focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 focus-visible:ring-offset-gray-950 disabled:cursor-not-allowed',
 	login:
 		'inline-flex items-center gap-1.5 rounded-md px-1.5 py-1 text-gray-500 outline-none transition-colors hover:bg-gray-100 hover:text-gray-900 focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 disabled:cursor-not-allowed',
+	public:
+		'home-locale-trigger inline-flex items-center gap-1.5 rounded-md px-1.5 py-1 outline-none transition-colors focus-visible:ring-2 focus-visible:ring-sky-500 focus-visible:ring-offset-2 disabled:cursor-not-allowed',
 };
 
 const codeClass: Record<Variant, string> = {
 	header: 'text-xs font-semibold uppercase tracking-wide text-white',
 	login: 'text-xs font-semibold uppercase tracking-wide text-gray-800',
+	public: 'text-xs font-semibold uppercase tracking-wide',
 };
 
 const chevronClass: Record<Variant, string> = {
 	header: 'text-gray-500',
 	login: 'text-gray-400',
+	public: 'home-subtle',
 };
 
 const menuClass: Record<Variant, string> = {
@@ -37,6 +41,7 @@ const menuClass: Record<Variant, string> = {
 		'absolute right-0 top-full z-50 mt-1.5 min-w-[9.5rem] overflow-hidden rounded-lg border border-gray-700 bg-gray-900 p-1 shadow-xl shadow-black/30 ring-1 ring-black/20',
 	login:
 		'absolute right-0 top-full z-50 mt-1.5 min-w-[9.5rem] overflow-hidden rounded-lg border border-gray-200 bg-white p-1 shadow-xl ring-1 ring-black/5',
+	public: 'home-locale-menu absolute right-0 top-full z-50 mt-1.5 min-w-[9.5rem] overflow-hidden rounded-lg border p-1 shadow-xl',
 };
 
 const optionClass: Record<Variant, string> = {
@@ -44,11 +49,13 @@ const optionClass: Record<Variant, string> = {
 		'flex w-full items-center justify-between gap-2 rounded-md px-2.5 py-2 text-left text-sm text-gray-300 outline-none transition hover:bg-gray-800 hover:text-white focus-visible:bg-gray-800 focus-visible:text-white',
 	login:
 		'flex w-full items-center justify-between gap-2 rounded-md px-2.5 py-2 text-left text-sm text-gray-700 outline-none transition hover:bg-gray-100 hover:text-gray-900 focus-visible:bg-gray-100 focus-visible:text-gray-900',
+	public: 'home-locale-option flex w-full items-center justify-between gap-2 rounded-md px-2.5 py-2 text-left text-sm outline-none transition',
 };
 
 const selectedOptionClass: Record<Variant, string> = {
 	header: 'bg-blue-500/15 font-semibold text-blue-200',
 	login: 'bg-blue-50 font-semibold text-blue-700',
+	public: 'home-locale-option-selected font-semibold',
 };
 
 export default function LocaleSwitcher({ variant }: { variant: Variant }) {

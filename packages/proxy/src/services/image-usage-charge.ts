@@ -41,6 +41,10 @@ import { canAffordToolCost } from './tool-usage-charge';
 import type { GatewayCircuitAlertEvent } from './circuit-alert-types';
 import { fireGatewayErrorWebhooks } from './alert-webhook';
 import type { RequestTimingSnapshot } from './request-timing';
+import {
+	applyRequestBodyLoggingPolicy,
+	type RequestBodyLoggingMode,
+} from './request-body-log-policy';
 
 export type ImageBillingParams = {
 	modelPricingProfileJson?: string | null;
@@ -490,6 +494,7 @@ export type RecordImageUsageParams = {
 	providerName?: string | null;
 	requestBody?: string | null;
 	upstreamRequestBody?: string | null;
+	requestBodyLoggingMode?: RequestBodyLoggingMode;
 	requestProtocol: 'openai';
 	requestOperation?: string | null;
 	upstreamProtocol: UpstreamProtocol;
@@ -697,8 +702,14 @@ export async function recordImageUsage(params: RecordImageUsageParams): Promise<
 			providerModelName: params.providerModelName ?? null,
 			modelName: params.modelName ?? null,
 			providerName: params.providerName ?? null,
-			requestBody: params.requestBody ?? null,
-			upstreamRequestBody: params.upstreamRequestBody ?? null,
+			requestBody: applyRequestBodyLoggingPolicy(
+				params.requestBody,
+				params.requestBodyLoggingMode
+			),
+			upstreamRequestBody: applyRequestBodyLoggingPolicy(
+				params.upstreamRequestBody,
+				params.requestBodyLoggingMode
+			),
 			requestProtocol: params.requestProtocol,
 			requestOperation: params.requestOperation ?? null,
 			upstreamProtocol: params.upstreamProtocol,

@@ -6,7 +6,9 @@ import { and, eq, sql } from 'drizzle-orm';
 import type { InsertUserAuditLogParams } from '../user-audit-logs-types';
 import type { InsertUserBudgetAuditLogParams } from '../user-budget-audit-params';
 import type { InsertKeyParams } from '../api-keys-types';
+import { prepareGatewayApiKeyForStorage } from '../../lib/key-hash';
 import type { InsertRequestLogParams } from '../request-logs-types';
+import { toPublicModelDailyStatsDelta } from '../public-model-daily-stats';
 import {
 	userBudgetAuditToInsertRowForBudgetTx,
 	userBudgetAuditToInsertRowForCreateKey,
@@ -19,6 +21,7 @@ import { nowIso, parseMoney } from '../../storage/critical-write-paths-utils';
 import {
 	apiKeysTable as myApiKeysTable,
 	apiKeyRequestLogsTable as myRequestLogsTable,
+	publicModelDailyStatsTable as myPublicModelDailyStatsTable,
 	systemConfigTable as mySystemConfigTable,
 	userAuditLogsTable as myUserAuditLogsTable,
 	usersTable as myUsersTable,
@@ -65,11 +68,14 @@ export async function createApiKeyWithAuditMy(
 ): Promise<void> {
 	const now = nowIso();
 	const auditRow = userBudgetAuditToInsertRowForCreateKey(params.insert.userId, params.audit);
+	const preparedKey = await prepareGatewayApiKeyForStorage(params.insert.key);
 	await client.drizzle.transaction(async (tx) => {
 		const status = params.insert.status ?? 'active';
 		await tx.insert(myApiKeysTable).values({
 			id: params.insert.id,
-			key: params.insert.key,
+			key: preparedKey.storageKey,
+			keyHash: preparedKey.keyHash,
+			keyPreview: preparedKey.keyPreview,
 			userId: params.insert.userId,
 			name: params.insert.name ?? null,
 			status,
@@ -183,6 +189,7 @@ export async function insertRequestUsageAndChargeTxMy(
 	const charged = roundGatewayMoney(params.chargedCost);
 	const afterSpent = roundGatewayMoney(params.beforeSpent + charged);
 	const now = nowIso();
+	const delta = toPublicModelDailyStatsDelta(params.requestLog, now);
 	await client.drizzle.transaction(async (tx) => {
 		await tx.insert(myRequestLogsTable).values({
 			id: params.requestLog.id,
@@ -241,6 +248,31 @@ export async function insertRequestUsageAndChargeTxMy(
 			audioCharacters: params.requestLog.audioCharacters ?? null,
 			createdAt: now,
 		});
+		await tx
+			.insert(myPublicModelDailyStatsTable)
+			.values({
+				statDate: delta.statDate,
+				modelId: delta.modelId,
+				shard: delta.shard,
+				requestCount: delta.requestCount,
+				successCount: delta.successCount,
+				errorCount: delta.errorCount,
+				outputTokens: delta.outputTokens,
+				latencyTotalMs: delta.latencyTotalMs,
+				latencySampleCount: delta.latencySampleCount,
+				updatedAt: now,
+			})
+			.onDuplicateKeyUpdate({
+				set: {
+					requestCount: sql`${myPublicModelDailyStatsTable.requestCount} + VALUES(request_count)`,
+					successCount: sql`${myPublicModelDailyStatsTable.successCount} + VALUES(success_count)`,
+					errorCount: sql`${myPublicModelDailyStatsTable.errorCount} + VALUES(error_count)`,
+					outputTokens: sql`${myPublicModelDailyStatsTable.outputTokens} + VALUES(output_tokens)`,
+					latencyTotalMs: sql`${myPublicModelDailyStatsTable.latencyTotalMs} + VALUES(latency_total_ms)`,
+					latencySampleCount: sql`${myPublicModelDailyStatsTable.latencySampleCount} + VALUES(latency_sample_count)`,
+					updatedAt: now,
+				},
+			});
 		if (!params.shouldChargeBudget) {
 			return;
 		}

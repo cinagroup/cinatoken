@@ -88,6 +88,7 @@ dev 演示**仅 CLI 发版**（有新 SQL 时先 `db:migrate:remote`）；生产
 | `D1_MIGRATIONS_WORKER_NAME` | 可选；仅 `wrangler d1 migrations` 配置名，**无需建 Worker** |
 | `HYPERDRIVE_ID` | 可选；把同一个 Hyperdrive 绑定加入 Proxy、Admin/Portal、Chain Worker。仅设置此项不会切库 |
 | `DATABASE_DRIVER` | Cloudflare 省略/`d1` → D1；`postgres` → Hyperdrive。选择 Postgres 时 `HYPERDRIVE_ID` 必填；三个 Worker 必须一致 |
+| `REQUEST_BODY_LOGGING` | Proxy 请求正文日志策略；模板默认 `off`。仅经隐私与留存评审后可设为 `redacted`，且脱敏结果仍可能包含敏感提示词 |
 | `PROXY_CUSTOM_DOMAIN` / `ADMIN_CUSTOM_DOMAIN` | 可选 |
 
 ---
@@ -192,6 +193,15 @@ npx wrangler d1 list
 2. 先部署 Chain consumer，再部署 Proxy 与统一控制台；推荐使用 `npm run deploy:cloudflare -- <instance> --migrate`
 
 先迁移、再发依赖新 schema 的 Worker。
+
+### 公开模型统计（0034）
+
+- D1/PostgreSQL 的 `0034_public_model_daily_stats.sql`（MySQL 为 `0030`）建立 16 分片的按模型日汇总，并一次性回填最近 90 天；生产升级必须先完成该迁移，再部署读取新表的 Proxy。
+- Proxy 的 Wrangler 模板声明 `PUBLIC_STATS_RATE_LIMITER`（namespace `2002`，每个数据中心每分钟 12 次缓存未命中）。此 binding 由 `npm run gen:wrangler` 生成，不是 Secret，也无需额外环境变量。
+- `GET /catalog/stats/models` 的正常响应使用 60 秒 Cache API TTL。缓存不可用时仍只查询有界汇总表；限流 binding 存在但调用失败时接口安全返回 `503`。
+- 发布后用连续两次相同 `range` 请求检查 `X-CinaToken-Cache: MISS` → `HIT`；再确认查询计划只访问 `public_model_daily_stats`，不访问 `api_key_request_logs`。
+- **0034 首次上线必须冻结旧写入**：先以 `CINATOKEN_MAINTENANCE_MODE=true` 发布 Proxy 并确认外部请求返回维护状态，再执行迁移和发布新 Proxy，最后关闭维护模式。不得直接用未冻结写入的“迁移后再部署”窗口，否则旧版本在两步之间写入的请求不会进入日汇总。Node/Docker 部署对应为摘流量/停旧进程、迁移、启动新镜像后恢复流量。
+- D1→PostgreSQL 切换会把 `public_model_daily_stats` 与请求日志一起置于冻结快照中 ETL，并核对行数及六个累计字段；源端和目标端都必须达到 `0034` 才允许切换。
 
 ---
 

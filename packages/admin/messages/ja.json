@@ -111,6 +111,177 @@
 			"description": "AI ケイパビリティゲートウェイと運用コントロールプレーン"
 		}
 	},
+	"publicNav": {
+		"label": "公開ナビゲーション",
+		"homeLabel": "cinatoken ホームへ戻る",
+		"models": "モデル",
+		"providers": "プロバイダー",
+		"rankings": "ランキング",
+		"benchmarks": "ベンチマーク",
+		"chat": "チャット",
+		"features": "機能",
+		"docs": "ドキュメント",
+		"portal": "ユーザーポータル",
+		"console": "コンソール"
+	},
+	"publicModels": {
+		"metadata": {
+			"title": "モデル",
+			"description": "cinatoken ゲートウェイで現在利用できる AI モデルを確認できます。"
+		},
+		"eyebrow": "ライブゲートウェイカタログ",
+		"title": "モデル",
+		"description": "cinatoken で現在公開中のモデルを確認し、機能と料金を比較して、一つの互換 API から呼び出せます。",
+		"getKey": "API キーを取得",
+		"byVendor": "提供: {vendor}",
+		"contextValue": "{value} コンテキスト",
+		"searchPlaceholder": "モデル、プロバイダー、機能を検索",
+		"searchLabel": "モデルカタログを検索",
+		"clearSearch": "検索をクリア",
+		"outputLabel": "出力タイプで絞り込む",
+		"outputs": {
+			"all": "すべてのモデル",
+			"text": "テキスト",
+			"image": "画像",
+			"video": "動画",
+			"audio": "音声"
+		},
+		"filters": {
+			"title": "フィルター",
+			"clear": "すべてクリア",
+			"providers": "プロバイダー",
+			"input": "入力モダリティ",
+			"protocol": "プロトコル",
+			"context": "最小コンテキスト",
+			"close": "フィルターを閉じる",
+			"show": "{count} モデルを表示"
+		},
+		"context": {
+			"all": "指定なし",
+			"128k": "128K+",
+			"1m": "1M+"
+		},
+		"modalities": {
+			"text": "テキスト",
+			"image": "画像",
+			"audio": "音声",
+			"video": "動画",
+			"file": "ファイル"
+		},
+		"results": {
+			"count": "{count} モデル"
+		},
+		"sort": {
+			"label": "モデルを並べ替え",
+			"newest": "新しい順",
+			"context": "コンテキストの大きい順",
+			"price": "入力料金の安い順",
+			"name": "名前"
+		},
+		"columns": {
+			"model": "モデル",
+			"provider": "プロバイダー",
+			"context": "コンテキスト",
+			"released": "リリース日",
+			"pricing": "入力 / 出力"
+		},
+		"view": {
+			"label": "モデル表示形式",
+			"list": "リスト表示",
+			"table": "テーブル表示"
+		},
+		"pricing": {
+			"unavailable": "料金未掲載",
+			"perImage": "/ 画像",
+			"perSecond": "/ 秒",
+			"perCharacter": "/ 文字",
+			"perMillion": "/ 100万 token",
+			"inputOutput": "ゲートウェイの請求通貨によるカタログ料金"
+		},
+		"unavailable": {
+			"title": "モデルカタログは一時的に利用できません",
+			"description": "ゲートウェイから応答がないため、キャッシュや仮のモデルデータは表示していません。"
+		},
+		"empty": {
+			"title": "条件に一致するモデルがありません",
+			"description": "検索条件を広げるか、フィルターをクリアしてください。"
+		}
+	},
+	"publicModelDetail": {
+		"metadata": {
+			"fallbackTitle": "モデル",
+			"title": "{model} — モデル詳細",
+			"description": "{vendor} の {model} の機能、料金、API 互換性を確認できます。"
+		},
+		"back": "すべてのモデル",
+		"noDescription": "このモデルの公開説明はありません。",
+		"pricingTitle": "料金",
+		"pricingDescription": "ゲートウェイが公開するカタログ料金です。アカウント別の調整が適用される場合があります。",
+		"pricingUnavailable": "公開カタログ料金はありません。",
+		"tier": "利用階層",
+		"input": "入力 / 100万 token",
+		"output": "出力 / 100万 token",
+		"allTokens": "すべての token",
+		"upToTokens": "{count} まで",
+		"perMillionHint": "料金は100万 token あたり {currency} で表示されます。",
+		"perImage": "画像ごと",
+		"perSecond": "秒ごと",
+		"perCharacter": "文字ごと",
+		"apiTitle": "このモデルを呼び出す",
+		"apiDescription": "推奨互換プロトコル: {protocol}。",
+		"capabilitiesTitle": "モデル情報",
+		"context": "コンテキストウィンドウ",
+		"maxOutput": "最大出力",
+		"released": "リリース日",
+		"routeGroups": "ルートグループ",
+		"modalities": "モダリティ",
+		"inputModalities": "入力: {values}",
+		"outputModalities": "出力: {values}",
+		"getKey": "API キーを取得",
+		"docs": "API ドキュメントを読む",
+		"unavailableTitle": "モデル詳細は一時的に利用できません",
+		"unavailableDescription": "ゲートウェイから検証済みモデル情報が返らないため、キャッシュや仮の詳細は表示していません。"
+	},
+	"publicProviders": {
+		"metadata": { "title": "プロバイダー", "description": "cinatoken で現在利用できる AI プロバイダーを確認できます。" },
+		"title": "プロバイダー",
+		"description": "cinatoken のアクティブなモデルカタログを支えるプロバイダーと、プロトコル・モダリティの対応状況を確認できます。",
+		"getKey": "API キーを取得",
+		"searchPlaceholder": "プロバイダーや機能を検索",
+		"searchLabel": "プロバイダーを検索",
+		"clearSearch": "検索をクリア",
+		"sortLabel": "プロバイダーを並べ替え",
+		"sort": { "models": "モデル数の多い順", "name": "名前", "newest": "最新リリース" },
+		"filters": { "title": "フィルター", "clear": "すべてクリア", "protocols": "プロトコル", "inputs": "入力モダリティ", "outputs": "出力モダリティ", "close": "フィルターを閉じる", "show": "{count} プロバイダーを表示" },
+		"columns": { "provider": "プロバイダー", "models": "モデル", "protocols": "プロトコル", "inputs": "入力", "outputs": "出力", "latest": "最新リリース" },
+		"count": "{count} プロバイダー",
+		"modelCount": "{count} モデル",
+		"models": "モデル",
+		"latest": "最新リリース",
+		"unavailable": { "title": "プロバイダーカタログは一時的に利用できません", "description": "ゲートウェイから集計結果がないため、仮データは表示していません。" },
+		"empty": { "title": "検索に一致するプロバイダーがありません", "description": "検索条件を広げてください。" }
+	},
+	"publicCompare": {
+		"metadata": { "title": "モデル比較", "description": "cinatoken の公開モデルを並べて比較します。" },
+		"title": "モデル比較", "description": "公開中の実データで機能、コンテキスト、プロトコル、料金を比較します。", "getKey": "API キーを取得", "pickerLabel": "比較するモデルを選択", "pickerPlaceholder": "別のモデルを選択", "add": "モデルを追加", "attribute": "属性", "remove": "{model} を削除", "unavailable": "モデルカタログは一時的に利用できません。", "empty": "比較するモデルを一つ以上選択してください。", "priceHint": "カタログ料金は {currency} 表示で、入出力は100万 token あたりです。",
+		"rows": { "provider": "プロバイダー", "modelId": "モデル ID", "context": "コンテキスト", "maxOutput": "最大出力", "input": "入力モダリティ", "output": "出力モダリティ", "protocols": "プロトコル", "released": "リリース日", "price": "入力 / 出力料金" }
+	},
+	"publicRankings": {
+		"metadata": { "title": "モデルランキング", "description": "cinatoken のプライバシー保護された利用・信頼性ランキング。" },
+		"title": "モデルランキング", "description": "公開モデルの利用量、信頼性、低遅延を確認できます。", "browseModels": "モデルを見る", "privacyNote": "{count} 件以上の集計行のみ公開し、ユーザー、コスト、ルート、エラー詳細は公開しません。",
+		"ranges": { "7d": "7日", "30d": "30日", "90d": "90日" }, "metrics": { "popular": "人気", "reliable": "信頼性", "latency": "低遅延" }, "columns": { "model": "モデル", "requests": "リクエスト", "success": "成功率", "latency": "平均遅延", "output": "出力 token" },
+		"unavailable": { "title": "ランキングは一時的に利用できません", "description": "検証済み集計テレメトリがありません。" }, "empty": { "title": "公開データが不足しています", "description": "この期間に {count} リクエストのしきい値へ到達したモデルはありません。" }
+	},
+	"publicBenchmarks": {
+		"metadata": { "title": "ゲートウェイベンチマーク", "description": "cinatoken で観測された遅延と信頼性です。" },
+		"title": "ゲートウェイベンチマーク", "description": "公開モデルの本番観測性能です。合成された知能評価ではなく、ゲートウェイ配信指標です。", "browseModels": "モデルを見る", "privacyNote": "{count} 件以上の集計行のみ公開し、ユーザー、コスト、ルート、エラー詳細は公開しません。",
+		"ranges": { "7d": "7日", "30d": "30日", "90d": "90日" }, "metrics": { "popular": "量", "reliable": "信頼性", "latency": "遅延" }, "columns": { "model": "モデル", "requests": "リクエスト", "success": "成功率", "latency": "平均遅延", "output": "出力 token" },
+		"unavailable": { "title": "ベンチマークは一時的に利用できません", "description": "検証済み集計テレメトリがありません。" }, "empty": { "title": "ベンチマークデータが不足しています", "description": "この期間に {count} リクエストのしきい値へ到達したモデルはありません。" }
+	},
+	"publicChat": {
+		"metadata": { "title": "チャット", "description": "プライベートなブラウザーセッションで cinatoken モデルを呼び出します。" },
+		"title": "チャット", "description": "OpenAI 互換ゲートウェイで公開テキストモデルを試します。", "newChat": "新しいチャット", "model": "モデル", "apiKey": "API キー", "keySafety": "このページのメモリ内だけに保持し、cinatoken が API へ転送します。画面側では保存しません。", "getKey": "キーを作成・管理", "clear": "会話をクリア", "emptyTitle": "会話を始める", "emptyDescription": "モデルと API キーを選び、メッセージを送信してください。応答はライブゲートウェイから届きます。", "catalogUnavailable": "モデルカタログが利用できないため開始できません。", "noModels": "公開中の OpenAI 互換テキストモデルがありません。", "thinking": "生成中…", "prompt": "cinatoken にメッセージ", "promptLabel": "チャットメッセージ", "send": "送信", "disclaimer": "モデル出力は不正確な場合があります。重要情報は確認してください。", "requestFailed": "リクエスト失敗（{status}）。", "invalidResponse": "アシスタントテキストが返りませんでした。", "networkError": "ゲートウェイへ接続できませんでした。"
+	},
 	"brand": {
 		"wordmark": "cinatoken",
 		"product": "cinatoken Gateway",
@@ -1570,6 +1741,7 @@
 			"metadataJson": "Metadata（JSON）",
 			"name": "名前",
 			"secretKey": "Secret key",
+			"keyPreview": "Key プレビュー",
 			"status": "ステータス",
 			"userIdAuth": "User ID（認証）",
 			"budgetReadonly": "予算（読み取り専用）",
@@ -1589,7 +1761,8 @@
 		"help": {
 			"userEmail": "照合または作成に必要です。外部 ID の組み合わせがすでに存在する場合、保存済みのメールアドレスは上書きされません。",
 			"metadata": "Key に保存され、GET /v1/me で返されます。不要な場合は空欄にしてください。",
-			"editMetadata": "この Key に保存され、GET /v1/me で返される完全な JSON です。空欄にするとクリアされます。"
+			"editMetadata": "この Key に保存され、GET /v1/me で返される完全な JSON です。空欄にするとクリアされます。",
+			"keyPreview": "完全なシークレットは作成時に一度だけ表示されます。このプレビューは認証には使用できません。"
 		},
 		"links": {
 			"requestLogsForKey": "この Key のリクエストログ →",

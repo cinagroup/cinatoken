@@ -1,4 +1,4 @@
-import type { D1Database } from '@cloudflare/workers-types';
+import type { D1Database, RateLimit } from '@cloudflare/workers-types';
 import type { GatewayRepositories, HyperdriveBinding, StorageContext } from '@octafuse/core';
 import { Hono } from 'hono';
 import type { Context, MiddlewareHandler } from 'hono';
@@ -12,7 +12,7 @@ import { responsesRoutes } from './routes/v1/responses';
 import { geminiRoutes } from './routes/v1/gemini';
 import { meRoutes } from './routes/v1/me';
 import { messagesRoutes } from './routes/v1/messages';
-import { catalogRoutes } from './routes/catalog';
+import { createCatalogRoutes } from './routes/catalog';
 import { modelsRoutes } from './routes/v1/models';
 import { webSearchRoutes } from './routes/v1/tools/web-search';
 import { webFetchRoutes } from './routes/v1/tools/web-fetch';
@@ -25,6 +25,11 @@ import { dashScopeRealtimeRoutes } from './routes/v1/dashscope-realtime';
 import { dashScopeMultimodalRoutes } from './routes/v1/dashscope-multimodal';
 import { proxyAppVersion } from './app-version';
 import type { DashScopeRealtimeNodeDispatch } from './services/egress/dashscope-realtime-driver';
+import {
+	resolveRequestBodyLoggingMode,
+	type RequestBodyLoggingMode,
+} from './services/request-body-log-policy';
+import type { PublicStatsRuntimeGuard } from './services/public-stats-runtime-guard';
 
 /** Cloudflare Worker bindings：D1 `DB`，或显式选择 Hyperdrive Postgres。 */
 export type GatewayBindings = {
@@ -35,10 +40,16 @@ export type GatewayBindings = {
 	DATABASE_DRIVER?: string;
 	/** 最终数据库切换窗口内，在任何存储访问之前拒绝外部 HTTP 流量。 */
 	CINATOKEN_MAINTENANCE_MODE?: string;
+	/** 请求正文日志策略：默认 off；仅显式 redacted 时写入已脱敏正文。 */
+	REQUEST_BODY_LOGGING?: string;
 	/** Node upgrade 请求临时注入的实时 WebSocket 调度器；不作为 Worker binding。 */
 	NODE_REALTIME_DISPATCH?: DashScopeRealtimeNodeDispatch;
-	/** Workers rate-limiting binding（wrangler.base.jsonc ratelimits）。认证失败限速；未注入时跳过。 */
-	RATE_LIMITER?: { limit(options: { key: string }): Promise<{ success: boolean }> };
+	/** Workers rate-limiting binding：认证失败限速；未注入时跳过。 */
+	AUTH_RATE_LIMITER?: RateLimit;
+	/** 兼容旧环境变量名；新部署使用 AUTH_RATE_LIMITER。 */
+	RATE_LIMITER?: RateLimit;
+	/** 公开统计缓存未命中时的独立限流器。 */
+	PUBLIC_STATS_RATE_LIMITER?: RateLimit;
 };
 
 export type Env = {
@@ -46,6 +57,7 @@ export type Env = {
 	Variables: {
 		apiKey?: ApiKeyContext;
 		repositories: GatewayRepositories;
+		requestBodyLoggingMode: RequestBodyLoggingMode;
 	};
 };
 
@@ -57,6 +69,10 @@ export type ProxyAppOptions = {
 	 * Worker 场景下用于尽早校验数据库绑定：Cloudflare 仅在请求进入 fetch 时注入 `env`，无独立「进程启动」钩子，故最早失败点为首个请求的此处。
 	 */
 	beforeAll?: MiddlewareHandler<Env>;
+	/** Node runtime override；Workers 默认读取 REQUEST_BODY_LOGGING binding。 */
+	requestBodyLogging?: string;
+	/** Node/Docker runtime fallback；Workers 使用平台 Cache API 与 rate-limit binding。 */
+	publicStatsRuntime?: PublicStatsRuntimeGuard;
 };
 
 export function createProxyApp(resolveStorage: StorageResolver, options?: ProxyAppOptions): Hono<Env> {
@@ -79,6 +95,16 @@ export function createProxyApp(resolveStorage: StorageResolver, options?: ProxyA
 			allowHeaders: ['Content-Type', 'Authorization'],
 		}),
 	);
+
+	app.use('*', async (c, next) => {
+		c.set(
+			'requestBodyLoggingMode',
+			resolveRequestBodyLoggingMode(
+				options?.requestBodyLogging ?? c.env.REQUEST_BODY_LOGGING
+			)
+		);
+		await next();
+	});
 
 	/**
 	 * Log short Gateway-generated 4xx bodies (chat / images / audio / …).
@@ -129,7 +155,7 @@ export function createProxyApp(resolveStorage: StorageResolver, options?: ProxyA
 	app.route('/v1/tools/web-deep-search', webDeepSearchRoutes);
 	app.route('/v1/tools/ai-detection', aiDetectionRoutes);
 	app.route('/v1/tools/pricing', toolsPricingRoutes);
-	app.route('/catalog', catalogRoutes);
+	app.route('/catalog', createCatalogRoutes(options?.publicStatsRuntime));
 
 	app.get('/', (c) => c.json({ name: 'cinatoken-proxy', version: proxyAppVersion }));
 

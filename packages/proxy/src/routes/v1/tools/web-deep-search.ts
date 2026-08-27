@@ -92,6 +92,7 @@ webDeepSearchRoutes.post('/', async (c) => {
 			unitPrices: { metered: unitMetered, standard: unitStandard, charged: unitCharged },
 			latencyMs,
 			requestBody: JSON.stringify({ query, provider, count }),
+			requestBodyLoggingMode: c.get('requestBodyLoggingMode'),
 			responseBody: JSON.stringify({
 				result_count: results.length,
 				results: results.map((r) => ({
@@ -130,6 +131,7 @@ webDeepSearchRoutes.post('/', async (c) => {
 				unitPrices: { metered: unitMetered, standard: unitStandard, charged: unitCharged },
 				latencyMs,
 				requestBody: JSON.stringify({ query, provider }),
+				requestBodyLoggingMode: c.get('requestBodyLoggingMode'),
 				errorMessage: message,
 				status: 'error',
 			});

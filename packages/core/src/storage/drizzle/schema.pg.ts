@@ -48,6 +48,7 @@ export const apiKeysTable = pgTable('api_keys', {
 	id: text('id').primaryKey(),
 	key: text('key').notNull(),
 	keyHash: text('key_hash'),
+	keyPreview: text('key_preview'),
 	userId: text('user_id').notNull(),
 	name: text('name'),
 	status: text('status').notNull().default('active'),
@@ -207,6 +208,27 @@ export const apiKeyRequestLogsTable = pgTable('api_key_request_logs', {
 	audioCharacters: integer('audio_characters'),
 	createdAt: timestamp('created_at', { withTimezone: true, mode: 'string' }).notNull(),
 });
+
+/** 匿名公开排行专用的分片日汇总；公开请求不得回退扫描 api_key_request_logs。 */
+export const publicModelDailyStatsTable = pgTable(
+	'public_model_daily_stats',
+	{
+		statDate: text('stat_date').notNull(),
+		modelId: text('model_id').notNull(),
+		shard: integer('shard').notNull(),
+		requestCount: bigint('request_count', { mode: 'number' }).notNull().default(0),
+		successCount: bigint('success_count', { mode: 'number' }).notNull().default(0),
+		errorCount: bigint('error_count', { mode: 'number' }).notNull().default(0),
+		outputTokens: bigint('output_tokens', { mode: 'number' }).notNull().default(0),
+		latencyTotalMs: bigint('latency_total_ms', { mode: 'number' }).notNull().default(0),
+		latencySampleCount: bigint('latency_sample_count', { mode: 'number' }).notNull().default(0),
+		updatedAt: timestamp('updated_at', { withTimezone: true, mode: 'string' }).notNull(),
+	},
+	(t) => [
+		uniqueIndex('uk_public_model_daily_stats').on(t.statDate, t.modelId, t.shard),
+		check('public_model_daily_stats_shard_chk', sql`shard >= 0 AND shard < 16`),
+	]
+);
 
 export const systemConfigTable = pgTable('system_config', {
 	key: text('key').primaryKey(),
@@ -430,6 +452,7 @@ export const pgCoreSchema = {
 	modelSurfacesTable,
 	modelRoutesTable,
 	apiKeyRequestLogsTable,
+	publicModelDailyStatsTable,
 	systemConfigTable,
 	userAuditLogsTable,
 	adminApiKeysTable,

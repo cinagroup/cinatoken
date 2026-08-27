@@ -7,7 +7,7 @@ import {
 	DEFAULT_D1_PERSIST_TO,
 } from '../lib/d1-execute';
 
-const REQUIRED_MIGRATION = '0030_chain_job_transactions.sql';
+const REQUIRED_MIGRATION = '0034_public_model_daily_stats.sql';
 
 type InvariantCheck = {
 	label: string;

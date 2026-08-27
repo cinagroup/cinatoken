@@ -44,6 +44,7 @@ export const apiKeysTable = sqliteTable('api_keys', {
 	id: text('id').primaryKey(),
 	key: text('key').notNull(),
 	keyHash: text('key_hash'),
+	keyPreview: text('key_preview'),
 	userId: text('user_id').notNull(),
 	name: text('name'),
 	status: text('status').notNull().default('active'),
@@ -205,6 +206,27 @@ export const apiKeyRequestLogsTable = sqliteTable('api_key_request_logs', {
 	audioCharacters: integer('audio_characters'),
 	createdAt: text('created_at').notNull().default(sql`CURRENT_TIMESTAMP`),
 });
+
+/** 匿名公开排行专用的分片日汇总；公开请求不得回退扫描 api_key_request_logs。 */
+export const publicModelDailyStatsTable = sqliteTable(
+	'public_model_daily_stats',
+	{
+		statDate: text('stat_date').notNull(),
+		modelId: text('model_id').notNull(),
+		shard: integer('shard').notNull(),
+		requestCount: integer('request_count').notNull().default(0),
+		successCount: integer('success_count').notNull().default(0),
+		errorCount: integer('error_count').notNull().default(0),
+		outputTokens: integer('output_tokens').notNull().default(0),
+		latencyTotalMs: integer('latency_total_ms').notNull().default(0),
+		latencySampleCount: integer('latency_sample_count').notNull().default(0),
+		updatedAt: text('updated_at').notNull().default(sql`CURRENT_TIMESTAMP`),
+	},
+	(t) => [
+		uniqueIndex('uk_public_model_daily_stats').on(t.statDate, t.modelId, t.shard),
+		check('public_model_daily_stats_shard_chk', sql`shard >= 0 AND shard < 16`),
+	]
+);
 
 export const systemConfigTable = sqliteTable('system_config', {
 	key: text('key').primaryKey(),
@@ -380,6 +402,7 @@ export const d1CoreSchema = {
 	modelSurfacesTable,
 	modelRoutesTable,
 	apiKeyRequestLogsTable,
+	publicModelDailyStatsTable,
 	systemConfigTable,
 	userAuditLogsTable,
 	adminApiKeysTable,

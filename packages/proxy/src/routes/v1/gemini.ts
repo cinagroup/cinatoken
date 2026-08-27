@@ -340,6 +340,7 @@ geminiRoutes.post('/models/:modelAction', async (c) => {
           provider_name: chosenRoute.providerName,
           request_body: requestBodyForLog,
           upstream_request_body: upstreamRequestBodyForLog,
+          request_body_logging_mode: c.get('requestBodyLoggingMode'),
           request_protocol: 'gemini',
           request_operation: GEMINI_GENERATE_OPERATION,
           upstream_protocol: chosenRoute.upstreamProtocol,

@@ -216,6 +216,76 @@ html[data-home-theme='light'] .home-surface {
   color: var(--home-text);
 }
 
+.home-locale-trigger {
+  color: var(--home-muted);
+}
+
+.home-locale-trigger:hover {
+  background-color: var(--home-menu-hover);
+  color: var(--home-text);
+}
+
+.home-locale-menu {
+  border-color: var(--home-border-strong);
+  background-color: var(--home-menu-bg);
+  box-shadow: var(--home-menu-shadow);
+  color: var(--home-text);
+}
+
+.home-locale-option {
+  color: var(--home-muted);
+}
+
+.home-locale-option:hover,
+.home-locale-option:focus-visible,
+.home-locale-option-selected {
+  background-color: var(--home-menu-hover);
+  color: var(--home-text);
+}
+
+.home-catalog-control {
+  border-color: var(--home-border-strong);
+  background-color: var(--home-secondary-bg);
+}
+
+.home-catalog-control::placeholder {
+  color: var(--home-faint);
+}
+
+.home-catalog-control option {
+  background-color: var(--home-menu-bg);
+  color: var(--home-text);
+}
+
+.home-catalog-drawer {
+  border-color: var(--home-border-strong);
+  background-color: var(--home-bg);
+  color: var(--home-text);
+}
+
+.home-catalog-card {
+  border-color: var(--home-border);
+  background-color: color-mix(in srgb, var(--home-secondary-bg) 94%, var(--home-text) 6%);
+}
+
+.home-catalog-card:hover {
+  border-color: var(--home-border-strong);
+}
+
+.home-catalog-icon {
+  border: 1px solid var(--home-border);
+  background-color: var(--home-menu-hover);
+  color: var(--home-muted);
+}
+
+.home-catalog-tabs {
+  scrollbar-width: none;
+}
+
+.home-catalog-tabs::-webkit-scrollbar {
+  display: none;
+}
+
 @keyframes home-enter {
   from {
     opacity: 0;

@@ -17,6 +17,7 @@ test('D1 source preflight covers every ETL and invalidated-session table once', 
 	assert.equal(new Set(SOURCE_D1_REQUIRED_TABLES).size, SOURCE_D1_REQUIRED_TABLES.length);
 	assert.ok(SOURCE_D1_REQUIRED_TABLES.includes('users'));
 	assert.ok(SOURCE_D1_REQUIRED_TABLES.includes('chain_job_transactions'));
+	assert.ok(SOURCE_D1_REQUIRED_TABLES.includes('public_model_daily_stats'));
 	assert.ok(SOURCE_D1_REQUIRED_TABLES.includes('portal_sessions'));
 	assert.ok(SOURCE_D1_REQUIRED_TABLES.includes('admin_sessions'));
 });

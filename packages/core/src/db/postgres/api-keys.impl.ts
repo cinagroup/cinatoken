@@ -5,7 +5,11 @@ import { and, asc, count, desc, eq, gt, isNotNull, isNull, like, lte, sql } from
 import type { ApiKeyRow, ResolvedGatewayKeyRow } from '../../types';
 import { roundGatewayMoney } from '../../lib/money-precision';
 import type { PostgresDatabaseClient } from '../../storage/database-client';
-import { hashLookupKey } from '../../lib/key-hash';
+import {
+	hashLookupKey,
+	prepareGatewayApiKeyForStorage,
+	resolveGatewayApiKeyPreview,
+} from '../../lib/key-hash';
 import type { ApiKeysRepository } from '../../storage/gateway-repository-interfaces';
 import { apiKeysTable as pgApiKeysTable, usersTable as pgUsersTable } from '../../storage/drizzle/schema.pg';
 import type { BudgetFilter, InsertKeyParams } from '../api-keys-types';
@@ -33,6 +37,7 @@ function apiKeyListOrderBy(sort: ApiKeyListSortField, order: ApiKeyListSortOrder
 function mapPgKeyRow(r: {
 	id: string;
 	key: string;
+	keyPreview: string | null;
 	userId: string;
 	name: string | null;
 	status: string;
@@ -43,7 +48,7 @@ function mapPgKeyRow(r: {
 }): ApiKeyRow {
 	return {
 		id: r.id,
-		key: r.key,
+		key: resolveGatewayApiKeyPreview(r.key, r.keyPreview),
 		user_id: r.userId,
 		name: r.name,
 		status: r.status,
@@ -58,6 +63,7 @@ function mapPgResolvedRow(
 	r: {
 		id: string;
 		key: string;
+		keyPreview: string | null;
 		userId: string;
 		name: string | null;
 		status: string;
@@ -92,6 +98,7 @@ function mapPgResolvedRow(
 function mapPgAdminListRow(r: {
 	id: string;
 	key: string;
+	key_preview: string | null;
 	user_id: string;
 	name: string | null;
 	user_email: string | null;
@@ -107,7 +114,7 @@ function mapPgAdminListRow(r: {
 }): AdminApiKeyListItem {
 	return {
 		id: r.id,
-		key: r.key,
+		key: resolveGatewayApiKeyPreview(r.key, r.key_preview),
 		user_id: r.user_id,
 		name: r.name,
 		user_email: r.user_email,
@@ -126,6 +133,7 @@ function mapPgAdminListRow(r: {
 const resolvedCols = {
 	id: pgApiKeysTable.id,
 	key: pgApiKeysTable.key,
+	keyPreview: pgApiKeysTable.keyPreview,
 	userId: pgApiKeysTable.userId,
 	name: pgApiKeysTable.name,
 	status: pgApiKeysTable.status,
@@ -147,17 +155,49 @@ export function createPostgresApiKeysRepository(db: PostgresDatabaseClient): Api
 	const drizzle = db.drizzle;
 	return {
 		async getApiKeyByKey(key: string): Promise<ApiKeyRow | null> {
-			const rows = await drizzle
+			const keyHash = await hashLookupKey(key);
+			const byHash = await drizzle
+				.select()
+				.from(pgApiKeysTable)
+				.where(and(eq(pgApiKeysTable.keyHash, keyHash), eq(pgApiKeysTable.status, 'active')))
+				.limit(1);
+			if (byHash[0]) return mapPgKeyRow(byHash[0]);
+			const legacy = await drizzle
 				.select()
 				.from(pgApiKeysTable)
 				.where(and(eq(pgApiKeysTable.key, key), eq(pgApiKeysTable.status, 'active')))
 				.limit(1);
-			return rows[0] ? mapPgKeyRow(rows[0]) : null;
+			if (!legacy[0]) return null;
+			const prepared = await prepareGatewayApiKeyForStorage(key);
+			await drizzle.update(pgApiKeysTable).set({
+				key: prepared.storageKey,
+				keyHash: prepared.keyHash,
+				keyPreview: prepared.keyPreview,
+			}).where(and(eq(pgApiKeysTable.id, legacy[0].id), eq(pgApiKeysTable.key, key)));
+			return mapPgKeyRow({
+				...legacy[0],
+				key: prepared.storageKey,
+				keyPreview: prepared.keyPreview,
+			});
 		},
 
 		async getApiKeyByKeyAnyStatus(key: string): Promise<ApiKeyRow | null> {
-			const rows = await drizzle.select().from(pgApiKeysTable).where(eq(pgApiKeysTable.key, key)).limit(1);
-			return rows[0] ? mapPgKeyRow(rows[0]) : null;
+			const keyHash = await hashLookupKey(key);
+			const byHash = await drizzle.select().from(pgApiKeysTable).where(eq(pgApiKeysTable.keyHash, keyHash)).limit(1);
+			if (byHash[0]) return mapPgKeyRow(byHash[0]);
+			const legacy = await drizzle.select().from(pgApiKeysTable).where(eq(pgApiKeysTable.key, key)).limit(1);
+			if (!legacy[0]) return null;
+			const prepared = await prepareGatewayApiKeyForStorage(key);
+			await drizzle.update(pgApiKeysTable).set({
+				key: prepared.storageKey,
+				keyHash: prepared.keyHash,
+				keyPreview: prepared.keyPreview,
+			}).where(and(eq(pgApiKeysTable.id, legacy[0].id), eq(pgApiKeysTable.key, key)));
+			return mapPgKeyRow({
+				...legacy[0],
+				key: prepared.storageKey,
+				keyPreview: prepared.keyPreview,
+			});
 		},
 
 		async getApiKeyById(id: string): Promise<ApiKeyRow | null> {
@@ -182,10 +222,19 @@ export function createPostgresApiKeysRepository(db: PostgresDatabaseClient): Api
 				.where(and(eq(pgApiKeysTable.key, key), eq(pgApiKeysTable.status, 'active')))
 				.limit(1);
 			if (rows[0]) {
-				await drizzle.update(pgApiKeysTable).set({ keyHash })
-					.where(eq(pgApiKeysTable.id, rows[0].id));
+				const prepared = await prepareGatewayApiKeyForStorage(key);
+				await drizzle.update(pgApiKeysTable).set({
+					key: prepared.storageKey,
+					keyHash: prepared.keyHash,
+					keyPreview: prepared.keyPreview,
+				}).where(and(eq(pgApiKeysTable.id, rows[0].id), eq(pgApiKeysTable.key, key)));
+				return mapPgResolvedRow({
+					...rows[0],
+					key: prepared.storageKey,
+					keyPreview: prepared.keyPreview,
+				});
 			}
-			return rows[0] ? mapPgResolvedRow(rows[0]) : null;
+			return null;
 		},
 
 		async getApiKeyWithUserById(id: string): Promise<ResolvedGatewayKeyRow | null> {
@@ -209,10 +258,12 @@ export function createPostgresApiKeysRepository(db: PostgresDatabaseClient): Api
 		async insertApiKey(params: InsertKeyParams): Promise<void> {
 			const now = new Date().toISOString();
 			const status = params.status ?? 'active';
+			const prepared = await prepareGatewayApiKeyForStorage(params.key);
 			await drizzle.insert(pgApiKeysTable).values({
 				id: params.id,
-				key: params.key,
-				keyHash: await hashLookupKey(params.key),
+				key: prepared.storageKey,
+				keyHash: prepared.keyHash,
+				keyPreview: prepared.keyPreview,
 				userId: params.userId,
 				name: params.name ?? null,
 				status,
@@ -256,6 +307,36 @@ export function createPostgresApiKeysRepository(db: PostgresDatabaseClient): Api
 				.where(eq(pgApiKeysTable.id, id))
 				.returning({ id: pgApiKeysTable.id });
 			return updated.length > 0;
+		},
+
+		async scrubLegacyApiKeySecrets(limit = 100): Promise<{ scrubbed: number; remaining: number }> {
+			const batchSize = Math.min(1000, Math.max(1, Math.floor(limit)));
+			const rows = await drizzle
+				.select({ id: pgApiKeysTable.id, key: pgApiKeysTable.key })
+				.from(pgApiKeysTable)
+				.where(sql`${pgApiKeysTable.key} NOT LIKE 'hashref:sha256:%'`)
+				.orderBy(pgApiKeysTable.createdAt)
+				.limit(batchSize);
+			let scrubbed = 0;
+			for (const row of rows) {
+				const prepared = await prepareGatewayApiKeyForStorage(row.key);
+				const updated = await drizzle
+					.update(pgApiKeysTable)
+					.set({
+						key: prepared.storageKey,
+						keyHash: prepared.keyHash,
+						keyPreview: prepared.keyPreview,
+						updatedAt: new Date().toISOString(),
+					})
+					.where(and(eq(pgApiKeysTable.id, row.id), eq(pgApiKeysTable.key, row.key)))
+					.returning({ id: pgApiKeysTable.id });
+				scrubbed += updated.length;
+			}
+			const remainingRows = await drizzle
+				.select({ total: count() })
+				.from(pgApiKeysTable)
+				.where(sql`${pgApiKeysTable.key} NOT LIKE 'hashref:sha256:%'`);
+			return { scrubbed, remaining: Number(remainingRows[0]?.total ?? 0) };
 		},
 
 		async updateApiKeyName(id: string, name: string | null): Promise<boolean> {
@@ -307,6 +388,7 @@ export function createPostgresApiKeysRepository(db: PostgresDatabaseClient): Api
 				.select({
 					id: pgApiKeysTable.id,
 					key: pgApiKeysTable.key,
+					key_preview: pgApiKeysTable.keyPreview,
 					user_id: pgApiKeysTable.userId,
 					name: pgApiKeysTable.name,
 					user_email: pgUsersTable.email,

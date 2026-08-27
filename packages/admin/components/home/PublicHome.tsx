@@ -13,11 +13,11 @@ import {
 	QueueListIcon,
 	ShieldCheckIcon,
 } from '@heroicons/react/24/outline';
-import LocaleSwitcher from '@/components/layout/LocaleSwitcher';
 import { CINATOKEN_GITHUB_DOCS_INDEX, CINATOKEN_GITHUB_REPO_WEB } from '@/lib/brand';
 import GatewayDemo from './GatewayDemo';
-import HomeThemeSwitcher from './HomeThemeSwitcher';
 import FrontendAttribution from '@/components/unified/FrontendAttribution';
+import PublicHeader from '@/components/public/PublicHeader';
+import PublicThemeBootstrap from '@/components/public/PublicThemeBootstrap';
 
 type IconComponent = ComponentType<SVGProps<SVGSVGElement>>;
 
@@ -48,25 +48,6 @@ const STEPS: Array<{
 	{ key: 'keys', icon: KeyIcon },
 	{ key: 'observe', icon: ChartBarSquareIcon },
 ];
-
-const HOME_THEME_BOOTSTRAP = `(() => {
-	let stored = null;
-	try {
-		stored = localStorage.getItem('cinatoken.home-theme.v1');
-	} catch {}
-	if (stored !== 'light' && stored !== 'dark' && stored !== 'system') {
-		stored = (document.cookie || '')
-			.split('; ')
-			.find((entry) => entry.startsWith('cinatoken_home_theme='))
-			?.slice('cinatoken_home_theme='.length) ?? null;
-	}
-	const preference = stored === 'light' || stored === 'dark' || stored === 'system' ? stored : 'system';
-	const resolved = preference === 'system'
-		? (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light')
-		: preference;
-	document.documentElement.dataset.homeThemePreference = preference;
-	document.documentElement.dataset.homeTheme = resolved;
-})();`;
 
 function ArrowLink({ href, children, primary = false }: { href: string; children: ReactNode; primary?: boolean }) {
 	const className = primary
@@ -100,34 +81,9 @@ export default async function PublicHome() {
 
 	return (
 		<>
-			<script suppressHydrationWarning dangerouslySetInnerHTML={{ __html: HOME_THEME_BOOTSTRAP }} />
+			<PublicThemeBootstrap />
 			<div className="home-surface min-h-screen overflow-x-hidden">
-			<header className="home-border home-header sticky top-0 z-50 border-b backdrop-blur-xl">
-				<div className="mx-auto flex h-16 max-w-[1440px] items-center gap-5 px-5 sm:px-8 lg:px-12">
-					<Link href="/" className="flex min-w-0 items-center gap-2.5" aria-label={t('nav.homeLabel')}>
-						<Image src="/brand/logo.png" alt={t('logoAlt')} width={36} height={36} priority className="h-8 w-8 rounded-lg sm:h-9 sm:w-9" />
-						<span className="home-text hidden truncate text-lg font-semibold tracking-[-0.035em] sm:inline sm:text-xl">cinatoken</span>
-					</Link>
-
-					<nav className="ml-10 hidden items-center gap-8 lg:flex" aria-label={t('nav.label')}>
-						<a href="#features" className="home-muted home-hover-text text-sm transition-colors">{t('nav.features')}</a>
-						<a href="#architecture" className="home-muted home-hover-text text-sm transition-colors">{t('nav.architecture')}</a>
-						<a href="#deployment" className="home-muted home-hover-text text-sm transition-colors">{t('nav.deployment')}</a>
-						<a href={CINATOKEN_GITHUB_DOCS_INDEX} target="_blank" rel="noreferrer" className="home-muted home-hover-text text-sm transition-colors">{t('nav.docs')}</a>
-					</nav>
-
-					<div className="ml-auto flex items-center gap-2.5">
-						<HomeThemeSwitcher />
-						<LocaleSwitcher variant="login" />
-						<Link href="/account" className="home-muted home-hover-text inline-flex h-9 items-center justify-center whitespace-nowrap rounded-lg border border-transparent px-3 text-xs font-medium transition sm:px-4 sm:text-sm">
-							{t('nav.portal')}
-						</Link>
-						<Link href="/dashboard" className="home-console-button inline-flex h-9 items-center justify-center whitespace-nowrap rounded-lg border px-3 text-xs font-medium transition sm:px-4 sm:text-sm">
-							{t('nav.console')}
-						</Link>
-					</div>
-				</div>
-			</header>
+			<PublicHeader />
 
 			<main>
 				<section className="home-border relative border-b px-5 pb-16 pt-14 sm:px-8 sm:pb-20 sm:pt-20 lg:px-12 lg:pb-24 lg:pt-24">

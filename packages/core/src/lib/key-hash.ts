@@ -10,6 +10,7 @@
  * 前缀 `sha256:` 预留算法敏捷性：未来换 KDF 时以新前缀并存。
  */
 const encoder = new TextEncoder();
+const GATEWAY_KEY_STORAGE_PREFIX = 'hashref:';
 
 function toHex(bytes: Uint8Array): string {
 	let out = '';
@@ -20,4 +21,34 @@ function toHex(bytes: Uint8Array): string {
 export async function hashLookupKey(value: string): Promise<string> {
 	const digest = await crypto.subtle.digest('SHA-256', encoder.encode(value));
 	return `sha256:${toHex(new Uint8Array(digest))}`;
+}
+
+export function previewGatewayApiKey(value: string): string {
+	if (!value) return 'sk-…';
+	if (value.length <= 12) return `${value.slice(0, 4)}…`;
+	return `${value.slice(0, 8)}…${value.slice(-4)}`;
+}
+
+export function resolveGatewayApiKeyPreview(storedKey: string, storedPreview?: string | null): string {
+	const preview = storedPreview?.trim();
+	if (preview) return preview;
+	if (storedKey.startsWith(GATEWAY_KEY_STORAGE_PREFIX) || storedKey.startsWith('sha256:')) {
+		return 'sk-…';
+	}
+	return previewGatewayApiKey(storedKey);
+}
+
+export async function prepareGatewayApiKeyForStorage(secretKey: string): Promise<{
+	keyHash: string;
+	keyPreview: string;
+	storageKey: string;
+}> {
+	const keyHash = await hashLookupKey(secretKey);
+	return {
+		keyHash,
+		keyPreview: previewGatewayApiKey(secretKey),
+		// `api_keys.key` is legacy NOT NULL + UNIQUE across all supported databases.
+		// Keep that constraint without persisting the bearer secret.
+		storageKey: `${GATEWAY_KEY_STORAGE_PREFIX}${keyHash}`,
+	};
 }

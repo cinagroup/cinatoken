@@ -7,6 +7,7 @@ import type { PostgresDatabaseClient } from '../../storage/database-client';
 import type { AdminAnalyticsRepository } from '../../storage/gateway-repository-interfaces';
 import type {
 	ModelAnalyticsRow,
+	PublicModelAnalyticsRow,
 	ModelProviderReliabilityRow,
 	ProviderAnalyticsRow,
 	ProviderReliabilityRow,
@@ -65,6 +66,24 @@ export function createPostgresAdminAnalyticsRepository(db: PostgresDatabaseClien
 		WHERE ${conditions.join(' AND ')}
 		GROUP BY rl.model_id, rl.route_group`;
 			return (await pg.unsafe(q, values)) as ModelAnalyticsRow[];
+		},
+
+		async queryPublicModelAnalytics(options: { startDate: string; endDate: string }): Promise<PublicModelAnalyticsRow[]> {
+			return (await pg.unsafe(
+				`SELECT
+					model_id,
+					SUM(request_count)::bigint AS request_count,
+					SUM(success_count)::bigint AS success_count,
+					SUM(error_count)::bigint AS error_count,
+					SUM(output_tokens)::bigint AS output_tokens,
+					CASE WHEN SUM(latency_sample_count) > 0
+						THEN SUM(latency_total_ms)::double precision / SUM(latency_sample_count)
+						ELSE NULL END AS avg_latency_ms
+				 FROM public_model_daily_stats
+				 WHERE stat_date >= $1 AND stat_date <= $2
+				 GROUP BY model_id`,
+				[options.startDate, options.endDate]
+			)) as PublicModelAnalyticsRow[];
 		},
 
 		async queryDistinctModelTags(): Promise<string[]> {

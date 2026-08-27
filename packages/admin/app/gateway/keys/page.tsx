@@ -130,7 +130,6 @@ export default function GatewayKeysPage() {
   const [saveError, setSaveError] = useState('');
   const [isSaving, setIsSaving] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
-  const [copiedKey, setCopiedKey] = useState<string | null>(null);
   const [statusTogglingId, setStatusTogglingId] = useState<string | null>(null);
   const { currency: billingCurrency } = useBillingCurrency();
   const { businessTimezone, formatDate, formatTime } = useGatewayDateTime();
@@ -416,8 +415,6 @@ export default function GatewayKeysPage() {
   const copyToClipboard = async (text: string) => {
     try {
       await navigator.clipboard.writeText(text);
-      setCopiedKey(text);
-      setTimeout(() => setCopiedKey(null), 2000);
     } catch (error) {
       console.error('Copy failed:', error);
     }
@@ -616,17 +613,6 @@ export default function GatewayKeysPage() {
                     <span className="min-w-0 truncate font-mono text-sm text-gray-900" title={key.key}>
                       {maskKey(key.key)}
                     </span>
-                    <button
-                      type="button"
-                      onClick={(event) => {
-                        event.stopPropagation();
-                        copyToClipboard(key.key);
-                      }}
-                      className={`shrink-0 ${copiedKey === key.key ? 'text-emerald-600' : 'text-gray-400 hover:text-gray-600'}`}
-                      title={t('copyKey')}
-                    >
-                      <ClipboardDocumentIcon className="h-4 w-4" />
-                    </button>
                   </div>
                 </td>
                 <td className="px-4 py-3.5 overflow-hidden">
@@ -951,17 +937,10 @@ export default function GatewayKeysPage() {
 
               <div className="mb-6 space-y-4">
                 <div className="grid gap-4 sm:grid-cols-2">
-                  <ReadonlyRow label={t('fields.secretKey')}>
-                    <div className="flex items-start gap-2">
+                  <ReadonlyRow label={t('fields.keyPreview')}>
+                    <div>
                       <span className="font-mono text-xs break-all">{selectedKey.key}</span>
-                      <button
-                        type="button"
-                        onClick={() => copyToClipboard(selectedKey.key)}
-                        className="shrink-0 text-gray-400 hover:text-gray-600"
-                        title={t('copySecret')}
-                      >
-                        <ClipboardDocumentIcon className="h-4 w-4" />
-                      </button>
+                      <p className="mt-1 text-[11px] leading-4 text-gray-400">{t('help.keyPreview')}</p>
                     </div>
                   </ReadonlyRow>
                   <ReadonlyRow label={t('fields.status')}>

@@ -102,6 +102,7 @@ aiDetectionRoutes.post('/', async (c) => {
 			unitPrices,
 			latencyMs,
 			requestBody: logRequestBody,
+			requestBodyLoggingMode: c.get('requestBodyLoggingMode'),
 			// 仅分数汇总，不含 excerpt / 原文
 			responseBody: JSON.stringify({
 				overall_score: result.overallScore,
@@ -153,6 +154,7 @@ aiDetectionRoutes.post('/', async (c) => {
 				unitPrices,
 				latencyMs,
 				requestBody: logRequestBody,
+				requestBodyLoggingMode: c.get('requestBodyLoggingMode'),
 				errorMessage: message,
 				status: 'error',
 			});

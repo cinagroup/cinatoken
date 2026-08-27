@@ -7,7 +7,7 @@ import { useState, useEffect, useCallback, useMemo, useRef, type ReactNode } fro
 import { useTranslations } from 'next-intl';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
-import { ClipboardDocumentIcon, MagnifyingGlassIcon, PlusIcon, TrashIcon, XMarkIcon } from '@heroicons/react/24/outline';
+import { MagnifyingGlassIcon, PlusIcon, TrashIcon, XMarkIcon } from '@heroicons/react/24/outline';
 import { readApiJson } from '@/lib/api-json';
 import { parseGatewayDateTime } from '@/lib/datetime';
 import { formatGatewayMoneyCode, formatGatewayMoneyCodeSigned, getGatewayCurrencySymbol } from '@/lib/format-gateway-currency';
@@ -840,9 +840,6 @@ export default function GatewayUserDetailPage() {
                   <tr key={k.id} className="border-b border-gray-100">
                     <td className="py-2 pr-4 font-mono text-xs align-top">
                       <span title={k.key}>{maskKey(k.key)}</span>
-                      <button type="button" onClick={() => copy(k.key)} className="ml-1 text-gray-400 hover:text-gray-600 align-middle">
-                        <ClipboardDocumentIcon className="h-3.5 w-3.5 inline" />
-                      </button>
                       <div className="text-gray-400">{shortId(k.id)}</div>
                     </td>
                     <td className="py-2 pr-4 align-top">{k.name || '—'}</td>

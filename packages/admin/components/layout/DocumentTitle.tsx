@@ -8,6 +8,7 @@ import { useLayoutEffect } from 'react';
 import { usePathname } from 'next/navigation';
 import { useLocale, useTranslations } from 'next-intl';
 import { formatAdminDocumentTitle, matchAdminNavRoute } from '@/lib/admin-nav';
+import { isPublicProductPath } from '@/lib/public-routes';
 
 export default function DocumentTitle() {
 	const pathname = usePathname();
@@ -20,6 +21,9 @@ export default function DocumentTitle() {
 	useLayoutEffect(() => {
 		const isHome = pathname === '/';
 		const isPortal = pathname === '/account' || pathname?.startsWith('/account/');
+		const isPublicDiscovery = !isHome && !isPortal && isPublicProductPath(pathname);
+		// Discovery pages own their localized SEO titles through route metadata.
+		if (isPublicDiscovery) return;
 		const app = tMeta('title');
 		const match = isHome || isPortal ? null : matchAdminNavRoute(pathname ?? '');
 		const page = match ? tSidebar(`nav.${match.nameKey}`) : null;

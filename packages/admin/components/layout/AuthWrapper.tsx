@@ -13,6 +13,7 @@ import LocaleSwitcher from '@/components/layout/LocaleSwitcher';
 import { BusinessTimezoneProvider } from '@/components/BusinessTimezoneProvider';
 import { ADMIN_SESSION_EXPIRED_EVENT_NAME } from '@/lib/admin-session-events';
 import { readJson } from '@/lib/api-json';
+import { isPublicProductPath } from '@/lib/public-routes';
 import Sidebar from './Sidebar';
 import ConsoleThemeToggle from '@/components/unified/ConsoleThemeToggle';
 import AdminMobileHeader from './AdminMobileHeader';
@@ -25,7 +26,7 @@ export default function AuthWrapper({ children }: Props) {
   const pathname = usePathname();
   const router = useRouter();
   // 门户分区使用统一会话，但不要求管理员能力。
-  const isPublicHome = pathname === '/' || pathname.startsWith('/account');
+  const isPublicHome = isPublicProductPath(pathname);
   const t = useTranslations('auth');
   const tBrand = useTranslations('brand');
   const tCommon = useTranslations('common');

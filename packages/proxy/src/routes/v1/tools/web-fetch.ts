@@ -95,6 +95,7 @@ webFetchRoutes.post('/', async (c) => {
 				url: guarded.url,
 				provider,
 			}),
+			requestBodyLoggingMode: c.get('requestBodyLoggingMode'),
 			responseBody: JSON.stringify({
 				url: result.url,
 				title: result.title,
@@ -133,6 +134,7 @@ webFetchRoutes.post('/', async (c) => {
 				unitPrices: { metered: unitMetered, standard: unitStandard, charged: unitCharged },
 				latencyMs,
 				requestBody: JSON.stringify({ url: guarded.url, provider }),
+				requestBodyLoggingMode: c.get('requestBodyLoggingMode'),
 				errorMessage: message,
 				status: 'error',
 			});

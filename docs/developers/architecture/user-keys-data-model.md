@@ -1,6 +1,6 @@
 # 用户与 API Key 数据模型（cinatoken Gateway）
 
-网关将**预算与周期**全部放在 **`users`**；**`api_keys`** 仅保存密钥材料、显示名、状态与 per-key `metadata`，通过 **`user_id`** 归属用户。三存储引擎（D1 / PostgreSQL / MySQL）的 DDL 以各自目录下的 **`0001_baseline.sql`** 为权威。
+网关将**预算与周期**全部放在 **`users`**；**`api_keys`** 保存不可逆查找摘要、安全预览、显示名、状态与 per-key `metadata`，通过 **`user_id`** 归属用户。Bearer 全文只在创建响应中返回一次。三存储引擎（D1 / PostgreSQL / MySQL）的 DDL 以各自迁移目录为权威。
 
 ## 实体关系
 
@@ -30,7 +30,9 @@ erDiagram
 
     api_keys {
         text id PK
-        text key "UNIQUE"
+        text key "UNIQUE hashref compatibility value"
+        text key_hash "UNIQUE SHA-256 lookup"
+        text key_preview "safe UI preview"
         text user_id FK
         text name
         text status
@@ -67,6 +69,8 @@ erDiagram
    - `external_system IS NOT NULL` 时：`UNIQUE(external_system, email)`；
    - **internal 用户**（`external_system IS NULL`）：`UNIQUE(email)`（仅此类行参与）。
 3. **`api_keys`**：不含任何 `budget_*` 或 `user_email`；列表/详情中的邮箱与预算来自 **`JOIN users`**。
+   - 新 Key 的 `key_hash` 保存带算法前缀的 SHA-256 查找摘要，`key_preview` 保存安全预览；遗留 NOT NULL/UNIQUE `key` 列仅保存 `hashref:` 摘要引用。
+   - 旧明文行在认证命中时在线清除；迁移后由受保护的维护接口分批清理其余行。任何列表或详情 API 都只返回预览。
 4. **多把 active key**：同一 `user_id` 下允许多条 `status = 'active'` 的密钥；创建密钥**不**再按 user 幂等。
 5. **删除语义**：
    - 删除 **`users`**：`ON DELETE CASCADE` 删除其 **`api_keys`**；子表中若存在指向该用户的 FK，按迁移定义处理（`user_audit_logs.user_id` 为 **`ON DELETE SET NULL`**，审计行保留）。

@@ -12,6 +12,7 @@ import {
 	getAdminKeyById,
 	getAdminKeyLogs,
 	listAdminKeys,
+	scrubLegacyGatewayKeySecrets,
 	updateAdminKey,
 } from '@/lib/services/admin/keys-service';
 import type { AdminKeyCreateInput, AdminKeyUpdateInput } from '@/lib/services/admin/types';
@@ -63,6 +64,18 @@ adminKeysRoutes.post('/', async (c) => {
 		);
 	} catch (error) {
 		return handleAdminRouteError(c, error, 'Failed to create key');
+	}
+});
+
+/** 分批清除历史 Gateway Key 明文；幂等，可重复调用直至 remaining=0。 */
+adminKeysRoutes.post('/maintenance/scrub-legacy-secrets', async (c) => {
+	const body = (await c.req.json().catch(() => ({}))) as { limit?: unknown };
+	const limit = typeof body.limit === 'number' && Number.isFinite(body.limit) ? body.limit : 100;
+	try {
+		const data = await scrubLegacyGatewayKeySecrets(c.get('repositories'), limit);
+		return c.json({ success: true as const, data });
+	} catch (error) {
+		return handleAdminRouteError(c, error, 'Failed to scrub legacy key secrets');
 	}
 });
 

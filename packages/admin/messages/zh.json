@@ -111,6 +111,177 @@
 			"description": "AI 能力网关与运营控制面"
 		}
 	},
+	"publicNav": {
+		"label": "公开导航",
+		"homeLabel": "返回 cinatoken 首页",
+		"models": "模型",
+		"providers": "供应商",
+		"rankings": "排行",
+		"benchmarks": "基准",
+		"chat": "聊天",
+		"features": "功能",
+		"docs": "文档",
+		"portal": "用户中心",
+		"console": "控制台"
+	},
+	"publicModels": {
+		"metadata": {
+			"title": "模型",
+			"description": "浏览当前可通过 cinatoken 网关调用的 AI 模型。"
+		},
+		"eyebrow": "实时网关目录",
+		"title": "模型",
+		"description": "浏览 cinatoken 当前发布的全部模型，对比能力与价格，并通过一个兼容 API 完成调用。",
+		"getKey": "获取 API 密钥",
+		"byVendor": "由 {vendor} 提供",
+		"contextValue": "{value} 上下文",
+		"searchPlaceholder": "搜索模型、供应商或能力",
+		"searchLabel": "搜索模型目录",
+		"clearSearch": "清除搜索",
+		"outputLabel": "按输出类型筛选",
+		"outputs": {
+			"all": "全部模型",
+			"text": "文本",
+			"image": "图像",
+			"video": "视频",
+			"audio": "音频"
+		},
+		"filters": {
+			"title": "筛选",
+			"clear": "全部清除",
+			"providers": "供应商",
+			"input": "输入模态",
+			"protocol": "协议",
+			"context": "最小上下文",
+			"close": "关闭筛选",
+			"show": "显示 {count} 个模型"
+		},
+		"context": {
+			"all": "不限",
+			"128k": "128K+",
+			"1m": "1M+"
+		},
+		"modalities": {
+			"text": "文本",
+			"image": "图像",
+			"audio": "音频",
+			"video": "视频",
+			"file": "文件"
+		},
+		"results": {
+			"count": "{count} 个模型"
+		},
+		"sort": {
+			"label": "模型排序",
+			"newest": "最新发布",
+			"context": "上下文从高到低",
+			"price": "输入价格从低到高",
+			"name": "名称"
+		},
+		"columns": {
+			"model": "模型",
+			"provider": "供应商",
+			"context": "上下文",
+			"released": "发布日期",
+			"pricing": "输入 / 输出"
+		},
+		"view": {
+			"label": "模型显示方式",
+			"list": "列表视图",
+			"table": "表格视图"
+		},
+		"pricing": {
+			"unavailable": "未标价",
+			"perImage": "/ 张",
+			"perSecond": "/ 秒",
+			"perCharacter": "/ 字符",
+			"perMillion": "/ 百万 token",
+			"inputOutput": "按网关计费币种显示目录价"
+		},
+		"unavailable": {
+			"title": "模型目录暂时不可用",
+			"description": "网关未返回目录响应，因此不会展示缓存或虚构的模型数据。"
+		},
+		"empty": {
+			"title": "没有符合筛选条件的模型",
+			"description": "请尝试更宽泛的搜索，或清除当前筛选条件。"
+		}
+	},
+	"publicModelDetail": {
+		"metadata": {
+			"fallbackTitle": "模型",
+			"title": "{model} — 模型详情",
+			"description": "查看 {vendor} 的 {model}，包括能力、价格与 API 兼容协议。"
+		},
+		"back": "全部模型",
+		"noDescription": "该模型暂无公开说明。",
+		"pricingTitle": "价格",
+		"pricingDescription": "网关发布的目录价；账户级价格调整可能另行适用。",
+		"pricingUnavailable": "该模型暂无公开目录价。",
+		"tier": "用量档位",
+		"input": "输入 / 百万 token",
+		"output": "输出 / 百万 token",
+		"allTokens": "全部 token",
+		"upToTokens": "不超过 {count}",
+		"perMillionHint": "价格单位为每百万 token 的 {currency}。",
+		"perImage": "每张",
+		"perSecond": "每秒",
+		"perCharacter": "每字符",
+		"apiTitle": "调用此模型",
+		"apiDescription": "推荐兼容协议：{protocol}。",
+		"capabilitiesTitle": "模型信息",
+		"context": "上下文窗口",
+		"maxOutput": "最大输出",
+		"released": "发布日期",
+		"routeGroups": "路由组",
+		"modalities": "模态",
+		"inputModalities": "输入：{values}",
+		"outputModalities": "输出：{values}",
+		"getKey": "获取 API 密钥",
+		"docs": "阅读 API 文档",
+		"unavailableTitle": "模型详情暂时不可用",
+		"unavailableDescription": "网关未返回经过验证的模型记录，因此不会展示缓存或虚构的详情。"
+	},
+	"publicProviders": {
+		"metadata": { "title": "供应商", "description": "浏览当前可通过 cinatoken 使用的 AI 供应商。" },
+		"title": "供应商",
+		"description": "浏览 cinatoken 活跃模型目录背后的供应商，以及实时协议和模态覆盖。",
+		"getKey": "获取 API 密钥",
+		"searchPlaceholder": "搜索供应商或能力",
+		"searchLabel": "搜索供应商",
+		"clearSearch": "清除搜索",
+		"sortLabel": "供应商排序",
+		"sort": { "models": "模型数量最多", "name": "名称", "newest": "最新发布" },
+		"filters": { "title": "筛选", "clear": "全部清除", "protocols": "协议", "inputs": "输入模态", "outputs": "输出模态", "close": "关闭筛选", "show": "显示 {count} 个供应商" },
+		"columns": { "provider": "供应商", "models": "模型", "protocols": "协议", "inputs": "输入", "outputs": "输出", "latest": "最新发布" },
+		"count": "{count} 个供应商",
+		"modelCount": "{count} 个模型",
+		"models": "模型",
+		"latest": "最新发布",
+		"unavailable": { "title": "供应商目录暂时不可用", "description": "网关未返回供应商聚合数据，因此不会展示占位数据。" },
+		"empty": { "title": "没有符合搜索条件的供应商", "description": "请尝试更宽泛的搜索词。" }
+	},
+	"publicCompare": {
+		"metadata": { "title": "模型比较", "description": "并排比较 cinatoken 已发布模型。" },
+		"title": "模型比较", "description": "使用实时发布数据比较能力、上下文、协议与目录价格。", "getKey": "获取 API 密钥", "pickerLabel": "选择要比较的模型", "pickerPlaceholder": "选择另一个模型", "add": "添加模型", "attribute": "属性", "remove": "移除 {model}", "unavailable": "模型目录暂时不可用。", "empty": "请至少选择一个模型进行比较。", "priceHint": "目录价以 {currency} 显示；输入和输出单价均按每百万 token 计算。",
+		"rows": { "provider": "供应商", "modelId": "模型 ID", "context": "上下文", "maxOutput": "最大输出", "input": "输入模态", "output": "输出模态", "protocols": "协议", "released": "发布日期", "price": "输入 / 输出价格" }
+	},
+	"publicRankings": {
+		"metadata": { "title": "模型排行", "description": "来自 cinatoken 网关的隐私安全用量与可靠性排行。" },
+		"title": "模型排行", "description": "查看 cinatoken 网关中使用最多、响应最可靠和延迟最低的已发布模型。", "browseModels": "浏览模型", "privacyNote": "仅发布至少有 {count} 次请求的聚合行；不公开用户、成本、路由或错误详情。",
+		"ranges": { "7d": "7 天", "30d": "30 天", "90d": "90 天" }, "metrics": { "popular": "热门", "reliable": "可靠", "latency": "低延迟" }, "columns": { "model": "模型", "requests": "请求数", "success": "成功率", "latency": "平均延迟", "output": "输出 token" },
+		"unavailable": { "title": "排行暂时不可用", "description": "网关未返回经过验证的聚合遥测。" }, "empty": { "title": "公开数据暂时不足", "description": "该时间窗内没有模型达到 {count} 次请求的隐私阈值。" }
+	},
+	"publicBenchmarks": {
+		"metadata": { "title": "网关基准", "description": "cinatoken 网关实际观测到的延迟与可靠性指标。" },
+		"title": "网关基准", "description": "已发布模型的生产环境观测性能；这是网关交付指标，不是虚构的模型智能评测。", "browseModels": "浏览模型", "privacyNote": "仅发布至少有 {count} 次请求的聚合行；不公开用户、成本、路由或错误详情。",
+		"ranges": { "7d": "7 天", "30d": "30 天", "90d": "90 天" }, "metrics": { "popular": "调用量", "reliable": "可靠性", "latency": "延迟" }, "columns": { "model": "模型", "requests": "请求数", "success": "成功率", "latency": "平均延迟", "output": "输出 token" },
+		"unavailable": { "title": "基准暂时不可用", "description": "网关未返回经过验证的聚合遥测。" }, "empty": { "title": "基准数据暂时不足", "description": "该时间窗内没有模型达到 {count} 次请求的隐私阈值。" }
+	},
+	"publicChat": {
+		"metadata": { "title": "聊天", "description": "在私有浏览器会话中调用 cinatoken 文本模型。" },
+		"title": "聊天", "description": "通过 OpenAI 兼容网关测试已发布的文本模型。", "newChat": "新对话", "model": "模型", "apiKey": "API 密钥", "keySafety": "仅保存在当前页面内存中，并由 cinatoken 转发至其 API；本界面不会存储密钥。", "getKey": "创建或管理密钥", "clear": "清空对话", "emptyTitle": "开始对话", "emptyDescription": "选择模型、输入 API 密钥并发送消息；回复来自实时网关。", "catalogUnavailable": "模型目录不可用，暂时无法开始聊天。", "noModels": "当前没有已发布的 OpenAI 兼容文本模型。", "thinking": "生成中…", "prompt": "发送消息给 cinatoken", "promptLabel": "聊天消息", "send": "发送消息", "disclaimer": "模型输出可能不准确，请核验重要信息。", "requestFailed": "请求失败（{status}）。", "invalidResponse": "网关未返回助手文本。", "networkError": "请求无法到达网关。"
+	},
 	"brand": {
 		"wordmark": "cinatoken",
 		"product": "cinatoken Gateway",
@@ -1570,6 +1741,7 @@
 			"metadataJson": "Metadata（JSON）",
 			"name": "名称",
 			"secretKey": "Secret Key",
+			"keyPreview": "Key 预览",
 			"status": "状态",
 			"userIdAuth": "用户 ID（鉴权）",
 			"budgetReadonly": "额度（只读）",
@@ -1589,7 +1761,8 @@
 		"help": {
 			"userEmail": "用于匹配或创建。外部身份对已存在时，不会覆盖已存储 Email。",
 			"metadata": "保存在 Key 上，并由 GET /v1/me 返回。留空表示无。",
-			"editMetadata": "保存在此 Key 上的完整 JSON；留空则清除。GET /v1/me 会显示该值。"
+			"editMetadata": "保存在此 Key 上的完整 JSON；留空则清除。GET /v1/me 会显示该值。",
+			"keyPreview": "完整密钥仅在创建时显示一次；此预览不能用于鉴权。"
 		},
 		"links": {
 			"requestLogsForKey": "查看此 Key 的请求日志 →",

@@ -31,11 +31,11 @@ export async function grantPostgresRuntime(env: NodeJS.ProcessEnv = process.env)
 		const [migration] = await sql<Array<{ applied: boolean }>>`
 			SELECT EXISTS (
 				SELECT 1 FROM cinatoken_gateway.schema_migrations
-				WHERE version = '0030_chain_job_transactions.sql'
+				WHERE version = '0034_public_model_daily_stats.sql'
 			) AS applied
 		`;
 		if (!migration?.applied) {
-			throw new Error('PostgreSQL migrations are incomplete; 0030_chain_job_transactions.sql is required.');
+			throw new Error('PostgreSQL migrations are incomplete; 0034_public_model_daily_stats.sql is required.');
 		}
 
 		await sql.begin(async (tx) => {

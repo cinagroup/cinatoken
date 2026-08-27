@@ -128,6 +128,19 @@ export interface ModelAnalyticsRow {
 	avg_attempts: number | null;
 }
 
+/**
+ * 公开模型排行使用的最小聚合行。
+ * 数据必须来自 `public_model_daily_stats`，不得由未认证请求直接扫描请求日志。
+ */
+export interface PublicModelAnalyticsRow {
+	model_id: string | null;
+	request_count: number;
+	success_count: number;
+	error_count: number;
+	output_tokens: number;
+	avg_latency_ms: number | null;
+}
+
 /** 分析：按用户邮箱聚合。 */
 export interface UserAnalyticsRow {
 	user_email: string;

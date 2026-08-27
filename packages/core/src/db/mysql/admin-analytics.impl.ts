@@ -7,6 +7,7 @@ import type { MySqlDatabaseClient } from '../../storage/database-client';
 import type { AdminAnalyticsRepository } from '../../storage/gateway-repository-interfaces';
 import type {
 	ModelAnalyticsRow,
+	PublicModelAnalyticsRow,
 	ModelProviderReliabilityRow,
 	ProviderAnalyticsRow,
 	ProviderReliabilityRow,
@@ -61,6 +62,25 @@ export function createMySqlAdminAnalyticsRepository(db: MySqlDatabaseClient): Ad
 				 WHERE ${conditions.join(' AND ')}
 				 GROUP BY rl.model_id, rl.route_group`,
 				bindValues
+			);
+			return rows;
+		},
+
+		async queryPublicModelAnalytics(options: { startDate: string; endDate: string }): Promise<PublicModelAnalyticsRow[]> {
+			const [rows] = await pool.query<PublicModelAnalyticsRow[]>(
+				`SELECT
+					model_id,
+					SUM(request_count) AS request_count,
+					SUM(success_count) AS success_count,
+					SUM(error_count) AS error_count,
+					SUM(output_tokens) AS output_tokens,
+					CASE WHEN SUM(latency_sample_count) > 0
+						THEN SUM(latency_total_ms) / SUM(latency_sample_count)
+						ELSE NULL END AS avg_latency_ms
+				 FROM public_model_daily_stats
+				 WHERE stat_date >= ? AND stat_date <= ?
+				 GROUP BY model_id`,
+				[options.startDate, options.endDate]
 			);
 			return rows;
 		},

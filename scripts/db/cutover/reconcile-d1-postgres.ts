@@ -21,7 +21,7 @@ interface ReconcileCheck {
 }
 
 const TARGET_SCHEMA = 'cinatoken_gateway';
-const REQUIRED_MIGRATION = '0030_chain_job_transactions.sql';
+const REQUIRED_MIGRATION = '0034_public_model_daily_stats.sql';
 
 function printUsage(): void {
 	console.log(`Usage:
@@ -159,6 +159,18 @@ function buildChecks(): ReconcileCheck[] {
 			d1Sql: 'SELECT CAST(COALESCE(SUM(total_tokens), 0) AS TEXT) AS value FROM api_key_request_logs',
 			pgSql: `SELECT COALESCE(SUM(total_tokens), 0)::text AS value FROM ${qualifiedTable('api_key_request_logs')}`,
 		},
+		...[
+			'request_count',
+			'success_count',
+			'error_count',
+			'output_tokens',
+			'latency_total_ms',
+			'latency_sample_count',
+		].map((column): ReconcileCheck => ({
+			label: `public_model_daily_stats:sum_${column}`,
+			d1Sql: `SELECT CAST(COALESCE(SUM(${quoteIdentifier(column)}), 0) AS TEXT) AS value FROM public_model_daily_stats`,
+			pgSql: `SELECT COALESCE(SUM(${quoteIdentifier(column)}), 0)::text AS value FROM ${qualifiedTable('public_model_daily_stats')}`,
+		})),
 		{
 			label: 'users:sum_budget_spent',
 			d1Sql: 'SELECT ROUND(COALESCE(SUM(budget_spent), 0), 6) AS value FROM users',

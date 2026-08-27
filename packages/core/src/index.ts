@@ -34,6 +34,7 @@ export * from './db/model-route-policy';
 export * from './db/route-pool-tier-strategies';
 export * from './db/route-pool-sticky-types';
 export * from './db/request-logs-types';
+export * from './db/public-model-daily-stats';
 export * from './db/pricing-audit';
 export * from './db/pricing-profile';
 export * from './db/image-token-usage';
@@ -50,6 +51,7 @@ export * from './shared-channels';
 
 export * from './lib/business-timezone';
 export * from './lib/billing-currency';
+export * from './lib/public-model-slug';
 export * from './lib/alert-webhook-system-config';
 export * from './lib/web-search-system-config';
 export * from './lib/web-fetch-system-config';

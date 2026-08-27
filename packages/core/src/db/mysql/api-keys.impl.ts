@@ -4,7 +4,11 @@
 import { and, asc, count, desc, eq, gt, isNotNull, isNull, like, lte, sql } from 'drizzle-orm';
 import type { ApiKeyRow, ResolvedGatewayKeyRow } from '../../types';
 import { roundGatewayMoney } from '../../lib/money-precision';
-import { hashLookupKey } from '../../lib/key-hash';
+import {
+	hashLookupKey,
+	prepareGatewayApiKeyForStorage,
+	resolveGatewayApiKeyPreview,
+} from '../../lib/key-hash';
 import type { MySqlDatabaseClient } from '../../storage/database-client';
 import type { ApiKeysRepository } from '../../storage/gateway-repository-interfaces';
 import { apiKeysTable as myApiKeysTable, usersTable as myUsersTable } from '../../storage/drizzle/schema.mysql';
@@ -33,6 +37,7 @@ function apiKeyListOrderBy(sort: ApiKeyListSortField, order: ApiKeyListSortOrder
 function mapMyKeyRow(r: {
 	id: string;
 	key: string;
+	keyPreview: string | null;
 	userId: string;
 	name: string | null;
 	status: string;
@@ -43,7 +48,7 @@ function mapMyKeyRow(r: {
 }): ApiKeyRow {
 	return {
 		id: r.id,
-		key: r.key,
+		key: resolveGatewayApiKeyPreview(r.key, r.keyPreview),
 		user_id: r.userId,
 		name: r.name,
 		status: r.status,
@@ -58,6 +63,7 @@ function mapMyResolvedRow(
 	r: {
 		id: string;
 		key: string;
+		keyPreview: string | null;
 		userId: string;
 		name: string | null;
 		status: string;
@@ -92,6 +98,7 @@ function mapMyResolvedRow(
 function mapMyAdminListRow(r: {
 	id: string;
 	key: string;
+	key_preview: string | null;
 	user_id: string;
 	name: string | null;
 	user_email: string | null;
@@ -107,7 +114,7 @@ function mapMyAdminListRow(r: {
 }): AdminApiKeyListItem {
 	return {
 		id: r.id,
-		key: r.key,
+		key: resolveGatewayApiKeyPreview(r.key, r.key_preview),
 		user_id: r.user_id,
 		name: r.name,
 		user_email: r.user_email,
@@ -126,6 +133,7 @@ function mapMyAdminListRow(r: {
 const resolvedCols = {
 	id: myApiKeysTable.id,
 	key: myApiKeysTable.key,
+	keyPreview: myApiKeysTable.keyPreview,
 	userId: myApiKeysTable.userId,
 	name: myApiKeysTable.name,
 	status: myApiKeysTable.status,
@@ -147,17 +155,49 @@ export function createMySqlApiKeysRepository(db: MySqlDatabaseClient): ApiKeysRe
 	const drizzle = db.drizzle;
 	return {
 		async getApiKeyByKey(key: string): Promise<ApiKeyRow | null> {
-			const rows = await drizzle
+			const keyHash = await hashLookupKey(key);
+			const byHash = await drizzle
+				.select()
+				.from(myApiKeysTable)
+				.where(and(eq(myApiKeysTable.keyHash, keyHash), eq(myApiKeysTable.status, 'active')))
+				.limit(1);
+			if (byHash[0]) return mapMyKeyRow(byHash[0]);
+			const legacy = await drizzle
 				.select()
 				.from(myApiKeysTable)
 				.where(and(eq(myApiKeysTable.key, key), eq(myApiKeysTable.status, 'active')))
 				.limit(1);
-			return rows[0] ? mapMyKeyRow(rows[0]) : null;
+			if (!legacy[0]) return null;
+			const prepared = await prepareGatewayApiKeyForStorage(key);
+			await drizzle.update(myApiKeysTable).set({
+				key: prepared.storageKey,
+				keyHash: prepared.keyHash,
+				keyPreview: prepared.keyPreview,
+			}).where(and(eq(myApiKeysTable.id, legacy[0].id), eq(myApiKeysTable.key, key)));
+			return mapMyKeyRow({
+				...legacy[0],
+				key: prepared.storageKey,
+				keyPreview: prepared.keyPreview,
+			});
 		},
 
 		async getApiKeyByKeyAnyStatus(key: string): Promise<ApiKeyRow | null> {
-			const rows = await drizzle.select().from(myApiKeysTable).where(eq(myApiKeysTable.key, key)).limit(1);
-			return rows[0] ? mapMyKeyRow(rows[0]) : null;
+			const keyHash = await hashLookupKey(key);
+			const byHash = await drizzle.select().from(myApiKeysTable).where(eq(myApiKeysTable.keyHash, keyHash)).limit(1);
+			if (byHash[0]) return mapMyKeyRow(byHash[0]);
+			const legacy = await drizzle.select().from(myApiKeysTable).where(eq(myApiKeysTable.key, key)).limit(1);
+			if (!legacy[0]) return null;
+			const prepared = await prepareGatewayApiKeyForStorage(key);
+			await drizzle.update(myApiKeysTable).set({
+				key: prepared.storageKey,
+				keyHash: prepared.keyHash,
+				keyPreview: prepared.keyPreview,
+			}).where(and(eq(myApiKeysTable.id, legacy[0].id), eq(myApiKeysTable.key, key)));
+			return mapMyKeyRow({
+				...legacy[0],
+				key: prepared.storageKey,
+				keyPreview: prepared.keyPreview,
+			});
 		},
 
 		async getApiKeyById(id: string): Promise<ApiKeyRow | null> {
@@ -182,10 +222,19 @@ export function createMySqlApiKeysRepository(db: MySqlDatabaseClient): ApiKeysRe
 				.where(and(eq(myApiKeysTable.key, key), eq(myApiKeysTable.status, 'active')))
 				.limit(1);
 			if (rows[0]) {
-				await drizzle.update(myApiKeysTable).set({ keyHash })
-					.where(eq(myApiKeysTable.id, rows[0].id));
+				const prepared = await prepareGatewayApiKeyForStorage(key);
+				await drizzle.update(myApiKeysTable).set({
+					key: prepared.storageKey,
+					keyHash: prepared.keyHash,
+					keyPreview: prepared.keyPreview,
+				}).where(and(eq(myApiKeysTable.id, rows[0].id), eq(myApiKeysTable.key, key)));
+				return mapMyResolvedRow({
+					...rows[0],
+					key: prepared.storageKey,
+					keyPreview: prepared.keyPreview,
+				});
 			}
-			return rows[0] ? mapMyResolvedRow(rows[0]) : null;
+			return null;
 		},
 
 		async getApiKeyWithUserById(id: string): Promise<ResolvedGatewayKeyRow | null> {
@@ -209,10 +258,12 @@ export function createMySqlApiKeysRepository(db: MySqlDatabaseClient): ApiKeysRe
 		async insertApiKey(params: InsertKeyParams): Promise<void> {
 			const now = new Date().toISOString();
 			const status = params.status ?? 'active';
+			const prepared = await prepareGatewayApiKeyForStorage(params.key);
 			await drizzle.insert(myApiKeysTable).values({
 				id: params.id,
-				key: params.key,
-				keyHash: await hashLookupKey(params.key),
+				key: prepared.storageKey,
+				keyHash: prepared.keyHash,
+				keyPreview: prepared.keyPreview,
 				userId: params.userId,
 				name: params.name ?? null,
 				status,
@@ -270,6 +321,41 @@ export function createMySqlApiKeysRepository(db: MySqlDatabaseClient): ApiKeysRe
 			return true;
 		},
 
+		async scrubLegacyApiKeySecrets(limit = 100): Promise<{ scrubbed: number; remaining: number }> {
+			const batchSize = Math.min(1000, Math.max(1, Math.floor(limit)));
+			const rows = await drizzle
+				.select({ id: myApiKeysTable.id, key: myApiKeysTable.key })
+				.from(myApiKeysTable)
+				.where(sql`${myApiKeysTable.key} NOT LIKE 'hashref:sha256:%'`)
+				.orderBy(myApiKeysTable.createdAt)
+				.limit(batchSize);
+			let scrubbed = 0;
+			for (const row of rows) {
+				const prepared = await prepareGatewayApiKeyForStorage(row.key);
+				const existing = await drizzle
+					.select({ id: myApiKeysTable.id })
+					.from(myApiKeysTable)
+					.where(and(eq(myApiKeysTable.id, row.id), eq(myApiKeysTable.key, row.key)))
+					.limit(1);
+				if (!existing[0]) continue;
+				await drizzle
+					.update(myApiKeysTable)
+					.set({
+						key: prepared.storageKey,
+						keyHash: prepared.keyHash,
+						keyPreview: prepared.keyPreview,
+						updatedAt: new Date().toISOString(),
+					})
+					.where(and(eq(myApiKeysTable.id, row.id), eq(myApiKeysTable.key, row.key)));
+				scrubbed += 1;
+			}
+			const remainingRows = await drizzle
+				.select({ total: count() })
+				.from(myApiKeysTable)
+				.where(sql`${myApiKeysTable.key} NOT LIKE 'hashref:sha256:%'`);
+			return { scrubbed, remaining: Number(remainingRows[0]?.total ?? 0) };
+		},
+
 		async updateApiKeyName(id: string, name: string | null): Promise<boolean> {
 			const existing = await drizzle
 				.select({ id: myApiKeysTable.id })
@@ -321,6 +407,7 @@ export function createMySqlApiKeysRepository(db: MySqlDatabaseClient): ApiKeysRe
 				.select({
 					id: myApiKeysTable.id,
 					key: myApiKeysTable.key,
+					key_preview: myApiKeysTable.keyPreview,
 					user_id: myApiKeysTable.userId,
 					name: myApiKeysTable.name,
 					user_email: myUsersTable.email,

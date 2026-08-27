@@ -4,7 +4,11 @@
 import type { D1Database, D1PreparedStatement } from '@cloudflare/workers-types';
 import type { ApiKeyRow, ResolvedGatewayKeyRow } from '../../types';
 import { roundGatewayMoney } from '../../lib/money-precision';
-import { hashLookupKey } from '../../lib/key-hash';
+import {
+	hashLookupKey,
+	prepareGatewayApiKeyForStorage,
+	resolveGatewayApiKeyPreview,
+} from '../../lib/key-hash';
 import type { D1DatabaseClient } from '../../storage/database-client';
 import type { ApiKeysRepository } from '../../storage/gateway-repository-interfaces';
 import type { ApiKeysD1Statements } from './d1-repository-extras';
@@ -21,6 +25,7 @@ import type { AdminApiKeyListItem } from '../../storage/repository-dtos';
 type KeySqlRow = {
 	id: string;
 	key: string;
+	key_preview: string | null;
 	user_id: string;
 	name: string | null;
 	status: string;
@@ -33,7 +38,7 @@ type KeySqlRow = {
 function mapKeyRow(r: KeySqlRow): ApiKeyRow {
 	return {
 		id: r.id,
-		key: r.key,
+		key: resolveGatewayApiKeyPreview(r.key, r.key_preview),
 		user_id: r.user_id,
 		name: r.name,
 		status: r.status,
@@ -73,18 +78,27 @@ function mapResolvedRow(r: ResolvedSqlRow): ResolvedGatewayKeyRow {
 export async function buildInsertApiKeyStatement(db: D1Database, params: InsertKeyParams): Promise<D1PreparedStatement> {
 	const status = params.status ?? 'active';
 	// 审计 M2-3：新写入同步落哈希（认证路径哈希优先）。
-	const keyHash = await hashLookupKey(params.key);
+	const prepared = await prepareGatewayApiKeyForStorage(params.key);
 	return db
 		.prepare(
-			`INSERT INTO api_keys (id, key, key_hash, user_id, name, status, metadata, created_at, updated_at)
-       VALUES (?, ?, ?, ?, ?, ?, ?, datetime('now'), datetime('now'))`
+			`INSERT INTO api_keys (id, key, key_hash, key_preview, user_id, name, status, metadata, created_at, updated_at)
+			 VALUES (?, ?, ?, ?, ?, ?, ?, ?, datetime('now'), datetime('now'))`
 		)
-		.bind(params.id, params.key, keyHash, params.userId, params.name ?? null, status, params.metadata ?? null);
+		.bind(
+			params.id,
+			prepared.storageKey,
+			prepared.keyHash,
+			prepared.keyPreview,
+			params.userId,
+			params.name ?? null,
+			status,
+			params.metadata ?? null
+		);
 }
 
 export function createD1ApiKeysRepository(db: D1DatabaseClient): ApiKeysRepository & ApiKeysD1Statements {
 	const raw = db.raw;
-	const resolvedSelect = `SELECT k.id, k.key, k.user_id, k.name, k.status, k.metadata, k.last_used_at, k.created_at, k.updated_at,
+	const resolvedSelect = `SELECT k.id, k.key, k.key_preview, k.user_id, k.name, k.status, k.metadata, k.last_used_at, k.created_at, k.updated_at,
     u.email AS user_email, u.metadata AS user_metadata, u.charged_cost_factors AS user_charged_cost_factors, u.budget_max, u.budget_base, u.budget_spent, u.budget_period, u.budget_reset_at
     FROM api_keys k INNER JOIN users u ON u.id = k.user_id`;
 
@@ -92,16 +106,37 @@ export function createD1ApiKeysRepository(db: D1DatabaseClient): ApiKeysReposito
 		buildInsertApiKeyStatement,
 
 		async getApiKeyByKey(key: string): Promise<ApiKeyRow | null> {
-			const row = await raw
+			const keyHash = await hashLookupKey(key);
+			const byHash = await raw
+				.prepare('SELECT * FROM api_keys WHERE key_hash = ? AND status = ?')
+				.bind(keyHash, 'active')
+				.first<KeySqlRow>();
+			if (byHash) return mapKeyRow(byHash);
+			const legacy = await raw
 				.prepare('SELECT * FROM api_keys WHERE key = ? AND status = ?')
 				.bind(key, 'active')
 				.first<KeySqlRow>();
-			return row ? mapKeyRow(row) : null;
+			if (!legacy) return null;
+			const prepared = await prepareGatewayApiKeyForStorage(key);
+			await raw
+				.prepare('UPDATE api_keys SET key = ?, key_hash = ?, key_preview = ? WHERE id = ? AND key = ?')
+				.bind(prepared.storageKey, prepared.keyHash, prepared.keyPreview, legacy.id, key)
+				.run();
+			return mapKeyRow({ ...legacy, key: prepared.storageKey, key_preview: prepared.keyPreview });
 		},
 
 		async getApiKeyByKeyAnyStatus(key: string): Promise<ApiKeyRow | null> {
-			const row = await raw.prepare('SELECT * FROM api_keys WHERE key = ?').bind(key).first<KeySqlRow>();
-			return row ? mapKeyRow(row) : null;
+			const keyHash = await hashLookupKey(key);
+			const byHash = await raw.prepare('SELECT * FROM api_keys WHERE key_hash = ?').bind(keyHash).first<KeySqlRow>();
+			if (byHash) return mapKeyRow(byHash);
+			const legacy = await raw.prepare('SELECT * FROM api_keys WHERE key = ?').bind(key).first<KeySqlRow>();
+			if (!legacy) return null;
+			const prepared = await prepareGatewayApiKeyForStorage(key);
+			await raw
+				.prepare('UPDATE api_keys SET key = ?, key_hash = ?, key_preview = ? WHERE id = ? AND key = ?')
+				.bind(prepared.storageKey, prepared.keyHash, prepared.keyPreview, legacy.id, key)
+				.run();
+			return mapKeyRow({ ...legacy, key: prepared.storageKey, key_preview: prepared.keyPreview });
 		},
 
 		async getApiKeyById(id: string): Promise<ApiKeyRow | null> {
@@ -122,8 +157,12 @@ export function createD1ApiKeysRepository(db: D1DatabaseClient): ApiKeysReposito
 				.bind(key, 'active')
 				.first<ResolvedSqlRow>();
 			if (!row) return null;
-			await raw.prepare('UPDATE api_keys SET key_hash = ? WHERE id = ?').bind(keyHash, row.id).run();
-			return mapResolvedRow(row);
+			const prepared = await prepareGatewayApiKeyForStorage(key);
+			await raw
+				.prepare('UPDATE api_keys SET key = ?, key_hash = ?, key_preview = ? WHERE id = ? AND key = ?')
+				.bind(prepared.storageKey, prepared.keyHash, prepared.keyPreview, row.id, key)
+				.run();
+			return mapResolvedRow({ ...row, key: prepared.storageKey, key_preview: prepared.keyPreview });
 		},
 
 		async getApiKeyWithUserById(id: string): Promise<ResolvedGatewayKeyRow | null> {
@@ -179,6 +218,27 @@ export function createD1ApiKeysRepository(db: D1DatabaseClient): ApiKeysReposito
 			return result.meta.changes > 0;
 		},
 
+		async scrubLegacyApiKeySecrets(limit = 100): Promise<{ scrubbed: number; remaining: number }> {
+			const batchSize = Math.min(1000, Math.max(1, Math.floor(limit)));
+			const rows = await raw
+				.prepare("SELECT id, key FROM api_keys WHERE key NOT LIKE 'hashref:sha256:%' ORDER BY created_at ASC LIMIT ?")
+				.bind(batchSize)
+				.all<{ id: string; key: string }>();
+			let scrubbed = 0;
+			for (const row of rows.results ?? []) {
+				const prepared = await prepareGatewayApiKeyForStorage(row.key);
+				const result = await raw
+					.prepare('UPDATE api_keys SET key = ?, key_hash = ?, key_preview = ?, updated_at = datetime("now") WHERE id = ? AND key = ?')
+					.bind(prepared.storageKey, prepared.keyHash, prepared.keyPreview, row.id, row.key)
+					.run();
+				scrubbed += result.meta.changes ?? 0;
+			}
+			const countRow = await raw
+				.prepare("SELECT COUNT(*) AS count FROM api_keys WHERE key NOT LIKE 'hashref:sha256:%'")
+				.first<{ count: number }>();
+			return { scrubbed, remaining: Number(countRow?.count ?? 0) };
+		},
+
 		async updateApiKeyName(id: string, name: string | null): Promise<boolean> {
 			const result = await raw
 				.prepare('UPDATE api_keys SET name = ?, updated_at = datetime("now") WHERE id = ?')
@@ -223,7 +283,7 @@ export function createD1ApiKeysRepository(db: D1DatabaseClient): ApiKeysReposito
 			const total = Number(countRow?.total ?? 0);
 			const rows = await raw
 				.prepare(
-					`SELECT k.id, k.key, k.user_id, k.name, k.status, k.metadata, k.created_at, k.updated_at,
+					`SELECT k.id, k.key, k.key_preview, k.user_id, k.name, k.status, k.metadata, k.created_at, k.updated_at,
             u.email AS user_email, u.budget_max, u.budget_base, u.budget_spent, u.budget_period, u.budget_reset_at
        FROM api_keys k INNER JOIN users u ON u.id = k.user_id ${whereClause} ${orderBy} LIMIT ? OFFSET ?`
 				)
@@ -231,6 +291,7 @@ export function createD1ApiKeysRepository(db: D1DatabaseClient): ApiKeysReposito
 				.all<{
 					id: string;
 					key: string;
+					key_preview: string | null;
 					user_id: string;
 					name: string | null;
 					status: string;
@@ -246,7 +307,7 @@ export function createD1ApiKeysRepository(db: D1DatabaseClient): ApiKeysReposito
 				}>();
 			const keys: AdminApiKeyListItem[] = (rows.results ?? []).map((r) => ({
 				id: r.id,
-				key: r.key,
+				key: resolveGatewayApiKeyPreview(r.key, r.key_preview),
 				user_id: r.user_id,
 				name: r.name,
 				user_email: r.user_email,

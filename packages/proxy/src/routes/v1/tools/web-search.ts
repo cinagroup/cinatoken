@@ -111,6 +111,7 @@ webSearchRoutes.post('/', async (c) => {
 				blocked_domains: blockedDomains,
 				count,
 			}),
+			requestBodyLoggingMode: c.get('requestBodyLoggingMode'),
 			responseBody: JSON.stringify({
 				result_count: results.length,
 				results: results.map((r) => ({
@@ -151,6 +152,7 @@ webSearchRoutes.post('/', async (c) => {
 				unitPrices: { metered: unitMetered, standard: unitStandard, charged: unitCharged },
 				latencyMs,
 				requestBody: JSON.stringify({ query, provider }),
+				requestBodyLoggingMode: c.get('requestBodyLoggingMode'),
 				errorMessage: message,
 				status: 'error',
 			});

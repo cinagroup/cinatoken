@@ -60,6 +60,7 @@ Authorization: Bearer sk-admin-<64 hex characters>
 | `/admin/users/:id/budget/transition` | POST | `users` + `user_audit_logs`（原子转换） | 外部集成方 |
 | `/admin/keys` | GET | `api_keys` **JOIN** `users`（分页列表；预算只读） | Admin UI、外部集成方 |
 | `/admin/keys` | POST | `api_keys`（+ 可能 `users`） | 外部集成方、运维脚本 |
+| `/admin/keys/maintenance/scrub-legacy-secrets` | POST | `api_keys` 历史明文在线清理（分批、幂等） | 生产迁移运维 |
 | `/admin/keys/:id` | GET | `api_keys` **JOIN** `users` | 外部集成方、Admin UI |
 | `/admin/keys/:id` | PATCH, DELETE | `api_keys` | Admin UI、外部集成方 |
 | `/admin/keys/:id/logs` | GET | `api_key_request_logs`（Key 范围，分页） | 外部集成方、Admin UI |
@@ -304,7 +305,20 @@ POST /admin/keys
 }
 ```
 
-> **明文 `key`** 仅在本次响应中返回完整值；客户端须立即保存。列表与详情接口中的 `key` 为掩码或存储形态，不应依赖再次取回明文。
+> **明文 `key`** 仅在本次响应中返回完整值；客户端须立即保存。列表与详情接口中的 `key` 始终为安全预览，不能用于鉴权，也不能再次取回明文。
+
+### 清理历史明文 Key
+
+迁移 `0033_gateway_key_secret_removal.sql`（MySQL 为 `0029_key_hash_and_gateway_secret_removal.sql`）完成且新版本 Admin 已部署后，具有 `user_keys.write` 的管理员可分批调用：
+
+```http
+POST /admin/keys/maintenance/scrub-legacy-secrets
+Content-Type: application/json
+
+{ "limit": 100 }
+```
+
+响应 `data.scrubbed` 为本批实际清理数，`data.remaining` 为仍保存旧格式的行数。该操作幂等；重复调用直至 `remaining = 0`。清理只改变认证材料的存储形式，不改变 Key ID、状态、归属、审计或请求日志。
 
 ### 示例（已有用户）
 

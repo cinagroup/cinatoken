@@ -33,7 +33,7 @@ interface ReconcileCheck {
 
 type EtlSqlValue = string | number | boolean | null;
 
-const REQUIRED_MIGRATION = '0030_chain_job_transactions.sql';
+const REQUIRED_MIGRATION = '0034_public_model_daily_stats.sql';
 const ETL_LOCK_KEY = 746923552;
 const BATCH_SIZE = 250;
 const MAX_POSTGRES_BATCH_PARAMETERS = 60_000;

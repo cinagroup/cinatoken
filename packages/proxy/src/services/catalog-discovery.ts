@@ -12,14 +12,15 @@ import {
 	type ParsedPricingProfile,
 	type UpstreamProtocol,
 } from '@octafuse/core';
+import { toPublicModelSlug } from '@octafuse/core/lib/public-model-slug';
 import {
 	filterRouteGroupsByAllowlist,
-	parseMetadata,
 	parseTags,
 } from '../lib/model-list-parse';
 
 export type CatalogDiscoveryModel = {
 	id: string;
+	slug: string;
 	display_name: string | null;
 	vendor: string;
 	context_window: number | null;
@@ -34,7 +35,17 @@ export type CatalogDiscoveryModel = {
 	input_modalities: string[] | null;
 	output_modalities: string[] | null;
 	released_at: string | null;
-	metadata?: Record<string, unknown>;
+};
+
+export type CatalogProviderSummary = {
+	id: string;
+	display_name: string;
+	model_count: number;
+	protocols: UpstreamProtocol[];
+	route_groups: string[];
+	input_modalities: string[];
+	output_modalities: string[];
+	latest_released_at: string | null;
 };
 
 function normalizeRowRouteGroup(routeGroup: string | undefined): string {
@@ -92,6 +103,64 @@ function groupActiveRoutesByModel(routes: ModelRouteJoinRow[]): Map<string, Mode
 	return map;
 }
 
+function sortStrings(values: Iterable<string>): string[] {
+	return [...new Set(values)].sort((a, b) => a.localeCompare(b));
+}
+
+/** Public provider cards derived only from already-sanitized active model discovery. */
+export function aggregateCatalogProviders(models: CatalogDiscoveryModel[]): CatalogProviderSummary[] {
+	type MutableProvider = {
+		id: string;
+		displayName: string;
+		modelCount: number;
+		protocols: Set<UpstreamProtocol>;
+		routeGroups: Set<string>;
+		inputModalities: Set<string>;
+		outputModalities: Set<string>;
+		latestReleasedAt: string | null;
+	};
+	const grouped = new Map<string, MutableProvider>();
+	for (const model of models) {
+		const displayName = model.vendor.trim() || 'other';
+		const id = displayName.toLocaleLowerCase();
+		let provider = grouped.get(id);
+		if (!provider) {
+			provider = {
+				id,
+				displayName,
+				modelCount: 0,
+				protocols: new Set(),
+				routeGroups: new Set(),
+				inputModalities: new Set(),
+				outputModalities: new Set(),
+				latestReleasedAt: null,
+			};
+			grouped.set(id, provider);
+		}
+		provider.modelCount += 1;
+		for (const protocol of model.protocols) provider.protocols.add(protocol);
+		for (const group of model.route_groups) provider.routeGroups.add(group);
+		for (const modality of model.input_modalities ?? []) provider.inputModalities.add(modality);
+		for (const modality of model.output_modalities ?? []) provider.outputModalities.add(modality);
+		if (model.released_at && (!provider.latestReleasedAt || model.released_at > provider.latestReleasedAt)) {
+			provider.latestReleasedAt = model.released_at;
+		}
+	}
+
+	return [...grouped.values()]
+		.map((provider) => ({
+			id: provider.id,
+			display_name: provider.displayName,
+			model_count: provider.modelCount,
+			protocols: sortProtocols(provider.protocols),
+			route_groups: sortStrings(provider.routeGroups),
+			input_modalities: sortStrings(provider.inputModalities),
+			output_modalities: sortStrings(provider.outputModalities),
+			latest_released_at: provider.latestReleasedAt,
+		}))
+		.sort((a, b) => b.model_count - a.model_count || a.display_name.localeCompare(b.display_name));
+}
+
 export async function listCatalogDiscoveryModels(
 	repos: GatewayRepositories,
 	options?: { routeGroups?: string[] | null }
@@ -131,6 +200,7 @@ export async function listCatalogDiscoveryModels(
 
 		list.push({
 			id: m.id,
+			slug: toPublicModelSlug(m.id),
 			display_name: m.display_name,
 			vendor: m.vendor?.trim() ? m.vendor : 'other',
 			context_window: m.context_window,
@@ -145,7 +215,6 @@ export async function listCatalogDiscoveryModels(
 			input_modalities: parseModelModalitiesJson(m.input_modalities),
 			output_modalities: parseModelModalitiesJson(m.output_modalities),
 			released_at: m.released_at ?? null,
-			metadata: parseMetadata(m.metadata),
 		});
 	}
 

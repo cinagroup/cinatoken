@@ -652,6 +652,7 @@ async function finalizeImageResponse(params: FinalizeImageParams): Promise<Respo
 				providerName: chosenRoute.providerName,
 				requestBody: requestBodyForLog,
 				upstreamRequestBody: upstreamRequestBodyForLog,
+				requestBodyLoggingMode: c.get('requestBodyLoggingMode'),
 				requestProtocol: 'openai',
 				requestOperation: operation === 'generations' ? 'images.generations' : 'images.edits',
 				upstreamProtocol: chosenRoute.upstreamProtocol,
