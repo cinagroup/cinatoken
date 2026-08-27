@@ -124,6 +124,12 @@ assert.match(hyperdriveMigrationWorker, /isDiagnosticRequestAuthorized/u);
 assert.match(hyperdriveMigrationWorker, /pg_advisory_xact_lock/u);
 assert.match(hyperdriveMigrationWorker, /grantPostgresRuntime/u);
 
+const runtimeGrants = read('scripts/db/cutover/grant-postgres-runtime.ts');
+const runtimeGrantSql = runtimeGrants.match(/tx\.unsafe\(`([\s\S]*?)`\)/u)?.[1];
+assert.ok(runtimeGrantSql, 'Unable to parse runtime grant SQL');
+assert.doesNotMatch(runtimeGrantSql, /^\s*\/\//mu, 'Runtime grant SQL must use SQL comments, not JavaScript comments');
+assert.match(runtimeGrants, /0034_public_model_daily_stats\.sql/u);
+
 const hyperdriveAccessProbe = read('scripts/db/cutover/hyperdrive-access-probe-worker.ts');
 assert.match(hyperdriveAccessProbe, /migratorContractPassed/u);
 assert.match(hyperdriveAccessProbe, /runtimeContractPassed/u);
