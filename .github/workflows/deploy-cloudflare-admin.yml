@@ -23,6 +23,8 @@ jobs:
       D1_DATABASE_NAME: cinatoken
       D1_DATABASE_ID: f7588b56-e761-49fc-b944-4cd7d121fc21
       D1_MIGRATIONS_WORKER_NAME: cinatoken-d1-migrations
+      DATABASE_DRIVER: postgres
+      HYPERDRIVE_ID: e703c04c8505431d9e22ce6f8b371251
       CINACHAIN_CHAIN_ID: "84532"
     steps:
       - name: Checkout main
