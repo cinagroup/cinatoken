@@ -41,5 +41,6 @@ describe('CinaAuth OIDC transaction', () => {
 		assert.equal(await openCinaAuthTransaction(sealed, secret, createdAt + 11 * 60_000), null);
 		assert.equal(sanitizeCinaAuthCallbackPath('//attacker.example/path'), '/dashboard');
 		assert.equal(sanitizeCinaAuthCallbackPath('https://attacker.example/path'), '/dashboard');
+		assert.equal(sanitizeCinaAuthCallbackPath('/admin/models'), '/admin/models');
 	});
 });

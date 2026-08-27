@@ -30,6 +30,8 @@ export default function AuthWrapper({ children }: Props) {
   const t = useTranslations('auth');
   const tBrand = useTranslations('brand');
   const tCommon = useTranslations('common');
+  const adminCallbackPath = pathname || '/dashboard';
+  const encodedAdminCallbackPath = encodeURIComponent(adminCallbackPath);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [loginErrorCode, setLoginErrorCode] = useState('');
@@ -160,13 +162,13 @@ export default function AuthWrapper({ children }: Props) {
 			) : null}
 		  <div className="space-y-3">
 			<a
-			  href="/api/auth/cinaauth/login?callbackURL=%2Fdashboard"
+			  href={`/api/auth/cinaauth/login?callbackURL=${encodedAdminCallbackPath}`}
 			  className="flex w-full items-center justify-center rounded-md bg-cyan-600 px-4 py-2.5 font-medium text-white transition-colors hover:bg-cyan-700 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:ring-offset-2"
 			>
 			  {t('continueWithCinaAuth')}
 			</a>
 			<a
-			  href="/api/auth/cinaauth/register?callbackURL=%2Fdashboard"
+			  href={`/api/auth/cinaauth/register?callbackURL=${encodedAdminCallbackPath}`}
 			  className="flex w-full items-center justify-center rounded-md border border-gray-300 bg-white px-4 py-2.5 font-medium text-gray-700 transition-colors hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:ring-offset-2"
 			>
 			  {t('createAccount')}

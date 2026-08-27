@@ -165,7 +165,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
 			logAdminAuthEvent('admin.auth.login_failed', request, {
 				username: cinaAuthSessionUsername(tokens.subject),
 			});
-			return fail(request, 'admin_forbidden');
+			return fail(request, 'admin_forbidden', transaction.callbackPath);
 		}
 
 		const sessionToken = generateSessionToken();
