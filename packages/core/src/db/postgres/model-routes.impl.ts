@@ -62,7 +62,8 @@ export function createPostgresModelRoutesRepository(db: PostgresDatabaseClient):
 			const surfacesByPool = new Map<string, string>();
 			const poolIds = [...new Set(list.map((r) => r.route_pool_id).filter((id): id is string => Boolean(id)))];
 			if (poolIds.length > 0) {
-				const surfaceRows = await pg<Array<{ route_pool_id: string; surfaces: string }>>`
+				const surfaceRows = (await pg.unsafe(
+					`
 					SELECT route_pool_id,
 						json_agg(json_build_object(
 							'id', id,
@@ -71,9 +72,11 @@ export function createPostgresModelRoutesRepository(db: PostgresDatabaseClient):
 							'status', status
 						) ORDER BY request_protocol, request_operation)::text AS surfaces
 					FROM model_surfaces
-					WHERE route_pool_id = ANY(${poolIds})
+					WHERE route_pool_id = ANY($1::text[])
 					GROUP BY route_pool_id
-				`;
+					`,
+					[poolIds] as never[],
+				)) as unknown as Array<{ route_pool_id: string; surfaces: string }>;
 				for (const row of surfaceRows) surfacesByPool.set(row.route_pool_id, row.surfaces);
 			}
 			return list.map((r) => ({

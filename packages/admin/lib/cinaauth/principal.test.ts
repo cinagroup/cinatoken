@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import { describe, it } from 'node:test';
 import type { AdminPrincipal } from '@/lib/admin-principal';
 import {
+	CinaAuthConsoleVerificationUnavailableError,
 	cinaAuthSessionUsername,
 	cinaAuthSubjectFromPrincipal,
 	verifyCinaAuthConsolePrincipal,
@@ -81,6 +82,36 @@ describe('CinaAuth console principal', () => {
 					CINAAUTH_AUTH_SERVICE: service,
 				}),
 				null,
+			);
+		});
+	});
+
+	it('reports a retryable verification failure when CinaAuth returns 503', async () => {
+		await withRequiredSecrets(async () => {
+			const service = {
+				fetch: async () => new Response('unavailable', { status: 503 }),
+			} as unknown as Fetcher;
+			await assert.rejects(
+				verifyCinaAuthConsolePrincipal(request, consolePrincipal, {
+					CINAAUTH_AUTH_SERVICE: service,
+				}),
+				CinaAuthConsoleVerificationUnavailableError,
+			);
+		});
+	});
+
+	it('reports a retryable verification failure when the service binding throws', async () => {
+		await withRequiredSecrets(async () => {
+			const service = {
+				fetch: async () => {
+					throw new Error('service unavailable');
+				},
+			} as unknown as Fetcher;
+			await assert.rejects(
+				verifyCinaAuthConsolePrincipal(request, consolePrincipal, {
+					CINAAUTH_AUTH_SERVICE: service,
+				}),
+				CinaAuthConsoleVerificationUnavailableError,
 			);
 		});
 	});

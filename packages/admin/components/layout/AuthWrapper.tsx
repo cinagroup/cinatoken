@@ -54,11 +54,13 @@ export default function AuthWrapper({ children }: Props) {
         }
       }
       const response = await fetch('/api/auth/check');
+      if (!response.ok) {
+        throw new Error(`Admin auth check failed with ${response.status}`);
+      }
       const data = await readJson<{ authenticated: boolean }>(response);
       setIsAuthenticated(data.authenticated);
     } catch (error) {
       console.error('Auth check error:', error);
-      setIsAuthenticated(false);
     } finally {
       setIsLoading(false);
     }
@@ -75,7 +77,8 @@ export default function AuthWrapper({ children }: Props) {
 
   useEffect(() => {
     const onSessionExpired = () => {
-      void fetch('/api/auth/logout', { method: 'POST' });
+      // Protected requests remain fail-closed on the server. Do not destroy the
+      // local session on a single rejection, so transient CinaAuth failures can recover.
       setIsAuthenticated(false);
       setIsLoading(false);
     };
