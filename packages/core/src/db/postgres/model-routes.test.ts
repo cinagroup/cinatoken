@@ -4,7 +4,7 @@ import type { PostgresDatabaseClient } from '../../storage/database-client';
 import { createPostgresModelRoutesRepository } from './model-routes.impl';
 
 describe('PostgreSQL model routes repository', () => {
-	it('binds route pool ids as one typed array when loading surfaces', async () => {
+	it('binds each route pool id separately when loading surfaces', async () => {
 		const routes = [
 			{
 				id: 'route-1',
@@ -86,8 +86,8 @@ describe('PostgreSQL model routes repository', () => {
 
 		const result = await createPostgresModelRoutesRepository(client).listModelRoutesWithJoins({});
 
-		assert.match(capturedSql, /route_pool_id = ANY\(\$1::text\[\]\)/u);
-		assert.deepEqual(capturedParams, [['pool-1', 'pool-2']]);
+		assert.match(capturedSql, /route_pool_id IN \(\$1, \$2\)/u);
+		assert.deepEqual(capturedParams, ['pool-1', 'pool-2']);
 		assert.equal(result[0]?.surfaces, '[{"id":"surface-1"}]');
 		assert.equal(result[1]?.surfaces, '[{"id":"surface-2"}]');
 	});
