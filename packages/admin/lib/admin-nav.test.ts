@@ -5,6 +5,7 @@ import { formatAdminDocumentTitle, matchAdminNavRoute } from './admin-nav';
 describe('matchAdminNavRoute', () => {
 	it('matches exact sidebar paths', () => {
 		assert.equal(matchAdminNavRoute('/admin/simulator')?.nameKey, 'simulator');
+		assert.equal(matchAdminNavRoute('/admin/endpoints')?.nameKey, 'endpoints');
 		assert.equal(matchAdminNavRoute('/dashboard')?.nameKey, 'dashboard');
 	});
 

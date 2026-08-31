@@ -42,6 +42,30 @@ test('permission matrix protects console-only surfaces and defaults to deny', ()
 	assert.deepEqual(getAdminAuthorizationDecision('GET', '/admin/playground/realtime'), {
 		kind: 'permission', permission: 'playground.execute',
 	});
+	assert.deepEqual(getAdminAuthorizationDecision('GET', '/admin/presets'), {
+		kind: 'permission', permission: 'presets.read',
+	});
+	assert.deepEqual(getAdminAuthorizationDecision('PATCH', '/admin/presets/p1'), {
+		kind: 'permission', permission: 'presets.write',
+	});
+	assert.deepEqual(getAdminAuthorizationDecision('GET', '/admin/guardrails'), {
+		kind: 'permission', permission: 'guardrails.read',
+	});
+	assert.deepEqual(getAdminAuthorizationDecision('PUT', '/admin/guardrails/g1/assignments'), {
+		kind: 'permission', permission: 'guardrails.write',
+	});
+	assert.deepEqual(getAdminAuthorizationDecision('GET', '/admin/data-policies'), {
+		kind: 'permission', permission: 'routes.read',
+	});
+	assert.deepEqual(getAdminAuthorizationDecision('PUT', '/admin/data-policies/route-1'), {
+		kind: 'permission', permission: 'routes.write',
+	});
+	assert.deepEqual(getAdminAuthorizationDecision('GET', '/admin/endpoints'), {
+		kind: 'permission', permission: 'routes.read',
+	});
+	assert.deepEqual(getAdminAuthorizationDecision('POST', '/admin/endpoints/endpoint-1/routes/route-1'), {
+		kind: 'permission', permission: 'routes.write',
+	});
 	assert.deepEqual(getAdminAuthorizationDecision('GET', '/admin/users/u1/audit-logs'), {
 		kind: 'permission', permission: 'logs.read',
 	});

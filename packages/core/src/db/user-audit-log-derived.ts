@@ -25,6 +25,12 @@ export function parseUserAuditSnapshotFromJson(raw: string | null | undefined): 
 			o.budget_reset_at === undefined || o.budget_reset_at === null || o.budget_reset_at === ''
 				? null
 				: String(o.budget_reset_at);
+		const budget_epoch = Number.isSafeInteger(Number(o.budget_epoch))
+			? Math.max(0, Number(o.budget_epoch))
+			: 0;
+		const budget_reserved_micros = Number.isSafeInteger(Number(o.budget_reserved_micros))
+			? Math.max(0, Number(o.budget_reserved_micros))
+			: 0;
 		const status = typeof o.status === 'string' ? o.status : '';
 		const metadata = o.metadata === undefined || o.metadata === null ? null : String(o.metadata);
 		const charged_cost_factors =
@@ -43,6 +49,8 @@ export function parseUserAuditSnapshotFromJson(raw: string | null | undefined): 
 			budget_spent,
 			budget_period,
 			budget_reset_at,
+			budget_epoch,
+			budget_reserved_micros,
 			status,
 			metadata,
 			charged_cost_factors,

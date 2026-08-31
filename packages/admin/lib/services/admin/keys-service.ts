@@ -1,8 +1,8 @@
 /**
  * 管理后台 API 密钥：列表（JOIN users，预算只读）、创建（须关联已有 user 或外部身份对）、
- * 详情、日志、密钥级 metadata/status/name 更新、物理删除。预算与邮箱在 `/admin/users`。
+ * 详情、日志、密钥级 metadata/status/name 更新、吊销墓碑。预算与邮箱在 `/admin/users`。
  */
-import type { GatewayRepositories, RequestLogsByKeyIdFilter } from '@octafuse/core';
+import { defaultWorkspaceId, type GatewayRepositories, type RequestLogsByKeyIdFilter } from '@octafuse/core';
 import { createKey, updateKeyName } from '@octafuse/core/services/key-service';
 import {
 	getKeyInfo,
@@ -38,7 +38,7 @@ async function resolveKeyRow(repos: GatewayRepositories, idOrKey: string) {
 	return repos.apiKeys.getApiKeyWithUserById(idOrKey);
 }
 
-/** 含已吊销：按 sk- 查时不过滤 status，供物理删除等。 */
+/** 含已吊销：按 sk- 查时不过滤 status，供治理与审计。 */
 async function resolveKeyRowAnyStatus(repos: GatewayRepositories, idOrKey: string) {
 	if (idOrKey.startsWith('sk-')) {
 		const k = await repos.apiKeys.getApiKeyByKeyAnyStatus(idOrKey);
@@ -141,6 +141,7 @@ export async function createAdminKey(repos: GatewayRepositories, input: AdminKey
 
 	const result = await createKey(repos, {
 		user_id: userId,
+		workspace_id: defaultWorkspaceId('personal', userId),
 		name: input.name ?? null,
 		metadata: metaString ?? null,
 		provision_reason: input.reason,
@@ -151,6 +152,7 @@ export async function createAdminKey(repos: GatewayRepositories, input: AdminKey
 		key: result.key,
 		key_id: result.key_id,
 		user_id: userId,
+		workspace_id: result.workspace_id,
 	};
 }
 
@@ -332,6 +334,7 @@ export async function updateAdminKey(
 		id: info.id,
 		key_id: info.id,
 		user_id: info.user_id,
+		workspace_id: info.workspace_id,
 		name: info.name,
 		user_email: info.user_email,
 		budget_max: info.budget_max,
@@ -357,6 +360,7 @@ export async function getAdminKeyById(repos: GatewayRepositories, idOrKey: strin
 		id: info.id,
 		key: info.key,
 		user_id: info.user_id,
+		workspace_id: info.workspace_id,
 		name: info.name,
 		user_email: info.user_email,
 		budget_max: info.budget_max,
@@ -373,7 +377,12 @@ export async function getAdminKeyById(repos: GatewayRepositories, idOrKey: strin
 	};
 }
 
-/** 物理删除密钥；未找到抛 `notFound`。 */
+/**
+ * DELETE is implemented as a revocation tombstone. A request can already be
+ * authenticated (including an unlimited account with no budget reservation)
+ * when an administrator removes the key. Physically deleting the FK target at
+ * that point can make the eventual request/audit critical write fail.
+ */
 export async function deleteAdminKey(repos: GatewayRepositories, idOrKey: string, actorId: string): Promise<void> {
 	const row = await resolveKeyRowAnyStatus(repos, idOrKey);
 	if (!row) throw notFound('Key not found');
@@ -388,11 +397,11 @@ export async function deleteAdminKey(repos: GatewayRepositories, idOrKey: string
 		userBudgetAuditToInsertRowFull(row.user_id, {
 			id: crypto.randomUUID(),
 			apiKeyId: row.id,
-			eventType: 'key_deleted',
+			eventType: 'key_revoked',
 			actorType: 'admin',
 			actorId,
-			reasonCode: 'admin_key_delete',
-			reasonText: 'API key permanently deleted',
+			reasonCode: 'admin_key_delete_tombstone',
+			reasonText: 'API key revoked and retained as an audit tombstone',
 			beforeSpent: spent,
 			deltaSpent: 0,
 			afterSpent: spent,
@@ -416,6 +425,6 @@ export async function deleteAdminKey(repos: GatewayRepositories, idOrKey: string
 			correlationId: crypto.randomUUID(),
 		})
 	);
-	const ok = await repos.apiKeys.deleteApiKeyHard(row.id, row.key);
+	const ok = await repos.apiKeys.revokeApiKey(row.id);
 	if (!ok) throw notFound('Key not found');
 }

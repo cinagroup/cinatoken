@@ -1,5 +1,6 @@
 import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
+import { linkOrganizationMembershipsToUser } from '@octafuse/core';
 import { generateSessionToken, hashSessionToken } from '@/lib/auth';
 import {
 	fetchCinaAuth,
@@ -79,6 +80,7 @@ async function completePortalLogin(
 	const { storage } = await resolveAdminRequestRuntime(request);
 	const { repositories } = storage;
 	const userId = await upsertPortalUser(repositories.users, subject, email);
+	await linkOrganizationMembershipsToUser(repositories.client, subject, userId);
 	await repositories.portalLedger.ensureUserEarnings(userId);
 
 	const sessionToken = generateSessionToken();
@@ -178,6 +180,11 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
 			storage.repositories.users,
 			tokens.subject,
 			email,
+		);
+		await linkOrganizationMembershipsToUser(
+			storage.repositories.client,
+			tokens.subject,
+			userId,
 		);
 		await storage.repositories.portalLedger.ensureUserEarnings(userId);
 		await Promise.all([

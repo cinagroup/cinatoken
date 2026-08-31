@@ -23,6 +23,22 @@ export async function hashLookupKey(value: string): Promise<string> {
 	return `sha256:${toHex(new Uint8Array(digest))}`;
 }
 
+/**
+ * Verify that a hash-index hit still represents the row's current plaintext
+ * secret. This rejects rows left with a stale non-null hash by older rotation
+ * code while preserving the plaintext fallback used by migration-era rows.
+ */
+export async function matchesLookupKeyHash(value: string, expectedHash: string): Promise<boolean> {
+	const actualBytes = encoder.encode(await hashLookupKey(value));
+	const expectedBytes = encoder.encode(expectedHash);
+	let difference = actualBytes.length ^ expectedBytes.length;
+	const length = Math.max(actualBytes.length, expectedBytes.length);
+	for (let index = 0; index < length; index += 1) {
+		difference |= (actualBytes[index] ?? 0) ^ (expectedBytes[index] ?? 0);
+	}
+	return difference === 0;
+}
+
 export function previewGatewayApiKey(value: string): string {
 	if (!value) return 'sk-…';
 	if (value.length <= 12) return `${value.slice(0, 4)}…`;

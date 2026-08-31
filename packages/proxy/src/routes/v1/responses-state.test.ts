@@ -25,4 +25,8 @@ describe('responses state routing guard', () => {
 	it('blocks previous_response_id when multiple targets are eligible', () => {
 		assert.equal(responsesStateRouteUnavailable([route('a'), route('b')], 'resp_1'), true);
 	});
+
+	it('blocks previous_response_id when multiple model candidates are eligible', () => {
+		assert.equal(responsesStateRouteUnavailable([route('a')], 'resp_1', 2), true);
+	});
 });

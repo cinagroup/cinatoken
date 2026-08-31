@@ -20,11 +20,24 @@ import {
 	resolveAudioBillingDuration,
 	type AudioDurationSource,
 } from './audio-duration';
+import {
+	resolveResponseByteLimit,
+	responseTextWithinLimit,
+	UpstreamResponseBodyTooLargeError,
+} from './bounded-response-body';
+import {
+	sanitizeUpstreamUrlForLog,
+	upstreamErrorNameForLog,
+} from './upstream-observability';
+import { GatewayErrorCode } from '../gateway-error-codes';
+import { gatewayErrorResponse } from '../gateway-error-response';
 
 export const AUDIO_TRANSCRIPTION_TIMEOUT_MS = 120_000;
+export const AUDIO_TRANSCRIPTION_MAX_RESPONSE_BYTES = 2 * 1024 * 1024;
 /** OpenAI Whisper 官方上限 25MB；Gateway 略收紧以保护 Worker 内存 */
 export const AUDIO_MAX_BYTES_PER_FILE = 25 * 1024 * 1024;
 export const AUDIO_ALLOWED_MIME = new Set([
+	'audio/aac',
 	'audio/mpeg',
 	'audio/mp3',
 	'audio/mp4',
@@ -42,6 +55,21 @@ export type AudioUpload = {
 	filename: string;
 	mimeType: string;
 	bytes: Uint8Array;
+};
+
+export type AudioTranscriptionProviderOptionValue =
+	| string
+	| number
+	| boolean
+	| readonly string[];
+
+export type AudioTranscriptionProviderOptions = Readonly<
+	Record<string, Readonly<Record<string, AudioTranscriptionProviderOptionValue>>>
+>;
+
+export type OpenAiAudioTranscriptionDispatchOptions = {
+	fetchImpl?: typeof fetch;
+	maxResponseBytes?: number;
 };
 
 /**
@@ -62,6 +90,7 @@ export function normalizeAudioMimeType(mimeType: string): string {
 /** MIME → 扩展名；缺省勿用 `.webm`（mp3 被标成 webm 时上游常报 invalid_audio）。 */
 export function extensionFromAudioMime(mimeType: string): string {
 	const m = normalizeAudioMimeType(mimeType) || mimeType.trim().toLowerCase();
+	if (m.includes('aac')) return 'aac';
 	if (m.includes('mpeg') || m === 'audio/mp3') return 'mp3';
 	if (m.includes('mp4') || m.includes('m4a')) return 'm4a';
 	if (m.includes('wav') || m.includes('wave') || m.includes('x-wav')) return 'wav';
@@ -111,8 +140,31 @@ export type NormalizedAudioTranscriptionRequest = {
 	 */
 	clientDurationSeconds?: number;
 	/** 透传额外表单字段（不含 file/model/response_format/duration_seconds） */
-	extra?: Record<string, string>;
+	extra?: Record<string, AudioTranscriptionProviderOptionValue>;
+	/** OpenRouter `provider.options.<provider>`；仅在匹配的 route attempt 上应用。 */
+	providerOptions?: AudioTranscriptionProviderOptions;
 };
+
+function canonicalProviderOptionKey(value: string): string {
+	return value.trim().toLocaleLowerCase();
+}
+
+/** Resolve request options for this concrete provider without exposing them to another failover attempt. */
+export function resolveAudioProviderOptionsForRoute(
+	req: NormalizedAudioTranscriptionRequest,
+	route: RouteResult,
+): Readonly<Record<string, AudioTranscriptionProviderOptionValue>> {
+	const options = req.providerOptions;
+	if (!options) return {};
+	const endpointProviderSlug = route.endpoint?.providerSlug ?? '';
+	const candidates = [route.providerId, route.providerName, endpointProviderSlug]
+		.map(canonicalProviderOptionKey)
+		.filter(Boolean);
+	for (const [provider, value] of Object.entries(options)) {
+		if (candidates.includes(canonicalProviderOptionKey(provider))) return value;
+	}
+	return {};
+}
 
 /**
  * 按上游模型能力选择 response_format。
@@ -161,6 +213,7 @@ function withTimeoutSignal(
 		controller.abort();
 	};
 	requestSignal?.addEventListener('abort', onClientAbort, { once: true });
+	if (requestSignal?.aborted) onClientAbort();
 	const timer = setTimeout(() => {
 		if (reason === 'none') reason = 'gateway_timeout';
 		controller.abort();
@@ -262,13 +315,27 @@ export function extractTranscriptionText(body: unknown): string {
 	return typeof text === 'string' ? text : '';
 }
 
+/** A 2xx transcription must contain an OpenAI-compatible transcript shape. */
+export function isUsableAudioTranscriptionBody(body: unknown): boolean {
+	if (!body || typeof body !== 'object' || Array.isArray(body)) return false;
+	const record = body as Record<string, unknown>;
+	return typeof record.text === 'string' || Array.isArray(record.segments);
+}
+
 /** 按客户端 format 裁剪上游回包。 */
 export function reshapeTranscriptionForClient(
 	upstreamBody: unknown,
 	clientFormat: AudioClientResponseFormat
 ): unknown {
+	const usage = normalizeAudioTranscriptionUsage(upstreamBody);
 	if (clientFormat === 'verbose_json' || clientFormat === 'diarized_json') {
-		return upstreamBody;
+		if (!upstreamBody || typeof upstreamBody !== 'object' || Array.isArray(upstreamBody)) {
+			return { text: extractTranscriptionText(upstreamBody), ...(usage ? { usage } : {}) };
+		}
+		return {
+			...(upstreamBody as Record<string, unknown>),
+			...(usage ? { usage } : {}),
+		};
 	}
 	const text = extractTranscriptionText(upstreamBody);
 	if (clientFormat === 'text') {
@@ -282,9 +349,52 @@ export function reshapeTranscriptionForClient(
 		typeof (upstreamBody as Record<string, unknown>).text === 'string' &&
 		clientFormat === 'json'
 	) {
-		return { text: (upstreamBody as Record<string, unknown>).text };
+		return {
+			text: (upstreamBody as Record<string, unknown>).text,
+			...(usage ? { usage } : {}),
+		};
 	}
-	return { text };
+	return { text, ...(usage ? { usage } : {}) };
+}
+
+function finiteNonNegative(value: unknown): number | null {
+	const number = typeof value === 'number' ? value : Number.NaN;
+	return Number.isFinite(number) && number >= 0 ? number : null;
+}
+
+function finiteNonNegativeInteger(value: unknown): number | null {
+	const number = finiteNonNegative(value);
+	return number == null || !Number.isSafeInteger(number) ? null : number;
+}
+
+/**
+ * Normalize only usage values proven by the upstream body. Unknown seconds,
+ * tokens, and cost stay absent rather than becoming misleading zeroes.
+ */
+export function normalizeAudioTranscriptionUsage(
+	upstreamBody: unknown,
+): Record<string, number> | null {
+	if (!upstreamBody || typeof upstreamBody !== 'object' || Array.isArray(upstreamBody)) return null;
+	const root = upstreamBody as Record<string, unknown>;
+	const rawUsage = root.usage && typeof root.usage === 'object' && !Array.isArray(root.usage)
+		? root.usage as Record<string, unknown>
+		: null;
+	const usage: Record<string, number> = {};
+	const seconds = finiteNonNegative(rawUsage?.seconds) ?? finiteNonNegative(root.duration);
+	if (seconds != null) usage.seconds = seconds;
+	const inputTokens = finiteNonNegativeInteger(rawUsage?.input_tokens);
+	const outputTokens = finiteNonNegativeInteger(rawUsage?.output_tokens);
+	const explicitTotalTokens = finiteNonNegativeInteger(rawUsage?.total_tokens);
+	if (inputTokens != null) usage.input_tokens = inputTokens;
+	if (outputTokens != null) usage.output_tokens = outputTokens;
+	if (explicitTotalTokens != null) usage.total_tokens = explicitTotalTokens;
+	else if (inputTokens != null && outputTokens != null) {
+		const derivedTotal = inputTokens + outputTokens;
+		if (Number.isSafeInteger(derivedTotal)) usage.total_tokens = derivedTotal;
+	}
+	const cost = finiteNonNegative(rawUsage?.cost);
+	if (cost != null) usage.cost = cost;
+	return Object.keys(usage).length > 0 ? usage : null;
 }
 
 /** 构造 OpenAI Audio 客户端响应；跨协议 adapter 复用相同输出契约。 */
@@ -320,7 +430,8 @@ export async function dispatchOpenAiAudioTranscriptions(
 	req: NormalizedAudioTranscriptionRequest,
 	requestSignal?: AbortSignal,
 	timing?: RequestTimingCollector | null,
-	attempt?: RequestTimingAttempt
+	attempt?: RequestTimingAttempt,
+	options: OpenAiAudioTranscriptionDispatchOptions = {},
 ): Promise<{
 	response: Response;
 	usagePromise: Promise<UsageFromStream>;
@@ -331,6 +442,9 @@ export async function dispatchOpenAiAudioTranscriptions(
 		audioDurationSource: AudioDurationSource | null;
 		audioFileBytes: number;
 		audioTokenUsage: AudioTokenUsage | null;
+		upstreamOutcomeUnknown?: boolean;
+		responseBodyTooLarge?: boolean;
+		failoverForbidden?: boolean;
 	};
 }> {
 	const file = req.file;
@@ -340,13 +454,21 @@ export async function dispatchOpenAiAudioTranscriptions(
 	const url = resolveUpstreamEndpoint('openai', 'audio.transcriptions', route.providerEndpoints, {
 		providerId: route.providerId,
 	});
-	console.log(
-		`[Gateway Audio] upstream transcriptions POST ${url} providerModel=${route.providerModelName} providerId=${route.providerId}`
-	);
+	const upstreamLabel = sanitizeUpstreamUrlForLog(url);
+	console.log(JSON.stringify({
+		event: 'gateway.audio.upstream_start',
+		operation: 'transcriptions',
+		upstream: upstreamLabel,
+		providerId: route.providerId,
+		routeTargetId: route.targetId,
+		providerModel: route.providerModelName,
+	}));
 
 	const form = new FormData();
+	const providerOptions = resolveAudioProviderOptionsForRoute(req, route);
 	const mergedExtras = buildRouteRequestBody(route, {
 		...(req.extra ?? {}),
+		...providerOptions,
 		...(req.language ? { language: req.language } : {}),
 		...(req.prompt ? { prompt: req.prompt } : {}),
 		...(req.temperature != null ? { temperature: req.temperature } : {}),
@@ -360,6 +482,12 @@ export async function dispatchOpenAiAudioTranscriptions(
 	for (const [k, v] of Object.entries(mergedExtras)) {
 		if (v == null) continue;
 		if (k === 'model' || k === 'file' || k === 'response_format') continue;
+		if (Array.isArray(v)) {
+			for (const item of v) {
+				if (typeof item === 'string') form.append(k, item);
+			}
+			continue;
+		}
 		if (typeof v === 'string' || typeof v === 'number' || typeof v === 'boolean') {
 			form.append(k, String(v));
 		}
@@ -379,9 +507,19 @@ export async function dispatchOpenAiAudioTranscriptions(
 		requestSignal,
 		AUDIO_TRANSCRIPTION_TIMEOUT_MS
 	);
+	const responseByteLimit = resolveResponseByteLimit(
+		options.maxResponseBytes,
+		AUDIO_TRANSCRIPTION_MAX_RESPONSE_BYTES,
+	);
+	let dispatchStarted = false;
+	let upstreamStatus: number | null = null;
+	let observedUpstreamRequestId: string | null = null;
 	try {
+		if (signal.aborted) throw new DOMException('Aborted', 'AbortError');
 		const { secret } = await resolveProviderUpstreamSecret(route.providerApiKey);
-		const response = await fetch(url, {
+		if (signal.aborted) throw new DOMException('Aborted', 'AbortError');
+		dispatchStarted = true;
+		const response = await (options.fetchImpl ?? fetch)(url, {
 			method: 'POST',
 			headers: {
 				Authorization: `Bearer ${secret}`,
@@ -389,19 +527,52 @@ export async function dispatchOpenAiAudioTranscriptions(
 			body: form,
 			signal,
 		});
+		upstreamStatus = response.status;
 		timing?.markAttemptHeaders(attempt, response.status);
 		const upstreamRequestId = extractUpstreamRequestId(response.headers);
-		const text = await response.text();
+		observedUpstreamRequestId = upstreamRequestId;
+		const text = await responseTextWithinLimit(response, responseByteLimit);
 		timing?.markStreamComplete();
 		let upstreamBody: unknown = null;
+		let jsonValid = true;
 		try {
 			upstreamBody = text ? JSON.parse(text) : null;
 		} catch {
+			jsonValid = false;
 			upstreamBody = { error: { message: text.slice(0, 500) || 'Invalid upstream JSON' } };
 		}
-		console.log(
-			`[Gateway Audio] upstream transcriptions done status=${response.status} elapsedMs=${Date.now() - startedAt} url=${url}`
-		);
+		console.log(JSON.stringify({
+			event: 'gateway.audio.upstream_complete',
+			operation: 'transcriptions',
+			upstream: upstreamLabel,
+			providerId: route.providerId,
+			routeTargetId: route.targetId,
+			status: response.status,
+			elapsedMs: Date.now() - startedAt,
+		}));
+
+		const successfulOutcomeUnknown = response.ok
+			&& (!jsonValid || !isUsableAudioTranscriptionBody(upstreamBody));
+		if (successfulOutcomeUnknown) {
+			return {
+				response: gatewayErrorResponse({
+					status: 502,
+					code: GatewayErrorCode.upstreamRequestFailed,
+					message: 'Audio transcription upstream returned an invalid response',
+				}),
+				usagePromise: Promise.resolve(EMPTY_USAGE),
+				upstreamRequestId,
+				meta: {
+					parsedBody: null,
+					audioDurationSeconds: null,
+					audioDurationSource: null,
+					audioFileBytes: file.bytes.byteLength,
+					audioTokenUsage: null,
+					upstreamOutcomeUnknown: true,
+					failoverForbidden: true,
+				},
+			};
+		}
 
 		let audioDurationSeconds: number | null = null;
 		let audioDurationSource: AudioDurationSource | null = null;
@@ -432,7 +603,7 @@ export async function dispatchOpenAiAudioTranscriptions(
 		const clientBody = response.ok
 			? reshapeTranscriptionForClient(upstreamBody, req.clientResponseFormat)
 			: upstreamBody;
-			const clientResponse = buildAudioTranscriptionClientResponse(
+		const clientResponse = buildAudioTranscriptionClientResponse(
 			req.clientResponseFormat,
 			clientBody,
 			response.status,
@@ -460,36 +631,53 @@ export async function dispatchOpenAiAudioTranscriptions(
 			(err instanceof Error && err.name === 'AbortError');
 		const resolvedAbort =
 			abortReason === 'none' && requestSignal?.aborted ? 'client_abort' : abortReason;
+		const explicitNonOk = upstreamStatus != null && (upstreamStatus < 200 || upstreamStatus >= 300);
+		const upstreamOutcomeUnknown = dispatchStarted && !explicitNonOk;
+		const responseBodyTooLarge =
+			err instanceof UpstreamResponseBodyTooLargeError && upstreamOutcomeUnknown;
 		const message = aborted
 			? resolvedAbort === 'gateway_timeout'
 				? `Audio transcription timed out waiting for upstream after ${AUDIO_TRANSCRIPTION_TIMEOUT_MS}ms`
 				: 'Audio transcription was cancelled by the client'
 			: 'Audio transcription upstream failed';
-		console.error(
-			`[Gateway Audio] upstream transcriptions failed abortReason=${abortReason} elapsedMs=${Date.now() - startedAt} url=${url} err=${
-				err instanceof Error ? err.message : String(err)
-			}`
-		);
+		console.error(JSON.stringify({
+			event: 'gateway.audio.upstream_error',
+			operation: 'transcriptions',
+			upstream: upstreamLabel,
+			providerId: route.providerId,
+			routeTargetId: route.targetId,
+			abortReason,
+			elapsedMs: Date.now() - startedAt,
+			errorName: upstreamErrorNameForLog(err),
+		}));
 		const errorBody = {
 			error: {
 				message,
-				upstream_url: url,
-				detail: aborted ? undefined : err instanceof Error ? err.message : String(err),
 			},
 		};
 		return {
 			response: new Response(JSON.stringify(errorBody), {
-				status: aborted && resolvedAbort === 'gateway_timeout' ? 504 : aborted ? 499 : 502,
+				status: explicitNonOk
+					? upstreamStatus!
+					: aborted && resolvedAbort === 'gateway_timeout'
+						? 504
+						: aborted
+							? 499
+							: 502,
 				headers: { 'Content-Type': 'application/json' },
 			}),
 			usagePromise: Promise.resolve(EMPTY_USAGE),
-			upstreamRequestId: null,
+			upstreamRequestId: observedUpstreamRequestId,
 			meta: {
 				parsedBody: errorBody,
 				audioDurationSeconds: null,
 				audioDurationSource: null,
 				audioFileBytes: file.bytes.byteLength,
 				audioTokenUsage: null,
+				...(upstreamOutcomeUnknown
+					? { upstreamOutcomeUnknown: true, failoverForbidden: true }
+					: {}),
+				...(responseBodyTooLarge ? { responseBodyTooLarge: true } : {}),
 			},
 		};
 	} finally {

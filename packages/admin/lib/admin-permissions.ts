@@ -30,6 +30,10 @@ export function getAdminAuthorizationDecision(method: string, pathname: string):
 	// 门户账本：共享密钥收益补偿（挂靠 users 权限域）
 	if (pathname.startsWith('/admin/earnings')) return readOrWrite(normalizedMethod, 'users');
 	if (pathname.startsWith('/admin/models')) return readOrWrite(normalizedMethod, 'models');
+	if (pathname.startsWith('/admin/presets')) return readOrWrite(normalizedMethod, 'presets');
+	if (pathname.startsWith('/admin/guardrails')) return readOrWrite(normalizedMethod, 'guardrails');
+	if (pathname.startsWith('/admin/data-policies')) return readOrWrite(normalizedMethod, 'routes');
+	if (pathname.startsWith('/admin/endpoints')) return readOrWrite(normalizedMethod, 'routes');
 	if (pathname.startsWith('/admin/routes')) return readOrWrite(normalizedMethod, 'routes');
 	if (/^\/admin\/users\/[^/]+\/(?:logs|audit-logs)(?:\/|$)/.test(pathname)) {
 		return { kind: 'permission', permission: 'logs.read' };

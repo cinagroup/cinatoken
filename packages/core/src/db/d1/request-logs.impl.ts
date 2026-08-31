@@ -15,8 +15,12 @@ import type { RequestLogRow } from '../../types';
 import type { D1DatabaseClient } from '../../storage/database-client';
 import type { RequestLogsRepository } from '../../storage/gateway-repository-interfaces';
 import type { RequestLogsD1Statements } from './d1-repository-extras';
-import type { InsertRequestLogParams } from '../request-logs-types';
+import type { GenerationRequestLogRow, InsertRequestLogParams, RoutePerformanceSample } from '../request-logs-types';
 import { filterAllowedRequestLogStatuses } from '../request-log-status-filter';
+import {
+	buildRecentRoutePerformanceSamplesSql,
+	normalizeRoutePerformanceSamplesPerTarget,
+} from '../route-performance-sampling';
 
 export function buildInsertRequestLogStatement(
 	db: D1Database,
@@ -25,13 +29,14 @@ export function buildInsertRequestLogStatement(
 ): D1PreparedStatement {
 	return db
 		.prepare(
-			`INSERT INTO api_key_request_logs (id, user_id, api_key_id, user_email, model_id, provider_id, provider_model_name, model_name, provider_name, request_body, upstream_request_body, request_protocol, request_operation, upstream_protocol, upstream_operation, model_surface_id, route_pool_id, route_target_id, adapter, route_trace, input_tokens, output_tokens, cache_read_tokens, cache_write_tokens, reasoning_tokens, total_tokens, metered_cost, standard_cost, charged_cost, route_group, status, latency_ms, gateway_overhead_ms, upstream_response_ms, final_upstream_headers_ms, first_reasoning_token_ms, first_token_ms, stream_duration_ms, upstream_attempt_count, upstream_failover_count, timing_metadata, error_message, raw_usage, pricing_audit, provider_key_id, provider_key_label, provider_key_fingerprint, upstream_request_id, upstream_message_id, billing_kind, input_image_count, output_image_count, audio_duration_seconds, audio_characters, created_at)
-			 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
+			`INSERT INTO api_key_request_logs (id, user_id, api_key_id, workspace_id, user_email, model_id, provider_id, provider_model_name, model_name, provider_name, request_body, upstream_request_body, request_protocol, request_operation, upstream_protocol, upstream_operation, model_surface_id, route_pool_id, route_target_id, adapter, route_trace, input_tokens, output_tokens, cache_read_tokens, cache_write_tokens, reasoning_tokens, total_tokens, metered_cost, standard_cost, charged_cost, budget_charged_micros, budget_accounted_at, route_group, status, latency_ms, gateway_overhead_ms, upstream_response_ms, final_upstream_headers_ms, first_reasoning_token_ms, first_token_ms, stream_duration_ms, upstream_attempt_count, upstream_failover_count, timing_metadata, error_message, raw_usage, pricing_audit, provider_key_id, provider_key_label, provider_key_fingerprint, upstream_request_id, upstream_message_id, billing_kind, input_image_count, output_image_count, audio_duration_seconds, audio_characters, created_at)
+			 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
 		)
 		.bind(
 			params.id,
 			params.userId,
 			params.apiKeyId,
+			params.workspaceId,
 			params.userEmail,
 			params.modelId,
 			params.providerId,
@@ -58,6 +63,8 @@ export function buildInsertRequestLogStatement(
 			roundGatewayMoney(params.meteredCost),
 			roundGatewayMoney(params.standardCost),
 			roundGatewayMoney(params.chargedCost),
+			params.budgetChargedMicros ?? null,
+			params.budgetAccountedAt ?? null,
 			params.routeGroup,
 			params.status,
 			params.latencyMs,
@@ -91,6 +98,22 @@ export function createD1RequestLogsRepository(db: D1DatabaseClient): RequestLogs
 	const raw = db.raw;
 	return {
 		buildInsertRequestLogStatement,
+
+		async getRequestLogByIdForOwner(options): Promise<GenerationRequestLogRow | null> {
+			return raw
+				.prepare(
+					`SELECT rl.id, rl.request_operation, rl.status, rl.created_at,
+					        rl.latency_ms, rl.model_id, rl.provider_name,
+					        rl.input_tokens, rl.output_tokens, rl.upstream_message_id
+					 FROM api_key_request_logs rl
+					 WHERE rl.id = ?
+					   AND rl.user_id = ?
+					   AND rl.workspace_id = ?
+					 LIMIT 1`
+				)
+				.bind(options.id, options.userId, options.workspaceId)
+				.first<GenerationRequestLogRow>();
+		},
 
 		async getRequestLogsByKeyId(
 			apiKeyId: string,
@@ -145,6 +168,7 @@ export function createD1RequestLogsRepository(db: D1DatabaseClient): RequestLogs
 		async getRequestLogs(options: {
 			page?: number;
 			pageSize?: number;
+			workspaceId?: string;
 			apiKeyId?: string;
 			userId?: string;
 			userEmail?: string;
@@ -162,6 +186,12 @@ export function createD1RequestLogsRepository(db: D1DatabaseClient): RequestLogs
 			const conditions: string[] = [];
 			const conditionsRl: string[] = [];
 			const bindValues: unknown[] = [];
+
+			if (options.workspaceId) {
+				conditions.push('workspace_id = ?');
+				conditionsRl.push('rl.workspace_id = ?');
+				bindValues.push(options.workspaceId);
+			}
 
 			if (options.apiKeyId) {
 				conditions.push('api_key_id = ?');
@@ -240,8 +270,20 @@ export function createD1RequestLogsRepository(db: D1DatabaseClient): RequestLogs
 			startDate: string;
 			endDate: string;
 			endExclusive?: boolean;
+			userId?: string;
+			workspaceId?: string;
 		}) {
 			const comparator = options.endExclusive ? '<' : '<=';
+			const conditions = [`created_at >= ?`, `created_at ${comparator} ?`];
+			const bindValues: unknown[] = [options.startDate, options.endDate];
+			if (options.userId) {
+				conditions.push('user_id = ?');
+				bindValues.push(options.userId);
+			}
+			if (options.workspaceId) {
+				conditions.push('workspace_id = ?');
+				bindValues.push(options.workspaceId);
+			}
 			const row = await raw
 				.prepare(
 					`SELECT
@@ -249,9 +291,9 @@ export function createD1RequestLogsRepository(db: D1DatabaseClient): RequestLogs
 				COALESCE(${sqlMoneyRound('SUM(charged_cost)')}, 0) as charged_cost,
 				COALESCE(${sqlMoneyRound('SUM(metered_cost)')}, 0) as metered_cost,
 				COALESCE(${sqlMoneyRound('SUM(standard_cost)')}, 0) as standard_cost
-			 FROM api_key_request_logs WHERE created_at >= ? AND created_at ${comparator} ?`
+				 FROM api_key_request_logs WHERE ${conditions.join(' AND ')}`
 				)
-				.bind(options.startDate, options.endDate)
+				.bind(...bindValues)
 				.first();
 
 			return mapRequestStatsByRangeRow(row);
@@ -342,6 +384,17 @@ export function createD1RequestLogsRepository(db: D1DatabaseClient): RequestLogs
 				.prepare(`SELECT * FROM api_key_request_logs WHERE status = 'error' ORDER BY created_at DESC LIMIT ?`)
 				.bind(limit)
 				.all<RequestLogRow>();
+			return rows.results ?? [];
+		},
+
+		async getRecentRoutePerformanceSamples(options): Promise<RoutePerformanceSample[]> {
+			if (options.routeTargetIds.length === 0) return [];
+			const maxSamplesPerRoute = normalizeRoutePerformanceSamplesPerTarget(options.maxSamplesPerRoute);
+			if (maxSamplesPerRoute === 0) return [];
+			const sql = buildRecentRoutePerformanceSamplesSql('d1', options.routeTargetIds.length);
+			const rows = await raw.prepare(sql)
+				.bind(...options.routeTargetIds, options.sinceIso, maxSamplesPerRoute)
+				.all<RoutePerformanceSample>();
 			return rows.results ?? [];
 		},
 

@@ -92,7 +92,9 @@ export function RouteModal(props: Props) {
 	const tCommon = useTranslations('common');
 	const adapterLabel = (adapter: string) =>
 		t.has(`adapterNames.${adapter}`) ? t(`adapterNames.${adapter}`) : adapter;
-	const hasCustomParams = formData.custom_params_json.trim().length > 0;
+	const hasCustomParams =
+		formData.custom_params_json.trim().length > 0 ||
+		formData.routing_metadata_json.trim().length > 0;
 	const customParamsSessionKey = `${open ? '1' : '0'}:${editingRoute?.id ?? ''}:${duplicateSourceRouteId ?? ''}`;
 	const [customParamsSession, setCustomParamsSession] = useState(customParamsSessionKey);
 	const [customParamsOpen, setCustomParamsOpen] = useState(() => open && hasCustomParams);
@@ -716,19 +718,45 @@ export function RouteModal(props: Props) {
 											<h4 className="text-sm font-medium text-amber-900">{t('customParams')}</h4>
 											<p className="text-[11px] text-amber-800/80">{t('requestDefaultsHint')}</p>
 										</div>
-										<textarea
-											rows={5}
-											value={formData.custom_params_json}
-											onChange={(e) =>
-												onFormChange({
-													...formData,
-													custom_params_json: e.target.value,
-												})
-											}
-											className="min-h-[120px] w-full resize-y rounded-md border border-amber-200 bg-white px-3 py-2 font-mono text-xs leading-relaxed focus:border-amber-500 focus:outline-none focus:ring-2 focus:ring-amber-500/30"
-											placeholder={t('customParamsPlaceholder')}
-											spellCheck={false}
-										/>
+										<div className="grid grid-cols-1 gap-3 lg:grid-cols-2">
+											<div>
+												<label className="mb-1 block text-xs font-medium text-amber-900">
+													{t('upstreamRequestDefaults')}
+												</label>
+												<textarea
+													rows={5}
+													value={formData.custom_params_json}
+													onChange={(e) =>
+														onFormChange({
+															...formData,
+															custom_params_json: e.target.value,
+														})
+													}
+													className="min-h-[120px] w-full resize-y rounded-md border border-amber-200 bg-white px-3 py-2 font-mono text-xs leading-relaxed focus:border-amber-500 focus:outline-none focus:ring-2 focus:ring-amber-500/30"
+													placeholder={t('customParamsPlaceholder')}
+													spellCheck={false}
+												/>
+											</div>
+											<div>
+												<label className="mb-1 block text-xs font-medium text-amber-900">
+													{t('routingMetadata')}
+												</label>
+												<textarea
+													rows={5}
+													value={formData.routing_metadata_json}
+													onChange={(e) =>
+														onFormChange({
+															...formData,
+															routing_metadata_json: e.target.value,
+														})
+													}
+													className="min-h-[120px] w-full resize-y rounded-md border border-amber-200 bg-white px-3 py-2 font-mono text-xs leading-relaxed focus:border-amber-500 focus:outline-none focus:ring-2 focus:ring-amber-500/30"
+													placeholder={t('routingMetadataPlaceholder')}
+													spellCheck={false}
+												/>
+												<p className="mt-1 text-[11px] text-amber-800/80">{t('routingMetadataHint')}</p>
+											</div>
+										</div>
 									</div>
 								</div>
 							) : null}

@@ -269,10 +269,32 @@ describe('DashScope ASR dispatch', () => {
 
 		assert.equal(calls[0]?.url, 'https://workspace.example/api/v1/services/aigc/multimodal-generation/generation');
 		assert.equal(new Headers(calls[0]?.init?.headers).get('Authorization'), 'Bearer sk-test');
-		assert.deepEqual(await result.response.json(), { text: '同步结果' });
+		assert.deepEqual(await result.response.json(), { text: '同步结果', usage: { seconds: 2 } });
 		assert.equal(result.meta.audioDurationSeconds, 2);
 		assert.equal(result.meta.audioDurationSource, 'upstream');
 		assert.equal(result.upstreamRequestId, 'req-sync');
+	});
+
+	it('rejects invalid and unusable synchronous 2xx responses as outcome-unknown', async () => {
+		for (const body of ['not-json', JSON.stringify({ output: {}, usage: { seconds: 2 } })]) {
+			const result = await dispatchDashScopeSyncAsr(
+				route(),
+				request(),
+				undefined,
+				null,
+				undefined,
+				{ fetchImpl: async () => new Response(body, { status: 200 }) },
+			);
+
+			assert.equal(result.response.status, 502);
+			assert.equal(result.meta.upstreamOutcomeUnknown, true);
+			assert.equal(result.meta.failoverForbidden, true);
+			assert.equal(result.meta.audioDurationSeconds, null);
+			const clientBody = await result.response.json() as { code?: string; error?: { code?: number } };
+			assert.equal(clientBody.code, 'gateway.upstream_request_failed');
+			assert.equal(clientBody.error?.code, 502);
+			assert.equal(JSON.stringify(clientBody).includes(body), false);
+		}
 	});
 
 	it('uses the Qwen-Audio-3.0 request and response contracts selected by its adapter', async () => {
@@ -310,7 +332,10 @@ describe('DashScope ASR dispatch', () => {
 		assert.equal(sent.input.messages[0]?.content[0]?.type, 'input_audio');
 		assert.equal(sent.parameters.format, 'wav');
 		assert.deepEqual(sent.parameters.language_hints, ['zh']);
-		assert.deepEqual(await result.response.json(), { text: 'Audio 3.0 结果' });
+		assert.deepEqual(await result.response.json(), {
+			text: 'Audio 3.0 结果',
+			usage: { seconds: 2.25 },
+		});
 		assert.equal(result.meta.audioDurationSeconds, 2.25);
 		assert.equal(result.upstreamRequestId, 'req-audio30');
 	});
@@ -354,6 +379,224 @@ describe('DashScope ASR dispatch', () => {
 		assert.equal(result.meta.audioDurationSeconds, 3);
 	});
 
+	it('rejects invalid native multimodal 2xx responses as outcome-unknown', async () => {
+		for (const body of [
+			'not-json',
+			JSON.stringify({ usage: { duration: 3 } }),
+			JSON.stringify({ output: {}, usage: { duration: 3 } }),
+			JSON.stringify({ output: { choices: [{ message: { content: [{ audio: 'ignored' }] } }] }, usage: { duration: 3 } }),
+		]) {
+			const result = await dispatchDashScopeMultimodalPassthrough(
+				route({ adapter: 'passthrough' }),
+				{ model: 'public-asr', input: { messages: [] } },
+				undefined,
+				null,
+				undefined,
+				{ fetchImpl: async () => new Response(body, { status: 200 }) },
+			);
+
+			assert.equal(result.response.status, 502);
+			assert.equal(result.meta.upstreamOutcomeUnknown, true);
+			assert.equal(result.meta.failoverForbidden, true);
+			assert.equal(result.meta.audioDurationSeconds, null);
+			assert.equal((await result.response.json() as { code?: string }).code, 'gateway.upstream_request_failed');
+		}
+	});
+
+	it('accepts each supported native multimodal transcript shape', async () => {
+		for (const output of [
+			{ text: '' },
+			{ choices: [{ message: { content: [{ audio: 'ignored' }, { text: '选择结果' }] } }] },
+		]) {
+			const result = await dispatchDashScopeMultimodalPassthrough(
+				route({ adapter: 'passthrough' }),
+				{ model: 'public-asr', input: { messages: [] } },
+				undefined,
+				null,
+				undefined,
+				{
+					fetchImpl: async () => Response.json({
+						output,
+						usage: { seconds: 1 },
+					}),
+				},
+			);
+
+			assert.equal(result.response.status, 200);
+			assert.equal(result.meta.audioDurationSeconds, 1);
+			assert.deepEqual((await result.response.json() as { output?: unknown }).output, output);
+		}
+	});
+
+	it('starts the Guardrail dispatch lease immediately before the multimodal network write', async () => {
+		const events: string[] = [];
+		const result = await dispatchDashScopeMultimodalPassthrough(
+			route({ adapter: 'passthrough' }),
+			{ model: 'public-asr', input: { messages: [] } },
+			undefined,
+			null,
+			undefined,
+			{
+				beforeUpstreamDispatch: async () => { events.push('lease-dispatched'); },
+				fetchImpl: async () => {
+					events.push('fetch');
+					return new Response(
+						JSON.stringify({ output: { text: '' }, usage: { seconds: 1 } }),
+						{ status: 200 },
+					);
+				},
+			},
+		);
+
+		assert.equal(result.response.status, 200);
+		assert.deepEqual(events, ['lease-dispatched', 'fetch']);
+	});
+
+	it('does not write upstream when dispatch admission fails', async () => {
+		let fetchCalled = false;
+		const result = await dispatchDashScopeMultimodalPassthrough(
+			route({ adapter: 'passthrough' }),
+			{ model: 'public-asr', input: { messages: [] } },
+			undefined,
+			null,
+			undefined,
+			{
+				beforeUpstreamDispatch: async () => { throw new Error('lease rejected'); },
+				fetchImpl: async () => {
+					fetchCalled = true;
+					return new Response('{}', { status: 200 });
+				},
+			},
+		);
+
+		assert.equal(result.response.status, 502);
+		assert.equal(fetchCalled, false);
+		assert.equal(result.meta.upstreamOutcomeUnknown, undefined);
+	});
+
+	it('does not acquire a multimodal dispatch lease for an already-cancelled request', async () => {
+		const controller = new AbortController();
+		controller.abort();
+		let leaseCalls = 0;
+		let fetchCalls = 0;
+		const result = await dispatchDashScopeMultimodalPassthrough(
+			route({ adapter: 'passthrough' }),
+			{ model: 'public-asr', input: { messages: [] } },
+			controller.signal,
+			null,
+			undefined,
+			{
+				beforeUpstreamDispatch: async () => { leaseCalls += 1; },
+				fetchImpl: async () => {
+					fetchCalls += 1;
+					return Response.json({ output: {} });
+				},
+			},
+		);
+
+		assert.equal(result.response.status, 499);
+		assert.equal(leaseCalls, 0);
+		assert.equal(fetchCalls, 0);
+		assert.equal(result.meta.upstreamOutcomeUnknown, undefined);
+	});
+
+	it('reports an unknown outcome in attempt metadata when fetch fails after dispatch began', async () => {
+		const result = await dispatchDashScopeMultimodalPassthrough(
+			route({ adapter: 'passthrough' }),
+			{ model: 'public-asr', input: { messages: [] } },
+			undefined,
+			null,
+			undefined,
+			{
+				beforeUpstreamDispatch: async () => undefined,
+				fetchImpl: async () => { throw new TypeError('connection reset'); },
+			},
+		);
+
+		assert.equal(result.response.status, 502);
+		assert.equal(result.meta.upstreamOutcomeUnknown, true);
+		assert.equal(result.meta.failoverForbidden, true);
+	});
+
+	it('propagates a pre-dispatch cancellation without writing upstream', async () => {
+		const controller = new AbortController();
+		controller.abort();
+		let fetchCalls = 0;
+		const result = await dispatchDashScopeSyncAsr(
+			route(),
+			request(),
+			controller.signal,
+			undefined,
+			undefined,
+			{
+				fetchImpl: async () => {
+					fetchCalls += 1;
+					return new Response('{}', { status: 200 });
+				},
+			},
+		);
+
+		assert.equal(result.response.status, 499);
+		assert.equal(fetchCalls, 0);
+		assert.equal(result.meta.upstreamOutcomeUnknown, undefined);
+		assert.equal(result.meta.failoverForbidden, undefined);
+	});
+
+	it('bounds a 200 multimodal body as it streams and cancels it', async () => {
+		let cancelled = false;
+		const result = await dispatchDashScopeMultimodalPassthrough(
+			route({ adapter: 'passthrough' }),
+			{ model: 'public-asr', input: { messages: [] } },
+			undefined,
+			null,
+			undefined,
+			{
+				beforeUpstreamDispatch: async () => undefined,
+				maxResponseBytes: 32,
+				fetchImpl: async () => new Response(new ReadableStream<Uint8Array>({
+					start(controller) {
+						controller.enqueue(new TextEncoder().encode('{"output":"'));
+						controller.enqueue(new TextEncoder().encode('x'.repeat(128)));
+					},
+					cancel() { cancelled = true; },
+				}), { status: 200 }),
+			},
+		);
+
+		assert.equal(result.response.status, 200);
+		assert.equal(result.meta.responseBodyTooLarge, true);
+		assert.equal(result.meta.upstreamOutcomeUnknown, true);
+		assert.equal(result.meta.failoverForbidden, true);
+		assert.equal(cancelled, true);
+		assert.match(JSON.stringify(await result.response.json()), /exceeds the configured limit/);
+	});
+
+	it('applies the same streaming ceiling and cancellation to a large 500 body', async () => {
+		let cancelled = false;
+		const result = await dispatchDashScopeMultimodalPassthrough(
+			route({ adapter: 'passthrough' }),
+			{ model: 'public-asr', input: { messages: [] } },
+			undefined,
+			null,
+			undefined,
+			{
+				maxResponseBytes: 16,
+				fetchImpl: async () => new Response(new ReadableStream<Uint8Array>({
+					start(controller) {
+						controller.enqueue(new TextEncoder().encode('provider error '.repeat(8)));
+					},
+					cancel() { cancelled = true; },
+				}), { status: 500 }),
+			},
+		);
+
+		assert.equal(result.response.status, 500);
+		assert.equal(result.meta.responseBodyTooLarge, true);
+		assert.equal(result.meta.upstreamOutcomeUnknown, undefined);
+		assert.equal(cancelled, true);
+		assert.match(JSON.stringify(await result.response.json()), /exceeds the configured limit/);
+	});
+
 	it('uses the Fun-ASR request and response contracts selected by its adapter', async () => {
 		let requestInit: RequestInit | undefined;
 		const result = await dispatchDashScopeSyncAsr(
@@ -390,7 +633,10 @@ describe('DashScope ASR dispatch', () => {
 			).parameters.format,
 			'wav',
 		);
-		assert.deepEqual(await result.response.json(), { text: 'Fun-ASR 结果' });
+		assert.deepEqual(await result.response.json(), {
+			text: 'Fun-ASR 结果',
+			usage: { seconds: 2 },
+		});
 		assert.equal(result.meta.audioDurationSeconds, 2);
 		assert.equal(result.upstreamRequestId, 'req-fun');
 	});
@@ -452,8 +698,70 @@ describe('DashScope ASR dispatch', () => {
 			'https://workspace.example/api/v1/tasks/task%2F1',
 			'https://result.example/transcript.json',
 		]);
-		assert.deepEqual(await result.response.json(), { text: '异步结果' });
+		assert.deepEqual(await result.response.json(), { text: '异步结果', usage: { seconds: 3 } });
 		assert.equal(result.meta.audioDurationSeconds, 3);
 		assert.equal(result.upstreamRequestId, 'req-query');
+	});
+
+	it('rejects an unusable asynchronous result document as outcome-unknown', async () => {
+		const responses = [
+			Response.json({ output: { task_id: 'task-1', task_status: 'PENDING' } }),
+			Response.json({
+				output: {
+					task_id: 'task-1',
+					task_status: 'SUCCEEDED',
+					results: [{ transcription_url: 'https://result.example/transcript.json', subtask_status: 'SUCCEEDED' }],
+				},
+			}),
+			Response.json({ output: {}, usage: { seconds: 3 } }),
+		];
+		const result = await dispatchDashScopeAsyncAsr(
+			route({
+				providerModelName: 'qwen3-asr-flash-filetrans',
+				upstreamOperation: 'audio.transcriptions.async',
+				adapter: 'dashscope-asr-file-async',
+			}),
+			request({ file: null, fileSourceUrl: 'https://audio.example/sample.wav' }),
+			undefined,
+			null,
+			undefined,
+			{ fetchImpl: async () => responses.shift()!, pollIntervalMs: 0 },
+		);
+
+		assert.equal(result.response.status, 502);
+		assert.equal(result.meta.upstreamOutcomeUnknown, true);
+		assert.equal(result.meta.failoverForbidden, true);
+		assert.equal(result.meta.audioDurationSeconds, null);
+		assert.equal((await result.response.json() as { code?: string }).code, 'gateway.upstream_request_failed');
+	});
+
+	it('rejects a private asynchronous transcription destination without fetching it', async () => {
+		let calls = 0;
+		const responses = [
+			Response.json({ output: { task_id: 'task-1', task_status: 'PENDING' } }),
+			Response.json({
+				output: {
+					task_id: 'task-1', task_status: 'SUCCEEDED',
+					results: [{ transcription_url: 'http://127.0.0.1/admin', subtask_status: 'SUCCEEDED' }],
+				},
+			}),
+		];
+		const result = await dispatchDashScopeAsyncAsr(
+			route({
+				providerModelName: 'qwen3-asr-flash-filetrans',
+				upstreamOperation: 'audio.transcriptions.async',
+				adapter: 'dashscope-asr-file-async',
+			}),
+			request({ file: null, fileSourceUrl: 'https://audio.example/sample.wav' }),
+			undefined,
+			null,
+			undefined,
+			{ fetchImpl: async () => { calls += 1; return responses.shift()!; }, pollIntervalMs: 0 },
+		);
+
+		assert.equal(calls, 2);
+		assert.equal(result.response.status, 502);
+		assert.equal(result.meta.upstreamOutcomeUnknown, true);
+		assert.equal(result.meta.failoverForbidden, true);
 	});
 });

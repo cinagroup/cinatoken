@@ -1,19 +1,38 @@
 import { ETL_EXCLUDED_SESSION_TABLES, ETL_TABLE_ORDER } from '../lib/migration-tables';
 import {
 	type D1ExecutionConfig,
+	getTableColumns,
 	parseD1ExecutionConfig,
 	runD1ExecuteJson,
 	DEFAULT_D1_DATABASE_NAME,
 	DEFAULT_D1_PERSIST_TO,
 } from '../lib/d1-execute';
+import {
+	D1_BUDGET_SPENT_MICROS_MIGRATION,
+	type D1BudgetSpentPrecisionMode,
+	d1BudgetSpentInvariantSql,
+	resolveD1BudgetSpentPrecisionMode,
+} from './user-budget-spent-precision';
 
-const REQUIRED_MIGRATION = '0034_public_model_daily_stats.sql';
+const REQUIRED_MIGRATION = '0049_model_endpoint_audio_capabilities.sql';
 
-type InvariantCheck = {
+export type InvariantCheck = {
 	label: string;
 	sql: string;
 	expected: number;
 };
+
+export function buildD1BudgetSpentPreflightCheck(
+	mode: D1BudgetSpentPrecisionMode,
+): InvariantCheck {
+	return {
+		label: mode === 'authoritative_micros'
+			? 'user_budget_spent_authoritative_micros_invalid'
+			: 'user_budget_spent_legacy_real_unsafe',
+		sql: d1BudgetSpentInvariantSql(mode),
+		expected: 0,
+	};
+}
 
 export const SOURCE_D1_REQUIRED_TABLES = [
 	...ETL_TABLE_ORDER,
@@ -118,6 +137,24 @@ export const SOURCE_D1_INVARIANT_CHECKS: readonly InvariantCheck[] = [
 		sql: `SELECT COUNT(*) AS value FROM system_config WHERE key = 'MASTER_KEY'`,
 		expected: 0,
 	},
+	{
+		label: 'active_user_budget_reservations',
+		sql: `SELECT COUNT(*) AS value FROM user_budget_reservations
+			WHERE state IN ('reserved', 'dispatched')`,
+		expected: 0,
+	},
+	{
+		label: 'user_budget_reserved_counter_drift',
+		sql: `SELECT COUNT(*) AS value FROM users AS account
+			WHERE account.budget_reserved_micros <> COALESCE((
+				SELECT SUM(reservation.reserved_micros)
+				FROM user_budget_reservations AS reservation
+				WHERE reservation.user_id = account.id
+					AND reservation.budget_epoch = account.budget_epoch
+					AND reservation.state IN ('reserved', 'dispatched')
+			), 0)`,
+		expected: 0,
+	},
 ];
 
 function quoteSqlString(value: string): string {
@@ -175,6 +212,31 @@ export function runSourceD1Preflight(config: D1ExecutionConfig): void {
 	}
 	console.log(`[PASS] required_migration=${REQUIRED_MIGRATION}`);
 
+	const [precisionMigration] = runD1ExecuteJson(
+		`SELECT COUNT(*) AS value FROM d1_migrations WHERE name = ${quoteSqlString(D1_BUDGET_SPENT_MICROS_MIGRATION)}`,
+		config,
+	);
+	const precisionMigrationCount = parseCount(
+		precisionMigration?.value,
+		'budget_spent_precision_migration',
+	);
+	if (precisionMigrationCount > 1) {
+		throw new Error(`D1 migration ledger contains duplicate ${D1_BUDGET_SPENT_MICROS_MIGRATION} rows.`);
+	}
+	const budgetSpentPrecisionMode = resolveD1BudgetSpentPrecisionMode(
+		getTableColumns('users', config),
+		precisionMigrationCount === 1,
+	);
+	console.log(
+		`[STATE] user_budget_spent_precision=${budgetSpentPrecisionMode}; ` +
+		`migration_0041=${precisionMigrationCount === 1 ? 'present' : 'absent'}`,
+	);
+	if (budgetSpentPrecisionMode === 'legacy_real_safe_fallback') {
+		console.warn(
+			'[WARN] D1 0041 is absent; cutover may continue only because every legacy REAL value is proven recoverable below 2^32 units.',
+		);
+	}
+
 	const tableNames = SOURCE_D1_REQUIRED_TABLES.map(quoteSqlString).join(', ');
 	const tables = runD1ExecuteJson(
 		`SELECT name FROM sqlite_schema WHERE type = 'table' AND name IN (${tableNames}) ORDER BY name`,
@@ -188,7 +250,10 @@ export function runSourceD1Preflight(config: D1ExecutionConfig): void {
 	console.log(`[PASS] required_tables=${SOURCE_D1_REQUIRED_TABLES.length}`);
 
 	let failures = 0;
-	for (const check of SOURCE_D1_INVARIANT_CHECKS) {
+	for (const check of [
+		...SOURCE_D1_INVARIANT_CHECKS,
+		buildD1BudgetSpentPreflightCheck(budgetSpentPrecisionMode),
+	]) {
 		let row: Record<string, unknown> | undefined;
 		try {
 			[row] = runD1ExecuteJson(check.sql, config);

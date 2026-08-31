@@ -8,6 +8,10 @@ import {
 	type WebDeepSearchParams,
 	type WebDeepSearchResult,
 } from './types';
+import {
+	assertToolProviderOutputWithinLimit,
+	readToolProviderResponseText,
+} from '../http/bounded-response';
 
 type FirecrawlSearchItem = {
 	title?: string;
@@ -66,7 +70,10 @@ export async function deepSearchFirecrawl(params: WebDeepSearchParams): Promise<
 		}),
 	});
 
-	const text = await response.text();
+	const text = await readToolProviderResponseText(response, {
+		provider: 'firecrawl',
+		errorConstructor: WebDeepSearchProviderError,
+	});
 	let json: FirecrawlRawResponse;
 	try {
 		json = JSON.parse(text) as FirecrawlRawResponse;
@@ -87,7 +94,7 @@ export async function deepSearchFirecrawl(params: WebDeepSearchParams): Promise<
 	}
 
 	const items = normalizeItems(json.data);
-	return items
+	const results = items
 		.filter((p) => typeof p.url === 'string' && p.url.trim())
 		.map((p) => {
 			const content =
@@ -104,4 +111,9 @@ export async function deepSearchFirecrawl(params: WebDeepSearchParams): Promise<
 				content,
 			};
 		});
+	assertToolProviderOutputWithinLimit(results, {
+		provider: 'firecrawl',
+		errorConstructor: WebDeepSearchProviderError,
+	});
+	return results;
 }

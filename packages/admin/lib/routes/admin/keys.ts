@@ -1,6 +1,6 @@
 /**
  * 管理路由：`/admin/keys` — API 密钥列表（分页、邮箱、`user_id`）、
- * 创建、查询、更新（仅 name/metadata/status）、物理删除及单 key 请求日志。全程要求 Admin principal。
+ * 创建、查询、更新（仅 name/metadata/status）、吊销墓碑及单 key 请求日志。全程要求 Admin principal。
  */
 import { Hono } from 'hono';
 import { parseApiKeyListSortQuery } from '@octafuse/core/db/api-keys-list-sort';
@@ -137,7 +137,7 @@ adminKeysRoutes.get('/:id', async (c) => {
 	}
 });
 
-/** 物理删除密钥行。 */
+/** DELETE 语义为吊销并保留审计墓碑。 */
 adminKeysRoutes.delete('/:id', async (c) => {
 	try {
 		const repos = c.get('repositories');

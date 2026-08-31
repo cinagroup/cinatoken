@@ -2,6 +2,7 @@
  * Public catalog discovery (no API key): runtime model capabilities from active routes.
  */
 import { Hono } from 'hono';
+import type { GatewayRepositories } from '@octafuse/core';
 import { BILLING_CURRENCY_KEY, normalizeBillingCurrencyCode } from '@octafuse/core/lib/billing-currency';
 import type { Env } from '../app';
 import { parseCatalogRouteGroupsQuery } from '../lib/model-list-parse';
@@ -20,6 +21,31 @@ const PUBLIC_STATS_CACHE_CONTROL = 'public, max-age=60';
 
 function setPublicCatalogCache(c: { header(name: string, value: string): void }): void {
 	c.header('Cache-Control', PUBLIC_CACHE_CONTROL);
+}
+
+async function readPublicBillingCurrency(repos: GatewayRepositories): Promise<string> {
+	try {
+		return normalizeBillingCurrencyCode(await repos.systemConfig.getConfig(BILLING_CURRENCY_KEY));
+	} catch (error) {
+		console.warn('[Gateway] public catalog billing currency read failed; using default', {
+			error: error instanceof Error ? error.message : String(error),
+		});
+		return normalizeBillingCurrencyCode(null);
+	}
+}
+
+async function listPublicCatalogModels(
+	repos: GatewayRepositories,
+	options?: { routeGroups?: string[] | null },
+) {
+	try {
+		return await listCatalogDiscoveryModels(repos, options);
+	} catch (error) {
+		console.warn('[Gateway] public catalog read failed; retrying once', {
+			error: error instanceof Error ? error.message : String(error),
+		});
+		return listCatalogDiscoveryModels(repos, options);
+	}
 }
 
 function utcDateOnly(value: Date): string {
@@ -49,16 +75,16 @@ export function createCatalogRoutes(runtime?: PublicStatsRuntimeGuard): Hono<Env
 catalogRoutes.get('/models', async (c) => {
 	const repos = c.get('repositories');
 	const routeGroups = parseCatalogRouteGroupsQuery(c.req.query('route_groups'));
-	const [data, billingCurrencyRaw] = await Promise.all([
-		listCatalogDiscoveryModels(repos, { routeGroups }),
-		repos.systemConfig.getConfig(BILLING_CURRENCY_KEY),
+	const [data, billingCurrency] = await Promise.all([
+		listPublicCatalogModels(repos, { routeGroups }),
+		readPublicBillingCurrency(repos),
 	]);
 	setPublicCatalogCache(c);
 
 	return c.json({
 		object: 'list',
 		data,
-		billing_currency: normalizeBillingCurrencyCode(billingCurrencyRaw),
+		billing_currency: billingCurrency,
 		generated_at: new Date().toISOString(),
 	});
 });
@@ -71,9 +97,9 @@ catalogRoutes.get('/models/:vendor/:slug', async (c) => {
 		return c.json({ error: { code: 'invalid_catalog_path', message: 'Invalid catalog model path' } }, 400);
 	}
 	const repos = c.get('repositories');
-	const [models, billingCurrencyRaw] = await Promise.all([
-		listCatalogDiscoveryModels(repos),
-		repos.systemConfig.getConfig(BILLING_CURRENCY_KEY),
+	const [models, billingCurrency] = await Promise.all([
+		listPublicCatalogModels(repos),
+		readPublicBillingCurrency(repos),
 	]);
 	const model = models.find((candidate) =>
 		candidate.slug === slug && candidate.vendor.localeCompare(vendor, undefined, { sensitivity: 'base' }) === 0
@@ -85,7 +111,7 @@ catalogRoutes.get('/models/:vendor/:slug', async (c) => {
 	return c.json({
 		object: 'model',
 		data: model,
-		billing_currency: normalizeBillingCurrencyCode(billingCurrencyRaw),
+		billing_currency: billingCurrency,
 		generated_at: new Date().toISOString(),
 	});
 });
@@ -93,15 +119,15 @@ catalogRoutes.get('/models/:vendor/:slug', async (c) => {
 /** `GET /catalog/providers` — provider capability aggregates, never credentials or endpoints. */
 catalogRoutes.get('/providers', async (c) => {
 	const repos = c.get('repositories');
-	const [models, billingCurrencyRaw] = await Promise.all([
-		listCatalogDiscoveryModels(repos),
-		repos.systemConfig.getConfig(BILLING_CURRENCY_KEY),
+	const [models, billingCurrency] = await Promise.all([
+		listPublicCatalogModels(repos),
+		readPublicBillingCurrency(repos),
 	]);
 	setPublicCatalogCache(c);
 	return c.json({
 		object: 'list',
 		data: aggregateCatalogProviders(models),
-		billing_currency: normalizeBillingCurrencyCode(billingCurrencyRaw),
+		billing_currency: billingCurrency,
 		generated_at: new Date().toISOString(),
 	});
 });
@@ -155,7 +181,7 @@ catalogRoutes.get('/stats/models', async (c) => {
 		const { start, startDate, endDate } = publicStatsWindow(days, end);
 		const repos = c.get('repositories');
 		const [models, rows] = await Promise.all([
-			listCatalogDiscoveryModels(repos),
+			listPublicCatalogModels(repos),
 			repos.analytics.queryPublicModelAnalytics({ startDate, endDate }),
 		]);
 		const response = c.json({

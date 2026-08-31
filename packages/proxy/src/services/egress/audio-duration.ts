@@ -11,7 +11,7 @@ export type ResolvedAudioDuration = {
 	source: AudioDurationSource;
 };
 
-const MAX_AUDIO_DURATION_SECONDS = 25 * 60;
+export const MAX_AUDIO_DURATION_SECONDS = 25 * 60;
 
 function isFinitePositive(n: number): boolean {
 	return typeof n === 'number' && Number.isFinite(n) && n > 0;

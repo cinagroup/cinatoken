@@ -32,6 +32,7 @@ import {
 import type { RequestTimingAttempt, RequestTimingCollector } from './request-timing';
 import { GatewayErrorCode } from './gateway-error-codes';
 import { gatewayErrorResponse, gatewayNestedErrorResponse } from './gateway-error-response';
+import { responseTextWithinLimit } from './egress/bounded-response-body';
 import {
 	clearStickyBindingSync,
 	mergeStickyIntoAttempts,
@@ -49,6 +50,10 @@ import {
 const STICKY_STALE_GC_PROBABILITY = 1 / 500;
 const STICKY_STALE_GC_MAX_AGE_MS = 7 * 24 * 60 * 60 * 1000;
 const STICKY_STALE_GC_LIMIT = 500;
+/** Model fallback accepts at most eight candidates; never retain a larger request trace. */
+const MAX_DISPATCH_ATTEMPT_TRACES = 8;
+/** Enough for error classification without retaining a 64 KiB body per candidate. */
+const MAX_DISPATCH_TRACE_ERROR_BODY_BYTES = 8 * 1024;
 
 function maybeScheduleStickyStaleGc(
 	repos: GatewayRepositories,
@@ -71,6 +76,17 @@ export type ImageDispatchAbortReason = 'client_abort' | 'gateway_timeout';
 export type ProxyDispatchMeta = {
 	imageUsage?: import('@octafuse/core').ImageTokenUsage | null;
 	parsedBody?: unknown;
+	/** Native OpenRouter-compatible Images SSE; settlement resolves only at a validated terminal event. */
+	imageStreamSettlement?: Promise<{
+		completed: boolean;
+		done: boolean;
+		cancelled: boolean;
+		imageAbortReason?: ImageDispatchAbortReason;
+		errorMessage: string | null;
+		validImages: number;
+		imageUsage: import('@octafuse/core').ImageTokenUsage | null;
+		upstreamSupplierCostUsdTicks: number | null;
+	}>;
 	/** 仅 Images：上游 wait 被 abort 时由 driver 写入（见 openai-images-driver） */
 	imageAbortReason?: ImageDispatchAbortReason;
 	/** 仅 Audio transcriptions：计费时长（秒） */
@@ -81,7 +97,33 @@ export type ProxyDispatchMeta = {
 	audioFileBytes?: number;
 	/** 仅 Audio token 计费：上游 `usage.type=tokens` */
 	audioTokenUsage?: import('@octafuse/core').AudioTokenUsage | null;
+	/** The final network attempt may have been consumed, but no HTTP response was observed. */
+	upstreamOutcomeUnknown?: boolean;
+	/** A native JSON response was cancelled after crossing its streaming byte ceiling. */
+	responseBodyTooLarge?: boolean;
+	/** A paid/accepted upstream response must not be replayed against another provider. */
+	failoverForbidden?: boolean;
+	/** The response body was generated and sanitized inside the gateway, not supplied by an upstream. */
+	gatewayGeneratedError?: boolean;
 };
+
+type UnknownUpstreamOutcomeError = Error & {
+	upstreamOutcomeUnknown: true;
+};
+
+/** Preserve the original error while telling failover that a network write may have landed. */
+export function markUpstreamOutcomeUnknown(error: unknown): UnknownUpstreamOutcomeError {
+	const normalized = error instanceof Error ? error : new Error(String(error));
+	return Object.assign(normalized, { upstreamOutcomeUnknown: true as const });
+}
+
+function thrownOutcomeIsUnknown(error: unknown): boolean {
+	return (
+		error != null &&
+		typeof error === 'object' &&
+		(error as { upstreamOutcomeUnknown?: unknown }).upstreamOutcomeUnknown === true
+	);
+}
 
 /** Images abort 的 504 不得换 provider / 换路由（避免客户端取消或超时后二次打 OpenAI）。 */
 export function shouldFailImmediatelyForImageAbort(meta?: ProxyDispatchMeta | null): boolean {
@@ -113,6 +155,20 @@ export type ProxyFailoverResult = {
 	stickyTrace?: (() => Promise<StickyTraceSnapshot>) | undefined;
 	/** Background bind/touch mutations (schedule via waitUntil) */
 	stickyMutationPromise?: Promise<unknown> | null;
+	/** Bounded, sanitized request-level attempt history for model fallback audit. */
+	dispatchAttempts?: ProxyDispatchAttemptTrace[];
+};
+
+export type ProxyDispatchAttemptTrace = {
+	candidateIndex: number | null;
+	modelId: string | null;
+	globalEndpointRank: number | null;
+	routeTargetId: string;
+	providerId: string;
+	status: number | null;
+	outcome: 'success' | 'error' | 'fetch_error';
+	contentType?: string | null;
+	errorBodyText?: string | null;
 };
 
 export type FailoverDispatchOptions = {
@@ -126,13 +182,36 @@ export type FailoverDispatchOptions = {
 	routePoolId?: string | null;
 	/** Pool sticky config from surface join */
 	sticky?: RoutePoolStickyRoutingConfig | null;
+	/** Outer cross-model orchestration will continue after a non-OK result. */
+	deferFinalAttempt?: boolean;
+	/**
+	 * Request-scoped admission boundary. It is awaited immediately before the
+	 * first eligible dispatch callback and may fail closed without being
+	 * classified as an upstream fetch failure.
+	 */
+	beforeUpstreamDispatch?: () => Promise<void>;
+	/**
+	 * Text drivers can prepare URL, credentials and serialized body first, then
+	 * invoke the admission boundary immediately beside fetch(). Other drivers
+	 * retain the legacy failover-level placement until individually audited.
+	 * Once a driver reports that dispatch may have landed, failover stops and
+	 * accounting preserves the admitted ceiling because replay is forbidden.
+	 */
+	delegateBeforeUpstreamDispatchToDriver?: boolean;
+	/**
+	 * Execute provider.sort.partition="none" as one request-level chain. A
+	 * request-shape 4xx stops only that model candidate; replay-forbidden
+	 * outcomes still stop the entire chain.
+	 */
+	crossModelCandidateFailover?: boolean;
 };
 
 type DispatchFn = (
 	route: RouteResult,
 	requestSignal?: AbortSignal,
 	timing?: RequestTimingCollector | null,
-	attempt?: RequestTimingAttempt
+	attempt?: RequestTimingAttempt,
+	beforeFetch?: () => Promise<void>,
 ) => Promise<ProxyDispatchResult>;
 
 function emptyRoute(protocol: UpstreamProtocol): RouteResult {
@@ -153,6 +232,7 @@ function emptyRoute(protocol: UpstreamProtocol): RouteResult {
 		routeMeteredProfileJson: null,
 		routeChargedProfileJson: null,
 		customParams: null,
+		routingMetadata: null,
 		routeGroup: 'default',
 		routePriority: 0,
 		routeWeight: 1,
@@ -285,17 +365,69 @@ export async function failoverDispatch(
 
 	let lastResponse: Response | null = null;
 	let lastRoute: RouteResult = protocolRoutes[0]!;
+	let lastDispatchMeta: ProxyDispatchMeta | undefined;
 	let lastTimingAttempt: RequestTimingAttempt | undefined;
 	let stickyAttemptCleared = false;
+	let unknownOutcomeObserved = false;
+	let lastDispatchedCandidateIndex: number | null = null;
+	const blockedCandidateIndexes = new Set<number>();
+	const dispatchAttempts: ProxyDispatchAttemptTrace[] = [];
+	const dispatchAttemptIndexByCandidate = new Map<number, number>();
+	const recordDispatchAttempt = (attempt: ProxyDispatchAttemptTrace): void => {
+		if (
+			options?.crossModelCandidateFailover === true
+			&& attempt.candidateIndex != null
+		) {
+			const existingIndex = dispatchAttemptIndexByCandidate.get(attempt.candidateIndex);
+			if (existingIndex != null) {
+				dispatchAttempts[existingIndex] = attempt;
+				return;
+			}
+			if (dispatchAttempts.length >= MAX_DISPATCH_ATTEMPT_TRACES) {
+				const evicted = dispatchAttempts.shift();
+				if (evicted?.candidateIndex != null) {
+					dispatchAttemptIndexByCandidate.delete(evicted.candidateIndex);
+				}
+				for (const [candidateIndex, index] of dispatchAttemptIndexByCandidate) {
+					dispatchAttemptIndexByCandidate.set(candidateIndex, index - 1);
+				}
+			}
+			dispatchAttemptIndexByCandidate.set(attempt.candidateIndex, dispatchAttempts.length);
+			dispatchAttempts.push(attempt);
+			return;
+		}
+
+		if (dispatchAttempts.length >= MAX_DISPATCH_ATTEMPT_TRACES) {
+			dispatchAttempts.shift();
+		}
+		dispatchAttempts.push(attempt);
+	};
 
 	const finish = (result: ProxyFailoverResult): ProxyFailoverResult => ({
 		...result,
+		dispatchAttempts: [...dispatchAttempts],
 		stickyTrace: () => resolveStickyTrace(stickySession),
 		stickyMutationPromise: stickyMutationPromise(stickySession),
 	});
+	const candidateIndexOf = (route: RouteResult): number | null =>
+		typeof route.gatewayCandidateIndex === 'number' && Number.isInteger(route.gatewayCandidateIndex)
+			? route.gatewayCandidateIndex
+			: null;
+	const hasLaterEligibleAttempt = (afterIndex: number): boolean => {
+		for (let index = afterIndex + 1; index < attempts.length; index += 1) {
+			const later = attempts[index]!;
+			const candidateIndex = candidateIndexOf(later);
+			if (candidateIndex != null && blockedCandidateIndexes.has(candidateIndex)) continue;
+			if (getProviderCircuitRemainingMs(circuitKeyForRoute(later)) > 0) continue;
+			return true;
+		}
+		return false;
+	};
 
 	for (let attemptIndex = 0; attemptIndex < attempts.length; attemptIndex += 1) {
 		const route = attempts[attemptIndex]!;
+		const candidateIndex = candidateIndexOf(route);
+		if (candidateIndex != null && blockedCandidateIndexes.has(candidateIndex)) continue;
 		const isStickyAttempt =
 			Boolean(stickyRoute) && route.targetId === stickyRoute!.targetId && attemptIndex === 0;
 
@@ -305,6 +437,15 @@ export async function failoverDispatch(
 			);
 			continue;
 		}
+		if (
+			options?.crossModelCandidateFailover === true
+			&& lastDispatchedCandidateIndex != null
+			&& candidateIndex != null
+			&& candidateIndex !== lastDispatchedCandidateIndex
+		) {
+			timing?.markModelTransition();
+		}
+		if (candidateIndex != null) lastDispatchedCandidateIndex = candidateIndex;
 
 		const timingAttempt = timing?.startAttempt(route);
 		lastTimingAttempt = timingAttempt;
@@ -312,20 +453,38 @@ export async function failoverDispatch(
 		console.log(
 			`[Gateway Proxy] calling provider providerId=${route.providerId} model=${route.providerModelName}${isStickyAttempt ? ' sticky=1' : ''}`
 		);
+		const delegateAdmissionBoundary =
+			options?.delegateBeforeUpstreamDispatchToDriver === true;
+		if (!delegateAdmissionBoundary) {
+			await options?.beforeUpstreamDispatch?.();
+		}
+		let admissionBoundaryFailed = false;
+		const beforeFetch = delegateAdmissionBoundary
+			? async (): Promise<void> => {
+					try {
+						await options?.beforeUpstreamDispatch?.();
+					} catch (error) {
+						admissionBoundaryFailed = true;
+						throw error;
+					}
+				}
+			: undefined;
 
 		let response: Response;
 		let usagePromise: Promise<UsageFromStream>;
 		let upstreamRequestId: string | null = null;
 		let dispatchMeta: ProxyDispatchMeta | undefined;
 		try {
-			const dispatched = await dispatch(route, requestSignal, timing, timingAttempt);
+			const dispatched = await dispatch(route, requestSignal, timing, timingAttempt, beforeFetch);
 			response = dispatched.response;
 			usagePromise = dispatched.usagePromise;
 			upstreamRequestId = dispatched.upstreamRequestId;
 			dispatchMeta = dispatched.meta;
 		} catch (err) {
+			// Admission persistence is a local fail-closed error, not an upstream
+			// network failure and must never trigger provider/model failover.
+			if (admissionBoundaryFailed) throw err;
 			timing?.markAttemptError(timingAttempt, err);
-			if (hasNextAttempt) timing?.markAttemptFailover(timingAttempt);
 			const errMessage = err instanceof Error ? err.message : String(err);
 			console.warn(
 				`[Gateway Proxy] fetch failed providerId=${route.providerId} error=${errMessage}`
@@ -340,14 +499,40 @@ export async function failoverDispatch(
 				stickyAttemptCleared = true;
 			}
 			// 与 route_resolution_failed 一致：把 fetch 层原文带给客户端（DNS/TLS/abort 等，不含凭据）
+			const outcomeUnknown = thrownOutcomeIsUnknown(err);
 			lastResponse = gatewayErrorResponse({
 				status: 502,
 				code: GatewayErrorCode.upstreamRequestFailed,
-				message: errMessage.trim()
+				message: outcomeUnknown
+					? 'Upstream request outcome could not be confirmed; the request was not replayed'
+					: errMessage.trim()
 					? `Upstream request failed: ${errMessage.trim()}`
 					: 'Upstream request failed',
 			});
 			lastRoute = route;
+			recordDispatchAttempt({
+				candidateIndex,
+				modelId: route.gatewayModelId ?? null,
+				globalEndpointRank: route.gatewayGlobalEndpointRank ?? null,
+				routeTargetId: route.targetId,
+				providerId: route.providerId,
+				status: null,
+				outcome: 'fetch_error',
+			});
+			if (outcomeUnknown) {
+				timing?.markFinalAttempt(timingAttempt);
+				return finish({
+					response: lastResponse,
+					usagePromise: Promise.resolve(EMPTY_USAGE),
+					upstreamRequestId: null,
+					chosenRoute: route,
+					circuitEvents,
+					suppressErrorAlert: false,
+					meta: { upstreamOutcomeUnknown: true, failoverForbidden: true },
+				});
+			}
+			if (hasNextAttempt) timing?.markAttemptFailover(timingAttempt);
+			lastDispatchMeta = undefined;
 			continue;
 		}
 
@@ -355,6 +540,15 @@ export async function failoverDispatch(
 		lastRoute = route;
 
 		if (isSuccessfulDispatchResponse(response)) {
+			recordDispatchAttempt({
+				candidateIndex,
+				modelId: route.gatewayModelId ?? null,
+				globalEndpointRank: route.gatewayGlobalEndpointRank ?? null,
+				routeTargetId: route.targetId,
+				providerId: route.providerId,
+				status: response.status,
+				outcome: 'success',
+			});
 			timing?.markFinalAttempt(timingAttempt);
 			markProviderSuccess(circuitKeyForRoute(route));
 			if (stickySession) {
@@ -371,6 +565,9 @@ export async function failoverDispatch(
 					});
 				}
 			}
+			const successfulMeta = unknownOutcomeObserved
+				? { ...(dispatchMeta ?? {}), upstreamOutcomeUnknown: true as const }
+				: dispatchMeta;
 			return finish({
 				response,
 				usagePromise,
@@ -378,13 +575,43 @@ export async function failoverDispatch(
 				chosenRoute: route,
 				circuitEvents,
 				suppressErrorAlert: false,
-				meta: dispatchMeta,
+				meta: successfulMeta,
 			});
 		}
+		unknownOutcomeObserved ||= dispatchMeta?.upstreamOutcomeUnknown === true;
+		const replayForbidden = dispatchMeta?.failoverForbidden === true || unknownOutcomeObserved;
+		lastDispatchMeta = unknownOutcomeObserved
+			? {
+					...(dispatchMeta ?? {}),
+					upstreamOutcomeUnknown: true,
+					failoverForbidden: true,
+				}
+			: dispatchMeta;
 
-		const classification: UpstreamFailureClassification = shouldFailImmediatelyForImageAbort(dispatchMeta)
+		const classification: UpstreamFailureClassification = shouldFailImmediatelyForImageAbort(dispatchMeta) || replayForbidden
 			? { action: 'fail_immediately' }
 			: classifyUpstreamHttpFailure(response.status);
+		const attemptTrace: ProxyDispatchAttemptTrace = {
+			candidateIndex,
+			modelId: route.gatewayModelId ?? null,
+			globalEndpointRank: route.gatewayGlobalEndpointRank ?? null,
+			routeTargetId: route.targetId,
+			providerId: route.providerId,
+			status: response.status,
+			outcome: 'error',
+			contentType: response.headers.get('content-type'),
+		};
+		if (options?.crossModelCandidateFailover === true) {
+			try {
+				attemptTrace.errorBodyText = await responseTextWithinLimit(
+					response.clone(),
+					MAX_DISPATCH_TRACE_ERROR_BODY_BYTES,
+				);
+			} catch {
+				attemptTrace.errorBodyText = null;
+			}
+		}
+		recordDispatchAttempt(attemptTrace);
 		logProviderSwitchAlert(route, classification, response.status);
 
 		if (
@@ -399,15 +626,32 @@ export async function failoverDispatch(
 		}
 
 		if (classification.action === 'fail_immediately') {
-			timing?.markFinalAttempt(timingAttempt);
+			const mayContinueWithAnotherModel =
+				options?.crossModelCandidateFailover === true
+				&& candidateIndex != null
+				&& !replayForbidden
+				&& !shouldFailImmediatelyForImageAbort(dispatchMeta);
+			if (mayContinueWithAnotherModel) {
+				blockedCandidateIndexes.add(candidateIndex);
+				if (hasLaterEligibleAttempt(attemptIndex)) {
+					timing?.markAttemptFailover(timingAttempt);
+					await response.body?.cancel('model_candidate_rejected').catch(() => undefined);
+					continue;
+				}
+			}
+			if (!options?.deferFinalAttempt || replayForbidden) {
+				timing?.markFinalAttempt(timingAttempt);
+			}
 			return finish({
 				response,
-				usagePromise: Promise.resolve(EMPTY_USAGE),
+				usagePromise: replayForbidden
+					? usagePromise
+					: Promise.resolve(EMPTY_USAGE),
 				upstreamRequestId,
 				chosenRoute: route,
 				circuitEvents,
 				suppressErrorAlert: false,
-				meta: dispatchMeta,
+				meta: lastDispatchMeta,
 			});
 		}
 
@@ -449,6 +693,12 @@ export async function failoverDispatch(
 		console.warn(
 			`[Gateway Proxy] provider non-OK, trying next candidate providerId=${route.providerId} status=${response.status}`
 		);
+		if (
+			options?.crossModelCandidateFailover === true
+			&& hasLaterEligibleAttempt(attemptIndex)
+		) {
+			await response.body?.cancel('provider_endpoint_failed').catch(() => undefined);
+		}
 	}
 
 	if (!lastResponse) {
@@ -466,7 +716,7 @@ export async function failoverDispatch(
 		});
 	}
 
-	timing?.markFinalAttempt(lastTimingAttempt);
+	if (!options?.deferFinalAttempt) timing?.markFinalAttempt(lastTimingAttempt);
 	return finish({
 		response: lastResponse,
 		usagePromise: Promise.resolve(EMPTY_USAGE),
@@ -474,6 +724,7 @@ export async function failoverDispatch(
 		chosenRoute: lastRoute,
 		circuitEvents,
 		suppressErrorAlert: false,
+		meta: lastDispatchMeta,
 	});
 }
 

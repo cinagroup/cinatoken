@@ -13,6 +13,8 @@ export type UserAuditSnapshot = {
 	budget_spent: number;
 	budget_period: string;
 	budget_reset_at: string | null;
+	budget_epoch: number;
+	budget_reserved_micros: number;
 	status: string;
 	metadata: string | null;
 	charged_cost_factors: string | null;
@@ -29,6 +31,8 @@ export function userRowToSnapshot(row: UserRow): UserAuditSnapshot {
 		budget_spent: roundGatewayMoney(Number(row.budget_spent)),
 		budget_period: row.budget_period,
 		budget_reset_at: row.budget_reset_at,
+		budget_epoch: Number(row.budget_epoch),
+		budget_reserved_micros: Number(row.budget_reserved_micros),
 		status: row.status,
 		metadata: row.metadata,
 		charged_cost_factors: row.charged_cost_factors,
@@ -56,6 +60,8 @@ export function computeChangedFields(before: UserAuditSnapshot, after: UserAudit
 		'budget_spent',
 		'budget_period',
 		'budget_reset_at',
+		'budget_epoch',
+		'budget_reserved_micros',
 		'status',
 		'metadata',
 		'charged_cost_factors',
@@ -91,6 +97,8 @@ export function snapshotWithOverrides(
 			| 'budget_spent'
 			| 'budget_period'
 			| 'budget_reset_at'
+			| 'budget_epoch'
+			| 'budget_reserved_micros'
 			| 'status'
 			| 'metadata'
 			| 'charged_cost_factors'
@@ -114,6 +122,8 @@ export function buildUserAuditSnapshotsForLazyPeriodReset(
 		budget_spent: roundGatewayMoney(next.budget_spent),
 		budget_reset_at: next.budget_reset_at,
 		budget_max: maxChanged ? next.budget_max : before.budget_max,
+		budget_epoch: before.budget_epoch + 1,
+		budget_reserved_micros: 0,
 	});
 	const fields = computeChangedFields(before, after);
 	return {

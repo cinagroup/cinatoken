@@ -5,17 +5,13 @@ import { GEMINI_GENERATE_OPERATION } from '@octafuse/core';
 import { Hono } from 'hono';
 import type { Env } from '../../app';
 import { requireApiKey } from '../../middleware/auth';
-import {
-  resolveRoutesForSurface,
-  type RouteResult,
-} from '../../services/model-router';
-import { resolveModelRouting } from '../../services/resolve-model-route-group';
+import { assignGenerationId } from '../../middleware/generation-id';
+import type { RouteResult } from '../../services/model-router';
 import {
   buildAffinityKey,
   buildTierKeyPrefix,
-  resolveRouteStrategyPlan,
 } from '../../services/route-strategies';
-import { proxyGeminiContent, EMPTY_USAGE, type UsageFromStream } from '../../services/proxy';
+import { proxyGeminiContent, EMPTY_USAGE } from '../../services/proxy';
 import { buildRouteRequestBody } from '../../services/route-default-params';
 import { finalizeRequestLogJson } from '../../services/request-log-shared';
 import { summarizeGeminiToolsForLog } from '../../services/request-log-tools-summary';
@@ -36,6 +32,31 @@ import {
 import { GatewayErrorCode } from '../../services/gateway-error-codes';
 import { gatewayErrorJson } from '../../services/gateway-error-response';
 import { RequestTimingCollector } from '../../services/request-timing';
+import { buildModelFallbackPlan } from '../../services/model-fallback-plan';
+import {
+  auditGuardrailOutputDecision,
+  filterGuardrailResponse,
+  forfeitRequestGuardrailBudgets,
+  markRequestGuardrailBudgetsDispatched,
+  releaseRequestGuardrailBudgets,
+  reserveRequestGuardrailBudgets,
+} from '../../services/request-guardrails';
+import {
+  estimateGuardrailBudgetMicros,
+  estimateOrdinaryBudgetChargedCost,
+} from '../../services/guardrail-budget-estimate';
+import {
+  reserveOrdinaryUserBudget,
+  type OrdinaryBudgetLease,
+} from '../../services/ordinary-budget-lifecycle';
+import {
+  geminiBodyForBudgetEstimate,
+  runGeminiRequestGuardrails,
+} from '../../services/gemini-request-guardrails';
+import {
+  textUsageCostIsUnknown,
+  textUsageWithSafetyTimeout,
+} from '../../services/text-usage-settlement';
 
 /** usage Promise 兜底超时（与 OpenAI/Anthropic 路由一致）。 */
 const USAGE_SAFETY_TIMEOUT_MS = 5 * 60 * 1000;
@@ -82,16 +103,6 @@ function geminiUpstreamWireBodyForLog(
   return finalizeRequestLogJson(geminiBodyRedactedForLog(merged, action));
 }
 
-/** 流/响应是否已产出可用 token 统计。 */
-function hasUsage(u: UsageFromStream): boolean {
-  return (
-    u.total_tokens > 0 ||
-    u.input_tokens > 0 ||
-    u.output_tokens > 0 ||
-    u.reasoning_tokens > 0
-  );
-}
-
 /** 与 chat/messages 相同：`Variables.apiKey` 在鉴权后注入。 */
 type GeminiEnv = Env & { Variables: { apiKey: import('../../middleware/auth').ApiKeyContext } };
 
@@ -118,12 +129,14 @@ function parseGeminiAction(
 export const geminiRoutes = new Hono<GeminiEnv>();
 
 geminiRoutes.use('*', requireApiKey);
+geminiRoutes.use('*', assignGenerationId);
 
 /** `modelAction` 形如 `{modelId}:{generateContent|streamGenerateContent}`（见 `parseGeminiAction`）。 */
 geminiRoutes.post('/models/:modelAction', async (c) => {
   const repos = c.get('repositories');
   const apiKey = c.get('apiKey');
   const start = Date.now();
+  const requestCorrelationId = c.get('generationId')!;
   const timing = new RequestTimingCollector();
   const parsedAction = parseGeminiAction(c.req.param('modelAction'));
   if (!parsedAction) {
@@ -147,55 +160,43 @@ geminiRoutes.post('/models/:modelAction', async (c) => {
     });
   }
 
-  const resolved = await resolveModelRouting(repos, pathModelId);
-  if (!resolved) {
+  const guardrail = await runGeminiRequestGuardrails(repos, {
+    workspaceId: apiKey.workspaceId,
+    userId: apiKey.userId,
+    apiKeyId: apiKey.keyId,
+    modelId: pathModelId,
+    body,
+    action,
+    correlationId: requestCorrelationId,
+    now: new Date(start),
+  });
+  if (!guardrail.ok) {
     return gatewayErrorJson(c, {
-      status: 404,
-      code: GatewayErrorCode.modelNotFound,
-      message: 'Model not found',
+      status: guardrail.status,
+      code: guardrail.code === 'guardrail_invalid'
+        ? GatewayErrorCode.guardrailInvalid
+        : GatewayErrorCode.guardrailBlocked,
+      message: guardrail.message,
     });
   }
-  const { model, baseModelId, explicitGroup } = resolved;
-  const effectiveRouteGroup = explicitGroup?.trim() || 'default';
+  body = guardrail.body;
 
-  if (apiKey.budgetMax != null && apiKey.budgetSpent >= apiKey.budgetMax) {
+  const fallbackPlan = await buildModelFallbackPlan(repos, {
+    modelIds: [pathModelId],
+    body,
+    requestProtocol: 'gemini',
+    requestOperation: GEMINI_GENERATE_OPERATION,
+    pricingAt: new Date(start),
+  });
+  if (!fallbackPlan.ok) {
     return gatewayErrorJson(c, {
-      status: 403,
-      code: GatewayErrorCode.budgetExceeded,
-      message: 'Budget exceeded',
+      status: fallbackPlan.status,
+      code: fallbackPlan.code,
+      message: fallbackPlan.message,
     });
   }
-
-  let routes: RouteResult[];
-  let poolStrategy: string | null = null;
-  let poolTierStrategies: string | null = null;
-  let stickySurface: import('@octafuse/core').ResolvedModelSurfaceRow | null = null;
-  try {
-    const resolvedSurface = await resolveRoutesForSurface(repos, {
-      modelId: baseModelId,
-      routeGroup: effectiveRouteGroup,
-      requestProtocol: 'gemini',
-      requestOperation: GEMINI_GENERATE_OPERATION,
-    });
-    routes = resolvedSurface.routes;
-    poolStrategy = resolvedSurface.surface?.pool_strategy ?? null;
-    poolTierStrategies = resolvedSurface.surface?.pool_tier_strategies ?? null;
-    stickySurface = resolvedSurface.surface;
-  } catch (err) {
-    const message = err instanceof Error ? err.message : 'Model route resolution failed';
-    return gatewayErrorJson(c, {
-      status: 502,
-      code: GatewayErrorCode.routeResolutionFailed,
-      message,
-    });
-  }
-  if (routes.length === 0) {
-    return gatewayErrorJson(c, {
-      status: 502,
-      code: GatewayErrorCode.noRoute,
-      message: `No Gemini route in route group "${effectiveRouteGroup}" for this model`,
-    });
-  }
+  const selectedPlan = fallbackPlan.candidates[0]!;
+  const { model, baseModelId, effectiveRouteGroup, routes, upstreamBody } = selectedPlan;
 
   const modelNameForLog =
     model.display_name != null && String(model.display_name).trim() !== ''
@@ -216,35 +217,163 @@ geminiRoutes.post('/models/:modelAction', async (c) => {
   }
 
   const requestSignal = c.req.raw.signal;
-  const strategyPlan = await resolveRouteStrategyPlan({
-    routePolicyRaw: model.route_policy ?? null,
-    poolStrategy,
-    poolTierStrategies,
-    protocol: 'gemini',
-    capability: GEMINI_GENERATE_OPERATION,
-    routeGroup: effectiveRouteGroup,
-    repos,
+  const budgetEstimatePlan = [
+    { ...selectedPlan, upstreamBody: geminiBodyForBudgetEstimate(upstreamBody) },
+  ];
+  const ordinaryEstimate = estimateOrdinaryBudgetChargedCost(
+    budgetEstimatePlan,
+    apiKey.chargedCostFactors,
+  );
+  if (!ordinaryEstimate.ok) {
+    return gatewayErrorJson(c, {
+      status: 502,
+      code: GatewayErrorCode.routeResolutionFailed,
+      message: ordinaryEstimate.message,
+    });
+  }
+  const ordinaryAdmission = await reserveOrdinaryUserBudget(repos, {
+    requestId: requestCorrelationId,
+    userId: apiKey.userId,
+    apiKeyId: apiKey.keyId,
+    budgetMax: apiKey.budgetMax,
+    expectedBudgetEpoch: apiKey.budgetEpoch,
+    estimatedChargedCost: ordinaryEstimate.estimatedChargedCost,
+    now: new Date(start),
   });
+  if (!ordinaryAdmission.ok) {
+    return gatewayErrorJson(c, {
+      status: 403,
+      code: GatewayErrorCode.budgetExceeded,
+      message: ordinaryAdmission.error.message,
+    });
+  }
+  const ordinaryBudgetLease: OrdinaryBudgetLease = ordinaryAdmission.lease;
+  const terminateOrdinaryBudget = async (reason: string): Promise<void> => {
+    try {
+      await ordinaryBudgetLease.terminateUnknown(reason);
+    } catch (error) {
+      console.error(
+        `[Gateway Gemini] ordinary budget cleanup failed requestId=${requestCorrelationId} state=${ordinaryBudgetLease.state} reason=${reason} error=${error instanceof Error ? error.message : String(error)}`,
+      );
+    }
+  };
+  const guardrailBudgetMicros = estimateGuardrailBudgetMicros(
+    budgetEstimatePlan,
+    apiKey.chargedCostFactors,
+  );
+  let admission: Awaited<ReturnType<typeof reserveRequestGuardrailBudgets>>;
+  try {
+    admission = await reserveRequestGuardrailBudgets(repos, {
+      requestId: requestCorrelationId,
+      intents: guardrail.budgetIntents,
+      reservedMicros: guardrailBudgetMicros,
+    });
+  } catch (error) {
+    await terminateOrdinaryBudget('guardrail_budget_admission_failed');
+    throw error;
+  }
+  if (!admission.ok) {
+    await terminateOrdinaryBudget('guardrail_budget_admission_failed');
+    if (admission.blocked) {
+      return gatewayErrorJson(c, {
+        status: 403,
+        code: admission.reason === 'gateway_key_limit' || admission.reason === 'workspace_budget' ? GatewayErrorCode.budgetExceeded : GatewayErrorCode.guardrailBlocked,
+        message: admission.message,
+      });
+    }
+    throw new Error(`Guardrail budget admission failed: ${admission.message}`);
+  }
+  let guardrailBudgetReserved = admission.reserved;
+  let guardrailBudgetDispatched = false;
+  let guardrailBudgetForfeited = false;
+  const forfeitGuardrailBudget = async (reason: string): Promise<void> => {
+    if (!guardrailBudgetDispatched || guardrailBudgetForfeited) return;
+    try {
+      await forfeitRequestGuardrailBudgets(
+        repos,
+        requestCorrelationId,
+        guardrailBudgetReserved,
+        reason,
+      );
+      guardrailBudgetForfeited = true;
+    } catch (error) {
+      console.error(
+        `[Gateway Gemini] guardrail budget forfeit failed requestId=${requestCorrelationId} reason=${reason} error=${error instanceof Error ? error.message : String(error)}`,
+      );
+    }
+  };
+  const beforeUpstreamDispatch = async (): Promise<void> => {
+    if (guardrailBudgetReserved && !guardrailBudgetDispatched) {
+      try {
+        await markRequestGuardrailBudgetsDispatched(
+          repos,
+          requestCorrelationId,
+          guardrailBudgetReserved,
+        );
+        guardrailBudgetDispatched = true;
+      } catch (error) {
+        await releaseRequestGuardrailBudgets(
+          repos,
+          requestCorrelationId,
+          guardrailBudgetReserved,
+          'dispatch_transition_failed',
+        ).catch((releaseError: unknown) => {
+          console.error(
+            `[Gateway Gemini] guardrail budget release failed requestId=${requestCorrelationId} error=${releaseError instanceof Error ? releaseError.message : String(releaseError)}`,
+          );
+        });
+        await terminateOrdinaryBudget('guardrail_dispatch_mark_failed');
+        throw error;
+      }
+    }
+    await ordinaryBudgetLease.beforeUpstreamDispatch();
+  };
   const affinityKey = buildAffinityKey(apiKey.userId, baseModelId, effectiveRouteGroup, 'gemini');
   const tierKeyPrefix = buildTierKeyPrefix(baseModelId, effectiveRouteGroup, 'gemini');
   timing.markGatewayComplete();
-  const proxyResult = await proxyGeminiContent(
-    repos,
-    routes,
-    action,
-    body,
-    c.req.url.includes('?') ? c.req.url.slice(c.req.url.indexOf('?')) : '',
-    requestSignal,
-    {
-      affinityKey,
-      tierKeyPrefix,
-      strategy: strategyPlan.base,
-      tierStrategies: strategyPlan.tierOverrides,
-      timing,
-      routePoolId: stickySurface?.route_pool_id ?? routes[0]?.routePoolId ?? null,
-      sticky: stickyConfigFromSurface(stickySurface),
+  let proxyResult: Awaited<ReturnType<typeof proxyGeminiContent>>;
+  try {
+    proxyResult = await proxyGeminiContent(
+      repos,
+      routes,
+      action,
+      upstreamBody,
+      c.req.url.includes('?') ? c.req.url.slice(c.req.url.indexOf('?')) : '',
+      requestSignal,
+      {
+        affinityKey,
+        tierKeyPrefix,
+        strategy: selectedPlan.strategy.base,
+        tierStrategies: selectedPlan.strategy.tierOverrides,
+        timing,
+        routePoolId: selectedPlan.surface?.route_pool_id ?? routes[0]?.routePoolId ?? null,
+        sticky: selectedPlan.hasProviderPreferences ? null : stickyConfigFromSurface(selectedPlan.surface),
+        beforeUpstreamDispatch,
+      }
+    );
+  } catch (error) {
+    await forfeitGuardrailBudget('upstream_dispatch_failed');
+    await terminateOrdinaryBudget('upstream_dispatch_failed');
+    throw error;
+  }
+  if (ordinaryBudgetLease.state === 'reserved') {
+    await terminateOrdinaryBudget('upstream_dispatch_not_started');
+  }
+  if (guardrailBudgetReserved && !guardrailBudgetDispatched) {
+    try {
+      await releaseRequestGuardrailBudgets(
+        repos,
+        requestCorrelationId,
+        guardrailBudgetReserved,
+        'upstream_dispatch_not_started',
+      );
+      guardrailBudgetReserved = false;
+    } catch (error) {
+      console.error(
+        `[Gateway Gemini] guardrail budget pre-dispatch release failed requestId=${requestCorrelationId} error=${error instanceof Error ? error.message : String(error)}`,
+      );
     }
-  );
+  }
   const {
     usagePromise,
     chosenRoute,
@@ -257,7 +386,13 @@ geminiRoutes.post('/models/:modelAction', async (c) => {
   if (stickyMutationPromise) {
     scheduleBackgroundWork(c, stickyMutationPromise);
   }
-  const { response, errorBodyText } = await materializeNonOkResponse(proxyResult.response);
+  let { response, errorBodyText } = await materializeNonOkResponse(proxyResult.response).catch(
+    async (error: unknown) => {
+      await forfeitGuardrailBudget('upstream_response_materialization_failed');
+      await terminateOrdinaryBudget('upstream_response_materialization_failed');
+      throw error;
+    },
+  );
 
   let userModelCircuitEvent = null;
   if (response.ok) {
@@ -281,19 +416,48 @@ geminiRoutes.post('/models/:modelAction', async (c) => {
     ? [...circuitEvents, userModelCircuitEvent]
     : circuitEvents;
 
-  const usageOrSafety = Promise.race([
-    usagePromise.then((u) => ({
-      usage: u,
-      incomplete: !hasUsage(u),
-      timedOut: false as const,
-    })),
-    new Promise<{ usage: typeof EMPTY_USAGE; incomplete: true; timedOut: true }>((resolve) =>
-      setTimeout(
-        () => resolve({ usage: EMPTY_USAGE, incomplete: true, timedOut: true }),
-        USAGE_SAFETY_TIMEOUT_MS
-      )
-    ),
-  ]);
+  const upstreamResponseOk = response.ok;
+  let outputGuardrailBlocked = false;
+  if (guardrail.outputFilters.length > 0 && response.ok) {
+    const filtered = await filterGuardrailResponse(response, guardrail.outputFilters).catch(
+      async (error: unknown) => {
+        await forfeitGuardrailBudget('output_guardrail_failed_after_dispatch');
+        await terminateOrdinaryBudget('output_guardrail_failed_after_dispatch');
+        throw error;
+      },
+    );
+    await auditGuardrailOutputDecision(repos, {
+	  workspaceId: apiKey.workspaceId,
+      userId: apiKey.userId,
+      apiKeyId: apiKey.keyId,
+      modelIds: [pathModelId],
+      trace: guardrail.trace,
+      blockedBy: filtered.blockedBy,
+      redactionCount: filtered.redactionCount,
+      correlationId: requestCorrelationId,
+    }).catch((error: unknown) => {
+      console.warn(
+        `[Gateway Gemini] output guardrail audit failed requestId=${requestCorrelationId} error=${error instanceof Error ? error.message : String(error)}`,
+      );
+    });
+    if (filtered.blockedBy) {
+      outputGuardrailBlocked = true;
+      errorBodyText = 'Guardrail blocked response output';
+      response = gatewayErrorJson(c, {
+        status: 403,
+        code: GatewayErrorCode.guardrailBlocked,
+        message: 'Response blocked by output guardrail',
+      });
+    } else {
+      response = filtered.response;
+    }
+  }
+
+  const usageOrSafety = textUsageWithSafetyTimeout(
+    usagePromise,
+    USAGE_SAFETY_TIMEOUT_MS,
+    EMPTY_USAGE,
+  );
 
   scheduleBackgroundWork(
     c,
@@ -305,6 +469,14 @@ geminiRoutes.post('/models/:modelAction', async (c) => {
           cancelled: Boolean(usageCollected.cancelled),
           responseOk: response.ok,
           incomplete,
+        });
+        const costUnknown = textUsageCostIsUnknown({
+          upstreamResponseOk,
+          usageAvailable: !incomplete,
+          cancelled: Boolean(usageCollected.cancelled),
+          streamError: Boolean(usageCollected.stream_error),
+          upstreamOutcomeUnknown: proxyResult.meta?.upstreamOutcomeUnknown === true,
+          responseBodyTooLarge: proxyResult.meta?.responseBodyTooLarge === true,
         });
         let errorMessage: string | undefined;
         if (status === 'success') {
@@ -324,13 +496,15 @@ geminiRoutes.post('/models/:modelAction', async (c) => {
         } else {
           errorMessage = `HTTP ${response.status}`;
         }
-        const upstreamRequestBodyForLog = geminiUpstreamWireBodyForLog(chosenRoute, body, action);
+        const upstreamRequestBodyForLog = geminiUpstreamWireBodyForLog(chosenRoute, upstreamBody, action);
         const loggedRequestId = resolveGeminiLoggedRequestId({
           headerRequestId: upstreamRequestId,
           bodyRequestId: usageCollected.upstreamBodyRequestId ?? null,
         });
         return recordUsage(repos, {
           api_key_id: apiKey.keyId,
+		  workspace_id: apiKey.workspaceId,
+          request_log_id: requestCorrelationId,
           user_id: apiKey.userId,
           user_email: apiKey.userEmail,
           model_id: baseModelId,
@@ -351,7 +525,9 @@ geminiRoutes.post('/models/:modelAction', async (c) => {
           adapter: chosenRoute.adapter,
           gemini_wire_action: action,
           sticky_trace: stickyTrace ? await stickyTrace() : null,
+          provider_routing_trace: chosenRoute.providerRoutingTrace ?? null,
           usage: usageCollected,
+          endpoint_pricing_snapshot: chosenRoute.endpoint ?? null,
           model_pricing_profile: model.pricing_profile ?? null,
           route_price_override_json: chosenRoute.priceOverrideRaw,
           user_charged_cost_factors_json: apiKey.chargedCostFactors,
@@ -370,10 +546,27 @@ geminiRoutes.post('/models/:modelAction', async (c) => {
           upstream_message_id: usageCollected.upstreamMessageId ?? null,
           circuit_events: alertCircuitEvents.length > 0 ? alertCircuitEvents : undefined,
           suppress_error_alert: suppressErrorAlert || undefined,
+          charge_on_error: outputGuardrailBlocked || undefined,
+          guardrail_budget_settlement: guardrailBudgetReserved
+            ? { requestId: requestCorrelationId, unknownCost: costUnknown }
+            : undefined,
+          ordinary_budget_settlement:
+            ordinaryBudgetLease.reserved && ordinaryBudgetLease.state === 'dispatched'
+              ? {
+                  requestId: requestCorrelationId,
+                  budgetEpoch: ordinaryBudgetLease.budgetEpoch!,
+                  reservedMicros: ordinaryBudgetLease.reservedMicros,
+                  unknownCost: costUnknown,
+                }
+              : undefined,
         });
       })
-      .catch(() => {
-        // ignore recordUsage failure in response path
+      .catch(async (error: unknown) => {
+        console.error(
+          `[Gateway Gemini] recordUsage failed baseModelId=${baseModelId} keyId=${apiKey.keyId} error=${error instanceof Error ? error.message : String(error)}`,
+        );
+        await forfeitGuardrailBudget('request_usage_settlement_failed');
+        await terminateOrdinaryBudget('request_usage_settlement_failed');
       })
   );
 

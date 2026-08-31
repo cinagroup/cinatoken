@@ -1,7 +1,9 @@
 import { normalizeBillingCurrencyCode } from '@octafuse/core/lib/billing-currency';
 import { toPublicModelSlug } from '@octafuse/core/lib/public-model-slug';
 
-const DEFAULT_PUBLIC_API_ORIGIN = 'https://api.cinatoken.com';
+import { fetchPublicGateway } from '@/lib/public-gateway';
+
+export { resolvePublicApiOrigin } from '@/lib/public-gateway';
 const PUBLIC_CATALOG_TIMEOUT_MS = 8_000;
 const PROTOCOLS = new Set(['openai', 'anthropic', 'gemini']);
 
@@ -37,6 +39,9 @@ export type PublicCatalogModel = {
 	inputModalities: string[];
 	outputModalities: string[];
 	releasedAt: string | null;
+	endpointSlugs: string[];
+	regions: string[];
+	dataPolicySummary: { verifiedRouteCount: number; zdrAvailable: boolean; latestVerifiedAt: string | null };
 };
 
 export type PublicCatalogProvider = {
@@ -200,6 +205,15 @@ function parseModel(value: unknown): PublicCatalogModel | null {
 		releasedAt: /^\d{4}-\d{2}-\d{2}$/.test(String(value.released_at ?? ''))
 			? String(value.released_at)
 			: null,
+		endpointSlugs: safeStringArray(value.endpoint_slugs, 64)
+			.filter((slug) => slug.length <= 120 && /^[a-z0-9][a-z0-9._-]{0,63}(?:\/[a-z0-9][a-z0-9._-]{0,63})*$/.test(slug)),
+		regions: safeStringArray(value.regions, 64)
+			.filter((region) => /^[a-z0-9][a-z0-9._-]{0,63}$/.test(region)),
+		dataPolicySummary: isRecord(value.data_policy_summary) ? {
+			verifiedRouteCount: safeNumber(value.data_policy_summary.verified_route_count) ?? 0,
+			zdrAvailable: value.data_policy_summary.zdr_available === true,
+			latestVerifiedAt: safeString(value.data_policy_summary.latest_verified_at, 64),
+		} : { verifiedRouteCount: 0, zdrAvailable: false, latestVerifiedAt: null },
 	};
 }
 
@@ -303,21 +317,9 @@ export function parsePublicModelStatsResponse(value: unknown, fallbackRange: '7d
 	};
 }
 
-export function resolvePublicApiOrigin(raw = process.env.CINATOKEN_PUBLIC_API_ORIGIN): string {
-	try {
-		const url = new URL(raw?.trim() || DEFAULT_PUBLIC_API_ORIGIN);
-		if (!['http:', 'https:'].includes(url.protocol) || url.username || url.password) {
-			return DEFAULT_PUBLIC_API_ORIGIN;
-		}
-		return url.origin;
-	} catch {
-		return DEFAULT_PUBLIC_API_ORIGIN;
-	}
-}
-
 export async function fetchPublicCatalogModels(): Promise<PublicCatalogResult> {
 	try {
-		const response = await fetch(`${resolvePublicApiOrigin()}/catalog/models`, {
+		const response = await fetchPublicGateway('/catalog/models', {
 			headers: { accept: 'application/json' },
 			next: { revalidate: 60 },
 			signal: AbortSignal.timeout(PUBLIC_CATALOG_TIMEOUT_MS),
@@ -335,8 +337,8 @@ export async function fetchPublicCatalogModel(vendor: string, slug: string): Pro
 		return { status: 'not-found', model: null, billingCurrency: 'USD', generatedAt: null };
 	}
 	try {
-		const response = await fetch(
-			`${resolvePublicApiOrigin()}/catalog/models/${encodeURIComponent(vendor)}/${encodeURIComponent(slug)}`,
+		const response = await fetchPublicGateway(
+			`/catalog/models/${encodeURIComponent(vendor)}/${encodeURIComponent(slug)}`,
 			{
 				headers: { accept: 'application/json' },
 				next: { revalidate: 60 },
@@ -356,7 +358,7 @@ export async function fetchPublicCatalogModel(vendor: string, slug: string): Pro
 
 export async function fetchPublicCatalogProviders(): Promise<PublicCatalogProvidersResult> {
 	try {
-		const response = await fetch(`${resolvePublicApiOrigin()}/catalog/providers`, {
+		const response = await fetchPublicGateway('/catalog/providers', {
 			headers: { accept: 'application/json' },
 			next: { revalidate: 60 },
 			signal: AbortSignal.timeout(PUBLIC_CATALOG_TIMEOUT_MS),
@@ -371,7 +373,7 @@ export async function fetchPublicCatalogProviders(): Promise<PublicCatalogProvid
 
 export async function fetchPublicModelStats(range: '7d' | '30d' | '90d' = '7d'): Promise<PublicModelStatsResult> {
 	try {
-		const response = await fetch(`${resolvePublicApiOrigin()}/catalog/stats/models?range=${range}`, {
+		const response = await fetchPublicGateway(`/catalog/stats/models?range=${range}`, {
 			headers: { accept: 'application/json' },
 			next: { revalidate: 60 },
 			signal: AbortSignal.timeout(PUBLIC_CATALOG_TIMEOUT_MS),

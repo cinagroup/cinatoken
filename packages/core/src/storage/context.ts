@@ -10,6 +10,7 @@ import {
 import { createD1Repositories } from './repositories-d1';
 import type { GatewayRepositories } from './repositories-types';
 import type { RuntimeDatabaseConfig } from './runtime-database-config';
+import { isTransientPostgresConnectionError } from './drizzle/client-postgres';
 
 export interface StorageContext {
 	readonly client: GatewayDatabaseClient;
@@ -43,14 +44,23 @@ export async function createWorkerStorageContext(
 	if (config.driver === 'd1') {
 		return createD1StorageContext(config.db);
 	}
-	return createPostgresStorageContext(config.connectionString, {
+	const options: postgres.Options<Record<string, postgres.PostgresType>> = {
 		// Hyperdrive owns the upstream pool. Keeping one postgres.js session per
 		// request/message ensures the explicit search_path initialization applies
 		// to every query instead of only the first pooled connection.
 		max: 1,
 		fetch_types: false,
 		prepare: true,
-	});
+	};
+	try {
+		return await createPostgresStorageContext(config.connectionString, options);
+	} catch (error) {
+		if (!isTransientPostgresConnectionError(error)) throw error;
+		console.warn('Transient Hyperdrive session initialization failed; retrying once', {
+			error: error instanceof Error ? error.message : String(error),
+		});
+		return createPostgresStorageContext(config.connectionString, options);
+	}
 }
 
 export async function createMySqlStorageContext(

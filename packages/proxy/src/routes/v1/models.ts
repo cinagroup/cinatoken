@@ -1,10 +1,12 @@
 /**
  * 用户路由：`GET /v1/models` — OpenAI 兼容列表形态，附带 `model_info`（定价、tags、route_groups 等）。
  * 未传 `route_groups` 时默认仅返回 `default`/`free`，主要为兼容 agent 默认拉列表（FREE/VIP 分组）。
- * 未传 `kind` 时默认仅返回 LLM（排除文生图，如 gpt-image-2）；文生图见 `POST /v1/images/*`。
+ * 未传 `kind` 时默认仅返回 LLM（排除 Embeddings、文生图与 Audio endpoint 模型）。
+ * 可用 `kind=embedding|image|audio|all` 或 `output_modalities` 显式发现其它模型。
  */
 import {
-	isAudioTranscriptionModel,
+	isAudioModel,
+	isEmbeddingModel,
 	isImageGenerationModel,
 	isTextLlmModel,
 	parseModelModalitiesJson,
@@ -17,11 +19,18 @@ import {
 	filterRouteGroupsByAllowlist,
 	parseMetadata,
 	parseModelsKindQuery,
+	parseModelsOutputModalitiesQuery,
 	parseModelsRouteGroupsQuery,
 	parseRouteGroupsJson,
 	parseTags,
 } from '../../lib/model-list-parse';
 import { listPublicModelsWithRoutes } from '../../services/public-models';
+import {
+	groupVerifiedEndpointBindingsByModel,
+	parsePublicModelsRegion,
+	summarizePublicEndpointDiscovery,
+} from '../../services/public-endpoint-discovery';
+import { listVerifiedPublicEndpointBindings } from '../../services/public-model-endpoints';
 
 type ModelsEnv = Env & { Variables: { apiKey: import('../../middleware/auth').ApiKeyContext } };
 
@@ -44,7 +53,7 @@ interface ModelInfoResponse {
 	/** 厂商/品牌；缺省归为 other */
 	vendor: string;
 	tags: string[];
-	/** 来自 active `model_routes` 的去重 route_group（计费通道） */
+	/** 来自当前 verified Endpoint 绑定路由的去重 route_group（计费通道） */
 	route_groups: string[];
 	context_window: number | null;
 	max_tokens: number | null;
@@ -63,6 +72,10 @@ interface ModelInfoResponse {
 	output_modalities: string[] | null;
 	/** Model release date `YYYY-MM-DD`. */
 	released_at: string | null;
+	/** Current verified endpoint selectors available within the discovery scope. */
+	endpoint_slugs: string[];
+	/** Current verified provider locations; not an inference residency guarantee. */
+	regions: string[];
 	metadata?: Record<string, unknown>;
 }
 
@@ -99,9 +112,25 @@ function displayCompatPricesFromProfile(pricingProfile: string | null): {
  */
 modelsRoutes.get('/', async (c) => {
 	const repos = c.get('repositories');
+	const regionResult = parsePublicModelsRegion(c.req.query('region'));
+	if (!regionResult.ok) {
+		return c.json({
+			error: {
+				message: regionResult.message,
+				type: 'invalid_request_error',
+				param: 'region',
+				code: 'invalid_region',
+			},
+		}, 400);
+	}
+	const region = regionResult.value;
 	const models = await listPublicModelsWithRoutes(repos);
+	const endpointBindingsByModel = groupVerifiedEndpointBindingsByModel(
+		await listVerifiedPublicEndpointBindings(repos, models)
+	);
 	const allowedRouteGroups = parseModelsRouteGroupsQuery(c.req.query('route_groups'));
 	const kind = parseModelsKindQuery(c.req.query('kind'));
+	const outputModalities = parseModelsOutputModalitiesQuery(c.req.query('output_modalities'));
 
 	const list: ModelResponse[] = [];
 	for (const m of models) {
@@ -110,27 +139,41 @@ modelsRoutes.get('/', async (c) => {
 			input_modalities: m.input_modalities,
 			pricing_profile: m.pricing_profile,
 		};
-		if (kind === 'llm' && !isTextLlmModel(kindFields)) {
+		if (kind === 'llm' && (!isTextLlmModel(kindFields) || isEmbeddingModel(kindFields))) {
 			continue;
 		}
 		if (kind === 'image' && !isImageGenerationModel(kindFields)) {
 			continue;
 		}
-		if (kind === 'audio' && !isAudioTranscriptionModel(kindFields)) {
+		if (kind === 'audio' && !isAudioModel(kindFields)) {
+			continue;
+		}
+		if (kind === 'embedding' && !isEmbeddingModel(kindFields)) {
+			continue;
+		}
+		const parsedOutputModalities = parseModelModalitiesJson(m.output_modalities) ?? [];
+		if (outputModalities && !outputModalities.some((value) => parsedOutputModalities.includes(value))) {
 			continue;
 		}
 		const { input_price, output_price } = displayCompatPricesFromProfile(m.pricing_profile);
-		const routeGroups = filterRouteGroupsByAllowlist(
+		let routeGroups = filterRouteGroupsByAllowlist(
 			parseRouteGroupsJson(m.route_groups ?? null),
 			allowedRouteGroups
 		);
 		if (routeGroups.length === 0) {
 			continue;
 		}
+		const endpointDiscovery = summarizePublicEndpointDiscovery(endpointBindingsByModel.get(m.id) ?? [], {
+			routeGroups,
+			region,
+		});
+		if (!endpointDiscovery.has_matching_route) continue;
+		routeGroups = filterRouteGroupsByAllowlist(routeGroups, endpointDiscovery.route_groups);
+		if (routeGroups.length === 0) continue;
 		list.push({
 			id: m.id,
 			object: 'model',
-			owned_by: 'octafuse',
+			owned_by: 'cinatoken',
 			model_info: {
 				display_name: m.display_name,
 				vendor: m.vendor,
@@ -143,8 +186,10 @@ modelsRoutes.get('/', async (c) => {
 				output_price,
 				description: m.description,
 				input_modalities: parseModelModalitiesJson(m.input_modalities),
-				output_modalities: parseModelModalitiesJson(m.output_modalities),
+				output_modalities: parsedOutputModalities.length > 0 ? parsedOutputModalities : null,
 				released_at: m.released_at ?? null,
+				endpoint_slugs: endpointDiscovery.endpoint_slugs,
+				regions: endpointDiscovery.regions,
 				metadata: parseMetadata(m.metadata),
 			},
 		});
@@ -153,5 +198,12 @@ modelsRoutes.get('/', async (c) => {
 	return c.json({
 		data: list,
 		object: 'list',
+		...(region ? {
+			region_filter: {
+				region,
+				scope: 'provider_endpoint_location_discovery',
+				inference_data_residency_guaranteed: false,
+			},
+		} : {}),
 	});
 });

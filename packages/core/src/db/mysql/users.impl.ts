@@ -6,8 +6,9 @@ import type { UserRow } from '../../types';
 import { roundGatewayMoney } from '../../lib/money-precision';
 import type { MySqlDatabaseClient } from '../../storage/database-client';
 import type { UsersRepository } from '../../storage/gateway-repository-interfaces';
-import { usersTable as myUsersTable } from '../../storage/drizzle/schema.mysql';
+import { usersTable as myUsersTable, workspacesTable as myWorkspacesTable } from '../../storage/drizzle/schema.mysql';
 import type { InsertUserParams, UserMaxBudgetFilter } from '../users-types';
+import { defaultWorkspaceId } from '../../workspaces';
 import {
 	DEFAULT_USER_LIST_ORDER,
 	DEFAULT_USER_LIST_SORT,
@@ -46,6 +47,8 @@ function mapMyUserRow(r: {
 	budgetSpent: string;
 	budgetPeriod: string;
 	budgetResetAt: string | null;
+	budgetEpoch: number;
+	budgetReservedMicros: number;
 	status: string;
 	metadata: string | null;
 	chargedCostFactors: string | null;
@@ -62,6 +65,8 @@ function mapMyUserRow(r: {
 		budget_spent: parseMoney(r.budgetSpent),
 		budget_period: r.budgetPeriod,
 		budget_reset_at: r.budgetResetAt,
+		budget_epoch: Number(r.budgetEpoch),
+		budget_reserved_micros: Number(r.budgetReservedMicros),
 		status: r.status,
 		metadata: r.metadata,
 		charged_cost_factors: r.chargedCostFactors ?? null,
@@ -141,21 +146,40 @@ export function createMySqlUsersRepository(db: MySqlDatabaseClient): UsersReposi
 			const budgetMax = params.budgetMax != null ? String(roundGatewayMoney(params.budgetMax)) : null;
 			const budgetBase = String(params.budgetBase != null ? roundGatewayMoney(params.budgetBase) : 0);
 			const budgetSpent = String(params.budgetSpent != null ? roundGatewayMoney(params.budgetSpent) : 0);
-			await drizzle.insert(myUsersTable).values({
-				id: params.id,
-				email: params.email,
-				budgetMax,
-				budgetBase,
-				budgetSpent,
-				budgetPeriod: params.budgetPeriod ?? 'none',
-				budgetResetAt: params.budgetResetAt ?? null,
-				status: params.status ?? 'active',
-				metadata: params.metadata ?? null,
-				chargedCostFactors: params.chargedCostFactors ?? null,
-				externalSystem: params.externalSystem ?? null,
-				externalUserId: params.externalUserId ?? null,
-				createdAt: now,
-				updatedAt: now,
+			const workspaceId = defaultWorkspaceId('personal', params.id);
+			await drizzle.transaction(async (tx) => {
+				await tx.insert(myUsersTable).values({
+					id: params.id,
+					email: params.email,
+					budgetMax,
+					budgetBase,
+					budgetSpent,
+					budgetPeriod: params.budgetPeriod ?? 'none',
+					budgetResetAt: params.budgetResetAt ?? null,
+					status: params.status ?? 'active',
+					metadata: params.metadata ?? null,
+					chargedCostFactors: params.chargedCostFactors ?? null,
+					externalSystem: params.externalSystem ?? null,
+					externalUserId: params.externalUserId ?? null,
+					createdAt: now,
+					updatedAt: now,
+				});
+				await tx.insert(myWorkspacesTable).values({
+					id: workspaceId,
+					scopeType: 'personal',
+					organizationId: null,
+					personalOwnerUserId: params.id,
+					name: 'Default',
+					slug: 'default',
+					description: null,
+					isDefault: 1,
+					defaultScopeKey: workspaceId,
+					status: 'active',
+					settingsJson: null,
+					createdByUserId: params.id,
+					createdAt: now,
+					updatedAt: now,
+				});
 			});
 		},
 
@@ -187,6 +211,8 @@ export function createMySqlUsersRepository(db: MySqlDatabaseClient): UsersReposi
 					.set({
 						...baseSet,
 						budgetSpent: String(roundGatewayMoney(budget_spent_override ?? 0)),
+						budgetEpoch: sql`${myUsersTable.budgetEpoch} + 1`,
+						budgetReservedMicros: 0,
 						...(metadata !== undefined ? { metadata } : {}),
 					})
 					.where(eq(myUsersTable.id, id));
@@ -198,6 +224,8 @@ export function createMySqlUsersRepository(db: MySqlDatabaseClient): UsersReposi
 					.set({
 						...baseSet,
 						budgetSpent: '0',
+						budgetEpoch: sql`${myUsersTable.budgetEpoch} + 1`,
+						budgetReservedMicros: 0,
 						...(metadata !== undefined ? { metadata } : {}),
 					})
 					.where(eq(myUsersTable.id, id));

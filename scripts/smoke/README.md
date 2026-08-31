@@ -51,6 +51,37 @@ npx tsx --test scripts/smoke/test-critical-write-paths.ts
 
 可在 Admin 配好路由后，用「不传某字段 / 显式覆盖」做回归。
 
+## 5. 生产公开目录 readiness
+
+`test-public-catalog-readiness.ts` 是无凭据、只读的发布后门禁。它同时验证：
+
+- `GET /health` 返回 `status: "ok"`；
+- `/catalog/models` 与 `/catalog/providers` 达到显式最小数量；
+- OpenRouter 兼容的 `/api/v1/models` 与 `/api/v1/providers` 可匿名读取且达到相同门槛；
+- 至少一个公开模型的 `/api/v1/models/:author/:model/endpoints` 存在 verified Endpoint。
+
+默认检查生产 API，目录为空、兼容路由仍要求 API Key、返回合同异常或 Endpoint 未发布都会以非零退出码失败：
+
+```bash
+npx tsx scripts/smoke/test-public-catalog-readiness.ts
+```
+
+预发布或自定义域名使用环境变量，禁止为了让门禁通过而把最小数量设置为零：
+
+```powershell
+$env:CINATOKEN_PUBLIC_BASE_URL = 'https://api-staging.cinatoken.com'
+$env:CINATOKEN_MIN_PUBLIC_MODELS = '1'
+$env:CINATOKEN_MIN_PUBLIC_PROVIDERS = '1'
+$env:CINATOKEN_READINESS_TIMEOUT_MS = '10000'
+npx tsx scripts/smoke/test-public-catalog-readiness.ts
+```
+
+契约单测不访问网络：
+
+```bash
+npx tsx --test scripts/smoke/test-public-catalog-readiness.test.ts
+```
+
 ## 说明
 
 `test-postgres-core-routes` 名称中的 “postgres” 为历史遗留：脚本对 **任意** `DATABASE_DRIVER` 下的 Node 网关同样适用（见 `test-node-core-routes.ts` 内 `smokeLabel()`）。

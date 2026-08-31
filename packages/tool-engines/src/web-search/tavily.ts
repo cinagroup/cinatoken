@@ -4,6 +4,10 @@
 
 import { clampCount, filterResults, normalizeHost } from './domain-filter';
 import { WebSearchProviderError, type WebSearchParams, type WebSearchResult } from './types';
+import {
+	assertToolProviderOutputWithinLimit,
+	readToolProviderResponseText,
+} from '../http/bounded-response';
 
 type TavilyRawResult = {
 	title?: string;
@@ -60,7 +64,10 @@ export async function searchTavilyWeb(params: WebSearchParams): Promise<WebSearc
 		body: JSON.stringify(body),
 	});
 
-	const text = await response.text();
+	const text = await readToolProviderResponseText(response, {
+		provider: 'tavily',
+		errorConstructor: WebSearchProviderError,
+	});
 	let json: TavilyRawResponse;
 	try {
 		json = JSON.parse(text) as TavilyRawResponse;
@@ -94,5 +101,10 @@ export async function searchTavilyWeb(params: WebSearchParams): Promise<WebSearc
 			};
 		});
 
-	return filterResults(mapped, params.allowedDomains, params.blockedDomains);
+	const results = filterResults(mapped, params.allowedDomains, params.blockedDomains);
+	assertToolProviderOutputWithinLimit(results, {
+		provider: 'tavily',
+		errorConstructor: WebSearchProviderError,
+	});
+	return results;
 }

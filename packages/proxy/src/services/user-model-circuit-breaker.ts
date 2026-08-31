@@ -8,7 +8,9 @@
  */
 import { formatHttpErrorTextForRequestLog } from './request-log-record-status';
 import { isSensitiveContentErrorMessage } from './sensitive-content-detector';
-import { GATEWAY_ERROR_CODE_HEADER, GatewayErrorCode } from './gateway-error-codes';
+import { GatewayErrorCode } from './gateway-error-codes';
+import { gatewayNestedErrorResponse } from './gateway-error-response';
+import type { OpenRouterErrorSkin } from './openrouter-error-protocol';
 
 export const USER_MODEL_CIRCUIT_BREAKER_ENABLED = true;
 
@@ -170,57 +172,63 @@ export function formatSensitiveContentCircuitOpenErrorMessage(info: UserModelCir
 	return formatUserModelCircuitOpenErrorMessage(info);
 }
 
-export function buildSensitiveContentCircuitOpenResponse(info: UserModelCircuitOpenInfo): Response {
+type UserModelCircuitResponseOptions = {
+	skin?: OpenRouterErrorSkin;
+	requestId?: string | null;
+};
+
+export function buildSensitiveContentCircuitOpenResponse(
+	info: UserModelCircuitOpenInfo,
+	options: UserModelCircuitResponseOptions = {},
+): Response {
 	const blockedUntilIso = new Date(info.blockedUntil).toISOString();
 	const code = GatewayErrorCode.circuitSensitiveContent;
-	const body = {
+	return gatewayNestedErrorResponse({
+		status: 429,
+		code,
 		error: {
 			message: `Sensitive content was blocked upstream. Please retry this user/model after ${info.retryAfterSeconds} seconds.`,
 			type: 'sensitive_content_circuit_open',
-			code,
 			retry_after_seconds: info.retryAfterSeconds,
 			blocked_until: blockedUntilIso,
 		},
-	};
-	return new Response(JSON.stringify(body), {
-		status: 429,
-		headers: {
-			'Content-Type': 'application/json',
-			'Retry-After': String(info.retryAfterSeconds),
-			[GATEWAY_ERROR_CODE_HEADER]: code,
-		},
+		headers: { 'Retry-After': String(info.retryAfterSeconds) },
+		skin: options.skin,
+		requestId: options.requestId,
 	});
 }
 
-export function buildClientErrorCircuitOpenResponse(info: UserModelCircuitOpenInfo): Response {
+export function buildClientErrorCircuitOpenResponse(
+	info: UserModelCircuitOpenInfo,
+	options: UserModelCircuitResponseOptions = {},
+): Response {
 	const blockedUntilIso = new Date(info.blockedUntil).toISOString();
 	const code = GatewayErrorCode.circuitClientError;
 	const replay =
 		info.lastErrorMessage?.trim() ||
 		`Upstream rejected this request (client error). Circuit open until ${blockedUntilIso}.`;
-	const body = {
+	return gatewayNestedErrorResponse({
+		status: 400,
+		code,
 		error: {
 			message: replay,
 			type: 'upstream_client_error_circuit_open',
-			code,
 			retry_after_seconds: info.retryAfterSeconds,
 			blocked_until: blockedUntilIso,
 		},
-	};
-	return new Response(JSON.stringify(body), {
-		status: 400,
-		headers: {
-			'Content-Type': 'application/json',
-			[GATEWAY_ERROR_CODE_HEADER]: code,
-		},
+		skin: options.skin,
+		requestId: options.requestId,
 	});
 }
 
-export function buildUserModelCircuitOpenResponse(info: UserModelCircuitOpenInfo): Response {
+export function buildUserModelCircuitOpenResponse(
+	info: UserModelCircuitOpenInfo,
+	options: UserModelCircuitResponseOptions = {},
+): Response {
 	if (info.reason === 'sensitive_content') {
-		return buildSensitiveContentCircuitOpenResponse(info);
+		return buildSensitiveContentCircuitOpenResponse(info, options);
 	}
-	return buildClientErrorCircuitOpenResponse(info);
+	return buildClientErrorCircuitOpenResponse(info, options);
 }
 
 /** 测试用：清空熔断状态。 */

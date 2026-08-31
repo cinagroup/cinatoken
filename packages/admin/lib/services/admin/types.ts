@@ -173,6 +173,7 @@ export type AdminModelRouteMutationInput = {
 	/** JSON string or object; canonical `charged_factor` / `metered_factor` / optional `schedule`; nested `metered`/`charged` tiers stripped on write. Normalized by `coerceRoutePriceOverrideInput`. */
 	price_override?: unknown;
 	custom_params?: unknown;
+	routing_metadata?: unknown;
 	upstream_protocol?: unknown;
 	/** Public Gateway protocol used to enter this route pool. Defaults to upstream_protocol. */
 	request_protocol?: unknown;
@@ -293,6 +294,7 @@ export type AdminKeyListItem = {
 	id: string;
 	key: string;
 	user_id: string;
+	workspace_id: string;
 	name: string | null;
 	user_email: string | null;
 	budget_max: number | null;
@@ -319,6 +321,7 @@ export type AdminKeyCreateOutput = {
 	key: string;
 	key_id: string;
 	user_id: string;
+	workspace_id: string;
 };
 
 export type AdminKeyLogsOutput = {
@@ -352,6 +355,7 @@ export type AdminKeyUpdateOutput =
 			id: string;
 			key_id: string;
 			user_id: string;
+			workspace_id: string;
 			name: string | null;
 			user_email: string | null;
 			budget_max: number | null;
@@ -366,6 +370,7 @@ export type AdminKeyDetailOutput = {
 	id: string;
 	key: string;
 	user_id: string;
+	workspace_id: string;
 	name: string | null;
 	user_email: string | null;
 	budget_max: number | null;

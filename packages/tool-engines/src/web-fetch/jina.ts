@@ -3,6 +3,10 @@
  */
 
 import { WebFetchProviderError, type WebFetchParams, type WebFetchResult } from './types';
+import {
+	assertToolProviderOutputWithinLimit,
+	readToolProviderResponseText,
+} from '../http/bounded-response';
 
 type JinaRawResponse = {
 	data?: {
@@ -41,7 +45,10 @@ export async function fetchJinaUrl(params: WebFetchParams): Promise<WebFetchResu
 		body: JSON.stringify({ url: params.url }),
 	});
 
-	const text = await response.text();
+	const text = await readToolProviderResponseText(response, {
+		provider: 'jina',
+		errorConstructor: WebFetchProviderError,
+	});
 	let json: JinaRawResponse;
 	try {
 		json = JSON.parse(text) as JinaRawResponse;
@@ -74,5 +81,10 @@ export async function fetchJinaUrl(params: WebFetchParams): Promise<WebFetchResu
 	const title = typeof data.title === 'string' && data.title.trim() ? data.title.trim() : undefined;
 	const finalUrl = typeof data.url === 'string' && data.url.trim() ? data.url.trim() : params.url;
 
-	return { title, url: finalUrl, content };
+	const result = { title, url: finalUrl, content };
+	assertToolProviderOutputWithinLimit(result, {
+		provider: 'jina',
+		errorConstructor: WebFetchProviderError,
+	});
+	return result;
 }

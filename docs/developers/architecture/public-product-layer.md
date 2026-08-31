@@ -54,18 +54,22 @@ Web 同源边界还提供两个只供页面使用的 BFF 路由：
 - `GET /api/public/stats` 转发并再次解析公开统计响应，避免浏览器跨源访问；只接受 `7d`、`30d`、`90d`。
 - `POST /api/public/chat` 只接受 OpenAI 兼容的 `model` 与文本 `messages`，强制非流式调用并转发请求头中的 Gateway Key。密钥仅存在于当前 React 页面内存和单次请求中，不写入 cookie、localStorage、日志或服务端存储。
 
+Cloudflare 部署中，Admin Worker 通过 `CINATOKEN_PROXY_SERVICE` Service Binding 读取目录并转发 Chat，避免同账户 Worker 重新经过公网自定义域名、WAF 或 Access 策略。Node/Docker 与本地开发仍回退到 `CINATOKEN_PUBLIC_API_ORIGIN`。Service Binding 名称由 `PROXY_WORKER_NAME` 同步生成，不得在租户配置中写死。
+
 公开目录接口必须满足：
 
 - 无认证读取，响应不得包含秘密或内部路由目标。
 - 列表支持稳定排序；新增过滤参数时保持旧客户端兼容。
 - 服务端响应允许短 TTL 缓存；用户私有数据和管理员数据使用 `private, no-store`。
 - 空数据返回合法空集合，不使用硬编码演示数据补齐页面。
+- 页面必须区分“网关不可用”“网关正常但尚未发布模型”“筛选后无匹配结果”三种状态，避免把首发配置缺失误报成系统故障。
 - 公开聚合必须定义时间窗、样本阈值和失败样本口径。
 - 公开模型统计只允许读取最近 90 天的 `public_model_daily_stats`。该表按 UTC 日期、模型和 16 个稳定分片累计请求数、成功/失败数、输出 token 与延迟样本；D1、PostgreSQL、MySQL 迁移会一次性回填最近 90 天。
 - `GET /catalog/stats/models` 使用只包含规范化 `range` 的 Cache API 键；缓存未命中时才调用 `PUBLIC_STATS_RATE_LIMITER`。限流拒绝返回 `429`，限流绑定故障返回 `503`，两者都不得查询数据库或写入缓存。
 - Node/Docker 运行时使用进程内、最多三个规范化 range 键的 60 秒缓存、固定窗口限流和 single-flight；并发冷请求只产生一次统计加载。多副本部署仍应在入口层增加共享限流。
 - `/rankings` 与 `/benchmarks` 展示的是 cinatoken 网关观测到的运营指标，不是模型智能、知识或基准测试分数。
-- Chat BFF 的请求体上限为 128 KiB，最多 50 条消息、合计最多 100,000 个字符；上游响应使用 `no-store`。
+- Chat BFF 的请求体上限为 12 MiB，最多 50 条消息、合计最多 100,000 个文字字符；图片仅接受 PNG/JPEG/WebP/GIF Data URL，单张最多 4 MiB、单次会话最多 4 张且合计最多 8 MiB。上游 SSE 使用 `no-store, no-transform` 并直接透传响应流，不在 Admin Worker 中整包缓冲。
+- `/chat` 的浏览器本地会话默认关闭；启用后只保存文字记录和模型 ID，API Key 始终仅在页面内存中，图片字节也不进入 Local Storage。模型回复通过不启用原始 HTML 的 GFM Markdown 渲染，并禁止模型 Markdown 触发远程图片加载。
 
 ## 5. 访问控制与路由规则
 

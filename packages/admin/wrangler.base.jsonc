@@ -51,6 +51,10 @@
 		{
 			"binding": "CINAAUTH_AUTH_SERVICE",
 			"service": "cinaauth-api"
+		},
+		{
+			"binding": "CINATOKEN_PROXY_SERVICE",
+			"service": "cinatoken-proxy"
 		}
 	],
 	"secrets": {
@@ -58,6 +62,7 @@
 			"CINATOKEN_OIDC_CLIENT_SECRET",
 			"CINATOKEN_OIDC_BRIDGE_SECRET",
 			"CINATOKEN_OIDC_TRANSACTION_SECRET",
+			"CINATOKEN_IDENTITY_EVENTS_SECRET",
 			"SHARED_KEY_ENCRYPTION_SECRET"
 		]
 	},

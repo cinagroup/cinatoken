@@ -184,7 +184,7 @@ Authorization: Bearer sk-admin-<64 hex characters>
 
 ### `PATCH /admin/users/:id/keys/:keyId` / `DELETE ...`
 
-与全局 **`PATCH/DELETE /admin/keys/:id`** 语义一致，但限定密钥属于该用户。
+与全局 **`PATCH/DELETE /admin/keys/:id`** 语义一致，但限定密钥属于该用户。`DELETE` 会吊销 Key 并保留审计墓碑，不物理删除行。
 
 ### `GET /admin/users/:id/logs`
 
@@ -470,7 +470,7 @@ curl http://localhost:8789/api/admin/keys/uuid-here \
 
 ## 删除 Key
 
-从数据库物理删除该 **`api_keys`** 行。`user_audit_logs.api_key_id` 外键为 **`ON DELETE SET NULL`**（审计行保留，密钥引用清空）。`api_key_request_logs` 仍可能保留 `api_key_id` 引用（无 FK 或 `SET NULL`，依迁移）。吊销请优先使用 `PATCH` 将 `status` 设为 `revoked`。
+吊销该 **`api_keys`** 并保留行为审计所需的墓碑行。同步物理删除会与已经通过认证、但尚未完成请求日志/预算结算的在途请求竞争，因此公开管理 API 不提供物理删除；离线数据保留流程必须先证明没有在途请求。
 
 ### 请求
 
@@ -574,7 +574,7 @@ GET /admin/keys/:id/logs?page=1&page_size=20&exclude_status=incomplete
 }
 ```
 
-> 注：LLM、Audio token 与 Image token 模式按 `models.pricing_profile.tiers` 选档；Image `per_image`、Audio `per_second` 与 Agent Tool `fixed_tool_cost` 使用各自计费基数。模型请求中，`metered_cost` / 路由侧 `charged_cost` = 目录价 × 有效倍率（无 `schedule.mode` 时叠乘；`override` 时窗内用窗口 factor），`standard_cost` = 目录价（不乘路由倍率）；若 `users.charged_cost_factors` 含该目录模型 ID，再对路由用户计费乘一次该倍率并六位四舍五入（只改最终 `charged_cost` 与预算累加）。**Tools** 在 catalog 直接配置三账本绝对单价（`metered` / `standard` / `charged`，无 Route factor/schedule，也不应用用户计费倍率），成功后分别写入三列，仅 `charged_cost` 累加预算。嵌套 `metered`/`charged` tiers **不计价**。**`pricing_audit`** 新写入为 **v4**（模型见 `packages/core/src/db/pricing-audit.ts`；Tools 为 `kind=fixed_tool_cost` + `unit_prices` / `totals`；v4 模型审计可带 `user_charged_factor`，未命中为 `null`）。**`request_protocol`** 为客户端调用的 Gateway 入口协议；**`upstream_protocol`** 为本次请求所选路由的 `model_routes.upstream_protocol` 快照。历史字段 `total_cost` 与 **`billing_factor`** 列已移除。列表接口返回列为 `api_key_request_logs` 全字段（与 `packages/core/src/types.ts` 中 `RequestLogRow` 一致）。
+> 注：路由模型请求的准入、预算上限和最终结算以 Route 绑定的 chosen verified **Model Endpoint** 价目为标准价事实源；`models.pricing_profile` 只保留作目录、静态 preset 和历史 UI 兼容，不能替代 Endpoint。文本/Embedding 与已支持的 Image 按张/参考图、Audio 时长/Unicode 字符计量均遵循这一规则；尚未支持的 Image/Audio meter 在 dispatch 前 fail closed。`metered_cost` / 路由侧 `charged_cost` 在 Endpoint 标准价上应用有效 Route 倍率，Endpoint discount 只进入用户扣费基数；用户模型倍率只再次作用于最终 `charged_cost`。**Tools** 仍在 catalog 直接配置三账本绝对单价。**`request_protocol`** 是客户端入口，**`upstream_protocol` / `upstream_operation`** 是所选 Route 快照，Audio adapter 必须按实际上游 operation 取价。历史字段 `total_cost` 与 **`billing_factor`** 列已移除。
 
 ### 示例
 
@@ -610,6 +610,7 @@ curl "http://localhost:8789/api/admin/keys/uuid-here/logs?page=1&page_size=10" \
     "endpoints": {
       "chat": "https://api.example.com/v1/chat/completions",
       "responses": "https://api.example.com/v1/responses",
+      "embeddings": "https://api.example.com/v1/embeddings",
       "images.generations": "https://api.example.com/v1/images/generations",
       "images.edits": "https://api.example.com/v1/images/edits",
       "audio.transcriptions": "https://api.example.com/v1/audio/transcriptions"
@@ -638,9 +639,11 @@ curl "http://localhost:8789/api/admin/keys/uuid-here/logs?page=1&page_size=10" \
   - **`priority`**：层（Proxy 按 **DESC** 硬序）。
   - **`weight`**：同层权重，整数 **≥ 1**（默认 1）；非法 → **400**。
   - **`POST`** 省略或空白 **`route_group`** → **`default`**；**`PATCH`** 若含 `route_group` 则不得为仅空白（否则 **400**）。
-  - **`request_protocol` / `request_operation`**：公开请求入口，例如 `openai` + `chat` / `responses`；省略 operation 使用兼容值 `*`。
+  - **`request_protocol` / `request_operation`**：公开请求入口，例如 `openai` + `chat` / `responses` / `embeddings`；省略 operation 使用兼容值 `*`。
   - **`upstream_protocol` / `upstream_operation`**：Target 实际调用的协议 / capability；省略 operation 时跟随请求 operation。
   - **`adapter`**：同协议、同 operation 使用 `passthrough`；OpenAI ASR / TTS 转 DashScope 使用白名单中的显式 adapter。未声明的跨协议或 operation 组合返回 **400**，见 [DashScope 音频架构](../architecture/dashscope-audio.md)。
+  - **`routing_metadata`**：仅描述该具体 Route Target 可公开用于选择的能力，不参与上游请求。JSON 形状为 `{ "supported_parameters": ["tools", "response_format"], "quantization": "fp8", "endpoint_slug": "provider/turbo", "endpoint_class": "standard", "region": "us", "context_length": 128000, "max_prompt_tokens": 120000, "max_completion_tokens": 16384 }`；参数名、量化值、公开 endpoint slug、端点分类、地域与三个容量值会被严格规范化，未知字段或非法值返回 **400**。容量值只能是正安全整数或 `null`，且必须来自该具体 endpoint 的可核验规格；不得从模型目录值或 `custom_params` 猜测。Chat 的 `max_tokens` / `max_completion_tokens`、Responses 的 `max_output_tokens`、Messages 的 `max_tokens` 会在首次上游调用前按 `max_completion_tokens` 过滤，未知或不足均 fail closed。`endpoint_slug` 最长 120 字符，只允许字母、数字、点、下划线、连字符和 slash 分段，保存后会小写化；它会出现在公开目录中，禁止填入内部 ID、URL 或秘密。slash 变体必须显式设置 `endpoint_class` 为 `standard` 或 `service_tier`，不得根据后缀猜测；`service_tier` 与未分类历史变体默认均不参与路由，只有请求在 `provider.order` / `provider.only` 中给出完整 slug 才会放行，基础 slug 与普通 fallback 都不会包含它。`region` 只是管理员声明的供应端点位置发现标签，不是推理数据驻留保证。Proxy 以 fail-closed 方式读取，损坏或缺失元数据不会被推断为支持。
+  - **`custom_params`**：仍是发送给上游的请求默认参数；不得用它承载路由能力、数据策略或凭据。`routing_metadata` 与 `custom_params` 的信任和出站边界必须保持分离。
   - **`GET` 响应**：除 Target 字段外包含 `route_pool_id` 与 `surfaces`（JSON 数组字符串），用于还原 Surface → Pool → Target 拓扑。
 - **`PATCH /admin/routes/pools/:poolId`**：设置当前 Pool 的策略与按层覆盖。body 示例：
 
@@ -665,6 +668,42 @@ curl "http://localhost:8789/api/admin/keys/uuid-here/logs?page=1&page_size=10" \
   - **`POST .../sticky/reset`**：仅 bump `sticky_epoch`，返回 `{ sticky_epoch }`。历史行不立即删除，随 GC / 覆盖消失。
 
 完整拓扑与 operation 白名单见 [route-topology.md](../architecture/route-topology.md)。
+
+### Model Endpoints（`/admin/endpoints`）
+
+Endpoint 是 Route 可调用能力、价格和公开发现的权威证据，不等同于 Provider 出站 URL，也不能由 `models.pricing_profile`、Route `price_override` 或 `routing_metadata` 推断。
+
+| 方法 | 路径 | 说明 |
+|------|------|------|
+| GET / POST | `/admin/endpoints` | 列表（可按 `model_id`、`provider_id`、`status` 筛选）/创建 draft |
+| GET / PATCH / DELETE | `/admin/endpoints/:id` | 详情、部分更新、删除；修改价格/能力/证据会把已核验记录自动降级为 draft |
+| POST / DELETE | `/admin/endpoints/:id/routes/:routeTargetId` | 绑定/解绑具体 Route Target；模型与 Provider 必须一致 |
+
+发布顺序固定为：创建 draft → 绑定 Route → 填写公开 HTTPS 证据和未来到期时间 → `PATCH { "status": "verified" }`。核验时会逐绑定检查 exact operation、Provider 出站能力和 Route+Provider subject fingerprint；缺失、漂移、过期或 operation 不匹配均 fail closed。
+
+`audio_capabilities` 使用严格的 operation-scoped v1 JSON。旧 Endpoint 迁移后为 `{}`/unknown，不会从 legacy audio 价格猜测回填。例如按秒转写：
+
+```json
+{
+  "v": 1,
+  "pricing_by_operation": {
+    "audio.transcriptions": {
+      "currency": "USD",
+      "meter": {
+        "kind": "duration",
+        "unit": "second",
+        "price": "0.0001",
+        "minimum_units": 1,
+        "increment_units": 0.25
+      },
+      "request": "0",
+      "discount": 0
+    }
+  }
+}
+```
+
+TTS 使用 `characters` + `unicode_code_point`；token meter 必须声明五个价格分项和 `require_authoritative_breakdown: true`，但数据面在尚无权威分项 usage 时会在 dispatch 前安全拒绝。Realtime TTS session 不是独立推理计费 operation，不得把 session 创建费冒充会话内 inference 费用。
 
 ### `models.route_policy`（`PATCH /admin/models/:id`）
 
@@ -693,6 +732,23 @@ curl "http://localhost:8789/api/admin/keys/uuid-here/logs?page=1&page_size=10" \
 - **请求体**：`{ "ids": ["glm-5", "gpt-5.2", ...] }`（**必填**；`ids` 须为非空字符串数组；重复 id 会去重；顺序保留）。
 - **行为**：仅处理 `ids` 中在静态目录存在的 id；根据当前 **`BILLING_CURRENCY`**（`USD` → `usd` 分支，`CNY` → `cny` 分支；库内为其他历史值时按 **`USD`** 分支取价）写入 `models.pricing_profile`；**已存在同 `id` 的不导入、不覆盖**，该 id 记入 **`skipped_existing`**；否则 **INSERT** 新建并写入 `model_tags`。未知 id 或校验失败记入 **`failed`**，其余仍处理。
 - **响应** `data`：`{ "billing_currency_used", "created", "updated"（恒为 0）, "skipped_existing": string[], "failed": [{ "id", "message" }] }`。
+
+### 运维验收：Embedding 模型
+
+Embedding 与 LLM 共用 Models + Routes，不新增独立管理页；数据面提供 `POST /v1/embeddings` 和 `GET /v1/embeddings/models`。
+
+1. **Provider**：配置 OpenAI 或兼容 Provider Key。`endpoints.openai.base`（例如 `https://api.openai.com/v1`）可自动派生 `/embeddings`；非标准地址可显式填写 `endpoints.openai.endpoints.embeddings`。
+2. **Model**：创建或编辑模型，将 `output_modalities` 设为 `["embeddings"]`，填写真实 `context_window`；`pricing_profile.tiers[].input_price` 使用每百万输入 token 单价，`output_price` 设为 0。
+3. **Route**：创建 `request_protocol=openai`、`request_operation=embeddings`、`upstream_protocol=openai`、`upstream_operation=embeddings` 的活动路由；`provider_model_name` 填真实上游模型 ID。
+4. **Discovery**：用户 Key 调用 `GET /v1/embeddings/models` 应出现该模型；普通 `GET /v1/models` 默认不出现，使用 `kind=embedding` 或 `output_modalities=embeddings` 查询。
+5. **调用与审计**：调用 `POST /v1/embeddings` 后，在 Request Logs 核对 `request_operation=embeddings`、输入 token、`charged_cost` 和选中的 Route Target。日志不会保存原始 input、user 或 embedding 数组。
+
+```bash
+curl -sS "$GATEWAY_URL/v1/embeddings" \
+  -H "Authorization: Bearer $USER_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{"model":"text-embedding-3-small","input":"production smoke test"}'
+```
 
 ### 运维验收：文生图模型 `gpt-image-2`
 
@@ -764,18 +820,18 @@ curl -sS "$GATEWAY_URL/v1/images/generations" \
   -d '{"model":"doubao-seedream-5-0","prompt":"海边灯塔水彩封面","size":"2K","n":1,"watermark":false}'
 ```
 
-### `pricing_profile` / `price_override` 契约（`/admin/models`、`/admin/routes`）
+### Legacy `pricing_profile` / Endpoint / `price_override` 契约
 
-- **模型目录价**：`models.pricing_profile`（TEXT JSON）。
+- **模型目录兼容价**：`models.pricing_profile`（TEXT JSON）仍供 catalog、静态 preset、kind 推断和旧 UI 展示；路由推理的运行时价目必须配置在 `/admin/endpoints`，并完成 Route 绑定与 verified 核验。
   - **Token（LLM）**：canonical `{ "tiers": [...] }`。非末档 `upto` 为有限数字 **≥ 0**；**末档 `upto` 为 JSON `null`**（开放上界）。LLM 选档 basis 为上游 **`input_tokens`**（`packages/core/src/db/pricing-profile.ts`）。
   - **Image 双模式**（显式 `image_billing_mode`；Admin 保存禁止混配）：
-    - **`token`**：`{ "image_billing_mode": "token", "tiers": [ { image_* $/1M ... } ] }`。扣费权威 = 上游 `usage`；`pricing_audit.kind=image_tokens`。缺省无 mode 且 tier 含正 `image_*` 时运行时推断为 `token`。
-    - **`per_image`**：`{ "image_billing_mode": "per_image", "image": { "default", "input"?, "uncertain_result_policy"? } }`（**无 `tiers`**；写入时会剥离历史占位零档）。扣费权威 = 确认输出张数 × `image.default`（+ 可选参考图 `image.input`）；`pricing_audit.kind=image_per_image`。日志列 `billing_kind` / `input_image_count` / `output_image_count`。
-    - 无 mode 且仅有 legacy `image` 块：**不计费**（避免旧数据突然扣款）；须显式设 `per_image` 或跑迁移脚本。
+    - **`token`**：`{ "image_billing_mode": "token", "tiers": [ { image_* $/1M ... } ] }`；仅作 legacy 目录描述。Endpoint token meter 当前数据面不支持，会在 dispatch 前 fail closed。
+    - **`per_image`**：`{ "image_billing_mode": "per_image", "image": { "default", "input"?, "uncertain_result_policy"? } }`（**无 `tiers`**）；对应运行时安全子集必须另在 Endpoint `image_capabilities.pricing` 声明。日志列仍使用 `billing_kind` / `input_image_count` / `output_image_count`。
+    - 无 mode 且仅有 legacy `image` 块不会成为 Endpoint 证据；不得据此自动扣费或自动回填。
     - `gpt-image-2` / Gemini：token 预设；Seedream / GLM / Grok：per_image 预设（见 [image-models.md](../reference/image-models.md)）。
   - **Audio 双模式**（显式 `audio_billing_mode`；Admin 保存禁止与 Image 计费字段混配）：
-    - **`per_second`**：`{ "audio_billing_mode": "per_second", "audio": { "price_per_second", "minimum_seconds"? } }`（**无 `tiers`**）。扣费权威 = 计费秒数 × `price_per_second`；`pricing_audit.kind=audio_per_second`。日志列 `billing_kind=audio_per_second`、`audio_duration_seconds`。
-    - **`token`**：`{ "audio_billing_mode": "token", "tiers": [ { "input_price", "output_price", "upto": null } ] }`（$/1M）。扣费权威 = 上游 transcription `usage`（`type=tokens`）；`pricing_audit.kind=audio_tokens`。日志列 `billing_kind=audio_tokens`，并写入 input/output token。
+    - **`per_second`**：legacy `{ "audio_billing_mode": "per_second", "audio": { "price_per_second", "minimum_seconds"? } }` 只作目录描述；运行时须在 Endpoint `audio_capabilities.pricing_by_operation` 为 exact operation 声明 `duration` / `second` meter。
+    - **`token`**：legacy `{ "audio_billing_mode": "token", "tiers": [...] }` 只作目录描述；Endpoint token meter 虽可声明五维价格，但当前数据面尚无权威分项 breakdown，因而 dispatch 前 fail closed。
     - 预设：`whisper-1` → `per_second`；`gpt-4o-mini-transcribe` / `gpt-4o-transcribe` / `gpt-4o-transcribe-diarize` → `token`（见 [user.md「语音转写」](user.md#语音转写audio-transcriptions)）。
   - Request log：迁移 **`0013_request_log_image_billing`** 增加 `billing_kind`、`input_image_count`、`output_image_count`；**`0014_request_log_audio_billing`** 增加 `audio_duration_seconds`。
 - **模型 Kind（Admin UI，无独立 DB 列）**：
@@ -784,7 +840,7 @@ curl -sS "$GATEWAY_URL/v1/images/generations" \
   - **LLM**：其余；仅当 `output_modalities` 缺失时，才用历史 `pricing_profile.image` 兜底判定。
   - Models / Routes UI 侧栏 Kind 为 **`llm` | `image` | `audio`（无 All）**，URL `?kind=` 与 `?vendor=` 组合；默认 `llm`。Image 卡片按 mode 展示 `/M` 或 `/image`；Audio 卡片按 mode 展示 `/s` 或 token in/out。
   - 文生图与语音转写**不使用**聊天字段 `context_window` / `max_tokens`（多数预设与保存为 `null`；Admin 卡片/表单隐藏这两项；部分 ASR token 预设可带 context/max 供上游约束）。LLM 的 `max_tokens` 缺省仍为 8192。迁移 **`0010_models_max_tokens_nullable`** 允许 `max_tokens` 为 NULL。
-- **路由计价（canonical）**：`model_routes.price_override` 只维护倍率（不复制计费模式或基础单价），**不再**要求 nested `metered` / `charged` tiers：
+- **路由计价（canonical）**：`model_routes.price_override` 只维护相对 Endpoint 标准价的倍率（不复制计费模式或基础单价），**不再**要求 nested `metered` / `charged` tiers：
 
 ```json
 {
@@ -804,12 +860,12 @@ curl -sS "$GATEWAY_URL/v1/images/generations" \
 }
 ```
 
-  - `charged_factor` / `metered_factor`：相对目录价的默认倍率（缺省 `1`；`metered_factor` 缺失时可回退读历史 `provider_factor`）；未命中分时时段时使用。
+  - `charged_factor` / `metered_factor`：相对 Endpoint 标准价的默认倍率（缺省 `1`；`metered_factor` 缺失时可回退读历史 `provider_factor`）；未命中分时时段时使用。
   - `schedule`（可选）：分时窗口，时区为 `system_config.BUSINESS_TIMEZONE`；半开区间 `[start, end)`，仅 `end` 可为 `24:00`；允许跨午夜。可选 `days` 为 ISO 星期数组（`1`=周一 … `7`=周日）；省略表示每天。跨午夜时 `days` 锚定窗口**开始日**（例如周五 `22:00–06:00` 覆盖周五 22:00 至周六 06:00）。窗口在请求进入 Gateway 时锁定，长流式请求跨越边界不会切换倍率。同侧窗口在一周循环上禁止重叠。
   - `schedule.mode`：
-    - **缺省或 `"multiply"`**（存量）：`charged_cost` = 目录价 × `charged_factor` × 命中窗 `factor`（未命中窗按 `1`）；`metered_cost` 同理。
+    - **缺省或 `"multiply"`**（存量）：`charged_cost` = Endpoint 用户扣费基数 × `charged_factor` × 命中窗 `factor`（未命中窗按 `1`）；`metered_cost` 以 Endpoint 标准价同理。
     - **`"override"`**（Admin UI 新写入）：命中窗时窗口 `factor` 就是对标准价的倍率；未命中用上方默认 `charged_factor` / `metered_factor`。两侧共享同一套 start/end（及可选 `days`），各写自己的 `factor`。
-  - `standard_cost` 仅为目录价。嵌套 `metered`/`charged` tiers **写入时剥离、运行时忽略**。`pricing_audit.schedule.evaluated_at_utc` 记录本次选窗使用的请求开始时刻，并带 `local_weekday`（1–7）。非法 `mode` 或非法 `days` 在 Admin API 写入时拒绝。
+  - `standard_cost` 为 chosen Endpoint 标准价结果。嵌套 `metered`/`charged` tiers **写入时剥离、运行时忽略**。`pricing_audit.schedule.evaluated_at_utc` 记录本次选窗使用的请求开始时刻，并带 `local_weekday`（1–7）。非法 `mode` 或非法 `days` 在 Admin API 写入时拒绝。
 - **公开列表**：`GET /v1/models` 返回完整 `pricing_profile` 字符串；`model_info.input_price` / `output_price` 为 **兼容展示**：取各档中 **最低 `input_price`** 所在档的 in/out。详见 [user.md「获取模型列表」](user.md)。
 
 #### Gateway Admin UI — Model Routes「Billing & Cost」
@@ -818,7 +874,7 @@ curl -sS "$GATEWAY_URL/v1/images/generations" \
 
 | 区块 | 含义 | 数据来源 |
 |------|------|----------|
-| **Standard price** | 目录标准价（只读） | `models.pricing_profile`（LLM/Image token/Audio token 的 tiers，或 Image per_image / Audio per_second 的单价块） |
+| **Standard price** | Legacy 目录价展示（只读；不能证明 Route 可计费） | `models.pricing_profile`；运行时标准价请在 `/admin/endpoints` 查看和维护 |
 | **Charged factor** | 用户侧默认倍率（窗外） | `price_override.charged_factor` |
 | **Metered factor** | 供应侧默认倍率（窗外） | `price_override.metered_factor` |
 | **Schedule** | 共享 start/end 与可选星期，每行 Charged / Metered 倍率（覆盖默认） | `price_override.schedule`（`mode: "override"`） |
@@ -989,3 +1045,38 @@ Admin UI 登录后由 `BusinessTimezoneProvider` 调用，用于时间列展示�
 | `start_date` / `end_date` | 同上 |
 
 响应 `data`：`providers`（按 `provider_id`）、`modelProviders`（按 `model_id` + `provider_id`）、`recentErrors`。
+
+## Preset 治理
+
+Preset 管理端使用独立权限 `presets.read` / `presets.write`：
+
+| 方法与路径 | 权限 | 说明 |
+| --- | --- | --- |
+| `GET /admin/presets` | `presets.read` | 列出全部用户的活动与归档 Preset，返回指定版本配置，不返回请求正文 |
+| `GET /admin/presets/:id/versions` | `presets.read` | 按版本号倒序列出不可变历史版本 |
+| `PATCH /admin/presets/:id` | `presets.write` | 修改名称、说明、`private | public` 可见性或 `active | archived` 状态 |
+| `POST /admin/presets/:id/designate` | `presets.write` | 将已存在的历史版本指定为当前版本 |
+
+管理员不能借此修改历史版本内容；新内容必须由所有者创建新版本。控制台页面为 `/admin/presets`。
+
+## Guardrail 与数据策略治理
+
+Guardrail 使用独立权限 `guardrails.read` / `guardrails.write`：
+
+| 方法与路径 | 权限 | 说明 |
+| --- | --- | --- |
+| `GET /admin/guardrails`、`GET /admin/guardrails/:id/versions` | `guardrails.read` | 查看全部策略及不可变版本 |
+| `GET /admin/guardrails/:id/assignments` | `guardrails.read` | 查看用户/API Key 绑定 |
+| `PUT /admin/guardrails/:id/assignments` | `guardrails.write` | 管理员下发强制绑定；普通用户不能覆盖或解绑 |
+| `DELETE /admin/guardrails/assignments/:scopeType/:scopeId` | `guardrails.write` | 解除 scope 上的绑定 |
+| `PATCH /admin/guardrails/:id`、`POST /admin/guardrails/:id/designate` | `guardrails.write` | 治理元数据、归档状态与指定版本 |
+
+路由数据策略复用 `routes.read` / `routes.write`，控制台页面为 `/admin/data-policies`：
+
+| 方法与路径 | 权限 | 说明 |
+| --- | --- | --- |
+| `GET /admin/data-policies` | `routes.read` | 每个 concrete route target 的 retention/training/ZDR 状态、subject 是否仍匹配及失效原因；未配置项返回保守默认值 |
+| `PUT /admin/data-policies/:routeTargetId` | `routes.write` | 对当前 Route + Provider trust subject 计算 SHA-256 绑定，写入核验状态、公开 HTTPS 证据与有效期，并追加审计快照 |
+| `GET /admin/data-policies/:routeTargetId/audit` | `routes.read` | 读取追加式变更历史 |
+
+`verified` 必须有无凭据的 HTTPS 证据 URL 和未来有效期。核验 subject 覆盖 Provider ID、当前协议 endpoint、上游账号凭据的不可逆摘要、共享渠道类型、上游模型、协议/operation、adapter 与 `custom_params`；数据库不保存原始 subject 或新凭据。运行时重新计算并进行精确匹配，还要求 `retention_days = 0`、`training_allowed = false`、`zdr_supported = true` 才将该 route 视为 ZDR。任何 subject 变更、缺失 fingerprint、`unknown`、过期或证据缺失均 fail closed；管理端的 Route/Provider 写接口会把受影响断言置为 `unknown` 并追加失效审计。共享渠道会在选路后注入不同用户账号，当前没有逐 shared key 的数据策略证据，因此 `provider.zdr=true` 与 `data_collection=deny` 都会排除所有 `shared_channel_type` 路由，即使 route 记录本身为 `verified`。

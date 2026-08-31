@@ -5,6 +5,10 @@
 
 import { clampCount, filterResults, normalizeHost } from './domain-filter';
 import { WebSearchProviderError, type WebSearchParams, type WebSearchResult } from './types';
+import {
+	assertToolProviderOutputWithinLimit,
+	readToolProviderResponseText,
+} from '../http/bounded-response';
 
 type CleverSeeRawResult = {
 	title?: string;
@@ -56,7 +60,10 @@ export async function searchCleverSeeWeb(params: WebSearchParams): Promise<WebSe
 		body: JSON.stringify(body),
 	});
 
-	const text = await response.text();
+	const text = await readToolProviderResponseText(response, {
+		provider: 'cleversee',
+		errorConstructor: WebSearchProviderError,
+	});
 	let json: CleverSeeRawResponse;
 	try {
 		json = JSON.parse(text) as CleverSeeRawResponse;
@@ -103,5 +110,10 @@ export async function searchCleverSeeWeb(params: WebSearchParams): Promise<WebSe
 			datePublished: p.date?.trim() || undefined,
 		}));
 
-	return filterResults(mapped, params.allowedDomains, params.blockedDomains);
+	const results = filterResults(mapped, params.allowedDomains, params.blockedDomains);
+	assertToolProviderOutputWithinLimit(results, {
+		provider: 'cleversee',
+		errorConstructor: WebSearchProviderError,
+	});
+	return results;
 }

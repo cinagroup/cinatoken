@@ -2,24 +2,27 @@
  * 管理端 `/admin/users`：列表、按外部对幂等创建、详情（懒重置预算）、计划/资料 PATCH、
  * 物理删除、子资源 keys / request-logs / audit-logs。
  */
-import type { BudgetPeriod, GatewayRepositories } from '@octafuse/core';
+import { defaultWorkspaceId, type BudgetPeriod, type GatewayRepositories, type UserRow } from '@octafuse/core';
 import type { UserListSortField, UserListSortOrder } from '@octafuse/core/db/users-list-sort';
 import { createKey, revokeKey, updateKeyName } from '@octafuse/core/services/key-service';
 import {
-	computeFirstReset,
 	getKeyInfo,
 	getOrCreateUser,
 	getUserInfo,
 	replaceKeyMetadata,
 	updateKeyMetadata,
 	updateKeyStatus,
-	updateUserPlan,
 } from '@octafuse/core/services/user-service';
 import {
 	applyBudgetTransition,
 	previewBudgetTransition,
 	type BudgetTransitionParams,
 } from '@octafuse/core/services/budget-transition-service';
+import {
+	applyUserPlanPatchWithAudit,
+	UserPlanPatchConflictError,
+	type UserPlanPatchWithAuditParams,
+} from '@octafuse/core/services/user-plan-patch-service';
 import { userBudgetAuditToInsertRowFull } from '@octafuse/core/db/user-budget-audit-mapper';
 import { roundGatewayMoney } from '@octafuse/core/lib/money-precision';
 import {
@@ -34,6 +37,14 @@ import { parseUserChargedCostFactors } from '@octafuse/core';
 import { badRequest, conflict, notFound } from './errors';
 import { normalizeMetadataInput } from './shared';
 import type { AdminUserCreateInput, AdminUserUpdateInput, AdminBudgetTransitionInput, JsonObject } from './types';
+
+type UpdateAdminUserDependencies = {
+	applyPlanPatch: typeof applyUserPlanPatchWithAudit;
+};
+
+const UPDATE_ADMIN_USER_DEPENDENCIES: UpdateAdminUserDependencies = {
+	applyPlanPatch: applyUserPlanPatchWithAudit,
+};
 
 const UUID_RE =
 	/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
@@ -205,7 +216,74 @@ export async function getAdminUserByRouteId(repos: GatewayRepositories, raw: str
 	return info;
 }
 
-export async function updateAdminUser(repos: GatewayRepositories, raw: string, input: AdminUserUpdateInput, actorId: string) {
+function assertAdminBudgetAmount(name: string, value: number | null | undefined): void {
+	if (value !== undefined && value !== null && (!Number.isFinite(value) || value < 0)) {
+		throw badRequest(`${name} must be a non-negative finite number or null`);
+	}
+}
+
+/** Resolve the legacy PATCH contract before any profile mutation is attempted. */
+export function resolveAdminUserPlanPatch(
+	input: AdminUserUpdateInput,
+	metadataReplace: string | null | undefined,
+): UserPlanPatchWithAuditParams {
+	assertAdminBudgetAmount('budget_max', input.budget_max);
+	assertAdminBudgetAmount('budget_base', input.budget_base);
+	assertAdminBudgetAmount('budget_spent', input.budget_spent);
+	if (input.budget_period !== undefined && !['none', 'daily', 'weekly', 'monthly'].includes(input.budget_period)) {
+		throw badRequest('budget_period must be none, daily, weekly, or monthly');
+	}
+	if (input.reset_budget !== undefined && typeof input.reset_budget !== 'boolean') {
+		throw badRequest('reset_budget must be a boolean');
+	}
+	if (
+		input.budget_reset_at !== undefined &&
+		input.budget_reset_at !== null &&
+		(typeof input.budget_reset_at !== 'string' || Number.isNaN(new Date(input.budget_reset_at).getTime()))
+	) {
+		throw badRequest('budget_reset_at must be a valid ISO datetime or null');
+	}
+
+	let resetBudget: boolean;
+	if (input.reset_budget !== undefined) {
+		resetBudget = input.reset_budget;
+	} else if (input.budget_period === undefined && input.budget_reset_at === undefined) {
+		resetBudget = false;
+	} else {
+		resetBudget = true;
+	}
+
+	let metadata: UserPlanPatchWithAuditParams['metadata'];
+	if (metadataReplace !== undefined) {
+		metadata = { kind: 'replace', value: metadataReplace };
+	} else if (
+		input.metadata !== undefined &&
+		typeof input.metadata === 'object' &&
+		input.metadata !== null &&
+		!Array.isArray(input.metadata)
+	) {
+		metadata = { kind: 'merge', value: input.metadata as JsonObject };
+	}
+
+	return {
+		budget_max: input.budget_max,
+		budget_base: input.budget_base,
+		budget_spent: input.budget_spent,
+		budget_period: input.budget_period,
+		budget_reset_at: input.budget_reset_at,
+		reset_budget: resetBudget,
+		metadata,
+		reason: input.reason,
+	};
+}
+
+export async function updateAdminUser(
+	repos: GatewayRepositories,
+	raw: string,
+	input: AdminUserUpdateInput,
+	actorId: string,
+	dependencies: UpdateAdminUserDependencies = UPDATE_ADMIN_USER_DEPENDENCIES,
+) {
 	const userId = await resolveAdminUserId(repos, raw);
 	const row = await repos.users.getById(userId);
 	if (!row) throw notFound('User not found');
@@ -296,6 +374,24 @@ export async function updateAdminUser(repos: GatewayRepositories, raw: string, i
 	if (hasMetaObjectMerge && hasMetaReplace) {
 		throw badRequest('Use either metadata (object merge or string replace) or metadata_replace, not both');
 	}
+	// Resolve and validate the entire budget mutation before applying any of the
+	// independently persisted profile fields below.
+	const resolvedPlanPatch = hasBudgetField
+		? resolveAdminUserPlanPatch(input, metadataReplaceStr)
+		: null;
+	let metadataAuditedWithBudget = false;
+	if (resolvedPlanPatch) {
+		try {
+			const result = await dependencies.applyPlanPatch(repos, userId, resolvedPlanPatch, actorId);
+			if (!result) throw notFound('User not found');
+			metadataAuditedWithBudget = result.audited && resolvedPlanPatch.metadata !== undefined;
+		} catch (error) {
+			if (error instanceof UserPlanPatchConflictError) {
+				throw conflict(error.message);
+			}
+			throw error;
+		}
+	}
 
 	if (hasStatus) {
 		await repos.users.updateUserStatus(userId, String(input.status));
@@ -320,53 +416,13 @@ export async function updateAdminUser(repos: GatewayRepositories, raw: string, i
 		if (!ok) throw new Error('Failed to update user');
 	}
 
-	if (hasMetaObjectMerge && !hasBudgetField && !hasMetaReplace) {
+	if (!resolvedPlanPatch && hasMetaObjectMerge) {
 		const existing: JsonObject = row.metadata ? (JSON.parse(row.metadata) as JsonObject) : {};
 		const merged = JSON.stringify({ ...existing, ...(input.metadata as JsonObject) });
 		const ok = await repos.users.setUserMetadataById(userId, merged);
 		if (!ok) throw new Error('Failed to update user');
-	} else if (hasBudgetField || hasMetaReplace) {
-		const effMax = budget_max_in === undefined ? row.budget_max : budget_max_in;
-		const effPeriod = (budget_period_in ?? row.budget_period) as BudgetPeriod;
-		let mergedMetadataJson: string | null | undefined;
-		if (hasMetaReplace) {
-			mergedMetadataJson = metadataReplaceStr ?? undefined;
-		} else if (hasMetaObjectMerge && input.metadata) {
-			const existing: JsonObject = row.metadata ? (JSON.parse(row.metadata) as JsonObject) : {};
-			mergedMetadataJson = JSON.stringify({ ...existing, ...(input.metadata as JsonObject) });
-		}
-
-		let resolvedBudgetResetAt: string | null;
-		if (input.budget_reset_at !== undefined) {
-			resolvedBudgetResetAt = input.budget_reset_at;
-		} else if (budget_period_in !== undefined && budget_period_in !== row.budget_period) {
-			if (budget_period_in === 'none') {
-				resolvedBudgetResetAt = null;
-			} else {
-				resolvedBudgetResetAt = computeFirstReset(budget_period_in as BudgetPeriod);
-			}
-		} else {
-			resolvedBudgetResetAt = row.budget_reset_at ?? null;
-		}
-
-		let resolvedResetBudget: boolean;
-		if (input.reset_budget !== undefined) {
-			resolvedResetBudget = input.reset_budget;
-		} else if (budget_period_in === undefined && input.budget_reset_at === undefined) {
-			resolvedResetBudget = false;
-		} else {
-			resolvedResetBudget = true;
-		}
-
-		const ok = await updateUserPlan(repos, userId, {
-			budget_max: effMax,
-			budget_period: effPeriod,
-			reset_budget: resolvedResetBudget,
-			budget_reset_at: resolvedBudgetResetAt,
-			metadata: mergedMetadataJson,
-			budget_spent: budget_spent_in,
-			budget_base: budget_base_in,
-		});
+	} else if (!resolvedPlanPatch && hasMetaReplace) {
+		const ok = await repos.users.setUserMetadataById(userId, metadataReplaceStr ?? null);
 		if (!ok) throw new Error('Failed to update user');
 	}
 
@@ -378,12 +434,15 @@ export async function updateAdminUser(repos: GatewayRepositories, raw: string, i
 
 	const budgetChanged =
 		Number(rowAfter.budget_spent ?? 0) !== Number(row.budget_spent ?? 0) ||
-		Number(rowAfter.budget_max ?? 0) !== Number(row.budget_max ?? 0) ||
+		(rowAfter.budget_max ?? null) !== (row.budget_max ?? null) ||
 		Number(rowAfter.budget_base ?? 0) !== Number(row.budget_base ?? 0) ||
 		(rowAfter.budget_period ?? null) !== (row.budget_period ?? null) ||
-		(rowAfter.budget_reset_at ?? null) !== (row.budget_reset_at ?? null);
+		(rowAfter.budget_reset_at ?? null) !== (row.budget_reset_at ?? null) ||
+		Number(rowAfter.budget_epoch) !== Number(row.budget_epoch) ||
+		Number(rowAfter.budget_reserved_micros) !== Number(row.budget_reserved_micros);
 
 	const metadataChanged = (row.metadata ?? '') !== (rowAfter.metadata ?? '');
+	const profileMetadataChanged = metadataChanged && !metadataAuditedWithBudget;
 	const statusChanged = (row.status ?? '') !== (rowAfter.status ?? '');
 	const emailChanged = (row.email ?? null) !== (rowAfter.email ?? null);
 	const externalSystemChanged = (row.external_system ?? null) !== (rowAfter.external_system ?? null);
@@ -393,7 +452,7 @@ export async function updateAdminUser(repos: GatewayRepositories, raw: string, i
 		(row.charged_cost_factors ?? null) !== (rowAfter.charged_cost_factors ?? null);
 
 	let profileAuditPayload: Record<string, unknown> | null = null;
-	if (metadataChanged || statusChanged || emailChanged || externalChanged || chargedCostFactorsChanged) {
+	if (profileMetadataChanged || statusChanged || emailChanged || externalChanged || chargedCostFactorsChanged) {
 		profileAuditPayload = {};
 		if (emailChanged) {
 			profileAuditPayload.email = { from: row.email ?? null, to: rowAfter.email ?? null };
@@ -413,7 +472,7 @@ export async function updateAdminUser(repos: GatewayRepositories, raw: string, i
 				to: rowAfter.external_user_id ?? null,
 			};
 		}
-		if (metadataChanged) {
+		if (profileMetadataChanged) {
 			let operation: 'merge' | 'replace' | 'update' = 'update';
 			let touchedKeys: string[] | undefined;
 			if (hasMetaObjectMerge && input.metadata && typeof input.metadata === 'object' && !Array.isArray(input.metadata)) {
@@ -435,50 +494,40 @@ export async function updateAdminUser(repos: GatewayRepositories, raw: string, i
 	const profileAuditJson =
 		profileAuditPayload && Object.keys(profileAuditPayload).length > 0 ? JSON.stringify(profileAuditPayload) : null;
 
-	const beforeUserSnap = snapshotToJson(userRowToSnapshot(row));
+	// Budget and metadata included in the atomic plan audit are neutralized in a
+	// separate profile audit, so its changed_fields never claims a second debit/reset.
+	const profileBeforeRow: UserRow = {
+		...row,
+		...(budgetChanged
+			? {
+				budget_max: rowAfter.budget_max,
+				budget_base: rowAfter.budget_base,
+				budget_spent: rowAfter.budget_spent,
+				budget_period: rowAfter.budget_period,
+				budget_reset_at: rowAfter.budget_reset_at,
+				budget_epoch: rowAfter.budget_epoch,
+				budget_reserved_micros: rowAfter.budget_reserved_micros,
+			}
+			: {}),
+		...(metadataAuditedWithBudget ? { metadata: rowAfter.metadata } : {}),
+	};
+	const beforeUserSnap = snapshotToJson(userRowToSnapshot(profileBeforeRow));
 	const afterUserSnap = snapshotToJson(userRowToSnapshot(rowAfter));
-	const userChangedFieldsJson = changedFieldsToJson(computeChangedFields(userRowToSnapshot(row), userRowToSnapshot(rowAfter)));
+	const userChangedFieldsJson = changedFieldsToJson(
+		computeChangedFields(userRowToSnapshot(profileBeforeRow), userRowToSnapshot(rowAfter)),
+	);
 
-	if (budgetChanged) {
-		await repos.userAuditLogs.insertUserAuditLog(
-			userBudgetAuditToInsertRowFull(userId, {
-				id: crypto.randomUUID(),
-				apiKeyId: null,
-				eventType: 'admin_adjust',
-				actorType: 'admin',
-				actorId,
-				reasonCode: 'admin_patch_budget',
-				reasonText: reasonText,
-				beforeSpent: Number(row.budget_spent ?? 0),
-				deltaSpent: Number(rowAfter.budget_spent ?? 0) - Number(row.budget_spent ?? 0),
-				afterSpent: Number(rowAfter.budget_spent ?? 0),
-				beforeBudgetMax: row.budget_max ?? null,
-				afterBudgetMax: rowAfter.budget_max ?? null,
-				beforeBudgetBase: row.budget_base ?? null,
-				afterBudgetBase: rowAfter.budget_base ?? null,
-				beforeBudgetPeriod: row.budget_period ?? null,
-				afterBudgetPeriod: rowAfter.budget_period ?? null,
-				beforeBudgetResetAt: row.budget_reset_at ?? null,
-				afterBudgetResetAt: rowAfter.budget_reset_at ?? null,
-				changePayloadMerge: profileAuditJson,
-				beforeUserSnapshot: beforeUserSnap,
-				afterUserSnapshot: afterUserSnap,
-				changedFields: userChangedFieldsJson,
-				source: 'admin_users',
-				correlationId: crypto.randomUUID(),
-			})
-		);
-	} else if (metadataChanged || statusChanged || emailChanged || externalChanged || chargedCostFactorsChanged) {
+	if (profileMetadataChanged || statusChanged || emailChanged || externalChanged || chargedCostFactorsChanged) {
 		let reasonCode = 'admin_patch_profile';
-		if (metadataChanged && !statusChanged && !emailChanged && !externalChanged && !chargedCostFactorsChanged) {
+		if (profileMetadataChanged && !statusChanged && !emailChanged && !externalChanged && !chargedCostFactorsChanged) {
 			reasonCode = 'admin_patch_metadata';
-		} else if (statusChanged && !metadataChanged && !emailChanged && !externalChanged && !chargedCostFactorsChanged) {
+		} else if (statusChanged && !profileMetadataChanged && !emailChanged && !externalChanged && !chargedCostFactorsChanged) {
 			reasonCode = 'admin_patch_status';
-		} else if (emailChanged && !metadataChanged && !statusChanged && !externalChanged && !chargedCostFactorsChanged) {
+		} else if (emailChanged && !profileMetadataChanged && !statusChanged && !externalChanged && !chargedCostFactorsChanged) {
 			reasonCode = 'admin_patch_email';
-		} else if (externalChanged && !metadataChanged && !statusChanged && !emailChanged && !chargedCostFactorsChanged) {
+		} else if (externalChanged && !profileMetadataChanged && !statusChanged && !emailChanged && !chargedCostFactorsChanged) {
 			reasonCode = 'admin_patch_external_identity';
-		} else if (chargedCostFactorsChanged && !metadataChanged && !statusChanged && !emailChanged && !externalChanged) {
+		} else if (chargedCostFactorsChanged && !profileMetadataChanged && !statusChanged && !emailChanged && !externalChanged) {
 			reasonCode = 'admin_patch_charged_cost_factors';
 		}
 		const spent = Number(rowAfter.budget_spent ?? 0);
@@ -658,6 +707,7 @@ export async function createAdminUserKey(
 	}
 	return createKey(repos, {
 		user_id: userId,
+		workspace_id: defaultWorkspaceId('personal', userId),
 		name: input.name ?? null,
 		metadata: metaString,
 		provision_reason: input.reason,
@@ -685,11 +735,11 @@ export async function deleteAdminUserKey(repos: GatewayRepositories, rawUser: st
 		userBudgetAuditToInsertRowFull(userId, {
 			id: crypto.randomUUID(),
 			apiKeyId: keyId,
-			eventType: 'key_deleted',
+			eventType: 'key_revoked',
 			actorType: 'admin',
 			actorId,
-			reasonCode: 'admin_user_key_delete',
-			reasonText: 'API key permanently deleted',
+			reasonCode: 'admin_user_key_delete_tombstone',
+			reasonText: 'API key revoked and retained as an audit tombstone',
 			beforeSpent: spent,
 			deltaSpent: 0,
 			afterSpent: spent,
@@ -713,7 +763,7 @@ export async function deleteAdminUserKey(repos: GatewayRepositories, rawUser: st
 			correlationId: crypto.randomUUID(),
 		})
 	);
-	const ok = await repos.apiKeys.deleteApiKeyHard(keyId, row.key);
+	const ok = await repos.apiKeys.revokeApiKey(keyId);
 	if (!ok) throw notFound('Key not found');
 }
 

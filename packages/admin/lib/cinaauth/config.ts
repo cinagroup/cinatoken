@@ -96,15 +96,26 @@ export const getCinaAuthSecrets = (request?: Request): CinaAuthSecrets => ({
 		readEnv(request, 'CINATOKEN_OIDC_CLIENT_SECRET'),
 		'CINATOKEN_OIDC_CLIENT_SECRET',
 	),
-	bridgeSecret: requireStrongSecret(
-		readEnv(request, 'CINATOKEN_OIDC_BRIDGE_SECRET'),
-		'CINATOKEN_OIDC_BRIDGE_SECRET',
-	),
+	bridgeSecret: getCinaAuthBridgeSecret(request),
 	transactionSecret: requireStrongSecret(
 		readEnv(request, 'CINATOKEN_OIDC_TRANSACTION_SECRET'),
 		'CINATOKEN_OIDC_TRANSACTION_SECRET',
 	),
 });
+
+/** Shared service-to-service secret used for live role checks and signed identity events. */
+export const getCinaAuthBridgeSecret = (request?: Request): string =>
+	requireStrongSecret(
+		readEnv(request, 'CINATOKEN_OIDC_BRIDGE_SECRET'),
+		'CINATOKEN_OIDC_BRIDGE_SECRET',
+	);
+
+/** Dedicated HMAC secret for CinaAuth organization-event delivery. */
+export const getCinaAuthIdentityEventsSecret = (request?: Request): string =>
+	requireStrongSecret(
+		readEnv(request, 'CINATOKEN_IDENTITY_EVENTS_SECRET'),
+		'CINATOKEN_IDENTITY_EVENTS_SECRET',
+	);
 
 export const hasRequiredCinaAuthRole = (
 	role: string | null | undefined,

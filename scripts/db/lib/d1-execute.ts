@@ -12,6 +12,7 @@ export interface D1ExecutionConfig {
 	databaseName: string;
 	source: 'remote' | 'local';
 	persistTo: string;
+	env?: NodeJS.ProcessEnv;
 }
 
 export const DEFAULT_D1_DATABASE_NAME = process.env.D1_DATABASE_NAME?.trim() || 'cinatoken';
@@ -49,7 +50,7 @@ export function runD1ExecuteJson(
 		cwd: PROJECT_ROOT,
 		encoding: 'utf-8',
 		shell: false,
-		env: process.env,
+		env: config.env ?? process.env,
 	});
 
 	if (result.error) {

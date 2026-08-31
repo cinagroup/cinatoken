@@ -2,17 +2,24 @@ import assert from 'node:assert/strict';
 import { test } from 'node:test';
 import { createInMemoryPublicStatsRuntimeGuard } from './public-stats-runtime-guard';
 
-test('Node fallback cache canonicalizes host/query variants to the bounded range key', async () => {
+test('Node fallback cache ignores host but isolates paths and canonicalizes query order', async () => {
 	let now = 1_000;
 	const guard = createInMemoryPublicStatsRuntimeGuard({ now: () => now, ttlMs: 60_000 });
 	await guard.cache!.put(
 		new Request('https://first.example/catalog/stats/models?unused=1&range=7d'),
 		new Response('cached'),
 	);
-	const hit = await guard.cache!.match(new Request('https://attacker-host.example/other?range=7d'));
+	const hit = await guard.cache!.match(
+		new Request('https://attacker-host.example/catalog/stats/models?range=7d&unused=1')
+	);
 	assert.equal(await hit?.text(), 'cached');
 	now += 60_000;
-	assert.equal(await guard.cache!.match(new Request('https://first.example/?range=7d')), undefined);
+	assert.equal(
+		await guard.cache!.match(
+			new Request('https://first.example/catalog/stats/models?range=7d&unused=1')
+		),
+		undefined
+	);
 });
 
 test('Node fallback rate limiter is fixed-window and fail-closed after its bound', async () => {

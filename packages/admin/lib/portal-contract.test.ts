@@ -20,6 +20,7 @@ test('portal me response uses the shared success/data contract', () => {
 				email: 'user@example.com',
 				isAdmin: false,
 				capabilities: getAccountCapabilities(false),
+				organizations: [],
 			},
 		},
 	);

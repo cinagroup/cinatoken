@@ -119,6 +119,7 @@ export default function PublicModelDetail({ result }: { result: PublicCatalogMod
 					<p className="home-muted mt-5 max-w-3xl text-base leading-7">{model.description ?? t('noDescription')}</p>
 					<div className="mt-6 flex flex-wrap gap-2">
 						{[...model.tags, ...model.protocols].map((value) => <span key={value} className="rounded-full border border-[var(--home-border-strong)] px-3 py-1 text-xs home-muted">{value}</span>)}
+						{model.dataPolicySummary.zdrAvailable ? <span className="rounded-full border border-emerald-500/40 bg-emerald-500/10 px-3 py-1 text-xs font-semibold text-emerald-600 dark:text-emerald-400">ZDR</span> : null}
 					</div>
 
 					<section className="mt-12">
@@ -143,6 +144,9 @@ export default function PublicModelDetail({ result }: { result: PublicCatalogMod
 								[t('maxOutput'), formatTokenCount(model.maxTokens, locale)],
 								[t('released'), model.releasedAt ?? '—'],
 								[t('routeGroups'), model.routeGroups.join(', ') || '—'],
+								[t('dataPolicy'), model.dataPolicySummary.zdrAvailable
+									? t('zdrAvailable', { count: model.dataPolicySummary.verifiedRouteCount })
+									: t('zdrUnavailable')],
 							].map(([label, value]) => <div key={label}><dt className="home-faint text-xs">{label}</dt><dd className="home-text mt-1 break-words">{value}</dd></div>)}
 						</dl>
 						<div className="home-border mt-5 border-t pt-5">

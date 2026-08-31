@@ -1,16 +1,19 @@
 /**
  * MySQL：`providers` 表（Drizzle + mysql2）。
  */
-import { eq } from 'drizzle-orm';
-import type { ResultSetHeader } from 'mysql2/promise';
-import type { ProviderRow } from '../../types';
-import type { MySqlDatabaseClient } from '../../storage/database-client';
-import type { ProvidersRepository } from '../../storage/gateway-repository-interfaces';
-import { providersTable as myProvidersTable } from '../../storage/drizzle/schema.mysql';
-import type { ProviderProtocolBases } from '../providers-types';
-import type { ProviderAdminRow } from '../../storage/repository-dtos';
-import { PROVIDER_PATCH_COLS } from '../patch-allowlists';
-import { asMySqlPool } from './mysql2-compat';
+import { eq, inArray } from "drizzle-orm";
+import type { ResultSetHeader } from "mysql2/promise";
+import type { ProviderRow } from "../../types";
+import type { MySqlDatabaseClient } from "../../storage/database-client";
+import type { ProvidersRepository } from "../../storage/gateway-repository-interfaces";
+import { providersTable as myProvidersTable } from "../../storage/drizzle/schema.mysql";
+import {
+	MAX_PROVIDER_ID_BATCH_SIZE,
+	type ProviderProtocolBases,
+} from "../providers-types";
+import type { ProviderAdminRow } from "../../storage/repository-dtos";
+import { PROVIDER_PATCH_COLS } from "../patch-allowlists";
+import { asMySqlPool } from "./mysql2-compat";
 
 const PROVIDER_LIST_WITH_ROUTE_COUNTS_SQL = `SELECT p.id, p.name, p.endpoints, p.api_key, p.status, p.description, p.shared_channel_type, p.created_at,
 		(SELECT COUNT(*) FROM model_routes WHERE provider_id = p.id) AS routes_count,
@@ -44,7 +47,9 @@ function mapMyProviderRow(r: {
 	};
 }
 
-export function createMySqlProvidersRepository(db: MySqlDatabaseClient): ProvidersRepository {
+export function createMySqlProvidersRepository(
+	db: MySqlDatabaseClient
+): ProvidersRepository {
 	const drizzle = db.drizzle;
 	const pool = asMySqlPool(db.raw);
 
@@ -78,8 +83,28 @@ export function createMySqlProvidersRepository(db: MySqlDatabaseClient): Provide
 			}));
 		},
 
+		async getProvidersByIds(ids: string[]): Promise<ProviderRow[]> {
+			if (ids.length > MAX_PROVIDER_ID_BATCH_SIZE) {
+				throw new RangeError(
+					`provider id batch exceeds ${MAX_PROVIDER_ID_BATCH_SIZE}`
+				);
+			}
+			const uniqueIds = [...new Set(ids)];
+			if (uniqueIds.length === 0) return [];
+			const rows = await drizzle
+				.select()
+				.from(myProvidersTable)
+				.where(inArray(myProvidersTable.id, uniqueIds))
+				.orderBy(myProvidersTable.id);
+			return rows.map(mapMyProviderRow);
+		},
+
 		async providerIdExists(id: string): Promise<boolean> {
-			const row = await drizzle.select({ id: myProvidersTable.id }).from(myProvidersTable).where(eq(myProvidersTable.id, id)).limit(1);
+			const row = await drizzle
+				.select({ id: myProvidersTable.id })
+				.from(myProvidersTable)
+				.where(eq(myProvidersTable.id, id))
+				.limit(1);
 			return row.length > 0;
 		},
 
@@ -97,35 +122,49 @@ export function createMySqlProvidersRepository(db: MySqlDatabaseClient): Provide
 				id: params.id,
 				name: params.name,
 				endpoints: params.endpoints,
-				apiKey: params.apiKey ?? '',
-				status: params.status ?? 'active',
-				description: params.description == null ? null : String(params.description),
+				apiKey: params.apiKey ?? "",
+				status: params.status ?? "active",
+				description:
+					params.description == null ? null : String(params.description),
 				sharedChannelType: params.sharedChannelType ?? null,
 				createdAt: now,
 			});
 		},
 
-		async updateProviderByPatch(id: string, body: Record<string, unknown>): Promise<number> {
+		async updateProviderByPatch(
+			id: string,
+			body: Record<string, unknown>
+		): Promise<number> {
 			const patch: string[] = [];
 			const bindValues: unknown[] = [];
 			for (const [key, value] of Object.entries(body)) {
-				if (key === 'id' || value === undefined) continue;
+				if (key === "id" || value === undefined) continue;
 				if (!PROVIDER_PATCH_COLS.has(key)) continue;
 				patch.push(`${key} = ?`);
 				bindValues.push(value);
 			}
 			if (patch.length === 0) return 0;
-			const [result] = await pool.execute<ResultSetHeader>(`UPDATE providers SET ${patch.join(', ')} WHERE id = ?`, [...bindValues, id]);
+			const [result] = await pool.execute<ResultSetHeader>(
+				`UPDATE providers SET ${patch.join(", ")} WHERE id = ?`,
+				[...bindValues, id]
+			);
 			return result.affectedRows;
 		},
 
 		async deleteProviderById(id: string): Promise<number> {
-			const [result] = await pool.execute<ResultSetHeader>('DELETE FROM providers WHERE id = ?', [id]);
+			const [result] = await pool.execute<ResultSetHeader>(
+				"DELETE FROM providers WHERE id = ?",
+				[id]
+			);
 			return result.affectedRows;
 		},
 
 		async getProviderById(id: string): Promise<ProviderRow | null> {
-			const rows = await drizzle.select().from(myProvidersTable).where(eq(myProvidersTable.id, id)).limit(1);
+			const rows = await drizzle
+				.select()
+				.from(myProvidersTable)
+				.where(eq(myProvidersTable.id, id))
+				.limit(1);
 			return rows[0] ? mapMyProviderRow(rows[0]) : null;
 		},
 
@@ -160,7 +199,9 @@ export function createMySqlProvidersRepository(db: MySqlDatabaseClient): Provide
 			};
 		},
 
-		async getProviderProtocolBases(providerId: string): Promise<ProviderProtocolBases | null> {
+		async getProviderProtocolBases(
+			providerId: string
+		): Promise<ProviderProtocolBases | null> {
 			const rows = await drizzle
 				.select({
 					id: myProvidersTable.id,
@@ -172,7 +213,9 @@ export function createMySqlProvidersRepository(db: MySqlDatabaseClient): Provide
 			return rows[0] ?? null;
 		},
 
-		async getProviderApiKeyPlaintext(providerId: string): Promise<{ api_key: string } | null> {
+		async getProviderApiKeyPlaintext(
+			providerId: string
+		): Promise<{ api_key: string } | null> {
 			const rows = await drizzle
 				.select({ api_key: myProvidersTable.apiKey })
 				.from(myProvidersTable)

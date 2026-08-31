@@ -21,7 +21,9 @@ export class WebFetchProviderError extends Error {
 	constructor(
 		message: string,
 		readonly status: number,
-		readonly provider: string
+		readonly provider: string,
+		/** `known_zero` is reserved for failures proven to occur before billable work. */
+		readonly upstreamOutcome: 'known_zero' | 'unknown' = 'unknown',
 	) {
 		super(message);
 		this.name = 'WebFetchProviderError';

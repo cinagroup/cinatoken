@@ -8,6 +8,11 @@ export { fetchJinaUrl } from './jina';
 export { fetchTavilyUrl } from './tavily';
 export { assertFetchUrlSafe, type UrlGuardResult } from './url-guard';
 export {
+	fetchWithSafeRedirects,
+	UnsafeFetchDestinationError,
+	type SafeRedirectFetchResult,
+} from './safe-redirect-fetch';
+export {
 	WebFetchProviderError,
 	type WebFetchParams,
 	type WebFetchResult,

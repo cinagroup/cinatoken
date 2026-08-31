@@ -13,7 +13,7 @@
 import { parsePricingProfile } from './pricing-profile';
 
 export const MODEL_INPUT_MODALITIES = ['text', 'image', 'audio', 'video', 'file'] as const;
-export const MODEL_OUTPUT_MODALITIES = ['text', 'image', 'audio'] as const;
+export const MODEL_OUTPUT_MODALITIES = ['text', 'image', 'audio', 'embeddings'] as const;
 
 export type ModelInputModality = (typeof MODEL_INPUT_MODALITIES)[number];
 export type ModelOutputModality = (typeof MODEL_OUTPUT_MODALITIES)[number];
@@ -172,6 +172,11 @@ export function isAudioSpeechModel(m: ModelKindFields): boolean {
 /** 该目录模型是否属于音频端点模型（ASR 或 TTS）。 */
 export function isAudioModel(m: ModelKindFields): boolean {
 	return isAudioTranscriptionModel(m) || isAudioSpeechModel(m);
+}
+
+/** Whether this model returns vector embeddings rather than generated content. */
+export function isEmbeddingModel(m: ModelKindFields): boolean {
+	return normalizeOutputModalitiesList(m.output_modalities)?.includes('embeddings') === true;
 }
 
 /** False for image-generation / ASR / TTS models; true for chat / multimodal LLMs and unknown. */

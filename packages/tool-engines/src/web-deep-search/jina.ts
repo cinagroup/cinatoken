@@ -8,6 +8,10 @@ import {
 	type WebDeepSearchParams,
 	type WebDeepSearchResult,
 } from './types';
+import {
+	assertToolProviderOutputWithinLimit,
+	readToolProviderResponseText,
+} from '../http/bounded-response';
 
 type JinaSearchItem = {
 	title?: string;
@@ -53,7 +57,10 @@ export async function deepSearchJina(params: WebDeepSearchParams): Promise<WebDe
 		}),
 	});
 
-	const text = await response.text();
+	const text = await readToolProviderResponseText(response, {
+		provider: 'jina',
+		errorConstructor: WebDeepSearchProviderError,
+	});
 	let json: JinaRawResponse;
 	try {
 		json = JSON.parse(text) as JinaRawResponse;
@@ -74,7 +81,7 @@ export async function deepSearchJina(params: WebDeepSearchParams): Promise<WebDe
 	}
 
 	const items = Array.isArray(json.data) ? json.data : [];
-	return items
+	const results = items
 		.filter((p) => typeof p.url === 'string' && p.url.trim())
 		.slice(0, limit)
 		.map((p) => {
@@ -90,4 +97,9 @@ export async function deepSearchJina(params: WebDeepSearchParams): Promise<WebDe
 				content,
 			};
 		});
+	assertToolProviderOutputWithinLimit(results, {
+		provider: 'jina',
+		errorConstructor: WebDeepSearchProviderError,
+	});
+	return results;
 }

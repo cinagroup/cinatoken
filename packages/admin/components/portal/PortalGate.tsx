@@ -6,22 +6,27 @@
  * - 已登录 → 门户导航 + 内容。
  * 会话依赖 `/api/user/me`（401 即未登录）。
  */
-import { useCallback, useEffect, useState, ReactNode } from 'react';
+import { useCallback, useEffect, useRef, useState, useTransition, ReactNode } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
+import type { WorkspaceContextProjection } from '@octafuse/core';
 import { useTranslations } from 'next-intl';
 import LocaleSwitcher from '@/components/layout/LocaleSwitcher';
 import { readPortalJson } from '@/lib/portal-fetch';
 import ConsoleThemeToggle from '@/components/unified/ConsoleThemeToggle';
 import FrontendAttribution from '@/components/unified/FrontendAttribution';
+import { PortalWorkspaceProvider } from '@/components/portal/PortalWorkspaceContext';
+import PortalWorkspaceSwitcher from '@/components/portal/PortalWorkspaceSwitcher';
 import {
   ArrowLeftStartOnRectangleIcon,
   BanknotesIcon,
   ChartBarSquareIcon,
   Cog6ToothIcon,
+	ClockIcon,
   HomeIcon,
   KeyIcon,
+	QueueListIcon,
   ShieldCheckIcon,
   SparklesIcon,
 } from '@heroicons/react/24/outline';
@@ -40,6 +45,7 @@ export type PortalMe = {
 
 export default function PortalGate({ children }: Props) {
   const pathname = usePathname();
+  const router = useRouter();
   const t = useTranslations('portal');
   const tAuth = useTranslations('auth');
   const tCommon = useTranslations('common');
@@ -47,30 +53,51 @@ export default function PortalGate({ children }: Props) {
   const [me, setMe] = useState<PortalMe | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [loginError, setLoginError] = useState('');
+  const [workspaceContext, setWorkspaceContext] = useState<WorkspaceContextProjection | null>(null);
+  const [workspaceError, setWorkspaceError] = useState<'load' | 'switch' | null>(null);
+  const [isWorkspaceSwitching, startWorkspaceTransition] = useTransition();
+  const sessionRequestEpoch = useRef(0);
 
   const checkSession = useCallback(async () => {
-    try {
-      const response = await fetch('/api/user/me', { cache: 'no-store' });
-      if (response.ok) {
-        const data = await readPortalJson<PortalMe>(response);
-        setMe(data?.data ?? null);
-      } else {
-        setMe(null);
-      }
-    } catch {
-      setMe(null);
-    } finally {
-      setIsLoading(false);
-    }
+	const epoch = ++sessionRequestEpoch.current;
+	const [sessionResult, workspaceResult] = await Promise.allSettled([
+		fetch('/api/user/me', { cache: 'no-store' }),
+		fetch('/api/user/workspaces', { cache: 'no-store' }),
+	]);
+	if (epoch !== sessionRequestEpoch.current) return;
+	if (sessionResult.status !== 'fulfilled' || !sessionResult.value.ok) {
+		setMe(null);
+		setWorkspaceContext(null);
+		setWorkspaceError(null);
+		setIsLoading(false);
+		return;
+	}
+	const sessionData = await readPortalJson<PortalMe>(sessionResult.value);
+	if (epoch !== sessionRequestEpoch.current) return;
+	setMe(sessionData?.data ?? null);
+	if (workspaceResult.status === 'fulfilled' && workspaceResult.value.ok) {
+		const workspaceData = await readPortalJson<WorkspaceContextProjection>(workspaceResult.value);
+		if (epoch !== sessionRequestEpoch.current) return;
+		setWorkspaceContext(workspaceData?.data ?? null);
+		setWorkspaceError(workspaceData?.data ? null : 'load');
+	} else {
+		setWorkspaceContext(null);
+		setWorkspaceError('load');
+	}
+	setIsLoading(false);
   }, []);
 
   useEffect(() => {
-    void checkSession();
+	const timer = window.setTimeout(() => void checkSession(), 0);
+	return () => window.clearTimeout(timer);
   }, [checkSession]);
 
   useEffect(() => {
-    const authError = new URLSearchParams(window.location.search).get('auth_error');
-    if (authError) setLoginError(tAuth('loginError'));
+	const timer = window.setTimeout(() => {
+		const authError = new URLSearchParams(window.location.search).get('auth_error');
+		if (authError) setLoginError(tAuth('loginError'));
+	}, 0);
+	return () => window.clearTimeout(timer);
   }, [tAuth]);
 
   useEffect(() => {
@@ -82,13 +109,43 @@ export default function PortalGate({ children }: Props) {
   }, [checkSession]);
 
   const logout = async () => {
+	sessionRequestEpoch.current += 1;
     await fetch('/api/user/auth/logout', { method: 'POST' }).catch(() => undefined);
     setMe(null);
+	setWorkspaceContext(null);
+	setWorkspaceError(null);
   };
+
+  const selectWorkspace = useCallback((workspaceId: string) => {
+	if (!workspaceId || workspaceId === workspaceContext?.currentWorkspace.id) return;
+	sessionRequestEpoch.current += 1;
+	setWorkspaceError(null);
+	startWorkspaceTransition(async () => {
+		try {
+			const response = await fetch('/api/user/workspaces/current', {
+				method: 'PUT',
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify({ workspace_id: workspaceId }),
+			});
+			const result = await readPortalJson<WorkspaceContextProjection>(response);
+			if (!response.ok || !result?.data) {
+				setWorkspaceError('switch');
+				return;
+			}
+			setWorkspaceContext(result.data);
+			router.refresh();
+		} catch {
+			setWorkspaceError('switch');
+		}
+	});
+  }, [router, workspaceContext?.currentWorkspace.id]);
 
   const navItems = [
     { href: '/account', label: t('nav.overview'), Icon: HomeIcon },
+	{ href: '/account/activity', label: t('nav.activity'), Icon: ClockIcon },
     { href: '/account/keys', label: t('nav.keys'), Icon: KeyIcon },
+	{ href: '/account/presets', label: t('nav.presets'), Icon: QueueListIcon },
+	{ href: '/account/guardrails', label: t('nav.guardrails'), Icon: ShieldCheckIcon },
     { href: '/account/earnings', label: t('nav.earnings'), Icon: ChartBarSquareIcon },
     { href: '/account/withdraw', label: t('nav.withdraw'), Icon: BanknotesIcon },
     { href: '/account/nft', label: t('nav.nft'), Icon: SparklesIcon },
@@ -161,6 +218,12 @@ export default function PortalGate({ children }: Props) {
   }
 
   return (
+    <PortalWorkspaceProvider
+	  context={workspaceContext}
+	  error={workspaceError}
+	  isSwitching={isWorkspaceSwitching}
+	  selectWorkspace={selectWorkspace}
+	>
     <div className="console-shell flex min-h-dvh">
       <aside className="console-panel sticky top-0 hidden h-dvh w-64 shrink-0 border-r lg:flex lg:flex-col">
         <div className="flex h-16 items-center gap-3 border-b px-4" style={{ borderColor: 'var(--console-border)' }}>
@@ -170,6 +233,7 @@ export default function PortalGate({ children }: Props) {
             <div className="console-muted truncate text-xs">{t('portalTitle')}</div>
           </div>
         </div>
+		<PortalWorkspaceSwitcher />
         <nav className="flex-1 space-y-1 overflow-y-auto p-3">
           {navItems.map((item) => {
             const active = pathname === item.href || (item.href !== '/account' && pathname.startsWith(item.href));
@@ -208,6 +272,9 @@ export default function PortalGate({ children }: Props) {
             </div>
             <ConsoleThemeToggle />
           </div>
+		  <div className="border-t px-4 py-2.5" style={{ borderColor: 'var(--console-border)' }}>
+			<PortalWorkspaceSwitcher compact />
+		  </div>
           <nav className="flex gap-1 overflow-x-auto px-3 pb-2">
             {navItems.map((item) => {
               const active = pathname === item.href || (item.href !== '/account' && pathname.startsWith(item.href));
@@ -218,5 +285,6 @@ export default function PortalGate({ children }: Props) {
         <main id="main-content" className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">{children}</main>
       </div>
     </div>
+	</PortalWorkspaceProvider>
   );
 }

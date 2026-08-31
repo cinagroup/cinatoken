@@ -11,6 +11,7 @@ test('computeBudgetTransition carries remaining budget forward', () => {
 			budget_spent: 1,
 			budget_period: 'monthly',
 			budget_reset_at: '2026-06-23T15:31:49.000Z',
+			budget_reserved_micros: 0,
 		},
 		{
 			target_budget_base: 100,
@@ -34,6 +35,7 @@ test('computeBudgetTransition deducts overage from next period', () => {
 			budget_spent: 12,
 			budget_period: 'monthly',
 			budget_reset_at: '2026-06-23T15:31:49.000Z',
+			budget_reserved_micros: 0,
 		},
 		{
 			target_budget_base: 100,
@@ -47,6 +49,28 @@ test('computeBudgetTransition deducts overage from next period', () => {
 	assert.equal(result.after.budget_spent, 0);
 });
 
+test('computeBudgetTransition does not carry active reservation capacity into a reset period', () => {
+	const result = computeBudgetTransition(
+		{
+			budget_max: 10,
+			budget_base: 10,
+			budget_spent: 1,
+			budget_period: 'monthly',
+			budget_reset_at: '2026-06-23T15:31:49.000Z',
+			budget_reserved_micros: 2_500_000,
+		},
+		{
+			target_budget_base: 100,
+			budget_period: 'monthly',
+			carryover_strategy: 'remaining_or_overage',
+			reset_spent: true,
+		},
+	);
+	assert.equal(result.carryover, 6.5);
+	assert.equal(result.after.budget_max, 106.5);
+	assert.equal(result.after.budget_reserved_micros, 0);
+});
+
 test('computeBudgetTransition none strategy skips carryover', () => {
 	const result = computeBudgetTransition(
 		{
@@ -55,6 +79,7 @@ test('computeBudgetTransition none strategy skips carryover', () => {
 			budget_spent: 1,
 			budget_period: 'monthly',
 			budget_reset_at: null,
+			budget_reserved_micros: 0,
 		},
 		{
 			target_budget_base: 100,
@@ -65,6 +90,27 @@ test('computeBudgetTransition none strategy skips carryover', () => {
 	);
 	assert.equal(result.carryover, 0);
 	assert.equal(result.after.budget_max, 100);
+});
+
+test('computeBudgetTransition preserves active reservations when spent is not reset', () => {
+	const result = computeBudgetTransition(
+		{
+			budget_max: 10,
+			budget_base: 10,
+			budget_spent: 1,
+			budget_period: 'monthly',
+			budget_reset_at: null,
+			budget_reserved_micros: 250_000,
+		},
+		{
+			target_budget_base: 10,
+			budget_period: 'monthly',
+			carryover_strategy: 'none',
+			reset_spent: false,
+		},
+	);
+	assert.equal(result.after.budget_spent, 1);
+	assert.equal(result.after.budget_reserved_micros, 250_000);
 });
 
 test('assertAndFinalizeUserAuditInsert accepts admin_budget_transition source', () => {

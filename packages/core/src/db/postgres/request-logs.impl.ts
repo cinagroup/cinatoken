@@ -13,10 +13,30 @@ import type { PostgresDatabaseClient } from '../../storage/database-client';
 import type { RequestLogsRepository } from '../../storage/gateway-repository-interfaces';
 import { sqlitePlaceholdersToPg } from '../shared/sql-placeholders';
 import { filterAllowedRequestLogStatuses } from '../request-log-status-filter';
+import type { GenerationRequestLogRow, RoutePerformanceSample } from '../request-logs-types';
+import {
+	buildRecentRoutePerformanceSamplesSql,
+	normalizeRoutePerformanceSamplesPerTarget,
+} from '../route-performance-sampling';
 
 export function createPostgresRequestLogsRepository(db: PostgresDatabaseClient): RequestLogsRepository {
 	const pg = db.raw;
 	return {
+		async getRequestLogByIdForOwner(options): Promise<GenerationRequestLogRow | null> {
+			const rows = (await pg.unsafe(
+				`SELECT rl.id, rl.request_operation, rl.status, rl.created_at,
+				        rl.latency_ms, rl.model_id, rl.provider_name,
+				        rl.input_tokens, rl.output_tokens, rl.upstream_message_id
+				 FROM api_key_request_logs rl
+				 WHERE rl.id = $1
+				   AND rl.user_id = $2
+				   AND rl.workspace_id = $3
+				 LIMIT 1`,
+				[options.id, options.userId, options.workspaceId]
+			)) as GenerationRequestLogRow[];
+			return rows[0] ?? null;
+		},
+
 		async getRequestLogsByKeyId(
 			apiKeyId: string,
 			page: number,
@@ -66,6 +86,7 @@ export function createPostgresRequestLogsRepository(db: PostgresDatabaseClient):
 		async getRequestLogs(options: {
 			page?: number;
 			pageSize?: number;
+			workspaceId?: string;
 			apiKeyId?: string;
 			userId?: string;
 			userEmail?: string;
@@ -82,6 +103,11 @@ export function createPostgresRequestLogsRepository(db: PostgresDatabaseClient):
 			const offset = (page - 1) * pageSize;
 			const conditions: string[] = [];
 			const bindValues: unknown[] = [];
+
+			if (options.workspaceId) {
+				conditions.push('rl.workspace_id = ?');
+				bindValues.push(options.workspaceId);
+			}
 
 			if (options.apiKeyId) {
 				conditions.push('rl.api_key_id = ?');
@@ -151,8 +177,20 @@ export function createPostgresRequestLogsRepository(db: PostgresDatabaseClient):
 			startDate: string;
 			endDate: string;
 			endExclusive?: boolean;
+			userId?: string;
+			workspaceId?: string;
 		}) {
 			const comparator = options.endExclusive ? '<' : '<=';
+			const conditions = [`created_at >= $1`, `created_at ${comparator} $2`];
+			const values: unknown[] = [options.startDate, options.endDate];
+			if (options.userId) {
+				values.push(options.userId);
+				conditions.push(`user_id = $${values.length}`);
+			}
+			if (options.workspaceId) {
+				values.push(options.workspaceId);
+				conditions.push(`workspace_id = $${values.length}`);
+			}
 			const q = `SELECT
 				COUNT(*)::bigint as total_requests,
 				SUM(CASE WHEN status = 'success' THEN 1 ELSE 0 END)::bigint as success_count,
@@ -166,8 +204,8 @@ export function createPostgresRequestLogsRepository(db: PostgresDatabaseClient):
 				COALESCE(${sqlMoneyRound('SUM(charged_cost)')}, 0) as charged_cost,
 				COALESCE(${sqlMoneyRound('SUM(metered_cost)')}, 0) as metered_cost,
 				COALESCE(${sqlMoneyRound('SUM(standard_cost)')}, 0) as standard_cost
-			 FROM api_key_request_logs WHERE created_at >= $1 AND created_at ${comparator} $2`;
-			const rows = (await pg.unsafe(q, [options.startDate, options.endDate])) as Record<string, unknown>[];
+			 FROM api_key_request_logs WHERE ${conditions.join(' AND ')}`;
+			const rows = (await pg.unsafe(q, values as Parameters<typeof pg.unsafe>[1])) as Record<string, unknown>[];
 			return mapRequestStatsByRangeRow(rows[0]);
 		},
 
@@ -246,6 +284,19 @@ export function createPostgresRequestLogsRepository(db: PostgresDatabaseClient):
 				`SELECT * FROM api_key_request_logs WHERE status = 'error' ORDER BY created_at DESC LIMIT $1`,
 				[limit]
 			)) as RequestLogRow[];
+		},
+
+		async getRecentRoutePerformanceSamples(options): Promise<RoutePerformanceSample[]> {
+			if (options.routeTargetIds.length === 0) return [];
+			const maxSamplesPerRoute = normalizeRoutePerformanceSamplesPerTarget(options.maxSamplesPerRoute);
+			if (maxSamplesPerRoute === 0) return [];
+			const sql = sqlitePlaceholdersToPg(
+				buildRecentRoutePerformanceSamplesSql('postgres', options.routeTargetIds.length),
+			);
+			return (await pg.unsafe(
+				sql,
+				[...options.routeTargetIds, options.sinceIso, maxSamplesPerRoute] as Parameters<typeof pg.unsafe>[1],
+			)) as RoutePerformanceSample[];
 		},
 
 		async getDistinctActiveUsersCount(options: { startDate: string; endDate: string; endExclusive?: boolean }): Promise<number> {

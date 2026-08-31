@@ -14,6 +14,7 @@ export const REQUEST_OPERATIONS_BY_PROTOCOL = {
 	openai: [
 		"chat",
 		"responses",
+		"embeddings",
 		"images.generations",
 		"images.edits",
 		"audio.transcriptions",

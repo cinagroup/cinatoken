@@ -21,9 +21,13 @@ export type AdminBindings = {
 	CINATOKEN_OIDC_CLIENT_SECRET?: string;
 	CINATOKEN_OIDC_BRIDGE_SECRET?: string;
 	CINATOKEN_OIDC_TRANSACTION_SECRET?: string;
+	CINATOKEN_IDENTITY_EVENTS_SECRET?: string;
+	CINAAUTH_ORGANIZATION_ADMIN_ROLES?: string;
 	SHARED_KEY_ENCRYPTION_SECRET?: string;
 	CHAIN_JOBS?: Queue<ChainJobMessage>;
 	/** Workers rate-limiting binding（wrangler.base.jsonc ratelimits）。认证失败限速；未注入时跳过。 */
+	AUTH_RATE_LIMITER?: { limit(options: { key: string }): Promise<{ success: boolean }> };
+	/** 旧部署绑定名兼容；新部署统一使用 `AUTH_RATE_LIMITER`。 */
 	RATE_LIMITER?: { limit(options: { key: string }): Promise<{ success: boolean }> };
 	/** Node / 自托管数据库使用 `DATABASE_URL`；Cloudflare Postgres 只使用 `HYPERDRIVE`。 */
 	DATABASE_URL?: string;

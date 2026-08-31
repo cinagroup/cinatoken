@@ -1,7 +1,7 @@
 import { and, desc, eq, gt, lte } from 'drizzle-orm';
 import type { MySqlDatabaseClient } from '../../storage/database-client';
 import type { AdminAccessRepository } from '../../storage/gateway-repository-interfaces';
-import { hashLookupKey } from '../../lib/key-hash';
+import { hashLookupKey, matchesLookupKeyHash } from '../../lib/key-hash';
 import {
 	adminApiKeysTable,
 	adminSessionsTable,
@@ -34,7 +34,7 @@ export function createMySqlAdminAccessRepository(db: MySqlDatabaseClient): Admin
 			const hash = await hashLookupKey(secretKey);
 			const byHash = await drizzle.select().from(adminApiKeysTable)
 				.where(and(eq(adminApiKeysTable.secretKeyHash, hash), eq(adminApiKeysTable.status, 'active'))).limit(1);
-			if (byHash[0]) return mapKey(byHash[0]);
+			if (byHash[0] && await matchesLookupKeyHash(byHash[0].secretKey, hash)) return mapKey(byHash[0]);
 			const row = await drizzle.select().from(adminApiKeysTable)
 				.where(and(eq(adminApiKeysTable.secretKey, secretKey), eq(adminApiKeysTable.status, 'active'))).limit(1);
 			if (!row[0]) return null;
@@ -48,13 +48,28 @@ export function createMySqlAdminAccessRepository(db: MySqlDatabaseClient): Admin
 		},
 		async updateApiKey(id, patch) {
 			if (Object.keys(patch).length === 0 || !(await getById(id))) return false;
-			await drizzle.update(adminApiKeysTable).set({ ...patch, updatedAt: new Date().toISOString() }).where(eq(adminApiKeysTable.id, id));
+			const secretKeyHash = patch.secretKey === undefined
+				? undefined
+				: await hashLookupKey(patch.secretKey);
+			await drizzle.update(adminApiKeysTable).set({
+				...patch,
+				...(secretKeyHash === undefined ? {} : {
+					secretKeyHash,
+					keyPrefix: patch.secretKey!.slice(0, 12),
+				}),
+				updatedAt: new Date().toISOString(),
+			}).where(eq(adminApiKeysTable.id, id));
 			return true;
 		},
-		async rotateApiKey(id, secretKey, keyPrefix) {
+		async rotateApiKey(id, secretKey) {
 			const existing = await getById(id);
 			if (!existing || existing.status !== 'active') return false;
-			await drizzle.update(adminApiKeysTable).set({ secretKey, keyPrefix, updatedAt: new Date().toISOString() }).where(eq(adminApiKeysTable.id, id));
+			await drizzle.update(adminApiKeysTable).set({
+				secretKey,
+				secretKeyHash: await hashLookupKey(secretKey),
+				keyPrefix: secretKey.slice(0, 12),
+				updatedAt: new Date().toISOString(),
+			}).where(eq(adminApiKeysTable.id, id));
 			return true;
 		},
 		async revokeApiKey(id) {

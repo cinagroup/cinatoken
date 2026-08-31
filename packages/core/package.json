@@ -12,7 +12,15 @@
 		"build": "npm run build:migrate && npm run build:node-index",
 		"build:migrate": "tsc -p tsconfig.build.migrate.json",
 		"build:node-index": "esbuild src/index.ts --bundle --platform=node --format=esm --outfile=dist/index.js --packages=external --log-level=warning",
-		"test:unit": "tsx --test src/storage/drizzle/client-postgres.test.ts src/chain-jobs.test.ts src/db/image-token-usage.test.ts src/db/audio-token-usage.test.ts src/db/image-per-image-usage.test.ts src/db/pricing-profile.test.ts src/db/pricing-schedule.test.ts src/db/user-charged-cost-factors.test.ts src/db/model-modalities.test.ts src/db/model-route-policy.test.ts src/db/route-pool-tier-strategies.test.ts src/db/route-pool-sticky-types.test.ts src/db/route-pool-sticky-bindings.contract.test.ts src/db/public-model-daily-stats.test.ts src/db/public-model-daily-stats-write.contract.test.ts src/lib/business-timezone.test.ts src/lib/shared-key-encryption.test.ts src/lib/provider-key-encryption.test.ts src/lib/key-hash.test.ts src/lib/public-model-slug.test.ts src/services/budget-transition-service.test.ts src/storage/runtime-database-config.test.ts src/upstream-protocol-images-url.test.ts src/provider-endpoints.test.ts src/route-topology.test.ts src/realtime-protocol.test.ts src/gcp-service-account-token.test.ts src/vertex-openai-model.test.ts"
+		"pretest:unit": "npm run test:ordinary-budget -w @octafuse/core && npm run test:workspaces -w @octafuse/core && npm run test:generation-lookup -w @octafuse/core && npm run test:model-endpoints -w @octafuse/core && npm run test:management-keys -w @octafuse/core && npm run test:key-expiry -w @octafuse/core && npm run test:key-limits -w @octafuse/core",
+		"test:ordinary-budget": "tsx --test src/storage/api-key-auth.d1.test.ts src/storage/user-budget-spent-micros-migration.d1.test.ts src/storage/user-budget.d1.test.ts src/storage/user-budget-critical-write.d1.test.ts",
+		"test:workspaces": "tsx --test src/storage/workspaces.d1.test.ts src/storage/preset-guardrail-workspaces.d1.test.ts",
+		"test:generation-lookup": "tsx --test src/db/request-logs-generation-lookup.contract.test.ts",
+		"test:model-endpoints": "tsx --test src/model-endpoint-catalog.test.ts src/model-endpoint-runtime.test.ts src/model-endpoint-backfill.test.ts src/storage/model-endpoints.sql-repositories.test.ts",
+		"test:management-keys": "tsx --test src/storage/management-api-keys.d1.test.ts src/storage/management-gateway-keys.d1.test.ts",
+		"test:key-expiry": "tsx --test src/services/key-service.test.ts src/storage/api-key-auth.d1.test.ts",
+		"test:key-limits": "tsx --test src/gateway-key-limits.test.ts src/workspace-budgets.test.ts",
+		"test:unit": "tsx --test src/storage/drizzle/client-postgres.test.ts src/storage/organization-identity.d1.test.ts src/storage/guardrail-budget.d1.test.ts src/storage/route-data-policy-subject.d1.test.ts src/storage/model-endpoints.d1.test.ts src/request-presets.test.ts src/guardrails.test.ts src/route-data-policy.test.ts src/organization-identity.test.ts src/chain-jobs.test.ts src/db/admin-access-key-mutation.test.ts src/db/guardrail-assignment-policy.test.ts src/db/request-logs-user-stats.d1.test.ts src/db/route-performance-sampling.test.ts src/db/image-token-usage.test.ts src/db/audio-token-usage.test.ts src/db/image-per-image-usage.test.ts src/db/pricing-profile.test.ts src/db/pricing-schedule.test.ts src/db/user-charged-cost-factors.test.ts src/db/model-modalities.test.ts src/db/model-route-policy.test.ts src/db/route-routing-metadata.test.ts src/db/postgres/model-route-patch.test.ts src/db/route-pool-tier-strategies.test.ts src/db/route-pool-sticky-types.test.ts src/db/route-pool-sticky-bindings.contract.test.ts src/db/public-model-daily-stats.test.ts src/db/public-model-daily-stats-write.contract.test.ts src/lib/business-timezone.test.ts src/lib/shared-key-encryption.test.ts src/lib/provider-key-encryption.test.ts src/lib/key-hash.test.ts src/lib/public-model-slug.test.ts src/services/budget-transition-service.test.ts src/services/user-plan-patch-service.test.ts src/storage/runtime-database-config.test.ts src/upstream-protocol-images-url.test.ts src/provider-endpoints.test.ts src/route-topology.test.ts src/realtime-protocol.test.ts src/gcp-service-account-token.test.ts src/vertex-openai-model.test.ts"
 	},
 	"files": [
 		"dist",
@@ -47,6 +55,7 @@
 		"./db/user-audit-snapshot": "./src/db/user-audit-snapshot.ts",
 		"./db/users-list-sort": "./src/db/users-list-sort.ts",
 		"./db/api-keys-list-sort": "./src/db/api-keys-list-sort.ts",
+		"./model-endpoint-catalog": "./src/model-endpoint-catalog.ts",
 		"./lib/business-timezone": "./src/lib/business-timezone.ts",
 		"./lib/billing-currency": "./src/lib/billing-currency.ts",
 		"./lib/public-model-slug": "./src/lib/public-model-slug.ts",
@@ -63,10 +72,12 @@
 		"./services/key-service": "./src/services/key-service.ts",
 		"./services/user-service": "./src/services/user-service.ts",
 		"./services/budget-transition-service": "./src/services/budget-transition-service.ts",
+		"./services/user-plan-patch-service": "./src/services/user-plan-patch-service.ts",
 		"./storage/drizzle/client-d1": "./src/storage/drizzle/client-d1.ts",
 		"./storage/repositories-d1": "./src/storage/repositories-d1.ts",
 		"./storage/runtime-database-config": "./src/storage/runtime-database-config.ts",
 		"./storage/context": "./src/storage/context.ts",
+		"./storage/organization-identity": "./src/storage/organization-identity.ts",
 		"./upstream-protocol": "./src/upstream-protocol.ts",
 		"./provider-endpoints": "./src/provider-endpoints.ts",
 		"./route-topology": "./src/route-topology.ts",
@@ -82,7 +93,7 @@
 		"postgres": "^3.4.9"
 	},
 	"devDependencies": {
-		"@cloudflare/workers-types": "^5.20260823.1",
+		"@cloudflare/workers-types": "^5.20260829.1",
 		"@types/node": "^25.5.0",
 		"esbuild": "^0.27.3",
 		"tsx": "^4.21.0",

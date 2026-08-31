@@ -11,6 +11,8 @@ import {
 import {
 	GEMINI_GENERATE_OPERATION,
 	GEMINI_LEGACY_GENERATE_OPERATIONS,
+	LEGACY_WILDCARD_OPERATION,
+	REQUEST_OPERATIONS_BY_PROTOCOL,
 	canonicalizeRequestOperation,
 } from './route-topology';
 import {
@@ -23,6 +25,7 @@ import {
 export type ProviderEndpointCapability =
 	| 'chat'
 	| 'responses'
+	| 'embeddings'
 	| 'images.generations'
 	| 'images.edits'
 	| 'audio.transcriptions'
@@ -42,6 +45,7 @@ export type ProviderEndpointCapability =
 export const OPENAI_ENDPOINT_CAPABILITIES = [
 	'chat',
 	'responses',
+	'embeddings',
 	'images.generations',
 	'images.edits',
 	'audio.transcriptions',
@@ -78,6 +82,49 @@ const CAPABILITIES_BY_PROTOCOL: Record<UpstreamProtocol, readonly ProviderEndpoi
 	anthropic: ANTHROPIC_ENDPOINT_CAPABILITIES,
 	gemini: GEMINI_ENDPOINT_CAPABILITIES,
 	dashscope: DASHSCOPE_ENDPOINT_CAPABILITIES,
+};
+
+/**
+ * Route operations describe a protocol lifecycle, while Provider endpoint
+ * capabilities describe the concrete URLs that lifecycle calls. Most map
+ * one-to-one; DashScope async and realtime operations are deliberately
+ * explicit because they call different HTTP/WSS endpoints.
+ */
+const ENDPOINT_CAPABILITIES_BY_OPERATION: Record<
+	UpstreamProtocol,
+	Readonly<Record<string, readonly ProviderEndpointCapability[]>>
+> = {
+	openai: {
+		chat: ['chat'],
+		responses: ['responses'],
+		embeddings: ['embeddings'],
+		'images.generations': ['images.generations'],
+		'images.edits': ['images.edits'],
+		'audio.transcriptions': ['audio.transcriptions'],
+		'audio.speech': ['audio.speech'],
+	},
+	anthropic: {
+		messages: ['messages'],
+	},
+	gemini: {
+		[GEMINI_GENERATE_OPERATION]: [GEMINI_GENERATE_OPERATION],
+	},
+	dashscope: {
+		'audio.transcriptions': ['audio.transcriptions'],
+		'audio.transcriptions.multimodal': ['audio.transcriptions.multimodal'],
+		'audio.transcriptions.async': [
+			'audio.transcriptions',
+			'audio.transcriptions.tasks',
+		],
+		'audio.transcriptions.realtime.inference': ['audio.realtime.inference'],
+		'audio.transcriptions.realtime.session': ['audio.realtime.session'],
+		'audio.speech': ['audio.speech'],
+		// SpeechSynthesizer streaming uses the same HTTP/SSE endpoint.
+		'audio.speech.stream': ['audio.speech'],
+		'audio.speech.multimodal': ['audio.speech.multimodal'],
+		'audio.speech.realtime.inference': ['audio.realtime.inference'],
+		'audio.speech.realtime.session': ['audio.realtime.session'],
+	},
 };
 
 /** Write-side whitelist: gemini accepts canonical + legacy keys. */
@@ -477,11 +524,13 @@ export function resolveUpstreamEndpoint(
 	const base = cfg?.base;
 	if (base) {
 		const root = trimSlash(base);
-		switch (resolvedCapability) {
+			switch (resolvedCapability) {
 			case 'chat':
 				return `${root}/chat/completions`;
 			case 'responses':
 				return `${root}/responses`;
+			case 'embeddings':
+				return `${root}/embeddings`;
 			case 'images.generations':
 				return buildOpenAiCompatibleImagesUrl(root, 'generations');
 			case 'images.edits':
@@ -583,4 +632,65 @@ export function listConfiguredCapabilities(
 		return hasAny ? [GEMINI_GENERATE_OPERATION] : [];
 	}
 	return all.filter((cap) => Boolean(endpoints[cap]));
+}
+
+/**
+ * Concrete Provider endpoint capabilities required to execute one route
+ * operation. Unknown operations return `null` and therefore fail closed.
+ *
+ * A legacy `*` target can receive every public operation for its protocol, so
+ * it is callable only when the Provider can satisfy the union of those
+ * operations. Provider resource-only capabilities (for example DashScope
+ * hotwords and voices) are intentionally not part of that route union.
+ */
+export function requiredProviderEndpointCapabilitiesForOperation(
+	protocol: UpstreamProtocol,
+	upstreamOperation: string
+): ProviderEndpointCapability[] | null {
+	const operation = canonicalizeRequestOperation(
+		protocol,
+		upstreamOperation.trim()
+	);
+	if (!operation) return null;
+
+	if (operation !== LEGACY_WILDCARD_OPERATION) {
+		const requirements = ENDPOINT_CAPABILITIES_BY_OPERATION[protocol][operation];
+		return requirements ? [...requirements] : null;
+	}
+
+	const requirements: ProviderEndpointCapability[] = [];
+	const seen = new Set<ProviderEndpointCapability>();
+	for (const routableOperation of REQUEST_OPERATIONS_BY_PROTOCOL[protocol]) {
+		const operationRequirements =
+			ENDPOINT_CAPABILITIES_BY_OPERATION[protocol][routableOperation];
+		if (!operationRequirements) return null;
+		for (const capability of operationRequirements) {
+			if (seen.has(capability)) continue;
+			seen.add(capability);
+			requirements.push(capability);
+		}
+	}
+	return requirements;
+}
+
+/**
+ * Whether the Provider has every concrete endpoint needed by the selected
+ * upstream route operation. This is stricter than protocol-level presence:
+ * an embeddings-only OpenAI configuration cannot publish a chat route, and a
+ * DashScope async transcription route needs both submit and task-query URLs.
+ */
+export function providerSupportsUpstreamOperation(
+	protocol: UpstreamProtocol,
+	upstreamOperation: string,
+	provider: ProviderEndpointsSource
+): boolean {
+	const required = requiredProviderEndpointCapabilitiesForOperation(
+		protocol,
+		upstreamOperation
+	);
+	if (!required) return false;
+	const configured = new Set(
+		listConfiguredCapabilities(parseProviderEndpoints(provider), protocol)
+	);
+	return required.every((capability) => configured.has(capability));
 }

@@ -3,13 +3,14 @@
  * 数值列在 SQLite / PG 驱动下可能为 number 或 string，读侧统一为 `number | string` 的联合或经映射后的 number。
  */
 
-import type { ModelRouteRow } from '../types';
+import type { ModelRouteRow } from "../types";
 
 /** 管理端密钥列表行（`getAllApiKeys`，JOIN `users`）。 */
 export interface AdminApiKeyListItem {
 	id: string;
 	key: string;
 	user_id: string;
+	workspace_id: string;
 	name: string | null;
 	user_email: string | null;
 	budget_max: number | null;
@@ -59,6 +60,7 @@ export interface ModelRouteJoinRow {
 	weight?: number;
 	price_override: string | null;
 	custom_params: string | null;
+	routing_metadata: string | null;
 	upstream_protocol: string;
 	route_pool_id: string | null;
 	upstream_operation: string;
@@ -76,6 +78,35 @@ export interface ModelRouteJoinRow {
 	pool_sticky_epoch?: number | null;
 	model_name: string | null;
 	provider_name: string | null;
+	/** Joined provider scheduling state; omitted only by legacy/test repository adapters. */
+	provider_status?: string | null;
+}
+
+/**
+ * Minimal route-target projection used by endpoint discovery.
+ *
+ * This intentionally excludes model/provider display joins, route-pool strategy
+ * metadata, and surfaces. Provider credentials stay behind ProvidersRepository's
+ * encryption boundary and are loaded separately in one bounded batch.
+ */
+export interface ModelEndpointDiscoveryRouteBindingRow {
+	endpoint_id: string;
+	subject_fingerprint: string | null;
+	id: string;
+	model_id: string;
+	provider_id: string;
+	provider_model_name: string;
+	status: string;
+	/** Route-group membership used by bounded public catalog discovery. */
+	route_group: string;
+	custom_params: string | null;
+	/** Legacy endpoint facts are retained only as a drift gate during cutover. */
+	routing_metadata: string | null;
+	upstream_protocol: string;
+	upstream_operation: string;
+	adapter: string;
+	route_pool_id: string | null;
+	pool_status: string | null;
 }
 
 /** `getModelRouteRowById`：`SELECT * FROM model_routes`。 */

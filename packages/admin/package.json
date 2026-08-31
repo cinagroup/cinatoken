@@ -14,14 +14,15 @@
 		"deploy": "npm run build:cf && node ./scripts/deploy-cloudflare.mjs",
 		"cf-typegen": "wrangler types --env-interface CloudflareEnv cloudflare-env.d.ts --include-runtime false",
 		"typecheck": "tsc -p tsconfig.json --noEmit",
-		"pretest:unit": "npm run build:node-index -w @octafuse/core",
-		"test:unit": "tsx --test lib/admin-nav.test.ts lib/browser-mutation.test.ts lib/cinaauth/*.test.ts lib/evm-signature.test.ts lib/portal-contract.test.ts lib/public-catalog.test.ts lib/public-chat.test.ts lib/public-routes.test.ts lib/unified-session.test.ts lib/wallet-challenge.test.ts lib/summarize-charged-cost-factors.test.ts lib/services/admin/*.test.ts lib/playground/proxy-response-headers.test.ts lib/dashscope-realtime-client.test.ts lib/pricing-ui-image.test.ts lib/image-generations.test.ts lib/simulator/endpoint.test.ts lib/playground/sse-event-summary.test.ts lib/playground/response-observations.test.ts lib/playground/samples/index.test.ts app/gateway/simulator/simulator-utils.test.ts app/gateway/playground/playground-utils.test.ts app/gateway/routes/route-utils.test.ts app/gateway/routes/route-strategy-meta.test.ts app/gateway/providers/provider-utils.test.ts app/gateway/tools/components/provider-card-state.test.ts app/gateway/request-logs/request-log-display.test.ts"
+		"pretest:unit": "npm run build:node-index -w @octafuse/core && npm run test:endpoints-ui -w @octafuse/admin",
+		"test:endpoints-ui": "tsx --test app/gateway/endpoints/endpoint-api.test.ts",
+		"test:unit": "tsx --test lib/admin-auth-rate-limit.test.ts lib/admin-nav.test.ts lib/browser-mutation.test.ts lib/cinaauth/*.test.ts lib/evm-signature.test.ts lib/portal-contract.test.ts lib/public-catalog.test.ts lib/public-gateway.test.ts lib/public-chat.test.ts lib/public-routes.test.ts lib/unified-session.test.ts lib/wallet-challenge.test.ts lib/workspace-cookie.test.ts lib/summarize-charged-cost-factors.test.ts lib/services/admin/*.test.ts lib/services/user/*.test.ts lib/playground/proxy-response-headers.test.ts lib/dashscope-realtime-client.test.ts lib/pricing-ui-image.test.ts lib/image-generations.test.ts lib/simulator/endpoint.test.ts lib/playground/sse-event-summary.test.ts lib/playground/response-observations.test.ts lib/playground/samples/index.test.ts app/gateway/simulator/simulator-utils.test.ts app/gateway/playground/playground-utils.test.ts app/gateway/routes/route-utils.test.ts app/gateway/routes/route-strategy-meta.test.ts app/gateway/providers/provider-utils.test.ts app/gateway/tools/components/provider-card-state.test.ts app/gateway/request-logs/request-log-display.test.ts"
 	},
 	"dependencies": {
-		"@noble/curves": "^1.9.7",
-		"@noble/hashes": "^1.8.0",
 		"@heroicons/react": "^2.2.0",
 		"@lobehub/icons-static-svg": "1.94.0",
+		"@noble/curves": "^1.9.7",
+		"@noble/hashes": "^1.8.0",
 		"@octafuse/core": "*",
 		"@octafuse/tool-engines": "*",
 		"@opennextjs/cloudflare": "1.19.4",
@@ -32,11 +33,13 @@
 		"oauth4webapi": "^3.8.5",
 		"react": "^19.2.4",
 		"react-dom": "^19.2.4",
+		"react-markdown": "^10.1.0",
 		"recharts": "^2.15.4",
+		"remark-gfm": "^4.0.1",
 		"simple-icons": "^16.13.0"
 	},
 	"devDependencies": {
-		"@cloudflare/workers-types": "^5.20260823.1",
+		"@cloudflare/workers-types": "^5.20260829.1",
 		"@types/node": "^20.11.0",
 		"@types/react": "^18.3.0",
 		"@types/react-dom": "^18.3.0",
@@ -48,6 +51,6 @@
 		"tailwindcss": "^3.4.1",
 		"typescript": "^5.7.2",
 		"viem": "^2.55.19",
-		"wrangler": "^4.125.0"
+		"wrangler": "^4.127.1"
 	}
 }

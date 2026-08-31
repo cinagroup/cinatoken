@@ -157,7 +157,7 @@ adminModelRoutes.patch('/:id', async (c) => {
 	}
 	try {
 		const repos = c.get('repositories');
-		await updateModelRouteService(repos, id, body);
+		await updateModelRouteService(repos, id, body, c.get('principal').id);
 		return c.json({ success: true, message: 'Route updated successfully' });
 	} catch (error) {
 		return handleAdminRouteError(c, error, 'Failed to update route');

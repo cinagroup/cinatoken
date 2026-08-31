@@ -4,3 +4,6 @@ export type ProviderProtocolBases = {
 	/** `providers.endpoints` JSON */
 	endpoints: string | null;
 };
+
+/** Cross-driver/D1-safe maximum for provider id batch reads. */
+export const MAX_PROVIDER_ID_BATCH_SIZE = 100;

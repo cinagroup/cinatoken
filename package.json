@@ -38,6 +38,8 @@
 		"db:provision:pg-roles": "dotenv -c -- tsx scripts/db/cutover/provision-postgres-roles.ts",
 		"db:grant:pg-runtime": "dotenv -c -- tsx scripts/db/cutover/grant-postgres-runtime.ts",
 		"db:preflight:d1-source": "tsx scripts/db/cutover/preflight-d1-source.ts --d1-source=remote",
+		"db:endpoint-backfill:plan": "tsx scripts/db/model-endpoints/cli.ts plan",
+		"db:endpoint-backfill:apply": "tsx scripts/db/model-endpoints/cli.ts apply",
 		"db:migrate:mysql": "dotenv -c -- tsx packages/core/src/migrate/cli.ts --driver mysql",
 		"db:migrate:mysql:docker": "node packages/core/dist/migrate/cli.js --driver mysql",
 		"db:list:pg": "dotenv -c -- tsx scripts/db/diag/list-pg-databases.ts",
@@ -48,12 +50,16 @@
 		"test:gateway:node-smoke": "dotenv -c -- tsx scripts/smoke/test-node-core-routes.ts",
 		"test:gateway:postgres-smoke": "dotenv -c -- tsx scripts/smoke/test-postgres-core-routes.ts",
 		"test:gateway:sql-storage-smoke": "dotenv -c -- tsx scripts/smoke/test-storage-concurrent-charge.ts",
+		"test:public-catalog-readiness": "tsx scripts/smoke/test-public-catalog-readiness.ts",
+		"test:public-catalog-readiness:contract": "tsx --test scripts/smoke/test-public-catalog-readiness.test.ts",
 		"test:deploy": "node --test scripts/deploy/*.test.mjs",
 		"verify:proxy-bundle": "node scripts/ci/verify-proxy-bundle-externals.mjs",
 		"test:d1-portal-ledger": "node scripts/ci/verify-d1-portal-ledger.mjs",
 		"test:postgres-migration": "node scripts/ci/verify-postgres-migration-contract.mjs",
+		"test:mysql-migration": "node scripts/ci/verify-mysql-migration-contract.mjs",
+		"test:endpoint-backfill-plan": "tsx --test scripts/db/model-endpoints/*.test.ts",
 		"test:postgres-role-provisioning": "tsx --test scripts/db/cutover/postgres-role-provisioning.test.ts scripts/db/cutover/diagnostic-auth.test.ts scripts/db/cutover/preflight-d1-source.test.ts scripts/db/cutover/hyperdrive-bootstrap-worker.test.ts",
-		"test:unit": "npm run test:deploy && npm run test:d1-portal-ledger && npm run test:postgres-migration && npm run test:postgres-role-provisioning && npm run test:unit -w @octafuse/core && npm run test:unit -w @octafuse/proxy && npm run test:unit -w @octafuse/admin && npm run test:unit -w @cinatoken/chain-worker"
+		"test:unit": "npm run test:deploy && npm run test:d1-portal-ledger && npm run test:postgres-migration && npm run test:mysql-migration && npm run test:endpoint-backfill-plan && npm run test:public-catalog-readiness:contract && npm run test:postgres-role-provisioning && npm run test:unit -w @octafuse/core && npm run test:unit -w @octafuse/tool-engines && npm run test:unit -w @octafuse/proxy && npm run test:unit -w @octafuse/admin && npm run test:unit -w @cinatoken/chain-worker"
 	},
 	"devDependencies": {
 		"@changesets/changelog-github": "^0.5.1",
@@ -62,6 +68,6 @@
 		"dotenv-cli": "^11.0.0",
 		"tsx": "^4.21.0",
 		"typescript": "^5.7.2",
-		"wrangler": "^4.125.0"
+		"wrangler": "^4.127.1"
 	}
 }

@@ -255,6 +255,11 @@ function ModelBadges({ model }: { model: PublicCatalogModel }) {
 	const t = useTranslations('publicModels');
 	return (
 		<div className="flex flex-wrap gap-1.5">
+			{model.dataPolicySummary.zdrAvailable ? (
+				<span className="rounded-md border border-emerald-500/40 bg-emerald-500/10 px-2 py-1 text-[10px] font-semibold text-emerald-600 dark:text-emerald-400">
+					ZDR
+				</span>
+			) : null}
 			{model.inputModalities.slice(0, 4).map((modality) => (
 				<span key={modality} className="rounded-md bg-[var(--home-menu-hover)] px-2 py-1 text-[11px] home-muted">
 					{t.has(`modalities.${modality}`) ? t(`modalities.${modality}`) : modality}
@@ -323,7 +328,10 @@ function ModelsTable({ models, billingCurrency }: { models: PublicCatalogModel[]
 								<p className="home-text font-medium"><Link href={modelHref(model)} className="rounded-sm transition-colors hover:text-sky-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500">{model.displayName}</Link></p>
 								<p className="home-faint mt-1 max-w-[340px] truncate font-mono text-[11px]">{model.id}</p>
 							</td>
-							<td className="home-muted px-4 py-4">{model.vendor}</td>
+							<td className="home-muted px-4 py-4">
+								<span>{model.vendor}</span>
+								{model.dataPolicySummary.zdrAvailable ? <span className="ml-2 rounded border border-emerald-500/40 px-1.5 py-0.5 text-[10px] font-semibold text-emerald-600 dark:text-emerald-400">ZDR</span> : null}
+							</td>
 							<td className="home-muted px-4 py-4 tabular-nums">{formatTokenCount(model.contextWindow, locale)}</td>
 							<td className="home-text px-4 py-4 font-medium tabular-nums"><PriceSummary profile={model.pricingProfile} currency={billingCurrency} locale={locale} /></td>
 						</tr>
@@ -508,6 +516,11 @@ export default function PublicModelsPage({ catalog }: { catalog: PublicCatalogRe
 						<div className="home-border-strong rounded-xl border px-6 py-12 text-center">
 							<h2 className="home-text text-lg font-semibold">{t('unavailable.title')}</h2>
 							<p className="home-muted mx-auto mt-2 max-w-lg text-sm leading-6">{t('unavailable.description')}</p>
+						</div>
+					) : catalog.models.length === 0 ? (
+						<div className="home-border-strong rounded-xl border px-6 py-12 text-center">
+							<h2 className="home-text text-lg font-semibold">{t('publishedEmpty.title')}</h2>
+							<p className="home-muted mx-auto mt-2 max-w-lg text-sm leading-6">{t('publishedEmpty.description')}</p>
 						</div>
 					) : visibleModels.length === 0 ? (
 						<div className="home-border-strong rounded-xl border px-6 py-12 text-center">

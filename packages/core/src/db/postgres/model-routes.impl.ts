@@ -11,10 +11,7 @@ import {
 	providersTable as pgProviders,
 	routePoolsTable as pgPools,
 } from '../../storage/drizzle/schema.pg';
-
-function snakeToCamel(key: string): string {
-	return key.replace(/_([a-z])/g, (_, c: string) => c.toUpperCase());
-}
+import { buildPostgresModelRoutePatch } from './model-route-patch';
 
 export function createPostgresModelRoutesRepository(db: PostgresDatabaseClient): ModelRoutesRepository {
 	const drizzle = db.drizzle;
@@ -37,6 +34,7 @@ export function createPostgresModelRoutesRepository(db: PostgresDatabaseClient):
 					weight: pgMr.weight,
 					price_override: pgMr.priceOverride,
 					custom_params: pgMr.customParams,
+					routing_metadata: pgMr.routingMetadata,
 					upstream_protocol: pgMr.upstreamProtocol,
 					route_pool_id: pgMr.routePoolId,
 					upstream_operation: pgMr.upstreamOperation,
@@ -50,6 +48,7 @@ export function createPostgresModelRoutesRepository(db: PostgresDatabaseClient):
 					pool_sticky_epoch: pgPools.stickyEpoch,
 					model_name: pgModels.displayName,
 					provider_name: pgProviders.name,
+					provider_status: pgProviders.status,
 				})
 				.from(pgMr)
 				.leftJoin(pgModels, eq(pgMr.modelId, pgModels.id))
@@ -88,6 +87,7 @@ export function createPostgresModelRoutesRepository(db: PostgresDatabaseClient):
 				weight: Number(r.weight),
 				price_override: r.price_override,
 				custom_params: r.custom_params,
+				routing_metadata: r.routing_metadata,
 				upstream_protocol: r.upstream_protocol,
 				route_pool_id: r.route_pool_id,
 				upstream_operation: r.upstream_operation,
@@ -106,6 +106,7 @@ export function createPostgresModelRoutesRepository(db: PostgresDatabaseClient):
 					r.pool_sticky_epoch == null ? null : Number(r.pool_sticky_epoch),
 				model_name: r.model_name,
 				provider_name: r.provider_name,
+				provider_status: r.provider_status,
 			}));
 		},
 
@@ -120,6 +121,7 @@ export function createPostgresModelRoutesRepository(db: PostgresDatabaseClient):
 			weight?: number;
 			priceOverride: unknown;
 			customParams: string | null;
+			routingMetadata: string | null;
 			upstreamProtocol: string;
 			routePoolId: string;
 			upstreamOperation: string;
@@ -137,6 +139,7 @@ export function createPostgresModelRoutesRepository(db: PostgresDatabaseClient):
 				weight: params.weight ?? 1,
 				priceOverride: params.priceOverride == null ? null : String(params.priceOverride),
 				customParams: params.customParams,
+				routingMetadata: params.routingMetadata,
 				upstreamProtocol: params.upstreamProtocol,
 				routePoolId: params.routePoolId,
 				upstreamOperation: params.upstreamOperation,
@@ -160,6 +163,7 @@ export function createPostgresModelRoutesRepository(db: PostgresDatabaseClient):
 				weight: r.weight,
 				price_override: r.priceOverride,
 				custom_params: r.customParams,
+				routing_metadata: r.routingMetadata,
 				upstream_protocol: r.upstreamProtocol,
 				route_pool_id: r.routePoolId,
 				upstream_operation: r.upstreamOperation,
@@ -250,12 +254,7 @@ export function createPostgresModelRoutesRepository(db: PostgresDatabaseClient):
 		},
 
 		async updateModelRouteByPatch(id: string, patch: Record<string, unknown>): Promise<number> {
-			const set: Record<string, unknown> = {};
-			for (const [key, value] of Object.entries(patch)) {
-				if (value === undefined) continue;
-				const camel = snakeToCamel(key);
-				set[camel] = value;
-			}
+			const set = buildPostgresModelRoutePatch(patch);
 			if (Object.keys(set).length === 0) return 0;
 			const updated = await drizzle
 				.update(pgMr)

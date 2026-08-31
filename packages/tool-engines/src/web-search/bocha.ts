@@ -4,6 +4,10 @@
 
 import { clampCount, filterResults, normalizeHost } from './domain-filter';
 import { WebSearchProviderError, type WebSearchParams, type WebSearchResult } from './types';
+import {
+	assertToolProviderOutputWithinLimit,
+	readToolProviderResponseText,
+} from '../http/bounded-response';
 
 type BochaRawPage = {
 	name?: string;
@@ -52,7 +56,10 @@ export async function searchBochaWeb(params: WebSearchParams): Promise<WebSearch
 		body: JSON.stringify(body),
 	});
 
-	const text = await response.text();
+	const text = await readToolProviderResponseText(response, {
+		provider: 'bocha',
+		errorConstructor: WebSearchProviderError,
+	});
 	let json: BochaRawResponse;
 	try {
 		json = JSON.parse(text) as BochaRawResponse;
@@ -90,5 +97,10 @@ export async function searchBochaWeb(params: WebSearchParams): Promise<WebSearch
 			datePublished: p.datePublished?.trim() || undefined,
 		}));
 
-	return filterResults(mapped, params.allowedDomains, params.blockedDomains);
+	const results = filterResults(mapped, params.allowedDomains, params.blockedDomains);
+	assertToolProviderOutputWithinLimit(results, {
+		provider: 'bocha',
+		errorConstructor: WebSearchProviderError,
+	});
+	return results;
 }

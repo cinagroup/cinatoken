@@ -2,15 +2,16 @@
 
 本文定义 CinaToken 将业务数据从 Cloudflare D1 迁入 PostgreSQL 的生产边界和操作顺序。目标 PostgreSQL 可以与 CinaAuth 共用同一数据库实例，但 CinaToken 只拥有 **`cinatoken_gateway` Schema**；不得读写 CinaAuth 的身份、会话或迁移表。
 
-> 当前 Phase 3 已完成目标 Schema 初始化和运行身份隔离：2026-08-24 使用环境中的 Cloudflare API Token，经一次性受保护 Worker 在 CinaAuth 所用 PlanetScale PostgreSQL 18.6 内创建 `cinatoken_gateway`、专用 migrator/runtime 角色和两个独立 Hyperdrive；两个 256 位随机密码只在 Worker 内存、PostgreSQL 与 Hyperdrive 写入式配置之间传递。目标已完成 0001–0030，幂等重跑为 0 新执行/30 跳过；访问探针确认 migrator 仅拥有本 Schema DDL 权限，runtime 只有业务表 DML/函数执行权限且不能读写 `schema_migrations`。所有临时 Worker 均已删除。生产 D1 的 22 张必需表和 11 项不变量预检仍通过，但最终备份、源写入冻结、ETL/对账和灰度尚未执行，因此生产继续使用 D1。
+> 当前仓库切换合同：源 D1 迁移链尾为 `0054_workspace_budgets.sql`，目标 PostgreSQL 迁移链尾为 `0053_workspace_budgets.sql`。D1 的 `0041_user_budget_spent_micros.sql` 是专用精度升级，目标仍以精确 `NUMERIC(18,6)` 保存 `budget_spent`，因此两个后端的尾版本号有意相差一。最终备份、源写入冻结、ETL、零差异对账和灰度仍是独立的生产放行门。
 
 ## 1. 不变量
 
 - 业务表固定在 `cinatoken_gateway`，运行时 `search_path=cinatoken_gateway,public`。
 - 若只存在历史 `octafuse_gateway`，迁移器会在持有 advisory lock 后将其原地改名；若新旧 Schema 同时存在，迁移器拒绝继续，必须人工对账。
-- D1 与 PostgreSQL 的迁移版本必须一一对应。目前目标必须完成 `0030_chain_job_transactions.sql`。
+- 源 D1 应完成 `0054_workspace_budgets.sql`（且包含 D1 专用 `0041_user_budget_spent_micros.sql`），目标 PostgreSQL 必须完成 `0053_workspace_budgets.sql`；不得只按相同版本号推断跨后端等价性。
+- Endpoint-first 迁移只建表，不从旧 `providers.endpoints`、`model_routes.routing_metadata`、`price_override` 或 `models.pricing_profile` 猜测证据；D1 `0048`/PostgreSQL `0047` 为每条 `model_endpoint_routes` 绑定增加 nullable `subject_fingerprint`，D1 `0049`/PostgreSQL `0048` 增加 operation-scoped `audio_capabilities`。旧链接保持 `NULL`、旧音频证据保持 `{}`，并在读取门禁启用后 fail closed。ETL 只复制已显式写入的 `model_endpoints` / `model_endpoint_routes`；切换读取路径前必须另行完成 dual-write、可审计 backfill/reverify 与逐路由对账。
 - `portal_sessions`、`admin_sessions` 不迁移，目标会话会被清空；切换后普通用户和管理员都必须重新登录。
-- 整数微单位列是门户资金的权威状态；旧 `NUMERIC(18,6)` 列只作兼容投影。
+- D1 普通用户预算以 `users.budget_spent_micros INTEGER` 为权威状态，`budget_spent REAL` 只作兼容投影；PostgreSQL 没有该 D1 专用列，以精确 `NUMERIC(18,6)` 保存同一微单位金额。
 - ETL 不复制 CinaAuth 用户、账户、Session 或 OAuth/OIDC 数据。CinaAuth 仍是身份权威，CinaToken 仅保存稳定身份映射和业务数据。
 
 ## 2. 上线前置条件
@@ -19,7 +20,7 @@
 2. 使用两个专用数据库角色：`cinatoken_gateway_migrator` 拥有 Schema 并仅用于迁移/ETL，`cinatoken_gateway_runtime` 仅拥有业务表运行时权限。不得复用 CinaAuth Hyperdrive 的数据库用户。
 3. 目标没有任何线上读写流量；源 D1 已进入维护模式并冻结所有业务写入。远程 D1 的逐表查询不共享一个事务快照，未冻结源库时不能形成一致副本。
 4. `DATABASE_URL` 通过进程环境或秘密管理器注入，不写入仓库、Shell 历史、命令参数或日志。
-5. 已确认 D1 完成 0030，且没有未处理的重复活跃提现、负数资金余额或损坏外键。
+5. 已确认 D1 至少完成 0040，且没有未处理的活跃 Guardrail/普通预算 reservation、重复活跃提现、负数资金余额或损坏外键。正常生产切换应先完成 0041；只有下述只读预检明确报告 `legacy_real_safe_fallback` 时才允许从旧 D1 兼容迁移。
 6. 已创建指向目标 PostgreSQL 的 CinaToken 专用 Hyperdrive 配置；其数据库用户必须是 `cinatoken_gateway_runtime`，Proxy、Admin/Portal 与 Chain Worker 使用同一个 Hyperdrive ID。
 
 ### 2.1 源 D1 只读预检
@@ -32,14 +33,14 @@ npm run db:preflight:d1-source
 
 脚本只执行固定的聚合/元数据 SQL，不接受任意查询，不输出 Key、Session、交易原文或用户字段。它验证：
 
-- 0030 和全部 ETL/会话表存在；
+- 0040 和全部 ETL/会话表存在，并核对 0041 迁移账本与 `users.budget_spent_micros` 列是否一致；
 - 外键、CinaAuth 身份对、重复身份映射和空邮箱；
-- 资金微单位非负且与兼容投影一致；
+- 0041 源的权威普通预算微单位非负、不超过 `9007199254740991` 且与 REAL 兼容投影一致；无 0041 的旧源只有在每一行 `budget_spent` 都非负且严格小于 `2^32` units 时才可唯一恢复到微单位；
 - 每用户最多一笔活跃提现，提现金额和锁定余额一致；
 - 链上 Outbox 类型、交易摘要和业务行引用有效；
 - 0024 删除的 `MASTER_KEY` 不再残留。
 
-2026-08-24 的生产只读快照：2 个用户、1 个 CinaAuth 映射、1 个 API Key、1 组用户资金行、Portal/Admin Session 各 1；提现、NFT、账本和链上 Outbox 均为 0。所有 11 项不变量通过。此快照仅证明当时状态，最终冻结后必须重跑，且 Session 仍按本方案不迁移。
+历史只读快照只证明采样时刻。最终冻结后必须重跑当前版本预检，记录普通预算精度模式，且 Session 仍按本方案不迁移。
 
 最终窗口的冻结顺序固定为：先以 `CINATOKEN_MAINTENANCE_MODE=true` 部署 Proxy 与 Admin，并从公网确认二者均返回带 `Retry-After` 的 503；再移除 `cinatoken-chain-jobs` 的 Chain Worker consumer，等待在途批次结束；最后在一段观察间隔前后分别读取 D1 Time Travel bookmark 和全套只读预检，只有 bookmark 与业务计数保持不变才可传入 `--source-frozen`。恢复服务时由 Postgres 生产部署重新加入 Queue consumer，不能在 D1 ETL 期间提前恢复。
 
@@ -82,7 +83,7 @@ npm run db:migrate:pg
 npm run db:grant:pg-runtime
 ```
 
-`db:grant:pg-runtime` 会验证当前用户和 Schema owner 都是 `cinatoken_gateway_migrator`、迁移已到 0030，然后向 runtime 授予所有业务表/序列/函数的最小运行权限，并明确撤销其对 `schema_migrations` 的全部权限。
+`db:grant:pg-runtime` 会验证当前用户和 Schema owner 都是 `cinatoken_gateway_migrator`、目标迁移已到 `0053_workspace_budgets.sql`，然后向 runtime 授予所有业务表/序列/函数的最小运行权限，并明确撤销其对 `schema_migrations` 的全部权限。
 
 迁移必须可重复执行。随后用只读 SQL 验证：
 
@@ -94,9 +95,9 @@ FROM cinatoken_gateway.schema_migrations
 ORDER BY version;
 ```
 
-预期 `current_schema()` 为 `cinatoken_gateway`，迁移记录完整到 `0030_chain_job_transactions.sql`。若 `octafuse_gateway` 与 `cinatoken_gateway` 同时存在，停止操作，不得删除或自动合并任一侧。
+预期 `current_schema()` 为 `cinatoken_gateway`，迁移记录完整到 `0053_workspace_budgets.sql`。若 `octafuse_gateway` 与 `cinatoken_gateway` 同时存在，停止操作，不得删除或自动合并任一侧。
 
-在仅持有 Hyperdrive、无明文连接串的 Cloudflare 操作环境中，使用 `postgres-migrations-worker.ts` 将固定的 30 个 SQL 模块打包到一次性 Worker。入口只接受强 Bearer Token，不接受任意 SQL；迁移和 advisory lock 位于同一事务，成功后调用同一套 runtime 授权逻辑。2026-08-24 首次执行为 30/30，第二次为 0 新执行/30 跳过，随后迁移 Worker 已删除。
+在仅持有 Hyperdrive、无明文连接串的 Cloudflare 操作环境中，使用 `postgres-migrations-worker.ts` 将固定的 47 个 PostgreSQL SQL 模块打包到一次性 Worker。入口只接受强 Bearer Token，不接受任意 SQL；迁移和 advisory lock 位于同一事务，成功后调用同一套 runtime 授权逻辑。验证幂等重跑为 0 新执行/47 跳过后删除迁移 Worker。
 
 ### 3.3 创建专用 Hyperdrive
 
@@ -104,7 +105,7 @@ ORDER BY version;
 
 临时诊断 Worker 必须先通过 stdin/秘密管理器配置至少 32 字符的 `PREFLIGHT_TOKEN` Secret，并由不会记录 Authorization Header 的受控客户端访问。两个诊断入口在 Secret 缺失或 Bearer Token 不匹配时均 fail closed；验证结束后删除整个临时 Worker，而不是只删除 Secret。
 
-2026-08-24 已创建两个独立配置：`cinatoken-gateway-migrator` 只用于迁移/ETL，`cinatoken-gateway-runtime` 用于长期业务运行，二者均禁用 SQL 结果缓存。`hyperdrive-access-probe-worker.ts` 的双身份探针已验证角色、Schema owner、0030/30 条迁移记录、业务表 DML、函数执行、禁止 `TRUNCATE`、禁止访问迁移表等合同，探针 Worker 随后删除。生产配置只预置 runtime Hyperdrive ID；在最终 ETL/对账和放行门完成前不得设置 `DATABASE_DRIVER=postgres`。
+两个 Hyperdrive 必须保持独立：`cinatoken-gateway-migrator` 只用于迁移/ETL，`cinatoken-gateway-runtime` 用于长期业务运行，二者均禁用 SQL 结果缓存。`hyperdrive-access-probe-worker.ts` 的双身份探针必须验证角色、Schema owner、`0053_workspace_budgets.sql`/53 条目标迁移记录、业务表 DML、函数执行、禁止 `TRUNCATE`、禁止访问迁移表等合同；验证后删除探针 Worker。生产配置只预置 runtime Hyperdrive ID；在最终 ETL/对账和放行门完成前不得设置 `DATABASE_DRIVER=postgres`。
 
 ## 4. 演练
 
@@ -122,13 +123,19 @@ DATABASE_URL='postgres://...' npx tsx scripts/db/cutover/etl-d1-to-postgres.ts \
 
 `--target-offline` 和 `--source-frozen` 是强制确认项。ETL 会：
 
-1. 校验目标 Schema、0030 迁移和全部表；
+1. 校验目标 Schema、0040 迁移和全部表，并判定源 D1 普通预算精度模式；
 2. 获取 PostgreSQL 事务级 advisory lock；
 3. 在同一目标事务中暂时禁用资金触发器，避免复制历史收益/提现时二次记账；
-4. 按外键顺序复制全部持久业务表，并把 SQLite 的 `0/1` 布尔值转换为 PostgreSQL 布尔值；
+4. 按外键顺序复制全部持久业务表，并把 SQLite 的 `0/1` 布尔值转换为 PostgreSQL 布尔值；对 `users` 排除 D1 专用 `budget_spent_micros` 目标列，把 D1 返回的整数 TEXT 用整数运算格式化为六位小数文本后写入 PostgreSQL `NUMERIC`，不经过 JavaScript 浮点除法；
 5. 清空目标 Portal/Admin Session，恢复触发器并原子提交。
 
-任一目标 SQL 或 D1 读取失败都会回滚目标事务。`--tables` 只用于离线修复，不能与 `--truncate` 同用，也不能代替最终全量复制；Upsert 不会删除目标中的陈旧行。
+任一目标 SQL 或 D1 读取失败都会回滚目标事务。`--tables` 只用于离线修复，不能与 `--truncate` 同用，也不能代替最终全量复制；Upsert 不会删除目标中的陈旧行。`api_key_request_logs`、`guardrail_budget_windows`、`guardrail_budget_reservations` 是不可拆分的 Guardrail 核算组：`--tables` 涉及其中任一表时必须同时列出三表，并且目标三表必须全部为空。全量复制只要不带 `--truncate`，同样会在事务内先验证目标核算组三表为空并 fail closed。
+
+### 4.1 普通预算精度兼容与恢复
+
+- **0041 源（首选）**：ETL/Worker 只读 `CAST(budget_spent_micros AS TEXT)`，并逐行写成精确六位小数。迁移账本存在但列缺失、或列存在但账本缺失，都视为 Schema 漂移并立即停止。
+- **旧 D1（临时兼容）**：只有预检和 ETL 自身都证明所有 REAL 值满足 `0 <= budget_spent < 4294967296` 时才用 D1 的 `ROUND(... * 1000000)` 生成整数 TEXT。该边界保证 binary64 的最大舍入误差小于半个微单位；范围外数据不得猜测、截断或带容差迁移。
+- **0041 应用失败**：Cloudflare D1/Wrangler 会回滚失败迁移。保留冻结状态和备份，定位超出安全回填范围的旧 REAL 行，通过已审批的数据来源恢复其权威微单位后再重跑；不得手工把迁移记录标为已完成。
 
 ## 5. 最终复制与对账
 
@@ -147,10 +154,11 @@ DATABASE_URL='postgres://...' npx tsx scripts/db/cutover/etl-d1-to-postgres.ts \
 
 ```bash
 DATABASE_URL='postgres://...' npx tsx scripts/db/cutover/reconcile-d1-postgres.ts \
-  --d1-source=remote
+  --d1-source=remote \
+  --source-frozen
 ```
 
-对账覆盖所有迁移表行数、请求费用/Token 汇总、用户预算审计、资金微单位汇总以及目标会话清空。任何 `ERR` 都必须阻断切流；脚本以非零状态退出。
+对账会发出多条不共享快照的 D1 查询，因此同样强制要求 `--source-frozen`；该参数只是运维人员对冻结流程已完成的确认，不会在数据库中创建机械 fencing。对账覆盖所有迁移表行数、请求费用/Token 汇总、用户预算审计、资金微单位汇总以及目标会话清空。普通用户 `budget_spent` 不再比较 REAL 总和或使用容差：脚本按批读取源端权威/安全恢复的整数 TEXT，与 PostgreSQL `NUMERIC * 1000000` 的精确文本逐用户比较，任一微单位差异都会阻断切流。Guardrail 核算会分别在源与目标逐窗口验证：不存在 `reserved`/`dispatched` reservation，`reserved_micros=0`，`settled_micros` 等于所有终态 reservation 的已核算微单位汇总，`unreserved_micros` 等于窗口内未被 `settled`/`expired` reservation 覆盖的请求日志汇总。任一不变量失败都会输出审计差异并阻断切流；脚本以非零状态退出。
 
 此外应抽样核验：
 
@@ -185,7 +193,7 @@ DATABASE_DRIVER=postgres
 
 - [ ] 源/目标备份可恢复
 - [x] 目标角色权限最小化，migrator/runtime Hyperdrive 相互隔离
-- [x] Schema 仅为 `cinatoken_gateway`，0030 完整、重复执行无变化
+- [ ] 源 D1 0041（或经明确审计的安全旧源兼容模式）和目标 PostgreSQL 0040 合同均通过
 - [ ] 最终复制发生在源冻结与目标离线窗口
 - [ ] 全量对账零差异，目标 Session 为零
 - [ ] 普通用户/管理员越权测试与 CinaAuth 身份映射测试通过

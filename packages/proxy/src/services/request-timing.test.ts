@@ -33,6 +33,7 @@ test('RequestTimingCollector snapshots stable timing metrics and attempt metadat
 	const first = timing.startAttempt(route());
 	timing.markAttemptHeaders(first, 429);
 	timing.markAttemptFailover(first);
+	timing.markModelFallback();
 
 	const second = timing.startAttempt(route({ providerId: 'provider-b', providerKeyId: 'key-b' }));
 	timing.markAttemptHeaders(second, 200);
@@ -47,7 +48,7 @@ test('RequestTimingCollector snapshots stable timing metrics and attempt metadat
 
 	const snapshot = timing.snapshot();
 	assert.equal(snapshot.upstreamAttemptCount, 2);
-	assert.equal(snapshot.upstreamFailoverCount, 1);
+	assert.equal(snapshot.upstreamFailoverCount, 2);
 	assert.equal(typeof snapshot.gatewayOverheadMs, 'number');
 	assert.equal(typeof snapshot.upstreamResponseMs, 'number');
 	assert.equal(typeof snapshot.finalUpstreamHeadersMs, 'number');
@@ -58,10 +59,12 @@ test('RequestTimingCollector snapshots stable timing metrics and attempt metadat
 	const metadata = JSON.parse(snapshot.timingMetadata ?? '{}') as {
 		first_byte_ms?: number;
 		first_event_ms?: number;
+		model_fallback_count?: number;
 		attempts?: Array<{ provider_id: string; status: number; selected: boolean }>;
 	};
 	assert.equal(typeof metadata.first_byte_ms, 'number');
 	assert.equal(typeof metadata.first_event_ms, 'number');
+	assert.equal(metadata.model_fallback_count, 1);
 	assert.equal(metadata.attempts?.length, 2);
 	assert.equal(metadata.attempts?.[0]?.status, 429);
 	assert.equal(metadata.attempts?.[1]?.provider_id, 'provider-b');

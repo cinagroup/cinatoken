@@ -108,6 +108,7 @@ export type RouteFormData = {
 	/** Same-priority weight; default 1 */
 	weight: number;
 	custom_params_json: string;
+	routing_metadata_json: string;
 	route_group: string;
 	charged_factor: string;
 	metered_factor: string;
@@ -192,6 +193,7 @@ export const EMPTY_ROUTE_FORM: RouteFormData = {
 	priority: 0,
 	weight: 1,
 	custom_params_json: '',
+	routing_metadata_json: '',
 	route_group: 'default',
 	charged_factor: '1',
 	metered_factor: '1',

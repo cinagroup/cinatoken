@@ -1,6 +1,6 @@
 import type { D1DatabaseClient } from '../../storage/database-client';
 import type { AdminAccessRepository } from '../../storage/gateway-repository-interfaces';
-import { hashLookupKey } from '../../lib/key-hash';
+import { hashLookupKey, matchesLookupKeyHash } from '../../lib/key-hash';
 import type {
 	AdminApiKeyRow,
 	AdminApiKeyStatus,
@@ -71,7 +71,7 @@ export function createD1AdminAccessRepository(db: D1DatabaseClient): AdminAccess
 			// 审计 M2-2：哈希优先查找；miss 回退明文（迁移窗口），命中即惰性回填。
 			const hash = await hashLookupKey(secretKey);
 			const byHash = await raw.prepare(`SELECT ${KEY_COLUMNS} FROM admin_api_keys WHERE secret_key_hash = ? AND status = 'active'`).bind(hash).first<KeySqlRow>();
-			if (byHash) return mapKey(byHash);
+			if (byHash && await matchesLookupKeyHash(byHash.secret_key, hash)) return mapKey(byHash);
 			const row = await raw.prepare(`SELECT ${KEY_COLUMNS} FROM admin_api_keys WHERE secret_key = ? AND status = 'active'`).bind(secretKey).first<KeySqlRow>();
 			if (!row) return null;
 			await raw.prepare('UPDATE admin_api_keys SET secret_key_hash = ? WHERE id = ?').bind(hash, row.id).run();
@@ -82,7 +82,7 @@ export function createD1AdminAccessRepository(db: D1DatabaseClient): AdminAccess
 			await raw.prepare(`INSERT INTO admin_api_keys
           (id, name, description, secret_key, key_prefix, permissions_json, secret_key_hash, status, created_at, updated_at)
           VALUES (?, ?, ?, ?, ?, ?, ?, 'active', datetime('now'), datetime('now'))`)
-				.bind(params.id, params.name, params.description ?? null, params.secretKey, secretHash, params.keyPrefix, params.permissionsJson)
+				.bind(params.id, params.name, params.description ?? null, params.secretKey, params.keyPrefix, params.permissionsJson, secretHash)
 				.run();
 		},
 		async updateApiKey(id, patch) {
@@ -91,8 +91,14 @@ export function createD1AdminAccessRepository(db: D1DatabaseClient): AdminAccess
 			if (patch.name !== undefined) { sets.push('name = ?'); values.push(patch.name); }
 			if (patch.description !== undefined) { sets.push('description = ?'); values.push(patch.description); }
 			if (patch.permissionsJson !== undefined) { sets.push('permissions_json = ?'); values.push(patch.permissionsJson); }
-			if (patch.secretKey !== undefined) { sets.push('secret_key = ?'); values.push(patch.secretKey); }
-			if (patch.keyPrefix !== undefined) { sets.push('key_prefix = ?'); values.push(patch.keyPrefix); }
+			if (patch.secretKey !== undefined) {
+				sets.push('secret_key = ?', 'secret_key_hash = ?', 'key_prefix = ?');
+				values.push(
+					patch.secretKey,
+					await hashLookupKey(patch.secretKey),
+					patch.secretKey.slice(0, 12),
+				);
+			}
 			if (patch.status !== undefined) { sets.push('status = ?'); values.push(patch.status); }
 			if (patch.revokedAt !== undefined) { sets.push('revoked_at = ?'); values.push(patch.revokedAt); }
 			if (sets.length === 0) return false;
@@ -100,8 +106,10 @@ export function createD1AdminAccessRepository(db: D1DatabaseClient): AdminAccess
 			const result = await raw.prepare(`UPDATE admin_api_keys SET ${sets.join(', ')} WHERE id = ?`).bind(...values, id).run();
 			return Number(result.meta.changes ?? 0) > 0;
 		},
-		async rotateApiKey(id, secretKey, keyPrefix) {
-			const result = await raw.prepare(`UPDATE admin_api_keys SET secret_key = ?, key_prefix = ?, updated_at = datetime('now') WHERE id = ? AND status = 'active'`).bind(secretKey, keyPrefix, id).run();
+		async rotateApiKey(id, secretKey) {
+			const secretKeyHash = await hashLookupKey(secretKey);
+			const result = await raw.prepare(`UPDATE admin_api_keys SET secret_key = ?, secret_key_hash = ?, key_prefix = ?, updated_at = datetime('now') WHERE id = ? AND status = 'active'`)
+				.bind(secretKey, secretKeyHash, secretKey.slice(0, 12), id).run();
 			return Number(result.meta.changes ?? 0) > 0;
 		},
 		async revokeApiKey(id) {

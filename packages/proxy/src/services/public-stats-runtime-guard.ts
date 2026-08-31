@@ -21,8 +21,11 @@ const DEFAULT_TTL_MS = 60_000;
 const DEFAULT_RATE_LIMIT = 12;
 const DEFAULT_RATE_PERIOD_MS = 60_000;
 
-function canonicalRangeKey(request: Request): string {
-	return new URL(request.url).searchParams.get('range') ?? '7d';
+function canonicalCacheKey(request: Request): string {
+	const url = new URL(request.url);
+	url.hash = '';
+	url.searchParams.sort();
+	return `${url.pathname}?${url.searchParams.toString()}`;
 }
 
 export function createPublicStatsSingleflight(): PublicStatsSingleflight {
@@ -59,7 +62,7 @@ export function createInMemoryPublicStatsRuntimeGuard(options?: {
 	return {
 		cache: {
 			async match(request) {
-				const key = canonicalRangeKey(request);
+				const key = canonicalCacheKey(request);
 				const entry = cached.get(key);
 				if (!entry) return undefined;
 				if (entry.expiresAt <= now()) {
@@ -69,7 +72,7 @@ export function createInMemoryPublicStatsRuntimeGuard(options?: {
 				return entry.response.clone();
 			},
 			async put(request, response) {
-				cached.set(canonicalRangeKey(request), {
+				cached.set(canonicalCacheKey(request), {
 					expiresAt: now() + ttlMs,
 					response: response.clone(),
 				});

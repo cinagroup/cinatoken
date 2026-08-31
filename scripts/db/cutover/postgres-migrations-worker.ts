@@ -36,6 +36,25 @@ import migration0031 from '../../../packages/core/migrations-postgres/0031_ledge
 import migration0032 from '../../../packages/core/migrations-postgres/0032_key_hash_lookup.sql';
 import migration0033 from '../../../packages/core/migrations-postgres/0033_gateway_key_secret_removal.sql';
 import migration0034 from '../../../packages/core/migrations-postgres/0034_public_model_daily_stats.sql';
+import migration0035 from '../../../packages/core/migrations-postgres/0035_request_presets.sql';
+import migration0036 from '../../../packages/core/migrations-postgres/0036_guardrails.sql';
+import migration0037 from '../../../packages/core/migrations-postgres/0037_route_data_policies.sql';
+import migration0038 from '../../../packages/core/migrations-postgres/0038_organization_identity_projection.sql';
+import migration0039 from '../../../packages/core/migrations-postgres/0039_guardrail_budget_reservations.sql';
+import migration0040 from '../../../packages/core/migrations-postgres/0040_user_budget_reservations.sql';
+import migration0041 from '../../../packages/core/migrations-postgres/0041_workspaces.sql';
+import migration0042 from '../../../packages/core/migrations-postgres/0042_gateway_keys_workspace.sql';
+import migration0043 from '../../../packages/core/migrations-postgres/0043_workspace_presets_guardrails.sql';
+import migration0044 from '../../../packages/core/migrations-postgres/0044_route_routing_metadata.sql';
+import migration0045 from '../../../packages/core/migrations-postgres/0045_route_data_policy_subject_fingerprint.sql';
+import migration0046 from '../../../packages/core/migrations-postgres/0046_model_endpoints.sql';
+import migration0047 from '../../../packages/core/migrations-postgres/0047_model_endpoint_route_subject_fingerprint.sql';
+import migration0048 from '../../../packages/core/migrations-postgres/0048_model_endpoint_audio_capabilities.sql';
+import migration0049 from '../../../packages/core/migrations-postgres/0049_model_endpoint_evidence_ledger.sql';
+import migration0050 from '../../../packages/core/migrations-postgres/0050_management_api_keys.sql';
+import migration0051 from '../../../packages/core/migrations-postgres/0051_gateway_key_expiry.sql';
+import migration0052 from '../../../packages/core/migrations-postgres/0052_gateway_key_limits.sql';
+import migration0053 from '../../../packages/core/migrations-postgres/0053_workspace_budgets.sql';
 
 interface MigrationEnv {
 	MIGRATOR_HYPERDRIVE: { readonly connectionString: string };
@@ -78,6 +97,25 @@ const MIGRATIONS = [
 	['0032_key_hash_lookup.sql', migration0032],
 	['0033_gateway_key_secret_removal.sql', migration0033],
 	['0034_public_model_daily_stats.sql', migration0034],
+	['0035_request_presets.sql', migration0035],
+	['0036_guardrails.sql', migration0036],
+	['0037_route_data_policies.sql', migration0037],
+	['0038_organization_identity_projection.sql', migration0038],
+	['0039_guardrail_budget_reservations.sql', migration0039],
+	['0040_user_budget_reservations.sql', migration0040],
+	['0041_workspaces.sql', migration0041],
+	['0042_gateway_keys_workspace.sql', migration0042],
+	['0043_workspace_presets_guardrails.sql', migration0043],
+	['0044_route_routing_metadata.sql', migration0044],
+	['0045_route_data_policy_subject_fingerprint.sql', migration0045],
+	['0046_model_endpoints.sql', migration0046],
+	['0047_model_endpoint_route_subject_fingerprint.sql', migration0047],
+	['0048_model_endpoint_audio_capabilities.sql', migration0048],
+	['0049_model_endpoint_evidence_ledger.sql', migration0049],
+	['0050_management_api_keys.sql', migration0050],
+	['0051_gateway_key_expiry.sql', migration0051],
+	['0052_gateway_key_limits.sql', migration0052],
+	['0053_workspace_budgets.sql', migration0053],
 ] as const;
 
 export default {

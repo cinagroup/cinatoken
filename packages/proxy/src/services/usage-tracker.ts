@@ -1,12 +1,17 @@
 /**
  * 用量与计费：按百万 token 单价计算 `metered_cost`（供应成本）、`standard_cost`（目录标准成本）、`charged_cost`（用户预算）。
- * - 基数始终来自 `models.pricing_profile`（按 input_tokens 选档）。
- * - `metered_cost` / `charged_cost` = 目录价 × 有效倍率（无 `schedule.mode` 时叠乘；`override` 时窗内用窗口 factor）。
- * - `standard_cost` = 目录价（不乘路由倍率）。
+ * - 已路由请求的基数始终来自 request-local verified Model Endpoint flat pricing；
+ *   route-less gateway audit rows alone retain the legacy model profile path.
+ * - `metered_cost` / `charged_cost` = endpoint tariff × effective route factor.
+ * - `standard_cost` = endpoint list tariff（不乘路由倍率）。
  * - nested `price_override.metered` / `charged` tiers 忽略不计价。
  * 写入 `api_key_request_logs`（含 `pricing_audit` JSON，见 `PRICING_AUDIT_JSON_SCHEMA_VERSION`）并在非 error 且 charged>0 时累加 `users.budget_spent`。
  */
-import type { GatewayRepositories, UpstreamProtocol } from '@octafuse/core';
+import type {
+	GatewayRepositories,
+	UpstreamProtocol,
+	VerifiedModelEndpointSnapshot,
+} from '@octafuse/core';
 import {
 	getBusinessTimezone,
 	getUserBudgetSnapshot,
@@ -43,8 +48,83 @@ import {
 	applyRequestBodyLoggingPolicy,
 	type RequestBodyLoggingMode,
 } from './request-body-log-policy';
+import type { ModelFallbackTrace } from './model-fallbacks';
+import type { RouteResult } from './model-router';
+import {
+	resolveEndpointTextPricing,
+	type EndpointPricingAuditIdentity,
+} from './endpoint-billing-pricing';
 
 const TOKENS_PER_MILLION = 1_000_000;
+
+export type OrdinaryBudgetUsageSettlement = {
+	requestId: string;
+	/** Reservation period generation, used only to keep audit snapshots period-safe. */
+	budgetEpoch: number;
+	/** Request-scoped reservation ceiling used for an accurate audit snapshot. */
+	reservedMicros: number;
+	/** Preserve the reserved ceiling when dispatched usage cannot be proven. */
+	unknownCost: boolean;
+};
+
+export function ordinaryBudgetAuditCharge(params: {
+	settlement: OrdinaryBudgetUsageSettlement | null | undefined;
+	currentBudgetEpoch: number | null;
+	chargedCost: number;
+	shouldChargeBudget: boolean;
+}): number {
+	const settlement = params.settlement;
+	if (settlement && (
+		!Number.isSafeInteger(settlement.budgetEpoch)
+		|| settlement.budgetEpoch < 0
+		|| !Number.isSafeInteger(settlement.reservedMicros)
+		|| settlement.reservedMicros <= 0
+	)) {
+		throw new Error('Ordinary budget settlement audit metadata is invalid');
+	}
+	if (settlement && params.currentBudgetEpoch !== settlement.budgetEpoch) return 0;
+	if (settlement?.unknownCost) return settlement.reservedMicros / TOKENS_PER_MILLION;
+	return params.shouldChargeBudget ? params.chargedCost : 0;
+}
+
+export function ordinaryBudgetAuditSnapshotTransition(params: {
+	settlement: OrdinaryBudgetUsageSettlement | null | undefined;
+	currentBudgetEpoch: number | null;
+	currentReservedMicros: number;
+	chargedCost: number;
+	shouldChargeBudget: boolean;
+}): {
+	auditCharge: number;
+	afterReservedMicros: number;
+	settlementEpochMatches: boolean;
+} {
+	if (!Number.isSafeInteger(params.currentReservedMicros) || params.currentReservedMicros < 0) {
+		throw new Error('Ordinary budget audit snapshot reserved total is invalid');
+	}
+	const auditCharge = ordinaryBudgetAuditCharge(params);
+	const settlementEpochMatches = params.settlement == null
+		|| params.currentBudgetEpoch === params.settlement.budgetEpoch;
+	return {
+		auditCharge,
+		afterReservedMicros: params.settlement && settlementEpochMatches
+			? Math.max(0, params.currentReservedMicros - params.settlement.reservedMicros)
+			: params.currentReservedMicros,
+		settlementEpochMatches,
+	};
+}
+
+export function ordinaryBudgetSettlementForCriticalWrite(
+	settlement: OrdinaryBudgetUsageSettlement | null | undefined,
+) {
+	if (!settlement) return undefined;
+	return {
+		requestId: settlement.requestId,
+		mode: settlement.unknownCost ? 'reserved' as const : 'actual' as const,
+		reason: settlement.unknownCost
+			? 'usage_unavailable_after_dispatch'
+			: 'request_usage_settled',
+	};
+}
 
 /**
  * 根据 token 数量与模型单价（每百万 token）计算原始成本；纯本地计算，不采用上游账单字段。
@@ -75,10 +155,16 @@ function buildRequestPricingAuditJson(options: {
 	supplierAudit: PriceResolutionAuditSide;
 	standardAudit: PriceResolutionAuditSide;
 	chargedAudit: PriceResolutionAuditSide;
+	endpointPricing?: EndpointPricingAuditIdentity & {
+		cache_write_strategy: 'maximum_declared_rate';
+	};
+	requestCosts?: { supplier: number; standard: number; user_charge: number };
 }): string {
 	return JSON.stringify({
 		v: PRICING_AUDIT_JSON_SCHEMA_VERSION,
 		basis_tokens: options.usage.input_tokens,
+		...(options.endpointPricing ? { endpoint_pricing: options.endpointPricing } : {}),
+		...(options.requestCosts ? { request_costs: options.requestCosts } : {}),
 		snapshot: {
 			supplier: options.supplierAudit,
 			standard: options.standardAudit,
@@ -120,6 +206,8 @@ export async function recordUsage(
 	repos: GatewayRepositories,
 	params: {
 		api_key_id: string;
+		workspace_id: string;
+		request_log_id?: string;
 		user_id: string;
 		user_email: string | null;
 		model_id: string;
@@ -146,7 +234,13 @@ export async function recordUsage(
 			attempted_target: string | null;
 			result: string;
 		} | null;
+		/** Cross-model fallback audit extension; contains no prompts or provider secrets. */
+		model_fallback_trace?: ModelFallbackTrace | null;
+		/** Sanitized Provider Routing decision; contains no prompt or credentials. */
+		provider_routing_trace?: RouteResult['providerRoutingTrace'] | null;
 		usage: UsageFromStream;
+		/** Verified request-local pricing/evidence snapshot selected for this route. */
+		endpoint_pricing_snapshot?: VerifiedModelEndpointSnapshot | null;
 		model_pricing_profile?: string | null;
 		route_price_override_json?: string | null;
 		/** `users.charged_cost_factors` JSON；按 `model_id` 精确匹配后再乘路由 charged */
@@ -173,6 +267,16 @@ export async function recordUsage(
 		circuit_events?: GatewayCircuitAlertEvent[];
 		/** 已有熔断短路等场景：写日志但不发 webhook */
 		suppress_error_alert?: boolean;
+		/** Output guardrail may replace a successful upstream response with 403; still settle the incurred usage. */
+		charge_on_error?: boolean;
+		/** Atomic Guardrail lease to settle with the request log transaction. */
+		guardrail_budget_settlement?: {
+			requestId: string;
+			/** Preserve the full reserved ceiling when upstream usage is unavailable. */
+			unknownCost: boolean;
+		};
+		/** Atomic ordinary-user budget lease settled with this request log. */
+		ordinary_budget_settlement?: OrdinaryBudgetUsageSettlement;
 	}
 ): Promise<void> {
 	const basis = params.usage.input_tokens;
@@ -190,18 +294,53 @@ export async function recordUsage(
 	const chargedSch = resolveDailyScheduleFactor(schedule.charged, pricingAtUtc, businessTimezone);
 	const meteredSch = resolveDailyScheduleFactor(schedule.metered, pricingAtUtc, businessTimezone);
 
-	const catalogSupplier = resolveSupplierBillingPrices({
+	const endpointPricing = resolveEndpointTextPricing(params.endpoint_pricing_snapshot);
+	const routedUsage = params.route_target_id != null;
+	if (routedUsage) {
+		if (!endpointPricing.ok) {
+			throw new Error(`Verified endpoint pricing is required for routed usage: ${endpointPricing.message}`);
+		}
+		if (
+			params.endpoint_pricing_snapshot?.modelId !== params.model_id
+			|| params.endpoint_pricing_snapshot?.providerId !== params.provider_id
+		) {
+			throw new Error('Verified endpoint pricing identity does not match routed usage');
+		}
+	}
+	const endpointResolved = endpointPricing.ok ? endpointPricing.value : null;
+	const legacySupplier = endpointResolved ? null : resolveSupplierBillingPrices({
 		basisInputTokens: basis,
 		modelPricingProfileJson: params.model_pricing_profile ?? null,
 	});
-	const standardResolved = resolveStandardBillingPrices({
+	const legacyStandard = endpointResolved ? null : resolveStandardBillingPrices({
 		basisInputTokens: basis,
 		modelPricingProfileJson: params.model_pricing_profile ?? null,
 	});
-	const catalogCharged = resolveChargedBillingPrices({
+	const legacyCharged = endpointResolved ? null : resolveChargedBillingPrices({
 		basisInputTokens: basis,
 		modelPricingProfileJson: params.model_pricing_profile ?? null,
 	});
+	const auditSide = (
+		prices: BillingPriceSnapshot,
+		source: 'model_x_factor' | 'model',
+	): { prices: BillingPriceSnapshot; audit: PriceResolutionAuditSide } => ({
+		prices,
+		audit: {
+			path: 'profile',
+			source,
+			basis_tokens: basis,
+			prices,
+		},
+	});
+	const catalogSupplier = endpointResolved
+		? auditSide(endpointResolved.standardPrices, 'model_x_factor')
+		: legacySupplier!;
+	const standardResolved = endpointResolved
+		? auditSide(endpointResolved.standardPrices, 'model')
+		: legacyStandard!;
+	const catalogCharged = endpointResolved
+		? auditSide(endpointResolved.chargedPrices, 'model_x_factor')
+		: legacyCharged!;
 
 	const supplierResolved = applyRouteFactorsToSide({
 		catalog: catalogSupplier,
@@ -216,27 +355,34 @@ export async function recordUsage(
 		mode: schedule.mode,
 	});
 
+	const supplierRequestCost = endpointResolved
+		? endpointResolved.standardRequestCost * (supplierResolved.audit.effective_factor ?? 1)
+		: 0;
+	const standardRequestCost = endpointResolved?.standardRequestCost ?? 0;
+	const chargedRequestCost = endpointResolved
+		? endpointResolved.chargedRequestCost * (chargedResolved.audit.effective_factor ?? 1)
+		: 0;
 	const supplierCost = computeMeteredCost(
 		params.usage,
 		supplierResolved.prices.input_price,
 		supplierResolved.prices.output_price,
 		supplierResolved.prices.cache_read_price,
 		supplierResolved.prices.cache_write_price
-	);
+	) + supplierRequestCost;
 	const standardCost = computeMeteredCost(
 		params.usage,
 		standardResolved.prices.input_price,
 		standardResolved.prices.output_price,
 		standardResolved.prices.cache_read_price,
 		standardResolved.prices.cache_write_price
-	);
+	) + standardRequestCost;
 	const chargedRaw = computeMeteredCost(
 		params.usage,
 		chargedResolved.prices.input_price,
 		chargedResolved.prices.output_price,
 		chargedResolved.prices.cache_read_price,
 		chargedResolved.prices.cache_write_price
-	);
+	) + chargedRequestCost;
 	const routeChargedCost = roundGatewayMoney(chargedRaw);
 	const factorsJson = params.user_charged_cost_factors_json ?? null;
 	if (factorsJson != null && factorsJson.trim() !== '' && parseUserChargedCostFactors(factorsJson) == null) {
@@ -248,7 +394,9 @@ export async function recordUsage(
 		parseUserChargedCostFactors(factorsJson),
 		params.model_id
 	);
-	const chargedCost = applyUserChargedCostFactor(routeChargedCost, userChargedFactor);
+	const resolvedChargedCost = applyUserChargedCostFactor(routeChargedCost, userChargedFactor);
+	const billingCommitted = params.status !== 'error' || params.charge_on_error === true;
+	const chargedCost = billingCommitted ? resolvedChargedCost : 0;
 	chargedResolved.audit.user_charged_factor = userChargedFactor;
 	const supplierCostR = roundGatewayMoney(supplierCost);
 	const standardCostR = roundGatewayMoney(standardCost);
@@ -258,22 +406,48 @@ export async function recordUsage(
 			supplierAudit: supplierResolved.audit,
 			standardAudit: standardResolved.audit,
 			chargedAudit: chargedResolved.audit,
+			...(endpointResolved ? {
+				endpointPricing: endpointResolved.audit,
+				requestCosts: {
+					supplier: roundGatewayMoney(supplierRequestCost),
+					standard: roundGatewayMoney(standardRequestCost),
+					user_charge: roundGatewayMoney(chargedRequestCost),
+				},
+			} : {}),
 		}),
 		userChargedFactor
 	);
 	console.log(
 		`[Gateway Usage] recordUsage model_id=${params.model_id} request_protocol=${params.request_protocol} status=${params.status} route_group=${params.route_group} input_tokens=${params.usage.input_tokens} output_tokens=${params.usage.output_tokens} reasoning_tokens=${params.usage.reasoning_tokens} metered=${supplierCostR} standard=${standardCostR} charged=${chargedCost} charged_eff=${chargedResolved.audit.effective_factor} user_charged_factor=${userChargedFactor ?? 'none'} metered_eff=${supplierResolved.audit.effective_factor}`
 	);
-	const id = crypto.randomUUID();
-	const shouldChargeBudget = params.status !== 'error' && chargedCost > 0;
-	const userSnapshot = shouldChargeBudget ? await getUserBudgetSnapshot(repos, params.user_id) : null;
+	const id = params.request_log_id ?? crypto.randomUUID();
+	const shouldChargeBudget = billingCommitted && chargedCost > 0;
+	const hasOrdinaryBudgetSettlement = params.ordinary_budget_settlement != null;
+	const userSnapshot = shouldChargeBudget || hasOrdinaryBudgetSettlement
+		? await getUserBudgetSnapshot(repos, params.user_id)
+		: null;
 	const beforeSpent = userSnapshot?.budgetSpent ?? 0;
-	const userRow = shouldChargeBudget ? await repos.users.getById(params.user_id) : null;
-	const afterSpentVal = roundGatewayMoney(beforeSpent + chargedCost);
+	const userRow = shouldChargeBudget || hasOrdinaryBudgetSettlement
+		? await repos.users.getById(params.user_id)
+		: null;
+	const ordinarySettlement = params.ordinary_budget_settlement;
+	const ordinaryAuditTransition = ordinaryBudgetAuditSnapshotTransition({
+		settlement: ordinarySettlement,
+		currentBudgetEpoch: userRow == null ? null : Number(userRow.budget_epoch),
+		currentReservedMicros: userRow == null ? 0 : Number(userRow.budget_reserved_micros),
+		chargedCost,
+		shouldChargeBudget,
+	});
+	const afterSpentVal = roundGatewayMoney(beforeSpent + ordinaryAuditTransition.auditCharge);
 	let usageSnaps: { before: string; after: string; changed: string | null } | null = null;
 	if (userRow) {
 		const beforeS = userRowToSnapshot(userRow);
-		const afterS = snapshotWithOverrides(beforeS, { budget_spent: afterSpentVal });
+		const afterS = ordinarySettlement && !ordinaryAuditTransition.settlementEpochMatches
+			? beforeS
+			: snapshotWithOverrides(beforeS, {
+					budget_spent: afterSpentVal,
+					budget_reserved_micros: ordinaryAuditTransition.afterReservedMicros,
+				});
 		usageSnaps = {
 			before: snapshotToJson(beforeS),
 			after: snapshotToJson(afterS),
@@ -286,6 +460,7 @@ export async function recordUsage(
 			id,
 			userId: params.user_id,
 			apiKeyId: params.api_key_id,
+			workspaceId: params.workspace_id,
 			userEmail: params.user_email,
 			modelId: params.model_id,
 			providerId: params.provider_id,
@@ -316,6 +491,12 @@ export async function recordUsage(
 					? { gemini: { action: params.gemini_wire_action } }
 					: {}),
 				...(params.sticky_trace ? { sticky: params.sticky_trace } : {}),
+				...(params.model_fallback_trace
+					? { model_fallback: params.model_fallback_trace }
+					: {}),
+				...(params.provider_routing_trace
+					? { provider_routing: params.provider_routing_trace }
+					: {}),
 			}),
 			inputTokens: params.usage.input_tokens,
 			outputTokens: params.usage.output_tokens,
@@ -326,6 +507,7 @@ export async function recordUsage(
 			meteredCost: supplierCostR,
 			standardCost: standardCostR,
 			chargedCost: chargedCost,
+			budgetAccountedAt: pricingAtUtc.toISOString(),
 			routeGroup: params.route_group,
 			status: params.status,
 			latencyMs: params.latency_ms ?? null,
@@ -350,6 +532,18 @@ export async function recordUsage(
 		shouldChargeBudget,
 		beforeSpent,
 		chargedCost,
+		guardrailBudgetSettlement: params.guardrail_budget_settlement
+			? {
+				requestId: params.guardrail_budget_settlement.requestId,
+				mode: params.guardrail_budget_settlement.unknownCost ? 'reserved' : 'actual',
+				reason: params.guardrail_budget_settlement.unknownCost
+					? 'usage_unavailable_after_dispatch'
+					: 'request_usage_settled',
+			}
+			: undefined,
+		userBudgetSettlement: ordinaryBudgetSettlementForCriticalWrite(
+			params.ordinary_budget_settlement,
+		),
 		audit: {
 			apiKeyId: params.api_key_id,
 			eventType: 'usage_charge',

@@ -31,6 +31,27 @@ export function asMySqlPool(pool: unknown): MySqlPoolLike {
 	return pool as MySqlPoolLike;
 }
 
+/** Convert an ISO-8601 instant to a UTC MySQL DATETIME(6) value. */
+export function toMySqlDateTime(value: string): string {
+	const parsed = new Date(value);
+	if (!Number.isFinite(parsed.getTime())) throw new Error('Invalid MySQL datetime input');
+	return `${parsed.toISOString().slice(0, 23).replace('T', ' ')}000`;
+}
+
+/** Convert a mysql2 DATETIME/TIMESTAMP result to a canonical UTC ISO instant. */
+export function fromMySqlDateTime(value: string | Date): string {
+	if (value instanceof Date) return value.toISOString();
+	const text = String(value);
+	const mysqlDateTime = /^\d{4}-\d{2}-\d{2}[ T]\d{2}:\d{2}:\d{2}(?:\.\d{1,6})?$/u.test(text);
+	const parsed = new Date(
+		mysqlDateTime
+			? `${text.slice(0, 23).replace(' ', 'T')}Z`
+			: text
+	);
+	if (!Number.isFinite(parsed.getTime())) throw new Error('Invalid MySQL datetime result');
+	return parsed.toISOString();
+}
+
 /**
  * 执行 SELECT 并以 `RowDataPacket & T` 数组返回结果。
  * 所有需要 raw SQL 读查询的 impl 都应通过此函数，把类型断言收敛在这里。

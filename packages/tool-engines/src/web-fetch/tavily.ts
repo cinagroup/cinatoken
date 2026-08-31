@@ -3,6 +3,10 @@
  */
 
 import { WebFetchProviderError, type WebFetchParams, type WebFetchResult } from './types';
+import {
+	assertToolProviderOutputWithinLimit,
+	readToolProviderResponseText,
+} from '../http/bounded-response';
 
 type TavilyExtractResult = {
 	url?: string;
@@ -50,7 +54,10 @@ export async function fetchTavilyUrl(params: WebFetchParams): Promise<WebFetchRe
 		}),
 	});
 
-	const text = await response.text();
+	const text = await readToolProviderResponseText(response, {
+		provider: 'tavily',
+		errorConstructor: WebFetchProviderError,
+	});
 	let json: TavilyRawResponse;
 	try {
 		json = JSON.parse(text) as TavilyRawResponse;
@@ -95,5 +102,10 @@ export async function fetchTavilyUrl(params: WebFetchParams): Promise<WebFetchRe
 	const finalUrl =
 		typeof first.url === 'string' && first.url.trim() ? first.url.trim() : params.url;
 
-	return { title, url: finalUrl, content };
+	const result = { title, url: finalUrl, content };
+	assertToolProviderOutputWithinLimit(result, {
+		provider: 'tavily',
+		errorConstructor: WebFetchProviderError,
+	});
+	return result;
 }

@@ -26,6 +26,7 @@ import {
 import { modelKindFromFlags, resolveOpenaiUpstreamCapability } from '@/lib/invoke-kind';
 import { AdminServiceError, badRequest, notFound } from './errors';
 import { isPendingProviderImportApiKey } from '@octafuse/core/db/provider-key-utils';
+import { fetchWithSafeRedirects } from '@octafuse/tool-engines/web-fetch';
 
 /** 与 Proxy `RouteResult` 对齐的最小子集，供合并默认参数与拼 URL。 */
 export type PlaygroundResolvedRoute = {
@@ -833,7 +834,11 @@ async function pollPlaygroundDashScopeAsyncAsr(
 		if (!transcriptionUrl) {
 			throw new AdminServiceError(502, 'DashScope asynchronous ASR result has no transcription_url');
 		}
-		const resultResponse = await fetch(transcriptionUrl, { signal: requestSignal });
+		const { response: resultResponse } = await fetchWithSafeRedirects(transcriptionUrl, {
+			init: { signal: requestSignal },
+			requireHttps: true,
+			allowIpLiterals: false,
+		});
 		const resultBody = (await resultResponse.json()) as unknown;
 		return new Response(
 			JSON.stringify({
@@ -1139,7 +1144,11 @@ export async function invokePlaygroundUpstream(
 			throw new AdminServiceError(502, 'DashScope TTS response has no output.audio.url');
 		}
 		try {
-			const audioResponse = await fetch(audioUrl, { signal: requestSignal });
+			const { response: audioResponse } = await fetchWithSafeRedirects(audioUrl, {
+				init: { signal: requestSignal },
+				requireHttps: true,
+				allowIpLiterals: false,
+			});
 			if (!audioResponse.ok) {
 				throw new AdminServiceError(502, `DashScope TTS audio download failed: HTTP ${audioResponse.status}`);
 			}

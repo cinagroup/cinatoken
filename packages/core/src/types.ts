@@ -13,19 +13,32 @@ export type ApiKeyBudgetAuditEventType =
 	| 'key_revoked'
 	| 'key_deleted'
 	| 'user_created'
-	| 'user_deleted';
+	| 'user_deleted'
+	| 'guardrail_blocked'
+	| 'guardrail_redacted';
 
-export type ApiKeyBudgetAuditActorType = 'system' | 'admin' | 'service';
+export type ApiKeyBudgetAuditActorType = 'system' | 'admin' | 'service' | 'user';
 
 /** `api_keys` 表行；`key` 仅为安全预览，Bearer 全文只在创建时返回。预算在 `users`。 */
 export interface ApiKeyRow {
 	id: string;
 	key: string;
 	user_id: string;
+	/** CinaToken-owned resource boundary; creator identity remains `user_id`. */
+	workspace_id: string;
 	name: string | null;
 	status: string;
 	/** JSON 字符串 */
 	metadata: string | null;
+	expires_at: string | null;
+	/** Per-key spend ceiling in millionths of one gateway billing unit. */
+	limit_micros: number | null;
+	/** NULL means a lifetime limit; ignored when `limit_micros` is NULL. */
+	limit_reset: 'daily' | 'weekly' | 'monthly' | null;
+	/** Reserved for private/BYOK accounting; currently always false. */
+	include_byok_in_limit: boolean;
+	/** Monotonic generation invalidating stale key-limit admission intents. */
+	limit_epoch: number;
 	last_used_at: string | null;
 	created_at: string;
 	updated_at: string;
@@ -40,6 +53,10 @@ export interface UserRow {
 	budget_spent: number;
 	budget_period: string;
 	budget_reset_at: string | null;
+	/** Monotonic budget-period generation used to invalidate outstanding reservations. */
+	budget_epoch: number;
+	/** Sum of active ordinary-user reservations in millionths of one budget unit. */
+	budget_reserved_micros: number;
 	status: string;
 	metadata: string | null;
 	/** `{ "<models.id>": factor }` JSON；NULL 表示无用户级 Charged 折扣 */
@@ -64,6 +81,8 @@ export interface ResolvedGatewayKeyRow extends ApiKeyRow {
 	budget_spent: number;
 	budget_period: string;
 	budget_reset_at: string | null;
+	budget_epoch: number;
+	budget_reserved_micros: number;
 }
 
 /** `providers.status` 枚举。 */
@@ -138,6 +157,8 @@ export interface ModelRouteRow {
   price_override: string | null;
   /** 路由级默认请求体片段（JSON 对象字符串）；与用户请求体深度合并，用户字段优先 */
   custom_params: string | null;
+  /** 仅供网关选路的能力元数据；不得透传上游。 */
+  routing_metadata?: string | null;
   /** `openai` | `anthropic` | `gemini` */
   upstream_protocol: string;
   /** Owning route pool. Nullable only for databases that have not applied migration 0016 yet. */
@@ -153,6 +174,8 @@ export interface RequestLogRow {
 	id: string;
 	user_id: string | null;
 	api_key_id: string | null;
+	/** Immutable request-time Workspace snapshot; legacy rows can be null. */
+	workspace_id: string | null;
 	user_email: string | null;
 	/** 管理端全局日志查询从 users 关联得到；物理日志行本身不存储。 */
 	external_system?: string | null;

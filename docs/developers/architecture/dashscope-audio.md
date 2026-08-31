@@ -126,18 +126,19 @@ POST /api/admin/providers/:providerId/dashscope/voices
 
 同步 ASR、TTS、资源管理和异步文件 ASR 都无需额外存储。异步文件 ASR 请求必须携带 DashScope 可访问的公开 `file_url`。
 
-数据库还需要应用 `0022_request_log_audio_characters.sql`，用于记录 TTS 的真实字符数。
+数据库需要包含 `0022_request_log_audio_characters.sql`，并迁移到当前 Endpoint Audio 能力版本（D1 `0049` / PostgreSQL `0048` / MySQL `0045`）。旧 Endpoint 的 `audio_capabilities={}` 不会从 legacy 目录价自动回填。
 
 ## 计费与日志
 
-| 能力       | 上游真实用量       | billing kind                 |
-| ---------- | ------------------ | ---------------------------- |
-| ASR 按时长 | 音频秒数           | `audio_per_second`           |
-| ASR token  | input/output token | `audio_tokens`               |
-| TTS        | `usage.characters` | `audio_characters`           |
-| 音色创建   | `usage.count`      | 单独的 Provider 资源操作记录 |
+| 能力       | Endpoint meter / 权威事实 | 当前状态 |
+| ---------- | -------------------------- | -------- |
+| ASR 按时长 | actually selected upstream operation 的 `duration/second`；上游或已解析媒体/PCM 时长 | HTTP 与 realtime ASR 安全子集已支持 |
+| ASR token  | `tokens/token` + 五维权威 breakdown | 暂未支持，dispatch 前 fail closed |
+| HTTP TTS   | actually selected upstream operation 的 `characters/unicode_code_point`；已校验请求文本 | 已支持 |
+| Realtime TTS | 需要独立、可证明的 inference 字符事实 | 暂未支持，dispatch 前 fail closed |
+| 音色创建   | `usage.count` | 单独的 Provider 资源操作记录，不进入模型 Route 结算 |
 
-请求日志增加 TTS 字符数，保留上游 request ID、协议、operation、adapter 和最终路由目标。日志不保存音频二进制；文本请求遵循现有 request-body 日志策略。
+请求日志增加 TTS 字符数，保留上游 request ID、入口/上游协议与 operation、adapter 和最终路由目标。Audio 计费按实际上游 operation 读取 chosen verified Endpoint；不能借用入口 operation 的价目。日志不保存音频二进制；文本请求遵循现有 request-body 日志策略。
 
 ## 分阶段验收
 

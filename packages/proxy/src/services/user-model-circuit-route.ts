@@ -18,6 +18,7 @@ import {
 import type { GatewayCircuitAlertEvent } from './circuit-alert-types';
 import { recordUsage } from './usage-tracker';
 import type { RequestTimingCollector } from './request-timing';
+import type { ModelFallbackTrace } from './model-fallbacks';
 
 const GATEWAY_PROVIDER_ID = 'gateway';
 
@@ -34,6 +35,7 @@ export type UserModelCircuitRouteContext = {
 	 * 仍会因 `sensitive_content` 短路。
 	 */
 	clientErrorCircuitEnabled?: boolean;
+	modelFallbackTrace?: ModelFallbackTrace | null;
 };
 
 export type UserModelCircuitTriggerOptions = {
@@ -67,6 +69,7 @@ export function maybeBlockUserModelCircuit<E extends Env>(
 		c,
 		recordUsage(repos, {
 			api_key_id: apiKey.keyId,
+			workspace_id: apiKey.workspaceId,
 			user_id: apiKey.userId,
 			user_email: apiKey.userEmail,
 			model_id: ctx.baseModelId,
@@ -83,6 +86,7 @@ export function maybeBlockUserModelCircuit<E extends Env>(
 			status: 'error',
 			latency_ms: latencyMs,
 			timing: ctx.timing?.snapshot() ?? null,
+			model_fallback_trace: ctx.modelFallbackTrace ?? null,
 			error_message: formatUserModelCircuitOpenErrorMessage(open),
 			suppress_error_alert: true,
 		}).catch((err) => {
@@ -92,7 +96,15 @@ export function maybeBlockUserModelCircuit<E extends Env>(
 			);
 		})
 	);
-	return buildUserModelCircuitOpenResponse(open);
+	const skin = /(?:^|\/)responses\/?$/.test(c.req.path)
+		? 'responses'
+		: /(?:^|\/)messages\/?$/.test(c.req.path)
+			? 'anthropic'
+			: 'chat';
+	return buildUserModelCircuitOpenResponse(open, {
+		skin,
+		requestId: c.get('generationId') ?? null,
+	});
 }
 
 /** @deprecated 使用 {@link maybeBlockUserModelCircuit} */

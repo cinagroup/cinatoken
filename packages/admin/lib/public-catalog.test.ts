@@ -9,6 +9,20 @@ import {
 } from './public-catalog';
 
 describe('public catalog boundary', () => {
+	it('treats a valid empty catalog as ready instead of a gateway failure', () => {
+		const result = parsePublicCatalogResponse({
+			object: 'list',
+			data: [],
+			billing_currency: 'usd',
+			generated_at: '2026-08-30T00:00:00.000Z',
+		});
+
+		assert.equal(result.status, 'ready');
+		assert.deepEqual(result.models, []);
+		assert.equal(result.billingCurrency, 'USD');
+		assert.equal(result.generatedAt, '2026-08-30T00:00:00.000Z');
+	});
+
 	it('sanitizes a valid public model and preserves billing metadata', () => {
 		const result = parsePublicCatalogResponse({
 			billing_currency: 'cny',
@@ -24,6 +38,9 @@ describe('public catalog boundary', () => {
 				input_modalities: ['text'],
 				output_modalities: ['text'],
 				released_at: '2026-08-01',
+				endpoint_slugs: ['provider/turbo', 'https://must-not-pass.example'],
+				regions: ['eu', '../unsafe'],
+				data_policy_summary: { verified_route_count: 2, zdr_available: true, latest_verified_at: '2026-08-28T00:00:00.000Z' },
 			}],
 		});
 
@@ -36,6 +53,13 @@ describe('public catalog boundary', () => {
 			upto: null,
 			input_price: 1,
 			output_price: 3,
+		});
+		assert.deepEqual(result.models[0]?.endpointSlugs, ['provider/turbo']);
+		assert.deepEqual(result.models[0]?.regions, ['eu']);
+		assert.deepEqual(result.models[0]?.dataPolicySummary, {
+			verifiedRouteCount: 2,
+			zdrAvailable: true,
+			latestVerifiedAt: '2026-08-28T00:00:00.000Z',
 		});
 	});
 

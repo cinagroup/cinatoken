@@ -1,5 +1,6 @@
 /**
- * Public model catalog discovery: active routes → supported protocols per route group.
+ * Public model catalog discovery: current verified endpoint bindings → supported
+ * protocols per route group.
  * Used by `GET /catalog/models` (no API key; sanitized, no provider secrets).
  */
 import {
@@ -8,15 +9,29 @@ import {
 	parsePricingProfile,
 	UPSTREAM_PROTOCOLS,
 	type GatewayRepositories,
-	type ModelRouteJoinRow,
+	type ModelEndpointDiscoveryRouteBindingRow,
 	type ParsedPricingProfile,
+	type RouteDataPolicyRow,
 	type UpstreamProtocol,
+	effectiveRouteDataPolicyStatusForSubject,
+	routeDataPolicyAllowsZdr,
 } from '@octafuse/core';
 import { toPublicModelSlug } from '@octafuse/core/lib/public-model-slug';
 import {
 	filterRouteGroupsByAllowlist,
 	parseTags,
 } from '../lib/model-list-parse';
+import {
+	endpointRouteGroup,
+	groupVerifiedEndpointBindingsByModel,
+	summarizePublicEndpointDiscovery,
+} from './public-endpoint-discovery';
+import {
+	listVerifiedPublicEndpointBindings,
+	type VerifiedPublicEndpointBinding,
+} from './public-model-endpoints';
+
+const POLICY_BATCH_SIZE = 90;
 
 export type CatalogDiscoveryModel = {
 	id: string;
@@ -35,6 +50,15 @@ export type CatalogDiscoveryModel = {
 	input_modalities: string[] | null;
 	output_modalities: string[] | null;
 	released_at: string | null;
+	/** Current verified endpoint selectors; never target ids or URLs. */
+	endpoint_slugs: string[];
+	/** Current verified provider locations; never a data-residency claim. */
+	regions: string[];
+	data_policy_summary: {
+		verified_route_count: number;
+		zdr_available: boolean;
+		latest_verified_at: string | null;
+	};
 };
 
 export type CatalogProviderSummary = {
@@ -48,13 +72,6 @@ export type CatalogProviderSummary = {
 	latest_released_at: string | null;
 };
 
-function normalizeRowRouteGroup(routeGroup: string | undefined): string {
-	if (typeof routeGroup === 'string' && routeGroup.trim() !== '') {
-		return routeGroup.trim();
-	}
-	return 'default';
-}
-
 function sortProtocols(protocols: Iterable<UpstreamProtocol>): UpstreamProtocol[] {
 	const set = new Set(protocols);
 	return UPSTREAM_PROTOCOLS.filter((p) => set.has(p));
@@ -66,11 +83,12 @@ export function resolveRecommendedProtocol(protocols: UpstreamProtocol[]): Upstr
 	return protocols[0] ?? 'openai';
 }
 
-function buildProtocolsByGroup(routes: ModelRouteJoinRow[]): Record<string, UpstreamProtocol[]> {
+function buildProtocolsByGroup(
+	routes: readonly ModelEndpointDiscoveryRouteBindingRow[]
+): Record<string, UpstreamProtocol[]> {
 	const byGroup = new Map<string, Set<UpstreamProtocol>>();
 	for (const row of routes) {
-		if (row.status !== 'active') continue;
-		const group = normalizeRowRouteGroup(row.route_group);
+		const group = endpointRouteGroup(row.route_group);
 		let protocols = byGroup.get(group);
 		if (!protocols) {
 			protocols = new Set();
@@ -89,18 +107,10 @@ function buildProtocolsByGroup(routes: ModelRouteJoinRow[]): Record<string, Upst
 	return out;
 }
 
-function groupActiveRoutesByModel(routes: ModelRouteJoinRow[]): Map<string, ModelRouteJoinRow[]> {
-	const map = new Map<string, ModelRouteJoinRow[]>();
-	for (const row of routes) {
-		if (row.status !== 'active') continue;
-		const list = map.get(row.model_id);
-		if (list) {
-			list.push(row);
-		} else {
-			map.set(row.model_id, [row]);
-		}
-	}
-	return map;
+function routesForBindings(
+	bindings: readonly VerifiedPublicEndpointBinding[]
+): ModelEndpointDiscoveryRouteBindingRow[] {
+	return bindings.flatMap((binding) => binding.routes);
 }
 
 function sortStrings(values: Iterable<string>): string[] {
@@ -166,13 +176,25 @@ export async function listCatalogDiscoveryModels(
 	options?: { routeGroups?: string[] | null }
 ): Promise<CatalogDiscoveryModel[]> {
 	const models = await repos.modelRouting.listModelsWithActiveRoutes();
-	const allRoutes = await repos.routes.listModelRoutesWithJoins({});
-	const routesByModel = groupActiveRoutesByModel(allRoutes);
+	const endpointBindings = await listVerifiedPublicEndpointBindings(repos, models);
+	const routesByModel = groupVerifiedEndpointBindingsByModel(endpointBindings);
+	const endpointRoutes = routesForBindings(endpointBindings);
+	const routeIds = [...new Set(endpointRoutes.map((route) => route.id))];
+	const dataPolicies: RouteDataPolicyRow[] = [];
+	for (let index = 0; index < routeIds.length; index += POLICY_BATCH_SIZE) {
+		dataPolicies.push(
+			...(await repos.routeDataPolicies.getByRouteTargetIds(
+				routeIds.slice(index, index + POLICY_BATCH_SIZE)
+			))
+		);
+	}
+	const policyByRoute = new Map(dataPolicies.map((policy) => [policy.route_target_id, policy]));
 	const allowedGroups = options?.routeGroups ?? null;
 
 	const list: CatalogDiscoveryModel[] = [];
 	for (const m of models) {
-		const routes = routesByModel.get(m.id) ?? [];
+		const modelBindings = routesByModel.get(m.id) ?? [];
+		const routes = routesForBindings(modelBindings);
 		const fullProtocolsByGroup = buildProtocolsByGroup(routes);
 		let routeGroups = Object.keys(fullProtocolsByGroup).sort((a, b) => a.localeCompare(b));
 
@@ -197,6 +219,19 @@ export async function listCatalogDiscoveryModels(
 		if (protocols.length === 0) {
 			continue;
 		}
+		const includedRoutes = routes.filter((route) => routeGroups.includes(endpointRouteGroup(route.route_group)));
+		const endpointDiscovery = summarizePublicEndpointDiscovery(modelBindings, { routeGroups });
+		const verifiedPolicies = includedRoutes
+			.map((route) => ({
+				policy: policyByRoute.get(route.id),
+				fingerprint: route.subject_fingerprint,
+			}))
+			.filter(({ policy, fingerprint }) => effectiveRouteDataPolicyStatusForSubject(policy, fingerprint) === 'verified')
+			.map(({ policy }) => policy);
+		const latestVerifiedAt = verifiedPolicies.reduce<string | null>((latest, policy) => {
+			const value = policy?.verified_at ?? null;
+			return value && (!latest || value > latest) ? value : latest;
+		}, null);
 
 		list.push({
 			id: m.id,
@@ -215,6 +250,16 @@ export async function listCatalogDiscoveryModels(
 			input_modalities: parseModelModalitiesJson(m.input_modalities),
 			output_modalities: parseModelModalitiesJson(m.output_modalities),
 			released_at: m.released_at ?? null,
+			endpoint_slugs: endpointDiscovery.endpoint_slugs,
+			regions: endpointDiscovery.regions,
+			data_policy_summary: {
+				verified_route_count: verifiedPolicies.length,
+				zdr_available: includedRoutes.some((route) => routeDataPolicyAllowsZdr(
+					policyByRoute.get(route.id),
+					route.subject_fingerprint,
+				)),
+				latest_verified_at: latestVerifiedAt,
+			},
 		});
 	}
 

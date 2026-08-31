@@ -8,6 +8,7 @@ import {
 	isRouteAdapterCompatible,
 	isRequestOperationForProtocol,
 	normalizeRouteOperation,
+	normalizeRouteRoutingMetadataInput,
 	PASSTHROUGH_ROUTE_ADAPTER,
 } from '@octafuse/core';
 import { isImageGenerationModel } from '@octafuse/core/db/model-modalities';
@@ -25,6 +26,15 @@ import type {
 	AdminModelRouteMutationInput,
 	AdminModelRouteRow,
 } from './types';
+
+const ROUTE_DATA_POLICY_SUBJECT_FIELDS = new Set([
+	'provider_id',
+	'provider_model_name',
+	'custom_params',
+	'upstream_protocol',
+	'upstream_operation',
+	'adapter',
+]);
 
 /** Image-generation catalog models may only use OpenAI Images–compatible routes. */
 async function assertImageModelOpenaiProtocol(
@@ -108,6 +118,12 @@ export async function createModelRouteService(
 
 	const customParamsNorm = normalizeJsonObjectField(body.custom_params, 'custom_params');
 	if (!customParamsNorm.ok) throw badRequest(customParamsNorm.message);
+	let routingMetadata: string | null;
+	try {
+		routingMetadata = normalizeRouteRoutingMetadataInput(body.routing_metadata);
+	} catch (error) {
+		throw badRequest(error instanceof Error ? error.message : 'Invalid routing_metadata');
+	}
 
 	let proto: UpstreamProtocol;
 	try {
@@ -198,6 +214,7 @@ export async function createModelRouteService(
 		routeGroup,
 		priceOverride,
 		customParams: customParamsNorm.value,
+		routingMetadata,
 		upstreamProtocol: proto,
 		routePoolId: topology.poolId,
 		upstreamOperation,
@@ -221,7 +238,8 @@ export async function getModelRouteService(repos: GatewayRepositories, id: strin
 export async function updateModelRouteService(
 	repos: GatewayRepositories,
 	id: string,
-	body: AdminModelRouteMutationInput
+	body: AdminModelRouteMutationInput,
+	actorId: string,
 ): Promise<void> {
 	const patch = { ...body };
 	delete patch.id;
@@ -231,6 +249,13 @@ export async function updateModelRouteService(
 		const normalized = normalizeJsonObjectField(patch.custom_params, 'custom_params');
 		if (!normalized.ok) throw badRequest(normalized.message);
 		patch.custom_params = normalized.value;
+	}
+	if (patch.routing_metadata !== undefined) {
+		try {
+			patch.routing_metadata = normalizeRouteRoutingMetadataInput(patch.routing_metadata);
+		} catch (error) {
+			throw badRequest(error instanceof Error ? error.message : 'Invalid routing_metadata');
+		}
 	}
 	if (patch.route_group !== undefined) {
 		const g = String(patch.route_group).trim();
@@ -357,6 +382,17 @@ export async function updateModelRouteService(
 	if (!hasPatch) return;
 	const changes = await repos.routes.updateModelRouteByPatch(id, patch);
 	if (!changes) throw notFound('Route not found');
+	const changedSubjectFields = Object.keys(patch)
+		.filter((key) => patch[key as keyof typeof patch] !== undefined && ROUTE_DATA_POLICY_SUBJECT_FIELDS.has(key))
+		.sort();
+	if (changedSubjectFields.length > 0) {
+		await repos.routeDataPolicies.invalidateForRouteTarget(id, {
+			id: crypto.randomUUID(),
+			actorId,
+			nowIso: new Date().toISOString(),
+			reason: `route_subject_changed:${changedSubjectFields.join(',')}`,
+		});
+	}
 
 	const newPoolId =
 		patch.route_pool_id != null && String(patch.route_pool_id).trim() !== ''

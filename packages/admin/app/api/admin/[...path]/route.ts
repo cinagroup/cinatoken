@@ -11,6 +11,7 @@ import { resolveAdminRequestRuntime } from '@/lib/admin-request-runtime';
 import { verifyCinaAuthConsolePrincipal } from '@/lib/cinaauth/principal';
 import { getBearerKeyPrefix, logAdminAuthEvent } from '@/lib/security-log';
 import { rejectInvalidAdminMutationOrigin } from '@/lib/browser-mutation';
+import { rejectRateLimitedAdminAuth } from '@/lib/admin-auth-rate-limit';
 
 export const dynamic = 'force-dynamic';
 
@@ -34,6 +35,8 @@ async function handle(request: Request): Promise<Response> {
 			? await verifyCinaAuthConsolePrincipal(request, authenticated, runtimeBindings)
 			: null;
 		if (!principal) {
+			const rateLimited = await rejectRateLimitedAdminAuth(request, runtimeBindings);
+			if (rateLimited) return rateLimited;
 			logAdminAuthEvent('admin.auth.unauthorized', request, {
 				keyPrefix: getBearerKeyPrefix(request),
 				method: request.method,

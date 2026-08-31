@@ -15,6 +15,7 @@ import { adminConfigRoutes } from '@/lib/routes/admin/config';
 import { adminKeysRoutes } from '@/lib/routes/admin/keys';
 import { adminUsersRoutes } from '@/lib/routes/admin/users';
 import { adminModelRoutes } from '@/lib/routes/admin/model-routes';
+import { adminModelEndpointsRoutes } from '@/lib/routes/admin/model-endpoints';
 import { adminModelsRoutes } from '@/lib/routes/admin/models';
 import { adminPlaygroundRoutes } from '@/lib/routes/admin/playground';
 import { adminProvidersRoutes } from '@/lib/routes/admin/providers';
@@ -25,8 +26,12 @@ import { adminSharedKeysRoutes } from '@/lib/routes/admin/shared-keys';
 import { adminEarningsRoutes } from '@/lib/routes/admin/earnings';
 import { adminWithdrawalsRoutes } from '@/lib/routes/admin/withdrawals';
 import { adminNftMintsRoutes } from '@/lib/routes/admin/nft-mints';
+import { adminPresetsRoutes } from '@/lib/routes/admin/presets';
+import { adminGuardrailsRoutes } from '@/lib/routes/admin/guardrails';
+import { adminDataPoliciesRoutes } from '@/lib/routes/admin/data-policies';
 import { getAdminAuthorizationDecision } from '@/lib/admin-permissions';
 import { hasAdminPermission } from '@/lib/admin-principal';
+import { rejectRateLimitedAdminAuth } from '@/lib/admin-auth-rate-limit';
 
 export function createAdminApp(): Hono<AdminEnv> {
 	const app = new Hono<AdminEnv>();
@@ -57,25 +62,8 @@ export function createAdminApp(): Hono<AdminEnv> {
 		c.set('repositories', repositories);
 		const principal = c.env.ADMIN_PRINCIPAL;
 		if (!principal) {
-			// 认证失败限速（Workers ratelimit binding，per-colo 尽力而为）；
-			// 限速器缺失/故障时保持常规 401 语义。
-			const limiter = c.env.RATE_LIMITER;
-			if (limiter) {
-				try {
-					const { success } = await limiter.limit({
-						key: c.req.header('CF-Connecting-IP') ?? 'unknown',
-					});
-					if (!success) {
-						return c.json(
-							{ success: false, message: 'Too many failed authentication attempts' },
-							429,
-							{ 'Retry-After': '60' },
-						);
-					}
-				} catch {
-					// 限速器故障不得阻断正常 401
-				}
-			}
+			const rateLimited = await rejectRateLimitedAdminAuth(c.req.raw, c.env);
+			if (rateLimited) return rateLimited;
 			return c.json({ success: false, message: 'Unauthorized' }, 401);
 		}
 		c.set('principal', principal);
@@ -106,6 +94,7 @@ export function createAdminApp(): Hono<AdminEnv> {
 	app.route('/admin/providers', adminProvidersRoutes);
 	app.route('/admin/models', adminModelsRoutes);
 	app.route('/admin/routes', adminModelRoutes);
+	app.route('/admin/endpoints', adminModelEndpointsRoutes);
 	app.route('/admin/playground', adminPlaygroundRoutes);
 	app.route('/admin/stats', adminStatsRoutes);
 	app.route('/admin/config', adminConfigRoutes);
@@ -118,6 +107,9 @@ export function createAdminApp(): Hono<AdminEnv> {
 	app.route('/admin/withdrawals', adminWithdrawalsRoutes);
 	app.route('/admin/earnings', adminEarningsRoutes);
 	app.route('/admin/nft-mints', adminNftMintsRoutes);
+	app.route('/admin/presets', adminPresetsRoutes);
+	app.route('/admin/guardrails', adminGuardrailsRoutes);
+	app.route('/admin/data-policies', adminDataPoliciesRoutes);
 
 	app.get('/admin', (c) => c.json({ name: 'octafuse-admin-api', version: adminAppVersion }));
 

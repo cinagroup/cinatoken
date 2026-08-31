@@ -6,26 +6,28 @@
  * 流程：鉴权 → 解析 model → 预算预检 → openai 路由故障转移 → 成功后按 Images usage token 分项扣费。
  * 日志禁止写入 prompt 原文、参考图与 Base64。
  */
-import type { GatewayRepositories, ModelRow, ResolvedModelSurfaceRow } from '@octafuse/core';
+import type {
+	GatewayRepositories,
+	GuardrailBudgetIntent,
+	GuardrailPreflightResult,
+} from '@octafuse/core';
 import { Hono } from 'hono';
 import type { Context } from 'hono';
 import type { Env } from '../../app';
 import { requireApiKey, type ApiKeyContext } from '../../middleware/auth';
-import {
-	resolveRoutesForSurface,
-	type RouteResult,
-} from '../../services/model-router';
-import { resolveModelRouting } from '../../services/resolve-model-route-group';
+import { assignGenerationId } from '../../middleware/generation-id';
 import {
 	buildAffinityKey,
 	buildTierKeyPrefix,
-	resolveRouteStrategyPlan,
 } from '../../services/route-strategies';
 import { proxyImageEdits, proxyImageGenerations, type ProxyResult } from '../../services/proxy';
 import { finalizeRequestLogJson } from '../../services/request-log-shared';
 import {
-	canAffordImageCost,
+	createImagePricingContext,
 	estimateImageBudgetPrecheck,
+	hasAuthoritativeImageTokenUsage,
+	imageGuardrailBudgetMicros,
+	multipleImageBillingMode,
 	recordImageUsage,
 	type ImageBillingParams,
 	type ImageCostBreakdown,
@@ -56,6 +58,26 @@ import { gatewayErrorJson } from '../../services/gateway-error-response';
 import { RequestTimingCollector } from '../../services/request-timing';
 import { scheduleBackgroundWork } from '../../runtime/schedule-background-work';
 import { stickyConfigFromSurface } from '../../services/provider-sticky-routing';
+import { buildModelFallbackPlan } from '../../services/model-fallback-plan';
+import type { RouteResult } from '../../services/model-router';
+import {
+	auditGuardrailOutputDecision,
+	forfeitRequestGuardrailBudgets,
+	markRequestGuardrailBudgetsDispatched,
+	releaseRequestGuardrailBudgets,
+	reserveRequestGuardrailBudgets,
+	runRequestGuardrails,
+} from '../../services/request-guardrails';
+import {
+	reserveOrdinaryUserBudget,
+	type OrdinaryBudgetLease,
+} from '../../services/ordinary-budget-lifecycle';
+import {
+	markMultimediaBudgetsBeforeDispatch,
+	selectConservativeMultimediaBudgetEstimate,
+} from '../../services/multimedia-ordinary-budget';
+import { routeUsesUnsupportedMultimediaEndpointPriceSelection } from '../../services/endpoint-billing-pricing';
+import { buildRouteRequestBody } from '../../services/route-default-params';
 
 type ImagesEnv = Env & { Variables: { apiKey: ApiKeyContext } };
 type ImagesContext = Context<ImagesEnv>;
@@ -63,62 +85,7 @@ type ImagesContext = Context<ImagesEnv>;
 export const imageRoutes = new Hono<ImagesEnv>();
 
 imageRoutes.use('*', requireApiKey);
-
-async function resolveOpenAiImageRoutes(
-	repos: GatewayRepositories,
-	rawModelId: string,
-	requestOperation: 'images.generations' | 'images.edits'
-): Promise<
-	| {
-			ok: true;
-			model: ModelRow;
-			baseModelId: string;
-			effectiveRouteGroup: string;
-			routes: RouteResult[];
-			poolStrategy: string | null;
-			poolTierStrategies: string | null;
-			stickySurface: ResolvedModelSurfaceRow | null;
-	  }
-	| { ok: false; status: 400 | 404 | 502; error: string }
-> {
-	const resolved = await resolveModelRouting(repos, rawModelId);
-	if (!resolved) {
-		const modelForLog = truncateModelIdForLog(rawModelId);
-		console.warn(`[Gateway Images] model not found clientModel=${modelForLog}`);
-		return { ok: false, status: 404, error: `Model not found: ${modelForLog}` };
-	}
-	const { model, baseModelId, explicitGroup } = resolved;
-	const effectiveRouteGroup = explicitGroup?.trim() || 'default';
-	try {
-		const resolvedSurface = await resolveRoutesForSurface(repos, {
-			modelId: baseModelId,
-			routeGroup: effectiveRouteGroup,
-			requestProtocol: 'openai',
-			requestOperation,
-		});
-		const routes = resolvedSurface.routes;
-		if (routes.length === 0) {
-			return {
-				ok: false,
-				status: 502,
-				error: `No OpenAI route in route group "${effectiveRouteGroup}" for this model`,
-			};
-		}
-		return {
-			ok: true,
-			model,
-			baseModelId,
-			effectiveRouteGroup,
-			routes,
-			poolStrategy: resolvedSurface.surface?.pool_strategy ?? null,
-			poolTierStrategies: resolvedSurface.surface?.pool_tier_strategies ?? null,
-			stickySurface: resolvedSurface.surface,
-		};
-	} catch (err) {
-		const message = err instanceof Error ? err.message : 'Model route resolution failed';
-		return { ok: false, status: 502, error: message };
-	}
-}
+imageRoutes.use('*', assignGenerationId);
 
 function modelDisplayName(model: { display_name?: string | null }, baseModelId: string): string {
 	return model.display_name != null && String(model.display_name).trim() !== ''
@@ -133,6 +100,62 @@ function truncateModelIdForLog(rawModelId: string, maxLen = 200): string {
 		return trimmed;
 	}
 	return `${trimmed.slice(0, maxLen)}…`;
+}
+
+/** Endpoint metadata is the only authoritative capability source for optional image parameters. */
+export function imageRouteSupportsParameter(
+	route: Pick<RouteResult, 'endpoint'>,
+	parameter: 'n' | 'stream',
+	value?: number,
+): boolean {
+	const capabilities = route.endpoint?.imageCapabilities;
+	if (!capabilities) return false;
+	if (parameter === 'stream') return capabilities.supports_streaming === true;
+	const entry = Object.entries(capabilities.supported_parameters)
+		.find(([name]) => name.trim().toLowerCase() === parameter)?.[1];
+	if (!entry) return false;
+	if (value === undefined) return true;
+	if (entry.type === 'range') return value >= entry.min && value <= entry.max;
+	if (entry.type === 'enum') return entry.values.includes(String(value));
+	return entry.type === 'boolean';
+}
+
+/** Reproduce the driver's route-default merge before deriving billable request facts. */
+export function countRouteImageGenerationReferences(
+	route: RouteResult,
+	upstreamBody: Record<string, unknown>,
+): number {
+	return countOpenAiGenerationReferenceImages(buildRouteRequestBody(route, upstreamBody));
+}
+
+/**
+ * `false` is reserved for a proven non-billable terminal outcome. `undefined`
+ * preserves dispatched ceilings when the upstream may have consumed the work.
+ */
+export function imageClientOutcomeBillable(params: {
+	status: 'success' | 'error';
+	responseOk: boolean;
+	costUnknown: boolean;
+	imageAbortReason?: 'client_abort' | 'gateway_timeout' | null;
+}): boolean | undefined {
+	if (
+		params.imageAbortReason === 'client_abort'
+		|| params.imageAbortReason === 'gateway_timeout'
+	) {
+		return false;
+	}
+	if (params.status === 'success') return true;
+	if (params.responseOk || params.costUnknown) return undefined;
+	return false;
+}
+
+export function shouldPreserveImageDispatchedCeiling(params: {
+	costUnknown: boolean;
+	imageAbortReason?: 'client_abort' | 'gateway_timeout' | null;
+}): boolean {
+	return params.costUnknown
+		&& params.imageAbortReason !== 'client_abort'
+		&& params.imageAbortReason !== 'gateway_timeout';
 }
 
 /**
@@ -221,6 +244,202 @@ function rejectImageRequest(
 						? GatewayErrorCode.routeResolutionFailed
 						: GatewayErrorCode.invalidRequest,
 		message: error,
+	});
+}
+
+export const IMAGE_OUTPUT_GUARDRAIL_UNSUPPORTED = 'unsupported_image_output';
+
+/** Image bytes/Base64/URLs are opaque output and cannot be safely text-filtered. */
+export function imageOutputGuardrailBlockReason(outputFilterCount: number): string | null {
+	return outputFilterCount > 0 ? IMAGE_OUTPUT_GUARDRAIL_UNSUPPORTED : null;
+}
+
+type ImagePromptGuardrailParams = Pick<
+	NormalizedImageEditRequest,
+	'prompt' | 'n' | 'size' | 'quality' | 'background'
+>;
+
+/** Public image request fields only: reference images and routing controls stay outside Guardrails. */
+function imagePromptGuardrailBody(
+	model: string,
+	request: ImagePromptGuardrailParams,
+): Record<string, unknown> {
+	const body: Record<string, unknown> = { model, prompt: request.prompt, n: request.n };
+	if (request.size) body.size = request.size;
+	if (request.quality) body.quality = request.quality;
+	if (request.background) body.background = request.background;
+	return body;
+}
+
+/** Generation projection keeps reference images/Base64 and provider controls out of filtering. */
+export function imageGenerationGuardrailBody(
+	model: string,
+	request: ImagePromptGuardrailParams,
+): Record<string, unknown> {
+	return imagePromptGuardrailBody(model, request);
+}
+
+/** Multipart projection keeps uploaded image bytes out of filtering. */
+export function imageEditGuardrailBody(
+	model: string,
+	edit: ImagePromptGuardrailParams,
+): Record<string, unknown> {
+	return imagePromptGuardrailBody(model, edit);
+}
+
+type SuccessfulGuardrail = Extract<GuardrailPreflightResult, { ok: true }>;
+
+async function failClosedForImageOutputGuardrail(
+	c: ImagesContext,
+	repos: GatewayRepositories,
+	apiKey: ApiKeyContext,
+	modelId: string,
+	requestId: string,
+	guardrail: SuccessfulGuardrail,
+): Promise<Response | null> {
+	const blockedBy = imageOutputGuardrailBlockReason(guardrail.outputFilters.length);
+	if (!blockedBy) return null;
+	await auditGuardrailOutputDecision(repos, {
+		workspaceId: apiKey.workspaceId,
+		userId: apiKey.userId,
+		apiKeyId: apiKey.keyId,
+		modelIds: [modelId],
+		correlationId: requestId,
+		trace: guardrail.trace,
+		blockedBy,
+		redactionCount: 0,
+	}).catch((error: unknown) => {
+		console.warn(JSON.stringify({
+			message: 'image output guardrail audit failed',
+			request_id: requestId,
+			error: error instanceof Error ? error.message : String(error),
+		}));
+	});
+	return gatewayErrorJson(c, {
+		status: 403,
+		code: GatewayErrorCode.guardrailBlocked,
+		message: 'Image output cannot be safely inspected by the configured output guardrail',
+	});
+}
+
+type ImageGuardrailBudgetLease =
+	| { ok: false; blocked: boolean; reason?: 'gateway_key_limit' | 'workspace_budget' | 'guardrail_budget'; message: string }
+	| {
+			ok: true;
+			reserved: boolean;
+			dispatched: boolean;
+			terminal: boolean;
+			beforeUpstreamDispatch(): Promise<void>;
+			release(reason: string): Promise<void>;
+			forfeit(reason: string): Promise<void>;
+	  };
+
+/** @internal exported for lifecycle regression tests. */
+export async function admitImageGuardrailBudget(
+	repos: GatewayRepositories,
+	params: {
+		requestId: string;
+		intents: GuardrailBudgetIntent[];
+		reservedMicros: number;
+		now: Date;
+	},
+): Promise<ImageGuardrailBudgetLease> {
+	const admission = await reserveRequestGuardrailBudgets(repos, params);
+	if (!admission.ok) return admission;
+	let dispatched = false;
+	let terminal = false;
+	const lease: AdmittedImageGuardrailBudgetLease = {
+		ok: true,
+		reserved: admission.reserved,
+		get dispatched() { return dispatched; },
+		get terminal() { return terminal; },
+		async beforeUpstreamDispatch(): Promise<void> {
+			if (dispatched) return;
+			await markRequestGuardrailBudgetsDispatched(
+				repos,
+				params.requestId,
+				admission.reserved,
+				params.now,
+			);
+			dispatched = true;
+		},
+		async release(reason: string): Promise<void> {
+			if (!admission.reserved || terminal) return;
+			await releaseRequestGuardrailBudgets(
+				repos,
+				params.requestId,
+				admission.reserved,
+				reason,
+			);
+			terminal = true;
+		},
+		async forfeit(reason: string): Promise<void> {
+			if (!admission.reserved || terminal) return;
+			try {
+				await forfeitRequestGuardrailBudgets(
+					repos,
+					params.requestId,
+					admission.reserved,
+					reason,
+				);
+				terminal = true;
+			} catch (error) {
+				console.error(JSON.stringify({
+					message: 'image guardrail budget forfeit failed',
+					request_id: params.requestId,
+					reason,
+					error: error instanceof Error ? error.message : String(error),
+				}));
+			}
+		},
+	};
+	return lease;
+}
+
+type AdmittedImageGuardrailBudgetLease = Extract<ImageGuardrailBudgetLease, { ok: true }>;
+
+async function terminateImageOrdinaryBudget(
+	lease: OrdinaryBudgetLease,
+	requestId: string,
+	reason: string,
+): Promise<void> {
+	try {
+		await lease.terminateUnknown(reason);
+	} catch (error) {
+		console.error(
+			`[Gateway Images] ordinary budget cleanup failed requestId=${requestId} state=${lease.state} reason=${reason} error=${error instanceof Error ? error.message : String(error)}`,
+		);
+	}
+}
+
+async function terminateImageGuardrailBudget(
+	lease: AdmittedImageGuardrailBudgetLease,
+	reason: string,
+): Promise<void> {
+	try {
+		if (lease.dispatched) await lease.forfeit(reason);
+		else await lease.release(reason);
+	} catch (error) {
+		console.error(
+			`[Gateway Images] guardrail budget cleanup failed reason=${reason} error=${error instanceof Error ? error.message : String(error)}`,
+		);
+	}
+}
+
+async function beforeImageUpstreamDispatch(
+	ordinaryLease: OrdinaryBudgetLease,
+	guardrailLease: AdmittedImageGuardrailBudgetLease,
+	requestId: string,
+): Promise<void> {
+	await markMultimediaBudgetsBeforeDispatch({
+		markGuardrail: () => guardrailLease.beforeUpstreamDispatch(),
+		markOrdinary: () => ordinaryLease.beforeUpstreamDispatch(),
+		terminateOrdinary: () => terminateImageOrdinaryBudget(
+			ordinaryLease,
+			requestId,
+			'pre_dispatch_failed',
+		),
+		terminateGuardrail: () => terminateImageGuardrailBudget(guardrailLease, 'pre_dispatch_failed'),
 	});
 }
 
@@ -493,6 +712,11 @@ async function parseMultipartEdits(c: ImagesContext): Promise<MultipartEditsPars
 type FinalizeImageParams = {
 	c: ImagesContext;
 	proxyResult: ProxyResult;
+	requestLogId: string;
+	budgetAccountedAt: string;
+	guardrailBudgetReserved: boolean;
+	forfeitGuardrailBudget(reason: string): Promise<void>;
+	ordinaryBudgetLease: OrdinaryBudgetLease;
 	apiKey: ApiKeyContext;
 	repos: GatewayRepositories;
 	baseModelId: string;
@@ -512,19 +736,25 @@ type FinalizeImageParams = {
 		quality?: string;
 		background?: string;
 	};
+	multiImageBilling?: ReturnType<typeof multipleImageBillingMode>;
 	referenceCount?: number;
 	start: number;
 	timing: RequestTimingCollector;
 };
 
-/**
- * generations / edits 共用：materialize → 用量/状态 → 后台记费 → 统一响应。
- * 优先消费 driver 经 failover 透传的 `meta.parsedBody` / `meta.imageUsage`，避免重复 JSON.parse。
- */
-async function finalizeImageResponse(params: FinalizeImageParams): Promise<Response> {
+function finalizeImageStreamResponse(
+	params: FinalizeImageParams,
+	settlement: NonNullable<ProxyResult['meta']>['imageStreamSettlement'],
+): Response {
+	if (!settlement) throw new Error('Image stream settlement is missing');
 	const {
 		c,
 		proxyResult,
+		requestLogId,
+		budgetAccountedAt,
+		guardrailBudgetReserved,
+		forfeitGuardrailBudget,
+		ordinaryBudgetLease,
 		apiKey,
 		repos,
 		baseModelId,
@@ -540,6 +770,145 @@ async function finalizeImageResponse(params: FinalizeImageParams): Promise<Respo
 		start,
 		timing,
 	} = params;
+	const {
+		chosenRoute,
+		upstreamRequestId,
+		circuitEvents,
+		suppressErrorAlert,
+		stickyTrace,
+		stickyMutationPromise,
+	} = proxyResult;
+	if (stickyMutationPromise) scheduleBackgroundWork(c, stickyMutationPromise);
+
+	const upstreamRequestBodyForLog = finalizeRequestLogJson(
+		redactImageRequestForLog({
+			operation,
+			model: chosenRoute.providerModelName,
+			n: common.n,
+			size: common.size,
+			quality: common.quality,
+			background: common.background,
+			prompt: common.prompt,
+			referenceCount,
+		}),
+	);
+
+	scheduleBackgroundWork(
+		c,
+		(async () => {
+			const outcome = await settlement;
+			const status: 'success' | 'error' = outcome.completed && outcome.done
+				? 'success'
+				: 'error';
+			if (status === 'success') markUserModelSuccess(apiKey.userId, baseModelId);
+			const imageAbortReason = outcome.imageAbortReason
+				?? (outcome.cancelled ? 'client_abort' : null);
+			const stickyTraceSnapshot = stickyTrace ? await stickyTrace() : null;
+			await recordImageUsage({
+				repos,
+				requestLogId,
+				budgetAccountedAt,
+				guardrailBudgetSettlement: guardrailBudgetReserved
+					? { requestId: requestLogId }
+					: undefined,
+				ordinaryBudgetSettlement:
+					ordinaryBudgetLease.reserved && ordinaryBudgetLease.state === 'dispatched'
+						? {
+								requestId: requestLogId,
+								budgetEpoch: ordinaryBudgetLease.budgetEpoch!,
+								reservedMicros: ordinaryBudgetLease.reservedMicros,
+								unknownCost: false,
+							}
+						: undefined,
+				apiKeyId: apiKey.keyId,
+				workspaceId: apiKey.workspaceId,
+				userId: apiKey.userId,
+				userEmail: apiKey.userEmail,
+				modelId: baseModelId,
+				providerId: chosenRoute.providerId,
+				providerModelName: chosenRoute.providerModelName,
+				modelName: modelNameForLog,
+				providerName: chosenRoute.providerName,
+				requestBody: requestBodyForLog,
+				upstreamRequestBody: upstreamRequestBodyForLog,
+				requestBodyLoggingMode: c.get('requestBodyLoggingMode'),
+				requestProtocol: 'openai',
+				requestOperation: 'images.generations',
+				upstreamProtocol: chosenRoute.upstreamProtocol,
+				upstreamOperation: chosenRoute.upstreamOperation,
+				modelSurfaceId: chosenRoute.modelSurfaceId,
+				routePoolId: chosenRoute.routePoolId,
+				routeTargetId: chosenRoute.targetId,
+				adapter: chosenRoute.adapter,
+				stickyTrace: stickyTraceSnapshot,
+				providerRoutingTrace: chosenRoute.providerRoutingTrace ?? null,
+				routeGroup: effectiveRouteGroup,
+				status,
+				latencyMs: Date.now() - start,
+				errorMessage: status === 'error'
+					? outcome.errorMessage ?? 'Image generation stream did not complete'
+					: undefined,
+				billing,
+				effectiveImageCount: outcome.validImages,
+				imageUsage: outcome.imageUsage,
+				clientAbortPrecheck: imageAbortReason ? budgetPrecheck : null,
+				imageAbortReason,
+				resultConfirmed: status === 'success',
+				upstreamAccepted: true,
+				clientOutcomeBillable: status === 'success',
+				upstreamSupplierCostUsdTicks: outcome.upstreamSupplierCostUsdTicks,
+				providerKeyId: chosenRoute.providerKeyId ?? null,
+				providerKeyLabel: chosenRoute.providerKeyLabel ?? null,
+				providerKeyFingerprint: chosenRoute.providerKeyFingerprint ?? null,
+				upstreamRequestId,
+				timing: timing.snapshot(),
+				circuitEvents: circuitEvents.length > 0 ? circuitEvents : undefined,
+				suppressErrorAlert: suppressErrorAlert || undefined,
+			});
+		})().catch(async (err) => {
+			console.error(
+				`[Gateway Images] stream settlement failed baseModelId=${baseModelId} keyId=${apiKey.keyId} clientModel=${clientModelId} error=${err instanceof Error ? err.message : String(err)}`,
+			);
+			await forfeitGuardrailBudget('image_stream_settlement_failed');
+			await terminateImageOrdinaryBudget(
+				ordinaryBudgetLease,
+				requestLogId,
+				'image_stream_settlement_failed',
+			);
+		}),
+	);
+	return proxyResult.response;
+}
+
+/**
+ * generations / edits 共用：materialize → 用量/状态 → 后台记费 → 统一响应。
+ * 优先消费 driver 经 failover 透传的 `meta.parsedBody` / `meta.imageUsage`，避免重复 JSON.parse。
+ */
+async function finalizeImageResponse(params: FinalizeImageParams): Promise<Response> {
+	const {
+		c,
+		proxyResult,
+		requestLogId,
+		budgetAccountedAt,
+		guardrailBudgetReserved,
+		forfeitGuardrailBudget,
+		ordinaryBudgetLease,
+		apiKey,
+		repos,
+		baseModelId,
+		effectiveRouteGroup,
+		modelNameForLog,
+		requestBodyForLog,
+		operation,
+		billing,
+		budgetPrecheck,
+		clientModelId,
+		common,
+		multiImageBilling,
+		referenceCount,
+		start,
+		timing,
+	} = params;
 
 	const {
 		chosenRoute,
@@ -549,17 +918,38 @@ async function finalizeImageResponse(params: FinalizeImageParams): Promise<Respo
 		stickyTrace,
 		stickyMutationPromise,
 	} = proxyResult;
+	if (proxyResult.response.ok && proxyResult.meta?.imageStreamSettlement) {
+		return finalizeImageStreamResponse(params, proxyResult.meta.imageStreamSettlement);
+	}
 	if (stickyMutationPromise) {
 		scheduleBackgroundWork(c, stickyMutationPromise);
 	}
-	const { response, errorBodyText } = await materializeNonOkResponse(proxyResult.response);
-	await proxyResult.usagePromise.catch(() => undefined);
+	const { response, errorBodyText } = await materializeNonOkResponse(proxyResult.response).catch(
+		async (error: unknown) => {
+			await forfeitGuardrailBudget('upstream_response_materialization_failed');
+			await terminateImageOrdinaryBudget(
+				ordinaryBudgetLease,
+				requestLogId,
+				'upstream_response_materialization_failed',
+			);
+			throw error;
+		},
+	);
+	const usageUnavailable = await proxyResult.usagePromise.then(
+		() => false,
+		() => true,
+	);
 
 	const parsedBody = proxyResult.meta?.parsedBody ?? null;
 	const imageUsage = response.ok ? (proxyResult.meta?.imageUsage ?? null) : null;
 	const validImages = response.ok ? countValidImageResults(parsedBody) : 0;
 	const latency = Date.now() - start;
 	const imageAbortReason = proxyResult.meta?.imageAbortReason ?? null;
+	const ordinaryCostUnknown = proxyResult.meta?.upstreamOutcomeUnknown === true
+		|| proxyResult.meta?.responseBodyTooLarge === true
+		|| (response.ok && usageUnavailable)
+		|| imageAbortReason === 'client_abort'
+		|| imageAbortReason === 'gateway_timeout';
 	const clientAbortPrecheck =
 		imageAbortReason === 'client_abort' || imageAbortReason === 'gateway_timeout'
 			? budgetPrecheck
@@ -577,18 +967,26 @@ async function finalizeImageResponse(params: FinalizeImageParams): Promise<Respo
 	}
 
 	let responseText: string;
-	if (errorBodyText != null) {
-		responseText = errorBodyText;
-	} else if (parsedBody !== null && parsedBody !== undefined) {
-		responseText = JSON.stringify(parsedBody);
-	} else {
-		responseText = await response.clone().text();
+	try {
+		if (errorBodyText != null) {
+			responseText = errorBodyText;
+		} else if (parsedBody !== null && parsedBody !== undefined) {
+			responseText = JSON.stringify(parsedBody);
+		} else {
+			responseText = await response.clone().text();
+		}
+	} catch (error) {
+		await forfeitGuardrailBudget('upstream_response_decode_failed');
+		await terminateImageOrdinaryBudget(
+			ordinaryBudgetLease,
+			requestLogId,
+			'upstream_response_decode_failed',
+		);
+		throw error;
 	}
 
 	let userModelCircuitEvent = null;
-	if (response.ok) {
-		markUserModelSuccess(apiKey.userId, baseModelId);
-	} else if (errorBodyText != null) {
+	if (!response.ok && errorBodyText != null) {
 		userModelCircuitEvent = maybeTriggerUserModelCircuitFromUpstream(
 			apiKey.userId,
 			baseModelId,
@@ -607,10 +1005,22 @@ async function finalizeImageResponse(params: FinalizeImageParams): Promise<Respo
 		? [...circuitEvents, userModelCircuitEvent]
 		: circuitEvents;
 
-	const status: 'success' | 'error' = response.ok && validImages > 0 ? 'success' : 'error';
+	const missingMultiImageTokenUsage =
+		common.n > 1
+		&& multiImageBilling === 'token'
+		&& !hasAuthoritativeImageTokenUsage(imageUsage);
+	const status: 'success' | 'error' =
+		response.ok && validImages > 0 && !missingMultiImageTokenUsage ? 'success' : 'error';
+	const settlementCostUnknown = shouldPreserveImageDispatchedCeiling({
+		costUnknown: ordinaryCostUnknown,
+		imageAbortReason,
+	});
+	if (status === 'success') markUserModelSuccess(apiKey.userId, baseModelId);
 	let errorMessage: string | undefined;
 	if (status === 'error') {
-		if (response.ok && validImages === 0) {
+		if (missingMultiImageTokenUsage) {
+			errorMessage = 'Multiple-image generation completed without authoritative usage';
+		} else if (response.ok && validImages === 0) {
 			errorMessage = 'Upstream returned no image data';
 		} else if (errorBodyText != null) {
 			errorMessage = formatHttpErrorTextForRequestLog(
@@ -642,7 +1052,25 @@ async function finalizeImageResponse(params: FinalizeImageParams): Promise<Respo
 			const stickyTraceSnapshot = stickyTrace ? await stickyTrace() : null;
 			await recordImageUsage({
 				repos,
+				requestLogId,
+				budgetAccountedAt,
+				guardrailBudgetSettlement: guardrailBudgetReserved
+					? {
+							requestId: requestLogId,
+							...(settlementCostUnknown ? { mode: 'reserved' as const } : {}),
+						}
+					: undefined,
+				ordinaryBudgetSettlement:
+					ordinaryBudgetLease.reserved && ordinaryBudgetLease.state === 'dispatched'
+						? {
+								requestId: requestLogId,
+								budgetEpoch: ordinaryBudgetLease.budgetEpoch!,
+								reservedMicros: ordinaryBudgetLease.reservedMicros,
+								unknownCost: settlementCostUnknown,
+							}
+						: undefined,
 				apiKeyId: apiKey.keyId,
+				workspaceId: apiKey.workspaceId,
 				userId: apiKey.userId,
 				userEmail: apiKey.userEmail,
 				modelId: baseModelId,
@@ -662,6 +1090,7 @@ async function finalizeImageResponse(params: FinalizeImageParams): Promise<Respo
 				routeTargetId: chosenRoute.targetId,
 				adapter: chosenRoute.adapter,
 				stickyTrace: stickyTraceSnapshot,
+				providerRoutingTrace: chosenRoute.providerRoutingTrace ?? null,
 				routeGroup: effectiveRouteGroup,
 				status,
 				latencyMs: latency,
@@ -672,6 +1101,13 @@ async function finalizeImageResponse(params: FinalizeImageParams): Promise<Respo
 				clientAbortPrecheck,
 				imageAbortReason,
 				resultConfirmed: status === 'success' && validImages > 0,
+				upstreamAccepted: response.ok,
+				clientOutcomeBillable: imageClientOutcomeBillable({
+					status,
+					responseOk: response.ok,
+					costUnknown: ordinaryCostUnknown,
+					imageAbortReason,
+				}),
 				upstreamSupplierCostUsdTicks,
 				providerKeyId: chosenRoute.providerKeyId ?? null,
 				providerKeyLabel: chosenRoute.providerKeyLabel ?? null,
@@ -681,9 +1117,15 @@ async function finalizeImageResponse(params: FinalizeImageParams): Promise<Respo
 				circuitEvents: alertCircuitEvents.length > 0 ? alertCircuitEvents : undefined,
 				suppressErrorAlert: suppressErrorAlert || undefined,
 			});
-		})().catch((err) => {
+		})().catch(async (err) => {
 			console.error(
 				`[Gateway Images] recordImageUsage failed baseModelId=${baseModelId} keyId=${apiKey.keyId} clientModel=${clientModelId} error=${err instanceof Error ? err.message : String(err)}`
+			);
+			await forfeitGuardrailBudget('image_usage_settlement_failed');
+			await terminateImageOrdinaryBudget(
+				ordinaryBudgetLease,
+				requestLogId,
+				'image_usage_settlement_failed',
 			);
 		})
 	);
@@ -695,7 +1137,18 @@ async function finalizeImageResponse(params: FinalizeImageParams): Promise<Respo
 		});
 	}
 	if (response.ok && validImages === 0) {
-		return c.json({ error: 'Upstream returned no image data' }, 502);
+		return gatewayErrorJson(c, {
+			status: 502,
+			code: GatewayErrorCode.upstreamRequestFailed,
+			message: 'Upstream returned no image data',
+		});
+	}
+	if (missingMultiImageTokenUsage) {
+		return gatewayErrorJson(c, {
+			status: 502,
+			code: GatewayErrorCode.upstreamRequestFailed,
+			message: 'Multiple-image generation completed without authoritative usage',
+		});
 	}
 	return new Response(responseText, {
 		status: response.status >= 400 && response.status < 600 ? response.status : 502,
@@ -703,10 +1156,12 @@ async function finalizeImageResponse(params: FinalizeImageParams): Promise<Respo
 	});
 }
 
-imageRoutes.post('/generations', async (c) => {
+async function handleImageGenerations(c: ImagesContext): Promise<Response> {
 	const repos = c.get('repositories');
 	const apiKey = c.get('apiKey');
 	const start = Date.now();
+	const requestStartedAt = new Date(start);
+	const requestCorrelationId = c.get('generationId')!;
 	const timing = new RequestTimingCollector();
 	const contentType = c.req.header('content-type') ?? null;
 	const contentLength = c.req.header('content-length') ?? null;
@@ -736,15 +1191,15 @@ imageRoutes.post('/generations', async (c) => {
 		});
 	}
 
-	const common = normalizeImageCommonParams({
+	const initialCommon = normalizeImageCommonParams({
 		prompt: body.prompt,
 		n: body.n,
 		size: body.size,
 		quality: body.quality,
 		background: body.background,
 	});
-	if (!common.ok) {
-		return rejectImageRequest(c, 400, common.error, {
+	if (!initialCommon.ok) {
+		return rejectImageRequest(c, 400, initialCommon.error, {
 			operation: 'generations',
 			contentType,
 			contentLength,
@@ -754,10 +1209,66 @@ imageRoutes.post('/generations', async (c) => {
 			promptChars: typeof body.prompt === 'string' ? body.prompt.length : 0,
 		});
 	}
+	if (body.stream !== undefined && typeof body.stream !== 'boolean') {
+		return rejectImageRequest(c, 400, 'stream must be a boolean', {
+			operation: 'generations', contentType, contentLength, bodyKeys,
+			hasModel: true, clientModel: rawModelId,
+		});
+	}
 
-	const routed = await resolveOpenAiImageRoutes(repos, rawModelId, 'images.generations');
-	if (!routed.ok) {
-		return rejectImageRequest(c, routed.status, routed.error, {
+	const guardrail = await runRequestGuardrails(repos, {
+		workspaceId: apiKey.workspaceId,
+		userId: apiKey.userId,
+		apiKeyId: apiKey.keyId,
+		modelIds: [rawModelId],
+		body: imageGenerationGuardrailBody(rawModelId, initialCommon),
+		correlationId: requestCorrelationId,
+		now: requestStartedAt,
+	});
+	if (!guardrail.ok) {
+		return gatewayErrorJson(c, {
+			status: guardrail.status,
+			code: guardrail.code === 'guardrail_invalid'
+				? GatewayErrorCode.guardrailInvalid
+				: GatewayErrorCode.guardrailBlocked,
+			message: guardrail.message,
+		});
+	}
+	const guardedPrompt = guardrail.body.prompt;
+	if (typeof guardedPrompt !== 'string') {
+		return rejectImageRequest(c, 400, 'Guardrail produced an invalid image prompt', {
+			operation: 'generations', contentType, contentLength, bodyKeys,
+			hasModel: true, clientModel: rawModelId,
+		});
+	}
+	body = { ...body, prompt: guardedPrompt };
+	const common = normalizeImageCommonParams({
+		prompt: body.prompt,
+		n: body.n,
+		size: body.size,
+		quality: body.quality,
+		background: body.background,
+	});
+	if (!common.ok) {
+		return rejectImageRequest(c, 400, common.error, {
+			operation: 'generations', contentType, contentLength, bodyKeys,
+			hasModel: true, clientModel: rawModelId,
+		});
+	}
+	const outputGuardrailRejection = await failClosedForImageOutputGuardrail(
+		c, repos, apiKey, rawModelId, requestCorrelationId, guardrail,
+	);
+	if (outputGuardrailRejection) return outputGuardrailRejection;
+
+	const fallbackPlan = await buildModelFallbackPlan(repos, {
+		modelIds: [rawModelId],
+		body,
+		requestProtocol: 'openai',
+		requestOperation: 'images.generations',
+		pricingAt: requestStartedAt,
+	});
+	if (!fallbackPlan.ok) {
+		return rejectImageRequest(c, fallbackPlan.status, fallbackPlan.message, {
 			operation: 'generations',
 			contentType,
 			contentLength,
@@ -767,27 +1278,76 @@ imageRoutes.post('/generations', async (c) => {
 			promptChars: common.prompt.length,
 		});
 	}
-	const { model, baseModelId, effectiveRouteGroup, routes } = routed;
+	const selectedPlan = fallbackPlan.candidates[0]!;
+	const { model, baseModelId, effectiveRouteGroup } = selectedPlan;
+	body = selectedPlan.upstreamBody;
+	if (body.stream !== undefined && typeof body.stream !== 'boolean') {
+		return rejectImageRequest(c, 400, 'stream must be a boolean', {
+			operation: 'generations', contentType, contentLength, bodyKeys,
+			hasModel: true, clientModel: rawModelId,
+		});
+	}
+	const streamRequested = body.stream === true;
+	let routes = selectedPlan.routes;
+	if (routes.some(routeUsesUnsupportedMultimediaEndpointPriceSelection)) {
+		return rejectImageRequest(c, 400, 'provider.max_price and provider.sort=price are unavailable for Images until multimedia endpoint price comparison is enabled', {
+			operation: 'generations', contentType, contentLength, bodyKeys,
+			hasModel: true, clientModel: rawModelId,
+		});
+	}
+	if (streamRequested) {
+		routes = routes.filter((route) => imageRouteSupportsParameter(route, 'stream'));
+		if (routes.length === 0) {
+			return rejectImageRequest(c, 400, 'No configured endpoint proves support for image streaming', {
+				operation: 'generations', contentType, contentLength, bodyKeys,
+				hasModel: true, clientModel: rawModelId,
+			});
+		}
+	}
+	let multiImageBilling: ReturnType<typeof multipleImageBillingMode> = null;
+	if (common.n > 1) {
+		routes = routes.filter((route) => imageRouteSupportsParameter(route, 'n', common.n));
+		if (routes.length === 0) {
+			return rejectImageRequest(c, 400, 'No configured endpoint proves support for n > 1', {
+				operation: 'generations', contentType, contentLength, bodyKeys,
+				hasModel: true, clientModel: rawModelId,
+			});
+		}
+		// The Endpoint precheck below proves every eligible route has a
+		// count-based tariff before any upstream dispatch can begin.
+		multiImageBilling = 'per_image';
+	}
 	const modelNameForLog = modelDisplayName(model, baseModelId);
 
-	if (apiKey.budgetMax != null && apiKey.budgetSpent >= apiKey.budgetMax) {
-		return rejectImageRequest(c, 403, 'Budget exceeded', {
-			operation: 'generations',
-			contentType,
-			contentLength,
-			bodyKeys,
-			hasModel: true,
-			clientModel: rawModelId,
-			promptChars: common.prompt.length,
-		});
+	const upstreamBody: Record<string, unknown> = {
+		prompt: common.prompt,
+		n: common.n,
+	};
+	if (common.size) upstreamBody.size = common.size;
+	if (common.quality) upstreamBody.quality = common.quality;
+	if (common.background) upstreamBody.background = common.background;
+	// 仅显式透传：GPT Image 不接受 response_format（DALL·E 遗留），默认由上游决定
+	if (typeof body.response_format === 'string' && body.response_format.trim() !== '') {
+		upstreamBody.response_format = body.response_format.trim();
 	}
+	if (typeof body.output_format === 'string') {
+		upstreamBody.output_format = body.output_format;
+	}
+	if (streamRequested) upstreamBody.stream = true;
+	// Seedream 等兼容扩展：用户显式传入时透传；亦可由 route `custom_params` 注入默认值
+	applyOpenAiImageGenerationExtras(upstreamBody, body);
 
-	const referenceCount = countOpenAiGenerationReferenceImages(body);
-
-	const estimate = await estimateImageBudgetPrecheck(
-		repos,
-		{
-			modelPricingProfileJson: model.pricing_profile ?? null,
+	const pricingContext = await createImagePricingContext(repos, start);
+	const routeRequestFacts = routes.map((route) => ({
+		route,
+		endpoint: route.endpoint ?? null,
+		endpointId: route.endpoint?.id ?? null,
+		priceOverrideRaw: route.priceOverrideRaw,
+		referenceCount: countRouteImageGenerationReferences(route, upstreamBody),
+	}));
+	const estimateSelection = selectConservativeMultimediaBudgetEstimate(await Promise.all(
+		routeRequestFacts.map(({ endpoint, priceOverrideRaw, referenceCount }) => estimateImageBudgetPrecheck(repos, {
+			endpoint,
 			catalogModelId: baseModelId,
 			userChargedCostFactorsJson: apiKey.chargedCostFactors,
 			quality: common.quality ?? 'auto',
@@ -797,19 +1357,17 @@ imageRoutes.post('/generations', async (c) => {
 			referenceCount,
 			operation: 'generations',
 			requestStartedAtMs: start,
-		},
-		routes.map((route) => route.priceOverrideRaw)
-	);
-	if (!canAffordImageCost(apiKey.budgetMax, apiKey.budgetSpent, estimate.chargedCost)) {
-		return rejectImageRequest(c, 403, 'Budget exceeded', {
-			operation: 'generations',
-			contentType,
-			contentLength,
-			bodyKeys,
-			hasModel: true,
-			clientModel: rawModelId,
-			promptChars: common.prompt.length,
-			referenceCount,
+			pricingContext,
+		}, [priceOverrideRaw])),
+	));
+	if (!estimateSelection) {
+		throw new Error('Image fallback plan has no billable route estimate');
+	}
+	const { estimate, estimatedChargedCost } = estimateSelection;
+	if (estimatedChargedCost === null) {
+		return rejectImageRequest(c, 502, 'No eligible image route has a provable charged-cost ceiling', {
+			operation: 'generations', contentType, contentLength, bodyKeys,
+			hasModel: true, clientModel: rawModelId,
 		});
 	}
 
@@ -838,54 +1396,127 @@ imageRoutes.post('/generations', async (c) => {
 		return circuitBlocked;
 	}
 
-	const upstreamBody: Record<string, unknown> = {
-		prompt: common.prompt,
-		n: common.n,
-	};
-	if (common.size) upstreamBody.size = common.size;
-	if (common.quality) upstreamBody.quality = common.quality;
-	if (common.background) upstreamBody.background = common.background;
-	// 仅显式透传：GPT Image 不接受 response_format（DALL·E 遗留），默认由上游决定
-	if (typeof body.response_format === 'string' && body.response_format.trim() !== '') {
-		upstreamBody.response_format = body.response_format.trim();
-	}
-	if (typeof body.output_format === 'string') {
-		upstreamBody.output_format = body.output_format;
-	}
-	// Seedream 等兼容扩展：用户显式传入时透传；亦可由 route `custom_params` 注入默认值
-	applyOpenAiImageGenerationExtras(upstreamBody, body);
-
-	const strategyPlan = await resolveRouteStrategyPlan({
-		routePolicyRaw: model.route_policy ?? null,
-		poolStrategy: routed.poolStrategy,
-		poolTierStrategies: routed.poolTierStrategies,
-		protocol: 'openai',
-		capability: 'images.generations',
-		routeGroup: effectiveRouteGroup,
-		repos,
-	});
 	const affinityKey = buildAffinityKey(apiKey.userId, baseModelId, effectiveRouteGroup, 'openai');
 	const tierKeyPrefix = buildTierKeyPrefix(baseModelId, effectiveRouteGroup, 'openai');
 	timing.markGatewayComplete();
+	const ordinaryAdmission = await reserveOrdinaryUserBudget(repos, {
+		requestId: requestCorrelationId,
+		userId: apiKey.userId,
+		apiKeyId: apiKey.keyId,
+		budgetMax: apiKey.budgetMax,
+		expectedBudgetEpoch: apiKey.budgetEpoch,
+		estimatedChargedCost,
+		now: new Date(start),
+	});
+	if (!ordinaryAdmission.ok) {
+		return gatewayErrorJson(c, {
+			status: 403,
+			code: GatewayErrorCode.budgetExceeded,
+			message: ordinaryAdmission.error.message,
+		});
+	}
+	const ordinaryBudgetLease = ordinaryAdmission.lease;
+	let guardrailBudgetLease: ImageGuardrailBudgetLease;
+	try {
+		guardrailBudgetLease = await admitImageGuardrailBudget(repos, {
+			requestId: requestCorrelationId,
+			intents: guardrail.budgetIntents,
+			reservedMicros: imageGuardrailBudgetMicros(estimate),
+			now: new Date(),
+		});
+	} catch (error) {
+		await terminateImageOrdinaryBudget(
+			ordinaryBudgetLease,
+			requestCorrelationId,
+			'guardrail_budget_admission_failed',
+		);
+		throw error;
+	}
+	if (!guardrailBudgetLease.ok) {
+		await terminateImageOrdinaryBudget(
+			ordinaryBudgetLease,
+			requestCorrelationId,
+			'guardrail_budget_admission_failed',
+		);
+		if (guardrailBudgetLease.blocked) {
+			return gatewayErrorJson(c, {
+				status: 403,
+				code: guardrailBudgetLease.reason === 'gateway_key_limit' || guardrailBudgetLease.reason === 'workspace_budget' ? GatewayErrorCode.budgetExceeded : GatewayErrorCode.guardrailBlocked,
+				message: guardrailBudgetLease.message,
+			});
+		}
+		throw new Error(`Guardrail budget admission failed: ${guardrailBudgetLease.message}`);
+	}
 
 	console.log(
 		`[Gateway Images] generations baseModelId=${baseModelId} keyId=${apiKey.keyId} n=${common.n}`
 	);
 
-	const stickySurface = routed.stickySurface;
-	const proxyResult = await proxyImageGenerations(repos, routes, upstreamBody, c.req.raw.signal, {
-		affinityKey,
-		tierKeyPrefix,
-		strategy: strategyPlan.base,
-		tierStrategies: strategyPlan.tierOverrides,
-		timing,
-		routePoolId: stickySurface?.route_pool_id ?? routes[0]?.routePoolId ?? null,
-		sticky: stickyConfigFromSurface(stickySurface),
-	});
+	let proxyResult: Awaited<ReturnType<typeof proxyImageGenerations>>;
+	try {
+		proxyResult = await proxyImageGenerations(repos, routes, upstreamBody, c.req.raw.signal, {
+			affinityKey,
+			tierKeyPrefix,
+			strategy: selectedPlan.strategy.base,
+			tierStrategies: selectedPlan.strategy.tierOverrides,
+			timing,
+			routePoolId: selectedPlan.surface?.route_pool_id ?? routes[0]?.routePoolId ?? null,
+			sticky: selectedPlan.hasProviderPreferences
+				? null
+				: stickyConfigFromSurface(selectedPlan.surface),
+			beforeUpstreamDispatch: () => beforeImageUpstreamDispatch(
+				ordinaryBudgetLease,
+				guardrailBudgetLease,
+				requestCorrelationId,
+			),
+			image: {
+				requireAuthoritativeUsage: false,
+			},
+		});
+	} catch (error) {
+		await terminateImageGuardrailBudget(guardrailBudgetLease, 'upstream_dispatch_failed');
+		await terminateImageOrdinaryBudget(
+			ordinaryBudgetLease,
+			requestCorrelationId,
+			'upstream_dispatch_failed',
+		);
+		throw error;
+	}
+	const chosenRouteFacts = routeRequestFacts.find(({ route, endpointId }) =>
+		route.targetId === proxyResult.chosenRoute.targetId
+		&& route.providerId === proxyResult.chosenRoute.providerId
+		&& endpointId != null
+		&& endpointId === proxyResult.chosenRoute.endpoint?.id
+		&& route.priceOverrideRaw === proxyResult.chosenRoute.priceOverrideRaw
+	);
+	if (!chosenRouteFacts) {
+		await terminateImageGuardrailBudget(guardrailBudgetLease, 'chosen_route_facts_mismatch');
+		await terminateImageOrdinaryBudget(
+			ordinaryBudgetLease,
+			requestCorrelationId,
+			'chosen_route_facts_mismatch',
+		);
+		throw new Error('Chosen image route does not match its admitted endpoint request facts');
+	}
+	if (ordinaryBudgetLease.state === 'reserved') {
+		await terminateImageOrdinaryBudget(
+			ordinaryBudgetLease,
+			requestCorrelationId,
+			'upstream_dispatch_not_started',
+		);
+	}
+	if (!guardrailBudgetLease.dispatched) {
+		await terminateImageGuardrailBudget(guardrailBudgetLease, 'upstream_dispatch_not_started');
+	}
 
 	return finalizeImageResponse({
 		c,
 		proxyResult,
+		requestLogId: requestCorrelationId,
+		budgetAccountedAt: requestStartedAt.toISOString(),
+		guardrailBudgetReserved: guardrailBudgetLease.reserved,
+		forfeitGuardrailBudget: (reason) => guardrailBudgetLease.forfeit(reason),
+		ordinaryBudgetLease,
 		apiKey,
 		repos,
 		baseModelId,
@@ -894,31 +1525,39 @@ imageRoutes.post('/generations', async (c) => {
 		requestBodyForLog,
 		operation: 'generations',
 		billing: {
-			modelPricingProfileJson: model.pricing_profile ?? null,
+			endpoint: chosenRouteFacts.endpoint,
 			catalogModelId: baseModelId,
 			userChargedCostFactorsJson: apiKey.chargedCostFactors,
-			routePriceOverrideJson: proxyResult.chosenRoute.priceOverrideRaw,
+			routePriceOverrideJson: chosenRouteFacts.priceOverrideRaw,
 			quality: common.quality ?? 'auto',
 			size: common.size ?? 'auto',
 			imageCount: common.n,
 			isEdit: false,
-			referenceCount,
+			referenceCount: chosenRouteFacts.referenceCount,
 			operation: 'generations',
 			requestStartedAtMs: start,
+			pricingContext,
 		},
 		budgetPrecheck: estimate,
 		clientModelId: rawModelId,
 		common,
-		referenceCount,
+		multiImageBilling,
+		referenceCount: chosenRouteFacts.referenceCount,
 		start,
 		timing,
 	});
-});
+}
+
+// OpenRouter's canonical Images generation surface plus the legacy OpenAI alias.
+imageRoutes.post('/', handleImageGenerations);
+imageRoutes.post('/generations', handleImageGenerations);
 
 imageRoutes.post('/edits', async (c) => {
 	const repos = c.get('repositories');
 	const apiKey = c.get('apiKey');
 	const start = Date.now();
+	const requestStartedAt = new Date(start);
+	const requestCorrelationId = c.get('generationId')!;
 	const timing = new RequestTimingCollector();
 
 	const parsed = await parseMultipartEdits(c);
@@ -928,11 +1567,49 @@ imageRoutes.post('/edits', async (c) => {
 			...parsed.diag,
 		});
 	}
-	const { model: rawModelId, edit, totalUploadBytes } = parsed;
+	const { model: rawModelId, totalUploadBytes } = parsed;
+	let edit = parsed.edit;
 
-	const routed = await resolveOpenAiImageRoutes(repos, rawModelId, 'images.edits');
-	if (!routed.ok) {
-		return rejectImageRequest(c, routed.status, routed.error, {
+	const guardrail = await runRequestGuardrails(repos, {
+		workspaceId: apiKey.workspaceId,
+		userId: apiKey.userId,
+		apiKeyId: apiKey.keyId,
+		modelIds: [rawModelId],
+		body: imageEditGuardrailBody(rawModelId, edit),
+		correlationId: requestCorrelationId,
+		now: requestStartedAt,
+	});
+	if (!guardrail.ok) {
+		return gatewayErrorJson(c, {
+			status: guardrail.status,
+			code: guardrail.code === 'guardrail_invalid'
+				? GatewayErrorCode.guardrailInvalid
+				: GatewayErrorCode.guardrailBlocked,
+			message: guardrail.message,
+		});
+	}
+	const guardedPrompt = guardrail.body.prompt;
+	if (typeof guardedPrompt !== 'string') {
+		return rejectImageRequest(c, 400, 'Guardrail produced an invalid image prompt', {
+			operation: 'edits', hasModel: true, clientModel: rawModelId,
+			referenceCount: edit.images.length, totalUploadBytes,
+		});
+	}
+	edit = { ...edit, prompt: guardedPrompt };
+	const outputGuardrailRejection = await failClosedForImageOutputGuardrail(
+		c, repos, apiKey, rawModelId, requestCorrelationId, guardrail,
+	);
+	if (outputGuardrailRejection) return outputGuardrailRejection;
+
+	const fallbackPlan = await buildModelFallbackPlan(repos, {
+		modelIds: [rawModelId],
+		body: guardrail.body,
+		requestProtocol: 'openai',
+		requestOperation: 'images.edits',
+		pricingAt: requestStartedAt,
+	});
+	if (!fallbackPlan.ok) {
+		return rejectImageRequest(c, fallbackPlan.status, fallbackPlan.message, {
 			operation: 'edits',
 			contentType: c.req.header('content-type') ?? null,
 			contentLength: c.req.header('content-length') ?? null,
@@ -943,48 +1620,61 @@ imageRoutes.post('/edits', async (c) => {
 			totalUploadBytes,
 		});
 	}
-	const { model, baseModelId, effectiveRouteGroup, routes } = routed;
+	const selectedPlan = fallbackPlan.candidates[0]!;
+	const { model, baseModelId, effectiveRouteGroup } = selectedPlan;
+	let routes = selectedPlan.routes;
+	if (routes.some(routeUsesUnsupportedMultimediaEndpointPriceSelection)) {
+		return rejectImageRequest(c, 400, 'provider.max_price and provider.sort=price are unavailable for Images until multimedia endpoint price comparison is enabled', {
+			operation: 'edits', hasModel: true, clientModel: rawModelId,
+			referenceCount: edit.images.length, totalUploadBytes,
+		});
+	}
+	let multiImageBilling: ReturnType<typeof multipleImageBillingMode> = null;
+	if (edit.n > 1) {
+		routes = routes.filter((route) => imageRouteSupportsParameter(route, 'n', edit.n));
+		if (routes.length === 0) {
+			return rejectImageRequest(c, 400, 'No configured endpoint proves support for n > 1', {
+				operation: 'edits', hasModel: true, clientModel: rawModelId,
+				referenceCount: edit.images.length, totalUploadBytes,
+			});
+		}
+		multiImageBilling = 'per_image';
+	}
 	const modelNameForLog = modelDisplayName(model, baseModelId);
 
-	if (apiKey.budgetMax != null && apiKey.budgetSpent >= apiKey.budgetMax) {
-		return rejectImageRequest(c, 403, 'Budget exceeded', {
-			operation: 'edits',
-			contentType: c.req.header('content-type') ?? null,
-			contentLength: c.req.header('content-length') ?? null,
-			hasModel: true,
-			clientModel: rawModelId,
-			promptChars: edit.prompt.length,
-			referenceCount: edit.images.length,
-			totalUploadBytes,
-		});
-	}
-
-	const estimate = await estimateImageBudgetPrecheck(
-		repos,
-		{
-			modelPricingProfileJson: model.pricing_profile ?? null,
+	const pricingContext = await createImagePricingContext(repos, start);
+	const routeRequestFacts = routes.map((route) => ({
+		route,
+		endpoint: route.endpoint ?? null,
+		endpointId: route.endpoint?.id ?? null,
+		priceOverrideRaw: route.priceOverrideRaw,
+		// Multipart reference files are appended after route defaults; the driver
+		// explicitly ignores custom `image`/`images` fields.
+		referenceCount: edit.images.length,
+	}));
+	const estimateSelection = selectConservativeMultimediaBudgetEstimate(await Promise.all(
+		routeRequestFacts.map(({ endpoint, priceOverrideRaw, referenceCount }) => estimateImageBudgetPrecheck(repos, {
+			endpoint,
 			catalogModelId: baseModelId,
 			userChargedCostFactorsJson: apiKey.chargedCostFactors,
 			quality: edit.quality ?? 'auto',
 			size: edit.size ?? 'auto',
 			imageCount: edit.n,
 			isEdit: true,
-			referenceCount: edit.images.length,
+			referenceCount,
 			operation: 'edits',
 			requestStartedAtMs: start,
-		},
-		routes.map((route) => route.priceOverrideRaw)
-	);
-	if (!canAffordImageCost(apiKey.budgetMax, apiKey.budgetSpent, estimate.chargedCost)) {
-		return rejectImageRequest(c, 403, 'Budget exceeded', {
-			operation: 'edits',
-			contentType: c.req.header('content-type') ?? null,
-			contentLength: c.req.header('content-length') ?? null,
-			hasModel: true,
-			clientModel: rawModelId,
-			promptChars: edit.prompt.length,
-			referenceCount: edit.images.length,
-			totalUploadBytes,
+			pricingContext,
+		}, [priceOverrideRaw])),
+	));
+	if (!estimateSelection) {
+		throw new Error('Image fallback plan has no billable route estimate');
+	}
+	const { estimate, estimatedChargedCost } = estimateSelection;
+	if (estimatedChargedCost === null) {
+		return rejectImageRequest(c, 502, 'No eligible image route has a provable charged-cost ceiling', {
+			operation: 'edits', hasModel: true, clientModel: rawModelId,
+			referenceCount: edit.images.length, totalUploadBytes,
 		});
 	}
 
@@ -1014,37 +1704,124 @@ imageRoutes.post('/edits', async (c) => {
 		return circuitBlocked;
 	}
 
-	const strategyPlan = await resolveRouteStrategyPlan({
-		routePolicyRaw: model.route_policy ?? null,
-		poolStrategy: routed.poolStrategy,
-		poolTierStrategies: routed.poolTierStrategies,
-		protocol: 'openai',
-		capability: 'images.edits',
-		routeGroup: effectiveRouteGroup,
-		repos,
-	});
 	const affinityKey = buildAffinityKey(apiKey.userId, baseModelId, effectiveRouteGroup, 'openai');
 	const tierKeyPrefix = buildTierKeyPrefix(baseModelId, effectiveRouteGroup, 'openai');
 	timing.markGatewayComplete();
+	const ordinaryAdmission = await reserveOrdinaryUserBudget(repos, {
+		requestId: requestCorrelationId,
+		userId: apiKey.userId,
+		apiKeyId: apiKey.keyId,
+		budgetMax: apiKey.budgetMax,
+		expectedBudgetEpoch: apiKey.budgetEpoch,
+		estimatedChargedCost,
+		now: new Date(start),
+	});
+	if (!ordinaryAdmission.ok) {
+		return gatewayErrorJson(c, {
+			status: 403,
+			code: GatewayErrorCode.budgetExceeded,
+			message: ordinaryAdmission.error.message,
+		});
+	}
+	const ordinaryBudgetLease = ordinaryAdmission.lease;
+	let guardrailBudgetLease: ImageGuardrailBudgetLease;
+	try {
+		guardrailBudgetLease = await admitImageGuardrailBudget(repos, {
+			requestId: requestCorrelationId,
+			intents: guardrail.budgetIntents,
+			reservedMicros: imageGuardrailBudgetMicros(estimate),
+			now: new Date(),
+		});
+	} catch (error) {
+		await terminateImageOrdinaryBudget(
+			ordinaryBudgetLease,
+			requestCorrelationId,
+			'guardrail_budget_admission_failed',
+		);
+		throw error;
+	}
+	if (!guardrailBudgetLease.ok) {
+		await terminateImageOrdinaryBudget(
+			ordinaryBudgetLease,
+			requestCorrelationId,
+			'guardrail_budget_admission_failed',
+		);
+		if (guardrailBudgetLease.blocked) {
+			return gatewayErrorJson(c, {
+				status: 403,
+				code: guardrailBudgetLease.reason === 'gateway_key_limit' || guardrailBudgetLease.reason === 'workspace_budget' ? GatewayErrorCode.budgetExceeded : GatewayErrorCode.guardrailBlocked,
+				message: guardrailBudgetLease.message,
+			});
+		}
+		throw new Error(`Guardrail budget admission failed: ${guardrailBudgetLease.message}`);
+	}
 
 	console.log(
 		`[Gateway Images] edits baseModelId=${baseModelId} keyId=${apiKey.keyId} refs=${edit.images.length}`
 	);
 
-	const stickySurface = routed.stickySurface;
-	const proxyResult = await proxyImageEdits(repos, routes, edit, c.req.raw.signal, {
-		affinityKey,
-		tierKeyPrefix,
-		strategy: strategyPlan.base,
-		tierStrategies: strategyPlan.tierOverrides,
-		timing,
-		routePoolId: stickySurface?.route_pool_id ?? routes[0]?.routePoolId ?? null,
-		sticky: stickyConfigFromSurface(stickySurface),
-	});
+	let proxyResult: Awaited<ReturnType<typeof proxyImageEdits>>;
+	try {
+		proxyResult = await proxyImageEdits(repos, routes, edit, c.req.raw.signal, {
+			affinityKey,
+			tierKeyPrefix,
+			strategy: selectedPlan.strategy.base,
+			tierStrategies: selectedPlan.strategy.tierOverrides,
+			timing,
+			routePoolId: selectedPlan.surface?.route_pool_id ?? routes[0]?.routePoolId ?? null,
+			sticky: selectedPlan.hasProviderPreferences
+				? null
+				: stickyConfigFromSurface(selectedPlan.surface),
+			beforeUpstreamDispatch: () => beforeImageUpstreamDispatch(
+				ordinaryBudgetLease,
+				guardrailBudgetLease,
+				requestCorrelationId,
+			),
+		});
+	} catch (error) {
+		await terminateImageGuardrailBudget(guardrailBudgetLease, 'upstream_dispatch_failed');
+		await terminateImageOrdinaryBudget(
+			ordinaryBudgetLease,
+			requestCorrelationId,
+			'upstream_dispatch_failed',
+		);
+		throw error;
+	}
+	const chosenRouteFacts = routeRequestFacts.find(({ route, endpointId }) =>
+		route.targetId === proxyResult.chosenRoute.targetId
+		&& route.providerId === proxyResult.chosenRoute.providerId
+		&& endpointId != null
+		&& endpointId === proxyResult.chosenRoute.endpoint?.id
+		&& route.priceOverrideRaw === proxyResult.chosenRoute.priceOverrideRaw
+	);
+	if (!chosenRouteFacts) {
+		await terminateImageGuardrailBudget(guardrailBudgetLease, 'chosen_route_facts_mismatch');
+		await terminateImageOrdinaryBudget(
+			ordinaryBudgetLease,
+			requestCorrelationId,
+			'chosen_route_facts_mismatch',
+		);
+		throw new Error('Chosen image edit route does not match its admitted endpoint request facts');
+	}
+	if (ordinaryBudgetLease.state === 'reserved') {
+		await terminateImageOrdinaryBudget(
+			ordinaryBudgetLease,
+			requestCorrelationId,
+			'upstream_dispatch_not_started',
+		);
+	}
+	if (!guardrailBudgetLease.dispatched) {
+		await terminateImageGuardrailBudget(guardrailBudgetLease, 'upstream_dispatch_not_started');
+	}
 
 	return finalizeImageResponse({
 		c,
 		proxyResult,
+		requestLogId: requestCorrelationId,
+		budgetAccountedAt: requestStartedAt.toISOString(),
+		guardrailBudgetReserved: guardrailBudgetLease.reserved,
+		forfeitGuardrailBudget: (reason) => guardrailBudgetLease.forfeit(reason),
+		ordinaryBudgetLease,
 		apiKey,
 		repos,
 		baseModelId,
@@ -1053,17 +1830,18 @@ imageRoutes.post('/edits', async (c) => {
 		requestBodyForLog,
 		operation: 'edits',
 		billing: {
-			modelPricingProfileJson: model.pricing_profile ?? null,
+			endpoint: chosenRouteFacts.endpoint,
 			catalogModelId: baseModelId,
 			userChargedCostFactorsJson: apiKey.chargedCostFactors,
-			routePriceOverrideJson: proxyResult.chosenRoute.priceOverrideRaw,
+			routePriceOverrideJson: chosenRouteFacts.priceOverrideRaw,
 			quality: edit.quality ?? 'auto',
 			size: edit.size ?? 'auto',
 			imageCount: edit.n,
 			isEdit: true,
-			referenceCount: edit.images.length,
+			referenceCount: chosenRouteFacts.referenceCount,
 			operation: 'edits',
 			requestStartedAtMs: start,
+			pricingContext,
 		},
 		budgetPrecheck: estimate,
 		clientModelId: rawModelId,
@@ -1074,7 +1852,8 @@ imageRoutes.post('/edits', async (c) => {
 			quality: edit.quality,
 			background: edit.background,
 		},
-		referenceCount: edit.images.length,
+		multiImageBilling,
+		referenceCount: chosenRouteFacts.referenceCount,
 		start,
 		timing,
 	});

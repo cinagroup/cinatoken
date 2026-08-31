@@ -18,6 +18,8 @@ type PreflightRow = {
 	gateway_schema_usage: boolean;
 	gateway_schema_create: boolean;
 	migration_table_exists: boolean;
+	migration_count: string;
+	latest_migration: string | null;
 };
 
 /**
@@ -68,7 +70,11 @@ export default {
 					COALESCE(has_schema_privilege(current_user, gateway_namespace.oid, 'CREATE'), FALSE)
 						AS gateway_schema_create,
 					to_regclass('cinatoken_gateway.schema_migrations') IS NOT NULL
-						AS migration_table_exists
+						AS migration_table_exists,
+					(SELECT COUNT(*)::TEXT FROM cinatoken_gateway.schema_migrations)
+						AS migration_count,
+					(SELECT MAX(version) FROM cinatoken_gateway.schema_migrations)
+						AS latest_migration
 				FROM gateway_namespace
 			`;
 			const row = rows[0];

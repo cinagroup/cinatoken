@@ -54,7 +54,7 @@ Use chain ID `84532` only for Base Sepolia. A mainnet launch requires reviewed m
 | Worker | Secrets |
 | --- | --- |
 | Proxy | `SHARED_KEY_ENCRYPTION_SECRET` |
-| Admin | `CINATOKEN_OIDC_CLIENT_SECRET`, `CINATOKEN_OIDC_BRIDGE_SECRET`, `CINATOKEN_OIDC_TRANSACTION_SECRET`, `SHARED_KEY_ENCRYPTION_SECRET` |
+| Admin | `CINATOKEN_OIDC_CLIENT_SECRET`, `CINATOKEN_OIDC_BRIDGE_SECRET`, `CINATOKEN_OIDC_TRANSACTION_SECRET`, `CINATOKEN_IDENTITY_EVENTS_SECRET`, `SHARED_KEY_ENCRYPTION_SECRET` |
 | Chain | `CINACHAIN_RPC_URL`, `CINACHAIN_MINTER_PRIVATE_KEY`, `CINABADGE_CONTRACT_ADDRESS`, `CINACREDIT_CONTRACT_ADDRESS` |
 
 Use `wrangler secret put` or a secret manager integration. Do not place these values in `cloudflare-worker/*.env`, command-line arguments, GitHub Actions logs, or tracked files. The deployment CLI checks secret names before it deploys; it never reads their values.

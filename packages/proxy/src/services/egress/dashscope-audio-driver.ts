@@ -6,13 +6,17 @@
  * - 异步 Qwen-Audio-3.0-ASR-Flash-Filetrans/Fun-ASR：提交公网 file_urls，轮询 task，再读取结果 JSON。
  */
 import { resolveProviderUpstreamSecret, resolveUpstreamEndpoint } from '@octafuse/core';
+import { fetchWithSafeRedirects } from '@octafuse/tool-engines/web-fetch';
 import type { RouteResult } from '../model-router';
 import { EMPTY_USAGE, type UsageFromStream } from '../proxy';
 import type { RequestTimingAttempt, RequestTimingCollector } from '../request-timing';
+import { GatewayErrorCode } from '../gateway-error-codes';
+import { gatewayErrorResponse } from '../gateway-error-response';
 import {
 	AUDIO_TRANSCRIPTION_TIMEOUT_MS,
 	buildAudioTranscriptionClientResponse,
 	extensionFromAudioMime,
+	resolveAudioProviderOptionsForRoute,
 	reshapeTranscriptionForClient,
 	type AudioUpload,
 	type NormalizedAudioTranscriptionRequest,
@@ -23,6 +27,8 @@ import { extractUpstreamRequestId, normalizeUpstreamId } from './upstream-reques
 /** 官方同步接口的 Base64 Data URL 请求上限为 10MB。 */
 export const DASHSCOPE_SYNC_ASR_MAX_DATA_URL_BYTES = 10 * 1024 * 1024;
 export const DASHSCOPE_ASYNC_POLL_INTERVAL_MS = 1_000;
+/** Native multimodal JSON is always bounded, even for non-2xx provider errors. */
+export const DASHSCOPE_MULTIMODAL_MAX_RESPONSE_BYTES = 2 * 1024 * 1024;
 
 type FetchLike = (input: string | URL | Request, init?: RequestInit) => Promise<Response>;
 
@@ -30,6 +36,10 @@ export type DashScopeAsrDispatchOptions = {
 	fetchImpl?: FetchLike;
 	pollIntervalMs?: number;
 	timeoutMs?: number;
+	/** Called after request construction/secret resolution and immediately before the first network write. */
+	beforeUpstreamDispatch?: () => Promise<void>;
+	/** Optional hard cap used before buffering a native multimodal JSON response. */
+	maxResponseBytes?: number;
 };
 
 type DashScopeAudioDispatchResult = {
@@ -42,6 +52,9 @@ type DashScopeAudioDispatchResult = {
 		audioDurationSource: AudioDurationSource | null;
 		audioFileBytes: number;
 		audioTokenUsage: null;
+		upstreamOutcomeUnknown?: boolean;
+		responseBodyTooLarge?: boolean;
+		failoverForbidden?: boolean;
 	};
 };
 
@@ -58,19 +71,20 @@ function asFiniteNonNegativeNumber(value: unknown): number | null {
 
 /** Worker 与 Node 共用的无 Buffer Base64 编码。 */
 export function audioUploadToDataUrl(file: AudioUpload): string {
+	const prefix = `data:${file.mimeType || 'application/octet-stream'};base64,`;
+	const encodedLength = Math.ceil(file.bytes.byteLength / 3) * 4;
+	if (prefix.length + encodedLength > DASHSCOPE_SYNC_ASR_MAX_DATA_URL_BYTES) {
+		throw new Error(
+			`DashScope synchronous ASR Data URL must be at most ${DASHSCOPE_SYNC_ASR_MAX_DATA_URL_BYTES} bytes`,
+		);
+	}
 	let binary = '';
 	const chunkSize = 0x8000;
 	for (let offset = 0; offset < file.bytes.byteLength; offset += chunkSize) {
 		const chunk = file.bytes.subarray(offset, Math.min(offset + chunkSize, file.bytes.byteLength));
 		binary += String.fromCharCode(...chunk);
 	}
-	const dataUrl = `data:${file.mimeType || 'application/octet-stream'};base64,${btoa(binary)}`;
-	if (dataUrl.length > DASHSCOPE_SYNC_ASR_MAX_DATA_URL_BYTES) {
-		throw new Error(
-			`DashScope synchronous ASR Data URL must be at most ${DASHSCOPE_SYNC_ASR_MAX_DATA_URL_BYTES} bytes`,
-		);
-	}
-	return dataUrl;
+	return `${prefix}${btoa(binary)}`;
 }
 
 function normalizedAsrOptions(route: RouteResult, req: NormalizedAudioTranscriptionRequest): Record<string, unknown> {
@@ -375,8 +389,48 @@ export function normalizeDashScopeAsyncAsrResult(resultFile: unknown, taskBody: 
 	};
 }
 
-async function parseJsonResponse(response: Response): Promise<unknown> {
-	const text = await response.text();
+class DashScopeResponseBodyTooLargeError extends Error {
+	constructor(readonly upstreamStatus: number) {
+		super('DashScope response body exceeds the configured limit');
+		this.name = 'DashScopeResponseBodyTooLargeError';
+	}
+}
+
+async function responseTextWithinLimit(response: Response, maxBytes: number): Promise<string> {
+	const declaredLength = Number(response.headers.get('content-length'));
+	if (Number.isFinite(declaredLength) && declaredLength > maxBytes) {
+		await response.body?.cancel('dashscope_response_too_large').catch(() => undefined);
+		throw new DashScopeResponseBodyTooLargeError(response.status);
+	}
+	if (!response.body) return '';
+	const reader = response.body.getReader();
+	const chunks: Uint8Array[] = [];
+	let byteLength = 0;
+	try {
+		while (true) {
+			const { done, value } = await reader.read();
+			if (done) break;
+			byteLength += value.byteLength;
+			if (byteLength > maxBytes) {
+				await reader.cancel('dashscope_response_too_large').catch(() => undefined);
+				throw new DashScopeResponseBodyTooLargeError(response.status);
+			}
+			chunks.push(value);
+		}
+	} finally {
+		reader.releaseLock();
+	}
+	const bytes = new Uint8Array(byteLength);
+	let offset = 0;
+	for (const chunk of chunks) {
+		bytes.set(chunk, offset);
+		offset += chunk.byteLength;
+	}
+	return new TextDecoder().decode(bytes);
+}
+
+async function parseJsonResponse(response: Response, maxBytes?: number): Promise<unknown> {
+	const text = maxBytes == null ? await response.text() : await responseTextWithinLimit(response, maxBytes);
 	if (!text) return null;
 	try {
 		return JSON.parse(text) as unknown;
@@ -385,6 +439,14 @@ async function parseJsonResponse(response: Response): Promise<unknown> {
 			error: { message: text.slice(0, 500) || 'Invalid upstream JSON' },
 		};
 	}
+}
+
+function resolveDashScopeResponseLimit(options: DashScopeAsrDispatchOptions): number {
+	return typeof options.maxResponseBytes === 'number'
+		&& Number.isFinite(options.maxResponseBytes)
+		&& options.maxResponseBytes > 0
+		? Math.min(DASHSCOPE_MULTIMODAL_MAX_RESPONSE_BYTES, Math.floor(options.maxResponseBytes))
+		: DASHSCOPE_MULTIMODAL_MAX_RESPONSE_BYTES;
 }
 
 function bodyRequestId(body: unknown): string | null {
@@ -398,6 +460,10 @@ function clientResult(
 	fileBytes: number,
 	duration: { seconds: number; source: AudioDurationSource } | null,
 	requestId: string | null,
+	metaOverrides: Pick<
+		DashScopeAudioDispatchResult['meta'],
+		'upstreamOutcomeUnknown' | 'responseBodyTooLarge' | 'failoverForbidden'
+	> = {},
 ): DashScopeAudioDispatchResult {
 	const clientBody = upstreamResponse.ok
 		? reshapeTranscriptionForClient(parsedBody, req.clientResponseFormat)
@@ -417,6 +483,7 @@ function clientResult(
 			audioDurationSource: duration?.source ?? null,
 			audioFileBytes: fileBytes,
 			audioTokenUsage: null,
+			...metaOverrides,
 		},
 	};
 }
@@ -442,6 +509,7 @@ function withTimeout(
 	let timeoutReached = false;
 	const onAbort = () => controller.abort();
 	requestSignal?.addEventListener('abort', onAbort, { once: true });
+	if (requestSignal?.aborted) onAbort();
 	const timer = setTimeout(() => {
 		timeoutReached = true;
 		controller.abort();
@@ -460,9 +528,21 @@ function errorDispatchResult(
 	req: NormalizedAudioTranscriptionRequest,
 	status: number,
 	message: string,
+	metaOverrides: Pick<
+		DashScopeAudioDispatchResult['meta'],
+		'upstreamOutcomeUnknown' | 'responseBodyTooLarge' | 'failoverForbidden'
+	> = {},
 ): DashScopeAudioDispatchResult {
 	const body = { error: { message } };
-	return clientResult(req, new Response(null, { status }), body, req.file?.bytes.byteLength ?? 0, null, null);
+	return clientResult(
+		req,
+		new Response(null, { status }),
+		body,
+		req.file?.bytes.byteLength ?? 0,
+		null,
+		null,
+		metaOverrides,
+	);
 }
 
 type DashScopeSyncAsrFamily = 'qwen3' | 'qwen-audio' | 'fun';
@@ -490,6 +570,43 @@ function normalizeSyncAsrResult(family: DashScopeSyncAsrFamily, body: unknown): 
 	return normalizeDashScopeSyncAsrResult(body);
 }
 
+function isUsableSyncAsrResult(family: DashScopeSyncAsrFamily, body: unknown): boolean {
+	const output = asObject(asObject(body)?.output);
+	if (!output) return false;
+	if (family !== 'qwen3') {
+		return typeof output.text === 'string' || typeof asObject(output.sentence)?.text === 'string';
+	}
+	const choice = firstArrayObject(output.choices);
+	const message = asObject(choice?.message);
+	const content = firstArrayObject(message?.content);
+	return typeof content?.text === 'string';
+}
+
+function invalidSuccessfulResult(
+	req: NormalizedAudioTranscriptionRequest,
+	requestId: string | null,
+	fileBytes: number,
+): DashScopeAudioDispatchResult {
+	return {
+		response: gatewayErrorResponse({
+			status: 502,
+			code: GatewayErrorCode.upstreamRequestFailed,
+			message: 'Audio transcription upstream returned an invalid response',
+		}),
+		usagePromise: Promise.resolve(EMPTY_USAGE),
+		upstreamRequestId: requestId,
+		meta: {
+			parsedBody: null,
+			audioDurationSeconds: null,
+			audioDurationSource: null,
+			audioFileBytes: fileBytes,
+			audioTokenUsage: null,
+			upstreamOutcomeUnknown: true,
+			failoverForbidden: true,
+		},
+	};
+}
+
 /** 按显式 adapter 分发 Qwen3 / Qwen-Audio-3.0 / Fun-ASR 的同步文件调用。 */
 export async function dispatchDashScopeSyncAsr(
 	route: RouteResult,
@@ -504,13 +621,26 @@ export async function dispatchDashScopeSyncAsr(
 	if (!family) {
 		throw new Error(`Unsupported DashScope synchronous ASR adapter: ${route.adapter}`);
 	}
+	if (Object.keys(resolveAudioProviderOptionsForRoute(req, route)).length > 0) {
+		return errorDispatchResult(
+			req,
+			400,
+			`provider.options for ${route.providerName} cannot be safely mapped to this DashScope ASR adapter`,
+		);
+	}
 	const fetchImpl = options.fetchImpl ?? fetch;
-	const { secret } = await resolveProviderUpstreamSecret(route.providerApiKey);
 	const url = resolveUpstreamEndpoint('dashscope', 'audio.transcriptions.multimodal', route.providerEndpoints, {
 		providerId: route.providerId,
 	});
 	const timeout = withTimeout(requestSignal, options.timeoutMs ?? AUDIO_TRANSCRIPTION_TIMEOUT_MS);
+	const responseByteLimit = resolveDashScopeResponseLimit(options);
+	let dispatchStarted = false;
+	let upstreamStatus: number | null = null;
 	try {
+		if (timeout.signal.aborted) throw new DOMException('Aborted', 'AbortError');
+		const { secret } = await resolveProviderUpstreamSecret(route.providerApiKey);
+		if (timeout.signal.aborted) throw new DOMException('Aborted', 'AbortError');
+		dispatchStarted = true;
 		const response = await fetchImpl(url, {
 			method: 'POST',
 			headers: {
@@ -521,9 +651,10 @@ export async function dispatchDashScopeSyncAsr(
 			body: JSON.stringify(buildSyncAsrBody(family, route, req)),
 			signal: timeout.signal,
 		});
+		upstreamStatus = response.status;
 		timing?.markAttemptHeaders(attempt, response.status);
 		const headerRequestId = extractUpstreamRequestId(response.headers);
-		const upstreamBody = await parseJsonResponse(response);
+		const upstreamBody = await parseJsonResponse(response, responseByteLimit);
 		timing?.markStreamComplete();
 		if (!response.ok) {
 			return clientResult(
@@ -535,6 +666,10 @@ export async function dispatchDashScopeSyncAsr(
 				headerRequestId ?? bodyRequestId(upstreamBody),
 			);
 		}
+		const requestId = headerRequestId ?? bodyRequestId(upstreamBody);
+		if (!isUsableSyncAsrResult(family, upstreamBody)) {
+			return invalidSuccessfulResult(req, requestId, req.file.bytes.byteLength);
+		}
 		const normalized = normalizeSyncAsrResult(family, upstreamBody);
 		const seconds = asFiniteNonNegativeNumber(asObject(normalized.usage)?.seconds);
 		return clientResult(
@@ -543,19 +678,29 @@ export async function dispatchDashScopeSyncAsr(
 			normalized,
 			req.file.bytes.byteLength,
 			resolveDashScopeDuration(req, seconds),
-			headerRequestId ?? bodyRequestId(upstreamBody),
+			requestId,
 		);
 	} catch (error) {
 		timing?.markStreamComplete();
 		const aborted = timeout.signal.aborted;
+		const explicitNonOk = upstreamStatus != null && (upstreamStatus < 200 || upstreamStatus >= 300);
+		const upstreamOutcomeUnknown = dispatchStarted && !explicitNonOk;
 		return errorDispatchResult(
 			req,
-			aborted ? (timeout.timedOut() ? 504 : 499) : 502,
+			explicitNonOk ? upstreamStatus! : aborted ? (timeout.timedOut() ? 504 : 499) : 502,
 			aborted
 				? timeout.timedOut()
 					? 'DashScope synchronous ASR timed out'
 					: 'DashScope synchronous ASR was cancelled by the client'
 				: `DashScope synchronous ASR failed: ${error instanceof Error ? error.message : String(error)}`,
+			{
+				...(upstreamOutcomeUnknown
+					? { upstreamOutcomeUnknown: true, failoverForbidden: true }
+					: {}),
+				...(error instanceof DashScopeResponseBodyTooLargeError
+					? { responseBodyTooLarge: true }
+					: {}),
+			},
 		);
 	} finally {
 		timeout.clear();
@@ -591,10 +736,23 @@ export async function dispatchDashScopeAsyncAsr(
 	attempt?: RequestTimingAttempt,
 	options: DashScopeAsrDispatchOptions = {},
 ): Promise<DashScopeAudioDispatchResult> {
+	if (Object.keys(resolveAudioProviderOptionsForRoute(req, route)).length > 0) {
+		return errorDispatchResult(
+			req,
+			400,
+			`provider.options for ${route.providerName} cannot be safely mapped to this DashScope ASR adapter`,
+		);
+	}
 	const fetchImpl = options.fetchImpl ?? fetch;
-	const { secret } = await resolveProviderUpstreamSecret(route.providerApiKey);
 	const timeout = withTimeout(requestSignal, options.timeoutMs ?? AUDIO_TRANSCRIPTION_TIMEOUT_MS);
+	const responseByteLimit = resolveDashScopeResponseLimit(options);
+	let dispatchStarted = false;
+	let submitAccepted = false;
+	let upstreamStatus: number | null = null;
 	try {
+		if (timeout.signal.aborted) throw new DOMException('Aborted', 'AbortError');
+		const { secret } = await resolveProviderUpstreamSecret(route.providerApiKey);
+		if (timeout.signal.aborted) throw new DOMException('Aborted', 'AbortError');
 		const fileUrl = req.fileSourceUrl;
 		if (!fileUrl) {
 			throw new Error('DashScope asynchronous ASR requires a client-provided file_url');
@@ -602,6 +760,8 @@ export async function dispatchDashScopeAsyncAsr(
 		const submitUrl = resolveUpstreamEndpoint('dashscope', 'audio.transcriptions', route.providerEndpoints, {
 			providerId: route.providerId,
 		});
+		if (timeout.signal.aborted) throw new DOMException('Aborted', 'AbortError');
+		dispatchStarted = true;
 		const submitResponse = await fetchImpl(submitUrl, {
 			method: 'POST',
 			headers: {
@@ -612,8 +772,10 @@ export async function dispatchDashScopeAsyncAsr(
 			body: JSON.stringify(buildDashScopeAsyncAsrBody(route, fileUrl, req)),
 			signal: timeout.signal,
 		});
+		upstreamStatus = submitResponse.status;
 		timing?.markAttemptHeaders(attempt, submitResponse.status);
-		const submitBody = await parseJsonResponse(submitResponse);
+		if (submitResponse.ok) submitAccepted = true;
+		const submitBody = await parseJsonResponse(submitResponse, responseByteLimit);
 		const submitRequestId = extractUpstreamRequestId(submitResponse.headers) ?? bodyRequestId(submitBody);
 		if (!submitResponse.ok) {
 			timing?.markStreamComplete();
@@ -634,11 +796,19 @@ export async function dispatchDashScopeAsyncAsr(
 				headers: { Authorization: `Bearer ${secret}` },
 				signal: timeout.signal,
 			});
-			const queryBody = await parseJsonResponse(queryResponse);
+			const queryBody = await parseJsonResponse(queryResponse, responseByteLimit);
 			const requestId = extractUpstreamRequestId(queryResponse.headers) ?? bodyRequestId(queryBody) ?? submitRequestId;
 			if (!queryResponse.ok) {
 				timing?.markStreamComplete();
-				return clientResult(req, queryResponse, queryBody, req.file?.bytes.byteLength ?? 0, null, requestId);
+				return clientResult(
+					req,
+					queryResponse,
+					queryBody,
+					req.file?.bytes.byteLength ?? 0,
+					null,
+					requestId,
+					{ upstreamOutcomeUnknown: true, failoverForbidden: true },
+				);
 			}
 			const output = taskOutput(queryBody);
 			if (!output) {
@@ -696,13 +866,28 @@ export async function dispatchDashScopeAsyncAsr(
 			if (typeof transcriptionUrl !== 'string' || !transcriptionUrl) {
 				throw new Error('DashScope asynchronous ASR result has no transcription_url');
 			}
-			const resultResponse = await fetchImpl(transcriptionUrl, {
-				signal: timeout.signal,
+			const { response: resultResponse } = await fetchWithSafeRedirects(transcriptionUrl, {
+				fetchImpl: fetchImpl as typeof fetch,
+				init: { signal: timeout.signal },
+				requireHttps: true,
+				allowIpLiterals: false,
 			});
-			const resultBody = await parseJsonResponse(resultResponse);
+			const resultBody = await parseJsonResponse(resultResponse, responseByteLimit);
 			if (!resultResponse.ok) {
 				timing?.markStreamComplete();
-				return clientResult(req, resultResponse, resultBody, req.file?.bytes.byteLength ?? 0, null, requestId);
+				return clientResult(
+					req,
+					resultResponse,
+					resultBody,
+					req.file?.bytes.byteLength ?? 0,
+					null,
+					requestId,
+					{ upstreamOutcomeUnknown: true, failoverForbidden: true },
+				);
+			}
+			if (!Array.isArray(asObject(resultBody)?.transcripts)) {
+				timing?.markStreamComplete();
+				return invalidSuccessfulResult(req, requestId, req.file?.bytes.byteLength ?? 0);
 			}
 			const normalized = normalizeDashScopeAsyncAsrResult(resultBody, queryBody);
 			const seconds = asFiniteNonNegativeNumber(asObject(normalized.usage)?.seconds);
@@ -719,14 +904,26 @@ export async function dispatchDashScopeAsyncAsr(
 	} catch (error) {
 		timing?.markStreamComplete();
 		const aborted = timeout.signal.aborted;
+		const explicitSubmitNonOk = upstreamStatus != null
+			&& (upstreamStatus < 200 || upstreamStatus >= 300)
+			&& !submitAccepted;
+		const upstreamOutcomeUnknown = submitAccepted || (dispatchStarted && !explicitSubmitNonOk);
 		return errorDispatchResult(
 			req,
-			aborted ? (timeout.timedOut() ? 504 : 499) : 502,
+			explicitSubmitNonOk ? upstreamStatus! : aborted ? (timeout.timedOut() ? 504 : 499) : 502,
 			aborted
 				? timeout.timedOut()
 					? 'DashScope asynchronous ASR timed out'
 					: 'DashScope asynchronous ASR was cancelled by the client'
 				: `DashScope asynchronous ASR failed: ${error instanceof Error ? error.message : String(error)}`,
+			{
+				...(upstreamOutcomeUnknown
+					? { upstreamOutcomeUnknown: true, failoverForbidden: true }
+					: {}),
+				...(error instanceof DashScopeResponseBodyTooLargeError
+					? { responseBodyTooLarge: true }
+					: {}),
+			},
 		);
 	} finally {
 		timeout.clear();
@@ -736,6 +933,15 @@ export async function dispatchDashScopeAsyncAsr(
 export function extractDashScopeMultimodalDurationSeconds(body: unknown): number | null {
 	const usage = asObject(asObject(body)?.usage);
 	return asFiniteNonNegativeNumber(usage?.duration) ?? asFiniteNonNegativeNumber(usage?.seconds);
+}
+
+function isUsableMultimodalPassthroughResult(body: unknown): boolean {
+	const output = asObject(asObject(body)?.output);
+	if (!output) return false;
+	if (typeof output.text === 'string') return true;
+	const choice = firstArrayObject(output.choices);
+	const content = asObject(choice?.message)?.content;
+	return Array.isArray(content) && content.some((part) => typeof asObject(part)?.text === 'string');
 }
 
 /** 透传 DashScope 同步多模态 JSON：替换 model，返回原生响应，按 usage.duration/seconds 计费。 */
@@ -748,16 +954,28 @@ export async function dispatchDashScopeMultimodalPassthrough(
 	options: DashScopeAsrDispatchOptions = {},
 ): Promise<DashScopeAudioDispatchResult> {
 	const fetchImpl = options.fetchImpl ?? fetch;
-	const { secret } = await resolveProviderUpstreamSecret(route.providerApiKey);
 	const url = resolveUpstreamEndpoint('dashscope', 'audio.transcriptions.multimodal', route.providerEndpoints, {
 		providerId: route.providerId,
 	});
-	const timeout = withTimeout(requestSignal, options.timeoutMs ?? AUDIO_TRANSCRIPTION_TIMEOUT_MS);
 	const upstreamBody = {
 		...body,
 		model: route.providerModelName,
 	};
+	const serializedBody = JSON.stringify(upstreamBody);
+	const timeout = withTimeout(requestSignal, options.timeoutMs ?? AUDIO_TRANSCRIPTION_TIMEOUT_MS);
+	const responseByteLimit = typeof options.maxResponseBytes === 'number'
+		&& Number.isFinite(options.maxResponseBytes)
+		&& options.maxResponseBytes > 0
+		? Math.min(DASHSCOPE_MULTIMODAL_MAX_RESPONSE_BYTES, Math.floor(options.maxResponseBytes))
+		: DASHSCOPE_MULTIMODAL_MAX_RESPONSE_BYTES;
+	let dispatchStarted = false;
 	try {
+		if (timeout.signal.aborted) throw new DOMException('Aborted', 'AbortError');
+		const { secret } = await resolveProviderUpstreamSecret(route.providerApiKey);
+		if (timeout.signal.aborted) throw new DOMException('Aborted', 'AbortError');
+		await options.beforeUpstreamDispatch?.();
+		if (timeout.signal.aborted) throw new DOMException('Aborted', 'AbortError');
+		dispatchStarted = true;
 		const response = await fetchImpl(url, {
 			method: 'POST',
 			headers: {
@@ -765,14 +983,34 @@ export async function dispatchDashScopeMultimodalPassthrough(
 				'Content-Type': 'application/json',
 				'X-DashScope-SSE': 'disable',
 			},
-			body: JSON.stringify(upstreamBody),
+			body: serializedBody,
 			signal: timeout.signal,
 		});
 		timing?.markAttemptHeaders(attempt, response.status);
 		const headerRequestId = extractUpstreamRequestId(response.headers);
-		const parsedBody = await parseJsonResponse(response);
+		const parsedBody = await parseJsonResponse(response, responseByteLimit);
 		timing?.markStreamComplete();
 		const requestId = headerRequestId ?? bodyRequestId(parsedBody);
+		if (response.ok && !isUsableMultimodalPassthroughResult(parsedBody)) {
+			return {
+				response: gatewayErrorResponse({
+					status: 502,
+					code: GatewayErrorCode.upstreamRequestFailed,
+					message: 'DashScope multimodal upstream returned an invalid response',
+				}),
+				usagePromise: Promise.resolve(EMPTY_USAGE),
+				upstreamRequestId: requestId,
+				meta: {
+					parsedBody: null,
+					audioDurationSeconds: null,
+					audioDurationSource: null,
+					audioFileBytes: 0,
+					audioTokenUsage: null,
+					upstreamOutcomeUnknown: true,
+					failoverForbidden: true,
+				},
+			};
+		}
 		const seconds = response.ok ? extractDashScopeMultimodalDurationSeconds(parsedBody) : null;
 		const duration =
 			seconds == null
@@ -800,6 +1038,30 @@ export async function dispatchDashScopeMultimodalPassthrough(
 			},
 		};
 	} catch (error) {
+		if (error instanceof DashScopeResponseBodyTooLargeError) {
+			timing?.markStreamComplete();
+			const parsedBody = { error: { message: error.message } };
+			const upstreamOutcomeUnknown = error.upstreamStatus >= 200 && error.upstreamStatus < 300;
+			return {
+				response: new Response(JSON.stringify(parsedBody), {
+					status: error.upstreamStatus,
+					headers: { 'Content-Type': 'application/json' },
+				}),
+				usagePromise: Promise.resolve(EMPTY_USAGE),
+				upstreamRequestId: null,
+				meta: {
+					parsedBody,
+					audioDurationSeconds: null,
+					audioDurationSource: null,
+					audioFileBytes: 0,
+					audioTokenUsage: null,
+					responseBodyTooLarge: true,
+					...(upstreamOutcomeUnknown
+						? { upstreamOutcomeUnknown: true, failoverForbidden: true }
+						: {}),
+				},
+			};
+		}
 		timing?.markStreamComplete();
 		const aborted = timeout.signal.aborted;
 		const message = aborted
@@ -821,6 +1083,8 @@ export async function dispatchDashScopeMultimodalPassthrough(
 				audioDurationSource: null,
 				audioFileBytes: 0,
 				audioTokenUsage: null,
+				upstreamOutcomeUnknown: dispatchStarted || undefined,
+				failoverForbidden: dispatchStarted || undefined,
 			},
 		};
 	} finally {

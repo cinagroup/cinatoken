@@ -211,6 +211,14 @@ function generateProxy(names) {
 
 function generateAdmin(names) {
 	const base = readBase("packages/admin/wrangler.base.jsonc");
+	const organizationAdminRoles = trimEnv("CINAAUTH_ORGANIZATION_ADMIN_ROLES");
+	const adminVars = {
+		...base.vars,
+		CINACHAIN_CHAIN_ID: names.cinachainChainId,
+		...(organizationAdminRoles
+			? { CINAAUTH_ORGANIZATION_ADMIN_ROLES: organizationAdminRoles }
+			: {}),
+	};
 	const config = applyHttpMaintenanceMode(applyWorkerDatabaseRuntime({
 		...base,
 		name: names.adminWorkerName,
@@ -228,10 +236,12 @@ function generateAdmin(names) {
 				queue: names.chainJobQueueName,
 			})),
 		},
-		vars: {
-			...base.vars,
-			CINACHAIN_CHAIN_ID: names.cinachainChainId,
-		},
+		vars: adminVars,
+		services: base.services.map((service) =>
+			service.binding === "CINATOKEN_PROXY_SERVICE"
+				? { ...service, service: names.proxyWorkerName }
+				: service,
+		),
 	}, names), names);
 
 	const routes = customDomainRoutes(names.adminCustomDomain);

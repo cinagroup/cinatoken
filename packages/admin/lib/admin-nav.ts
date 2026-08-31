@@ -6,6 +6,10 @@ export type AdminNavNameKey =
 	| 'dashboard'
 	| 'providers'
 	| 'models'
+	| 'endpoints'
+	| 'presets'
+	| 'guardrails'
+	| 'dataPolicies'
 	| 'routes'
 	| 'playground'
 	| 'simulator'
@@ -54,6 +58,10 @@ export const ADMIN_NAV_GROUPS: AdminNavGroup[] = [
 		items: [
 			{ nameKey: 'providers', href: '/admin/providers' },
 			{ nameKey: 'models', href: '/admin/models' },
+			{ nameKey: 'endpoints', href: '/admin/endpoints' },
+			{ nameKey: 'presets', href: '/admin/presets' },
+			{ nameKey: 'guardrails', href: '/admin/guardrails' },
+			{ nameKey: 'dataPolicies', href: '/admin/data-policies' },
 			{ nameKey: 'routes', href: '/admin/routes' },
 			{ nameKey: 'playground', href: '/admin/playground' },
 			{ nameKey: 'simulator', href: '/admin/simulator' },

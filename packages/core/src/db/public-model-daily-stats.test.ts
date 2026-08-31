@@ -11,6 +11,7 @@ function requestLog(overrides: Partial<InsertRequestLogParams> = {}): InsertRequ
 		id: '7f858a9f-b55c-4fb9-a962-47f20b178b0e',
 		userId: 'user-1',
 		apiKeyId: 'key-1',
+		workspaceId: 'personal:user-1',
 		userEmail: null,
 		modelId: 'vendor/model',
 		providerId: 'provider-1',

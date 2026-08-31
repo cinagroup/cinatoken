@@ -9,6 +9,7 @@ import type { AdminBindings } from './admin-env';
 import { getAdminApp } from './admin-app';
 import { resolveAdminStorageContext } from './storage-context';
 import { verifyCinaAuthConsolePrincipal } from './cinaauth/principal';
+import { rejectRateLimitedAdminAuth } from './admin-auth-rate-limit';
 
 function rewriteToInternalAdminPath(request: Request): Request {
 	const url = new URL(request.url);
@@ -37,7 +38,10 @@ export async function handleAdminRealtimeUpgrade(
 			CINATOKEN_OIDC_CLIENT_SECRET: env.CINATOKEN_OIDC_CLIENT_SECRET,
 			CINATOKEN_OIDC_BRIDGE_SECRET: env.CINATOKEN_OIDC_BRIDGE_SECRET,
 			CINATOKEN_OIDC_TRANSACTION_SECRET: env.CINATOKEN_OIDC_TRANSACTION_SECRET,
+			CINATOKEN_IDENTITY_EVENTS_SECRET: env.CINATOKEN_IDENTITY_EVENTS_SECRET,
+			CINAAUTH_ORGANIZATION_ADMIN_ROLES: env.CINAAUTH_ORGANIZATION_ADMIN_ROLES,
 			SHARED_KEY_ENCRYPTION_SECRET: env.SHARED_KEY_ENCRYPTION_SECRET,
+			AUTH_RATE_LIMITER: env.AUTH_RATE_LIMITER,
 			DATABASE_DRIVER: env.DATABASE_DRIVER,
 		};
 		const storage = await resolveAdminStorageContext(runtimeBindings, 'cloudflare');
@@ -45,7 +49,11 @@ export async function handleAdminRealtimeUpgrade(
 		const principal = authenticated
 			? await verifyCinaAuthConsolePrincipal(request, authenticated, runtimeBindings)
 			: null;
-		if (!principal) return Response.json({ success: false, message: 'Unauthorized' }, { status: 401 });
+		if (!principal) {
+			const rateLimited = await rejectRateLimitedAdminAuth(request, runtimeBindings);
+			if (rateLimited) return rateLimited;
+			return Response.json({ success: false, message: 'Unauthorized' }, { status: 401 });
+		}
 
 		const appBindings: AdminBindings = {
 			...runtimeBindings,

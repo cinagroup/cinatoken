@@ -11,6 +11,7 @@ declare namespace Cloudflare {
 		HYPERDRIVE?: import('@octafuse/core').HyperdriveBinding;
 		ASSETS: Fetcher;
 		CINAAUTH_AUTH_SERVICE: Fetcher;
+		CINATOKEN_PROXY_SERVICE: Fetcher;
 		CINAAUTH_ISSUER: string;
 		CINAAUTH_ACCOUNT_ORIGIN: string;
 		CINATOKEN_APP_ORIGIN: string;
@@ -19,8 +20,11 @@ declare namespace Cloudflare {
 		CINATOKEN_OIDC_CLIENT_SECRET: string;
 		CINATOKEN_OIDC_BRIDGE_SECRET: string;
 		CINATOKEN_OIDC_TRANSACTION_SECRET: string;
+		CINATOKEN_IDENTITY_EVENTS_SECRET: string;
+		CINAAUTH_ORGANIZATION_ADMIN_ROLES?: string;
 		SHARED_KEY_ENCRYPTION_SECRET: string;
 		CHAIN_JOBS: Queue<import('@octafuse/core').ChainJobMessage>;
+		AUTH_RATE_LIMITER: RateLimit;
 		ADMIN_USERNAME?: string;
 		ADMIN_PASSWORD?: string;
 		ADMIN_COOKIE_SECURE?: string;

@@ -1,6 +1,7 @@
 'use client';
 
 import { useTranslations } from 'next-intl';
+import { parseRouteRoutingMetadata } from '@octafuse/core';
 import {
 	parseChargedFactorFromPriceOverride,
 	parseMeteredFactorFromPriceOverride,
@@ -24,6 +25,13 @@ type Props = {
 	onToggleStatus: (route: RouteListRow) => void;
 };
 
+function compactTokenCapacity(label: string, value: number | null): string | null {
+	if (value == null) return null;
+	if (value >= 1_000_000 && value % 1_000_000 === 0) return `${label} ${value / 1_000_000}m`;
+	if (value >= 1_000 && value % 1_000 === 0) return `${label} ${value / 1_000}k`;
+	return `${label} ${value}`;
+}
+
 export function RouteListItem(props: Props) {
 	const { route, togglingId, onEdit, onToggleStatus } = props;
 	const t = useTranslations('routes.listItem');
@@ -37,6 +45,21 @@ export function RouteListItem(props: Props) {
 	const chargedStatus = t(`factorStatus.charged.${chargedLevel}`);
 	const meteredStatus = t(`factorStatus.metered.${meteredLevel}`);
 	const hasPricingInversion = hasBasePricingInversion(chargedDisp, meteredDisp);
+	const routingMetadata = parseRouteRoutingMetadata(route.routing_metadata);
+	const routingMetadataLabel = routingMetadata
+		? [
+			routingMetadata.endpoint_slug,
+			routingMetadata.endpoint_class === 'service_tier' ? 'service tier' : null,
+			routingMetadata.quantization,
+			routingMetadata.region,
+				routingMetadata.supported_parameters.length > 0
+				? `${routingMetadata.supported_parameters.length} params`
+				: null,
+			compactTokenCapacity('ctx', routingMetadata.context_length),
+			compactTokenCapacity('prompt', routingMetadata.max_prompt_tokens),
+			compactTokenCapacity('out', routingMetadata.max_completion_tokens),
+		].filter(Boolean).join(' · ')
+		: '';
 
 	return (
 		<li className="flex items-start gap-3 px-4 py-2.5 transition-colors hover:bg-gray-50/80">
@@ -128,6 +151,15 @@ export function RouteListItem(props: Props) {
 							aria-label={t('scheduleAria', { windows: schHint })}
 						>
 							{t('scheduleBadge')}
+						</span>
+					) : null}
+					{routingMetadataLabel ? (
+						<span
+							className={`${FACTOR_CHIP_BASE} w-auto max-w-[8rem] truncate bg-indigo-50 text-indigo-900 ring-indigo-200/90`}
+							title={routingMetadataLabel}
+							aria-label={routingMetadataLabel}
+						>
+							{routingMetadataLabel}
 						</span>
 					) : null}
 				</div>

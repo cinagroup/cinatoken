@@ -34,6 +34,10 @@ test("generated Wrangler configs preserve HTTPS values and Workers Routes", () =
 	);
 	assert.equal(admin.vars.CINAAUTH_ISSUER, "https://auth.cinaseek.ai");
 	assert.equal(admin.main, "worker.ts");
+	assert.deepEqual(
+		admin.services.find((service) => service.binding === "CINATOKEN_PROXY_SERVICE"),
+		{ binding: "CINATOKEN_PROXY_SERVICE", service: "cinatoken-proxy" },
+	);
 	assert.deepEqual(admin.routes, [
 		{ pattern: "cinatoken.com/*", zone_name: "cinatoken.com" },
 	]);
@@ -46,6 +50,32 @@ test("generated Wrangler configs preserve HTTPS values and Workers Routes", () =
 	assert.equal(chain.queues.consumers[0].max_concurrency, 1);
 	assert.equal(proxy.hyperdrive, undefined);
 	assert.equal(proxy.vars?.DATABASE_DRIVER, undefined);
+});
+
+test("admin service binding follows a custom proxy Worker name", (t) => {
+	const env = { ...process.env, PROXY_WORKER_NAME: "tenant-proxy" };
+	delete env.D1_DATABASE_ID;
+	t.after(() => {
+		const restoreEnv = { ...process.env };
+		delete restoreEnv.D1_DATABASE_ID;
+		delete restoreEnv.PROXY_WORKER_NAME;
+		spawnSync(process.execPath, ["scripts/deploy/gen-wrangler.mjs"], {
+			cwd: root,
+			env: restoreEnv,
+			encoding: "utf8",
+		});
+	});
+	const result = spawnSync(process.execPath, ["scripts/deploy/gen-wrangler.mjs"], {
+		cwd: root,
+		env,
+		encoding: "utf8",
+	});
+	assert.equal(result.status, 0, result.stderr);
+	const admin = JSON.parse(readFileSync(join(root, "packages/admin/wrangler.jsonc"), "utf8"));
+	assert.equal(
+		admin.services.find((service) => service.binding === "CINATOKEN_PROXY_SERVICE")?.service,
+		"tenant-proxy",
+	);
 });
 
 test("generated Worker configs stage one shared Hyperdrive binding and explicit Postgres selection", (t) => {

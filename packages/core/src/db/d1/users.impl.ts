@@ -3,9 +3,11 @@
  */
 import type { UserRow } from '../../types';
 import { roundGatewayMoney } from '../../lib/money-precision';
+import { userBudgetAmount, userBudgetUnits } from '../user-budget-reservation-types';
 import type { D1DatabaseClient } from '../../storage/database-client';
 import type { UsersRepository } from '../../storage/gateway-repository-interfaces';
 import type { InsertUserParams, UserMaxBudgetFilter } from '../users-types';
+import { defaultWorkspaceId } from '../../workspaces';
 import {
 	buildD1UserListOrderByClause,
 	DEFAULT_USER_LIST_ORDER,
@@ -22,6 +24,8 @@ type UserSqlRow = {
 	budget_spent: number;
 	budget_period: string;
 	budget_reset_at: string | null;
+	budget_epoch: number;
+	budget_reserved_micros: number;
 	status: string;
 	metadata: string | null;
 	charged_cost_factors: string | null;
@@ -30,6 +34,13 @@ type UserSqlRow = {
 	created_at: string;
 	updated_at: string;
 };
+
+function toD1BudgetSpentMicros(value: number): number {
+	if (!Number.isFinite(value) || value < 0) {
+		throw new Error('D1 ordinary-user budget spend must be a finite non-negative number');
+	}
+	return userBudgetUnits(value);
+}
 
 function mapUserRow(r: UserSqlRow): UserRow {
 	return {
@@ -40,6 +51,8 @@ function mapUserRow(r: UserSqlRow): UserRow {
 		budget_spent: roundGatewayMoney(Number(r.budget_spent)),
 		budget_period: r.budget_period,
 		budget_reset_at: r.budget_reset_at,
+		budget_epoch: Number(r.budget_epoch),
+		budget_reserved_micros: Number(r.budget_reserved_micros),
 		status: r.status,
 		metadata: r.metadata,
 		charged_cost_factors: r.charged_cost_factors ?? null,
@@ -125,14 +138,16 @@ export function createD1UsersRepository(db: D1DatabaseClient): UsersRepository {
 		async createUser(params: InsertUserParams): Promise<void> {
 			const budgetMax = params.budgetMax != null ? roundGatewayMoney(params.budgetMax) : null;
 			const budgetBase = params.budgetBase != null ? roundGatewayMoney(params.budgetBase) : 0;
-			const budgetSpent = params.budgetSpent != null ? roundGatewayMoney(params.budgetSpent) : 0;
+			const budgetSpentMicros = toD1BudgetSpentMicros(params.budgetSpent ?? 0);
+			const budgetSpent = userBudgetAmount(budgetSpentMicros);
 			const budgetPeriod = params.budgetPeriod ?? 'none';
 			const budgetResetAt = params.budgetResetAt ?? null;
 			const status = params.status ?? 'active';
-			await raw
-				.prepare(
-					`INSERT INTO users (id, email, budget_max, budget_base, budget_spent, budget_period, budget_reset_at, status, metadata, charged_cost_factors, external_system, external_user_id, created_at, updated_at)
-           VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, datetime('now'), datetime('now'))`
+			const workspaceId = defaultWorkspaceId('personal', params.id);
+			await raw.batch([
+				raw.prepare(
+					`INSERT INTO users (id, email, budget_max, budget_base, budget_spent, budget_spent_micros, budget_period, budget_reset_at, status, metadata, charged_cost_factors, external_system, external_user_id, created_at, updated_at)
+					 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, datetime('now'), datetime('now'))`
 				)
 				.bind(
 					params.id,
@@ -140,6 +155,7 @@ export function createD1UsersRepository(db: D1DatabaseClient): UsersRepository {
 					budgetMax,
 					budgetBase,
 					budgetSpent,
+					budgetSpentMicros,
 					budgetPeriod,
 					budgetResetAt,
 					status,
@@ -147,8 +163,13 @@ export function createD1UsersRepository(db: D1DatabaseClient): UsersRepository {
 					params.chargedCostFactors ?? null,
 					params.externalSystem ?? null,
 					params.externalUserId ?? null
-				)
-				.run();
+				),
+				raw.prepare(`INSERT INTO workspaces (
+					id, scope_type, personal_owner_user_id, name, slug, is_default,
+					default_scope_key, status, created_by_user_id, created_at, updated_at
+				) VALUES (?, 'personal', ?, 'Default', 'default', 1, ?, 'active', ?, datetime('now'), datetime('now'))`)
+					.bind(workspaceId, params.id, workspaceId, params.id),
+			]);
 		},
 
 		async updateUserPlan(
@@ -161,17 +182,22 @@ export function createD1UsersRepository(db: D1DatabaseClient): UsersRepository {
 			budget_spent_override?: number | null,
 			budget_base?: number | null
 		): Promise<boolean> {
-			const setClauses: string[] = ['budget_max = ?', 'budget_period = ?', 'budget_reset_at = ?', 'updated_at = datetime("now")'];
+			const setClauses: string[] = ['budget_max = ?', 'budget_period = ?', 'budget_reset_at = ?', "updated_at = datetime('now')"];
 			const bindValues: unknown[] = [
 				budget_max != null ? roundGatewayMoney(budget_max) : null,
 				budget_period,
 				budget_reset_at ?? null,
 			];
+			const resetsBudgetEpoch = budget_spent_override !== undefined || resetBudget;
 			if (budget_spent_override !== undefined) {
-				setClauses.push('budget_spent = ?');
-				bindValues.push(roundGatewayMoney(budget_spent_override ?? 0));
+				const budgetSpentMicros = toD1BudgetSpentMicros(budget_spent_override ?? 0);
+				setClauses.push('budget_spent = ?', 'budget_spent_micros = ?');
+				bindValues.push(userBudgetAmount(budgetSpentMicros), budgetSpentMicros);
 			} else if (resetBudget) {
-				setClauses.push('budget_spent = 0');
+				setClauses.push('budget_spent = 0', 'budget_spent_micros = 0');
+			}
+			if (resetsBudgetEpoch) {
+				setClauses.push('budget_epoch = budget_epoch + 1', 'budget_reserved_micros = 0');
 			}
 			if (budget_base !== undefined) {
 				setClauses.push('budget_base = ?');
@@ -191,7 +217,7 @@ export function createD1UsersRepository(db: D1DatabaseClient): UsersRepository {
 
 		async updateUserStatus(id: string, status: string): Promise<boolean> {
 			const result = await raw
-				.prepare('UPDATE users SET status = ?, updated_at = datetime("now") WHERE id = ?')
+				.prepare("UPDATE users SET status = ?, updated_at = datetime('now') WHERE id = ?")
 				.bind(status, id)
 				.run();
 			return result.meta.changes > 0;
@@ -199,7 +225,7 @@ export function createD1UsersRepository(db: D1DatabaseClient): UsersRepository {
 
 		async setUserMetadataById(id: string, metadataJson: string | null): Promise<boolean> {
 			const result = await raw
-				.prepare('UPDATE users SET metadata = ?, updated_at = datetime("now") WHERE id = ?')
+				.prepare("UPDATE users SET metadata = ?, updated_at = datetime('now') WHERE id = ?")
 				.bind(metadataJson, id)
 				.run();
 			return result.meta.changes > 0;
@@ -207,7 +233,7 @@ export function createD1UsersRepository(db: D1DatabaseClient): UsersRepository {
 
 		async setUserChargedCostFactorsById(id: string, chargedCostFactorsJson: string | null): Promise<boolean> {
 			const result = await raw
-				.prepare('UPDATE users SET charged_cost_factors = ?, updated_at = datetime("now") WHERE id = ?')
+				.prepare("UPDATE users SET charged_cost_factors = ?, updated_at = datetime('now') WHERE id = ?")
 				.bind(chargedCostFactorsJson, id)
 				.run();
 			return result.meta.changes > 0;
@@ -215,7 +241,7 @@ export function createD1UsersRepository(db: D1DatabaseClient): UsersRepository {
 
 		async setUserEmailById(id: string, email: string): Promise<boolean> {
 			const result = await raw
-				.prepare('UPDATE users SET email = ?, updated_at = datetime("now") WHERE id = ?')
+				.prepare("UPDATE users SET email = ?, updated_at = datetime('now') WHERE id = ?")
 				.bind(email, id)
 				.run();
 			return result.meta.changes > 0;
@@ -228,7 +254,7 @@ export function createD1UsersRepository(db: D1DatabaseClient): UsersRepository {
 		): Promise<boolean> {
 			const result = await raw
 				.prepare(
-					'UPDATE users SET external_system = ?, external_user_id = ?, updated_at = datetime("now") WHERE id = ?'
+					"UPDATE users SET external_system = ?, external_user_id = ?, updated_at = datetime('now') WHERE id = ?"
 				)
 				.bind(externalSystem, externalUserId, id)
 				.run();

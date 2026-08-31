@@ -6,6 +6,7 @@
 import type { ResolvedAiDetectionConfig } from '@octafuse/core/lib/ai-detection-system-config';
 import { AI_DETECTION_PROVIDER_REQUIRED_CREDENTIALS } from '@octafuse/core/lib/ai-detection-system-config';
 import { signTc3Request } from '../../tencent/tc3-sign';
+import { readToolProviderResponseText } from '../../http/bounded-response';
 import {
 	AiDetectionProviderError,
 	type AiDetectionDriver,
@@ -111,7 +112,10 @@ async function detectTencentTmsSegment(
 		body: payload,
 	});
 
-	const textBody = await res.text();
+	const textBody = await readToolProviderResponseText(res, {
+		provider: 'tencent_tms',
+		errorConstructor: AiDetectionProviderError,
+	});
 	let json: TmsResponse;
 	try {
 		json = JSON.parse(textBody) as TmsResponse;

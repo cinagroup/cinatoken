@@ -286,6 +286,111 @@ html[data-home-theme='light'] .home-surface {
   display: none;
 }
 
+.public-chat-markdown {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.public-chat-markdown > :first-child {
+  margin-top: 0;
+}
+
+.public-chat-markdown > :last-child {
+  margin-bottom: 0;
+}
+
+.public-chat-markdown p,
+.public-chat-markdown ul,
+.public-chat-markdown ol,
+.public-chat-markdown blockquote,
+.public-chat-markdown pre,
+.public-chat-markdown table {
+  margin: 0.75rem 0;
+}
+
+.public-chat-markdown h1,
+.public-chat-markdown h2,
+.public-chat-markdown h3 {
+  margin: 1rem 0 0.5rem;
+  font-weight: 650;
+  line-height: 1.35;
+}
+
+.public-chat-markdown h1 { font-size: 1.125rem; }
+.public-chat-markdown h2 { font-size: 1rem; }
+.public-chat-markdown h3 { font-size: 0.9375rem; }
+
+.public-chat-markdown ul,
+.public-chat-markdown ol {
+  padding-left: 1.25rem;
+}
+
+.public-chat-markdown ul { list-style: disc; }
+.public-chat-markdown ol { list-style: decimal; }
+
+.public-chat-markdown blockquote {
+  border-left: 2px solid var(--home-border-strong);
+  padding-left: 0.875rem;
+  color: var(--home-muted);
+}
+
+.public-chat-markdown code {
+  border: 1px solid var(--home-border);
+  border-radius: 0.3rem;
+  background: var(--home-menu-hover);
+  padding: 0.1rem 0.3rem;
+  font-size: 0.8em;
+}
+
+.public-chat-markdown pre {
+  max-width: 100%;
+  overflow-x: auto;
+  border: 1px solid var(--home-border);
+  border-radius: 0.625rem;
+  background: var(--home-menu-hover);
+  padding: 0.875rem;
+}
+
+.public-chat-markdown pre code {
+  border: 0;
+  background: transparent;
+  padding: 0;
+  font-size: 0.75rem;
+}
+
+.public-chat-markdown a {
+  color: #0ea5e9;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.public-chat-markdown table {
+  display: block;
+  max-width: 100%;
+  overflow-x: auto;
+  border-collapse: collapse;
+}
+
+.public-chat-markdown th,
+.public-chat-markdown td {
+  border: 1px solid var(--home-border);
+  padding: 0.35rem 0.55rem;
+  text-align: left;
+}
+
+.public-chat-cursor {
+  display: inline-block;
+  width: 0.45rem;
+  height: 1rem;
+  border-radius: 0.125rem;
+  background: currentColor;
+  animation: public-chat-cursor 900ms steps(1, end) infinite;
+}
+
+@keyframes public-chat-cursor {
+  50% { opacity: 0.2; }
+}
+
 @keyframes home-enter {
   from {
     opacity: 0;
@@ -361,6 +466,9 @@ html[data-console-theme='dark'] {
 
 .console-shell { background: var(--console-bg); color: var(--console-text); }
 .console-panel { background: var(--console-panel); border-color: var(--console-border); }
+.console-input { background: var(--console-panel); border-color: var(--console-border); color: var(--console-text); }
+.console-input::placeholder { color: var(--console-muted); }
+.console-badge { background: var(--console-accent-soft); color: var(--console-accent); }
 .console-muted { color: var(--console-muted); }
 .console-nav-link { color: var(--console-muted); }
 .console-nav-link:hover { background: var(--console-panel-subtle); color: var(--console-text); }
@@ -376,6 +484,7 @@ html[data-console-theme='dark'] .console-shell .border-gray-50,
 html[data-console-theme='dark'] .console-shell .border-gray-100,
 html[data-console-theme='dark'] .console-shell .border-gray-200,
 html[data-console-theme='dark'] .console-shell .border-gray-300 { border-color: var(--console-border) !important; }
+html[data-console-theme='dark'] .console-shell .text-gray-950,
 html[data-console-theme='dark'] .console-shell .text-gray-900,
 html[data-console-theme='dark'] .console-shell .text-gray-800,
 html[data-console-theme='dark'] .console-shell .text-gray-700 { color: var(--console-text) !important; }

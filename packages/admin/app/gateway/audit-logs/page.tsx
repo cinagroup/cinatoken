@@ -46,7 +46,7 @@ const AUDIT_LOG_SOURCE_CHANNEL_SET = new Set<string>(API_KEY_BUDGET_AUDIT_SOURCE
 /** 完整前缀目录（含历史 `admin:`），表格徽章仍能识别老 Master Key 行。 */
 const AUDIT_LOG_ACTOR_KIND_SET = new Set<string>(USER_AUDIT_ACTOR_KINDS);
 /** 筛选 UI 不含历史 Master Key；全选时不传 `actor_kind`，默认列表仍含老 `admin:` 行。 */
-const AUDIT_LOG_ACTOR_KIND_FILTERS = ['console', 'admin_key', 'system', 'service'] as const;
+const AUDIT_LOG_ACTOR_KIND_FILTERS = ['console', 'admin_key', 'system', 'service', 'portal'] as const;
 const AUDIT_LOG_ACTOR_KIND_FILTER_SET = new Set<string>(AUDIT_LOG_ACTOR_KIND_FILTERS);
 
 type AuditLogFilterOptions = {

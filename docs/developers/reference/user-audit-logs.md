@@ -9,7 +9,7 @@
 | 维度 | 列 | 含义 |
 |------|-----|------|
 | **Event** | `event_type` | 业务事件：`usage_charge`、`period_reset`、`admin_adjust`、`key_created`、`key_revoked`、`key_deleted`、`user_created`、`user_deleted` 等。 |
-| **Actor** | `actor_type` + `actor_id` | `system` / `admin` / `service` 与稳定 principal（新写入为 `console:<username>` 或 `admin_key:<id>`；历史 `admin:gateway_master_key` 保持原样）。 |
+| **Actor** | `actor_type` + `actor_id` | `system` / `admin` / `service` / `user` 与稳定 principal（门户用户为 `portal:<user_id>`；管理员为 `console:<username>` 或 `admin_key:<id>`；历史 `admin:gateway_master_key` 保持原样）。 |
 | **Cause** | `source` + `reason_code` + `reason_text` | 入口通道、机器可筛码、人类可读说明。 |
 | **快照** | `before_user_snapshot` / `after_user_snapshot` / `changed_fields` | `UserAuditSnapshot` JSON；金额类展示以快照为准。 |
 | **扩展** | `change_payload` | JSON：周期前后值、管理端 patch 摘要、删除上下文等。 |
@@ -25,6 +25,7 @@
 | `admin` | 历史 Master Key 调用，保持原样不回填 | `admin:gateway_master_key` |
 | `system` | 网关自动化（扣费、周期重置） | `system:gateway` |
 | `service` | 内部服务（用户幂等创建等） | `service:user_provision` |
+| `portal` | 用户中心自助操作，`actor_type=user` | `portal:usr_123` |
 
 因此「后台管理员操作」与「集成密钥经 Admin API 操作」的区分靠 `actor_id` 前缀，而非 `actor_type`。枚举定义见 `packages/core/src/db/user-audit-catalog.ts` 的 `USER_AUDIT_ACTOR_KINDS`。
 
@@ -48,11 +49,12 @@
 
 ### 4. 新建密钥（`key_created`）
 
-- `createKey` → `createApiKeyWithAudit`；`source=key_provision`。
+- `createKey` → `createApiKeyWithAudit`；`source=key_provision`。用户中心自助创建记录为 `actor_type=user`、`actor_id=portal:<user_id>`；管理端调用仍记录为 `admin`。
 
 ### 5. 吊销 / 删除密钥（`key_revoked` / `key_deleted`）
 
 - 管理端 PATCH `revoked` 或 DELETE 密钥前写入；`source` 为 `admin_keys` / `admin_user_key` 等。
+- 门户创建/吊销独立 Management API Key 时复用 `key_created` / `key_revoked` 事件，`source=portal_management_keys`，`reason_code=management_key_create` / `management_key_revoke`，`change_payload.resource_type=management_api_key`。事件与对应 Management Key 写入或状态变更处于同一数据库事务；`api_key_id` 保持 `null`，载荷只记录资源 ID、账户范围、状态、名称和过期时间，不记录明文密钥。
 
 ### 6. 管理端 PATCH 用户 / 密钥（`admin_adjust`）
 

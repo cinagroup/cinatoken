@@ -1,32 +1,48 @@
-import type { GatewayDatabaseClient } from './database-client';
-import type { GatewayRepositories } from './repositories-types';
-import { createMySqlAdminAnalyticsRepository } from '../db/mysql/admin-analytics.impl';
-import { createMySqlApiKeysRepository } from '../db/mysql/api-keys.impl';
-import { createMySqlModelRoutesRepository } from '../db/mysql/model-routes.impl';
-import { createMySqlModelRoutingRepository } from '../db/mysql/model-routing.impl';
-import { createMySqlModelsRepository } from '../db/mysql/models.impl';
-import { createMySqlProvidersRepository } from '../db/mysql/providers.impl';
-import { createMySqlRequestLogsRepository } from '../db/mysql/request-logs.impl';
-import { createMySqlSystemConfigRepository } from '../db/mysql/system-config.impl';
-import { createMySqlRoutePoolStickyBindingsRepository } from '../db/mysql/route-pool-sticky-bindings.impl';
-import { createMySqlUserAuditLogsRepository } from '../db/mysql/user-audit-logs.impl';
-import { createMySqlUsersRepository } from '../db/mysql/users.impl';
-import { createMySqlAdminAccessRepository } from '../db/mysql/admin-access.impl';
+import type { GatewayDatabaseClient } from "./database-client";
+import type { GatewayRepositories } from "./repositories-types";
+import { createMySqlAdminAnalyticsRepository } from "../db/mysql/admin-analytics.impl";
+import { createMySqlApiKeysRepository } from "../db/mysql/api-keys.impl";
+import { createMySqlModelRoutesRepository } from "../db/mysql/model-routes.impl";
+import { createMySqlModelRoutingRepository } from "../db/mysql/model-routing.impl";
+import { createMySqlModelsRepository } from "../db/mysql/models.impl";
+import { createMySqlProvidersRepository } from "../db/mysql/providers.impl";
+import { createMySqlRequestLogsRepository } from "../db/mysql/request-logs.impl";
+import { createMySqlSystemConfigRepository } from "../db/mysql/system-config.impl";
+import { createMySqlRoutePoolStickyBindingsRepository } from "../db/mysql/route-pool-sticky-bindings.impl";
+import { createMySqlUserAuditLogsRepository } from "../db/mysql/user-audit-logs.impl";
+import { createMySqlUsersRepository } from "../db/mysql/users.impl";
+import { createMySqlAdminAccessRepository } from "../db/mysql/admin-access.impl";
+import { createMySqlRequestPresetsRepository } from "../db/mysql/request-presets.impl";
+import { createMySqlGuardrailsRepository } from "../db/mysql/guardrails.impl";
+import { createMySqlGuardrailBudgetsRepository } from "../db/mysql/guardrail-budgets.impl";
+import { createMySqlUserBudgetReservationsRepository } from "../db/mysql/user-budget-reservations.impl";
+import { createMySqlRouteDataPoliciesRepository } from "../db/mysql/route-data-policies.impl";
+import { createMySqlModelEndpointsRepository } from "../db/mysql/model-endpoints.impl";
+import { createManagementApiKeysRepository } from "./management-api-keys";
 import {
 	createMySqlPortalAccessRepository,
 	createMySqlPortalLedgerRepository,
 	createMySqlSharedKeysRepository,
-} from '../db/mysql/portal-marketplace.impl';
+} from "../db/mysql/portal-marketplace.impl";
 
-export function createMySqlRepositories(client: GatewayDatabaseClient): GatewayRepositories {
-	if (client.driver !== 'mysql') {
-		throw new Error('createMySqlRepositories: expected MySQL client');
+export function createMySqlRepositories(
+	client: GatewayDatabaseClient
+): GatewayRepositories {
+	if (client.driver !== "mysql") {
+		throw new Error("createMySqlRepositories: expected MySQL client");
 	}
 	return {
 		client,
 		users: createMySqlUsersRepository(client),
 		apiKeys: createMySqlApiKeysRepository(client),
 		requestLogs: createMySqlRequestLogsRepository(client),
+		requestPresets: createMySqlRequestPresetsRepository(client),
+		guardrails: createMySqlGuardrailsRepository(client),
+		guardrailBudgets: createMySqlGuardrailBudgetsRepository(client),
+		userBudgets: createMySqlUserBudgetReservationsRepository(client),
+		routeDataPolicies: createMySqlRouteDataPoliciesRepository(client),
+		modelEndpoints: createMySqlModelEndpointsRepository(client),
+		managementApiKeys: createManagementApiKeysRepository(client),
 		providers: createMySqlProvidersRepository(client),
 		models: createMySqlModelsRepository(client),
 		routes: createMySqlModelRoutesRepository(client),

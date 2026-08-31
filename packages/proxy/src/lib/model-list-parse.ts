@@ -77,22 +77,31 @@ export function parseModelsRouteGroupsQuery(raw: string | undefined): string[] {
 }
 
 /** Model kind filter for agent-facing `GET /v1/models`. */
-export type ModelsKindFilter = 'llm' | 'image' | 'audio' | 'all';
+export type ModelsKindFilter = 'llm' | 'image' | 'audio' | 'embedding' | 'all';
 
 /**
  * Parse `kind` for `GET /v1/models`.
  * Empty / missing / unknown → `llm`（默认排除文生图 / ASR，兼容 chat/agent 拉列表）。
- * `image` → 仅文生图；`audio` → 仅转写；`all` → 不按 kind 过滤。
+ * `image` → 仅文生图；`audio` → ASR/TTS Audio endpoint 模型；`all` → 不按 kind 过滤。
  */
 export function parseModelsKindQuery(raw: string | undefined): ModelsKindFilter {
 	if (raw == null || raw.trim() === '') {
 		return 'llm';
 	}
 	const v = raw.trim().toLowerCase();
-	if (v === 'image' || v === 'audio' || v === 'all' || v === 'llm') {
+	if (v === 'image' || v === 'audio' || v === 'embedding' || v === 'embeddings' || v === 'all' || v === 'llm') {
+		if (v === 'embeddings') return 'embedding';
 		return v;
 	}
 	return 'llm';
+}
+
+/** Explicit OpenRouter-style output modality filter; `all` disables filtering. */
+export function parseModelsOutputModalitiesQuery(raw: string | undefined): string[] | null {
+	if (raw == null || raw.trim() === '') return null;
+	const values = [...new Set(raw.split(',').map((value) => value.trim().toLowerCase()).filter(Boolean))];
+	if (values.includes('all')) return null;
+	return values.length > 0 ? values : null;
 }
 
 /**

@@ -100,13 +100,13 @@ export const API_KEY_BUDGET_AUDIT_EVENT_TYPES = [
 ] as const;
 
 /** 与 octafuse `ApiKeyBudgetAuditActorType` 对齐 */
-export const API_KEY_BUDGET_AUDIT_ACTOR_TYPES = ['system', 'admin', 'service'] as const;
+export const API_KEY_BUDGET_AUDIT_ACTOR_TYPES = ['system', 'admin', 'service', 'user'] as const;
 
 /**
  * 与 octafuse `USER_AUDIT_ACTOR_KINDS` 对齐：`actor_id` 的身份前缀。
  * `actor_type` 只到类别，同一类别下仍有多个身份（`admin` 既是控制台会话也是每把集成密钥）。
  */
-export const USER_AUDIT_ACTOR_KINDS = ['console', 'admin_key', 'admin', 'system', 'service'] as const;
+export const USER_AUDIT_ACTOR_KINDS = ['console', 'admin_key', 'admin', 'system', 'service', 'portal'] as const;
 
 /** 与 octafuse `UserAuditSourceChannel` 对齐（筛选多选与网关枚举一致） */
 export const API_KEY_BUDGET_AUDIT_SOURCE_CHANNELS = [
@@ -191,6 +191,8 @@ export interface GatewayModelRoute {
   price_override: string | null;
   /** JSON object string: route-level request body defaults (merged with client body; client wins) */
   custom_params: string | null;
+  /** Gateway-only endpoint capabilities; never merged into the upstream request. */
+  routing_metadata?: string | null;
   /** NOT NULL DEFAULT 'openai' after gateway migration 0011 */
   upstream_protocol: string;
   /** Provider-side capability; `*` follows the matched request operation. */

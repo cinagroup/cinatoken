@@ -1,5 +1,6 @@
 /**
- * 用户路由：`GET /v1/me` — 返回当前用户预算周期、已用额度与 metadata（优先 `users.metadata`，回退 key metadata）。
+ * 用户路由：`GET /v1/me` — 返回当前 Key 的 Workspace、用户预算周期、已用额度与 metadata
+ *（优先 `users.metadata`，回退 key metadata）。
  */
 import { Hono } from 'hono';
 import {
@@ -25,6 +26,7 @@ meRoutes.get('/', async (c) => {
   const billing_currency = normalizeBillingCurrencyCode(rawCurrency);
   return c.json(
     normalizeApiTimeFields({
+      workspace_id: apiKey.workspaceId,
       budget_max: apiKey.budgetMax,
       budget_spent: apiKey.budgetSpent,
       budget_period: apiKey.budgetPeriod,

@@ -4,7 +4,9 @@ import { prepareGeminiUpstreamFetch, resolveGeminiUpstreamAuth } from './gemini-
 import {
 	listConfiguredCapabilities,
 	parseProviderEndpoints,
+	providerSupportsUpstreamOperation,
 	providerSupportsUpstreamProtocol,
+	requiredProviderEndpointCapabilitiesForOperation,
 	resolveUpstreamEndpoint,
 	serializeProviderEndpoints,
 	validateAndNormalizeProviderEndpoints,
@@ -77,6 +79,22 @@ describe('resolveUpstreamEndpoint', () => {
 			openai: { base: 'https://api.x.ai/v1' },
 		});
 		assert.equal(url, 'https://api.x.ai/v1/responses');
+	});
+
+	it('derives embeddings from openai base', () => {
+		const url = resolveUpstreamEndpoint('openai', 'embeddings', {
+			openai: { base: 'https://api.openai.com/v1' },
+		});
+		assert.equal(url, 'https://api.openai.com/v1/embeddings');
+	});
+
+	it('uses an embeddings capability template without appending a suffix', () => {
+		const url = resolveUpstreamEndpoint('openai', 'embeddings', {
+			openai: {
+				endpoints: { embeddings: 'https://vendor.example/vectorize' },
+			},
+		});
+		assert.equal(url, 'https://vendor.example/vectorize');
 	});
 
 	it('uses responses capability template without appending suffix', () => {
@@ -194,6 +212,132 @@ describe('providerSupportsUpstreamProtocol', () => {
 	});
 });
 
+describe('Provider operation endpoint requirements', () => {
+	it('maps DashScope composite and alias operations to the exact driver endpoints', () => {
+		assert.deepEqual(
+			requiredProviderEndpointCapabilitiesForOperation(
+				'dashscope',
+				'audio.transcriptions.async'
+			),
+			['audio.transcriptions', 'audio.transcriptions.tasks']
+		);
+		assert.deepEqual(
+			requiredProviderEndpointCapabilitiesForOperation(
+				'dashscope',
+				'audio.transcriptions.realtime.inference'
+			),
+			['audio.realtime.inference']
+		);
+		assert.deepEqual(
+			requiredProviderEndpointCapabilitiesForOperation(
+				'dashscope',
+				'audio.transcriptions.realtime.session'
+			),
+			['audio.realtime.session']
+		);
+		assert.deepEqual(
+			requiredProviderEndpointCapabilitiesForOperation(
+				'dashscope',
+				'audio.speech.stream'
+			),
+			['audio.speech']
+		);
+		assert.deepEqual(
+			requiredProviderEndpointCapabilitiesForOperation(
+				'dashscope',
+				'audio.speech.realtime.inference'
+			),
+			['audio.realtime.inference']
+		);
+		assert.deepEqual(
+			requiredProviderEndpointCapabilitiesForOperation(
+				'dashscope',
+				'audio.speech.realtime.session'
+			),
+			['audio.realtime.session']
+		);
+	});
+
+	it('requires all routable capabilities for a legacy wildcard without requiring resource-only endpoints', () => {
+		assert.deepEqual(
+			requiredProviderEndpointCapabilitiesForOperation('dashscope', '*'),
+			[
+				'audio.transcriptions',
+				'audio.transcriptions.multimodal',
+				'audio.transcriptions.tasks',
+				'audio.realtime.inference',
+				'audio.realtime.session',
+				'audio.speech',
+				'audio.speech.multimodal',
+			]
+		);
+		assert.equal(
+			providerSupportsUpstreamOperation('dashscope', '*', {
+				endpoints: { dashscope: { base: 'https://dashscope.example/api/v1' } },
+			}),
+			true
+		);
+	});
+
+	it('fails closed when only the protocol or one half of a composite operation is configured', () => {
+		assert.equal(
+			providerSupportsUpstreamOperation('openai', 'chat', {
+				endpoints: {
+					openai: { endpoints: { embeddings: 'https://vendor.example/embeddings' } },
+				},
+			}),
+			false
+		);
+		assert.equal(
+			providerSupportsUpstreamOperation('dashscope', 'audio.transcriptions.async', {
+				endpoints: {
+					dashscope: {
+						endpoints: {
+							'audio.transcriptions': 'https://vendor.example/asr/submit',
+						},
+					},
+				},
+			}),
+			false
+		);
+		assert.equal(
+			providerSupportsUpstreamOperation('dashscope', 'audio.transcriptions.async', {
+				endpoints: {
+					dashscope: {
+						endpoints: {
+							'audio.transcriptions': 'https://vendor.example/asr/submit',
+							'audio.transcriptions.tasks': 'https://vendor.example/tasks/{task_id}',
+						},
+					},
+				},
+			}),
+			true
+		);
+	});
+
+	it('canonicalizes legacy Gemini actions and rejects unknown operations', () => {
+		const provider = {
+			endpoints: {
+				gemini: {
+					endpoints: {
+						generateContent: 'https://vendor.example/models/{model}:generateContent',
+					},
+				},
+			},
+		};
+		assert.equal(
+			providerSupportsUpstreamOperation('gemini', 'generateContent', provider),
+			true
+		);
+		assert.equal(
+			providerSupportsUpstreamOperation('openai', 'not-a-real-operation', {
+				endpoints: { openai: { base: 'https://vendor.example/v1' } },
+			}),
+			false
+		);
+	});
+});
+
 describe('validateAndNormalizeProviderEndpoints', () => {
 	it('rejects gemini template without {model}', () => {
 		assert.throws(
@@ -295,7 +439,7 @@ describe('listConfiguredCapabilities', () => {
 				{ openai: { base: 'https://api.openai.com/v1' } },
 				'openai'
 			),
-			['chat', 'responses', 'images.generations', 'images.edits', 'audio.transcriptions', 'audio.speech']
+			['chat', 'responses', 'embeddings', 'images.generations', 'images.edits', 'audio.transcriptions', 'audio.speech']
 		);
 	});
 
@@ -324,7 +468,7 @@ describe('listConfiguredCapabilities', () => {
 				},
 				'openai'
 			),
-			['chat', 'responses', 'images.generations', 'images.edits', 'audio.transcriptions', 'audio.speech']
+			['chat', 'responses', 'embeddings', 'images.generations', 'images.edits', 'audio.transcriptions', 'audio.speech']
 		);
 	});
 

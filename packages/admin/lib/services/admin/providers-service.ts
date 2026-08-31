@@ -24,6 +24,12 @@ import type {
 	AdminProvidersImportOutput,
 } from './types';
 
+const PROVIDER_DATA_POLICY_SUBJECT_FIELDS = new Set([
+	'endpoints',
+	'api_key',
+	'shared_channel_type',
+]);
+
 function resolveEndpointsFromMutation(body: AdminProviderMutationInput): string | null {
 	if (body.endpoints === undefined || body.endpoints === null) {
 		return null;
@@ -142,7 +148,8 @@ export async function revealProviderApiKeyService(
 export async function updateProviderService(
 	repos: GatewayRepositories,
 	id: string,
-	body: AdminProviderMutationInput
+	body: AdminProviderMutationInput,
+	actorId: string,
 ): Promise<void> {
 	const existing = await repos.providers.getProviderRowById(id);
 	if (!existing) throw notFound('Provider not found');
@@ -178,6 +185,17 @@ export async function updateProviderService(
 	const changes = await repos.providers.updateProviderByPatch(id, patch);
 	if (changes === 0) {
 		throw notFound('Provider not found');
+	}
+	const changedSubjectFields = Object.keys(patch)
+		.filter((key) => PROVIDER_DATA_POLICY_SUBJECT_FIELDS.has(key))
+		.sort();
+	if (changedSubjectFields.length > 0) {
+		await repos.routeDataPolicies.invalidateForProvider(id, {
+			id: crypto.randomUUID(),
+			actorId,
+			nowIso: new Date().toISOString(),
+			reason: `provider_subject_changed:${changedSubjectFields.join(',')}`,
+		});
 	}
 }
 

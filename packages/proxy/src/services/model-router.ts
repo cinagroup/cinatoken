@@ -7,18 +7,29 @@
 import type {
 	GatewayRepositories,
 	ModelRouteRow,
+	ProviderRow,
 	ProviderEndpointsMap,
 	ResolvedModelSurfaceRow,
 	UpstreamProtocol,
+	VerifiedModelEndpointSnapshot,
 } from '@octafuse/core';
 import {
 	effectiveUpstreamOperation,
+	computeRouteDataPolicySubjectFingerprintFromRows,
 	extractMeteredProfileFromPriceOverrideJson,
 	extractChargedProfileFromPriceOverrideJson,
 	fingerprintProviderApiKey,
+	isPendingProviderImportApiKey,
 	isRouteAdapterCompatible,
+	modelEndpointSubjectFingerprintIsValid,
+	modelEndpointSupportsOperation,
 	normalizeUpstreamProtocol,
+	parseVerifiedModelEndpointSnapshot,
 	parseProviderEndpoints,
+	parseRouteRoutingMetadata,
+	providerSupportsUpstreamProtocol,
+	type RouteRoutingMetadata,
+	verifiedEndpointMatchesLegacyRoutingMetadata,
 } from '@octafuse/core';
 import { selectActiveRouteRows } from './route-selection';
 
@@ -31,6 +42,16 @@ export interface RouteResult {
 	/** `providers.name` 快照，供 `api_key_request_logs` 等落库 */
 	providerName: string;
 	providerModelName: string;
+	/** Verified, request-local endpoint capability and flat-pricing snapshot. */
+	endpoint?: VerifiedModelEndpointSnapshot;
+	/** Public gateway model id returned to clients; never the provider's private model name. */
+	gatewayModelId?: string;
+	/** Request-local model-fallback candidate identity; never serialized upstream. */
+	gatewayCandidateIndex?: number;
+	/** Request-local rank used by provider.sort.partition="none". */
+	gatewayGlobalEndpointRank?: number;
+	/** SHA-256 binding for verified ZDR/data-collection evidence. */
+	dataPolicySubjectFingerprint?: string;
 	upstreamProtocol: UpstreamProtocol;
 	upstreamOperation: string;
 	adapter: string;
@@ -52,6 +73,21 @@ export interface RouteResult {
 	/** 自 `price_override.charged` 解析出的 JSON 字符串（无则 null）；用户预算 `charged_cost` 优先于此 */
 	routeChargedProfileJson: string | null;
 	customParams: Record<string, unknown> | null;
+	/** Gateway-only endpoint capabilities; never merged into the upstream body. */
+	routingMetadata?: RouteRoutingMetadata | null;
+	/** Sanitized request-time provider preference decision for request-log audit. */
+	providerRoutingTrace?: {
+		configured_target_ids: string[];
+		eligible_target_ids: string[];
+		sort: string | null;
+		partition: 'model' | 'none';
+		global_endpoint_rank: number | null;
+		require_parameters: boolean;
+		data_collection: 'allow' | 'deny';
+		zdr: boolean;
+		quantizations: string[] | null;
+		max_price: Record<string, number> | null;
+	};
 	routeGroup: string;
 	/** `model_routes.priority`；同层按 route strategy 排序 */
 	routePriority: number;
@@ -76,18 +112,16 @@ function parseJsonObject(raw: string | null | undefined): Record<string, unknown
 	return null;
 }
 
-async function routeRowToResult(repos: GatewayRepositories, route: ModelRouteRow): Promise<RouteResult | null> {
-	const provider = await repos.providers.getProviderById(route.provider_id);
-	if (!provider || provider.status === 'disabled') {
-		return null;
-	}
-	// 共享渠道 provider 允许无自有 api_key（纯靠用户共享密钥池）
-	if (!provider.api_key && !provider.shared_channel_type) {
-		return null;
-	}
+function routeRowToResult(
+	route: ModelRouteRow,
+	provider: ProviderRow,
+	endpoint: VerifiedModelEndpointSnapshot,
+	dataPolicySubjectFingerprint: string,
+): RouteResult {
 	const protocol = normalizeUpstreamProtocol(route.upstream_protocol);
 	const providerEndpoints = parseProviderEndpoints(provider);
 	const customParams = parseJsonObject(route.custom_params);
+	const routingMetadata = parseRouteRoutingMetadata(route.routing_metadata);
 	if (route.custom_params && !customParams) {
 		console.warn(
 			`[Gateway Router] ignored invalid custom_params JSON routeId=${route.id} modelId=${route.model_id}`
@@ -108,6 +142,8 @@ async function routeRowToResult(repos: GatewayRepositories, route: ModelRouteRow
 		providerId: provider.id,
 		providerName: provider.name,
 		providerModelName: route.provider_model_name,
+		endpoint,
+		dataPolicySubjectFingerprint,
 		upstreamProtocol: protocol,
 		upstreamOperation: route.upstream_operation ?? '*',
 		adapter: route.adapter ?? 'passthrough',
@@ -118,6 +154,7 @@ async function routeRowToResult(repos: GatewayRepositories, route: ModelRouteRow
 		routeMeteredProfileJson: extractMeteredProfileFromPriceOverrideJson(route.price_override),
 		routeChargedProfileJson: extractChargedProfileFromPriceOverrideJson(route.price_override),
 		customParams,
+		routingMetadata,
 		routeGroup,
 		routePriority: route.priority,
 		routeWeight,
@@ -125,6 +162,29 @@ async function routeRowToResult(repos: GatewayRepositories, route: ModelRouteRow
 		providerKeyLabel: provider.name,
 		providerKeyFingerprint: fingerprintProviderApiKey(provider.api_key ?? ''),
 	};
+}
+
+function providerIsCallableForRoute(
+	provider: ProviderRow | undefined,
+	route: ModelRouteRow,
+): provider is ProviderRow {
+	if (
+		!provider
+		|| provider.status !== 'active'
+		|| Boolean(provider.shared_channel_type?.trim())
+		|| !provider.api_key?.trim()
+		|| isPendingProviderImportApiKey(provider.api_key)
+	) {
+		return false;
+	}
+	try {
+		return providerSupportsUpstreamProtocol(
+			normalizeUpstreamProtocol(route.upstream_protocol),
+			provider,
+		);
+	} catch {
+		return false;
+	}
 }
 
 export interface SurfaceRouteResolution {
@@ -189,11 +249,17 @@ export async function resolveRoutesForSurface(
 				params.requestOperation
 			),
 		}))
-		.filter((route) =>
-			routeMatchesSurface(route, {
-				protocol: params.requestProtocol,
-				operation: params.requestOperation,
-			})
+		.filter(
+			(route) =>
+				route.endpoint !== undefined &&
+				modelEndpointSupportsOperation(
+					route.endpoint,
+					route.upstreamOperation
+				) &&
+				routeMatchesSurface(route, {
+					protocol: params.requestProtocol,
+					operation: params.requestOperation,
+				})
 		);
 	return { surface, routes };
 }
@@ -208,14 +274,54 @@ export async function resolveRouteResultsFromRows(
 	repos: GatewayRepositories,
 	rows: ModelRouteRow[]
 ): Promise<RouteResult[]> {
-	const result: RouteResult[] = [];
-	for (const route of rows) {
-		const r = await routeRowToResult(repos, route);
-		if (r) {
-			result.push(r);
-		}
+	const routeTargetIds = [...new Set(rows.map((route) => route.id))];
+	const providerIds = [...new Set(rows.map((route) => route.provider_id))];
+	if (routeTargetIds.length === 0) return [];
+	if (routeTargetIds.length > 100 || providerIds.length > 100) {
+		throw new RangeError('runtime route resolution exceeds the 100-row batch safety limit');
 	}
-	return result;
+
+	const now = new Date();
+	const [bindings, providers] = await Promise.all([
+		repos.modelEndpoints.listRuntimeBindingsByRouteTargetIds(routeTargetIds),
+		repos.providers.getProvidersByIds(providerIds),
+	]);
+	const providersById = new Map(providers.map((provider) => [provider.id, provider]));
+	const bindingsByTarget = new Map<string, (typeof bindings)[number] | null>();
+	for (const binding of bindings) {
+		bindingsByTarget.set(
+			binding.route_target_id,
+			bindingsByTarget.has(binding.route_target_id) ? null : binding,
+		);
+	}
+
+	const resolved = await Promise.all(rows.map(async (route): Promise<RouteResult | null> => {
+		const binding = bindingsByTarget.get(route.id);
+		const provider = providersById.get(route.provider_id);
+		if (!binding || !providerIsCallableForRoute(provider, route)) return null;
+		if (binding.model_id !== route.model_id || binding.provider_id !== route.provider_id) return null;
+
+		const endpoint = parseVerifiedModelEndpointSnapshot(binding, now);
+		if (!endpoint || endpoint.modelId !== route.model_id || endpoint.providerId !== provider.id) {
+			return null;
+		}
+		if (!verifiedEndpointMatchesLegacyRoutingMetadata(endpoint, route.routing_metadata)) {
+			return null;
+		}
+
+		const currentSubjectFingerprint = await computeRouteDataPolicySubjectFingerprintFromRows(
+			route,
+			provider,
+		);
+		if (
+			!modelEndpointSubjectFingerprintIsValid(binding.subject_fingerprint)
+			|| binding.subject_fingerprint !== currentSubjectFingerprint
+		) {
+			return null;
+		}
+		return routeRowToResult(route, provider, endpoint, currentSubjectFingerprint);
+	}));
+	return resolved.filter((route): route is RouteResult => route !== null);
 }
 
 /**

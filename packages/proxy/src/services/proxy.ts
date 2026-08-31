@@ -6,6 +6,7 @@ import type { GatewayRepositories } from "@octafuse/core";
 import type { RouteResult } from "./model-router";
 import { dispatchOpenAiRoute } from "./egress/openai-driver";
 import { dispatchOpenAiResponsesRoute } from "./egress/openai-responses-driver";
+import { dispatchOpenAiEmbeddingsRoute } from './egress/openai-embeddings-driver';
 import {
 	dispatchOpenAiImageEdits,
 	dispatchOpenAiImageGenerations,
@@ -39,6 +40,7 @@ import { dispatchGeminiRoute } from "./egress/gemini-driver";
 import {
 	failoverDispatch,
 	type FailoverDispatchOptions,
+	type ProxyDispatchAttemptTrace,
 	type ProxyDispatchMeta,
 } from './failover-dispatch';
 import type { GatewayCircuitAlertEvent } from './circuit-alert-types';
@@ -68,6 +70,8 @@ export interface UsageFromStream {
 	audio_characters?: number;
 	/** 实时 ASR 上游返回的真实计费时长（秒）。 */
 	audio_duration_seconds?: number;
+	/** 实时时长取自上游 usage，或网关验证过的 16-bit mono PCM 字节累计。 */
+	audio_duration_source?: 'upstream' | 'client';
 	/** 客户端在流结束前断开（如用户取消）时置位 */
 	cancelled?: boolean;
 	/** 上游流在终止事件前失败；用于把已返回 2xx headers 的半截流记为失败。 */
@@ -98,6 +102,8 @@ export interface ProxyResult {
 	stickyTrace?: (() => Promise<StickyTraceSnapshot>) | undefined;
 	/** Background bind/touch mutations (schedule via waitUntil) */
 	stickyMutationPromise?: Promise<unknown> | null;
+	/** Sanitized request-level endpoint attempts, populated by failoverDispatch. */
+	dispatchAttempts?: ProxyDispatchAttemptTrace[];
 }
 
 /** 无用量或解析失败时的零值占位（避免 undefined 传播）。 */
@@ -119,6 +125,17 @@ export type AudioSpeechProxyOptions = FailoverDispatchOptions &
 	AudioSpeechDispatchOptions;
 export type DashScopeRealtimeProxyOptions = FailoverDispatchOptions &
 	DashScopeRealtimeDispatchOptions;
+export type ImageGenerationProxyOptions = FailoverDispatchOptions & {
+	image?: { requireAuthoritativeUsage?: boolean };
+};
+
+export type RouteRequestBody =
+	| Record<string, unknown>
+	| ((route: RouteResult) => Record<string, unknown>);
+
+function requestBodyForRoute(body: RouteRequestBody, route: RouteResult): Record<string, unknown> {
+	return typeof body === 'function' ? body(route) : body;
+}
 
 /**
  * 代理 OpenAI Chat Completions：外层 provider 优先级 + 层内 route strategy failover。
@@ -126,9 +143,10 @@ export type DashScopeRealtimeProxyOptions = FailoverDispatchOptions &
 export async function proxyChatCompletions(
 	repos: GatewayRepositories,
 	routes: RouteResult[],
-	body: Record<string, unknown>,
+	body: RouteRequestBody,
 	requestSignal?: AbortSignal,
-	options?: FailoverDispatchOptions
+	options?: FailoverDispatchOptions,
+	publicCorrelationId?: string,
 ): Promise<ProxyResult> {
 	const result = await failoverDispatch(
 		repos,
@@ -138,10 +156,19 @@ export async function proxyChatCompletions(
 			route,
 			signal,
 			timing?: RequestTimingCollector | null,
-			attempt?: RequestTimingAttempt
-		) => dispatchOpenAiRoute(route, body, signal, timing, attempt),
+			attempt?: RequestTimingAttempt,
+			beforeFetch?: () => Promise<void>,
+		) => dispatchOpenAiRoute(
+			route,
+			requestBodyForRoute(body, route),
+			signal,
+			timing,
+			attempt,
+			beforeFetch,
+			publicCorrelationId,
+		),
 		requestSignal,
-		options
+		options ? { ...options, delegateBeforeUpstreamDispatchToDriver: true } : undefined,
 	);
 	return result;
 }
@@ -152,9 +179,10 @@ export async function proxyChatCompletions(
 export async function proxyResponses(
 	repos: GatewayRepositories,
 	routes: RouteResult[],
-	body: Record<string, unknown>,
+	body: RouteRequestBody,
 	requestSignal?: AbortSignal,
-	options?: FailoverDispatchOptions
+	options?: FailoverDispatchOptions,
+	publicCorrelationId?: string,
 ): Promise<ProxyResult> {
 	return failoverDispatch(
 		repos,
@@ -164,10 +192,38 @@ export async function proxyResponses(
 			route,
 			signal,
 			timing?: RequestTimingCollector | null,
-			attempt?: RequestTimingAttempt
-		) => dispatchOpenAiResponsesRoute(route, body, signal, timing, attempt),
+			attempt?: RequestTimingAttempt,
+			beforeFetch?: () => Promise<void>,
+		) => dispatchOpenAiResponsesRoute(
+			route,
+			requestBodyForRoute(body, route),
+			signal,
+			timing,
+			attempt,
+			beforeFetch,
+			publicCorrelationId,
+		),
 		requestSignal,
-		options
+		options ? { ...options, delegateBeforeUpstreamDispatchToDriver: true } : undefined,
+	);
+}
+
+/** Proxy OpenAI-compatible embeddings with provider failover before a paid response is accepted. */
+export async function proxyEmbeddings(
+	repos: GatewayRepositories,
+	routes: RouteResult[],
+	body: Record<string, unknown>,
+	requestSignal?: AbortSignal,
+	options?: FailoverDispatchOptions,
+): Promise<ProxyResult> {
+	return failoverDispatch(
+		repos,
+		routes,
+		'openai',
+		(route, signal, timing, attempt, beforeFetch) =>
+			dispatchOpenAiEmbeddingsRoute(route, body, signal, timing, attempt, beforeFetch),
+		requestSignal,
+		options ? { ...options, delegateBeforeUpstreamDispatchToDriver: true } : undefined,
 	);
 }
 
@@ -177,9 +233,10 @@ export async function proxyResponses(
 export async function proxyAnthropicMessages(
 	repos: GatewayRepositories,
 	routes: RouteResult[],
-	body: Record<string, unknown>,
+	body: RouteRequestBody,
 	requestSignal?: AbortSignal,
-	options?: FailoverDispatchOptions
+	options?: FailoverDispatchOptions,
+	publicCorrelationId?: string,
 ): Promise<ProxyResult> {
 	return failoverDispatch(
 		repos,
@@ -189,10 +246,19 @@ export async function proxyAnthropicMessages(
 			route,
 			signal,
 			timing?: RequestTimingCollector | null,
-			attempt?: RequestTimingAttempt
-		) => dispatchAnthropicRoute(route, body, signal, timing, attempt),
+			attempt?: RequestTimingAttempt,
+			beforeFetch?: () => Promise<void>,
+		) => dispatchAnthropicRoute(
+			route,
+			requestBodyForRoute(body, route),
+			signal,
+			timing,
+			attempt,
+			beforeFetch,
+			publicCorrelationId,
+		),
 		requestSignal,
-		options
+		options ? { ...options, delegateBeforeUpstreamDispatchToDriver: true } : undefined,
 	);
 }
 
@@ -204,7 +270,7 @@ export async function proxyImageGenerations(
 	routes: RouteResult[],
 	body: Record<string, unknown>,
 	requestSignal?: AbortSignal,
-	options?: FailoverDispatchOptions
+	options?: ImageGenerationProxyOptions
 ): Promise<ProxyResult> {
 	return failoverDispatch(
 		repos,
@@ -214,10 +280,13 @@ export async function proxyImageGenerations(
 			route,
 			signal,
 			timing?: RequestTimingCollector | null,
-			attempt?: RequestTimingAttempt
-		) => dispatchOpenAiImageGenerations(route, body, signal, timing, attempt),
+			attempt?: RequestTimingAttempt,
+			beforeFetch?: () => Promise<void>,
+		) => dispatchOpenAiImageGenerations(route, body, signal, timing, attempt, {
+			requireAuthoritativeUsage: options?.image?.requireAuthoritativeUsage,
+		}, beforeFetch),
 		requestSignal,
-		options
+		options ? { ...options, delegateBeforeUpstreamDispatchToDriver: true } : undefined,
 	);
 }
 
@@ -239,10 +308,11 @@ export async function proxyImageEdits(
 			route,
 			signal,
 			timing?: RequestTimingCollector | null,
-			attempt?: RequestTimingAttempt
-		) => dispatchOpenAiImageEdits(route, edit, signal, timing, attempt),
+			attempt?: RequestTimingAttempt,
+			beforeFetch?: () => Promise<void>,
+		) => dispatchOpenAiImageEdits(route, edit, signal, timing, attempt, {}, beforeFetch),
 		requestSignal,
-		options
+		options ? { ...options, delegateBeforeUpstreamDispatchToDriver: true } : undefined,
 	);
 }
 
@@ -470,10 +540,11 @@ export async function proxyGeminiContent(
 			route,
 			signal,
 			timing?: RequestTimingCollector | null,
-			attempt?: RequestTimingAttempt
+			attempt?: RequestTimingAttempt,
+			beforeFetch?: () => Promise<void>,
 		) =>
-			dispatchGeminiRoute(route, body, action, search, signal, timing, attempt),
+			dispatchGeminiRoute(route, body, action, search, signal, timing, attempt, beforeFetch),
 		requestSignal,
-		options
+		options ? { ...options, delegateBeforeUpstreamDispatchToDriver: true } : undefined,
 	);
 }

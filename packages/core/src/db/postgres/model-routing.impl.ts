@@ -19,6 +19,7 @@ function mapPgModelRouteToRow(r: {
 	weight: number;
 	priceOverride: string | null;
 	customParams: string | null;
+	routingMetadata: string | null;
 	upstreamProtocol: string;
 	routePoolId: string | null;
 	upstreamOperation: string;
@@ -36,6 +37,7 @@ function mapPgModelRouteToRow(r: {
 		weight: r.weight,
 		price_override: r.priceOverride,
 		custom_params: r.customParams,
+		routing_metadata: r.routingMetadata,
 		upstream_protocol: r.upstreamProtocol,
 		route_pool_id: r.routePoolId,
 		upstream_operation: r.upstreamOperation,

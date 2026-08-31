@@ -107,7 +107,11 @@ export function budgetLazyResetNeedsPersist(
 }
 
 /** 懒周期重置写库时的审计标签（`getUserInfo` / `getKeyInfo` / 代理鉴权）。 */
-export type LazyBudgetResetAuditKind = 'user_info' | 'key_info' | 'api_key_auth';
+export type LazyBudgetResetAuditKind =
+	| 'user_info'
+	| 'key_info'
+	| 'api_key_auth'
+	| 'budget_transition';
 
 const LAZY_RESET_AUDIT: Record<
 	LazyBudgetResetAuditKind,
@@ -128,15 +132,26 @@ const LAZY_RESET_AUDIT: Record<
 		reasonText: 'Period reset (auth)',
 		source: 'gateway_auth',
 	},
+	budget_transition: {
+		reasonCode: 'budget_transition_lazy_reset',
+		reasonText: 'Period reset (budget transition)',
+		source: 'admin_budget_transition',
+	},
 };
 
 type BudgetRowForLazyReset = Pick<
 	UserRow,
-	'budget_period' | 'budget_reset_at' | 'budget_spent' | 'budget_max' | 'budget_base'
+	| 'budget_period'
+	| 'budget_reset_at'
+	| 'budget_spent'
+	| 'budget_max'
+	| 'budget_base'
+	| 'budget_epoch'
+	| 'budget_reserved_micros'
 >;
 
 /**
- * 若 `maybeResetBudget` 相对当前行有变化则 CAS 写回 `users` 并插入周期重置审计。
+ * 若 `maybeResetBudget` 相对当前行有变化则以完整预算计算输入做 CAS，开启新 epoch、清零预留并插入周期重置审计。
  * `snapshotUserRow === undefined` 时在确需落库前会 `repos.users.getById(userId)` 取快照行。
  */
 export async function persistLazyBudgetResetIfNeeded(
@@ -154,6 +169,8 @@ export async function persistLazyBudgetResetIfNeeded(
 	budget_spent: number;
 	budget_reset_at: string | null;
 	budget_max: number | null;
+	budget_epoch: number;
+	budget_reserved_micros: number;
 }> {
 	const row = args.budgetRow;
 	const { budget_spent, budget_reset_at, budget_max: nextBudgetMax } = maybeResetBudget(
@@ -170,7 +187,14 @@ export async function persistLazyBudgetResetIfNeeded(
 	};
 	const nextSnapshot = { budget_spent, budget_reset_at, budget_max: nextBudgetMax };
 	if (!budgetLazyResetNeedsPersist(rowSnapshot, nextSnapshot)) {
-		return { didPersist: false, budget_spent, budget_reset_at, budget_max: nextBudgetMax };
+		return {
+			didPersist: false,
+			budget_spent,
+			budget_reset_at,
+			budget_max: nextBudgetMax,
+			budget_epoch: row.budget_epoch,
+			budget_reserved_micros: row.budget_reserved_micros,
+		};
 	}
 	const maxChanged =
 		(row.budget_max == null ? null : roundGatewayMoney(Number(row.budget_max))) !== nextBudgetMax;
@@ -187,9 +211,15 @@ export async function persistLazyBudgetResetIfNeeded(
 				)
 			: null;
 	const labels = LAZY_RESET_AUDIT[args.kind];
-	await updateUserBudgetWithAuditTx(repos, {
+	const didPersist = await updateUserBudgetWithAuditTx(repos, {
 		userId: args.userId,
+		expectedBudgetMax: row.budget_max,
+		expectedBudgetBase: row.budget_base,
+		expectedBudgetSpent: row.budget_spent,
+		expectedBudgetPeriod: row.budget_period,
 		expectedBudgetResetAt: args.expectedBudgetResetAt,
+		expectedBudgetEpoch: row.budget_epoch,
+		expectedBudgetReservedMicros: row.budget_reserved_micros,
 		budgetSpent: budget_spent,
 		budgetResetAt: budget_reset_at,
 		budgetMax: maxChanged ? nextBudgetMax : undefined,
@@ -215,7 +245,28 @@ export async function persistLazyBudgetResetIfNeeded(
 			correlationId: crypto.randomUUID(),
 		},
 	});
-	return { didPersist: true, budget_spent, budget_reset_at, budget_max: nextBudgetMax };
+	if (!didPersist) {
+		const latest = await repos.users.getById(args.userId);
+		if (latest) {
+			return {
+				didPersist: false,
+				budget_spent: roundGatewayMoney(latest.budget_spent),
+				budget_reset_at: latest.budget_reset_at,
+				budget_max: latest.budget_max == null ? null : roundGatewayMoney(latest.budget_max),
+				budget_epoch: latest.budget_epoch,
+				budget_reserved_micros: latest.budget_reserved_micros,
+			};
+		}
+		throw new Error('Ordinary-user budget account disappeared during lazy reset');
+	}
+	return {
+		didPersist,
+		budget_spent,
+		budget_reset_at,
+		budget_max: nextBudgetMax,
+		budget_epoch: row.budget_epoch + 1,
+		budget_reserved_micros: 0,
+	};
 }
 
 function validateExternalPair(external_system?: string | null, external_user_id?: string | null): void {
@@ -371,7 +422,13 @@ export async function getOrCreateUser(
 export async function getUserInfo(repos: GatewayRepositories, userId: string) {
 	const row = await repos.users.getById(userId);
 	if (!row) return null;
-	const { didPersist, budget_spent, budget_reset_at, budget_max: nextBudgetMax } =
+	const {
+		budget_spent,
+		budget_reset_at,
+		budget_max: nextBudgetMax,
+		budget_epoch,
+		budget_reserved_micros,
+	} =
 		await persistLazyBudgetResetIfNeeded(repos, {
 			budgetRow: row,
 			userId: row.id,
@@ -380,10 +437,7 @@ export async function getUserInfo(repos: GatewayRepositories, userId: string) {
 			snapshotUserRow: row,
 			kind: 'user_info',
 		});
-	let effectiveBudgetMax = row.budget_max != null ? roundGatewayMoney(Number(row.budget_max)) : null;
-	if (didPersist) {
-		effectiveBudgetMax = nextBudgetMax;
-	}
+	const effectiveBudgetMax = nextBudgetMax;
 	let metadata: Record<string, unknown> | null = null;
 	if (row.metadata) {
 		try {
@@ -402,6 +456,8 @@ export async function getUserInfo(repos: GatewayRepositories, userId: string) {
 		budget_spent: roundGatewayMoney(budget_spent),
 		budget_period: row.budget_period,
 		budget_reset_at,
+		budget_epoch,
+		budget_reserved_micros,
 		status: row.status,
 		metadata,
 		charged_cost_factors: parseUserChargedCostFactors(row.charged_cost_factors),
@@ -416,7 +472,13 @@ export async function getUserInfo(repos: GatewayRepositories, userId: string) {
 export async function getKeyInfo(repos: GatewayRepositories, id: string) {
 	const row = await repos.apiKeys.getApiKeyWithUserById(id);
 	if (!row) return null;
-	const { didPersist, budget_spent, budget_reset_at, budget_max: nextBudgetMax } =
+	const {
+		budget_spent,
+		budget_reset_at,
+		budget_max: nextBudgetMax,
+		budget_epoch,
+		budget_reserved_micros,
+	} =
 		await persistLazyBudgetResetIfNeeded(repos, {
 			budgetRow: row,
 			userId: row.user_id,
@@ -424,10 +486,7 @@ export async function getKeyInfo(repos: GatewayRepositories, id: string) {
 			apiKeyId: id,
 			kind: 'key_info',
 		});
-	let effectiveBudgetMax = row.budget_max != null ? roundGatewayMoney(Number(row.budget_max)) : null;
-	if (didPersist) {
-		effectiveBudgetMax = nextBudgetMax;
-	}
+	const effectiveBudgetMax = nextBudgetMax;
 	let metadata: Record<string, unknown> | null = null;
 	if (row.metadata) {
 		try {
@@ -440,6 +499,7 @@ export async function getKeyInfo(repos: GatewayRepositories, id: string) {
 		id: row.id,
 		key: row.key,
 		user_id: row.user_id,
+		workspace_id: row.workspace_id,
 		name: row.name,
 		user_email: row.user_email,
 		budget_max: effectiveBudgetMax,
@@ -447,6 +507,8 @@ export async function getKeyInfo(repos: GatewayRepositories, id: string) {
 		budget_spent: roundGatewayMoney(budget_spent),
 		budget_period: row.budget_period,
 		budget_reset_at,
+		budget_epoch,
+		budget_reserved_micros,
 		status: row.status,
 		metadata,
 		created_at: row.created_at,

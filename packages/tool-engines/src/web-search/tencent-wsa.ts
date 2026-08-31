@@ -5,6 +5,10 @@
 
 import { clampCount, filterResults, normalizeHost } from './domain-filter';
 import { WebSearchProviderError, type WebSearchParams, type WebSearchResult } from './types';
+import {
+	assertToolProviderOutputWithinLimit,
+	readToolProviderResponseText,
+} from '../http/bounded-response';
 
 type TencentWsaPage = {
 	title?: string;
@@ -73,7 +77,10 @@ export async function searchTencentWsaWeb(params: WebSearchParams): Promise<WebS
 		body: JSON.stringify(body),
 	});
 
-	const text = await response.text();
+	const text = await readToolProviderResponseText(response, {
+		provider: 'tencent_wsa',
+		errorConstructor: WebSearchProviderError,
+	});
 	let json: TencentWsaRawResponse;
 	try {
 		json = JSON.parse(text) as TencentWsaRawResponse;
@@ -129,5 +136,10 @@ export async function searchTencentWsaWeb(params: WebSearchParams): Promise<WebS
 		});
 	}
 
-	return filterResults(mapped, params.allowedDomains, params.blockedDomains).slice(0, count);
+	const results = filterResults(mapped, params.allowedDomains, params.blockedDomains).slice(0, count);
+	assertToolProviderOutputWithinLimit(results, {
+		provider: 'tencent_wsa',
+		errorConstructor: WebSearchProviderError,
+	});
+	return results;
 }

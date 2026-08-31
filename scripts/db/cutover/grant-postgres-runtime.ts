@@ -31,11 +31,11 @@ export async function grantPostgresRuntime(env: NodeJS.ProcessEnv = process.env)
 		const [migration] = await sql<Array<{ applied: boolean }>>`
 			SELECT EXISTS (
 				SELECT 1 FROM cinatoken_gateway.schema_migrations
-				WHERE version = '0034_public_model_daily_stats.sql'
+				WHERE version = '0053_workspace_budgets.sql'
 			) AS applied
 		`;
 		if (!migration?.applied) {
-			throw new Error('PostgreSQL migrations are incomplete; 0034_public_model_daily_stats.sql is required.');
+			throw new Error('PostgreSQL migrations are incomplete; 0053_workspace_budgets.sql is required (migration=0053).');
 		}
 
 		await sql.begin(async (tx) => {
@@ -52,15 +52,40 @@ export async function grantPostgresRuntime(env: NodeJS.ProcessEnv = process.env)
 				REVOKE UPDATE, DELETE ON TABLE
 					${GATEWAY_SCHEMA}.api_key_request_logs,
 					${GATEWAY_SCHEMA}.shared_key_earnings,
-					${GATEWAY_SCHEMA}.portal_ledger_entries
+					${GATEWAY_SCHEMA}.portal_ledger_entries,
+					${GATEWAY_SCHEMA}.request_preset_versions,
+					${GATEWAY_SCHEMA}.guardrail_versions,
+					${GATEWAY_SCHEMA}.route_data_policy_audit,
+					${GATEWAY_SCHEMA}.identity_event_inbox
+				FROM ${GATEWAY_RUNTIME_ROLE};
+
+				-- Endpoint apply uses a separately provisioned operator identity. The
+				-- public runtime must not be able to manufacture immutable provenance.
+				REVOKE INSERT, UPDATE, DELETE ON TABLE
+					${GATEWAY_SCHEMA}.model_endpoint_backfill_database_identity,
+					${GATEWAY_SCHEMA}.model_endpoint_backfill_trust_registry,
+					${GATEWAY_SCHEMA}.model_endpoint_backfill_runs,
+					${GATEWAY_SCHEMA}.model_endpoint_evidence_attestations
+				FROM ${GATEWAY_RUNTIME_ROLE};
+				-- Budget reservations are mutable state machines, but deletion would
+				-- erase the evidence used to reconcile admission and settlement.
+				REVOKE DELETE ON TABLE
+					${GATEWAY_SCHEMA}.guardrail_budget_windows,
+					${GATEWAY_SCHEMA}.guardrail_budget_reservations,
+					${GATEWAY_SCHEMA}.user_budget_reservations
 				FROM ${GATEWAY_RUNTIME_ROLE};
 				GRANT USAGE, SELECT, UPDATE
 					ON ALL SEQUENCES IN SCHEMA ${GATEWAY_SCHEMA} TO ${GATEWAY_RUNTIME_ROLE};
 				REVOKE EXECUTE ON ALL FUNCTIONS IN SCHEMA ${GATEWAY_SCHEMA} FROM PUBLIC;
 				GRANT EXECUTE ON ALL FUNCTIONS IN SCHEMA ${GATEWAY_SCHEMA} TO ${GATEWAY_RUNTIME_ROLE};
 
+				-- Future tables fail closed for writes. Every migration batch must finish
+				-- by rerunning this grant step, which explicitly grants existing business
+				-- tables and then narrows immutable/privileged tables above.
 				ALTER DEFAULT PRIVILEGES IN SCHEMA ${GATEWAY_SCHEMA}
-					GRANT SELECT, INSERT, UPDATE, DELETE ON TABLES TO ${GATEWAY_RUNTIME_ROLE};
+					REVOKE INSERT, UPDATE, DELETE ON TABLES FROM ${GATEWAY_RUNTIME_ROLE};
+				ALTER DEFAULT PRIVILEGES IN SCHEMA ${GATEWAY_SCHEMA}
+					GRANT SELECT ON TABLES TO ${GATEWAY_RUNTIME_ROLE};
 				ALTER DEFAULT PRIVILEGES IN SCHEMA ${GATEWAY_SCHEMA}
 					GRANT USAGE, SELECT, UPDATE ON SEQUENCES TO ${GATEWAY_RUNTIME_ROLE};
 				ALTER DEFAULT PRIVILEGES IN SCHEMA ${GATEWAY_SCHEMA}
@@ -71,7 +96,7 @@ export async function grantPostgresRuntime(env: NodeJS.ProcessEnv = process.env)
 		});
 
 		console.log(
-			`Runtime grants applied: schema=${GATEWAY_SCHEMA} role=${GATEWAY_RUNTIME_ROLE} migration=0034`,
+			`Runtime grants applied: schema=${GATEWAY_SCHEMA} role=${GATEWAY_RUNTIME_ROLE} migration=0051`,
 		);
 	} finally {
 		await sql.end({ timeout: 5 });

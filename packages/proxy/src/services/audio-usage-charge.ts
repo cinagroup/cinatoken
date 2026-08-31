@@ -4,8 +4,14 @@
  * - `token`：上游 usage tokens × $/1M × 路由 factor（gpt-4o-*transcribe）
  * 最终扣费禁止用字节估算冒充 token；缺上游 token usage 时计 0 并审计。
  */
-import type { GatewayRepositories, UpstreamProtocol } from '@octafuse/core';
+import type {
+	AudioEndpointPricingOperation,
+	GatewayRepositories,
+	UpstreamProtocol,
+	VerifiedModelEndpointSnapshot,
+} from '@octafuse/core';
 import {
+	AUDIO_ENDPOINT_PRICING_OPERATIONS,
 	buildAudioTokenPrecheckUsage,
 	changedFieldsToJson,
 	computeAudioPerSecondMeteredCost,
@@ -15,6 +21,7 @@ import {
 	EMPTY_AUDIO_TOKEN_USAGE,
 	getBusinessTimezone,
 	getUserBudgetSnapshot,
+	guardrailBudgetUnits,
 	insertRequestUsageAndChargeTx,
 	parsePricingProfile,
 	parseRouteBaseFactors,
@@ -44,17 +51,29 @@ import {
 	type ParsedPricingProfile,
 	type PriceResolutionAuditSide,
 } from '@octafuse/core';
-import { canAffordToolCost } from './tool-usage-charge';
 import type { GatewayCircuitAlertEvent } from './circuit-alert-types';
 import { fireGatewayErrorWebhooks } from './alert-webhook';
 import type { RequestTimingSnapshot } from './request-timing';
-import { resolveAudioBillingDuration } from './egress/audio-duration';
+import {
+	MAX_AUDIO_DURATION_SECONDS,
+	resolveAudioBillingDuration,
+} from './egress/audio-duration';
 import {
 	applyRequestBodyLoggingPolicy,
 	type RequestBodyLoggingMode,
 } from './request-body-log-policy';
+import {
+	ordinaryBudgetAuditSnapshotTransition,
+	ordinaryBudgetSettlementForCriticalWrite,
+	type OrdinaryBudgetUsageSettlement,
+} from './usage-tracker';
+import { resolveEndpointAudioPricing } from './endpoint-audio-billing-pricing';
 
 export type AudioBillingParams = {
+	/** Immutable verified Endpoint captured on the selected route. */
+	endpoint?: VerifiedModelEndpointSnapshot | null;
+	/** Exact selected upstream operation used to select Endpoint pricing evidence. */
+	operation?: AudioEndpointPricingOperation | null;
 	modelPricingProfileJson?: string | null;
 	routePriceOverrideJson?: string | null;
 	/** per_second 计费时长；token 模式仅作预检/日志参考 */
@@ -62,15 +81,30 @@ export type AudioBillingParams = {
 	durationSource?: 'upstream' | 'media' | 'client' | 'estimated' | 'precheck';
 	fileBytes?: number;
 	requestStartedAtMs?: number;
+	/** Request-local snapshot; prevents a timezone change from drifting settlement. */
+	businessTimezone?: string;
 	/** token 模式最终扣费：上游真实 usage；缺省则不计费 */
 	tokenUsage?: AudioTokenUsage | null;
-	/** TTS 最终扣费：上游真实 usage.characters；缺省则不计费 */
+	/** TTS 最终扣费：已验证的计费字符数（按字符 TTS 使用请求输入）；缺省则不可证明。 */
 	characters?: number | null;
 	/** 目录 `models.id`，用于查找用户 Charged 折扣 */
 	catalogModelId?: string;
 	/** `users.charged_cost_factors` JSON */
 	userChargedCostFactorsJson?: string | null;
 };
+
+/**
+ * Resolve a route operation to the exact Endpoint audio pricing operation.
+ * This intentionally performs no trimming or aliasing: pricing evidence must
+ * match the canonical operation selected by the route.
+ */
+export function resolveCanonicalAudioEndpointPricingOperation(
+	operation: string | null | undefined,
+): AudioEndpointPricingOperation | null {
+	return AUDIO_ENDPOINT_PRICING_OPERATIONS.find(
+		(candidate) => candidate === operation,
+	) ?? null;
+}
 
 export type AudioCostBreakdown = {
 	durationSeconds: number;
@@ -115,15 +149,20 @@ function pricingAtUtcFromParams(requestStartedAtMs?: number): Date {
 async function resolveRouteFactors(
 	repos: GatewayRepositories,
 	routePriceOverrideJson: string | null | undefined,
-	requestStartedAtMs?: number
+	requestStartedAtMs?: number,
+	businessTimezoneSnapshot?: string,
 ): Promise<{
 	meteredFactor: number;
 	chargedFactor: number;
+	pricingAtUtc: string;
+	businessTimezone: string;
 	meteredAuditExtras: Pick<PriceResolutionAuditSide, 'base_factor' | 'schedule' | 'effective_factor'>;
 	chargedAuditExtras: Pick<PriceResolutionAuditSide, 'base_factor' | 'schedule' | 'effective_factor'>;
 }> {
 	const pricingAtUtc = pricingAtUtcFromParams(requestStartedAtMs);
-	const businessTimezone = await getBusinessTimezone(repos);
+	const businessTimezone = businessTimezoneSnapshot?.trim()
+		? businessTimezoneSnapshot
+		: await getBusinessTimezone(repos);
 	const baseFactors = parseRouteBaseFactors(routePriceOverrideJson ?? null);
 	const schedule = parseRoutePricingSchedule(routePriceOverrideJson ?? null);
 	const chargedSch = resolveDailyScheduleFactor(schedule.charged, pricingAtUtc, businessTimezone);
@@ -146,6 +185,8 @@ async function resolveRouteFactors(
 	return {
 		meteredFactor,
 		chargedFactor,
+		pricingAtUtc: pricingAtUtc.toISOString(),
+		businessTimezone,
 		meteredAuditExtras: schSide(meteredSch, baseFactors.meteredFactor, meteredFactor),
 		chargedAuditExtras: schSide(chargedSch, baseFactors.chargedFactor, chargedFactor),
 	};
@@ -259,7 +300,7 @@ function buildAudioPerCharacterCosts(
 				billable_characters: billableCharacters,
 				price_per_character: pricePerCharacter,
 				minimum_characters: profile.audio.minimum_characters ?? 0,
-				usage_source: 'upstream',
+				usage_source: 'validated_request_input',
 				supplier: {
 					path: 'profile',
 					source: 'model_x_factor',
@@ -401,6 +442,108 @@ function zeroAudioCostBreakdown(
 	);
 }
 
+function endpointAudioBillingKind(
+	billing: AudioBillingParams,
+): AudioCostBreakdown['billingKind'] {
+	const operation = billing.operation ?? undefined;
+	const meter = operation
+		? billing.endpoint?.audioCapabilities?.pricing_by_operation[operation]?.meter
+		: undefined;
+	return meter?.kind === 'tokens'
+		? 'audio_tokens'
+		: meter?.kind === 'characters'
+			? 'audio_per_character'
+			: 'audio_per_second';
+}
+
+function resolveAudioCostsForEndpoint(
+	billing: AudioBillingParams,
+	factors: Awaited<ReturnType<typeof resolveRouteFactors>>,
+): AudioCostBreakdown {
+	const operation = billing.operation ?? undefined;
+	const facts = operation?.startsWith('audio.speech')
+		? { unicodeCodePoints: billing.characters ?? undefined }
+		: { durationSeconds: billing.durationSeconds };
+	const resolved = resolveEndpointAudioPricing(billing.endpoint, operation, facts);
+	const billingKind = endpointAudioBillingKind(billing);
+	if (!resolved.ok) {
+		return zeroAudioCostBreakdown(billing, factors, billingKind, {
+			source: 'verified_model_endpoint',
+			endpoint_id: billing.endpoint?.id ?? null,
+			operation: operation ?? null,
+			error: resolved.reason,
+			message: resolved.message,
+		});
+	}
+
+	const value = resolved.value;
+	const meteredCost = roundGatewayMoney(
+		value.standardBaseCost * factors.meteredFactor,
+	);
+	const standardCost = roundGatewayMoney(value.standardBaseCost);
+	const chargedCost = roundGatewayMoney(
+		value.chargedBaseCost * factors.chargedFactor,
+	);
+	return withUserAudioChargedFactor(
+		{
+			durationSeconds: value.meterKind === 'duration' ? value.actualUnits : 0,
+			billableSeconds: value.meterKind === 'duration' ? value.billableUnits : 0,
+			pricePerSecond: value.meterKind === 'duration' ? value.standardUnitPrice : 0,
+			characters: value.meterKind === 'characters' ? value.actualUnits : 0,
+			billableCharacters: value.meterKind === 'characters' ? value.billableUnits : 0,
+			pricePerCharacter: value.meterKind === 'characters' ? value.standardUnitPrice : 0,
+			meteredCost,
+			standardCost,
+			chargedCost,
+			meteredFactor: factors.meteredFactor,
+			chargedFactor: factors.chargedFactor,
+			pricingAuditJson: JSON.stringify({
+				v: PRICING_AUDIT_JSON_SCHEMA_VERSION,
+				kind: billingKind,
+				...value.audit,
+				actual_units: value.actualUnits,
+				billable_units: value.billableUnits,
+				minimum_units: value.minimumUnits,
+				increment_units: value.incrementUnits,
+				standard_meter_cost: value.standardMeterCost,
+				standard_request_fee: value.standardRequestFee,
+				standard_base_cost: value.standardBaseCost,
+				charged_meter_cost: value.chargedMeterCost,
+				charged_request_fee: value.chargedRequestFee,
+				charged_base_cost: value.chargedBaseCost,
+				pricing_at: factors.pricingAtUtc,
+				business_timezone: factors.businessTimezone,
+				duration_source: value.meterKind === 'duration'
+					? billing.durationSource ?? null
+					: null,
+				file_bytes: billing.fileBytes ?? null,
+				snapshot: {
+					supplier: {
+						...value.audit,
+						source: 'verified_model_endpoint_x_factor',
+						...factors.meteredAuditExtras,
+						cost: meteredCost,
+					},
+					standard: {
+						...value.audit,
+						source: 'verified_model_endpoint',
+						cost: standardCost,
+					},
+					user_charge: {
+						...value.audit,
+						source: 'verified_model_endpoint_discount_x_factor',
+						...factors.chargedAuditExtras,
+						cost: chargedCost,
+					},
+				},
+			}),
+			billingKind,
+			logTokens: { inputTokens: 0, outputTokens: 0, totalTokens: 0 },
+		},
+		billing,
+	);
+}
+
 function resolveAudioCostsForProfile(
 	billing: AudioBillingParams,
 	profile: ParsedPricingProfile | null,
@@ -419,7 +562,7 @@ function resolveAudioCostsForProfile(
 			(options?.allowTokenPrecheckEstimate
 				? buildAudioTokenPrecheckUsage(billing.durationSeconds)
 				: null);
-		if (!usage || (usage.input_tokens === 0 && usage.output_tokens === 0 && usage.total_tokens === 0)) {
+		if (!hasAuthoritativeAudioTokenUsage(usage)) {
 			return zeroAudioCostBreakdown(billing, factors, 'audio_tokens', {
 				error: 'missing_upstream_token_usage',
 			});
@@ -434,9 +577,13 @@ function resolveAudioCostsForProfile(
 	}
 
 	if (mode === 'per_character' && profile && profileHasAudioPerCharacterPricing(profile)) {
-		if (billing.characters == null) {
+		if (
+			billing.characters == null
+			|| !Number.isFinite(billing.characters)
+			|| billing.characters <= 0
+		) {
 			return zeroAudioCostBreakdown(billing, factors, 'audio_per_character', {
-				error: 'missing_upstream_character_usage',
+				error: 'missing_authoritative_character_count',
 			});
 		}
 		return buildAudioPerCharacterCosts(billing, profile, factors);
@@ -447,13 +594,16 @@ function resolveAudioCostsForProfile(
 	});
 }
 
-/** 单条 TTS 路由的按字符成本；characters 必须来自上游，null 会明确审计为缺失。 */
+/** 单条 TTS 路由的按字符成本；characters 必须来自已验证的计费输入，null 会明确审计为缺失。 */
 export async function estimateAudioSpeechCosts(
 	repos: GatewayRepositories,
 	billing: Pick<
 		AudioBillingParams,
+		| 'endpoint'
+		| 'operation'
 		| 'modelPricingProfileJson'
 		| 'requestStartedAtMs'
+		| 'businessTimezone'
 		| 'characters'
 		| 'catalogModelId'
 		| 'userChargedCostFactorsJson'
@@ -465,20 +615,31 @@ export async function estimateAudioSpeechCosts(
 		...billing,
 		durationSeconds: 0,
 	};
-	return resolveAudioCostsForProfile(
-		params,
-		parsePricingProfile(billing.modelPricingProfileJson ?? null),
-		await resolveRouteFactors(repos, billing.routePriceOverrideJson, billing.requestStartedAtMs)
+	const factors = await resolveRouteFactors(
+		repos,
+		billing.routePriceOverrideJson,
+		billing.requestStartedAtMs,
+		billing.businessTimezone,
 	);
+	return billing.endpoint
+		? resolveAudioCostsForEndpoint(params, factors)
+		: resolveAudioCostsForProfile(
+				params,
+				parsePricingProfile(billing.modelPricingProfileJson ?? null),
+				factors,
+			);
 }
 
-/** TTS 预算预检允许用输入字符数；最终扣费仍只接受上游 usage.characters。 */
+/** TTS 预算预检与按字符最终扣费都使用同一份已验证请求输入字符数。 */
 export async function estimateAudioSpeechBudgetPrecheck(
 	repos: GatewayRepositories,
 	billing: Pick<
 		AudioBillingParams,
+		| 'endpoint'
+		| 'operation'
 		| 'modelPricingProfileJson'
 		| 'requestStartedAtMs'
+		| 'businessTimezone'
 		| 'catalogModelId'
 		| 'userChargedCostFactorsJson'
 	> & {
@@ -492,20 +653,31 @@ export async function estimateAudioSpeechBudgetPrecheck(
 		durationSource: 'precheck',
 		characters: billing.inputCharacters,
 	};
-	const profile = parsePricingProfile(billing.modelPricingProfileJson ?? null);
+	const profile = billing.endpoint
+		? null
+		: parsePricingProfile(billing.modelPricingProfileJson ?? null);
 	let best: AudioCostBreakdown | null = null;
 	for (const override of routePriceOverrides.length > 0 ? routePriceOverrides : [null]) {
-		const factors = await resolveRouteFactors(repos, override, billing.requestStartedAtMs);
-		const costs = resolveAudioCostsForProfile(
-			{ ...params, routePriceOverrideJson: override },
-			profile,
-			factors
+		const factors = await resolveRouteFactors(
+			repos,
+			override,
+			billing.requestStartedAtMs,
+			billing.businessTimezone,
 		);
+		const routeParams = { ...params, routePriceOverrideJson: override };
+		const costs = billing.endpoint
+			? resolveAudioCostsForEndpoint(routeParams, factors)
+			: resolveAudioCostsForProfile(routeParams, profile, factors);
 		if (!best || costs.chargedCost >= best.chargedCost) best = costs;
 	}
 	return best ?? zeroAudioCostBreakdown(
 		params,
-		await resolveRouteFactors(repos, null, billing.requestStartedAtMs),
+		await resolveRouteFactors(
+			repos,
+			null,
+			billing.requestStartedAtMs,
+			billing.businessTimezone,
+		),
 		'audio_per_character',
 		{ error: 'missing_audio_pricing' }
 	);
@@ -519,6 +691,8 @@ export async function estimateAudioBudgetPrecheck(
 		mimeType?: string;
 		fileBytesForParse?: Uint8Array;
 		clientDurationSeconds?: number;
+		/** Internal, server-enforced upper bound; never populate from client input. */
+		verifiedDurationCeilingSeconds?: number;
 	},
 	routePriceOverrides: Array<string | null | undefined>
 ): Promise<AudioCostBreakdown> {
@@ -529,40 +703,145 @@ export async function estimateAudioBudgetPrecheck(
 		fileBytesForParse: billing.fileBytesForParse,
 		clientSeconds: billing.clientDurationSeconds,
 	});
-	const durationSeconds = resolved.seconds;
+	// Client duration and compressed-byte heuristics are not server-verifiable
+	// admission bounds: a low-bitrate file can be much longer than either hint.
+	// Media-container duration is deterministic. A server-enforced transport
+	// limiter may provide its own verified ceiling (for example realtime PCM);
+	// every other pre-dispatch source reserves the same 25-minute ceiling used
+	// by final billing.
+	const verifiedDurationCeiling = billing.verifiedDurationCeilingSeconds;
+	const hasVerifiedDurationCeiling = Number.isFinite(verifiedDurationCeiling)
+		&& Number(verifiedDurationCeiling) >= 0
+		&& Number(verifiedDurationCeiling) <= MAX_AUDIO_DURATION_SECONDS;
+	const durationSeconds = resolved.source === 'media'
+		? resolved.seconds
+		: hasVerifiedDurationCeiling
+			? Number(verifiedDurationCeiling)
+			: MAX_AUDIO_DURATION_SECONDS;
 	const params: AudioBillingParams = {
 		...billing,
 		durationSeconds,
-		durationSource: resolved.source === 'estimated' ? 'precheck' : resolved.source,
+		durationSource: resolved.source === 'media' ? 'media' : 'precheck',
 	};
-	const profile = parsePricingProfile(billing.modelPricingProfileJson ?? null);
+	const profile = billing.endpoint
+		? null
+		: parsePricingProfile(billing.modelPricingProfileJson ?? null);
 	let maxCharged = 0;
 	let best: AudioCostBreakdown | null = null;
 	const overrides =
 		routePriceOverrides.length > 0 ? routePriceOverrides : [billing.routePriceOverrideJson];
 	for (const override of overrides) {
-		const factors = await resolveRouteFactors(repos, override, billing.requestStartedAtMs);
-		const costs = resolveAudioCostsForProfile(
-			{ ...params, routePriceOverrideJson: override },
-			profile,
-			factors,
-			{ allowTokenPrecheckEstimate: true }
+		const factors = await resolveRouteFactors(
+			repos,
+			override,
+			billing.requestStartedAtMs,
+			billing.businessTimezone,
 		);
+		const routeParams = { ...params, routePriceOverrideJson: override };
+		const costs = billing.endpoint
+			? resolveAudioCostsForEndpoint(routeParams, factors)
+			: resolveAudioCostsForProfile(
+					routeParams,
+					profile,
+					factors,
+					{ allowTokenPrecheckEstimate: true },
+				);
 		if (costs.chargedCost >= maxCharged) {
 			maxCharged = costs.chargedCost;
 			best = costs;
 		}
 	}
-	return best ?? zeroAudioCostBreakdown(params, await resolveRouteFactors(repos, null), 'audio_per_second', {
+	return best ?? zeroAudioCostBreakdown(params, await resolveRouteFactors(
+		repos,
+		null,
+		billing.requestStartedAtMs,
+		billing.businessTimezone,
+	), 'audio_per_second', {
 		error: 'missing_audio_pricing',
 	});
 }
 
-export const canAffordAudioCost = canAffordToolCost;
+function hasAuthoritativeAudioTokenUsage(
+	usage: AudioTokenUsage | null | undefined,
+): usage is AudioTokenUsage {
+	return usage != null
+		&& (usage.input_tokens > 0 || usage.output_tokens > 0 || usage.total_tokens > 0);
+}
+
+/** Convert the conservative audio charged-cost precheck into an integer lease ceiling. */
+export function audioGuardrailBudgetMicros(chargedCost: number): number {
+	if (chargedCost === Number.POSITIVE_INFINITY) return Number.MAX_SAFE_INTEGER;
+	return guardrailBudgetUnits(chargedCost, 'ceiling');
+}
+
+export function audioGuardrailSettlementMode(params: {
+	status: 'success' | 'error';
+	/** A consumed 2xx response may be logged as an error after output validation. */
+	chargeOnError?: boolean;
+	billingMode: 'per_second' | 'token' | 'per_character' | null;
+	durationSeconds: number;
+	durationSource?: AudioBillingParams['durationSource'];
+	tokenUsage: AudioTokenUsage | null | undefined;
+	characters: number | null | undefined;
+	usageUnavailable?: boolean;
+}): 'actual' | 'reserved' {
+	// A known terminal provider rejection is a known zero debit. An output-
+	// blocked or otherwise consumed response still needs the metric required by
+	// its billing mode before either budget ledger can settle an actual amount.
+	const billingCommitted = params.status === 'success' || params.chargeOnError === true;
+	if (!billingCommitted) return 'actual';
+	if (params.billingMode === 'per_character') {
+		return params.characters == null || !Number.isFinite(params.characters) || params.characters < 0
+			? 'reserved'
+			: 'actual';
+	}
+	if (params.usageUnavailable) return 'reserved';
+	if (params.billingMode === 'token') {
+		return hasAuthoritativeAudioTokenUsage(params.tokenUsage) ? 'actual' : 'reserved';
+	}
+	if (params.billingMode === 'per_second') {
+		if (params.durationSeconds < 0 || !Number.isFinite(params.durationSeconds)) return 'reserved';
+		if (
+			params.durationSeconds === 0
+			&& params.durationSource !== 'upstream'
+			&& params.durationSource !== 'media'
+		) {
+			return 'reserved';
+		}
+		if (
+			params.durationSource != null
+			&& params.durationSource !== 'upstream'
+			&& params.durationSource !== 'media'
+		) {
+			return 'reserved';
+		}
+		return 'actual';
+	}
+	return 'actual';
+}
+
+export function resolveAudioUsageWriteIdentity(params: {
+	requestLogId?: string;
+	requestStartedAtMs?: number;
+}): { requestLogId: string; budgetAccountedAt: string } {
+	const requestedAccountedAt =
+		typeof params.requestStartedAtMs === 'number' && Number.isFinite(params.requestStartedAtMs)
+			? new Date(params.requestStartedAtMs)
+			: new Date();
+	return {
+		requestLogId: params.requestLogId ?? crypto.randomUUID(),
+		budgetAccountedAt: Number.isNaN(requestedAccountedAt.getTime())
+			? new Date().toISOString()
+			: requestedAccountedAt.toISOString(),
+	};
+}
 
 export type RecordAudioUsageParams = {
 	repos: GatewayRepositories;
+	/** Stable request correlation id shared with the Guardrail reservation. */
+	requestLogId?: string;
 	apiKeyId: string;
+	workspaceId: string;
 	userId: string;
 	userEmail: string | null;
 	modelId: string;
@@ -587,8 +866,11 @@ export type RecordAudioUsageParams = {
 		attempted_target: string | null;
 		result: string;
 	} | null;
+	providerRoutingTrace?: import('./model-router').RouteResult['providerRoutingTrace'] | null;
 	routeGroup: string;
 	status: 'success' | 'error';
+	/** Log an error response while still charging a known, consumed upstream result. */
+	chargeOnError?: boolean;
 	latencyMs: number;
 	errorMessage?: string | null;
 	billing: AudioBillingParams;
@@ -599,54 +881,139 @@ export type RecordAudioUsageParams = {
 	timing?: RequestTimingSnapshot | null;
 	circuitEvents?: GatewayCircuitAlertEvent[];
 	suppressErrorAlert?: boolean;
+	guardrailBudgetSettlement?: {
+		requestId: string;
+		/** Set when the usage promise itself failed or was otherwise unavailable. */
+		usageUnavailable?: boolean;
+		/** Explicit conservative settlement for a consumed response whose usage body was bounded away. */
+		mode?: 'actual' | 'reserved';
+	};
+	/** Ordinary user-budget reservation settled atomically with this usage write. */
+	ordinaryBudgetSettlement?: OrdinaryBudgetUsageSettlement;
 };
 
 export async function recordAudioUsage(params: RecordAudioUsageParams): Promise<{
 	requestLogId: string;
 	chargedCost: number;
 }> {
-	const profile = parsePricingProfile(params.billing.modelPricingProfileJson ?? null);
+	const hasEndpointPricing = params.billing.endpoint != null;
+	const routedPricingOperation = resolveCanonicalAudioEndpointPricingOperation(
+		params.upstreamOperation,
+	);
+	if (
+		hasEndpointPricing
+		&& (
+			params.billing.endpoint!.modelId !== params.modelId
+			|| params.billing.endpoint!.providerId !== params.providerId
+			|| params.billing.operation == null
+			|| routedPricingOperation == null
+			|| params.billing.operation !== routedPricingOperation
+		)
+	) {
+		throw new Error(
+			'Verified audio endpoint pricing identity or operation does not match routed usage',
+		);
+	}
+	const profile = hasEndpointPricing
+		? null
+		: parsePricingProfile(params.billing.modelPricingProfileJson ?? null);
 	const factors = await resolveRouteFactors(
 		params.repos,
 		params.billing.routePriceOverrideJson,
-		params.billing.requestStartedAtMs
+		params.billing.requestStartedAtMs,
+		params.billing.businessTimezone,
 	);
 
+	const endpointKind = endpointAudioBillingKind(params.billing);
+	const billingMode = hasEndpointPricing
+		? endpointKind === 'audio_tokens'
+			? 'token'
+			: endpointKind === 'audio_per_character'
+				? 'per_character'
+				: 'per_second'
+		: resolveAudioBillingMode(profile);
+	const billingCommitted = params.status === 'success' || params.chargeOnError === true;
+	const derivedSettlementMode = audioGuardrailSettlementMode({
+		status: params.status,
+		chargeOnError: params.chargeOnError,
+		billingMode,
+		durationSeconds: params.billing.durationSeconds,
+		durationSource: params.billing.durationSource,
+		tokenUsage: params.billing.tokenUsage,
+		characters: params.billing.characters,
+		usageUnavailable: params.guardrailBudgetSettlement?.usageUnavailable,
+	});
+	// Guardrail and ordinary budgets describe the same committed debit. Either
+	// caller-observed uncertainty or a missing billing-mode metric keeps both at
+	// the admitted ceiling; an explicit "actual" must never weaken that result.
+	const sharedSettlementMode: 'actual' | 'reserved' =
+		params.guardrailBudgetSettlement?.mode === 'reserved'
+		|| params.ordinaryBudgetSettlement?.unknownCost === true
+		|| derivedSettlementMode === 'reserved'
+			? 'reserved'
+			: 'actual';
+	const ordinaryBudgetSettlement = params.ordinaryBudgetSettlement
+		? {
+				...params.ordinaryBudgetSettlement,
+				unknownCost: sharedSettlementMode === 'reserved',
+			}
+		: undefined;
 	let costs: AudioCostBreakdown;
-	if (params.status === 'error') {
-		const mode = resolveAudioBillingMode(profile);
+	if (!billingCommitted) {
 		costs = zeroAudioCostBreakdown(
 			params.billing,
 			factors,
-			mode === 'token'
+			billingMode === 'token'
 				? 'audio_tokens'
-				: mode === 'per_character'
+				: billingMode === 'per_character'
 					? 'audio_per_character'
 					: 'audio_per_second',
 			{ error: 'request_failed' }
 		);
 	} else {
-		// 最终扣费：token 模式只用上游 usage，禁止预检估算
-		costs = resolveAudioCostsForProfile(params.billing, profile, factors, {
-			allowTokenPrecheckEstimate: false,
-		});
+		// Endpoint token meters remain fail-closed until authoritative component
+		// usage exists. Legacy token mode likewise never uses the precheck estimate.
+		costs = hasEndpointPricing
+			? resolveAudioCostsForEndpoint(params.billing, factors)
+			: resolveAudioCostsForProfile(params.billing, profile, factors, {
+					allowTokenPrecheckEstimate: false,
+				});
 	}
 
-	const chargedCost = params.status === 'error' ? 0 : costs.chargedCost;
-	const meteredCost = params.status === 'error' ? 0 : costs.meteredCost;
-	const standardCost = params.status === 'error' ? 0 : costs.standardCost;
-	const shouldChargeBudget = params.status !== 'error' && chargedCost > 0;
-	const id = crypto.randomUUID();
-	const userSnapshot = shouldChargeBudget
+	const chargedCost = billingCommitted ? costs.chargedCost : 0;
+	const meteredCost = billingCommitted ? costs.meteredCost : 0;
+	const standardCost = billingCommitted ? costs.standardCost : 0;
+	const shouldChargeBudget = billingCommitted && chargedCost > 0;
+	const writeIdentity = resolveAudioUsageWriteIdentity({
+		requestLogId: params.requestLogId,
+		requestStartedAtMs: params.billing.requestStartedAtMs,
+	});
+	const id = writeIdentity.requestLogId;
+	const hasOrdinaryBudgetSettlement = ordinaryBudgetSettlement != null;
+	const userSnapshot = shouldChargeBudget || hasOrdinaryBudgetSettlement
 		? await getUserBudgetSnapshot(params.repos, params.userId)
 		: null;
 	const beforeSpent = userSnapshot?.budgetSpent ?? 0;
-	const userRow = shouldChargeBudget ? await params.repos.users.getById(params.userId) : null;
-	const afterSpentVal = roundGatewayMoney(beforeSpent + chargedCost);
+	const userRow = shouldChargeBudget || hasOrdinaryBudgetSettlement
+		? await params.repos.users.getById(params.userId)
+		: null;
+	const ordinaryAuditTransition = ordinaryBudgetAuditSnapshotTransition({
+		settlement: ordinaryBudgetSettlement,
+		currentBudgetEpoch: userRow == null ? null : Number(userRow.budget_epoch),
+		currentReservedMicros: userRow == null ? 0 : Number(userRow.budget_reserved_micros),
+		chargedCost,
+		shouldChargeBudget,
+	});
+	const afterSpentVal = roundGatewayMoney(beforeSpent + ordinaryAuditTransition.auditCharge);
 	let usageSnaps: { before: string; after: string; changed: string | null } | null = null;
 	if (userRow) {
 		const beforeS = userRowToSnapshot(userRow);
-		const afterS = snapshotWithOverrides(beforeS, { budget_spent: afterSpentVal });
+		const afterS = ordinaryBudgetSettlement && !ordinaryAuditTransition.settlementEpochMatches
+			? beforeS
+			: snapshotWithOverrides(beforeS, {
+					budget_spent: afterSpentVal,
+					budget_reserved_micros: ordinaryAuditTransition.afterReservedMicros,
+				});
 		usageSnaps = {
 			before: snapshotToJson(beforeS),
 			after: snapshotToJson(afterS),
@@ -655,8 +1022,12 @@ export async function recordAudioUsage(params: RecordAudioUsageParams): Promise<
 	}
 
 	const usage = params.billing.tokenUsage ?? EMPTY_AUDIO_TOKEN_USAGE;
+	const budgetAccountedAt = writeIdentity.budgetAccountedAt;
+	const guardrailSettlementMode = params.guardrailBudgetSettlement
+		? sharedSettlementMode
+		: null;
 	const rawUsage =
-		params.status === 'success'
+		billingCommitted
 			? JSON.stringify({
 					billing_kind: costs.billingKind,
 					duration_seconds: costs.durationSeconds,
@@ -688,6 +1059,7 @@ export async function recordAudioUsage(params: RecordAudioUsageParams): Promise<
 			id,
 			userId: params.userId,
 			apiKeyId: params.apiKeyId,
+			workspaceId: params.workspaceId,
 			userEmail: params.userEmail,
 			modelId: params.modelId,
 			providerId: params.providerId,
@@ -715,16 +1087,18 @@ export async function recordAudioUsage(params: RecordAudioUsageParams): Promise<
 				pool: params.routePoolId ?? null,
 				target: params.routeTargetId ?? null,
 				...(params.stickyTrace ? { sticky: params.stickyTrace } : {}),
+				...(params.providerRoutingTrace ? { provider_routing: params.providerRoutingTrace } : {}),
 			}),
-			inputTokens: params.status === 'success' ? costs.logTokens.inputTokens : 0,
-			outputTokens: params.status === 'success' ? costs.logTokens.outputTokens : 0,
+			inputTokens: billingCommitted ? costs.logTokens.inputTokens : 0,
+			outputTokens: billingCommitted ? costs.logTokens.outputTokens : 0,
 			cacheReadTokens: 0,
 			cacheWriteTokens: 0,
 			reasoningTokens: 0,
-			totalTokens: params.status === 'success' ? costs.logTokens.totalTokens : 0,
+			totalTokens: billingCommitted ? costs.logTokens.totalTokens : 0,
 			meteredCost,
 			standardCost,
 			chargedCost,
+			budgetAccountedAt,
 			routeGroup: params.routeGroup,
 			status: params.status,
 			latencyMs: params.latencyMs,
@@ -744,11 +1118,11 @@ export async function recordAudioUsage(params: RecordAudioUsageParams): Promise<
 			inputImageCount: 0,
 			outputImageCount: 0,
 			audioDurationSeconds:
-				params.status === 'success' && costs.billingKind !== 'audio_per_character'
+				billingCommitted && costs.billingKind !== 'audio_per_character'
 					? costs.durationSeconds
 					: null,
 			audioCharacters:
-				params.status === 'success' && costs.billingKind === 'audio_per_character'
+				billingCommitted && costs.billingKind === 'audio_per_character'
 					? costs.characters
 					: null,
 			providerKeyId: params.providerKeyId ?? null,
@@ -760,6 +1134,18 @@ export async function recordAudioUsage(params: RecordAudioUsageParams): Promise<
 		shouldChargeBudget,
 		beforeSpent,
 		chargedCost,
+		guardrailBudgetSettlement: params.guardrailBudgetSettlement
+			? {
+					requestId: params.guardrailBudgetSettlement.requestId,
+					mode: guardrailSettlementMode!,
+					reason: guardrailSettlementMode === 'reserved'
+						? 'audio_usage_unavailable_after_dispatch'
+						: 'audio_request_usage_settled',
+				}
+			: undefined,
+		userBudgetSettlement: ordinaryBudgetSettlementForCriticalWrite(
+			ordinaryBudgetSettlement,
+		),
 		audit: {
 			apiKeyId: params.apiKeyId,
 			eventType: 'usage_charge',

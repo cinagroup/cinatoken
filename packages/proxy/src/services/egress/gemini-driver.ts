@@ -13,6 +13,10 @@ import type { UsageFromStream } from '../proxy';
 import { buildRouteRequestBody } from '../route-default-params';
 import { extractUpstreamRequestId, normalizeUpstreamId } from './upstream-request-id';
 import type { RequestTimingAttempt, RequestTimingCollector } from '../request-timing';
+import { markUpstreamOutcomeUnknown, type ProxyDispatchMeta, type ProxyDispatchResult } from '../failover-dispatch';
+import { parseSseDataLine } from './sse-data-line';
+import { assertTextUpstreamHttpUrl } from './text-upstream-url';
+import { readBoundedTextJsonObject, rebuildTextJsonResponse } from './text-json-response';
 
 const EMPTY_USAGE_LOCAL: UsageFromStream = {
   input_tokens: 0,
@@ -24,8 +28,9 @@ const EMPTY_USAGE_LOCAL: UsageFromStream = {
   raw_usage: null,
 };
 
-const POST_DISCONNECT_DRAIN_MS = 90_000;
-const decoder = new TextDecoder();
+/** Keep stream settlement inside the Workers post-response waitUntil grace window. */
+export const GEMINI_POST_DISCONNECT_DRAIN_MS = 25_000;
+export const GEMINI_SSE_MAX_LINE_CHARS = 256 * 1024;
 
 type GeminiUsageMetadata = {
   promptTokenCount?: number;
@@ -37,7 +42,7 @@ type GeminiUsageMetadata = {
   thoughts_token_count?: number;
 };
 
-type SSEState = { lineBuffer: string };
+type SSEState = { lineBuffer: string; decoder: TextDecoder };
 
 function thoughtsTokenCountFromGemini(u: GeminiUsageMetadata): number {
   const n = u.thoughtsTokenCount ?? u.thoughts_token_count;
@@ -109,9 +114,9 @@ export function hasGeminiContentPart(parsed: {
   return false;
 }
 
-function parseJsonUsage(text: string, usage: UsageFromStream, timing?: RequestTimingCollector | null): void {
+function applyParsedGeminiUsage(parsed: Record<string, unknown>, usage: UsageFromStream, timing?: RequestTimingCollector | null): void {
   try {
-    const parsed = JSON.parse(text) as {
+    const value = parsed as {
       usageMetadata?: GeminiUsageMetadata;
       candidates?: Array<{
         usageMetadata?: GeminiUsageMetadata;
@@ -124,29 +129,47 @@ function parseJsonUsage(text: string, usage: UsageFromStream, timing?: RequestTi
       request_id?: string;
     };
     timing?.markFirstEvent();
-    if (hasGeminiReasoningPart(parsed)) timing?.markFirstReasoningToken();
-    if (hasGeminiContentPart(parsed)) timing?.markFirstToken();
+    if (hasGeminiReasoningPart(value)) timing?.markFirstReasoningToken();
+    if (hasGeminiContentPart(value)) timing?.markFirstToken();
     // message id 为 Gemini 顶层 `responseId`（流式每个 chunk 亦带），取首个。
     if (!usage.upstreamMessageId) {
-      const msgId = normalizeUpstreamId(parsed.responseId);
+      const msgId = normalizeUpstreamId(value.responseId);
       if (msgId) usage.upstreamMessageId = msgId;
     }
     // 部分 Gemini 代理在 body 追加 requestId；与 responseId 区分，供日志 request id 解析。
     if (!usage.upstreamBodyRequestId) {
-      const reqId = normalizeUpstreamId(parsed.requestId ?? parsed.request_id);
+      const reqId = normalizeUpstreamId(value.requestId ?? value.request_id);
       if (reqId) usage.upstreamBodyRequestId = reqId;
     }
-    if (parsed.usageMetadata) {
-      applyUsage(usage, usageFromGemini(parsed.usageMetadata));
+    if (value.usageMetadata) {
+      applyUsage(usage, usageFromGemini(value.usageMetadata));
       return;
     }
-    for (const c of parsed.candidates ?? []) {
+    for (const c of value.candidates ?? []) {
       if (c.usageMetadata) {
         applyUsage(usage, usageFromGemini(c.usageMetadata));
       }
     }
   } catch {
-    // ignore parse failures
+    usage.stream_error = usage.stream_error ?? 'Malformed Gemini response data';
+  }
+}
+
+function parseJsonUsage(text: string, usage: UsageFromStream, timing?: RequestTimingCollector | null): void {
+  try {
+    const parsed = JSON.parse(text) as unknown;
+    if (parsed == null || typeof parsed !== 'object' || Array.isArray(parsed)) {
+      throw new Error('Gemini response data must be an object');
+    }
+    applyParsedGeminiUsage(parsed as Record<string, unknown>, usage, timing);
+  } catch {
+    usage.stream_error = usage.stream_error ?? 'Malformed Gemini response data';
+  }
+}
+
+function assertGeminiSseLineWithinLimit(line: string): void {
+  if (line.length > GEMINI_SSE_MAX_LINE_CHARS) {
+    throw new Error('Gemini SSE line exceeds the gateway limit');
   }
 }
 
@@ -156,15 +179,18 @@ function parseSSEChunk(
   usage: UsageFromStream,
   timing?: RequestTimingCollector | null
 ): void {
-  state.lineBuffer += decoder.decode(chunk, { stream: true });
+  state.lineBuffer += state.decoder.decode(chunk, { stream: true });
   const lines = state.lineBuffer.split('\n');
   state.lineBuffer = lines.pop() ?? '';
   for (const line of lines) {
-    if (!line.startsWith('data: ')) continue;
-    const data = line.slice(6).trim();
+    assertGeminiSseLineWithinLimit(line);
+    const parsedData = parseSseDataLine(line);
+    if (parsedData === null) continue;
+    const data = parsedData.trim();
     if (!data || data === '[DONE]') continue;
     parseJsonUsage(data, usage, timing);
   }
+  assertGeminiSseLineWithinLimit(state.lineBuffer);
 }
 
 function processRemainingLineBuffer(
@@ -172,9 +198,12 @@ function processRemainingLineBuffer(
   usage: UsageFromStream,
   timing?: RequestTimingCollector | null
 ): void {
+  state.lineBuffer += state.decoder.decode();
+  assertGeminiSseLineWithinLimit(state.lineBuffer);
   const line = state.lineBuffer.trim();
-  if (!line.startsWith('data: ')) return;
-  const data = line.slice(6).trim();
+  const parsedData = parseSseDataLine(line);
+  if (parsedData === null) return;
+  const data = parsedData.trim();
   if (!data || data === '[DONE]') return;
   parseJsonUsage(data, usage, timing);
 }
@@ -189,15 +218,33 @@ async function pumpWithUsageTracking(
 ): Promise<void> {
   const reader = upstream.getReader();
   const writer = downstream.getWriter();
-  const state: SSEState = { lineBuffer: '' };
+  const state: SSEState = {
+    lineBuffer: '',
+    decoder: new TextDecoder('utf-8', { fatal: true, ignoreBOM: true }),
+  };
   let clientDisconnected = false;
   let disconnectTime = 0;
+  let drainCancelTimer: ReturnType<typeof setTimeout> | undefined;
 
-  const onAbort = (): void => {
+  const markClientDisconnected = (): void => {
     usage.cancelled = true;
     clientDisconnected = true;
+    if (disconnectTime === 0) disconnectTime = Date.now();
+    if (drainCancelTimer !== undefined) return;
+    drainCancelTimer = setTimeout(() => {
+      void reader.cancel().catch(() => {
+        // The upstream already closed or was cancelled.
+      });
+    }, GEMINI_POST_DISCONNECT_DRAIN_MS);
   };
-  requestSignal?.addEventListener('abort', onAbort);
+  const onAbort = (): void => {
+    markClientDisconnected();
+  };
+  if (requestSignal?.aborted) {
+    onAbort();
+  } else {
+    requestSignal?.addEventListener('abort', onAbort, { once: true });
+  }
 
   try {
     while (true) {
@@ -214,22 +261,24 @@ async function pumpWithUsageTracking(
         try {
           await writer.write(value);
         } catch {
-          clientDisconnected = true;
-          disconnectTime = Date.now();
-          usage.cancelled = true;
+          markClientDisconnected();
         }
       }
 
       if (
         clientDisconnected &&
         disconnectTime > 0 &&
-        Date.now() - disconnectTime > POST_DISCONNECT_DRAIN_MS
+        Date.now() - disconnectTime >= GEMINI_POST_DISCONNECT_DRAIN_MS
       ) {
         await reader.cancel();
         break;
       }
     }
+  } catch (error) {
+    usage.stream_error = error instanceof Error ? error.message : String(error);
+    await reader.cancel('gemini_sse_invalid_or_too_large').catch(() => undefined);
   } finally {
+    if (drainCancelTimer !== undefined) clearTimeout(drainCancelTimer);
     requestSignal?.removeEventListener('abort', onAbort);
     timing?.markStreamComplete();
     resolveUsage(usage);
@@ -276,7 +325,7 @@ function streamResponseWithUsage(
 async function nonStreamResponseWithUsage(
   response: Response,
   timing?: RequestTimingCollector | null
-): Promise<{ response: Response; usagePromise: Promise<UsageFromStream> }> {
+): Promise<{ response: Response; usagePromise: Promise<UsageFromStream>; meta?: ProxyDispatchMeta }> {
   const contentType = response.headers.get('Content-Type') ?? '';
   if (!contentType.includes('application/json')) {
     return {
@@ -284,26 +333,18 @@ async function nonStreamResponseWithUsage(
       usagePromise: Promise.resolve(EMPTY_USAGE_LOCAL),
     };
   }
-  try {
-    const text = await response.text();
+  const parsed = await readBoundedTextJsonObject(response, { skin: 'chat' });
+  if (!parsed.ok) {
     timing?.markStreamComplete();
-    const usage: UsageFromStream = { ...EMPTY_USAGE_LOCAL };
-    parseJsonUsage(text, usage);
-    return {
-      response: new Response(text, {
-        status: response.status,
-        statusText: response.statusText,
-        headers: response.headers,
-      }),
-      usagePromise: Promise.resolve(usage),
-    };
-  } catch {
-    timing?.markStreamComplete();
-    return {
-      response,
-      usagePromise: Promise.resolve(EMPTY_USAGE_LOCAL),
-    };
+    return { ...parsed, usagePromise: Promise.resolve(EMPTY_USAGE_LOCAL) };
   }
+  const usage: UsageFromStream = { ...EMPTY_USAGE_LOCAL };
+  applyParsedGeminiUsage(parsed.value, usage, timing);
+  timing?.markStreamComplete();
+  return {
+    response: rebuildTextJsonResponse(response, parsed.value),
+    usagePromise: Promise.resolve(usage),
+  };
 }
 
 /**
@@ -319,8 +360,9 @@ export async function dispatchGeminiRoute(
   search: string,
   requestSignal?: AbortSignal,
   timing?: RequestTimingCollector | null,
-  attempt?: RequestTimingAttempt
-): Promise<{ response: Response; usagePromise: Promise<UsageFromStream>; upstreamRequestId: string | null }> {
+  attempt?: RequestTimingAttempt,
+  beforeFetch?: () => Promise<void>,
+): Promise<ProxyDispatchResult> {
   const resolvedUrl = resolveUpstreamEndpoint(
     'gemini',
     GEMINI_GENERATE_OPERATION,
@@ -343,13 +385,22 @@ export async function dispatchGeminiRoute(
       resolved.isServiceAccount
     ),
   });
+  assertTextUpstreamHttpUrl(url.toString());
+  new Headers(headers);
 
   const requestBody = buildRouteRequestBody(route, body);
-  const response = await fetch(url.toString(), {
-    method: 'POST',
-    headers,
-    body: JSON.stringify(requestBody),
-  });
+  const serializedBody = JSON.stringify(requestBody);
+  await beforeFetch?.();
+  let response: Response;
+  try {
+    response = await fetch(url.toString(), {
+      method: 'POST',
+      headers,
+      body: serializedBody,
+    });
+  } catch (error) {
+    throw markUpstreamOutcomeUnknown(error);
+  }
   timing?.markAttemptHeaders(attempt, response.status);
   const upstreamRequestId = extractUpstreamRequestId(response.headers);
 

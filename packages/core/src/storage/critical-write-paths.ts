@@ -29,6 +29,8 @@ import {
 import type { GatewayDatabaseClient } from './database-client';
 import { createD1DatabaseClient } from './database-client';
 import type { InsertUserAuditLogParams } from '../db/user-audit-logs-types';
+import type { GuardrailBudgetSettlement } from '../db/guardrail-budget-types';
+import type { UserBudgetSettlement } from '../db/user-budget-reservation-types';
 import type { GatewayRepositories } from './repositories';
 
 export type StorageRef = D1Database | GatewayDatabaseClient | GatewayRepositories;
@@ -89,13 +91,19 @@ export async function createApiKeyWithAudit(
 
 /**
  * 条件更新 `users` 预算字段并写 `user_audit_logs`。
- * Postgres / MySQL：`WHERE id=? AND budget_reset_at` 与读库时的 `expectedBudgetResetAt` 一致才更新；否则跳过审计（并发 lazy reset 已由另一请求提交）。
+ * 三种驱动均以读取时的完整预算计算输入做 CAS；获胜者在同一事务中开启新 epoch、清零预留计数并写审计。
  */
 export async function updateUserBudgetWithAuditTx(
 	storage: StorageRef,
 	params: {
 		userId: string;
+		expectedBudgetMax: number | null;
+		expectedBudgetBase: number;
+		expectedBudgetSpent: number;
+		expectedBudgetPeriod: string;
 		expectedBudgetResetAt: string | null;
+		expectedBudgetEpoch: number;
+		expectedBudgetReservedMicros: number;
 		budgetSpent: number;
 		budgetResetAt: string | null;
 		budgetMax?: number | null;
@@ -103,17 +111,23 @@ export async function updateUserBudgetWithAuditTx(
 		apiKeyId: string | null;
 		audit: Omit<InsertUserBudgetAuditLogParams, 'id' | 'apiKeyId' | 'afterSpent' | 'afterBudgetResetAt'>;
 	}
-): Promise<void> {
+): Promise<boolean> {
+	if (!Number.isSafeInteger(params.expectedBudgetEpoch) || params.expectedBudgetEpoch < 0
+		|| !Number.isSafeInteger(params.expectedBudgetReservedMicros) || params.expectedBudgetReservedMicros < 0
+		|| !Number.isFinite(params.expectedBudgetBase) || params.expectedBudgetBase < 0
+		|| !Number.isFinite(params.expectedBudgetSpent) || params.expectedBudgetSpent < 0
+		|| (params.expectedBudgetMax !== null
+			&& (!Number.isFinite(params.expectedBudgetMax) || params.expectedBudgetMax < 0))) {
+		throw new Error('Invalid expected ordinary-user budget reset accounting values');
+	}
 	const client = resolveDatabaseClient(storage);
 	if (client.driver === 'd1') {
-		await updateUserBudgetWithAuditTxD1(client, params);
-		return;
+		return updateUserBudgetWithAuditTxD1(client, params);
 	}
 	if (client.driver === 'mysql') {
-		await updateUserBudgetWithAuditTxMy(client, params);
-		return;
+		return updateUserBudgetWithAuditTxMy(client, params);
 	}
-	await updateUserBudgetWithAuditTxPg(client, params);
+	return updateUserBudgetWithAuditTxPg(client, params);
 }
 
 export async function insertRequestUsageAndChargeTx(
@@ -125,6 +139,8 @@ export async function insertRequestUsageAndChargeTx(
 		userId: string;
 		beforeSpent: number;
 		chargedCost: number;
+		guardrailBudgetSettlement?: GuardrailBudgetSettlement;
+		userBudgetSettlement?: UserBudgetSettlement;
 		audit: Omit<InsertUserBudgetAuditLogParams, 'id' | 'afterSpent' | 'deltaSpent'>;
 	}
 ): Promise<void> {
@@ -145,15 +161,35 @@ export async function applyUserBudgetTransitionWithAuditTx(
 	storage: StorageRef,
 	params: {
 		userId: string;
+		expectedBudgetMax: number | null;
+		expectedBudgetBase: number;
+		expectedBudgetEpoch: number;
+		expectedBudgetReservedMicros: number;
+		expectedBudgetSpent: number;
+		expectedBudgetPeriod: string;
+		expectedBudgetResetAt: string | null;
 		budgetMax: number | null;
 		budgetBase: number;
 		budgetSpent: number;
 		budgetPeriod: string;
 		budgetResetAt: string | null;
+		/** True only when this transition starts a new budget accounting generation. */
+		resetEpoch: boolean;
 		metadata?: string | null;
 		audit: InsertUserAuditLogParams;
 	}
 ): Promise<boolean> {
+	if (!Number.isSafeInteger(params.expectedBudgetEpoch) || params.expectedBudgetEpoch < 0
+		|| !Number.isSafeInteger(params.expectedBudgetReservedMicros) || params.expectedBudgetReservedMicros < 0
+		|| !Number.isFinite(params.expectedBudgetBase) || params.expectedBudgetBase < 0
+		|| !Number.isFinite(params.expectedBudgetSpent) || params.expectedBudgetSpent < 0
+		|| (params.expectedBudgetMax !== null
+			&& (!Number.isFinite(params.expectedBudgetMax) || params.expectedBudgetMax < 0))
+		|| !Number.isFinite(params.budgetBase) || params.budgetBase < 0
+		|| !Number.isFinite(params.budgetSpent) || params.budgetSpent < 0
+		|| (params.budgetMax !== null && (!Number.isFinite(params.budgetMax) || params.budgetMax < 0))) {
+		throw new Error('Invalid ordinary-user budget transition accounting values');
+	}
 	const client = resolveDatabaseClient(storage);
 	if (client.driver === 'd1') {
 		return applyUserBudgetTransitionWithAuditD1(client, params);

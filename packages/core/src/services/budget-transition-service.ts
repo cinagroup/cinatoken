@@ -13,7 +13,14 @@ import {
 } from '../db/user-audit-snapshot';
 import { userBudgetAuditToInsertRowFull } from '../db/user-budget-audit-mapper';
 import { applyUserBudgetTransitionWithAuditTx } from '../storage/critical-write-paths';
-import { computeFirstReset, getUserInfo, maybeResetBudget } from './user-service';
+import {
+	budgetLazyResetNeedsPersist,
+	computeFirstReset,
+	getUserInfo,
+	maybeResetBudget,
+	persistLazyBudgetResetIfNeeded,
+} from './user-service';
+import { isSafeUserBudgetMicros, userBudgetAmount } from '../db/user-budget-reservation-types';
 
 export type BudgetCarryoverStrategy = 'remaining_or_overage' | 'none';
 
@@ -33,6 +40,7 @@ export type BudgetTransitionSnapshot = {
 	budget_spent: number;
 	budget_period: string;
 	budget_reset_at: string | null;
+	budget_reserved_micros: number;
 };
 
 export type BudgetTransitionPreview = {
@@ -55,6 +63,7 @@ function snapshotFromUserRow(row: UserRow): BudgetTransitionSnapshot {
 		budget_spent: lazy.budget_spent,
 		budget_period: row.budget_period,
 		budget_reset_at: lazy.budget_reset_at,
+		budget_reserved_micros: row.budget_reserved_micros,
 	};
 }
 
@@ -77,9 +86,13 @@ export function computeBudgetTransition(
 	const resetSpent = input.reset_spent ?? true;
 	const currentMax = before.budget_max ?? 0;
 	const currentSpent = before.budget_spent;
+	if (!isSafeUserBudgetMicros(before.budget_reserved_micros)) {
+		throw new Error('Invalid ordinary-user reserved budget counter');
+	}
+	const currentReserved = userBudgetAmount(before.budget_reserved_micros);
 	const carryover =
 		strategy === 'remaining_or_overage'
-			? roundGatewayMoney(currentMax - currentSpent)
+			? roundGatewayMoney(currentMax - currentSpent - currentReserved)
 			: 0;
 	const nextMax = roundGatewayMoney(targetBase + carryover);
 	const nextSpent = resetSpent ? 0 : currentSpent;
@@ -93,6 +106,7 @@ export function computeBudgetTransition(
 			budget_spent: nextSpent,
 			budget_period: input.budget_period,
 			budget_reset_at: budgetResetAt,
+			budget_reserved_micros: resetSpent ? 0 : before.budget_reserved_micros,
 		},
 		carryover,
 	};
@@ -127,24 +141,55 @@ export async function previewBudgetTransition(
 		budget_spent: info.budget_spent,
 		budget_period: info.budget_period,
 		budget_reset_at: info.budget_reset_at,
+		budget_reserved_micros: info.budget_reserved_micros,
 	};
 	return computeBudgetTransition(before, input);
 }
 
-/**
- * 原子应用：事务内读用户行、按懒重置语义取有效快照、计算并写入 + 审计。
- */
-export async function applyBudgetTransition(
+async function applyBudgetTransitionAttempt(
 	repos: GatewayRepositories,
 	userId: string,
 	input: BudgetTransitionParams,
-	actorId: string = 'master_key'
+	actorId: string,
+	retriesRemaining: number,
 ): Promise<{ preview: BudgetTransitionPreview; applied: BudgetTransitionSnapshot } | null> {
+	const initialRow = await repos.users.getById(userId);
+	if (!initialRow) return null;
+
+	// A due lazy reset is itself a real accounting-period transition. Persist it
+	// before applying an admin transition so even `reset_spent: false` cannot
+	// carry old-epoch reservations into the new period.
+	await persistLazyBudgetResetIfNeeded(repos, {
+		budgetRow: initialRow,
+		userId: initialRow.id,
+		expectedBudgetResetAt: initialRow.budget_reset_at,
+		apiKeyId: null,
+		snapshotUserRow: initialRow,
+		kind: 'budget_transition',
+	});
 	const row = await repos.users.getById(userId);
 	if (!row) return null;
 
 	const before = snapshotFromUserRow(row);
+	if (budgetLazyResetNeedsPersist(
+		{
+			budget_spent: row.budget_spent,
+			budget_reset_at: row.budget_reset_at,
+			budget_max: row.budget_max,
+		},
+		{
+			budget_spent: before.budget_spent,
+			budget_reset_at: before.budget_reset_at,
+			budget_max: before.budget_max,
+		},
+	)) {
+		if (retriesRemaining > 0) {
+			return applyBudgetTransitionAttempt(repos, userId, input, actorId, retriesRemaining - 1);
+		}
+		throw new Error('Failed to persist due budget reset before budget transition');
+	}
 	const preview = computeBudgetTransition(before, input);
+	const resetEpoch = input.reset_spent ?? true;
 	const metadataJson = mergeMetadataJson(row, input.metadata);
 	const reasonText =
 		typeof input.reason === 'string' && input.reason.trim() !== '' ? input.reason.trim() : 'Budget transition';
@@ -157,6 +202,8 @@ export async function applyBudgetTransition(
 		budget_spent: preview.after.budget_spent,
 		budget_period: preview.after.budget_period,
 		budget_reset_at: preview.after.budget_reset_at,
+		budget_epoch: resetEpoch ? row.budget_epoch + 1 : row.budget_epoch,
+		budget_reserved_micros: preview.after.budget_reserved_micros,
 		metadata: metadataJson === undefined ? row.metadata : metadataJson,
 	};
 	const afterSnap = snapshotToJson(userRowToSnapshot(afterRowForSnap));
@@ -166,11 +213,19 @@ export async function applyBudgetTransition(
 
 	const ok = await applyUserBudgetTransitionWithAuditTx(repos, {
 		userId,
+		expectedBudgetMax: row.budget_max,
+		expectedBudgetBase: row.budget_base,
+		expectedBudgetEpoch: row.budget_epoch,
+		expectedBudgetReservedMicros: row.budget_reserved_micros,
+		expectedBudgetSpent: row.budget_spent,
+		expectedBudgetPeriod: row.budget_period,
+		expectedBudgetResetAt: row.budget_reset_at,
 		budgetMax: preview.after.budget_max,
 		budgetBase: preview.after.budget_base,
 		budgetSpent: preview.after.budget_spent,
 		budgetPeriod: preview.after.budget_period,
 		budgetResetAt: preview.after.budget_reset_at,
+		resetEpoch,
 		metadata: metadataJson,
 		audit: userBudgetAuditToInsertRowFull(userId, {
 			id: crypto.randomUUID(),
@@ -204,7 +259,22 @@ export async function applyBudgetTransition(
 		}),
 	});
 	if (!ok) {
+		if (retriesRemaining > 0) {
+			return applyBudgetTransitionAttempt(repos, userId, input, actorId, retriesRemaining - 1);
+		}
 		throw new Error('Failed to apply budget transition');
 	}
 	return { preview, applied: preview.after };
+}
+
+/**
+ * 乐观并发应用：每次尝试都重新读取预算 epoch/spent/reserved 快照；关键写事务仅在快照仍一致时写入并审计。
+ */
+export async function applyBudgetTransition(
+	repos: GatewayRepositories,
+	userId: string,
+	input: BudgetTransitionParams,
+	actorId: string = 'master_key',
+): Promise<{ preview: BudgetTransitionPreview; applied: BudgetTransitionSnapshot } | null> {
+	return applyBudgetTransitionAttempt(repos, userId, input, actorId, 2);
 }

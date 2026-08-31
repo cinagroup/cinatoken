@@ -58,6 +58,7 @@ export class RequestTimingCollector {
 	private streamDurationMs: number | null = null;
 	private streamCompletedAt: number | null = null;
 	private upstreamFailoverCount = 0;
+	private modelFallbackCount = 0;
 	private readonly attempts: RequestTimingAttempt[] = [];
 
 	elapsed(): number {
@@ -114,6 +115,22 @@ export class RequestTimingCollector {
 		this.upstreamFailoverCount += 1;
 	}
 
+	/** An outer model fallback continues after the final provider of one model failed. */
+	markModelFallback(hadUpstreamAttempt = true): void {
+		this.markEndpointFallback(true, hadUpstreamAttempt);
+	}
+
+	/** Outer endpoint orchestration continues; partition=none may stay on the same model. */
+	markEndpointFallback(modelChanged: boolean, hadUpstreamAttempt = true): void {
+		if (modelChanged) this.modelFallbackCount += 1;
+		if (hadUpstreamAttempt) this.upstreamFailoverCount += 1;
+	}
+
+	/** Record only a model transition; the dispatcher records endpoint failover separately. */
+	markModelTransition(): void {
+		this.modelFallbackCount += 1;
+	}
+
 	markFinalAttempt(attempt: RequestTimingAttempt | undefined): void {
 		if (!attempt) return;
 		attempt.selected = true;
@@ -162,11 +179,13 @@ export class RequestTimingCollector {
 		const metadata = {
 			first_byte_ms: this.firstByteMs,
 			first_event_ms: this.firstEventMs,
+			model_fallback_count: this.modelFallbackCount,
 			attempts: this.attempts,
 		};
 		const hasMetadata =
 			this.firstByteMs != null ||
 			this.firstEventMs != null ||
+			this.modelFallbackCount > 0 ||
 			this.attempts.length > 0;
 		return {
 			gatewayOverheadMs: this.gatewayOverheadMs,

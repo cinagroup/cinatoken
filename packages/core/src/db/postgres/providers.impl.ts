@@ -1,14 +1,17 @@
 /**
  * Postgres：`providers` 表（Drizzle）。
  */
-import { eq } from 'drizzle-orm';
-import type { ProviderRow } from '../../types';
-import type { PostgresDatabaseClient } from '../../storage/database-client';
-import type { ProvidersRepository } from '../../storage/gateway-repository-interfaces';
-import { providersTable as pgProvidersTable } from '../../storage/drizzle/schema.pg';
-import type { ProviderProtocolBases } from '../providers-types';
-import type { ProviderAdminRow } from '../../storage/repository-dtos';
-import { PROVIDER_PATCH_COLS } from '../patch-allowlists';
+import { eq, inArray } from "drizzle-orm";
+import type { ProviderRow } from "../../types";
+import type { PostgresDatabaseClient } from "../../storage/database-client";
+import type { ProvidersRepository } from "../../storage/gateway-repository-interfaces";
+import { providersTable as pgProvidersTable } from "../../storage/drizzle/schema.pg";
+import {
+	MAX_PROVIDER_ID_BATCH_SIZE,
+	type ProviderProtocolBases,
+} from "../providers-types";
+import type { ProviderAdminRow } from "../../storage/repository-dtos";
+import { PROVIDER_PATCH_COLS } from "../patch-allowlists";
 
 function snakeToCamel(key: string): string {
 	return key.replace(/_([a-z])/g, (_, c: string) => c.toUpperCase());
@@ -36,7 +39,9 @@ function mapPgProviderRow(r: {
 	};
 }
 
-export function createPostgresProvidersRepository(db: PostgresDatabaseClient): ProvidersRepository {
+export function createPostgresProvidersRepository(
+	db: PostgresDatabaseClient
+): ProvidersRepository {
 	const drizzle = db.drizzle;
 	const pg = db.raw;
 	return {
@@ -74,8 +79,28 @@ export function createPostgresProvidersRepository(db: PostgresDatabaseClient): P
 			}));
 		},
 
+		async getProvidersByIds(ids: string[]): Promise<ProviderRow[]> {
+			if (ids.length > MAX_PROVIDER_ID_BATCH_SIZE) {
+				throw new RangeError(
+					`provider id batch exceeds ${MAX_PROVIDER_ID_BATCH_SIZE}`
+				);
+			}
+			const uniqueIds = [...new Set(ids)];
+			if (uniqueIds.length === 0) return [];
+			const rows = await drizzle
+				.select()
+				.from(pgProvidersTable)
+				.where(inArray(pgProvidersTable.id, uniqueIds))
+				.orderBy(pgProvidersTable.id);
+			return rows.map(mapPgProviderRow);
+		},
+
 		async providerIdExists(id: string): Promise<boolean> {
-			const row = await drizzle.select({ id: pgProvidersTable.id }).from(pgProvidersTable).where(eq(pgProvidersTable.id, id)).limit(1);
+			const row = await drizzle
+				.select({ id: pgProvidersTable.id })
+				.from(pgProvidersTable)
+				.where(eq(pgProvidersTable.id, id))
+				.limit(1);
 			return row.length > 0;
 		},
 
@@ -93,18 +118,22 @@ export function createPostgresProvidersRepository(db: PostgresDatabaseClient): P
 				id: params.id,
 				name: params.name,
 				endpoints: params.endpoints,
-				apiKey: params.apiKey ?? '',
-				status: params.status ?? 'active',
-				description: params.description == null ? null : String(params.description),
+				apiKey: params.apiKey ?? "",
+				status: params.status ?? "active",
+				description:
+					params.description == null ? null : String(params.description),
 				sharedChannelType: params.sharedChannelType ?? null,
 				createdAt: now,
 			});
 		},
 
-		async updateProviderByPatch(id: string, body: Record<string, unknown>): Promise<number> {
+		async updateProviderByPatch(
+			id: string,
+			body: Record<string, unknown>
+		): Promise<number> {
 			const set: Record<string, unknown> = {};
 			for (const [key, value] of Object.entries(body)) {
-				if (key === 'id' || value === undefined) continue;
+				if (key === "id" || value === undefined) continue;
 				if (!PROVIDER_PATCH_COLS.has(key)) continue;
 				const camel = snakeToCamel(key);
 				set[camel] = value;
@@ -119,12 +148,19 @@ export function createPostgresProvidersRepository(db: PostgresDatabaseClient): P
 		},
 
 		async deleteProviderById(id: string): Promise<number> {
-			const deleted = await drizzle.delete(pgProvidersTable).where(eq(pgProvidersTable.id, id)).returning({ id: pgProvidersTable.id });
+			const deleted = await drizzle
+				.delete(pgProvidersTable)
+				.where(eq(pgProvidersTable.id, id))
+				.returning({ id: pgProvidersTable.id });
 			return deleted.length;
 		},
 
 		async getProviderById(id: string): Promise<ProviderRow | null> {
-			const rows = await drizzle.select().from(pgProvidersTable).where(eq(pgProvidersTable.id, id)).limit(1);
+			const rows = await drizzle
+				.select()
+				.from(pgProvidersTable)
+				.where(eq(pgProvidersTable.id, id))
+				.limit(1);
 			return rows[0] ? mapPgProviderRow(rows[0]) : null;
 		},
 
@@ -164,7 +200,9 @@ export function createPostgresProvidersRepository(db: PostgresDatabaseClient): P
 			};
 		},
 
-		async getProviderProtocolBases(providerId: string): Promise<ProviderProtocolBases | null> {
+		async getProviderProtocolBases(
+			providerId: string
+		): Promise<ProviderProtocolBases | null> {
 			const rows = await drizzle
 				.select({
 					id: pgProvidersTable.id,
@@ -176,7 +214,9 @@ export function createPostgresProvidersRepository(db: PostgresDatabaseClient): P
 			return rows[0] ?? null;
 		},
 
-		async getProviderApiKeyPlaintext(providerId: string): Promise<{ api_key: string } | null> {
+		async getProviderApiKeyPlaintext(
+			providerId: string
+		): Promise<{ api_key: string } | null> {
 			const rows = await drizzle
 				.select({ api_key: pgProvidersTable.apiKey })
 				.from(pgProvidersTable)

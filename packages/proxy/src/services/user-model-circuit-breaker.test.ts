@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import {
 	buildClientErrorCircuitOpenResponse,
 	buildSensitiveContentCircuitOpenResponse,
+	buildUserModelCircuitOpenResponse,
 	getUserModelCircuitOpen,
 	isSensitiveUpstreamResponse,
 	markUserModelSuccess,
@@ -89,8 +90,14 @@ describe('user-model-circuit-breaker — short-circuit response codes', () => {
 		assert.equal(res.status, 429);
 		assert.equal(res.headers.get('Retry-After'), String(info.retryAfterSeconds));
 		assert.equal(res.headers.get(GATEWAY_ERROR_CODE_HEADER), GatewayErrorCode.circuitSensitiveContent);
-		const body = (await res.json()) as { error: { code: string } };
-		assert.equal(body.error.code, GatewayErrorCode.circuitSensitiveContent);
+		const body = (await res.json()) as {
+			error: { code: number; metadata: { error_type: string; retry_after_seconds: number } };
+			code: string;
+		};
+		assert.equal(body.error.code, 429);
+		assert.equal(body.error.metadata.error_type, 'rate_limit_exceeded');
+		assert.equal(body.error.metadata.retry_after_seconds, info.retryAfterSeconds);
+		assert.equal(body.code, GatewayErrorCode.circuitSensitiveContent);
 	});
 
 	it('client_error short-circuit is 400 + circuit.client_error', async () => {
@@ -99,10 +106,48 @@ describe('user-model-circuit-breaker — short-circuit response codes', () => {
 		assert.equal(res.status, 400);
 		assert.equal(res.headers.get('Retry-After'), null);
 		assert.equal(res.headers.get(GATEWAY_ERROR_CODE_HEADER), GatewayErrorCode.circuitClientError);
-		const body = (await res.json()) as { error: { code: string; message: string; type: string } };
-		assert.equal(body.error.code, GatewayErrorCode.circuitClientError);
-		assert.equal(body.error.type, 'upstream_client_error_circuit_open');
+		const body = (await res.json()) as {
+			error: { code: number; message: string; metadata: { error_type: string; reason: string } };
+			code: string;
+		};
+		assert.equal(body.error.code, 400);
+		assert.equal(body.error.metadata.error_type, 'invalid_request');
+		assert.equal(body.error.metadata.reason, 'upstream_client_error_circuit_open');
 		assert.match(body.error.message, /invalid temperature/);
+		assert.equal(body.code, GatewayErrorCode.circuitClientError);
+	});
+
+	it('uses post-Router generation ids in Responses and Anthropic circuit envelopes', async () => {
+		const info = recordUserModelCircuitTrigger('u-skins', 'm-skins', 'sensitive_content', undefined, 1_000);
+		const responses = buildUserModelCircuitOpenResponse(info, {
+			skin: 'responses',
+			requestId: 'gen-responses-circuit',
+		});
+		assert.deepEqual(await responses.json(), {
+			status: 'failed',
+			error: {
+				code: 'rate_limit_exceeded',
+				message: `Sensitive content was blocked upstream. Please retry this user/model after ${info.retryAfterSeconds} seconds.`,
+			},
+			error_type: 'rate_limit_exceeded',
+			id: 'gen-responses-circuit',
+			code: GatewayErrorCode.circuitSensitiveContent,
+		});
+
+		const anthropic = buildUserModelCircuitOpenResponse(info, {
+			skin: 'anthropic',
+			requestId: 'gen-anthropic-circuit',
+		});
+		assert.deepEqual(await anthropic.json(), {
+			type: 'error',
+			error: {
+				type: 'rate_limit_error',
+				message: `Sensitive content was blocked upstream. Please retry this user/model after ${info.retryAfterSeconds} seconds.`,
+				error_type: 'rate_limit_exceeded',
+			},
+			request_id: 'gen-anthropic-circuit',
+			code: GatewayErrorCode.circuitSensitiveContent,
+		});
 	});
 });
 

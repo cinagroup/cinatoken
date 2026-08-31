@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import { describe, it } from 'node:test';
 import {
 	isAudioModel,
+	isEmbeddingModel,
 	isAudioSpeechModel,
 	isAudioTranscriptionModel,
 	isImageGenerationModel,
@@ -67,6 +68,18 @@ describe('isImageGenerationModel', () => {
 			}),
 			false
 		);
+	});
+});
+
+describe('isEmbeddingModel', () => {
+	it('recognizes the embeddings output modality', () => {
+		const embedding = {
+			input_modalities: '["text"]',
+			output_modalities: '["embeddings"]',
+		};
+		assert.equal(isEmbeddingModel(embedding), true);
+		assert.equal(isImageGenerationModel(embedding), false);
+		assert.equal(isAudioModel(embedding), false);
 	});
 });
 

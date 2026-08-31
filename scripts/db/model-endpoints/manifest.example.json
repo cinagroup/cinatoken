@@ -1,0 +1,62 @@
+{
+  "version": "cinatoken.endpoint-backfill-manifest.v1",
+  "manifest_id": "CHANGE-REPLACE-ME",
+  "created_at": "2026-08-30T00:00:00.000Z",
+  "actor_id": "cinaauth:replace-with-admin-id",
+  "target": {
+    "driver": "postgres",
+    "database_fingerprint": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+    "required_migration": "0048_model_endpoint_audio_capabilities.sql"
+  },
+  "policy": {
+    "allow_create": false,
+    "allow_material_update": false,
+    "allow_draft_promotion": false,
+    "allow_route_link_changes": false
+  },
+  "endpoints": [
+    {
+      "id": "replace-with-endpoint-id",
+      "expected_updated_at": "2026-08-30T00:00:00.000Z",
+      "model_id": "replace-with-model-id",
+      "provider_id": "replace-with-provider-id",
+      "provider_slug": "replace-with-provider-slug",
+      "tag": "replace-with-provider-slug",
+      "endpoint_class": null,
+      "region": null,
+      "context_length": 128000,
+      "max_prompt_tokens": 120000,
+      "max_completion_tokens": 8000,
+      "quantization": null,
+      "supported_parameters": [
+        "temperature",
+        "tool_choice"
+      ],
+      "pricing": {
+        "currency": "USD",
+        "prompt": "0.000001",
+        "completion": "0.000002"
+      },
+      "supports_implicit_caching": false,
+      "supports_voice_cloning": false,
+      "supports_tool_choice": {
+        "auto": true,
+        "function": true,
+        "none": true,
+        "required": true
+      },
+      "image_capabilities": null,
+      "audio_capabilities": null,
+      "evidence": {
+        "url": "https://provider.example/pricing",
+        "observed_at": "2026-08-30T00:00:00.000Z",
+        "expires_at": "2027-08-30T00:00:00.000Z",
+        "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+        "reviewed_by": "cinaauth:replace-with-reviewer-id"
+      },
+      "route_target_ids": [
+        "replace-with-route-target-id"
+      ]
+    }
+  ]
+}

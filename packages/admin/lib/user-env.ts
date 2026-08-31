@@ -4,6 +4,7 @@ import type {
 	GatewayRepositories,
 	HyperdriveBinding,
 	StorageContext,
+	WorkspaceContextProjection,
 } from '@octafuse/core';
 import type { UserPrincipal } from '@/lib/user-auth';
 
@@ -20,6 +21,9 @@ export type UserBindings = {
 	CINATOKEN_OIDC_CLIENT_SECRET?: string;
 	CINATOKEN_OIDC_BRIDGE_SECRET?: string;
 	CINATOKEN_OIDC_TRANSACTION_SECRET?: string;
+	CINATOKEN_IDENTITY_EVENTS_SECRET?: string;
+	/** Explicit comma-separated CinaAuth roles allowed organization-wide billing authority. */
+	CINAAUTH_ORGANIZATION_ADMIN_ROLES?: string;
 	SHARED_KEY_ENCRYPTION_SECRET?: string;
 	CHAIN_JOBS?: Queue<ChainJobMessage>;
 	/** Node / 自托管数据库使用 `DATABASE_URL`；Cloudflare Postgres 只使用 `HYPERDRIVE`。 */
@@ -34,5 +38,7 @@ export type UserEnv = {
 	Variables: {
 		repositories: GatewayRepositories;
 		principal: UserPrincipal;
+		/** Re-authorized on every user API request; browser cookies are preference only. */
+		workspaceContext: WorkspaceContextProjection;
 	};
 };

@@ -15,21 +15,38 @@ import {
 	DEFAULT_D1_DATABASE_NAME,
 	DEFAULT_D1_PERSIST_TO,
 } from '../lib/d1-execute';
+import {
+	assertGuardrailLedgerTableSelection,
+	GUARDRAIL_LEDGER_TABLES,
+} from './guardrail-ledger-contract';
+import {
+	D1_BUDGET_SPENT_MICROS_MIGRATION,
+	D1_BUDGET_SPENT_TRANSFER_ALIAS,
+	type D1BudgetSpentPrecisionMode,
+	d1BudgetSpentInvariantSql,
+	d1BudgetSpentTransferExpression,
+	postgresBudgetSpentFromTransferRow,
+	postgresUserColumnsForD1Source,
+	resolveD1BudgetSpentPrecisionMode,
+} from './user-budget-spent-precision';
 
 interface EtlConfig {
 	postgresUrl: string;
 	batchSize: number;
 	truncateBeforeLoad: boolean;
 	tableFilter: Set<string> | null;
+	guardrailLedgerIncluded: boolean;
+	ordinaryBudgetLedgerIncluded: boolean;
 	targetOfflineConfirmed: boolean;
 	sourceFrozenConfirmed: boolean;
 	d1: D1ExecutionConfig;
 }
 
 const TARGET_SCHEMA = 'cinatoken_gateway';
-const REQUIRED_MIGRATION = '0034_public_model_daily_stats.sql';
+const REQUIRED_MIGRATION = '0053_workspace_budgets.sql';
 const ETL_LOCK_KEY = 746923552;
 const MAX_POSTGRES_BATCH_PARAMETERS = 60_000;
+const ORDINARY_BUDGET_ETL_TABLES = ['users', 'user_budget_reservations'] as const;
 type QuerySql = postgres.Sql | postgres.TransactionSql;
 type EtlSqlValue = string | number | boolean | null;
 
@@ -40,7 +57,9 @@ function printUsage(): void {
 Options:
   --batch-size=<n>           Batch size per INSERT (default: 500)
   --truncate                 TRUNCATE target tables before ETL (recommended first run)
-  --tables=<a,b,c>           Only migrate selected tables (do not combine with --truncate)
+  --tables=<a,b,c>           Only migrate selected tables (do not combine with --truncate).
+                             Guardrail logs/windows/reservations must be selected together
+                             Users/user budget reservations must be selected together
   --target-offline           Required acknowledgement: target has no live writers/readers
   --source-frozen            Required acknowledgement: source D1 writes are frozen
   --d1-source=remote|local   D1 source (default: remote)
@@ -110,6 +129,16 @@ function parseConfig(): EtlConfig {
 	if (invalidTables.length > 0) {
 		throw new Error(`Unknown ETL table(s): ${invalidTables.join(', ')}`);
 	}
+	const guardrailLedgerIncluded = assertGuardrailLedgerTableSelection(tableFilter);
+	const selectedOrdinaryBudgetTables = tableFilter == null
+		? ORDINARY_BUDGET_ETL_TABLES.length
+		: ORDINARY_BUDGET_ETL_TABLES.filter((table) => tableFilter.has(table)).length;
+	if (selectedOrdinaryBudgetTables !== 0 && selectedOrdinaryBudgetTables !== ORDINARY_BUDGET_ETL_TABLES.length) {
+		throw new Error(
+			`Ordinary-user budget account and reservation tables are an indivisible cutover group: ${ORDINARY_BUDGET_ETL_TABLES.join(', ')}`,
+		);
+	}
+	const ordinaryBudgetLedgerIncluded = selectedOrdinaryBudgetTables === ORDINARY_BUDGET_ETL_TABLES.length;
 
 	const truncateBeforeLoad = args.includes('--truncate');
 	if (truncateBeforeLoad && tableFilter) {
@@ -136,6 +165,8 @@ function parseConfig(): EtlConfig {
 		batchSize,
 		truncateBeforeLoad,
 		tableFilter,
+		guardrailLedgerIncluded,
+		ordinaryBudgetLedgerIncluded,
 		targetOfflineConfirmed,
 		sourceFrozenConfirmed,
 		d1: parseD1ExecutionConfig(args),
@@ -189,6 +220,41 @@ async function truncateTables(sql: QuerySql): Promise<void> {
 	await sql.unsafe(statement);
 }
 
+async function assertGuardrailLedgerTargetEmpty(sql: QuerySql): Promise<void> {
+	const countExpressions = GUARDRAIL_LEDGER_TABLES.map(
+		(table) => `(SELECT COUNT(*)::text FROM ${qualifiedTable(table)}) AS ${quoteIdentifier(table)}`,
+	).join(',\n');
+	const [counts] = await sql.unsafe<Record<string, string>[]>(`SELECT ${countExpressions}`);
+	if (!counts) {
+		throw new Error('Unable to verify that the target Guardrail ledger tables are empty');
+	}
+	const nonEmpty = GUARDRAIL_LEDGER_TABLES.filter((table) => {
+		const value = counts[table];
+		return value === undefined || !/^\d+$/u.test(value) || BigInt(value) !== 0n;
+	});
+	if (nonEmpty.length > 0) {
+		const details = GUARDRAIL_LEDGER_TABLES.map(
+			(table) => `${table}=${String(counts[table] ?? 'unavailable')}`,
+		).join(', ');
+		throw new Error(
+			`Target Guardrail ledger must be truncated or all three tables must be empty before load (${details})`,
+		);
+	}
+	console.log('[ETL] verified target Guardrail ledger group is empty');
+}
+
+async function assertOrdinaryBudgetLedgerTargetEmpty(sql: QuerySql): Promise<void> {
+	const [row] = await sql.unsafe<Array<{ count: string }>>(
+		`SELECT COUNT(*)::text AS count FROM ${qualifiedTable('user_budget_reservations')}`,
+	);
+	if (!row || !/^\d+$/u.test(row.count) || BigInt(row.count) !== 0n) {
+		throw new Error(
+			`Target ordinary-user budget reservation ledger must be empty before load (user_budget_reservations=${String(row?.count ?? 'unavailable')})`,
+		);
+	}
+	console.log('[ETL] verified target ordinary-user budget reservation ledger is empty');
+}
+
 function buildBatchInsertSql(tableName: EtlTableName, columns: string[], rowCount: number): string {
 	const quotedColumns = columns.map(quoteIdentifier).join(', ');
 	const values = Array.from({ length: rowCount }, (_, rowIndex) => {
@@ -206,17 +272,45 @@ function buildBatchInsertSql(tableName: EtlTableName, columns: string[], rowCoun
 function parseCount(rows: Record<string, unknown>[]): number {
 	const countValue = rows[0]?.count;
 	const count = typeof countValue === 'number' ? countValue : Number(countValue ?? 0);
-	if (!Number.isFinite(count)) {
+	if (!Number.isSafeInteger(count) || count < 0) {
 		throw new Error(`Invalid count value: ${String(countValue)}`);
 	}
 	return count;
 }
 
-async function migrateTable(sql: QuerySql, tableName: EtlTableName, config: EtlConfig): Promise<void> {
-	const columns = getTableColumns(tableName, config.d1);
-	if (columns.length === 0) {
+function inspectD1BudgetSpentPrecision(config: EtlConfig): D1BudgetSpentPrecisionMode {
+	const userColumns = getTableColumns('users', config.d1);
+	const migrationCount = parseCount(runD1ExecuteJson(
+		`SELECT COUNT(*) AS count FROM d1_migrations WHERE name = '${D1_BUDGET_SPENT_MICROS_MIGRATION}'`,
+		config.d1,
+	));
+	if (migrationCount > 1) {
+		throw new Error(`D1 migration ledger contains duplicate ${D1_BUDGET_SPENT_MICROS_MIGRATION} rows`);
+	}
+	const mode = resolveD1BudgetSpentPrecisionMode(userColumns, migrationCount === 1);
+	const invalidRows = parseCount(runD1ExecuteJson(d1BudgetSpentInvariantSql(mode), config.d1));
+	if (invalidRows !== 0) {
+		throw new Error(
+			`D1 users.budget_spent cannot be transferred exactly in ${mode} mode: ${invalidRows} invalid row(s)`,
+		);
+	}
+	console.log(`[ETL] users.budget_spent precision=${mode}; invalid_rows=0`);
+	return mode;
+}
+
+async function migrateTable(
+	sql: QuerySql,
+	tableName: EtlTableName,
+	config: EtlConfig,
+	budgetSpentPrecisionMode: D1BudgetSpentPrecisionMode,
+): Promise<void> {
+	const sourceColumns = getTableColumns(tableName, config.d1);
+	if (sourceColumns.length === 0) {
 		throw new Error(`Table ${tableName} has no columns or does not exist in D1 source`);
 	}
+	const columns = tableName === 'users'
+		? postgresUserColumnsForD1Source(sourceColumns)
+		: sourceColumns;
 
 	const totalRows = parseCount(runD1ExecuteJson(`SELECT COUNT(*) AS count FROM "${tableName}"`, config.d1));
 	const tableBatchSize = Math.min(
@@ -227,20 +321,29 @@ async function migrateTable(sql: QuerySql, tableName: EtlTableName, config: EtlC
 
 	let migrated = 0;
 	for (let offset = 0; offset < totalRows; offset += tableBatchSize) {
+		const selectList = tableName === 'users'
+			? `*, ${d1BudgetSpentTransferExpression(budgetSpentPrecisionMode)} AS "${D1_BUDGET_SPENT_TRANSFER_ALIAS}"`
+			: '*';
 		const d1Rows = runD1ExecuteJson(
-			`SELECT * FROM "${tableName}" ORDER BY rowid LIMIT ${tableBatchSize} OFFSET ${offset}`,
+			`SELECT ${selectList} FROM "${tableName}" ORDER BY rowid LIMIT ${tableBatchSize} OFFSET ${offset}`,
 			config.d1
 		);
 		if (d1Rows.length === 0) {
 			break;
 		}
-		const params = d1Rows.flatMap((row) =>
-			columns.map((column) => toSqlValue(tableName, column, row[column]))
-		);
+		const params = d1Rows.flatMap((row) => columns.map((column) => {
+			if (tableName === 'users' && column === 'budget_spent') {
+				return postgresBudgetSpentFromTransferRow(row);
+			}
+			return toSqlValue(tableName, column, row[column]);
+		}));
 		const sqlText = buildBatchInsertSql(tableName, columns, d1Rows.length);
 		await sql.unsafe(sqlText, params);
 		migrated += d1Rows.length;
 		console.log(`[ETL] ${tableName}: ${migrated}/${totalRows}`);
+	}
+	if (migrated !== totalRows) {
+		throw new Error(`Short D1 read for ${tableName}: expected ${totalRows}, received ${migrated}`);
 	}
 }
 
@@ -299,6 +402,27 @@ async function main(): Promise<void> {
 
 	try {
 		await assertTargetReady(sql);
+		const budgetSpentPrecisionMode = inspectD1BudgetSpentPrecision(config);
+		const activeGuardrailReservations = parseCount(runD1ExecuteJson(
+			`SELECT COUNT(*) AS count FROM guardrail_budget_reservations
+			 WHERE state IN ('reserved', 'dispatched')`,
+			config.d1,
+		));
+		if (activeGuardrailReservations !== 0) {
+			throw new Error(
+				`Source Guardrail budget leases are not drained: ${activeGuardrailReservations} active reservation(s)`,
+			);
+		}
+		const activeUserBudgetReservations = parseCount(runD1ExecuteJson(
+			`SELECT COUNT(*) AS count FROM user_budget_reservations
+			 WHERE state IN ('reserved', 'dispatched')`,
+			config.d1,
+		));
+		if (activeUserBudgetReservations !== 0) {
+			throw new Error(
+				`Source ordinary-user budget leases are not drained: ${activeUserBudgetReservations} active reservation(s)`,
+			);
+		}
 		console.log(
 			`[ETL] source=D1(${config.d1.source}:${config.d1.databaseName}), target=Postgres(${TARGET_SCHEMA}), batch=${config.batchSize}`
 		);
@@ -308,6 +432,12 @@ async function main(): Promise<void> {
 
 		await sql.begin(async (tx) => {
 			await tx`SELECT pg_advisory_xact_lock(${ETL_LOCK_KEY})`;
+			if (config.guardrailLedgerIncluded && !config.truncateBeforeLoad) {
+				await assertGuardrailLedgerTargetEmpty(tx);
+			}
+			if (config.ordinaryBudgetLedgerIncluded && !config.truncateBeforeLoad) {
+				await assertOrdinaryBudgetLedgerTargetEmpty(tx);
+			}
 			await tx.unsafe(
 				`ALTER TABLE ${qualifiedTable('shared_key_earnings')} DISABLE TRIGGER USER`
 			);
@@ -322,7 +452,7 @@ async function main(): Promise<void> {
 				if (config.tableFilter && !config.tableFilter.has(tableName)) {
 					continue;
 				}
-				await migrateTable(tx, tableName, config);
+				await migrateTable(tx, tableName, config, budgetSpentPrecisionMode);
 			}
 
 			await tx.unsafe(

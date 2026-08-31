@@ -1,31 +1,50 @@
-import type { GatewayDatabaseClient } from './database-client';
+import type { GatewayDatabaseClient } from "./database-client";
 import type {
 	AdminAnalyticsRepository,
+	GuardrailsRepository,
+	GuardrailBudgetsRepository,
+	UserBudgetReservationsRepository,
+	RouteDataPoliciesRepository,
 	AdminAccessRepository,
 	ApiKeysRepository,
 	ModelRoutesRepository,
+	ModelEndpointsRepository,
+	ManagementApiKeysRepository,
 	ModelRoutingRepository,
 	ModelsRepository,
 	PortalAccessRepository,
 	PortalLedgerRepository,
 	ProvidersRepository,
 	RequestLogsRepository,
+	RequestPresetsRepository,
 	RoutePoolStickyBindingsRepository,
 	SharedKeysRepository,
 	SystemConfigRepository,
 	UserAuditLogsRepository,
 	UsersRepository,
-} from './gateway-repository-interfaces';
-import type { ApiKeysD1Statements, RequestLogsD1Statements } from '../db/d1/d1-repository-extras';
+} from "./gateway-repository-interfaces";
+import type {
+	ApiKeysD1Statements,
+	RequestLogsD1Statements,
+} from "../db/d1/d1-repository-extras";
 
-export type ApiKeysRepositoryHandle = ApiKeysRepository & Partial<ApiKeysD1Statements>;
-export type RequestLogsRepositoryHandle = RequestLogsRepository & Partial<RequestLogsD1Statements>;
+export type ApiKeysRepositoryHandle = ApiKeysRepository &
+	Partial<ApiKeysD1Statements>;
+export type RequestLogsRepositoryHandle = RequestLogsRepository &
+	Partial<RequestLogsD1Statements>;
 
 export interface GatewayRepositories {
 	readonly client: GatewayDatabaseClient;
 	readonly users: UsersRepository;
 	readonly apiKeys: ApiKeysRepositoryHandle;
 	readonly requestLogs: RequestLogsRepositoryHandle;
+	readonly requestPresets: RequestPresetsRepository;
+	readonly guardrails: GuardrailsRepository;
+	readonly guardrailBudgets: GuardrailBudgetsRepository;
+	readonly userBudgets: UserBudgetReservationsRepository;
+	readonly routeDataPolicies: RouteDataPoliciesRepository;
+	readonly modelEndpoints: ModelEndpointsRepository;
+	readonly managementApiKeys: ManagementApiKeysRepository;
 	readonly providers: ProvidersRepository;
 	readonly models: ModelsRepository;
 	readonly routes: ModelRoutesRepository;
@@ -41,6 +60,8 @@ export interface GatewayRepositories {
 }
 
 /** 统一取 Hono 上下文中的 `GatewayDatabaseClient`。 */
-export function getGatewayDatabaseClient(repositories: GatewayRepositories): GatewayDatabaseClient {
+export function getGatewayDatabaseClient(
+	repositories: GatewayRepositories
+): GatewayDatabaseClient {
 	return repositories.client;
 }

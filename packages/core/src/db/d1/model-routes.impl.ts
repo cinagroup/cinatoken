@@ -7,7 +7,7 @@ import type { ModelRouteDetailRow, ModelRouteJoinRow } from '../../storage/repos
 import { MODEL_ROUTE_PATCH_COLS } from '../patch-allowlists';
 
 const MODEL_ROUTE_LIST_JOIN_SQL = `SELECT mr.id, mr.model_id, mr.provider_id, mr.provider_model_name, mr.priority, mr.status,
-				mr.route_group, mr.weight, mr.price_override, mr.custom_params, mr.upstream_protocol,
+				mr.route_group, mr.weight, mr.price_override, mr.custom_params, mr.routing_metadata, mr.upstream_protocol,
 				mr.route_pool_id, mr.upstream_operation, mr.adapter,
 				rp.name AS pool_name, rp.strategy AS pool_strategy, rp.tier_strategies AS pool_tier_strategies, rp.status AS pool_status,
 				rp.sticky_enabled AS pool_sticky_enabled,
@@ -19,7 +19,7 @@ const MODEL_ROUTE_LIST_JOIN_SQL = `SELECT mr.id, mr.model_id, mr.provider_id, mr
 					'request_operation', ms.request_operation,
 					'status', ms.status
 				)) FROM model_surfaces ms WHERE ms.route_pool_id = mr.route_pool_id) AS surfaces,
-				m.display_name as model_name, p.name as provider_name
+				m.display_name as model_name, p.name as provider_name, p.status as provider_status
 			 FROM model_routes mr
 			 LEFT JOIN models m ON mr.model_id = m.id
 			 LEFT JOIN providers p ON mr.provider_id = p.id
@@ -56,6 +56,7 @@ export function createD1ModelRoutesRepository(db: D1DatabaseClient): ModelRoutes
 			weight?: number;
 			priceOverride: unknown;
 			customParams: string | null;
+			routingMetadata: string | null;
 			upstreamProtocol: string;
 			routePoolId: string;
 			upstreamOperation: string;
@@ -63,8 +64,8 @@ export function createD1ModelRoutesRepository(db: D1DatabaseClient): ModelRoutes
 		}): Promise<void> {
 			await raw
 				.prepare(
-					`INSERT INTO model_routes (id, model_id, provider_id, provider_model_name, priority, status, route_group, weight, price_override, custom_params, upstream_protocol, route_pool_id, upstream_operation, adapter, created_at)
-			 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, datetime('now'))`
+					`INSERT INTO model_routes (id, model_id, provider_id, provider_model_name, priority, status, route_group, weight, price_override, custom_params, routing_metadata, upstream_protocol, route_pool_id, upstream_operation, adapter, created_at)
+			 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, datetime('now'))`
 				)
 				.bind(
 					params.id,
@@ -77,6 +78,7 @@ export function createD1ModelRoutesRepository(db: D1DatabaseClient): ModelRoutes
 					params.weight ?? 1,
 					params.priceOverride ?? null,
 					params.customParams,
+					params.routingMetadata,
 					params.upstreamProtocol,
 					params.routePoolId,
 					params.upstreamOperation,

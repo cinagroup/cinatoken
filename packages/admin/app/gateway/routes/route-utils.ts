@@ -2,6 +2,7 @@ import {
 	isAudioModel,
 	isAudioSpeechModel,
 	isAudioTranscriptionModel,
+	isEmbeddingModel,
 	isImageGenerationModel,
 	isTextLlmModel,
 } from '@octafuse/core/db/model-modalities';
@@ -83,6 +84,7 @@ export function requestSurfacePath(protocol: string, operation: string, modelId?
 		const paths: Record<string, string> = {
 			chat: '/v1/chat/completions',
 			responses: '/v1/responses',
+			embeddings: '/v1/embeddings',
 			'images.generations': '/v1/images/generations',
 			'images.edits': '/v1/images/edits',
 			'audio.transcriptions': '/v1/audio/transcriptions',
@@ -617,6 +619,7 @@ export function buildFormDataFromRoute(route: GatewayModelRoute, _models: Gatewa
 		priority: route.priority,
 		weight: Number(route.weight ?? 1) || 1,
 		custom_params_json: route.custom_params ?? '',
+		routing_metadata_json: route.routing_metadata ?? '',
 		route_group: route.route_group ?? 'default',
 		charged_factor: String(factors.chargedFactor),
 		metered_factor: String(factors.meteredFactor),
@@ -660,6 +663,7 @@ export function buildRouteSavePayload(
 		route_group: formData.route_group.trim() || 'default',
 		price_override: JSON.stringify(priceOverride),
 		custom_params: normalizeJsonText(formData.custom_params_json, 'custom_params'),
+		routing_metadata: normalizeJsonText(formData.routing_metadata_json, 'routing_metadata'),
 	};
 	if (!editingRoute) {
 		payload.status = 'inactive';
@@ -682,6 +686,9 @@ export function requestOperationsForModel(
 ): readonly string[] {
 	if (model && isImageGenerationModel(model)) {
 		return protocol === 'openai' ? ['images.generations', 'images.edits'] : [];
+	}
+	if (model && isEmbeddingModel(model)) {
+		return protocol === 'openai' ? ['embeddings'] : [];
 	}
 	if (model && isAudioTranscriptionModel(model)) {
 		if (protocol === 'openai') return ['audio.transcriptions'];
@@ -1230,6 +1237,7 @@ export function createInitialRouteForm(models: GatewayModel[], presetModelId?: s
 		priority: 0,
 		weight: 1,
 		custom_params_json: '',
+		routing_metadata_json: '',
 		route_group: 'default',
 		charged_factor: '1',
 		metered_factor: '1',

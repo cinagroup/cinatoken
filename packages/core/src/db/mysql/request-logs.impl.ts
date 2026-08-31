@@ -14,12 +14,32 @@ import {
 import type { RequestLogRow } from '../../types';
 import type { MySqlDatabaseClient } from '../../storage/database-client';
 import type { RequestLogsRepository } from '../../storage/gateway-repository-interfaces';
-import { asMySqlPool } from './mysql2-compat';
+import { asMySqlPool, toMySqlDateTime } from './mysql2-compat';
 import { filterAllowedRequestLogStatuses } from '../request-log-status-filter';
+import type { GenerationRequestLogRow, RoutePerformanceSample } from '../request-logs-types';
+import {
+	buildRecentRoutePerformanceSamplesSql,
+	normalizeRoutePerformanceSamplesPerTarget,
+} from '../route-performance-sampling';
 
 export function createMySqlRequestLogsRepository(db: MySqlDatabaseClient): RequestLogsRepository {
 	const pool = asMySqlPool(db.raw);
 	return {
+		async getRequestLogByIdForOwner(options): Promise<GenerationRequestLogRow | null> {
+			const [rows] = await pool.query<GenerationRequestLogRow[]>(
+				`SELECT rl.id, rl.request_operation, rl.status, rl.created_at,
+				        rl.latency_ms, rl.model_id, rl.provider_name,
+				        rl.input_tokens, rl.output_tokens, rl.upstream_message_id
+				 FROM api_key_request_logs rl
+				 WHERE rl.id = ?
+				   AND rl.user_id = ?
+				   AND rl.workspace_id = ?
+				 LIMIT 1`,
+				[options.id, options.userId, options.workspaceId]
+			);
+			return rows[0] ?? null;
+		},
+
 		async getRequestLogsByKeyId(
 			apiKeyId: string,
 			page: number,
@@ -83,6 +103,7 @@ export function createMySqlRequestLogsRepository(db: MySqlDatabaseClient): Reque
 		async getRequestLogs(options: {
 			page?: number;
 			pageSize?: number;
+			workspaceId?: string;
 			apiKeyId?: string;
 			userId?: string;
 			userEmail?: string;
@@ -99,6 +120,11 @@ export function createMySqlRequestLogsRepository(db: MySqlDatabaseClient): Reque
 			const offset = (page - 1) * pageSize;
 			const conditions: string[] = [];
 			const bindValues: unknown[] = [];
+
+			if (options.workspaceId) {
+				conditions.push('rl.workspace_id = ?');
+				bindValues.push(options.workspaceId);
+			}
 
 			if (options.apiKeyId) {
 				conditions.push('rl.api_key_id = ?');
@@ -164,16 +190,28 @@ export function createMySqlRequestLogsRepository(db: MySqlDatabaseClient): Reque
 			startDate: string;
 			endDate: string;
 			endExclusive?: boolean;
+			userId?: string;
+			workspaceId?: string;
 		}) {
 			const comparator = options.endExclusive ? '<' : '<=';
+			const conditions = [`created_at >= ?`, `created_at ${comparator} ?`];
+			const values: unknown[] = [options.startDate, options.endDate];
+			if (options.userId) {
+				conditions.push('user_id = ?');
+				values.push(options.userId);
+			}
+			if (options.workspaceId) {
+				conditions.push('workspace_id = ?');
+				values.push(options.workspaceId);
+			}
 			const [rows] = await pool.query<(RowDataPacket & Record<string, unknown>)[]>(
 				`SELECT
 					${REQUEST_STATS_SELECT_SQL},
 					COALESCE(${sqlMoneyRound('SUM(charged_cost)')}, 0) AS charged_cost,
 					COALESCE(${sqlMoneyRound('SUM(metered_cost)')}, 0) AS metered_cost,
 					COALESCE(${sqlMoneyRound('SUM(standard_cost)')}, 0) AS standard_cost
-				 FROM api_key_request_logs WHERE created_at >= ? AND created_at ${comparator} ?`,
-				[options.startDate, options.endDate]
+				 FROM api_key_request_logs WHERE ${conditions.join(' AND ')}`,
+				values
 			);
 			return mapRequestStatsByRangeRow(rows[0] as Parameters<typeof mapRequestStatsByRangeRow>[0]);
 		},
@@ -253,6 +291,18 @@ export function createMySqlRequestLogsRepository(db: MySqlDatabaseClient): Reque
 			const [rows] = await pool.query<RequestLogRow[]>(
 				`SELECT * FROM api_key_request_logs WHERE status = 'error' ORDER BY created_at DESC LIMIT ?`,
 				[limit]
+			);
+			return rows;
+		},
+
+		async getRecentRoutePerformanceSamples(options): Promise<RoutePerformanceSample[]> {
+			if (options.routeTargetIds.length === 0) return [];
+			const maxSamplesPerRoute = normalizeRoutePerformanceSamplesPerTarget(options.maxSamplesPerRoute);
+			if (maxSamplesPerRoute === 0) return [];
+			const sql = buildRecentRoutePerformanceSamplesSql('mysql', options.routeTargetIds.length);
+			const [rows] = await pool.query<(RowDataPacket & RoutePerformanceSample)[]>(
+				sql,
+				[...options.routeTargetIds, toMySqlDateTime(options.sinceIso), maxSamplesPerRoute]
 			);
 			return rows;
 		},

@@ -60,6 +60,10 @@ describe('request surface path', () => {
 		assert.equal(requestSurfacePath('openai', 'audio.speech', 'audio-model'), '/v1/audio/speech');
 	});
 
+	it('maps the OpenAI embeddings surface', () => {
+		assert.equal(requestSurfacePath('openai', 'embeddings', 'embedding-model'), '/v1/embeddings');
+	});
+
 	it('shows the shared DashScope realtime WebSocket entry with routing parameters', () => {
 		assert.equal(
 			requestSurfacePath('dashscope', 'audio.transcriptions.realtime.inference', 'my fun/asr'),
@@ -165,6 +169,13 @@ describe('route form capability filters', () => {
 	it('limits public operations by model modality', () => {
 		assert.deepEqual(requestOperationsForModel(model(), 'openai'), ['chat', 'responses']);
 		assert.deepEqual(
+			requestOperationsForModel(model({
+				input_modalities: '["text"]',
+				output_modalities: '["embeddings"]',
+			}), 'openai'),
+			['embeddings'],
+		);
+		assert.deepEqual(
 			requestOperationsForModel(
 				model({
 					input_modalities: '["text","image"]',
@@ -262,6 +273,14 @@ describe('route form capability filters', () => {
 			'chat',
 			'responses',
 		]);
+		assert.deepEqual(
+			upstreamOperationsForProviderModel(
+				baseProvider,
+				model({ input_modalities: '["text"]', output_modalities: '["embeddings"]' }),
+				'openai',
+			),
+			['embeddings'],
+		);
 		assert.deepEqual(
 			upstreamOperationsForProviderModel(
 				baseProvider,

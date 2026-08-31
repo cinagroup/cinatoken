@@ -181,7 +181,7 @@ adminProvidersRoutes.patch("/:id", async (c) => {
 	}
 	try {
 		const repos = c.get("repositories");
-		await updateProviderService(repos, id, body);
+		await updateProviderService(repos, id, body, c.get('principal').id);
 		return c.json({ success: true, message: "Provider updated successfully" });
 	} catch (error) {
 		return handleAdminRouteError(c, error, "Failed to update provider");

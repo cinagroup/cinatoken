@@ -8,6 +8,8 @@ export type InsertRequestLogParams = {
 	id: string;
 	userId: string | null;
 	apiKeyId: string;
+	/** Immutable request-time Workspace snapshot; must match the authenticated Gateway Key. */
+	workspaceId: string;
 	userEmail: string | null;
 	modelId: string;
 	providerId: string;
@@ -34,6 +36,10 @@ export type InsertRequestLogParams = {
 	meteredCost: number;
 	standardCost: number;
 	chargedCost: number;
+	/** Integer micro-unit debit used by the atomic Guardrail budget ledger. */
+	budgetChargedMicros?: number | null;
+	/** Request-start timestamp used to pin budget accounting across period boundaries. */
+	budgetAccountedAt?: string | null;
 	routeGroup: string;
 	status: 'success' | 'error' | 'incomplete' | 'cancelled';
 	latencyMs: number | null;
@@ -67,4 +73,34 @@ export type InsertRequestLogParams = {
 	audioDurationSeconds?: number | null;
 	/** TTS：上游返回的有效计费字符数 */
 	audioCharacters?: number | null;
+};
+
+/**
+ * Least-privilege projection used by the public Generation metadata endpoint.
+ * Keep this type intentionally narrow: request bodies, route traces, errors,
+ * provider-key material and pricing audits must never be loaded by that path.
+ */
+export type GenerationRequestLogRow = {
+	id: string;
+	request_operation: string | null;
+	status: string;
+	created_at: string;
+	latency_ms: number | null;
+	model_id: string | null;
+	provider_name: string | null;
+	input_tokens: number;
+	output_tokens: number;
+	upstream_message_id: string | null;
+};
+
+/** Bounded recent success sample used by request-time provider performance preferences. */
+export type RoutePerformanceSample = {
+	route_target_id: string;
+	output_tokens: number;
+	latency_ms: number | null;
+	upstream_response_ms: number | null;
+	final_upstream_headers_ms: number | null;
+	first_token_ms: number | null;
+	stream_duration_ms: number | null;
+	created_at: string;
 };

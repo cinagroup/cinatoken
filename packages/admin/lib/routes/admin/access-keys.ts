@@ -92,7 +92,7 @@ adminAccessKeysRoutes.get('/:id/secret', async (c) => {
 
 adminAccessKeysRoutes.post('/:id/rotate', async (c) => {
 	const secretKey = generateAdminApiKey();
-	const updated = await c.get('repositories').adminAccess.rotateApiKey(c.req.param('id'), secretKey, secretKey.slice(0, 12));
+	const updated = await c.get('repositories').adminAccess.rotateApiKey(c.req.param('id'), secretKey);
 	if (!updated) return c.json({ success: false, message: 'Active Admin API key not found' }, 404);
 	return c.json({ success: true, data: { id: c.req.param('id'), key: secretKey } });
 });
@@ -127,7 +127,6 @@ adminAccessKeysRoutes.patch('/:id', async (c) => {
 		description?: string | null;
 		permissionsJson?: string;
 		secretKey?: string;
-		keyPrefix?: string;
 		status?: 'active' | 'revoked';
 		revokedAt?: string | null;
 	} = {};
@@ -161,7 +160,6 @@ adminAccessKeysRoutes.patch('/:id', async (c) => {
 			return c.json({ success: false, message: 'Invalid secret_key' }, 400);
 		}
 		patch.secretKey = secretKey;
-		patch.keyPrefix = secretKey.slice(0, 12);
 	}
 	if (Object.keys(patch).length === 0) {
 		return c.json({ success: false, message: 'No changes supplied' }, 400);

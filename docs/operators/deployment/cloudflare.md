@@ -203,6 +203,20 @@ npx wrangler d1 list
 - **0034 首次上线必须冻结旧写入**：先以 `CINATOKEN_MAINTENANCE_MODE=true` 发布 Proxy 并确认外部请求返回维护状态，再执行迁移和发布新 Proxy，最后关闭维护模式。不得直接用未冻结写入的“迁移后再部署”窗口，否则旧版本在两步之间写入的请求不会进入日汇总。Node/Docker 部署对应为摘流量/停旧进程、迁移、启动新镜像后恢复流量。
 - D1→PostgreSQL 切换会把 `public_model_daily_stats` 与请求日志一起置于冻结快照中 ETL，并核对行数及六个累计字段；源端和目标端都必须达到 `0034` 才允许切换。
 
+### 请求预设（0035）
+
+- D1/PostgreSQL 的 `0035_request_presets.sql`（MySQL 为 `0031`）创建 `request_presets` 与 `request_preset_versions`；必须先迁移，再发布读取 `requestPresets` 仓储的 Proxy/Admin。
+- D1→PostgreSQL ETL 顺序包含 Preset 主表与版本表，且两端切换门禁必须达到 `0035_request_presets.sql`。
+- 发布后用普通用户创建一个私有 Preset，创建第二版本并回滚，再用另一个用户确认私有 slug 返回 `gateway.preset_not_found`；最后由管理员核对所有者、指定版本与归档状态。
+
+### Guardrails 与路由数据策略（0036–0037、0046）
+
+- D1 必须迁移到 `0049_model_endpoint_audio_capabilities.sql`，PostgreSQL 到 `0048_model_endpoint_audio_capabilities.sql`，MySQL 到 `0045_model_endpoint_audio_capabilities.sql`。前一组迁移已为每条 Endpoint/Route 绑定增加 nullable subject fingerprint；本组为 Endpoint 增加 operation-scoped `audio_capabilities`。旧链接保持 `NULL`、旧音频证据保持 `{}`，不得从 legacy pricing 自动猜测回填。D1/PostgreSQL 版本号相差一是因为 D1 独有 `0041_user_budget_spent_micros.sql`，不得按相同序号判断等价。
+- 必须先迁移，再发布读取 `guardrails` / `routeDataPolicies` 仓储的 Proxy 和 Admin。旧 Worker 与新表结构混跑会使所有带策略请求进入 500，而不是安全降级。
+- 新 route target 默认数据策略是 `unknown`、允许训练、无 ZDR；这是有意的 fail-closed 默认。管理员需在 `/admin/data-policies` 附上公开 HTTPS 证据和有效期后，ZDR 流量才会进入该路由。
+- subject 绑定迁移会把所有旧 `verified` 断言置为 `unknown` 并写入 `subject_fingerprint_backfill_required` 审计；这是安全升级行为。迁移后必须由管理员逐条复核并重新保存，不能批量复制旧状态。Route 的 Provider/模型/协议/operation/adapter/`custom_params`，或 Provider 的 endpoint/API Key/共享渠道发生变更时，断言会自动失效；运行时 fingerprint 比较是最终 fail-closed 门禁。
+- 发布后最小验收：管理员下发一个用户绑定并确认普通用户无法覆盖/解绑；构造 `provider.zdr=true` 请求确认仅命中已核验 route；将证据设为过期后确认返回 `gateway.zdr_no_route`；检查审计快照与请求审计均不含原始提示词、上游 Key 或合同内容。
+
 ---
 
 ## 7. 认证与下游

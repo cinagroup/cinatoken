@@ -3,6 +3,10 @@
  */
 
 import { WebFetchProviderError, type WebFetchParams, type WebFetchResult } from './types';
+import {
+	assertToolProviderOutputWithinLimit,
+	readToolProviderResponseText,
+} from '../http/bounded-response';
 
 type FirecrawlRawResponse = {
 	success?: boolean;
@@ -44,7 +48,10 @@ export async function fetchFirecrawlUrl(params: WebFetchParams): Promise<WebFetc
 		}),
 	});
 
-	const text = await response.text();
+	const text = await readToolProviderResponseText(response, {
+		provider: 'firecrawl',
+		errorConstructor: WebFetchProviderError,
+	});
 	let json: FirecrawlRawResponse;
 	try {
 		json = JSON.parse(text) as FirecrawlRawResponse;
@@ -79,5 +86,10 @@ export async function fetchFirecrawlUrl(params: WebFetchParams): Promise<WebFetc
 		(typeof meta?.url === 'string' && meta.url.trim() ? meta.url.trim() : undefined) ||
 		params.url;
 
-	return { title, url: finalUrl, content: markdown };
+	const result = { title, url: finalUrl, content: markdown };
+	assertToolProviderOutputWithinLimit(result, {
+		provider: 'firecrawl',
+		errorConstructor: WebFetchProviderError,
+	});
+	return result;
 }
