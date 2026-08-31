@@ -227,6 +227,29 @@ test("audit M2: provider api keys encrypt on insert and decrypt at the boundary"
 	);
 });
 
+test("environment-backed provider references remain non-secret configuration", async () => {
+	const { repository, store } = makeRepository([]);
+	const wrapped = createEncryptedProvidersRepository(repository, SECRET);
+
+	await wrapped.insertProvider({
+		id: "deepseek-official",
+		name: "DeepSeek Official",
+		endpoints: null,
+		description: null,
+		apiKey: "env:DEEPSEEK_API_KEY",
+	});
+	assert.equal(store.get("deepseek-official")?.api_key, "env:DEEPSEEK_API_KEY");
+
+	await wrapped.updateProviderByPatch("deepseek-official", {
+		api_key: "env:DEEPSEEK_API_KEY",
+	});
+	assert.equal(store.get("deepseek-official")?.api_key, "env:DEEPSEEK_API_KEY");
+	assert.equal(
+		(await wrapped.getProviderById("deepseek-official"))?.api_key,
+		"env:DEEPSEEK_API_KEY"
+	);
+});
+
 test("audit M2: legacy plaintext provider keys migrate in place on first read", async () => {
 	const { repository, store } = makeRepository([
 		{ id: "p2", name: "Anthropic", api_key: "sk-legacy-plain" },

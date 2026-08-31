@@ -3,6 +3,8 @@ import {
 	assertSharedKeyEncryptionSecret,
 	createEncryptedSharedKeysRepository,
 	createEncryptedProvidersRepository,
+	createEnvironmentProviderKeysRepository,
+	DEEPSEEK_OFFICIAL_ENVIRONMENT_SECRET_POLICY,
 } from '@octafuse/core';
 import { createWorkerStorageContext } from '@octafuse/core/storage/context';
 import {
@@ -36,7 +38,16 @@ function protectSharedKeys(storage: StorageContext, bindings?: AdminBindings): S
 		repositories: {
 			...storage.repositories,
 			sharedKeys: createEncryptedSharedKeysRepository(storage.repositories.sharedKeys, secret),
-			providers: createEncryptedProvidersRepository(storage.repositories.providers, secret),
+			providers: createEnvironmentProviderKeysRepository(
+				createEncryptedProvidersRepository(storage.repositories.providers, secret),
+				{
+					policies: [DEEPSEEK_OFFICIAL_ENVIRONMENT_SECRET_POLICY],
+					secrets: {
+						DEEPSEEK_API_KEY:
+							bindings?.DEEPSEEK_API_KEY ?? process.env.DEEPSEEK_API_KEY,
+					},
+				},
+			),
 		},
 	};
 }

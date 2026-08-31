@@ -54,6 +54,7 @@ export async function resolveAdminRequestRuntime(request?: Request): Promise<{
 		CINAAUTH_ORGANIZATION_ADMIN_ROLES: env?.CINAAUTH_ORGANIZATION_ADMIN_ROLES,
 		SHARED_KEY_ENCRYPTION_SECRET:
 			env?.SHARED_KEY_ENCRYPTION_SECRET ?? process.env.SHARED_KEY_ENCRYPTION_SECRET,
+		DEEPSEEK_API_KEY: env?.DEEPSEEK_API_KEY ?? process.env.DEEPSEEK_API_KEY,
 		CHAIN_JOBS: env?.CHAIN_JOBS,
 		AUTH_RATE_LIMITER: env?.AUTH_RATE_LIMITER,
 		DATABASE_URL: cloudflareRuntime ? undefined : process.env.DATABASE_URL,

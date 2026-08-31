@@ -146,6 +146,7 @@ async function main() {
 	const baseNames = namesFromPrefix(prefix);
 	const requiredSecretNames = [
 		"SHARED_KEY_ENCRYPTION_SECRET",
+		"DEEPSEEK_API_KEY",
 		"CINATOKEN_OIDC_CLIENT_SECRET",
 		"CINATOKEN_OIDC_BRIDGE_SECRET",
 		"CINATOKEN_OIDC_TRANSACTION_SECRET",
@@ -242,13 +243,14 @@ async function main() {
 	}
 
 	const secretTargets = [
-		[names.proxyWorkerName, ["SHARED_KEY_ENCRYPTION_SECRET"]],
+		[names.proxyWorkerName, ["SHARED_KEY_ENCRYPTION_SECRET", "DEEPSEEK_API_KEY"]],
 		[names.adminWorkerName, [
 			"CINATOKEN_OIDC_CLIENT_SECRET",
 			"CINATOKEN_OIDC_BRIDGE_SECRET",
 			"CINATOKEN_OIDC_TRANSACTION_SECRET",
 			"CINATOKEN_IDENTITY_EVENTS_SECRET",
 			"SHARED_KEY_ENCRYPTION_SECRET",
+			"DEEPSEEK_API_KEY",
 		]],
 		[names.chainWorkerName, [
 			"CINACHAIN_RPC_URL",

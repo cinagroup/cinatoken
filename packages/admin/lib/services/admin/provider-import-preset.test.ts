@@ -153,6 +153,10 @@ describe('provider import preset catalog metadata', () => {
 		const chatOf = (name: string) => byName.get(name)?.endpoints.openai?.endpoints?.chat;
 		const openaiBaseOf = (name: string) => byName.get(name)?.endpoints.openai?.base;
 		const anthropicBaseOf = (name: string) => byName.get(name)?.endpoints.anthropic?.base;
+		const responsesOf = (name: string) => byName.get(name)?.endpoints.openai?.endpoints?.responses;
+
+		assert.equal(responsesOf('DeepSeek'), 'https://api.deepseek.com/responses');
+		assert.equal(anthropicBaseOf('DeepSeek'), 'https://api.deepseek.com/anthropic');
 
 		assert.equal(
 			chatOf('Command Code'),

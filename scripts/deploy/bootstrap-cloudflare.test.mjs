@@ -14,6 +14,7 @@ test('non-interactive bootstrap fails before creating resources when secrets are
 	const env = { ...process.env };
 	for (const name of [
 		'SHARED_KEY_ENCRYPTION_SECRET',
+		'DEEPSEEK_API_KEY',
 		'CINATOKEN_OIDC_CLIENT_SECRET',
 		'CINATOKEN_OIDC_BRIDGE_SECRET',
 		'CINATOKEN_OIDC_TRANSACTION_SECRET',

@@ -25,6 +25,7 @@ export type UserBindings = {
 	/** Explicit comma-separated CinaAuth roles allowed organization-wide billing authority. */
 	CINAAUTH_ORGANIZATION_ADMIN_ROLES?: string;
 	SHARED_KEY_ENCRYPTION_SECRET?: string;
+	DEEPSEEK_API_KEY?: string;
 	CHAIN_JOBS?: Queue<ChainJobMessage>;
 	/** Node / 自托管数据库使用 `DATABASE_URL`；Cloudflare Postgres 只使用 `HYPERDRIVE`。 */
 	DATABASE_URL?: string;

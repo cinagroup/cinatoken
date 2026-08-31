@@ -24,6 +24,7 @@ export type AdminBindings = {
 	CINATOKEN_IDENTITY_EVENTS_SECRET?: string;
 	CINAAUTH_ORGANIZATION_ADMIN_ROLES?: string;
 	SHARED_KEY_ENCRYPTION_SECRET?: string;
+	DEEPSEEK_API_KEY?: string;
 	CHAIN_JOBS?: Queue<ChainJobMessage>;
 	/** Workers rate-limiting binding（wrangler.base.jsonc ratelimits）。认证失败限速；未注入时跳过。 */
 	AUTH_RATE_LIMITER?: { limit(options: { key: string }): Promise<{ success: boolean }> };

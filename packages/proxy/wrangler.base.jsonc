@@ -44,6 +44,6 @@
 		"head_sampling_rate": 1
 	},
 	"secrets": {
-		"required": ["SHARED_KEY_ENCRYPTION_SECRET"]
+		"required": ["SHARED_KEY_ENCRYPTION_SECRET", "DEEPSEEK_API_KEY"]
 	}
 }

@@ -20,6 +20,7 @@
 
 - 上游 Base URL / `endpoints` 与协议类型是否匹配。
 - 上游 API Key 是否真实可用（列表为脱敏；明文经管理后台「显示」或 `GET /api/admin/providers/:id/api-key`）。
+- 官方 DeepSeek Provider（固定 ID `deepseek-official`）使用 `env:DEEPSEEK_API_KEY` 引用；实际密钥仅从 Proxy/Admin 运行时的 `DEEPSEEK_API_KEY` 环境变量或 Worker Secret 读取，不写入数据库。密钥验证失败时必须保持 Provider 为 `disabled`。
 - 供应商 `status` 是否为 **active**（disabled 或空密钥的行不会参与调度）。
 - 如使用导入模板，导入后须补齐真实 API Key（导入占位 key 会标为 pending）。
 

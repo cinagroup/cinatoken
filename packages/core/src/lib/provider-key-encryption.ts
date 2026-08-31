@@ -12,6 +12,7 @@
  * salt/info 将其与共享密钥用途域分离）。
  */
 import type { ProvidersRepository } from "../storage/gateway-repository-interfaces";
+import { isProviderApiKeyEnvironmentReference } from "./provider-key-environment";
 import {
 	assertSharedKeyEncryptionSecret,
 	encryptSharedKeySecret,
@@ -76,6 +77,10 @@ export function createEncryptedProvidersRepository(
 		if (!row) return null;
 		const stored = row.api_key;
 		if (!stored) return row;
+		// Environment references are non-secret configuration. Keep them readable
+		// and stable so the runtime can resolve the binding without copying the
+		// actual secret into provider storage.
+		if (isProviderApiKeyEnvironmentReference(stored)) return row;
 		const context = providerContext(row.id);
 		if (!isEncryptedSharedKeySecret(stored)) {
 			// 明文旧行：首次读取即地加密
@@ -119,6 +124,10 @@ export function createEncryptedProvidersRepository(
 		async insertProvider(params) {
 			const apiKey = params.apiKey;
 			if (typeof apiKey === "string" && apiKey.length > 0) {
+				if (isProviderApiKeyEnvironmentReference(apiKey)) {
+					await repository.insertProvider(params);
+					return;
+				}
 				await repository.insertProvider({
 					...params,
 					apiKey: await encryptSharedKeySecret(
@@ -135,6 +144,9 @@ export function createEncryptedProvidersRepository(
 			const secretValue = patchSecretValue(body);
 			if (secretValue === null)
 				return repository.updateProviderByPatch(id, body);
+			if (isProviderApiKeyEnvironmentReference(secretValue)) {
+				return repository.updateProviderByPatch(id, body);
+			}
 			const patched = {
 				...body,
 				api_key: await encryptSharedKeySecret(

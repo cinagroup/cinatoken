@@ -23,6 +23,7 @@ declare namespace Cloudflare {
 		CINATOKEN_IDENTITY_EVENTS_SECRET: string;
 		CINAAUTH_ORGANIZATION_ADMIN_ROLES?: string;
 		SHARED_KEY_ENCRYPTION_SECRET: string;
+		DEEPSEEK_API_KEY?: string;
 		CHAIN_JOBS: Queue<import('@octafuse/core').ChainJobMessage>;
 		AUTH_RATE_LIMITER: RateLimit;
 		ADMIN_USERNAME?: string;

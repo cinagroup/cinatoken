@@ -2,7 +2,9 @@ import {
 	createMySqlStorageContext,
 	createPostgresStorageContext,
 	createEncryptedProvidersRepository,
+	createEnvironmentProviderKeysRepository,
 	createEncryptedSharedKeysRepository,
+	DEEPSEEK_OFFICIAL_ENVIRONMENT_SECRET_POLICY,
 	assertSharedKeyEncryptionSecret,
 	resolveNodeDatabaseConfig,
 	type StorageContext,
@@ -39,7 +41,13 @@ async function resolveNodeStorage(): Promise<StorageContext> {
 		repositories: {
 			...storage.repositories,
 			sharedKeys: createEncryptedSharedKeysRepository(storage.repositories.sharedKeys, secret),
-			providers: createEncryptedProvidersRepository(storage.repositories.providers, secret),
+			providers: createEnvironmentProviderKeysRepository(
+				createEncryptedProvidersRepository(storage.repositories.providers, secret),
+				{
+					policies: [DEEPSEEK_OFFICIAL_ENVIRONMENT_SECRET_POLICY],
+					secrets: { DEEPSEEK_API_KEY: process.env.DEEPSEEK_API_KEY },
+				},
+			),
 		},
 	};
 }

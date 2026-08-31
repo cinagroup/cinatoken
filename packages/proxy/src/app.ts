@@ -53,6 +53,8 @@ export type GatewayBindings = {
 	DB?: D1Database;
 	HYPERDRIVE?: HyperdriveBinding;
 	SHARED_KEY_ENCRYPTION_SECRET?: string;
+	/** DeepSeek official upstream key; configured as a Worker Secret. */
+	DEEPSEEK_API_KEY?: string;
 	/** 省略时保持 D1；只有 `postgres` 会切换到 `HYPERDRIVE`。 */
 	DATABASE_DRIVER?: string;
 	/** 最终数据库切换窗口内，在任何存储访问之前拒绝外部 HTTP 流量。 */

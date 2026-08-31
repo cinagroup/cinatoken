@@ -3,6 +3,7 @@
  */
 
 import { parseGcpServiceAccountJson } from '../gcp-service-account-token';
+import { parseProviderApiKeyEnvironmentReference } from '../lib/provider-key-environment';
 
 /** 占位密钥：静态导入模板写入 default pool key，须在 Admin 中替换为真实密钥。 */
 export const PROVIDER_IMPORT_PENDING_API_KEY = '__OCTAFUSE_PENDING_PROVIDER_API_KEY__';
@@ -13,6 +14,8 @@ export function isPendingProviderImportApiKey(apiKey: string | null | undefined)
 
 /** 尾号指纹，如 `…x7Kp`；短密钥返回 `***`。服务账号只暴露邮箱尾号，避免泄露私钥。 */
 export function fingerprintProviderApiKey(apiKey: string): string {
+	const environmentName = parseProviderApiKeyEnvironmentReference(apiKey);
+	if (environmentName) return `env:${environmentName}`;
 	const account = parseGcpServiceAccountJson(apiKey);
 	if (account) {
 		const email = account.client_email;
@@ -26,6 +29,8 @@ export function fingerprintProviderApiKey(apiKey: string): string {
 
 /** Admin 列表脱敏预览，如 `sk-…x7Kp`；服务账号展示 `sa:client_email`。 */
 export function maskProviderApiKeyForAdmin(apiKey: string): string {
+	const environmentName = parseProviderApiKeyEnvironmentReference(apiKey);
+	if (environmentName) return `env:${environmentName}`;
 	const account = parseGcpServiceAccountJson(apiKey);
 	if (account) return `sa:${account.client_email}`;
 	const trimmed = apiKey.trim();

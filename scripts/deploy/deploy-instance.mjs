@@ -174,6 +174,7 @@ function main() {
 	if (doProxy) {
 		assertWorkerSecrets(vars.PROXY_WORKER_NAME || "cinatoken-proxy", [
 			"SHARED_KEY_ENCRYPTION_SECRET",
+			"DEEPSEEK_API_KEY",
 		]);
 	}
 	if (doChain) {
@@ -191,6 +192,7 @@ function main() {
 			"CINATOKEN_OIDC_TRANSACTION_SECRET",
 			"CINATOKEN_IDENTITY_EVENTS_SECRET",
 			"SHARED_KEY_ENCRYPTION_SECRET",
+			"DEEPSEEK_API_KEY",
 		]);
 	}
 	if (preflightOnly) {

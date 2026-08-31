@@ -1,7 +1,9 @@
 import {
 	assertSharedKeyEncryptionSecret,
 	createEncryptedProvidersRepository,
+	createEnvironmentProviderKeysRepository,
 	createEncryptedSharedKeysRepository,
+	DEEPSEEK_OFFICIAL_ENVIRONMENT_SECRET_POLICY,
 	createWorkerStorageContext,
 	isGatewayMaintenanceMode,
 	resolveWorkerDatabaseConfig,
@@ -19,7 +21,13 @@ async function resolveWorkersStorage(context: Context<Env>): Promise<StorageCont
 		repositories: {
 			...storage.repositories,
 			sharedKeys: createEncryptedSharedKeysRepository(storage.repositories.sharedKeys, secret),
-			providers: createEncryptedProvidersRepository(storage.repositories.providers, secret),
+			providers: createEnvironmentProviderKeysRepository(
+				createEncryptedProvidersRepository(storage.repositories.providers, secret),
+				{
+					policies: [DEEPSEEK_OFFICIAL_ENVIRONMENT_SECRET_POLICY],
+					secrets: { DEEPSEEK_API_KEY: context.env.DEEPSEEK_API_KEY },
+				},
+			),
 		},
 	};
 }

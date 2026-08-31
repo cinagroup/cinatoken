@@ -83,6 +83,7 @@ export * from "./lib/route-strategy-system-config";
 export * from "./lib/money-precision";
 export * from "./lib/shared-key-encryption";
 export * from "./lib/provider-key-encryption";
+export * from "./lib/provider-key-environment";
 export * from "./lib/string-utils";
 export * from "./lib/time-format";
 export * from "./lib/resolve-me-metadata";
