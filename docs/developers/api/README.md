@@ -11,7 +11,7 @@
 | 健康检查与用户 API | Proxy（CF Worker 或 Node） | `https://<proxy>/` | `/`、`/health`、`/catalog/*`、`/v1/*`、`/v1beta/*` |
 | 管理 API | Admin（OpenNext 或 Node） | `https://<admin>/` | **`/api/admin/*`**（服务端重写为内部 `/admin/*`） |
 
-**与实现对齐**：Proxy 路由以 **`packages/proxy/src/app.ts`** 及各 **`packages/proxy/src/routes/**`**（含 **`routes/catalog.ts`**）为准；根路径 JSON 见该文件（`name: octafuse-proxy`）。管理路由以 **`packages/admin/lib/admin-app.ts`** 及 **`packages/admin/lib/routes/admin/**`** 为准。
+**与实现对齐**：Proxy 路由以 **`packages/proxy/src/app.ts`** 及各 **`packages/proxy/src/routes/**`**（含 **`routes/catalog.ts`**）为准；根路径 JSON 见该文件（`name: cinatoken-proxy`）。管理路由以 **`packages/admin/lib/admin-app.ts`** 及 **`packages/admin/lib/routes/admin/**`** 为准。
 
 ## 扩展文档
 

@@ -18,7 +18,7 @@ GET /
 
 ```json
 {
-  "name": "octafuse-proxy",
+  "name": "cinatoken-proxy",
   "version": "2.0.0"
 }
 ```
@@ -48,7 +48,7 @@ GET /health
 ```json
 {
   "status": "ok",
-  "service": "octafuse-proxy"
+  "service": "cinatoken-proxy"
 }
 ```
 

@@ -8,5 +8,5 @@ export const healthRoutes = new Hono<Env>();
 
 /** 返回固定 JSON，不做 DB 探测（轻量探活）。 */
 healthRoutes.get('/', (c) => {
-	return c.json({ status: 'ok', service: 'octafuse-proxy' });
+	return c.json({ status: 'ok', service: 'cinatoken-proxy' });
 });
