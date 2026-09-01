@@ -151,6 +151,10 @@ export async function applyProviderPerformanceRouting(
 				.map((route) => route.targetId),
 		);
 		preferredIds = thresholdPreferredIds;
+		ordered = ordered.map((route) => ({
+			...route,
+			gatewayPerformancePreferred: thresholdPreferredIds.has(route.targetId),
+		}));
 		if (thresholdPreferredIds.size > 0) {
 			ordered = ordered.map((route) => ({
 				...route,

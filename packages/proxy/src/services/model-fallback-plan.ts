@@ -219,6 +219,7 @@ async function buildExecutionCandidates(params: {
 	preferences: ProviderPreferences | null;
 	pricingAt: Date;
 	businessTimezone: string;
+	deferPriceRoutingToSurface: boolean;
 }): Promise<{
 	candidates: ModelFallbackCandidatePlan[];
 	endpointPartition: 'model' | 'none';
@@ -260,7 +261,7 @@ async function buildExecutionCandidates(params: {
 		})),
 	);
 	let orderedEntries = [...entries];
-	if (params.preferences?.sort?.by === 'price') {
+	if (params.preferences?.sort?.by === 'price' && !params.deferPriceRoutingToSurface) {
 		orderedEntries.sort((left, right) =>
 			priceSortScore(left.price) - priceSortScore(right.price)
 			|| left.candidateIndex - right.candidateIndex
@@ -280,6 +281,7 @@ async function buildExecutionCandidates(params: {
 	);
 	if (
 		params.preferences?.sort?.by === 'price'
+		&& !params.deferPriceRoutingToSurface
 		&& (params.preferences.preferredMinThroughput != null
 			|| params.preferences.preferredMaxLatency != null)
 	) {
@@ -385,11 +387,15 @@ export async function buildModelFallbackPlan(
 		}
 	}
 	const usesPriceRouting = Boolean(preferences?.maxPrice || preferences?.sort?.by === 'price');
+	const deferPriceRoutingToSurface = params.requestProtocol === 'openai'
+		&& (params.requestOperation === 'images.generations'
+			|| params.requestOperation === 'images.edits');
+	const usesGenericPriceRouting = usesPriceRouting && !deferPriceRoutingToSurface;
 	const usesGlobalEndpointPartition = preferences?.sort?.partition === 'none';
 	const pricingAt = params.pricingAt instanceof Date && Number.isFinite(params.pricingAt.getTime())
 		? params.pricingAt
 		: new Date();
-	const businessTimezone = usesPriceRouting ? await getBusinessTimezone(repos) : 'UTC';
+	const businessTimezone = usesGenericPriceRouting ? await getBusinessTimezone(repos) : 'UTC';
 	let surfaces: Awaited<ReturnType<typeof resolveRoutesForSurface>>[];
 	try {
 		surfaces = await Promise.all(
@@ -505,7 +511,7 @@ export async function buildModelFallbackPlan(
 			continue;
 		}
 		let selectedRoutes = providerResult.routes;
-		if (usesPriceRouting) {
+		if (usesGenericPriceRouting) {
 			const priced = selectedRoutes.map((route) => ({
 				route,
 				price: comparableRoutePrice(route, pricingAt, businessTimezone),
@@ -586,6 +592,7 @@ export async function buildModelFallbackPlan(
 		preferences,
 		pricingAt,
 		businessTimezone,
+		deferPriceRoutingToSurface,
 	});
 	return {
 		ok: true,

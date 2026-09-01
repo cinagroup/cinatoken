@@ -35,6 +35,9 @@ import {
 	scaleBillingPrices,
 	toScheduleAudit,
 	applyUserChargedCostToBreakdown,
+	applyUserChargedCostFactor,
+	lookupUserChargedCostFactor,
+	parseUserChargedCostFactors,
 	snapshotToJson,
 	snapshotWithOverrides,
 	userRowToSnapshot,
@@ -94,6 +97,10 @@ export type ImagePricingContext = Readonly<{
 
 export type ImageCostBreakdown = {
 	unitPrice: number;
+	/** Charged price for one output image, or null when this billing mode cannot prove it. */
+	chargedOutputUnitPrice?: number | null;
+	/** Charged fixed request component for the normalized request facts. */
+	chargedRequestPrice?: number | null;
 	imageCount: number;
 	meteredCost: number;
 	standardCost: number;
@@ -209,11 +216,24 @@ function withUserImageChargedFactor(
 	breakdown: ImageCostBreakdown,
 	params: ImageBillingParams
 ): ImageCostBreakdown {
-	return applyUserChargedCostToBreakdown(
+	const adjusted = applyUserChargedCostToBreakdown(
 		breakdown,
 		params.userChargedCostFactorsJson,
 		params.catalogModelId ?? ''
 	);
+	const factor = lookupUserChargedCostFactor(
+		parseUserChargedCostFactors(params.userChargedCostFactorsJson),
+		params.catalogModelId ?? '',
+	);
+	return {
+		...adjusted,
+		chargedOutputUnitPrice: breakdown.chargedOutputUnitPrice == null
+			? breakdown.chargedOutputUnitPrice
+			: applyUserChargedCostFactor(breakdown.chargedOutputUnitPrice, factor),
+		chargedRequestPrice: breakdown.chargedRequestPrice == null
+			? breakdown.chargedRequestPrice
+			: applyUserChargedCostFactor(breakdown.chargedRequestPrice, factor),
+	};
 }
 
 export type UncertainResultUsageSource =
@@ -320,6 +340,8 @@ function zeroImageCostBreakdown(
 	return withUserImageChargedFactor(
 		{
 			unitPrice: 0,
+			chargedOutputUnitPrice: null,
+			chargedRequestPrice: null,
 			imageCount: Math.max(0, Math.floor(params.imageCount)),
 			meteredCost: 0,
 			standardCost: 0,
@@ -431,23 +453,25 @@ function estimateImageTokenCosts(
 
 	return withUserImageChargedFactor(
 		{
-		unitPrice: 0,
-		imageCount: Math.max(0, Math.floor(params.imageCount)),
-		meteredCost,
-		standardCost,
-		chargedCost,
-		meteredFactor: factors.meteredFactor,
-		chargedFactor: factors.chargedFactor,
-		pricingAuditJson,
-		logTokens: {
-			inputTokens: usage.text_tokens,
-			outputTokens: usage.image_output_tokens,
-			cacheReadTokens: usage.cached_text_tokens,
-			cacheWriteTokens: 0,
-			totalTokens: usage.total_tokens,
-		},
-		logImageCounts: { inputImageCount: 0, outputImageCount: 0 },
-		billingKind: 'image_tokens',
+			unitPrice: 0,
+			chargedOutputUnitPrice: null,
+			chargedRequestPrice: null,
+			imageCount: Math.max(0, Math.floor(params.imageCount)),
+			meteredCost,
+			standardCost,
+			chargedCost,
+			meteredFactor: factors.meteredFactor,
+			chargedFactor: factors.chargedFactor,
+			pricingAuditJson,
+			logTokens: {
+				inputTokens: usage.text_tokens,
+				outputTokens: usage.image_output_tokens,
+				cacheReadTokens: usage.cached_text_tokens,
+				cacheWriteTokens: 0,
+				totalTokens: usage.total_tokens,
+			},
+			logImageCounts: { inputImageCount: 0, outputImageCount: 0 },
+			billingKind: 'image_tokens',
 		},
 		params
 	);
@@ -507,6 +531,8 @@ function estimateImagePerImageCosts(
 	return withUserImageChargedFactor(
 		{
 			unitPrice: outputUnitPrice,
+			chargedOutputUnitPrice: roundGatewayMoney(outputUnitPrice * factors.chargedFactor),
+			chargedRequestPrice: 0,
 			imageCount: outputCount,
 			meteredCost,
 			standardCost,
@@ -614,6 +640,12 @@ function estimateEndpointImageCosts(
 	return withUserImageChargedFactor(
 		{
 			unitPrice: resolved.value.standardOutputUnitCost,
+			chargedOutputUnitPrice: roundGatewayMoney(
+				resolved.value.standardOutputUnitCost * factors.chargedFactor,
+			),
+			chargedRequestPrice: roundGatewayMoney(
+				resolved.value.standardFixedRequestCost * factors.chargedFactor,
+			),
 			imageCount: outputCount,
 			meteredCost,
 			standardCost,

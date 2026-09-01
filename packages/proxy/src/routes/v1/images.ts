@@ -76,7 +76,7 @@ import {
 	markMultimediaBudgetsBeforeDispatch,
 	selectConservativeMultimediaBudgetEstimate,
 } from '../../services/multimedia-ordinary-budget';
-import { routeUsesUnsupportedMultimediaEndpointPriceSelection } from '../../services/endpoint-billing-pricing';
+import { applyImageProviderPriceRouting } from '../../services/image-provider-price-routing';
 import { buildRouteRequestBody } from '../../services/route-default-params';
 
 type ImagesEnv = Env & { Variables: { apiKey: ApiKeyContext } };
@@ -444,12 +444,39 @@ async function beforeImageUpstreamDispatch(
 }
 
 type MultipartEditsParseResult =
-	| { ok: true; model: string; edit: NormalizedImageEditRequest; totalUploadBytes: number }
+	| {
+		ok: true;
+		model: string;
+		edit: NormalizedImageEditRequest;
+		provider: Record<string, unknown> | null;
+		totalUploadBytes: number;
+	  }
 	| {
 			ok: false;
 			error: string;
 			diag: Omit<ImageRejectDiag, 'operation'>;
 	  };
+
+export function parseMultipartImageProvider(
+	value: unknown,
+): { ok: true; value: Record<string, unknown> | null } | { ok: false; message: string } {
+	if (value === undefined) return { ok: true, value: null };
+	let parsed: unknown = value;
+	if (typeof value === 'string') {
+		if (value.length > 16_384) {
+			return { ok: false, message: 'provider must be at most 16384 characters in multipart requests' };
+		}
+		try {
+			parsed = JSON.parse(value) as unknown;
+		} catch {
+			return { ok: false, message: 'provider must be a JSON object in multipart requests' };
+		}
+	}
+	if (parsed == null || typeof parsed !== 'object' || Array.isArray(parsed)) {
+		return { ok: false, message: 'provider must be a JSON object in multipart requests' };
+	}
+	return { ok: true, value: parsed as Record<string, unknown> };
+}
 
 async function parseMultipartEdits(c: ImagesContext): Promise<MultipartEditsParseResult> {
 	const contentType = c.req.header('content-type') ?? '';
@@ -498,6 +525,19 @@ async function parseMultipartEdits(c: ImagesContext): Promise<MultipartEditsPars
 				...baseDiag,
 				bodyKeys,
 				hasModel: false,
+			},
+		};
+	}
+	const provider = parseMultipartImageProvider(body.provider);
+	if (!provider.ok) {
+		return {
+			ok: false,
+			error: provider.message,
+			diag: {
+				...baseDiag,
+				bodyKeys,
+				hasModel: true,
+				clientModel: model,
 			},
 		};
 	}
@@ -697,6 +737,7 @@ async function parseMultipartEdits(c: ImagesContext): Promise<MultipartEditsPars
 	return {
 		ok: true,
 		model,
+		provider: provider.value,
 		edit: {
 			prompt: common.prompt,
 			n: common.n,
@@ -1293,12 +1334,6 @@ async function handleImageGenerations(c: ImagesContext): Promise<Response> {
 	}
 	const streamRequested = body.stream === true;
 	let routes = selectedPlan.routes;
-	if (routes.some(routeUsesUnsupportedMultimediaEndpointPriceSelection)) {
-		return rejectImageRequest(c, 400, 'provider.max_price and provider.sort=price are unavailable for Images until multimedia endpoint price comparison is enabled', {
-			operation: 'generations', contentType, contentLength, bodyKeys,
-			hasModel: true, clientModel: rawModelId,
-		});
-	}
 	if (streamRequested) {
 		routes = routes.filter((route) => imageRouteSupportsParameter(route, 'stream'));
 		if (routes.length === 0) {
@@ -1349,21 +1384,45 @@ async function handleImageGenerations(c: ImagesContext): Promise<Response> {
 		priceOverrideRaw: route.priceOverrideRaw,
 		referenceCount: countRouteImageGenerationReferences(route, upstreamBody),
 	}));
-	const estimateSelection = selectConservativeMultimediaBudgetEstimate(await Promise.all(
-		routeRequestFacts.map(({ endpoint, priceOverrideRaw, referenceCount }) => estimateImageBudgetPrecheck(repos, {
-			endpoint,
+	const pricedRouteFacts = await Promise.all(routeRequestFacts.map(async (facts) => {
+		const commonPricing = {
+			endpoint: facts.endpoint,
 			catalogModelId: baseModelId,
-			userChargedCostFactorsJson: apiKey.chargedCostFactors,
 			quality: common.quality ?? 'auto',
 			size: common.size ?? 'auto',
-			imageCount: common.n,
 			isEdit: false,
-			referenceCount,
-			operation: 'generations',
+			operation: 'generations' as const,
 			requestStartedAtMs: start,
 			pricingContext,
-		}, [priceOverrideRaw])),
-	));
+		};
+		const [budgetEstimate, requestEstimate] = await Promise.all([
+			estimateImageBudgetPrecheck(repos, {
+				...commonPricing,
+				userChargedCostFactorsJson: apiKey.chargedCostFactors,
+				imageCount: common.n,
+				referenceCount: facts.referenceCount,
+			}, [facts.priceOverrideRaw]),
+			estimateImageBudgetPrecheck(repos, {
+				...commonPricing,
+				userChargedCostFactorsJson: null,
+				imageCount: common.n,
+				referenceCount: facts.referenceCount,
+			}, [facts.priceOverrideRaw]),
+		]);
+		return { ...facts, budgetEstimate, requestEstimate };
+	}));
+	const priceRouting = applyImageProviderPriceRouting(pricedRouteFacts);
+	if (!priceRouting.ok) {
+		return rejectImageRequest(c, 400, priceRouting.message, {
+			operation: 'generations', contentType, contentLength, bodyKeys,
+			hasModel: true, clientModel: rawModelId,
+		});
+	}
+	routes = priceRouting.candidates.map((candidate) => candidate.route);
+	const selectedRouteRequestFacts = priceRouting.candidates;
+	const estimateSelection = selectConservativeMultimediaBudgetEstimate(
+		selectedRouteRequestFacts.map(({ budgetEstimate }) => budgetEstimate),
+	);
 	if (!estimateSelection) {
 		throw new Error('Image fallback plan has no billable route estimate');
 	}
@@ -1486,7 +1545,7 @@ async function handleImageGenerations(c: ImagesContext): Promise<Response> {
 		);
 		throw error;
 	}
-	const chosenRouteFacts = routeRequestFacts.find(({ route, endpointId }) =>
+	const chosenRouteFacts = selectedRouteRequestFacts.find(({ route, endpointId }) =>
 		route.targetId === proxyResult.chosenRoute.targetId
 		&& route.providerId === proxyResult.chosenRoute.providerId
 		&& endpointId != null
@@ -1607,7 +1666,9 @@ imageRoutes.post('/edits', async (c) => {
 
 	const fallbackPlan = await buildModelFallbackPlan(repos, {
 		modelIds: [rawModelId],
-		body: guardrail.body,
+		body: parsed.provider
+			? { ...guardrail.body, provider: parsed.provider }
+			: guardrail.body,
 		requestProtocol: 'openai',
 		requestOperation: 'images.edits',
 		pricingAt: requestStartedAt,
@@ -1627,12 +1688,6 @@ imageRoutes.post('/edits', async (c) => {
 	const selectedPlan = fallbackPlan.candidates[0]!;
 	const { model, baseModelId, effectiveRouteGroup } = selectedPlan;
 	let routes = selectedPlan.routes;
-	if (routes.some(routeUsesUnsupportedMultimediaEndpointPriceSelection)) {
-		return rejectImageRequest(c, 400, 'provider.max_price and provider.sort=price are unavailable for Images until multimedia endpoint price comparison is enabled', {
-			operation: 'edits', hasModel: true, clientModel: rawModelId,
-			referenceCount: edit.images.length, totalUploadBytes,
-		});
-	}
 	let multiImageBilling: ReturnType<typeof multipleImageBillingMode> = null;
 	if (edit.n > 1) {
 		routes = routes.filter((route) => imageRouteSupportsParameter(route, 'n', edit.n));
@@ -1656,21 +1711,45 @@ imageRoutes.post('/edits', async (c) => {
 		// explicitly ignores custom `image`/`images` fields.
 		referenceCount: edit.images.length,
 	}));
-	const estimateSelection = selectConservativeMultimediaBudgetEstimate(await Promise.all(
-		routeRequestFacts.map(({ endpoint, priceOverrideRaw, referenceCount }) => estimateImageBudgetPrecheck(repos, {
-			endpoint,
+	const pricedRouteFacts = await Promise.all(routeRequestFacts.map(async (facts) => {
+		const commonPricing = {
+			endpoint: facts.endpoint,
 			catalogModelId: baseModelId,
-			userChargedCostFactorsJson: apiKey.chargedCostFactors,
 			quality: edit.quality ?? 'auto',
 			size: edit.size ?? 'auto',
-			imageCount: edit.n,
 			isEdit: true,
-			referenceCount,
-			operation: 'edits',
+			operation: 'edits' as const,
 			requestStartedAtMs: start,
 			pricingContext,
-		}, [priceOverrideRaw])),
-	));
+		};
+		const [budgetEstimate, requestEstimate] = await Promise.all([
+			estimateImageBudgetPrecheck(repos, {
+				...commonPricing,
+				userChargedCostFactorsJson: apiKey.chargedCostFactors,
+				imageCount: edit.n,
+				referenceCount: facts.referenceCount,
+			}, [facts.priceOverrideRaw]),
+			estimateImageBudgetPrecheck(repos, {
+				...commonPricing,
+				userChargedCostFactorsJson: null,
+				imageCount: edit.n,
+				referenceCount: facts.referenceCount,
+			}, [facts.priceOverrideRaw]),
+		]);
+		return { ...facts, budgetEstimate, requestEstimate };
+	}));
+	const priceRouting = applyImageProviderPriceRouting(pricedRouteFacts);
+	if (!priceRouting.ok) {
+		return rejectImageRequest(c, 400, priceRouting.message, {
+			operation: 'edits', hasModel: true, clientModel: rawModelId,
+			referenceCount: edit.images.length, totalUploadBytes,
+		});
+	}
+	routes = priceRouting.candidates.map((candidate) => candidate.route);
+	const selectedRouteRequestFacts = priceRouting.candidates;
+	const estimateSelection = selectConservativeMultimediaBudgetEstimate(
+		selectedRouteRequestFacts.map(({ budgetEstimate }) => budgetEstimate),
+	);
 	if (!estimateSelection) {
 		throw new Error('Image fallback plan has no billable route estimate');
 	}
@@ -1791,7 +1870,7 @@ imageRoutes.post('/edits', async (c) => {
 		);
 		throw error;
 	}
-	const chosenRouteFacts = routeRequestFacts.find(({ route, endpointId }) =>
+	const chosenRouteFacts = selectedRouteRequestFacts.find(({ route, endpointId }) =>
 		route.targetId === proxyResult.chosenRoute.targetId
 		&& route.providerId === proxyResult.chosenRoute.providerId
 		&& endpointId != null

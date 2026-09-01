@@ -50,6 +50,8 @@ export interface RouteResult {
 	gatewayCandidateIndex?: number;
 	/** Request-local rank used by provider.sort.partition="none". */
 	gatewayGlobalEndpointRank?: number;
+	/** Request-local soft-performance threshold result used by deferred price sorting. */
+	gatewayPerformancePreferred?: boolean;
 	/** SHA-256 binding for verified ZDR/data-collection evidence. */
 	dataPolicySubjectFingerprint?: string;
 	upstreamProtocol: UpstreamProtocol;

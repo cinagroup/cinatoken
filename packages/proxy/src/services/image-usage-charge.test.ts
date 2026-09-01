@@ -164,6 +164,8 @@ describe('estimateImageCosts', () => {
 
 		assert.equal(costs.billingKind, 'image_per_image');
 		assert.equal(costs.unitPrice, 0.07);
+		assert.equal(costs.chargedOutputUnitPrice, 0.07);
+		assert.equal(costs.chargedRequestPrice, 0);
 		assert.equal(costs.standardCost, 0.14);
 		assert.equal(costs.chargedCost, 0.14);
 		const audit = JSON.parse(costs.pricingAuditJson) as Record<string, unknown>;
@@ -201,6 +203,8 @@ describe('estimateImageCosts', () => {
 		assert.equal(costs.chargedFactor, 4);
 		assert.equal(costs.meteredCost, 0.48);
 		assert.equal(costs.chargedCost, 0.08);
+		assert.equal(costs.chargedOutputUnitPrice, 0.08);
+		assert.equal(costs.chargedRequestPrice, 0);
 		const audit = JSON.parse(costs.pricingAuditJson) as {
 			endpoint_id: string;
 			user_charged_factor: number;
@@ -216,6 +220,25 @@ describe('estimateImageCosts', () => {
 		assert.equal(audit.snapshot.user_charge.cost, 0.16);
 		assert.equal(audit.user_charged_factor, 0.5);
 		assert.equal(audit.snapshot.user_charge.user_charged_factor, 0.5);
+	});
+
+	it('exposes fixed request and output-image price dimensions without mixing totals', async () => {
+		const costs = await estimateImageCosts(mockRepos(), {
+			endpoint: verifiedImageEndpoint([
+				{ billable: 'output_image', unit: 'image', cost_usd: '0.04' },
+				{ billable: 'input_reference', unit: 'request', cost_usd: '0.03' },
+			]),
+			routePriceOverrideJson: JSON.stringify({ charged_factor: 2 }),
+			quality: 'auto',
+			size: 'auto',
+			imageCount: 1,
+			referenceCount: 1,
+			operation: 'edits',
+		});
+
+		assert.equal(costs.chargedOutputUnitPrice, 0.08);
+		assert.equal(costs.chargedRequestPrice, 0.06);
+		assert.equal(costs.chargedCost, 0.14);
 	});
 
 	it('marks empty or unsupported endpoint tariffs as unprovable estimates', async () => {

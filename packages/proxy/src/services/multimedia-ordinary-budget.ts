@@ -9,7 +9,9 @@ export type ConservativeMultimediaBudgetEstimate<T extends MultimediaChargedCost
 	estimatedChargedCost: number | null;
 };
 
-function estimateHasProvablePricing(estimate: MultimediaChargedCostEstimate): boolean {
+export function multimediaEstimateHasProvablePricing(
+	estimate: MultimediaChargedCostEstimate,
+): boolean {
 	if (!Number.isFinite(estimate.chargedCost) || estimate.chargedCost < 0) return false;
 	try {
 		const audit = JSON.parse(estimate.pricingAuditJson) as unknown;
@@ -32,10 +34,10 @@ export function selectConservativeMultimediaBudgetEstimate<
 >(estimates: readonly T[]): ConservativeMultimediaBudgetEstimate<T> | null {
 	if (estimates.length === 0) return null;
 	let estimate = estimates[0]!;
-	let allProvable = estimateHasProvablePricing(estimate);
+	let allProvable = multimediaEstimateHasProvablePricing(estimate);
 	for (const candidate of estimates.slice(1)) {
 		if (candidate.chargedCost >= estimate.chargedCost) estimate = candidate;
-		allProvable &&= estimateHasProvablePricing(candidate);
+		allProvable &&= multimediaEstimateHasProvablePricing(candidate);
 	}
 	return {
 		estimate,

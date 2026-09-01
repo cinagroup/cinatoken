@@ -229,7 +229,7 @@ Chat Completions、Messages 与 Responses 支持 OpenRouter 兼容的请求级 P
 - `data_collection="deny"` 只接受经过有效证据核验、零保留且禁止训练的 Route Target；`zdr=true` 还要求明确支持 ZDR。未知、过期或证据缺失均 fail closed。
 - `enforce_distillable_text=true` 只保留模型 `metadata.distillable_text=true` 的候选；未声明时 fail closed。
 - `sort` 接受 `price`、`latency`、`throughput`，也接受带 `by`、`partition="model" | "none"` 和百分位/阈值的对象形式。性能排序使用最近 5 分钟成功请求的有界路由样本；阈值是软偏好，所有路由均未达标时仍保留 fallback。`partition="none"` 会把最多 8 个 fallback model 的 endpoint 放入同一个全局排序与一次 failover 调度链，避免分模型重启调度器改变顺序或重放状态。
-- Chat、Responses、Messages、Gemini text 与 Embeddings 的 `max_price` 安全支持 `prompt`、`completion` 与 `request`，比较值来自所选 verified Endpoint 的权威价格、Route charged factor 及同一请求开始时点；阶梯价按最贵配置档执行上限，因此可能保守拒绝，但不会低估。Image 的按张/参考图安全子集与 Audio 的时长/Unicode 字符安全子集已经使用 chosen verified Endpoint 结算；但多媒体价格比较器尚未开放，因此 Image、Audio 与 DashScope 路由传入任何 `max_price` 或 `sort=price` 时仍会在 dispatch 前返回 **400**，不能把安全拒绝当成功能对等。
+- Chat、Responses、Messages、Gemini text 与 Embeddings 的 `max_price` 安全支持 `prompt`、`completion` 与 `request`，比较值来自所选 verified Endpoint 的权威价格、Route charged factor 及同一请求开始时点；阶梯价按最贵配置档执行上限，因此可能保守拒绝，但不会低估。Image 的 verified 按张安全子集支持 `max_price.image`（单张输出价）、`max_price.request`（当前请求的固定 request fee）和 `sort="price"`（按本次完整请求价）；比较与最终计费复用同一 Endpoint、Route charged factor、请求事实及冻结时点，未知价路由不会参与价格排序。Image 的 `prompt`/`completion` 价格维度，以及 Audio/DashScope 的任何 `max_price` 或 `sort=price`，仍会在 dispatch 前返回 **400**。
 - `region` 是管理员声明的供应端点位置标签；只开放于 `GET /v1/models?region=eu|us` 的目录发现过滤，不约束实际推理路径，也不构成端到端数据驻留保证。推理请求中的未知 Provider 字段返回 400，不会静默忽略或透传上游。
 - Provider 路由决策以脱敏摘要写入请求日志 `route_trace.provider_routing`；不包含提示词、上游地址或凭据。
 
@@ -1139,11 +1139,12 @@ Content-Type: application/json
 |------|------|
 | `model` | 必填；支持 `id:route_group` 后缀 |
 | `prompt` | 必填；最长 4000 字符 |
-| `n` | 仅允许 **1**（首期） |
+| `n` | **1..10**；`n>1` 仅在候选 Endpoint 明确证明参数范围且按张计费可预检时开放 |
 | `size` / `quality` / `background` | 可选；GPT Image 常用 `auto` / `1024x…`；Seedream 常用 `2K` / `4K` |
 | `response_format` | 可选；**仅当调用方显式传入时透传**。默认由上游决定（GPT Image 系列通常直接返回 `b64_json`，且不接受该参数） |
 | `watermark` / `sequential_image_generation` / `optimize_prompt_options` | 可选；Seedream 等兼容扩展，**显式传入时透传**；也可由路由 `custom_params` 注入默认值 |
 | `image` | 可选；Seedream **图生图 / 多图融合**用 JSON 字符串或字符串数组（URL / data URL），走本 generations 端点，**不是** multipart `/edits` |
+| `provider` | 可选；支持 Image 安全价格选择，例如 `{ "sort": "price", "max_price": { "image": 0.05 } }`；只在 Gateway 内使用，不转发上游 |
 
 ### 编辑（参考图）
 
@@ -1153,7 +1154,7 @@ Authorization: Bearer <USER_API_KEY>
 Content-Type: multipart/form-data
 ```
 
-表单字段：`model`、`prompt`、`n=1`、可选 `size`/`quality`/`background`，以及最多 **5** 个 `image` 文件（`image/png` \| `image/jpeg` \| `image/webp`，单文件 ≤ 20MB）。
+表单字段：`model`、`prompt`、`n=1`、可选 `size`/`quality`/`background`，以及最多 **5** 个 `image` 文件（`image/png` \| `image/jpeg` \| `image/webp`，单文件 ≤ 20MB）。如需 Provider 价格控制，`provider` 表单字段须为 JSON 对象字符串，例如 `{"sort":"price","max_price":{"image":0.05,"request":0.01}}`；该字段只用于 Gateway 选路，不会进入上游 multipart。
 
 **必须**使用 `Content-Type: multipart/form-data`（含 boundary）。若客户端误发 `application/json` 或其它类型，Gateway 在读 body 前即返回 400 `Unsupported Content-Type for /v1/images/edits…`（不会再误报成 `Missing model`）。Seedream 图生图请走 generations + JSON `image`，不要用本端点。
 

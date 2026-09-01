@@ -536,6 +536,56 @@ describe('model fallback preflight', () => {
 		if (!requestCap.ok) assert.match(requestCap.message, /max_price/);
 	});
 
+	it('defers image price controls to the request-specific image comparator', async () => {
+		const imageRoute = {
+			...modelRoute('m1'),
+			upstream_operation: 'images.generations',
+		};
+		const result = await buildModelFallbackPlan(
+			repositories(new Map([['m1', model('m1')]]), [], {
+				routesByModel: new Map([['m1', [imageRoute]]]),
+				endpointPricingByRoute: new Map([[
+					'target-m1',
+					{ prompt: '0', completion: '0', image: '9.99' },
+				]]),
+				endpointOverridesByRoute: new Map([[
+					'target-m1',
+					{
+						context_length: null,
+						max_prompt_tokens: null,
+						max_completion_tokens: null,
+						pricing: JSON.stringify({
+							currency: 'USD', prompt: '0', completion: '0', image: '9.99',
+						}),
+						image_capabilities: JSON.stringify({
+							provider_slug: 'provider-a',
+							provider_tag: null,
+							supports_streaming: false,
+							supported_parameters: {},
+							allowed_passthrough_parameters: [],
+							pricing: [
+								{ billable: 'output_image', unit: 'image', cost_usd: '0.04' },
+							],
+						}),
+					},
+				]]),
+			}),
+			{
+				modelIds: ['m1'],
+				body: { model: 'm1', provider: { max_price: { image: 0.05 } } },
+				requestProtocol: 'openai',
+				requestOperation: 'images.generations',
+			},
+		);
+		assert.equal(result.ok, true);
+		if (result.ok) {
+			assert.deepEqual(
+				result.candidates[0]?.routes[0]?.providerRoutingTrace?.max_price,
+				{ image: 0.05 },
+			);
+		}
+	});
+
 	it('fails preflight when any requested model is unknown', async () => {
 		const result = await buildModelFallbackPlan(
 			repositories(new Map([['m1', model('m1')]])),

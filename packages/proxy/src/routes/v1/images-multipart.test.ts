@@ -11,6 +11,7 @@ import {
 	imageOutputGuardrailBlockReason,
 	countRouteImageGenerationReferences,
 	admitImageGuardrailBudget,
+	parseMultipartImageProvider,
 	validateImagesEditsContentType,
 } from './images';
 import { isAtomicImageBudgetRoute } from '../../middleware/auth';
@@ -52,6 +53,23 @@ describe('validateImagesEditsContentType', () => {
 	it('rejects application/x-www-form-urlencoded for edits (files require multipart)', () => {
 		const err = validateImagesEditsContentType('application/x-www-form-urlencoded');
 		assert.match(err ?? '', /Unsupported Content-Type/i);
+	});
+});
+
+describe('multipart image provider preferences', () => {
+	it('parses a JSON provider object without forwarding it as image content', () => {
+		assert.deepEqual(
+			parseMultipartImageProvider('{"sort":"price","max_price":{"image":0.05}}'),
+			{ ok: true, value: { sort: 'price', max_price: { image: 0.05 } } },
+		);
+		assert.deepEqual(parseMultipartImageProvider(undefined), { ok: true, value: null });
+	});
+
+	it('rejects malformed and non-object provider values', () => {
+		assert.equal(parseMultipartImageProvider('not-json').ok, false);
+		assert.equal(parseMultipartImageProvider('[]').ok, false);
+		assert.equal(parseMultipartImageProvider('null').ok, false);
+		assert.equal(parseMultipartImageProvider(' '.repeat(16_385)).ok, false);
 	});
 });
 
