@@ -2,6 +2,10 @@
 	{
 		"name": "DeepSeek",
 		"vendor_key": "deepseek",
+		"managed_environment_key": {
+			"provider_id": "deepseek-official",
+			"env_name": "DEEPSEEK_API_KEY"
+		},
 		"endpoints": {
 			"openai": {
 				"endpoints": {

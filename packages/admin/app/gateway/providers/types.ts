@@ -101,6 +101,7 @@ export type ProviderFormData = {
 
 export type ProviderImportResult = {
 	created: number;
+	skipped_existing: string[];
 	failed: Array<{ id: string; message: string }>;
 };
 

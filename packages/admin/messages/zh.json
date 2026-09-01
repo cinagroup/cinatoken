@@ -806,7 +806,7 @@
 		},
 		"import": {
 			"title": "从模板导入",
-			"subtitle": "预填常见端点。仅 LLM 的 OpenAI 模板导入 chat URL；具备 Images 的保留 Base URL。每次导入会创建新的供应商行。",
+			"subtitle": "预填常见端点。仅 LLM 的 OpenAI 模板导入 chat URL；具备 Images 的保留 Base URL。普通模板创建新的供应商行，托管模板按固定 ID 幂等安装。",
 			"searchPlaceholder": "搜索模板名称",
 			"clearSearch": "清除模板搜索",
 			"clear": "清除",
@@ -820,7 +820,13 @@
 			"openaiBase": "OpenAI base：{url}",
 			"openaiChat": "OpenAI chat：{url}",
 			"openaiCaps": "· {caps}",
-			"importSelected": "导入选中项（{count}）"
+			"importSelected": "导入选中项（{count}）",
+			"selectAtLeastOne": "请至少选择一个模板。",
+			"resultFinished": "导入完成。",
+			"resultCreated": "已创建：{count}",
+			"resultAlreadyInstalled": "已安装：{count}",
+			"resultFailed": "失败：",
+			"requestFailed": "导入失败"
 		},
 		"modal": {
 			"editTitle": "编辑供应商",

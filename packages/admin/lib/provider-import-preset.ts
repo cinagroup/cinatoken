@@ -11,7 +11,8 @@
  * - Gemini Vertex 兼容聚合：写到 `{model}` 前的完整前缀，并设 `gemini.auth: "bearer"`
  * - 正式 Vertex（项目级）：OpenAI 仅 Chat Completions（`.../endpoints/openapi/chat/completions`）；原生 Gemini 写项目级 `{model}` 前缀并设 `auth: "bearer"`
  *
- * 导入后不含 API Key，须在 Edit Provider 中手动添加。
+ * 普通模板导入后不含 API Key，须在 Edit Provider 中手动添加。显式标记的
+ * 托管环境凭据模板只落 `env:NAME` 引用，密钥仍由 Worker Secret 提供。
  */
 import rawPresets from './provider-import-presets.json';
 import { getModelVendorLabel, normalizeModelVendorInput } from './model-vendor';
@@ -28,6 +29,15 @@ import {
 export type StaticProviderImportPresetRow = {
 	name: string;
 	vendor_key: string;
+	/**
+	 * Built-in operator credential reference. The import service accepts only
+	 * explicitly allowlisted provider/env pairs; the secret value never enters
+	 * this catalog or the database.
+	 */
+	managed_environment_key?: {
+		provider_id: string;
+		env_name: string;
+	};
 	/**
 	 * Provider 产品级图标。省略时回退 `vendor_key`。
 	 * 例如 Xiaomi MiMo 使用 `xiaomimimo`，而不是 Xiaomi 企业 Logo。

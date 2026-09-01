@@ -107,6 +107,8 @@ ORDER BY version;
 
 两个 Hyperdrive 必须保持独立：`cinatoken-gateway-migrator` 只用于迁移/ETL，`cinatoken-gateway-runtime` 用于长期业务运行，二者均禁用 SQL 结果缓存。`hyperdrive-access-probe-worker.ts` 的双身份探针必须验证角色、Schema owner、`0054_generation_metadata_snapshots.sql`/54 条目标迁移记录、业务表 DML、函数执行、禁止 `TRUNCATE`、禁止访问迁移表等合同；验证后删除探针 Worker。生产配置只预置 runtime Hyperdrive ID；在最终 ETL/对账和放行门完成前不得设置 `DATABASE_DRIVER=postgres`。
 
+公开目录发布前可把 `catalog-readiness-probe-worker.ts` 作为一次性 Worker 绑定到 **runtime Hyperdrive**。它复用 Proxy 的 verified Endpoint 与公开序列化逻辑，并额外只返回模型、Provider、Route、Endpoint/绑定的非敏感聚合计数；不接受 SQL 或查询参数。探针使用同样的 `PREFLIGHT_TOKEN` 约束，runtime 角色无权读取 `schema_migrations`，因此迁移版本仍须由 migrator 身份单独证明。探针结束后删除整个 Worker，再运行 `npm run test:public-catalog-readiness` 验证公开 API 至少发布一个模型、Provider 和 Endpoint。
+
 ## 4. 演练
 
 先对 D1 备份或本地持久化副本演练，目标必须是隔离的非生产 PostgreSQL：

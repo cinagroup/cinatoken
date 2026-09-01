@@ -131,12 +131,12 @@ export type AdminProvidersImportBody = {
 	ids: string[];
 };
 
-/** `POST /admin/providers/import`：从静态模板创建 `providers` 行；每次导入新增；`skipped_existing` 恒为空（兼容字段）。 */
+/** `POST /admin/providers/import`：从静态模板创建 `providers` 行。托管环境凭据模板使用固定 Provider id 并幂等跳过。 */
 export type AdminProvidersImportOutput = {
 	created: number;
 	/** 与 `/admin/models/import` 对齐，恒为 `0`。 */
 	updated: number;
-	/** 兼容字段；重复导入同一模板不再跳过，恒为空数组。 */
+	/** 已安装的固定 id 托管模板 catalog 键；普通模板仍允许重复导入。 */
 	skipped_existing: string[];
 	failed: Array<{ id: string; message: string }>;
 };

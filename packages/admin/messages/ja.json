@@ -810,7 +810,7 @@
 		},
 		"import": {
 			"title": "テンプレートからインポート",
-			"subtitle": "一般的なエンドポイントを事前入力します。LLM 専用の OpenAI テンプレートは chat URL を、Images 対応 Provider は Base URL を使用します。インポートごとに新しい Provider 行が作成されます。",
+			"subtitle": "一般的なエンドポイントを事前入力します。LLM 専用の OpenAI テンプレートは chat URL を、Images 対応 Provider は Base URL を使用します。通常のテンプレートは新しい Provider 行を作成し、管理対象テンプレートは固定 ID で冪等にインストールします。",
 			"searchPlaceholder": "テンプレート名を検索",
 			"clearSearch": "テンプレート検索をクリア",
 			"clear": "クリア",
@@ -824,7 +824,13 @@
 			"openaiBase": "OpenAI base：{url}",
 			"openaiChat": "OpenAI chat：{url}",
 			"openaiCaps": "· {caps}",
-			"importSelected": "選択項目をインポート（{count}）"
+			"importSelected": "選択項目をインポート（{count}）",
+			"selectAtLeastOne": "少なくとも 1 つのテンプレートを選択してください。",
+			"resultFinished": "インポートが完了しました。",
+			"resultCreated": "作成済み：{count}",
+			"resultAlreadyInstalled": "インストール済み：{count}",
+			"resultFailed": "失敗：",
+			"requestFailed": "インポートに失敗しました"
 		},
 		"modal": {
 			"editTitle": "Provider を編集",

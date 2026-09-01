@@ -1,6 +1,11 @@
 /** 管理后台 `providers` CRUD：单键 `api_key` + `status`，`endpoints` JSON 校验与持久化。 */
 import type { GatewayRepositories } from '@octafuse/core';
-import { isSharedKeyChannelType } from '@octafuse/core';
+import {
+	DEEPSEEK_API_KEY_ENV_NAME,
+	DEEPSEEK_OFFICIAL_PROVIDER_ID,
+	formatProviderApiKeyEnvironmentReference,
+	isSharedKeyChannelType,
+} from '@octafuse/core';
 import {
 	serializeProviderEndpoints,
 	validateAndNormalizeProviderEndpoints,
@@ -29,6 +34,41 @@ const PROVIDER_DATA_POLICY_SUBJECT_FIELDS = new Set([
 	'api_key',
 	'shared_channel_type',
 ]);
+
+const DEEPSEEK_MODELS_VALIDATION_URL = 'https://api.deepseek.com/models';
+const PROVIDER_ENVIRONMENT_KEY_VALIDATION_TIMEOUT_MS = 10_000;
+
+/**
+ * Validate the fixed DeepSeek runtime Secret without inference or response
+ * buffering. Redirects fail closed so the Bearer credential can never be
+ * forwarded to a different origin.
+ */
+export async function validateDeepSeekEnvironmentApiKey(
+	apiKey: string | null | undefined,
+	fetchImpl: typeof fetch = fetch,
+): Promise<boolean> {
+	const secret = apiKey?.trim() ?? '';
+	if (!secret) return false;
+
+	try {
+		const response = await fetchImpl(DEEPSEEK_MODELS_VALIDATION_URL, {
+			method: 'GET',
+			headers: {
+				Accept: 'application/json',
+				Authorization: `Bearer ${secret}`,
+			},
+			redirect: 'error',
+			signal: AbortSignal.timeout(PROVIDER_ENVIRONMENT_KEY_VALIDATION_TIMEOUT_MS),
+		});
+		const valid = response.status === 200;
+		if (response.body) {
+			await response.body.cancel().catch(() => undefined);
+		}
+		return valid;
+	} catch {
+		return false;
+	}
+}
 
 function resolveEndpointsFromMutation(body: AdminProviderMutationInput): string | null {
 	if (body.endpoints === undefined || body.endpoints === null) {
@@ -231,12 +271,17 @@ function suggestUniqueProviderImportName(baseName: string, existingNameLower: Se
 }
 
 /**
- * 从 `lib/provider-import-presets.json` 按 **catalog 键**导入 Provider：
- * 写入占位 `PROVIDER_IMPORT_PENDING_API_KEY`，须在 Admin 中替换为真实密钥。
+ * 从 `lib/provider-import-presets.json` 按 **catalog 键**导入 Provider。
+ * 普通模板写入待替换占位符；allowlist 中的托管模板写固定 Provider id
+ * 与非敏感 `env:NAME` 引用；只有固定官方端点验证 Secret 成功才启用。
  */
 export async function importProvidersFromStaticPresetsService(
 	repos: GatewayRepositories,
-	input: { ids: string[] }
+	input: {
+		ids: string[];
+		environmentApiKeys?: Readonly<Record<string, string | undefined>>;
+		fetchImpl?: typeof fetch;
+	}
 ): Promise<AdminProvidersImportOutput> {
 	const uniqueIds = [...new Set((input.ids ?? []).map((x) => String(x).trim()).filter((x) => x.length > 0))];
 	if (uniqueIds.length === 0) {
@@ -246,6 +291,7 @@ export async function importProvidersFromStaticPresetsService(
 	const presetByKey = new Map(listStaticProviderImportPresets().map((p) => [p.catalog_key, p]));
 
 	let created = 0;
+	const skippedExisting: string[] = [];
 	const failed: Array<{ id: string; message: string }> = [];
 
 	const existingProviders = await listProvidersService(repos);
@@ -262,15 +308,39 @@ export async function importProvidersFromStaticPresetsService(
 			if (!baseName) {
 				throw badRequest(`Static preset catalog key "${catalogKey}": missing name`);
 			}
+			const managed = preset.managed_environment_key;
+			if (managed && (
+				managed.provider_id !== DEEPSEEK_OFFICIAL_PROVIDER_ID ||
+				managed.env_name !== DEEPSEEK_API_KEY_ENV_NAME
+			)) {
+				throw badRequest(
+					`Static preset catalog key "${catalogKey}": unsupported managed environment key`
+				);
+			}
+			if (managed && await repos.providers.providerIdExists(managed.provider_id)) {
+				skippedExisting.push(catalogKey);
+				continue;
+			}
 
 			const name = suggestUniqueProviderImportName(baseName, existingNameLower);
+			const apiKey = managed
+				? formatProviderApiKeyEnvironmentReference(managed.env_name)
+				: PROVIDER_IMPORT_PENDING_API_KEY;
+			const managedKeyIsValid = managed
+				? await validateDeepSeekEnvironmentApiKey(
+					input.environmentApiKeys?.[managed.env_name],
+					input.fetchImpl,
+				)
+				: true;
+			const status = managedKeyIsValid ? 'active' : 'disabled';
 
 			await createProviderService(repos, {
+				id: managed?.provider_id,
 				name,
 				endpoints: preset.endpoints,
 				description: preset.description ?? null,
-				api_key: PROVIDER_IMPORT_PENDING_API_KEY,
-				status: 'active',
+				api_key: apiKey,
+				status,
 			});
 
 			existingNameLower.add(name.toLowerCase());
@@ -284,7 +354,7 @@ export async function importProvidersFromStaticPresetsService(
 	return {
 		created,
 		updated: 0,
-		skipped_existing: [],
+		skipped_existing: skippedExisting,
 		failed,
 	};
 }

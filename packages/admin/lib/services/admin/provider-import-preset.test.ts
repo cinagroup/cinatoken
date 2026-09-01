@@ -157,6 +157,10 @@ describe('provider import preset catalog metadata', () => {
 
 		assert.equal(responsesOf('DeepSeek'), 'https://api.deepseek.com/responses');
 		assert.equal(anthropicBaseOf('DeepSeek'), 'https://api.deepseek.com/anthropic');
+		assert.deepEqual(byName.get('DeepSeek')?.managed_environment_key, {
+			provider_id: 'deepseek-official',
+			env_name: 'DEEPSEEK_API_KEY',
+		});
 
 		assert.equal(
 			chatOf('Command Code'),

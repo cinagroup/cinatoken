@@ -810,7 +810,7 @@
 		},
 		"import": {
 			"title": "템플릿에서 가져오기",
-			"subtitle": "일반적인 엔드포인트를 미리 채웁니다. LLM 전용 OpenAI 템플릿은 chat URL을 가져오고, Images 기능이 있는 Provider는 Base URL을 유지합니다. 가져올 때마다 새 Provider 항목이 생성됩니다.",
+			"subtitle": "일반적인 엔드포인트를 미리 채웁니다. LLM 전용 OpenAI 템플릿은 chat URL을 가져오고, Images 기능이 있는 Provider는 Base URL을 유지합니다. 일반 템플릿은 새 Provider 항목을 만들고 관리형 템플릿은 고정 ID로 멱등 설치됩니다.",
 			"searchPlaceholder": "템플릿 이름 검색",
 			"clearSearch": "템플릿 검색 초기화",
 			"clear": "초기화",
@@ -824,7 +824,13 @@
 			"openaiBase": "OpenAI base: {url}",
 			"openaiChat": "OpenAI chat: {url}",
 			"openaiCaps": "· {caps}",
-			"importSelected": "선택 항목 가져오기 ({count})"
+			"importSelected": "선택 항목 가져오기 ({count})",
+			"selectAtLeastOne": "템플릿을 하나 이상 선택하세요.",
+			"resultFinished": "가져오기가 완료되었습니다.",
+			"resultCreated": "생성됨: {count}",
+			"resultAlreadyInstalled": "이미 설치됨: {count}",
+			"resultFailed": "실패:",
+			"requestFailed": "가져오기에 실패했습니다"
 		},
 		"modal": {
 			"editTitle": "Provider 편집",

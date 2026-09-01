@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
+import { useTranslations } from 'next-intl';
 import { useReplaceListPageQuery } from '@/lib/use-replace-list-query';
 import {
 	deleteProvider,
@@ -47,6 +48,7 @@ function emptyFilterCounts(): Record<ProviderListFilter, number> {
 }
 
 export function useProvidersPageState() {
+	const t = useTranslations('providers');
 	const searchParams = useSearchParams();
 	const [providers, setProviders] = useState<GatewayProvider[]>([]);
 	const [isLoading, setIsLoading] = useState(true);
@@ -300,19 +302,28 @@ export function useProvidersPageState() {
 			.filter(([, v]) => v)
 			.map(([k]) => k);
 		if (ids.length === 0) {
-			alert('Select at least one template.');
+			alert(t('import.selectAtLeastOne'));
 			return;
 		}
 		setImportSubmitting(true);
 		try {
 			const result = await importProviderPresets(ids);
 			if (result.success) {
-				const { created, failed } = result.data;
-				const failLines =
-					failed.length > 0
-						? `\nFailed:\n${failed.map((f) => `  ${f.id}: ${f.message}`).join('\n')}`
-						: '';
-				alert(`Import finished.\nCreated: ${created}${failLines}`);
+				const { created, skipped_existing: skippedExisting, failed } = result.data;
+				const summary = [
+					t('import.resultFinished'),
+					t('import.resultCreated', { count: created }),
+				];
+				if (skippedExisting.length > 0) {
+					summary.push(t('import.resultAlreadyInstalled', { count: skippedExisting.length }));
+				}
+				if (failed.length > 0) {
+					summary.push(
+						t('import.resultFailed'),
+						...failed.map((failure) => `  ${failure.id}: ${failure.message}`),
+					);
+				}
+				alert(summary.join('\n'));
 				setShowImportModal(false);
 				void refreshProviders();
 			} else {
@@ -320,11 +331,11 @@ export function useProvidersPageState() {
 			}
 		} catch (error) {
 			console.error('Import providers error:', error);
-			alert('Import failed');
+			alert(t('import.requestFailed'));
 		} finally {
 			setImportSubmitting(false);
 		}
-	}, [importSelected, refreshProviders]);
+	}, [importSelected, refreshProviders, t]);
 
 	const handleSave = useCallback(async () => {
 		if (!editingProvider && !formData.api_key.trim() && !formData.shared_channel_type) {

@@ -818,7 +818,7 @@
 		},
 		"import": {
 			"title": "Import from templates",
-			"subtitle": "Prefills common endpoints. LLM-only OpenAI templates import chat URLs; providers with Images keep a Base URL. Each import creates a new provider row.",
+			"subtitle": "Prefills common endpoints. LLM-only OpenAI templates import chat URLs; providers with Images keep a Base URL. Most imports create a new Provider row; managed templates install idempotently.",
 			"searchPlaceholder": "Search template name",
 			"clearSearch": "Clear template search",
 			"clear": "Clear",
@@ -832,7 +832,13 @@
 			"openaiBase": "OpenAI base: {url}",
 			"openaiChat": "OpenAI chat: {url}",
 			"openaiCaps": "· {caps}",
-			"importSelected": "Import selected ({count})"
+			"importSelected": "Import selected ({count})",
+			"selectAtLeastOne": "Select at least one template.",
+			"resultFinished": "Import finished.",
+			"resultCreated": "Created: {count}",
+			"resultAlreadyInstalled": "Already installed: {count}",
+			"resultFailed": "Failed:",
+			"requestFailed": "Import failed"
 		},
 		"modal": {
 			"editTitle": "Edit Provider",

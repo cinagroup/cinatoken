@@ -24,6 +24,7 @@ import type {
 	AdminProvidersImportOutput,
 } from "@/lib/services/admin/types";
 import { handleAdminRouteError } from "./error-response";
+import { DEEPSEEK_API_KEY_ENV_NAME } from "@octafuse/core";
 import { normalizeApiTimeFields } from "@octafuse/core/lib/time-format";
 
 export const adminProvidersRoutes = new Hono<AdminEnv>();
@@ -96,8 +97,14 @@ adminProvidersRoutes.post("/import", async (c) => {
 		const data: AdminProvidersImportOutput =
 			await importProvidersFromStaticPresetsService(repos, {
 				ids: Array.isArray(body.ids) ? body.ids : [],
+				environmentApiKeys: {
+					[DEEPSEEK_API_KEY_ENV_NAME]: c.env.DEEPSEEK_API_KEY,
+				},
 			});
 		const parts = [`created ${data.created}`];
+		if (data.skipped_existing.length) {
+			parts.push(`${data.skipped_existing.length} already installed`);
+		}
 		if (data.failed.length) {
 			parts.push(`${data.failed.length} failed`);
 		}
