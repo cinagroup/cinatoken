@@ -340,6 +340,8 @@ function recordRealtimeUsage(params: {
 						operation,
 					}),
 					requestBodyLoggingMode: c.get('requestBodyLoggingMode'),
+					requestOrigin: new URL(c.req.url).origin,
+					responseStreamed: true,
 					requestProtocol: 'dashscope',
 					requestOperation: operation,
 					upstreamProtocol: route.upstreamProtocol,

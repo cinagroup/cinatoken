@@ -113,6 +113,8 @@ function setupDatabase(): DatabaseSync {
 			upstream_request_id TEXT, upstream_message_id TEXT, billing_kind TEXT,
 			input_image_count INTEGER, output_image_count INTEGER,
 			audio_duration_seconds REAL, audio_characters INTEGER,
+			request_origin TEXT, response_streamed INTEGER, data_region TEXT,
+			is_byok INTEGER, charged_cost_usd REAL, upstream_inference_cost_usd REAL,
 			created_at TEXT NOT NULL
 		);
 		CREATE TABLE public_model_daily_stats (

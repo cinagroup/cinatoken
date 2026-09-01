@@ -19,9 +19,20 @@ const GENERATION: GenerationRequestLogRow = {
 	request_operation: 'chat',
 	input_tokens: 11,
 	output_tokens: 22,
+	cache_read_tokens: 3,
+	reasoning_tokens: 4,
+	input_image_count: 0,
+	output_image_count: 0,
 	status: 'success',
 	latency_ms: 1250,
 	upstream_message_id: 'chatcmpl-public-123',
+	workspace_id: 'workspace-1',
+	request_origin: 'https://cinatoken.com',
+	response_streamed: 1,
+	data_region: 'global',
+	is_byok: 0,
+	charged_cost_usd: '0.001500000000',
+	upstream_inference_cost_usd: '0.001200000000',
 	created_at: '2026-08-30T00:00:00.000Z',
 };
 
@@ -98,7 +109,7 @@ describe('GET generation metadata', () => {
 		]);
 	});
 
-	it('returns only proven safe metadata and never serializes internal request-log columns', async () => {
+	it('returns an SDK-compatible proven metadata snapshot without internal request-log columns', async () => {
 		const response = await request('/api/v1/generation?id=gen-owned', {
 			headers: { Authorization: 'Bearer sk-test' },
 		});
@@ -110,28 +121,28 @@ describe('GET generation metadata', () => {
 			cache_discount: null,
 			cancelled: false,
 			created_at: '2026-08-30T00:00:00.000Z',
-			data_region: null,
+			data_region: 'global',
 			external_user: null,
 			finish_reason: null,
 			generation_time: null,
 			http_referer: null,
 			id: 'gen-owned',
-			is_byok: null,
+			is_byok: false,
 			latency: 1250,
 			model: 'vendor/model',
 			moderation_latency: null,
 			native_finish_reason: null,
-			native_tokens_cached: null,
-			native_tokens_completion: null,
+			native_tokens_cached: 3,
+			native_tokens_completion: 22,
 			native_tokens_completion_images: null,
-			native_tokens_prompt: null,
-			native_tokens_reasoning: null,
+			native_tokens_prompt: 11,
+			native_tokens_reasoning: 4,
 			num_fetches: null,
 			num_input_audio_prompt: null,
 			num_media_completion: null,
 			num_media_prompt: null,
 			num_search_results: null,
-			origin: null,
+			origin: 'https://cinatoken.com',
 			preset_id: null,
 			provider_name: 'Provider One',
 			provider_responses: null,
@@ -139,15 +150,16 @@ describe('GET generation metadata', () => {
 			router: null,
 			service_tier: null,
 			session_id: null,
-			streamed: null,
+			streamed: true,
 			tokens_completion: 22,
 			tokens_prompt: 11,
-			total_cost: null,
+			total_cost: 0.0015,
 			upstream_id: 'chatcmpl-public-123',
-			upstream_inference_cost: null,
-			usage: null,
+			upstream_inference_cost: 0.0012,
+			usage: 0.0015,
 			user_agent: null,
 			web_search_engine: null,
+			workspace_id: 'workspace-1',
 		});
 
 		const serialized = JSON.stringify(body);
@@ -159,9 +171,13 @@ describe('GET generation metadata', () => {
 		]) {
 			assert.equal(Object.hasOwn(body.data, forbiddenKey), false);
 		}
+		assert.equal(
+			toGenerationMetadataData({ ...GENERATION, request_operation: 'models.generate' })?.api_type,
+			'completions',
+		);
 	});
 
-	it('rejects malformed or oversized stored strings instead of reflecting them', () => {
+	it('rejects incomplete, malformed, or non-canonical mandatory snapshots', () => {
 		const data = toGenerationMetadataData({
 			...GENERATION,
 			id: 'invalid\ngeneration',
@@ -170,11 +186,22 @@ describe('GET generation metadata', () => {
 			provider_name: 'unsafe\u0000provider',
 			upstream_message_id: 'bad\nupstream-id',
 		});
-		assert.equal(data.id, null);
-		assert.equal(data.created_at, null);
-		assert.equal(data.model, null);
-		assert.equal(data.provider_name, null);
-		assert.equal(data.upstream_id, null);
+		assert.equal(data, null);
+		assert.equal(toGenerationMetadataData({ ...GENERATION, request_origin: 'https://cinatoken.com/path' }), null);
+		assert.equal(toGenerationMetadataData({ ...GENERATION, data_region: 'unknown' }), null);
+		assert.equal(toGenerationMetadataData({ ...GENERATION, is_byok: null }), null);
+		assert.equal(toGenerationMetadataData({ ...GENERATION, charged_cost_usd: '-1' }), null);
+	});
+
+	it('keeps legacy rows without immutable USD/origin snapshots unavailable', async () => {
+		const { repositories } = testRepositories();
+		(repositories.requestLogs.getRequestLogByIdForOwner as unknown as () => Promise<GenerationRequestLogRow>) =
+			async () => ({ ...GENERATION, request_origin: null, charged_cost_usd: null });
+		const app = createProxyApp(async () => ({ repositories } as StorageContext));
+		const response = await app.request('/api/v1/generation?id=gen-owned', {
+			headers: { Authorization: 'Bearer sk-test' },
+		}, { REQUEST_BODY_LOGGING: 'off' });
+		assert.equal(response.status, 404);
 	});
 
 	it('uses one indistinguishable 404 for other users, other Workspaces, missing rows, and invalid ids', async () => {

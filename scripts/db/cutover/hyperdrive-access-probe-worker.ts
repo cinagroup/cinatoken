@@ -61,8 +61,8 @@ function migratorContractPassed(row: MigratorProbe | undefined): boolean {
 		!row.can_create_role &&
 		row.schema_usage &&
 		row.schema_create &&
-		row.migration_count === '53' &&
-		row.latest_migration === '0053_workspace_budgets.sql' &&
+		row.migration_count === '54' &&
+		row.latest_migration === '0054_generation_metadata_snapshots.sql' &&
 		row.latest_migration_applied;
 }
 
@@ -147,7 +147,7 @@ export default {
 						(SELECT MAX(version) FROM cinatoken_gateway.schema_migrations) AS latest_migration,
 						EXISTS (
 							SELECT 1 FROM cinatoken_gateway.schema_migrations
-							WHERE version = '0053_workspace_budgets.sql'
+							WHERE version = '0054_generation_metadata_snapshots.sql'
 						) AS latest_migration_applied
 				`;
 			const migratorPassed = migratorContractPassed(migratorRow);

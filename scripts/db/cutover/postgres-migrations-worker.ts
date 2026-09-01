@@ -55,6 +55,7 @@ import migration0050 from '../../../packages/core/migrations-postgres/0050_manag
 import migration0051 from '../../../packages/core/migrations-postgres/0051_gateway_key_expiry.sql';
 import migration0052 from '../../../packages/core/migrations-postgres/0052_gateway_key_limits.sql';
 import migration0053 from '../../../packages/core/migrations-postgres/0053_workspace_budgets.sql';
+import migration0054 from '../../../packages/core/migrations-postgres/0054_generation_metadata_snapshots.sql';
 
 interface MigrationEnv {
 	MIGRATOR_HYPERDRIVE: { readonly connectionString: string };
@@ -116,6 +117,7 @@ const MIGRATIONS = [
 	['0051_gateway_key_expiry.sql', migration0051],
 	['0052_gateway_key_limits.sql', migration0052],
 	['0053_workspace_budgets.sql', migration0053],
+	['0054_generation_metadata_snapshots.sql', migration0054],
 ] as const;
 
 export default {

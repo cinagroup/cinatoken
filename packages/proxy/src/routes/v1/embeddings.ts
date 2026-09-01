@@ -589,6 +589,8 @@ embeddingsRoutes.post('/', async (c) => {
 				proxyResult.chosenRoute,
 			),
 			request_body_logging_mode: c.get('requestBodyLoggingMode'),
+			request_origin: new URL(c.req.url).origin,
+			response_streamed: false,
 			request_protocol: 'openai',
 			request_operation: 'embeddings',
 			upstream_protocol: proxyResult.chosenRoute.upstreamProtocol,

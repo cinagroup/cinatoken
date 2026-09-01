@@ -73,6 +73,18 @@ export type InsertRequestLogParams = {
 	audioDurationSeconds?: number | null;
 	/** TTS：上游返回的有效计费字符数 */
 	audioCharacters?: number | null;
+	/** Canonical credential-free HTTP(S) origin captured from the inbound request URL. */
+	requestOrigin?: string | null;
+	/** Whether the public response used a streaming transport. */
+	responseStreamed?: boolean | null;
+	/** OpenRouter-compatible request-time routing region snapshot. */
+	dataRegion?: 'global' | 'europe' | 'us' | null;
+	/** Request-time private BYOK decision; shared/platform provider keys are false. */
+	isByok?: boolean | null;
+	/** User-visible generation charge in USD; null when the billing currency is not provably USD. */
+	chargedCostUsd?: number | null;
+	/** Upstream inference cost in USD; null when the supplier cost is not provably USD. */
+	upstreamInferenceCostUsd?: number | null;
 };
 
 /**
@@ -90,8 +102,79 @@ export type GenerationRequestLogRow = {
 	provider_name: string | null;
 	input_tokens: number;
 	output_tokens: number;
+	cache_read_tokens: number;
+	reasoning_tokens: number;
+	input_image_count: number;
+	output_image_count: number;
 	upstream_message_id: string | null;
+	workspace_id: string | null;
+	request_origin: string | null;
+	response_streamed: boolean | number | null;
+	data_region: string | null;
+	is_byok: boolean | number | null;
+	charged_cost_usd: number | string | null;
+	upstream_inference_cost_usd: number | string | null;
 };
+
+const GENERATION_DATA_REGIONS = new Set(['global', 'europe', 'us']);
+
+/** Fail closed before persisting a partial or forged Generation metadata snapshot. */
+export function assertGenerationSnapshotIsValid(params: InsertRequestLogParams): void {
+	const required = [
+		params.requestOrigin,
+		params.dataRegion,
+		params.isByok,
+		params.chargedCostUsd,
+	];
+	const hasSnapshot = required.some((value) => value != null);
+	if (!hasSnapshot) {
+		if (params.responseStreamed != null || params.upstreamInferenceCostUsd != null) {
+			throw new TypeError('Generation metadata snapshot is incomplete');
+		}
+		return;
+	}
+	if (required.some((value) => value == null)) {
+		throw new TypeError('Generation metadata snapshot is incomplete');
+	}
+
+	if (typeof params.requestOrigin !== 'string' || params.requestOrigin.length > 512) {
+		throw new TypeError('Generation request origin is invalid');
+	}
+	let origin: URL;
+	try {
+		origin = new URL(params.requestOrigin);
+	} catch {
+		throw new TypeError('Generation request origin is invalid');
+	}
+	if (
+		(origin.protocol !== 'https:' && origin.protocol !== 'http:')
+		|| origin.username !== ''
+		|| origin.password !== ''
+		|| origin.origin !== params.requestOrigin
+		|| origin.pathname !== '/'
+		|| origin.search !== ''
+		|| origin.hash !== ''
+	) {
+		throw new TypeError('Generation request origin must be a canonical credential-free HTTP(S) origin');
+	}
+	if (!GENERATION_DATA_REGIONS.has(params.dataRegion!)) {
+		throw new TypeError('Generation data region is invalid');
+	}
+	if (typeof params.isByok !== 'boolean') {
+		throw new TypeError('Generation BYOK snapshot must be boolean');
+	}
+	if (params.responseStreamed != null && typeof params.responseStreamed !== 'boolean') {
+		throw new TypeError('Generation streaming snapshot must be boolean or null');
+	}
+	for (const [label, value] of [
+		['charged USD cost', params.chargedCostUsd],
+		['upstream USD cost', params.upstreamInferenceCostUsd],
+	] as const) {
+		if (value != null && (typeof value !== 'number' || !Number.isFinite(value) || value < 0)) {
+			throw new TypeError(`Generation ${label} must be a finite non-negative number or null`);
+		}
+	}
+}
 
 /** Bounded recent success sample used by request-time provider performance preferences. */
 export type RoutePerformanceSample = {

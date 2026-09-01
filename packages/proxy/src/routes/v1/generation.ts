@@ -11,40 +11,35 @@ type GenerationEnv = Env & { Variables: { apiKey: ApiKeyContext } };
 
 type GenerationApiType = 'completions' | 'embeddings' | 'rerank' | 'tts' | 'stt' | 'video' | 'image';
 
-/**
- * Deliberately nullable subset of OpenRouter's Generation data contract.
- * Request logs do not snapshot request headers, data region, billing currency,
- * finish reason, streaming mode, BYOK ownership, or provider invoice cost, so
- * those values must remain null instead of being reconstructed after the fact.
- */
+/** OpenRouter SDK-compatible Generation data contract. */
 export type GenerationMetadataData = {
 	api_type: GenerationApiType | null;
 	app_id: null;
 	cache_discount: null;
 	cancelled: boolean | null;
-	created_at: string | null;
-	data_region: null;
+	created_at: string;
+	data_region: 'global' | 'europe' | 'us';
 	external_user: null;
 	finish_reason: null;
 	generation_time: null;
 	http_referer: null;
-	id: string | null;
-	is_byok: null;
+	id: string;
+	is_byok: boolean;
 	latency: number | null;
-	model: string | null;
+	model: string;
 	moderation_latency: null;
 	native_finish_reason: null;
-	native_tokens_cached: null;
-	native_tokens_completion: null;
+	native_tokens_cached: number | null;
+	native_tokens_completion: number | null;
 	native_tokens_completion_images: null;
-	native_tokens_prompt: null;
-	native_tokens_reasoning: null;
+	native_tokens_prompt: number | null;
+	native_tokens_reasoning: number | null;
 	num_fetches: null;
 	num_input_audio_prompt: null;
-	num_media_completion: null;
-	num_media_prompt: null;
+	num_media_completion: number | null;
+	num_media_prompt: number | null;
 	num_search_results: null;
-	origin: null;
+	origin: string;
 	preset_id: null;
 	provider_name: string | null;
 	provider_responses: null;
@@ -52,18 +47,17 @@ export type GenerationMetadataData = {
 	router: null;
 	service_tier: null;
 	session_id: null;
-	streamed: null;
+	streamed: boolean | null;
 	tokens_completion: number | null;
 	tokens_prompt: number | null;
-	/** Null because `charged_cost` does not snapshot its USD/CNY currency. */
-	total_cost: null;
+	total_cost: number;
 	/** Stored application-level upstream generation identifier, when valid. */
 	upstream_id: string | null;
-	upstream_inference_cost: null;
-	/** Null for the same currency-proof reason as `total_cost`. */
-	usage: null;
+	upstream_inference_cost: number | null;
+	usage: number;
 	user_agent: null;
 	web_search_engine: null;
+	workspace_id: string | null;
 };
 
 const GENERATION_ID_PATTERN = /^gen-[A-Za-z0-9_-]{1,128}$/;
@@ -82,11 +76,24 @@ function nonNegativeFiniteNumber(value: unknown): number | null {
 		: null;
 }
 
+function nonNegativeDecimal(value: unknown): number | null {
+	if (typeof value === 'number') return nonNegativeFiniteNumber(value);
+	if (typeof value !== 'string' || !/^(?:0|[1-9]\d*)(?:\.\d+)?$/u.test(value)) return null;
+	return nonNegativeFiniteNumber(Number(value));
+}
+
+function storedBoolean(value: unknown): boolean | null {
+	if (value === true || value === 1) return true;
+	if (value === false || value === 0) return false;
+	return null;
+}
+
 function generationApiType(operation: string | null | undefined): GenerationApiType | null {
 	switch (operation) {
 		case 'chat':
 		case 'responses':
 		case 'messages':
+		case 'models.generate':
 		case 'generateContent':
 		case 'streamGenerateContent':
 			return 'completions';
@@ -130,36 +137,82 @@ function publicCreatedAt(value: string): string | null {
 	return safe && Number.isFinite(Date.parse(safe)) ? safe : null;
 }
 
-/** Map only non-sensitive RequestLog columns with equivalent public semantics. */
-export function toGenerationMetadataData(row: GenerationRequestLogRow): GenerationMetadataData {
+function publicOrigin(value: string | null): string | null {
+	const safe = publicLogString(value, 512);
+	if (!safe) return null;
+	try {
+		const url = new URL(safe);
+		if (
+			(url.protocol !== 'https:' && url.protocol !== 'http:')
+			|| url.username !== ''
+			|| url.password !== ''
+			|| url.origin !== safe
+			|| url.pathname !== '/'
+			|| url.search !== ''
+			|| url.hash !== ''
+		) return null;
+		return safe;
+	} catch {
+		return null;
+	}
+}
+
+function publicDataRegion(value: string | null): GenerationMetadataData['data_region'] | null {
+	return value === 'global' || value === 'europe' || value === 'us' ? value : null;
+}
+
+/** Map only non-sensitive immutable columns; incomplete legacy snapshots stay unavailable. */
+export function toGenerationMetadataData(row: GenerationRequestLogRow): GenerationMetadataData | null {
+	const id = GENERATION_ID_PATTERN.test(row.id) ? row.id : null;
+	const createdAt = publicCreatedAt(row.created_at);
+	const model = publicLogString(row.model_id, 200);
+	const origin = publicOrigin(row.request_origin);
+	const dataRegion = publicDataRegion(row.data_region);
+	const isByok = storedBoolean(row.is_byok);
+	const totalCost = nonNegativeDecimal(row.charged_cost_usd);
+	if (
+		id == null
+		|| createdAt == null
+		|| model == null
+		|| origin == null
+		|| dataRegion == null
+		|| isByok == null
+		|| totalCost == null
+	) return null;
+
+	const apiType = generationApiType(row.request_operation);
 	return {
-		api_type: generationApiType(row.request_operation),
+		api_type: apiType,
 		app_id: null,
 		cache_discount: null,
 		cancelled: cancelledFromStatus(row.status),
-		created_at: publicCreatedAt(row.created_at),
-		data_region: null,
+		created_at: createdAt,
+		data_region: dataRegion,
 		external_user: null,
 		finish_reason: null,
 		generation_time: null,
 		http_referer: null,
-		id: GENERATION_ID_PATTERN.test(row.id) ? row.id : null,
-		is_byok: null,
+		id,
+		is_byok: isByok,
 		latency: nonNegativeFiniteNumber(row.latency_ms),
-		model: publicLogString(row.model_id, 200),
+		model,
 		moderation_latency: null,
 		native_finish_reason: null,
-		native_tokens_cached: null,
-		native_tokens_completion: null,
+		native_tokens_cached: nonNegativeSafeInteger(row.cache_read_tokens),
+		native_tokens_completion: nonNegativeSafeInteger(row.output_tokens),
 		native_tokens_completion_images: null,
-		native_tokens_prompt: null,
-		native_tokens_reasoning: null,
+		native_tokens_prompt: nonNegativeSafeInteger(row.input_tokens),
+		native_tokens_reasoning: nonNegativeSafeInteger(row.reasoning_tokens),
 		num_fetches: null,
 		num_input_audio_prompt: null,
-		num_media_completion: null,
-		num_media_prompt: null,
+		num_media_completion: apiType === 'image'
+			? nonNegativeSafeInteger(row.output_image_count)
+			: null,
+		num_media_prompt: apiType === 'image'
+			? nonNegativeSafeInteger(row.input_image_count)
+			: null,
 		num_search_results: null,
-		origin: null,
+		origin,
 		preset_id: null,
 		provider_name: publicLogString(row.provider_name, 200),
 		provider_responses: null,
@@ -167,15 +220,16 @@ export function toGenerationMetadataData(row: GenerationRequestLogRow): Generati
 		router: null,
 		service_tier: null,
 		session_id: null,
-		streamed: null,
+		streamed: storedBoolean(row.response_streamed),
 		tokens_completion: nonNegativeSafeInteger(row.output_tokens),
 		tokens_prompt: nonNegativeSafeInteger(row.input_tokens),
-		total_cost: null,
+		total_cost: totalCost,
 		upstream_id: publicUpstreamId(row.upstream_message_id),
-		upstream_inference_cost: null,
-		usage: null,
+		upstream_inference_cost: nonNegativeDecimal(row.upstream_inference_cost_usd),
+		usage: totalCost,
 		user_agent: null,
 		web_search_engine: null,
+		workspace_id: publicLogString(row.workspace_id, 600),
 	};
 }
 
@@ -220,7 +274,9 @@ generationRoutes.get('/', requireApiKey, async (c) => {
 		if (!row) return notFound(c);
 
 		c.header('Cache-Control', 'private, no-store');
-		return c.json({ data: toGenerationMetadataData(row) });
+		const data = toGenerationMetadataData(row);
+		if (!data) return notFound(c);
+		return c.json({ data });
 	} catch (error) {
 		console.error(JSON.stringify({
 			message: 'generation metadata lookup failed',

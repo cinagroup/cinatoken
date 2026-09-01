@@ -656,6 +656,12 @@ export const apiKeyRequestLogsTable = sqliteTable("api_key_request_logs", {
 	outputImageCount: integer("output_image_count").notNull().default(0),
 	audioDurationSeconds: real("audio_duration_seconds"),
 	audioCharacters: integer("audio_characters"),
+	requestOrigin: text("request_origin"),
+	responseStreamed: integer("response_streamed", { mode: "boolean" }),
+	dataRegion: text("data_region"),
+	isByok: integer("is_byok", { mode: "boolean" }),
+	chargedCostUsd: real("charged_cost_usd"),
+	upstreamInferenceCostUsd: real("upstream_inference_cost_usd"),
 	createdAt: text("created_at")
 		.notNull()
 		.default(sql`CURRENT_TIMESTAMP`),

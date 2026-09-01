@@ -712,6 +712,12 @@ export const apiKeyRequestLogsTable = mysqlTable("api_key_request_logs", {
 	outputImageCount: int("output_image_count").notNull().default(0),
 	audioDurationSeconds: double("audio_duration_seconds"),
 	audioCharacters: int("audio_characters"),
+	requestOrigin: varchar("request_origin", { length: 512 }),
+	responseStreamed: tinyint("response_streamed"),
+	dataRegion: varchar("data_region", { length: 16 }),
+	isByok: tinyint("is_byok"),
+	chargedCostUsd: decimal("charged_cost_usd", { precision: 24, scale: 12 }),
+	upstreamInferenceCostUsd: decimal("upstream_inference_cost_usd", { precision: 24, scale: 12 }),
 	createdAt: timestamp("created_at", { fsp: 6, mode: "string" }).notNull(),
 });
 

@@ -715,6 +715,8 @@ messagesRoutes.post('/', async (c) => {
           request_body: requestBodyForLog,
           upstream_request_body: upstreamRequestBodyForLog,
           request_body_logging_mode: c.get('requestBodyLoggingMode'),
+		  request_origin: new URL(c.req.url).origin,
+		  response_streamed: body.stream === true,
           request_protocol: 'anthropic',
           request_operation: 'messages',
           upstream_protocol: chosenRoute.upstreamProtocol,

@@ -38,7 +38,7 @@ interface ReconcileCheck {
 }
 
 const TARGET_SCHEMA = 'cinatoken_gateway';
-const REQUIRED_MIGRATION = '0053_workspace_budgets.sql';
+const REQUIRED_MIGRATION = '0054_generation_metadata_snapshots.sql';
 const GUARDRAIL_LEDGER_CHECK_PREFIX = 'guardrail-ledger:';
 const BUDGET_SPENT_RECONCILE_BATCH_SIZE = 250;
 

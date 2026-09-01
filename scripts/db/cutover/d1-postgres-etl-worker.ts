@@ -51,7 +51,7 @@ interface ReconcileCheck {
 
 type EtlSqlValue = string | number | boolean | null;
 
-const REQUIRED_MIGRATION = '0053_workspace_budgets.sql';
+const REQUIRED_MIGRATION = '0054_generation_metadata_snapshots.sql';
 const ETL_LOCK_KEY = 746923552;
 const BATCH_SIZE = 250;
 const MAX_POSTGRES_BATCH_PARAMETERS = 60_000;

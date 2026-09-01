@@ -15,7 +15,12 @@ import type { RequestLogRow } from '../../types';
 import type { D1DatabaseClient } from '../../storage/database-client';
 import type { RequestLogsRepository } from '../../storage/gateway-repository-interfaces';
 import type { RequestLogsD1Statements } from './d1-repository-extras';
-import type { GenerationRequestLogRow, InsertRequestLogParams, RoutePerformanceSample } from '../request-logs-types';
+import {
+	assertGenerationSnapshotIsValid,
+	type GenerationRequestLogRow,
+	type InsertRequestLogParams,
+	type RoutePerformanceSample,
+} from '../request-logs-types';
 import { filterAllowedRequestLogStatuses } from '../request-log-status-filter';
 import {
 	buildRecentRoutePerformanceSamplesSql,
@@ -27,10 +32,11 @@ export function buildInsertRequestLogStatement(
 	params: InsertRequestLogParams,
 	createdAtIso = new Date().toISOString()
 ): D1PreparedStatement {
+	assertGenerationSnapshotIsValid(params);
 	return db
 		.prepare(
-			`INSERT INTO api_key_request_logs (id, user_id, api_key_id, workspace_id, user_email, model_id, provider_id, provider_model_name, model_name, provider_name, request_body, upstream_request_body, request_protocol, request_operation, upstream_protocol, upstream_operation, model_surface_id, route_pool_id, route_target_id, adapter, route_trace, input_tokens, output_tokens, cache_read_tokens, cache_write_tokens, reasoning_tokens, total_tokens, metered_cost, standard_cost, charged_cost, budget_charged_micros, budget_accounted_at, route_group, status, latency_ms, gateway_overhead_ms, upstream_response_ms, final_upstream_headers_ms, first_reasoning_token_ms, first_token_ms, stream_duration_ms, upstream_attempt_count, upstream_failover_count, timing_metadata, error_message, raw_usage, pricing_audit, provider_key_id, provider_key_label, provider_key_fingerprint, upstream_request_id, upstream_message_id, billing_kind, input_image_count, output_image_count, audio_duration_seconds, audio_characters, created_at)
-			 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
+			`INSERT INTO api_key_request_logs (id, user_id, api_key_id, workspace_id, user_email, model_id, provider_id, provider_model_name, model_name, provider_name, request_body, upstream_request_body, request_protocol, request_operation, upstream_protocol, upstream_operation, model_surface_id, route_pool_id, route_target_id, adapter, route_trace, input_tokens, output_tokens, cache_read_tokens, cache_write_tokens, reasoning_tokens, total_tokens, metered_cost, standard_cost, charged_cost, budget_charged_micros, budget_accounted_at, route_group, status, latency_ms, gateway_overhead_ms, upstream_response_ms, final_upstream_headers_ms, first_reasoning_token_ms, first_token_ms, stream_duration_ms, upstream_attempt_count, upstream_failover_count, timing_metadata, error_message, raw_usage, pricing_audit, provider_key_id, provider_key_label, provider_key_fingerprint, upstream_request_id, upstream_message_id, billing_kind, input_image_count, output_image_count, audio_duration_seconds, audio_characters, request_origin, response_streamed, data_region, is_byok, charged_cost_usd, upstream_inference_cost_usd, created_at)
+			 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
 		)
 		.bind(
 			params.id,
@@ -90,6 +96,14 @@ export function buildInsertRequestLogStatement(
 			params.outputImageCount ?? 0,
 			params.audioDurationSeconds ?? null,
 			params.audioCharacters ?? null,
+			params.requestOrigin ?? null,
+			params.responseStreamed == null ? null : Number(params.responseStreamed),
+			params.dataRegion ?? null,
+			params.isByok == null ? null : Number(params.isByok),
+			params.chargedCostUsd == null ? null : roundGatewayMoney(params.chargedCostUsd),
+			params.upstreamInferenceCostUsd == null
+				? null
+				: roundGatewayMoney(params.upstreamInferenceCostUsd),
 			createdAtIso
 		);
 }
@@ -104,7 +118,11 @@ export function createD1RequestLogsRepository(db: D1DatabaseClient): RequestLogs
 				.prepare(
 					`SELECT rl.id, rl.request_operation, rl.status, rl.created_at,
 					        rl.latency_ms, rl.model_id, rl.provider_name,
-					        rl.input_tokens, rl.output_tokens, rl.upstream_message_id
+					        rl.input_tokens, rl.output_tokens, rl.cache_read_tokens,
+					        rl.reasoning_tokens, rl.input_image_count, rl.output_image_count,
+					        rl.upstream_message_id, rl.workspace_id, rl.request_origin,
+					        rl.response_streamed, rl.data_region, rl.is_byok,
+					        rl.charged_cost_usd, rl.upstream_inference_cost_usd
 					 FROM api_key_request_logs rl
 					 WHERE rl.id = ?
 					   AND rl.user_id = ?

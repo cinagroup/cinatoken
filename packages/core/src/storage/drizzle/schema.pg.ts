@@ -708,6 +708,12 @@ export const apiKeyRequestLogsTable = pgTable("api_key_request_logs", {
 	outputImageCount: integer("output_image_count").notNull().default(0),
 	audioDurationSeconds: real("audio_duration_seconds"),
 	audioCharacters: integer("audio_characters"),
+	requestOrigin: text("request_origin"),
+	responseStreamed: boolean("response_streamed"),
+	dataRegion: text("data_region"),
+	isByok: boolean("is_byok"),
+	chargedCostUsd: numeric("charged_cost_usd", { precision: 24, scale: 12 }),
+	upstreamInferenceCostUsd: numeric("upstream_inference_cost_usd", { precision: 24, scale: 12 }),
 	createdAt: timestamp("created_at", {
 		withTimezone: true,
 		mode: "string",

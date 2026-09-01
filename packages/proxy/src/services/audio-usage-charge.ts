@@ -62,6 +62,7 @@ import {
 	applyRequestBodyLoggingPolicy,
 	type RequestBodyLoggingMode,
 } from './request-body-log-policy';
+import { verifiedUsdGenerationWriteSnapshot } from './generation-metadata-snapshot';
 import {
 	ordinaryBudgetAuditSnapshotTransition,
 	ordinaryBudgetSettlementForCriticalWrite,
@@ -852,6 +853,8 @@ export type RecordAudioUsageParams = {
 	requestBody?: string | null;
 	upstreamRequestBody?: string | null;
 	requestBodyLoggingMode?: RequestBodyLoggingMode;
+	requestOrigin?: string | null;
+	responseStreamed?: boolean | null;
 	requestProtocol: UpstreamProtocol;
 	requestOperation?: string | null;
 	upstreamProtocol: UpstreamProtocol;
@@ -984,6 +987,13 @@ export async function recordAudioUsage(params: RecordAudioUsageParams): Promise<
 	const meteredCost = billingCommitted ? costs.meteredCost : 0;
 	const standardCost = billingCommitted ? costs.standardCost : 0;
 	const shouldChargeBudget = billingCommitted && chargedCost > 0;
+	const generationSnapshot = verifiedUsdGenerationWriteSnapshot({
+		verifiedUsdPricing: hasEndpointPricing,
+		requestOrigin: params.requestOrigin,
+		responseStreamed: params.responseStreamed,
+		chargedCostUsd: chargedCost,
+		upstreamInferenceCostUsd: billingCommitted ? meteredCost : null,
+	});
 	const writeIdentity = resolveAudioUsageWriteIdentity({
 		requestLogId: params.requestLogId,
 		requestStartedAtMs: params.billing.requestStartedAtMs,
@@ -1130,6 +1140,7 @@ export async function recordAudioUsage(params: RecordAudioUsageParams): Promise<
 			providerKeyFingerprint: params.providerKeyFingerprint ?? null,
 			upstreamRequestId: params.upstreamRequestId ?? null,
 			upstreamMessageId: null,
+			...generationSnapshot,
 		},
 		shouldChargeBudget,
 		beforeSpent,

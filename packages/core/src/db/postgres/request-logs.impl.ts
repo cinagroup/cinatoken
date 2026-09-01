@@ -24,9 +24,13 @@ export function createPostgresRequestLogsRepository(db: PostgresDatabaseClient):
 	return {
 		async getRequestLogByIdForOwner(options): Promise<GenerationRequestLogRow | null> {
 			const rows = (await pg.unsafe(
-				`SELECT rl.id, rl.request_operation, rl.status, rl.created_at,
-				        rl.latency_ms, rl.model_id, rl.provider_name,
-				        rl.input_tokens, rl.output_tokens, rl.upstream_message_id
+			`SELECT rl.id, rl.request_operation, rl.status, rl.created_at::text AS created_at,
+			        rl.latency_ms, rl.model_id, rl.provider_name,
+			        rl.input_tokens, rl.output_tokens, rl.cache_read_tokens,
+			        rl.reasoning_tokens, rl.input_image_count, rl.output_image_count,
+			        rl.upstream_message_id, rl.workspace_id, rl.request_origin,
+			        rl.response_streamed, rl.data_region, rl.is_byok,
+			        rl.charged_cost_usd, rl.upstream_inference_cost_usd
 				 FROM api_key_request_logs rl
 				 WHERE rl.id = $1
 				   AND rl.user_id = $2

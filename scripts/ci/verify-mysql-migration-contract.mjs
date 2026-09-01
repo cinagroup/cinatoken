@@ -11,8 +11,8 @@ const mysqlMigrations = readdirSync(join(root, 'packages/core/migrations-mysql')
 	.sort();
 assert.equal(
 	mysqlMigrations.at(-1),
-	'0050_workspace_budgets.sql',
-	'MySQL migration chain must end with the Workspace budgets migration',
+	'0051_generation_metadata_snapshots.sql',
+	'MySQL migration chain must end with the Generation metadata snapshot migration',
 );
 
 const budget = read('packages/core/migrations-mysql/0035_guardrail_budget_reservations.sql');
@@ -338,5 +338,26 @@ for (const workspaceBudgetContract of [
 		`0050 is missing Workspace budget contract: ${workspaceBudgetContract}`,
 	);
 }
+
+const generationMetadata = read('packages/core/migrations-mysql/0051_generation_metadata_snapshots.sql');
+for (const generationContract of [
+	'ADD COLUMN request_origin VARCHAR(512) NULL',
+	'ADD COLUMN response_streamed TINYINT NULL',
+	'ADD COLUMN data_region VARCHAR(16) NULL',
+	'ADD COLUMN is_byok TINYINT NULL',
+	'ADD COLUMN charged_cost_usd DECIMAL(24, 12) NULL',
+	'ADD COLUMN upstream_inference_cost_usd DECIMAL(24, 12) NULL',
+	"data_region IN ('global', 'europe', 'us')",
+]) {
+	assert.ok(
+		generationMetadata.includes(generationContract),
+		`0051 is missing Generation metadata contract: ${generationContract}`,
+	);
+}
+assert.doesNotMatch(
+	generationMetadata,
+	/(?:UPDATE|INSERT\s+INTO)\s+api_key_request_logs/iu,
+	'MySQL Generation metadata facts must not be inferred for historical request logs',
+);
 
 console.log('MySQL Guardrail/user/Workspace budget, identity, routing, data-policy, and endpoint-first contract: PASS');

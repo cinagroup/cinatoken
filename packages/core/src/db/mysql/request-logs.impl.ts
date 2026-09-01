@@ -14,7 +14,7 @@ import {
 import type { RequestLogRow } from '../../types';
 import type { MySqlDatabaseClient } from '../../storage/database-client';
 import type { RequestLogsRepository } from '../../storage/gateway-repository-interfaces';
-import { asMySqlPool, toMySqlDateTime } from './mysql2-compat';
+import { asMySqlPool, fromMySqlDateTime, toMySqlDateTime } from './mysql2-compat';
 import { filterAllowedRequestLogStatuses } from '../request-log-status-filter';
 import type { GenerationRequestLogRow, RoutePerformanceSample } from '../request-logs-types';
 import {
@@ -22,14 +22,22 @@ import {
 	normalizeRoutePerformanceSamplesPerTarget,
 } from '../route-performance-sampling';
 
+type MySqlGenerationRequestLogRow = Omit<GenerationRequestLogRow, 'created_at'> & {
+	created_at: string | Date;
+};
+
 export function createMySqlRequestLogsRepository(db: MySqlDatabaseClient): RequestLogsRepository {
 	const pool = asMySqlPool(db.raw);
 	return {
 		async getRequestLogByIdForOwner(options): Promise<GenerationRequestLogRow | null> {
-			const [rows] = await pool.query<GenerationRequestLogRow[]>(
+			const [rows] = await pool.query<MySqlGenerationRequestLogRow[]>(
 				`SELECT rl.id, rl.request_operation, rl.status, rl.created_at,
 				        rl.latency_ms, rl.model_id, rl.provider_name,
-				        rl.input_tokens, rl.output_tokens, rl.upstream_message_id
+				        rl.input_tokens, rl.output_tokens, rl.cache_read_tokens,
+				        rl.reasoning_tokens, rl.input_image_count, rl.output_image_count,
+				        rl.upstream_message_id, rl.workspace_id, rl.request_origin,
+				        rl.response_streamed, rl.data_region, rl.is_byok,
+				        rl.charged_cost_usd, rl.upstream_inference_cost_usd
 				 FROM api_key_request_logs rl
 				 WHERE rl.id = ?
 				   AND rl.user_id = ?
@@ -37,7 +45,10 @@ export function createMySqlRequestLogsRepository(db: MySqlDatabaseClient): Reque
 				 LIMIT 1`,
 				[options.id, options.userId, options.workspaceId]
 			);
-			return rows[0] ?? null;
+			const row = rows[0];
+			if (!row) return null;
+			row.created_at = fromMySqlDateTime(row.created_at);
+			return row as GenerationRequestLogRow;
 		},
 
 		async getRequestLogsByKeyId(

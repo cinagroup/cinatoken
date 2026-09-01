@@ -17,7 +17,7 @@
 		"test:ordinary-budget": "tsx --test src/services/ordinary-budget-lifecycle.test.ts src/services/ordinary-budget-usage-settlement.test.ts src/services/text-usage-settlement.test.ts",
 		"test:embeddings": "tsx --test src/routes/v1/embeddings.test.ts src/services/egress/openai-embeddings-driver.test.ts",
 		"test:models": "tsx --test src/routes/v1/models.test.ts src/routes/v1/endpoints.test.ts src/routes/v1/openrouter-public-catalog.test.ts src/services/public-model-endpoints.test.ts src/services/public-image-endpoints.test.ts",
-		"test:generation": "tsx --test src/routes/v1/generation.test.ts",
+		"test:generation": "tsx --test src/routes/v1/generation.test.ts src/services/generation-metadata-snapshot.test.ts",
 		"test:request-log-status": "tsx --test src/services/request-log-record-status.test.ts",
 		"test:api-aliases": "tsx --test src/app-api-v1-aliases.test.ts src/app-cors-openrouter.test.ts src/app-global-errors.test.ts",
 		"test:management-keys": "tsx --test src/routes/v1/management-keys.test.ts src/routes/v1/management-workspace-budgets.test.ts src/routes/v1/current-key.test.ts",

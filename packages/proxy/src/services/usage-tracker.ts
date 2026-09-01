@@ -48,6 +48,7 @@ import {
 	applyRequestBodyLoggingPolicy,
 	type RequestBodyLoggingMode,
 } from './request-body-log-policy';
+import { verifiedUsdGenerationWriteSnapshot } from './generation-metadata-snapshot';
 import type { ModelFallbackTrace } from './model-fallbacks';
 import type { RouteResult } from './model-router';
 import {
@@ -218,6 +219,9 @@ export async function recordUsage(
 		request_body?: string | null;
 		upstream_request_body?: string | null;
 		request_body_logging_mode?: RequestBodyLoggingMode;
+		/** Canonical origin from the inbound request URL; never a Referer or full path. */
+		request_origin?: string | null;
+		response_streamed?: boolean | null;
 		request_protocol: UpstreamProtocol;
 		request_operation?: string | null;
 		upstream_protocol: UpstreamProtocol;
@@ -400,6 +404,13 @@ export async function recordUsage(
 	chargedResolved.audit.user_charged_factor = userChargedFactor;
 	const supplierCostR = roundGatewayMoney(supplierCost);
 	const standardCostR = roundGatewayMoney(standardCost);
+	const generationSnapshot = verifiedUsdGenerationWriteSnapshot({
+		verifiedUsdPricing: endpointResolved != null,
+		requestOrigin: params.request_origin,
+		responseStreamed: params.response_streamed,
+		chargedCostUsd: chargedCost,
+		upstreamInferenceCostUsd: billingCommitted ? supplierCostR : null,
+	});
 	const pricingAuditJson = attachUserChargedFactorToPricingAudit(
 		buildRequestPricingAuditJson({
 			usage: params.usage,
@@ -528,6 +539,7 @@ export async function recordUsage(
 			providerKeyFingerprint: params.provider_key_fingerprint ?? null,
 			upstreamRequestId: params.upstream_request_id ?? null,
 			upstreamMessageId: params.upstream_message_id ?? null,
+			...generationSnapshot,
 		},
 		shouldChargeBudget,
 		beforeSpent,

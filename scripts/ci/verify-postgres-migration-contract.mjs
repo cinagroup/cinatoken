@@ -17,12 +17,12 @@ assert.deepEqual(
 );
 assert.deepEqual(
 	d1Migrations.slice(40),
-	['0041_user_budget_spent_micros.sql', '0042_workspaces.sql', '0043_gateway_keys_workspace.sql', '0044_workspace_presets_guardrails.sql', '0045_route_routing_metadata.sql', '0046_route_data_policy_subject_fingerprint.sql', '0047_model_endpoints.sql', '0048_model_endpoint_route_subject_fingerprint.sql', '0049_model_endpoint_audio_capabilities.sql', '0050_model_endpoint_evidence_ledger.sql', '0051_management_api_keys.sql', '0052_gateway_key_expiry.sql', '0053_gateway_key_limits.sql', '0054_workspace_budgets.sql'],
+	['0041_user_budget_spent_micros.sql', '0042_workspaces.sql', '0043_gateway_keys_workspace.sql', '0044_workspace_presets_guardrails.sql', '0045_route_routing_metadata.sql', '0046_route_data_policy_subject_fingerprint.sql', '0047_model_endpoints.sql', '0048_model_endpoint_route_subject_fingerprint.sql', '0049_model_endpoint_audio_capabilities.sql', '0050_model_endpoint_evidence_ledger.sql', '0051_management_api_keys.sql', '0052_gateway_key_expiry.sql', '0053_gateway_key_limits.sql', '0054_workspace_budgets.sql', '0055_generation_metadata_snapshots.sql'],
 	'D1 must retain its dedicated precision migration before Workspace and Gateway Key scope migrations',
 );
 assert.deepEqual(
 	postgresMigrations.slice(40),
-	['0041_workspaces.sql', '0042_gateway_keys_workspace.sql', '0043_workspace_presets_guardrails.sql', '0044_route_routing_metadata.sql', '0045_route_data_policy_subject_fingerprint.sql', '0046_model_endpoints.sql', '0047_model_endpoint_route_subject_fingerprint.sql', '0048_model_endpoint_audio_capabilities.sql', '0049_model_endpoint_evidence_ledger.sql', '0050_management_api_keys.sql', '0051_gateway_key_expiry.sql', '0052_gateway_key_limits.sql', '0053_workspace_budgets.sql'],
+	['0041_workspaces.sql', '0042_gateway_keys_workspace.sql', '0043_workspace_presets_guardrails.sql', '0044_route_routing_metadata.sql', '0045_route_data_policy_subject_fingerprint.sql', '0046_model_endpoints.sql', '0047_model_endpoint_route_subject_fingerprint.sql', '0048_model_endpoint_audio_capabilities.sql', '0049_model_endpoint_evidence_ledger.sql', '0050_management_api_keys.sql', '0051_gateway_key_expiry.sql', '0052_gateway_key_limits.sql', '0053_workspace_budgets.sql', '0054_generation_metadata_snapshots.sql'],
 	'PostgreSQL stores budget_spent directly as NUMERIC and must end with its Workspace budgets migration',
 );
 
@@ -57,6 +57,27 @@ for (const contract of [
 ]) {
 	assert.ok(workspaceBudgetsMigration.includes(contract), `PostgreSQL 0053 is missing Workspace budget contract: ${contract}`);
 }
+
+const generationMetadataMigration = read('packages/core/migrations-postgres/0054_generation_metadata_snapshots.sql');
+for (const generationContract of [
+	'ADD COLUMN request_origin TEXT',
+	'ADD COLUMN response_streamed BOOLEAN',
+	'ADD COLUMN data_region TEXT',
+	'ADD COLUMN is_byok BOOLEAN',
+	'ADD COLUMN charged_cost_usd NUMERIC(24, 12)',
+	'ADD COLUMN upstream_inference_cost_usd NUMERIC(24, 12)',
+	"data_region IN ('global', 'europe', 'us')",
+]) {
+	assert.ok(
+		generationMetadataMigration.includes(generationContract),
+		`PostgreSQL 0054 is missing Generation metadata contract: ${generationContract}`,
+	);
+}
+assert.doesNotMatch(
+	generationMetadataMigration,
+	/(?:UPDATE|INSERT\s+INTO)\s+api_key_request_logs/iu,
+	'Generation metadata facts must not be inferred for historical request logs',
+);
 
 const migrationRunner = read('packages/core/src/migrate/postgres.ts');
 assert.match(migrationRunner, /GATEWAY_POSTGRES_SCHEMA = 'cinatoken_gateway'/u);
@@ -172,7 +193,7 @@ for (const safetyContract of [
 	'ENABLE TRIGGER USER',
 	'pg_advisory_xact_lock',
 	'ETL_EXCLUDED_SESSION_TABLES',
-	'0053_workspace_budgets.sql',
+	'0054_generation_metadata_snapshots.sql',
 	'activeGuardrailReservations',
 	'activeUserBudgetReservations',
 	'postgresBudgetSpentFromTransferRow',
@@ -191,7 +212,7 @@ assert.match(reconcile, /reportGuardrailLedgerDifferences/u);
 assert.match(reconcile, /GUARDRAIL_LEDGER_CHECK_PREFIX = 'guardrail-ledger:'/u);
 assert.match(reconcile, /source:active-reservations/u);
 assert.match(reconcile, /target:active-reservations/u);
-assert.match(reconcile, /0053_workspace_budgets\.sql/u);
+assert.match(reconcile, /0054_generation_metadata_snapshots\.sql/u);
 assert.match(reconcile, /ordinary-budget:source-active-reservations/u);
 assert.match(reconcile, /ordinary-budget:target-active-reservations/u);
 assert.match(reconcile, /ordinary-budget:source-reserved-counter-drift/u);
@@ -242,7 +263,7 @@ assert.match(etlWorker, /ledger_differences/u);
 assert.match(etlWorker, /ETL_ATTEST_SOURCE_FROZEN/u);
 assert.match(etlWorker, /source_frozen_attestation_missing/u);
 assert.match(etlWorker, /attestation_only: true/u);
-assert.match(etlWorker, /0053_workspace_budgets\.sql/u);
+assert.match(etlWorker, /0054_generation_metadata_snapshots\.sql/u);
 assert.match(etlWorker, /active_user_budget_reservations/u);
 assert.match(etlWorker, /ordinary-budget:source-active-reservations/u);
 assert.match(etlWorker, /ordinary-budget:target-active-reservations/u);
@@ -286,8 +307,8 @@ assert.match(userBudgetPrecisionTests, /8589934592000001/u);
 assert.match(userBudgetPrecisionTests, /4294967296\.0/u);
 assert.match(userBudgetPrecisionTests, /Number inputs[\s\S]*fail closed/u);
 const cutoverRunbook = read('docs/operators/migrations/d1-postgres-cutover.md');
-assert.match(cutoverRunbook, /源 D1 迁移链尾为 `0054_workspace_budgets\.sql`/u);
-assert.match(cutoverRunbook, /目标 PostgreSQL 迁移链尾为 `0053_workspace_budgets\.sql`/u);
+assert.match(cutoverRunbook, /源 D1 迁移链尾为 `0055_generation_metadata_snapshots\.sql`/u);
+assert.match(cutoverRunbook, /目标 PostgreSQL 迁移链尾为 `0054_generation_metadata_snapshots\.sql`/u);
 assert.match(cutoverRunbook, /D1 `0048`\/PostgreSQL `0047`[^\n]*subject_fingerprint/u);
 assert.match(cutoverRunbook, /旧音频证据保持 `\{\}`/u);
 assert.match(cutoverRunbook, /legacy_real_safe_fallback/u);
@@ -575,8 +596,8 @@ const runtimeGrants = read('scripts/db/cutover/grant-postgres-runtime.ts');
 const runtimeGrantSql = runtimeGrants.match(/tx\.unsafe\(`([\s\S]*?)`\)/u)?.[1];
 assert.ok(runtimeGrantSql, 'Unable to parse runtime grant SQL');
 assert.doesNotMatch(runtimeGrantSql, /^\s*\/\//mu, 'Runtime grant SQL must use SQL comments, not JavaScript comments');
-assert.match(runtimeGrants, /0053_workspace_budgets\.sql/u);
-assert.match(runtimeGrants, /migration=0053/u);
+assert.match(runtimeGrants, /0054_generation_metadata_snapshots\.sql/u);
+assert.match(runtimeGrants, /migration=0054/u);
 for (const immutableTable of [
 	'api_key_request_logs',
 	'shared_key_earnings',
@@ -634,8 +655,8 @@ assert.match(hyperdriveAccessProbe, /management_api_keys_insert/u);
 assert.match(hyperdriveAccessProbe, /management_api_keys_update/u);
 assert.match(hyperdriveAccessProbe, /management_api_keys_delete/u);
 assert.match(hyperdriveAccessProbe, /user_budget_reservations_delete/u);
-assert.match(hyperdriveAccessProbe, /migration_count === '53'/u);
-assert.match(hyperdriveAccessProbe, /0053_workspace_budgets\.sql/u);
+assert.match(hyperdriveAccessProbe, /migration_count === '54'/u);
+assert.match(hyperdriveAccessProbe, /0054_generation_metadata_snapshots\.sql/u);
 
 const corePackage = JSON.parse(read('packages/core/package.json'));
 assert.match(corePackage.scripts['pretest:unit'], /test:ordinary-budget/u);

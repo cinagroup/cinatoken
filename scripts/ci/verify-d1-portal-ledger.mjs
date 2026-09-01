@@ -12,8 +12,8 @@ database.exec('PRAGMA foreign_keys = ON');
 const migrationFiles = readdirSync(migrationsDirectory).filter((name) => name.endsWith('.sql')).sort();
 assert.equal(
 	migrationFiles.at(-1),
-	'0054_workspace_budgets.sql',
-	'D1 migration chain must end with the Workspace budgets migration',
+	'0055_generation_metadata_snapshots.sql',
+	'D1 migration chain must end with the Generation metadata snapshot migration',
 );
 
 for (const file of migrationFiles) {
@@ -33,6 +33,29 @@ for (const file of migrationFiles) {
 	}
 	database.exec(sql);
 }
+
+const requestLogColumns = new Set(
+	database.prepare('PRAGMA table_info(api_key_request_logs)').all().map((row) => row.name),
+);
+for (const column of [
+	'request_origin',
+	'response_streamed',
+	'data_region',
+	'is_byok',
+	'charged_cost_usd',
+	'upstream_inference_cost_usd',
+]) {
+	assert.ok(requestLogColumns.has(column), `0055 did not add api_key_request_logs.${column}`);
+}
+const generationMigration = readFileSync(
+	join(migrationsDirectory, '0055_generation_metadata_snapshots.sql'),
+	'utf8',
+);
+assert.doesNotMatch(
+	generationMigration,
+	/(?:UPDATE|INSERT\s+INTO)\s+api_key_request_logs/iu,
+	'D1 Generation metadata facts must not be inferred for historical request logs',
+);
 
 const gatewayKeyLimitColumns = new Set(
 	database.prepare(`PRAGMA table_info('api_keys')`).all().map((row) => String(row.name)),

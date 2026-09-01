@@ -7,7 +7,7 @@ import type { InsertUserAuditLogParams } from '../user-audit-logs-types';
 import type { InsertUserBudgetAuditLogParams } from '../user-budget-audit-params';
 import type { InsertKeyParams } from '../api-keys-types';
 import { prepareGatewayApiKeyForStorage } from '../../lib/key-hash';
-import type { InsertRequestLogParams } from '../request-logs-types';
+import { assertGenerationSnapshotIsValid, type InsertRequestLogParams } from '../request-logs-types';
 import { guardrailBudgetUnits, type GuardrailBudgetSettlement } from '../guardrail-budget-types';
 import {
 	isSafeUserBudgetMicros,
@@ -252,6 +252,7 @@ export async function insertRequestUsageAndChargeTxMy(
 		audit: Omit<InsertUserBudgetAuditLogParams, 'id' | 'afterSpent' | 'deltaSpent'>;
 	}
 ): Promise<void> {
+	assertGenerationSnapshotIsValid(params.requestLog);
 	if (params.guardrailBudgetSettlement?.requestId !== undefined
 		&& params.guardrailBudgetSettlement.requestId !== params.requestLog.id) {
 		throw new Error('Guardrail budget settlement requestId must match request log id');
@@ -506,6 +507,18 @@ export async function insertRequestUsageAndChargeTxMy(
 			outputImageCount: params.requestLog.outputImageCount ?? 0,
 			audioDurationSeconds: params.requestLog.audioDurationSeconds ?? null,
 			audioCharacters: params.requestLog.audioCharacters ?? null,
+			requestOrigin: params.requestLog.requestOrigin ?? null,
+			responseStreamed: params.requestLog.responseStreamed == null
+				? null
+				: Number(params.requestLog.responseStreamed),
+			dataRegion: params.requestLog.dataRegion ?? null,
+			isByok: params.requestLog.isByok == null ? null : Number(params.requestLog.isByok),
+			chargedCostUsd: params.requestLog.chargedCostUsd == null
+				? null
+				: String(roundGatewayMoney(params.requestLog.chargedCostUsd)),
+			upstreamInferenceCostUsd: params.requestLog.upstreamInferenceCostUsd == null
+				? null
+				: String(roundGatewayMoney(params.requestLog.upstreamInferenceCostUsd)),
 			createdAt: now,
 		});
 		await tx

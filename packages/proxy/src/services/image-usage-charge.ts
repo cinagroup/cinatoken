@@ -49,6 +49,7 @@ import {
 	applyRequestBodyLoggingPolicy,
 	type RequestBodyLoggingMode,
 } from './request-body-log-policy';
+import { verifiedUsdGenerationWriteSnapshot } from './generation-metadata-snapshot';
 import {
 	ordinaryBudgetAuditSnapshotTransition,
 	ordinaryBudgetSettlementForCriticalWrite,
@@ -780,6 +781,8 @@ export type RecordImageUsageParams = {
 	requestBody?: string | null;
 	upstreamRequestBody?: string | null;
 	requestBodyLoggingMode?: RequestBodyLoggingMode;
+	requestOrigin?: string | null;
+	responseStreamed?: boolean | null;
 	requestProtocol: 'openai';
 	requestOperation?: string | null;
 	upstreamProtocol: UpstreamProtocol;
@@ -1034,6 +1037,13 @@ export async function recordImageUsage(params: RecordImageUsageParams): Promise<
 	const meteredCost = errorWithoutCharge ? 0 : costs.meteredCost;
 	const standardCost = errorWithoutCharge ? 0 : costs.standardCost;
 	const shouldChargeBudget = !errorWithoutCharge && chargedCost > 0;
+	const generationSnapshot = verifiedUsdGenerationWriteSnapshot({
+		verifiedUsdPricing: hasEndpointPricing,
+		requestOrigin: params.requestOrigin,
+		responseStreamed: params.responseStreamed,
+		chargedCostUsd: chargedCost,
+		upstreamInferenceCostUsd: !errorWithoutCharge ? meteredCost : null,
+	});
 	const id = params.requestLogId ?? crypto.randomUUID();
 	const hasOrdinaryBudgetSettlement = ordinaryBudgetSettlement != null;
 	const userSnapshot = shouldChargeBudget || hasOrdinaryBudgetSettlement
@@ -1172,6 +1182,7 @@ export async function recordImageUsage(params: RecordImageUsageParams): Promise<
 			providerKeyFingerprint: params.providerKeyFingerprint ?? null,
 			upstreamRequestId: params.upstreamRequestId ?? null,
 			upstreamMessageId: null,
+			...generationSnapshot,
 		},
 		shouldChargeBudget,
 		beforeSpent,
