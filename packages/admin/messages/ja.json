@@ -3045,6 +3045,13 @@
 		"supported": "対応",
 		"unsupported": "非対応",
 		"expired": "期限切れ",
+		"deepseek": {
+			"publish": "DeepSeek を公開",
+			"publishing": "DeepSeek を公開中…",
+			"confirmPublish": "固定の DeepSeek 公式エンドポイント証拠を作成または更新し、対象となる有効なルートをすべて紐付け、検証済み記録を明示的に公開しますか？ピーク時の定価を使用し、無関係なエンドポイントは変更しません。",
+			"result": "公開 {published} 件、新規ルート紐付け {linked} 件、スキップ {skipped} 件、失敗 {failed} 件。",
+			"evidenceExpiry": "公式価格証拠の有効期限は {date} です。価格変更を確認してから再公開してください。"
+		},
 		"statuses": {
 			"draft": "下書き",
 			"verified": "検証済み",

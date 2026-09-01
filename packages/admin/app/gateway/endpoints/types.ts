@@ -57,6 +57,30 @@ export type EndpointRouteOption = {
 	status?: string | null;
 };
 
+export type DeepSeekEndpointBootstrapModelResult = {
+	model_id: string;
+	endpoint_id: string | null;
+	status:
+		| "published"
+		| "skipped_missing_model"
+		| "skipped_no_routes"
+		| "failed";
+	linked_routes: number;
+	message: string | null;
+};
+
+export type DeepSeekEndpointBootstrapResult = {
+	provider_id: "deepseek-official";
+	evidence_url: string;
+	evidence_expires_at: string;
+	pricing_basis: "peak";
+	published: number;
+	linked_routes: number;
+	skipped: number;
+	failed: number;
+	models: DeepSeekEndpointBootstrapModelResult[];
+};
+
 export type EndpointFormState = {
 	model_id: string;
 	provider_id: string;

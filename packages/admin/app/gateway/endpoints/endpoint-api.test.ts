@@ -5,6 +5,7 @@ import {
 	endpointToForm,
 	isoToLocalDateTimeInput,
 	previewAudioCapabilitiesJson,
+	publishOfficialDeepSeekEndpoints,
 	summarizeAudioCapabilities,
 } from "./endpoint-api";
 import { EMPTY_ENDPOINT_FORM, type EndpointListItem } from "./types";
@@ -223,5 +224,44 @@ describe("endpoint admin form mapping", () => {
 	it("round-trips UTC expiry through a datetime-local value", () => {
 		const iso = "2026-12-01T00:00:00.000Z";
 		assert.equal(new Date(isoToLocalDateTimeInput(iso)).toISOString(), iso);
+	});
+
+	it("uses an explicit authenticated mutation for the fixed DeepSeek publication", async () => {
+		const originalFetch = globalThis.fetch;
+		let requestedUrl = "";
+		let requestedInit: RequestInit | undefined;
+		globalThis.fetch = async (input, init) => {
+			requestedUrl = String(input);
+			requestedInit = init;
+			return Response.json({
+				success: true,
+				data: {
+					provider_id: "deepseek-official",
+					evidence_url:
+						"https://api-docs.deepseek.com/quick_start/pricing/",
+					evidence_expires_at: "2026-09-15T06:00:00.000Z",
+					pricing_basis: "peak",
+					published: 2,
+					linked_routes: 6,
+					skipped: 0,
+					failed: 0,
+					models: [],
+				},
+			});
+		};
+		try {
+			const result = await publishOfficialDeepSeekEndpoints();
+			assert.equal(
+				requestedUrl,
+				"/api/admin/endpoints/bootstrap/deepseek"
+			);
+			assert.equal(requestedInit?.method, "POST");
+			assert.deepEqual(JSON.parse(String(requestedInit?.body)), {
+				publish: true,
+			});
+			assert.equal(result.published, 2);
+		} finally {
+			globalThis.fetch = originalFetch;
+		}
 	});
 });

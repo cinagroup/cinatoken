@@ -13,6 +13,10 @@ import {
 	unlinkModelEndpointRouteService,
 	updateModelEndpointService,
 } from "@/lib/services/admin/model-endpoints-service";
+import {
+	bootstrapDeepSeekEndpointsService,
+	type AdminDeepSeekEndpointBootstrapInput,
+} from "@/lib/services/admin/deepseek-endpoint-bootstrap";
 import { handleAdminRouteError } from "./error-response";
 
 export const adminModelEndpointsRoutes = new Hono<AdminEnv>();
@@ -57,6 +61,33 @@ adminModelEndpointsRoutes.post("/", async (c) => {
 		);
 	} catch (error) {
 		return handleAdminRouteError(c, error, "Failed to create model endpoint");
+	}
+});
+
+adminModelEndpointsRoutes.post("/bootstrap/deepseek", async (c) => {
+	let body: AdminDeepSeekEndpointBootstrapInput;
+	try {
+		body = await c.req.json<AdminDeepSeekEndpointBootstrapInput>();
+	} catch {
+		return c.json({ success: false, message: "Invalid JSON body" }, 400);
+	}
+	try {
+		const data = await bootstrapDeepSeekEndpointsService(
+			c.get("repositories"),
+			body,
+			c.get("principal").id
+		);
+		return c.json({
+			success: true,
+			message: "Official DeepSeek endpoints processed",
+			data,
+		});
+	} catch (error) {
+		return handleAdminRouteError(
+			c,
+			error,
+			"Failed to publish official DeepSeek endpoints"
+		);
 	}
 });
 

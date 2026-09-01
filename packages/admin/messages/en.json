@@ -3053,6 +3053,13 @@
 		"supported": "Supported",
 		"unsupported": "Not supported",
 		"expired": "Expired",
+		"deepseek": {
+			"publish": "Publish DeepSeek",
+			"publishing": "Publishing DeepSeek…",
+			"confirmPublish": "Create or refresh the fixed official DeepSeek endpoint evidence, link every eligible active route, and explicitly publish the verified records? Peak list prices will be used and existing unrelated endpoints will not be changed.",
+			"result": "Published {published}; linked {linked} new routes; skipped {skipped}; failed {failed}.",
+			"evidenceExpiry": "Official pricing evidence expires {date}. Re-run publication after reviewing any pricing change."
+		},
 		"statuses": {
 			"draft": "Draft",
 			"verified": "Verified",

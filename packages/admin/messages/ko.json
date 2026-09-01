@@ -3045,6 +3045,13 @@
 		"supported": "지원",
 		"unsupported": "미지원",
 		"expired": "만료됨",
+		"deepseek": {
+			"publish": "DeepSeek 게시",
+			"publishing": "DeepSeek 게시 중…",
+			"confirmPublish": "고정된 DeepSeek 공식 엔드포인트 증거를 만들거나 갱신하고, 적합한 활성 라우트를 모두 연결한 뒤 검증된 레코드를 명시적으로 게시할까요? 피크 정가를 사용하며 관련 없는 엔드포인트는 변경하지 않습니다.",
+			"result": "게시 {published}개, 신규 라우트 연결 {linked}개, 건너뜀 {skipped}개, 실패 {failed}개.",
+			"evidenceExpiry": "공식 가격 증거는 {date}에 만료됩니다. 가격 변경을 검토한 후 다시 게시하세요."
+		},
 		"statuses": { "draft": "초안", "verified": "검증됨", "disabled": "비활성" },
 		"metrics": {
 			"total": "카탈로그 기록",

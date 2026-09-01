@@ -11,6 +11,7 @@ import type {
 	EndpointModelOption,
 	EndpointProviderOption,
 	EndpointRouteOption,
+	DeepSeekEndpointBootstrapResult,
 	TriState,
 } from "./types";
 
@@ -256,6 +257,16 @@ export async function setEndpointRouteLink(
 			endpointId
 		)}/routes/${encodeURIComponent(routeTargetId)}`,
 		{ method: linked ? "POST" : "DELETE" }
+	);
+}
+
+export async function publishOfficialDeepSeekEndpoints(): Promise<DeepSeekEndpointBootstrapResult> {
+	return api<DeepSeekEndpointBootstrapResult>(
+		"/api/admin/endpoints/bootstrap/deepseek",
+		{
+			method: "POST",
+			body: JSON.stringify({ publish: true }),
+		}
 	);
 }
 

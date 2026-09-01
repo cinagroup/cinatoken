@@ -4,6 +4,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import {
 	ArrowPathIcon,
 	CheckCircleIcon,
+	CloudArrowUpIcon,
 	ExclamationTriangleIcon,
 	LinkIcon,
 	PencilSquareIcon,
@@ -17,6 +18,7 @@ import {
 	endpointToForm,
 	loadEndpointWorkspace,
 	previewAudioCapabilitiesJson,
+	publishOfficialDeepSeekEndpoints,
 	saveEndpoint,
 	setEndpointRouteLink,
 	summarizeAudioCapabilities,
@@ -29,6 +31,7 @@ import {
 	type EndpointModelOption,
 	type EndpointProviderOption,
 	type EndpointRouteOption,
+	type DeepSeekEndpointBootstrapResult,
 	type TriState,
 } from "./types";
 
@@ -665,6 +668,10 @@ export default function ModelEndpointsPage() {
 	const [saveError, setSaveError] = useState<string | null>(null);
 	const [saving, setSaving] = useState(false);
 	const [linkBusy, setLinkBusy] = useState<string | null>(null);
+	const [deepSeekBusy, setDeepSeekBusy] = useState(false);
+	const [deepSeekResult, setDeepSeekResult] =
+		useState<DeepSeekEndpointBootstrapResult | null>(null);
+	const [deepSeekError, setDeepSeekError] = useState<string | null>(null);
 
 	const refresh = useCallback(async () => {
 		setLoadError(null);
@@ -777,6 +784,24 @@ export default function ModelEndpointsPage() {
 		}
 	}
 
+	async function handlePublishDeepSeek() {
+		if (!window.confirm(t("deepseek.confirmPublish"))) return;
+		setDeepSeekBusy(true);
+		setDeepSeekError(null);
+		setDeepSeekResult(null);
+		try {
+			const result = await publishOfficialDeepSeekEndpoints();
+			setDeepSeekResult(result);
+			await refresh();
+		} catch (error) {
+			setDeepSeekError(
+				error instanceof Error ? error.message : tCommon("requestFailed")
+			);
+		} finally {
+			setDeepSeekBusy(false);
+		}
+	}
+
 	return (
 		<div className="min-h-full bg-gray-100/90 p-4 pb-8 sm:p-6 lg:p-8">
 			<div className="mx-auto max-w-7xl">
@@ -790,6 +815,17 @@ export default function ModelEndpointsPage() {
 						</p>
 					</div>
 					<div className="flex gap-2">
+						<button
+							type="button"
+							onClick={() => void handlePublishDeepSeek()}
+							disabled={deepSeekBusy}
+							className="inline-flex items-center gap-2 rounded-lg border border-cyan-300 bg-cyan-50 px-3 py-2 text-sm font-semibold text-cyan-800 shadow-sm hover:bg-cyan-100 disabled:cursor-not-allowed disabled:opacity-60"
+						>
+							<CloudArrowUpIcon className="h-4 w-4" />
+							{deepSeekBusy
+								? t("deepseek.publishing")
+								: t("deepseek.publish")}
+						</button>
 						<button
 							type="button"
 							onClick={() => void refresh()}
@@ -851,6 +887,61 @@ export default function ModelEndpointsPage() {
 					<div className="mt-6 flex items-center gap-2 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800">
 						<ExclamationTriangleIcon className="h-5 w-5" />
 						{loadError}
+					</div>
+				) : null}
+
+				{deepSeekError ? (
+					<div className="mt-6 flex items-center gap-2 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800">
+						<ExclamationTriangleIcon className="h-5 w-5 shrink-0" />
+						{deepSeekError}
+					</div>
+				) : null}
+
+				{deepSeekResult ? (
+					<div
+						className={`mt-6 rounded-xl border px-4 py-3 text-sm ${
+							deepSeekResult.failed > 0
+								? "border-amber-200 bg-amber-50 text-amber-900"
+								: "border-emerald-200 bg-emerald-50 text-emerald-900"
+						}`}
+					>
+						<div className="flex items-start gap-2">
+							{deepSeekResult.failed > 0 ? (
+								<ExclamationTriangleIcon className="mt-0.5 h-5 w-5 shrink-0" />
+							) : (
+								<CheckCircleIcon className="mt-0.5 h-5 w-5 shrink-0" />
+							)}
+							<div>
+								<p className="font-semibold">
+									{t("deepseek.result", {
+										published: deepSeekResult.published,
+										linked: deepSeekResult.linked_routes,
+										skipped: deepSeekResult.skipped,
+										failed: deepSeekResult.failed,
+									})}
+								</p>
+								<p className="mt-1 text-xs opacity-80">
+									{t("deepseek.evidenceExpiry", {
+										date: new Date(
+											deepSeekResult.evidence_expires_at
+										).toLocaleString(),
+									})}
+								</p>
+								{deepSeekResult.models.some(
+									(model) => model.status === "failed"
+								) ? (
+									<ul className="mt-2 list-disc space-y-1 pl-5 text-xs">
+										{deepSeekResult.models
+											.filter((model) => model.status === "failed")
+											.map((model) => (
+												<li key={model.model_id}>
+													{model.model_id}: {model.message}
+												</li>
+											))}
+									</ul>
+								) : null}
+							</div>
+						</div>
 					</div>
 				) : null}
 
