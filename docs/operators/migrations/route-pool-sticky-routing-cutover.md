@@ -49,7 +49,7 @@ For migration 0020 alone, old Proxy builds ignore the new columns/table and a ne
 
 | `lookup` | Meaning |
 |----------|---------|
-| `hit` | Binding used as first attempt |
+| `hit` | A valid binding was found; `attempted_target` confirms whether this request actually dispatched it |
 | `miss` | No row |
 | `expired` | Row past `expires_at` (idle TTL) |
 | `invalid_epoch` | `pool_epoch` mismatch after sticky config change |
@@ -58,6 +58,8 @@ For migration 0020 alone, old Proxy builds ignore the new columns/table and a ne
 | `disabled` | Sticky off for this pool / request |
 
 `result` is resolved **after** bind/touch CAS settles (`unchanged` = lost CAS; `storage_error` = write failed). Correlate with `cache_read_tokens` and `upstream_failover_count` to measure Prompt Cache benefit vs failover cost.
+
+Private BYOK ordering remains global: primary BYOK → shared/platform capacity → fallback BYOK. Sticky routing only promotes its target **inside each credential section**. Consequently, `lookup=hit` with `attempted_target=null` means an earlier primary BYOK attempt on another target succeeded; the existing binding is deliberately preserved without touch, clear, or rebind.
 
 ## Admin ops (Routes Flow → Provider sticky dialog)
 

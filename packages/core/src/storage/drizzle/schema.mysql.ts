@@ -421,6 +421,53 @@ export const managementApiKeysTable = mysqlTable(
 	]
 );
 
+export const byokKeysTable = mysqlTable(
+	"byok_keys",
+	{
+		id: varchar("id", { length: 64 }).primaryKey(),
+		workspaceId: varchar("workspace_id", { length: COL.WORKSPACE_ID })
+			.notNull()
+			.references(() => workspacesTable.id, { onDelete: "cascade" }),
+		provider: varchar("provider", { length: 128 }).notNull(),
+		name: varchar("name", { length: 255 }),
+		apiKeyEncrypted: text("api_key_encrypted").notNull(),
+		label: varchar("label", { length: 512 }).notNull(),
+		disabled: tinyint("disabled").notNull().default(0),
+		isFallback: tinyint("is_fallback").notNull().default(0),
+		alwaysUseForProvider: tinyint("always_use_for_provider").notNull().default(0),
+		alwaysUseForMatchingModels: tinyint("always_use_for_matching_models").notNull().default(0),
+		sortOrder: int("sort_order", { unsigned: true }).notNull(),
+		allowedModelsJson: text("allowed_models_json"),
+		allowedUserIdsJson: text("allowed_user_ids_json"),
+		allowedApiKeyHashesJson: text("allowed_api_key_hashes_json"),
+		createdByManagementKeyId: varchar("created_by_management_key_id", {
+			length: 64,
+		}).references(() => managementApiKeysTable.id, { onDelete: "set null" }),
+		deletedAt: datetime("deleted_at", { fsp: 6, mode: "string" }),
+		createdAt: datetime("created_at", { fsp: 6, mode: "string" }).notNull(),
+		updatedAt: datetime("updated_at", { fsp: 6, mode: "string" }).notNull(),
+	},
+	(t) => [
+		index("idx_byok_keys_workspace_created").on(t.workspaceId, t.createdAt),
+		index("idx_byok_keys_runtime").on(
+			t.workspaceId,
+			t.provider,
+			t.disabled,
+			t.isFallback,
+			t.sortOrder
+		),
+		index("idx_byok_keys_creator").on(t.createdByManagementKeyId, t.createdAt),
+		check(
+			"byok_keys_always_use_priority_chk",
+			sql`(${t.alwaysUseForProvider} = 0 AND ${t.alwaysUseForMatchingModels} = 0) OR ${t.isFallback} = 0`
+		),
+		check(
+			"byok_keys_shared_capacity_policy_exclusive_chk",
+			sql`${t.alwaysUseForProvider} = 0 OR ${t.alwaysUseForMatchingModels} = 0`
+		),
+	]
+);
+
 export const providersTable = mysqlTable("providers", {
 	id: varchar("id", { length: COL.ID }).primaryKey(),
 	name: varchar("name", { length: COL.PROVIDER_NAME }).notNull(),
@@ -667,6 +714,11 @@ export const apiKeyRequestLogsTable = mysqlTable("api_key_request_logs", {
 	cacheWriteTokens: int("cache_write_tokens").notNull().default(0),
 	reasoningTokens: int("reasoning_tokens").notNull().default(0),
 	totalTokens: int("total_tokens").notNull().default(0),
+	nativeTokensPrompt: bigint("native_tokens_prompt", { mode: "number", unsigned: true }),
+	nativeTokensCompletion: bigint("native_tokens_completion", { mode: "number", unsigned: true }),
+	nativeTokensCached: bigint("native_tokens_cached", { mode: "number", unsigned: true }),
+	nativeTokensReasoning: bigint("native_tokens_reasoning", { mode: "number", unsigned: true }),
+	nativeTokensCompletionImages: bigint("native_tokens_completion_images", { mode: "number", unsigned: true }),
 	meteredCost: decimal("metered_cost", { precision: 18, scale: 6 })
 		.notNull()
 		.default("0"),
@@ -712,14 +764,106 @@ export const apiKeyRequestLogsTable = mysqlTable("api_key_request_logs", {
 	outputImageCount: int("output_image_count").notNull().default(0),
 	audioDurationSeconds: double("audio_duration_seconds"),
 	audioCharacters: int("audio_characters"),
+	sessionId: varchar("session_id", { length: 256 }),
 	requestOrigin: varchar("request_origin", { length: 512 }),
+	httpReferer: varchar("http_referer", { length: 512 }),
+	userAgent: varchar("user_agent", { length: 512 }),
 	responseStreamed: tinyint("response_streamed"),
 	dataRegion: varchar("data_region", { length: 16 }),
 	isByok: tinyint("is_byok"),
 	chargedCostUsd: decimal("charged_cost_usd", { precision: 24, scale: 12 }),
 	upstreamInferenceCostUsd: decimal("upstream_inference_cost_usd", { precision: 24, scale: 12 }),
+	serviceTier: varchar("service_tier", { length: 16 }),
+	finishReason: varchar("finish_reason", { length: 16 }),
+	nativeFinishReason: varchar("native_finish_reason", { length: 128 }),
+	providerResponses: text("provider_responses"),
 	createdAt: timestamp("created_at", { fsp: 6, mode: "string" }).notNull(),
 });
+
+export const providerAttemptAvailabilityTable = mysqlTable(
+	"provider_attempt_availability",
+	{
+		requestLogId: varchar("request_log_id", { length: COL.ID }).notNull().references(
+			() => apiKeyRequestLogsTable.id,
+			{ onDelete: "cascade" }
+		),
+		attemptIndex: int("attempt_index").notNull(),
+		routeTargetId: varchar("route_target_id", { length: COL.ID }).notNull(),
+		providerId: varchar("provider_id", { length: COL.ID }).notNull(),
+		outcome: varchar("outcome", { length: 16 }).notNull(),
+		reason: varchar("reason", { length: 32 }).notNull(),
+		httpStatus: int("http_status"),
+		observedAt: datetime("observed_at", { fsp: 6, mode: "string" }).notNull(),
+	},
+	(t) => [
+		primaryKey({ columns: [t.requestLogId, t.attemptIndex] }),
+		index("idx_provider_attempt_availability_route_observed")
+			.on(t.routeTargetId, t.observedAt),
+		index("idx_provider_attempt_availability_observed").on(t.observedAt),
+		check(
+			"provider_attempt_availability_attempt_index_chk",
+			sql`${t.attemptIndex} BETWEEN 1 AND 128`
+		),
+		check(
+			"provider_attempt_availability_outcome_chk",
+			sql`${t.outcome} IN ('available', 'unavailable', 'excluded')`
+		),
+		check(
+			"provider_attempt_availability_reason_chk",
+			sql`${t.reason} IN ('accepted', 'provider_http_error', 'rate_limited', 'network_error', 'invalid_response', 'client_error', 'client_cancelled', 'unknown')`
+		),
+		check(
+			"provider_attempt_availability_http_status_chk",
+			sql`${t.httpStatus} IS NULL OR ${t.httpStatus} BETWEEN 100 AND 599`
+		),
+	]
+);
+
+export const generationFeedbackTable = mysqlTable(
+	"generation_feedback",
+	{
+		id: varchar("id", { length: 40 }).primaryKey(),
+		generationId: varchar("generation_id", { length: COL.ID }).notNull().references(
+			() => apiKeyRequestLogsTable.id,
+			{ onDelete: "cascade" }
+		),
+		workspaceId: varchar("workspace_id", { length: COL.WORKSPACE_ID }).notNull().references(
+			() => workspacesTable.id,
+			{ onDelete: "cascade" }
+		),
+		managementApiKeyId: varchar("management_api_key_id", { length: 64 }).notNull().references(
+			() => managementApiKeysTable.id,
+			{ onDelete: "cascade" }
+		),
+		accountType: varchar("account_type", { length: COL.STATUS }).notNull(),
+		personalOwnerUserId: varchar("personal_owner_user_id", { length: COL.USER_ID }).references(
+			() => usersTable.id,
+			{ onDelete: "cascade" }
+		),
+		organizationId: varchar("organization_id", { length: 255 }).references(
+			() => organizationsTable.id,
+			{ onDelete: "cascade" }
+		),
+		category: varchar("category", { length: COL.STATUS }).notNull(),
+		comment: text("comment"),
+		createdAt: datetime("created_at", { fsp: 6, mode: "string" }).notNull(),
+	},
+	(t) => [
+		index("idx_generation_feedback_generation_created").on(t.generationId, t.createdAt),
+		index("idx_generation_feedback_personal_created").on(t.personalOwnerUserId, t.createdAt),
+		index("idx_generation_feedback_organization_created").on(t.organizationId, t.createdAt),
+		check("generation_feedback_id_chk", sql`CHAR_LENGTH(${t.id}) = 40 AND LEFT(${t.id}, 4) = 'gfb_'`),
+		check("generation_feedback_category_chk", sql`${t.category} IN ('latency', 'incoherence', 'incorrect_response', 'formatting', 'billing', 'api_error', 'other')`),
+		check("generation_feedback_comment_chk", sql`${t.comment} IS NULL OR CHAR_LENGTH(${t.comment}) <= 1000`),
+		check(
+			"generation_feedback_account_owner_chk",
+			sql`(
+			(${t.accountType} = 'personal' AND ${t.personalOwnerUserId} IS NOT NULL AND ${t.organizationId} IS NULL)
+			OR (${t.accountType} = 'organization' AND ${t.personalOwnerUserId} IS NULL AND ${t.organizationId} IS NOT NULL)
+			)`
+		),
+	]
+);
 
 /** 匿名公开排行专用的分片日汇总；公开请求不得回退扫描 api_key_request_logs。 */
 export const publicModelDailyStatsTable = mysqlTable(
@@ -736,6 +880,9 @@ export const publicModelDailyStatsTable = mysqlTable(
 			.default(0),
 		errorCount: bigint("error_count", { mode: "number" }).notNull().default(0),
 		outputTokens: bigint("output_tokens", { mode: "number" })
+			.notNull()
+			.default(0),
+		totalTokens: bigint("total_tokens", { mode: "number" })
 			.notNull()
 			.default(0),
 		latencyTotalMs: bigint("latency_total_ms", { mode: "number" })
@@ -840,6 +987,14 @@ export const guardrailsTable = mysqlTable(
 		status: varchar("status", { length: COL.STATUS })
 			.notNull()
 			.default("active"),
+		isWorkspaceDefault: tinyint("is_workspace_default").notNull().default(0),
+		isAccountDefault: tinyint("is_account_default").notNull().default(0),
+		accountScopeKey: varchar("account_scope_key", { length: COL.WORKSPACE_ID }),
+		workspaceDefaultKey: varchar("workspace_default_key", { length: 64 })
+			.generatedAlwaysAs(
+				sql`CASE WHEN is_workspace_default = TRUE THEN SHA2(workspace_id, 256) ELSE NULL END`,
+				{ mode: "stored" }
+			),
 		designatedVersion: int("designated_version").notNull().default(1),
 		latestVersion: int("latest_version").notNull().default(1),
 		createdAt: timestamp("created_at", { fsp: 6, mode: "string" }).notNull(),
@@ -847,6 +1002,16 @@ export const guardrailsTable = mysqlTable(
 	},
 	(t) => [
 		uniqueIndex("uk_guardrails_id_workspace").on(t.id, t.workspaceKey),
+		uniqueIndex("uk_guardrails_workspace_default").on(t.workspaceDefaultKey),
+		uniqueIndex("uk_guardrails_account_default").on(t.accountScopeKey),
+		check(
+			"guardrails_default_kind_chk",
+			sql`NOT (${t.isWorkspaceDefault} = TRUE AND ${t.isAccountDefault} = TRUE)`
+		),
+		check(
+			"guardrails_account_scope_key_chk",
+			sql`(${t.isAccountDefault} = TRUE AND ${t.accountScopeKey} IS NOT NULL) OR (${t.isAccountDefault} = FALSE AND ${t.accountScopeKey} IS NULL)`
+		),
 		check("guardrails_status_chk", sql`${t.status} IN ('active', 'archived')`),
 		check(
 			"guardrails_versions_chk",
@@ -888,6 +1053,10 @@ export const guardrailAssignmentsTable = mysqlTable(
 		createdByUserId: varchar("created_by_user_id", {
 			length: COL.USER_ID,
 		}).references(() => usersTable.id, { onDelete: "set null" }),
+		managementSource: varchar("management_source", { length: 32 }),
+		assignedByUserId: varchar("assigned_by_user_id", {
+			length: COL.USER_ID,
+		}).references(() => usersTable.id, { onDelete: "set null" }),
 		createdAt: timestamp("created_at", { fsp: 6, mode: "string" }).notNull(),
 	},
 	(t) => [
@@ -895,6 +1064,13 @@ export const guardrailAssignmentsTable = mysqlTable(
 			t.workspaceKey,
 			t.scopeType,
 			t.scopeId
+		),
+		index("idx_guardrail_assignments_assigned_by").on(t.assignedByUserId),
+		index("idx_guardrail_assignments_management_list").on(
+			t.workspaceKey,
+			t.managementSource,
+			t.createdAt,
+			t.id
 		),
 		check(
 			"guardrail_assignments_scope_chk",
@@ -975,6 +1151,9 @@ export const guardrailBudgetReservationsTable = mysqlTable(
 		settledMicros: bigint("settled_micros", { mode: "number" })
 			.notNull()
 			.default(0),
+		settlementBasis: varchar("settlement_basis", { length: 32 })
+			.notNull()
+			.default("charged"),
 		state: varchar("state", { length: 16 }).notNull().default("reserved"),
 		expiresAt: datetime("expires_at", { fsp: 6, mode: "string" }).notNull(),
 		dispatchedAt: datetime("dispatched_at", { fsp: 6, mode: "string" }),
@@ -1003,6 +1182,10 @@ export const guardrailBudgetReservationsTable = mysqlTable(
 		check(
 			"guardrail_budget_reservations_state_chk",
 			sql`${t.state} IN ('reserved', 'dispatched', 'settled', 'released', 'expired')`
+		),
+		check(
+			"guardrail_budget_reservations_settlement_basis_chk",
+			sql`${t.settlementBasis} IN ('charged', 'gateway_key_route')`
 		),
 	]
 );
@@ -1290,6 +1473,141 @@ export const nftMintsTable = mysqlTable(
 	(t) => [uniqueIndex("uk_nft_mints_user_badge").on(t.userId, t.badgeTokenId)]
 );
 
+/** Batch metadata only; request and response bodies stay in private R2 objects. */
+export const batchesTable = mysqlTable(
+	"batches",
+	{
+		id: varchar("id", { length: 128 }).primaryKey(),
+		accountId: varchar("account_id", { length: 1024 }).notNull(),
+		workspaceId: varchar("workspace_id", { length: COL.WORKSPACE_ID }).notNull(),
+		workspaceKey: asciiBinarySha256("workspace_key").generatedAlwaysAs(
+			sql`SHA2(workspace_id, 256)`,
+			{ mode: "stored" }
+		),
+		userId: varchar("user_id", { length: COL.USER_ID }).notNull(),
+		apiKeyHash: varchar("api_key_hash", { length: 71 }).notNull(),
+		endpoint: varchar("endpoint", { length: 32 }).notNull(),
+		modelId: varchar("model_id", { length: COL.ID }).notNull(),
+		routeGroup: varchar("route_group", { length: COL.ROUTE_GROUP }).notNull(),
+		status: varchar("status", { length: COL.STATUS }).notNull().default("validating"),
+		completionWindow: varchar("completion_window", { length: 8 }).notNull().default("24h"),
+		idempotencyKeyHash: asciiBinarySha256("idempotency_key_hash"),
+		idempotencyScopeKey: asciiBinarySha256("idempotency_scope_key").generatedAlwaysAs(
+			sql`CASE WHEN idempotency_key_hash IS NULL THEN NULL ELSE SHA2(CONCAT(CHAR_LENGTH(workspace_id), ':', workspace_id, ':', api_key_hash, ':', idempotency_key_hash), 256) END`,
+			{ mode: "stored" }
+		),
+		inputObjectKey: varchar("input_object_key", { length: 1024 }).notNull(),
+		inputSha256: asciiBinarySha256("input_sha256").notNull(),
+		inputBytes: int("input_bytes", { unsigned: true }).notNull(),
+		resultObjectKey: varchar("result_object_key", { length: 1024 }),
+		resultSha256: asciiBinarySha256("result_sha256"),
+		requestCount: int("request_count", { unsigned: true }).notNull(),
+		validationNextOrdinal: int("validation_next_ordinal", { unsigned: true })
+			.notNull()
+			.default(0),
+		validationInputOffset: int("validation_input_offset", { unsigned: true })
+			.notNull()
+			.default(0),
+		completedCount: int("completed_count", { unsigned: true }).notNull().default(0),
+		failedCount: int("failed_count", { unsigned: true }).notNull().default(0),
+		cancelledCount: int("cancelled_count", { unsigned: true }).notNull().default(0),
+		promptTokens: bigint("prompt_tokens", { mode: "number", unsigned: true }).notNull().default(0),
+		completionTokens: bigint("completion_tokens", { mode: "number", unsigned: true })
+			.notNull()
+			.default(0),
+		totalTokens: bigint("total_tokens", { mode: "number", unsigned: true }).notNull().default(0),
+		chargedCostMicros: bigint("charged_cost_micros", {
+			mode: "number",
+			unsigned: true,
+		})
+			.notNull()
+			.default(0),
+		byokRequestCount: int("byok_request_count", { unsigned: true }).notNull().default(0),
+		unknownCostCount: int("unknown_cost_count", { unsigned: true }).notNull().default(0),
+		createdAt: datetime("created_at", { fsp: 6, mode: "string" }).notNull(),
+		inProgressAt: datetime("in_progress_at", { fsp: 6, mode: "string" }),
+		finalizingAt: datetime("finalizing_at", { fsp: 6, mode: "string" }),
+		finalizedAt: datetime("finalized_at", { fsp: 6, mode: "string" }),
+		expiresAt: datetime("expires_at", { fsp: 6, mode: "string" }).notNull(),
+		retentionExpiresAt: datetime("retention_expires_at", { fsp: 6, mode: "string" }).notNull(),
+		leaseOwner: varchar("lease_owner", { length: 128 }),
+		leaseExpiresAt: datetime("lease_expires_at", { fsp: 6, mode: "string" }),
+		attemptCount: bigint("attempt_count", { mode: "number", unsigned: true }).notNull().default(0),
+		revision: bigint("revision", { mode: "number", unsigned: true }).notNull().default(0),
+		lastErrorCode: varchar("last_error_code", { length: 128 }),
+		updatedAt: datetime("updated_at", { fsp: 6, mode: "string" }).notNull(),
+	},
+	(t) => [
+		uniqueIndex("uk_batches_idempotency").on(t.idempotencyScopeKey),
+		index("idx_batches_workspace_created").on(t.workspaceKey, t.createdAt, t.id),
+		index("idx_batches_status_lease").on(t.status, t.leaseExpiresAt),
+		index("idx_batches_retention").on(t.retentionExpiresAt),
+		check(
+			"batches_status_chk",
+			sql`${t.status} IN ('validating', 'in_progress', 'finalizing', 'completed', 'failed', 'expired', 'cancelling', 'cancelled')`
+		),
+		check(
+			"batches_counts_chk",
+			sql`${t.requestCount} BETWEEN 1 AND 1000000 AND ${t.completedCount} + ${t.failedCount} + ${t.cancelledCount} <= ${t.requestCount}`
+		),
+		check(
+			"batches_validation_checkpoint_chk",
+			sql`${t.inputBytes} BETWEEN 1 AND 52428800 AND ${t.validationNextOrdinal} <= ${t.requestCount} AND ${t.validationInputOffset} <= ${t.inputBytes}`
+		),
+	]
+);
+
+/** Idempotent per-request ledger for an accepted batch. */
+export const batchItemsTable = mysqlTable(
+	"batch_items",
+	{
+		id: varchar("id", { length: 128 }).notNull().unique(),
+		batchId: varchar("batch_id", { length: 128 }).notNull(),
+		ordinal: int("ordinal", { unsigned: true }).notNull(),
+		customId: varchar("custom_id", { length: 256 }).notNull(),
+		status: varchar("status", { length: COL.STATUS }).notNull().default("pending"),
+		attemptCount: bigint("attempt_count", { mode: "number", unsigned: true }).notNull().default(0),
+		startedAt: datetime("started_at", { fsp: 6, mode: "string" }),
+		dispatchStartedAt: datetime("dispatch_started_at", { fsp: 6, mode: "string" }),
+		completedAt: datetime("completed_at", { fsp: 6, mode: "string" }),
+		generationId: varchar("generation_id", { length: COL.ID }),
+		reservationId: varchar("reservation_id", { length: COL.ID }),
+		leaseOwner: varchar("lease_owner", { length: 128 }),
+		leaseExpiresAt: datetime("lease_expires_at", { fsp: 6, mode: "string" }),
+		requestStartOffset: int("request_start_offset", { unsigned: true }).notNull(),
+		requestEndOffset: int("request_end_offset", { unsigned: true }).notNull(),
+		requestSha256: asciiBinarySha256("request_sha256").notNull(),
+		resultObjectKey: varchar("result_object_key", { length: 1024 }),
+		resultSha256: asciiBinarySha256("result_sha256"),
+		errorCode: varchar("error_code", { length: 128 }),
+		errorSummary: varchar("error_summary", { length: 1000 }),
+		revision: bigint("revision", { mode: "number", unsigned: true }).notNull().default(0),
+		createdAt: datetime("created_at", { fsp: 6, mode: "string" }).notNull(),
+		updatedAt: datetime("updated_at", { fsp: 6, mode: "string" }).notNull(),
+	},
+	(t) => [
+		primaryKey({ columns: [t.batchId, t.ordinal] }),
+		uniqueIndex("uk_batch_items_custom").on(t.batchId, t.customId),
+		index("idx_batch_items_status_ordinal").on(t.batchId, t.status, t.ordinal),
+		check(
+			"batch_items_status_chk",
+			sql`${t.status} IN ('pending', 'in_progress', 'completed', 'failed', 'cancelled')`
+		),
+		check(
+			"batch_items_request_range_chk",
+			sql`${t.requestStartOffset} BETWEEN 0 AND 52428799 AND ${t.requestEndOffset} BETWEEN 1 AND 52428800 AND ${t.requestEndOffset} > ${t.requestStartOffset} AND ${t.requestEndOffset} - ${t.requestStartOffset} <= 1048578`
+		),
+		check(
+			"batch_items_lease_pair_chk",
+			sql`(${t.leaseOwner} IS NULL AND ${t.leaseExpiresAt} IS NULL) OR (${t.leaseOwner} IS NOT NULL AND char_length(${t.leaseOwner}) BETWEEN 1 AND 128 AND ${t.leaseExpiresAt} IS NOT NULL)`
+		),
+		check(
+			"batch_items_dispatch_chk",
+			sql`(${t.dispatchStartedAt} IS NULL AND ${t.generationId} IS NULL AND ${t.reservationId} IS NULL) OR (${t.dispatchStartedAt} IS NOT NULL AND ${t.startedAt} IS NOT NULL AND ${t.generationId} IS NOT NULL AND char_length(${t.generationId}) BETWEEN 1 AND 512 AND ${t.reservationId} IS NOT NULL AND char_length(${t.reservationId}) BETWEEN 1 AND 512)`
+		),
+	]
+);
+
 export const mysqlCoreSchema = {
 	usersTable,
 	organizationsTable,
@@ -1299,6 +1617,7 @@ export const mysqlCoreSchema = {
 	workspaceMembershipsTable,
 	apiKeysTable,
 	managementApiKeysTable,
+	byokKeysTable,
 	providersTable,
 	modelsTable,
 	modelEndpointsTable,
@@ -1307,6 +1626,7 @@ export const mysqlCoreSchema = {
 	modelRoutesTable,
 	modelEndpointRoutesTable,
 	apiKeyRequestLogsTable,
+	generationFeedbackTable,
 	publicModelDailyStatsTable,
 	systemConfigTable,
 	requestPresetsTable,
@@ -1328,4 +1648,6 @@ export const mysqlCoreSchema = {
 	userEarningsTable,
 	withdrawalsTable,
 	nftMintsTable,
+	batchesTable,
+	batchItemsTable,
 };

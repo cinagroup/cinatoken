@@ -61,10 +61,12 @@ describe('PostgreSQL model routes repository', () => {
 				provider_status: 'active',
 			},
 		];
+		let capturedLimit: number | null = null;
 		const builder = {
 			from() { return this; },
 			leftJoin() { return this; },
 			orderBy() { return this; },
+			limit(value: number) { capturedLimit = value; return this; },
 			then(resolve: (value: typeof routes) => unknown) { return Promise.resolve(resolve(routes)); },
 		};
 		let capturedSql = '';
@@ -84,8 +86,9 @@ describe('PostgreSQL model routes repository', () => {
 			},
 		} as unknown as PostgresDatabaseClient;
 
-		const result = await createPostgresModelRoutesRepository(client).listModelRoutesWithJoins({});
+		const result = await createPostgresModelRoutesRepository(client).listModelRoutesWithJoins({ limit: 1_001 });
 
+		assert.equal(capturedLimit, 1_001);
 		assert.match(capturedSql, /route_pool_id IN \(\$1, \$2\)/u);
 		assert.deepEqual(capturedParams, ['pool-1', 'pool-2']);
 		assert.equal(result[0]?.surfaces, '[{"id":"surface-1"}]');

@@ -2,6 +2,7 @@
  * 解析请求体里的 `model` 字符串：`baseId` 与可选后缀 `baseId:route_group`（显式指定计费通道）。
  */
 import type { GatewayRepositories, ModelRow } from '@octafuse/core';
+import type { ServiceTierModelVariant } from './provider-routing-preferences';
 
 export interface ResolvedModelRouting {
   model: ModelRow;
@@ -9,6 +10,8 @@ export interface ResolvedModelRouting {
   baseModelId: string;
   /** 仅来自 `baseId:group` 后缀；为 null 时选路使用 **`default`** 路由组 */
   explicitGroup: string | null;
+  /** OpenRouter service-tier model variant; distinct from operator route groups. */
+  modelVariant: ServiceTierModelVariant | null;
 }
 
 /**
@@ -33,6 +36,7 @@ export async function resolveModelRouting(
       model: direct,
       baseModelId: t,
       explicitGroup: null,
+      modelVariant: null,
     };
   }
 
@@ -52,9 +56,13 @@ export async function resolveModelRouting(
     return null;
   }
 
+  const modelVariant = groupSuffix === 'nitro' || groupSuffix === 'floor'
+    ? groupSuffix
+    : null;
   return {
     model: baseRow,
     baseModelId: baseId,
-    explicitGroup: groupSuffix,
+    explicitGroup: modelVariant ? null : groupSuffix,
+    modelVariant,
   };
 }

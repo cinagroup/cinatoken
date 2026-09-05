@@ -44,6 +44,12 @@ type GeminiUsageMetadata = {
 
 type SSEState = { lineBuffer: string; decoder: TextDecoder };
 
+function safeNativeCount(value: unknown): number | null {
+	return typeof value === 'number' && Number.isSafeInteger(value) && value >= 0
+		? value
+		: null;
+}
+
 function thoughtsTokenCountFromGemini(u: GeminiUsageMetadata): number {
   const n = u.thoughtsTokenCount ?? u.thoughts_token_count;
   return typeof n === 'number' && Number.isFinite(n) ? n : 0;
@@ -61,6 +67,13 @@ function usageFromGemini(u: GeminiUsageMetadata): UsageFromStream {
   const total =
     u.totalTokenCount != null ? Math.max(u.totalTokenCount, explicitSum) : explicitSum;
   const rawJson = JSON.stringify(u);
+	const nativePrompt = safeNativeCount(u.promptTokenCount);
+	const nativeCandidates = safeNativeCount(u.candidatesTokenCount);
+	const nativeReasoning = safeNativeCount(u.thoughtsTokenCount ?? u.thoughts_token_count);
+	const nativeCompletion = nativeCandidates != null
+		&& (nativeReasoning == null || Number.isSafeInteger(nativeCandidates + nativeReasoning))
+		? nativeCandidates + (nativeReasoning ?? 0)
+		: null;
   return {
     input_tokens: inputTokens,
     output_tokens: outputTokens,
@@ -69,6 +82,11 @@ function usageFromGemini(u: GeminiUsageMetadata): UsageFromStream {
     reasoning_tokens: reasoningTokens,
     total_tokens: total,
     raw_usage: rawJson,
+	native_tokens_prompt: nativePrompt,
+	native_tokens_completion: nativeCompletion,
+	native_tokens_cached: safeNativeCount(u.cachedContentTokenCount),
+	native_tokens_reasoning: nativeReasoning,
+	native_tokens_completion_images: null,
   };
 }
 
@@ -80,6 +98,11 @@ function applyUsage(target: UsageFromStream, next: UsageFromStream): void {
   target.reasoning_tokens = next.reasoning_tokens;
   target.total_tokens = next.total_tokens;
   target.raw_usage = next.raw_usage;
+	target.native_tokens_prompt = next.native_tokens_prompt;
+	target.native_tokens_completion = next.native_tokens_completion;
+	target.native_tokens_cached = next.native_tokens_cached;
+	target.native_tokens_reasoning = next.native_tokens_reasoning;
+	target.native_tokens_completion_images = next.native_tokens_completion_images;
 }
 
 export function hasGeminiReasoningPart(parsed: {

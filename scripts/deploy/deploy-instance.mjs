@@ -22,6 +22,7 @@ import {
 	assertWranglerLoggedIn,
 	assertWorkerSecrets,
 	ensureQueue,
+	ensureR2Bucket,
 	envPathForInstance,
 	fetchRemoteMasterKey,
 	log,
@@ -146,6 +147,12 @@ function main() {
 		logError("HYPERDRIVE_ID is required when DATABASE_DRIVER=postgres");
 		process.exit(1);
 	}
+	const batchInfraValue = (vars.BATCH_INFRA_ENABLED || "false").trim().toLowerCase();
+	if (batchInfraValue !== "true" && batchInfraValue !== "false") {
+		logError("BATCH_INFRA_ENABLED must be true or false");
+		process.exit(1);
+	}
+	const batchInfraEnabled = batchInfraValue === "true";
 
 	assertWranglerLoggedIn();
 
@@ -210,6 +217,12 @@ function main() {
 		const resourcePrefix = vars.D1_DATABASE_NAME || "cinatoken";
 		ensureQueue(vars.CHAIN_JOB_DLQ_NAME || `${resourcePrefix}-chain-jobs-dlq`);
 		ensureQueue(vars.CHAIN_JOB_QUEUE_NAME || `${resourcePrefix}-chain-jobs`);
+	}
+	if (doProxy && batchInfraEnabled) {
+		const resourcePrefix = vars.D1_DATABASE_NAME || "cinatoken";
+		ensureR2Bucket(vars.BATCH_BUCKET_NAME || `${resourcePrefix}-batch-private`);
+		ensureQueue(vars.BATCH_DLQ_NAME || `${resourcePrefix}-batch-jobs-dlq`);
+		ensureQueue(vars.BATCH_QUEUE_NAME || `${resourcePrefix}-batch-jobs`);
 	}
 	if (doProxy) {
 		runNpmWithEnv(vars, ["deploy:proxy"]);

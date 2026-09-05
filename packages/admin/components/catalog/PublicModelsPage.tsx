@@ -18,11 +18,30 @@ import type {
 } from '@/lib/public-catalog';
 
 type SortMode = 'newest' | 'context' | 'price' | 'name';
-type OutputMode = 'all' | 'text' | 'image' | 'audio' | 'video';
+type OutputMode =
+	| 'all'
+	| 'text'
+	| 'image'
+	| 'embeddings'
+	| 'audio'
+	| 'video'
+	| 'rerank'
+	| 'speech'
+	| 'transcription';
 type ContextMode = 'all' | '128k' | '1m';
 type ViewMode = 'list' | 'table';
 
-const OUTPUT_MODES: OutputMode[] = ['all', 'text', 'image', 'video', 'audio'];
+const OUTPUT_MODES: OutputMode[] = [
+	'all',
+	'text',
+	'image',
+	'embeddings',
+	'video',
+	'audio',
+	'rerank',
+	'speech',
+	'transcription',
+];
 const SORT_MODES: SortMode[] = ['newest', 'context', 'price', 'name'];
 const CONTEXT_MODES: ContextMode[] = ['all', '128k', '1m'];
 const VIEW_MODES: ViewMode[] = ['list', 'table'];

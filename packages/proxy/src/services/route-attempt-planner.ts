@@ -34,7 +34,8 @@ export function buildRouteAttemptPlan(
 	ctx: { affinityKey: string; tierKeyPrefix: string },
 	strategyName: RouteStrategyName,
 	now = Date.now(),
-	tierOverrides?: ReadonlyMap<number, RouteStrategyName> | null
+	tierOverrides?: ReadonlyMap<number, RouteStrategyName> | null,
+	options?: { filterCircuit?: boolean },
 ): RouteAttemptPlan {
 	const attempts: RouteResult[] = [];
 	let earliestRetryAfterMs: number | null = null;
@@ -54,7 +55,9 @@ export function buildRouteAttemptPlan(
 			tierKey: `${ctx.tierKeyPrefix}|${tier.priority}`,
 		});
 		for (const route of ordered) {
-			const remaining = getProviderCircuitRemainingMs(route.providerId, now);
+			const remaining = options?.filterCircuit === false
+				? 0
+				: getProviderCircuitRemainingMs(route.providerId, now);
 			if (remaining > 0) {
 				skippedByCircuit += 1;
 				trackRetryAfter(remaining);

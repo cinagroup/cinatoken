@@ -69,8 +69,9 @@ export async function createKey(
 	if (limitMicros !== null && (!Number.isSafeInteger(limitMicros) || limitMicros < 0)) {
 		throw new TypeError('createKey: limit_micros must be a non-negative safe integer or null');
 	}
-	if (params.include_byok_in_limit === true) {
-		throw new TypeError('createKey: BYOK limit accounting is not supported');
+	if (params.include_byok_in_limit !== undefined
+		&& typeof params.include_byok_in_limit !== 'boolean') {
+		throw new TypeError('createKey: include_byok_in_limit must be a boolean');
 	}
 	const limitReset = normalizeGatewayKeyLimitReset(params.limit_reset);
 	const id = generateId();
@@ -86,7 +87,7 @@ export async function createKey(
 		expiresAt,
 		limitMicros,
 		limitReset,
-		includeByokInLimit: false,
+		includeByokInLimit: params.include_byok_in_limit ?? false,
 		status: 'active',
 	};
 

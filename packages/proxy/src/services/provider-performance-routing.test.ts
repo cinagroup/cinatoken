@@ -1,6 +1,10 @@
 import assert from 'node:assert/strict';
 import { describe, it } from 'node:test';
-import type { GatewayRepositories, RoutePerformanceSample } from '@octafuse/core';
+import type {
+	GatewayRepositories,
+	RouteAvailabilityAggregate,
+	RoutePerformanceSample,
+} from '@octafuse/core';
 import type { RouteResult } from './model-router';
 import { applyProviderPerformanceRouting } from './provider-performance-routing';
 import type { ProviderPreferences } from './provider-routing-preferences';
@@ -20,25 +24,38 @@ function preferences(overrides: Partial<ProviderPreferences>): ProviderPreferenc
 	return {
 		order: [], only: null, ignore: [], allowFallbacks: true, requireZdr: false,
 		requireParameters: false, dataCollection: 'allow', enforceDistillableText: false,
-		quantizations: null, sort: null, preferredMinThroughput: null,
-		preferredMaxLatency: null, maxPrice: null, ...overrides,
+		quantizations: null, configuredSort: null, sort: null, preferredMinThroughput: null,
+		preferredMaxLatency: null, maxPrice: null, serviceTier: null, explicitServiceTier: null,
+		requestedSpeed: null, speedControlled: false, modelVariant: null,
+		...overrides,
 	};
 }
 
 function sample(routeTargetId: string, firstTokenMs: number, outputTokens: number, streamDurationMs: number): RoutePerformanceSample {
 	return {
-		route_target_id: routeTargetId, first_token_ms: firstTokenMs, output_tokens: outputTokens,
+		route_target_id: routeTargetId, first_reasoning_token_ms: null,
+		first_token_ms: firstTokenMs, output_tokens: outputTokens,
 		stream_duration_ms: streamDurationMs, latency_ms: null, upstream_response_ms: null,
-		final_upstream_headers_ms: null, created_at: '2026-08-30T00:00:00.000Z',
+		final_upstream_headers_ms: 100, created_at: '2026-08-30T00:00:00.000Z',
 	};
 }
 
 type PerformanceRepositories = {
-	requestLogs: Pick<GatewayRepositories['requestLogs'], 'getRecentRoutePerformanceSamples'>;
+	requestLogs: Pick<
+		GatewayRepositories['requestLogs'],
+		'getRecentRoutePerformanceSamples' | 'getRouteAvailabilityAggregates'
+	>;
 };
 
+function enoughSamples(samples: RoutePerformanceSample[]): RoutePerformanceSample[] {
+	return samples.flatMap((item) => Array.from({ length: 5 }, () => ({ ...item })));
+}
+
 function repositories(samples: RoutePerformanceSample[]): PerformanceRepositories {
-	return { requestLogs: { getRecentRoutePerformanceSamples: async () => samples } };
+	return { requestLogs: {
+		getRecentRoutePerformanceSamples: async () => enoughSamples(samples),
+		getRouteAvailabilityAggregates: async () => [],
+	} };
 }
 
 type SampleQuery = {
@@ -49,8 +66,12 @@ type SampleQuery = {
 
 function repositoriesWithLoader(
 	loader: (options: SampleQuery) => Promise<RoutePerformanceSample[]>,
+	availabilityLoader: () => Promise<RouteAvailabilityAggregate[]> = async () => [],
 ): PerformanceRepositories {
-	return { requestLogs: { getRecentRoutePerformanceSamples: loader } };
+	return { requestLogs: {
+		getRecentRoutePerformanceSamples: async (options) => enoughSamples(await loader(options)),
+		getRouteAvailabilityAggregates: availabilityLoader,
+	} };
 }
 
 describe('provider performance routing', () => {
@@ -138,5 +159,72 @@ describe('provider performance routing', () => {
 		assert.ok(calls.every((call) => call.maxSamplesPerRoute === 100));
 		assert.ok(calls.every((call) => call.sinceIso === '2026-08-30T00:00:00.000Z'));
 		assert.equal(result[0]?.targetId, 'route-129');
+	});
+
+	it('requires enough metric samples before one request can change provider order', async () => {
+		const routes = [route('configured-first'), route('one-fast-sample')];
+		const result = await applyProviderPerformanceRouting({ requestLogs: {
+			getRecentRoutePerformanceSamples: async () => [
+				sample('configured-first', 1_000, 10, 1_000),
+				sample('one-fast-sample', 1, 10, 1_000),
+			],
+			getRouteAvailabilityAggregates: async () => [],
+		} }, routes, preferences({ sort: { by: 'latency', partition: 'model' } }));
+
+		assert.deepEqual(result.map((item) => item.targetId), [
+			'configured-first',
+			'one-fast-sample',
+		]);
+	});
+
+	it('demotes endpoints with 100-sample degraded or down uptime before speed', async () => {
+		const result = await applyProviderPerformanceRouting(
+			repositoriesWithLoader(
+				async () => [
+					sample('fast-down', 10, 100, 100),
+					sample('slower-healthy', 500, 100, 1_000),
+				],
+				async () => [{
+					route_target_id: 'fast-down',
+					available_5m: 70,
+					total_5m: 100,
+					available_30m: 70,
+					total_30m: 100,
+					available_1d: 70,
+					total_1d: 100,
+				}],
+			),
+			[route('fast-down'), route('slower-healthy')],
+			preferences({ sort: { by: 'latency', partition: 'model' } }),
+		);
+
+		assert.deepEqual(result.map((item) => item.targetId), [
+			'slower-healthy',
+			'fast-down',
+		]);
+	});
+
+	it('fails open with sanitized warnings when optional telemetry is unavailable', async () => {
+		const warnings: string[] = [];
+		const originalWarn = console.warn;
+		console.warn = (value?: unknown) => warnings.push(String(value));
+		try {
+			const routes = [route('first'), route('second')];
+			const result = await applyProviderPerformanceRouting({ requestLogs: {
+				getRecentRoutePerformanceSamples: async () => {
+					throw new Error('private performance database detail');
+				},
+				getRouteAvailabilityAggregates: async () => {
+					throw new Error('private availability database detail');
+				},
+			} }, routes, preferences({ sort: { by: 'latency', partition: 'model' } }));
+			assert.deepEqual(result.map((item) => item.targetId), ['first', 'second']);
+			assert.equal(warnings.length, 2);
+			assert.match(warnings[0]!, /provider performance samples unavailable/u);
+			assert.match(warnings[1]!, /provider availability aggregates unavailable/u);
+			assert.doesNotMatch(warnings.join(' '), /private/u);
+		} finally {
+			console.warn = originalWarn;
+		}
 	});
 });

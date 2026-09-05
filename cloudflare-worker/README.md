@@ -28,6 +28,7 @@
 
 ```bash
 npm run bootstrap:cloudflare                          # 首次
+npm run bootstrap:cloudflare -- --batch-infra        # 仅显式预置 Batch 私有基础设施；API 仍关闭
 npm run deploy:cloudflare -- <instance> --migrate     # 有新 D1 SQL 时
 npm run deploy:cloudflare -- <instance>               # 仅双 Worker
 ```
@@ -47,6 +48,8 @@ npm run deploy:cloudflare -- <instance>               # 仅双 Worker
 | `HYPERDRIVE_ID` | 可选；为 Proxy、Admin/Portal、Chain Worker 生成同一个 `HYPERDRIVE` 绑定。单独设置只会预置绑定，不会切库 |
 | `DATABASE_DRIVER` | Cloudflare 省略或 `d1` 时继续使用 D1；显式 `postgres` 时必须同时提供 `HYPERDRIVE_ID`，三个 Worker 一起切到 Hyperdrive Postgres。Cloudflare 不支持本项目的 MySQL 路径 |
 | `CINATOKEN_MAINTENANCE_MODE` | 仅 `true`/`false`；`true` 时 Proxy/Admin 在数据库访问前返回 503。最终 ETL 还必须移除 Chain Queue consumer |
+| `BATCH_INFRA_ENABLED` | 默认 `false`；仅显式设为 `true` 时为 Proxy 生成私有 R2、Batch Queue 与 DLQ 绑定，不代表 API 已开放 |
+| `BATCH_BUCKET_NAME` / `BATCH_QUEUE_NAME` / `BATCH_DLQ_NAME` | 每实例独立的 Batch 资源名；当前 Phase 2 构建固定拒绝 `BATCH_API_ENABLED=true` |
 | `PROXY_CUSTOM_DOMAIN` / `ADMIN_CUSTOM_DOMAIN` | 可选；写入 wrangler `routes` |
 
 实现：`npm run gen:wrangler` → [`scripts/deploy/gen-wrangler.mjs`](../scripts/deploy/gen-wrangler.mjs)。

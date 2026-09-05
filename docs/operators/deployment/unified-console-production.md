@@ -33,6 +33,11 @@ ADMIN_WORKER_NAME=cinatoken-admin
 CHAIN_WORKER_NAME=cinatoken-chain-worker
 CHAIN_JOB_QUEUE_NAME=cinatoken-chain-jobs
 CHAIN_JOB_DLQ_NAME=cinatoken-chain-jobs-dlq
+# Batch Phase 2 is staged separately and remains disabled by default:
+BATCH_INFRA_ENABLED=false
+BATCH_BUCKET_NAME=cinatoken-batch-private
+BATCH_QUEUE_NAME=cinatoken-batch-jobs
+BATCH_DLQ_NAME=cinatoken-batch-jobs-dlq
 D1_DATABASE_NAME=cinatoken
 D1_DATABASE_ID=<uuid>
 D1_MIGRATIONS_WORKER_NAME=cinatoken-d1-migrations
@@ -41,6 +46,8 @@ CINACHAIN_CHAIN_ID=84532
 # PROXY_CUSTOM_DOMAIN=api.cinatoken.com
 # ADMIN_CUSTOM_DOMAIN=cinatoken.com
 ```
+
+Do not set `BATCH_API_ENABLED=true`: the Phase 2 generator rejects it because the idempotent executor, billing evidence, lifecycle maintenance, and public API are not yet release-ready. To pre-provision only the private R2/Queue/DLQ layer, use the explicit `--batch-infra` bootstrap option or set `BATCH_INFRA_ENABLED=true` in a controlled staging instance; this does not authorize provider calls.
 
 The current production hostnames are already bound through Cloudflare Dashboard/existing
 proxied DNS, so leave both custom-domain variables unset during routine deploys. Setting
@@ -60,6 +67,12 @@ Use chain ID `84532` only for Base Sepolia. A mainnet launch requires reviewed m
 Use `wrangler secret put` or a secret manager integration. Do not place these values in `cloudflare-worker/*.env`, command-line arguments, GitHub Actions logs, or tracked files. The deployment CLI checks secret names before it deploys; it never reads their values.
 
 `REQUEST_BODY_LOGGING` is a non-secret Proxy variable and defaults to `off`. Keep it off in production unless an approved incident or audit workflow explicitly requires request payloads. The only opt-in value is `redacted`; it stores the existing redacted and truncated representation, which can still contain sensitive prompt text, so access control and retention limits remain mandatory.
+
+Endpoint uptime facts are credential-free but intentionally short-lived. The Proxy Cron Trigger runs at minute 17 of every UTC hour and defaults to `PROVIDER_ATTEMPT_RETENTION_DAYS=7`, `PROVIDER_ATTEMPT_RETENTION_BATCH_SIZE=5000`, and `PROVIDER_ATTEMPT_RETENTION_MAX_BATCHES=10`. Retention days must remain within 2–30 days so the public 1-day window cannot be deleted. Each run is capped at 50,000 oldest rows and logs `saturated=true` when backlog remains; alert on two consecutive saturated runs and increase frequency/capacity only after measuring D1 or Hyperdrive load. The cleanup is isolated from request settlement. PostgreSQL runtime keeps table-level `DELETE` revoked and may execute only the migration-owned function that independently enforces a 5,000-row/25-hour safety boundary.
+
+Public endpoint uptime is withheld until each window has at least 100 eligible observations. HTTP 403 geographic/policy restrictions, 429 throttling, caller 4xx, unknown outcomes, and client cancellations are excluded from the denominator; throttling remains covered by the short-term provider circuit. Request-time performance routing needs at least five valid samples per metric and uses the global five-minute uptime tier only after the same 100-observation gate. Performance telemetry failures preserve the configured route order and log only a stable error category.
+
+Self-hosted PostgreSQL/MySQL deployments do not receive Cloudflare Cron events. Schedule `npm run db:retention:provider-attempts` hourly under the same non-secret retention variables and runtime database identity, and alert on a non-zero exit or repeated `saturated=true`. Never invoke this maintenance command with the migrator credential during normal operation.
 
 ## Migration preflight
 
@@ -113,6 +126,7 @@ For a Worker that does not exist yet, first-time bootstrap deploys an inactive s
 ## Acceptance gates
 
 - `npm run test:unit`, all workspace typechecks, Admin production build, and Worker dry-run builds pass.
+- Proxy Cron configuration contains only `17 * * * *`; a local `/cdn-cgi/handler/scheduled?format=json` rehearsal succeeds, and production Cron Events/Workers Logs show `gateway.provider_attempt_retention.completed` without repeated saturation.
 - Ordinary CinaAuth user: `/account` works; `/dashboard` and `/admin/*` redirect to `/account`; no admin API succeeds.
 - Administrator: the same account center works and the operator-console switch opens `/admin/*` after live role verification.
 - Cross-origin cookie POST is rejected; same-origin POST succeeds; admin bearer API behavior remains compatible.

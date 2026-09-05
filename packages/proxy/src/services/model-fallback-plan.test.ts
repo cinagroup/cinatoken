@@ -106,6 +106,7 @@ function repositories(
 		routesByModel?: Map<string, ModelRouteRow[]>;
 		performanceSamples?: RoutePerformanceSample[];
 		provider?: ProviderRow;
+		providers?: ProviderRow[];
 		endpointPricingByRoute?: Map<string, {
 			prompt: string;
 			completion: string;
@@ -116,7 +117,8 @@ function repositories(
 		endpointOverridesByRoute?: Map<string, Partial<ModelEndpointRow>>;
 	} = {},
 ): GatewayRepositories {
-	const selectedProvider = options.provider ?? provider;
+	const selectedProviders = options.providers ?? [options.provider ?? provider];
+	const providersById = new Map(selectedProviders.map((item) => [item.id, item]));
 	const routesForModel = (id: string) => options.routesByModel?.get(id) ?? [modelRoute(id)];
 	const routesById = new Map(
 		[...models.keys()].flatMap((modelId) => routesForModel(modelId)).map((route) => [route.id, route]),
@@ -128,7 +130,7 @@ function repositories(
 			getModelRoutesByModelId: async (id: string) => routesForModel(id),
 		},
 		providers: {
-			getProvidersByIds: async (ids: string[]) => ids.includes(selectedProvider.id) ? [selectedProvider] : [],
+			getProvidersByIds: async (ids: string[]) => selectedProviders.filter((item) => ids.includes(item.id)),
 		},
 		modelEndpoints: {
 			listRuntimeBindingsByRouteTargetIds: async (ids: string[]) => Promise.all(
@@ -136,6 +138,8 @@ function repositories(
 					const route = routesById.get(id);
 					if (!route) return [];
 					return [Promise.resolve().then(async () => {
+						const selectedProvider = providersById.get(route.provider_id);
+						if (!selectedProvider) throw new Error(`missing provider ${route.provider_id}`);
 						const metadata = parseRouteRoutingMetadata(route.routing_metadata);
 						const pricing = options.endpointPricingByRoute?.get(id) ?? {
 							prompt: '0', completion: '0',
@@ -183,7 +187,11 @@ function repositories(
 			getByRouteTargetIds: async (ids: string[]) => policies.filter((policy) => ids.includes(policy.route_target_id)),
 		},
 		systemConfig: { getConfig: async () => null },
-		requestLogs: { getRecentRoutePerformanceSamples: async () => options.performanceSamples ?? [] },
+		requestLogs: {
+			getRecentRoutePerformanceSamples: async () => (options.performanceSamples ?? [])
+				.flatMap((sample) => Array.from({ length: 5 }, () => ({ ...sample }))),
+			getRouteAvailabilityAggregates: async () => [],
+		},
 	} as unknown as GatewayRepositories;
 }
 
@@ -214,11 +222,194 @@ describe('model fallback preflight', () => {
 			zdr: false,
 			quantizations: null,
 			max_price: null,
+			service_tier: null,
+			speed: null,
+			model_variant: null,
 		});
 		assert.equal(
 			JSON.stringify(result.candidates[0]?.routes[0]?.providerRoutingTrace).includes('secret'),
 			false,
 		);
+	});
+
+	it('retains only public performance thresholds in the request-local routing trace', async () => {
+		const result = await buildModelFallbackPlan(
+			repositories(new Map([['m1', model('m1')]])),
+			{
+				modelIds: ['m1'],
+				body: {
+					model: 'm1',
+					messages: [],
+					provider: {
+						preferred_min_throughput: { p50: 40, p90: 20 },
+						preferred_max_latency: 0.8,
+					},
+				},
+				requestProtocol: 'openai',
+				requestOperation: 'chat',
+			},
+		);
+
+		assert.equal(result.ok, true);
+		if (!result.ok) return;
+		assert.deepEqual(
+			result.candidates[0]?.routes[0]?.providerRoutingTrace?.preferred_min_throughput,
+			{ p50: 40, p90: 20 },
+		);
+		assert.equal(
+			result.candidates[0]?.routes[0]?.providerRoutingTrace?.preferred_max_latency,
+			0.8,
+		);
+	});
+
+	it('implements service-tier pools, aliases, and model variants from verified endpoints', async () => {
+		const tierRoute = (
+			targetId: string,
+			endpointSlug: string,
+			endpointClass: 'standard' | 'service_tier',
+			priority: number,
+		): ModelRouteRow => ({
+			...modelRoute('m1'),
+			id: targetId,
+			priority,
+			routing_metadata: JSON.stringify({
+				endpoint_slug: endpointSlug,
+				endpoint_class: endpointClass,
+				supported_parameters: ['speed'],
+			}),
+		});
+		const standard = tierRoute('standard', 'provider-a/standard', 'standard', 100);
+		const priority = tierRoute('priority', 'provider-a/fast', 'service_tier', 10);
+		const flex = tierRoute('flex', 'provider-a/flex', 'service_tier', 1);
+		const routesByModel = new Map([['m1', [standard, priority, flex]]]);
+		const endpointPricingByRoute = new Map([
+			['standard', { prompt: '0.000002', completion: '0.000002' }],
+			['priority', { prompt: '0.000004', completion: '0.000004' }],
+			['flex', { prompt: '0.000001', completion: '0.000001' }],
+		]);
+		const performanceSamples: RoutePerformanceSample[] = [
+			{ route_target_id: 'standard', first_reasoning_token_ms: null, first_token_ms: 500, output_tokens: 100, stream_duration_ms: 1_000, latency_ms: null, upstream_response_ms: null, final_upstream_headers_ms: 0, created_at: '2026-08-30T00:00:00Z' },
+			{ route_target_id: 'priority', first_reasoning_token_ms: null, first_token_ms: 100, output_tokens: 300, stream_duration_ms: 1_000, latency_ms: null, upstream_response_ms: null, final_upstream_headers_ms: 0, created_at: '2026-08-30T00:00:00Z' },
+		];
+		const repos = repositories(new Map([['m1', model('m1')]]), [], {
+			routesByModel,
+			endpointPricingByRoute,
+			performanceSamples,
+		});
+
+		const priorityResult = await buildModelFallbackPlan(repos, {
+			modelIds: ['m1'],
+			body: { model: 'm1', messages: [], service_tier: 'fast' },
+			requestProtocol: 'openai',
+			requestOperation: 'chat',
+		});
+		assert.equal(priorityResult.ok, true);
+		if (priorityResult.ok) {
+			assert.deepEqual(priorityResult.candidates[0]?.routes.map((route) => route.targetId), ['priority', 'standard']);
+			assert.deepEqual(priorityResult.candidates[0]?.routes.map((route) => route.gatewayServiceTier), ['priority', 'default']);
+			assert.equal('service_tier' in priorityResult.candidates[0]!.upstreamBody, false);
+			assert.equal(priorityResult.candidates[0]?.routingPreferences?.serviceTier, 'priority');
+		}
+
+		const fastResult = await buildModelFallbackPlan(repos, {
+			modelIds: ['m1'],
+			body: { model: 'm1', messages: [], speed: 'fast' },
+			requestProtocol: 'openai',
+			requestOperation: 'chat',
+		});
+		assert.equal(fastResult.ok, true);
+		if (fastResult.ok) {
+			assert.deepEqual(fastResult.candidates[0]?.routes.map((route) => route.targetId), ['priority', 'standard']);
+			assert.equal('speed' in fastResult.candidates[0]!.upstreamBody, false);
+			assert.equal(fastResult.candidates[0]?.routingPreferences?.requestedSpeed, 'fast');
+			assert.deepEqual(fastResult.candidates[0]?.routes.map((route) => route.gatewayTextSpeed), ['fast', 'fast']);
+			assert.deepEqual(fastResult.candidates[0]?.routes.map((route) => route.gatewayRequestedServiceTier), ['priority', 'priority']);
+			assert.equal(fastResult.candidates[0]?.routes[0]?.providerRoutingTrace?.speed, 'fast');
+		}
+
+		const flexResult = await buildModelFallbackPlan(repos, {
+			modelIds: ['m1'],
+			body: { model: 'm1', messages: [], service_tier: 'flex' },
+			requestProtocol: 'openai',
+			requestOperation: 'chat',
+		});
+		assert.equal(flexResult.ok, true);
+		if (flexResult.ok) {
+			assert.deepEqual(flexResult.candidates[0]?.routes.map((route) => route.targetId), ['flex']);
+		}
+
+		const nitro = await buildModelFallbackPlan(repos, {
+			modelIds: ['m1:nitro'],
+			body: { model: 'm1:nitro', messages: [] },
+			requestProtocol: 'openai',
+			requestOperation: 'chat',
+		});
+		assert.equal(nitro.ok, true);
+		if (nitro.ok) {
+			assert.deepEqual(nitro.candidates[0]?.routes.map((route) => route.targetId), ['priority', 'standard']);
+			assert.equal(nitro.candidates[0]?.effectiveRouteGroup, 'default');
+			assert.equal(nitro.candidates[0]?.routingPreferences?.modelVariant, 'nitro');
+		}
+
+		const floor = await buildModelFallbackPlan(repos, {
+			modelIds: ['m1:floor'],
+			body: { model: 'm1:floor', messages: [] },
+			requestProtocol: 'openai',
+			requestOperation: 'chat',
+		});
+		assert.equal(floor.ok, true);
+		if (floor.ok) {
+			assert.deepEqual(floor.candidates[0]?.routes.map((route) => route.targetId), ['flex', 'standard']);
+			assert.equal(floor.candidates[0]?.routingPreferences?.modelVariant, 'floor');
+		}
+
+		const orderedNitro = await buildModelFallbackPlan(repos, {
+			modelIds: ['m1:nitro'],
+			body: { model: 'm1:nitro', messages: [], provider: { order: ['provider-a'] } },
+			requestProtocol: 'openai',
+			requestOperation: 'chat',
+		});
+		assert.equal(orderedNitro.ok, true);
+		if (orderedNitro.ok) {
+			assert.deepEqual(orderedNitro.candidates[0]?.routes.map((route) => route.targetId), ['standard']);
+		}
+
+		const defaultNitro = await buildModelFallbackPlan(repos, {
+			modelIds: ['m1:nitro'],
+			body: { model: 'm1:nitro', messages: [], service_tier: 'default' },
+			requestProtocol: 'openai',
+			requestOperation: 'chat',
+		});
+		assert.equal(defaultNitro.ok, true);
+		if (defaultNitro.ok) {
+			assert.deepEqual(defaultNitro.candidates[0]?.routes.map((route) => route.targetId), ['standard']);
+		}
+	});
+
+	it('falls back to standard routing only when a flex endpoint does not exist', async () => {
+		const standardRoute = {
+			...modelRoute('m1'),
+			routing_metadata: JSON.stringify({
+				endpoint_slug: 'provider-a/standard',
+				endpoint_class: 'standard',
+			}),
+		};
+		const result = await buildModelFallbackPlan(
+			repositories(new Map([['m1', model('m1')]]), [], {
+				routesByModel: new Map([['m1', [standardRoute]]]),
+			}),
+			{
+				modelIds: ['m1'],
+				body: { model: 'm1', messages: [], service_tier: 'flex' },
+				requestProtocol: 'openai',
+				requestOperation: 'chat',
+			},
+		);
+		assert.equal(result.ok, true);
+		if (result.ok) {
+			assert.deepEqual(result.candidates[0]?.routes.map((route) => route.targetId), ['target-m1']);
+			assert.equal(result.candidates[0]?.routes[0]?.gatewayServiceTier, 'default');
+		}
 	});
 
 	it('globally interleaves endpoints across fallback models for partition none', async () => {
@@ -232,10 +423,10 @@ describe('model fallback preflight', () => {
 			['m2', [makeRoute('m2', 'm2-fast', 20), makeRoute('m2', 'm2-slow', 10)]],
 		]);
 		const performanceSamples: RoutePerformanceSample[] = [
-			{ route_target_id: 'm1-slow', first_token_ms: 1_000, output_tokens: 10, stream_duration_ms: 1_000, latency_ms: null, upstream_response_ms: null, final_upstream_headers_ms: null, created_at: '2026-08-30T00:00:00Z' },
-			{ route_target_id: 'm1-fast', first_token_ms: 200, output_tokens: 10, stream_duration_ms: 1_000, latency_ms: null, upstream_response_ms: null, final_upstream_headers_ms: null, created_at: '2026-08-30T00:00:00Z' },
-			{ route_target_id: 'm2-fast', first_token_ms: 100, output_tokens: 10, stream_duration_ms: 1_000, latency_ms: null, upstream_response_ms: null, final_upstream_headers_ms: null, created_at: '2026-08-30T00:00:00Z' },
-			{ route_target_id: 'm2-slow', first_token_ms: 300, output_tokens: 10, stream_duration_ms: 1_000, latency_ms: null, upstream_response_ms: null, final_upstream_headers_ms: null, created_at: '2026-08-30T00:00:00Z' },
+			{ route_target_id: 'm1-slow', first_reasoning_token_ms: null, first_token_ms: 1_000, output_tokens: 10, stream_duration_ms: 1_000, latency_ms: null, upstream_response_ms: null, final_upstream_headers_ms: 0, created_at: '2026-08-30T00:00:00Z' },
+			{ route_target_id: 'm1-fast', first_reasoning_token_ms: null, first_token_ms: 200, output_tokens: 10, stream_duration_ms: 1_000, latency_ms: null, upstream_response_ms: null, final_upstream_headers_ms: 0, created_at: '2026-08-30T00:00:00Z' },
+			{ route_target_id: 'm2-fast', first_reasoning_token_ms: null, first_token_ms: 100, output_tokens: 10, stream_duration_ms: 1_000, latency_ms: null, upstream_response_ms: null, final_upstream_headers_ms: 0, created_at: '2026-08-30T00:00:00Z' },
+			{ route_target_id: 'm2-slow', first_reasoning_token_ms: null, first_token_ms: 300, output_tokens: 10, stream_duration_ms: 1_000, latency_ms: null, upstream_response_ms: null, final_upstream_headers_ms: 0, created_at: '2026-08-30T00:00:00Z' },
 		];
 		const result = await buildModelFallbackPlan(
 			repositories(
@@ -616,7 +807,13 @@ describe('model fallback preflight', () => {
 			},
 		);
 		assert.equal(result.ok, true);
-		if (result.ok) assert.deepEqual(result.candidates[0]?.routes.map((route) => route.targetId), ['target-m1']);
+		if (result.ok) {
+			assert.deepEqual(result.candidates[0]?.routes.map((route) => route.targetId), ['target-m1']);
+			assert.equal(
+				result.candidates[0]?.routes[0]?.gatewayPrivateByokDataPolicyAllowed,
+				false,
+			);
+		}
 	});
 
 	it('fails closed when verified ZDR evidence is bound to a different route subject', async () => {
@@ -665,8 +862,12 @@ describe('model fallback preflight', () => {
 		);
 		assert.equal(result.ok, false);
 		if (!result.ok) {
-			assert.equal(result.status, 502);
-			assert.equal(result.code, 'gateway.no_route');
+			assert.equal(result.status, 400);
+			assert.equal(result.code, 'gateway.data_collection_no_route');
+			assert.equal(
+				result.message,
+				'No verified no-collection route is available for model "m1"',
+			);
 		}
 	});
 
@@ -698,5 +899,84 @@ describe('model fallback preflight', () => {
 		);
 		assert.equal(tools.ok, false);
 		if (!tools.ok) assert.equal(tools.code, 'gateway.zdr_tools_unsupported');
+	});
+
+	it('applies default inverse-square provider balancing only when sort and order are absent', async () => {
+		const providerB: ProviderRow = {
+			...provider,
+			id: 'provider-b',
+			name: 'Provider B',
+		};
+		const cheap = { ...modelRoute('m1'), id: 'target-cheap', priority: 10 };
+		const expensive = {
+			...modelRoute('m1'),
+			id: 'target-expensive',
+			provider_id: providerB.id,
+			priority: 100,
+		};
+		const repos = repositories(new Map([['m1', model('m1')]]), [], {
+			routesByModel: new Map([['m1', [cheap, expensive]]]),
+			providers: [provider, providerB],
+			endpointPricingByRoute: new Map([
+				['target-cheap', { prompt: '0.000001', completion: '0.000001' }],
+				['target-expensive', { prompt: '0.000010', completion: '0.000010' }],
+			]),
+		});
+
+		const defaults = await buildModelFallbackPlan(repos, {
+			modelIds: ['m1'],
+			body: { model: 'm1', messages: [] },
+			requestProtocol: 'openai',
+			requestOperation: 'chat',
+			pricingAt: new Date('2026-09-01T00:00:00.000Z'),
+		});
+		assert.equal(defaults.ok, true);
+		if (!defaults.ok) return;
+		assert.deepEqual(
+			[...defaults.candidates[0]!.routes]
+				.sort((left, right) => left.gatewayDefaultLoadBalanceRank! - right.gatewayDefaultLoadBalanceRank!)
+				.map((item) => item.gatewayDefaultLoadBalanceRank),
+			[1, 2],
+		);
+		assert.equal(
+			defaults.candidates[0]!.routes.every(
+				(item) => item.providerRoutingTrace?.default_load_balance === true,
+			),
+			true,
+		);
+
+		const explicitPrice = await buildModelFallbackPlan(repos, {
+			modelIds: ['m1'],
+			body: { model: 'm1', messages: [], provider: { sort: 'price' } },
+			requestProtocol: 'openai',
+			requestOperation: 'chat',
+			pricingAt: new Date('2026-09-01T00:00:00.000Z'),
+		});
+		assert.equal(explicitPrice.ok, true);
+		if (!explicitPrice.ok) return;
+		assert.deepEqual(explicitPrice.candidates[0]!.routes.map((item) => item.targetId), [
+			'target-cheap',
+			'target-expensive',
+		]);
+		assert.equal(
+			explicitPrice.candidates[0]!.routes.every(
+				(item) => item.gatewayDefaultLoadBalanceRank === undefined,
+			),
+			true,
+		);
+
+		const explicitOrder = await buildModelFallbackPlan(repos, {
+			modelIds: ['m1'],
+			body: { model: 'm1', messages: [], provider: { order: ['Provider B'] } },
+			requestProtocol: 'openai',
+			requestOperation: 'chat',
+			pricingAt: new Date('2026-09-01T00:00:00.000Z'),
+		});
+		assert.equal(explicitOrder.ok, true);
+		if (!explicitOrder.ok) return;
+		const attempted = [...explicitOrder.candidates[0]!.routes]
+			.sort((left, right) => right.routePriority - left.routePriority);
+		assert.equal(attempted[0]?.providerId, 'provider-b');
+		assert.equal(attempted.every((item) => item.gatewayDefaultLoadBalanceRank === undefined), true);
 	});
 });

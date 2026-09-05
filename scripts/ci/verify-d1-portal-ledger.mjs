@@ -12,8 +12,8 @@ database.exec('PRAGMA foreign_keys = ON');
 const migrationFiles = readdirSync(migrationsDirectory).filter((name) => name.endsWith('.sql')).sort();
 assert.equal(
 	migrationFiles.at(-1),
-	'0055_generation_metadata_snapshots.sql',
-	'D1 migration chain must end with the Generation metadata snapshot migration',
+	'0068_batch_jobs.sql',
+	'D1 migration chain must end with the Batch metadata migration',
 );
 
 for (const file of migrationFiles) {
@@ -27,12 +27,54 @@ for (const file of migrationFiles) {
 		database.prepare('INSERT INTO users (id, email) VALUES (?, ?), (?, ?)')
 			.run('user-1', 'user@example.com', 'user-2', 'two@example.com');
 	}
+	if (file === '0034_public_model_daily_stats.sql') {
+		database.prepare(`INSERT INTO api_key_request_logs
+			(id, model_id, input_tokens, output_tokens, total_tokens, status, latency_ms)
+			VALUES (?, ?, ?, ?, ?, ?, ?)`).run(
+			'public-model-total-token-backfill', 'vendor/backfill-model', 11, 7, 18, 'success', 10,
+		);
+	}
 	if (file === '0043_gateway_keys_workspace.sql') {
 		database.prepare(`INSERT INTO api_keys (id, key, user_id, name)
 			VALUES (?, ?, ?, ?)`).run('gateway-key-1', 'sk-workspace-backfill', 'user-1', 'Production');
 	}
 	database.exec(sql);
 }
+
+const workspaceBudgetUsageIndex = database.prepare(`SELECT sql FROM sqlite_master
+	WHERE type = 'index' AND name = 'idx_api_key_request_logs_workspace_budget_accounted'`).get();
+assert.match(
+	String(workspaceBudgetUsageIndex?.sql ?? ''),
+	/workspace_id\s*,\s*COALESCE\s*\(\s*budget_accounted_at\s*,\s*created_at\s*\)/iu,
+	'0067 must index Workspace budget reads by effective accounting time',
+);
+
+const batchTableSql = String(
+	database.prepare(`SELECT sql FROM sqlite_master WHERE type = 'table' AND name = 'batches'`).get()?.sql ?? '',
+);
+const batchItemsTableSql = String(
+	database.prepare(`SELECT sql FROM sqlite_master WHERE type = 'table' AND name = 'batch_items'`).get()?.sql ?? '',
+);
+for (const contract of [
+	"status IN ('validating', 'in_progress', 'finalizing', 'completed', 'failed', 'expired', 'cancelling', 'cancelled')",
+	"completion_window = '24h'",
+	'input_object_key',
+	'input_sha256',
+	'retention_expires_at',
+	'lease_owner',
+	'revision',
+]) {
+	assert.ok(batchTableSql.includes(contract), `0068 is missing Batch contract: ${contract}`);
+}
+for (const forbiddenColumn of ['request_body', 'response_body']) {
+	assert.doesNotMatch(batchTableSql, new RegExp(`\\b${forbiddenColumn}\\b`, 'u'));
+	assert.doesNotMatch(batchItemsTableSql, new RegExp(`\\b${forbiddenColumn}\\b`, 'u'));
+}
+assert.match(batchItemsTableSql, /batch_id TEXT NOT NULL REFERENCES batches\(id\) ON DELETE CASCADE/u);
+assert.ok(
+	database.prepare(`SELECT 1 FROM sqlite_master WHERE type = 'index' AND name = 'uk_batches_idempotency'`).get(),
+	'0068 must enforce scoped Batch idempotency',
+);
 
 const requestLogColumns = new Set(
 	database.prepare('PRAGMA table_info(api_key_request_logs)').all().map((row) => row.name),
@@ -44,8 +86,20 @@ for (const column of [
 	'is_byok',
 	'charged_cost_usd',
 	'upstream_inference_cost_usd',
+	'session_id',
+	'service_tier',
+	'finish_reason',
+	'native_finish_reason',
+	'http_referer',
+	'user_agent',
+	'native_tokens_prompt',
+	'native_tokens_completion',
+	'native_tokens_cached',
+	'native_tokens_reasoning',
+	'native_tokens_completion_images',
+	'provider_responses',
 ]) {
-	assert.ok(requestLogColumns.has(column), `0055 did not add api_key_request_logs.${column}`);
+	assert.ok(requestLogColumns.has(column), `D1 migration chain did not add api_key_request_logs.${column}`);
 }
 const generationMigration = readFileSync(
 	join(migrationsDirectory, '0055_generation_metadata_snapshots.sql'),
@@ -56,6 +110,127 @@ assert.doesNotMatch(
 	/(?:UPDATE|INSERT\s+INTO)\s+api_key_request_logs/iu,
 	'D1 Generation metadata facts must not be inferred for historical request logs',
 );
+const byokTableSql = String(
+	database.prepare(`SELECT sql FROM sqlite_master WHERE type = 'table' AND name = 'byok_keys'`).get()?.sql ?? '',
+);
+for (const contract of [
+	'REFERENCES workspaces(id) ON DELETE CASCADE',
+	'REFERENCES management_api_keys(id) ON DELETE SET NULL',
+	'byok_keys_secret_lifecycle_chk',
+	"substr(api_key_encrypted, 1, 7) = 'enc:v2:'",
+	"deleted_at IS NOT NULL AND api_key_encrypted = '' AND disabled = 1",
+	'json_array_length(allowed_api_key_hashes_json) BETWEEN 1 AND 100',
+]) {
+	assert.ok(byokTableSql.includes(contract), `0064 is missing private BYOK contract: ${contract}`);
+}
+for (const contract of [
+	'always_use_for_provider',
+	'always_use_for_provider IN (0, 1)',
+	'always_use_for_provider = 0 OR is_fallback = 0',
+	'always_use_for_matching_models',
+	'always_use_for_matching_models IN (0, 1)',
+	'always_use_for_matching_models = 0 OR is_fallback = 0',
+	'always_use_for_matching_models = 0 OR always_use_for_provider = 0',
+]) {
+	assert.ok(byokTableSql.includes(contract), `0065 is missing BYOK shared-capacity contract: ${contract}`);
+}
+for (const index of [
+	'uk_byok_keys_active_order',
+	'idx_byok_keys_workspace_created',
+	'idx_byok_keys_runtime',
+	'idx_byok_keys_creator',
+]) {
+	assert.ok(database.prepare(`SELECT 1 FROM sqlite_master WHERE type = 'index' AND name = ?`).get(index),
+		`0064 is missing private BYOK index: ${index}`);
+}
+const feedbackTableSql = String(
+	database.prepare(`SELECT sql FROM sqlite_master WHERE type = 'table' AND name = 'generation_feedback'`).get()?.sql ?? '',
+);
+for (const contract of [
+	'generation_id',
+	'management_api_key_id',
+	'personal_owner_user_id',
+	'organization_id',
+	'generation_feedback_account_owner_chk',
+	'comment IS NULL OR length(comment) <= 1000',
+]) {
+	assert.ok(feedbackTableSql.includes(contract), `0057 is missing Generation feedback contract: ${contract}`);
+}
+
+const providerAttemptTableSql = String(
+	database.prepare(`SELECT sql FROM sqlite_master WHERE type = 'table' AND name = 'provider_attempt_availability'`).get()?.sql ?? '',
+);
+for (const contract of [
+	'REFERENCES api_key_request_logs(id) ON DELETE CASCADE',
+	'CHECK (attempt_index BETWEEN 1 AND 128)',
+	"CHECK (outcome IN ('available', 'unavailable', 'excluded'))",
+	"'invalid_response'",
+]) {
+	assert.ok(providerAttemptTableSql.includes(contract), `0061 is missing provider-attempt availability contract: ${contract}`);
+}
+for (const index of [
+	'idx_provider_attempt_availability_route_observed',
+	'idx_provider_attempt_availability_observed',
+]) {
+	assert.ok(database.prepare(`SELECT 1 FROM sqlite_master WHERE type = 'index' AND name = ?`).get(index),
+		`0061 is missing provider-attempt availability index: ${index}`);
+}
+
+const publicModelStatsColumns = new Set(
+	database.prepare(`PRAGMA table_info('public_model_daily_stats')`).all().map((row) => String(row.name)),
+);
+assert.ok(publicModelStatsColumns.has('total_tokens'),
+	'0062 must add authoritative public_model_daily_stats.total_tokens');
+assert.deepEqual(
+	{ ...database.prepare(`SELECT request_count, output_tokens, total_tokens
+		FROM public_model_daily_stats WHERE model_id = ?`).get('vendor/backfill-model') },
+	{ request_count: 1, output_tokens: 7, total_tokens: 18 },
+	'0062 must backfill total tokens without changing existing public aggregate facts',
+);
+
+const guardrailAssignmentColumns = new Set(
+	database.prepare(`PRAGMA table_info('guardrail_assignments')`).all().map((row) => String(row.name)),
+);
+for (const column of ['management_source', 'assigned_by_user_id']) {
+	assert.ok(guardrailAssignmentColumns.has(column), `0058 did not add guardrail_assignments.${column}`);
+}
+const guardrailAssignmentMigration = readFileSync(
+	join(migrationsDirectory, '0058_guardrail_assignment_management_source.sql'),
+	'utf8',
+);
+for (const contract of [
+	"CHECK (management_source IN ('admin', 'management_api'))",
+	"SET management_source = 'admin'",
+	'REFERENCES users(id) ON DELETE SET NULL',
+	'WHERE management_source IS NOT NULL',
+]) {
+	assert.ok(guardrailAssignmentMigration.includes(contract), `0058 is missing Guardrail assignment provenance contract: ${contract}`);
+}
+
+const guardrailColumns = new Set(
+	database.prepare(`PRAGMA table_info('guardrails')`).all().map((row) => String(row.name)),
+);
+assert.ok(guardrailColumns.has('is_workspace_default'), '0059 did not add guardrails.is_workspace_default');
+const workspaceDefaultIndex = String(database.prepare(`SELECT sql FROM sqlite_master
+	WHERE type = 'index' AND name = 'uk_guardrails_workspace_default'`).get()?.sql ?? '');
+assert.match(workspaceDefaultIndex, /WHERE is_workspace_default = 1/u);
+assert.equal(database.prepare(`SELECT COUNT(*) AS total FROM guardrails
+	WHERE is_workspace_default = 1`).get()?.total, 2, '0059 must backfill one default Guardrail per active personal Workspace');
+assert.equal(database.prepare(`SELECT COUNT(*) AS total FROM guardrail_versions version
+	JOIN guardrails guardrail ON guardrail.id = version.guardrail_id
+	WHERE guardrail.is_workspace_default = 1 AND version.version = 1 AND version.config_json = '{}'`).get()?.total, 2);
+
+assert.ok(guardrailColumns.has('is_account_default'), '0060 did not add guardrails.is_account_default');
+assert.ok(guardrailColumns.has('account_scope_key'), '0060 did not add guardrails.account_scope_key');
+const accountDefaultIndex = database.prepare(`SELECT sql FROM sqlite_master
+	WHERE type = 'index' AND name = 'uk_guardrails_account_default'`).get()?.sql ?? '';
+assert.match(accountDefaultIndex, /WHERE is_account_default = 1/u);
+assert.equal(database.prepare(`SELECT COUNT(*) AS total FROM guardrails
+	WHERE is_account_default = 1`).get()?.total, 2,
+	'0060 must backfill one Account Default Guardrail per active personal account');
+assert.equal(database.prepare(`SELECT COUNT(*) AS total FROM guardrail_versions version
+	JOIN guardrails guardrail ON guardrail.id = version.guardrail_id
+	WHERE guardrail.is_account_default = 1 AND version.version = 1 AND version.config_json = '{}'`).get()?.total, 2);
 
 const gatewayKeyLimitColumns = new Set(
 	database.prepare(`PRAGMA table_info('api_keys')`).all().map((row) => String(row.name)),
@@ -69,6 +244,8 @@ const guardrailBudgetTableSql = String(
 assert.match(guardrailBudgetTableSql, /'lifetime'/u, '0053 must add lifetime Guardrail budget windows');
 assert.match(guardrailBudgetTableSql, /limit_micros >= 0/u, '0053 must permit an explicit zero Key limit');
 assert.match(guardrailBudgetTableSql, /'workspace'/u, '0054 must add the system-only Workspace budget scope');
+assert.match(guardrailBudgetTableSql, /settlement_basis/u, '0066 must persist the Guardrail budget settlement basis');
+assert.match(guardrailBudgetTableSql, /gateway_key_route/u, '0066 must constrain the route-selective settlement basis');
 
 database.prepare(`UPDATE api_keys
 	SET status = 'active', limit_micros = 1000000, limit_reset = 'daily', limit_epoch = 1,
@@ -100,6 +277,24 @@ assert.throws(
 	),
 	/gateway_key_limit_stale/u,
 	'0053 must reject a reservation evaluated against an old Key limit epoch',
+);
+const insertRouteSelectiveKeyLimitReservation = database.prepare(`INSERT INTO guardrail_budget_reservations (
+	id, workspace_id, request_id, assignment_id, guardrail_id, guardrail_version,
+	scope_type, scope_id, period, period_start, period_end,
+	limit_micros, reserved_micros, settled_micros, settlement_basis, state,
+	expires_at, created_at, updated_at
+) VALUES (?, 'personal:user-1', ?, 'gateway-key-limit:gateway-key-1',
+	'gateway-key-limit:gateway-key-1', 2, 'api_key', 'gateway-key-1', 'daily',
+	'2026-09-01T00:00:00.000Z', '2026-09-02T00:00:00.000Z', 1000000, 1, 0,
+	'gateway_key_route', 'reserved', '2026-09-01T01:02:00.000Z',
+	'2026-09-01T01:00:00.000Z', '2026-09-01T01:00:00.000Z')`);
+database.prepare(`UPDATE api_keys SET include_byok_in_limit = 1 WHERE id = 'gateway-key-1'`).run();
+insertRouteSelectiveKeyLimitReservation.run('key-limit-route-selective-1', 'key-limit-route-request-1');
+database.prepare(`UPDATE api_keys SET include_byok_in_limit = 0 WHERE id = 'gateway-key-1'`).run();
+assert.throws(
+	() => insertRouteSelectiveKeyLimitReservation.run('key-limit-route-selective-2', 'key-limit-route-request-2'),
+	/gateway_key_limit_stale/u,
+	'0066 must reject route-selective admission unless the Gateway Key includes BYOK in its limit',
 );
 
 assert.ok(

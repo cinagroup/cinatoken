@@ -26,10 +26,12 @@ const RATE_LIMIT_RETRY_AFTER_CAP_MS = 900_000;
 const AUTH_COOLDOWN_MS = 300_000;
 const SERVER_FAILURE_THRESHOLD = 3;
 const SERVER_COOLDOWN_MS = 10_000;
+const RECENT_PROVIDER_FAILURE_MS = 30_000;
 const MAX_ENTRIES = 10_000;
 
 type CircuitEntry = {
 	openUntil: number;
+	recentFailureUntil: number;
 	consecutiveRateLimit: number;
 	consecutiveServerFailures: number;
 };
@@ -39,7 +41,12 @@ const circuitByProvider = new Map<string, CircuitEntry>();
 function purgeIfOverCapacity(now: number): void {
 	if (circuitByProvider.size <= MAX_ENTRIES) return;
 	for (const [providerId, entry] of circuitByProvider) {
-		if (entry.openUntil <= now && entry.consecutiveRateLimit === 0 && entry.consecutiveServerFailures === 0) {
+		if (
+			entry.openUntil <= now
+			&& entry.recentFailureUntil <= now
+			&& entry.consecutiveRateLimit === 0
+			&& entry.consecutiveServerFailures === 0
+		) {
 			circuitByProvider.delete(providerId);
 		}
 	}
@@ -74,11 +81,13 @@ export function markProviderFailure(
 ): ProviderCircuitFailureResult {
 	const entry = circuitByProvider.get(providerId) ?? {
 		openUntil: 0,
+		recentFailureUntil: 0,
 		consecutiveRateLimit: 0,
 		consecutiveServerFailures: 0,
 	};
 	const previousOpenUntil = entry.openUntil;
 	let appliedCooldownMs = 0;
+	entry.recentFailureUntil = Math.max(entry.recentFailureUntil, now + RECENT_PROVIDER_FAILURE_MS);
 
 	if (kind === 'rate_limit') {
 		let cooldownMs: number;
@@ -145,6 +154,17 @@ export function getProviderCircuitRemainingMs(providerId: string, now = Date.now
 
 export function isProviderCircuitOpen(providerId: string, now = Date.now()): boolean {
 	return getProviderCircuitRemainingMs(providerId, now) > 0;
+}
+
+/**
+ * Whether this isolate observed an upstream availability failure for the
+ * provider during OpenRouter's 30-second default-routing health window.
+ * This is a soft ordering signal only; the circuit-open check remains the
+ * authoritative hard skip.
+ */
+export function isProviderRecentlyDegraded(providerId: string, now = Date.now()): boolean {
+	const entry = circuitByProvider.get(providerId);
+	return entry != null && entry.recentFailureUntil > now;
 }
 
 /** 测试用：清空熔断状态。 */

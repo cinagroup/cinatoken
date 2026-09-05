@@ -8,6 +8,7 @@ import {
 } from "./db/route-routing-metadata";
 import {
 	AUDIO_ENDPOINT_PRICING_OPERATIONS,
+	audioEndpointReferenceEvidenceMatchesVoiceCloning,
 	audioEndpointSupportsOperation,
 	isAudioEndpointReady,
 	isImageEndpointReady,
@@ -43,6 +44,7 @@ const ENDPOINT_FACT_KIND_BY_OPERATION = {
 	chat: "text",
 	responses: "text",
 	embeddings: "text",
+	rerank: "text",
 	"images.generations": "image",
 	"images.edits": "image",
 	"audio.transcriptions": "audio",
@@ -305,6 +307,13 @@ export function parseVerifiedModelEndpointSnapshot(
 			row.audio_capabilities ?? "{}"
 		);
 		if (imageCapabilities && imageCapabilities.provider_slug !== providerSlug) return null;
+		if (
+			audioCapabilities &&
+			!audioEndpointReferenceEvidenceMatchesVoiceCloning(
+				audioCapabilities,
+				capabilities.voice_cloning
+			)
+		) return null;
 
 		const contextLength = positiveCapacity(row.context_length);
 		const maxPromptTokens = positiveCapacity(row.max_prompt_tokens);

@@ -34,7 +34,8 @@ export function buildRecentRoutePerformanceSamplesSql(
 
 	return `WITH ranked_samples AS (
 		SELECT route_target_id, output_tokens, latency_ms, upstream_response_ms,
-		       final_upstream_headers_ms, first_token_ms, stream_duration_ms, created_at,
+		       final_upstream_headers_ms, first_reasoning_token_ms, first_token_ms,
+		       stream_duration_ms, created_at,
 		       ROW_NUMBER() OVER (
 			       PARTITION BY route_target_id
 			       ORDER BY ${newestFirst}
@@ -45,7 +46,8 @@ export function buildRecentRoutePerformanceSamplesSql(
 		  AND ${sincePredicate}
 	)
 	SELECT route_target_id, output_tokens, latency_ms, upstream_response_ms,
-	       final_upstream_headers_ms, first_token_ms, stream_duration_ms, ${createdAtProjection}
+	       final_upstream_headers_ms, first_reasoning_token_ms, first_token_ms,
+	       stream_duration_ms, ${createdAtProjection}
 	FROM ranked_samples
 	WHERE sample_rank <= ?
 	ORDER BY route_target_id ASC, sample_rank ASC`;

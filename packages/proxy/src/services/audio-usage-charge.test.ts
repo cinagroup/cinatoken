@@ -611,6 +611,42 @@ describe('audio Guardrail budget integration', () => {
 		});
 	});
 
+	it('persists authoritative provider-native audio token counts and leaves unsupported dimensions null', async () => {
+		const batches: CapturedStatement[][] = [];
+		await recordAudioUsage({
+			repos: captureD1AudioRepositories(batches),
+			requestLogId: 'audio-native-usage',
+			apiKeyId: 'key-1', workspaceId: 'workspace-1', userId: 'user-1', userEmail: null,
+			modelId: 'qwen/audio', providerId: 'provider-audio-1',
+			requestProtocol: 'openai', requestOperation: 'audio.transcriptions',
+			upstreamProtocol: 'openai', upstreamOperation: 'audio.transcriptions',
+			routeGroup: 'default', status: 'success', latencyMs: 10,
+			billing: {
+				modelPricingProfileJson: JSON.stringify({
+					audio_billing_mode: 'token',
+					tiers: [{ upto: null, input_price: 1.25, output_price: 5 }],
+				}),
+				durationSeconds: 1,
+				tokenUsage: {
+					input_tokens: 17,
+					output_tokens: 5,
+					total_tokens: 22,
+					audio_tokens: 12,
+					text_tokens: 10,
+					raw_usage: '{"provider":"evidence"}',
+				},
+			},
+			suppressErrorAlert: true,
+		});
+
+		const insert = findRequestLogInsert(batches[0]!);
+		assert.equal(requestLogColumn(insert, 'native_tokens_prompt'), 17);
+		assert.equal(requestLogColumn(insert, 'native_tokens_completion'), 5);
+		assert.equal(requestLogColumn(insert, 'native_tokens_cached'), null);
+		assert.equal(requestLogColumn(insert, 'native_tokens_reasoning'), null);
+		assert.equal(requestLogColumn(insert, 'native_tokens_completion_images'), null);
+	});
+
 	it('atomically records an output-blocked error while charging known upstream duration', async () => {
 		const batches: Array<Array<{ sql: string; values: unknown[] }>> = [];
 		const repos = captureD1AudioRepositories(batches);
@@ -620,6 +656,7 @@ describe('audio Guardrail budget integration', () => {
 			requestLogId: requestId,
 			apiKeyId: 'key-1', userId: 'user-1', userEmail: null,
 			modelId: 'qwen/asr', providerId: 'aliyun',
+			sessionId: 'session-audio-1',
 			requestProtocol: 'dashscope', requestOperation: 'audio.transcriptions.multimodal',
 			upstreamProtocol: 'dashscope', upstreamOperation: 'audio.transcriptions.multimodal',
 			routeGroup: 'default', status: 'error', chargeOnError: true,
@@ -640,6 +677,7 @@ describe('audio Guardrail budget integration', () => {
 		const insert = findRequestLogInsert(batches[0]!);
 		assert.equal(requestLogColumn(insert, 'status'), 'error');
 		assert.equal(requestLogColumn(insert, 'charged_cost'), 0.03);
+		assert.equal(requestLogColumn(insert, 'session_id'), 'session-audio-1');
 		assert.ok(batches[0]!.some(({ sql }) => sql.includes("SET state = 'settled'")));
 	});
 
@@ -740,11 +778,74 @@ describe('audio Guardrail budget integration', () => {
 		assert.equal(ordinaryTransition.values[1], 5_000);
 		assert.ok(batches[0]!.some(({ sql }) => sql.includes("SET state = 'settled'")));
 	});
+
+	it('waives private BYOK charges while preserving an unknown route-inclusive key ceiling', async () => {
+		const batches: CapturedStatement[][] = [];
+		const requestId = 'audio-private-byok';
+		const result = await recordAudioUsage({
+			repos: captureD1AudioRepositories(batches, 'gateway_key_route'),
+			requestLogId: requestId,
+			apiKeyId: 'key-1', userId: 'user-1', userEmail: null,
+			workspaceId: 'workspace-1',
+			modelId: 'qwen/audio', providerId: 'provider-audio-1',
+			requestOrigin: 'https://cinatoken.com', responseStreamed: false,
+			requestProtocol: 'openai', requestOperation: 'audio.transcriptions',
+			upstreamProtocol: 'openai', upstreamOperation: 'audio.transcriptions',
+			routeTargetId: 'target-audio-byok',
+			routeGroup: 'default', status: 'success', latencyMs: 10,
+			providerKeyId: 'byok:audio-1',
+			billing: {
+				endpoint: audioEndpoint({
+					'audio.transcriptions': {
+						currency: 'USD',
+						meter: {
+							kind: 'duration', unit: 'second', price: '0.01',
+							minimum_units: 0, increment_units: 1,
+						},
+					},
+				}),
+				operation: 'audio.transcriptions',
+				durationSeconds: 3,
+				durationSource: 'upstream',
+				requestStartedAtMs: Date.parse('2026-09-03T01:00:00.000Z'),
+			},
+			guardrailBudgetSettlement: { requestId, usageUnavailable: true, mode: 'reserved' },
+			ordinaryBudgetSettlement: {
+				requestId, budgetEpoch: 7, reservedMicros: 30_000, unknownCost: true,
+			},
+			suppressErrorAlert: true,
+		});
+
+		assert.equal(result.chargedCost, 0);
+		const insert = findRequestLogInsert(batches[0]!);
+		assert.equal(requestLogColumn(insert, 'metered_cost'), 0);
+		assert.equal(requestLogColumn(insert, 'standard_cost'), 0.03);
+		assert.equal(requestLogColumn(insert, 'charged_cost'), 0);
+		assert.equal(requestLogColumn(insert, 'is_byok'), 1);
+		assert.equal(requestLogColumn(insert, 'charged_cost_usd'), 0);
+		assert.equal(requestLogColumn(insert, 'upstream_inference_cost_usd'), 0);
+		const audit = JSON.parse(String(requestLogColumn(insert, 'pricing_audit'))) as {
+			byok?: Record<string, unknown>;
+		};
+		assert.equal(audit.byok?.policy, 'fee_waived_until_entitlement_v1');
+		assert.equal(audit.byok?.standard_equivalent_cost_usd, 0.03);
+		const ordinaryTransition = batches[0]!.find(({ sql }) =>
+			sql.includes('UPDATE user_budget_reservations') && sql.includes('SET state = ?')
+		);
+		assert.equal(ordinaryTransition?.values[0], 'settled');
+		assert.equal(ordinaryTransition?.values[1], 0);
+		assert.ok(batches[0]!.some(({ sql }) =>
+			sql.includes("SET state = 'expired'") && sql.includes('settled_micros = reserved_micros')
+		));
+	});
 });
 
 type CapturedStatement = { sql: string; values: unknown[] };
 
-function captureD1AudioRepositories(batches: CapturedStatement[][]): GatewayRepositories {
+function captureD1AudioRepositories(
+	batches: CapturedStatement[][],
+	settlementBasis: 'charged' | 'gateway_key_route' = 'charged',
+): GatewayRepositories {
 	class Statement {
 		constructor(readonly sql: string, readonly values: unknown[] = []) {}
 		bind(...values: unknown[]): Statement { return new Statement(this.sql, values); }
@@ -761,6 +862,15 @@ function captureD1AudioRepositories(batches: CapturedStatement[][]): GatewayRepo
 				} as T;
 			}
 			return { present: 1 } as T;
+		}
+		async all<T>(): Promise<{ results: T[] }> {
+			const gatewayKeyRoute = settlementBasis === 'gateway_key_route';
+			return { results: [{
+				assignment_id: gatewayKeyRoute ? 'gateway-key-limit:key-1' : 'guardrail-1',
+				scope_type: gatewayKeyRoute ? 'api_key' : 'user',
+				scope_id: gatewayKeyRoute ? 'key-1' : 'user-1',
+				settlement_basis: settlementBasis,
+			} as T] };
 		}
 	}
 	const raw = {

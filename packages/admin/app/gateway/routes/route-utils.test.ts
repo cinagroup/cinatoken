@@ -21,6 +21,7 @@ import {
 	requestOperationsForModel,
 	requestLogProtocolPath,
 	requestSurfacePath,
+	modelMatchesKindFilter,
 	resolveEffectiveRouteStrategy,
 	splitRoutesByProtocolAndRouteGroup,
 	SURFACE_PATH_MODEL_PLACEHOLDER,
@@ -54,6 +55,17 @@ function provider(endpoints: object): GatewayProvider {
 	};
 }
 
+describe('route model kind filter', () => {
+	it('keeps rerank models out of the LLM bucket', () => {
+		const rerank = model({
+			input_modalities: JSON.stringify(['text']),
+			output_modalities: JSON.stringify(['rerank']),
+		});
+		assert.equal(modelMatchesKindFilter(rerank, 'rerank'), true);
+		assert.equal(modelMatchesKindFilter(rerank, 'llm'), false);
+	});
+});
+
 describe('request surface path', () => {
 	it('maps OpenAI audio operations to their real slash-separated endpoints', () => {
 		assert.equal(requestSurfacePath('openai', 'audio.transcriptions', 'audio-model'), '/v1/audio/transcriptions');
@@ -62,6 +74,7 @@ describe('request surface path', () => {
 
 	it('maps the OpenAI embeddings surface', () => {
 		assert.equal(requestSurfacePath('openai', 'embeddings', 'embedding-model'), '/v1/embeddings');
+		assert.equal(requestSurfacePath('openai', 'rerank', 'rerank-model'), '/v1/rerank');
 	});
 
 	it('shows the shared DashScope realtime WebSocket entry with routing parameters', () => {
@@ -176,6 +189,13 @@ describe('route form capability filters', () => {
 			['embeddings'],
 		);
 		assert.deepEqual(
+			requestOperationsForModel(model({
+				input_modalities: '["text"]',
+				output_modalities: '["rerank"]',
+			}), 'openai'),
+			['rerank'],
+		);
+		assert.deepEqual(
 			requestOperationsForModel(
 				model({
 					input_modalities: '["text","image"]',
@@ -280,6 +300,14 @@ describe('route form capability filters', () => {
 				'openai',
 			),
 			['embeddings'],
+		);
+		assert.deepEqual(
+			upstreamOperationsForProviderModel(
+				baseProvider,
+				model({ input_modalities: '["text"]', output_modalities: '["rerank"]' }),
+				'openai',
+			),
+			['rerank'],
 		);
 		assert.deepEqual(
 			upstreamOperationsForProviderModel(

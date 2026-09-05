@@ -99,6 +99,12 @@ describe('provider routing preferences', () => {
 				['google-main', 'openai-main'],
 			);
 		}
+
+		const orderReplacesSort = applyProviderRoutingPreferences({
+			provider: { order: ['Google', 'OpenAI'], sort: 'price' },
+		}, routes);
+		assert.equal(orderReplacesSort.ok, true);
+		if (orderReplacesSort.ok) assert.equal(orderReplacesSort.preferences?.sort, null);
 	});
 
 	it('supports ZDR as a validated gateway control and fails closed for unknown fields', () => {
@@ -133,6 +139,20 @@ describe('provider routing preferences', () => {
 		assert.equal(result.ok, true);
 		if (result.ok) assert.deepEqual(result.routes.map((item) => item.providerId), ['fp8']);
 
+		const rerank = applyProviderRoutingPreferences({
+			model: 'cohere/rerank-v3.5',
+			query: 'query',
+			documents: ['a', 'b'],
+			top_n: 1,
+			provider: { require_parameters: true },
+		}, [
+			route('rerank', 'Rerank', 1, {
+				supported_parameters: ['top_n'], quantization: null,
+				endpoint_slug: 'cohere/default', endpoint_class: 'standard', region: 'us',
+			}),
+		]);
+		assert.equal(rerank.ok, true, 'query/documents are structural; only top_n requires capability evidence');
+
 		const softToolChoice = applyProviderRoutingPreferences({
 			messages: [],
 			tool_choice: 'auto',
@@ -150,7 +170,7 @@ describe('provider routing preferences', () => {
 	it('matches exact endpoint slugs and their base slug without treating region as a variant', () => {
 		const variants = [
 			route('acme', 'Acme', 100, {
-				supported_parameters: [], quantization: null, endpoint_slug: 'acme/standard', endpoint_class: 'standard', region: 'eu',
+				supported_parameters: ['speed'], quantization: null, endpoint_slug: 'acme/standard', endpoint_class: 'standard', region: 'eu',
 			}),
 			route('acme', 'Acme', 10, {
 				supported_parameters: [], quantization: null, endpoint_slug: 'acme/turbo', endpoint_class: 'standard', region: 'us',
@@ -160,6 +180,9 @@ describe('provider routing preferences', () => {
 			}),
 			route('acme', 'Acme', 5, {
 				supported_parameters: [], quantization: null, endpoint_slug: 'acme/flex', endpoint_class: 'service_tier', region: 'us',
+			}),
+			route('acme', 'Acme', 3, {
+				supported_parameters: ['speed'], quantization: null, endpoint_slug: 'acme/fast', endpoint_class: 'service_tier', region: 'us',
 			}),
 			route('acme', 'Acme', 4, {
 				supported_parameters: [], quantization: null, endpoint_slug: 'acme/mystery', endpoint_class: 'service_tier', region: 'us',
@@ -233,12 +256,144 @@ describe('provider routing preferences', () => {
 		const regionIsNotAnEndpointSelector = applyProviderRoutingPreferences({ provider: { only: ['acme/eu'] } }, variants);
 		assert.equal(regionIsNotAnEndpointSelector.ok, false);
 
-		assert.deepEqual(applyProviderRoutingPreferences({ service_tier: 'flex' }, variants), {
+		const flexTier = applyProviderRoutingPreferences({ service_tier: 'flex' }, variants);
+		assert.equal(flexTier.ok, true);
+		if (flexTier.ok) {
+			assert.equal('service_tier' in flexTier.body, false);
+			assert.deepEqual(flexTier.routes.map((item) => item.endpoint?.selectorSlug), ['acme/flex']);
+			assert.equal(flexTier.routes[0]?.gatewayServiceTier, 'flex');
+			assert.equal(flexTier.preferences?.sort?.by, 'price');
+		}
+
+		const priorityTier = applyProviderRoutingPreferences({ service_tier: 'fast' }, variants);
+		assert.equal(priorityTier.ok, true);
+		if (priorityTier.ok) {
+			assert.deepEqual(priorityTier.routes.map((item) => item.endpoint?.selectorSlug), [
+				'acme/standard', 'acme/turbo', 'other/default', 'acme/fast',
+			]);
+			assert.deepEqual(priorityTier.routes.map((item) => item.gatewayServiceTier), [
+				'default', 'default', 'default', 'priority',
+			]);
+			assert.equal(priorityTier.preferences?.serviceTier, 'priority');
+			assert.equal(priorityTier.preferences?.sort?.by, 'throughput');
+		}
+
+		const priorityAlias = applyProviderRoutingPreferences({ provider: { only: ['acme/priority'] } }, variants);
+		assert.equal(priorityAlias.ok, true);
+		if (priorityAlias.ok) {
+			assert.deepEqual(priorityAlias.routes.map((item) => item.endpoint?.selectorSlug), ['acme/fast']);
+			assert.equal(priorityAlias.routes[0]?.gatewayServiceTier, 'priority');
+		}
+
+		const speedFast = applyProviderRoutingPreferences({ speed: 'fast' }, variants);
+		assert.equal(speedFast.ok, true);
+		if (speedFast.ok) {
+			assert.equal('speed' in speedFast.body, false);
+			assert.equal(speedFast.preferences?.serviceTier, 'priority');
+			assert.equal(speedFast.preferences?.explicitServiceTier, null);
+			assert.equal(speedFast.preferences?.requestedSpeed, 'fast');
+			assert.deepEqual(speedFast.routes.map((item) => item.endpoint?.selectorSlug), [
+				'acme/standard', 'acme/turbo', 'other/default', 'acme/fast',
+			]);
+			assert.deepEqual(speedFast.routes.map((item) => item.gatewayTextSpeed), [
+				'fast', undefined, undefined, 'fast',
+			]);
+			assert.deepEqual(speedFast.routes.map((item) => item.gatewayRequestedServiceTier), [
+				'priority', 'default', 'default', 'priority',
+			]);
+			assert.equal(speedFast.routes.every((item) => item.gatewayTextSpeedControlled), true);
+		}
+
+		const conflictingPriority = applyProviderRoutingPreferences({
+			speed: 'standard',
+			service_tier: 'priority',
+		}, variants);
+		assert.equal(conflictingPriority.ok, true);
+		if (conflictingPriority.ok) {
+			assert.equal(conflictingPriority.preferences?.serviceTier, 'priority');
+			assert.equal(conflictingPriority.preferences?.explicitServiceTier, 'priority');
+			assert.equal(conflictingPriority.preferences?.requestedSpeed, 'standard');
+			assert.equal(conflictingPriority.routes[0]?.gatewayTextSpeed, 'standard');
+			assert.equal(conflictingPriority.routes.at(-1)?.gatewayTextSpeed, 'standard');
+		}
+
+		const explicitDefaultFast = applyProviderRoutingPreferences({
+			speed: 'fast',
+			service_tier: 'default',
+		}, variants);
+		assert.equal(explicitDefaultFast.ok, true);
+		if (explicitDefaultFast.ok) {
+			assert.deepEqual(explicitDefaultFast.routes.map((item) => item.endpoint?.selectorSlug), [
+				'acme/standard', 'acme/turbo', 'other/default',
+			]);
+			assert.equal(explicitDefaultFast.routes[0]?.gatewayRequestedServiceTier, 'default');
+			assert.equal(explicitDefaultFast.routes[0]?.gatewayTextSpeed, 'fast');
+		}
+
+		const explicitNullSpeed = applyProviderRoutingPreferences({ speed: null }, variants);
+		assert.equal(explicitNullSpeed.ok, true);
+		if (explicitNullSpeed.ok) {
+			assert.equal('speed' in explicitNullSpeed.body, false);
+			assert.equal(explicitNullSpeed.routes.every((item) => item.gatewayTextSpeedControlled), true);
+		}
+		assert.deepEqual(applyProviderRoutingPreferences({ speed: 2 }, variants), {
 			ok: false,
-			message: 'Top-level service_tier routing is not supported; select a configured service tier by exact endpoint slug in provider.order or provider.only',
+			message: 'speed must be one of: fast, standard, or null',
+		});
+
+		const nitro = applyProviderRoutingPreferences({}, variants, 'nitro');
+		assert.equal(nitro.ok, true);
+		if (nitro.ok) {
+			assert.deepEqual(nitro.routes.map((item) => item.endpoint?.selectorSlug), [
+				'acme/standard', 'acme/turbo', 'other/default', 'acme/fast',
+			]);
+			assert.equal(nitro.preferences?.sort?.by, 'throughput');
+		}
+		const floor = applyProviderRoutingPreferences({}, variants, 'floor');
+		assert.equal(floor.ok, true);
+		if (floor.ok) {
+			assert.deepEqual(floor.routes.map((item) => item.endpoint?.selectorSlug), [
+				'acme/standard', 'acme/turbo', 'other/default', 'acme/flex',
+			]);
+			assert.equal(floor.preferences?.sort?.by, 'price');
+		}
+
+		const explicitDefault = applyProviderRoutingPreferences({ service_tier: 'default' }, variants, 'nitro');
+		assert.equal(explicitDefault.ok, true);
+		if (explicitDefault.ok) {
+			assert.deepEqual(explicitDefault.routes.map((item) => item.endpoint?.selectorSlug), [
+				'acme/standard', 'acme/turbo', 'other/default',
+			]);
+		}
+
+		const orderedVariant = applyProviderRoutingPreferences({ provider: { order: ['acme'] } }, variants, 'nitro');
+		assert.equal(orderedVariant.ok, true);
+		if (orderedVariant.ok) {
+			assert.equal(orderedVariant.routes.some((item) => item.endpoint?.endpointClass === 'service_tier'), false);
+		}
+
+		assert.deepEqual(applyProviderRoutingPreferences({ service_tier: 'scale' }, variants), {
+			ok: false,
+			message: 'service_tier must be one of: auto, default, fast, flex, priority, or null',
 		});
 		const tierOnlyByDefault = applyProviderRoutingPreferences({ model: 'test' }, variants.slice(-2));
 		assert.equal(tierOnlyByDefault.ok, false);
+
+		const flexFallback = applyProviderRoutingPreferences({ service_tier: 'flex' }, variants.slice(0, 3));
+		assert.equal(flexFallback.ok, true);
+		if (flexFallback.ok) assert.equal(flexFallback.preferences?.sort, null);
+
+		const flexFallbackWithConfiguredSort = applyProviderRoutingPreferences({
+			service_tier: 'flex',
+			provider: { sort: 'latency' },
+		}, variants.slice(0, 3));
+		assert.equal(flexFallbackWithConfiguredSort.ok, true);
+		if (flexFallbackWithConfiguredSort.ok) {
+			assert.deepEqual(flexFallbackWithConfiguredSort.preferences?.sort, {
+				by: 'latency',
+				partition: 'model',
+			});
+		}
 	});
 
 	it('validates price, multi-percentile performance, data and cross-model sorting controls', () => {
@@ -283,5 +438,15 @@ describe('provider routing preferences', () => {
 		const result = prepared.value.apply(routes);
 		assert.equal(result.ok, true);
 		if (result.ok) assert.deepEqual(result.routes.map((item) => item.providerId), ['openai-main']);
+	});
+
+	it('leaves numeric speed untouched when text-speed parsing is not enabled', () => {
+		const body = { model: 'tts-model', speed: 1.25 };
+		const prepared = prepareProviderRoutingPreferences(body);
+		assert.equal(prepared.ok, true);
+		if (!prepared.ok) return;
+		assert.equal(prepared.value.body, body);
+		assert.equal(prepared.value.body.speed, 1.25);
+		assert.equal(prepared.value.requestedSpeed, null);
 	});
 });

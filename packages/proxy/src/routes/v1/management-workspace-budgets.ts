@@ -13,6 +13,10 @@ import {
 import { Hono, type Context } from 'hono';
 import type { Env } from '../../app';
 import { requireManagementApiKey } from '../../middleware/management-auth';
+import {
+	BoundedJsonRequestError,
+	readBoundedJsonObject,
+} from '../../services/egress/bounded-json-request';
 import { GatewayErrorCode } from '../../services/gateway-error-codes';
 import { gatewayErrorJson } from '../../services/gateway-error-response';
 
@@ -96,9 +100,25 @@ managementWorkspaceBudgetRoutes.put('/:id_or_slug/budgets/:interval', async (c) 
 	}
 	const workspaceId = await resolveWorkspaceId(c);
 	if (!workspaceId) return notFound(c);
-	const body = await c.req.json<unknown>().catch(() => null);
-	if (!body || typeof body !== 'object' || Array.isArray(body)) {
-		return invalid(c, 'Invalid JSON body');
+	let body: Record<string, unknown>;
+	try {
+		body = await readBoundedJsonObject(c.req.raw, {
+			maxBytes: 8 * 1024,
+			label: 'Workspace budget request',
+		});
+	} catch (error) {
+		if (error instanceof BoundedJsonRequestError) {
+			return gatewayErrorJson(c, {
+				status: error.kind === 'payload_too_large' ? 413 : 400,
+				code: error.kind === 'payload_too_large'
+					? GatewayErrorCode.payloadTooLarge
+					: error.kind === 'invalid_json'
+						? GatewayErrorCode.invalidJson
+						: GatewayErrorCode.invalidRequest,
+				message: error.message,
+			});
+		}
+		throw error;
 	}
 	const fields = Object.keys(body);
 	if (fields.length !== 1 || !fields.every((field) => UPDATE_FIELDS.has(field))) {
@@ -107,7 +127,7 @@ managementWorkspaceBudgetRoutes.put('/:id_or_slug/budgets/:interval', async (c) 
 	let limitMicros: number;
 	try {
 		limitMicros = normalizeWorkspaceBudgetLimitMicros(
-			(body as Record<string, unknown>).limit_usd,
+			body.limit_usd,
 		);
 	} catch (error) {
 		return invalid(c, error instanceof Error ? error.message : 'Invalid budget limit');

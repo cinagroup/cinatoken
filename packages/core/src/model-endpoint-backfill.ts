@@ -4,6 +4,7 @@ import type {
 } from "./db/model-endpoints-types";
 import { ROUTE_QUANTIZATIONS } from "./db/route-routing-metadata";
 import {
+	audioEndpointReferenceEvidenceMatchesVoiceCloning,
 	normalizeAudioEndpointCapabilities,
 	normalizeEndpointCapabilities,
 	normalizeImageEndpointCapabilities,
@@ -615,6 +616,22 @@ function parseEndpoint(
 			`${label}.image_capabilities.provider_slug must match provider_slug`
 		);
 	}
+	const audioCapabilities = nullableJsonFact(
+		input.audio_capabilities,
+		`${label}.audio_capabilities`,
+		normalizeAudioEndpointCapabilities
+	);
+	if (
+		audioCapabilities &&
+		!audioEndpointReferenceEvidenceMatchesVoiceCloning(
+			audioCapabilities,
+			supportsVoiceCloning
+		)
+	) {
+		throw new TypeError(
+			`${label}.audio_capabilities reference-audio evidence requires supports_voice_cloning=true`
+		);
+	}
 	const routeTargetIds = parseStringArray(
 		input.route_target_ids,
 		`${label}.route_target_ids`,
@@ -664,11 +681,7 @@ function parseEndpoint(
 		supports_voice_cloning: supportsVoiceCloning,
 		supports_tool_choice: supportsToolChoice,
 		image_capabilities: imageCapabilities,
-		audio_capabilities: nullableJsonFact(
-			input.audio_capabilities,
-			`${label}.audio_capabilities`,
-			normalizeAudioEndpointCapabilities
-		),
+		audio_capabilities: audioCapabilities,
 		evidence: parseEvidence(input.evidence, `${label}.evidence`),
 		route_target_ids: routeTargetIds,
 	};

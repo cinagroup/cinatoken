@@ -6,6 +6,7 @@ import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import {
 	isAudioModel,
 	isImageGenerationModel,
+	isRerankModel,
 	isTextLlmModel,
 	parseModelModalitiesJson,
 } from '@octafuse/core/db/model-modalities';
@@ -48,6 +49,7 @@ import {
 	EMPTY_AUDIO_MODEL_FORM,
 	EMPTY_IMAGE_MODEL_FORM,
 	EMPTY_MODEL_FORM,
+	EMPTY_RERANK_MODEL_FORM,
 	parseModelListKindFilterParam,
 	type ModelFormData,
 	type ModelFormKind,
@@ -144,6 +146,9 @@ export function useModelsPageState() {
 		if (selectedKind === 'audio') {
 			return models.filter((m) => isAudioModel(m));
 		}
+		if (selectedKind === 'rerank') {
+			return models.filter((m) => isRerankModel(m));
+		}
 		return models.filter((m) => isTextLlmModel(m));
 	}, [models, selectedKind]);
 
@@ -158,12 +163,14 @@ export function useModelsPageState() {
 		let llm = 0;
 		let image = 0;
 		let audio = 0;
+		let rerank = 0;
 		for (const m of models) {
-			if (isImageGenerationModel(m)) image += 1;
+			if (isRerankModel(m)) rerank += 1;
+			else if (isImageGenerationModel(m)) image += 1;
 			else if (isAudioModel(m)) audio += 1;
 			else llm += 1;
 		}
-		return { llm, image, audio };
+		return { llm, image, audio, rerank };
 	}, [models]);
 
 	const selectedVendorItems = useMemo(() => {
@@ -260,7 +267,9 @@ export function useModelsPageState() {
 		setImportCatalogError('');
 		setImportCatalogSearch('');
 		// 导入表格按单一类型显示对应计费列；模型目录选“全部”时从 LLM 目录开始。
-		setImportCatalogKind(selectedKind === 'all' ? DEFAULT_KIND_FILTER : selectedKind);
+		setImportCatalogKind(
+			selectedKind === 'all' || selectedKind === 'rerank' ? DEFAULT_KIND_FILTER : selectedKind
+		);
 		setImportSelected({});
 		void loadImportCatalog();
 	}, [loadImportCatalog, selectedKind]);
@@ -349,16 +358,25 @@ export function useModelsPageState() {
 				pricing_profile: model.pricing_profile,
 			});
 			const audioModel = isAudioModel({
+				output_modalities: outputMods,
 				pricing_profile: model.pricing_profile,
 			});
-			const kind: ModelFormKind = audioModel ? 'audio' : imageModel ? 'image' : 'llm';
+			const rerankModel = isRerankModel({ output_modalities: outputMods });
+			const kind: ModelFormKind = rerankModel
+				? 'rerank'
+				: audioModel
+					? 'audio'
+					: imageModel
+						? 'image'
+						: 'llm';
 			setFormKind(kind);
 			setFormData({
 				id: model.id,
 				display_name: model.display_name || '',
 				vendor: normalizeModelVendorInput(model.vendor),
 				context_window: imageModel || audioModel ? '' : model.context_window?.toString() || '',
-				max_tokens: imageModel || audioModel ? '' : model.max_tokens?.toString() || '4096',
+				max_tokens:
+					imageModel || audioModel || rerankModel ? '' : model.max_tokens?.toString() || '4096',
 				input_modalities: parseModelModalitiesJson(model.input_modalities) ?? ['text'],
 				output_modalities: outputMods,
 				released_at: model.released_at ?? '',
@@ -410,6 +428,12 @@ export function useModelsPageState() {
 				});
 				setAudioPricingDraft(createDefaultAudioPricingDraft());
 				setPricingTierRows([]);
+			} else if (kind === 'rerank') {
+				setFormData({
+					...EMPTY_RERANK_MODEL_FORM,
+					vendor,
+				});
+				setPricingTierRows([createDefaultNewModelTierRow()]);
 			} else {
 				setFormData({
 					...EMPTY_MODEL_FORM,
@@ -472,15 +496,32 @@ export function useModelsPageState() {
 			setPricingTierRows([]);
 			return;
 		}
+		if (kind === 'rerank') {
+			setFormData((prev) => ({
+				...prev,
+				input_modalities: ['text'],
+				output_modalities: ['rerank'],
+				max_tokens: '',
+			}));
+			setPricingTierRows((rows) =>
+				rows.length === 0 || draftRowsLookLikeImageOnly(rows)
+					? [createDefaultNewModelTierRow()]
+					: rows
+			);
+			return;
+		}
 		setFormData((prev) => {
-			const withoutImage = prev.output_modalities.filter((m) => m !== 'image');
+			const withoutSpecialOutput = prev.output_modalities.filter(
+				(m) => m !== 'image' && m !== 'rerank'
+			);
 			const input = prev.input_modalities.includes('text')
 				? prev.input_modalities
 				: ['text', ...prev.input_modalities.filter((m) => m !== 'audio')];
 			return {
 				...prev,
 				input_modalities: input.length > 0 ? input : ['text'],
-				output_modalities: withoutImage.length > 0 ? withoutImage : ['text'],
+				output_modalities:
+					withoutSpecialOutput.length > 0 ? withoutSpecialOutput : ['text'],
 				max_tokens: prev.max_tokens.trim() !== '' ? prev.max_tokens : '8192',
 			};
 		});
@@ -534,7 +575,13 @@ export function useModelsPageState() {
 		}
 
 		setSelectedKind(
-			isImageGenerationModel(model) ? 'image' : isAudioModel(model) ? 'audio' : 'llm'
+			isRerankModel(model)
+				? 'rerank'
+				: isImageGenerationModel(model)
+					? 'image'
+					: isAudioModel(model)
+						? 'audio'
+						: 'llm'
 		);
 		const vendor = normalizeModelVendorInput(model.vendor);
 		if (vendor) setSelectedVendor(vendor);

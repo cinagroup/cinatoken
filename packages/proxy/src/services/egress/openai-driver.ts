@@ -4,7 +4,12 @@ import type { UsageFromStream } from '../proxy';
 import { buildRouteRequestBody } from '../route-default-params';
 import { extractUpstreamRequestId, normalizeUpstreamId } from './upstream-request-id';
 import type { RequestTimingAttempt, RequestTimingCollector } from '../request-timing';
-import { parseSseDataLine } from './sse-data-line';
+import {
+  BoundedSseEventFramer,
+  parseSseEventData,
+  rewriteSseEventData,
+  terminateSseEvent,
+} from './sse-data-line';
 import {
   markUpstreamOutcomeUnknown,
   type ProxyDispatchMeta,
@@ -16,26 +21,38 @@ import {
   sanitizePublicErrorMessage,
 } from '../openrouter-error-protocol';
 import {
+  cancelInvalidTextSuccessResponse,
+  invalidTextSuccessResponse,
   preDispatchCancelledTextResponse,
   readBoundedTextJsonObject,
   rebuildTextJsonResponse,
+  TEXT_SUCCESS_RESPONSE_MAX_COLLECTION_ITEMS,
 } from './text-json-response';
+import {
+  normalizeOpenAiResponseServiceTier,
+  normalizeResponseTextSpeed,
+} from './service-tier-contract';
+import {
+  normalizeCanonicalFinishReason,
+  normalizeNativeFinishReason,
+} from './finish-reason-contract';
 
 /**
  * OpenAI 协议流式响应（SSE）在此文件中有两条并行关注点，请勿混为一谈：
  *
  * 1) 网关计费 / 统计（`usage` 对象）
- *    - 从每条 `data: {...}` 里解析 `usage`，用「最后一次出现的快照」覆盖 `usageFromStream`。
- *    - 与是否转发给客户端无关：即使后面把某行里的 `usage` 从转发流里删掉，这里仍已按行解析过。
+ *    - 从每个 EventSource event 的折叠 `data` 里解析 `usage`，用「最后一次出现的快照」覆盖 `usageFromStream`。
+ *    - 与是否转发给客户端无关：即使后面把 event 里的 `usage` 从转发流里删掉，这里仍已解析过。
  *
  * 2) 转发给下游客户端的字节流
  *    - 历史上曾原样转发上游字节；部分上游（如 MiMo）在「非空 choices」的每个 chunk 里都带**累计** usage，
  *      而常见客户端（含 OpenAI SDK）会对每个 chunk 的 `usage` 做累加，导致「上下文用量」被放大数倍。
- *    - 因此这里按行重组 SSE，并对 **转发内容** 调用 `transformStreamUsageForClient`，在「仍在 delta 阶段」
- *      的行里去掉 `usage`，保留「收尾」形态（如 `choices: []` 或带 `finish_reason`）上的 `usage`，与
+ *    - 因此这里按完整 event 重组 SSE，在「仍在 delta 阶段」的 event 里去掉 `usage`，保留
+ *      「收尾」形态（如 `choices: []` 或带 `finish_reason`）上的 `usage`，与
  *      OpenAI 官方流式行为更接近。
  *
- * 行缓冲：上游 `read()` 的切分点不一定落在换行符上，因此用 `lineBuffer` 拼完整行后再解析与转发。
+ * Event 缓冲：上游 `read()` 的切分点不一定落在 UTF-8 字符、字段或空行边界，因此只在完整
+ * EventSource event 后解析；多条 `data` 字段按标准以换行折叠，并对跨 read 的残留实施严格上限。
  */
 
 const EMPTY_USAGE_LOCAL: UsageFromStream = {
@@ -49,7 +66,9 @@ const EMPTY_USAGE_LOCAL: UsageFromStream = {
 };
 
 /** Bound persistent SSE framing state; provider events above this are invalid. */
-export const MAX_OPENAI_SSE_LINE_CHARS = 256 * 1024;
+export const MAX_OPENAI_SSE_EVENT_CHARS = 256 * 1024;
+/** @deprecated Kept for callers that imported the former line-oriented limit. */
+export const MAX_OPENAI_SSE_LINE_CHARS = MAX_OPENAI_SSE_EVENT_CHARS;
 
 /** Provider usage object (OpenAI / Claude via OpenAI-compatible API). */
 type ProviderUsage = {
@@ -58,6 +77,7 @@ type ProviderUsage = {
   input_tokens?: number;
   output_tokens?: number;
   total_tokens?: number;
+  speed?: unknown;
   prompt_tokens_details?: {
     cached_tokens?: number;
     cache_creation_tokens?: number;
@@ -65,16 +85,123 @@ type ProviderUsage = {
   completion_tokens_details?: {
     reasoning_tokens?: number;
     text_tokens?: number;
+	image_tokens?: number;
   };
 };
 
+function isPlainObject(value: unknown): value is Record<string, unknown> {
+  return value != null && typeof value === 'object' && !Array.isArray(value);
+}
+
+function nonNegativeSafeInteger(value: unknown): value is number {
+  return typeof value === 'number' && Number.isSafeInteger(value) && value >= 0;
+}
+
+function optionalSafeCount(value: unknown): boolean {
+  return value === undefined || nonNegativeSafeInteger(value);
+}
+
+function effectiveSafeCount(primary: unknown, fallback: unknown): number | null {
+  if (nonNegativeSafeInteger(primary)) return primary;
+  return nonNegativeSafeInteger(fallback) ? fallback : null;
+}
+
+function validProviderUsage(value: unknown): value is ProviderUsage {
+  if (!isPlainObject(value)) return false;
+  const prompt = value.prompt_tokens;
+  const input = value.input_tokens;
+  const completion = value.completion_tokens;
+  const output = value.output_tokens;
+  if (
+    (!nonNegativeSafeInteger(prompt) && !nonNegativeSafeInteger(input))
+    || (!nonNegativeSafeInteger(completion) && !nonNegativeSafeInteger(output))
+    || !nonNegativeSafeInteger(value.total_tokens)
+    || (prompt !== undefined && input !== undefined && prompt !== input)
+    || (completion !== undefined && output !== undefined && completion !== output)
+  ) return false;
+
+  const promptDetails = value.prompt_tokens_details;
+  const completionDetails = value.completion_tokens_details;
+  if (promptDetails !== undefined && !isPlainObject(promptDetails)) return false;
+  if (completionDetails !== undefined && !isPlainObject(completionDetails)) return false;
+  if (
+    !optionalSafeCount(promptDetails?.cached_tokens)
+    || !optionalSafeCount(promptDetails?.cache_creation_tokens)
+    || !optionalSafeCount(completionDetails?.reasoning_tokens)
+    || !optionalSafeCount(completionDetails?.text_tokens)
+	|| !optionalSafeCount(completionDetails?.image_tokens)
+  ) return false;
+
+  const inputCount = effectiveSafeCount(prompt, input);
+  const outputCount = effectiveSafeCount(completion, output);
+  if (inputCount == null || outputCount == null) return false;
+  const cacheRead = nonNegativeSafeInteger(promptDetails?.cached_tokens)
+    ? promptDetails.cached_tokens
+    : 0;
+  const cacheWrite = nonNegativeSafeInteger(promptDetails?.cache_creation_tokens)
+    ? promptDetails.cache_creation_tokens
+    : 0;
+  const cacheCount = cacheRead + cacheWrite;
+  const totalCount = value.total_tokens;
+  if (
+    (!Number.isSafeInteger(inputCount + outputCount)
+      || totalCount !== inputCount + outputCount)
+    && (!Number.isSafeInteger(inputCount + cacheCount + outputCount)
+      || totalCount !== inputCount + cacheCount + outputCount)
+  ) return false;
+  const reasoning = completionDetails?.reasoning_tokens;
+  return reasoning === undefined
+    || (nonNegativeSafeInteger(reasoning) && reasoning <= outputCount);
+}
+
+function validChatMessage(value: unknown): boolean {
+  if (!isPlainObject(value) || value.role !== 'assistant') return false;
+  const hasContent = Object.prototype.hasOwnProperty.call(value, 'content');
+  const content = value.content;
+  const validContent = content === null
+    || typeof content === 'string'
+    || Array.isArray(content);
+  return (hasContent && validContent)
+    || Array.isArray(value.tool_calls)
+    || isPlainObject(value.function_call)
+    || typeof value.refusal === 'string';
+}
+
+function validChatSuccessResponse(value: Record<string, unknown>): boolean {
+  if (
+    value.object !== 'chat.completion'
+    || normalizeUpstreamId(value.id) == null
+    || typeof value.model !== 'string'
+    || !value.model.trim()
+    || !nonNegativeSafeInteger(value.created)
+    || !Array.isArray(value.choices)
+    || value.choices.length === 0
+    || value.choices.length > TEXT_SUCCESS_RESPONSE_MAX_COLLECTION_ITEMS
+    || (value.usage !== undefined && !validProviderUsage(value.usage))
+  ) return false;
+
+  const indexes = new Set<number>();
+  for (const choice of value.choices) {
+    if (
+      !isPlainObject(choice)
+      || !nonNegativeSafeInteger(choice.index)
+      || indexes.has(choice.index)
+      || !Object.prototype.hasOwnProperty.call(choice, 'finish_reason')
+      || (choice.finish_reason !== null && typeof choice.finish_reason !== 'string')
+      || !validChatMessage(choice.message)
+    ) return false;
+    indexes.add(choice.index);
+  }
+  return true;
+}
+
 type SSEState = {
-  lineBuffer: string;
   sawDone: boolean;
   sawFailure: boolean;
   associationId: string | null;
   lastFinishReason: string | null;
   lastNativeFinishReason: string | null;
+  serviceTier: ReturnType<typeof normalizeOpenAiResponseServiceTier>;
 };
 
 const encoder = new TextEncoder();
@@ -132,9 +259,20 @@ function usageFromProvider(u: ProviderUsage): UsageFromStream {
     totalTokens: u.total_tokens,
   });
   const rawJson = JSON.stringify(u);
+	const nativePrompt = effectiveSafeCount(u.prompt_tokens, u.input_tokens);
+	const nativeCompletion = effectiveSafeCount(u.completion_tokens, u.output_tokens);
+	const nativeCached = nonNegativeSafeInteger(u.prompt_tokens_details?.cached_tokens)
+		? u.prompt_tokens_details.cached_tokens
+		: null;
+	const nativeReasoning = nonNegativeSafeInteger(u.completion_tokens_details?.reasoning_tokens)
+		? u.completion_tokens_details.reasoning_tokens
+		: null;
+	const nativeCompletionImages = nonNegativeSafeInteger(u.completion_tokens_details?.image_tokens)
+		? u.completion_tokens_details.image_tokens
+		: null;
   // 输出单行 SSE 的 usage 日志，比较长，生产中不输出，主要DEBUG 用
   // console.log('[Gateway Proxy] raw usage from provider:', rawJson);
-  return {
+  const usage: UsageFromStream = {
     input_tokens: promptTokens,
     output_tokens: completionTokens,
     cache_read_tokens: cacheRead,
@@ -142,7 +280,16 @@ function usageFromProvider(u: ProviderUsage): UsageFromStream {
     reasoning_tokens: reasoning,
     total_tokens: u.total_tokens ?? promptTokens + completionTokens,
     raw_usage: rawJson,
+	native_tokens_prompt: nativePrompt,
+	native_tokens_completion: nativeCompletion,
+	native_tokens_cached: nativeCached,
+	native_tokens_reasoning: nativeReasoning,
+	native_tokens_completion_images: nativeCompletionImages,
   };
+  if (Object.prototype.hasOwnProperty.call(u, 'speed')) {
+    usage.speed = normalizeResponseTextSpeed(u.speed);
+  }
+  return usage;
 }
 
 /**
@@ -202,10 +349,11 @@ type ChatStreamEvent = {
   model?: unknown;
   choices?: ChatStreamChoice[];
   usage?: ProviderUsage;
+  service_tier?: unknown;
   error?: { message?: unknown };
 };
 
-type ProcessedChatLine = { wire: string; stop: boolean };
+type ProcessedChatEvent = { wire: string; stop: boolean };
 
 function nonEmptyString(value: unknown): string | null {
   return typeof value === 'string' && value.trim() ? value.trim() : null;
@@ -220,24 +368,30 @@ function applyProviderUsage(target: UsageFromStream, providerUsage: ProviderUsag
   target.reasoning_tokens = next.reasoning_tokens;
   target.total_tokens = next.total_tokens;
   target.raw_usage = next.raw_usage;
+	target.native_tokens_prompt = next.native_tokens_prompt;
+	target.native_tokens_completion = next.native_tokens_completion;
+	target.native_tokens_cached = next.native_tokens_cached;
+	target.native_tokens_reasoning = next.native_tokens_reasoning;
+	target.native_tokens_completion_images = next.native_tokens_completion_images;
+  if (Object.prototype.hasOwnProperty.call(next, 'speed')) target.speed = next.speed;
 }
 
-/** Parse, account and normalize one complete Chat Completions SSE line. */
-function processChatSseLine(params: {
-  line: string;
+/** Parse, account and normalize one complete Chat Completions SSE event. */
+function processChatSseEvent(params: {
+  event: string;
   state: SSEState;
   usage: UsageFromStream;
   timing?: RequestTimingCollector | null;
   publicModelId?: string;
   publicProviderName?: string;
-}): ProcessedChatLine {
-  const parsedData = parseSseDataLine(params.line);
-  if (parsedData === null) return { wire: `${params.line}\n`, stop: false };
+}): ProcessedChatEvent {
+  const parsedData = parseSseEventData(params.event);
+  if (parsedData === null) return { wire: params.event, stop: false };
   const data = parsedData.trim();
-  if (!data) return { wire: `${params.line}\n`, stop: false };
+  if (!data) return { wire: params.event, stop: false };
   if (data === '[DONE]') {
     params.state.sawDone = true;
-    return { wire: `${params.line}\n`, stop: true };
+    return { wire: params.event, stop: true };
   }
 
   let parsed: ChatStreamEvent;
@@ -267,7 +421,12 @@ function processChatSseLine(params: {
     params.state.associationId ??= eventId;
     params.usage.upstreamMessageId ??= eventId;
   }
-  if (parsed.usage) applyProviderUsage(params.usage, parsed.usage);
+  if (parsed.usage) {
+    if (Object.prototype.hasOwnProperty.call(parsed.usage, 'speed')) {
+      parsed.usage.speed = normalizeResponseTextSpeed(parsed.usage.speed);
+    }
+    applyProviderUsage(params.usage, parsed.usage);
+  }
 
   if (parsed.error && typeof parsed.error === 'object') {
     params.usage.stream_error = sanitizePublicErrorMessage(
@@ -286,6 +445,12 @@ function processChatSseLine(params: {
   }
 
   let changed = false;
+	if (Object.prototype.hasOwnProperty.call(parsed, 'service_tier')) {
+		params.state.serviceTier = normalizeOpenAiResponseServiceTier(parsed.service_tier);
+	}
+	parsed.service_tier = params.state.serviceTier;
+	params.usage.service_tier = params.state.serviceTier;
+	changed = true;
   if (params.state.associationId && parsed.id !== params.state.associationId) {
     parsed.id = params.state.associationId;
     changed = true;
@@ -311,6 +476,12 @@ function processChatSseLine(params: {
     } else if (nativeFinishReason) {
       params.state.lastNativeFinishReason = nativeFinishReason;
     }
+		if (choice.index === 0) {
+			params.usage.finish_reason = normalizeCanonicalFinishReason(choice.finish_reason);
+			params.usage.native_finish_reason = normalizeNativeFinishReason(
+				choice.native_finish_reason ?? choice.finish_reason,
+			);
+		}
   }
 
   // OpenRouter intentionally emits a single content-free choice on the final
@@ -335,17 +506,18 @@ function processChatSseLine(params: {
   }
 
   return {
-    wire: `${changed ? `data: ${JSON.stringify(parsed)}` : params.line}\n`,
+    wire: changed
+      ? rewriteSseEventData(params.event, JSON.stringify(parsed))
+      : params.event,
     stop: false,
   };
 }
 
 /**
  * 从上游读 SSE 字节流，双路处理：
- * - 每凑齐一行完整行：先 `processUsageFromDataLine` 更新计费统计；
- *   再 `transformStreamUsageForClient` 得到发给客户端的文本，拼成 `forward` 写出。
- * - 上游 `read()` 可能截断在半个 UTF-8 字符或半行，剩余留在 `state.lineBuffer`。
- * - `done === true` 时：若缓冲区里还有未以换行结尾的残留，按「最后一行」再处理一次（与旧 `processRemainingLineBuffer` 等价）。
+ * - 每凑齐一个完整 EventSource event，先更新计费统计，再按下游背压写出。
+ * - 上游 `read()` 可能截断在半个 UTF-8 字符、字段或 event，残留由有界 framer 保存。
+ * - `done === true` 时：若仍有未以空行结束的 event，按 EventSource EOF 语义处理一次。
  *
  * 客户端断开时立即取消上游 body，不会为了末尾 usage 继续生成/计费。
  */
@@ -364,13 +536,17 @@ async function pumpWithUsageTracking(
   const reader = upstream.getReader();
   const writer = downstream.getWriter();
   const state: SSEState = {
-    lineBuffer: '',
     sawDone: false,
     sawFailure: false,
     associationId: normalizeUpstreamId(publicCorrelationId),
     lastFinishReason: null,
     lastNativeFinishReason: null,
+    serviceTier: null,
   };
+  const framer = new BoundedSseEventFramer(
+    MAX_OPENAI_SSE_EVENT_CHARS,
+    'OpenAI SSE event exceeded the gateway framing limit',
+  );
   let clientDisconnected = requestSignal?.aborted === true;
 
   const markClientDisconnected = (): void => {
@@ -400,8 +576,8 @@ async function pumpWithUsageTracking(
     }
   };
 
-  const processLine = (line: string): ProcessedChatLine => processChatSseLine({
-    line,
+  const processEvent = (event: string): ProcessedChatEvent => processChatSseEvent({
+    event,
     state,
     usage,
     timing,
@@ -409,19 +585,21 @@ async function pumpWithUsageTracking(
     publicProviderName,
   });
 
+  const handleEvent = async (event: string): Promise<boolean> => {
+    const processed = processEvent(event);
+    const written = await writeWire(processed.wire);
+    return processed.stop || !written || clientDisconnected;
+  };
+
   try {
     while (true) {
       if (clientDisconnected) break;
       const { done, value } = await reader.read();
       if (done) {
-        state.lineBuffer += decoder.decode();
-        if (state.lineBuffer.length > MAX_OPENAI_SSE_LINE_CHARS) {
-          throw new Error('OpenAI SSE event exceeded the gateway framing limit');
-        }
-        if (state.lineBuffer.trim() && !clientDisconnected) {
-          const processed = processLine(state.lineBuffer);
-          state.lineBuffer = '';
-          await writeWire(processed.wire);
+        const stopped = await framer.push(decoder.decode(), handleEvent);
+        const remainder = stopped ? '' : framer.finish();
+        if (remainder.trim() && !clientDisconnected) {
+          await handleEvent(terminateSseEvent(remainder));
         }
         if (!state.sawDone && !state.sawFailure && !clientDisconnected) {
           usage.stream_error = usage.stream_error ?? 'Upstream Chat stream ended before data: [DONE]';
@@ -436,31 +614,7 @@ async function pumpWithUsageTracking(
       }
 
       if (value.byteLength > 0) timing?.markFirstByte();
-      state.lineBuffer += decoder.decode(value, { stream: true });
-      if (state.lineBuffer.length > MAX_OPENAI_SSE_LINE_CHARS && !state.lineBuffer.includes('\n')) {
-        throw new Error('OpenAI SSE event exceeded the gateway framing limit');
-      }
-      const lines = state.lineBuffer.split('\n');
-      state.lineBuffer = lines.pop() ?? '';
-      if (state.lineBuffer.length > MAX_OPENAI_SSE_LINE_CHARS) {
-        throw new Error('OpenAI SSE event exceeded the gateway framing limit');
-      }
-
-      let forward = '';
-      let stop = false;
-      for (const line of lines) {
-        if (line.length > MAX_OPENAI_SSE_LINE_CHARS) {
-          throw new Error('OpenAI SSE event exceeded the gateway framing limit');
-        }
-        const processed = processLine(line);
-        forward += processed.wire;
-        if (processed.stop) {
-          stop = true;
-          break;
-        }
-      }
-
-      await writeWire(forward);
+      const stop = await framer.push(decoder.decode(value, { stream: true }), handleEvent);
       if (stop || clientDisconnected) {
         await reader.cancel(stop ? 'Chat SSE terminal event received' : requestSignal?.reason).catch(() => undefined);
         break;
@@ -468,6 +622,7 @@ async function pumpWithUsageTracking(
     }
   } catch (err) {
     if (!clientDisconnected) {
+      await reader.cancel('Chat SSE processing failed').catch(() => undefined);
       usage.stream_error = usage.stream_error ?? sanitizePublicErrorMessage(
         err instanceof Error ? err.message : String(err),
         'Upstream Chat Completions stream failed',
@@ -551,13 +706,6 @@ async function nonStreamResponseWithUsage(
   usagePromise: Promise<UsageFromStream>;
   meta?: ProxyDispatchMeta;
 }> {
-  const contentType = response.headers.get('Content-Type') ?? '';
-  if (!contentType.toLowerCase().includes('application/json')) {
-    return {
-      response,
-      usagePromise: Promise.resolve({ ...EMPTY_USAGE_LOCAL }),
-    };
-  }
   const materialized = await readBoundedTextJsonObject(response, {
     skin: 'chat',
     requestId: publicCorrelationId,
@@ -572,13 +720,43 @@ async function nonStreamResponseWithUsage(
   }
 
   const parsed = materialized.value;
+  if (!validChatSuccessResponse(parsed)) {
+    const invalid = invalidTextSuccessResponse({
+      skin: 'chat',
+      protocol: 'Chat Completions',
+      requestId: publicCorrelationId,
+    });
+    return {
+      ...invalid,
+      usagePromise: Promise.resolve({ ...EMPTY_USAGE_LOCAL }),
+    };
+  }
   const providerUsage = parsed.usage;
-  let usage = providerUsage != null && typeof providerUsage === 'object' && !Array.isArray(providerUsage)
+  if (providerUsage && Object.prototype.hasOwnProperty.call(providerUsage, 'speed')) {
+    (providerUsage as ProviderUsage).speed = normalizeResponseTextSpeed(
+      (providerUsage as ProviderUsage).speed,
+    );
+  }
+  let usage = providerUsage != null
     ? usageFromProvider(providerUsage as ProviderUsage)
     : { ...EMPTY_USAGE_LOCAL };
   const msgId = normalizeUpstreamId(parsed.id);
   if (msgId) usage = { ...usage, upstreamMessageId: msgId };
+	const primaryChoice = (parsed.choices as Array<Record<string, unknown>>)
+		.find((choice) => choice.index === 0)
+		?? (parsed.choices as Array<Record<string, unknown>>)[0];
+	if (primaryChoice) {
+		usage.finish_reason = normalizeCanonicalFinishReason(primaryChoice.finish_reason);
+		usage.native_finish_reason = normalizeNativeFinishReason(
+			primaryChoice.native_finish_reason ?? primaryChoice.finish_reason,
+		);
+	}
+  const generationId = normalizeUpstreamId(publicCorrelationId);
+  if (generationId) parsed.id = generationId;
   if (publicModelId) parsed.model = publicModelId;
+	const serviceTier = normalizeOpenAiResponseServiceTier(parsed.service_tier);
+	parsed.service_tier = serviceTier;
+	usage.service_tier = serviceTier;
   return {
     response: rebuildTextJsonResponse(response, parsed),
     usagePromise: Promise.resolve(usage),
@@ -652,7 +830,9 @@ export async function dispatchOpenAiRoute(
 
   if (response.ok) {
     const contentType = response.headers.get('Content-Type') ?? '';
-    if (contentType.toLowerCase().includes('application/json')) {
+    const normalizedContentType = contentType.toLowerCase();
+    const streamRequested = requestBody.stream === true;
+    if (!streamRequested && normalizedContentType.includes('application/json')) {
       const result = await nonStreamResponseWithUsage(
         response,
         timing,
@@ -661,7 +841,7 @@ export async function dispatchOpenAiRoute(
       );
       return { ...result, upstreamRequestId };
     }
-    if (response.body) {
+    if (streamRequested && response.body && normalizedContentType.includes('text/event-stream')) {
       const result = streamResponseWithUsage(
         response,
         requestSignal,
@@ -672,6 +852,17 @@ export async function dispatchOpenAiRoute(
       );
       return { ...result, upstreamRequestId };
     }
+    const invalid = await cancelInvalidTextSuccessResponse(response, {
+      skin: 'chat',
+      protocol: 'Chat Completions',
+      requestId: publicCorrelationId,
+    });
+    timing?.markStreamComplete();
+    return {
+      ...invalid,
+      usagePromise: Promise.resolve({ ...EMPTY_USAGE_LOCAL }),
+      upstreamRequestId,
+    };
   }
 
   return {

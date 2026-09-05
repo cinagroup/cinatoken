@@ -31,6 +31,10 @@ import {
 } from './upstream-observability';
 import { GatewayErrorCode } from '../gateway-error-codes';
 import { gatewayErrorResponse } from '../gateway-error-response';
+import {
+	resolveAudioProviderOptionsForRoute as resolveRouteAudioProviderOptions,
+	type AudioProviderOptions,
+} from './audio-provider-options';
 
 export const AUDIO_TRANSCRIPTION_TIMEOUT_MS = 120_000;
 export const AUDIO_TRANSCRIPTION_MAX_RESPONSE_BYTES = 2 * 1024 * 1024;
@@ -145,25 +149,15 @@ export type NormalizedAudioTranscriptionRequest = {
 	providerOptions?: AudioTranscriptionProviderOptions;
 };
 
-function canonicalProviderOptionKey(value: string): string {
-	return value.trim().toLocaleLowerCase();
-}
-
 /** Resolve request options for this concrete provider without exposing them to another failover attempt. */
 export function resolveAudioProviderOptionsForRoute(
 	req: NormalizedAudioTranscriptionRequest,
 	route: RouteResult,
 ): Readonly<Record<string, AudioTranscriptionProviderOptionValue>> {
-	const options = req.providerOptions;
-	if (!options) return {};
-	const endpointProviderSlug = route.endpoint?.providerSlug ?? '';
-	const candidates = [route.providerId, route.providerName, endpointProviderSlug]
-		.map(canonicalProviderOptionKey)
-		.filter(Boolean);
-	for (const [provider, value] of Object.entries(options)) {
-		if (candidates.includes(canonicalProviderOptionKey(provider))) return value;
-	}
-	return {};
+	return resolveRouteAudioProviderOptions(
+		req.providerOptions as AudioProviderOptions<AudioTranscriptionProviderOptionValue> | undefined,
+		route,
+	);
 }
 
 /**

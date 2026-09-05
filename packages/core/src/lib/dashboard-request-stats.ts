@@ -1,9 +1,32 @@
 import type {
+	RequestActivityGroupRow,
 	RequestStatsByRangeRow,
 	RequestTimeseriesRow,
 	ThroughputSnapshot,
 	UserTokenTimeseriesRow,
 } from '../storage/repository-dtos';
+
+type ActivityGroupSqlRow = {
+	group_id?: string;
+	group_name?: string | null;
+	request_count?: number | string;
+	success_count?: number | string;
+	error_count?: number | string;
+	total_tokens?: number | string;
+	charged_cost?: number | string;
+};
+
+export function mapRequestActivityGroupRows(rows: ActivityGroupSqlRow[]): RequestActivityGroupRow[] {
+	return rows.map((row) => ({
+		id: String(row.group_id ?? ''),
+		name: row.group_name == null || row.group_name === '' ? null : String(row.group_name),
+		requestCount: Number(row.request_count ?? 0),
+		successCount: Number(row.success_count ?? 0),
+		errorCount: Number(row.error_count ?? 0),
+		totalTokens: Number(row.total_tokens ?? 0),
+		chargedCost: Number(row.charged_cost ?? 0),
+	}));
+}
 
 type StatsSqlRow = {
 	total_requests?: number | string;

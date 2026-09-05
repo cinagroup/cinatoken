@@ -1,5 +1,6 @@
-import type { D1Database, RateLimit } from "@cloudflare/workers-types";
+import type { D1Database, Queue, R2Bucket, RateLimit } from "@cloudflare/workers-types";
 import type {
+	BatchDispatchMessage,
 	GatewayRepositories,
 	HyperdriveBinding,
 	ManagementApiKeyPrincipal,
@@ -12,6 +13,7 @@ import { bodyLimit } from "hono/body-limit";
 import type { ApiKeyContext } from "./middleware/auth";
 import { healthRoutes } from "./routes/health";
 import { chatRoutes } from "./routes/v1/chat";
+import { completionsRoutes } from "./routes/v1/completions";
 import { responsesRoutes } from "./routes/v1/responses";
 import { geminiRoutes } from "./routes/v1/gemini";
 import { meRoutes } from "./routes/v1/me";
@@ -29,12 +31,17 @@ import { imageRoutes } from "./routes/v1/images";
 import { audioRoutes } from "./routes/v1/audio";
 import { dashScopeRealtimeRoutes } from "./routes/v1/dashscope-realtime";
 import { dashScopeMultimodalRoutes } from "./routes/v1/dashscope-multimodal";
-import { createPresetCaptureRoutes } from "./routes/v1/presets";
+import { presetRoutes } from "./routes/v1/presets";
 import { embeddingsRoutes } from "./routes/v1/embeddings";
+import { rerankRoutes } from "./routes/v1/rerank";
 import { createOpenRouterPublicCatalogRoutes } from "./routes/v1/openrouter-public-catalog";
 import { managementKeyRoutes } from "./routes/v1/management-keys";
+import { managementWorkspaceRoutes } from "./routes/v1/management-workspaces";
 import { managementWorkspaceBudgetRoutes } from "./routes/v1/management-workspace-budgets";
+import { managementGuardrailRoutes } from "./routes/v1/management-guardrails";
+import { byokRoutes } from "./routes/v1/byok";
 import { currentKeyRoutes } from "./routes/v1/current-key";
+import { analyticsRoutes } from "./routes/v1/analytics";
 import { proxyAppVersion } from "./app-version";
 import type { DashScopeRealtimeNodeDispatch } from "./services/egress/dashscope-realtime-driver";
 import {
@@ -55,6 +62,14 @@ export type GatewayBindings = {
 	SHARED_KEY_ENCRYPTION_SECRET?: string;
 	/** DeepSeek official upstream key; configured as a Worker Secret. */
 	DEEPSEEK_API_KEY?: string;
+	/** Private Batch request/result object storage; emitted only with explicit infra opt-in. */
+	BATCH_BUCKET?: R2Bucket;
+	/** Prompt-free Batch dispatch queue producer; emitted only with explicit infra opt-in. */
+	BATCH_QUEUE?: Queue<BatchDispatchMessage>;
+	/** Phase 2 keeps all public Batch routes off even when infrastructure is staged. */
+	BATCH_API_ENABLED?: string;
+	/** Deployment-specific DLQ name used to distinguish terminal queue delivery. */
+	BATCH_QUEUE_DLQ?: string;
 	/** 省略时保持 D1；只有 `postgres` 会切换到 `HYPERDRIVE`。 */
 	DATABASE_DRIVER?: string;
 	/** 最终数据库切换窗口内，在任何存储访问之前拒绝外部 HTTP 流量。 */
@@ -69,6 +84,16 @@ export type GatewayBindings = {
 	RATE_LIMITER?: RateLimit;
 	/** 公开统计缓存未命中时的独立限流器。 */
 	PUBLIC_STATS_RATE_LIMITER?: RateLimit;
+	/** Management Analytics Query：每个 Management Key 每分钟最多 64 次。 */
+	ANALYTICS_RATE_LIMITER?: RateLimit;
+	/** CinaAuth organization roles that project to Workspace API admin membership. */
+	CINAAUTH_ORGANIZATION_ADMIN_ROLES?: string;
+	/** Credential-free endpoint uptime fact retention (2..30 days; default 7). */
+	PROVIDER_ATTEMPT_RETENTION_DAYS?: string;
+	/** Per-statement retention delete cap (1..5000; default 5000). */
+	PROVIDER_ATTEMPT_RETENTION_BATCH_SIZE?: string;
+	/** Per-Cron statement cap (1..20; default 10). */
+	PROVIDER_ATTEMPT_RETENTION_MAX_BATCHES?: string;
 };
 
 export type Env = {
@@ -77,6 +102,7 @@ export type Env = {
 		apiKey?: ApiKeyContext;
 		managementKey?: ManagementApiKeyPrincipal;
 		generationId?: string;
+		organizationAdminRoles: string | undefined;
 		repositories: GatewayRepositories;
 		requestBodyLoggingMode: RequestBodyLoggingMode;
 	};
@@ -96,6 +122,8 @@ export type ProxyAppOptions = {
 	requestBodyLogging?: string;
 	/** Node/Docker runtime fallback；Workers 使用平台 Cache API 与 rate-limit binding。 */
 	publicStatsRuntime?: PublicStatsRuntimeGuard;
+	/** Node runtime override；Workers read the CinaAuth role mapping from bindings. */
+	organizationAdminRoles?: string;
 };
 
 export function createProxyApp(
@@ -105,6 +133,7 @@ export function createProxyApp(
 	const app = new Hono<Env>();
 	const {
 		publicCatalogRoutes: openRouterPublicCatalogRoutes,
+		managementCatalogRoutes: openRouterManagementCatalogRoutes,
 		providersAliasRoutes: openRouterProvidersAliasRoutes,
 	} = createOpenRouterPublicCatalogRoutes(options?.publicStatsRuntime);
 
@@ -181,7 +210,7 @@ export function createProxyApp(
 		c.set(
 			"requestBodyLoggingMode",
 			resolveRequestBodyLoggingMode(
-				options?.requestBodyLogging ?? c.env.REQUEST_BODY_LOGGING
+				options?.requestBodyLogging ?? c.env?.REQUEST_BODY_LOGGING
 			)
 		);
 		await next();
@@ -206,6 +235,15 @@ export function createProxyApp(
 	});
 
 	app.use("*", async (c, next) => {
+		c.set(
+			"organizationAdminRoles",
+			options?.organizationAdminRoles ??
+				c.env?.CINAAUTH_ORGANIZATION_ADMIN_ROLES
+		);
+		await next();
+	});
+
+	app.use("*", async (c, next) => {
 		const storage = await resolveStorage(c);
 		c.set("repositories", storage.repositories);
 		await next();
@@ -215,8 +253,10 @@ export function createProxyApp(
 	app.route("/v1", endpointDiscoveryRoutes);
 	app.route("/v1/generation", generationRoutes);
 	app.route("/v1/chat/completions", chatRoutes);
+	app.route("/v1/completions", completionsRoutes);
 	app.route("/v1/responses", responsesRoutes);
 	app.route("/v1/embeddings", embeddingsRoutes);
+	app.route("/v1/rerank", rerankRoutes);
 	app.route("/v1/images", imageRoutes);
 	app.route("/v1/audio", audioRoutes);
 	app.route("/v1/dashscope/realtime", dashScopeRealtimeRoutes);
@@ -234,46 +274,31 @@ export function createProxyApp(
 	app.route("/v1/tools/web-deep-search", webDeepSearchRoutes);
 	app.route("/v1/tools/ai-detection", aiDetectionRoutes);
 	app.route("/v1/tools/pricing", toolsPricingRoutes);
-	// OpenRouter-compatible base URL. Inference handlers remain authenticated;
-	// the exact catalog reads below mirror OpenRouter's anonymous live surfaces.
-	// OpenRouter's canonical catalog is anonymous. Register it before the
-	// authenticated discovery router so only the exact public model/provider
-	// paths are widened; ZDR and Image discovery remain authenticated below.
+	// OpenRouter-compatible base URL. Models and Providers remain anonymous;
+	// canonical per-model Endpoints requires a Management key. Register the
+	// exact contracts before the legacy Gateway-key discovery aliases below.
 	app.route("/api/v1", openRouterPublicCatalogRoutes);
+	app.route("/api/v1", openRouterManagementCatalogRoutes);
 	app.route("/api/v1/key", currentKeyRoutes);
 	app.route("/api/v1/keys", managementKeyRoutes);
+	app.route("/api/v1/workspaces", managementWorkspaceRoutes);
 	app.route("/api/v1/workspaces", managementWorkspaceBudgetRoutes);
+	app.route("/api/v1/guardrails", managementGuardrailRoutes);
+	app.route("/api/v1/byok", byokRoutes);
+	app.route("/api/v1/analytics", analyticsRoutes);
 	app.route("/api/v1", endpointDiscoveryRoutes);
 	app.route("/api/v1/generation", generationRoutes);
 	app.route("/api/v1/chat/completions", chatRoutes);
+	app.route("/api/v1/completions", completionsRoutes);
 	app.route("/api/v1/responses", responsesRoutes);
 	app.route("/api/v1/embeddings", embeddingsRoutes);
+	app.route("/api/v1/rerank", rerankRoutes);
 	app.route("/api/v1/images", imageRoutes);
 	app.route("/api/v1/audio", audioRoutes);
 	app.route("/api/v1/messages", messagesRoutes);
 	app.route("/catalog", createCatalogRoutes(options?.publicStatsRuntime));
-	const presetCaptureRoutes = createPresetCaptureRoutes(
-		async (c, targetPath, body) => {
-			const targetUrl = new URL(c.req.url);
-			targetUrl.pathname = targetPath;
-			targetUrl.search = "";
-			const headers = new Headers(c.req.raw.headers);
-			headers.delete("content-length");
-			const request = new Request(targetUrl, {
-				method: "POST",
-				headers,
-				body: JSON.stringify(body),
-				signal: c.req.raw.signal,
-			});
-			try {
-				return await app.fetch(request, c.env, c.executionCtx);
-			} catch {
-				return app.fetch(request, c.env);
-			}
-		}
-	);
-	app.route("/api/v1/presets", presetCaptureRoutes);
-	app.route("/v1/presets", presetCaptureRoutes);
+	app.route("/api/v1/presets", presetRoutes);
+	app.route("/v1/presets", presetRoutes);
 
 	app.get("/", (c) =>
 		c.json({ name: "cinatoken-proxy", version: proxyAppVersion })

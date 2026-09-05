@@ -26,6 +26,7 @@ export type ProviderEndpointCapability =
 	| 'chat'
 	| 'responses'
 	| 'embeddings'
+	| 'rerank'
 	| 'images.generations'
 	| 'images.edits'
 	| 'audio.transcriptions'
@@ -46,6 +47,7 @@ export const OPENAI_ENDPOINT_CAPABILITIES = [
 	'chat',
 	'responses',
 	'embeddings',
+	'rerank',
 	'images.generations',
 	'images.edits',
 	'audio.transcriptions',
@@ -98,6 +100,7 @@ const ENDPOINT_CAPABILITIES_BY_OPERATION: Record<
 		chat: ['chat'],
 		responses: ['responses'],
 		embeddings: ['embeddings'],
+		rerank: ['rerank'],
 		'images.generations': ['images.generations'],
 		'images.edits': ['images.edits'],
 		'audio.transcriptions': ['audio.transcriptions'],
@@ -531,6 +534,8 @@ export function resolveUpstreamEndpoint(
 				return `${root}/responses`;
 			case 'embeddings':
 				return `${root}/embeddings`;
+			case 'rerank':
+				return `${root}/rerank`;
 			case 'images.generations':
 				return buildOpenAiCompatibleImagesUrl(root, 'generations');
 			case 'images.edits':

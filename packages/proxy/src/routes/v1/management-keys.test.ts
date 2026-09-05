@@ -41,12 +41,17 @@ function fixture() {
 		limit_reset: null,
 		include_byok_in_limit: false,
 		limit_epoch: 0,
+		limit_consumed_micros: 2_500_000,
 		created_at: "2026-08-31T01:00:00.000Z",
 		updated_at: "2026-08-31T01:00:00.000Z",
 		usage: 12.5,
 		usage_daily: 2.5,
 		usage_weekly: 4.5,
 		usage_monthly: 8.5,
+		byok_usage: 4,
+		byok_usage_daily: 1,
+		byok_usage_weekly: 2,
+		byok_usage_monthly: 3,
 	};
 	const repositories = {
 		managementApiKeys: {
@@ -111,6 +116,8 @@ test("Management key lists real usage without exposing either secret", async () 
 	assert.equal(body.data.length, 1);
 	assert.equal(body.data[0]?.hash, gatewayHash);
 	assert.equal(body.data[0]?.usage, 12.5);
+	assert.equal(body.data[0]?.byok_usage, 4);
+	assert.equal(body.data[0]?.byok_usage_daily, 1);
 	assert.equal(body.data[0]?.limit, null);
 	assert.equal(body.data[0]?.expires_at, "2099-01-01T00:00:00.000Z");
 	assert.equal(body.data[0]?.workspace_id, "personal:user-1");
@@ -166,7 +173,7 @@ test("Management key can inspect, disable, rename, and delete an owned key", asy
 	);
 });
 
-test("Management API updates key limits while rejecting unavailable BYOK accounting", async () => {
+test("Management API updates key limits and enables BYOK accounting", async () => {
 	const { request } = fixture();
 	const limit = await request(`/api/v1/keys/${gatewayHash}`, {
 		...bearer(managementSecret),
@@ -192,7 +199,10 @@ test("Management API updates key limits while rejecting unavailable BYOK account
 		},
 		body: JSON.stringify({ include_byok_in_limit: true }),
 	});
-	assert.equal(byok.status, 400);
+	assert.equal(byok.status, 200);
+	const byokBody = (await byok.json()) as { data: Record<string, unknown> };
+	assert.equal(byokBody.data.include_byok_in_limit, true);
+	assert.equal(byokBody.data.limit_remaining, 7.5);
 
 	const connect = await request("/api/v1/keys", {
 		...bearer(managementSecret),

@@ -91,8 +91,10 @@ describe('parseSharedKeyId / circuitKeyForRoute', () => {
 
 	it('scopes the circuit key per shared key attempt', () => {
 		const shared = makeRoute('p1', { providerKeyId: `${SHARED_KEY_ID_PREFIX}k1` });
+		const byok = makeRoute('p1', { providerKeyId: 'byok:k2' });
 		const own = makeRoute('p1', { providerKeyId: 'p1' });
 		assert.equal(circuitKeyForRoute(shared), 'p1#sharedkey:k1');
+		assert.equal(circuitKeyForRoute(byok), 'p1#byok:k2');
 		assert.equal(circuitKeyForRoute(own), 'p1');
 	});
 });

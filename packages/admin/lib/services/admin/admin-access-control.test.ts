@@ -9,6 +9,7 @@ import {
 import { getAdminAuthorizationDecision } from '../../admin-permissions';
 import { prepareAdminConfigRows } from '../../admin-config-secrets';
 import { authenticateAdminRequest, generateAdminApiKey, hashSessionToken, timingSafeEqualSecret } from '../../auth';
+import { handleGatewayApiError } from '../../api-error';
 
 const routeWriter: AdminPrincipal = {
 	type: 'api_key',
@@ -129,4 +130,78 @@ test('authentication resolves active named keys and persistent sessions', async 
 	assert.equal(await authenticateAdminRequest(new Request('https://admin.test/api/admin/routes', {
 		headers: { authorization: 'Bearer revoked-or-unknown' },
 	}), repositories), null);
+});
+
+test('console authentication retries one transient session read and then succeeds', async () => {
+	const sessionToken = 'transient-session';
+	const expectedSessionHash = await hashSessionToken(sessionToken);
+	let attempts = 0;
+	const repositories = {
+		adminAccess: {
+			getActiveApiKeyBySecret: async () => null,
+			touchApiKey: async () => {},
+			getValidSession: async (tokenHash: string) => {
+				assert.equal(tokenHash, expectedSessionHash);
+				attempts += 1;
+				if (attempts === 1) {
+					throw new Error('Failed query', { cause: new Error('D1_ERROR: network connection lost') });
+				}
+				return {
+					tokenHash,
+					username: 'admin',
+					createdAt: '2026-01-01T00:00:00.000Z',
+					expiresAt: '2027-01-01T00:00:00.000Z',
+				};
+			},
+		},
+	};
+
+	assert.deepEqual(
+		await authenticateAdminRequest(new Request('https://admin.test/api/admin/routes', {
+			headers: { cookie: `admin_session=${sessionToken}` },
+		}), repositories),
+		{ type: 'console', id: 'console:admin', username: 'admin' },
+	);
+	assert.equal(attempts, 2);
+});
+
+test('console authentication does not retry permanent session query errors', async () => {
+	let attempts = 0;
+	const repositories = {
+		adminAccess: {
+			getActiveApiKeyBySecret: async () => null,
+			touchApiKey: async () => {},
+			getValidSession: async () => {
+				attempts += 1;
+				throw new Error('no such table: admin_sessions');
+			},
+		},
+	};
+
+	await assert.rejects(
+		authenticateAdminRequest(new Request('https://admin.test/api/admin/routes', {
+			headers: { cookie: 'admin_session=broken-session' },
+		}), repositories),
+		/no such table/,
+	);
+	assert.equal(attempts, 1);
+});
+
+test('gateway API error logging preserves causes while redacting database params', async () => {
+	const tokenHash = 'a'.repeat(64);
+	const cause = new Error(`D1_ERROR: request failed for params: ${tokenHash},2026-09-04T00:00:00.000Z`);
+	const error = new Error(`Failed query\nparams: ${tokenHash},2026-09-04T00:00:00.000Z`, { cause });
+	const originalConsoleError = console.error;
+	let logged: unknown[] = [];
+	console.error = (...args: unknown[]) => { logged = args; };
+	try {
+		const response = handleGatewayApiError({ route: 'admin.test', error });
+		assert.equal(response.status, 500);
+	} finally {
+		console.error = originalConsoleError;
+	}
+	const serialized = JSON.stringify(logged);
+	assert.doesNotMatch(serialized, new RegExp(tokenHash));
+	assert.match(serialized, /\[redacted\]/);
+	assert.match(serialized, /D1_ERROR/);
 });

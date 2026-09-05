@@ -79,6 +79,7 @@ function createLedgerDatabase(): DatabaseSync {
 }
 
 test("Guardrail ledger tables are either all selected or all omitted", () => {
+	assert.equal(GUARDRAIL_LEDGER_TABLES.includes("provider_attempt_availability"), true);
 	assert.equal(assertGuardrailLedgerTableSelection(null), true);
 	assert.equal(
 		assertGuardrailLedgerTableSelection(new Set(["users", "models"])),
@@ -172,7 +173,9 @@ test("PostgreSQL ledger audit preserves the same terminal and log-coverage contr
 		audit.unreservedWindowMismatchCount,
 		/ROUND\(GREATEST\(log\.charged_cost, 0\) \* 1000000\)::bigint/u
 	);
-	for (const table of GUARDRAIL_LEDGER_TABLES) {
+	for (const table of GUARDRAIL_LEDGER_TABLES.filter(
+		(table) => table !== "provider_attempt_availability"
+	)) {
 		assert.match(
 			audit.windowMismatchDetails + audit.activeReservationDetails,
 			new RegExp(`"cinatoken_gateway"\\."${table}"`, "u")

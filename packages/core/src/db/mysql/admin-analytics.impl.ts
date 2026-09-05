@@ -74,6 +74,7 @@ export function createMySqlAdminAnalyticsRepository(db: MySqlDatabaseClient): Ad
 					SUM(success_count) AS success_count,
 					SUM(error_count) AS error_count,
 					SUM(output_tokens) AS output_tokens,
+					SUM(total_tokens) AS total_tokens,
 					CASE WHEN SUM(latency_sample_count) > 0
 						THEN SUM(latency_total_ms) / SUM(latency_sample_count)
 						ELSE NULL END AS avg_latency_ms

@@ -25,6 +25,7 @@ import {
 	type RouteQuantization,
 } from "@octafuse/core";
 import {
+	audioEndpointReferenceEvidenceMatchesVoiceCloning,
 	isAudioEndpointReady,
 	normalizeAudioEndpointCapabilities,
 	normalizeEndpointCapabilities,
@@ -439,6 +440,17 @@ function canonicalize(
 	const audioCapabilities = normalizeAudioCapabilities(
 		input.audio_capabilities
 	);
+	if (
+		audioCapabilities &&
+		!audioEndpointReferenceEvidenceMatchesVoiceCloning(
+			audioCapabilities,
+			supportsVoiceCloning
+		)
+	) {
+		throw badRequest(
+			"audio.speech reference-audio evidence requires supports_voice_cloning=true"
+		);
+	}
 	if (imageCapabilities && imageCapabilities.provider_slug !== providerSlug) {
 		throw badRequest(
 			"image_capabilities.provider_slug must match provider_slug"

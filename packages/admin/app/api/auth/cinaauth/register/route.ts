@@ -12,6 +12,11 @@ export function GET(request: NextRequest): NextResponse {
 	if (request.nextUrl.searchParams.get('intent') === 'portal') {
 		url.searchParams.set('intent', 'portal');
 	}
+	if (request.nextUrl.searchParams.get('presentation') === 'popup') {
+		url.searchParams.set('presentation', 'popup');
+		const popupRequest = request.nextUrl.searchParams.get('request');
+		if (popupRequest) url.searchParams.set('request', popupRequest);
+	}
 	const response = NextResponse.redirect(url, 302);
 	response.headers.set('Cache-Control', 'no-store');
 	return response;

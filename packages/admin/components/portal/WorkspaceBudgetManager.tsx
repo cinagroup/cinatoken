@@ -13,6 +13,11 @@ type WorkspaceBudget = {
 	workspaceId: string;
 	limitUsd: number;
 	resetInterval: Interval;
+	periodStart: string;
+	periodEnd: string;
+	spentUsd: number;
+	reservedUsd: number;
+	remainingUsd: number;
 	createdAt: string;
 	updatedAt: string;
 };
@@ -140,6 +145,10 @@ export default function WorkspaceBudgetManager() {
 		currency: 'USD',
 		maximumFractionDigits: 6,
 	});
+	const date = new Intl.DateTimeFormat(locale, {
+		dateStyle: 'medium',
+		timeZone: 'UTC',
+	});
 
 	return (
 		<section className="console-panel rounded-xl border p-5" style={{ borderColor: 'var(--console-border)' }}>
@@ -159,11 +168,53 @@ export default function WorkspaceBudgetManager() {
 			<div className="mt-4 grid gap-3 md:grid-cols-2 xl:grid-cols-4">
 				{INTERVALS.map((interval) => {
 					const row = rows.find((candidate) => candidate.resetInterval === interval);
+					const spentPercent = row ? Math.min(100, (row.spentUsd / row.limitUsd) * 100) : 0;
+					const reservedPercent = row
+						? Math.min(100 - spentPercent, (row.reservedUsd / row.limitUsd) * 100)
+						: 0;
 					return (
 						<div key={interval} className="rounded-lg border p-4" style={{ borderColor: 'var(--console-border)' }}>
 							<div className="text-sm font-medium">{t(intervalKey(interval))}</div>
 							<div className="mt-2 text-xl font-semibold">{row ? money.format(row.limitUsd) : t('notConfigured')}</div>
 							<div className="console-muted mt-1 min-h-8 text-xs">{t(`reset_${interval}`)}</div>
+							{row && (
+								<div className="mt-3 space-y-2">
+									<div
+										role="progressbar"
+										aria-label={t('usageLabel', { interval: t(intervalKey(interval)) })}
+										aria-valuemin={0}
+										aria-valuemax={row.limitUsd}
+										aria-valuenow={Math.min(row.limitUsd, row.spentUsd + row.reservedUsd)}
+										className="flex h-2 overflow-hidden rounded-full"
+										style={{ background: 'var(--console-panel-subtle)' }}
+									>
+										<div className="h-full bg-cyan-600" style={{ width: `${spentPercent}%` }} />
+										<div className="h-full bg-cyan-300" style={{ width: `${reservedPercent}%` }} />
+									</div>
+									<div className="grid grid-cols-3 gap-2 text-xs">
+										<div>
+											<div className="console-muted">{t('spent')}</div>
+											<div className="mt-0.5 font-medium">{money.format(row.spentUsd)}</div>
+										</div>
+										<div>
+											<div className="console-muted">{t('reserved')}</div>
+											<div className="mt-0.5 font-medium">{money.format(row.reservedUsd)}</div>
+										</div>
+										<div>
+											<div className="console-muted">{t('remaining')}</div>
+											<div className="mt-0.5 font-medium">{money.format(row.remainingUsd)}</div>
+										</div>
+									</div>
+									<div className="console-muted text-[11px]">
+										{interval === 'lifetime'
+											? t('periodSince', { start: date.format(new Date(row.periodStart)) })
+											: t('periodWindow', {
+												start: date.format(new Date(row.periodStart)),
+												end: date.format(new Date(row.periodEnd)),
+											})}
+									</div>
+								</div>
+							)}
 							{canManage && (
 								<div className="mt-3 space-y-2">
 									<input

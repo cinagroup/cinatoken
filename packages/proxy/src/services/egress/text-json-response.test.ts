@@ -8,7 +8,10 @@ import { dispatchAnthropicRoute } from './anthropic-driver';
 import { dispatchOpenAiRoute } from './openai-driver';
 import { dispatchOpenAiResponsesRoute } from './openai-responses-driver';
 import { dispatchGeminiRoute } from './gemini-driver';
-import { TEXT_JSON_RESPONSE_MAX_BYTES } from './text-json-response';
+import {
+	TEXT_JSON_RESPONSE_MAX_BYTES,
+	TEXT_SUCCESS_RESPONSE_MAX_COLLECTION_ITEMS,
+} from './text-json-response';
 
 type Protocol = 'chat' | 'responses' | 'anthropic';
 type DispatchResult = {
@@ -47,21 +50,21 @@ function route(protocol: Protocol): RouteResult {
 	};
 }
 
-function dispatch(protocol: Protocol): Promise<DispatchResult> {
+function dispatch(protocol: Protocol, stream = false): Promise<DispatchResult> {
 	if (protocol === 'chat') {
 		return dispatchOpenAiRoute(
-			route(protocol), { messages: [] }, undefined, undefined, undefined, undefined,
+			route(protocol), { messages: [], stream }, undefined, undefined, undefined, undefined,
 			'gen-json-contract',
 		);
 	}
 	if (protocol === 'responses') {
 		return dispatchOpenAiResponsesRoute(
-			route(protocol), { input: 'hi' }, undefined, undefined, undefined, undefined,
+			route(protocol), { input: 'hi', stream }, undefined, undefined, undefined, undefined,
 			'gen-json-contract',
 		);
 	}
 	return dispatchAnthropicRoute(
-		route(protocol), { messages: [] }, undefined, undefined, undefined, undefined,
+		route(protocol), { messages: [], stream }, undefined, undefined, undefined, undefined,
 		'gen-json-contract',
 	);
 }
@@ -94,12 +97,18 @@ async function withFetchResponse(
 const validBody: Record<Protocol, Record<string, unknown>> = {
 	chat: {
 		id: 'chatcmpl-upstream',
+		object: 'chat.completion',
+		created: 1_700_000_000,
 		model: 'private/provider-model',
 		choices: [{ index: 0, message: { role: 'assistant', content: 'ok' }, finish_reason: 'stop' }],
 		usage: { prompt_tokens: 2, completion_tokens: 3, total_tokens: 5 },
 	},
 	responses: {
 		id: 'resp-upstream',
+		object: 'response',
+		created_at: 1_700_000_000,
+		completed_at: 1_700_000_001,
+		error: null,
 		model: 'private/provider-model',
 		status: 'completed',
 		output: [],
@@ -108,8 +117,11 @@ const validBody: Record<Protocol, Record<string, unknown>> = {
 	anthropic: {
 		id: 'msg-upstream',
 		type: 'message',
+		role: 'assistant',
 		model: 'private/provider-model',
 		content: [],
+		stop_reason: 'end_turn',
+		stop_sequence: null,
 		usage: { input_tokens: 2, output_tokens: 3 },
 	},
 };
@@ -135,7 +147,10 @@ describe('bounded non-streaming text JSON responses', () => {
 				assert.equal(result.response.headers.get('content-length'), null);
 				assert.equal(result.response.headers.get('content-encoding'), null);
 				assert.equal(result.response.headers.get('transfer-encoding'), null);
-				assert.equal((await result.usagePromise).total_tokens, 5);
+				const usage = await result.usagePromise;
+				assert.equal(usage.total_tokens, 5);
+				assert.equal(usage.native_tokens_prompt, 2);
+				assert.equal(usage.native_tokens_completion, 3);
 				assert.equal((await result.response.json() as { responseId?: string }).responseId, 'gemini-response');
 			}
 		);
@@ -175,9 +190,202 @@ describe('bounded non-streaming text JSON responses', () => {
 					assert.equal(result.response.bodyUsed, false);
 					const body = JSON.parse(await result.response.text()) as Record<string, unknown>;
 					assert.equal(body.model, 'public/model');
-					assert.equal((await result.usagePromise).total_tokens, 5);
+					const usage = await result.usagePromise;
+					assert.equal(usage.total_tokens, 5);
+					assert.equal(usage.native_tokens_prompt, 2);
+					assert.equal(usage.native_tokens_completion, 3);
+					assert.equal(
+						usage.native_tokens_cached,
+						protocol === 'anthropic' ? 0 : null,
+					);
+					if (protocol === 'chat') {
+						assert.equal(usage.finish_reason, 'stop');
+						assert.equal(usage.native_finish_reason, 'stop');
+					} else if (protocol === 'anthropic') {
+						assert.equal(usage.finish_reason, 'stop');
+						assert.equal(usage.native_finish_reason, 'end_turn');
+					} else {
+						assert.equal(usage.finish_reason, undefined);
+						assert.equal(usage.native_finish_reason, undefined);
+					}
 					assert.equal(result.meta, undefined);
 				},
+			);
+		}
+	});
+
+	it('uses Chat choice zero and preserves conservative Anthropic finish semantics', async () => {
+		await withFetchResponse(
+			() => Response.json({
+				...validBody.chat,
+				choices: [
+					{ index: 1, message: { role: 'assistant', content: 'later' }, finish_reason: 'length' },
+					{
+						index: 0,
+						message: { role: 'assistant', content: 'primary' },
+						finish_reason: 'tool_calls',
+						native_finish_reason: 'tool_use',
+					},
+				],
+			}),
+			async () => {
+				const usage = await (await dispatch('chat')).usagePromise;
+				assert.equal(usage.finish_reason, 'tool_calls');
+				assert.equal(usage.native_finish_reason, 'tool_use');
+			},
+		);
+
+		for (const [native, canonical] of [
+			['refusal', 'content_filter'],
+			['model_context_window_exceeded', 'length'],
+			['pause_turn', null],
+			['compaction', null],
+		] as const) {
+			await withFetchResponse(
+				() => Response.json({ ...validBody.anthropic, stop_reason: native }),
+				async () => {
+					const usage = await (await dispatch('anthropic')).usagePromise;
+					assert.equal(usage.finish_reason, canonical);
+					assert.equal(usage.native_finish_reason, native);
+				},
+			);
+		}
+	});
+
+	it('keeps optional Chat and Responses usage non-authoritative when omitted', async () => {
+		for (const protocol of ['chat', 'responses'] as const) {
+			const body = { ...validBody[protocol] };
+			delete body.usage;
+			await withFetchResponse(
+				() => Response.json(body),
+				async () => {
+					const result = await dispatch(protocol);
+					assert.equal(result.response.status, 200);
+					assert.equal((await result.usagePromise).raw_usage, null);
+					assert.equal((await result.usagePromise).total_tokens, 0);
+					assert.equal((await result.usagePromise).native_tokens_prompt, undefined);
+				}
+			);
+		}
+	});
+
+	it('rejects protocol-invalid accepted objects without exposing provider fields', async () => {
+		const invalidBodies: Record<Protocol, Array<Record<string, unknown>>> = {
+			chat: [
+				{ ...validBody.chat, object: 'chat.completion.chunk' },
+				{ ...validBody.chat, id: 'chatcmpl-bad\nid' },
+				{ ...validBody.chat, choices: [] },
+				{
+					...validBody.chat,
+					choices: [{ index: 0, message: { role: 'user', content: 'bad' }, finish_reason: 'stop' }],
+				},
+				{
+					...validBody.chat,
+					usage: { prompt_tokens: 2, completion_tokens: 3, total_tokens: 99 },
+				},
+				{
+					...validBody.chat,
+					choices: Array.from(
+						{ length: TEXT_SUCCESS_RESPONSE_MAX_COLLECTION_ITEMS + 1 },
+						(_, index) => ({
+							index,
+							message: { role: 'assistant', content: '' },
+							finish_reason: 'stop',
+						}),
+					),
+				},
+			],
+			responses: [
+				{ ...validBody.responses, object: 'response.completed' },
+				{ ...validBody.responses, id: 'resp bad' },
+				{ ...validBody.responses, status: 'unknown' },
+				{ ...validBody.responses, output: ['private-leak'] },
+				{
+					...validBody.responses,
+					usage: { input_tokens: 2, output_tokens: 3, total_tokens: 4 },
+				},
+				{ ...validBody.responses, status: 'failed', error: null },
+				{
+					...validBody.responses,
+					output: Array.from(
+						{ length: TEXT_SUCCESS_RESPONSE_MAX_COLLECTION_ITEMS + 1 },
+						() => ({ type: 'message' }),
+					),
+				},
+			],
+			anthropic: [
+				{ ...validBody.anthropic, type: 'message_start' },
+				{ ...validBody.anthropic, id: 'msg bad' },
+				{ ...validBody.anthropic, role: 'user' },
+				{ ...validBody.anthropic, content: ['private-leak'] },
+				{ ...validBody.anthropic, usage: { input_tokens: 2.5, output_tokens: 3 } },
+				{ ...validBody.anthropic, usage: undefined },
+				{
+					...validBody.anthropic,
+					content: Array.from(
+						{ length: TEXT_SUCCESS_RESPONSE_MAX_COLLECTION_ITEMS + 1 },
+						() => ({ type: 'text', text: '' }),
+					),
+				},
+			],
+		};
+
+		for (const protocol of ['chat', 'responses', 'anthropic'] as const) {
+			for (const body of invalidBodies[protocol]) {
+				await withFetchResponse(
+					() => Response.json({ ...body, private_secret: 'must-not-leak' }),
+					async () => {
+						const result = await dispatch(protocol);
+						assert.equal(result.response.status, 502, protocol);
+						assert.equal(result.meta?.upstreamOutcomeUnknown, true, protocol);
+						assert.equal(result.meta?.failoverForbidden, true, protocol);
+						assert.equal(result.meta?.gatewayGeneratedError, true, protocol);
+						assert.doesNotMatch(await result.response.text(), /must-not-leak|private_secret/);
+					}
+				);
+			}
+		}
+	});
+
+	it('requires the requested JSON or EventSource transport and cancels mismatches', async () => {
+		for (const protocol of ['chat', 'responses', 'anthropic'] as const) {
+			for (const streamRequested of [false, true]) {
+				let cancelled = 0;
+				const bytes = new TextEncoder().encode(
+					streamRequested ? JSON.stringify(validBody[protocol]) : 'must-not-leak',
+				);
+				const body = new ReadableStream<Uint8Array>({
+					start(controller) { controller.enqueue(bytes); },
+					cancel() { cancelled += 1; },
+				});
+				await withFetchResponse(
+					() => new Response(body, {
+						status: 200,
+						headers: {
+							'Content-Type': streamRequested ? 'application/json' : 'text/plain',
+						},
+					}),
+					async () => {
+						const result = await dispatch(protocol, streamRequested);
+						assert.equal(result.response.status, 502, `${protocol}/${streamRequested}`);
+						assert.equal(result.meta?.upstreamOutcomeUnknown, true);
+						assert.equal(result.meta?.failoverForbidden, true);
+						assert.doesNotMatch(await result.response.text(), /must-not-leak/);
+					}
+				);
+				assert.equal(cancelled, 1, `${protocol}/${streamRequested}`);
+			}
+
+			await withFetchResponse(
+				() => new Response(null, {
+					status: 200,
+					headers: { 'Content-Type': 'text/event-stream' },
+				}),
+				async () => {
+					const result = await dispatch(protocol, true);
+					assert.equal(result.response.status, 502, `${protocol}/empty-stream`);
+					assert.equal(result.meta?.upstreamOutcomeUnknown, true);
+				}
 			);
 		}
 	});

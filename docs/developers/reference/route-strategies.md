@@ -111,11 +111,13 @@ Affinity 分数：`score = max(1, weight) / -ln(u)`，`u` 来自 FNV-1a（`route
 路由池可另开 **供应商粘性**（`sticky_enabled` + `sticky_idle_ttl_seconds`），与上述四种层内策略正交：
 
 1. 无有效绑定时：仍按 **Priority → 层内策略 → 故障转移（Failover）** 选路；成功后写入共享表 `route_pool_sticky_bindings`。
-2. 有有效绑定时：将该上游目标（Upstream Target）**跨优先级层插到尝试序列最前**；成功则滑动续期（默认空闲 1h，60s 内 touch 合并）。
+2. 有有效绑定时：在每个凭据分区内将该上游目标（Upstream Target）**跨优先级层前置**；成功则滑动续期（默认空闲 1h，60s 内 touch 合并）。全局凭据顺序仍为主 BYOK → 共享/平台容量 → 兜底 BYOK，粘性不会跨分区改变该顺序。
 3. 供应商可归因故障（429 / 5xx / 401–403 / 524 / 网络）→ CAS 解绑并继续常规计划；400/404 / 图片 abort **不解绑**。
 4. 粘到低优先级层后**不主动探测**高层；仅故障、配置变更（`sticky_epoch++`）或空闲过期后重选。
 5. Lookup 细分：`invalid_circuit`（熔断中）保留旧绑定且不重绑；`invalid_target`（目标不在候选）用 `expectedToken` CAS 覆盖；`invalid_epoch` 由既有 expiry/epoch CAS 覆盖。
 6. `route_trace.sticky` 在 bind/touch CAS settle 后写入，便于观察 `unchanged` / `storage_error`。过期行由机会式 GC（~1/500 请求）清理。
+
+当 `lookup=hit` 但另一目标的主 BYOK 在更早的凭据分区直接成功时，粘性目标没有真正发出请求：`attempted_target` 保持 `null`、`result=unchanged`，原绑定也不会被 touch 或重绑。
 
 管理后台：在拓扑视图（Topology）的路由组或路由池节点中，点击供应商粘性状态芯片打开配置弹窗。运维迁移见 [route-pool-sticky-routing-cutover.md](../../operators/migrations/route-pool-sticky-routing-cutover.md)。
 

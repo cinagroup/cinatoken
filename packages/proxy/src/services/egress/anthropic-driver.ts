@@ -7,7 +7,12 @@ import type { UsageFromStream } from '../proxy';
 import { buildRouteRequestBody } from '../route-default-params';
 import { extractUpstreamRequestId, normalizeUpstreamId } from './upstream-request-id';
 import type { RequestTimingAttempt, RequestTimingCollector } from '../request-timing';
-import { parseSseDataLine } from './sse-data-line';
+import {
+  BoundedSseEventFramer,
+  parseSseEventData,
+  rewriteSseEventData,
+  terminateSseEvent,
+} from './sse-data-line';
 import {
   markUpstreamOutcomeUnknown,
   type ProxyDispatchMeta,
@@ -18,10 +23,19 @@ import {
   sanitizePublicErrorMessage,
 } from '../openrouter-error-protocol';
 import {
+  cancelInvalidTextSuccessResponse,
+  invalidTextSuccessResponse,
   preDispatchCancelledTextResponse,
   readBoundedTextJsonObject,
   rebuildTextJsonResponse,
+  TEXT_SUCCESS_RESPONSE_MAX_COLLECTION_ITEMS,
 } from './text-json-response';
+import {
+  normalizeAnthropicResponseServiceTier,
+  normalizeOpenAiResponseServiceTier,
+  normalizeResponseTextSpeed,
+} from './service-tier-contract';
+import { finishReasonsFromAnthropicStopReason } from './finish-reason-contract';
 
 const EMPTY_USAGE_LOCAL: UsageFromStream = {
   input_tokens: 0,
@@ -34,7 +48,9 @@ const EMPTY_USAGE_LOCAL: UsageFromStream = {
 };
 
 /** Bound persistent SSE framing state; provider events above this are invalid. */
-export const MAX_ANTHROPIC_SSE_LINE_CHARS = 256 * 1024;
+export const MAX_ANTHROPIC_SSE_EVENT_CHARS = 256 * 1024;
+/** @deprecated Kept for callers that imported the former line-oriented limit. */
+export const MAX_ANTHROPIC_SSE_LINE_CHARS = MAX_ANTHROPIC_SSE_EVENT_CHARS;
 const encoder = new TextEncoder();
 
 type AnthropicUsage = {
@@ -42,13 +58,71 @@ type AnthropicUsage = {
   output_tokens?: number;
   cache_read_input_tokens?: number;
   cache_creation_input_tokens?: number;
+  service_tier?: unknown;
+  speed?: unknown;
 };
 
+function isPlainObject(value: unknown): value is Record<string, unknown> {
+  return value != null && typeof value === 'object' && !Array.isArray(value);
+}
+
+function nonNegativeSafeInteger(value: unknown): value is number {
+  return typeof value === 'number' && Number.isSafeInteger(value) && value >= 0;
+}
+
+function optionalSafeCount(value: unknown): boolean {
+  return value === undefined || nonNegativeSafeInteger(value);
+}
+
+function validAnthropicUsage(value: unknown): value is AnthropicUsage {
+  if (
+    !isPlainObject(value)
+    || !nonNegativeSafeInteger(value.input_tokens)
+    || !nonNegativeSafeInteger(value.output_tokens)
+    || !optionalSafeCount(value.cache_read_input_tokens)
+    || !optionalSafeCount(value.cache_creation_input_tokens)
+  ) return false;
+  const cacheRead = nonNegativeSafeInteger(value.cache_read_input_tokens)
+    ? value.cache_read_input_tokens
+    : 0;
+  const cacheWrite = nonNegativeSafeInteger(value.cache_creation_input_tokens)
+    ? value.cache_creation_input_tokens
+    : 0;
+  return Number.isSafeInteger(
+    value.input_tokens
+      + value.output_tokens
+      + cacheRead
+      + cacheWrite,
+  );
+}
+
+function validAnthropicSuccessResponse(value: Record<string, unknown>): boolean {
+  if (
+    value.type !== 'message'
+    || value.role !== 'assistant'
+    || normalizeUpstreamId(value.id) == null
+    || typeof value.model !== 'string'
+    || !value.model.trim()
+    || !Array.isArray(value.content)
+    || value.content.length > TEXT_SUCCESS_RESPONSE_MAX_COLLECTION_ITEMS
+    || !Object.prototype.hasOwnProperty.call(value, 'stop_reason')
+    || (value.stop_reason !== null && (
+      typeof value.stop_reason !== 'string' || !value.stop_reason.trim()
+    ))
+    || !Object.prototype.hasOwnProperty.call(value, 'stop_sequence')
+    || (value.stop_sequence !== null && typeof value.stop_sequence !== 'string')
+    || !validAnthropicUsage(value.usage)
+  ) return false;
+  return value.content.every((block) => isPlainObject(block)
+    && typeof block.type === 'string'
+    && block.type.trim().length > 0);
+}
+
 type SSEState = {
-  lineBuffer: string;
   sawMessageStop: boolean;
   sawFailure: boolean;
   associationId: string | null;
+  serviceTier: ReturnType<typeof normalizeAnthropicResponseServiceTier>;
 };
 
 function usageFromAnthropic(u: AnthropicUsage): UsageFromStream {
@@ -62,7 +136,8 @@ function usageFromAnthropic(u: AnthropicUsage): UsageFromStream {
   // regular = input_tokens - cache_read - cache_write.
   const inputTokensTotal = netInputAfterBreakpoint + cacheRead + cacheWrite;
   const rawJson = JSON.stringify(u);
-  return {
+	const hasNativeUsage = validAnthropicUsage(u);
+  const usage: UsageFromStream = {
     input_tokens: inputTokensTotal,
     output_tokens: outputTokens,
     cache_read_tokens: cacheRead,
@@ -70,7 +145,17 @@ function usageFromAnthropic(u: AnthropicUsage): UsageFromStream {
     reasoning_tokens: 0,
     total_tokens: inputTokensTotal + outputTokens,
     raw_usage: rawJson,
+    service_tier: normalizeOpenAiResponseServiceTier(u.service_tier),
+	native_tokens_prompt: hasNativeUsage ? inputTokensTotal : null,
+	native_tokens_completion: hasNativeUsage ? outputTokens : null,
+	native_tokens_cached: hasNativeUsage ? cacheRead : null,
+	native_tokens_reasoning: null,
+	native_tokens_completion_images: null,
   };
+  if (Object.prototype.hasOwnProperty.call(u, 'speed')) {
+    usage.speed = normalizeResponseTextSpeed(u.speed);
+  }
+  return usage;
 }
 
 function applyUsage(target: UsageFromStream, next: UsageFromStream): void {
@@ -81,6 +166,13 @@ function applyUsage(target: UsageFromStream, next: UsageFromStream): void {
   target.reasoning_tokens = next.reasoning_tokens;
   target.total_tokens = next.total_tokens;
   target.raw_usage = next.raw_usage;
+  target.service_tier = next.service_tier;
+	target.native_tokens_prompt = next.native_tokens_prompt;
+	target.native_tokens_completion = next.native_tokens_completion;
+	target.native_tokens_cached = next.native_tokens_cached;
+	target.native_tokens_reasoning = next.native_tokens_reasoning;
+	target.native_tokens_completion_images = next.native_tokens_completion_images;
+  if (Object.prototype.hasOwnProperty.call(next, 'speed')) target.speed = next.speed;
 }
 
 export function hasAnthropicReasoningDelta(parsed: {
@@ -112,14 +204,20 @@ export function hasAnthropicContentDelta(parsed: {
 type AnthropicStreamEvent = {
   type?: string;
   model?: unknown;
-  delta?: { type?: unknown; text?: unknown; partial_json?: unknown; thinking?: unknown };
+  delta?: {
+    type?: unknown;
+    text?: unknown;
+    partial_json?: unknown;
+    thinking?: unknown;
+    stop_reason?: unknown;
+  };
   usage?: AnthropicUsage;
   message?: { id?: string; model?: unknown; usage?: AnthropicUsage };
   error?: { type?: unknown; message?: unknown; error_type?: unknown };
   request_id?: unknown;
 };
 
-type ProcessedAnthropicLine = { wire: string; stop: boolean };
+type ProcessedAnthropicEvent = { wire: string; stop: boolean };
 
 function canonicalAnthropicErrorType(nativeType: unknown): string {
   switch (nativeType) {
@@ -134,17 +232,17 @@ function canonicalAnthropicErrorType(nativeType: unknown): string {
   }
 }
 
-function processAnthropicSseLine(params: {
-  line: string;
+function processAnthropicSseEvent(params: {
+  event: string;
   state: SSEState;
   usage: UsageFromStream;
   timing?: RequestTimingCollector | null;
   publicModelId?: string;
-}): ProcessedAnthropicLine {
-  const parsedData = parseSseDataLine(params.line);
-  if (parsedData === null) return { wire: `${params.line}\n`, stop: false };
+}): ProcessedAnthropicEvent {
+  const parsedData = parseSseEventData(params.event);
+  if (parsedData === null) return { wire: params.event, stop: false };
   const data = parsedData.trim();
-  if (!data) return { wire: `${params.line}\n`, stop: false };
+  if (!data) return { wire: params.event, stop: false };
   if (data === '[DONE]') {
     params.usage.stream_error = params.usage.stream_error ?? 'Anthropic stream ended without message_stop';
     params.state.sawFailure = true;
@@ -178,10 +276,34 @@ function processAnthropicSseLine(params: {
     params.state.associationId = messageId;
     params.usage.upstreamMessageId ??= messageId;
   }
-  const usageSnapshot = parsed.usage ?? parsed.message?.usage;
-  if (usageSnapshot) applyUsage(params.usage, usageFromAnthropic(usageSnapshot));
-
   let changed = false;
+	if (parsed.usage) {
+		if (Object.prototype.hasOwnProperty.call(parsed.usage, 'service_tier')) {
+			params.state.serviceTier = normalizeAnthropicResponseServiceTier(parsed.usage.service_tier);
+		}
+		parsed.usage.service_tier = params.state.serviceTier;
+		if (Object.prototype.hasOwnProperty.call(parsed.usage, 'speed')) {
+			parsed.usage.speed = normalizeResponseTextSpeed(parsed.usage.speed);
+		}
+		changed = true;
+	}
+	if (parsed.message?.usage) {
+		if (Object.prototype.hasOwnProperty.call(parsed.message.usage, 'service_tier')) {
+			params.state.serviceTier = normalizeAnthropicResponseServiceTier(parsed.message.usage.service_tier);
+		}
+		parsed.message.usage.service_tier = params.state.serviceTier;
+		if (Object.prototype.hasOwnProperty.call(parsed.message.usage, 'speed')) {
+			parsed.message.usage.speed = normalizeResponseTextSpeed(parsed.message.usage.speed);
+		}
+		changed = true;
+	}
+	const usageSnapshot = parsed.usage ?? parsed.message?.usage;
+	if (usageSnapshot) applyUsage(params.usage, usageFromAnthropic(usageSnapshot));
+	if (parsed.type === 'message_delta' && Object.prototype.hasOwnProperty.call(parsed.delta ?? {}, 'stop_reason')) {
+		const reasons = finishReasonsFromAnthropicStopReason(parsed.delta?.stop_reason);
+		params.usage.finish_reason = reasons.finishReason;
+		params.usage.native_finish_reason = reasons.nativeFinishReason;
+	}
   if (params.publicModelId && Object.prototype.hasOwnProperty.call(parsed, 'model')) {
     parsed.model = params.publicModelId;
     changed = true;
@@ -218,7 +340,9 @@ function processAnthropicSseLine(params: {
   }
 
   return {
-    wire: `${changed ? `data: ${JSON.stringify(parsed)}` : params.line}\n`,
+    wire: changed
+      ? rewriteSseEventData(params.event, JSON.stringify(parsed))
+      : params.event,
     stop: parsed.type === 'error' || parsed.type === 'message_stop',
   };
 }
@@ -237,11 +361,15 @@ async function pumpWithUsageTracking(
   const reader = upstream.getReader();
   const writer = downstream.getWriter();
   const state: SSEState = {
-    lineBuffer: '',
     sawMessageStop: false,
     sawFailure: false,
     associationId: normalizeUpstreamId(publicCorrelationId),
+    serviceTier: null,
   };
+  const framer = new BoundedSseEventFramer(
+    MAX_ANTHROPIC_SSE_EVENT_CHARS,
+    'Anthropic SSE event exceeded the gateway framing limit',
+  );
   let clientDisconnected = requestSignal?.aborted === true;
 
   const markClientDisconnected = (): void => {
@@ -268,27 +396,28 @@ async function pumpWithUsageTracking(
       return false;
     }
   };
-  const processLine = (line: string): ProcessedAnthropicLine => processAnthropicSseLine({
-    line,
+  const processEvent = (event: string): ProcessedAnthropicEvent => processAnthropicSseEvent({
+    event,
     state,
     usage,
     timing,
     publicModelId,
   });
+  const handleEvent = async (event: string): Promise<boolean> => {
+    const processed = processEvent(event);
+    const written = await writeWire(processed.wire);
+    return processed.stop || !written || clientDisconnected;
+  };
 
   try {
     while (true) {
       if (clientDisconnected) break;
       const { done, value } = await reader.read();
       if (done) {
-        state.lineBuffer += decoder.decode();
-        if (state.lineBuffer.length > MAX_ANTHROPIC_SSE_LINE_CHARS) {
-          throw new Error('Anthropic SSE event exceeded the gateway framing limit');
-        }
-        if (!clientDisconnected && state.lineBuffer.trim()) {
-          const processed = processLine(state.lineBuffer);
-          state.lineBuffer = '';
-          await writeWire(processed.wire);
+        const stopped = await framer.push(decoder.decode(), handleEvent);
+        const remainder = stopped ? '' : framer.finish();
+        if (!clientDisconnected && remainder.trim()) {
+          await handleEvent(terminateSseEvent(remainder));
         }
         if (!state.sawMessageStop && !state.sawFailure && !clientDisconnected) {
           usage.stream_error = usage.stream_error ?? 'Upstream Anthropic stream ended before message_stop';
@@ -299,29 +428,7 @@ async function pumpWithUsageTracking(
       }
 
       if (value.byteLength > 0) timing?.markFirstByte();
-      state.lineBuffer += decoder.decode(value, { stream: true });
-      if (state.lineBuffer.length > MAX_ANTHROPIC_SSE_LINE_CHARS && !state.lineBuffer.includes('\n')) {
-        throw new Error('Anthropic SSE event exceeded the gateway framing limit');
-      }
-      const lines = state.lineBuffer.split('\n');
-      state.lineBuffer = lines.pop() ?? '';
-      if (state.lineBuffer.length > MAX_ANTHROPIC_SSE_LINE_CHARS) {
-        throw new Error('Anthropic SSE event exceeded the gateway framing limit');
-      }
-      let forward = '';
-      let stop = false;
-      for (const line of lines) {
-        if (line.length > MAX_ANTHROPIC_SSE_LINE_CHARS) {
-          throw new Error('Anthropic SSE event exceeded the gateway framing limit');
-        }
-        const processed = processLine(line);
-        forward += processed.wire;
-        if (processed.stop) {
-          stop = true;
-          break;
-        }
-      }
-      await writeWire(forward);
+      const stop = await framer.push(decoder.decode(value, { stream: true }), handleEvent);
       if (stop || clientDisconnected) {
         await reader.cancel(stop ? 'Anthropic SSE terminal event received' : requestSignal?.reason).catch(() => undefined);
         break;
@@ -329,6 +436,7 @@ async function pumpWithUsageTracking(
     }
   } catch (error) {
     if (!clientDisconnected) {
+      await reader.cancel('Anthropic SSE processing failed').catch(() => undefined);
       usage.stream_error = usage.stream_error ?? sanitizePublicErrorMessage(
         error instanceof Error ? error.message : String(error),
         'Upstream provider stream interrupted',
@@ -405,13 +513,6 @@ async function nonStreamResponseWithUsage(
   usagePromise: Promise<UsageFromStream>;
   meta?: ProxyDispatchMeta;
 }> {
-  const contentType = response.headers.get('Content-Type') ?? '';
-  if (!contentType.toLowerCase().includes('application/json')) {
-    return {
-      response,
-      usagePromise: Promise.resolve({ ...EMPTY_USAGE_LOCAL }),
-    };
-  }
   const materialized = await readBoundedTextJsonObject(response, {
     skin: 'anthropic',
     requestId: publicCorrelationId,
@@ -426,12 +527,30 @@ async function nonStreamResponseWithUsage(
   }
 
   const parsed = materialized.value;
+  if (!validAnthropicSuccessResponse(parsed)) {
+    const invalid = invalidTextSuccessResponse({
+      skin: 'anthropic',
+      protocol: 'Anthropic Messages',
+      requestId: publicCorrelationId,
+    });
+    return {
+      ...invalid,
+      usagePromise: Promise.resolve({ ...EMPTY_USAGE_LOCAL }),
+    };
+  }
   const usageCandidate = parsed.usage;
-  const usage = usageCandidate != null
-    && typeof usageCandidate === 'object'
-    && !Array.isArray(usageCandidate)
-    ? usageFromAnthropic(usageCandidate as AnthropicUsage)
-    : { ...EMPTY_USAGE_LOCAL };
+	(usageCandidate as AnthropicUsage).service_tier = normalizeAnthropicResponseServiceTier(
+		(usageCandidate as AnthropicUsage).service_tier,
+	);
+  if (Object.prototype.hasOwnProperty.call(usageCandidate as AnthropicUsage, 'speed')) {
+    (usageCandidate as AnthropicUsage).speed = normalizeResponseTextSpeed(
+      (usageCandidate as AnthropicUsage).speed,
+    );
+  }
+  const usage = usageFromAnthropic(usageCandidate as AnthropicUsage);
+	const reasons = finishReasonsFromAnthropicStopReason(parsed.stop_reason);
+	usage.finish_reason = reasons.finishReason;
+	usage.native_finish_reason = reasons.nativeFinishReason;
   const msgId = normalizeUpstreamId(parsed.id);
   if (msgId) usage.upstreamMessageId = msgId;
   if (publicModelId) parsed.model = publicModelId;
@@ -475,7 +594,7 @@ export async function dispatchAnthropicRoute(
   });
   if (requestSignal?.aborted) return cancelledBeforeDispatch();
   const { secret } = await resolveProviderUpstreamSecret(route.providerApiKey);
-  const requestBody = {
+  const requestBody: Record<string, unknown> = {
     ...buildRouteRequestBody(route, body),
     model: route.providerModelName,
   };
@@ -505,7 +624,9 @@ export async function dispatchAnthropicRoute(
 
   if (response.ok) {
     const contentType = response.headers.get('Content-Type') ?? '';
-    if (contentType.toLowerCase().includes('application/json')) {
+    const normalizedContentType = contentType.toLowerCase();
+    const streamRequested = requestBody.stream === true;
+    if (!streamRequested && normalizedContentType.includes('application/json')) {
       const result = await nonStreamResponseWithUsage(
         response,
         timing,
@@ -514,7 +635,7 @@ export async function dispatchAnthropicRoute(
       );
       return { ...result, upstreamRequestId };
     }
-    if (response.body) {
+    if (streamRequested && response.body && normalizedContentType.includes('text/event-stream')) {
       const result = streamResponseWithUsage(
         response,
         requestSignal,
@@ -524,6 +645,17 @@ export async function dispatchAnthropicRoute(
       );
       return { ...result, upstreamRequestId };
     }
+    const invalid = await cancelInvalidTextSuccessResponse(response, {
+      skin: 'anthropic',
+      protocol: 'Anthropic Messages',
+      requestId: publicCorrelationId,
+    });
+    timing?.markStreamComplete();
+    return {
+      ...invalid,
+      usagePromise: Promise.resolve({ ...EMPTY_USAGE_LOCAL }),
+      upstreamRequestId,
+    };
   }
 
   return {

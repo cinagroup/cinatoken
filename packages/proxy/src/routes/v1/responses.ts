@@ -13,11 +13,11 @@ import {
 } from '../../services/route-strategies';
 import { proxyResponses, EMPTY_USAGE, type ProxyResult } from '../../services/proxy';
 import { finalizeRequestLogJson } from '../../services/request-log-shared';
+import { generationRequestLogContext } from '../../services/generation-request-context';
 import { summarizeOpenAiToolsForLog } from '../../services/request-log-tools-summary';
 import { buildRouteRequestBody } from '../../services/route-default-params';
 import { recordUsage } from '../../services/usage-tracker';
 import { scheduleBackgroundWork } from '../../runtime/schedule-background-work';
-import { stickyConfigFromSurface } from '../../services/provider-sticky-routing';
 import {
 	computeRequestLogStatus,
 	formatHttpErrorTextForRequestLog,
@@ -45,31 +45,39 @@ import { resolveRequestPreset } from '@octafuse/core';
 import {
 	auditGuardrailOutputDecision,
 	filterGuardrailResponse,
-	forfeitRequestGuardrailBudgets,
-	markRequestGuardrailBudgetsDispatched,
-	releaseRequestGuardrailBudgets,
-	reserveRequestGuardrailBudgets,
 	runRequestGuardrails,
 } from '../../services/request-guardrails';
 import {
 	estimateGuardrailBudgetMicros,
+	estimateGatewayKeyByokBudgetMicros,
 	estimateOrdinaryBudgetChargedCost,
 } from '../../services/guardrail-budget-estimate';
-import {
-	reserveOrdinaryUserBudget,
-	type OrdinaryBudgetLease,
-} from '../../services/ordinary-budget-lifecycle';
+import { createRouteAwareBudgetAdmission } from '../../services/request-budget-admission';
 import {
 	textUsageCostIsUnknown,
 	textUsageWithSafetyTimeout,
 } from '../../services/text-usage-settlement';
+import {
+	attachOpenRouterMetadata,
+	openRouterMetadataRequested,
+	routerMetadataGuardrailStage,
+	type RouterMetadataPipelineStage,
+} from '../../services/openrouter-router-metadata';
+import { resolveServiceTierBillingRoute } from '../../services/service-tier-billing';
+import {
+	buildOpenRouterSessionAffinityKey,
+	openRouterSessionDispatchOptions,
+	prepareOpenRouterSessionRouting,
+	resolveOpenRouterStickyRouting,
+} from '../../services/openrouter-session-routing';
+import { privateByokContextForApiKey } from '../../services/byok-key-pool';
 
 const USAGE_SAFETY_TIMEOUT_MS = 5 * 60 * 1000;
 
 function responsesBodyRedactedForLog(body: Record<string, unknown>): Record<string, unknown> {
 	const out: Record<string, unknown> = {};
 	for (const [k, v] of Object.entries(body)) {
-		if (k === 'input' || k === 'messages' || k === 'prompt' || k === 'data' || k === 'instructions') {
+		if (k === 'input' || k === 'messages' || k === 'prompt' || k === 'data' || k === 'instructions' || k === 'prompt_cache_key') {
 			continue;
 		}
 		if (k === 'tools') {
@@ -131,6 +139,7 @@ responsesRoutes.post('/', async (c) => {
 	const start = Date.now();
 	const requestCorrelationId = c.get('generationId')!;
 	const timing = new RequestTimingCollector();
+	const routerMetadataEnabled = openRouterMetadataRequested(c.req.raw.headers);
 
 	let body: { model?: string; [k: string]: unknown };
 	try {
@@ -142,6 +151,17 @@ responsesRoutes.post('/', async (c) => {
 			message: 'Invalid JSON body',
 		});
 	}
+
+	const preparedSession = prepareOpenRouterSessionRouting(body, c.req.raw.headers);
+	if (!preparedSession.ok) {
+		return gatewayErrorJson(c, {
+			status: 400,
+			code: GatewayErrorCode.invalidRequest,
+			message: preparedSession.message,
+		});
+	}
+	body = preparedSession.body;
+	let sessionRouting = preparedSession.routing;
 
 	const presetResolution = await resolveRequestPreset(repos, apiKey.workspaceId, apiKey.userId, body, 'responses');
 	if (!presetResolution.ok) {
@@ -165,6 +185,7 @@ responsesRoutes.post('/', async (c) => {
 			message: parsedModels.message,
 		});
 	}
+	const preGuardrailModelIds = [...parsedModels.value.modelIds];
 
 	const guardrail = await runRequestGuardrails(repos, {
 		workspaceId: apiKey.workspaceId,
@@ -176,17 +197,52 @@ responsesRoutes.post('/', async (c) => {
 		now: new Date(start),
 	});
 	if (!guardrail.ok) {
-		return gatewayErrorJson(c, {
+		const guardrailResponse = gatewayErrorJson(c, {
 			status: guardrail.status,
 			code: guardrail.code === 'guardrail_invalid' ? GatewayErrorCode.guardrailInvalid : GatewayErrorCode.guardrailBlocked,
 			message: guardrail.message,
+		});
+		const diagnosticPlan = routerMetadataEnabled
+			? await buildModelFallbackPlan(repos, {
+					modelIds: preGuardrailModelIds,
+					body: parsedModels.value.upstreamBody,
+					requestProtocol: 'openai',
+					requestOperation: 'responses',
+					pricingAt: new Date(start),
+				})
+			: null;
+		return attachOpenRouterMetadata(guardrailResponse, {
+			enabled: routerMetadataEnabled,
+			protocol: 'responses',
+			requestHeaders: c.req.raw.headers,
+			requestedModelIds: preGuardrailModelIds,
+			candidates: diagnosticPlan?.ok ? diagnosticPlan.candidates : [],
+			timing,
+			pipeline: guardrail.code === 'guardrail_blocked'
+				? [routerMetadataGuardrailStage('request', 'blocked', 1)]
+				: [],
 		});
 	}
 	body = guardrail.body;
 	parsedModels = parseOpenAiModelFallbacks(body);
 	if (!parsedModels.ok) {
-		return gatewayErrorJson(c, { status: 400, code: GatewayErrorCode.invalidRequest, message: parsedModels.message });
+		return attachOpenRouterMetadata(
+			gatewayErrorJson(c, { status: 400, code: GatewayErrorCode.invalidRequest, message: parsedModels.message }),
+			{
+				enabled: routerMetadataEnabled,
+				protocol: 'responses',
+				requestHeaders: c.req.raw.headers,
+				requestedModelIds: preGuardrailModelIds,
+				candidates: [],
+				timing,
+			},
+		);
 	}
+	sessionRouting = resolveOpenRouterStickyRouting(sessionRouting, body, 'responses');
+	const requestedModelIds = [...parsedModels.value.modelIds];
+	const routerMetadataPipeline: RouterMetadataPipelineStage[] = [];
+	if (guardrail.flagCount > 0) routerMetadataPipeline.push(routerMetadataGuardrailStage('request', 'flagged', guardrail.flagCount));
+	if (guardrail.redactionCount > 0) routerMetadataPipeline.push(routerMetadataGuardrailStage('request', 'redacted', guardrail.redactionCount));
 
 	const fallbackPlan = await buildModelFallbackPlan(repos, {
 		modelIds: parsedModels.value.modelIds,
@@ -196,12 +252,36 @@ responsesRoutes.post('/', async (c) => {
 		pricingAt: new Date(start),
 	});
 	if (!fallbackPlan.ok) {
-		return gatewayErrorJson(c, {
-			status: fallbackPlan.status,
-			code: fallbackPlan.code,
-			message: fallbackPlan.message,
-		});
+		return attachOpenRouterMetadata(
+			gatewayErrorJson(c, {
+				status: fallbackPlan.status,
+				code: fallbackPlan.code,
+				message: fallbackPlan.message,
+			}),
+			{
+				enabled: routerMetadataEnabled,
+				protocol: 'responses',
+				requestHeaders: c.req.raw.headers,
+				requestedModelIds,
+				candidates: [],
+				timing,
+				pipeline: routerMetadataPipeline,
+			},
+		);
 	}
+	const attachRoutedMetadata = (
+		routedResponse: Response,
+		chosenRoute: RouteResult | null = null,
+	): Promise<Response> => attachOpenRouterMetadata(routedResponse, {
+		enabled: routerMetadataEnabled,
+		protocol: 'responses',
+		requestHeaders: c.req.raw.headers,
+		requestedModelIds,
+		candidates: fallbackPlan.candidates,
+		timing,
+		chosenRoute,
+		pipeline: routerMetadataPipeline,
+	});
 
 	const previousResponseId = readPreviousResponseId(body);
 	if (responsesStateRouteUnavailable(
@@ -209,41 +289,53 @@ responsesRoutes.post('/', async (c) => {
 		previousResponseId,
 		fallbackPlan.candidates.length,
 	)) {
-		return gatewayErrorJson(c, {
+		return attachRoutedMetadata(gatewayErrorJson(c, {
 			status: 409,
 			code: GatewayErrorCode.responsesStateRouteUnavailable,
 			message:
 				'previous_response_id cannot be routed: multiple models or upstream targets are eligible and Gateway does not bind Response IDs yet',
-		});
+		}));
 	}
 	const ordinaryEstimate = estimateOrdinaryBudgetChargedCost(
 		fallbackPlan.candidates,
 		apiKey.chargedCostFactors,
 	);
 	if (!ordinaryEstimate.ok) {
-		return gatewayErrorJson(c, {
+		return attachRoutedMetadata(gatewayErrorJson(c, {
 			status: 502,
 			code: GatewayErrorCode.routeResolutionFailed,
 			message: ordinaryEstimate.message,
-		});
+		}));
 	}
-	const ordinaryAdmission = await reserveOrdinaryUserBudget(repos, {
-		requestId: requestCorrelationId,
-		userId: apiKey.userId,
-		apiKeyId: apiKey.keyId,
-		budgetMax: apiKey.budgetMax,
-		expectedBudgetEpoch: apiKey.budgetEpoch,
-		estimatedChargedCost: ordinaryEstimate.estimatedChargedCost,
-		now: new Date(start),
+	const guardrailBudgetMicros = estimateGuardrailBudgetMicros(
+		fallbackPlan.candidates,
+		apiKey.chargedCostFactors,
+	);
+	const byokGatewayKeyBudgetMicros = Math.max(
+		guardrailBudgetMicros,
+		estimateGatewayKeyByokBudgetMicros(fallbackPlan.candidates),
+	);
+	const budgetAdmission = await createRouteAwareBudgetAdmission(repos, {
+		ordinary: {
+			requestId: requestCorrelationId,
+			userId: apiKey.userId,
+			apiKeyId: apiKey.keyId,
+			budgetMax: apiKey.budgetMax,
+			expectedBudgetEpoch: apiKey.budgetEpoch,
+			estimatedChargedCost: ordinaryEstimate.estimatedChargedCost,
+			now: new Date(start),
+		},
+		guardrail: {
+			intents: guardrail.budgetIntents,
+			reservedMicros: guardrailBudgetMicros,
+			now: new Date(start),
+		},
+		privateByokGatewayKey: {
+			includeInLimit: apiKey.includeByokInLimit === true,
+			reservedMicros: byokGatewayKeyBudgetMicros,
+		},
 	});
-	if (!ordinaryAdmission.ok) {
-		return gatewayErrorJson(c, {
-			status: 403,
-			code: GatewayErrorCode.budgetExceeded,
-			message: ordinaryAdmission.error.message,
-		});
-	}
-	const ordinaryBudgetLease: OrdinaryBudgetLease = ordinaryAdmission.lease;
+	const ordinaryBudgetLease = budgetAdmission.ordinaryLease;
 	const terminateOrdinaryBudget = async (reason: string): Promise<void> => {
 		try {
 			await ordinaryBudgetLease.terminateUnknown(reason);
@@ -263,66 +355,10 @@ responsesRoutes.post('/', async (c) => {
 	let response: Response | null = null;
 	let errorBodyText: string | null = null;
 	let upstreamOutcomeUnknownObserved = false;
-	const guardrailBudgetMicros = estimateGuardrailBudgetMicros(
-		fallbackPlan.candidates,
-		apiKey.chargedCostFactors,
-	);
-	let guardrailBudgetAdmissionChecked = false;
-	let guardrailBudgetReserved = false;
-	let guardrailBudgetDispatched = false;
-	const beforeUpstreamDispatch = async (): Promise<void> => {
-		if (guardrailBudgetReserved && !guardrailBudgetDispatched) {
-			try {
-				await markRequestGuardrailBudgetsDispatched(
-					repos,
-					requestCorrelationId,
-					guardrailBudgetReserved,
-				);
-				guardrailBudgetDispatched = true;
-			} catch (error) {
-				await releaseRequestGuardrailBudgets(
-					repos,
-					requestCorrelationId,
-					guardrailBudgetReserved,
-					'dispatch_transition_failed',
-				).catch((releaseError: unknown) => {
-					console.error(
-						`[Gateway Responses] guardrail budget release failed requestId=${requestCorrelationId} error=${releaseError instanceof Error ? releaseError.message : String(releaseError)}`,
-					);
-				});
-				await terminateOrdinaryBudget('guardrail_dispatch_mark_failed');
-				throw error;
-			}
-		}
-		await ordinaryBudgetLease.beforeUpstreamDispatch();
-	};
+	const beforeUpstreamDispatch = (route: RouteResult): Promise<void> =>
+		budgetAdmission.beforeUpstreamDispatch(route);
 
 	if (fallbackPlan.endpointPartition === 'none') {
-		let admission: Awaited<ReturnType<typeof reserveRequestGuardrailBudgets>>;
-		try {
-			admission = await reserveRequestGuardrailBudgets(repos, {
-				requestId: requestCorrelationId,
-				intents: guardrail.budgetIntents,
-				reservedMicros: guardrailBudgetMicros,
-			});
-		} catch (error) {
-			await terminateOrdinaryBudget('guardrail_budget_admission_failed');
-			throw error;
-		}
-		guardrailBudgetAdmissionChecked = true;
-		if (!admission.ok) {
-			await terminateOrdinaryBudget('guardrail_budget_admission_failed');
-			if (admission.blocked) {
-				return gatewayErrorJson(c, {
-					status: 403,
-					code: admission.reason === 'gateway_key_limit' || admission.reason === 'workspace_budget' ? GatewayErrorCode.budgetExceeded : GatewayErrorCode.guardrailBlocked,
-					message: admission.message,
-				});
-			}
-			throw new Error(`Guardrail budget admission failed: ${admission.message}`);
-		}
-		guardrailBudgetReserved = admission.reserved;
-
 		let globalDispatch: Awaited<ReturnType<typeof dispatchGlobalModelFallback>>;
 		try {
 			globalDispatch = await dispatchGlobalModelFallback({
@@ -335,16 +371,20 @@ responsesRoutes.post('/', async (c) => {
 				timing,
 				beforeUpstreamDispatch,
 				proxy: proxyResponses,
-				affinityKey: buildAffinityKey(apiKey.userId, 'global', 'partition-none', 'openai'),
+				affinityKey: sessionRouting.stickyKeyDigest != null && sessionRouting.stickySource != null
+					? buildOpenRouterSessionAffinityKey({
+						userId: apiKey.userId,
+						workspaceId: apiKey.workspaceId,
+						stickyKeyDigest: sessionRouting.stickyKeyDigest,
+						stickySource: sessionRouting.stickySource,
+						baseModelId: 'global',
+					})
+					: buildAffinityKey(apiKey.userId, 'global', 'partition-none', 'openai'),
 				tierKeyPrefix: buildTierKeyPrefix('global', 'partition-none', 'openai'),
+				byok: privateByokContextForApiKey(apiKey),
 			});
 		} catch (error) {
-			await forfeitRequestGuardrailBudgets(
-				repos,
-				requestCorrelationId,
-				guardrailBudgetDispatched,
-				'upstream_request_failed_after_dispatch',
-			).catch(() => undefined);
+			await budgetAdmission.terminateGuardrailUnknown('upstream_request_failed_after_dispatch').catch(() => undefined);
 			await terminateOrdinaryBudget('upstream_dispatch_failed');
 			throw error;
 		}
@@ -366,17 +406,11 @@ responsesRoutes.post('/', async (c) => {
 					globalDispatch.fallbackAttempts,
 				),
 			});
-			if (guardrailBudgetReserved) {
-				await releaseRequestGuardrailBudgets(
-					repos,
-					requestCorrelationId,
-					guardrailBudgetReserved,
-					'upstream_dispatch_not_started',
-				);
-				guardrailBudgetReserved = false;
+			if (budgetAdmission.guardrailReserved && !budgetAdmission.guardrailDispatched) {
+				await budgetAdmission.releaseGuardrailPreDispatch('upstream_dispatch_not_started');
 			}
 			await terminateOrdinaryBudget('model_circuit_terminal');
-			if (circuitBlocked) return circuitBlocked;
+			if (circuitBlocked) return attachRoutedMetadata(circuitBlocked);
 			throw new Error('All globally sorted model candidates were circuit-open');
 		}
 		accumulatedCircuitEvents.push(
@@ -389,12 +423,7 @@ responsesRoutes.post('/', async (c) => {
 			trustedGatewayError: globalDispatch.result.meta?.gatewayGeneratedError === true,
 		}).catch(
 			async (error: unknown) => {
-				await forfeitRequestGuardrailBudgets(
-					repos,
-					requestCorrelationId,
-					guardrailBudgetDispatched,
-					'upstream_response_failed_after_dispatch',
-				).catch(() => undefined);
+				await budgetAdmission.terminateGuardrailUnknown('upstream_response_failed_after_dispatch').catch(() => undefined);
 				await terminateOrdinaryBudget('upstream_response_materialization_failed');
 				throw error;
 			},
@@ -441,11 +470,8 @@ responsesRoutes.post('/', async (c) => {
 				modelFallbackTrace: buildModelFallbackTrace(parsedModels.value.modelIds, fallbackAttempts),
 			});
 			if (circuitBlocked) {
-				if (guardrailBudgetDispatched) {
-					await forfeitRequestGuardrailBudgets(
-						repos,
-						requestCorrelationId,
-						guardrailBudgetReserved,
+				if (budgetAdmission.guardrailDispatched) {
+					await budgetAdmission.forfeitGuardrailPostDispatch(
 						'circuit_short_circuit_after_dispatch',
 					).catch((error: unknown) => {
 						console.error(
@@ -454,41 +480,25 @@ responsesRoutes.post('/', async (c) => {
 					});
 				}
 				await terminateOrdinaryBudget('model_circuit_terminal');
-				return circuitBlocked;
+				return attachRoutedMetadata(circuitBlocked);
 			}
 			fallbackAttempts.pop();
-		}
-
-		if (!guardrailBudgetAdmissionChecked) {
-			let admission: Awaited<ReturnType<typeof reserveRequestGuardrailBudgets>>;
-			try {
-				admission = await reserveRequestGuardrailBudgets(repos, {
-					requestId: requestCorrelationId,
-					intents: guardrail.budgetIntents,
-					reservedMicros: guardrailBudgetMicros,
-				});
-			} catch (error) {
-				await terminateOrdinaryBudget('guardrail_budget_admission_failed');
-				throw error;
-			}
-			guardrailBudgetAdmissionChecked = true;
-			if (!admission.ok) {
-				await terminateOrdinaryBudget('guardrail_budget_admission_failed');
-				if (admission.blocked) {
-					return gatewayErrorJson(c, {
-						status: 403,
-						code: admission.reason === 'gateway_key_limit' || admission.reason === 'workspace_budget' ? GatewayErrorCode.budgetExceeded : GatewayErrorCode.guardrailBlocked,
-						message: admission.message,
-					});
-				}
-				throw new Error(`Guardrail budget admission failed: ${admission.message}`);
-			}
-			guardrailBudgetReserved = admission.reserved;
 		}
 
 		console.log(
 			`[Gateway Responses] forwarding baseModelId=${candidate.baseModelId} clientModel=${candidate.requestedModelId} providerIds=${candidate.routes.map((route) => route.providerId).join(',')} keyId=${apiKey.keyId}`,
 		);
+		const sessionDispatch = openRouterSessionDispatchOptions({
+			routing: sessionRouting,
+			userId: apiKey.userId,
+			workspaceId: apiKey.workspaceId,
+			baseModelId: candidate.baseModelId,
+			routeGroup: candidate.effectiveRouteGroup,
+			protocol: 'openai',
+			surface: candidate.surface,
+			hasProviderPreferences: candidate.hasProviderPreferences,
+			routingPreferences: candidate.routingPreferences,
+		});
 		let result: ProxyResult;
 		try {
 			result = await proxyResponses(
@@ -497,25 +507,23 @@ responsesRoutes.post('/', async (c) => {
 				candidate.upstreamBody,
 				requestSignal,
 				{
-					affinityKey: buildAffinityKey(apiKey.userId, candidate.baseModelId, candidate.effectiveRouteGroup, 'openai'),
+					affinityKey: sessionDispatch.affinityKey,
 					tierKeyPrefix: buildTierKeyPrefix(candidate.baseModelId, candidate.effectiveRouteGroup, 'openai'),
 					strategy: candidate.strategy.base,
 					tierStrategies: candidate.strategy.tierOverrides,
 					timing,
 					routePoolId: candidate.surface?.route_pool_id ?? candidate.routes[0]?.routePoolId ?? null,
-					sticky: candidate.hasProviderPreferences ? null : stickyConfigFromSurface(candidate.surface),
+					sticky: sessionDispatch.sticky,
+					stickySuccessPolicy: sessionDispatch.stickySuccessPolicy,
+					stickyRouteEligible: sessionDispatch.stickyRouteEligible,
 					deferFinalAttempt: !isLastCandidate,
 					beforeUpstreamDispatch,
+					byok: privateByokContextForApiKey(apiKey),
 				},
 				requestCorrelationId,
 			);
 		} catch (error) {
-			await forfeitRequestGuardrailBudgets(
-				repos,
-				requestCorrelationId,
-				guardrailBudgetDispatched,
-				'upstream_request_failed_after_dispatch',
-			).catch((forfeitError: unknown) => {
+			await budgetAdmission.terminateGuardrailUnknown('upstream_request_failed_after_dispatch').catch((forfeitError: unknown) => {
 				console.error(
 					`[Gateway Responses] guardrail budget forfeit failed requestId=${requestCorrelationId} error=${forfeitError instanceof Error ? forfeitError.message : String(forfeitError)}`,
 				);
@@ -534,12 +542,7 @@ responsesRoutes.post('/', async (c) => {
 			requestId: requestCorrelationId,
 			trustedGatewayError: result.meta?.gatewayGeneratedError === true,
 		}).catch(async (error: unknown) => {
-			await forfeitRequestGuardrailBudgets(
-				repos,
-				requestCorrelationId,
-				guardrailBudgetDispatched,
-				'upstream_response_failed_after_dispatch',
-			).catch((forfeitError: unknown) => {
+			await budgetAdmission.terminateGuardrailUnknown('upstream_response_failed_after_dispatch').catch((forfeitError: unknown) => {
 				console.error(
 					`[Gateway Responses] guardrail budget forfeit failed requestId=${requestCorrelationId} error=${forfeitError instanceof Error ? forfeitError.message : String(forfeitError)}`,
 				);
@@ -560,8 +563,12 @@ responsesRoutes.post('/', async (c) => {
 			route_group: candidate.effectiveRouteGroup,
 			status: materialized.response.status,
 			outcome: materialized.response.ok ? 'success' : 'error',
-			provider_id: result.chosenRoute.providerId,
-			route_target_id: result.chosenRoute.targetId,
+			...(result.meta?.admissionDeniedPreDispatch === true
+				? {}
+				: {
+						provider_id: result.chosenRoute.providerId,
+						route_target_id: result.chosenRoute.targetId,
+					}),
 			...(materialized.response.headers.get(GATEWAY_ERROR_CODE_HEADER)
 				? { error_code: materialized.response.headers.get(GATEWAY_ERROR_CODE_HEADER)! }
 				: {}),
@@ -574,7 +581,7 @@ responsesRoutes.post('/', async (c) => {
 			errorBodyText = null;
 			break;
 		}
-		if (materialized.errorBodyText != null) {
+		if (materialized.errorBodyText != null && result.meta?.gatewayGeneratedError !== true) {
 			const circuitEvent = maybeTriggerUserModelCircuitFromUpstream(
 				apiKey.userId,
 				candidate.baseModelId,
@@ -600,12 +607,7 @@ responsesRoutes.post('/', async (c) => {
 	}
 
 	if (!selectedPlan || !proxyResult || !response) {
-		await forfeitRequestGuardrailBudgets(
-			repos,
-			requestCorrelationId,
-			guardrailBudgetDispatched,
-			'fallback_exhausted_after_dispatch',
-		).catch((forfeitError: unknown) => {
+		await budgetAdmission.terminateGuardrailUnknown('fallback_exhausted_after_dispatch').catch((forfeitError: unknown) => {
 			console.error(
 				`[Gateway Responses] guardrail budget forfeit failed requestId=${requestCorrelationId} error=${forfeitError instanceof Error ? forfeitError.message : String(forfeitError)}`,
 			);
@@ -616,15 +618,9 @@ responsesRoutes.post('/', async (c) => {
 	if (ordinaryBudgetLease.state === 'reserved') {
 		await terminateOrdinaryBudget('upstream_dispatch_not_started');
 	}
-	if (guardrailBudgetReserved && !guardrailBudgetDispatched) {
+	if (budgetAdmission.guardrailReserved && !budgetAdmission.guardrailDispatched) {
 		try {
-			await releaseRequestGuardrailBudgets(
-				repos,
-				requestCorrelationId,
-				guardrailBudgetReserved,
-				'upstream_dispatch_not_started',
-			);
-			guardrailBudgetReserved = false;
+			await budgetAdmission.releaseGuardrailPreDispatch('upstream_dispatch_not_started');
 		} catch (error) {
 			console.error(
 				`[Gateway Responses] guardrail budget pre-dispatch release failed requestId=${requestCorrelationId} error=${error instanceof Error ? error.message : String(error)}`,
@@ -648,12 +644,7 @@ responsesRoutes.post('/', async (c) => {
 	let outputGuardrailBlocked = false;
 	if (guardrail.outputFilters.length > 0 && response.ok) {
 		const filtered = await filterGuardrailResponse(response, guardrail.outputFilters).catch(async (error: unknown) => {
-			await forfeitRequestGuardrailBudgets(
-				repos,
-				requestCorrelationId,
-				guardrailBudgetDispatched,
-				'output_guardrail_failed_after_dispatch',
-			).catch((forfeitError: unknown) => {
+			await budgetAdmission.terminateGuardrailUnknown('output_guardrail_failed_after_dispatch').catch((forfeitError: unknown) => {
 				console.error(
 					`[Gateway Responses] guardrail budget forfeit failed requestId=${requestCorrelationId} error=${forfeitError instanceof Error ? forfeitError.message : String(forfeitError)}`,
 				);
@@ -673,12 +664,18 @@ responsesRoutes.post('/', async (c) => {
 		});
 		if (filtered.blockedBy) {
 			outputGuardrailBlocked = true;
+			routerMetadataPipeline.push(routerMetadataGuardrailStage('response', 'blocked', 1));
 			errorBodyText = 'Guardrail blocked response output';
 			response = gatewayErrorJson(c, { status: 403, code: GatewayErrorCode.guardrailBlocked, message: 'Response blocked by output guardrail' });
 		} else {
+			if (filtered.redactionCount > 0) {
+				routerMetadataPipeline.push(routerMetadataGuardrailStage('response', 'redacted', filtered.redactionCount));
+			}
 			response = filtered.response;
 		}
 	}
+
+	response = await attachRoutedMetadata(response, chosenRoute);
 
 	const usageOrSafety = textUsageWithSafetyTimeout(
 		usagePromise,
@@ -692,12 +689,23 @@ responsesRoutes.post('/', async (c) => {
 			.then(async ({ usage: usageCollected, incomplete, timedOut }) => {
 				const latency = Date.now() - start;
 				if (timedOut) timing.markStreamComplete();
+				timing.finalizeSelectedAttemptAvailability({
+					clientCancelled: Boolean(usageCollected.cancelled),
+					invalidResponse: Boolean(usageCollected.stream_error)
+						|| (proxyResult.meta?.gatewayGeneratedError === true && !upstreamResponseOk),
+				});
 				const status = computeRequestLogStatus({
 					cancelled: Boolean(usageCollected.cancelled),
 					responseOk: response.ok,
 					incomplete,
 					streamError: Boolean(usageCollected.stream_error),
 				});
+				const serviceTierBilling = resolveServiceTierBillingRoute(
+					chosenRoute,
+					selectedPlan.routes,
+					usageCollected.service_tier,
+				);
+				const pricingRoute = serviceTierBilling.pricingRoute;
 				const costUnknown = textUsageCostIsUnknown({
 					upstreamResponseOk,
 					usageAvailable: !incomplete,
@@ -705,6 +713,7 @@ responsesRoutes.post('/', async (c) => {
 					streamError: Boolean(usageCollected.stream_error),
 					upstreamOutcomeUnknown: proxyResult.meta?.upstreamOutcomeUnknown === true,
 					responseBodyTooLarge: proxyResult.meta?.responseBodyTooLarge === true,
+					serviceTierPricingUnknown: !serviceTierBilling.exact,
 				});
 				let errorMessage: string | undefined;
 				if (status === 'success') {
@@ -743,7 +752,9 @@ responsesRoutes.post('/', async (c) => {
 					upstream_request_body: upstreamRequestBodyForLog,
 					request_body_logging_mode: c.get('requestBodyLoggingMode'),
 					request_origin: new URL(c.req.url).origin,
+					...generationRequestLogContext(c.req.raw.headers),
 					response_streamed: body.stream === true,
+					session_id: sessionRouting.sessionId,
 					request_protocol: 'openai',
 					request_operation: 'responses',
 					upstream_protocol: chosenRoute.upstreamProtocol,
@@ -756,17 +767,17 @@ responsesRoutes.post('/', async (c) => {
 					model_fallback_trace: modelFallbackTrace,
 					provider_routing_trace: chosenRoute.providerRoutingTrace ?? null,
 					usage: usageCollected,
-					endpoint_pricing_snapshot: chosenRoute.endpoint ?? null,
+					endpoint_pricing_snapshot: pricingRoute.endpoint ?? null,
 					model_pricing_profile: model.pricing_profile ?? null,
-					route_price_override_json: chosenRoute.priceOverrideRaw,
+					route_price_override_json: pricingRoute.priceOverrideRaw,
 					user_charged_cost_factors_json: apiKey.chargedCostFactors,
-					route_metered_profile_json: chosenRoute.routeMeteredProfileJson,
-					route_charged_profile_json: chosenRoute.routeChargedProfileJson,
+					route_metered_profile_json: pricingRoute.routeMeteredProfileJson,
+					route_charged_profile_json: pricingRoute.routeChargedProfileJson,
 					request_started_at_ms: start,
 					route_group: chosenRoute.routeGroup,
 					status,
 					latency_ms: latency,
-					timing: timing.snapshot(),
+					timing: timing.snapshot(usageCollected.upstreamMessageId),
 					error_message: errorMessage,
 					provider_key_id: chosenRoute.providerKeyId ?? null,
 					provider_key_label: chosenRoute.providerKeyLabel ?? null,
@@ -776,7 +787,7 @@ responsesRoutes.post('/', async (c) => {
 					circuit_events: accumulatedCircuitEvents.length > 0 ? accumulatedCircuitEvents : undefined,
 					suppress_error_alert: suppressErrorAlert || undefined,
 					charge_on_error: outputGuardrailBlocked || undefined,
-					guardrail_budget_settlement: guardrailBudgetReserved
+					guardrail_budget_settlement: budgetAdmission.guardrailReserved
 						? { requestId: requestCorrelationId, unknownCost: costUnknown }
 						: undefined,
 					ordinary_budget_settlement:
@@ -794,12 +805,7 @@ responsesRoutes.post('/', async (c) => {
 				console.error(
 					`[Gateway Responses] recordUsage failed baseModelId=${baseModelId} keyId=${apiKey.keyId} error=${err instanceof Error ? err.message : String(err)}`,
 				);
-				await forfeitRequestGuardrailBudgets(
-					repos,
-					requestCorrelationId,
-					guardrailBudgetDispatched,
-					'usage_settlement_failed_after_dispatch',
-				).catch((forfeitError: unknown) => {
+				await budgetAdmission.terminateGuardrailUnknown('usage_settlement_failed_after_dispatch').catch((forfeitError: unknown) => {
 					console.error(
 						`[Gateway Responses] guardrail budget forfeit failed requestId=${requestCorrelationId} error=${forfeitError instanceof Error ? forfeitError.message : String(forfeitError)}`,
 					);

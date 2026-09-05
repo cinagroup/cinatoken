@@ -123,6 +123,7 @@ function PlaygroundPageInner() {
 									audioSendBlocked={s.audioSendBlocked}
 									selectedIsImage={s.selectedIsImage}
 									selectedIsAudio={s.selectedIsAudio}
+									selectedIsRerank={s.selectedIsRerank}
 									selectedIsAudioTranscription={s.selectedIsAudioTranscription}
 									selectedAudioUsesDashScope={s.selectedAudioUsesDashScope}
 									selectedCanUseMicrophone={s.selectedCanUseMicrophone}

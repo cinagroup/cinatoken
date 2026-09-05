@@ -87,6 +87,7 @@ describe('GET /catalog/models', () => {
 					return [{
 				model_id: 'vendor/model', route_group: 'default', request_count: 25,
 				success_count: 24, error_count: 1, input_tokens: 100, output_tokens: 200,
+				total_tokens: 300,
 				avg_latency_ms: 120,
 					}];
 				},
@@ -148,6 +149,7 @@ describe('GET /catalog/models', () => {
 		assert.deepEqual(stats.data, [{
 			id: 'vendor/model', slug: '~dmVuZG9yL21vZGVs', display_name: 'Model', vendor: 'Vendor',
 			request_count: 25, success_rate: 96, avg_latency_ms: 120, output_tokens: 200,
+			total_tokens: 300,
 		}]);
 		assert.equal(statsResponse.headers.get('x-cinatoken-cache'), 'MISS');
 		assert.equal(rawAnalyticsCalls, 0);
@@ -338,7 +340,7 @@ describe('GET /catalog/models', () => {
 					await gate;
 					return [{
 						model_id: 'vendor/model', request_count: 20, success_count: 20,
-						error_count: 0, output_tokens: 10, avg_latency_ms: 20,
+						error_count: 0, output_tokens: 10, total_tokens: 15, avg_latency_ms: 20,
 					}];
 				},
 			},

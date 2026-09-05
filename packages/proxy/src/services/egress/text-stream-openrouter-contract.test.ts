@@ -13,6 +13,11 @@ import {
 	dispatchOpenAiResponsesRoute,
 	MAX_RESPONSES_SSE_LINE_CHARS,
 } from './openai-responses-driver';
+import {
+	BoundedSseEventFramer,
+	parseSseEventData,
+	rewriteSseEventData,
+} from './sse-data-line';
 
 function route(protocol: 'openai' | 'anthropic'): RouteResult {
 	return {
@@ -54,9 +59,8 @@ async function withMockResponse<T>(body: BodyInit, run: () => Promise<T>): Promi
 
 function dataEvents(text: string): Array<Record<string, unknown>> {
 	const events: Array<Record<string, unknown>> = [];
-	for (const line of text.split(/\r?\n/)) {
-		if (!line.startsWith('data:')) continue;
-		const data = line.slice(5).trim();
+	for (const event of text.split(/\r\n\r\n|\n\n|\r\r/)) {
+		const data = parseSseEventData(event)?.trim();
 		if (!data || data === '[DONE]') continue;
 		const parsed = JSON.parse(data) as unknown;
 		if (parsed && typeof parsed === 'object' && !Array.isArray(parsed)) {
@@ -65,6 +69,43 @@ function dataEvents(text: string): Array<Record<string, unknown>> {
 	}
 	return events;
 }
+
+function chunkedStream(chunks: string[]): ReadableStream<Uint8Array> {
+	const encoder = new TextEncoder();
+	return new ReadableStream<Uint8Array>({
+		start(controller) {
+			for (const chunk of chunks) controller.enqueue(encoder.encode(chunk));
+			controller.close();
+		},
+	});
+}
+
+describe('bounded EventSource framing', () => {
+	it('folds multi-line data across CRLF read boundaries and preserves routing fields when rewritten', async () => {
+		const events: string[] = [];
+		const framer = new BoundedSseEventFramer(1024, 'test framing limit');
+		await framer.push('event: response.created\r\nid: wire-1\r\ndata: {\r', (event) => {
+			events.push(event);
+			return false;
+		});
+		await framer.push('\ndata:"ok":true}\r\n\r', (event) => {
+			events.push(event);
+			return false;
+		});
+		await framer.push('\n', (event) => {
+			events.push(event);
+			return false;
+		});
+		assert.equal(framer.finish(), '');
+		assert.equal(events.length, 1);
+		assert.equal(parseSseEventData(events[0]!), '{\n"ok":true}');
+
+		const rewritten = rewriteSseEventData(events[0]!, JSON.stringify({ ok: false }));
+		assert.match(rewritten, /^event: response\.created\r\nid: wire-1\r\ndata: /);
+		assert.equal((rewritten.match(/data:/g) ?? []).length, 1);
+		assert.match(rewritten, /\r\n\r\n$/);
+	});
+});
 
 describe('OpenRouter text stream terminal contracts', () => {
 	it('normalizes the Chat usage frame to one content-free terminal choice before [DONE]', async () => {
@@ -111,9 +152,52 @@ describe('OpenRouter text stream terminal contracts', () => {
 				assert.ok(text.indexOf(JSON.stringify(final)) < text.indexOf('data: [DONE]'));
 				const usage = await result.usagePromise;
 				assert.equal(usage.total_tokens, 5);
+				assert.equal(usage.finish_reason, 'stop');
+				assert.equal(usage.native_finish_reason, 'end_turn');
 				assert.equal(usage.stream_error, undefined);
 			},
 		);
+	});
+
+	it('folds multi-line Chat data fields across chunks without losing SSE routing fields or usage', async () => {
+		const body = [
+			': upstream-comment',
+			'id: wire-chat',
+			'data: {',
+			'data: "id":"chatcmpl-multi",',
+			'data: "model":"private/provider-model",',
+			'data: "choices":[{"index":0,"delta":{},"finish_reason":"stop"}],',
+			'data: "usage":{"prompt_tokens":2,"completion_tokens":3,"total_tokens":5}',
+			'data: }',
+			'',
+			'data: [DONE]',
+			'',
+		].join('\r\n');
+		await withMockResponse(chunkedStream([
+			body.slice(0, 37),
+			body.slice(37, 121),
+			body.slice(121),
+		]), async () => {
+			const result = await dispatchOpenAiRoute(
+				route('openai'),
+				{ stream: true },
+				undefined,
+				undefined,
+				undefined,
+				undefined,
+				'gen-multiline-chat',
+			);
+			const text = await result.response.text();
+			const event = dataEvents(text)[0]!;
+			assert.equal(event.id, 'gen-multiline-chat');
+			assert.equal(event.model, 'public/model-a');
+			assert.match(text, /: upstream-comment\r\nid: wire-chat\r\n/);
+			assert.match(text, /data: \[DONE\]/);
+			const usage = await result.usagePromise;
+			assert.equal(usage.total_tokens, 5);
+			assert.equal(usage.upstreamMessageId, 'chatcmpl-multi');
+			assert.equal(usage.stream_error, undefined);
+		});
 	});
 
 	it('turns Chat native errors and abnormal EOF into one associated terminal error', async () => {
@@ -186,6 +270,45 @@ describe('OpenRouter text stream terminal contracts', () => {
 		});
 	});
 
+	it('folds multi-line Responses events and preserves event/id fields through model normalization', async () => {
+		const body = [
+			'event: response.created',
+			'id: wire-response',
+			'data: {',
+			'data: "type":"response.created",',
+			'data: "response":{"id":"resp-multi","model":"private/provider-model","status":"in_progress"}',
+			'data: }',
+			'',
+			'event: response.completed',
+			'data: {',
+			'data: "type":"response.completed",',
+			'data: "response":{"id":"resp-multi","model":"private/provider-model","usage":{"input_tokens":4,"output_tokens":6,"total_tokens":10}}',
+			'data: }',
+			'',
+			'data: [DONE]',
+			'',
+		].join('\r\n');
+		await withMockResponse(chunkedStream([
+			body.slice(0, 29),
+			body.slice(29, 187),
+			body.slice(187),
+		]), async () => {
+			const result = await dispatchOpenAiResponsesRoute(route('openai'), { stream: true });
+			const text = await result.response.text();
+			const events = dataEvents(text);
+			assert.equal(events.length, 2);
+			assert.equal((events[0]!.response as { id: string }).id, 'resp-multi');
+			assert.equal((events[0]!.response as { model: string }).model, 'public/model-a');
+			assert.equal((events[1]!.response as { model: string }).model, 'public/model-a');
+			assert.match(text, /^event: response\.created\r\nid: wire-response\r\n/);
+			assert.doesNotMatch(text, /response\.failed/);
+			const usage = await result.usagePromise;
+			assert.equal(usage.total_tokens, 10);
+			assert.equal(usage.upstreamMessageId, 'resp-multi');
+			assert.equal(usage.stream_error, undefined);
+		});
+	});
+
 	it('requires Anthropic message_stop and associates a synthesized error with message_start', async () => {
 		const body = [
 			`event: message_start\ndata: ${JSON.stringify({
@@ -218,6 +341,32 @@ describe('OpenRouter text stream terminal contracts', () => {
 		});
 	});
 
+	it('captures Anthropic message_delta termination metadata before message_stop', async () => {
+		const body = [
+			`data: ${JSON.stringify({
+				type: 'message_start',
+				message: { id: 'msg-finish', usage: { input_tokens: 2, output_tokens: 0 } },
+			})}`,
+			'',
+			`data: ${JSON.stringify({
+				type: 'message_delta',
+				delta: { stop_reason: 'tool_use', stop_sequence: null },
+				usage: { input_tokens: 2, output_tokens: 3 },
+			})}`,
+			'',
+			`data: ${JSON.stringify({ type: 'message_stop' })}`,
+			'',
+		].join('\n');
+		await withMockResponse(body, async () => {
+			const result = await dispatchAnthropicRoute(route('anthropic'), { stream: true });
+			await result.response.text();
+			const usage = await result.usagePromise;
+			assert.equal(usage.finish_reason, 'tool_calls');
+			assert.equal(usage.native_finish_reason, 'tool_use');
+			assert.equal(usage.stream_error, undefined);
+		});
+	});
+
 	it('marks native Anthropic type:error failed and adds canonical error_type', async () => {
 		const body = [
 			`data: ${JSON.stringify({ type: 'message_start', message: { id: 'msg-current' } })}`,
@@ -239,6 +388,42 @@ describe('OpenRouter text stream terminal contracts', () => {
 		});
 	});
 
+	it('folds multi-line Anthropic events and reaches message_stop without a synthetic error', async () => {
+		const body = [
+			'event: message_start',
+			'id: wire-message',
+			'data: {',
+			'data: "type":"message_start",',
+			'data: "message":{"id":"msg-multi","model":"private/provider-model","usage":{"input_tokens":2}}',
+			'data: }',
+			'',
+			'event: message_stop',
+			'data: {',
+			'data: "type":"message_stop"',
+			'data: }',
+			'',
+		].join('\r\n');
+		await withMockResponse(chunkedStream([
+			body.slice(0, 35),
+			body.slice(35, 153),
+			body.slice(153),
+		]), async () => {
+			const result = await dispatchAnthropicRoute(route('anthropic'), { stream: true });
+			const text = await result.response.text();
+			const events = dataEvents(text);
+			assert.equal(events.length, 2);
+			assert.equal((events[0]!.message as { id: string }).id, 'msg-multi');
+			assert.equal((events[0]!.message as { model: string }).model, 'public/model-a');
+			assert.equal(events[1]!.type, 'message_stop');
+			assert.match(text, /^event: message_start\r\nid: wire-message\r\n/);
+			assert.doesNotMatch(text, /provider_unavailable/);
+			const usage = await result.usagePromise;
+			assert.equal(usage.input_tokens, 2);
+			assert.equal(usage.upstreamMessageId, 'msg-multi');
+			assert.equal(usage.stream_error, undefined);
+		});
+	});
+
 	it('fails boundedly instead of retaining an unbounded unterminated SSE line', async () => {
 		const cases = [
 			{
@@ -255,11 +440,25 @@ describe('OpenRouter text stream terminal contracts', () => {
 			},
 		];
 		for (const testCase of cases) {
-			await withMockResponse(`data: "${'x'.repeat(testCase.max + 1)}`, async () => {
+			let cancelled = 0;
+			let sent = false;
+			const oversized = new TextEncoder().encode(`data: "${'x'.repeat(testCase.max + 1)}`);
+			const upstream = new ReadableStream<Uint8Array>({
+				pull(controller) {
+					if (sent) return;
+					sent = true;
+					controller.enqueue(oversized);
+				},
+				cancel() {
+					cancelled += 1;
+				},
+			});
+			await withMockResponse(upstream, async () => {
 				const result = await testCase.dispatch();
 				const text = await result.response.text();
 				assert.match(text, /provider_unavailable/);
 				assert.match((await result.usagePromise).stream_error ?? '', /framing limit/i);
+				assert.equal(cancelled, 1);
 			});
 		}
 	});

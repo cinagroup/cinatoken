@@ -7,7 +7,12 @@ import type { InsertUserAuditLogParams } from '../user-audit-logs-types';
 import type { InsertUserBudgetAuditLogParams } from '../user-budget-audit-params';
 import type { InsertKeyParams } from '../api-keys-types';
 import { prepareGatewayApiKeyForStorage } from '../../lib/key-hash';
-import { assertGenerationSnapshotIsValid, type InsertRequestLogParams } from '../request-logs-types';
+import {
+	assertGenerationSnapshotIsValid,
+	serializeGenerationProviderResponses,
+	type InsertRequestLogParams,
+} from '../request-logs-types';
+import { assertProviderAttemptAvailabilityFacts } from '../provider-attempt-availability';
 import { guardrailBudgetUnits, type GuardrailBudgetSettlement } from '../guardrail-budget-types';
 import {
 	isSafeUserBudgetMicros,
@@ -30,6 +35,7 @@ import { toMySqlDateTime } from './mysql2-compat';
 import {
 	apiKeysTable as myApiKeysTable,
 	apiKeyRequestLogsTable as myRequestLogsTable,
+	providerAttemptAvailabilityTable as myProviderAttemptAvailabilityTable,
 	guardrailBudgetReservationsTable as myGuardrailBudgetReservationsTable,
 	guardrailBudgetWindowsTable as myGuardrailBudgetWindowsTable,
 	publicModelDailyStatsTable as myPublicModelDailyStatsTable,
@@ -253,6 +259,7 @@ export async function insertRequestUsageAndChargeTxMy(
 	}
 ): Promise<void> {
 	assertGenerationSnapshotIsValid(params.requestLog);
+	assertProviderAttemptAvailabilityFacts(params.requestLog.providerAttempts);
 	if (params.guardrailBudgetSettlement?.requestId !== undefined
 		&& params.guardrailBudgetSettlement.requestId !== params.requestLog.id) {
 		throw new Error('Guardrail budget settlement requestId must match request log id');
@@ -285,6 +292,13 @@ export async function insertRequestUsageAndChargeTxMy(
 		throw new Error('Charged cost exceeds the safe ordinary-user micro-unit range');
 	}
 	const budgetChargedMicros = params.shouldChargeBudget ? guardrailBudgetUnits(charged) : 0;
+	const standard = roundGatewayMoney(params.requestLog.standardCost);
+	if (!Number.isFinite(standard) || standard < 0
+		|| standard > userBudgetAmount(USER_BUDGET_MAX_SAFE_MICROS)) {
+		throw new Error('Standard cost exceeds the safe Guardrail budget micro-unit range');
+	}
+	const byokStandardMicros = guardrailBudgetUnits(standard);
+	const isByokRequest = params.requestLog.isByok === true;
 	const ordinaryActualMicros = params.shouldChargeBudget ? userBudgetUnits(charged) : 0;
 	const now = nowIso();
 	const guardrailNow = toMySqlDateTime(now);
@@ -475,6 +489,11 @@ export async function insertRequestUsageAndChargeTxMy(
 			cacheWriteTokens: params.requestLog.cacheWriteTokens,
 			reasoningTokens: params.requestLog.reasoningTokens,
 			totalTokens: params.requestLog.totalTokens,
+			nativeTokensPrompt: params.requestLog.nativeTokensPrompt ?? null,
+			nativeTokensCompletion: params.requestLog.nativeTokensCompletion ?? null,
+			nativeTokensCached: params.requestLog.nativeTokensCached ?? null,
+			nativeTokensReasoning: params.requestLog.nativeTokensReasoning ?? null,
+			nativeTokensCompletionImages: params.requestLog.nativeTokensCompletionImages ?? null,
 			meteredCost: String(roundGatewayMoney(params.requestLog.meteredCost)),
 			standardCost: String(roundGatewayMoney(params.requestLog.standardCost)),
 			chargedCost: String(roundGatewayMoney(params.requestLog.chargedCost)),
@@ -507,7 +526,10 @@ export async function insertRequestUsageAndChargeTxMy(
 			outputImageCount: params.requestLog.outputImageCount ?? 0,
 			audioDurationSeconds: params.requestLog.audioDurationSeconds ?? null,
 			audioCharacters: params.requestLog.audioCharacters ?? null,
+			sessionId: params.requestLog.sessionId ?? null,
 			requestOrigin: params.requestLog.requestOrigin ?? null,
+			httpReferer: params.requestLog.httpReferer ?? null,
+			userAgent: params.requestLog.userAgent ?? null,
 			responseStreamed: params.requestLog.responseStreamed == null
 				? null
 				: Number(params.requestLog.responseStreamed),
@@ -519,8 +541,26 @@ export async function insertRequestUsageAndChargeTxMy(
 			upstreamInferenceCostUsd: params.requestLog.upstreamInferenceCostUsd == null
 				? null
 				: String(roundGatewayMoney(params.requestLog.upstreamInferenceCostUsd)),
+			serviceTier: params.requestLog.serviceTier ?? null,
+			finishReason: params.requestLog.finishReason ?? null,
+			nativeFinishReason: params.requestLog.nativeFinishReason ?? null,
+			providerResponses: serializeGenerationProviderResponses(params.requestLog.providerResponses),
 			createdAt: now,
 		});
+		if ((params.requestLog.providerAttempts?.length ?? 0) > 0) {
+			await tx.insert(myProviderAttemptAvailabilityTable).values(
+				params.requestLog.providerAttempts!.map((attempt) => ({
+					requestLogId: params.requestLog.id,
+					attemptIndex: attempt.attemptIndex,
+					routeTargetId: attempt.routeTargetId,
+					providerId: attempt.providerId,
+					outcome: attempt.outcome,
+					reason: attempt.reason,
+					httpStatus: attempt.httpStatus,
+					observedAt: toMySqlDateTime(attempt.observedAtIso),
+				}))
+			);
+		}
 		await tx
 			.insert(myPublicModelDailyStatsTable)
 			.values({
@@ -531,6 +571,7 @@ export async function insertRequestUsageAndChargeTxMy(
 				successCount: delta.successCount,
 				errorCount: delta.errorCount,
 				outputTokens: delta.outputTokens,
+				totalTokens: delta.totalTokens,
 				latencyTotalMs: delta.latencyTotalMs,
 				latencySampleCount: delta.latencySampleCount,
 				updatedAt: now,
@@ -541,6 +582,7 @@ export async function insertRequestUsageAndChargeTxMy(
 					successCount: sql`${myPublicModelDailyStatsTable.successCount} + VALUES(success_count)`,
 					errorCount: sql`${myPublicModelDailyStatsTable.errorCount} + VALUES(error_count)`,
 					outputTokens: sql`${myPublicModelDailyStatsTable.outputTokens} + VALUES(output_tokens)`,
+					totalTokens: sql`${myPublicModelDailyStatsTable.totalTokens} + VALUES(total_tokens)`,
 					latencyTotalMs: sql`${myPublicModelDailyStatsTable.latencyTotalMs} + VALUES(latency_total_ms)`,
 					latencySampleCount: sql`${myPublicModelDailyStatsTable.latencySampleCount} + VALUES(latency_sample_count)`,
 					updatedAt: now,
@@ -590,6 +632,7 @@ export async function insertRequestUsageAndChargeTxMy(
 			const settlement = params.guardrailBudgetSettlement;
 			const reservations = await tx.select({
 				id: myGuardrailBudgetReservationsTable.id,
+				assignmentId: myGuardrailBudgetReservationsTable.assignmentId,
 				workspaceId: myGuardrailBudgetReservationsTable.workspaceId,
 				scopeType: myGuardrailBudgetReservationsTable.scopeType,
 				scopeId: myGuardrailBudgetReservationsTable.scopeId,
@@ -597,6 +640,7 @@ export async function insertRequestUsageAndChargeTxMy(
 				periodStart: myGuardrailBudgetReservationsTable.periodStart,
 				reservedMicros: myGuardrailBudgetReservationsTable.reservedMicros,
 				settledMicros: myGuardrailBudgetReservationsTable.settledMicros,
+				settlementBasis: myGuardrailBudgetReservationsTable.settlementBasis,
 				state: myGuardrailBudgetReservationsTable.state,
 			}).from(myGuardrailBudgetReservationsTable).where(and(
 				eq(myGuardrailBudgetReservationsTable.requestId, settlement.requestId),
@@ -608,6 +652,19 @@ export async function insertRequestUsageAndChargeTxMy(
 			if (requestWorkspaceId == null
 				|| reservations.some((reservation) => reservation.workspaceId !== requestWorkspaceId)) {
 				throw new Error('Guardrail budget settlement Workspace identity mismatch');
+			}
+			if (reservations.some((reservation) =>
+				reservation.settlementBasis === 'gateway_key_route'
+				&& (
+					reservation.scopeType !== 'api_key'
+					|| reservation.scopeId !== params.requestLog.apiKeyId
+					|| reservation.assignmentId !== `gateway-key-limit:${params.requestLog.apiKeyId}`
+				))) {
+				throw new Error('Route-selective settlement is not the authenticated Gateway key limit');
+			}
+			if (isByokRequest
+				&& reservations.some((reservation) => reservation.settlementBasis !== 'gateway_key_route')) {
+				throw new Error('Private BYOK cannot settle non-key budget reservations');
 			}
 			const orderedReservations = [...reservations].sort((left, right) =>
 				[
@@ -626,13 +683,16 @@ export async function insertRequestUsageAndChargeTxMy(
 			);
 			for (const reservation of orderedReservations) {
 				if (reservation.state === 'released') continue;
+				const actualMicros = reservation.settlementBasis === 'gateway_key_route' && isByokRequest
+					? byokStandardMicros
+					: budgetChargedMicros;
 				if (reservation.state === 'expired') {
 					if (settlement.mode !== 'actual') continue;
 					const previousSettledMicros = Number(reservation.settledMicros);
-					if (budgetChargedMicros <= previousSettledMicros) continue;
-					const lateActualDeltaMicros = budgetChargedMicros - previousSettledMicros;
+					if (actualMicros <= previousSettledMicros) continue;
+					const lateActualDeltaMicros = actualMicros - previousSettledMicros;
 					const [reservationUpdate] = (await tx.update(myGuardrailBudgetReservationsTable).set({
-						settledMicros: budgetChargedMicros,
+						settledMicros: actualMicros,
 						terminalReason: 'late_actual_overrun',
 						updatedAt: guardrailNow,
 					}).where(and(
@@ -660,7 +720,7 @@ export async function insertRequestUsageAndChargeTxMy(
 				}
 				const settledMicros = settlement.mode === 'reserved'
 					? Number(reservation.reservedMicros)
-					: budgetChargedMicros;
+					: actualMicros;
 				const [reservationUpdate] = (await tx.update(myGuardrailBudgetReservationsTable).set({
 					state: settlement.mode === 'reserved' ? 'expired' : 'settled',
 					settledMicros,

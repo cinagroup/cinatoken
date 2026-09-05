@@ -2,6 +2,7 @@
 
 import { TrashIcon } from '@heroicons/react/24/outline';
 import { useTranslations } from 'next-intl';
+import { useMemo } from 'react';
 import {
 	MODEL_INPUT_MODALITIES,
 	MODEL_OUTPUT_MODALITIES,
@@ -19,14 +20,18 @@ import {
 	type ImagePerImageDraft,
 	type PricingTierDraftRow,
 } from '@/lib/pricing-tiers-draft';
-import { tagBadgeClass } from '../model-utils';
+import {
+	publicCatalogTopProviderEditorState,
+	tagBadgeClass,
+	updatePublicCatalogTopProviderMetadata,
+} from '../model-utils';
 import type { ModelFormData, ModelFormKind, ModelListItem } from '../types';
 
 type Props = {
 	open: boolean;
 	editingModel: ModelListItem | null;
 	formData: ModelFormData;
-	/** 当前 Kind（含 audio；由父级 formKind 驱动，避免仅靠 modalities 误判） */
+	/** 当前 Kind（含 audio/rerank；由父级 formKind 驱动，避免仅靠 modalities 误判） */
 	formKind: ModelFormKind;
 	pricingTierRows: PricingTierDraftRow[];
 	imageBillingMode?: ImageBillingModeDraft;
@@ -47,7 +52,7 @@ type Props = {
 	onAddTag: () => void;
 	onRemoveTag: (tag: string) => void;
 	onToggleModality: (kind: 'input_modalities' | 'output_modalities', modality: string) => void;
-	/** 切换 LLM / Image / Audio Kind（同步 modalities 与默认 pricing） */
+	/** 切换 LLM / Image / Audio / Rerank Kind（同步 modalities 与默认 pricing） */
 	onKindChange: (kind: ModelFormKind) => void;
 	onSave: () => void;
 	onDelete: (id: string) => void;
@@ -87,11 +92,13 @@ export function ModelModal(props: Props) {
 	const tCommon = useTranslations('common');
 	const isImageModel = formKind === 'image';
 	const isAudioModel = formKind === 'audio';
+	const isRerankModel = formKind === 'rerank';
 	const audioCapability =
 		isAudioModel && audioPricingDraft?.mode === 'per_character'
 			? 'speech'
 			: 'transcription';
-	const hideTokenLimits = isImageModel || isAudioModel;
+	const hideContextWindow = isImageModel || isAudioModel;
+	const hideMaxTokens = hideContextWindow || isRerankModel;
 	// 音频能力沿用下方“音频定价”的分段控件样式，保持弹窗内的视觉一致性。
 	const audioCapabilityOptions = [
 		{
@@ -103,6 +110,20 @@ export function ModelModal(props: Props) {
 			label: t('audioCapabilitySpeech'),
 		},
 	] as const;
+	const topProviderEditor = useMemo(
+		() => publicCatalogTopProviderEditorState(formData.metadata),
+		[formData.metadata]
+	);
+	const topProviderReady = topProviderEditor.status === 'ready'
+		? topProviderEditor
+		: null;
+	const setTopProviderMetadata = (
+		selector: { endpointTag: string; isModerated: boolean } | null
+	) => {
+		const updated = updatePublicCatalogTopProviderMetadata(formData.metadata, selector);
+		if (!updated.ok) return;
+		onFormChange({ ...formData, metadata: updated.value });
+	};
 
 	/** 音频能力是显式配置项：同步设置模态和计费，避免保存出 TTS + 按秒这类矛盾组合。 */
 	const changeAudioCapability = (next: 'transcription' | 'speech') => {
@@ -111,7 +132,7 @@ export function ModelModal(props: Props) {
 			onFormChange({
 				...formData,
 				input_modalities: ['text'],
-				output_modalities: ['audio'],
+				output_modalities: ['speech'],
 			});
 			onAudioPricingDraftChange(createDefaultAudioCharacterPricingDraft());
 			return;
@@ -119,7 +140,7 @@ export function ModelModal(props: Props) {
 		onFormChange({
 			...formData,
 			input_modalities: ['audio'],
-			output_modalities: ['text'],
+			output_modalities: ['transcription'],
 		});
 		onAudioPricingDraftChange(createDefaultAudioPricingDraft());
 	};
@@ -173,6 +194,7 @@ export function ModelModal(props: Props) {
 										{ id: 'llm' as const, label: t('kindLlm') },
 										{ id: 'image' as const, label: t('kindImage') },
 										{ id: 'audio' as const, label: t('kindAudio') },
+										{ id: 'rerank' as const, label: t('kindRerank') },
 									] as const
 								).map((opt) => {
 									const active = formKind === opt.id;
@@ -196,7 +218,9 @@ export function ModelModal(props: Props) {
 								})}
 							</div>
 							<p className="mt-1.5 text-[11px] text-gray-500 leading-relaxed">
-								{isAudioModel
+								{isRerankModel
+									? t('kindHintRerank')
+									: isAudioModel
 									? t('kindHintAudio')
 									: isImageModel
 										? t('kindHintImage')
@@ -286,8 +310,7 @@ export function ModelModal(props: Props) {
 								className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
 							/>
 						</div>
-						{!hideTokenLimits ? (
-							<>
+						{!hideContextWindow ? (
 								<div>
 									<label className="block text-sm font-medium text-gray-700 mb-1">
 										{t('contextWindow')}
@@ -302,6 +325,8 @@ export function ModelModal(props: Props) {
 										placeholder={t('contextWindowPlaceholder')}
 									/>
 								</div>
+						) : null}
+						{!hideMaxTokens ? (
 								<div>
 									<label className="block text-sm font-medium text-gray-700 mb-1">
 										{t('maxTokens')}
@@ -316,12 +341,16 @@ export function ModelModal(props: Props) {
 										placeholder={t('maxTokensPlaceholder')}
 									/>
 								</div>
-							</>
-						) : (
+						) : null}
+						{hideContextWindow ? (
 							<div className="col-span-2 rounded-md border border-amber-100 bg-amber-50/70 px-3 py-2 text-xs text-amber-800">
 								{isAudioModel ? t('audioNoTokenLimits') : t('imageNoTokenLimits')}
 							</div>
-						)}
+						) : isRerankModel ? (
+							<div className="rounded-md border border-emerald-100 bg-emerald-50/70 px-3 py-2 text-xs text-emerald-800">
+								{t('rerankNoMaxTokens')}
+							</div>
+						) : null}
 						<div className="col-span-2 rounded-md border border-gray-200 bg-gray-50/80 px-3 py-2.5">
 							<div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
 								<div className="min-w-0 flex-1 space-y-2.5">
@@ -339,7 +368,7 @@ export function ModelModal(props: Props) {
 												type="checkbox"
 												checked={formData.input_modalities.includes(m)}
 												onChange={() => onToggleModality('input_modalities', m)}
-												disabled={isAudioModel || isSaving || isDeleting}
+											disabled={isAudioModel || isRerankModel || isSaving || isDeleting}
 												className="h-3.5 w-3.5 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
 													/>
 													{m}
@@ -361,7 +390,7 @@ export function ModelModal(props: Props) {
 												type="checkbox"
 												checked={formData.output_modalities.includes(m)}
 												onChange={() => onToggleModality('output_modalities', m)}
-												disabled={isAudioModel || isSaving || isDeleting}
+											disabled={isAudioModel || isRerankModel || isSaving || isDeleting}
 												className="h-3.5 w-3.5 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
 													/>
 													{m}
@@ -701,6 +730,77 @@ export function ModelModal(props: Props) {
 								className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
 								placeholder={t('descriptionPlaceholder')}
 							/>
+						</div>
+						<div className="col-span-2 rounded-md border border-gray-200 bg-gray-50/80 p-3">
+							<div className="flex flex-wrap items-start justify-between gap-3">
+								<div>
+									<p className="text-sm font-medium text-gray-800">
+										{t('publicCatalogTopProvider')}
+									</p>
+									<p className="mt-1 text-[11px] leading-relaxed text-gray-500">
+										{t('publicCatalogTopProviderHint')}
+									</p>
+								</div>
+								<label className="inline-flex items-center gap-2 text-sm text-gray-700">
+									<input
+										type="checkbox"
+										checked={topProviderReady?.enabled ?? false}
+										disabled={
+											topProviderReady === null || isSaving || isDeleting
+										}
+										onChange={(event) => {
+											setTopProviderMetadata(event.target.checked
+												? { endpointTag: '', isModerated: false }
+												: null);
+										}}
+										className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+									/>
+									{t('publicCatalogTopProviderEnabled')}
+								</label>
+							</div>
+							{topProviderReady?.enabled ? (
+								<div className="mt-3 grid gap-3 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-end">
+									<div>
+										<label className="mb-1 block text-xs font-medium text-gray-600">
+											{t('publicCatalogTopProviderEndpointTag')}
+										</label>
+										<input
+											type="text"
+											value={topProviderReady.endpointTag}
+											disabled={isSaving || isDeleting}
+											onChange={(event) => setTopProviderMetadata({
+												endpointTag: event.target.value,
+												isModerated: topProviderReady.isModerated,
+											})}
+											className="w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+											placeholder="deepseek/standard"
+											aria-invalid={!topProviderReady.selectorValid}
+										/>
+									</div>
+									<label className="inline-flex min-h-10 items-center gap-2 text-sm text-gray-700">
+										<input
+											type="checkbox"
+											checked={topProviderReady.isModerated}
+											disabled={isSaving || isDeleting}
+											onChange={(event) => setTopProviderMetadata({
+												endpointTag: topProviderReady.endpointTag,
+												isModerated: event.target.checked,
+											})}
+											className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+										/>
+										{t('publicCatalogTopProviderModerated')}
+									</label>
+								</div>
+							) : null}
+							{topProviderEditor.status === 'metadata-invalid' ? (
+								<p className="mt-2 text-xs text-red-600">
+									{t('publicCatalogTopProviderInvalidMetadata')}
+								</p>
+							) : topProviderReady?.enabled && !topProviderReady.selectorValid ? (
+								<p className="mt-2 text-xs text-red-600">
+									{t('publicCatalogTopProviderInvalidSelector')}
+								</p>
+							) : null}
 						</div>
 						<div className="col-span-2">
 							<label className="block text-sm font-medium text-gray-700 mb-1">{t('metadataJson')}</label>

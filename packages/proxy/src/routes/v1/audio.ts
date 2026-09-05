@@ -5,7 +5,6 @@
  */
 import type {
 	GatewayRepositories,
-	GuardrailBudgetIntent,
 	GuardrailPreflightResult,
 } from '@octafuse/core';
 import { getBusinessTimezone } from '@octafuse/core';
@@ -25,6 +24,7 @@ import {
 	type UsageFromStream,
 } from '../../services/proxy';
 import { finalizeRequestLogJson } from '../../services/request-log-shared';
+import { generationRequestContext } from '../../services/generation-request-context';
 import {
 	audioGuardrailBudgetMicros,
 	estimateAudioBudgetPrecheck,
@@ -38,7 +38,6 @@ import {
 	resolveAudioUploadFilename,
 	normalizeAudioMimeType,
 	validateAudioUpload,
-	type AudioTranscriptionProviderOptions,
 	type AudioTranscriptionProviderOptionValue,
 	type NormalizedAudioTranscriptionRequest,
 } from '../../services/egress/openai-audio-driver';
@@ -48,7 +47,20 @@ import {
 	type OpenRouterAudioJsonLimits,
 } from '../../services/egress/openrouter-audio-json';
 import {
+	OPENROUTER_SPEECH_AUDIO_SENTINEL,
+	OPENROUTER_SPEECH_JSON_MAX_REQUEST_BYTES,
+	OpenRouterSpeechJsonError,
+	parseOpenRouterSpeechJson,
+	type OpenRouterSpeechJsonResult,
+} from '../../services/egress/openrouter-speech-json';
+import type {
+	AudioProviderOptions,
+	AudioProviderOptionValue,
+} from '../../services/egress/audio-provider-options';
+import {
+	audioSpeechRouteCanDispatch,
 	redactAudioSpeechRequestForLog,
+	type AudioSpeechInputReferencePart,
 	type AudioSpeechResponseFormat,
 	type AudioSpeechVoice,
 	type NormalizedAudioSpeechRequest,
@@ -70,17 +82,9 @@ import { stickyConfigFromSurface } from '../../services/provider-sticky-routing'
 import { buildModelFallbackPlan } from '../../services/model-fallback-plan';
 import {
 	auditGuardrailOutputDecision,
-	forfeitRequestGuardrailBudgets,
-	markRequestGuardrailBudgetsDispatched,
-	releaseRequestGuardrailBudgets,
-	reserveRequestGuardrailBudgets,
 } from '../../services/request-guardrails';
+import type { OrdinaryBudgetLease } from '../../services/ordinary-budget-lifecycle';
 import {
-	reserveOrdinaryUserBudget,
-	type OrdinaryBudgetLease,
-} from '../../services/ordinary-budget-lifecycle';
-import {
-	markMultimediaBudgetsBeforeDispatch,
 	selectConservativeMultimediaBudgetEstimate,
 } from '../../services/multimedia-ordinary-budget';
 import { routeUsesUnsupportedMultimediaEndpointPriceSelection } from '../../services/endpoint-billing-pricing';
@@ -89,6 +93,12 @@ import {
 	runAudioSpeechRequestGuardrails,
 	runAudioTranscriptionRequestGuardrails,
 } from '../../services/audio-request-guardrails';
+import { parseOpenRouterSessionHeader } from '../../services/openrouter-session-routing';
+import { privateByokContextForApiKey } from '../../services/byok-key-pool';
+import {
+	createRouteAwareBudgetAdmission,
+	type RouteAwareBudgetAdmission,
+} from '../../services/request-budget-admission';
 
 type AudioEnv = Env & { Variables: { apiKey: ApiKeyContext } };
 type AudioContext = Context<AudioEnv>;
@@ -144,70 +154,23 @@ async function blockUnsupportedAudioOutputGuardrails(
 
 type AudioGuardrailBudgetLease = {
 	requestId: string;
-	reserved: boolean;
-	dispatched: boolean;
-	terminal: boolean;
-	beforeUpstreamDispatch(): Promise<void>;
+	readonly reserved: boolean;
+	readonly dispatched: boolean;
+	readonly terminal: boolean;
 	release(reason: string): Promise<void>;
 	forfeit(reason: string): Promise<void>;
 };
 
-async function admitAudioGuardrailBudget(
-	repos: GatewayRepositories,
-	params: {
-		requestId: string;
-		intents: GuardrailBudgetIntent[];
-		reservedMicros: number;
-	},
-): Promise<
-	| { ok: true; lease: AudioGuardrailBudgetLease }
-	| { ok: false; blocked: boolean; reason?: 'gateway_key_limit' | 'workspace_budget' | 'guardrail_budget'; message: string }
-> {
-	const admission = await reserveRequestGuardrailBudgets(repos, params);
-	if (!admission.ok) return admission;
+function audioGuardrailBudgetLease(
+	admission: RouteAwareBudgetAdmission,
+): AudioGuardrailBudgetLease {
 	return {
-		ok: true,
-		lease: {
-			requestId: params.requestId,
-			reserved: admission.reserved,
-			dispatched: false,
-			terminal: false,
-			async beforeUpstreamDispatch(): Promise<void> {
-				if (this.dispatched) return;
-				await markRequestGuardrailBudgetsDispatched(
-					repos,
-					params.requestId,
-					admission.reserved,
-				);
-				this.dispatched = true;
-			},
-			async release(reason: string): Promise<void> {
-				if (!admission.reserved || this.terminal) return;
-				await releaseRequestGuardrailBudgets(
-					repos,
-					params.requestId,
-					admission.reserved,
-					reason,
-				);
-				this.terminal = true;
-			},
-			async forfeit(reason: string): Promise<void> {
-				if (!admission.reserved || this.terminal) return;
-				try {
-					await forfeitRequestGuardrailBudgets(
-						repos,
-						params.requestId,
-						admission.reserved,
-						reason,
-					);
-					this.terminal = true;
-				} catch (error) {
-					console.error(
-						`[Gateway Audio] guardrail budget forfeit failed requestId=${params.requestId} reason=${reason} error=${error instanceof Error ? error.message : String(error)}`,
-					);
-				}
-			},
-		},
+		requestId: admission.ordinaryLease.requestId,
+		get reserved() { return admission.guardrailReserved; },
+		get dispatched() { return admission.guardrailDispatched; },
+		get terminal() { return admission.guardrailTerminal; },
+		release: (reason) => admission.releaseGuardrailPreDispatch(reason),
+		forfeit: (reason) => admission.terminateGuardrailUnknown(reason),
 	};
 }
 
@@ -239,22 +202,6 @@ async function terminateAudioGuardrailBudget(
 	}
 }
 
-async function beforeAudioUpstreamDispatch(
-	ordinaryLease: OrdinaryBudgetLease,
-	guardrailLease: AudioGuardrailBudgetLease,
-): Promise<void> {
-	await markMultimediaBudgetsBeforeDispatch({
-		markGuardrail: () => guardrailLease.beforeUpstreamDispatch(),
-		markOrdinary: () => ordinaryLease.beforeUpstreamDispatch(),
-		terminateOrdinary: () => terminateAudioOrdinaryBudget(
-			ordinaryLease,
-			guardrailLease.requestId,
-			'pre_dispatch_failed',
-		),
-		terminateGuardrail: () => terminateAudioGuardrailBudget(guardrailLease, 'pre_dispatch_failed'),
-	});
-}
-
 const OPENROUTER_STT_RESPONSE_FORMATS = new Set(['json', 'verbose_json']);
 const AUDIO_MULTIPART_MAX_BODY_BYTES = AUDIO_MAX_BYTES_PER_FILE + 1024 * 1024;
 const AUDIO_JSON_FORMATS: Readonly<Record<string, string>> = {
@@ -267,9 +214,15 @@ const AUDIO_JSON_FORMATS: Readonly<Record<string, string>> = {
 	aac: 'audio/aac',
 };
 const AUDIO_PROVIDER_OPTION_RESERVED_FIELDS = new Set([
-	'model', 'file', 'input_audio', 'provider', 'response_format',
+	'model', 'file', 'input_audio', 'input_references', 'provider', 'response_format',
 	'duration', 'duration_seconds',
 ]);
+const AUDIO_PROVIDER_OPTION_MAX_BYTES = 64 * 1024;
+const AUDIO_PROVIDER_OPTION_MAX_DEPTH = 6;
+const AUDIO_PROVIDER_OPTION_MAX_NODES = 512;
+const AUDIO_PROVIDER_OPTION_MAX_ARRAY_ITEMS = 16;
+const AUDIO_PROVIDER_OPTION_MAX_OBJECT_FIELDS = 32;
+const AUDIO_PROVIDER_OPTION_FIELD_RE = /^[A-Za-z][A-Za-z0-9_.\[\]-]{0,63}$/;
 
 type AudioTranscriptionParseFailureKind =
 	| 'invalid_json'
@@ -431,11 +384,79 @@ function validatedModel(value: unknown):
 	return { ok: true, value: model };
 }
 
-function parseProviderOptions(value: unknown):
+function normalizeStructuredAudioProviderOption(
+	value: unknown,
+	path: string,
+	depth: number,
+	state: { nodes: number },
+): { ok: true; value: AudioProviderOptionValue } | { ok: false; error: string } {
+	state.nodes += 1;
+	if (state.nodes > AUDIO_PROVIDER_OPTION_MAX_NODES) {
+		return { ok: false, error: 'provider.options contains too many values' };
+	}
+	if (depth > AUDIO_PROVIDER_OPTION_MAX_DEPTH) {
+		return { ok: false, error: `${path} exceeds the nesting limit` };
+	}
+	if (value === null || typeof value === 'boolean') return { ok: true, value };
+	if (typeof value === 'number') {
+		return Number.isFinite(value)
+			? { ok: true, value }
+			: { ok: false, error: `${path} must be finite` };
+	}
+	if (typeof value === 'string') {
+		return Array.from(value).length <= 4096
+			? { ok: true, value }
+			: { ok: false, error: `${path} is too long` };
+	}
+	if (Array.isArray(value)) {
+		if (value.length > AUDIO_PROVIDER_OPTION_MAX_ARRAY_ITEMS) {
+			return { ok: false, error: `${path} contains too many items` };
+		}
+		const normalized: AudioProviderOptionValue[] = [];
+		for (let index = 0; index < value.length; index += 1) {
+			const item = normalizeStructuredAudioProviderOption(
+				value[index],
+				`${path}[${index}]`,
+				depth + 1,
+				state,
+			);
+			if (!item.ok) return item;
+			normalized.push(item.value);
+		}
+		return { ok: true, value: normalized };
+	}
+	if (!value || typeof value !== 'object') {
+		return { ok: false, error: `${path} contains an unsupported value` };
+	}
+	const entries = Object.entries(value as Record<string, unknown>);
+	if (entries.length > AUDIO_PROVIDER_OPTION_MAX_OBJECT_FIELDS) {
+		return { ok: false, error: `${path} has too many fields` };
+	}
+	const normalized: Record<string, AudioProviderOptionValue> = {};
+	for (const [field, child] of entries) {
+		if (!AUDIO_PROVIDER_OPTION_FIELD_RE.test(field)) {
+			return { ok: false, error: `${path} contains an invalid field` };
+		}
+		const item = normalizeStructuredAudioProviderOption(
+			child,
+			`${path}.${field}`,
+			depth + 1,
+			state,
+		);
+		if (!item.ok) return item;
+		normalized[field] = item.value;
+	}
+	return { ok: true, value: normalized };
+}
+
+function parseProviderOptions<Value = AudioTranscriptionProviderOptionValue>(
+	value: unknown,
+	allowStructuredValues = false,
+):
 	| {
 			ok: true;
 			routingProvider: Record<string, unknown> | undefined;
-			providerOptions: AudioTranscriptionProviderOptions | undefined;
+			providerOptions: AudioProviderOptions<Value> | undefined;
 	  }
 	| { ok: false; error: string } {
 	if (value === undefined) {
@@ -462,7 +483,8 @@ function parseProviderOptions(value: unknown):
 	if (entries.length === 0 || entries.length > 16) {
 		return { ok: false, error: 'provider.options must contain between 1 and 16 providers' };
 	}
-	const normalized: Record<string, Record<string, AudioTranscriptionProviderOptionValue>> = {};
+	const normalized: Record<string, Record<string, Value>> = {};
+	const structuredState = { nodes: 0 };
 	for (const [providerName, rawFields] of entries) {
 		if (!/^[A-Za-z0-9][A-Za-z0-9_.:/-]{0,119}$/.test(providerName)) {
 			return { ok: false, error: 'provider.options contains an invalid provider name' };
@@ -474,29 +496,40 @@ function parseProviderOptions(value: unknown):
 		if (fields.length > 32) {
 			return { ok: false, error: `provider.options.${providerName} has too many fields` };
 		}
-		const normalizedFields: Record<string, AudioTranscriptionProviderOptionValue> = {};
+		const normalizedFields: Record<string, Value> = {};
 		for (const [field, fieldValue] of fields) {
 			if (
-				!/^[A-Za-z][A-Za-z0-9_.\[\]-]{0,63}$/.test(field)
+				!AUDIO_PROVIDER_OPTION_FIELD_RE.test(field)
 				|| AUDIO_PROVIDER_OPTION_RESERVED_FIELDS.has(field)
 			) {
 				return { ok: false, error: `provider.options.${providerName} contains an invalid field` };
+			}
+			if (allowStructuredValues) {
+				const item = normalizeStructuredAudioProviderOption(
+					fieldValue,
+					`provider.options.${providerName}.${field}`,
+					0,
+					structuredState,
+				);
+				if (!item.ok) return item;
+				normalizedFields[field] = item.value as Value;
+				continue;
 			}
 			if (typeof fieldValue === 'string') {
 				if (fieldValue.length > 4096) {
 					return { ok: false, error: `provider.options.${providerName}.${field} is too long` };
 				}
-				normalizedFields[field] = fieldValue;
+				normalizedFields[field] = fieldValue as Value;
 			} else if (typeof fieldValue === 'number' && Number.isFinite(fieldValue)) {
-				normalizedFields[field] = fieldValue;
+				normalizedFields[field] = fieldValue as Value;
 			} else if (typeof fieldValue === 'boolean') {
-				normalizedFields[field] = fieldValue;
+				normalizedFields[field] = fieldValue as Value;
 			} else if (
 				Array.isArray(fieldValue)
 				&& fieldValue.length <= 8
 				&& fieldValue.every((item) => typeof item === 'string' && item.length <= 256)
 			) {
-				normalizedFields[field] = fieldValue as string[];
+				normalizedFields[field] = fieldValue as Value;
 			} else {
 				return {
 					ok: false,
@@ -505,6 +538,12 @@ function parseProviderOptions(value: unknown):
 			}
 		}
 		normalized[providerName] = normalizedFields;
+	}
+	if (
+		allowStructuredValues
+		&& new TextEncoder().encode(JSON.stringify(normalized)).byteLength > AUDIO_PROVIDER_OPTION_MAX_BYTES
+	) {
+		return { ok: false, error: `provider.options must be at most ${AUDIO_PROVIDER_OPTION_MAX_BYTES} bytes` };
 	}
 	return {
 		ok: true,
@@ -533,6 +572,13 @@ async function parseMultipartTranscription(request: Request): Promise<ParsedAudi
 		return request.signal.aborted
 			? { ok: false, kind: 'cancelled', error: 'Audio transcription request was cancelled' }
 			: { ok: false, kind: 'invalid_request', error: 'Invalid multipart body' };
+	}
+	if (form.has('session_id')) {
+		return {
+			ok: false,
+			kind: 'invalid_request',
+			error: 'session_id is not supported in an audio body; use x-session-id',
+		};
 	}
 
 	const modelResult = validatedModel(multipartTextField(form.getAll('model')));
@@ -660,6 +706,13 @@ async function parseJsonTranscription(
 		throw error;
 	}
 	const { body, audioBytes } = parsedJson;
+	if (Object.prototype.hasOwnProperty.call(body, 'session_id')) {
+		return {
+			ok: false,
+			kind: 'invalid_request',
+			error: 'session_id is not supported in an audio body; use x-session-id',
+		};
+	}
 	const modelResult = validatedModel(body.model);
 	if (!modelResult.ok) return { ...modelResult, kind: 'invalid_request' };
 	const inputAudio = body.input_audio;
@@ -787,6 +840,15 @@ audioRoutes.post('/transcriptions', async (c) => {
 	const start = Date.now();
 	const requestCorrelationId = c.get('generationId')!;
 	const timing = new RequestTimingCollector();
+	const parsedSession = parseOpenRouterSessionHeader(c.req.raw.headers);
+	if (!parsedSession.ok) {
+		return gatewayErrorJson(c, {
+			status: 400,
+			code: GatewayErrorCode.invalidRequest,
+			message: parsedSession.message,
+		});
+	}
+	const sessionId = parsedSession.sessionId;
 
 	const parsed = await parseAudioTranscriptionRequest(c.req.raw);
 	if (!parsed.ok) {
@@ -901,7 +963,7 @@ audioRoutes.post('/transcriptions', async (c) => {
 		}, [route.priceOverrideRaw])),
 	));
 	if (!estimateSelection) throw new Error('Audio fallback plan has no billable route estimate');
-	const { estimate, estimatedChargedCost } = estimateSelection;
+	const { estimate, estimatedChargedCost, estimatedStandardCost } = estimateSelection;
 	const pricingCeilingFailure = audioPricingCeilingFailureContract(estimatedChargedCost);
 	if (pricingCeilingFailure) return gatewayErrorJson(c, pricingCeilingFailure);
 
@@ -926,59 +988,37 @@ audioRoutes.post('/transcriptions', async (c) => {
 		startMs: start,
 		timing,
 		clientErrorCircuitEnabled: false,
+		sessionId,
 	});
 	if (circuitBlocked) {
 		return circuitBlocked;
 	}
 
-	const ordinaryAdmission = await reserveOrdinaryUserBudget(repos, {
-		requestId: requestCorrelationId,
-		userId: apiKey.userId,
-		apiKeyId: apiKey.keyId,
-		budgetMax: apiKey.budgetMax,
-		expectedBudgetEpoch: apiKey.budgetEpoch,
-		estimatedChargedCost,
-		now: new Date(start),
-	});
-	if (!ordinaryAdmission.ok) {
-		return gatewayErrorJson(c, {
-			status: 403,
-			code: GatewayErrorCode.budgetExceeded,
-			message: ordinaryAdmission.error.message,
-		});
-	}
-	const ordinaryBudgetLease = ordinaryAdmission.lease;
-	let budgetAdmission: Awaited<ReturnType<typeof admitAudioGuardrailBudget>>;
-	try {
-		budgetAdmission = await admitAudioGuardrailBudget(repos, {
+	const budgetAdmission = await createRouteAwareBudgetAdmission(repos, {
+		ordinary: {
 			requestId: requestCorrelationId,
+			userId: apiKey.userId,
+			apiKeyId: apiKey.keyId,
+			budgetMax: apiKey.budgetMax,
+			expectedBudgetEpoch: apiKey.budgetEpoch,
+			estimatedChargedCost,
+			now: new Date(start),
+		},
+		guardrail: {
 			intents: guardrail.budgetIntents,
 			reservedMicros: audioGuardrailBudgetMicros(estimate.chargedCost),
-		});
-	} catch (error) {
-		await terminateAudioOrdinaryBudget(
-			ordinaryBudgetLease,
-			requestCorrelationId,
-			'guardrail_budget_admission_failed',
-		);
-		throw error;
-	}
-	if (!budgetAdmission.ok) {
-		await terminateAudioOrdinaryBudget(
-			ordinaryBudgetLease,
-			requestCorrelationId,
-			'guardrail_budget_admission_failed',
-		);
-		if (budgetAdmission.blocked) {
-			return gatewayErrorJson(c, {
-				status: 403,
-				code: budgetAdmission.reason === 'gateway_key_limit' || budgetAdmission.reason === 'workspace_budget' ? GatewayErrorCode.budgetExceeded : GatewayErrorCode.guardrailBlocked,
-				message: budgetAdmission.message,
-			});
-		}
-		throw new Error(`Guardrail budget admission failed: ${budgetAdmission.message}`);
-	}
-	const guardrailBudgetLease = budgetAdmission.lease;
+			now: new Date(start),
+		},
+		privateByokGatewayKey: {
+			includeInLimit: apiKey.includeByokInLimit === true,
+			reservedMicros: Math.max(
+				audioGuardrailBudgetMicros(estimate.chargedCost),
+				audioGuardrailBudgetMicros(estimatedStandardCost ?? Number.POSITIVE_INFINITY),
+			),
+		},
+	});
+	const ordinaryBudgetLease = budgetAdmission.ordinaryLease;
+	const guardrailBudgetLease = audioGuardrailBudgetLease(budgetAdmission);
 	const affinityKey = buildAffinityKey(apiKey.userId, baseModelId, effectiveRouteGroup, 'openai');
 	const tierKeyPrefix = buildTierKeyPrefix(baseModelId, effectiveRouteGroup, 'openai');
 	timing.markGatewayComplete();
@@ -1002,10 +1042,8 @@ audioRoutes.post('/transcriptions', async (c) => {
 				timing,
 				routePoolId: selectedPlan.surface?.route_pool_id ?? routes[0]?.routePoolId ?? null,
 				sticky: selectedPlan.hasProviderPreferences ? null : stickyConfigFromSurface(selectedPlan.surface),
-				beforeUpstreamDispatch: () => beforeAudioUpstreamDispatch(
-					ordinaryBudgetLease,
-					guardrailBudgetLease,
-				),
+				beforeUpstreamDispatch: (route) => budgetAdmission.beforeUpstreamDispatch(route),
+				byok: privateByokContextForApiKey(apiKey),
 			}
 		);
 	} catch (error) {
@@ -1037,6 +1075,7 @@ audioRoutes.post('/transcriptions', async (c) => {
 		effectiveRouteGroup,
 		modelNameForLog,
 		requestBodyForLog,
+		sessionId,
 		fileBytes: transcription.file?.bytes.byteLength ?? 0,
 		businessTimezone,
 		start,
@@ -1046,52 +1085,144 @@ audioRoutes.post('/transcriptions', async (c) => {
 	});
 });
 
-const SPEECH_RESPONSE_FORMATS = new Set<AudioSpeechResponseFormat>([
+const OPENROUTER_SPEECH_RESPONSE_FORMATS = new Set<AudioSpeechResponseFormat>([
 	'mp3',
-	'opus',
-	'aac',
-	'flac',
-	'wav',
 	'pcm',
 ]);
+export const AUDIO_SPEECH_MAX_REQUEST_BYTES = OPENROUTER_SPEECH_JSON_MAX_REQUEST_BYTES;
 
-function parseSpeechVoice(value: unknown): AudioSpeechVoice | null {
-	if (typeof value === 'string' && value.trim() !== '') return value.trim();
-	if (
-		value != null &&
-		typeof value === 'object' &&
-		!Array.isArray(value) &&
-		typeof (value as Record<string, unknown>).id === 'string' &&
-		((value as Record<string, unknown>).id as string).trim() !== ''
-	) {
-		return { id: ((value as Record<string, unknown>).id as string).trim() };
+type AudioSpeechParseFailureKind =
+	| 'invalid_json'
+	| 'invalid_request'
+	| 'payload_too_large'
+	| 'cancelled';
+
+export type ParsedAudioSpeechRequest =
+	| {
+			ok: true;
+			model: string;
+			speech: NormalizedAudioSpeechRequest;
+			routingProvider: Record<string, unknown> | undefined;
+	  }
+	| { ok: false; kind: AudioSpeechParseFailureKind; error: string };
+
+function parseSpeechVoice(value: unknown):
+	| { ok: true; value: AudioSpeechVoice | undefined }
+	| { ok: false; error: string } {
+	if (value === undefined) return { ok: true, value: undefined };
+	if (typeof value === 'string' && value.trim() !== '') {
+		return { ok: true, value: value.trim() };
 	}
-	return null;
+	return { ok: false, error: 'voice must be a non-empty string when provided' };
 }
 
-function parseSpeechRequest(body: unknown):
-	| { ok: true; model: string; speech: NormalizedAudioSpeechRequest }
+function parseSpeechInputReferences(
+	value: unknown,
+	referenceAudio: OpenRouterSpeechJsonResult['referenceAudio'],
+):
+	| { ok: true; value: readonly AudioSpeechInputReferencePart[] | undefined }
+	| { ok: false; error: string } {
+	if (value === undefined) {
+		return referenceAudio == null
+			? { ok: true, value: undefined }
+			: { ok: false, error: 'Reference audio appeared outside input_references' };
+	}
+	if (!Array.isArray(value) || value.length < 1 || value.length > 2) {
+		return { ok: false, error: 'input_references must contain one or two parts' };
+	}
+	const parts: AudioSpeechInputReferencePart[] = [];
+	let audioCount = 0;
+	let textCount = 0;
+	for (const rawPart of value) {
+		if (!rawPart || typeof rawPart !== 'object' || Array.isArray(rawPart)) {
+			return { ok: false, error: 'Each input_references part must be an object' };
+		}
+		const part = rawPart as Record<string, unknown>;
+		if (part.type === 'input_audio') {
+			audioCount += 1;
+			if (audioCount > 1 || Object.keys(part).some((key) => key !== 'type' && key !== 'input_audio')) {
+				return { ok: false, error: 'input_references accepts at most one input_audio part' };
+			}
+			if (!part.input_audio || typeof part.input_audio !== 'object' || Array.isArray(part.input_audio)) {
+				return { ok: false, error: 'input_references input_audio must contain data' };
+			}
+			const inputAudio = part.input_audio as Record<string, unknown>;
+			if (
+				Object.keys(inputAudio).some((key) => key !== 'data')
+				|| inputAudio.data !== OPENROUTER_SPEECH_AUDIO_SENTINEL
+				|| referenceAudio == null
+			) {
+				return { ok: false, error: 'input_references input_audio.data must be a single base64 string' };
+			}
+			parts.push({
+				type: 'input_audio',
+				inputAudio: referenceAudio,
+			});
+			continue;
+		}
+		if (part.type === 'text') {
+			textCount += 1;
+			if (textCount > 1 || Object.keys(part).some((key) => key !== 'type' && key !== 'text')) {
+				return { ok: false, error: 'input_references accepts at most one text part' };
+			}
+			if (typeof part.text !== 'string' || part.text.trim() === '') {
+				return { ok: false, error: 'input_references text must be a non-empty string' };
+			}
+			if (Array.from(part.text).length > 16_384) {
+				return { ok: false, error: 'input_references text must be at most 16384 characters' };
+			}
+			parts.push({ type: 'text', text: part.text });
+			continue;
+		}
+		return { ok: false, error: 'input_references parts must use type input_audio or text' };
+	}
+	if (audioCount !== 1 || referenceAudio == null) {
+		return { ok: false, error: 'input_references requires exactly one input_audio part' };
+	}
+	return { ok: true, value: parts };
+}
+
+export function parseSpeechRequest(
+	body: unknown,
+	referenceAudio: OpenRouterSpeechJsonResult['referenceAudio'] = null,
+):
+	| {
+			ok: true;
+			model: string;
+			speech: NormalizedAudioSpeechRequest;
+			routingProvider: Record<string, unknown> | undefined;
+	  }
 	| { ok: false; error: string } {
 	if (!body || typeof body !== 'object' || Array.isArray(body)) {
 		return { ok: false, error: 'JSON body must be an object' };
 	}
 	const value = body as Record<string, unknown>;
-	const model = typeof value.model === 'string' ? value.model.trim() : '';
-	if (!model) return { ok: false, error: 'Missing model' };
+	if (Object.prototype.hasOwnProperty.call(value, 'session_id')) {
+		return { ok: false, error: 'session_id is not supported in an audio body; use x-session-id' };
+	}
+	const modelResult = validatedModel(value.model);
+	if (!modelResult.ok) return modelResult;
+	const model = modelResult.value;
 	const input = typeof value.input === 'string' ? value.input : '';
 	const inputCharacters = Array.from(input).length;
 	if (inputCharacters === 0) return { ok: false, error: 'Missing input' };
 	if (inputCharacters > 4096) return { ok: false, error: 'input must be at most 4096 characters' };
-	const voice = parseSpeechVoice(value.voice);
-	if (!voice) return { ok: false, error: 'Missing or invalid voice' };
+	const voiceResult = parseSpeechVoice(value.voice);
+	if (!voiceResult.ok) return voiceResult;
+	const inputReferencesResult = parseSpeechInputReferences(value.input_references, referenceAudio);
+	if (!inputReferencesResult.ok) return inputReferencesResult;
+	const voice = voiceResult.value;
 
-	const responseFormatRaw =
-		typeof value.response_format === 'string' ? value.response_format.trim().toLowerCase() : 'mp3';
-	if (!SPEECH_RESPONSE_FORMATS.has(responseFormatRaw as AudioSpeechResponseFormat)) {
-		return { ok: false, error: `Unsupported response_format: ${responseFormatRaw}` };
+	const responseFormatRaw = value.response_format === undefined
+		? 'pcm'
+		: typeof value.response_format === 'string'
+			? value.response_format.trim().toLowerCase()
+			: '';
+	if (!OPENROUTER_SPEECH_RESPONSE_FORMATS.has(responseFormatRaw as AudioSpeechResponseFormat)) {
+		return { ok: false, error: 'response_format must be "mp3" or "pcm"' };
 	}
-	const speed = value.speed == null ? 1 : Number(value.speed);
-	if (!Number.isFinite(speed) || speed < 0.25 || speed > 4) {
+	const speed = value.speed === undefined ? 1 : value.speed;
+	if (typeof speed !== 'number' || !Number.isFinite(speed) || speed < 0.25 || speed > 4) {
 		return { ok: false, error: 'speed must be between 0.25 and 4.0' };
 	}
 	const streamFormatRaw =
@@ -1109,10 +1240,13 @@ function parseSpeechRequest(body: unknown):
 		}
 		if (value.instructions !== '') instructions = value.instructions;
 	}
+	const providerResult = parseProviderOptions<AudioProviderOptionValue>(value.provider, true);
+	if (!providerResult.ok) return providerResult;
 
 	return {
 		ok: true,
 		model,
+		routingProvider: providerResult.routingProvider,
 		speech: {
 			input,
 			voice,
@@ -1120,6 +1254,110 @@ function parseSpeechRequest(body: unknown):
 			speed,
 			streamFormat: streamFormatRaw,
 			instructions,
+			inputReferences: inputReferencesResult.value,
+			providerOptions: providerResult.providerOptions,
+		},
+	};
+}
+
+export async function parseAudioSpeechRequest(
+	request: Request,
+	maxRequestBytes = AUDIO_SPEECH_MAX_REQUEST_BYTES,
+): Promise<ParsedAudioSpeechRequest> {
+	const requestLimit = Number.isSafeInteger(maxRequestBytes) && maxRequestBytes > 0
+		? Math.min(AUDIO_SPEECH_MAX_REQUEST_BYTES, maxRequestBytes)
+		: AUDIO_SPEECH_MAX_REQUEST_BYTES;
+	let parsedBody: OpenRouterSpeechJsonResult;
+	try {
+		parsedBody = await parseOpenRouterSpeechJson(request, {
+			maxRequestBytes: requestLimit,
+		});
+	} catch (error) {
+		if (error instanceof OpenRouterSpeechJsonError) {
+			return { ok: false, kind: error.kind, error: error.message };
+		}
+		throw error;
+	}
+	const parsed = parseSpeechRequest(parsedBody.body, parsedBody.referenceAudio);
+	return parsed.ok
+		? parsed
+		: { ok: false, kind: 'invalid_request', error: parsed.error };
+}
+
+/** Project all provider option strings through the existing input Guardrail engine. */
+export function audioSpeechGuardrailBody(
+	parsed: Extract<ReturnType<typeof parseSpeechRequest>, { ok: true }>,
+): Record<string, unknown> {
+	const referenceText = parsed.speech.inputReferences?.find((part) => part.type === 'text');
+	return {
+		model: parsed.model,
+		input: parsed.speech.input,
+		instructions: {
+			top_level: parsed.speech.instructions ?? null,
+			provider_options: parsed.speech.providerOptions ?? null,
+			reference_text: referenceText?.type === 'text' ? referenceText.text : null,
+		},
+		...(parsed.routingProvider ? { provider: parsed.routingProvider } : {}),
+	};
+}
+
+export function restoreAudioSpeechAfterGuardrail(
+	parsed: Extract<ReturnType<typeof parseSpeechRequest>, { ok: true }>,
+	guardedBody: Record<string, unknown>,
+):
+	| {
+			ok: true;
+			routingBody: Record<string, unknown>;
+			speech: NormalizedAudioSpeechRequest;
+	  }
+	| { ok: false; error: string } {
+	const envelope = guardedBody.instructions;
+	if (!envelope || typeof envelope !== 'object' || Array.isArray(envelope)) {
+		return { ok: false, error: 'Guardrail produced invalid audio speech instructions' };
+	}
+	const instructionEnvelope = envelope as Record<string, unknown>;
+	const topLevelInstructions = instructionEnvelope.top_level;
+	if (topLevelInstructions !== null && typeof topLevelInstructions !== 'string') {
+		return { ok: false, error: 'Guardrail produced invalid audio speech instructions' };
+	}
+	const rawProviderOptions = instructionEnvelope.provider_options;
+	const guardedProviderOptions = rawProviderOptions === null
+		? { ok: true as const, providerOptions: undefined }
+		: parseProviderOptions<AudioProviderOptionValue>({ options: rawProviderOptions }, true);
+	if (!guardedProviderOptions.ok) {
+		return { ok: false, error: 'Guardrail produced invalid audio speech provider options' };
+	}
+	const originalReferenceText = parsed.speech.inputReferences?.find((part) => part.type === 'text');
+	const guardedReferenceText = instructionEnvelope.reference_text;
+	if (
+		(originalReferenceText?.type === 'text' && typeof guardedReferenceText !== 'string')
+		|| (originalReferenceText == null && guardedReferenceText !== null)
+	) {
+		return { ok: false, error: 'Guardrail produced invalid audio speech reference text' };
+	}
+	const restoredReferences = parsed.speech.inputReferences?.map((part) =>
+		part.type === 'text'
+			? { ...part, text: guardedReferenceText as string }
+			: part);
+	const routingBody: Record<string, unknown> = {
+		model: parsed.model,
+		input: guardedBody.input,
+		...(parsed.speech.voice ? { voice: parsed.speech.voice } : {}),
+		response_format: parsed.speech.responseFormat,
+		speed: parsed.speech.speed,
+		stream_format: parsed.speech.streamFormat,
+		...(topLevelInstructions ? { instructions: topLevelInstructions } : {}),
+		...(guardedBody.provider !== undefined ? { provider: guardedBody.provider } : {}),
+	};
+	const reparsed = parseSpeechRequest(routingBody);
+	if (!reparsed.ok) return reparsed;
+	return {
+		ok: true,
+		routingBody,
+		speech: {
+			...reparsed.speech,
+			inputReferences: restoredReferences,
+			providerOptions: guardedProviderOptions.providerOptions,
 		},
 	};
 }
@@ -1130,21 +1368,21 @@ audioRoutes.post('/speech', async (c) => {
 	const start = Date.now();
 	const requestCorrelationId = c.get('generationId')!;
 	const timing = new RequestTimingCollector();
-	let body: unknown;
-	try {
-		body = await c.req.json();
-	} catch {
-		return gatewayErrorJson(c, {
-			status: 400,
-			code: GatewayErrorCode.invalidJson,
-			message: 'Invalid JSON body',
-		});
-	}
-	const parsed = parseSpeechRequest(body);
-	if (!parsed.ok) {
+	const parsedSession = parseOpenRouterSessionHeader(c.req.raw.headers);
+	if (!parsedSession.ok) {
 		return gatewayErrorJson(c, {
 			status: 400,
 			code: GatewayErrorCode.invalidRequest,
+			message: parsedSession.message,
+		});
+	}
+	const sessionId = parsedSession.sessionId;
+	const parsed = await parseAudioSpeechRequest(c.req.raw);
+	if (!parsed.ok) {
+		const failure = audioTranscriptionParseFailureContract(parsed.kind);
+		return gatewayErrorJson(c, {
+			status: failure.status,
+			code: failure.code,
 			message: parsed.error,
 		});
 	}
@@ -1154,7 +1392,7 @@ audioRoutes.post('/speech', async (c) => {
 		userId: apiKey.userId,
 		apiKeyId: apiKey.keyId,
 		modelId: rawModelId,
-		body: body as Record<string, unknown>,
+		body: audioSpeechGuardrailBody(parsed),
 		correlationId: requestCorrelationId,
 		now: new Date(start),
 	});
@@ -1176,9 +1414,17 @@ audioRoutes.post('/speech', async (c) => {
 		requestCorrelationId,
 	);
 	if (outputGuardrailBlock) return outputGuardrailBlock;
+	const guardedRequest = restoreAudioSpeechAfterGuardrail(parsed, guardrail.body);
+	if (!guardedRequest.ok) {
+		return gatewayErrorJson(c, {
+			status: 400,
+			code: GatewayErrorCode.guardrailInvalid,
+			message: guardedRequest.error,
+		});
+	}
 	const fallbackPlan = await buildModelFallbackPlan(repos, {
 		modelIds: [rawModelId],
-		body: guardrail.body,
+		body: guardedRequest.routingBody,
 		requestProtocol: 'openai',
 		requestOperation: 'audio.speech',
 		pricingAt: new Date(start),
@@ -1199,8 +1445,20 @@ audioRoutes.post('/speech', async (c) => {
 			message: guardedParsed.error,
 		});
 	}
-	const speech = guardedParsed.speech;
-	const { model, baseModelId, effectiveRouteGroup, routes } = selectedPlan;
+	const speech: NormalizedAudioSpeechRequest = {
+		...guardedParsed.speech,
+		inputReferences: guardedRequest.speech.inputReferences,
+		providerOptions: guardedRequest.speech.providerOptions,
+	};
+	const { model, baseModelId, effectiveRouteGroup, routes: plannedRoutes } = selectedPlan;
+	const routes = plannedRoutes.filter((route) => audioSpeechRouteCanDispatch(route, speech));
+	if (routes.length === 0) {
+		return gatewayErrorJson(c, {
+			status: 502,
+			code: GatewayErrorCode.routeResolutionFailed,
+			message: 'No configured audio speech route supports the requested format and options',
+		});
+	}
 	if (routes.some(routeUsesUnsupportedMultimediaEndpointPriceSelection)) {
 		return gatewayErrorJson(c, {
 			status: 400,
@@ -1222,7 +1480,7 @@ audioRoutes.post('/speech', async (c) => {
 		}, [route.priceOverrideRaw])),
 	));
 	if (!estimateSelection) throw new Error('Audio fallback plan has no billable route estimate');
-	const { estimate, estimatedChargedCost } = estimateSelection;
+	const { estimate, estimatedChargedCost, estimatedStandardCost } = estimateSelection;
 	const pricingCeilingFailure = audioPricingCeilingFailureContract(estimatedChargedCost);
 	if (pricingCeilingFailure) return gatewayErrorJson(c, pricingCeilingFailure);
 
@@ -1237,57 +1495,35 @@ audioRoutes.post('/speech', async (c) => {
 		startMs: start,
 		timing,
 		clientErrorCircuitEnabled: false,
+		sessionId,
 	});
 	if (circuitBlocked) return circuitBlocked;
 
-	const ordinaryAdmission = await reserveOrdinaryUserBudget(repos, {
-		requestId: requestCorrelationId,
-		userId: apiKey.userId,
-		apiKeyId: apiKey.keyId,
-		budgetMax: apiKey.budgetMax,
-		expectedBudgetEpoch: apiKey.budgetEpoch,
-		estimatedChargedCost,
-		now: new Date(start),
-	});
-	if (!ordinaryAdmission.ok) {
-		return gatewayErrorJson(c, {
-			status: 403,
-			code: GatewayErrorCode.budgetExceeded,
-			message: ordinaryAdmission.error.message,
-		});
-	}
-	const ordinaryBudgetLease = ordinaryAdmission.lease;
-	let budgetAdmission: Awaited<ReturnType<typeof admitAudioGuardrailBudget>>;
-	try {
-		budgetAdmission = await admitAudioGuardrailBudget(repos, {
+	const budgetAdmission = await createRouteAwareBudgetAdmission(repos, {
+		ordinary: {
 			requestId: requestCorrelationId,
+			userId: apiKey.userId,
+			apiKeyId: apiKey.keyId,
+			budgetMax: apiKey.budgetMax,
+			expectedBudgetEpoch: apiKey.budgetEpoch,
+			estimatedChargedCost,
+			now: new Date(start),
+		},
+		guardrail: {
 			intents: guardrail.budgetIntents,
 			reservedMicros: audioGuardrailBudgetMicros(estimate.chargedCost),
-		});
-	} catch (error) {
-		await terminateAudioOrdinaryBudget(
-			ordinaryBudgetLease,
-			requestCorrelationId,
-			'guardrail_budget_admission_failed',
-		);
-		throw error;
-	}
-	if (!budgetAdmission.ok) {
-		await terminateAudioOrdinaryBudget(
-			ordinaryBudgetLease,
-			requestCorrelationId,
-			'guardrail_budget_admission_failed',
-		);
-		if (budgetAdmission.blocked) {
-			return gatewayErrorJson(c, {
-				status: 403,
-				code: budgetAdmission.reason === 'gateway_key_limit' || budgetAdmission.reason === 'workspace_budget' ? GatewayErrorCode.budgetExceeded : GatewayErrorCode.guardrailBlocked,
-				message: budgetAdmission.message,
-			});
-		}
-		throw new Error(`Guardrail budget admission failed: ${budgetAdmission.message}`);
-	}
-	const guardrailBudgetLease = budgetAdmission.lease;
+			now: new Date(start),
+		},
+		privateByokGatewayKey: {
+			includeInLimit: apiKey.includeByokInLimit === true,
+			reservedMicros: Math.max(
+				audioGuardrailBudgetMicros(estimate.chargedCost),
+				audioGuardrailBudgetMicros(estimatedStandardCost ?? Number.POSITIVE_INFINITY),
+			),
+		},
+	});
+	const ordinaryBudgetLease = budgetAdmission.ordinaryLease;
+	const guardrailBudgetLease = audioGuardrailBudgetLease(budgetAdmission);
 	const affinityKey = buildAffinityKey(apiKey.userId, baseModelId, effectiveRouteGroup, 'openai');
 	const tierKeyPrefix = buildTierKeyPrefix(baseModelId, effectiveRouteGroup, 'openai');
 	timing.markGatewayComplete();
@@ -1306,10 +1542,8 @@ audioRoutes.post('/speech', async (c) => {
 				timing,
 				routePoolId: selectedPlan.surface?.route_pool_id ?? routes[0]?.routePoolId ?? null,
 				sticky: selectedPlan.hasProviderPreferences ? null : stickyConfigFromSurface(selectedPlan.surface),
-				beforeUpstreamDispatch: () => beforeAudioUpstreamDispatch(
-					ordinaryBudgetLease,
-					guardrailBudgetLease,
-				),
+				beforeUpstreamDispatch: (route) => budgetAdmission.beforeUpstreamDispatch(route),
+				byok: privateByokContextForApiKey(apiKey),
 			}
 		);
 	} catch (error) {
@@ -1340,6 +1574,7 @@ audioRoutes.post('/speech', async (c) => {
 		effectiveRouteGroup,
 		modelNameForLog,
 		requestBodyForLog,
+		sessionId,
 		inputCharacters: Array.from(speech.input).length,
 		businessTimezone,
 		start,
@@ -1358,6 +1593,7 @@ async function finalizeSpeechResponse(params: {
 	effectiveRouteGroup: string;
 	modelNameForLog: string;
 	requestBodyForLog: string | null;
+	sessionId: string | null;
 	inputCharacters: number;
 	businessTimezone: string;
 	start: number;
@@ -1374,6 +1610,7 @@ async function finalizeSpeechResponse(params: {
 		effectiveRouteGroup,
 		modelNameForLog,
 		requestBodyForLog,
+		sessionId,
 		inputCharacters,
 		businessTimezone,
 		start,
@@ -1490,6 +1727,8 @@ async function finalizeSpeechResponse(params: {
 					requestBody: requestBodyForLog,
 					requestBodyLoggingMode: c.get('requestBodyLoggingMode'),
 					requestOrigin: new URL(c.req.url).origin,
+					...generationRequestContext(c.req.raw.headers),
+					sessionId,
 					responseStreamed: true,
 					requestProtocol: 'openai',
 					requestOperation: 'audio.speech',
@@ -1570,6 +1809,7 @@ async function finalizeAudioResponse(params: {
 	effectiveRouteGroup: string;
 	modelNameForLog: string;
 	requestBodyForLog: string | null;
+	sessionId: string | null;
 	fileBytes: number;
 	businessTimezone: string;
 	start: number;
@@ -1586,6 +1826,7 @@ async function finalizeAudioResponse(params: {
 		effectiveRouteGroup,
 		modelNameForLog,
 		requestBodyForLog,
+		sessionId,
 		fileBytes,
 		businessTimezone,
 		start,
@@ -1686,6 +1927,8 @@ async function finalizeAudioResponse(params: {
 				requestBody: requestBodyForLog,
 				requestBodyLoggingMode: c.get('requestBodyLoggingMode'),
 				requestOrigin: new URL(c.req.url).origin,
+				...generationRequestContext(c.req.raw.headers),
+				sessionId,
 				responseStreamed: false,
 				requestProtocol: 'openai',
 				requestOperation: 'audio.transcriptions',

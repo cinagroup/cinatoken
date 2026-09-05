@@ -111,6 +111,32 @@ test('D1 Presets, Guardrails, assignments, and budget windows are isolated by Wo
 		assert.equal(await presets.getAccessibleBySlug(
 			'shared-slug', 'personal:user-workspace-2', 'user-workspace-1',
 		), null, 'a private preset cannot leak across Workspaces');
+		assert.equal((await presets.listVisibleByWorkspacePage(
+			'personal:user-workspace-1', 'user-workspace-2', { offset: 0, limit: 10 },
+		)).totalCount, 1, 'an active Workspace-public preset is visible to another caller');
+		assert.equal((await presets.listVisibleByWorkspacePage(
+			'personal:user-workspace-2', 'user-workspace-1', { offset: 0, limit: 10 },
+		)).totalCount, 0, 'a private preset is omitted outside its owner');
+
+		await presets.addVersion({
+			presetId: 'preset-workspace-1', versionId: 'preset-version-1b',
+			systemPrompt: 'Second', configJson: '{"model":"openai/gpt-5","temperature":0.2}',
+			createdByUserId: 'user-workspace-1', nowIso: '2026-08-30T00:01:00.000Z',
+		});
+		await presets.addVersion({
+			presetId: 'preset-workspace-1', versionId: 'preset-version-1c',
+			systemPrompt: 'Third', configJson: '{"model":"openai/gpt-5","temperature":0.3}',
+			createdByUserId: 'user-workspace-1', nowIso: '2026-08-30T00:02:00.000Z',
+		});
+		const versionPage = await presets.listVersionsPage(
+			'preset-workspace-1', { offset: 0, limit: 2 },
+		);
+		assert.equal(versionPage.totalCount, 3);
+		assert.deepEqual(versionPage.data.map((row) => row.version), [1, 2]);
+		assert.equal((await presets.listVersionsPage(
+			'preset-workspace-1', { offset: 2, limit: 2 },
+		)).data[0]?.version, 3);
+		assert.equal((await presets.getVersion('preset-workspace-1', 2))?.system_prompt, 'Second');
 
 		for (const suffix of ['1', '2'] as const) {
 			await guardrails.createWithVersion({
@@ -128,12 +154,36 @@ test('D1 Presets, Guardrails, assignments, and budget windows are isolated by Wo
 				createdByUserId: `user-workspace-${suffix}`, nowIso,
 			});
 		}
-		assert.deepEqual((await guardrails.getEffectiveForRequest(
-			'personal:user-workspace-1', 'shared-subject', 'key-workspace-1',
-		)).map((row) => row.id), ['guardrail-workspace-1']);
-		assert.deepEqual((await guardrails.getEffectiveForRequest(
-			'personal:user-workspace-2', 'shared-subject', 'key-workspace-2',
-		)).map((row) => row.id), ['guardrail-workspace-2']);
+		for (const suffix of ['1', '2'] as const) {
+			const effective = await guardrails.getEffectiveForRequest(
+				`personal:user-workspace-${suffix}`, 'shared-subject', `key-workspace-${suffix}`,
+			);
+			assert.equal(effective.length, 3);
+			assert.ok(effective.some((row) => row.is_account_default
+				&& row.assignment_scope_type === 'account'
+				&& row.assignment_scope_id === `personal:user-workspace-${suffix}`));
+			assert.ok(effective.some((row) => row.id === `guardrail-workspace-${suffix}`
+				&& row.assignment_scope_type === 'user'));
+			assert.ok(effective.some((row) => row.is_workspace_default
+				&& row.assignment_scope_type === 'workspace'
+				&& row.assignment_scope_id === `personal:user-workspace-${suffix}`));
+		}
+		const workspaceDefaultId = String(database.prepare(`SELECT id FROM guardrails
+			WHERE workspace_id = ? AND is_workspace_default = 1`)
+			.get('personal:user-workspace-1')?.id);
+		await assert.rejects(() => guardrails.upsertAssignment({
+			id: 'invalid-workspace-default-assignment', workspaceId: 'personal:user-workspace-1',
+			guardrailId: workspaceDefaultId, scopeType: 'user', scopeId: 'shared-subject',
+			createdByUserId: 'user-workspace-1', nowIso,
+		}), /Default Guardrails cannot be assigned/u);
+		const accountDefaultId = String(database.prepare(`SELECT id FROM guardrails
+			WHERE account_scope_key = ? AND is_account_default = 1`)
+			.get('personal:user-workspace-1')?.id);
+		await assert.rejects(() => guardrails.upsertAssignment({
+			id: 'invalid-account-default-assignment', workspaceId: 'personal:user-workspace-1',
+			guardrailId: accountDefaultId, scopeType: 'user', scopeId: 'shared-subject',
+			createdByUserId: 'user-workspace-1', nowIso,
+		}), /Default Guardrails cannot be assigned/u);
 		await assert.rejects(() => guardrails.upsertAssignment({
 			id: 'cross-workspace-key-assignment', workspaceId: 'personal:user-workspace-1',
 			guardrailId: 'guardrail-workspace-1', scopeType: 'api_key', scopeId: 'key-workspace-2',

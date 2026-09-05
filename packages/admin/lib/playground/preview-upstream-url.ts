@@ -49,6 +49,8 @@ export function previewPlaygroundUpstreamUrl(input: {
 	imageOperation?: "generations" | "edits";
 	/** Audio transcription (ASR) catalog model. */
 	isAudioModel?: boolean;
+	/** Rerank catalog model (`output_modalities` includes `rerank`). */
+	isRerankModel?: boolean;
 	/** Route target operation; required to resolve DashScope's concrete audio endpoint. */
 	upstreamOperation?: string | null;
 	geminiAction?: GeminiContentAction;
@@ -67,7 +69,12 @@ export function previewPlaygroundUpstreamUrl(input: {
 
 	try {
 		switch (protocol) {
-			case "openai": {
+		case "openai": {
+				if (input.isRerankModel) {
+					return resolveUpstreamEndpoint(protocol, 'rerank', providerEndpoints, {
+						providerId: provider.id,
+					});
+				}
 				const kind = modelKindFromFlags(
 					Boolean(input.isAudioModel),
 					Boolean(input.isImageModel)

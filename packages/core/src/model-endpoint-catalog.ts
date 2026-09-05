@@ -4,6 +4,7 @@ const MAX_STRING_LENGTH = 128;
 const MAX_COLLECTION_SIZE = 256;
 const MAX_IMAGE_COST_USD = 1_000_000_000;
 const MAX_AUDIO_METER_UNITS = 1_000_000_000;
+export const AUDIO_REFERENCE_MEDIA_TYPES_LIMIT = 16;
 
 export type EvidenceBoolean = boolean | null;
 
@@ -103,11 +104,24 @@ export type AudioOperationPricing = {
 	discount?: number;
 };
 
+export type AudioSpeechRequestCapabilities = {
+	/** Whether this endpoint documents a provider-side voice when `voice` is omitted. */
+	supports_default_voice: EvidenceBoolean;
+	/** Exact reference-audio media types accepted for stateless voice cloning. */
+	reference_audio_media_types: string[];
+	/** Media type the provider assigns to a raw Base64 reference, if documented. */
+	reference_audio_default_media_type: string | null;
+};
+
 export type AudioEndpointCapabilities = {
 	v: 1;
 	pricing_by_operation: Partial<
 		Record<AudioEndpointPricingOperation, AudioOperationPricing>
 	>;
+	/** Request-shape evidence is optional for backward-compatible v1 records. */
+	speech_by_operation?: {
+		"audio.speech"?: AudioSpeechRequestCapabilities;
+	};
 };
 
 export type ImageCapabilityDescriptor =
@@ -457,6 +471,85 @@ function normalizeAudioOperationPricing(
 	return output;
 }
 
+const AUDIO_MEDIA_TYPE = /^audio\/[a-z0-9][a-z0-9.+-]{0,63}$/u;
+
+function normalizeAudioReferenceMediaTypes(
+	input: unknown
+): string[] {
+	if (
+		!Array.isArray(input) ||
+		input.length > AUDIO_REFERENCE_MEDIA_TYPES_LIMIT
+	) {
+		throw new TypeError(
+			`audio.speech reference_audio_media_types must be an array of at most ${AUDIO_REFERENCE_MEDIA_TYPES_LIMIT} media types`
+		);
+	}
+	const output: string[] = [];
+	const seen = new Set<string>();
+	for (const item of input) {
+		const normalized = boundedString(
+			item,
+			"audio.speech reference media type"
+		).toLowerCase();
+		if (!AUDIO_MEDIA_TYPE.test(normalized)) {
+			throw new TypeError(
+				"audio.speech reference media types must use an exact audio/* media type without parameters"
+			);
+		}
+		if (seen.has(normalized)) {
+			throw new TypeError(
+				`audio.speech reference_audio_media_types contains a duplicate: ${normalized}`
+			);
+		}
+		seen.add(normalized);
+		output.push(normalized);
+	}
+	return output;
+}
+
+function normalizeAudioSpeechRequestCapabilities(
+	input: unknown
+): AudioSpeechRequestCapabilities {
+	const label = "audio speech request capabilities";
+	const value = record(input, label);
+	allowKeys(
+		value,
+		[
+			"supports_default_voice",
+			"reference_audio_media_types",
+			"reference_audio_default_media_type",
+		],
+		label
+	);
+	const referenceAudioMediaTypes = normalizeAudioReferenceMediaTypes(
+		value.reference_audio_media_types
+	);
+	const referenceAudioDefaultMediaType =
+		value.reference_audio_default_media_type === null
+			? null
+			: boundedString(
+					value.reference_audio_default_media_type,
+					"audio.speech reference_audio_default_media_type"
+				).toLowerCase();
+	if (
+		referenceAudioDefaultMediaType !== null &&
+		(!AUDIO_MEDIA_TYPE.test(referenceAudioDefaultMediaType) ||
+			!referenceAudioMediaTypes.includes(referenceAudioDefaultMediaType))
+	) {
+		throw new TypeError(
+			"audio.speech reference_audio_default_media_type must be one of reference_audio_media_types"
+		);
+	}
+	return {
+		supports_default_voice: evidenceBoolean(
+			value.supports_default_voice,
+			"audio.speech supports_default_voice"
+		),
+		reference_audio_media_types: referenceAudioMediaTypes,
+		reference_audio_default_media_type: referenceAudioDefaultMediaType,
+	};
+}
+
 /**
  * Parse endpoint-scoped audio evidence. Unknown operations, meter/operation
  * mismatches, implicit units, exponent prices, and incomplete token dimensions
@@ -466,7 +559,11 @@ export function normalizeAudioEndpointCapabilities(
 	input: unknown
 ): AudioEndpointCapabilities {
 	const value = record(input, "audio endpoint capabilities");
-	allowKeys(value, ["v", "pricing_by_operation"], "audio endpoint capabilities");
+	allowKeys(
+		value,
+		["v", "pricing_by_operation", "speech_by_operation"],
+		"audio endpoint capabilities"
+	);
 	if (value.v !== 1) {
 		throw new TypeError("audio endpoint capabilities v must be 1");
 	}
@@ -498,7 +595,60 @@ export function normalizeAudioEndpointCapabilities(
 			);
 		}
 	}
-	return { v: 1, pricing_by_operation: pricingByOperation };
+	let speechByOperation: AudioEndpointCapabilities["speech_by_operation"];
+	if (value.speech_by_operation !== undefined) {
+		if (pricingByOperation["audio.speech"] === undefined) {
+			throw new TypeError(
+				"audio endpoint speech_by_operation requires audio.speech pricing evidence"
+			);
+		}
+		const speechInput = record(
+			value.speech_by_operation,
+			"audio endpoint speech_by_operation"
+		);
+		allowKeys(
+			speechInput,
+			["audio.speech"],
+			"audio endpoint speech_by_operation"
+		);
+		if (Object.keys(speechInput).length === 0) {
+			throw new TypeError(
+				"audio endpoint speech_by_operation must contain audio.speech"
+			);
+		}
+		speechByOperation = {
+			"audio.speech": normalizeAudioSpeechRequestCapabilities(
+				speechInput["audio.speech"]
+			),
+		};
+	}
+	return {
+		v: 1,
+		pricing_by_operation: pricingByOperation,
+		...(speechByOperation === undefined
+			? {}
+			: { speech_by_operation: speechByOperation }),
+	};
+}
+
+export function audioEndpointSpeechRequestCapabilities(
+	value: AudioEndpointCapabilities
+): AudioSpeechRequestCapabilities | null {
+	return value.speech_by_operation?.["audio.speech"] ?? null;
+}
+
+/** Cross-fact guard shared by Admin, backfill, runtime, and discovery. */
+export function audioEndpointReferenceEvidenceMatchesVoiceCloning(
+	value: AudioEndpointCapabilities,
+	voiceCloning: EvidenceBoolean
+): boolean {
+	const speech = audioEndpointSpeechRequestCapabilities(value);
+	return (
+		!speech ||
+		(speech.reference_audio_media_types.length === 0 &&
+			speech.reference_audio_default_media_type === null) ||
+		voiceCloning === true
+	);
 }
 
 export function isAudioEndpointReady(

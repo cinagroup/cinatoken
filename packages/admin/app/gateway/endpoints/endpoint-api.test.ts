@@ -114,6 +114,13 @@ describe("endpoint admin form mapping", () => {
 						},
 					},
 				},
+				speech_by_operation: {
+					"audio.speech": {
+						supports_default_voice: true,
+						reference_audio_media_types: ["audio/WAV"],
+						reference_audio_default_media_type: "audio/WAV",
+					},
+				},
 			})
 		);
 		assert.equal(valid.ok, true);
@@ -133,6 +140,14 @@ describe("endpoint admin form mapping", () => {
 		assert.deepEqual(
 			summarizeAudioCapabilities(valid.capabilities),
 			valid.summary
+		);
+		assert.deepEqual(
+			valid.capabilities?.speech_by_operation?.["audio.speech"],
+			{
+				supports_default_voice: true,
+				reference_audio_media_types: ["audio/wav"],
+				reference_audio_default_media_type: "audio/wav",
+			}
 		);
 
 		const invalidOperation = previewAudioCapabilitiesJson(

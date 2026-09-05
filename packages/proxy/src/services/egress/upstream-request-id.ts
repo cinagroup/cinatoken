@@ -5,7 +5,7 @@
  *    经 CDN / 聚合商时常被剥离或替换（例如网宿仅回 `x-ws-request-id`），因此名单里既含各家标准头，
  *    也含已知中转/CDN 的兜底头（标准头优先，兜底头置后）。
  * 2) **message id**（应用层）：来自响应 body，是这次「生成结果对象」的 id（OpenAI `chatcmpl-*`、
- *    Anthropic `msg_*`、Gemini `responseId`）。属于 API 契约，穿透聚合商，几乎恒有。见各 driver。
+ *    Embeddings `embd-*`、Anthropic `msg_*`、Gemini `responseId`）。属于 API 契约，穿透聚合商，见各 driver。
  */
 
 /**
@@ -32,12 +32,18 @@ const UPSTREAM_REQUEST_ID_HEADER_NAMES = [
 
 const UPSTREAM_ID_MAX_LENGTH = 200;
 
-/** 归一化任意 id 值：转字符串、trim、空则 null、超长则截断。 */
+/**
+ * Accept one bounded visible-ASCII upstream identifier.
+ *
+ * IDs are untrusted provider input and may later appear in audit/export data.
+ * Reject controls, whitespace and overlong values instead of normalizing them
+ * into ambiguous or log-injectable identifiers.
+ */
 export function normalizeUpstreamId(value: unknown): string | null {
 	if (typeof value !== 'string') return null;
 	const trimmed = value.trim();
-	if (!trimmed) return null;
-	return trimmed.length > UPSTREAM_ID_MAX_LENGTH ? trimmed.slice(0, UPSTREAM_ID_MAX_LENGTH) : trimmed;
+	if (!trimmed || trimmed.length > UPSTREAM_ID_MAX_LENGTH) return null;
+	return /^[\x21-\x7e]+$/.test(trimmed) ? trimmed : null;
 }
 
 function normalizeCloudTraceContextRequestId(value: string): string | null {

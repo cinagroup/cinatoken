@@ -4,6 +4,7 @@ import { useCallback, useState } from 'react';
 import {
 	isAudioModel,
 	isImageGenerationModel,
+	isRerankModel,
 	parseModelModalitiesJson,
 } from '@octafuse/core/db/model-modalities';
 import {
@@ -30,6 +31,7 @@ import {
 	EMPTY_AUDIO_MODEL_FORM,
 	EMPTY_IMAGE_MODEL_FORM,
 	EMPTY_MODEL_FORM,
+	EMPTY_RERANK_MODEL_FORM,
 	type ModelFormData,
 	type ModelFormKind,
 	type ModelListItem,
@@ -93,16 +95,25 @@ export function useModelEditModal(options?: Options) {
 				pricing_profile: model.pricing_profile,
 			});
 			const audioModel = isAudioModel({
+				output_modalities: outputMods,
 				pricing_profile: model.pricing_profile,
 			});
-			const kind: ModelFormKind = audioModel ? 'audio' : imageModel ? 'image' : 'llm';
+			const rerankModel = isRerankModel({ output_modalities: outputMods });
+			const kind: ModelFormKind = rerankModel
+				? 'rerank'
+				: audioModel
+					? 'audio'
+					: imageModel
+						? 'image'
+						: 'llm';
 			setFormKind(kind);
 			setFormData({
 				id: model.id,
 				display_name: model.display_name || '',
 				vendor: normalizeModelVendorInput(model.vendor),
 				context_window: imageModel || audioModel ? '' : model.context_window?.toString() || '',
-				max_tokens: imageModel || audioModel ? '' : model.max_tokens?.toString() || '4096',
+				max_tokens:
+					imageModel || audioModel || rerankModel ? '' : model.max_tokens?.toString() || '4096',
 				input_modalities: parseModelModalitiesJson(model.input_modalities) ?? ['text'],
 				output_modalities: outputMods,
 				released_at: model.released_at ?? '',
@@ -138,6 +149,14 @@ export function useModelEditModal(options?: Options) {
 				});
 				setAudioPricingDraft(createDefaultAudioPricingDraft());
 				setPricingTierRows([]);
+			} else if (kind === 'rerank') {
+				setFormData({
+					...EMPTY_RERANK_MODEL_FORM,
+					vendor,
+				});
+				setPricingTierRows([createDefaultNewModelTierRow()]);
+				setImageBillingMode('token');
+				setImagePerImageDraft(createDefaultImagePerImageDraft());
 			} else {
 				setFormData({
 					...EMPTY_MODEL_FORM,
@@ -215,15 +234,32 @@ export function useModelEditModal(options?: Options) {
 			setPricingTierRows([]);
 			return;
 		}
+		if (kind === 'rerank') {
+			setFormData((prev) => ({
+				...prev,
+				input_modalities: ['text'],
+				output_modalities: ['rerank'],
+				max_tokens: '',
+			}));
+			setPricingTierRows((rows) =>
+				rows.length === 0 || draftRowsLookLikeImageOnly(rows)
+					? [createDefaultNewModelTierRow()]
+					: rows
+			);
+			return;
+		}
 		setFormData((prev) => {
-			const withoutImage = prev.output_modalities.filter((m) => m !== 'image');
+			const withoutSpecialOutput = prev.output_modalities.filter(
+				(m) => m !== 'image' && m !== 'rerank'
+			);
 			const input = prev.input_modalities.includes('text')
 				? prev.input_modalities
 				: ['text', ...prev.input_modalities.filter((m) => m !== 'audio')];
 			return {
 				...prev,
 				input_modalities: input.length > 0 ? input : ['text'],
-				output_modalities: withoutImage.length > 0 ? withoutImage : ['text'],
+				output_modalities:
+					withoutSpecialOutput.length > 0 ? withoutSpecialOutput : ['text'],
 				max_tokens: prev.max_tokens.trim() !== '' ? prev.max_tokens : '8192',
 			};
 		});

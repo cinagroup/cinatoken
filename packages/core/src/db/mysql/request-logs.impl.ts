@@ -1,9 +1,10 @@
 /**
  * MySQL：`api_key_request_logs` 读查询。
  */
-import type { RowDataPacket } from 'mysql2/promise';
+import type { ResultSetHeader, RowDataPacket } from 'mysql2/promise';
 import { sqlMoneyRound } from '../../lib/money-precision';
 import {
+	mapRequestActivityGroupRows,
 	mapRequestStatsByRangeRow,
 	mapRequestTimeseriesRows,
 	mapThroughputSnapshot,
@@ -21,6 +22,18 @@ import {
 	buildRecentRoutePerformanceSamplesSql,
 	normalizeRoutePerformanceSamplesPerTarget,
 } from '../route-performance-sampling';
+import { assertGenerationFeedbackInsertParams } from '../generation-feedback-types';
+import {
+	assertProviderAttemptRetentionDeleteParams,
+	buildProviderAttemptRetentionDeleteSql,
+	buildRouteAvailabilityAggregateSql,
+	normalizeRouteAvailabilityAggregate,
+	routeAvailabilityAggregateParams,
+} from '../provider-attempt-availability';
+import {
+	buildManagementAnalyticsQuery,
+	mapManagementAnalyticsResult,
+} from '../analytics-query';
 
 type MySqlGenerationRequestLogRow = Omit<GenerationRequestLogRow, 'created_at'> & {
 	created_at: string | Date;
@@ -29,15 +42,87 @@ type MySqlGenerationRequestLogRow = Omit<GenerationRequestLogRow, 'created_at'> 
 export function createMySqlRequestLogsRepository(db: MySqlDatabaseClient): RequestLogsRepository {
 	const pool = asMySqlPool(db.raw);
 	return {
+		async queryManagementAnalytics(query) {
+			const normalizedQuery = {
+				...query,
+				startDate: toMySqlDateTime(query.startDate),
+				endDate: toMySqlDateTime(query.endDate),
+			};
+			const built = buildManagementAnalyticsQuery('mysql', normalizedQuery);
+			const connection = await pool.getConnection();
+			try {
+				await connection.query("SET time_zone = '+00:00'");
+				const [rows] = await connection.query<
+					(RowDataPacket & Record<string, unknown>)[]
+				>(built.sql, built.values);
+				return mapManagementAnalyticsResult(rows, query);
+			} finally {
+				connection.release();
+			}
+		},
+
+		async insertGenerationFeedbackForManagementAccount(params): Promise<boolean> {
+			assertGenerationFeedbackInsertParams(params);
+			const personal = params.account.accountType === 'personal';
+			const ownerId = personal
+				? params.account.personalOwnerUserId!
+				: params.account.organizationId!;
+			const accountPredicate = personal
+				? `mk.account_type = 'personal'
+				   AND mk.personal_owner_user_id = ?
+				   AND mk.organization_id IS NULL
+				   AND w.scope_type = 'personal'
+				   AND w.personal_owner_user_id = mk.personal_owner_user_id
+				   AND w.organization_id IS NULL
+				   AND rl.user_id = mk.personal_owner_user_id`
+				: `mk.account_type = 'organization'
+				   AND mk.organization_id = ?
+				   AND mk.personal_owner_user_id IS NULL
+				   AND w.scope_type = 'organization'
+				   AND w.organization_id = mk.organization_id
+				   AND w.personal_owner_user_id IS NULL`;
+			const [result] = await pool.execute<ResultSetHeader>(
+				`INSERT INTO generation_feedback (
+					id, generation_id, workspace_id, management_api_key_id,
+					account_type, personal_owner_user_id, organization_id,
+					category, comment, created_at
+				 )
+				 SELECT ?, rl.id, rl.workspace_id, mk.id,
+				        mk.account_type, mk.personal_owner_user_id, mk.organization_id,
+				        ?, ?, ?
+				 FROM api_key_request_logs rl
+				 JOIN workspaces w ON w.id = rl.workspace_id
+				 JOIN management_api_keys mk ON mk.id = ? AND mk.status = 'active'
+				 WHERE rl.id = ?
+				   AND ${accountPredicate}`,
+				[
+					params.id,
+					params.category,
+					params.comment,
+					params.createdAtIso,
+					params.managementApiKeyId,
+					params.generationId,
+					ownerId,
+				],
+			);
+			return result.affectedRows === 1;
+		},
+
 		async getRequestLogByIdForOwner(options): Promise<GenerationRequestLogRow | null> {
 			const [rows] = await pool.query<MySqlGenerationRequestLogRow[]>(
 				`SELECT rl.id, rl.request_operation, rl.status, rl.created_at,
-				        rl.latency_ms, rl.model_id, rl.provider_name,
+				        rl.latency_ms, rl.final_upstream_headers_ms, rl.stream_duration_ms,
+				        rl.model_id, rl.provider_name,
 				        rl.input_tokens, rl.output_tokens, rl.cache_read_tokens,
-				        rl.reasoning_tokens, rl.input_image_count, rl.output_image_count,
-				        rl.upstream_message_id, rl.workspace_id, rl.request_origin,
+				        rl.reasoning_tokens, rl.native_tokens_prompt,
+				        rl.native_tokens_completion, rl.native_tokens_cached,
+				        rl.native_tokens_reasoning, rl.native_tokens_completion_images,
+				        rl.input_image_count, rl.output_image_count,
+				        rl.upstream_message_id, rl.session_id, rl.workspace_id, rl.request_origin,
+				        rl.http_referer, rl.user_agent,
 				        rl.response_streamed, rl.data_region, rl.is_byok,
-				        rl.charged_cost_usd, rl.upstream_inference_cost_usd
+				        rl.charged_cost_usd, rl.upstream_inference_cost_usd, rl.service_tier,
+				        rl.finish_reason, rl.native_finish_reason, rl.provider_responses
 				 FROM api_key_request_logs rl
 				 WHERE rl.id = ?
 				   AND rl.user_id = ?
@@ -120,6 +205,7 @@ export function createMySqlRequestLogsRepository(db: MySqlDatabaseClient): Reque
 			userEmail?: string;
 			modelId?: string;
 			providerId?: string;
+			providerName?: string;
 			routeGroup?: string;
 			protocol?: string;
 			status?: string;
@@ -156,6 +242,10 @@ export function createMySqlRequestLogsRepository(db: MySqlDatabaseClient): Reque
 			if (options.providerId) {
 				conditions.push('rl.provider_id = ?');
 				bindValues.push(options.providerId);
+			}
+			if (options.providerName) {
+				conditions.push('rl.provider_name = ?');
+				bindValues.push(options.providerName);
 			}
 			if (options.routeGroup) {
 				conditions.push('rl.route_group = ?');
@@ -203,6 +293,10 @@ export function createMySqlRequestLogsRepository(db: MySqlDatabaseClient): Reque
 			endExclusive?: boolean;
 			userId?: string;
 			workspaceId?: string;
+			apiKeyId?: string;
+			modelId?: string;
+			providerName?: string;
+			status?: string;
 		}) {
 			const comparator = options.endExclusive ? '<' : '<=';
 			const conditions = [`created_at >= ?`, `created_at ${comparator} ?`];
@@ -214,6 +308,22 @@ export function createMySqlRequestLogsRepository(db: MySqlDatabaseClient): Reque
 			if (options.workspaceId) {
 				conditions.push('workspace_id = ?');
 				values.push(options.workspaceId);
+			}
+			if (options.apiKeyId) {
+				conditions.push('api_key_id = ?');
+				values.push(options.apiKeyId);
+			}
+			if (options.modelId) {
+				conditions.push('model_id = ?');
+				values.push(options.modelId);
+			}
+			if (options.providerName) {
+				conditions.push('provider_name = ?');
+				values.push(options.providerName);
+			}
+			if (options.status) {
+				conditions.push('status = ?');
+				values.push(options.status);
 			}
 			const [rows] = await pool.query<(RowDataPacket & Record<string, unknown>)[]>(
 				`SELECT
@@ -227,25 +337,108 @@ export function createMySqlRequestLogsRepository(db: MySqlDatabaseClient): Reque
 			return mapRequestStatsByRangeRow(rows[0] as Parameters<typeof mapRequestStatsByRangeRow>[0]);
 		},
 
+		async getRequestActivityGroups(options) {
+			const comparator = options.endExclusive ? '<' : '<=';
+			const conditions = [
+				`created_at >= ?`,
+				`created_at ${comparator} ?`,
+				'user_id = ?',
+				'workspace_id = ?',
+			];
+			const values: unknown[] = [
+				options.startDate,
+				options.endDate,
+				options.userId,
+				options.workspaceId,
+			];
+			if (options.apiKeyId) {
+				conditions.push('api_key_id = ?');
+				values.push(options.apiKeyId);
+			}
+			if (options.modelId) {
+				conditions.push('model_id = ?');
+				values.push(options.modelId);
+			}
+			if (options.providerName) {
+				conditions.push('provider_name = ?');
+				values.push(options.providerName);
+			}
+			if (options.status) {
+				conditions.push('status = ?');
+				values.push(options.status);
+			}
+			const groupColumn = options.dimension === 'model'
+				? 'model_id'
+				: options.dimension === 'provider' ? 'provider_name' : 'api_key_id';
+			const groupName = options.dimension === 'model'
+				? "MAX(NULLIF(model_name, ''))"
+				: 'NULL';
+			conditions.push(`${groupColumn} IS NOT NULL`, `${groupColumn} != ''`);
+			const parsedLimit = Number(options.limit);
+			const limit = Number.isFinite(parsedLimit)
+				? Math.min(25, Math.max(1, Math.trunc(parsedLimit)))
+				: 10;
+			const [rows] = await pool.query<(RowDataPacket & Record<string, unknown>)[]>(
+				`SELECT
+					${groupColumn} AS group_id,
+					${groupName} AS group_name,
+					COUNT(*) AS request_count,
+					SUM(CASE WHEN status = 'success' THEN 1 ELSE 0 END) AS success_count,
+					SUM(CASE WHEN status = 'error' THEN 1 ELSE 0 END) AS error_count,
+					COALESCE(SUM(total_tokens), 0) AS total_tokens,
+					COALESCE(${sqlMoneyRound('SUM(charged_cost)')}, 0) AS charged_cost
+				 FROM api_key_request_logs
+				 WHERE ${conditions.join(' AND ')}
+				 GROUP BY ${groupColumn}
+				 ORDER BY charged_cost DESC, request_count DESC, group_id ASC
+				 LIMIT ?`,
+				[...values, limit]
+			);
+			return mapRequestActivityGroupRows(rows as Parameters<typeof mapRequestActivityGroupRows>[0]);
+		},
+
 		async queryRequestTimeseries(options: {
 			startDate: string;
 			endDate: string;
+			endExclusive?: boolean;
 			granularity: 'hour' | 'day';
+			userId?: string;
+			workspaceId?: string;
+			apiKeyId?: string;
+			modelId?: string;
+			providerName?: string;
+			status?: string;
 		}) {
 			const bucketExpr =
 				options.granularity === 'hour'
 					? "DATE_FORMAT(created_at, '%Y-%m-%d %H:00:00')"
 					: "DATE_FORMAT(created_at, '%Y-%m-%d')";
+			const comparator = options.endExclusive ? '<' : '<=';
+			const conditions = [`created_at >= ?`, `created_at ${comparator} ?`];
+			const values: unknown[] = [options.startDate, options.endDate];
+			for (const [column, value] of [
+				['user_id', options.userId],
+				['workspace_id', options.workspaceId],
+				['api_key_id', options.apiKeyId],
+				['model_id', options.modelId],
+				['provider_name', options.providerName],
+				['status', options.status],
+			] as const) {
+				if (value) {
+					conditions.push(`${column} = ?`);
+					values.push(value);
+				}
+			}
 			const [rows] = await pool.query<(RowDataPacket & Record<string, unknown>)[]>(
 				`SELECT
 					${bucketExpr} AS bucket,
 					${REQUEST_TIMESERIES_SELECT_SQL},
 					COALESCE(${sqlMoneyRound('SUM(charged_cost)')}, 0) AS charged_cost
 				 FROM api_key_request_logs
-				 WHERE created_at >= ? AND created_at <= ?
+				 WHERE ${conditions.join(' AND ')}
 				 GROUP BY bucket
 				 ORDER BY bucket ASC`,
-				[options.startDate, options.endDate]
+				values
 			);
 			return mapRequestTimeseriesRows(rows as Parameters<typeof mapRequestTimeseriesRows>[0]);
 		},
@@ -316,6 +509,33 @@ export function createMySqlRequestLogsRepository(db: MySqlDatabaseClient): Reque
 				[...options.routeTargetIds, toMySqlDateTime(options.sinceIso), maxSamplesPerRoute]
 			);
 			return rows;
+		},
+
+		async getRouteAvailabilityAggregates(options) {
+			if (options.routeTargetIds.length === 0) return [];
+			const sql = buildRouteAvailabilityAggregateSql('mysql', options.routeTargetIds.length);
+			const params = routeAvailabilityAggregateParams({
+				...options,
+				since5mIso: toMySqlDateTime(options.since5mIso),
+				since30mIso: toMySqlDateTime(options.since30mIso),
+				since1dIso: toMySqlDateTime(options.since1dIso),
+			});
+			const [rows] = await pool.query<RowDataPacket[]>(sql, params);
+			return rows.map((row) => normalizeRouteAvailabilityAggregate(row));
+		},
+
+		async deleteProviderAttemptAvailabilityBefore(options) {
+			assertProviderAttemptRetentionDeleteParams(options);
+			const cutoff = toMySqlDateTime(options.cutoffIso);
+			const [result] = await pool.execute<ResultSetHeader>(
+				buildProviderAttemptRetentionDeleteSql('mysql'),
+				[cutoff, cutoff, options.limit],
+			);
+			const deleted = Number(result.affectedRows ?? 0);
+			if (!Number.isSafeInteger(deleted) || deleted < 0 || deleted > options.limit) {
+				throw new TypeError('Provider attempt retention delete result is invalid');
+			}
+			return deleted;
 		},
 
 		async getDistinctActiveUsersCount(options: { startDate: string; endDate: string; endExclusive?: boolean }): Promise<number> {

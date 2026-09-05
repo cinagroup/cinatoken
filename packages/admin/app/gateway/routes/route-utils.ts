@@ -4,6 +4,7 @@ import {
 	isAudioTranscriptionModel,
 	isEmbeddingModel,
 	isImageGenerationModel,
+	isRerankModel,
 	isTextLlmModel,
 } from '@octafuse/core/db/model-modalities';
 import {
@@ -85,6 +86,7 @@ export function requestSurfacePath(protocol: string, operation: string, modelId?
 			chat: '/v1/chat/completions',
 			responses: '/v1/responses',
 			embeddings: '/v1/embeddings',
+			rerank: '/v1/rerank',
 			'images.generations': '/v1/images/generations',
 			'images.edits': '/v1/images/edits',
 			'audio.transcriptions': '/v1/audio/transcriptions',
@@ -690,6 +692,9 @@ export function requestOperationsForModel(
 	if (model && isEmbeddingModel(model)) {
 		return protocol === 'openai' ? ['embeddings'] : [];
 	}
+	if (model && isRerankModel(model)) {
+		return protocol === 'openai' ? ['rerank'] : [];
+	}
 	if (model && isAudioTranscriptionModel(model)) {
 		if (protocol === 'openai') return ['audio.transcriptions'];
 		if (protocol === 'dashscope') {
@@ -975,6 +980,7 @@ export function modelMatchesKindFilter(meta: GatewayModel | undefined, filterKin
 	}
 	if (filterKind === 'image') return isImageGenerationModel(meta);
 	if (filterKind === 'audio') return isAudioModel(meta);
+	if (filterKind === 'rerank') return isRerankModel(meta);
 	return isTextLlmModel(meta);
 }
 

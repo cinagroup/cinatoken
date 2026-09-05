@@ -8,6 +8,7 @@ import type {
 	ReserveGuardrailBudgetsResult,
 } from '../guardrail-budget-types';
 import {
+	classifyDispatchedGuardrailBudgetExtension,
 	existingGuardrailReservationReplay,
 	sortedGuardrailBudgetIntents,
 	validateGuardrailBudgetReservationParams,
@@ -125,7 +126,12 @@ async function validateWorkspaceBudgetIntent(connection: PoolConnection, intent:
 	}
 }
 
-async function validateGatewayKeyLimitIntent(connection: PoolConnection, intent: GuardrailBudgetIntent, nowIso: string): Promise<void> {
+async function validateGatewayKeyLimitIntent(
+	connection: PoolConnection,
+	intent: GuardrailBudgetIntent,
+	nowIso: string,
+	settlementBasis: ReserveGuardrailBudgetsParams['settlementBasis'] = 'charged',
+): Promise<void> {
 	if (!isGatewayKeyLimitIntent(intent)) return;
 	const [rows] = await connection.query<Array<RowDataPacket & {
 		workspace_id: string;
@@ -152,7 +158,7 @@ async function validateGatewayKeyLimitIntent(connection: PoolConnection, intent:
 		|| Number(row.limit_micros) !== intent.limitMicros
 		|| Number(row.limit_epoch) + 1 !== intent.guardrailVersion
 		|| (row.limit_reset ?? 'lifetime') !== intent.period
-		|| Number(row.include_byok_in_limit) !== 0) {
+		|| (settlementBasis === 'gateway_key_route' && Number(row.include_byok_in_limit) !== 1)) {
 		throw new GatewayKeyLimitStaleError();
 	}
 }
@@ -200,7 +206,7 @@ export function createMySqlGuardrailBudgetsRepository(client: MySqlDatabaseClien
 							return { status: 'conflict', message: 'request id reservation payload mismatch' } as ReserveGuardrailBudgetsResult;
 						}
 						for (const intent of sortedGuardrailBudgetIntents(params.intents)) {
-							await validateGatewayKeyLimitIntent(connection, intent, params.nowIso);
+							await validateGatewayKeyLimitIntent(connection, intent, params.nowIso, params.settlementBasis);
 							await validateWorkspaceBudgetIntent(connection, intent);
 							const window = await seedWindow(connection, intent, params.nowIso);
 							if (window.unreserved + window.settled + window.reserved + params.reservedMicros > intent.limitMicros) {
@@ -217,12 +223,13 @@ export function createMySqlGuardrailBudgetsRepository(client: MySqlDatabaseClien
 							await connection.execute(`INSERT INTO guardrail_budget_reservations (
 								id, workspace_id, workspace_key, request_id, assignment_id, guardrail_id, guardrail_version,
 								scope_type, scope_id, period, period_start, period_end,
-								limit_micros, reserved_micros, settled_micros, state,
+								limit_micros, reserved_micros, settled_micros, settlement_basis, state,
 								expires_at, created_at, updated_at
-							) VALUES (?, ?, SHA2(?, 256), ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 0, 'reserved', ?, ?, ?)`, [
+							) VALUES (?, ?, SHA2(?, 256), ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 0, ?, 'reserved', ?, ?, ?)`, [
 								crypto.randomUUID(), intent.workspaceId, intent.workspaceId, params.requestId, intent.assignmentId, intent.guardrailId,
 								intent.guardrailVersion, intent.scopeType, intent.scopeId, intent.period,
 								toMySqlDateTime(intent.periodStart), toMySqlDateTime(intent.periodEnd), intent.limitMicros, params.reservedMicros,
+								params.settlementBasis ?? 'charged',
 								expiresAt, now, now,
 							]);
 						}
@@ -239,6 +246,72 @@ export function createMySqlGuardrailBudgetsRepository(client: MySqlDatabaseClien
 				const racedReplay = await classifyReplay(pool, params);
 				if (racedReplay) return racedReplay;
 				if (error instanceof GuardrailBudgetBlockedError) return { status: 'blocked', assignmentId: error.assignmentId };
+				if (error instanceof GatewayKeyLimitStaleError) {
+					return { status: 'conflict', message: 'Gateway key limit configuration changed; retry the request' };
+				}
+				if (error instanceof WorkspaceBudgetStaleError) {
+					return { status: 'conflict', message: 'Workspace budget configuration changed; retry the request' };
+				}
+				throw error;
+			}
+		},
+
+		async extendDispatched(params) {
+			try {
+				const now = toMySqlDateTime(params.nowIso);
+				const expiresAt = toMySqlDateTime(params.expiresAtIso);
+				return await withDeadlockRetry(async () => {
+					const connection = await pool.getConnection();
+					try {
+						await connection.beginTransaction();
+						const rows = await listByRequest(connection, params.requestId, true);
+						const classification = classifyDispatchedGuardrailBudgetExtension(rows, params);
+						if (classification.status === 'conflict') {
+							await connection.rollback();
+							return { status: 'conflict', message: classification.message } as ReserveGuardrailBudgetsResult;
+						}
+						if (classification.status === 'idempotent') {
+							await connection.commit();
+							return { status: 'idempotent', reservationCount: params.intents.length } as ReserveGuardrailBudgetsResult;
+						}
+						for (const intent of classification.missingIntents) {
+							await validateGatewayKeyLimitIntent(connection, intent, params.nowIso, 'charged');
+							await validateWorkspaceBudgetIntent(connection, intent);
+							const window = await seedWindow(connection, intent, params.nowIso);
+							if (window.unreserved + window.settled + window.reserved + params.reservedMicros > intent.limitMicros) {
+								throw new GuardrailBudgetBlockedError(intent.assignmentId);
+							}
+							await connection.execute(`UPDATE guardrail_budget_windows
+								SET unreserved_micros = ?, reserved_micros = reserved_micros + ?, period_end = ?, updated_at = ?
+								WHERE workspace_id = ? AND scope_type = ? AND scope_id = ? AND period = ? AND period_start = ?`, [
+								window.unreserved, params.reservedMicros, toMySqlDateTime(intent.periodEnd), now,
+								intent.workspaceId, intent.scopeType, intent.scopeId, intent.period, toMySqlDateTime(intent.periodStart),
+							]);
+							await connection.execute(`INSERT INTO guardrail_budget_reservations (
+								id, workspace_id, workspace_key, request_id, assignment_id, guardrail_id, guardrail_version,
+								scope_type, scope_id, period, period_start, period_end,
+								limit_micros, reserved_micros, settled_micros, settlement_basis, state,
+								expires_at, dispatched_at, created_at, updated_at
+							) VALUES (?, ?, SHA2(?, 256), ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 0, 'charged', 'dispatched', ?, ?, ?, ?)`, [
+								crypto.randomUUID(), intent.workspaceId, intent.workspaceId, params.requestId, intent.assignmentId,
+								intent.guardrailId, intent.guardrailVersion, intent.scopeType, intent.scopeId, intent.period,
+								toMySqlDateTime(intent.periodStart), toMySqlDateTime(intent.periodEnd), intent.limitMicros,
+								params.reservedMicros, expiresAt, now, now, now,
+							]);
+						}
+						await connection.commit();
+						return { status: 'reserved', reservationCount: params.intents.length } as ReserveGuardrailBudgetsResult;
+					} catch (error) {
+						await connection.rollback().catch(() => undefined);
+						throw error;
+					} finally {
+						connection.release();
+					}
+				});
+			} catch (error) {
+				if (error instanceof GuardrailBudgetBlockedError) {
+					return { status: 'blocked', assignmentId: error.assignmentId };
+				}
 				if (error instanceof GatewayKeyLimitStaleError) {
 					return { status: 'conflict', message: 'Gateway key limit configuration changed; retry the request' };
 				}

@@ -184,6 +184,111 @@ export async function ensureDefaultWorkspacesForSubject(
 							AND external_user_id = ? AND status = 'active'
 					)
 			`).bind(input.subject, input.userId, input.subject),
+			client.raw.prepare(`
+				INSERT OR IGNORE INTO guardrails (
+					id, workspace_id, owner_user_id, name, description, status,
+					designated_version, latest_version, created_at, updated_at,
+					is_workspace_default
+				)
+				SELECT
+					lower(hex(randomblob(4))) || '-' || lower(hex(randomblob(2))) || '-4' ||
+						substr(lower(hex(randomblob(2))), 2) || '-' ||
+						substr('89ab', abs(random()) % 4 + 1, 1) ||
+						substr(lower(hex(randomblob(2))), 2) || '-' || lower(hex(randomblob(6))),
+					workspace.id, ?, 'Workspace ' || substr(workspace.id, 1, 180) || ' Default',
+					NULL, 'active', 1, 1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 1
+				FROM workspaces workspace
+				JOIN users owner ON owner.id = ? AND owner.external_system = 'cinaauth'
+					AND owner.external_user_id = ? AND owner.status = 'active'
+				WHERE workspace.status = 'active'
+					AND (
+						(workspace.scope_type = 'personal' AND workspace.personal_owner_user_id = ?)
+						OR (workspace.scope_type = 'organization' AND EXISTS (
+							SELECT 1 FROM organization_memberships membership
+							WHERE membership.organization_id = workspace.organization_id
+								AND membership.subject = ? AND membership.status = 'active'
+						))
+					)
+					AND NOT EXISTS (
+						SELECT 1 FROM guardrails existing
+						WHERE existing.workspace_id = workspace.id
+							AND existing.is_workspace_default = 1
+					)
+			`).bind(input.userId, input.userId, input.subject, input.userId, input.subject),
+			client.raw.prepare(`
+				INSERT OR IGNORE INTO guardrail_versions (
+					id, guardrail_id, version, config_json, created_by_user_id, created_at
+				)
+				SELECT
+					lower(hex(randomblob(4))) || '-' || lower(hex(randomblob(2))) || '-4' ||
+						substr(lower(hex(randomblob(2))), 2) || '-' ||
+						substr('89ab', abs(random()) % 4 + 1, 1) ||
+						substr(lower(hex(randomblob(2))), 2) || '-' || lower(hex(randomblob(6))),
+					guardrail.id, 1, '{}', ?, guardrail.created_at
+				FROM guardrails guardrail
+				WHERE guardrail.is_workspace_default = 1
+					AND guardrail.owner_user_id = ?
+					AND NOT EXISTS (
+						SELECT 1 FROM guardrail_versions version
+						WHERE version.guardrail_id = guardrail.id AND version.version = 1
+					)
+			`).bind(input.userId, input.userId),
+			client.raw.prepare(`
+				INSERT OR IGNORE INTO guardrails (
+					id, workspace_id, owner_user_id, name, description, status,
+					designated_version, latest_version, created_at, updated_at,
+					is_workspace_default, is_account_default, account_scope_key
+				)
+				SELECT
+					lower(hex(randomblob(4))) || '-' || lower(hex(randomblob(2))) || '-4' ||
+						substr(lower(hex(randomblob(2))), 2) || '-' ||
+						substr('89ab', abs(random()) % 4 + 1, 1) ||
+						substr(lower(hex(randomblob(2))), 2) || '-' || lower(hex(randomblob(6))),
+					workspace.id, ?, 'Account Default', NULL, 'active', 1, 1,
+					CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 0, 1,
+					CASE workspace.scope_type
+						WHEN 'personal' THEN 'personal:' || workspace.personal_owner_user_id
+						WHEN 'organization' THEN 'organization:' || workspace.organization_id
+					END
+				FROM workspaces workspace
+				JOIN users owner ON owner.id = ? AND owner.external_system = 'cinaauth'
+					AND owner.external_user_id = ? AND owner.status = 'active'
+				WHERE workspace.status = 'active'
+					AND (
+						(workspace.scope_type = 'personal' AND workspace.personal_owner_user_id = ?)
+						OR (workspace.scope_type = 'organization' AND EXISTS (
+							SELECT 1 FROM organization_memberships membership
+							WHERE membership.organization_id = workspace.organization_id
+								AND membership.subject = ? AND membership.status = 'active'
+						))
+					)
+					AND workspace.id = (
+						SELECT candidate.id FROM workspaces candidate
+						WHERE candidate.status = 'active' AND candidate.scope_type = workspace.scope_type
+							AND (
+								(workspace.scope_type = 'personal' AND candidate.personal_owner_user_id = workspace.personal_owner_user_id)
+								OR (workspace.scope_type = 'organization' AND candidate.organization_id = workspace.organization_id)
+							)
+						ORDER BY candidate.is_default DESC, candidate.created_at, candidate.id LIMIT 1
+					)
+			`).bind(input.userId, input.userId, input.subject, input.userId, input.subject),
+			client.raw.prepare(`
+				INSERT OR IGNORE INTO guardrail_versions (
+					id, guardrail_id, version, config_json, created_by_user_id, created_at
+				)
+				SELECT
+					lower(hex(randomblob(4))) || '-' || lower(hex(randomblob(2))) || '-4' ||
+						substr(lower(hex(randomblob(2))), 2) || '-' ||
+						substr('89ab', abs(random()) % 4 + 1, 1) ||
+						substr(lower(hex(randomblob(2))), 2) || '-' || lower(hex(randomblob(6))),
+					guardrail.id, 1, '{}', guardrail.owner_user_id, guardrail.created_at
+				FROM guardrails guardrail
+				WHERE guardrail.is_account_default = 1 AND guardrail.owner_user_id = ?
+					AND NOT EXISTS (
+						SELECT 1 FROM guardrail_versions version
+						WHERE version.guardrail_id = guardrail.id AND version.version = 1
+					)
+			`).bind(input.userId),
 		]);
 		return;
 	}
@@ -219,6 +324,102 @@ export async function ensureDefaultWorkspacesForSubject(
 							AND external_user_id = ${input.subject} AND status = 'active'
 					)
 				ON CONFLICT (id) DO NOTHING
+			`;
+			await transaction`
+				INSERT INTO guardrails (
+					id, workspace_id, owner_user_id, name, description, status,
+					designated_version, latest_version, created_at, updated_at,
+					is_workspace_default
+				)
+				SELECT
+					substr(md5(workspace.id || ':workspace-default-guardrail'), 1, 8) || '-' ||
+						substr(md5(workspace.id || ':workspace-default-guardrail'), 9, 4) || '-5' ||
+						substr(md5(workspace.id || ':workspace-default-guardrail'), 14, 3) || '-8' ||
+						substr(md5(workspace.id || ':workspace-default-guardrail'), 18, 3) || '-' ||
+						substr(md5(workspace.id || ':workspace-default-guardrail'), 21, 12),
+					workspace.id, ${input.userId}, 'Workspace ' || left(workspace.id, 180) || ' Default',
+					NULL, 'active', 1, 1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, TRUE
+				FROM workspaces workspace
+				JOIN users owner ON owner.id = ${input.userId}
+					AND owner.external_system = 'cinaauth'
+					AND owner.external_user_id = ${input.subject} AND owner.status = 'active'
+				WHERE workspace.status = 'active'
+					AND (
+						(workspace.scope_type = 'personal' AND workspace.personal_owner_user_id = ${input.userId})
+						OR (workspace.scope_type = 'organization' AND EXISTS (
+							SELECT 1 FROM organization_memberships membership
+							WHERE membership.organization_id = workspace.organization_id
+								AND membership.subject = ${input.subject} AND membership.status = 'active'
+						))
+					)
+				ON CONFLICT DO NOTHING
+			`;
+			await transaction`
+				INSERT INTO guardrail_versions (
+					id, guardrail_id, version, config_json, created_by_user_id, created_at
+				)
+				SELECT
+					substr(md5(guardrail.id || ':version:1'), 1, 8) || '-' ||
+						substr(md5(guardrail.id || ':version:1'), 9, 4) || '-5' ||
+						substr(md5(guardrail.id || ':version:1'), 14, 3) || '-8' ||
+						substr(md5(guardrail.id || ':version:1'), 18, 3) || '-' ||
+						substr(md5(guardrail.id || ':version:1'), 21, 12),
+					guardrail.id, 1, '{}', ${input.userId}, guardrail.created_at
+				FROM guardrails guardrail
+				WHERE guardrail.is_workspace_default
+					AND guardrail.owner_user_id = ${input.userId}
+				ON CONFLICT (guardrail_id, version) DO NOTHING
+			`;
+			await transaction`
+				INSERT INTO guardrails (
+					id, workspace_id, owner_user_id, name, description, status,
+					designated_version, latest_version, created_at, updated_at,
+					is_workspace_default, is_account_default, account_scope_key
+				)
+				SELECT
+					substr(md5(account.account_scope_key || ':account-default-guardrail'), 1, 8) || '-' ||
+						substr(md5(account.account_scope_key || ':account-default-guardrail'), 9, 4) || '-5' ||
+						substr(md5(account.account_scope_key || ':account-default-guardrail'), 14, 3) || '-8' ||
+						substr(md5(account.account_scope_key || ':account-default-guardrail'), 18, 3) || '-' ||
+						substr(md5(account.account_scope_key || ':account-default-guardrail'), 21, 12),
+					account.workspace_id, ${input.userId}, 'Account Default', NULL, 'active', 1, 1,
+					CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, FALSE, TRUE, account.account_scope_key
+				FROM (
+					SELECT DISTINCT ON (account_scope_key) workspace.id AS workspace_id, account_scope_key
+					FROM (
+						SELECT workspace.*,
+							CASE workspace.scope_type
+								WHEN 'personal' THEN 'personal:' || workspace.personal_owner_user_id
+								WHEN 'organization' THEN 'organization:' || workspace.organization_id
+							END AS account_scope_key
+						FROM workspaces workspace
+						WHERE workspace.status = 'active' AND (
+							(workspace.scope_type = 'personal' AND workspace.personal_owner_user_id = ${input.userId})
+							OR (workspace.scope_type = 'organization' AND EXISTS (
+								SELECT 1 FROM organization_memberships membership
+								WHERE membership.organization_id = workspace.organization_id
+									AND membership.subject = ${input.subject} AND membership.status = 'active'
+							))
+						)
+					) workspace
+					ORDER BY account_scope_key, workspace.is_default DESC, workspace.created_at, workspace.id
+				) account
+				ON CONFLICT DO NOTHING
+			`;
+			await transaction`
+				INSERT INTO guardrail_versions (
+					id, guardrail_id, version, config_json, created_by_user_id, created_at
+				)
+				SELECT
+					substr(md5(guardrail.id || ':version:1'), 1, 8) || '-' ||
+						substr(md5(guardrail.id || ':version:1'), 9, 4) || '-5' ||
+						substr(md5(guardrail.id || ':version:1'), 14, 3) || '-8' ||
+						substr(md5(guardrail.id || ':version:1'), 18, 3) || '-' ||
+						substr(md5(guardrail.id || ':version:1'), 21, 12),
+					guardrail.id, 1, '{}', guardrail.owner_user_id, guardrail.created_at
+				FROM guardrails guardrail
+				WHERE guardrail.is_account_default AND guardrail.owner_user_id = ${input.userId}
+				ON CONFLICT (guardrail_id, version) DO NOTHING
 			`;
 		});
 		return;
@@ -256,6 +457,77 @@ export async function ensureDefaultWorkspacesForSubject(
 				)
 			ON DUPLICATE KEY UPDATE id = id
 		`, [input.subject, input.userId, input.subject]);
+		await connection.execute(`
+			INSERT IGNORE INTO guardrails (
+				id, workspace_id, workspace_key, owner_user_id, name, description, status,
+				designated_version, latest_version, created_at, updated_at,
+				is_workspace_default
+			)
+			SELECT UUID(), workspace.id, SHA2(workspace.id, 256), ?,
+				CONCAT('Workspace ', LEFT(workspace.id, 180), ' Default'), NULL,
+				'active', 1, 1, UTC_TIMESTAMP(6), UTC_TIMESTAMP(6), TRUE
+			FROM workspaces workspace
+			JOIN users owner ON owner.id = ? AND owner.external_system = 'cinaauth'
+				AND owner.external_user_id = ? AND owner.status = 'active'
+			WHERE workspace.status = 'active'
+				AND (
+					(workspace.scope_type = 'personal' AND workspace.personal_owner_user_id = ?)
+					OR (workspace.scope_type = 'organization' AND EXISTS (
+						SELECT 1 FROM organization_memberships membership
+						WHERE membership.organization_id = workspace.organization_id
+							AND membership.subject = ? AND membership.status = 'active'
+					))
+				)
+		`, [input.userId, input.userId, input.subject, input.userId, input.subject]);
+		await connection.execute(`
+			INSERT IGNORE INTO guardrail_versions (
+				id, guardrail_id, version, config_json, created_by_user_id, created_at
+			)
+			SELECT UUID(), guardrail.id, 1, '{}', ?, guardrail.created_at
+			FROM guardrails guardrail
+			WHERE guardrail.is_workspace_default = TRUE AND guardrail.owner_user_id = ?
+		`, [input.userId, input.userId]);
+		await connection.execute(`
+			INSERT IGNORE INTO guardrails (
+				id, workspace_id, workspace_key, owner_user_id, name, description, status,
+				designated_version, latest_version, created_at, updated_at,
+				is_workspace_default, is_account_default, account_scope_key
+			)
+			SELECT UUID(), workspace.id, SHA2(workspace.id, 256), ?, 'Account Default', NULL,
+				'active', 1, 1, UTC_TIMESTAMP(6), UTC_TIMESTAMP(6), FALSE, TRUE,
+				IF(workspace.scope_type = 'personal',
+					CONCAT('personal:', workspace.personal_owner_user_id),
+					CONCAT('organization:', workspace.organization_id))
+			FROM workspaces workspace
+			JOIN users owner ON owner.id = ? AND owner.external_system = 'cinaauth'
+				AND owner.external_user_id = ? AND owner.status = 'active'
+			WHERE workspace.status = 'active'
+				AND (
+					(workspace.scope_type = 'personal' AND workspace.personal_owner_user_id = ?)
+					OR (workspace.scope_type = 'organization' AND EXISTS (
+						SELECT 1 FROM organization_memberships membership
+						WHERE membership.organization_id = workspace.organization_id
+							AND membership.subject = ? AND membership.status = 'active'
+					))
+				)
+				AND workspace.id = (
+					SELECT candidate.id FROM workspaces candidate
+					WHERE candidate.status = 'active' AND candidate.scope_type = workspace.scope_type
+						AND (
+							(workspace.scope_type = 'personal' AND candidate.personal_owner_user_id = workspace.personal_owner_user_id)
+							OR (workspace.scope_type = 'organization' AND candidate.organization_id = workspace.organization_id)
+						)
+					ORDER BY candidate.is_default DESC, candidate.created_at, candidate.id LIMIT 1
+				)
+		`, [input.userId, input.userId, input.subject, input.userId, input.subject]);
+		await connection.execute(`
+			INSERT IGNORE INTO guardrail_versions (
+				id, guardrail_id, version, config_json, created_by_user_id, created_at
+			)
+			SELECT UUID(), guardrail.id, 1, '{}', guardrail.owner_user_id, guardrail.created_at
+			FROM guardrails guardrail
+			WHERE guardrail.is_account_default = TRUE AND guardrail.owner_user_id = ?
+		`, [input.userId]);
 		await connection.commit();
 	} catch (error) {
 		await connection.rollback().catch(() => undefined);
@@ -293,7 +565,10 @@ async function queryPostgres(
 		.replaceAll(':subject', '$1')
 		.replaceAll(':user_id', '$2')
 		.replaceAll(':default_true', 'TRUE')
-		.replaceAll(':workspace_id', '$3');
+		// PostgreSQL cannot infer the type of a null-only parameter in
+		// `$3 IS NULL`. Cast every occurrence so listing all Workspaces with a
+		// null preference is valid as well as filtering by an explicit id.
+		.replaceAll(':workspace_id', '$3::text');
 	const rows = await client.raw.unsafe<WorkspaceAccessRow[]>(sql, [
 		input.subject,
 		input.userId,

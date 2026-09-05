@@ -1,5 +1,7 @@
 export type GuardrailStatus = 'active' | 'archived';
 export type GuardrailScopeType = 'user' | 'api_key';
+export type GuardrailEffectiveScopeType = GuardrailScopeType | 'workspace' | 'account';
+export type GuardrailAssignmentManagementSource = 'admin' | 'management_api';
 
 export type GuardrailRow = {
 	id: string;
@@ -8,6 +10,9 @@ export type GuardrailRow = {
 	name: string;
 	description: string | null;
 	status: GuardrailStatus;
+	is_workspace_default?: boolean | number;
+	is_account_default?: boolean | number;
+	account_scope_key?: string | null;
 	designated_version: number;
 	latest_version: number;
 	created_at: string;
@@ -37,13 +42,15 @@ export type GuardrailAssignmentRow = {
 	scope_type: GuardrailScopeType;
 	scope_id: string;
 	created_by_user_id: string | null;
+	management_source: GuardrailAssignmentManagementSource | null;
+	assigned_by_user_id: string | null;
 	created_at: string;
 	guardrail_name?: string;
 };
 
 export type EffectiveGuardrailRow = GuardrailWithVersionRow & {
 	assignment_id: string;
-	assignment_scope_type: GuardrailScopeType;
+	assignment_scope_type: GuardrailEffectiveScopeType;
 	assignment_scope_id: string;
 };
 
@@ -92,7 +99,48 @@ export type UpsertGuardrailAssignmentParams = {
 	scopeType: GuardrailScopeType;
 	scopeId: string;
 	createdByUserId: string | null;
+	/** Privileged source; inferred as admin when createdByUserId is null. */
+	managementSource?: GuardrailAssignmentManagementSource | null;
+	/** Actor retained separately because createdByUserId=null protects the row. */
+	assignedByUserId?: string | null;
 	nowIso: string;
 	/** User-originated writes must never replace an administrator-managed binding. */
 	preserveAdminManaged?: boolean;
 };
+
+export function resolveGuardrailAssignmentProvenance(
+	params: Pick<
+		UpsertGuardrailAssignmentParams,
+		'createdByUserId' | 'managementSource' | 'assignedByUserId'
+	>
+): {
+	managementSource: GuardrailAssignmentManagementSource | null;
+	assignedByUserId: string | null;
+} {
+	const managementSource =
+		params.managementSource === undefined
+			? params.createdByUserId === null
+				? 'admin'
+				: null
+			: params.managementSource;
+	const assignedByUserId = params.assignedByUserId ?? null;
+
+	if (params.createdByUserId !== null) {
+		if (managementSource !== null || assignedByUserId !== null) {
+			throw new Error(
+				'user-managed guardrail assignments cannot have privileged provenance'
+			);
+		}
+		return { managementSource: null, assignedByUserId: null };
+	}
+	if (managementSource === null) {
+		throw new Error('privileged guardrail assignments require a management source');
+	}
+	if (managementSource === 'management_api' && assignedByUserId === null) {
+		throw new Error('management API guardrail assignments require an actor');
+	}
+	if (managementSource === 'admin' && assignedByUserId !== null) {
+		throw new Error('admin guardrail assignments cannot have a management API actor');
+	}
+	return { managementSource, assignedByUserId };
+}

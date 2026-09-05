@@ -7,7 +7,6 @@
 import type {
 	AudioEndpointPricingOperation,
 	GatewayRepositories,
-	GuardrailBudgetIntent,
 	ModelRow,
 } from '@octafuse/core';
 import { getBusinessTimezone } from '@octafuse/core';
@@ -37,32 +36,28 @@ import { scheduleBackgroundWork } from '../../runtime/schedule-background-work';
 import { parseDashScopeRealtimeAuthProtocol } from '@octafuse/core/realtime-protocol';
 import { buildModelFallbackPlan } from '../../services/model-fallback-plan';
 import { stickyConfigFromSurface } from '../../services/provider-sticky-routing';
-import {
-	forfeitRequestGuardrailBudgets,
-	releaseRequestGuardrailBudgets,
-	reserveRequestGuardrailBudgets,
-	runRequestGuardrails,
-} from '../../services/request-guardrails';
+import { runRequestGuardrails } from '../../services/request-guardrails';
 import {
 	dashScopeRealtimeCriticalSettlement,
 	DASHSCOPE_REALTIME_BILLING_DURATION_CEILING_SECONDS,
 	DASHSCOPE_REALTIME_CONNECT_TIMEOUT_MS,
-	DASHSCOPE_REALTIME_GUARDRAIL_LEASE_MS,
 	DASHSCOPE_REALTIME_MAX_AUDIO_SECONDS,
 	DASHSCOPE_REALTIME_MAX_CLIENT_BYTES,
 	DASHSCOPE_REALTIME_MAX_CLIENT_MESSAGE_BYTES,
 	DASHSCOPE_REALTIME_MAX_SESSION_MS,
 } from '../../services/dashscope-realtime-guardrails';
+import type { OrdinaryBudgetLease } from '../../services/ordinary-budget-lifecycle';
 import {
-	reserveOrdinaryUserBudget,
-	type OrdinaryBudgetLease,
-} from '../../services/ordinary-budget-lifecycle';
-import {
-	markMultimediaBudgetsBeforeDispatch,
 	selectConservativeMultimediaBudgetEstimate,
 } from '../../services/multimedia-ordinary-budget';
 import type { OrdinaryBudgetUsageSettlement } from '../../services/usage-tracker';
 import { routeUsesUnsupportedMultimediaEndpointPriceSelection } from '../../services/endpoint-billing-pricing';
+import { generationRequestContext } from '../../services/generation-request-context';
+import { privateByokContextForApiKey } from '../../services/byok-key-pool';
+import {
+	createRouteAwareBudgetAdmission,
+	type RouteAwareBudgetAdmission,
+} from '../../services/request-budget-admission';
 
 type RealtimeEnv = Env & { Variables: { apiKey: ApiKeyContext } };
 type RealtimeContext = Context<RealtimeEnv>;
@@ -152,10 +147,21 @@ type RealtimeGuardrailBudgetLease = {
 	requestId: string;
 	reserved: boolean;
 	readonly dispatched: boolean;
-	markDispatched(): Promise<void>;
 	release(reason: string): Promise<void>;
 	forfeit(reason: string): Promise<void>;
 };
+
+function routeAwareRealtimeGuardrailLease(
+	admission: RouteAwareBudgetAdmission,
+): RealtimeGuardrailBudgetLease {
+	return {
+		requestId: admission.ordinaryLease.requestId,
+		get reserved() { return admission.guardrailReserved; },
+		get dispatched() { return admission.guardrailDispatched; },
+		release: (reason) => admission.releaseGuardrailPreDispatch(reason),
+		forfeit: (reason) => admission.terminateGuardrailUnknown(reason),
+	};
+}
 
 function realtimeOrdinaryBudgetSettlement(
 	lease: OrdinaryBudgetLease,
@@ -184,80 +190,6 @@ async function terminateRealtimeOrdinaryBudgetSafely(
 			`[Gateway Realtime] ordinary budget cleanup failed requestId=${lease.requestId} state=${lease.state} reason=${reason} error=${error instanceof Error ? error.message : String(error)}`,
 		);
 	}
-}
-
-async function admitRealtimeGuardrailBudget(
-	repos: GatewayRepositories,
-	params: {
-		requestId: string;
-		intents: GuardrailBudgetIntent[];
-		reservedMicros: number;
-	},
-): Promise<
-	| { ok: true; lease: RealtimeGuardrailBudgetLease }
-	| { ok: false; blocked: boolean; reason?: 'gateway_key_limit' | 'workspace_budget' | 'guardrail_budget'; message: string }
-> {
-	const admission = await reserveRequestGuardrailBudgets(repos, params);
-	if (!admission.ok) return admission;
-
-	let dispatched = false;
-	let terminal = false;
-	let dispatchPromise: Promise<void> | null = null;
-	return {
-		ok: true,
-		lease: {
-			requestId: params.requestId,
-			reserved: admission.reserved,
-			get dispatched(): boolean {
-				return dispatched;
-			},
-			async markDispatched(): Promise<void> {
-				if (!admission.reserved || dispatched) return;
-				dispatchPromise ??= (async () => {
-					const dispatchedAt = new Date();
-					const marked = await repos.guardrailBudgets.markDispatched(
-						params.requestId,
-						dispatchedAt.toISOString(),
-						new Date(
-							dispatchedAt.getTime() + DASHSCOPE_REALTIME_GUARDRAIL_LEASE_MS,
-						).toISOString(),
-					);
-					if (!marked) {
-						throw new Error('Realtime Guardrail budget reservation could not enter dispatched state');
-					}
-					dispatched = true;
-				})();
-				await dispatchPromise;
-			},
-			async release(reason: string): Promise<void> {
-				if (!admission.reserved || terminal) return;
-				if (dispatched) {
-					throw new Error('A dispatched realtime Guardrail reservation cannot be released');
-				}
-				await releaseRequestGuardrailBudgets(
-					repos,
-					params.requestId,
-					admission.reserved,
-					reason,
-				);
-				terminal = true;
-			},
-			async forfeit(reason: string): Promise<void> {
-				if (!admission.reserved || terminal) return;
-				if (!dispatched) {
-					await this.release(reason);
-					return;
-				}
-				await forfeitRequestGuardrailBudgets(
-					repos,
-					params.requestId,
-					admission.reserved,
-					reason,
-				);
-				terminal = true;
-			},
-		},
-	};
 }
 
 function recordRealtimeUsage(params: {
@@ -341,6 +273,7 @@ function recordRealtimeUsage(params: {
 					}),
 					requestBodyLoggingMode: c.get('requestBodyLoggingMode'),
 					requestOrigin: new URL(c.req.url).origin,
+					...generationRequestContext(c.req.raw.headers),
 					responseStreamed: true,
 					requestProtocol: 'dashscope',
 					requestOperation: operation,
@@ -525,7 +458,7 @@ dashScopeRealtimeRoutes.get('/', async (c) => {
 		}, [route.priceOverrideRaw])),
 	));
 	if (!estimateSelection) throw new Error('Realtime fallback plan has no billable route estimate');
-	const { estimate, estimatedChargedCost } = estimateSelection;
+	const { estimate, estimatedChargedCost, estimatedStandardCost } = estimateSelection;
 	const pricingCeilingFailure = dashScopeRealtimePricingCeilingFailureContract(
 		estimatedChargedCost,
 	);
@@ -543,52 +476,31 @@ dashScopeRealtimeRoutes.get('/', async (c) => {
 		maxClientBytes: DASHSCOPE_REALTIME_MAX_CLIENT_BYTES,
 		requirePcmAudio: true,
 	};
-	const ordinaryAdmission = await reserveOrdinaryUserBudget(repos, {
-		requestId: requestCorrelationId,
-		userId: apiKey.userId,
-		apiKeyId: apiKey.keyId,
-		budgetMax: apiKey.budgetMax,
-		expectedBudgetEpoch: apiKey.budgetEpoch,
-		estimatedChargedCost,
-		now: new Date(start),
-	});
-	if (!ordinaryAdmission.ok) {
-		return gatewayErrorJson(c, {
-			status: 403,
-			code: GatewayErrorCode.budgetExceeded,
-			message: ordinaryAdmission.error.message,
-		});
-	}
-	const ordinaryBudgetLease = ordinaryAdmission.lease;
-	let budgetAdmission: Awaited<ReturnType<typeof admitRealtimeGuardrailBudget>>;
-	try {
-		budgetAdmission = await admitRealtimeGuardrailBudget(repos, {
+	const budgetAdmission = await createRouteAwareBudgetAdmission(repos, {
+		ordinary: {
 			requestId: requestCorrelationId,
+			userId: apiKey.userId,
+			apiKeyId: apiKey.keyId,
+			budgetMax: apiKey.budgetMax,
+			expectedBudgetEpoch: apiKey.budgetEpoch,
+			estimatedChargedCost,
+			now: new Date(start),
+		},
+		guardrail: {
 			intents: guardrail.budgetIntents,
 			reservedMicros: audioGuardrailBudgetMicros(estimate.chargedCost),
-		});
-	} catch (error) {
-		await terminateRealtimeOrdinaryBudgetSafely(
-			ordinaryBudgetLease,
-			'realtime_guardrail_admission_failed',
-		);
-		throw error;
-	}
-	if (!budgetAdmission.ok) {
-		await terminateRealtimeOrdinaryBudgetSafely(
-			ordinaryBudgetLease,
-			'realtime_guardrail_admission_rejected',
-		);
-		if (budgetAdmission.blocked) {
-			return gatewayErrorJson(c, {
-				status: 403,
-				code: budgetAdmission.reason === 'gateway_key_limit' || budgetAdmission.reason === 'workspace_budget' ? GatewayErrorCode.budgetExceeded : GatewayErrorCode.guardrailBlocked,
-				message: budgetAdmission.message,
-			});
-		}
-		throw new Error(`Realtime Guardrail budget admission failed: ${budgetAdmission.message}`);
-	}
-	const guardrailBudgetLease = budgetAdmission.lease;
+			now: new Date(start),
+		},
+		privateByokGatewayKey: {
+			includeInLimit: apiKey.includeByokInLimit === true,
+			reservedMicros: Math.max(
+				audioGuardrailBudgetMicros(estimate.chargedCost),
+				audioGuardrailBudgetMicros(estimatedStandardCost ?? Number.POSITIVE_INFINITY),
+			),
+		},
+	});
+	const ordinaryBudgetLease = budgetAdmission.ordinaryLease;
+	const guardrailBudgetLease = routeAwareRealtimeGuardrailLease(budgetAdmission);
 	const timing = new RequestTimingCollector();
 	timing.markGatewayComplete();
 	let proxyResult: Awaited<ReturnType<typeof proxyDashScopeRealtime>>;
@@ -622,22 +534,13 @@ dashScopeRealtimeRoutes.get('/', async (c) => {
 				sticky: selectedPlan.hasProviderPreferences
 					? null
 					: stickyConfigFromSurface(selectedPlan.surface),
-				beforeUpstreamDispatch: () => markMultimediaBudgetsBeforeDispatch({
-					markGuardrail: () => guardrailBudgetLease.markDispatched(),
-					markOrdinary: () => ordinaryBudgetLease.beforeUpstreamDispatch(),
-					terminateOrdinary: () => terminateRealtimeOrdinaryBudgetSafely(
-						ordinaryBudgetLease,
-						'realtime_dispatch_transition_failed',
-					),
-					terminateGuardrail: () => guardrailBudgetLease.forfeit(
-						'realtime_dispatch_transition_failed',
-					),
-				}),
+				beforeUpstreamDispatch: (route) => budgetAdmission.beforeUpstreamDispatch(route),
 				sessionLimits: {
 					...sessionLimits,
 					connectDeadlineAtMs:
 						Date.now() + DASHSCOPE_REALTIME_CONNECT_TIMEOUT_MS,
 				},
+				byok: privateByokContextForApiKey(apiKey),
 			}
 		);
 	} catch (error) {

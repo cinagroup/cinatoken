@@ -53,12 +53,17 @@ const gatewayMetadataRow: ManagementGatewayKeyRow = {
 	limit_reset: "daily",
 	include_byok_in_limit: false,
 	limit_epoch: 1,
+	limit_consumed_micros: 2_500_000,
 	created_at: "2026-08-31T00:00:00.000Z",
 	updated_at: "2026-08-31T00:00:00.000Z",
 	usage: 12.5,
 	usage_daily: 2.5,
 	usage_weekly: 4.5,
 	usage_monthly: 8.5,
+	byok_usage: 4,
+	byok_usage_daily: 1,
+	byok_usage_weekly: 2,
+	byok_usage_monthly: 3,
 };
 
 const managementRow: ManagementApiKeyRow = {
@@ -118,6 +123,8 @@ test("current-key returns real Gateway usage without revealing the secret", asyn
 	assert.equal(body.data.label, gatewayMetadataRow.key_preview);
 	assert.equal(body.data.usage, 12.5);
 	assert.equal(body.data.usage_daily, 2.5);
+	assert.equal(body.data.byok_usage, 4);
+	assert.equal(body.data.byok_usage_daily, 1);
 	assert.equal(body.data.expires_at, gatewayMetadataRow.expires_at);
 	assert.equal(body.data.limit, 10);
 	assert.equal(body.data.limit_remaining, 7.5);

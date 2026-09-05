@@ -88,6 +88,13 @@ function audioOnlyRow(patch: Partial<ModelEndpointRow> = {}): ModelEndpointRow {
 					},
 				},
 			},
+			speech_by_operation: {
+				"audio.speech": {
+					supports_default_voice: true,
+					reference_audio_media_types: [],
+					reference_audio_default_media_type: null,
+				},
+			},
 		}),
 		...patch,
 	});
@@ -139,11 +146,17 @@ describe("verified model endpoint runtime snapshot", () => {
 		assert.ok(image);
 		assert.ok(audio);
 		assert.ok(mixed);
+		assert.equal(
+			audio.audioCapabilities?.speech_by_operation?.["audio.speech"]
+				?.supports_default_voice,
+			true
+		);
 
 		for (const operation of [
 			"chat",
 			"responses",
 			"embeddings",
+			"rerank",
 			"messages",
 			"models.generate",
 		]) {
@@ -219,6 +232,16 @@ describe("verified model endpoint runtime snapshot", () => {
 	});
 
 	it("fails closed for unverified, expired, future, incomplete, or cross-provider claims", () => {
+		const contradictoryAudio = JSON.parse(
+			audioOnlyRow().audio_capabilities ?? "{}"
+		) as Record<string, unknown>;
+		contradictoryAudio.speech_by_operation = {
+			"audio.speech": {
+				supports_default_voice: false,
+				reference_audio_media_types: ["audio/wav"],
+				reference_audio_default_media_type: "audio/wav",
+			},
+		};
 		for (const candidate of [
 			row({ status: "draft" }),
 			row({ expires_at: NOW.toISOString() }),
@@ -226,6 +249,10 @@ describe("verified model endpoint runtime snapshot", () => {
 			row({ evidence_url: "http://evidence.example/endpoint-1" }),
 			row({ pricing: "{}" }),
 			row({ tag: "another-provider/turbo" }),
+			audioOnlyRow({
+				audio_capabilities: JSON.stringify(contradictoryAudio),
+				supports_voice_cloning: null,
+			}),
 		]) {
 			assert.equal(parseVerifiedModelEndpointSnapshot(candidate, NOW), null);
 		}

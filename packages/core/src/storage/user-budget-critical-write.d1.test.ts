@@ -138,12 +138,26 @@ function setupDatabase(): DatabaseSync {
 	database.exec(`
 		ALTER TABLE guardrail_budget_windows ADD COLUMN workspace_id TEXT NOT NULL DEFAULT 'personal:user-1';
 		ALTER TABLE guardrail_budget_reservations ADD COLUMN workspace_id TEXT NOT NULL DEFAULT 'personal:user-1';
+		ALTER TABLE guardrail_budget_reservations ADD COLUMN settlement_basis TEXT NOT NULL DEFAULT 'charged'
+			CHECK (settlement_basis IN ('charged', 'gateway_key_route'));
 	`);
 	database.exec(readFileSync(fileURLToPath(new URL(
 		'../../migrations-d1/0040_user_budget_reservations.sql', import.meta.url,
 	).href), 'utf8'));
 	database.exec(readFileSync(fileURLToPath(new URL(
 		'../../migrations-d1/0041_user_budget_spent_micros.sql', import.meta.url,
+	).href), 'utf8'));
+	database.exec(readFileSync(fileURLToPath(new URL(
+		'../../migrations-d1/0056_request_session_id.sql', import.meta.url,
+	).href), 'utf8'));
+	database.exec(readFileSync(fileURLToPath(new URL(
+		'../../migrations-d1/0061_provider_attempt_availability.sql', import.meta.url,
+	).href), 'utf8'));
+	database.exec(readFileSync(fileURLToPath(new URL(
+		'../../migrations-d1/0062_public_model_total_tokens.sql', import.meta.url,
+	).href), 'utf8'));
+	database.exec(readFileSync(fileURLToPath(new URL(
+		'../../migrations-d1/0063_generation_service_tier.sql', import.meta.url,
 	).href), 'utf8'));
 	return database;
 }
@@ -181,6 +195,11 @@ function requestLog(id: string, chargedCost: number): InsertRequestLogParams {
 		cacheWriteTokens: 0,
 		reasoningTokens: 0,
 		totalTokens: 20,
+		nativeTokensPrompt: 10,
+		nativeTokensCompletion: 10,
+		nativeTokensCached: 0,
+		nativeTokensReasoning: 0,
+		nativeTokensCompletionImages: null,
 		meteredCost: chargedCost,
 		standardCost: chargedCost,
 		chargedCost,
@@ -190,6 +209,29 @@ function requestLog(id: string, chargedCost: number): InsertRequestLogParams {
 		latencyMs: 10,
 		errorMessage: null,
 		rawUsage: null,
+		serviceTier: 'priority',
+		finishReason: 'stop',
+		nativeFinishReason: 'end_turn',
+		httpReferer: 'https://app.example',
+		userAgent: 'CinaSDK/1.0',
+		providerResponses: [{
+			status: 200,
+			endpoint_id: 'route-1',
+			is_byok: false,
+			latency: 7,
+			model_permaslug: 'openai/test',
+			provider_name: 'Provider',
+			routed_service_tier: 'priority',
+		}],
+		providerAttempts: [{
+			attemptIndex: 1,
+			routeTargetId: 'route-1',
+			providerId: 'provider-1',
+			outcome: 'available',
+			reason: 'accepted',
+			httpStatus: 200,
+			observedAtIso: '2026-08-29T01:00:00.000Z',
+		}],
 	};
 }
 
@@ -285,11 +327,37 @@ test('D1 critical write atomically settles actual usage and replays without dupl
 		assert.equal(Number(database.prepare('SELECT COUNT(*) AS count FROM api_key_request_logs').get()?.count), 1);
 		assert.equal(Number(database.prepare('SELECT SUM(request_count) AS count FROM public_model_daily_stats').get()?.count), 1);
 		assert.equal(Number(database.prepare('SELECT COUNT(*) AS count FROM user_audit_logs').get()?.count), 1);
+		assert.deepEqual({ ...database.prepare(`SELECT service_tier, finish_reason, native_finish_reason,
+			http_referer, user_agent, native_tokens_prompt, native_tokens_completion,
+			native_tokens_cached, native_tokens_reasoning, native_tokens_completion_images,
+			provider_responses
+			FROM api_key_request_logs WHERE id = 'request-actual'`).get() }, {
+			service_tier: 'priority',
+			finish_reason: 'stop',
+			native_finish_reason: 'end_turn',
+			http_referer: 'https://app.example',
+			user_agent: 'CinaSDK/1.0',
+			native_tokens_prompt: 10,
+			native_tokens_completion: 10,
+			native_tokens_cached: 0,
+			native_tokens_reasoning: 0,
+			native_tokens_completion_images: null,
+			provider_responses: JSON.stringify(requestLog('request-actual', 0.25).providerResponses),
+		});
+		assert.deepEqual({ ...database.prepare(`SELECT route_target_id, outcome, reason, http_status
+			FROM provider_attempt_availability WHERE request_log_id = 'request-actual'`).get() }, {
+			route_target_id: 'route-1',
+			outcome: 'available',
+			reason: 'accepted',
+			http_status: 200,
+		});
 
 		await writeUsage(client, 'request-actual', 0.25, 'actual');
 		assert.equal(Number(database.prepare('SELECT COUNT(*) AS count FROM api_key_request_logs').get()?.count), 1);
 		assert.equal(Number(database.prepare('SELECT SUM(request_count) AS count FROM public_model_daily_stats').get()?.count), 1);
 		assert.equal(Number(database.prepare('SELECT COUNT(*) AS count FROM user_audit_logs').get()?.count), 1);
+		assert.equal(Number(database.prepare(`SELECT COUNT(*) AS count
+			FROM provider_attempt_availability WHERE request_log_id = 'request-actual'`).get()?.count), 1);
 	} finally {
 		database.close();
 	}
@@ -454,6 +522,73 @@ test('D1 critical write fails closed on unsafe costs and reservation identity mi
 			writeUsage(client, 'request-invalid', Number.MAX_VALUE, 'actual'),
 			/safe ordinary-user micro-unit range/,
 		);
+		const invalidTier = requestLog('request-invalid-tier', 0.25);
+		invalidTier.serviceTier = 'untrusted' as InsertRequestLogParams['serviceTier'];
+		await assert.rejects(
+			insertRequestUsageAndChargeTxD1(client, {
+				requestLog: invalidTier,
+				shouldChargeBudget: false,
+				userId: 'user-1',
+				beforeSpent: 0,
+				chargedCost: 0.25,
+				audit: {
+					apiKeyId: 'key-1', eventType: 'usage_charge', actorType: 'system',
+					beforeSpent: 0, requestLogId: 'request-invalid-tier', source: 'gateway_usage',
+				},
+			}),
+			/Generation service tier is invalid/,
+		);
+		for (const [requestId, mutate, expected] of [
+			[
+				'request-invalid-finish',
+				(log: InsertRequestLogParams) => { log.finishReason = 'unknown' as InsertRequestLogParams['finishReason']; },
+				/Generation finish reason is invalid/,
+			],
+			[
+				'request-invalid-native-finish',
+				(log: InsertRequestLogParams) => { log.nativeFinishReason = 'bad\nreason'; },
+				/Generation native finish reason is invalid/,
+			],
+			[
+				'request-invalid-http-referer',
+				(log: InsertRequestLogParams) => { log.httpReferer = 'https://app.example/private'; },
+				/Generation HTTP referer must be a canonical/,
+			],
+			[
+				'request-invalid-user-agent',
+				(log: InsertRequestLogParams) => { log.userAgent = 'bad\nagent'; },
+				/Generation User-Agent is invalid/,
+			],
+			[
+				'request-invalid-native-token',
+				(log: InsertRequestLogParams) => { log.nativeTokensPrompt = -1; },
+				/Generation native prompt tokens must be a safe non-negative integer or null/,
+			],
+			[
+				'request-invalid-provider-response',
+				(log: InsertRequestLogParams) => {
+					log.providerResponses = [{ status: 200, provider_key: 'secret' } as never];
+				},
+				/Generation provider response contains an unsupported field/,
+			],
+		] as const) {
+			const invalid = requestLog(requestId, 0.25);
+			mutate(invalid);
+			await assert.rejects(
+				insertRequestUsageAndChargeTxD1(client, {
+					requestLog: invalid,
+					shouldChargeBudget: false,
+					userId: 'user-1',
+					beforeSpent: 0,
+					chargedCost: 0.25,
+					audit: {
+						apiKeyId: 'key-1', eventType: 'usage_charge', actorType: 'system',
+						beforeSpent: 0, requestLogId: requestId, source: 'gateway_usage',
+					},
+				}),
+				expected,
+			);
+		}
 		const mismatched = requestLog('request-invalid', 0.25);
 		mismatched.apiKeyId = 'key-other';
 		await assert.rejects(

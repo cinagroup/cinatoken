@@ -88,12 +88,26 @@ function setup() {
 		CREATE TABLE api_key_request_logs (
 			api_key_id TEXT,
 			charged_cost REAL NOT NULL,
+			standard_cost REAL NOT NULL,
+			is_byok INTEGER,
 			created_at TEXT NOT NULL
 		);
 		CREATE TABLE user_budget_reservations (
 			id TEXT PRIMARY KEY,
 			api_key_id TEXT NOT NULL,
 			state TEXT NOT NULL
+		);
+		CREATE TABLE guardrail_budget_windows (
+			workspace_id TEXT NOT NULL,
+			scope_type TEXT NOT NULL,
+			scope_id TEXT NOT NULL,
+			period TEXT NOT NULL,
+			period_start TEXT NOT NULL,
+			period_end TEXT NOT NULL,
+			unreserved_micros INTEGER NOT NULL,
+			settled_micros INTEGER NOT NULL,
+			reserved_micros INTEGER NOT NULL,
+			PRIMARY KEY (workspace_id, scope_type, scope_id, period, period_start)
 		);
 		CREATE TABLE guardrail_budget_reservations (
 			id TEXT PRIMARY KEY,
@@ -119,9 +133,17 @@ function setup() {
 				64
 			)}', 'sk-other…3333', 'user-2', 'personal:user-2', 'Other tenant', 'active', NULL, datetime('now'), datetime('now'));
 		INSERT INTO api_key_request_logs VALUES
-			('key-1', 1.25, datetime('now')),
-			('key-1', 2.00, datetime('now', '-2 day')),
-			('key-1', 2.75, datetime('now', '-40 day'));
+			('key-1', 1.25, 1.25, 0, datetime('now')),
+			('key-1', 2.00, 2.00, 0, datetime('now', '-2 day')),
+			('key-1', 2.75, 2.75, 0, datetime('now', '-40 day')),
+			('key-1', 0.00, 0.75, 1, datetime('now')),
+			('key-1', 0.00, 1.25, 1, datetime('now', '-2 day')),
+			('key-1', 0.00, 2.00, 1, datetime('now', '-40 day'));
+		INSERT INTO guardrail_budget_windows VALUES (
+			'personal:user-1', 'api_key', 'key-1', 'lifetime',
+			datetime('now', '-1 day'), '9999-12-31T23:59:59.999Z',
+			250000, 1000000, 125000
+		);
 	`);
 	return { database, repository: createD1ApiKeysRepository(client(database)) };
 }
@@ -147,6 +169,11 @@ test("D1 Management API list is workspace-scoped and reports charged usage", asy
 		assert.equal(active[0]?.usage_daily, 1.25);
 		assert.ok((active[0]?.usage_weekly ?? 0) >= 1.25);
 		assert.ok((active[0]?.usage_monthly ?? 0) >= 1.25);
+		assert.equal(active[0]?.byok_usage, 4);
+		assert.equal(active[0]?.limit_consumed_micros, 1_250_000);
+		assert.equal(active[0]?.byok_usage_daily, 0.75);
+		assert.ok((active[0]?.byok_usage_weekly ?? 0) >= 0.75);
+		assert.ok((active[0]?.byok_usage_monthly ?? 0) >= 0.75);
 		assert.deepEqual(await repository.getCurrentById("key-1"), active[0]);
 		assert.equal(await repository.getCurrentById("key-2"), null);
 
@@ -221,8 +248,8 @@ test("D1 Management API mutations cannot cross accounts and protect in-flight re
 			false
 		);
 		database.prepare("UPDATE guardrail_budget_reservations SET state = 'settled'").run();
-		database.prepare("INSERT INTO api_key_request_logs VALUES (?, ?, ?)")
-			.run("key-1", 1.25, "2026-08-31T01:00:00.000Z");
+		database.prepare("INSERT INTO api_key_request_logs VALUES (?, ?, ?, ?, ?)")
+			.run("key-1", 1.25, 1.25, 0, "2026-08-31T01:00:00.000Z");
 		assert.equal(
 			await repository.deleteByHashForManagement({
 				...account,

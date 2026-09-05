@@ -47,11 +47,13 @@ test('preset config rejects transient, unknown, recursive, and secret-bearing fi
 test('capture strips transient bodies and extracts protocol system prompts', () => {
 	const result = captureRequestPresetConfig({
 		model: 'openai/gpt-5', stream: true,
+		provider: { sort: 'price' }, metadata: { customer: 'not-persisted' },
+		session_id: 'not-persisted', unknown_future_field: 'ignored',
 		messages: [{ role: 'system', content: 'Answer briefly' }, { role: 'user', content: 'hi' }],
 	}, 'chat');
 	assert.equal(result.ok, true);
 	if (!result.ok) return;
-	assert.deepEqual(result.value, { model: 'openai/gpt-5' });
+	assert.deepEqual(result.value, { model: 'openai/gpt-5', provider: { sort: 'price' } });
 	assert.equal(result.systemPrompt, 'Answer briefly');
 });
 
@@ -101,6 +103,17 @@ test('preset resolution fails closed for conflicts and inaccessible slugs', asyn
 	assert.deepEqual(conflict.ok ? null : [conflict.status, conflict.code], [400, 'invalid_preset_reference']);
 	const missing = await resolveRequestPreset(repositories(null), 'ws-1', 'user-1', { preset: 'coding' }, 'messages');
 	assert.deepEqual(missing.ok ? null : [missing.status, missing.code], [404, 'preset_not_found']);
+});
+
+test('preset resolution revalidates stored configuration and fails closed', async () => {
+	const corrupted: RequestPresetWithVersionRow = {
+		...preset,
+		version_config_json: JSON.stringify({ model: 'openai/gpt-5', provider: { api_key: 'must-never-load' } }),
+	};
+	const result = await resolveRequestPreset(repositories(corrupted), 'ws-1', 'user-1', {
+		preset: 'coding', messages: [{ role: 'user', content: 'hi' }],
+	}, 'chat');
+	assert.deepEqual(result.ok ? null : [result.status, result.code], [409, 'preset_invalid']);
 });
 
 test('saving a preset creates immutable versions and enforces slug ownership', async () => {

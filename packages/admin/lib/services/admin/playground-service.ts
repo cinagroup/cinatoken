@@ -7,7 +7,11 @@ import {
 	isGcpServiceAccountJson,
 	resolveProviderUpstreamSecret,
 } from '@octafuse/core';
-import { isAudioModel as isCatalogAudioModel, isImageGenerationModel } from '@octafuse/core/db/model-modalities';
+import {
+	isAudioModel as isCatalogAudioModel,
+	isImageGenerationModel,
+	isRerankModel,
+} from '@octafuse/core/db/model-modalities';
 import {
 	type GeminiContentAction,
 	prepareGeminiUpstreamFetch,
@@ -42,6 +46,14 @@ export type PlaygroundResolvedRoute = {
 	isImageModel: boolean;
 	/** Catalog model is an audio endpoint model (ASR or TTS). */
 	isAudioModel: boolean;
+	/** Catalog model is a rerank endpoint model. */
+	isRerankModel: boolean;
+};
+
+type PlaygroundRouteRepositories = {
+	routes: Pick<GatewayRepositories['routes'], 'getModelRouteRowById'>;
+	providers: Pick<GatewayRepositories['providers'], 'getProviderById'>;
+	models: Pick<GatewayRepositories['models'], 'getModelDetailWithRouteCounts'>;
 };
 
 type JsonObject = Record<string, unknown>;
@@ -94,7 +106,7 @@ function parseJsonObject(raw: string | null | undefined): Record<string, unknown
  * 始终使用该供应商的单键 `providers.api_key`。
  */
 export async function resolvePlaygroundRoute(
-	repos: GatewayRepositories,
+	repos: PlaygroundRouteRepositories,
 	routeId: string,
 ): Promise<PlaygroundResolvedRoute> {
 	const id = String(routeId ?? '').trim();
@@ -115,8 +127,11 @@ export async function resolvePlaygroundRoute(
 		throw badRequest('Provider is disabled');
 	}
 
-	const keyRow = await repos.providers.getProviderApiKeyPlaintext(provider.id);
-	const apiKey = keyRow?.api_key?.trim() ?? '';
+	// `getProviderById` is the runtime read boundary: envelope-encrypted values
+	// are decrypted and approved `env:NAME` references are resolved there.
+	// The separate plaintext/reveal method intentionally preserves `env:NAME`
+	// for Admin display and must never be used as an upstream credential.
+	const apiKey = provider.api_key?.trim() ?? '';
 	if (!apiKey || isPendingProviderImportApiKey(apiKey)) {
 		throw badRequest('Provider has no usable API key configured');
 	}
@@ -147,6 +162,7 @@ export async function resolvePlaygroundRoute(
 				pricing_profile: model.pricing_profile as string | null | undefined,
 		  })
 		: false;
+	const isRerank = model ? isRerankModel(model) : false;
 
 	return {
 		upstreamProtocol: protocol,
@@ -159,6 +175,7 @@ export async function resolvePlaygroundRoute(
 		customParams,
 		isImageModel,
 		isAudioModel,
+		isRerankModel: isRerank,
 	};
 }
 
@@ -899,6 +916,9 @@ export async function invokePlaygroundUpstream(
 	if (route.isAudioModel && route.upstreamProtocol !== 'openai' && route.upstreamProtocol !== 'dashscope') {
 		throw badRequest('Audio transcription models require upstream_protocol=openai or dashscope.');
 	}
+	if (route.isRerankModel && route.upstreamProtocol !== 'openai') {
+		throw badRequest('Rerank models require upstream_protocol=openai.');
+	}
 
 	const imageOperation: ImageOperation | null =
 		route.isImageModel && !route.isAudioModel ? (input.imageOperation === 'edits' ? 'edits' : 'generations') : null;
@@ -907,6 +927,26 @@ export async function invokePlaygroundUpstream(
 
 	switch (route.upstreamProtocol) {
 		case 'openai': {
+			if (route.isRerankModel) {
+				try {
+					url = resolveUpstreamEndpoint('openai', 'rerank', route.providerEndpoints, {
+						providerId: route.providerId,
+					});
+				} catch (e) {
+					throw badRequest(e instanceof Error ? e.message : 'Failed to resolve OpenAI rerank URL');
+				}
+				headers = {
+					'Content-Type': 'application/json',
+					Authorization: `Bearer ${route.providerApiKey}`,
+				};
+				const requestBody: Record<string, unknown> = {
+					...merged,
+					model: applyVertexOpenAiModelPrefix(url, route.providerModelName),
+				};
+				fetchBody = JSON.stringify(requestBody);
+				upstreamWireBodyJson = fetchBody;
+				break;
+			}
 			if (route.isAudioModel) {
 				if (route.upstreamOperation === 'audio.speech') {
 					const request = buildPlaygroundOpenAiSpeechRequest(route, merged);

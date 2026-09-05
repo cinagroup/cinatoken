@@ -136,6 +136,13 @@ describe("endpoint catalog metadata", () => {
 					},
 				},
 			},
+			speech_by_operation: {
+				"audio.speech": {
+					supports_default_voice: true,
+					reference_audio_media_types: ["audio/WAV", "audio/mpeg"],
+					reference_audio_default_media_type: "audio/WAV",
+				},
+			},
 		});
 		assert.equal(isAudioEndpointReady(audio), true);
 		assert.equal(
@@ -158,6 +165,89 @@ describe("endpoint catalog metadata", () => {
 		assert.equal(
 			audioEndpointSupportsOperation(audio, "audio.speech.stream"),
 			false
+		);
+		assert.deepEqual(audio.speech_by_operation?.["audio.speech"], {
+			supports_default_voice: true,
+			reference_audio_media_types: ["audio/wav", "audio/mpeg"],
+			reference_audio_default_media_type: "audio/wav",
+		});
+	});
+
+	it("rejects guessed or ambiguous speech request evidence", () => {
+		const pricing = {
+			"audio.speech": {
+				currency: "USD",
+				meter: {
+					kind: "characters",
+					unit: "unicode_code_point",
+					price: "0.1",
+					minimum_units: 0,
+					increment_units: 1,
+				},
+			},
+		};
+		for (const speech of [
+			{},
+			{ "audio.future": {} },
+			{
+				"audio.speech": {
+					supports_default_voice: undefined,
+					reference_audio_media_types: [],
+					reference_audio_default_media_type: null,
+				},
+			},
+			{
+				"audio.speech": {
+					supports_default_voice: false,
+					reference_audio_media_types: ["audio/wav", "AUDIO/WAV"],
+					reference_audio_default_media_type: null,
+				},
+			},
+			{
+				"audio.speech": {
+					supports_default_voice: null,
+					reference_audio_media_types: ["audio/wav"],
+					reference_audio_default_media_type: "audio/mpeg",
+				},
+			},
+			{
+				"audio.speech": {
+					supports_default_voice: false,
+					reference_audio_media_types: ["audio/wav;rate=16000"],
+					reference_audio_default_media_type: null,
+				},
+			},
+		]) {
+			assert.throws(() => normalizeAudioEndpointCapabilities({
+				v: 1,
+				pricing_by_operation: pricing,
+				speech_by_operation: speech,
+			}));
+		}
+		assert.throws(
+			() => normalizeAudioEndpointCapabilities({
+				v: 1,
+				pricing_by_operation: {
+					"audio.transcriptions": {
+						currency: "USD",
+						meter: {
+							kind: "duration",
+							unit: "second",
+							price: "0.1",
+							minimum_units: 0,
+							increment_units: 1,
+						},
+					},
+				},
+				speech_by_operation: {
+					"audio.speech": {
+						supports_default_voice: false,
+						reference_audio_media_types: [],
+						reference_audio_default_media_type: null,
+					},
+				},
+			}),
+			/requires audio\.speech pricing evidence/
 		);
 	});
 

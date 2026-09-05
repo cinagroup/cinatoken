@@ -1,5 +1,13 @@
-import { describe, expect, it } from 'vitest';
+import assert from 'node:assert/strict';
+import { describe, it } from 'node:test';
 import { extractUpstreamRequestId, normalizeUpstreamId, resolveGeminiLoggedRequestId } from './upstream-request-id';
+
+function expect(actual: unknown): { toBe(expected: unknown): void; toBeNull(): void } {
+	return {
+		toBe: (expected) => assert.equal(actual, expected),
+		toBeNull: () => assert.equal(actual, null),
+	};
+}
 
 describe('extractUpstreamRequestId', () => {
 	it('prefers x-request-id over other headers', () => {
@@ -46,9 +54,10 @@ describe('extractUpstreamRequestId', () => {
 		expect(extractUpstreamRequestId(new Headers({ 'content-type': 'application/json' }))).toBeNull();
 	});
 
-	it('trims and truncates long values', () => {
+	it('trims valid values and rejects overlong header ids', () => {
 		const long = 'a'.repeat(250);
-		expect(extractUpstreamRequestId(new Headers({ 'x-request-id': `  ${long}  ` }))).toHaveLength(200);
+		expect(extractUpstreamRequestId(new Headers({ 'x-request-id': '  req-valid  ' }))).toBe('req-valid');
+		expect(extractUpstreamRequestId(new Headers({ 'x-request-id': long }))).toBeNull();
 	});
 });
 
@@ -66,8 +75,11 @@ describe('normalizeUpstreamId', () => {
 		expect(normalizeUpstreamId(123)).toBeNull();
 	});
 
-	it('truncates values longer than 200 chars', () => {
-		expect(normalizeUpstreamId('a'.repeat(250))).toHaveLength(200);
+	it('rejects controls, embedded whitespace, non-ASCII, and overlong values', () => {
+		expect(normalizeUpstreamId('msg-bad\nid')).toBeNull();
+		expect(normalizeUpstreamId('msg bad')).toBeNull();
+		expect(normalizeUpstreamId('消息-id')).toBeNull();
+		expect(normalizeUpstreamId('a'.repeat(250))).toBeNull();
 	});
 });
 

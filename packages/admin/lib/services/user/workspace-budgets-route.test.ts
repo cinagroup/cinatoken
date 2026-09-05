@@ -44,6 +44,8 @@ class SqliteD1Statement {
 	}
 
 	first<T>(): T | null {
+		if (this.sql.includes('FROM guardrail_budget_windows')) return null;
+		if (this.sql.includes('FROM api_key_request_logs')) return { spent_micros: 0 } as T;
 		return (this.state.workspaceExists ? { id: 'workspace-1' } : null) as T | null;
 	}
 
@@ -151,6 +153,12 @@ test('Workspace owner/admin can manage limits and ordering is fail-closed', asyn
 				body: JSON.stringify({ limit_usd: limit }),
 			});
 			assert.equal(response.status, 200, `${role} must manage ${interval}`);
+			const body = await response.json() as { data: Record<string, unknown> };
+			assert.equal(body.data.spentUsd, 0);
+			assert.equal(body.data.reservedUsd, 0);
+			assert.equal(body.data.remainingUsd, limit);
+			assert.equal(typeof body.data.periodStart, 'string');
+			assert.equal(typeof body.data.periodEnd, 'string');
 		}
 		const invalid = await app.request('/workspace-budgets/weekly', {
 			method: 'PUT',

@@ -1,6 +1,7 @@
 import type { GatewayDatabaseClient } from "./database-client";
 import type { GatewayRepositories } from "./repositories-types";
 import { createPostgresAdminAnalyticsRepository } from "../db/postgres/admin-analytics.impl";
+import { createPostgresBatchesRepository } from "../db/postgres/batches.impl";
 import { createPostgresApiKeysRepository } from "../db/postgres/api-keys.impl";
 import { createPostgresModelRoutesRepository } from "../db/postgres/model-routes.impl";
 import { createPostgresModelRoutingRepository } from "../db/postgres/model-routing.impl";
@@ -19,6 +20,7 @@ import { createPostgresUserBudgetReservationsRepository } from "../db/postgres/u
 import { createPostgresRouteDataPoliciesRepository } from "../db/postgres/route-data-policies.impl";
 import { createPostgresModelEndpointsRepository } from "../db/postgres/model-endpoints.impl";
 import { createManagementApiKeysRepository } from "./management-api-keys";
+import { createByokKeysRepository } from "./byok-keys";
 import {
 	createPostgresPortalAccessRepository,
 	createPostgresPortalLedgerRepository,
@@ -33,6 +35,7 @@ export function createPostgresRepositories(
 	}
 	return {
 		client,
+		batches: createPostgresBatchesRepository(client),
 		users: createPostgresUsersRepository(client),
 		apiKeys: createPostgresApiKeysRepository(client),
 		requestLogs: createPostgresRequestLogsRepository(client),
@@ -43,6 +46,7 @@ export function createPostgresRepositories(
 		routeDataPolicies: createPostgresRouteDataPoliciesRepository(client),
 		modelEndpoints: createPostgresModelEndpointsRepository(client),
 		managementApiKeys: createManagementApiKeysRepository(client),
+		byokKeys: createByokKeysRepository(client),
 		providers: createPostgresProvidersRepository(client),
 		models: createPostgresModelsRepository(client),
 		routes: createPostgresModelRoutesRepository(client),

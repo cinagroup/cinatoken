@@ -19,6 +19,18 @@ export type WorkspaceBudgetRow = {
 	updated_at: string;
 };
 
+/** Current accounting snapshot for a configured Workspace budget interval. */
+export type WorkspaceBudgetUsageRow = WorkspaceBudgetRow & {
+	period_start: string;
+	period_end: string;
+	/** Committed usage: direct charges plus settled reservations. */
+	spent_micros: number;
+	/** Capacity held by requests that have not reached a terminal settlement. */
+	reserved_micros: number;
+	/** Capacity available for a new admission at the time of this snapshot. */
+	remaining_micros: number;
+};
+
 const INTERVAL_RANK: Record<WorkspaceBudgetInterval, number> = {
 	daily: 0,
 	weekly: 1,
@@ -42,6 +54,11 @@ export function normalizeWorkspaceBudgetLimitMicros(value: unknown): number {
 
 export function workspaceBudgetAmount(micros: number): number {
 	if (!Number.isSafeInteger(micros) || micros <= 0) throw new TypeError('Workspace budget limit is invalid');
+	return micros / GUARDRAIL_BUDGET_MICROS_PER_UNIT;
+}
+
+export function workspaceBudgetUsageAmount(micros: number): number {
+	if (!Number.isSafeInteger(micros) || micros < 0) throw new TypeError('Workspace budget usage amount is invalid');
 	return micros / GUARDRAIL_BUDGET_MICROS_PER_UNIT;
 }
 

@@ -6,11 +6,13 @@ import {
 	type ManagementApiKeyAccount,
 } from '../db/management-api-keys-types';
 import {
+	buildWorkspaceBudgetIntent,
 	normalizeWorkspaceBudgetInterval,
 	validateWorkspaceBudgetOrdering,
 	WORKSPACE_BUDGET_MAX_EPOCH,
 	type WorkspaceBudgetInterval,
 	type WorkspaceBudgetRow,
+	type WorkspaceBudgetUsageRow,
 } from '../workspace-budgets';
 
 type RawWorkspaceBudgetRow = {
@@ -25,6 +27,16 @@ type RawWorkspaceBudgetRow = {
 };
 
 type MySqlWorkspaceBudgetRow = RawWorkspaceBudgetRow & RowDataPacket;
+
+type RawWorkspaceBudgetWindow = {
+	unreserved_micros: number | string;
+	settled_micros: number | string;
+	reserved_micros: number | string;
+};
+
+type RawWorkspaceBudgetLogUsage = {
+	spent_micros: number | string;
+};
 
 function isoTimestamp(value: string | Date): string {
 	if (value instanceof Date) return value.toISOString();
@@ -95,6 +107,163 @@ export async function listWorkspaceBudgets(
 		return (await client.raw.unsafe<RawWorkspaceBudgetRow[]>(POSTGRES_SELECT, [workspaceId])).map(mapRow);
 	}
 	return (await mysqlQueryRows<MySqlWorkspaceBudgetRow>(client.raw, MYSQL_SELECT, [workspaceId])).map(mapRow);
+}
+
+function safeUsageMicros(value: number | string, label: string): number {
+	const micros = Number(value);
+	if (!Number.isSafeInteger(micros) || micros < 0) {
+		throw new TypeError(`Workspace budget ${label} is invalid`);
+	}
+	return micros;
+}
+
+async function readWorkspaceBudgetWindow(
+	client: GatewayDatabaseClient,
+	params: {
+		workspaceId: string;
+		period: WorkspaceBudgetInterval;
+		periodStart: string;
+		periodEnd: string;
+	},
+): Promise<RawWorkspaceBudgetWindow | null> {
+	if (client.driver === 'd1') {
+		return await client.raw.prepare(`SELECT unreserved_micros, settled_micros, reserved_micros
+			FROM guardrail_budget_windows
+			WHERE workspace_id = ? AND scope_type = 'workspace' AND scope_id = ?
+				AND period = ? AND period_start = ? AND period_end = ?
+			LIMIT 1`)
+			.bind(params.workspaceId, params.workspaceId, params.period, params.periodStart, params.periodEnd)
+			.first<RawWorkspaceBudgetWindow>();
+	}
+	if (client.driver === 'postgres') {
+		const rows = await client.raw.unsafe<RawWorkspaceBudgetWindow[]>(`SELECT
+			unreserved_micros, settled_micros, reserved_micros
+			FROM guardrail_budget_windows
+			WHERE workspace_id = $1 AND scope_type = 'workspace' AND scope_id = $1
+				AND period = $2 AND period_start = $3::timestamptz AND period_end = $4::timestamptz
+			LIMIT 1`, [params.workspaceId, params.period, params.periodStart, params.periodEnd]);
+		return rows[0] ?? null;
+	}
+	const rows = await mysqlQueryRows<RowDataPacket & RawWorkspaceBudgetWindow>(client.raw, `SELECT
+		unreserved_micros, settled_micros, reserved_micros
+		FROM guardrail_budget_windows
+		WHERE workspace_id = ? AND scope_type = 'workspace' AND scope_id = ?
+			AND period = ? AND period_start = ? AND period_end = ?
+		LIMIT 1`, [
+		params.workspaceId,
+		params.workspaceId,
+		params.period,
+		toMySqlDateTime(params.periodStart),
+		toMySqlDateTime(params.periodEnd),
+	]);
+	return rows[0] ?? null;
+}
+
+async function readWorkspaceBudgetLogUsage(
+	client: GatewayDatabaseClient,
+	params: { workspaceId: string; periodStart: string; periodEnd: string },
+): Promise<number> {
+	let row: RawWorkspaceBudgetLogUsage | null;
+	if (client.driver === 'd1') {
+		row = await client.raw.prepare(`SELECT COALESCE(SUM(COALESCE(
+				budget_charged_micros,
+				CAST(ROUND(MAX(charged_cost, 0) * 1000000) AS INTEGER)
+			)), 0) AS spent_micros
+			FROM api_key_request_logs
+			WHERE workspace_id = ?
+				AND COALESCE(budget_accounted_at, created_at) >= ?
+				AND COALESCE(budget_accounted_at, created_at) < ?`)
+			.bind(params.workspaceId, params.periodStart, params.periodEnd)
+			.first<RawWorkspaceBudgetLogUsage>();
+	} else if (client.driver === 'postgres') {
+		const rows = await client.raw.unsafe<RawWorkspaceBudgetLogUsage[]>(`SELECT COALESCE(SUM(COALESCE(
+				budget_charged_micros,
+				ROUND(GREATEST(charged_cost, 0) * 1000000)::bigint
+			)), 0) AS spent_micros
+			FROM api_key_request_logs
+			WHERE workspace_id = $1
+				AND COALESCE(budget_accounted_at, created_at) >= $2::timestamptz
+				AND COALESCE(budget_accounted_at, created_at) < $3::timestamptz`, [
+			params.workspaceId,
+			params.periodStart,
+			params.periodEnd,
+		]);
+		row = rows[0] ?? null;
+	} else {
+		const rows = await mysqlQueryRows<RowDataPacket & RawWorkspaceBudgetLogUsage>(client.raw, `SELECT
+			COALESCE(SUM(COALESCE(
+				budget_charged_micros,
+				CAST(ROUND(GREATEST(charged_cost, 0) * 1000000) AS UNSIGNED)
+			)), 0) AS spent_micros
+			FROM api_key_request_logs
+			WHERE workspace_id = ?
+				AND budget_accounted_effective_at >= ?
+				AND budget_accounted_effective_at < ?`, [
+			params.workspaceId,
+			toMySqlDateTime(params.periodStart),
+			toMySqlDateTime(params.periodEnd),
+		]);
+		row = rows[0] ?? null;
+	}
+	return safeUsageMicros(row?.spent_micros ?? 0, 'spent amount');
+}
+
+function mapUsage(
+	budget: WorkspaceBudgetRow,
+	periodStart: string,
+	periodEnd: string,
+	window: RawWorkspaceBudgetWindow | null,
+	fallbackSpentMicros: number,
+): WorkspaceBudgetUsageRow {
+	const unreservedMicros = window ? safeUsageMicros(window.unreserved_micros, 'unreserved amount') : fallbackSpentMicros;
+	const settledMicros = window ? safeUsageMicros(window.settled_micros, 'settled amount') : 0;
+	const reservedMicros = window ? safeUsageMicros(window.reserved_micros, 'reserved amount') : 0;
+	const spentMicros = unreservedMicros + settledMicros;
+	const consumedMicros = spentMicros + reservedMicros;
+	if (!Number.isSafeInteger(spentMicros) || !Number.isSafeInteger(consumedMicros)) {
+		throw new TypeError('Workspace budget usage total is invalid');
+	}
+	return {
+		...budget,
+		period_start: periodStart,
+		period_end: periodEnd,
+		spent_micros: spentMicros,
+		reserved_micros: reservedMicros,
+		remaining_micros: Math.max(0, budget.limit_micros - consumedMicros),
+	};
+}
+
+/**
+ * Read current Workspace budget snapshots for the user portal. The request
+ * admission path continues to use the lighter listWorkspaceBudgets query.
+ */
+export async function listWorkspaceBudgetUsage(
+	client: GatewayDatabaseClient,
+	workspaceId: string,
+	now = new Date(),
+): Promise<WorkspaceBudgetUsageRow[]> {
+	if (!Number.isFinite(now.getTime())) throw new TypeError('Workspace budget snapshot time is invalid');
+	const budgets = await listWorkspaceBudgets(client, workspaceId);
+	const result: WorkspaceBudgetUsageRow[] = [];
+	for (const budget of budgets) {
+		const intent = buildWorkspaceBudgetIntent(budget, now);
+		const windowParams = {
+			workspaceId,
+			period: budget.reset_interval,
+			periodStart: intent.periodStart,
+			periodEnd: intent.periodEnd,
+		};
+		let window = await readWorkspaceBudgetWindow(client, windowParams);
+		let fallbackSpentMicros = 0;
+		if (!window) {
+			fallbackSpentMicros = await readWorkspaceBudgetLogUsage(client, windowParams);
+			// A request may have materialized the authoritative window while the
+			// legacy-log snapshot was being read. Prefer that ledger if it now exists.
+			window = await readWorkspaceBudgetWindow(client, windowParams);
+		}
+		result.push(mapUsage(budget, intent.periodStart, intent.periodEnd, window, fallbackSpentMicros));
+	}
+	return result;
 }
 
 /** Resolve OpenRouter's Workspace `id_or_slug` within one Management-key account. */

@@ -15,6 +15,7 @@ export const REQUEST_OPERATIONS_BY_PROTOCOL = {
 		"chat",
 		"responses",
 		"embeddings",
+		"rerank",
 		"images.generations",
 		"images.edits",
 		"audio.transcriptions",

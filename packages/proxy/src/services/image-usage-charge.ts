@@ -59,6 +59,11 @@ import {
 	type OrdinaryBudgetUsageSettlement,
 } from './usage-tracker';
 import { resolveEndpointImagePricing } from './endpoint-image-billing-pricing';
+import { parseByokKeyId } from './byok-key-pool';
+import {
+	applyPrivateByokBillingPolicy,
+	privateByokSettlementMode,
+} from './byok-billing-policy';
 
 export type ImageBillingParams = {
 	/**
@@ -104,6 +109,7 @@ export type ImageCostBreakdown = {
 	imageCount: number;
 	meteredCost: number;
 	standardCost: number;
+	byokStandardCostCeiling?: number;
 	chargedCost: number;
 	meteredFactor: number;
 	chargedFactor: number;
@@ -733,6 +739,7 @@ export async function estimateImageBudgetPrecheck(
 	const overrides =
 		routePriceOverrideJsons.length > 0 ? routePriceOverrideJsons : [null];
 	let best: ImageCostBreakdown | null = null;
+	let byokStandardCostCeiling = 0;
 	for (const override of overrides) {
 		const costs = await estimateImageCosts(repos, {
 			...params,
@@ -741,8 +748,9 @@ export async function estimateImageBudgetPrecheck(
 		if (!best || costs.chargedCost > best.chargedCost) {
 			best = costs;
 		}
+		byokStandardCostCeiling = Math.max(byokStandardCostCeiling, costs.standardCost);
 	}
-	return best!;
+	return { ...best!, byokStandardCostCeiling };
 }
 
 /** 将 breakdown 标为未确认结果扣费审计（client abort / gateway timeout / 按请求张数）。 */
@@ -814,6 +822,10 @@ export type RecordImageUsageParams = {
 	upstreamRequestBody?: string | null;
 	requestBodyLoggingMode?: RequestBodyLoggingMode;
 	requestOrigin?: string | null;
+	httpReferer?: string | null;
+	userAgent?: string | null;
+	/** OpenRouter cross-modal grouping identifier; never used for provider affinity here. */
+	sessionId?: string | null;
 	responseStreamed?: boolean | null;
 	requestProtocol: 'openai';
 	requestOperation?: string | null;
@@ -867,6 +879,7 @@ export async function recordImageUsage(params: RecordImageUsageParams): Promise<
 	chargedCost: number;
 }> {
 	const hasEndpointPricing = params.billing.endpoint != null;
+	const isByok = parseByokKeyId(params.providerKeyId) !== null;
 	if (
 		hasEndpointPricing
 		&& (
@@ -905,16 +918,17 @@ export async function recordImageUsage(params: RecordImageUsageParams): Promise<
 		outputCountExceededAdmission,
 		clientOutcomeBillable: params.clientOutcomeBillable,
 	});
-	const sharedSettlementMode: 'actual' | 'reserved' =
+	const nominalSettlementMode: 'actual' | 'reserved' =
 		params.guardrailBudgetSettlement?.mode === 'reserved'
 		|| params.ordinaryBudgetSettlement?.unknownCost === true
 		|| derivedSettlementMode === 'reserved'
 			? 'reserved'
 			: 'actual';
+	const ordinarySettlementMode = privateByokSettlementMode(isByok, nominalSettlementMode);
 	const ordinaryBudgetSettlement = params.ordinaryBudgetSettlement
 		? {
 				...params.ordinaryBudgetSettlement,
-				unknownCost: sharedSettlementMode === 'reserved',
+				unknownCost: ordinarySettlementMode === 'reserved',
 			}
 		: undefined;
 	const imageAbortReason = params.imageAbortReason ?? null;
@@ -1063,6 +1077,13 @@ export async function recordImageUsage(params: RecordImageUsageParams): Promise<
 			observedImageCount,
 		});
 	}
+	const adjustedBilling = applyPrivateByokBillingPolicy({
+		meteredCost: costs.meteredCost,
+		standardCost: costs.standardCost,
+		chargedCost: costs.chargedCost,
+		pricingAuditJson: costs.pricingAuditJson,
+	}, isByok);
+	costs = { ...costs, ...adjustedBilling };
 
 	const errorWithoutCharge = params.status === 'error' && !chargeUncertain;
 	const chargedCost = errorWithoutCharge ? 0 : costs.chargedCost;
@@ -1072,9 +1093,13 @@ export async function recordImageUsage(params: RecordImageUsageParams): Promise<
 	const generationSnapshot = verifiedUsdGenerationWriteSnapshot({
 		verifiedUsdPricing: hasEndpointPricing,
 		requestOrigin: params.requestOrigin,
+		httpReferer: params.httpReferer,
+		userAgent: params.userAgent,
+		sessionId: params.sessionId,
 		responseStreamed: params.responseStreamed,
 		chargedCostUsd: chargedCost,
 		upstreamInferenceCostUsd: !errorWithoutCharge ? meteredCost : null,
+		isByok,
 	});
 	const id = params.requestLogId ?? crypto.randomUUID();
 	const hasOrdinaryBudgetSettlement = ordinaryBudgetSettlement != null;
@@ -1114,6 +1139,15 @@ export async function recordImageUsage(params: RecordImageUsageParams): Promise<
 		outputCountExceededAdmission
 			? effectiveOutputImageCountForLog
 			: costs.logImageCounts?.outputImageCount ?? effectiveOutputImageCountForLog;
+	const nativeImageUsage = hasAuthoritativeImageTokenUsage(params.imageUsage)
+		? params.imageUsage
+		: null;
+	const nativeImagePrompt = nativeImageUsage == null
+		? null
+		: nativeImageUsage.text_tokens + nativeImageUsage.image_input_tokens;
+	const nativeImageCached = nativeImageUsage == null
+		? null
+		: nativeImageUsage.cached_text_tokens + nativeImageUsage.cached_image_input_tokens;
 
 	const rawUsage =
 		params.imageUsage?.raw_usage ??
@@ -1135,7 +1169,7 @@ export async function recordImageUsage(params: RecordImageUsageParams): Promise<
 						}),
 					})
 				: null);
-	const guardrailSettlementMode = sharedSettlementMode;
+	const guardrailSettlementMode = nominalSettlementMode;
 
 	console.log(
 		`[Gateway Usage] recordImageUsage model_id=${params.modelId} status=${params.status} kind=${costs.billingKind} images=${logOutputImages} input_images=${logInputImages} metered=${meteredCost} standard=${standardCost} charged=${chargedCost}${
@@ -1185,6 +1219,17 @@ export async function recordImageUsage(params: RecordImageUsageParams): Promise<
 			cacheWriteTokens: costs.logTokens.cacheWriteTokens,
 			reasoningTokens: 0,
 			totalTokens: costs.logTokens.totalTokens,
+			nativeTokensPrompt:
+				Number.isSafeInteger(nativeImagePrompt) && nativeImagePrompt! >= 0
+					? nativeImagePrompt
+					: null,
+			nativeTokensCompletion: nativeImageUsage?.image_output_tokens ?? null,
+			nativeTokensCached:
+				Number.isSafeInteger(nativeImageCached) && nativeImageCached! >= 0
+					? nativeImageCached
+					: null,
+			nativeTokensReasoning: null,
+			nativeTokensCompletionImages: nativeImageUsage?.image_output_tokens ?? null,
 			meteredCost,
 			standardCost,
 			chargedCost,
@@ -1203,6 +1248,8 @@ export async function recordImageUsage(params: RecordImageUsageParams): Promise<
 			upstreamAttemptCount: params.timing?.upstreamAttemptCount ?? null,
 			upstreamFailoverCount: params.timing?.upstreamFailoverCount ?? null,
 			timingMetadata: params.timing?.timingMetadata ?? null,
+			providerAttempts: params.timing?.providerAttempts ?? [],
+			providerResponses: params.timing?.providerResponses ?? null,
 			errorMessage: params.errorMessage ?? null,
 			rawUsage,
 			pricingAudit: costs.pricingAuditJson,
@@ -1225,7 +1272,9 @@ export async function recordImageUsage(params: RecordImageUsageParams): Promise<
 				mode: guardrailSettlementMode,
 				reason: guardrailSettlementMode === 'reserved'
 					? 'image_usage_unavailable_after_dispatch'
-					: 'image_usage_settled',
+					: isByok
+						? 'private_byok_list_price_settled'
+						: 'image_usage_settled',
 			}
 			: undefined,
 		userBudgetSettlement: ordinaryBudgetSettlementForCriticalWrite(

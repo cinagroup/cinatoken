@@ -69,6 +69,11 @@ import {
 	type OrdinaryBudgetUsageSettlement,
 } from './usage-tracker';
 import { resolveEndpointAudioPricing } from './endpoint-audio-billing-pricing';
+import { parseByokKeyId } from './byok-key-pool';
+import {
+	applyPrivateByokBillingPolicy,
+	privateByokSettlementMode,
+} from './byok-billing-policy';
 
 export type AudioBillingParams = {
 	/** Immutable verified Endpoint captured on the selected route. */
@@ -116,6 +121,7 @@ export type AudioCostBreakdown = {
 	pricePerCharacter: number;
 	meteredCost: number;
 	standardCost: number;
+	byokStandardCostCeiling?: number;
 	chargedCost: number;
 	meteredFactor: number;
 	chargedFactor: number;
@@ -658,6 +664,7 @@ export async function estimateAudioSpeechBudgetPrecheck(
 		? null
 		: parsePricingProfile(billing.modelPricingProfileJson ?? null);
 	let best: AudioCostBreakdown | null = null;
+	let byokStandardCostCeiling = 0;
 	for (const override of routePriceOverrides.length > 0 ? routePriceOverrides : [null]) {
 		const factors = await resolveRouteFactors(
 			repos,
@@ -670,8 +677,9 @@ export async function estimateAudioSpeechBudgetPrecheck(
 			? resolveAudioCostsForEndpoint(routeParams, factors)
 			: resolveAudioCostsForProfile(routeParams, profile, factors);
 		if (!best || costs.chargedCost >= best.chargedCost) best = costs;
+		byokStandardCostCeiling = Math.max(byokStandardCostCeiling, costs.standardCost);
 	}
-	return best ?? zeroAudioCostBreakdown(
+	const selected = best ?? zeroAudioCostBreakdown(
 		params,
 		await resolveRouteFactors(
 			repos,
@@ -682,6 +690,7 @@ export async function estimateAudioSpeechBudgetPrecheck(
 		'audio_per_character',
 		{ error: 'missing_audio_pricing' }
 	);
+	return { ...selected, byokStandardCostCeiling };
 }
 
 /** 预算预检：per_second 用时长；token 用保守 token 上界（不用于最终扣费）。 */
@@ -729,6 +738,7 @@ export async function estimateAudioBudgetPrecheck(
 		: parsePricingProfile(billing.modelPricingProfileJson ?? null);
 	let maxCharged = 0;
 	let best: AudioCostBreakdown | null = null;
+	let byokStandardCostCeiling = 0;
 	const overrides =
 		routePriceOverrides.length > 0 ? routePriceOverrides : [billing.routePriceOverrideJson];
 	for (const override of overrides) {
@@ -751,8 +761,9 @@ export async function estimateAudioBudgetPrecheck(
 			maxCharged = costs.chargedCost;
 			best = costs;
 		}
+		byokStandardCostCeiling = Math.max(byokStandardCostCeiling, costs.standardCost);
 	}
-	return best ?? zeroAudioCostBreakdown(params, await resolveRouteFactors(
+	const selected = best ?? zeroAudioCostBreakdown(params, await resolveRouteFactors(
 		repos,
 		null,
 		billing.requestStartedAtMs,
@@ -760,6 +771,7 @@ export async function estimateAudioBudgetPrecheck(
 	), 'audio_per_second', {
 		error: 'missing_audio_pricing',
 	});
+	return { ...selected, byokStandardCostCeiling };
 }
 
 function hasAuthoritativeAudioTokenUsage(
@@ -854,6 +866,10 @@ export type RecordAudioUsageParams = {
 	upstreamRequestBody?: string | null;
 	requestBodyLoggingMode?: RequestBodyLoggingMode;
 	requestOrigin?: string | null;
+	httpReferer?: string | null;
+	userAgent?: string | null;
+	/** OpenRouter cross-modal grouping identifier; never used for provider affinity here. */
+	sessionId?: string | null;
 	responseStreamed?: boolean | null;
 	requestProtocol: UpstreamProtocol;
 	requestOperation?: string | null;
@@ -936,6 +952,7 @@ export async function recordAudioUsage(params: RecordAudioUsageParams): Promise<
 				: 'per_second'
 		: resolveAudioBillingMode(profile);
 	const billingCommitted = params.status === 'success' || params.chargeOnError === true;
+	const isByok = parseByokKeyId(params.providerKeyId) !== null;
 	const derivedSettlementMode = audioGuardrailSettlementMode({
 		status: params.status,
 		chargeOnError: params.chargeOnError,
@@ -949,16 +966,17 @@ export async function recordAudioUsage(params: RecordAudioUsageParams): Promise<
 	// Guardrail and ordinary budgets describe the same committed debit. Either
 	// caller-observed uncertainty or a missing billing-mode metric keeps both at
 	// the admitted ceiling; an explicit "actual" must never weaken that result.
-	const sharedSettlementMode: 'actual' | 'reserved' =
+	const nominalSettlementMode: 'actual' | 'reserved' =
 		params.guardrailBudgetSettlement?.mode === 'reserved'
 		|| params.ordinaryBudgetSettlement?.unknownCost === true
 		|| derivedSettlementMode === 'reserved'
 			? 'reserved'
 			: 'actual';
+	const ordinarySettlementMode = privateByokSettlementMode(isByok, nominalSettlementMode);
 	const ordinaryBudgetSettlement = params.ordinaryBudgetSettlement
 		? {
 				...params.ordinaryBudgetSettlement,
-				unknownCost: sharedSettlementMode === 'reserved',
+				unknownCost: ordinarySettlementMode === 'reserved',
 			}
 		: undefined;
 	let costs: AudioCostBreakdown;
@@ -982,6 +1000,13 @@ export async function recordAudioUsage(params: RecordAudioUsageParams): Promise<
 					allowTokenPrecheckEstimate: false,
 				});
 	}
+	const adjustedBilling = applyPrivateByokBillingPolicy({
+		meteredCost: costs.meteredCost,
+		standardCost: costs.standardCost,
+		chargedCost: costs.chargedCost,
+		pricingAuditJson: costs.pricingAuditJson,
+	}, isByok);
+	costs = { ...costs, ...adjustedBilling };
 
 	const chargedCost = billingCommitted ? costs.chargedCost : 0;
 	const meteredCost = billingCommitted ? costs.meteredCost : 0;
@@ -990,9 +1015,13 @@ export async function recordAudioUsage(params: RecordAudioUsageParams): Promise<
 	const generationSnapshot = verifiedUsdGenerationWriteSnapshot({
 		verifiedUsdPricing: hasEndpointPricing,
 		requestOrigin: params.requestOrigin,
+		httpReferer: params.httpReferer,
+		userAgent: params.userAgent,
+		sessionId: params.sessionId,
 		responseStreamed: params.responseStreamed,
 		chargedCostUsd: chargedCost,
 		upstreamInferenceCostUsd: billingCommitted ? meteredCost : null,
+		isByok,
 	});
 	const writeIdentity = resolveAudioUsageWriteIdentity({
 		requestLogId: params.requestLogId,
@@ -1032,9 +1061,13 @@ export async function recordAudioUsage(params: RecordAudioUsageParams): Promise<
 	}
 
 	const usage = params.billing.tokenUsage ?? EMPTY_AUDIO_TOKEN_USAGE;
+	const nativeAudioUsage = costs.billingKind === 'audio_tokens'
+		&& hasAuthoritativeAudioTokenUsage(params.billing.tokenUsage)
+		? params.billing.tokenUsage
+		: null;
 	const budgetAccountedAt = writeIdentity.budgetAccountedAt;
 	const guardrailSettlementMode = params.guardrailBudgetSettlement
-		? sharedSettlementMode
+		? nominalSettlementMode
 		: null;
 	const rawUsage =
 		billingCommitted
@@ -1105,6 +1138,11 @@ export async function recordAudioUsage(params: RecordAudioUsageParams): Promise<
 			cacheWriteTokens: 0,
 			reasoningTokens: 0,
 			totalTokens: billingCommitted ? costs.logTokens.totalTokens : 0,
+			nativeTokensPrompt: nativeAudioUsage?.input_tokens ?? null,
+			nativeTokensCompletion: nativeAudioUsage?.output_tokens ?? null,
+			nativeTokensCached: null,
+			nativeTokensReasoning: null,
+			nativeTokensCompletionImages: null,
 			meteredCost,
 			standardCost,
 			chargedCost,
@@ -1121,6 +1159,8 @@ export async function recordAudioUsage(params: RecordAudioUsageParams): Promise<
 			upstreamAttemptCount: params.timing?.upstreamAttemptCount ?? null,
 			upstreamFailoverCount: params.timing?.upstreamFailoverCount ?? null,
 			timingMetadata: params.timing?.timingMetadata ?? null,
+			providerAttempts: params.timing?.providerAttempts ?? [],
+			providerResponses: params.timing?.providerResponses ?? null,
 			errorMessage: params.errorMessage ?? null,
 			rawUsage,
 			pricingAudit: costs.pricingAuditJson,
@@ -1151,7 +1191,9 @@ export async function recordAudioUsage(params: RecordAudioUsageParams): Promise<
 					mode: guardrailSettlementMode!,
 					reason: guardrailSettlementMode === 'reserved'
 						? 'audio_usage_unavailable_after_dispatch'
-						: 'audio_request_usage_settled',
+						: isByok
+							? 'private_byok_list_price_settled'
+							: 'audio_request_usage_settled',
 				}
 			: undefined,
 		userBudgetSettlement: ordinaryBudgetSettlementForCriticalWrite(

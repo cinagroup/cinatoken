@@ -35,6 +35,11 @@ type RuntimeProbe = {
 	user_budget_reservations_exists: boolean;
 	workspaces_exists: boolean;
 	management_api_keys_exists: boolean;
+	byok_keys_exists: boolean;
+	generation_feedback_exists: boolean;
+	provider_attempt_availability_exists: boolean;
+	batches_exists: boolean;
+	batch_items_exists: boolean;
 	can_create_database_object: boolean;
 	can_create_role: boolean;
 	schema_usage: boolean;
@@ -48,6 +53,27 @@ type RuntimeProbe = {
 	management_api_keys_insert: boolean;
 	management_api_keys_update: boolean;
 	management_api_keys_delete: boolean;
+	byok_keys_select: boolean;
+	byok_keys_insert: boolean;
+	byok_keys_update: boolean;
+	byok_keys_delete: boolean;
+	generation_feedback_select: boolean;
+	generation_feedback_insert: boolean;
+	generation_feedback_update: boolean;
+	generation_feedback_delete: boolean;
+	provider_attempt_availability_select: boolean;
+	provider_attempt_availability_insert: boolean;
+	provider_attempt_availability_update: boolean;
+	provider_attempt_availability_delete: boolean;
+	batches_select: boolean;
+	batches_insert: boolean;
+	batches_update: boolean;
+	batches_delete: boolean;
+	batch_items_select: boolean;
+	batch_items_insert: boolean;
+	batch_items_update: boolean;
+	batch_items_delete: boolean;
+	provider_attempt_retention_execute: boolean;
 	user_budget_reservations_delete: boolean;
 	migrations_select: boolean;
 	migrations_insert: boolean;
@@ -61,8 +87,8 @@ function migratorContractPassed(row: MigratorProbe | undefined): boolean {
 		!row.can_create_role &&
 		row.schema_usage &&
 		row.schema_create &&
-		row.migration_count === '54' &&
-		row.latest_migration === '0054_generation_metadata_snapshots.sql' &&
+		row.migration_count === '67' &&
+		row.latest_migration === '0067_batch_jobs.sql' &&
 		row.latest_migration_applied;
 }
 
@@ -77,6 +103,11 @@ function runtimeContractPassed(row: RuntimeProbe | undefined): boolean {
 		row.user_budget_reservations_exists &&
 		row.workspaces_exists &&
 		row.management_api_keys_exists &&
+		row.byok_keys_exists &&
+		row.generation_feedback_exists &&
+		row.provider_attempt_availability_exists &&
+		row.batches_exists &&
+		row.batch_items_exists &&
 		!row.can_create_database_object &&
 		!row.can_create_role &&
 		row.schema_usage &&
@@ -90,6 +121,27 @@ function runtimeContractPassed(row: RuntimeProbe | undefined): boolean {
 		row.management_api_keys_insert &&
 		row.management_api_keys_update &&
 		row.management_api_keys_delete &&
+		row.byok_keys_select &&
+		row.byok_keys_insert &&
+		row.byok_keys_update &&
+		row.byok_keys_delete &&
+		row.generation_feedback_select &&
+		row.generation_feedback_insert &&
+		!row.generation_feedback_update &&
+		!row.generation_feedback_delete &&
+		row.provider_attempt_availability_select &&
+		row.provider_attempt_availability_insert &&
+		!row.provider_attempt_availability_update &&
+		!row.provider_attempt_availability_delete &&
+		row.batches_select &&
+		row.batches_insert &&
+		row.batches_update &&
+		!row.batches_delete &&
+		row.batch_items_select &&
+		row.batch_items_insert &&
+		row.batch_items_update &&
+		!row.batch_items_delete &&
+		row.provider_attempt_retention_execute &&
 		!row.user_budget_reservations_delete &&
 		!row.migrations_select &&
 		!row.migrations_insert &&
@@ -147,7 +199,7 @@ export default {
 						(SELECT MAX(version) FROM cinatoken_gateway.schema_migrations) AS latest_migration,
 						EXISTS (
 							SELECT 1 FROM cinatoken_gateway.schema_migrations
-							WHERE version = '0054_generation_metadata_snapshots.sql'
+							WHERE version = '0067_batch_jobs.sql'
 						) AS latest_migration_applied
 				`;
 			const migratorPassed = migratorContractPassed(migratorRow);
@@ -174,6 +226,13 @@ export default {
 						to_regclass('cinatoken_gateway.workspaces') IS NOT NULL AS workspaces_exists,
 						to_regclass('cinatoken_gateway.management_api_keys') IS NOT NULL
 							AS management_api_keys_exists,
+						to_regclass('cinatoken_gateway.byok_keys') IS NOT NULL AS byok_keys_exists,
+						to_regclass('cinatoken_gateway.generation_feedback') IS NOT NULL
+							AS generation_feedback_exists,
+						to_regclass('cinatoken_gateway.provider_attempt_availability') IS NOT NULL
+							AS provider_attempt_availability_exists,
+						to_regclass('cinatoken_gateway.batches') IS NOT NULL AS batches_exists,
+						to_regclass('cinatoken_gateway.batch_items') IS NOT NULL AS batch_items_exists,
 						has_database_privilege(current_user, current_database(), 'CREATE')
 							AS can_create_database_object,
 						COALESCE((SELECT rolcreaterole FROM pg_roles WHERE rolname = current_user), FALSE)
@@ -197,6 +256,71 @@ export default {
 						has_table_privilege(
 							current_user, 'cinatoken_gateway.management_api_keys', 'DELETE'
 						) AS management_api_keys_delete,
+						has_table_privilege(
+							current_user, 'cinatoken_gateway.byok_keys', 'SELECT'
+						) AS byok_keys_select,
+						has_table_privilege(
+							current_user, 'cinatoken_gateway.byok_keys', 'INSERT'
+						) AS byok_keys_insert,
+						has_table_privilege(
+							current_user, 'cinatoken_gateway.byok_keys', 'UPDATE'
+						) AS byok_keys_update,
+						has_table_privilege(
+							current_user, 'cinatoken_gateway.byok_keys', 'DELETE'
+						) AS byok_keys_delete,
+						has_table_privilege(
+							current_user, 'cinatoken_gateway.generation_feedback', 'SELECT'
+						) AS generation_feedback_select,
+						has_table_privilege(
+							current_user, 'cinatoken_gateway.generation_feedback', 'INSERT'
+						) AS generation_feedback_insert,
+						has_table_privilege(
+							current_user, 'cinatoken_gateway.generation_feedback', 'UPDATE'
+						) AS generation_feedback_update,
+						has_table_privilege(
+							current_user, 'cinatoken_gateway.generation_feedback', 'DELETE'
+						) AS generation_feedback_delete,
+						has_table_privilege(
+							current_user, 'cinatoken_gateway.provider_attempt_availability', 'SELECT'
+						) AS provider_attempt_availability_select,
+						has_table_privilege(
+							current_user, 'cinatoken_gateway.provider_attempt_availability', 'INSERT'
+						) AS provider_attempt_availability_insert,
+						has_table_privilege(
+							current_user, 'cinatoken_gateway.provider_attempt_availability', 'UPDATE'
+						) AS provider_attempt_availability_update,
+						has_table_privilege(
+							current_user, 'cinatoken_gateway.provider_attempt_availability', 'DELETE'
+						) AS provider_attempt_availability_delete,
+						has_table_privilege(
+							current_user, 'cinatoken_gateway.batches', 'SELECT'
+						) AS batches_select,
+						has_table_privilege(
+							current_user, 'cinatoken_gateway.batches', 'INSERT'
+						) AS batches_insert,
+						has_table_privilege(
+							current_user, 'cinatoken_gateway.batches', 'UPDATE'
+						) AS batches_update,
+						has_table_privilege(
+							current_user, 'cinatoken_gateway.batches', 'DELETE'
+						) AS batches_delete,
+						has_table_privilege(
+							current_user, 'cinatoken_gateway.batch_items', 'SELECT'
+						) AS batch_items_select,
+						has_table_privilege(
+							current_user, 'cinatoken_gateway.batch_items', 'INSERT'
+						) AS batch_items_insert,
+						has_table_privilege(
+							current_user, 'cinatoken_gateway.batch_items', 'UPDATE'
+						) AS batch_items_update,
+						has_table_privilege(
+							current_user, 'cinatoken_gateway.batch_items', 'DELETE'
+						) AS batch_items_delete,
+						has_function_privilege(
+							current_user,
+							'cinatoken_gateway.delete_provider_attempt_availability_before(timestamptz, integer)',
+							'EXECUTE'
+						) AS provider_attempt_retention_execute,
 						COALESCE(has_table_privilege(
 							current_user,
 							to_regclass('cinatoken_gateway.user_budget_reservations'),

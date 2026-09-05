@@ -1,18 +1,29 @@
 import type { GatewayRepositories } from './storage/repositories-types';
-import type { RequestPresetVisibility, RequestPresetWithVersionRow } from './db/request-presets-types';
+import type {
+	RequestPresetVersionRow,
+	RequestPresetVisibility,
+	RequestPresetWithVersionRow,
+} from './db/request-presets-types';
 
 export const REQUEST_PRESET_MAX_CONFIG_BYTES = 64 * 1024;
 export const REQUEST_PRESET_MAX_SYSTEM_PROMPT_BYTES = 32 * 1024;
 
 const SLUG_PATTERN = /^[a-z0-9](?:[a-z0-9_-]{0,62}[a-z0-9])?$/;
-const TRANSIENT_FIELDS = new Set(['messages', 'input', 'prompt', 'stream', 'system', 'instructions', 'preset']);
+const TRANSIENT_FIELDS = new Set([
+	'messages', 'input', 'prompt', 'stream', 'system', 'instructions', 'preset',
+	'background', 'debug', 'metadata', 'previous_response_id', 'prompt_cache_key',
+	'safety_identifier', 'session_id', 'store', 'trace', 'user',
+]);
 const ALLOWED_CONFIG_FIELDS = new Set([
 	'model', 'models', 'provider', 'tools', 'tool_choice', 'parallel_tool_calls',
 	'temperature', 'top_p', 'top_k', 'min_p', 'top_a', 'frequency_penalty',
 	'presence_penalty', 'repetition_penalty', 'max_tokens', 'max_completion_tokens',
-	'stop', 'seed', 'response_format', 'structured_outputs', 'reasoning', 'verbosity',
-	'logprobs', 'top_logprobs', 'user', 'metadata',
-	'route_group', 'service_tier',
+	'max_output_tokens', 'max_tool_calls', 'stop', 'stop_sequences', 'seed',
+	'response_format', 'structured_outputs', 'reasoning', 'reasoning_effort',
+	'verbosity', 'logit_bias', 'logprobs', 'top_logprobs', 'modalities',
+	'image_config', 'audio', 'cache_control', 'context_management', 'fallbacks',
+	'output_config', 'plugins', 'thinking', 'stop_server_tools_when', 'text',
+	'truncation', 'route_group', 'service_tier', 'speed',
 ]);
 const FORBIDDEN_NESTED_KEYS = new Set([
 	'api_key', 'apikey', 'authorization', 'headers', 'base_url', 'baseurl',
@@ -75,7 +86,11 @@ export function validateRequestPresetConfig(input: unknown): PresetConfigValidat
 			return { ok: false, message: 'provider must be an object' };
 		}
 		const provider = config.provider as Record<string, unknown>;
-		const supported = new Set(['order', 'only', 'ignore', 'allow_fallbacks', 'zdr']);
+		const supported = new Set([
+			'order', 'only', 'ignore', 'allow_fallbacks', 'zdr', 'require_parameters',
+			'data_collection', 'enforce_distillable_text', 'quantizations', 'sort',
+			'preferred_min_throughput', 'preferred_max_latency', 'max_price',
+		]);
 		const unsupported = Object.keys(provider).filter((key) => !supported.has(key));
 		if (unsupported.length > 0) return { ok: false, message: `Unsupported provider preference: ${unsupported.join(', ')}` };
 		for (const key of ['order', 'only', 'ignore'] as const) {
@@ -84,11 +99,42 @@ export function validateRequestPresetConfig(input: unknown): PresetConfigValidat
 				return { ok: false, message: `provider.${key} must contain at most 32 provider names` };
 			}
 		}
-		if (provider.allow_fallbacks !== undefined && typeof provider.allow_fallbacks !== 'boolean') {
-			return { ok: false, message: 'provider.allow_fallbacks must be a boolean' };
+		for (const key of ['allow_fallbacks', 'zdr', 'require_parameters', 'enforce_distillable_text'] as const) {
+			if (provider[key] !== undefined && typeof provider[key] !== 'boolean') {
+				return { ok: false, message: `provider.${key} must be a boolean` };
+			}
 		}
-		if (provider.zdr !== undefined && typeof provider.zdr !== 'boolean') {
-			return { ok: false, message: 'provider.zdr must be a boolean' };
+		if (provider.data_collection !== undefined && provider.data_collection !== 'allow' && provider.data_collection !== 'deny') {
+			return { ok: false, message: 'provider.data_collection must be allow or deny' };
+		}
+		if (provider.sort !== undefined) {
+			const validSort = typeof provider.sort === 'string'
+				? ['price', 'throughput', 'latency'].includes(provider.sort)
+				: provider.sort !== null && typeof provider.sort === 'object' && !Array.isArray(provider.sort)
+					&& Object.keys(provider.sort as Record<string, unknown>).every((key) => key === 'by' || key === 'partition')
+					&& ['price', 'throughput', 'latency'].includes(String((provider.sort as Record<string, unknown>).by))
+					&& ['model', 'none'].includes(String((provider.sort as Record<string, unknown>).partition ?? 'model'));
+			if (!validSort) return { ok: false, message: 'provider.sort is invalid' };
+		}
+		if (provider.quantizations !== undefined && (
+			!Array.isArray(provider.quantizations)
+			|| provider.quantizations.length === 0
+			|| provider.quantizations.length > 32
+			|| provider.quantizations.some((item) => typeof item !== 'string' || !item.trim() || item.length > 32)
+		)) {
+			return { ok: false, message: 'provider.quantizations must contain 1-32 names' };
+		}
+		if (provider.max_price !== undefined) {
+			if (!provider.max_price || typeof provider.max_price !== 'object' || Array.isArray(provider.max_price)) {
+				return { ok: false, message: 'provider.max_price must be an object' };
+			}
+			const maxPrice = provider.max_price as Record<string, unknown>;
+			if (Object.keys(maxPrice).some((key) => !['prompt', 'completion', 'request', 'image'].includes(key))) {
+				return { ok: false, message: 'provider.max_price contains an unsupported field' };
+			}
+			if (Object.values(maxPrice).some((value) => typeof value !== 'number' || !Number.isFinite(value) || value < 0)) {
+				return { ok: false, message: 'provider.max_price values must be non-negative numbers' };
+			}
 		}
 	}
 	const error = walkJson(config, 0, { nodes: 0 });
@@ -138,8 +184,8 @@ export function extractPresetSystemPrompt(body: Record<string, unknown>, protoco
 
 export function captureRequestPresetConfig(body: Record<string, unknown>, protocol: RequestPresetProtocol): PresetConfigValidationResult & { systemPrompt?: string | null } {
 	const config: Record<string, unknown> = {};
-	for (const [key, value] of Object.entries(body)) {
-		if (!TRANSIENT_FIELDS.has(key)) config[key] = value;
+	for (const key of ALLOWED_CONFIG_FIELDS) {
+		if (Object.prototype.hasOwnProperty.call(body, key)) config[key] = body[key];
 	}
 	const validated = validateRequestPresetConfig(config);
 	if (!validated.ok) return validated;
@@ -148,6 +194,66 @@ export function captureRequestPresetConfig(body: Record<string, unknown>, protoc
 	} catch (error) {
 		return { ok: false, message: error instanceof Error ? error.message : 'Invalid preset system prompt' };
 	}
+}
+
+function storedPresetConfig(configJson: string): Record<string, unknown> {
+	if (new TextEncoder().encode(configJson).byteLength > REQUEST_PRESET_MAX_CONFIG_BYTES) {
+		throw new TypeError('Stored preset config exceeds 64 KiB');
+	}
+	let parsed: unknown;
+	try {
+		parsed = JSON.parse(configJson);
+	} catch {
+		throw new TypeError('Stored preset config is invalid');
+	}
+	if (!parsed || typeof parsed !== 'object' || Array.isArray(parsed)) {
+		throw new TypeError('Stored preset config is invalid');
+	}
+	const validated = validateRequestPresetConfig(parsed);
+	if (!validated.ok) throw new TypeError(validated.message);
+	return validated.value;
+}
+
+export function publicRequestPresetVersion(row: RequestPresetVersionRow) {
+	return {
+		config: storedPresetConfig(row.config_json),
+		created_at: row.created_at,
+		creator_id: row.created_by_user_id,
+		id: row.id,
+		preset_id: row.preset_id,
+		system_prompt: row.system_prompt,
+		updated_at: row.created_at,
+		version: row.version,
+	};
+}
+
+export function publicRequestPreset(row: RequestPresetWithVersionRow, includeVersion = false) {
+	const summary = {
+		created_at: row.created_at,
+		creator_user_id: row.owner_user_id,
+		description: row.description,
+		designated_version_id: row.version_id,
+		id: row.id,
+		name: row.name,
+		slug: row.slug,
+		status: row.status,
+		status_updated_at: row.status === 'archived' ? row.updated_at : null,
+		updated_at: row.updated_at,
+		workspace_id: row.workspace_id,
+	};
+	if (!includeVersion) return summary;
+	return {
+		...summary,
+		designated_version: publicRequestPresetVersion({
+			id: row.version_id,
+			preset_id: row.id,
+			version: row.designated_version,
+			system_prompt: row.version_system_prompt,
+			config_json: row.version_config_json,
+			created_by_user_id: row.version_created_by_user_id,
+			created_at: row.version_created_at,
+		}),
+	};
 }
 
 function toolIdentity(tool: unknown): string | null {
@@ -230,7 +336,7 @@ export async function resolveRequestPreset(
 	if (!preset) return { ok: false, status: 404, code: 'preset_not_found', message: 'Preset not found or not accessible' };
 	let config: Record<string, unknown>;
 	try {
-		config = JSON.parse(preset.version_config_json) as Record<string, unknown>;
+		config = storedPresetConfig(preset.version_config_json);
 	} catch {
 		return { ok: false, status: 409, code: 'preset_invalid', message: 'Preset designated version is invalid' };
 	}

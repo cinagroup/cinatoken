@@ -82,6 +82,8 @@ dev 演示**仅 CLI 发版**（有新 SQL 时先 `db:migrate:remote`）；生产
 |------|------|
 | `PROXY_WORKER_NAME` / `ADMIN_WORKER_NAME` / `CHAIN_WORKER_NAME` | **须与 Cloudflare Dashboard 中的 Worker 名一致** |
 | `CHAIN_JOB_QUEUE_NAME` / `CHAIN_JOB_DLQ_NAME` | 链上任务 Queue 与死信 Queue；每个实例必须独立 |
+| `BATCH_INFRA_ENABLED` | Batch Phase 2 基础设施开关；默认/生产常规部署保持 `false`。只有受控预置时设 `true`；不等同于开放 API |
+| `BATCH_BUCKET_NAME` / `BATCH_QUEUE_NAME` / `BATCH_DLQ_NAME` | 私有 Batch R2、主 Queue 与 DLQ；仅 `BATCH_INFRA_ENABLED=true` 时绑定，每个实例必须独立 |
 | `CINACHAIN_CHAIN_ID` | 钱包签名与 Chain Worker 必须使用同一链 ID |
 | `D1_DATABASE_NAME` | D1 逻辑名 |
 | `D1_DATABASE_ID` | 远程 deploy / migrate **必填**。写入生成的 `wrangler.jsonc` 后，本机 `dev:proxy`/`dev:admin` 会连**另一套**本地 D1；继续本地开发前执行 `npm run gen:wrangler`（见 [local-development.md §1](../../developers/local-development.md#️-本地-d1-与-database_id远程-deploy-后必读)） |
@@ -90,6 +92,8 @@ dev 演示**仅 CLI 发版**（有新 SQL 时先 `db:migrate:remote`）；生产
 | `DATABASE_DRIVER` | Cloudflare 省略/`d1` → D1；`postgres` → Hyperdrive。选择 Postgres 时 `HYPERDRIVE_ID` 必填；三个 Worker 必须一致 |
 | `REQUEST_BODY_LOGGING` | Proxy 请求正文日志策略；模板默认 `off`。仅经隐私与留存评审后可设为 `redacted`，且脱敏结果仍可能包含敏感提示词 |
 | `PROXY_CUSTOM_DOMAIN` / `ADMIN_CUSTOM_DOMAIN` | 可选 |
+
+Batch 仍处于功能关闭阶段。`npm run bootstrap:cloudflare -- --batch-infra` 会创建/复用私有 Bucket 和两个 Queue，并让 Proxy 获得绑定；生成器仍强制 `BATCH_API_ENABLED=false`。不得给该 Bucket 开启公共开发 URL/自定义域名，也不得把基础设施已存在误报为 Batch API 可用。对象 30 天生命周期和孤儿清理在后续 maintenance 阶段验收前，应保持功能关闭。
 
 ---
 

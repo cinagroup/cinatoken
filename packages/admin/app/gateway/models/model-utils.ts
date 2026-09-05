@@ -2,6 +2,10 @@ import { catalogInputPriceSortKey } from '@/lib/pricing-ui';
 import { formatCompactTokens } from '@/lib/format-compact-tokens';
 import { normalizeModelVendorInput } from '@/lib/model-vendor';
 import {
+	PUBLIC_CATALOG_TOP_PROVIDER_METADATA_KEY,
+	parsePublicCatalogTopProviderSelection,
+} from '@octafuse/core/public-model-catalog';
+import {
 	parsePricingProfile,
 	profileHasAudioPerCharacterPricing,
 	profileHasAudioPerSecondPricing,
@@ -46,10 +50,101 @@ export function parseMetadataForSave(
 				error: 'Metadata must be a JSON object ({ ... }), not an array or primitive',
 			};
 		}
+		if (
+			parsePublicCatalogTopProviderSelection(
+				parsed as Record<string, unknown>
+			).status === 'invalid'
+		) {
+			return {
+				ok: false,
+				error: 'Public catalog top provider requires an exact endpoint tag and boolean moderation value',
+			};
+		}
 		return { ok: true, value: JSON.stringify(parsed) };
 	} catch {
 		return { ok: false, error: 'Metadata must be valid JSON' };
 	}
+}
+
+export type PublicCatalogTopProviderEditorState =
+	| { status: 'metadata-invalid' }
+	| {
+		status: 'ready';
+		enabled: boolean;
+		selectorValid: boolean;
+		endpointTag: string;
+		isModerated: boolean;
+	};
+
+function metadataObject(raw: string): Record<string, unknown> | null {
+	const trimmed = raw.trim();
+	if (trimmed === '') return {};
+	try {
+		const parsed: unknown = JSON.parse(trimmed);
+		return parsed !== null && typeof parsed === 'object' && !Array.isArray(parsed)
+			? parsed as Record<string, unknown>
+			: null;
+	} catch {
+		return null;
+	}
+}
+
+export function publicCatalogTopProviderEditorState(
+	raw: string
+): PublicCatalogTopProviderEditorState {
+	const metadata = metadataObject(raw);
+	if (!metadata) return { status: 'metadata-invalid' };
+	const selection = parsePublicCatalogTopProviderSelection(metadata);
+	if (selection.status === 'absent') {
+		return {
+			status: 'ready',
+			enabled: false,
+			selectorValid: true,
+			endpointTag: '',
+			isModerated: false,
+		};
+	}
+	if (selection.status === 'valid') {
+		return {
+			status: 'ready',
+			enabled: true,
+			selectorValid: true,
+			endpointTag: selection.selector.endpointTag,
+			isModerated: selection.selector.isModerated,
+		};
+	}
+	const value = metadata[PUBLIC_CATALOG_TOP_PROVIDER_METADATA_KEY];
+	const record = value !== null && typeof value === 'object' && !Array.isArray(value)
+		? value as Record<string, unknown>
+		: null;
+	return {
+		status: 'ready',
+		enabled: true,
+		selectorValid: false,
+		endpointTag: typeof record?.endpoint_tag === 'string' ? record.endpoint_tag : '',
+		isModerated: record?.is_moderated === true,
+	};
+}
+
+export function updatePublicCatalogTopProviderMetadata(
+	raw: string,
+	selector: { endpointTag: string; isModerated: boolean } | null
+): { ok: true; value: string } | { ok: false } {
+	const metadata = metadataObject(raw);
+	if (!metadata) return { ok: false };
+	const next = Object.fromEntries(Object.entries(metadata));
+	if (selector === null) {
+		delete next[PUBLIC_CATALOG_TOP_PROVIDER_METADATA_KEY];
+	} else {
+		next[PUBLIC_CATALOG_TOP_PROVIDER_METADATA_KEY] = {
+			endpoint_tag: selector.endpointTag,
+			is_moderated: selector.isModerated,
+		};
+	}
+	return {
+		ok: true,
+		value: Object.keys(next).length > 0 ? JSON.stringify(next, null, 2) : '',
+	};
 }
 
 export function buildMetadataSummary(metadata: string | null | undefined): MetadataSummary {

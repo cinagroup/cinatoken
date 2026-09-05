@@ -8,6 +8,8 @@ import {
 	type ModelRouteJoinRow,
 	type ModelRow,
 	type ProviderRow,
+	type RouteAvailabilityAggregate,
+	type RoutePerformanceSample,
 	type RouteDataPolicyRow,
 } from "@octafuse/core";
 import {
@@ -125,19 +127,25 @@ function endpoint(overrides: Partial<ModelEndpointRow> = {}): ModelEndpointRow {
 }
 function repo(
 	options: {
+		model?: ModelRow;
 		endpoint?: ModelEndpointRow;
 		route?: ModelRouteJoinRow;
 		provider?: ProviderRow;
 		policy?: RouteDataPolicyRow;
+		performanceSamples?: RoutePerformanceSample[];
+		availabilityAggregates?: RouteAvailabilityAggregate[];
+		availabilityError?: Error;
+		performanceError?: Error;
 	} = {}
 ): PublicEndpointDiscoveryRepositories {
-	const e = options.endpoint ?? endpoint(),
-		route = options.route ?? ROUTE,
+	const m = options.model ?? MODEL,
+		e = options.endpoint ?? endpoint({ model_id: m.id }),
+		route = options.route ?? { ...ROUTE, model_id: m.id },
 		p = options.provider ?? PROVIDER;
 	return {
 		modelRouting: {
-			getModelById: async (id) => (id === MODEL.id ? MODEL : null),
-			listModelsWithActiveRoutes: async () => [MODEL],
+			getModelById: async (id) => (id === m.id ? m : null),
+			listModelsWithActiveRoutes: async () => [m],
 		},
 		providers: {
 			getProvidersByIds: async (ids) => (ids.includes(p.id) ? [p] : []),
@@ -159,6 +167,25 @@ function repo(
 		routeDataPolicies: {
 			getByRouteTargetIds: async () => (options.policy ? [options.policy] : []),
 		},
+		requestLogs: {
+			getRecentRoutePerformanceSamples: async (query) => {
+				assert.ok(query.routeTargetIds.length > 0 && query.routeTargetIds.length <= 64);
+				assert.equal(new Set(query.routeTargetIds).size, query.routeTargetIds.length);
+				assert.equal(query.sinceIso, '2026-08-30T11:30:00.000Z');
+				assert.equal(query.maxSamplesPerRoute, 100);
+				if (options.performanceError) throw options.performanceError;
+				return options.performanceSamples ?? [];
+			},
+			getRouteAvailabilityAggregates: async (query) => {
+				assert.ok(query.routeTargetIds.length > 0 && query.routeTargetIds.length <= 64);
+				assert.equal(new Set(query.routeTargetIds).size, query.routeTargetIds.length);
+				assert.equal(query.since5mIso, '2026-08-30T11:55:00.000Z');
+				assert.equal(query.since30mIso, '2026-08-30T11:30:00.000Z');
+				assert.equal(query.since1dIso, '2026-08-29T12:00:00.000Z');
+				if (options.availabilityError) throw options.availabilityError;
+				return options.availabilityAggregates ?? [];
+			},
+		},
 	};
 }
 
@@ -175,6 +202,9 @@ describe("endpoint entity publication", () => {
 		});
 		assert.equal(data.endpoints[0]?.context_length, 128000);
 		assert.equal(data.endpoints[0]?.supports_implicit_caching, false);
+		assert.equal(data.endpoints[0]?.supports_default_voice, null);
+		assert.deepEqual(data.endpoints[0]?.reference_audio_media_types, []);
+		assert.equal(data.endpoints[0]?.reference_audio_default_media_type, null);
 		assert.deepEqual(data.endpoints[0]?.supports_tool_choice, {
 			auto: true,
 			function: false,
@@ -186,6 +216,244 @@ describe("endpoint entity publication", () => {
 		assert.doesNotMatch(
 			JSON.stringify(data),
 			/must not leak|secret\.example|secret-key|private\.evidence|admin-secret/
+		);
+	});
+
+	it("publishes privacy-thresholded 30-minute latency and throughput percentiles", async () => {
+		const performanceSamples = Array.from({ length: 20 }, (_, index): RoutePerformanceSample => ({
+			route_target_id: ROUTE.id,
+			output_tokens: index + 1,
+			latency_ms: null,
+			upstream_response_ms: null,
+			final_upstream_headers_ms: 0,
+			first_reasoning_token_ms: null,
+			first_token_ms: (index + 1) * 100,
+			stream_duration_ms: 1_000,
+			created_at: '2026-08-30T11:59:00.000Z',
+		}));
+		const availabilityAggregates: RouteAvailabilityAggregate[] = [{
+			route_target_id: ROUTE.id,
+			available_5m: 90,
+			total_5m: 100,
+			available_30m: 190,
+			total_30m: 200,
+			available_1d: 990,
+			total_1d: 1_000,
+		}];
+		const data = await getPublicModelEndpoints(
+			repo({ performanceSamples, availabilityAggregates }),
+			parseModelEndpointPath("openai", "model")!,
+			NOW,
+		);
+		assert.deepEqual(data?.endpoints[0]?.latency_last_30m, {
+			p50: 1, p75: 1.5, p90: 1.8, p99: 2,
+		});
+		assert.deepEqual(data?.endpoints[0]?.throughput_last_30m, {
+			p50: 10, p75: 5, p90: 2, p99: 1,
+		});
+		assert.equal(data?.endpoints[0]?.uptime_last_5m, 90);
+		assert.equal(data?.endpoints[0]?.uptime_last_30m, 95);
+		assert.equal(data?.endpoints[0]?.uptime_last_1d, 99);
+
+		const belowThreshold = await getPublicModelEndpoints(
+			repo({ performanceSamples: performanceSamples.slice(0, 19) }),
+			parseModelEndpointPath("openai", "model")!,
+			NOW,
+		);
+		assert.equal(belowThreshold?.endpoints[0]?.latency_last_30m, null);
+		assert.equal(belowThreshold?.endpoints[0]?.throughput_last_30m, null);
+		assert.equal(belowThreshold?.endpoints[0]?.uptime_last_30m, null);
+	});
+
+	it("keeps each uptime window private until it independently reaches the threshold", async () => {
+		const data = await getPublicModelEndpoints(
+			repo({
+				availabilityAggregates: [{
+					route_target_id: ROUTE.id,
+					available_5m: 99,
+					total_5m: 99,
+					available_30m: 90,
+					total_30m: 100,
+					available_1d: 195,
+					total_1d: 200,
+				}],
+			}),
+			parseModelEndpointPath("openai", "model")!,
+			NOW,
+		);
+		assert.equal(data?.endpoints[0]?.uptime_last_5m, null);
+		assert.equal(data?.endpoints[0]?.uptime_last_30m, 90);
+		assert.equal(data?.endpoints[0]?.uptime_last_1d, 97.5);
+	});
+
+	it("keeps endpoint discovery available when optional performance telemetry fails", async () => {
+		const originalWarn = console.warn;
+		const warnings: string[] = [];
+		console.warn = (value?: unknown) => warnings.push(String(value));
+		try {
+			const data = await getPublicModelEndpoints(
+				repo({ performanceError: new Error("private database details") }),
+				parseModelEndpointPath("openai", "model")!,
+				NOW,
+			);
+			assert.equal(data?.endpoints.length, 1);
+			assert.equal(data?.endpoints[0]?.latency_last_30m, null);
+			assert.equal(data?.endpoints[0]?.throughput_last_30m, null);
+			assert.equal(warnings.length, 1);
+			assert.match(warnings[0]!, /endpoint performance samples unavailable/u);
+			assert.doesNotMatch(warnings[0]!, /private database details/u);
+		} finally {
+			console.warn = originalWarn;
+		}
+	});
+
+	it("keeps latency data available when optional uptime aggregation fails", async () => {
+		const originalWarn = console.warn;
+		const warnings: string[] = [];
+		console.warn = (value?: unknown) => warnings.push(String(value));
+		try {
+			const performanceSamples = Array.from({ length: 20 }, (_, index): RoutePerformanceSample => ({
+				route_target_id: ROUTE.id,
+				output_tokens: index + 1,
+				latency_ms: (index + 1) * 100,
+				upstream_response_ms: null,
+				final_upstream_headers_ms: 0,
+				first_reasoning_token_ms: (index + 1) * 100,
+				first_token_ms: null,
+				stream_duration_ms: 1_000,
+				created_at: '2026-08-30T11:59:00.000Z',
+			}));
+			const data = await getPublicModelEndpoints(
+				repo({
+					performanceSamples,
+					availabilityError: new Error("private uptime database details"),
+				}),
+				parseModelEndpointPath("openai", "model")!,
+				NOW,
+			);
+			assert.notEqual(data?.endpoints[0]?.latency_last_30m, null);
+			assert.equal(data?.endpoints[0]?.uptime_last_30m, null);
+			assert.equal(warnings.length, 1);
+			assert.match(warnings[0]!, /endpoint availability aggregates unavailable/u);
+			assert.doesNotMatch(warnings[0]!, /private uptime database details/u);
+		} finally {
+			console.warn = originalWarn;
+		}
+	});
+
+	it("publishes normalized endpoint speech request evidence", async () => {
+		const speechModel: ModelRow = {
+			...MODEL,
+			id: "openai/speech-model",
+			display_name: "Speech Model",
+			context_window: null,
+			max_tokens: null,
+			pricing_profile: JSON.stringify({
+				audio_billing_mode: "per_character",
+				audio: { price_per_character: 0.00002 },
+			}),
+			input_modalities: '["text"]',
+			output_modalities: '["speech"]',
+		};
+		const speechRoute: ModelRouteJoinRow = {
+			...ROUTE,
+			id: "speech-route",
+			model_id: speechModel.id,
+			upstream_operation: "audio.speech",
+		};
+		const repository = repo({
+			model: speechModel,
+			route: speechRoute,
+			endpoint: endpoint({
+				model_id: speechModel.id,
+				context_length: null,
+				max_prompt_tokens: null,
+				max_completion_tokens: null,
+				pricing: "{}",
+				supports_voice_cloning: true,
+				audio_capabilities: JSON.stringify({
+					v: 1,
+					pricing_by_operation: {
+						"audio.speech": {
+							currency: "USD",
+							meter: {
+								kind: "characters",
+								unit: "unicode_code_point",
+								price: "0.00002",
+								minimum_units: 0,
+								increment_units: 1,
+							},
+						},
+					},
+					speech_by_operation: {
+						"audio.speech": {
+							supports_default_voice: true,
+							reference_audio_media_types: ["audio/WAV"],
+							reference_audio_default_media_type: "audio/WAV",
+						},
+					},
+				}),
+			}),
+		});
+		assert.equal(
+			(await listVerifiedPublicEndpointBindings(repository, [speechModel], NOW)).length,
+			1
+		);
+		const data = await getPublicModelEndpoints(
+			repository,
+			parseModelEndpointPath("openai", "speech-model")!,
+			NOW
+		);
+		assert.ok(data);
+		assert.equal(data.endpoints[0]?.context_length, 0);
+		assert.deepEqual(data.endpoints[0]?.pricing, {
+			prompt: "0.00002",
+			completion: "0",
+		});
+		assert.equal(data.endpoints[0]?.supports_default_voice, true);
+		assert.deepEqual(data.endpoints[0]?.reference_audio_media_types, [
+			"audio/wav",
+		]);
+		assert.equal(
+			data.endpoints[0]?.reference_audio_default_media_type,
+			"audio/wav"
+		);
+		assert.deepEqual(data.endpoints[0]?.audio_capabilities, {
+			v: 1,
+			pricing_by_operation: {
+				"audio.speech": {
+					currency: "USD",
+					meter: {
+						kind: "characters",
+						unit: "unicode_code_point",
+						price: "0.00002",
+						minimum_units: 0,
+						increment_units: 1,
+					},
+				},
+			},
+			speech_by_operation: {
+				"audio.speech": {
+					supports_default_voice: true,
+					reference_audio_media_types: ["audio/wav"],
+					reference_audio_default_media_type: "audio/wav",
+				},
+			},
+		});
+	});
+
+	it("does not bind an audio route without evidence for its exact operation", async () => {
+		const audioRoute: ModelRouteJoinRow = {
+			...ROUTE,
+			upstream_operation: "audio.speech",
+		};
+		assert.deepEqual(
+			await listVerifiedPublicEndpointBindings(
+				repo({ route: audioRoute }),
+				[MODEL],
+				NOW
+			),
+			[]
 		);
 	});
 

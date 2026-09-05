@@ -18,6 +18,7 @@ import GatewayDemo from './GatewayDemo';
 import FrontendAttribution from '@/components/unified/FrontendAttribution';
 import PublicHeader from '@/components/public/PublicHeader';
 import PublicThemeBootstrap from '@/components/public/PublicThemeBootstrap';
+import CinaAuthAccessLink from '@/components/auth/CinaAuthAccessLink';
 
 type IconComponent = ComponentType<SVGProps<SVGSVGElement>>;
 
@@ -67,6 +68,9 @@ function ArrowLink({ href, children, primary = false }: { href: string; children
 				{content}
 			</a>
 		);
+	}
+	if (href === '/dashboard') {
+		return <CinaAuthAccessLink href={href} intent="admin" className={className}>{content}</CinaAuthAccessLink>;
 	}
 
 	return (

@@ -12,7 +12,7 @@ export type PresetCatalogRow = {
 	id: string;
 	display_name: string | null;
 	vendor: string;
-	/** `llm` | `image` | `audio` — same Kind as Models list filter */
+	/** Static presets currently contain `llm` | `image` | `audio`. */
 	kind: 'llm' | 'image' | 'audio';
 	context_window: number | null;
 	max_tokens: number | null;
@@ -63,10 +63,10 @@ export type ModelImportResult = {
 export const ALL_VENDORS_KEY = 'all';
 
 /**
- * 模型目录 Kind 视图（`?kind=all|llm|image|audio`）。
+ * 模型目录 Kind 视图（`?kind=all|llm|image|audio|rerank`）。
  * 模型目录允许跨类型浏览；调试台继续使用 `@/lib/invoke-kind` 中不含 All 的模型类型。
  */
-export const MODEL_LIST_KIND_FILTERS = ['all', 'llm', 'image', 'audio'] as const;
+export const MODEL_LIST_KIND_FILTERS = ['all', 'llm', 'image', 'audio', 'rerank'] as const;
 export type ModelListKindFilter = (typeof MODEL_LIST_KIND_FILTERS)[number];
 export const DEFAULT_MODEL_LIST_KIND_FILTER: ModelListKindFilter = 'all';
 
@@ -107,13 +107,21 @@ export const EMPTY_IMAGE_MODEL_FORM: ModelFormData = {
 	output_modalities: ['image'],
 };
 
-/** 手工新建 Audio 转写模型时的模态默认值（对齐 whisper-1：audio → text）。 */
+/** 手工新建 Audio 转写模型时的模态默认值（对齐 OpenRouter：audio → transcription）。 */
 export const EMPTY_AUDIO_MODEL_FORM: ModelFormData = {
 	...EMPTY_MODEL_FORM,
 	max_tokens: '',
 	context_window: '',
 	input_modalities: ['audio'],
-	output_modalities: ['text'],
+	output_modalities: ['transcription'],
 };
 
-export type ModelFormKind = 'llm' | 'image' | 'audio';
+/** 手工新建 Rerank 模型：保留输入容量，输出为排序结果，不使用生成 token 上限。 */
+export const EMPTY_RERANK_MODEL_FORM: ModelFormData = {
+	...EMPTY_MODEL_FORM,
+	max_tokens: '',
+	input_modalities: ['text'],
+	output_modalities: ['rerank'],
+};
+
+export type ModelFormKind = 'llm' | 'image' | 'audio' | 'rerank';

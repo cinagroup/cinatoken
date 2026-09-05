@@ -24,6 +24,7 @@ function route(
 		customParams: { vad_enabled: true },
 		isImageModel: false,
 		isAudioModel: true,
+		isRerankModel: false,
 		...overrides,
 	};
 }

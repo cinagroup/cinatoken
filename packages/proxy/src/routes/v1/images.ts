@@ -22,6 +22,7 @@ import {
 } from '../../services/route-strategies';
 import { proxyImageEdits, proxyImageGenerations, type ProxyResult } from '../../services/proxy';
 import { finalizeRequestLogJson } from '../../services/request-log-shared';
+import { generationRequestContext } from '../../services/generation-request-context';
 import {
 	createImagePricingContext,
 	estimateImageBudgetPrecheck,
@@ -68,16 +69,18 @@ import {
 	reserveRequestGuardrailBudgets,
 	runRequestGuardrails,
 } from '../../services/request-guardrails';
+import type { OrdinaryBudgetLease } from '../../services/ordinary-budget-lifecycle';
 import {
-	reserveOrdinaryUserBudget,
-	type OrdinaryBudgetLease,
-} from '../../services/ordinary-budget-lifecycle';
-import {
-	markMultimediaBudgetsBeforeDispatch,
 	selectConservativeMultimediaBudgetEstimate,
 } from '../../services/multimedia-ordinary-budget';
 import { applyImageProviderPriceRouting } from '../../services/image-provider-price-routing';
 import { buildRouteRequestBody } from '../../services/route-default-params';
+import { parseOpenRouterSessionHeader } from '../../services/openrouter-session-routing';
+import { privateByokContextForApiKey } from '../../services/byok-key-pool';
+import {
+	createRouteAwareBudgetAdmission,
+	type RouteAwareBudgetAdmission,
+} from '../../services/request-budget-admission';
 
 type ImagesEnv = Env & { Variables: { apiKey: ApiKeyContext } };
 type ImagesContext = Context<ImagesEnv>;
@@ -398,6 +401,22 @@ export async function admitImageGuardrailBudget(
 
 type AdmittedImageGuardrailBudgetLease = Extract<ImageGuardrailBudgetLease, { ok: true }>;
 
+function routeAwareImageGuardrailLease(
+	admission: RouteAwareBudgetAdmission,
+): AdmittedImageGuardrailBudgetLease {
+	return {
+		ok: true,
+		get reserved() { return admission.guardrailReserved; },
+		get dispatched() { return admission.guardrailDispatched; },
+		get terminal() { return admission.guardrailTerminal; },
+		beforeUpstreamDispatch: () => Promise.reject(
+			new Error('Route-aware image admission requires a selected route'),
+		),
+		release: (reason) => admission.releaseGuardrailPreDispatch(reason),
+		forfeit: (reason) => admission.terminateGuardrailUnknown(reason),
+	};
+}
+
 async function terminateImageOrdinaryBudget(
 	lease: OrdinaryBudgetLease,
 	requestId: string,
@@ -424,23 +443,6 @@ async function terminateImageGuardrailBudget(
 			`[Gateway Images] guardrail budget cleanup failed reason=${reason} error=${error instanceof Error ? error.message : String(error)}`,
 		);
 	}
-}
-
-async function beforeImageUpstreamDispatch(
-	ordinaryLease: OrdinaryBudgetLease,
-	guardrailLease: AdmittedImageGuardrailBudgetLease,
-	requestId: string,
-): Promise<void> {
-	await markMultimediaBudgetsBeforeDispatch({
-		markGuardrail: () => guardrailLease.beforeUpstreamDispatch(),
-		markOrdinary: () => ordinaryLease.beforeUpstreamDispatch(),
-		terminateOrdinary: () => terminateImageOrdinaryBudget(
-			ordinaryLease,
-			requestId,
-			'pre_dispatch_failed',
-		),
-		terminateGuardrail: () => terminateImageGuardrailBudget(guardrailLease, 'pre_dispatch_failed'),
-	});
 }
 
 type MultipartEditsParseResult =
@@ -515,6 +517,17 @@ async function parseMultipartEdits(c: ImagesContext): Promise<MultipartEditsPars
 	}
 
 	const bodyKeys = summarizeBodyKeys(body);
+	if (Object.prototype.hasOwnProperty.call(body, 'session_id')) {
+		return {
+			ok: false,
+			error: 'session_id is not supported in an images body; use x-session-id',
+			diag: {
+				...baseDiag,
+				bodyKeys,
+				hasModel: typeof body.model === 'string' && body.model.trim() !== '',
+			},
+		};
+	}
 	const modelRaw = body.model;
 	const model = typeof modelRaw === 'string' ? modelRaw.trim() : '';
 	if (!model) {
@@ -764,6 +777,7 @@ type FinalizeImageParams = {
 	effectiveRouteGroup: string;
 	modelNameForLog: string;
 	requestBodyForLog: string | null;
+	sessionId: string | null;
 	operation: 'generations' | 'edits';
 	billing: ImageBillingParams;
 	/** 入口预算预检（客户端取消时按此金额扣费） */
@@ -802,6 +816,7 @@ function finalizeImageStreamResponse(
 		effectiveRouteGroup,
 		modelNameForLog,
 		requestBodyForLog,
+		sessionId,
 		operation,
 		billing,
 		budgetPrecheck,
@@ -874,6 +889,8 @@ function finalizeImageStreamResponse(
 				upstreamRequestBody: upstreamRequestBodyForLog,
 				requestBodyLoggingMode: c.get('requestBodyLoggingMode'),
 				requestOrigin: new URL(c.req.url).origin,
+				...generationRequestContext(c.req.raw.headers),
+				sessionId,
 				responseStreamed: true,
 				requestProtocol: 'openai',
 				requestOperation: 'images.generations',
@@ -942,6 +959,7 @@ async function finalizeImageResponse(params: FinalizeImageParams): Promise<Respo
 		effectiveRouteGroup,
 		modelNameForLog,
 		requestBodyForLog,
+		sessionId,
 		operation,
 		billing,
 		budgetPrecheck,
@@ -1125,6 +1143,8 @@ async function finalizeImageResponse(params: FinalizeImageParams): Promise<Respo
 				upstreamRequestBody: upstreamRequestBodyForLog,
 				requestBodyLoggingMode: c.get('requestBodyLoggingMode'),
 				requestOrigin: new URL(c.req.url).origin,
+				...generationRequestContext(c.req.raw.headers),
+				sessionId,
 				responseStreamed: false,
 				requestProtocol: 'openai',
 				requestOperation: operation === 'generations' ? 'images.generations' : 'images.edits',
@@ -1210,6 +1230,13 @@ async function handleImageGenerations(c: ImagesContext): Promise<Response> {
 	const timing = new RequestTimingCollector();
 	const contentType = c.req.header('content-type') ?? null;
 	const contentLength = c.req.header('content-length') ?? null;
+	const parsedSession = parseOpenRouterSessionHeader(c.req.raw.headers);
+	if (!parsedSession.ok) {
+		return rejectImageRequest(c, 400, parsedSession.message, {
+			operation: 'generations', contentType, contentLength, bodyKeys: [], hasModel: false,
+		});
+	}
+	const sessionId = parsedSession.sessionId;
 
 	let body: Record<string, unknown>;
 	try {
@@ -1225,6 +1252,18 @@ async function handleImageGenerations(c: ImagesContext): Promise<Response> {
 	}
 
 	const bodyKeys = summarizeBodyKeys(body);
+	if (Object.prototype.hasOwnProperty.call(body, 'session_id')) {
+		const clientModel = typeof body.model === 'string' ? body.model.trim() : '';
+		return rejectImageRequest(
+			c,
+			400,
+			'session_id is not supported in an images body; use x-session-id',
+			{
+				operation: 'generations', contentType, contentLength, bodyKeys,
+				hasModel: clientModel !== '', clientModel: clientModel || undefined,
+			},
+		);
+	}
 	const rawModelId = typeof body.model === 'string' ? body.model.trim() : '';
 	if (!rawModelId) {
 		return rejectImageRequest(c, 400, 'Missing model', {
@@ -1426,7 +1465,7 @@ async function handleImageGenerations(c: ImagesContext): Promise<Response> {
 	if (!estimateSelection) {
 		throw new Error('Image fallback plan has no billable route estimate');
 	}
-	const { estimate, estimatedChargedCost } = estimateSelection;
+	const { estimate, estimatedChargedCost, estimatedStandardCost } = estimateSelection;
 	if (estimatedChargedCost === null) {
 		return rejectImageRequest(c, 502, 'No eligible image route has a provable charged-cost ceiling', {
 			operation: 'generations', contentType, contentLength, bodyKeys,
@@ -1454,6 +1493,7 @@ async function handleImageGenerations(c: ImagesContext): Promise<Response> {
 		startMs: start,
 		timing,
 		clientErrorCircuitEnabled: false,
+		sessionId,
 	});
 	if (circuitBlocked) {
 		return circuitBlocked;
@@ -1462,54 +1502,31 @@ async function handleImageGenerations(c: ImagesContext): Promise<Response> {
 	const affinityKey = buildAffinityKey(apiKey.userId, baseModelId, effectiveRouteGroup, 'openai');
 	const tierKeyPrefix = buildTierKeyPrefix(baseModelId, effectiveRouteGroup, 'openai');
 	timing.markGatewayComplete();
-	const ordinaryAdmission = await reserveOrdinaryUserBudget(repos, {
-		requestId: requestCorrelationId,
-		userId: apiKey.userId,
-		apiKeyId: apiKey.keyId,
-		budgetMax: apiKey.budgetMax,
-		expectedBudgetEpoch: apiKey.budgetEpoch,
-		estimatedChargedCost,
-		now: new Date(start),
-	});
-	if (!ordinaryAdmission.ok) {
-		return gatewayErrorJson(c, {
-			status: 403,
-			code: GatewayErrorCode.budgetExceeded,
-			message: ordinaryAdmission.error.message,
-		});
-	}
-	const ordinaryBudgetLease = ordinaryAdmission.lease;
-	let guardrailBudgetLease: ImageGuardrailBudgetLease;
-	try {
-		guardrailBudgetLease = await admitImageGuardrailBudget(repos, {
+	const budgetAdmission = await createRouteAwareBudgetAdmission(repos, {
+		ordinary: {
 			requestId: requestCorrelationId,
+			userId: apiKey.userId,
+			apiKeyId: apiKey.keyId,
+			budgetMax: apiKey.budgetMax,
+			expectedBudgetEpoch: apiKey.budgetEpoch,
+			estimatedChargedCost,
+			now: new Date(start),
+		},
+		guardrail: {
 			intents: guardrail.budgetIntents,
 			reservedMicros: imageGuardrailBudgetMicros(estimate),
-			now: new Date(),
-		});
-	} catch (error) {
-		await terminateImageOrdinaryBudget(
-			ordinaryBudgetLease,
-			requestCorrelationId,
-			'guardrail_budget_admission_failed',
-		);
-		throw error;
-	}
-	if (!guardrailBudgetLease.ok) {
-		await terminateImageOrdinaryBudget(
-			ordinaryBudgetLease,
-			requestCorrelationId,
-			'guardrail_budget_admission_failed',
-		);
-		if (guardrailBudgetLease.blocked) {
-			return gatewayErrorJson(c, {
-				status: 403,
-				code: guardrailBudgetLease.reason === 'gateway_key_limit' || guardrailBudgetLease.reason === 'workspace_budget' ? GatewayErrorCode.budgetExceeded : GatewayErrorCode.guardrailBlocked,
-				message: guardrailBudgetLease.message,
-			});
-		}
-		throw new Error(`Guardrail budget admission failed: ${guardrailBudgetLease.message}`);
-	}
+			now: new Date(start),
+		},
+		privateByokGatewayKey: {
+			includeInLimit: apiKey.includeByokInLimit === true,
+			reservedMicros: Math.max(
+				imageGuardrailBudgetMicros(estimate),
+				imageGuardrailBudgetMicros({ chargedCost: estimatedStandardCost ?? Number.POSITIVE_INFINITY }),
+			),
+		},
+	});
+	const ordinaryBudgetLease = budgetAdmission.ordinaryLease;
+	const guardrailBudgetLease = routeAwareImageGuardrailLease(budgetAdmission);
 
 	console.log(
 		`[Gateway Images] generations baseModelId=${baseModelId} keyId=${apiKey.keyId} n=${common.n}`
@@ -1527,14 +1544,11 @@ async function handleImageGenerations(c: ImagesContext): Promise<Response> {
 			sticky: selectedPlan.hasProviderPreferences
 				? null
 				: stickyConfigFromSurface(selectedPlan.surface),
-			beforeUpstreamDispatch: () => beforeImageUpstreamDispatch(
-				ordinaryBudgetLease,
-				guardrailBudgetLease,
-				requestCorrelationId,
-			),
+			beforeUpstreamDispatch: (route) => budgetAdmission.beforeUpstreamDispatch(route),
 			image: {
 				requireAuthoritativeUsage: false,
 			},
+			byok: privateByokContextForApiKey(apiKey),
 		});
 	} catch (error) {
 		await terminateImageGuardrailBudget(guardrailBudgetLease, 'upstream_dispatch_failed');
@@ -1586,6 +1600,7 @@ async function handleImageGenerations(c: ImagesContext): Promise<Response> {
 		effectiveRouteGroup,
 		modelNameForLog,
 		requestBodyForLog,
+		sessionId,
 		operation: 'generations',
 		billing: {
 			endpoint: chosenRouteFacts.endpoint,
@@ -1622,6 +1637,13 @@ imageRoutes.post('/edits', async (c) => {
 	const requestStartedAt = new Date(start);
 	const requestCorrelationId = c.get('generationId')!;
 	const timing = new RequestTimingCollector();
+	const parsedSession = parseOpenRouterSessionHeader(c.req.raw.headers);
+	if (!parsedSession.ok) {
+		return rejectImageRequest(c, 400, parsedSession.message, {
+			operation: 'edits', bodyKeys: [], hasModel: false,
+		});
+	}
+	const sessionId = parsedSession.sessionId;
 
 	const parsed = await parseMultipartEdits(c);
 	if (!parsed.ok) {
@@ -1753,7 +1775,7 @@ imageRoutes.post('/edits', async (c) => {
 	if (!estimateSelection) {
 		throw new Error('Image fallback plan has no billable route estimate');
 	}
-	const { estimate, estimatedChargedCost } = estimateSelection;
+	const { estimate, estimatedChargedCost, estimatedStandardCost } = estimateSelection;
 	if (estimatedChargedCost === null) {
 		return rejectImageRequest(c, 502, 'No eligible image route has a provable charged-cost ceiling', {
 			operation: 'edits', hasModel: true, clientModel: rawModelId,
@@ -1782,6 +1804,7 @@ imageRoutes.post('/edits', async (c) => {
 		startMs: start,
 		timing,
 		clientErrorCircuitEnabled: false,
+		sessionId,
 	});
 	if (circuitBlocked) {
 		return circuitBlocked;
@@ -1790,54 +1813,31 @@ imageRoutes.post('/edits', async (c) => {
 	const affinityKey = buildAffinityKey(apiKey.userId, baseModelId, effectiveRouteGroup, 'openai');
 	const tierKeyPrefix = buildTierKeyPrefix(baseModelId, effectiveRouteGroup, 'openai');
 	timing.markGatewayComplete();
-	const ordinaryAdmission = await reserveOrdinaryUserBudget(repos, {
-		requestId: requestCorrelationId,
-		userId: apiKey.userId,
-		apiKeyId: apiKey.keyId,
-		budgetMax: apiKey.budgetMax,
-		expectedBudgetEpoch: apiKey.budgetEpoch,
-		estimatedChargedCost,
-		now: new Date(start),
-	});
-	if (!ordinaryAdmission.ok) {
-		return gatewayErrorJson(c, {
-			status: 403,
-			code: GatewayErrorCode.budgetExceeded,
-			message: ordinaryAdmission.error.message,
-		});
-	}
-	const ordinaryBudgetLease = ordinaryAdmission.lease;
-	let guardrailBudgetLease: ImageGuardrailBudgetLease;
-	try {
-		guardrailBudgetLease = await admitImageGuardrailBudget(repos, {
+	const budgetAdmission = await createRouteAwareBudgetAdmission(repos, {
+		ordinary: {
 			requestId: requestCorrelationId,
+			userId: apiKey.userId,
+			apiKeyId: apiKey.keyId,
+			budgetMax: apiKey.budgetMax,
+			expectedBudgetEpoch: apiKey.budgetEpoch,
+			estimatedChargedCost,
+			now: new Date(start),
+		},
+		guardrail: {
 			intents: guardrail.budgetIntents,
 			reservedMicros: imageGuardrailBudgetMicros(estimate),
-			now: new Date(),
-		});
-	} catch (error) {
-		await terminateImageOrdinaryBudget(
-			ordinaryBudgetLease,
-			requestCorrelationId,
-			'guardrail_budget_admission_failed',
-		);
-		throw error;
-	}
-	if (!guardrailBudgetLease.ok) {
-		await terminateImageOrdinaryBudget(
-			ordinaryBudgetLease,
-			requestCorrelationId,
-			'guardrail_budget_admission_failed',
-		);
-		if (guardrailBudgetLease.blocked) {
-			return gatewayErrorJson(c, {
-				status: 403,
-				code: guardrailBudgetLease.reason === 'gateway_key_limit' || guardrailBudgetLease.reason === 'workspace_budget' ? GatewayErrorCode.budgetExceeded : GatewayErrorCode.guardrailBlocked,
-				message: guardrailBudgetLease.message,
-			});
-		}
-		throw new Error(`Guardrail budget admission failed: ${guardrailBudgetLease.message}`);
-	}
+			now: new Date(start),
+		},
+		privateByokGatewayKey: {
+			includeInLimit: apiKey.includeByokInLimit === true,
+			reservedMicros: Math.max(
+				imageGuardrailBudgetMicros(estimate),
+				imageGuardrailBudgetMicros({ chargedCost: estimatedStandardCost ?? Number.POSITIVE_INFINITY }),
+			),
+		},
+	});
+	const ordinaryBudgetLease = budgetAdmission.ordinaryLease;
+	const guardrailBudgetLease = routeAwareImageGuardrailLease(budgetAdmission);
 
 	console.log(
 		`[Gateway Images] edits baseModelId=${baseModelId} keyId=${apiKey.keyId} refs=${edit.images.length}`
@@ -1855,11 +1855,8 @@ imageRoutes.post('/edits', async (c) => {
 			sticky: selectedPlan.hasProviderPreferences
 				? null
 				: stickyConfigFromSurface(selectedPlan.surface),
-			beforeUpstreamDispatch: () => beforeImageUpstreamDispatch(
-				ordinaryBudgetLease,
-				guardrailBudgetLease,
-				requestCorrelationId,
-			),
+			beforeUpstreamDispatch: (route) => budgetAdmission.beforeUpstreamDispatch(route),
+			byok: privateByokContextForApiKey(apiKey),
 		});
 	} catch (error) {
 		await terminateImageGuardrailBudget(guardrailBudgetLease, 'upstream_dispatch_failed');
@@ -1911,6 +1908,7 @@ imageRoutes.post('/edits', async (c) => {
 		effectiveRouteGroup,
 		modelNameForLog,
 		requestBodyForLog,
+		sessionId,
 		operation: 'edits',
 		billing: {
 			endpoint: chosenRouteFacts.endpoint,

@@ -5,18 +5,36 @@
  * Kind (LLM vs image-generation vs audio ASR/TTS) is derived — no separate DB column:
  * - Image generation: `output_modalities` includes `image`
  * - Fallback when output modalities missing: `pricing_profile.image` present
- * - Audio transcription: `pricing_profile.audio_billing_mode` 为 `per_second`（+ `audio`）或 `token`（+ tiers）
- * - Audio speech: `pricing_profile.audio_billing_mode` 为 `per_character`（+ `audio`）
+ * - Audio transcription: `output_modalities` includes `transcription`, with a legacy pricing fallback
+ * - Audio speech: `output_modalities` includes `speech`, with a legacy pricing fallback
  * - Do **not** use `input_modalities` containing `image` (multimodal LLMs also accept images)
  */
 
 import { parsePricingProfile } from './pricing-profile';
 
 export const MODEL_INPUT_MODALITIES = ['text', 'image', 'audio', 'video', 'file'] as const;
-export const MODEL_OUTPUT_MODALITIES = ['text', 'image', 'audio', 'embeddings'] as const;
+export const MODEL_OUTPUT_MODALITIES = [
+	'text',
+	'image',
+	'embeddings',
+	'audio',
+	'video',
+	'rerank',
+	'speech',
+	'transcription',
+] as const;
 
 export type ModelInputModality = (typeof MODEL_INPUT_MODALITIES)[number];
 export type ModelOutputModality = (typeof MODEL_OUTPUT_MODALITIES)[number];
+
+/**
+ * Public embeddings discovery is intentionally capped. Repositories return one
+ * additional row as an overflow sentinel so callers never publish a silently
+ * truncated catalog.
+ */
+export const MAX_CALLABLE_EMBEDDING_MODELS = 1_000;
+export const MAX_CALLABLE_EMBEDDING_MODEL_QUERY_RESULTS =
+	MAX_CALLABLE_EMBEDDING_MODELS + 1;
 
 const INPUT_SET = new Set<string>(MODEL_INPUT_MODALITIES);
 const OUTPUT_SET = new Set<string>(MODEL_OUTPUT_MODALITIES);
@@ -147,6 +165,9 @@ export function isImageGenerationModel(m: ModelKindFields): boolean {
  * Detected via `audio_billing_mode: per_second|token` with matching pricing payload.
  */
 export function isAudioTranscriptionModel(m: ModelKindFields): boolean {
+	if (normalizeOutputModalitiesList(m.output_modalities)?.includes('transcription')) {
+		return true;
+	}
 	const profile = parsePricingProfile(m.pricing_profile ?? undefined);
 	if (!profile?.audio_billing_mode) {
 		return false;
@@ -162,6 +183,9 @@ export function isAudioTranscriptionModel(m: ModelKindFields): boolean {
 
 /** Whether this catalog model synthesizes speech and bills by upstream characters. */
 export function isAudioSpeechModel(m: ModelKindFields): boolean {
+	if (normalizeOutputModalitiesList(m.output_modalities)?.includes('speech')) {
+		return true;
+	}
 	const profile = parsePricingProfile(m.pricing_profile ?? undefined);
 	return (
 		profile?.audio_billing_mode === 'per_character' &&
@@ -179,10 +203,17 @@ export function isEmbeddingModel(m: ModelKindFields): boolean {
 	return normalizeOutputModalitiesList(m.output_modalities)?.includes('embeddings') === true;
 }
 
-/** False for image-generation / ASR / TTS models; true for chat / multimodal LLMs and unknown. */
+/** Whether this model returns relevance-ranked documents rather than generated content. */
+export function isRerankModel(m: ModelKindFields): boolean {
+	return normalizeOutputModalitiesList(m.output_modalities)?.includes('rerank') === true;
+}
+
+/** False for specialized output models; true for chat / multimodal LLMs and unknown. */
 export function isTextLlmModel(m: ModelKindFields): boolean {
 	return (
 		!isImageGenerationModel(m) &&
-		!isAudioModel(m)
+		!isAudioModel(m) &&
+		!isEmbeddingModel(m) &&
+		!isRerankModel(m)
 	);
 }

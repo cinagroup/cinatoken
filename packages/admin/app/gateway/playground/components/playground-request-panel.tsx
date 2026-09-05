@@ -42,6 +42,7 @@ type Props = {
 	audioSendBlocked: boolean;
 	selectedIsImage: boolean;
 	selectedIsAudio: boolean;
+	selectedIsRerank: boolean;
 	selectedIsAudioTranscription: boolean;
 	selectedAudioUsesDashScope: boolean;
 	selectedCanUseMicrophone: boolean;
@@ -77,6 +78,7 @@ export function PlaygroundRequestPanel({
 	audioSendBlocked,
 	selectedIsImage,
 	selectedIsAudio,
+	selectedIsRerank,
 	selectedIsAudioTranscription,
 	selectedAudioUsesDashScope,
 	selectedCanUseMicrophone,
@@ -100,6 +102,7 @@ export function PlaygroundRequestPanel({
 	const llmFamily = playgroundLlmFamilyForRoute(selected, {
 		isImage: selectedIsImage,
 		isAudio: selectedIsAudio,
+		isRerank: selectedIsRerank,
 	});
 	const llmSample = llmFamily
 		? matchPlaygroundLlmSample(llmFamily, bodyText, playgroundModelHintFromRoute(selected))
@@ -194,6 +197,11 @@ export function PlaygroundRequestPanel({
 			{audioSendBlocked ? (
 				<div className="rounded-md border border-amber-200 bg-amber-50 p-2.5 text-sm text-amber-900">
 					{t('audioOpenaiOnly')}
+				</div>
+			) : null}
+			{selectedIsRerank ? (
+				<div className="rounded-md border border-emerald-200 bg-emerald-50 p-2.5 text-sm text-emerald-900">
+					{t('rerankHint')}
 				</div>
 			) : null}
 

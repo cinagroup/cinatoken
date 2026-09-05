@@ -1,7 +1,7 @@
 import type { GatewayRepositories } from '@octafuse/core';
 import type { GatewayCircuitAlertEvent } from './circuit-alert-types';
 import type { FailoverDispatchOptions, ProxyDispatchAttemptTrace } from './failover-dispatch';
-import { GatewayErrorCode } from './gateway-error-codes';
+import { GATEWAY_ERROR_CODE_HEADER, GatewayErrorCode } from './gateway-error-codes';
 import type { ModelFallbackCandidatePlan } from './model-fallback-plan';
 import type { ModelFallbackTraceAttempt } from './model-fallbacks';
 import type { RouteResult } from './model-router';
@@ -87,10 +87,11 @@ export async function dispatchGlobalModelFallback(params: {
 	requestSignal?: AbortSignal;
 	publicCorrelationId?: string;
 	timing: NonNullable<FailoverDispatchOptions['timing']>;
-	beforeUpstreamDispatch: () => Promise<void>;
+	beforeUpstreamDispatch: (route: RouteResult) => Promise<void>;
 	proxy: GlobalTextProxy;
 	affinityKey: string;
 	tierKeyPrefix: string;
+	byok?: FailoverDispatchOptions['byok'];
 }): Promise<GlobalModelFallbackDispatchResult> {
 	const openByCandidate = new Map<number, NonNullable<ReturnType<typeof getUserModelCircuitOpen>>>();
 	for (let index = 0; index < params.candidates.length; index += 1) {
@@ -136,6 +137,7 @@ export async function dispatchGlobalModelFallback(params: {
 			sticky: null,
 			beforeUpstreamDispatch: params.beforeUpstreamDispatch,
 			crossModelCandidateFailover: true,
+			byok: params.byok,
 		},
 		params.publicCorrelationId,
 	);
@@ -171,6 +173,18 @@ export async function dispatchGlobalModelFallback(params: {
 		...orderedIndexes.map((index) =>
 			attemptSummary(params.candidates[index]!, lastAttemptByCandidate.get(index)!),
 		),
+		...(result.meta?.admissionDeniedPreDispatch === true
+			? [{
+				model: selectedPlan.requestedModelId,
+				base_model: selectedPlan.baseModelId,
+				route_group: selectedPlan.effectiveRouteGroup,
+				status: result.response.status,
+				outcome: 'error' as const,
+				...(result.response.headers.get(GATEWAY_ERROR_CODE_HEADER)
+					? { error_code: result.response.headers.get(GATEWAY_ERROR_CODE_HEADER)! }
+					: {}),
+			}]
+			: []),
 	];
 
 	const userModelCircuitEvents: GatewayCircuitAlertEvent[] = [];

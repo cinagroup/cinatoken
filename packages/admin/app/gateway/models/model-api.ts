@@ -1,4 +1,8 @@
-import { isAudioModel, isImageGenerationModel } from '@octafuse/core/db/model-modalities';
+import {
+	isAudioModel,
+	isImageGenerationModel,
+	isRerankModel,
+} from '@octafuse/core/db/model-modalities';
 import { readApiJson } from '@/lib/api-json';
 import { normalizeModelVendorInput } from '@/lib/model-vendor';
 import {
@@ -57,21 +61,24 @@ export async function saveModel(
 	const isAudioResolved =
 		isAudio ||
 		isAudioModel({
+			output_modalities: formData.output_modalities,
 			pricing_profile: tierJson.json,
 		});
-	const skipTokenLimits = isImageResolved || isAudioResolved;
+	const isRerankResolved = isRerankModel({ output_modalities: formData.output_modalities });
+	const skipContextWindow = isImageResolved || isAudioResolved;
+	const skipMaxTokens = skipContextWindow || isRerankResolved;
 	const parsedMax = formData.max_tokens.trim() ? parseInt(formData.max_tokens, 10) : NaN;
 	const payload = {
 		...formData,
 		tags: formData.tags,
 		vendor: normalizeModelVendorInput(formData.vendor),
-		// Image / Audio：chat context / max_tokens 不适用 — 保存时始终清空
-		context_window: skipTokenLimits
+		// Image / Audio：context/max_tokens 不适用；Rerank 保留 context，仅清空生成 token 上限。
+		context_window: skipContextWindow
 			? null
 			: formData.context_window
 				? parseInt(formData.context_window, 10)
 				: null,
-		max_tokens: skipTokenLimits ? null : Number.isFinite(parsedMax) ? parsedMax : 4096,
+		max_tokens: skipMaxTokens ? null : Number.isFinite(parsedMax) ? parsedMax : 4096,
 		input_modalities: formData.input_modalities,
 		output_modalities: formData.output_modalities,
 		released_at: formData.released_at.trim() || null,

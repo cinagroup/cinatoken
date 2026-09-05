@@ -8,6 +8,7 @@ import { getLocale, getMessages, getTranslations } from 'next-intl/server';
 import AuthWrapper from '@/components/layout/AuthWrapper';
 import DocumentTitle from '@/components/layout/DocumentTitle';
 import { ConsoleThemeProvider } from '@/components/unified/ConsoleThemeProvider';
+import CinaAuthPopupProvider from '@/components/auth/CinaAuthPopupProvider';
 
 const CONSOLE_THEME_BOOTSTRAP = `(() => {
 	let stored = null;
@@ -59,7 +60,9 @@ export default async function RootLayout({
 				<NextIntlClientProvider locale={locale} messages={messages}>
 					<ConsoleThemeProvider>
 						<DocumentTitle />
-						<AuthWrapper>{children}</AuthWrapper>
+						<CinaAuthPopupProvider>
+							<AuthWrapper>{children}</AuthWrapper>
+						</CinaAuthPopupProvider>
 					</ConsoleThemeProvider>
 				</NextIntlClientProvider>
 			</body>

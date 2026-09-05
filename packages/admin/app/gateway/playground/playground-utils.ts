@@ -5,7 +5,10 @@ import {
 	DASHSCOPE_MULTIMODAL_ASR_BODY_TEMPLATE,
 	isAudioRouteModel,
 } from '@/lib/audio-transcriptions';
-import { isAudioTranscriptionModel } from '@octafuse/core/db/model-modalities';
+import {
+	isAudioTranscriptionModel,
+	isRerankModel,
+} from '@octafuse/core/db/model-modalities';
 import {
 	IMAGE_EDITS_BODY_TEMPLATE,
 	IMAGE_GENERATIONS_BODY_TEMPLATE,
@@ -26,8 +29,7 @@ import {
 } from '@/lib/playground/samples';
 import { normalizeProtocol } from '@/lib/playground/usage-parsing';
 import type { AdminModelRow } from '@/lib/services/admin/types';
-import type { ModelKindFilter } from '../models/types';
-import type { RouteListRow } from './types';
+import type { PlaygroundModelKind, RouteListRow } from './types';
 
 export {
 	PLAYGROUND_LLM_SAMPLE_IDS,
@@ -78,8 +80,24 @@ export const BODY_TEMPLATES: Record<string, string> = {
 	gemini: LLM_SAMPLE_BODIES.gemini.connectivity,
 };
 
-export function resolveRouteModelKind(m: AdminModelRow | undefined): ModelKindFilter {
+export const RERANK_BODY_TEMPLATE = JSON.stringify(
+	{
+		query: 'What is the capital of France?',
+		documents: [
+			'Paris is the capital and most populous city of France.',
+			'Berlin is the capital of Germany.',
+			'Madrid is the capital of Spain.',
+		],
+		top_n: 2,
+		return_documents: true,
+	},
+	null,
+	2,
+);
+
+export function resolveRouteModelKind(m: AdminModelRow | undefined): PlaygroundModelKind {
 	if (!m) return 'llm';
+	if (isRerankModel(m)) return 'rerank';
 	if (isAudioRouteModel(m)) return 'audio';
 	if (isImageRouteModel(m)) return 'image';
 	return 'llm';
@@ -217,6 +235,7 @@ export function templateForRoute(
 	const proto = normalizeProtocol(route.upstream_protocol);
 	const isImage = model ? isImageRouteModel(model) : false;
 	const isAudio = model ? isAudioRouteModel(model) : false;
+	const isRerank = model ? isRerankModel(model) : false;
 	const isAudioTranscription = isAudioTranscriptionModel(model ?? {});
 	const isAudioHttp = proto === 'openai' || proto === 'dashscope';
 	const realtime = isAudio && proto === 'dashscope' && isDashScopeRealtimeOperation(route.upstream_operation ?? '');
@@ -246,6 +265,9 @@ export function templateForRoute(
 	}
 	if (isImage && proto === 'openai') {
 		return imageOperation === 'edits' ? IMAGE_EDITS_BODY_TEMPLATE : IMAGE_GENERATIONS_BODY_TEMPLATE;
+	}
+	if (isRerank && proto === 'openai') {
+		return RERANK_BODY_TEMPLATE;
 	}
 	const family = resolvePlaygroundLlmFamily(route);
 	if (family) {
@@ -279,9 +301,9 @@ export function resolvePlaygroundLlmFamily(route: RouteListRow | null | undefine
 
 export function playgroundLlmFamilyForRoute(
 	route: RouteListRow | null | undefined,
-	opts: { isImage?: boolean; isAudio?: boolean } = {},
+	opts: { isImage?: boolean; isAudio?: boolean; isRerank?: boolean } = {},
 ): PlaygroundLlmFamily | null {
-	if (opts.isImage || opts.isAudio) return null;
+	if (opts.isImage || opts.isAudio || opts.isRerank) return null;
 	return resolvePlaygroundLlmFamily(route);
 }
 

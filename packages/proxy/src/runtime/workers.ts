@@ -3,6 +3,7 @@ import {
 	createEncryptedProvidersRepository,
 	createEnvironmentProviderKeysRepository,
 	createEncryptedSharedKeysRepository,
+	createEncryptedByokKeysRepository,
 	DEEPSEEK_OFFICIAL_ENVIRONMENT_SECRET_POLICY,
 	createWorkerStorageContext,
 	isGatewayMaintenanceMode,
@@ -12,24 +13,31 @@ import {
 import type { Context } from 'hono';
 import { createProxyApp, type Env } from '../app';
 
-async function resolveWorkersStorage(context: Context<Env>): Promise<StorageContext> {
-	const config = resolveWorkerDatabaseConfig(context.env);
+export async function resolveWorkerStorageFromBindings(
+	bindings: Env['Bindings']
+): Promise<StorageContext> {
+	const config = resolveWorkerDatabaseConfig(bindings);
 	const storage = await createWorkerStorageContext(config);
-	const secret = assertSharedKeyEncryptionSecret(context.env.SHARED_KEY_ENCRYPTION_SECRET);
+	const secret = assertSharedKeyEncryptionSecret(bindings.SHARED_KEY_ENCRYPTION_SECRET);
 	return {
 		...storage,
 		repositories: {
 			...storage.repositories,
 			sharedKeys: createEncryptedSharedKeysRepository(storage.repositories.sharedKeys, secret),
+			byokKeys: createEncryptedByokKeysRepository(storage.repositories.byokKeys, secret),
 			providers: createEnvironmentProviderKeysRepository(
 				createEncryptedProvidersRepository(storage.repositories.providers, secret),
 				{
 					policies: [DEEPSEEK_OFFICIAL_ENVIRONMENT_SECRET_POLICY],
-					secrets: { DEEPSEEK_API_KEY: context.env.DEEPSEEK_API_KEY },
+					secrets: { DEEPSEEK_API_KEY: bindings.DEEPSEEK_API_KEY },
 				},
 			),
 		},
 	};
+}
+
+async function resolveWorkersStorage(context: Context<Env>): Promise<StorageContext> {
+	return await resolveWorkerStorageFromBindings(context.env);
 }
 
 export const workerApp = createProxyApp(resolveWorkersStorage, {

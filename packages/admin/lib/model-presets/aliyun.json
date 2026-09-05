@@ -768,7 +768,7 @@
 		},
 		"modalities": {
 			"input": ["audio"],
-			"output": ["text"]
+			"output": ["transcription"]
 		}
 	},
 	{
@@ -798,7 +798,7 @@
 		},
 		"modalities": {
 			"input": ["audio"],
-			"output": ["text"]
+			"output": ["transcription"]
 		}
 	},
 	{
@@ -828,7 +828,7 @@
 		},
 		"modalities": {
 			"input": ["audio"],
-			"output": ["text"]
+			"output": ["transcription"]
 		}
 	},
 	{
@@ -858,7 +858,7 @@
 		},
 		"modalities": {
 			"input": ["audio"],
-			"output": ["text"]
+			"output": ["transcription"]
 		}
 	},
 	{
@@ -888,7 +888,7 @@
 		},
 		"modalities": {
 			"input": ["audio"],
-			"output": ["text"]
+			"output": ["transcription"]
 		}
 	},
 	{
@@ -918,7 +918,7 @@
 		},
 		"modalities": {
 			"input": ["audio"],
-			"output": ["text"]
+			"output": ["transcription"]
 		}
 	},
 	{
@@ -948,7 +948,7 @@
 		},
 		"modalities": {
 			"input": ["audio"],
-			"output": ["text"]
+			"output": ["transcription"]
 		}
 	},
 	{
@@ -978,7 +978,7 @@
 		},
 		"modalities": {
 			"input": ["audio"],
-			"output": ["text"]
+			"output": ["transcription"]
 		}
 	},
 	{
@@ -1008,7 +1008,7 @@
 		},
 		"modalities": {
 			"input": ["text"],
-			"output": ["audio"]
+			"output": ["speech"]
 		}
 	},
 	{
@@ -1038,7 +1038,7 @@
 		},
 		"modalities": {
 			"input": ["text"],
-			"output": ["audio"]
+			"output": ["speech"]
 		}
 	},
 	{
@@ -1068,7 +1068,7 @@
 		},
 		"modalities": {
 			"input": ["text"],
-			"output": ["audio"]
+			"output": ["speech"]
 		}
 	},
 	{
@@ -1098,7 +1098,7 @@
 		},
 		"modalities": {
 			"input": ["text"],
-			"output": ["audio"]
+			"output": ["speech"]
 		}
 	},
 	{
@@ -1128,7 +1128,7 @@
 		},
 		"modalities": {
 			"input": ["text"],
-			"output": ["audio"]
+			"output": ["speech"]
 		}
 	},
 	{
@@ -1158,7 +1158,7 @@
 		},
 		"modalities": {
 			"input": ["text"],
-			"output": ["audio"]
+			"output": ["speech"]
 		}
 	},
 	{
@@ -1188,7 +1188,7 @@
 		},
 		"modalities": {
 			"input": ["text"],
-			"output": ["audio"]
+			"output": ["speech"]
 		},
 		"released": "2026-02-27"
 	},
@@ -1219,7 +1219,7 @@
 		},
 		"modalities": {
 			"input": ["text"],
-			"output": ["audio"]
+			"output": ["speech"]
 		},
 		"released": "2026-02-27"
 	}

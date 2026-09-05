@@ -1,6 +1,7 @@
 import type { GatewayDatabaseClient } from "./database-client";
 import type { GatewayRepositories } from "./repositories-types";
 import { createD1AdminAnalyticsRepository } from "../db/d1/admin-analytics.impl";
+import { createD1BatchesRepository } from "../db/d1/batches.impl";
 import { createD1ApiKeysRepository } from "../db/d1/api-keys.impl";
 import { createD1ModelRoutesRepository } from "../db/d1/model-routes.impl";
 import { createD1ModelRoutingRepository } from "../db/d1/model-routing.impl";
@@ -19,6 +20,7 @@ import { createD1UserBudgetReservationsRepository } from "../db/d1/user-budget-r
 import { createD1RouteDataPoliciesRepository } from "../db/d1/route-data-policies.impl";
 import { createD1ModelEndpointsRepository } from "../db/d1/model-endpoints.impl";
 import { createManagementApiKeysRepository } from "./management-api-keys";
+import { createByokKeysRepository } from "./byok-keys";
 import {
 	createD1PortalAccessRepository,
 	createD1PortalLedgerRepository,
@@ -33,6 +35,7 @@ export function createD1Repositories(
 	}
 	return {
 		client,
+		batches: createD1BatchesRepository(client),
 		users: createD1UsersRepository(client),
 		apiKeys: createD1ApiKeysRepository(client),
 		requestLogs: createD1RequestLogsRepository(client),
@@ -43,6 +46,7 @@ export function createD1Repositories(
 		routeDataPolicies: createD1RouteDataPoliciesRepository(client),
 		modelEndpoints: createD1ModelEndpointsRepository(client),
 		managementApiKeys: createManagementApiKeysRepository(client),
+		byokKeys: createByokKeysRepository(client),
 		providers: createD1ProvidersRepository(client),
 		models: createD1ModelsRepository(client),
 		routes: createD1ModelRoutesRepository(client),

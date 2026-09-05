@@ -2,6 +2,7 @@
  * Postgres：推理路径模型/路由查询。
  */
 import { and, desc, eq } from 'drizzle-orm';
+import { MAX_CALLABLE_EMBEDDING_MODEL_QUERY_RESULTS } from '../model-modalities';
 import type { ModelRow, ModelRouteRow } from '../../types';
 import type { ResolvedModelSurfaceRow } from '../../route-topology';
 import type { PostgresDatabaseClient } from '../../storage/database-client';
@@ -70,6 +71,43 @@ export function createPostgresModelRoutingRepository(db: PostgresDatabaseClient)
 		ORDER BY m.id
 	`;
 			return rows;
+		},
+
+		async listCallableEmbeddingModelCandidates(): Promise<ModelRow[]> {
+			return pg<ModelRow[]>`
+				SELECT m.id, m.display_name, m.vendor, m.context_window, m.max_tokens, m.pricing_profile,
+					(SELECT COALESCE(json_agg(mt.tag ORDER BY mt.tag)::text, '[]') FROM model_tags mt WHERE mt.model_id = m.id) AS tags,
+					m.description, m.metadata, m.input_modalities, m.output_modalities, m.released_at, m.created_at::text
+				FROM models m
+				WHERE m.output_modalities LIKE '%"embeddings"%'
+				  AND EXISTS (
+					SELECT 1
+					FROM model_routes mr
+					LEFT JOIN route_pools rp ON rp.id = mr.route_pool_id
+					WHERE mr.model_id = m.id
+					  AND mr.status = 'active'
+					  AND (rp.status IS NULL OR rp.status <> 'disabled')
+					  AND (
+						(
+						  EXISTS (SELECT 1 FROM model_surfaces ms_any WHERE ms_any.route_pool_id = mr.route_pool_id)
+						  AND EXISTS (
+							SELECT 1 FROM model_surfaces ms
+							WHERE ms.route_pool_id = mr.route_pool_id
+							  AND ms.status <> 'disabled'
+							  AND ms.request_protocol = 'openai'
+							  AND ms.request_operation IN ('embeddings', '*')
+						  )
+						)
+						OR (
+						  NOT EXISTS (SELECT 1 FROM model_surfaces ms_any WHERE ms_any.route_pool_id = mr.route_pool_id)
+						  AND mr.upstream_protocol = 'openai'
+						  AND mr.upstream_operation IN ('embeddings', '*')
+						)
+					  )
+				  )
+				ORDER BY m.id
+				LIMIT ${MAX_CALLABLE_EMBEDDING_MODEL_QUERY_RESULTS}
+			`;
 		},
 
 		async getModelRoutesByModelId(modelId: string): Promise<ModelRouteRow[]> {

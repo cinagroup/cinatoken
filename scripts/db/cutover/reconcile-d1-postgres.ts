@@ -38,7 +38,7 @@ interface ReconcileCheck {
 }
 
 const TARGET_SCHEMA = 'cinatoken_gateway';
-const REQUIRED_MIGRATION = '0054_generation_metadata_snapshots.sql';
+const REQUIRED_MIGRATION = '0067_batch_jobs.sql';
 const GUARDRAIL_LEDGER_CHECK_PREFIX = 'guardrail-ledger:';
 const BUDGET_SPENT_RECONCILE_BATCH_SIZE = 250;
 
@@ -196,6 +196,7 @@ function buildChecks(): ReconcileCheck[] {
 			'success_count',
 			'error_count',
 			'output_tokens',
+			'total_tokens',
 			'latency_total_ms',
 			'latency_sample_count',
 		].map((column): ReconcileCheck => ({

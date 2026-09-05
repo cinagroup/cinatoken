@@ -241,6 +241,44 @@ test("strictly parses and canonicalizes an explicit manifest", () => {
 	);
 });
 
+test("rejects contradictory voice-cloning evidence in a backfill manifest", () => {
+	const input = rawManifest() as Record<string, unknown>;
+	const endpoint = {
+		...((input.endpoints as Array<Record<string, unknown>>)[0] ?? {}),
+		supports_voice_cloning: false,
+		audio_capabilities: {
+			v: 1,
+			pricing_by_operation: {
+				"audio.speech": {
+					currency: "USD",
+					meter: {
+						kind: "characters",
+						unit: "unicode_code_point",
+						price: "0.00002",
+						minimum_units: 0,
+						increment_units: 1,
+					},
+				},
+			},
+			speech_by_operation: {
+				"audio.speech": {
+					supports_default_voice: false,
+					reference_audio_media_types: ["audio/wav"],
+					reference_audio_default_media_type: "audio/wav",
+				},
+			},
+		},
+	};
+	assert.throws(
+		() => parseEndpointBackfillManifest({ ...input, endpoints: [endpoint] }),
+		(error: unknown) =>
+			error instanceof EndpointBackfillManifestError &&
+			/reference-audio evidence requires supports_voice_cloning=true/u.test(
+				error.message
+			)
+	);
+});
+
 test("plans a deterministic create without serializing provider credentials", async () => {
 	const parsed = manifest();
 	const first = await planEndpointBackfill(parsed, inventory(), NOW);

@@ -11,6 +11,7 @@ export type PublicModelDailyStatsDelta = {
 	successCount: 0 | 1;
 	errorCount: 0 | 1;
 	outputTokens: number;
+	totalTokens: number;
 	latencyTotalMs: number;
 	latencySampleCount: 0 | 1;
 };
@@ -33,6 +34,9 @@ export function toPublicModelDailyStatsDelta(
 	const outputTokens = Number.isFinite(requestLog.outputTokens) && requestLog.outputTokens > 0
 		? Math.trunc(requestLog.outputTokens)
 		: 0;
+	const totalTokens = Number.isFinite(requestLog.totalTokens) && requestLog.totalTokens > 0
+		? Math.trunc(requestLog.totalTokens)
+		: 0;
 	const latency = requestLog.latencyMs;
 	const normalizedLatency = latency != null && Number.isFinite(latency) && latency >= 0
 		? Math.trunc(latency)
@@ -45,6 +49,7 @@ export function toPublicModelDailyStatsDelta(
 		successCount: requestLog.status === 'success' ? 1 : 0,
 		errorCount: requestLog.status === 'error' ? 1 : 0,
 		outputTokens,
+		totalTokens,
 		latencyTotalMs: normalizedLatency,
 		latencySampleCount: latency != null && Number.isFinite(latency) && latency >= 0 ? 1 : 0,
 	};

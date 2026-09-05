@@ -144,6 +144,10 @@ export function createD1UsersRepository(db: D1DatabaseClient): UsersRepository {
 			const budgetResetAt = params.budgetResetAt ?? null;
 			const status = params.status ?? 'active';
 			const workspaceId = defaultWorkspaceId('personal', params.id);
+			const defaultGuardrailId = crypto.randomUUID();
+			const defaultGuardrailVersionId = crypto.randomUUID();
+			const accountDefaultGuardrailId = crypto.randomUUID();
+			const accountDefaultGuardrailVersionId = crypto.randomUUID();
 			await raw.batch([
 				raw.prepare(
 					`INSERT INTO users (id, email, budget_max, budget_base, budget_spent, budget_spent_micros, budget_period, budget_reset_at, status, metadata, charged_cost_factors, external_system, external_user_id, created_at, updated_at)
@@ -169,6 +173,26 @@ export function createD1UsersRepository(db: D1DatabaseClient): UsersRepository {
 					default_scope_key, status, created_by_user_id, created_at, updated_at
 				) VALUES (?, 'personal', ?, 'Default', 'default', 1, ?, 'active', ?, datetime('now'), datetime('now'))`)
 					.bind(workspaceId, params.id, workspaceId, params.id),
+				raw.prepare(`INSERT INTO guardrails (
+					id, workspace_id, owner_user_id, name, description, status,
+					is_workspace_default, designated_version, latest_version, created_at, updated_at
+				) VALUES (?, ?, ?, ?, NULL, 'active', 1, 1, 1, datetime('now'), datetime('now'))`)
+					.bind(defaultGuardrailId, workspaceId, params.id,
+						`Workspace ${workspaceId.slice(0, 180)} Default`),
+				raw.prepare(`INSERT INTO guardrail_versions (
+					id, guardrail_id, version, config_json, created_by_user_id, created_at
+				) VALUES (?, ?, 1, '{}', ?, datetime('now'))`)
+					.bind(defaultGuardrailVersionId, defaultGuardrailId, params.id),
+				raw.prepare(`INSERT INTO guardrails (
+					id, workspace_id, owner_user_id, name, description, status,
+					is_workspace_default, is_account_default, account_scope_key,
+					designated_version, latest_version, created_at, updated_at
+				) VALUES (?, ?, ?, 'Account Default', NULL, 'active', 0, 1, ?, 1, 1, datetime('now'), datetime('now'))`)
+					.bind(accountDefaultGuardrailId, workspaceId, params.id, `personal:${params.id}`),
+				raw.prepare(`INSERT INTO guardrail_versions (
+					id, guardrail_id, version, config_json, created_by_user_id, created_at
+				) VALUES (?, ?, 1, '{}', ?, datetime('now'))`)
+					.bind(accountDefaultGuardrailVersionId, accountDefaultGuardrailId, params.id),
 			]);
 		},
 
@@ -262,7 +286,11 @@ export function createD1UsersRepository(db: D1DatabaseClient): UsersRepository {
 		},
 
 		async deleteUserHard(id: string): Promise<boolean> {
-			const result = await raw.prepare('DELETE FROM users WHERE id = ?').bind(id).run();
+			const result = await raw.prepare(`DELETE FROM users WHERE id = ?
+				AND NOT EXISTS (SELECT 1 FROM guardrails guardrail
+					WHERE guardrail.owner_user_id = users.id
+						AND (guardrail.is_workspace_default = 1 OR guardrail.is_account_default = 1))`)
+				.bind(id).run();
 			return (result.meta.changes ?? 0) > 0;
 		},
 

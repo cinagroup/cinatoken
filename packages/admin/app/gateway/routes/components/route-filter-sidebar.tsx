@@ -16,7 +16,7 @@ type Props = {
 	filterVendor: string;
 	filterProviderId: string;
 	statusCounts: { all: number; active: number; inactive: number };
-	kindCounts: { all: number; llm: number; image: number; audio: number };
+	kindCounts: { all: number; llm: number; image: number; audio: number; rerank: number };
 	routesCount: number;
 	routeGroupFilterOptions: string[];
 	routeGroupCounts: Map<string, number>;
@@ -136,6 +136,12 @@ export function RouteFilterSidebar(props: Props) {
 						count={kindCounts.audio}
 						isActive={filterKind === 'audio'}
 						onClick={() => onFilterKindChange('audio')}
+					/>
+					<HorizontalButton
+						label={t('kindRerank')}
+						count={kindCounts.rerank}
+						isActive={filterKind === 'rerank'}
+						onClick={() => onFilterKindChange('rerank')}
 					/>
 				</HorizontalSection>
 

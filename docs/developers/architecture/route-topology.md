@@ -34,7 +34,7 @@ model + route_group + request protocol + operation
 
 | 请求协议 | operation |
 |----------|-----------|
-| OpenAI | `chat`、`responses`、`images.generations`、`images.edits`、`audio.transcriptions`、`audio.speech` |
+| OpenAI | `chat`、`responses`、`embeddings`、`rerank`、`images.generations`、`images.edits`、`audio.transcriptions`、`audio.speech` |
 | Anthropic | `messages` |
 | Gemini | **`models.generate`**（generate-content 家族，覆盖流式与非流式） |
 | DashScope | `audio.transcriptions.*`、`audio.speech.*`（文件、流式与实时操作见 [DashScope 音频架构](./dashscope-audio.md)） |
@@ -105,7 +105,7 @@ model + route_group + request protocol + operation
 }
 ```
 
-`lookup` 描述读取绑定的结果，`attempted_target` 是被前置尝试的上游目标，`result` 在 bind / touch 的 CAS 完成后记录最终绑定动作。可结合 cache read token 与故障转移次数判断供应商粘性是否提高缓存连续性。`route_trace` 记录最终选中（或最后失败）的拓扑标识和关键决策，不是完整 attempt 列表。
+`lookup` 描述读取绑定的结果，`attempted_target` 是真正跨过上游发送边界的粘性目标，`result` 在 bind / touch 的 CAS 完成后记录最终绑定动作。主 BYOK、共享/平台容量、兜底 BYOK 的全局分区顺序优先于粘性；粘性只在各分区内部前置目标。因此 `lookup=hit` 仍可能出现 `attempted_target=null`：另一目标的主 BYOK 已先成功，原绑定保持不变。可结合 cache read token 与故障转移次数判断供应商粘性是否提高缓存连续性。`route_trace` 记录最终选中（或最后失败）的拓扑标识和关键决策，不是完整 attempt 列表。
 
 管理后台在删除上游目标、或上游目标迁移到新路由池后，会调用 `deleteRoutePoolIfEmpty`：若旧路由池已无任何上游目标，则删除其请求入口与路由池（避免空路由池 / 孤儿请求入口泄漏）。
 

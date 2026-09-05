@@ -14,7 +14,7 @@ import {
 	resolveD1BudgetSpentPrecisionMode,
 } from './user-budget-spent-precision';
 
-const REQUIRED_MIGRATION = '0049_model_endpoint_audio_capabilities.sql';
+const REQUIRED_MIGRATION = '0068_batch_jobs.sql';
 
 export type InvariantCheck = {
 	label: string;

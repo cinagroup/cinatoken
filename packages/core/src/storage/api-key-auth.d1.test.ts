@@ -168,6 +168,50 @@ test('D1 gateway authentication requires both an active key and an active user',
 	assert.equal((await repos.apiKeys.getApiKeyWithUserById('key-1'))?.id, 'key-1');
 });
 
+test('D1 asynchronous authentication uses only a validated lookup hash and current authorization', async () => {
+	const database = setupDatabase('active');
+	const repos = repositories(database);
+	try {
+		// The ordinary bearer path performs the one-time legacy plaintext migration.
+		assert.equal(
+			(await repos.apiKeys.getApiKeyWithUserByKey('sk-disabled-user-test'))?.id,
+			'key-1',
+		);
+		const stored = database.prepare('SELECT key_hash FROM api_keys WHERE id = ?')
+			.get('key-1') as { key_hash: string };
+		assert.match(stored.key_hash, /^sha256:[0-9a-f]{64}$/u);
+		assert.equal(
+			(await repos.apiKeys.getActiveApiKeyWithUserByLookupHash(stored.key_hash))?.id,
+			'key-1',
+		);
+
+		database.prepare("UPDATE api_keys SET status = 'revoked' WHERE id = ?").run('key-1');
+		assert.equal(
+			await repos.apiKeys.getActiveApiKeyWithUserByLookupHash(stored.key_hash),
+			null,
+		);
+		database.prepare("UPDATE api_keys SET status = 'active' WHERE id = ?").run('key-1');
+		database.prepare("UPDATE users SET status = 'disabled' WHERE id = ?").run('user-1');
+		assert.equal(
+			await repos.apiKeys.getActiveApiKeyWithUserByLookupHash(stored.key_hash),
+			null,
+		);
+		database.prepare("UPDATE users SET status = 'active' WHERE id = ?").run('user-1');
+		database.prepare("UPDATE workspaces SET status = 'archived' WHERE id = ?")
+			.run('personal:user-1');
+		assert.equal(
+			await repos.apiKeys.getActiveApiKeyWithUserByLookupHash(stored.key_hash),
+			null,
+		);
+		await assert.rejects(
+			repos.apiKeys.getActiveApiKeyWithUserByLookupHash('a'.repeat(64)),
+			/Gateway key lookup hash/u,
+		);
+	} finally {
+		database.close();
+	}
+});
+
 test('D1 gateway authentication fails closed after the key expiry boundary', async () => {
 	const database = setupDatabase('active');
 	const repos = repositories(database);

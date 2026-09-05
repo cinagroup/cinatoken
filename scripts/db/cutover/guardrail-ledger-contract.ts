@@ -1,5 +1,6 @@
 export const GUARDRAIL_LEDGER_TABLES = [
 	"api_key_request_logs",
+	"provider_attempt_availability",
 	"guardrail_budget_windows",
 	"guardrail_budget_reservations",
 ] as const;
@@ -19,9 +20,10 @@ export interface GuardrailLedgerAuditSql {
 type GuardrailLedgerDialect = "d1" | "postgres";
 
 /**
- * The request log, window counters, and reservations form one accounting unit.
- * A partial copy can look internally valid while double-counting or dropping a
- * request, so a cutover may either omit all three or copy all three together.
+ * The request log, its provider-attempt child facts, window counters, and
+ * reservations form one accounting/audit unit. A partial copy can look
+ * internally valid while double-counting, dropping a request, or losing uptime
+ * evidence, so a cutover may either omit all four or copy all four together.
  */
 export function assertGuardrailLedgerTableSelection(
 	tableFilter: ReadonlySet<string> | null

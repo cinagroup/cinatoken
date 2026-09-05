@@ -38,7 +38,7 @@ Content-Type: application/json
 
 服务端只接受同一请求中已复验为可访问的 Workspace，并将选择保存为 `HttpOnly; SameSite=Lax` 的浏览器偏好 Cookie；Cookie 不是授权凭据。每个普通用户 API 请求的中间件都会重新校验本地 `user_id` 与 CinaAuth `subject` 的精确绑定，并重新解析服务端 Workspace 权限。组织成员关系被撤销后，旧偏好立即失效并安全回退到个人 Default Workspace。读取和切换响应均为 `Cache-Control: private, no-store`，退出登录会清除此偏好。
 
-用户中心的桌面侧栏与移动端顶部已经提供同一套切换器。Gateway Key、Activity、Preset、Guardrail 与共享预算已具备 Workspace 边界；BYOK 与 Routing 个性化仍未完成。Workspace 创建、归档、成员管理与完整 CinaAuth 组织角色映射也尚未开放。
+用户中心的桌面侧栏与移动端顶部已经提供同一套切换器。Gateway Key、Activity、Preset、Guardrail、私有 BYOK 与共享预算已具备 Workspace 边界；Routing 个性化仍未完成。Workspace 创建、归档、成员管理与完整 CinaAuth 组织角色映射也尚未开放。
 
 ### Workspace Gateway Key（Phase 3 首个切片）
 
@@ -54,27 +54,50 @@ DELETE /api/user/gateway-keys/{id}
 
 组织管理员跨成员管理 Key 尚未开放：CinaAuth 组织角色目前仍作为不透明值处理，在正式定义 role/permission 映射前不会猜测角色字符串。管理员全局 Key 管理也尚未提供 Workspace 选择器。
 
+### 私有 BYOK 凭据门户
+
+`/account/byok` 使用当前 CinaAuth 会话和服务端解析的 Workspace 管理 Provider 私有凭据，无需向浏览器暴露 Management API Key。控制面接口为：
+
+```http
+GET    /api/user/byok?provider=deepseek&offset=0&limit=50
+POST   /api/user/byok
+POST   /api/user/byok/reorder
+GET    /api/user/byok/{id}
+PATCH  /api/user/byok/{id}
+DELETE /api/user/byok/{id}
+```
+
+个人 Workspace 只允许所有者操作；组织 Workspace 只允许由 `CINAAUTH_ORGANIZATION_ADMIN_ROLES` 明确映射、且仍拥有有效本地 Workspace 访问权的 CinaAuth 管理角色操作。普通组织成员返回 403。每次请求都把会话用户固定到当前服务端 Workspace；浏览器提交其他 `workspace_id`、跨 Workspace ID 或跨账户 Gateway Key hash 不会扩大权限。所有响应都设置 `Cache-Control: private, no-store`。
+
+创建和更新字段与 [Management API 的私有 BYOK](management.md#私有-byok) 相同：支持 Provider、名称、启停、主/兜底、互斥的 `always_use_for_matching_models` / `always_use_for_provider`，以及模型、用户和 Gateway Key SHA-256 allowlist。完整 Provider Secret 是 write-only；创建、读取、更新、列表和删除响应都只返回安全末四位标签，轮换时空 Secret 表示保持原值。原始请求体在流式读取阶段限制为 192 KiB，单个 Secret 仍受 64 KiB 规范化上限保护。
+
+页面按 Provider 分组展示凭据，可切换主/兜底、启停、排序、轮换、删除及三档共享容量策略。reorder 必须提交当前 Workspace/Provider 的完整 active 集合；集合过期或不完整时返回 409 且不部分写入。将任一共享容量禁止策略为 `true` 的凭据移入兜底前，必须先 PATCH 清除两个策略。`always_use_for_matching_models` 只在模型、当前用户和 Gateway Key hash 过滤都命中时禁止同 Provider 共享容量；更强的 `always_use_for_provider` 在身份过滤命中时覆盖同一 Provider 的所有模型，包括 `allowed_models` 未命中的模型。两者都不禁止其它 Provider。门户和 Management API 共用同一加密仓储、原子排序和运行时调度合同；门户审计主体记录为当前用户，不伪装成 Management Key。
+
 ### Management API Key 与 Gateway Key 自动化
 
-`/account/keys` 同时提供账户级 Management API Key。它使用独立的 `sk-cina-mgmt-` 凭据命名空间和独立数据库表，可调用 Proxy Worker 的只读 `GET /api/v1/key`、Gateway Key 管理 `/api/v1/keys` 与 Workspace 预算 `/api/v1/workspaces/{id_or_slug}/budgets`，不能调用 Chat、Responses、Images 等推理入口；普通 `sk-` Gateway Key 只能读取自身的 `/api/v1/key` 元数据，不能反向调用 Management API。
+`/account/keys` 同时提供账户级 Management API Key。它使用独立的 `sk-cina-mgmt-` 凭据命名空间和独立数据库表，可调用 Proxy Worker 的只读 `GET /api/v1/key`、Gateway Key 管理 `/api/v1/keys`、Workspace 预算 `/api/v1/workspaces/{id_or_slug}/budgets` 与结构化 Generation Feedback `POST /api/v1/generation/feedback`，不能调用 Chat、Responses、Images 等推理入口；普通 `sk-` Gateway Key 只能读取自身的 `/api/v1/key` 元数据，不能反向调用 Management API。
 
 Management Key 完整明文只在门户创建响应中返回一次，数据库只保存 SHA-256 hash 与安全预览。可设置未来的 UTC 过期时间，也可随时吊销；每次认证都会复验状态、过期时间和所属个人/组织生命周期。创建和吊销与 `user_audit_logs` 审计记录在同一数据库事务中，审计载荷不包含明文凭据。
 
 个人账户只有所有者可以签发；组织账户只有当前 Workspace 的本地 `admin` 角色可以签发。该授权不会从未知 CinaAuth 角色字符串推断。Management API 对 Gateway Key 的列表、单条读取、改名、启停和删除都在服务端按账户与 Workspace 约束；存在用量历史或 `reserved` / `dispatched` 请求时拒绝硬删除，调用方应禁用 Key，以保留 Workspace 历史消费归属。
 
-当前返回真实的总计、日、周、月 `charged_cost` 用量。Gateway Key 可在门户或 Management API 创建时设置严格的未来 UTC `expires_at`，三库持久化且每次数据面鉴权复验；过期 Key 保留在列表供审计，但不能继续推理。门户和 Management API 也可配置非负 `limit` 及 lifetime/daily/weekly/monthly `limit_reset`；统一账本在推理准入时原子预留、在完成时按实际费用结算、失败时释放，三库事务都会复验 Key 配置版本，避免并发超支或旧配置穿透。BYOK 尚未启用，因此 `include_byok_in_limit` 只接受 `false`。完整接口见 [Management API](management.md)。
+当前返回真实的总计、日、周、月 `charged_cost` 用量，并将 `is_byok=true` 请求的 Endpoint 目录标准价单独聚合到 `byok_usage*`；后者是分析估算，不是 CinaToken 扣费。Gateway Key 可在门户或 Management API 创建时设置严格的未来 UTC `expires_at`，三库持久化且每次数据面鉴权复验；过期 Key 保留在列表供审计，但不能继续推理。门户和 Management API 也可配置非负 `limit` 及 lifetime/daily/weekly/monthly `limit_reset`；统一账本在推理准入时原子预留、在完成时按实际费用结算、失败时释放，三库事务都会复验 Key 配置版本，避免并发超支或旧配置穿透。`limit_remaining` 从该权威账本计算，不会用当前开关倒算历史请求。私有 BYOK 当前采用过渡期零网关费策略，保留目录价分析且默认不计入任何预算；当 `include_byok_in_limit=true` 时，仅当前 Gateway Key 限额按 verified Endpoint 目录标准价进行 route-selective 预留与结算，Workspace、普通用户和普通 Guardrail 预算仍排除成功的私有 BYOK。开关变更仅影响之后准入的请求；用量未知时 Key 保守保留预留上界；BYOK 失败并回退共享或平台容量前，系统会原子补齐普通收费预算。完整接口见 [Management API](management.md)。
 
 ---
 
 ## 用户中心 Activity 与预算总览
 
-普通用户通过 CinaAuth 会话访问 Admin Worker 上的 `/account/activity`。该页面展示当前 Workspace 的请求数、成功率、Token、实际扣费、平均延迟和请求明细，并展示 daily/weekly/monthly/lifetime 四档 Workspace 共享预算。成员只读，Workspace owner/admin 可配置或删除；服务端严格校验层级顺序。页面原有的账户预算剩余、已结算消费和进行中预留仍是账户级视图，与 Workspace 共享预算分别展示，不能相互替代。
+普通用户通过 CinaAuth 会话访问 Admin Worker 上的 `/account/activity`。该页面展示当前 Workspace 的请求数、成功率、Token、实际扣费、平均延迟和请求明细，并提供可切换请求数、Token、消费和平均延迟的时序图：7 天范围按小时聚合，30/90 天范围按日聚合。页面还按实际扣费列出当前筛选条件下最多 10 个模型、Gateway Key 与 Provider 分组；点击分组可继续精确筛选。Provider 维度仅使用请求时保存并经过长度/控制字符校验的公开展示名，不返回内部 Provider ID。带 `gen-*` 标识的新请求可直接打开 Generation 详情抽屉，查看公开模型、Provider、时延、原生 Token、费用、请求上下文及有界 Provider 尝试快照。摘要、时序、三类分组和明细使用相同的时间、状态、Key、模型与 Provider 筛选语义。CSV 同步导出公开 Provider 名称以及图片/音频用量计数。页面还展示 daily/weekly/monthly/lifetime 四档 Workspace 共享预算。每档预算显示当前 UTC 周期、已消费 `spent`、在途 `reserved` 和可用于新准入的 `remaining = max(0, limit - spent - reserved)`；成员只读，Workspace owner/admin 可配置或删除，服务端严格校验层级顺序。页面原有的账户预算剩余、已结算消费和进行中预留仍是账户级视图，与 Workspace 共享预算分别展示，不能相互替代。
 
 控制面接口：
 
 ```http
-GET /api/user/activity?range=7d&page=1&page_size=20&status=success&api_key_id=...&model_id=...
-GET /api/user/activity/export.csv?range=30d&status=error&api_key_id=...&model_id=...
+GET /api/user/activity?range=7d&page=1&page_size=20&status=success&api_key_id=...&model_id=...&provider_name=...
+GET /api/user/activity/export.csv?range=30d&status=error&api_key_id=...&model_id=...&provider_name=...
+GET /api/user/activity/gen-...
+GET /api/user/workspace-budgets
+PUT /api/user/workspace-budgets/:interval
+DELETE /api/user/workspace-budgets/:interval
 ```
 
 | 参数 | 约束 | 说明 |
@@ -85,8 +108,11 @@ GET /api/user/activity/export.csv?range=30d&status=error&api_key_id=...&model_id
 | `status` | `success` / `error` / `incomplete` / `cancelled` | 可选状态筛选 |
 | `api_key_id` | 最长 128 字符 | 可选 Gateway Key 精确筛选 |
 | `model_id` | 最长 256 字符 | 可选模型 ID 精确筛选 |
+| `provider_name` | 最长 200 字符且不含控制字符 | 可选公开 Provider 展示名精确筛选 |
 
-服务端始终从 CinaAuth 会话主体和逐请求复验的当前 Workspace 同时写入 `user_id` 与 Workspace 查询条件；Workspace 通过日志所关联 Gateway Key 的服务端归属解析。客户端传入其他用户或其他 Workspace 的 Key ID 只会得到空结果。明细响应采用字段白名单，不返回 Provider/Route 内部标识、上游地址或请求正文、错误详情、密钥指纹、上游请求 ID、pricing audit 等运维信息。
+服务端始终从 CinaAuth 会话主体和逐请求复验的当前 Workspace 同时写入 `user_id` 与 Workspace 查询条件；Workspace 通过不可变请求日志快照和所关联 Gateway Key 的服务端归属解析。客户端传入其他用户或其他 Workspace 的 Key ID 只会得到空结果。模型、Key、Provider 分组及时序分别由一条有界聚合查询完成，不加载明细或形成 N+1；Key 名称只从当前用户在当前 Workspace 可见的 Key 集合映射，Provider 分组只使用请求时公开名称快照。时序 bucket 由服务端规范化为 UTC ISO 时间，非法日期和非有限数值不会直接进入门户响应。列表响应采用字段白名单，不返回 Provider/Route 内部标识、上游地址或请求正文、错误详情、密钥指纹、上游请求 ID、pricing audit 等运维信息。
+
+`GET /api/user/activity/:generation_id` 使用门户会话而非 Gateway Key，但复用 `/api/v1/generation` 的同一最小权限数据库投影和 core 安全净化规则。查询在 SQL 层同时绑定精确 Generation ID、会话用户和当前 Workspace，并在服务层再次核对不可变 Workspace 快照；非法 ID、跨租户记录和缺少 identity/origin/region/BYOK 证据的旧记录统一返回 404。非美元部署无法真实生成 OpenRouter 的 USD `total_cost` 时，门户仍返回详情并将该字段保留为 `null`，页面费用则使用 Activity 已核验的当前计费币种数值。响应为 `Cache-Control: private, no-store`，仍不包含请求/响应正文、内部路由、凭据或错误诊断。
 
 CSV 导出同样强制当前用户作用域，最多导出 1,000 行，并通过响应头返回实际行数、总数、是否截断和计费币种：
 
@@ -99,7 +125,24 @@ X-CinaToken-Billing-Currency
 
 导出列中的金额标题带币种后缀（例如 `charged_cost_usd`）；所有单元格均进行 CSV 转义，并中和 `=`, `+`, `-`, `@` 开头的公式输入。页面和接口均返回 `Cache-Control: private, no-store`。
 
-预算剩余值按 `max(0, budget_max - budget_spent - budget_reserved_micros / 1,000,000)` 展示。`budget_max = null` 表示无限制；预留只代表尚未结算的并发请求，不是第二份消费账本。
+账户预算剩余值按 `max(0, budget_max - budget_spent - budget_reserved_micros / 1,000,000)` 展示。`budget_max = null` 表示无限制；预留只代表尚未结算的并发请求，不是第二份消费账本。Workspace 预算接口返回 `periodStart`、`periodEnd`、`spentUsd`、`reservedUsd` 和 `remainingUsd`，从同一 Guardrail 账本读取；刚创建且尚未物化窗口时，按相同 `budget_charged_micros` 口径从当前周期请求日志读取。成功的零网关费私有 BYOK 不计入 Workspace 预算，这与 Workspace shared spend budget 只约束平台计费支出的语义一致。
+
+---
+
+## Generation 元数据
+
+每个已接收的推理请求都会返回公开 `X-Generation-Id: gen-*`。持有产生该请求的 Gateway Key、且该 Key 仍属于同一用户和 Workspace 时，可查询最小化的 OpenRouter-compatible 元数据：
+
+```http
+GET /api/v1/generation?id=gen-...
+Authorization: Bearer <USER_API_KEY>
+```
+
+`/v1/generation` 兼容 alias 同样可用。已登录的门户用户也可在 `/account/activity` 点击对应请求，页面通过 `GET /api/user/activity/:generation_id` 读取相同的安全投影，无需把 Gateway Key 明文带入浏览器会话。服务端在单条数据库查询中同时约束 Generation ID、用户和当前 Workspace；非法、缺失、跨用户、跨 Workspace，或缺少不可变费用/origin 快照的旧记录统一返回 404。公开 `/api/v1/generation` 仍严格要求可证明的 USD 费用；门户在非美元部署中允许 `total_cost=null`，并使用 Activity 的计费币种金额展示。响应不会加载或返回请求正文、响应正文、Route trace、Provider URL/密钥、内部错误或计价审计。
+
+`latency` 是 Gateway 观测的请求总耗时；`generation_time` 只有在最终选中上游的首个 headers 延迟与正文/流持续时间均可证明时才返回两者之和，否则为 `null`。`native_tokens_*` 只来自对应 Provider 协议的权威 usage 字段，并与 Gateway 归一化的 `tokens_prompt` / `tokens_completion` 分开存储；没有证据时返回 `null`，不会用 0 或归一化值猜测。`provider_responses` 最多保存 32 次上游尝试，只包含公开状态、Route Endpoint ID、公开模型/Provider 名、延迟、服务等级、该次尝试的真实 `is_byok` 事实，以及最终选中响应的公共上游 ID；不会包含 Provider 内部 ID、私有模型名、URL、凭据、指纹或原始错误。超过数量/大小限制或解析失败时整体返回 `null`。
+
+部署当前迁移链前必须应用 D1 `0068_batch_jobs.sql`、PostgreSQL `0067_batch_jobs.sql` 或 MySQL `0064_batch_jobs.sql`。Generation 的旧行不会事后推断新增字段；Batch 数据层存在不代表 Batch API 已开放。
 
 ---
 
@@ -219,7 +262,7 @@ Chat Completions、Messages 与 Responses 支持 OpenRouter 兼容的请求级 P
 }
 ```
 
-- 选择器可匹配 Admin 中的 Provider `id`、显示名称或当前 verified Endpoint 的公开 `endpoint_slug`，大小写不敏感。完整 slug（如 `acme/turbo`）只匹配该变体；基础 slug（`acme`）只匹配管理员显式标记 `endpoint_class="standard"` 的 slash 变体。`endpoint_class="service_tier"` 与未分类的历史 slash 变体默认永不进入候选，只有在 `provider.order` 或 `provider.only` 中提供完整 slug 才会放行；不会从 `fast`、`flex` 等任意后缀猜测层级。旧 Route `routing_metadata` 只参与漂移检查。当前尚未实现统一的顶层 `service_tier` 路由语义，传入该字段会明确返回 **400**，不会静默透传上游。`region` 不充当 endpoint 变体。
+- 选择器可匹配 Admin 中的 Provider `id`、显示名称或当前 verified Endpoint 的公开 `endpoint_slug`，大小写不敏感。完整 slug（如 `acme/turbo`）只匹配该变体；基础 slug（`acme`）只匹配管理员显式标记 `endpoint_class="standard"` 的 slash 变体。普通请求不会进入 `endpoint_class="service_tier"` 或未分类的历史 slash 变体；完整 slug 可在 `provider.order` / `provider.only` 中显式选择。只有管理员明确分类的 `/flex`、`/fast` 或 `/priority` endpoint 才会参加自动服务等级路由，未知后缀仍保持 exact-only。旧 Route `routing_metadata` 只参与漂移检查，`region` 不充当 endpoint 变体。
 - `only` 先建立允许集合，`ignore` 再排除；`order` 覆盖本次请求的 Provider 顺序。
 - `allow_fallbacks=false` 且提供 `order` 时，只保留 `order` 明确列出的 Provider/endpoint，并仍可在该有序集合内故障转移；未提供 `order` 时才收敛到首个 Provider。请求级偏好存在时不会被 Provider sticky 绑定改写。
 - `provider` 是网关控制字段，转发上游前会被删除。单个列表最多 32 项，单项最长 120 字符。
@@ -229,9 +272,12 @@ Chat Completions、Messages 与 Responses 支持 OpenRouter 兼容的请求级 P
 - `data_collection="deny"` 只接受经过有效证据核验、零保留且禁止训练的 Route Target；`zdr=true` 还要求明确支持 ZDR。未知、过期或证据缺失均 fail closed。
 - `enforce_distillable_text=true` 只保留模型 `metadata.distillable_text=true` 的候选；未声明时 fail closed。
 - `sort` 接受 `price`、`latency`、`throughput`，也接受带 `by`、`partition="model" | "none"` 和百分位/阈值的对象形式。性能排序使用最近 5 分钟成功请求的有界路由样本；阈值是软偏好，所有路由均未达标时仍保留 fallback。`partition="none"` 会把最多 8 个 fallback model 的 endpoint 放入同一个全局排序与一次 failover 调度链，避免分模型重启调度器改变顺序或重放状态。
-- Chat、Responses、Messages、Gemini text 与 Embeddings 的 `max_price` 安全支持 `prompt`、`completion` 与 `request`，比较值来自所选 verified Endpoint 的权威价格、Route charged factor 及同一请求开始时点；阶梯价按最贵配置档执行上限，因此可能保守拒绝，但不会低估。Image 的 verified 按张安全子集支持 `max_price.image`（单张输出价）、`max_price.request`（当前请求的固定 request fee）和 `sort="price"`（按本次完整请求价）；比较与最终计费复用同一 Endpoint、Route charged factor、请求事实及冻结时点，未知价路由不会参与价格排序。Image 的 `prompt`/`completion` 价格维度，以及 Audio/DashScope 的任何 `max_price` 或 `sort=price`，仍会在 dispatch 前返回 **400**。
+- 对 Chat、Responses、Messages、Embeddings 与 Rerank，未显式设置 `provider.sort` 或非空 `provider.order` 时启用默认 Provider 负载均衡：先把当前 Worker 实例最近 30 秒观察到上游可用性失败的 Provider 移到健康候选之后，再以当前 verified Endpoint 的 prompt+completion 用户价为可比价格，对正价格候选按价格平方倒数进行无放回选择，并保留完整 fallback 顺序。免费候选先于付费候选，价格不可证明的候选留在同一健康层末尾；全部价格均为零或均不可证明时保留管理员 Route 策略。显式 `sort`/`order` 会关闭该默认均衡，`only`/`ignore` 等过滤仍先执行。30 秒健康信号是实例内的软排序证据，不冒充全局 uptime 指标；已打开熔断的候选仍由硬门禁跳过。参照 [OpenRouter Provider Routing](https://openrouter.ai/docs/guides/routing/provider-selection)。
+- Chat、Responses 与 Messages 支持顶层 `service_tier: null | "auto" | "default" | "fast" | "flex" | "priority"` 以及 `speed: null | "fast" | "standard"`；`service_tier="fast"` 规范化为 `priority`，`auto` 规范化为显式默认层，未实现的 `scale`、非法 speed 和未知值返回 **400**。没有显式 `service_tier` 时，`speed="fast"` 派生 priority 路由；两者都显式提供时各自按原值执行，例如 `speed="standard"` 不会覆盖 `service_tier="priority"`。`priority` 在已核验的 default+priority 池中先尝试 priority，再回落 default，各层按近期吞吐排序；`flex` 有专属 endpoint 时只按价格使用 flex 池，没有 flex endpoint 时恢复标准池及调用方原有排序。模型后缀 `:nitro` 在 default+priority 整体池按吞吐排序，`:floor` 在 default+flex 整体池按价格排序；显式 `service_tier` 覆盖后缀，显式 `provider.order` 取代排序并关闭隐式 variant admission。这些控制字段会在路由前剥离；网关只向 chosen Route 注入权威等级，并且只有当前 verified Endpoint 明确声明 `supported_parameters` 包含 `speed` 时才注入原生 speed，未声明能力的 fallback 不会收到该字段。Chat/Responses 在响应根对象、Messages 在 `usage.service_tier` 返回上游实际等级；三种协议的 `usage.speed` 会规范化为 `fast | standard | null`，缺失时不伪造。若实际等级无法关联到同 Provider、同模型、同 operation 的当前 verified 计价 Endpoint，结算保持 cost-unknown 并使用保守预算上界，而不会猜测等级价格。该能力目前只开放于上述三种文本 operation，参照 [OpenRouter Service Tiers](https://openrouter.ai/docs/guides/features/service-tiers)。
+- Chat、Responses 与 Messages 支持 OpenRouter 会话粘性路由。显式 `session_id` 可放在 JSON body 或 `x-session-id` 请求头，body 字段存在时优先；值必须是有效 Unicode 字符串且最多 256 字符，空字符串等同未启用。未提供有效 `session_id` 时依次使用非空 `prompt_cache_key`、首个 `system`/`developer` 消息与首个非系统消息的规范化摘要作为会话键。显式会话在完整成功响应后绑定；隐式会话只有在上游报告 `cache_read_tokens > 0` 且当前 verified Endpoint 的 cache-read 单价低于 prompt 单价时才绑定。绑定采用 10 分钟 inactivity TTL，完整成功访问续期；取消、流错误、目标失效或可重试失败不会错误续期，并按正常候选安全回退。显式 `provider.order` 始终优先并关闭 OpenRouter 会话粘性，其他 Provider 过滤只缩小合格候选。`session_id` 是网关控制字段，会在 Preset、Guardrail 与上游转发之前剥离；Route `custom_params` 也不能重新注入。Embeddings、Rerank、Images generation/edit 与 Audio transcription/speech 仅接受 `x-session-id`（同样最多 256 字符），只用于跨模态 Generation 分组，不创建 Provider sticky；这些接口的 JSON 或 multipart body 出现 `session_id` 会返回 **400**。会话亲和存储只接收租户/模型作用域的 SHA-256 摘要，不保存 `prompt_cache_key` 或消息正文；显式会话原值按用户和 Workspace 权限写入并返回 Generation 快照，且不依赖 USD 定价证据。部署前必须应用三库对应的 `0056`（D1）、`0052`（MySQL）或 `0055`（PostgreSQL）迁移。参照 [OpenRouter Prompt Caching / Session ID](https://openrouter.ai/docs/guides/best-practices/prompt-caching)。
+- Chat、Responses、Messages、Gemini text、Embeddings 与 Rerank 的 `max_price` 安全支持 `prompt`、`completion` 与 `request`，比较值来自所选 verified Endpoint 的权威价格、Route charged factor 及同一请求开始时点；阶梯价按最贵配置档执行上限，因此可能保守拒绝，但不会低估。Image 的 verified 按张安全子集支持 `max_price.image`（单张输出价）、`max_price.request`（当前请求的固定 request fee）和 `sort="price"`（按本次完整请求价）；比较与最终计费复用同一 Endpoint、Route charged factor、请求事实及冻结时点，未知价路由不会参与价格排序。Image 的 `prompt`/`completion` 价格维度，以及 Audio/DashScope 的任何 `max_price` 或 `sort=price`，仍会在 dispatch 前返回 **400**。
 - `region` 是管理员声明的供应端点位置标签；只开放于 `GET /v1/models?region=eu|us` 的目录发现过滤，不约束实际推理路径，也不构成端到端数据驻留保证。推理请求中的未知 Provider 字段返回 400，不会静默忽略或透传上游。
-- Provider 路由决策以脱敏摘要写入请求日志 `route_trace.provider_routing`；不包含提示词、上游地址或凭据。
+- Provider 路由决策以脱敏摘要写入请求日志 `route_trace.provider_routing`；默认均衡另外记录 `default_load_balance` 和所选候选的 `provider_recently_degraded`，不包含提示词、价格明细、上游地址或凭据。
 
 Chat Completions 与 Responses 同时支持 OpenRouter 兼容的跨模型 fallback：
 
@@ -543,7 +589,7 @@ Admin 中 Provider 的权威配置为 **`providers.endpoints`** JSON（迁移 `0
 
 OpenAI 兼容的模型列表接口。返回网关中 **至少有一条活跃路由** 的模型（全量可见，不按 API Key 区分）。
 
-面向 Chat Completions / Agent 的默认行为：**仅返回 LLM**（排除 Embeddings、文生图与独立 Audio endpoint 模型；多模态「看图」LLM 仍会返回）。Embedding 模型请使用 `GET /v1/embeddings/models`、`kind=embedding` 或 `output_modalities=embeddings`；文生图模型（如 `gpt-image-2`）请使用 `POST /v1/images/*` 或 `kind=image`；ASR/TTS 模型请使用 `kind=audio`（调用入口分别为 `/v1/audio/transcriptions` 与 `/v1/audio/speech`）；`kind=all` 不过滤。
+面向 Chat Completions / Agent 的默认行为：**仅返回 LLM**（排除 Embeddings、Rerank、文生图与独立 Audio endpoint 模型；多模态「看图」LLM 仍会返回）。Embedding 模型请使用 `GET /v1/embeddings/models`、`kind=embedding` 或 `output_modalities=embeddings`；Rerank 模型使用 `output_modalities=rerank` 查询并调用 `POST /v1/rerank`；文生图模型（如 `gpt-image-2`）请使用 `POST /v1/images/*` 或 `kind=image`；ASR/TTS 模型请使用 `kind=audio`（调用入口分别为 `/v1/audio/transcriptions` 与 `/v1/audio/speech`）；`kind=all` 不过滤。
 
 ### 请求
 
@@ -610,7 +656,7 @@ GET /v1/models
 | `output_price` | number \| null | **兼容展示**：与上档同行的输出价（$/1M） |
 | `description` | string \| null | 模型描述 |
 | `input_modalities` | string[] \| null | 支持的输入模态（OpenRouter 风格）：`text`、`image`、`audio`、`video`、`file`；客户端可据此限制附件类型 |
-| `output_modalities` | string[] \| null | 支持的输出模态：`text`、`embeddings`、`image`、`audio` |
+| `output_modalities` | string[] \| null | 支持的输出模态：`text`、`image`、`embeddings`、`audio`、`video`、`rerank`、`speech`、`transcription`；独立 TTS/ASR 应分别使用 `speech`/`transcription`，不再伪装成通用 `audio`/`text` |
 | `released_at` | string \| null | 模型发布日期（`YYYY-MM-DD`） |
 | `endpoint_slugs` | string[] | 当前查询所含活动 Route Target 的去重公开端点 slug；不包含 target ID、上游 URL 或凭据 |
 | `regions` | string[] | 当前查询所含端点的管理员声明位置标签；仅用于发现，不是数据驻留声明 |
@@ -646,7 +692,7 @@ curl "http://localhost:8787/v1/models?region=eu" \
 
 ## Embeddings
 
-OpenAI / OpenRouter 兼容的向量生成接口。两个端点均要求用户 Gateway API Key，并且只发现或调用存在活动 OpenAI `embeddings` Request Surface 的模型。
+OpenAI / OpenRouter 兼容的向量生成接口。两个端点均要求用户 Gateway API Key，并且只发现或调用存在活动 OpenAI `embeddings` Request Surface 的模型。模型目录是全局能力目录，不读取或返回其他用户/Workspace 的资源。
 
 ### 创建向量
 
@@ -692,7 +738,7 @@ GET /v1/embeddings/models
 Authorization: Bearer sk-xxx...
 ```
 
-返回 OpenRouter 风格的模型数组，包括 `architecture`、每 token `pricing.prompt`、`supported_parameters`、`top_provider` 与详情链接。只有 `output_modalities` 包含 `embeddings` 且具备活动 Embeddings Surface 的模型会出现。
+返回 OpenRouter 风格的模型数组，包括 `architecture`、每 token `pricing.prompt`、`supported_parameters`、`top_provider` 与详情链接。只有 `output_modalities` 包含 `embeddings` 且具备活动 Embeddings Surface 的模型会出现。查询在数据库内按活动 Route、Route Pool 和 Request Surface 收敛，不读取完整 Route 集合；最多发布 1000 个模型，并额外读取一个溢出哨兵。超过该上限时返回 `503 embedding_model_catalog_too_large` 与 `Retry-After: 60`，不会返回不完整目录。
 
 ### 安全、预算与故障转移
 
@@ -703,7 +749,120 @@ Authorization: Bearer sk-xxx...
 
 ---
 
+## Rerank
+
+OpenRouter 兼容的相关性排序接口。`POST /v1/rerank` 与 `POST /api/v1/rerank` 均要求用户 Gateway API Key；模型必须声明 `output_modalities=["rerank"]`，并配置 active 的 OpenAI `rerank` Request Surface、可调用 Route Target 与当前 verified Endpoint。
+
+```http
+POST /v1/rerank
+Authorization: Bearer sk-xxx...
+Content-Type: application/json
+```
+
+请求体：
+
+| 字段 | 必填 | 说明 |
+|------|------|------|
+| `model` | 是 | 网关 Rerank 模型 ID，最多 240 字符 |
+| `query` | 是 | 查询字符串 |
+| `documents` | 是 | 1–2048 个字符串，或包含 `text` / `image` 的对象；图片只接受无凭据的 HTTP(S) URL 或 `data:image/*;base64,...` |
+| `top_n` | 否 | 至少为 1 的安全整数 |
+| `provider` | 否 | 与其它推理入口相同的 OpenRouter Provider 路由偏好 |
+
+Rerank 不支持流式输出，也不接受 body `session_id`、`models` 或 `fallbacks`；跨 Generation 分组可用最多 256 字符的 `x-session-id`。请求体最多 8 MiB，成功响应最多 16 MiB。响应只发布公开 Generation ID、网关模型 ID、安全 Provider 名、排序结果与经白名单验证的可选 usage：
+
+```json
+{
+  "id": "gen-...",
+  "model": "cohere/rerank-v3.5",
+  "provider": "Cohere",
+  "results": [
+    { "index": 1, "relevance_score": 0.97, "document": { "text": "..." } }
+  ],
+  "usage": { "search_units": 1, "total_tokens": 128, "cost": 0.001 }
+}
+```
+
+网关验证结果索引唯一且不越界、分数有限，并按分数降序规范化。响应中的 `document` 不采信 Provider 回显，而是从 Guardrail 处理后的实际上游请求按索引重建，只保留 `text` / `image`。请求日志同样不保存 query 或文档内容，只保存数量与 text/image/multimodal 分类计数。
+
+预算准入按 `context_window × documents.length` 作为保守输入上限、输出 token 为 0，并包含 verified Endpoint 的固定 request fee。Provider usage 缺失时按未知成本保留预留上界；已经收到 2xx 后若 JSON、schema、usage 或大小非法，返回脱敏 typed 502 且禁止故障转移重放。模型可通过匿名目录 `GET /api/v1/models?output_modalities=rerank` 发现；默认 text 目录不会混入 Rerank 模型。
+
+```bash
+curl -sS "$GATEWAY_URL/v1/rerank" \
+  -H "Authorization: Bearer $USER_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{"model":"cohere/rerank-v3.5","query":"best database","documents":["PostgreSQL","Redis"],"top_n":1}'
+```
+
+---
+
 ## 公开模型目录（Catalog Discovery）
+
+### OpenRouter-shaped Models API
+
+匿名 `GET /api/v1/models` 是 OpenRouter 兼容的模型发现面，只发布存在 active Route、verified/未过期/subject 匹配 Endpoint，且该 Route 的 exact upstream operation 已有对应能力证据的模型。`output_modalities` 采用 OpenRouter 语义：未传时默认 `text`；可传逗号分隔的 `text,image,embeddings,audio,video,rerank,speech,transcription`，或单独传 `all`。`supported_parameters` 要求模型同时具备所列 verified Endpoint 参数；`context` 设置至少为 1 的最小上下文，未知上下文不会误入结果；`model_authors` 精确匹配 canonical model slug 的作者段。
+
+`category` 接受官方分类 `programming`、`roleplay`、`marketing`、`marketing/seo`、`technology`、`science`、`translation`、`legal`、`finance`、`health`、`trivia`、`academia`，只匹配模型 tags 或 `metadata.category/categories` 中的显式白名单事实；不会从名称或描述猜测分类。`arch` 只匹配 `metadata.architecture` 或 `metadata.model_family` 的显式值。`distillable=true|false` 以 `metadata.distillable_text === true` 为唯一肯定事实，`false` 排除显式可蒸馏模型。`min_age_days` / `max_age_days` 按 `released_at` 到当前安全目录快照生成时刻的完整天数筛选；缺失、非法或未来日期不会通过年龄筛选。公开 DTO 的 `architecture.tokenizer` 与 `architecture.instruct_type` 也只从同名 metadata 字段做长度和控制字符校验后发布，任意其他 metadata 不会进入该 DTO。
+
+`min_price` / `max_price` 按输入 Token 的 USD/百万 Token 筛选，`min_output_price` / `max_output_price` 按输出 Token 的 USD/百万 Token 筛选；所有价格参数必须是非负有限数，同一维度的最小值不能大于最大值。任何价格条件都会排除缺少可证明 Token 单价的模型，按字符或按秒计费的 Audio 价格不会被误当作每百万 Token 价格。
+
+`sort` 支持 `newest`、`context-high-to-low`、`pricing-low-to-high`、`pricing-high-to-low`、`throughput-high-to-low`、`latency-low-to-high`、`most-popular` 和 `top-weekly`。后两个值语义相同：按当前 UTC 日及前六个 UTC 日的输入+输出总 Token 降序；每个模型至少需要 20 个聚合请求样本，低于门槛或总量不安全的模型稳定排在末尾，内部周总量不进入公开 Model DTO。价格排序使用公开主 Endpoint 的输入/输出每百万 Token 价格算术平均值；缺少可比较 Token 价格的模型稳定排在末尾。官方 Models 概览另描述了包含 request/web-search 的加权价格，但未公开权重，因此当前实现不声称覆盖该加权扩展。两个性能排序使用最近 30 分钟内达到隐私样本门槛的 Endpoint p50，分别取模型所有可发布 Endpoint 中的最高吞吐量或最低首 Token 延迟，缺少合格证据的模型同样稳定排在末尾。未知值、空列表、重复参数、重复列表项、相反的年龄/价格上下界以及把 `all` 与其它值混用都会在读取目录前返回 400。
+
+匿名 `GET /api/v1/models/count` 返回 `{ "data": { "count": number } }`，并复用同一个安全目录快照；它按官方合同只接受同语义的 `output_modalities`，默认统计 text 输出模型，其他查询参数在目录读取前返回 400。
+
+匿名 `GET /api/v1/model/{author}/{slug}` 按完整 canonical slug 返回与列表一致的单个 Model DTO。当前只做精确查找：不存在、未发布或尚未实现的 alias 统一返回 404；未知 query 在目录读取前返回 400。成功响应与列表共享证据到期上限，路径级请求受公共目录限流保护。
+
+```bash
+# 默认只发现 text 输出模型
+curl https://api.cinatoken.com/api/v1/models
+
+# 发现具备可调用、可计价 verified audio.speech Route 的 TTS 模型
+curl "https://api.cinatoken.com/api/v1/models?output_modalities=speech"
+
+# 发现语音转写模型
+curl "https://api.cinatoken.com/api/v1/models?output_modalities=transcription"
+
+# 按近期可发布 Endpoint 的 p50 吞吐量排序
+curl "https://api.cinatoken.com/api/v1/models?sort=throughput-high-to-low"
+
+# 按最近七个 UTC 日的输入+输出总 Token 排序（top-weekly 为同义值）
+curl "https://api.cinatoken.com/api/v1/models?sort=most-popular"
+
+# 输入不超过 $1/百万 Token、输出不超过 $3/百万 Token，并按价格从低到高
+curl "https://api.cinatoken.com/api/v1/models?max_price=1&max_output_price=3&sort=pricing-low-to-high"
+
+# 只发现显式标记为 GPT 架构、可蒸馏且至少发布 30 天的编程模型
+curl "https://api.cinatoken.com/api/v1/models?category=programming&arch=gpt&distillable=true&min_age_days=30"
+
+# 统计所有输出模态的已发布模型
+curl "https://api.cinatoken.com/api/v1/models/count?output_modalities=all"
+
+# 精确读取单个已发布模型
+curl "https://api.cinatoken.com/api/v1/model/deepseek/deepseek-chat"
+```
+
+独立 TTS/ASR 的 `context_length` 在没有 token 上下文事实时按 OpenRouter 合同返回 `0`。旧目录行若仍以 `audio`/`text` 表示 TTS/ASR，但 legacy 计费模式能确定唯一类型，公开边界会只读归一化为 `speech`/`transcription`；不会要求先批量改写生产数据。按字符或按秒端点把单位价格投影到 `pricing.prompt`，并返回 `pricing.completion = "0"`；token meter 则只投影 Endpoint 中经过核验的五维 token 单价。一个公开 Endpoint 聚合多个可调用 Audio operation 时，只有这些 operation 的投影价格完全一致才会发布，否则 fail closed。端点详情中的 CinaToken `audio_capabilities` 扩展只包含当前绑定 Route 实际可调用的 operation，不会暴露未绑定能力、上游 URL、凭据或证据记录。
+
+当一个模型有多个不同价格的公开 Endpoint 时，管理员必须在模型编辑弹窗的“公开目录主供应端点”区域显式选择 Model DTO 的公开主 Endpoint；该操作不会改变实际推理路由，价格也不会自动取最低值。表单会与原始 JSON metadata 双向同步并保留其它字段；原始存储合同如下，`endpoint_tag` 必须精确且唯一匹配当前可发布 Endpoint，`is_moderated` 必须是布尔值：
+
+```json
+{
+  "public_catalog_top_provider": {
+    "endpoint_tag": "deepseek/standard",
+    "is_moderated": false
+  }
+}
+```
+
+选择成功后，Model DTO 的 `pricing` 使用该 Endpoint 应用 `discount` 后的有效单价，`top_provider` 发布该 Endpoint 的 context、最大输出 Token 与显式 moderation 事实；原始 `discount` 不进入公开 DTO。选择器缺失时，仅当全部可发布 Endpoint 的有效价格完全一致才发布价格，且 `top_provider` 保持 `null`；选择器格式错误、包含额外字段、匹配不到或匹配多个 Endpoint 时均 fail closed，价格留空且不参与价格筛选/排序。模型保存边界会拒绝不完整或非法选择器，原始 Metadata JSON 无法解析时专用控件禁用且不会覆盖原文。任意其它 metadata 仍不会公开。
+
+canonical `GET /api/v1/models/{author}/{slug}/endpoints` 只接受 Management API Key，并返回 `Cache-Control: private, no-store`；普通 Gateway Key 不具备该管理权限。历史 `/v1/*` 发现接口仍保持原有 Gateway Key 合同。
+
+Endpoint 的 `latency_last_30m` 与 `throughput_last_30m` 来自最近 30 分钟内成功完成、且绑定到当前公开 Endpoint Route 的实际请求样本，分别按秒和 token/秒返回 `p50`、`p75`、`p90`、`p99`。延迟只使用推理或正文中最早出现的首 Token，不以 headers 或总耗时伪装 TTFT；吞吐量使用输出 Token 除以最终选中尝试从 fetch 开始到完整响应结束的生成耗时。每项指标至少需要 20 个有效样本；单次发现最多读取 64 条 Route、每条最多 100 个样本，不能完整纳入查询边界或低于隐私阈值时返回 `null`。延迟百分位越低越好；吞吐量使用高值优先语义，因此 `p90` 表示较保守的低尾吞吐。
+
+`uptime_last_5m`、`uptime_last_30m` 与 `uptime_last_1d` 来自每次真实上游尝试的最小化可用性事实，并按 `available / (available + unavailable) * 100` 返回百分比。101/2xx 计为可用；3xx、Provider 认证/路由错误、5xx、网络失败，以及成功响应后的无效 JSON/SSE、原生流错误或异常终止计为不可用；403 地域/策略限制、429 Provider 限流、其他调用方 4xx、客户端取消和未知状态被排除。每个窗口独立要求至少 100 个有效样本，低于阈值返回 `null`。事实只保存 Route/Provider 标识、分类、状态码和实际观测时间，不保存密钥、URL、请求/响应体或原始错误；D1/PostgreSQL/MySQL 均在请求日志结算事务内原子写入。公开周热度使用同一请求日志结算事务写入的分片日聚合，不允许匿名请求回退扫描原始日志；新迁移会从仍保留的 90 天请求日志回填 `total_tokens`。可选性能、可用率或热度查询任一失败时 discovery 仍保持可用，仅对应指标降级为 `null`，日志只记录脱敏错误类型。发布代码前必须先应用 D1 `0062`、PostgreSQL `0061` 或 MySQL `0058` 迁移。
+
+### CinaToken Portal Catalog
 
 面向门户、文档站等 **无需用户 API Key** 的运行时能力发现接口。基于 **active `model_routes`** 聚合各 `route_group` 支持的 **`upstream_protocol`**，不返回 provider id、API key、`provider_model_name` 等运维字段。
 
@@ -1224,20 +1383,66 @@ Content-Type: application/json
 |------|------|
 | `model` | 必填；支持 `id:route_group` 后缀 |
 | `input` | 必填；合成文本，最多 4096 个字符 |
-| `voice` | 必填；字符串或 `{ "id": "..." }` |
-| `response_format` | 可选；`mp3`（默认）/ `opus` / `aac` / `flac` / `wav` / `pcm` |
-| `speed` | 可选；`0.25`–`4.0`，默认 `1` |
-| `stream_format` | 可选；`audio`（默认）或 `sse` |
-| `instructions` | 可选；风格指令，最多 4096 个字符 |
+| `voice` | Provider-dependent；非空字符串。普通合成仅在 chosen Endpoint 明确核验 `supports_default_voice=true` 时可省略；无状态音色克隆由参考音频提供音色，也可省略 |
+| `response_format` | 可选；仅支持 `mp3` / `pcm`，默认 `pcm` |
+| `speed` | 可选；必须是 JSON number，`0.25`–`4.0`，默认 `1`；不支持该字段的 Provider 会忽略，不把它作为拒绝路由的理由 |
+| `input_references` | 可选；无状态音色克隆引用，必须且最多含一个 `input_audio`，可再含一个 `text` 转写部分 |
+| `provider` | 可选；支持路由选择字段及 `provider.options` |
+| `stream_format` | CinaToken 扩展；`audio`（默认）或 `sse` |
+| `instructions` | CinaToken 扩展；顶层风格指令，最多 4096 个字符 |
 
-同协议 OpenAI 上游使用 `passthrough`；转到 DashScope SpeechSynthesizer、Qwen-TTS 或 MiniMax 时，必须选择对应的显式 adapter。TTS 计费要求 chosen verified Endpoint 在实际上游 operation 下声明 `audio_capabilities` 的 `characters` + `unicode_code_point` meter；网关以已校验的请求 `input` Unicode code point 数作为权威数量，并应用 Endpoint 的 minimum/increment、request fee、discount 与 Route 倍率。缺失或 operation 不匹配时在 dispatch 前 fail closed。
+同协议 OpenAI 上游使用 `passthrough`；转到 DashScope SpeechSynthesizer、Qwen-TTS 或 MiniMax 时，必须选择对应的显式 adapter。网关会在计价和预算预留前排除无法满足本次格式、速度、指令或供应商选项的 adapter；没有兼容路由时返回路由不可用，不会尝试上游。DashScope SpeechSynthesizer 与 MiniMax 的 `speed` 按官方 `0.5`–`2.0` 范围验证；Qwen-TTS 没有该参数，因此忽略客户端 `speed`。当前 Qwen-TTS 只返回 `wav`，而公开 OpenRouter 合同只接受 `mp3` / `pcm`，所以在实现可核验的格式转换前不会被公开 TTS 入口选中。TTS 计费要求 chosen verified Endpoint 在实际上游 operation 下声明 `audio_capabilities` 的 `characters` + `unicode_code_point` meter；网关以已校验的请求 `input` Unicode code point 数作为权威数量，并应用 Endpoint 的 minimum/increment、request fee、discount 与 Route 倍率。缺失或 operation 不匹配时在 dispatch 前 fail closed。
+
+`provider.options` 可按 Provider `id`、显示名称或当前 verified Endpoint 的公开 `endpoint_slug` 配置供应商专用参数，比较时忽略大小写。每次实际尝试只会收到与该 Route 匹配的选项，其他供应商的选项不会泄漏到 fallback；`model`、`input`、`voice`、`response_format`、`speed`、`stream` 等标准字段始终由已校验请求和 adapter 决定，不能被选项覆盖。内置 DashScope adapter 在计价前按当前官方字段、类型、枚举和范围验证匹配选项；OpenAI-compatible passthrough 保留对应 Provider 自己的扩展字段。嵌套字符串会经过同一 Guardrail 扫描与脱敏，普通日志只记录是否存在选项，不记录其值。
+
+```json
+{
+  "model": "your-tts-model",
+  "input": "你好，cinatoken。",
+  "voice": "alloy",
+  "response_format": "mp3",
+  "provider": {
+    "order": ["openai"],
+    "options": {
+      "openai": {
+        "instructions": "Speak warmly and clearly."
+      }
+    }
+  }
+}
+```
+
+### 无状态音色克隆
+
+`input_references` 支持 raw Base64 或 `data:audio/<format>;base64,...`。Endpoint 必须处于 verified/未过期状态、`capabilities.voice_cloning=true`，并在 `audio_capabilities.speech_by_operation["audio.speech"]` 明确列出参考音频格式；同一模型下能力未知、不支持克隆或格式不匹配的 Provider 会在计价前被排除。data URI 的 media type 必须精确命中已核验列表；raw Base64 只有在 Endpoint 同时声明已核验的默认参考格式时才可路由，不会根据内容或文件头猜测格式。
+
+```json
+{
+  "model": "your-cloning-tts-model",
+  "input": "这是使用参考音色生成的语音。",
+  "response_format": "mp3",
+  "input_references": [
+    {
+      "type": "input_audio",
+      "input_audio": { "data": "data:audio/wav;base64,UklGRi..." }
+    },
+    { "type": "text", "text": "这是参考音频的转写文本。" }
+  ]
+}
+```
+
+每个请求最多一个 `input_audio` 和一个可选 `text`，并且音频部分必填。Base64 最多 **20 MiB**、解码音频最多 **15 MiB**；克隆音频超限按兼容合同返回 400。网关在入站时流式解码并从 Guardrail/路由元数据中移除 Base64，只扫描可选转写；出站时再按块编码并流向选中的上游，不把参考音频、Base64 或转写原文写入普通日志。
+
+除参考音频外的 TTS JSON 元数据上限为 **256 KiB**，完整请求最多 **20 MiB + 256 KiB**，并按实际流入字节计数；`provider.options` 规范化后的 JSON 上限为 64 KiB，同时限制供应商数、嵌套深度、节点数、数组长度和对象字段数。错误媒体类型、畸形 UTF-8、超限正文、超限元数据或超限选项都会在路由和上游调用前拒绝；客户端取消上传时会立即取消读取。
+
+`stream_format=audio` 时响应保持字节流透传：`mp3` 固定返回 `Content-Type: audio/mpeg`，`pcm` 固定返回 `Content-Type: audio/pcm`。`stream_format=sse` 是 CinaToken 扩展，返回 `text/event-stream`。若上游以 2xx 返回空 body 或与请求不匹配的媒体类型，网关会取消该流并返回脱敏 502；结果不确定时禁止自动重放。
 
 ```bash
 curl -sS "$GATEWAY_URL/v1/audio/speech" \
   -H "Authorization: Bearer $USER_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{"model":"your-tts-model","input":"你好，cinatoken。","voice":"your-voice"}' \
-  --output speech.mp3
+  --output speech.pcm
 ```
 
 ### DashScope 同步 ASR HTTP 透传
@@ -1334,28 +1539,39 @@ Preset 把可复用的模型、Provider、工具与生成参数保存为不可�
 
 请求字段浅覆盖 Preset；`tools` 例外，会按工具身份合并：同名请求工具覆盖预设工具，预设顺序保持不变，请求新增工具追加。Chat、Messages、Responses 的系统提示分别映射到 system message、顶层 `system`、`instructions`，请求显式提供时以请求为准。
 
-“保存配置并执行”的兼容入口：
+公开读取与配置捕获接口使用普通 Gateway Key：
 
 ```
+GET  /api/v1/presets?offset=0&limit=50
+GET  /api/v1/presets/{slug}
+GET  /api/v1/presets/{slug}/versions?offset=0&limit=50
+GET  /api/v1/presets/{slug}/versions/{version}
 POST /api/v1/presets/{slug}/chat/completions
 POST /api/v1/presets/{slug}/messages
 POST /api/v1/presets/{slug}/responses
 ```
 
-也接受 `/v1/presets/{slug}/...`。新 slug 创建 Preset；调用自己已有的 slug 会创建并指定一个新版本。slug 全局唯一，私有 Preset 只有所有者可调用，公开 Preset 可被其他已认证用户显式引用。无权限或不存在统一按 `gateway.preset_not_found` 处理，避免枚举私有资源。
+也接受 `/v1/presets/...`。三个 POST 是配置捕获接口：只保存并返回 Preset，不执行推理、不访问上游，也不会产生模型费用。新 slug 创建 Preset；调用自己在当前 Workspace 已有的 slug 会创建并指定一个新版本。slug 仅在 Workspace 内唯一；私有 Preset 只有所有者可见，active public Preset 可由同 Workspace 的其他已认证用户读取和显式引用。跨 Workspace、无权限或不存在统一按 `gateway.preset_not_found` 处理，避免枚举私有资源。配置管理不消耗推理预算，但 Gateway Key 必须有效。
 
 门户 `/account/presets` 使用 CinaAuth 会话管理自己的 Preset；对应控制面 API 是 `/api/user/presets`（列表/创建版本）、`/:id/versions`、`/:id/designate` 与 `PATCH /:id`。管理员在 `/admin/presets` 通过 `/api/admin/presets` 治理全局可见性、状态与指定版本。
 
 ## Guardrails 与零数据保留
 
-门户 `/account/guardrails` 可创建不可变版本的 Guardrail，并绑定当前 CinaAuth 用户或其 Gateway API Key。控制面入口是 `/api/user/guardrails`；支持创建、创建新版本、查看历史与绑定、指定历史版本、归档。普通用户只能操作自己的资源和 scope；管理员下发的绑定不能被普通用户覆盖、解绑、改版或归档。
+门户 `/account/guardrails` 可创建不可变版本的 Guardrail，并绑定当前 CinaAuth 用户或其 Gateway API Key。每个个人/组织账户有一条 `Account Default`，作为账户策略上限自动继承到全部 Workspace；每个 Workspace 另有一条自动创建、无需绑定即覆盖全部流量的 `Workspace <workspace-id> Default`。两类默认策略可更新内容与指定历史版本，但不能改名、归档、删除或再次绑定。Account Default 只接受模型/Provider 限制、ZDR 与 `data_collection="deny"`，不接受预算或内容过滤。控制面入口是 `/api/user/guardrails`；普通用户只能修改自己拥有的资源，组织成员可读取本账户默认上限，管理员下发的绑定不能被普通用户覆盖、解绑、改版或归档。
+
+`GET /api/user/guardrails/effective` 会使用当前 Workspace 和 CinaAuth 用户计算只读的有效策略；可选 `api_key_id` 只接受该用户在当前 Workspace 内的 active Key。响应列出实际参与合并的 Account Default、Workspace Default、用户和 Key 策略版本，给出 allowlist 交集、ignore 并集、最严格内置检测、预算层、ZDR/禁止收集要求，以及通过模型/Provider 身份策略的 active Route 候选摘要。服务端随后按当前 Route + Provider 凭据重新证明隐私与 verified Endpoint subject，并执行运行时规划器中与请求无关的静态门禁：供应商状态/凭据/协议、唯一端点绑定、operation capability、output capacity、当前业务时区的实际计费价格，以及有界的近 5 分钟 latency/throughput 样本。响应会明确列出排除原因、未知容量、缺失样本和采样截断。它不会把预览误报为最终可分发承诺：供应商偏好、必需参数、最高价格、请求 token 数及 process/isolate-local circuit state 仍在每次真实请求中复验。响应为 `private, no-store`，不返回正则原文、Provider 凭据、内部 route/endpoint ID、上游私有模型名或任何 subject fingerprint。
 
 配置支持：
 
 ```json
 {
   "allowed_models": ["anthropic/claude-sonnet"],
-  "allowed_providers": ["Anthropic"],
+	"allowed_providers": ["Anthropic"],
+	"content_filter_builtins": [
+		{ "slug": "secrets", "action": "block" },
+		{ "slug": "email", "action": "redact" },
+		{ "slug": "regex-prompt-injection", "action": "flag" }
+  ],
   "input_filters": [{ "id": "secret", "pattern": "api[_-]?key", "action": "redact" }],
   "output_filters": [{ "id": "internal", "pattern": "internal only", "action": "block" }],
   "budget": { "limit": 100, "period": "monthly" },
@@ -1365,7 +1581,9 @@ POST /api/v1/presets/{slug}/responses
 
 过滤器使用保守的线性时间正则子集：不允许分组、懒惰量词或无界 `+`/`*`；每个顶层 `|` 分支最多使用一个 `?` 或 `{min,max}`，其中 `max` 不超过 256；固定次数 `{n}` 不超过 4096。需要重复匹配时请使用有界范围，例如 `[a-z]{1,64}@example\\.com`。
 
-用户级与 Key 级策略同时生效：allowlist 取交集，过滤器取并集且 block 优先，预算分别检查，`require_zdr`/模型组 ZDR 取更严格结果。输入过滤发生在上游调用前；非流式输出过滤发生在返回客户端前。流式请求若配置输出过滤会返回 `gateway.guardrail_blocked`，不会先发送未经检查的片段。
+确定性内置输入检测支持 `secrets`、`email`、`phone`、`ssn`、`credit-card`、`ip-address` 的 `block | redact`，以及 `regex-prompt-injection` 的 `block | redact | flag`；它会覆盖嵌套消息和 tool arguments。`secrets` 覆盖 OpenRouter 文档列出的 33 种可识别格式，redact 使用 `[SECRET:<format-id>]`，并按官方边界排除裸十六进制、UUID、通用哈希和普通高熵字符串。`flag` 保持正文不变，只记录不含原文的命中类型与计数。需要外部 NLP 能力的 `person-name`、`address` 当前拒绝配置，不会形成虚假策略。
+
+Account Default、Workspace Default、用户级与 Key 级策略同时生效：allowlist 取交集，拒绝列表和过滤器取并集且 `block > redact > flag`，`require_zdr`/模型组 ZDR 取更严格结果，任一账户策略要求 `data_collection="deny"` 时会覆盖调用方的 `allow`。用户与 Key 绑定预算分别检查；Workspace Default 预算同时生成 user 与 key 两个检查，因此一次 Key 调用会计入两者；Account Default 不承载预算。输入过滤发生在上游调用前；非流式输出过滤发生在返回客户端前。流式请求若配置输出过滤会返回 `gateway.guardrail_blocked`，不会先发送未经检查的片段；用户内容不在初始请求体中的入口若无法在后续帧边界执行检测，也会 fail closed。
 
 调用方也可在 Chat、Messages 或 Responses 请求中显式要求 ZDR：
 

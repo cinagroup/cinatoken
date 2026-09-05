@@ -4,6 +4,7 @@
 import type { D1Database, D1PreparedStatement } from '@cloudflare/workers-types';
 import { roundGatewayMoney, sqlMoneyRound } from '../../lib/money-precision';
 import {
+	mapRequestActivityGroupRows,
 	mapRequestStatsByRangeRow,
 	mapRequestTimeseriesRows,
 	mapThroughputSnapshot,
@@ -17,6 +18,7 @@ import type { RequestLogsRepository } from '../../storage/gateway-repository-int
 import type { RequestLogsD1Statements } from './d1-repository-extras';
 import {
 	assertGenerationSnapshotIsValid,
+	serializeGenerationProviderResponses,
 	type GenerationRequestLogRow,
 	type InsertRequestLogParams,
 	type RoutePerformanceSample,
@@ -26,6 +28,18 @@ import {
 	buildRecentRoutePerformanceSamplesSql,
 	normalizeRoutePerformanceSamplesPerTarget,
 } from '../route-performance-sampling';
+import { assertGenerationFeedbackInsertParams } from '../generation-feedback-types';
+import {
+	assertProviderAttemptRetentionDeleteParams,
+	buildProviderAttemptRetentionDeleteSql,
+	buildRouteAvailabilityAggregateSql,
+	normalizeRouteAvailabilityAggregate,
+	routeAvailabilityAggregateParams,
+} from '../provider-attempt-availability';
+import {
+	buildManagementAnalyticsQuery,
+	mapManagementAnalyticsResult,
+} from '../analytics-query';
 
 export function buildInsertRequestLogStatement(
 	db: D1Database,
@@ -35,8 +49,8 @@ export function buildInsertRequestLogStatement(
 	assertGenerationSnapshotIsValid(params);
 	return db
 		.prepare(
-			`INSERT INTO api_key_request_logs (id, user_id, api_key_id, workspace_id, user_email, model_id, provider_id, provider_model_name, model_name, provider_name, request_body, upstream_request_body, request_protocol, request_operation, upstream_protocol, upstream_operation, model_surface_id, route_pool_id, route_target_id, adapter, route_trace, input_tokens, output_tokens, cache_read_tokens, cache_write_tokens, reasoning_tokens, total_tokens, metered_cost, standard_cost, charged_cost, budget_charged_micros, budget_accounted_at, route_group, status, latency_ms, gateway_overhead_ms, upstream_response_ms, final_upstream_headers_ms, first_reasoning_token_ms, first_token_ms, stream_duration_ms, upstream_attempt_count, upstream_failover_count, timing_metadata, error_message, raw_usage, pricing_audit, provider_key_id, provider_key_label, provider_key_fingerprint, upstream_request_id, upstream_message_id, billing_kind, input_image_count, output_image_count, audio_duration_seconds, audio_characters, request_origin, response_streamed, data_region, is_byok, charged_cost_usd, upstream_inference_cost_usd, created_at)
-			 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
+			`INSERT INTO api_key_request_logs (id, user_id, api_key_id, workspace_id, user_email, model_id, provider_id, provider_model_name, model_name, provider_name, request_body, upstream_request_body, request_protocol, request_operation, upstream_protocol, upstream_operation, model_surface_id, route_pool_id, route_target_id, adapter, route_trace, input_tokens, output_tokens, cache_read_tokens, cache_write_tokens, reasoning_tokens, total_tokens, native_tokens_prompt, native_tokens_completion, native_tokens_cached, native_tokens_reasoning, native_tokens_completion_images, metered_cost, standard_cost, charged_cost, budget_charged_micros, budget_accounted_at, route_group, status, latency_ms, gateway_overhead_ms, upstream_response_ms, final_upstream_headers_ms, first_reasoning_token_ms, first_token_ms, stream_duration_ms, upstream_attempt_count, upstream_failover_count, timing_metadata, error_message, raw_usage, pricing_audit, provider_key_id, provider_key_label, provider_key_fingerprint, upstream_request_id, upstream_message_id, billing_kind, input_image_count, output_image_count, audio_duration_seconds, audio_characters, session_id, request_origin, response_streamed, data_region, is_byok, charged_cost_usd, upstream_inference_cost_usd, service_tier, finish_reason, native_finish_reason, provider_responses, http_referer, user_agent, created_at)
+			 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
 		)
 		.bind(
 			params.id,
@@ -66,6 +80,11 @@ export function buildInsertRequestLogStatement(
 			params.cacheWriteTokens,
 			params.reasoningTokens,
 			params.totalTokens,
+			params.nativeTokensPrompt ?? null,
+			params.nativeTokensCompletion ?? null,
+			params.nativeTokensCached ?? null,
+			params.nativeTokensReasoning ?? null,
+			params.nativeTokensCompletionImages ?? null,
 			roundGatewayMoney(params.meteredCost),
 			roundGatewayMoney(params.standardCost),
 			roundGatewayMoney(params.chargedCost),
@@ -96,6 +115,7 @@ export function buildInsertRequestLogStatement(
 			params.outputImageCount ?? 0,
 			params.audioDurationSeconds ?? null,
 			params.audioCharacters ?? null,
+			params.sessionId ?? null,
 			params.requestOrigin ?? null,
 			params.responseStreamed == null ? null : Number(params.responseStreamed),
 			params.dataRegion ?? null,
@@ -104,6 +124,12 @@ export function buildInsertRequestLogStatement(
 			params.upstreamInferenceCostUsd == null
 				? null
 				: roundGatewayMoney(params.upstreamInferenceCostUsd),
+			params.serviceTier ?? null,
+			params.finishReason ?? null,
+			params.nativeFinishReason ?? null,
+			serializeGenerationProviderResponses(params.providerResponses),
+			params.httpReferer ?? null,
+			params.userAgent ?? null,
 			createdAtIso
 		);
 }
@@ -113,16 +139,77 @@ export function createD1RequestLogsRepository(db: D1DatabaseClient): RequestLogs
 	return {
 		buildInsertRequestLogStatement,
 
+		async queryManagementAnalytics(query) {
+			const built = buildManagementAnalyticsQuery('d1', query);
+			const rows = await raw
+				.prepare(built.sql)
+				.bind(...built.values)
+				.all<Record<string, unknown>>();
+			return mapManagementAnalyticsResult(rows.results ?? [], query);
+		},
+
+		async insertGenerationFeedbackForManagementAccount(params): Promise<boolean> {
+			assertGenerationFeedbackInsertParams(params);
+			const personal = params.account.accountType === 'personal';
+			const ownerId = personal
+				? params.account.personalOwnerUserId!
+				: params.account.organizationId!;
+			const accountPredicate = personal
+				? `mk.account_type = 'personal'
+				   AND mk.personal_owner_user_id = ?
+				   AND mk.organization_id IS NULL
+				   AND w.scope_type = 'personal'
+				   AND w.personal_owner_user_id = mk.personal_owner_user_id
+				   AND w.organization_id IS NULL
+				   AND rl.user_id = mk.personal_owner_user_id`
+				: `mk.account_type = 'organization'
+				   AND mk.organization_id = ?
+				   AND mk.personal_owner_user_id IS NULL
+				   AND w.scope_type = 'organization'
+				   AND w.organization_id = mk.organization_id
+				   AND w.personal_owner_user_id IS NULL`;
+			const result = await raw.prepare(
+				`INSERT INTO generation_feedback (
+					id, generation_id, workspace_id, management_api_key_id,
+					account_type, personal_owner_user_id, organization_id,
+					category, comment, created_at
+				 )
+				 SELECT ?, rl.id, rl.workspace_id, mk.id,
+				        mk.account_type, mk.personal_owner_user_id, mk.organization_id,
+				        ?, ?, ?
+				 FROM api_key_request_logs rl
+				 JOIN workspaces w ON w.id = rl.workspace_id
+				 JOIN management_api_keys mk ON mk.id = ? AND mk.status = 'active'
+				 WHERE rl.id = ?
+				   AND ${accountPredicate}`
+			).bind(
+				params.id,
+				params.category,
+				params.comment,
+				params.createdAtIso,
+				params.managementApiKeyId,
+				params.generationId,
+				ownerId,
+			).run();
+			return Number(result.meta.changes ?? 0) === 1;
+		},
+
 		async getRequestLogByIdForOwner(options): Promise<GenerationRequestLogRow | null> {
 			return raw
 				.prepare(
 					`SELECT rl.id, rl.request_operation, rl.status, rl.created_at,
-					        rl.latency_ms, rl.model_id, rl.provider_name,
+					        rl.latency_ms, rl.final_upstream_headers_ms, rl.stream_duration_ms,
+					        rl.model_id, rl.provider_name,
 					        rl.input_tokens, rl.output_tokens, rl.cache_read_tokens,
-					        rl.reasoning_tokens, rl.input_image_count, rl.output_image_count,
-					        rl.upstream_message_id, rl.workspace_id, rl.request_origin,
+					        rl.reasoning_tokens, rl.native_tokens_prompt,
+					        rl.native_tokens_completion, rl.native_tokens_cached,
+					        rl.native_tokens_reasoning, rl.native_tokens_completion_images,
+					        rl.input_image_count, rl.output_image_count,
+					        rl.upstream_message_id, rl.session_id, rl.workspace_id, rl.request_origin,
+					        rl.http_referer, rl.user_agent,
 					        rl.response_streamed, rl.data_region, rl.is_byok,
-					        rl.charged_cost_usd, rl.upstream_inference_cost_usd
+					        rl.charged_cost_usd, rl.upstream_inference_cost_usd, rl.service_tier,
+					        rl.finish_reason, rl.native_finish_reason, rl.provider_responses
 					 FROM api_key_request_logs rl
 					 WHERE rl.id = ?
 					   AND rl.user_id = ?
@@ -192,6 +279,7 @@ export function createD1RequestLogsRepository(db: D1DatabaseClient): RequestLogs
 			userEmail?: string;
 			modelId?: string;
 			providerId?: string;
+			providerName?: string;
 			routeGroup?: string;
 			protocol?: string;
 			status?: string;
@@ -235,6 +323,11 @@ export function createD1RequestLogsRepository(db: D1DatabaseClient): RequestLogs
 				conditions.push('provider_id = ?');
 				conditionsRl.push('rl.provider_id = ?');
 				bindValues.push(options.providerId);
+			}
+			if (options.providerName) {
+				conditions.push('provider_name = ?');
+				conditionsRl.push('rl.provider_name = ?');
+				bindValues.push(options.providerName);
 			}
 			if (options.routeGroup) {
 				conditions.push('route_group = ?');
@@ -290,6 +383,10 @@ export function createD1RequestLogsRepository(db: D1DatabaseClient): RequestLogs
 			endExclusive?: boolean;
 			userId?: string;
 			workspaceId?: string;
+			apiKeyId?: string;
+			modelId?: string;
+			providerName?: string;
+			status?: string;
 		}) {
 			const comparator = options.endExclusive ? '<' : '<=';
 			const conditions = [`created_at >= ?`, `created_at ${comparator} ?`];
@@ -301,6 +398,22 @@ export function createD1RequestLogsRepository(db: D1DatabaseClient): RequestLogs
 			if (options.workspaceId) {
 				conditions.push('workspace_id = ?');
 				bindValues.push(options.workspaceId);
+			}
+			if (options.apiKeyId) {
+				conditions.push('api_key_id = ?');
+				bindValues.push(options.apiKeyId);
+			}
+			if (options.modelId) {
+				conditions.push('model_id = ?');
+				bindValues.push(options.modelId);
+			}
+			if (options.providerName) {
+				conditions.push('provider_name = ?');
+				bindValues.push(options.providerName);
+			}
+			if (options.status) {
+				conditions.push('status = ?');
+				bindValues.push(options.status);
 			}
 			const row = await raw
 				.prepare(
@@ -317,15 +430,111 @@ export function createD1RequestLogsRepository(db: D1DatabaseClient): RequestLogs
 			return mapRequestStatsByRangeRow(row);
 		},
 
+		async getRequestActivityGroups(options) {
+			const comparator = options.endExclusive ? '<' : '<=';
+			const conditions = [
+				`created_at >= ?`,
+				`created_at ${comparator} ?`,
+				'user_id = ?',
+				'workspace_id = ?',
+			];
+			const bindValues: unknown[] = [
+				options.startDate,
+				options.endDate,
+				options.userId,
+				options.workspaceId,
+			];
+			if (options.apiKeyId) {
+				conditions.push('api_key_id = ?');
+				bindValues.push(options.apiKeyId);
+			}
+			if (options.modelId) {
+				conditions.push('model_id = ?');
+				bindValues.push(options.modelId);
+			}
+			if (options.providerName) {
+				conditions.push('provider_name = ?');
+				bindValues.push(options.providerName);
+			}
+			if (options.status) {
+				conditions.push('status = ?');
+				bindValues.push(options.status);
+			}
+			const groupColumn = options.dimension === 'model'
+				? 'model_id'
+				: options.dimension === 'provider' ? 'provider_name' : 'api_key_id';
+			const groupName = options.dimension === 'model'
+				? "MAX(NULLIF(model_name, ''))"
+				: 'NULL';
+			conditions.push(`${groupColumn} IS NOT NULL`, `${groupColumn} != ''`);
+			const parsedLimit = Number(options.limit);
+			const limit = Number.isFinite(parsedLimit)
+				? Math.min(25, Math.max(1, Math.trunc(parsedLimit)))
+				: 10;
+			const rows = await raw
+				.prepare(
+					`SELECT
+						${groupColumn} as group_id,
+						${groupName} as group_name,
+						COUNT(*) as request_count,
+						SUM(CASE WHEN status = 'success' THEN 1 ELSE 0 END) as success_count,
+						SUM(CASE WHEN status = 'error' THEN 1 ELSE 0 END) as error_count,
+						COALESCE(SUM(total_tokens), 0) as total_tokens,
+						COALESCE(${sqlMoneyRound('SUM(charged_cost)')}, 0) as charged_cost
+					 FROM api_key_request_logs
+					 WHERE ${conditions.join(' AND ')}
+					 GROUP BY ${groupColumn}
+					 ORDER BY charged_cost DESC, request_count DESC, group_id ASC
+					 LIMIT ?`
+				)
+				.bind(...bindValues, limit)
+				.all();
+			return mapRequestActivityGroupRows(rows.results ?? []);
+		},
+
 		async queryRequestTimeseries(options: {
 			startDate: string;
 			endDate: string;
+			endExclusive?: boolean;
 			granularity: 'hour' | 'day';
+			userId?: string;
+			workspaceId?: string;
+			apiKeyId?: string;
+			modelId?: string;
+			providerName?: string;
+			status?: string;
 		}) {
 			const bucketExpr =
 				options.granularity === 'hour'
 					? "strftime('%Y-%m-%d %H:00:00', created_at)"
 					: "strftime('%Y-%m-%d', created_at)";
+			const comparator = options.endExclusive ? '<' : '<=';
+			const conditions = [`created_at >= ?`, `created_at ${comparator} ?`];
+			const bindValues: unknown[] = [options.startDate, options.endDate];
+			if (options.userId) {
+				conditions.push('user_id = ?');
+				bindValues.push(options.userId);
+			}
+			if (options.workspaceId) {
+				conditions.push('workspace_id = ?');
+				bindValues.push(options.workspaceId);
+			}
+			if (options.apiKeyId) {
+				conditions.push('api_key_id = ?');
+				bindValues.push(options.apiKeyId);
+			}
+			if (options.modelId) {
+				conditions.push('model_id = ?');
+				bindValues.push(options.modelId);
+			}
+			if (options.providerName) {
+				conditions.push('provider_name = ?');
+				bindValues.push(options.providerName);
+			}
+			if (options.status) {
+				conditions.push('status = ?');
+				bindValues.push(options.status);
+			}
 			const rows = await raw
 				.prepare(
 					`SELECT
@@ -333,11 +542,11 @@ export function createD1RequestLogsRepository(db: D1DatabaseClient): RequestLogs
 				${REQUEST_TIMESERIES_SELECT_SQL},
 				COALESCE(${sqlMoneyRound('SUM(charged_cost)')}, 0) as charged_cost
 			 FROM api_key_request_logs
-			 WHERE created_at >= ? AND created_at <= ?
+				 WHERE ${conditions.join(' AND ')}
 			 GROUP BY bucket
 			 ORDER BY bucket ASC`
 				)
-				.bind(options.startDate, options.endDate)
+				.bind(...bindValues)
 				.all();
 			return mapRequestTimeseriesRows(rows.results ?? []);
 		},
@@ -414,6 +623,27 @@ export function createD1RequestLogsRepository(db: D1DatabaseClient): RequestLogs
 				.bind(...options.routeTargetIds, options.sinceIso, maxSamplesPerRoute)
 				.all<RoutePerformanceSample>();
 			return rows.results ?? [];
+		},
+
+		async getRouteAvailabilityAggregates(options) {
+			if (options.routeTargetIds.length === 0) return [];
+			const sql = buildRouteAvailabilityAggregateSql('d1', options.routeTargetIds.length);
+			const rows = await raw.prepare(sql)
+				.bind(...routeAvailabilityAggregateParams(options))
+				.all<Record<string, unknown>>();
+			return (rows.results ?? []).map(normalizeRouteAvailabilityAggregate);
+		},
+
+		async deleteProviderAttemptAvailabilityBefore(options) {
+			assertProviderAttemptRetentionDeleteParams(options);
+			const result = await raw.prepare(buildProviderAttemptRetentionDeleteSql('d1'))
+				.bind(options.cutoffIso, options.cutoffIso, options.limit)
+				.run();
+			const deleted = Number(result.meta.changes ?? 0);
+			if (!Number.isSafeInteger(deleted) || deleted < 0 || deleted > options.limit) {
+				throw new TypeError('Provider attempt retention delete result is invalid');
+			}
+			return deleted;
 		},
 
 		async getDistinctActiveUsersCount(options: { startDate: string; endDate: string; endExclusive?: boolean }): Promise<number> {

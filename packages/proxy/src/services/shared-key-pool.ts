@@ -11,6 +11,7 @@
  */
 import type { GatewayRepositories, SharedKeyRow } from '@octafuse/core';
 import type { RouteResult } from './model-router';
+import { parseByokKeyId } from './byok-key-pool';
 
 /** `RouteResult.providerKeyId` 前缀，标记该次尝试由用户共享密钥服务。 */
 export const SHARED_KEY_ID_PREFIX = 'sharedkey:';
@@ -28,7 +29,10 @@ export function parseSharedKeyId(providerKeyId: string | null | undefined): stri
  */
 export function circuitKeyForRoute(route: Pick<RouteResult, 'providerId' | 'providerKeyId'>): string {
 	const sharedKeyId = parseSharedKeyId(route.providerKeyId);
-	return sharedKeyId ? `${route.providerId}#${route.providerKeyId}` : route.providerId;
+	const byokKeyId = parseByokKeyId(route.providerKeyId);
+	return sharedKeyId || byokKeyId
+		? `${route.providerId}#${route.providerKeyId}`
+		: route.providerId;
 }
 
 /** 进程级 per-key 冷却（失败后短暂跳过；DB status 变更才是永久移除）。 */

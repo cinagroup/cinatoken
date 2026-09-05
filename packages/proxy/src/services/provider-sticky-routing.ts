@@ -11,6 +11,7 @@ import {
 	type RoutePoolStickyRoutingConfig,
 } from '@octafuse/core/db/route-pool-sticky-types';
 import type { RouteResult } from './model-router';
+import { isPrivateByokRoute } from './byok-key-pool';
 import { getProviderCircuitRemainingMs } from './provider-circuit-breaker';
 import type { UpstreamFailureClassification } from './upstream-failure-classifier';
 
@@ -96,8 +97,26 @@ export function mergeStickyIntoAttempts(
 	stickyRoute: RouteResult | null
 ): RouteResult[] {
 	if (!stickyRoute) return attempts;
-	const rest = attempts.filter((r) => r.targetId !== stickyRoute.targetId);
-	return [stickyRoute, ...rest];
+	if (!attempts.some((route) => route.targetId === stickyRoute.targetId)) return attempts;
+	const prioritizeStickyTarget = (section: RouteResult[]): RouteResult[] => [
+		...section.filter((route) => route.targetId === stickyRoute.targetId),
+		...section.filter((route) => route.targetId !== stickyRoute.targetId),
+	];
+	const primaryByok = attempts.filter(
+		(route) => isPrivateByokRoute(route) && route.gatewayPrivateByokFallback !== true,
+	);
+	const sharedAndPlatform = attempts.filter((route) => !isPrivateByokRoute(route));
+	const fallbackByok = attempts.filter(
+		(route) => isPrivateByokRoute(route) && route.gatewayPrivateByokFallback === true,
+	);
+	// Sticky changes target preference inside each credential section. It must
+	// never pull platform capacity ahead of another target's primary BYOK key,
+	// or pull a fallback BYOK key ahead of shared/platform capacity.
+	return [
+		...prioritizeStickyTarget(primaryByok),
+		...prioritizeStickyTarget(sharedAndPlatform),
+		...prioritizeStickyTarget(fallbackByok),
+	];
 }
 
 export function emptyStickyTrace(): StickyTraceSnapshot {
@@ -135,6 +154,8 @@ export async function resolveStickySession(
 		affinityKey: string;
 		config: RoutePoolStickyRoutingConfig;
 		candidates: RouteResult[];
+		/** Request-local credential/circuit availability for this route target. */
+		targetAvailable?: (route: RouteResult) => boolean;
 		nowMs?: number;
 	}
 ): Promise<{ session: StickySession | null; stickyRoute: RouteResult | null }> {
@@ -204,7 +225,11 @@ export async function resolveStickySession(
 			session.staleToken = row.binding_token;
 			return { session, stickyRoute: null };
 		}
-		if (getProviderCircuitRemainingMs(stickyRoute.providerId, nowMs) > 0) {
+		if (
+			params.targetAvailable
+				? !params.targetAvailable(stickyRoute)
+				: getProviderCircuitRemainingMs(stickyRoute.providerId, nowMs) > 0
+		) {
 			session.lookup = 'invalid_circuit';
 			return { session, stickyRoute: null };
 		}
@@ -213,7 +238,6 @@ export async function resolveStickySession(
 		session.previousExpiresAt = row.expires_at;
 		session.bindingToken = row.binding_token;
 		session.boundTargetId = row.route_target_id;
-		session.attemptedTargetId = row.route_target_id;
 		return { session, stickyRoute };
 	} catch (err) {
 		console.warn('[Gateway Sticky] lookup failed; failing open to normal routing', err);
@@ -223,11 +247,11 @@ export async function resolveStickySession(
 	}
 }
 
-export function scheduleStickyTouchIfNeeded(
+async function performStickyTouchIfNeeded(
 	repos: GatewayRepositories,
 	session: StickySession,
 	nowMs = Date.now()
-): void {
+): Promise<void> {
 	if (!session.bindingToken) return;
 	if (
 		session.previousExpiresAt &&
@@ -243,23 +267,39 @@ export function scheduleStickyTouchIfNeeded(
 	const expiresAt = toIso(nowMs + session.config.idleTtlSeconds * 1000);
 	const token = session.bindingToken;
 	session.result = 'kept';
-	session.mutations.push(
-		repos.routePoolSticky
-			.touchBinding({
+	try {
+		const ok = await repos.routePoolSticky.touchBinding({
 				routePoolId: session.routePoolId,
 				affinityHash: session.affinityHash,
 				expectedToken: token,
 				expiresAt,
 				nowIso: toIso(nowMs),
-			})
-			.then((ok) => {
-				if (!ok) session.result = 'unchanged';
-			})
-			.catch((err) => {
-				console.warn('[Gateway Sticky] touch failed', err);
-				session.result = 'storage_error';
-			})
-	);
+			});
+		if (!ok) session.result = 'unchanged';
+	} catch (err) {
+		console.warn('[Gateway Sticky] touch failed', err);
+		session.result = 'storage_error';
+	}
+}
+
+export function scheduleStickyTouchIfNeeded(
+	repos: GatewayRepositories,
+	session: StickySession,
+	nowMs = Date.now()
+): void {
+	session.mutations.push(performStickyTouchIfNeeded(repos, session, nowMs));
+}
+
+/** Delay the idle-window refresh until the response stream has completed successfully. */
+export function scheduleStickyTouchAfter(
+	repos: GatewayRepositories,
+	session: StickySession,
+	ready: Promise<boolean>
+): void {
+	session.mutations.push((async () => {
+		if (!(await ready.catch(() => false))) return;
+		await performStickyTouchIfNeeded(repos, session);
+	})());
 }
 
 export async function clearStickyBindingSync(
@@ -287,12 +327,12 @@ export async function clearStickyBindingSync(
 	}
 }
 
-export function scheduleStickyBind(
+async function performStickyBind(
 	repos: GatewayRepositories,
 	session: StickySession,
 	route: RouteResult,
 	opts?: { rebound?: boolean; nowMs?: number }
-): void {
+): Promise<void> {
 	const nowMs = opts?.nowMs ?? Date.now();
 	const bindingToken = crypto.randomUUID();
 	const expiresAt = toIso(nowMs + session.config.idleTtlSeconds * 1000);
@@ -305,9 +345,8 @@ export function scheduleStickyBind(
 	session.boundTargetId = route.targetId;
 	session.attemptedTargetId = route.targetId;
 	session.result = opts?.rebound || previousHadBinding ? 'rebound' : 'bound';
-	session.mutations.push(
-		repos.routePoolSticky
-			.tryBind({
+	try {
+		const ok = await repos.routePoolSticky.tryBind({
 				routePoolId: session.routePoolId,
 				affinityHash: session.affinityHash,
 				routeTargetId: route.targetId,
@@ -316,15 +355,35 @@ export function scheduleStickyBind(
 				expiresAt,
 				nowIso: toIso(nowMs),
 				expectedToken: expectedToken ?? undefined,
-			})
-			.then((ok) => {
-				if (!ok) session.result = 'unchanged';
-			})
-			.catch((err) => {
-				console.warn('[Gateway Sticky] bind failed', err);
-				session.result = 'storage_error';
-			})
-	);
+			});
+		if (!ok) session.result = 'unchanged';
+	} catch (err) {
+		console.warn('[Gateway Sticky] bind failed', err);
+		session.result = 'storage_error';
+	}
+}
+
+export function scheduleStickyBind(
+	repos: GatewayRepositories,
+	session: StickySession,
+	route: RouteResult,
+	opts?: { rebound?: boolean; nowMs?: number }
+): void {
+	session.mutations.push(performStickyBind(repos, session, route, opts));
+}
+
+/** Delay a bind/rebind until the caller's stream/cache activation predicate succeeds. */
+export function scheduleStickyBindAfter(
+	repos: GatewayRepositories,
+	session: StickySession,
+	route: RouteResult,
+	ready: Promise<boolean>,
+	opts?: { rebound?: boolean }
+): void {
+	session.mutations.push((async () => {
+		if (!(await ready.catch(() => false))) return;
+		await performStickyBind(repos, session, route, opts);
+	})());
 }
 
 export function stickyMutationPromise(session: StickySession | null): Promise<unknown> | null {

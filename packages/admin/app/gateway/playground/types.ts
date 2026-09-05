@@ -2,7 +2,7 @@ import type { PlaygroundProtocol } from '@/lib/playground/merge-assistant-text';
 import type { ImageOperation, ImagePreviewItem } from '@/lib/image-generations';
 import type { AdminModelRow } from '@/lib/services/admin/types';
 import type { GatewayProvider } from '@/lib/types';
-import type { ModelKindFilter } from '../models/types';
+import type { ModelFormKind } from '../models/types';
 
 export type PlaygroundMode = 'routes' | 'tools';
 
@@ -39,4 +39,12 @@ export type ResponseMeta = {
 
 export type FilterOption = { id: string; label: string };
 
-export type { PlaygroundProtocol, ImageOperation, ImagePreviewItem, AdminModelRow, GatewayProvider, ModelKindFilter };
+export type PlaygroundModelKind = ModelFormKind;
+
+export type {
+	PlaygroundProtocol,
+	ImageOperation,
+	ImagePreviewItem,
+	AdminModelRow,
+	GatewayProvider,
+};

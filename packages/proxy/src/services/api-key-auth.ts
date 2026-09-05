@@ -1,7 +1,7 @@
 /**
  * 用户密钥鉴权：校验 Bearer sk-，并在读库时触发与 `user-service.maybeResetBudget` 一致的预算周期重置写回。
  */
-import type { GatewayRepositories } from '@octafuse/core';
+import type { GatewayRepositories, ResolvedGatewayKeyRow } from '@octafuse/core';
 import {
 	MANAGEMENT_API_KEY_PREFIX,
 	persistLazyBudgetResetIfNeeded,
@@ -24,10 +24,45 @@ export type AuthenticatedApiKey = {
 	budgetEpoch: number;
 	budgetPeriod: string;
 	budgetResetAt: string | null;
+	/** Whether private BYOK list-price usage participates in this Key's limit. */
+	includeByokInLimit: boolean;
 	metadata: Record<string, unknown> | null;
 	/** `users.charged_cost_factors` JSON；无折扣时为 null */
 	chargedCostFactors: string | null;
 };
+
+async function authenticatedApiKeyFromRow(
+	repos: GatewayRepositories,
+	row: ResolvedGatewayKeyRow,
+): Promise<AuthenticatedApiKey> {
+	const {
+		budget_spent: nextSpent,
+		budget_reset_at: nextReset,
+		budget_max: nextMax,
+		budget_epoch: nextEpoch,
+	} = await persistLazyBudgetResetIfNeeded(repos, {
+		budgetRow: row,
+		userId: row.user_id,
+		expectedBudgetResetAt: row.budget_reset_at,
+		apiKeyId: row.id,
+		kind: 'api_key_auth',
+	});
+
+	return {
+		keyId: row.id,
+		userId: row.user_id,
+		workspaceId: row.workspace_id,
+		userEmail: row.user_email,
+		budgetMax: nextMax == null ? null : roundGatewayMoney(nextMax),
+		budgetSpent: roundGatewayMoney(nextSpent),
+		budgetEpoch: nextEpoch,
+		budgetPeriod: row.budget_period,
+		budgetResetAt: nextReset,
+		includeByokInLimit: row.include_byok_in_limit,
+		metadata: resolveMeMetadata(row.user_metadata, row.metadata),
+		chargedCostFactors: row.user_charged_cost_factors ?? null,
+	};
+}
 
 /**
  * 校验 sk 是否存在且 active；若预算周期已到期则在此函数内写回数据库。
@@ -41,34 +76,17 @@ export async function authenticateApiKey(repos: GatewayRepositories, key: string
 	if (key.startsWith(MANAGEMENT_API_KEY_PREFIX)) return null;
 	const row = await repos.apiKeys.getApiKeyWithUserByKey(key);
 	if (!row) return null;
+	return authenticatedApiKeyFromRow(repos, row);
+}
 
-	const {
-		budget_spent: nextSpent,
-		budget_reset_at: nextReset,
-		budget_max: nextMax,
-		budget_epoch: nextEpoch,
-	} =
-		await persistLazyBudgetResetIfNeeded(repos, {
-			budgetRow: row,
-			userId: row.user_id,
-			expectedBudgetResetAt: row.budget_reset_at,
-			apiKeyId: row.id,
-			kind: 'api_key_auth',
-		});
-
-	const metadata = resolveMeMetadata(row.user_metadata, row.metadata);
-
-	return {
-		keyId: row.id,
-		userId: row.user_id,
-		workspaceId: row.workspace_id,
-		userEmail: row.user_email,
-		budgetMax: nextMax == null ? null : roundGatewayMoney(nextMax),
-		budgetSpent: roundGatewayMoney(nextSpent),
-		budgetEpoch: nextEpoch,
-		budgetPeriod: row.budget_period,
-		budgetResetAt: nextReset,
-		metadata,
-		chargedCostFactors: row.user_charged_cost_factors ?? null,
-	};
+/**
+ * Reauthorize an asynchronous request from the irreversible lookup hash stored
+ * with the job. This deliberately has no plaintext or legacy-key fallback.
+ */
+export async function authenticateApiKeyByLookupHash(
+	repos: GatewayRepositories,
+	keyHash: string,
+): Promise<AuthenticatedApiKey | null> {
+	const row = await repos.apiKeys.getActiveApiKeyWithUserByLookupHash(keyHash);
+	return row ? authenticatedApiKeyFromRow(repos, row) : null;
 }

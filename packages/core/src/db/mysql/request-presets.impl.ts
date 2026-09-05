@@ -1,4 +1,4 @@
-import { and, desc, eq, or } from 'drizzle-orm';
+import { and, asc, count, desc, eq, or } from 'drizzle-orm';
 import type { MySqlDatabaseClient } from '../../storage/database-client';
 import type { RequestPresetsRepository } from '../../storage/gateway-repository-interfaces';
 import {
@@ -51,6 +51,24 @@ export function createMySqlRequestPresetsRepository(db: MySqlDatabaseClient): Re
 			const query = includeArchived ? base() : base().where(eq(requestPresetsTable.status, 'active'));
 			return await query.orderBy(desc(requestPresetsTable.updatedAt), requestPresetsTable.id) as RequestPresetWithVersionRow[];
 		},
+		async listVisibleByWorkspacePage(workspaceId, userId, page) {
+			const condition = and(
+				eq(requestPresetsTable.workspaceId, workspaceId),
+				or(
+					eq(requestPresetsTable.ownerUserId, userId),
+					and(eq(requestPresetsTable.visibility, 'public'), eq(requestPresetsTable.status, 'active')),
+				),
+			);
+			const [total, rows] = await Promise.all([
+				drizzle.select({ value: count() }).from(requestPresetsTable).where(condition),
+				base().where(condition).orderBy(desc(requestPresetsTable.updatedAt), requestPresetsTable.id)
+					.limit(page.limit).offset(page.offset),
+			]);
+			return {
+				data: rows as RequestPresetWithVersionRow[],
+				totalCount: Number(total[0]?.value ?? 0),
+			};
+		},
 		getById,
 		async getByIdInWorkspace(id, workspaceId) {
 			return ((await base().where(and(eq(requestPresetsTable.id, id), eq(requestPresetsTable.workspaceId, workspaceId))).limit(1))[0] as RequestPresetWithVersionRow | undefined) ?? null;
@@ -66,6 +84,16 @@ export function createMySqlRequestPresetsRepository(db: MySqlDatabaseClient): Re
 				or(eq(requestPresetsTable.ownerUserId, userId), eq(requestPresetsTable.visibility, 'public')),
 			)).limit(1))[0] as RequestPresetWithVersionRow | undefined) ?? null;
 		},
+		async getVisibleBySlug(slug, workspaceId, userId) {
+			return ((await base().where(and(
+				eq(requestPresetsTable.workspaceId, workspaceId),
+				eq(requestPresetsTable.slug, slug),
+				or(
+					eq(requestPresetsTable.ownerUserId, userId),
+					and(eq(requestPresetsTable.visibility, 'public'), eq(requestPresetsTable.status, 'active')),
+				),
+			)).limit(1))[0] as RequestPresetWithVersionRow | undefined) ?? null;
+		},
 		async listVersions(presetId) {
 			return drizzle.select({
 				id: requestPresetVersionsTable.id,
@@ -76,6 +104,37 @@ export function createMySqlRequestPresetsRepository(db: MySqlDatabaseClient): Re
 				created_by_user_id: requestPresetVersionsTable.createdByUserId,
 				created_at: requestPresetVersionsTable.createdAt,
 			}).from(requestPresetVersionsTable).where(eq(requestPresetVersionsTable.presetId, presetId)).orderBy(desc(requestPresetVersionsTable.version));
+		},
+		async listVersionsPage(presetId, page) {
+			const condition = eq(requestPresetVersionsTable.presetId, presetId);
+			const [total, rows] = await Promise.all([
+				drizzle.select({ value: count() }).from(requestPresetVersionsTable).where(condition),
+				drizzle.select({
+					id: requestPresetVersionsTable.id,
+					preset_id: requestPresetVersionsTable.presetId,
+					version: requestPresetVersionsTable.version,
+					system_prompt: requestPresetVersionsTable.systemPrompt,
+					config_json: requestPresetVersionsTable.configJson,
+					created_by_user_id: requestPresetVersionsTable.createdByUserId,
+					created_at: requestPresetVersionsTable.createdAt,
+				}).from(requestPresetVersionsTable).where(condition)
+					.orderBy(asc(requestPresetVersionsTable.version)).limit(page.limit).offset(page.offset),
+			]);
+			return { data: rows, totalCount: Number(total[0]?.value ?? 0) };
+		},
+		async getVersion(presetId, version) {
+			return (await drizzle.select({
+				id: requestPresetVersionsTable.id,
+				preset_id: requestPresetVersionsTable.presetId,
+				version: requestPresetVersionsTable.version,
+				system_prompt: requestPresetVersionsTable.systemPrompt,
+				config_json: requestPresetVersionsTable.configJson,
+				created_by_user_id: requestPresetVersionsTable.createdByUserId,
+				created_at: requestPresetVersionsTable.createdAt,
+			}).from(requestPresetVersionsTable).where(and(
+				eq(requestPresetVersionsTable.presetId, presetId),
+				eq(requestPresetVersionsTable.version, version),
+			)).limit(1))[0] ?? null;
 		},
 		async createWithVersion(params) {
 			const connection = await pool.getConnection();

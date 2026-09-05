@@ -1,11 +1,12 @@
 import {
 	deleteWorkspaceBudget,
-	listWorkspaceBudgets,
+	listWorkspaceBudgetUsage,
 	normalizeWorkspaceBudgetInterval,
 	normalizeWorkspaceBudgetLimitMicros,
 	upsertWorkspaceBudget,
 	workspaceBudgetAmount,
-	type WorkspaceBudgetRow,
+	workspaceBudgetUsageAmount,
+	type WorkspaceBudgetUsageRow,
 } from '@octafuse/core';
 import { Hono, type Context } from 'hono';
 import type { UserEnv } from '@/lib/user-env';
@@ -13,12 +14,17 @@ import { hasAuthoritativeOrganizationAdminRole } from '@/lib/cinaauth/organizati
 
 export const userWorkspaceBudgetsRoutes = new Hono<UserEnv>();
 
-function response(row: WorkspaceBudgetRow) {
+function response(row: WorkspaceBudgetUsageRow) {
 	return {
 		id: row.id,
 		workspaceId: row.workspace_id,
 		limitUsd: workspaceBudgetAmount(row.limit_micros),
 		resetInterval: row.reset_interval,
+		periodStart: row.period_start,
+		periodEnd: row.period_end,
+		spentUsd: workspaceBudgetUsageAmount(row.spent_micros),
+		reservedUsd: workspaceBudgetUsageAmount(row.reserved_micros),
+		remainingUsd: workspaceBudgetUsageAmount(row.remaining_micros),
 		createdAt: row.created_at,
 		updatedAt: row.updated_at,
 	};
@@ -36,7 +42,7 @@ function canManage(c: Context<UserEnv>): boolean {
 
 userWorkspaceBudgetsRoutes.get('/', async (c) => {
 	const workspaceId = c.get('workspaceContext').currentWorkspace.id;
-	const rows = await listWorkspaceBudgets(c.get('repositories').client, workspaceId);
+	const rows = await listWorkspaceBudgetUsage(c.get('repositories').client, workspaceId);
 	c.header('Cache-Control', 'private, no-store');
 	return c.json({ success: true, data: rows.map(response) });
 });
@@ -73,8 +79,11 @@ userWorkspaceBudgetsRoutes.put('/:interval', async (c) => {
 			limitMicros,
 		});
 		if (!row) return c.json({ success: false, message: 'Workspace not found' }, 404);
+		const usage = (await listWorkspaceBudgetUsage(c.get('repositories').client, workspaceId))
+			.find((candidate) => candidate.id === row.id);
+		if (!usage) throw new Error('Workspace budget usage snapshot is unavailable after update');
 		c.header('Cache-Control', 'private, no-store');
-		return c.json({ success: true, data: response(row) });
+		return c.json({ success: true, data: response(usage) });
 	} catch (error) {
 		if (error instanceof TypeError) return c.json({ success: false, message: error.message }, 400);
 		throw error;

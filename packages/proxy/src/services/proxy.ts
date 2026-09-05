@@ -7,6 +7,7 @@ import type { RouteResult } from "./model-router";
 import { dispatchOpenAiRoute } from "./egress/openai-driver";
 import { dispatchOpenAiResponsesRoute } from "./egress/openai-responses-driver";
 import { dispatchOpenAiEmbeddingsRoute } from './egress/openai-embeddings-driver';
+import { dispatchOpenAiRerankRoute } from './egress/openai-rerank-driver';
 import {
 	dispatchOpenAiImageEdits,
 	dispatchOpenAiImageGenerations,
@@ -64,8 +65,22 @@ export interface UsageFromStream {
 	/** 推理/thinking 分列（Gemini：thoughts，为计入 `output_tokens` 的子集；OpenAI：completion 内 reasoning 子集） */
 	reasoning_tokens: number;
 	total_tokens: number;
+	/** Provider-reported counters; absent/null means no authoritative upstream evidence. */
+	native_tokens_prompt?: number | null;
+	native_tokens_completion?: number | null;
+	native_tokens_cached?: number | null;
+	native_tokens_reasoning?: number | null;
+	native_tokens_completion_images?: number | null;
 	/** 上游 usage 对象 JSON 字符串快照，便于审计 */
 	raw_usage: string | null;
+	/** Canonical tier reported by the upstream response; null means unavailable. */
+	service_tier?: 'default' | 'flex' | 'priority' | null;
+	/** OpenRouter-normalized reason the primary generation choice terminated. */
+	finish_reason?: 'tool_calls' | 'stop' | 'length' | 'content_filter' | 'error' | null;
+	/** Bounded provider-native reason for the same primary generation choice. */
+	native_finish_reason?: string | null;
+	/** Canonical text-generation speed reported by the upstream usage object. */
+	speed?: 'fast' | 'standard' | null;
 	/** TTS 上游返回的真实计费字符数；缺失时不按输入长度补算。 */
 	audio_characters?: number;
 	/** 实时 ASR 上游返回的真实计费时长（秒）。 */
@@ -77,7 +92,8 @@ export interface UsageFromStream {
 	/** 上游流在终止事件前失败；用于把已返回 2xx headers 的半截流记为失败。 */
 	stream_error?: string;
 	/**
-	 * 上游响应 body 里的「生成结果」id（OpenAI `chatcmpl-*` / Anthropic `msg_*` / Gemini `responseId`）。
+	 * 上游响应 body 里的「生成结果」id（OpenAI `chatcmpl-*` / Embeddings `embd-*` /
+	 * Anthropic `msg_*` / Gemini `responseId`）。
 	 * 与 header 侧 `upstreamRequestId` 语义不同：这是应用层 message id，穿透聚合商/CDN，随 usage 一起解析。
 	 */
 	upstreamMessageId?: string | null;
@@ -124,7 +140,7 @@ export type AudioTranscriptionProxyOptions = FailoverDispatchOptions & {
 export type AudioSpeechProxyOptions = FailoverDispatchOptions &
 	AudioSpeechDispatchOptions;
 export type DashScopeRealtimeProxyOptions = FailoverDispatchOptions &
-	DashScopeRealtimeDispatchOptions;
+	Omit<DashScopeRealtimeDispatchOptions, 'beforeUpstreamDispatch'>;
 export type ImageGenerationProxyOptions = FailoverDispatchOptions & {
 	image?: { requireAuthoritativeUsage?: boolean };
 };
@@ -215,13 +231,50 @@ export async function proxyEmbeddings(
 	body: Record<string, unknown>,
 	requestSignal?: AbortSignal,
 	options?: FailoverDispatchOptions,
+	publicCorrelationId?: string,
 ): Promise<ProxyResult> {
 	return failoverDispatch(
 		repos,
 		routes,
 		'openai',
 		(route, signal, timing, attempt, beforeFetch) =>
-			dispatchOpenAiEmbeddingsRoute(route, body, signal, timing, attempt, beforeFetch),
+			dispatchOpenAiEmbeddingsRoute(
+				route,
+				body,
+				signal,
+				timing,
+				attempt,
+				beforeFetch,
+				publicCorrelationId,
+			),
+		requestSignal,
+		options ? { ...options, delegateBeforeUpstreamDispatchToDriver: true } : undefined,
+	);
+}
+
+/** Proxy OpenRouter-compatible rerank requests with pre-response provider failover. */
+export async function proxyRerank(
+	repos: GatewayRepositories,
+	routes: RouteResult[],
+	body: Record<string, unknown>,
+	requestSignal?: AbortSignal,
+	options?: FailoverDispatchOptions,
+	publicCorrelationId?: string,
+): Promise<ProxyResult> {
+	return failoverDispatch(
+		repos,
+		routes,
+		'openai',
+		(route, signal, timing, attempt, beforeFetch) =>
+			dispatchOpenAiRerankRoute(
+				route,
+				body,
+				signal,
+				timing,
+				attempt,
+				beforeFetch,
+				publicCorrelationId,
+			),
 		requestSignal,
 		options ? { ...options, delegateBeforeUpstreamDispatchToDriver: true } : undefined,
 	);
@@ -505,7 +558,8 @@ export async function proxyDashScopeRealtime(
 			route,
 			signal,
 			timing?: RequestTimingCollector | null,
-			attempt?: RequestTimingAttempt
+			attempt?: RequestTimingAttempt,
+			beforeFetch?: () => Promise<void>,
 		) =>
 			dispatchDashScopeRealtime(
 				route,
@@ -513,10 +567,15 @@ export async function proxyDashScopeRealtime(
 				signal,
 				timing,
 				attempt,
-				options
+				{
+					...options,
+					beforeUpstreamDispatch: beforeFetch,
+				},
 			),
 		requestSignal,
-		options
+		options == null
+			? undefined
+			: { ...options, delegateBeforeUpstreamDispatchToDriver: true },
 	);
 }
 

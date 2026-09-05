@@ -2,6 +2,7 @@
  * MySQL：推理路径模型/路由查询。
  */
 import { and, desc, eq } from 'drizzle-orm';
+import { MAX_CALLABLE_EMBEDDING_MODEL_QUERY_RESULTS } from '../model-modalities';
 import type { ModelRow, ModelRouteRow } from '../../types';
 import type { ResolvedModelSurfaceRow } from '../../route-topology';
 import type { MySqlDatabaseClient } from '../../storage/database-client';
@@ -70,6 +71,45 @@ export function createMySqlModelRoutingRepository(db: MySqlDatabaseClient): Mode
 				 FROM models m
 				 WHERE EXISTS (SELECT 1 FROM model_routes r WHERE r.model_id = m.id AND r.status = 'active')
 				 ORDER BY m.id`
+			);
+			return rows;
+		},
+
+		async listCallableEmbeddingModelCandidates(): Promise<ModelRow[]> {
+			const [rows] = await pool.query<ModelRow[]>(
+				`SELECT m.id, m.display_name, m.vendor, m.context_window, m.max_tokens, m.pricing_profile,
+					CAST(COALESCE((SELECT JSON_ARRAYAGG(mt.tag ORDER BY mt.tag) FROM model_tags mt WHERE mt.model_id = m.id), JSON_ARRAY()) AS CHAR) AS tags,
+					m.description, m.metadata, m.input_modalities, m.output_modalities, m.released_at, m.created_at
+				 FROM models m
+				 WHERE m.output_modalities LIKE '%"embeddings"%'
+				   AND EXISTS (
+					 SELECT 1
+					 FROM model_routes mr
+					 LEFT JOIN route_pools rp ON rp.id = mr.route_pool_id
+					 WHERE mr.model_id = m.id
+					   AND mr.status = 'active'
+					   AND (rp.status IS NULL OR rp.status <> 'disabled')
+					   AND (
+						 (
+						   EXISTS (SELECT 1 FROM model_surfaces ms_any WHERE ms_any.route_pool_id = mr.route_pool_id)
+						   AND EXISTS (
+							 SELECT 1 FROM model_surfaces ms
+							 WHERE ms.route_pool_id = mr.route_pool_id
+							   AND ms.status <> 'disabled'
+							   AND ms.request_protocol = 'openai'
+							   AND ms.request_operation IN ('embeddings', '*')
+						   )
+						 )
+						 OR (
+						   NOT EXISTS (SELECT 1 FROM model_surfaces ms_any WHERE ms_any.route_pool_id = mr.route_pool_id)
+						   AND mr.upstream_protocol = 'openai'
+						   AND mr.upstream_operation IN ('embeddings', '*')
+						 )
+					   )
+				   )
+				 ORDER BY m.id
+				 LIMIT ?`,
+				[MAX_CALLABLE_EMBEDDING_MODEL_QUERY_RESULTS]
 			);
 			return rows;
 		},

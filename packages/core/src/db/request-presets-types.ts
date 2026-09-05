@@ -34,6 +34,16 @@ export type RequestPresetWithVersionRow = RequestPresetRow & {
 	version_created_at: string;
 };
 
+export type RequestPresetPage = {
+	data: RequestPresetWithVersionRow[];
+	totalCount: number;
+};
+
+export type RequestPresetVersionPage = {
+	data: RequestPresetVersionRow[];
+	totalCount: number;
+};
+
 export type CreateRequestPresetParams = {
 	id: string;
 	versionId: string;

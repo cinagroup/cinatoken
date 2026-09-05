@@ -6,31 +6,24 @@ import type {
 	UpstreamProtocol,
 } from '@octafuse/core';
 import {
+	comparableRoutePriceSortScore,
 	getBusinessTimezone,
-	parseRouteBaseFactors,
-	parseRoutePricingSchedule,
-	resolveDailyScheduleFactor,
-	resolveEffectiveRouteFactor,
+	resolveComparableRoutePrice,
 	routeDataPolicyAllowsZdr,
 	routeDataPolicyDeniesCollection,
+	routeSatisfiesComparableMaxPrice,
+	type ComparableRoutePrice,
 } from '@octafuse/core';
 import { resolveRoutesForSurface, type RouteResult } from './model-router';
 import {
 	prepareProviderRoutingPreferences,
-	type ProviderMaxPrice,
 	type ProviderPreferences,
 } from './provider-routing-preferences';
 import { applyProviderPerformanceRouting } from './provider-performance-routing';
+import { applyDefaultProviderLoadBalancing } from './provider-default-load-balancing';
 import { resolveModelRouting } from './resolve-model-route-group';
 import { resolveRouteStrategyPlan, type RouteStrategyPlan } from './route-strategies';
 import { GatewayErrorCode, type GatewayErrorCodeValue } from './gateway-error-codes';
-
-type ComparableRoutePrice = {
-	prompt: number | null;
-	completion: number | null;
-	request: number | null;
-	image: number | null;
-};
 
 type RequestedOutputCapacityResult =
 	| { ok: true; maxCompletionTokens: number | null }
@@ -105,52 +98,30 @@ function comparableRoutePrice(
 	pricingAt: Date,
 	businessTimezone: string,
 ): ComparableRoutePrice {
-	const pricing = route.endpoint?.pricing;
-	if (!pricing) return { prompt: null, completion: null, request: null, image: null };
-	const discountFactor = 1 - (pricing.discount ?? 0);
-	const unitPrice = (value: string | undefined, multiplier = 1): number | null => {
-		if (value === undefined) return null;
-		const parsed = Number(value);
-		return Number.isFinite(parsed) && parsed >= 0
-			? parsed * multiplier * discountFactor
-			: null;
-	};
-	// Public provider.max_price prompt/completion values are USD per million
-	// tokens, while endpoint catalog prices are normalized USD per token.
-	const prompt = unitPrice(pricing.prompt, 1_000_000);
-	const completion = unitPrice(pricing.completion, 1_000_000);
-	const request = unitPrice(pricing.request);
-	const image = unitPrice(pricing.image);
-	const base = parseRouteBaseFactors(route.priceOverrideRaw).chargedFactor;
-	const schedule = parseRoutePricingSchedule(route.priceOverrideRaw);
-	const scheduleFactor = resolveDailyScheduleFactor(schedule.charged, pricingAt, businessTimezone);
-	const factor = resolveEffectiveRouteFactor(base, scheduleFactor, schedule.mode);
-	return {
-		prompt: prompt == null ? null : prompt * factor,
-		completion: completion == null ? null : completion * factor,
-		request: request == null ? null : request * factor,
-		image: image == null ? null : image * factor,
-	};
+	return resolveComparableRoutePrice({
+		pricing: route.endpoint?.pricing,
+		priceOverrideRaw: route.priceOverrideRaw,
+		pricingAt,
+		businessTimezone,
+	});
 }
 
-function routeSatisfiesMaxPrice(
-	price: ComparableRoutePrice,
-	maxPrice: ProviderMaxPrice | null,
-): boolean {
-	if (!maxPrice) return true;
-	for (const field of ['prompt', 'completion', 'request', 'image'] as const) {
-		const maximum = maxPrice[field];
-		if (maximum === undefined) continue;
-		const actual = price[field];
-		if (actual == null || actual > maximum) return false;
-	}
-	return true;
-}
-
-function priceSortScore(price: ComparableRoutePrice): number {
-	const prompt = price.prompt ?? Number.POSITIVE_INFINITY;
-	const completion = price.completion ?? Number.POSITIVE_INFINITY;
-	return prompt + completion;
+function supportsDefaultProviderLoadBalancing(params: {
+	requestProtocol: UpstreamProtocol;
+	requestOperation: string;
+}): boolean {
+	return (
+		params.requestProtocol === 'openai'
+		&& (
+			params.requestOperation === 'chat'
+			|| params.requestOperation === 'responses'
+			|| params.requestOperation === 'embeddings'
+			|| params.requestOperation === 'rerank'
+		)
+	) || (
+		params.requestProtocol === 'anthropic'
+		&& params.requestOperation === 'messages'
+	);
 }
 
 export type ModelFallbackCandidatePlan = {
@@ -163,6 +134,7 @@ export type ModelFallbackCandidatePlan = {
 	strategy: RouteStrategyPlan;
 	upstreamBody: Record<string, unknown>;
 	hasProviderPreferences: boolean;
+	routingPreferences: ProviderPreferences | null;
 };
 
 export type ModelFallbackPlanResult =
@@ -194,20 +166,34 @@ function attachProviderRoutingTrace(
 	partition: 'model' | 'none',
 	globalEndpointRank: number | null,
 ): RouteResult {
-	if (!preferences) return route;
+	const defaultLoadBalanced = route.gatewayDefaultLoadBalanceRank != null;
+	if (!preferences && !defaultLoadBalanced) return route;
 	return {
 		...route,
 		providerRoutingTrace: {
 			configured_target_ids: configuredTargetIds,
 			eligible_target_ids: eligibleTargetIds,
-			sort: preferences.sort?.by ?? null,
+			sort: preferences?.sort?.by ?? null,
 			partition,
 			global_endpoint_rank: globalEndpointRank,
-			require_parameters: preferences.requireParameters,
-			data_collection: preferences.dataCollection,
-			zdr: preferences.requireZdr,
-			quantizations: preferences.quantizations,
-			max_price: preferences.maxPrice,
+			require_parameters: preferences?.requireParameters ?? false,
+			data_collection: preferences?.dataCollection ?? 'allow',
+			zdr: preferences?.requireZdr ?? false,
+			quantizations: preferences?.quantizations ?? null,
+			max_price: preferences?.maxPrice ?? null,
+			...(preferences?.preferredMinThroughput == null
+				? {}
+				: { preferred_min_throughput: preferences.preferredMinThroughput }),
+			...(preferences?.preferredMaxLatency == null
+				? {}
+				: { preferred_max_latency: preferences.preferredMaxLatency }),
+			service_tier: preferences?.serviceTier ?? null,
+			speed: preferences?.requestedSpeed ?? null,
+			model_variant: preferences?.modelVariant ?? null,
+			...(defaultLoadBalanced ? {
+				default_load_balance: true,
+				provider_recently_degraded: route.gatewayProviderRecentlyDegraded === true,
+			} : {}),
 		},
 	};
 }
@@ -216,7 +202,6 @@ async function buildExecutionCandidates(params: {
 	repos: GatewayRepositories;
 	candidates: ModelFallbackCandidatePlan[];
 	configuredTargetIdsByCandidate: string[][];
-	preferences: ProviderPreferences | null;
 	pricingAt: Date;
 	businessTimezone: string;
 	deferPriceRoutingToSurface: boolean;
@@ -225,7 +210,10 @@ async function buildExecutionCandidates(params: {
 	endpointPartition: 'model' | 'none';
 	globalRoutes: RouteResult[];
 }> {
-	const partition = params.preferences?.sort?.partition ?? 'model';
+	const globalPreference = params.candidates
+		.map((candidate) => candidate.routingPreferences)
+		.find((preferences) => preferences?.sort?.partition === 'none') ?? null;
+	const partition = globalPreference ? 'none' : 'model';
 	if (partition === 'model') {
 		const candidates = params.candidates.map((candidate, index) => {
 			const eligibleTargetIds = candidate.routes.map((route) => route.targetId);
@@ -233,7 +221,7 @@ async function buildExecutionCandidates(params: {
 				...candidate,
 				routes: candidate.routes.map((route) => attachProviderRoutingTrace(
 					route,
-					params.preferences,
+					candidate.routingPreferences,
 					params.configuredTargetIdsByCandidate[index] ?? [],
 					eligibleTargetIds,
 					'model',
@@ -261,9 +249,9 @@ async function buildExecutionCandidates(params: {
 		})),
 	);
 	let orderedEntries = [...entries];
-	if (params.preferences?.sort?.by === 'price' && !params.deferPriceRoutingToSurface) {
+	if (globalPreference?.sort?.by === 'price' && !params.deferPriceRoutingToSurface) {
 		orderedEntries.sort((left, right) =>
-			priceSortScore(left.price) - priceSortScore(right.price)
+			comparableRoutePriceSortScore(left.price) - comparableRoutePriceSortScore(right.price)
 			|| left.candidateIndex - right.candidateIndex
 			|| left.routeIndex - right.routeIndex
 		);
@@ -276,14 +264,18 @@ async function buildExecutionCandidates(params: {
 	let globallyOrderedRoutes = await applyProviderPerformanceRouting(
 		params.repos,
 		orderedEntries.map((entry) => entry.route),
-		params.preferences!,
+		globalPreference!,
 		params.pricingAt,
 	);
+	globallyOrderedRoutes = orderPriorityServiceTierFirst(
+		globallyOrderedRoutes,
+		globalPreference,
+	);
 	if (
-		params.preferences?.sort?.by === 'price'
+		globalPreference?.sort?.by === 'price'
 		&& !params.deferPriceRoutingToSurface
-		&& (params.preferences.preferredMinThroughput != null
-			|| params.preferences.preferredMaxLatency != null)
+		&& (globalPreference.preferredMinThroughput != null
+			|| globalPreference.preferredMaxLatency != null)
 	) {
 		globallyOrderedRoutes = [...globallyOrderedRoutes].sort(
 			(left, right) => right.routePriority - left.routePriority,
@@ -300,7 +292,7 @@ async function buildExecutionCandidates(params: {
 			routePriority: globallyOrderedRoutes.length - index,
 			gatewayGlobalEndpointRank: index + 1,
 		},
-		params.preferences,
+		globalPreference,
 		configuredTargetIds,
 		eligibleTargetIds,
 		'none',
@@ -313,6 +305,21 @@ async function buildExecutionCandidates(params: {
 		),
 	}));
 	return { candidates, endpointPartition: 'none', globalRoutes: rankedRoutes };
+}
+
+function orderPriorityServiceTierFirst(
+	routes: RouteResult[],
+	preferences: ProviderPreferences | null,
+): RouteResult[] {
+	if (preferences?.serviceTier !== 'priority' || preferences.order.length > 0) return routes;
+	const ordered = [
+		...routes.filter((route) => route.gatewayServiceTier === 'priority'),
+		...routes.filter((route) => route.gatewayServiceTier !== 'priority'),
+	];
+	return ordered.map((route, index) => ({
+		...route,
+		routePriority: ordered.length - index,
+	}));
 }
 
 /**
@@ -331,7 +338,16 @@ export async function buildModelFallbackPlan(
 		pricingAt?: Date;
 	},
 ): Promise<ModelFallbackPlanResult> {
-	const preparedProvider = prepareProviderRoutingPreferences(params.body);
+	const serviceTierOperationSupported = (
+		params.requestProtocol === 'openai'
+		&& (params.requestOperation === 'chat' || params.requestOperation === 'responses')
+	) || (
+		params.requestProtocol === 'anthropic'
+		&& params.requestOperation === 'messages'
+	);
+	const preparedProvider = prepareProviderRoutingPreferences(params.body, {
+		allowTextSpeed: serviceTierOperationSupported,
+	});
 	if (!preparedProvider.ok) {
 		return {
 			ok: false,
@@ -374,6 +390,19 @@ export async function buildModelFallbackPlan(
 
 	const resolved = resolvedModels as Array<NonNullable<(typeof resolvedModels)[number]>>;
 	const preferences = preparedProvider.value.preferences;
+	if (
+		(preparedProvider.value.serviceTier !== null
+			|| preparedProvider.value.requestedSpeed !== null
+			|| resolved.some((candidate) => candidate.modelVariant !== null))
+		&& !serviceTierOperationSupported
+	) {
+		return {
+			ok: false,
+			status: 400,
+			code: GatewayErrorCode.invalidRequest,
+			message: 'service_tier, text speed, and :nitro/:floor are supported only for Chat Completions, Responses, and Messages',
+		};
+	}
 	const requiredCompletionTokens = outputCapacity.maxCompletionTokens;
 	if (preferences?.enforceDistillableText) {
 		const deniedIndex = resolved.findIndex((candidate) => !modelAllowsTextDistillation(candidate.model));
@@ -386,7 +415,12 @@ export async function buildModelFallbackPlan(
 			};
 		}
 	}
-	const usesPriceRouting = Boolean(preferences?.maxPrice || preferences?.sort?.by === 'price');
+	const usesPriceRouting = Boolean(
+		preferences?.maxPrice
+		|| preferences?.sort?.by === 'price'
+		|| resolved.some((candidate) => candidate.modelVariant === 'floor'),
+	);
+	const canUseDefaultLoadBalancing = supportsDefaultProviderLoadBalancing(params);
 	const deferPriceRoutingToSurface = params.requestProtocol === 'openai'
 		&& (params.requestOperation === 'images.generations'
 			|| params.requestOperation === 'images.edits');
@@ -395,7 +429,9 @@ export async function buildModelFallbackPlan(
 	const pricingAt = params.pricingAt instanceof Date && Number.isFinite(params.pricingAt.getTime())
 		? params.pricingAt
 		: new Date();
-	const businessTimezone = usesGenericPriceRouting ? await getBusinessTimezone(repos) : 'UTC';
+	const businessTimezone = usesGenericPriceRouting || canUseDefaultLoadBalancing
+		? await getBusinessTimezone(repos)
+		: 'UTC';
 	let surfaces: Awaited<ReturnType<typeof resolveRoutesForSurface>>[];
 	try {
 		surfaces = await Promise.all(
@@ -418,6 +454,10 @@ export async function buildModelFallbackPlan(
 	}
 
 	const eligibleRoutes: RouteResult[][] = [];
+	const routingPreferencesByCandidate: Array<ProviderPreferences | null> = Array.from(
+		{ length: resolved.length },
+		() => null,
+	);
 	const configuredTargetIdsByCandidate: string[][] = [];
 	let firstSkippedCandidateFailure: Extract<ModelFallbackPlanResult, { ok: false }> | null = null;
 	for (let index = 0; index < resolved.length; index += 1) {
@@ -427,6 +467,7 @@ export async function buildModelFallbackPlan(
 			...route,
 			gatewayModelId: candidate.baseModelId,
 			gatewayCandidateIndex: index,
+			gatewaySessionIdControlled: serviceTierOperationSupported || undefined,
 		}));
 		const configuredTargetIds = routes.map((route) => route.targetId);
 		configuredTargetIdsByCandidate.push(configuredTargetIds);
@@ -496,8 +537,15 @@ export async function buildModelFallbackPlan(
 				eligibleRoutes.push([]);
 				continue;
 			}
+			// The verified policy fingerprint includes the configured Provider
+			// account. A private credential changes that trust subject, so do not
+			// inject BYOK until policy evidence can be verified per private key.
+			routes = routes.map((route) => ({
+				...route,
+				gatewayPrivateByokDataPolicyAllowed: false,
+			}));
 		}
-		const providerResult = preparedProvider.value.apply(routes);
+		const providerResult = preparedProvider.value.apply(routes, candidate.modelVariant);
 		if (!providerResult.ok) {
 			const failure: Extract<ModelFallbackPlanResult, { ok: false }> = {
 				ok: false,
@@ -510,20 +558,26 @@ export async function buildModelFallbackPlan(
 			eligibleRoutes.push([]);
 			continue;
 		}
+		const candidatePreferences = providerResult.preferences;
+		routingPreferencesByCandidate[index] = candidatePreferences;
 		let selectedRoutes = providerResult.routes;
-		if (usesGenericPriceRouting) {
+		const candidateUsesPriceRouting = Boolean(
+			candidatePreferences?.maxPrice
+			|| candidatePreferences?.sort?.by === 'price',
+		);
+		if (usesGenericPriceRouting && candidateUsesPriceRouting) {
 			const priced = selectedRoutes.map((route) => ({
 				route,
 				price: comparableRoutePrice(route, pricingAt, businessTimezone),
 			}));
 			selectedRoutes = priced
-				.filter((item) => routeSatisfiesMaxPrice(item.price, preferences?.maxPrice ?? null))
-				.sort((a, b) => preferences?.sort?.by === 'price'
-					? priceSortScore(a.price) - priceSortScore(b.price)
+				.filter((item) => routeSatisfiesComparableMaxPrice(item.price, candidatePreferences?.maxPrice ?? null))
+				.sort((a, b) => candidatePreferences?.sort?.by === 'price'
+					? comparableRoutePriceSortScore(a.price) - comparableRoutePriceSortScore(b.price)
 					: 0)
 				.map((item, priceIndex, all) => ({
 					...item.route,
-					routePriority: preferences?.sort?.by === 'price'
+					routePriority: candidatePreferences?.sort?.by === 'price'
 						? all.length - priceIndex
 						: item.route.routePriority,
 				}));
@@ -540,15 +594,28 @@ export async function buildModelFallbackPlan(
 				continue;
 			}
 		}
-		if (preferences && (preferences.sort?.partition ?? 'model') === 'model') {
+		if (candidatePreferences && (candidatePreferences.sort?.partition ?? 'model') === 'model') {
 			selectedRoutes = await applyProviderPerformanceRouting(
 				repos,
 				selectedRoutes,
-				preferences,
+				candidatePreferences,
 				pricingAt,
 			);
 		}
-		eligibleRoutes.push(selectedRoutes);
+		const shouldUseDefaultLoadBalancing = canUseDefaultLoadBalancing
+			&& candidatePreferences?.sort == null
+			&& (candidatePreferences?.order.length ?? 0) === 0;
+		if (shouldUseDefaultLoadBalancing) {
+			const balanced = applyDefaultProviderLoadBalancing({
+				routes: selectedRoutes,
+				priceScore: (route) => comparableRoutePriceSortScore(
+					comparableRoutePrice(route, pricingAt, businessTimezone),
+				),
+				now: pricingAt.getTime(),
+			});
+			selectedRoutes = balanced.routes;
+		}
+		eligibleRoutes.push(orderPriorityServiceTierFirst(selectedRoutes, candidatePreferences));
 	}
 	if (eligibleRoutes.every((routes) => routes.length === 0)) {
 		return firstSkippedCandidateFailure ?? {
@@ -557,6 +624,21 @@ export async function buildModelFallbackPlan(
 			code: GatewayErrorCode.noRoute,
 			message: 'No configured route satisfies the requested provider preferences',
 		};
+	}
+	if (usesGlobalEndpointPartition) {
+		const globalSorts = new Set(
+			routingPreferencesByCandidate
+				.filter((candidatePreferences, index) => eligibleRoutes[index]?.length)
+				.map((candidatePreferences) => candidatePreferences?.sort?.by ?? null),
+		);
+		if (globalSorts.size > 1) {
+			return {
+				ok: false,
+				status: 400,
+				code: GatewayErrorCode.invalidRequest,
+				message: 'provider.sort.partition="none" cannot combine fallback models with different service-tier variant sorts',
+			};
+		}
 	}
 
 	const strategies = await Promise.all(
@@ -583,13 +665,13 @@ export async function buildModelFallbackPlan(
 			surface: surfaces[index]!.surface,
 			strategy: strategies[index]!,
 			upstreamBody: preparedProvider.value.body,
-			hasProviderPreferences: preparedProvider.value.hasPreferences,
-		}));
+			hasProviderPreferences: preparedProvider.value.hasPreferences || candidate.modelVariant !== null,
+			routingPreferences: routingPreferencesByCandidate[index] ?? null,
+	}));
 	const finalized = await buildExecutionCandidates({
 		repos,
 		candidates,
 		configuredTargetIdsByCandidate,
-		preferences,
 		pricingAt,
 		businessTimezone,
 		deferPriceRoutingToSurface,

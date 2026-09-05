@@ -10,6 +10,7 @@ export type OpenRouterErrorType =
 	| "provider_overloaded"
 	| "provider_unavailable"
 	| "invalid_request"
+	| "conflict"
 	| "invalid_prompt"
 	| "not_found"
 	| "precondition_failed"
@@ -56,6 +57,7 @@ const ERROR_TYPE_BY_GATEWAY_CODE: Record<
 	[GatewayErrorCode.permissionDenied]: "permission_denied",
 	[GatewayErrorCode.authRateLimited]: "rate_limit_exceeded",
 	[GatewayErrorCode.publicCatalogRateLimited]: "rate_limit_exceeded",
+	[GatewayErrorCode.analyticsRateLimited]: "rate_limit_exceeded",
 	[GatewayErrorCode.publicCatalogUnavailable]: "server",
 	[GatewayErrorCode.internalError]: "server",
 	[GatewayErrorCode.routeNotFound]: "not_found",
@@ -63,6 +65,7 @@ const ERROR_TYPE_BY_GATEWAY_CODE: Record<
 	[GatewayErrorCode.noRoute]: "not_found",
 	[GatewayErrorCode.routeResolutionFailed]: "provider_unavailable",
 	[GatewayErrorCode.invalidRequest]: "invalid_request",
+	[GatewayErrorCode.resourceConflict]: "conflict",
 	[GatewayErrorCode.invalidPresetReference]: "invalid_request",
 	[GatewayErrorCode.presetNotFound]: "not_found",
 	[GatewayErrorCode.presetInvalid]: "invalid_request",
@@ -95,6 +98,7 @@ const STATUS_BY_ERROR_TYPE: Record<OpenRouterErrorType, number> = {
 	provider_overloaded: 529,
 	provider_unavailable: 502,
 	invalid_request: 400,
+	conflict: 409,
 	invalid_prompt: 400,
 	not_found: 404,
 	precondition_failed: 412,
@@ -114,6 +118,7 @@ const RESPONSE_CODE_BY_ERROR_TYPE: Record<OpenRouterErrorType, string> = {
 	rate_limit_exceeded: "rate_limit_exceeded",
 	context_length_exceeded: "invalid_prompt",
 	invalid_request: "invalid_prompt",
+	conflict: "server_error",
 	content_policy_violation: "image_content_policy_violation",
 	authentication: "server_error",
 	provider_overloaded: "server_error",
@@ -144,6 +149,7 @@ const ANTHROPIC_TYPE_BY_ERROR_TYPE: Record<OpenRouterErrorType, string> = {
 	context_length_exceeded: "invalid_request_error",
 	content_policy_violation: "invalid_request_error",
 	invalid_request: "invalid_request_error",
+	conflict: "invalid_request_error",
 	invalid_prompt: "invalid_request_error",
 	precondition_failed: "invalid_request_error",
 	payload_too_large: "invalid_request_error",
@@ -422,6 +428,32 @@ export function buildChatMidstreamErrorEvent(params: {
 			metadata: { error_type: "provider_unavailable" },
 		},
 		choices: [{ index: 0, delta: { content: "" }, finish_reason: "error" }],
+})}\n\n`;
+}
+
+/** OpenAI legacy Completions uses the same object shape for every SSE chunk. */
+export function buildCompletionsMidstreamErrorEvent(params: {
+	model: string;
+	provider: string;
+	/** Reuse the request/stream association id. Never mint an unrelated id mid-stream. */
+	id?: string | null;
+	message?: string;
+}): string {
+	const status = openRouterStatusForErrorType("provider_unavailable");
+	return `data: ${JSON.stringify({
+		...(params.id ? { id: params.id } : {}),
+		object: "text_completion",
+		created: Math.floor(Date.now() / 1000),
+		model: params.model,
+		provider: params.provider,
+		error: {
+			code: status,
+			message: sanitizePublicErrorMessage(
+				params.message ?? "Upstream provider stream interrupted"
+			),
+			metadata: { error_type: "provider_unavailable" },
+		},
+		choices: [{ index: 0, text: "", logprobs: null, finish_reason: "error" }],
 	})}\n\n`;
 }
 

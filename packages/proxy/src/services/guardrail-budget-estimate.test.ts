@@ -3,9 +3,14 @@ import { describe, it } from 'node:test';
 import type { ModelRow, VerifiedModelEndpointSnapshot } from '@octafuse/core';
 import {
 	estimateEmbeddingGuardrailBudgetMicros,
+	estimateEmbeddingGatewayKeyByokBudgetMicros,
 	estimateEmbeddingOrdinaryBudgetChargedCost,
+	estimateGatewayKeyByokBudgetMicros,
 	estimateGuardrailBudgetMicros,
 	estimateOrdinaryBudgetChargedCost,
+	estimateRerankGatewayKeyByokBudgetMicros,
+	estimateRerankGuardrailBudgetMicros,
+	estimateRerankOrdinaryBudgetChargedCost,
 } from './guardrail-budget-estimate';
 import type { ModelFallbackCandidatePlan } from './model-fallback-plan';
 import type { RouteResult } from './model-router';
@@ -366,6 +371,29 @@ describe('estimateOrdinaryBudgetChargedCost', () => {
 	});
 });
 
+describe('Gateway Key BYOK budget estimates', () => {
+	it('uses full context and output ceilings at standard/list price', () => {
+		const result = estimateGatewayKeyByokBudgetMicros([candidate({
+			contextWindow: 100,
+			maxTokens: 20,
+			body: { model: 'openai/test-model', messages: [] },
+			pricingProfile: pricing([{ input_price: 2, output_price: 3 }]),
+		})]);
+
+		// Full 100-token context × $2/M plus 20 output × $3/M, with one micro guard.
+		assert.equal(result, 261);
+	});
+
+	it('uses count × full context for embedding list-price admission', () => {
+		const embedding = candidate({
+			contextWindow: 100,
+			pricingProfile: pricing([{ input_price: 2, output_price: 500 }]),
+		});
+		assert.equal(estimateEmbeddingGatewayKeyByokBudgetMicros([embedding], 3), 601);
+		assert.equal(estimateEmbeddingGatewayKeyByokBudgetMicros([embedding], 0), Number.MAX_SAFE_INTEGER);
+	});
+});
+
 describe('embedding budget estimates', () => {
 	it('charges only batch input tokens and multiplies the context ceiling by input count', () => {
 		const embedding = candidate({
@@ -386,6 +414,39 @@ describe('embedding budget estimates', () => {
 		if (!result.ok) assert.equal(result.reason, 'non_finite_cost');
 		assert.equal(
 			estimateEmbeddingGuardrailBudgetMicros([candidate()], 0, null),
+			Number.MAX_SAFE_INTEGER,
+		);
+	});
+});
+
+describe('rerank budget estimates', () => {
+	it('uses document count times context, no generated-token price, and includes request fees', () => {
+		const rerank = candidate({
+			contextWindow: 100,
+			maxTokens: 999,
+			pricingProfile: pricing([{ input_price: 2, output_price: 500 }]),
+		});
+		rerank.routes[0]!.endpoint = {
+			...rerank.routes[0]!.endpoint!,
+			pricing: {
+				...rerank.routes[0]!.endpoint!.pricing!,
+				request: '0.001',
+			},
+		};
+		assert.deepEqual(
+			estimateRerankOrdinaryBudgetChargedCost([rerank], 3, null),
+			{ ok: true, kind: 'bounded', estimatedChargedCost: 0.001601 },
+		);
+		assert.equal(estimateRerankGuardrailBudgetMicros([rerank], 3, null), 1_601);
+		assert.equal(estimateRerankGatewayKeyByokBudgetMicros([rerank], 3), 1_601);
+	});
+
+	it('fails closed for an unsafe document count', () => {
+		const result = estimateRerankOrdinaryBudgetChargedCost([candidate()], 0, null);
+		assert.equal(result.ok, false);
+		if (!result.ok) assert.equal(result.reason, 'non_finite_cost');
+		assert.equal(
+			estimateRerankGatewayKeyByokBudgetMicros([candidate()], 0),
 			Number.MAX_SAFE_INTEGER,
 		);
 	});

@@ -18,6 +18,10 @@ import {
 	parseSharedKeyId,
 } from './shared-key-pool';
 import {
+	expandAttemptsWithPrivateByok,
+	type PrivateByokRequestContext,
+} from './byok-key-pool';
+import {
 	getProviderCircuitRemainingMs,
 	markProviderFailure,
 	markProviderSuccess,
@@ -32,6 +36,7 @@ import {
 import type { RequestTimingAttempt, RequestTimingCollector } from './request-timing';
 import { GatewayErrorCode } from './gateway-error-codes';
 import { gatewayErrorResponse, gatewayNestedErrorResponse } from './gateway-error-response';
+import { RequestBudgetAdmissionError } from './request-budget-admission';
 import { responseTextWithinLimit } from './egress/bounded-response-body';
 import {
 	clearStickyBindingSync,
@@ -39,7 +44,9 @@ import {
 	resolveStickySession,
 	resolveStickyTrace,
 	scheduleStickyBind,
+	scheduleStickyBindAfter,
 	scheduleStickyTouchIfNeeded,
+	scheduleStickyTouchAfter,
 	shouldInvalidateStickyBinding,
 	stickyMutationPromise,
 	type StickySession,
@@ -105,6 +112,8 @@ export type ProxyDispatchMeta = {
 	failoverForbidden?: boolean;
 	/** The response body was generated and sanitized inside the gateway, not supplied by an upstream. */
 	gatewayGeneratedError?: boolean;
+	/** A request-local admission policy denied the attempt before any upstream network dispatch. */
+	admissionDeniedPreDispatch?: boolean;
 };
 
 type UnknownUpstreamOutcomeError = Error & {
@@ -182,6 +191,10 @@ export type FailoverDispatchOptions = {
 	routePoolId?: string | null;
 	/** Pool sticky config from surface join */
 	sticky?: RoutePoolStickyRoutingConfig | null;
+	/** OpenRouter activation gate; omitted preserves the pool's HTTP-success behavior. */
+	stickySuccessPolicy?: 'stream_success' | 'cache_hit' | null;
+	/** Restrict sticky lookup/binding to routes where cache reads are economically beneficial. */
+	stickyRouteEligible?: ((route: RouteResult) => boolean) | null;
 	/** Outer cross-model orchestration will continue after a non-OK result. */
 	deferFinalAttempt?: boolean;
 	/**
@@ -189,7 +202,7 @@ export type FailoverDispatchOptions = {
 	 * first eligible dispatch callback and may fail closed without being
 	 * classified as an upstream fetch failure.
 	 */
-	beforeUpstreamDispatch?: () => Promise<void>;
+	beforeUpstreamDispatch?: (route: RouteResult) => Promise<void>;
 	/**
 	 * Text drivers can prepare URL, credentials and serialized body first, then
 	 * invoke the admission boundary immediately beside fetch(). Other drivers
@@ -204,6 +217,8 @@ export type FailoverDispatchOptions = {
 	 * outcomes still stop the entire chain.
 	 */
 	crossModelCandidateFailover?: boolean;
+	/** Authenticated request scope used to select encrypted private provider keys. */
+	byok?: PrivateByokRequestContext | null;
 };
 
 type DispatchFn = (
@@ -247,13 +262,6 @@ function logProviderSwitchAlert(route: RouteResult, classification: UpstreamFail
 	console.warn(
 		`[Gateway Proxy] provider auth issue, trying next provider providerId=${route.providerId} status=${status ?? 'fetch_error'}`
 	);
-}
-
-function allProvidersBusyDueToCircuitOnly(plan: {
-	attempts: { length: number };
-	skippedByCircuit: number;
-}): boolean {
-	return plan.attempts.length === 0 && plan.skippedByCircuit > 0;
 }
 
 function allProvidersBusyResponse(retryAfterMs: number | null): Response {
@@ -321,43 +329,77 @@ export async function failoverDispatch(
 	const strategy: RouteStrategyName = options?.strategy ?? DEFAULT_ROUTE_STRATEGY;
 	const tierStrategies = options?.tierStrategies ?? null;
 	const stickyConfig = options?.sticky ?? null;
+	const stickyRouteEligible = options?.stickyRouteEligible ?? null;
 	const routePoolId =
 		options?.routePoolId ?? protocolRoutes.find((r) => r.routePoolId)?.routePoolId ?? null;
 
-	const { session: stickySession, stickyRoute } = stickyConfig?.enabled
-		? await resolveStickySession(repos, {
-				routePoolId,
-				affinityKey,
-				config: stickyConfig,
-				candidates: protocolRoutes,
-			})
-		: { session: null, stickyRoute: null };
-
-	if (stickySession) {
-		maybeScheduleStickyStaleGc(repos, stickySession);
-	}
-
 	const circuitEvents: GatewayCircuitAlertEvent[] = [];
+	const nowMs = Date.now();
 	const plan = buildRouteAttemptPlan(
 		protocolRoutes,
 		{ affinityKey, tierKeyPrefix },
 		strategy,
-		Date.now(),
-		tierStrategies
+		nowMs,
+		tierStrategies,
+		// Credential-specific circuits can only be evaluated after shared/BYOK
+		// expansion. Filtering the base provider here would incorrectly suppress
+		// healthy private credentials for the same route target.
+		{ filterCircuit: false },
 	);
 	// 共享渠道 route 展开为「用户共享 key 固定序列 + provider 自有 key 兜底」；
 	// 共享 key 的熔断走复合键（见 circuitKeyForRoute），坏 key 不波及 provider。
-	const expandedAttempts = await expandAttemptsWithSharedKeys(repos, plan.attempts);
-	const attempts = mergeStickyIntoAttempts(expandedAttempts, stickyRoute);
+	const sharedAndPlatformAttempts = await expandAttemptsWithSharedKeys(repos, plan.attempts);
+	const credentialAttempts = await expandAttemptsWithPrivateByok(
+		repos,
+		plan.attempts,
+		sharedAndPlatformAttempts,
+		options?.byok,
+	);
+	let earliestRetryAfterMs: number | null = null;
+	let skippedByCircuit = 0;
+	const availableAttempts = credentialAttempts.filter((route) => {
+		const remaining = getProviderCircuitRemainingMs(circuitKeyForRoute(route), nowMs);
+		if (remaining <= 0) return true;
+		skippedByCircuit += 1;
+		if (earliestRetryAfterMs == null || remaining < earliestRetryAfterMs) {
+			earliestRetryAfterMs = remaining;
+		}
+		return false;
+	});
+	const availableTargetIds = new Set(availableAttempts.map((route) => route.targetId));
+	const stickyCandidates = stickyRouteEligible
+		? protocolRoutes.filter(stickyRouteEligible)
+		: protocolRoutes;
+	const { session: stickySession, stickyRoute } = stickyConfig?.enabled && stickyCandidates.length > 0
+		? await resolveStickySession(repos, {
+				routePoolId,
+				affinityKey,
+				config: stickyConfig,
+				candidates: stickyCandidates,
+				targetAvailable: (route) => availableTargetIds.has(route.targetId),
+				nowMs,
+			})
+		: { session: null, stickyRoute: null };
+	if (stickySession) {
+		maybeScheduleStickyStaleGc(repos, stickySession, nowMs);
+	}
+	const attempts = mergeStickyIntoAttempts(availableAttempts, stickyRoute);
 
 	if (attempts.length === 0) {
+		const noCredentials = credentialAttempts.length === 0;
 		return {
-			response: allProvidersBusyResponse(plan.earliestRetryAfterMs),
+			response: noCredentials
+				? gatewayErrorResponse({
+						status: 502,
+						code: GatewayErrorCode.noRoute,
+						message: 'No usable upstream credentials configured',
+					})
+				: allProvidersBusyResponse(earliestRetryAfterMs),
 			usagePromise: Promise.resolve(EMPTY_USAGE),
 			upstreamRequestId: null,
 			chosenRoute: protocolRoutes[0]!,
 			circuitEvents: [],
-			suppressErrorAlert: allProvidersBusyDueToCircuitOnly(plan),
+			suppressErrorAlert: !noCredentials && skippedByCircuit > 0,
 			stickyTrace: () => resolveStickyTrace(stickySession),
 			stickyMutationPromise: stickyMutationPromise(stickySession),
 		};
@@ -368,6 +410,7 @@ export async function failoverDispatch(
 	let lastDispatchMeta: ProxyDispatchMeta | undefined;
 	let lastTimingAttempt: RequestTimingAttempt | undefined;
 	let stickyAttemptCleared = false;
+	let stickyTargetAttempted = false;
 	let unknownOutcomeObserved = false;
 	let lastDispatchedCandidateIndex: number | null = null;
 	const blockedCandidateIndexes = new Set<number>();
@@ -428,8 +471,6 @@ export async function failoverDispatch(
 		const route = attempts[attemptIndex]!;
 		const candidateIndex = candidateIndexOf(route);
 		if (candidateIndex != null && blockedCandidateIndexes.has(candidateIndex)) continue;
-		const isStickyAttempt =
-			Boolean(stickyRoute) && route.targetId === stickyRoute!.targetId && attemptIndex === 0;
 
 		if (getProviderCircuitRemainingMs(circuitKeyForRoute(route)) > 0) {
 			console.warn(
@@ -437,6 +478,10 @@ export async function failoverDispatch(
 			);
 			continue;
 		}
+		const isStickyAttempt =
+			Boolean(stickyRoute)
+			&& route.targetId === stickyRoute!.targetId
+			&& !stickyTargetAttempted;
 		if (
 			options?.crossModelCandidateFailover === true
 			&& lastDispatchedCandidateIndex != null
@@ -455,18 +500,52 @@ export async function failoverDispatch(
 		);
 		const delegateAdmissionBoundary =
 			options?.delegateBeforeUpstreamDispatchToDriver === true;
-		if (!delegateAdmissionBoundary) {
-			await options?.beforeUpstreamDispatch?.();
+		// The callback owns credential-aware policy. Always invoke it for private
+		// BYOK too: it may no-op, reserve only the Gateway Key limit, or atomically
+		// extend that lease before a later shared/platform fallback.
+		const budgetAdmissionRequired = options?.beforeUpstreamDispatch != null;
+		if (!delegateAdmissionBoundary && budgetAdmissionRequired) {
+			try {
+				await options?.beforeUpstreamDispatch?.(route);
+			} catch (error) {
+				if (!(error instanceof RequestBudgetAdmissionError)) throw error;
+				timing?.markFinalAttempt(timingAttempt);
+				return finish({
+					response: gatewayErrorResponse({
+						status: error.status,
+						code: error.code,
+						message: error.message,
+					}),
+					usagePromise: Promise.resolve(EMPTY_USAGE),
+					upstreamRequestId: null,
+					chosenRoute: route,
+					circuitEvents,
+					suppressErrorAlert: true,
+					meta: {
+						gatewayGeneratedError: true,
+						failoverForbidden: true,
+						admissionDeniedPreDispatch: true,
+					},
+				});
+			}
 		}
 		let admissionBoundaryFailed = false;
-		const beforeFetch = delegateAdmissionBoundary
+		let stickyAttemptDispatched = false;
+		const markStickyAttemptDispatched = (): void => {
+			if (!isStickyAttempt || !stickySession) return;
+			stickyTargetAttempted = true;
+			stickyAttemptDispatched = true;
+			stickySession.attemptedTargetId = route.targetId;
+		};
+		const beforeFetch = delegateAdmissionBoundary && budgetAdmissionRequired
 			? async (): Promise<void> => {
 					try {
-						await options?.beforeUpstreamDispatch?.();
+						await options?.beforeUpstreamDispatch?.(route);
 					} catch (error) {
 						admissionBoundaryFailed = true;
 						throw error;
 					}
+					markStickyAttemptDispatched();
 				}
 			: undefined;
 
@@ -475,6 +554,9 @@ export async function failoverDispatch(
 		let upstreamRequestId: string | null = null;
 		let dispatchMeta: ProxyDispatchMeta | undefined;
 		try {
+			// Delegated drivers mark the attempt at their pre-fetch boundary so a
+			// local preparation/admission failure cannot masquerade as upstream I/O.
+			if (!beforeFetch) markStickyAttemptDispatched();
 			const dispatched = await dispatch(route, requestSignal, timing, timingAttempt, beforeFetch);
 			response = dispatched.response;
 			usagePromise = dispatched.usagePromise;
@@ -483,8 +565,30 @@ export async function failoverDispatch(
 		} catch (err) {
 			// Admission persistence is a local fail-closed error, not an upstream
 			// network failure and must never trigger provider/model failover.
-			if (admissionBoundaryFailed) throw err;
-			timing?.markAttemptError(timingAttempt, err);
+			if (admissionBoundaryFailed) {
+				if (!(err instanceof RequestBudgetAdmissionError)) throw err;
+				timing?.markFinalAttempt(timingAttempt);
+				return finish({
+					response: gatewayErrorResponse({
+						status: err.status,
+						code: err.code,
+						message: err.message,
+					}),
+					usagePromise: Promise.resolve(EMPTY_USAGE),
+					upstreamRequestId: null,
+					chosenRoute: route,
+					circuitEvents,
+					suppressErrorAlert: true,
+					meta: {
+						gatewayGeneratedError: true,
+						failoverForbidden: true,
+						admissionDeniedPreDispatch: true,
+					},
+				});
+			}
+			timing?.markAttemptError(timingAttempt, err, {
+				clientCancelled: requestSignal?.aborted === true,
+			});
 			const errMessage = err instanceof Error ? err.message : String(err);
 			console.warn(
 				`[Gateway Proxy] fetch failed providerId=${route.providerId} error=${errMessage}`
@@ -492,7 +596,7 @@ export async function failoverDispatch(
 			const fetchClassification = classifyUpstreamFetchFailure();
 			if (
 				stickySession &&
-				isStickyAttempt &&
+				stickyAttemptDispatched &&
 				shouldInvalidateStickyBinding(fetchClassification)
 			) {
 				await clearStickyBindingSync(repos, stickySession);
@@ -552,17 +656,53 @@ export async function failoverDispatch(
 			timing?.markFinalAttempt(timingAttempt);
 			markProviderSuccess(circuitKeyForRoute(route));
 			if (stickySession) {
-				if (isStickyAttempt && stickySession.bindingToken) {
-					scheduleStickyTouchIfNeeded(repos, stickySession);
-				} else if (stickySession.lookup !== 'invalid_circuit') {
+				const stickySuccessPolicy = options?.stickySuccessPolicy ?? null;
+				const routeEligible = stickyRouteEligible?.(route) ?? true;
+				const completedSuccess = stickySuccessPolicy == null
+					? null
+					: usagePromise.then(
+							(usage) =>
+								usage.cancelled !== true
+								&& !usage.stream_error,
+							() => false,
+						);
+				const bindReady = stickySuccessPolicy === 'cache_hit'
+					? usagePromise.then(
+							(usage) =>
+								usage.cancelled !== true
+								&& !usage.stream_error
+								&& Number.isSafeInteger(usage.cache_read_tokens)
+								&& usage.cache_read_tokens > 0,
+							() => false,
+						)
+					: completedSuccess;
+				if (stickyAttemptDispatched && stickySession.bindingToken) {
+					if (completedSuccess) {
+						scheduleStickyTouchAfter(repos, stickySession, completedSuccess);
+					} else {
+						scheduleStickyTouchIfNeeded(repos, stickySession);
+					}
+				} else if (
+					stickySession.lookup !== 'invalid_circuit'
+					&& !(stickySession.lookup === 'hit' && stickySession.attemptedTargetId == null)
+					&& routeEligible
+				) {
+					// A primary BYOK route can legitimately succeed before a sticky
+					// target in the later shared/platform section. Preserve the valid
+					// binding when it was never actually attempted by this request.
 					// invalid_circuit: keep the existing binding until the provider cools down;
 					// tryBind would lose to CAS on a still-fresh row.
-					scheduleStickyBind(repos, stickySession, route, {
+					const bindOptions = {
 						rebound:
 							stickyAttemptCleared ||
 							stickySession.lookup === 'hit' ||
 							stickySession.lookup === 'invalid_target',
-					});
+					};
+					if (bindReady) {
+						scheduleStickyBindAfter(repos, stickySession, route, bindReady, bindOptions);
+					} else {
+						scheduleStickyBind(repos, stickySession, route, bindOptions);
+					}
 				}
 			}
 			const successfulMeta = unknownOutcomeObserved
@@ -616,7 +756,7 @@ export async function failoverDispatch(
 
 		if (
 			stickySession &&
-			isStickyAttempt &&
+			stickyAttemptDispatched &&
 			shouldInvalidateStickyBinding(classification, {
 				imageAbort: shouldFailImmediatelyForImageAbort(dispatchMeta),
 			})

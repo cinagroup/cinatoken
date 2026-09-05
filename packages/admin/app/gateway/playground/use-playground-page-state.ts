@@ -5,7 +5,10 @@ import { useSearchParams } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { flushSync } from 'react-dom';
 import { isAudioRouteModel, validateAudioTranscriptionFile } from '@/lib/audio-transcriptions';
-import { isAudioTranscriptionModel } from '@octafuse/core/db/model-modalities';
+import {
+	isAudioTranscriptionModel,
+	isRerankModel,
+} from '@octafuse/core/db/model-modalities';
 import {
 	IMAGE_EDITS_BODY_TEMPLATE,
 	IMAGE_GENERATIONS_BODY_TEMPLATE,
@@ -34,7 +37,7 @@ import {
 import { readApiJson } from '@/lib/api-json';
 import type { AdminModelRow } from '@/lib/services/admin/types';
 import type { ApiResponse, GatewayProvider } from '@/lib/types';
-import { DEFAULT_KIND_FILTER, type ModelKindFilter } from '../models/types';
+import { DEFAULT_KIND_FILTER } from '../models/types';
 import {
 	BODY_TEMPLATES,
 	decodeWireRequestBodyHeader,
@@ -48,7 +51,15 @@ import {
 	templateForRoute,
 	type PlaygroundLlmSampleId,
 } from './playground-utils';
-import type { FilterOption, GeminiAction, PlaygroundMode, ResponseMeta, ResponseTab, RouteListRow } from './types';
+import type {
+	FilterOption,
+	GeminiAction,
+	PlaygroundMode,
+	PlaygroundModelKind,
+	ResponseMeta,
+	ResponseTab,
+	RouteListRow,
+} from './types';
 
 function isAbortError(error: unknown): boolean {
 	return (
@@ -74,7 +85,7 @@ export function usePlaygroundPageState() {
 	const [loadingRoutes, setLoadingRoutes] = useState(true);
 	const [loadError, setLoadError] = useState<string | null>(null);
 
-	const [filterKind, setFilterKind] = useState<ModelKindFilter>(DEFAULT_KIND_FILTER);
+	const [filterKind, setFilterKind] = useState<PlaygroundModelKind>(DEFAULT_KIND_FILTER);
 	const [filterModel, setFilterModel] = useState('');
 	const [filterProvider, setFilterProvider] = useState('');
 	const [routeSearch, setRouteSearch] = useState('');
@@ -125,6 +136,10 @@ export function usePlaygroundPageState() {
 		const m = modelsById.get(selected.model_id);
 		return m ? isAudioRouteModel(m) : false;
 	}, [selected, modelsById]);
+	const selectedIsRerank = useMemo(() => {
+		if (!selected) return false;
+		return isRerankModel(modelsById.get(selected.model_id) ?? {});
+	}, [selected, modelsById]);
 	const selectedIsAudioTranscription = useMemo(
 		() => (selected ? isAudioTranscriptionModel(modelsById.get(selected.model_id) ?? {}) : false),
 		[selected, modelsById],
@@ -143,6 +158,7 @@ export function usePlaygroundPageState() {
 	const selectedAudioUpstreamProtocol = (selected?.upstream_protocol ?? 'openai').trim().toLowerCase();
 	const audioSendBlocked =
 		selectedIsAudio && selectedAudioUpstreamProtocol !== 'openai' && selectedAudioUpstreamProtocol !== 'dashscope';
+	const rerankSendBlocked = selectedIsRerank && selectedAudioUpstreamProtocol !== 'openai';
 	const selectedAudioUsesDashScope = selectedIsAudio && selectedAudioUpstreamProtocol === 'dashscope';
 	const selectedUsesDashScopeRealtime = selectedDashScopeRealtimeOperation != null;
 	const selectedCanUseMicrophone =
@@ -163,9 +179,18 @@ export function usePlaygroundPageState() {
 			isImageModel: selectedIsImage && !selectedIsAudio,
 			imageOperation: selectedIsImage && !selectedIsAudio ? imageOperation : undefined,
 			isAudioModel: selectedIsAudio,
+			isRerankModel: selectedIsRerank,
 			geminiAction,
 		});
-	}, [selected, providersById, selectedIsImage, selectedIsAudio, imageOperation, geminiAction]);
+	}, [
+		selected,
+		providersById,
+		selectedIsImage,
+		selectedIsAudio,
+		selectedIsRerank,
+		imageOperation,
+		geminiAction,
+	]);
 
 	const requestTargetUrl = responseMeta?.upstreamUrl ?? previewUpstreamUrl;
 
@@ -178,7 +203,7 @@ export function usePlaygroundPageState() {
 	}, [responseText, responseProtocol, responseMeta?.contentType]);
 
 	const observationTags = useMemo(() => {
-		if (selectedIsImage || selectedIsAudio) return [];
+		if (selectedIsImage || selectedIsAudio || selectedIsRerank) return [];
 		return observePlaygroundResponse({
 			raw: responseText,
 			protocol: responseProtocol,
@@ -188,6 +213,7 @@ export function usePlaygroundPageState() {
 	}, [
 		selectedIsImage,
 		selectedIsAudio,
+		selectedIsRerank,
 		responseText,
 		responseProtocol,
 		responseMeta?.contentType,
@@ -212,7 +238,7 @@ export function usePlaygroundPageState() {
 	}, [mergedAssistantParts, responseText, sending, t]);
 
 	const kindCounts = useMemo(() => {
-		const counts = { llm: 0, image: 0, audio: 0 };
+		const counts = { llm: 0, image: 0, audio: 0, rerank: 0 };
 		const seen = new Set<string>();
 		for (const r of routes) {
 			if (seen.has(r.model_id)) continue;
@@ -278,7 +304,7 @@ export function usePlaygroundPageState() {
 	}, [filterProvider, providerOptions]);
 
 	const onFilterKindChange = useCallback(
-		(next: ModelKindFilter) => {
+		(next: PlaygroundModelKind) => {
 			if (next === filterKind) return;
 			setFilterKind(next);
 			setFilterModel('');
@@ -452,6 +478,8 @@ export function usePlaygroundPageState() {
 			? t('imageOpenaiOnly')
 			: audioSendBlocked
 				? t('audioOpenaiOnly')
+				: rerankSendBlocked
+					? t('rerankOpenaiOnly')
 				: selectedNeedsAudioFile && !validateAudioTranscriptionFile(audioFile).ok
 					? t('audioFileRequired')
 					: selectedIsImage &&
@@ -474,6 +502,10 @@ export function usePlaygroundPageState() {
 		}
 		if (audioSendBlocked) {
 			setBodyError(t('audioOpenaiOnly'));
+			return;
+		}
+		if (rerankSendBlocked) {
+			setBodyError(t('rerankOpenaiOnly'));
 			return;
 		}
 		let bodyObj: Record<string, unknown>;
@@ -823,6 +855,7 @@ export function usePlaygroundPageState() {
 		requestTargetUrl,
 		selectedIsImage,
 		selectedIsAudio,
+		selectedIsRerank,
 		selectedIsAudioTranscription,
 		imageSendBlocked,
 		audioSendBlocked,

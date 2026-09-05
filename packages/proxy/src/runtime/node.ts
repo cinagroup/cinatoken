@@ -4,6 +4,7 @@ import {
 	createEncryptedProvidersRepository,
 	createEnvironmentProviderKeysRepository,
 	createEncryptedSharedKeysRepository,
+	createEncryptedByokKeysRepository,
 	DEEPSEEK_OFFICIAL_ENVIRONMENT_SECRET_POLICY,
 	assertSharedKeyEncryptionSecret,
 	resolveNodeDatabaseConfig,
@@ -41,6 +42,7 @@ async function resolveNodeStorage(): Promise<StorageContext> {
 		repositories: {
 			...storage.repositories,
 			sharedKeys: createEncryptedSharedKeysRepository(storage.repositories.sharedKeys, secret),
+			byokKeys: createEncryptedByokKeysRepository(storage.repositories.byokKeys, secret),
 			providers: createEnvironmentProviderKeysRepository(
 				createEncryptedProvidersRepository(storage.repositories.providers, secret),
 				{
@@ -55,6 +57,7 @@ async function resolveNodeStorage(): Promise<StorageContext> {
 export function createNodeApp() {
 	return createProxyApp(async () => resolveNodeStorage(), {
 		requestBodyLogging: process.env.REQUEST_BODY_LOGGING,
+		organizationAdminRoles: process.env.CINAAUTH_ORGANIZATION_ADMIN_ROLES,
 		publicStatsRuntime: createInMemoryPublicStatsRuntimeGuard(),
 	});
 }

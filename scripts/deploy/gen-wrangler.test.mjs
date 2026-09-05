@@ -17,6 +17,11 @@ test("generated Wrangler configs preserve HTTPS values and Workers Routes", () =
 	delete env.ADMIN_CUSTOM_DOMAIN;
 	delete env.CHAIN_JOB_QUEUE_NAME;
 	delete env.CHAIN_JOB_DLQ_NAME;
+	delete env.BATCH_INFRA_ENABLED;
+	delete env.BATCH_API_ENABLED;
+	delete env.BATCH_BUCKET_NAME;
+	delete env.BATCH_QUEUE_NAME;
+	delete env.BATCH_DLQ_NAME;
 	const result = spawnSync(process.execPath, ["scripts/deploy/gen-wrangler.mjs"], {
 		cwd: root,
 		env,
@@ -44,12 +49,83 @@ test("generated Wrangler configs preserve HTTPS values and Workers Routes", () =
 	assert.deepEqual(proxy.routes, [
 		{ pattern: "api.cinatoken.com/*", zone_name: "cinatoken.com" },
 	]);
+	assert.deepEqual(proxy.triggers, { crons: ["17 * * * *"] });
+	assert.equal(proxy.vars.PROVIDER_ATTEMPT_RETENTION_DAYS, "7");
+	assert.equal(proxy.vars.PROVIDER_ATTEMPT_RETENTION_BATCH_SIZE, "5000");
+	assert.equal(proxy.vars.PROVIDER_ATTEMPT_RETENTION_MAX_BATCHES, "10");
+	assert.equal(proxy.vars.BATCH_API_ENABLED, "false");
+	assert.equal(proxy.r2_buckets, undefined);
+	assert.equal(proxy.queues, undefined);
 	assert.equal(admin.queues.producers[0].queue, "cinatoken-chain-jobs");
 	assert.equal(chain.queues.consumers[0].queue, "cinatoken-chain-jobs");
 	assert.equal(chain.queues.consumers[0].dead_letter_queue, "cinatoken-chain-jobs-dlq");
 	assert.equal(chain.queues.consumers[0].max_concurrency, 1);
 	assert.equal(proxy.hyperdrive, undefined);
 	assert.equal(proxy.vars?.DATABASE_DRIVER, undefined);
+});
+
+test("Batch infrastructure is explicit, private, renamed, and API-disabled", (t) => {
+	const env = {
+		...process.env,
+		BATCH_INFRA_ENABLED: "true",
+		BATCH_BUCKET_NAME: "tenant-private-batches",
+		BATCH_QUEUE_NAME: "tenant-batch-jobs",
+		BATCH_DLQ_NAME: "tenant-batch-jobs-dlq",
+	};
+	delete env.D1_DATABASE_ID;
+	delete env.BATCH_API_ENABLED;
+	t.after(() => {
+		const restoreEnv = { ...process.env };
+		delete restoreEnv.D1_DATABASE_ID;
+		delete restoreEnv.BATCH_INFRA_ENABLED;
+		delete restoreEnv.BATCH_API_ENABLED;
+		delete restoreEnv.BATCH_BUCKET_NAME;
+		delete restoreEnv.BATCH_QUEUE_NAME;
+		delete restoreEnv.BATCH_DLQ_NAME;
+		spawnSync(process.execPath, ["scripts/deploy/gen-wrangler.mjs"], {
+			cwd: root,
+			env: restoreEnv,
+			encoding: "utf8",
+		});
+	});
+	const result = spawnSync(process.execPath, ["scripts/deploy/gen-wrangler.mjs"], {
+		cwd: root,
+		env,
+		encoding: "utf8",
+	});
+	assert.equal(result.status, 0, result.stderr);
+	const proxy = JSON.parse(readFileSync(join(root, "packages/proxy/wrangler.jsonc"), "utf8"));
+	assert.deepEqual(proxy.r2_buckets, [
+		{ binding: "BATCH_BUCKET", bucket_name: "tenant-private-batches" },
+	]);
+	assert.deepEqual(proxy.queues.producers, [
+		{ binding: "BATCH_QUEUE", queue: "tenant-batch-jobs" },
+	]);
+	assert.equal(proxy.queues.consumers[0].queue, "tenant-batch-jobs");
+	assert.equal(proxy.queues.consumers[0].dead_letter_queue, "tenant-batch-jobs-dlq");
+	assert.equal(proxy.queues.consumers[0].max_batch_size, 1);
+	assert.equal(proxy.queues.consumers[0].max_concurrency, 5);
+	assert.equal(proxy.queues.consumers[1].queue, "tenant-batch-jobs-dlq");
+	assert.equal(proxy.queues.consumers[1].max_retries, 0);
+	assert.equal(proxy.queues.consumers[1].max_concurrency, 1);
+	assert.equal(proxy.vars.BATCH_QUEUE_DLQ, "tenant-batch-jobs-dlq");
+	assert.equal(proxy.vars.BATCH_API_ENABLED, "false");
+});
+
+test("Phase 2 generation rejects public Batch API activation and malformed flags", () => {
+	for (const overrides of [
+		{ BATCH_API_ENABLED: "true", BATCH_INFRA_ENABLED: "true" },
+		{ BATCH_INFRA_ENABLED: "yes" },
+	]) {
+		const env = { ...process.env, ...overrides };
+		delete env.D1_DATABASE_ID;
+		const result = spawnSync(process.execPath, ["scripts/deploy/gen-wrangler.mjs"], {
+			cwd: root,
+			env,
+			encoding: "utf8",
+		});
+		assert.notEqual(result.status, 0);
+	}
 });
 
 test("admin service binding follows a custom proxy Worker name", (t) => {
@@ -76,6 +152,40 @@ test("admin service binding follows a custom proxy Worker name", (t) => {
 		admin.services.find((service) => service.binding === "CINATOKEN_PROXY_SERVICE")?.service,
 		"tenant-proxy",
 	);
+});
+
+test("CinaAuth organization admin roles reach both HTTP Workers", (t) => {
+	const env = {
+		...process.env,
+		CINAAUTH_ORGANIZATION_ADMIN_ROLES: "owner,workspace-admin",
+	};
+	delete env.D1_DATABASE_ID;
+	t.after(() => {
+		const restoreEnv = { ...process.env };
+		delete restoreEnv.D1_DATABASE_ID;
+		delete restoreEnv.CINAAUTH_ORGANIZATION_ADMIN_ROLES;
+		spawnSync(process.execPath, ["scripts/deploy/gen-wrangler.mjs"], {
+			cwd: root,
+			env: restoreEnv,
+			encoding: "utf8",
+		});
+	});
+	const result = spawnSync(process.execPath, ["scripts/deploy/gen-wrangler.mjs"], {
+		cwd: root,
+		env,
+		encoding: "utf8",
+	});
+	assert.equal(result.status, 0, result.stderr);
+	for (const relativePath of [
+		"packages/proxy/wrangler.jsonc",
+		"packages/admin/wrangler.jsonc",
+	]) {
+		const config = JSON.parse(readFileSync(join(root, relativePath), "utf8"));
+		assert.equal(
+			config.vars.CINAAUTH_ORGANIZATION_ADMIN_ROLES,
+			"owner,workspace-admin",
+		);
+	}
 });
 
 test("generated Worker configs stage one shared Hyperdrive binding and explicit Postgres selection", (t) => {

@@ -16,6 +16,7 @@ import { buildInsertApiKeyStatement } from './api-keys.impl';
 import type { InsertKeyParams } from '../api-keys-types';
 import { buildInsertRequestLogStatement } from './request-logs.impl';
 import type { InsertRequestLogParams } from '../request-logs-types';
+import { assertProviderAttemptAvailabilityFacts } from '../provider-attempt-availability';
 import { guardrailBudgetUnits, type GuardrailBudgetSettlement } from '../guardrail-budget-types';
 import {
 	isSafeUserBudgetMicros,
@@ -428,6 +429,7 @@ async function insertRequestUsageAndChargeTxD1Attempt(
 	params: InsertRequestUsageAndChargeD1Params,
 	allowLateActualExpiryRetry: boolean,
 ): Promise<void> {
+	assertProviderAttemptAvailabilityFacts(params.requestLog.providerAttempts);
 	if (params.guardrailBudgetSettlement?.requestId !== undefined
 		&& params.guardrailBudgetSettlement.requestId !== params.requestLog.id) {
 		throw new Error('Guardrail budget settlement requestId must match request log id');
@@ -455,7 +457,8 @@ async function insertRequestUsageAndChargeTxD1Attempt(
 		throw new Error('Ordinary-user budget settlement mode and reason are required');
 	}
 	if (params.guardrailBudgetSettlement) {
-		const reservation = await client.raw.prepare(`SELECT 1 AS present
+		const reservations = (await client.raw.prepare(`SELECT reservation.assignment_id,
+			reservation.scope_type, reservation.scope_id, reservation.settlement_basis
 			FROM guardrail_budget_reservations AS reservation
 			JOIN guardrail_budget_windows AS window
 				ON window.workspace_id = reservation.workspace_id
@@ -469,11 +472,29 @@ async function insertRequestUsageAndChargeTxD1Attempt(
 					WHERE api_key.id = ? AND api_key.workspace_id = reservation.workspace_id
 				)
 				AND reservation.state IN ('reserved', 'dispatched', 'settled', 'expired', 'released')
-			LIMIT 1`)
+			ORDER BY reservation.assignment_id`)
 			.bind(params.guardrailBudgetSettlement.requestId, params.requestLog.apiKeyId)
-			.first<{ present: number }>();
-		if (!reservation) {
+			.all<{
+				assignment_id: string;
+				scope_type: string;
+				scope_id: string;
+				settlement_basis: string;
+			}>()).results ?? [];
+		if (reservations.length === 0) {
 			throw new Error('Guardrail budget settlement has no matching reservation window');
+		}
+		if (reservations.some((reservation) =>
+			reservation.settlement_basis === 'gateway_key_route'
+			&& (
+				reservation.scope_type !== 'api_key'
+				|| reservation.scope_id !== params.requestLog.apiKeyId
+				|| reservation.assignment_id !== `gateway-key-limit:${params.requestLog.apiKeyId}`
+			))) {
+			throw new Error('Route-selective settlement is not the authenticated Gateway key limit');
+		}
+		if (params.requestLog.isByok === true
+			&& reservations.some((reservation) => reservation.settlement_basis !== 'gateway_key_route')) {
+			throw new Error('Private BYOK cannot settle non-key budget reservations');
 		}
 	}
 	const charged = roundGatewayMoney(params.chargedCost);
@@ -482,6 +503,13 @@ async function insertRequestUsageAndChargeTxD1Attempt(
 		throw new Error('Charged cost exceeds the safe ordinary-user micro-unit range');
 	}
 	const budgetChargedMicros = params.shouldChargeBudget ? guardrailBudgetUnits(charged) : 0;
+	const standard = roundGatewayMoney(params.requestLog.standardCost);
+	if (!Number.isFinite(standard) || standard < 0
+		|| standard > userBudgetAmount(USER_BUDGET_MAX_SAFE_MICROS)) {
+		throw new Error('Standard cost exceeds the safe Guardrail budget micro-unit range');
+	}
+	const byokStandardMicros = guardrailBudgetUnits(standard);
+	const isByokRequest = params.requestLog.isByok === true ? 1 : 0;
 	const ordinaryActualMicros = params.shouldChargeBudget ? userBudgetUnits(charged) : 0;
 	let ordinarySettlementMicros: number | null = null;
 	let ordinaryReservation: UserBudgetReservationRow | null = null;
@@ -559,13 +587,14 @@ async function insertRequestUsageAndChargeTxD1Attempt(
 			.prepare(
 				`INSERT INTO public_model_daily_stats (
 					stat_date, model_id, shard, request_count, success_count, error_count,
-					output_tokens, latency_total_ms, latency_sample_count, updated_at
-				) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+					output_tokens, total_tokens, latency_total_ms, latency_sample_count, updated_at
+				) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
 				ON CONFLICT(stat_date, model_id, shard) DO UPDATE SET
 					request_count = request_count + excluded.request_count,
 					success_count = success_count + excluded.success_count,
 					error_count = error_count + excluded.error_count,
 					output_tokens = output_tokens + excluded.output_tokens,
+					total_tokens = total_tokens + excluded.total_tokens,
 					latency_total_ms = latency_total_ms + excluded.latency_total_ms,
 					latency_sample_count = latency_sample_count + excluded.latency_sample_count,
 					updated_at = excluded.updated_at`
@@ -573,9 +602,26 @@ async function insertRequestUsageAndChargeTxD1Attempt(
 			.bind(
 				delta.statDate, delta.modelId, delta.shard, delta.requestCount,
 				delta.successCount, delta.errorCount, delta.outputTokens,
+				delta.totalTokens,
 				delta.latencyTotalMs, delta.latencySampleCount, now
 			),
 	];
+	for (const attempt of params.requestLog.providerAttempts ?? []) {
+		statements.push(client.raw.prepare(`INSERT INTO provider_attempt_availability (
+			request_log_id, attempt_index, route_target_id, provider_id,
+			outcome, reason, http_status, observed_at
+		) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`)
+			.bind(
+				params.requestLog.id,
+				attempt.attemptIndex,
+				attempt.routeTargetId,
+				attempt.providerId,
+				attempt.outcome,
+				attempt.reason,
+				attempt.httpStatus,
+				attempt.observedAtIso,
+			));
+	}
 	if (params.userBudgetSettlement && ordinaryReservation && ordinarySettlementMicros !== null) {
 		const settlement = params.userBudgetSettlement;
 		if (ordinaryReservation.state === 'reserved' || ordinaryReservation.state === 'dispatched') {
@@ -651,6 +697,10 @@ async function insertRequestUsageAndChargeTxD1Attempt(
 					WHERE request_id = ? AND state IN ('reserved', 'dispatched')`)
 				.bind(now, settlement.reason.slice(0, 128), now, settlement.requestId));
 		} else {
+			const actualSql = `CASE
+				WHEN reservation.settlement_basis = 'gateway_key_route' AND ? = 1 THEN ?
+				ELSE ?
+			END`;
 			// An expiry may conservatively settle the ceiling before late usage
 			// arrives. If actual usage exceeds that ceiling, atomically add only
 			// the overrun delta while preserving the expired terminal state.
@@ -658,8 +708,8 @@ async function insertRequestUsageAndChargeTxD1Attempt(
 				client.raw.prepare(`UPDATE guardrail_budget_windows AS window
 					SET settled_micros = settled_micros + COALESCE((
 						SELECT SUM(CASE
-							WHEN ? > reservation.settled_micros
-							THEN ? - reservation.settled_micros
+							WHEN ${actualSql} > reservation.settled_micros
+							THEN ${actualSql} - reservation.settled_micros
 							ELSE 0
 						END)
 						FROM guardrail_budget_reservations AS reservation
@@ -675,7 +725,7 @@ async function insertRequestUsageAndChargeTxD1Attempt(
 						SELECT 1 FROM guardrail_budget_reservations AS reservation
 						WHERE reservation.request_id = ?
 							AND reservation.state = 'expired'
-							AND ? > reservation.settled_micros
+							AND ${actualSql} > reservation.settled_micros
 							AND reservation.workspace_id = window.workspace_id
 							AND reservation.scope_type = window.scope_type
 							AND reservation.scope_id = window.scope_id
@@ -683,18 +733,35 @@ async function insertRequestUsageAndChargeTxD1Attempt(
 							AND reservation.period_start = window.period_start
 					)`)
 					.bind(
-						budgetChargedMicros, budgetChargedMicros, settlement.requestId, now,
-						settlement.requestId, budgetChargedMicros,
+						isByokRequest, byokStandardMicros, budgetChargedMicros,
+						isByokRequest, byokStandardMicros, budgetChargedMicros,
+						settlement.requestId, now, settlement.requestId,
+						isByokRequest, byokStandardMicros, budgetChargedMicros,
 					),
 				client.raw.prepare(`UPDATE guardrail_budget_reservations
-					SET settled_micros = ?, terminal_reason = 'late_actual_overrun', updated_at = ?
-					WHERE request_id = ? AND state = 'expired' AND settled_micros < ?`)
-					.bind(budgetChargedMicros, now, settlement.requestId, budgetChargedMicros),
+					SET settled_micros = CASE
+						WHEN settlement_basis = 'gateway_key_route' AND ? = 1 THEN ?
+						ELSE ?
+					END, terminal_reason = 'late_actual_overrun', updated_at = ?
+					WHERE request_id = ? AND state = 'expired' AND settled_micros < CASE
+						WHEN settlement_basis = 'gateway_key_route' AND ? = 1 THEN ?
+						ELSE ?
+					END`)
+					.bind(
+						isByokRequest, byokStandardMicros, budgetChargedMicros, now, settlement.requestId,
+						isByokRequest, byokStandardMicros, budgetChargedMicros,
+					),
 				client.raw.prepare(`UPDATE guardrail_budget_reservations
-					SET state = 'settled', settled_micros = ?,
+					SET state = 'settled', settled_micros = CASE
+						WHEN settlement_basis = 'gateway_key_route' AND ? = 1 THEN ?
+						ELSE ?
+					END,
 						terminal_at = ?, terminal_reason = ?, updated_at = ?
 					WHERE request_id = ? AND state IN ('reserved', 'dispatched')`)
-					.bind(budgetChargedMicros, now, settlement.reason.slice(0, 128), now, settlement.requestId),
+					.bind(
+						isByokRequest, byokStandardMicros, budgetChargedMicros,
+						now, settlement.reason.slice(0, 128), now, settlement.requestId,
+					),
 			);
 		}
 	}

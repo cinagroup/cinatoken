@@ -466,6 +466,53 @@ describe("model endpoint admin service", () => {
 		);
 	});
 
+	it("requires voice-cloning evidence to agree with speech reference formats", async () => {
+		const withReferenceEvidence = {
+			...speechAudioCapabilities(),
+			speech_by_operation: {
+				"audio.speech": {
+					supports_default_voice: false,
+					reference_audio_media_types: ["audio/wav"],
+					reference_audio_default_media_type: "audio/wav",
+				},
+			},
+		};
+		await assert.rejects(
+			createModelEndpointService(
+				repositories().repos,
+				{
+					...validMutation(),
+					supports_voice_cloning: false,
+					audio_capabilities: withReferenceEvidence,
+				},
+				"admin-1",
+				NOW
+			),
+			/reference-audio evidence requires supports_voice_cloning=true/
+		);
+
+		const state = repositories();
+		await createModelEndpointService(
+			state.repos,
+			{
+				...validMutation(),
+				supports_voice_cloning: true,
+				audio_capabilities: withReferenceEvidence,
+			},
+			"admin-1",
+			NOW
+		);
+		assert.deepEqual(
+			JSON.parse(state.getInserted()?.audioCapabilities ?? "{}")
+				.speech_by_operation["audio.speech"],
+			{
+				supports_default_voice: false,
+				reference_audio_media_types: ["audio/wav"],
+				reference_audio_default_media_type: "audio/wav",
+			}
+		);
+	});
+
 	it("uses the runtime parameter limit and provider-qualified tag rule", async () => {
 		const parameters = Array.from(
 			{ length: MODEL_ENDPOINT_SUPPORTED_PARAMETERS_LIMIT },

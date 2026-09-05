@@ -7,6 +7,7 @@ import { useTranslations } from 'next-intl';
 import LocaleSwitcher from '@/components/layout/LocaleSwitcher';
 import HomeThemeSwitcher from '@/components/home/HomeThemeSwitcher';
 import { CINATOKEN_GITHUB_DOCS_INDEX } from '@/lib/brand';
+import CinaAuthAccessLink from '@/components/auth/CinaAuthAccessLink';
 
 export default function PublicHeader() {
 	const pathname = usePathname();
@@ -61,18 +62,21 @@ export default function PublicHeader() {
 				<div className="ml-auto flex items-center gap-1.5 sm:gap-2.5">
 					<HomeThemeSwitcher />
 					<LocaleSwitcher variant="public" />
-					<Link
+					<CinaAuthAccessLink
 						href="/account"
-						className="home-muted home-hover-text hidden h-9 items-center justify-center whitespace-nowrap rounded-lg border border-transparent px-3 text-sm font-medium transition sm:inline-flex"
+						intent="portal"
+						className="home-muted home-hover-text inline-flex h-9 items-center justify-center whitespace-nowrap rounded-lg border border-transparent px-2 text-xs font-medium transition sm:px-3 sm:text-sm"
 					>
-						{t('portal')}
-					</Link>
-					<Link
+						<span className="sm:hidden">{t('portalCompact')}</span>
+						<span className="hidden sm:inline">{t('portal')}</span>
+					</CinaAuthAccessLink>
+					<CinaAuthAccessLink
 						href="/dashboard"
+						intent="admin"
 						className="home-console-button inline-flex h-9 items-center justify-center whitespace-nowrap rounded-lg border px-3 text-xs font-medium transition sm:px-4 sm:text-sm"
 					>
 						{t('console')}
-					</Link>
+					</CinaAuthAccessLink>
 				</div>
 			</div>
 		</header>

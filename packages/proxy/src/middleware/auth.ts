@@ -9,11 +9,14 @@ import type { Env } from "../app";
 import { GatewayErrorCode } from "../services/gateway-error-codes";
 import { gatewayErrorJson } from "../services/gateway-error-response";
 import { parseDashScopeRealtimeAuthProtocol } from "@octafuse/core/realtime-protocol";
+import { hashLookupKey } from "@octafuse/core";
 
 /** 与 `authenticateApiKey` 结果一致，供 `/v1/*` 处理器使用。 */
 export type ApiKeyContext = {
 	/** `api_keys.id` */
 	keyId: string;
+	/** Lowercase SHA-256 hex used only for BYOK allowlist matching. */
+	apiKeyHash: string;
 	userId: string;
 	/** Server-resolved owner of the authenticated Gateway Key. */
 	workspaceId: string;
@@ -24,6 +27,7 @@ export type ApiKeyContext = {
 	budgetEpoch: number;
 	budgetPeriod: string;
 	budgetResetAt: string | null;
+	includeByokInLimit?: boolean;
 	metadata: Record<string, unknown> | null;
 	chargedCostFactors: string | null;
 };
@@ -184,13 +188,19 @@ export const requireApiKey = createMiddleware<Env>(async (c, next) => {
 	const isGenerationLookupRoute =
 		c.req.method === "GET" &&
 		(c.req.path === "/api/v1/generation" || c.req.path === "/v1/generation");
+	// Preset CRUD captures configuration only and never dispatches inference.
+	// Keep it available when an inference budget is exhausted so callers can
+	// inspect or repair the configuration that they will use after replenishing.
+	const isPresetManagementRoute =
+		(c.req.method === "GET" || c.req.method === "POST") &&
+		/^\/(?:api\/)?v1\/presets(?:\/|$)/.test(c.req.path);
 	// Atomic ordinary-budget admission for model requests is done in the route
 	// after the complete model/route failover plan has been resolved.
 	const isModelRequestRoute =
 		c.req.method === "POST" &&
-		(c.req.path.endsWith("/chat/completions") ||
-			c.req.path.endsWith("/messages") ||
-			c.req.path.endsWith("/responses") ||
+		(/^\/(?:api\/)?v1\/(?:chat\/completions|completions|messages|responses)\/?$/.test(
+			c.req.path
+		) ||
 			/^\/v1beta\/models\/[^/]+:(?:generateContent|streamGenerateContent)$/.test(
 				c.req.path
 			));
@@ -218,6 +228,7 @@ export const requireApiKey = createMiddleware<Env>(async (c, next) => {
 		!isModelsRoute &&
 		!isEndpointDiscoveryRoute &&
 		!isGenerationLookupRoute &&
+		!isPresetManagementRoute &&
 		!isModelRequestRoute &&
 		!isFixedPriceToolRoute &&
 		!isImagesRoute &&
@@ -235,8 +246,13 @@ export const requireApiKey = createMiddleware<Env>(async (c, next) => {
 		});
 	}
 
+	const lookupHash = await hashLookupKey(key);
+	const apiKeyHash = lookupHash.startsWith("sha256:")
+		? lookupHash.slice("sha256:".length)
+		: lookupHash;
 	c.set("apiKey", {
 		keyId: authResult.keyId,
+		apiKeyHash,
 		userId: authResult.userId,
 		workspaceId: authResult.workspaceId,
 		userEmail: authResult.userEmail,
@@ -245,6 +261,7 @@ export const requireApiKey = createMiddleware<Env>(async (c, next) => {
 		budgetEpoch: authResult.budgetEpoch,
 		budgetPeriod: authResult.budgetPeriod,
 		budgetResetAt: authResult.budgetResetAt,
+		includeByokInLimit: authResult.includeByokInLimit,
 		metadata: authResult.metadata,
 		chargedCostFactors: authResult.chargedCostFactors,
 	});

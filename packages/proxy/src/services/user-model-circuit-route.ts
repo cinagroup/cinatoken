@@ -36,6 +36,8 @@ export type UserModelCircuitRouteContext = {
 	 */
 	clientErrorCircuitEnabled?: boolean;
 	modelFallbackTrace?: ModelFallbackTrace | null;
+	/** Validated OpenRouter session grouping id for the Generation snapshot. */
+	sessionId?: string | null;
 };
 
 export type UserModelCircuitTriggerOptions = {
@@ -77,6 +79,7 @@ export function maybeBlockUserModelCircuit<E extends Env>(
 			model_name: ctx.modelNameForLog,
 			request_body: ctx.requestBodyForLog,
 			request_body_logging_mode: c.get('requestBodyLoggingMode'),
+			session_id: ctx.sessionId,
 			request_protocol: ctx.requestProtocol,
 			upstream_protocol: ctx.requestProtocol,
 			usage: EMPTY_USAGE,

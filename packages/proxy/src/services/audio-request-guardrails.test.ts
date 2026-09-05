@@ -72,13 +72,27 @@ describe('audio request Guardrail adapters', () => {
 		})]), {
 			workspaceId: 'personal:user-1', userId: 'user-1', apiKeyId: 'key-1', modelId: 'tts-1', correlationId: 'request-2',
 			now: new Date('2026-08-29T00:00:00.000Z'),
-			body: { model: 'tts-1', input: 'secret words', instructions: 'say secret', voice: 'alloy' },
+			body: {
+				model: 'tts-1',
+				input: 'secret words',
+				instructions: {
+					top_level: 'say secret',
+					provider_options: { openai: { instructions: 'warm secret voice' } },
+					reference_text: 'secret reference transcript',
+				},
+			},
 		});
 
 		assert.equal(result.ok, true);
 		if (!result.ok) return;
 		assert.equal(result.body.input, '[REDACTED:secret] words');
-		assert.equal(result.body.instructions, 'say [REDACTED:secret]');
+		assert.deepEqual(result.body.instructions, {
+			top_level: 'say [REDACTED:secret]',
+			provider_options: {
+				openai: { instructions: 'warm [REDACTED:secret] voice' },
+			},
+			reference_text: '[REDACTED:secret] reference transcript',
+		});
 	});
 
 	it('marks every configured audio output filter for fail-closed preflight rejection', async () => {

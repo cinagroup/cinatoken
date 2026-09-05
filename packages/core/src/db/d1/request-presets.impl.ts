@@ -32,6 +32,16 @@ export function createD1RequestPresetsRepository(db: D1DatabaseClient): RequestP
 			const rows = await raw.prepare(`${SELECT_DESIGNATED}${status} ORDER BY p.updated_at DESC, p.id`).all<RequestPresetWithVersionRow>();
 			return rows.results ?? [];
 		},
+		async listVisibleByWorkspacePage(workspaceId, userId, page) {
+			const visibility = `(p.owner_user_id = ? OR (p.visibility = 'public' AND p.status = 'active'))`;
+			const count = await raw.prepare(`SELECT COUNT(*) AS total_count FROM request_presets p
+				WHERE p.workspace_id = ? AND ${visibility}`)
+				.bind(workspaceId, userId).first<{ total_count: number | string }>();
+			const rows = await raw.prepare(`${SELECT_DESIGNATED} WHERE p.workspace_id = ? AND ${visibility}
+				ORDER BY p.updated_at DESC, p.id ASC LIMIT ? OFFSET ?`)
+				.bind(workspaceId, userId, page.limit, page.offset).all<RequestPresetWithVersionRow>();
+			return { data: rows.results ?? [], totalCount: Number(count?.total_count ?? 0) };
+		},
 		getById,
 		async getByIdInWorkspace(id, workspaceId) {
 			return (await raw.prepare(`${SELECT_DESIGNATED} WHERE p.id = ? AND p.workspace_id = ?`).bind(id, workspaceId).first<RequestPresetWithVersionRow>()) ?? null;
@@ -42,9 +52,29 @@ export function createD1RequestPresetsRepository(db: D1DatabaseClient): RequestP
 		async getAccessibleBySlug(slug, workspaceId, userId) {
 			return (await raw.prepare(`${SELECT_DESIGNATED} WHERE p.workspace_id = ? AND p.slug = ? AND p.status = 'active' AND (p.owner_user_id = ? OR p.visibility = 'public')`).bind(workspaceId, slug, userId).first<RequestPresetWithVersionRow>()) ?? null;
 		},
+		async getVisibleBySlug(slug, workspaceId, userId) {
+			return (await raw.prepare(`${SELECT_DESIGNATED} WHERE p.workspace_id = ? AND p.slug = ?
+				AND (p.owner_user_id = ? OR (p.visibility = 'public' AND p.status = 'active'))`)
+				.bind(workspaceId, slug, userId).first<RequestPresetWithVersionRow>()) ?? null;
+		},
 		async listVersions(presetId) {
 			const rows = await raw.prepare(`SELECT id, preset_id, version, system_prompt, config_json, created_by_user_id, created_at FROM request_preset_versions WHERE preset_id = ? ORDER BY version DESC`).bind(presetId).all<RequestPresetVersionRow>();
 			return rows.results ?? [];
+		},
+		async listVersionsPage(presetId, page) {
+			const count = await raw.prepare(`SELECT COUNT(*) AS total_count FROM request_preset_versions WHERE preset_id = ?`)
+				.bind(presetId).first<{ total_count: number | string }>();
+			const rows = await raw.prepare(`SELECT id, preset_id, version, system_prompt, config_json,
+				created_by_user_id, created_at FROM request_preset_versions WHERE preset_id = ?
+				ORDER BY version ASC LIMIT ? OFFSET ?`)
+				.bind(presetId, page.limit, page.offset).all<RequestPresetVersionRow>();
+			return { data: rows.results ?? [], totalCount: Number(count?.total_count ?? 0) };
+		},
+		async getVersion(presetId, version) {
+			return (await raw.prepare(`SELECT id, preset_id, version, system_prompt, config_json,
+				created_by_user_id, created_at FROM request_preset_versions
+				WHERE preset_id = ? AND version = ?`).bind(presetId, version)
+				.first<RequestPresetVersionRow>()) ?? null;
 		},
 		async createWithVersion(params) {
 			await raw.batch([

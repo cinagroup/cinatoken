@@ -16,6 +16,7 @@ describe('route topology operations', () => {
 		assert.equal(isRequestOperationForProtocol('openai', 'chat'), true);
 		assert.equal(isRequestOperationForProtocol('openai', 'responses'), true);
 		assert.equal(isRequestOperationForProtocol('openai', 'embeddings'), true);
+		assert.equal(isRequestOperationForProtocol('openai', 'rerank'), true);
 		assert.equal(isRequestOperationForProtocol('openai', 'audio.speech'), true);
 		assert.equal(isRequestOperationForProtocol('anthropic', 'messages'), true);
 		assert.equal(isRequestOperationForProtocol('gemini', GEMINI_GENERATE_OPERATION), true);

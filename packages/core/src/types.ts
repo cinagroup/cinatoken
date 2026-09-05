@@ -14,8 +14,12 @@ export type ApiKeyBudgetAuditEventType =
 	| 'key_deleted'
 	| 'user_created'
 	| 'user_deleted'
+	| 'byok_key_created'
+	| 'byok_key_updated'
+	| 'byok_key_deleted'
 	| 'guardrail_blocked'
-	| 'guardrail_redacted';
+	| 'guardrail_redacted'
+	| 'guardrail_flagged';
 
 export type ApiKeyBudgetAuditActorType = 'system' | 'admin' | 'service' | 'user';
 
@@ -35,7 +39,7 @@ export interface ApiKeyRow {
 	limit_micros: number | null;
 	/** NULL means a lifetime limit; ignored when `limit_micros` is NULL. */
 	limit_reset: 'daily' | 'weekly' | 'monthly' | null;
-	/** Reserved for private/BYOK accounting; currently always false. */
+	/** Count private BYOK catalog/list-price usage toward this Key's limit. */
 	include_byok_in_limit: boolean;
 	/** Monotonic generation invalidating stale key-limit admission intents. */
 	limit_epoch: number;

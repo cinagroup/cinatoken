@@ -2,7 +2,7 @@
 
 import type { ReactNode } from 'react';
 import { useTranslations } from 'next-intl';
-import type { ModelKindFilter } from '../../models/types';
+import type { PlaygroundModelKind } from '../types';
 import {
 	formatRouteJsonColumn,
 	inputClass,
@@ -23,9 +23,9 @@ function ReadonlyField({ label, children }: { label: string; children: ReactNode
 }
 
 type Props = {
-	filterKind: ModelKindFilter;
-	onFilterKindChange: (kind: ModelKindFilter) => void;
-	kindCounts: { llm: number; image: number; audio: number };
+	filterKind: PlaygroundModelKind;
+	onFilterKindChange: (kind: PlaygroundModelKind) => void;
+	kindCounts: { llm: number; image: number; audio: number; rerank: number };
 	routeSearch: string;
 	onRouteSearchChange: (v: string) => void;
 	filterModel: string;
@@ -77,6 +77,7 @@ export function PlaygroundSetupPanel({
 								{ id: 'llm' as const, label: t('kindLlm'), count: kindCounts.llm },
 								{ id: 'image' as const, label: t('kindImage'), count: kindCounts.image },
 								{ id: 'audio' as const, label: t('kindAudio'), count: kindCounts.audio },
+								{ id: 'rerank' as const, label: t('kindRerank'), count: kindCounts.rerank },
 							] as const
 						).map((opt) => {
 							const active = filterKind === opt.id;

@@ -35,23 +35,22 @@ function commonMetadata(options: {
 	usageDaily: number;
 	usageWeekly: number;
 	usageMonthly: number;
+	byokUsage: number;
+	byokUsageDaily: number;
+	byokUsageWeekly: number;
+	byokUsageMonthly: number;
 	limitMicros?: number | null;
 	limitReset?: "daily" | "weekly" | "monthly" | null;
 	includeByokInLimit?: boolean;
+	limitConsumedMicros?: number;
 }) {
 	const limit = gatewayKeyLimitAmount(options.limitMicros ?? null);
-	const periodUsage = options.limitReset === "daily"
-		? options.usageDaily
-		: options.limitReset === "weekly"
-			? options.usageWeekly
-			: options.limitReset === "monthly"
-				? options.usageMonthly
-				: options.usage;
+	const periodUsage = gatewayKeyLimitAmount(options.limitConsumedMicros ?? 0) ?? 0;
 	return {
-		byok_usage: 0,
-		byok_usage_daily: 0,
-		byok_usage_monthly: 0,
-		byok_usage_weekly: 0,
+		byok_usage: options.byokUsage,
+		byok_usage_daily: options.byokUsageDaily,
+		byok_usage_monthly: options.byokUsageMonthly,
+		byok_usage_weekly: options.byokUsageWeekly,
 		creator_user_id: options.creatorUserId,
 		expires_at: options.expiresAt,
 		include_byok_in_limit: options.includeByokInLimit ?? false,
@@ -82,9 +81,14 @@ function gatewayMetadata(row: ManagementGatewayKeyRow) {
 		usageDaily: row.usage_daily,
 		usageWeekly: row.usage_weekly,
 		usageMonthly: row.usage_monthly,
+		byokUsage: row.byok_usage,
+		byokUsageDaily: row.byok_usage_daily,
+		byokUsageWeekly: row.byok_usage_weekly,
+		byokUsageMonthly: row.byok_usage_monthly,
 		limitMicros: row.limit_micros,
 		limitReset: row.limit_reset,
 		includeByokInLimit: row.include_byok_in_limit,
+		limitConsumedMicros: row.limit_consumed_micros,
 	});
 }
 
@@ -108,6 +112,10 @@ function managementMetadata(row: ManagementApiKeyRow) {
 		usageDaily: 0,
 		usageWeekly: 0,
 		usageMonthly: 0,
+		byokUsage: 0,
+		byokUsageDaily: 0,
+		byokUsageWeekly: 0,
+		byokUsageMonthly: 0,
 	});
 }
 

@@ -4,6 +4,7 @@ import { ClipboardDocumentIcon, PencilSquareIcon, PlusIcon } from '@heroicons/re
 import {
 	isAudioModel,
 	isImageGenerationModel,
+	isRerankModel,
 } from '@octafuse/core/db/model-modalities';
 import { formatCompactTokens } from '@/lib/format-compact-tokens';
 import { useTranslations } from 'next-intl';
@@ -51,14 +52,19 @@ export function RouteModelCard(props: Props) {
 	const { model_id, title, groupRoutes, activeCount } = card;
 	const isImage = meta ? isImageGenerationModel(meta) : false;
 	const isAudio = meta ? isAudioModel(meta) : false;
+	const isRerank = meta ? isRerankModel(meta) : false;
 	const contextStr = formatCompactTokens(meta?.context_window);
 	const maxStr = formatCompactTokens(meta?.max_tokens);
-	const modelStatsTitle = isAudio
+	const modelStatsTitle = isRerank
+		? t('rerankModelHint')
+		: isAudio
 		? t('audioModelHint')
 		: isImage
 			? t('imageModelHint')
 			: t('contextMaxOutput', { context: contextStr, max: maxStr });
-	const modelStatsLine = isAudio
+	const modelStatsLine = isRerank
+		? t('rerankModelHint')
+		: isAudio
 		? t('audioModelHint')
 		: isImage
 			? t('imageModelHint')

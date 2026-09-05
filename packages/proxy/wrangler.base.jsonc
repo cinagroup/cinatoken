@@ -19,6 +19,11 @@
 			"name": "PUBLIC_STATS_RATE_LIMITER",
 			"namespace_id": "2002",
 			"simple": { "limit": 12, "period": 60 }
+		},
+		{
+			"name": "ANALYTICS_RATE_LIMITER",
+			"namespace_id": "2003",
+			"simple": { "limit": 64, "period": 60 }
 		}
 	],
 
@@ -30,7 +35,16 @@
 		}
 	],
 	"vars": {
-		"REQUEST_BODY_LOGGING": "off"
+		"REQUEST_BODY_LOGGING": "off",
+		// Phase 2 safety gate: infrastructure can be staged while the public API remains unavailable.
+		"BATCH_API_ENABLED": "false",
+		"PROVIDER_ATTEMPT_RETENTION_DAYS": "7",
+		"PROVIDER_ATTEMPT_RETENTION_BATCH_SIZE": "5000",
+		"PROVIDER_ATTEMPT_RETENTION_MAX_BATCHES": "10"
+	},
+	"triggers": {
+		// UTC: hourly at minute 17; each invocation remains bounded to 50,000 rows.
+		"crons": ["17 * * * *"]
 	},
 	"d1_databases": [
 		{
@@ -39,6 +53,39 @@
 			"migrations_dir": "../core/migrations-d1"
 		}
 	],
+	// gen-wrangler removes all Batch bindings unless BATCH_INFRA_ENABLED=true.
+	"r2_buckets": [
+		{
+			"binding": "BATCH_BUCKET",
+			"bucket_name": "cinatoken-batch-private"
+		}
+	],
+	"queues": {
+		"producers": [
+			{
+				"binding": "BATCH_QUEUE",
+				"queue": "cinatoken-batch-jobs"
+			}
+		],
+		"consumers": [
+			{
+				"queue": "cinatoken-batch-jobs",
+				"max_batch_size": 1,
+				"max_batch_timeout": 5,
+				"max_retries": 8,
+				"retry_delay": 30,
+				"dead_letter_queue": "cinatoken-batch-jobs-dlq",
+				"max_concurrency": 5
+			},
+			{
+				"queue": "cinatoken-batch-jobs-dlq",
+				"max_batch_size": 10,
+				"max_batch_timeout": 5,
+				"max_retries": 0,
+				"max_concurrency": 1
+			}
+		]
+	},
 	"observability": {
 		"enabled": true,
 		"head_sampling_rate": 1

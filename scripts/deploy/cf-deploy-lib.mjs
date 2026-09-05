@@ -292,6 +292,40 @@ export function ensureQueue(queueName) {
 	runWrangler(["queues", "create", queueName]);
 }
 
+/** Create a private R2 bucket once; no public development URL or domain is enabled. */
+export function ensureR2Bucket(bucketName) {
+	const existing = runWrangler(
+		["r2", "bucket", "info", bucketName, "--json"],
+		{ capture: true, allowFailure: true },
+	);
+	if (existing.status === 0) {
+		log(`Reusing existing R2 bucket "${bucketName}"`);
+	} else {
+		const combined = `${existing.stdout}\n${existing.stderr}`;
+		if (!/not found|does not exist|10006|NoSuchBucket/iu.test(combined)) {
+			throw new Error(
+				`Unable to determine whether R2 bucket ${bucketName} exists.\n${combined.trim()}`,
+			);
+		}
+		log(`Creating private R2 bucket "${bucketName}"…`);
+		runWrangler(["r2", "bucket", "create", bucketName]);
+	}
+
+	// A reused bucket may have been made public after initial provisioning.
+	// Disable r2.dev every time and fail closed on any connected custom domain.
+	runWrangler(["r2", "bucket", "dev-url", "disable", bucketName]);
+	const domains = runWrangler(
+		["r2", "bucket", "domain", "list", bucketName],
+		{ capture: true },
+	);
+	if (!/There are no custom domains connected to this bucket\./u.test(domains.stdout)) {
+		throw new Error(
+			`R2 bucket ${bucketName} has a custom domain. Remove every public domain before binding it to Batch.`,
+		);
+	}
+	log(`Verified R2 bucket "${bucketName}" has no r2.dev access or custom domain`);
+}
+
 /**
  * @param {string} instance
  * @param {{
@@ -300,6 +334,10 @@ export function ensureQueue(queueName) {
  *   chainWorkerName: string,
  *   chainJobQueueName: string,
  *   chainJobDlqName: string,
+ *   batchInfraEnabled?: boolean,
+ *   batchBucketName?: string,
+ *   batchQueueName?: string,
+ *   batchDlqName?: string,
  *   d1DatabaseName: string,
  *   d1DatabaseId: string,
  *   d1MigrationsWorkerName: string,
@@ -322,6 +360,11 @@ export function writeInstanceEnvFile(instance, names) {
 		`CHAIN_WORKER_NAME=${names.chainWorkerName}`,
 		`CHAIN_JOB_QUEUE_NAME=${names.chainJobQueueName}`,
 		`CHAIN_JOB_DLQ_NAME=${names.chainJobDlqName}`,
+		`BATCH_INFRA_ENABLED=${names.batchInfraEnabled === true ? "true" : "false"}`,
+		`BATCH_BUCKET_NAME=${names.batchBucketName || `${names.d1DatabaseName}-batch-private`}`,
+		`BATCH_QUEUE_NAME=${names.batchQueueName || `${names.d1DatabaseName}-batch-jobs`}`,
+		`BATCH_DLQ_NAME=${names.batchDlqName || `${names.d1DatabaseName}-batch-jobs-dlq`}`,
+		`# BATCH_API_ENABLED remains false until the audited consumer and billing gates ship.`,
 		`CINACHAIN_CHAIN_ID=84532`,
 		``,
 		`D1_DATABASE_NAME=${names.d1DatabaseName}`,
@@ -514,6 +557,9 @@ export function namesFromPrefix(prefix) {
 		chainWorkerName: `${p}-chain-worker`,
 		chainJobQueueName: `${p}-chain-jobs`,
 		chainJobDlqName: `${p}-chain-jobs-dlq`,
+		batchBucketName: `${p}-batch-private`,
+		batchQueueName: `${p}-batch-jobs`,
+		batchDlqName: `${p}-batch-jobs-dlq`,
 		d1DatabaseName: p,
 		d1MigrationsWorkerName: `${p}-d1-migrations`,
 	};

@@ -49,6 +49,7 @@ test('builds a bounded deterministic public daily-stats delta', () => {
 	assert.equal(first.successCount, 1);
 	assert.equal(first.errorCount, 0);
 	assert.equal(first.outputTokens, 25);
+	assert.equal(first.totalTokens, 35);
 	assert.equal(first.latencyTotalMs, 120);
 	assert.equal(first.latencySampleCount, 1);
 	assert.ok(first.shard >= 0 && first.shard < PUBLIC_MODEL_DAILY_STATS_SHARDS);
@@ -58,11 +59,13 @@ test('normalizes unsafe telemetry values without changing request status counts'
 	const delta = toPublicModelDailyStatsDelta(requestLog({
 		status: 'error',
 		outputTokens: Number.NaN,
+		totalTokens: Number.POSITIVE_INFINITY,
 		latencyMs: -1,
 	}), '2026-08-27T00:00:00.000Z');
 	assert.equal(delta.successCount, 0);
 	assert.equal(delta.errorCount, 1);
 	assert.equal(delta.outputTokens, 0);
+	assert.equal(delta.totalTokens, 0);
 	assert.equal(delta.latencyTotalMs, 0);
 	assert.equal(delta.latencySampleCount, 0);
 });

@@ -1,6 +1,7 @@
 import type { GatewayDatabaseClient } from "./database-client";
 import type { GatewayRepositories } from "./repositories-types";
 import { createMySqlAdminAnalyticsRepository } from "../db/mysql/admin-analytics.impl";
+import { createMySqlBatchesRepository } from "../db/mysql/batches.impl";
 import { createMySqlApiKeysRepository } from "../db/mysql/api-keys.impl";
 import { createMySqlModelRoutesRepository } from "../db/mysql/model-routes.impl";
 import { createMySqlModelRoutingRepository } from "../db/mysql/model-routing.impl";
@@ -19,6 +20,7 @@ import { createMySqlUserBudgetReservationsRepository } from "../db/mysql/user-bu
 import { createMySqlRouteDataPoliciesRepository } from "../db/mysql/route-data-policies.impl";
 import { createMySqlModelEndpointsRepository } from "../db/mysql/model-endpoints.impl";
 import { createManagementApiKeysRepository } from "./management-api-keys";
+import { createByokKeysRepository } from "./byok-keys";
 import {
 	createMySqlPortalAccessRepository,
 	createMySqlPortalLedgerRepository,
@@ -33,6 +35,7 @@ export function createMySqlRepositories(
 	}
 	return {
 		client,
+		batches: createMySqlBatchesRepository(client),
 		users: createMySqlUsersRepository(client),
 		apiKeys: createMySqlApiKeysRepository(client),
 		requestLogs: createMySqlRequestLogsRepository(client),
@@ -43,6 +46,7 @@ export function createMySqlRepositories(
 		routeDataPolicies: createMySqlRouteDataPoliciesRepository(client),
 		modelEndpoints: createMySqlModelEndpointsRepository(client),
 		managementApiKeys: createManagementApiKeysRepository(client),
+		byokKeys: createByokKeysRepository(client),
 		providers: createMySqlProvidersRepository(client),
 		models: createMySqlModelsRepository(client),
 		routes: createMySqlModelRoutesRepository(client),

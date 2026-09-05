@@ -7,7 +7,6 @@
  */
 import type {
 	GatewayRepositories,
-	GuardrailBudgetIntent,
 	GuardrailPreflightResult,
 } from '@octafuse/core';
 import { getBusinessTimezone } from '@octafuse/core';
@@ -22,6 +21,7 @@ import {
 } from '../../services/route-strategies';
 import { proxyDashScopeMultimodalPassthrough, type ProxyResult } from '../../services/proxy';
 import { finalizeRequestLogJson } from '../../services/request-log-shared';
+import { generationRequestContext } from '../../services/generation-request-context';
 import {
 	audioGuardrailBudgetMicros,
 	audioGuardrailSettlementMode,
@@ -43,26 +43,23 @@ import { buildModelFallbackPlan } from '../../services/model-fallback-plan';
 import {
 	auditGuardrailOutputDecision,
 	filterGuardrailResponse,
-	forfeitRequestGuardrailBudgets,
 	GUARDRAIL_MAX_RESPONSE_BYTES,
-	markRequestGuardrailBudgetsDispatched,
-	releaseRequestGuardrailBudgets,
-	reserveRequestGuardrailBudgets,
 } from '../../services/request-guardrails';
 import {
 	redactDashScopeMultimodalBodyForLog,
 	runDashScopeMultimodalRequestGuardrails,
 } from '../../services/audio-request-guardrails';
 import { MAX_AUDIO_DURATION_SECONDS } from '../../services/egress/audio-duration';
+import type { OrdinaryBudgetLease } from '../../services/ordinary-budget-lifecycle';
 import {
-	reserveOrdinaryUserBudget,
-	type OrdinaryBudgetLease,
-} from '../../services/ordinary-budget-lifecycle';
-import {
-	markMultimediaBudgetsBeforeDispatch,
 	selectConservativeMultimediaBudgetEstimate,
 } from '../../services/multimedia-ordinary-budget';
 import { routeUsesUnsupportedMultimediaEndpointPriceSelection } from '../../services/endpoint-billing-pricing';
+import { privateByokContextForApiKey } from '../../services/byok-key-pool';
+import {
+	createRouteAwareBudgetAdmission,
+	type RouteAwareBudgetAdmission,
+} from '../../services/request-budget-admission';
 
 type MultimodalEnv = Env & { Variables: { apiKey: ApiKeyContext } };
 type MultimodalContext = Context<MultimodalEnv>;
@@ -125,50 +122,21 @@ type MultimodalGuardrailBudgetLease = {
 	reserved: boolean;
 	dispatched: boolean;
 	terminal: boolean;
-	beforeUpstreamDispatch(): Promise<void>;
 	release(reason: string): Promise<void>;
 	forfeit(reason: string): Promise<void>;
 };
 
-async function admitMultimodalGuardrailBudget(
-	repos: GatewayRepositories,
-	params: { requestId: string; intents: GuardrailBudgetIntent[]; reservedMicros: number; now: Date },
-): Promise<
-	| { ok: true; lease: MultimodalGuardrailBudgetLease }
-	| { ok: false; blocked: boolean; reason?: 'gateway_key_limit' | 'workspace_budget' | 'guardrail_budget'; message: string }
-> {
-	const admission = await reserveRequestGuardrailBudgets(repos, params);
-	if (!admission.ok) return admission;
-	let dispatchPromise: Promise<void> | null = null;
-	const lease: MultimodalGuardrailBudgetLease = {
-		requestId: params.requestId,
-		reserved: admission.reserved,
-		dispatched: false,
-		terminal: false,
-		async beforeUpstreamDispatch(): Promise<void> {
-			if (this.dispatched) return;
-			dispatchPromise ??= (async () => {
-				await markRequestGuardrailBudgetsDispatched(
-					repos,
-					params.requestId,
-					admission.reserved,
-				);
-				this.dispatched = true;
-			})();
-			await dispatchPromise;
-		},
-		async release(reason: string): Promise<void> {
-			if (!admission.reserved || this.terminal) return;
-			await releaseRequestGuardrailBudgets(repos, params.requestId, admission.reserved, reason);
-			this.terminal = true;
-		},
-		async forfeit(reason: string): Promise<void> {
-			if (!admission.reserved || this.terminal) return;
-			await forfeitRequestGuardrailBudgets(repos, params.requestId, admission.reserved, reason);
-			this.terminal = true;
-		},
+function routeAwareMultimodalGuardrailLease(
+	admission: RouteAwareBudgetAdmission,
+): MultimodalGuardrailBudgetLease {
+	return {
+		requestId: admission.ordinaryLease.requestId,
+		get reserved() { return admission.guardrailReserved; },
+		get dispatched() { return admission.guardrailDispatched; },
+		get terminal() { return admission.guardrailTerminal; },
+		release: (reason) => admission.releaseGuardrailPreDispatch(reason),
+		forfeit: (reason) => admission.terminateGuardrailUnknown(reason),
 	};
-	return { ok: true, lease };
 }
 
 async function terminateMultimodalOrdinaryBudget(
@@ -197,25 +165,6 @@ async function terminateMultimodalGuardrailBudget(
 			`[Gateway Audio] DashScope multimodal Guardrail budget cleanup failed requestId=${lease.requestId} reason=${reason} error=${error instanceof Error ? error.message : String(error)}`,
 		);
 	}
-}
-
-async function beforeMultimodalUpstreamDispatch(
-	ordinaryLease: OrdinaryBudgetLease,
-	guardrailLease: MultimodalGuardrailBudgetLease,
-): Promise<void> {
-	await markMultimediaBudgetsBeforeDispatch({
-		markGuardrail: () => guardrailLease.beforeUpstreamDispatch(),
-		markOrdinary: () => ordinaryLease.beforeUpstreamDispatch(),
-		terminateOrdinary: () => terminateMultimodalOrdinaryBudget(
-			ordinaryLease,
-			guardrailLease.requestId,
-			'pre_dispatch_failed',
-		),
-		terminateGuardrail: () => terminateMultimodalGuardrailBudget(
-			guardrailLease,
-			'pre_dispatch_failed',
-		),
-	});
 }
 
 dashScopeMultimodalRoutes.post('/', async (c) => {
@@ -313,7 +262,7 @@ dashScopeMultimodalRoutes.post('/', async (c) => {
 		}, [route.priceOverrideRaw])),
 	));
 	if (!estimateSelection) throw new Error('Multimodal fallback plan has no billable route estimate');
-	const { estimate, estimatedChargedCost } = estimateSelection;
+	const { estimate, estimatedChargedCost, estimatedStandardCost } = estimateSelection;
 	const pricingCeilingFailure = dashScopeMultimodalPricingCeilingFailureContract(estimatedChargedCost);
 	if (pricingCeilingFailure) return gatewayErrorJson(c, pricingCeilingFailure);
 
@@ -331,55 +280,31 @@ dashScopeMultimodalRoutes.post('/', async (c) => {
 	});
 	if (circuitBlocked) return circuitBlocked;
 
-	const ordinaryAdmission = await reserveOrdinaryUserBudget(repos, {
-		requestId: requestCorrelationId,
-		userId: apiKey.userId,
-		apiKeyId: apiKey.keyId,
-		budgetMax: apiKey.budgetMax,
-		expectedBudgetEpoch: apiKey.budgetEpoch,
-		estimatedChargedCost,
-		now: new Date(start),
-	});
-	if (!ordinaryAdmission.ok) {
-		return gatewayErrorJson(c, {
-			status: 403,
-			code: GatewayErrorCode.budgetExceeded,
-			message: ordinaryAdmission.error.message,
-		});
-	}
-	const ordinaryBudgetLease = ordinaryAdmission.lease;
-	let budgetAdmission: Awaited<ReturnType<typeof admitMultimodalGuardrailBudget>>;
-	try {
-		budgetAdmission = await admitMultimodalGuardrailBudget(repos, {
+	const budgetAdmission = await createRouteAwareBudgetAdmission(repos, {
+		ordinary: {
 			requestId: requestCorrelationId,
+			userId: apiKey.userId,
+			apiKeyId: apiKey.keyId,
+			budgetMax: apiKey.budgetMax,
+			expectedBudgetEpoch: apiKey.budgetEpoch,
+			estimatedChargedCost,
+			now: new Date(start),
+		},
+		guardrail: {
 			intents: guardrail.budgetIntents,
 			reservedMicros: audioGuardrailBudgetMicros(estimate.chargedCost),
 			now: new Date(start),
-		});
-	} catch (error) {
-		await terminateMultimodalOrdinaryBudget(
-			ordinaryBudgetLease,
-			requestCorrelationId,
-			'guardrail_budget_admission_failed',
-		);
-		throw error;
-	}
-	if (!budgetAdmission.ok) {
-		await terminateMultimodalOrdinaryBudget(
-			ordinaryBudgetLease,
-			requestCorrelationId,
-			'guardrail_budget_admission_failed',
-		);
-		if (budgetAdmission.blocked) {
-			return gatewayErrorJson(c, {
-				status: 403,
-				code: budgetAdmission.reason === 'gateway_key_limit' || budgetAdmission.reason === 'workspace_budget' ? GatewayErrorCode.budgetExceeded : GatewayErrorCode.guardrailBlocked,
-				message: budgetAdmission.message,
-			});
-		}
-		throw new Error(`Guardrail budget admission failed: ${budgetAdmission.message}`);
-	}
-	const guardrailBudgetLease = budgetAdmission.lease;
+		},
+		privateByokGatewayKey: {
+			includeInLimit: apiKey.includeByokInLimit === true,
+			reservedMicros: Math.max(
+				audioGuardrailBudgetMicros(estimate.chargedCost),
+				audioGuardrailBudgetMicros(estimatedStandardCost ?? Number.POSITIVE_INFINITY),
+			),
+		},
+	});
+	const ordinaryBudgetLease = budgetAdmission.ordinaryLease;
+	const guardrailBudgetLease = routeAwareMultimodalGuardrailLease(budgetAdmission);
 	timing.markGatewayComplete();
 	let proxyResult: ProxyResult;
 	try {
@@ -396,17 +321,15 @@ dashScopeMultimodalRoutes.post('/', async (c) => {
 				timing,
 				routePoolId: selectedPlan.surface?.route_pool_id ?? routes[0]?.routePoolId ?? null,
 				sticky: selectedPlan.hasProviderPreferences ? null : stickyConfigFromSurface(selectedPlan.surface),
+				beforeUpstreamDispatch: (route) => budgetAdmission.beforeUpstreamDispatch(route),
 				dashScope: {
-					beforeUpstreamDispatch: () => beforeMultimodalUpstreamDispatch(
-						ordinaryBudgetLease,
-						guardrailBudgetLease,
-					),
 					...(guardrail.outputFilters.length > 0
 						? {
 								maxResponseBytes: GUARDRAIL_MAX_RESPONSE_BYTES,
 							}
 						: {}),
 				},
+				byok: privateByokContextForApiKey(apiKey),
 			},
 		);
 	} catch (error) {
@@ -626,6 +549,7 @@ async function finalizeMultimodalResponse(params: {
 				requestBody: requestBodyForLog,
 				requestBodyLoggingMode: c.get('requestBodyLoggingMode'),
 				requestOrigin: new URL(c.req.url).origin,
+				...generationRequestContext(c.req.raw.headers),
 				responseStreamed: true,
 				requestProtocol: 'dashscope',
 				requestOperation: 'audio.transcriptions.multimodal',

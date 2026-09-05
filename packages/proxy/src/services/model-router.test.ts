@@ -263,11 +263,43 @@ describe("verified endpoint runtime loading", () => {
 		assert.deepEqual(await resolveRouteResultsFromRows(repos, [identityMismatch, legacyDrift]), []);
 	});
 
-	it("rejects providers that Admin verification would not consider callable", async () => {
+	it("keeps active routes that can be credentialized by shared keys or BYOK", async () => {
+		const providerCases: ProviderRow[] = [
+			{ ...provider, id: "provider-shared", api_key: "", shared_channel_type: "openai" },
+			{ ...provider, id: "provider-byok-only", api_key: "   " },
+		];
+		const rows = providerCases.map((candidate, index) => ({
+			...route(`route-credentialized-${index}`),
+			provider_id: candidate.id,
+		}));
+		const bindings = await Promise.all(rows.map(async (candidate, index) => ({
+			...endpointRow({
+				id: `endpoint-credentialized-${index}`,
+				provider_id: candidate.provider_id,
+				provider_slug: index === 0 ? "openai" : "provider-byok",
+			}),
+			route_target_id: candidate.id,
+			subject_fingerprint: await computeRouteDataPolicySubjectFingerprintFromRows(
+				candidate,
+				providerCases[index]!,
+			),
+		})));
+		const repos = {
+			modelEndpoints: {
+				listRuntimeBindingsByRouteTargetIds: async () => bindings,
+			} as GatewayRepositories["modelEndpoints"],
+			providers: {
+				getProvidersByIds: async () => providerCases,
+			} as GatewayRepositories["providers"],
+		} as GatewayRepositories;
+
+		const resolved = await resolveRouteResultsFromRows(repos, rows);
+		assert.deepEqual(resolved.map((candidate) => candidate.targetId), rows.map((row) => row.id));
+	});
+
+	it("rejects disabled, pending-import, and protocol-incompatible providers", async () => {
 		const providerCases: ProviderRow[] = [
 			{ ...provider, id: "provider-disabled", status: "disabled" },
-			{ ...provider, id: "provider-shared", shared_channel_type: "openai" },
-			{ ...provider, id: "provider-no-key", api_key: "   " },
 			{ ...provider, id: "provider-pending-key", api_key: "__OCTAFUSE_PENDING_PROVIDER_API_KEY__" },
 			{
 				...provider,

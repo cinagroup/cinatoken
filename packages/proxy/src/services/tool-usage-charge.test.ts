@@ -60,6 +60,14 @@ function repositoriesWithD1Capture(batches: CapturedStatement[][]): GatewayRepos
 			if (this.sql.includes('FROM api_key_request_logs')) return null;
 			return { present: 1 } as T;
 		}
+		async all<T>(): Promise<{ results: T[] }> {
+			return { results: [{
+				assignment_id: 'guardrail-1',
+				scope_type: 'user',
+				scope_id: 'user-1',
+				settlement_basis: 'charged',
+			} as T] };
+		}
 	}
 	const raw = {
 		prepare(sql: string): Statement {

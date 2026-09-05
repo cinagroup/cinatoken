@@ -2,7 +2,7 @@ import type { AdminPrincipal } from '@/lib/admin-principal';
 import {
 	fetchCinaAuth,
 	getCinaAuthConfig,
-	getCinaAuthSecrets,
+	getCinaAuthBridgeSecret,
 	hasRequiredCinaAuthRole,
 } from '@/lib/cinaauth/config';
 
@@ -43,7 +43,7 @@ export const verifyCinaAuthConsolePrincipal = async (
 	const subject = cinaAuthSubjectFromPrincipal(principal);
 	if (!subject) return null;
 	const config = getCinaAuthConfig(request);
-	const { bridgeSecret } = getCinaAuthSecrets(request);
+	const bridgeSecret = getCinaAuthBridgeSecret(request);
 	const upstream = new Request(`${config.issuer}/api/auth/cinatoken-oidc/verify`, {
 		method: 'POST',
 		headers: {

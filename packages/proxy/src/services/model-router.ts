@@ -50,10 +50,31 @@ export interface RouteResult {
 	gatewayCandidateIndex?: number;
 	/** Request-local rank used by provider.sort.partition="none". */
 	gatewayGlobalEndpointRank?: number;
+	/** Request-local rank produced by OpenRouter's default inverse-square price load balancer. */
+	gatewayDefaultLoadBalanceRank?: number;
+	/** Soft 30-second availability signal used by the default load balancer. */
+	gatewayProviderRecentlyDegraded?: boolean;
 	/** Request-local soft-performance threshold result used by deferred price sorting. */
 	gatewayPerformancePreferred?: boolean;
+	/** Canonical tier injected upstream after verified endpoint selection. */
+	gatewayServiceTier?: 'default' | 'flex' | 'priority';
+	/** Tier value injected upstream; it may differ from the endpoint pricing tier for native speed. */
+	gatewayRequestedServiceTier?: 'default' | 'flex' | 'priority';
+	gatewayTextSpeed?: 'fast' | 'standard';
+	/** A text speed field was present and must not leak from route defaults. */
+	gatewayTextSpeedControlled?: boolean;
+	/** OpenRouter session_id is a gateway control and must never reach an upstream. */
+	gatewaySessionIdControlled?: boolean;
 	/** SHA-256 binding for verified ZDR/data-collection evidence. */
 	dataPolicySubjectFingerprint?: string;
+	/**
+	 * Request-local compliance gate for private BYOK injection. False means the
+	 * selected route's policy proof is credential-bound and cannot be reused by
+	 * an unverified private account credential.
+	 */
+	gatewayPrivateByokDataPolicyAllowed?: boolean;
+	/** Request-local BYOK section marker; true keys must run after shared/platform capacity. */
+	gatewayPrivateByokFallback?: boolean;
 	upstreamProtocol: UpstreamProtocol;
 	upstreamOperation: string;
 	adapter: string;
@@ -89,6 +110,14 @@ export interface RouteResult {
 		zdr: boolean;
 		quantizations: string[] | null;
 		max_price: Record<string, number> | null;
+		/** Public numeric routing thresholds that materially influenced selection. */
+		preferred_min_throughput?: number | Partial<Record<'p50' | 'p75' | 'p90' | 'p99', number>> | null;
+		preferred_max_latency?: number | Partial<Record<'p50' | 'p75' | 'p90' | 'p99', number>> | null;
+		service_tier?: 'default' | 'flex' | 'priority' | null;
+		speed?: 'fast' | 'standard' | null;
+		model_variant?: 'nitro' | 'floor' | null;
+		default_load_balance?: boolean;
+		provider_recently_degraded?: boolean;
 	};
 	routeGroup: string;
 	/** `model_routes.priority`；同层按 route strategy 排序 */
@@ -173,12 +202,11 @@ function providerIsCallableForRoute(
 	if (
 		!provider
 		|| provider.status !== 'active'
-		|| Boolean(provider.shared_channel_type?.trim())
-		|| !provider.api_key?.trim()
-		|| isPendingProviderImportApiKey(provider.api_key)
 	) {
 		return false;
 	}
+	const providerApiKey = provider.api_key?.trim() ?? '';
+	if (providerApiKey && isPendingProviderImportApiKey(providerApiKey)) return false;
 	try {
 		return providerSupportsUpstreamProtocol(
 			normalizeUpstreamProtocol(route.upstream_protocol),

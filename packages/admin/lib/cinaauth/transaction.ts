@@ -1,6 +1,40 @@
+import { isCinaAuthPopupRequestId } from '@/lib/cinaauth/popup';
+
 const TRANSACTION_MAX_AGE_MS = 10 * 60 * 1000;
 const MINIMUM_SECRET_LENGTH = 32;
 export const CINATOKEN_OIDC_TRANSACTION_COOKIE = '__Host-cinatoken_oidc_tx';
+
+// oauth4webapi generates a random base64url state. Keep callback input bounded
+// before using it in a cookie name; every value still requires HMAC verification.
+export function cinaAuthTransactionCookieName(state: unknown): string | null {
+	return typeof state === 'string' && /^[A-Za-z0-9_-]{32,128}$/u.test(state)
+		? `${CINATOKEN_OIDC_TRANSACTION_COOKIE}_${state}`
+		: null;
+}
+
+type TransactionCookies = { get: (name: string) => { value: string } | undefined };
+
+export function selectCinaAuthTransactionCookieName(cookies: TransactionCookies, state: unknown): string | null {
+	const scoped = cinaAuthTransactionCookieName(state);
+	if (!scoped) return null;
+	if (cookies.get(scoped)) return scoped;
+	// Accept an in-flight transaction from the previous deployment during rollout.
+	return cookies.get(CINATOKEN_OIDC_TRANSACTION_COOKIE) ? CINATOKEN_OIDC_TRANSACTION_COOKIE : null;
+}
+
+export async function readCinaAuthCallbackTransaction(
+	cookies: TransactionCookies,
+	state: string | null,
+	secret: string,
+	now = Date.now(),
+): Promise<CinatokenOidcTransaction | null> {
+	const name = selectCinaAuthTransactionCookieName(cookies, state);
+	if (!name) return null;
+	const value = cookies.get(name)?.value;
+	if (!value) return null;
+	const transaction = await openCinaAuthTransaction(value, secret, now);
+	return transaction?.state === state ? transaction : null;
+}
 
 export type CinatokenOidcTransaction = {
 	state: string;
@@ -10,6 +44,8 @@ export type CinatokenOidcTransaction = {
 	createdAt: number;
 	/** 会话去向：`admin`（默认，管理台会话）或 `portal`（普通用户门户会话）。 */
 	intent?: 'admin' | 'portal';
+	/** Signed correlation id for a popup flow; absent for full-page fallback. */
+	popupRequestId?: string;
 };
 
 const bytesToBase64Url = (bytes: Uint8Array): string => {
@@ -48,7 +84,9 @@ const isTransaction = (value: unknown): value is CinatokenOidcTransaction => {
 		typeof candidate.createdAt === 'number' &&
 		(candidate.intent === undefined ||
 			candidate.intent === 'admin' ||
-			candidate.intent === 'portal')
+			candidate.intent === 'portal') &&
+		(candidate.popupRequestId === undefined ||
+			isCinaAuthPopupRequestId(candidate.popupRequestId))
 	);
 };
 

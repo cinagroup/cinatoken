@@ -28,12 +28,19 @@ describe('openai-responses-driver usage', () => {
 			total_tokens: 50,
 			input_tokens_details: { cached_tokens: 4 },
 			output_tokens_details: { reasoning_tokens: 12 },
+			speed: 'fast',
 		});
 		assert.equal(usage.input_tokens, 20);
 		assert.equal(usage.output_tokens, 30);
 		assert.equal(usage.cache_read_tokens, 4);
 		assert.equal(usage.reasoning_tokens, 12);
 		assert.equal(usage.total_tokens, 50);
+		assert.equal(usage.speed, 'fast');
+		assert.equal(usage.native_tokens_prompt, 20);
+		assert.equal(usage.native_tokens_completion, 30);
+		assert.equal(usage.native_tokens_cached, 4);
+		assert.equal(usage.native_tokens_reasoning, 12);
+		assert.equal(usage.native_tokens_completion_images, null);
 	});
 
 	it('accepts chat-style prompt/completion aliases', () => {
@@ -48,6 +55,8 @@ describe('openai-responses-driver usage', () => {
 		assert.equal(usage.cache_read_tokens, 2);
 		assert.equal(usage.reasoning_tokens, 1);
 		assert.equal(usage.total_tokens, 11);
+		assert.equal(usage.native_tokens_prompt, 8);
+		assert.equal(usage.native_tokens_completion, 3);
 	});
 });
 

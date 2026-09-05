@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import { describe, it } from 'node:test';
 import {
 	BODY_TEMPLATES,
+	RERANK_BODY_TEMPLATE,
 	isPlaygroundBodyDirty,
 	isResponsesPlaygroundRoute,
 	LLM_SAMPLE_BODIES,
@@ -14,9 +15,11 @@ import {
 	resolvePlaygroundLlmFamily,
 	routeMatchesSearch,
 	templateForRoute,
+	resolveRouteModelKind,
 	type PlaygroundLlmFamily,
 } from './playground-utils';
 import type { RouteListRow } from './types';
+import type { AdminModelRow } from '@/lib/services/admin/types';
 
 function route(overrides: Partial<RouteListRow> = {}): RouteListRow {
 	return {
@@ -54,6 +57,24 @@ describe('playground-utils', () => {
 			BODY_TEMPLATES.openai_responses,
 		);
 		assert.equal(templateForRoute(route({ upstream_operation: 'chat' }), undefined), BODY_TEMPLATES.openai);
+	});
+
+	it('classifies rerank routes separately and uses a rerank request template', () => {
+		const model = {
+			id: 'deepseek-reranker',
+			output_modalities: JSON.stringify(['rerank']),
+		} as AdminModelRow;
+		assert.equal(resolveRouteModelKind(model), 'rerank');
+		assert.equal(
+			templateForRoute(
+				route({ model_id: model.id, provider_model_name: model.id, upstream_operation: 'rerank' }),
+				model,
+			),
+			RERANK_BODY_TEMPLATE,
+		);
+		const body = JSON.parse(RERANK_BODY_TEMPLATE) as Record<string, unknown>;
+		assert.equal(typeof body.query, 'string');
+		assert.equal(Array.isArray(body.documents), true);
 	});
 
 	it('keeps the default Responses template without tools', () => {

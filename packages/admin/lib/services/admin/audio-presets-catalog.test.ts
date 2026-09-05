@@ -55,9 +55,10 @@ describe('static audio model presets (*-audio.json)', () => {
 		for (const row of audioRows) {
 			assert.ok(row.vendor, `vendor required for ${row.id}`);
 			if (asPricing(row.pricing.usd).audio_billing_mode === 'per_character') {
-				assert.equal((row.modalities?.output ?? []).includes('audio'), true);
+				assert.equal((row.modalities?.output ?? []).includes('speech'), true);
 			} else {
 				assert.equal((row.modalities?.input ?? []).includes('audio'), true);
+				assert.equal((row.modalities?.output ?? []).includes('transcription'), true);
 			}
 		}
 	});

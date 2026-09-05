@@ -4,7 +4,13 @@ import type { UsageFromStream } from '../proxy';
 import { buildRouteRequestBody } from '../route-default-params';
 import { extractUpstreamRequestId, normalizeUpstreamId } from './upstream-request-id';
 import type { RequestTimingAttempt, RequestTimingCollector } from '../request-timing';
-import { parseSseDataLine } from './sse-data-line';
+import {
+	BoundedSseEventFramer,
+	parseSseDataLine,
+	parseSseEventData,
+	rewriteSseEventData,
+	terminateSseEvent,
+} from './sse-data-line';
 import {
 	markUpstreamOutcomeUnknown,
 	type ProxyDispatchMeta,
@@ -15,10 +21,17 @@ import {
 	sanitizePublicErrorMessage,
 } from '../openrouter-error-protocol';
 import {
+	cancelInvalidTextSuccessResponse,
+	invalidTextSuccessResponse,
 	preDispatchCancelledTextResponse,
 	readBoundedTextJsonObject,
 	rebuildTextJsonResponse,
+	TEXT_SUCCESS_RESPONSE_MAX_COLLECTION_ITEMS,
 } from './text-json-response';
+import {
+	normalizeOpenAiResponseServiceTier,
+	normalizeResponseTextSpeed,
+} from './service-tier-contract';
 
 /**
  * OpenAI Responses API 透传：
@@ -38,7 +51,9 @@ const EMPTY_USAGE_LOCAL: UsageFromStream = {
 };
 
 /** Bound persistent SSE framing state; provider events above this are invalid. */
-export const MAX_RESPONSES_SSE_LINE_CHARS = 256 * 1024;
+export const MAX_RESPONSES_SSE_EVENT_CHARS = 256 * 1024;
+/** @deprecated Kept for callers that imported the former line-oriented limit. */
+export const MAX_RESPONSES_SSE_LINE_CHARS = MAX_RESPONSES_SSE_EVENT_CHARS;
 
 const TERMINAL_EVENT_TYPES = new Set([
 	'response.completed',
@@ -64,12 +79,14 @@ type ResponsesUsage = {
 	prompt_tokens?: number;
 	completion_tokens?: number;
 	total_tokens?: number;
+	speed?: unknown;
 	input_tokens_details?: {
 		cached_tokens?: number;
 		cache_creation_tokens?: number;
 	};
 	output_tokens_details?: {
 		reasoning_tokens?: number;
+		image_tokens?: number;
 	};
 	prompt_tokens_details?: {
 		cached_tokens?: number;
@@ -77,8 +94,131 @@ type ResponsesUsage = {
 	};
 	completion_tokens_details?: {
 		reasoning_tokens?: number;
+		image_tokens?: number;
 	};
 };
+
+const RESPONSE_STATUSES = new Set([
+	'cancelled',
+	'completed',
+	'failed',
+	'in_progress',
+	'incomplete',
+	'queued',
+]);
+
+function isPlainObject(value: unknown): value is Record<string, unknown> {
+	return value != null && typeof value === 'object' && !Array.isArray(value);
+}
+
+function nonNegativeSafeInteger(value: unknown): value is number {
+	return typeof value === 'number' && Number.isSafeInteger(value) && value >= 0;
+}
+
+function optionalSafeCount(value: unknown): boolean {
+	return value === undefined || nonNegativeSafeInteger(value);
+}
+
+function effectiveSafeCount(primary: unknown, fallback: unknown): number | null {
+	if (nonNegativeSafeInteger(primary)) return primary;
+	return nonNegativeSafeInteger(fallback) ? fallback : null;
+}
+
+function validResponsesUsage(value: unknown): value is ResponsesUsage {
+	if (!isPlainObject(value)) return false;
+	const input = value.input_tokens;
+	const prompt = value.prompt_tokens;
+	const output = value.output_tokens;
+	const completion = value.completion_tokens;
+	if (
+		(!nonNegativeSafeInteger(input) && !nonNegativeSafeInteger(prompt))
+		|| (!nonNegativeSafeInteger(output) && !nonNegativeSafeInteger(completion))
+		|| !nonNegativeSafeInteger(value.total_tokens)
+		|| (input !== undefined && prompt !== undefined && input !== prompt)
+		|| (output !== undefined && completion !== undefined && output !== completion)
+	) return false;
+
+	const inputDetails = value.input_tokens_details;
+	const promptDetails = value.prompt_tokens_details;
+	const outputDetails = value.output_tokens_details;
+	const completionDetails = value.completion_tokens_details;
+	for (const details of [inputDetails, promptDetails, outputDetails, completionDetails]) {
+		if (details !== undefined && !isPlainObject(details)) return false;
+	}
+	const inputDetailsObject = isPlainObject(inputDetails) ? inputDetails : undefined;
+	const promptDetailsObject = isPlainObject(promptDetails) ? promptDetails : undefined;
+	const outputDetailsObject = isPlainObject(outputDetails) ? outputDetails : undefined;
+	const completionDetailsObject = isPlainObject(completionDetails) ? completionDetails : undefined;
+	if (
+		!optionalSafeCount(inputDetailsObject?.cached_tokens)
+		|| !optionalSafeCount(inputDetailsObject?.cache_creation_tokens)
+		|| !optionalSafeCount(promptDetailsObject?.cached_tokens)
+		|| !optionalSafeCount(promptDetailsObject?.cache_creation_tokens)
+		|| !optionalSafeCount(outputDetailsObject?.reasoning_tokens)
+		|| !optionalSafeCount(outputDetailsObject?.image_tokens)
+		|| !optionalSafeCount(completionDetailsObject?.reasoning_tokens)
+		|| !optionalSafeCount(completionDetailsObject?.image_tokens)
+		|| (
+			inputDetailsObject?.cached_tokens !== undefined
+			&& promptDetailsObject?.cached_tokens !== undefined
+			&& inputDetailsObject.cached_tokens !== promptDetailsObject.cached_tokens
+		)
+		|| (
+			outputDetailsObject?.reasoning_tokens !== undefined
+			&& completionDetailsObject?.reasoning_tokens !== undefined
+			&& outputDetailsObject.reasoning_tokens !== completionDetailsObject.reasoning_tokens
+		)
+		|| (
+			outputDetailsObject?.image_tokens !== undefined
+			&& completionDetailsObject?.image_tokens !== undefined
+			&& outputDetailsObject.image_tokens !== completionDetailsObject.image_tokens
+		)
+	) return false;
+
+	const inputCount = effectiveSafeCount(input, prompt);
+	const outputCount = effectiveSafeCount(output, completion);
+	if (inputCount == null || outputCount == null) return false;
+	const cachedValue = inputDetailsObject?.cached_tokens ?? promptDetailsObject?.cached_tokens;
+	const reasoningValue = outputDetailsObject?.reasoning_tokens
+		?? completionDetailsObject?.reasoning_tokens;
+	const cached = nonNegativeSafeInteger(cachedValue) ? cachedValue : 0;
+	const reasoning = nonNegativeSafeInteger(reasoningValue) ? reasoningValue : 0;
+	return Number.isSafeInteger(inputCount + outputCount)
+		&& value.total_tokens === inputCount + outputCount
+		&& cached <= inputCount
+		&& reasoning <= outputCount;
+}
+
+function validResponsesError(value: unknown): boolean {
+	return value === null || (
+		isPlainObject(value)
+		&& typeof value.code === 'string'
+		&& value.code.trim().length > 0
+		&& typeof value.message === 'string'
+		&& value.message.trim().length > 0
+	);
+}
+
+function validResponsesSuccessResponse(value: Record<string, unknown>): boolean {
+	if (
+		value.object !== 'response'
+		|| normalizeUpstreamId(value.id) == null
+		|| typeof value.model !== 'string'
+		|| !value.model.trim()
+		|| !nonNegativeSafeInteger(value.created_at)
+		|| (value.completed_at !== null && !nonNegativeSafeInteger(value.completed_at))
+		|| typeof value.status !== 'string'
+		|| !RESPONSE_STATUSES.has(value.status)
+		|| !Array.isArray(value.output)
+		|| value.output.length > TEXT_SUCCESS_RESPONSE_MAX_COLLECTION_ITEMS
+		|| (value.error !== undefined && !validResponsesError(value.error))
+		|| (value.usage !== undefined && value.usage !== null && !validResponsesUsage(value.usage))
+	) return false;
+	if (value.status === 'failed' && !isPlainObject(value.error)) return false;
+	return value.output.every((item) => isPlainObject(item)
+		&& typeof item.type === 'string'
+		&& item.type.trim().length > 0);
+}
 
 type ResponsesEvent = {
 	type?: string;
@@ -86,21 +226,23 @@ type ResponsesEvent = {
 	model?: unknown;
 	delta?: unknown;
 	usage?: ResponsesUsage;
+	service_tier?: unknown;
 	response?: {
 		id?: string;
 		model?: unknown;
 		status?: string;
 		usage?: ResponsesUsage;
+		service_tier?: unknown;
 		error?: { message?: string; code?: string };
 	};
 	error?: { message?: string; code?: string };
 };
 
 type SSEState = {
-	lineBuffer: string;
 	sawTerminal: boolean;
 	sawFailure: boolean;
 	associationId: string | null;
+	serviceTier: ReturnType<typeof normalizeOpenAiResponseServiceTier>;
 };
 
 const encoder = new TextEncoder();
@@ -121,7 +263,15 @@ export function usageFromResponses(u: ResponsesUsage): UsageFromStream {
 	const reasoning = numberOrZero(
 		u.output_tokens_details?.reasoning_tokens ?? u.completion_tokens_details?.reasoning_tokens,
 	);
-	return {
+	const nativePrompt = effectiveSafeCount(u.input_tokens, u.prompt_tokens);
+	const nativeCompletion = effectiveSafeCount(u.output_tokens, u.completion_tokens);
+	const nativeCachedValue = u.input_tokens_details?.cached_tokens
+		?? u.prompt_tokens_details?.cached_tokens;
+	const nativeReasoningValue = u.output_tokens_details?.reasoning_tokens
+		?? u.completion_tokens_details?.reasoning_tokens;
+	const nativeCompletionImagesValue = u.output_tokens_details?.image_tokens
+		?? u.completion_tokens_details?.image_tokens;
+	const usage: UsageFromStream = {
 		input_tokens: inputTokens,
 		output_tokens: outputTokens,
 		cache_read_tokens: cacheRead,
@@ -129,7 +279,18 @@ export function usageFromResponses(u: ResponsesUsage): UsageFromStream {
 		reasoning_tokens: reasoning,
 		total_tokens: numberOrZero(u.total_tokens) || inputTokens + outputTokens,
 		raw_usage: JSON.stringify(u),
+		native_tokens_prompt: nativePrompt,
+		native_tokens_completion: nativeCompletion,
+		native_tokens_cached: nonNegativeSafeInteger(nativeCachedValue) ? nativeCachedValue : null,
+		native_tokens_reasoning: nonNegativeSafeInteger(nativeReasoningValue) ? nativeReasoningValue : null,
+		native_tokens_completion_images: nonNegativeSafeInteger(nativeCompletionImagesValue)
+			? nativeCompletionImagesValue
+			: null,
 	};
+	if (Object.prototype.hasOwnProperty.call(u, 'speed')) {
+		usage.speed = normalizeResponseTextSpeed(u.speed);
+	}
+	return usage;
 }
 
 export function applyResponsesUsage(target: UsageFromStream, usage: ResponsesUsage): void {
@@ -141,6 +302,12 @@ export function applyResponsesUsage(target: UsageFromStream, usage: ResponsesUsa
 	target.reasoning_tokens = next.reasoning_tokens;
 	target.total_tokens = next.total_tokens;
 	target.raw_usage = next.raw_usage;
+	target.native_tokens_prompt = next.native_tokens_prompt;
+	target.native_tokens_completion = next.native_tokens_completion;
+	target.native_tokens_cached = next.native_tokens_cached;
+	target.native_tokens_reasoning = next.native_tokens_reasoning;
+	target.native_tokens_completion_images = next.native_tokens_completion_images;
+	if (Object.prototype.hasOwnProperty.call(next, 'speed')) target.speed = next.speed;
 }
 
 export function isResponsesTerminalEventType(type: string | undefined): boolean {
@@ -163,6 +330,9 @@ function applyResponsesEvent(
 	}
 
 	const usageObj = parsed.response?.usage ?? parsed.usage;
+	if (usageObj && Object.prototype.hasOwnProperty.call(usageObj, 'speed')) {
+		usageObj.speed = normalizeResponseTextSpeed(usageObj.speed);
+	}
 	if (usageObj) applyResponsesUsage(usage, usageObj);
 
 	if (type === 'response.failed' || type === 'response.error' || type === 'error') {
@@ -199,44 +369,63 @@ export function processResponsesDataLine(
 	}
 }
 
-function rewriteResponsesModelInDataLine(line: string, publicModelId?: string): string {
-	if (!publicModelId) return line;
-	const parsedData = parseSseDataLine(line);
-	if (parsedData === null) return line;
+function rewriteResponsesPublicFieldsInSseEvent(
+	event: string,
+	publicModelId?: string,
+	serviceTier: ReturnType<typeof normalizeOpenAiResponseServiceTier> = null,
+): string {
+	const parsedData = parseSseEventData(event);
+	if (parsedData === null) return event;
 	const data = parsedData.trim();
-	if (!data || data === '[DONE]') return line;
+	if (!data || data === '[DONE]') return event;
 	try {
 		const parsed = JSON.parse(data) as ResponsesEvent;
 		let changed = false;
-		if (Object.prototype.hasOwnProperty.call(parsed, 'model')) {
+		if (publicModelId && Object.prototype.hasOwnProperty.call(parsed, 'model')) {
 			parsed.model = publicModelId;
 			changed = true;
 		}
-		if (parsed.response && Object.prototype.hasOwnProperty.call(parsed.response, 'model')) {
+		if (publicModelId && parsed.response && Object.prototype.hasOwnProperty.call(parsed.response, 'model')) {
 			parsed.response.model = publicModelId;
 			changed = true;
 		}
-		return changed ? `data: ${JSON.stringify(parsed)}` : line;
+		if (Object.prototype.hasOwnProperty.call(parsed, 'service_tier')) {
+			parsed.service_tier = normalizeOpenAiResponseServiceTier(parsed.service_tier);
+			changed = true;
+		}
+		if (parsed.response) {
+			parsed.response.service_tier = Object.prototype.hasOwnProperty.call(parsed.response, 'service_tier')
+				? normalizeOpenAiResponseServiceTier(parsed.response.service_tier)
+				: serviceTier;
+			changed = true;
+		}
+		for (const usage of [parsed.usage, parsed.response?.usage]) {
+			if (usage && Object.prototype.hasOwnProperty.call(usage, 'speed')) {
+				usage.speed = normalizeResponseTextSpeed(usage.speed);
+				changed = true;
+			}
+		}
+		return changed ? rewriteSseEventData(event, JSON.stringify(parsed)) : event;
 	} catch {
-		return line;
+		return event;
 	}
 }
 
-type ProcessedResponsesLine = { wire: string; stop: boolean };
+type ProcessedResponsesEvent = { wire: string; stop: boolean };
 
-function processResponsesSseLine(params: {
-	line: string;
+function processResponsesSseEvent(params: {
+	event: string;
 	state: SSEState;
 	usage: UsageFromStream;
 	timing?: RequestTimingCollector | null;
 	publicModelId?: string;
-}): ProcessedResponsesLine {
-	const parsedData = parseSseDataLine(params.line);
-	if (parsedData === null) return { wire: `${params.line}\n`, stop: false };
+}): ProcessedResponsesEvent {
+	const parsedData = parseSseEventData(params.event);
+	if (parsedData === null) return { wire: params.event, stop: false };
 	const data = parsedData.trim();
-	if (!data) return { wire: `${params.line}\n`, stop: false };
+	if (!data) return { wire: params.event, stop: false };
 	if (data === '[DONE]') {
-		if (params.state.sawTerminal) return { wire: `${params.line}\n`, stop: true };
+		if (params.state.sawTerminal) return { wire: params.event, stop: true };
 		params.usage.stream_error =
 			params.usage.stream_error ?? 'Responses stream ended before a typed terminal event';
 		params.state.sawFailure = true;
@@ -245,7 +434,7 @@ function processResponsesSseLine(params: {
 			wire: `${buildResponsesFailedEvent({
 				id: params.state.associationId,
 				model: params.publicModelId,
-			})}${params.line}\n`,
+			})}${params.event}`,
 			stop: true,
 		};
 	}
@@ -275,10 +464,21 @@ function processResponsesSseLine(params: {
 	if (responseId) params.state.associationId = responseId;
 	const type = typeof parsed.type === 'string' ? parsed.type : '';
 	const failed = type === 'response.failed' || type === 'response.error' || type === 'error';
+	if (Object.prototype.hasOwnProperty.call(parsed, 'service_tier')) {
+		params.state.serviceTier = normalizeOpenAiResponseServiceTier(parsed.service_tier);
+	}
+	if (parsed.response && Object.prototype.hasOwnProperty.call(parsed.response, 'service_tier')) {
+		params.state.serviceTier = normalizeOpenAiResponseServiceTier(parsed.response.service_tier);
+	}
+	params.usage.service_tier = params.state.serviceTier;
 	params.state.sawTerminal ||= terminal;
 	params.state.sawFailure ||= failed;
 	return {
-		wire: `${rewriteResponsesModelInDataLine(params.line, params.publicModelId)}\n`,
+		wire: rewriteResponsesPublicFieldsInSseEvent(
+			params.event,
+			params.publicModelId,
+			params.state.serviceTier,
+		),
 		// Error events are terminal and must not be followed by a second,
 		// unrelated synthesized response id.
 		stop: failed,
@@ -299,11 +499,15 @@ async function pumpResponsesWithUsageTracking(
 	const reader = upstream.getReader();
 	const writer = downstream.getWriter();
 	const state: SSEState = {
-		lineBuffer: '',
 		sawTerminal: false,
 		sawFailure: false,
 		associationId: normalizeUpstreamId(publicCorrelationId),
+		serviceTier: null,
 	};
+	const framer = new BoundedSseEventFramer(
+		MAX_RESPONSES_SSE_EVENT_CHARS,
+		'Responses SSE event exceeded the gateway framing limit',
+	);
 	let clientDisconnected = requestSignal?.aborted === true;
 
 	const markClientDisconnected = (): void => {
@@ -329,28 +533,28 @@ async function pumpResponsesWithUsageTracking(
 			console.log('[Gateway Responses] client disconnected; upstream stream cancelled');
 		}
 	};
-	const processLine = (line: string): ProcessedResponsesLine => processResponsesSseLine({
-		line,
+	const processEvent = (event: string): ProcessedResponsesEvent => processResponsesSseEvent({
+		event,
 		state,
 		usage,
 		timing,
 		publicModelId,
 	});
+	const handleEvent = async (event: string): Promise<boolean> => {
+		const processed = processEvent(event);
+		await writeChunk(processed.wire);
+		return processed.stop || clientDisconnected;
+	};
 
 	try {
 		while (true) {
 			if (clientDisconnected) break;
 			const { done, value } = await reader.read();
 			if (done) {
-				state.lineBuffer += decoder.decode();
-				if (state.lineBuffer.length > MAX_RESPONSES_SSE_LINE_CHARS) {
-					throw new Error('Responses SSE event exceeded the gateway framing limit');
-				}
-				if (state.lineBuffer.trim()) {
-					const line = state.lineBuffer;
-					state.lineBuffer = '';
-					const processed = processLine(line);
-					await writeChunk(processed.wire);
+				const stopped = await framer.push(decoder.decode(), handleEvent);
+				const remainder = stopped ? '' : framer.finish();
+				if (remainder.trim()) {
+					await handleEvent(terminateSseEvent(remainder));
 				}
 				if (!state.sawTerminal && !clientDisconnected) {
 					usage.stream_error =
@@ -366,30 +570,7 @@ async function pumpResponsesWithUsageTracking(
 			}
 
 			if (value.byteLength > 0) timing?.markFirstByte();
-			state.lineBuffer += decoder.decode(value, { stream: true });
-			if (state.lineBuffer.length > MAX_RESPONSES_SSE_LINE_CHARS && !state.lineBuffer.includes('\n')) {
-				throw new Error('Responses SSE event exceeded the gateway framing limit');
-			}
-			const lines = state.lineBuffer.split('\n');
-			state.lineBuffer = lines.pop() ?? '';
-			if (state.lineBuffer.length > MAX_RESPONSES_SSE_LINE_CHARS) {
-				throw new Error('Responses SSE event exceeded the gateway framing limit');
-			}
-
-			let forward = '';
-			let stop = false;
-			for (const line of lines) {
-				if (line.length > MAX_RESPONSES_SSE_LINE_CHARS) {
-					throw new Error('Responses SSE event exceeded the gateway framing limit');
-				}
-				const processed = processLine(line);
-				forward += processed.wire;
-				if (processed.stop) {
-					stop = true;
-					break;
-				}
-			}
-			await writeChunk(forward);
+			const stop = await framer.push(decoder.decode(value, { stream: true }), handleEvent);
 			if (stop || clientDisconnected) {
 				await reader.cancel(stop ? 'Responses SSE terminal error/marker received' : requestSignal?.reason).catch(() => undefined);
 				break;
@@ -397,6 +578,7 @@ async function pumpResponsesWithUsageTracking(
 		}
 	} catch (err) {
 		if (!clientDisconnected) {
+			await reader.cancel('Responses SSE processing failed').catch(() => undefined);
 			console.warn('[Gateway Responses] pump error', err instanceof Error ? err.message : String(err));
 			usage.stream_error = usage.stream_error ?? sanitizePublicErrorMessage(
 				err instanceof Error ? err.message : String(err),
@@ -482,7 +664,13 @@ function extractUsageFromResponsesObject(parsed: Record<string, unknown>): Usage
 		&& !Array.isArray(usageCandidate)
 		? usageCandidate as ResponsesUsage
 		: null;
+	if (usageObj && Object.prototype.hasOwnProperty.call(usageObj, 'speed')) {
+		usageObj.speed = normalizeResponseTextSpeed(usageObj.speed);
+	}
 	let usage: UsageFromStream = usageObj ? usageFromResponses(usageObj) : { ...EMPTY_USAGE_LOCAL };
+	usage.service_tier = normalizeOpenAiResponseServiceTier(
+		responseObject?.service_tier ?? parsed.service_tier,
+	);
 	const msgId = normalizeUpstreamId(parsed.id ?? responseObject?.id);
 	if (msgId) usage = { ...usage, upstreamMessageId: msgId };
 	return usage;
@@ -498,13 +686,6 @@ async function nonStreamResponseWithUsage(
 	usagePromise: Promise<UsageFromStream>;
 	meta?: ProxyDispatchMeta;
 }> {
-	const contentType = response.headers.get('Content-Type') ?? '';
-	if (!contentType.toLowerCase().includes('application/json')) {
-		return {
-			response,
-			usagePromise: Promise.resolve({ ...EMPTY_USAGE_LOCAL }),
-		};
-	}
 	const materialized = await readBoundedTextJsonObject(response, {
 		skin: 'responses',
 		requestId: publicCorrelationId,
@@ -519,6 +700,17 @@ async function nonStreamResponseWithUsage(
 	}
 
 	const parsed = materialized.value;
+	if (!validResponsesSuccessResponse(parsed)) {
+		const invalid = invalidTextSuccessResponse({
+			skin: 'responses',
+			protocol: 'Responses',
+			requestId: publicCorrelationId,
+		});
+		return {
+			...invalid,
+			usagePromise: Promise.resolve({ ...EMPTY_USAGE_LOCAL }),
+		};
+	}
 	if (publicModelId) {
 		parsed.model = publicModelId;
 		const responseObject = parsed.response != null
@@ -530,6 +722,7 @@ async function nonStreamResponseWithUsage(
 			responseObject.model = publicModelId;
 		}
 	}
+	parsed.service_tier = normalizeOpenAiResponseServiceTier(parsed.service_tier);
 	return {
 		response: rebuildTextJsonResponse(response, parsed),
 		usagePromise: Promise.resolve(extractUsageFromResponsesObject(parsed)),
@@ -569,7 +762,7 @@ export async function dispatchOpenAiResponsesRoute(
 	});
 	if (requestSignal?.aborted) return cancelledBeforeDispatch();
 	const { secret } = await resolveProviderUpstreamSecret(route.providerApiKey);
-	const requestBody = {
+	const requestBody: Record<string, unknown> = {
 		...buildRouteRequestBody(route, body),
 		model: applyVertexOpenAiModelPrefix(url, route.providerModelName),
 	};
@@ -599,7 +792,9 @@ export async function dispatchOpenAiResponsesRoute(
 
 	if (response.ok) {
 		const contentType = response.headers.get('Content-Type') ?? '';
-		if (contentType.toLowerCase().includes('application/json')) {
+		const normalizedContentType = contentType.toLowerCase();
+		const streamRequested = requestBody.stream === true;
+		if (!streamRequested && normalizedContentType.includes('application/json')) {
 			const result = await nonStreamResponseWithUsage(
 				response,
 				timing,
@@ -608,7 +803,7 @@ export async function dispatchOpenAiResponsesRoute(
 			);
 			return { ...result, upstreamRequestId };
 		}
-		if (response.body) {
+		if (streamRequested && response.body && normalizedContentType.includes('text/event-stream')) {
 			const result = streamResponseWithUsage(
 				response,
 				requestSignal,
@@ -618,6 +813,17 @@ export async function dispatchOpenAiResponsesRoute(
 			);
 			return { ...result, upstreamRequestId };
 		}
+		const invalid = await cancelInvalidTextSuccessResponse(response, {
+			skin: 'responses',
+			protocol: 'Responses',
+			requestId: publicCorrelationId,
+		});
+		timing?.markStreamComplete();
+		return {
+			...invalid,
+			usagePromise: Promise.resolve({ ...EMPTY_USAGE_LOCAL }),
+			upstreamRequestId,
+		};
 	}
 
 	return {

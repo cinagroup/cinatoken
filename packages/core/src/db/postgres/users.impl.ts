@@ -6,7 +6,12 @@ import type { UserRow } from '../../types';
 import { roundGatewayMoney } from '../../lib/money-precision';
 import type { PostgresDatabaseClient } from '../../storage/database-client';
 import type { UsersRepository } from '../../storage/gateway-repository-interfaces';
-import { usersTable as pgUsersTable, workspacesTable as pgWorkspacesTable } from '../../storage/drizzle/schema.pg';
+import {
+	guardrailsTable as pgGuardrailsTable,
+	guardrailVersionsTable as pgGuardrailVersionsTable,
+	usersTable as pgUsersTable,
+	workspacesTable as pgWorkspacesTable,
+} from '../../storage/drizzle/schema.pg';
 import type { InsertUserParams, UserMaxBudgetFilter } from '../users-types';
 import { defaultWorkspaceId } from '../../workspaces';
 import {
@@ -147,6 +152,8 @@ export function createPostgresUsersRepository(db: PostgresDatabaseClient): Users
 			const budgetBase = String(params.budgetBase != null ? roundGatewayMoney(params.budgetBase) : 0);
 			const budgetSpent = String(params.budgetSpent != null ? roundGatewayMoney(params.budgetSpent) : 0);
 			const workspaceId = defaultWorkspaceId('personal', params.id);
+			const defaultGuardrailId = crypto.randomUUID();
+			const accountDefaultGuardrailId = crypto.randomUUID();
 			await drizzle.transaction(async (tx) => {
 				await tx.insert(pgUsersTable).values({
 					id: params.id,
@@ -179,6 +186,50 @@ export function createPostgresUsersRepository(db: PostgresDatabaseClient): Users
 					createdByUserId: params.id,
 					createdAt: now,
 					updatedAt: now,
+				});
+				await tx.insert(pgGuardrailsTable).values({
+					id: defaultGuardrailId,
+					workspaceId,
+					ownerUserId: params.id,
+					name: `Workspace ${workspaceId.slice(0, 180)} Default`,
+					description: null,
+					status: 'active',
+					isWorkspaceDefault: true,
+					designatedVersion: 1,
+					latestVersion: 1,
+					createdAt: now,
+					updatedAt: now,
+				});
+				await tx.insert(pgGuardrailVersionsTable).values({
+					id: crypto.randomUUID(),
+					guardrailId: defaultGuardrailId,
+					version: 1,
+					configJson: '{}',
+					createdByUserId: params.id,
+					createdAt: now,
+				});
+				await tx.insert(pgGuardrailsTable).values({
+					id: accountDefaultGuardrailId,
+					workspaceId,
+					ownerUserId: params.id,
+					name: 'Account Default',
+					description: null,
+					status: 'active',
+					isWorkspaceDefault: false,
+					isAccountDefault: true,
+					accountScopeKey: `personal:${params.id}`,
+					designatedVersion: 1,
+					latestVersion: 1,
+					createdAt: now,
+					updatedAt: now,
+				});
+				await tx.insert(pgGuardrailVersionsTable).values({
+					id: crypto.randomUUID(),
+					guardrailId: accountDefaultGuardrailId,
+					version: 1,
+					configJson: '{}',
+					createdByUserId: params.id,
+					createdAt: now,
 				});
 			});
 		},
@@ -297,8 +348,13 @@ export function createPostgresUsersRepository(db: PostgresDatabaseClient): Users
 		},
 
 		async deleteUserHard(id: string): Promise<boolean> {
-			const r = await drizzle.delete(pgUsersTable).where(eq(pgUsersTable.id, id)).returning({ id: pgUsersTable.id });
-			return r.length > 0;
+			const rows = await db.raw.unsafe<Array<{ id: string }>>(`DELETE FROM users subject
+				WHERE subject.id = $1 AND NOT EXISTS (
+					SELECT 1 FROM guardrails guardrail
+					WHERE guardrail.owner_user_id = subject.id
+						AND (guardrail.is_workspace_default OR guardrail.is_account_default)
+				) RETURNING subject.id`, [id]);
+			return rows.length > 0;
 		},
 
 		async getUsersCount() {

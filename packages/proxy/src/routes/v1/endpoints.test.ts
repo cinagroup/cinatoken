@@ -3,6 +3,7 @@ import { describe, it } from "node:test";
 import {
 	computeRouteDataPolicySubjectFingerprintFromRows,
 	type GatewayRepositories,
+	type ManagementApiKeyRow,
 	type ModelEndpointDiscoveryRouteBindingRow,
 	type ModelRouteJoinRow,
 	type ModelEndpointRow,
@@ -16,6 +17,23 @@ import { Hono } from "hono";
 import { createProxyApp, type Env } from "../../app";
 import { requireApiKey } from "../../middleware/auth";
 import { GatewayErrorCode } from "../../services/gateway-error-codes";
+
+const MANAGEMENT_SECRET = `sk-cina-mgmt-${"a".repeat(64)}`;
+const MANAGEMENT_ROW: ManagementApiKeyRow = {
+	id: "management-1",
+	key_hash: `sha256:${"a".repeat(64)}`,
+	key_preview: "sk-cina-mgmt-aaaa…aaaa",
+	account_type: "personal",
+	personal_owner_user_id: "user-1",
+	organization_id: null,
+	name: "Endpoint discovery",
+	status: "active",
+	expires_at: null,
+	last_used_at: null,
+	created_by_user_id: "user-1",
+	created_at: "2026-08-31T00:00:00.000Z",
+	updated_at: "2026-08-31T00:00:00.000Z",
+};
 
 const MODEL: ModelRow = {
 	id: "openai/model-one",
@@ -184,6 +202,10 @@ async function testRepositories(): Promise<GatewayRepositories> {
 		updated_at: "2026-08-01T00:00:00.000Z",
 	};
 	return {
+		managementApiKeys: {
+			getActiveBySecret: async (secret: string) =>
+				secret === MANAGEMENT_SECRET ? MANAGEMENT_ROW : null,
+		},
 		apiKeys: {
 			getApiKeyWithUserByKey: async (key: string) =>
 				key === "sk-test" ? gatewayKey() : null,
@@ -221,29 +243,63 @@ async function testRepositories(): Promise<GatewayRepositories> {
 			getByRouteTargetIds: async (ids: string[]) =>
 				ids.includes(ROUTE.id) ? [policy] : [],
 		},
+		requestLogs: {
+			getRecentRoutePerformanceSamples: async () => [],
+			getRouteAvailabilityAggregates: async () => [],
+		},
 	} as GatewayRepositories;
 }
 
 describe("OpenRouter endpoint routes", () => {
-	it("keeps canonical model endpoints public while other discovery remains authenticated", async () => {
+	it("requires a Management key for canonical endpoints while preserving Gateway-key aliases", async () => {
 		const repositories = await testRepositories();
 		const app = createProxyApp(
 			async () => ({ repositories } as StorageContext)
 		);
-		const canonical = await app.request(
+		const unauthenticatedCanonical = await app.request(
 			"/api/v1/models/openai/model-one/endpoints",
 			{},
 			{ REQUEST_BODY_LOGGING: "off" }
 		);
+		assert.equal(unauthenticatedCanonical.status, 401);
+		for (const invalidSecret of [
+			"not-a-real-key",
+			`sk-cina-mgmt-${"b".repeat(64)}`,
+		]) {
+			const invalidCanonical = await app.request(
+				"/api/v1/models/openai/model-one/endpoints",
+				{ headers: { Authorization: `Bearer ${invalidSecret}` } },
+				{ REQUEST_BODY_LOGGING: "off" }
+			);
+			assert.equal(invalidCanonical.status, 401);
+			assert.equal(
+				invalidCanonical.headers.get("x-octafuse-error-code"),
+				GatewayErrorCode.authFailed
+			);
+		}
+
+		const ordinaryCanonical = await app.request(
+			"/api/v1/models/openai/model-one/endpoints",
+			{ headers: { Authorization: "Bearer sk-test" } },
+			{ REQUEST_BODY_LOGGING: "off" }
+		);
+		assert.equal(ordinaryCanonical.status, 403);
+		assert.equal(
+			ordinaryCanonical.headers.get("x-octafuse-error-code"),
+			GatewayErrorCode.permissionDenied
+		);
+		assert.equal(
+			((await ordinaryCanonical.json()) as { error: { message: string } }).error.message,
+			"Only management keys can perform this operation"
+		);
+
+		const canonical = await app.request(
+			"/api/v1/models/openai/model-one/endpoints",
+			{ headers: { Authorization: `Bearer ${MANAGEMENT_SECRET}` } },
+			{ REQUEST_BODY_LOGGING: "off" }
+		);
 		assert.equal(canonical.status, 200);
-		assert.match(
-			canonical.headers.get("cache-control") ?? "",
-			/^public, max-age=(?:[1-5]?\d|60), must-revalidate$/u
-		);
-		assert.doesNotMatch(
-			canonical.headers.get("cache-control") ?? "",
-			/stale-while-revalidate/u
-		);
+		assert.equal(canonical.headers.get("cache-control"), "private, no-store");
 		assert.ok(((await canonical.json()) as { data: unknown }).data);
 
 		const paths = [
@@ -304,7 +360,7 @@ describe("OpenRouter endpoint routes", () => {
 		);
 		const response = await app.request(
 			"/api/v1/models/openai/missing/endpoints",
-			{},
+			{ headers: { Authorization: `Bearer ${MANAGEMENT_SECRET}` } },
 			{ REQUEST_BODY_LOGGING: "off" }
 		);
 		assert.equal(response.status, 404);
@@ -337,7 +393,11 @@ describe("OpenRouter endpoint routes", () => {
 			const response = await app.request(
 				path,
 				{
-					headers: { Authorization: "Bearer sk-test" },
+					headers: {
+						Authorization: path.includes("/models/")
+							? `Bearer ${MANAGEMENT_SECRET}`
+							: "Bearer sk-test",
+					},
 				},
 				{ REQUEST_BODY_LOGGING: "off" }
 			);

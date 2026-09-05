@@ -5,6 +5,7 @@ import { useSearchParams } from 'next/navigation';
 import {
 	isAudioModel,
 	isImageGenerationModel,
+	isRerankModel,
 } from '@octafuse/core/db/model-modalities';
 import { isRouteStrategyName } from '@octafuse/core/db/model-route-policy';
 import { parseRoutePoolTierStrategies } from '@octafuse/core/db/route-pool-tier-strategies';
@@ -209,12 +210,14 @@ export function useRoutesPageState() {
 		let llm = 0;
 		let image = 0;
 		let audio = 0;
+		let rerank = 0;
 		for (const m of models) {
-			if (isImageGenerationModel(m)) image += 1;
+			if (isRerankModel(m)) rerank += 1;
+			else if (isImageGenerationModel(m)) image += 1;
 			else if (isAudioModel(m)) audio += 1;
 			else llm += 1;
 		}
-		return { all: models.length, llm, image, audio };
+		return { all: models.length, llm, image, audio, rerank };
 	}, [models]);
 
 	const routesByModel = useMemo(

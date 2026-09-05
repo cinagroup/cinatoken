@@ -15,8 +15,22 @@ export const USER_AUDIT_EVENT_TYPES = [
 	"key_deleted",
 	"user_created",
 	"user_deleted",
+	"byok_key_created",
+	"byok_key_updated",
+	"byok_key_deleted",
+	"workspace_created",
+	"workspace_updated",
+	"workspace_deleted",
+	"guardrail_created",
+	"guardrail_updated",
+	"guardrail_deleted",
+	"guardrail_key_assignments_updated",
+	"guardrail_member_assignments_updated",
+	"workspace_members_added",
+	"workspace_members_removed",
 	"guardrail_blocked",
 	"guardrail_redacted",
+	"guardrail_flagged",
 ] as const;
 
 /** 来源通道（`source`）：入口/通路，不与 `event_type` 混用 */
@@ -34,6 +48,9 @@ export const USER_AUDIT_SOURCE_CHANNELS = [
 	"admin_keys",
 	"admin_user_key",
 	"portal_management_keys",
+	"gateway_management_workspaces",
+	"gateway_management_guardrails",
+	"gateway_management_byok",
 	/** 历史兼容：仅归一化读入，新写入不应再产生 */
 	"usage_charge",
 	"period_reset",

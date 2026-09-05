@@ -88,6 +88,22 @@ describe('resolveUpstreamEndpoint', () => {
 		assert.equal(url, 'https://api.openai.com/v1/embeddings');
 	});
 
+	it('derives rerank from openai base', () => {
+		const url = resolveUpstreamEndpoint('openai', 'rerank', {
+			openai: { base: 'https://api.cohere.com/v2' },
+		});
+		assert.equal(url, 'https://api.cohere.com/v2/rerank');
+	});
+
+	it('uses a rerank capability template without appending a suffix', () => {
+		const url = resolveUpstreamEndpoint('openai', 'rerank', {
+			openai: {
+				endpoints: { rerank: 'https://vendor.example/ranking' },
+			},
+		});
+		assert.equal(url, 'https://vendor.example/ranking');
+	});
+
 	it('uses an embeddings capability template without appending a suffix', () => {
 		const url = resolveUpstreamEndpoint('openai', 'embeddings', {
 			openai: {
@@ -439,7 +455,7 @@ describe('listConfiguredCapabilities', () => {
 				{ openai: { base: 'https://api.openai.com/v1' } },
 				'openai'
 			),
-			['chat', 'responses', 'embeddings', 'images.generations', 'images.edits', 'audio.transcriptions', 'audio.speech']
+			['chat', 'responses', 'embeddings', 'rerank', 'images.generations', 'images.edits', 'audio.transcriptions', 'audio.speech']
 		);
 	});
 
@@ -468,7 +484,7 @@ describe('listConfiguredCapabilities', () => {
 				},
 				'openai'
 			),
-			['chat', 'responses', 'embeddings', 'images.generations', 'images.edits', 'audio.transcriptions', 'audio.speech']
+			['chat', 'responses', 'embeddings', 'rerank', 'images.generations', 'images.edits', 'audio.transcriptions', 'audio.speech']
 		);
 	});
 

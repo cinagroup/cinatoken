@@ -7,6 +7,7 @@ import type {
 	ReserveGuardrailBudgetsResult,
 } from '../guardrail-budget-types';
 import {
+	classifyDispatchedGuardrailBudgetExtension,
 	existingGuardrailReservationReplay,
 	sortedGuardrailBudgetIntents,
 	validateGuardrailBudgetReservationParams,
@@ -116,7 +117,12 @@ async function validateWorkspaceBudgetIntent(pg: PgQuery, intent: GuardrailBudge
 	}
 }
 
-async function validateGatewayKeyLimitIntent(pg: PgQuery, intent: GuardrailBudgetIntent, nowIso: string): Promise<void> {
+async function validateGatewayKeyLimitIntent(
+	pg: PgQuery,
+	intent: GuardrailBudgetIntent,
+	nowIso: string,
+	settlementBasis: ReserveGuardrailBudgetsParams['settlementBasis'] = 'charged',
+): Promise<void> {
 	if (!isGatewayKeyLimitIntent(intent)) return;
 	const rows = await pg.unsafe<Array<{
 		workspace_id: string;
@@ -141,7 +147,7 @@ async function validateGatewayKeyLimitIntent(pg: PgQuery, intent: GuardrailBudge
 		|| Number(row.limit_micros) !== intent.limitMicros
 		|| Number(row.limit_epoch) + 1 !== intent.guardrailVersion
 		|| (row.limit_reset ?? 'lifetime') !== intent.period
-		|| row.include_byok_in_limit) {
+		|| (settlementBasis === 'gateway_key_route' && !row.include_byok_in_limit)) {
 		throw new GatewayKeyLimitStaleError();
 	}
 }
@@ -167,7 +173,7 @@ export function createPostgresGuardrailBudgetsRepository(client: PostgresDatabas
 					if (lockedReplay === 'idempotent') return { status: 'idempotent', reservationCount: params.intents.length };
 					if (lockedReplay === 'conflict') return { status: 'conflict', message: 'request id reservation payload mismatch' };
 					for (const intent of sortedGuardrailBudgetIntents(params.intents)) {
-						await validateGatewayKeyLimitIntent(tx, intent, params.nowIso);
+						await validateGatewayKeyLimitIntent(tx, intent, params.nowIso, params.settlementBasis);
 						await validateWorkspaceBudgetIntent(tx, intent);
 						const window = await seedWindow(tx, intent, params.nowIso);
 						if (window.unreserved + window.settled + window.reserved + params.reservedMicros > intent.limitMicros) {
@@ -185,9 +191,62 @@ export function createPostgresGuardrailBudgetsRepository(client: PostgresDatabas
 						await tx.unsafe(`INSERT INTO guardrail_budget_reservations (
 							id, workspace_id, request_id, assignment_id, guardrail_id, guardrail_version,
 							scope_type, scope_id, period, period_start, period_end,
-							limit_micros, reserved_micros, settled_micros, state,
+							limit_micros, reserved_micros, settled_micros, settlement_basis, state,
 							expires_at, created_at, updated_at
-						) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, 0, 'reserved', $14, $15, $15)`, [
+						) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, 0, $14, 'reserved', $15, $16, $16)`, [
+							crypto.randomUUID(), intent.workspaceId, params.requestId, intent.assignmentId, intent.guardrailId,
+							intent.guardrailVersion, intent.scopeType, intent.scopeId, intent.period,
+							intent.periodStart, intent.periodEnd, intent.limitMicros, params.reservedMicros,
+							params.settlementBasis ?? 'charged', params.expiresAtIso, params.nowIso,
+						]);
+					}
+					return { status: 'reserved', reservationCount: params.intents.length };
+				});
+			} catch (error) {
+				const racedReplay = await classifyReplay(pg, params);
+				if (racedReplay) return racedReplay;
+				if (error instanceof GuardrailBudgetBlockedError) return { status: 'blocked', assignmentId: error.assignmentId };
+				if (error instanceof GatewayKeyLimitStaleError) {
+					return { status: 'conflict', message: 'Gateway key limit configuration changed; retry the request' };
+				}
+				if (error instanceof WorkspaceBudgetStaleError) {
+					return { status: 'conflict', message: 'Workspace budget configuration changed; retry the request' };
+				}
+				throw error;
+			}
+		},
+
+		async extendDispatched(params) {
+			try {
+				return await pg.begin<ReserveGuardrailBudgetsResult>(async (tx) => {
+					const rows = await listByRequest(tx, params.requestId, true);
+					const classification = classifyDispatchedGuardrailBudgetExtension(rows, params);
+					if (classification.status === 'conflict') {
+						return { status: 'conflict', message: classification.message };
+					}
+					if (classification.status === 'idempotent') {
+						return { status: 'idempotent', reservationCount: params.intents.length };
+					}
+					for (const intent of classification.missingIntents) {
+						await validateGatewayKeyLimitIntent(tx, intent, params.nowIso, 'charged');
+						await validateWorkspaceBudgetIntent(tx, intent);
+						const window = await seedWindow(tx, intent, params.nowIso);
+						if (window.unreserved + window.settled + window.reserved + params.reservedMicros > intent.limitMicros) {
+							throw new GuardrailBudgetBlockedError(intent.assignmentId);
+						}
+						await tx.unsafe(`UPDATE guardrail_budget_windows
+							SET unreserved_micros = $1, reserved_micros = reserved_micros + $2,
+								period_end = $3, updated_at = $4
+							WHERE workspace_id = $5 AND scope_type = $6 AND scope_id = $7 AND period = $8 AND period_start = $9`, [
+							window.unreserved, params.reservedMicros, intent.periodEnd, params.nowIso,
+							intent.workspaceId, intent.scopeType, intent.scopeId, intent.period, intent.periodStart,
+						]);
+						await tx.unsafe(`INSERT INTO guardrail_budget_reservations (
+							id, workspace_id, request_id, assignment_id, guardrail_id, guardrail_version,
+							scope_type, scope_id, period, period_start, period_end,
+							limit_micros, reserved_micros, settled_micros, settlement_basis, state,
+							expires_at, dispatched_at, created_at, updated_at
+						) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, 0, 'charged', 'dispatched', $14, $15, $15, $15)`, [
 							crypto.randomUUID(), intent.workspaceId, params.requestId, intent.assignmentId, intent.guardrailId,
 							intent.guardrailVersion, intent.scopeType, intent.scopeId, intent.period,
 							intent.periodStart, intent.periodEnd, intent.limitMicros, params.reservedMicros,
@@ -197,9 +256,9 @@ export function createPostgresGuardrailBudgetsRepository(client: PostgresDatabas
 					return { status: 'reserved', reservationCount: params.intents.length };
 				});
 			} catch (error) {
-				const racedReplay = await classifyReplay(pg, params);
-				if (racedReplay) return racedReplay;
-				if (error instanceof GuardrailBudgetBlockedError) return { status: 'blocked', assignmentId: error.assignmentId };
+				if (error instanceof GuardrailBudgetBlockedError) {
+					return { status: 'blocked', assignmentId: error.assignmentId };
+				}
 				if (error instanceof GatewayKeyLimitStaleError) {
 					return { status: 'conflict', message: 'Gateway key limit configuration changed; retry the request' };
 				}

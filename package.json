@@ -43,6 +43,8 @@
 		"db:migrate:mysql": "dotenv -c -- tsx packages/core/src/migrate/cli.ts --driver mysql",
 		"db:migrate:mysql:docker": "node packages/core/dist/migrate/cli.js --driver mysql",
 		"db:list:pg": "dotenv -c -- tsx scripts/db/diag/list-pg-databases.ts",
+		"predb:retention:provider-attempts": "npm run build:node-index -w @octafuse/core",
+		"db:retention:provider-attempts": "dotenv -c -- tsx scripts/db/maintenance/provider-attempt-retention.ts",
 		"db:query": "npm run gen:wrangler && node scripts/deploy/wrangler-d1-cli.mjs execute --local --persist-to .wrangler/state --command",
 		"db:query:remote": "npm run gen:wrangler -- --remote && node scripts/deploy/wrangler-d1-cli.mjs execute --remote --command",
 		"db:export:remote:schema": "tsx scripts/db/d1-remote-export/export-remote-schema.ts",

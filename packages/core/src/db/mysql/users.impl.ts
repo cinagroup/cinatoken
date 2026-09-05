@@ -6,7 +6,12 @@ import type { UserRow } from '../../types';
 import { roundGatewayMoney } from '../../lib/money-precision';
 import type { MySqlDatabaseClient } from '../../storage/database-client';
 import type { UsersRepository } from '../../storage/gateway-repository-interfaces';
-import { usersTable as myUsersTable, workspacesTable as myWorkspacesTable } from '../../storage/drizzle/schema.mysql';
+import {
+	guardrailsTable as myGuardrailsTable,
+	guardrailVersionsTable as myGuardrailVersionsTable,
+	usersTable as myUsersTable,
+	workspacesTable as myWorkspacesTable,
+} from '../../storage/drizzle/schema.mysql';
 import type { InsertUserParams, UserMaxBudgetFilter } from '../users-types';
 import { defaultWorkspaceId } from '../../workspaces';
 import {
@@ -147,6 +152,8 @@ export function createMySqlUsersRepository(db: MySqlDatabaseClient): UsersReposi
 			const budgetBase = String(params.budgetBase != null ? roundGatewayMoney(params.budgetBase) : 0);
 			const budgetSpent = String(params.budgetSpent != null ? roundGatewayMoney(params.budgetSpent) : 0);
 			const workspaceId = defaultWorkspaceId('personal', params.id);
+			const defaultGuardrailId = crypto.randomUUID();
+			const accountDefaultGuardrailId = crypto.randomUUID();
 			await drizzle.transaction(async (tx) => {
 				await tx.insert(myUsersTable).values({
 					id: params.id,
@@ -179,6 +186,52 @@ export function createMySqlUsersRepository(db: MySqlDatabaseClient): UsersReposi
 					createdByUserId: params.id,
 					createdAt: now,
 					updatedAt: now,
+				});
+				await tx.insert(myGuardrailsTable).values({
+					id: defaultGuardrailId,
+					workspaceId,
+					workspaceKey: sql`SHA2(${workspaceId}, 256)`,
+					ownerUserId: params.id,
+					name: `Workspace ${workspaceId.slice(0, 180)} Default`,
+					description: null,
+					status: 'active',
+					isWorkspaceDefault: 1,
+					designatedVersion: 1,
+					latestVersion: 1,
+					createdAt: now,
+					updatedAt: now,
+				});
+				await tx.insert(myGuardrailVersionsTable).values({
+					id: crypto.randomUUID(),
+					guardrailId: defaultGuardrailId,
+					version: 1,
+					configJson: '{}',
+					createdByUserId: params.id,
+					createdAt: now,
+				});
+				await tx.insert(myGuardrailsTable).values({
+					id: accountDefaultGuardrailId,
+					workspaceId,
+					workspaceKey: sql`SHA2(${workspaceId}, 256)`,
+					ownerUserId: params.id,
+					name: 'Account Default',
+					description: null,
+					status: 'active',
+					isWorkspaceDefault: 0,
+					isAccountDefault: 1,
+					accountScopeKey: `personal:${params.id}`,
+					designatedVersion: 1,
+					latestVersion: 1,
+					createdAt: now,
+					updatedAt: now,
+				});
+				await tx.insert(myGuardrailVersionsTable).values({
+					id: crypto.randomUUID(),
+					guardrailId: accountDefaultGuardrailId,
+					version: 1,
+					configJson: '{}',
+					createdByUserId: params.id,
+					createdAt: now,
 				});
 			});
 		},
@@ -292,10 +345,13 @@ export function createMySqlUsersRepository(db: MySqlDatabaseClient): UsersReposi
 		},
 
 		async deleteUserHard(id: string): Promise<boolean> {
-			const existing = await drizzle.select({ id: myUsersTable.id }).from(myUsersTable).where(eq(myUsersTable.id, id)).limit(1);
-			if (!existing[0]) return false;
-			await drizzle.delete(myUsersTable).where(eq(myUsersTable.id, id));
-			return true;
+			const [result] = await db.raw.execute(`DELETE FROM users
+				WHERE id = ? AND NOT EXISTS (
+					SELECT 1 FROM guardrails guardrail
+					WHERE guardrail.owner_user_id = users.id
+						AND (guardrail.is_workspace_default = TRUE OR guardrail.is_account_default = TRUE)
+				)`, [id]);
+			return 'affectedRows' in result && Number(result.affectedRows) > 0;
 		},
 
 		async getUsersCount() {

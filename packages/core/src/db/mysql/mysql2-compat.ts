@@ -57,7 +57,7 @@ export function fromMySqlDateTime(value: string | Date): string {
  * 所有需要 raw SQL 读查询的 impl 都应通过此函数，把类型断言收敛在这里。
  */
 export async function mysqlQueryRows<T extends RowDataPacket>(
-	pool: Pool | MySqlPoolLike,
+	pool: Pool | MySqlPoolLike | PoolConnection | MySqlConnectionLike,
 	sql: string,
 	values?: unknown[]
 ): Promise<T[]> {

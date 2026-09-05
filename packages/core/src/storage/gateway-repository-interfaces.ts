@@ -10,6 +10,7 @@ import type {
 	ApiKeyRow,
 } from "../types";
 import type {
+	ExtendDispatchedGuardrailBudgetsParams,
 	ReserveGuardrailBudgetsParams,
 	ReserveGuardrailBudgetsResult,
 } from "../db/guardrail-budget-types";
@@ -22,6 +23,12 @@ import type {
 	GenerationRequestLogRow,
 	RoutePerformanceSample,
 } from "../db/request-logs-types";
+import type { InsertGenerationFeedbackForManagementAccountParams } from "../db/generation-feedback-types";
+import type {
+	ManagementAnalyticsQuery,
+	ManagementAnalyticsQueryResult,
+} from "../db/analytics-query";
+import type { RouteAvailabilityAggregate } from "../db/provider-attempt-availability";
 import type {
 	BudgetFilter,
 	InsertKeyParams,
@@ -55,6 +62,7 @@ import type {
 	ProviderAnalyticsRow,
 	ProviderReliabilityRow,
 	RequestStatsByRangeRow,
+	RequestActivityGroupRow,
 	RequestTimeseriesRow,
 	ThroughputSnapshot,
 	UserAnalyticsRow,
@@ -87,7 +95,9 @@ import type {
 	AddRequestPresetVersionParams,
 	CreateRequestPresetParams,
 	RequestPresetRow,
+	RequestPresetPage,
 	RequestPresetVersionRow,
+	RequestPresetVersionPage,
 	RequestPresetWithVersionRow,
 	UpdateRequestPresetMetadataPatch,
 } from "../db/request-presets-types";
@@ -127,6 +137,94 @@ import type {
 	ManagementApiKeyAccount,
 	ManagementApiKeyRow,
 } from "../db/management-api-keys-types";
+import type {
+	ByokKeyInsertParams,
+	ByokKeyListPage,
+	ByokKeyReorderParams,
+	ByokKeyReorderResult,
+	ByokKeyRow,
+	ByokRuntimeKeyRow,
+	ByokKeyUpdateParams,
+	ByokManagementMutation,
+	ByokRuntimeLookup,
+} from "../db/byok-keys-types";
+import type {
+	AdvanceBatchValidationParams,
+	AdvanceBatchValidationResult,
+	BatchLeaseParams,
+	BatchItemRow,
+	BatchPage,
+	BatchRow,
+	ClaimNextBatchItemParams,
+	ClaimNextBatchItemResult,
+	CompleteBatchValidationParams,
+	CreateBatchParams,
+	CreateBatchResult,
+	FailBatchExecutionPreflightParams,
+	FailBatchExecutionPreflightResult,
+	FailBatchValidationParams,
+	ListBatchesParams,
+	MarkBatchItemDispatchStartedParams,
+	ReleaseBatchItemBeforeDispatchParams,
+} from "../db/batch-types";
+
+/** Batch metadata only. Prompt and response bodies never cross this repository boundary. */
+export interface BatchesRepository {
+	/** Persist a validating batch, or classify an exact idempotent replay. */
+	create(params: CreateBatchParams): Promise<CreateBatchResult>;
+	/** Account + Workspace scoping is mandatory; cross-tenant IDs resolve to null. */
+	getByIdInWorkspace(
+		id: string,
+		accountId: string,
+		workspaceId: string
+	): Promise<BatchRow | null>;
+	/** Internal Queue lookup. Callers must never expose this unscoped method to HTTP. */
+	getByIdForDispatch(id: string): Promise<BatchRow | null>;
+	/** Newest-first keyset page for the OpenRouter-compatible list surface. */
+	listByWorkspace(params: ListBatchesParams): Promise<BatchPage>;
+	/** Internal bounded scan used to repair lost Queue sends and expired leases. */
+	listDispatchCandidates(nowIso: string, limit?: number): Promise<BatchRow[]>;
+	/** Acquire only an absent/expired validating or in-progress lease via revision CAS. */
+	claimLease(params: BatchLeaseParams): Promise<BatchRow | null>;
+	/** Extend only the caller's still-live lease via revision CAS. */
+	renewLease(params: BatchLeaseParams): Promise<BatchRow | null>;
+	/** Atomically append a body-free validation chunk and advance its R2 byte cursor. */
+	advanceValidation(
+		params: AdvanceBatchValidationParams
+	): Promise<AdvanceBatchValidationResult>;
+	/** Enter in_progress only after every expected item and byte has been validated. */
+	completeValidation(
+		params: CompleteBatchValidationParams
+	): Promise<BatchRow | null>;
+	/** Fail closed on a terminal input/ledger validation error under the same lease. */
+	failValidation(params: FailBatchValidationParams): Promise<BatchRow | null>;
+	/**
+	 * Claim or renew the lowest non-terminal item under a live in_progress batch
+	 * lease. A prior dispatch marker is surfaced as outcome_unknown and is never
+	 * silently replayed.
+	 */
+	claimNextItem(
+		params: ClaimNextBatchItemParams
+	): Promise<ClaimNextBatchItemResult>;
+	/**
+	 * Commit the irreversible no-replay boundary before marking budget leases
+	 * dispatched and before issuing the upstream request.
+	 */
+	markItemDispatchStarted(
+		params: MarkBatchItemDispatchStartedParams
+	): Promise<BatchItemRow | null>;
+	/** Release only a still-live owned item that has not crossed the dispatch fence. */
+	releaseItemBeforeDispatch(
+		params: ReleaseBatchItemBeforeDispatchParams
+	): Promise<BatchItemRow | null>;
+	/**
+	 * Atomically fail every undispatched open item and the parent Batch when
+	 * consumption-time Gateway-key authorization fails. A dispatch marker wins.
+	 */
+	failExecutionPreflight(
+		params: FailBatchExecutionPreflightParams
+	): Promise<FailBatchExecutionPreflightResult>;
+}
 
 export interface ManagementApiKeysRepository {
 	getActiveBySecret(secret: string): Promise<ManagementApiKeyRow | null>;
@@ -149,6 +247,36 @@ export interface ManagementApiKeysRepository {
 		workspaceId: string,
 		account: ManagementApiKeyAccount
 	): Promise<boolean>;
+}
+
+/** Account-scoped, encrypted bring-your-own-provider credentials. */
+export interface ByokKeysRepository {
+	listForAccount(
+		account: ManagementApiKeyAccount,
+		options: {
+			offset: number;
+			limit: number;
+			workspaceId?: string;
+			provider?: string;
+		}
+	): Promise<ByokKeyListPage>;
+	getByIdInAccount(
+		id: string,
+		account: ManagementApiKeyAccount
+	): Promise<ByokKeyRow | null>;
+	insertForManagement(params: ByokKeyInsertParams): Promise<ByokKeyRow | null>;
+	updateForManagement(params: ByokKeyUpdateParams): Promise<ByokKeyRow | null>;
+	reorderForManagement(params: ByokKeyReorderParams): Promise<ByokKeyReorderResult>;
+	deleteForManagement(params: ByokManagementMutation): Promise<boolean>;
+	/** Bounded, deterministic runtime candidates: primary first, fallback last. */
+	listActiveForRequest(params: ByokRuntimeLookup): Promise<ByokRuntimeKeyRow[]>;
+	/**
+	 * Whether an eligible prioritized credential forbids shared/platform
+	 * capacity for this provider and model. The matching-model policy applies
+	 * every filter; the strongest provider-wide policy intentionally ignores
+	 * only model filters. Member and Gateway-key filters always scope both.
+	 */
+	shouldSuppressSharedCapacityForRequest(params: ByokRuntimeLookup): Promise<boolean>;
 }
 
 export interface ModelEndpointsRepository {
@@ -204,6 +332,11 @@ export interface RequestPresetsRepository {
 		includeArchived?: boolean
 	): Promise<RequestPresetWithVersionRow[]>;
 	listAll(includeArchived?: boolean): Promise<RequestPresetWithVersionRow[]>;
+	listVisibleByWorkspacePage(
+		workspaceId: string,
+		userId: string,
+		page: { offset: number; limit: number }
+	): Promise<RequestPresetPage>;
 	getById(id: string): Promise<RequestPresetWithVersionRow | null>;
 	getByIdInWorkspace(
 		id: string,
@@ -218,7 +351,20 @@ export interface RequestPresetsRepository {
 		workspaceId: string,
 		userId: string
 	): Promise<RequestPresetWithVersionRow | null>;
+	getVisibleBySlug(
+		slug: string,
+		workspaceId: string,
+		userId: string
+	): Promise<RequestPresetWithVersionRow | null>;
 	listVersions(presetId: string): Promise<RequestPresetVersionRow[]>;
+	listVersionsPage(
+		presetId: string,
+		page: { offset: number; limit: number }
+	): Promise<RequestPresetVersionPage>;
+	getVersion(
+		presetId: string,
+		version: number
+	): Promise<RequestPresetVersionRow | null>;
 	createWithVersion(
 		params: CreateRequestPresetParams
 	): Promise<RequestPresetWithVersionRow>;
@@ -292,6 +438,13 @@ export interface GuardrailBudgetsRepository {
 	/** Atomically reserves every user/API-key policy or none of them. */
 	reserveMany(
 		params: ReserveGuardrailBudgetsParams
+	): Promise<ReserveGuardrailBudgetsResult>;
+	/**
+	 * Extends an already-dispatched BYOK Gateway-key reservation with the
+	 * charged-budget intents required before shared/platform fallback.
+	 */
+	extendDispatched(
+		params: ExtendDispatchedGuardrailBudgetsParams
 	): Promise<ReserveGuardrailBudgetsResult>;
 	/** Transfers lifecycle ownership to the upstream dispatch path. */
 	markDispatched(
@@ -470,6 +623,14 @@ export interface ApiKeysRepository {
 	getApiKeyByKeyAnyStatus(key: string): Promise<ApiKeyRow | null>;
 	getApiKeyById(id: string): Promise<ApiKeyRow | null>;
 	getApiKeyWithUserByKey(key: string): Promise<ResolvedGatewayKeyRow | null>;
+	/**
+	 * Internal asynchronous reauthorization by the irreversible lookup hash.
+	 * Applies the same active Key, user, Workspace, organization, membership,
+	 * and expiry predicates as bearer authentication without requiring plaintext.
+	 */
+	getActiveApiKeyWithUserByLookupHash(
+		keyHash: string
+	): Promise<ResolvedGatewayKeyRow | null>;
 	getApiKeyWithUserById(id: string): Promise<ResolvedGatewayKeyRow | null>;
 	listKeysByUserId(
 		userId: string,
@@ -598,6 +759,13 @@ export interface ModelsRepository {
 export interface ModelRoutingRepository {
 	getModelById(id: string): Promise<ModelRow | null>;
 	listModelsWithActiveRoutes(): Promise<ModelRow[]>;
+	/**
+	 * Returns at most MAX_CALLABLE_EMBEDDING_MODEL_QUERY_RESULTS model rows that
+	 * have an active OpenAI embeddings route/surface. The output-modality SQL
+	 * predicate is deliberately only a safe prefilter; callers must still apply
+	 * isEmbeddingModel so malformed legacy JSON fails closed.
+	 */
+	listCallableEmbeddingModelCandidates(): Promise<ModelRow[]>;
 	getModelRoutesByModelId(modelId: string): Promise<ModelRouteRow[]>;
 	resolveModelSurface(params: {
 		modelId: string;
@@ -612,6 +780,8 @@ export interface ModelRoutesRepository {
 	listModelRoutesWithJoins(filters: {
 		modelId?: string;
 		providerId?: string;
+		/** Optional bounded read for previews and public control surfaces. */
+		limit?: number;
 	}): Promise<ModelRouteJoinRow[]>;
 	insertModelRoute(params: {
 		id: string;
@@ -765,6 +935,22 @@ export type RequestLogsByKeyIdFilter = {
 
 export interface RequestLogsRepository {
 	/**
+	 * Execute an OpenRouter-shaped analytics query inside the authenticated
+	 * Management principal's account boundary. Storage must enforce that
+	 * boundary in SQL rather than relying on caller-supplied Workspace filters.
+	 */
+	queryManagementAnalytics(
+		query: ManagementAnalyticsQuery
+	): Promise<ManagementAnalyticsQueryResult>;
+	/**
+	 * Atomically records feedback only when the generation and Management key
+	 * belong to the same personal or organization account. A false result is an
+	 * indistinguishable missing/foreign/revoked-key outcome.
+	 */
+	insertGenerationFeedbackForManagementAccount(
+		params: InsertGenerationFeedbackForManagementAccountParams
+	): Promise<boolean>;
+	/**
 	 * Resolve one generation within the authenticated user's current Workspace.
 	 * All three predicates must be enforced by the storage query itself; callers
 	 * must not fetch a broader row set and filter it in application memory.
@@ -790,6 +976,8 @@ export interface RequestLogsRepository {
 		userEmail?: string;
 		modelId?: string;
 		providerId?: string;
+		/** Public provider display-name snapshot captured on the request log. */
+		providerName?: string;
 		routeGroup?: string;
 		protocol?: string;
 		status?: string;
@@ -804,11 +992,41 @@ export interface RequestLogsRepository {
 		userId?: string;
 		/** Optional Workspace boundary, resolved through the owning Gateway Key. */
 		workspaceId?: string;
+		apiKeyId?: string;
+		modelId?: string;
+		/** Public provider display-name snapshot captured on the request log. */
+		providerName?: string;
+		status?: string;
 	}): Promise<RequestStatsByRangeRow>;
+	/** Bounded ordinary-user Activity aggregation; dimensions are fixed to public model/key/provider identifiers. */
+	getRequestActivityGroups(options: {
+		startDate: string;
+		endDate: string;
+		endExclusive?: boolean;
+		userId: string;
+		workspaceId: string;
+		apiKeyId?: string;
+		modelId?: string;
+		/** Public provider display-name snapshot captured on the request log. */
+		providerName?: string;
+		status?: string;
+		dimension: 'model' | 'apiKey' | 'provider';
+		limit: number;
+	}): Promise<RequestActivityGroupRow[]>;
 	queryRequestTimeseries(options: {
 		startDate: string;
 		endDate: string;
+		endExclusive?: boolean;
 		granularity: "hour" | "day";
+		/** Optional tenant boundary for ordinary-user Activity trends. */
+		userId?: string;
+		/** Optional Workspace boundary for ordinary-user Activity trends. */
+		workspaceId?: string;
+		apiKeyId?: string;
+		modelId?: string;
+		/** Public provider display-name snapshot captured on the request log. */
+		providerName?: string;
+		status?: string;
 	}): Promise<RequestTimeseriesRow[]>;
 	queryUserTokenTimeseries(options: {
 		startDate: string;
@@ -825,6 +1043,17 @@ export interface RequestLogsRepository {
 		/** Independent cap for each route target, never a shared/global row limit. */
 		maxSamplesPerRoute: number;
 	}): Promise<RoutePerformanceSample[]>;
+	getRouteAvailabilityAggregates(options: {
+		routeTargetIds: string[];
+		since5mIso: string;
+		since30mIso: string;
+		since1dIso: string;
+	}): Promise<RouteAvailabilityAggregate[]>;
+	/** Bounded oldest-first hygiene; never deletes inside request settlement. */
+	deleteProviderAttemptAvailabilityBefore(options: {
+		cutoffIso: string;
+		limit: number;
+	}): Promise<number>;
 	getDistinctActiveUsersCount(options: {
 		startDate: string;
 		endDate: string;

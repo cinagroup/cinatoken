@@ -13,7 +13,7 @@ type Props = {
 	selectedVendor: string;
 	modelsByVendor: [string, unknown[]][];
 	selectedKind: ModelListKindFilter;
-	kindCounts: { llm: number; image: number; audio: number };
+	kindCounts: { llm: number; image: number; audio: number; rerank: number };
 	onSelectVendor: (vendor: string) => void;
 	onSelectKind: (kind: ModelListKindFilter) => void;
 	onClearFilter: () => void;
@@ -76,6 +76,12 @@ export function ModelFilterSidebar(props: Props) {
 							count={kindCounts.audio}
 							isActive={selectedKind === 'audio'}
 							onClick={() => onSelectKind('audio')}
+						/>
+						<HorizontalButton
+							label={t('kindRerank')}
+							count={kindCounts.rerank}
+							isActive={selectedKind === 'rerank'}
+							onClick={() => onSelectKind('rerank')}
 						/>
 					</HorizontalSection>
 					{hasActiveFilter ? (

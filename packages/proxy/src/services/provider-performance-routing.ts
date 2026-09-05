@@ -1,4 +1,18 @@
-import type { GatewayRepositories, RoutePerformanceSample } from '@octafuse/core';
+import type {
+	GatewayRepositories,
+	RouteAvailabilityAggregate,
+	RoutePerformanceSample,
+} from '@octafuse/core';
+import {
+	collectRoutePerformanceSeries,
+	MIN_ROUTE_AVAILABILITY_OBSERVATIONS,
+	ROUTE_PERFORMANCE_MAX_ROUTES_PER_QUERY,
+	ROUTE_PERFORMANCE_MAX_SAMPLES_PER_ROUTE,
+	ROUTE_PERFORMANCE_WINDOW_MS,
+	routePerformanceMetricIsReady,
+	routePerformancePercentile,
+	type RoutePerformanceSeries,
+} from '@octafuse/core';
 import type { RouteResult } from './model-router';
 import type {
 	ProviderPerformancePreference,
@@ -6,59 +20,12 @@ import type {
 	ProviderPreferences,
 } from './provider-routing-preferences';
 
-const PERFORMANCE_WINDOW_MS = 5 * 60 * 1000;
-const MAX_ROUTES_PER_QUERY = 64;
-const MAX_SAMPLES_PER_ROUTE = 100;
-
-type RoutePerformance = {
-	latencySeconds: number[];
-	throughputTokensPerSecond: number[];
-};
-
 type ProviderPerformanceRepositories = {
-	requestLogs: Pick<GatewayRepositories['requestLogs'], 'getRecentRoutePerformanceSamples'>;
+	requestLogs: Pick<
+		GatewayRepositories['requestLogs'],
+		'getRecentRoutePerformanceSamples' | 'getRouteAvailabilityAggregates'
+	>;
 };
-
-function finiteNonNegative(value: unknown): number | null {
-	const number = Number(value);
-	return Number.isFinite(number) && number >= 0 ? number : null;
-}
-
-function latencySeconds(sample: RoutePerformanceSample): number | null {
-	for (const value of [
-		sample.first_token_ms,
-		sample.final_upstream_headers_ms,
-		sample.upstream_response_ms,
-		sample.latency_ms,
-	]) {
-		const milliseconds = finiteNonNegative(value);
-		if (milliseconds != null) return milliseconds / 1_000;
-	}
-	return null;
-}
-
-function throughputTokensPerSecond(sample: RoutePerformanceSample): number | null {
-	const tokens = finiteNonNegative(sample.output_tokens);
-	const duration = finiteNonNegative(sample.stream_duration_ms);
-	if (tokens == null || tokens <= 0 || duration == null || duration <= 0) return null;
-	return tokens * 1_000 / duration;
-}
-
-function percentile(
-	values: number[],
-	requested: ProviderPercentile,
-	higherIsBetter = false,
-): number | null {
-	if (values.length === 0) return null;
-	const sorted = [...values].sort((a, b) => a - b);
-	const ratio = Number(requested.slice(1)) / 100;
-	// Latency p90 is the slow-tail percentile. Throughput p90 means 90% of
-	// requests achieved at least the returned rate, so it uses the low tail.
-	const index = higherIsBetter
-		? Math.max(0, Math.ceil((1 - ratio) * sorted.length) - 1)
-		: Math.max(0, Math.ceil(ratio * sorted.length) - 1);
-	return sorted[index] ?? null;
-}
 
 function preferenceEntries(
 	preference: ProviderPerformancePreference,
@@ -71,32 +38,50 @@ function preferenceEntries(
 }
 
 function routeMeetsThresholds(
-	metric: RoutePerformance | undefined,
+	metric: RoutePerformanceSeries | undefined,
 	preferences: ProviderPreferences,
 ): boolean {
 	if (!metric) return false;
 	if (preferences.preferredMinThroughput != null) {
 		for (const [requested, threshold] of preferenceEntries(preferences.preferredMinThroughput)) {
-			const actual = percentile(metric.throughputTokensPerSecond, requested, true);
+			const actual = routePerformanceMetricIsReady(metric.throughputTokensPerSecond)
+				? routePerformancePercentile(metric.throughputTokensPerSecond, requested, true)
+				: null;
 			if (actual == null || actual < threshold) return false;
 		}
 	}
 	if (preferences.preferredMaxLatency != null) {
 		for (const [requested, threshold] of preferenceEntries(preferences.preferredMaxLatency)) {
-			const actual = percentile(metric.latencySeconds, requested);
+			const actual = routePerformanceMetricIsReady(metric.latencySeconds)
+				? routePerformancePercentile(metric.latencySeconds, requested)
+				: null;
 			if (actual == null || actual > threshold) return false;
 		}
 	}
 	return true;
 }
 
-function sortMetric(metric: RoutePerformance | undefined, by: 'latency' | 'throughput'): number | null {
+function sortMetric(metric: RoutePerformanceSeries | undefined, by: 'latency' | 'throughput'): number | null {
 	if (!metric) return null;
-	return percentile(
-		by === 'latency' ? metric.latencySeconds : metric.throughputTokensPerSecond,
+	const values = by === 'latency' ? metric.latencySeconds : metric.throughputTokensPerSecond;
+	if (!routePerformanceMetricIsReady(values)) return null;
+	return routePerformancePercentile(
+		values,
 		'p50',
 		by === 'throughput',
 	);
+}
+
+/** 0 = normal/insufficient evidence, 1 = degraded, 2 = down. */
+function routeReliabilityRank(aggregate: RouteAvailabilityAggregate | undefined): number {
+	if (!aggregate || aggregate.total_5m < MIN_ROUTE_AVAILABILITY_OBSERVATIONS) return 0;
+	const uptime = aggregate.available_5m / aggregate.total_5m;
+	if (uptime >= 0.95) return 0;
+	return uptime >= 0.8 ? 1 : 2;
+}
+
+function telemetryWarning(message: string): void {
+	console.warn(JSON.stringify({ message }));
 }
 
 /** Apply OpenRouter-style recent performance preferences using a bounded five-minute sample. */
@@ -115,34 +100,50 @@ export async function applyProviderPerformanceRouting(
 
 	const routeTargetIds = [...new Set(routes.map((route) => route.targetId))];
 	const routeTargetIdSet = new Set(routeTargetIds);
-	const metrics = new Map<string, RoutePerformance>();
-	const sampleCounts = new Map<string, number>();
-	const sinceIso = new Date(now.getTime() - PERFORMANCE_WINDOW_MS).toISOString();
-	for (let offset = 0; offset < routeTargetIds.length; offset += MAX_ROUTES_PER_QUERY) {
-		const routeTargetBatch = routeTargetIds.slice(offset, offset + MAX_ROUTES_PER_QUERY);
-		const samples = await repos.requestLogs.getRecentRoutePerformanceSamples({
-			routeTargetIds: routeTargetBatch,
-			sinceIso,
-			maxSamplesPerRoute: MAX_SAMPLES_PER_ROUTE,
-		});
-		for (const sample of samples) {
-			if (!routeTargetIdSet.has(sample.route_target_id)) continue;
-			const count = sampleCounts.get(sample.route_target_id) ?? 0;
-			if (count >= MAX_SAMPLES_PER_ROUTE) continue;
-			sampleCounts.set(sample.route_target_id, count + 1);
-			const metric = metrics.get(sample.route_target_id) ?? {
-				latencySeconds: [],
-				throughputTokensPerSecond: [],
-			};
-			const latency = latencySeconds(sample);
-			if (latency != null) metric.latencySeconds.push(latency);
-			const throughput = throughputTokensPerSecond(sample);
-			if (throughput != null) metric.throughputTokensPerSecond.push(throughput);
-			metrics.set(sample.route_target_id, metric);
-		}
+	const sinceIso = new Date(now.getTime() - ROUTE_PERFORMANCE_WINDOW_MS).toISOString();
+	const since30mIso = new Date(now.getTime() - 30 * 60 * 1_000).toISOString();
+	const since1dIso = new Date(now.getTime() - 24 * 60 * 60 * 1_000).toISOString();
+	const sampleBatches: RoutePerformanceSample[] = [];
+	const availabilityByRoute = new Map<string, RouteAvailabilityAggregate>();
+	let performanceTelemetryFailed = false;
+	let availabilityTelemetryFailed = false;
+	for (let offset = 0; offset < routeTargetIds.length; offset += ROUTE_PERFORMANCE_MAX_ROUTES_PER_QUERY) {
+		const routeTargetBatch = routeTargetIds.slice(offset, offset + ROUTE_PERFORMANCE_MAX_ROUTES_PER_QUERY);
+		const [samples, availability] = await Promise.allSettled([
+			repos.requestLogs.getRecentRoutePerformanceSamples({
+				routeTargetIds: routeTargetBatch,
+				sinceIso,
+				maxSamplesPerRoute: ROUTE_PERFORMANCE_MAX_SAMPLES_PER_ROUTE,
+			}),
+			repos.requestLogs.getRouteAvailabilityAggregates({
+				routeTargetIds: routeTargetBatch,
+				since5mIso: sinceIso,
+				since30mIso,
+				since1dIso,
+			}),
+		]);
+		if (samples.status === 'fulfilled') sampleBatches.push(...samples.value);
+		else performanceTelemetryFailed = true;
+		if (availability.status === 'fulfilled') {
+			for (const aggregate of availability.value) {
+				if (routeTargetIdSet.has(aggregate.route_target_id)) {
+					availabilityByRoute.set(aggregate.route_target_id, aggregate);
+				}
+			}
+		} else availabilityTelemetryFailed = true;
 	}
+	if (performanceTelemetryFailed) telemetryWarning('provider performance samples unavailable');
+	if (availabilityTelemetryFailed) telemetryWarning('provider availability aggregates unavailable');
+	const metrics = collectRoutePerformanceSeries({
+		samples: sampleBatches,
+		allowedRouteTargetIds: routeTargetIdSet,
+		maxSamplesPerRoute: ROUTE_PERFORMANCE_MAX_SAMPLES_PER_ROUTE,
+	});
 
 	let ordered = [...routes];
+	const reliabilityRank = (route: RouteResult) => routeReliabilityRank(
+		availabilityByRoute.get(route.targetId),
+	);
 	let preferredIds: Set<string> | null = null;
 	if (preferences.preferredMinThroughput != null || preferences.preferredMaxLatency != null) {
 		const thresholdPreferredIds = new Set(
@@ -168,6 +169,8 @@ export async function applyProviderPerformanceRouting(
 	const sortBy = preferences.sort?.by;
 	if (sortBy === 'latency' || sortBy === 'throughput') {
 		ordered.sort((left, right) => {
+			const reliabilityDelta = reliabilityRank(left) - reliabilityRank(right);
+			if (reliabilityDelta !== 0) return reliabilityDelta;
 			if (preferredIds && preferredIds.size > 0) {
 				const preferredDelta = Number(preferredIds.has(right.targetId))
 					- Number(preferredIds.has(left.targetId));
@@ -179,6 +182,18 @@ export async function applyProviderPerformanceRouting(
 			if (leftMetric == null) return 1;
 			if (rightMetric == null) return -1;
 			return sortBy === 'latency' ? leftMetric - rightMetric : rightMetric - leftMetric;
+		});
+		ordered = ordered.map((route, index) => ({ ...route, routePriority: ordered.length - index }));
+	} else if (preferredIds != null || ordered.some((route) => reliabilityRank(route) > 0)) {
+		ordered.sort((left, right) => {
+			const reliabilityDelta = reliabilityRank(left) - reliabilityRank(right);
+			if (reliabilityDelta !== 0) return reliabilityDelta;
+			if (preferredIds && preferredIds.size > 0) {
+				const preferredDelta = Number(preferredIds.has(right.targetId))
+					- Number(preferredIds.has(left.targetId));
+				if (preferredDelta !== 0) return preferredDelta;
+			}
+			return right.routePriority - left.routePriority;
 		});
 		ordered = ordered.map((route, index) => ({ ...route, routePriority: ordered.length - index }));
 	}

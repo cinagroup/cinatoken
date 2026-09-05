@@ -598,6 +598,14 @@ describe('image Guardrail budget integration', () => {
 			async first<T>(): Promise<T | null> {
 				return { present: 1 } as T;
 			}
+			async all<T>(): Promise<{ results: T[] }> {
+				return { results: [{
+					assignment_id: 'guardrail-1',
+					scope_type: 'user',
+					scope_id: 'user-1',
+					settlement_basis: 'charged',
+				} as T] };
+			}
 		}
 		const raw = {
 			prepare(sql: string): Statement {
@@ -622,6 +630,7 @@ describe('image Guardrail budget integration', () => {
 			guardrailBudgetSettlement: { requestId },
 			apiKeyId: 'key-1', userId: 'user-1', userEmail: 'user@example.com',
 			modelId: 'openai/image-free', providerId: 'provider-1',
+			sessionId: 'session-image-1',
 			requestProtocol: 'openai', requestOperation: 'images.generations',
 			upstreamProtocol: 'openai', routeGroup: 'default', status: 'success', latencyMs: 10,
 			billing: { modelPricingProfileJson: null, imageCount: 1, operation: 'generations' },
@@ -640,11 +649,49 @@ describe('image Guardrail budget integration', () => {
 			.map((column) => column.trim());
 		assert.equal(requestInsert!.values[columns.indexOf('id')], requestId);
 		assert.equal(requestInsert!.values[columns.indexOf('budget_accounted_at')], accountedAt);
+		assert.equal(requestInsert!.values[columns.indexOf('session_id')], 'session-image-1');
+		assert.equal(requestInsert!.values[columns.indexOf('native_tokens_prompt')], null);
+		assert.equal(requestInsert!.values[columns.indexOf('native_tokens_completion')], null);
+		assert.equal(requestInsert!.values[columns.indexOf('native_tokens_cached')], null);
+		assert.equal(requestInsert!.values[columns.indexOf('native_tokens_reasoning')], null);
+		assert.equal(requestInsert!.values[columns.indexOf('native_tokens_completion_images')], null);
 		const settlement = batches[0]!.find((statement) =>
 			statement.sql.includes("SET state = 'settled'")
 		);
 		assert.ok(settlement);
 		assert.ok(settlement!.values.includes(requestId));
+	});
+
+	it('persists authoritative provider-native image token dimensions without inferring missing data', async () => {
+		const batches: ImageCapturedStatement[][] = [];
+		await recordImageUsage({
+			repos: captureD1ImageRepositories(batches),
+			requestLogId: 'image-native-usage',
+			apiKeyId: 'key-1', workspaceId: 'workspace-1', userId: 'user-1', userEmail: null,
+			modelId: 'openai/image-token', providerId: 'provider-1',
+			requestProtocol: 'openai', requestOperation: 'images.generations',
+			upstreamProtocol: 'openai', routeGroup: 'default', status: 'success', latencyMs: 10,
+			billing: { modelPricingProfileJson: TOKEN_PROFILE, imageCount: 1, operation: 'generations' },
+			effectiveImageCount: 1,
+			imageUsage: {
+				text_tokens: 11,
+				cached_text_tokens: 3,
+				image_input_tokens: 7,
+				cached_image_input_tokens: 2,
+				image_output_tokens: 13,
+				total_tokens: 31,
+				raw_usage: '{"provider":"evidence"}',
+			},
+			resultConfirmed: true,
+			suppressErrorAlert: true,
+		});
+
+		const insert = findImageRequestLogInsert(batches[0]!);
+		assert.equal(imageRequestLogColumn(insert, 'native_tokens_prompt'), 18);
+		assert.equal(imageRequestLogColumn(insert, 'native_tokens_completion'), 13);
+		assert.equal(imageRequestLogColumn(insert, 'native_tokens_cached'), 5);
+		assert.equal(imageRequestLogColumn(insert, 'native_tokens_reasoning'), null);
+		assert.equal(imageRequestLogColumn(insert, 'native_tokens_completion_images'), 13);
 	});
 
 	it('preserves both budget ceilings for a consumed but unusable 2xx result', async () => {
@@ -816,6 +863,63 @@ describe('image Guardrail budget integration', () => {
 			suppressErrorAlert: true,
 		}), /endpoint pricing identity does not match routed usage/);
 	});
+
+	it('waives private BYOK image charges while preserving an unknown route-inclusive key ceiling', async () => {
+		const batches: ImageCapturedStatement[][] = [];
+		const requestId = 'image-private-byok';
+		const result = await recordImageUsage({
+			repos: captureD1ImageRepositories(batches, 'gateway_key_route'),
+			requestLogId: requestId,
+			guardrailBudgetSettlement: { requestId, mode: 'reserved' },
+			ordinaryBudgetSettlement: {
+				requestId, budgetEpoch: 7, reservedMicros: 40_000, unknownCost: true,
+			},
+			apiKeyId: 'key-1', userId: 'user-1', userEmail: null,
+			workspaceId: 'workspace-1',
+			modelId: 'openai/image-endpoint-model', providerId: 'provider-1',
+			requestOrigin: 'https://cinatoken.com', responseStreamed: false,
+			requestProtocol: 'openai', requestOperation: 'images.generations',
+			upstreamProtocol: 'openai', upstreamOperation: 'images.generations',
+			routeTargetId: 'target-image-byok',
+			routeGroup: 'default', status: 'success', latencyMs: 10,
+			providerKeyId: 'byok:image-1',
+			billing: {
+				endpoint: verifiedImageEndpoint([
+					{ billable: 'output_image', unit: 'image', cost_usd: '0.04' },
+				]),
+				imageCount: 1,
+				operation: 'generations',
+				requestStartedAtMs: Date.parse('2026-09-03T02:00:00.000Z'),
+			},
+			effectiveImageCount: 1,
+			imageUsage: null,
+			resultConfirmed: true,
+			upstreamAccepted: true,
+			suppressErrorAlert: true,
+		});
+
+		assert.equal(result.chargedCost, 0);
+		const insert = findImageRequestLogInsert(batches[0]!);
+		assert.equal(imageRequestLogColumn(insert, 'metered_cost'), 0);
+		assert.equal(imageRequestLogColumn(insert, 'standard_cost'), 0.04);
+		assert.equal(imageRequestLogColumn(insert, 'charged_cost'), 0);
+		assert.equal(imageRequestLogColumn(insert, 'is_byok'), 1);
+		assert.equal(imageRequestLogColumn(insert, 'charged_cost_usd'), 0);
+		assert.equal(imageRequestLogColumn(insert, 'upstream_inference_cost_usd'), 0);
+		const audit = JSON.parse(String(imageRequestLogColumn(insert, 'pricing_audit'))) as {
+			byok?: Record<string, unknown>;
+		};
+		assert.equal(audit.byok?.policy, 'fee_waived_until_entitlement_v1');
+		assert.equal(audit.byok?.standard_equivalent_cost_usd, 0.04);
+		const ordinaryTransition = batches[0]!.find(({ sql }) =>
+			sql.includes('UPDATE user_budget_reservations') && sql.includes('SET state = ?')
+		);
+		assert.equal(ordinaryTransition?.values[0], 'settled');
+		assert.equal(ordinaryTransition?.values[1], 0);
+		assert.ok(batches[0]!.some(({ sql }) =>
+			sql.includes("SET state = 'expired'") && sql.includes('settled_micros = reserved_micros')
+		));
+	});
 });
 
 describe('missing upstream usage fallback', () => {
@@ -962,7 +1066,10 @@ describe('shouldChargeUncertainImageResult', () => {
 
 type ImageCapturedStatement = { sql: string; values: unknown[] };
 
-function captureD1ImageRepositories(batches: ImageCapturedStatement[][]): GatewayRepositories {
+function captureD1ImageRepositories(
+	batches: ImageCapturedStatement[][],
+	settlementBasis: 'charged' | 'gateway_key_route' = 'charged',
+): GatewayRepositories {
 	class Statement {
 		constructor(readonly sql: string, readonly values: unknown[] = []) {}
 		bind(...values: unknown[]): Statement { return new Statement(this.sql, values); }
@@ -979,6 +1086,15 @@ function captureD1ImageRepositories(batches: ImageCapturedStatement[][]): Gatewa
 				} as T;
 			}
 			return { present: 1 } as T;
+		}
+		async all<T>(): Promise<{ results: T[] }> {
+			const gatewayKeyRoute = settlementBasis === 'gateway_key_route';
+			return { results: [{
+				assignment_id: gatewayKeyRoute ? 'gateway-key-limit:key-1' : 'guardrail-1',
+				scope_type: gatewayKeyRoute ? 'api_key' : 'user',
+				scope_id: gatewayKeyRoute ? 'key-1' : 'user-1',
+				settlement_basis: settlementBasis,
+			} as T] };
 		}
 	}
 	const raw = {

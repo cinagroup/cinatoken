@@ -4,7 +4,7 @@
  * 根级鉴权壳：未登录时进入 CinaAuth；已登录则渲染 `Sidebar` + 子页面。
  * 本地会话依赖 `/api/auth/check`，管理权限由服务端向 CinaAuth 实时复核。
  */
-import { useState, useEffect, useCallback, ReactNode } from 'react';
+import { useState, useEffect, useCallback, useRef, ReactNode } from 'react';
 import Image from 'next/image';
 import { useTranslations } from 'next-intl';
 import { usePathname, useRouter } from 'next/navigation';
@@ -17,6 +17,9 @@ import { isPublicProductPath } from '@/lib/public-routes';
 import Sidebar from './Sidebar';
 import ConsoleThemeToggle from '@/components/unified/ConsoleThemeToggle';
 import AdminMobileHeader from './AdminMobileHeader';
+import CinaAuthLoginButtons from '@/components/auth/CinaAuthLoginButtons';
+import CinaAuthAccessLink from '@/components/auth/CinaAuthAccessLink';
+import { subscribeCinaAuthSessionChanges } from '@/lib/cinaauth/session-events';
 
 interface Props {
   children: ReactNode;
@@ -31,38 +34,64 @@ export default function AuthWrapper({ children }: Props) {
   const tBrand = useTranslations('brand');
   const tCommon = useTranslations('common');
   const adminCallbackPath = pathname || '/dashboard';
-  const encodedAdminCallbackPath = encodeURIComponent(adminCallbackPath);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [loginErrorCode, setLoginErrorCode] = useState('');
+  const [isSessionCheckUnavailable, setIsSessionCheckUnavailable] = useState(false);
+  const authRequestEpoch = useRef(0);
 
   const checkAuth = useCallback(async () => {
+	const epoch = ++authRequestEpoch.current;
     if (isPublicHome) {
       setIsLoading(false);
       return;
     }
 
     try {
-	  if (pathname === '/dashboard' || pathname.startsWith('/admin') || pathname.startsWith('/gateway')) {
-        const accountResponse = await fetch('/api/user/me', { cache: 'no-store' });
-        if (accountResponse.ok) {
-          const account = await readJson<{ success: boolean; data?: { isAdmin: boolean } }>(accountResponse);
-          if (account.data && !account.data.isAdmin) {
-            router.replace('/account');
-            return;
-          }
-        }
-      }
-      const response = await fetch('/api/auth/check');
+	  const isAdminPath =
+		pathname === '/dashboard' ||
+		pathname.startsWith('/admin') ||
+		pathname.startsWith('/gateway');
+	  const [response, accountResponse] = await Promise.all([
+		fetch('/api/auth/check', { cache: 'no-store', signal: AbortSignal.timeout(15_000) }),
+		isAdminPath
+			? fetch('/api/user/me', { cache: 'no-store', signal: AbortSignal.timeout(15_000) }).catch(() => null)
+			: Promise.resolve(null),
+	  ]);
+	  if (epoch !== authRequestEpoch.current) return;
       if (!response.ok) {
         throw new Error(`Admin auth check failed with ${response.status}`);
       }
-      const data = await readJson<{ authenticated: boolean }>(response);
-      setIsAuthenticated(data.authenticated);
+	  setIsSessionCheckUnavailable(false);
+	  const data = await readJson<{
+		authenticated: boolean;
+		verification?: 'none' | 'verified' | 'degraded' | 'rejected';
+	  }>(response);
+	  if (epoch !== authRequestEpoch.current) return;
+	  if (!data || typeof data.authenticated !== 'boolean') {
+		throw new Error('Invalid auth status response');
+	  }
+	  if (data.authenticated) {
+		setIsAuthenticated(true);
+		return;
+	  }
+	  if (accountResponse?.ok) {
+		const account = await readJson<{
+			success: boolean;
+			data?: { isAdmin: boolean };
+		}>(accountResponse);
+		if (epoch !== authRequestEpoch.current) return;
+		if (account.data && !account.data.isAdmin) {
+			router.replace('/account');
+			return;
+		}
+	  }
+	  setIsAuthenticated(false);
     } catch (error) {
       console.error('Auth check error:', error);
+	  if (epoch === authRequestEpoch.current) setIsSessionCheckUnavailable(true);
     } finally {
-      setIsLoading(false);
+	  if (epoch === authRequestEpoch.current) setIsLoading(false);
     }
   }, [isPublicHome, pathname, router]);
 
@@ -79,7 +108,9 @@ export default function AuthWrapper({ children }: Props) {
     const onSessionExpired = () => {
       // Protected requests remain fail-closed on the server. Do not destroy the
       // local session on a single rejection, so transient CinaAuth failures can recover.
+	  authRequestEpoch.current += 1;
       setIsAuthenticated(false);
+      setIsSessionCheckUnavailable(false);
       setIsLoading(false);
     };
     window.addEventListener(ADMIN_SESSION_EXPIRED_EVENT_NAME, onSessionExpired);
@@ -95,6 +126,30 @@ export default function AuthWrapper({ children }: Props) {
     document.addEventListener('visibilitychange', onVisible);
     return () => document.removeEventListener('visibilitychange', onVisible);
   }, [checkAuth]);
+
+  const onPopupAuthenticated = useCallback(async () => {
+	setLoginErrorCode('');
+	setIsSessionCheckUnavailable(false);
+	setIsLoading(true);
+	await checkAuth();
+	router.refresh();
+  }, [checkAuth, router]);
+
+  useEffect(() => subscribeCinaAuthSessionChanges((change) => {
+	authRequestEpoch.current += 1;
+	setIsAuthenticated(false);
+	setIsSessionCheckUnavailable(false);
+	setLoginErrorCode('');
+	if (change === 'logout') setIsLoading(false);
+	else {
+		setIsLoading(true);
+		void checkAuth();
+	}
+  }), [checkAuth]);
+
+  const onPopupError = useCallback((errorCode: string) => {
+	setLoginErrorCode(errorCode);
+  }, []);
 
   if (isPublicHome) {
     return <>{children}</>;
@@ -137,6 +192,22 @@ export default function AuthWrapper({ children }: Props) {
             </div>
           </div>
 		  <p className="mb-5 text-sm leading-6 text-gray-600">{t('cinaAuthDescription')}</p>
+			{isSessionCheckUnavailable ? (
+			  <div className="mb-4 rounded-md border border-amber-200 bg-amber-50 p-3 text-sm text-amber-950">
+				<p className="font-medium">{t('sessionCheckUnavailable')}</p>
+				<p className="mt-1 text-xs leading-5 text-amber-800">{t('sessionCheckUnavailableHelp')}</p>
+				<button
+				  type="button"
+				  onClick={() => {
+					setIsLoading(true);
+					void checkAuth();
+				  }}
+				  className="mt-2 rounded-md border border-amber-300 bg-white px-3 py-1.5 text-xs font-semibold text-amber-900 hover:bg-amber-100"
+				>
+				  {t('retrySessionCheck')}
+				</button>
+			  </div>
+			) : null}
 			{loginErrorCode === 'admin_forbidden' ? (
 			  <div className="mb-4 rounded-md border border-amber-200 bg-amber-50 p-3 text-sm text-amber-950">
 				<p className="font-medium">{t('adminForbidden')}</p>
@@ -150,12 +221,13 @@ export default function AuthWrapper({ children }: Props) {
 				  >
 					{t('manageCinaAuthRoles')}
 				  </a>
-				  <a
-					href="/api/auth/cinaauth/login?intent=portal&callbackURL=%2Faccount"
+				  <CinaAuthAccessLink
+					href="/account"
+					intent="portal"
 					className="inline-flex items-center justify-center rounded-md px-3 py-2 text-xs font-semibold text-amber-900 hover:bg-amber-100"
 				  >
 					{t('continueToUserCenter')}
-				  </a>
+				  </CinaAuthAccessLink>
 				</div>
 			  </div>
 			) : loginErrorCode ? (
@@ -163,20 +235,12 @@ export default function AuthWrapper({ children }: Props) {
 				{t('loginError')}
 			  </div>
 			) : null}
-		  <div className="space-y-3">
-			<a
-			  href={`/api/auth/cinaauth/login?callbackURL=${encodedAdminCallbackPath}`}
-			  className="flex w-full items-center justify-center rounded-md bg-cyan-600 px-4 py-2.5 font-medium text-white transition-colors hover:bg-cyan-700 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:ring-offset-2"
-			>
-			  {t('continueWithCinaAuth')}
-			</a>
-			<a
-			  href={`/api/auth/cinaauth/register?callbackURL=${encodedAdminCallbackPath}`}
-			  className="flex w-full items-center justify-center rounded-md border border-gray-300 bg-white px-4 py-2.5 font-medium text-gray-700 transition-colors hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:ring-offset-2"
-			>
-			  {t('createAccount')}
-			</a>
-		  </div>
+		  <CinaAuthLoginButtons
+			intent="admin"
+			callbackPath={adminCallbackPath}
+			onAuthenticated={onPopupAuthenticated}
+			onError={onPopupError}
+		  />
 		  <p className="mt-4 text-xs leading-5 text-gray-500">{t('roleRequirement')}</p>
           <div className="mt-6 border-t border-gray-100 pt-4">
             <BrandExternalLinks variant="login" />

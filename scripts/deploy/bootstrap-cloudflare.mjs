@@ -16,6 +16,7 @@
  *   --reuse-d1                  Fail if D1 name missing (do not create)
  *   --d1-id <uuid>              Use this D1 id (skip create/list match by name)
  *   --skip-secret               Stop after resources/migrations; provision secrets later
+ *   --batch-infra               Stage private Batch R2/Queue/DLQ; API stays off
  *   --yes, -y                   Accept bootstrap defaults (migration still confirms on a TTY)
  *   --help, -h
  */
@@ -24,6 +25,7 @@ import {
 	assertWranglerLoggedIn,
 	ensureD1Database,
 	ensureQueue,
+	ensureR2Bucket,
 	ensureWorkerSecretTarget,
 	envPathForInstance,
 	log,
@@ -52,6 +54,7 @@ Options:
   --reuse-d1                  Require existing D1 with that name
   --d1-id <uuid>              Use existing D1 id directly
   --skip-secret               Stop after resources/migrations; provision secrets later
+  --batch-infra               Stage private Batch infrastructure; does not enable the API
   --yes, -y                   Accept bootstrap defaults; migration still confirms on a TTY
   --help, -h
 
@@ -69,6 +72,7 @@ function parseArgs(argv) {
 		yes: false,
 		reuseD1: false,
 		skipSecret: false,
+		batchInfra: false,
 	};
 	for (let i = 0; i < argv.length; i++) {
 		const a = argv[i];
@@ -93,6 +97,9 @@ function parseArgs(argv) {
 				break;
 			case "--skip-secret":
 				out.skipSecret = true;
+				break;
+			case "--batch-infra":
+				out.batchInfra = true;
 				break;
 			case "--instance":
 				out.instance = next();
@@ -214,6 +221,7 @@ async function main() {
 
 	const names = {
 		...baseNames,
+		batchInfraEnabled: Boolean(args.batchInfra),
 		d1DatabaseId,
 		proxyCustomDomain: proxyDomain || undefined,
 		adminCustomDomain: adminDomain || undefined,
@@ -222,6 +230,11 @@ async function main() {
 	writeInstanceEnvFile(instance, names);
 	ensureQueue(names.chainJobDlqName);
 	ensureQueue(names.chainJobQueueName);
+	if (names.batchInfraEnabled) {
+		ensureR2Bucket(names.batchBucketName);
+		ensureQueue(names.batchDlqName);
+		ensureQueue(names.batchQueueName);
+	}
 
 	/** @type {Record<string, string>} */
 	const vars = {
@@ -230,6 +243,10 @@ async function main() {
 		CHAIN_WORKER_NAME: names.chainWorkerName,
 		CHAIN_JOB_QUEUE_NAME: names.chainJobQueueName,
 		CHAIN_JOB_DLQ_NAME: names.chainJobDlqName,
+		BATCH_INFRA_ENABLED: names.batchInfraEnabled ? "true" : "false",
+		BATCH_BUCKET_NAME: names.batchBucketName,
+		BATCH_QUEUE_NAME: names.batchQueueName,
+		BATCH_DLQ_NAME: names.batchDlqName,
 		CINACHAIN_CHAIN_ID: process.env.CINACHAIN_CHAIN_ID || "84532",
 		D1_DATABASE_NAME: names.d1DatabaseName,
 		D1_DATABASE_ID: names.d1DatabaseId,

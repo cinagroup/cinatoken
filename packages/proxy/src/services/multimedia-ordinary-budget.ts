@@ -1,5 +1,8 @@
 export type MultimediaChargedCostEstimate = {
 	chargedCost: number;
+	standardCost: number;
+	/** Maximum standard/list-price cost across any route collapsed into this estimate. */
+	byokStandardCostCeiling?: number;
 	pricingAuditJson: string;
 };
 
@@ -7,6 +10,8 @@ export type ConservativeMultimediaBudgetEstimate<T extends MultimediaChargedCost
 	estimate: T;
 	/** Null means at least one eligible route has no provable finite charged ceiling. */
 	estimatedChargedCost: number | null;
+	/** Null means at least one eligible route has no provable finite list-price ceiling. */
+	estimatedStandardCost: number | null;
 };
 
 export function multimediaEstimateHasProvablePricing(
@@ -35,13 +40,21 @@ export function selectConservativeMultimediaBudgetEstimate<
 	if (estimates.length === 0) return null;
 	let estimate = estimates[0]!;
 	let allProvable = multimediaEstimateHasProvablePricing(estimate);
+	let standardCeiling = estimate.byokStandardCostCeiling ?? estimate.standardCost;
 	for (const candidate of estimates.slice(1)) {
 		if (candidate.chargedCost >= estimate.chargedCost) estimate = candidate;
 		allProvable &&= multimediaEstimateHasProvablePricing(candidate);
+		standardCeiling = Math.max(
+			standardCeiling,
+			candidate.byokStandardCostCeiling ?? candidate.standardCost,
+		);
 	}
 	return {
 		estimate,
 		estimatedChargedCost: allProvable ? estimate.chargedCost : null,
+		estimatedStandardCost: allProvable && Number.isFinite(standardCeiling) && standardCeiling >= 0
+			? standardCeiling
+			: null,
 	};
 }
 

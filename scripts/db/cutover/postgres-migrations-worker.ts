@@ -56,6 +56,19 @@ import migration0051 from '../../../packages/core/migrations-postgres/0051_gatew
 import migration0052 from '../../../packages/core/migrations-postgres/0052_gateway_key_limits.sql';
 import migration0053 from '../../../packages/core/migrations-postgres/0053_workspace_budgets.sql';
 import migration0054 from '../../../packages/core/migrations-postgres/0054_generation_metadata_snapshots.sql';
+import migration0055 from '../../../packages/core/migrations-postgres/0055_request_session_id.sql';
+import migration0056 from '../../../packages/core/migrations-postgres/0056_generation_feedback.sql';
+import migration0057 from '../../../packages/core/migrations-postgres/0057_guardrail_assignment_management_source.sql';
+import migration0058 from '../../../packages/core/migrations-postgres/0058_workspace_default_guardrails.sql';
+import migration0059 from '../../../packages/core/migrations-postgres/0059_account_default_guardrails.sql';
+import migration0060 from '../../../packages/core/migrations-postgres/0060_provider_attempt_availability.sql';
+import migration0061 from '../../../packages/core/migrations-postgres/0061_public_model_total_tokens.sql';
+import migration0062 from '../../../packages/core/migrations-postgres/0062_generation_service_tier.sql';
+import migration0063 from '../../../packages/core/migrations-postgres/0063_private_byok.sql';
+import migration0064 from '../../../packages/core/migrations-postgres/0064_byok_always_use_for_provider.sql';
+import migration0065 from '../../../packages/core/migrations-postgres/0065_guardrail_budget_settlement_basis.sql';
+import migration0066 from '../../../packages/core/migrations-postgres/0066_workspace_budget_usage_index.sql';
+import migration0067 from '../../../packages/core/migrations-postgres/0067_batch_jobs.sql';
 
 interface MigrationEnv {
 	MIGRATOR_HYPERDRIVE: { readonly connectionString: string };
@@ -118,6 +131,19 @@ const MIGRATIONS = [
 	['0052_gateway_key_limits.sql', migration0052],
 	['0053_workspace_budgets.sql', migration0053],
 	['0054_generation_metadata_snapshots.sql', migration0054],
+	['0055_request_session_id.sql', migration0055],
+	['0056_generation_feedback.sql', migration0056],
+	['0057_guardrail_assignment_management_source.sql', migration0057],
+	['0058_workspace_default_guardrails.sql', migration0058],
+	['0059_account_default_guardrails.sql', migration0059],
+	['0060_provider_attempt_availability.sql', migration0060],
+	['0061_public_model_total_tokens.sql', migration0061],
+	['0062_generation_service_tier.sql', migration0062],
+	['0063_private_byok.sql', migration0063],
+	['0064_byok_always_use_for_provider.sql', migration0064],
+	['0065_guardrail_budget_settlement_basis.sql', migration0065],
+	['0066_workspace_budget_usage_index.sql', migration0066],
+	['0067_batch_jobs.sql', migration0067],
 ] as const;
 
 export default {

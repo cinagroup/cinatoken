@@ -108,6 +108,61 @@ test('OpenAI Chat streaming forces terminal usage without discarding compatible 
 	);
 });
 
+test('verified service-tier selection overrides stale client or route defaults immediately before egress', async () => {
+	const bodies: Record<string, unknown>[] = [];
+	await withFetch(
+		(async (_input, init) => {
+			bodies.push(JSON.parse(String(init?.body)) as Record<string, unknown>);
+			return new Response('{}', { status: 400 });
+		}) as typeof fetch,
+		async () => {
+			const flexRoute = route('openai');
+			flexRoute.gatewayServiceTier = 'flex';
+			flexRoute.customParams = { service_tier: 'priority' };
+			await dispatchOpenAiRoute(flexRoute, {
+				messages: [],
+				service_tier: 'default',
+			});
+
+			const standardRoute = route('anthropic');
+			standardRoute.gatewayServiceTier = 'default';
+			await dispatchAnthropicRoute(standardRoute, {
+				messages: [],
+				service_tier: 'priority',
+			});
+		},
+	);
+
+	assert.deepEqual(bodies.map((body) => body.service_tier), ['flex', 'default']);
+});
+
+test('verified text-speed capability controls egress and strips unsupported route defaults', async () => {
+	const bodies: Record<string, unknown>[] = [];
+	await withFetch(
+		(async (_input, init) => {
+			bodies.push(JSON.parse(String(init?.body)) as Record<string, unknown>);
+			return new Response('{}', { status: 400 });
+		}) as typeof fetch,
+		async () => {
+			const fastRoute = route('openai');
+			fastRoute.gatewayTextSpeedControlled = true;
+			fastRoute.gatewayTextSpeed = 'fast';
+			fastRoute.gatewayRequestedServiceTier = 'priority';
+			fastRoute.customParams = { speed: 'standard', service_tier: 'default' };
+			await dispatchOpenAiRoute(fastRoute, { messages: [], speed: 'standard' });
+
+			const unsupportedRoute = route('anthropic');
+			unsupportedRoute.gatewayTextSpeedControlled = true;
+			unsupportedRoute.customParams = { speed: 'fast' };
+			await dispatchAnthropicRoute(unsupportedRoute, { messages: [] });
+		},
+	);
+
+	assert.equal(bodies[0]?.speed, 'fast');
+	assert.equal(bodies[0]?.service_tier, 'priority');
+	assert.equal('speed' in bodies[1]!, false);
+});
+
 test('text driver fetch rejection is marked as an unknown upstream outcome', async () => {
 	await withFetch(
 		(async () => {

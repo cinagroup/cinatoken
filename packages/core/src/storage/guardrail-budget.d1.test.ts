@@ -102,7 +102,17 @@ function reservationParams(
 
 function setupDatabase(): DatabaseSync {
 	const database = new DatabaseSync(':memory:');
-	database.exec(`
+		database.exec(`
+		CREATE TABLE workspaces (
+			id TEXT PRIMARY KEY,
+			status TEXT NOT NULL
+		);
+		CREATE TABLE management_api_keys (
+			id TEXT PRIMARY KEY,
+			account_type TEXT NOT NULL,
+			status TEXT NOT NULL,
+			updated_at TEXT NOT NULL
+		);
 		CREATE TABLE users (
 			id TEXT PRIMARY KEY,
 			budget_spent REAL NOT NULL DEFAULT 0,
@@ -113,13 +123,13 @@ function setupDatabase(): DatabaseSync {
 			id TEXT PRIMARY KEY,
 			user_id TEXT NOT NULL,
 			workspace_id TEXT NOT NULL,
-			status TEXT NOT NULL
+			status TEXT NOT NULL,
+			expires_at TEXT
 		);
 		CREATE TABLE api_key_request_logs (
 			id TEXT PRIMARY KEY,
 			user_id TEXT,
 			api_key_id TEXT,
-			workspace_id TEXT,
 			user_email TEXT,
 			model_id TEXT,
 			provider_id TEXT,
@@ -187,6 +197,7 @@ function setupDatabase(): DatabaseSync {
 			success_count INTEGER NOT NULL DEFAULT 0,
 			error_count INTEGER NOT NULL DEFAULT 0,
 			output_tokens INTEGER NOT NULL DEFAULT 0,
+			total_tokens INTEGER NOT NULL DEFAULT 0,
 			latency_total_ms INTEGER NOT NULL DEFAULT 0,
 			latency_sample_count INTEGER NOT NULL DEFAULT 0,
 			updated_at TEXT NOT NULL,
@@ -210,6 +221,7 @@ function setupDatabase(): DatabaseSync {
 			reason_text TEXT,
 			created_at TEXT NOT NULL DEFAULT (datetime('now'))
 		);
+		INSERT INTO workspaces (id, status) VALUES ('personal:user-1', 'active');
 		INSERT INTO users (id, budget_spent, updated_at)
 		VALUES ('user-1', 0, '2026-08-29T00:00:00.000Z');
 		INSERT INTO api_keys (id, user_id, workspace_id, status) VALUES
@@ -221,6 +233,21 @@ function setupDatabase(): DatabaseSync {
 		ALTER TABLE guardrail_budget_windows ADD COLUMN workspace_id TEXT NOT NULL DEFAULT 'personal:user-1';
 		ALTER TABLE guardrail_budget_reservations ADD COLUMN workspace_id TEXT NOT NULL DEFAULT 'personal:user-1';
 	`);
+	database.exec(readFileSync(fileURLToPath(new URL(
+		'../../migrations-d1/0053_gateway_key_limits.sql', import.meta.url,
+	).href), 'utf8'));
+	database.exec(readFileSync(fileURLToPath(new URL(
+		'../../migrations-d1/0054_workspace_budgets.sql', import.meta.url,
+	).href), 'utf8'));
+	database.exec(readFileSync(fileURLToPath(new URL(
+		'../../migrations-d1/0056_request_session_id.sql', import.meta.url,
+	).href), 'utf8'));
+	database.exec(readFileSync(fileURLToPath(new URL(
+		'../../migrations-d1/0063_generation_service_tier.sql', import.meta.url,
+	).href), 'utf8'));
+	database.exec(readFileSync(fileURLToPath(new URL(
+		'../../migrations-d1/0066_guardrail_budget_settlement_basis.sql', import.meta.url,
+	).href), 'utf8'));
 	return database;
 }
 
@@ -228,6 +255,7 @@ function usageLog(
 	id: string,
 	chargedCost: number,
 	budgetAccountedAt: string | null = '2026-08-29T01:00:00.000Z',
+	options: { standardCost?: number; isByok?: boolean } = {},
 ): InsertRequestLogParams {
 	return {
 		id, userId: 'user-1', apiKeyId: 'key-1', workspaceId: 'personal:user-1', userEmail: 'user@example.com',
@@ -236,8 +264,14 @@ function usageLog(
 		requestProtocol: 'openai', requestOperation: 'chat.completions', upstreamProtocol: 'openai',
 		upstreamOperation: 'chat.completions', inputTokens: 10, outputTokens: 10,
 		cacheReadTokens: 0, cacheWriteTokens: 0, reasoningTokens: 0, totalTokens: 20,
-		meteredCost: chargedCost, standardCost: chargedCost, chargedCost, budgetAccountedAt,
+		meteredCost: chargedCost, standardCost: options.standardCost ?? chargedCost, chargedCost, budgetAccountedAt,
 		routeGroup: 'default', status: 'success', latencyMs: 10, errorMessage: null, rawUsage: null,
+		...(options.isByok === undefined ? {} : {
+			requestOrigin: 'https://cinatoken.com',
+			dataRegion: 'global' as const,
+			isByok: options.isByok,
+			chargedCostUsd: chargedCost,
+		}),
 	};
 }
 
@@ -247,11 +281,16 @@ async function writeUsage(
 		id: string;
 		chargedCost: number;
 		budgetAccountedAt?: string | null;
+		standardCost?: number;
+		isByok?: boolean;
 		settlement?: { requestId: string; mode: 'actual' | 'reserved'; reason: string };
 	},
 ): Promise<void> {
 	await insertRequestUsageAndChargeTxD1(client, {
-		requestLog: usageLog(params.id, params.chargedCost, params.budgetAccountedAt),
+		requestLog: usageLog(params.id, params.chargedCost, params.budgetAccountedAt, {
+			standardCost: params.standardCost,
+			isByok: params.isByok,
+		}),
 		shouldChargeBudget: true,
 		userId: 'user-1',
 		beforeSpent: 0,
@@ -262,6 +301,21 @@ async function writeUsage(
 			requestLogId: params.id, source: 'gateway_usage',
 		},
 	});
+}
+
+function gatewayKeyIntent(limitMicros = 1_000_000): GuardrailBudgetIntent {
+	return {
+		workspaceId: 'personal:user-1',
+		assignmentId: 'gateway-key-limit:key-1',
+		guardrailId: 'gateway-key-limit:key-1',
+		guardrailVersion: 2,
+		scopeType: 'api_key',
+		scopeId: 'key-1',
+		period: 'daily',
+		periodStart: PERIOD_START,
+		periodEnd: PERIOD_END,
+		limitMicros,
+	};
 }
 
 function plain<T>(value: T): T {
@@ -695,6 +749,105 @@ test('D1 Guardrail settlement rejects mismatched or missing reservation identiti
 			Number(database.prepare(`SELECT COUNT(*) AS count FROM api_key_request_logs`).get().count),
 			0,
 		);
+	} finally {
+		database.close();
+	}
+});
+
+test('D1 Gateway Key BYOK admission is opt-in and settles at list price', async () => {
+	const database = setupDatabase();
+	try {
+		database.prepare(`UPDATE api_keys SET limit_micros = ?, limit_reset = 'daily',
+			include_byok_in_limit = 1, limit_epoch = 1 WHERE id = 'key-1'`).run(1_000_000);
+		const client = createD1Client(database);
+		const repository = createD1GuardrailBudgetsRepository(client);
+		const keyIntent = gatewayKeyIntent();
+		const params = {
+			...reservationParams('request-byok-list-price', [keyIntent], 500_000),
+			settlementBasis: 'gateway_key_route' as const,
+		};
+
+		assert.deepEqual(await repository.reserveMany(params), {
+			status: 'reserved', reservationCount: 1,
+		});
+		assert.equal(await repository.markDispatched(
+			params.requestId, params.nowIso, params.expiresAtIso,
+		), true);
+		await writeUsage(client, {
+			id: params.requestId,
+			chargedCost: 0,
+			standardCost: 0.4,
+			isByok: true,
+			settlement: { requestId: params.requestId, mode: 'actual', reason: 'private_byok_list_price_settled' },
+		});
+
+		const reservation = database.prepare(`SELECT state, settled_micros, settlement_basis
+			FROM guardrail_budget_reservations WHERE request_id = ?`).get(params.requestId) as Record<string, unknown>;
+		assert.deepEqual(plain(reservation), {
+			state: 'settled', settled_micros: 400_000, settlement_basis: 'gateway_key_route',
+		});
+		const window = database.prepare(`SELECT reserved_micros, settled_micros
+			FROM guardrail_budget_windows WHERE scope_type = 'api_key' AND scope_id = 'key-1'`).get() as Record<string, unknown>;
+		assert.deepEqual(plain(window), { reserved_micros: 0, settled_micros: 400_000 });
+
+		database.prepare(`UPDATE api_keys SET include_byok_in_limit = 0 WHERE id = 'key-1'`).run();
+		const excluded = await repository.reserveMany({
+			...reservationParams('request-byok-excluded', [keyIntent], 100_000),
+			settlementBasis: 'gateway_key_route',
+		});
+		assert.equal(excluded.status, 'conflict');
+	} finally {
+		database.close();
+	}
+});
+
+test('D1 BYOK fallback atomically extends the dispatched key lease and settles shared usage', async () => {
+	const database = setupDatabase();
+	try {
+		database.prepare(`UPDATE api_keys SET limit_micros = ?, limit_reset = 'daily',
+			include_byok_in_limit = 1, limit_epoch = 1 WHERE id = 'key-1'`).run(1_000_000);
+		const client = createD1Client(database);
+		const repository = createD1GuardrailBudgetsRepository(client);
+		const keyIntent = gatewayKeyIntent();
+		const userIntent = intent('user-fallback-limit', 'user', 'user-1');
+		const initial = {
+			...reservationParams('request-byok-fallback', [keyIntent], 500_000),
+			settlementBasis: 'gateway_key_route' as const,
+		};
+		assert.equal((await repository.reserveMany(initial)).status, 'reserved');
+		assert.equal(await repository.markDispatched(
+			initial.requestId, initial.nowIso, initial.expiresAtIso,
+		), true);
+
+		const extension = {
+			...reservationParams(initial.requestId, [keyIntent, userIntent], 250_000),
+			expiresAtIso: '2026-08-29T01:15:00.000Z',
+		};
+		assert.deepEqual(await repository.extendDispatched(extension), {
+			status: 'reserved', reservationCount: 2,
+		});
+		assert.deepEqual(await repository.extendDispatched(extension), {
+			status: 'idempotent', reservationCount: 2,
+		});
+		const rows = database.prepare(`SELECT assignment_id, reserved_micros, settlement_basis, state
+			FROM guardrail_budget_reservations WHERE request_id = ? ORDER BY assignment_id`).all(initial.requestId);
+		assert.deepEqual(plain(rows), [
+			{ assignment_id: 'gateway-key-limit:key-1', reserved_micros: 500_000, settlement_basis: 'gateway_key_route', state: 'dispatched' },
+			{ assignment_id: 'user-fallback-limit', reserved_micros: 250_000, settlement_basis: 'charged', state: 'dispatched' },
+		]);
+
+		await writeUsage(client, {
+			id: initial.requestId,
+			chargedCost: 0.2,
+			standardCost: 0.4,
+			settlement: { requestId: initial.requestId, mode: 'actual', reason: 'actual_usage' },
+		});
+		const settled = database.prepare(`SELECT assignment_id, settled_micros, state
+			FROM guardrail_budget_reservations WHERE request_id = ? ORDER BY assignment_id`).all(initial.requestId);
+		assert.deepEqual(plain(settled), [
+			{ assignment_id: 'gateway-key-limit:key-1', settled_micros: 200_000, state: 'settled' },
+			{ assignment_id: 'user-fallback-limit', settled_micros: 200_000, state: 'settled' },
+		]);
 	} finally {
 		database.close();
 	}

@@ -76,6 +76,7 @@ export function createPostgresAdminAnalyticsRepository(db: PostgresDatabaseClien
 					SUM(success_count)::bigint AS success_count,
 					SUM(error_count)::bigint AS error_count,
 					SUM(output_tokens)::bigint AS output_tokens,
+					SUM(total_tokens)::bigint AS total_tokens,
 					CASE WHEN SUM(latency_sample_count) > 0
 						THEN SUM(latency_total_ms)::double precision / SUM(latency_sample_count)
 						ELSE NULL END AS avg_latency_ms

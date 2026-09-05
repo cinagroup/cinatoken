@@ -22,6 +22,7 @@ import type {
 	ManagementGatewayKeyLookupParams,
 	ManagementGatewayKeyRow,
 } from "../api-keys-types";
+import { assertGatewayKeyLookupHash } from "../api-keys-types";
 import {
 	buildD1ApiKeyListOrderByClause,
 	DEFAULT_API_KEY_LIST_ORDER,
@@ -103,15 +104,22 @@ function mapResolvedRow(r: ResolvedSqlRow): ResolvedGatewayKeyRow {
 
 type ManagementGatewayKeySqlRow = Omit<
 	ManagementGatewayKeyRow,
-	"limit_micros" | "include_byok_in_limit" | "limit_epoch" | "usage" | "usage_daily" | "usage_weekly" | "usage_monthly"
+	"limit_micros" | "include_byok_in_limit" | "limit_epoch" | "limit_consumed_micros"
+	| "usage" | "usage_daily" | "usage_weekly" | "usage_monthly"
+	| "byok_usage" | "byok_usage_daily" | "byok_usage_weekly" | "byok_usage_monthly"
 > & {
 	limit_micros: number | string | null;
 	include_byok_in_limit: number;
 	limit_epoch: number | string;
+	limit_consumed_micros: number | string;
 	usage: number | string;
 	usage_daily: number | string;
 	usage_weekly: number | string;
 	usage_monthly: number | string;
+	byok_usage: number | string;
+	byok_usage_daily: number | string;
+	byok_usage_weekly: number | string;
+	byok_usage_monthly: number | string;
 };
 
 function mapManagementGatewayKeyRow(
@@ -122,10 +130,15 @@ function mapManagementGatewayKeyRow(
 		limit_micros: row.limit_micros === null ? null : Number(row.limit_micros),
 		include_byok_in_limit: row.include_byok_in_limit === 1,
 		limit_epoch: Number(row.limit_epoch),
+		limit_consumed_micros: Number(row.limit_consumed_micros ?? 0),
 		usage: roundGatewayMoney(Number(row.usage ?? 0)),
 		usage_daily: roundGatewayMoney(Number(row.usage_daily ?? 0)),
 		usage_weekly: roundGatewayMoney(Number(row.usage_weekly ?? 0)),
 		usage_monthly: roundGatewayMoney(Number(row.usage_monthly ?? 0)),
+		byok_usage: roundGatewayMoney(Number(row.byok_usage ?? 0)),
+		byok_usage_daily: roundGatewayMoney(Number(row.byok_usage_daily ?? 0)),
+		byok_usage_weekly: roundGatewayMoney(Number(row.byok_usage_weekly ?? 0)),
+		byok_usage_monthly: roundGatewayMoney(Number(row.byok_usage_monthly ?? 0)),
 	};
 }
 
@@ -160,6 +173,14 @@ const managementUsageSelect = `
 		k.user_id, k.workspace_id, k.name, k.status, k.expires_at,
 		k.limit_micros, k.limit_reset, k.include_byok_in_limit, k.limit_epoch,
 		k.created_at, k.updated_at,
+		COALESCE((SELECT budget_window.unreserved_micros + budget_window.settled_micros
+			FROM guardrail_budget_windows budget_window
+			WHERE budget_window.workspace_id = k.workspace_id
+				AND budget_window.scope_type = 'api_key' AND budget_window.scope_id = k.id
+				AND budget_window.period = COALESCE(k.limit_reset, 'lifetime')
+				AND julianday(budget_window.period_start) <= julianday('now')
+				AND julianday(budget_window.period_end) > julianday('now')
+			ORDER BY budget_window.period_start DESC LIMIT 1), 0) AS limit_consumed_micros,
 		COALESCE((SELECT SUM(log.charged_cost) FROM api_key_request_logs log
 			WHERE log.api_key_id = k.id), 0) AS usage,
 		COALESCE((SELECT SUM(log.charged_cost) FROM api_key_request_logs log
@@ -167,7 +188,18 @@ const managementUsageSelect = `
 		COALESCE((SELECT SUM(log.charged_cost) FROM api_key_request_logs log
 			WHERE log.api_key_id = k.id AND log.created_at >= datetime('now', 'start of day', '-' || ((CAST(strftime('%w', 'now') AS INTEGER) + 6) % 7) || ' days')), 0) AS usage_weekly,
 		COALESCE((SELECT SUM(log.charged_cost) FROM api_key_request_logs log
-			WHERE log.api_key_id = k.id AND log.created_at >= datetime('now', 'start of month')), 0) AS usage_monthly
+			WHERE log.api_key_id = k.id AND log.created_at >= datetime('now', 'start of month')), 0) AS usage_monthly,
+		COALESCE((SELECT SUM(log.standard_cost) FROM api_key_request_logs log
+			WHERE log.api_key_id = k.id AND log.is_byok = 1), 0) AS byok_usage,
+		COALESCE((SELECT SUM(log.standard_cost) FROM api_key_request_logs log
+			WHERE log.api_key_id = k.id AND log.is_byok = 1
+				AND log.created_at >= datetime('now', 'start of day')), 0) AS byok_usage_daily,
+		COALESCE((SELECT SUM(log.standard_cost) FROM api_key_request_logs log
+			WHERE log.api_key_id = k.id AND log.is_byok = 1
+				AND log.created_at >= datetime('now', 'start of day', '-' || ((CAST(strftime('%w', 'now') AS INTEGER) + 6) % 7) || ' days')), 0) AS byok_usage_weekly,
+		COALESCE((SELECT SUM(log.standard_cost) FROM api_key_request_logs log
+			WHERE log.api_key_id = k.id AND log.is_byok = 1
+				AND log.created_at >= datetime('now', 'start of month')), 0) AS byok_usage_monthly
 	FROM api_keys k INNER JOIN workspaces w ON w.id = k.workspace_id`;
 
 export async function buildInsertApiKeyStatement(
@@ -241,6 +273,18 @@ export function createD1ApiKeysRepository(
 				)
 			)
 		)`;
+	const getActiveByLookupHash = async (
+		keyHash: string
+	): Promise<ResolvedGatewayKeyRow | null> => {
+		assertGatewayKeyLookupHash(keyHash);
+		const row = await raw
+			.prepare(
+				`${resolvedSelect} WHERE k.key_hash = ? AND k.status = ? AND u.status = ? AND ${activeGatewayAuthorizationPredicate}`
+			)
+			.bind(keyHash, "active", "active")
+			.first<ResolvedSqlRow>();
+		return row ? mapResolvedRow(row) : null;
+	};
 
 	return {
 		buildInsertApiKeyStatement,
@@ -446,13 +490,8 @@ export function createD1ApiKeysRepository(
 			// 哈希优先查找；miss 回退明文（迁移窗口）。密钥和用户
 			// 必须同时 active，且创建者在目标 workspace 仍有 CinaAuth 访问权。
 			const keyHash = await hashLookupKey(key);
-			const byHash = await raw
-				.prepare(
-					`${resolvedSelect} WHERE k.key_hash = ? AND k.status = ? AND u.status = ? AND ${activeGatewayAuthorizationPredicate}`
-				)
-				.bind(keyHash, "active", "active")
-				.first<ResolvedSqlRow>();
-			if (byHash) return mapResolvedRow(byHash);
+			const byHash = await getActiveByLookupHash(keyHash);
+			if (byHash) return byHash;
 			const row = await raw
 				.prepare(
 					`${resolvedSelect} WHERE k.key = ? AND k.status = ? AND u.status = ? AND ${activeGatewayAuthorizationPredicate}`
@@ -478,6 +517,10 @@ export function createD1ApiKeysRepository(
 				key: prepared.storageKey,
 				key_preview: prepared.keyPreview,
 			});
+		},
+
+		async getActiveApiKeyWithUserByLookupHash(keyHash) {
+			return getActiveByLookupHash(keyHash);
 		},
 
 		async getApiKeyWithUserById(

@@ -43,7 +43,7 @@ interface EtlConfig {
 }
 
 const TARGET_SCHEMA = 'cinatoken_gateway';
-const REQUIRED_MIGRATION = '0054_generation_metadata_snapshots.sql';
+const REQUIRED_MIGRATION = '0067_batch_jobs.sql';
 const ETL_LOCK_KEY = 746923552;
 const MAX_POSTGRES_BATCH_PARAMETERS = 60_000;
 const ORDINARY_BUDGET_ETL_TABLES = ['users', 'user_budget_reservations'] as const;

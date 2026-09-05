@@ -10,6 +10,7 @@ import {
 	type GuardrailFilter,
 	type GuardrailPreflightResult,
 	type GuardrailBudgetIntent,
+	type GuardrailBudgetSettlementBasis,
 } from '@octafuse/core';
 
 const GUARDRAIL_BUDGET_ADMISSION_LEASE_MS = 2 * 60 * 1000;
@@ -22,7 +23,13 @@ export type GuardrailBudgetAdmissionResult =
 
 export async function reserveRequestGuardrailBudgets(
 	repositories: GatewayRepositories,
-	params: { requestId: string; intents: GuardrailBudgetIntent[]; reservedMicros: number; now?: Date },
+	params: {
+		requestId: string;
+		intents: GuardrailBudgetIntent[];
+		reservedMicros: number;
+		settlementBasis?: GuardrailBudgetSettlementBasis;
+		now?: Date;
+	},
 ): Promise<GuardrailBudgetAdmissionResult> {
 	if (params.intents.length === 0 || params.reservedMicros === 0) return { ok: true, reserved: false };
 	const now = params.now ?? new Date();
@@ -46,7 +53,14 @@ export async function reserveRequestGuardrailBudgets(
 		reservedMicros: params.reservedMicros,
 		nowIso,
 		expiresAtIso: new Date(now.getTime() + GUARDRAIL_BUDGET_ADMISSION_LEASE_MS).toISOString(),
+		settlementBasis: params.settlementBasis,
 	});
+	return guardrailBudgetAdmissionResult(result);
+}
+
+function guardrailBudgetAdmissionResult(
+	result: Awaited<ReturnType<GatewayRepositories['guardrailBudgets']['reserveMany']>>,
+): GuardrailBudgetAdmissionResult {
 	if (result.status === 'reserved' || result.status === 'idempotent') return { ok: true, reserved: true };
 	if (result.status === 'blocked') {
 		const keyLimit = result.assignmentId?.startsWith(GATEWAY_KEY_LIMIT_INTENT_PREFIX) ?? false;
@@ -58,6 +72,22 @@ export async function reserveRequestGuardrailBudgets(
 	}
 	if (result.status === 'conflict') return { ok: false, blocked: false, message: result.message };
 	return { ok: false, blocked: false, message: 'Unexpected Guardrail budget admission result' };
+}
+
+export async function extendDispatchedRequestGuardrailBudgets(
+	repositories: GatewayRepositories,
+	params: { requestId: string; intents: GuardrailBudgetIntent[]; reservedMicros: number; now?: Date },
+): Promise<GuardrailBudgetAdmissionResult> {
+	if (params.intents.length === 0 || params.reservedMicros === 0) return { ok: true, reserved: false };
+	const now = params.now ?? new Date();
+	const result = await repositories.guardrailBudgets.extendDispatched({
+		requestId: params.requestId,
+		intents: params.intents,
+		reservedMicros: params.reservedMicros,
+		nowIso: now.toISOString(),
+		expiresAtIso: new Date(now.getTime() + GUARDRAIL_BUDGET_DISPATCH_LEASE_MS).toISOString(),
+	});
+	return guardrailBudgetAdmissionResult(result);
 }
 
 export async function markRequestGuardrailBudgetsDispatched(
@@ -148,22 +178,37 @@ export async function auditGuardrailDecision(
 ): Promise<void> {
 	const blocked = !params.result.ok;
 	const redactionCount = params.result.ok ? params.result.redactionCount : 0;
-	if (!blocked && redactionCount === 0) return;
+	const flagCount = params.result.ok ? params.result.flagCount : 0;
+	if (!blocked && redactionCount === 0 && flagCount === 0) return;
+	const eventType = blocked
+		? 'guardrail_blocked'
+		: redactionCount > 0 ? 'guardrail_redacted' : 'guardrail_flagged';
+	const reasonCode = params.result.ok
+		? redactionCount > 0 ? 'guardrail_input_redacted' : 'guardrail_input_flagged'
+		: params.result.code;
 	await repositories.userAuditLogs.insertUserAuditLog({
 		id: crypto.randomUUID(),
 		userId: params.userId,
 		apiKeyId: params.apiKeyId,
-		eventType: blocked ? 'guardrail_blocked' : 'guardrail_redacted',
+		eventType,
 		actorType: 'system',
 		source: 'gateway_guardrails',
-		reasonCode: params.result.ok ? 'guardrail_input_redacted' : params.result.code,
-		reasonText: blocked ? 'Guardrail blocked request' : 'Guardrail redacted request input',
+		reasonCode,
+		reasonText: blocked
+			? 'Guardrail blocked request'
+			: redactionCount > 0 ? 'Guardrail redacted request input' : 'Guardrail flagged request input',
 		correlationId: params.correlationId,
 		changePayload: JSON.stringify({
 			v: 1,
 			workspace_id: params.workspaceId,
 			model_fingerprint: await sha256(params.modelIds.join('\n')),
-			decision_fingerprint: await sha256(params.result.ok ? `redacted:${redactionCount}` : params.result.message),
+			decision_fingerprint: await sha256(params.result.ok
+				? JSON.stringify({
+					redaction_count: redactionCount,
+					flag_count: flagCount,
+					builtins: params.result.builtinDetections,
+				})
+				: params.result.message),
 			assignments: params.result.trace.map((item) => ({
 				assignment_id: item.assignmentId,
 				guardrail_id: item.guardrailId,
@@ -171,6 +216,9 @@ export async function auditGuardrailDecision(
 				scope_type: item.scopeType,
 			})),
 			redaction_count: redactionCount,
+			flag_count: flagCount,
+			builtin_detections: params.result.ok ? params.result.builtinDetections : [],
+			blocked_builtin: params.result.ok ? null : params.result.blockedBuiltin ?? null,
 		}),
 	});
 }
@@ -198,7 +246,7 @@ export async function runRequestGuardrails(
 	const result: GuardrailPreflightResult =
 		preflight.ok &&
 		params.inputFilterSupport === 'unsupported' &&
-		preflight.inputFilters.length > 0
+		preflight.hasInputGuardrails
 			? {
 					ok: false,
 					status: 403,

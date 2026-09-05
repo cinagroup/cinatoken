@@ -9,7 +9,10 @@ import { resolveAdminRequestRuntime } from '@/lib/admin-request-runtime';
 import { authenticateUserRequest } from '@/lib/user-auth';
 import { rejectInvalidBrowserMutationOrigin } from '@/lib/browser-mutation';
 import { authenticateAdminRequest } from '@/lib/auth';
-import { verifyCinaAuthConsolePrincipal } from '@/lib/cinaauth/principal';
+import {
+	CinaAuthConsoleVerificationUnavailableError,
+	verifyCinaAuthConsolePrincipal,
+} from '@/lib/cinaauth/principal';
 import { getAccountCapabilities } from '@/lib/unified-session';
 
 export const dynamic = 'force-dynamic';
@@ -38,9 +41,24 @@ async function handle(request: Request): Promise<Response> {
 		}
 		if (new URL(request.url).pathname === '/api/user/me') {
 			const adminAuthentication = await authenticateAdminRequest(request, repositories);
-			const adminPrincipal = adminAuthentication
-				? await verifyCinaAuthConsolePrincipal(request, adminAuthentication, runtimeBindings)
-				: null;
+			let adminPrincipal: Awaited<
+				ReturnType<typeof verifyCinaAuthConsolePrincipal>
+			> = null;
+			if (adminAuthentication) {
+				try {
+					adminPrincipal = await verifyCinaAuthConsolePrincipal(
+						request,
+						adminAuthentication,
+						runtimeBindings,
+					);
+				} catch (error) {
+					if (!(error instanceof CinaAuthConsoleVerificationUnavailableError)) {
+						throw error;
+					}
+					// Portal authentication is independently backed by portal_sessions.
+					// A transient admin-role check must not log out an ordinary user.
+				}
+			}
 			if (adminPrincipal?.type === 'console') {
 				principal = {
 					...principal,

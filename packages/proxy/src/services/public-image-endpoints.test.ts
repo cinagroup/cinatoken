@@ -54,7 +54,7 @@ const route: ModelRouteJoinRow = {
 	routing_metadata: null,
 	upstream_protocol: "openai",
 	route_pool_id: null,
-	upstream_operation: "image",
+	upstream_operation: "images.generations",
 	adapter: "passthrough",
 	surfaces: null,
 	pool_name: null,
@@ -162,6 +162,10 @@ function repos(
 				),
 		},
 		routeDataPolicies: { getByRouteTargetIds: async () => [] },
+		requestLogs: {
+			getRecentRoutePerformanceSamples: async () => [],
+			getRouteAvailabilityAggregates: async () => [],
+		},
 	};
 }
 describe("image endpoint discovery", () => {

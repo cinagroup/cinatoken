@@ -33,7 +33,7 @@ const MODEL_ROUTE_LIST_JOIN_SQL = `SELECT mr.id, mr.model_id, mr.provider_id, mr
 export function createMySqlModelRoutesRepository(db: MySqlDatabaseClient): ModelRoutesRepository {
 	const pool = asMySqlPool(db.raw);
 	return {
-		async listModelRoutesWithJoins(filters: { modelId?: string; providerId?: string }): Promise<ModelRouteJoinRow[]> {
+		async listModelRoutesWithJoins(filters: { modelId?: string; providerId?: string; limit?: number }): Promise<ModelRouteJoinRow[]> {
 			const conditions: string[] = [];
 			const bindValues: unknown[] = [];
 			if (filters.modelId) {
@@ -45,7 +45,9 @@ export function createMySqlModelRoutesRepository(db: MySqlDatabaseClient): Model
 				bindValues.push(filters.providerId);
 			}
 			const where = conditions.length > 0 ? `WHERE ${conditions.join(' AND ')}` : '';
-			const sqlText = `${MODEL_ROUTE_LIST_JOIN_SQL} ${where} ORDER BY mr.model_id, mr.priority DESC`;
+			const limit = filters.limit == null ? null : Math.max(1, Math.min(10_000, Math.trunc(filters.limit)));
+			if (limit != null) bindValues.push(limit);
+			const sqlText = `${MODEL_ROUTE_LIST_JOIN_SQL} ${where} ORDER BY mr.model_id, mr.priority DESC${limit == null ? '' : ' LIMIT ?'}`;
 			const [rows] = await pool.query<ModelRouteJoinRow[]>(sqlText, bindValues);
 			return rows;
 		},

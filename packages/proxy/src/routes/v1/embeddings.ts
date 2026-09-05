@@ -4,13 +4,13 @@ import {
 	parseModelModalitiesJson,
 	parsePricingProfile,
 } from '@octafuse/core';
+import { MAX_CALLABLE_EMBEDDING_MODELS } from '@octafuse/core/db/model-modalities';
 import { toPublicModelSlug } from '@octafuse/core/lib/public-model-slug';
 import { Hono } from 'hono';
 import type { Env } from '../../app';
 import { requireApiKey } from '../../middleware/auth';
 import { assignGenerationId } from '../../middleware/generation-id';
 import { parseMetadata, parseTags } from '../../lib/model-list-parse';
-import { listPublicModelsWithRoutes } from '../../services/public-models';
 import { buildModelFallbackPlan } from '../../services/model-fallback-plan';
 import type { RouteResult } from '../../services/model-router';
 import { buildAffinityKey, buildTierKeyPrefix } from '../../services/route-strategies';
@@ -19,6 +19,7 @@ import { stickyConfigFromSurface } from '../../services/provider-sticky-routing'
 import { scheduleBackgroundWork } from '../../runtime/schedule-background-work';
 import { RequestTimingCollector } from '../../services/request-timing';
 import { finalizeRequestLogJson } from '../../services/request-log-shared';
+import { generationRequestLogContext } from '../../services/generation-request-context';
 import { buildRouteRequestBody } from '../../services/route-default-params';
 import {
 	computeRequestLogStatus,
@@ -33,25 +34,21 @@ import {
 	maybeTriggerUserModelCircuitFromUpstream,
 } from '../../services/user-model-circuit-route';
 import {
-	forfeitRequestGuardrailBudgets,
-	markRequestGuardrailBudgetsDispatched,
-	releaseRequestGuardrailBudgets,
-	reserveRequestGuardrailBudgets,
 	runRequestGuardrails,
 } from '../../services/request-guardrails';
 import {
 	estimateEmbeddingGuardrailBudgetMicros,
+	estimateEmbeddingGatewayKeyByokBudgetMicros,
 	estimateEmbeddingOrdinaryBudgetChargedCost,
 } from '../../services/guardrail-budget-estimate';
-import {
-	reserveOrdinaryUserBudget,
-	type OrdinaryBudgetLease,
-} from '../../services/ordinary-budget-lifecycle';
+import { createRouteAwareBudgetAdmission } from '../../services/request-budget-admission';
 import {
 	textUsageCostIsUnknown,
 	textUsageWithSafetyTimeout,
 } from '../../services/text-usage-settlement';
 import { recordUsage } from '../../services/usage-tracker';
+import { parseOpenRouterSessionHeader } from '../../services/openrouter-session-routing';
+import { privateByokContextForApiKey } from '../../services/byok-key-pool';
 
 const USAGE_SAFETY_TIMEOUT_MS = 5 * 60 * 1000;
 export const MAX_EMBEDDING_INPUT_ITEMS = 2_048;
@@ -114,6 +111,13 @@ export function validateEmbeddingsBody(body: Record<string, unknown>):
 	| { ok: true; modelId: string; input: EmbeddingInputShape }
 	| { ok: false; code: typeof GatewayErrorCode.invalidRequest | typeof GatewayErrorCode.missingModel; message: string } {
 	const modelId = typeof body.model === 'string' ? body.model.trim() : '';
+	if (Object.prototype.hasOwnProperty.call(body, 'session_id')) {
+		return {
+			ok: false,
+			code: GatewayErrorCode.invalidRequest,
+			message: 'session_id is not supported in an embeddings body; use x-session-id',
+		};
+	}
 	if (
 		Object.prototype.hasOwnProperty.call(body, 'models')
 		|| Object.prototype.hasOwnProperty.call(body, 'fallbacks')
@@ -242,13 +246,22 @@ function stringArray(value: unknown): string[] {
 /** `GET /v1/embeddings/models` — only models with a callable embeddings surface. */
 embeddingsRoutes.get('/models', async (c) => {
 	const repos = c.get('repositories');
-	const [models, routes] = await Promise.all([
-		listPublicModelsWithRoutes(repos),
-		repos.routes.listModelRoutesWithJoins({}),
-	]);
-	const routable = new Set(routes.filter(routeExposesEmbeddings).map((route) => route.model_id));
+	const models = await repos.modelRouting.listCallableEmbeddingModelCandidates();
+	if (models.length > MAX_CALLABLE_EMBEDDING_MODELS) {
+		return c.json({
+			error: {
+				code: 'embedding_model_catalog_too_large',
+				message: 'Embedding model catalog is temporarily unavailable',
+			},
+		}, 503, {
+			'Cache-Control': 'private, no-store',
+			'Retry-After': '60',
+		});
+	}
 	const data = models
-		.filter((model) => routable.has(model.id) && isEmbeddingModel(model))
+		// Repository SQL is a bounded prefilter. Re-parse legacy JSON here so
+		// malformed or non-array modality payloads always fail closed.
+		.filter(isEmbeddingModel)
 		.map((model) => {
 			const metadata = parseMetadata(model.metadata);
 			const releasedAt = model.released_at ? Date.parse(`${model.released_at}T00:00:00Z`) : Number.NaN;
@@ -303,6 +316,13 @@ embeddingsRoutes.post('/', async (c) => {
 	const start = Date.now();
 	const requestId = c.get('generationId')!;
 	const timing = new RequestTimingCollector();
+	const parsedSession = parseOpenRouterSessionHeader(c.req.raw.headers);
+	if (!parsedSession.ok) {
+		return gatewayErrorJson(c, {
+			status: 400, code: GatewayErrorCode.invalidRequest, message: parsedSession.message,
+		});
+	}
+	const sessionId = parsedSession.sessionId;
 
 	let body: Record<string, unknown>;
 	try {
@@ -371,6 +391,7 @@ embeddingsRoutes.post('/', async (c) => {
 		startMs: start,
 		timing,
 		clientErrorCircuitEnabled: false,
+		sessionId,
 	});
 	if (circuitBlocked) return circuitBlocked;
 
@@ -386,21 +407,36 @@ embeddingsRoutes.post('/', async (c) => {
 			message: ordinaryEstimate.message,
 		});
 	}
-	const ordinaryAdmission = await reserveOrdinaryUserBudget(repos, {
-		requestId,
-		userId: apiKey.userId,
-		apiKeyId: apiKey.keyId,
-		budgetMax: apiKey.budgetMax,
-		expectedBudgetEpoch: apiKey.budgetEpoch,
-		estimatedChargedCost: ordinaryEstimate.estimatedChargedCost,
-		now: new Date(start),
+	const guardrailMicros = estimateEmbeddingGuardrailBudgetMicros(
+		fallbackPlan.candidates,
+		validation.input.count,
+		apiKey.chargedCostFactors,
+	);
+	const byokGatewayKeyBudgetMicros = Math.max(
+		guardrailMicros,
+		estimateEmbeddingGatewayKeyByokBudgetMicros(fallbackPlan.candidates, validation.input.count),
+	);
+	const budgetAdmission = await createRouteAwareBudgetAdmission(repos, {
+		ordinary: {
+			requestId,
+			userId: apiKey.userId,
+			apiKeyId: apiKey.keyId,
+			budgetMax: apiKey.budgetMax,
+			expectedBudgetEpoch: apiKey.budgetEpoch,
+			estimatedChargedCost: ordinaryEstimate.estimatedChargedCost,
+			now: new Date(start),
+		},
+		guardrail: {
+			intents: guardrail.budgetIntents,
+			reservedMicros: guardrailMicros,
+			now: new Date(start),
+		},
+		privateByokGatewayKey: {
+			includeInLimit: apiKey.includeByokInLimit === true,
+			reservedMicros: byokGatewayKeyBudgetMicros,
+		},
 	});
-	if (!ordinaryAdmission.ok) {
-		return gatewayErrorJson(c, {
-			status: 403, code: GatewayErrorCode.budgetExceeded, message: ordinaryAdmission.error.message,
-		});
-	}
-	const ordinaryLease: OrdinaryBudgetLease = ordinaryAdmission.lease;
+	const ordinaryLease = budgetAdmission.ordinaryLease;
 	const terminateOrdinary = async (reason: string): Promise<void> => {
 		try {
 			await ordinaryLease.terminateUnknown(reason);
@@ -411,61 +447,18 @@ embeddingsRoutes.post('/', async (c) => {
 		}
 	};
 
-	let guardrailReserved = false;
-	let guardrailDispatched = false;
-	let guardrailForfeited = false;
-	const guardrailMicros = estimateEmbeddingGuardrailBudgetMicros(
-		fallbackPlan.candidates,
-		validation.input.count,
-		apiKey.chargedCostFactors,
-	);
-	let guardrailAdmission: Awaited<ReturnType<typeof reserveRequestGuardrailBudgets>>;
-	try {
-		guardrailAdmission = await reserveRequestGuardrailBudgets(repos, {
-			requestId,
-			intents: guardrail.budgetIntents,
-			reservedMicros: guardrailMicros,
-		});
-	} catch (error) {
-		await terminateOrdinary('guardrail_budget_admission_failed');
-		throw error;
-	}
-	if (!guardrailAdmission.ok) {
-		await terminateOrdinary('guardrail_budget_admission_failed');
-		if (guardrailAdmission.blocked) {
-			return gatewayErrorJson(c, {
-				status: 403, code: guardrailAdmission.reason === 'gateway_key_limit' || guardrailAdmission.reason === 'workspace_budget' ? GatewayErrorCode.budgetExceeded : GatewayErrorCode.guardrailBlocked, message: guardrailAdmission.message,
-			});
-		}
-		throw new Error(`Guardrail budget admission failed: ${guardrailAdmission.message}`);
-	}
-	guardrailReserved = guardrailAdmission.reserved;
 	const forfeitGuardrail = async (reason: string): Promise<void> => {
-		if (!guardrailDispatched || guardrailForfeited) return;
+		if (!budgetAdmission.guardrailDispatched || budgetAdmission.guardrailTerminal) return;
 		try {
-			await forfeitRequestGuardrailBudgets(repos, requestId, guardrailReserved, reason);
-			guardrailForfeited = true;
+			await budgetAdmission.forfeitGuardrailPostDispatch(reason);
 		} catch (error) {
 			console.error('[Gateway Embeddings] guardrail budget forfeit failed', {
 				requestId, reason, error: error instanceof Error ? error.message : String(error),
 			});
 		}
 	};
-	const beforeUpstreamDispatch = async (): Promise<void> => {
-		if (guardrailReserved && !guardrailDispatched) {
-			try {
-				await markRequestGuardrailBudgetsDispatched(repos, requestId, guardrailReserved);
-				guardrailDispatched = true;
-			} catch (error) {
-				await releaseRequestGuardrailBudgets(
-					repos, requestId, guardrailReserved, 'upstream_dispatch_not_started',
-				).catch(() => undefined);
-				await terminateOrdinary('guardrail_dispatch_mark_failed');
-				throw error;
-			}
-		}
-		await ordinaryLease.beforeUpstreamDispatch();
-	};
+	const beforeUpstreamDispatch = (route: RouteResult): Promise<void> =>
+		budgetAdmission.beforeUpstreamDispatch(route);
 
 	timing.markGatewayComplete();
 	let proxyResult: Awaited<ReturnType<typeof proxyEmbeddings>>;
@@ -488,7 +481,9 @@ embeddingsRoutes.post('/', async (c) => {
 				routePoolId: candidate.surface?.route_pool_id ?? candidate.routes[0]?.routePoolId ?? null,
 				sticky: candidate.hasProviderPreferences ? null : stickyConfigFromSurface(candidate.surface),
 				beforeUpstreamDispatch,
+				byok: privateByokContextForApiKey(apiKey),
 			},
+			requestId,
 		);
 	} catch (error) {
 		await forfeitGuardrail('upstream_dispatch_failed');
@@ -499,12 +494,9 @@ embeddingsRoutes.post('/', async (c) => {
 		scheduleBackgroundWork(c, proxyResult.stickyMutationPromise);
 	}
 	if (ordinaryLease.state === 'reserved') await terminateOrdinary('upstream_dispatch_not_started');
-	if (guardrailReserved && !guardrailDispatched) {
+	if (budgetAdmission.guardrailReserved && !budgetAdmission.guardrailDispatched) {
 		try {
-			await releaseRequestGuardrailBudgets(
-				repos, requestId, guardrailReserved, 'upstream_dispatch_not_started',
-			);
-			guardrailReserved = false;
+			await budgetAdmission.releaseGuardrailPreDispatch('upstream_dispatch_not_started');
 		} catch (error) {
 			console.error('[Gateway Embeddings] guardrail budget release failed', {
 				requestId, error: error instanceof Error ? error.message : String(error),
@@ -512,7 +504,10 @@ embeddingsRoutes.post('/', async (c) => {
 		}
 	}
 
-	const materialized = await materializeNonOkResponse(proxyResult.response).catch(async (error: unknown) => {
+	const materialized = await materializeNonOkResponse(proxyResult.response, {
+		requestId,
+		trustedGatewayError: proxyResult.meta?.gatewayGeneratedError === true,
+	}).catch(async (error: unknown) => {
 		await forfeitGuardrail('upstream_response_materialization_failed');
 		await terminateOrdinary('upstream_response_materialization_failed');
 		throw error;
@@ -525,7 +520,7 @@ embeddingsRoutes.post('/', async (c) => {
 	const circuitEvents = [...proxyResult.circuitEvents];
 	if (response.ok) {
 		markUserModelSuccess(apiKey.userId, candidate.baseModelId);
-	} else if (errorBodyText != null) {
+	} else if (errorBodyText != null && proxyResult.meta?.gatewayGeneratedError !== true) {
 		const event = maybeTriggerUserModelCircuitFromUpstream(
 			apiKey.userId,
 			candidate.baseModelId,
@@ -547,6 +542,11 @@ embeddingsRoutes.post('/', async (c) => {
 	);
 	scheduleBackgroundWork(c, usageOrSafety.then(async ({ usage, incomplete, timedOut }) => {
 		if (timedOut) timing.markStreamComplete();
+		timing.finalizeSelectedAttemptAvailability({
+			clientCancelled: Boolean(usage.cancelled),
+			invalidResponse: Boolean(usage.stream_error)
+				|| (proxyResult.meta?.gatewayGeneratedError === true && !response.ok),
+		});
 		const status = computeRequestLogStatus({
 			cancelled: Boolean(usage.cancelled),
 			responseOk: response.ok,
@@ -590,6 +590,8 @@ embeddingsRoutes.post('/', async (c) => {
 			),
 			request_body_logging_mode: c.get('requestBodyLoggingMode'),
 			request_origin: new URL(c.req.url).origin,
+			...generationRequestLogContext(c.req.raw.headers),
+			session_id: sessionId,
 			response_streamed: false,
 			request_protocol: 'openai',
 			request_operation: 'embeddings',
@@ -612,7 +614,7 @@ embeddingsRoutes.post('/', async (c) => {
 			route_group: proxyResult.chosenRoute.routeGroup,
 			status,
 			latency_ms: Date.now() - start,
-			timing: timing.snapshot(),
+			timing: timing.snapshot(usage.upstreamMessageId),
 			error_message: errorMessage,
 			provider_key_id: proxyResult.chosenRoute.providerKeyId ?? null,
 			provider_key_label: proxyResult.chosenRoute.providerKeyLabel ?? null,
@@ -621,7 +623,7 @@ embeddingsRoutes.post('/', async (c) => {
 			upstream_message_id: usage.upstreamMessageId ?? null,
 			circuit_events: circuitEvents.length > 0 ? circuitEvents : undefined,
 			suppress_error_alert: proxyResult.suppressErrorAlert || undefined,
-			guardrail_budget_settlement: guardrailReserved
+			guardrail_budget_settlement: budgetAdmission.guardrailReserved
 				? { requestId, unknownCost }
 				: undefined,
 			ordinary_budget_settlement:

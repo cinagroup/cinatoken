@@ -55,6 +55,39 @@ describe('provider-sticky-routing helpers', () => {
 		);
 	});
 
+	it('prioritizes the sticky target inside each BYOK/platform section', () => {
+		const aPrimary = {
+			...makeRoute('t1', 'p1', 10),
+			providerKeyId: 'byok:a-primary',
+			providerApiKey: 'private-a-primary',
+			gatewayPrivateByokFallback: false,
+		};
+		const primary = {
+			...makeRoute('t2', 'p2', 0),
+			providerKeyId: 'byok:primary',
+			providerApiKey: 'private-primary',
+			gatewayPrivateByokFallback: false,
+		};
+		const a = makeRoute('t1', 'p1', 10);
+		const platform = makeRoute('t2', 'p2', 0);
+		const fallback = {
+			...makeRoute('t2', 'p2', 0),
+			providerKeyId: 'byok:fallback',
+			providerApiKey: 'private-fallback',
+			gatewayPrivateByokFallback: true,
+		};
+		const stickyBase = makeRoute('t2', 'p2', 0);
+		const merged = mergeStickyIntoAttempts(
+			[aPrimary, primary, a, platform, fallback],
+			stickyBase,
+		);
+		assert.deepEqual(
+			merged.map((route) => route.providerKeyId ?? route.providerId),
+			['byok:primary', 'byok:a-primary', 'p2', 'p1', 'byok:fallback'],
+		);
+		assert.equal(merged.filter((route) => route.targetId === 't2').length, 3);
+	});
+
 	it('invalidates sticky only on retry_key (not image abort / fail_immediately)', () => {
 		assert.equal(shouldInvalidateStickyBinding({ action: 'retry_key' }), true);
 		assert.equal(shouldInvalidateStickyBinding({ action: 'fail_immediately' }), false);
@@ -110,6 +143,7 @@ describe('resolveStickySession', () => {
 		});
 		assert.equal(hit.session?.lookup, 'hit');
 		assert.equal(hit.stickyRoute?.targetId, 't2');
+		assert.equal(hit.session?.attemptedTargetId, null);
 
 		markProviderFailure('p2', 'rate_limit', 30_000);
 		const invalid = await resolveStickySession(repos, {

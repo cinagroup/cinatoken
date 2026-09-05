@@ -87,6 +87,22 @@ describe("previewPlaygroundUpstreamUrl", () => {
 		assert.equal(url, "https://api.openai.com/v1/audio/speech");
 	});
 
+	it("appends /rerank for rerank models", () => {
+		const url = previewPlaygroundUpstreamUrl({
+			provider: {
+				id: "p1",
+				endpoints: JSON.stringify({
+					openai: { base: "https://api.example.com/v1" },
+				}),
+			},
+			upstreamProtocol: "openai",
+			providerModelName: "deepseek-reranker",
+			isImageModel: false,
+			isRerankModel: true,
+		});
+		assert.equal(url, "https://api.example.com/v1/rerank");
+	});
+
 	it("builds the DashScope multimodal ASR URL from the selected route operation", () => {
 		const url = previewPlaygroundUpstreamUrl({
 			provider: {

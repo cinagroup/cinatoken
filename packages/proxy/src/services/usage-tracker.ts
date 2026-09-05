@@ -55,6 +55,11 @@ import {
 	resolveEndpointTextPricing,
 	type EndpointPricingAuditIdentity,
 } from './endpoint-billing-pricing';
+import { parseByokKeyId } from './byok-key-pool';
+import {
+	applyPrivateByokBillingPolicy,
+	privateByokSettlementMode,
+} from './byok-billing-policy';
 
 const TOKENS_PER_MILLION = 1_000_000;
 
@@ -221,6 +226,12 @@ export async function recordUsage(
 		request_body_logging_mode?: RequestBodyLoggingMode;
 		/** Canonical origin from the inbound request URL; never a Referer or full path. */
 		request_origin?: string | null;
+		/** Canonical origin from the explicit OpenRouter HTTP-Referer application header. */
+		http_referer?: string | null;
+		/** Bounded User-Agent request header. */
+		user_agent?: string | null;
+		/** Validated OpenRouter session id for the least-privilege Generation snapshot. */
+		session_id?: string | null;
 		response_streamed?: boolean | null;
 		request_protocol: UpstreamProtocol;
 		request_operation?: string | null;
@@ -400,18 +411,12 @@ export async function recordUsage(
 	);
 	const resolvedChargedCost = applyUserChargedCostFactor(routeChargedCost, userChargedFactor);
 	const billingCommitted = params.status !== 'error' || params.charge_on_error === true;
-	const chargedCost = billingCommitted ? resolvedChargedCost : 0;
 	chargedResolved.audit.user_charged_factor = userChargedFactor;
-	const supplierCostR = roundGatewayMoney(supplierCost);
-	const standardCostR = roundGatewayMoney(standardCost);
-	const generationSnapshot = verifiedUsdGenerationWriteSnapshot({
-		verifiedUsdPricing: endpointResolved != null,
-		requestOrigin: params.request_origin,
-		responseStreamed: params.response_streamed,
-		chargedCostUsd: chargedCost,
-		upstreamInferenceCostUsd: billingCommitted ? supplierCostR : null,
-	});
-	const pricingAuditJson = attachUserChargedFactorToPricingAudit(
+	const isByok = parseByokKeyId(params.provider_key_id) !== null;
+	const nominalSupplierCost = roundGatewayMoney(supplierCost);
+	const nominalStandardCost = roundGatewayMoney(standardCost);
+	const nominalChargedCost = billingCommitted ? resolvedChargedCost : 0;
+	const nominalPricingAuditJson = attachUserChargedFactorToPricingAudit(
 		buildRequestPricingAuditJson({
 			usage: params.usage,
 			supplierAudit: supplierResolved.audit,
@@ -428,8 +433,32 @@ export async function recordUsage(
 		}),
 		userChargedFactor
 	);
+	const billingAmounts = applyPrivateByokBillingPolicy({
+		meteredCost: nominalSupplierCost,
+		standardCost: nominalStandardCost,
+		chargedCost: nominalChargedCost,
+		pricingAuditJson: nominalPricingAuditJson,
+	}, isByok);
+	const supplierCostR = billingAmounts.meteredCost;
+	const standardCostR = billingAmounts.standardCost;
+	const chargedCost = billingAmounts.chargedCost;
+	const pricingAuditJson = billingAmounts.pricingAuditJson;
+	const generationSnapshot = verifiedUsdGenerationWriteSnapshot({
+		verifiedUsdPricing: endpointResolved != null,
+		sessionId: params.session_id,
+		requestOrigin: params.request_origin,
+		httpReferer: params.http_referer,
+		userAgent: params.user_agent,
+		responseStreamed: params.response_streamed,
+		chargedCostUsd: chargedCost,
+		upstreamInferenceCostUsd: billingCommitted ? supplierCostR : null,
+		isByok,
+		serviceTier: params.usage.service_tier ?? null,
+		finishReason: params.usage.finish_reason ?? null,
+		nativeFinishReason: params.usage.native_finish_reason ?? null,
+	});
 	console.log(
-		`[Gateway Usage] recordUsage model_id=${params.model_id} request_protocol=${params.request_protocol} status=${params.status} route_group=${params.route_group} input_tokens=${params.usage.input_tokens} output_tokens=${params.usage.output_tokens} reasoning_tokens=${params.usage.reasoning_tokens} metered=${supplierCostR} standard=${standardCostR} charged=${chargedCost} charged_eff=${chargedResolved.audit.effective_factor} user_charged_factor=${userChargedFactor ?? 'none'} metered_eff=${supplierResolved.audit.effective_factor}`
+		`[Gateway Usage] recordUsage model_id=${params.model_id} request_protocol=${params.request_protocol} status=${params.status} route_group=${params.route_group} input_tokens=${params.usage.input_tokens} output_tokens=${params.usage.output_tokens} reasoning_tokens=${params.usage.reasoning_tokens} metered=${supplierCostR} standard=${standardCostR} charged=${chargedCost} is_byok=${isByok ? 1 : 0} charged_eff=${chargedResolved.audit.effective_factor} user_charged_factor=${userChargedFactor ?? 'none'} metered_eff=${supplierResolved.audit.effective_factor}`
 	);
 	const id = params.request_log_id ?? crypto.randomUUID();
 	const shouldChargeBudget = billingCommitted && chargedCost > 0;
@@ -441,7 +470,15 @@ export async function recordUsage(
 	const userRow = shouldChargeBudget || hasOrdinaryBudgetSettlement
 		? await repos.users.getById(params.user_id)
 		: null;
-	const ordinarySettlement = params.ordinary_budget_settlement;
+	const ordinarySettlement = params.ordinary_budget_settlement
+		? {
+				...params.ordinary_budget_settlement,
+				unknownCost: privateByokSettlementMode(
+					isByok,
+					params.ordinary_budget_settlement.unknownCost ? 'reserved' : 'actual',
+				) === 'reserved',
+			}
+		: undefined;
 	const ordinaryAuditTransition = ordinaryBudgetAuditSnapshotTransition({
 		settlement: ordinarySettlement,
 		currentBudgetEpoch: userRow == null ? null : Number(userRow.budget_epoch),
@@ -515,6 +552,11 @@ export async function recordUsage(
 			cacheWriteTokens: params.usage.cache_write_tokens,
 			reasoningTokens: params.usage.reasoning_tokens,
 			totalTokens: params.usage.total_tokens,
+			nativeTokensPrompt: params.usage.native_tokens_prompt ?? null,
+			nativeTokensCompletion: params.usage.native_tokens_completion ?? null,
+			nativeTokensCached: params.usage.native_tokens_cached ?? null,
+			nativeTokensReasoning: params.usage.native_tokens_reasoning ?? null,
+			nativeTokensCompletionImages: params.usage.native_tokens_completion_images ?? null,
 			meteredCost: supplierCostR,
 			standardCost: standardCostR,
 			chargedCost: chargedCost,
@@ -531,6 +573,8 @@ export async function recordUsage(
 			upstreamAttemptCount: params.timing?.upstreamAttemptCount ?? null,
 			upstreamFailoverCount: params.timing?.upstreamFailoverCount ?? null,
 			timingMetadata: params.timing?.timingMetadata ?? null,
+			providerAttempts: params.timing?.providerAttempts ?? [],
+			providerResponses: params.timing?.providerResponses ?? null,
 			errorMessage: params.error_message ?? null,
 			rawUsage: params.usage.raw_usage ?? null,
 			pricingAudit: pricingAuditJson,
@@ -550,11 +594,13 @@ export async function recordUsage(
 				mode: params.guardrail_budget_settlement.unknownCost ? 'reserved' : 'actual',
 				reason: params.guardrail_budget_settlement.unknownCost
 					? 'usage_unavailable_after_dispatch'
-					: 'request_usage_settled',
+					: isByok
+						? 'private_byok_list_price_settled'
+						: 'request_usage_settled',
 			}
 			: undefined,
 		userBudgetSettlement: ordinaryBudgetSettlementForCriticalWrite(
-			params.ordinary_budget_settlement,
+			ordinarySettlement,
 		),
 		audit: {
 			apiKeyId: params.api_key_id,

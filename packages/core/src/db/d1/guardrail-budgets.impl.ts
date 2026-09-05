@@ -3,6 +3,7 @@ import type { GuardrailBudgetReservationRow } from '../guardrail-budget-types';
 import type { GuardrailBudgetsRepository } from '../../storage/gateway-repository-interfaces';
 import type { D1DatabaseClient } from '../../storage/database-client';
 import {
+	classifyDispatchedGuardrailBudgetExtension,
 	existingGuardrailReservationReplay,
 	sortedGuardrailBudgetIntents,
 	validateGuardrailBudgetReservationParams,
@@ -25,17 +26,18 @@ export function createD1GuardrailBudgetsRepository(client: D1DatabaseClient): Gu
 			if (replay === 'idempotent') return { status: 'idempotent', reservationCount: params.intents.length };
 			if (replay === 'conflict') return { status: 'conflict', message: 'request id already has a different Guardrail budget reservation' };
 
+			const settlementBasis = params.settlementBasis ?? 'charged';
 			const statements: D1PreparedStatement[] = sortedGuardrailBudgetIntents(params.intents).map((intent) =>
 				client.raw.prepare(`INSERT INTO guardrail_budget_reservations (
 					id, workspace_id, request_id, assignment_id, guardrail_id, guardrail_version,
 					scope_type, scope_id, period, period_start, period_end,
-					limit_micros, reserved_micros, settled_micros, state,
+					limit_micros, reserved_micros, settled_micros, settlement_basis, state,
 					expires_at, created_at, updated_at
-				) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 0, 'reserved', ?, ?, ?)`)
+				) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 0, ?, 'reserved', ?, ?, ?)`)
 					.bind(
 						crypto.randomUUID(), intent.workspaceId, params.requestId, intent.assignmentId, intent.guardrailId,
 						intent.guardrailVersion, intent.scopeType, intent.scopeId, intent.period,
-						intent.periodStart, intent.periodEnd, intent.limitMicros, params.reservedMicros,
+						intent.periodStart, intent.periodEnd, intent.limitMicros, params.reservedMicros, settlementBasis,
 						params.expiresAtIso, params.nowIso, params.nowIso,
 					),
 			);
@@ -56,6 +58,67 @@ export function createD1GuardrailBudgetsRepository(client: D1DatabaseClient): Gu
 					return { status: 'blocked', assignmentId: intent?.assignmentId ?? null };
 				}
 				if (message.includes('guardrail_budget_exceeded')) return { status: 'blocked', assignmentId: null };
+				if (message.includes('gateway_key_limit_stale')) {
+					return { status: 'conflict', message: 'Gateway key limit configuration changed; retry the request' };
+				}
+				if (message.includes('workspace_budget_stale')) {
+					return { status: 'conflict', message: 'Workspace budget configuration changed; retry the request' };
+				}
+				throw error;
+			}
+		},
+
+		async extendDispatched(params) {
+			const existing = await listByRequest(client, params.requestId);
+			const classification = classifyDispatchedGuardrailBudgetExtension(existing, params);
+			if (classification.status === 'conflict') {
+				return { status: 'conflict', message: classification.message };
+			}
+			if (classification.status === 'idempotent') {
+				return { status: 'idempotent', reservationCount: params.intents.length };
+			}
+			const statements = classification.missingIntents.map((intent) =>
+				client.raw.prepare(`INSERT INTO guardrail_budget_reservations (
+					id, workspace_id, request_id, assignment_id, guardrail_id, guardrail_version,
+					scope_type, scope_id, period, period_start, period_end,
+					limit_micros, reserved_micros, settled_micros, settlement_basis, state,
+					expires_at, dispatched_at, created_at, updated_at
+				) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 0, 'charged', 'dispatched', ?, ?, ?, ?)`)
+					.bind(
+						crypto.randomUUID(), intent.workspaceId, params.requestId, intent.assignmentId, intent.guardrailId,
+						intent.guardrailVersion, intent.scopeType, intent.scopeId, intent.period,
+						intent.periodStart, intent.periodEnd, intent.limitMicros, params.reservedMicros,
+						params.expiresAtIso, params.nowIso, params.nowIso, params.nowIso,
+					),
+			);
+			try {
+				await client.raw.batch(statements);
+				const completed = classifyDispatchedGuardrailBudgetExtension(
+					await listByRequest(client, params.requestId),
+					params,
+				);
+				return completed.status === 'idempotent'
+					? { status: 'reserved', reservationCount: params.intents.length }
+					: { status: 'conflict', message: 'fallback reservation extension did not become durable' };
+			} catch (error) {
+				const raced = classifyDispatchedGuardrailBudgetExtension(
+					await listByRequest(client, params.requestId),
+					params,
+				);
+				if (raced.status === 'idempotent') {
+					return { status: 'idempotent', reservationCount: params.intents.length };
+				}
+				const message = errorText(error);
+				if (message.includes('gateway_key_limit_exceeded')) {
+					return { status: 'blocked', assignmentId: existing.find((row) => row.settlement_basis === 'gateway_key_route')?.assignment_id ?? null };
+				}
+				if (message.includes('workspace_budget_exceeded')) {
+					const intent = params.intents.find((item) => item.assignmentId.startsWith('workspace-budget:'));
+					return { status: 'blocked', assignmentId: intent?.assignmentId ?? null };
+				}
+				if (message.includes('guardrail_budget_exceeded')) {
+					return { status: 'blocked', assignmentId: null };
+				}
 				if (message.includes('gateway_key_limit_stale')) {
 					return { status: 'conflict', message: 'Gateway key limit configuration changed; retry the request' };
 				}

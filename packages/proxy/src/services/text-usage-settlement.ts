@@ -38,13 +38,15 @@ export function textUsageCostIsUnknown(input: {
 	streamError?: boolean;
 	upstreamOutcomeUnknown?: boolean;
 	responseBodyTooLarge?: boolean;
+	serviceTierPricingUnknown?: boolean;
 }): boolean {
 	if (input.upstreamOutcomeUnknown) return true;
 	if (!input.upstreamResponseOk) return false;
 	return !input.usageAvailable
 		|| input.cancelled === true
 		|| input.streamError === true
-		|| input.responseBodyTooLarge === true;
+		|| input.responseBodyTooLarge === true
+		|| input.serviceTierPricingUnknown === true;
 }
 
 /** Promise.race with deterministic loser-timer cleanup. */

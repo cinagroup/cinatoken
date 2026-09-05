@@ -33,6 +33,16 @@ test('D1 request logging batches the raw log and public rollup atomically even w
 				async first() {
 					return { present: 1 };
 				},
+				async all() {
+					return {
+						results: [{
+							assignment_id: 'guardrail-1',
+							scope_type: 'user',
+							scope_id: 'user-1',
+							settlement_basis: 'charged',
+						}],
+					};
+				},
 			} as unknown as CapturedStatement;
 			return statement;
 		},
@@ -55,9 +65,14 @@ test('D1 request logging batches the raw log and public rollup atomically even w
 	assert.match(batch[0]!.sqlText, /INSERT INTO api_key_request_logs/);
 	assert.match(batch[0]!.sqlText, /budget_charged_micros/);
 	assert.equal((batch[0]!.sqlText.match(/\?/g) ?? []).length, batch[0]!.bindValues.length);
-	assert.equal(batch[0]!.bindValues[29], 0);
+	const requestLogColumns = /api_key_request_logs\s*\(([^)]+)\)/su.exec(batch[0]!.sqlText)![1]!
+		.split(',')
+		.map((column) => column.trim());
+	assert.equal(batch[0]!.bindValues[requestLogColumns.indexOf('budget_charged_micros')], 0);
 	assert.match(batch[1]!.sqlText, /INSERT INTO public_model_daily_stats/);
+	assert.match(batch[1]!.sqlText, /total_tokens = total_tokens \+ excluded\.total_tokens/);
 	assert.match(batch[1]!.sqlText, /ON CONFLICT\(stat_date, model_id, shard\) DO UPDATE/);
+	assert.equal(batch[1]!.bindValues[7], 3);
 	assert.equal(batch[0]!.bindValues.at(-1), batch[1]!.bindValues.at(-1));
 });
 
@@ -74,6 +89,16 @@ test('D1 request logging settles an unknown Guardrail charge in the same batch',
 				},
 				async first() {
 					return { present: 1 };
+				},
+				async all() {
+					return {
+						results: [{
+							assignment_id: 'guardrail-1',
+							scope_type: 'user',
+							scope_id: 'user-1',
+							settlement_basis: 'charged',
+						}],
+					};
 				},
 			} as unknown as CapturedStatement;
 			return statement;

@@ -1,22 +1,69 @@
 import type { MySqlDatabaseClient } from '../../storage/database-client';
 import type { GuardrailsRepository } from '../../storage/gateway-repository-interfaces';
 import type { EffectiveGuardrailRow, GuardrailAssignmentRow, GuardrailVersionRow, GuardrailWithVersionRow } from '../guardrails-types';
+import { resolveGuardrailAssignmentProvenance } from '../guardrails-types';
 import { asMySqlPool } from './mysql2-compat';
 
-const SELECT_DESIGNATED = `SELECT g.id, g.workspace_id, g.owner_user_id, g.name, g.description, g.status, g.designated_version, g.latest_version, g.created_at, g.updated_at, v.id AS version_id, v.config_json AS version_config_json, v.created_by_user_id AS version_created_by_user_id, v.created_at AS version_created_at FROM guardrails g JOIN guardrail_versions v ON v.guardrail_id = g.id AND v.version = g.designated_version`;
+const SELECT_DESIGNATED = `SELECT g.id, g.workspace_id, g.owner_user_id, g.name, g.description, g.status,
+	g.is_workspace_default, g.is_account_default, g.account_scope_key,
+	g.designated_version, g.latest_version, g.created_at, g.updated_at,
+	v.id AS version_id, v.config_json AS version_config_json,
+	v.created_by_user_id AS version_created_by_user_id, v.created_at AS version_created_at
+	FROM guardrails g JOIN guardrail_versions v ON v.guardrail_id = g.id AND v.version = g.designated_version`;
 
 export function createMySqlGuardrailsRepository(db: MySqlDatabaseClient): GuardrailsRepository {
 	const pool = asMySqlPool(db.raw);
 	const query = async <T>(sql: string, params: unknown[] = []): Promise<T[]> => (await pool.query(sql, params))[0] as T[];
 	const getById = async (id: string) => (await query<GuardrailWithVersionRow>(`${SELECT_DESIGNATED} WHERE g.id = ?`, [id]))[0] ?? null;
 	return {
-		async listOwnedByWorkspace(workspaceId, userId, includeArchived = false) { return query(`${SELECT_DESIGNATED} WHERE g.workspace_id = ? AND g.owner_user_id = ?${includeArchived ? '' : " AND g.status = 'active'"} ORDER BY g.updated_at DESC, g.id`, [workspaceId, userId]); },
+		async listOwnedByWorkspace(workspaceId, userId, includeArchived = false) { return query(`${SELECT_DESIGNATED} WHERE (
+			(g.workspace_id = ? AND g.owner_user_id = ?)
+			OR (g.is_account_default = TRUE AND g.account_scope_key = (
+				SELECT IF(workspace.scope_type = 'personal',
+					CONCAT('personal:', workspace.personal_owner_user_id),
+					CONCAT('organization:', workspace.organization_id))
+				FROM workspaces workspace WHERE workspace.id = ? AND workspace.status = 'active'
+			))
+		)${includeArchived ? '' : " AND g.status = 'active'"} ORDER BY g.is_account_default DESC, g.updated_at DESC, g.id`, [workspaceId, userId, workspaceId]); },
 		async listAll(includeArchived = false) { return query(`${SELECT_DESIGNATED}${includeArchived ? '' : " WHERE g.status = 'active'"} ORDER BY g.updated_at DESC, g.id`); },
 		getById,
-		async getByIdInWorkspace(id, workspaceId) { return (await query<GuardrailWithVersionRow>(`${SELECT_DESIGNATED} WHERE g.id = ? AND g.workspace_id = ?`, [id, workspaceId]))[0] ?? null; },
+		async getByIdInWorkspace(id, workspaceId) { return (await query<GuardrailWithVersionRow>(`${SELECT_DESIGNATED} WHERE g.id = ? AND (
+			g.workspace_id = ? OR (g.is_account_default = TRUE AND g.account_scope_key = (
+				SELECT IF(workspace.scope_type = 'personal',
+					CONCAT('personal:', workspace.personal_owner_user_id),
+					CONCAT('organization:', workspace.organization_id))
+				FROM workspaces workspace WHERE workspace.id = ? AND workspace.status = 'active'
+			))
+		)`, [id, workspaceId, workspaceId]))[0] ?? null; },
 		async listVersions(guardrailId) { return query<GuardrailVersionRow>(`SELECT id, guardrail_id, version, config_json, created_by_user_id, created_at FROM guardrail_versions WHERE guardrail_id = ? ORDER BY version DESC`, [guardrailId]); },
-		async listAssignments(guardrailId) { return query<GuardrailAssignmentRow>(`SELECT a.id, a.workspace_id, a.guardrail_id, a.scope_type, a.scope_id, a.created_by_user_id, a.created_at, g.name AS guardrail_name FROM guardrail_assignments a JOIN guardrails g ON g.id = a.guardrail_id WHERE a.guardrail_id = ? ORDER BY a.scope_type, a.scope_id`, [guardrailId]); },
-		async getEffectiveForRequest(workspaceId, userId, apiKeyId) { return query<EffectiveGuardrailRow>(`SELECT g.id, g.workspace_id, g.owner_user_id, g.name, g.description, g.status, g.designated_version, g.latest_version, g.created_at, g.updated_at, v.id AS version_id, v.config_json AS version_config_json, v.created_by_user_id AS version_created_by_user_id, v.created_at AS version_created_at, a.id AS assignment_id, a.scope_type AS assignment_scope_type, a.scope_id AS assignment_scope_id FROM guardrail_assignments a JOIN guardrails g ON g.id = a.guardrail_id AND g.workspace_id = a.workspace_id JOIN guardrail_versions v ON v.guardrail_id = g.id AND v.version = g.designated_version WHERE g.workspace_id = ? AND g.status = 'active' AND ((a.scope_type = 'user' AND a.scope_id = ?) OR (a.scope_type = 'api_key' AND a.scope_id = ?)) ORDER BY a.scope_type, a.id`, [workspaceId, userId, apiKeyId]); },
+		async listAssignments(guardrailId) { return query<GuardrailAssignmentRow>(`SELECT a.id, a.workspace_id, a.guardrail_id, a.scope_type, a.scope_id, a.created_by_user_id, a.management_source, a.assigned_by_user_id, a.created_at, g.name AS guardrail_name FROM guardrail_assignments a JOIN guardrails g ON g.id = a.guardrail_id WHERE a.guardrail_id = ? ORDER BY a.scope_type, a.scope_id`, [guardrailId]); },
+		async getEffectiveForRequest(workspaceId, userId, apiKeyId) { return query<EffectiveGuardrailRow>(`SELECT
+			g.id, g.workspace_id, g.owner_user_id, g.name, g.description, g.status,
+			g.is_workspace_default, g.is_account_default, g.account_scope_key,
+			g.designated_version, g.latest_version, g.created_at, g.updated_at,
+			v.id AS version_id, v.config_json AS version_config_json,
+			v.created_by_user_id AS version_created_by_user_id, v.created_at AS version_created_at,
+			CASE WHEN g.is_account_default = TRUE THEN CONCAT('account-default:', g.id)
+				WHEN g.is_workspace_default = TRUE THEN CONCAT('workspace-default:', g.id) ELSE a.id END AS assignment_id,
+			CASE WHEN g.is_account_default = TRUE THEN 'account'
+				WHEN g.is_workspace_default = TRUE THEN 'workspace' ELSE a.scope_type END AS assignment_scope_type,
+			CASE WHEN g.is_account_default = TRUE THEN g.account_scope_key
+				WHEN g.is_workspace_default = TRUE THEN g.workspace_id ELSE a.scope_id END AS assignment_scope_id
+			FROM workspaces request_workspace
+			JOIN guardrails g ON g.status = 'active' AND (
+				(g.is_account_default = TRUE AND g.account_scope_key = CASE request_workspace.scope_type
+					WHEN 'personal' THEN CONCAT('personal:', request_workspace.personal_owner_user_id)
+					WHEN 'organization' THEN CONCAT('organization:', request_workspace.organization_id) END)
+				OR g.workspace_id = request_workspace.id
+			)
+			JOIN guardrail_versions v ON v.guardrail_id = g.id AND v.version = g.designated_version
+			LEFT JOIN guardrail_assignments a ON g.is_workspace_default = FALSE AND g.is_account_default = FALSE
+				AND a.guardrail_id = g.id AND a.workspace_id = g.workspace_id
+				AND ((a.scope_type = 'user' AND a.scope_id = ?) OR (a.scope_type = 'api_key' AND a.scope_id = ?))
+			WHERE request_workspace.id = ? AND request_workspace.status = 'active'
+				AND (g.is_account_default = TRUE OR g.is_workspace_default = TRUE OR a.id IS NOT NULL)
+			ORDER BY CASE assignment_scope_type WHEN 'account' THEN 0 WHEN 'workspace' THEN 1
+				WHEN 'user' THEN 2 ELSE 3 END, assignment_id`, [userId, apiKeyId, workspaceId]); },
 		async createWithVersion(params) {
 			const connection = await pool.getConnection(); try { await connection.beginTransaction(); await connection.execute(`INSERT INTO guardrails (id, workspace_id, workspace_key, owner_user_id, name, description, status, designated_version, latest_version, created_at, updated_at) VALUES (?, ?, SHA2(?, 256), ?, ?, ?, 'active', 1, 1, ?, ?)`, [params.id, params.workspaceId, params.workspaceId, params.ownerUserId, params.name, params.description, params.nowIso, params.nowIso]); await connection.execute(`INSERT INTO guardrail_versions (id, guardrail_id, version, config_json, created_by_user_id, created_at) VALUES (?, ?, 1, ?, ?, ?)`, [params.versionId, params.id, params.configJson, params.createdByUserId, params.nowIso]); await connection.commit(); } catch (error) { await connection.rollback(); throw error; } finally { connection.release(); }
 			const row = await getById(params.id); if (!row) throw new Error('guardrail create did not return a row'); return row;
@@ -30,7 +77,7 @@ export function createMySqlGuardrailsRepository(db: MySqlDatabaseClient): Guardr
 			try {
 				await connection.beginTransaction();
 				const [result] = await connection.execute<import('mysql2/promise').ResultSetHeader>(
-					`UPDATE guardrails SET latest_version = latest_version + 1, designated_version = latest_version + 1, name = ?, description = ?, updated_at = ? WHERE id = ? AND status = 'active'${protection}`,
+					`UPDATE guardrails SET latest_version = latest_version + 1, designated_version = latest_version + 1, name = IF(is_workspace_default = TRUE OR is_account_default = TRUE, name, ?), description = ?, updated_at = ? WHERE id = ? AND status = 'active'${protection}`,
 					[params.name, params.description, params.nowIso, params.guardrailId],
 				);
 				if (result.affectedRows !== 1) {
@@ -57,7 +104,9 @@ export function createMySqlGuardrailsRepository(db: MySqlDatabaseClient): Guardr
 			const protection = patch.preserveAdminManaged
 				? ` AND NOT EXISTS (SELECT 1 FROM guardrail_assignments a WHERE a.guardrail_id = guardrails.id AND a.created_by_user_id IS NULL)`
 				: '';
-			const [result] = await pool.execute<import('mysql2/promise').ResultSetHeader>(`UPDATE guardrails SET ${sets.join(', ')} WHERE id = ?${protection}`, values); return result.affectedRows === 1;
+			const defaultProtection = patch.name !== undefined || patch.status !== undefined
+				? ' AND is_workspace_default = FALSE AND is_account_default = FALSE' : '';
+			const [result] = await pool.execute<import('mysql2/promise').ResultSetHeader>(`UPDATE guardrails SET ${sets.join(', ')} WHERE id = ?${defaultProtection}${protection}`, values); return result.affectedRows === 1;
 		},
 		async designateVersion(id, version, nowIso, options) {
 			const protection = options?.preserveAdminManaged
@@ -66,10 +115,15 @@ export function createMySqlGuardrailsRepository(db: MySqlDatabaseClient): Guardr
 			const [result] = await pool.execute<import('mysql2/promise').ResultSetHeader>(`UPDATE guardrails g SET g.designated_version = ?, g.updated_at = ? WHERE g.id = ? AND g.status = 'active' AND EXISTS (SELECT 1 FROM guardrail_versions v WHERE v.guardrail_id = g.id AND v.version = ?)${protection}`, [version, nowIso, id, version]); return result.affectedRows === 1;
 		},
 		async upsertAssignment(params) {
+			const [assignable] = await pool.query<Array<{ id: string }>>(`SELECT id FROM guardrails
+				WHERE id = ? AND workspace_id = ? AND is_workspace_default = FALSE AND is_account_default = FALSE LIMIT 1`,
+			[params.guardrailId, params.workspaceId]);
+			if (!assignable[0]) throw new Error('Default Guardrails cannot be assigned');
+			const provenance = resolveGuardrailAssignmentProvenance(params);
 			const update = params.preserveAdminManaged
-				? `guardrail_id = IF(created_by_user_id IS NULL, guardrail_id, VALUES(guardrail_id)), created_at = IF(created_by_user_id IS NULL, created_at, VALUES(created_at)), created_by_user_id = IF(created_by_user_id IS NULL, created_by_user_id, VALUES(created_by_user_id))`
-				: `guardrail_id = VALUES(guardrail_id), created_by_user_id = VALUES(created_by_user_id), created_at = VALUES(created_at)`;
-			await pool.execute(`INSERT INTO guardrail_assignments (id, workspace_id, workspace_key, guardrail_id, scope_type, scope_id, created_by_user_id, created_at) VALUES (?, ?, SHA2(?, 256), ?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE ${update}`, [params.id, params.workspaceId, params.workspaceId, params.guardrailId, params.scopeType, params.scopeId, params.createdByUserId, params.nowIso]); return (await query<GuardrailAssignmentRow>(`SELECT a.id, a.workspace_id, a.guardrail_id, a.scope_type, a.scope_id, a.created_by_user_id, a.created_at, g.name AS guardrail_name FROM guardrail_assignments a JOIN guardrails g ON g.id = a.guardrail_id WHERE a.workspace_id = ? AND a.scope_type = ? AND a.scope_id = ?`, [params.workspaceId, params.scopeType, params.scopeId]))[0]!;
+				? `guardrail_id = IF(created_by_user_id IS NULL, guardrail_id, VALUES(guardrail_id)), created_at = IF(created_by_user_id IS NULL, created_at, VALUES(created_at)), assigned_by_user_id = IF(created_by_user_id IS NULL, assigned_by_user_id, VALUES(assigned_by_user_id)), management_source = IF(created_by_user_id IS NULL, management_source, VALUES(management_source)), created_by_user_id = IF(created_by_user_id IS NULL, created_by_user_id, VALUES(created_by_user_id))`
+				: `guardrail_id = VALUES(guardrail_id), created_by_user_id = VALUES(created_by_user_id), management_source = VALUES(management_source), assigned_by_user_id = VALUES(assigned_by_user_id), created_at = VALUES(created_at)`;
+			await pool.execute(`INSERT INTO guardrail_assignments (id, workspace_id, workspace_key, guardrail_id, scope_type, scope_id, created_by_user_id, management_source, assigned_by_user_id, created_at) VALUES (?, ?, SHA2(?, 256), ?, ?, ?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE ${update}`, [params.id, params.workspaceId, params.workspaceId, params.guardrailId, params.scopeType, params.scopeId, params.createdByUserId, provenance.managementSource, provenance.assignedByUserId, params.nowIso]); return (await query<GuardrailAssignmentRow>(`SELECT a.id, a.workspace_id, a.guardrail_id, a.scope_type, a.scope_id, a.created_by_user_id, a.management_source, a.assigned_by_user_id, a.created_at, g.name AS guardrail_name FROM guardrail_assignments a JOIN guardrails g ON g.id = a.guardrail_id WHERE a.workspace_id = ? AND a.scope_type = ? AND a.scope_id = ?`, [params.workspaceId, params.scopeType, params.scopeId]))[0]!;
 		},
 		async deleteAssignment(workspaceId, scopeType, scopeId, createdByUserId) { const ownerClause = createdByUserId === undefined ? '' : ' AND created_by_user_id = ?'; const values = createdByUserId === undefined ? [workspaceId, scopeType, scopeId] : [workspaceId, scopeType, scopeId, createdByUserId]; const [result] = await pool.execute<import('mysql2/promise').ResultSetHeader>(`DELETE FROM guardrail_assignments WHERE workspace_id = ? AND scope_type = ? AND scope_id = ?${ownerClause}`, values); return result.affectedRows > 0; },
 		async getSettledBudgetSpent(workspaceId, scopeType, scopeId, sinceIso) { const column = scopeType === 'user' ? 'user_id' : 'api_key_id'; const row = (await query<{ spent: string | number }>(`SELECT COALESCE(SUM(l.charged_cost), 0) AS spent FROM api_key_request_logs l WHERE l.${column} = ? AND l.created_at >= ? AND EXISTS (SELECT 1 FROM api_keys k WHERE k.id = l.api_key_id AND k.workspace_id = ?)`, [scopeId, sinceIso, workspaceId]))[0]; return Number(row?.spent ?? 0); },

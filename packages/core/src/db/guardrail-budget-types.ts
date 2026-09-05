@@ -11,6 +11,14 @@ export type GuardrailBudgetReservationState =
 	| 'released'
 	| 'expired';
 
+/**
+ * Selects the request-log amount used when an admitted reservation settles.
+ * `gateway_key_route` is valid only for the authenticated Gateway Key limit:
+ * shared capacity uses the gateway charge, while private BYOK uses the
+ * catalog/list-price equivalent recorded on the same request log.
+ */
+export type GuardrailBudgetSettlementBasis = 'charged' | 'gateway_key_route';
+
 /** Immutable policy/window snapshot carried from Guardrail evaluation to admission. */
 export type GuardrailBudgetIntent = {
 	workspaceId: string;
@@ -40,6 +48,7 @@ export type GuardrailBudgetReservationRow = {
 	limit_micros: number | string;
 	reserved_micros: number | string;
 	settled_micros: number | string;
+	settlement_basis: GuardrailBudgetSettlementBasis;
 	state: GuardrailBudgetReservationState;
 	expires_at: string;
 	dispatched_at: string | null;
@@ -50,6 +59,21 @@ export type GuardrailBudgetReservationRow = {
 };
 
 export type ReserveGuardrailBudgetsParams = {
+	requestId: string;
+	intents: GuardrailBudgetIntent[];
+	reservedMicros: number;
+	settlementBasis?: GuardrailBudgetSettlementBasis;
+	nowIso: string;
+	expiresAtIso: string;
+};
+
+/**
+ * Atomically adds the non-key charged-budget reservations immediately before
+ * a request falls back from an already-dispatched private BYOK attempt to
+ * shared/platform capacity. The existing Gateway Key reservation remains the
+ * request's route-selective reservation.
+ */
+export type ExtendDispatchedGuardrailBudgetsParams = {
 	requestId: string;
 	intents: GuardrailBudgetIntent[];
 	reservedMicros: number;

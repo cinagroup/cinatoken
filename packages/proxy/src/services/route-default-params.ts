@@ -37,5 +37,23 @@ export function buildRouteRequestBody(
   userBody: JsonObject
 ): JsonObject {
   const finalBody = deepMergeDefaults(route.customParams ?? {}, userBody);
-  return isPlainObject(finalBody) ? finalBody : { ...userBody };
+  const normalized = isPlainObject(finalBody) ? finalBody : { ...userBody };
+	const speedControlledBody = route.gatewayTextSpeedControlled
+		? { ...normalized }
+		: normalized;
+	if (route.gatewayTextSpeedControlled) delete speedControlledBody.speed;
+	const sessionControlledBody = route.gatewaySessionIdControlled
+		? { ...speedControlledBody }
+		: speedControlledBody;
+	if (route.gatewaySessionIdControlled) delete sessionControlledBody.session_id;
+	const withSpeed = route.gatewayTextSpeed
+		? { ...sessionControlledBody, speed: route.gatewayTextSpeed }
+		: sessionControlledBody;
+  // `service_tier` is a gateway routing control. Re-inject only the tier of
+  // the verified endpoint chosen for this attempt so a priority fallback to a
+  // standard endpoint cannot accidentally ask the provider for priority again.
+  const requestedServiceTier = route.gatewayRequestedServiceTier ?? route.gatewayServiceTier;
+  return requestedServiceTier
+    ? { ...withSpeed, service_tier: requestedServiceTier }
+    : withSpeed;
 }

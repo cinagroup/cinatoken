@@ -18,12 +18,16 @@ import ConsoleThemeToggle from '@/components/unified/ConsoleThemeToggle';
 import FrontendAttribution from '@/components/unified/FrontendAttribution';
 import { PortalWorkspaceProvider } from '@/components/portal/PortalWorkspaceContext';
 import PortalWorkspaceSwitcher from '@/components/portal/PortalWorkspaceSwitcher';
+import CinaAuthLoginButtons from '@/components/auth/CinaAuthLoginButtons';
+import { useCinaAuthLogout } from '@/components/auth/useCinaAuthLogout';
+import { subscribeCinaAuthSessionChanges } from '@/lib/cinaauth/session-events';
 import {
   ArrowLeftStartOnRectangleIcon,
   BanknotesIcon,
   ChartBarSquareIcon,
   Cog6ToothIcon,
 	ClockIcon,
+	CloudArrowUpIcon,
   HomeIcon,
   KeyIcon,
 	QueueListIcon,
@@ -53,19 +57,32 @@ export default function PortalGate({ children }: Props) {
   const [me, setMe] = useState<PortalMe | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [loginError, setLoginError] = useState('');
+  const [isSessionCheckUnavailable, setIsSessionCheckUnavailable] = useState(false);
   const [workspaceContext, setWorkspaceContext] = useState<WorkspaceContextProjection | null>(null);
   const [workspaceError, setWorkspaceError] = useState<'load' | 'switch' | null>(null);
   const [isWorkspaceSwitching, startWorkspaceTransition] = useTransition();
   const sessionRequestEpoch = useRef(0);
+  const { logout, isLoggingOut, logoutFailed } = useCinaAuthLogout();
 
   const checkSession = useCallback(async () => {
 	const epoch = ++sessionRequestEpoch.current;
 	const [sessionResult, workspaceResult] = await Promise.allSettled([
-		fetch('/api/user/me', { cache: 'no-store' }),
-		fetch('/api/user/workspaces', { cache: 'no-store' }),
+		fetch('/api/user/me', { cache: 'no-store', signal: AbortSignal.timeout(15_000) }),
+		fetch('/api/user/workspaces', { cache: 'no-store', signal: AbortSignal.timeout(15_000) }),
 	]);
 	if (epoch !== sessionRequestEpoch.current) return;
-	if (sessionResult.status !== 'fulfilled' || !sessionResult.value.ok) {
+	if (sessionResult.status !== 'fulfilled') {
+		setIsSessionCheckUnavailable(true);
+		setIsLoading(false);
+		return;
+	}
+	if (!sessionResult.value.ok) {
+		if (sessionResult.value.status !== 401 && sessionResult.value.status !== 403) {
+			setIsSessionCheckUnavailable(true);
+			setIsLoading(false);
+			return;
+		}
+		setIsSessionCheckUnavailable(false);
 		setMe(null);
 		setWorkspaceContext(null);
 		setWorkspaceError(null);
@@ -74,7 +91,13 @@ export default function PortalGate({ children }: Props) {
 	}
 	const sessionData = await readPortalJson<PortalMe>(sessionResult.value);
 	if (epoch !== sessionRequestEpoch.current) return;
-	setMe(sessionData?.data ?? null);
+	if (!sessionData?.success || !sessionData.data?.userId) {
+		setIsSessionCheckUnavailable(true);
+		setIsLoading(false);
+		return;
+	}
+	setIsSessionCheckUnavailable(false);
+	setMe(sessionData.data);
 	if (workspaceResult.status === 'fulfilled' && workspaceResult.value.ok) {
 		const workspaceData = await readPortalJson<WorkspaceContextProjection>(workspaceResult.value);
 		if (epoch !== sessionRequestEpoch.current) return;
@@ -92,6 +115,18 @@ export default function PortalGate({ children }: Props) {
 	return () => window.clearTimeout(timer);
   }, [checkSession]);
 
+  const onPopupAuthenticated = useCallback(async () => {
+	setLoginError('');
+	setIsSessionCheckUnavailable(false);
+	setIsLoading(true);
+	await checkSession();
+	router.refresh();
+  }, [checkSession, router]);
+
+  const onPopupError = useCallback(() => {
+	setLoginError(tAuth('loginError'));
+  }, [tAuth]);
+
   useEffect(() => {
 	const timer = window.setTimeout(() => {
 		const authError = new URLSearchParams(window.location.search).get('auth_error');
@@ -108,13 +143,19 @@ export default function PortalGate({ children }: Props) {
     return () => document.removeEventListener('visibilitychange', onVisible);
   }, [checkSession]);
 
-  const logout = async () => {
+  useEffect(() => subscribeCinaAuthSessionChanges((change) => {
 	sessionRequestEpoch.current += 1;
-    await fetch('/api/user/auth/logout', { method: 'POST' }).catch(() => undefined);
-    setMe(null);
+	setMe(null);
+	setIsSessionCheckUnavailable(false);
 	setWorkspaceContext(null);
 	setWorkspaceError(null);
-  };
+	setLoginError('');
+	if (change === 'logout') setIsLoading(false);
+	else {
+		setIsLoading(true);
+		void checkSession();
+	}
+  }), [checkSession]);
 
   const selectWorkspace = useCallback((workspaceId: string) => {
 	if (!workspaceId || workspaceId === workspaceContext?.currentWorkspace.id) return;
@@ -146,6 +187,7 @@ export default function PortalGate({ children }: Props) {
     { href: '/account/keys', label: t('nav.keys'), Icon: KeyIcon },
 	{ href: '/account/presets', label: t('nav.presets'), Icon: QueueListIcon },
 	{ href: '/account/guardrails', label: t('nav.guardrails'), Icon: ShieldCheckIcon },
+	{ href: '/account/byok', label: t('nav.byok'), Icon: CloudArrowUpIcon },
     { href: '/account/earnings', label: t('nav.earnings'), Icon: ChartBarSquareIcon },
     { href: '/account/withdraw', label: t('nav.withdraw'), Icon: BanknotesIcon },
     { href: '/account/nft', label: t('nav.nft'), Icon: SparklesIcon },
@@ -187,24 +229,34 @@ export default function PortalGate({ children }: Props) {
             </div>
           </div>
           <p className="mb-5 text-sm leading-6 text-gray-600">{t('loginDescription')}</p>
+          {isSessionCheckUnavailable && (
+			<div className="mb-4 rounded-md border border-amber-200 bg-amber-50 p-3 text-sm text-amber-950">
+			  <p className="font-medium">{tAuth('sessionCheckUnavailable')}</p>
+			  <p className="mt-1 text-xs leading-5 text-amber-800">{tAuth('sessionCheckUnavailableHelp')}</p>
+			  <button
+				type="button"
+				onClick={() => {
+				  setIsLoading(true);
+				  void checkSession();
+				}}
+				className="mt-2 rounded-md border border-amber-300 bg-white px-3 py-1.5 text-xs font-semibold text-amber-900 hover:bg-amber-100"
+			  >
+				{tAuth('retrySessionCheck')}
+			  </button>
+			</div>
+		  )}
           {loginError && (
             <div className="mb-4 rounded-md border border-red-200 bg-red-50 p-3 text-sm text-red-600">
               {loginError}
             </div>
           )}
-          <div className="space-y-3">
-            <a
-              href="/api/auth/cinaauth/login?intent=portal&callbackURL=%2Faccount"
-              className="flex w-full items-center justify-center rounded-md bg-cyan-600 px-4 py-2.5 font-medium text-white transition-colors hover:bg-cyan-700 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:ring-offset-2"
-            >
-              {tAuth('continueWithCinaAuth')}
-            </a>
-            <a
-              href="/api/auth/cinaauth/register?intent=portal&callbackURL=%2Faccount"
-              className="flex w-full items-center justify-center rounded-md border border-gray-300 bg-white px-4 py-2.5 font-medium text-gray-700 transition-colors hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:ring-offset-2"
-            >
-              {tAuth('createAccount')}
-            </a>
+		  <div className="space-y-3">
+			<CinaAuthLoginButtons
+			  intent="portal"
+			  callbackPath={pathname || '/account'}
+			  onAuthenticated={onPopupAuthenticated}
+			  onError={onPopupError}
+			/>
             <Link
               href="/"
               className="flex w-full items-center justify-center rounded-md px-4 py-2 text-sm text-gray-500 hover:text-gray-700"
@@ -256,9 +308,10 @@ export default function PortalGate({ children }: Props) {
             <ConsoleThemeToggle />
             <LocaleSwitcher variant="login" />
           </div>
-          <button type="button" onClick={() => void logout()} className="console-nav-link flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm">
+          {logoutFailed ? <p role="alert" className="px-3 text-xs text-red-600">{tAuth('logoutFailed')}</p> : null}
+          <button type="button" disabled={isLoggingOut} onClick={() => void logout()} className="console-nav-link flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm disabled:opacity-60">
             <ArrowLeftStartOnRectangleIcon className="h-[18px] w-[18px]" />
-            {tAuth('logout')}
+            {tAuth(isLoggingOut ? 'loggingOut' : 'logout')}
           </button>
           <div className="console-muted"><FrontendAttribution compact /></div>
         </div>
@@ -270,8 +323,14 @@ export default function PortalGate({ children }: Props) {
               <Image src="/brand/logo.png" alt={tBrand('logoAlt')} width={32} height={32} className="h-8 w-8 rounded-lg" />
               <div className="min-w-0"><div className="text-sm font-semibold">CinaToken</div><div className="console-muted truncate text-xs">{me.email}</div></div>
             </div>
-            <ConsoleThemeToggle />
+			<div className="flex shrink-0 items-center gap-2">
+			  <ConsoleThemeToggle />
+			  <button type="button" disabled={isLoggingOut} onClick={() => void logout()} aria-label={tAuth(isLoggingOut ? 'loggingOut' : 'logout')} className="console-nav-link rounded-md p-2 disabled:opacity-60">
+				<ArrowLeftStartOnRectangleIcon className="h-5 w-5" />
+			  </button>
+			</div>
           </div>
+		  {logoutFailed ? <p role="alert" className="px-4 pb-3 text-xs text-red-600">{tAuth('logoutFailed')}</p> : null}
 		  <div className="border-t px-4 py-2.5" style={{ borderColor: 'var(--console-border)' }}>
 			<PortalWorkspaceSwitcher compact />
 		  </div>
@@ -282,7 +341,7 @@ export default function PortalGate({ children }: Props) {
             })}
           </nav>
         </header>
-        <main id="main-content" className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">{children}</main>
+        <main id="main-content" className="mx-auto w-full min-w-0 max-w-7xl overflow-x-hidden px-4 py-6 sm:px-6 lg:px-8">{children}</main>
       </div>
     </div>
 	</PortalWorkspaceProvider>

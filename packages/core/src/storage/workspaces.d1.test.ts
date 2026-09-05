@@ -101,6 +101,32 @@ function migrate(database: DatabaseSync): void {
 		new URL('../../migrations-d1/0042_workspaces.sql', import.meta.url),
 		'utf8',
 	));
+	database.exec(`
+		CREATE TABLE guardrails (
+			id TEXT PRIMARY KEY,
+			workspace_id TEXT NOT NULL REFERENCES workspaces(id) ON DELETE CASCADE,
+			owner_user_id TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+			name TEXT NOT NULL, description TEXT, status TEXT NOT NULL,
+			designated_version INTEGER NOT NULL, latest_version INTEGER NOT NULL,
+			created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+			updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+			is_workspace_default INTEGER NOT NULL DEFAULT 0,
+			is_account_default INTEGER NOT NULL DEFAULT 0,
+			account_scope_key TEXT
+		);
+		CREATE UNIQUE INDEX uk_guardrails_workspace_default
+			ON guardrails(workspace_id) WHERE is_workspace_default = 1;
+		CREATE UNIQUE INDEX uk_guardrails_account_default
+			ON guardrails(account_scope_key) WHERE is_account_default = 1;
+		CREATE TABLE guardrail_versions (
+			id TEXT PRIMARY KEY,
+			guardrail_id TEXT NOT NULL REFERENCES guardrails(id) ON DELETE CASCADE,
+			version INTEGER NOT NULL, config_json TEXT NOT NULL,
+			created_by_user_id TEXT REFERENCES users(id) ON DELETE SET NULL,
+			created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+			UNIQUE (guardrail_id, version)
+		);
+	`);
 }
 
 test('D1 user creation atomically provisions the personal Default Workspace', async () => {
@@ -108,7 +134,8 @@ test('D1 user creation atomically provisions the personal Default Workspace', as
 	try {
 		migrate(database);
 		const client = d1Client(database);
-		await createD1UsersRepository(client).createUser({
+		const users = createD1UsersRepository(client);
+		await users.createUser({
 			id: 'user-new',
 			email: 'new@example.com',
 			externalSystem: 'cinaauth',
@@ -124,6 +151,36 @@ test('D1 user creation atomically provisions the personal Default Workspace', as
 				is_default: 1,
 			},
 		);
+		const defaultGuardrail = database.prepare(`SELECT guardrail.id,
+			guardrail.is_workspace_default, version.version, version.config_json
+			FROM guardrails guardrail
+			JOIN guardrail_versions version ON version.guardrail_id = guardrail.id
+			WHERE guardrail.workspace_id = ? AND guardrail.is_workspace_default = 1`)
+			.get('personal:user-new') as Record<string, unknown>;
+		assert.deepEqual({ ...defaultGuardrail }, {
+			id: defaultGuardrail.id,
+			is_workspace_default: 1,
+			version: 1,
+			config_json: '{}',
+		});
+		const accountDefault = database.prepare(`SELECT guardrail.name,
+			guardrail.is_account_default, guardrail.account_scope_key,
+			version.version, version.config_json
+			FROM guardrails guardrail
+			JOIN guardrail_versions version ON version.guardrail_id = guardrail.id
+			WHERE guardrail.account_scope_key = ? AND guardrail.is_account_default = 1`)
+			.get('personal:user-new') as Record<string, unknown>;
+		assert.deepEqual({ ...accountDefault }, {
+			name: 'Account Default',
+			is_account_default: 1,
+			account_scope_key: 'personal:user-new',
+			version: 1,
+			config_json: '{}',
+		});
+		assert.equal(await users.deleteUserHard('user-new'), false,
+			'a default Guardrail owner cannot be hard-deleted');
+		assert.equal(database.prepare('SELECT COUNT(*) AS total FROM users WHERE id = ?')
+			.get('user-new')?.total, 1);
 	} finally {
 		database.close();
 	}
@@ -240,6 +297,41 @@ test('D1 lazily provisions a newly projected organization Default workspace', as
 				.get('organization:org-2') as { default_scope_key: string }).default_scope_key,
 			'organization:org-2',
 		);
+		const defaultGuardrail = database.prepare(`SELECT guardrail.name,
+			guardrail.is_workspace_default, version.version, version.config_json
+			FROM guardrails guardrail
+			JOIN guardrail_versions version ON version.guardrail_id = guardrail.id
+			WHERE guardrail.workspace_id = ? AND guardrail.is_workspace_default = 1`)
+			.get('organization:org-2') as Record<string, unknown>;
+		assert.deepEqual({ ...defaultGuardrail }, {
+			name: 'Workspace organization:org-2 Default',
+			is_workspace_default: 1,
+			version: 1,
+			config_json: '{}',
+		});
+		const accountDefault = database.prepare(`SELECT guardrail.name,
+			guardrail.is_account_default, guardrail.account_scope_key,
+			version.version, version.config_json
+			FROM guardrails guardrail
+			JOIN guardrail_versions version ON version.guardrail_id = guardrail.id
+			WHERE guardrail.account_scope_key = ? AND guardrail.is_account_default = 1`)
+			.get('organization:org-2') as Record<string, unknown>;
+		assert.deepEqual({ ...accountDefault }, {
+			name: 'Account Default',
+			is_account_default: 1,
+			account_scope_key: 'organization:org-2',
+			version: 1,
+			config_json: '{}',
+		});
+		await listAccessibleWorkspacesForSubject(d1Client(database), {
+			userId: 'user-1', subject: 'subject-1',
+		});
+		assert.equal(database.prepare(`SELECT COUNT(*) AS total FROM guardrails
+			WHERE workspace_id = ? AND is_workspace_default = 1`)
+			.get('organization:org-2')?.total, 1, 'default provisioning is idempotent');
+		assert.equal(database.prepare(`SELECT COUNT(*) AS total FROM guardrails
+			WHERE account_scope_key = ? AND is_account_default = 1`)
+			.get('organization:org-2')?.total, 1, 'account default provisioning is idempotent');
 	} finally {
 		database.close();
 	}

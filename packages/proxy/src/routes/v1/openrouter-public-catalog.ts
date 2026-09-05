@@ -12,18 +12,23 @@ import {
 	type ModelRow,
 	type RouteDataPolicyRow,
 } from '@octafuse/core';
+import { parsePublicCatalogTopProviderSelection } from '@octafuse/core/public-model-catalog';
 import { Hono } from 'hono';
 import type { Context } from 'hono';
 import type { Env } from '../../app';
+import { requireModelEndpointsManagementApiKey } from '../../middleware/management-auth';
 import { scheduleBackgroundWork } from '../../runtime/schedule-background-work';
 import {
 	listVerifiedPublicEndpointBindings,
+	loadPublicEndpointPerformance,
+	openRouterModelOutputModalities,
 	parseModelEndpointPath,
 	resolvePublishedPublicProviders,
 	serializePublishedPublicModelEndpoint,
 	serializePublishedPublicModelEndpointsDocument,
 	type PublicModelEndpoint,
 	type PublicModelEndpointsDocument,
+	type PublicEndpointPerformanceMap,
 	type PublishedPublicProviderCatalog,
 	type PublishedPublicProviderIdentity,
 	type VerifiedPublicEndpointBinding,
@@ -34,9 +39,10 @@ import {
 	createPublicStatsSingleflight,
 	type PublicStatsRuntimeGuard,
 } from '../../services/public-stats-runtime-guard';
+import { privacyQualifiedWeeklyTokenTotals } from '../../services/public-catalog-stats';
 
-const CATALOG_SNAPSHOT_VERSION = 'cinatoken.openrouter-public-catalog.v1' as const;
-const CATALOG_SNAPSHOT_CACHE_PATH = '/__cinatoken/cache/openrouter-public-catalog-v1';
+const CATALOG_SNAPSHOT_VERSION = 'cinatoken.openrouter-public-catalog.v6' as const;
+const CATALOG_SNAPSHOT_CACHE_PATH = '/__cinatoken/cache/openrouter-public-catalog-v6';
 const CATALOG_SNAPSHOT_SINGLEFLIGHT_KEY = 'openrouter-public-catalog-snapshot';
 const MAX_PUBLIC_CACHE_TTL_SECONDS = 60;
 const MAX_LIMIT = 1_000;
@@ -44,21 +50,68 @@ const DEFAULT_LIMIT = 500;
 const MAX_OFFSET = 1_000_000;
 const MAX_QUERY_LENGTH = 200;
 const MAX_PROVIDER_FILTERS = 32;
+const MAX_MODEL_AUTHOR_FILTERS = 32;
+const MAX_SUPPORTED_PARAMETER_FILTERS = 64;
+const MAX_CONTEXT_FILTER = 1_000_000_000;
+const MAX_AGE_FILTER_DAYS = 1_000_000;
+const MAX_PRICE_FILTER_PER_MILLION = Number.MAX_SAFE_INTEGER;
+const MAX_ARCH_FILTER_LENGTH = 80;
+const MAX_MODEL_METADATA_JSON_LENGTH = 65_536;
+const MAX_MODEL_TAGS_JSON_LENGTH = 8_192;
+const MAX_MODEL_FACT_VALUES = 64;
 const POLICY_BATCH_SIZE = 90;
 const CONTROL = /[\u0000-\u001f\u007f]/u;
 const DECIMAL_INTEGER = /^(?:0|[1-9]\d*)$/u;
+const DECIMAL_NUMBER = /^(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d{1,3})?$/u;
 const INPUT_MODALITIES = new Set(['text', 'image', 'audio', 'video', 'file']);
-const OUTPUT_MODALITIES = new Set(['text', 'image', 'audio', 'embeddings']);
+const OUTPUT_MODALITIES = new Set([
+	'text',
+	'image',
+	'embeddings',
+	'audio',
+	'video',
+	'rerank',
+	'speech',
+	'transcription',
+]);
+const MODEL_CATEGORIES = new Set([
+	'programming',
+	'roleplay',
+	'marketing',
+	'marketing/seo',
+	'technology',
+	'science',
+	'translation',
+	'legal',
+	'finance',
+	'health',
+	'trivia',
+	'academia',
+]);
 const ALLOWED_MODEL_QUERY_KEYS = new Set([
 	'limit',
 	'offset',
 	'q',
 	'input_modalities',
+	'output_modalities',
+	'supported_parameters',
+	'context',
+	'model_authors',
 	'providers',
 	'zdr',
 	'region',
 	'sort',
+	'category',
+	'arch',
+	'distillable',
+	'min_age_days',
+	'max_age_days',
+	'min_price',
+	'max_price',
+	'min_output_price',
+	'max_output_price',
 ]);
+const ALLOWED_MODEL_COUNT_QUERY_KEYS = new Set(['output_modalities']);
 
 type EdgeCache = {
 	match(request: Request): Promise<Response | undefined>;
@@ -87,11 +140,15 @@ type OpenRouterModel = {
 		modality: string | null;
 		input_modalities: string[];
 		output_modalities: string[];
-		tokenizer: null;
-		instruct_type: null;
+		tokenizer: string | null;
+		instruct_type: string | null;
 	};
 	pricing: Record<string, string | number>;
-	top_provider: null;
+	top_provider: {
+		context_length: number;
+		max_completion_tokens: number | null;
+		is_moderated: boolean;
+	} | null;
 	per_request_limits: null;
 	supported_parameters: string[];
 	default_parameters: Record<string, never>;
@@ -102,29 +159,66 @@ type OpenRouterModel = {
 	reasoning: null;
 };
 
-type ModelSort = 'newest' | 'context-high-to-low' | null;
+type ModelSort =
+	| 'newest'
+	| 'context-high-to-low'
+	| 'pricing-low-to-high'
+	| 'pricing-high-to-low'
+	| 'throughput-high-to-low'
+	| 'latency-low-to-high'
+	| 'most-popular'
+	| 'top-weekly'
+	| null;
 type ModelQuery = {
 	limit: number;
 	offset: number;
 	q: string | null;
 	inputModalities: string[];
+	outputModalities: string[];
+	allOutputModalities: boolean;
+	supportedParameters: string[];
+	minimumContext: number | null;
+	modelAuthors: string[];
 	providers: string[];
 	zdr: boolean;
 	region: 'eu' | 'us' | null;
+	category: string | null;
+	arch: string | null;
+	distillable: boolean | null;
+	minimumAgeDays: number | null;
+	maximumAgeDays: number | null;
+	minimumPromptPrice: number | null;
+	maximumPromptPrice: number | null;
+	minimumOutputPrice: number | null;
+	maximumOutputPrice: number | null;
 	sort: ModelSort;
 };
 type QueryFailure = { ok: false; param: string; message: string };
 type QuerySuccess = { ok: true; value: ModelQuery };
 type QueryResult = QueryFailure | QuerySuccess;
+type ModelCountQueryResult =
+	| QueryFailure
+	| { ok: true; value: OutputModalitiesQuery };
 
 type PublishedModelRecord = {
 	dto: OpenRouterModel;
 	details: PublicModelEndpointsDocument;
 	searchText: string;
 	inputModalities: string[];
+	outputModalities: string[];
 	providers: string[];
 	regions: string[];
+	categories: string[];
+	architectures: string[];
 	zdr: boolean;
+	distillable: boolean;
+	ageDays: number | null;
+	latencyP50: number | null;
+	throughputP50: number | null;
+	weeklyTokens: number | null;
+	promptPricePerMillion: number | null;
+	outputPricePerMillion: number | null;
+	pricingSortScore: number | null;
 };
 
 type PublishedCatalogSnapshot = {
@@ -211,10 +305,54 @@ function parsePublishedCatalogSnapshot(
 		!Array.isArray(record.details.endpoints) ||
 		typeof record.searchText !== 'string' ||
 		!Array.isArray(record.inputModalities) ||
+		!Array.isArray(record.outputModalities) ||
 		!Array.isArray(record.providers) ||
 		!Array.isArray(record.regions) ||
+		!Array.isArray(record.categories) ||
+		!Array.isArray(record.architectures) ||
 		typeof record.zdr !== 'boolean' ||
-		[record.inputModalities, record.providers, record.regions].some((items) =>
+		typeof record.distillable !== 'boolean' ||
+		!(record.ageDays === null || (
+			Number.isSafeInteger(record.ageDays)
+			&& (record.ageDays as number) >= 0
+		)) ||
+		!(record.latencyP50 === null || (
+			typeof record.latencyP50 === 'number'
+			&& Number.isFinite(record.latencyP50)
+			&& record.latencyP50 >= 0
+		)) ||
+		!(record.throughputP50 === null || (
+			typeof record.throughputP50 === 'number'
+			&& Number.isFinite(record.throughputP50)
+			&& record.throughputP50 >= 0
+		)) ||
+		!(record.weeklyTokens === null || (
+			Number.isSafeInteger(record.weeklyTokens)
+			&& (record.weeklyTokens as number) >= 0
+		)) ||
+		!(record.promptPricePerMillion === null || (
+			typeof record.promptPricePerMillion === 'number'
+			&& Number.isFinite(record.promptPricePerMillion)
+			&& record.promptPricePerMillion >= 0
+		)) ||
+		!(record.outputPricePerMillion === null || (
+			typeof record.outputPricePerMillion === 'number'
+			&& Number.isFinite(record.outputPricePerMillion)
+			&& record.outputPricePerMillion >= 0
+		)) ||
+		!(record.pricingSortScore === null || (
+			typeof record.pricingSortScore === 'number'
+			&& Number.isFinite(record.pricingSortScore)
+			&& record.pricingSortScore >= 0
+		)) ||
+		[
+			record.inputModalities,
+			record.outputModalities,
+			record.providers,
+			record.regions,
+			record.categories,
+			record.architectures,
+		].some((items) =>
 			(items as unknown[]).some((item) => typeof item !== 'string')
 		)
 	)) return null;
@@ -299,9 +437,62 @@ function boundedInteger(
 		);
 }
 
+function optionalBoundedInteger(
+	search: URLSearchParams,
+	key: 'context' | 'min_age_days' | 'max_age_days',
+	minimum: number,
+	maximum: number
+): number | null | QueryFailure {
+	const raw = oneQueryValue(search, key);
+	if (raw === null) return null;
+	if (typeof raw !== 'string') return raw;
+	if (!DECIMAL_INTEGER.test(raw)) {
+		return queryFailure(key, `Query parameter "${key}" must be a decimal integer`);
+	}
+	const value = Number(raw);
+	return Number.isSafeInteger(value) && value >= minimum && value <= maximum
+		? value
+		: queryFailure(key, `Query parameter "${key}" is outside the supported range`);
+}
+
+function optionalBoundedPrice(
+	search: URLSearchParams,
+	key: 'min_price' | 'max_price' | 'min_output_price' | 'max_output_price'
+): number | null | QueryFailure {
+	const raw = oneQueryValue(search, key);
+	if (raw === null) return null;
+	if (typeof raw !== 'string') return raw;
+	if (raw.length === 0 || raw.length > 64 || !DECIMAL_NUMBER.test(raw)) {
+		return queryFailure(key, `Query parameter "${key}" must be a non-negative number`);
+	}
+	const value = Number(raw);
+	return Number.isFinite(value) && value >= 0 && value <= MAX_PRICE_FILTER_PER_MILLION
+		? value
+		: queryFailure(key, `Query parameter "${key}" is outside the supported range`);
+}
+
+function optionalNormalizedText(
+	search: URLSearchParams,
+	key: 'arch',
+	maximumLength: number
+): string | null | QueryFailure {
+	const raw = oneQueryValue(search, key);
+	if (raw === null) return null;
+	if (typeof raw !== 'string') return raw;
+	const value = safeText(raw, maximumLength);
+	return value
+		? normalizedIdentity(value)
+		: queryFailure(key, `Query parameter "${key}" contains an invalid value`);
+}
+
 function commaSeparated(
 	search: URLSearchParams,
-	key: 'input_modalities' | 'providers',
+	key:
+		| 'input_modalities'
+		| 'output_modalities'
+		| 'supported_parameters'
+		| 'model_authors'
+		| 'providers',
 	maximumItems: number,
 	maximumItemLength: number
 ): string[] | QueryFailure {
@@ -320,7 +511,60 @@ function commaSeparated(
 	) {
 		return queryFailure(key, `Query parameter "${key}" contains an invalid list`);
 	}
-	return [...new Set(items.map(normalizedIdentity))].sort(stableStringCompare);
+	const normalized = items.map(normalizedIdentity);
+	return new Set(normalized).size === normalized.length
+		? normalized.sort(stableStringCompare)
+		: queryFailure(key, `Query parameter "${key}" contains duplicate values`);
+}
+
+type OutputModalitiesQuery = {
+	values: string[];
+	all: boolean;
+};
+
+function outputModalitiesQuery(
+	search: URLSearchParams
+): OutputModalitiesQuery | QueryFailure {
+	const raw = oneQueryValue(search, 'output_modalities');
+	if (raw === null) return { values: ['text'], all: false };
+	if (typeof raw !== 'string') return raw;
+	const items = raw.split(',').map((item) => normalizedIdentity(item.trim()));
+	if (
+		items.length === 0
+		|| items.length > OUTPUT_MODALITIES.size
+		|| items.some((item) => item.length === 0 || item.length > 16 || CONTROL.test(item))
+		|| new Set(items).size !== items.length
+	) {
+		return queryFailure(
+			'output_modalities',
+			'Query parameter "output_modalities" contains an invalid list'
+		);
+	}
+	if (items.includes('all')) {
+		return items.length === 1
+			? { values: [], all: true }
+			: queryFailure(
+				'output_modalities',
+				'Output modality "all" must not be combined with another value'
+			);
+	}
+	const unsupported = items.find((value) => !OUTPUT_MODALITIES.has(value));
+	return unsupported
+		? queryFailure(
+			'output_modalities',
+			`Unsupported output modality "${unsupported}"`
+		)
+		: { values: [...items].sort(stableStringCompare), all: false };
+}
+
+function parseModelCountQuery(url: URL): ModelCountQueryResult {
+	for (const key of url.searchParams.keys()) {
+		if (!ALLOWED_MODEL_COUNT_QUERY_KEYS.has(key)) {
+			return queryFailure(key, `Unsupported query parameter "${key}"`);
+		}
+	}
+	const outputQuery = outputModalitiesQuery(url.searchParams);
+	return 'ok' in outputQuery ? outputQuery : { ok: true, value: outputQuery };
 }
 
 function parseModelQuery(url: URL): QueryResult {
@@ -361,6 +605,30 @@ function parseModelQuery(url: URL): QueryResult {
 		);
 	}
 
+	const outputQuery = outputModalitiesQuery(url.searchParams);
+	if ('ok' in outputQuery) return outputQuery;
+	const supportedParameters = commaSeparated(
+		url.searchParams,
+		'supported_parameters',
+		MAX_SUPPORTED_PARAMETER_FILTERS,
+		64
+	);
+	if (!Array.isArray(supportedParameters)) return supportedParameters;
+	const minimumContext = optionalBoundedInteger(
+		url.searchParams,
+		'context',
+		1,
+		MAX_CONTEXT_FILTER
+	);
+	if (typeof minimumContext !== 'number' && minimumContext !== null) return minimumContext;
+	const modelAuthors = commaSeparated(
+		url.searchParams,
+		'model_authors',
+		MAX_MODEL_AUTHOR_FILTERS,
+		120
+	);
+	if (!Array.isArray(modelAuthors)) return modelAuthors;
+
 	const providers = commaSeparated(
 		url.searchParams,
 		'providers',
@@ -381,16 +649,105 @@ function parseModelQuery(url: URL): QueryResult {
 		return queryFailure('region', 'Query parameter "region" must be "eu" or "us"');
 	}
 
+	const rawCategory = oneQueryValue(url.searchParams, 'category');
+	if (typeof rawCategory !== 'string' && rawCategory !== null) return rawCategory;
+	const categoryText = rawCategory === null ? null : safeText(rawCategory, 32);
+	const category = categoryText === null ? null : normalizedIdentity(categoryText);
+	if (rawCategory !== null && (category === null || !MODEL_CATEGORIES.has(category))) {
+		return queryFailure('category', 'Query parameter "category" is not a supported category');
+	}
+
+	const arch = optionalNormalizedText(url.searchParams, 'arch', MAX_ARCH_FILTER_LENGTH);
+	if (typeof arch !== 'string' && arch !== null) return arch;
+
+	const rawDistillable = oneQueryValue(url.searchParams, 'distillable');
+	if (typeof rawDistillable !== 'string' && rawDistillable !== null) return rawDistillable;
+	if (
+		rawDistillable !== null
+		&& rawDistillable !== 'true'
+		&& rawDistillable !== 'false'
+	) {
+		return queryFailure('distillable', 'Query parameter "distillable" must be "true" or "false"');
+	}
+
+	const minimumAgeDays = optionalBoundedInteger(
+		url.searchParams,
+		'min_age_days',
+		0,
+		MAX_AGE_FILTER_DAYS
+	);
+	if (typeof minimumAgeDays !== 'number' && minimumAgeDays !== null) return minimumAgeDays;
+	const maximumAgeDays = optionalBoundedInteger(
+		url.searchParams,
+		'max_age_days',
+		0,
+		MAX_AGE_FILTER_DAYS
+	);
+	if (typeof maximumAgeDays !== 'number' && maximumAgeDays !== null) return maximumAgeDays;
+	if (
+		minimumAgeDays !== null
+		&& maximumAgeDays !== null
+		&& minimumAgeDays > maximumAgeDays
+	) {
+		return queryFailure(
+			'max_age_days',
+			'Query parameter "max_age_days" must be greater than or equal to "min_age_days"'
+		);
+	}
+
+	const minimumPromptPrice = optionalBoundedPrice(url.searchParams, 'min_price');
+	if (typeof minimumPromptPrice !== 'number' && minimumPromptPrice !== null) {
+		return minimumPromptPrice;
+	}
+	const maximumPromptPrice = optionalBoundedPrice(url.searchParams, 'max_price');
+	if (typeof maximumPromptPrice !== 'number' && maximumPromptPrice !== null) {
+		return maximumPromptPrice;
+	}
+	if (
+		minimumPromptPrice !== null
+		&& maximumPromptPrice !== null
+		&& minimumPromptPrice > maximumPromptPrice
+	) {
+		return queryFailure(
+			'max_price',
+			'Query parameter "max_price" must be greater than or equal to "min_price"'
+		);
+	}
+	const minimumOutputPrice = optionalBoundedPrice(url.searchParams, 'min_output_price');
+	if (typeof minimumOutputPrice !== 'number' && minimumOutputPrice !== null) {
+		return minimumOutputPrice;
+	}
+	const maximumOutputPrice = optionalBoundedPrice(url.searchParams, 'max_output_price');
+	if (typeof maximumOutputPrice !== 'number' && maximumOutputPrice !== null) {
+		return maximumOutputPrice;
+	}
+	if (
+		minimumOutputPrice !== null
+		&& maximumOutputPrice !== null
+		&& minimumOutputPrice > maximumOutputPrice
+	) {
+		return queryFailure(
+			'max_output_price',
+			'Query parameter "max_output_price" must be greater than or equal to "min_output_price"'
+		);
+	}
+
 	const rawSort = oneQueryValue(url.searchParams, 'sort');
 	if (typeof rawSort !== 'string' && rawSort !== null) return rawSort;
 	if (
 		rawSort !== null
 		&& rawSort !== 'newest'
 		&& rawSort !== 'context-high-to-low'
+		&& rawSort !== 'pricing-low-to-high'
+		&& rawSort !== 'pricing-high-to-low'
+		&& rawSort !== 'throughput-high-to-low'
+		&& rawSort !== 'latency-low-to-high'
+		&& rawSort !== 'most-popular'
+		&& rawSort !== 'top-weekly'
 	) {
 		return queryFailure(
 			'sort',
-			'Only "newest" and "context-high-to-low" are supported'
+			'Only "newest", "context-high-to-low", "pricing-low-to-high", "pricing-high-to-low", "throughput-high-to-low", "latency-low-to-high", "most-popular", and "top-weekly" are supported'
 		);
 	}
 
@@ -401,9 +758,23 @@ function parseModelQuery(url: URL): QueryResult {
 			offset,
 			q,
 			inputModalities,
+			outputModalities: outputQuery.values,
+			allOutputModalities: outputQuery.all,
+			supportedParameters,
+			minimumContext,
+			modelAuthors,
 			providers,
 			zdr: rawZdr === 'true',
 			region: rawRegion,
+			category,
+			arch,
+			distillable: rawDistillable === null ? null : rawDistillable === 'true',
+			minimumAgeDays,
+			maximumAgeDays,
+			minimumPromptPrice,
+			maximumPromptPrice,
+			minimumOutputPrice,
+			maximumOutputPrice,
 			sort: rawSort,
 		},
 	};
@@ -465,6 +836,68 @@ function positiveCapacity(value: number | null): number | null {
 	return Number.isSafeInteger(value) && (value ?? 0) > 0 ? value : null;
 }
 
+function parseBoundedJsonObject(raw: string | null): Record<string, unknown> | null {
+	if (!raw || raw.length > MAX_MODEL_METADATA_JSON_LENGTH) return null;
+	try {
+		const value: unknown = JSON.parse(raw);
+		return isRecord(value) ? value : null;
+	} catch {
+		return null;
+	}
+}
+
+function boundedNormalizedStrings(
+	value: unknown,
+	maximumItems = MAX_MODEL_FACT_VALUES,
+	maximumItemLength = 80
+): string[] {
+	if (!Array.isArray(value) || value.length > maximumItems) return [];
+	const parsed: string[] = [];
+	for (const item of value) {
+		const safe = safeText(item, maximumItemLength);
+		if (!safe) return [];
+		parsed.push(normalizedIdentity(safe));
+	}
+	return [...new Set(parsed)].sort(stableStringCompare);
+}
+
+function boundedModelTags(raw: string | null): string[] {
+	if (!raw || raw.length > MAX_MODEL_TAGS_JSON_LENGTH) return [];
+	try {
+		return boundedNormalizedStrings(JSON.parse(raw));
+	} catch {
+		return [];
+	}
+}
+
+function explicitModelCategories(
+	model: ModelRow,
+	metadata: Record<string, unknown> | null
+): string[] {
+	const values = new Set(boundedModelTags(model.tags));
+	for (const value of boundedNormalizedStrings(metadata?.categories, 32, 32)) {
+		values.add(value);
+	}
+	const category = safeText(metadata?.category, 32);
+	if (category) values.add(normalizedIdentity(category));
+	return [...values].filter((value) => MODEL_CATEGORIES.has(value)).sort(stableStringCompare);
+}
+
+function explicitModelArchitectures(metadata: Record<string, unknown> | null): string[] {
+	const values = [metadata?.architecture, metadata?.model_family]
+		.map((value) => safeText(value, MAX_ARCH_FILTER_LENGTH))
+		.filter((value): value is string => value !== null)
+		.map(normalizedIdentity);
+	return [...new Set(values)].sort(stableStringCompare);
+}
+
+function snapshotAgeDays(createdEpoch: number | null, generatedAtMs: number): number | null {
+	if (createdEpoch === null) return null;
+	const ageSeconds = Math.floor(generatedAtMs / 1_000) - createdEpoch;
+	if (!Number.isSafeInteger(ageSeconds) || ageSeconds < 0) return null;
+	return Math.floor(ageSeconds / 86_400);
+}
+
 function modelEndpointPath(model: ModelRow): { canonicalSlug: string; details: string } | null {
 	const slash = model.id.indexOf('/');
 	const parsed = slash > 0 && model.id.indexOf('/', slash + 1) < 0
@@ -481,28 +914,186 @@ function modelEndpointPath(model: ModelRow): { canonicalSlug: string; details: s
 		: null;
 }
 
-function canonicalPricing(
-	endpoints: readonly PublicModelEndpoint[]
-): Record<string, string | number> {
-	if (endpoints.length === 0) return {};
-	const normalized = endpoints.map((endpoint) => Object.fromEntries(
-		Object.entries(endpoint.pricing).sort(([a], [b]) => stableStringCompare(a, b))
-	) as Record<string, string | number>);
-	const first = JSON.stringify(normalized[0]);
-	return normalized.every((pricing) => JSON.stringify(pricing) === first)
-		? normalized[0]!
-		: {};
+type DecimalParts = { coefficient: bigint; scale: number };
+
+function decimalParts(value: string): DecimalParts | null {
+	const match = /^(\d+)(?:\.(\d+))?(?:[eE]([+-]?\d+))?$/u.exec(value);
+	if (!match) return null;
+	const fraction = match[2] ?? '';
+	const exponent = Number(match[3] ?? '0');
+	if (!Number.isSafeInteger(exponent) || Math.abs(exponent) > 400) return null;
+	let coefficient = BigInt(`${match[1]}${fraction}`);
+	let scale = fraction.length - exponent;
+	if (scale < 0) {
+		coefficient *= 10n ** BigInt(-scale);
+		scale = 0;
+	}
+	return { coefficient, scale };
+}
+
+function formatDecimal(parts: DecimalParts, maximumScale = 18): string {
+	let { coefficient, scale } = parts;
+	if (scale > maximumScale) {
+		const divisor = 10n ** BigInt(scale - maximumScale);
+		const quotient = coefficient / divisor;
+		const remainder = coefficient % divisor;
+		coefficient = quotient + (remainder * 2n >= divisor ? 1n : 0n);
+		scale = maximumScale;
+	}
+	while (scale > 0 && coefficient % 10n === 0n) {
+		coefficient /= 10n;
+		scale -= 1;
+	}
+	const digits = coefficient.toString().padStart(scale + 1, '0');
+	return scale === 0
+		? digits
+		: `${digits.slice(0, -scale)}.${digits.slice(-scale)}`;
+}
+
+function applyPricingDiscount(value: string, discount: number | undefined): string | null {
+	if (discount === undefined || discount === 0) return value;
+	const price = decimalParts(value);
+	const parsedDiscount = decimalParts(String(discount));
+	if (!price || !parsedDiscount) return null;
+	const one = 10n ** BigInt(parsedDiscount.scale);
+	if (parsedDiscount.coefficient > one) return null;
+	return formatDecimal({
+		coefficient: price.coefficient * (one - parsedDiscount.coefficient),
+		scale: price.scale + parsedDiscount.scale,
+	});
+}
+
+function effectiveEndpointPricing(
+	endpoint: PublicModelEndpoint
+): Record<string, string> | null {
+	const output: Record<string, string> = {};
+	for (const [key, raw] of Object.entries(endpoint.pricing)
+		.sort(([a], [b]) => stableStringCompare(a, b))) {
+		if (key === 'discount') continue;
+		if (typeof raw !== 'string') return null;
+		const value = applyPricingDiscount(raw, endpoint.pricing.discount);
+		if (value === null) return null;
+		output[key] = value;
+	}
+	return output;
+}
+
+function endpointUsesTokenPrices(endpoint: PublicModelEndpoint): boolean {
+	if (endpoint.audio_capabilities === null) return true;
+	const operations = Object.values(endpoint.audio_capabilities.pricing_by_operation)
+		.filter((value) => value !== undefined);
+	return operations.length > 0
+		&& operations.every((value) => value.meter.kind === 'tokens');
+}
+
+type PublishedModelPricing = {
+	pricing: Record<string, string>;
+	topProvider: OpenRouterModel['top_provider'];
+	promptPricePerMillion: number | null;
+	outputPricePerMillion: number | null;
+	pricingSortScore: number | null;
+};
+
+function comparablePricingFacts(
+	endpoint: PublicModelEndpoint,
+	pricing: Readonly<Record<string, string>>
+): Pick<PublishedModelPricing,
+	'promptPricePerMillion' | 'outputPricePerMillion' | 'pricingSortScore'> {
+	if (!endpointUsesTokenPrices(endpoint)) {
+		return {
+			promptPricePerMillion: null,
+			outputPricePerMillion: null,
+			pricingSortScore: null,
+		};
+	}
+	const prompt = Number(pricing.prompt) * 1_000_000;
+	const output = Number(pricing.completion) * 1_000_000;
+	if (
+		!Number.isFinite(prompt)
+		|| prompt < 0
+		|| !Number.isFinite(output)
+		|| output < 0
+	) {
+		return {
+			promptPricePerMillion: null,
+			outputPricePerMillion: null,
+			pricingSortScore: null,
+		};
+	}
+	const pricingSortScore = (prompt + output) / 2;
+	return {
+		promptPricePerMillion: prompt,
+		outputPricePerMillion: output,
+		pricingSortScore: Number.isFinite(pricingSortScore) ? pricingSortScore : null,
+	};
+}
+
+function publishedModelPricing(
+	endpoints: readonly PublicModelEndpoint[],
+	metadata: Record<string, unknown> | null
+): PublishedModelPricing {
+	const unavailable = (): PublishedModelPricing => ({
+		pricing: {},
+		topProvider: null,
+		promptPricePerMillion: null,
+		outputPricePerMillion: null,
+		pricingSortScore: null,
+	});
+	if (endpoints.length === 0) return unavailable();
+
+	const selection = parsePublicCatalogTopProviderSelection(metadata);
+	if (selection.status === 'invalid') return unavailable();
+	if (selection.status === 'valid') {
+		const matches = endpoints.filter(
+			(endpoint) => endpoint.tag === selection.selector.endpointTag
+		);
+		if (matches.length !== 1) return unavailable();
+		const endpoint = matches[0]!;
+		const pricing = effectiveEndpointPricing(endpoint);
+		if (!pricing) return unavailable();
+		return {
+			pricing,
+			topProvider: {
+				context_length: endpoint.context_length,
+				max_completion_tokens: endpoint.max_completion_tokens,
+				is_moderated: selection.selector.isModerated,
+			},
+			...comparablePricingFacts(endpoint, pricing),
+		};
+	}
+
+	const normalized = endpoints.map(effectiveEndpointPricing);
+	if (normalized.some((pricing) => pricing === null)) return unavailable();
+	const first = normalized[0]!;
+	const serialized = JSON.stringify(first);
+	if (!normalized.every((pricing) => JSON.stringify(pricing) === serialized)) {
+		return unavailable();
+	}
+	const facts = endpoints.every(endpointUsesTokenPrices)
+		? comparablePricingFacts(endpoints[0]!, first)
+		: {
+			promptPricePerMillion: null,
+			outputPricePerMillion: null,
+			pricingSortScore: null,
+		};
+	return { pricing: first, topProvider: null, ...facts };
 }
 
 function toOpenRouterModel(
 	model: ModelRow,
-	endpoints: readonly PublicModelEndpoint[]
+	endpoints: readonly PublicModelEndpoint[],
+	metadata: Record<string, unknown> | null,
+	publishedPricing: PublishedModelPricing
 ): OpenRouterModel | null {
 	const path = modelEndpointPath(model);
 	const id = safeText(model.id, 240);
 	if (!path || !id) return null;
 	const inputModalities = normalizedModalities(model.input_modalities, INPUT_MODALITIES);
-	const outputModalities = normalizedModalities(model.output_modalities, OUTPUT_MODALITIES);
+	const outputModalities = [...new Set(
+		openRouterModelOutputModalities(model).filter((value) => OUTPUT_MODALITIES.has(value))
+	)].sort(stableStringCompare);
+	const dedicatedAudioOutput = outputModalities.includes('speech')
+		|| outputModalities.includes('transcription');
 	return {
 		id,
 		canonical_slug: path.canonicalSlug,
@@ -510,18 +1101,18 @@ function toOpenRouterModel(
 		name: safeText(model.display_name, 160) ?? id,
 		created: releasedEpoch(model.released_at),
 		description: safeText(model.description, 4_000) ?? '',
-		context_length: positiveCapacity(model.context_window),
+		context_length: positiveCapacity(model.context_window) ?? (dedicatedAudioOutput ? 0 : null),
 		architecture: {
 			modality: inputModalities.length > 0 && outputModalities.length > 0
 				? `${inputModalities.join('+')}->${outputModalities.join('+')}`
 				: null,
 			input_modalities: inputModalities,
 			output_modalities: outputModalities,
-			tokenizer: null,
-			instruct_type: null,
+			tokenizer: safeText(metadata?.tokenizer, 160),
+			instruct_type: safeText(metadata?.instruct_type, 160),
 		},
-		pricing: canonicalPricing(endpoints),
-		top_provider: null,
+		pricing: publishedPricing.pricing,
+		top_provider: publishedPricing.topProvider,
 		per_request_limits: null,
 		supported_parameters: [...new Set(
 			endpoints.flatMap((endpoint) => endpoint.supported_parameters)
@@ -568,11 +1159,66 @@ async function routePolicies(
 	return new Map(policies.map((policy) => [policy.route_target_id, policy]));
 }
 
+function modelPerformanceScores(
+	bindings: readonly VerifiedPublicEndpointBinding[],
+	performance: PublicEndpointPerformanceMap
+): { latencyP50: number | null; throughputP50: number | null } {
+	const latency: number[] = [];
+	const throughput: number[] = [];
+	for (const binding of bindings) {
+		const endpointPerformance = performance.get(binding.endpoint.id);
+		const latencyP50 = endpointPerformance?.latencyLast30m?.p50;
+		if (typeof latencyP50 === 'number' && Number.isFinite(latencyP50) && latencyP50 >= 0) {
+			latency.push(latencyP50);
+		}
+		const throughputP50 = endpointPerformance?.throughputLast30m?.p50;
+		if (
+			typeof throughputP50 === 'number'
+			&& Number.isFinite(throughputP50)
+			&& throughputP50 >= 0
+		) {
+			throughput.push(throughputP50);
+		}
+	}
+	return {
+		// A model can be routed to any published endpoint, so its score is the
+		// best privacy-qualified endpoint median for the requested dimension.
+		latencyP50: latency.length > 0 ? Math.min(...latency) : null,
+		throughputP50: throughput.length > 0 ? Math.max(...throughput) : null,
+	};
+}
+
+async function loadWeeklyPopularity(
+	c: Context<Env>,
+	now: Date
+): Promise<Map<string, number>> {
+	const start = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()));
+	start.setUTCDate(start.getUTCDate() - 6);
+	try {
+		const rows = await c.get('repositories').analytics.queryPublicModelAnalytics({
+			startDate: start.toISOString().slice(0, 10),
+			endDate: now.toISOString().slice(0, 10),
+		});
+		return privacyQualifiedWeeklyTokenTotals(rows);
+	} catch (error) {
+		console.warn(JSON.stringify({
+			message: 'public catalog weekly popularity read failed',
+			error_type: error instanceof Error ? error.name : 'UnknownError',
+		}));
+		return new Map();
+	}
+}
+
 async function buildPublishedCatalogSnapshot(
 	c: Context<Env>
 ): Promise<PublishedCatalogSnapshot> {
 	const now = new Date();
 	const { models, bindings, providers } = await verifiedBindings(c, now);
+	const repositories = c.get('repositories');
+	const [performance, weeklyTokenTotals] = await Promise.all([
+		loadPublicEndpointPerformance(repositories, bindings, now),
+		loadWeeklyPopularity(c, now),
+	]);
 	const modelById = new Map(models.map((model) => [model.id, model]));
 	const publishedByModel = new Map<string, Array<{
 		binding: VerifiedPublicEndpointBinding;
@@ -584,7 +1230,8 @@ async function buildPublishedCatalogSnapshot(
 		const endpoint = serializePublishedPublicModelEndpoint(
 			model,
 			binding,
-			providers.bySlug
+			providers.bySlug,
+			performance
 		);
 		if (!endpoint) continue;
 		const list = publishedByModel.get(model.id) ?? [];
@@ -610,10 +1257,13 @@ async function buildPublishedCatalogSnapshot(
 		const details = serializePublishedPublicModelEndpointsDocument(
 			model,
 			entries.map((entry) => entry.binding),
-			providers.bySlug
+			providers.bySlug,
+			performance
 		);
 		if (!details) continue;
-		const dto = toOpenRouterModel(model, details.endpoints);
+		const metadata = parseBoundedJsonObject(model.metadata);
+		const modelPricing = publishedModelPricing(details.endpoints, metadata);
+		const dto = toOpenRouterModel(model, details.endpoints, metadata, modelPricing);
 		if (!dto) continue;
 		const providerFacets = new Set<string>();
 		const regions = new Set<string>();
@@ -637,6 +1287,12 @@ async function buildPublishedCatalogSnapshot(
 				}
 			}
 		}
+		const performanceScores = modelPerformanceScores(
+			entries.map((entry) => entry.binding),
+			performance
+		);
+		const categories = explicitModelCategories(model, metadata);
+		const architectures = explicitModelArchitectures(metadata);
 		records.push({
 			dto,
 			details,
@@ -647,9 +1303,19 @@ async function buildPublishedCatalogSnapshot(
 				dto.description,
 			].join('\n')),
 			inputModalities: [...new Set(dto.architecture.input_modalities)].sort(stableStringCompare),
+			outputModalities: [...new Set(dto.architecture.output_modalities)].sort(stableStringCompare),
 			providers: [...providerFacets].sort(stableStringCompare),
 			regions: [...regions].sort(stableStringCompare),
+			categories,
+			architectures,
 			zdr,
+			distillable: metadata?.distillable_text === true,
+			ageDays: snapshotAgeDays(dto.created, now.getTime()),
+			...performanceScores,
+			weeklyTokens: weeklyTokenTotals.get(model.id) ?? null,
+			promptPricePerMillion: modelPricing.promptPricePerMillion,
+			outputPricePerMillion: modelPricing.outputPricePerMillion,
+			pricingSortScore: modelPricing.pricingSortScore,
 		});
 	}
 	const recordIndex: Record<string, number> = Object.create(null) as Record<string, number>;
@@ -679,7 +1345,8 @@ async function loadPublishedCatalogSnapshot(
 	c: Context<Env>,
 	runtime: PublicStatsRuntimeGuard | undefined,
 	singleflight: ReturnType<typeof createPublicStatsSingleflight>,
-	hot: HotSnapshotCache
+	hot: HotSnapshotCache,
+	limitColdMiss = true
 ): Promise<SnapshotLoadResult> {
 	const nowMs = Date.now();
 	if (hot.current?.validUntilMs && hot.current.validUntilMs > nowMs) {
@@ -707,7 +1374,9 @@ async function loadPublishedCatalogSnapshot(
 	}
 
 	const response = await singleflight.run(CATALOG_SNAPSHOT_SINGLEFLIGHT_KEY, async () => {
-		const limiter = c.env?.PUBLIC_STATS_RATE_LIMITER ?? runtime?.rateLimiter;
+		const limiter = limitColdMiss
+			? c.env?.PUBLIC_STATS_RATE_LIMITER ?? runtime?.rateLimiter
+			: undefined;
 		if (limiter) {
 			try {
 				const result = await limiter.limit({ key: CATALOG_SNAPSHOT_SINGLEFLIGHT_KEY });
@@ -781,6 +1450,10 @@ function filterAndSortModels(
 	query: ModelQuery
 ): PublishedModelRecord[] {
 	const search = query.q ? normalizedIdentity(query.q) : null;
+	const outputQuery: OutputModalitiesQuery = {
+		values: query.outputModalities,
+		all: query.allOutputModalities,
+	};
 	const filtered = records.filter((record) => {
 		if (search) {
 			if (!record.searchText.includes(search)) return false;
@@ -789,12 +1462,70 @@ function filterAndSortModels(
 			query.inputModalities.length > 0
 			&& !query.inputModalities.every((value) => record.inputModalities.includes(value))
 		) return false;
+		if (!modelMatchesOutputQuery(record, outputQuery)) return false;
+		if (query.supportedParameters.length > 0) {
+			const supported = new Set(record.dto.supported_parameters.map(normalizedIdentity));
+			if (!query.supportedParameters.every((value) => supported.has(value))) return false;
+		}
+		if (
+			query.minimumContext !== null
+			&& (
+				record.dto.context_length === null
+				|| record.dto.context_length < query.minimumContext
+			)
+		) return false;
+		if (query.modelAuthors.length > 0) {
+			const separator = record.dto.canonical_slug.indexOf('/');
+			const author = separator > 0
+				? normalizedIdentity(record.dto.canonical_slug.slice(0, separator))
+				: '';
+			if (!query.modelAuthors.includes(author)) return false;
+		}
 		if (
 			query.providers.length > 0
 			&& !query.providers.some((value) => record.providers.includes(value))
 		) return false;
 		if (query.zdr && !record.zdr) return false;
 		if (query.region && !record.regions.includes(query.region)) return false;
+		if (query.category && !record.categories.includes(query.category)) return false;
+		if (query.arch && !record.architectures.includes(query.arch)) return false;
+		if (query.distillable !== null && record.distillable !== query.distillable) return false;
+		if (
+			query.minimumAgeDays !== null
+			&& (record.ageDays === null || record.ageDays < query.minimumAgeDays)
+		) return false;
+		if (
+			query.maximumAgeDays !== null
+			&& (record.ageDays === null || record.ageDays > query.maximumAgeDays)
+		) return false;
+		if (
+			query.minimumPromptPrice !== null
+			&& (
+				record.promptPricePerMillion === null
+				|| record.promptPricePerMillion < query.minimumPromptPrice
+			)
+		) return false;
+		if (
+			query.maximumPromptPrice !== null
+			&& (
+				record.promptPricePerMillion === null
+				|| record.promptPricePerMillion > query.maximumPromptPrice
+			)
+		) return false;
+		if (
+			query.minimumOutputPrice !== null
+			&& (
+				record.outputPricePerMillion === null
+				|| record.outputPricePerMillion < query.minimumOutputPrice
+			)
+		) return false;
+		if (
+			query.maximumOutputPrice !== null
+			&& (
+				record.outputPricePerMillion === null
+				|| record.outputPricePerMillion > query.maximumOutputPrice
+			)
+		) return false;
 		return true;
 	});
 
@@ -809,8 +1540,59 @@ function filterAndSortModels(
 			const bContext = b.dto.context_length ?? Number.NEGATIVE_INFINITY;
 			if (aContext !== bContext) return bContext - aContext;
 		}
+		if (
+			query.sort === 'pricing-low-to-high'
+			|| query.sort === 'pricing-high-to-low'
+		) {
+			if (a.pricingSortScore === null && b.pricingSortScore !== null) return 1;
+			if (a.pricingSortScore !== null && b.pricingSortScore === null) return -1;
+			if (
+				a.pricingSortScore !== null
+				&& b.pricingSortScore !== null
+				&& a.pricingSortScore !== b.pricingSortScore
+			) {
+				return query.sort === 'pricing-low-to-high'
+					? a.pricingSortScore - b.pricingSortScore
+					: b.pricingSortScore - a.pricingSortScore;
+			}
+		}
+		if (query.sort === 'throughput-high-to-low') {
+			if (a.throughputP50 === null && b.throughputP50 !== null) return 1;
+			if (a.throughputP50 !== null && b.throughputP50 === null) return -1;
+			if (
+				a.throughputP50 !== null
+				&& b.throughputP50 !== null
+				&& a.throughputP50 !== b.throughputP50
+			) return b.throughputP50 - a.throughputP50;
+		}
+		if (query.sort === 'latency-low-to-high') {
+			if (a.latencyP50 === null && b.latencyP50 !== null) return 1;
+			if (a.latencyP50 !== null && b.latencyP50 === null) return -1;
+			if (
+				a.latencyP50 !== null
+				&& b.latencyP50 !== null
+				&& a.latencyP50 !== b.latencyP50
+			) return a.latencyP50 - b.latencyP50;
+		}
+		if (query.sort === 'most-popular' || query.sort === 'top-weekly') {
+			if (a.weeklyTokens === null && b.weeklyTokens !== null) return 1;
+			if (a.weeklyTokens !== null && b.weeklyTokens === null) return -1;
+			if (
+				a.weeklyTokens !== null
+				&& b.weeklyTokens !== null
+				&& a.weeklyTokens !== b.weeklyTokens
+			) return b.weeklyTokens - a.weeklyTokens;
+		}
 		return stableStringCompare(a.dto.id, b.dto.id);
 	});
+}
+
+function modelMatchesOutputQuery(
+	record: PublishedModelRecord,
+	query: OutputModalitiesQuery
+): boolean {
+	return query.all
+		|| query.values.every((value) => record.outputModalities.includes(value));
 }
 
 function nextModelsLink(query: ModelQuery, totalCount: number): string | null {
@@ -823,11 +1605,41 @@ function nextModelsLink(query: ModelQuery, totalCount: number): string | null {
 	if (query.inputModalities.length > 0) {
 		params.set('input_modalities', query.inputModalities.join(','));
 	}
+	if (query.allOutputModalities) {
+		params.set('output_modalities', 'all');
+	} else if (
+		query.outputModalities.length !== 1
+		|| query.outputModalities[0] !== 'text'
+	) {
+		params.set('output_modalities', query.outputModalities.join(','));
+	}
+	if (query.supportedParameters.length > 0) {
+		params.set('supported_parameters', query.supportedParameters.join(','));
+	}
+	if (query.minimumContext !== null) {
+		params.set('context', String(query.minimumContext));
+	}
+	if (query.modelAuthors.length > 0) {
+		params.set('model_authors', query.modelAuthors.join(','));
+	}
 	if (query.providers.length > 0) {
 		params.set('providers', query.providers.join(','));
 	}
 	if (query.zdr) params.set('zdr', 'true');
 	if (query.region) params.set('region', query.region);
+	if (query.category) params.set('category', query.category);
+	if (query.arch) params.set('arch', query.arch);
+	if (query.distillable !== null) params.set('distillable', String(query.distillable));
+	if (query.minimumAgeDays !== null) params.set('min_age_days', String(query.minimumAgeDays));
+	if (query.maximumAgeDays !== null) params.set('max_age_days', String(query.maximumAgeDays));
+	if (query.minimumPromptPrice !== null) params.set('min_price', String(query.minimumPromptPrice));
+	if (query.maximumPromptPrice !== null) params.set('max_price', String(query.maximumPromptPrice));
+	if (query.minimumOutputPrice !== null) {
+		params.set('min_output_price', String(query.minimumOutputPrice));
+	}
+	if (query.maximumOutputPrice !== null) {
+		params.set('max_output_price', String(query.maximumOutputPrice));
+	}
 	if (query.sort) params.set('sort', query.sort);
 	return `/api/v1/models?${params.toString()}`;
 }
@@ -838,11 +1650,30 @@ function modelQueryIsSharedCacheable(query: ModelQuery): boolean {
 		query.offset === 0 &&
 		query.q === null &&
 		query.inputModalities.length === 0 &&
+		!query.allOutputModalities &&
+		query.outputModalities.length === 1 &&
+		query.outputModalities[0] === 'text' &&
+		query.supportedParameters.length === 0 &&
+		query.minimumContext === null &&
+		query.modelAuthors.length === 0 &&
 		query.providers.length === 0 &&
 		!query.zdr &&
 		query.region === null &&
+		query.category === null &&
+		query.arch === null &&
+		query.distillable === null &&
+		query.minimumAgeDays === null &&
+		query.maximumAgeDays === null &&
+		query.minimumPromptPrice === null &&
+		query.maximumPromptPrice === null &&
+		query.minimumOutputPrice === null &&
+		query.maximumOutputPrice === null &&
 		query.sort === null
 	);
+}
+
+function modelCountQueryIsSharedCacheable(query: OutputModalitiesQuery): boolean {
+	return !query.all && query.values.length === 1 && query.values[0] === 'text';
 }
 
 function publicCatalogClientKey(c: Context<Env>, surface: string): string {
@@ -886,11 +1717,13 @@ export function createOpenRouterPublicCatalogRoutes(
 	runtime?: PublicStatsRuntimeGuard
 ): {
 	publicCatalogRoutes: Hono<Env>;
+	managementCatalogRoutes: Hono<Env>;
 	providersAliasRoutes: Hono<Env>;
 } {
 	const singleflight = runtime?.singleflight ?? createPublicStatsSingleflight();
 	const hotSnapshot: HotSnapshotCache = { current: null };
 	const publicCatalogRoutes = new Hono<Env>();
+	const managementCatalogRoutes = new Hono<Env>();
 	const providersAliasRoutes = new Hono<Env>();
 
 	const listProviders = async (c: Context<Env>): Promise<Response> => {
@@ -957,7 +1790,39 @@ export function createOpenRouterPublicCatalogRoutes(
 		}
 	});
 
-	publicCatalogRoutes.get('/models/:author/:slug/endpoints', async (c) => {
+	publicCatalogRoutes.get('/models/count', async (c) => {
+		const parsed = parseModelCountQuery(new URL(c.req.url));
+		if (!parsed.ok) return invalidQueryResponse(c, parsed);
+		const query = parsed.value;
+		try {
+			const loaded = await loadPublishedCatalogSnapshot(c, runtime, singleflight, hotSnapshot);
+			if (!loaded.ok) return loaded.response;
+			if (!modelCountQueryIsSharedCacheable(query)) {
+				const limited = await enforcePublicCatalogRequestLimit(c, runtime, 'query');
+				if (limited) return limited;
+			}
+			const count = loaded.snapshot.records.reduce((total, record) => (
+				total + (modelMatchesOutputQuery(record, query) ? 1 : 0)
+			), 0);
+			return applyPublicCachePolicy(
+				c.json({ data: { count } }),
+				loaded.snapshot,
+				modelCountQueryIsSharedCacheable(query)
+			);
+		} catch (error) {
+			console.error(JSON.stringify({
+				message: 'public model count failed',
+				error_type: error instanceof Error ? error.name : 'UnknownError',
+			}));
+			return gatewayErrorJson(c, {
+				status: 500,
+				code: GatewayErrorCode.internalError,
+				message: 'Model count failed',
+			});
+		}
+	});
+
+	publicCatalogRoutes.get('/model/:author/:slug', async (c) => {
 		const invalidQuery = rejectUnexpectedQuery(c);
 		if (invalidQuery) return invalidQuery;
 		const path = parseModelEndpointPath(c.req.param('author'), c.req.param('slug'));
@@ -985,23 +1850,78 @@ export function createOpenRouterPublicCatalogRoutes(
 				});
 			}
 			return applyPublicCachePolicy(
-				c.json({ data: record.details }),
+				c.json({ data: record.dto }),
 				loaded.snapshot,
 				true
 			);
 		} catch (error) {
 			console.error(JSON.stringify({
-				message: 'public endpoint discovery failed',
+				message: 'public model detail failed',
 				model_id: path.canonicalModelId,
 				error_type: error instanceof Error ? error.name : 'UnknownError',
 			}));
 			return gatewayErrorJson(c, {
 				status: 500,
 				code: GatewayErrorCode.internalError,
-				message: 'Endpoint discovery failed',
+				message: 'Model discovery failed',
 			});
 		}
 	});
 
-	return { publicCatalogRoutes, providersAliasRoutes };
+	managementCatalogRoutes.get(
+		'/models/:author/:slug/endpoints',
+		requireModelEndpointsManagementApiKey,
+		async (c) => {
+			const invalidQuery = rejectUnexpectedQuery(c);
+			if (invalidQuery) return invalidQuery;
+			const path = parseModelEndpointPath(c.req.param('author'), c.req.param('slug'));
+			if (!path) {
+				return gatewayErrorJson(c, {
+					status: 404,
+					code: GatewayErrorCode.modelNotFound,
+					message: 'Resource not found',
+				});
+			}
+			try {
+				const loaded = await loadPublishedCatalogSnapshot(
+					c,
+					runtime,
+					singleflight,
+					hotSnapshot,
+					false
+				);
+				if (!loaded.ok) return loaded.response;
+				const index = loaded.snapshot.recordIndex[path.canonicalModelId];
+				const record = Number.isSafeInteger(index)
+					? loaded.snapshot.records[index!]
+					: undefined;
+				if (!record) {
+					return gatewayErrorJson(c, {
+						status: 404,
+						code: GatewayErrorCode.modelNotFound,
+						message: 'Resource not found',
+					});
+				}
+				c.header('Cache-Control', 'private, no-store');
+				return c.json({ data: record.details });
+			} catch (error) {
+				console.error(JSON.stringify({
+					message: 'management endpoint discovery failed',
+					model_id: path.canonicalModelId,
+					error_type: error instanceof Error ? error.name : 'UnknownError',
+				}));
+				return gatewayErrorJson(c, {
+					status: 500,
+					code: GatewayErrorCode.internalError,
+					message: 'Endpoint discovery failed',
+				});
+			}
+		}
+	);
+
+	return {
+		publicCatalogRoutes,
+		managementCatalogRoutes,
+		providersAliasRoutes,
+	};
 }

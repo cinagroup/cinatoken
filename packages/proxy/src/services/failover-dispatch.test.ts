@@ -1,6 +1,6 @@
 import { beforeEach, describe, it, mock } from 'node:test';
 import assert from 'node:assert/strict';
-import type { GatewayRepositories, SharedKeyRow } from '@octafuse/core';
+import type { ByokRuntimeKeyRow, GatewayRepositories, SharedKeyRow } from '@octafuse/core';
 import type { RouteResult } from './model-router';
 import { EMPTY_USAGE, proxyDashScopeMultimodalPassthrough } from './proxy';
 import {
@@ -15,6 +15,10 @@ import {
 	resetProviderCircuitStateForTests,
 } from './provider-circuit-breaker';
 import { resetSharedKeyPoolStateForTests } from './shared-key-pool';
+import {
+	createRouteAwareBudgetAdmission,
+	RequestBudgetAdmissionError,
+} from './request-budget-admission';
 
 function makeRoute(providerId: string, overrides: Partial<RouteResult> = {}): RouteResult {
 	return {
@@ -52,6 +56,46 @@ const defaultOptions = {
 	strategy: 'weight_priority' as const,
 };
 
+const byokContext = {
+	workspaceId: 'workspace-1',
+	userId: 'user-1',
+	apiKeyHash: 'a'.repeat(64),
+};
+
+function makeByokKey(id: string, isFallback = false): ByokRuntimeKeyRow {
+	return {
+		id,
+		workspace_id: byokContext.workspaceId,
+		provider: 'deepseek',
+		name: null,
+		label: `...${id.slice(-4)}`,
+		disabled: false,
+		is_fallback: isFallback,
+		sort_order: 0,
+		allowed_models: null,
+		allowed_user_ids: null,
+		allowed_api_key_hashes: null,
+		created_by_management_key_id: null,
+		created_at: '2026-09-03T00:00:00.000Z',
+		updated_at: '2026-09-03T00:00:00.000Z',
+		api_key: `secret-${id}`,
+	};
+}
+
+function makeByokRoute(overrides: Partial<RouteResult> = {}): RouteResult {
+	return makeRoute('provider-1', {
+		targetId: 'target-byok',
+		gatewayModelId: 'deepseek/deepseek-chat',
+		endpoint: {
+			id: 'endpoint-deepseek',
+			modelId: 'deepseek/deepseek-chat',
+			providerId: 'provider-1',
+			providerSlug: 'deepseek',
+		} as NonNullable<RouteResult['endpoint']>,
+		...overrides,
+	});
+}
+
 beforeEach(() => {
 	resetProviderCircuitStateForTests();
 	resetSharedKeyPoolStateForTests();
@@ -67,6 +111,436 @@ describe('dispatch success response', () => {
 			} as Response),
 			true
 		);
+	});
+});
+
+describe('failoverDispatch — private BYOK credentials', () => {
+	it('attempts primary BYOK, shared, platform, then fallback BYOK for one route target', async () => {
+		const sharedKey: SharedKeyRow = {
+			id: 'shared-1',
+			sellerUserId: 'seller-1',
+			channelType: 'openai',
+			apiKey: 'secret-shared-1',
+			keyFingerprint: '...ared',
+			label: 'shared-1',
+			status: 'active',
+			sellerPriority: 0,
+			weight: 1,
+			inputPrice: 1,
+			outputPrice: 2,
+			cacheReadPrice: null,
+			cacheWritePrice: null,
+			validatedAt: null,
+			lastUsedAt: null,
+			lastFailureAt: null,
+			failureReason: null,
+			servedInputTokens: 0,
+			servedOutputTokens: 0,
+			earnedTotal: 0,
+			createdAt: '2026-09-03T00:00:00.000Z',
+			updatedAt: '2026-09-03T00:00:00.000Z',
+		};
+		const repos = {
+			sharedKeys: {
+				listActiveSharedKeysByChannel: async () => [sharedKey],
+				markSharedKeyFailure: mock.fn(),
+			},
+			byokKeys: {
+				listActiveForRequest: async () => [
+					makeByokKey('primary-1'),
+					makeByokKey('fallback-1', true),
+				],
+			},
+		} as unknown as GatewayRepositories;
+		const seen: string[] = [];
+		const result = await failoverDispatch(
+			repos,
+			[makeByokRoute({ providerSharedChannelType: 'openai' })],
+			'openai',
+			async (route) => {
+				seen.push(route.providerKeyId ?? 'none');
+				const success = route.providerKeyId === 'byok:fallback-1';
+				return {
+					response: new Response(success ? 'ok' : 'unavailable', {
+						status: success ? 200 : 503,
+					}),
+					usagePromise: Promise.resolve(EMPTY_USAGE),
+					upstreamRequestId: null,
+				};
+			},
+			undefined,
+			{ ...defaultOptions, byok: byokContext },
+		);
+
+		assert.deepEqual(seen, [
+			'byok:primary-1',
+			'sharedkey:shared-1',
+			'provider-1',
+			'byok:fallback-1',
+		]);
+		assert.equal(result.response.status, 200);
+		assert.equal(result.chosenRoute.providerKeyId, 'byok:fallback-1');
+	});
+
+	it('dispatches a BYOK-only route without allowing a blank platform credential to egress', async () => {
+		const repos = {
+			byokKeys: {
+				listActiveForRequest: async () => [makeByokKey('only-1')],
+			},
+		} as unknown as GatewayRepositories;
+		const seen: Array<[string | null | undefined, string]> = [];
+		const result = await failoverDispatch(
+			repos,
+			[makeByokRoute({ providerApiKey: '' })],
+			'openai',
+			async (route) => {
+				seen.push([route.providerKeyId, route.providerApiKey]);
+				return {
+					response: new Response('ok', { status: 200 }),
+					usagePromise: Promise.resolve(EMPTY_USAGE),
+					upstreamRequestId: null,
+				};
+			},
+			undefined,
+			{ ...defaultOptions, byok: byokContext },
+		);
+
+		assert.deepEqual(seen, [['byok:only-1', 'secret-only-1']]);
+		assert.equal(result.response.status, 200);
+	});
+
+	it('delegates route-aware admission for BYOK and platform fallback at each dispatch boundary', async () => {
+		const repos = {
+			byokKeys: {
+				listActiveForRequest: async () => [makeByokKey('primary-1')],
+			},
+		} as unknown as GatewayRepositories;
+		const events: string[] = [];
+		const result = await failoverDispatch(
+			repos,
+			[makeByokRoute()],
+			'openai',
+			async (route) => {
+				events.push(`dispatch:${route.providerKeyId}`);
+				const isByok = route.providerKeyId?.startsWith('byok:') === true;
+				return {
+					response: new Response(isByok ? 'unavailable' : 'ok', {
+						status: isByok ? 503 : 200,
+					}),
+					usagePromise: Promise.resolve(EMPTY_USAGE),
+					upstreamRequestId: null,
+				};
+			},
+			undefined,
+			{
+				...defaultOptions,
+				byok: byokContext,
+				beforeUpstreamDispatch: async (route) => {
+					events.push(`admission:${route.providerKeyId}`);
+				},
+			},
+		);
+
+		assert.deepEqual(events, [
+			'admission:byok:primary-1',
+			'dispatch:byok:primary-1',
+			'admission:provider-1',
+			'dispatch:provider-1',
+		]);
+		assert.equal(result.response.status, 200);
+	});
+
+	it('lets an exhausted finite-budget user complete a successful zero-fee BYOK request', async () => {
+		const ordinaryReserve = mock.fn<GatewayRepositories['userBudgets']['reserve']>(async () => ({
+			status: 'blocked',
+			remainingMicros: 0,
+		}));
+		const guardrailReserve = mock.fn<GatewayRepositories['guardrailBudgets']['reserveMany']>(
+			async () => ({ status: 'blocked', assignmentId: 'assignment-1' }),
+		);
+		const repos = {
+			byokKeys: {
+				listActiveForRequest: async () => [makeByokKey('zero-fee-1')],
+			},
+			userBudgets: {
+				reserve: ordinaryReserve,
+				expireBefore: mock.fn(async () => 0),
+				markDispatched: mock.fn(async () => true),
+				release: mock.fn(async () => 1),
+				forfeitDispatched: mock.fn(async () => 1),
+			},
+			guardrailBudgets: {
+				reserveMany: guardrailReserve,
+				expireBefore: mock.fn(async () => 0),
+				markDispatched: mock.fn(async () => true),
+				releaseMany: mock.fn(async () => 1),
+				forfeitMany: mock.fn(async () => 1),
+			},
+		} as unknown as GatewayRepositories;
+		const admission = await createRouteAwareBudgetAdmission(repos, {
+			ordinary: {
+				requestId: 'request-byok-success',
+				userId: byokContext.userId,
+				apiKeyId: 'gateway-key-1',
+				budgetMax: 1,
+				expectedBudgetEpoch: 4,
+				estimatedChargedCost: 0.25,
+			},
+			guardrail: { intents: [], reservedMicros: 250_000 },
+			privateByokGatewayKey: { includeInLimit: false, reservedMicros: 250_000 },
+		});
+		const dispatched: string[] = [];
+
+		const result = await failoverDispatch(
+			repos,
+			[makeByokRoute({ providerApiKey: '' })],
+			'openai',
+			async (route) => {
+				dispatched.push(route.providerKeyId ?? 'none');
+				return {
+					response: new Response('ok', { status: 200 }),
+					usagePromise: Promise.resolve(EMPTY_USAGE),
+					upstreamRequestId: null,
+				};
+			},
+			undefined,
+			{
+				...defaultOptions,
+				byok: byokContext,
+				beforeUpstreamDispatch: (route) => admission.beforeUpstreamDispatch(route),
+			},
+		);
+
+		assert.equal(result.response.status, 200);
+		assert.deepEqual(dispatched, ['byok:zero-fee-1']);
+		assert.equal(ordinaryReserve.mock.callCount(), 0);
+		assert.equal(guardrailReserve.mock.callCount(), 0);
+		assert.equal(admission.ordinaryLease.kind, 'free');
+		assert.equal(admission.guardrailReserved, false);
+	});
+
+	it('denies platform fallback before egress when BYOK fails and the ordinary budget is exhausted', async () => {
+		const ordinaryReserve = mock.fn<GatewayRepositories['userBudgets']['reserve']>(async () => ({
+			status: 'blocked',
+			remainingMicros: 0,
+		}));
+		const guardrailReserve = mock.fn<GatewayRepositories['guardrailBudgets']['reserveMany']>(
+			async () => ({ status: 'reserved', reservationCount: 0 }),
+		);
+		const repos = {
+			byokKeys: {
+				listActiveForRequest: async () => [makeByokKey('fallback-denied-1')],
+			},
+			userBudgets: {
+				reserve: ordinaryReserve,
+				expireBefore: mock.fn(async () => 0),
+				markDispatched: mock.fn(async () => true),
+				release: mock.fn(async () => 1),
+				forfeitDispatched: mock.fn(async () => 1),
+			},
+			guardrailBudgets: {
+				reserveMany: guardrailReserve,
+				expireBefore: mock.fn(async () => 0),
+				markDispatched: mock.fn(async () => true),
+				releaseMany: mock.fn(async () => 1),
+				forfeitMany: mock.fn(async () => 1),
+			},
+		} as unknown as GatewayRepositories;
+		const admission = await createRouteAwareBudgetAdmission(repos, {
+			ordinary: {
+				requestId: 'request-platform-denied',
+				userId: byokContext.userId,
+				apiKeyId: 'gateway-key-1',
+				budgetMax: 1,
+				expectedBudgetEpoch: 4,
+				estimatedChargedCost: 0.25,
+			},
+			guardrail: { intents: [], reservedMicros: 250_000 },
+			privateByokGatewayKey: { includeInLimit: false, reservedMicros: 250_000 },
+		});
+		const dispatched: string[] = [];
+
+		const result = await failoverDispatch(
+			repos,
+			[makeByokRoute()],
+			'openai',
+			async (route) => {
+				dispatched.push(route.providerKeyId ?? 'none');
+				return {
+					response: new Response('unavailable', { status: 503 }),
+					usagePromise: Promise.resolve(EMPTY_USAGE),
+					upstreamRequestId: null,
+				};
+			},
+			undefined,
+			{
+				...defaultOptions,
+				byok: byokContext,
+				beforeUpstreamDispatch: (route) => admission.beforeUpstreamDispatch(route),
+			},
+		);
+
+		assert.equal(result.response.status, 402);
+		assert.equal(result.response.headers.get('X-OctaFuse-Error-Code'), 'gateway.budget_exceeded');
+		assert.deepEqual(dispatched, ['byok:fallback-denied-1']);
+		assert.equal(ordinaryReserve.mock.callCount(), 1);
+		assert.equal(guardrailReserve.mock.callCount(), 0);
+		assert.equal(result.meta?.gatewayGeneratedError, true);
+		assert.equal(result.dispatchAttempts?.length, 1);
+		assert.equal(result.dispatchAttempts?.[0]?.routeTargetId, 'target-byok');
+	});
+
+	it('can explicitly include private BYOK in an authenticated future budget policy', async () => {
+		const repos = {
+			byokKeys: {
+				listActiveForRequest: async () => [makeByokKey('included-1')],
+			},
+		} as unknown as GatewayRepositories;
+		const admitted: string[] = [];
+		await failoverDispatch(
+			repos,
+			[makeByokRoute({ providerApiKey: '' })],
+			'openai',
+			async () => ({
+				response: new Response('ok', { status: 200 }),
+				usagePromise: Promise.resolve(EMPTY_USAGE),
+				upstreamRequestId: null,
+			}),
+			undefined,
+			{
+				...defaultOptions,
+				byok: byokContext,
+				includePrivateByokInBudget: true,
+				beforeUpstreamDispatch: async (route) => {
+					admitted.push(route.providerKeyId ?? 'none');
+				},
+			},
+		);
+
+		assert.deepEqual(admitted, ['byok:included-1']);
+	});
+
+	it('does not disable a shared key when a private BYOK credential receives 401 or 403', async () => {
+		for (const status of [401, 403]) {
+			resetProviderCircuitStateForTests();
+			const markSharedKeyFailure = mock.fn();
+			const repos = {
+				sharedKeys: { markSharedKeyFailure },
+				byokKeys: {
+					listActiveForRequest: async () => [makeByokKey(`auth-${status}`)],
+				},
+			} as unknown as GatewayRepositories;
+			const seen: string[] = [];
+			const result = await failoverDispatch(
+				repos,
+				[makeByokRoute()],
+				'openai',
+				async (route) => {
+					seen.push(route.providerKeyId ?? 'none');
+					const isByok = route.providerKeyId?.startsWith('byok:') === true;
+					return {
+						response: new Response(isByok ? 'auth rejected' : 'ok', {
+							status: isByok ? status : 200,
+						}),
+						usagePromise: Promise.resolve(EMPTY_USAGE),
+						upstreamRequestId: null,
+					};
+				},
+				undefined,
+				{ ...defaultOptions, byok: byokContext },
+			);
+
+			assert.deepEqual(seen, [`byok:auth-${status}`, 'provider-1']);
+			assert.equal(result.response.status, 200);
+			assert.equal(markSharedKeyFailure.mock.callCount(), 0);
+		}
+	});
+
+	it('isolates a circuit-open BYOK key and still attempts another private credential', async () => {
+		markProviderFailure('provider-1#byok:key-1', 'rate_limit', 60_000);
+		const repos = {
+			byokKeys: {
+				listActiveForRequest: async () => [
+					makeByokKey('key-1'),
+					makeByokKey('key-2'),
+				],
+			},
+		} as unknown as GatewayRepositories;
+		const seen: string[] = [];
+		const result = await failoverDispatch(
+			repos,
+			[makeByokRoute()],
+			'openai',
+			async (route) => {
+				seen.push(route.providerKeyId ?? 'none');
+				return {
+					response: new Response('ok', { status: 200 }),
+					usagePromise: Promise.resolve(EMPTY_USAGE),
+					upstreamRequestId: null,
+				};
+			},
+			undefined,
+			{ ...defaultOptions, byok: byokContext },
+		);
+
+		assert.deepEqual(seen, ['byok:key-2']);
+		assert.equal(result.chosenRoute.providerKeyId, 'byok:key-2');
+	});
+
+	it('does not let an open platform circuit suppress a healthy BYOK credential', async () => {
+		markProviderFailure('provider-1', 'rate_limit', 60_000);
+		const repos = {
+			byokKeys: {
+				listActiveForRequest: async () => [makeByokKey('healthy-1')],
+			},
+		} as unknown as GatewayRepositories;
+		const seen: string[] = [];
+		const result = await failoverDispatch(
+			repos,
+			[makeByokRoute()],
+			'openai',
+			async (route) => {
+				seen.push(route.providerKeyId ?? 'none');
+				return {
+					response: new Response('ok', { status: 200 }),
+					usagePromise: Promise.resolve(EMPTY_USAGE),
+					upstreamRequestId: null,
+				};
+			},
+			undefined,
+			{ ...defaultOptions, byok: byokContext },
+		);
+
+		assert.deepEqual(seen, ['byok:healthy-1']);
+		assert.equal(result.response.status, 200);
+	});
+
+	it('returns 429 without dispatch when every expanded credential circuit is open', async () => {
+		markProviderFailure('provider-1', 'rate_limit', 60_000);
+		markProviderFailure('provider-1#byok:primary-1', 'rate_limit', 60_000);
+		markProviderFailure('provider-1#byok:fallback-1', 'rate_limit', 60_000);
+		const repos = {
+			byokKeys: {
+				listActiveForRequest: async () => [
+					makeByokKey('primary-1'),
+					makeByokKey('fallback-1', true),
+				],
+			},
+		} as unknown as GatewayRepositories;
+		const dispatch = mock.fn();
+		const result = await failoverDispatch(
+			repos,
+			[makeByokRoute()],
+			'openai',
+			dispatch,
+			undefined,
+			{ ...defaultOptions, byok: byokContext },
+		);
+
+		assert.equal(dispatch.mock.callCount(), 0);
+		assert.equal(result.response.status, 429);
+		assert.equal(result.suppressErrorAlert, true);
+		assert.match(result.response.headers.get('retry-after') ?? '', /^\d+$/u);
 	});
 });
 
@@ -534,6 +1008,37 @@ describe('failoverDispatch — all providers unavailable', () => {
 });
 
 describe('failoverDispatch — pre-dispatch admission boundary', () => {
+	it('returns the canonical gateway budget response without dispatch or provider failover', async () => {
+		const dispatch = mock.fn(async () => ({
+			response: new Response('must not run', { status: 200 }),
+			usagePromise: Promise.resolve(EMPTY_USAGE),
+			upstreamRequestId: null,
+		}));
+		const result = await failoverDispatch(
+			emptyRepos,
+			[makeRoute('p1'), makeRoute('p2')],
+			'openai',
+			dispatch,
+			undefined,
+			{
+				...defaultOptions,
+				beforeUpstreamDispatch: async () => {
+					throw new RequestBudgetAdmissionError({
+						code: 'gateway.budget_exceeded',
+						message: 'Gateway key spend limit exceeded',
+					});
+				},
+			},
+		);
+
+		assert.equal(dispatch.mock.callCount(), 0);
+		assert.equal(result.response.status, 402);
+		assert.equal(result.response.headers.get('X-OctaFuse-Error-Code'), 'gateway.budget_exceeded');
+		assert.equal(result.meta?.gatewayGeneratedError, true);
+		assert.equal(result.meta?.failoverForbidden, true);
+		assert.equal(result.meta?.admissionDeniedPreDispatch, true);
+	});
+
 	it('awaits the admission callback immediately before the first dispatch only', async () => {
 		const events: string[] = [];
 		const result = await failoverDispatch(
@@ -687,6 +1192,42 @@ describe('failoverDispatch — pre-dispatch admission boundary', () => {
 			(error: unknown) => error === admissionError,
 		);
 		assert.deepEqual(events, ['prepare']);
+	});
+
+	it('returns a gateway Guardrail response when a delegated driver reaches a denied admission boundary', async () => {
+		const events: string[] = [];
+		const result = await failoverDispatch(
+			emptyRepos,
+			[makeRoute('p1'), makeRoute('p2')],
+			'openai',
+			async (_route, _signal, _timing, _attempt, beforeFetch) => {
+				events.push('prepare');
+				await beforeFetch?.();
+				events.push('fetch');
+				return {
+					response: new Response('must not run', { status: 200 }),
+					usagePromise: Promise.resolve(EMPTY_USAGE),
+					upstreamRequestId: null,
+				};
+			},
+			undefined,
+			{
+				...defaultOptions,
+				delegateBeforeUpstreamDispatchToDriver: true,
+				beforeUpstreamDispatch: async () => {
+					throw new RequestBudgetAdmissionError({
+						code: 'gateway.guardrail_blocked',
+						message: 'Request blocked by guardrail budget',
+					});
+				},
+			},
+		);
+
+		assert.deepEqual(events, ['prepare']);
+		assert.equal(result.response.status, 403);
+		assert.equal(result.response.headers.get('X-OctaFuse-Error-Code'), 'gateway.guardrail_blocked');
+		assert.equal(result.meta?.failoverForbidden, true);
+		assert.equal(result.meta?.admissionDeniedPreDispatch, true);
 	});
 });
 
@@ -1034,6 +1575,83 @@ describe('failoverDispatch — provider sticky', () => {
 		assert.equal(touchBinding.mock.callCount(), 1);
 	});
 
+	it('keeps an existing binding untouched when another target primary BYOK succeeds first', async () => {
+		const now = Date.now();
+		const touchBinding = mock.fn(async () => true);
+		const tryBind = mock.fn(async () => true);
+		const clearBinding = mock.fn(async () => true);
+		const repos = {
+			byokKeys: {
+				listActiveForRequest: async ({ provider }: { provider: string }) =>
+					provider === 'deepseek' ? [makeByokKey('preempt-sticky-1')] : [],
+			},
+			routePoolSticky: {
+				getBinding: async () => ({
+					route_pool_id: 'pool-1',
+					affinity_hash: 'x',
+					route_target_id: 'sticky-target',
+					binding_token: 'tok-existing',
+					pool_epoch: 0,
+					expires_at: new Date(now + 3_600_000).toISOString(),
+				}),
+				touchBinding,
+				tryBind,
+				clearBinding,
+				...stickyRepoExtras,
+			},
+		} as unknown as GatewayRepositories;
+		const stickyRoute = makeRoute('sticky-provider', {
+			targetId: 'sticky-target',
+			gatewayModelId: 'deepseek/deepseek-chat',
+			endpoint: {
+				id: 'endpoint-sticky',
+				modelId: 'deepseek/deepseek-chat',
+				providerId: 'sticky-provider',
+				providerSlug: 'openai',
+			} as NonNullable<RouteResult['endpoint']>,
+			routePriority: 10,
+		});
+		const byokRoute = makeByokRoute({
+			targetId: 'byok-target',
+			routePriority: 1,
+		});
+		const seen: Array<{ targetId: string; keyId: string | null | undefined }> = [];
+
+		const result = await failoverDispatch(
+			repos,
+			[stickyRoute, byokRoute],
+			'openai',
+			async (route) => {
+				seen.push({ targetId: route.targetId, keyId: route.providerKeyId });
+				return {
+					response: new Response('ok', { status: 200 }),
+					usagePromise: Promise.resolve(EMPTY_USAGE),
+					upstreamRequestId: null,
+				};
+			},
+			undefined,
+			{
+				...defaultOptions,
+				byok: byokContext,
+				routePoolId: 'pool-1',
+				sticky: { enabled: true, idleTtlSeconds: 3600, epoch: 0 },
+			},
+		);
+
+		assert.deepEqual(seen, [
+			{ targetId: 'byok-target', keyId: 'byok:preempt-sticky-1' },
+		]);
+		assert.equal(result.chosenRoute.targetId, 'byok-target');
+		assert.deepEqual(await result.stickyTrace!(), {
+			lookup: 'hit',
+			attempted_target: null,
+			result: 'unchanged',
+		});
+		assert.equal(touchBinding.mock.callCount(), 0);
+		assert.equal(tryBind.mock.callCount(), 0);
+		assert.equal(clearBinding.mock.callCount(), 0);
+	});
+
 	it('clears sticky on provider failure and continues normal plan without retrying same target', async () => {
 		const now = Date.now();
 		const seen: string[] = [];
@@ -1166,6 +1784,229 @@ describe('failoverDispatch — provider sticky', () => {
 		assert.equal(tryBind.mock.callCount(), 1);
 		const bindArgs = tryBind.mock.calls[0]?.arguments[0] as { poolEpoch: number };
 		assert.equal(bindArgs.poolEpoch, 3);
+	});
+
+	it('waits for a completed successful stream before binding an explicit session', async () => {
+		let resolveUsage!: (usage: typeof EMPTY_USAGE) => void;
+		const usagePromise = new Promise<typeof EMPTY_USAGE>((resolve) => {
+			resolveUsage = resolve;
+		});
+		const tryBind = mock.fn(async () => true);
+		const repos = {
+			routePoolSticky: {
+				getBinding: async () => null,
+				tryBind,
+				touchBinding: mock.fn(),
+				clearBinding: mock.fn(),
+				...stickyRepoExtras,
+			},
+		} as unknown as GatewayRepositories;
+		const result = await failoverDispatch(
+			repos,
+			[makeRoute('p1', { targetId: 't1' })],
+			'openai',
+			async () => ({
+				response: new Response('ok', { status: 200 }),
+				usagePromise,
+				upstreamRequestId: null,
+			}),
+			undefined,
+			{
+				...defaultOptions,
+				routePoolId: 'pool-1',
+				sticky: { enabled: true, idleTtlSeconds: 600, epoch: 0 },
+				stickySuccessPolicy: 'stream_success',
+			},
+		);
+
+		assert.equal(tryBind.mock.callCount(), 0);
+		resolveUsage(EMPTY_USAGE);
+		await result.stickyMutationPromise;
+		assert.equal(tryBind.mock.callCount(), 1);
+		assert.equal((await result.stickyTrace!()).result, 'bound');
+	});
+
+	it('does not bind or touch a sticky session after cancellation or a stream error', async () => {
+		for (const usage of [
+			{ ...EMPTY_USAGE, cancelled: true },
+			{ ...EMPTY_USAGE, stream_error: 'upstream ended early' },
+		]) {
+			const tryBind = mock.fn(async () => true);
+			const touchBinding = mock.fn(async () => true);
+			const missRepos = {
+				routePoolSticky: {
+					getBinding: async () => null,
+					tryBind,
+					touchBinding,
+					clearBinding: mock.fn(),
+					...stickyRepoExtras,
+				},
+			} as unknown as GatewayRepositories;
+			const miss = await failoverDispatch(
+				missRepos,
+				[makeRoute('p1', { targetId: 't1' })],
+				'openai',
+				async () => ({
+					response: new Response('ok', { status: 200 }),
+					usagePromise: Promise.resolve(usage),
+					upstreamRequestId: null,
+				}),
+				undefined,
+				{
+					...defaultOptions,
+					routePoolId: 'pool-1',
+					sticky: { enabled: true, idleTtlSeconds: 600, epoch: 0 },
+					stickySuccessPolicy: 'stream_success',
+				},
+			);
+			await miss.stickyMutationPromise;
+			assert.equal(tryBind.mock.callCount(), 0);
+
+			const now = Date.now();
+			const hitRepos = {
+				routePoolSticky: {
+					getBinding: async () => ({
+						route_pool_id: 'pool-1', affinity_hash: 'x', route_target_id: 't1',
+						binding_token: 'token', pool_epoch: 0,
+						expires_at: new Date(now + 300_000).toISOString(),
+					}),
+					tryBind,
+					touchBinding,
+					clearBinding: mock.fn(),
+					...stickyRepoExtras,
+				},
+			} as unknown as GatewayRepositories;
+			const hit = await failoverDispatch(
+				hitRepos,
+				[makeRoute('p1', { targetId: 't1' })],
+				'openai',
+				async () => ({
+					response: new Response('ok', { status: 200 }),
+					usagePromise: Promise.resolve(usage),
+					upstreamRequestId: null,
+				}),
+				undefined,
+				{
+					...defaultOptions,
+					routePoolId: 'pool-1',
+					sticky: { enabled: true, idleTtlSeconds: 600, epoch: 0 },
+					stickySuccessPolicy: 'stream_success',
+				},
+			);
+			await hit.stickyMutationPromise;
+			assert.equal(touchBinding.mock.callCount(), 0);
+		}
+	});
+
+	it('binds implicit affinity only after a cache hit on an eligible route', async () => {
+		for (const [cacheReadTokens, expectedBinds] of [[0, 0], [24, 1]] as const) {
+			const tryBind = mock.fn(async () => true);
+			const repos = {
+				routePoolSticky: {
+					getBinding: async () => null,
+					tryBind,
+					touchBinding: mock.fn(),
+					clearBinding: mock.fn(),
+					...stickyRepoExtras,
+				},
+			} as unknown as GatewayRepositories;
+			const result = await failoverDispatch(
+				repos,
+				[makeRoute('eligible', { targetId: 'eligible-target' })],
+				'openai',
+				async () => ({
+					response: new Response('ok', { status: 200 }),
+					usagePromise: Promise.resolve({ ...EMPTY_USAGE, cache_read_tokens: cacheReadTokens }),
+					upstreamRequestId: null,
+				}),
+				undefined,
+				{
+					...defaultOptions,
+					routePoolId: 'pool-1',
+					sticky: { enabled: true, idleTtlSeconds: 600, epoch: 0 },
+					stickySuccessPolicy: 'cache_hit',
+					stickyRouteEligible: (route) => route.providerId === 'eligible',
+				},
+			);
+			await result.stickyMutationPromise;
+			assert.equal(tryBind.mock.callCount(), expectedBinds);
+		}
+	});
+
+	it('touches an already activated implicit session after any completed success', async () => {
+		const now = Date.now();
+		const touchBinding = mock.fn(async () => true);
+		const repos = {
+			routePoolSticky: {
+				getBinding: async () => ({
+					route_pool_id: 'pool-1', affinity_hash: 'x', route_target_id: 'eligible-target',
+					binding_token: 'token', pool_epoch: 0,
+					expires_at: new Date(now + 300_000).toISOString(),
+				}),
+				tryBind: mock.fn(),
+				touchBinding,
+				clearBinding: mock.fn(),
+				...stickyRepoExtras,
+			},
+		} as unknown as GatewayRepositories;
+		const result = await failoverDispatch(
+			repos,
+			[makeRoute('eligible', { targetId: 'eligible-target' })],
+			'openai',
+			async () => ({
+				response: new Response('ok', { status: 200 }),
+				usagePromise: Promise.resolve(EMPTY_USAGE),
+				upstreamRequestId: null,
+			}),
+			undefined,
+			{
+				...defaultOptions,
+				routePoolId: 'pool-1',
+				sticky: { enabled: true, idleTtlSeconds: 600, epoch: 0 },
+				stickySuccessPolicy: 'cache_hit',
+				stickyRouteEligible: () => true,
+			},
+		);
+		await result.stickyMutationPromise;
+		assert.equal(touchBinding.mock.callCount(), 1);
+	});
+
+	it('disables implicit sticky storage when no route has beneficial cache pricing', async () => {
+		const getBinding = mock.fn(async () => null);
+		const tryBind = mock.fn(async () => true);
+		const repos = {
+			routePoolSticky: {
+				getBinding,
+				tryBind,
+				touchBinding: mock.fn(),
+				clearBinding: mock.fn(),
+				...stickyRepoExtras,
+			},
+		} as unknown as GatewayRepositories;
+		const result = await failoverDispatch(
+			repos,
+			[makeRoute('ineligible', { targetId: 't1' })],
+			'openai',
+			async () => ({
+				response: new Response('ok', { status: 200 }),
+				usagePromise: Promise.resolve({ ...EMPTY_USAGE, cache_read_tokens: 10 }),
+				upstreamRequestId: null,
+			}),
+			undefined,
+			{
+				...defaultOptions,
+				routePoolId: 'pool-1',
+				sticky: { enabled: true, idleTtlSeconds: 600, epoch: 0 },
+				stickySuccessPolicy: 'cache_hit',
+				stickyRouteEligible: () => false,
+			},
+		);
+		assert.equal(result.response.status, 200);
+		assert.equal(getBinding.mock.callCount(), 0);
+		assert.equal(tryBind.mock.callCount(), 0);
+		assert.deepEqual(await result.stickyTrace!(), {
+			lookup: 'disabled', attempted_target: null, result: 'unchanged',
+		});
 	});
 
 	it('records unchanged when tryBind loses CAS', async () => {

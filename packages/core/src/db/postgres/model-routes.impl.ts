@@ -17,7 +17,7 @@ export function createPostgresModelRoutesRepository(db: PostgresDatabaseClient):
 	const drizzle = db.drizzle;
 	const pg = db.raw;
 	return {
-		async listModelRoutesWithJoins(filters: { modelId?: string; providerId?: string }): Promise<ModelRouteJoinRow[]> {
+		async listModelRoutesWithJoins(filters: { modelId?: string; providerId?: string; limit?: number }): Promise<ModelRouteJoinRow[]> {
 			const conditions = [];
 			if (filters.modelId) conditions.push(eq(pgMr.modelId, filters.modelId));
 			if (filters.providerId) conditions.push(eq(pgMr.providerId, filters.providerId));
@@ -57,6 +57,9 @@ export function createPostgresModelRoutesRepository(db: PostgresDatabaseClient):
 				.orderBy(pgMr.modelId, desc(pgMr.priority));
 			if (whereExpr) {
 				q = q.where(whereExpr) as typeof q;
+			}
+			if (filters.limit != null) {
+				q = q.limit(Math.max(1, Math.min(10_000, Math.trunc(filters.limit)))) as typeof q;
 			}
 			const list = await q;
 			const surfacesByPool = new Map<string, string>();

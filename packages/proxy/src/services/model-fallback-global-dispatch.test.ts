@@ -136,6 +136,60 @@ afterEach(() => {
 });
 
 describe('partition none global model fallback dispatch', () => {
+	it('records a gateway-local admission denial without inventing an upstream provider attempt', async () => {
+		const fixture = globalFixture();
+		const chosenRoute = fixture.routes[0]!;
+		const proxy: GlobalTextProxy = async () => ({
+			response: new Response(
+				JSON.stringify({ error: { message: 'Gateway key spend limit exceeded' } }),
+				{
+					status: 402,
+					headers: {
+						'Content-Type': 'application/json',
+						'X-OctaFuse-Error-Code': 'gateway.budget_exceeded',
+					},
+				},
+			),
+			usagePromise: Promise.resolve(EMPTY_USAGE),
+			upstreamRequestId: null,
+			chosenRoute,
+			circuitEvents: [],
+			suppressErrorAlert: true,
+			meta: {
+				gatewayGeneratedError: true,
+				failoverForbidden: true,
+				admissionDeniedPreDispatch: true,
+			},
+			dispatchAttempts: [],
+		});
+
+		const dispatched = await dispatchGlobalModelFallback({
+			repos: emptyRepos,
+			candidates: fixture.candidates,
+			globalRoutes: fixture.routes,
+			userId: 'user-budget-denied',
+			timing: new RequestTimingCollector(),
+			beforeUpstreamDispatch: async () => undefined,
+			proxy,
+			affinityKey: 'user-budget-denied|global|partition-none|openai',
+			tierKeyPrefix: 'global|partition-none|openai',
+		});
+
+		assert.equal(dispatched.ok, true);
+		if (!dispatched.ok) return;
+		assert.equal(dispatched.fallbackAttempts.length, 1);
+		assert.deepEqual(dispatched.fallbackAttempts[0], {
+			model: 'm2',
+			base_model: 'm2',
+			route_group: 'default',
+			status: 402,
+			outcome: 'error',
+			error_code: 'gateway.budget_exceeded',
+		});
+		assert.equal(dispatched.fallbackAttempts[0]?.provider_id, undefined);
+		assert.equal(dispatched.fallbackAttempts[0]?.route_target_id, undefined);
+	});
+
 	it('stops after one fetch when the first dispatched outcome is unknown', async () => {
 		const fixture = globalFixture();
 		let fetches = 0;
@@ -191,8 +245,13 @@ describe('partition none global model fallback dispatch', () => {
 			return Response.json({
 				id: 'chatcmpl-success',
 				object: 'chat.completion',
+				created: 1_700_000_000,
 				model: 'private-m1-b',
-				choices: [],
+				choices: [{
+					index: 0,
+					message: { role: 'assistant', content: 'ok' },
+					finish_reason: 'stop',
+				}],
 				usage: { prompt_tokens: 1, completion_tokens: 2, total_tokens: 3 },
 			});
 		};
@@ -355,8 +414,13 @@ describe('partition none global model fallback dispatch', () => {
 				return Response.json({
 					id: 'chatcmpl-success',
 					object: 'chat.completion',
+					created: 1_700_000_000,
 					model: 'private-c7-e119',
-					choices: [],
+					choices: [{
+						index: 0,
+						message: { role: 'assistant', content: 'ok' },
+						finish_reason: 'stop',
+					}],
 					usage: { prompt_tokens: 1, completion_tokens: 2, total_tokens: 3 },
 				});
 			}

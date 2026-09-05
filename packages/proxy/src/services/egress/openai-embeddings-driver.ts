@@ -8,15 +8,16 @@ import type { ProxyDispatchMeta } from '../failover-dispatch';
 import type { UsageFromStream } from '../proxy';
 import { buildRouteRequestBody } from '../route-default-params';
 import type { RequestTimingAttempt, RequestTimingCollector } from '../request-timing';
-import { GATEWAY_ERROR_CODE_HEADER, GatewayErrorCode } from '../gateway-error-codes';
+import { GatewayErrorCode } from '../gateway-error-codes';
 import { gatewayErrorResponse } from '../gateway-error-response';
 import { markUpstreamOutcomeUnknown } from '../failover-dispatch';
 import { extractUpstreamRequestId, normalizeUpstreamId } from './upstream-request-id';
-import {
-	responseTextWithinLimit,
-	UpstreamResponseBodyTooLargeError,
-} from './bounded-response-body';
 import { assertTextUpstreamHttpUrl } from './text-upstream-url';
+import {
+	preDispatchCancelledTextResponse,
+	readBoundedTextJsonObject,
+	rebuildTextJsonResponse,
+} from './text-json-response';
 
 /** Large enough for sizeable float vectors while remaining bounded inside a Worker isolate. */
 export const OPENAI_EMBEDDINGS_RESPONSE_MAX_BYTES = 32 * 1024 * 1024;
@@ -38,15 +39,29 @@ type EmbeddingsUsage = {
 };
 
 function nonNegativeCount(value: unknown): number {
-	return typeof value === 'number' && Number.isFinite(value) && value >= 0
-		? Math.trunc(value)
-		: 0;
+	return typeof value === 'number' && Number.isSafeInteger(value) && value >= 0
+		? value
+		: -1;
 }
 
 /** Normalize OpenAI-compatible embedding usage onto the gateway token ledger. */
 export function usageFromEmbeddings(raw: EmbeddingsUsage): UsageFromStream {
-	const inputTokens = nonNegativeCount(raw.prompt_tokens ?? raw.input_tokens);
-	const totalTokens = nonNegativeCount(raw.total_tokens) || inputTokens;
+	const promptTokens = raw.prompt_tokens === undefined
+		? null
+		: nonNegativeCount(raw.prompt_tokens);
+	const inputAliasTokens = raw.input_tokens === undefined
+		? null
+		: nonNegativeCount(raw.input_tokens);
+	const totalTokens = nonNegativeCount(raw.total_tokens);
+	const inputTokens = promptTokens ?? inputAliasTokens;
+	if (
+		inputTokens == null
+		|| inputTokens < 0
+		|| totalTokens < inputTokens
+		|| (promptTokens != null && inputAliasTokens != null && promptTokens !== inputAliasTokens)
+	) {
+		return { ...EMPTY_USAGE_LOCAL };
+	}
 	return {
 		input_tokens: inputTokens,
 		output_tokens: 0,
@@ -55,30 +70,100 @@ export function usageFromEmbeddings(raw: EmbeddingsUsage): UsageFromStream {
 		reasoning_tokens: 0,
 		total_tokens: totalTokens,
 		raw_usage: JSON.stringify(raw),
+		native_tokens_prompt: inputTokens,
+		native_tokens_completion: 0,
+		native_tokens_cached: null,
+		native_tokens_reasoning: null,
+		native_tokens_completion_images: null,
 	};
 }
 
-function rebuildJsonResponse(response: Response, text: string): Response {
-	const headers = new Headers(response.headers);
-	headers.delete('Content-Length');
-	return new Response(text, {
-		status: response.status,
-		statusText: response.statusText,
-		headers,
-	});
+function isPlainObject(value: unknown): value is Record<string, unknown> {
+	return value != null && typeof value === 'object' && !Array.isArray(value);
 }
 
-function unreadableEmbeddingResponse(message: string): Response {
-	return gatewayErrorResponse({
-		status: 502,
-		code: GatewayErrorCode.upstreamRequestFailed,
-		message,
-	});
+function expectedEmbeddingCount(input: unknown): number | null {
+	if (typeof input === 'string' && input.length > 0) return 1;
+	if (!Array.isArray(input) || input.length === 0) return null;
+	if (input.every((item) => typeof item === 'number' && Number.isFinite(item))) return 1;
+	return input.length;
+}
+
+function validBase64(value: string): boolean {
+	if (value.length === 0 || value.length % 4 !== 0) return false;
+	let padding = 0;
+	if (value.endsWith('==')) padding = 2;
+	else if (value.endsWith('=')) padding = 1;
+	const dataEnd = value.length - padding;
+	for (let index = 0; index < dataEnd; index += 1) {
+		const code = value.charCodeAt(index);
+		const alphaNumeric = (code >= 48 && code <= 57)
+			|| (code >= 65 && code <= 90)
+			|| (code >= 97 && code <= 122);
+		if (!alphaNumeric && code !== 43 && code !== 47) return false;
+	}
+	for (let index = dataEnd; index < value.length; index += 1) {
+		if (value.charCodeAt(index) !== 61) return false;
+	}
+	if (padding === 0) return true;
+	return padding === 2 ? dataEnd % 4 === 2 : dataEnd % 4 === 3;
+}
+
+function validEmbeddingValue(value: unknown, encodingFormat: 'float' | 'base64'): boolean {
+	if (encodingFormat === 'base64') return typeof value === 'string' && validBase64(value);
+	return Array.isArray(value)
+		&& value.length > 0
+		&& value.every((item) => typeof item === 'number' && Number.isFinite(item));
+}
+
+function validEmbeddingData(
+	value: unknown,
+	expectedCount: number,
+	encodingFormat: 'float' | 'base64',
+): boolean {
+	if (!Array.isArray(value) || value.length !== expectedCount) return false;
+	const indexes = new Set<number>();
+	for (const item of value) {
+		if (!isPlainObject(item) || item.object !== 'embedding') return false;
+		if (
+			typeof item.index !== 'number'
+			|| !Number.isSafeInteger(item.index)
+			|| item.index < 0
+			|| item.index >= expectedCount
+			|| indexes.has(item.index)
+			|| !validEmbeddingValue(item.embedding, encodingFormat)
+		) return false;
+		indexes.add(item.index);
+	}
+	return indexes.size === expectedCount;
+}
+
+function invalidEmbeddingSuccess(requestId?: string): {
+	response: Response;
+	usagePromise: Promise<UsageFromStream>;
+	meta: ProxyDispatchMeta;
+} {
+	return {
+		response: gatewayErrorResponse({
+			status: 502,
+			code: GatewayErrorCode.upstreamRequestFailed,
+			message: 'Upstream provider returned an invalid embeddings response',
+			requestId,
+		}),
+		usagePromise: Promise.resolve({ ...EMPTY_USAGE_LOCAL }),
+		meta: {
+			upstreamOutcomeUnknown: true,
+			failoverForbidden: true,
+			gatewayGeneratedError: true,
+		},
+	};
 }
 
 async function normalizeSuccessfulEmbeddingsResponse(
 	response: Response,
+	requestBody: Record<string, unknown>,
 	publicModelId: string | undefined,
+	publicCorrelationId?: string,
 	timing?: RequestTimingCollector | null,
 ): Promise<{
 	response: Response;
@@ -87,58 +172,49 @@ async function normalizeSuccessfulEmbeddingsResponse(
 }> {
 	const contentType = response.headers.get('Content-Type') ?? '';
 	if (!contentType.toLowerCase().includes('application/json')) {
-		// Keep an unexpected body streaming and account it conservatively as missing usage.
+		await response.body?.cancel('invalid_embeddings_content_type').catch(() => undefined);
 		timing?.markStreamComplete();
-		return { response, usagePromise: Promise.resolve({ ...EMPTY_USAGE_LOCAL }) };
+		return invalidEmbeddingSuccess(publicCorrelationId);
 	}
 
-	let text: string;
-	try {
-		text = await responseTextWithinLimit(response, OPENAI_EMBEDDINGS_RESPONSE_MAX_BYTES);
-	} catch (error) {
-		timing?.markStreamComplete();
-		if (error instanceof UpstreamResponseBodyTooLargeError) {
-			return {
-				response: unreadableEmbeddingResponse('Upstream embeddings response exceeded the gateway size limit'),
-				usagePromise: Promise.resolve({ ...EMPTY_USAGE_LOCAL }),
-				meta: { responseBodyTooLarge: true, failoverForbidden: true },
-			};
-		}
-		return {
-			response: unreadableEmbeddingResponse('Upstream embeddings response could not be read'),
-			usagePromise: Promise.resolve({ ...EMPTY_USAGE_LOCAL }),
-			meta: { upstreamOutcomeUnknown: true, failoverForbidden: true },
-		};
-	}
-
+	const materialized = await readBoundedTextJsonObject(response, {
+		skin: 'chat',
+		requestId: publicCorrelationId,
+		maxBytes: OPENAI_EMBEDDINGS_RESPONSE_MAX_BYTES,
+	});
 	timing?.markStreamComplete();
-	let parsed: unknown;
-	try {
-		parsed = JSON.parse(text) as unknown;
-	} catch {
+	if (!materialized.ok) {
 		return {
-			response: rebuildJsonResponse(response, text),
+			response: materialized.response,
 			usagePromise: Promise.resolve({ ...EMPTY_USAGE_LOCAL }),
-		};
-	}
-	if (parsed == null || typeof parsed !== 'object' || Array.isArray(parsed)) {
-		return {
-			response: rebuildJsonResponse(response, text),
-			usagePromise: Promise.resolve({ ...EMPTY_USAGE_LOCAL }),
+			meta: materialized.meta,
 		};
 	}
 
-	const object = parsed as Record<string, unknown>;
-	if (publicModelId) object.model = publicModelId;
+	const object = materialized.value;
+	const inputCount = expectedEmbeddingCount(requestBody.input);
+	const encodingFormat = requestBody.encoding_format === 'base64' ? 'base64' : 'float';
+	const nativeId = object.id === undefined ? null : normalizeUpstreamId(object.id);
+	if (
+		inputCount == null
+		|| object.object !== 'list'
+		|| typeof object.model !== 'string'
+		|| !object.model.trim()
+		|| !validEmbeddingData(object.data, inputCount, encodingFormat)
+		|| (object.id !== undefined && nativeId == null)
+	) return invalidEmbeddingSuccess(publicCorrelationId);
+
 	const usageRaw = object.usage;
 	let usage: UsageFromStream = { ...EMPTY_USAGE_LOCAL };
-	if (usageRaw != null && typeof usageRaw === 'object' && !Array.isArray(usageRaw)) {
+	if (usageRaw !== undefined) {
+		if (!isPlainObject(usageRaw)) return invalidEmbeddingSuccess(publicCorrelationId);
 		usage = usageFromEmbeddings(usageRaw as EmbeddingsUsage);
+		if (usage.raw_usage == null) return invalidEmbeddingSuccess(publicCorrelationId);
 	}
-	const messageId = normalizeUpstreamId(object.id);
-	if (messageId) usage = { ...usage, upstreamMessageId: messageId };
+	if (nativeId) usage = { ...usage, upstreamMessageId: nativeId };
+	if (publicModelId) object.model = publicModelId;
 	return {
-		response: rebuildJsonResponse(response, JSON.stringify(object)),
+		response: rebuildTextJsonResponse(response, object),
 		usagePromise: Promise.resolve(usage),
 	};
 }
@@ -151,6 +227,7 @@ export async function dispatchOpenAiEmbeddingsRoute(
 	timing?: RequestTimingCollector | null,
 	attempt?: RequestTimingAttempt,
 	beforeFetch?: () => Promise<void>,
+	publicCorrelationId?: string,
 ): Promise<{
 	response: Response;
 	usagePromise: Promise<UsageFromStream>;
@@ -161,48 +238,45 @@ export async function dispatchOpenAiEmbeddingsRoute(
 		providerId: route.providerId,
 	});
 	assertTextUpstreamHttpUrl(url);
+	const cancelledBeforeDispatch = () => ({
+		response: preDispatchCancelledTextResponse('chat', publicCorrelationId),
+		usagePromise: Promise.resolve({ ...EMPTY_USAGE_LOCAL, cancelled: true }),
+		upstreamRequestId: null,
+		meta: {
+			failoverForbidden: true,
+			gatewayGeneratedError: true,
+		} satisfies ProxyDispatchMeta,
+	});
+	if (requestSignal?.aborted) return cancelledBeforeDispatch();
 	const { secret } = await resolveProviderUpstreamSecret(route.providerApiKey);
 	const requestBody = {
 		...buildRouteRequestBody(route, body),
 		model: applyVertexOpenAiModelPrefix(url, route.providerModelName),
 	};
 	const serializedBody = JSON.stringify(requestBody);
+	const headers = {
+		'Content-Type': 'application/json',
+		Authorization: `Bearer ${secret}`,
+	};
+	new Headers(headers);
 
+	if (requestSignal?.aborted) return cancelledBeforeDispatch();
 	await beforeFetch?.();
+	if (requestSignal?.aborted) return cancelledBeforeDispatch();
 	let response: Response;
 	try {
 		response = await fetch(url, {
 			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json',
-				Authorization: `Bearer ${secret}`,
-			},
+			headers,
 			body: serializedBody,
 			signal: requestSignal,
 		});
 	} catch (error) {
-		if (requestSignal?.aborted) {
-			return {
-				response: new Response(JSON.stringify({
-					error: 'Client disconnected before the embeddings response completed',
-					code: GatewayErrorCode.upstreamRequestFailed,
-				}), {
-					status: 499,
-					headers: {
-						'Content-Type': 'application/json',
-						[GATEWAY_ERROR_CODE_HEADER]: GatewayErrorCode.upstreamRequestFailed,
-					},
-				}),
-				usagePromise: Promise.resolve({ ...EMPTY_USAGE_LOCAL, cancelled: true }),
-				upstreamRequestId: null,
-				meta: { upstreamOutcomeUnknown: true, failoverForbidden: true },
-			};
-		}
 		throw markUpstreamOutcomeUnknown(error);
 	}
 	timing?.markAttemptHeaders(attempt, response.status);
 	const upstreamRequestId = extractUpstreamRequestId(response.headers);
-	if (!response.ok || !response.body) {
+	if (!response.ok) {
 		return {
 			response,
 			usagePromise: Promise.resolve({ ...EMPTY_USAGE_LOCAL }),
@@ -211,7 +285,9 @@ export async function dispatchOpenAiEmbeddingsRoute(
 	}
 	const normalized = await normalizeSuccessfulEmbeddingsResponse(
 		response,
+		requestBody,
 		route.gatewayModelId,
+		publicCorrelationId,
 		timing,
 	);
 	return { ...normalized, upstreamRequestId };

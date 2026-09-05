@@ -30,7 +30,7 @@ import {
   BanknotesIcon,
   SparklesIcon,
 } from '@heroicons/react/24/outline';
-import { useState } from 'react';
+import { useCinaAuthLogout } from '@/components/auth/useCinaAuthLogout';
 import { ADMIN_NAV_GROUPS, type AdminNavNameKey } from '@/lib/admin-nav';
 import { adminAppVersion } from '@/lib/app-version';
 import ConsoleThemeToggle from '@/components/unified/ConsoleThemeToggle';
@@ -77,20 +77,12 @@ export default function Sidebar({
   const tPortalSettings = useTranslations('portal.settings');
   const pathname = usePathname();
   const router = useRouter();
-  const [isLoggingOut, setIsLoggingOut] = useState(false);
+  const { logout, isLoggingOut, logoutFailed } = useCinaAuthLogout();
 
   const handleLogout = async () => {
-    if (isLoggingOut) return;
-
-    setIsLoggingOut(true);
-    try {
-      await fetch('/api/auth/logout', { method: 'POST' });
+    if (await logout()) {
       router.push('/');
       router.refresh();
-    } catch (error) {
-      console.error('Logout error:', error);
-    } finally {
-      setIsLoggingOut(false);
     }
   };
 
@@ -173,6 +165,7 @@ export default function Sidebar({
           </div>
         ))}
       </nav>
+	  {logoutFailed ? <p role="alert" className="px-4 pb-3 text-xs text-red-600">{tAuth('logoutFailed')}</p> : null}
 
       {/* Footer: links + version */}
       <div className="space-y-3 border-t p-4" style={{ borderColor: 'var(--console-border)' }}>

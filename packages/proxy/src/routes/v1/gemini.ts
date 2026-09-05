@@ -14,6 +14,7 @@ import {
 import { proxyGeminiContent, EMPTY_USAGE } from '../../services/proxy';
 import { buildRouteRequestBody } from '../../services/route-default-params';
 import { finalizeRequestLogJson } from '../../services/request-log-shared';
+import { generationRequestLogContext } from '../../services/generation-request-context';
 import { summarizeGeminiToolsForLog } from '../../services/request-log-tools-summary';
 import { resolveGeminiLoggedRequestId } from '../../services/egress/upstream-request-id';
 import { recordUsage } from '../../services/usage-tracker';
@@ -36,19 +37,13 @@ import { buildModelFallbackPlan } from '../../services/model-fallback-plan';
 import {
   auditGuardrailOutputDecision,
   filterGuardrailResponse,
-  forfeitRequestGuardrailBudgets,
-  markRequestGuardrailBudgetsDispatched,
-  releaseRequestGuardrailBudgets,
-  reserveRequestGuardrailBudgets,
 } from '../../services/request-guardrails';
 import {
   estimateGuardrailBudgetMicros,
+	estimateGatewayKeyByokBudgetMicros,
   estimateOrdinaryBudgetChargedCost,
 } from '../../services/guardrail-budget-estimate';
-import {
-  reserveOrdinaryUserBudget,
-  type OrdinaryBudgetLease,
-} from '../../services/ordinary-budget-lifecycle';
+import { createRouteAwareBudgetAdmission } from '../../services/request-budget-admission';
 import {
   geminiBodyForBudgetEstimate,
   runGeminiRequestGuardrails,
@@ -57,6 +52,7 @@ import {
   textUsageCostIsUnknown,
   textUsageWithSafetyTimeout,
 } from '../../services/text-usage-settlement';
+import { privateByokContextForApiKey } from '../../services/byok-key-pool';
 
 /** usage Promise 兜底超时（与 OpenAI/Anthropic 路由一致）。 */
 const USAGE_SAFETY_TIMEOUT_MS = 5 * 60 * 1000;
@@ -231,23 +227,35 @@ geminiRoutes.post('/models/:modelAction', async (c) => {
       message: ordinaryEstimate.message,
     });
   }
-  const ordinaryAdmission = await reserveOrdinaryUserBudget(repos, {
-    requestId: requestCorrelationId,
-    userId: apiKey.userId,
-    apiKeyId: apiKey.keyId,
-    budgetMax: apiKey.budgetMax,
-    expectedBudgetEpoch: apiKey.budgetEpoch,
-    estimatedChargedCost: ordinaryEstimate.estimatedChargedCost,
-    now: new Date(start),
+  const guardrailBudgetMicros = estimateGuardrailBudgetMicros(
+    budgetEstimatePlan,
+    apiKey.chargedCostFactors,
+  );
+	const byokGatewayKeyBudgetMicros = Math.max(
+		guardrailBudgetMicros,
+		estimateGatewayKeyByokBudgetMicros(fallbackPlan.candidates),
+	);
+  const budgetAdmission = await createRouteAwareBudgetAdmission(repos, {
+    ordinary: {
+      requestId: requestCorrelationId,
+      userId: apiKey.userId,
+      apiKeyId: apiKey.keyId,
+      budgetMax: apiKey.budgetMax,
+      expectedBudgetEpoch: apiKey.budgetEpoch,
+      estimatedChargedCost: ordinaryEstimate.estimatedChargedCost,
+      now: new Date(start),
+    },
+    guardrail: {
+      intents: guardrail.budgetIntents,
+      reservedMicros: guardrailBudgetMicros,
+      now: new Date(start),
+    },
+		privateByokGatewayKey: {
+			includeInLimit: apiKey.includeByokInLimit === true,
+			reservedMicros: byokGatewayKeyBudgetMicros,
+		},
   });
-  if (!ordinaryAdmission.ok) {
-    return gatewayErrorJson(c, {
-      status: 403,
-      code: GatewayErrorCode.budgetExceeded,
-      message: ordinaryAdmission.error.message,
-    });
-  }
-  const ordinaryBudgetLease: OrdinaryBudgetLease = ordinaryAdmission.lease;
+  const ordinaryBudgetLease = budgetAdmission.ordinaryLease;
   const terminateOrdinaryBudget = async (reason: string): Promise<void> => {
     try {
       await ordinaryBudgetLease.terminateUnknown(reason);
@@ -257,77 +265,18 @@ geminiRoutes.post('/models/:modelAction', async (c) => {
       );
     }
   };
-  const guardrailBudgetMicros = estimateGuardrailBudgetMicros(
-    budgetEstimatePlan,
-    apiKey.chargedCostFactors,
-  );
-  let admission: Awaited<ReturnType<typeof reserveRequestGuardrailBudgets>>;
-  try {
-    admission = await reserveRequestGuardrailBudgets(repos, {
-      requestId: requestCorrelationId,
-      intents: guardrail.budgetIntents,
-      reservedMicros: guardrailBudgetMicros,
-    });
-  } catch (error) {
-    await terminateOrdinaryBudget('guardrail_budget_admission_failed');
-    throw error;
-  }
-  if (!admission.ok) {
-    await terminateOrdinaryBudget('guardrail_budget_admission_failed');
-    if (admission.blocked) {
-      return gatewayErrorJson(c, {
-        status: 403,
-        code: admission.reason === 'gateway_key_limit' || admission.reason === 'workspace_budget' ? GatewayErrorCode.budgetExceeded : GatewayErrorCode.guardrailBlocked,
-        message: admission.message,
-      });
-    }
-    throw new Error(`Guardrail budget admission failed: ${admission.message}`);
-  }
-  let guardrailBudgetReserved = admission.reserved;
-  let guardrailBudgetDispatched = false;
-  let guardrailBudgetForfeited = false;
   const forfeitGuardrailBudget = async (reason: string): Promise<void> => {
-    if (!guardrailBudgetDispatched || guardrailBudgetForfeited) return;
+    if (!budgetAdmission.guardrailDispatched || budgetAdmission.guardrailTerminal) return;
     try {
-      await forfeitRequestGuardrailBudgets(
-        repos,
-        requestCorrelationId,
-        guardrailBudgetReserved,
-        reason,
-      );
-      guardrailBudgetForfeited = true;
+      await budgetAdmission.forfeitGuardrailPostDispatch(reason);
     } catch (error) {
       console.error(
         `[Gateway Gemini] guardrail budget forfeit failed requestId=${requestCorrelationId} reason=${reason} error=${error instanceof Error ? error.message : String(error)}`,
       );
     }
   };
-  const beforeUpstreamDispatch = async (): Promise<void> => {
-    if (guardrailBudgetReserved && !guardrailBudgetDispatched) {
-      try {
-        await markRequestGuardrailBudgetsDispatched(
-          repos,
-          requestCorrelationId,
-          guardrailBudgetReserved,
-        );
-        guardrailBudgetDispatched = true;
-      } catch (error) {
-        await releaseRequestGuardrailBudgets(
-          repos,
-          requestCorrelationId,
-          guardrailBudgetReserved,
-          'dispatch_transition_failed',
-        ).catch((releaseError: unknown) => {
-          console.error(
-            `[Gateway Gemini] guardrail budget release failed requestId=${requestCorrelationId} error=${releaseError instanceof Error ? releaseError.message : String(releaseError)}`,
-          );
-        });
-        await terminateOrdinaryBudget('guardrail_dispatch_mark_failed');
-        throw error;
-      }
-    }
-    await ordinaryBudgetLease.beforeUpstreamDispatch();
-  };
+  const beforeUpstreamDispatch = (route: RouteResult): Promise<void> =>
+    budgetAdmission.beforeUpstreamDispatch(route);
   const affinityKey = buildAffinityKey(apiKey.userId, baseModelId, effectiveRouteGroup, 'gemini');
   const tierKeyPrefix = buildTierKeyPrefix(baseModelId, effectiveRouteGroup, 'gemini');
   timing.markGatewayComplete();
@@ -349,6 +298,7 @@ geminiRoutes.post('/models/:modelAction', async (c) => {
         routePoolId: selectedPlan.surface?.route_pool_id ?? routes[0]?.routePoolId ?? null,
         sticky: selectedPlan.hasProviderPreferences ? null : stickyConfigFromSurface(selectedPlan.surface),
         beforeUpstreamDispatch,
+        byok: privateByokContextForApiKey(apiKey),
       }
     );
   } catch (error) {
@@ -359,15 +309,9 @@ geminiRoutes.post('/models/:modelAction', async (c) => {
   if (ordinaryBudgetLease.state === 'reserved') {
     await terminateOrdinaryBudget('upstream_dispatch_not_started');
   }
-  if (guardrailBudgetReserved && !guardrailBudgetDispatched) {
+  if (budgetAdmission.guardrailReserved && !budgetAdmission.guardrailDispatched) {
     try {
-      await releaseRequestGuardrailBudgets(
-        repos,
-        requestCorrelationId,
-        guardrailBudgetReserved,
-        'upstream_dispatch_not_started',
-      );
-      guardrailBudgetReserved = false;
+      await budgetAdmission.releaseGuardrailPreDispatch('upstream_dispatch_not_started');
     } catch (error) {
       console.error(
         `[Gateway Gemini] guardrail budget pre-dispatch release failed requestId=${requestCorrelationId} error=${error instanceof Error ? error.message : String(error)}`,
@@ -397,7 +341,7 @@ geminiRoutes.post('/models/:modelAction', async (c) => {
   let userModelCircuitEvent = null;
   if (response.ok) {
     markUserModelSuccess(apiKey.userId, baseModelId);
-  } else if (errorBodyText != null) {
+  } else if (errorBodyText != null && proxyResult.meta?.gatewayGeneratedError !== true) {
     userModelCircuitEvent = maybeTriggerUserModelCircuitFromUpstream(
       apiKey.userId,
       baseModelId,
@@ -465,6 +409,11 @@ geminiRoutes.post('/models/:modelAction', async (c) => {
       .then(async ({ usage: usageCollected, incomplete, timedOut }) => {
         const latency = Date.now() - start;
         if (timedOut) timing.markStreamComplete();
+		timing.finalizeSelectedAttemptAvailability({
+		  clientCancelled: Boolean(usageCollected.cancelled),
+		  invalidResponse: Boolean(usageCollected.stream_error)
+			|| (proxyResult.meta?.gatewayGeneratedError === true && !upstreamResponseOk),
+		});
         const status = computeRequestLogStatus({
           cancelled: Boolean(usageCollected.cancelled),
           responseOk: response.ok,
@@ -516,6 +465,7 @@ geminiRoutes.post('/models/:modelAction', async (c) => {
           upstream_request_body: upstreamRequestBodyForLog,
           request_body_logging_mode: c.get('requestBodyLoggingMode'),
 		  request_origin: new URL(c.req.url).origin,
+		  ...generationRequestLogContext(c.req.raw.headers),
 		  response_streamed: action === 'streamGenerateContent',
           request_protocol: 'gemini',
           request_operation: GEMINI_GENERATE_OPERATION,
@@ -539,7 +489,7 @@ geminiRoutes.post('/models/:modelAction', async (c) => {
           route_group: chosenRoute.routeGroup,
           status,
           latency_ms: latency,
-          timing: timing.snapshot(),
+          timing: timing.snapshot(usageCollected.upstreamMessageId),
           error_message: errorMessage,
           provider_key_id: chosenRoute.providerKeyId ?? null,
           provider_key_label: chosenRoute.providerKeyLabel ?? null,
@@ -549,7 +499,7 @@ geminiRoutes.post('/models/:modelAction', async (c) => {
           circuit_events: alertCircuitEvents.length > 0 ? alertCircuitEvents : undefined,
           suppress_error_alert: suppressErrorAlert || undefined,
           charge_on_error: outputGuardrailBlocked || undefined,
-          guardrail_budget_settlement: guardrailBudgetReserved
+          guardrail_budget_settlement: budgetAdmission.guardrailReserved
             ? { requestId: requestCorrelationId, unknownCost: costUnknown }
             : undefined,
           ordinary_budget_settlement:

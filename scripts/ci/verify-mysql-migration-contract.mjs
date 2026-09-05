@@ -11,8 +11,8 @@ const mysqlMigrations = readdirSync(join(root, 'packages/core/migrations-mysql')
 	.sort();
 assert.equal(
 	mysqlMigrations.at(-1),
-	'0051_generation_metadata_snapshots.sql',
-	'MySQL migration chain must end with the Generation metadata snapshot migration',
+	'0064_batch_jobs.sql',
+	'MySQL migration chain must end with the Batch metadata migration',
 );
 
 const budget = read('packages/core/migrations-mysql/0035_guardrail_budget_reservations.sql');
@@ -360,4 +360,199 @@ assert.doesNotMatch(
 	'MySQL Generation metadata facts must not be inferred for historical request logs',
 );
 
-console.log('MySQL Guardrail/user/Workspace budget, identity, routing, data-policy, and endpoint-first contract: PASS');
+const requestSessionId = read('packages/core/migrations-mysql/0052_request_session_id.sql');
+for (const sessionContract of [
+	'ADD COLUMN session_id VARCHAR(256) NULL',
+	'CHECK (session_id IS NULL OR CHAR_LENGTH(session_id) BETWEEN 1 AND 256)',
+]) {
+	assert.ok(requestSessionId.includes(sessionContract), `0052 is missing request session contract: ${sessionContract}`);
+}
+assert.doesNotMatch(
+	requestSessionId,
+	/(?:UPDATE|INSERT\s+INTO)\s+api_key_request_logs/iu,
+	'MySQL request session IDs must not be inferred for historical request logs',
+);
+
+const generationFeedback = read('packages/core/migrations-mysql/0053_generation_feedback.sql');
+for (const feedbackContract of [
+	'CREATE TABLE generation_feedback',
+	'generation_id VARCHAR(512) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL',
+	'workspace_id VARCHAR(600) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_bin NOT NULL',
+	'management_api_key_id VARCHAR(64) NOT NULL',
+	'personal_owner_user_id VARCHAR(512) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci',
+	'organization_id VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_bin',
+	'FOREIGN KEY (generation_id) REFERENCES api_key_request_logs(id) ON DELETE CASCADE',
+	'FOREIGN KEY (management_api_key_id) REFERENCES management_api_keys(id) ON DELETE CASCADE',
+	'generation_feedback_account_owner_chk',
+	"category IN (",
+	'comment IS NULL OR CHAR_LENGTH(comment) <= 1000',
+	'INDEX idx_generation_feedback_generation_created',
+]) {
+	assert.ok(generationFeedback.includes(feedbackContract), `0053 is missing Generation feedback contract: ${feedbackContract}`);
+}
+
+const guardrailAssignmentManagement = read('packages/core/migrations-mysql/0054_guardrail_assignment_management_source.sql');
+for (const assignmentContract of [
+	'ADD COLUMN management_source VARCHAR(32) NULL',
+	'ADD COLUMN assigned_by_user_id VARCHAR(512) NULL',
+	"CHECK (management_source IN ('admin', 'management_api'))",
+	'FOREIGN KEY (assigned_by_user_id) REFERENCES users(id) ON DELETE SET NULL',
+	'INDEX idx_guardrail_assignments_assigned_by',
+	"SET management_source = 'admin'",
+]) {
+	assert.ok(guardrailAssignmentManagement.includes(assignmentContract),
+		`0054 is missing Guardrail assignment provenance contract: ${assignmentContract}`);
+}
+
+const workspaceDefaultGuardrails = read('packages/core/migrations-mysql/0055_workspace_default_guardrails.sql');
+for (const defaultContract of [
+	'ADD COLUMN is_workspace_default BOOLEAN NOT NULL DEFAULT FALSE',
+	'GENERATED ALWAYS AS',
+	'CASE WHEN is_workspace_default = TRUE THEN SHA2(workspace_id, 256) ELSE NULL END',
+	'ADD UNIQUE INDEX uk_guardrails_workspace_default (workspace_default_key)',
+	'INSERT INTO guardrails',
+	'INSERT INTO guardrail_versions',
+	"WHERE guardrail.is_workspace_default = TRUE",
+]) {
+	assert.ok(workspaceDefaultGuardrails.includes(defaultContract),
+		`0055 is missing Workspace Default Guardrail contract: ${defaultContract}`);
+}
+
+const accountDefaultGuardrails = read('packages/core/migrations-mysql/0056_account_default_guardrails.sql');
+for (const contract of [
+	'ADD COLUMN is_account_default BOOLEAN NOT NULL DEFAULT FALSE',
+	'ADD COLUMN account_scope_key VARCHAR(600)',
+	'ADD UNIQUE INDEX uk_guardrails_account_default (account_scope_key)',
+	'guardrails_default_kind_chk',
+	"CONCAT('personal:', owner.id)",
+	"CONCAT('organization:', organization.id)",
+	'WHERE guardrail.is_account_default = TRUE',
+]) {
+	assert.ok(accountDefaultGuardrails.includes(contract),
+		`0056 is missing Account Default Guardrail contract: ${contract}`);
+}
+
+const providerAttemptAvailability = read('packages/core/migrations-mysql/0057_provider_attempt_availability.sql');
+for (const contract of [
+	'CREATE TABLE provider_attempt_availability',
+	'FOREIGN KEY (request_log_id) REFERENCES api_key_request_logs(id) ON DELETE CASCADE',
+	"CHECK (outcome IN ('available', 'unavailable', 'excluded'))",
+	'CHECK (attempt_index BETWEEN 1 AND 128)',
+	'idx_provider_attempt_availability_route_observed',
+	'idx_provider_attempt_availability_observed',
+	"'invalid_response'",
+	'COLLATE=utf8mb4_unicode_ci',
+]) {
+	assert.ok(providerAttemptAvailability.includes(contract),
+		`0057 is missing provider-attempt availability contract: ${contract}`);
+}
+
+const publicModelTotalTokens = read('packages/core/migrations-mysql/0058_public_model_total_tokens.sql');
+for (const contract of [
+	'ADD COLUMN total_tokens BIGINT NOT NULL DEFAULT 0',
+	'COALESCE(SUM(total_tokens), 0)',
+	'ON DUPLICATE KEY UPDATE',
+]) {
+	assert.ok(publicModelTotalTokens.includes(contract),
+		`0058 is missing public model total-token contract: ${contract}`);
+}
+
+const generationResponseMetadata = read('packages/core/migrations-mysql/0059_generation_service_tier.sql');
+for (const contract of [
+	'ADD COLUMN service_tier VARCHAR(16) NULL',
+	"service_tier IN ('default', 'flex', 'priority')",
+	'ADD COLUMN finish_reason VARCHAR(16) NULL',
+	"finish_reason IN ('tool_calls', 'stop', 'length', 'content_filter', 'error')",
+	'ADD COLUMN native_finish_reason VARCHAR(128) NULL',
+	'char_length(native_finish_reason) BETWEEN 1 AND 128',
+	'ADD COLUMN http_referer VARCHAR(512) NULL',
+	'char_length(http_referer) BETWEEN 1 AND 512',
+	'ADD COLUMN user_agent VARCHAR(512) NULL',
+	'char_length(user_agent) BETWEEN 1 AND 512',
+	'ADD COLUMN native_tokens_prompt BIGINT UNSIGNED NULL',
+	'ADD COLUMN native_tokens_completion BIGINT UNSIGNED NULL',
+	'ADD COLUMN native_tokens_cached BIGINT UNSIGNED NULL',
+	'ADD COLUMN native_tokens_reasoning BIGINT UNSIGNED NULL',
+	'ADD COLUMN native_tokens_completion_images BIGINT UNSIGNED NULL',
+	'ADD COLUMN provider_responses TEXT NULL',
+	'native_tokens_prompt <= 9007199254740991',
+	'native_tokens_completion <= 9007199254740991',
+	'native_tokens_cached <= 9007199254740991',
+	'native_tokens_reasoning <= 9007199254740991',
+	'native_tokens_completion_images <= 9007199254740991',
+	'octet_length(provider_responses) <= 32768',
+]) {
+	assert.ok(generationResponseMetadata.includes(contract),
+		`0059 is missing Generation response-metadata contract: ${contract}`);
+}
+assert.doesNotMatch(
+	generationResponseMetadata,
+	/(?:UPDATE|INSERT\s+INTO)\s+api_key_request_logs/iu,
+	'MySQL Generation response metadata must not be inferred for historical request logs',
+);
+
+const privateByok = read('packages/core/migrations-mysql/0060_private_byok.sql');
+for (const contract of [
+	'CREATE TABLE byok_keys',
+	'api_key_encrypted MEDIUMTEXT NOT NULL',
+	'GENERATED ALWAYS AS',
+	"CASE WHEN deleted_at IS NULL THEN SHA2(CONCAT(",
+	'FOREIGN KEY (workspace_id) REFERENCES workspaces(id) ON DELETE CASCADE',
+	'FOREIGN KEY (created_by_management_key_id) REFERENCES management_api_keys(id) ON DELETE SET NULL',
+	'byok_keys_secret_lifecycle_chk',
+	"LEFT(api_key_encrypted, 7) = 'enc:v2:'",
+	"deleted_at IS NOT NULL AND api_key_encrypted = '' AND disabled = 1",
+	'JSON_LENGTH(allowed_api_key_hashes_json) BETWEEN 1 AND 100',
+	'UNIQUE INDEX uk_byok_keys_active_order (active_order_key)',
+	'INDEX idx_byok_keys_runtime (workspace_id, provider, disabled, is_fallback, sort_order)',
+]) {
+	assert.ok(privateByok.includes(contract), `0060 is missing private BYOK contract: ${contract}`);
+}
+
+const byokAlwaysUse = read('packages/core/migrations-mysql/0061_byok_always_use_for_provider.sql');
+for (const contract of [
+	'ADD COLUMN always_use_for_provider TINYINT(1) NOT NULL DEFAULT 0',
+	'ADD COLUMN always_use_for_matching_models TINYINT(1) NOT NULL DEFAULT 0',
+	'byok_keys_always_use_priority_chk',
+	'always_use_for_provider IN (0, 1)',
+	'always_use_for_matching_models IN (0, 1)',
+	'byok_keys_shared_capacity_policy_exclusive_chk',
+	'always_use_for_provider = 0 OR always_use_for_matching_models = 0',
+]) {
+	assert.ok(byokAlwaysUse.includes(contract), `0061 is missing BYOK shared-capacity contract: ${contract}`);
+}
+
+const guardrailSettlementBasis = read('packages/core/migrations-mysql/0062_guardrail_budget_settlement_basis.sql');
+for (const contract of [
+	'ADD COLUMN settlement_basis VARCHAR(32) NOT NULL DEFAULT',
+	'guardrail_budget_reservations_settlement_basis_chk',
+	"CHECK (settlement_basis IN ('charged', 'gateway_key_route'))",
+]) {
+	assert.ok(guardrailSettlementBasis.includes(contract),
+		`0062 is missing route-selective settlement contract: ${contract}`);
+}
+
+const workspaceBudgetUsageIndex = read('packages/core/migrations-mysql/0063_workspace_budget_usage_index.sql');
+assert.match(
+	workspaceBudgetUsageIndex,
+	/CREATE INDEX idx_api_key_request_logs_workspace_budget_accounted\s+ON api_key_request_logs\(workspace_id, budget_accounted_effective_at\)/u,
+	'0063 must index Workspace budget reads by effective accounting time',
+);
+
+const batchJobs = read('packages/core/migrations-mysql/0064_batch_jobs.sql');
+for (const contract of [
+	'CREATE TABLE batches',
+	'CREATE TABLE batch_items',
+	'GENERATED ALWAYS AS (SHA2(workspace_id, 256)) STORED',
+	'UNIQUE KEY uk_batches_idempotency (idempotency_scope_key)',
+	"completion_window = '24h'",
+	'FOREIGN KEY (batch_id) REFERENCES batches(id) ON DELETE CASCADE',
+	'PRIMARY KEY (batch_id, ordinal)',
+	'UNIQUE KEY uk_batch_items_custom (batch_id, custom_id)',
+	'9007199254740991',
+]) {
+	assert.ok(batchJobs.includes(contract), `0064 is missing Batch contract: ${contract}`);
+}
+assert.doesNotMatch(batchJobs, /\b(?:request_body|response_body)\b/u);
+
+console.log('MySQL Guardrail/user/Workspace budget, identity, routing, endpoint-first, session, feedback, default Guardrail, provider-attempt availability, public model total-token, Generation response-metadata, private BYOK, shared-capacity policy, route-selective settlement, Workspace usage-index, and Batch metadata contract: PASS');

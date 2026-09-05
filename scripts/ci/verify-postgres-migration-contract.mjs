@@ -17,13 +17,13 @@ assert.deepEqual(
 );
 assert.deepEqual(
 	d1Migrations.slice(40),
-	['0041_user_budget_spent_micros.sql', '0042_workspaces.sql', '0043_gateway_keys_workspace.sql', '0044_workspace_presets_guardrails.sql', '0045_route_routing_metadata.sql', '0046_route_data_policy_subject_fingerprint.sql', '0047_model_endpoints.sql', '0048_model_endpoint_route_subject_fingerprint.sql', '0049_model_endpoint_audio_capabilities.sql', '0050_model_endpoint_evidence_ledger.sql', '0051_management_api_keys.sql', '0052_gateway_key_expiry.sql', '0053_gateway_key_limits.sql', '0054_workspace_budgets.sql', '0055_generation_metadata_snapshots.sql'],
+	['0041_user_budget_spent_micros.sql', '0042_workspaces.sql', '0043_gateway_keys_workspace.sql', '0044_workspace_presets_guardrails.sql', '0045_route_routing_metadata.sql', '0046_route_data_policy_subject_fingerprint.sql', '0047_model_endpoints.sql', '0048_model_endpoint_route_subject_fingerprint.sql', '0049_model_endpoint_audio_capabilities.sql', '0050_model_endpoint_evidence_ledger.sql', '0051_management_api_keys.sql', '0052_gateway_key_expiry.sql', '0053_gateway_key_limits.sql', '0054_workspace_budgets.sql', '0055_generation_metadata_snapshots.sql', '0056_request_session_id.sql', '0057_generation_feedback.sql', '0058_guardrail_assignment_management_source.sql', '0059_workspace_default_guardrails.sql', '0060_account_default_guardrails.sql', '0061_provider_attempt_availability.sql', '0062_public_model_total_tokens.sql', '0063_generation_service_tier.sql', '0064_private_byok.sql', '0065_byok_always_use_for_provider.sql', '0066_guardrail_budget_settlement_basis.sql', '0067_workspace_budget_usage_index.sql', '0068_batch_jobs.sql'],
 	'D1 must retain its dedicated precision migration before Workspace and Gateway Key scope migrations',
 );
 assert.deepEqual(
 	postgresMigrations.slice(40),
-	['0041_workspaces.sql', '0042_gateway_keys_workspace.sql', '0043_workspace_presets_guardrails.sql', '0044_route_routing_metadata.sql', '0045_route_data_policy_subject_fingerprint.sql', '0046_model_endpoints.sql', '0047_model_endpoint_route_subject_fingerprint.sql', '0048_model_endpoint_audio_capabilities.sql', '0049_model_endpoint_evidence_ledger.sql', '0050_management_api_keys.sql', '0051_gateway_key_expiry.sql', '0052_gateway_key_limits.sql', '0053_workspace_budgets.sql', '0054_generation_metadata_snapshots.sql'],
-	'PostgreSQL stores budget_spent directly as NUMERIC and must end with its Workspace budgets migration',
+	['0041_workspaces.sql', '0042_gateway_keys_workspace.sql', '0043_workspace_presets_guardrails.sql', '0044_route_routing_metadata.sql', '0045_route_data_policy_subject_fingerprint.sql', '0046_model_endpoints.sql', '0047_model_endpoint_route_subject_fingerprint.sql', '0048_model_endpoint_audio_capabilities.sql', '0049_model_endpoint_evidence_ledger.sql', '0050_management_api_keys.sql', '0051_gateway_key_expiry.sql', '0052_gateway_key_limits.sql', '0053_workspace_budgets.sql', '0054_generation_metadata_snapshots.sql', '0055_request_session_id.sql', '0056_generation_feedback.sql', '0057_guardrail_assignment_management_source.sql', '0058_workspace_default_guardrails.sql', '0059_account_default_guardrails.sql', '0060_provider_attempt_availability.sql', '0061_public_model_total_tokens.sql', '0062_generation_service_tier.sql', '0063_private_byok.sql', '0064_byok_always_use_for_provider.sql', '0065_guardrail_budget_settlement_basis.sql', '0066_workspace_budget_usage_index.sql', '0067_batch_jobs.sql'],
+	'PostgreSQL stores budget_spent directly as NUMERIC and must retain its one-version offset from D1',
 );
 
 for (const file of postgresMigrations) {
@@ -79,6 +79,208 @@ assert.doesNotMatch(
 	'Generation metadata facts must not be inferred for historical request logs',
 );
 
+const requestSessionMigration = read('packages/core/migrations-postgres/0055_request_session_id.sql');
+for (const sessionContract of [
+	'ADD COLUMN session_id TEXT',
+	'CHECK (session_id IS NULL OR length(session_id) BETWEEN 1 AND 256)',
+]) {
+	assert.ok(requestSessionMigration.includes(sessionContract), `PostgreSQL 0055 is missing request session contract: ${sessionContract}`);
+}
+assert.doesNotMatch(
+	requestSessionMigration,
+	/(?:UPDATE|INSERT\s+INTO)\s+api_key_request_logs/iu,
+	'PostgreSQL request session IDs must not be inferred for historical request logs',
+);
+
+const generationFeedbackMigration = read('packages/core/migrations-postgres/0056_generation_feedback.sql');
+for (const feedbackContract of [
+	'CREATE TABLE generation_feedback',
+	'generation_id TEXT NOT NULL',
+	'workspace_id TEXT NOT NULL',
+	'management_api_key_id TEXT NOT NULL',
+	'REFERENCES api_key_request_logs(id) ON DELETE CASCADE',
+	'REFERENCES management_api_keys(id) ON DELETE CASCADE',
+	'generation_feedback_account_owner_chk',
+	'comment IS NULL OR length(comment) <= 1000',
+	'CREATE INDEX idx_generation_feedback_generation_created',
+	'WHERE personal_owner_user_id IS NOT NULL',
+	'WHERE organization_id IS NOT NULL',
+]) {
+	assert.ok(generationFeedbackMigration.includes(feedbackContract), `PostgreSQL 0056 is missing Generation feedback contract: ${feedbackContract}`);
+}
+
+const guardrailAssignmentManagementMigration = read('packages/core/migrations-postgres/0057_guardrail_assignment_management_source.sql');
+for (const assignmentContract of [
+	'ADD COLUMN management_source TEXT',
+	'ADD COLUMN assigned_by_user_id TEXT',
+	"CHECK (management_source IN ('admin', 'management_api'))",
+	"SET management_source = 'admin'",
+	'ON guardrail_assignments(assigned_by_user_id)',
+	'WHERE management_source IS NOT NULL',
+]) {
+	assert.ok(guardrailAssignmentManagementMigration.includes(assignmentContract),
+		`PostgreSQL 0057 is missing Guardrail assignment provenance contract: ${assignmentContract}`);
+}
+
+const workspaceDefaultGuardrailMigration = read('packages/core/migrations-postgres/0058_workspace_default_guardrails.sql');
+for (const defaultContract of [
+	'ADD COLUMN is_workspace_default BOOLEAN NOT NULL DEFAULT FALSE',
+	'CREATE UNIQUE INDEX uk_guardrails_workspace_default',
+	'WHERE is_workspace_default',
+	'INSERT INTO guardrails',
+	'INSERT INTO guardrail_versions',
+	'WHERE guardrail.is_workspace_default',
+]) {
+	assert.ok(workspaceDefaultGuardrailMigration.includes(defaultContract),
+		`PostgreSQL 0058 is missing Workspace Default Guardrail contract: ${defaultContract}`);
+}
+
+const accountDefaultGuardrailMigration = read('packages/core/migrations-postgres/0059_account_default_guardrails.sql');
+for (const accountDefaultContract of [
+	'ADD COLUMN is_account_default BOOLEAN NOT NULL DEFAULT FALSE',
+	'ADD COLUMN account_scope_key TEXT',
+	'guardrails_default_kind_chk',
+	'guardrails_account_scope_key_chk',
+	'CREATE UNIQUE INDEX uk_guardrails_account_default',
+	"'personal:' || owner.id",
+	"'organization:' || organization.id",
+	'WHERE guardrail.is_account_default',
+]) {
+	assert.ok(accountDefaultGuardrailMigration.includes(accountDefaultContract),
+		`PostgreSQL 0059 is missing Account Default Guardrail contract: ${accountDefaultContract}`);
+}
+
+const providerAttemptAvailabilityMigration = read('packages/core/migrations-postgres/0060_provider_attempt_availability.sql');
+for (const availabilityContract of [
+	'CREATE TABLE provider_attempt_availability',
+	'REFERENCES api_key_request_logs(id) ON DELETE CASCADE',
+	"CHECK (outcome IN ('available', 'unavailable', 'excluded'))",
+	'CHECK (attempt_index BETWEEN 1 AND 128)',
+	'idx_provider_attempt_availability_route_observed',
+	'idx_provider_attempt_availability_observed',
+	'CREATE FUNCTION delete_provider_attempt_availability_before',
+	'SECURITY DEFINER',
+	"p_limit > 5000",
+	"INTERVAL '25 hours'",
+	'FOR UPDATE SKIP LOCKED',
+	'REVOKE ALL ON FUNCTION delete_provider_attempt_availability_before',
+]) {
+	assert.ok(providerAttemptAvailabilityMigration.includes(availabilityContract),
+		`PostgreSQL 0060 is missing provider-attempt availability contract: ${availabilityContract}`);
+}
+
+const publicModelTotalTokensMigration = read('packages/core/migrations-postgres/0061_public_model_total_tokens.sql');
+for (const totalTokensContract of [
+	'ADD COLUMN total_tokens BIGINT NOT NULL DEFAULT 0',
+	'COALESCE(SUM(total_tokens), 0)',
+	'ON CONFLICT (stat_date, model_id, shard) DO UPDATE',
+]) {
+	assert.ok(publicModelTotalTokensMigration.includes(totalTokensContract),
+		`PostgreSQL 0061 is missing public model total-token contract: ${totalTokensContract}`);
+}
+
+const generationResponseMetadataMigration = read('packages/core/migrations-postgres/0062_generation_service_tier.sql');
+for (const serviceTierContract of [
+	'ADD COLUMN service_tier TEXT',
+	"service_tier IN ('default', 'flex', 'priority')",
+	'ADD COLUMN finish_reason TEXT',
+	"finish_reason IN ('tool_calls', 'stop', 'length', 'content_filter', 'error')",
+	'ADD COLUMN native_finish_reason TEXT',
+	'char_length(native_finish_reason) BETWEEN 1 AND 128',
+	'ADD COLUMN http_referer TEXT',
+	'char_length(http_referer) BETWEEN 1 AND 512',
+	'ADD COLUMN user_agent TEXT',
+	'char_length(user_agent) BETWEEN 1 AND 512',
+	'ADD COLUMN native_tokens_prompt BIGINT',
+	'ADD COLUMN native_tokens_completion BIGINT',
+	'ADD COLUMN native_tokens_cached BIGINT',
+	'ADD COLUMN native_tokens_reasoning BIGINT',
+	'ADD COLUMN native_tokens_completion_images BIGINT',
+	'ADD COLUMN provider_responses TEXT',
+	'native_tokens_prompt BETWEEN 0 AND 9007199254740991',
+	'native_tokens_completion BETWEEN 0 AND 9007199254740991',
+	'native_tokens_cached BETWEEN 0 AND 9007199254740991',
+	'native_tokens_reasoning BETWEEN 0 AND 9007199254740991',
+	'native_tokens_completion_images BETWEEN 0 AND 9007199254740991',
+	'octet_length(provider_responses) <= 32768',
+]) {
+	assert.ok(generationResponseMetadataMigration.includes(serviceTierContract),
+		`PostgreSQL 0062 is missing Generation response-metadata contract: ${serviceTierContract}`);
+}
+assert.doesNotMatch(
+	generationResponseMetadataMigration,
+	/(?:UPDATE|INSERT\s+INTO)\s+api_key_request_logs/iu,
+	'Generation response metadata must not be inferred for historical request logs',
+);
+
+const privateByokMigration = read('packages/core/migrations-postgres/0063_private_byok.sql');
+for (const byokContract of [
+	'CREATE TABLE byok_keys',
+	'api_key_encrypted TEXT NOT NULL',
+	'REFERENCES workspaces(id) ON DELETE CASCADE',
+	'REFERENCES management_api_keys(id) ON DELETE SET NULL',
+	'byok_keys_secret_lifecycle_chk',
+	"api_key_encrypted LIKE 'enc:v2:%'",
+	"deleted_at IS NOT NULL AND api_key_encrypted = '' AND disabled = TRUE",
+	'jsonb_array_length(allowed_api_key_hashes_json::jsonb) BETWEEN 1 AND 100',
+	'CREATE UNIQUE INDEX uk_byok_keys_active_order',
+	'CREATE INDEX idx_byok_keys_runtime',
+]) {
+	assert.ok(privateByokMigration.includes(byokContract),
+		`PostgreSQL 0063 is missing private BYOK contract: ${byokContract}`);
+}
+const byokAlwaysUseMigration = read(
+	'packages/core/migrations-postgres/0064_byok_always_use_for_provider.sql',
+);
+for (const byokContract of [
+	'ADD COLUMN always_use_for_provider BOOLEAN NOT NULL DEFAULT FALSE',
+	'ADD COLUMN always_use_for_matching_models BOOLEAN NOT NULL DEFAULT FALSE',
+	'byok_keys_always_use_priority_chk',
+	'byok_keys_shared_capacity_policy_exclusive_chk',
+	'CHECK (NOT always_use_for_provider OR NOT always_use_for_matching_models)',
+]) {
+	assert.ok(byokAlwaysUseMigration.includes(byokContract),
+		`PostgreSQL 0064 is missing BYOK shared-capacity contract: ${byokContract}`);
+}
+
+const guardrailSettlementBasisMigration = read(
+	'packages/core/migrations-postgres/0065_guardrail_budget_settlement_basis.sql',
+);
+for (const contract of [
+	'ADD COLUMN settlement_basis TEXT NOT NULL DEFAULT',
+	'guardrail_budget_reservations_settlement_basis_chk',
+	"CHECK (settlement_basis IN ('charged', 'gateway_key_route'))",
+]) {
+	assert.ok(guardrailSettlementBasisMigration.includes(contract),
+		`PostgreSQL 0065 is missing route-selective settlement contract: ${contract}`);
+}
+
+const workspaceBudgetUsageIndexMigration = read(
+	'packages/core/migrations-postgres/0066_workspace_budget_usage_index.sql',
+);
+assert.match(
+	workspaceBudgetUsageIndexMigration,
+	/CREATE INDEX idx_api_key_request_logs_workspace_budget_accounted\s+ON api_key_request_logs\(workspace_id, COALESCE\(budget_accounted_at, created_at\)\)/u,
+	'PostgreSQL 0066 must index Workspace budget reads by effective accounting time',
+);
+
+const batchJobsMigration = read('packages/core/migrations-postgres/0067_batch_jobs.sql');
+for (const contract of [
+	'CREATE TABLE batches',
+	'CREATE TABLE batch_items',
+	'CREATE UNIQUE INDEX uk_batches_idempotency',
+	'WHERE idempotency_key_hash IS NOT NULL',
+	"completion_window = '24h'",
+	'REFERENCES batches(id) ON DELETE CASCADE',
+	'PRIMARY KEY (batch_id, ordinal)',
+	'UNIQUE (batch_id, custom_id)',
+	'9007199254740991',
+]) {
+	assert.ok(batchJobsMigration.includes(contract),
+		`PostgreSQL 0067 is missing Batch contract: ${contract}`);
+}
+assert.doesNotMatch(batchJobsMigration, /\b(?:request_body|response_body)\b/u);
+
 const migrationRunner = read('packages/core/src/migrate/postgres.ts');
 assert.match(migrationRunner, /GATEWAY_POSTGRES_SCHEMA = 'cinatoken_gateway'/u);
 assert.match(migrationRunner, /LEGACY_GATEWAY_POSTGRES_SCHEMA = 'octafuse_gateway'/u);
@@ -128,6 +330,9 @@ assert.deepEqual(actualTables, [
 	'identity_event_inbox',
 	'api_keys',
 	'management_api_keys',
+	'byok_keys',
+	'batches',
+	'batch_items',
 	'request_presets',
 	'request_preset_versions',
 	'guardrails',
@@ -145,6 +350,8 @@ assert.deepEqual(actualTables, [
 	'route_data_policy_audit',
 	'route_pool_sticky_bindings',
 	'api_key_request_logs',
+	'provider_attempt_availability',
+	'generation_feedback',
 	'guardrail_budget_windows',
 	'guardrail_budget_reservations',
 	'user_budget_reservations',
@@ -166,10 +373,19 @@ assert.match(
 	/ETL_EXCLUDED_SESSION_TABLES = \[\s*["']portal_sessions["'],\s*["']admin_sessions["'],?\s*\]/u,
 );
 assert.match(migrationTables, /user_budget_reservations: \[["']request_id["']\]/u);
+assert.match(migrationTables, /byok_keys: \[["']id["']\]/u);
+assert.match(migrationTables, /batches: \[["']id["']\]/u);
+assert.match(migrationTables, /batch_items: \[["']batch_id["'], ["']ordinal["']\]/u);
+assert.match(
+	migrationTables,
+	/byok_keys:\s*\[[\s\S]*?["']disabled["'],\s*["']is_fallback["'],\s*["']always_use_for_provider["'],\s*["']always_use_for_matching_models["'],\s*\]/u,
+);
 assert.match(migrationTables, /workspaces: \[["']id["']\]/u);
 assert.match(migrationTables, /workspace_memberships: \[["']id["']\]/u);
 assert.match(migrationTables, /workspace_budgets: \[["']id["']\]/u);
 assert.match(migrationTables, /management_api_keys: \[["']id["']\]/u);
+assert.match(migrationTables, /generation_feedback: \[["']id["']\]/u);
+assert.match(migrationTables, /provider_attempt_availability: \[["']request_log_id["'], ["']attempt_index["']\]/u);
 assert.match(migrationTables, /workspaces: \[["']is_default["']\]/u);
 assert.match(migrationTables, /model_endpoints: \[["']id["']\]/u);
 assert.match(
@@ -193,7 +409,7 @@ for (const safetyContract of [
 	'ENABLE TRIGGER USER',
 	'pg_advisory_xact_lock',
 	'ETL_EXCLUDED_SESSION_TABLES',
-	'0054_generation_metadata_snapshots.sql',
+	'0067_batch_jobs.sql',
 	'activeGuardrailReservations',
 	'activeUserBudgetReservations',
 	'postgresBudgetSpentFromTransferRow',
@@ -212,7 +428,8 @@ assert.match(reconcile, /reportGuardrailLedgerDifferences/u);
 assert.match(reconcile, /GUARDRAIL_LEDGER_CHECK_PREFIX = 'guardrail-ledger:'/u);
 assert.match(reconcile, /source:active-reservations/u);
 assert.match(reconcile, /target:active-reservations/u);
-assert.match(reconcile, /0054_generation_metadata_snapshots\.sql/u);
+assert.match(reconcile, /0067_batch_jobs\.sql/u);
+assert.match(reconcile, /'total_tokens'/u);
 assert.match(reconcile, /ordinary-budget:source-active-reservations/u);
 assert.match(reconcile, /ordinary-budget:target-active-reservations/u);
 assert.match(reconcile, /ordinary-budget:source-reserved-counter-drift/u);
@@ -227,6 +444,7 @@ assert.doesNotMatch(reconcile, /users:sum_budget_spent/u);
 const guardrailLedgerContract = read('scripts/db/cutover/guardrail-ledger-contract.ts');
 for (const ledgerTable of [
 	'api_key_request_logs',
+	'provider_attempt_availability',
 	'guardrail_budget_windows',
 	'guardrail_budget_reservations',
 ]) {
@@ -263,7 +481,7 @@ assert.match(etlWorker, /ledger_differences/u);
 assert.match(etlWorker, /ETL_ATTEST_SOURCE_FROZEN/u);
 assert.match(etlWorker, /source_frozen_attestation_missing/u);
 assert.match(etlWorker, /attestation_only: true/u);
-assert.match(etlWorker, /0054_generation_metadata_snapshots\.sql/u);
+assert.match(etlWorker, /0067_batch_jobs\.sql/u);
 assert.match(etlWorker, /active_user_budget_reservations/u);
 assert.match(etlWorker, /ordinary-budget:source-active-reservations/u);
 assert.match(etlWorker, /ordinary-budget:target-active-reservations/u);
@@ -277,7 +495,7 @@ assert.match(etlWorker, /user_budget_spent_precision/u);
 assert.doesNotMatch(etlWorker, /users:sum_budget_spent/u);
 
 const d1Preflight = read('scripts/db/cutover/preflight-d1-source.ts');
-assert.match(d1Preflight, /0049_model_endpoint_audio_capabilities\.sql/u);
+assert.match(d1Preflight, /0068_batch_jobs\.sql/u);
 assert.match(d1Preflight, /active_user_budget_reservations/u);
 assert.match(d1Preflight, /user_budget_reserved_counter_drift/u);
 assert.match(d1Preflight, /D1_BUDGET_SPENT_MICROS_MIGRATION/u);
@@ -307,8 +525,8 @@ assert.match(userBudgetPrecisionTests, /8589934592000001/u);
 assert.match(userBudgetPrecisionTests, /4294967296\.0/u);
 assert.match(userBudgetPrecisionTests, /Number inputs[\s\S]*fail closed/u);
 const cutoverRunbook = read('docs/operators/migrations/d1-postgres-cutover.md');
-assert.match(cutoverRunbook, /源 D1 迁移链尾为 `0055_generation_metadata_snapshots\.sql`/u);
-assert.match(cutoverRunbook, /目标 PostgreSQL 迁移链尾为 `0054_generation_metadata_snapshots\.sql`/u);
+assert.match(cutoverRunbook, /源 D1 迁移链尾为 `0068_batch_jobs\.sql`/u);
+assert.match(cutoverRunbook, /目标 PostgreSQL 迁移链尾为 `0067_batch_jobs\.sql`/u);
 assert.match(cutoverRunbook, /D1 `0048`\/PostgreSQL `0047`[^\n]*subject_fingerprint/u);
 assert.match(cutoverRunbook, /旧音频证据保持 `\{\}`/u);
 assert.match(cutoverRunbook, /legacy_real_safe_fallback/u);
@@ -596,8 +814,8 @@ const runtimeGrants = read('scripts/db/cutover/grant-postgres-runtime.ts');
 const runtimeGrantSql = runtimeGrants.match(/tx\.unsafe\(`([\s\S]*?)`\)/u)?.[1];
 assert.ok(runtimeGrantSql, 'Unable to parse runtime grant SQL');
 assert.doesNotMatch(runtimeGrantSql, /^\s*\/\//mu, 'Runtime grant SQL must use SQL comments, not JavaScript comments');
-assert.match(runtimeGrants, /0054_generation_metadata_snapshots\.sql/u);
-assert.match(runtimeGrants, /migration=0054/u);
+assert.match(runtimeGrants, /0067_batch_jobs\.sql/u);
+assert.match(runtimeGrants, /migration=0067/u);
 for (const immutableTable of [
 	'api_key_request_logs',
 	'shared_key_earnings',
@@ -606,6 +824,8 @@ for (const immutableTable of [
 	'guardrail_versions',
 	'route_data_policy_audit',
 	'identity_event_inbox',
+	'generation_feedback',
+	'provider_attempt_availability',
 ]) {
 	assert.match(
 		runtimeGrantSql,
@@ -636,6 +856,8 @@ for (const budgetLedgerTable of [
 	'guardrail_budget_windows',
 	'guardrail_budget_reservations',
 	'user_budget_reservations',
+	'batches',
+	'batch_items',
 ]) {
 	assert.match(
 		runtimeGrantSql,
@@ -654,14 +876,45 @@ assert.match(hyperdriveAccessProbe, /management_api_keys_select/u);
 assert.match(hyperdriveAccessProbe, /management_api_keys_insert/u);
 assert.match(hyperdriveAccessProbe, /management_api_keys_update/u);
 assert.match(hyperdriveAccessProbe, /management_api_keys_delete/u);
+assert.match(hyperdriveAccessProbe, /byok_keys_exists/u);
+assert.match(hyperdriveAccessProbe, /byok_keys_select/u);
+assert.match(hyperdriveAccessProbe, /byok_keys_insert/u);
+assert.match(hyperdriveAccessProbe, /byok_keys_update/u);
+assert.match(hyperdriveAccessProbe, /byok_keys_delete/u);
+assert.match(hyperdriveAccessProbe, /generation_feedback_exists/u);
+assert.match(hyperdriveAccessProbe, /generation_feedback_select/u);
+assert.match(hyperdriveAccessProbe, /generation_feedback_insert/u);
+assert.match(hyperdriveAccessProbe, /generation_feedback_update/u);
+assert.match(hyperdriveAccessProbe, /generation_feedback_delete/u);
+assert.match(hyperdriveAccessProbe, /provider_attempt_availability_exists/u);
+assert.match(hyperdriveAccessProbe, /provider_attempt_availability_select/u);
+assert.match(hyperdriveAccessProbe, /provider_attempt_availability_insert/u);
+assert.match(hyperdriveAccessProbe, /provider_attempt_availability_update/u);
+assert.match(hyperdriveAccessProbe, /provider_attempt_availability_delete/u);
+assert.match(hyperdriveAccessProbe, /provider_attempt_retention_execute/u);
 assert.match(hyperdriveAccessProbe, /user_budget_reservations_delete/u);
-assert.match(hyperdriveAccessProbe, /migration_count === '54'/u);
-assert.match(hyperdriveAccessProbe, /0054_generation_metadata_snapshots\.sql/u);
+for (const batchAccessContract of [
+	'batches_exists',
+	'batch_items_exists',
+	'batches_select',
+	'batches_insert',
+	'batches_update',
+	'batches_delete',
+	'batch_items_select',
+	'batch_items_insert',
+	'batch_items_update',
+	'batch_items_delete',
+]) {
+	assert.match(hyperdriveAccessProbe, new RegExp(batchAccessContract, 'u'));
+}
+assert.match(hyperdriveAccessProbe, /migration_count === '67'/u);
+assert.match(hyperdriveAccessProbe, /0067_batch_jobs\.sql/u);
 
 const corePackage = JSON.parse(read('packages/core/package.json'));
 assert.match(corePackage.scripts['pretest:unit'], /test:ordinary-budget/u);
 assert.match(corePackage.scripts['pretest:unit'], /test:workspaces/u);
 assert.match(corePackage.scripts['pretest:unit'], /test:management-keys/u);
+assert.match(corePackage.scripts['pretest:unit'], /test:batches/u);
 assert.match(corePackage.scripts['test:ordinary-budget'], /user-budget\.d1\.test\.ts/u);
 assert.match(corePackage.scripts['test:workspaces'], /workspaces\.d1\.test\.ts/u);
 assert.match(corePackage.scripts['test:workspaces'], /preset-guardrail-workspaces\.d1\.test\.ts/u);

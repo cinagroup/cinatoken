@@ -169,6 +169,7 @@ export interface PublicModelAnalyticsRow {
 	success_count: number;
 	error_count: number;
 	output_tokens: number;
+	total_tokens: number;
 	avg_latency_ms: number | null;
 }
 
@@ -231,6 +232,17 @@ export interface RequestStatsByRangeRow {
 	cacheWriteTokens: number;
 	totalTokens: number;
 	avgLatencyMs: number | null;
+}
+
+/** Ordinary-user Activity: bounded spend aggregation for one safe public dimension. */
+export interface RequestActivityGroupRow {
+	id: string;
+	name: string | null;
+	requestCount: number;
+	successCount: number;
+	errorCount: number;
+	totalTokens: number;
+	chargedCost: number;
 }
 
 /** 仪表盘：按 bucket 聚合的时序行。 */

@@ -1,12 +1,20 @@
 import {
 	computeRouteDataPolicySubjectFingerprintFromRows,
+	collectRoutePerformanceSeries,
+	isAudioSpeechModel,
+	isAudioTranscriptionModel,
+	modelEndpointSupportsOperation,
 	modelEndpointSubjectFingerprintIsValid,
+	MIN_ROUTE_AVAILABILITY_OBSERVATIONS,
 	normalizeUpstreamProtocol,
 	parseVerifiedModelEndpointSnapshot,
 	parseModelModalitiesJson,
 	parseProviderEndpoints,
 	protocolHasEndpointsConfig,
 	routeDataPolicyAllowsZdr,
+	routePerformancePercentile,
+	ROUTE_PERFORMANCE_MAX_ROUTES_PER_QUERY,
+	ROUTE_PERFORMANCE_MAX_SAMPLES_PER_ROUTE,
 	verifiedEndpointMatchesLegacyRoutingMetadata,
 	type GatewayRepositories,
 	type ModelEndpointDiscoveryRouteBindingRow,
@@ -17,11 +25,16 @@ import {
 	type VerifiedModelEndpointSnapshot,
 } from "@octafuse/core";
 import {
+	AUDIO_ENDPOINT_PRICING_OPERATIONS,
+	audioEndpointSpeechRequestCapabilities,
 	isPublicEndpointCapabilityReady,
 	normalizeEndpointCapabilities,
 	normalizeImageEndpointCapabilities,
 	normalizeTextEndpointPricing,
 	serializeImagePricingLine,
+	type AudioEndpointCapabilities,
+	type AudioEndpointPricingOperation,
+	type AudioOperationPricing,
 	type ImageCapabilityDescriptor,
 	type ImageEndpointCapabilities,
 } from "@octafuse/core/model-endpoint-catalog";
@@ -51,6 +64,10 @@ export type PublicEndpointDiscoveryRepositories = {
 		GatewayRepositories["routeDataPolicies"],
 		"getByRouteTargetIds"
 	>;
+	requestLogs: Pick<
+		GatewayRepositories["requestLogs"],
+		"getRecentRoutePerformanceSamples" | "getRouteAvailabilityAggregates"
+	>;
 };
 type ToolChoice = {
 	auto: boolean;
@@ -58,6 +75,10 @@ type ToolChoice = {
 	none: boolean;
 	required: boolean;
 };
+type PublicEndpointPricing = Omit<
+	ReturnType<typeof normalizeTextEndpointPricing>,
+	"currency"
+>;
 export type PublicModelEndpoint = {
 	name: string;
 	model_id: string;
@@ -69,18 +90,45 @@ export type PublicModelEndpoint = {
 	max_completion_tokens: number | null;
 	quantization: string | null;
 	supported_parameters: string[];
-	pricing: Omit<ReturnType<typeof normalizeTextEndpointPricing>, "currency">;
+	pricing: PublicEndpointPricing;
 	supports_implicit_caching: boolean;
 	supports_tool_choice: ToolChoice;
 	supports_voice_cloning: boolean;
+	/** CinaToken extension: null means the endpoint has no verified default-voice fact. */
+	supports_default_voice: boolean | null;
+	/** CinaToken extension: exact clone-reference media types accepted by this endpoint. */
+	reference_audio_media_types: string[];
+	/** CinaToken extension: media type assigned to raw Base64 clone references. */
+	reference_audio_default_media_type: string | null;
+	/** CinaToken extension: verified operation facts scoped to callable bound routes. */
+	audio_capabilities: AudioEndpointCapabilities | null;
 	/** OpenRouter uses `0` for an endpoint that is currently available. */
 	status: 0;
-	latency_last_30m: null;
-	throughput_last_30m: null;
-	uptime_last_5m: null;
-	uptime_last_30m: null;
-	uptime_last_1d: null;
+	latency_last_30m: PublicEndpointPercentiles | null;
+	throughput_last_30m: PublicEndpointPercentiles | null;
+	uptime_last_5m: number | null;
+	uptime_last_30m: number | null;
+	uptime_last_1d: number | null;
 };
+export type PublicEndpointPercentiles = {
+	p50: number;
+	p75: number;
+	p90: number;
+	p99: number;
+};
+export type PublicEndpointPerformance = {
+	latencyLast30m: PublicEndpointPercentiles | null;
+	throughputLast30m: PublicEndpointPercentiles | null;
+	uptimeLast5m: number | null;
+	uptimeLast30m: number | null;
+	uptimeLast1d: number | null;
+};
+export type PublicEndpointPerformanceMap = ReadonlyMap<string, PublicEndpointPerformance>;
+
+const PUBLIC_ENDPOINT_PERFORMANCE_WINDOW_MS = 30 * 60 * 1_000;
+export const PUBLIC_ENDPOINT_PERFORMANCE_MINIMUM_SAMPLE_SIZE = 20;
+/** OpenRouter begins endpoint uptime classification only after 100 observations. */
+export const PUBLIC_ENDPOINT_UPTIME_MINIMUM_SAMPLE_SIZE = MIN_ROUTE_AVAILABILITY_OBSERVATIONS;
 export type PublicModelEndpointsDocument = {
 	id: string;
 	name: string;
@@ -123,6 +171,22 @@ export type ParsedModelEndpointPath = {
 	slug: string;
 	canonicalModelId: string;
 };
+
+/**
+ * Normalize legacy dedicated Audio model rows to the current OpenRouter output
+ * vocabulary without mutating stored catalog data. Explicit speech/transcription
+ * modalities remain authoritative; only legacy pricing-classified rows are remapped.
+ */
+export function openRouterModelOutputModalities(model: ModelRow): string[] {
+	const stored = parseModelModalitiesJson(model.output_modalities) ?? [];
+	if (stored.includes("speech") || stored.includes("transcription")) {
+		return [...new Set(stored)].sort(stableStringCompare);
+	}
+	const speech = isAudioSpeechModel(model);
+	const transcription = isAudioTranscriptionModel(model);
+	if (speech !== transcription) return [speech ? "speech" : "transcription"];
+	return [...new Set(stored)].sort(stableStringCompare);
+}
 
 export function parseModelEndpointPath(
 	author: string,
@@ -313,6 +377,10 @@ async function bindRows(
 				bound.snapshot,
 				route.routing_metadata
 			) ||
+			!modelEndpointSupportsOperation(
+				bound.snapshot,
+				route.upstream_operation
+			) ||
 			!routeCallable(route)
 		)
 			continue;
@@ -446,11 +514,13 @@ export async function listVerifiedPublicEndpointBindings(
 function validCapacity(value: number | null): boolean {
 	return value === null || (Number.isSafeInteger(value) && value > 0);
 }
+
 function textEndpoint(
 	m: ModelRow,
 	e: ModelEndpointRow,
 	p: ProviderRow,
-	providerNameOverride?: string
+	providerNameOverride?: string,
+	performance?: PublicEndpointPerformance
 ): PublicModelEndpoint | null {
 	if (
 		e.context_length == null ||
@@ -503,16 +573,180 @@ function textEndpoint(
 			supports_implicit_caching: c.implicit_caching!,
 			supports_tool_choice: c.tool_choice as ToolChoice,
 			supports_voice_cloning: c.voice_cloning!,
+			supports_default_voice: null,
+			reference_audio_media_types: [],
+			reference_audio_default_media_type: null,
+			audio_capabilities: null,
 			status: 0,
-			latency_last_30m: null,
-			throughput_last_30m: null,
-			uptime_last_5m: null,
-			uptime_last_30m: null,
-			uptime_last_1d: null,
+			latency_last_30m: performance?.latencyLast30m ?? null,
+			throughput_last_30m: performance?.throughputLast30m ?? null,
+			uptime_last_5m: performance?.uptimeLast5m ?? null,
+			uptime_last_30m: performance?.uptimeLast30m ?? null,
+			uptime_last_1d: performance?.uptimeLast1d ?? null,
 		};
 	} catch {
 		return null;
 	}
+}
+
+type AudioModelKind = "speech" | "transcription";
+
+function audioModelKind(model: ModelRow): AudioModelKind | null {
+	const speech = isAudioSpeechModel(model);
+	const transcription = isAudioTranscriptionModel(model);
+	if (speech === transcription) return null;
+	return speech ? "speech" : "transcription";
+}
+
+function audioOperationMatchesKind(
+	operation: AudioEndpointPricingOperation,
+	kind: AudioModelKind
+): boolean {
+	return kind === "speech"
+		? operation.startsWith("audio.speech")
+		: operation.startsWith("audio.transcriptions");
+}
+
+function boundAudioCapabilities(
+	binding: VerifiedPublicEndpointBinding,
+	kind: AudioModelKind
+): AudioEndpointCapabilities | null {
+	const source = binding.snapshot.audioCapabilities;
+	if (!source) return null;
+	const wildcard = binding.routes.some((route) => route.upstream_operation === "*");
+	const boundOperations = new Set(
+		binding.routes.map((route) => route.upstream_operation)
+	);
+	const pricingByOperation: AudioEndpointCapabilities["pricing_by_operation"] = {};
+	for (const operation of AUDIO_ENDPOINT_PRICING_OPERATIONS) {
+		if (
+			audioOperationMatchesKind(operation, kind)
+			&& (wildcard || boundOperations.has(operation))
+			&& source.pricing_by_operation[operation] !== undefined
+		) {
+			pricingByOperation[operation] = source.pricing_by_operation[operation];
+		}
+	}
+	if (Object.keys(pricingByOperation).length === 0) return null;
+	const speech = pricingByOperation["audio.speech"] !== undefined
+		? source.speech_by_operation?.["audio.speech"]
+		: undefined;
+	return {
+		v: 1,
+		pricing_by_operation: pricingByOperation,
+		...(speech === undefined
+			? {}
+			: { speech_by_operation: { "audio.speech": speech } }),
+	};
+}
+
+function openRouterAudioPricing(
+	value: AudioOperationPricing
+): PublicEndpointPricing {
+	const meter = value.meter;
+	const pricing: PublicEndpointPricing = meter.kind === "tokens"
+		? {
+			prompt: meter.rates.input_text,
+			completion: meter.rates.output_text,
+			audio: meter.rates.input_audio,
+			audio_output: meter.rates.output_audio,
+			input_audio_cache: meter.rates.input_audio_cache,
+		}
+		: {
+			prompt: meter.price,
+			completion: "0",
+		};
+	if (value.request !== undefined) pricing.request = value.request;
+	if (value.discount !== undefined) pricing.discount = value.discount;
+	return pricing;
+}
+
+function audioEndpoint(
+	m: ModelRow,
+	binding: VerifiedPublicEndpointBinding,
+	providerNameOverride?: string,
+	performance?: PublicEndpointPerformance
+): PublicModelEndpoint | null {
+	const e = binding.endpoint;
+	const kind = audioModelKind(m);
+	if (
+		!kind ||
+		!validCapacity(e.context_length) ||
+		!validCapacity(e.max_prompt_tokens) ||
+		!validCapacity(e.max_completion_tokens) ||
+		!ENDPOINT_TAG.test(e.tag) ||
+		(e.quantization !== null && safe(e.quantization, 64) === null)
+	) return null;
+	const audioCapabilities = boundAudioCapabilities(binding, kind);
+	if (!audioCapabilities) return null;
+	const operationPricing = Object.values(audioCapabilities.pricing_by_operation)
+		.filter((value): value is AudioOperationPricing => value !== undefined)
+		.map(openRouterAudioPricing);
+	const firstPricing = operationPricing[0];
+	if (
+		!firstPricing ||
+		!operationPricing.every((pricing) => (
+			JSON.stringify(pricing) === JSON.stringify(firstPricing)
+		))
+	) return null;
+	const providerName = safe(providerNameOverride ?? binding.provider.name);
+	const speech = audioEndpointSpeechRequestCapabilities(audioCapabilities);
+	const params = binding.snapshot.supportedParameters;
+	if (!providerName || params.length > 128) return null;
+	const toolChoice = binding.snapshot.capabilities.tool_choice;
+	return {
+		name: `${providerName}: ${safe(m.display_name) ?? m.id}`,
+		model_id: m.id,
+		model_name: safe(m.display_name) ?? m.id,
+		provider_name: providerName,
+		tag: e.tag,
+		context_length: binding.snapshot.contextLength ?? 0,
+		max_prompt_tokens: binding.snapshot.maxPromptTokens,
+		max_completion_tokens: binding.snapshot.maxCompletionTokens,
+		quantization: e.quantization,
+		supported_parameters: [...params].sort(),
+		pricing: firstPricing,
+		supports_implicit_caching:
+			binding.snapshot.capabilities.implicit_caching === true,
+		supports_tool_choice: {
+			auto: toolChoice.auto === true,
+			function: toolChoice.function === true,
+			none: toolChoice.none === true,
+			required: toolChoice.required === true,
+		},
+		supports_voice_cloning:
+			binding.snapshot.capabilities.voice_cloning === true,
+		supports_default_voice: speech?.supports_default_voice ?? null,
+		reference_audio_media_types: [
+			...(speech?.reference_audio_media_types ?? []),
+		],
+		reference_audio_default_media_type:
+			speech?.reference_audio_default_media_type ?? null,
+		audio_capabilities: audioCapabilities,
+		status: 0,
+		latency_last_30m: performance?.latencyLast30m ?? null,
+		throughput_last_30m: performance?.throughputLast30m ?? null,
+		uptime_last_5m: performance?.uptimeLast5m ?? null,
+		uptime_last_30m: performance?.uptimeLast30m ?? null,
+		uptime_last_1d: performance?.uptimeLast1d ?? null,
+	};
+}
+
+function endpointForBinding(
+	model: ModelRow,
+	binding: VerifiedPublicEndpointBinding,
+	providerNameOverride?: string,
+	performance?: PublicEndpointPerformance
+): PublicModelEndpoint | null {
+	return audioModelKind(model)
+		? audioEndpoint(model, binding, providerNameOverride, performance)
+		: textEndpoint(
+			model,
+			binding.endpoint,
+			binding.provider,
+			providerNameOverride,
+			performance
+		);
 }
 
 /**
@@ -523,7 +757,8 @@ function textEndpoint(
 export function serializePublishedPublicModelEndpoint(
 	model: ModelRow,
 	binding: VerifiedPublicEndpointBinding,
-	publishedProvidersBySlug: ReadonlyMap<string, PublishedPublicProviderIdentity>
+	publishedProvidersBySlug: ReadonlyMap<string, PublishedPublicProviderIdentity>,
+	performance?: PublicEndpointPerformanceMap
 ): PublicModelEndpoint | null {
 	if (binding.endpoint.model_id !== model.id) return null;
 	const providerSlug = normalizedProviderSlug(binding.endpoint.provider_slug);
@@ -531,11 +766,11 @@ export function serializePublishedPublicModelEndpoint(
 		? publishedProvidersBySlug.get(providerSlug)
 		: undefined;
 	return publishedProvider
-		? textEndpoint(
+		? endpointForBinding(
 			model,
-			binding.endpoint,
-			binding.provider,
-			publishedProvider.name
+			binding,
+			publishedProvider.name,
+			performance?.get(binding.endpoint.id)
 		)
 		: null;
 }
@@ -548,7 +783,8 @@ export function serializePublishedPublicModelEndpoint(
 export function serializePublishedPublicModelEndpointsDocument(
 	model: ModelRow,
 	bindings: readonly VerifiedPublicEndpointBinding[],
-	publishedProvidersBySlug: ReadonlyMap<string, PublishedPublicProviderIdentity>
+	publishedProvidersBySlug: ReadonlyMap<string, PublishedPublicProviderIdentity>,
+	performance?: PublicEndpointPerformanceMap
 ): PublicModelEndpointsDocument | null {
 	const endpoints = bindings
 		.filter((binding) => binding.endpoint.model_id === model.id)
@@ -556,12 +792,136 @@ export function serializePublishedPublicModelEndpointsDocument(
 			const endpoint = serializePublishedPublicModelEndpoint(
 				model,
 				binding,
-				publishedProvidersBySlug
+				publishedProvidersBySlug,
+				performance
 			);
 			return endpoint ? [endpoint] : [];
 		})
 		.sort((left, right) => left.tag.localeCompare(right.tag));
 	return endpoints.length > 0 ? document(model, endpoints) : null;
+}
+
+function roundedMetric(value: number): number {
+	return Math.round(value * 1_000) / 1_000;
+}
+
+function publicPercentiles(
+	values: readonly number[],
+	higherIsBetter = false
+): PublicEndpointPercentiles | null {
+	if (values.length < PUBLIC_ENDPOINT_PERFORMANCE_MINIMUM_SAMPLE_SIZE) return null;
+	const percentile = (requested: 'p50' | 'p75' | 'p90' | 'p99') => {
+		const value = routePerformancePercentile(values, requested, higherIsBetter);
+		return value == null ? null : roundedMetric(value);
+	};
+	const p50 = percentile('p50');
+	const p75 = percentile('p75');
+	const p90 = percentile('p90');
+	const p99 = percentile('p99');
+	return p50 == null || p75 == null || p90 == null || p99 == null
+		? null
+		: { p50, p75, p90, p99 };
+}
+
+/**
+ * Load privacy-thresholded, successful-request performance for complete endpoint
+ * route sets. The route and row caps are shared with runtime routing so a public
+ * catalog request cannot turn into an unbounded telemetry scan.
+ */
+export async function loadPublicEndpointPerformance(
+	r: Pick<PublicEndpointDiscoveryRepositories, 'requestLogs'>,
+	bindings: readonly VerifiedPublicEndpointBinding[],
+	now = new Date()
+): Promise<PublicEndpointPerformanceMap> {
+	const selected: VerifiedPublicEndpointBinding[] = [];
+	const selectedRouteIds = new Set<string>();
+	for (const binding of [...bindings].sort((left, right) => (
+		stableStringCompare(left.endpoint.id, right.endpoint.id)
+	))) {
+		const newRouteIds = [...new Set(binding.routes.map((route) => route.id))]
+			.filter((id) => !selectedRouteIds.has(id));
+		if (
+			selectedRouteIds.size + newRouteIds.length
+			> ROUTE_PERFORMANCE_MAX_ROUTES_PER_QUERY
+		) continue;
+		selected.push(binding);
+		for (const id of newRouteIds) selectedRouteIds.add(id);
+	}
+	if (selectedRouteIds.size === 0) return new Map();
+
+	const since5mIso = new Date(now.getTime() - 5 * 60 * 1_000).toISOString();
+	const since30mIso = new Date(now.getTime() - PUBLIC_ENDPOINT_PERFORMANCE_WINDOW_MS).toISOString();
+	const since1dIso = new Date(now.getTime() - 24 * 60 * 60 * 1_000).toISOString();
+	const [sampleResult, availabilityResult] = await Promise.allSettled([
+		r.requestLogs.getRecentRoutePerformanceSamples({
+			routeTargetIds: [...selectedRouteIds],
+			sinceIso: since30mIso,
+			maxSamplesPerRoute: ROUTE_PERFORMANCE_MAX_SAMPLES_PER_ROUTE,
+		}),
+		r.requestLogs.getRouteAvailabilityAggregates({
+			routeTargetIds: [...selectedRouteIds],
+			since5mIso,
+			since30mIso,
+			since1dIso,
+		}),
+	]);
+	if (sampleResult.status === 'rejected') {
+		console.warn(JSON.stringify({
+			message: 'endpoint performance samples unavailable',
+			error_type: sampleResult.reason instanceof Error
+				? sampleResult.reason.name
+				: typeof sampleResult.reason,
+		}));
+	}
+	if (availabilityResult.status === 'rejected') {
+		console.warn(JSON.stringify({
+			message: 'endpoint availability aggregates unavailable',
+			error_type: availabilityResult.reason instanceof Error
+				? availabilityResult.reason.name
+				: typeof availabilityResult.reason,
+		}));
+	}
+	const samples = sampleResult.status === 'fulfilled' ? sampleResult.value : [];
+	const availabilityByRoute = new Map(
+		(availabilityResult.status === 'fulfilled' ? availabilityResult.value : [])
+			.map((aggregate) => [aggregate.route_target_id, aggregate]),
+	);
+	const byRoute = collectRoutePerformanceSeries({
+		samples,
+		allowedRouteTargetIds: selectedRouteIds,
+		maxSamplesPerRoute: ROUTE_PERFORMANCE_MAX_SAMPLES_PER_ROUTE,
+	});
+	const result = new Map<string, PublicEndpointPerformance>();
+	for (const binding of selected) {
+		const metrics = binding.routes.flatMap((route) => {
+			const metric = byRoute.get(route.id);
+			return metric ? [metric] : [];
+		});
+		const latency = metrics.flatMap((metric) => metric.latencySeconds);
+		const throughput = metrics.flatMap((metric) => metric.throughputTokensPerSecond);
+		const availability = binding.routes.flatMap((route) => {
+			const aggregate = availabilityByRoute.get(route.id);
+			return aggregate ? [aggregate] : [];
+		});
+		const uptime = (
+			availableKey: 'available_5m' | 'available_30m' | 'available_1d',
+			totalKey: 'total_5m' | 'total_30m' | 'total_1d',
+		): number | null => {
+			const available = availability.reduce((sum, row) => sum + row[availableKey], 0);
+			const total = availability.reduce((sum, row) => sum + row[totalKey], 0);
+			return total < PUBLIC_ENDPOINT_UPTIME_MINIMUM_SAMPLE_SIZE
+				? null
+				: roundedMetric(available * 100 / total);
+		};
+		result.set(binding.endpoint.id, {
+			latencyLast30m: publicPercentiles(latency),
+			throughputLast30m: publicPercentiles(throughput, true),
+			uptimeLast5m: uptime('available_5m', 'total_5m'),
+			uptimeLast30m: uptime('available_30m', 'total_30m'),
+			uptimeLast1d: uptime('available_1d', 'total_1d'),
+		});
+	}
+	return result;
 }
 function archMeta(m: ModelRow, key: string): string | null {
 	try {
@@ -580,7 +940,7 @@ function document(
 	endpoints: PublicModelEndpoint[]
 ): PublicModelEndpointsDocument {
 	const i = parseModelModalitiesJson(m.input_modalities) ?? [],
-		o = parseModelModalitiesJson(m.output_modalities) ?? [];
+		o = openRouterModelOutputModalities(m);
 	return {
 		id: m.id,
 		name: safe(m.display_name) ?? m.id,
@@ -610,16 +970,23 @@ export async function getPublicModelEndpoints(
 	const sourceBindings = options?.bindings
 		? options.bindings.filter((binding) => binding.endpoint.model_id === m.id)
 		: await bindings(r, m, now);
+	const performance = await loadPublicEndpointPerformance(r, sourceBindings, now);
 	if (options?.publishedProvidersBySlug) {
 		return serializePublishedPublicModelEndpointsDocument(
 			m,
 			sourceBindings,
-			options.publishedProvidersBySlug
+			options.publishedProvidersBySlug,
+			performance
 		);
 	}
 	const es = sourceBindings
 		.flatMap((b) => {
-			const e = textEndpoint(m, b.endpoint, b.provider);
+			const e = endpointForBinding(
+				m,
+				b,
+				undefined,
+				performance.get(b.endpoint.id)
+			);
 			return e ? [e] : [];
 		})
 		.sort((a, b) => a.tag.localeCompare(b.tag));
@@ -645,6 +1012,10 @@ export async function listVerifiedZdrPublicEndpoints(
 			))
 		);
 	const pm = new Map(ps.map((p) => [p.route_target_id, p]));
+	const approved: Array<{
+		binding: VerifiedPublicEndpointBinding;
+		model: ModelRow;
+	}> = [];
 	for (const b of bs) {
 		const m = modelMap.get(b.endpoint.model_id);
 		if (!m) continue;
@@ -672,10 +1043,21 @@ export async function listVerifiedZdrPublicEndpoints(
 				break;
 			}
 		}
-		if (ok) {
-			const e = textEndpoint(m, b.endpoint, b.provider);
-			if (e) out.push(e);
-		}
+		if (ok) approved.push({ binding: b, model: m });
+	}
+	const performance = await loadPublicEndpointPerformance(
+		r,
+		approved.map(({ binding }) => binding),
+		now
+	);
+	for (const { binding, model } of approved) {
+		const e = endpointForBinding(
+			model,
+			binding,
+			undefined,
+			performance.get(binding.endpoint.id)
+		);
+		if (e) out.push(e);
 	}
 	return out.sort(
 		(a, b) => a.model_id.localeCompare(b.model_id) || a.tag.localeCompare(b.tag)

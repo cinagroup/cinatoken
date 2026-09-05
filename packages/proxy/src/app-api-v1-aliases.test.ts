@@ -12,9 +12,13 @@ describe('OpenRouter /api/v1 path aliases', () => {
 		const app = createProxyApp(async () => ({ repositories } as StorageContext));
 		const requests: Array<[string, string]> = [
 			['POST', '/api/v1/chat/completions'],
+			['POST', '/api/v1/completions'],
+			['POST', '/v1/completions'],
 			['POST', '/api/v1/responses'],
 			['POST', '/api/v1/messages'],
 			['POST', '/api/v1/embeddings'],
+			['POST', '/api/v1/rerank'],
+			['POST', '/v1/rerank'],
 			['POST', '/api/v1/images'],
 			['POST', '/api/v1/images/generations'],
 			['POST', '/api/v1/audio/speech'],

@@ -611,6 +611,7 @@ curl "http://localhost:8789/api/admin/keys/uuid-here/logs?page=1&page_size=10" \
       "chat": "https://api.example.com/v1/chat/completions",
       "responses": "https://api.example.com/v1/responses",
       "embeddings": "https://api.example.com/v1/embeddings",
+      "rerank": "https://api.example.com/v1/rerank",
       "images.generations": "https://api.example.com/v1/images/generations",
       "images.edits": "https://api.example.com/v1/images/edits",
       "audio.transcriptions": "https://api.example.com/v1/audio/transcriptions"
@@ -639,10 +640,10 @@ curl "http://localhost:8789/api/admin/keys/uuid-here/logs?page=1&page_size=10" \
   - **`priority`**：层（Proxy 按 **DESC** 硬序）。
   - **`weight`**：同层权重，整数 **≥ 1**（默认 1）；非法 → **400**。
   - **`POST`** 省略或空白 **`route_group`** → **`default`**；**`PATCH`** 若含 `route_group` 则不得为仅空白（否则 **400**）。
-  - **`request_protocol` / `request_operation`**：公开请求入口，例如 `openai` + `chat` / `responses` / `embeddings`；省略 operation 使用兼容值 `*`。
+  - **`request_protocol` / `request_operation`**：公开请求入口，例如 `openai` + `chat` / `responses` / `embeddings` / `rerank`；省略 operation 使用兼容值 `*`。
   - **`upstream_protocol` / `upstream_operation`**：Target 实际调用的协议 / capability；省略 operation 时跟随请求 operation。
   - **`adapter`**：同协议、同 operation 使用 `passthrough`；OpenAI ASR / TTS 转 DashScope 使用白名单中的显式 adapter。未声明的跨协议或 operation 组合返回 **400**，见 [DashScope 音频架构](../architecture/dashscope-audio.md)。
-  - **`routing_metadata`**：仅描述该具体 Route Target 可公开用于选择的能力，不参与上游请求。JSON 形状为 `{ "supported_parameters": ["tools", "response_format"], "quantization": "fp8", "endpoint_slug": "provider/turbo", "endpoint_class": "standard", "region": "us", "context_length": 128000, "max_prompt_tokens": 120000, "max_completion_tokens": 16384 }`；参数名、量化值、公开 endpoint slug、端点分类、地域与三个容量值会被严格规范化，未知字段或非法值返回 **400**。容量值只能是正安全整数或 `null`，且必须来自该具体 endpoint 的可核验规格；不得从模型目录值或 `custom_params` 猜测。Chat 的 `max_tokens` / `max_completion_tokens`、Responses 的 `max_output_tokens`、Messages 的 `max_tokens` 会在首次上游调用前按 `max_completion_tokens` 过滤，未知或不足均 fail closed。`endpoint_slug` 最长 120 字符，只允许字母、数字、点、下划线、连字符和 slash 分段，保存后会小写化；它会出现在公开目录中，禁止填入内部 ID、URL 或秘密。slash 变体必须显式设置 `endpoint_class` 为 `standard` 或 `service_tier`，不得根据后缀猜测；`service_tier` 与未分类历史变体默认均不参与路由，只有请求在 `provider.order` / `provider.only` 中给出完整 slug 才会放行，基础 slug 与普通 fallback 都不会包含它。`region` 只是管理员声明的供应端点位置发现标签，不是推理数据驻留保证。Proxy 以 fail-closed 方式读取，损坏或缺失元数据不会被推断为支持。
+  - **`routing_metadata`**：仅描述该具体 Route Target 可公开用于选择的能力，不参与上游请求。JSON 形状为 `{ "supported_parameters": ["tools", "response_format", "speed"], "quantization": "fp8", "endpoint_slug": "provider/turbo", "endpoint_class": "standard", "region": "us", "context_length": 128000, "max_prompt_tokens": 120000, "max_completion_tokens": 16384 }`；参数名、量化值、公开 endpoint slug、端点分类、地域与三个容量值会被严格规范化，未知字段或非法值返回 **400**。容量值只能是正安全整数或 `null`，且必须来自该具体 endpoint 的可核验规格；不得从模型目录值或 `custom_params` 猜测。Chat 的 `max_tokens` / `max_completion_tokens`、Responses 的 `max_output_tokens`、Messages 的 `max_tokens` 会在首次上游调用前按 `max_completion_tokens` 过滤，未知或不足均 fail closed。`endpoint_slug` 最长 120 字符，只允许字母、数字、点、下划线、连字符和 slash 分段，保存后会小写化；它会出现在公开目录中，禁止填入内部 ID、URL 或秘密。slash 变体必须显式设置 `endpoint_class` 为 `standard` 或 `service_tier`，不得仅根据后缀猜测；普通请求仍排除所有 service-tier 与未分类历史变体，完整 slug 可通过 `provider.order` / `provider.only` exact opt-in。自动服务等级只识别已核验且显式分类的 `provider/flex`、`provider/fast`、`provider/priority`；每一层必须作为独立 Endpoint/Route 绑定，提供与该层一致的上游参数和价格证据。原生 `speed` 也只会发给 `supported_parameters` 明确包含 `speed` 的当前 verified Endpoint；如 Provider 用单独的 `*-fast` 模型，应把 `/fast` Route 的 `provider_model_name` 显式配置成该 sibling，网关不会根据名称猜测或改写模型。其它 suffix 保持 exact-only。`region` 只是管理员声明的供应端点位置发现标签，不是推理数据驻留保证。Proxy 以 fail-closed 方式读取，损坏或缺失元数据不会被推断为支持。
   - **`custom_params`**：仍是发送给上游的请求默认参数；不得用它承载路由能力、数据策略或凭据。`routing_metadata` 与 `custom_params` 的信任和出站边界必须保持分离。
   - **`GET` 响应**：除 Target 字段外包含 `route_pool_id` 与 `surfaces`（JSON 数组字符串），用于还原 Surface → Pool → Target 拓扑。
 - **`PATCH /admin/routes/pools/:poolId`**：设置当前 Pool 的策略与按层覆盖。body 示例：
@@ -705,6 +706,38 @@ Endpoint 是 Route 可调用能力、价格和公开发现的权威证据，不�
 
 TTS 使用 `characters` + `unicode_code_point`；token meter 必须声明五个价格分项和 `require_authoritative_breakdown: true`，但数据面在尚无权威分项 usage 时会在 dispatch 前安全拒绝。Realtime TTS session 不是独立推理计费 operation，不得把 session 创建费冒充会话内 inference 费用。
 
+OpenAI-compatible TTS 还可在同一 v1 JSON 中声明请求形状证据。`speech_by_operation` 只接受 `audio.speech`，且必须同时存在该 operation 的价格证据：
+
+```json
+{
+  "v": 1,
+  "pricing_by_operation": {
+    "audio.speech": {
+      "currency": "USD",
+      "meter": {
+        "kind": "characters",
+        "unit": "unicode_code_point",
+        "price": "0.00002",
+        "minimum_units": 0,
+        "increment_units": 1
+      }
+    }
+  },
+  "speech_by_operation": {
+    "audio.speech": {
+      "supports_default_voice": false,
+      "reference_audio_media_types": ["audio/wav", "audio/mpeg"],
+      "reference_audio_default_media_type": "audio/wav"
+    }
+  }
+}
+```
+
+- `supports_default_voice` 为 `true` / `false` / `null`；只有 `true` 允许普通合成省略 `voice`。
+- `reference_audio_media_types` 最多 16 个精确、无参数的 `audio/*` media type；data URI 必须命中该列表。
+- raw Base64 没有自描述格式，只有配置了且命中列表的 `reference_audio_default_media_type` 才能路由。
+- 声明任一 reference-audio 格式时，Endpoint 的 `supports_voice_cloning` 必须为 `true`。未知、矛盾或未核验事实均在 Admin 或 dispatch 前 fail closed。
+
 ### `models.route_policy`（`PATCH /admin/models/:id`）
 
 模型级路由策略覆盖（优先级低于 Route Pool 与 `tier_strategies`，高于全局 `ROUTE_STRATEGY`）。形状与解析见 [route-strategies.md](../reference/route-strategies.md)。
@@ -749,6 +782,18 @@ curl -sS "$GATEWAY_URL/v1/embeddings" \
   -H "Content-Type: application/json" \
   -d '{"model":"text-embedding-3-small","input":"production smoke test"}'
 ```
+
+### 运维验收：Rerank 模型
+
+Rerank 与 LLM 共用 Models、Endpoints 与 Routes；数据面提供 `POST /v1/rerank` 及 OpenRouter 别名 `POST /api/v1/rerank`。
+
+1. **Provider**：配置兼容 Rerank 的 Provider Key。`endpoints.openai.base` 可派生 `/rerank`；版本根不同或非标准路径时，显式填写 `endpoints.openai.endpoints.rerank` 的完整 HTTPS URL。
+2. **Model**：将 `output_modalities` 设为 `["rerank"]`，填写可核验的 `context_window`。按请求收费时，在 verified Endpoint `pricing.request` 填每次调用价格，并将 token 单价设为 0；按 token 收费时填写真实 prompt 单价。
+3. **Route**：创建 active 的 `openai + rerank` Request Surface，并使用 `upstream_protocol=openai`、`upstream_operation=rerank`、`adapter=passthrough`。Admin 的 operation 选择器会按 Rerank 模态只显示该操作。
+4. **Endpoint**：绑定同一 Model/Provider/Route Target，填入权威证据、未来到期时间、上下文上限、支持参数（例如 `top_n`）及价格，然后核验为 `verified`。
+5. **调用与审计**：使用测试 Gateway Key 发起小批量请求，核对 `request_operation=rerank`、Provider、request/token 费用和 Generation。请求日志只保存文档数量与类型汇总，不保存 query 或文档正文。
+
+生产验收不得复用未授权的付费密钥；先用供应商沙箱或明确批准的小额调用验证响应、取消和账单。
 
 ### 运维验收：文生图模型 `gpt-image-2`
 
@@ -835,11 +880,12 @@ curl -sS "$GATEWAY_URL/v1/images/generations" \
     - 预设：`whisper-1` → `per_second`；`gpt-4o-mini-transcribe` / `gpt-4o-transcribe` / `gpt-4o-transcribe-diarize` → `token`（见 [user.md「语音转写」](user.md#语音转写audio-transcriptions)）。
   - Request log：迁移 **`0013_request_log_image_billing`** 增加 `billing_kind`、`input_image_count`、`output_image_count`；**`0014_request_log_audio_billing`** 增加 `audio_duration_seconds`。
 - **模型 Kind（Admin UI，无独立 DB 列）**：
-  - **Audio（语音转写）**：`pricing_profile` 含有效 `audio_billing_mode`（`per_second` + `audio`，或 `token` + `tiers`）；见 `isAudioTranscriptionModel`（`packages/core`）。
+  - **Audio（ASR/TTS）**：优先使用 OpenRouter 输出模态；ASR 为 `output_modalities: ["transcription"]`，TTS 为 `["speech"]`。旧数据仍可由有效 `audio_billing_mode`（`per_second`/`token` 为 ASR，`per_character` 为 TTS）兼容识别，但新建与静态预设不再把它们写成通用 `text`/`audio` 输出。
   - **Image（文生图）**：非 Audio，且 `output_modalities` 含 `image`（**不要**用 `input` 含 `image` 判断——多模态 LLM 也会有）。
-  - **LLM**：其余；仅当 `output_modalities` 缺失时，才用历史 `pricing_profile.image` 兜底判定。
-  - Models / Routes UI 侧栏 Kind 为 **`llm` | `image` | `audio`（无 All）**，URL `?kind=` 与 `?vendor=` 组合；默认 `llm`。Image 卡片按 mode 展示 `/M` 或 `/image`；Audio 卡片按 mode 展示 `/s` 或 token in/out。
-  - 文生图与语音转写**不使用**聊天字段 `context_window` / `max_tokens`（多数预设与保存为 `null`；Admin 卡片/表单隐藏这两项；部分 ASR token 预设可带 context/max 供上游约束）。LLM 的 `max_tokens` 缺省仍为 8192。迁移 **`0010_models_max_tokens_nullable`** 允许 `max_tokens` 为 NULL。
+  - **Rerank（重排序）**：`output_modalities` 含 `rerank`；输入固定为 text，保留可核验的 `context_window`，不设置生成 `max_tokens`。
+  - **LLM**：排除 Audio、Image、Embeddings 与 Rerank 后的其余模型；仅当 `output_modalities` 缺失时，才用历史 `pricing_profile.image` 兜底判定。
+  - Models / Routes UI 侧栏 Kind 为 **`all` | `llm` | `image` | `audio` | `rerank`**；Models 的 URL `?kind=` 与 `?vendor=` 组合并默认 `all`。Playground 没有 `all`，默认 `llm`，可选 Rerank Route 后载入 `query + documents` 模板并直连配置的 rerank URL。静态导入目录暂只有 `llm | image | audio` 预设。Image 卡片按 mode 展示 `/M` 或 `/image`；Audio 卡片按 mode 展示 `/s`、`/character` 或 token in/out。
+  - 文生图与语音转写**不使用**聊天字段 `context_window` / `max_tokens`（多数预设与保存为 `null`；Admin 卡片/表单隐藏这两项；部分 ASR token 预设可带 context/max 供上游约束）。Rerank 仅隐藏并清空 `max_tokens`。LLM 的 `max_tokens` 缺省仍为 8192。迁移 **`0010_models_max_tokens_nullable`** 允许 `max_tokens` 为 NULL。
 - **路由计价（canonical）**：`model_routes.price_override` 只维护相对 Endpoint 标准价的倍率（不复制计费模式或基础单价），**不再**要求 nested `metered` / `charged` tiers：
 
 ```json
@@ -1066,6 +1112,7 @@ Guardrail 使用独立权限 `guardrails.read` / `guardrails.write`：
 | 方法与路径 | 权限 | 说明 |
 | --- | --- | --- |
 | `GET /admin/guardrails`、`GET /admin/guardrails/:id/versions` | `guardrails.read` | 查看全部策略及不可变版本 |
+| `GET /admin/guardrails/effective?workspace_id=...&user_id=...&api_key_id=...` | `guardrails.read` | 在复验 Workspace 成员及可选 active Key 归属后，预览有效策略、当前隐私/Endpoint subject 证据、静态可调用性、operation/output capacity、实际计费价格和有界的近 5 分钟性能；请求参数门禁与 process/isolate-local circuit 仍只在真实分发时判定，响应不暴露内部 ID、私有上游模型名、凭据或 fingerprint |
 | `GET /admin/guardrails/:id/assignments` | `guardrails.read` | 查看用户/API Key 绑定 |
 | `PUT /admin/guardrails/:id/assignments` | `guardrails.write` | 管理员下发强制绑定；普通用户不能覆盖或解绑 |
 | `DELETE /admin/guardrails/assignments/:scopeType/:scopeId` | `guardrails.write` | 解除 scope 上的绑定 |

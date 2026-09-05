@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import {
 	getProviderCircuitRemainingMs,
 	isProviderCircuitOpen,
+	isProviderRecentlyDegraded,
 	markProviderFailure,
 	markProviderSuccess,
 	parseRetryAfterMs,
@@ -83,6 +84,14 @@ describe('rate_limit failures', () => {
 });
 
 describe('auth / server failures', () => {
+	it('retains a soft 30-second degradation signal before the server circuit opens', () => {
+		const t0 = 1_000_000;
+		markProviderFailure('p', 'server', null, t0);
+		assert.equal(isProviderCircuitOpen('p', t0 + 1), false);
+		assert.equal(isProviderRecentlyDegraded('p', t0 + 29_999), true);
+		assert.equal(isProviderRecentlyDegraded('p', t0 + 30_000), false);
+	});
+
 	it('opens 5min for auth failures', () => {
 		const t0 = 1_000_000;
 		markProviderFailure('p', 'auth', null, t0);

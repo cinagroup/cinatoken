@@ -3,6 +3,7 @@
  * DashScope 统一使用 SSE 上游，以便边转发音频边读取最终真实 usage；不会用输入长度伪造最终用量。
  */
 import { resolveProviderUpstreamSecret, resolveUpstreamEndpoint } from '@octafuse/core';
+import { audioEndpointSpeechRequestCapabilities } from '@octafuse/core/model-endpoint-catalog';
 import type { RouteResult } from '../model-router';
 import { EMPTY_USAGE, type UsageFromStream } from '../proxy';
 import { buildRouteRequestBody } from '../route-default-params';
@@ -12,18 +13,35 @@ import {
 	sanitizeUpstreamUrlForLog,
 	upstreamErrorNameForLog,
 } from './upstream-observability';
+import {
+	resolveAudioProviderOptionsForRoute,
+	type AudioProviderOptions,
+} from './audio-provider-options';
 
 export type AudioSpeechResponseFormat = 'mp3' | 'opus' | 'aac' | 'flac' | 'wav' | 'pcm';
 export type AudioSpeechStreamFormat = 'audio' | 'sse';
-export type AudioSpeechVoice = string | { id: string };
+export type AudioSpeechVoice = string;
+
+export type AudioSpeechInputReferencePart =
+	| {
+			type: 'input_audio';
+			inputAudio: {
+				bytes: Uint8Array;
+				encoding: { kind: 'raw_base64' } | { kind: 'data_uri'; mediaType: string };
+			};
+	  }
+	| { type: 'text'; text: string };
 
 export type NormalizedAudioSpeechRequest = {
 	input: string;
-	voice: AudioSpeechVoice;
+	voice?: AudioSpeechVoice;
 	responseFormat: AudioSpeechResponseFormat;
 	speed: number;
 	streamFormat: AudioSpeechStreamFormat;
 	instructions?: string;
+	inputReferences?: readonly AudioSpeechInputReferencePart[];
+	/** OpenRouter `provider.options.<provider>`; resolved per concrete attempt. */
+	providerOptions?: AudioProviderOptions;
 };
 
 type SpeechDispatchMeta = {
@@ -62,8 +80,29 @@ const AUDIO_CONTENT_TYPES: Record<AudioSpeechResponseFormat, string> = {
 	aac: 'audio/aac',
 	flac: 'audio/flac',
 	wav: 'audio/wav',
-	pcm: 'application/octet-stream',
+	pcm: 'audio/pcm',
 };
+
+export function speechResponseContentType(
+	request: Pick<NormalizedAudioSpeechRequest, 'responseFormat' | 'streamFormat'>,
+): string {
+	return request.streamFormat === 'sse'
+		? 'text/event-stream; charset=utf-8'
+		: AUDIO_CONTENT_TYPES[request.responseFormat];
+}
+
+function isExpectedOpenAiSpeechContentType(
+	contentType: string | null,
+	request: Pick<NormalizedAudioSpeechRequest, 'responseFormat' | 'streamFormat'>,
+): boolean {
+	const mediaType = contentType?.split(';', 1)[0]?.trim().toLowerCase() ?? '';
+	if (request.streamFormat === 'sse') return mediaType === 'text/event-stream';
+	if (mediaType === 'application/octet-stream') return true;
+	if (request.responseFormat === 'mp3') {
+		return mediaType === 'audio/mpeg' || mediaType === 'audio/mp3';
+	}
+	return mediaType === AUDIO_CONTENT_TYPES[request.responseFormat];
+}
 
 function isObject(value: unknown): value is Record<string, unknown> {
 	return value != null && typeof value === 'object' && !Array.isArray(value);
@@ -73,8 +112,248 @@ function finiteInteger(value: unknown): number | null {
 	return typeof value === 'number' && Number.isInteger(value) && value >= 0 ? value : null;
 }
 
-function voiceId(voice: AudioSpeechVoice): string {
-	return typeof voice === 'string' ? voice : voice.id;
+function hasOnlyFields(value: Record<string, unknown>, allowed: ReadonlySet<string>): boolean {
+	return Object.keys(value).every((field) => allowed.has(field));
+}
+
+function finiteNumberInRange(value: unknown, minimum: number, maximum: number): boolean {
+	return typeof value === 'number' && Number.isFinite(value) && value >= minimum && value <= maximum;
+}
+
+function integerInSet(value: unknown, allowed: ReadonlySet<number>): boolean {
+	return typeof value === 'number' && Number.isInteger(value) && allowed.has(value);
+}
+
+const QWEN_TTS_LANGUAGES = new Set([
+	'Auto', 'Chinese', 'English', 'German', 'Italian', 'Portuguese', 'Spanish',
+	'Japanese', 'Korean', 'French', 'Russian',
+]);
+const MINIMAX_TTS_EMOTIONS = new Set([
+	'happy', 'sad', 'angry', 'fearful', 'disgusted', 'surprised', 'calm', 'whisper',
+]);
+const MINIMAX_TTS_SOUND_EFFECTS = new Set([
+	'spacious_echo', 'auditorium_echo', 'lofi_telephone', 'robotic',
+]);
+const MINIMAX_TTS_LANGUAGE_BOOSTS = new Set([
+	'Chinese', 'Chinese,Yue', 'English', 'Arabic', 'Russian', 'Spanish', 'French',
+	'Portuguese', 'German', 'Turkish', 'Dutch', 'Ukrainian', 'Vietnamese',
+	'Indonesian', 'Japanese', 'Italian', 'Korean', 'Thai', 'Polish', 'Romanian',
+	'Greek', 'Czech', 'Finnish', 'Hindi', 'Bulgarian', 'Danish', 'Hebrew', 'Malay',
+	'Persian', 'Slovak', 'Swedish', 'Croatian', 'Filipino', 'Hungarian', 'Norwegian',
+	'Slovenian', 'Catalan', 'Nynorsk', 'Tamil', 'Afrikaans', 'auto',
+]);
+
+function validateDashScopeSpeechOptions(
+	options: Readonly<Record<string, unknown>>,
+	request: NormalizedAudioSpeechRequest,
+): boolean {
+	if (!hasOnlyFields(options, new Set([
+		'sample_rate', 'volume', 'bit_rate', 'pitch', 'enable_ssml',
+		'word_timestamp_enabled', 'seed',
+	]))) return false;
+	if (options.sample_rate !== undefined && !integerInSet(
+		options.sample_rate,
+		new Set([8_000, 16_000, 22_050, 24_000, 44_100, 48_000]),
+	)) return false;
+	if (options.volume !== undefined && (
+		!Number.isInteger(options.volume) || !finiteNumberInRange(options.volume, 0, 100)
+	)) return false;
+	if (options.bit_rate !== undefined && (
+		!Number.isInteger(options.bit_rate)
+		|| !finiteNumberInRange(options.bit_rate, 6, 510)
+		|| request.responseFormat !== 'opus'
+	)) return false;
+	if (options.pitch !== undefined && !finiteNumberInRange(options.pitch, 0.5, 2)) return false;
+	for (const field of ['enable_ssml', 'word_timestamp_enabled'] as const) {
+		if (options[field] !== undefined && typeof options[field] !== 'boolean') return false;
+	}
+	return options.seed === undefined
+		|| (typeof options.seed === 'number' && Number.isSafeInteger(options.seed));
+}
+
+function validateDashScopeQwenOptions(options: Readonly<Record<string, unknown>>): boolean {
+	if (!hasOnlyFields(options, new Set(['language_type', 'optimize_instructions']))) return false;
+	if (options.language_type !== undefined && (
+		typeof options.language_type !== 'string' || !QWEN_TTS_LANGUAGES.has(options.language_type)
+	)) return false;
+	return options.optimize_instructions === undefined || typeof options.optimize_instructions === 'boolean';
+}
+
+function validateMiniMaxNestedOptions(
+	options: Readonly<Record<string, unknown>>,
+	request: NormalizedAudioSpeechRequest,
+): boolean {
+	if (!hasOnlyFields(options, new Set([
+		'voice_setting', 'audio_setting', 'pronunciation_dict', 'language_boost',
+		'voice_modify', 'text_normalization', 'latex_read', 'subtitle_enable', 'aigc_watermark',
+	]))) return false;
+
+	if (options.voice_setting !== undefined) {
+		if (!isObject(options.voice_setting) || !hasOnlyFields(
+			options.voice_setting,
+			new Set(['vol', 'pitch', 'emotion']),
+		)) return false;
+		if (options.voice_setting.vol !== undefined && !(
+			finiteNumberInRange(options.voice_setting.vol, Number.MIN_VALUE, 10)
+		)) return false;
+		if (options.voice_setting.pitch !== undefined && (
+			!Number.isInteger(options.voice_setting.pitch)
+			|| !finiteNumberInRange(options.voice_setting.pitch, -12, 12)
+		)) return false;
+		if (options.voice_setting.emotion !== undefined && (
+			typeof options.voice_setting.emotion !== 'string'
+			|| !MINIMAX_TTS_EMOTIONS.has(options.voice_setting.emotion)
+		)) return false;
+	}
+
+	if (options.audio_setting !== undefined) {
+		if (!isObject(options.audio_setting) || !hasOnlyFields(
+			options.audio_setting,
+			new Set(['sample_rate', 'bitrate', 'channel', 'force_cbr']),
+		)) return false;
+		if (options.audio_setting.sample_rate !== undefined && !integerInSet(
+			options.audio_setting.sample_rate,
+			new Set([8_000, 16_000, 22_050, 24_000, 32_000, 44_100]),
+		)) return false;
+		if (options.audio_setting.bitrate !== undefined && (
+			!integerInSet(options.audio_setting.bitrate, new Set([32_000, 64_000, 128_000, 256_000]))
+			|| request.responseFormat !== 'mp3'
+		)) return false;
+		if (options.audio_setting.channel !== undefined
+			&& !integerInSet(options.audio_setting.channel, new Set([1, 2]))) return false;
+		if (options.audio_setting.force_cbr !== undefined
+			&& (
+				typeof options.audio_setting.force_cbr !== 'boolean'
+				|| request.responseFormat !== 'mp3'
+			)) return false;
+	}
+
+	if (options.pronunciation_dict !== undefined) {
+		if (!isObject(options.pronunciation_dict)
+			|| !hasOnlyFields(options.pronunciation_dict, new Set(['tone']))) return false;
+		const tone = options.pronunciation_dict.tone;
+		if (tone !== undefined && (
+			!Array.isArray(tone)
+			|| tone.length > 16
+			|| !tone.every((item) => typeof item === 'string' && item.length <= 256)
+		)) return false;
+	}
+
+	if (options.voice_modify !== undefined) {
+		if (request.responseFormat !== 'mp3') return false;
+		if (!isObject(options.voice_modify) || !hasOnlyFields(
+			options.voice_modify,
+			new Set(['pitch', 'intensity', 'timbre', 'sound_effects']),
+		)) return false;
+		for (const field of ['pitch', 'intensity', 'timbre'] as const) {
+			const value = options.voice_modify[field];
+			if (value !== undefined && (
+				!Number.isInteger(value) || !finiteNumberInRange(value, -100, 100)
+			)) return false;
+		}
+		if (options.voice_modify.sound_effects !== undefined && (
+			typeof options.voice_modify.sound_effects !== 'string'
+			|| !MINIMAX_TTS_SOUND_EFFECTS.has(options.voice_modify.sound_effects)
+		)) return false;
+	}
+
+	if (options.language_boost !== undefined && (
+		typeof options.language_boost !== 'string'
+		|| !MINIMAX_TTS_LANGUAGE_BOOSTS.has(options.language_boost)
+	)) return false;
+	for (const field of ['text_normalization', 'latex_read'] as const) {
+		if (options[field] !== undefined && typeof options[field] !== 'boolean') return false;
+	}
+	// The adapter always uses upstream SSE, where these non-streaming-only
+	// controls are not supported by MiniMax.
+	if (options.subtitle_enable !== undefined || options.aigc_watermark !== undefined) return false;
+	return true;
+}
+
+function validateDashScopeProviderOptions(
+	kind: DashScopeTtsKind,
+	route: Pick<RouteResult, 'providerId' | 'providerName' | 'endpoint'>,
+	request: NormalizedAudioSpeechRequest,
+): boolean {
+	const options = resolveAudioProviderOptionsForRoute(request.providerOptions, route);
+	if (Object.keys(options).length === 0) return true;
+	if (kind === 'speech') return validateDashScopeSpeechOptions(options, request);
+	if (kind === 'qwen') return validateDashScopeQwenOptions(options);
+	return validateMiniMaxNestedOptions(options, request);
+}
+
+function voiceId(voice: AudioSpeechVoice | undefined): string | null {
+	return voice ?? null;
+}
+
+function requiredVoiceId(voice: AudioSpeechVoice | undefined): string {
+	if (!voice) throw new Error('The selected TTS adapter requires an explicit voice');
+	return voice;
+}
+
+function bytesToBase64(bytes: Uint8Array): string {
+	let binary = '';
+	for (let index = 0; index < bytes.byteLength; index += 0x2000) {
+		binary += String.fromCharCode(...bytes.subarray(index, index + 0x2000));
+	}
+	return btoa(binary);
+}
+
+function buildStreamingOpenAiSpeechBody(
+	body: Record<string, unknown>,
+	parts: readonly AudioSpeechInputReferencePart[],
+): ReadableStream<Uint8Array> {
+	const audio = parts.find((part) => part.type === 'input_audio');
+	if (audio?.type !== 'input_audio') {
+		throw new Error('Stateless voice cloning requires one reference audio part');
+	}
+	const marker = `__cinatoken_speech_audio_${crypto.randomUUID()}__`;
+	const serializedReferences = parts.map((part) => part.type === 'text'
+		? { type: 'text', text: part.text }
+		: { type: 'input_audio', input_audio: { data: marker } });
+	const serialized = JSON.stringify({ ...body, input_references: serializedReferences });
+	const quotedMarker = JSON.stringify(marker);
+	const markerIndex = serialized.indexOf(quotedMarker);
+	if (markerIndex < 0 || serialized.indexOf(quotedMarker, markerIndex + quotedMarker.length) >= 0) {
+		throw new Error('Could not isolate the stateless voice-cloning payload');
+	}
+	const dataUriPrefix = audio.inputAudio.encoding.kind === 'data_uri'
+		? `data:${audio.inputAudio.encoding.mediaType};base64,`
+		: '';
+	const prefix = `${serialized.slice(0, markerIndex + 1)}${dataUriPrefix}`;
+	const suffix = serialized.slice(markerIndex + quotedMarker.length - 1);
+	const encoder = new TextEncoder();
+	const bytes = audio.inputAudio.bytes;
+	// Divisible by three so every non-final chunk has no Base64 padding.
+	const chunkSize = 0x6000;
+	let phase: 'prefix' | 'audio' | 'suffix' | 'done' = 'prefix';
+	let offset = 0;
+	return new ReadableStream<Uint8Array>({
+		pull(controller) {
+			if (phase === 'prefix') {
+				phase = 'audio';
+				controller.enqueue(encoder.encode(prefix));
+				return;
+			}
+			if (phase === 'audio' && offset < bytes.byteLength) {
+				const chunk = bytes.subarray(offset, Math.min(offset + chunkSize, bytes.byteLength));
+				offset += chunk.byteLength;
+				controller.enqueue(encoder.encode(bytesToBase64(chunk)));
+				return;
+			}
+			if (phase === 'audio') phase = 'suffix';
+			if (phase === 'suffix') {
+				phase = 'done';
+				controller.enqueue(encoder.encode(suffix));
+				return;
+			}
+			controller.close();
+		},
+		cancel() {
+			phase = 'done';
+			offset = bytes.byteLength;
+		},
+	});
 }
 
 function copyResponseHeaders(headers: Headers): Headers {
@@ -357,10 +636,7 @@ function dashScopeStreamResponse(options: {
 	return {
 		response: new Response(body, {
 			headers: {
-				'Content-Type':
-					options.request.streamFormat === 'sse'
-						? 'text/event-stream; charset=utf-8'
-						: AUDIO_CONTENT_TYPES[options.request.responseFormat],
+				'Content-Type': speechResponseContentType(options.request),
 				'Cache-Control': 'no-cache',
 			},
 		}),
@@ -407,6 +683,10 @@ function validateDashScopeRequest(
 	kind: DashScopeTtsKind,
 	request: NormalizedAudioSpeechRequest
 ): string | null {
+	if (request.inputReferences) {
+		return 'DashScope TTS adapters do not support OpenRouter stateless voice cloning';
+	}
+	if (!request.voice) return 'DashScope TTS adapters require an explicit voice';
 	if (kind === 'speech') {
 		if (!['mp3', 'opus', 'wav', 'pcm'].includes(request.responseFormat)) {
 			return `DashScope SpeechSynthesizer does not support response_format=${request.responseFormat}`;
@@ -418,14 +698,68 @@ function validateDashScopeRequest(
 	}
 	if (kind === 'qwen') {
 		if (request.responseFormat !== 'wav') return 'DashScope Qwen-TTS only returns wav audio';
-		if (request.speed !== 1) return 'DashScope Qwen-TTS does not support speed';
 		return null;
 	}
 	if (!['mp3', 'pcm', 'flac', 'wav'].includes(request.responseFormat)) {
 		return `DashScope MiniMax does not support response_format=${request.responseFormat}`;
 	}
 	if (request.instructions) return 'DashScope MiniMax does not support OpenAI instructions';
+	if (request.speed < 0.5 || request.speed > 2) {
+		return 'DashScope MiniMax speed must be between 0.5 and 2.0';
+	}
 	return null;
+}
+
+/**
+ * Keep adapter-specific request validation ahead of pricing admission and
+ * dispatch. A false result means the route cannot faithfully serve this
+ * already-normalized public request.
+ */
+export function audioSpeechRouteCanDispatch(
+	route: Pick<
+		RouteResult,
+		'adapter' | 'upstreamProtocol' | 'endpoint' | 'providerId' | 'providerName'
+	>,
+	request: NormalizedAudioSpeechRequest,
+): boolean {
+	if (route.adapter === 'passthrough' && route.upstreamProtocol === 'openai') {
+		const speechCapabilities = route.endpoint?.audioCapabilities
+			? audioEndpointSpeechRequestCapabilities(route.endpoint.audioCapabilities)
+			: null;
+		if (request.inputReferences) {
+			if (
+				route.endpoint?.capabilities.voice_cloning !== true ||
+				!speechCapabilities
+			) {
+				return false;
+			}
+			const audio = request.inputReferences.find(
+				(part) => part.type === 'input_audio',
+			);
+			if (audio?.type !== 'input_audio') return false;
+			const mediaType = audio.inputAudio.encoding.kind === 'data_uri'
+				? audio.inputAudio.encoding.mediaType.toLowerCase()
+				: speechCapabilities.reference_audio_default_media_type;
+			return mediaType !== null
+				&& speechCapabilities.reference_audio_media_types.includes(mediaType);
+		}
+		return request.voice != null
+			|| speechCapabilities?.supports_default_voice === true;
+	}
+	if (route.upstreamProtocol !== 'dashscope') return false;
+	if (route.adapter === 'dashscope-tts-speech') {
+		return validateDashScopeRequest('speech', request) === null
+			&& validateDashScopeProviderOptions('speech', route, request);
+	}
+	if (route.adapter === 'dashscope-tts-qwen') {
+		return validateDashScopeRequest('qwen', request) === null
+			&& validateDashScopeProviderOptions('qwen', route, request);
+	}
+	if (route.adapter === 'dashscope-tts-minimax') {
+		return validateDashScopeRequest('minimax', request) === null
+			&& validateDashScopeProviderOptions('minimax', route, request);
+	}
+	return false;
 }
 
 /** 显式 adapter 决定请求形状，避免按模型名称猜测 MiniMax 与 Qwen 协议。 */
@@ -434,11 +768,13 @@ export function buildDashScopeTtsBody(
 	request: NormalizedAudioSpeechRequest,
 	kind: DashScopeTtsKind
 ): Record<string, unknown> {
-	const voice = voiceId(request.voice);
+	const voice = requiredVoiceId(request.voice);
+	const providerOptions = resolveAudioProviderOptionsForRoute(request.providerOptions, route);
 	if (kind === 'speech') {
 		return buildRouteRequestBody(route, {
 			model: route.providerModelName,
 			input: {
+				...providerOptions,
 				text: request.input,
 				voice,
 				format: request.responseFormat,
@@ -451,20 +787,41 @@ export function buildDashScopeTtsBody(
 		return buildRouteRequestBody(route, {
 			model: route.providerModelName,
 			input: {
+				...providerOptions,
 				text: request.input,
 				voice,
 				...(request.instructions ? { instructions: request.instructions } : {}),
 			},
 		});
 	}
+	const providerVoiceSetting = isObject(providerOptions.voice_setting)
+		? providerOptions.voice_setting
+		: {};
+	const providerAudioSetting = isObject(providerOptions.audio_setting)
+		? providerOptions.audio_setting
+		: {};
+	const providerStreamOptions = isObject(providerOptions.stream_options)
+		? providerOptions.stream_options
+		: {};
 	return buildRouteRequestBody(route, {
 		model: route.providerModelName,
 		input: {
+			...providerOptions,
 			text: request.input,
-			voice_setting: { voice_id: voice, speed: request.speed },
-			audio_setting: { format: request.responseFormat },
+			voice_setting: {
+				...providerVoiceSetting,
+				voice_id: voice,
+				speed: request.speed,
+			},
+			audio_setting: {
+				...providerAudioSetting,
+				format: request.responseFormat,
+			},
 			// MiniMax 尾帧默认重复完整 hex；关闭聚合避免客户端收到重复音频。
-			stream_options: { exclude_aggregated_audio: true },
+			stream_options: {
+				...providerStreamOptions,
+				exclude_aggregated_audio: true,
+			},
 		},
 	});
 }
@@ -660,24 +1017,30 @@ export async function dispatchOpenAiAudioSpeech(
 	});
 	const upstreamLabel = sanitizeUpstreamUrlForLog(url);
 	const { secret } = await resolveProviderUpstreamSecret(route.providerApiKey);
-	const serializedBody = JSON.stringify(
-		buildRouteRequestBody(route, {
+	const providerOptions = resolveAudioProviderOptionsForRoute(request.providerOptions, route);
+	const upstreamBody = buildRouteRequestBody(route, {
+			...providerOptions,
 			model: route.providerModelName,
 			input: request.input,
-			voice: request.voice,
+			...(request.voice ? { voice: request.voice } : {}),
 			response_format: request.responseFormat,
 			speed: request.speed,
 			stream_format: request.streamFormat,
 			...(request.instructions ? { instructions: request.instructions } : {}),
-		}),
-	);
+	});
+	// Reference audio is a request-scoped, Guardrail-projected capability. Route
+	// defaults must never synthesize it outside the verified cloning gate.
+	delete upstreamBody.input_references;
+	const serializedBody: BodyInit = request.inputReferences
+		? buildStreamingOpenAiSpeechBody(upstreamBody, request.inputReferences)
+		: JSON.stringify(upstreamBody);
 	const meta: SpeechDispatchMeta = {};
 	let dispatchStarted = false;
 	let upstreamStatus: number | null = null;
 	let observedUpstreamRequestId: string | null = null;
 	try {
 		dispatchStarted = true;
-		const response = await (options?.fetchImpl ?? fetch)(url, {
+		const fetchInit: RequestInit & { duplex?: 'half' } = {
 			method: 'POST',
 			headers: {
 				Authorization: `Bearer ${secret}`,
@@ -685,7 +1048,9 @@ export async function dispatchOpenAiAudioSpeech(
 			},
 			body: serializedBody,
 			signal: requestSignal,
-		});
+			...(request.inputReferences ? { duplex: 'half' as const } : {}),
+		};
+		const response = await (options?.fetchImpl ?? fetch)(url, fetchInit);
 		upstreamStatus = response.status;
 		timing?.markAttemptHeaders(attempt, response.status);
 		const upstreamRequestId = extractUpstreamRequestId(response.headers);
@@ -694,17 +1059,38 @@ export async function dispatchOpenAiAudioSpeech(
 			return { response, usagePromise: Promise.resolve(EMPTY_USAGE), upstreamRequestId, meta };
 		}
 		if (!response.body) {
-			forbidSpeechFailover(meta);
-			return { response, usagePromise: Promise.resolve(EMPTY_USAGE), upstreamRequestId, meta };
+			return unknownSpeechFailure({
+				operation: 'openai.speech',
+				providerId: route.providerId,
+				routeTargetId: route.targetId,
+				upstreamLabel,
+				error: new Error('OpenAI speech returned an empty response body'),
+				meta,
+				upstreamRequestId,
+			});
+		}
+		if (!isExpectedOpenAiSpeechContentType(response.headers.get('content-type'), request)) {
+			await response.body.cancel('speech_unexpected_content_type').catch(() => undefined);
+			return unknownSpeechFailure({
+				operation: 'openai.speech',
+				providerId: route.providerId,
+				routeTargetId: route.targetId,
+				upstreamLabel,
+				error: new Error('OpenAI speech returned an unexpected Content-Type'),
+				meta,
+				upstreamRequestId,
+			});
 		}
 		const wrapped = wrapOpenAiSpeechBody(response.body, request.streamFormat, timing, () => {
 			forbidSpeechFailover(meta);
 		});
+		const responseHeaders = copyResponseHeaders(response.headers);
+		responseHeaders.set('Content-Type', speechResponseContentType(request));
 		return {
 			response: new Response(wrapped.body, {
 				status: response.status,
 				statusText: response.statusText,
-				headers: copyResponseHeaders(response.headers),
+				headers: responseHeaders,
 			}),
 			usagePromise: wrapped.usagePromise,
 			upstreamRequestId,
@@ -763,6 +1149,7 @@ export function redactAudioSpeechRequestForLog(
 	model: string,
 	request: NormalizedAudioSpeechRequest
 ): Record<string, unknown> {
+	const inputAudio = request.inputReferences?.find((part) => part.type === 'input_audio');
 	return {
 		model,
 		input_characters: Array.from(request.input).length,
@@ -771,5 +1158,11 @@ export function redactAudioSpeechRequestForLog(
 		speed: request.speed,
 		stream_format: request.streamFormat,
 		has_instructions: Boolean(request.instructions),
+		has_provider_options: request.providerOptions != null,
+		input_reference_count: request.inputReferences?.length ?? 0,
+		reference_audio_bytes: inputAudio?.type === 'input_audio'
+			? inputAudio.inputAudio.bytes.byteLength
+			: 0,
+		has_reference_transcript: request.inputReferences?.some((part) => part.type === 'text') ?? false,
 	};
 }

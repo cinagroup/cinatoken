@@ -31,11 +31,11 @@ export async function grantPostgresRuntime(env: NodeJS.ProcessEnv = process.env)
 		const [migration] = await sql<Array<{ applied: boolean }>>`
 			SELECT EXISTS (
 				SELECT 1 FROM cinatoken_gateway.schema_migrations
-				WHERE version = '0054_generation_metadata_snapshots.sql'
+				WHERE version = '0067_batch_jobs.sql'
 			) AS applied
 		`;
 		if (!migration?.applied) {
-			throw new Error('PostgreSQL migrations are incomplete; 0054_generation_metadata_snapshots.sql is required (migration=0054).');
+			throw new Error('PostgreSQL migrations are incomplete; 0067_batch_jobs.sql is required (migration=0067).');
 		}
 
 		await sql.begin(async (tx) => {
@@ -56,7 +56,9 @@ export async function grantPostgresRuntime(env: NodeJS.ProcessEnv = process.env)
 					${GATEWAY_SCHEMA}.request_preset_versions,
 					${GATEWAY_SCHEMA}.guardrail_versions,
 					${GATEWAY_SCHEMA}.route_data_policy_audit,
-					${GATEWAY_SCHEMA}.identity_event_inbox
+					${GATEWAY_SCHEMA}.identity_event_inbox,
+					${GATEWAY_SCHEMA}.generation_feedback,
+					${GATEWAY_SCHEMA}.provider_attempt_availability
 				FROM ${GATEWAY_RUNTIME_ROLE};
 
 				-- Endpoint apply uses a separately provisioned operator identity. The
@@ -72,7 +74,9 @@ export async function grantPostgresRuntime(env: NodeJS.ProcessEnv = process.env)
 				REVOKE DELETE ON TABLE
 					${GATEWAY_SCHEMA}.guardrail_budget_windows,
 					${GATEWAY_SCHEMA}.guardrail_budget_reservations,
-					${GATEWAY_SCHEMA}.user_budget_reservations
+					${GATEWAY_SCHEMA}.user_budget_reservations,
+					${GATEWAY_SCHEMA}.batches,
+					${GATEWAY_SCHEMA}.batch_items
 				FROM ${GATEWAY_RUNTIME_ROLE};
 				GRANT USAGE, SELECT, UPDATE
 					ON ALL SEQUENCES IN SCHEMA ${GATEWAY_SCHEMA} TO ${GATEWAY_RUNTIME_ROLE};
@@ -96,7 +100,7 @@ export async function grantPostgresRuntime(env: NodeJS.ProcessEnv = process.env)
 		});
 
 		console.log(
-			`Runtime grants applied: schema=${GATEWAY_SCHEMA} role=${GATEWAY_RUNTIME_ROLE} migration=0051`,
+			`Runtime grants applied: schema=${GATEWAY_SCHEMA} role=${GATEWAY_RUNTIME_ROLE} migration=0067`,
 		);
 	} finally {
 		await sql.end({ timeout: 5 });

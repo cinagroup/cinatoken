@@ -46,11 +46,30 @@ function resolveMaintenanceMode() {
 	process.exit(1);
 }
 
+function resolveStrictBoolean(key, defaultValue = false) {
+	const raw = trimEnv(key).toLowerCase();
+	if (!raw) return defaultValue;
+	if (raw === "false") return false;
+	if (raw === "true") return true;
+	console.error(
+		`gen-wrangler: unsupported ${key}="${raw}". Expected true or false.`,
+	);
+	process.exit(1);
+}
+
 function resolveNames() {
 	const d1DatabaseName =
 		trimEnv("D1_DATABASE_NAME") || "cinatoken";
 	const chainWorkerName =
 		trimEnv("CHAIN_WORKER_NAME") || "cinatoken-chain-worker";
+	const batchInfraEnabled = resolveStrictBoolean("BATCH_INFRA_ENABLED");
+	const batchApiEnabled = resolveStrictBoolean("BATCH_API_ENABLED");
+	if (batchApiEnabled) {
+		console.error(
+			"gen-wrangler: BATCH_API_ENABLED=true is not supported by the Phase 2 build. Stage infrastructure with BATCH_INFRA_ENABLED=true while the public API remains off.",
+		);
+		process.exit(1);
+	}
 
 	return {
 		proxyWorkerName:
@@ -62,6 +81,13 @@ function resolveNames() {
 			trimEnv("CHAIN_JOB_QUEUE_NAME") || `${d1DatabaseName}-chain-jobs`,
 		chainJobDlqName:
 			trimEnv("CHAIN_JOB_DLQ_NAME") || `${d1DatabaseName}-chain-jobs-dlq`,
+		batchInfraEnabled,
+		batchBucketName:
+			trimEnv("BATCH_BUCKET_NAME") || `${d1DatabaseName}-batch-private`,
+		batchQueueName:
+			trimEnv("BATCH_QUEUE_NAME") || `${d1DatabaseName}-batch-jobs`,
+		batchDlqName:
+			trimEnv("BATCH_DLQ_NAME") || `${d1DatabaseName}-batch-jobs-dlq`,
 		cinachainChainId: trimEnv("CINACHAIN_CHAIN_ID") || "84532",
 		d1MigrationsWorkerName:
 			trimEnv("D1_MIGRATIONS_WORKER_NAME") ||
@@ -186,11 +212,56 @@ function applyHttpMaintenanceMode(config, names) {
 	return next;
 }
 
+function applyBatchInfrastructure(config, names) {
+	const next = { ...config };
+	const vars = { ...(config.vars ?? {}), BATCH_API_ENABLED: "false" };
+	if (!names.batchInfraEnabled) {
+		delete next.r2_buckets;
+		delete next.queues;
+		delete vars.BATCH_QUEUE_DLQ;
+		next.vars = vars;
+		return next;
+	}
+
+	next.r2_buckets = (config.r2_buckets ?? []).map((bucket) =>
+		bucket.binding === "BATCH_BUCKET"
+			? { ...bucket, bucket_name: names.batchBucketName }
+			: bucket,
+	);
+	next.queues = {
+		...(config.queues ?? {}),
+		producers: (config.queues?.producers ?? []).map((producer) =>
+			producer.binding === "BATCH_QUEUE"
+				? { ...producer, queue: names.batchQueueName }
+				: producer,
+		),
+		consumers: (config.queues?.consumers ?? []).map((consumer) =>
+			consumer.queue === "cinatoken-batch-jobs-dlq"
+				? { ...consumer, queue: names.batchDlqName }
+				: {
+						...consumer,
+						queue: names.batchQueueName,
+						dead_letter_queue: names.batchDlqName,
+					},
+		),
+	};
+	vars.BATCH_QUEUE_DLQ = names.batchDlqName;
+	next.vars = vars;
+	return next;
+}
+
 function generateProxy(names) {
 	const base = readBase("packages/proxy/wrangler.base.jsonc");
-	const config = applyHttpMaintenanceMode(applyWorkerDatabaseRuntime({
+	const organizationAdminRoles = trimEnv("CINAAUTH_ORGANIZATION_ADMIN_ROLES");
+	const config = applyBatchInfrastructure(applyHttpMaintenanceMode(applyWorkerDatabaseRuntime({
 		...base,
 		name: names.proxyWorkerName,
+		vars: {
+			...base.vars,
+			...(organizationAdminRoles
+				? { CINAAUTH_ORGANIZATION_ADMIN_ROLES: organizationAdminRoles }
+				: {}),
+		},
 		d1_databases: [
 			applyD1Binding(
 				base.d1_databases[0],
@@ -198,7 +269,7 @@ function generateProxy(names) {
 				names.d1DatabaseId,
 			),
 		],
-	}, names), names);
+	}, names), names), names);
 	const routes = customDomainRoutes(names.proxyCustomDomain);
 	if (routes) {
 		config.routes = routes;
@@ -352,7 +423,10 @@ function main() {
 			(names.hyperdriveId
 				? ` hyperdrive=${names.hyperdriveId} driver=${names.databaseDriver || "d1 (staged target, unbound)"}`
 				: "") +
-			(names.maintenanceMode ? " maintenance=true" : ""),
+			(names.maintenanceMode ? " maintenance=true" : "") +
+			(names.batchInfraEnabled
+				? ` batch-infra=true batch-bucket=${names.batchBucketName} batch-queue=${names.batchQueueName}`
+				: " batch-infra=false"),
 	);
 
 	if (REMOTE && names.d1DatabaseId) {

@@ -6,7 +6,12 @@ import type { InsertUserAuditLogParams } from '../user-audit-logs-types';
 import type { InsertUserBudgetAuditLogParams } from '../user-budget-audit-params';
 import type { InsertKeyParams } from '../api-keys-types';
 import { prepareGatewayApiKeyForStorage } from '../../lib/key-hash';
-import { assertGenerationSnapshotIsValid, type InsertRequestLogParams } from '../request-logs-types';
+import {
+	assertGenerationSnapshotIsValid,
+	serializeGenerationProviderResponses,
+	type InsertRequestLogParams,
+} from '../request-logs-types';
+import { assertProviderAttemptAvailabilityFacts } from '../provider-attempt-availability';
 import { guardrailBudgetUnits, type GuardrailBudgetSettlement } from '../guardrail-budget-types';
 import {
 	isSafeUserBudgetMicros,
@@ -28,6 +33,7 @@ import { nowIso, parseMoney } from '../../storage/critical-write-paths-utils';
 import {
 	apiKeysTable as pgApiKeysTable,
 	apiKeyRequestLogsTable as pgRequestLogsTable,
+	providerAttemptAvailabilityTable as pgProviderAttemptAvailabilityTable,
 	guardrailBudgetReservationsTable as pgGuardrailBudgetReservationsTable,
 	guardrailBudgetWindowsTable as pgGuardrailBudgetWindowsTable,
 	publicModelDailyStatsTable as pgPublicModelDailyStatsTable,
@@ -251,6 +257,7 @@ export async function insertRequestUsageAndChargeTxPg(
 	}
 ): Promise<void> {
 	assertGenerationSnapshotIsValid(params.requestLog);
+	assertProviderAttemptAvailabilityFacts(params.requestLog.providerAttempts);
 	if (params.guardrailBudgetSettlement?.requestId !== undefined
 		&& params.guardrailBudgetSettlement.requestId !== params.requestLog.id) {
 		throw new Error('Guardrail budget settlement requestId must match request log id');
@@ -283,6 +290,13 @@ export async function insertRequestUsageAndChargeTxPg(
 		throw new Error('Charged cost exceeds the safe ordinary-user micro-unit range');
 	}
 	const budgetChargedMicros = params.shouldChargeBudget ? guardrailBudgetUnits(charged) : 0;
+	const standard = roundGatewayMoney(params.requestLog.standardCost);
+	if (!Number.isFinite(standard) || standard < 0
+		|| standard > userBudgetAmount(USER_BUDGET_MAX_SAFE_MICROS)) {
+		throw new Error('Standard cost exceeds the safe Guardrail budget micro-unit range');
+	}
+	const byokStandardMicros = guardrailBudgetUnits(standard);
+	const isByokRequest = params.requestLog.isByok === true;
 	const ordinaryActualMicros = params.shouldChargeBudget ? userBudgetUnits(charged) : 0;
 	const now = nowIso();
 	const delta = toPublicModelDailyStatsDelta(params.requestLog, now);
@@ -473,6 +487,11 @@ export async function insertRequestUsageAndChargeTxPg(
 			cacheWriteTokens: params.requestLog.cacheWriteTokens,
 			reasoningTokens: params.requestLog.reasoningTokens,
 			totalTokens: params.requestLog.totalTokens,
+			nativeTokensPrompt: params.requestLog.nativeTokensPrompt ?? null,
+			nativeTokensCompletion: params.requestLog.nativeTokensCompletion ?? null,
+			nativeTokensCached: params.requestLog.nativeTokensCached ?? null,
+			nativeTokensReasoning: params.requestLog.nativeTokensReasoning ?? null,
+			nativeTokensCompletionImages: params.requestLog.nativeTokensCompletionImages ?? null,
 			meteredCost: String(roundGatewayMoney(params.requestLog.meteredCost)),
 			standardCost: String(roundGatewayMoney(params.requestLog.standardCost)),
 			chargedCost: String(roundGatewayMoney(params.requestLog.chargedCost)),
@@ -503,7 +522,10 @@ export async function insertRequestUsageAndChargeTxPg(
 			outputImageCount: params.requestLog.outputImageCount ?? 0,
 			audioDurationSeconds: params.requestLog.audioDurationSeconds ?? null,
 			audioCharacters: params.requestLog.audioCharacters ?? null,
+			sessionId: params.requestLog.sessionId ?? null,
 			requestOrigin: params.requestLog.requestOrigin ?? null,
+			httpReferer: params.requestLog.httpReferer ?? null,
+			userAgent: params.requestLog.userAgent ?? null,
 			responseStreamed: params.requestLog.responseStreamed ?? null,
 			dataRegion: params.requestLog.dataRegion ?? null,
 			isByok: params.requestLog.isByok ?? null,
@@ -513,8 +535,26 @@ export async function insertRequestUsageAndChargeTxPg(
 			upstreamInferenceCostUsd: params.requestLog.upstreamInferenceCostUsd == null
 				? null
 				: String(roundGatewayMoney(params.requestLog.upstreamInferenceCostUsd)),
+			serviceTier: params.requestLog.serviceTier ?? null,
+			finishReason: params.requestLog.finishReason ?? null,
+			nativeFinishReason: params.requestLog.nativeFinishReason ?? null,
+			providerResponses: serializeGenerationProviderResponses(params.requestLog.providerResponses),
 			createdAt: now,
 		});
+		if ((params.requestLog.providerAttempts?.length ?? 0) > 0) {
+			await tx.insert(pgProviderAttemptAvailabilityTable).values(
+				params.requestLog.providerAttempts!.map((attempt) => ({
+					requestLogId: params.requestLog.id,
+					attemptIndex: attempt.attemptIndex,
+					routeTargetId: attempt.routeTargetId,
+					providerId: attempt.providerId,
+					outcome: attempt.outcome,
+					reason: attempt.reason,
+					httpStatus: attempt.httpStatus,
+					observedAt: attempt.observedAtIso,
+				}))
+			);
+		}
 		await tx
 			.insert(pgPublicModelDailyStatsTable)
 			.values({
@@ -525,6 +565,7 @@ export async function insertRequestUsageAndChargeTxPg(
 				successCount: delta.successCount,
 				errorCount: delta.errorCount,
 				outputTokens: delta.outputTokens,
+				totalTokens: delta.totalTokens,
 				latencyTotalMs: delta.latencyTotalMs,
 				latencySampleCount: delta.latencySampleCount,
 				updatedAt: now,
@@ -540,6 +581,7 @@ export async function insertRequestUsageAndChargeTxPg(
 					successCount: sql`${pgPublicModelDailyStatsTable.successCount} + excluded.success_count`,
 					errorCount: sql`${pgPublicModelDailyStatsTable.errorCount} + excluded.error_count`,
 					outputTokens: sql`${pgPublicModelDailyStatsTable.outputTokens} + excluded.output_tokens`,
+					totalTokens: sql`${pgPublicModelDailyStatsTable.totalTokens} + excluded.total_tokens`,
 					latencyTotalMs: sql`${pgPublicModelDailyStatsTable.latencyTotalMs} + excluded.latency_total_ms`,
 					latencySampleCount: sql`${pgPublicModelDailyStatsTable.latencySampleCount} + excluded.latency_sample_count`,
 					updatedAt: now,
@@ -589,12 +631,14 @@ export async function insertRequestUsageAndChargeTxPg(
 			const settlement = params.guardrailBudgetSettlement;
 			const existingReservations = await tx.select({
 				id: pgGuardrailBudgetReservationsTable.id,
+				assignmentId: pgGuardrailBudgetReservationsTable.assignmentId,
 				workspaceId: pgGuardrailBudgetReservationsTable.workspaceId,
 				scopeType: pgGuardrailBudgetReservationsTable.scopeType,
 				scopeId: pgGuardrailBudgetReservationsTable.scopeId,
 				period: pgGuardrailBudgetReservationsTable.period,
 				periodStart: pgGuardrailBudgetReservationsTable.periodStart,
 				settledMicros: pgGuardrailBudgetReservationsTable.settledMicros,
+				settlementBasis: pgGuardrailBudgetReservationsTable.settlementBasis,
 				state: pgGuardrailBudgetReservationsTable.state,
 			}).from(pgGuardrailBudgetReservationsTable).where(and(
 				eq(pgGuardrailBudgetReservationsTable.requestId, settlement.requestId),
@@ -607,6 +651,19 @@ export async function insertRequestUsageAndChargeTxPg(
 				|| existingReservations.some((reservation) => reservation.workspaceId !== requestWorkspaceId)) {
 				throw new Error('Guardrail budget settlement Workspace identity mismatch');
 			}
+			if (existingReservations.some((reservation) =>
+				reservation.settlementBasis === 'gateway_key_route'
+				&& (
+					reservation.scopeType !== 'api_key'
+					|| reservation.scopeId !== params.requestLog.apiKeyId
+					|| reservation.assignmentId !== `gateway-key-limit:${params.requestLog.apiKeyId}`
+				))) {
+				throw new Error('Route-selective settlement is not the authenticated Gateway key limit');
+			}
+			if (isByokRequest
+				&& existingReservations.some((reservation) => reservation.settlementBasis !== 'gateway_key_route')) {
+				throw new Error('Private BYOK cannot settle non-key budget reservations');
+			}
 			const terminalState = settlement.mode === 'reserved' ? 'expired' : 'settled';
 			const claimed = await tx
 				.update(pgGuardrailBudgetReservationsTable)
@@ -614,7 +671,11 @@ export async function insertRequestUsageAndChargeTxPg(
 					state: terminalState,
 					settledMicros: settlement.mode === 'reserved'
 						? sql`${pgGuardrailBudgetReservationsTable.reservedMicros}`
-						: budgetChargedMicros,
+						: sql`CASE
+							WHEN ${pgGuardrailBudgetReservationsTable.settlementBasis} = 'gateway_key_route'
+								AND ${isByokRequest} THEN ${byokStandardMicros}
+							ELSE ${budgetChargedMicros}
+						END`,
 					terminalAt: now,
 					terminalReason: settlement.reason.slice(0, 128),
 					updatedAt: now,
@@ -664,16 +725,24 @@ export async function insertRequestUsageAndChargeTxPg(
 			if (settlement.mode === 'actual') {
 				const overruns = existingReservations
 					.filter((reservation) => reservation.state === 'expired')
-					.filter((reservation) => budgetChargedMicros > Number(reservation.settledMicros))
+					.filter((reservation) => {
+						const actualMicros = reservation.settlementBasis === 'gateway_key_route' && isByokRequest
+							? byokStandardMicros
+							: budgetChargedMicros;
+						return actualMicros > Number(reservation.settledMicros);
+					})
 					.sort((left, right) => [
 						left.workspaceId, left.scopeType, left.scopeId, left.period, String(left.periodStart),
 					].join('\u0000').localeCompare([
 						right.workspaceId, right.scopeType, right.scopeId, right.period, String(right.periodStart),
 					].join('\u0000')));
 				for (const reservation of overruns) {
-					const delta = budgetChargedMicros - Number(reservation.settledMicros);
+					const actualMicros = reservation.settlementBasis === 'gateway_key_route' && isByokRequest
+						? byokStandardMicros
+						: budgetChargedMicros;
+					const delta = actualMicros - Number(reservation.settledMicros);
 					const updatedReservations = await tx.update(pgGuardrailBudgetReservationsTable).set({
-						settledMicros: budgetChargedMicros,
+						settledMicros: actualMicros,
 						terminalReason: 'late_actual_overrun',
 						updatedAt: now,
 					}).where(and(

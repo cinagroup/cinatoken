@@ -408,6 +408,58 @@ export const managementApiKeysTable = pgTable(
 	]
 );
 
+export const byokKeysTable = pgTable(
+	"byok_keys",
+	{
+		id: text("id").primaryKey(),
+		workspaceId: text("workspace_id").notNull().references(
+			() => workspacesTable.id,
+			{ onDelete: "cascade" }
+		),
+		provider: text("provider").notNull(),
+		name: text("name"),
+		apiKeyEncrypted: text("api_key_encrypted").notNull(),
+		label: text("label").notNull(),
+		disabled: boolean("disabled").notNull().default(false),
+		isFallback: boolean("is_fallback").notNull().default(false),
+		alwaysUseForProvider: boolean("always_use_for_provider").notNull().default(false),
+		alwaysUseForMatchingModels: boolean("always_use_for_matching_models").notNull().default(false),
+		sortOrder: integer("sort_order").notNull(),
+		allowedModelsJson: text("allowed_models_json"),
+		allowedUserIdsJson: text("allowed_user_ids_json"),
+		allowedApiKeyHashesJson: text("allowed_api_key_hashes_json"),
+		createdByManagementKeyId: text("created_by_management_key_id").references(
+			() => managementApiKeysTable.id,
+			{ onDelete: "set null" }
+		),
+		deletedAt: timestamp("deleted_at", { withTimezone: true, mode: "string" }),
+		createdAt: timestamp("created_at", { withTimezone: true, mode: "string" }).notNull(),
+		updatedAt: timestamp("updated_at", { withTimezone: true, mode: "string" }).notNull(),
+	},
+	(t) => [
+		uniqueIndex("uk_byok_keys_active_order")
+			.on(t.workspaceId, t.provider, t.sortOrder)
+			.where(sql`${t.deletedAt} IS NULL`),
+		index("idx_byok_keys_workspace_created").on(t.workspaceId, t.createdAt),
+		index("idx_byok_keys_runtime").on(
+			t.workspaceId,
+			t.provider,
+			t.disabled,
+			t.isFallback,
+			t.sortOrder
+		),
+		index("idx_byok_keys_creator").on(t.createdByManagementKeyId, t.createdAt),
+		check(
+			"byok_keys_always_use_priority_chk",
+			sql`(NOT ${t.alwaysUseForProvider} AND NOT ${t.alwaysUseForMatchingModels}) OR NOT ${t.isFallback}`
+		),
+		check(
+			"byok_keys_shared_capacity_policy_exclusive_chk",
+			sql`NOT ${t.alwaysUseForProvider} OR NOT ${t.alwaysUseForMatchingModels}`
+		),
+	]
+);
+
 export const providersTable = pgTable("providers", {
 	id: text("id").primaryKey(),
 	name: text("name").notNull(),
@@ -667,6 +719,11 @@ export const apiKeyRequestLogsTable = pgTable("api_key_request_logs", {
 	cacheWriteTokens: integer("cache_write_tokens").notNull().default(0),
 	reasoningTokens: integer("reasoning_tokens").notNull().default(0),
 	totalTokens: integer("total_tokens").notNull().default(0),
+	nativeTokensPrompt: bigint("native_tokens_prompt", { mode: "number" }),
+	nativeTokensCompletion: bigint("native_tokens_completion", { mode: "number" }),
+	nativeTokensCached: bigint("native_tokens_cached", { mode: "number" }),
+	nativeTokensReasoning: bigint("native_tokens_reasoning", { mode: "number" }),
+	nativeTokensCompletionImages: bigint("native_tokens_completion_images", { mode: "number" }),
 	meteredCost: numeric("metered_cost", { precision: 18, scale: 6 })
 		.notNull()
 		.default("0"),
@@ -708,17 +765,113 @@ export const apiKeyRequestLogsTable = pgTable("api_key_request_logs", {
 	outputImageCount: integer("output_image_count").notNull().default(0),
 	audioDurationSeconds: real("audio_duration_seconds"),
 	audioCharacters: integer("audio_characters"),
+	sessionId: text("session_id"),
 	requestOrigin: text("request_origin"),
+	httpReferer: text("http_referer"),
+	userAgent: text("user_agent"),
 	responseStreamed: boolean("response_streamed"),
 	dataRegion: text("data_region"),
 	isByok: boolean("is_byok"),
 	chargedCostUsd: numeric("charged_cost_usd", { precision: 24, scale: 12 }),
 	upstreamInferenceCostUsd: numeric("upstream_inference_cost_usd", { precision: 24, scale: 12 }),
+	serviceTier: text("service_tier"),
+	finishReason: text("finish_reason"),
+	nativeFinishReason: text("native_finish_reason"),
+	providerResponses: text("provider_responses"),
 	createdAt: timestamp("created_at", {
 		withTimezone: true,
 		mode: "string",
 	}).notNull(),
 });
+
+export const providerAttemptAvailabilityTable = pgTable(
+	"provider_attempt_availability",
+	{
+		requestLogId: text("request_log_id").notNull().references(
+			() => apiKeyRequestLogsTable.id,
+			{ onDelete: "cascade" }
+		),
+		attemptIndex: integer("attempt_index").notNull(),
+		routeTargetId: text("route_target_id").notNull(),
+		providerId: text("provider_id").notNull(),
+		outcome: text("outcome").notNull(),
+		reason: text("reason").notNull(),
+		httpStatus: integer("http_status"),
+		observedAt: timestamp("observed_at", { withTimezone: true, mode: "string" }).notNull(),
+	},
+	(t) => [
+		primaryKey({ columns: [t.requestLogId, t.attemptIndex] }),
+		index("idx_provider_attempt_availability_route_observed")
+			.on(t.routeTargetId, t.observedAt),
+		index("idx_provider_attempt_availability_observed").on(t.observedAt),
+		check(
+			"provider_attempt_availability_attempt_index_chk",
+			sql`${t.attemptIndex} BETWEEN 1 AND 128`
+		),
+		check(
+			"provider_attempt_availability_outcome_chk",
+			sql`${t.outcome} IN ('available', 'unavailable', 'excluded')`
+		),
+		check(
+			"provider_attempt_availability_reason_chk",
+			sql`${t.reason} IN ('accepted', 'provider_http_error', 'rate_limited', 'network_error', 'invalid_response', 'client_error', 'client_cancelled', 'unknown')`
+		),
+		check(
+			"provider_attempt_availability_http_status_chk",
+			sql`${t.httpStatus} IS NULL OR ${t.httpStatus} BETWEEN 100 AND 599`
+		),
+	]
+);
+
+export const generationFeedbackTable = pgTable(
+	"generation_feedback",
+	{
+		id: text("id").primaryKey(),
+		generationId: text("generation_id").notNull().references(
+			() => apiKeyRequestLogsTable.id,
+			{ onDelete: "cascade" }
+		),
+		workspaceId: text("workspace_id").notNull().references(
+			() => workspacesTable.id,
+			{ onDelete: "cascade" }
+		),
+		managementApiKeyId: text("management_api_key_id").notNull().references(
+			() => managementApiKeysTable.id,
+			{ onDelete: "cascade" }
+		),
+		accountType: text("account_type").notNull(),
+		personalOwnerUserId: text("personal_owner_user_id").references(
+			() => usersTable.id,
+			{ onDelete: "cascade" }
+		),
+		organizationId: text("organization_id").references(
+			() => organizationsTable.id,
+			{ onDelete: "cascade" }
+		),
+		category: text("category").notNull(),
+		comment: text("comment"),
+		createdAt: timestamp("created_at", { withTimezone: true, mode: "string" }).notNull(),
+	},
+	(t) => [
+		index("idx_generation_feedback_generation_created").on(t.generationId, t.createdAt),
+		index("idx_generation_feedback_personal_created")
+			.on(t.personalOwnerUserId, t.createdAt)
+			.where(sql`${t.personalOwnerUserId} IS NOT NULL`),
+		index("idx_generation_feedback_organization_created")
+			.on(t.organizationId, t.createdAt)
+			.where(sql`${t.organizationId} IS NOT NULL`),
+		check("generation_feedback_id_chk", sql`length(${t.id}) = 40 AND left(${t.id}, 4) = 'gfb_'`),
+		check("generation_feedback_category_chk", sql`${t.category} IN ('latency', 'incoherence', 'incorrect_response', 'formatting', 'billing', 'api_error', 'other')`),
+		check("generation_feedback_comment_chk", sql`${t.comment} IS NULL OR length(${t.comment}) <= 1000`),
+		check(
+			"generation_feedback_account_owner_chk",
+			sql`(
+			(${t.accountType} = 'personal' AND ${t.personalOwnerUserId} IS NOT NULL AND ${t.organizationId} IS NULL)
+			OR (${t.accountType} = 'organization' AND ${t.personalOwnerUserId} IS NULL AND ${t.organizationId} IS NOT NULL)
+			)`
+		),
+	]
+);
 
 /** 匿名公开排行专用的分片日汇总；公开请求不得回退扫描 api_key_request_logs。 */
 export const publicModelDailyStatsTable = pgTable(
@@ -735,6 +888,9 @@ export const publicModelDailyStatsTable = pgTable(
 			.default(0),
 		errorCount: bigint("error_count", { mode: "number" }).notNull().default(0),
 		outputTokens: bigint("output_tokens", { mode: "number" })
+			.notNull()
+			.default(0),
+		totalTokens: bigint("total_tokens", { mode: "number" })
 			.notNull()
 			.default(0),
 		latencyTotalMs: bigint("latency_total_ms", { mode: "number" })
@@ -847,6 +1003,9 @@ export const guardrailsTable = pgTable(
 		name: text("name").notNull(),
 		description: text("description"),
 		status: text("status").notNull().default("active"),
+		isWorkspaceDefault: boolean("is_workspace_default").notNull().default(false),
+		isAccountDefault: boolean("is_account_default").notNull().default(false),
+		accountScopeKey: text("account_scope_key"),
 		designatedVersion: integer("designated_version").notNull().default(1),
 		latestVersion: integer("latest_version").notNull().default(1),
 		createdAt: timestamp("created_at", {
@@ -860,6 +1019,20 @@ export const guardrailsTable = pgTable(
 	},
 	(t) => [
 		uniqueIndex("uk_guardrails_id_workspace").on(t.id, t.workspaceId),
+		uniqueIndex("uk_guardrails_workspace_default")
+			.on(t.workspaceId)
+			.where(sql`${t.isWorkspaceDefault}`),
+		uniqueIndex("uk_guardrails_account_default")
+			.on(t.accountScopeKey)
+			.where(sql`${t.isAccountDefault}`),
+		check(
+			"guardrails_default_kind_chk",
+			sql`NOT (${t.isWorkspaceDefault} AND ${t.isAccountDefault})`
+		),
+		check(
+			"guardrails_account_scope_key_chk",
+			sql`${t.isAccountDefault} = (${t.accountScopeKey} IS NOT NULL)`
+		),
 		check("guardrails_status_chk", sql`${t.status} IN ('active', 'archived')`),
 		check(
 			"guardrails_versions_chk",
@@ -905,6 +1078,11 @@ export const guardrailAssignmentsTable = pgTable(
 			() => usersTable.id,
 			{ onDelete: "set null" }
 		),
+		managementSource: text("management_source"),
+		assignedByUserId: text("assigned_by_user_id").references(
+			() => usersTable.id,
+			{ onDelete: "set null" }
+		),
 		createdAt: timestamp("created_at", {
 			withTimezone: true,
 			mode: "string",
@@ -916,6 +1094,10 @@ export const guardrailAssignmentsTable = pgTable(
 			t.scopeType,
 			t.scopeId
 		),
+		index("idx_guardrail_assignments_assigned_by").on(t.assignedByUserId),
+		index("idx_guardrail_assignments_management_list")
+			.on(t.workspaceId, t.managementSource, t.createdAt, t.id)
+			.where(sql`${t.managementSource} IS NOT NULL`),
 		check(
 			"guardrail_assignments_scope_chk",
 			sql`${t.scopeType} IN ('user', 'api_key', 'workspace')`
@@ -1005,6 +1187,7 @@ export const guardrailBudgetReservationsTable = pgTable(
 		settledMicros: bigint("settled_micros", { mode: "number" })
 			.notNull()
 			.default(0),
+		settlementBasis: text("settlement_basis").notNull().default("charged"),
 		state: text("state").notNull().default("reserved"),
 		expiresAt: timestamp("expires_at", {
 			withTimezone: true,
@@ -1048,6 +1231,10 @@ export const guardrailBudgetReservationsTable = pgTable(
 		check(
 			"guardrail_budget_reservations_state_chk",
 			sql`${t.state} IN ('reserved', 'dispatched', 'settled', 'released', 'expired')`
+		),
+		check(
+			"guardrail_budget_reservations_settlement_basis_chk",
+			sql`${t.settlementBasis} IN ('charged', 'gateway_key_route')`
 		),
 	]
 );
@@ -1519,6 +1706,146 @@ export const chainJobTransactionsTable = pgTable(
 	(t) => [primaryKey({ columns: [t.jobKind, t.jobId] })]
 );
 
+/** Batch metadata only; request and response bodies stay in private R2 objects. */
+export const batchesTable = pgTable(
+	"batches",
+	{
+		id: text("id").primaryKey(),
+		accountId: text("account_id").notNull(),
+		workspaceId: text("workspace_id")
+			.notNull()
+			.references(() => workspacesTable.id, { onDelete: "restrict" }),
+		userId: text("user_id")
+			.notNull()
+			.references(() => usersTable.id, { onDelete: "restrict" }),
+		apiKeyHash: text("api_key_hash").notNull(),
+		endpoint: text("endpoint").notNull(),
+		modelId: text("model_id").notNull(),
+		routeGroup: text("route_group").notNull(),
+		status: text("status").notNull().default("validating"),
+		completionWindow: text("completion_window").notNull().default("24h"),
+		idempotencyKeyHash: text("idempotency_key_hash"),
+		inputObjectKey: text("input_object_key").notNull(),
+		inputSha256: text("input_sha256").notNull(),
+		inputBytes: integer("input_bytes").notNull(),
+		resultObjectKey: text("result_object_key"),
+		resultSha256: text("result_sha256"),
+		requestCount: integer("request_count").notNull(),
+		validationNextOrdinal: integer("validation_next_ordinal").notNull().default(0),
+		validationInputOffset: integer("validation_input_offset").notNull().default(0),
+		completedCount: integer("completed_count").notNull().default(0),
+		failedCount: integer("failed_count").notNull().default(0),
+		cancelledCount: integer("cancelled_count").notNull().default(0),
+		promptTokens: bigint("prompt_tokens", { mode: "number" }).notNull().default(0),
+		completionTokens: bigint("completion_tokens", { mode: "number" })
+			.notNull()
+			.default(0),
+		totalTokens: bigint("total_tokens", { mode: "number" }).notNull().default(0),
+		chargedCostMicros: bigint("charged_cost_micros", { mode: "number" })
+			.notNull()
+			.default(0),
+		byokRequestCount: integer("byok_request_count").notNull().default(0),
+		unknownCostCount: integer("unknown_cost_count").notNull().default(0),
+		createdAt: timestamp("created_at", { withTimezone: true, mode: "string" }).notNull(),
+		inProgressAt: timestamp("in_progress_at", { withTimezone: true, mode: "string" }),
+		finalizingAt: timestamp("finalizing_at", { withTimezone: true, mode: "string" }),
+		finalizedAt: timestamp("finalized_at", { withTimezone: true, mode: "string" }),
+		expiresAt: timestamp("expires_at", { withTimezone: true, mode: "string" }).notNull(),
+		retentionExpiresAt: timestamp("retention_expires_at", {
+			withTimezone: true,
+			mode: "string",
+		}).notNull(),
+		leaseOwner: text("lease_owner"),
+		leaseExpiresAt: timestamp("lease_expires_at", {
+			withTimezone: true,
+			mode: "string",
+		}),
+		attemptCount: bigint("attempt_count", { mode: "number" }).notNull().default(0),
+		revision: bigint("revision", { mode: "number" }).notNull().default(0),
+		lastErrorCode: text("last_error_code"),
+		updatedAt: timestamp("updated_at", { withTimezone: true, mode: "string" }).notNull(),
+	},
+	(t) => [
+		uniqueIndex("uk_batches_idempotency")
+			.on(t.workspaceId, t.apiKeyHash, t.idempotencyKeyHash)
+			.where(sql`idempotency_key_hash IS NOT NULL`),
+		index("idx_batches_workspace_created").on(t.workspaceId, t.createdAt, t.id),
+		index("idx_batches_status_lease").on(t.status, t.leaseExpiresAt),
+		index("idx_batches_retention").on(t.retentionExpiresAt),
+		check(
+			"batches_status_chk",
+			sql`${t.status} IN ('validating', 'in_progress', 'finalizing', 'completed', 'failed', 'expired', 'cancelling', 'cancelled')`
+		),
+		check(
+			"batches_counts_chk",
+			sql`${t.requestCount} BETWEEN 1 AND 1000000 AND ${t.completedCount} + ${t.failedCount} + ${t.cancelledCount} <= ${t.requestCount}`
+		),
+		check(
+			"batches_validation_checkpoint_chk",
+			sql`${t.inputBytes} BETWEEN 1 AND 52428800 AND ${t.validationNextOrdinal} BETWEEN 0 AND ${t.requestCount} AND ${t.validationInputOffset} BETWEEN 0 AND ${t.inputBytes}`
+		),
+	]
+);
+
+/** Idempotent per-request ledger for an accepted batch. */
+export const batchItemsTable = pgTable(
+	"batch_items",
+	{
+		id: text("id").notNull().unique(),
+		batchId: text("batch_id")
+			.notNull()
+			.references(() => batchesTable.id, { onDelete: "cascade" }),
+		ordinal: integer("ordinal").notNull(),
+		customId: text("custom_id").notNull(),
+		status: text("status").notNull().default("pending"),
+		attemptCount: bigint("attempt_count", { mode: "number" }).notNull().default(0),
+		startedAt: timestamp("started_at", { withTimezone: true, mode: "string" }),
+		dispatchStartedAt: timestamp("dispatch_started_at", {
+			withTimezone: true,
+			mode: "string",
+		}),
+		completedAt: timestamp("completed_at", { withTimezone: true, mode: "string" }),
+		generationId: text("generation_id"),
+		reservationId: text("reservation_id"),
+		leaseOwner: text("lease_owner"),
+		leaseExpiresAt: timestamp("lease_expires_at", {
+			withTimezone: true,
+			mode: "string",
+		}),
+		requestStartOffset: integer("request_start_offset").notNull(),
+		requestEndOffset: integer("request_end_offset").notNull(),
+		requestSha256: text("request_sha256").notNull(),
+		resultObjectKey: text("result_object_key"),
+		resultSha256: text("result_sha256"),
+		errorCode: text("error_code"),
+		errorSummary: text("error_summary"),
+		revision: bigint("revision", { mode: "number" }).notNull().default(0),
+		createdAt: timestamp("created_at", { withTimezone: true, mode: "string" }).notNull(),
+		updatedAt: timestamp("updated_at", { withTimezone: true, mode: "string" }).notNull(),
+	},
+	(t) => [
+		primaryKey({ columns: [t.batchId, t.ordinal] }),
+		uniqueIndex("uk_batch_items_custom").on(t.batchId, t.customId),
+		index("idx_batch_items_status_ordinal").on(t.batchId, t.status, t.ordinal),
+		check(
+			"batch_items_status_chk",
+			sql`${t.status} IN ('pending', 'in_progress', 'completed', 'failed', 'cancelled')`
+		),
+		check(
+			"batch_items_request_range_chk",
+			sql`${t.requestStartOffset} BETWEEN 0 AND 52428799 AND ${t.requestEndOffset} BETWEEN 1 AND 52428800 AND ${t.requestEndOffset} > ${t.requestStartOffset} AND ${t.requestEndOffset} - ${t.requestStartOffset} <= 1048578`
+		),
+		check(
+			"batch_items_lease_pair_chk",
+			sql`(${t.leaseOwner} IS NULL AND ${t.leaseExpiresAt} IS NULL) OR (${t.leaseOwner} IS NOT NULL AND length(${t.leaseOwner}) BETWEEN 1 AND 128 AND ${t.leaseExpiresAt} IS NOT NULL)`
+		),
+		check(
+			"batch_items_dispatch_chk",
+			sql`(${t.dispatchStartedAt} IS NULL AND ${t.generationId} IS NULL AND ${t.reservationId} IS NULL) OR (${t.dispatchStartedAt} IS NOT NULL AND ${t.startedAt} IS NOT NULL AND ${t.generationId} IS NOT NULL AND length(${t.generationId}) BETWEEN 1 AND 512 AND ${t.reservationId} IS NOT NULL AND length(${t.reservationId}) BETWEEN 1 AND 512)`
+		),
+	]
+);
+
 export const pgCoreSchema = {
 	usersTable,
 	organizationsTable,
@@ -1528,6 +1855,7 @@ export const pgCoreSchema = {
 	workspaceMembershipsTable,
 	apiKeysTable,
 	managementApiKeysTable,
+	byokKeysTable,
 	providersTable,
 	modelsTable,
 	modelEndpointsTable,
@@ -1536,6 +1864,7 @@ export const pgCoreSchema = {
 	modelRoutesTable,
 	modelEndpointRoutesTable,
 	apiKeyRequestLogsTable,
+	generationFeedbackTable,
 	publicModelDailyStatsTable,
 	systemConfigTable,
 	requestPresetsTable,
@@ -1559,4 +1888,6 @@ export const pgCoreSchema = {
 	withdrawalsTable,
 	nftMintsTable,
 	chainJobTransactionsTable,
+	batchesTable,
+	batchItemsTable,
 };

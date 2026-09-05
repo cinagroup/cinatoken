@@ -1,6 +1,7 @@
 import type { GatewayDatabaseClient } from "./database-client";
 import type {
 	AdminAnalyticsRepository,
+	BatchesRepository,
 	GuardrailsRepository,
 	GuardrailBudgetsRepository,
 	UserBudgetReservationsRepository,
@@ -10,6 +11,7 @@ import type {
 	ModelRoutesRepository,
 	ModelEndpointsRepository,
 	ManagementApiKeysRepository,
+	ByokKeysRepository,
 	ModelRoutingRepository,
 	ModelsRepository,
 	PortalAccessRepository,
@@ -35,6 +37,7 @@ export type RequestLogsRepositoryHandle = RequestLogsRepository &
 
 export interface GatewayRepositories {
 	readonly client: GatewayDatabaseClient;
+	readonly batches: BatchesRepository;
 	readonly users: UsersRepository;
 	readonly apiKeys: ApiKeysRepositoryHandle;
 	readonly requestLogs: RequestLogsRepositoryHandle;
@@ -45,6 +48,7 @@ export interface GatewayRepositories {
 	readonly routeDataPolicies: RouteDataPoliciesRepository;
 	readonly modelEndpoints: ModelEndpointsRepository;
 	readonly managementApiKeys: ManagementApiKeysRepository;
+	readonly byokKeys: ByokKeysRepository;
 	readonly providers: ProvidersRepository;
 	readonly models: ModelsRepository;
 	readonly routes: ModelRoutesRepository;

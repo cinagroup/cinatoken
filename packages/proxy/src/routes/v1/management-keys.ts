@@ -80,21 +80,15 @@ function lookupParams(
 
 function publicKey(row: ManagementGatewayKeyRow) {
 	const limit = gatewayKeyLimitAmount(row.limit_micros);
-	const periodUsage = row.limit_reset === "daily"
-		? row.usage_daily
-		: row.limit_reset === "weekly"
-			? row.usage_weekly
-			: row.limit_reset === "monthly"
-				? row.usage_monthly
-				: row.usage;
+	const periodUsage = gatewayKeyLimitAmount(row.limit_consumed_micros) ?? 0;
 	const limitRemaining = limit === null
 		? null
 		: Math.max(0, Math.round((limit - periodUsage) * 1_000_000) / 1_000_000);
 	return {
-		byok_usage: 0,
-		byok_usage_daily: 0,
-		byok_usage_monthly: 0,
-		byok_usage_weekly: 0,
+		byok_usage: row.byok_usage,
+		byok_usage_daily: row.byok_usage_daily,
+		byok_usage_monthly: row.byok_usage_monthly,
+		byok_usage_weekly: row.byok_usage_weekly,
 		created_at: row.created_at,
 		creator_user_id: row.user_id,
 		disabled: row.status !== "active",
@@ -172,15 +166,15 @@ function workspaceId(value: unknown): string | null {
 function limitFields(body: JsonObject): {
 	limitMicros: number | null;
 	limitReset: "daily" | "weekly" | "monthly" | null;
-	includeByokInLimit: false;
+	includeByokInLimit: boolean;
 } {
-	if ("include_byok_in_limit" in body && body.include_byok_in_limit !== false) {
-		throw new TypeError("include_byok_in_limit must be false until BYOK is enabled");
+	if ("include_byok_in_limit" in body && typeof body.include_byok_in_limit !== "boolean") {
+		throw new TypeError("include_byok_in_limit must be a boolean");
 	}
 	return {
 		limitMicros: normalizeGatewayKeyLimitMicros(body.limit),
 		limitReset: normalizeGatewayKeyLimitReset(body.limit_reset),
-		includeByokInLimit: false,
+		includeByokInLimit: body.include_byok_in_limit === true,
 	};
 }
 
@@ -413,10 +407,10 @@ managementKeyRoutes.patch("/:hash", async (c) => {
 		if ("limit" in body) patch.limitMicros = normalizeGatewayKeyLimitMicros(body.limit);
 		if ("limit_reset" in body) patch.limitReset = normalizeGatewayKeyLimitReset(body.limit_reset);
 		if ("include_byok_in_limit" in body) {
-			if (body.include_byok_in_limit !== false) {
-				throw new TypeError("include_byok_in_limit must be false until BYOK is enabled");
+			if (typeof body.include_byok_in_limit !== "boolean") {
+				throw new TypeError("include_byok_in_limit must be a boolean");
 			}
-			patch.includeByokInLimit = false;
+			patch.includeByokInLimit = body.include_byok_in_limit;
 		}
 	} catch (error) {
 		return invalid(c, error instanceof Error ? error.message : "Invalid key limit");

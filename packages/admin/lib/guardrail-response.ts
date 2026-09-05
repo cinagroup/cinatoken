@@ -7,7 +7,9 @@ function parseConfig(value: string): Record<string, unknown> | null {
 export function guardrailResponse(row: GuardrailWithVersionRow) {
 	return {
 		id: row.id, workspaceId: row.workspace_id, ownerUserId: row.owner_user_id, name: row.name, description: row.description,
-		status: row.status, designatedVersion: row.designated_version, latestVersion: row.latest_version,
+		status: row.status, isWorkspaceDefault: Boolean(row.is_workspace_default),
+		isAccountDefault: Boolean(row.is_account_default), accountScopeKey: row.account_scope_key ?? null,
+		designatedVersion: row.designated_version, latestVersion: row.latest_version,
 		config: parseConfig(row.version_config_json), createdAt: row.created_at, updatedAt: row.updated_at,
 		versionCreatedAt: row.version_created_at,
 	};

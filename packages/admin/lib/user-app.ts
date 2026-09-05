@@ -26,6 +26,7 @@ import { userActivityRoutes } from "@/lib/routes/user/activity";
 import { userWorkspacesRoutes } from "@/lib/routes/user/workspaces";
 import { userManagementKeysRoutes } from "@/lib/routes/user/management-keys";
 import { userWorkspaceBudgetsRoutes } from "@/lib/routes/user/workspace-budgets";
+import { userByokRoutes } from "@/lib/routes/user/byok";
 import type { AccountCapability } from "@/lib/unified-session";
 import {
 	clearWorkspaceCookieHeader,
@@ -141,6 +142,7 @@ export function createUserApp(): Hono<UserEnv> {
 	app.route("/user/workspaces", userWorkspacesRoutes);
 	app.route("/user/management-keys", userManagementKeysRoutes);
 	app.route("/user/workspace-budgets", userWorkspaceBudgetsRoutes);
+	app.route("/user/byok", userByokRoutes);
 
 	app.get("/user", (c) =>
 		c.json({ name: "cinatoken-user-api", version: appVersion })

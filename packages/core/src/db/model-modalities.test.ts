@@ -6,6 +6,7 @@ import {
 	isAudioSpeechModel,
 	isAudioTranscriptionModel,
 	isImageGenerationModel,
+	isRerankModel,
 	isTextLlmModel,
 } from './model-modalities';
 
@@ -80,6 +81,19 @@ describe('isEmbeddingModel', () => {
 		assert.equal(isEmbeddingModel(embedding), true);
 		assert.equal(isImageGenerationModel(embedding), false);
 		assert.equal(isAudioModel(embedding), false);
+		assert.equal(isTextLlmModel(embedding), false);
+	});
+});
+
+describe('isRerankModel', () => {
+	it('recognizes rerank output and excludes it from text-generation models', () => {
+		const rerank = {
+			input_modalities: ['text'],
+			output_modalities: ['rerank'],
+		};
+		assert.equal(isRerankModel(rerank), true);
+		assert.equal(isEmbeddingModel(rerank), false);
+		assert.equal(isTextLlmModel(rerank), false);
 	});
 });
 
@@ -93,7 +107,7 @@ describe('audio model kind', () => {
 		};
 		const tts = {
 			input_modalities: ['text'],
-			output_modalities: ['audio'],
+			output_modalities: ['speech'],
 			pricing_profile: JSON.stringify({
 				audio_billing_mode: 'per_character',
 				audio: { price_per_character: 0.0001 },
@@ -106,5 +120,24 @@ describe('audio model kind', () => {
 		assert.equal(isAudioSpeechModel(tts), true);
 		assert.equal(isAudioModel(tts), true);
 		assert.equal(isTextLlmModel(tts), false);
+	});
+
+	it('prefers explicit OpenRouter speech and transcription output modalities', () => {
+		const speech = {
+			input_modalities: ['text'],
+			output_modalities: ['speech'],
+			pricing_profile: zeroTierProfile,
+		};
+		const transcription = {
+			input_modalities: ['audio'],
+			output_modalities: ['transcription'],
+			pricing_profile: zeroTierProfile,
+		};
+		assert.equal(isAudioSpeechModel(speech), true);
+		assert.equal(isAudioTranscriptionModel(speech), false);
+		assert.equal(isAudioTranscriptionModel(transcription), true);
+		assert.equal(isAudioSpeechModel(transcription), false);
+		assert.equal(isTextLlmModel(speech), false);
+		assert.equal(isTextLlmModel(transcription), false);
 	});
 });

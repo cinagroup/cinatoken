@@ -15,9 +15,11 @@ import {
 } from '@/lib/cinaauth/oidc-client';
 import { cinaAuthSessionUsername } from '@/lib/cinaauth/principal';
 import {
-	CINATOKEN_OIDC_TRANSACTION_COOKIE,
-	openCinaAuthTransaction,
+	readCinaAuthCallbackTransaction,
+	selectCinaAuthTransactionCookieName,
+	type CinatokenOidcTransaction,
 } from '@/lib/cinaauth/transaction';
+import { createCinaAuthPopupCompletionResponse } from '@/lib/cinaauth/popup-response';
 import { resolveAdminRequestRuntime } from '@/lib/admin-request-runtime';
 import { logAdminAuthEvent } from '@/lib/security-log';
 import { PORTAL_SESSION_TTL_MS, USER_SESSION_COOKIE, upsertPortalUser } from '@/lib/user-auth';
@@ -35,8 +37,15 @@ type UserInfoResponse = {
 	email?: string | null;
 };
 
-const clearTransactionCookie = (response: NextResponse): void => {
-	response.cookies.set(CINATOKEN_OIDC_TRANSACTION_COOKIE, '', {
+const clearTransactionCookie = (
+	request: NextRequest, response: NextResponse, transaction?: CinatokenOidcTransaction,
+): void => {
+	// Only a verified, state-matched transaction may clear its own cookie. An
+	// unrelated callback must not cancel another tab (including a legacy flow).
+	if (!transaction) return;
+	const name = selectCinaAuthTransactionCookieName(request.cookies, transaction.state);
+	if (!name) return;
+	response.cookies.set(name, '', {
 		httpOnly: true,
 		secure: true,
 		sameSite: 'lax',
@@ -45,24 +54,53 @@ const clearTransactionCookie = (response: NextResponse): void => {
 	});
 };
 
-const fail = (request: NextRequest, error: string, fallbackPath = '/'): NextResponse => {
+const fail = (
+	request: NextRequest,
+	error: string,
+	fallbackPath = '/',
+	transaction?: CinatokenOidcTransaction,
+): NextResponse => {
+	if (transaction?.popupRequestId) {
+		const response = createCinaAuthPopupCompletionResponse({
+			requestId: transaction.popupRequestId,
+			appOrigin: new URL(request.url).origin,
+			callbackPath: transaction.callbackPath,
+			ok: false,
+			error,
+		});
+		clearTransactionCookie(request, response, transaction);
+		return response;
+	}
 	const url = new URL(fallbackPath, request.url);
 	url.searchParams.set('auth_error', error);
 	const response = NextResponse.redirect(url, 302);
-	clearTransactionCookie(response);
+	clearTransactionCookie(request, response, transaction);
 	response.headers.set('Cache-Control', 'no-store');
 	return response;
 };
 
+const complete = (
+	transaction: CinatokenOidcTransaction,
+	appOrigin: string,
+): NextResponse =>
+	transaction.popupRequestId
+		? createCinaAuthPopupCompletionResponse({
+				requestId: transaction.popupRequestId,
+				appOrigin,
+				callbackPath: transaction.callbackPath,
+				ok: true,
+			})
+		: NextResponse.redirect(new URL(transaction.callbackPath, appOrigin), 302);
+
 /**
  * 门户（普通用户）会话：不校验管理员角色，走标准 OIDC userinfo 取 sub/email，
- * upsert `users` 行后签发独立 `user_session`（24h）。
+ * upsert `users` 行后签发统一 Cookie 对应的门户会话（24h）。
  */
 async function completePortalLogin(
 	request: NextRequest,
 	accessToken: string,
 	subject: string,
-	callbackPath: string,
+	transaction: CinatokenOidcTransaction,
 ): Promise<NextResponse> {
 	const config = getCinaAuthConfig(request);
 	const userinfoRequest = new Request(`${config.issuer}/api/auth/oauth2/userinfo`, {
@@ -73,7 +111,7 @@ async function completePortalLogin(
 	const userinfoResponse = await fetchCinaAuth(userinfoRequest, request);
 	const userinfo = (await userinfoResponse.json().catch(() => null)) as UserInfoResponse | null;
 	if (!userinfoResponse.ok || userinfo?.sub !== subject) {
-		return fail(request, 'portal_userinfo_failed', '/account');
+		return fail(request, 'portal_userinfo_failed', '/account', transaction);
 	}
 	const email = userinfo.email?.trim() || `${subject}@cinaauth.invalid`;
 
@@ -95,9 +133,8 @@ async function completePortalLogin(
 		expiresAt: expiresAt.toISOString(),
 	});
 
-	const destination = new URL(callbackPath, config.appOrigin);
-	const response = NextResponse.redirect(destination, 302);
-	clearTransactionCookie(response);
+	const response = complete(transaction, config.appOrigin);
+	clearTransactionCookie(request, response, transaction);
 	response.cookies.set(CINATOKEN_SESSION_COOKIE, sessionToken, {
 		httpOnly: true,
 		secure: true,
@@ -113,14 +150,13 @@ async function completePortalLogin(
 
 /** Completes OIDC, checks the live CinaAuth role, and creates a local console session. */
 export async function GET(request: NextRequest): Promise<NextResponse> {
-	const transactionCookie = request.cookies.get(CINATOKEN_OIDC_TRANSACTION_COOKIE)?.value;
-	if (!transactionCookie) return fail(request, 'invalid_transaction');
-
+	let transaction: CinatokenOidcTransaction | null = null;
 	try {
 		const config = getCinaAuthConfig(request);
 		const secrets = getCinaAuthSecrets(request);
-		const transaction = await openCinaAuthTransaction(
-			transactionCookie,
+		transaction = await readCinaAuthCallbackTransaction(
+			request.cookies,
+			request.nextUrl.searchParams.get('state'),
 			secrets.transactionSecret,
 		);
 		if (!transaction) return fail(request, 'invalid_transaction');
@@ -140,7 +176,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
 				request,
 				tokens.accessToken,
 				tokens.subject,
-				transaction.callbackPath,
+				transaction,
 			);
 		}
 
@@ -167,7 +203,12 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
 			logAdminAuthEvent('admin.auth.login_failed', request, {
 				username: cinaAuthSessionUsername(tokens.subject),
 			});
-			return fail(request, 'admin_forbidden', transaction.callbackPath);
+			return fail(
+				request,
+				'admin_forbidden',
+				transaction.callbackPath,
+				transaction,
+			);
 		}
 
 		const sessionToken = generateSessionToken();
@@ -206,9 +247,8 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
 			expiresAt: expiresAt.toISOString(),
 		});
 
-		const destination = new URL(transaction.callbackPath, config.appOrigin);
-		const response = NextResponse.redirect(destination, 302);
-		clearTransactionCookie(response);
+		const response = complete(transaction, config.appOrigin);
+		clearTransactionCookie(request, response, transaction);
 		response.cookies.set(CINATOKEN_SESSION_COOKIE, sessionToken, {
 			httpOnly: true,
 			secure: true,
@@ -229,6 +269,11 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
 				...getCinaAuthOidcFailureDetails(error),
 			}),
 		);
-		return fail(request, 'oidc_failed');
+		return fail(
+			request,
+			'oidc_failed',
+			transaction?.callbackPath ?? '/',
+			transaction ?? undefined,
+		);
 	}
 }

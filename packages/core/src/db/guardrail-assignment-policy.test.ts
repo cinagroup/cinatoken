@@ -20,6 +20,9 @@ function repository() {
 		CREATE TABLE guardrails (
 			id TEXT PRIMARY KEY, workspace_id TEXT NOT NULL, owner_user_id TEXT NOT NULL,
 			name TEXT NOT NULL, description TEXT, status TEXT NOT NULL,
+			is_workspace_default INTEGER NOT NULL DEFAULT 0,
+			is_account_default INTEGER NOT NULL DEFAULT 0,
+			account_scope_key TEXT,
 			designated_version INTEGER NOT NULL, latest_version INTEGER NOT NULL,
 			created_at TEXT NOT NULL, updated_at TEXT NOT NULL
 		);
@@ -30,7 +33,8 @@ function repository() {
 		);
 		CREATE TABLE guardrail_assignments (
 			id TEXT PRIMARY KEY, workspace_id TEXT NOT NULL, guardrail_id TEXT NOT NULL, scope_type TEXT NOT NULL,
-			scope_id TEXT NOT NULL, created_by_user_id TEXT, created_at TEXT NOT NULL,
+			scope_id TEXT NOT NULL, created_by_user_id TEXT, management_source TEXT,
+			assigned_by_user_id TEXT, created_at TEXT NOT NULL,
 			UNIQUE(workspace_id, scope_type, scope_id)
 		);
 		INSERT INTO guardrails (id, workspace_id, owner_user_id, name, description, status, designated_version, latest_version, created_at, updated_at)
@@ -69,7 +73,8 @@ function postgresRepository() {
 		if (sql.startsWith('INSERT INTO guardrail_assignments')) {
 			return [{
 				id: params[0], workspace_id: params[1], guardrail_id: params[2], scope_type: params[3],
-				scope_id: params[4], created_by_user_id: params[5], created_at: params[6],
+				scope_id: params[4], created_by_user_id: params[5], management_source: params[6],
+				assigned_by_user_id: params[7], created_at: params[8],
 			}];
 		}
 		if (sql.startsWith('SELECT g.id')) return [row];
@@ -105,6 +110,8 @@ describe('guardrail assignment ownership policy', () => {
 		const attempted = await repo.upsertAssignment({ id: 'a2', workspaceId: 'ws-1', guardrailId: 'user-policy', scopeType: 'user', scopeId: 'u1', createdByUserId: 'u1', nowIso: '2026-08-29T00:01:00.000Z', preserveAdminManaged: true });
 		assert.equal(attempted.guardrail_id, 'admin-policy');
 		assert.equal(attempted.created_by_user_id, null);
+		assert.equal(attempted.management_source, 'admin');
+		assert.equal(attempted.assigned_by_user_id, null);
 		assert.equal(await repo.deleteAssignment('ws-1', 'user', 'u1', 'u1'), false);
 		assert.equal(await repo.deleteAssignment('ws-1', 'user', 'u1'), true);
 	});
@@ -114,7 +121,33 @@ describe('guardrail assignment ownership policy', () => {
 		await repo.upsertAssignment({ id: 'a1', workspaceId: 'ws-1', guardrailId: 'user-policy', scopeType: 'api_key', scopeId: 'k1', createdByUserId: 'u1', nowIso: '2026-08-29T00:00:00.000Z', preserveAdminManaged: true });
 		const replaced = await repo.upsertAssignment({ id: 'a2', workspaceId: 'ws-1', guardrailId: 'admin-policy', scopeType: 'api_key', scopeId: 'k1', createdByUserId: 'u1', nowIso: '2026-08-29T00:01:00.000Z', preserveAdminManaged: true });
 		assert.equal(replaced.guardrail_id, 'admin-policy');
+		assert.equal(replaced.management_source, null);
 		assert.equal(await repo.deleteAssignment('ws-1', 'api_key', 'k1', 'u1'), true);
+	});
+
+	it('records Management API provenance without weakening administrator takeover protection', async () => {
+		const repo = repository();
+		const assigned = await repo.upsertAssignment({
+			id: 'management-a1', workspaceId: 'ws-1', guardrailId: 'admin-policy',
+			scopeType: 'api_key', scopeId: 'management-key-target', createdByUserId: null,
+			managementSource: 'management_api', assignedByUserId: 'u1',
+			nowIso: '2026-08-29T00:00:00.000Z',
+		});
+		assert.equal(assigned.management_source, 'management_api');
+		assert.equal(assigned.assigned_by_user_id, 'u1');
+		const replaced = await repo.upsertAssignment({
+			id: 'management-a2', workspaceId: 'ws-1', guardrailId: 'free-policy',
+			scopeType: 'api_key', scopeId: 'management-key-target', createdByUserId: null,
+			managementSource: 'management_api', assignedByUserId: 'u1',
+			nowIso: '2026-08-29T00:01:00.000Z',
+		});
+		assert.equal(replaced.id, 'management-a1');
+		assert.equal(replaced.guardrail_id, 'free-policy');
+		assert.rejects(() => repo.upsertAssignment({
+			id: 'invalid-management', workspaceId: 'ws-1', guardrailId: 'free-policy',
+			scopeType: 'api_key', scopeId: 'invalid-management', createdByUserId: null,
+			managementSource: 'management_api', nowIso: '2026-08-29T00:02:00.000Z',
+		}), /require an actor/u);
 	});
 
 	it('atomically blocks protected guardrail mutations after administrator takeover', async () => {

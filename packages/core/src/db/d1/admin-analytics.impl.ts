@@ -76,6 +76,7 @@ export function createD1AdminAnalyticsRepository(db: D1DatabaseClient): AdminAna
 						SUM(success_count) AS success_count,
 						SUM(error_count) AS error_count,
 						SUM(output_tokens) AS output_tokens,
+						SUM(total_tokens) AS total_tokens,
 						CASE WHEN SUM(latency_sample_count) > 0
 							THEN CAST(SUM(latency_total_ms) AS REAL) / SUM(latency_sample_count)
 							ELSE NULL END AS avg_latency_ms

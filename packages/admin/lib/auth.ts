@@ -13,6 +13,59 @@ type AdminAuthenticationRepositories = {
 	>;
 };
 
+const TRANSIENT_ADMIN_SESSION_ERROR_PATTERNS = [
+	/d1_error/i,
+	/database is locked/i,
+	/network connection (?:was )?lost/i,
+	/connection reset/i,
+	/temporarily unavailable/i,
+	/too many requests/i,
+	/timed? ?out/i,
+] as const;
+
+function errorCauseMessages(error: unknown): string[] {
+	const messages: string[] = [];
+	const seen = new Set<unknown>();
+	let current: unknown = error;
+	for (let depth = 0; depth < 4 && current != null && !seen.has(current); depth += 1) {
+		seen.add(current);
+		if (current instanceof Error) {
+			messages.push(`${current.name}: ${current.message}`);
+			current = current.cause;
+			continue;
+		}
+		messages.push(String(current));
+		break;
+	}
+	return messages;
+}
+
+function isTransientAdminSessionReadError(error: unknown): boolean {
+	const details = errorCauseMessages(error).join('\n');
+	return TRANSIENT_ADMIN_SESSION_ERROR_PATTERNS.some((pattern) => pattern.test(details));
+}
+
+function redactDatabaseErrorParams(message: string): string {
+	return message.replace(/(\bparams:\s*)[^\r\n]*/giu, '$1[redacted]');
+}
+
+async function getValidAdminSessionWithRetry(
+	repositories: AdminAuthenticationRepositories,
+	tokenHash: string,
+	nowIso: string,
+) {
+	try {
+		return await repositories.adminAccess.getValidSession(tokenHash, nowIso);
+	} catch (error) {
+		if (!isTransientAdminSessionReadError(error)) throw error;
+		console.warn('Transient admin session read failed; retrying once', {
+			error: errorCauseMessages(error).map(redactDatabaseErrorParams),
+		});
+		await new Promise<void>((resolve) => setTimeout(resolve, 25));
+		return repositories.adminAccess.getValidSession(tokenHash, nowIso);
+	}
+}
+
 /** 生成 32 字节十六进制会话标识。 */
 export function generateSessionToken(): string {
   const array = new Uint8Array(32);
@@ -78,7 +131,11 @@ export async function authenticateAdminRequest(
 	const token = getSessionToken(request);
 	if (!token) return null;
 	const tokenHash = await hashSessionToken(token);
-	const session = await repositories.adminAccess.getValidSession(tokenHash, new Date().toISOString());
+	const session = await getValidAdminSessionWithRetry(
+		repositories,
+		tokenHash,
+		new Date().toISOString(),
+	);
 	if (!session) return null;
 	return { type: 'console', id: `console:${session.username}`, username: session.username };
 }

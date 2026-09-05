@@ -1,6 +1,8 @@
 import type {
 	GuardrailBudgetIntent,
 	GuardrailBudgetReservationRow,
+	GuardrailBudgetSettlementBasis,
+	ExtendDispatchedGuardrailBudgetsParams,
 	ReserveGuardrailBudgetsParams,
 } from './guardrail-budget-types';
 import { isSafeGuardrailBudgetMicros } from './guardrail-budget-types';
@@ -21,6 +23,16 @@ export function validateGuardrailBudgetReservationParams(params: ReserveGuardrai
 		return 'reservedMicros must be a positive safe integer';
 	}
 	if (params.intents.length === 0 || params.intents.length > 7) return 'one to seven budget intents are required';
+	const settlementBasis: GuardrailBudgetSettlementBasis = params.settlementBasis ?? 'charged';
+	if (settlementBasis !== 'charged' && settlementBasis !== 'gateway_key_route') {
+		return 'settlementBasis is invalid';
+	}
+	if (
+		settlementBasis === 'gateway_key_route'
+		&& (params.intents.length !== 1 || !isGatewayKeyLimitIntent(params.intents[0]!))
+	) {
+		return 'gateway_key_route settlement requires exactly one Gateway key limit intent';
+	}
 	const assignments = new Set<string>();
 	const windows = new Set<string>();
 	for (const intent of params.intents) {
@@ -40,10 +52,10 @@ export function validateGuardrailBudgetReservationParams(params: ReserveGuardrai
 	return null;
 }
 
-function rowMatchesIntent(
+export function guardrailBudgetReservationMatchesIntent(
 	row: GuardrailBudgetReservationRow,
 	intent: GuardrailBudgetIntent,
-	reservedMicros: number,
+	reservedMicros?: number,
 ): boolean {
 	return row.workspace_id === intent.workspaceId
 		&& row.assignment_id === intent.assignmentId
@@ -55,7 +67,7 @@ function rowMatchesIntent(
 		&& new Date(row.period_start).toISOString() === new Date(intent.periodStart).toISOString()
 		&& new Date(row.period_end).toISOString() === new Date(intent.periodEnd).toISOString()
 		&& Number(row.limit_micros) === intent.limitMicros
-		&& Number(row.reserved_micros) === reservedMicros;
+		&& (reservedMicros === undefined || Number(row.reserved_micros) === reservedMicros);
 }
 
 export function existingGuardrailReservationReplay(
@@ -66,8 +78,81 @@ export function existingGuardrailReservationReplay(
 	if (rows.length !== params.intents.length) return 'conflict';
 	if (rows.some((row) => row.state !== 'reserved' && row.state !== 'dispatched')) return 'conflict';
 	const byAssignment = new Map(rows.map((row) => [row.assignment_id, row]));
+	const settlementBasis = params.settlementBasis ?? 'charged';
 	return params.intents.every((intent) => {
 		const row = byAssignment.get(intent.assignmentId);
-		return row ? rowMatchesIntent(row, intent, params.reservedMicros) : false;
+		return row
+			? row.settlement_basis === settlementBasis
+				&& guardrailBudgetReservationMatchesIntent(row, intent, params.reservedMicros)
+			: false;
 	}) ? 'idempotent' : 'conflict';
+}
+
+export type GuardrailBudgetExtensionClassification =
+	| { status: 'extend'; missingIntents: GuardrailBudgetIntent[] }
+	| { status: 'idempotent' }
+	| { status: 'conflict'; message: string };
+
+/**
+ * Validate the only supported reservation expansion: a dispatched,
+ * route-selective Gateway Key reservation may gain charged-budget intents
+ * immediately before shared/platform fallback.
+ */
+export function classifyDispatchedGuardrailBudgetExtension(
+	rows: GuardrailBudgetReservationRow[],
+	params: ExtendDispatchedGuardrailBudgetsParams,
+): GuardrailBudgetExtensionClassification {
+	const invalid = validateGuardrailBudgetReservationParams({
+		...params,
+		settlementBasis: 'charged',
+	});
+	if (invalid) return { status: 'conflict', message: invalid };
+	if (rows.length === 0) {
+		return { status: 'conflict', message: 'request has no dispatched BYOK Gateway key reservation' };
+	}
+	if (rows.some((row) => row.state !== 'dispatched')) {
+		return { status: 'conflict', message: 'request reservation is not fully dispatched' };
+	}
+
+	const routeRows = rows.filter((row) => row.settlement_basis === 'gateway_key_route');
+	if (routeRows.length !== 1) {
+		return { status: 'conflict', message: 'request has no unique route-selective Gateway key reservation' };
+	}
+	const routeRow = routeRows[0]!;
+	if (
+		routeRow.scope_type !== 'api_key'
+		|| routeRow.assignment_id !== `gateway-key-limit:${routeRow.scope_id}`
+		|| routeRow.guardrail_id !== routeRow.assignment_id
+	) {
+		return { status: 'conflict', message: 'route-selective reservation is not a Gateway key limit' };
+	}
+
+	const byAssignment = new Map(params.intents.map((intent) => [intent.assignmentId, intent]));
+	for (const row of rows) {
+		const intent = byAssignment.get(row.assignment_id);
+		if (!intent || !guardrailBudgetReservationMatchesIntent(
+			row,
+			intent,
+			row.settlement_basis === 'charged' ? params.reservedMicros : undefined,
+		)) {
+			return { status: 'conflict', message: 'request id reservation payload mismatch' };
+		}
+		if (row !== routeRow && row.settlement_basis !== 'charged') {
+			return { status: 'conflict', message: 'request has an invalid fallback reservation basis' };
+		}
+	}
+
+	const routeIntent = byAssignment.get(routeRow.assignment_id);
+	if (!routeIntent || !isGatewayKeyLimitIntent(routeIntent)) {
+		return { status: 'conflict', message: 'Gateway key limit intent changed during fallback' };
+	}
+	const missingIntents = sortedGuardrailBudgetIntents(params.intents).filter(
+		(intent) => !rows.some((row) => row.assignment_id === intent.assignmentId),
+	);
+	if (missingIntents.some(isGatewayKeyLimitIntent)) {
+		return { status: 'conflict', message: 'fallback cannot replace the admitted Gateway key limit' };
+	}
+	return missingIntents.length === 0
+		? { status: 'idempotent' }
+		: { status: 'extend', missingIntents };
 }

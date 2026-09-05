@@ -28,7 +28,7 @@
 		},
 		"modalities": {
 			"input": ["audio"],
-			"output": ["text"]
+			"output": ["transcription"]
 		},
 		"released": "2022-09-01"
 	},
@@ -67,7 +67,7 @@
 		},
 		"modalities": {
 			"input": ["audio", "text"],
-			"output": ["text"]
+			"output": ["transcription"]
 		},
 		"released": "2025-03-20"
 	},
@@ -106,7 +106,7 @@
 		},
 		"modalities": {
 			"input": ["audio", "text"],
-			"output": ["text"]
+			"output": ["transcription"]
 		},
 		"released": "2025-03-20"
 	},
@@ -145,7 +145,7 @@
 		},
 		"modalities": {
 			"input": ["audio", "text"],
-			"output": ["text"]
+			"output": ["transcription"]
 		},
 		"released": "2025-10-18"
 	}

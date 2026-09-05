@@ -9,6 +9,7 @@ import {
 	coerceModelReleasedAtInput,
 	isAudioModel,
 	isImageGenerationModel,
+	isRerankModel,
 } from '@octafuse/core/db/model-modalities';
 import {
 	BILLING_CURRENCY_KEY,
@@ -232,13 +233,15 @@ export async function createModelService(repos: GatewayRepositories, body: Admin
 		output_modalities: outputModalities,
 		pricing_profile: pricingProfile,
 	});
-	const skipLlmDefaults = isImage || isAudio;
-	const maxTokens = skipLlmDefaults
+	const isRerank = isRerankModel({ output_modalities: outputModalities });
+	const skipContextDefault = isImage || isAudio;
+	const skipMaxTokenDefault = skipContextDefault || isRerank;
+	const maxTokens = skipMaxTokenDefault
 		? body.max_tokens == null
 			? null
 			: Number(body.max_tokens)
 		: (body.max_tokens ?? 8192);
-	const contextWindow = skipLlmDefaults
+	const contextWindow = skipContextDefault
 		? body.context_window == null
 			? null
 			: Number(body.context_window)

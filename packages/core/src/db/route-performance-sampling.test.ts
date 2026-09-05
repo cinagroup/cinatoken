@@ -21,19 +21,20 @@ test('D1 sampling keeps the newest limit independently for every route target', 
 				latency_ms INTEGER,
 				upstream_response_ms INTEGER,
 				final_upstream_headers_ms INTEGER,
+				first_reasoning_token_ms INTEGER,
 				first_token_ms INTEGER,
 				stream_duration_ms INTEGER,
 				created_at TEXT NOT NULL
 			);
 			INSERT INTO api_key_request_logs VALUES
-				('busy-1', 'busy', 'success', 10, 100, NULL, NULL, 100, 1000, '2026-08-30 00:01:00'),
-				('busy-2', 'busy', 'success', 20, 200, NULL, NULL, 200, 1000, '2026-08-30T00:02:00.000Z'),
-				('busy-3', 'busy', 'success', 30, 300, NULL, NULL, 300, 1000, '2026-08-30 00:03:00'),
-				('busy-4', 'busy', 'success', 40, 400, NULL, NULL, 400, 1000, '2026-08-30T00:04:00.000Z'),
-				('sparse-1', 'sparse', 'success', 15, 150, NULL, NULL, 150, 1000, '2026-08-30 00:01:30'),
-				('sparse-2', 'sparse', 'success', 25, 250, NULL, NULL, 250, 1000, '2026-08-30T00:02:30.000Z'),
-				('sparse-old', 'sparse', 'success', 1, 1, NULL, NULL, 1, 1000, '2026-08-29 23:59:59'),
-				('sparse-error', 'sparse', 'error', 999, 999, NULL, NULL, 999, 1000, '2026-08-30 00:05:00');
+				('busy-1', 'busy', 'success', 10, 100, NULL, NULL, NULL, 100, 1000, '2026-08-30 00:01:00'),
+				('busy-2', 'busy', 'success', 20, 200, NULL, NULL, NULL, 200, 1000, '2026-08-30T00:02:00.000Z'),
+				('busy-3', 'busy', 'success', 30, 300, NULL, NULL, NULL, 300, 1000, '2026-08-30 00:03:00'),
+				('busy-4', 'busy', 'success', 40, 400, NULL, NULL, NULL, 400, 1000, '2026-08-30T00:04:00.000Z'),
+				('sparse-1', 'sparse', 'success', 15, 150, NULL, NULL, NULL, 150, 1000, '2026-08-30 00:01:30'),
+				('sparse-2', 'sparse', 'success', 25, 250, NULL, NULL, NULL, 250, 1000, '2026-08-30T00:02:30.000Z'),
+				('sparse-old', 'sparse', 'success', 1, 1, NULL, NULL, NULL, 1, 1000, '2026-08-29 23:59:59'),
+				('sparse-error', 'sparse', 'error', 999, 999, NULL, NULL, NULL, 999, 1000, '2026-08-30 00:05:00');
 		`);
 
 		const sql = buildRecentRoutePerformanceSamplesSql('d1', 2);

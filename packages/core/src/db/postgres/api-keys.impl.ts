@@ -40,6 +40,7 @@ import type {
 	ManagementGatewayKeyLookupParams,
 	ManagementGatewayKeyRow,
 } from "../api-keys-types";
+import { assertGatewayKeyLookupHash } from "../api-keys-types";
 import {
 	DEFAULT_API_KEY_LIST_ORDER,
 	DEFAULT_API_KEY_LIST_SORT,
@@ -189,15 +190,22 @@ function mapPgAdminListRow(r: {
 
 type PgManagementGatewayKeyRow = Omit<
 	ManagementGatewayKeyRow,
-	"limit_micros" | "include_byok_in_limit" | "limit_epoch" | "usage" | "usage_daily" | "usage_weekly" | "usage_monthly"
+	"limit_micros" | "include_byok_in_limit" | "limit_epoch" | "limit_consumed_micros"
+	| "usage" | "usage_daily" | "usage_weekly" | "usage_monthly"
+	| "byok_usage" | "byok_usage_daily" | "byok_usage_weekly" | "byok_usage_monthly"
 > & {
 	limit_micros: string | number | null;
 	include_byok_in_limit: boolean;
 	limit_epoch: string | number;
+	limit_consumed_micros: string | number;
 	usage: string | number;
 	usage_daily: string | number;
 	usage_weekly: string | number;
 	usage_monthly: string | number;
+	byok_usage: string | number;
+	byok_usage_daily: string | number;
+	byok_usage_weekly: string | number;
+	byok_usage_monthly: string | number;
 };
 
 function mapPgManagementGatewayKeyRow(
@@ -208,10 +216,15 @@ function mapPgManagementGatewayKeyRow(
 		limit_micros: row.limit_micros === null ? null : Number(row.limit_micros),
 		include_byok_in_limit: row.include_byok_in_limit,
 		limit_epoch: Number(row.limit_epoch),
+		limit_consumed_micros: Number(row.limit_consumed_micros ?? 0),
 		usage: roundGatewayMoney(Number(row.usage ?? 0)),
 		usage_daily: roundGatewayMoney(Number(row.usage_daily ?? 0)),
 		usage_weekly: roundGatewayMoney(Number(row.usage_weekly ?? 0)),
 		usage_monthly: roundGatewayMoney(Number(row.usage_monthly ?? 0)),
+		byok_usage: roundGatewayMoney(Number(row.byok_usage ?? 0)),
+		byok_usage_daily: roundGatewayMoney(Number(row.byok_usage_daily ?? 0)),
+		byok_usage_weekly: roundGatewayMoney(Number(row.byok_usage_weekly ?? 0)),
+		byok_usage_monthly: roundGatewayMoney(Number(row.byok_usage_monthly ?? 0)),
 	};
 }
 
@@ -247,6 +260,14 @@ const pgManagementUsageSelect = `
 		k.user_id, k.workspace_id, k.name, k.status, k.expires_at,
 		k.limit_micros, k.limit_reset, k.include_byok_in_limit, k.limit_epoch,
 		k.created_at, k.updated_at,
+		COALESCE((SELECT budget_window.unreserved_micros + budget_window.settled_micros
+			FROM guardrail_budget_windows budget_window
+			WHERE budget_window.workspace_id = k.workspace_id
+				AND budget_window.scope_type = 'api_key' AND budget_window.scope_id = k.id
+				AND budget_window.period = COALESCE(k.limit_reset, 'lifetime')
+				AND budget_window.period_start <= CURRENT_TIMESTAMP
+				AND budget_window.period_end > CURRENT_TIMESTAMP
+			ORDER BY budget_window.period_start DESC LIMIT 1), 0) AS limit_consumed_micros,
 		COALESCE((SELECT SUM(log.charged_cost) FROM api_key_request_logs log
 			WHERE log.api_key_id = k.id), 0) AS usage,
 		COALESCE((SELECT SUM(log.charged_cost) FROM api_key_request_logs log
@@ -254,7 +275,18 @@ const pgManagementUsageSelect = `
 		COALESCE((SELECT SUM(log.charged_cost) FROM api_key_request_logs log
 			WHERE log.api_key_id = k.id AND log.created_at >= date_trunc('week', CURRENT_TIMESTAMP)), 0) AS usage_weekly,
 		COALESCE((SELECT SUM(log.charged_cost) FROM api_key_request_logs log
-			WHERE log.api_key_id = k.id AND log.created_at >= date_trunc('month', CURRENT_TIMESTAMP)), 0) AS usage_monthly
+			WHERE log.api_key_id = k.id AND log.created_at >= date_trunc('month', CURRENT_TIMESTAMP)), 0) AS usage_monthly,
+		COALESCE((SELECT SUM(log.standard_cost) FROM api_key_request_logs log
+			WHERE log.api_key_id = k.id AND log.is_byok IS TRUE), 0) AS byok_usage,
+		COALESCE((SELECT SUM(log.standard_cost) FROM api_key_request_logs log
+			WHERE log.api_key_id = k.id AND log.is_byok IS TRUE
+				AND log.created_at >= date_trunc('day', CURRENT_TIMESTAMP)), 0) AS byok_usage_daily,
+		COALESCE((SELECT SUM(log.standard_cost) FROM api_key_request_logs log
+			WHERE log.api_key_id = k.id AND log.is_byok IS TRUE
+				AND log.created_at >= date_trunc('week', CURRENT_TIMESTAMP)), 0) AS byok_usage_weekly,
+		COALESCE((SELECT SUM(log.standard_cost) FROM api_key_request_logs log
+			WHERE log.api_key_id = k.id AND log.is_byok IS TRUE
+				AND log.created_at >= date_trunc('month', CURRENT_TIMESTAMP)), 0) AS byok_usage_monthly
 	FROM api_keys k INNER JOIN workspaces w ON w.id = k.workspace_id`;
 
 const resolvedCols = {
@@ -338,6 +370,33 @@ export function createPostgresApiKeysRepository(
 ): ApiKeysRepository {
 	const drizzle = db.drizzle;
 	const raw = db.raw;
+	const getActiveByLookupHash = async (
+		keyHash: string
+	): Promise<ResolvedGatewayKeyRow | null> => {
+		assertGatewayKeyLookupHash(keyHash);
+		const rows = await drizzle
+			.select(resolvedCols)
+			.from(pgApiKeysTable)
+			.innerJoin(pgUsersTable, eq(pgApiKeysTable.userId, pgUsersTable.id))
+			.innerJoin(
+				pgWorkspacesTable,
+				eq(pgApiKeysTable.workspaceId, pgWorkspacesTable.id)
+			)
+			.leftJoin(
+				pgOrganizationsTable,
+				eq(pgWorkspacesTable.organizationId, pgOrganizationsTable.id)
+			)
+			.where(
+				and(
+					eq(pgApiKeysTable.keyHash, keyHash),
+					eq(pgApiKeysTable.status, "active"),
+					eq(pgUsersTable.status, "active"),
+					activeGatewayAuthorizationFilter
+				)
+			)
+			.limit(1);
+		return rows[0] ? mapPgResolvedRow(rows[0]) : null;
+	};
 	return {
 		async getCurrentById(id) {
 			const rows = await raw.unsafe<PgManagementGatewayKeyRow[]>(
@@ -554,28 +613,8 @@ export function createPostgresApiKeysRepository(
 		): Promise<ResolvedGatewayKeyRow | null> {
 			// 审计 M2-3：哈希优先查找；miss 回退明文（迁移窗口），命中即惰性回填。
 			const keyHash = await hashLookupKey(key);
-			const byHash = await drizzle
-				.select(resolvedCols)
-				.from(pgApiKeysTable)
-				.innerJoin(pgUsersTable, eq(pgApiKeysTable.userId, pgUsersTable.id))
-				.innerJoin(
-					pgWorkspacesTable,
-					eq(pgApiKeysTable.workspaceId, pgWorkspacesTable.id)
-				)
-				.leftJoin(
-					pgOrganizationsTable,
-					eq(pgWorkspacesTable.organizationId, pgOrganizationsTable.id)
-				)
-				.where(
-					and(
-						eq(pgApiKeysTable.keyHash, keyHash),
-						eq(pgApiKeysTable.status, "active"),
-						eq(pgUsersTable.status, "active"),
-						activeGatewayAuthorizationFilter
-					)
-				)
-				.limit(1);
-			if (byHash[0]) return mapPgResolvedRow(byHash[0]);
+			const byHash = await getActiveByLookupHash(keyHash);
+			if (byHash) return byHash;
 			const rows = await drizzle
 				.select(resolvedCols)
 				.from(pgApiKeysTable)
@@ -616,6 +655,10 @@ export function createPostgresApiKeysRepository(
 				});
 			}
 			return null;
+		},
+
+		async getActiveApiKeyWithUserByLookupHash(keyHash) {
+			return getActiveByLookupHash(keyHash);
 		},
 
 		async getApiKeyWithUserById(
