@@ -1,5 +1,11 @@
 # Changelog
 
+## 2.9.0
+
+### Minor Changes
+
+- [`7e876cf`](https://github.com/cinagroup/cinatoken/commit/7e876cfb048e98e619cbc97b5712c1d21cdb8a5b) - 启动 `cinatoken_gateway` PostgreSQL 迁移：安全改名历史 Schema，补齐门户整数账本与链上事务 Outbox 迁移，统一 PostgreSQL 运行时 search path，并将 D1→PostgreSQL ETL/对账升级为覆盖当前数据模型、源冻结、目标离线、会话失效和失败关闭的生产迁移流程。Proxy、Admin/Portal 与 Chain Worker 现可通过同一个 Cloudflare Hyperdrive 绑定显式切换到 PostgreSQL；默认仍保持 D1，缺失或不一致的切换配置会失败关闭。
+
 ## 2.8.0
 
 ### Minor Changes
