@@ -201,9 +201,9 @@ export function createPostgresModelEndpointsRepository(
 			if (ids.length === 0) return [];
 			return query<ModelEndpointRouteLinkRow>(
 				"SELECT endpoint_id, route_target_id, subject_fingerprint, created_at::text AS created_at FROM model_endpoint_routes WHERE endpoint_id IN (SELECT id FROM pg_catalog.jsonb_array_elements_text($1::jsonb) AS selected(id)) ORDER BY endpoint_id, route_target_id",
-				// Drizzle's postgres-js adapter makes JSON serializers transparent;
-				// the explicit SQL jsonb cast must receive serialized text.
-				[JSON.stringify(ids)]
+				// OID 25 is text: preserve JSON bytes with plain postgres.js and
+				// Drizzle's transparent JSON serializer before the SQL jsonb cast.
+				[pg.typed(JSON.stringify(ids), 25)]
 			);
 		},
 		async listDiscoveryRouteBindings(endpointIds) {
@@ -227,7 +227,7 @@ export function createPostgresModelEndpointsRepository(
 				 WHERE mer.endpoint_id IN (SELECT id FROM pg_catalog.jsonb_array_elements_text($1::jsonb) AS selected(id))
 				 ORDER BY mer.endpoint_id, mr.id
 				 LIMIT ${MAX_MODEL_ENDPOINT_DISCOVERY_BINDING_RESULTS}`,
-				[JSON.stringify(ids)]
+				[pg.typed(JSON.stringify(ids), 25)]
 			);
 		},
 		async listRuntimeBindingsByRouteTargetIds(routeTargetIds) {
@@ -244,7 +244,7 @@ export function createPostgresModelEndpointsRepository(
 				 JOIN model_endpoints me ON me.id = mer.endpoint_id
 				 WHERE mer.route_target_id IN (SELECT id FROM pg_catalog.jsonb_array_elements_text($1::jsonb) AS selected(id))
 				 ORDER BY mer.route_target_id, me.id`,
-				[JSON.stringify(ids)]
+				[pg.typed(JSON.stringify(ids), 25)]
 			);
 		},
 		async linkRoute(params) {

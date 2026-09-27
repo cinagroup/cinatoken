@@ -10,7 +10,9 @@ export function createPostgresRouteDataPoliciesRepository(db: PostgresDatabaseCl
 	const getByRouteTargetId = async (id: string) => (await query<RouteDataPolicyRow>(`SELECT ${COLUMNS} FROM route_data_policies WHERE route_target_id = $1`, [id]))[0] ?? null;
 	return {
 		async listAll() { return query<RouteDataPolicyAdminRow>(`SELECT r.id AS route_target_id, p.subject_fingerprint, p.retention_days, COALESCE(p.training_allowed, TRUE) AS training_allowed, COALESCE(p.zdr_supported, FALSE) AS zdr_supported, p.evidence_url, p.verified_by, p.verified_at, p.expires_at, COALESCE(p.status, 'unknown') AS status, p.invalidated_at, p.invalidation_reason, COALESCE(p.updated_at, r.created_at) AS updated_at, r.model_id, r.provider_id, pr.name AS provider_name, r.provider_model_name, r.upstream_protocol, r.upstream_operation, r.route_group FROM model_routes r JOIN providers pr ON pr.id = r.provider_id LEFT JOIN route_data_policies p ON p.route_target_id = r.id ORDER BY pr.name, r.model_id, r.id`); },
-		async getByRouteTargetIds(ids) { if (ids.length === 0) return []; return query<RouteDataPolicyRow>(`SELECT ${COLUMNS} FROM route_data_policies WHERE route_target_id IN (SELECT id FROM pg_catalog.jsonb_array_elements_text($1::jsonb) AS selected(id))`, [pg.json(ids)]); },
+		// OID 25 is text: keep JSON bytes stable before SQL's jsonb cast,
+		// including the shared raw client whose JSON serializer Drizzle changes.
+		async getByRouteTargetIds(ids) { if (ids.length === 0) return []; return query<RouteDataPolicyRow>(`SELECT ${COLUMNS} FROM route_data_policies WHERE route_target_id IN (SELECT id FROM pg_catalog.jsonb_array_elements_text($1::jsonb) AS selected(id))`, [pg.typed(JSON.stringify(ids), 25)]); },
 		getByRouteTargetId,
 		async listAudit(routeTargetId) { return query<RouteDataPolicyAuditRow>(`SELECT id, route_target_id, snapshot_json, actor_id, created_at FROM route_data_policy_audit WHERE route_target_id = $1 ORDER BY created_at DESC, id DESC`, [routeTargetId]); },
 		async upsertWithAudit(params) {

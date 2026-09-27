@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import test from 'node:test';
 import {setImmediate as tick} from 'node:timers/promises';
 import {setupPeerWindow} from './images-sse-capacity-peer-window-fixture.mjs';
+import {awaitPeerTestReadiness} from './images-sse-capacity-peer-finalizer-fixture.mjs';
 import {createSseCapacityPeerWindow} from '../../../../scripts/deploy/staging-sse-capacity-peer-window.mjs';
 import {SSE_STAGING_SCOPE as g} from '../../../../scripts/deploy/staging-sse-reconciliation.mjs';
 import {SSE_RECOVERY_ACCESS_SCOPE as c} from '../../../../scripts/deploy/staging-sse-recovery-access-v2.mjs';
@@ -11,6 +12,9 @@ import {SSE_RECOVERY_ACCESS_SCOPE as c} from '../../../../scripts/deploy/staging
 async function setup(t,{fault,pending=false}={}) {
   const x=await setupPeerWindow(t,{pending}),calls=[],rpc=[],events=[];
   let body,signal,sent=0,observations=0,finishPrimaryCalls=0;
+  let markReadEntered,markFetchAborted;
+  const firstReadEntered=new Promise(resolve=>{markReadEntered=resolve;});
+  const fetchAborted=new Promise(resolve=>{markFetchAborted=resolve;});
   let deliveredNative=false;
   const emitNative=()=>{if(!deliveredNative){deliveredNative=true;x.receive();}};
   x.setSleep(async()=>{if(fault!=='missing-native')emitNative();});
@@ -34,11 +38,13 @@ async function setup(t,{fault,pending=false}={}) {
         }else controller.enqueue(source);
         if(fault==='early-eof')controller.close();
         signal.addEventListener('abort',()=>{
+          markFetchAborted();
           if(fault==='cancel-hang')return;
           x.at(Math.max(x.now(),1300),x.r.cancelIssuedAt);x.ended();
           try{controller.error(new DOMException('Cancelled','AbortError'));}catch{}
         },{once:true});
-      },cancel(){x.ended();}});
+      },pull(){if(fault==='first-read-hang')markReadEntered();},cancel(){x.ended();}},
+        {highWaterMark:fault==='first-read-hang'?0:1});
       return new Response(stream,{headers:{'Content-Type':'text/event-stream','X-Generation-Id':x.r.id,'x-c02-capacity-instance':x.pool}});
     },
     readObservation:async()=>{
@@ -66,7 +72,7 @@ async function setup(t,{fault,pending=false}={}) {
     },
   };
   const window=createSseCapacityPeerWindow(options);
-  return {...x,window,options,calls,rpc,events,accessHeaders,emitNative,
+  return {...x,window,options,calls,rpc,events,accessHeaders,emitNative,firstReadEntered,fetchAborted,
     get spent(){return x.spent;},
     get sent(){return sent;},get observations(){return observations;},get signal(){return signal;},
     get finishPrimaryCalls(){return finishPrimaryCalls;},
@@ -131,25 +137,25 @@ test('final journal failure preserves cleanup result but reports attention, neve
   assert.equal(result.finalization.cleanupPassed,true);assert.doesNotMatch(JSON.stringify(result),/local-secret/);
 });
 
-test('missing native event expires without recovery and preserves financial rows',async t=>{
-  const x=await setup(t,{fault:'missing-native'}),before=x.f.financial(),result=await x.window.run();
+test('missing native event expires without recovery and preserves financial rows',{timeout:10000},async t=>{
+  const x=await setup(t,{fault:'missing-native'}),before=x.f.financial(),result=await awaitPeerTestReadiness(x.window.run(),{label:'missing native window'});
   assert.equal(result.result,'ATTENTION_REQUIRED');assert.deepEqual(x.rpc,[]);assert.equal(result.finalization.fixtureRemoved,false);
   assert.deepEqual(x.f.financial(),before);assert.equal(result.finalization.accessClosed,true);
 });
 
-test('late cancellation read cannot call success transition after its deadline',async t=>{
+test('late cancellation read cannot call success transition after its deadline',{timeout:10000},async t=>{
   const x=await setup(t,{fault:'cancel-hang'}),work=x.window.run();
-  for(let i=0;i<100&&!x.signal?.aborted;i++)await tick();assert.equal(x.signal.aborted,true);
+  await awaitPeerTestReadiness(x.fetchAborted,{owner:work,label:'actual primary abort'});assert.equal(x.signal.aborted,true);
   // Expire the read bound. The finalizer can actually cancel the stream, but
   // the old timed-out continuation must not call finishPrimary afterward.
-  t.mock.timers.tick(10001);await tick();const result=await work;
+  t.mock.timers.tick(10001);const result=await awaitPeerTestReadiness(work,{label:'cancel deadline finalization'});
   assert.equal(x.finishPrimaryCalls,0);assert.notEqual(result.result,'OBSERVED');assert.equal(x.sent,1);
 });
 
-test('first read deadline aborts the original fetch and still finalizes once',async t=>{
+test('first read deadline aborts the original fetch and still finalizes once',{timeout:10000},async t=>{
   const x=await setup(t,{fault:'first-read-hang'}),work=x.window.run();
-  for(let i=0;i<100&&!x.signal;i++)await tick();assert.ok(x.signal);await tick();
-  t.mock.timers.tick(15001);await tick();const result=await work;
+  await awaitPeerTestReadiness(x.firstReadEntered,{owner:work,label:'actual first body read'});assert.ok(x.signal);
+  t.mock.timers.tick(15001);const result=await awaitPeerTestReadiness(work,{label:'first read deadline finalization'});
   assert.equal(x.signal.aborted,true);assert.equal(x.finishPrimaryCalls,0);assert.equal(x.sent,1);
   assert.notEqual(result.result,'OBSERVED');assert.equal(result.finalization.accessClosed,true);
   assert.equal(x.window.run(),work);assert.equal(x.sent,1);

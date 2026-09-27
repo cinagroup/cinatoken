@@ -1,0 +1,33 @@
+{
+  "status": "PASS",
+  "cleanup": "PASS",
+  "binaryVersion": "postgres (PostgreSQL) 18.6",
+  "modes": [
+    {
+      "mode": "plain",
+      "readers": 4,
+      "explicitTextOid": 25,
+      "quotedBackslashInjectionIdRoundTrip": true,
+      "emptyAndAbsent": true,
+      "deduped": true,
+      "endpointBatchLimitsPreserved": true
+    },
+    {
+      "mode": "drizzle",
+      "readers": 4,
+      "explicitTextOid": 25,
+      "quotedBackslashInjectionIdRoundTrip": true,
+      "emptyAndAbsent": true,
+      "deduped": true,
+      "endpointBatchLimitsPreserved": true
+    }
+  ],
+  "limitations": [
+    "Owned loopback PostgreSQL only; predecessor source saved separately; no vendor serializer mutation or remote service."
+  ],
+  "sourceSha256": {
+    "nativeTest": "b679fe6d39cd4d23f64d2ac34337ba27367d92a45cbd785f76639aff0c56f30d",
+    "endpoints": "dd7ed527ad8afd51bef0f6d0a5546fbd02e36734f8f4edd425700ff58e7361e5",
+    "policies": "d1e79e0cd338bb86ca8cc2c91e2d21fd13e65915f711d51c00a45e4f80e2f9c8"
+  }
+}

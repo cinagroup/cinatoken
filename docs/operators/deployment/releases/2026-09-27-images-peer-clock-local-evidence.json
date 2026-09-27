@@ -1,0 +1,64 @@
+{
+  "version": 1,
+  "parentCommit": "e6447134db3bb06274708590e91e7eba525b10db",
+  "status": "LOCAL_TEST_COMPONENT_PASS_REMOTE_CI_PENDING",
+  "sources": [
+    {
+      "path": "packages/proxy/scripts/staging/images-sse-capacity-peer-window.test.mjs",
+      "beforeSha256": "da009eb63fac9af1256c2a64a857cb6ceed3cc1f233ac4ad4a3fc5758b7f6358",
+      "beforeCRLF": 0,
+      "afterSha256": "78a11ef2e202acd780383bfb57fa6057b78325706bd6535de1398ef9c1d8db83",
+      "afterCRLF": 0
+    },
+    {
+      "path": "packages/proxy/scripts/staging/images-sse-capacity-peer-finalizer-fixture.mjs",
+      "beforeSha256": "cd7aa7f3c2a9568bdc88da71a784d1d6a72547297f75e9e6036c869078de0e8f",
+      "beforeCRLF": 0,
+      "afterSha256": "7644a12c9308d2d0dda14ca21beab3e878198c41308088b12022685bfb7876b9",
+      "afterCRLF": 0
+    }
+  ],
+  "originalFailedCases": {
+    "path": ".wrangler/publish-20260927/images-peer-window-targeted-clock.log",
+    "sha256": "a6a12486527a604d55e1cebcb0b7235920e6a76e5dfb0759aae8b1a4236ac60a",
+    "tests": 3,
+    "pass": 3,
+    "fail": 0,
+    "cancelled": 0,
+    "skipped": 0,
+    "todo": 0,
+    "exitCode": 0
+  },
+  "entireWindowAndSharedFinalizer": {
+    "path": ".wrangler/publish-20260927/images-peer-window-and-finalizer-clock.log",
+    "sha256": "59afbbebe4107a3be8db39421261a5085d7dfc63035384fabbc89473cf7540e4",
+    "tests": 41,
+    "pass": 41,
+    "fail": 0,
+    "cancelled": 0,
+    "skipped": 0,
+    "todo": 0,
+    "exitCode": 0,
+    "testFiles": [
+      "packages/proxy/scripts/staging/images-sse-capacity-peer-window.test.mjs",
+      "packages/proxy/scripts/staging/images-sse-capacity-peer-finalizer.test.mjs"
+    ]
+  },
+  "negativeReadinessProof": {
+    "originalOwnerRejectionPreserved": true,
+    "earlyOwnerEndRejected": true,
+    "pendingReadinessRealTimerRejectedWithMockTimers": true,
+    "realTimeoutMs": 5000,
+    "elapsedMs": 5007.2038,
+    "nodeVersion": "v24.14.1"
+  },
+  "nodeVersion": "v24.14.1",
+  "productionRuntimeChanged": false,
+  "historicalEvidenceRewritten": false,
+  "realReadinessGuardMs": 5000,
+  "virtualDeadlinesMs": {
+    "cancellation": 10001,
+    "firstRead": 15001
+  },
+  "syntaxAndDiffChecks": "PASS"
+}

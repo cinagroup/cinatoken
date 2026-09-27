@@ -704,7 +704,7 @@ for (const stop of ['client', 'deadline'] as const) it(`${stop} stopped Chat req
 	const tasks: Promise<unknown>[] = [];
 	const context = { props: {}, passThroughOnException() {}, waitUntil(task: Promise<unknown>) { tasks.push(task); } };
 	t.after(async () => { opened.resolve(); closeAck.resolve(); await Promise.allSettled(tasks); });
-	const pending = app.request('/v1/chat/completions', {
+	const pending = Promise.resolve(app.request('/v1/chat/completions', {
 		method: 'POST', signal: abort.signal,
 		headers: { Authorization: 'Bearer synthetic-client-key', 'Content-Type': 'application/json' },
 		body: textJsonResourceInput('/v1/chat/completions', 'chat', 'model'),
@@ -713,7 +713,7 @@ for (const stop of ['client', 'deadline'] as const) it(`${stop} stopped Chat req
 		HYPERDRIVE: { connectionString: 'postgres://runtime@localhost/gateway' },
 		BUDGET_ADMISSION_HYPERDRIVE: { connectionString: 'postgres://admission@localhost/gateway' },
 		BUDGET_RECOVERY_HYPERDRIVE: { connectionString: 'postgres://recovery@localhost/gateway' },
-	} as Parameters<typeof app.request>[2], context);
+	} as Parameters<typeof app.request>[2], context));
 	await Promise.race([entered.promise, pending.then(response => {
 		throw new Error(`PostgreSQL Chat owner was not opened: ${response.status}`);
 	})]);

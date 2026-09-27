@@ -1,5 +1,6 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
+import postgres from "postgres";
 import { createMySqlModelEndpointsRepository } from "../db/mysql/model-endpoints.impl";
 import { createPostgresModelEndpointsRepository } from "../db/postgres/model-endpoints.impl";
 import type {
@@ -93,6 +94,8 @@ describe("SQL model-endpoint repositories", () => {
 	it("round-trips and patches audio_capabilities through PostgreSQL CRUD", async () => {
 		const calls: Array<{ sql: string; params: unknown[] }> = [];
 		const raw = {
+			// Use the real driver's parameter constructor; no connection is opened.
+			typed: postgres({ host: "127.0.0.1", port: 1, max: 1 }).typed,
 			async unsafe(sql: string, params: unknown[] = []): Promise<unknown[]> {
 				calls.push({ sql, params });
 				if (/^SELECT/u.test(sql.trim())) return [row()];
@@ -145,11 +148,12 @@ describe("SQL model-endpoint repositories", () => {
 		await repository.listRuntimeBindingsByRouteTargetIds(["route-1"]);
 		assert.match(calls.at(-1)!.sql, /me\.audio_capabilities/u);
 		assert.match(calls.at(-1)!.sql, /jsonb_array_elements_text\(\$1::jsonb\)/u);
-		assert.deepEqual(calls.at(-1)!.params, ['["route-1"]']);
+		assert.equal((calls.at(-1)!.params[0] as { type: number }).type, 25);
+		assert.equal((calls.at(-1)!.params[0] as { value: string }).value, '["route-1"]');
 		await repository.listRouteLinks(["endpoint-1", "endpoint-2"]);
-		assert.deepEqual(calls.at(-1)!.params, ['["endpoint-1","endpoint-2"]']);
+		assert.equal((calls.at(-1)!.params[0] as { value: string }).value, '["endpoint-1","endpoint-2"]');
 		await repository.listDiscoveryRouteBindings(["endpoint-1"]);
-		assert.deepEqual(calls.at(-1)!.params, ['["endpoint-1"]']);
+		assert.equal((calls.at(-1)!.params[0] as { value: string }).value, '["endpoint-1"]');
 		assert.equal(
 			await repository.updateUnpublished("endpoint-1", {
 				status: "draft",

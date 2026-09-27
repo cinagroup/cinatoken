@@ -497,7 +497,17 @@ export async function insertRequestUsageAndChargeTxPg(
 				? reservedMicros
 				: ordinaryActualMicros;
 
-			const existingLogs = await tx.select({
+			if (recovery) {
+				// Recovery rejects any prior log; its least-privilege role needs only
+				// identity here, while ordinary replay retains its full comparisons.
+				const priorLogs = await tx.select({ id: pgRequestLogsTable.id })
+					.from(pgRequestLogsTable)
+					.where(eq(pgRequestLogsTable.id, params.requestLog.id));
+				if (priorLogs.length !== 0) {
+					throw new Error('Legacy log cannot be adopted by a new settlement receipt');
+				}
+			}
+			const existingLogs = recovery ? [] : await tx.select({
 				id: pgRequestLogsTable.id,
 				userId: pgRequestLogsTable.userId,
 				apiKeyId: pgRequestLogsTable.apiKeyId,
