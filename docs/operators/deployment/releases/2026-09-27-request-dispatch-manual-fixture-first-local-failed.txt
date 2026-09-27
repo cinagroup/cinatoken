@@ -1,0 +1,32 @@
+TAP version 13
+# Subtest: text upload resource public /v1/chat/completions/json/full
+not ok 1 - text upload resource public /v1/chat/completions/json/full
+  ---
+  duration_ms: 183.551
+  type: 'test'
+  location: 'C:\\Users\\cina\\.codex\\worktrees\\checklist-release\\cinatoken\\packages\\proxy\\src\\routes\\v1\\request-dispatch-limit.test.ts:1:6016'
+  failureType: 'testCodeFailure'
+  error: |-
+    {"error":{"code":502,"message":"Upstream provider is unavailable","metadata":{"error_type":"provider_unavailable"}},"code":"upstream.server_error"}
+    
+    502 !== 200
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 200
+  actual: 502
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (C:\Users\cina\.codex\worktrees\checklist-release\cinatoken\packages\proxy\src\routes\v1\request-dispatch-limit.test.ts:127:11)
+    async Test.run (node:internal/test_runner/test:1054:7)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 0
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 14558.8652

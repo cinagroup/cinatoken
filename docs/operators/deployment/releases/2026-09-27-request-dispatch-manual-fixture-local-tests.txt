@@ -1,0 +1,442 @@
+TAP version 13
+# Subtest: text upload resource public /v1/chat/completions/json/full
+ok 1 - text upload resource public /v1/chat/completions/json/full
+  ---
+  duration_ms: 234.4399
+  type: 'test'
+  ...
+# Subtest: text upload resource public /v1/chat/completions/json/partial
+ok 2 - text upload resource public /v1/chat/completions/json/partial
+  ---
+  duration_ms: 92.8404
+  type: 'test'
+  ...
+# Subtest: text upload resource public /v1/chat/completions/json/last-page
+ok 3 - text upload resource public /v1/chat/completions/json/last-page
+  ---
+  duration_ms: 34.9566
+  type: 'test'
+  ...
+# Subtest: text upload resource public /v1/chat/completions/json/cancel
+ok 4 - text upload resource public /v1/chat/completions/json/cancel
+  ---
+  duration_ms: 47.7042
+  type: 'test'
+  ...
+# Subtest: text upload resource public /v1/chat/completions/sse/full
+ok 5 - text upload resource public /v1/chat/completions/sse/full
+  ---
+  duration_ms: 43.0852
+  type: 'test'
+  ...
+# Subtest: text upload resource public /v1/chat/completions/sse/partial
+ok 6 - text upload resource public /v1/chat/completions/sse/partial
+  ---
+  duration_ms: 62.4547
+  type: 'test'
+  ...
+# Subtest: text upload resource public /v1/chat/completions/sse/last-page
+ok 7 - text upload resource public /v1/chat/completions/sse/last-page
+  ---
+  duration_ms: 41.38
+  type: 'test'
+  ...
+# Subtest: text upload resource public /v1/chat/completions/sse/cancel
+ok 8 - text upload resource public /v1/chat/completions/sse/cancel
+  ---
+  duration_ms: 61.8753
+  type: 'test'
+  ...
+# Subtest: text upload resource public /api/v1/chat/completions/json/full
+ok 9 - text upload resource public /api/v1/chat/completions/json/full
+  ---
+  duration_ms: 83.5932
+  type: 'test'
+  ...
+# Subtest: text upload resource public /api/v1/chat/completions/json/partial
+ok 10 - text upload resource public /api/v1/chat/completions/json/partial
+  ---
+  duration_ms: 71.8969
+  type: 'test'
+  ...
+# Subtest: text upload resource public /api/v1/chat/completions/json/last-page
+ok 11 - text upload resource public /api/v1/chat/completions/json/last-page
+  ---
+  duration_ms: 69.5474
+  type: 'test'
+  ...
+# Subtest: text upload resource public /api/v1/chat/completions/json/cancel
+ok 12 - text upload resource public /api/v1/chat/completions/json/cancel
+  ---
+  duration_ms: 54.9554
+  type: 'test'
+  ...
+# Subtest: text upload resource public /api/v1/chat/completions/sse/full
+ok 13 - text upload resource public /api/v1/chat/completions/sse/full
+  ---
+  duration_ms: 88.8361
+  type: 'test'
+  ...
+# Subtest: text upload resource public /api/v1/chat/completions/sse/partial
+ok 14 - text upload resource public /api/v1/chat/completions/sse/partial
+  ---
+  duration_ms: 56.3796
+  type: 'test'
+  ...
+# Subtest: text upload resource public /api/v1/chat/completions/sse/last-page
+ok 15 - text upload resource public /api/v1/chat/completions/sse/last-page
+  ---
+  duration_ms: 32.2239
+  type: 'test'
+  ...
+# Subtest: text upload resource public /api/v1/chat/completions/sse/cancel
+ok 16 - text upload resource public /api/v1/chat/completions/sse/cancel
+  ---
+  duration_ms: 35.537
+  type: 'test'
+  ...
+# Subtest: text upload resource public /v1/completions/json/full
+ok 17 - text upload resource public /v1/completions/json/full
+  ---
+  duration_ms: 37.2046
+  type: 'test'
+  ...
+# Subtest: text upload resource public /v1/completions/json/partial
+ok 18 - text upload resource public /v1/completions/json/partial
+  ---
+  duration_ms: 52.1521
+  type: 'test'
+  ...
+# Subtest: text upload resource public /v1/completions/json/last-page
+ok 19 - text upload resource public /v1/completions/json/last-page
+  ---
+  duration_ms: 56.6075
+  type: 'test'
+  ...
+# Subtest: text upload resource public /v1/completions/json/cancel
+ok 20 - text upload resource public /v1/completions/json/cancel
+  ---
+  duration_ms: 25.9953
+  type: 'test'
+  ...
+# Subtest: text upload resource public /v1/completions/sse/full
+ok 21 - text upload resource public /v1/completions/sse/full
+  ---
+  duration_ms: 32.5922
+  type: 'test'
+  ...
+# Subtest: text upload resource public /v1/completions/sse/partial
+ok 22 - text upload resource public /v1/completions/sse/partial
+  ---
+  duration_ms: 73.401
+  type: 'test'
+  ...
+# Subtest: text upload resource public /v1/completions/sse/last-page
+ok 23 - text upload resource public /v1/completions/sse/last-page
+  ---
+  duration_ms: 36.7665
+  type: 'test'
+  ...
+# Subtest: text upload resource public /v1/completions/sse/cancel
+ok 24 - text upload resource public /v1/completions/sse/cancel
+  ---
+  duration_ms: 37.3593
+  type: 'test'
+  ...
+# Subtest: text upload resource public /api/v1/completions/json/full
+ok 25 - text upload resource public /api/v1/completions/json/full
+  ---
+  duration_ms: 35.3593
+  type: 'test'
+  ...
+# Subtest: text upload resource public /api/v1/completions/json/partial
+ok 26 - text upload resource public /api/v1/completions/json/partial
+  ---
+  duration_ms: 41.9042
+  type: 'test'
+  ...
+# Subtest: text upload resource public /api/v1/completions/json/last-page
+ok 27 - text upload resource public /api/v1/completions/json/last-page
+  ---
+  duration_ms: 24.7443
+  type: 'test'
+  ...
+# Subtest: text upload resource public /api/v1/completions/json/cancel
+ok 28 - text upload resource public /api/v1/completions/json/cancel
+  ---
+  duration_ms: 31.9835
+  type: 'test'
+  ...
+# Subtest: text upload resource public /api/v1/completions/sse/full
+ok 29 - text upload resource public /api/v1/completions/sse/full
+  ---
+  duration_ms: 26.9231
+  type: 'test'
+  ...
+# Subtest: text upload resource public /api/v1/completions/sse/partial
+ok 30 - text upload resource public /api/v1/completions/sse/partial
+  ---
+  duration_ms: 68.2742
+  type: 'test'
+  ...
+# Subtest: text upload resource public /api/v1/completions/sse/last-page
+ok 31 - text upload resource public /api/v1/completions/sse/last-page
+  ---
+  duration_ms: 45.7415
+  type: 'test'
+  ...
+# Subtest: text upload resource public /api/v1/completions/sse/cancel
+ok 32 - text upload resource public /api/v1/completions/sse/cancel
+  ---
+  duration_ms: 28.1968
+  type: 'test'
+  ...
+# Subtest: text upload resource public /v1/responses/json/full
+ok 33 - text upload resource public /v1/responses/json/full
+  ---
+  duration_ms: 39.6578
+  type: 'test'
+  ...
+# Subtest: text upload resource public /v1/responses/json/partial
+ok 34 - text upload resource public /v1/responses/json/partial
+  ---
+  duration_ms: 35.5633
+  type: 'test'
+  ...
+# Subtest: text upload resource public /v1/responses/json/last-page
+ok 35 - text upload resource public /v1/responses/json/last-page
+  ---
+  duration_ms: 28.4369
+  type: 'test'
+  ...
+# Subtest: text upload resource public /v1/responses/json/cancel
+ok 36 - text upload resource public /v1/responses/json/cancel
+  ---
+  duration_ms: 33.9373
+  type: 'test'
+  ...
+# Subtest: text upload resource public /v1/responses/sse/full
+ok 37 - text upload resource public /v1/responses/sse/full
+  ---
+  duration_ms: 45.7311
+  type: 'test'
+  ...
+# Subtest: text upload resource public /v1/responses/sse/partial
+ok 38 - text upload resource public /v1/responses/sse/partial
+  ---
+  duration_ms: 42.1148
+  type: 'test'
+  ...
+# Subtest: text upload resource public /v1/responses/sse/last-page
+ok 39 - text upload resource public /v1/responses/sse/last-page
+  ---
+  duration_ms: 28.1071
+  type: 'test'
+  ...
+# Subtest: text upload resource public /v1/responses/sse/cancel
+ok 40 - text upload resource public /v1/responses/sse/cancel
+  ---
+  duration_ms: 26.6716
+  type: 'test'
+  ...
+# Subtest: text upload resource public /api/v1/responses/json/full
+ok 41 - text upload resource public /api/v1/responses/json/full
+  ---
+  duration_ms: 40.7875
+  type: 'test'
+  ...
+# Subtest: text upload resource public /api/v1/responses/json/partial
+ok 42 - text upload resource public /api/v1/responses/json/partial
+  ---
+  duration_ms: 54.2257
+  type: 'test'
+  ...
+# Subtest: text upload resource public /api/v1/responses/json/last-page
+ok 43 - text upload resource public /api/v1/responses/json/last-page
+  ---
+  duration_ms: 47.1405
+  type: 'test'
+  ...
+# Subtest: text upload resource public /api/v1/responses/json/cancel
+ok 44 - text upload resource public /api/v1/responses/json/cancel
+  ---
+  duration_ms: 46.9603
+  type: 'test'
+  ...
+# Subtest: text upload resource public /api/v1/responses/sse/full
+ok 45 - text upload resource public /api/v1/responses/sse/full
+  ---
+  duration_ms: 50.5553
+  type: 'test'
+  ...
+# Subtest: text upload resource public /api/v1/responses/sse/partial
+ok 46 - text upload resource public /api/v1/responses/sse/partial
+  ---
+  duration_ms: 45.078
+  type: 'test'
+  ...
+# Subtest: text upload resource public /api/v1/responses/sse/last-page
+ok 47 - text upload resource public /api/v1/responses/sse/last-page
+  ---
+  duration_ms: 35.9289
+  type: 'test'
+  ...
+# Subtest: text upload resource public /api/v1/responses/sse/cancel
+ok 48 - text upload resource public /api/v1/responses/sse/cancel
+  ---
+  duration_ms: 38.7398
+  type: 'test'
+  ...
+# Subtest: text upload resource public /v1/messages/json/full
+ok 49 - text upload resource public /v1/messages/json/full
+  ---
+  duration_ms: 44.4408
+  type: 'test'
+  ...
+# Subtest: text upload resource public /v1/messages/json/partial
+ok 50 - text upload resource public /v1/messages/json/partial
+  ---
+  duration_ms: 43.366
+  type: 'test'
+  ...
+# Subtest: text upload resource public /v1/messages/json/last-page
+ok 51 - text upload resource public /v1/messages/json/last-page
+  ---
+  duration_ms: 27.5217
+  type: 'test'
+  ...
+# Subtest: text upload resource public /v1/messages/json/cancel
+ok 52 - text upload resource public /v1/messages/json/cancel
+  ---
+  duration_ms: 29.2555
+  type: 'test'
+  ...
+# Subtest: text upload resource public /v1/messages/sse/full
+ok 53 - text upload resource public /v1/messages/sse/full
+  ---
+  duration_ms: 27.0138
+  type: 'test'
+  ...
+# Subtest: text upload resource public /v1/messages/sse/partial
+ok 54 - text upload resource public /v1/messages/sse/partial
+  ---
+  duration_ms: 41.1853
+  type: 'test'
+  ...
+# Subtest: text upload resource public /v1/messages/sse/last-page
+ok 55 - text upload resource public /v1/messages/sse/last-page
+  ---
+  duration_ms: 28.1479
+  type: 'test'
+  ...
+# Subtest: text upload resource public /v1/messages/sse/cancel
+ok 56 - text upload resource public /v1/messages/sse/cancel
+  ---
+  duration_ms: 26.6552
+  type: 'test'
+  ...
+# Subtest: text upload resource public /api/v1/messages/json/full
+ok 57 - text upload resource public /api/v1/messages/json/full
+  ---
+  duration_ms: 25.8224
+  type: 'test'
+  ...
+# Subtest: text upload resource public /api/v1/messages/json/partial
+ok 58 - text upload resource public /api/v1/messages/json/partial
+  ---
+  duration_ms: 41.5638
+  type: 'test'
+  ...
+# Subtest: text upload resource public /api/v1/messages/json/last-page
+ok 59 - text upload resource public /api/v1/messages/json/last-page
+  ---
+  duration_ms: 32.3919
+  type: 'test'
+  ...
+# Subtest: text upload resource public /api/v1/messages/json/cancel
+ok 60 - text upload resource public /api/v1/messages/json/cancel
+  ---
+  duration_ms: 17.7955
+  type: 'test'
+  ...
+# Subtest: text upload resource public /api/v1/messages/sse/full
+ok 61 - text upload resource public /api/v1/messages/sse/full
+  ---
+  duration_ms: 22.3308
+  type: 'test'
+  ...
+# Subtest: text upload resource public /api/v1/messages/sse/partial
+ok 62 - text upload resource public /api/v1/messages/sse/partial
+  ---
+  duration_ms: 36.7095
+  type: 'test'
+  ...
+# Subtest: text upload resource public /api/v1/messages/sse/last-page
+ok 63 - text upload resource public /api/v1/messages/sse/last-page
+  ---
+  duration_ms: 49.9536
+  type: 'test'
+  ...
+# Subtest: text upload resource public /api/v1/messages/sse/cancel
+ok 64 - text upload resource public /api/v1/messages/sse/cancel
+  ---
+  duration_ms: 28.3739
+  type: 'test'
+  ...
+# Subtest: text upload resource public /v1beta/models/model-0:generateContent/json/full
+ok 65 - text upload resource public /v1beta/models/model-0:generateContent/json/full
+  ---
+  duration_ms: 27.4518
+  type: 'test'
+  ...
+# Subtest: text upload resource public /v1beta/models/model-0:generateContent/json/partial
+ok 66 - text upload resource public /v1beta/models/model-0:generateContent/json/partial
+  ---
+  duration_ms: 28.1507
+  type: 'test'
+  ...
+# Subtest: text upload resource public /v1beta/models/model-0:generateContent/json/last-page
+ok 67 - text upload resource public /v1beta/models/model-0:generateContent/json/last-page
+  ---
+  duration_ms: 24.5188
+  type: 'test'
+  ...
+# Subtest: text upload resource public /v1beta/models/model-0:generateContent/json/cancel
+ok 68 - text upload resource public /v1beta/models/model-0:generateContent/json/cancel
+  ---
+  duration_ms: 19.1182
+  type: 'test'
+  ...
+# Subtest: text upload resource public /v1beta/models/model-0:generateContent/sse/full
+ok 69 - text upload resource public /v1beta/models/model-0:generateContent/sse/full
+  ---
+  duration_ms: 22.3845
+  type: 'test'
+  ...
+# Subtest: text upload resource public /v1beta/models/model-0:generateContent/sse/partial
+ok 70 - text upload resource public /v1beta/models/model-0:generateContent/sse/partial
+  ---
+  duration_ms: 26.763
+  type: 'test'
+  ...
+# Subtest: text upload resource public /v1beta/models/model-0:generateContent/sse/last-page
+ok 71 - text upload resource public /v1beta/models/model-0:generateContent/sse/last-page
+  ---
+  duration_ms: 16.3407
+  type: 'test'
+  ...
+# Subtest: text upload resource public /v1beta/models/model-0:generateContent/sse/cancel
+ok 72 - text upload resource public /v1beta/models/model-0:generateContent/sse/cancel
+  ---
+  duration_ms: 13.5458
+  type: 'test'
+  ...
+1..72
+# tests 72
+# suites 0
+# pass 72
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 7562.716

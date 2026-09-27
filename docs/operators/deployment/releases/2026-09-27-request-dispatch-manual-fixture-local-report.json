@@ -1,0 +1,147 @@
+{
+  "schemaVersion": 1,
+  "recordedAtUtc": "2026-09-27T09:22:26.498Z",
+  "status": "LOCAL_TARGETED_TESTS_PASS_FULL_LINUX_GATE_PENDING",
+  "predecessorCommit": "f6586260e6e0274902cb7569135d3550c89fdabd",
+  "executionWorkspace": "C:/Users/cina/.codex/worktrees/checklist-release/cinatoken",
+  "node": {
+    "version": "22.23.2",
+    "binarySha256": "0d0f5e39f9f3d9587bc19f73eab3c2c9c4903fd02d6dbf9c853dd81b3d95fad4",
+    "source": "Official portable distribution, verified against official SHASUMS256.txt before extraction"
+  },
+  "historicalLinuxFailure": {
+    "step": "Proxy dispatch full unit step9",
+    "status": "FAIL",
+    "tests": 4346,
+    "pass": 4274,
+    "fail": 72,
+    "allFailures": "9 public paths × 2 JSON/SSE variants × 4 upload modes; stale redirect:error fetch-mock assertion threw and the driver normalized it to unknown502",
+    "downstreamWorkerdStep10": "SKIPPED",
+    "log": {
+      "path": ".wrangler/publish-20260927/github-dispatch-f6586260-full.log",
+      "sha256": "204093c8d913b4043e416b48f9a5b5821f7bd7ef45040ccb0d702702bc7177ba"
+    }
+  },
+  "patch": {
+    "path": "packages/proxy/src/routes/v1/request-dispatch-limit.test.ts",
+    "beforeSha256": "3c9e88d48616f0718e237bc8fde58af424d6948e84136dcfa9bdb93abdff0f4a",
+    "afterSha256": "13b500d58601b989b271f1cde8e0ffae86e5c1e749434efe81765a719f4e4870",
+    "oldAssertion": "assert.equal(init.redirect, 'error')",
+    "newAssertion": "assert.equal(init.redirect, 'manual')",
+    "byteExactSingleLiteralChange": true,
+    "lineEndingsPreserved": true,
+    "assertionsBefore": 378,
+    "assertionsAfter": 378,
+    "allOtherAssertionsPreserved": true,
+    "preservedAssertions": "Upload/body/metadata bytes, upstream sends, batch and usage counts, response status, request admission/capacity, locked-body cancellation and cleanup"
+  },
+  "actualLocalTests": {
+    "oldOneCaseReproduction": {
+      "command": "node --import tsx --test --test-name-pattern=\"^text upload resource public /v1/chat/completions/json/full$\" packages/proxy/src/routes/v1/request-dispatch-limit.test.ts",
+      "exitCode": 1,
+      "tests": 1,
+      "pass": 0,
+      "fail": 1,
+      "skip": 0,
+      "actual": 502,
+      "expected": 200,
+      "log": {
+        "path": "docs/operators/deployment/releases/2026-09-27-request-dispatch-manual-fixture-first-local-failed.txt",
+        "sha256": "a020c2f02580ec5bbdab36feec3d0ab2b454b0ebf76b46ecc479ec980434639d"
+      }
+    },
+    "patchedPublicUploadMatrix": {
+      "command": "node --import tsx --test --test-name-pattern=\"^text upload resource public \" packages/proxy/src/routes/v1/request-dispatch-limit.test.ts",
+      "exitCode": 0,
+      "tests": 72,
+      "pass": 72,
+      "fail": 0,
+      "skip": 0,
+      "durationMs": 7562.716,
+      "log": {
+        "path": "docs/operators/deployment/releases/2026-09-27-request-dispatch-manual-fixture-local-tests.txt",
+        "sha256": "b733e815e964f4dd3743b8ae719dc9bfcde3e14ed6ccc793211e8c94d87d596e"
+      }
+    }
+  },
+  "corpora": {
+    "algorithm": "Sorted TS/TSX paths + LF + raw unmodified UTF8 content; items joined by LF.",
+    "core": {
+      "files": 327,
+      "sha256": "477233bf3c31f1ef3ca847ba3e36179fef50f85e1ba3c909a847706bff2800b0",
+      "unchangedFromF658InExecutionCheckout": true,
+      "checkout": "C:/Users/cina/.codex/worktrees/checklist-release/cinatoken",
+      "excludesConcurrentPrimaryD1PortalMarketplaceEdits": true
+    },
+    "proxy": {
+      "files": 454,
+      "sha256": "13f9a76eaa24c3b34f143ac6921c2769c7b68d1d7f80ff3c332068b27b383f04",
+      "beforeSha256": "1c0e8004ed308eeae2209ed03dede60b458eb1e0b14991d0fa7bdd65c6fb645f",
+      "changedPaths": [
+        "packages/proxy/src/routes/v1/request-dispatch-limit.test.ts"
+      ],
+      "allOther453FilesByteIdentical": true
+    }
+  },
+  "productionRuntimePins": [
+    {
+      "path": "packages/proxy/src/services/egress/openai-driver.ts",
+      "sha256": "6f0a0cf741a43e690e11150a4639746bdaae47a00a9843f89a07099fe6179118",
+      "byteIdenticalToF658": true
+    },
+    {
+      "path": "packages/proxy/src/services/egress/openai-responses-driver.ts",
+      "sha256": "183b2950dea081577df0731ad46f95c247bfd333799ca635865e772477512590",
+      "byteIdenticalToF658": true
+    },
+    {
+      "path": "packages/proxy/src/services/egress/anthropic-driver.ts",
+      "sha256": "9d86470f4f0b853386cae9139d84bf4253d4f71e52e9681f4b45b7c462309056",
+      "byteIdenticalToF658": true
+    },
+    {
+      "path": "packages/proxy/src/services/egress/gemini-driver.ts",
+      "sha256": "6f85845f9ed5619f7e6f302429c3a84669d08962b7783d1a1603141e9087300e",
+      "byteIdenticalToF658": true
+    },
+    {
+      "path": "packages/proxy/src/services/failover-dispatch.ts",
+      "sha256": "d4c78d5d76c7f801b5db82fef5026121c154492e7b4f55ba6ee78824d07fa452",
+      "byteIdenticalToF658": true
+    },
+    {
+      "path": "packages/proxy/src/services/request-log-record-status.ts",
+      "sha256": "6932dce340cdd9f6c1da56ab2ca54987e03290254c284a174c454528d4d8fe1c",
+      "byteIdenticalToF658": true
+    }
+  ],
+  "historical282Report": {
+    "path": "docs/operators/deployment/releases/2026-09-27-text-workerd-manual-redirect-local-report.json",
+    "sha256": "5f02328c354f9cebdec49baa44b9479a9e9fff52c1a79e1cb0c004a61f979289",
+    "unchanged": true,
+    "previousResult": "282/282 local targeted PASS; two typechecks EXIT0"
+  },
+  "independentReadOnlyReview": {
+    "path": ".wrangler/publish-20260927/f658-text-upload-fixture-successor-read-only-review.json",
+    "sha256": "84d193780efc04cf8e85192fcdddca1482849c0fc2a37b1fb66bb85f433d2f6b",
+    "status": "PASS_READ_ONLY_REVIEW",
+    "exactSingleLiteral": true,
+    "assertionsPreserved": 378,
+    "other453ProxySourcesUnchanged": true
+  },
+  "remainingErrorExpectationAudit": {
+    "ordinaryTextInferenceMocks": 0,
+    "preservedScopes": [
+      "Default-off frozen v401 holder expectations",
+      "Independent BYOK/operator transports",
+      "Frozen/history Node relay controls"
+    ]
+  },
+  "limitations": [
+    "Only the one old-source reproduction and the patched 72 public-upload cases were executed locally for this successor. No new full suite, types, workerd, PostgreSQL, or build run.",
+    "The f658 full unit failure remains historical; its workerd prerequisite was skipped. A fresh full Linux CI gate is still required.",
+    "No production runtime, authority/ACL/SQL, admission or financial policy, flags/default-off holders, dependencies, workflow, or build output changed by this successor.",
+    "No commit, push, deployment, remote SQL, or paid-provider call was performed by this agent."
+  ],
+  "processStateAtHandoff": "All owned local test processes terminated; no owned PG or build process"
+}

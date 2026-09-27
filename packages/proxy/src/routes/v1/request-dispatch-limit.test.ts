@@ -105,7 +105,7 @@ for (const [path, operation, partition] of textJsonResourceRoutes) for (const st
 			const requestPath = stream && operation === 'models.generate' ? path.replace(':generateContent', ':streamGenerateContent') : path;
 			let sends = 0, reader: ReadableStreamDefaultReader<Uint8Array> | undefined;
 			t.mock.method(globalThis, 'fetch', async (_url: RequestInfo | URL, init?: RequestInit) => {
-				sends++; assert.ok(init?.body instanceof ReadableStream); assert.equal(init.redirect, 'error');
+				sends++; assert.ok(init?.body instanceof ReadableStream); assert.equal(init.redirect, 'manual');
 				const contentLength = Number(new Headers(init.headers).get('Content-Length'));
 				assert.ok(contentLength > 0);
 				if (mode === 'full') {
