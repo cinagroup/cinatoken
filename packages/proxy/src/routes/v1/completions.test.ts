@@ -37,6 +37,7 @@ describe('legacy Completions route control boundary', () => {
 	it('uses route-level atomic budget admission and validates before touching model storage', async () => {
 		let modelStorageTouched = false;
 		const repositories = {
+			client: { driver: 'd1' },
 			apiKeys: {
 				getApiKeyWithUserByKey: async (key: string) =>
 					key === 'sk-completions-test' ? exhaustedGatewayKey() : null,

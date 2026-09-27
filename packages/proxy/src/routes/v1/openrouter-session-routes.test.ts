@@ -21,6 +21,7 @@ function gatewayKey(): ResolvedGatewayKeyRow {
 
 function app() {
 	const repositories = {
+		client: { driver: 'd1' },
 		apiKeys: {
 			getApiKeyWithUserByKey: async (key: string) => key === 'sk-test' ? gatewayKey() : null,
 		},
