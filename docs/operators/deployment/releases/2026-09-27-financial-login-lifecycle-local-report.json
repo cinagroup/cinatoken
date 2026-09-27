@@ -1,0 +1,48 @@
+{
+  "status": "PASS",
+  "cleanup": "PASS",
+  "scope": "owned loopback PG18.6; lifecycle successor retains all 15 review-only direct-login gates; no production SQL, Hyperdrive or Queue",
+  "binaryVersion": "postgres (PostgreSQL) 18.6",
+  "stages": [
+    "73-formal-migrations-guard-and-runtime-acl",
+    "parent-replay-expand-empty-backfill-gate-and-runtime-acl",
+    "superuser-created-scram-login-without-pg18-membership",
+    "default-no-replay-plan-rejects-gated-replay-schema",
+    "callable-function-drift-blocks-grant",
+    "callable-function-body-drift-blocks-grant",
+    "unexpected-trigger-blocks-grant",
+    "disabled-replay-trigger-blocks-grant",
+    "disabled-replay-log-id-guard-blocks-grant",
+    "replay-function-body-drift-blocks-grant",
+    "public-column-drift-blocks-atomic-grant-then-exact-grant-succeeds",
+    "direct-password-login-defaults-and-cross-role-denials",
+    "session-overridden-deadline-rejected-before-scan-and-capacity",
+    "clean-login-empty-financial-scan",
+    "server-transaction-timeout-terminates-long-transaction"
+  ],
+  "sourceSha256": {
+    "generator": "63bb365307628feea68cc18493fc8064e5eddc92948a855fd53bd867edae04f8",
+    "unitTest": "64ed2440378ec0867a3d3e595a759976dd71a3710a6fec02caddde021098aee8",
+    "nativeTest": "b6e727e0226336bbbcb7a3e95b0b06c578196c2d84a409471efaab751d57a3ec",
+    "predecessorNativeTest": "9bfbf9281e9a67109005d897962b4a67214bf0395b40c41a21179631e19d6c19",
+    "ownedClusterHarness": "6b5923be8d3bdcd061033eed1af2f67f3b87fa2fca1f2cf0a0b2eb0eb2cb8d2a",
+    "driverConnection": "ee3a218d9aa6a6f2887c1a19da50009335fe84c11a5431d5cab72d6bc528632f",
+    "roleCatalogue": "8110d641d3d19fce2bfe9c4bd691bbf7927c15dd33ecd297be843d51f10b8ca5",
+    "consumer": "1df6c296a651b7d128b7a1d383494f30885f970592e4e245dcc8f27b0eb0b8ef"
+  },
+  "limitations": [
+    "SCRAM verifier structure cannot prove password entropy",
+    "role connection limit requires separate live instance-wide origin budget",
+    "grant fixture scans no financial job; durable commit is covered by the separate v328 fixture",
+    "role default timeouts are session mutable; consumer rejects changed pg_settings source",
+    "The preserved predecessor printed 15 passing stages on Linux CI but Node failed with an uncaught postgres.js 3.4.9 Immediate.nextWrite null-socket write. That prior run is not a passing native test.",
+    "The destructive timeout probe sends explicit BEGIN and pg_sleep in one simple SQL message. It retains the real server transaction_timeout termination and server-log assertion, without a JavaScript transaction scope issuing ROLLBACK after the backend closes. No exception handler suppresses driver errors."
+  ],
+  "postgresJsVersion": "3.4.9",
+  "destructiveTimeout": {
+    "backendPid": 21944,
+    "timeoutMs": 200,
+    "clientErrorCode": "ECONNRESET",
+    "serverTerminationLogConfirmed": true
+  }
+}

@@ -19,5 +19,6 @@ jobs:
           node-version: ${{ matrix.node }}
           cache: npm
       - run: npm ci
+      - run: npm run build:node-index -w @octafuse/core
       # Uses loopback HTTP and synthetic native-tail records, never Cloudflare credentials.
       - run: node --test scripts/deploy/staging-sse-host-expiry-session.test.mjs

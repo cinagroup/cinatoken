@@ -24,5 +24,6 @@ jobs:
         with:
           node-version: ${{ matrix.node }}
       - run: npm ci
+      - run: npm run build:node-index -w @octafuse/core
       - run: node node_modules/tsx/dist/cli.mjs --test scripts/deploy/staging-sse-peer-rejection-capture.test.mjs packages/proxy/scripts/staging/images-sse-peer-rejection-run.test.mjs
       - run: node node_modules/typescript/bin/tsc --noEmit -p packages/proxy/scripts/staging/tsconfig.json

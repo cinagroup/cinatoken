@@ -19,5 +19,6 @@ jobs:
           node-version: ${{ matrix.node }}
           cache: npm
       - run: npm ci
+      - run: npm run build:node-index -w @octafuse/core
       - run: node node_modules/tsx/dist/cli.mjs --test --test-concurrency=2 scripts/deploy/staging-sse-peer-diagnostic-client.test.mjs scripts/deploy/staging-sse-peer-diagnostic-client-regression.test.mjs packages/proxy/scripts/staging/images-sse-peer-diagnostic-window.test.mjs packages/proxy/scripts/staging/images-sse-peer-diagnostic.test.mjs
       - run: node node_modules/typescript/bin/tsc --noEmit -p packages/proxy/scripts/staging/tsconfig.json

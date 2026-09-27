@@ -55,7 +55,7 @@ jobs:
       - name: Start postgres
         run: |
           set -euo pipefail
-          docker compose -f docker/compose/node-pg.yml up -d postgres
+          docker compose -f docker/compose/node-pg.yml up -d --wait --wait-timeout 90 postgres
 
       - name: Verify legacy schema rename and migration idempotency
         run: |
@@ -68,6 +68,15 @@ jobs:
           docker compose -f docker/compose/node-pg.yml --profile migrate \
             run --rm migrate
 
+          expected_migrations=$(find packages/core/migrations-postgres -maxdepth 1 -type f -name '*.sql' | wc -l)
+          actual_migrations=$(docker compose -f docker/compose/node-pg.yml exec -T postgres \
+            psql -v ON_ERROR_STOP=1 -At -U postgres -d cinatoken \
+            -c 'SELECT COUNT(*) FROM cinatoken_gateway.schema_migrations')
+          if (( actual_migrations != expected_migrations )); then
+            printf 'expected %s PostgreSQL migrations, found %s\n' "$expected_migrations" "$actual_migrations" >&2
+            exit 1
+          fi
+
           docker compose -f docker/compose/node-pg.yml exec -T postgres \
             psql -v ON_ERROR_STOP=1 -U postgres -d cinatoken <<'SQL'
           DO $verify$
@@ -77,9 +86,6 @@ jobs:
             END IF;
             IF to_regnamespace('octafuse_gateway') IS NOT NULL THEN
               RAISE EXCEPTION 'legacy octafuse_gateway schema was not renamed';
-            END IF;
-            IF (SELECT COUNT(*) FROM cinatoken_gateway.schema_migrations) <> 30 THEN
-              RAISE EXCEPTION 'expected 30 PostgreSQL migrations';
             END IF;
             IF to_regclass('cinatoken_gateway.portal_ledger_entries') IS NULL
                OR to_regclass('cinatoken_gateway.chain_job_transactions') IS NULL THEN
@@ -101,13 +107,19 @@ jobs:
 
           SET search_path TO cinatoken_gateway;
           INSERT INTO users (id, email) VALUES ('pg-smoke-user', 'pg-smoke@example.com');
+          INSERT INTO workspaces (id, scope_type, personal_owner_user_id, name, slug)
+          VALUES ('pg-smoke-workspace', 'personal', 'pg-smoke-user', 'Smoke', 'smoke');
+          INSERT INTO api_keys (id, key, key_hash, key_preview, user_id, workspace_id)
+          VALUES
+            ('pg-smoke-api-key', 'hashref:sha256:' || repeat('0', 64), repeat('0', 64),
+             'fixture', 'pg-smoke-user', 'pg-smoke-workspace');
           INSERT INTO user_earnings (user_id) VALUES ('pg-smoke-user');
           INSERT INTO shared_keys
             (id, seller_user_id, channel_type, api_key, key_fingerprint, status)
           VALUES
             ('pg-smoke-key', 'pg-smoke-user', 'openai', 'encrypted-fixture', 'fixture-fingerprint', 'active');
-          INSERT INTO api_key_request_logs (id, user_id)
-          VALUES ('pg-smoke-request', 'pg-smoke-user');
+          INSERT INTO api_key_request_logs (id, user_id, api_key_id, workspace_id)
+          VALUES ('pg-smoke-request', 'pg-smoke-user', 'pg-smoke-api-key', 'pg-smoke-workspace');
           INSERT INTO shared_key_earnings
             (id, request_log_id, shared_key_id, seller_user_id, gross_amount, net_amount)
           VALUES

@@ -19,5 +19,6 @@ jobs:
           node-version: ${{ matrix.node }}
           cache: npm
       - run: npm ci
+      - run: npm run build:node-index -w @octafuse/core
       # Real local SQLite, synthetic credentials; external fetch forbidden by fixture.
       - run: node node_modules/tsx/dist/cli.mjs --test packages/proxy/scripts/staging/images-sse-capacity-ownership.test.mjs packages/proxy/src/services/request-capacity.test.ts packages/proxy/src/services/capacity-response-body.test.ts packages/proxy/src/app-request-capacity.test.ts packages/proxy/src/runtime/schedule-background-work.test.ts packages/proxy/src/runtime/workers-maintenance.test.ts

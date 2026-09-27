@@ -1,0 +1,161 @@
+{
+  "version": 1,
+  "status": "LOCAL_COMPONENT_PASS_REMOTE_CI_PENDING",
+  "commit": "f1f218e6",
+  "changes": [
+    {
+      "path": ".github/workflows/images-sse-access-transport-safety.yml",
+      "beforeSha256": "61e245bb92f96e46ca39e901c6ede7032751a12ae43cd73397c19d0f2868fc5d",
+      "afterSha256": "c60fe0b2f70fac8f68f76e5af18ced3b4c00231124499eb52526f60d596b63af"
+    },
+    {
+      "path": ".github/workflows/images-sse-capacity-observation-safety.yml",
+      "beforeSha256": "efdb1ad7e0337c5dde75de5778e53ef1096b6c7bcebc3b0304b66b55de849921",
+      "afterSha256": "f5c8985add56833064354778606e990ce8ea0810d6af7e0b3675f026e5d93e58"
+    },
+    {
+      "path": ".github/workflows/images-sse-capacity-peer-acceptance-safety.yml",
+      "beforeSha256": "2e9e33da1310a6ab180faaf3a603d4e7e61735335c71c14dcaa0e7282dc996f8",
+      "afterSha256": "068860553e2cd5a9c00b0eb4462cffbfcbce9789e64b68be8a329f037b8c8098"
+    },
+    {
+      "path": ".github/workflows/images-sse-capacity-peer-cli-safety.yml",
+      "beforeSha256": "c58699cf66b0d89d815e7672ebc3f6b53a18c78217e88d708b5ffe3c17cdabc2",
+      "afterSha256": "f25dfa8fb5cc35d06baeb2417356c42680e1ba2b17d4897874ef16cc90461e52"
+    },
+    {
+      "path": ".github/workflows/images-sse-capacity-peer-safety.yml",
+      "beforeSha256": "eca7ca0cfffd56c10f052ab3eafc78621daccafa0c937281528ccad6b65cfe40",
+      "afterSha256": "c2affbde45774ae95a0568c13b89118578d5043c707948454a1cedffb7f2c1e7"
+    },
+    {
+      "path": ".github/workflows/images-sse-capacity-peer-v2-safety.yml",
+      "beforeSha256": "f2b92a201a1b863b4ceb6df5a322f4f1305f855a1d0698c0c7a81efa65e0e982",
+      "afterSha256": "1855e16c2b39882247a1a16ce89e3948e225919069753867769d674307b867a0"
+    },
+    {
+      "path": ".github/workflows/images-sse-capacity-peer-v3-safety.yml",
+      "beforeSha256": "0c7287d055019af684563ae98fd2cb3959d4c9541e21da851c4df0f1a26dc2de",
+      "afterSha256": "bd2b81a686c0dbba694c36ec40a5c57b1890949d16516511bdab438e77cf9c80"
+    },
+    {
+      "path": ".github/workflows/images-sse-capacity-safety.yml",
+      "beforeSha256": "bb511ba4282a7b53998d602a7bfda1aef66e9572fb328659f7960b84c07e6004",
+      "afterSha256": "d5b2735a885a7b8db1f320f24fb61da860652a3d9edd66f4a5846e6c202bfd6b"
+    },
+    {
+      "path": ".github/workflows/images-sse-capacity-sampler-safety.yml",
+      "beforeSha256": "c9309f1187b03c755bd1e33fc850d3f86043c2ba0101a1a64bc911c103da5faa",
+      "afterSha256": "d5c7011fd7476f68414b39548d8845ac2feb9585deca1fa49aa0ea7ee76a5b4e"
+    },
+    {
+      "path": ".github/workflows/images-sse-peer-acceptance-v3-safety.yml",
+      "beforeSha256": "3a87d7c123676dffe0ecab76f8c0f6b65045c7d9a8ba6137a8966819a86bb716",
+      "afterSha256": "5d63ff2969f3df0c0a55448d2b6c12db2f59385aab678a369579d582a54751a1"
+    },
+    {
+      "path": ".github/workflows/images-sse-peer-diagnostic-operator-safety.yml",
+      "beforeSha256": "a608713dbe72e02c80852de702d3525aef43ccbfb28e81e99baab3427e8c688c",
+      "afterSha256": "1a6d2efe78adc6d67d892b761e000d7e162ba0f4ba90a9a89f7633c8826bc38e"
+    },
+    {
+      "path": ".github/workflows/images-sse-peer-diagnostic-safety.yml",
+      "beforeSha256": "7297e74a2e630f9f16e389cedbb0e82a4f7330e0d538b3fd94028b0da89ef080",
+      "afterSha256": "70a59560ab2bea92d2fe55ab16e9b9995a31bfa981fec3deee5fd2acb7c5728f"
+    },
+    {
+      "path": ".github/workflows/images-sse-peer-diagnostic-transport-safety.yml",
+      "beforeSha256": "2724f69ea46e55ec9f7c9adadb9fe3f428f08c8b9e3fb072cdc29c87349328fa",
+      "afterSha256": "1971a92d10823ff631fc844ae6817b71784d0f249a83cfd427d01fad595d0e11"
+    },
+    {
+      "path": ".github/workflows/images-sse-peer-operator-v3-safety.yml",
+      "beforeSha256": "5ed9774926fdc42fb14b76178bcfa7e67ab3c365d35c9e620b44713bb132faec",
+      "afterSha256": "05566836fe5ca7f967659c7c0d17c47d92ac899edab78285d7b953b0320366c6"
+    },
+    {
+      "path": ".github/workflows/images-sse-peer-rejection-safety.yml",
+      "beforeSha256": "1d512f52a11f19782de1a3905aa53a62e50ead55a40fd4dd1166569862d4d028",
+      "afterSha256": "ac6b130fca15c6cab66196878d4caaed2f35fc8dd6a42652e01b39a1c0a0060e"
+    },
+    {
+      "path": ".github/workflows/images-sse-peer-window-v3-safety.yml",
+      "beforeSha256": "e134db8d026ac0fba251daaa4839799764f092728c720389b7ff39796a3b9759",
+      "afterSha256": "ac09089a04c9cb13586a233adeee8a7f1afe42be3a6b634da3b803fa2845ef8d"
+    },
+    {
+      "path": ".github/workflows/images-sse-session-safety.yml",
+      "beforeSha256": "ab932d2019e685b3f88e3210fbb81db8daa3a171923170fa5c851096ca2a2fa3",
+      "afterSha256": "4f1114662e7da3fcf911162250a2ca4a686312a56f9073d2d5809415627bfa26"
+    },
+    {
+      "path": "packages/proxy/src/services/multipart-body-inspector.ts",
+      "beforeSha256": "15ca8379fe5a63a96dca6db2f8ae3b709e92acea24ed5638e16d5bd674a4c650",
+      "afterSha256": "85090c860303960a8cfc74481cde071a6264885f7b114bb7107b6ced4039a07f",
+      "beforeCRLF": 0,
+      "afterCRLF": 0
+    }
+  ],
+  "proxyCorpus": {
+    "files": 454,
+    "beforeSha256": "b5291d31836459112a9216c83b2b62b43f306014ab86fbc586d64368c425de42",
+    "afterSha256": "efa7de97e6be678cecd6d6cfd7faa6a4b865de33149ca7b227bc408d13499b63",
+    "historicalFrozenSha256": "c744c8b57d4caecb2cd34403ec286657b8b71183cc61c8f61c04c61b7ca4dd7b",
+    "beforeCommit": "f1f218e6",
+    "beforeCorpusVerifiedFromGitBlobs": true,
+    "precedingFixtureSuccessorChanges": [
+      {
+        "path": "packages/proxy/src/routes/v1/completions.test.ts",
+        "beforeCommit": "79b720c6",
+        "beforeSha256": "c7651f7f346aaf8d624169da30e4815f78baa00af18df9bf4ded825de921fa20",
+        "afterCommit": "f1f218e6",
+        "afterSha256": "c28465f29338f6b6ac53db7c7517d99c99b3ee470742e4b9908424727373a8b4"
+      },
+      {
+        "path": "packages/proxy/src/routes/v1/openrouter-session-routes.test.ts",
+        "beforeCommit": "79b720c6",
+        "beforeSha256": "ddc7ad65033b534cc17c78fd9c1a5da59fec98b861dac934c0993854b848094c",
+        "afterCommit": "f1f218e6",
+        "afterSha256": "53f985578b3c4226f4436f22a0d2c14375e81aa5ebff927f289e854d9c2983bf"
+      }
+    ],
+    "explanation": "The v402 historical frozen corpus is preserved in historical evidence. Commit f1f218e6 already contains two fixture test successors; the one explicit Uint8Array annotation creates the current successor corpus. Emitted-JavaScript equivalence applies to this annotation only."
+  },
+  "legacyFrozenReportsModified": false,
+  "emittedJavaScript": {
+    "sameBytes": true,
+    "sha256": "e3cbf810c3a0b2bed2ef9e5132055ae8db1dda1ef30a53994c31c756e785816a",
+    "bytes": 8556,
+    "transform": "esbuild transform loader=ts format=esm target=es2022"
+  },
+  "targetedTests": {
+    "files": [
+      "packages/proxy/src/services/multipart-body-inspector.test.ts",
+      "packages/proxy/src/services/streaming-multipart-body.test.ts"
+    ],
+    "tests": 122,
+    "pass": 122,
+    "fail": 0,
+    "cancelled": 0,
+    "skipped": 0,
+    "todo": 0,
+    "exitCode": 0,
+    "log": ".wrangler/publish-20260927/multipart-targeted-tests.log",
+    "logSha256": "71e683a9abaa93a790b286ce1af362292a1cfc69e8f34278b50a0c27637fca12",
+    "nodeVersion": "v24.14.1"
+  },
+  "stageTypecheck": {
+    "compiler": "5.9.3",
+    "archiveIntegrityMatchesPackageLock": true,
+    "exitCode": 0,
+    "log": ".wrangler/publish-20260927/images-stage-typecheck-ts593.log",
+    "logSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "localNodeTypes": "25.9.5",
+    "lockedNodeTypes": "25.6.0"
+  },
+  "workflowVerification": {
+    "changed": 17,
+    "yamlParsePass": true,
+    "coreBuildImmediatelyAfterCi": true
+  }
+}

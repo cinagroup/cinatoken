@@ -253,7 +253,7 @@ jobs:
             node --import tsx --test scripts/db/cutover/postgres-financial-consumer-login.native.test.mjs
       - run: |
           gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
-            node --import tsx --test scripts/db/cutover/build-financial-consumer-direct-login-grant.native.test.mjs
+            node --import tsx --test scripts/db/cutover/build-financial-consumer-direct-login-grant-lifecycle.native.test.mjs
       - run: |
           gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
             node --import tsx --test scripts/db/cutover/build-image-fact-job-producer-grant.native.test.mjs

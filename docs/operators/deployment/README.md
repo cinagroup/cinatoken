@@ -13,6 +13,8 @@
 
 **默认推荐 Cloudflare**（个人与小流量通常可在免费额度内运行）。本地试用与一键上云见 [users/quickstart.md](../../users/quickstart.md)。
 
+本轮发布核验见 [2026-09-27 checklist v402 部署记录](./releases/2026-09-27-checklist-v402.md)。
+
 | 场景 | 文档 |
 |------|------|
 | Cloudflare 首次上云 | [cloudflare-quickstart.md](./cloudflare-quickstart.md) |

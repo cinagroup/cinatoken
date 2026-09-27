@@ -66,7 +66,7 @@ export function createMultipartBodyInspector(
 		|| !Number.isSafeInteger(limits.maxFileBytes) || limits.maxFileBytes < 0) throw new RangeError('Invalid multipart limits');
 	// Lazy initialization preserves auth-first behavior for an unread invalid form.
 	let initialized = false, disposed = false, firstBoundary = true;
-	let boundary = '', needle = new Uint8Array(), prefix: number[] = [];
+	let boundary = '', needle: Uint8Array = new Uint8Array(), prefix: number[] = [];
 	let state: 'body' | 'suffix' | 'headers' | 'closed' = 'body';
 	let matched = 0, suffix = -1, padding = 0, headerLength = 0;
 	let header: Uint8Array | undefined;
