@@ -1,0 +1,194 @@
+TAP version 13
+# Runtime grants applied: schema=cinatoken_gateway role=cinatoken_gateway_runtime migration=0073
+# Runtime grants applied: schema=cinatoken_gateway role=cinatoken_gateway_runtime migration=0073
+# {
+#   "reportFile": "C:\\\\Users\\\\cina\\\\.codex\\\\worktrees\\\\checklist-release\\\\cinatoken\\\\.wrangler\\\\staging\\\\pg-native-dispatch-tests\\\\report-replay-reservations-backend-lifecycle-successor-c475d5e2-2022-44f8-8084-ee95ac958e34.json",
+#   "status": "PASS",
+#   "cleanup": "PASS",
+#   "stages": [
+#     {
+#       "name": "formal-schema-and-parent-installed",
+#       "result": "PASS",
+#       "migrations": 73
+#     },
+#     {
+#       "name": "ordinary-runtime-default-acl-installed-before-replay-expand",
+#       "result": "PASS"
+#     },
+#     {
+#       "name": "real-producer-login-function-only-no-direct-intent-dml",
+#       "result": "PASS"
+#     },
+#     {
+#       "name": "expand-rejects-extra-execute-on-new-log-id-guard-and-rolls-back",
+#       "result": "PASS"
+#     },
+#     {
+#       "name": "pre-switch-direct-legacy-writer-reserves-without-tombstone-dml",
+#       "result": "PASS"
+#     },
+#     {
+#       "name": "bounded-resumable-backfill-and-missing-row-gate-reject",
+#       "result": "PASS",
+#       "parentBatch": {
+#         "source": "parent",
+#         "scanned": 1,
+#         "inserted": 1,
+#         "pages": 2
+#       },
+#       "intentBatch": {
+#         "source": "intent",
+#         "scanned": 1,
+#         "inserted": 0,
+#         "pages": 2
+#       },
+#       "legacyBatch": {
+#         "source": "legacy_log",
+#         "scanned": 2,
+#         "inserted": 1,
+#         "pages": 3
+#       },
+#       "longCursorBytes": 1201
+#     },
+#     {
+#       "name": "late-low-sorting-legacy-log-reserved-after-cursor",
+#       "result": "PASS"
+#     },
+#     {
+#       "name": "final-seven-source-census-detects-and-recovers-missed-low-id",
+#       "result": "PASS",
+#       "recoveredLateBatch": {
+#         "source": "legacy_log",
+#         "scanned": 4,
+#         "inserted": 1,
+#         "pages": 5
+#       }
+#     },
+#     {
+#       "name": "producer-security-definer-pre-gate-reserves-in-same-commit",
+#       "result": "PASS"
+#     },
+#     {
+#       "name": "gate-rejects-disabled-legacy-log-id-immutability",
+#       "result": "PASS"
+#     },
+#     {
+#       "name": "gate-lock-timeout-atomic-rollback-then-activation",
+#       "result": "PASS"
+#     },
+#     {
+#       "name": "runtime-grant-rerun-preserves-registry-and-function-denial",
+#       "result": "PASS",
+#       "acl": {
+#         "table_access": false,
+#         "intent_execute": false,
+#         "log_execute": false,
+#         "parent_execute": false
+#       }
+#     },
+#     {
+#       "name": "post-gate-log-id-rewrite-rollback-preserves-other-column-update",
+#       "result": "PASS",
+#       "old_id": 1,
+#       "new_id": 0,
+#       "new_reservation": 0
+#     },
+#     {
+#       "name": "post-gate-log-writer-reserves-and-deleted-log-id-cannot-reopen",
+#       "result": "PASS"
+#     },
+#     {
+#       "name": "producer-security-definer-post-gate-reserves-before-intent",
+#       "result": "PASS"
+#     },
+#     {
+#       "name": "concurrent-same-id-one-reservation-one-claim-no-financial-log-without-receipt",
+#       "result": "PASS"
+#     },
+#     {
+#       "name": "aborted-backend-rolls-back-reservation-and-retry-registers-once",
+#       "result": "PASS"
+#     },
+#     {
+#       "name": "financial-fk-history-and-immutable-fact-preserved",
+#       "result": "PASS",
+#       "facts": 1,
+#       "outbox": 1,
+#       "jobs": 1,
+#       "fact_hash": "8818a95a60ea312ceb860ff93b15247d53887db86b2f7549f377f7c9016819f2"
+#     },
+#     {
+#       "name": "receipt-present-wrong-user-or-operation-log-rejected-atomically",
+#       "result": "PASS"
+#     },
+#     {
+#       "name": "real-receipt-before-log-same-transaction-commit",
+#       "result": "PASS",
+#       "receipts": 1,
+#       "logs": 1,
+#       "job_state": "committed",
+#       "reservations": 1
+#     },
+#     {
+#       "name": "all-seven-source-backfill-statements-run-and-idempotent",
+#       "result": "PASS",
+#       "remainingSources": [
+#         {
+#           "source": "fact",
+#           "scanned": 2,
+#           "inserted": 0,
+#           "pages": 3
+#         },
+#         {
+#           "source": "outbox",
+#           "scanned": 2,
+#           "inserted": 0,
+#           "pages": 3
+#         },
+#         {
+#           "source": "job",
+#           "scanned": 2,
+#           "inserted": 0,
+#           "pages": 3
+#         },
+#         {
+#           "source": "receipt",
+#           "scanned": 1,
+#           "inserted": 0,
+#           "pages": 2
+#         }
+#       ]
+#     },
+#     {
+#       "name": "bounded-keyset-retention-review-never-authorizes-deletion",
+#       "result": "PASS",
+#       "rows": [
+#         {
+#           "request_id": "replay-clean-9cb8d3fb-3c5a-49b4-9703-16b38b1559f6",
+#           "review_bucket": "pre_dispatch_expired_policy_review",
+#           "delete_allowed": false
+#         },
+#         {
+#           "request_id": "replay-old-3123eff0-834a-4ace-93b2-e39cbfb37bdb",
+#           "review_bucket": "claimed_history_hold",
+#           "delete_allowed": false
+#         }
+#       ]
+#     }
+#   ]
+# }
+# Subtest: native PG18 replay reservation, bounded backfill, parent gate and retention classification; owned backend lifecycle successor
+ok 1 - native PG18 replay reservation, bounded backfill, parent gate and retention classification; owned backend lifecycle successor
+  ---
+  duration_ms: 54916.6733
+  type: 'test'
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 1
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 55319.5652

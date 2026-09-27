@@ -1,0 +1,200 @@
+{
+  "schema": "f658-native109-runner-failure-emitted-summary-boundary-v1",
+  "recordedAtUtc": "2026-09-27T09:23:07.422Z",
+  "commit": "f6586260e6e0274902cb7569135d3550c89fdabd",
+  "githubRun": 36308162357,
+  "githubJob": 108588759756,
+  "sourceLog": {
+    "path": ".wrangler/publish-20260927/github-native-financial-f6586260-full.log",
+    "sha256": "035d01dd74e904cbc0e34749f45796ab09f3b15269ce9147e9c37f392cd87c76"
+  },
+  "runner": {
+    "conclusion": "FAILURE",
+    "failureType": "uncaughtException",
+    "error": "Cannot read properties of null (reading 'write')",
+    "stack": "Immediate.nextWrite (node_modules/postgres/src/connection.js:255:22)",
+    "failureTimeUtc": "2026-09-27T09:18:49.8828227Z"
+  },
+  "emittedSummary": {
+    "reportFile": "/__w/cinatoken/cinatoken/.wrangler/staging/pg-native-dispatch-tests/report-replay-reservations-06d1f071-7517-43eb-a8e3-6e4e12f37dae.json",
+    "status": "PASS",
+    "cleanup": "PASS",
+    "stages": [
+      {
+        "name": "formal-schema-and-parent-installed",
+        "result": "PASS",
+        "migrations": 73
+      },
+      {
+        "name": "ordinary-runtime-default-acl-installed-before-replay-expand",
+        "result": "PASS"
+      },
+      {
+        "name": "real-producer-login-function-only-no-direct-intent-dml",
+        "result": "PASS"
+      },
+      {
+        "name": "expand-rejects-extra-execute-on-new-log-id-guard-and-rolls-back",
+        "result": "PASS"
+      },
+      {
+        "name": "pre-switch-direct-legacy-writer-reserves-without-tombstone-dml",
+        "result": "PASS"
+      },
+      {
+        "name": "bounded-resumable-backfill-and-missing-row-gate-reject",
+        "result": "PASS",
+        "parentBatch": {
+          "source": "parent",
+          "scanned": 1,
+          "inserted": 1,
+          "pages": 2
+        },
+        "intentBatch": {
+          "source": "intent",
+          "scanned": 1,
+          "inserted": 0,
+          "pages": 2
+        },
+        "legacyBatch": {
+          "source": "legacy_log",
+          "scanned": 2,
+          "inserted": 1,
+          "pages": 3
+        },
+        "longCursorBytes": 1201
+      },
+      {
+        "name": "late-low-sorting-legacy-log-reserved-after-cursor",
+        "result": "PASS"
+      },
+      {
+        "name": "final-seven-source-census-detects-and-recovers-missed-low-id",
+        "result": "PASS",
+        "recoveredLateBatch": {
+          "source": "legacy_log",
+          "scanned": 4,
+          "inserted": 1,
+          "pages": 5
+        }
+      },
+      {
+        "name": "producer-security-definer-pre-gate-reserves-in-same-commit",
+        "result": "PASS"
+      },
+      {
+        "name": "gate-rejects-disabled-legacy-log-id-immutability",
+        "result": "PASS"
+      },
+      {
+        "name": "gate-lock-timeout-atomic-rollback-then-activation",
+        "result": "PASS"
+      },
+      {
+        "name": "runtime-grant-rerun-preserves-registry-and-function-denial",
+        "result": "PASS",
+        "acl": {
+          "table_access": false,
+          "intent_execute": false,
+          "log_execute": false,
+          "parent_execute": false
+        }
+      },
+      {
+        "name": "post-gate-log-id-rewrite-rollback-preserves-other-column-update",
+        "result": "PASS",
+        "old_id": 1,
+        "new_id": 0,
+        "new_reservation": 0
+      },
+      {
+        "name": "post-gate-log-writer-reserves-and-deleted-log-id-cannot-reopen",
+        "result": "PASS"
+      },
+      {
+        "name": "producer-security-definer-post-gate-reserves-before-intent",
+        "result": "PASS"
+      },
+      {
+        "name": "concurrent-same-id-one-reservation-one-claim-no-financial-log-without-receipt",
+        "result": "PASS"
+      },
+      {
+        "name": "aborted-backend-rolls-back-reservation-and-retry-registers-once",
+        "result": "PASS"
+      },
+      {
+        "name": "financial-fk-history-and-immutable-fact-preserved",
+        "result": "PASS",
+        "facts": 1,
+        "outbox": 1,
+        "jobs": 1,
+        "fact_hash": "05721594d37ab946ed9fc80f0b825f6129dc7108a5626261fb9f0ecc8150a5ce"
+      },
+      {
+        "name": "receipt-present-wrong-user-or-operation-log-rejected-atomically",
+        "result": "PASS"
+      },
+      {
+        "name": "real-receipt-before-log-same-transaction-commit",
+        "result": "PASS",
+        "receipts": 1,
+        "logs": 1,
+        "job_state": "committed",
+        "reservations": 1
+      },
+      {
+        "name": "all-seven-source-backfill-statements-run-and-idempotent",
+        "result": "PASS",
+        "remainingSources": [
+          {
+            "source": "fact",
+            "scanned": 2,
+            "inserted": 0,
+            "pages": 3
+          },
+          {
+            "source": "outbox",
+            "scanned": 2,
+            "inserted": 0,
+            "pages": 3
+          },
+          {
+            "source": "job",
+            "scanned": 2,
+            "inserted": 0,
+            "pages": 3
+          },
+          {
+            "source": "receipt",
+            "scanned": 1,
+            "inserted": 0,
+            "pages": 2
+          }
+        ]
+      },
+      {
+        "name": "bounded-keyset-retention-review-never-authorizes-deletion",
+        "result": "PASS",
+        "rows": [
+          {
+            "request_id": "replay-clean-ec94e889-622d-46d2-8224-b8551af5e0c5",
+            "review_bucket": "pre_dispatch_expired_policy_review",
+            "delete_allowed": false
+          },
+          {
+            "request_id": "replay-old-86f1e8b5-45c2-4a29-9f23-0879fadb1ad4",
+            "review_bucket": "claimed_history_hold",
+            "delete_allowed": false
+          }
+        ]
+      }
+    ]
+  },
+  "emittedStageCount": 22,
+  "emittedTimeUtc": "2026-09-27T09:19:03.9363791Z",
+  "machineSummaryIsRunnerPass": false,
+  "sourceBackedHypothesis": "postgres.js begin scope catch queues automatic ROLLBACK after backend termination while connection.closed has nulled socket; this is a static source inference, not an instrumented ordering proof.",
+  "recommendedSuccessorBoundary": "Keep real PID-targeted termination and rollback/retry assertions, use a dedicated owned explicitly begun transaction without automatic dead-socket rollback; prove server PgSleep state before killing and expected disconnect afterward. Never swallow unrelated uncaught errors or patch vendor/ACL.",
+  "limitations": "This extracts the stdout JSON summary, not the original generated report file. PASS SQL summary and owned-cluster cleanup cannot override Node runner FAILURE or establish request/Worker lifecycle."
+}

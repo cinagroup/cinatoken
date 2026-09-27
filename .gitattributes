@@ -11,3 +11,6 @@ docs/developers/architecture/implementation-evidence/** -text
 docs/operators/deployment/releases/2026-09-27-text-workerd-manual-redirect-local-tests.txt -text
 docs/operators/deployment/releases/2026-09-27-request-dispatch-manual-fixture-first-local-failed.txt -text
 docs/operators/deployment/releases/2026-09-27-request-dispatch-manual-fixture-local-tests.txt -text
+docs/operators/deployment/releases/2026-09-27-replay-reservations-backend-lifecycle-first-local-cancelled.txt -text
+docs/operators/deployment/releases/2026-09-27-replay-reservations-backend-lifecycle-second-local-startup-failed.txt -text
+docs/operators/deployment/releases/2026-09-27-replay-reservations-backend-lifecycle-local-tests.txt -text

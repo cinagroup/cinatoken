@@ -1,0 +1,216 @@
+{
+  "schema": "replay-reservations-backend-lifecycle-successor-local-evidence-v1",
+  "status": "PASS_LOCAL_NATIVE_RUNNER_AND_CLEANUP",
+  "recordedAtUtc": "2026-09-27T09:45:28.983Z",
+  "immutableTestBase": "f6586260e6e0274902cb7569135d3550c89fdabd",
+  "isolatedCheckout": "C:/Users/cina/.codex/worktrees/checklist-release/cinatoken",
+  "source": {
+    "path": "scripts/db/cutover/postgres-replay-reservations-backend-lifecycle-successor.native.test.mjs",
+    "sha256": "d1347b01561eff94a632e570daa300522466a96a241d1e38d487fbc17617945b"
+  },
+  "historicalSource": {
+    "path": "scripts/db/cutover/postgres-replay-reservations.native.test.mjs",
+    "sha256": "d95055419a04465c7c172ff0b8426bd0b928bd538e4dad80f9442229abd5e269",
+    "preserved": true
+  },
+  "correction": "Only the destructive fixture-owned connection lifecycle: actual SELECT initializes fetch_types:false connection, bounded reserve, explicit BEGIN before prepare, exact backend PgSleep readiness, real backend termination; no client-side rollback on the dead socket.",
+  "actualLocalGate": {
+    "nodeVersion": "v22.23.2",
+    "postgresBinary": "postgres (PostgreSQL) 18.6",
+    "postgresJsVersion": "3.4.9",
+    "tests": 1,
+    "passed": 1,
+    "failed": 0,
+    "cancelled": 0,
+    "skipped": 0,
+    "stages": 22,
+    "originalAssertionsPreserved": 79,
+    "originalSqlCallsPreserved": 90,
+    "exitCode": 0,
+    "signal": null,
+    "startedAtUtc": "2026-09-27T09:43:55.617Z",
+    "completedAtUtc": "2026-09-27T09:44:51.053Z",
+    "cleanup": "PASS",
+    "destructiveTermination": {
+      "backendPid": 19300,
+      "explicitBeginBeforePrepare": true,
+      "activePgSleepObserved": true,
+      "clientErrorCode": "ECONNRESET",
+      "backendGone": true,
+      "serverTerminationLogConfirmed": true
+    }
+  },
+  "machineReport": {
+    "path": "docs/operators/deployment/releases/2026-09-27-replay-reservations-backend-lifecycle-local-report.json",
+    "sha256": "0e9228ec1149bc63b7579fe5b32ea79929b9902a5b902bfab1857f372c62d8aa"
+  },
+  "rawTap": {
+    "path": "docs/operators/deployment/releases/2026-09-27-replay-reservations-backend-lifecycle-local-tests.txt",
+    "sha256": "90ec2f858ee0c908b83b35ef058c2f55670654ed21332d5f1964d3ff90b57d84"
+  },
+  "independentStaticReview": {
+    "path": ".wrangler/publish-20260927/replay-backend-lifecycle-successor-final-independent-static-review.json",
+    "sha256": "8c6dec9aeb4f27ff1af19f349d50cdd89a0e8a79ee52c47048933f35750bf705",
+    "result": "PASS",
+    "review": {
+      "schema": "replay-backend-lifecycle-successor-independent-static-review-v1",
+      "recordedAtUtc": "2026-09-27T09:38:15.123Z",
+      "historical": {
+        "path": "scripts/db/cutover/postgres-replay-reservations.native.test.mjs",
+        "sha256": "d95055419a04465c7c172ff0b8426bd0b928bd538e4dad80f9442229abd5e269",
+        "assertions": 79,
+        "stages": 22,
+        "sqlCalls": 90
+      },
+      "successor": {
+        "path": "scripts/db/cutover/postgres-replay-reservations-backend-lifecycle-successor.native.test.mjs",
+        "sha256": "d1347b01561eff94a632e570daa300522466a96a241d1e38d487fbc17617945b",
+        "assertions": 87,
+        "stages": 22,
+        "sqlCalls": 94
+      },
+      "oldAssertionsTextAndOrderPreserved": true,
+      "all22StagesTextAndOrderPreserved": true,
+      "oldSqlUnsafeCallTextAndOrderPreserved": true,
+      "addedAssertions": [
+        "assert.equal(report.sourceSha256.historicalNativeTest, historicalNativeTestSha256)",
+        "assert.equal(pid, initializedPid, 'Reserved transaction must use the initialized owned backend')",
+        "assert.ok(Number.isSafeInteger(pid) && pid > 0)",
+        "assert.equal(activeSleepObserved, true, 'Exact owned backend must enter PgSleep before termination')",
+        "assert.equal(terminated.status, 'rejected')",
+        "assert.ok(['57P01', 'CONNECTION_CLOSED', 'ECONNRESET'].includes(terminated.error?.code),\n          'Expected server termination or closed transport; arbitrary errors are not accepted')",
+        "assert.equal(backendGone, true, 'Terminated owned backend must disappear')",
+        "assert.match(await cluster.readLog(), new RegExp(\n          '\\\\[' + pid + '\\\\] FATAL:.*terminating connection due to administrator command', 'i'))"
+      ],
+      "addedSqlCalls": [
+        "crashClient.unsafe('SELECT pg_backend_pid() AS pid')",
+        "tx.unsafe('BEGIN')",
+        "cluster.admin.unsafe(\n            'SELECT state, wait_event_type, wait_event FROM pg_catalog.pg_stat_activity WHERE pid=$1', [pid])",
+        "cluster.admin.unsafe(\n            'SELECT count(*)::int AS n FROM pg_catalog.pg_stat_activity WHERE pid=$1', [pid])"
+      ],
+      "newSqlScope": "One explicit BEGIN plus real client PID initialization and two read-only pg_stat_activity observation queries. No role/grant/schema/policy or financial SQL added.",
+      "lifecycleReview": "Dedicated owned reserved client; real initial PID query; 5s bounded initialization/reserve; initialized/reserved PID equality; explicit transaction; both asynchronous outcomes observed; bounded exact PID/PgSleep readiness; real backend termination; expected disconnect whitelist; PID removal and PID-specific server FATAL; release/end cleanup.",
+      "originalCrashFinancialProofPreserved": "Prepare succeeds before termination, rollback leaves zero tombstones, one holder retry registers exactly once.",
+      "processUncaughtHandlerAdded": false,
+      "vendorPatched": false,
+      "productionRuntimeModifiedBySuccessor": false,
+      "limitations": "Static lineage proof only. Actual Node runner EXIT0/native financial assertions and cleanup remain necessary. This fixture does not fix every vendor automatic begin() disconnect path or prove request/Worker resource ownership."
+    }
+  },
+  "sourcePins": [
+    {
+      "path": "scripts/db/cutover/postgres-replay-reservations.native.test.mjs",
+      "sha256": "d95055419a04465c7c172ff0b8426bd0b928bd538e4dad80f9442229abd5e269",
+      "byteIdenticalToImmutableF658": true
+    },
+    {
+      "path": "packages/core/src/test-support/postgres-native-cluster.mjs",
+      "sha256": "6b5923be8d3bdcd061033eed1af2f67f3b87fa2fca1f2cf0a0b2eb0eb2cb8d2a",
+      "byteIdenticalToImmutableF658": true
+    },
+    {
+      "path": "scripts/db/cutover/grant-postgres-runtime.ts",
+      "sha256": "99fd6bded1f568a62339f3774fec8e9ce7e69a9423fdf625b46cf7794b8553ea",
+      "byteIdenticalToImmutableF658": true
+    },
+    {
+      "path": "scripts/db/cutover/provision-postgres-roles.ts",
+      "sha256": "544b5827001bdd7a2540e1da5772af3741560f79c4248ccc7b7cabbb8dd7f85a",
+      "byteIdenticalToImmutableF658": true
+    },
+    {
+      "path": "scripts/db/cutover/build-postgres-replay-reservation-backfill.mjs",
+      "sha256": "62d1cc9795693d6a043ae7b26d24084b6c0f01c80bfb142e09928f5fef7fd3d0",
+      "byteIdenticalToImmutableF658": true
+    },
+    {
+      "path": "scripts/db/cutover/build-postgres-replay-retention-candidates.mjs",
+      "sha256": "e7e33b1ababf04a25dabd06734bcca59011460501752f519ef8c95e0d3fb4435",
+      "byteIdenticalToImmutableF658": true
+    },
+    {
+      "path": "packages/core/migrations-proposals/postgres/request-dispatch-replay-reservations.sql",
+      "sha256": "c288bbc43fad3bbb8b3b1a88fa1b1d01b9e5f2f9f520753873e0cdf21643c3d8",
+      "byteIdenticalToImmutableF658": true
+    },
+    {
+      "path": "packages/core/migrations-proposals/postgres/request-dispatch-replay-parent-gate.sql",
+      "sha256": "1079eb858811c70dd850b95be68f64e5c7b8361926e8c3f0a9e80621f6125b10",
+      "byteIdenticalToImmutableF658": true
+    },
+    {
+      "path": "docs/developers/architecture/implementation-evidence/C03-postgres-native-replay-reservations-v335-report.json",
+      "sha256": "a146cc68f909883d228056d37f316c7a83b51b909bca8585000f8a4a34723446",
+      "byteIdenticalToImmutableF658": true
+    }
+  ],
+  "firstLinuxFailure": {
+    "path": "docs/operators/deployment/releases/2026-09-27-replay-reservations-backend-lifecycle-first-linux-runner-failure.json",
+    "sha256": "95392e0e516c0b0a87b960a25c3a68b51efef5a7ced741326a9d1d3eb57af6a7",
+    "boundary": "Actual Node runner uncaughtException FAILURE; later 22-stage SQL PASS and cleanup PASS did not make the run pass.",
+    "sourceBasedInference": "postgres.js begin() scope catch queues automatic rollback after termination; a queued nextWrite can race closed socket=null. The log directly proves nextWrite null.write, not the precise callback order."
+  },
+  "firstLocalFailure": {
+    "report": {
+      "path": "docs/operators/deployment/releases/2026-09-27-replay-reservations-backend-lifecycle-first-local-failed-report.json",
+      "sha256": "de92fd46d09834f52b5e5071d5bdaa5819d8d1630004cebe9f2bda768fc569c2"
+    },
+    "rawTap": {
+      "path": "docs/operators/deployment/releases/2026-09-27-replay-reservations-backend-lifecycle-first-local-cancelled.txt",
+      "sha256": "93306895c666e80993d2366f31948c1e21b1d514a60c2e4930963cf7cba544ab"
+    },
+    "runner": {
+      "path": ".wrangler/publish-20260927/native109-first-local-cancelled-runner-result.json",
+      "sha256": "1452a5715993e6d8bc20c2c0a59bafacdb85e9cd339027063912d369db56d052"
+    },
+    "source": {
+      "path": ".wrangler/publish-20260927/native109-first-local-source.mjs",
+      "sha256": "567c52b6a44e0e6084b76c2cf2b1e779c0916440599aeb8650b1a998d231ce75"
+    },
+    "exitCode": 1,
+    "failureType": "testTimeoutFailure",
+    "cleanup": "PASS",
+    "ownedDirectoryAbsent": true,
+    "boundary": "Fresh reserve with fetch_types:false did not finish connection initialization; test timed out. Owned pg_ctl shutdown allowed terminal cleanup; 57P03 in its final machine report was a shutdown consequence, not an accepted business assertion."
+  },
+  "secondLocalStartupFailure": {
+    "rawTap": {
+      "path": "docs/operators/deployment/releases/2026-09-27-replay-reservations-backend-lifecycle-second-local-startup-failed.txt",
+      "sha256": "aa8dc45baac18b0ced49028a32fde47b3f8cb0cdff3cee8552331ff0fc610bd8"
+    },
+    "runner": {
+      "executable": "C:/cinagroup/cinatoken/.wrangler/publish-20260927/node22-diagnostic/node-v22.23.2-win-x64/node.exe",
+      "args": [
+        "--import",
+        "tsx",
+        "--test",
+        "scripts/db/cutover/postgres-replay-reservations-backend-lifecycle-successor.native.test.mjs"
+      ],
+      "cwd": "C:/Users/cina/.codex/worktrees/checklist-release/cinatoken",
+      "startedAt": "2026-09-27T09:38:32.325Z",
+      "completedAt": "2026-09-27T09:38:50.126Z",
+      "exitCode": 1,
+      "signal": null
+    },
+    "boundary": "Frozen harness returned AggregateError Native startup unconfirmed before any SQL stage. No data directory, server.log or matching owned PG process existed. Necessary initdb diagnostic on the same owned directory then succeeded; pg_ctl reported no server running, no postmaster.pid existed and the exact owned directory was removed before the final run.",
+    "finalSourceUnchanged": true,
+    "ownedDirectoryAbsent": true,
+    "diagnostic": {
+      "path": ".wrangler/publish-20260927/native109-second-local-initdb-diagnostic-corrected.txt",
+      "sha256": "cd5eac51b2d52f5813febe01e470f1b3af7fd7008c1fabd876ce26973f97254f"
+    }
+  },
+  "workflowChange": {
+    "path": ".github/workflows/proxy-dispatch-safety.yml",
+    "change": "Exact native109 command replacement only; all other workflow bytes retained.",
+    "beforeSha256": "23e8874912921d3d7420ed906e28888b4573d74f6ffdcd81a9fa99a86c043a6b",
+    "afterSha256": "7a96729408ef791bcfe2eb92609411dec99066dd907ce5ae770b6a57fa591036",
+    "oldCommand": "node --import tsx --test scripts/db/cutover/postgres-replay-reservations.native.test.mjs",
+    "newCommand": "node --import tsx --test scripts/db/cutover/postgres-replay-reservations-backend-lifecycle-successor.native.test.mjs"
+  },
+  "limitations": [
+    "This is a fixture lifecycle successor, not a vendor patch or proof of all postgres.js backend-disconnection behavior.",
+    "Primary contains concurrent unrelated Core edits; actual native execution and immutable source comparison use isolated f658.",
+    "No production provider, financial charge, SQL migration, production ACL change, Core build, optional later native gate, commit, push or deployment was performed for this target."
+  ]
+}

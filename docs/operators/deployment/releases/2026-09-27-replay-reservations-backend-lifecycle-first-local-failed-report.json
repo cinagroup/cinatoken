@@ -1,0 +1,138 @@
+{
+  "status": "FAIL",
+  "cleanup": "PASS",
+  "binaryVersion": "postgres (PostgreSQL) 18.6",
+  "nodeVersion": "v22.23.2",
+  "lineage": {
+    "historicalNativeTestSha256": "d95055419a04465c7c172ff0b8426bd0b928bd538e4dad80f9442229abd5e269",
+    "change": "Fixture-owned explicit transaction and observed backend termination; no production SQL, ACL or vendor change."
+  },
+  "scope": "owned loopback PostgreSQL 18.6; 73 formal migrations; review-only reservation and gate proposals",
+  "limitations": [
+    "The historical Linux runner failed with an uncaught postgres.js automatic-rollback socket race despite a PASS SQL summary; this successor requires the actual Node test runner to pass.",
+    "This fixture lifecycle correction does not claim to fix all postgres.js automatic begin() backend-disconnection behavior.",
+    "No source-history deletion or archival is authorized; delete_allowed remains false.",
+    "The immutable reservation grows indefinitely until a separately reviewed replay horizon and retention policy exist.",
+    "Lock duration and capacity on a representative production-size old database are not measured.",
+    "The receipt-before-log check uses the migrator fixture with formal 0072 triggers; it does not install the optional legacy-log guard or exercise the dedicated financial consumer LOGIN."
+  ],
+  "sourceSha256": {
+    "formalMigrationCorpus": "23afef61a8a670e0af8c90e3a138f522e6b283b454e380a592bf85bca83108dc",
+    "nativeTest": "567c52b6a44e0e6084b76c2cf2b1e779c0916440599aeb8650b1a998d231ce75",
+    "historicalNativeTest": "d95055419a04465c7c172ff0b8426bd0b928bd538e4dad80f9442229abd5e269",
+    "nativeClusterHarness": "6b5923be8d3bdcd061033eed1af2f67f3b87fa2fca1f2cf0a0b2eb0eb2cb8d2a",
+    "postgresTransactionLifecycle": "4e21f5733e70d79cffc10d10d4ef01031de4a9ac862210e43f8870029fd103ed",
+    "postgresConnectionLifecycle": "ee3a218d9aa6a6f2887c1a19da50009335fe84c11a5431d5cab72d6bc528632f",
+    "baseProposal": "c288bbc43fad3bbb8b3b1a88fa1b1d01b9e5f2f9f520753873e0cdf21643c3d8",
+    "gateProposal": "1079eb858811c70dd850b95be68f64e5c7b8361926e8c3f0a9e80621f6125b10",
+    "runtimeGrant": "99fd6bded1f568a62339f3774fec8e9ce7e69a9423fdf625b46cf7794b8553ea",
+    "backfillGenerator": "62d1cc9795693d6a043ae7b26d24084b6c0f01c80bfb142e09928f5fef7fd3d0",
+    "candidateGenerator": "e7e33b1ababf04a25dabd06734bcca59011460501752f519ef8c95e0d3fb4435"
+  },
+  "stages": [
+    {
+      "name": "formal-schema-and-parent-installed",
+      "result": "PASS",
+      "migrations": 73
+    },
+    {
+      "name": "ordinary-runtime-default-acl-installed-before-replay-expand",
+      "result": "PASS"
+    },
+    {
+      "name": "real-producer-login-function-only-no-direct-intent-dml",
+      "result": "PASS"
+    },
+    {
+      "name": "expand-rejects-extra-execute-on-new-log-id-guard-and-rolls-back",
+      "result": "PASS"
+    },
+    {
+      "name": "pre-switch-direct-legacy-writer-reserves-without-tombstone-dml",
+      "result": "PASS"
+    },
+    {
+      "name": "bounded-resumable-backfill-and-missing-row-gate-reject",
+      "result": "PASS",
+      "parentBatch": {
+        "source": "parent",
+        "scanned": 1,
+        "inserted": 1,
+        "pages": 2
+      },
+      "intentBatch": {
+        "source": "intent",
+        "scanned": 1,
+        "inserted": 0,
+        "pages": 2
+      },
+      "legacyBatch": {
+        "source": "legacy_log",
+        "scanned": 2,
+        "inserted": 1,
+        "pages": 3
+      },
+      "longCursorBytes": 1201
+    },
+    {
+      "name": "late-low-sorting-legacy-log-reserved-after-cursor",
+      "result": "PASS"
+    },
+    {
+      "name": "final-seven-source-census-detects-and-recovers-missed-low-id",
+      "result": "PASS",
+      "recoveredLateBatch": {
+        "source": "legacy_log",
+        "scanned": 4,
+        "inserted": 1,
+        "pages": 5
+      }
+    },
+    {
+      "name": "producer-security-definer-pre-gate-reserves-in-same-commit",
+      "result": "PASS"
+    },
+    {
+      "name": "gate-rejects-disabled-legacy-log-id-immutability",
+      "result": "PASS"
+    },
+    {
+      "name": "gate-lock-timeout-atomic-rollback-then-activation",
+      "result": "PASS"
+    },
+    {
+      "name": "runtime-grant-rerun-preserves-registry-and-function-denial",
+      "result": "PASS",
+      "acl": {
+        "table_access": false,
+        "intent_execute": false,
+        "log_execute": false,
+        "parent_execute": false
+      }
+    },
+    {
+      "name": "post-gate-log-id-rewrite-rollback-preserves-other-column-update",
+      "result": "PASS",
+      "old_id": 1,
+      "new_id": 0,
+      "new_reservation": 0
+    },
+    {
+      "name": "post-gate-log-writer-reserves-and-deleted-log-id-cannot-reopen",
+      "result": "PASS"
+    },
+    {
+      "name": "producer-security-definer-post-gate-reserves-before-intent",
+      "result": "PASS"
+    },
+    {
+      "name": "concurrent-same-id-one-reservation-one-claim-no-financial-log-without-receipt",
+      "result": "PASS"
+    }
+  ],
+  "postgresVersion": "3.4.9",
+  "error": {
+    "code": "57P03",
+    "message": "the database system is shutting down"
+  }
+}

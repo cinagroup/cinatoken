@@ -569,7 +569,7 @@ jobs:
             node --import tsx --test scripts/db/cutover/build-request-legacy-parent-census.native.test.mjs
       - run: |
           gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
-            node --import tsx --test scripts/db/cutover/postgres-replay-reservations.native.test.mjs
+            node --import tsx --test scripts/db/cutover/postgres-replay-reservations-backend-lifecycle-successor.native.test.mjs
       - run: |
           gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
             node --import tsx --test scripts/db/cutover/postgres-legacy-parent-activation.native.test.mjs
