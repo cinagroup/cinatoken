@@ -3,7 +3,8 @@ import {readFileSync} from 'node:fs';
 import test from 'node:test';
 import ts from 'typescript';
 const tables=new Set(['users','organizations','workspaces','management_api_keys','byok_keys','user_audit_logs','guardrails']);
-for(const[file,expected]of [['./byok-keys.ts',47],['../db/postgres/users.impl.ts',2]])test(file+': PostgreSQL raw tables are qualified without leaking into other dialects',()=>{
+// Both deletion paths also query guardrails to preserve account/workspace defaults.
+for(const[file,expected]of [['./byok-keys.ts',47],['../db/postgres/users.impl.ts',4]])test(file+': PostgreSQL raw tables are qualified without leaking into other dialects',()=>{
   const source=readFileSync(new URL(file,import.meta.url),'utf8'),ast=ts.createSourceFile(file,source,ts.ScriptTarget.Latest,true);let count=0;const ranges=[];
   function inspect(n){
     if(ts.isStringLiteralLike(n)||[ts.SyntaxKind.TemplateHead,ts.SyntaxKind.TemplateMiddle,ts.SyntaxKind.TemplateTail].includes(n.kind))for(const m of n.text.matchAll(/\b(?:FROM|JOIN|INTO|UPDATE)\s+([\w.]+)/gi)){const table=m[1].split('.').at(-1);if(tables.has(table)){assert.equal(m[1],'cinatoken_gateway.'+table);count++;}}
