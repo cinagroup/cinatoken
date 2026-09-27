@@ -117,7 +117,7 @@ jobs:
         working-directory: packages/proxy
       - run: npm run test:complete-chat-quote -w @octafuse/proxy
       # Two synthetic Workers, a private Service Binding, and an in-process fallback contract.
-      - run: node --import tsx --test scripts/staging/chat-holder-binding-v364.node.test.mjs scripts/staging/chat-holder-binding-v364-miniflare-input-successor.test.mjs
+      - run: node --import tsx --test scripts/staging/chat-holder-binding-v364.node.test.mjs scripts/staging/chat-holder-binding-v364-http-cancel-successor.test.mjs
         working-directory: packages/proxy
       # Review-only Chat quote/admission to private holder seam with one loopback POST.
       - run: node --import tsx --test src/services/complete-chat-holder-dispatch-v385.test.ts

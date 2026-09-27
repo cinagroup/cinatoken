@@ -1,0 +1,11 @@
+# v364 HTTP cancellation comparison successor
+
+The [1edbf325 CI report](./2026-09-27-1edbf325-linux-proxy-ci-report.json) records 4346/4346 full unit and ordinary Worker 3 cases / 4 modes PASS. At step 27, five of six v364 tests passed, including the two native bounds and streaming cases. Only the native cancellation case failed: its KV marker stayed null during the original 100 × 10 ms observation loop ([failed log](./2026-09-27-v364-http-cancel-successor-first-linux-failed.txt)). Steps 28–65 were skipped.
+
+The current getWorker.fetch path already uses Miniflare's special HTTP proxy bridge. The failure does not prove generic RPC serialization lost cancellation. It also does not distinguish failure to propagate cancellation from termination of the asynchronous KV write's execution context. The synthetic private holder's cancel callback writes KV without an explicit waitUntil owner; that observation remains a concrete boundary to investigate.
+
+The new successor leaves the two passed native RPC cases and the committed 961cd304 source unchanged. Only the cancellation case uses a new mf.dispatchFetch helper with the same URL, method, Content-Type and envelope body. It checks the owned 127.0.0.1 runtime origin and the private holder's accepted marker, then retains the original first chunk, reader.cancel, 100 × 10 ms observed-marker assertion and absence of release. All 39 original assertions remain, with two routing assertions added (41 total); the four titles remain. No timeout, error handling or skip was loosened.
+
+A Node 24 configuration-only selection passed 1/1 ([log](./2026-09-27-v364-http-cancel-successor-config-only-local-tests.txt)); no native Worker was started locally. The [source report](./2026-09-27-v364-http-cancel-successor-local-report.json) supplies the required Linux Node 22 command. The actual HTTP cancellation comparison remains pending and may still fail. If it does, the missing cancellation evidence remains a gap rather than justification to extend a timeout or remove an assertion.
+
+This comparison retains the test-only 2026-09-04 runtime date. It does not certify the frozen 2026-09-25 JSONC semantics, activate a production holder, or prove production HTTP/financial cleanup. Private/gateway fixture source, frozen configurations, production runtime and prior evidence remain unchanged.

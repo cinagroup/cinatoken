@@ -1,0 +1,84 @@
+{
+  "schema": "v364-http-cancel-successor-local-v1",
+  "recordedAtUtc": "2026-09-27T10:32:08.412Z",
+  "status": "PARTIAL_LOCAL_CONFIG_PASS_HTTP_CANCELLATION_NATIVE_LINUX_PENDING",
+  "predecessorCommit": "1edbf325b35ae4fa7a05ebaaeb3aae2573b37f66",
+  "successor": {
+    "path": "packages/proxy/scripts/staging/chat-holder-binding-v364-http-cancel-successor.test.mjs",
+    "sha256": "0820bbd5e673d3951130866f11d13e72fbcaa73bd0683f7d19ca8de7ab6df4b1"
+  },
+  "historicalSourcesPreserved": [
+    {
+      "path": "packages/proxy/scripts/staging/chat-holder-binding-v364-miniflare-input-successor.test.mjs",
+      "sha256": "961cd304321d1bbcbe270448c9fdb9366b865d6d7caf569dea25105b8e501351"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/chat-holder-binding-v364-workerd-date-successor.test.mjs",
+      "sha256": "89be9986165a6b9ee47e3685a5bea6c584858a10a6530fcf317b39c807a4bd77"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/chat-holder-binding-v364.test.mjs",
+      "sha256": "74c96ce1b3825744652f1679e858bf8992aef1d4763a1ba25dc5e5b8b1d80f68"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/chat-holder-binding-v364.node.test.mjs",
+      "sha256": "51c845fcca4edb2bdd371bee90f0a6e7efce7ac98e310a18e60206513b2148b7"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/wrangler.chat-holder-gateway-v364.jsonc",
+      "sha256": "e1a0354ff5bf7915c6c125f3003683a56b708d8bdd6006cce6b33c4ff8a6bb77"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/wrangler.chat-holder-private-v364.jsonc",
+      "sha256": "6b897d8aa7b01087b75d4b74968d4004e2b6ddb87650bad1203c7693160b2047"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/chat-holder-gateway-v364.ts",
+      "sha256": "8c85b01ba54daa9b7302c726d20693d08ccb3395350ea6a333817eed46441eaf"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/chat-holder-private-v364.ts",
+      "sha256": "5d32924d095aed7591e1b2ee8667d52bc374fc15e61ad68dae5ff749afd861c1"
+    }
+  ],
+  "staticDelta": {
+    "byteExactInverse": true,
+    "originalAssertions": 39,
+    "currentAssertions": 41,
+    "originalTitles": 4,
+    "twoPassedRpcTestBodiesUnchanged": true,
+    "originalCancelObservationLoopUnchanged": true,
+    "change": "Only cancellation case uses a new mf.dispatchFetch HTTP-entry helper with the same URL/init; helper checks owned loopback origin and the case checks the original private holder accepted marker",
+    "unchanged": "Old RPC factory/post, two passed native RPC cases, all39 original assertions, body/method/headers, binding/flags, local date2026-09-04 and frozenJSONC2026-09-25"
+  },
+  "localConfigOnly": {
+    "node": "v24.14.1",
+    "command": "node --import tsx --test --test-name-pattern=\"^v364 configs keep\" packages/proxy/scripts/staging/chat-holder-binding-v364-http-cancel-successor.test.mjs",
+    "exitCode": 0,
+    "tests": 1,
+    "pass": 1,
+    "fail": 0,
+    "nativeCasesNotExecuted": 3,
+    "log": {
+      "path": "docs/operators/deployment/releases/2026-09-27-v364-http-cancel-successor-config-only-local-tests.txt",
+      "sha256": "78098f1a79d205d49180a33855d831d2ccda6e58fe1a1351b5fce5a5d768cd50"
+    }
+  },
+  "historicalLinux": {
+    "ciReport": {
+      "path": "docs/operators/deployment/releases/2026-09-27-1edbf325-linux-proxy-ci-report.json",
+      "sha256": "7c0eaef966098812f0f89ae3c31e6b60e6ffea96f9854d9b85ba0e8666379dc5"
+    },
+    "nativeBindingCasesPass": 2,
+    "nativeBindingCasesFail": 1,
+    "cancellationUnresolved": true
+  },
+  "requiredLinuxCommand": "node --import tsx --test packages/proxy/scripts/staging/chat-holder-binding-v364.node.test.mjs packages/proxy/scripts/staging/chat-holder-binding-v364-http-cancel-successor.test.mjs",
+  "limitations": [
+    "The new direct HTTP-entry cancellation comparison has not run natively. It may fail for the same reason; no claim that it repairs cancellation.",
+    "The previous missing KV marker does not establish RPC serialization loss. The bridge already dispatches via HTTP; propagation and asynchronous KV IoContext lifetime remain unresolved.",
+    "No timeout, cancellation assertion, error handling, skip, runtime/private gateway source, old configuration, default-off setting or financial/SQL authority was weakened or modified.",
+    "Local selected configuration test used Node24.14.1; real three native cases require LinuxNode22 execution. Windows native was not retried.",
+    "The local date remains2026-09-04 and cannot certify frozenJSONC2026-09-25 semantics."
+  ]
+}

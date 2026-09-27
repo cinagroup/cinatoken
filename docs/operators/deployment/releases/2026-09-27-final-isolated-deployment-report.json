@@ -1,6 +1,6 @@
 {
   "schema": "checklist-v402-existing-services-isolated-deployment-v1",
-  "recordedAtUtc": "2026-09-27T09:52:31.393Z",
+  "recordedAtUtc": "2026-09-27T10:37:32.880Z",
   "status": "DEPLOYED_VERIFIED_PUBLIC_GET_AND_LINUX_WORKER_GATE",
   "sourceCommit": "14eadad8742d6fc3dd0eebd445992e65d1d607db",
   "runtimeFixCommit": "3b7c5b6bef33dec5354f46d90cab2345f08b6d0c",
@@ -158,15 +158,29 @@
     "productionSqlExecuted": false,
     "migrationsExecuted": false,
     "paidProviderCalls": false,
-    "reviewFeaturesDefaultOff": true
+    "reviewFeaturesDefaultOff": true,
+    "productionSqlInterpretation": "No direct management, test or migration SQL command was executed against production. Public GET checks may perform normal read-only application database queries."
   },
   "cleanup": {
     "primaryOwnedDryRunDirectoriesRemoved": true,
     "primaryWranglerLocalConfigRestored": true,
     "managedWorktreeArchive": "pending until all owned tests complete",
-    "ignoredLogs": "preserve in primary .wrangler/publish-20260927/isolated/"
+    "ignoredLogs": "preserve in primary .wrangler/publish-20260927/isolated/",
+    "portableNode22Diagnostic": {
+      "status": "REMOVED",
+      "removedAtUtc": "2026-09-27T10:00:21.9327948Z",
+      "target": "C:\\cinagroup\\cinatoken\\.wrangler\\publish-20260927\\node22-diagnostic",
+      "filesRemoved": 2035,
+      "reparseEntries": 0,
+      "ownedRunningProcesses": 0,
+      "verifiedArtifactPreserved": true,
+      "officialChecksumsPreserved": true,
+      "preCleanupProcessInventory": "Unavailable: sandbox WMI read denied; child agents confirmed all owned tests terminal before removal.",
+      "postCleanupProcessInventory": "Elevated read-only WMI inventory completed.",
+      "evidenceSha256": "3b6dfd7e53805e3fc62e5a61885d7b8dead54520f5865a1b513d8660f30de52b"
+    }
   },
-  "latestCi": "14eadad8: 4346/4346 full unit, actual Worker 3 cases/4 modes and Docker PASS; later v364 runtime-startup fixture failure pending successor. Release automated Version PR still denied by unchanged repository permissions.",
+  "latestCi": "1edbf325: 18 actual push runs, 16 SUCCESS/2 FAILURE; full unit 4346/4346, ordinary native Worker 3 cases/4 modes, native SQL workflow commands7–113 all107, Images11/22 and four independent gates plus Docker PASS. v364 holder5/6: cancel observation missing, later dispatch28–65 SKIPPED. Release Version PR still denied by unchanged repository permissions. HTTP cancellation comparison pending fresh Linux execution.",
   "deploymentHistory": [
     {
       "sourceCommit": "a8029350760d9442f866ac1eab59d4d2845eed4a",
@@ -281,5 +295,17 @@
     "Default-off holder/credential-free review paths retain separately documented redirect:error risks; this ordinary-driver fix does not enable or validate them.",
     "Public GET checks prove those public endpoints only; synthetic Linux Worker transport tests are separately recorded.",
     "Historical Proxy versions retain the known Worker redirect:error incompatibility and are not a fix for this issue."
-  ]
+  ],
+  "latestCiSourceCommit": "1edbf325b35ae4fa7a05ebaaeb3aae2573b37f66",
+  "reviewHolderCancellationGate": {
+    "defaultOff": true,
+    "checklistActivationGatesChecked": false,
+    "sourceCommit": "1edbf325b35ae4fa7a05ebaaeb3aae2573b37f66",
+    "testsPassed": 5,
+    "testsTotal": 6,
+    "nativeBoundsAndStreaming": "PASS",
+    "nativeCancellationObservation": "FAIL",
+    "cause": "Unconfirmed: KV null does not distinguish cancellation propagation from asynchronous observation lifetime.",
+    "nextComparison": "Test-only direct HTTP consumer, original cancellation assertion and timeout preserved."
+  }
 }

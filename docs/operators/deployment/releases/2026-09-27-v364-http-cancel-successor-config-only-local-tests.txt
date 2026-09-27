@@ -1,0 +1,9 @@
+✔ v364 configs keep the synthetic holder private and bind only the named holder (1.9799ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 1
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1069.8459

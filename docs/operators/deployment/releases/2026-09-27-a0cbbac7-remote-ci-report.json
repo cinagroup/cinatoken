@@ -1,0 +1,1760 @@
+{
+  "schema": "a0cbbac7-final-github-ci-frozen-report-v2",
+  "recordedAtUtc": "2026-09-27T10:21:07.949Z",
+  "commit": "a0cbbac7ec3f99acc19c0a8af2312ea3d99b16b5",
+  "workflowCounts": {
+    "total": 18,
+    "success": 16,
+    "failure": 1
+  },
+  "allWorkflowRuns": [
+    {
+      "conclusion": "success",
+      "createdAt": "2026-09-27T10:06:39Z",
+      "databaseId": 36311481753,
+      "event": "push",
+      "headSha": "a0cbbac7ec3f99acc19c0a8af2312ea3d99b16b5",
+      "name": "Verify package versions",
+      "status": "completed",
+      "updatedAt": "2026-09-27T10:06:50Z",
+      "url": "https://github.com/cinagroup/cinatoken/actions/runs/36311481753"
+    },
+    {
+      "conclusion": "success",
+      "createdAt": "2026-09-27T10:06:39Z",
+      "databaseId": 36311481716,
+      "event": "push",
+      "headSha": "a0cbbac7ec3f99acc19c0a8af2312ea3d99b16b5",
+      "name": "Gemini cancellation wire safety",
+      "status": "completed",
+      "updatedAt": "2026-09-27T10:07:12Z",
+      "url": "https://github.com/cinagroup/cinatoken/actions/runs/36311481716"
+    },
+    {
+      "conclusion": "success",
+      "createdAt": "2026-09-27T10:06:39Z",
+      "databaseId": 36311481617,
+      "event": "push",
+      "headSha": "a0cbbac7ec3f99acc19c0a8af2312ea3d99b16b5",
+      "name": "Images SSE operator fixture safety",
+      "status": "completed",
+      "updatedAt": "2026-09-27T10:07:48Z",
+      "url": "https://github.com/cinagroup/cinatoken/actions/runs/36311481617"
+    },
+    {
+      "conclusion": "failure",
+      "createdAt": "2026-09-27T10:06:39Z",
+      "databaseId": 36311481709,
+      "event": "push",
+      "headSha": "a0cbbac7ec3f99acc19c0a8af2312ea3d99b16b5",
+      "name": "Release",
+      "status": "completed",
+      "updatedAt": "2026-09-27T10:07:22Z",
+      "url": "https://github.com/cinagroup/cinatoken/actions/runs/36311481709"
+    },
+    {
+      "conclusion": "success",
+      "createdAt": "2026-09-27T10:06:39Z",
+      "databaseId": 36311481772,
+      "event": "push",
+      "headSha": "a0cbbac7ec3f99acc19c0a8af2312ea3d99b16b5",
+      "name": "Images SSE peer rejection safety",
+      "status": "completed",
+      "updatedAt": "2026-09-27T10:07:39Z",
+      "url": "https://github.com/cinagroup/cinatoken/actions/runs/36311481772"
+    },
+    {
+      "conclusion": "success",
+      "createdAt": "2026-09-27T10:06:39Z",
+      "databaseId": 36311481770,
+      "event": "push",
+      "headSha": "a0cbbac7ec3f99acc19c0a8af2312ea3d99b16b5",
+      "name": "Images SSE peer management safety",
+      "status": "completed",
+      "updatedAt": "2026-09-27T10:07:50Z",
+      "url": "https://github.com/cinagroup/cinatoken/actions/runs/36311481770"
+    },
+    {
+      "conclusion": "success",
+      "createdAt": "2026-09-27T10:06:39Z",
+      "databaseId": 36311481600,
+      "event": "push",
+      "headSha": "a0cbbac7ec3f99acc19c0a8af2312ea3d99b16b5",
+      "name": "Text redirect wire safety",
+      "status": "completed",
+      "updatedAt": "2026-09-27T10:07:25Z",
+      "url": "https://github.com/cinagroup/cinatoken/actions/runs/36311481600"
+    },
+    {
+      "conclusion": "success",
+      "createdAt": "2026-09-27T10:06:39Z",
+      "databaseId": 36311481682,
+      "event": "push",
+      "headSha": "a0cbbac7ec3f99acc19c0a8af2312ea3d99b16b5",
+      "name": "Text SSE cancellation wire safety",
+      "status": "completed",
+      "updatedAt": "2026-09-27T10:07:21Z",
+      "url": "https://github.com/cinagroup/cinatoken/actions/runs/36311481682"
+    },
+    {
+      "conclusion": "success",
+      "createdAt": "2026-09-27T10:06:39Z",
+      "databaseId": 36311481606,
+      "event": "push",
+      "headSha": "a0cbbac7ec3f99acc19c0a8af2312ea3d99b16b5",
+      "name": "Images SSE peer finalizer safety",
+      "status": "completed",
+      "updatedAt": "2026-09-27T10:07:56Z",
+      "url": "https://github.com/cinagroup/cinatoken/actions/runs/36311481606"
+    },
+    {
+      "conclusion": "success",
+      "createdAt": "2026-09-27T10:06:39Z",
+      "databaseId": 36311481635,
+      "event": "push",
+      "headSha": "a0cbbac7ec3f99acc19c0a8af2312ea3d99b16b5",
+      "name": "Images SSE dual recovery Access safety",
+      "status": "completed",
+      "updatedAt": "2026-09-27T10:08:13Z",
+      "url": "https://github.com/cinagroup/cinatoken/actions/runs/36311481635"
+    },
+    {
+      "conclusion": "success",
+      "createdAt": "2026-09-27T10:06:39Z",
+      "databaseId": 36311481647,
+      "event": "push",
+      "headSha": "a0cbbac7ec3f99acc19c0a8af2312ea3d99b16b5",
+      "name": "Images SSE durable staging safety",
+      "status": "completed",
+      "updatedAt": "2026-09-27T10:08:58Z",
+      "url": "https://github.com/cinagroup/cinatoken/actions/runs/36311481647"
+    },
+    {
+      "conclusion": "success",
+      "createdAt": "2026-09-27T10:06:39Z",
+      "databaseId": 36311481637,
+      "event": "push",
+      "headSha": "a0cbbac7ec3f99acc19c0a8af2312ea3d99b16b5",
+      "name": "Images SSE completed window safety",
+      "status": "completed",
+      "updatedAt": "2026-09-27T10:08:36Z",
+      "url": "https://github.com/cinagroup/cinatoken/actions/runs/36311481637"
+    },
+    {
+      "conclusion": "success",
+      "createdAt": "2026-09-27T10:06:39Z",
+      "databaseId": 36311481670,
+      "event": "push",
+      "headSha": "a0cbbac7ec3f99acc19c0a8af2312ea3d99b16b5",
+      "name": "Images SSE peer run safety",
+      "status": "completed",
+      "updatedAt": "2026-09-27T10:09:08Z",
+      "url": "https://github.com/cinagroup/cinatoken/actions/runs/36311481670"
+    },
+    {
+      "conclusion": "success",
+      "createdAt": "2026-09-27T10:06:39Z",
+      "databaseId": 36311481622,
+      "event": "push",
+      "headSha": "a0cbbac7ec3f99acc19c0a8af2312ea3d99b16b5",
+      "name": "Images SSE peer window safety",
+      "status": "completed",
+      "updatedAt": "2026-09-27T10:08:27Z",
+      "url": "https://github.com/cinagroup/cinatoken/actions/runs/36311481622"
+    },
+    {
+      "conclusion": "success",
+      "createdAt": "2026-09-27T10:06:39Z",
+      "databaseId": 36311481658,
+      "event": "push",
+      "headSha": "a0cbbac7ec3f99acc19c0a8af2312ea3d99b16b5",
+      "name": "Images SSE snapshot reconciliation safety",
+      "status": "completed",
+      "updatedAt": "2026-09-27T10:09:22Z",
+      "url": "https://github.com/cinagroup/cinatoken/actions/runs/36311481658"
+    },
+    {
+      "conclusion": "success",
+      "createdAt": "2026-09-27T10:06:39Z",
+      "databaseId": 36311481708,
+      "event": "push",
+      "headSha": "a0cbbac7ec3f99acc19c0a8af2312ea3d99b16b5",
+      "name": "Images SSE snapshot boundary safety",
+      "status": "completed",
+      "updatedAt": "2026-09-27T10:09:24Z",
+      "url": "https://github.com/cinagroup/cinatoken/actions/runs/36311481708"
+    },
+    {
+      "conclusion": "success",
+      "createdAt": "2026-09-27T10:06:39Z",
+      "databaseId": 36311481651,
+      "event": "push",
+      "headSha": "a0cbbac7ec3f99acc19c0a8af2312ea3d99b16b5",
+      "name": "Docker Compose Smoke (node-pg)",
+      "status": "completed",
+      "updatedAt": "2026-09-27T10:10:40Z",
+      "url": "https://github.com/cinagroup/cinatoken/actions/runs/36311481651"
+    },
+    {
+      "conclusion": "cancelled",
+      "createdAt": "2026-09-27T10:06:39Z",
+      "databaseId": 36311481604,
+      "event": "push",
+      "headSha": "a0cbbac7ec3f99acc19c0a8af2312ea3d99b16b5",
+      "name": "Proxy dispatch safety",
+      "status": "completed",
+      "updatedAt": "2026-09-27T10:19:51Z",
+      "url": "https://github.com/cinagroup/cinatoken/actions/runs/36311481604"
+    }
+  ],
+  "sourceEvidence": [
+    {
+      "path": ".wrangler/publish-20260927/github-a0cbbac7-runs.json",
+      "sha256": "140c84335cbf7daaea2912b4df5a24b143b2298597dae1195bbfb2ab7943e523"
+    },
+    {
+      "path": ".wrangler/publish-20260927/github-proxy-a0cbbac7-status.json",
+      "sha256": "231f597f60d20dde73322720e04a1fdffd3ea3ec06be3bf38ec712efb35e6ab3"
+    },
+    {
+      "path": ".wrangler/publish-20260927/github-docker-a0cbbac7-status.json",
+      "sha256": "e52e1e2ae42f0b71872a09ee6ecab166764e9e6f37c720f127991d86e4b352da"
+    },
+    {
+      "path": ".wrangler/publish-20260927/github-release-a0cbbac7-status.json",
+      "sha256": "f432030f1ada765d0bbb5009628dc774fed84096281de06df64026448d035901"
+    },
+    {
+      "path": ".wrangler/publish-20260927/github-native-financial-a0cbbac7-full.log",
+      "sha256": "6a638601c843d529eb1349774ef6b8ba87638dd03c8aebe2ff82f1fbc414bca4"
+    },
+    {
+      "path": ".wrangler/publish-20260927/github-docker-a0cbbac7-full.log",
+      "sha256": "2f2f2329e028ad719153992262b06b9ad33f1f5aff022303206a5b9ec828f576"
+    },
+    {
+      "path": ".wrangler/publish-20260927/github-release-a0cbbac7-failed.log",
+      "sha256": "dbaeeae10bf8fed15399f8e13958d0ebb0f0efc1119fa6a4061ff9b23a3e585d"
+    }
+  ],
+  "immutableWorkflowTextSha256": "0c7618307e84eda7a0b9b81d4f94453a401a9b9eae3cf9117e27f33992af1cb5",
+  "runtimeSourceInvariants": {
+    "runtimeBase": "f6586260e6e0274902cb7569135d3550c89fdabd",
+    "allSixSourceFilesByteIdentical": true,
+    "pins": [
+      {
+        "path": "packages/proxy/src/services/egress/openai-driver.ts",
+        "sha256": "6f0a0cf741a43e690e11150a4639746bdaae47a00a9843f89a07099fe6179118",
+        "byteIdenticalToRuntimeBase": true
+      },
+      {
+        "path": "packages/proxy/src/services/egress/openai-responses-driver.ts",
+        "sha256": "183b2950dea081577df0731ad46f95c247bfd333799ca635865e772477512590",
+        "byteIdenticalToRuntimeBase": true
+      },
+      {
+        "path": "packages/proxy/src/services/egress/anthropic-driver.ts",
+        "sha256": "9d86470f4f0b853386cae9139d84bf4253d4f71e52e9681f4b45b7c462309056",
+        "byteIdenticalToRuntimeBase": true
+      },
+      {
+        "path": "packages/proxy/src/services/egress/gemini-driver.ts",
+        "sha256": "6f85845f9ed5619f7e6f302429c3a84669d08962b7783d1a1603141e9087300e",
+        "byteIdenticalToRuntimeBase": true
+      },
+      {
+        "path": "packages/proxy/src/services/failover-dispatch.ts",
+        "sha256": "d4c78d5d76c7f801b5db82fef5026121c154492e7b4f55ba6ee78824d07fa452",
+        "byteIdenticalToRuntimeBase": true
+      },
+      {
+        "path": "packages/proxy/src/services/request-log-record-status.ts",
+        "sha256": "6932dce340cdd9f6c1da56ab2ca54987e03290254c284a174c454528d4d8fe1c",
+        "byteIdenticalToRuntimeBase": true
+      }
+    ]
+  },
+  "nativeFilePins": [
+    {
+      "path": "scripts/db/cutover/postgres-replay-reservations-backend-lifecycle-successor.native.test.mjs",
+      "sha256": "d1347b01561eff94a632e570daa300522466a96a241d1e38d487fbc17617945b"
+    },
+    {
+      "path": "scripts/db/cutover/postgres-replay-reservations.native.test.mjs",
+      "sha256": "d95055419a04465c7c172ff0b8426bd0b928bd538e4dad80f9442229abd5e269"
+    },
+    {
+      "path": "scripts/db/cutover/postgres-shared-key-guardrail-post-reservation-denial-v348-runtime-buyer-client-successor.native.test.mjs",
+      "sha256": "1abd4fff8b9819b49904121503270c75ce490e3170904b0e7c8e70db2fd92455"
+    },
+    {
+      "path": "scripts/db/cutover/postgres-shared-key-stats-claim-reader-v349-cjs-loader-successor.native.test.mjs",
+      "sha256": "82cbba9203902cdfdd2cebe686f5a2f9ce12502b952f4d299d5a415fb5fefab7"
+    }
+  ],
+  "nativeFinancial": {
+    "run": 36311481604,
+    "job": 108598144977,
+    "conclusion": "cancelled",
+    "environment": {
+      "node": "v22.23.2",
+      "postgresImage": "postgres:18.6-bookworm",
+      "pgVersion": "18.6-1.pgdg12+2"
+    },
+    "workflowCommands": [
+      {
+        "number": 7,
+        "name": "Run install -d -o postgres -g postgres -m 0755 .wrangler/staging .wrangler/staging/pg-native-dispatch-tests",
+        "conclusion": "success",
+        "command": "install -d -o postgres -g postgres -m 0755 .wrangler/staging .wrangler/staging/pg-native-dispatch-tests\n# Fixed machine reports are overwritten by fixtures; source directories stay checkout-owned.\nfor artifact in \\\n  docs/developers/architecture/implementation-evidence/C03-postgres-native-replay-scale-lock-v333-report.json \\\n  docs/developers/architecture/implementation-evidence/C04-authenticated-complete-text-quote-v360-report.json \\\n  docs/developers/architecture/implementation-evidence/C04-authenticated-request-capability-v356-report.json \\\n  docs/developers/architecture/implementation-evidence/C04-authenticated-text-route-ceiling-v357-report.json \\\n  docs/developers/architecture/implementation-evidence/C04-authenticated-text-route-source-fence-v359-report.json \\\n  docs/developers/architecture/implementation-evidence/C04-complete-chat-holder-dispatch-v387-report.json \\\n  docs/developers/architecture/implementation-evidence/C04-complete-text-admission-buyer-v379-report.json \\\n  docs/developers/architecture/implementation-evidence/C04-complete-text-all-hold-renewal-v367-report.json \\\n  docs/developers/architecture/implementation-evidence/C04-complete-text-attempt-grant-v362-report.json \\\n  docs/developers/architecture/implementation-evidence/C04-complete-text-auth-routing-recovery-coinstall-v400-report.json \\\n  docs/developers/architecture/implementation-evidence/C04-complete-text-buyer-counter-cutover-v367-report.json \\\n  docs/developers/architecture/implementation-evidence/C04-complete-text-holder-worker-v390-report.json \\\n  docs/developers/architecture/implementation-evidence/C04-complete-text-legacy-buyer-held-v368-report.json \\\n  docs/developers/architecture/implementation-evidence/C04-complete-text-legacy-reaper-fence-v366-report.json \\\n  docs/developers/architecture/implementation-evidence/C04-complete-text-manifest-selection-v393-report.json \\\n  docs/developers/architecture/implementation-evidence/C04-complete-text-no-fetch-close-blocker-v382-report.json \\\n  docs/developers/architecture/implementation-evidence/C04-complete-text-no-fetch-fence-v370-report.json \\\n  docs/developers/architecture/implementation-evidence/C04-complete-text-no-fetch-platform-close-v388-report.json \\\n  docs/developers/architecture/implementation-evidence/C04-complete-text-no-fetch-recovery-v389-report.json \\\n  docs/developers/architecture/implementation-evidence/C04-complete-text-observed-holder-v384-report.json \\\n  docs/developers/architecture/implementation-evidence/C04-complete-text-platform-close-fence-v386-report.json \\\n  docs/developers/architecture/implementation-evidence/C04-complete-text-private-route-reader-v366-report.json \\\n  docs/developers/architecture/implementation-evidence/C04-complete-text-quote-budget-admission-v361-report.json \\\n  docs/developers/architecture/implementation-evidence/C04-complete-text-read-grant-bridge-v367-report.json \\\n  docs/developers/architecture/implementation-evidence/C04-complete-text-response-no-fetch-coinstall-v397-report.json \\\n  docs/developers/architecture/implementation-evidence/C04-complete-text-response-observation-v392-report.json \\\n  docs/developers/architecture/implementation-evidence/C04-complete-text-result-client-digest-v367-report.json \\\n  docs/developers/architecture/implementation-evidence/C04-complete-text-result-facts-v366-report.json \\\n  docs/developers/architecture/implementation-evidence/C04-complete-text-routing-projection-v396-report.json \\\n  docs/developers/architecture/implementation-evidence/C04-complete-text-secretless-plan-v365-report.json \\\n  docs/developers/architecture/implementation-evidence/C04-complete-text-secretless-plan-v391-report.json \\\n  docs/developers/architecture/implementation-evidence/C04-complete-text-send-start-v365-report.json \\\n  docs/developers/architecture/implementation-evidence/C04-legacy-buyer-commit-ack-v376-report.json \\\n  docs/developers/architecture/implementation-evidence/C04-legacy-buyer-commit-journal-v378-report.json \\\n  docs/developers/architecture/implementation-evidence/C04-legacy-buyer-delayed-commit-v377-report.json \\\n  docs/developers/architecture/implementation-evidence/C04-legacy-buyer-journal-integration-v381-report.json \\\n  docs/developers/architecture/implementation-evidence/C04-legacy-buyer-request-projection-v383-report.json \\\n  docs/developers/architecture/implementation-evidence/C04-legacy-buyer-terminal-reader-v375-report.json \\\n  docs/developers/architecture/implementation-evidence/C04-legacy-buyer-window-accountant-v371-report.json \\\n  docs/developers/architecture/implementation-evidence/C04-legacy-buyer-windowed-app-privileges-renewal-v376-report.json \\\n  docs/developers/architecture/implementation-evidence/C04-legacy-buyer-windowed-app-privileges-v374-report.json \\\n  docs/developers/architecture/implementation-evidence/C04-legacy-buyer-windowed-app-v372-report.json \\\n  docs/developers/architecture/implementation-evidence/C04-personal-key-auth-period-v395-report.json \\\n  docs/developers/architecture/implementation-evidence/C04-postgres-credited-usage-gap-v342-results.json \\\n  docs/developers/architecture/implementation-evidence/C04-postgres-credited-usage-reader-v344-results.json \\\n  docs/developers/architecture/implementation-evidence/C04-postgres-credited-usage-store-v343-results.json \\\n  docs/developers/architecture/implementation-evidence/C04-postgres-exclusive-credential-free-chat-ingress-v401-report.json \\\n  docs/developers/architecture/implementation-evidence/C04-postgres-complete-text-platform-event-delivery-v402-report.json \\\n  docs/developers/architecture/implementation-evidence/C04-postgres-shared-earning-scanner-v350-results.json \\\n  docs/developers/architecture/implementation-evidence/C04-postgres-stats-auth-boundary-v346-results.json \\\n  docs/developers/architecture/implementation-evidence/C04-shared-earning-backlog-observation-v353-results.json \\\n  docs/developers/architecture/implementation-evidence/C04-stats-claim-reader-v349-results.json \\\n  docs/developers/architecture/implementation-evidence/C04-stats-signed-claim-v348-results.json; do\n  if [ ! -e \"$artifact\" ]; then\n    install -m 0644 /dev/null \"$artifact\"\n  fi\n  chown postgres:postgres \"$artifact\"\n  chmod u+rw \"$artifact\"\ndone\ngosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n  node --import tsx --test scripts/db/cutover/postgres-financial-consumer-login.native.test.mjs\n"
+      },
+      {
+        "number": 8,
+        "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+        "conclusion": "success",
+        "command": "gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n  node --import tsx --test scripts/db/cutover/build-financial-consumer-direct-login-grant-lifecycle.native.test.mjs\n"
+      },
+      {
+        "number": 9,
+        "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+        "conclusion": "success",
+        "command": "gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n  node --import tsx --test scripts/db/cutover/build-image-fact-job-producer-grant.native.test.mjs\n"
+      },
+      {
+        "number": 10,
+        "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+        "conclusion": "success",
+        "command": "gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n  node --import tsx --test scripts/db/cutover/postgres-image-http-financial-jsonb-boundary.native.test.mjs\n"
+      },
+      {
+        "number": 11,
+        "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+        "conclusion": "success",
+        "command": "gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n  node --import tsx --test scripts/db/cutover/postgres-image-edits-http-financial.native.test.mjs\n"
+      },
+      {
+        "number": 12,
+        "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+        "conclusion": "success",
+        "command": "gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n  node --import tsx --test scripts/db/cutover/postgres-recovery-server-deadline.native.test.mjs\n"
+      },
+      {
+        "number": 13,
+        "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+        "conclusion": "success",
+        "command": "gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n  node --import tsx --test scripts/db/cutover/postgres-legacy-handler-compat.native.test.mjs\n"
+      },
+      {
+        "number": 14,
+        "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+        "conclusion": "success",
+        "command": "gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n  node --import tsx --test scripts/db/cutover/postgres-replay-scale-lock.native.test.mjs\n"
+      },
+      {
+        "number": 15,
+        "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+        "conclusion": "success",
+        "command": "gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n  node --import tsx --test scripts/db/cutover/postgres-shared-key-earnings-history.native.test.mjs\n"
+      },
+      {
+        "number": 16,
+        "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+        "conclusion": "success",
+        "command": "gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n  node --import tsx --test scripts/db/cutover/postgres-shared-key-earnings-projection-index.native.test.mjs\n"
+      },
+      {
+        "number": 17,
+        "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+        "conclusion": "success",
+        "command": "gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n  node --import tsx --test scripts/db/cutover/postgres-shared-key-usage-repair-jobs.native.test.mjs\n"
+      },
+      {
+        "number": 18,
+        "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+        "conclusion": "success",
+        "command": "gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n  node --import tsx --test scripts/db/cutover/postgres-shared-usage-repair-backfill.native.test.mjs\n"
+      },
+      {
+        "number": 19,
+        "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+        "conclusion": "success",
+        "command": "gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n  node --import tsx --test scripts/db/cutover/postgres-shared-usage-repair-durable-cursor.native.test.mjs\n"
+      },
+      {
+        "number": 20,
+        "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+        "conclusion": "success",
+        "command": "gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n  node --import tsx --test scripts/db/cutover/postgres-shared-key-usage-repair-runtime-grant.native.test.mjs\n"
+      },
+      {
+        "number": 21,
+        "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+        "conclusion": "success",
+        "command": "gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n  node --import tsx --test scripts/db/cutover/build-shared-key-usage-repair-direct-login-grant.native.test.mjs\n"
+      },
+      {
+        "number": 22,
+        "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+        "conclusion": "success",
+        "command": "gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n  node --import tsx --test scripts/db/cutover/postgres-shared-key-usage-repair-failure-isolation.native.test.mjs\n"
+      },
+      {
+        "number": 23,
+        "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+        "conclusion": "success",
+        "command": "gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n  node --import tsx --test scripts/db/cutover/postgres-shared-key-usage-repair-durable-claim.native.test.mjs\n"
+      },
+      {
+        "number": 24,
+        "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+        "conclusion": "success",
+        "command": "gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n  node --import tsx --test scripts/db/cutover/postgres-shared-key-quote-versions.native.test.mjs\n"
+      },
+      {
+        "number": 25,
+        "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+        "conclusion": "success",
+        "command": "gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n  node --import tsx --test scripts/db/cutover/postgres-shared-key-dispatch-quote-attempts.native.test.mjs\n"
+      },
+      {
+        "number": 26,
+        "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+        "conclusion": "success",
+        "command": "gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n  node --import tsx --test scripts/db/cutover/postgres-shared-key-orphan-claim-v347.native.test.mjs\n"
+      },
+      {
+        "number": 27,
+        "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+        "conclusion": "success",
+        "command": "gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n  node --import tsx --test scripts/db/cutover/postgres-shared-key-orphan-review-v348.native.test.mjs\n"
+      },
+      {
+        "number": 28,
+        "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+        "conclusion": "success",
+        "command": "gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n  node --import tsx --test scripts/db/cutover/postgres-shared-key-economic-outbox.native.test.mjs\n"
+      },
+      {
+        "number": 29,
+        "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+        "conclusion": "success",
+        "command": "gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n  node --import tsx --test scripts/db/cutover/postgres-shared-key-selected-event-gate-v351.native.test.mjs\n"
+      },
+      {
+        "number": 30,
+        "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+        "conclusion": "success",
+        "command": "gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n  node --import tsx --test scripts/db/cutover/postgres-shared-key-selected-event-buyer-v351.native.test.mjs\n"
+      },
+      {
+        "number": 31,
+        "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+        "conclusion": "success",
+        "command": "gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n  node --import tsx --test scripts/db/cutover/postgres-shared-key-economic-outbox-producer.native.test.mjs\n"
+      },
+      {
+        "number": 32,
+        "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+        "conclusion": "success",
+        "command": "gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n  node --import tsx --test scripts/db/cutover/postgres-shared-key-snapshot-earning-consumer.native.test.mjs\n"
+      },
+      {
+        "number": 33,
+        "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+        "conclusion": "success",
+        "command": "gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n  node --import tsx --test scripts/db/cutover/postgres-shared-earning-consumer-runner.native.test.mjs\n"
+      },
+      {
+        "number": 34,
+        "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+        "conclusion": "success",
+        "command": "gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n  node --import tsx --test scripts/db/cutover/postgres-shared-key-buyer-debit-v2.native.test.mjs\n"
+      },
+      {
+        "number": 35,
+        "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+        "conclusion": "success",
+        "command": "gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n  node --import tsx --test scripts/db/cutover/postgres-shared-key-economic-producer-v2-aggregate-proof.native.test.mjs\n"
+      },
+      {
+        "number": 36,
+        "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+        "conclusion": "success",
+        "command": "gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n  node --import tsx --test scripts/db/cutover/postgres-budget-admission-login-v350.native.test.mjs\n"
+      },
+      {
+        "number": 37,
+        "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+        "conclusion": "success",
+        "command": "gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n  node --import tsx --test scripts/db/cutover/postgres-ordinary-budget-recovery-v354.native.test.mjs\n"
+      },
+      {
+        "number": 38,
+        "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+        "conclusion": "success",
+        "command": "gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n  node --import tsx --test scripts/db/cutover/postgres-guardrail-budget-admission-login-v351.native.test.mjs\n"
+      },
+      {
+        "number": 39,
+        "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+        "conclusion": "success",
+        "command": "gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n  node --import tsx --test scripts/db/cutover/postgres-guardrail-budget-lifecycle-v353.native.test.mjs\n"
+      },
+      {
+        "number": 40,
+        "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+        "conclusion": "success",
+        "command": "gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n  node --import tsx --test scripts/db/cutover/postgres-guardrail-budget-dispatched-extension-v355.native.test.mjs\n"
+      },
+      {
+        "number": 41,
+        "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+        "conclusion": "success",
+        "command": "gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n  node --import tsx --test scripts/db/cutover/postgres-authenticated-request-capability-login-v356.native.test.mjs\n"
+      },
+      {
+        "number": 42,
+        "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+        "conclusion": "success",
+        "command": "gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n  node --import tsx --test scripts/db/cutover/postgres-authenticated-text-route-ceiling-v357.native.test.mjs\n"
+      },
+      {
+        "number": 43,
+        "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+        "conclusion": "success",
+        "command": "gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n  node --import tsx --test scripts/db/cutover/postgres-authenticated-text-route-source-fence-v359.native.test.mjs\n"
+      },
+      {
+        "number": 44,
+        "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+        "conclusion": "success",
+        "command": "gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n  node --import tsx --test scripts/db/cutover/postgres-authenticated-complete-text-quote-v360.native.test.mjs\n"
+      },
+      {
+        "number": 45,
+        "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+        "conclusion": "success",
+        "command": "gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n  node --import tsx --test scripts/db/cutover/postgres-complete-text-quote-budget-admission-v361.native.test.mjs\n"
+      },
+      {
+        "number": 46,
+        "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+        "conclusion": "success",
+        "command": "gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n  node --import tsx --test scripts/db/cutover/postgres-complete-text-attempt-grant-v362.native.test.mjs\n"
+      },
+      {
+        "number": 47,
+        "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+        "conclusion": "success",
+        "command": "gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n  node --import tsx --test scripts/db/cutover/postgres-complete-text-secretless-plan-v365.native.test.mjs\n"
+      },
+      {
+        "number": 48,
+        "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+        "conclusion": "success",
+        "command": "gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n  node --import tsx --test scripts/db/cutover/postgres-complete-text-send-start-v365.native.test.mjs\n"
+      },
+      {
+        "number": 49,
+        "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+        "conclusion": "success",
+        "command": "gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n  node --import tsx --test scripts/db/cutover/postgres-complete-text-private-route-reader-v366.native.test.mjs\n"
+      },
+      {
+        "number": 50,
+        "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+        "conclusion": "success",
+        "command": "gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n  node --import tsx --test scripts/db/cutover/postgres-complete-text-read-grant-bridge-v367.native.test.mjs\n"
+      },
+      {
+        "number": 51,
+        "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+        "conclusion": "success",
+        "command": "gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n  node --import tsx --test scripts/db/cutover/postgres-complete-text-result-facts-v366.native.test.mjs\n"
+      },
+      {
+        "number": 52,
+        "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+        "conclusion": "success",
+        "command": "gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n  node --import tsx --test scripts/db/cutover/postgres-complete-text-result-client-digest-v367.native.test.mjs\n"
+      },
+      {
+        "number": 53,
+        "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+        "conclusion": "success",
+        "command": "gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n  node --import tsx --test scripts/db/cutover/postgres-complete-text-legacy-reaper-fence-v366.native.test.mjs\n"
+      },
+      {
+        "number": 54,
+        "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+        "conclusion": "success",
+        "command": "gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n  node --import tsx --test scripts/db/cutover/postgres-complete-text-all-hold-renewal-v367.native.test.mjs\n"
+      },
+      {
+        "number": 55,
+        "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+        "conclusion": "success",
+        "command": "gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n  node --import tsx --test scripts/db/cutover/postgres-complete-text-buyer-counter-cutover-v367.native.test.mjs\n"
+      },
+      {
+        "number": 56,
+        "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+        "conclusion": "success",
+        "command": "gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n  node --import tsx --test scripts/db/cutover/postgres-complete-text-legacy-buyer-held-v368.native.test.mjs\n"
+      },
+      {
+        "number": 57,
+        "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+        "conclusion": "success",
+        "command": "gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n  node --import tsx --test scripts/db/cutover/postgres-buyer-held-opt-in-gap-v370.native.test.mjs\n"
+      },
+      {
+        "number": 58,
+        "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+        "conclusion": "success",
+        "command": "gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n  node --import tsx --test scripts/db/cutover/postgres-legacy-buyer-window-accountant-v371.native.test.mjs\n"
+      },
+      {
+        "number": 59,
+        "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+        "conclusion": "success",
+        "command": "gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n  node --import tsx --test scripts/db/cutover/postgres-legacy-buyer-windowed-app-v372.native.test.mjs\n"
+      },
+      {
+        "number": 60,
+        "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+        "conclusion": "success",
+        "command": "gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n  node --import tsx --test scripts/db/cutover/postgres-legacy-buyer-windowed-app-privileges-v374.native.test.mjs\n"
+      },
+      {
+        "number": 61,
+        "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+        "conclusion": "success",
+        "command": "gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n  node --import tsx --test scripts/db/cutover/postgres-legacy-buyer-windowed-app-privileges-renewal-v376.native.test.mjs\n"
+      },
+      {
+        "number": 62,
+        "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+        "conclusion": "success",
+        "command": "gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n  node --import tsx --test scripts/db/cutover/postgres-legacy-buyer-terminal-reader-v375.native.test.mjs\n"
+      },
+      {
+        "number": 63,
+        "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+        "conclusion": "success",
+        "command": "gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n  node --import tsx --test scripts/db/cutover/postgres-legacy-buyer-commit-ack-v376.native.test.mjs\n"
+      },
+      {
+        "number": 64,
+        "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+        "conclusion": "success",
+        "command": "gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n  node --import tsx --test scripts/db/cutover/postgres-legacy-buyer-delayed-commit-v377.native.test.mjs\n"
+      },
+      {
+        "number": 65,
+        "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+        "conclusion": "success",
+        "command": "gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n  node --import tsx --test scripts/db/cutover/postgres-legacy-buyer-commit-journal-v378.native.test.mjs\n"
+      },
+      {
+        "number": 66,
+        "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+        "conclusion": "success",
+        "command": "gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n  node --import tsx --test scripts/db/cutover/postgres-complete-text-admission-buyer-v379.native.test.mjs\n"
+      },
+      {
+        "number": 67,
+        "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+        "conclusion": "success",
+        "command": "gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n  node --test packages/core/src/test-support/postgres-journal-commit-ack-proxy-v381.native.test.mjs\n"
+      },
+      {
+        "number": 68,
+        "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+        "conclusion": "success",
+        "command": "gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n  node --import tsx --test scripts/db/cutover/postgres-legacy-buyer-journal-integration-v381.native.test.mjs\n"
+      },
+      {
+        "number": 69,
+        "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+        "conclusion": "success",
+        "command": "gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n  node --import tsx --test scripts/db/cutover/postgres-complete-text-no-fetch-close-blocker-v382.native.test.mjs\n"
+      },
+      {
+        "number": 70,
+        "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+        "conclusion": "success",
+        "command": "gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n  node --import tsx --test scripts/db/cutover/postgres-legacy-buyer-request-projection-v383.native.test.mjs\n"
+      },
+      {
+        "number": 71,
+        "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+        "conclusion": "success",
+        "command": "gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n  node --import tsx --test scripts/db/cutover/postgres-complete-text-observed-holder-v384.native.test.mjs\n"
+      },
+      {
+        "number": 72,
+        "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+        "conclusion": "success",
+        "command": "gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n  node --import tsx --test scripts/db/cutover/postgres-complete-text-platform-close-fence-v386.native.test.mjs\n"
+      },
+      {
+        "number": 73,
+        "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+        "conclusion": "success",
+        "command": "gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n  node --import tsx --test scripts/db/cutover/postgres-complete-chat-holder-dispatch-v387.native.test.mjs\n"
+      },
+      {
+        "number": 74,
+        "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+        "conclusion": "success",
+        "command": "gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n  node --import tsx --test scripts/db/cutover/postgres-complete-text-no-fetch-platform-close-v388.native.test.mjs\n"
+      },
+      {
+        "number": 75,
+        "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+        "conclusion": "success",
+        "command": "gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n  node --import tsx --test scripts/db/cutover/postgres-complete-text-no-fetch-recovery-v389.native.test.mjs\n"
+      },
+      {
+        "number": 76,
+        "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+        "conclusion": "success",
+        "command": "gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n  node --import tsx --test scripts/db/cutover/postgres-complete-text-holder-worker-v390.native.test.mjs\n"
+      },
+      {
+        "number": 77,
+        "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+        "conclusion": "success",
+        "command": "gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n  node --import tsx --test scripts/db/cutover/postgres-complete-text-secretless-plan-v391.native.test.mjs\n"
+      },
+      {
+        "number": 78,
+        "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+        "conclusion": "success",
+        "command": "gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n  node --import tsx --test scripts/db/cutover/postgres-complete-text-response-observation-v392.native.test.mjs\n"
+      },
+      {
+        "number": 79,
+        "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+        "conclusion": "success",
+        "command": "gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n  TSX_TSCONFIG_PATH=scripts/db/cutover/postgres-complete-text-manifest-selection-v393.tsconfig.json \\\n  node --import tsx --test scripts/db/cutover/postgres-complete-text-manifest-selection-v393.native.test.mjs\n"
+      },
+      {
+        "number": 80,
+        "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+        "conclusion": "success",
+        "command": "gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n  node --import tsx --test scripts/db/cutover/postgres-personal-key-auth-period-v395.native.test.mjs\n"
+      },
+      {
+        "number": 81,
+        "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+        "conclusion": "success",
+        "command": "gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n  TSX_TSCONFIG_PATH=scripts/db/cutover/postgres-complete-text-routing-projection-v396.tsconfig.json \\\n  node --import tsx --test scripts/db/cutover/postgres-complete-text-routing-projection-v396.native.test.mjs\n"
+      },
+      {
+        "number": 82,
+        "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+        "conclusion": "success",
+        "command": "gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n  node --import tsx --test scripts/db/cutover/postgres-complete-text-response-no-fetch-coinstall-v397.native.test.mjs\n"
+      },
+      {
+        "number": 83,
+        "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+        "conclusion": "success",
+        "command": "gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n  TSX_TSCONFIG_PATH=scripts/db/cutover/postgres-complete-text-auth-routing-recovery-coinstall-v400.tsconfig.json \\\n  node --import tsx --test scripts/db/cutover/postgres-complete-text-auth-routing-recovery-coinstall-v400.native.test.mjs\n"
+      },
+      {
+        "number": 84,
+        "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+        "conclusion": "success",
+        "command": "gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n  TSX_TSCONFIG_PATH=scripts/db/cutover/postgres-exclusive-credential-free-chat-ingress-v401.tsconfig.json \\\n  node --import tsx --test scripts/db/cutover/postgres-exclusive-credential-free-chat-ingress-v401.native.test.mjs\n"
+      },
+      {
+        "number": 85,
+        "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+        "conclusion": "success",
+        "command": "gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n  TSX_TSCONFIG_PATH=scripts/db/cutover/postgres-complete-text-platform-event-delivery-v402.tsconfig.json \\\n  node --import tsx --test scripts/db/cutover/postgres-complete-text-platform-event-delivery-v402.native.test.mjs\n"
+      },
+      {
+        "number": 86,
+        "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+        "conclusion": "success",
+        "command": "gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n  node --import tsx --test scripts/db/cutover/postgres-complete-text-no-fetch-fence-v370.native.test.mjs\n"
+      },
+      {
+        "number": 87,
+        "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+        "conclusion": "cancelled",
+        "command": "gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n  node --import tsx --test packages/core/src/storage/postgres-jsonb-batch-native.test.mjs\n"
+      },
+      {
+        "number": 88,
+        "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+        "conclusion": "skipped",
+        "command": "gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n  node --import tsx --test scripts/db/cutover/postgres-guardrail-admission-adapter-v352.native.test.mjs\n"
+      },
+      {
+        "number": 89,
+        "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+        "conclusion": "skipped",
+        "command": "gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n  node --import tsx --test scripts/db/cutover/postgres-shared-key-buyer-budget-receipt-v2.native.test.mjs\n"
+      },
+      {
+        "number": 90,
+        "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+        "conclusion": "skipped",
+        "command": "gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n  node --import tsx --test scripts/db/cutover/postgres-shared-key-buyer-receipt-retention-v346.native.test.mjs\n"
+      },
+      {
+        "number": 91,
+        "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+        "conclusion": "skipped",
+        "command": "gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n  node --import tsx --test scripts/db/cutover/postgres-runtime-privilege-transition-v345.native.test.mjs\n"
+      },
+      {
+        "number": 92,
+        "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+        "conclusion": "skipped",
+        "command": "gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n  node --import tsx --test scripts/db/cutover/postgres-buyer-critical-writer-split-v346.native.test.mjs\n"
+      },
+      {
+        "number": 93,
+        "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+        "conclusion": "skipped",
+        "command": "gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n  node --import tsx --test scripts/db/cutover/postgres-shared-key-economic-buyer-login-v347.native.test.mjs\n"
+      },
+      {
+        "number": 94,
+        "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+        "conclusion": "skipped",
+        "command": "gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n  node --import tsx --test scripts/db/cutover/postgres-shared-key-guardrail-post-reservation-denial-v348-runtime-buyer-client-successor.native.test.mjs\n"
+      },
+      {
+        "number": 95,
+        "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+        "conclusion": "skipped",
+        "command": "gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n  node --import tsx --test scripts/db/cutover/postgres-buyer-split-grant-rerun-v348.native.test.mjs\n"
+      },
+      {
+        "number": 96,
+        "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+        "conclusion": "skipped",
+        "command": "gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n  node --import tsx --test scripts/db/cutover/postgres-buyer-split-guardrail-v349.native.test.mjs\n"
+      },
+      {
+        "number": 97,
+        "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+        "conclusion": "skipped",
+        "command": "gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n  node --import tsx --test scripts/db/cutover/postgres-shared-key-stats-auth-boundary-v346.native.test.mjs\n"
+      },
+      {
+        "number": 98,
+        "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+        "conclusion": "skipped",
+        "command": "gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n  node --import tsx --test scripts/db/cutover/postgres-shared-key-stats-signed-claim-v348.native.test.mjs\n"
+      },
+      {
+        "number": 99,
+        "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+        "conclusion": "skipped",
+        "command": "gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n  node --import tsx --test scripts/db/cutover/postgres-shared-key-stats-claim-reader-v349-cjs-loader-successor.native.test.mjs\n"
+      },
+      {
+        "number": 100,
+        "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+        "conclusion": "skipped",
+        "command": "gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n  node --import tsx --test scripts/db/cutover/postgres-shared-key-snapshot-earning-consumer-v2.native.test.mjs\n"
+      },
+      {
+        "number": 101,
+        "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+        "conclusion": "skipped",
+        "command": "gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n  node --import tsx --test scripts/db/cutover/postgres-shared-key-economic-delivery.native.test.mjs\n"
+      },
+      {
+        "number": 102,
+        "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+        "conclusion": "skipped",
+        "command": "gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n  node --import tsx --test scripts/db/cutover/postgres-shared-earning-scanner-v350.native.test.mjs\n"
+      },
+      {
+        "number": 103,
+        "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+        "conclusion": "skipped",
+        "command": "gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n  node --import tsx --test scripts/db/cutover/postgres-shared-earning-backlog-v353.native.test.mjs\n"
+      },
+      {
+        "number": 104,
+        "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+        "conclusion": "skipped",
+        "command": "gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n  node --import tsx --test scripts/db/cutover/postgres-shared-key-credited-usage-gap.native.test.mjs\n"
+      },
+      {
+        "number": 105,
+        "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+        "conclusion": "skipped",
+        "command": "gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n  node --test scripts/db/cutover/postgres-shared-key-credited-usage-store.native.test.mjs\n"
+      },
+      {
+        "number": 106,
+        "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+        "conclusion": "skipped",
+        "command": "gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n  node --import tsx --test scripts/db/cutover/postgres-shared-key-credited-usage-reader.native.test.mjs\n"
+      },
+      {
+        "number": 107,
+        "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+        "conclusion": "skipped",
+        "command": "gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n  node --import tsx --test scripts/db/cutover/postgres-recovery-old-database-upgrade.native.test.mjs\n"
+      },
+      {
+        "number": 108,
+        "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+        "conclusion": "skipped",
+        "command": "gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n  node --import tsx --test scripts/db/cutover/build-request-legacy-parent-census.native.test.mjs\n"
+      },
+      {
+        "number": 109,
+        "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+        "conclusion": "skipped",
+        "command": "gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n  node --import tsx --test scripts/db/cutover/postgres-replay-reservations-backend-lifecycle-successor.native.test.mjs\n"
+      },
+      {
+        "number": 110,
+        "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+        "conclusion": "skipped",
+        "command": "gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n  node --import tsx --test scripts/db/cutover/postgres-legacy-parent-activation.native.test.mjs\n"
+      },
+      {
+        "number": 111,
+        "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+        "conclusion": "skipped",
+        "command": "gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n  node --import tsx --test scripts/db/cutover/build-postgres-recovery-retention-review.native.test.mjs\n"
+      },
+      {
+        "number": 112,
+        "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+        "conclusion": "skipped",
+        "command": "gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n  node --import tsx --test packages/core/src/storage/management-workspaces.postgres-native.test.mjs\n"
+      },
+      {
+        "number": 113,
+        "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+        "conclusion": "skipped",
+        "command": "gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n  node --import tsx --test scripts/db/cutover/postgres-user-delete-audit.native.test.mjs\n"
+      }
+    ],
+    "passedCommands": 80,
+    "failedCommands": [],
+    "cancelledCommands": [
+      {
+        "number": 87,
+        "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+        "conclusion": "cancelled",
+        "command": "gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n  node --import tsx --test packages/core/src/storage/postgres-jsonb-batch-native.test.mjs\n"
+      }
+    ],
+    "skippedCommands": [
+      {
+        "number": 88,
+        "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+        "conclusion": "skipped",
+        "command": "gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n  node --import tsx --test scripts/db/cutover/postgres-guardrail-admission-adapter-v352.native.test.mjs\n"
+      },
+      {
+        "number": 89,
+        "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+        "conclusion": "skipped",
+        "command": "gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n  node --import tsx --test scripts/db/cutover/postgres-shared-key-buyer-budget-receipt-v2.native.test.mjs\n"
+      },
+      {
+        "number": 90,
+        "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+        "conclusion": "skipped",
+        "command": "gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n  node --import tsx --test scripts/db/cutover/postgres-shared-key-buyer-receipt-retention-v346.native.test.mjs\n"
+      },
+      {
+        "number": 91,
+        "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+        "conclusion": "skipped",
+        "command": "gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n  node --import tsx --test scripts/db/cutover/postgres-runtime-privilege-transition-v345.native.test.mjs\n"
+      },
+      {
+        "number": 92,
+        "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+        "conclusion": "skipped",
+        "command": "gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n  node --import tsx --test scripts/db/cutover/postgres-buyer-critical-writer-split-v346.native.test.mjs\n"
+      },
+      {
+        "number": 93,
+        "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+        "conclusion": "skipped",
+        "command": "gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n  node --import tsx --test scripts/db/cutover/postgres-shared-key-economic-buyer-login-v347.native.test.mjs\n"
+      },
+      {
+        "number": 94,
+        "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+        "conclusion": "skipped",
+        "command": "gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n  node --import tsx --test scripts/db/cutover/postgres-shared-key-guardrail-post-reservation-denial-v348-runtime-buyer-client-successor.native.test.mjs\n"
+      },
+      {
+        "number": 95,
+        "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+        "conclusion": "skipped",
+        "command": "gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n  node --import tsx --test scripts/db/cutover/postgres-buyer-split-grant-rerun-v348.native.test.mjs\n"
+      },
+      {
+        "number": 96,
+        "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+        "conclusion": "skipped",
+        "command": "gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n  node --import tsx --test scripts/db/cutover/postgres-buyer-split-guardrail-v349.native.test.mjs\n"
+      },
+      {
+        "number": 97,
+        "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+        "conclusion": "skipped",
+        "command": "gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n  node --import tsx --test scripts/db/cutover/postgres-shared-key-stats-auth-boundary-v346.native.test.mjs\n"
+      },
+      {
+        "number": 98,
+        "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+        "conclusion": "skipped",
+        "command": "gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n  node --import tsx --test scripts/db/cutover/postgres-shared-key-stats-signed-claim-v348.native.test.mjs\n"
+      },
+      {
+        "number": 99,
+        "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+        "conclusion": "skipped",
+        "command": "gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n  node --import tsx --test scripts/db/cutover/postgres-shared-key-stats-claim-reader-v349-cjs-loader-successor.native.test.mjs\n"
+      },
+      {
+        "number": 100,
+        "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+        "conclusion": "skipped",
+        "command": "gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n  node --import tsx --test scripts/db/cutover/postgres-shared-key-snapshot-earning-consumer-v2.native.test.mjs\n"
+      },
+      {
+        "number": 101,
+        "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+        "conclusion": "skipped",
+        "command": "gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n  node --import tsx --test scripts/db/cutover/postgres-shared-key-economic-delivery.native.test.mjs\n"
+      },
+      {
+        "number": 102,
+        "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+        "conclusion": "skipped",
+        "command": "gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n  node --import tsx --test scripts/db/cutover/postgres-shared-earning-scanner-v350.native.test.mjs\n"
+      },
+      {
+        "number": 103,
+        "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+        "conclusion": "skipped",
+        "command": "gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n  node --import tsx --test scripts/db/cutover/postgres-shared-earning-backlog-v353.native.test.mjs\n"
+      },
+      {
+        "number": 104,
+        "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+        "conclusion": "skipped",
+        "command": "gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n  node --import tsx --test scripts/db/cutover/postgres-shared-key-credited-usage-gap.native.test.mjs\n"
+      },
+      {
+        "number": 105,
+        "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+        "conclusion": "skipped",
+        "command": "gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n  node --test scripts/db/cutover/postgres-shared-key-credited-usage-store.native.test.mjs\n"
+      },
+      {
+        "number": 106,
+        "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+        "conclusion": "skipped",
+        "command": "gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n  node --import tsx --test scripts/db/cutover/postgres-shared-key-credited-usage-reader.native.test.mjs\n"
+      },
+      {
+        "number": 107,
+        "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+        "conclusion": "skipped",
+        "command": "gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n  node --import tsx --test scripts/db/cutover/postgres-recovery-old-database-upgrade.native.test.mjs\n"
+      },
+      {
+        "number": 108,
+        "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+        "conclusion": "skipped",
+        "command": "gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n  node --import tsx --test scripts/db/cutover/build-request-legacy-parent-census.native.test.mjs\n"
+      },
+      {
+        "number": 109,
+        "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+        "conclusion": "skipped",
+        "command": "gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n  node --import tsx --test scripts/db/cutover/postgres-replay-reservations-backend-lifecycle-successor.native.test.mjs\n"
+      },
+      {
+        "number": 110,
+        "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+        "conclusion": "skipped",
+        "command": "gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n  node --import tsx --test scripts/db/cutover/postgres-legacy-parent-activation.native.test.mjs\n"
+      },
+      {
+        "number": 111,
+        "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+        "conclusion": "skipped",
+        "command": "gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n  node --import tsx --test scripts/db/cutover/build-postgres-recovery-retention-review.native.test.mjs\n"
+      },
+      {
+        "number": 112,
+        "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+        "conclusion": "skipped",
+        "command": "gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n  node --import tsx --test packages/core/src/storage/management-workspaces.postgres-native.test.mjs\n"
+      },
+      {
+        "number": 113,
+        "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+        "conclusion": "skipped",
+        "command": "gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n  node --import tsx --test scripts/db/cutover/postgres-user-delete-audit.native.test.mjs\n"
+      }
+    ],
+    "all107WorkflowCommandsPassed": false,
+    "v348Step94": {
+      "runnerConclusion": "skipped",
+      "stdoutSummary": null,
+      "fixtureSha256": "1abd4fff8b9819b49904121503270c75ce490e3170904b0e7c8e70db2fd92455",
+      "sourceDefinedStageCalls": 27,
+      "actualLinuxRunnerTests": null,
+      "actualLinuxRunnerPass": null,
+      "actualLinuxRunnerFail": null,
+      "emittedReportPath": null,
+      "originalMachineReportDownloaded": false,
+      "stageEvidenceBoundary": "This fixture did not complete with a successful actual runner in this run. Source-defined stage count does not prove that those stages ran."
+    },
+    "v349Step99": {
+      "runnerConclusion": "skipped",
+      "stdoutSummary": null,
+      "fixtureSha256": "82cbba9203902cdfdd2cebe686f5a2f9ce12502b952f4d299d5a415fb5fefab7",
+      "sourceDefinedStageCalls": 20,
+      "actualLinuxRunnerTests": null,
+      "actualLinuxRunnerPass": null,
+      "actualLinuxRunnerFail": null,
+      "emittedReportPath": null,
+      "originalMachineReportDownloaded": false,
+      "stageEvidenceBoundary": "This fixture did not complete with a successful actual runner in this run. Source-defined stage count does not prove that those stages ran."
+    },
+    "replaySuccessorStep109": {
+      "runnerConclusion": "skipped",
+      "stdoutSummary": null,
+      "implementedAndAssertedChecks": "Frozen d134 source asserts explicit BEGIN, actual PgSleep on exact PID before termination, allowed disconnect code, exact backend gone and same-PID server FATAL.",
+      "actualLinuxDisconnectCode": null,
+      "actualLinuxBackendPid": null,
+      "omittedMachineFieldsBoundary": "Stdout emits only status/cleanup/stages. The original machine JSON containing destructiveTermination and sourceSha256 was not downloaded; local observed ECONNRESET/PID19300 must not be attributed to Linux."
+    },
+    "finalTail110Through113": [
+      {
+        "number": 110,
+        "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+        "conclusion": "skipped",
+        "command": "gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n  node --import tsx --test scripts/db/cutover/postgres-legacy-parent-activation.native.test.mjs\n"
+      },
+      {
+        "number": 111,
+        "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+        "conclusion": "skipped",
+        "command": "gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n  node --import tsx --test scripts/db/cutover/build-postgres-recovery-retention-review.native.test.mjs\n"
+      },
+      {
+        "number": 112,
+        "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+        "conclusion": "skipped",
+        "command": "gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n  node --import tsx --test packages/core/src/storage/management-workspaces.postgres-native.test.mjs\n"
+      },
+      {
+        "number": 113,
+        "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+        "conclusion": "skipped",
+        "command": "gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n  node --import tsx --test scripts/db/cutover/postgres-user-delete-audit.native.test.mjs\n"
+      }
+    ],
+    "evidenceBoundary": "The report summaries were extracted from full Linux runner stdout; original generated machine files were not downloaded. A summary alone cannot override actual Node/GitHub runner failure.",
+    "countingBoundary": "107 separate workflow commands are not 107 internal native stages. Internal stage lists are recorded only where actually emitted.",
+    "cleanupBoundary": "Owned loopback PostgreSQL SQL cluster cleanup does not establish request resource cleanup, background work ownership, production Worker lifecycle or paid provider behavior."
+  },
+  "dispatch": {
+    "run": 36311481604,
+    "job": 108598145117,
+    "conclusion": "failure",
+    "steps": [
+      {
+        "number": 5,
+        "name": "Run npm run typecheck -w @octafuse/proxy",
+        "conclusion": "success",
+        "command": "npm run typecheck -w @octafuse/proxy"
+      },
+      {
+        "number": 6,
+        "name": "Run npm run typecheck -w @octafuse/tool-engines",
+        "conclusion": "success",
+        "command": "npm run typecheck -w @octafuse/tool-engines"
+      },
+      {
+        "number": 7,
+        "name": "Run npm run typecheck:shared-key-summary -w @octafuse/core",
+        "conclusion": "success",
+        "command": "npm run typecheck:shared-key-summary -w @octafuse/core"
+      },
+      {
+        "number": 8,
+        "name": "Run npm run typecheck:dispatch-safety -w @octafuse/proxy",
+        "conclusion": "success",
+        "command": "npm run typecheck:dispatch-safety -w @octafuse/proxy"
+      },
+      {
+        "number": 9,
+        "name": "Run npm run test:dispatch-safety -w @octafuse/proxy",
+        "conclusion": "success",
+        "command": "npm run test:dispatch-safety -w @octafuse/proxy"
+      },
+      {
+        "number": 10,
+        "name": "Run node --import tsx --test packages/proxy/scripts/staging/text-dispatch-workerd-wire-worker-conditions-successor.test.mjs",
+        "conclusion": "success",
+        "command": "node --import tsx --test packages/proxy/scripts/staging/text-dispatch-workerd-wire-worker-conditions-successor.test.mjs"
+      },
+      {
+        "number": 11,
+        "name": "Preserve native Worker transport evidence",
+        "conclusion": "success",
+        "command": "actions/upload-artifact@v4"
+      },
+      {
+        "number": 12,
+        "name": "Run node --import tsx --test packages/proxy/scripts/staging/text-dispatch-relay-reset-v376.test.mjs",
+        "conclusion": "success",
+        "command": "node --import tsx --test packages/proxy/scripts/staging/text-dispatch-relay-reset-v376.test.mjs"
+      },
+      {
+        "number": 13,
+        "name": "Run node --import tsx --test packages/proxy/scripts/staging/text-dispatch-response-reset-v377.test.mjs",
+        "conclusion": "success",
+        "command": "node --import tsx --test packages/proxy/scripts/staging/text-dispatch-response-reset-v377.test.mjs"
+      },
+      {
+        "number": 14,
+        "name": "Run node --import tsx --test packages/proxy/scripts/staging/text-dispatch-post-headers-v385.test.mjs",
+        "conclusion": "success",
+        "command": "node --import tsx --test packages/proxy/scripts/staging/text-dispatch-post-headers-v385.test.mjs"
+      },
+      {
+        "number": 15,
+        "name": "Run node --import tsx --test packages/core/src/storage/shared-key-economic-unsupported-backends.test.mjs",
+        "conclusion": "success",
+        "command": "node --import tsx --test packages/core/src/storage/shared-key-economic-unsupported-backends.test.mjs"
+      },
+      {
+        "number": 16,
+        "name": "Run npm run test:unit -w @octafuse/tool-engines",
+        "conclusion": "success",
+        "command": "npm run test:unit -w @octafuse/tool-engines"
+      },
+      {
+        "number": 17,
+        "name": "Run node --import tsx --test src/services/egress/openai-embeddings-driver.test.ts src/services/egress/openai-rerank-driver.test.ts",
+        "conclusion": "success",
+        "command": "node --import tsx --test src/services/egress/openai-embeddings-driver.test.ts src/services/egress/openai-rerank-driver.test.ts"
+      },
+      {
+        "number": 18,
+        "name": "Run node --import tsx --test src/services/shared-key-earnings.test.ts",
+        "conclusion": "success",
+        "command": "node --import tsx --test src/services/shared-key-earnings.test.ts"
+      },
+      {
+        "number": 19,
+        "name": "Run node --import tsx --test src/services/shared-key-quote-attempt.test.ts",
+        "conclusion": "success",
+        "command": "node --import tsx --test src/services/shared-key-quote-attempt.test.ts"
+      },
+      {
+        "number": 20,
+        "name": "Run node --import tsx --test src/services/shared-key-economic-usage-handoff.test.ts",
+        "conclusion": "success",
+        "command": "node --import tsx --test src/services/shared-key-economic-usage-handoff.test.ts"
+      },
+      {
+        "number": 21,
+        "name": "Run node --import tsx --test src/services/postgres-ordinary-budget-admission.test.ts src/services/request-budget-admission.test.ts",
+        "conclusion": "success",
+        "command": "node --import tsx --test src/services/postgres-ordinary-budget-admission.test.ts src/services/request-budget-admission.test.ts"
+      },
+      {
+        "number": 22,
+        "name": "Run node --import tsx --test src/services/postgres-ordinary-budget-recovery.test.ts",
+        "conclusion": "success",
+        "command": "node --import tsx --test src/services/postgres-ordinary-budget-recovery.test.ts"
+      },
+      {
+        "number": 23,
+        "name": "Run node --import tsx --test src/services/postgres-ordinary-budget-request-owner.test.ts",
+        "conclusion": "success",
+        "command": "node --import tsx --test src/services/postgres-ordinary-budget-request-owner.test.ts"
+      },
+      {
+        "number": 24,
+        "name": "Run node --import tsx --test src/services/authenticated-chat-budget-proof.test.ts",
+        "conclusion": "success",
+        "command": "node --import tsx --test src/services/authenticated-chat-budget-proof.test.ts"
+      },
+      {
+        "number": 25,
+        "name": "Run node --import tsx --test src/services/chat-budget-owner-lifecycle.test.ts src/services/postgres-chat-budget-request-owner.test.ts",
+        "conclusion": "success",
+        "command": "node --import tsx --test src/services/chat-budget-owner-lifecycle.test.ts src/services/postgres-chat-budget-request-owner.test.ts"
+      },
+      {
+        "number": 26,
+        "name": "Run npm run test:complete-chat-quote -w @octafuse/proxy",
+        "conclusion": "success",
+        "command": "npm run test:complete-chat-quote -w @octafuse/proxy"
+      },
+      {
+        "number": 27,
+        "name": "Run node --import tsx --test scripts/staging/chat-holder-binding-v364.node.test.mjs scripts/staging/chat-holder-binding-v364-workerd-date-successor.test.mjs",
+        "conclusion": "failure",
+        "command": "node --import tsx --test scripts/staging/chat-holder-binding-v364.node.test.mjs scripts/staging/chat-holder-binding-v364-workerd-date-successor.test.mjs"
+      },
+      {
+        "number": 28,
+        "name": "Run node --import tsx --test src/services/complete-chat-holder-dispatch-v385.test.ts",
+        "conclusion": "skipped",
+        "command": "node --import tsx --test src/services/complete-chat-holder-dispatch-v385.test.ts"
+      },
+      {
+        "number": 29,
+        "name": "Run node --import tsx --test src/services/postgres-complete-text-no-fetch-close-v388.test.ts",
+        "conclusion": "skipped",
+        "command": "node --import tsx --test src/services/postgres-complete-text-no-fetch-close-v388.test.ts"
+      },
+      {
+        "number": 30,
+        "name": "Run node --import tsx --test src/services/postgres-complete-text-no-fetch-recovery-v389.test.ts src/services/hyperdrive-dedicated-role-transport-v390.test.ts src/runtime/complete-text-no-fetch-recovery-worker-v389.test.ts src/runtime/complete-text-holder-worker-v390.test.mjs",
+        "conclusion": "skipped",
+        "command": "node --import tsx --test src/services/postgres-complete-text-no-fetch-recovery-v389.test.ts src/services/hyperdrive-dedicated-role-transport-v390.test.ts src/runtime/complete-text-no-fetch-recovery-worker-v389.test.ts src/runtime/complete-text-holder-worker-v390.test.mjs"
+      },
+      {
+        "number": 31,
+        "name": "Run node --import tsx --test src/services/postgres-complete-text-secretless-plan-v391.test.mjs src/services/complete-text-response-observation-v392.test.ts src/services/postgres-complete-text-response-observation-v392.test.ts src/runtime/complete-text-response-holder-worker-v394.test.mjs",
+        "conclusion": "skipped",
+        "command": "node --import tsx --test src/services/postgres-complete-text-secretless-plan-v391.test.mjs src/services/complete-text-response-observation-v392.test.ts src/services/postgres-complete-text-response-observation-v392.test.ts src/runtime/complete-text-response-holder-worker-v394.test.mjs"
+      },
+      {
+        "number": 32,
+        "name": "Run node --import tsx --test src/services/postgres-personal-key-auth-v395.test.mjs src/services/postgres-complete-text-routing-projection-v396.test.ts src/services/credential-free-route-attempts-v398.test.ts src/services/postgres-complete-text-sticky-routing-v398.test.mjs src/services/route-strategies/route-strategies.test.ts src/services/provider-sticky-routing.test.ts src/services/provider-routing-preferences.test.ts",
+        "conclusion": "skipped",
+        "command": "node --import tsx --test src/services/postgres-personal-key-auth-v395.test.mjs src/services/postgres-complete-text-routing-projection-v396.test.ts src/services/credential-free-route-attempts-v398.test.ts src/services/postgres-complete-text-sticky-routing-v398.test.mjs src/services/route-strategies/route-strategies.test.ts src/services/provider-sticky-routing.test.ts src/services/provider-routing-preferences.test.ts"
+      },
+      {
+        "number": 33,
+        "name": "Run node --import tsx --test src/services/complete-chat-credential-free-dispatch-v400.test.ts",
+        "conclusion": "skipped",
+        "command": "node --import tsx --test src/services/complete-chat-credential-free-dispatch-v400.test.ts"
+      },
+      {
+        "number": 34,
+        "name": "Run node --import tsx --test src/services/credential-free-chat-preparation-v401.test.ts src/app-credential-free-chat-ingress-v401.test.ts",
+        "conclusion": "skipped",
+        "command": "node --import tsx --test src/services/credential-free-chat-preparation-v401.test.ts src/app-credential-free-chat-ingress-v401.test.ts"
+      },
+      {
+        "number": 35,
+        "name": "Run node --test scripts/db/cutover/build-complete-text-auth-routing-recovery-coinstall-v400.test.mjs",
+        "conclusion": "skipped",
+        "command": "node --test scripts/db/cutover/build-complete-text-auth-routing-recovery-coinstall-v400.test.mjs"
+      },
+      {
+        "number": 36,
+        "name": "Run npm install --prefix .wrangler/v402-pglite-unit --no-save --no-package-lock @electric-sql/pglite@0.5.8",
+        "conclusion": "skipped",
+        "command": "npm install --prefix .wrangler/v402-pglite-unit --no-save --no-package-lock @electric-sql/pglite@0.5.8"
+      },
+      {
+        "number": 37,
+        "name": "Run node --test scripts/db/cutover/build-complete-text-platform-event-delivery-v402.test.mjs scripts/db/cutover/postgres-complete-text-platform-event-delivery-v402.test.mjs scripts/db/cutover/complete-text-platform-event-delivery-runner-v402.test.mjs",
+        "conclusion": "skipped",
+        "command": "node --test scripts/db/cutover/build-complete-text-platform-event-delivery-v402.test.mjs scripts/db/cutover/postgres-complete-text-platform-event-delivery-v402.test.mjs scripts/db/cutover/complete-text-platform-event-delivery-runner-v402.test.mjs"
+      },
+      {
+        "number": 38,
+        "name": "Run node --import tsx --test src/storage/model-endpoints.sql-repositories.test.ts",
+        "conclusion": "skipped",
+        "command": "node --import tsx --test src/storage/model-endpoints.sql-repositories.test.ts"
+      },
+      {
+        "number": 39,
+        "name": "Run node --import tsx --test --test-name-pattern=\"opt-in authenticated Chat budget proof\" src/routes/v1/request-dispatch-limit.test.ts",
+        "conclusion": "skipped",
+        "command": "node --import tsx --test --test-name-pattern=\"opt-in authenticated Chat budget proof\" src/routes/v1/request-dispatch-limit.test.ts"
+      },
+      {
+        "number": 40,
+        "name": "Run node --import tsx --test --test-name-pattern=\"PostgreSQL Chat owner|stopped Chat request|dispatcher sends once after a PostgreSQL owner grant\" src/routes/v1/request-dispatch-limit.test.ts",
+        "conclusion": "skipped",
+        "command": "node --import tsx --test --test-name-pattern=\"PostgreSQL Chat owner|stopped Chat request|dispatcher sends once after a PostgreSQL owner grant\" src/routes/v1/request-dispatch-limit.test.ts"
+      },
+      {
+        "number": 41,
+        "name": "Run node --import tsx --test src/services/postgres-guardrail-budget-admission.test.ts",
+        "conclusion": "skipped",
+        "command": "node --import tsx --test src/services/postgres-guardrail-budget-admission.test.ts"
+      },
+      {
+        "number": 42,
+        "name": "Run node --import tsx --test src/services/postgres-guardrail-budget-lifecycle-v353.test.ts",
+        "conclusion": "skipped",
+        "command": "node --import tsx --test src/services/postgres-guardrail-budget-lifecycle-v353.test.ts"
+      },
+      {
+        "number": 43,
+        "name": "Run node --import tsx --test src/services/postgres-guardrail-budget-extension-v355.test.ts",
+        "conclusion": "skipped",
+        "command": "node --import tsx --test src/services/postgres-guardrail-budget-extension-v355.test.ts"
+      },
+      {
+        "number": 44,
+        "name": "Run node --import tsx --test src/services/postgres-guardrail-budget-request-port-v356.test.ts",
+        "conclusion": "skipped",
+        "command": "node --import tsx --test src/services/postgres-guardrail-budget-request-port-v356.test.ts"
+      },
+      {
+        "number": 45,
+        "name": "Run node --import tsx --test src/runtime/postgres-shared-earning-consumer.test.mjs",
+        "conclusion": "skipped",
+        "command": "node --import tsx --test src/runtime/postgres-shared-earning-consumer.test.mjs"
+      },
+      {
+        "number": 46,
+        "name": "Run node --import tsx --test src/runtime/postgres-shared-earning-delivery.test.mjs",
+        "conclusion": "skipped",
+        "command": "node --import tsx --test src/runtime/postgres-shared-earning-delivery.test.mjs"
+      },
+      {
+        "number": 47,
+        "name": "Run node --import tsx --test src/runtime/postgres-shared-earning-scanner.test.mjs",
+        "conclusion": "skipped",
+        "command": "node --import tsx --test src/runtime/postgres-shared-earning-scanner.test.mjs"
+      },
+      {
+        "number": 48,
+        "name": "Run npm run test:postgres-recovery-composition -w @octafuse/proxy",
+        "conclusion": "skipped",
+        "command": "npm run test:postgres-recovery-composition -w @octafuse/proxy"
+      },
+      {
+        "number": 49,
+        "name": "Run npm run test:postgres-recovery-queue-owner -w @octafuse/proxy",
+        "conclusion": "skipped",
+        "command": "npm run test:postgres-recovery-queue-owner -w @octafuse/proxy"
+      },
+      {
+        "number": 50,
+        "name": "Run node --test scripts/deploy/gen-wrangler.test.mjs",
+        "conclusion": "skipped",
+        "command": "node --test scripts/deploy/gen-wrangler.test.mjs"
+      },
+      {
+        "number": 51,
+        "name": "Run node --test scripts/deploy/gen-shared-earning-scanner-wrangler.test.mjs",
+        "conclusion": "skipped",
+        "command": "node --test scripts/deploy/gen-shared-earning-scanner-wrangler.test.mjs"
+      },
+      {
+        "number": 52,
+        "name": "Run node --import tsx --test scripts/db/cutover/build-financial-consumer-direct-login-grant.test.ts",
+        "conclusion": "skipped",
+        "command": "node --import tsx --test scripts/db/cutover/build-financial-consumer-direct-login-grant.test.ts"
+      },
+      {
+        "number": 53,
+        "name": "Run node --import tsx --test scripts/db/cutover/build-shared-key-usage-repair-direct-login-grant.test.ts",
+        "conclusion": "skipped",
+        "command": "node --import tsx --test scripts/db/cutover/build-shared-key-usage-repair-direct-login-grant.test.ts"
+      },
+      {
+        "number": 54,
+        "name": "Run node --test scripts/db/cutover/openrouter-generation-cost-candidate-v372.test.mjs",
+        "conclusion": "skipped",
+        "command": "node --test scripts/db/cutover/openrouter-generation-cost-candidate-v372.test.mjs"
+      },
+      {
+        "number": 55,
+        "name": "Run node --test scripts/db/cutover/build-postgres-shared-usage-repair-backfill.test.mjs",
+        "conclusion": "skipped",
+        "command": "node --test scripts/db/cutover/build-postgres-shared-usage-repair-backfill.test.mjs"
+      },
+      {
+        "number": 56,
+        "name": "Run node --test scripts/db/cutover/build-postgres-shared-usage-repair-durable-cursor.test.mjs",
+        "conclusion": "skipped",
+        "command": "node --test scripts/db/cutover/build-postgres-shared-usage-repair-durable-cursor.test.mjs"
+      },
+      {
+        "number": 57,
+        "name": "Run node --test scripts/db/cutover/build-postgres-recovery-retention-review.test.mjs",
+        "conclusion": "skipped",
+        "command": "node --test scripts/db/cutover/build-postgres-recovery-retention-review.test.mjs"
+      },
+      {
+        "number": 58,
+        "name": "Run node --import tsx --test scripts/db/cutover/d1-shared-key-earnings-history.test.mjs",
+        "conclusion": "skipped",
+        "command": "node --import tsx --test scripts/db/cutover/d1-shared-key-earnings-history.test.mjs"
+      },
+      {
+        "number": 59,
+        "name": "Run node --import tsx --test scripts/db/cutover/d1-shared-key-earnings-projection-index.test.mjs",
+        "conclusion": "skipped",
+        "command": "node --import tsx --test scripts/db/cutover/d1-shared-key-earnings-projection-index.test.mjs"
+      },
+      {
+        "number": 60,
+        "name": "Run node --import tsx --test packages/core/src/db/d1/portal-marketplace-rebuild.test.ts",
+        "conclusion": "skipped",
+        "command": "node --import tsx --test packages/core/src/db/d1/portal-marketplace-rebuild.test.ts"
+      },
+      {
+        "number": 61,
+        "name": "Run node --test scripts/db/cutover/build-request-legacy-parent-census.test.mjs scripts/db/cutover/build-request-legacy-parent-activation.test.mjs scripts/db/cutover/build-request-legacy-parent-default-acl-activation.test.mjs",
+        "conclusion": "skipped",
+        "command": "node --test scripts/db/cutover/build-request-legacy-parent-census.test.mjs scripts/db/cutover/build-request-legacy-parent-activation.test.mjs scripts/db/cutover/build-request-legacy-parent-default-acl-activation.test.mjs"
+      },
+      {
+        "number": 62,
+        "name": "Run node --test packages/proxy/scripts/test-postgres-image-owner-workerd.test.mjs",
+        "conclusion": "skipped",
+        "command": "node --test packages/proxy/scripts/test-postgres-image-owner-workerd.test.mjs"
+      },
+      {
+        "number": 63,
+        "name": "Run npm run typecheck:images:staging -w @octafuse/proxy",
+        "conclusion": "skipped",
+        "command": "npm run typecheck:images:staging -w @octafuse/proxy"
+      },
+      {
+        "number": 64,
+        "name": "Run npm run test:images:staging -w @octafuse/proxy",
+        "conclusion": "skipped",
+        "command": "npm run test:images:staging -w @octafuse/proxy"
+      },
+      {
+        "number": 65,
+        "name": "Run npm run test:oauth:workerd -w @octafuse/proxy",
+        "conclusion": "skipped",
+        "command": "npm run test:oauth:workerd -w @octafuse/proxy"
+      }
+    ],
+    "failures": [
+      {
+        "completedAt": "2026-09-27T10:11:05Z",
+        "conclusion": "failure",
+        "name": "Run node --import tsx --test scripts/staging/chat-holder-binding-v364.node.test.mjs scripts/staging/chat-holder-binding-v364-workerd-date-successor.test.mjs",
+        "number": 27,
+        "startedAt": "2026-09-27T10:11:03Z",
+        "status": "completed"
+      }
+    ],
+    "delegatedReview": "Auth and scope agents own complete dispatch, Worker artifact and independent Images verification; this summary records all actual dispatch step conclusions without substituting independently passed workflows for skipped commands."
+  },
+  "admin": {
+    "job": 108598145096,
+    "conclusion": "success"
+  },
+  "docker": {
+    "run": 36311481651,
+    "job": 108598144941,
+    "conclusion": "success",
+    "steps": [
+      {
+        "completedAt": "2026-09-27T10:07:19Z",
+        "conclusion": "success",
+        "name": "Set up job",
+        "number": 1,
+        "startedAt": "2026-09-27T10:07:18Z",
+        "status": "completed"
+      },
+      {
+        "completedAt": "2026-09-27T10:07:21Z",
+        "conclusion": "success",
+        "name": "Checkout",
+        "number": 2,
+        "startedAt": "2026-09-27T10:07:19Z",
+        "status": "completed"
+      },
+      {
+        "completedAt": "2026-09-27T10:07:25Z",
+        "conclusion": "success",
+        "name": "Set up Docker Buildx",
+        "number": 3,
+        "startedAt": "2026-09-27T10:07:21Z",
+        "status": "completed"
+      },
+      {
+        "completedAt": "2026-09-27T10:07:34Z",
+        "conclusion": "success",
+        "name": "Start postgres",
+        "number": 4,
+        "startedAt": "2026-09-27T10:07:25Z",
+        "status": "completed"
+      },
+      {
+        "completedAt": "2026-09-27T10:07:54Z",
+        "conclusion": "success",
+        "name": "Verify legacy schema rename and migration idempotency",
+        "number": 5,
+        "startedAt": "2026-09-27T10:07:34Z",
+        "status": "completed"
+      },
+      {
+        "completedAt": "2026-09-27T10:10:15Z",
+        "conclusion": "success",
+        "name": "Build and start proxy + admin",
+        "number": 6,
+        "startedAt": "2026-09-27T10:07:54Z",
+        "status": "completed"
+      },
+      {
+        "completedAt": "2026-09-27T10:10:17Z",
+        "conclusion": "success",
+        "name": "Wait for proxy health",
+        "number": 7,
+        "startedAt": "2026-09-27T10:10:15Z",
+        "status": "completed"
+      },
+      {
+        "completedAt": "2026-09-27T10:10:17Z",
+        "conclusion": "success",
+        "name": "Wait for admin health",
+        "number": 8,
+        "startedAt": "2026-09-27T10:10:17Z",
+        "status": "completed"
+      },
+      {
+        "completedAt": "2026-09-27T10:10:17Z",
+        "conclusion": "success",
+        "name": "Smoke GET endpoints",
+        "number": 9,
+        "startedAt": "2026-09-27T10:10:17Z",
+        "status": "completed"
+      },
+      {
+        "completedAt": "2026-09-27T10:10:28Z",
+        "conclusion": "success",
+        "name": "Teardown",
+        "number": 10,
+        "startedAt": "2026-09-27T10:10:17Z",
+        "status": "completed"
+      },
+      {
+        "completedAt": "2026-09-27T10:10:38Z",
+        "conclusion": "success",
+        "name": "Post Set up Docker Buildx",
+        "number": 19,
+        "startedAt": "2026-09-27T10:10:28Z",
+        "status": "completed"
+      },
+      {
+        "completedAt": "2026-09-27T10:10:39Z",
+        "conclusion": "success",
+        "name": "Post Checkout",
+        "number": 20,
+        "startedAt": "2026-09-27T10:10:38Z",
+        "status": "completed"
+      },
+      {
+        "completedAt": "2026-09-27T10:10:39Z",
+        "conclusion": "success",
+        "name": "Complete job",
+        "number": 21,
+        "startedAt": "2026-09-27T10:10:39Z",
+        "status": "completed"
+      }
+    ],
+    "formalSqlFiles": 73,
+    "legacySchemaRenameAndMigrationIdempotency": "PASS",
+    "ledgerFixtureAndFiveTriggers": "PASS",
+    "proxyHealthyAfterSeconds": 2,
+    "adminHealthyAfterSeconds": 1,
+    "adminHttpStatus": 200
+  },
+  "release": {
+    "run": 36311481709,
+    "job": 108598145282,
+    "conclusion": "failure",
+    "failedStep": 6,
+    "cause": "GitHub Actions is not permitted to create or approve pull requests",
+    "botBranch": "changeset-release/main",
+    "observedBotCommitPrefix": "e8cd3eb",
+    "pullRequestCreated": false,
+    "taggedReleaseProven": false,
+    "settingsChanged": false
+  },
+  "auditActions": "Read-only GitHub/Git reviews and evidence only; no builds, native PG, remote SQL, Provider calls, source changes, deployment or commit.",
+  "nativeLineageToPreviousSuccess": {
+    "previousCommit": "63e305a1bdf14c55fede74fb7ff9cbd9f732fc19",
+    "previousReport": "docs/operators/deployment/releases/2026-09-27-63e305a1-remote-ci-report.json",
+    "previousReportSha256": "9449be420e8d5a0f2a20b322d401c68ab47711301e1f3260559232a702c1c201",
+    "nativeWorkflowJobObjectIdentical": true,
+    "changedPaths": [
+      ".gitattributes",
+      ".github/workflows/proxy-dispatch-safety.yml",
+      "docs/operators/deployment/releases/2026-09-27-14eadad8-linux-proxy-ci-report.json",
+      "docs/operators/deployment/releases/2026-09-27-14eadad8-linux-worker-machine-report.json",
+      "docs/operators/deployment/releases/2026-09-27-checklist-v402.md",
+      "docs/operators/deployment/releases/2026-09-27-final-isolated-deployment-report.json",
+      "docs/operators/deployment/releases/2026-09-27-v364-workerd-date-successor-first-linux-failed.txt",
+      "docs/operators/deployment/releases/2026-09-27-v364-workerd-date-successor-fix.md",
+      "docs/operators/deployment/releases/2026-09-27-v364-workerd-date-successor-local-report.json",
+      "docs/operators/deployment/releases/2026-09-27-v364-workerd-date-successor-node-only-bundle-report.json",
+      "docs/operators/deployment/releases/2026-09-27-v364-workerd-date-successor-selected-local-tests.txt",
+      "packages/proxy/scripts/staging/chat-holder-binding-v364-workerd-date-successor.test.mjs"
+    ],
+    "dependencyPins": [
+      {
+        "path": "package.json",
+        "sha256": "5042152591681ee7fddc405bf3fe9a86c60d95192cfa3583e3a64acf3c8b7ca3",
+        "byteIdenticalToPreviousCommit": true
+      },
+      {
+        "path": "package-lock.json",
+        "sha256": "f9f477d173c8553fe2c10ee1f7217ca7a36db8d11afd056402afe98d71f940ff",
+        "byteIdenticalToPreviousCommit": true
+      },
+      {
+        "path": ".nvmrc",
+        "sha256": "f14b4987904bcb5814e4459a057ed4d20f58a633152288a761214dcd28780b56",
+        "byteIdenticalToPreviousCommit": true
+      },
+      {
+        "path": "packages/core/package.json",
+        "sha256": "5bdbb6d41edbd0ccf6e8e92f9ec6da28e73655aa3936933d96fa388a04833dcd",
+        "byteIdenticalToPreviousCommit": true
+      },
+      {
+        "path": "packages/proxy/package.json",
+        "sha256": "a2090eadf59bcead513a3bdb507c9b46f7b6e941843372510912af49ab878f88",
+        "byteIdenticalToPreviousCommit": true
+      },
+      {
+        "path": "packages/admin/package.json",
+        "sha256": "16f614780845c74dc575f74d2f651f73a99b83a5256c0979512826211971b67f",
+        "byteIdenticalToPreviousCommit": true
+      },
+      {
+        "path": "tsconfig.base.json",
+        "sha256": "67b06fcd644d967441140264f8f88d7072db6eb8b9bc51c553919597cc2f7492",
+        "byteIdenticalToPreviousCommit": true
+      }
+    ],
+    "sourceBoundary": "The only code change is a review-only v364 staging fixture successor, outside the unchanged native commands and dependencies; accompanying metadata pins release-evidence line endings. No core source, formal SQL or runtime source changed.",
+    "resultBoundary": "Byte-identical native lineage and previous 107/107 success do not turn a cancelled or failed current run into PASS."
+  },
+  "baseSummaryEvidence": {
+    "path": ".wrangler/publish-20260927/github-a0cbbac7-final-ci-summary.json",
+    "sha256": "e0ffc4226fcf0340b7d194b1fd99155d28c092cb89f5ffada6e4455b4a63a74c"
+  }
+}

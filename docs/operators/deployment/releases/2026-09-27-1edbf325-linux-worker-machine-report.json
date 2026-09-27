@@ -1,0 +1,4057 @@
+{
+  "schemaVersion": 1,
+  "fixture": "text-dispatch-workerd-wire-worker-conditions-successor",
+  "startedAt": "2026-09-27T10:22:18.991Z",
+  "node": "v22.23.2",
+  "platform": "linux",
+  "nativeWorkerOptIn": false,
+  "network": "owned 127.0.0.1 HTTP servers; no remote SQL, cloud origin or paid Provider",
+  "cases": [
+    {
+      "name": "production Chat dispatch bundles into a native Worker with fixed loopback provider",
+      "status": "PASS",
+      "elapsedMs": 186.82904899999994
+    },
+    {
+      "name": "native Worker fetch never follows 307/308 or retries an unknown send; explicit 429 uses three permits",
+      "status": "PASS",
+      "elapsedMs": 296.47313299999996
+    },
+    {
+      "name": "a retrying HTTP intermediary can turn one admitted Gateway fetch into two physical provider POSTs",
+      "status": "PASS",
+      "elapsedMs": 26.423467999999957
+    }
+  ],
+  "bundles": [
+    {
+      "platform": "browser",
+      "conditions": [
+        "workerd",
+        "worker",
+        "browser"
+      ],
+      "coreSource": true,
+      "coreDist": false,
+      "inputs": [
+        "packages/core/src/types.ts",
+        "packages/core/src/upstream-protocol.ts",
+        "packages/core/src/gemini-upstream-url.ts",
+        "packages/core/src/route-topology.ts",
+        "packages/core/src/provider-endpoints.ts",
+        "packages/core/src/gcp-oauth-lifecycle.ts",
+        "packages/core/src/request-auxiliary-auth-budget.ts",
+        "packages/core/src/gcp-service-account-token.ts",
+        "packages/core/src/request-deadline.ts",
+        "packages/core/src/preparation-control.ts",
+        "packages/core/src/vertex-openai-model.ts",
+        "packages/core/src/realtime-protocol.ts",
+        "packages/core/src/chain-jobs.ts",
+        "packages/core/src/request-presets.ts",
+        "packages/core/src/route-data-policy.ts",
+        "packages/core/src/db/guardrail-budget-types.ts",
+        "packages/core/src/guardrail-builtins.ts",
+        "packages/core/src/guardrails.ts",
+        "packages/core/src/db/pricing-schedule.ts",
+        "packages/core/src/route-comparable-price.ts",
+        "packages/core/src/route-performance.ts",
+        "packages/core/src/db/route-routing-metadata.ts",
+        "packages/core/src/model-endpoint-catalog.ts",
+        "packages/core/src/model-endpoint-runtime.ts",
+        "packages/core/src/lib/provider-key-environment.ts",
+        "packages/core/src/db/provider-key-utils.ts",
+        "packages/core/src/route-planner-preview.ts",
+        "packages/core/src/public-model-catalog.ts",
+        "packages/core/src/gateway-key-limits.ts",
+        "packages/core/src/workspace-budgets.ts",
+        "packages/core/src/management-workspaces.ts",
+        "packages/core/src/management-guardrails.ts",
+        "packages/core/src/organization-identity.ts",
+        "packages/core/src/workspaces.ts",
+        "node_modules/drizzle-orm/entity.js",
+        "node_modules/drizzle-orm/logger.js",
+        "node_modules/drizzle-orm/table.utils.js",
+        "node_modules/drizzle-orm/table.js",
+        "node_modules/drizzle-orm/column.js",
+        "node_modules/drizzle-orm/column-builder.js",
+        "node_modules/drizzle-orm/pg-core/foreign-keys.js",
+        "node_modules/drizzle-orm/tracing-utils.js",
+        "node_modules/drizzle-orm/pg-core/unique-constraint.js",
+        "node_modules/drizzle-orm/pg-core/utils/array.js",
+        "node_modules/drizzle-orm/pg-core/columns/common.js",
+        "node_modules/drizzle-orm/pg-core/columns/enum.js",
+        "node_modules/drizzle-orm/subquery.js",
+        "node_modules/drizzle-orm/version.js",
+        "node_modules/drizzle-orm/tracing.js",
+        "node_modules/drizzle-orm/view-common.js",
+        "node_modules/drizzle-orm/sql/sql.js",
+        "node_modules/drizzle-orm/utils.js",
+        "node_modules/drizzle-orm/pg-core/columns/int.common.js",
+        "node_modules/drizzle-orm/pg-core/columns/bigint.js",
+        "node_modules/drizzle-orm/pg-core/columns/bigserial.js",
+        "node_modules/drizzle-orm/pg-core/columns/boolean.js",
+        "node_modules/drizzle-orm/pg-core/columns/char.js",
+        "node_modules/drizzle-orm/pg-core/columns/cidr.js",
+        "node_modules/drizzle-orm/pg-core/columns/custom.js",
+        "node_modules/drizzle-orm/pg-core/columns/date.common.js",
+        "node_modules/drizzle-orm/pg-core/columns/date.js",
+        "node_modules/drizzle-orm/pg-core/columns/double-precision.js",
+        "node_modules/drizzle-orm/pg-core/columns/inet.js",
+        "node_modules/drizzle-orm/pg-core/columns/integer.js",
+        "node_modules/drizzle-orm/pg-core/columns/interval.js",
+        "node_modules/drizzle-orm/pg-core/columns/json.js",
+        "node_modules/drizzle-orm/pg-core/columns/jsonb.js",
+        "node_modules/drizzle-orm/pg-core/columns/line.js",
+        "node_modules/drizzle-orm/pg-core/columns/macaddr.js",
+        "node_modules/drizzle-orm/pg-core/columns/macaddr8.js",
+        "node_modules/drizzle-orm/pg-core/columns/numeric.js",
+        "node_modules/drizzle-orm/pg-core/columns/point.js",
+        "node_modules/drizzle-orm/pg-core/columns/postgis_extension/utils.js",
+        "node_modules/drizzle-orm/pg-core/columns/postgis_extension/geometry.js",
+        "node_modules/drizzle-orm/pg-core/columns/real.js",
+        "node_modules/drizzle-orm/pg-core/columns/serial.js",
+        "node_modules/drizzle-orm/pg-core/columns/smallint.js",
+        "node_modules/drizzle-orm/pg-core/columns/smallserial.js",
+        "node_modules/drizzle-orm/pg-core/columns/text.js",
+        "node_modules/drizzle-orm/pg-core/columns/time.js",
+        "node_modules/drizzle-orm/pg-core/columns/timestamp.js",
+        "node_modules/drizzle-orm/pg-core/columns/uuid.js",
+        "node_modules/drizzle-orm/pg-core/columns/varchar.js",
+        "node_modules/drizzle-orm/pg-core/columns/vector_extension/bit.js",
+        "node_modules/drizzle-orm/pg-core/columns/vector_extension/halfvec.js",
+        "node_modules/drizzle-orm/pg-core/columns/vector_extension/sparsevec.js",
+        "node_modules/drizzle-orm/pg-core/columns/vector_extension/vector.js",
+        "node_modules/drizzle-orm/pg-core/columns/all.js",
+        "node_modules/drizzle-orm/pg-core/table.js",
+        "node_modules/drizzle-orm/pg-core/primary-keys.js",
+        "node_modules/drizzle-orm/sql/expressions/conditions.js",
+        "node_modules/drizzle-orm/sql/expressions/select.js",
+        "node_modules/drizzle-orm/sql/expressions/index.js",
+        "node_modules/drizzle-orm/relations.js",
+        "node_modules/drizzle-orm/alias.js",
+        "node_modules/drizzle-orm/selection-proxy.js",
+        "node_modules/drizzle-orm/query-promise.js",
+        "node_modules/drizzle-orm/sqlite-core/foreign-keys.js",
+        "node_modules/drizzle-orm/sqlite-core/unique-constraint.js",
+        "node_modules/drizzle-orm/sqlite-core/columns/common.js",
+        "node_modules/drizzle-orm/sqlite-core/columns/blob.js",
+        "node_modules/drizzle-orm/sqlite-core/columns/custom.js",
+        "node_modules/drizzle-orm/sqlite-core/columns/integer.js",
+        "node_modules/drizzle-orm/sqlite-core/columns/numeric.js",
+        "node_modules/drizzle-orm/sqlite-core/columns/real.js",
+        "node_modules/drizzle-orm/sqlite-core/columns/text.js",
+        "node_modules/drizzle-orm/sqlite-core/columns/all.js",
+        "node_modules/drizzle-orm/sqlite-core/table.js",
+        "node_modules/drizzle-orm/sqlite-core/checks.js",
+        "node_modules/drizzle-orm/sqlite-core/indexes.js",
+        "node_modules/drizzle-orm/sqlite-core/primary-keys.js",
+        "node_modules/drizzle-orm/sqlite-core/utils.js",
+        "node_modules/drizzle-orm/sqlite-core/query-builders/delete.js",
+        "node_modules/drizzle-orm/casing.js",
+        "node_modules/drizzle-orm/errors.js",
+        "node_modules/drizzle-orm/sql/functions/aggregate.js",
+        "node_modules/drizzle-orm/sql/functions/vector.js",
+        "node_modules/drizzle-orm/sql/functions/index.js",
+        "node_modules/drizzle-orm/sql/index.js",
+        "node_modules/drizzle-orm/sqlite-core/columns/index.js",
+        "node_modules/drizzle-orm/sqlite-core/view-base.js",
+        "node_modules/drizzle-orm/sqlite-core/dialect.js",
+        "node_modules/drizzle-orm/query-builders/query-builder.js",
+        "node_modules/drizzle-orm/sqlite-core/query-builders/select.js",
+        "node_modules/drizzle-orm/sqlite-core/query-builders/query-builder.js",
+        "node_modules/drizzle-orm/sqlite-core/query-builders/insert.js",
+        "node_modules/drizzle-orm/sqlite-core/query-builders/select.types.js",
+        "node_modules/drizzle-orm/sqlite-core/query-builders/update.js",
+        "node_modules/drizzle-orm/sqlite-core/query-builders/index.js",
+        "node_modules/drizzle-orm/sqlite-core/query-builders/count.js",
+        "node_modules/drizzle-orm/sqlite-core/query-builders/query.js",
+        "node_modules/drizzle-orm/sqlite-core/query-builders/raw.js",
+        "node_modules/drizzle-orm/sqlite-core/db.js",
+        "node_modules/drizzle-orm/cache/core/cache.js",
+        "node_modules/drizzle-orm/cache/core/index.js",
+        "node_modules/drizzle-orm/sqlite-core/alias.js",
+        "node_modules/drizzle-orm/sqlite-core/session.js",
+        "node_modules/drizzle-orm/sqlite-core/subquery.js",
+        "node_modules/drizzle-orm/sqlite-core/view.js",
+        "node_modules/drizzle-orm/sqlite-core/index.js",
+        "node_modules/drizzle-orm/d1/session.js",
+        "node_modules/drizzle-orm/d1/driver.js",
+        "node_modules/drizzle-orm/d1/index.js",
+        "node_modules/drizzle-orm/operations.js",
+        "node_modules/drizzle-orm/index.js",
+        "packages/core/src/storage/drizzle/schema.d1.ts",
+        "packages/core/src/storage/drizzle/client-d1.ts",
+        "node_modules/drizzle-orm/pg-core/alias.js",
+        "node_modules/drizzle-orm/pg-core/checks.js",
+        "node_modules/drizzle-orm/pg-core/columns/index.js",
+        "node_modules/drizzle-orm/pg-core/indexes.js",
+        "node_modules/drizzle-orm/pg-core/policies.js",
+        "node_modules/drizzle-orm/pg-core/view-common.js",
+        "node_modules/drizzle-orm/pg-core/view-base.js",
+        "node_modules/drizzle-orm/pg-core/dialect.js",
+        "node_modules/drizzle-orm/pg-core/query-builders/select.js",
+        "node_modules/drizzle-orm/pg-core/query-builders/query-builder.js",
+        "node_modules/drizzle-orm/pg-core/view.js",
+        "node_modules/drizzle-orm/pg-core/utils.js",
+        "node_modules/drizzle-orm/pg-core/query-builders/delete.js",
+        "node_modules/drizzle-orm/pg-core/query-builders/insert.js",
+        "node_modules/drizzle-orm/pg-core/query-builders/refresh-materialized-view.js",
+        "node_modules/drizzle-orm/pg-core/query-builders/select.types.js",
+        "node_modules/drizzle-orm/pg-core/query-builders/update.js",
+        "node_modules/drizzle-orm/pg-core/query-builders/index.js",
+        "node_modules/drizzle-orm/pg-core/query-builders/count.js",
+        "node_modules/drizzle-orm/pg-core/query-builders/query.js",
+        "node_modules/drizzle-orm/pg-core/query-builders/raw.js",
+        "node_modules/drizzle-orm/pg-core/db.js",
+        "node_modules/drizzle-orm/pg-core/roles.js",
+        "node_modules/drizzle-orm/pg-core/sequence.js",
+        "node_modules/drizzle-orm/pg-core/schema.js",
+        "node_modules/drizzle-orm/pg-core/session.js",
+        "node_modules/drizzle-orm/pg-core/subquery.js",
+        "node_modules/drizzle-orm/pg-core/utils/index.js",
+        "node_modules/drizzle-orm/pg-core/index.js",
+        "packages/core/src/storage/drizzle/schema.pg.ts",
+        "node_modules/postgres/cf/polyfills.js",
+        "node_modules/postgres/cf/src/query.js",
+        "node_modules/postgres/cf/src/errors.js",
+        "node_modules/postgres/cf/src/types.js",
+        "node_modules/postgres/cf/src/result.js",
+        "node_modules/postgres/cf/src/queue.js",
+        "node_modules/postgres/cf/src/bytes.js",
+        "node_modules/postgres/cf/src/connection.js",
+        "node_modules/postgres/cf/src/subscribe.js",
+        "node_modules/postgres/cf/src/large.js",
+        "node_modules/postgres/cf/src/index.js",
+        "node_modules/drizzle-orm/postgres-js/session.js",
+        "node_modules/drizzle-orm/postgres-js/driver.js",
+        "node_modules/drizzle-orm/postgres-js/index.js",
+        "packages/core/src/storage/postgres-connection-error.ts",
+        "packages/core/src/storage/postgres-initialization.ts",
+        "packages/core/src/storage/drizzle/client-postgres.ts",
+        "node_modules/drizzle-orm/mysql-core/alias.js",
+        "node_modules/drizzle-orm/mysql-core/checks.js",
+        "node_modules/drizzle-orm/mysql-core/foreign-keys.js",
+        "node_modules/drizzle-orm/mysql-core/unique-constraint.js",
+        "node_modules/drizzle-orm/mysql-core/columns/common.js",
+        "node_modules/drizzle-orm/mysql-core/columns/bigint.js",
+        "node_modules/drizzle-orm/mysql-core/columns/binary.js",
+        "node_modules/drizzle-orm/mysql-core/columns/boolean.js",
+        "node_modules/drizzle-orm/mysql-core/columns/char.js",
+        "node_modules/drizzle-orm/mysql-core/columns/custom.js",
+        "node_modules/drizzle-orm/mysql-core/columns/date.js",
+        "node_modules/drizzle-orm/mysql-core/columns/datetime.js",
+        "node_modules/drizzle-orm/mysql-core/columns/decimal.js",
+        "node_modules/drizzle-orm/mysql-core/columns/double.js",
+        "node_modules/drizzle-orm/mysql-core/columns/enum.js",
+        "node_modules/drizzle-orm/mysql-core/columns/float.js",
+        "node_modules/drizzle-orm/mysql-core/columns/int.js",
+        "node_modules/drizzle-orm/mysql-core/columns/json.js",
+        "node_modules/drizzle-orm/mysql-core/columns/mediumint.js",
+        "node_modules/drizzle-orm/mysql-core/columns/real.js",
+        "node_modules/drizzle-orm/mysql-core/columns/serial.js",
+        "node_modules/drizzle-orm/mysql-core/columns/smallint.js",
+        "node_modules/drizzle-orm/mysql-core/columns/text.js",
+        "node_modules/drizzle-orm/mysql-core/columns/time.js",
+        "node_modules/drizzle-orm/mysql-core/columns/date.common.js",
+        "node_modules/drizzle-orm/mysql-core/columns/timestamp.js",
+        "node_modules/drizzle-orm/mysql-core/columns/tinyint.js",
+        "node_modules/drizzle-orm/mysql-core/columns/varbinary.js",
+        "node_modules/drizzle-orm/mysql-core/columns/varchar.js",
+        "node_modules/drizzle-orm/mysql-core/columns/year.js",
+        "node_modules/drizzle-orm/mysql-core/columns/index.js",
+        "node_modules/drizzle-orm/mysql-core/query-builders/count.js",
+        "node_modules/drizzle-orm/mysql-core/indexes.js",
+        "node_modules/drizzle-orm/mysql-core/columns/all.js",
+        "node_modules/drizzle-orm/mysql-core/table.js",
+        "node_modules/drizzle-orm/mysql-core/primary-keys.js",
+        "node_modules/drizzle-orm/mysql-core/view-common.js",
+        "node_modules/drizzle-orm/mysql-core/utils.js",
+        "node_modules/drizzle-orm/mysql-core/query-builders/delete.js",
+        "node_modules/drizzle-orm/mysql-core/view-base.js",
+        "node_modules/drizzle-orm/mysql-core/dialect.js",
+        "node_modules/drizzle-orm/mysql-core/query-builders/select.js",
+        "node_modules/drizzle-orm/mysql-core/query-builders/query-builder.js",
+        "node_modules/drizzle-orm/mysql-core/query-builders/insert.js",
+        "node_modules/drizzle-orm/mysql-core/query-builders/select.types.js",
+        "node_modules/drizzle-orm/mysql-core/query-builders/update.js",
+        "node_modules/drizzle-orm/mysql-core/query-builders/index.js",
+        "node_modules/drizzle-orm/mysql-core/query-builders/query.js",
+        "node_modules/drizzle-orm/mysql-core/db.js",
+        "node_modules/drizzle-orm/mysql-core/view.js",
+        "node_modules/drizzle-orm/mysql-core/schema.js",
+        "node_modules/drizzle-orm/mysql-core/session.js",
+        "node_modules/drizzle-orm/mysql-core/subquery.js",
+        "node_modules/drizzle-orm/mysql-core/index.js",
+        "packages/core/src/storage/drizzle/schema.mysql.ts",
+        "node_modules/sql-escaper/lib/index.js",
+        "node_modules/mysql2/lib/constants/client.js",
+        "node_modules/mysql2/lib/constants/charsets.js",
+        "node_modules/mysql2/package.json",
+        "node_modules/aws-ssl-profiles/lib/profiles/ca/defaults.js",
+        "node_modules/aws-ssl-profiles/lib/profiles/ca/proxies.js",
+        "node_modules/aws-ssl-profiles/lib/index.js",
+        "node_modules/mysql2/lib/constants/ssl_profiles.js",
+        "node_modules/mysql2/lib/connection_config.js",
+        "node_modules/lru.min/lib/index.js",
+        "node_modules/mysql2/lib/parsers/parser_cache.js",
+        "node_modules/denque/index.js",
+        "node_modules/mysql2/lib/constants/errors.js",
+        "node_modules/long/umd/index.js",
+        "node_modules/safer-buffer/safer.js",
+        "node_modules/iconv-lite/lib/bom-handling.js",
+        "node_modules/iconv-lite/lib/helpers/merge-exports.js",
+        "node_modules/iconv-lite/encodings/internal.js",
+        "node_modules/iconv-lite/encodings/utf32.js",
+        "node_modules/iconv-lite/encodings/utf16.js",
+        "node_modules/iconv-lite/encodings/utf7.js",
+        "node_modules/iconv-lite/encodings/sbcs-codec.js",
+        "node_modules/iconv-lite/encodings/sbcs-data.js",
+        "node_modules/iconv-lite/encodings/sbcs-data-generated.js",
+        "node_modules/iconv-lite/encodings/dbcs-codec.js",
+        "node_modules/iconv-lite/encodings/tables/shiftjis.json",
+        "node_modules/iconv-lite/encodings/tables/eucjp.json",
+        "node_modules/iconv-lite/encodings/tables/cp936.json",
+        "node_modules/iconv-lite/encodings/tables/gbk-added.json",
+        "node_modules/iconv-lite/encodings/tables/gb18030-ranges.json",
+        "node_modules/iconv-lite/encodings/tables/cp949.json",
+        "node_modules/iconv-lite/encodings/tables/cp950.json",
+        "node_modules/iconv-lite/encodings/tables/big5-added.json",
+        "node_modules/iconv-lite/encodings/dbcs-data.js",
+        "node_modules/iconv-lite/encodings/index.js",
+        "node_modules/iconv-lite/lib/streams.js",
+        "node_modules/iconv-lite/lib/index.js",
+        "node_modules/mysql2/lib/parsers/string.js",
+        "node_modules/mysql2/lib/constants/types.js",
+        "node_modules/mysql2/lib/packets/packet.js",
+        "node_modules/mysql2/lib/packet_parser.js",
+        "node_modules/mysql2/lib/packets/auth_next_factor.js",
+        "node_modules/mysql2/lib/packets/auth_switch_request.js",
+        "node_modules/mysql2/lib/packets/auth_switch_request_more_data.js",
+        "node_modules/mysql2/lib/packets/auth_switch_response.js",
+        "node_modules/mysql2/lib/packets/binary_row.js",
+        "node_modules/mysql2/lib/constants/commands.js",
+        "node_modules/mysql2/lib/packets/binlog_dump.js",
+        "node_modules/mysql2/lib/auth_41.js",
+        "node_modules/mysql2/lib/constants/charset_encodings.js",
+        "node_modules/mysql2/lib/packets/change_user.js",
+        "node_modules/mysql2/lib/packets/close_statement.js",
+        "node_modules/mysql2/lib/constants/field_flags.js",
+        "node_modules/mysql2/lib/packets/column_definition.js",
+        "node_modules/mysql2/lib/constants/cursor.js",
+        "node_modules/mysql2/lib/packets/encode_parameter.js",
+        "node_modules/mysql2/lib/packets/execute.js",
+        "node_modules/mysql2/lib/packets/handshake.js",
+        "node_modules/mysql2/lib/packets/handshake_response.js",
+        "node_modules/mysql2/lib/packets/prepare_statement.js",
+        "node_modules/mysql2/lib/packets/prepared_statement_header.js",
+        "node_modules/mysql2/lib/packets/query.js",
+        "node_modules/mysql2/lib/packets/register_slave.js",
+        "node_modules/mysql2/lib/packets/reset_connection.js",
+        "node_modules/mysql2/lib/constants/server_status.js",
+        "node_modules/mysql2/lib/constants/encoding_charset.js",
+        "node_modules/mysql2/lib/constants/session_track.js",
+        "node_modules/mysql2/lib/packets/resultset_header.js",
+        "node_modules/mysql2/lib/packets/ssl_request.js",
+        "node_modules/mysql2/lib/packets/text_row.js",
+        "node_modules/mysql2/lib/packets/index.js",
+        "node_modules/mysql2/lib/commands/command.js",
+        "node_modules/mysql2/lib/auth_plugins/sha256_password.js",
+        "node_modules/mysql2/lib/auth_plugins/caching_sha2_password.js",
+        "node_modules/mysql2/lib/auth_plugins/mysql_native_password.js",
+        "node_modules/mysql2/lib/auth_plugins/mysql_clear_password.js",
+        "node_modules/mysql2/lib/commands/auth_switch.js",
+        "node_modules/mysql2/lib/compressed_protocol.js",
+        "node_modules/mysql2/lib/commands/client_handshake.js",
+        "node_modules/mysql2/lib/commands/server_handshake.js",
+        "node_modules/mysql2/lib/helpers.js",
+        "node_modules/is-property/is-property.js",
+        "node_modules/generate-function/index.js",
+        "node_modules/mysql2/lib/parsers/text_parser.js",
+        "node_modules/mysql2/lib/parsers/static_text_parser.js",
+        "node_modules/mysql2/lib/commands/query.js",
+        "node_modules/mysql2/lib/commands/close_statement.js",
+        "node_modules/mysql2/lib/parsers/binary_parser.js",
+        "node_modules/mysql2/lib/parsers/static_binary_parser.js",
+        "node_modules/mysql2/lib/commands/execute.js",
+        "node_modules/mysql2/lib/commands/prepare.js",
+        "node_modules/mysql2/lib/commands/ping.js",
+        "node_modules/mysql2/lib/commands/register_slave.js",
+        "node_modules/mysql2/lib/packets/binlog_query_statusvars.js",
+        "node_modules/mysql2/lib/commands/binlog_dump.js",
+        "node_modules/mysql2/lib/commands/change_user.js",
+        "node_modules/mysql2/lib/commands/reset_connection.js",
+        "node_modules/mysql2/lib/commands/quit.js",
+        "node_modules/mysql2/lib/commands/index.js",
+        "node_modules/mysql2/lib/tracing.js",
+        "node_modules/named-placeholders/index.js",
+        "node_modules/mysql2/lib/base/connection.js",
+        "node_modules/mysql2/lib/promise/make_done_cb.js",
+        "node_modules/mysql2/lib/promise/prepared_statement_info.js",
+        "node_modules/mysql2/lib/promise/inherit_events.js",
+        "node_modules/mysql2/lib/promise/connection.js",
+        "node_modules/mysql2/lib/connection.js",
+        "node_modules/mysql2/lib/create_connection.js",
+        "node_modules/mysql2/lib/promise/pool_connection.js",
+        "node_modules/mysql2/lib/pool_connection.js",
+        "node_modules/mysql2/lib/base/pool.js",
+        "node_modules/mysql2/lib/promise/pool.js",
+        "node_modules/mysql2/lib/pool.js",
+        "node_modules/mysql2/lib/pool_config.js",
+        "node_modules/mysql2/lib/pool_cluster.js",
+        "node_modules/mysql2/lib/create_pool.js",
+        "node_modules/mysql2/lib/create_pool_cluster.js",
+        "node_modules/mysql2/lib/server.js",
+        "node_modules/mysql2/lib/auth_plugins/index.js",
+        "node_modules/mysql2/lib/promise/pool_cluster.js",
+        "node_modules/mysql2/promise.js",
+        "node_modules/mysql2/index.js",
+        "node_modules/drizzle-orm/mysql2/session.js",
+        "node_modules/drizzle-orm/mysql2/driver.js",
+        "node_modules/drizzle-orm/mysql2/index.js",
+        "packages/core/src/storage/drizzle/client-mysql.ts",
+        "packages/core/src/storage/database-client.ts",
+        "packages/core/src/lib/analytics-ttft-sql.ts",
+        "packages/core/src/lib/money-precision.ts",
+        "packages/core/src/db/d1/admin-analytics.impl.ts",
+        "packages/core/src/db/batch-types.ts",
+        "packages/core/src/db/batch-repository-utils.ts",
+        "packages/core/src/db/d1/batches.impl.ts",
+        "packages/core/src/lib/key-hash.ts",
+        "packages/core/src/db/api-keys-types.ts",
+        "packages/core/src/db/api-keys-list-sort.ts",
+        "packages/core/src/db/d1/api-keys.impl.ts",
+        "packages/core/src/db/patch-allowlists.ts",
+        "packages/core/src/db/d1/model-routes.impl.ts",
+        "packages/core/src/db/pricing-profile.ts",
+        "packages/core/src/db/model-modalities.ts",
+        "packages/core/src/db/d1/model-routing.impl.ts",
+        "packages/core/src/db/d1/models.impl.ts",
+        "packages/core/src/db/providers-types.ts",
+        "packages/core/src/db/d1/providers.impl.ts",
+        "packages/core/src/lib/dashboard-request-stats.ts",
+        "packages/core/src/db/request-logs-types.ts",
+        "packages/core/src/db/request-log-status-filter.ts",
+        "packages/core/src/db/route-performance-sampling.ts",
+        "packages/core/src/db/management-api-keys-types.ts",
+        "packages/core/src/db/generation-feedback-types.ts",
+        "packages/core/src/db/provider-attempt-availability.ts",
+        "packages/core/src/db/analytics-query.ts",
+        "packages/core/src/db/d1/request-logs.impl.ts",
+        "packages/core/src/db/d1/system-config.impl.ts",
+        "packages/core/src/db/d1/route-pool-sticky-bindings.impl.ts",
+        "packages/core/src/db/user-audit-catalog.ts",
+        "packages/core/src/db/user-audit-log-derived.ts",
+        "packages/core/src/db/d1/user-audit-logs.impl.ts",
+        "packages/core/src/db/user-budget-reservation-types.ts",
+        "packages/core/src/db/users-list-sort.ts",
+        "packages/core/src/db/d1/users.impl.ts",
+        "packages/core/src/db/d1/admin-access.impl.ts",
+        "packages/core/src/db/d1/request-presets.impl.ts",
+        "packages/core/src/db/guardrails-types.ts",
+        "packages/core/src/db/d1/guardrails.impl.ts",
+        "packages/core/src/db/guardrail-budget-repository-utils.ts",
+        "packages/core/src/db/d1/guardrail-budgets.impl.ts",
+        "packages/core/src/db/user-budget-reservation-utils.ts",
+        "packages/core/src/db/d1/user-budget-reservations.impl.ts",
+        "packages/core/src/db/d1/route-data-policies.impl.ts",
+        "packages/core/src/db/model-endpoints-types.ts",
+        "packages/core/src/db/d1/model-endpoints.impl.ts",
+        "packages/core/src/db/mysql/mysql2-compat.ts",
+        "packages/core/src/storage/management-api-keys.ts",
+        "packages/core/src/db/byok-keys-types.ts",
+        "packages/core/src/lib/shared-key-encryption.ts",
+        "packages/core/src/storage/byok-keys.ts",
+        "packages/core/src/db/d1/portal-marketplace.impl.ts",
+        "packages/core/src/storage/repositories-d1.ts",
+        "packages/core/src/db/postgres/admin-analytics.impl.ts",
+        "packages/core/src/db/postgres/batches.impl.ts",
+        "packages/core/src/storage/critical-write-paths-utils.ts",
+        "packages/core/src/db/postgres/api-keys.impl.ts",
+        "packages/core/src/db/postgres/model-route-patch.ts",
+        "packages/core/src/db/postgres/model-routes.impl.ts",
+        "packages/core/src/db/postgres/model-routing.impl.ts",
+        "packages/core/src/db/postgres/models.impl.ts",
+        "packages/core/src/db/postgres/providers.impl.ts",
+        "packages/core/src/db/shared/sql-placeholders.ts",
+        "packages/core/src/db/postgres/request-logs.impl.ts",
+        "packages/core/src/db/postgres/system-config.impl.ts",
+        "packages/core/src/db/postgres/route-pool-sticky-bindings.impl.ts",
+        "packages/core/src/db/user-audit-drizzle-insert.ts",
+        "packages/core/src/db/postgres/user-audit-logs.impl.ts",
+        "packages/core/src/db/postgres/users.impl.ts",
+        "packages/core/src/db/postgres/admin-access.impl.ts",
+        "packages/core/src/db/postgres/request-presets.impl.ts",
+        "packages/core/src/db/postgres/guardrails.impl.ts",
+        "packages/core/src/db/postgres/guardrail-budgets.impl.ts",
+        "packages/core/src/db/postgres/user-budget-reservations.impl.ts",
+        "packages/core/src/db/postgres/route-data-policies.impl.ts",
+        "packages/core/src/db/postgres/model-endpoints.impl.ts",
+        "packages/core/src/db/postgres/portal-marketplace.impl.ts",
+        "packages/core/src/storage/repositories-postgres.ts",
+        "packages/core/src/db/mysql/admin-analytics.impl.ts",
+        "packages/core/src/db/mysql/batches.impl.ts",
+        "packages/core/src/db/mysql/api-keys.impl.ts",
+        "packages/core/src/db/mysql/model-routes.impl.ts",
+        "packages/core/src/db/mysql/model-routing.impl.ts",
+        "packages/core/src/db/mysql/models.impl.ts",
+        "packages/core/src/db/mysql/providers.impl.ts",
+        "packages/core/src/db/mysql/request-logs.impl.ts",
+        "packages/core/src/db/mysql/system-config.impl.ts",
+        "packages/core/src/db/mysql/route-pool-sticky-bindings.impl.ts",
+        "packages/core/src/db/mysql/user-audit-logs.impl.ts",
+        "packages/core/src/db/mysql/users.impl.ts",
+        "packages/core/src/db/mysql/admin-access.impl.ts",
+        "packages/core/src/db/mysql/request-presets.impl.ts",
+        "packages/core/src/db/mysql/guardrails.impl.ts",
+        "packages/core/src/db/mysql/guardrail-budgets.impl.ts",
+        "packages/core/src/db/mysql/user-budget-reservations.impl.ts",
+        "packages/core/src/db/mysql/route-data-policies.impl.ts",
+        "packages/core/src/db/mysql/model-endpoints.impl.ts",
+        "packages/core/src/db/mysql/portal-marketplace.impl.ts",
+        "packages/core/src/storage/repositories-mysql.ts",
+        "packages/core/src/storage/context.ts",
+        "packages/core/src/storage/runtime-database-config.ts",
+        "packages/core/src/storage/repositories-types.ts",
+        "packages/core/src/storage/repositories.ts",
+        "packages/core/src/storage/gateway-repository-interfaces.ts",
+        "packages/core/src/storage/repository-dtos.ts",
+        "packages/core/src/db/user-audit-metadata.ts",
+        "packages/core/src/db/user-budget-audit-mapper.ts",
+        "packages/core/src/db/public-model-daily-stats.ts",
+        "packages/core/src/db/d1/critical-writes.impl.ts",
+        "packages/core/src/db/mysql/critical-writes.impl.ts",
+        "packages/core/src/db/shared-key-economic-outbox-types.ts",
+        "packages/core/src/db/user-audit-snapshot.ts",
+        "packages/core/src/db/postgres/legacy-buyer-windowed-transaction-v372.ts",
+        "packages/core/src/storage/recovery/usage-settlement-codec.ts",
+        "packages/core/src/storage/recovery/settlement-recovery-types.ts",
+        "packages/core/src/storage/recovery/usage-settlement-facts-postgres.ts",
+        "packages/core/src/storage/recovery/usage-settlement-transaction-postgres.ts",
+        "packages/core/src/db/postgres/critical-writes.impl.ts",
+        "packages/core/src/storage/critical-write-paths.ts",
+        "packages/core/src/storage/organization-identity.ts",
+        "packages/core/src/storage/workspaces.ts",
+        "packages/core/src/storage/workspace-budgets.ts",
+        "packages/core/src/storage/management-workspaces.ts",
+        "packages/core/src/storage/management-workspace-members.ts",
+        "packages/core/src/storage/management-guardrails.ts",
+        "packages/core/src/storage/management-guardrail-assignments.ts",
+        "packages/core/src/db/providers.ts",
+        "packages/core/src/db/system-config.ts",
+        "packages/core/src/db/user-budget-audit-params.ts",
+        "packages/core/src/db/model-route-policy.ts",
+        "packages/core/src/db/route-pool-tier-strategies.ts",
+        "packages/core/src/db/route-pool-sticky-types.ts",
+        "packages/core/src/generation-metadata.ts",
+        "packages/core/src/db/pricing-audit.ts",
+        "packages/core/src/db/image-token-usage.ts",
+        "packages/core/src/db/audio-token-usage.ts",
+        "packages/core/src/db/image-per-image-usage.ts",
+        "packages/core/src/db/user-charged-cost-factors.ts",
+        "packages/core/src/db/system-config-types.ts",
+        "packages/core/src/db/admin-access-types.ts",
+        "packages/core/src/db/shared-keys-types.ts",
+        "packages/core/src/db/request-presets-types.ts",
+        "packages/core/src/db/route-data-policy-types.ts",
+        "packages/core/src/model-endpoint-backfill.ts",
+        "packages/core/src/shared-channels.ts",
+        "packages/core/src/lib/business-timezone.ts",
+        "packages/core/src/lib/billing-currency.ts",
+        "packages/core/src/lib/public-model-slug.ts",
+        "packages/core/src/lib/alert-webhook-system-config.ts",
+        "packages/core/src/lib/tool-pricing.ts",
+        "packages/core/src/lib/web-search-system-config.ts",
+        "packages/core/src/lib/web-fetch-system-config.ts",
+        "packages/core/src/lib/web-deep-search-system-config.ts",
+        "packages/core/src/lib/ai-detection-system-config.ts",
+        "packages/core/src/lib/route-strategy-system-config.ts",
+        "packages/core/src/lib/provider-key-encryption.ts",
+        "packages/core/src/lib/byok-key-encryption.ts",
+        "packages/core/src/lib/string-utils.ts",
+        "packages/core/src/lib/time-format.ts",
+        "packages/core/src/lib/resolve-me-metadata.ts",
+        "packages/core/src/lib/key-expiry.ts",
+        "packages/core/src/services/user-service.ts",
+        "packages/core/src/services/budget-transition-service.ts",
+        "packages/core/src/services/key-service.ts",
+        "packages/core/src/services/management-key-service.ts",
+        "packages/core/src/services/shared-key-earnings.ts",
+        "packages/core/src/index.ts",
+        "packages/proxy/src/services/request-deadline.ts",
+        "packages/proxy/src/services/sensitive-content-detector.ts",
+        "packages/proxy/src/services/alert-webhook.ts",
+        "packages/proxy/src/services/resource-completion.ts",
+        "packages/proxy/src/services/egress/buffered-audio-resources.ts",
+        "packages/proxy/src/services/egress/audio-transcription-upload.ts",
+        "packages/proxy/src/services/egress/compact-json-string-page.ts",
+        "packages/proxy/src/services/egress/json-string-pages.ts",
+        "packages/proxy/src/services/route-default-params.ts",
+        "packages/proxy/src/services/egress/upstream-request-id.ts",
+        "packages/proxy/src/services/egress/bounded-response-body.ts",
+        "packages/proxy/src/services/egress/upstream-observability.ts",
+        "packages/proxy/src/services/gateway-error-codes.ts",
+        "packages/proxy/src/services/openrouter-error-protocol.ts",
+        "packages/proxy/src/services/upstream-failure-classifier.ts",
+        "packages/proxy/src/services/upstream-error-code.ts",
+        "packages/proxy/src/services/gateway-error-response.ts",
+        "packages/proxy/src/services/egress/audio-request-lifecycle.ts",
+        "packages/proxy/src/services/egress/audio-provider-options.ts",
+        "packages/proxy/src/services/egress/openai-audio-driver.ts",
+        "packages/proxy/src/services/egress/audio-duration.ts",
+        "packages/proxy/src/services/request-body-log-policy.ts",
+        "packages/proxy/src/services/generation-metadata-snapshot.ts",
+        "packages/proxy/src/services/shared-key-earnings.ts",
+        "packages/proxy/src/services/provider-usage-facts.ts",
+        "packages/proxy/src/services/endpoint-billing-pricing.ts",
+        "packages/proxy/src/services/byok-key-pool.ts",
+        "packages/proxy/src/services/byok-billing-policy.ts",
+        "packages/proxy/src/services/usage-tracker.ts",
+        "packages/proxy/src/services/endpoint-audio-billing-pricing.ts",
+        "packages/proxy/src/services/audio-usage-charge.ts",
+        "packages/proxy/src/services/dashscope-realtime-guardrails.ts",
+        "packages/proxy/src/services/egress/owned-upstream-response.ts",
+        "packages/proxy/src/services/egress/stream-json-body.ts",
+        "packages/proxy/src/services/egress/json-upload-body.ts",
+        "packages/proxy/src/services/egress/owned-json-upload-body.ts",
+        "packages/proxy/src/services/egress/with-owned-json-upload.ts",
+        "packages/proxy/src/services/egress/prepared-text-attempt.ts",
+        "packages/proxy/src/services/bounded-request-body.ts",
+        "packages/proxy/src/services/chat-final-quote-input.ts",
+        "packages/proxy/src/services/egress/sse-data-line.ts",
+        "packages/proxy/src/services/provider-circuit-breaker.ts",
+        "packages/proxy/src/services/route-strategies/route-affinity-hash.ts",
+        "packages/proxy/src/services/route-strategies/hash-affinity.ts",
+        "packages/proxy/src/services/route-strategies/weighted-random.ts",
+        "packages/proxy/src/services/route-strategies/weight-priority.ts",
+        "packages/proxy/src/services/route-strategies/weighted-round-robin.ts",
+        "packages/core/src/db/route-affinity-key.ts",
+        "packages/proxy/src/services/route-strategies/index.ts",
+        "packages/proxy/src/services/route-attempt-planner.ts",
+        "packages/proxy/src/services/shared-key-pool.ts",
+        "packages/proxy/src/services/ordinary-budget-lifecycle.ts",
+        "packages/proxy/src/services/request-guardrails.ts",
+        "packages/proxy/src/services/request-budget-admission.ts",
+        "packages/proxy/src/services/request-dispatch-budget.ts",
+        "packages/proxy/src/services/request-log-record-status.ts",
+        "packages/proxy/src/services/provider-sticky-routing.ts",
+        "packages/proxy/src/services/failover-dispatch.ts",
+        "packages/proxy/src/services/egress/openai-stream-usage-request.ts",
+        "packages/proxy/src/services/egress/text-upstream-url.ts",
+        "packages/proxy/src/services/egress/ambiguous-upstream-status.ts",
+        "packages/proxy/src/services/egress/text-json-response.ts",
+        "packages/proxy/src/services/egress/service-tier-contract.ts",
+        "packages/proxy/src/services/egress/finish-reason-contract.ts",
+        "packages/proxy/src/services/egress/openai-driver.ts",
+        "packages/proxy/src/services/egress/openai-responses-driver.ts",
+        "packages/proxy/src/services/egress/openai-embeddings-driver.ts",
+        "packages/proxy/src/services/egress/openai-rerank-driver.ts",
+        "packages/proxy/src/services/json-structure-budget.ts",
+        "packages/proxy/src/services/multipart-body-inspector.ts",
+        "packages/proxy/src/services/streaming-multipart-body.ts",
+        "packages/proxy/src/services/image-attempt-context.ts",
+        "packages/proxy/src/services/egress/multipart-upload-body.ts",
+        "packages/proxy/src/services/egress/json-scalar.ts",
+        "packages/proxy/src/services/egress/segmented-json-response.ts",
+        "packages/proxy/src/services/egress/json-string-number.ts",
+        "packages/proxy/src/services/egress/image-response-usage.ts",
+        "packages/proxy/src/services/egress/openai-images-driver.ts",
+        "packages/tool-engines/src/web-fetch/types.ts",
+        "packages/tool-engines/src/http/bounded-response.ts",
+        "packages/tool-engines/src/web-fetch/firecrawl.ts",
+        "packages/tool-engines/src/web-fetch/jina.ts",
+        "packages/tool-engines/src/web-fetch/tavily.ts",
+        "packages/tool-engines/src/web-fetch/dispatch.ts",
+        "packages/tool-engines/src/web-fetch/url-guard.ts",
+        "packages/tool-engines/src/web-fetch/safe-redirect-fetch.ts",
+        "packages/tool-engines/src/web-fetch/index.ts",
+        "packages/proxy/src/services/egress/dashscope-audio-driver.ts",
+        "packages/proxy/src/services/egress/audio-speech-stream-lifecycle.ts",
+        "packages/proxy/src/services/egress/audio-speech-driver.ts",
+        "packages/proxy/src/services/egress/realtime-connection-lifecycle.ts",
+        "packages/proxy/src/services/egress/dashscope-realtime-driver.ts",
+        "packages/proxy/src/services/egress/anthropic-driver.ts",
+        "packages/proxy/src/services/egress/gemini-driver.ts",
+        "packages/proxy/src/services/proxy.ts",
+        "text-dispatch-workerd-wire-worker-conditions-successor-fixture.js"
+      ],
+      "scriptSha256": "40c65d21a9047f782c56933ad3b4c463edc6aec0d4dd0598f492fdddcf7c4450",
+      "externalImports": [
+        {
+          "path": "node:crypto",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:crypto",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:crypto",
+          "kind": "import-statement",
+          "external": true
+        }
+      ]
+    },
+    {
+      "platform": "browser",
+      "conditions": [
+        "workerd",
+        "worker",
+        "browser"
+      ],
+      "coreSource": true,
+      "coreDist": false,
+      "inputs": [
+        "packages/core/src/types.ts",
+        "packages/core/src/upstream-protocol.ts",
+        "packages/core/src/gemini-upstream-url.ts",
+        "packages/core/src/route-topology.ts",
+        "packages/core/src/provider-endpoints.ts",
+        "packages/core/src/gcp-oauth-lifecycle.ts",
+        "packages/core/src/request-auxiliary-auth-budget.ts",
+        "packages/core/src/gcp-service-account-token.ts",
+        "packages/core/src/request-deadline.ts",
+        "packages/core/src/preparation-control.ts",
+        "packages/core/src/vertex-openai-model.ts",
+        "packages/core/src/realtime-protocol.ts",
+        "packages/core/src/chain-jobs.ts",
+        "packages/core/src/request-presets.ts",
+        "packages/core/src/route-data-policy.ts",
+        "packages/core/src/db/guardrail-budget-types.ts",
+        "packages/core/src/guardrail-builtins.ts",
+        "packages/core/src/guardrails.ts",
+        "packages/core/src/db/pricing-schedule.ts",
+        "packages/core/src/route-comparable-price.ts",
+        "packages/core/src/route-performance.ts",
+        "packages/core/src/db/route-routing-metadata.ts",
+        "packages/core/src/model-endpoint-catalog.ts",
+        "packages/core/src/model-endpoint-runtime.ts",
+        "packages/core/src/lib/provider-key-environment.ts",
+        "packages/core/src/db/provider-key-utils.ts",
+        "packages/core/src/route-planner-preview.ts",
+        "packages/core/src/public-model-catalog.ts",
+        "packages/core/src/gateway-key-limits.ts",
+        "packages/core/src/workspace-budgets.ts",
+        "packages/core/src/management-workspaces.ts",
+        "packages/core/src/management-guardrails.ts",
+        "packages/core/src/organization-identity.ts",
+        "packages/core/src/workspaces.ts",
+        "node_modules/drizzle-orm/entity.js",
+        "node_modules/drizzle-orm/logger.js",
+        "node_modules/drizzle-orm/table.utils.js",
+        "node_modules/drizzle-orm/table.js",
+        "node_modules/drizzle-orm/column.js",
+        "node_modules/drizzle-orm/column-builder.js",
+        "node_modules/drizzle-orm/pg-core/foreign-keys.js",
+        "node_modules/drizzle-orm/tracing-utils.js",
+        "node_modules/drizzle-orm/pg-core/unique-constraint.js",
+        "node_modules/drizzle-orm/pg-core/utils/array.js",
+        "node_modules/drizzle-orm/pg-core/columns/common.js",
+        "node_modules/drizzle-orm/pg-core/columns/enum.js",
+        "node_modules/drizzle-orm/subquery.js",
+        "node_modules/drizzle-orm/version.js",
+        "node_modules/drizzle-orm/tracing.js",
+        "node_modules/drizzle-orm/view-common.js",
+        "node_modules/drizzle-orm/sql/sql.js",
+        "node_modules/drizzle-orm/utils.js",
+        "node_modules/drizzle-orm/pg-core/columns/int.common.js",
+        "node_modules/drizzle-orm/pg-core/columns/bigint.js",
+        "node_modules/drizzle-orm/pg-core/columns/bigserial.js",
+        "node_modules/drizzle-orm/pg-core/columns/boolean.js",
+        "node_modules/drizzle-orm/pg-core/columns/char.js",
+        "node_modules/drizzle-orm/pg-core/columns/cidr.js",
+        "node_modules/drizzle-orm/pg-core/columns/custom.js",
+        "node_modules/drizzle-orm/pg-core/columns/date.common.js",
+        "node_modules/drizzle-orm/pg-core/columns/date.js",
+        "node_modules/drizzle-orm/pg-core/columns/double-precision.js",
+        "node_modules/drizzle-orm/pg-core/columns/inet.js",
+        "node_modules/drizzle-orm/pg-core/columns/integer.js",
+        "node_modules/drizzle-orm/pg-core/columns/interval.js",
+        "node_modules/drizzle-orm/pg-core/columns/json.js",
+        "node_modules/drizzle-orm/pg-core/columns/jsonb.js",
+        "node_modules/drizzle-orm/pg-core/columns/line.js",
+        "node_modules/drizzle-orm/pg-core/columns/macaddr.js",
+        "node_modules/drizzle-orm/pg-core/columns/macaddr8.js",
+        "node_modules/drizzle-orm/pg-core/columns/numeric.js",
+        "node_modules/drizzle-orm/pg-core/columns/point.js",
+        "node_modules/drizzle-orm/pg-core/columns/postgis_extension/utils.js",
+        "node_modules/drizzle-orm/pg-core/columns/postgis_extension/geometry.js",
+        "node_modules/drizzle-orm/pg-core/columns/real.js",
+        "node_modules/drizzle-orm/pg-core/columns/serial.js",
+        "node_modules/drizzle-orm/pg-core/columns/smallint.js",
+        "node_modules/drizzle-orm/pg-core/columns/smallserial.js",
+        "node_modules/drizzle-orm/pg-core/columns/text.js",
+        "node_modules/drizzle-orm/pg-core/columns/time.js",
+        "node_modules/drizzle-orm/pg-core/columns/timestamp.js",
+        "node_modules/drizzle-orm/pg-core/columns/uuid.js",
+        "node_modules/drizzle-orm/pg-core/columns/varchar.js",
+        "node_modules/drizzle-orm/pg-core/columns/vector_extension/bit.js",
+        "node_modules/drizzle-orm/pg-core/columns/vector_extension/halfvec.js",
+        "node_modules/drizzle-orm/pg-core/columns/vector_extension/sparsevec.js",
+        "node_modules/drizzle-orm/pg-core/columns/vector_extension/vector.js",
+        "node_modules/drizzle-orm/pg-core/columns/all.js",
+        "node_modules/drizzle-orm/pg-core/table.js",
+        "node_modules/drizzle-orm/pg-core/primary-keys.js",
+        "node_modules/drizzle-orm/sql/expressions/conditions.js",
+        "node_modules/drizzle-orm/sql/expressions/select.js",
+        "node_modules/drizzle-orm/sql/expressions/index.js",
+        "node_modules/drizzle-orm/relations.js",
+        "node_modules/drizzle-orm/alias.js",
+        "node_modules/drizzle-orm/selection-proxy.js",
+        "node_modules/drizzle-orm/query-promise.js",
+        "node_modules/drizzle-orm/sqlite-core/foreign-keys.js",
+        "node_modules/drizzle-orm/sqlite-core/unique-constraint.js",
+        "node_modules/drizzle-orm/sqlite-core/columns/common.js",
+        "node_modules/drizzle-orm/sqlite-core/columns/blob.js",
+        "node_modules/drizzle-orm/sqlite-core/columns/custom.js",
+        "node_modules/drizzle-orm/sqlite-core/columns/integer.js",
+        "node_modules/drizzle-orm/sqlite-core/columns/numeric.js",
+        "node_modules/drizzle-orm/sqlite-core/columns/real.js",
+        "node_modules/drizzle-orm/sqlite-core/columns/text.js",
+        "node_modules/drizzle-orm/sqlite-core/columns/all.js",
+        "node_modules/drizzle-orm/sqlite-core/table.js",
+        "node_modules/drizzle-orm/sqlite-core/checks.js",
+        "node_modules/drizzle-orm/sqlite-core/indexes.js",
+        "node_modules/drizzle-orm/sqlite-core/primary-keys.js",
+        "node_modules/drizzle-orm/sqlite-core/utils.js",
+        "node_modules/drizzle-orm/sqlite-core/query-builders/delete.js",
+        "node_modules/drizzle-orm/casing.js",
+        "node_modules/drizzle-orm/errors.js",
+        "node_modules/drizzle-orm/sql/functions/aggregate.js",
+        "node_modules/drizzle-orm/sql/functions/vector.js",
+        "node_modules/drizzle-orm/sql/functions/index.js",
+        "node_modules/drizzle-orm/sql/index.js",
+        "node_modules/drizzle-orm/sqlite-core/columns/index.js",
+        "node_modules/drizzle-orm/sqlite-core/view-base.js",
+        "node_modules/drizzle-orm/sqlite-core/dialect.js",
+        "node_modules/drizzle-orm/query-builders/query-builder.js",
+        "node_modules/drizzle-orm/sqlite-core/query-builders/select.js",
+        "node_modules/drizzle-orm/sqlite-core/query-builders/query-builder.js",
+        "node_modules/drizzle-orm/sqlite-core/query-builders/insert.js",
+        "node_modules/drizzle-orm/sqlite-core/query-builders/select.types.js",
+        "node_modules/drizzle-orm/sqlite-core/query-builders/update.js",
+        "node_modules/drizzle-orm/sqlite-core/query-builders/index.js",
+        "node_modules/drizzle-orm/sqlite-core/query-builders/count.js",
+        "node_modules/drizzle-orm/sqlite-core/query-builders/query.js",
+        "node_modules/drizzle-orm/sqlite-core/query-builders/raw.js",
+        "node_modules/drizzle-orm/sqlite-core/db.js",
+        "node_modules/drizzle-orm/cache/core/cache.js",
+        "node_modules/drizzle-orm/cache/core/index.js",
+        "node_modules/drizzle-orm/sqlite-core/alias.js",
+        "node_modules/drizzle-orm/sqlite-core/session.js",
+        "node_modules/drizzle-orm/sqlite-core/subquery.js",
+        "node_modules/drizzle-orm/sqlite-core/view.js",
+        "node_modules/drizzle-orm/sqlite-core/index.js",
+        "node_modules/drizzle-orm/d1/session.js",
+        "node_modules/drizzle-orm/d1/driver.js",
+        "node_modules/drizzle-orm/d1/index.js",
+        "node_modules/drizzle-orm/operations.js",
+        "node_modules/drizzle-orm/index.js",
+        "packages/core/src/storage/drizzle/schema.d1.ts",
+        "packages/core/src/storage/drizzle/client-d1.ts",
+        "node_modules/drizzle-orm/pg-core/alias.js",
+        "node_modules/drizzle-orm/pg-core/checks.js",
+        "node_modules/drizzle-orm/pg-core/columns/index.js",
+        "node_modules/drizzle-orm/pg-core/indexes.js",
+        "node_modules/drizzle-orm/pg-core/policies.js",
+        "node_modules/drizzle-orm/pg-core/view-common.js",
+        "node_modules/drizzle-orm/pg-core/view-base.js",
+        "node_modules/drizzle-orm/pg-core/dialect.js",
+        "node_modules/drizzle-orm/pg-core/query-builders/select.js",
+        "node_modules/drizzle-orm/pg-core/query-builders/query-builder.js",
+        "node_modules/drizzle-orm/pg-core/view.js",
+        "node_modules/drizzle-orm/pg-core/utils.js",
+        "node_modules/drizzle-orm/pg-core/query-builders/delete.js",
+        "node_modules/drizzle-orm/pg-core/query-builders/insert.js",
+        "node_modules/drizzle-orm/pg-core/query-builders/refresh-materialized-view.js",
+        "node_modules/drizzle-orm/pg-core/query-builders/select.types.js",
+        "node_modules/drizzle-orm/pg-core/query-builders/update.js",
+        "node_modules/drizzle-orm/pg-core/query-builders/index.js",
+        "node_modules/drizzle-orm/pg-core/query-builders/count.js",
+        "node_modules/drizzle-orm/pg-core/query-builders/query.js",
+        "node_modules/drizzle-orm/pg-core/query-builders/raw.js",
+        "node_modules/drizzle-orm/pg-core/db.js",
+        "node_modules/drizzle-orm/pg-core/roles.js",
+        "node_modules/drizzle-orm/pg-core/sequence.js",
+        "node_modules/drizzle-orm/pg-core/schema.js",
+        "node_modules/drizzle-orm/pg-core/session.js",
+        "node_modules/drizzle-orm/pg-core/subquery.js",
+        "node_modules/drizzle-orm/pg-core/utils/index.js",
+        "node_modules/drizzle-orm/pg-core/index.js",
+        "packages/core/src/storage/drizzle/schema.pg.ts",
+        "node_modules/postgres/cf/polyfills.js",
+        "node_modules/postgres/cf/src/query.js",
+        "node_modules/postgres/cf/src/errors.js",
+        "node_modules/postgres/cf/src/types.js",
+        "node_modules/postgres/cf/src/result.js",
+        "node_modules/postgres/cf/src/queue.js",
+        "node_modules/postgres/cf/src/bytes.js",
+        "node_modules/postgres/cf/src/connection.js",
+        "node_modules/postgres/cf/src/subscribe.js",
+        "node_modules/postgres/cf/src/large.js",
+        "node_modules/postgres/cf/src/index.js",
+        "node_modules/drizzle-orm/postgres-js/session.js",
+        "node_modules/drizzle-orm/postgres-js/driver.js",
+        "node_modules/drizzle-orm/postgres-js/index.js",
+        "packages/core/src/storage/postgres-connection-error.ts",
+        "packages/core/src/storage/postgres-initialization.ts",
+        "packages/core/src/storage/drizzle/client-postgres.ts",
+        "node_modules/drizzle-orm/mysql-core/alias.js",
+        "node_modules/drizzle-orm/mysql-core/checks.js",
+        "node_modules/drizzle-orm/mysql-core/foreign-keys.js",
+        "node_modules/drizzle-orm/mysql-core/unique-constraint.js",
+        "node_modules/drizzle-orm/mysql-core/columns/common.js",
+        "node_modules/drizzle-orm/mysql-core/columns/bigint.js",
+        "node_modules/drizzle-orm/mysql-core/columns/binary.js",
+        "node_modules/drizzle-orm/mysql-core/columns/boolean.js",
+        "node_modules/drizzle-orm/mysql-core/columns/char.js",
+        "node_modules/drizzle-orm/mysql-core/columns/custom.js",
+        "node_modules/drizzle-orm/mysql-core/columns/date.js",
+        "node_modules/drizzle-orm/mysql-core/columns/datetime.js",
+        "node_modules/drizzle-orm/mysql-core/columns/decimal.js",
+        "node_modules/drizzle-orm/mysql-core/columns/double.js",
+        "node_modules/drizzle-orm/mysql-core/columns/enum.js",
+        "node_modules/drizzle-orm/mysql-core/columns/float.js",
+        "node_modules/drizzle-orm/mysql-core/columns/int.js",
+        "node_modules/drizzle-orm/mysql-core/columns/json.js",
+        "node_modules/drizzle-orm/mysql-core/columns/mediumint.js",
+        "node_modules/drizzle-orm/mysql-core/columns/real.js",
+        "node_modules/drizzle-orm/mysql-core/columns/serial.js",
+        "node_modules/drizzle-orm/mysql-core/columns/smallint.js",
+        "node_modules/drizzle-orm/mysql-core/columns/text.js",
+        "node_modules/drizzle-orm/mysql-core/columns/time.js",
+        "node_modules/drizzle-orm/mysql-core/columns/date.common.js",
+        "node_modules/drizzle-orm/mysql-core/columns/timestamp.js",
+        "node_modules/drizzle-orm/mysql-core/columns/tinyint.js",
+        "node_modules/drizzle-orm/mysql-core/columns/varbinary.js",
+        "node_modules/drizzle-orm/mysql-core/columns/varchar.js",
+        "node_modules/drizzle-orm/mysql-core/columns/year.js",
+        "node_modules/drizzle-orm/mysql-core/columns/index.js",
+        "node_modules/drizzle-orm/mysql-core/query-builders/count.js",
+        "node_modules/drizzle-orm/mysql-core/indexes.js",
+        "node_modules/drizzle-orm/mysql-core/columns/all.js",
+        "node_modules/drizzle-orm/mysql-core/table.js",
+        "node_modules/drizzle-orm/mysql-core/primary-keys.js",
+        "node_modules/drizzle-orm/mysql-core/view-common.js",
+        "node_modules/drizzle-orm/mysql-core/utils.js",
+        "node_modules/drizzle-orm/mysql-core/query-builders/delete.js",
+        "node_modules/drizzle-orm/mysql-core/view-base.js",
+        "node_modules/drizzle-orm/mysql-core/dialect.js",
+        "node_modules/drizzle-orm/mysql-core/query-builders/select.js",
+        "node_modules/drizzle-orm/mysql-core/query-builders/query-builder.js",
+        "node_modules/drizzle-orm/mysql-core/query-builders/insert.js",
+        "node_modules/drizzle-orm/mysql-core/query-builders/select.types.js",
+        "node_modules/drizzle-orm/mysql-core/query-builders/update.js",
+        "node_modules/drizzle-orm/mysql-core/query-builders/index.js",
+        "node_modules/drizzle-orm/mysql-core/query-builders/query.js",
+        "node_modules/drizzle-orm/mysql-core/db.js",
+        "node_modules/drizzle-orm/mysql-core/view.js",
+        "node_modules/drizzle-orm/mysql-core/schema.js",
+        "node_modules/drizzle-orm/mysql-core/session.js",
+        "node_modules/drizzle-orm/mysql-core/subquery.js",
+        "node_modules/drizzle-orm/mysql-core/index.js",
+        "packages/core/src/storage/drizzle/schema.mysql.ts",
+        "node_modules/sql-escaper/lib/index.js",
+        "node_modules/mysql2/lib/constants/client.js",
+        "node_modules/mysql2/lib/constants/charsets.js",
+        "node_modules/mysql2/package.json",
+        "node_modules/aws-ssl-profiles/lib/profiles/ca/defaults.js",
+        "node_modules/aws-ssl-profiles/lib/profiles/ca/proxies.js",
+        "node_modules/aws-ssl-profiles/lib/index.js",
+        "node_modules/mysql2/lib/constants/ssl_profiles.js",
+        "node_modules/mysql2/lib/connection_config.js",
+        "node_modules/lru.min/lib/index.js",
+        "node_modules/mysql2/lib/parsers/parser_cache.js",
+        "node_modules/denque/index.js",
+        "node_modules/mysql2/lib/constants/errors.js",
+        "node_modules/long/umd/index.js",
+        "node_modules/safer-buffer/safer.js",
+        "node_modules/iconv-lite/lib/bom-handling.js",
+        "node_modules/iconv-lite/lib/helpers/merge-exports.js",
+        "node_modules/iconv-lite/encodings/internal.js",
+        "node_modules/iconv-lite/encodings/utf32.js",
+        "node_modules/iconv-lite/encodings/utf16.js",
+        "node_modules/iconv-lite/encodings/utf7.js",
+        "node_modules/iconv-lite/encodings/sbcs-codec.js",
+        "node_modules/iconv-lite/encodings/sbcs-data.js",
+        "node_modules/iconv-lite/encodings/sbcs-data-generated.js",
+        "node_modules/iconv-lite/encodings/dbcs-codec.js",
+        "node_modules/iconv-lite/encodings/tables/shiftjis.json",
+        "node_modules/iconv-lite/encodings/tables/eucjp.json",
+        "node_modules/iconv-lite/encodings/tables/cp936.json",
+        "node_modules/iconv-lite/encodings/tables/gbk-added.json",
+        "node_modules/iconv-lite/encodings/tables/gb18030-ranges.json",
+        "node_modules/iconv-lite/encodings/tables/cp949.json",
+        "node_modules/iconv-lite/encodings/tables/cp950.json",
+        "node_modules/iconv-lite/encodings/tables/big5-added.json",
+        "node_modules/iconv-lite/encodings/dbcs-data.js",
+        "node_modules/iconv-lite/encodings/index.js",
+        "node_modules/iconv-lite/lib/streams.js",
+        "node_modules/iconv-lite/lib/index.js",
+        "node_modules/mysql2/lib/parsers/string.js",
+        "node_modules/mysql2/lib/constants/types.js",
+        "node_modules/mysql2/lib/packets/packet.js",
+        "node_modules/mysql2/lib/packet_parser.js",
+        "node_modules/mysql2/lib/packets/auth_next_factor.js",
+        "node_modules/mysql2/lib/packets/auth_switch_request.js",
+        "node_modules/mysql2/lib/packets/auth_switch_request_more_data.js",
+        "node_modules/mysql2/lib/packets/auth_switch_response.js",
+        "node_modules/mysql2/lib/packets/binary_row.js",
+        "node_modules/mysql2/lib/constants/commands.js",
+        "node_modules/mysql2/lib/packets/binlog_dump.js",
+        "node_modules/mysql2/lib/auth_41.js",
+        "node_modules/mysql2/lib/constants/charset_encodings.js",
+        "node_modules/mysql2/lib/packets/change_user.js",
+        "node_modules/mysql2/lib/packets/close_statement.js",
+        "node_modules/mysql2/lib/constants/field_flags.js",
+        "node_modules/mysql2/lib/packets/column_definition.js",
+        "node_modules/mysql2/lib/constants/cursor.js",
+        "node_modules/mysql2/lib/packets/encode_parameter.js",
+        "node_modules/mysql2/lib/packets/execute.js",
+        "node_modules/mysql2/lib/packets/handshake.js",
+        "node_modules/mysql2/lib/packets/handshake_response.js",
+        "node_modules/mysql2/lib/packets/prepare_statement.js",
+        "node_modules/mysql2/lib/packets/prepared_statement_header.js",
+        "node_modules/mysql2/lib/packets/query.js",
+        "node_modules/mysql2/lib/packets/register_slave.js",
+        "node_modules/mysql2/lib/packets/reset_connection.js",
+        "node_modules/mysql2/lib/constants/server_status.js",
+        "node_modules/mysql2/lib/constants/encoding_charset.js",
+        "node_modules/mysql2/lib/constants/session_track.js",
+        "node_modules/mysql2/lib/packets/resultset_header.js",
+        "node_modules/mysql2/lib/packets/ssl_request.js",
+        "node_modules/mysql2/lib/packets/text_row.js",
+        "node_modules/mysql2/lib/packets/index.js",
+        "node_modules/mysql2/lib/commands/command.js",
+        "node_modules/mysql2/lib/auth_plugins/sha256_password.js",
+        "node_modules/mysql2/lib/auth_plugins/caching_sha2_password.js",
+        "node_modules/mysql2/lib/auth_plugins/mysql_native_password.js",
+        "node_modules/mysql2/lib/auth_plugins/mysql_clear_password.js",
+        "node_modules/mysql2/lib/commands/auth_switch.js",
+        "node_modules/mysql2/lib/compressed_protocol.js",
+        "node_modules/mysql2/lib/commands/client_handshake.js",
+        "node_modules/mysql2/lib/commands/server_handshake.js",
+        "node_modules/mysql2/lib/helpers.js",
+        "node_modules/is-property/is-property.js",
+        "node_modules/generate-function/index.js",
+        "node_modules/mysql2/lib/parsers/text_parser.js",
+        "node_modules/mysql2/lib/parsers/static_text_parser.js",
+        "node_modules/mysql2/lib/commands/query.js",
+        "node_modules/mysql2/lib/commands/close_statement.js",
+        "node_modules/mysql2/lib/parsers/binary_parser.js",
+        "node_modules/mysql2/lib/parsers/static_binary_parser.js",
+        "node_modules/mysql2/lib/commands/execute.js",
+        "node_modules/mysql2/lib/commands/prepare.js",
+        "node_modules/mysql2/lib/commands/ping.js",
+        "node_modules/mysql2/lib/commands/register_slave.js",
+        "node_modules/mysql2/lib/packets/binlog_query_statusvars.js",
+        "node_modules/mysql2/lib/commands/binlog_dump.js",
+        "node_modules/mysql2/lib/commands/change_user.js",
+        "node_modules/mysql2/lib/commands/reset_connection.js",
+        "node_modules/mysql2/lib/commands/quit.js",
+        "node_modules/mysql2/lib/commands/index.js",
+        "node_modules/mysql2/lib/tracing.js",
+        "node_modules/named-placeholders/index.js",
+        "node_modules/mysql2/lib/base/connection.js",
+        "node_modules/mysql2/lib/promise/make_done_cb.js",
+        "node_modules/mysql2/lib/promise/prepared_statement_info.js",
+        "node_modules/mysql2/lib/promise/inherit_events.js",
+        "node_modules/mysql2/lib/promise/connection.js",
+        "node_modules/mysql2/lib/connection.js",
+        "node_modules/mysql2/lib/create_connection.js",
+        "node_modules/mysql2/lib/promise/pool_connection.js",
+        "node_modules/mysql2/lib/pool_connection.js",
+        "node_modules/mysql2/lib/base/pool.js",
+        "node_modules/mysql2/lib/promise/pool.js",
+        "node_modules/mysql2/lib/pool.js",
+        "node_modules/mysql2/lib/pool_config.js",
+        "node_modules/mysql2/lib/pool_cluster.js",
+        "node_modules/mysql2/lib/create_pool.js",
+        "node_modules/mysql2/lib/create_pool_cluster.js",
+        "node_modules/mysql2/lib/server.js",
+        "node_modules/mysql2/lib/auth_plugins/index.js",
+        "node_modules/mysql2/lib/promise/pool_cluster.js",
+        "node_modules/mysql2/promise.js",
+        "node_modules/mysql2/index.js",
+        "node_modules/drizzle-orm/mysql2/session.js",
+        "node_modules/drizzle-orm/mysql2/driver.js",
+        "node_modules/drizzle-orm/mysql2/index.js",
+        "packages/core/src/storage/drizzle/client-mysql.ts",
+        "packages/core/src/storage/database-client.ts",
+        "packages/core/src/lib/analytics-ttft-sql.ts",
+        "packages/core/src/lib/money-precision.ts",
+        "packages/core/src/db/d1/admin-analytics.impl.ts",
+        "packages/core/src/db/batch-types.ts",
+        "packages/core/src/db/batch-repository-utils.ts",
+        "packages/core/src/db/d1/batches.impl.ts",
+        "packages/core/src/lib/key-hash.ts",
+        "packages/core/src/db/api-keys-types.ts",
+        "packages/core/src/db/api-keys-list-sort.ts",
+        "packages/core/src/db/d1/api-keys.impl.ts",
+        "packages/core/src/db/patch-allowlists.ts",
+        "packages/core/src/db/d1/model-routes.impl.ts",
+        "packages/core/src/db/pricing-profile.ts",
+        "packages/core/src/db/model-modalities.ts",
+        "packages/core/src/db/d1/model-routing.impl.ts",
+        "packages/core/src/db/d1/models.impl.ts",
+        "packages/core/src/db/providers-types.ts",
+        "packages/core/src/db/d1/providers.impl.ts",
+        "packages/core/src/lib/dashboard-request-stats.ts",
+        "packages/core/src/db/request-logs-types.ts",
+        "packages/core/src/db/request-log-status-filter.ts",
+        "packages/core/src/db/route-performance-sampling.ts",
+        "packages/core/src/db/management-api-keys-types.ts",
+        "packages/core/src/db/generation-feedback-types.ts",
+        "packages/core/src/db/provider-attempt-availability.ts",
+        "packages/core/src/db/analytics-query.ts",
+        "packages/core/src/db/d1/request-logs.impl.ts",
+        "packages/core/src/db/d1/system-config.impl.ts",
+        "packages/core/src/db/d1/route-pool-sticky-bindings.impl.ts",
+        "packages/core/src/db/user-audit-catalog.ts",
+        "packages/core/src/db/user-audit-log-derived.ts",
+        "packages/core/src/db/d1/user-audit-logs.impl.ts",
+        "packages/core/src/db/user-budget-reservation-types.ts",
+        "packages/core/src/db/users-list-sort.ts",
+        "packages/core/src/db/d1/users.impl.ts",
+        "packages/core/src/db/d1/admin-access.impl.ts",
+        "packages/core/src/db/d1/request-presets.impl.ts",
+        "packages/core/src/db/guardrails-types.ts",
+        "packages/core/src/db/d1/guardrails.impl.ts",
+        "packages/core/src/db/guardrail-budget-repository-utils.ts",
+        "packages/core/src/db/d1/guardrail-budgets.impl.ts",
+        "packages/core/src/db/user-budget-reservation-utils.ts",
+        "packages/core/src/db/d1/user-budget-reservations.impl.ts",
+        "packages/core/src/db/d1/route-data-policies.impl.ts",
+        "packages/core/src/db/model-endpoints-types.ts",
+        "packages/core/src/db/d1/model-endpoints.impl.ts",
+        "packages/core/src/db/mysql/mysql2-compat.ts",
+        "packages/core/src/storage/management-api-keys.ts",
+        "packages/core/src/db/byok-keys-types.ts",
+        "packages/core/src/lib/shared-key-encryption.ts",
+        "packages/core/src/storage/byok-keys.ts",
+        "packages/core/src/db/d1/portal-marketplace.impl.ts",
+        "packages/core/src/storage/repositories-d1.ts",
+        "packages/core/src/db/postgres/admin-analytics.impl.ts",
+        "packages/core/src/db/postgres/batches.impl.ts",
+        "packages/core/src/storage/critical-write-paths-utils.ts",
+        "packages/core/src/db/postgres/api-keys.impl.ts",
+        "packages/core/src/db/postgres/model-route-patch.ts",
+        "packages/core/src/db/postgres/model-routes.impl.ts",
+        "packages/core/src/db/postgres/model-routing.impl.ts",
+        "packages/core/src/db/postgres/models.impl.ts",
+        "packages/core/src/db/postgres/providers.impl.ts",
+        "packages/core/src/db/shared/sql-placeholders.ts",
+        "packages/core/src/db/postgres/request-logs.impl.ts",
+        "packages/core/src/db/postgres/system-config.impl.ts",
+        "packages/core/src/db/postgres/route-pool-sticky-bindings.impl.ts",
+        "packages/core/src/db/user-audit-drizzle-insert.ts",
+        "packages/core/src/db/postgres/user-audit-logs.impl.ts",
+        "packages/core/src/db/postgres/users.impl.ts",
+        "packages/core/src/db/postgres/admin-access.impl.ts",
+        "packages/core/src/db/postgres/request-presets.impl.ts",
+        "packages/core/src/db/postgres/guardrails.impl.ts",
+        "packages/core/src/db/postgres/guardrail-budgets.impl.ts",
+        "packages/core/src/db/postgres/user-budget-reservations.impl.ts",
+        "packages/core/src/db/postgres/route-data-policies.impl.ts",
+        "packages/core/src/db/postgres/model-endpoints.impl.ts",
+        "packages/core/src/db/postgres/portal-marketplace.impl.ts",
+        "packages/core/src/storage/repositories-postgres.ts",
+        "packages/core/src/db/mysql/admin-analytics.impl.ts",
+        "packages/core/src/db/mysql/batches.impl.ts",
+        "packages/core/src/db/mysql/api-keys.impl.ts",
+        "packages/core/src/db/mysql/model-routes.impl.ts",
+        "packages/core/src/db/mysql/model-routing.impl.ts",
+        "packages/core/src/db/mysql/models.impl.ts",
+        "packages/core/src/db/mysql/providers.impl.ts",
+        "packages/core/src/db/mysql/request-logs.impl.ts",
+        "packages/core/src/db/mysql/system-config.impl.ts",
+        "packages/core/src/db/mysql/route-pool-sticky-bindings.impl.ts",
+        "packages/core/src/db/mysql/user-audit-logs.impl.ts",
+        "packages/core/src/db/mysql/users.impl.ts",
+        "packages/core/src/db/mysql/admin-access.impl.ts",
+        "packages/core/src/db/mysql/request-presets.impl.ts",
+        "packages/core/src/db/mysql/guardrails.impl.ts",
+        "packages/core/src/db/mysql/guardrail-budgets.impl.ts",
+        "packages/core/src/db/mysql/user-budget-reservations.impl.ts",
+        "packages/core/src/db/mysql/route-data-policies.impl.ts",
+        "packages/core/src/db/mysql/model-endpoints.impl.ts",
+        "packages/core/src/db/mysql/portal-marketplace.impl.ts",
+        "packages/core/src/storage/repositories-mysql.ts",
+        "packages/core/src/storage/context.ts",
+        "packages/core/src/storage/runtime-database-config.ts",
+        "packages/core/src/storage/repositories-types.ts",
+        "packages/core/src/storage/repositories.ts",
+        "packages/core/src/storage/gateway-repository-interfaces.ts",
+        "packages/core/src/storage/repository-dtos.ts",
+        "packages/core/src/db/user-audit-metadata.ts",
+        "packages/core/src/db/user-budget-audit-mapper.ts",
+        "packages/core/src/db/public-model-daily-stats.ts",
+        "packages/core/src/db/d1/critical-writes.impl.ts",
+        "packages/core/src/db/mysql/critical-writes.impl.ts",
+        "packages/core/src/db/shared-key-economic-outbox-types.ts",
+        "packages/core/src/db/user-audit-snapshot.ts",
+        "packages/core/src/db/postgres/legacy-buyer-windowed-transaction-v372.ts",
+        "packages/core/src/storage/recovery/usage-settlement-codec.ts",
+        "packages/core/src/storage/recovery/settlement-recovery-types.ts",
+        "packages/core/src/storage/recovery/usage-settlement-facts-postgres.ts",
+        "packages/core/src/storage/recovery/usage-settlement-transaction-postgres.ts",
+        "packages/core/src/db/postgres/critical-writes.impl.ts",
+        "packages/core/src/storage/critical-write-paths.ts",
+        "packages/core/src/storage/organization-identity.ts",
+        "packages/core/src/storage/workspaces.ts",
+        "packages/core/src/storage/workspace-budgets.ts",
+        "packages/core/src/storage/management-workspaces.ts",
+        "packages/core/src/storage/management-workspace-members.ts",
+        "packages/core/src/storage/management-guardrails.ts",
+        "packages/core/src/storage/management-guardrail-assignments.ts",
+        "packages/core/src/db/providers.ts",
+        "packages/core/src/db/system-config.ts",
+        "packages/core/src/db/user-budget-audit-params.ts",
+        "packages/core/src/db/model-route-policy.ts",
+        "packages/core/src/db/route-pool-tier-strategies.ts",
+        "packages/core/src/db/route-pool-sticky-types.ts",
+        "packages/core/src/generation-metadata.ts",
+        "packages/core/src/db/pricing-audit.ts",
+        "packages/core/src/db/image-token-usage.ts",
+        "packages/core/src/db/audio-token-usage.ts",
+        "packages/core/src/db/image-per-image-usage.ts",
+        "packages/core/src/db/user-charged-cost-factors.ts",
+        "packages/core/src/db/system-config-types.ts",
+        "packages/core/src/db/admin-access-types.ts",
+        "packages/core/src/db/shared-keys-types.ts",
+        "packages/core/src/db/request-presets-types.ts",
+        "packages/core/src/db/route-data-policy-types.ts",
+        "packages/core/src/model-endpoint-backfill.ts",
+        "packages/core/src/shared-channels.ts",
+        "packages/core/src/lib/business-timezone.ts",
+        "packages/core/src/lib/billing-currency.ts",
+        "packages/core/src/lib/public-model-slug.ts",
+        "packages/core/src/lib/alert-webhook-system-config.ts",
+        "packages/core/src/lib/tool-pricing.ts",
+        "packages/core/src/lib/web-search-system-config.ts",
+        "packages/core/src/lib/web-fetch-system-config.ts",
+        "packages/core/src/lib/web-deep-search-system-config.ts",
+        "packages/core/src/lib/ai-detection-system-config.ts",
+        "packages/core/src/lib/route-strategy-system-config.ts",
+        "packages/core/src/lib/provider-key-encryption.ts",
+        "packages/core/src/lib/byok-key-encryption.ts",
+        "packages/core/src/lib/string-utils.ts",
+        "packages/core/src/lib/time-format.ts",
+        "packages/core/src/lib/resolve-me-metadata.ts",
+        "packages/core/src/lib/key-expiry.ts",
+        "packages/core/src/services/user-service.ts",
+        "packages/core/src/services/budget-transition-service.ts",
+        "packages/core/src/services/key-service.ts",
+        "packages/core/src/services/management-key-service.ts",
+        "packages/core/src/services/shared-key-earnings.ts",
+        "packages/core/src/index.ts",
+        "packages/proxy/src/services/request-deadline.ts",
+        "packages/proxy/src/services/sensitive-content-detector.ts",
+        "packages/proxy/src/services/alert-webhook.ts",
+        "packages/proxy/src/services/resource-completion.ts",
+        "packages/proxy/src/services/egress/buffered-audio-resources.ts",
+        "packages/proxy/src/services/egress/audio-transcription-upload.ts",
+        "packages/proxy/src/services/egress/compact-json-string-page.ts",
+        "packages/proxy/src/services/egress/json-string-pages.ts",
+        "packages/proxy/src/services/route-default-params.ts",
+        "packages/proxy/src/services/egress/upstream-request-id.ts",
+        "packages/proxy/src/services/egress/bounded-response-body.ts",
+        "packages/proxy/src/services/egress/upstream-observability.ts",
+        "packages/proxy/src/services/gateway-error-codes.ts",
+        "packages/proxy/src/services/openrouter-error-protocol.ts",
+        "packages/proxy/src/services/upstream-failure-classifier.ts",
+        "packages/proxy/src/services/upstream-error-code.ts",
+        "packages/proxy/src/services/gateway-error-response.ts",
+        "packages/proxy/src/services/egress/audio-request-lifecycle.ts",
+        "packages/proxy/src/services/egress/audio-provider-options.ts",
+        "packages/proxy/src/services/egress/openai-audio-driver.ts",
+        "packages/proxy/src/services/egress/audio-duration.ts",
+        "packages/proxy/src/services/request-body-log-policy.ts",
+        "packages/proxy/src/services/generation-metadata-snapshot.ts",
+        "packages/proxy/src/services/shared-key-earnings.ts",
+        "packages/proxy/src/services/provider-usage-facts.ts",
+        "packages/proxy/src/services/endpoint-billing-pricing.ts",
+        "packages/proxy/src/services/byok-key-pool.ts",
+        "packages/proxy/src/services/byok-billing-policy.ts",
+        "packages/proxy/src/services/usage-tracker.ts",
+        "packages/proxy/src/services/endpoint-audio-billing-pricing.ts",
+        "packages/proxy/src/services/audio-usage-charge.ts",
+        "packages/proxy/src/services/dashscope-realtime-guardrails.ts",
+        "packages/proxy/src/services/egress/owned-upstream-response.ts",
+        "packages/proxy/src/services/egress/stream-json-body.ts",
+        "packages/proxy/src/services/egress/json-upload-body.ts",
+        "packages/proxy/src/services/egress/owned-json-upload-body.ts",
+        "packages/proxy/src/services/egress/with-owned-json-upload.ts",
+        "packages/proxy/src/services/egress/prepared-text-attempt.ts",
+        "packages/proxy/src/services/bounded-request-body.ts",
+        "packages/proxy/src/services/chat-final-quote-input.ts",
+        "packages/proxy/src/services/egress/sse-data-line.ts",
+        "packages/proxy/src/services/provider-circuit-breaker.ts",
+        "packages/proxy/src/services/route-strategies/route-affinity-hash.ts",
+        "packages/proxy/src/services/route-strategies/hash-affinity.ts",
+        "packages/proxy/src/services/route-strategies/weighted-random.ts",
+        "packages/proxy/src/services/route-strategies/weight-priority.ts",
+        "packages/proxy/src/services/route-strategies/weighted-round-robin.ts",
+        "packages/core/src/db/route-affinity-key.ts",
+        "packages/proxy/src/services/route-strategies/index.ts",
+        "packages/proxy/src/services/route-attempt-planner.ts",
+        "packages/proxy/src/services/shared-key-pool.ts",
+        "packages/proxy/src/services/ordinary-budget-lifecycle.ts",
+        "packages/proxy/src/services/request-guardrails.ts",
+        "packages/proxy/src/services/request-budget-admission.ts",
+        "packages/proxy/src/services/request-dispatch-budget.ts",
+        "packages/proxy/src/services/request-log-record-status.ts",
+        "packages/proxy/src/services/provider-sticky-routing.ts",
+        "packages/proxy/src/services/failover-dispatch.ts",
+        "packages/proxy/src/services/egress/openai-stream-usage-request.ts",
+        "packages/proxy/src/services/egress/text-upstream-url.ts",
+        "packages/proxy/src/services/egress/ambiguous-upstream-status.ts",
+        "packages/proxy/src/services/egress/text-json-response.ts",
+        "packages/proxy/src/services/egress/service-tier-contract.ts",
+        "packages/proxy/src/services/egress/finish-reason-contract.ts",
+        "packages/proxy/src/services/egress/openai-driver.ts",
+        "packages/proxy/src/services/egress/openai-responses-driver.ts",
+        "packages/proxy/src/services/egress/openai-embeddings-driver.ts",
+        "packages/proxy/src/services/egress/openai-rerank-driver.ts",
+        "packages/proxy/src/services/json-structure-budget.ts",
+        "packages/proxy/src/services/multipart-body-inspector.ts",
+        "packages/proxy/src/services/streaming-multipart-body.ts",
+        "packages/proxy/src/services/image-attempt-context.ts",
+        "packages/proxy/src/services/egress/multipart-upload-body.ts",
+        "packages/proxy/src/services/egress/json-scalar.ts",
+        "packages/proxy/src/services/egress/segmented-json-response.ts",
+        "packages/proxy/src/services/egress/json-string-number.ts",
+        "packages/proxy/src/services/egress/image-response-usage.ts",
+        "packages/proxy/src/services/egress/openai-images-driver.ts",
+        "packages/tool-engines/src/web-fetch/types.ts",
+        "packages/tool-engines/src/http/bounded-response.ts",
+        "packages/tool-engines/src/web-fetch/firecrawl.ts",
+        "packages/tool-engines/src/web-fetch/jina.ts",
+        "packages/tool-engines/src/web-fetch/tavily.ts",
+        "packages/tool-engines/src/web-fetch/dispatch.ts",
+        "packages/tool-engines/src/web-fetch/url-guard.ts",
+        "packages/tool-engines/src/web-fetch/safe-redirect-fetch.ts",
+        "packages/tool-engines/src/web-fetch/index.ts",
+        "packages/proxy/src/services/egress/dashscope-audio-driver.ts",
+        "packages/proxy/src/services/egress/audio-speech-stream-lifecycle.ts",
+        "packages/proxy/src/services/egress/audio-speech-driver.ts",
+        "packages/proxy/src/services/egress/realtime-connection-lifecycle.ts",
+        "packages/proxy/src/services/egress/dashscope-realtime-driver.ts",
+        "packages/proxy/src/services/egress/anthropic-driver.ts",
+        "packages/proxy/src/services/egress/gemini-driver.ts",
+        "packages/proxy/src/services/proxy.ts",
+        "text-dispatch-workerd-wire-worker-conditions-successor-fixture.js"
+      ],
+      "scriptSha256": "863c09de794dcd2ccb8472c38209d9a84eee4d97b42166104b81c4619cefc5f2",
+      "externalImports": [
+        {
+          "path": "node:crypto",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:crypto",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:crypto",
+          "kind": "import-statement",
+          "external": true
+        }
+      ]
+    }
+  ],
+  "nativeModes": [
+    {
+      "mode": "redirect307",
+      "result": {
+        "status": 307,
+        "permits": 1,
+        "unknown": true,
+        "failoverForbidden": true
+      },
+      "providerPosts": 1,
+      "redirectTargetPosts": 0
+    },
+    {
+      "mode": "redirect308",
+      "result": {
+        "status": 308,
+        "permits": 1,
+        "unknown": true,
+        "failoverForbidden": true
+      },
+      "providerPosts": 1,
+      "redirectTargetPosts": 0
+    },
+    {
+      "mode": "reset",
+      "result": {
+        "status": 502,
+        "permits": 1,
+        "unknown": true,
+        "failoverForbidden": true
+      },
+      "providerPosts": 1,
+      "redirectTargetPosts": 0
+    },
+    {
+      "mode": "reject429",
+      "result": {
+        "status": 502,
+        "permits": 3,
+        "unknown": false,
+        "failoverForbidden": true
+      },
+      "providerPosts": 3,
+      "redirectTargetPosts": 0
+    }
+  ],
+  "relay": {
+    "gatewayPermits": 1,
+    "relayPosts": 1,
+    "providerPosts": 2,
+    "repeatedBodyAndCredential": true,
+    "providerHits": [
+      {
+        "path": "/v1/chat/completions",
+        "method": "POST",
+        "body": "{\"messages\":[{\"role\":\"user\",\"content\":\"fixture\"}],\"model\":\"synthetic-model\"}",
+        "credential": "Bearer synthetic-relay-secret"
+      },
+      {
+        "path": "/sink",
+        "method": "POST",
+        "body": "{\"messages\":[{\"role\":\"user\",\"content\":\"fixture\"}],\"model\":\"synthetic-model\"}",
+        "credential": "Bearer synthetic-relay-secret"
+      }
+    ],
+    "relayErrors": []
+  },
+  "cleanup": [
+    {
+      "resource": "worker-provider",
+      "closed": true
+    },
+    {
+      "resource": "worker-provider",
+      "closed": true
+    },
+    {
+      "resource": "worker-runtime",
+      "closed": true
+    },
+    {
+      "resource": "relay-provider",
+      "closed": true
+    },
+    {
+      "resource": "relay",
+      "closed": true
+    }
+  ],
+  "cleanupErrors": [],
+  "sourcePins": [
+    {
+      "path": "node_modules/aws-ssl-profiles/lib/index.js",
+      "sha256": "4bcda47ea0d35bec8b9e4719206661b26204a000a0d5f06a18959b85186f9430"
+    },
+    {
+      "path": "node_modules/aws-ssl-profiles/lib/profiles/ca/defaults.js",
+      "sha256": "c3667ba6c7e502e2213602948d37bbbfd000aebeb88b787d7e267fd580892469"
+    },
+    {
+      "path": "node_modules/aws-ssl-profiles/lib/profiles/ca/proxies.js",
+      "sha256": "3ea4f0b5bb0b3aaf22143c6b0bc03ffea27c1e0223eb645062fab8bd402d7b18"
+    },
+    {
+      "path": "node_modules/denque/index.js",
+      "sha256": "61e3335c88fa7415d0b0522ca2cbeed17b7a9b4911aa1e41d1006a2e782e553e"
+    },
+    {
+      "path": "node_modules/drizzle-orm/alias.js",
+      "sha256": "ecda0fe78aaf2c5e312a769d37f3c3fd99ec4b3827bd4924bd4e555baa18049d"
+    },
+    {
+      "path": "node_modules/drizzle-orm/cache/core/cache.js",
+      "sha256": "1c1e8cf571045a88ad71493ac57fc82a79b9c15b1cc644d67ac1674a0d6f3d42"
+    },
+    {
+      "path": "node_modules/drizzle-orm/cache/core/index.js",
+      "sha256": "52ddb2c19a8e080879e471902e024e9e648cf5e9bcab5c7e3bb6641eba666827"
+    },
+    {
+      "path": "node_modules/drizzle-orm/casing.js",
+      "sha256": "1e9df5391900f23d2e96e849f8935782940667e6696950736cf42d323186ac97"
+    },
+    {
+      "path": "node_modules/drizzle-orm/column-builder.js",
+      "sha256": "49574520e9f52b18cd4ba701995717256f0525b42542f40062cab2d8548717b4"
+    },
+    {
+      "path": "node_modules/drizzle-orm/column.js",
+      "sha256": "d2d16916b18d7c912e50b1f7fa31330da3c7012ea564fd1e3e287022de3e1555"
+    },
+    {
+      "path": "node_modules/drizzle-orm/d1/driver.js",
+      "sha256": "5f4a10f4cc340a0fe9c54a090f4661622fa55ba8ca2531b4c35cb94b4fc2580b"
+    },
+    {
+      "path": "node_modules/drizzle-orm/d1/index.js",
+      "sha256": "3066234a6394653038119bb4855d306a8107c55baa4bb0d12c41451df3114cf6"
+    },
+    {
+      "path": "node_modules/drizzle-orm/d1/session.js",
+      "sha256": "2c0ee59a44d772abe4a17ace3d0e49f0d3e7b67acd3b4b2aabd8f550d5dc4f96"
+    },
+    {
+      "path": "node_modules/drizzle-orm/entity.js",
+      "sha256": "9024b501ecb09d3e6cb8fe1d25e16533544cdf69849da846f0a149d8289f1f44"
+    },
+    {
+      "path": "node_modules/drizzle-orm/errors.js",
+      "sha256": "ca0578184ceea0af8abfc8b547a10c906e9e70d6c2d957668f12dc39ccac7144"
+    },
+    {
+      "path": "node_modules/drizzle-orm/index.js",
+      "sha256": "82787790acc7d7e41b9afc8f0a56e0b4e4081fb9f5cc86bf4e5f62e006cac04d"
+    },
+    {
+      "path": "node_modules/drizzle-orm/logger.js",
+      "sha256": "64dde0d1e9b781179401e4de92ea8495c5c93e2e201c9c1d9b9b8e0025e0f465"
+    },
+    {
+      "path": "node_modules/drizzle-orm/mysql-core/alias.js",
+      "sha256": "327aa38a6d2d6d9f8df744558111541eb147db7c29141beb2cce71be9907eceb"
+    },
+    {
+      "path": "node_modules/drizzle-orm/mysql-core/checks.js",
+      "sha256": "af28366b441ef03a97cd408236f7da77249c0dc27a8489a956a14cb8d486ab65"
+    },
+    {
+      "path": "node_modules/drizzle-orm/mysql-core/columns/all.js",
+      "sha256": "a4a804259326bdf776d164182fcfbb4dbd4c5bd30f80ba7d8cbfae9f37c123ca"
+    },
+    {
+      "path": "node_modules/drizzle-orm/mysql-core/columns/bigint.js",
+      "sha256": "31140775e6836e12f360141e6e33b2c3d07045c4925db8a3a880c152c950354f"
+    },
+    {
+      "path": "node_modules/drizzle-orm/mysql-core/columns/binary.js",
+      "sha256": "17edf57c8fcebc3c8637bc8af71c4c48409e0465221b7a626f2b0e532b06d92a"
+    },
+    {
+      "path": "node_modules/drizzle-orm/mysql-core/columns/boolean.js",
+      "sha256": "761692d607a1f60a7cb79564c6e5ccaf57559d51093739e176defae9cd75a235"
+    },
+    {
+      "path": "node_modules/drizzle-orm/mysql-core/columns/char.js",
+      "sha256": "cd35a1b289fea7845d1643f5f4f43a92720c3322f1d30d2e8272552142a4b0fa"
+    },
+    {
+      "path": "node_modules/drizzle-orm/mysql-core/columns/common.js",
+      "sha256": "39038dce01368467bd8870b613b0bbcc36980ba0d5e517f73865928c7223bcc3"
+    },
+    {
+      "path": "node_modules/drizzle-orm/mysql-core/columns/custom.js",
+      "sha256": "cc8cbe1d1a2d842b2bd2a7bf19320b8bf7b63b3447a7e362abd007b4fcdabd53"
+    },
+    {
+      "path": "node_modules/drizzle-orm/mysql-core/columns/date.common.js",
+      "sha256": "f866e650c6c8c79dc429cd86a0f7618c2cc9b40f599ffdf538f7022edf1b7a25"
+    },
+    {
+      "path": "node_modules/drizzle-orm/mysql-core/columns/date.js",
+      "sha256": "dd274c9e5efeffb3b6c3795e5e6e3d720f3f347b2010a2c54c8e178e9de00de0"
+    },
+    {
+      "path": "node_modules/drizzle-orm/mysql-core/columns/datetime.js",
+      "sha256": "ead46c49d1d0228ac5174d02ccb16d475473d0c7f96ee4a5f941d9510ae808c1"
+    },
+    {
+      "path": "node_modules/drizzle-orm/mysql-core/columns/decimal.js",
+      "sha256": "65a920c98a60e7b809630c45a7a2b6b8983cb97b697e31cacbbec3542a363e3c"
+    },
+    {
+      "path": "node_modules/drizzle-orm/mysql-core/columns/double.js",
+      "sha256": "98fe950aa73536e3a213c11fe0248e63620537e40938fed805cbc9f3ad130c12"
+    },
+    {
+      "path": "node_modules/drizzle-orm/mysql-core/columns/enum.js",
+      "sha256": "247e72ac64ec4464586424bf25841076df58416e09c62e4ea2355a666cfc7a21"
+    },
+    {
+      "path": "node_modules/drizzle-orm/mysql-core/columns/float.js",
+      "sha256": "e384e6d3cd534ce437e82a5c4d4375cc5b8253149f0676f6240ddeed6d8356de"
+    },
+    {
+      "path": "node_modules/drizzle-orm/mysql-core/columns/index.js",
+      "sha256": "35e432704c51dd79411fee9ef91a4657d8fb4d4167bf4f9e168d169cc9ec6326"
+    },
+    {
+      "path": "node_modules/drizzle-orm/mysql-core/columns/int.js",
+      "sha256": "024868d00f47845022570114beae5caf149a5720bf023e9c55aba87639202fb0"
+    },
+    {
+      "path": "node_modules/drizzle-orm/mysql-core/columns/json.js",
+      "sha256": "f4f94c1b669251251ada13591d4ca9b02ac82d71eb4854cacbce6fabcb1ac349"
+    },
+    {
+      "path": "node_modules/drizzle-orm/mysql-core/columns/mediumint.js",
+      "sha256": "eda20ad8dc97b9faaf9c84f580818877340d9569b91e132433f2e99de9ed6243"
+    },
+    {
+      "path": "node_modules/drizzle-orm/mysql-core/columns/real.js",
+      "sha256": "5a4a05ee7cec63cebd30c9dc464a6690fb385645d148ab826d8576b0e8c9863a"
+    },
+    {
+      "path": "node_modules/drizzle-orm/mysql-core/columns/serial.js",
+      "sha256": "aa944a221260f3084be9bf2ea7b2e3ae21911c61d5e2050d793451c1cb1d44f3"
+    },
+    {
+      "path": "node_modules/drizzle-orm/mysql-core/columns/smallint.js",
+      "sha256": "cf11d08c3947b6db782ccd2d591b6e8d50b476b21fc7d45056df92de3d3f4598"
+    },
+    {
+      "path": "node_modules/drizzle-orm/mysql-core/columns/text.js",
+      "sha256": "d1eb6a6cae2a168677fcbd5ccec28a771a45c96e39696bb8aa76100d2a74ffaa"
+    },
+    {
+      "path": "node_modules/drizzle-orm/mysql-core/columns/time.js",
+      "sha256": "235d552d745401493ebf6cf1e8c897e7f235b31c248c6f1bdac8ca4cfb44a1b9"
+    },
+    {
+      "path": "node_modules/drizzle-orm/mysql-core/columns/timestamp.js",
+      "sha256": "152cfb6a597f725e0c33066f2e5f9bc653de9b08184058e888308e0529154105"
+    },
+    {
+      "path": "node_modules/drizzle-orm/mysql-core/columns/tinyint.js",
+      "sha256": "2da08a9a0f0b89d09f90e4e6f9bc02973da497e311b294501e71d2d87b4e0c25"
+    },
+    {
+      "path": "node_modules/drizzle-orm/mysql-core/columns/varbinary.js",
+      "sha256": "8cc2f0200e6c59c8a5a952960c1b05c77181271a43cca685d16979353912de98"
+    },
+    {
+      "path": "node_modules/drizzle-orm/mysql-core/columns/varchar.js",
+      "sha256": "72d3f91caee539b8e59a78af4032124d6dc05b59c67a699c38b3366cfcaa242e"
+    },
+    {
+      "path": "node_modules/drizzle-orm/mysql-core/columns/year.js",
+      "sha256": "0f1b640cd07abad118f47f62ab9a091b80768b16dd28d38377cf172a848f774f"
+    },
+    {
+      "path": "node_modules/drizzle-orm/mysql-core/db.js",
+      "sha256": "d133f9bef85405a47fa8e7f6813b75baf5d921572ecf063844a08300167d846c"
+    },
+    {
+      "path": "node_modules/drizzle-orm/mysql-core/dialect.js",
+      "sha256": "986e27ed4f7b8008f50378df4ac924953d41773e53341a8bebda71b344691f26"
+    },
+    {
+      "path": "node_modules/drizzle-orm/mysql-core/foreign-keys.js",
+      "sha256": "0c758b3e1b352bef011626e1e386f290c7248f33d152ef0c5cc8e660ad013a90"
+    },
+    {
+      "path": "node_modules/drizzle-orm/mysql-core/index.js",
+      "sha256": "d58cdaf1b959e197d3131090e87ad74f1cd6115022aa66dc814401d2ac801db3"
+    },
+    {
+      "path": "node_modules/drizzle-orm/mysql-core/indexes.js",
+      "sha256": "6c6afae1963b9655dcd6fb071d95c0560428d30fab56b0cec022bbc1f9da9624"
+    },
+    {
+      "path": "node_modules/drizzle-orm/mysql-core/primary-keys.js",
+      "sha256": "f0782152f7a3f7c256d2e6182d8a120ddfcdae1c48885e3a3dcf563677ae9349"
+    },
+    {
+      "path": "node_modules/drizzle-orm/mysql-core/query-builders/count.js",
+      "sha256": "c080c4eebefd97f894f7ed33c1aa39cadd9256096d1408bb05df701315fb31b5"
+    },
+    {
+      "path": "node_modules/drizzle-orm/mysql-core/query-builders/delete.js",
+      "sha256": "0a90815528e5eb258e8b52f4fab9f058badba50079efe26f1660d81356d703ba"
+    },
+    {
+      "path": "node_modules/drizzle-orm/mysql-core/query-builders/index.js",
+      "sha256": "9cb913c9241e187473c0c9979d545562afd473cabf3abcfcdb2009616cd08c61"
+    },
+    {
+      "path": "node_modules/drizzle-orm/mysql-core/query-builders/insert.js",
+      "sha256": "48bc5e797e7ef83aae341670868f224eb1a9d2e82780c590213b09d2d08b2e88"
+    },
+    {
+      "path": "node_modules/drizzle-orm/mysql-core/query-builders/query-builder.js",
+      "sha256": "b26b144f7035b06a810fb697d1d50a166b83ca0195f4043efad8adb0fef54c28"
+    },
+    {
+      "path": "node_modules/drizzle-orm/mysql-core/query-builders/query.js",
+      "sha256": "0ee8f2556bdc9b45f4ac6ae0b1d462ffbe35f1a16ae0fc98ba92323e707eb72f"
+    },
+    {
+      "path": "node_modules/drizzle-orm/mysql-core/query-builders/select.js",
+      "sha256": "37a0ffea98eef9d7f7bc5971ed47f504815e54898309630f6e0b33ca4f470bbe"
+    },
+    {
+      "path": "node_modules/drizzle-orm/mysql-core/query-builders/select.types.js",
+      "sha256": "b6123208b421ffb4fbd073d75f15a9cd4521bd33ee8085aa2e1a3375c14a9896"
+    },
+    {
+      "path": "node_modules/drizzle-orm/mysql-core/query-builders/update.js",
+      "sha256": "0cf6330d0e6a82652a663fd026a25cd0cebc94c43b97c0ce3184f25b3cc1ecc5"
+    },
+    {
+      "path": "node_modules/drizzle-orm/mysql-core/schema.js",
+      "sha256": "4054a46132dd99bf8db868f26306a3a9e1a773e49175729aca7a134bca92fa5a"
+    },
+    {
+      "path": "node_modules/drizzle-orm/mysql-core/session.js",
+      "sha256": "60aba8ed329c82c787d6679b966948db72d75bae0f8ac4fb4e0285044d1e8308"
+    },
+    {
+      "path": "node_modules/drizzle-orm/mysql-core/subquery.js",
+      "sha256": "01e90bdcf2d644bac5085911f561ad936ec3afa018082cc18892d325a60748a6"
+    },
+    {
+      "path": "node_modules/drizzle-orm/mysql-core/table.js",
+      "sha256": "1a8d516bcd084b7539025b78f8cdf087ccc5011c406861a9be1fd8c1bafba568"
+    },
+    {
+      "path": "node_modules/drizzle-orm/mysql-core/unique-constraint.js",
+      "sha256": "4eacae76034c8d21a34a56c6bc26aad1df3b7d3a623d4f5ca211263211d901a4"
+    },
+    {
+      "path": "node_modules/drizzle-orm/mysql-core/utils.js",
+      "sha256": "f14e7c0db262aa9b21b0288df47ad0de692d900e6b0a68d9b22be098c5971176"
+    },
+    {
+      "path": "node_modules/drizzle-orm/mysql-core/view-base.js",
+      "sha256": "6e4b099b3af37369e9d1a2c33abfd3ae7580f346b2b8c5309eee178cafe4ba0c"
+    },
+    {
+      "path": "node_modules/drizzle-orm/mysql-core/view-common.js",
+      "sha256": "8e75fdfa1131afd9c318deb1633eba231a61a8df7f2182752d4073d706384eb5"
+    },
+    {
+      "path": "node_modules/drizzle-orm/mysql-core/view.js",
+      "sha256": "840b4c2e4821590578376beeec7024e47bde91757cf479226fb7b31a8740ade3"
+    },
+    {
+      "path": "node_modules/drizzle-orm/mysql2/driver.js",
+      "sha256": "d7d48676ea1b10fee4b0b22f034d2e12974037a7217e4af0d7eef643deea9199"
+    },
+    {
+      "path": "node_modules/drizzle-orm/mysql2/index.js",
+      "sha256": "3066234a6394653038119bb4855d306a8107c55baa4bb0d12c41451df3114cf6"
+    },
+    {
+      "path": "node_modules/drizzle-orm/mysql2/session.js",
+      "sha256": "f02ee630806edb530a87c9cbec5a906b0970e52e81eddd95827fccee6e9ea794"
+    },
+    {
+      "path": "node_modules/drizzle-orm/operations.js",
+      "sha256": "01c297f0da0998e534c359bdbf8b2d4833d8779123056fcee56b22f4c645c0a3"
+    },
+    {
+      "path": "node_modules/drizzle-orm/pg-core/alias.js",
+      "sha256": "327aa38a6d2d6d9f8df744558111541eb147db7c29141beb2cce71be9907eceb"
+    },
+    {
+      "path": "node_modules/drizzle-orm/pg-core/checks.js",
+      "sha256": "258ffb0b9e95ee115891185f4afbcd1fd02c5a98000b3fe9bc203bc821dd7f4b"
+    },
+    {
+      "path": "node_modules/drizzle-orm/pg-core/columns/all.js",
+      "sha256": "c8e6a672ce79663ca907c029b6882fe68ffd3aa564a77ac472fabb190ab50034"
+    },
+    {
+      "path": "node_modules/drizzle-orm/pg-core/columns/bigint.js",
+      "sha256": "60fb4de2192bf14ef1711c931acb7df1a36694783e08ca4596bc8c2759fd72c1"
+    },
+    {
+      "path": "node_modules/drizzle-orm/pg-core/columns/bigserial.js",
+      "sha256": "59ff4f99ea12c608a0da401ccfac3d39c5f8958fa93b404397577e04209d530f"
+    },
+    {
+      "path": "node_modules/drizzle-orm/pg-core/columns/boolean.js",
+      "sha256": "aaccee7082d53a4ac26e0f69432234fb2ab3546d34f5593c13c603728ac6afb6"
+    },
+    {
+      "path": "node_modules/drizzle-orm/pg-core/columns/char.js",
+      "sha256": "e173c2a497689c7c2ce2133bb5e8cb07f1756f3ffa0652ace09686fa0c685f49"
+    },
+    {
+      "path": "node_modules/drizzle-orm/pg-core/columns/cidr.js",
+      "sha256": "7c03aae5c3463c0152aa2ae02f15dc60b7282fe12dfc9d6906220e2bbc756dbf"
+    },
+    {
+      "path": "node_modules/drizzle-orm/pg-core/columns/common.js",
+      "sha256": "8319bdcce492572e95e5755a6a876990610508f9ec83671bd58e118f422fd050"
+    },
+    {
+      "path": "node_modules/drizzle-orm/pg-core/columns/custom.js",
+      "sha256": "058727eb4a054d90ac8d66f7f830f456461d8ba737bfb64cde23996f7b0ffaa6"
+    },
+    {
+      "path": "node_modules/drizzle-orm/pg-core/columns/date.common.js",
+      "sha256": "f997a0cbe871cdb741339d13fbf7070ea103e533eacfadfbc0de038ed8446895"
+    },
+    {
+      "path": "node_modules/drizzle-orm/pg-core/columns/date.js",
+      "sha256": "e8ed7bc27d6b61ff92930af9f029e57605779d7da2d638297bfd87398064e386"
+    },
+    {
+      "path": "node_modules/drizzle-orm/pg-core/columns/double-precision.js",
+      "sha256": "f58e5c6b7a495776183bdf633b762289277a11d4e523a1bb5f30dc8281395878"
+    },
+    {
+      "path": "node_modules/drizzle-orm/pg-core/columns/enum.js",
+      "sha256": "046a1abbfb4340d05d0186f13f80fabdff1a343e84790993d0d3be2d8f3b7282"
+    },
+    {
+      "path": "node_modules/drizzle-orm/pg-core/columns/index.js",
+      "sha256": "f6d16ba0001b5322f8c16c0ad66a2e349e4ceb31d166b0d8680766d04d69d01a"
+    },
+    {
+      "path": "node_modules/drizzle-orm/pg-core/columns/inet.js",
+      "sha256": "44d7d45286d26502ea5e9e8822a2f4515e521bbe65fa76234d747d29fe7fe5bc"
+    },
+    {
+      "path": "node_modules/drizzle-orm/pg-core/columns/int.common.js",
+      "sha256": "67bee8388a064321090164d98a3bcdd6bd827e8bf47751946201ba4a1d6dc446"
+    },
+    {
+      "path": "node_modules/drizzle-orm/pg-core/columns/integer.js",
+      "sha256": "ff1c082e57262f77135959a8fa55f5bd92866056d5848bcc43101b91e5f86b22"
+    },
+    {
+      "path": "node_modules/drizzle-orm/pg-core/columns/interval.js",
+      "sha256": "a4f8c635e4697cdc2b31012f80adb04c797ecfbc6feb96c4238d0c0549f3bb12"
+    },
+    {
+      "path": "node_modules/drizzle-orm/pg-core/columns/json.js",
+      "sha256": "ed7629153547ad80c2e88b844b03b28215ee8fbd0752a73667ff758b0ff62d39"
+    },
+    {
+      "path": "node_modules/drizzle-orm/pg-core/columns/jsonb.js",
+      "sha256": "590456e05c6d09399cc37180fabb5651f4da38cc9f4fd56a51641153e0b1e874"
+    },
+    {
+      "path": "node_modules/drizzle-orm/pg-core/columns/line.js",
+      "sha256": "49e47514bbc8bb338ccd7cdf308100dc9c22d2a61e533e588ac3f3ce2ab5fb50"
+    },
+    {
+      "path": "node_modules/drizzle-orm/pg-core/columns/macaddr.js",
+      "sha256": "f287c6312bb61238e948b6ada2f56df9105890a5195f262fcb8b65077ac15012"
+    },
+    {
+      "path": "node_modules/drizzle-orm/pg-core/columns/macaddr8.js",
+      "sha256": "a43ae8e3120a2152bc95c3b81f3d6cc98e996844f65b4e1de76aa1b5f1c1e96c"
+    },
+    {
+      "path": "node_modules/drizzle-orm/pg-core/columns/numeric.js",
+      "sha256": "560c731f58a7c1acddb36f3bd7718ad9023172579b51d2b594df52cb02595298"
+    },
+    {
+      "path": "node_modules/drizzle-orm/pg-core/columns/point.js",
+      "sha256": "1a861ff3e2051f403fbf43869d8febdd619735a7ecb9535f6572f007b34e320a"
+    },
+    {
+      "path": "node_modules/drizzle-orm/pg-core/columns/postgis_extension/geometry.js",
+      "sha256": "e9bd03472f32e4d301504e5437b22a632c882451a3c5a1f3ea312c259b1d13c5"
+    },
+    {
+      "path": "node_modules/drizzle-orm/pg-core/columns/postgis_extension/utils.js",
+      "sha256": "f39dde33f1a97bee8e6290d3244227ccf19ce903e5ac7c235e65cdadce0d1406"
+    },
+    {
+      "path": "node_modules/drizzle-orm/pg-core/columns/real.js",
+      "sha256": "7fe40c32dba2df694700ae949f63dfdde7b1499e61d36a3d8393b3ac2003c907"
+    },
+    {
+      "path": "node_modules/drizzle-orm/pg-core/columns/serial.js",
+      "sha256": "1c1f4c9dea64218ffa165c723e1b13fcabbd8f52cb3f85451e5c07be46986758"
+    },
+    {
+      "path": "node_modules/drizzle-orm/pg-core/columns/smallint.js",
+      "sha256": "275eb5fde53d315f5d2701f0f670210d55e39a97ca758066bd4474e7e49aea8a"
+    },
+    {
+      "path": "node_modules/drizzle-orm/pg-core/columns/smallserial.js",
+      "sha256": "16798b6e420f5da517eb1b88139ca62a76a62f3c00a00358651d75143a842286"
+    },
+    {
+      "path": "node_modules/drizzle-orm/pg-core/columns/text.js",
+      "sha256": "ed80e1c9a7e9a99aebc95c0950b163b081415f96c3676e2980b890e5d55f7138"
+    },
+    {
+      "path": "node_modules/drizzle-orm/pg-core/columns/time.js",
+      "sha256": "3c269ca4f12fbaf5b4ec33cb4ff74097181c0595878a59c2226b1447d817fdd6"
+    },
+    {
+      "path": "node_modules/drizzle-orm/pg-core/columns/timestamp.js",
+      "sha256": "d903316b96274428378ee2d475171f9df2f6011cb28d8bb82c6d0a18a89ed602"
+    },
+    {
+      "path": "node_modules/drizzle-orm/pg-core/columns/uuid.js",
+      "sha256": "ad79195405958c20e72c9481d41da573c041ade74ff30acd6850f54a73005de9"
+    },
+    {
+      "path": "node_modules/drizzle-orm/pg-core/columns/varchar.js",
+      "sha256": "7ecc77a3359f14d6998efde4c1052bd292c4c864334d4d75673239cd4c9b315d"
+    },
+    {
+      "path": "node_modules/drizzle-orm/pg-core/columns/vector_extension/bit.js",
+      "sha256": "e51fb5c69429c829b5bea261afab1b15c0b9c179375e06419c911b4a9c53f82e"
+    },
+    {
+      "path": "node_modules/drizzle-orm/pg-core/columns/vector_extension/halfvec.js",
+      "sha256": "7c28d5e6bc3bd9bbc7052e6a33dac647861a96cd77bafd06352f3755cca31aed"
+    },
+    {
+      "path": "node_modules/drizzle-orm/pg-core/columns/vector_extension/sparsevec.js",
+      "sha256": "976ea3c9997fadb110762c6e51b63ec9034b8c21f33ac83272321ca82bc769d5"
+    },
+    {
+      "path": "node_modules/drizzle-orm/pg-core/columns/vector_extension/vector.js",
+      "sha256": "2ec2bae38c1a977251568082c64ae13d5256be3adbe1aa1d64965d73017d9b4b"
+    },
+    {
+      "path": "node_modules/drizzle-orm/pg-core/db.js",
+      "sha256": "614b1bb0f2cfab9a3ffd841244dccfaa88a1399184afc01ba767983c604b56d1"
+    },
+    {
+      "path": "node_modules/drizzle-orm/pg-core/dialect.js",
+      "sha256": "a7d7921c939b228a3f1295be5f024a8c264169e368f591c2d29072ffe079b14e"
+    },
+    {
+      "path": "node_modules/drizzle-orm/pg-core/foreign-keys.js",
+      "sha256": "c90c2b1056cccb7e1597b690de16e262ce3dc116dd79c83ddc660001b61769f1"
+    },
+    {
+      "path": "node_modules/drizzle-orm/pg-core/index.js",
+      "sha256": "7a858794d312b3f0e2c165210f428a24671a4a3a4bdbaeb16700bf6633044e2f"
+    },
+    {
+      "path": "node_modules/drizzle-orm/pg-core/indexes.js",
+      "sha256": "d4b8326376b087303cbb64f266ed04b368a8b6f08f2286a917f5ad4782df2877"
+    },
+    {
+      "path": "node_modules/drizzle-orm/pg-core/policies.js",
+      "sha256": "2fb2fe0e09ea0121a3766ec8046ba91cd577a6428a0e14423c5d269d03534518"
+    },
+    {
+      "path": "node_modules/drizzle-orm/pg-core/primary-keys.js",
+      "sha256": "873f3ad704e8fae59f628ab85d0a68712ed98daea9dd57d601ef6dcb4981edea"
+    },
+    {
+      "path": "node_modules/drizzle-orm/pg-core/query-builders/count.js",
+      "sha256": "460b475f57b156f02f82388b52b844edb9e7d928fda07524c6648ac3581b5c34"
+    },
+    {
+      "path": "node_modules/drizzle-orm/pg-core/query-builders/delete.js",
+      "sha256": "504f23ed49a160324bfef0ff96cccf47af0d5cabe004b1b29a63075b33bfcfec"
+    },
+    {
+      "path": "node_modules/drizzle-orm/pg-core/query-builders/index.js",
+      "sha256": "f3e7ba3ee2f0e388e3f9f09a5c97a0417e0de92a29dfc7cbe35994bf19e6a139"
+    },
+    {
+      "path": "node_modules/drizzle-orm/pg-core/query-builders/insert.js",
+      "sha256": "b1d34b02fdfb4a9d4e051d958c52d5f505d5cd28041a45314236547acf1cc93c"
+    },
+    {
+      "path": "node_modules/drizzle-orm/pg-core/query-builders/query-builder.js",
+      "sha256": "3b99ad37255052d289de8ac75f29be30b4670d3823c01a4d64d221e7988f32c5"
+    },
+    {
+      "path": "node_modules/drizzle-orm/pg-core/query-builders/query.js",
+      "sha256": "015202fd0c4c4a1616d68214a31c8b419ba07545a89378f72971ce922478fe64"
+    },
+    {
+      "path": "node_modules/drizzle-orm/pg-core/query-builders/raw.js",
+      "sha256": "8a138baf50d14cfdb664ade7335dcff0a962effcc19bedc2ea06fb8aa547a887"
+    },
+    {
+      "path": "node_modules/drizzle-orm/pg-core/query-builders/refresh-materialized-view.js",
+      "sha256": "6c66b431d503dfee43713149158c3a9037897c1f549e8534d4dd493203592334"
+    },
+    {
+      "path": "node_modules/drizzle-orm/pg-core/query-builders/select.js",
+      "sha256": "038d8f66ca94497a24a52ff0bc6f495817e3b0fa7466a2af65f881e8dbe55559"
+    },
+    {
+      "path": "node_modules/drizzle-orm/pg-core/query-builders/select.types.js",
+      "sha256": "b6123208b421ffb4fbd073d75f15a9cd4521bd33ee8085aa2e1a3375c14a9896"
+    },
+    {
+      "path": "node_modules/drizzle-orm/pg-core/query-builders/update.js",
+      "sha256": "08c9d567362bb86546b09fa108ae8e77038f3160a2d673c27801fde8168ef0e0"
+    },
+    {
+      "path": "node_modules/drizzle-orm/pg-core/roles.js",
+      "sha256": "57da19732e052a7831cf42cc6e37a19939548aa61140d7cfb415cef5ffef50a5"
+    },
+    {
+      "path": "node_modules/drizzle-orm/pg-core/schema.js",
+      "sha256": "2293bea6f11bf9feb1bc8e95453e28f0a6025a510628020fc661bd945b301446"
+    },
+    {
+      "path": "node_modules/drizzle-orm/pg-core/sequence.js",
+      "sha256": "85367b332bb9d7e6216387e9b354cd4bd5041781719707c401198df16b75681b"
+    },
+    {
+      "path": "node_modules/drizzle-orm/pg-core/session.js",
+      "sha256": "57c3a206e679148757e97b2d41159091b4644e5c1aafdb7c01148fa4ce3b7d17"
+    },
+    {
+      "path": "node_modules/drizzle-orm/pg-core/subquery.js",
+      "sha256": "01e90bdcf2d644bac5085911f561ad936ec3afa018082cc18892d325a60748a6"
+    },
+    {
+      "path": "node_modules/drizzle-orm/pg-core/table.js",
+      "sha256": "d4b20b49d3bd38b2301e7761a7ce2cd7c8402f5cf64fff9c5bf3392bccc25468"
+    },
+    {
+      "path": "node_modules/drizzle-orm/pg-core/unique-constraint.js",
+      "sha256": "596ca62eebcf8783dcb347a57039877402450587ad39c4adf2520fbc04f775ea"
+    },
+    {
+      "path": "node_modules/drizzle-orm/pg-core/utils.js",
+      "sha256": "6fdfc1fb8b150ef2296e4c15eae2ddc35e3235890549382d1c23b6743d0bbfac"
+    },
+    {
+      "path": "node_modules/drizzle-orm/pg-core/utils/array.js",
+      "sha256": "e8946dff787f03435715873e5536b36a98ee9bab888a56118ebd922b229f30a9"
+    },
+    {
+      "path": "node_modules/drizzle-orm/pg-core/utils/index.js",
+      "sha256": "7cc7c1917e4a75de9ded23c737107da623eb85449cb15b8ec1731a6b3b3e7d68"
+    },
+    {
+      "path": "node_modules/drizzle-orm/pg-core/view-base.js",
+      "sha256": "19ad1b63033f7ff122899c25d275f84d70f6d24406cd0f09b60bc31cc487bfc1"
+    },
+    {
+      "path": "node_modules/drizzle-orm/pg-core/view-common.js",
+      "sha256": "7903045e8bd8ea3b237b1a1ee1e8fa4372e2bcbd2e2def67339b4d889d40d24f"
+    },
+    {
+      "path": "node_modules/drizzle-orm/pg-core/view.js",
+      "sha256": "b86ef71c7b9daa967b6dd48c5f89edf9165f195bf15a284c542e0c4fe5b59a97"
+    },
+    {
+      "path": "node_modules/drizzle-orm/postgres-js/driver.js",
+      "sha256": "7a4601128f03d54d70ce3a856bd0e24c1e2b49b5143a179a0cff1ea65d3047b6"
+    },
+    {
+      "path": "node_modules/drizzle-orm/postgres-js/index.js",
+      "sha256": "3066234a6394653038119bb4855d306a8107c55baa4bb0d12c41451df3114cf6"
+    },
+    {
+      "path": "node_modules/drizzle-orm/postgres-js/session.js",
+      "sha256": "d118fa954432ca3c4554cca14f26a1049ef04939a7cc7a0b96eaee0738bf6980"
+    },
+    {
+      "path": "node_modules/drizzle-orm/query-builders/query-builder.js",
+      "sha256": "8fe8f8865b59f30a2d6cd08ed40984b07f3c80783231e098d8246dd21d5b2dd7"
+    },
+    {
+      "path": "node_modules/drizzle-orm/query-promise.js",
+      "sha256": "8b16eb6e7386506587bd72be3c8535944def0b5432cef85c84f3ea488d975995"
+    },
+    {
+      "path": "node_modules/drizzle-orm/relations.js",
+      "sha256": "75ed22516acac6045391f18ea80e1db8bdb26b3fedb6f3913316b21809c47593"
+    },
+    {
+      "path": "node_modules/drizzle-orm/selection-proxy.js",
+      "sha256": "51f2604c4e1e4b59e390b7a63af5f47ab5ce5b85764d73182090887c8e9a959b"
+    },
+    {
+      "path": "node_modules/drizzle-orm/sql/expressions/conditions.js",
+      "sha256": "7bea9726b54e29c157505c9cc623a5ca69bd864701ae921b1f71401714e1611e"
+    },
+    {
+      "path": "node_modules/drizzle-orm/sql/expressions/index.js",
+      "sha256": "c5454ff285dc056eea04e1bcdef489b9fe92538ee2da985fbc46234bfe29c143"
+    },
+    {
+      "path": "node_modules/drizzle-orm/sql/expressions/select.js",
+      "sha256": "06a473e6d0ea2e76475d7cea58d4f2014604077f22b02cc3767e63e824d72e2e"
+    },
+    {
+      "path": "node_modules/drizzle-orm/sql/functions/aggregate.js",
+      "sha256": "ca17533320571dba829867de85bb5c0c6e2dd2f04b8343d251925ee0d4291b22"
+    },
+    {
+      "path": "node_modules/drizzle-orm/sql/functions/index.js",
+      "sha256": "5e6a0e364a61720d288ac50031b8e629622607c0e50de329b98890ae5d8a9630"
+    },
+    {
+      "path": "node_modules/drizzle-orm/sql/functions/vector.js",
+      "sha256": "5625978e037811e3c67c08640cf773eb2edafd908d37e7588b2812d8d2187667"
+    },
+    {
+      "path": "node_modules/drizzle-orm/sql/index.js",
+      "sha256": "98f351b96f66d11224fcd6506e9be40155829f0afdc784a8c002de7440af120f"
+    },
+    {
+      "path": "node_modules/drizzle-orm/sql/sql.js",
+      "sha256": "dbabfc58b93ef1e8e57059baf6ee63df958aab5d64eaa9b84e92ff531b6100f1"
+    },
+    {
+      "path": "node_modules/drizzle-orm/sqlite-core/alias.js",
+      "sha256": "327aa38a6d2d6d9f8df744558111541eb147db7c29141beb2cce71be9907eceb"
+    },
+    {
+      "path": "node_modules/drizzle-orm/sqlite-core/checks.js",
+      "sha256": "832c777bc822d6a4ce3b7e3458157d5493b3b2d2067a6d16f276247bd32d054e"
+    },
+    {
+      "path": "node_modules/drizzle-orm/sqlite-core/columns/all.js",
+      "sha256": "815419d6674cee7d98c97df8d705f7fb3b58cca77382ee72e400999a1705dc1d"
+    },
+    {
+      "path": "node_modules/drizzle-orm/sqlite-core/columns/blob.js",
+      "sha256": "bb641100717284f0b31975ad57ab45fc5eb0e53673a8f00a48c3fe65237da3cb"
+    },
+    {
+      "path": "node_modules/drizzle-orm/sqlite-core/columns/common.js",
+      "sha256": "cb57c6e4e3409ae8c99cbd66ba8b3692ffc6351981ddca0897baccd14fa49f69"
+    },
+    {
+      "path": "node_modules/drizzle-orm/sqlite-core/columns/custom.js",
+      "sha256": "f00f50f9ba6c58a751e917dc6fbadc0c4e2280e9e52c68ad0364a7031dbd8c23"
+    },
+    {
+      "path": "node_modules/drizzle-orm/sqlite-core/columns/index.js",
+      "sha256": "405dc0d2828c5b02927e1905748be8f6a632bf8cb20f110e97e222f3332e5875"
+    },
+    {
+      "path": "node_modules/drizzle-orm/sqlite-core/columns/integer.js",
+      "sha256": "806773d86d49c280e26ac85178c634acda455a13552d3b49fc538f785c76f7b1"
+    },
+    {
+      "path": "node_modules/drizzle-orm/sqlite-core/columns/numeric.js",
+      "sha256": "35064a09ecbac29bd431b0c6c3586fdcf9ab0e78e33e20ad723c1b0da165ab09"
+    },
+    {
+      "path": "node_modules/drizzle-orm/sqlite-core/columns/real.js",
+      "sha256": "b0b389f17ac3ab83ff6dd6797363cb6ae3810ffb652b3cc7f9906751d9d39d20"
+    },
+    {
+      "path": "node_modules/drizzle-orm/sqlite-core/columns/text.js",
+      "sha256": "e880c8cec0d12c2a41f74dd8c5bfcdb869a60b1ca43083fc2ccc189a58ca14db"
+    },
+    {
+      "path": "node_modules/drizzle-orm/sqlite-core/db.js",
+      "sha256": "d6d93a69162838fe0dd36218bdc12c0ec3e86427b89270fd5bd9f0de000c5b53"
+    },
+    {
+      "path": "node_modules/drizzle-orm/sqlite-core/dialect.js",
+      "sha256": "bdfdc50408b0b175b413692fcc49c13f9ebcffc41805b7159a9022328aee281f"
+    },
+    {
+      "path": "node_modules/drizzle-orm/sqlite-core/foreign-keys.js",
+      "sha256": "76bb3b226d8db0af48d99a74d253aa6d63639f52148e19bbd175c9a2f295f8bc"
+    },
+    {
+      "path": "node_modules/drizzle-orm/sqlite-core/index.js",
+      "sha256": "f29a30bb6dee288036cc0420dd8afd6f4899d5a32c5c32e0315e55b9e97c1c07"
+    },
+    {
+      "path": "node_modules/drizzle-orm/sqlite-core/indexes.js",
+      "sha256": "6ff8b8ef73799bba7ebd670fd1944c887ae9851722e1a062a1264b1adcb8ce34"
+    },
+    {
+      "path": "node_modules/drizzle-orm/sqlite-core/primary-keys.js",
+      "sha256": "a7ea5e854446ec86b09d534aaed320cef9950e65922f5b8b111b7beda455188c"
+    },
+    {
+      "path": "node_modules/drizzle-orm/sqlite-core/query-builders/count.js",
+      "sha256": "8e78b2f760f485c3825f712bde3f6126d65094db5964fff2d16032122ce846ae"
+    },
+    {
+      "path": "node_modules/drizzle-orm/sqlite-core/query-builders/delete.js",
+      "sha256": "e70efcb11bea4314c0bd17f8d16039e6d8f9c4c2483b2217c2163e353309cada"
+    },
+    {
+      "path": "node_modules/drizzle-orm/sqlite-core/query-builders/index.js",
+      "sha256": "9cb913c9241e187473c0c9979d545562afd473cabf3abcfcdb2009616cd08c61"
+    },
+    {
+      "path": "node_modules/drizzle-orm/sqlite-core/query-builders/insert.js",
+      "sha256": "23b240bfafcaf64216e46db9f4f2d1d61478df0b6f837322b5492490c77f27d0"
+    },
+    {
+      "path": "node_modules/drizzle-orm/sqlite-core/query-builders/query-builder.js",
+      "sha256": "6f377a78788802fcacd9e61e843db3c3e8d45ae4e55fc916c29eba2b967b2afa"
+    },
+    {
+      "path": "node_modules/drizzle-orm/sqlite-core/query-builders/query.js",
+      "sha256": "cbbfe37ca0bfd29b88dd7718962bad49f36e3bdf8ace68806e77b3ca7b63841f"
+    },
+    {
+      "path": "node_modules/drizzle-orm/sqlite-core/query-builders/raw.js",
+      "sha256": "d5d0bdcd4687c6bcf9b3b1e31444c4e3734556a789c30f2ed0d2085a87124e6a"
+    },
+    {
+      "path": "node_modules/drizzle-orm/sqlite-core/query-builders/select.js",
+      "sha256": "cc74843460e355dddcfb019b483e8976cbf8f86de15a222ec4265bfbd15d84a3"
+    },
+    {
+      "path": "node_modules/drizzle-orm/sqlite-core/query-builders/select.types.js",
+      "sha256": "b6123208b421ffb4fbd073d75f15a9cd4521bd33ee8085aa2e1a3375c14a9896"
+    },
+    {
+      "path": "node_modules/drizzle-orm/sqlite-core/query-builders/update.js",
+      "sha256": "70c7c363cf7da6c9a78753013c2ecbc8205adc4d695c2a8fc63c7c235af56a39"
+    },
+    {
+      "path": "node_modules/drizzle-orm/sqlite-core/session.js",
+      "sha256": "2bee9c89e750ee2567793b23b73f2d69da61c4194d7686c9a93b20a9e12f85a9"
+    },
+    {
+      "path": "node_modules/drizzle-orm/sqlite-core/subquery.js",
+      "sha256": "01e90bdcf2d644bac5085911f561ad936ec3afa018082cc18892d325a60748a6"
+    },
+    {
+      "path": "node_modules/drizzle-orm/sqlite-core/table.js",
+      "sha256": "8f60776334dc3d1aceff1d1a98e0f6210176f1cbab8afaa10c6f2a6f061776fe"
+    },
+    {
+      "path": "node_modules/drizzle-orm/sqlite-core/unique-constraint.js",
+      "sha256": "f6667d626a0f0625377162b160cd9b72e6bd34e2965aeef85bab182e01b4a059"
+    },
+    {
+      "path": "node_modules/drizzle-orm/sqlite-core/utils.js",
+      "sha256": "31292b9b6fe2aca023e10e275ea1e328fb8c914f76a1d9930232be92e78d01e7"
+    },
+    {
+      "path": "node_modules/drizzle-orm/sqlite-core/view-base.js",
+      "sha256": "4458c6c6cfac171cb7537d03107e7764f8b9cb31e06d8eb613ddc606735ad648"
+    },
+    {
+      "path": "node_modules/drizzle-orm/sqlite-core/view.js",
+      "sha256": "725770b62a5d39ef7eac097003dcddba03d5ef7599628f6e9bc5552f0a78768f"
+    },
+    {
+      "path": "node_modules/drizzle-orm/subquery.js",
+      "sha256": "1c5f4b67b806225e6a6f0f50fc404a573e8ceb4af0821e1fa8b624de992ef767"
+    },
+    {
+      "path": "node_modules/drizzle-orm/table.js",
+      "sha256": "a3b9b22a3ee8e9d2de5b2136c7ff0c5eed61cad2fb81e743f0d7b074077f243c"
+    },
+    {
+      "path": "node_modules/drizzle-orm/table.utils.js",
+      "sha256": "16fea519f3f971d3a470f7f8fddb2ac1fb911cdf40e4555afed8b847bd208cd6"
+    },
+    {
+      "path": "node_modules/drizzle-orm/tracing-utils.js",
+      "sha256": "f80fef8fba287e202eb685594ac29f9ca14f96944e7a946b718de1f9d43d2571"
+    },
+    {
+      "path": "node_modules/drizzle-orm/tracing.js",
+      "sha256": "faade73f36a14892a19145425ce6c6fff0dcbaa102b9ac72840261ea14083410"
+    },
+    {
+      "path": "node_modules/drizzle-orm/utils.js",
+      "sha256": "6363d99f639c5d7c19d4862d5126f7e9e6148fd7f226de5407e1d4fb9f2ecdae"
+    },
+    {
+      "path": "node_modules/drizzle-orm/version.js",
+      "sha256": "81ea18344e18599a76495124ed925a2d0c8573c2d0b2262f76b055b7c6bf95a6"
+    },
+    {
+      "path": "node_modules/drizzle-orm/view-common.js",
+      "sha256": "e66f51090406186b15ecc1a75b519ec2629a7ce07018f432c0a1b2d4f91d343d"
+    },
+    {
+      "path": "node_modules/esbuild/package.json",
+      "sha256": "24655ca1d9c91fe7517a99ec27bf1125b46efae71b54a55125d2a930b6ad61f9"
+    },
+    {
+      "path": "node_modules/generate-function/index.js",
+      "sha256": "aa1a9d1f0a4911573768a56ed889e251d2860165894134f097fd49650c490cfd"
+    },
+    {
+      "path": "node_modules/iconv-lite/encodings/dbcs-codec.js",
+      "sha256": "ee0cfbf10e4dc34906bf8a4aa0aaa991f8a50ac08966eaf65a31acfc5b33b8d1"
+    },
+    {
+      "path": "node_modules/iconv-lite/encodings/dbcs-data.js",
+      "sha256": "17f52a22ed26a2fe1cfab8164ad07152d60e6e38087e492e85ee4aec249f1f2c"
+    },
+    {
+      "path": "node_modules/iconv-lite/encodings/index.js",
+      "sha256": "a96a42738187fbb6eed876c843c8fd88c6d88729902159a983025d7341e50abd"
+    },
+    {
+      "path": "node_modules/iconv-lite/encodings/internal.js",
+      "sha256": "320313a132361c02f7f033b52eb579df8799a0e1429febf56d2c374f6c7a7ff1"
+    },
+    {
+      "path": "node_modules/iconv-lite/encodings/sbcs-codec.js",
+      "sha256": "d622479bee6d119d8df4d126f14acc2882213554ee46fbf27f2dc68970e315c7"
+    },
+    {
+      "path": "node_modules/iconv-lite/encodings/sbcs-data-generated.js",
+      "sha256": "2cf44b3f70c61c9cdd59fda7ec085bc3180809638f208c7239688ccb90a48866"
+    },
+    {
+      "path": "node_modules/iconv-lite/encodings/sbcs-data.js",
+      "sha256": "00885e0a6a2a199845ea9c96337d0e273bb57696abce2b4cc2de5c524dc85de8"
+    },
+    {
+      "path": "node_modules/iconv-lite/encodings/tables/big5-added.json",
+      "sha256": "db94db5e5d3ab696ddb0025685cfa85da1864839a4a26aab2f8f86f6b8382288"
+    },
+    {
+      "path": "node_modules/iconv-lite/encodings/tables/cp936.json",
+      "sha256": "8225bb693efd380279ed7280b8f8419fd069c5f018d20d5946bf187ad92c0cf7"
+    },
+    {
+      "path": "node_modules/iconv-lite/encodings/tables/cp949.json",
+      "sha256": "77a56ea83d0d94d1dc620042ad3c897f0e40814bb05c0085d3aeed0018e8a3e8"
+    },
+    {
+      "path": "node_modules/iconv-lite/encodings/tables/cp950.json",
+      "sha256": "99e2114dc4b39092617967c763f9eaeb4d8e70551afc5884baa3fb92827f3420"
+    },
+    {
+      "path": "node_modules/iconv-lite/encodings/tables/eucjp.json",
+      "sha256": "7c4fe279000f7e99fc7cd59afb1da21725dcebdc1babd9e3b883253a77abb042"
+    },
+    {
+      "path": "node_modules/iconv-lite/encodings/tables/gb18030-ranges.json",
+      "sha256": "5a3cc11e38f05a0908442acbf1c921d0b73f2a304fb6a9e4484e26eb1ca07d76"
+    },
+    {
+      "path": "node_modules/iconv-lite/encodings/tables/gbk-added.json",
+      "sha256": "10cbb08708f3a431977271887b2663f734390a22cedf90875fac9fdbd4bb5317"
+    },
+    {
+      "path": "node_modules/iconv-lite/encodings/tables/shiftjis.json",
+      "sha256": "02b0b120f697c48133e8b547e8dc594bc5b9f1c1799b50c2c5ff917298548558"
+    },
+    {
+      "path": "node_modules/iconv-lite/encodings/utf16.js",
+      "sha256": "f1307071fdc27db4bad98cb4845279880a5c5d6f28b44ddc2ec2e2f1790227ce"
+    },
+    {
+      "path": "node_modules/iconv-lite/encodings/utf32.js",
+      "sha256": "8f92ad4f3275e98176b5a7a7a2db3e99cc2930c57ce1e3d7816826d1c4e24396"
+    },
+    {
+      "path": "node_modules/iconv-lite/encodings/utf7.js",
+      "sha256": "0a1ac8158e64def6a57da3bb8f158d8c1bd57f8c68eb4a232d6f101f73397fe7"
+    },
+    {
+      "path": "node_modules/iconv-lite/lib/bom-handling.js",
+      "sha256": "e4019126f7695139538bfdeb9f0c933948ddde1d91b2989fbef46bad65aed0d4"
+    },
+    {
+      "path": "node_modules/iconv-lite/lib/helpers/merge-exports.js",
+      "sha256": "040baa601833402217e617a104dd32beb27615645f6c16924596ae2d9a58e1dc"
+    },
+    {
+      "path": "node_modules/iconv-lite/lib/index.js",
+      "sha256": "59759a24727cd37306bc039512307c8b87992568fc7a2145fcbb8a4fd404fb3c"
+    },
+    {
+      "path": "node_modules/iconv-lite/lib/streams.js",
+      "sha256": "8c30f663ec5d7ced629d9eaa4dc427538e89574013e0cc845bf90568dda30bcb"
+    },
+    {
+      "path": "node_modules/is-property/is-property.js",
+      "sha256": "4c6963cce2dc8f5fde0693a7a4f93c2d85aae03d4a21ba28388a236ecd1a51b3"
+    },
+    {
+      "path": "node_modules/long/umd/index.js",
+      "sha256": "ea6da8d5fff04abc358b94488dbbb7eeb46e5027cc05303b1761cea94bef7821"
+    },
+    {
+      "path": "node_modules/lru.min/lib/index.js",
+      "sha256": "2f822e6e9a454cc6e6e58d257cfd239d9c6be56f4c9c3ae03096a8fb93b81785"
+    },
+    {
+      "path": "node_modules/miniflare/package.json",
+      "sha256": "d43d063fc65818a57e5df8c5503bcfddaef5320099d2479097b16b6cb7a5a288"
+    },
+    {
+      "path": "node_modules/mysql2/index.js",
+      "sha256": "747cc233b0b1c996068f016fadc93fc37361893975736face7d8e29449edc23c"
+    },
+    {
+      "path": "node_modules/mysql2/lib/auth_41.js",
+      "sha256": "1e05381b2fb9a4dfaea23327f6f1deedf55d56c35ad0f4e69fd060283fd18a13"
+    },
+    {
+      "path": "node_modules/mysql2/lib/auth_plugins/caching_sha2_password.js",
+      "sha256": "97941af76f6faa981b4b5a633f9b848c6f9d51771539cd5cdc823298248d3737"
+    },
+    {
+      "path": "node_modules/mysql2/lib/auth_plugins/index.js",
+      "sha256": "bab3ab9abb7fc833671eeb4d712e2d76028d29ebcbeb7b90def2b9b91651641e"
+    },
+    {
+      "path": "node_modules/mysql2/lib/auth_plugins/mysql_clear_password.js",
+      "sha256": "e1d69443ec68e689bfd75c86a81a556d64413c85421b5ea8928cd918adea9d70"
+    },
+    {
+      "path": "node_modules/mysql2/lib/auth_plugins/mysql_native_password.js",
+      "sha256": "ebc6adda94378ec13bfdaf33e5c6ea74dae7a132b6feeef35fff4f3921c3cbeb"
+    },
+    {
+      "path": "node_modules/mysql2/lib/auth_plugins/sha256_password.js",
+      "sha256": "a5c91ac46d2daf279ac1ab7db41a9c31d6250cc272501cbf9f863c9dcd415cd2"
+    },
+    {
+      "path": "node_modules/mysql2/lib/base/connection.js",
+      "sha256": "e7cceba9a9f2edf2b2734369052c6e800191b2177d03efa33ef39e67c3f9f718"
+    },
+    {
+      "path": "node_modules/mysql2/lib/base/pool.js",
+      "sha256": "7f9174da55aac60d2c058384afb863ebf14d5895c7edb0aba9fcd6a27ec525da"
+    },
+    {
+      "path": "node_modules/mysql2/lib/commands/auth_switch.js",
+      "sha256": "d57bf0b39f91493f9ed33f0f44b2bca0e38dba47338e8ceac2d9784afb6c0391"
+    },
+    {
+      "path": "node_modules/mysql2/lib/commands/binlog_dump.js",
+      "sha256": "4d8801166fe724dec47a5811fe9b0f43e83e28fc4a9d3844ea18322a0175a34b"
+    },
+    {
+      "path": "node_modules/mysql2/lib/commands/change_user.js",
+      "sha256": "3a8b3db6821b61ea0134e78bd2795c66d788aae5cb638d67b78a4c821bc7fb6e"
+    },
+    {
+      "path": "node_modules/mysql2/lib/commands/client_handshake.js",
+      "sha256": "04f4f67ea87f31eef91284715614f993ee6660485f4f926208e1d3daa36fb6c1"
+    },
+    {
+      "path": "node_modules/mysql2/lib/commands/close_statement.js",
+      "sha256": "89448de135b2ba1f9e341599e0395c104da44f7d397f475d95f024a05928d0bd"
+    },
+    {
+      "path": "node_modules/mysql2/lib/commands/command.js",
+      "sha256": "f94521022f77fce0a0af821a063bc6ca5631f975dc167ee6bd9d4994c76be338"
+    },
+    {
+      "path": "node_modules/mysql2/lib/commands/execute.js",
+      "sha256": "2c7750801bdaa530aca2fe33408750acf5d74d06339d28b657110c24d8de49a2"
+    },
+    {
+      "path": "node_modules/mysql2/lib/commands/index.js",
+      "sha256": "b2c8953aa342ea6528d7ed37d81b5cd0de6bcb91081d3e5e4edea683e1584893"
+    },
+    {
+      "path": "node_modules/mysql2/lib/commands/ping.js",
+      "sha256": "3ae71094a7fd1961bfa4832f2bfeca623591fa28d1dfdc5372f701e0ace520e9"
+    },
+    {
+      "path": "node_modules/mysql2/lib/commands/prepare.js",
+      "sha256": "f8f8f95787de59c4627ccb0b687c9cc46050ca38e5c037fd6ca6cfa5f2677da4"
+    },
+    {
+      "path": "node_modules/mysql2/lib/commands/query.js",
+      "sha256": "a31877d278719bfe28c9edb89abec27f218ca7d9ed7a820d79afc68819ff5ea5"
+    },
+    {
+      "path": "node_modules/mysql2/lib/commands/quit.js",
+      "sha256": "d2087f7bcd21a46bfac2baa81a1688e51312503794062c89d077f3365080bcac"
+    },
+    {
+      "path": "node_modules/mysql2/lib/commands/register_slave.js",
+      "sha256": "acf6345d7b5cfe356589f47d40eca41164adedf6475463977f6edcb89d163763"
+    },
+    {
+      "path": "node_modules/mysql2/lib/commands/reset_connection.js",
+      "sha256": "8a72d74a9296019e2c5a7389e5e3a71fc5047780d40241d9467fceac75e994d6"
+    },
+    {
+      "path": "node_modules/mysql2/lib/commands/server_handshake.js",
+      "sha256": "bf12455d53e800365b238f3882644ab5625f3cbda38e15f889f6833204a7ddd1"
+    },
+    {
+      "path": "node_modules/mysql2/lib/compressed_protocol.js",
+      "sha256": "dfcad486f34af09b9e552ecb1fe2f068932b625f74f0e1571a0d3c9ab8e84e01"
+    },
+    {
+      "path": "node_modules/mysql2/lib/connection_config.js",
+      "sha256": "d03578f281a8ded708da7ab81ec57c725e143b2b1444962d3c6c09c90e5ec07f"
+    },
+    {
+      "path": "node_modules/mysql2/lib/connection.js",
+      "sha256": "3282d2cb7af3032699ff7690c2451cd92d34871421bb8f53af17f553056b9b6a"
+    },
+    {
+      "path": "node_modules/mysql2/lib/constants/charset_encodings.js",
+      "sha256": "c9e82d5315621d0fa886ca35fab31fa45a8944f25727e44141b016f6c925336f"
+    },
+    {
+      "path": "node_modules/mysql2/lib/constants/charsets.js",
+      "sha256": "752a71ac24bee3651dfad46cae49b6b6fba697f0cb2f212d6def312093a5fa0c"
+    },
+    {
+      "path": "node_modules/mysql2/lib/constants/client.js",
+      "sha256": "81148c028cc1536e8762214739a68353b1fb4ae213cdac9134f4f0d115aee818"
+    },
+    {
+      "path": "node_modules/mysql2/lib/constants/commands.js",
+      "sha256": "83d752a9b848d081c07b26da27fef789f613a4da91561b0342999ff958529ea0"
+    },
+    {
+      "path": "node_modules/mysql2/lib/constants/cursor.js",
+      "sha256": "440f1b182804f1b80ff749d4afd327994549524e4d98d5e1ae023829fbfd131a"
+    },
+    {
+      "path": "node_modules/mysql2/lib/constants/encoding_charset.js",
+      "sha256": "c1f433ccb07eba7bfbafc519898e8f433310abdb8698862d8ab281ee11787c9a"
+    },
+    {
+      "path": "node_modules/mysql2/lib/constants/errors.js",
+      "sha256": "4778749caf383bcdef6e45750fcc1fbe99d530806367a74c485409ce79156164"
+    },
+    {
+      "path": "node_modules/mysql2/lib/constants/field_flags.js",
+      "sha256": "6e10d228a15efa9c2393ee5551ef9639cb31ad211035424c0f5a5e7631419c2e"
+    },
+    {
+      "path": "node_modules/mysql2/lib/constants/server_status.js",
+      "sha256": "85dfcaeb3c8c0a4e9188fd1f04671da9d15dbe2e0ff785ff31cb2950709f6928"
+    },
+    {
+      "path": "node_modules/mysql2/lib/constants/session_track.js",
+      "sha256": "9e02bd9330245798c1e8cde4c2a44d327237d4d084195c433b4d1a389b2fb22c"
+    },
+    {
+      "path": "node_modules/mysql2/lib/constants/ssl_profiles.js",
+      "sha256": "5c75777072a25d6f7d8b18f438190ca41540839e12aff98fbc5c7f4386a643f1"
+    },
+    {
+      "path": "node_modules/mysql2/lib/constants/types.js",
+      "sha256": "7a0ca576c46ab457e9ccc5734c64088dbb93dfb66c3b926246150e8897866ef1"
+    },
+    {
+      "path": "node_modules/mysql2/lib/create_connection.js",
+      "sha256": "ac6e22b1f9952a15038802598f2d58ac4b45789e168d295b6bf58f1fe8ea710b"
+    },
+    {
+      "path": "node_modules/mysql2/lib/create_pool_cluster.js",
+      "sha256": "49bc050d0756c0b2e8aab7bc2f0b0bd99f9da69cefdd0cf35b55e7fdf9882d95"
+    },
+    {
+      "path": "node_modules/mysql2/lib/create_pool.js",
+      "sha256": "55cd1b7a5a9e70b2d14cd0dbb2e607ee109e2e25e421154b734803e5b4c2eda7"
+    },
+    {
+      "path": "node_modules/mysql2/lib/helpers.js",
+      "sha256": "cf6788ea02251d9280017073b8a67edd4db9609d6c0a3a36a3a2032c86c568b0"
+    },
+    {
+      "path": "node_modules/mysql2/lib/packet_parser.js",
+      "sha256": "ceb1db3229dc07eefee45cb57761d5995fc91c7face59da3240c1ecd6f95527f"
+    },
+    {
+      "path": "node_modules/mysql2/lib/packets/auth_next_factor.js",
+      "sha256": "7e6dca0b11716cc5a1bafad62e130765d9773e22eba2a115b94a7b3f18536bc1"
+    },
+    {
+      "path": "node_modules/mysql2/lib/packets/auth_switch_request_more_data.js",
+      "sha256": "a0bd4ab17968b59e8f5ca7ccbb68f4a540914e21643eadf0579285bb27873252"
+    },
+    {
+      "path": "node_modules/mysql2/lib/packets/auth_switch_request.js",
+      "sha256": "11ff290cc15f10248d99477d245d7fb59c914a4d5d4d09847d47a3ebca7e2bff"
+    },
+    {
+      "path": "node_modules/mysql2/lib/packets/auth_switch_response.js",
+      "sha256": "017ead9282f1715db84c7782c8c709b7382773c5e87d56a64d5cc93b613fa3dc"
+    },
+    {
+      "path": "node_modules/mysql2/lib/packets/binary_row.js",
+      "sha256": "611341ab2858680427478d42210aaaa18520f13843958d86c6e60f6a992ada11"
+    },
+    {
+      "path": "node_modules/mysql2/lib/packets/binlog_dump.js",
+      "sha256": "b68bb8e0b187aea964da9fa6c9ee57f9515ce52b758ffbeeb44e2b98d75247d4"
+    },
+    {
+      "path": "node_modules/mysql2/lib/packets/binlog_query_statusvars.js",
+      "sha256": "00b38759d5e9d7b2bc11e8a583f9268b85e0397cab7aa738522bb482ffeedf2e"
+    },
+    {
+      "path": "node_modules/mysql2/lib/packets/change_user.js",
+      "sha256": "b73bb89e085e7b2a0dcb7efc4c4a586a2588beeecc8ca09fc0a6b321e05768da"
+    },
+    {
+      "path": "node_modules/mysql2/lib/packets/close_statement.js",
+      "sha256": "40428bace1162612a41372ecb18d5d146ce4b38b65b46fcd2441aeddc9313a59"
+    },
+    {
+      "path": "node_modules/mysql2/lib/packets/column_definition.js",
+      "sha256": "d491dfa7fad8f7a9e7874c8a983dccb867fa8b2bbf01e18cf84a081528c329d8"
+    },
+    {
+      "path": "node_modules/mysql2/lib/packets/encode_parameter.js",
+      "sha256": "231ec02877edc0e349cf90015936f6ef827a3a1a635fb798f83cabaabf17bac2"
+    },
+    {
+      "path": "node_modules/mysql2/lib/packets/execute.js",
+      "sha256": "bb76e2e2f97da2a86b6a34192776fe67d7902fafcbaa1f407add0db764d80941"
+    },
+    {
+      "path": "node_modules/mysql2/lib/packets/handshake_response.js",
+      "sha256": "690882c18407af19474179c605fd3f562845cf3b7bfb8882f4f2a73c047afade"
+    },
+    {
+      "path": "node_modules/mysql2/lib/packets/handshake.js",
+      "sha256": "3fefa7e904cfe55977f14e1283af62a013eca95cf6e4160d55dbddb1bbb0c55f"
+    },
+    {
+      "path": "node_modules/mysql2/lib/packets/index.js",
+      "sha256": "e85731b4df15fb779fc3f5f56d06c11c59d053b43d8b0b3de1ad5be8182ba7ce"
+    },
+    {
+      "path": "node_modules/mysql2/lib/packets/packet.js",
+      "sha256": "0d96c43e8a40e81b66eedb05cffc2d79440ec4781114d1fd45e375a3c3e22172"
+    },
+    {
+      "path": "node_modules/mysql2/lib/packets/prepare_statement.js",
+      "sha256": "228bace8626d8180a755f5cf9864f9180de27760608b10518883b1ddd523dce3"
+    },
+    {
+      "path": "node_modules/mysql2/lib/packets/prepared_statement_header.js",
+      "sha256": "871f2b27e7bc56bbf887640b08398fd3b1efb8f9f8b18f39b059affb7ea33a36"
+    },
+    {
+      "path": "node_modules/mysql2/lib/packets/query.js",
+      "sha256": "cfdf1403be6bc49ec9549b79e14434d6317cd333158d9eeab12bd6df76c42739"
+    },
+    {
+      "path": "node_modules/mysql2/lib/packets/register_slave.js",
+      "sha256": "d65b79be6f13422fe1a23ccaf06816f31fce16fbb87977a363002b8ce5fe7acc"
+    },
+    {
+      "path": "node_modules/mysql2/lib/packets/reset_connection.js",
+      "sha256": "55ee07d313dbbc24a5906266c2c4867505a4c7d6c64d3081f5d6b6fd3919643e"
+    },
+    {
+      "path": "node_modules/mysql2/lib/packets/resultset_header.js",
+      "sha256": "96fed8b96c52eec930864e6f486767bcd38d9298c25b169ceb790f12acea55f2"
+    },
+    {
+      "path": "node_modules/mysql2/lib/packets/ssl_request.js",
+      "sha256": "946315a1bc2f196536024edc0763df4e36c4db30d63a2a4cf4f4f8fe68d4ba7d"
+    },
+    {
+      "path": "node_modules/mysql2/lib/packets/text_row.js",
+      "sha256": "b7f7047e08dcedd8247c806b444f214c42806b8f4e7b9f12f1514d5b8a1ba08f"
+    },
+    {
+      "path": "node_modules/mysql2/lib/parsers/binary_parser.js",
+      "sha256": "62a7c90ba9af2b04a86185b605334542f1f0ece8c59785098520d68f40acf122"
+    },
+    {
+      "path": "node_modules/mysql2/lib/parsers/parser_cache.js",
+      "sha256": "b50ccfc6729f8b4055cb839cb072543fcfda32a0adec1073c1c837fde4b67af3"
+    },
+    {
+      "path": "node_modules/mysql2/lib/parsers/static_binary_parser.js",
+      "sha256": "75645e75fe622b5504cf312d4c93ad3ebfd61f0315e65a46712e81943345641e"
+    },
+    {
+      "path": "node_modules/mysql2/lib/parsers/static_text_parser.js",
+      "sha256": "c04e6add9c8824b875ee73c1618681e5aa56ddacc7da9149fc54bee4f2a0480f"
+    },
+    {
+      "path": "node_modules/mysql2/lib/parsers/string.js",
+      "sha256": "72d96ffca58d233ec936d29491db82c746eab32c3ea2eb46f3a43acbe293b8ee"
+    },
+    {
+      "path": "node_modules/mysql2/lib/parsers/text_parser.js",
+      "sha256": "fdc3ae1f6bb77814401103f15ee446591ad54b5e04942491c76d69444ec64f9a"
+    },
+    {
+      "path": "node_modules/mysql2/lib/pool_cluster.js",
+      "sha256": "4e38755e60ce341f987d0e732dc0635d363203321a3d35c25555a0c679dd30e9"
+    },
+    {
+      "path": "node_modules/mysql2/lib/pool_config.js",
+      "sha256": "a2535b84cfa95fd93bbfd981cfd0141dae8437faa9965ad70db10c7ae2922f03"
+    },
+    {
+      "path": "node_modules/mysql2/lib/pool_connection.js",
+      "sha256": "be6309630e898a8bc1d8d013799a4510735b9a0b8324b72921de277f6e42473b"
+    },
+    {
+      "path": "node_modules/mysql2/lib/pool.js",
+      "sha256": "38e5b2eb0dbbe491c5f5b8fc90e7db14bbc4eb13d5b1d725ba0da1efe6f8ef17"
+    },
+    {
+      "path": "node_modules/mysql2/lib/promise/connection.js",
+      "sha256": "caec651ad17afc7fa4d388214f94e51f61899af20a5bbdb5835739458d617130"
+    },
+    {
+      "path": "node_modules/mysql2/lib/promise/inherit_events.js",
+      "sha256": "6c989ec632c554165182a737c8096a565133da6ab2504a9c22a67e75c6508762"
+    },
+    {
+      "path": "node_modules/mysql2/lib/promise/make_done_cb.js",
+      "sha256": "e082b2dcac9a839c9076f126de877513ecca31ee6147e72598b20ffc7d1e144d"
+    },
+    {
+      "path": "node_modules/mysql2/lib/promise/pool_cluster.js",
+      "sha256": "21a1b12860b91188025e2bbced65281a2c197bb3a75f118ddc55723447476bf6"
+    },
+    {
+      "path": "node_modules/mysql2/lib/promise/pool_connection.js",
+      "sha256": "a001cca337a8af6433c7b0f5d4b0d725a7db728d523472ab60c7351adf0a2d0d"
+    },
+    {
+      "path": "node_modules/mysql2/lib/promise/pool.js",
+      "sha256": "720fe4ecf532bdf71adaf2b3dea1dd41ebcd85e2515d7027c11fd3dcdca966e2"
+    },
+    {
+      "path": "node_modules/mysql2/lib/promise/prepared_statement_info.js",
+      "sha256": "674b807ec7beb5137d86ec126f419dd70dda07a64e835bd4230b5aaa6728b7f6"
+    },
+    {
+      "path": "node_modules/mysql2/lib/server.js",
+      "sha256": "3c0201ade466e78ff5cc457a5bbce20ba95c4650f63f63ec81740a8e3e580738"
+    },
+    {
+      "path": "node_modules/mysql2/lib/tracing.js",
+      "sha256": "f2f80ebe063e71058ee81b9482a83d7c51407aeeaee2af71c44a76e413d13acd"
+    },
+    {
+      "path": "node_modules/mysql2/package.json",
+      "sha256": "e8e8e37f24a4b7431c51f2ef9824ec0294b625d1f5c11f8326fe3f36c2c372e1"
+    },
+    {
+      "path": "node_modules/mysql2/promise.js",
+      "sha256": "4abb3bd3eee5335a0a2ca9109092b4e43ccf06566b8ffeced81fa15c456ad866"
+    },
+    {
+      "path": "node_modules/named-placeholders/index.js",
+      "sha256": "321429a6343d1ae21a5366312bb6acaed313848c77534e9a3b4f17418347cc68"
+    },
+    {
+      "path": "node_modules/postgres/cf/polyfills.js",
+      "sha256": "c9bfd7d57f1402676a42c8b6a49386ca18f95ccc687fdaad625f3a3fc7ba3f81"
+    },
+    {
+      "path": "node_modules/postgres/cf/src/bytes.js",
+      "sha256": "368a278367814e80f7ae816e01e202279f3ce38347f2ac465b562ebeb61d84ca"
+    },
+    {
+      "path": "node_modules/postgres/cf/src/connection.js",
+      "sha256": "3efad812b825f76708f2e62e8dd00088900206e04afed2dc4b75b9aecd435fa9"
+    },
+    {
+      "path": "node_modules/postgres/cf/src/errors.js",
+      "sha256": "85cfbed9a5ab0db41ab8e97b806c881af29807dfe99bc656fdf1a18c1c13b6c6"
+    },
+    {
+      "path": "node_modules/postgres/cf/src/index.js",
+      "sha256": "aca9c247b7ddb2aedf90d20ce8e6f52ac6ebd95865056599ca05ed4dab4baad7"
+    },
+    {
+      "path": "node_modules/postgres/cf/src/large.js",
+      "sha256": "b02b13cf2b5d435368c7d61989af1692a9965b6edf9b60e1d0bc320ac42f48df"
+    },
+    {
+      "path": "node_modules/postgres/cf/src/query.js",
+      "sha256": "67c45a5151032aa46b587abc15381fe4efd97c696e5c1b53082b8161309c4ee2"
+    },
+    {
+      "path": "node_modules/postgres/cf/src/queue.js",
+      "sha256": "15e6345adb6708bf3b99ad39fc2231c2fb61de5f6cba4b7a7a6be881482a4ec3"
+    },
+    {
+      "path": "node_modules/postgres/cf/src/result.js",
+      "sha256": "001ff5e0c8d634674f483d07fbcd620a797e3101f842d6c20ca3ace936260465"
+    },
+    {
+      "path": "node_modules/postgres/cf/src/subscribe.js",
+      "sha256": "9ce6fd98780e0adff813d13cc03951e5b1c66d602637beb6f9494c40e7b9212e"
+    },
+    {
+      "path": "node_modules/postgres/cf/src/types.js",
+      "sha256": "e6c9e8f43272ae853944613560e5eabb15955fd8b2981749e7fa1c9015f370db"
+    },
+    {
+      "path": "node_modules/safer-buffer/safer.js",
+      "sha256": "37f9716144105051ab302f6a0c30a52ff5de7269b9e1173ac22be798fc11ccad"
+    },
+    {
+      "path": "node_modules/sql-escaper/lib/index.js",
+      "sha256": "957b87fb3a55b05763f28911fc878fcdb168d3d675c3b39960953e6105b18475"
+    },
+    {
+      "path": "node_modules/workerd/package.json",
+      "sha256": "84a166529ea8d4de0bcdf2af781996846cd64e33367f357d88bbc3d514c06fe2"
+    },
+    {
+      "path": "package-lock.json",
+      "sha256": "f9f477d173c8553fe2c10ee1f7217ca7a36db8d11afd056402afe98d71f940ff"
+    },
+    {
+      "path": "packages/core/dist/index.js",
+      "sha256": "527f77bf141c0167ace4bfa0a9646c6cbd5df3c47a6e7d9b2d0efd25551b989b"
+    },
+    {
+      "path": "packages/core/package.json",
+      "sha256": "5bdbb6d41edbd0ccf6e8e92f9ec6da28e73655aa3936933d96fa388a04833dcd"
+    },
+    {
+      "path": "packages/core/src/chain-jobs.ts",
+      "sha256": "3cd76e852415062b290818eeefe79e66af0077853a6ca29e5246d30e8a149807"
+    },
+    {
+      "path": "packages/core/src/db/admin-access-types.ts",
+      "sha256": "c5a269665d11b2b53fe15dc8ed74d9966d67727f3b8efb712eb3822524354894"
+    },
+    {
+      "path": "packages/core/src/db/analytics-query.ts",
+      "sha256": "068909ef471a92179c7fa24505879385838fe1f874a1cc70414e73ba5076247b"
+    },
+    {
+      "path": "packages/core/src/db/api-keys-list-sort.ts",
+      "sha256": "4ca33eb20678b20f980fbdeb60ca3316313526a96d4c897d0581b074bd51203f"
+    },
+    {
+      "path": "packages/core/src/db/api-keys-types.ts",
+      "sha256": "4ed548a13d33085d78a6b951f6f7749b82dd235b8ef770a03bdd6898467b4a7b"
+    },
+    {
+      "path": "packages/core/src/db/audio-token-usage.ts",
+      "sha256": "783b62a24e70cf80f9c331c5c560ef322f1edfbeb51949862dd3f8b956181e9d"
+    },
+    {
+      "path": "packages/core/src/db/batch-repository-utils.ts",
+      "sha256": "6d62eba24735c9913730589858bfcd9634ec625584f58926c1aadff1ebc251f4"
+    },
+    {
+      "path": "packages/core/src/db/batch-types.ts",
+      "sha256": "df77f75caab7f5a39f02c56cf58da8aed7179630a618b295f7dc104ed0ef75f2"
+    },
+    {
+      "path": "packages/core/src/db/byok-keys-types.ts",
+      "sha256": "122d98b97bd4c1703ab4e1354b6b29c2fc393d21a609b37fdaf55ea3a99c1f9f"
+    },
+    {
+      "path": "packages/core/src/db/d1/admin-access.impl.ts",
+      "sha256": "efc062af1e3f7aedd8cf4db3fe426b8774a20758752a3af30449615b84419bc5"
+    },
+    {
+      "path": "packages/core/src/db/d1/admin-analytics.impl.ts",
+      "sha256": "4986202779ff26bfa8f5bdef401ef48c9b9db4c332602849db38f4c8b3a8ebd5"
+    },
+    {
+      "path": "packages/core/src/db/d1/api-keys.impl.ts",
+      "sha256": "9eedf6cce7aee4ba326b8313de495aefee7eb6e61b5813a2c35f4a09e95c4081"
+    },
+    {
+      "path": "packages/core/src/db/d1/batches.impl.ts",
+      "sha256": "dbd6567b94c9cd2d0e3eb305a069508928c58b64406e27158f6e28294cfb0b8a"
+    },
+    {
+      "path": "packages/core/src/db/d1/critical-writes.impl.ts",
+      "sha256": "145df8a9f579573664f0dbec08a833d5c80f0e3bb0f021cb6ce3c5dd157053bb"
+    },
+    {
+      "path": "packages/core/src/db/d1/guardrail-budgets.impl.ts",
+      "sha256": "daf0a06b9f6f5f185f301449e9f4b8019cd8bdcda15ab9b4f2490ec8c03fcf95"
+    },
+    {
+      "path": "packages/core/src/db/d1/guardrails.impl.ts",
+      "sha256": "27f8c077dfb54d177755af82f8eaf60903a353c5b6fef50603d1ade62cea75ee"
+    },
+    {
+      "path": "packages/core/src/db/d1/model-endpoints.impl.ts",
+      "sha256": "239e0e3438ca1c1dd2446af2a41e84708a9a58b554973ea13a27d026b7cbc2fd"
+    },
+    {
+      "path": "packages/core/src/db/d1/model-routes.impl.ts",
+      "sha256": "d8d52089207e892054f30ddf27715370e7f4f2babf129a93e7fa1da7e63074e5"
+    },
+    {
+      "path": "packages/core/src/db/d1/model-routing.impl.ts",
+      "sha256": "3202ff3ba624b5d2d8b0ebb5d8d43ada45c51d89a7cb724de7a1656779b416f6"
+    },
+    {
+      "path": "packages/core/src/db/d1/models.impl.ts",
+      "sha256": "2bec7cabdae3b5df7c20885a4cf140633df9a9526f9c662295aea8ca4748b4ab"
+    },
+    {
+      "path": "packages/core/src/db/d1/portal-marketplace.impl.ts",
+      "sha256": "dd624d80294448d883d902eb1f8f0edc726a9dd0e33bcdee722f0fb75b7024ec"
+    },
+    {
+      "path": "packages/core/src/db/d1/providers.impl.ts",
+      "sha256": "82b74ce256dc2970fdd8b0666e068bfde5a3b377def0616f46338aaea79f9be4"
+    },
+    {
+      "path": "packages/core/src/db/d1/request-logs.impl.ts",
+      "sha256": "b5be501229a158b15076c4bc6a99f4ebd2858924ddbf66d05f29710c95bec97b"
+    },
+    {
+      "path": "packages/core/src/db/d1/request-presets.impl.ts",
+      "sha256": "545f7542634ba5a9fc52371acfa06e811b62fdbb174faaa0efe4d6e02cb27861"
+    },
+    {
+      "path": "packages/core/src/db/d1/route-data-policies.impl.ts",
+      "sha256": "943e28f9fb04920f08d603b00b7e2518f49efcb7f051d04682661ce0e7b5d997"
+    },
+    {
+      "path": "packages/core/src/db/d1/route-pool-sticky-bindings.impl.ts",
+      "sha256": "cce97499c2d19f0bd2ff220b86abfe12d26593fff6d6baae503bee8e8c4d14b7"
+    },
+    {
+      "path": "packages/core/src/db/d1/system-config.impl.ts",
+      "sha256": "56a3b0e27d0c13aae8516b072beed9b2dce90f0e366208ea0c2166ef373dbf70"
+    },
+    {
+      "path": "packages/core/src/db/d1/user-audit-logs.impl.ts",
+      "sha256": "4c78b5f450b190c826551f659772ee9b99486682152ded4099439489f20c960b"
+    },
+    {
+      "path": "packages/core/src/db/d1/user-budget-reservations.impl.ts",
+      "sha256": "ae26e081b3d2989ed5371ebf5404c18e400310e2d862424b6c7d3db7017fb704"
+    },
+    {
+      "path": "packages/core/src/db/d1/users.impl.ts",
+      "sha256": "5ba6095747151c9c6634f8f9ec960e74a77f54231289450bc13021cb3f0284e3"
+    },
+    {
+      "path": "packages/core/src/db/generation-feedback-types.ts",
+      "sha256": "c1062b65044a42d9341e32555b1a8aba548fafe5ab49e8c31c0bc4e53d8cbee9"
+    },
+    {
+      "path": "packages/core/src/db/guardrail-budget-repository-utils.ts",
+      "sha256": "0f6f786b66531916bd27a37450779c1be341b0617b98b0a19ccd40403a93f437"
+    },
+    {
+      "path": "packages/core/src/db/guardrail-budget-types.ts",
+      "sha256": "8a6de84648144b59b8b662968cca19a21c58880ef762dc77e72ad3970632b4c0"
+    },
+    {
+      "path": "packages/core/src/db/guardrails-types.ts",
+      "sha256": "88ee6a3d31539670759134a63d994b6451e2f003fd2c7116c36f9b198106106b"
+    },
+    {
+      "path": "packages/core/src/db/image-per-image-usage.ts",
+      "sha256": "87f34cb0b0a43be4baa48b9398fa7908af32821d6a555643dddef5f8c53af2d5"
+    },
+    {
+      "path": "packages/core/src/db/image-token-usage.ts",
+      "sha256": "ea311e60d052d08a4ec674fe8c884aff39321a592d1409ebd0db299e9dac0bad"
+    },
+    {
+      "path": "packages/core/src/db/management-api-keys-types.ts",
+      "sha256": "11781796e3ecc12327e34000e2258807e45d452013047da7783862f3e0b54f07"
+    },
+    {
+      "path": "packages/core/src/db/model-endpoints-types.ts",
+      "sha256": "3c9dab9ad55d5196fa5cc7a1b07c3fd1f15710b78a2d01a0a5ebf4e825e1e006"
+    },
+    {
+      "path": "packages/core/src/db/model-modalities.ts",
+      "sha256": "0a25e834e7eced2fe7a4b3abafd590528ec69cb4882dd89c1d7f8206078f6f77"
+    },
+    {
+      "path": "packages/core/src/db/model-route-policy.ts",
+      "sha256": "2635136b8d76b69a4b9cadbad97bbb0221275f63b8465aac6213e2233e031b21"
+    },
+    {
+      "path": "packages/core/src/db/mysql/admin-access.impl.ts",
+      "sha256": "d4de06acf39824573c3c46218fe8da40fec84f0adbfb50147accaadf325bb905"
+    },
+    {
+      "path": "packages/core/src/db/mysql/admin-analytics.impl.ts",
+      "sha256": "c6946df33a781c040626e3194603cb9714322b2d899ac6ad20b0fe914184d1f7"
+    },
+    {
+      "path": "packages/core/src/db/mysql/api-keys.impl.ts",
+      "sha256": "89fd8a3eeb53a31862a4c81969cc5b33e8e257438c887b495bfb6f3671e70a4d"
+    },
+    {
+      "path": "packages/core/src/db/mysql/batches.impl.ts",
+      "sha256": "4df4e2a17097002cb1ae45b138a36bb3d87bef5b45eae9ddd18ac2fe8b2f50b1"
+    },
+    {
+      "path": "packages/core/src/db/mysql/critical-writes.impl.ts",
+      "sha256": "f8a6f9ae49c58dd3a96f41839527c87d06ef9f3f6ee0e2169d80645cd4d030c9"
+    },
+    {
+      "path": "packages/core/src/db/mysql/guardrail-budgets.impl.ts",
+      "sha256": "feeb8c8792ba80dc02c45ef6237fcbbd5b1a9f6e122a5e066a2799d771bfc540"
+    },
+    {
+      "path": "packages/core/src/db/mysql/guardrails.impl.ts",
+      "sha256": "d2325784a13206d0e68b51f440c332e2bc87d9eab9f4df6d6680ba047a53208d"
+    },
+    {
+      "path": "packages/core/src/db/mysql/model-endpoints.impl.ts",
+      "sha256": "e3f73341cc53acee4f251a26e2bedb8148aad285a1b10c268ebb348640a3b2b3"
+    },
+    {
+      "path": "packages/core/src/db/mysql/model-routes.impl.ts",
+      "sha256": "0c1653138c7c01407a92137b0a6d38d693b83f4662b90581259e044bee4e1ea5"
+    },
+    {
+      "path": "packages/core/src/db/mysql/model-routing.impl.ts",
+      "sha256": "53bc2a676c6f2009a222d8bc6ebe5483e428309ea007405ed6b3403d89a3b9c7"
+    },
+    {
+      "path": "packages/core/src/db/mysql/models.impl.ts",
+      "sha256": "3d7d296275fe01c9590cab3ca6320ae315fdc6b2282c2469926d3d86c8bf72d8"
+    },
+    {
+      "path": "packages/core/src/db/mysql/mysql2-compat.ts",
+      "sha256": "bd4c31031b2c3b6126442250e16d951cf48d189ad52700eec639791d7f8e4d3e"
+    },
+    {
+      "path": "packages/core/src/db/mysql/portal-marketplace.impl.ts",
+      "sha256": "7d2aac6fc3e7753c40d85311013ab0895bbb2745973139a68dbacedea8de8c0c"
+    },
+    {
+      "path": "packages/core/src/db/mysql/providers.impl.ts",
+      "sha256": "753192e1e1b4dc844a8bc6b052754d5741ef3676ef483cca24c86a4537bd256f"
+    },
+    {
+      "path": "packages/core/src/db/mysql/request-logs.impl.ts",
+      "sha256": "57edc5750c5669284c57c85ffb6c1f8f6b52d9bfdd02a6ab8301dc45c3a5a9bd"
+    },
+    {
+      "path": "packages/core/src/db/mysql/request-presets.impl.ts",
+      "sha256": "e9e8007b949236519441c60d3a6684dec2cb81ca563e85336d4ef2bdd652cd61"
+    },
+    {
+      "path": "packages/core/src/db/mysql/route-data-policies.impl.ts",
+      "sha256": "5795c2f025187f7d7ed0b89858c4bf178ae008d1ead784ab6df5955161e1a2f1"
+    },
+    {
+      "path": "packages/core/src/db/mysql/route-pool-sticky-bindings.impl.ts",
+      "sha256": "53ede1846e210acd94b55e6107dd7c3c21f4311a20d69fb9c1e3c117a25ade24"
+    },
+    {
+      "path": "packages/core/src/db/mysql/system-config.impl.ts",
+      "sha256": "1dce66a633498edda33e004e7b474a1c79b9da9b88ba1e0bc025cc35600beb9c"
+    },
+    {
+      "path": "packages/core/src/db/mysql/user-audit-logs.impl.ts",
+      "sha256": "f2cd66954daeff433da547026b2457cc707723c714c059865875866264b629b2"
+    },
+    {
+      "path": "packages/core/src/db/mysql/user-budget-reservations.impl.ts",
+      "sha256": "9651b9802caf7e421a073e72c3d7be4d71607dcb58c65f83aadc7c23e4597f8b"
+    },
+    {
+      "path": "packages/core/src/db/mysql/users.impl.ts",
+      "sha256": "2e9eae04ca40d01fc4e1f5eaf71ab4be38bfcbd64704cf3c8a562ef0e95d99f2"
+    },
+    {
+      "path": "packages/core/src/db/patch-allowlists.ts",
+      "sha256": "886cccff01d2b9b2c39d6d6510ea6757a82217a6e7a2278b71ed7b670c051467"
+    },
+    {
+      "path": "packages/core/src/db/postgres/admin-access.impl.ts",
+      "sha256": "3334c67a5eb5f5a75d600327e875d831de5eda34bb33649c9bd3078640fb19f8"
+    },
+    {
+      "path": "packages/core/src/db/postgres/admin-analytics.impl.ts",
+      "sha256": "dc5ca01319d8a3860359e707ebd1e3893d4caf2072441328f6bb82281043f227"
+    },
+    {
+      "path": "packages/core/src/db/postgres/api-keys.impl.ts",
+      "sha256": "fa452092be7d4507939ef90a96610db11223cf2b747f25438cf31ad650a2e60e"
+    },
+    {
+      "path": "packages/core/src/db/postgres/batches.impl.ts",
+      "sha256": "ae632f64776c1b415e91519b45e86dc611d46944bd44677f8d9e680ba886eb28"
+    },
+    {
+      "path": "packages/core/src/db/postgres/critical-writes.impl.ts",
+      "sha256": "69a7c8e621aeb87a687411b9687c2e53e052829c819ccfd6e0bd757073c38408"
+    },
+    {
+      "path": "packages/core/src/db/postgres/guardrail-budgets.impl.ts",
+      "sha256": "b87bc6d8516b51aa5ed19f7ff3037575c626977f6106dd8458f5f133875278ae"
+    },
+    {
+      "path": "packages/core/src/db/postgres/guardrails.impl.ts",
+      "sha256": "b33b8a7d7c04cbed9efe9bce36d3aaa9831c9e615ccc92d3836819e49e300b2e"
+    },
+    {
+      "path": "packages/core/src/db/postgres/legacy-buyer-windowed-transaction-v372.ts",
+      "sha256": "880f94f1ba2acbbcf549727dd15ccaa058c79acc35c5b239ac4411ae39b6e07e"
+    },
+    {
+      "path": "packages/core/src/db/postgres/model-endpoints.impl.ts",
+      "sha256": "dd7ed527ad8afd51bef0f6d0a5546fbd02e36734f8f4edd425700ff58e7361e5"
+    },
+    {
+      "path": "packages/core/src/db/postgres/model-route-patch.ts",
+      "sha256": "f5b1a9d19fa9b7fad489d52f18c201a2f5ce0444d86ddb3dc7f9e8da410dce69"
+    },
+    {
+      "path": "packages/core/src/db/postgres/model-routes.impl.ts",
+      "sha256": "02a1902f8d460ac80ca79096a42295d40641e7c687d98b6d69d8a0d0daac0ce9"
+    },
+    {
+      "path": "packages/core/src/db/postgres/model-routing.impl.ts",
+      "sha256": "d764dde9aae33a41f447b2045c95f571762078e6daa9cc83675f9c41dbe2aa70"
+    },
+    {
+      "path": "packages/core/src/db/postgres/models.impl.ts",
+      "sha256": "717612d992c60466461af02a10f2f41a1133d2254af71d5deedc5a462581b1e8"
+    },
+    {
+      "path": "packages/core/src/db/postgres/portal-marketplace.impl.ts",
+      "sha256": "7fa7c3d4c440d80d4f15c1712f4fc5c0efe089dd5a2c7dec6ca6d44ab11939f4"
+    },
+    {
+      "path": "packages/core/src/db/postgres/providers.impl.ts",
+      "sha256": "1a30a4aa9fd33e906e12f06baff99fa24ec88628ef945abad06a2f869bc3b499"
+    },
+    {
+      "path": "packages/core/src/db/postgres/request-logs.impl.ts",
+      "sha256": "83e94164a87d17c4ae56e63cb50b3ba4b6055dfc6ee7e837e9f0a0bdbd526750"
+    },
+    {
+      "path": "packages/core/src/db/postgres/request-presets.impl.ts",
+      "sha256": "6e09ca365fff79f16f891175f9905740a77c10343a7c5bbd684f308f8a2af9ce"
+    },
+    {
+      "path": "packages/core/src/db/postgres/route-data-policies.impl.ts",
+      "sha256": "d1e79e0cd338bb86ca8cc2c91e2d21fd13e65915f711d51c00a45e4f80e2f9c8"
+    },
+    {
+      "path": "packages/core/src/db/postgres/route-pool-sticky-bindings.impl.ts",
+      "sha256": "b0799de93674b04f0db2baf6f73d03c18a56b7e1c7489645f01b064403e72dc1"
+    },
+    {
+      "path": "packages/core/src/db/postgres/system-config.impl.ts",
+      "sha256": "1912562269c8d2153ebb066f03a7eccd42155ee41eaec390ef2d439d863881d7"
+    },
+    {
+      "path": "packages/core/src/db/postgres/user-audit-logs.impl.ts",
+      "sha256": "89992250c5e790be835eb8d07876fb16ef8ce3bb9d7261d221482cf8fe79e256"
+    },
+    {
+      "path": "packages/core/src/db/postgres/user-budget-reservations.impl.ts",
+      "sha256": "44b67669a45a5873df4f2379a55b110d5479cc515fe82496015dc9fb70399780"
+    },
+    {
+      "path": "packages/core/src/db/postgres/users.impl.ts",
+      "sha256": "3b182f5fcb6985b9439b865d7f83dcbe048a63418fc61c581dc42bf9ce46cda1"
+    },
+    {
+      "path": "packages/core/src/db/pricing-audit.ts",
+      "sha256": "125778d85b86ba32e9dbd84617881e9099652b8f320c2bfef464c6cdfb3ed74a"
+    },
+    {
+      "path": "packages/core/src/db/pricing-profile.ts",
+      "sha256": "f64d3063eb61121e491a64059587109e91f1209b43137e938e045c23d1696917"
+    },
+    {
+      "path": "packages/core/src/db/pricing-schedule.ts",
+      "sha256": "40b411bd1eadc81de2effcfd54eeca7021eec88204aa45852f0405fbea6e9c60"
+    },
+    {
+      "path": "packages/core/src/db/provider-attempt-availability.ts",
+      "sha256": "a065442f3e9c4093aee8b058439f47fde2e0e462c4d4c2fc3ecd55a286c02b40"
+    },
+    {
+      "path": "packages/core/src/db/provider-key-utils.ts",
+      "sha256": "94d30c06100b60d1dbe59a9eb6e5c2ec40db345b4a0499576628f056f89ff848"
+    },
+    {
+      "path": "packages/core/src/db/providers-types.ts",
+      "sha256": "ae71195afdf0d19fd4fdcf8417b47abc32eed17e5889fd1f8bb064aa8e7ac718"
+    },
+    {
+      "path": "packages/core/src/db/providers.ts",
+      "sha256": "2e670eb0d6e4c727b996d6fafb3578ecc056f7fc43f9bd402c98ba8444c6a474"
+    },
+    {
+      "path": "packages/core/src/db/public-model-daily-stats.ts",
+      "sha256": "fc5956eb72ea25c88783056aadf4eff454e3444211dbf1b7bde237b6969e1097"
+    },
+    {
+      "path": "packages/core/src/db/request-log-status-filter.ts",
+      "sha256": "0f02d09b23cd5631ef99c77f4812d2895b8b3fffa2a17ac90245dee219097006"
+    },
+    {
+      "path": "packages/core/src/db/request-logs-types.ts",
+      "sha256": "6d7ed2229276b535f0be4048bc754a6ba901478738a2451354a627b885a48462"
+    },
+    {
+      "path": "packages/core/src/db/request-presets-types.ts",
+      "sha256": "b2018582f6cc02e6cadb2a71daf327c5bdc1b4c77524534d2d83ea50b3e68f2d"
+    },
+    {
+      "path": "packages/core/src/db/route-affinity-key.ts",
+      "sha256": "d468d2493798d1516ea55b6d060479cfac3e864fcea890ab38bd1f37955560d7"
+    },
+    {
+      "path": "packages/core/src/db/route-data-policy-types.ts",
+      "sha256": "31a0191b535f6419cb2fbdfa359e4cd70d8220ba28d6948b0a285f3dfcd64301"
+    },
+    {
+      "path": "packages/core/src/db/route-performance-sampling.ts",
+      "sha256": "598ab9091fa40bdcb924edb2a9dc21e900882cd574f94587081c553621ec81ba"
+    },
+    {
+      "path": "packages/core/src/db/route-pool-sticky-types.ts",
+      "sha256": "47fdc9e72996f28bf74e4f2442bbd4d7570fce5e59664128583762554b84e114"
+    },
+    {
+      "path": "packages/core/src/db/route-pool-tier-strategies.ts",
+      "sha256": "695a877972429f85f2aa54eda5936da4c24e23db2167962fa17863d2ed11c9a7"
+    },
+    {
+      "path": "packages/core/src/db/route-routing-metadata.ts",
+      "sha256": "dabf9a8b3beba2616e0c57a73ad0106a34608723e78d7aa2a71648c8c4feedd4"
+    },
+    {
+      "path": "packages/core/src/db/shared-key-economic-outbox-types.ts",
+      "sha256": "2b6eb303295b1af192f9a3bc4b405834789a02cd0eda10b5a555dfa4e50a128e"
+    },
+    {
+      "path": "packages/core/src/db/shared-keys-types.ts",
+      "sha256": "c7162a39d87128085003a0941c6b21bf2b19cd2628bbab2fc7ce34061a6d641e"
+    },
+    {
+      "path": "packages/core/src/db/shared/sql-placeholders.ts",
+      "sha256": "baf55391c3295c54313c3d8732b4c9fbdba568b18407ce1cd4e198a55581410e"
+    },
+    {
+      "path": "packages/core/src/db/system-config-types.ts",
+      "sha256": "08f199495c4c067f8a09c5c8bed6297ee6e989cb02bfa9df66e8f20697255ad8"
+    },
+    {
+      "path": "packages/core/src/db/system-config.ts",
+      "sha256": "f6cbf43acfc0111ec9c402f0f0e19cabd6d28d7cb48b151d36207cd42b374f12"
+    },
+    {
+      "path": "packages/core/src/db/user-audit-catalog.ts",
+      "sha256": "97500af9a197131ba0cee9ab5f4e7b7b595cd86d58d79bfae4745814a0e6514e"
+    },
+    {
+      "path": "packages/core/src/db/user-audit-drizzle-insert.ts",
+      "sha256": "74b46bbe040f5dfbb3b46d94d371f9bfb6d04d09e0092d84a4106436c143f678"
+    },
+    {
+      "path": "packages/core/src/db/user-audit-log-derived.ts",
+      "sha256": "31f7b025ac2c63b8a8b6ab3726f8f70fc19b2171b4b5f1d7c1badad6bbec00f5"
+    },
+    {
+      "path": "packages/core/src/db/user-audit-metadata.ts",
+      "sha256": "a65f86e40f6999ef1ce4a66a12d14db9b79bb2b32114abe13398875070f96be1"
+    },
+    {
+      "path": "packages/core/src/db/user-audit-snapshot.ts",
+      "sha256": "cd7d23a25695aeca00d353fb6704e57073c377387786f2c640ebef34be1a33a6"
+    },
+    {
+      "path": "packages/core/src/db/user-budget-audit-mapper.ts",
+      "sha256": "e4e0d1fdfb13b47ec59abcd203dad600473bacc34e480e61decd6fc2e959ea5d"
+    },
+    {
+      "path": "packages/core/src/db/user-budget-audit-params.ts",
+      "sha256": "713e8a2a8998b2614006c49e71d728c33ada7e8607f657f528deabbb1bc7200d"
+    },
+    {
+      "path": "packages/core/src/db/user-budget-reservation-types.ts",
+      "sha256": "9bc82159ccc08a5a7bb2f841277a196297e8eaa64a0854dc9cab3b5d8babc479"
+    },
+    {
+      "path": "packages/core/src/db/user-budget-reservation-utils.ts",
+      "sha256": "53023826e9c3ec4c215c4668bdbf5fe98dcdb9dd26eebe27ac4b1db205dd76bf"
+    },
+    {
+      "path": "packages/core/src/db/user-charged-cost-factors.ts",
+      "sha256": "57d2c345286a63fc1ae0d6d31d90fa76856935c466988445a34db5196ef39ffa"
+    },
+    {
+      "path": "packages/core/src/db/users-list-sort.ts",
+      "sha256": "02089902bfd14df377de0851df77dfee03513f875f112481c5f91e586b6627fb"
+    },
+    {
+      "path": "packages/core/src/gateway-key-limits.ts",
+      "sha256": "578c02c01b06661b359a581a5dfceb2237264155bb84286913d9a61cb974ef06"
+    },
+    {
+      "path": "packages/core/src/gcp-oauth-lifecycle.ts",
+      "sha256": "90b6456e2b7ae19ee2e0d04c3f0b1e470f757bc11a91bd478c13b9830e7e0c0b"
+    },
+    {
+      "path": "packages/core/src/gcp-service-account-token.ts",
+      "sha256": "f60f0c28d49c01306c520289d6747c511ed0d52cdc5878378997024bf7cd844c"
+    },
+    {
+      "path": "packages/core/src/gemini-upstream-url.ts",
+      "sha256": "45f6ee904716e738763a6de5005934f06256af4c20380803d95e8c3e29bbd1c2"
+    },
+    {
+      "path": "packages/core/src/generation-metadata.ts",
+      "sha256": "86a5c6e4c171fd8e943e43af6908115cac384a7b95846586c0055f58731c58d9"
+    },
+    {
+      "path": "packages/core/src/guardrail-builtins.ts",
+      "sha256": "d18e4b09ea7a08f2db127f3ddbd41ca5702e55d0c2bf7d330a3fe7526a9c4c6f"
+    },
+    {
+      "path": "packages/core/src/guardrails.ts",
+      "sha256": "9bea51e34b5ab0d34126d3a4e7ae7f06aa61fdbd72a5318adb03cfadb47b9165"
+    },
+    {
+      "path": "packages/core/src/index.ts",
+      "sha256": "efd4118adf35426aa868d5fc7f92b0ebe0c5abafbd4fc38dc90126865b3e56ed"
+    },
+    {
+      "path": "packages/core/src/lib/ai-detection-system-config.ts",
+      "sha256": "19a9c50a2fb1d2b5434ef25ddbcebcd22bd9972209b2025fac72a2d37485fe4e"
+    },
+    {
+      "path": "packages/core/src/lib/alert-webhook-system-config.ts",
+      "sha256": "be98cd81cbe62dd0ef137ca4d22fb9e9eb4e6c62f0b4cfee96d659c3286ca852"
+    },
+    {
+      "path": "packages/core/src/lib/analytics-ttft-sql.ts",
+      "sha256": "2936aa6fd9110ce31612f75ee109c02291fbeaaa9d2ea079c2b756b6a7accba7"
+    },
+    {
+      "path": "packages/core/src/lib/billing-currency.ts",
+      "sha256": "63a4b32a694e7f9e1a1ede7d34ff8ea5071def10f0f71240f84d93bd89d30fd5"
+    },
+    {
+      "path": "packages/core/src/lib/business-timezone.ts",
+      "sha256": "e6addfe53da1697bcb37bd43872abb03b859e41f295a2e1ac737a550471b9d60"
+    },
+    {
+      "path": "packages/core/src/lib/byok-key-encryption.ts",
+      "sha256": "2febf1c727fb836cc41bf16729a74a205b24e10ad0535e70359e4e5ac79ddbb4"
+    },
+    {
+      "path": "packages/core/src/lib/dashboard-request-stats.ts",
+      "sha256": "c9d9d9aae755a123493120fc361f959ca2b58f31715d5140848f53d3d61d1c55"
+    },
+    {
+      "path": "packages/core/src/lib/key-expiry.ts",
+      "sha256": "ea9a19df66fe3cb1ad8a056b9f8480fd36eb2104ef98f428bc9d66a08e1a3e73"
+    },
+    {
+      "path": "packages/core/src/lib/key-hash.ts",
+      "sha256": "13368ea1df947fa7de4fda69b09fe059d1acd05a58ff38b66b60219210f94716"
+    },
+    {
+      "path": "packages/core/src/lib/money-precision.ts",
+      "sha256": "390f0c975b3dc158bb4942970bda099415fe7eb20d9e62f465101f8019c21b42"
+    },
+    {
+      "path": "packages/core/src/lib/provider-key-encryption.ts",
+      "sha256": "132b78a88075b8fc537a96e90a5b8653e7514a56487540849ec0ab869248dc9a"
+    },
+    {
+      "path": "packages/core/src/lib/provider-key-environment.ts",
+      "sha256": "90e0d595b1fdeae6083a935d06e76f909609101609cda20fc3aa859b9053fa57"
+    },
+    {
+      "path": "packages/core/src/lib/public-model-slug.ts",
+      "sha256": "3e237c6efd950f98277ed9c338159f2bbe434275d6b566fecc44a6c577898095"
+    },
+    {
+      "path": "packages/core/src/lib/resolve-me-metadata.ts",
+      "sha256": "52d318746d04047715c0d2dcc56a80a1a50837393debf201c1e9abbc49b6ed16"
+    },
+    {
+      "path": "packages/core/src/lib/route-strategy-system-config.ts",
+      "sha256": "28639c47ce1f8855600f329b85a62885ce084232765d92623054f3ff74a3fbcf"
+    },
+    {
+      "path": "packages/core/src/lib/shared-key-encryption.ts",
+      "sha256": "e1f9992fcc4cebd45bb7d574359354518942c76aa25547db8ca022ff005afcc2"
+    },
+    {
+      "path": "packages/core/src/lib/string-utils.ts",
+      "sha256": "8a40c5f02fadde425fa20f7db73796ead68f9f7552b53518966cefde8f56ceca"
+    },
+    {
+      "path": "packages/core/src/lib/time-format.ts",
+      "sha256": "3237bf01aa72a6aae82d32175545f72265415068743d3c86f6d267ba917f9186"
+    },
+    {
+      "path": "packages/core/src/lib/tool-pricing.ts",
+      "sha256": "478e9e6b63ad1cdb32839febc0ab46c18340455a9ed6cbdb2ed3c3677205f01c"
+    },
+    {
+      "path": "packages/core/src/lib/web-deep-search-system-config.ts",
+      "sha256": "911ceb4fa0d37014f736a7dfc517d5716ac98f71beb40d998a4efb55a40a5cee"
+    },
+    {
+      "path": "packages/core/src/lib/web-fetch-system-config.ts",
+      "sha256": "51a61c81db1a16e96c803edba1502d970567c9cd179dc2d2ec424a3dc92403e4"
+    },
+    {
+      "path": "packages/core/src/lib/web-search-system-config.ts",
+      "sha256": "62a55191ec8a2828ecb8102dde181d7d784bea372def8b8b40f91cd3182504cd"
+    },
+    {
+      "path": "packages/core/src/management-guardrails.ts",
+      "sha256": "66033edcb5ae28d3a5d8081b04b014d9112af701fc88082bb7d529fd66dbd940"
+    },
+    {
+      "path": "packages/core/src/management-workspaces.ts",
+      "sha256": "b08f3183fc656883f5291973db13fb2b8dc9f307d134a7297914e0015d432a9e"
+    },
+    {
+      "path": "packages/core/src/model-endpoint-backfill.ts",
+      "sha256": "b8cdbbdf9d56df68b99c3d62ee61001060983e668947d48b748443c92e137510"
+    },
+    {
+      "path": "packages/core/src/model-endpoint-catalog.ts",
+      "sha256": "62c54c5e39fd21c01f269cc24cd9bd3bb4eaf565419d430cb1b193e5e20c1d6e"
+    },
+    {
+      "path": "packages/core/src/model-endpoint-runtime.ts",
+      "sha256": "0ba47ba277af4042ff9159f4ff0466d1f9dd9126af71a238f5c86035a9c9a8df"
+    },
+    {
+      "path": "packages/core/src/organization-identity.ts",
+      "sha256": "e9c45eb0b9bdca1eb11ae5094c2361df2ef731743c36cafa92fca34b201bafbf"
+    },
+    {
+      "path": "packages/core/src/preparation-control.ts",
+      "sha256": "06ccde2cefc43c06d211ff87613567917ee19d93eb8eb8593f38c39d20233f08"
+    },
+    {
+      "path": "packages/core/src/provider-endpoints.ts",
+      "sha256": "352f0aa38400f96edb429fc50f7e84c784a7f0734a4d52343d841ad2e65a2c4a"
+    },
+    {
+      "path": "packages/core/src/public-model-catalog.ts",
+      "sha256": "22443c847b853c4eb5cf08f817e2088c5c53a27b92f2a8799b8f54148482180e"
+    },
+    {
+      "path": "packages/core/src/realtime-protocol.ts",
+      "sha256": "7fcfbb26b7b7a38a98a4ec2a0b67e53cb561d57e2fcd7c6dff38b366ca9d0e90"
+    },
+    {
+      "path": "packages/core/src/request-auxiliary-auth-budget.ts",
+      "sha256": "a2995a8cd480b150960beab7ccb2aae60352b46e5d3fc79fff5f813aa6ad197f"
+    },
+    {
+      "path": "packages/core/src/request-deadline.ts",
+      "sha256": "9d2de0896f252be784c5dc61d2d0e1de4b9f85676600912c2bf8cd9868e3d380"
+    },
+    {
+      "path": "packages/core/src/request-presets.ts",
+      "sha256": "7ac3ad7668194522dc08f4c1b46747c038971bb75ec6f5c44ea00c00dc37339b"
+    },
+    {
+      "path": "packages/core/src/route-comparable-price.ts",
+      "sha256": "e1b7f21491cbc1c0704e77cd3500a9936f26b089475732ce30403d94817820d8"
+    },
+    {
+      "path": "packages/core/src/route-data-policy.ts",
+      "sha256": "aa23743b500608be0412cdf56544c36617b8a0a1e1a00039760c5129d044af42"
+    },
+    {
+      "path": "packages/core/src/route-performance.ts",
+      "sha256": "678ccd90d7c7935b9d53e5f62a1cc5cb2575aabeb3875f67334335ba4cdd295c"
+    },
+    {
+      "path": "packages/core/src/route-planner-preview.ts",
+      "sha256": "115704bec2e5a530aab314451772076b5218b525948ed7d1ddf9f7568db311b8"
+    },
+    {
+      "path": "packages/core/src/route-topology.ts",
+      "sha256": "558711d1d7fa2bda82d42037ffd43a68067351eb2bcb6ab344011a4eeaa5f5de"
+    },
+    {
+      "path": "packages/core/src/services/budget-transition-service.ts",
+      "sha256": "937c307643528e93d29cf2e73a2fc23cd79176a1d24bbc6d5091d64549a40161"
+    },
+    {
+      "path": "packages/core/src/services/key-service.ts",
+      "sha256": "b6516c787925091346dacd176fa7e492b13f3197751880c8dd59ec854a025bc7"
+    },
+    {
+      "path": "packages/core/src/services/management-key-service.ts",
+      "sha256": "3d9ba42c1caeae8625b5376dbe5d617d3808e5e61452ecfd6f12075b434448cf"
+    },
+    {
+      "path": "packages/core/src/services/shared-key-earnings.ts",
+      "sha256": "6f6df05be79eb044b0a02c4e793a4e538196d84bcf90bd22c690f8923e0ca156"
+    },
+    {
+      "path": "packages/core/src/services/user-service.ts",
+      "sha256": "1698a81d9b29f5ad7e083e729f9cb2a1ff6b94c7c4ab51f21e5147f48a215320"
+    },
+    {
+      "path": "packages/core/src/shared-channels.ts",
+      "sha256": "2bc3c1b52afa07174d5a3b311a3df85b6eb53df65285f9df66982428c121d88c"
+    },
+    {
+      "path": "packages/core/src/storage/byok-keys.ts",
+      "sha256": "17b973d4393818ca4b77209ea5a201303d55b3f94bbbc3118da46a6f9d92da10"
+    },
+    {
+      "path": "packages/core/src/storage/context.ts",
+      "sha256": "9a0b0b4a6b3d8129b04aca4b8901fcc5b99adf6d4d9c2d62f7ead5b30c697a85"
+    },
+    {
+      "path": "packages/core/src/storage/critical-write-paths-utils.ts",
+      "sha256": "7b05fed705697ada0dec4a3c93d66817b9fc2bb4dc83be82b05aa5bc6f89715e"
+    },
+    {
+      "path": "packages/core/src/storage/critical-write-paths.ts",
+      "sha256": "0eb61549db8c5c71ef2163795aa6010a807d34e72d599d2ef1193a8ec2c601f6"
+    },
+    {
+      "path": "packages/core/src/storage/database-client.ts",
+      "sha256": "8b4f5abeec30c82215ab99e319e10e52e9cca99c70ca85ef08a97ed47f1c8881"
+    },
+    {
+      "path": "packages/core/src/storage/drizzle/client-d1.ts",
+      "sha256": "3f44525de77b026f42cf3651399f6247265cd5e55d74999f1c71e1cb58b9d567"
+    },
+    {
+      "path": "packages/core/src/storage/drizzle/client-mysql.ts",
+      "sha256": "1300ba0de3706f2836a11fb55c2a7898a66459fd83e2d56d5dfe6c8f9cc69845"
+    },
+    {
+      "path": "packages/core/src/storage/drizzle/client-postgres.ts",
+      "sha256": "8178fb1145d0492b9b962b1b14570da4d37ec69160dc06fd23c171958b4e661b"
+    },
+    {
+      "path": "packages/core/src/storage/drizzle/schema.d1.ts",
+      "sha256": "bdca6d6f0dc1a42c0839b2322727f8d2be566486a3722ee29c5bb282cbbd4139"
+    },
+    {
+      "path": "packages/core/src/storage/drizzle/schema.mysql.ts",
+      "sha256": "1199c7a58b4f8fec41f272ef08edcf8b778fe5db04e307355660e277ec75d4d2"
+    },
+    {
+      "path": "packages/core/src/storage/drizzle/schema.pg.ts",
+      "sha256": "e8be18b8b6a540f9b7960e42db37c2787f2ad6d71a4cc74a910f0798635cf8bc"
+    },
+    {
+      "path": "packages/core/src/storage/gateway-repository-interfaces.ts",
+      "sha256": "64039eade832db65153b62861467d27585e11024f30a917f71019aec4f8e8051"
+    },
+    {
+      "path": "packages/core/src/storage/management-api-keys.ts",
+      "sha256": "71088eabb76780ab1277346d701b3a30f27f3889324f6819d3165b332d265820"
+    },
+    {
+      "path": "packages/core/src/storage/management-guardrail-assignments.ts",
+      "sha256": "d9bb09059b6c57be7b4e962781494894bf56ed045b7bd2b3f432e6246b6ebfdc"
+    },
+    {
+      "path": "packages/core/src/storage/management-guardrails.ts",
+      "sha256": "3e191b6f9eb1c8878458358b2bec39ffec839755f53e3aaffa5cd68713eeb3bf"
+    },
+    {
+      "path": "packages/core/src/storage/management-workspace-members.ts",
+      "sha256": "a40fffd45d3c509558a4213be61f93c74c12c369df414f26136b07228b7ba71a"
+    },
+    {
+      "path": "packages/core/src/storage/management-workspaces.ts",
+      "sha256": "cb21ab57ef7c0b9189a71725b57803461f870451db8d910a8a227b61a00d320a"
+    },
+    {
+      "path": "packages/core/src/storage/organization-identity.ts",
+      "sha256": "dc7f2ea2a2c6e2da6b657666c5a201cb6710f37415ba9973b60cc5493bb63543"
+    },
+    {
+      "path": "packages/core/src/storage/postgres-connection-error.ts",
+      "sha256": "d5faa1cc69a40411d0cd383cfe2f328d528ee4a5329018ece9dec63f418e0b76"
+    },
+    {
+      "path": "packages/core/src/storage/postgres-initialization.ts",
+      "sha256": "1bdb2198b428e5c68e65eae59689db18b9e1596efb004726dd4cc943940c1802"
+    },
+    {
+      "path": "packages/core/src/storage/recovery/settlement-recovery-types.ts",
+      "sha256": "585e8d21450882602889b78478769ffa193bfb10d14026e0bab9e4ab6f0fe429"
+    },
+    {
+      "path": "packages/core/src/storage/recovery/usage-settlement-codec.ts",
+      "sha256": "7483200d4100963bb16c2ff74957d716fca09e8b20e11888ccf41b2566c4ef90"
+    },
+    {
+      "path": "packages/core/src/storage/recovery/usage-settlement-facts-postgres.ts",
+      "sha256": "77dc26a02d8baf47eb07c41af768a519341ef2266d688224eba8016f167db60d"
+    },
+    {
+      "path": "packages/core/src/storage/recovery/usage-settlement-transaction-postgres.ts",
+      "sha256": "ae28231da3d3f5d2fe497c861c46db6282fee099de1743bf6849769aea925669"
+    },
+    {
+      "path": "packages/core/src/storage/repositories-d1.ts",
+      "sha256": "d2335ee6d54ec0c218a267960f6011ce1042caa4d58eb906f7edd5d5ac834ee2"
+    },
+    {
+      "path": "packages/core/src/storage/repositories-mysql.ts",
+      "sha256": "450449cc9ab8e567b679e6852a1e59b0e68178d3cc432784d44cf4d993a91bcc"
+    },
+    {
+      "path": "packages/core/src/storage/repositories-postgres.ts",
+      "sha256": "68a4270d3d0b193f3fa005fc6b93b4fef94b4b4f21adf11a66025705b873fbd0"
+    },
+    {
+      "path": "packages/core/src/storage/repositories-types.ts",
+      "sha256": "ae30fe176313a5fb2ecbb165b20a9250eb5c92f6bf06d920a4709888ec211202"
+    },
+    {
+      "path": "packages/core/src/storage/repositories.ts",
+      "sha256": "d415899fb0cfe35925751eb12608a65e5179cfebfdf527bc773f8c7e3232eec3"
+    },
+    {
+      "path": "packages/core/src/storage/repository-dtos.ts",
+      "sha256": "cbd55cb487b8d1960b458a94daa033d6368868fd8c104f0dd44531cb6e767510"
+    },
+    {
+      "path": "packages/core/src/storage/runtime-database-config.ts",
+      "sha256": "b1d66f45599bbd6789eddfd9d4ff109d2de19bd38b5e4a75e66b759d43333d54"
+    },
+    {
+      "path": "packages/core/src/storage/workspace-budgets.ts",
+      "sha256": "eb8b58e81eea4c3da36a9550d26bd7e3a608ada252b317feba791a93e2ddfc3e"
+    },
+    {
+      "path": "packages/core/src/storage/workspaces.ts",
+      "sha256": "a18a93f0aff86e2e749d05fef70acbd4b05580e9a9f1a95734891e699c5c9137"
+    },
+    {
+      "path": "packages/core/src/types.ts",
+      "sha256": "76b62430e4a71da1235376759d42520c0c62c00b25b4f643169392fce6c123b9"
+    },
+    {
+      "path": "packages/core/src/upstream-protocol.ts",
+      "sha256": "70067ae53c29af4b57c9854db32deb8b9734a45c6716e269843cb1bd3f9da869"
+    },
+    {
+      "path": "packages/core/src/vertex-openai-model.ts",
+      "sha256": "23e83cade4b1260237d3f02eb6673b51225c6491cfe7d8190b96de367cc638dc"
+    },
+    {
+      "path": "packages/core/src/workspace-budgets.ts",
+      "sha256": "e75cfdf873d903110a1cad94a54421e5156af9ad9d029d896d13827e50eac061"
+    },
+    {
+      "path": "packages/core/src/workspaces.ts",
+      "sha256": "1284236a7df2ed904c96d32f8f990764328b01b10e13686fc1ae01f3cc34fc19"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/text-dispatch-workerd-wire-v374.test.mjs",
+      "sha256": "9b6a96ba25259f0cdca27dad9ed9baeed0b779091639032de93c459f397a1aa2"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/text-dispatch-workerd-wire-worker-conditions-successor.test.mjs",
+      "sha256": "268298b09c574e16178329a29bc6bda02ce0e16238bf698afc5eb9eebedaa24a"
+    },
+    {
+      "path": "packages/proxy/src/services/alert-webhook.ts",
+      "sha256": "6e946d0dd416c3abfe00aa2b4f3f4de84c68df6e1c38761a0fb529b13e68e67d"
+    },
+    {
+      "path": "packages/proxy/src/services/audio-usage-charge.ts",
+      "sha256": "645ff4c0cba7d5b4bfb5566c9f807f5229f6d7a55dc9eb51144213a2b6a1d0e9"
+    },
+    {
+      "path": "packages/proxy/src/services/bounded-request-body.ts",
+      "sha256": "7ef58b918d3dd47bfb6d5855954942a27aed8d0a417485396dba611b38c01204"
+    },
+    {
+      "path": "packages/proxy/src/services/byok-billing-policy.ts",
+      "sha256": "2697ed7a1f00341d43594b6bf6e8e58dfd208b7d23240c7d5ce805233e589246"
+    },
+    {
+      "path": "packages/proxy/src/services/byok-key-pool.ts",
+      "sha256": "e3885782b22a841e7661a425d1046b003342aeba626041b11786f9bcc795a18f"
+    },
+    {
+      "path": "packages/proxy/src/services/chat-final-quote-input.ts",
+      "sha256": "b1ee3131e5c5b0a59e1a93af82ee96b542b8018e2159c4b7e80067924b9d33f5"
+    },
+    {
+      "path": "packages/proxy/src/services/dashscope-realtime-guardrails.ts",
+      "sha256": "9f406222e06cd91931ee616759b4e73c95b29a97abfa50a6e84a95d7f0b0f52d"
+    },
+    {
+      "path": "packages/proxy/src/services/egress/ambiguous-upstream-status.ts",
+      "sha256": "92010933e8648ff0ab85104f33f7e5bfa1a17db3a40a4fad0c6e9b1931745fd5"
+    },
+    {
+      "path": "packages/proxy/src/services/egress/anthropic-driver.ts",
+      "sha256": "9d86470f4f0b853386cae9139d84bf4253d4f71e52e9681f4b45b7c462309056"
+    },
+    {
+      "path": "packages/proxy/src/services/egress/audio-duration.ts",
+      "sha256": "2233dcf945191d9865817d274792cf6900b09ead4b703305fbd41ad0525c6fc6"
+    },
+    {
+      "path": "packages/proxy/src/services/egress/audio-provider-options.ts",
+      "sha256": "3e719971985b1520aec11f55d78c9adec53f388cd84e9452fd503263ed9888ae"
+    },
+    {
+      "path": "packages/proxy/src/services/egress/audio-request-lifecycle.ts",
+      "sha256": "7175f625339bb68317d7b734303aa41e78acff75dde040d8c61661ded3f85c2f"
+    },
+    {
+      "path": "packages/proxy/src/services/egress/audio-speech-driver.ts",
+      "sha256": "621eaac5322e35ed161c83c794c605e4dc487b2361cf17e6fbeb001b783c54e5"
+    },
+    {
+      "path": "packages/proxy/src/services/egress/audio-speech-stream-lifecycle.ts",
+      "sha256": "bd66d5b83e118ef4eb182a0eee4706d6bc08131a04e6e3f4489f79bb2facafde"
+    },
+    {
+      "path": "packages/proxy/src/services/egress/audio-transcription-upload.ts",
+      "sha256": "86a260af99ec2950110a3b99f8204f8d5d6f24c150957f4980c997686abb026f"
+    },
+    {
+      "path": "packages/proxy/src/services/egress/bounded-response-body.ts",
+      "sha256": "d6cb3ef937f654efa6fab9e335717b0f57a3ea6f33b95c01e52aad5d2efcfb5d"
+    },
+    {
+      "path": "packages/proxy/src/services/egress/buffered-audio-resources.ts",
+      "sha256": "6d39be0af151f6e84e0c49e8a8fc1e7e124603bb552630dbd4d4fc7ca68c8e10"
+    },
+    {
+      "path": "packages/proxy/src/services/egress/compact-json-string-page.ts",
+      "sha256": "dc0ce02d486304b3ea236689752391507c00fdbc5132f867c5bf15c168d1c2cb"
+    },
+    {
+      "path": "packages/proxy/src/services/egress/dashscope-audio-driver.ts",
+      "sha256": "ef3e4ff63c3f92c35854f3f2de36aaeaaa05680321e914c6d3c3a91dbcc1d378"
+    },
+    {
+      "path": "packages/proxy/src/services/egress/dashscope-realtime-driver.ts",
+      "sha256": "2ca5db90a44fa72bb57f2218bc32df0411884c6d210a076719456e6367f132bb"
+    },
+    {
+      "path": "packages/proxy/src/services/egress/finish-reason-contract.ts",
+      "sha256": "20acaade2d73c1dfae7a801453ae47b7992edfdc62f77dfc1a62a82ac60d199b"
+    },
+    {
+      "path": "packages/proxy/src/services/egress/gemini-driver.ts",
+      "sha256": "6f85845f9ed5619f7e6f302429c3a84669d08962b7783d1a1603141e9087300e"
+    },
+    {
+      "path": "packages/proxy/src/services/egress/image-response-usage.ts",
+      "sha256": "a0897bd227f55c19bad1d5b48dae125445d8f72bc8bd902a017c8ea591a9e58f"
+    },
+    {
+      "path": "packages/proxy/src/services/egress/json-scalar.ts",
+      "sha256": "a648515aa215599659facb06d961cb402e9cb66e6d3fdba0adf531838be4737d"
+    },
+    {
+      "path": "packages/proxy/src/services/egress/json-string-number.ts",
+      "sha256": "43d54bf2c8e2eeb88c2629d9d16bc0e14edd0e5a976215dd2f234c8df15ba5a5"
+    },
+    {
+      "path": "packages/proxy/src/services/egress/json-string-pages.ts",
+      "sha256": "2b1ed240144fddf80f2e7114b38bc5159b7fd23c3be5c8b82221fe2c1880dc00"
+    },
+    {
+      "path": "packages/proxy/src/services/egress/json-upload-body.ts",
+      "sha256": "36db37a97ad0755008176de1c6e0973c60368ce7914bb6ca1fad1f283348ad2c"
+    },
+    {
+      "path": "packages/proxy/src/services/egress/multipart-upload-body.ts",
+      "sha256": "27114db5d458325ce858c887237fc8fd4d305dc873904ddf3ab01f0d759fae9d"
+    },
+    {
+      "path": "packages/proxy/src/services/egress/openai-audio-driver.ts",
+      "sha256": "f78ac034baf0b67019b238ea2708d35565bff10b69068efb90c4a7d1f2b35e9a"
+    },
+    {
+      "path": "packages/proxy/src/services/egress/openai-driver.ts",
+      "sha256": "6f0a0cf741a43e690e11150a4639746bdaae47a00a9843f89a07099fe6179118"
+    },
+    {
+      "path": "packages/proxy/src/services/egress/openai-embeddings-driver.ts",
+      "sha256": "6b678b07946d92d867048a06cefac49d9845f979de282c80fff97229d3b950ca"
+    },
+    {
+      "path": "packages/proxy/src/services/egress/openai-images-driver.ts",
+      "sha256": "ea50b3cac0cbb6bead40068a1ad3326b32acee463e78fcfeff253239ed22d349"
+    },
+    {
+      "path": "packages/proxy/src/services/egress/openai-rerank-driver.ts",
+      "sha256": "97c9321d3c8ee3827f429d2ad26c7d4ece5b76876cfbf46e9e76125016c6d4b4"
+    },
+    {
+      "path": "packages/proxy/src/services/egress/openai-responses-driver.ts",
+      "sha256": "183b2950dea081577df0731ad46f95c247bfd333799ca635865e772477512590"
+    },
+    {
+      "path": "packages/proxy/src/services/egress/openai-stream-usage-request.ts",
+      "sha256": "27224b61d4ceb287e1c67a9d1fd6ff4cd470a7d1ff81e012356472433d23619d"
+    },
+    {
+      "path": "packages/proxy/src/services/egress/owned-json-upload-body.ts",
+      "sha256": "e5181840c94a40e484f6751e236d92989ecfca53e7e0d70e38181b93cd3e67f5"
+    },
+    {
+      "path": "packages/proxy/src/services/egress/owned-upstream-response.ts",
+      "sha256": "b845e7d8d0674dea0216c5074f4da05382c1a440a7f6a39853c42bae16cbff56"
+    },
+    {
+      "path": "packages/proxy/src/services/egress/prepared-text-attempt.ts",
+      "sha256": "bd6ced1f898db995f08256aadabdb23412910f87f1e7b19ca33cec373f19102a"
+    },
+    {
+      "path": "packages/proxy/src/services/egress/realtime-connection-lifecycle.ts",
+      "sha256": "c9aade83692d91368d95309757e7709a33b61afc95e125e4f7c9be2c91849d99"
+    },
+    {
+      "path": "packages/proxy/src/services/egress/segmented-json-response.ts",
+      "sha256": "9370bf55839003c42661c96b880e4e4e25e1100454d88b839f805d0821b0ba49"
+    },
+    {
+      "path": "packages/proxy/src/services/egress/service-tier-contract.ts",
+      "sha256": "b1710be8707256cb71af5a18694f0ece596afb97d735cc8c360cadf254a1a04d"
+    },
+    {
+      "path": "packages/proxy/src/services/egress/sse-data-line.ts",
+      "sha256": "cf26310fb446e1acac5669b6fb1b01ad563b3d26500e75a1046a62a71435121f"
+    },
+    {
+      "path": "packages/proxy/src/services/egress/stream-json-body.ts",
+      "sha256": "e768cd041eba4787d8a9ee0ef633988e295ad59d01d4c8ec724385ba5b541a9c"
+    },
+    {
+      "path": "packages/proxy/src/services/egress/text-json-response.ts",
+      "sha256": "a13f20c95aa29dd458e9591961050d71553ae67a8ba6f3a14f49d5d9ed5b9063"
+    },
+    {
+      "path": "packages/proxy/src/services/egress/text-upstream-url.ts",
+      "sha256": "c67edff39e11bc83f2010002ff60305df06734f7dcd2447be9de299dff085801"
+    },
+    {
+      "path": "packages/proxy/src/services/egress/upstream-observability.ts",
+      "sha256": "97950b3e631b01ba384a4ed3dca0ba0ce067dbf5bb612c583a01ada9943c0ee6"
+    },
+    {
+      "path": "packages/proxy/src/services/egress/upstream-request-id.ts",
+      "sha256": "7f7c4b86332ab5d9f88476eb054ee6df8815d4f802987c006149a33c67af856e"
+    },
+    {
+      "path": "packages/proxy/src/services/egress/with-owned-json-upload.ts",
+      "sha256": "6c8284512ff576050ee02755707464baa3c6abaebac5635c008dd95a8904dd0c"
+    },
+    {
+      "path": "packages/proxy/src/services/endpoint-audio-billing-pricing.ts",
+      "sha256": "7dac7ffda91ac036f2f5bbabea5eab00f4a1455bd20fa415ed2098050b83cd52"
+    },
+    {
+      "path": "packages/proxy/src/services/endpoint-billing-pricing.ts",
+      "sha256": "b40d2ea5f984ff28556dfbedacb5629199d08357ee207ba0cd81481f21147fcb"
+    },
+    {
+      "path": "packages/proxy/src/services/failover-dispatch.ts",
+      "sha256": "d4c78d5d76c7f801b5db82fef5026121c154492e7b4f55ba6ee78824d07fa452"
+    },
+    {
+      "path": "packages/proxy/src/services/gateway-error-codes.ts",
+      "sha256": "f8e4be5e446ed55982c176fa09bbd090350ff3c361965ef67c9247034e865d10"
+    },
+    {
+      "path": "packages/proxy/src/services/gateway-error-response.ts",
+      "sha256": "3132fc8736d9c5a7927f77bdf1f2e4dd2045b337abb87e0e2969ea7da0252ebc"
+    },
+    {
+      "path": "packages/proxy/src/services/generation-metadata-snapshot.ts",
+      "sha256": "4c2b364ca1e8d87257f659b0a119acefee458e7dfab599a1ffc4b2bc64959dd0"
+    },
+    {
+      "path": "packages/proxy/src/services/image-attempt-context.ts",
+      "sha256": "d57ae9c0f56230fd1a4f775926d58c235897470ffec3aad110cef251eb4b8f3e"
+    },
+    {
+      "path": "packages/proxy/src/services/json-structure-budget.ts",
+      "sha256": "1cd620450908a79b4606e095579ff40e7b6d8c546949d8b0d5a8594ea2bc1382"
+    },
+    {
+      "path": "packages/proxy/src/services/multipart-body-inspector.ts",
+      "sha256": "85090c860303960a8cfc74481cde071a6264885f7b114bb7107b6ced4039a07f"
+    },
+    {
+      "path": "packages/proxy/src/services/openrouter-error-protocol.ts",
+      "sha256": "ca1a363256a1ef7d4839c8eec017189726dc1904a0c60229e91c98c6338877d4"
+    },
+    {
+      "path": "packages/proxy/src/services/ordinary-budget-lifecycle.ts",
+      "sha256": "64fa79750ed1cf2f7fa342380b61e74544162d606a4cfac32abc8ed18d5a7f1d"
+    },
+    {
+      "path": "packages/proxy/src/services/provider-circuit-breaker.ts",
+      "sha256": "66957245a00ae1e0964ae1479981be6cfef4ad9e897213be8fdb6083c73d3499"
+    },
+    {
+      "path": "packages/proxy/src/services/provider-sticky-routing.ts",
+      "sha256": "6ceb467b345f730b5a9bf73c1cdfdb93e1a6b8659f9dccbcf6692a6dfdf88fe0"
+    },
+    {
+      "path": "packages/proxy/src/services/provider-usage-facts.ts",
+      "sha256": "71513bd2d3695135b459d466d206f5b716cce47294daeeb698c041ef08a68e9b"
+    },
+    {
+      "path": "packages/proxy/src/services/proxy.ts",
+      "sha256": "b7ab322ea4722aceb527c45fbec55a6d8629ea8a11c1a0f09e52e6c67c655f2e"
+    },
+    {
+      "path": "packages/proxy/src/services/request-body-log-policy.ts",
+      "sha256": "26102bf0a4bf1809dd05f9f2b7619086c0b52cac1efae87d173b6821dd1ec6bf"
+    },
+    {
+      "path": "packages/proxy/src/services/request-budget-admission.ts",
+      "sha256": "959fd9430cdccbcb7b8a08ab2d140c25dac317c45a9ed1f5359c29ecd280accd"
+    },
+    {
+      "path": "packages/proxy/src/services/request-deadline.ts",
+      "sha256": "33efe31863ce5c8d45d75faab888010e79caabef07b387a554487721fb8192ca"
+    },
+    {
+      "path": "packages/proxy/src/services/request-dispatch-budget.ts",
+      "sha256": "53115c21920845089c19d9002c7e3b6c70f5fccdd3107f2fee30c0874393a066"
+    },
+    {
+      "path": "packages/proxy/src/services/request-guardrails.ts",
+      "sha256": "e5c757ea2ec49b5d5fa8e82bd23136775b7f997f9b60cff544705e056757f0b9"
+    },
+    {
+      "path": "packages/proxy/src/services/request-log-record-status.ts",
+      "sha256": "6932dce340cdd9f6c1da56ab2ca54987e03290254c284a174c454528d4d8fe1c"
+    },
+    {
+      "path": "packages/proxy/src/services/resource-completion.ts",
+      "sha256": "0d84565d1d96ae404acfbb9dbed1f8f43a97b253fb13d390253d14c2942c4fe0"
+    },
+    {
+      "path": "packages/proxy/src/services/route-attempt-planner.ts",
+      "sha256": "7eb2073b97c5938d87b09754ba9f57dbf971a78d978b2dcc8cefe8b2bc4e4b36"
+    },
+    {
+      "path": "packages/proxy/src/services/route-default-params.ts",
+      "sha256": "a8c6a3211f5fd2687bb6af47790cbdfbd0a7b4bdb1f50113a8956e79c0bd7e0b"
+    },
+    {
+      "path": "packages/proxy/src/services/route-strategies/hash-affinity.ts",
+      "sha256": "a909550c72f3032cfd6038493985fb893bd24d6125694647264efd7626ef2857"
+    },
+    {
+      "path": "packages/proxy/src/services/route-strategies/index.ts",
+      "sha256": "18c698205fb1c826830479fc69037a3a2ab53f1fe6f39e19843384e61da45743"
+    },
+    {
+      "path": "packages/proxy/src/services/route-strategies/route-affinity-hash.ts",
+      "sha256": "2667743f6f5c47788e380ef8ab7f157a88bf09ac0e174d68d99792fad5f39a3f"
+    },
+    {
+      "path": "packages/proxy/src/services/route-strategies/weight-priority.ts",
+      "sha256": "2252b453feda4e54ae767b452380991ccfd40c8f4bfc3842d7d2d1d593f5f1c5"
+    },
+    {
+      "path": "packages/proxy/src/services/route-strategies/weighted-random.ts",
+      "sha256": "74ca171a6df1408ae04c469a548b5410fbca8717c754b25dfdc09d1674b46ef9"
+    },
+    {
+      "path": "packages/proxy/src/services/route-strategies/weighted-round-robin.ts",
+      "sha256": "27667b1dd57e67e58d6ef3fb5a25efbdc3fcc1db363a94845454eb32aae8243f"
+    },
+    {
+      "path": "packages/proxy/src/services/sensitive-content-detector.ts",
+      "sha256": "9767bedb258d43056c14595b3f43eaf5cfdc98afc88bf9c9573c881e817a81b8"
+    },
+    {
+      "path": "packages/proxy/src/services/shared-key-earnings.ts",
+      "sha256": "1b5a4c22f67b0b52dc866735abb524435201c5ffbec5fd82c76012ff64d7a863"
+    },
+    {
+      "path": "packages/proxy/src/services/shared-key-pool.ts",
+      "sha256": "c65f12a6909c1130d89fb9aabe89b38878e1697df4d9b9c3801dee50c2d16174"
+    },
+    {
+      "path": "packages/proxy/src/services/streaming-multipart-body.ts",
+      "sha256": "4022296035e4d03c64e96ee84aab103396a928d476a930477d54d221ef7041d4"
+    },
+    {
+      "path": "packages/proxy/src/services/upstream-error-code.ts",
+      "sha256": "f5641379b8d7bd4bb5af04e4906adfc035809043493a6d85b1bd9a761ae7a8bc"
+    },
+    {
+      "path": "packages/proxy/src/services/upstream-failure-classifier.ts",
+      "sha256": "bf43fe7746854b962bfe7f4ba3f72696506597068ab37a790bfbfaeff78519ca"
+    },
+    {
+      "path": "packages/proxy/src/services/usage-tracker.ts",
+      "sha256": "7e136b969de321245d0e5e55c1a0c3630422b42f2985fd00128d3ff934c212ce"
+    },
+    {
+      "path": "packages/tool-engines/src/http/bounded-response.ts",
+      "sha256": "0dc7d85eaf1c27e2b013ea02cbcb963ee0c1c5210cf50b617263176d902eb77c"
+    },
+    {
+      "path": "packages/tool-engines/src/web-fetch/dispatch.ts",
+      "sha256": "63c42fec10983aa28e436a38f89ca599659bde0fcae3f31d9e05e0c067f29ede"
+    },
+    {
+      "path": "packages/tool-engines/src/web-fetch/firecrawl.ts",
+      "sha256": "533508890af1f5c128aa1619b04bf78f1b2528b537707746972fc0cf5f83dc82"
+    },
+    {
+      "path": "packages/tool-engines/src/web-fetch/index.ts",
+      "sha256": "e9a561b68b33f958fe951f3b21298f95d7568147c9b831b8b400e29dc39584d8"
+    },
+    {
+      "path": "packages/tool-engines/src/web-fetch/jina.ts",
+      "sha256": "52700bf891bd4eaff52ee8a408cb5441639c5be977c654dfe733d5d722de995b"
+    },
+    {
+      "path": "packages/tool-engines/src/web-fetch/safe-redirect-fetch.ts",
+      "sha256": "e3a3823330c4c4fb2da5bdd56d42a10f5fca1762f7dbc2f0abf75a45cd434949"
+    },
+    {
+      "path": "packages/tool-engines/src/web-fetch/tavily.ts",
+      "sha256": "5d782261cad6ae88edf17cf33f5b24402dfca102f63fa03762f46418be739de1"
+    },
+    {
+      "path": "packages/tool-engines/src/web-fetch/types.ts",
+      "sha256": "e0e207ef1a89f116bca299327a9044d8903a77d7627c4ae7badfcb64c2f54784"
+    },
+    {
+      "path": "packages/tool-engines/src/web-fetch/url-guard.ts",
+      "sha256": "ac9c7f7f856b767983d43144d798c5b4aab87969a347de0a6dac24936a4eb89c"
+    }
+  ],
+  "endedAt": "2026-09-27T10:22:19.584Z",
+  "nodeExecutableSha256": "3517c2df0b2f8cd7f422b4b8450ef81c6889f08eb03e281d6de9079b15e6a327",
+  "executionScope": {
+    "expectedCases": 3,
+    "executedCases": 3,
+    "expectedNativeModes": 4,
+    "executedNativeModes": 4,
+    "nativeMatrixComplete": true
+  },
+  "status": "PASS",
+  "limitations": [
+    "Browser package resolution matches Wrangler defaults; this dispatch-only esbuild fixture is not the deployed full Worker bundle.",
+    "Windows native runtime failure is retained as FAIL when opted in; no native transport result can be inferred from it.",
+    "The unsafe local relay counterexample does not establish actual deployed intermediary retry or redirect policy."
+  ]
+}
