@@ -2,6 +2,7 @@
  * 用户密钥鉴权：校验 Bearer sk-，并在读库时触发与 `user-service.maybeResetBudget` 一致的预算周期重置写回。
  */
 import type { GatewayRepositories, ResolvedGatewayKeyRow } from '@octafuse/core';
+import type { RequestDeadline } from './request-deadline';
 import {
 	MANAGEMENT_API_KEY_PREFIX,
 	persistLazyBudgetResetIfNeeded,
@@ -70,13 +71,21 @@ async function authenticatedApiKeyFromRow(
  * @param key 完整明文密钥（不含 `Bearer ` 前缀）
  * @returns 无效或吊销则 `null`
  */
-export async function authenticateApiKey(repos: GatewayRepositories, key: string): Promise<AuthenticatedApiKey | null> {
+export async function authenticateApiKey(
+	repos: GatewayRepositories, key: string, deadline?: RequestDeadline,
+): Promise<AuthenticatedApiKey | null> {
+	deadline?.throwIfStopped();
 	// Credential namespaces are authoritative. Even a malformed/imported
 	// api_keys row must never turn a Management secret into an inference key.
 	if (key.startsWith(MANAGEMENT_API_KEY_PREFIX)) return null;
 	const row = await repos.apiKeys.getApiKeyWithUserByKey(key);
+	// The legacy lookup can migrate plaintext keys. Await that owned write, but
+	// never start a budget reset or proceed to inference after a late result.
+	deadline?.throwIfStopped();
 	if (!row) return null;
-	return authenticatedApiKeyFromRow(repos, row);
+	const authenticated = await authenticatedApiKeyFromRow(repos, row);
+	deadline?.throwIfStopped();
+	return authenticated;
 }
 
 /**

@@ -1,0 +1,73 @@
+{
+  "version": "v335",
+  "date": "2026-09-24",
+  "status": "LOCAL_TTS_HIDDEN_RETRY_SUBSET_PASS_C02_OPEN",
+  "goalComplete": false,
+  "gitHeadAtEvidence": "7eb59008f7d8e156e81fd18a57658fdef2553264",
+  "scope": {
+    "operations": ["audio.speech.openai", "audio.speech.dashscope.speechSynthesizer", "audio.speech.dashscope.qwen", "audio.speech.dashscope.miniMax"],
+    "ambiguousHttpStatuses": ["300-399", 408, 499, "500-599"],
+    "clearRejectionRegression": [400, 401, 429],
+    "nativeFetchRedirectMode": "manual",
+    "supplierSdkLayerPresent": false,
+    "c02_5Complete": false,
+    "c02_6Complete": false,
+    "c02_GComplete": false
+  },
+  "beforeFixNativeLoopback": {
+    "scenario": "local Node server received complete TTS POST before responding; two candidates had distinct gatewayCandidateIndex values and crossModelCandidateFailover was enabled",
+    "httpStatuses": [307, 503],
+    "adapters": ["openai", "dashscope-speech", "dashscope-qwen", "dashscope-minimax"],
+    "scenarioCount": 8,
+    "postCountPerScenario": 2,
+    "redirectTargetHitCountPer307Scenario": 0,
+    "newRegressionTests": { "tests": 16, "pass": 4, "fail": 12 },
+    "observation": "local failing command output before edits; raw output was not saved separately"
+  },
+  "afterFixNativeLoopback": {
+    "scenarioCount": 8,
+    "postCountPerScenario": 1,
+    "redirectTargetHitCountPer307Scenario": 0,
+    "upstreamOutcomeUnknown": true,
+    "failoverForbidden": true,
+    "clear429BoundedFallback": { "postCount": 2, "firstStatus": 429, "secondStatus": 400 },
+    "publicErrorNormalization": { "http307Status": 502, "http503Status": 503, "locationHeader": null, "providerDetailExposed": false }
+  },
+  "validation": {
+    "combinedCommand": "npx tsx --test --test-reporter=dot src/services/egress/audio-speech-hidden-retry.test.ts src/services/egress/audio-speech-driver.test.ts src/services/egress/audio-speech-request-lifecycle.test.ts src/services/egress/tts-upload-resource.test.mjs src/services/egress/tts-resource-completion.test.mjs src/routes/v1/audio-transcriptions.test.ts",
+    "workingDirectory": "packages/proxy",
+    "tests": 390,
+    "pass": 390,
+    "fail": 0,
+    "newRegressionTests": { "tests": 16, "pass": 16, "fail": 0 },
+    "statusMatrix": [300, 301, 302, 303, 304, 307, 308, 408, 499, 500, 503, 524, 400, 401, 429],
+    "errorBodyFailureStatuses": [307, 503, 400, 429],
+    "proxyTypecheck": "PASS",
+    "gitDiffCheck": "PASS"
+  },
+  "ci": {
+    "testsInProxyDispatchSafetyScript": true,
+    "testsInProxyUnitScript": true,
+    "workflowEditedThisRound": false,
+    "linuxRunVerifiedForTheseEdits": false
+  },
+  "sourceSha256": {
+    "packages/proxy/src/services/egress/audio-speech-driver.ts": "621eaac5322e35ed161c83c794c605e4dc487b2361cf17e6fbeb001b783c54e5",
+    "packages/proxy/src/services/egress/audio-speech-hidden-retry.test.ts": "17342261b76818a16e66e3517ec543ddf68d244bd7a43558a623bc0f6f8e53f8",
+    "packages/proxy/src/services/egress/audio-speech-request-lifecycle.test.ts": "a8e7c670e90e4260472be24801deacf8a8ce398f340d4a1dbbea0a759f48297a",
+    "packages/proxy/src/services/egress/audio-request-lifecycle.ts": "7175f625339bb68317d7b734303aa41e78acff75dde040d8c61661ded3f85c2f",
+    "packages/proxy/src/services/request-log-record-status.ts": "3bb524663988d98195fc90e7c8327abc749288002c77c1b9f4ac400de1920113",
+    "packages/proxy/src/services/upstream-error-code.ts": "f5641379b8d7bd4bb5af04e4906adfc035809043493a6d85b1bd9a761ae7a8bc",
+    "packages/proxy/package.json": "b6195599e91df20be2b578976fd94ab523fa839968fe7c07a0957b3bbf4f4904"
+  },
+  "limits": {
+    "realWorkersCloudflareTransportVerified": false,
+    "intermediateProxyRetryVerified": false,
+    "supplierInternalRetryVerified": false,
+    "supplierAcceptanceAndBillingVerified": false,
+    "allEgressDriversAndSdksVerified": false,
+    "fullC02AcceptanceVerified": false,
+    "externalProviderCalls": 0,
+    "deployments": 0
+  }
+}

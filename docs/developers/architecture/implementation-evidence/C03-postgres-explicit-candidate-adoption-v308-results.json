@@ -1,0 +1,63 @@
+{
+  "version": "v308",
+  "date": "2026-09-23",
+  "status": "EXPLICIT_ADOPTION_BUILD_PASS_PRODUCTION_DISABLED",
+  "C03": "DOING",
+  "goalComplete": false,
+  "report": ".wrangler/staging/postgres-adoption-v308-7JFfws/results.json",
+  "validation": {
+    "v308Harness": { "pass": 6, "fail": 0, "skip": 0 },
+    "v300AdoptionRegression": { "pass": 9, "fail": 0, "skip": 0 },
+    "adoptedCoreFixedScanWire": { "pass": 4, "fail": 0 },
+    "protectedInputsUnchanged": 16,
+    "sourceAndQueryPinsCheckedForVariants": 3,
+    "actualFactoryMarkersCheckedForVariants": 3,
+    "staleV300ArtifactRejectedAfterMetadataMutation": true,
+    "coreRepeatBuildByteIdentical": true,
+    "defaultCoreEqualsDisabledCore": true,
+    "defaultProxyEqualsDisabledProxy": true,
+    "offlineWranglerDryRunAudited": true,
+    "workersRuntimeTests": 0,
+    "nativePostgresTests": 0
+  },
+  "artifactSha256": {
+    "esm": "e2e2385dd7543d557d64312be9ef1045cec57a094cfc1aeec882d4c356c25521",
+    "cjs": "5d08e70c604566c2d2ed9c84000008c8d13a15a9b04df268c9b3ef218154098b",
+    "cf": "5704f05aeb495cf78a97ae7d140d3a980007130736e0c8bc6b77ed90ec47d72d"
+  },
+  "sourceSha256": {
+    "scripts/db/diag/postgres-candidate-adoption.mjs": "17d79a4b58bd2fba45b697f32c0092445ea20083746cc073533433076f113157",
+    "scripts/db/diag/postgres-candidate-adoption-v308.test.mjs": "bfd0174b42000d3992c8e3c96f0bcdb929f963facfdba6e66813a37ab0ce306f"
+  },
+  "nodeBuildSha256": {
+    "defaultCore": "8db61255e8ec2be3a88c327c17be74d881160d53ac0c9c13449726fd362dfabe",
+    "disabledCore": "8db61255e8ec2be3a88c327c17be74d881160d53ac0c9c13449726fd362dfabe",
+    "v307Core": "ff7605355fc1defe81a01aecf81914078f682b68c806fe473a7138b1ce73ef0a",
+    "defaultProxy": "b3d9e0c5ec65debb1737a25abee931d1d56838db930feeb8d9146e1ecf703825",
+    "disabledProxy": "b3d9e0c5ec65debb1737a25abee931d1d56838db930feeb8d9146e1ecf703825",
+    "v307Proxy": "ce262301cd1a53fc182ed810233c40c8e3ac172b31a5b72aceda9e554acc887f"
+  },
+  "boundaries": {
+    "fullBundleAliasOnly": true,
+    "formalDriverAdoptionChanged": false,
+    "publicDriverTypesChanged": false,
+    "productionActivated": false,
+    "cloudflareWorkerdTested": false,
+    "nativePostgresTested": false,
+    "serverExecutionDeadlineAllPathsImplemented": false,
+    "trustworthyPhysicalReleaseImplemented": false,
+    "financialFullPathProven": false,
+    "unknownChargingPolicyDecided": false,
+    "crossNetworkExactlyOnceClaimed": false,
+    "remoteSqlCalls": 0,
+    "cloudManagementCalls": 0,
+    "deployments": 0,
+    "modelCalls": 0,
+    "kmsCalls": 0,
+    "cloudResourcesCreatedOrDeleted": 0,
+    "cumulativeStagingCapUsd": 2,
+    "capReset": false,
+    "node22RuntimeAccepted": false
+  },
+  "localNodeVersion": "v24.14.1"
+}

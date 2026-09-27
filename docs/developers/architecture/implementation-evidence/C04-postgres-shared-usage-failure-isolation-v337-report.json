@@ -1,0 +1,48 @@
+{
+  "status": "PASS",
+  "cleanup": "PASS",
+  "binaryVersion": "postgres (PostgreSQL) 18.6",
+  "scope": "owned loopback PG18.6, 73 formal migrations, three review-only proposals",
+  "stages": [
+    {
+      "name": "uncommitted-trigger-drift-times-out-before-preflight-and-committed-drift-rejected",
+      "result": "PASS"
+    },
+    {
+      "name": "exact-activation-and-atomic-successor-install",
+      "result": "PASS"
+    },
+    {
+      "name": "first-poison-attempt-commits-failure-state-and-next-key-repairs",
+      "result": "PASS"
+    },
+    {
+      "name": "new-earning-does-not-bypass-retry-window",
+      "result": "PASS"
+    },
+    {
+      "name": "five-attempt-dead-letter-stays-quarantined-after-new-earning",
+      "result": "PASS"
+    },
+    {
+      "name": "direct-migrator-explicit-requeue-and-single-projection-repair",
+      "result": "PASS"
+    },
+    {
+      "name": "query-cancellation-propagates-with-job-unchanged",
+      "result": "PASS"
+    }
+  ],
+  "sourceSha256": {
+    "history": "454a720f9a6b7410e0aad99c2aaa2eb3327fbbac8c86bb3e3cd4537131e6611b",
+    "jobs": "7b2f288ecb83e34207bcfd5a2a4eec934c0d6e156190826816ab033716c173d4",
+    "isolation": "14a9be7e9ed354f63b7d74c81303502a0217c9be080f541009466804d3e19b63",
+    "nativeFixture": "1737d2f345a88eb5654109dd5a6f6f79187619d16e7dda66fccdf5f61d4b3b11"
+  },
+  "limitations": [
+    "No formal migration, remote SQL, deployment or Worker/Hyperdrive runtime was exercised.",
+    "The fixture does not establish production backlog size or safe maintenance lock duration.",
+    "Failure isolation covers catchable SQL errors; query cancellation can stop the run before later keys.",
+    "Independent function DDL still requires trusted migrator serialization."
+  ]
+}

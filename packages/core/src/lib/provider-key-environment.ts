@@ -10,6 +10,7 @@
 import { parseProviderEndpoints } from "../provider-endpoints";
 import type { ProvidersRepository } from "../storage/gateway-repository-interfaces";
 import type { ProviderRow } from "../types";
+import { preparationRead } from '../preparation-control';
 
 const PROVIDER_API_KEY_ENV_REFERENCE_RE = /^env:([A-Z][A-Z0-9_]*)$/u;
 const PROVIDER_API_KEY_ENV_NAME_RE = /^[A-Z][A-Z0-9_]*$/u;
@@ -110,8 +111,8 @@ export function createEnvironmentProviderKeysRepository(
 ): ProvidersRepository {
 	return {
 		...repository,
-		async getProvidersByIds(ids) {
-			return (await repository.getProvidersByIds(ids)).map(
+		async getProvidersByIds(ids, control) {
+			return (await preparationRead(control, () => repository.getProvidersByIds(ids, control))).map(
 				(row) => resolveRow(row, options.policies, options.secrets)!
 			);
 		},

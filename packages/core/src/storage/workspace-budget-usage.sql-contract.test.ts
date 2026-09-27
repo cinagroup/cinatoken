@@ -19,8 +19,8 @@ test('PostgreSQL Workspace usage reads the exact ledger window and accepts BIGIN
 	const raw = {
 		async unsafe(sql: string, values: unknown[]) {
 			calls.push({ sql, values });
-			if (sql.includes('FROM workspace_budgets')) return [budget];
-			if (sql.includes('FROM guardrail_budget_windows')) {
+			if (sql.includes('FROM cinatoken_gateway.workspace_budgets')) return [budget];
+			if (sql.includes('FROM cinatoken_gateway.guardrail_budget_windows')) {
 				return [{ unreserved_micros: '1250000', settled_micros: '500000', reserved_micros: '250000' }];
 			}
 			throw new Error(`Unexpected PostgreSQL query: ${sql}`);

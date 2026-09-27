@@ -461,9 +461,16 @@ function firstMatchingSelectorIndex(route: RouteResult, selectors: string[], all
 	return selectors.findIndex((selector) => routeMatchesSelector(route, selector, allowTierBase));
 }
 
-function routeRequiresExplicitEndpointOptIn(route: RouteResult): boolean {
+/** The default selector rule, reusable by the private credential-free attester. */
+export function isDefaultEndpointRouteEligible(route: {
+	endpoint?: { selectorSlug?: string | null; endpointClass?: 'standard' | 'service_tier' | null };
+}): boolean {
 	const slug = route.endpoint?.selectorSlug;
-	return Boolean(slug?.includes('/') && route.endpoint?.endpointClass !== 'standard');
+	return !Boolean(slug?.includes('/') && route.endpoint?.endpointClass !== 'standard');
+}
+
+function routeRequiresExplicitEndpointOptIn(route: RouteResult): boolean {
+	return !isDefaultEndpointRouteEligible(route);
 }
 
 function hasExactEndpointSelector(route: RouteResult, selectors: readonly string[]): boolean {

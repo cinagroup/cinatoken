@@ -1,7 +1,7 @@
 /**
  * Gateway 错误细分类 code（点分层级）。
  *
- * - `gateway.*` — 请求未出网关
+ * - `gateway.*` — 网关自身生成的错误（不代表此前的 attempt 从未出站）
  * - `circuit.*` — 熔断短路（未打上游）
  * - `upstream.*` — 已打上游，网关分类后透传
  *
@@ -24,6 +24,8 @@ export const GatewayErrorCode = {
 	analyticsRateLimited: "gateway.analytics_rate_limited",
 	publicCatalogUnavailable: "gateway.public_catalog_unavailable",
 	internalError: "gateway.internal_error",
+	imageSettlementUnconfirmed: "gateway.image_settlement_unconfirmed",
+	capacityUnavailable: "gateway.capacity_unavailable",
 	routeNotFound: "gateway.route_not_found",
 	payloadTooLarge: "gateway.payload_too_large",
 	noRoute: "gateway.no_route",
@@ -39,6 +41,10 @@ export const GatewayErrorCode = {
 	dataCollectionNoRoute: "gateway.data_collection_no_route",
 	zdrToolsUnsupported: "gateway.zdr_tools_unsupported",
 	upstreamRequestFailed: "gateway.upstream_request_failed",
+	dispatchLimitExceeded: "gateway.dispatch_limit_exceeded",
+	auxiliaryAuthLimitExceeded: "gateway.auxiliary_auth_limit_exceeded",
+	requestDeadlineExceeded: "gateway.request_deadline_exceeded",
+	requestCancelled: "gateway.request_cancelled",
 	upstreamResponseTooLarge: "gateway.upstream_response_too_large",
 	responsesStateRouteUnavailable: "responses.state_route_unavailable",
 	responsesUnsupportedStateOperation: "responses.unsupported_state_operation",

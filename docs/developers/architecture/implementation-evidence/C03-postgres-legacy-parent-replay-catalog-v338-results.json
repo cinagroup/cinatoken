@@ -1,0 +1,45 @@
+{
+  "version": "v338",
+  "date": "2026-09-24",
+  "scope": "review-only C03 legacy-parent pre-DDL replay reservation catalog attestation",
+  "status": "PASS_LOCAL_ONLY",
+  "formalMigration": false,
+  "nativePostgres": {
+    "binaryVersion": "postgres (PostgreSQL) 18.6",
+    "command": "node --import tsx --test scripts/db/cutover/postgres-legacy-parent-activation.native.test.mjs",
+    "passed": 1,
+    "total": 1,
+    "stagesPassed": 16,
+    "cleanup": "PASS",
+    "report": "C03-postgres-native-legacy-parent-replay-catalog-v338-report.json",
+    "reportSha256": "715657aed97cbc6c6ab6bf2ad8ab19806566753c2cf0a6632062d3b061069933"
+  },
+  "unit": {
+    "command": "node --test scripts/db/cutover/build-request-legacy-parent-default-acl-activation.test.mjs",
+    "passed": 1,
+    "total": 1
+  },
+  "sourceSha256": {
+    "activationGenerator": "f57bf08149b55827a629bdae9f87209eeff7355802cd8c5947d434fe0ef7f4ce",
+    "generatorUnitTest": "fa5a34d18f8104cd5c479467fbf6c8e61d819657ddc5acd4bbf45819bc6663f5",
+    "nativeTest": "06ccac61e33441df8d4b4a935decb023ae99eeb0c7efed7954e405c86bbc32f5",
+    "replayReservationsProposal": "c288bbc43fad3bbb8b3b1a88fa1b1d01b9e5f2f9f520753873e0cdf21643c3d8",
+    "parentGateProposal": "1079eb858811c70dd850b95be68f64e5c7b8361926e8c3f0a9e80621f6125b10",
+    "formalMigrationCorpus": "23afef61a8a670e0af8c90e3a138f522e6b283b454e380a592bf85bca83108dc",
+    "generatedActivationBundle": "d16dc8e5fb07039a71c052b768684caed812e93e12fab86f80a2805c4d3343e1"
+  },
+  "negativeCoverage": [
+    "uncommitted legacy-log writer makes the pre-DDL source-table lock fail with 55P03",
+    "disabled intent reservation trigger rejected before parent table creation",
+    "log reservation trigger rebound to a no-op function rejected before parent table creation",
+    "intent and log reservation function bodies replaced with no-op bodies rejected before parent table creation",
+    "restored source definitions allow the normal legacy-parent switch and old-ID replay rejection"
+  ],
+  "limits": [
+    "This attests a critical replay-reservation catalog subset, not every historical SQL statement.",
+    "Table locks do not prevent function DDL by a concurrently trusted migrator; that actor remains inside the trusted operations boundary.",
+    "The synthetic fixture does not establish a production lock window, storage scale, D1/MySQL parity or deployment readiness; C03.7/G remain open."
+  ],
+  "remoteSql": false,
+  "deployment": false
+}

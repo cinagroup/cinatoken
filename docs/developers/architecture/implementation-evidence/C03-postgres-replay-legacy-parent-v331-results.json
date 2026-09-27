@@ -1,0 +1,130 @@
+{
+  "version": "v331",
+  "date": "2026-09-24",
+  "status": "LOCAL_REPLAY_LEGACY_PARENT_FINANCIAL_SUBSET_PASS_PRODUCTION_DISABLED",
+  "C03": "DOING",
+  "goalComplete": false,
+  "validation": {
+    "nativeLegacyCensus": {
+      "pass": 1,
+      "fail": 0,
+      "stages": 4,
+      "cleanup": "PASS"
+    },
+    "nativeReplayReservation": {
+      "pass": 1,
+      "fail": 0,
+      "stages": 19,
+      "cleanup": "PASS"
+    },
+    "nativeLegacyParentActivation": {
+      "pass": 1,
+      "fail": 0,
+      "stages": 10,
+      "cleanup": "PASS"
+    },
+    "nativeFinancialReplayGrant": {
+      "pass": 1,
+      "fail": 0,
+      "stages": 14,
+      "cleanup": "PASS"
+    },
+    "nativeOldReader": {
+      "pass": 1,
+      "fail": 0,
+      "stages": 10,
+      "cleanup": "PASS",
+      "legacyRows": 512,
+      "repositoryTotals": [
+        513,
+        515,
+        516
+      ]
+    },
+    "nativeHttpFinancial": {
+      "pass": 1,
+      "fail": 0,
+      "stages": 4,
+      "cleanup": "PASS",
+      "replayReservations": 1,
+      "fetchBoundaryOpenProducerTransactions": [
+        0,
+        0
+      ],
+      "financialSpent": "0.040000"
+    },
+    "legacyGeneratorUnit": {
+      "pass": 3,
+      "fail": 0
+    },
+    "financialGrantAndRolePolicyUnit": {
+      "pass": 10,
+      "fail": 0
+    },
+    "queueOwnerAndDispositionUnit": {
+      "pass": 24,
+      "fail": 0
+    },
+    "proxyTypecheck": true,
+    "workflowYamlParsed": true,
+    "linuxCiStepsRegistered": true,
+    "linuxCiRunVerified": false
+  },
+  "sourceSha256": {
+    ".github/workflows/proxy-dispatch-safety.yml": "699c4b838a608ebd83b3bc2ea9436b825dec320023be779cead41a74f184b197",
+    "packages/proxy/package.json": "d4204f3d5b10ca692424fb4d962c8cb2b116f550c48ae56ae2bf76a8a22889f3",
+    "packages/proxy/src/runtime/postgres-recovery-queue-disposition.ts": "83e8e9b76e0c9d6cd1e6cce8f5a065cee2e7e02da04e7ace71651c11d4b85edf",
+    "packages/proxy/src/runtime/postgres-recovery-queue-disposition.test.ts": "16d2c025ea26f98cfd4a027862df40897955142c3f7800259979742ff8181e81",
+    "packages/core/migrations-proposals/postgres/request-dispatch-replay-reservations.sql": "3fa28e1f34f0a99f73bd7f9e4411ae7de8659a170a04d0b60ac468f92a055667",
+    "packages/core/migrations-proposals/postgres/request-dispatch-replay-parent-gate.sql": "ff02f46cb94d6f6cdd003d6c00a6913d7d70421bb70124d2ff9cbdc9749e7e29",
+    "packages/core/migrations-proposals/postgres/request-dispatch-legacy-parent-backfill.sql": "49c59a2329d008f05f2bff2f4f1bb649a819ed69c7d9e66c3b193e7058b51758",
+    "scripts/db/cutover/grant-postgres-runtime.ts": "97a42a0d2bd9994566377e08b43281a2ead4842443c81ca8fc80439469725334",
+    "scripts/db/cutover/build-postgres-replay-reservation-backfill.mjs": "e1c93a71cf17e1dbf8e46f728fd25fe12e5ea4f47899d5978755a59459a39d7e",
+    "scripts/db/cutover/build-postgres-replay-retention-candidates.mjs": "e7e33b1ababf04a25dabd06734bcca59011460501752f519ef8c95e0d3fb4435",
+    "scripts/db/cutover/postgres-replay-reservations.native.test.mjs": "c79eef21f5b6ec06603a47f6bb00f978e7cdafe209968fa8762fe81223775bbc",
+    "scripts/db/cutover/build-request-legacy-parent-census.mjs": "3fdfe075d06b240aac655b091180d7268c9507555b02e3716a47347896124d8c",
+    "scripts/db/cutover/build-request-legacy-parent-census.test.mjs": "6e4212c7a5817d9663b152522cfc3fcc10ad4e4ac14b2e9309b7310b14228cae",
+    "scripts/db/cutover/build-request-legacy-parent-census.native.test.mjs": "9130867abcaf8a96d88873e0440fe3f9dfedbfef3709a74b6b83bfb0ee5e9a87",
+    "scripts/db/cutover/build-request-legacy-parent-activation.mjs": "d78e359a59114964ca9d5d88c45a0fef2c33412034fc203a521c3f73d7106488",
+    "scripts/db/cutover/build-request-legacy-parent-activation.test.mjs": "378a0764b2ed7a588a1785b9a389d495dcc2c14a0b5e9927d33b1ac36ba2c9f5",
+    "scripts/db/cutover/build-request-legacy-parent-default-acl-activation.mjs": "e280df138e0f77396e90c00e78b7cea08636df892ea859a9df68f94244181cc0",
+    "scripts/db/cutover/build-request-legacy-parent-default-acl-activation.test.mjs": "eb4ae4c2f0fa64ac43dac9a5d87c5d8353e1f44cc0a2d4f7e6228f20cb02aed6",
+    "scripts/db/cutover/postgres-legacy-parent-activation.native.test.mjs": "9e6f4dcacd9ef8a88eadcf89f2a4fcd7f1e3a9457543a72943c6223d466029ff",
+    "scripts/db/cutover/build-financial-consumer-direct-login-grant.ts": "a6549a81a003efb9c93cecbb4f554c4aadb2854fd1721319df090ad94a8169e5",
+    "scripts/db/cutover/build-financial-consumer-direct-login-grant.test.ts": "0d90c54a7c1619245de600e4362dc81af7c5a76640b81e25e38ef3fd8a18fecb",
+    "scripts/db/cutover/build-financial-consumer-direct-login-grant.native.test.mjs": "4b9604d977e018c49f629cd84fa037615b4ba05810988d49fa2075c7f9f7ed4f",
+    "scripts/db/cutover/postgres-recovery-role-policy.ts": "00eb58dd465249b75d1ae39318eed1757ec430111c1175ecf071e003033ab5d0",
+    "scripts/db/cutover/postgres-recovery-old-database-upgrade.native.test.mjs": "c239d09fae73e18fd2402d8efec42865d5f142d5caba3cfd07164c5236e1e5bf",
+    "scripts/db/cutover/postgres-image-http-financial.native.test.mjs": "3e28b9b1e975b6251e9f9e76478506c29ad1e1f8db1e1acc409c09eaf646458d",
+    "docs/developers/architecture/implementation-evidence/C03-postgres-native-legacy-parent-census-v331-report.json": "69796f413456a4073b8c339819f623de1e6881306f1eeaca41b1514c95565fdf",
+    "docs/developers/architecture/implementation-evidence/C03-postgres-native-replay-reservations-v331-report.json": "bf7fc0df2adca522b78a4cc28f6fa2c5f936f345f4c52a0995c202fec3d4b69d",
+    "docs/developers/architecture/implementation-evidence/C03-postgres-native-legacy-parent-activation-v331-report.json": "4a320758c0e998916c173ec0ad92381ae9b3cac176b7633dea34120d24f719c7",
+    "docs/developers/architecture/implementation-evidence/C03-postgres-native-financial-replay-grant-v331-report.json": "b8cee0aba5a70072e4fb5fca67eb594e08deea05116ec26586ad46b5f7a14660",
+    "docs/developers/architecture/implementation-evidence/C03-postgres-native-old-reader-v331-report.json": "c14733c90de34e3a0456123d2e9543d055dcadcbb12aa9cad56f1acc70ff8754",
+    "docs/developers/architecture/implementation-evidence/C03-postgres-native-http-fetch-boundary-v331-report.json": "18658899a7751b8b3b23f3fd53e86b5ec90a48632c6ee7a2777c474e0235fb67",
+    "docs/developers/architecture/implementation-evidence/C03-postgres-replay-legacy-parent-v331.md": "05a17119064c98421628d23195f4b6148c229406726898b6128eccc74b01d436"
+  },
+  "boundaries": {
+    "formalMigrations": 73,
+    "replayAndParentSqlReviewOnly": true,
+    "productionRecoveryEnabled": false,
+    "localReplayReservationBackfillPerformed": true,
+    "oldIntentPromotedToTrustedParent": false,
+    "retentionPolicyApproved": false,
+    "retentionDeleteAllowed": false,
+    "sourceHistoryDeleted": false,
+    "realWorkersHyperdriveQueueVerified": false,
+    "representativeProductionLockWindowVerified": false,
+    "allLegacyHandlersVerified": false,
+    "DBL_04_05_06_08Complete": false,
+    "C03_7Complete": false,
+    "C03_GComplete": false,
+    "C01_GComplete": false,
+    "C02_GComplete": false,
+    "remoteSqlCalls": 0,
+    "deployments": 0,
+    "cloudModelCalls": 0,
+    "cloudKmsCalls": 0,
+    "stagingUsd2CapReset": false
+  }
+}

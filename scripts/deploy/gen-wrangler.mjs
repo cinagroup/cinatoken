@@ -95,6 +95,16 @@ function resolveNames() {
 		d1DatabaseName,
 		d1DatabaseId: trimEnv("D1_DATABASE_ID"),
 		hyperdriveId: trimEnv("HYPERDRIVE_ID"),
+		reviewProducerHyperdriveBindingsEnabled: resolveStrictBoolean(
+			"REVIEW_PRODUCER_HYPERDRIVE_BINDINGS_ENABLED",
+		),
+		dispatchHyperdriveId: trimEnv("DISPATCH_HYPERDRIVE_ID"),
+		factHyperdriveId: trimEnv("FACT_HYPERDRIVE_ID"),
+		sharedKeyUsageRepairActivation: trimEnv("SHARED_KEY_USAGE_REPAIR_ENABLED"),
+		repairHyperdriveId: trimEnv("REPAIR_HYPERDRIVE_ID"),
+		sharedEarningScannerActivation: trimEnv("SHARED_EARNING_SCANNER_ENABLED"),
+		earningDeliveryHyperdriveId: trimEnv("EARNING_DELIVERY_HYPERDRIVE_ID"),
+		earningConsumerHyperdriveId: trimEnv("EARNING_CONSUMER_HYPERDRIVE_ID"),
 		databaseDriver: resolveWorkerDatabaseDriver(),
 		maintenanceMode: resolveMaintenanceMode(),
 		proxyCustomDomain: trimEnv("PROXY_CUSTOM_DOMAIN"),
@@ -202,6 +212,34 @@ function applyWorkerDatabaseRuntime(config, names) {
 	return next;
 }
 
+function applyReviewProducerHyperdriveBindings(config, names) {
+	if (!names.reviewProducerHyperdriveBindingsEnabled) return config;
+	// Review artifact only: application runtime wiring remains a separate gate.
+	return {
+		...config,
+		hyperdrive: [
+			...config.hyperdrive,
+			{ binding: "DISPATCH_HYPERDRIVE", id: names.dispatchHyperdriveId },
+			{ binding: "FACT_HYPERDRIVE", id: names.factHyperdriveId },
+		],
+	};
+}
+
+function applySharedKeyUsageRepairHyperdriveBinding(config, names) {
+	if (names.sharedKeyUsageRepairActivation !== "reviewed-v3") return config;
+	return {
+		...config,
+		hyperdrive: [
+			...config.hyperdrive,
+			{ binding: "REPAIR_HYPERDRIVE", id: names.repairHyperdriveId },
+		],
+		vars: {
+			...config.vars,
+			SHARED_KEY_USAGE_REPAIR_ENABLED: "reviewed-v3",
+		},
+	};
+}
+
 function applyHttpMaintenanceMode(config, names) {
 	const next = { ...config };
 	const vars = { ...(config.vars ?? {}) };
@@ -253,7 +291,7 @@ function applyBatchInfrastructure(config, names) {
 function generateProxy(names) {
 	const base = readBase("packages/proxy/wrangler.base.jsonc");
 	const organizationAdminRoles = trimEnv("CINAAUTH_ORGANIZATION_ADMIN_ROLES");
-	const config = applyBatchInfrastructure(applyHttpMaintenanceMode(applyWorkerDatabaseRuntime({
+	const runtimeConfig = applyWorkerDatabaseRuntime({
 		...base,
 		name: names.proxyWorkerName,
 		vars: {
@@ -269,7 +307,11 @@ function generateProxy(names) {
 				names.d1DatabaseId,
 			),
 		],
-	}, names), names), names);
+	}, names);
+	const config = applySharedKeyUsageRepairHyperdriveBinding(applyReviewProducerHyperdriveBindings(
+		applyBatchInfrastructure(applyHttpMaintenanceMode(runtimeConfig, names), names),
+		names,
+	), names);
 	const routes = customDomainRoutes(names.proxyCustomDomain);
 	if (routes) {
 		config.routes = routes;
@@ -404,9 +446,95 @@ function validateWorkerDatabaseRuntime(names) {
 	}
 }
 
+function validateReviewProducerHyperdriveBindings(names) {
+	const { reviewProducerHyperdriveBindingsEnabled: enabled, dispatchHyperdriveId, factHyperdriveId } = names;
+	if (!enabled) {
+		if (dispatchHyperdriveId || factHyperdriveId) {
+			console.error(
+				"gen-wrangler: DISPATCH_HYPERDRIVE_ID and FACT_HYPERDRIVE_ID require REVIEW_PRODUCER_HYPERDRIVE_BINDINGS_ENABLED=true.",
+			);
+			process.exit(1);
+		}
+		return;
+	}
+	if (names.databaseDriver !== "postgres" || !names.hyperdriveId) {
+		console.error(
+			"gen-wrangler: review producer Hyperdrive bindings require DATABASE_DRIVER=postgres and runtime HYPERDRIVE_ID.",
+		);
+		process.exit(1);
+	}
+	const ids = [
+		["HYPERDRIVE_ID", names.hyperdriveId],
+		["DISPATCH_HYPERDRIVE_ID", dispatchHyperdriveId],
+		["FACT_HYPERDRIVE_ID", factHyperdriveId],
+	];
+	const canonicalId = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+	for (const [key, id] of ids) {
+		if (!canonicalId.test(id)) {
+			console.error(`gen-wrangler: ${key} must be a canonical Hyperdrive UUID for review producer bindings.`);
+			process.exit(1);
+		}
+	}
+	if (new Set(ids.map(([, id]) => id.toLowerCase())).size !== ids.length) {
+		console.error("gen-wrangler: runtime, dispatch, and fact Hyperdrive IDs must be distinct.");
+		process.exit(1);
+	}
+}
+
+function validateSharedKeyUsageRepairHyperdriveBinding(names) {
+	const { sharedKeyUsageRepairActivation: activation, repairHyperdriveId } = names;
+	if (activation !== "" && activation !== "false" && activation !== "reviewed-v3") {
+		console.error("gen-wrangler: SHARED_KEY_USAGE_REPAIR_ENABLED must be reviewed-v3 or false.");
+		process.exit(1);
+	}
+	if (activation !== "reviewed-v3") {
+		if (repairHyperdriveId) {
+			console.error("gen-wrangler: REPAIR_HYPERDRIVE_ID requires SHARED_KEY_USAGE_REPAIR_ENABLED=reviewed-v3.");
+			process.exit(1);
+		}
+		return;
+	}
+	if (names.databaseDriver !== "postgres" || !names.hyperdriveId) {
+		console.error("gen-wrangler: shared-key usage repair requires DATABASE_DRIVER=postgres and HYPERDRIVE_ID.");
+		process.exit(1);
+	}
+	const ids = [
+		["HYPERDRIVE_ID", names.hyperdriveId],
+		["REPAIR_HYPERDRIVE_ID", repairHyperdriveId],
+		...(names.reviewProducerHyperdriveBindingsEnabled ? [
+			["DISPATCH_HYPERDRIVE_ID", names.dispatchHyperdriveId],
+			["FACT_HYPERDRIVE_ID", names.factHyperdriveId],
+		] : []),
+	];
+	const canonicalId = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+	for (const [key, id] of ids) {
+		if (!canonicalId.test(id)) {
+			console.error(`gen-wrangler: ${key} must be a canonical Hyperdrive UUID for shared-key usage repair.`);
+			process.exit(1);
+		}
+	}
+	if (new Set(ids.map(([, id]) => id.toLowerCase())).size !== ids.length) {
+		console.error("gen-wrangler: repair Hyperdrive ID must differ from runtime, dispatch and fact Hyperdrive IDs.");
+		process.exit(1);
+	}
+}
+
+function validateSharedEarningScannerHyperdriveBindings(names) {
+	const { sharedEarningScannerActivation: activation,
+		earningDeliveryHyperdriveId: deliveryId,
+		earningConsumerHyperdriveId: consumerId } = names;
+	if ((activation !== "" && activation !== "false") || deliveryId || consumerId) {
+		console.error("gen-wrangler: earning credentials require the dedicated scheduled Worker generator.");
+		process.exit(1);
+	}
+}
+
 function main() {
 	const names = resolveNames();
 	validateWorkerDatabaseRuntime(names);
+	validateReviewProducerHyperdriveBindings(names);
+	validateSharedKeyUsageRepairHyperdriveBinding(names);
+	validateSharedEarningScannerHyperdriveBindings(names);
 
 	if (REMOTE) {
 		validateRemote(names);
@@ -424,6 +552,8 @@ function main() {
 				? ` hyperdrive=${names.hyperdriveId} driver=${names.databaseDriver || "d1 (staged target, unbound)"}`
 				: "") +
 			(names.maintenanceMode ? " maintenance=true" : "") +
+				(names.reviewProducerHyperdriveBindingsEnabled ? " review-producer-hyperdrive-bindings=true" : "") +
+				(names.sharedKeyUsageRepairActivation === "reviewed-v3" ? " shared-key-usage-repair=reviewed-v3" : "") +
 			(names.batchInfraEnabled
 				? ` batch-infra=true batch-bucket=${names.batchBucketName} batch-queue=${names.batchQueueName}`
 				: " batch-infra=false"),

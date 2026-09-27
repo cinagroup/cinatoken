@@ -1,0 +1,71 @@
+{
+  "status": "PASS",
+  "cleanup": "PASS",
+  "scope": "owned loopback PostgreSQL with actual proxyImageGenerations and Images driver; fake fetch, no origin",
+  "limitations": [
+    "The claim-to-admission error mapping is fixture-only; no production route enables these proposals.",
+    "The delayed acknowledgement is a client wrapper after a real COMMIT, not a wire-level lost packet.",
+    "This proves the Images generations path only, not edits, text, all Workers, or accounting settlement."
+  ],
+  "binaryVersion": "postgres (PostgreSQL) 18.6",
+  "sourceSha256": {
+    "nativeTest": "13e34bb2bbc15612323dd3fc36baf3101ff0c00ea397890835bf84b7388526ef",
+    "claimRepository": "0e898ed87319fbb8ac4e325262795bf785aaee35e9508bc6062823a72d95fa4c",
+    "authProposal": "02cf4ffde6d37bb9253e9466cbde59047b5b8a0b19d73897ae69d60696db077d",
+    "singleClaimProposal": "6e62e12c25a94e4b32fe0121c728198a409f95427ef4cdcb14c51ebe1a629112",
+    "proxy": "07b093ad1909d612e2ad2b707fb608f214816bfe2e3bd8629fe7fba699e1ed19",
+    "failover": "de3021f862d2a5c8b6396f9604627a9928eb570dd7cdc79351c7390b88dbb3e3",
+    "imagesDriver": "161f4ef24d943e2e8bbcb7f9064f638e1cd01277b86ecfc4b1b9fc4159e37389",
+    "nativeCluster": "6b5923be8d3bdcd061033eed1af2f67f3b87fa2fca1f2cf0a0b2eb0eb2cb8d2a",
+    "formalMigrationCorpus": "23afef61a8a670e0af8c90e3a138f522e6b283b454e380a592bf85bca83108dc"
+  },
+  "stages": [
+    {
+      "name": "formal-schema-and-review-only-proposals",
+      "result": "PASS",
+      "formalMigrations": 73,
+      "index": {
+        "unique": true,
+        "valid": true
+      }
+    },
+    {
+      "name": "committed-but-unacknowledged-claim-zero-fetch",
+      "result": "PASS",
+      "durableState": "dispatch_claimed",
+      "providerFetches": 0
+    },
+    {
+      "name": "acknowledged-grant-one-fetch-preserves-known-non-2xx",
+      "result": "PASS",
+      "providerFetches": 1,
+      "responseStatus": 503,
+      "chosenProviderId": "first",
+      "usageTotalTokens": 10
+    },
+    {
+      "name": "denied-stale-revision-zero-fetch-no-fallback",
+      "result": "PASS",
+      "providerFetches": 0,
+      "responseStatus": 403
+    },
+    {
+      "name": "lost-commit-ack-zero-fetch-no-fallback",
+      "result": "PASS",
+      "durableState": "dispatch_claimed",
+      "providerFetches": 0,
+      "responseStatus": 403
+    },
+    {
+      "name": "concurrent-sibling-handlers-at-most-one-fetch",
+      "result": "PASS",
+      "providerFetches": 1,
+      "durableClaims": 1,
+      "responseStatuses": [
+        403,
+        503
+      ]
+    }
+  ],
+  "serverVersionNum": 180006
+}

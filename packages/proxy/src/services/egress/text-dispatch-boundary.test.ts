@@ -56,7 +56,8 @@ test('text drivers cross the admission boundary only after local preparation and
 		(async (_input, init) => {
 			fetchCalls += 1;
 			events.push('fetch');
-			assert.equal(typeof init?.body, 'string');
+			assert.ok(init?.body instanceof ReadableStream);
+			await new Response(init.body).text();
 			return new Response('{}', { status: 400 });
 		}) as typeof fetch,
 		async () => {
@@ -86,7 +87,7 @@ test('text drivers cross the admission boundary only after local preparation and
 test('OpenAI Chat streaming forces terminal usage without discarding compatible stream options', async () => {
 	await withFetch(
 		(async (_input, init) => {
-			const body = JSON.parse(String(init?.body)) as {
+			const body = await new Response(init?.body).json() as {
 				stream_options?: Record<string, unknown>;
 			};
 			assert.deepEqual(body.stream_options, {
@@ -112,7 +113,7 @@ test('verified service-tier selection overrides stale client or route defaults i
 	const bodies: Record<string, unknown>[] = [];
 	await withFetch(
 		(async (_input, init) => {
-			bodies.push(JSON.parse(String(init?.body)) as Record<string, unknown>);
+			bodies.push(await new Response(init?.body).json() as Record<string, unknown>);
 			return new Response('{}', { status: 400 });
 		}) as typeof fetch,
 		async () => {
@@ -140,7 +141,7 @@ test('verified text-speed capability controls egress and strips unsupported rout
 	const bodies: Record<string, unknown>[] = [];
 	await withFetch(
 		(async (_input, init) => {
-			bodies.push(JSON.parse(String(init?.body)) as Record<string, unknown>);
+			bodies.push(await new Response(init?.body).json() as Record<string, unknown>);
 			return new Response('{}', { status: 400 });
 		}) as typeof fetch,
 		async () => {

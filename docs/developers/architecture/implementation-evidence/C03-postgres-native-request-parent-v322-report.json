@@ -1,0 +1,159 @@
+{
+  "status": "PASS",
+  "cleanup": "PASS",
+  "binaryVersion": "postgres (PostgreSQL) 18.6",
+  "scope": "owned loopback PostgreSQL 18.6; review-only SQL; no runtime producer or origin",
+  "limitations": [
+    "Uses synthetic empty-schema fixtures; no production data, old-database lock duration, or backfill is proven.",
+    "No production repository or Worker is activated; the existing TypeScript repository is incompatible with the parent lock order.",
+    "No provider I/O, lost COMMIT acknowledgement, direct-grant remediation, or retention is exercised."
+  ],
+  "sourceSha256": {
+    "nativeTest": "069485ca6a56e1c3d0bb0996e189b1c8543cbbb4dad8d8e8b8f0f03f343fe67a",
+    "definerProposal": "02cf4ffde6d37bb9253e9466cbde59047b5b8a0b19d73897ae69d60696db077d",
+    "singleClaimProposal": "6e62e12c25a94e4b32fe0121c728198a409f95427ef4cdcb14c51ebe1a629112",
+    "parentProposal": "2e8c20088f72271ecf89bc4f43583ec3b2247893a11b84cc6a220563a72de8de",
+    "nativeCluster": "6b5923be8d3bdcd061033eed1af2f67f3b87fa2fca1f2cf0a0b2eb0eb2cb8d2a",
+    "formalMigrationCorpus": "23afef61a8a670e0af8c90e3a138f522e6b283b454e380a592bf85bca83108dc"
+  },
+  "stages": [
+    {
+      "name": "formal-schema",
+      "result": "PASS",
+      "formalMigrations": 73
+    },
+    {
+      "name": "v320-claim-authorization-and-index-installed",
+      "result": "PASS"
+    },
+    {
+      "name": "missing-activation-rejected-without-parent",
+      "result": "PASS"
+    },
+    {
+      "name": "old-intent-preflight-refuses-backfill-and-rolls-back",
+      "result": "PASS"
+    },
+    {
+      "name": "direct-writer-grant-preflight-refuses-install",
+      "result": "PASS"
+    },
+    {
+      "name": "default-function-execute-grant-refuses-atomic-install",
+      "result": "PASS"
+    },
+    {
+      "name": "parent-installed-without-runtime-or-producer-grants",
+      "result": "PASS",
+      "access": {
+        "runtime_table_write": false,
+        "producer_table_write": false,
+        "runtime_intent_write": false,
+        "producer_intent_write": false
+      },
+      "functions": [
+        {
+          "proname": "claim_request_dispatch_intent_v1",
+          "runtime_execute": false,
+          "producer_execute": false
+        },
+        {
+          "proname": "classify_request_dispatch_intent_v1",
+          "runtime_execute": false,
+          "producer_execute": false
+        },
+        {
+          "proname": "prepare_request_dispatch_intent_v1",
+          "runtime_execute": false,
+          "producer_execute": false
+        }
+      ]
+    },
+    {
+      "name": "v1-hard-attempt-and-five-minute-ceilings",
+      "result": "PASS"
+    },
+    {
+      "name": "scope-deadline-and-budget-frozen-with-route-specific-sibling",
+      "result": "PASS",
+      "parent": {
+        "created": "1790216826546",
+        "expiry": "1790216916545",
+        "max_attempts": 2,
+        "prepared_count": 2,
+        "claim_count": 0,
+        "first_claim_id": null
+      }
+    },
+    {
+      "name": "concurrent-sibling-prepare-waits-for-commit",
+      "result": "PASS",
+      "wait": {
+        "wait_event_type": "Lock",
+        "wait_event": "transactionid",
+        "blocked_by_holder": true
+      },
+      "firstTransactionRolledBack": false,
+      "contenderAccepted": true,
+      "preparedCount": 2,
+      "claimCount": 0
+    },
+    {
+      "name": "concurrent-sibling-prepare-waits-for-rollback",
+      "result": "PASS",
+      "wait": {
+        "wait_event_type": "Lock",
+        "wait_event": "transactionid",
+        "blocked_by_holder": true
+      },
+      "firstTransactionRolledBack": true,
+      "contenderAccepted": true,
+      "preparedCount": 1,
+      "claimCount": 0
+    },
+    {
+      "name": "concurrent-sibling-claim-one-grant",
+      "result": "PASS",
+      "wait": {
+        "wait_event_type": "Lock",
+        "wait_event": "transactionid",
+        "blocked_by_holder": true
+      },
+      "firstTransactionRolledBack": false,
+      "contenderAccepted": false,
+      "preparedCount": 2,
+      "claimCount": 1
+    },
+    {
+      "name": "concurrent-sibling-claim-after-rollback",
+      "result": "PASS",
+      "wait": {
+        "wait_event_type": "Lock",
+        "wait_event": "transactionid",
+        "blocked_by_holder": true
+      },
+      "firstTransactionRolledBack": true,
+      "contenderAccepted": true,
+      "preparedCount": 2,
+      "claimCount": 1
+    },
+    {
+      "name": "outcome-unknown-permanently-consumes-parent-claim",
+      "result": "PASS",
+      "parent": {
+        "created": "1790216826787",
+        "expiry": "1790216828286",
+        "max_attempts": 2,
+        "prepared_count": 2,
+        "claim_count": 1,
+        "first_claim_id": "80bd51f6-a67c-4421-a32e-4165422ce9e0"
+      },
+      "firstAttemptState": "outcome_unknown"
+    },
+    {
+      "name": "transaction-rollback-removes-parent-intent-and-claim",
+      "result": "PASS"
+    }
+  ],
+  "serverVersionNum": 180006
+}

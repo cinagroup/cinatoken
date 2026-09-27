@@ -1,0 +1,56 @@
+{
+  "version": "v333",
+  "date": "2026-09-24",
+  "status": "LOCAL_EARNINGS_HISTORY_GUARD_SUBSET_PASS_C04_OPEN",
+  "goalComplete": false,
+  "C04": "DOING",
+  "validation": {
+    "adminEarningsRouteTests": { "pass": 3, "fail": 0 },
+    "adminEarningsAndUsersCombined": { "pass": 11, "fail": 0 },
+    "adminTypecheck": "PASS",
+    "nativePostgres": { "pass": 1, "fail": 0, "stages": 5, "cleanup": "PASS", "version": "18.6" },
+    "workflowYamlParsed": true,
+    "linuxCiRun": false
+  },
+  "preGuardNegativeControl": {
+    "sharedKeyDeleteRemovedEarning": true,
+    "balanceMicrosRemaining": "40000",
+    "ledgerRowRemaining": true,
+    "rolledBack": true
+  },
+  "guardBehavior": {
+    "activationRequired": true,
+    "lockTimeoutSqlstate": "55P03",
+    "cascadeAndDirectMutationRejected": true,
+    "duplicateRequestLogCreditRejected": true,
+    "deletableUnusedKey": true
+  },
+  "adminHistoricalApply": {
+    "candidateWithoutOriginalEvidence": "409 historical_earning_evidence_required",
+    "incompleteFirstPage": "409 historical_earning_scan_incomplete",
+    "reportsScanCompleteness": true,
+    "currentPriceOwnerCommissionReads": 0,
+    "ledgerWrites": 0
+  },
+  "sourceSha256": {
+    "packages/admin/lib/routes/admin/earnings.ts": "14d0e4aab1603ccaa284970c447265c2f51aa91e1f1a358b17bce8131d8c5812",
+    "packages/admin/lib/routes/admin/earnings.test.ts": "211610acf16e09ab30bcb0b51ac082189905c2ec6f5743090f0f63969e0541af",
+    "packages/core/migrations-proposals/postgres/shared-key-earnings-history-guard.sql": "454a720f9a6b7410e0aad99c2aaa2eb3327fbbac8c86bb3e3cd4537131e6611b",
+    "scripts/db/cutover/postgres-shared-key-earnings-history.native.test.mjs": "e260fbff0917bcf5cdd3ddb00a52bd7a6ecb39dbd9e14e1946d158429c4af557",
+    "docs/developers/architecture/implementation-evidence/C04-earnings-history-guard-v333.md": "99a72625dd03d578ac1a2819161827ea33422ac4964b5d449a3b56f57ea6dbcc",
+    "docs/developers/architecture/implementation-evidence/C04-postgres-native-earning-history-v333-report.json": "dcd380c86045adbddb7c5406f3c2592f707663b1eaf754c6712c037c0562e571",
+    ".github/workflows/proxy-dispatch-safety.yml": "51d16b7e7422552eaa6329c8826321ca8e943d4a19677b80219ee7d6bbe02e41"
+  },
+  "boundaries": {
+    "formalMigrations": 73,
+    "guardFormalMigration": false,
+    "immutableEconomicSnapshot": false,
+    "economicOutboxAndConsumer": false,
+    "d1AndMysqlCascadeGuard": false,
+    "fullHistoricalPagination": false,
+    "productionEnabled": false,
+    "remoteSqlCalls": 0,
+    "deployments": 0,
+    "externalModelCalls": 0
+  }
+}

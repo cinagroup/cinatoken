@@ -1,0 +1,68 @@
+{
+  "version": "v337",
+  "date": "2026-09-24",
+  "status": "READ_ONLY_EARNING_QUOTE_CHAIN_AUDIT_C04_OPEN",
+  "goalComplete": false,
+  "gitHeadAtEvidence": "7eb59008f7d8e156e81fd18a57658fdef2553264",
+  "publicRecordUsageCallers": [
+    "packages/proxy/src/routes/v1/chat.ts",
+    "packages/proxy/src/routes/v1/gemini.ts",
+    "packages/proxy/src/routes/v1/messages.ts",
+    "packages/proxy/src/routes/v1/responses.ts",
+    "packages/proxy/src/routes/v1/embeddings.ts",
+    "packages/proxy/src/routes/v1/rerank.ts"
+  ],
+  "separateUsagePaths": {
+    "audioAndRealtime": "recordAudioUsage -> insertRequestUsageAndChargeTx; no settleSharedKeyEarning call",
+    "images": "recordImageUsage -> insertRequestUsageAndChargeTx; no settleSharedKeyEarning call"
+  },
+  "findings": {
+    "sellerPriceAndOwnerLostOnRouteClone": true,
+    "buyerPricingAuditIsSellerQuote": false,
+    "routeTraceIsImmutableSellerQuote": false,
+    "sharedKeyUpdatedAtIsFormalQuoteVersion": false,
+    "sharedKeyRowHasEntitlementVersion": false,
+    "sharedKeyRowHasBillingMode": false,
+    "sharedKeyRowHasCurrencyAndUnit": false,
+    "sharedKeyRowHasFormalEffectiveInterval": false,
+    "settlementReadsCurrentKeyAndCommissionAfterRequestLogCommit": true,
+    "requestLogAndSellerEarningAtomic": false,
+    "sellerEarningIdempotencyKey": "request_log_id",
+    "typedSharedEarningOutboxPresent": false,
+    "c04_1To5Complete": false
+  },
+  "nextSafeSlice": "review-only PostgreSQL append-only typed shared_key_quote_versions contract and negative native fixture; no current-earnings rewrite or consumer activation",
+  "validation": {
+    "mode": "source inspection and SHA verification only",
+    "testsRun": 0,
+    "externalProviderCalls": 0,
+    "remoteSqlCalls": 0,
+    "deployments": 0
+  },
+  "sourceSha256": {
+    "packages/proxy/src/services/shared-key-pool.ts": "c65f12a6909c1130d89fb9aabe89b38878e1697df4d9b9c3801dee50c2d16174",
+    "packages/proxy/src/services/model-router.ts": "d0723ce93df9b63819cc0c1fad65c84ce6c8b3d2d9881512bb8ee5ce9cb3819b",
+    "packages/proxy/src/services/usage-tracker.ts": "35304404b9de40b4adadfa8cd54d3320319ba9de18f85ea7cebe5e3fb0344967",
+    "packages/proxy/src/services/audio-usage-charge.ts": "645ff4c0cba7d5b4bfb5566c9f807f5229f6d7a55dc9eb51144213a2b6a1d0e9",
+    "packages/proxy/src/services/image-usage-charge.ts": "39d773d01483e1d393abfd329f54b088f61ac97d79a279665a1ccb8e039b4525",
+    "packages/proxy/src/routes/v1/chat.ts": "491bba32bcea44d8b1ea3ef356673d845d3c431675f4c9beb09f164f48a4bd68",
+    "packages/proxy/src/routes/v1/gemini.ts": "da8f1782cd1e1fff90bea5623e2793e235f42091b139c256a44ba2b1912b36d0",
+    "packages/proxy/src/routes/v1/messages.ts": "be39282a21b6cf88d7df98ab16e8ec225ba82304db1dc7dffe45d2b5acac0a18",
+    "packages/proxy/src/routes/v1/responses.ts": "3cde9824026e054102749b767ff04b6b383d9388bb4f85ae1aaed85dcd2ff15f",
+    "packages/proxy/src/routes/v1/embeddings.ts": "322633678ac10c314ad85c4cad1107eee57b51bb2dddae68bcfb75e1bd18bdac",
+    "packages/proxy/src/routes/v1/rerank.ts": "ba2655f7b5e59b2cb91ec6ed953788848e9a62c01152a729c2d41db458b53d5d",
+    "packages/core/src/services/shared-key-earnings.ts": "6f6df05be79eb044b0a02c4e793a4e538196d84bcf90bd22c690f8923e0ca156",
+    "packages/core/src/db/shared-keys-types.ts": "c7162a39d87128085003a0941c6b21bf2b19cd2628bbab2fc7ce34061a6d641e",
+    "packages/core/src/storage/critical-write-paths.ts": "c639089cb69442d07836829a4447437395ef43b85b75feef0fc3cba0e530439d",
+    "packages/core/src/db/request-logs-types.ts": "6d7ed2229276b535f0be4048bc754a6ba901478738a2451354a627b885a48462",
+    "packages/core/src/db/postgres/critical-writes.impl.ts": "ab1155707ad740ef96288f50d16cf78b4e2b35371ef64c8076c45c3a4927c986",
+    "packages/core/src/db/d1/critical-writes.impl.ts": "145df8a9f579573664f0dbec08a833d5c80f0e3bb0f021cb6ce3c5dd157053bb",
+    "packages/core/src/db/mysql/critical-writes.impl.ts": "f8a6f9ae49c58dd3a96f41839527c87d06ef9f3f6ee0e2169d80645cd4d030c9",
+    "packages/core/src/db/postgres/portal-marketplace.impl.ts": "6e02e6fcb15c5d2942001f0b8574f6521d7131f36f712db0f731aa19c35f7a8c",
+    "packages/core/src/db/d1/portal-marketplace.impl.ts": "dd624d80294448d883d902eb1f8f0edc726a9dd0e33bcdee722f0fb75b7024ec",
+    "packages/core/src/db/mysql/portal-marketplace.impl.ts": "7d2aac6fc3e7753c40d85311013ab0895bbb2745973139a68dbacedea8de8c0c",
+    "packages/core/src/storage/drizzle/schema.pg.ts": "e8be18b8b6a540f9b7960e42db37c2787f2ad6d71a4cc74a910f0798635cf8bc",
+    "packages/core/migrations-postgres/0029_portal_integer_ledger.sql": "0e2606696c95870253bb392061f9bb1e27f99b0698131fd422a2f36f67fab6a4",
+    "packages/core/migrations-d1/0029_portal_integer_ledger.sql": "884de45eddfb94bf0e43c828ee2030273c8c82b2b8d5f209d5bb8716c31cb950"
+  }
+}

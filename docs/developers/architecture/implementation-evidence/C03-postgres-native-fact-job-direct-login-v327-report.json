@@ -1,0 +1,47 @@
+{
+  "status": "PASS",
+  "cleanup": "PASS",
+  "binaryVersion": "postgres (PostgreSQL) 18.6",
+  "scope": "owned loopback PostgreSQL 18 SCRAM password-authenticated fact and dispatch LOGIN roles",
+  "limitations": [
+    "Local password-authenticated roles do not prove a production origin, credential rotation or capacity.",
+    "The review-only SQL grants producer persistence only, not the financial settlement consumer."
+  ],
+  "sourceSha256": {
+    "test": "3e379581d1d44754dc96cfbf141dc68ef7e93da1c1f8e6b2e7873f8a73d22aca",
+    "grant": "796b576519f54b9dd76fb3dcae53999adc23a8afbe213b60351120a42ba7a70b",
+    "factRepo": "8170b34cb965a77b35c49a6ca4a0a8ebe219230e9bedc9017376bf845f5a4e8e",
+    "jobRepo": "7ac1db1b02159b4827b2c0fee29711fee544246fc4e1fbbcbef420aca1c17429",
+    "cinatoken.dispatch_intent_definer_activation": "02cf4ffde6d37bb9253e9466cbde59047b5b8a0b19d73897ae69d60696db077d",
+    "cinatoken.request_dispatch_single_claim_activation": "6e62e12c25a94e4b32fe0121c728198a409f95427ef4cdcb14c51ebe1a629112",
+    "cinatoken.settlement_outbox_definer_activation": "c3995e07159d4fe0b2aac5ab96ee2d14e6e11fddc3bf9868d258d43620612f52"
+  },
+  "stages": [
+    {
+      "name": "distinct-scram-identities-no-cross-role-switch",
+      "result": "PASS"
+    },
+    {
+      "name": "pinned-migrations-parent-and-outbox-installed",
+      "result": "PASS",
+      "count": 73
+    },
+    {
+      "name": "wrong-mode-property-and-membership-refuse-atomically",
+      "result": "PASS"
+    },
+    {
+      "name": "password-authenticated-fact-job-persistence-and-cross-role-denials",
+      "result": "PASS",
+      "exactColumnGrants": 49,
+      "stored": {
+        "fact": 1,
+        "outbox": 1,
+        "job": 1,
+        "receipt": 0,
+        "log": 0
+      }
+    }
+  ],
+  "serverVersionNum": 180006
+}

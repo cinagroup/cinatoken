@@ -1,0 +1,62 @@
+{
+  "version": "v333",
+  "date": "2026-09-24",
+  "status": "LOCAL_REPLAY_CURSOR_AND_LOG_ID_GUARD_PASS_PRODUCTION_DISABLED",
+  "C03": "DOING",
+  "goalComplete": false,
+  "validation": {
+    "unitTests": { "pass": 13, "fail": 0 },
+    "targetedStrictTypecheck": "PASS",
+    "scriptsWideTypecheck": "FAIL_IN_UNTOUCHED_CATALOG_READINESS_AND_SMOKE_FILES",
+    "nativePostgres": { "pass": 7, "fail": 0, "cleanupPass": 7 },
+    "reportStages": {
+      "replayScaleLock": 11,
+      "replayReservations": 21,
+      "legacyParentActivation": 10,
+      "legacyHandlerCompatibility": 5,
+      "financialReplayGrant": 15,
+      "httpGenerationsFinancial": 4,
+      "httpEditsFinancial": 4
+    }
+  },
+  "sourceSha256": {
+    "scripts/db/cutover/build-postgres-replay-reservation-backfill.mjs": "62d1cc9795693d6a043ae7b26d24084b6c0f01c80bfb142e09928f5fef7fd3d0",
+    "scripts/db/cutover/build-postgres-replay-reservation-backfill.test.mjs": "c9eae87906a3bac5b80ce9855f172f6072b910b77f059204c34437b41c044f2b",
+    "packages/core/migrations-proposals/postgres/request-dispatch-replay-reservations.sql": "e9dad8f79a5bbc302de85658fb93fd5f8c17a30f4e932c98c26d98adaa94f64c",
+    "packages/core/migrations-proposals/postgres/request-dispatch-replay-parent-gate.sql": "1079eb858811c70dd850b95be68f64e5c7b8361926e8c3f0a9e80621f6125b10",
+    "scripts/db/cutover/grant-postgres-runtime.ts": "0fd36a946063fd81dbe5b381c7e35b4aa5ad6932015d6935e33442afad092390",
+    "scripts/db/cutover/postgres-recovery-role-policy.ts": "8110d641d3d19fce2bfe9c4bd691bbf7927c15dd33ecd297be843d51f10b8ca5",
+    "scripts/db/cutover/build-financial-consumer-direct-login-grant.ts": "9cbd97271f4f1a9c2c4ccd9b52efcd3dfa27ec43cee446f9880aab7f49b8dc36",
+    "scripts/db/cutover/build-request-legacy-parent-default-acl-activation.mjs": "481b5a423c814604a35a4e45344334fe758f87aa58fefcb542fb1a00dc7ba177",
+    "docs/developers/architecture/implementation-evidence/C03-postgres-replay-cursor-guard-v333.md": "7fd0ce72b1caa66eeb3e8678ebb476afa5d737dca7c01b030987c4a1d5655d58"
+  },
+  "reportSha256": {
+    "docs/developers/architecture/implementation-evidence/C03-postgres-native-replay-scale-lock-v333-report.json": "ba852b3fecd9058eda217ff07878ce66b4c7e23713661d4d804bc7d04483a74d",
+    "docs/developers/architecture/implementation-evidence/C03-postgres-native-replay-reservations-v333-report.json": "9fbc2e13aef5787c35032da108d7a92b831c48b20e27e8874b92053d60486a6e",
+    "docs/developers/architecture/implementation-evidence/C03-postgres-native-legacy-parent-activation-v333-report.json": "766236dbe32979a9d0358485c4c7ebdea5c757d688531d84ee72b23309d7c6e0",
+    "docs/developers/architecture/implementation-evidence/C03-postgres-native-legacy-handler-compat-v333-report.json": "0c5667dda9e3e80235102c8a27afaf37594341e5a9d5c0b47a6fe523d2789594",
+    "docs/developers/architecture/implementation-evidence/C03-postgres-native-financial-replay-grant-v333-report.json": "0ad2598456d27138d92e6415c9ba27112b37f73e6228a3828aa08557f28c4188",
+    "docs/developers/architecture/implementation-evidence/C03-postgres-native-http-generations-financial-v333-report.json": "644c7e209805d8af2a3fccf1511afe4a2322f1b23f6af31686970b8d962d2eca",
+    "docs/developers/architecture/implementation-evidence/C03-postgres-native-http-edits-financial-v333-report.json": "1ec5e96ceedb4ebcab22b20c8a3f878837081d0c9d2ab5796ed026b8764161fc"
+  },
+  "v332ScaleReportErratum": {
+    "previousPinnedSha256": "7fefe517244f2e49f563f96d411f649f3b710defe332929948813854adf806c8",
+    "currentOverwrittenSha256": "7c62b63643bb3945d806c589ddda61ee665773645943a60a49968cf3e9d7c17e",
+    "originalReportRecovered": false,
+    "currentCodeAuthority": "v333 reports"
+  },
+  "boundaries": {
+    "formalMigrations": 73,
+    "syntheticLegacyLogRows": 25001,
+    "retentionPolicyApproved": false,
+    "contractMigrationApproved": false,
+    "representativeProductionLockWindowVerified": false,
+    "historicalDeployedHandlersVerified": false,
+    "realWorkersHyperdriveQueueVerified": false,
+    "productionRecoveryEnabled": false,
+    "remoteSqlCalls": 0,
+    "deployments": 0,
+    "cloudModelCalls": 0,
+    "cloudKmsCalls": 0
+  }
+}

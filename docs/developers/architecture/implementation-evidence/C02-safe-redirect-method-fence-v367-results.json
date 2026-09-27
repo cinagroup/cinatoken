@@ -1,0 +1,46 @@
+{
+  "date": "2026-09-25",
+  "scope": "local Node loopback and source audit; no live supplier or Worker runtime",
+  "source_sha256": {
+    "packages/tool-engines/src/web-fetch/safe-redirect-fetch.ts": "e3a3823330c4c4fb2da5bdd56d42a10f5fca1762f7dbc2f0abf75a45cd434949",
+    "packages/tool-engines/src/web-fetch/safe-redirect-post-wire.test.mjs": "0029b4d2d625c9040c3eb035d96b1b680b116dfdc10635b1055e3b4e51678e1c",
+    "packages/proxy/src/services/egress/dashscope-audio-driver.test.ts": "1f9f5ee9be9e88977161b52e3c6b3b75dccef9345b0e01c435e8c3bea95d751b"
+  },
+  "negative_control": {
+    "command": "npx tsx --test packages/tool-engines/src/web-fetch/safe-redirect-post-wire.test.mjs",
+    "before_fix": "2/4 failed: 307 and 308 each forwarded a complete second POST with body paid-request to the redirect target; raw output not retained"
+  },
+  "checks": [
+    {
+      "command": "npm run test:unit -w @octafuse/tool-engines",
+      "result": "44/44 pass"
+    },
+    {
+      "command": "npx tsx --test packages/proxy/src/services/egress/dashscope-audio-driver.test.ts",
+      "result": "33/33 pass"
+    },
+    {
+      "command": "npm run typecheck -w @octafuse/tool-engines",
+      "result": "pass"
+    },
+    {
+      "command": "npm run typecheck -w @octafuse/proxy",
+      "result": "pass"
+    },
+    {
+      "command": "git diff --check -- packages/tool-engines/src/web-fetch/safe-redirect-fetch.ts packages/tool-engines/src/web-fetch/safe-redirect-post-wire.test.mjs packages/tool-engines/package.json packages/proxy/src/services/egress/dashscope-audio-driver.test.ts docs/developers/architecture/implementation-evidence/C02-safe-redirect-method-fence-v367.md",
+      "result": "pass"
+    }
+  ],
+  "gates": {
+    "C02.5": "open",
+    "C02.6": "open",
+    "C02.G": "open"
+  },
+  "unverified": [
+    "Linux CI",
+    "Cloudflare Workers and intermediary transport retries",
+    "provider-internal retries and billing",
+    "full cross-protocol durable budget and settlement"
+  ]
+}

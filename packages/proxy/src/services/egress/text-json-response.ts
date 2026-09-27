@@ -60,7 +60,7 @@ export async function cancelInvalidTextSuccessResponse(
 		requestId?: string | null;
 	},
 ): Promise<{ response: Response; meta: ProxyDispatchMeta }> {
-	await response.body?.cancel('invalid_text_success_response').catch(() => undefined);
+	void response.body?.cancel('invalid_text_success_response').catch(() => undefined);
 	return invalidTextSuccessResponse(params);
 }
 
@@ -97,6 +97,7 @@ export async function readBoundedTextJsonObject(
 		skin: OpenRouterErrorSkin;
 		requestId?: string | null;
 		maxBytes?: number;
+		signal?: AbortSignal;
 	},
 ): Promise<BoundedTextJsonObjectResult> {
 	let text: string;
@@ -104,6 +105,7 @@ export async function readBoundedTextJsonObject(
 		text = await responseTextWithinLimit(
 			response,
 			options.maxBytes ?? TEXT_JSON_RESPONSE_MAX_BYTES,
+			options.signal,
 		);
 	} catch (error) {
 		return {

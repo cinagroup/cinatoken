@@ -22,8 +22,8 @@ assert.deepEqual(
 );
 assert.deepEqual(
 	postgresMigrations.slice(40),
-	['0041_workspaces.sql', '0042_gateway_keys_workspace.sql', '0043_workspace_presets_guardrails.sql', '0044_route_routing_metadata.sql', '0045_route_data_policy_subject_fingerprint.sql', '0046_model_endpoints.sql', '0047_model_endpoint_route_subject_fingerprint.sql', '0048_model_endpoint_audio_capabilities.sql', '0049_model_endpoint_evidence_ledger.sql', '0050_management_api_keys.sql', '0051_gateway_key_expiry.sql', '0052_gateway_key_limits.sql', '0053_workspace_budgets.sql', '0054_generation_metadata_snapshots.sql', '0055_request_session_id.sql', '0056_generation_feedback.sql', '0057_guardrail_assignment_management_source.sql', '0058_workspace_default_guardrails.sql', '0059_account_default_guardrails.sql', '0060_provider_attempt_availability.sql', '0061_public_model_total_tokens.sql', '0062_generation_service_tier.sql', '0063_private_byok.sql', '0064_byok_always_use_for_provider.sql', '0065_guardrail_budget_settlement_basis.sql', '0066_workspace_budget_usage_index.sql', '0067_batch_jobs.sql'],
-	'PostgreSQL stores budget_spent directly as NUMERIC and must retain its one-version offset from D1',
+	['0041_workspaces.sql', '0042_gateway_keys_workspace.sql', '0043_workspace_presets_guardrails.sql', '0044_route_routing_metadata.sql', '0045_route_data_policy_subject_fingerprint.sql', '0046_model_endpoints.sql', '0047_model_endpoint_route_subject_fingerprint.sql', '0048_model_endpoint_audio_capabilities.sql', '0049_model_endpoint_evidence_ledger.sql', '0050_management_api_keys.sql', '0051_gateway_key_expiry.sql', '0052_gateway_key_limits.sql', '0053_workspace_budgets.sql', '0054_generation_metadata_snapshots.sql', '0055_request_session_id.sql', '0056_generation_feedback.sql', '0057_guardrail_assignment_management_source.sql', '0058_workspace_default_guardrails.sql', '0059_account_default_guardrails.sql', '0060_provider_attempt_availability.sql', '0061_public_model_total_tokens.sql', '0062_generation_service_tier.sql', '0063_private_byok.sql', '0064_byok_always_use_for_provider.sql', '0065_guardrail_budget_settlement_basis.sql', '0066_workspace_budget_usage_index.sql', '0067_batch_jobs.sql', '0068_function_schema_resolution.sql', '0069_recovery_dispatch_intents.sql', '0070_recovery_settlement_facts.sql', '0071_recovery_jobs.sql', '0072_recovery_commit_receipts.sql', '0073_recovery_api_key_workspace_lock.sql'],
+	'PostgreSQL must retain the baseline sequence and append recovery schema migrations in order',
 );
 
 for (const file of postgresMigrations) {
@@ -526,7 +526,7 @@ assert.match(userBudgetPrecisionTests, /4294967296\.0/u);
 assert.match(userBudgetPrecisionTests, /Number inputs[\s\S]*fail closed/u);
 const cutoverRunbook = read('docs/operators/migrations/d1-postgres-cutover.md');
 assert.match(cutoverRunbook, /源 D1 迁移链尾为 `0068_batch_jobs\.sql`/u);
-assert.match(cutoverRunbook, /目标 PostgreSQL 迁移链尾为 `0067_batch_jobs\.sql`/u);
+assert.match(cutoverRunbook, /目标 PostgreSQL 迁移链尾为 `0073_recovery_api_key_workspace_lock\.sql`/u);
 assert.match(cutoverRunbook, /D1 `0048`\/PostgreSQL `0047`[^\n]*subject_fingerprint/u);
 assert.match(cutoverRunbook, /旧音频证据保持 `\{\}`/u);
 assert.match(cutoverRunbook, /legacy_real_safe_fallback/u);
@@ -814,8 +814,27 @@ const runtimeGrants = read('scripts/db/cutover/grant-postgres-runtime.ts');
 const runtimeGrantSql = runtimeGrants.match(/tx\.unsafe\(`([\s\S]*?)`\)/u)?.[1];
 assert.ok(runtimeGrantSql, 'Unable to parse runtime grant SQL');
 assert.doesNotMatch(runtimeGrantSql, /^\s*\/\//mu, 'Runtime grant SQL must use SQL comments, not JavaScript comments');
-assert.match(runtimeGrants, /0067_batch_jobs\.sql/u);
-assert.match(runtimeGrants, /migration=0067/u);
+assert.match(runtimeGrants, /0073_recovery_api_key_workspace_lock\.sql/u);
+assert.match(runtimeGrants, /migration=0073/u);
+const recoveryAclBlock = runtimeGrantSql.match(/REVOKE ALL ON TABLE\s+([^;]+)\s+FROM \$\{GATEWAY_RUNTIME_ROLE\};/gu)
+	?.find(block => block.includes('request_dispatch_intents'));
+assert.ok(recoveryAclBlock, 'Runtime grant step must revoke the new recovery tables');
+for (const table of ['request_dispatch_intents', 'request_usage_settlements', 'request_usage_settlement_outbox', 'request_usage_recovery_jobs', 'request_usage_commit_receipts']) {
+	assert.ok(recoveryAclBlock.includes(`\$\{GATEWAY_SCHEMA\}.${table}`), `Missing runtime revoke for ${table}`);
+}
+assert.ok(runtimeGrantSql.indexOf('GRANT SELECT, INSERT, UPDATE, DELETE') < runtimeGrantSql.indexOf(recoveryAclBlock));
+const helperRevoke = runtimeGrantSql.match(/REVOKE EXECUTE ON FUNCTION[\s\S]*?recovery_api_key_workspace_matches\(text, text\)[\s\S]*?FROM \$\{GATEWAY_RUNTIME_ROLE\};/u)?.[0];
+assert.ok(helperRevoke, 'Runtime grant step must revoke the recovery definer helper');
+assert.ok(runtimeGrantSql.indexOf('GRANT EXECUTE ON ALL FUNCTIONS') < runtimeGrantSql.indexOf(helperRevoke));
+const parentAclBlock = runtimeGrantSql.match(/DO \$runtime_request_parent_privilege\$[\s\S]*?\$runtime_request_parent_privilege\$;/u)?.[0];
+assert.ok(parentAclBlock, 'Runtime grant rerun must close the optional request parent');
+assert.ok(runtimeGrantSql.indexOf('GRANT EXECUTE ON ALL FUNCTIONS') < runtimeGrantSql.indexOf(parentAclBlock));
+assert.match(parentAclBlock, /REVOKE ALL ON TABLE \$\{GATEWAY_SCHEMA\}\.request_dispatch_requests FROM \$\{GATEWAY_RUNTIME_ROLE\}/u);
+for (const name of ['prepare_request_dispatch_intent_v1', 'claim_request_dispatch_intent_v1', 'classify_request_dispatch_intent_v1']) {
+	assert.match(parentAclBlock, new RegExp(`REVOKE EXECUTE ON FUNCTION \\$\\{GATEWAY_SCHEMA\\}\\.${name}\\(`, 'u'));
+}
+assert.match(parentAclBlock, /has_table_privilege\(runtime_oid, parent_oid/u);
+assert.match(parentAclBlock, /has_function_privilege\(runtime_oid, claim_oid/u);
 for (const immutableTable of [
 	'api_key_request_logs',
 	'shared_key_earnings',
@@ -907,8 +926,10 @@ for (const batchAccessContract of [
 ]) {
 	assert.match(hyperdriveAccessProbe, new RegExp(batchAccessContract, 'u'));
 }
-assert.match(hyperdriveAccessProbe, /migration_count === '67'/u);
-assert.match(hyperdriveAccessProbe, /0067_batch_jobs\.sql/u);
+assert.match(hyperdriveAccessProbe, /migration_count === '73'/u);
+assert.match(hyperdriveAccessProbe, /0073_recovery_api_key_workspace_lock\.sql/u);
+assert.match(hyperdriveAccessProbe, /recovery_tables_inaccessible/u);
+assert.match(hyperdriveAccessProbe, /recovery_helper_execute/u);
 
 const corePackage = JSON.parse(read('packages/core/package.json'));
 assert.match(corePackage.scripts['pretest:unit'], /test:ordinary-budget/u);

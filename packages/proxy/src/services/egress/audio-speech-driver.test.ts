@@ -790,7 +790,7 @@ describe('OpenAI speech passthrough', () => {
 					));
 					return;
 				}
-				controller.error(new Error('socket closed'));
+				controller.error(new Error('socket closed PRIVATE_TRANSPORT_DETAIL'));
 			},
 		});
 		const broken = await dispatchOpenAiAudioSpeech(
@@ -800,9 +800,10 @@ describe('OpenAI speech passthrough', () => {
 				headers: { 'Content-Type': 'text/event-stream' },
 			}) },
 		);
-		await assert.rejects(() => broken.response.text(), /socket closed/);
+		await assert.rejects(() => broken.response.text(), { message: 'Audio speech stream failed' });
 		const usage = await broken.usagePromise;
-		assert.match(usage.stream_error ?? '', /socket closed/);
+		assert.equal(usage.stream_error, 'Audio speech stream failed');
+		assert.doesNotMatch(JSON.stringify(usage), /PRIVATE_TRANSPORT_DETAIL/);
 		assert.equal(broken.meta?.upstreamOutcomeUnknown, true);
 		assert.equal(broken.meta?.failoverForbidden, true);
 	});

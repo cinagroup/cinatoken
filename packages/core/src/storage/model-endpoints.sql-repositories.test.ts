@@ -144,6 +144,12 @@ describe("SQL model-endpoint repositories", () => {
 		]);
 		await repository.listRuntimeBindingsByRouteTargetIds(["route-1"]);
 		assert.match(calls.at(-1)!.sql, /me\.audio_capabilities/u);
+		assert.match(calls.at(-1)!.sql, /jsonb_array_elements_text\(\$1::jsonb\)/u);
+		assert.deepEqual(calls.at(-1)!.params, ['["route-1"]']);
+		await repository.listRouteLinks(["endpoint-1", "endpoint-2"]);
+		assert.deepEqual(calls.at(-1)!.params, ['["endpoint-1","endpoint-2"]']);
+		await repository.listDiscoveryRouteBindings(["endpoint-1"]);
+		assert.deepEqual(calls.at(-1)!.params, ['["endpoint-1"]']);
 		assert.equal(
 			await repository.updateUnpublished("endpoint-1", {
 				status: "draft",

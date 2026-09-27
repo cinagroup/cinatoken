@@ -1,0 +1,65 @@
+{
+  "version": "v316",
+  "date": "2026-09-24",
+  "status": "LOCAL_NATIVE_FACT_PRODUCER_PROPOSALS_PASS_PRODUCTION_DISABLED",
+  "C03": "DOING",
+  "goalComplete": false,
+  "validation": {
+    "intentDefinerProposalPglite": { "pass": 1, "fail": 0 },
+    "outboxDefinerProposalPglite": { "pass": 1, "fail": 0 },
+    "nativeFactProducerProposals": { "pass": 1, "fail": 0, "verifiedKeyLockOrders": 2 },
+    "nativeRecoveryFinancialNegative": { "pass": 1, "fail": 0 },
+    "nativeFormalMigrationCount": 73,
+    "postgresMigrationContract": true,
+    "diffCheck": true,
+    "nativePostgresVersion": "18.6",
+    "nativeProducerReport": "docs/developers/architecture/implementation-evidence/C03-postgres-fact-producer-proposals-v316-report.json",
+    "nativeFinancialNegativeReport": "docs/developers/architecture/implementation-evidence/C03-postgres-native-financial-negative-v316-report.json"
+  },
+  "sourceSha256": {
+    "packages/core/migrations-proposals/postgres/dispatch-intent-producer-definer.sql": "16d7bb38b67e4dedb6f47684f1db1c72f290c3ae3394f12d2b63b38efac157c2",
+    "packages/core/migrations-proposals/postgres/settlement-outbox-producer-definer.sql": "58b31a3a540fb7a6cd016bfbc928204f98b613f6d5451da330275a5fac6367ed",
+    "packages/core/src/storage/recovery/dispatch-intent-producer-definer.proposal.pglite.test.mjs": "148b7f033044b3e5648d4ae3ed1b6d003e9de9ed4f2960e56f0e22f054d912ff",
+    "packages/core/src/storage/recovery/settlement-outbox-producer-definer.proposal.pglite.test.mjs": "70eb2e9ca353eeba64bdb8604861f54d3b3da8a827283574d8470bdac58fc931",
+    "scripts/db/cutover/postgres-fact-producer-proposals.native.test.mjs": "13c7a4f8f153e754e20ebb87d104b380552f8df5c21c9a3babc379ce6fb27c91",
+    "scripts/db/cutover/postgres-recovery-financial-negative.native.test.mjs": "076d9fa61393d153f83b84fb98e06c12fcb7e8b3b189f4772e174e6519f05160",
+    "scripts/db/cutover/grant-postgres-runtime.ts": "5f36b5e732607ae6c4ee172f7a0b63bcd7248b1e6aa6d24584a813e87b95799e"
+  },
+  "evidenceSha256": {
+    "docs/developers/architecture/implementation-evidence/C03-postgres-fact-producer-proposals-v316-report.json": "e7a897a4824fd24467dcb4a8bbdca6c5deb04d55242ecc6c67412cf53638e905",
+    "docs/developers/architecture/implementation-evidence/C03-postgres-native-financial-negative-v316-report.json": "c299a96da7dec68710cec8ae941d0e7c081386d3b29e1091fea0fe969c284297"
+  },
+  "boundaries": {
+    "productionActivated": false,
+    "formalProducerMigrationAdded": false,
+    "producerProposalAppliedOutsideLocalFixture": false,
+    "productionFactProducerIdentityAssigned": false,
+    "producerTenantAuthorizationVerified": false,
+    "postgresProducerConnectedToWorkerOrNode": false,
+    "syntheticProducerNoLogin": true,
+    "syntheticProducerNoDirectKeyOrOutboxWrite": true,
+    "nativeProducerKeyLockOrdersVerified": true,
+    "financialNetworkCommitAckLossVerified": false,
+    "financialApplicationResultLossVerified": true,
+    "representativeLegacyTrafficLatencyConfirmed": false,
+    "originConnectionBudgetConfirmed": false,
+    "workersHyperdriveQueueLifecycleVerified": false,
+    "systemRuntimeInstalled": false,
+    "privateLocalRuntimeUsed": true,
+    "remoteSqlCalls": 0,
+    "cloudManagementCalls": 0,
+    "deployments": 0,
+    "modelCalls": 0,
+    "kmsCalls": 0,
+    "cumulativeStagingCapUsd": 2,
+    "capReset": false
+  },
+  "knownBlockers": [
+    "producer_proposals_not_formal_or_activated_outside_fixture",
+    "producer_identity_authorization_admission_unknown_and_provenance_unassigned",
+    "representative_legacy_traffic_latency_deadlock_and_upgrade_locks_unverified",
+    "current_origin_capacity_unverified",
+    "financial_network_commit_ack_loss_and_other_failure_variants_unverified",
+    "workers_hyperdrive_queue_lifecycle_unverified"
+  ]
+}

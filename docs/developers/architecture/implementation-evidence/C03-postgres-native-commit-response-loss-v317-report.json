@@ -1,0 +1,75 @@
+{
+  "status": "PASS",
+  "cleanup": "PASS",
+  "binaryVersion": "postgres (PostgreSQL) 18.6",
+  "scope": "owned loopback-only PG cluster and wire proxy; fixture migrator produces facts; NOLOGIN recovery via SET ROLE",
+  "lossMechanism": "Proxy forwards COMMIT and withholds PostgreSQL CommandComplete(COMMIT) and ReadyForQuery; independent backend verifies rows before client connection is severed; no TCP ACK packets are manipulated",
+  "stages": [
+    {
+      "name": "formal-migrations",
+      "result": "PASS",
+      "count": 73
+    },
+    {
+      "name": "role-and-guard",
+      "result": "PASS",
+      "login": false,
+      "runtimeCompatible": false
+    },
+    {
+      "name": "claimed-intent-and-fact",
+      "result": "PASS",
+      "requestId": "gen-d9efec74-92c8-4493-b24c-a4e20e10ac18"
+    },
+    {
+      "name": "postgres-commit-response-withheld-and-reconciled",
+      "result": "PASS",
+      "connections": 2,
+      "commitFramesForwarded": 1,
+      "beginFramesForwarded": 1,
+      "commitResponsesDropped": 1,
+      "backendProofBeforeDisconnect": {
+        "receipts": 1,
+        "logs": 1,
+        "spent": "1.250000",
+        "job_state": "committed"
+      },
+      "backendProofError": null,
+      "observedCommitTransportError": {
+        "name": "Error",
+        "code": "CONNECTION_CLOSED",
+        "message": "write CONNECTION_CLOSED 127.0.0.1:64862"
+      },
+      "confirmationRoles": [
+        "cinatoken_gateway_recovery",
+        "cinatoken_gateway_recovery",
+        "cinatoken_gateway_recovery"
+      ],
+      "durableState": {
+        "receipts": 1,
+        "logs": 1,
+        "attempts": 1,
+        "audits": 1,
+        "spent": "1.250000",
+        "job_state": "committed"
+      },
+      "replay": {
+        "receipts": 1,
+        "logs": 1,
+        "spent": "1.250000"
+      }
+    }
+  ],
+  "sourceSha256": {
+    "nativeTest": "8f2dfc984275e0f003d02bbcb91c37ea39b227fb98ac2cf0f9a667933d090635",
+    "rolePolicy": "a29f6d8df66b6837c2dceb4f4548fc8ff495d7076582098187cb0573c25b02de",
+    "runtimeGrant": "5f36b5e732607ae6c4ee172f7a0b63bcd7248b1e6aa6d24584a813e87b95799e",
+    "guardSwitch": "24a601dbafd66f16cdd14dcc81017bc26199c6b833e311d389cdb07103010763",
+    "nativeCluster": "6b5923be8d3bdcd061033eed1af2f67f3b87fa2fca1f2cf0a0b2eb0eb2cb8d2a",
+    "recoveryJobs": "7ac1db1b02159b4827b2c0fee29711fee544246fc4e1fbbcbef420aca1c17429",
+    "migration0073": "07025d295d1cf672235c9d45cea77c4bbef8f3859199708206833d945345593b",
+    "settlementRepository": "2be4882f4d715f4de16fa2abe2663ffdb4d0bf736566939b63d2657f032ac00f",
+    "financialWriter": "ab1155707ad740ef96288f50d16cf78b4e2b35371ef64c8076c45c3a4927c986"
+  },
+  "serverVersionNum": 180006
+}

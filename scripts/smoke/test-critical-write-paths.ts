@@ -12,10 +12,12 @@ class MockStatement {
 	public readonly sqlText: string;
 	public binds: unknown[] = [];
 	public runResult: { meta: { changes: number } };
+	private readonly firstResult: unknown | null;
 
-	public constructor(sqlText: string, runChanges = 1) {
+	public constructor(sqlText: string, runChanges = 1, firstResult: unknown | null = null) {
 		this.sqlText = sqlText;
 		this.runResult = { meta: { changes: runChanges } };
+		this.firstResult = firstResult;
 	}
 
 	public bind(...values: unknown[]): D1PreparedStatement {
@@ -24,7 +26,7 @@ class MockStatement {
 	}
 
 	public async first<T>(): Promise<T | null> {
-		return null;
+		return this.firstResult as T | null;
 	}
 
 	public async run(): Promise<{ meta: { changes: number } }> {
@@ -32,13 +34,18 @@ class MockStatement {
 	}
 }
 
-function createMockD1Database(): D1Database & { batches: D1PreparedStatement[][]; preparedSql: string[] } {
+function createMockD1Database(options: { budgetSpentMicros?: number } = {}):
+	D1Database & { batches: D1PreparedStatement[][]; preparedSql: string[] } {
 	const batches: D1PreparedStatement[][] = [];
 	const preparedSql: string[] = [];
 	return {
 		prepare(sql: string) {
 			preparedSql.push(sql);
-			return new MockStatement(sql, 1) as unknown as D1PreparedStatement;
+			const firstResult = options.budgetSpentMicros !== undefined
+				&& /SELECT budget_spent_micros\s+FROM users/.test(sql)
+				? { budget_spent_micros: options.budgetSpentMicros }
+				: null;
+			return new MockStatement(sql, 1, firstResult) as unknown as D1PreparedStatement;
 		},
 		async batch(statements: D1PreparedStatement[]) {
 			batches.push(statements);
@@ -65,6 +72,7 @@ test('createApiKeyWithAudit uses a single d1 batch transaction', async () => {
 			id: 'key-id',
 			key: 'sk-test',
 			userId: 'user-1',
+			workspaceId: 'personal:user-1',
 			status: 'active',
 		},
 		audit: {
@@ -82,12 +90,18 @@ test('createApiKeyWithAudit uses a single d1 batch transaction', async () => {
 });
 
 test('updateUserBudgetWithAuditTx runs update then audit batch when changes > 0', async () => {
-	const db = createMockD1Database();
+	const db = createMockD1Database({ budgetSpentMicros: 20_000_000 });
 	await updateUserBudgetWithAuditTx(db, {
 		userId: 'user-1',
+		expectedBudgetMax: 10,
+		expectedBudgetBase: 10,
+		expectedBudgetSpent: 20,
+		expectedBudgetPeriod: 'monthly',
 		expectedBudgetResetAt: '2026-01-01T00:00:00.000Z',
+		expectedBudgetEpoch: 0,
+		expectedBudgetReservedMicros: 0,
 		budgetSpent: 12.34,
-		budgetResetAt: '2026-01-01T00:00:00.000Z',
+		budgetResetAt: '2026-02-01T00:00:00.000Z',
 		apiKeyId: 'key-id',
 		audit: {
 			eventType: 'period_reset',
@@ -100,10 +114,10 @@ test('updateUserBudgetWithAuditTx runs update then audit batch when changes > 0'
 	});
 	assert.ok(db.preparedSql.some((s) => s.includes('UPDATE users')));
 	assert.equal(db.batches.length, 1);
-	assert.equal(db.batches[0]?.length, 1);
+	assert.equal(db.batches[0]?.length, 2);
 });
 
-test('insertRequestUsageAndChargeTx batches log + budget + audit together', async () => {
+test('insertRequestUsageAndChargeTx batches log, stats and accounting writes together', async () => {
 	const db = createMockD1Database();
 	await insertRequestUsageAndChargeTx(db, {
 		userId: 'user-1',
@@ -111,6 +125,7 @@ test('insertRequestUsageAndChargeTx batches log + budget + audit together', asyn
 			id: 'log-id',
 			userId: 'user-1',
 			apiKeyId: 'key-id',
+			workspaceId: 'personal:user-1',
 			userEmail: 'u@example.com',
 			modelId: 'm',
 			providerId: 'p',
@@ -154,7 +169,7 @@ test('insertRequestUsageAndChargeTx batches log + budget + audit together', asyn
 		},
 	});
 	assert.equal(db.batches.length, 1);
-	assert.equal(db.batches[0]?.length, 3);
+	assert.equal(db.batches[0]?.length, 5);
 });
 
 test('postgres branch uses transaction callback', async () => {
@@ -179,6 +194,7 @@ test('postgres branch uses transaction callback', async () => {
 			id: 'key-id',
 			key: 'sk-test',
 			userId: 'user-1',
+			workspaceId: 'personal:user-1',
 			status: 'active',
 		},
 		audit: {

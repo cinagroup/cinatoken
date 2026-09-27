@@ -1,0 +1,14 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": { "noEmit": true, "incremental": false },
+  "files": [
+    "src/services/shared-key-earnings.ts",
+    "src/storage/gateway-repository-interfaces.ts",
+    "src/db/d1/portal-marketplace.impl.ts",
+    "src/db/postgres/portal-marketplace.impl.ts",
+    "src/db/mysql/portal-marketplace.impl.ts",
+    "src/db/d1/portal-marketplace-rebuild.test.ts"
+  ],
+  "include": [],
+  "exclude": []
+}

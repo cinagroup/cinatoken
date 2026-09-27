@@ -1,6 +1,7 @@
 /**
  * 用户路由：`POST /v1/messages`（Anthropic Messages 协议），逻辑与 chat 对称，仅上游 driver 与协议筛选不同。
  */
+import { scheduleResourceCompletion } from '../../runtime/schedule-resource-completion';
 import { Hono } from 'hono';
 import type { Env } from '../../app';
 import { requireApiKey } from '../../middleware/auth';
@@ -52,6 +53,8 @@ import {
   estimateOrdinaryBudgetChargedCost,
 } from '../../services/guardrail-budget-estimate';
 import { createRouteAwareBudgetAdmission } from '../../services/request-budget-admission';
+import { createRequestDispatchBudget } from '../../services/request-dispatch-budget';
+import { assertTextRequestActive, textRequestFailureResponse, waitForTextRequestRead } from '../../middleware/text-request-lifecycle';
 import {
   textUsageCostIsUnknown,
   textUsageWithSafetyTimeout,
@@ -119,12 +122,15 @@ messagesRoutes.post('/', async (c) => {
   const start = Date.now();
   const requestCorrelationId = c.get('generationId')!;
   const timing = new RequestTimingCollector();
+  const dispatchBudget = c.get('textRequestLifecycle')?.dispatchBudget ?? createRequestDispatchBudget();
   const routerMetadataEnabled = openRouterMetadataRequested(c.req.raw.headers);
 
   let body: { model?: string; [k: string]: unknown };
   try {
     body = await c.req.json();
-  } catch {
+  } catch (error) {
+    const failure = textRequestFailureResponse(error, c);
+    if (failure) return failure;
     return gatewayErrorJson(c, {
       status: 400,
       code: GatewayErrorCode.invalidJson,
@@ -143,7 +149,8 @@ messagesRoutes.post('/', async (c) => {
   body = preparedSession.body;
   let sessionRouting = preparedSession.routing;
 
-  const presetResolution = await resolveRequestPreset(repos, apiKey.workspaceId, apiKey.userId, body, 'messages');
+  assertTextRequestActive(c);
+  const presetResolution = await waitForTextRequestRead(c, resolveRequestPreset, repos, apiKey.workspaceId, apiKey.userId, body, 'messages');
   if (!presetResolution.ok) {
     return gatewayErrorJson(c, {
       status: presetResolution.status,
@@ -167,6 +174,7 @@ messagesRoutes.post('/', async (c) => {
   }
   const preGuardrailModelIds = [...parsedModels.value.modelIds];
 
+  assertTextRequestActive(c);
   const guardrail = await runRequestGuardrails(repos, {
     workspaceId: apiKey.workspaceId,
     userId: apiKey.userId,
@@ -176,6 +184,7 @@ messagesRoutes.post('/', async (c) => {
     correlationId: requestCorrelationId,
 	now: new Date(start),
   });
+  assertTextRequestActive(c);
   if (!guardrail.ok) {
     const guardrailResponse = gatewayErrorJson(c, {
       status: guardrail.status,
@@ -183,7 +192,8 @@ messagesRoutes.post('/', async (c) => {
       message: guardrail.message,
     });
     const diagnosticPlan = routerMetadataEnabled
-      ? await buildModelFallbackPlan(repos, {
+      ? await waitForTextRequestRead(c, buildModelFallbackPlan, repos, {
+          control: c.get('textRequestLifecycle')?.deadline,
           modelIds: preGuardrailModelIds,
           body: parsedModels.value.upstreamBody,
           requestProtocol: 'anthropic',
@@ -224,7 +234,8 @@ messagesRoutes.post('/', async (c) => {
   if (guardrail.flagCount > 0) routerMetadataPipeline.push(routerMetadataGuardrailStage('request', 'flagged', guardrail.flagCount));
   if (guardrail.redactionCount > 0) routerMetadataPipeline.push(routerMetadataGuardrailStage('request', 'redacted', guardrail.redactionCount));
 
-  const fallbackPlan = await buildModelFallbackPlan(repos, {
+  const fallbackPlan = await waitForTextRequestRead(c, buildModelFallbackPlan, repos, {
+    control: c.get('textRequestLifecycle')?.deadline,
     modelIds: parsedModels.value.modelIds,
     body: parsedModels.value.upstreamBody,
     requestProtocol: 'anthropic',
@@ -281,6 +292,7 @@ messagesRoutes.post('/', async (c) => {
 		guardrailBudgetMicros,
 		estimateGatewayKeyByokBudgetMicros(fallbackPlan.candidates),
 	);
+  assertTextRequestActive(c);
   const budgetAdmission = await createRouteAwareBudgetAdmission(repos, {
     ordinary: {
       requestId: requestCorrelationId,
@@ -340,6 +352,8 @@ messagesRoutes.post('/', async (c) => {
         publicCorrelationId: requestCorrelationId,
         timing,
         beforeUpstreamDispatch,
+        dispatchBudget,
+        registerResourceCompletion: task => scheduleResourceCompletion(c, task),
         proxy: proxyAnthropicMessages,
         affinityKey: sessionRouting.stickyKeyDigest != null && sessionRouting.stickySource != null
           ? buildOpenRouterSessionAffinityKey({
@@ -492,6 +506,8 @@ messagesRoutes.post('/', async (c) => {
           stickyRouteEligible: sessionDispatch.stickyRouteEligible,
           deferFinalAttempt: !isLastCandidate,
           beforeUpstreamDispatch,
+          dispatchBudget,
+          registerResourceCompletion: task => scheduleResourceCompletion(c, task),
           byok: privateByokContextForApiKey(apiKey),
         },
         requestCorrelationId,
@@ -571,6 +587,8 @@ messagesRoutes.post('/', async (c) => {
     proxyResult = result;
     response = materialized.response;
     errorBodyText = materialized.errorBodyText;
+    // A terminal denial/unknown outcome must also stop the outer model loop.
+    break;
   }
   }
 

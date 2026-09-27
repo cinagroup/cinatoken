@@ -270,9 +270,9 @@ export function createManagementApiKeysRepository(
 				const keyHash = await hashLookupKey(secret);
 				const rows = await raw<RawManagementApiKeyRow[]>`
 					SELECT management_key.*
-					FROM management_api_keys management_key
-					LEFT JOIN users owner_user ON owner_user.id = management_key.personal_owner_user_id
-					LEFT JOIN organizations owner_organization ON owner_organization.id = management_key.organization_id
+					FROM cinatoken_gateway.management_api_keys management_key
+					LEFT JOIN cinatoken_gateway.users owner_user ON owner_user.id = management_key.personal_owner_user_id
+					LEFT JOIN cinatoken_gateway.organizations owner_organization ON owner_organization.id = management_key.organization_id
 					WHERE management_key.key_hash = ${keyHash}
 						AND management_key.status = 'active'
 						AND (management_key.expires_at IS NULL OR management_key.expires_at > CURRENT_TIMESTAMP)
@@ -285,7 +285,7 @@ export function createManagementApiKeysRepository(
 				const row = rows[0];
 				if (!row) return null;
 				const touched = await raw<{ id: string }[]>`
-					UPDATE management_api_keys SET last_used_at = CURRENT_TIMESTAMP
+					UPDATE cinatoken_gateway.management_api_keys SET last_used_at = CURRENT_TIMESTAMP
 					WHERE id = ${row.id} AND status = 'active'
 						AND (expires_at IS NULL OR expires_at > CURRENT_TIMESTAMP)
 					RETURNING id
@@ -299,7 +299,7 @@ export function createManagementApiKeysRepository(
 				const rows =
 					account.accountType === "personal"
 						? await raw<RawManagementApiKeyRow[]>`
-						SELECT * FROM management_api_keys
+						SELECT * FROM cinatoken_gateway.management_api_keys
 						WHERE account_type = 'personal'
 							AND personal_owner_user_id = ${account.personalOwnerUserId}
 							AND organization_id IS NULL
@@ -307,7 +307,7 @@ export function createManagementApiKeysRepository(
 						ORDER BY created_at DESC, id DESC LIMIT 100
 					`
 						: await raw<RawManagementApiKeyRow[]>`
-						SELECT * FROM management_api_keys
+						SELECT * FROM cinatoken_gateway.management_api_keys
 						WHERE account_type = 'organization'
 							AND personal_owner_user_id IS NULL
 							AND organization_id = ${account.organizationId}
@@ -322,13 +322,13 @@ export function createManagementApiKeysRepository(
 				const rows =
 					account.accountType === "personal"
 						? await raw<RawManagementApiKeyRow[]>`
-						SELECT * FROM management_api_keys
+						SELECT * FROM cinatoken_gateway.management_api_keys
 						WHERE id = ${id} AND account_type = 'personal'
 							AND personal_owner_user_id = ${account.personalOwnerUserId}
 							AND organization_id IS NULL LIMIT 1
 					`
 						: await raw<RawManagementApiKeyRow[]>`
-						SELECT * FROM management_api_keys
+						SELECT * FROM cinatoken_gateway.management_api_keys
 						WHERE id = ${id} AND account_type = 'organization'
 							AND personal_owner_user_id IS NULL
 							AND organization_id = ${account.organizationId} LIMIT 1
@@ -340,7 +340,7 @@ export function createManagementApiKeysRepository(
 				assertInsert(params);
 				await raw.begin(async (transaction) => {
 					await transaction`
-						INSERT INTO management_api_keys (
+						INSERT INTO cinatoken_gateway.management_api_keys (
 							id, key_hash, key_preview, account_type, personal_owner_user_id,
 							organization_id, name, status, expires_at, created_by_user_id,
 							created_at, updated_at
@@ -352,7 +352,7 @@ export function createManagementApiKeysRepository(
 						)
 					`;
 					await transaction`
-						INSERT INTO user_audit_logs (
+						INSERT INTO cinatoken_gateway.user_audit_logs (
 							id, user_id, api_key_id, event_type, actor_type,
 							change_payload, source, actor_id, reason_code, reason_text, created_at
 						) VALUES (
@@ -376,20 +376,20 @@ export function createManagementApiKeysRepository(
 					const rows =
 						account.accountType === "personal"
 							? await transaction<{ id: string }[]>`
-							UPDATE management_api_keys SET status = 'revoked', updated_at = ${nowIso}
+							UPDATE cinatoken_gateway.management_api_keys SET status = 'revoked', updated_at = ${nowIso}
 							WHERE id = ${id} AND status = 'active' AND account_type = 'personal'
 								AND personal_owner_user_id = ${account.personalOwnerUserId}
 								AND organization_id IS NULL RETURNING id
 						`
 							: await transaction<{ id: string }[]>`
-							UPDATE management_api_keys SET status = 'revoked', updated_at = ${nowIso}
+							UPDATE cinatoken_gateway.management_api_keys SET status = 'revoked', updated_at = ${nowIso}
 							WHERE id = ${id} AND status = 'active' AND account_type = 'organization'
 								AND personal_owner_user_id IS NULL
 								AND organization_id = ${account.organizationId} RETURNING id
 						`;
 					if (rows.length !== 1) return false;
 					await transaction`
-						INSERT INTO user_audit_logs (
+						INSERT INTO cinatoken_gateway.user_audit_logs (
 							id, user_id, api_key_id, event_type, actor_type,
 							change_payload, source, actor_id, reason_code, reason_text, created_at
 						) VALUES (
@@ -408,13 +408,13 @@ export function createManagementApiKeysRepository(
 				const rows =
 					account.accountType === "personal"
 						? await raw<{ id: string }[]>`
-						SELECT id FROM workspaces WHERE id = ${workspaceId}
+						SELECT id FROM cinatoken_gateway.workspaces WHERE id = ${workspaceId}
 							AND status = 'active' AND scope_type = 'personal'
 							AND personal_owner_user_id = ${account.personalOwnerUserId}
 							AND organization_id IS NULL LIMIT 1
 					`
 						: await raw<{ id: string }[]>`
-						SELECT id FROM workspaces WHERE id = ${workspaceId}
+						SELECT id FROM cinatoken_gateway.workspaces WHERE id = ${workspaceId}
 							AND status = 'active' AND scope_type = 'organization'
 							AND personal_owner_user_id IS NULL
 							AND organization_id = ${account.organizationId} LIMIT 1

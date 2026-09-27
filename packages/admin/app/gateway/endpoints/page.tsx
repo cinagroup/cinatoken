@@ -803,10 +803,10 @@ export default function ModelEndpointsPage() {
 	}
 
 	return (
-		<div className="min-h-full bg-gray-100/90 p-4 pb-8 sm:p-6 lg:p-8">
+		<div className="min-h-full bg-[var(--console-bg)] p-4 pb-8 sm:p-6 lg:p-8">
 			<div className="mx-auto max-w-7xl">
-				<header className="flex flex-col justify-between gap-4 sm:flex-row sm:items-start">
-					<div>
+				<header className="flex flex-col justify-between gap-4 xl:flex-row xl:items-start">
+					<div className="min-w-0 flex-1">
 						<h1 className="text-2xl font-bold text-gray-950 sm:text-3xl">
 							{t("title")}
 						</h1>
@@ -814,7 +814,7 @@ export default function ModelEndpointsPage() {
 							{t("subtitle")}
 						</p>
 					</div>
-					<div className="flex gap-2">
+					<div className="flex shrink-0 flex-wrap items-start gap-2 [&>button]:whitespace-nowrap [&_svg]:shrink-0">
 						<button
 							type="button"
 							onClick={() => void handlePublishDeepSeek()}
@@ -858,7 +858,7 @@ export default function ModelEndpointsPage() {
 						<p className="text-xs font-semibold uppercase tracking-wide text-gray-500">
 							{t("metrics.verified")}
 						</p>
-						<p className="mt-1 text-2xl font-bold text-emerald-700">
+						<p className="mt-1 text-2xl font-bold text-[var(--console-accent)]">
 							{
 								endpoints.filter(
 									(endpoint) =>
@@ -873,7 +873,7 @@ export default function ModelEndpointsPage() {
 						<p className="text-xs font-semibold uppercase tracking-wide text-gray-500">
 							{t("metrics.linked")}
 						</p>
-						<p className="mt-1 text-2xl font-bold text-cyan-700">
+						<p className="mt-1 text-2xl font-bold text-[var(--console-accent)]">
 							{
 								endpoints.filter(
 									(endpoint) => endpoint.route_target_ids.length > 0

@@ -70,13 +70,17 @@ function mapWorkspace(row: WorkspaceAccessRow): WorkspaceAccessProjection {
 	};
 }
 
-const WORKSPACE_ACCESS_SELECT = `
+// The schema is chosen only by these internal dialect-specific callers. Do not
+// rewrite completed SQL or accept a request-controlled table/schema identifier.
+function workspaceAccessSelect(driver: 'd1' | 'postgres' | 'mysql'): string {
+	const schema = driver === 'postgres' ? 'cinatoken_gateway.' : '';
+	return `
 	SELECT
 		w.id, w.name, w.slug, w.description, w.scope_type,
 		w.organization_id, o.name AS organization_name, o.slug AS organization_slug,
 		CASE WHEN w.scope_type = 'organization' THEN COALESCE((
 			SELECT organization_roles.roles_json
-			FROM organization_memberships organization_roles
+			FROM ${schema}organization_memberships organization_roles
 			WHERE organization_roles.organization_id = w.organization_id
 				AND organization_roles.subject = :subject
 				AND organization_roles.status = 'active'
@@ -86,7 +90,7 @@ const WORKSPACE_ACCESS_SELECT = `
 		CASE
 			WHEN w.scope_type = 'personal' THEN 'owner'
 			WHEN EXISTS (
-				SELECT 1 FROM workspace_memberships access_admin
+				SELECT 1 FROM ${schema}workspace_memberships access_admin
 				WHERE access_admin.workspace_id = w.id AND access_admin.subject = :subject
 					AND access_admin.status = 'active' AND access_admin.role = 'admin'
 			) THEN 'admin'
@@ -98,11 +102,11 @@ const WORKSPACE_ACCESS_SELECT = `
 			ELSE 'workspace_membership'
 		END AS access_source,
 		w.created_at, w.updated_at
-	FROM workspaces w
-	LEFT JOIN organizations o ON o.id = w.organization_id
+	FROM ${schema}workspaces w
+	LEFT JOIN ${schema}organizations o ON o.id = w.organization_id
 	WHERE w.status = 'active'
 		AND EXISTS (
-			SELECT 1 FROM users principal_identity
+			SELECT 1 FROM ${schema}users principal_identity
 			WHERE principal_identity.id = :user_id
 				AND principal_identity.external_system = 'cinaauth'
 				AND principal_identity.external_user_id = :subject
@@ -114,7 +118,7 @@ const WORKSPACE_ACCESS_SELECT = `
 				w.scope_type = 'organization'
 				AND o.status IN ('active', 'pending')
 				AND EXISTS (
-					SELECT 1 FROM organization_memberships organization_access
+					SELECT 1 FROM ${schema}organization_memberships organization_access
 					WHERE organization_access.organization_id = w.organization_id
 						AND organization_access.subject = :subject
 						AND organization_access.status = 'active'
@@ -122,7 +126,7 @@ const WORKSPACE_ACCESS_SELECT = `
 				AND (
 					w.is_default = :default_true
 					OR EXISTS (
-						SELECT 1 FROM workspace_memberships explicit_access
+						SELECT 1 FROM ${schema}workspace_memberships explicit_access
 						WHERE explicit_access.workspace_id = w.id
 							AND explicit_access.subject = :subject
 							AND explicit_access.status = 'active'
@@ -135,9 +139,10 @@ const WORKSPACE_ACCESS_SELECT = `
 		CASE WHEN w.scope_type = 'personal' THEN 0 ELSE 1 END,
 		o.name ASC, w.is_default DESC, w.name ASC, w.id ASC
 `;
+}
 
 function d1WorkspaceAccessSql(): string {
-	return WORKSPACE_ACCESS_SELECT
+	return workspaceAccessSelect('d1')
 		.replaceAll(':subject', '?')
 		.replaceAll(':user_id', '?')
 		.replaceAll(':default_true', '?')
@@ -296,37 +301,37 @@ export async function ensureDefaultWorkspacesForSubject(
 	if (client.driver === 'postgres') {
 		await client.raw.begin(async (transaction) => {
 			await transaction`
-				INSERT INTO workspaces (
+				INSERT INTO cinatoken_gateway.workspaces (
 					id, scope_type, personal_owner_user_id, name, slug,
 					is_default, default_scope_key, status, created_by_user_id
 				)
 				SELECT ${personalWorkspaceId}, 'personal', id, 'Default', 'default',
 					TRUE, ${personalWorkspaceId}, 'active', id
-				FROM users
+				FROM cinatoken_gateway.users
 				WHERE id = ${input.userId} AND external_system = 'cinaauth'
 					AND external_user_id = ${input.subject} AND status = 'active'
 				ON CONFLICT (id) DO NOTHING
 			`;
 			await transaction`
-				INSERT INTO workspaces (
+				INSERT INTO cinatoken_gateway.workspaces (
 					id, scope_type, organization_id, name, slug,
 					is_default, default_scope_key, status
 				)
 				SELECT 'organization:' || organization.id, 'organization', organization.id,
 					'Default', 'default', TRUE, 'organization:' || organization.id, 'active'
-				FROM organization_memberships membership
-				JOIN organizations organization ON organization.id = membership.organization_id
+				FROM cinatoken_gateway.organization_memberships membership
+				JOIN cinatoken_gateway.organizations organization ON organization.id = membership.organization_id
 				WHERE membership.subject = ${input.subject} AND membership.status = 'active'
 					AND organization.status IN ('active', 'pending')
 					AND EXISTS (
-						SELECT 1 FROM users
+						SELECT 1 FROM cinatoken_gateway.users
 						WHERE id = ${input.userId} AND external_system = 'cinaauth'
 							AND external_user_id = ${input.subject} AND status = 'active'
 					)
 				ON CONFLICT (id) DO NOTHING
 			`;
 			await transaction`
-				INSERT INTO guardrails (
+				INSERT INTO cinatoken_gateway.guardrails (
 					id, workspace_id, owner_user_id, name, description, status,
 					designated_version, latest_version, created_at, updated_at,
 					is_workspace_default
@@ -339,15 +344,15 @@ export async function ensureDefaultWorkspacesForSubject(
 						substr(md5(workspace.id || ':workspace-default-guardrail'), 21, 12),
 					workspace.id, ${input.userId}, 'Workspace ' || left(workspace.id, 180) || ' Default',
 					NULL, 'active', 1, 1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, TRUE
-				FROM workspaces workspace
-				JOIN users owner ON owner.id = ${input.userId}
+				FROM cinatoken_gateway.workspaces workspace
+				JOIN cinatoken_gateway.users owner ON owner.id = ${input.userId}
 					AND owner.external_system = 'cinaauth'
 					AND owner.external_user_id = ${input.subject} AND owner.status = 'active'
 				WHERE workspace.status = 'active'
 					AND (
 						(workspace.scope_type = 'personal' AND workspace.personal_owner_user_id = ${input.userId})
 						OR (workspace.scope_type = 'organization' AND EXISTS (
-							SELECT 1 FROM organization_memberships membership
+							SELECT 1 FROM cinatoken_gateway.organization_memberships membership
 							WHERE membership.organization_id = workspace.organization_id
 								AND membership.subject = ${input.subject} AND membership.status = 'active'
 						))
@@ -355,7 +360,7 @@ export async function ensureDefaultWorkspacesForSubject(
 				ON CONFLICT DO NOTHING
 			`;
 			await transaction`
-				INSERT INTO guardrail_versions (
+				INSERT INTO cinatoken_gateway.guardrail_versions (
 					id, guardrail_id, version, config_json, created_by_user_id, created_at
 				)
 				SELECT
@@ -365,13 +370,13 @@ export async function ensureDefaultWorkspacesForSubject(
 						substr(md5(guardrail.id || ':version:1'), 18, 3) || '-' ||
 						substr(md5(guardrail.id || ':version:1'), 21, 12),
 					guardrail.id, 1, '{}', ${input.userId}, guardrail.created_at
-				FROM guardrails guardrail
+				FROM cinatoken_gateway.guardrails guardrail
 				WHERE guardrail.is_workspace_default
 					AND guardrail.owner_user_id = ${input.userId}
 				ON CONFLICT (guardrail_id, version) DO NOTHING
 			`;
 			await transaction`
-				INSERT INTO guardrails (
+				INSERT INTO cinatoken_gateway.guardrails (
 					id, workspace_id, owner_user_id, name, description, status,
 					designated_version, latest_version, created_at, updated_at,
 					is_workspace_default, is_account_default, account_scope_key
@@ -392,11 +397,14 @@ export async function ensureDefaultWorkspacesForSubject(
 								WHEN 'personal' THEN 'personal:' || workspace.personal_owner_user_id
 								WHEN 'organization' THEN 'organization:' || workspace.organization_id
 							END AS account_scope_key
-						FROM workspaces workspace
+						FROM cinatoken_gateway.workspaces workspace
+						JOIN cinatoken_gateway.users owner ON owner.id = ${input.userId}
+							AND owner.external_system = 'cinaauth'
+							AND owner.external_user_id = ${input.subject} AND owner.status = 'active'
 						WHERE workspace.status = 'active' AND (
 							(workspace.scope_type = 'personal' AND workspace.personal_owner_user_id = ${input.userId})
 							OR (workspace.scope_type = 'organization' AND EXISTS (
-								SELECT 1 FROM organization_memberships membership
+								SELECT 1 FROM cinatoken_gateway.organization_memberships membership
 								WHERE membership.organization_id = workspace.organization_id
 									AND membership.subject = ${input.subject} AND membership.status = 'active'
 							))
@@ -407,7 +415,7 @@ export async function ensureDefaultWorkspacesForSubject(
 				ON CONFLICT DO NOTHING
 			`;
 			await transaction`
-				INSERT INTO guardrail_versions (
+				INSERT INTO cinatoken_gateway.guardrail_versions (
 					id, guardrail_id, version, config_json, created_by_user_id, created_at
 				)
 				SELECT
@@ -417,7 +425,7 @@ export async function ensureDefaultWorkspacesForSubject(
 						substr(md5(guardrail.id || ':version:1'), 18, 3) || '-' ||
 						substr(md5(guardrail.id || ':version:1'), 21, 12),
 					guardrail.id, 1, '{}', guardrail.owner_user_id, guardrail.created_at
-				FROM guardrails guardrail
+				FROM cinatoken_gateway.guardrails guardrail
 				WHERE guardrail.is_account_default AND guardrail.owner_user_id = ${input.userId}
 				ON CONFLICT (guardrail_id, version) DO NOTHING
 			`;
@@ -561,7 +569,7 @@ async function queryPostgres(
 	client: Extract<GatewayDatabaseClient, { driver: 'postgres' }>,
 	input: { userId: string; subject: string; workspaceId?: string },
 ): Promise<WorkspaceAccessProjection[]> {
-	const sql = WORKSPACE_ACCESS_SELECT
+	const sql = workspaceAccessSelect('postgres')
 		.replaceAll(':subject', '$1')
 		.replaceAll(':user_id', '$2')
 		.replaceAll(':default_true', 'TRUE')
@@ -581,7 +589,7 @@ async function queryMySql(
 	client: Extract<GatewayDatabaseClient, { driver: 'mysql' }>,
 	input: { userId: string; subject: string; workspaceId?: string },
 ): Promise<WorkspaceAccessProjection[]> {
-	const sql = WORKSPACE_ACCESS_SELECT
+	const sql = workspaceAccessSelect('mysql')
 		.replaceAll(':subject', '?')
 		.replaceAll(':user_id', '?')
 		.replaceAll(':default_true', 'TRUE')

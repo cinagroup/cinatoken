@@ -1,0 +1,76 @@
+{
+  "version": "v336",
+  "date": "2026-09-24",
+  "status": "LOCAL_TOOL_PROVIDER_REDIRECT_SUBSET_PASS_C02_OPEN",
+  "goalComplete": false,
+  "gitHeadAtEvidence": "7eb59008f7d8e156e81fd18a57658fdef2553264",
+  "scope": {
+    "providerPostDrivers": [
+      "web-search.bocha", "web-search.cleversee", "web-search.tavily", "web-search.tencent-wsa",
+      "web-fetch.firecrawl", "web-fetch.tavily", "web-fetch.jina",
+      "web-deep-search.firecrawl", "web-deep-search.jina", "ai-detection.tencent-tms"
+    ],
+    "providerPostDriverCount": 10,
+    "redirectStatuses": [307, 308],
+    "toolDispatcherCandidateLoopPresent": false,
+    "activeDirectToolProviderGetCount": 0,
+    "c02_5Complete": false,
+    "c02_6Complete": false,
+    "c02_GComplete": false
+  },
+  "beforeFixNativeLoopback": {
+    "scenarios": 20,
+    "injectedFetchCallsPerScenario": 1,
+    "originalAddressPostCountPerScenario": 1,
+    "crossOriginRedirectTargetPostCountPerScenario": 1,
+    "requestBodyByteLengthMatched": true,
+    "newRegressionTests": { "tests": 20, "pass": 0, "fail": 20 }
+  },
+  "afterFixNativeLoopback": {
+    "scenarios": 20,
+    "fetchRedirectMode": "manual",
+    "injectedFetchCallsPerScenario": 1,
+    "originalAddressPostCountPerScenario": 1,
+    "crossOriginRedirectTargetPostCountPerScenario": 0,
+    "redirectErrorUpstreamOutcome": "unknown",
+    "newRegressionTests": { "tests": 20, "pass": 20, "fail": 0 }
+  },
+  "validation": {
+    "toolEnginesUnitTests": 34,
+    "toolEnginesUnitPass": 34,
+    "toolEnginesUnitFail": 0,
+    "toolEnginesTypecheck": "PASS",
+    "proxyTypecheck": "PASS",
+    "gitDiffCheck": "PASS",
+    "workflowYamlParse": "PASS"
+  },
+  "ci": {
+    "testRegisteredInToolEnginesUnitScript": true,
+    "toolEnginesTypecheckStepAddedToProxyDispatchSafety": true,
+    "toolEnginesUnitStepAddedToProxyDispatchSafety": true,
+    "linuxRunVerified": false
+  },
+  "sourceSha256": {
+    "packages/tool-engines/src/web-search/bocha.ts": "3fe5e40fa69f6f742fe2d0861c17186942be934016e565f0de7aa4ee73c6d368",
+    "packages/tool-engines/src/web-search/cleversee.ts": "2387074169485c35c4d58bec53aa15c0c5ae6be6724e217006918df2b339b694",
+    "packages/tool-engines/src/web-search/tavily.ts": "bb6239ab8248c4d9d984fcd852004ae7938cf83c2719fc20fdcbcbe552e14b6d",
+    "packages/tool-engines/src/web-search/tencent-wsa.ts": "37f41970cb091bea2a3a231edacdc810f37baa005544c8544a0b987a086fc7ae",
+    "packages/tool-engines/src/web-fetch/firecrawl.ts": "533508890af1f5c128aa1619b04bf78f1b2528b537707746972fc0cf5f83dc82",
+    "packages/tool-engines/src/web-fetch/tavily.ts": "5d782261cad6ae88edf17cf33f5b24402dfca102f63fa03762f46418be739de1",
+    "packages/tool-engines/src/web-fetch/jina.ts": "52700bf891bd4eaff52ee8a408cb5441639c5be977c654dfe733d5d722de995b",
+    "packages/tool-engines/src/web-deep-search/firecrawl.ts": "36afb53e54c55b4efceaaf386bc4c14228c88b21eddf2551c08f8c1ca937ddf5",
+    "packages/tool-engines/src/web-deep-search/jina.ts": "ec7f6453e5d5db868fa813692e6421b2981a695158e1f6f24b0422a7f9308356",
+    "packages/tool-engines/src/ai-detection/drivers/tencent-tms.ts": "30fc4dd8f53ce5a6fee00b53b7ae7916133ae726060319bc15a80ff67b9dd2bf",
+    "packages/tool-engines/src/http/provider-post-redirect-wire.test.mjs": "69234934b7d9b4c22b25b356caaf6c282cf88b2f31f412065302a9af16c967e6",
+    "packages/tool-engines/package.json": "8a81da7a2385cd9a2d54941b54ca2c80a25ca7a1be5b887e3d6e958eac9c09a5"
+  },
+  "limits": {
+    "realWorkersCloudflareTransportVerified": false,
+    "intermediateProxyRetryVerified": false,
+    "supplierInternalRetryVerified": false,
+    "supplierAcceptanceAndBillingVerified": false,
+    "fullC02AcceptanceVerified": false,
+    "externalProviderCalls": 0,
+    "deployments": 0
+  }
+}

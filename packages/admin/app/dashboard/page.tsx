@@ -3,7 +3,7 @@
 /**
  * 总览页：拉取 `/api/admin/stats`（`start_date`/`end_date` 或 `range`），展示 KPI、图表、近期日志与错误摘要。
  */
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useCallback, useRef } from 'react';
 import Link from 'next/link';
 import { useTranslations } from 'next-intl';
 import { ArrowPathIcon } from '@heroicons/react/24/outline';
@@ -23,6 +23,7 @@ import { formatGatewayMoneyCode } from '@/lib/format-gateway-currency';
 import type { DashboardStats } from '@/lib/types';
 import { useBillingCurrency } from '@/lib/use-billing-currency';
 import { useGatewayDateTime } from '@/lib/use-gateway-datetime';
+import { DataLoadError } from '@/components/DataLoadError';
 
 function formatLatency(ms: number | null | undefined): string {
 	if (ms == null || !Number.isFinite(ms)) return '—';
@@ -38,6 +39,8 @@ export default function DashboardPage() {
 	const tTimeRange = useTranslations('timeRange');
 	const [stats, setStats] = useState<DashboardStats | null>(null);
 	const [isLoading, setIsLoading] = useState(true);
+	const [loadFailed, setLoadFailed] = useState(false);
+	const activeRequest = useRef<AbortController | null>(null);
 	const [rangeValue, setRangeValue] = useState<GatewayTimeRangeValue>(() => createRangeValue(DEFAULT_GATEWAY_TIME_RANGE_PRESET));
 	const { currency: billingCurrency } = useBillingCurrency();
 	const { businessTimezone, formatTime } = useGatewayDateTime();
@@ -53,29 +56,37 @@ export default function DashboardPage() {
 		[rangeValue, t, tTimeRange, businessTimezone]
 	);
 
-	useEffect(() => {
-		fetchStats();
-	}, [rangeValue.start_date, rangeValue.end_date]);
-
-	const fetchStats = async () => {
+	const fetchStats = useCallback(async () => {
+		activeRequest.current?.abort();
+		const controller = new AbortController();
+		activeRequest.current = controller;
 		setIsLoading(true);
+		setLoadFailed(false);
+		// Never label a previous range's totals with a newly selected range.
+		setStats(null);
 		try {
 			const params = new URLSearchParams();
 			if (rangeValue.start_date) params.set('start_date', rangeValue.start_date);
 			if (rangeValue.end_date) params.set('end_date', rangeValue.end_date);
 			// 仅滚动预设走 `range=`；日历快捷与自定义只传绝对起止，避免后端未知 preset 回落默认窗
 			if (isRollingPreset(rangeValue.preset)) params.set('range', rangeValue.preset);
-			const response = await fetch(`/api/admin/stats?${params.toString()}`);
+			const response = await fetch(`/api/admin/stats?${params.toString()}`, { cache: 'no-store', signal: controller.signal });
 			const data = await readApiJson<DashboardStats>(response);
-			if (data.success && data.data != null) {
+			if (!response.ok || !data.success || data.data == null) throw new Error('Statistics unavailable');
+			if (!controller.signal.aborted) {
 				setStats(data.data);
 			}
-		} catch (error) {
-			console.error('Fetch stats error:', error);
+		} catch {
+			if (!controller.signal.aborted) setLoadFailed(true);
 		} finally {
-			setIsLoading(false);
+			if (!controller.signal.aborted) setIsLoading(false);
 		}
-	};
+	}, [rangeValue]);
+
+	useEffect(() => {
+		void fetchStats();
+		return () => activeRequest.current?.abort();
+	}, [fetchStats]);
 
 	if (isLoading && !stats) {
 		return (
@@ -83,6 +94,10 @@ export default function DashboardPage() {
 				<div className="text-gray-600">{tCommon('loading')}</div>
 			</div>
 		);
+	}
+
+	if (loadFailed || !stats) {
+		return <div className="p-4 sm:p-8"><DataLoadError onRetry={() => void fetchStats()} /></div>;
 	}
 
 	const kpi = stats?.kpi;

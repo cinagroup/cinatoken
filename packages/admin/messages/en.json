@@ -209,7 +209,7 @@
 		},
 		"publishedEmpty": {
 			"title": "No models are published yet",
-			"description": "The gateway is online, but an operator still needs to activate a provider, define a model, and publish a route."
+			"description": "No publishable model endpoints are available. An operator must verify endpoint evidence and link each endpoint to a matching active model, provider, and callable route."
 		},
 		"empty": {
 			"title": "No models match these filters",
@@ -298,7 +298,7 @@
 		},
 		"publishedEmpty": {
 			"title": "No providers are published yet",
-			"description": "Provider cards appear after an operator publishes the first active model route."
+			"description": "Providers appear once they have a verified, unexpired model endpoint linked to a matching active, callable route."
 		},
 		"empty": {
 			"title": "No providers match this search",
@@ -449,6 +449,8 @@
 		"operatorConsole": "Operator console"
 	},
 	"common": {
+		"dataLoadFailed": "Data could not be loaded. Balances and statistics are unavailable, not zero. Please retry.",
+		"retry": "Retry",
 		"loading": "Loading...",
 		"loadingEllipsis": "Loading…",
 		"saving": "Saving…",
@@ -557,8 +559,8 @@
 	},
 	"gatewaySetup": {
 		"title": "Launch a real model",
-		"description": "The model API address belongs to the provider, not the model record. Configure provider credentials and Base URL, define the model, then bind both with a route.",
-		"badge": "3-step setup",
+		"description": "Configure the provider API key and Base URL, define the model, and bind a callable route. Verify and link a model endpoint to make it visible in the public catalog.",
+		"badge": "4-step setup",
 		"stepLabel": "Step {step}",
 		"steps": {
 			"provider": {
@@ -570,8 +572,12 @@
 				"description": "Import a catalog model or enter its real model ID and pricing."
 			},
 			"route": {
-				"title": "Bind and publish a route",
+				"title": "Bind a callable route",
 				"description": "Choose the provider, protocol, and upstream model name."
+			},
+			"endpoint": {
+				"title": "Verify and publish an endpoint",
+				"description": "Record pricing and capability evidence, link a matching route, and verify the endpoint for public discovery."
 			}
 		}
 	},

@@ -1,0 +1,86 @@
+{
+  "status": "PASS",
+  "cleanup": "PASS",
+  "binaryVersion": "postgres (PostgreSQL) 18.6",
+  "scope": "owned PG18.6; 73 formal migrations; quote + dispatch + economic proposals only",
+  "stages": [
+    {
+      "name": "formal-pg73-installed",
+      "result": "PASS"
+    },
+    {
+      "name": "hostile-migrator-default-grants-rejected-atomically",
+      "result": "PASS"
+    },
+    {
+      "name": "exact-pg73-ledger-and-default-off-activation",
+      "result": "PASS"
+    },
+    {
+      "name": "ordinary-runtime-denied-private-economic-source",
+      "result": "PASS"
+    },
+    {
+      "name": "immutable-quote-and-dedicated-pre-egress-claim-installed",
+      "result": "PASS"
+    },
+    {
+      "name": "stale-repeatable-read-snapshot-cannot-bypass-economic-coverage",
+      "result": "PASS"
+    },
+    {
+      "name": "missing-event-rolls-back-buyer-log-and-budget",
+      "result": "PASS"
+    },
+    {
+      "name": "missing-attempt-outcome-rolls-back-buyer-log-and-event",
+      "result": "PASS"
+    },
+    {
+      "name": "typed-buyer-amount-must-match-persisted-log",
+      "result": "PASS"
+    },
+    {
+      "name": "unknown-provider-attempt-cannot-be-declared-confirmed",
+      "result": "PASS"
+    },
+    {
+      "name": "two-billable-attempts-preserve-distinct-quote-versions-and-costs",
+      "result": "PASS"
+    },
+    {
+      "name": "duplicate-event-and-economic-fact-mutation-rejected",
+      "result": "PASS"
+    },
+    {
+      "name": "old-synchronous-earning-cannot-double-pay-enrolled-event",
+      "result": "PASS"
+    },
+    {
+      "name": "previously-paid-legacy-log-cannot-be-adopted-as-new-event",
+      "result": "PASS"
+    },
+    {
+      "name": "attempt-index-swap-rejected-by-exact-composite-quote-reference",
+      "result": "PASS"
+    },
+    {
+      "name": "concurrent-late-claim-waits-for-buyer-commit-then-rejects",
+      "result": "PASS"
+    }
+  ],
+  "sourceSha256": {
+    "quoteProposal": "1249a7ff07f95b48c7b45a41833c96c9a028e4bfe3a47e44e9dc6b72c3c77246",
+    "dispatchProposal": "c89c79e803fd69a2d09d44b33be3301aeb8aa4ed72c5dff5518439ec29fafb83",
+    "economicProposal": "f92835c72ff02cba23879ed90ad640832455ccb98764f28fe4ee04ce52aab1ac",
+    "nativeTest": "2b458c4eecd277ef62895197883591ef84771d193e9597a8b870b9fa0cd61d32",
+    "formalMigrationCorpus": "23afef61a8a670e0af8c90e3a138f522e6b283b454e380a592bf85bca83108dc"
+  },
+  "limitations": [
+    "The production critical writer does not yet pass typed buyer certainty, quote refs or per-attempt usage/cost into this outbox.",
+    "The current synchronous settleSharedKeyEarning call remains outside buyer settlement; this proposal prevents its payout for enrolled events but implements no new consumer.",
+    "The synthetic fixture writes a buyer budget value with the log in one transaction; it does not exercise the actual critical-write API or D1/MySQL.",
+    "The proposal rejects non-READ-COMMITTED inserts for every request log, economic event and legacy earning; real deployment must audit all writers for this isolation contract.",
+    "An attempt committed before an upstream send can remain without a buyer log after a crash; unknown reconciliation and consumer/retry protocols remain open."
+  ]
+}

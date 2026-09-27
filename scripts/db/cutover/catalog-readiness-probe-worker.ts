@@ -59,6 +59,10 @@ export default {
 				connect_timeout: 10,
 				idle_timeout: 5,
 			});
+			if (storage.client.driver !== 'postgres') {
+				throw new Error('Catalog readiness probe requires a PostgreSQL client');
+			}
+			const postgresClient = storage.client;
 			const repositories = storage.repositories;
 			const models = await repositories.modelRouting.listModelsWithActiveRoutes();
 			const bindings = await listVerifiedPublicEndpointBindings(
@@ -76,7 +80,7 @@ export default {
 				return document ? [document] : [];
 			});
 
-			const rows = await storage.client.raw<CatalogFactsRow[]>`
+			const rows = await postgresClient.raw<CatalogFactsRow[]>`
 				WITH callable_routes AS (
 					SELECT route.id, route.model_id
 					FROM model_routes AS route

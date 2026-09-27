@@ -1,0 +1,130 @@
+{
+  "schemaVersion": 1,
+  "workPackage": "C02.A",
+  "date": "2026-09-05",
+  "status": "LOCAL_PASS_SUBSET",
+  "head": "7eb59008f7d8e156e81fd18a57658fdef2553264",
+  "files": [
+    {
+      "path": ".github/workflows/proxy-dispatch-safety.yml",
+      "sha256": "39da756ee3682ff680457d1f8c67a6f56ac7aaaf75fcdd02fff8b90ab81ff725"
+    },
+    {
+      "path": "packages/proxy/package.json",
+      "sha256": "a2841b3c2014871722908aa59f15986a1f49396f30bdec6f093e0e954fa362e1"
+    },
+    {
+      "path": "packages/proxy/src/routes/v1/chat.ts",
+      "sha256": "fe1c5f0136090138c0192512f7f3b38cfd417df0890e23e7e63f42faeaca01e0"
+    },
+    {
+      "path": "packages/proxy/src/routes/v1/messages.ts",
+      "sha256": "68531c14f3250c42b81dcd00db74e733aab5e1cb97ccd869d35c2d3f8324ac55"
+    },
+    {
+      "path": "packages/proxy/src/routes/v1/request-dispatch-limit.test.ts",
+      "sha256": "53a1129147c61bf501654698317e9d3174fed1a1d16b4b64c98ca84cf713cc5d"
+    },
+    {
+      "path": "packages/proxy/src/routes/v1/responses.ts",
+      "sha256": "9a7cefd6f319f165174366e53a47820497ca804e1bda2bad8efef409a6ad6e51"
+    },
+    {
+      "path": "packages/proxy/src/services/failover-dispatch.test.ts",
+      "sha256": "22e753e073e55d6529f41988efb44f5288a32b7bace29e17310ad1f82dcf39a5"
+    },
+    {
+      "path": "packages/proxy/src/services/failover-dispatch.ts",
+      "sha256": "3dd21a80b35d1e10751b5b820d105c4f9d8552bf4c90ff116bc56e7eff12aa61"
+    },
+    {
+      "path": "packages/proxy/src/services/gateway-error-codes.ts",
+      "sha256": "15b59744d9212fee11eceea01478c1eb42b8fdefc6418d02c3dfcc16101b8a00"
+    },
+    {
+      "path": "packages/proxy/src/services/model-fallback-global-dispatch.test.ts",
+      "sha256": "47c1dd1b9063257d50e239a7686edabadace989f022d5435bfdadcf0b31ea99f"
+    },
+    {
+      "path": "packages/proxy/src/services/model-fallback-global-dispatch.ts",
+      "sha256": "1b125665911ebfc6055b1ad0181b8d7c4e91aa41c46a62ddeeb3c0a24e36c133"
+    },
+    {
+      "path": "packages/proxy/src/services/openrouter-error-protocol.ts",
+      "sha256": "5ef99e5aff92b34273a4f4b82ea4eec074b477882ce64fa91245c3d8d31c74cf"
+    },
+    {
+      "path": "packages/proxy/src/services/proxy.ts",
+      "sha256": "e7e5b0907099b61ccf083aac45aca85f495ddbc5b4074d63265ba04be6ec9cb0"
+    },
+    {
+      "path": "packages/proxy/src/services/request-dispatch-budget.test.ts",
+      "sha256": "36355c345d794a25f3ef186f0ec55293587e6b7fba739a54f1c35460708213be"
+    },
+    {
+      "path": "packages/proxy/src/services/request-dispatch-budget.ts",
+      "sha256": "0e270490eb85b91d8b09e44ffbea2cda1e13263ed84b9aa27125fb3a79f21e42"
+    },
+    {
+      "path": "packages/proxy/tsconfig.dispatch-safety.json",
+      "sha256": "acd027b6beff4ef92a2fb46496326e750b15f83ada479838e27b482a1a055fc0"
+    }
+  ],
+  "environment": {
+    "platform": "Windows",
+    "node": "24.14.1",
+    "repositoryNodeVersion": "22",
+    "workersTypes": "5.20260829.1",
+    "workersRuntimeTested": false,
+    "realDatabaseTested": false,
+    "awsKmsTested": false,
+    "remoteCiRun": false
+  },
+  "validation": [
+    {
+      "command": "npm.cmd run typecheck -w @octafuse/proxy",
+      "exitCode": 0
+    },
+    {
+      "command": "npm.cmd run typecheck:dispatch-safety -w @octafuse/proxy",
+      "exitCode": 0
+    },
+    {
+      "command": "npm.cmd run test:unit -w @octafuse/proxy",
+      "exitCode": 0,
+      "mainSuite": {
+        "tests": 684,
+        "suites": 134,
+        "pass": 684,
+        "fail": 0
+      },
+      "note": "Full npm lifecycle passed; main suite ran before the final fixture-only typing correction."
+    },
+    {
+      "command": "npm.cmd run test:dispatch-safety -w @octafuse/proxy",
+      "exitCode": 0,
+      "tests": 144,
+      "suites": 17,
+      "pass": 144,
+      "fail": 0,
+      "note": "Ran after final fixture typing corrections; overlaps the unit suite."
+    },
+    {
+      "check": "Workflow YAML parse and referenced test paths",
+      "exitCode": 0
+    },
+    {
+      "command": "git diff --check -- packages/proxy .github/workflows/proxy-dispatch-safety.yml docs/developers/architecture/v2.1-openrouter-implementation-checklist.md",
+      "exitCode": 0
+    }
+  ],
+  "existingDirtyFilePreservation": {
+    "checkedFiles": 37,
+    "unchangedFiles": 35,
+    "changedFiles": [
+      "docs/developers/architecture/implementation-evidence/README.md",
+      "docs/developers/architecture/v2.1-openrouter-implementation-checklist.md"
+    ]
+  },
+  "remainingGate": "C02.G NOT PASSED: absolute deadline, domain switching, all-modalities actual dispatch and nested retry verification remain outstanding."
+}

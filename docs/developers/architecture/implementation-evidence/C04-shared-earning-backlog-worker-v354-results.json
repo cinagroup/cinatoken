@@ -1,0 +1,29 @@
+{
+  "status": "PASS",
+  "mode": "local review only; default off",
+  "productionEnabled": false,
+  "remoteSqlOrCloudCalls": false,
+  "tests": {
+    "scannerUnit": { "passed": 11, "total": 11 },
+    "nativePostgres18_6": { "passedStages": 11, "cleanup": "PASS" },
+    "dedicatedGeneratorAndBundle": { "passed": 6, "total": 6 },
+    "proxyTypecheck": "PASS",
+    "nativeFixtureSyntax": "PASS",
+    "targetedDiffCheck": "PASS",
+    "linuxCi": "NOT_RUN"
+  },
+  "sourceSha256": {
+    "packages/proxy/src/runtime/postgres-shared-earning-scanner.ts": "23b85af2b138bd23d82c81eca92ed0387c2f2ee93fa3456d78ef83db49aa8152",
+    "packages/proxy/src/runtime/postgres-shared-earning-backlog-observer.ts": "b78fbaf86ac05db99e8866a47725d6ae4b9468419c79f29ae805b6daba3f7ad5",
+    "packages/proxy/src/runtime/postgres-shared-earning-scanner.test.mjs": "429c062bb82679b7b24415dd7a3c9b608a0000f9dfc658e4e165b631ccd913d5",
+    "packages/proxy/src/runtime/shared-earning-scanner-worker.ts": "e5b62955e2fd50edc100477720fb39a589b0fbb1356a931c899906084adde189",
+    "packages/proxy/wrangler.shared-earning-scanner.base.jsonc": "3d264cace27ddd644d0038354e5d3a762ef7339d04d23b9470318bebb66e3928",
+    "packages/core/migrations-proposals/postgres/shared-key-delivery-backlog-observation.sql": "855dc10543a13fd173ee7f3654b4b658d7b3d92a2b16e5f9f4c79b4b7302a02e",
+    "scripts/db/cutover/postgres-shared-earning-backlog-v353.native.test.mjs": "7bbf51c2ed9d64c9474b21ed9ca569494a86e0030e35554d51149586cb45ddb1"
+  },
+  "limitations": [
+    "The scheduled Worker and Hyperdrive were not exercised against a deployed PostgreSQL instance.",
+    "No production arrival rate, query I/O ceiling, backlog SLO, alert or end-to-end Cron wall-time bound was established.",
+    "The observation function remains a review-only proposal and the scanner remains disabled by default."
+  ]
+}

@@ -1,4 +1,8 @@
-import type { RouteResult } from '../model-router';
+/** Ordering uses provider identity and weight; it never needs an upstream credential. */
+export type RouteOrderCandidate = Readonly<{
+	providerId: string;
+	routeWeight: number;
+}>;
 
 export type RouteOrderContext = {
 	/** userId|baseModelId|routeGroup|protocol — 不含 capability */
@@ -7,4 +11,4 @@ export type RouteOrderContext = {
 	tierKey: string;
 };
 
-export type RouteOrderStrategy = (routes: RouteResult[], ctx: RouteOrderContext) => RouteResult[];
+export type RouteOrderStrategy = <T extends RouteOrderCandidate>(routes: readonly T[], ctx: RouteOrderContext) => T[];

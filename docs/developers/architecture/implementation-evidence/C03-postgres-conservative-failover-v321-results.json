@@ -1,0 +1,40 @@
+{
+  "version": "v321",
+  "date": "2026-09-24",
+  "status": "LOCAL_OPT_IN_CONSERVATIVE_FAILOVER_PASS_PRODUCTION_DISABLED",
+  "C03": "DOING",
+  "goalComplete": false,
+  "validation": {
+    "failoverDispatchTests": { "pass": 59, "fail": 0 },
+    "newConservativeModeTests": 5,
+    "dispatchSafetyDirectTsc": true,
+    "gitDiffCheck": true
+  },
+  "sourceSha256": {
+    "packages/proxy/src/services/failover-dispatch.ts": "de3021f862d2a5c8b6396f9604627a9928eb570dd7cdc79351c7390b88dbb3e3",
+    "packages/proxy/src/services/failover-dispatch.test.ts": "742a4640d82e0706a12a569e2580e6fc74a35ec00b8cba01fa3502ff0d35d22e"
+  },
+  "boundaries": {
+    "optInOnly": true,
+    "productionActivated": false,
+    "postgresRepositoryConnectedToProxy": false,
+    "d1RepositoryChanged": false,
+    "durableGrantCreatedByOption": false,
+    "callbackDurabilityVerified": false,
+    "singleFetchPerGrantVerified": false,
+    "commitAcknowledgementLossZeroFetchVerified": false,
+    "requestLevelDurableDeadlineAndBudgetGateImplemented": false,
+    "postgresUncertainErrorMappedToPublicResponse": false,
+    "realImagesSettlementWithKnownNon2xxVerified": false,
+    "producerIdentityAssigned": false,
+    "originConnectionBudgetConfirmed": false,
+    "workersHyperdriveQueueLifecycleVerified": false,
+    "remoteSqlCalls": 0,
+    "cloudManagementCalls": 0,
+    "deployments": 0,
+    "modelCalls": 0,
+    "kmsCalls": 0,
+    "cumulativeStagingCapUsd": 2,
+    "capReset": false
+  }
+}

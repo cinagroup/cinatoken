@@ -1,0 +1,194 @@
+{
+  "version": "v281",
+  "status": "PAID_PLAN_COMPONENT_LOCAL_AND_CLOUD_PASS_PREFLIGHT_PENDING",
+  "previousEvidence": {
+    "path": "docs/developers/architecture/implementation-evidence/C02-byok-d1-pages-targeted-v280-results.json",
+    "sha256": "150cca5d3f94aa99007631e5f6e258f97cb17702d42c5b76c103b18babff0095"
+  },
+  "priorArtifactsVerified": 11,
+  "priorEntireDependencyTreeRevalidated": false,
+  "unchangedMaintenanceGuardFiles": [
+    {
+      "path": "scripts/deploy/byok-d1-ingress-closure.mjs",
+      "sha256": "51224fa7c1075480ffad1db9d6581dbef1c7c40dc20f60d5b1a50efacb6e62bc"
+    },
+    {
+      "path": "scripts/deploy/byok-d1-maintenance-dispatch.mjs",
+      "sha256": "cde6e489c2ccc26aeca5e379f7a3369fc81c84064493c2941c34dbeca9aec793"
+    },
+    {
+      "path": "scripts/deploy/byok-d1-management.mjs",
+      "sha256": "0888e9c94b81e4c2fa0db5cd8d6269bce403db60886c48df5552b20ae2fbfb85"
+    },
+    {
+      "path": "scripts/deploy/byok-d1-operator.mjs",
+      "sha256": "d1f7825b5d0404ae52d3320f6a70bb081c63ed91708d510535dd4c52325e005a"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/byok-d1-cleanup.ts",
+      "sha256": "b015f0e3c6fca7412e32408e466577615c7d16364db09017446e0528c5b90847"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/byok-d1-maintenance-contract.ts",
+      "sha256": "4dfc3a8ca524f8c6e4f47d41240af0fa279220967ad67ccb9696af1f4a94bbe3"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/byok-d1-maintenance-host.ts",
+      "sha256": "962067df45d11d60ae1dbef958d697af20d1208945532e96de45abd71d8043be"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/byok-d1-maintenance-worker.ts",
+      "sha256": "d48a3ab7e37c5936e32ffa21ee13b554d1b4102cd83d5aa9039d2f6723c3347e"
+    }
+  ],
+  "local": {
+    "path": ".wrangler/staging/byok-paid-plan-v281-local/result.json",
+    "pass": 216,
+    "breakdown": [
+      {
+        "name": "source",
+        "pass": 71
+      },
+      {
+        "name": "bundle",
+        "pass": 71
+      },
+      {
+        "name": "existing-read-transport",
+        "pass": 52
+      },
+      {
+        "name": "existing-prior-code",
+        "pass": 22
+      }
+    ]
+  },
+  "cloud": {
+    "path": ".wrangler/staging/byok-paid-plan-v281-cloud/result.json",
+    "startedAt": "2026-09-21T06:03:27.788Z",
+    "finishedAt": "2026-09-21T06:03:34.777Z",
+    "elapsedMs": 6989,
+    "requests": 4,
+    "http200": 4,
+    "journalRecords": 10,
+    "defaultUsageModel": "standard",
+    "selectedPlan": {
+      "subscriptionId": "ac7c99a93c86483eb08ffbf63ebff062",
+      "productId": "workers_paid",
+      "publicName": "Workers Paid",
+      "scope": "account",
+      "state": "Paid",
+      "periodStart": "2026-08-29T00:00:00Z",
+      "periodEnd": "2026-09-29T00:00:00Z",
+      "currency": "USD",
+      "price": 5,
+      "current": true
+    },
+    "pointInTimePaidPlanObserved": true,
+    "notAnExecutionPermit": true
+  },
+  "fullPreflightPassed": false,
+  "nativeTimingQualified": false,
+  "databaseQuiescenceProved": false,
+  "allInvocationPathsInventoried": false,
+  "operatorProofProviderConnected": false,
+  "cloudWrites": 0,
+  "deployments": 0,
+  "sqlCalls": 0,
+  "publicWorkerCalls": 0,
+  "modelCalls": 0,
+  "kmsCalls": 0,
+  "subscriptionCreated": false,
+  "firstRoundUsdCap": 2,
+  "capReset": false,
+  "billingUsageRefreshed": false,
+  "remaining": [
+    "ZONE_ROUTE_READ_SCOPE",
+    "PAGES_RUNTIME_IDENTITY_CONTRACT",
+    "DISPATCH_PRODUCT_VISIBILITY",
+    "COMPLETE_FRESH_PREFLIGHT",
+    "NATIVE_BYOK_ACCEPTANCE"
+  ],
+  "artifacts": [
+    {
+      "path": ".wrangler/staging/byok-paid-plan-v281-local/result.json",
+      "sha256": "8175d1ae99aa0f4962697f3da75bd753076e018ee5ce13eb8c019a16d80ef00d"
+    },
+    {
+      "path": ".wrangler/staging/byok-paid-plan-v281-cloud/result.json",
+      "sha256": "e299f909ca9f9520e81a23632257c171983328d562b871ccd9a412c90136c8f3"
+    },
+    {
+      "path": ".wrangler/staging/byok-paid-plan-v281-cloud/.wrangler/staging/byok-d1-paid-plan-reservation/journal.jsonl",
+      "sha256": "f6b86e1f8e02899d97753223ad14ff5b21f6b6bc49d4d92fd4562123d91e05cc"
+    },
+    {
+      "path": ".wrangler/staging/byok-paid-plan-v281-cloud/.wrangler/staging/byok-d1-paid-plan-reservation/result.json",
+      "sha256": "be87324d582cb68b9cc617132643c3d924bdcbf3c3e613d843e9e8c6de5c07f5"
+    },
+    {
+      "path": "scripts/deploy/byok-d1-paid-plan.mjs",
+      "sha256": "8d24d987548a59c3635bcb4d109b1fdaad01eb15d0a2ef3140188d135b011260"
+    },
+    {
+      "path": "scripts/deploy/byok-d1-paid-plan.test.mjs",
+      "sha256": "f6a09d5e55af3fb0578893749d39cfe677dc82af012cea3b40bc10348f99d663"
+    },
+    {
+      "path": ".wrangler/staging/byok-paid-plan-v281-local/paid-plan.mjs",
+      "sha256": "cab7d1b78628b2cb887bc95388a93d0ab14c8bc617bd59e73c933466c934fb5c"
+    },
+    {
+      "path": ".wrangler/staging/byok-paid-plan-v281-local/paid-plan.meta.json",
+      "sha256": "ce75260551f09ad0b9a2a5c7fbec1cd27ecd5faa77e4e28b2d12fa76ef7a4d68"
+    },
+    {
+      "path": ".wrangler/staging/byok-paid-plan-v281-local/build.log",
+      "sha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b"
+    },
+    {
+      "path": ".wrangler/staging/byok-paid-plan-v281-local/source.log",
+      "sha256": "0e86adc243ebd1e339e24b2ef032834e7d3b22675f6add75c5e06fbf6affdf50"
+    },
+    {
+      "path": ".wrangler/staging/byok-paid-plan-v281-local/bundle.log",
+      "sha256": "023bccc47de1095681c067dc0ae44d357e7300d87b35ea8402dcb758e3464507"
+    },
+    {
+      "path": ".wrangler/staging/byok-paid-plan-v281-local/existing-read-transport.log",
+      "sha256": "99d755b9a35d2fc1a2a27ae4357665495e033cfd1b2d0ecdc23aeea5948d0b81"
+    },
+    {
+      "path": ".wrangler/staging/byok-paid-plan-v281-local/existing-prior-code.log",
+      "sha256": "75c88c6aeb2b260d94ce5b6f5ab300cc139f5b66848b6cc4588bdd9816e3c737"
+    },
+    {
+      "path": ".wrangler/staging/verify-byok-paid-plan-v281.mjs",
+      "sha256": "545cb0bca2de42617a47b8056b20d552162e614c982fb2d648bf35ec685192c8"
+    },
+    {
+      "path": ".wrangler/staging/collect-byok-paid-plan-v281.mjs",
+      "sha256": "f022469f76de4e90e8cd51d5462da2591af80c9d06ee85c785ae4817eb5a4713"
+    },
+    {
+      "path": ".wrangler/staging/summarize-byok-paid-plan-v281.mjs",
+      "sha256": "3c9e29b5bd2a684b236efb0ef261c52553e6627f2e3916b67f7a76bcefe85298"
+    },
+    {
+      "path": ".firecrawl/cloudflare-subscriptions-v271.md",
+      "sha256": "cf369f9c29ae09bcdd5e4b164034db3e33ef6eabd1798ee8efadff6c85fb3d0d"
+    },
+    {
+      "path": ".firecrawl/cloudflare-account-settings-v271.md",
+      "sha256": "de46728fe5ebb04c12b9450cfa3eaab5096af9419b1a8d084fc0faa85045d4b3"
+    },
+    {
+      "path": "node_modules/cloudflare/src/resources/accounts/subscriptions.ts",
+      "sha256": "d501c465f71b3b1e11f3869deaa41d8fb26211748248163aaa9c919f373db447"
+    },
+    {
+      "path": "node_modules/cloudflare/src/resources/workers/account-settings.ts",
+      "sha256": "599420ca5c6dc678503de190f51542aa61d6ab87bb2e767f8aa9d076ffdb6d45"
+    }
+  ]
+}

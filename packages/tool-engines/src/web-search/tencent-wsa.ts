@@ -70,6 +70,7 @@ export async function searchTencentWsaWeb(params: WebSearchParams): Promise<WebS
 
 	const response = await fetchImpl(TENCENT_WSA_ENDPOINT, {
 		method: 'POST',
+		redirect: 'manual',
 		headers: {
 			Authorization: `Bearer ${params.apiKey}`,
 			'Content-Type': 'application/json; charset=utf-8',

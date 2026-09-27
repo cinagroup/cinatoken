@@ -1,0 +1,576 @@
+name: Proxy dispatch safety
+
+on:
+  pull_request:
+    paths:
+      - 'packages/core/**'
+      - 'packages/proxy/**'
+      - 'packages/admin/**'
+      - 'packages/tool-engines/**'
+      - 'scripts/deploy/**'
+      - 'scripts/db/cutover/**'
+      - 'package.json'
+      - 'package-lock.json'
+      - 'tsconfig.base.json'
+      - '.nvmrc'
+      - '.github/workflows/proxy-dispatch-safety.yml'
+  push:
+    branches: [main, develop]
+    paths:
+      - 'packages/core/**'
+      - 'packages/proxy/**'
+      - 'packages/admin/**'
+      - 'packages/tool-engines/**'
+      - 'scripts/deploy/**'
+      - 'scripts/db/cutover/**'
+      - 'package.json'
+      - 'package-lock.json'
+      - 'tsconfig.base.json'
+      - '.nvmrc'
+      - '.github/workflows/proxy-dispatch-safety.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: proxy-dispatch-safety-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  admin-playground-safety:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+          cache: npm
+      - run: npm ci
+      - run: npm run build:node-index -w @octafuse/core
+      - run: npm run typecheck -w @octafuse/admin
+      - run: node --import tsx --test lib/services/admin/users-service.test.ts
+        working-directory: packages/admin
+      - run: node --import tsx --test lib/routes/admin/earnings.test.ts
+        working-directory: packages/admin
+      - run: node --import tsx --test lib/routes/shared-key-history-error.test.ts
+        working-directory: packages/admin
+      - run: node --import tsx --test lib/shared-key-credited-usage-reader.test.ts
+        working-directory: packages/admin
+      - run: node --import tsx --test lib/shared-key-signed-stats-reader.test.ts
+        working-directory: packages/admin
+      # Synthetic credentials/transport only; no buyer ledger or real OAuth/model requests.
+      - run: npm run test:playground -w @octafuse/admin
+  dispatch-safety:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+          cache: npm
+      - run: npm ci
+      - run: npm run typecheck -w @octafuse/proxy
+      - run: npm run typecheck -w @octafuse/tool-engines
+      - run: npm run typecheck:shared-key-summary -w @octafuse/core
+      - run: npm run typecheck:dispatch-safety -w @octafuse/proxy
+      # Synthetic repositories and intercepted fetch only; no cloud credentials.
+      - run: npm run test:dispatch-safety -w @octafuse/proxy
+      # Local workerd and a loopback provider count physical text POSTs at the transport boundary.
+      - run: node --import tsx --test packages/proxy/scripts/staging/text-dispatch-workerd-wire-v374.test.mjs
+      # A response reset can make an intermediary replay a complete POST behind one Gateway permit.
+      - run: node --import tsx --test packages/proxy/scripts/staging/text-dispatch-relay-reset-v376.test.mjs
+      # Direct text drivers must stop fallback when a fully uploaded POST loses its response.
+      - run: node --import tsx --test packages/proxy/scripts/staging/text-dispatch-response-reset-v377.test.mjs
+      # Post-header body resets and a buffering relay expose physical send uncertainty.
+      - run: node --import tsx --test packages/proxy/scripts/staging/text-dispatch-post-headers-v385.test.mjs
+      - run: node --import tsx --test packages/core/src/storage/shared-key-economic-unsupported-backends.test.mjs
+      # Real Node loopback only; ten tool POST drivers must not follow redirects.
+      - run: npm run test:unit -w @octafuse/tool-engines
+      - run: node --import tsx --test src/services/egress/openai-embeddings-driver.test.ts src/services/egress/openai-rerank-driver.test.ts
+        working-directory: packages/proxy
+      - run: node --import tsx --test src/services/shared-key-earnings.test.ts
+        working-directory: packages/proxy
+      - run: node --import tsx --test src/services/shared-key-quote-attempt.test.ts
+        working-directory: packages/proxy
+      - run: node --import tsx --test src/services/shared-key-economic-usage-handoff.test.ts
+        working-directory: packages/proxy
+      - run: node --import tsx --test src/services/postgres-ordinary-budget-admission.test.ts src/services/request-budget-admission.test.ts
+        working-directory: packages/proxy
+      - run: node --import tsx --test src/services/postgres-ordinary-budget-recovery.test.ts
+        working-directory: packages/proxy
+      - run: node --import tsx --test src/services/postgres-ordinary-budget-request-owner.test.ts
+        working-directory: packages/proxy
+      - run: node --import tsx --test src/services/authenticated-chat-budget-proof.test.ts
+        working-directory: packages/proxy
+      - run: node --import tsx --test src/services/chat-budget-owner-lifecycle.test.ts src/services/postgres-chat-budget-request-owner.test.ts
+        working-directory: packages/proxy
+      - run: npm run test:complete-chat-quote -w @octafuse/proxy
+      # Two synthetic Workers, a private Service Binding, and an in-process fallback contract.
+      - run: node --import tsx --test scripts/staging/chat-holder-binding-v364.node.test.mjs scripts/staging/chat-holder-binding-v364.test.mjs
+        working-directory: packages/proxy
+      # Review-only Chat quote/admission to private holder seam with one loopback POST.
+      - run: node --import tsx --test src/services/complete-chat-holder-dispatch-v385.test.ts
+        working-directory: packages/proxy
+      - run: node --import tsx --test src/services/postgres-complete-text-no-fetch-close-v388.test.ts
+        working-directory: packages/proxy
+      - run: node --import tsx --test src/services/postgres-complete-text-no-fetch-recovery-v389.test.ts src/services/hyperdrive-dedicated-role-transport-v390.test.ts src/runtime/complete-text-no-fetch-recovery-worker-v389.test.ts src/runtime/complete-text-holder-worker-v390.test.mjs
+        working-directory: packages/proxy
+      - run: node --import tsx --test src/services/postgres-complete-text-secretless-plan-v391.test.mjs src/services/complete-text-response-observation-v392.test.ts src/services/postgres-complete-text-response-observation-v392.test.ts src/runtime/complete-text-response-holder-worker-v394.test.mjs
+        working-directory: packages/proxy
+      - run: node --import tsx --test src/services/postgres-personal-key-auth-v395.test.mjs src/services/postgres-complete-text-routing-projection-v396.test.ts src/services/credential-free-route-attempts-v398.test.ts src/services/postgres-complete-text-sticky-routing-v398.test.mjs src/services/route-strategies/route-strategies.test.ts src/services/provider-sticky-routing.test.ts src/services/provider-routing-preferences.test.ts
+        working-directory: packages/proxy
+      - run: node --import tsx --test src/services/complete-chat-credential-free-dispatch-v400.test.ts
+        working-directory: packages/proxy
+      # Default-off Hono ingress, actual role-client parsers and owned stream cleanup; synthetic SQL only.
+      - run: node --import tsx --test src/services/credential-free-chat-preparation-v401.test.ts src/app-credential-free-chat-ingress-v401.test.ts
+        working-directory: packages/proxy
+      - run: node --test scripts/db/cutover/build-complete-text-auth-routing-recovery-coinstall-v400.test.mjs
+      # Review-only platform no-fetch event delivery; independent LOGIN clients and ACK ownership.
+      - run: npm install --prefix .wrangler/v402-pglite-unit --no-save --no-package-lock @electric-sql/pglite@0.5.8
+      - run: node --test scripts/db/cutover/build-complete-text-platform-event-delivery-v402.test.mjs scripts/db/cutover/postgres-complete-text-platform-event-delivery-v402.test.mjs scripts/db/cutover/complete-text-platform-event-delivery-runner-v402.test.mjs
+        env:
+          GATEWAY_PGLITE_MODULE: .wrangler/v402-pglite-unit/node_modules/@electric-sql/pglite/dist/index.js
+      - run: node --import tsx --test src/storage/model-endpoints.sql-repositories.test.ts
+        working-directory: packages/core
+      - run: node --import tsx --test --test-name-pattern="opt-in authenticated Chat budget proof" src/routes/v1/request-dispatch-limit.test.ts
+        working-directory: packages/proxy
+      - run: node --import tsx --test --test-name-pattern="PostgreSQL Chat owner|stopped Chat request|dispatcher sends once after a PostgreSQL owner grant" src/routes/v1/request-dispatch-limit.test.ts
+        working-directory: packages/proxy
+      - run: node --import tsx --test src/services/postgres-guardrail-budget-admission.test.ts
+        working-directory: packages/proxy
+      - run: node --import tsx --test src/services/postgres-guardrail-budget-lifecycle-v353.test.ts
+        working-directory: packages/proxy
+      - run: node --import tsx --test src/services/postgres-guardrail-budget-extension-v355.test.ts
+        working-directory: packages/proxy
+      - run: node --import tsx --test src/services/postgres-guardrail-budget-request-port-v356.test.ts
+        working-directory: packages/proxy
+      - run: node --import tsx --test src/runtime/postgres-shared-earning-consumer.test.mjs
+        working-directory: packages/proxy
+      - run: node --import tsx --test src/runtime/postgres-shared-earning-delivery.test.mjs
+        working-directory: packages/proxy
+      - run: node --import tsx --test src/runtime/postgres-shared-earning-scanner.test.mjs
+        working-directory: packages/proxy
+      - run: npm run test:postgres-recovery-composition -w @octafuse/proxy
+      - run: npm run test:postgres-recovery-queue-owner -w @octafuse/proxy
+      - run: node --test scripts/deploy/gen-wrangler.test.mjs
+      - run: node --test scripts/deploy/gen-shared-earning-scanner-wrangler.test.mjs
+      - run: node --import tsx --test scripts/db/cutover/build-financial-consumer-direct-login-grant.test.ts
+      - run: node --import tsx --test scripts/db/cutover/build-shared-key-usage-repair-direct-login-grant.test.ts
+      - run: node --test scripts/db/cutover/openrouter-generation-cost-candidate-v372.test.mjs
+      - run: node --test scripts/db/cutover/build-postgres-shared-usage-repair-backfill.test.mjs
+      - run: node --test scripts/db/cutover/build-postgres-shared-usage-repair-durable-cursor.test.mjs
+      - run: node --test scripts/db/cutover/build-postgres-recovery-retention-review.test.mjs
+      - run: node --import tsx --test scripts/db/cutover/d1-shared-key-earnings-history.test.mjs
+      - run: node --import tsx --test scripts/db/cutover/d1-shared-key-earnings-projection-index.test.mjs
+      - run: node --import tsx --test packages/core/src/db/d1/portal-marketplace-rebuild.test.ts
+      - run: node --test scripts/db/cutover/build-request-legacy-parent-census.test.mjs scripts/db/cutover/build-request-legacy-parent-activation.test.mjs scripts/db/cutover/build-request-legacy-parent-default-acl-activation.test.mjs
+      - run: node --test packages/proxy/scripts/test-postgres-image-owner-workerd.test.mjs
+      - run: npm run typecheck:images:staging -w @octafuse/proxy
+      - run: npm run test:images:staging -w @octafuse/proxy
+      # Local workerd only: generated test key, intercepted OAuth and denied external egress.
+      - run: npm run test:oauth:workerd -w @octafuse/proxy
+  native-financial-consumer:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    container:
+      image: postgres:18.6-bookworm
+      options: --user 0
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+      - run: npm ci
+      - run: npm run build:node-index -w @octafuse/core
+      # The fixture creates its own loopback cluster; no ambient database URL is used.
+      - run: |
+          install -d -o postgres -g postgres -m 0755 .wrangler/staging .wrangler/staging/pg-native-dispatch-tests
+          # Fixed machine reports are overwritten by fixtures; source directories stay checkout-owned.
+          for artifact in \
+            docs/developers/architecture/implementation-evidence/C03-postgres-native-replay-scale-lock-v333-report.json \
+            docs/developers/architecture/implementation-evidence/C04-authenticated-complete-text-quote-v360-report.json \
+            docs/developers/architecture/implementation-evidence/C04-authenticated-request-capability-v356-report.json \
+            docs/developers/architecture/implementation-evidence/C04-authenticated-text-route-ceiling-v357-report.json \
+            docs/developers/architecture/implementation-evidence/C04-authenticated-text-route-source-fence-v359-report.json \
+            docs/developers/architecture/implementation-evidence/C04-complete-chat-holder-dispatch-v387-report.json \
+            docs/developers/architecture/implementation-evidence/C04-complete-text-admission-buyer-v379-report.json \
+            docs/developers/architecture/implementation-evidence/C04-complete-text-all-hold-renewal-v367-report.json \
+            docs/developers/architecture/implementation-evidence/C04-complete-text-attempt-grant-v362-report.json \
+            docs/developers/architecture/implementation-evidence/C04-complete-text-auth-routing-recovery-coinstall-v400-report.json \
+            docs/developers/architecture/implementation-evidence/C04-complete-text-buyer-counter-cutover-v367-report.json \
+            docs/developers/architecture/implementation-evidence/C04-complete-text-holder-worker-v390-report.json \
+            docs/developers/architecture/implementation-evidence/C04-complete-text-legacy-buyer-held-v368-report.json \
+            docs/developers/architecture/implementation-evidence/C04-complete-text-legacy-reaper-fence-v366-report.json \
+            docs/developers/architecture/implementation-evidence/C04-complete-text-manifest-selection-v393-report.json \
+            docs/developers/architecture/implementation-evidence/C04-complete-text-no-fetch-close-blocker-v382-report.json \
+            docs/developers/architecture/implementation-evidence/C04-complete-text-no-fetch-fence-v370-report.json \
+            docs/developers/architecture/implementation-evidence/C04-complete-text-no-fetch-platform-close-v388-report.json \
+            docs/developers/architecture/implementation-evidence/C04-complete-text-no-fetch-recovery-v389-report.json \
+            docs/developers/architecture/implementation-evidence/C04-complete-text-observed-holder-v384-report.json \
+            docs/developers/architecture/implementation-evidence/C04-complete-text-platform-close-fence-v386-report.json \
+            docs/developers/architecture/implementation-evidence/C04-complete-text-private-route-reader-v366-report.json \
+            docs/developers/architecture/implementation-evidence/C04-complete-text-quote-budget-admission-v361-report.json \
+            docs/developers/architecture/implementation-evidence/C04-complete-text-read-grant-bridge-v367-report.json \
+            docs/developers/architecture/implementation-evidence/C04-complete-text-response-no-fetch-coinstall-v397-report.json \
+            docs/developers/architecture/implementation-evidence/C04-complete-text-response-observation-v392-report.json \
+            docs/developers/architecture/implementation-evidence/C04-complete-text-result-client-digest-v367-report.json \
+            docs/developers/architecture/implementation-evidence/C04-complete-text-result-facts-v366-report.json \
+            docs/developers/architecture/implementation-evidence/C04-complete-text-routing-projection-v396-report.json \
+            docs/developers/architecture/implementation-evidence/C04-complete-text-secretless-plan-v365-report.json \
+            docs/developers/architecture/implementation-evidence/C04-complete-text-secretless-plan-v391-report.json \
+            docs/developers/architecture/implementation-evidence/C04-complete-text-send-start-v365-report.json \
+            docs/developers/architecture/implementation-evidence/C04-legacy-buyer-commit-ack-v376-report.json \
+            docs/developers/architecture/implementation-evidence/C04-legacy-buyer-commit-journal-v378-report.json \
+            docs/developers/architecture/implementation-evidence/C04-legacy-buyer-delayed-commit-v377-report.json \
+            docs/developers/architecture/implementation-evidence/C04-legacy-buyer-journal-integration-v381-report.json \
+            docs/developers/architecture/implementation-evidence/C04-legacy-buyer-request-projection-v383-report.json \
+            docs/developers/architecture/implementation-evidence/C04-legacy-buyer-terminal-reader-v375-report.json \
+            docs/developers/architecture/implementation-evidence/C04-legacy-buyer-window-accountant-v371-report.json \
+            docs/developers/architecture/implementation-evidence/C04-legacy-buyer-windowed-app-privileges-renewal-v376-report.json \
+            docs/developers/architecture/implementation-evidence/C04-legacy-buyer-windowed-app-privileges-v374-report.json \
+            docs/developers/architecture/implementation-evidence/C04-legacy-buyer-windowed-app-v372-report.json \
+            docs/developers/architecture/implementation-evidence/C04-personal-key-auth-period-v395-report.json \
+            docs/developers/architecture/implementation-evidence/C04-postgres-credited-usage-gap-v342-results.json \
+            docs/developers/architecture/implementation-evidence/C04-postgres-credited-usage-reader-v344-results.json \
+            docs/developers/architecture/implementation-evidence/C04-postgres-credited-usage-store-v343-results.json \
+            docs/developers/architecture/implementation-evidence/C04-postgres-exclusive-credential-free-chat-ingress-v401-report.json \
+            docs/developers/architecture/implementation-evidence/C04-postgres-complete-text-platform-event-delivery-v402-report.json \
+            docs/developers/architecture/implementation-evidence/C04-postgres-shared-earning-scanner-v350-results.json \
+            docs/developers/architecture/implementation-evidence/C04-postgres-stats-auth-boundary-v346-results.json \
+            docs/developers/architecture/implementation-evidence/C04-shared-earning-backlog-observation-v353-results.json \
+            docs/developers/architecture/implementation-evidence/C04-stats-claim-reader-v349-results.json \
+            docs/developers/architecture/implementation-evidence/C04-stats-signed-claim-v348-results.json; do
+            if [ ! -e "$artifact" ]; then
+              install -m 0644 /dev/null "$artifact"
+            fi
+            chown postgres:postgres "$artifact"
+            chmod u+rw "$artifact"
+          done
+          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+            node --import tsx --test scripts/db/cutover/postgres-financial-consumer-login.native.test.mjs
+      - run: |
+          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+            node --import tsx --test scripts/db/cutover/build-financial-consumer-direct-login-grant.native.test.mjs
+      - run: |
+          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+            node --import tsx --test scripts/db/cutover/build-image-fact-job-producer-grant.native.test.mjs
+      - run: |
+          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+            node --import tsx --test scripts/db/cutover/postgres-image-http-financial.native.test.mjs
+      - run: |
+          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+            node --import tsx --test scripts/db/cutover/postgres-image-edits-http-financial.native.test.mjs
+      - run: |
+          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+            node --import tsx --test scripts/db/cutover/postgres-recovery-server-deadline.native.test.mjs
+      - run: |
+          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+            node --import tsx --test scripts/db/cutover/postgres-legacy-handler-compat.native.test.mjs
+      - run: |
+          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+            node --import tsx --test scripts/db/cutover/postgres-replay-scale-lock.native.test.mjs
+      - run: |
+          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+            node --import tsx --test scripts/db/cutover/postgres-shared-key-earnings-history.native.test.mjs
+      - run: |
+          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+            node --import tsx --test scripts/db/cutover/postgres-shared-key-earnings-projection-index.native.test.mjs
+      - run: |
+          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+            node --import tsx --test scripts/db/cutover/postgres-shared-key-usage-repair-jobs.native.test.mjs
+      - run: |
+          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+            node --import tsx --test scripts/db/cutover/postgres-shared-usage-repair-backfill.native.test.mjs
+      - run: |
+          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+            node --import tsx --test scripts/db/cutover/postgres-shared-usage-repair-durable-cursor.native.test.mjs
+      - run: |
+          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+            node --import tsx --test scripts/db/cutover/postgres-shared-key-usage-repair-runtime-grant.native.test.mjs
+      - run: |
+          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+            node --import tsx --test scripts/db/cutover/build-shared-key-usage-repair-direct-login-grant.native.test.mjs
+      - run: |
+          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+            node --import tsx --test scripts/db/cutover/postgres-shared-key-usage-repair-failure-isolation.native.test.mjs
+      - run: |
+          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+            node --import tsx --test scripts/db/cutover/postgres-shared-key-usage-repair-durable-claim.native.test.mjs
+      - run: |
+          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+            node --import tsx --test scripts/db/cutover/postgres-shared-key-quote-versions.native.test.mjs
+      - run: |
+          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+            node --import tsx --test scripts/db/cutover/postgres-shared-key-dispatch-quote-attempts.native.test.mjs
+      - run: |
+          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+            node --import tsx --test scripts/db/cutover/postgres-shared-key-orphan-claim-v347.native.test.mjs
+      - run: |
+          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+            node --import tsx --test scripts/db/cutover/postgres-shared-key-orphan-review-v348.native.test.mjs
+      - run: |
+          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+            node --import tsx --test scripts/db/cutover/postgres-shared-key-economic-outbox.native.test.mjs
+      - run: |
+          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+            node --import tsx --test scripts/db/cutover/postgres-shared-key-selected-event-gate-v351.native.test.mjs
+      - run: |
+          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+            node --import tsx --test scripts/db/cutover/postgres-shared-key-selected-event-buyer-v351.native.test.mjs
+      - run: |
+          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+            node --import tsx --test scripts/db/cutover/postgres-shared-key-economic-outbox-producer.native.test.mjs
+      - run: |
+          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+            node --import tsx --test scripts/db/cutover/postgres-shared-key-snapshot-earning-consumer.native.test.mjs
+      - run: |
+          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+            node --import tsx --test scripts/db/cutover/postgres-shared-earning-consumer-runner.native.test.mjs
+      - run: |
+          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+            node --import tsx --test scripts/db/cutover/postgres-shared-key-buyer-debit-v2.native.test.mjs
+      - run: |
+          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+            node --import tsx --test scripts/db/cutover/postgres-shared-key-economic-producer-v2.native.test.mjs
+      - run: |
+          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+            node --import tsx --test scripts/db/cutover/postgres-budget-admission-login-v350.native.test.mjs
+      - run: |
+          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+            node --import tsx --test scripts/db/cutover/postgres-ordinary-budget-recovery-v354.native.test.mjs
+      - run: |
+          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+            node --import tsx --test scripts/db/cutover/postgres-guardrail-budget-admission-login-v351.native.test.mjs
+      - run: |
+          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+            node --import tsx --test scripts/db/cutover/postgres-guardrail-budget-lifecycle-v353.native.test.mjs
+      - run: |
+          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+            node --import tsx --test scripts/db/cutover/postgres-guardrail-budget-dispatched-extension-v355.native.test.mjs
+      - run: |
+          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+            node --import tsx --test scripts/db/cutover/postgres-authenticated-request-capability-login-v356.native.test.mjs
+      - run: |
+          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+            node --import tsx --test scripts/db/cutover/postgres-authenticated-text-route-ceiling-v357.native.test.mjs
+      - run: |
+          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+            node --import tsx --test scripts/db/cutover/postgres-authenticated-text-route-source-fence-v359.native.test.mjs
+      - run: |
+          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+            node --import tsx --test scripts/db/cutover/postgres-authenticated-complete-text-quote-v360.native.test.mjs
+      - run: |
+          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+            node --import tsx --test scripts/db/cutover/postgres-complete-text-quote-budget-admission-v361.native.test.mjs
+      - run: |
+          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+            node --import tsx --test scripts/db/cutover/postgres-complete-text-attempt-grant-v362.native.test.mjs
+      - run: |
+          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+            node --import tsx --test scripts/db/cutover/postgres-complete-text-secretless-plan-v365.native.test.mjs
+      - run: |
+          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+            node --import tsx --test scripts/db/cutover/postgres-complete-text-send-start-v365.native.test.mjs
+      - run: |
+          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+            node --import tsx --test scripts/db/cutover/postgres-complete-text-private-route-reader-v366.native.test.mjs
+      - run: |
+          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+            node --import tsx --test scripts/db/cutover/postgres-complete-text-read-grant-bridge-v367.native.test.mjs
+      - run: |
+          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+            node --import tsx --test scripts/db/cutover/postgres-complete-text-result-facts-v366.native.test.mjs
+      - run: |
+          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+            node --import tsx --test scripts/db/cutover/postgres-complete-text-result-client-digest-v367.native.test.mjs
+      - run: |
+          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+            node --import tsx --test scripts/db/cutover/postgres-complete-text-legacy-reaper-fence-v366.native.test.mjs
+      - run: |
+          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+            node --import tsx --test scripts/db/cutover/postgres-complete-text-all-hold-renewal-v367.native.test.mjs
+      - run: |
+          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+            node --import tsx --test scripts/db/cutover/postgres-complete-text-buyer-counter-cutover-v367.native.test.mjs
+      - run: |
+          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+            node --import tsx --test scripts/db/cutover/postgres-complete-text-legacy-buyer-held-v368.native.test.mjs
+      - run: |
+          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+            node --import tsx --test scripts/db/cutover/postgres-buyer-held-opt-in-gap-v370.native.test.mjs
+      - run: |
+          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+            node --import tsx --test scripts/db/cutover/postgres-legacy-buyer-window-accountant-v371.native.test.mjs
+      - run: |
+          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+            node --import tsx --test scripts/db/cutover/postgres-legacy-buyer-windowed-app-v372.native.test.mjs
+      - run: |
+          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+            node --import tsx --test scripts/db/cutover/postgres-legacy-buyer-windowed-app-privileges-v374.native.test.mjs
+      - run: |
+          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+            node --import tsx --test scripts/db/cutover/postgres-legacy-buyer-windowed-app-privileges-renewal-v376.native.test.mjs
+      - run: |
+          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+            node --import tsx --test scripts/db/cutover/postgres-legacy-buyer-terminal-reader-v375.native.test.mjs
+      - run: |
+          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+            node --import tsx --test scripts/db/cutover/postgres-legacy-buyer-commit-ack-v376.native.test.mjs
+      - run: |
+          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+            node --import tsx --test scripts/db/cutover/postgres-legacy-buyer-delayed-commit-v377.native.test.mjs
+      - run: |
+          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+            node --import tsx --test scripts/db/cutover/postgres-legacy-buyer-commit-journal-v378.native.test.mjs
+      - run: |
+          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+            node --import tsx --test scripts/db/cutover/postgres-complete-text-admission-buyer-v379.native.test.mjs
+      - run: |
+          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+            node --test packages/core/src/test-support/postgres-journal-commit-ack-proxy-v381.native.test.mjs
+      - run: |
+          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+            node --import tsx --test scripts/db/cutover/postgres-legacy-buyer-journal-integration-v381.native.test.mjs
+      - run: |
+          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+            node --import tsx --test scripts/db/cutover/postgres-complete-text-no-fetch-close-blocker-v382.native.test.mjs
+      - run: |
+          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+            node --import tsx --test scripts/db/cutover/postgres-legacy-buyer-request-projection-v383.native.test.mjs
+      - run: |
+          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+            node --import tsx --test scripts/db/cutover/postgres-complete-text-observed-holder-v384.native.test.mjs
+      - run: |
+          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+            node --import tsx --test scripts/db/cutover/postgres-complete-text-platform-close-fence-v386.native.test.mjs
+      - run: |
+          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+            node --import tsx --test scripts/db/cutover/postgres-complete-chat-holder-dispatch-v387.native.test.mjs
+      - run: |
+          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+            node --import tsx --test scripts/db/cutover/postgres-complete-text-no-fetch-platform-close-v388.native.test.mjs
+      - run: |
+          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+            node --import tsx --test scripts/db/cutover/postgres-complete-text-no-fetch-recovery-v389.native.test.mjs
+      - run: |
+          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+            node --import tsx --test scripts/db/cutover/postgres-complete-text-holder-worker-v390.native.test.mjs
+      - run: |
+          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+            node --import tsx --test scripts/db/cutover/postgres-complete-text-secretless-plan-v391.native.test.mjs
+      - run: |
+          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+            node --import tsx --test scripts/db/cutover/postgres-complete-text-response-observation-v392.native.test.mjs
+      - run: |
+          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+            TSX_TSCONFIG_PATH=scripts/db/cutover/postgres-complete-text-manifest-selection-v393.tsconfig.json \
+            node --import tsx --test scripts/db/cutover/postgres-complete-text-manifest-selection-v393.native.test.mjs
+      - run: |
+          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+            node --import tsx --test scripts/db/cutover/postgres-personal-key-auth-period-v395.native.test.mjs
+      - run: |
+          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+            TSX_TSCONFIG_PATH=scripts/db/cutover/postgres-complete-text-routing-projection-v396.tsconfig.json \
+            node --import tsx --test scripts/db/cutover/postgres-complete-text-routing-projection-v396.native.test.mjs
+      - run: |
+          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+            node --import tsx --test scripts/db/cutover/postgres-complete-text-response-no-fetch-coinstall-v397.native.test.mjs
+      - run: |
+          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+            TSX_TSCONFIG_PATH=scripts/db/cutover/postgres-complete-text-auth-routing-recovery-coinstall-v400.tsconfig.json \
+            node --import tsx --test scripts/db/cutover/postgres-complete-text-auth-routing-recovery-coinstall-v400.native.test.mjs
+      - run: |
+          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+            TSX_TSCONFIG_PATH=scripts/db/cutover/postgres-exclusive-credential-free-chat-ingress-v401.tsconfig.json \
+            node --import tsx --test scripts/db/cutover/postgres-exclusive-credential-free-chat-ingress-v401.native.test.mjs
+      - run: |
+          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+            TSX_TSCONFIG_PATH=scripts/db/cutover/postgres-complete-text-platform-event-delivery-v402.tsconfig.json \
+            node --import tsx --test scripts/db/cutover/postgres-complete-text-platform-event-delivery-v402.native.test.mjs
+      - run: |
+          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+            node --import tsx --test scripts/db/cutover/postgres-complete-text-no-fetch-fence-v370.native.test.mjs
+      - run: |
+          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+            node --import tsx --test packages/core/src/storage/postgres-jsonb-batch-native.test.mjs
+      - run: |
+          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+            node --import tsx --test scripts/db/cutover/postgres-guardrail-admission-adapter-v352.native.test.mjs
+      - run: |
+          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+            node --import tsx --test scripts/db/cutover/postgres-shared-key-buyer-budget-receipt-v2.native.test.mjs
+      - run: |
+          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+            node --import tsx --test scripts/db/cutover/postgres-shared-key-buyer-receipt-retention-v346.native.test.mjs
+      - run: |
+          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+            node --import tsx --test scripts/db/cutover/postgres-runtime-privilege-transition-v345.native.test.mjs
+      - run: |
+          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+            node --import tsx --test scripts/db/cutover/postgres-buyer-critical-writer-split-v346.native.test.mjs
+      - run: |
+          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+            node --import tsx --test scripts/db/cutover/postgres-shared-key-economic-buyer-login-v347.native.test.mjs
+      - run: |
+          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+            node --import tsx --test scripts/db/cutover/postgres-shared-key-guardrail-post-reservation-denial-v348.native.test.mjs
+      - run: |
+          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+            node --import tsx --test scripts/db/cutover/postgres-buyer-split-grant-rerun-v348.native.test.mjs
+      - run: |
+          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+            node --import tsx --test scripts/db/cutover/postgres-buyer-split-guardrail-v349.native.test.mjs
+      - run: |
+          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+            node --import tsx --test scripts/db/cutover/postgres-shared-key-stats-auth-boundary-v346.native.test.mjs
+      - run: |
+          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+            node --import tsx --test scripts/db/cutover/postgres-shared-key-stats-signed-claim-v348.native.test.mjs
+      - run: |
+          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+            node --import tsx --test scripts/db/cutover/postgres-shared-key-stats-claim-reader-v349.native.test.mjs
+      - run: |
+          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+            node --import tsx --test scripts/db/cutover/postgres-shared-key-snapshot-earning-consumer-v2.native.test.mjs
+      - run: |
+          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+            node --import tsx --test scripts/db/cutover/postgres-shared-key-economic-delivery.native.test.mjs
+      - run: |
+          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+            node --import tsx --test scripts/db/cutover/postgres-shared-earning-scanner-v350.native.test.mjs
+      - run: |
+          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+            node --import tsx --test scripts/db/cutover/postgres-shared-earning-backlog-v353.native.test.mjs
+      - run: |
+          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+            node --import tsx --test scripts/db/cutover/postgres-shared-key-credited-usage-gap.native.test.mjs
+      - run: |
+          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+            node --test scripts/db/cutover/postgres-shared-key-credited-usage-store.native.test.mjs
+      - run: |
+          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+            node --import tsx --test scripts/db/cutover/postgres-shared-key-credited-usage-reader.native.test.mjs
+      - run: |
+          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+            node --import tsx --test scripts/db/cutover/postgres-recovery-old-database-upgrade.native.test.mjs
+      - run: |
+          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+            node --import tsx --test scripts/db/cutover/build-request-legacy-parent-census.native.test.mjs
+      - run: |
+          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+            node --import tsx --test scripts/db/cutover/postgres-replay-reservations.native.test.mjs
+      - run: |
+          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+            node --import tsx --test scripts/db/cutover/postgres-legacy-parent-activation.native.test.mjs
+      - run: |
+          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+            node --import tsx --test scripts/db/cutover/build-postgres-recovery-retention-review.native.test.mjs
+      - run: |
+          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+            node --import tsx --test packages/core/src/storage/management-workspaces.postgres-native.test.mjs
+      - run: |
+          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+            node --import tsx --test scripts/db/cutover/postgres-user-delete-audit.native.test.mjs

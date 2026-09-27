@@ -1,0 +1,1667 @@
+{
+  "schemaVersion": 1,
+  "scope": "C02.B2.2 serial synthetic in-flight cancellation subgate; C02.G NOT PASSED",
+  "budget": {
+    "roundCumulativeIncrementalCapUsd": 2,
+    "newBudget": false,
+    "modelCalls": 0,
+    "kmsCalls": 0,
+    "cumulativeKnownTestHttp": 89,
+    "finalCloudflareBillVerified": false
+  },
+  "deploys": [
+    {
+      "sourceArtifact": ".wrangler/staging/image-probe-deploy-result.json",
+      "sourceSha256": "a6a097bf00faf38b5a12ccaf9d512fa12a86d5269e7690b2d6562b58f072f451",
+      "result": "PASS",
+      "preflight": "PASS",
+      "startedAt": "2026-09-07T02:41:22.449Z",
+      "finishedAt": "2026-09-07T02:42:09.394Z",
+      "deployment": {
+        "id": "0f240c24-30b0-437c-ad7d-04658f7115ca",
+        "created_on": "2026-09-07T02:41:47.817052Z",
+        "versions": [
+          {
+            "version_id": "e9bb6c18-d99b-40ba-8b34-62fc95f598f6",
+            "percentage": 100
+          }
+        ]
+      },
+      "sources": [
+        {
+          "path": "packages/proxy/scripts/staging/images-upstream.ts",
+          "sha256": "b18a6eccf1f0c742ec634f8ee7b14e568ac5b5265ef5188193829e85b26451b9"
+        },
+        {
+          "path": "packages/proxy/scripts/staging/images-probe.ts",
+          "sha256": "6557115b81dd1799039888a9a4a1a1661121451e36084b6491b9bc25798107cc"
+        },
+        {
+          "path": "packages/proxy/scripts/staging/images-probe-contract.ts",
+          "sha256": "45f3a90bb0e3e69db7fc3e32284d9153144450c42ba48b697a33ef02c416ed38"
+        },
+        {
+          "path": "packages/proxy/scripts/staging/wrangler.images-upstream.jsonc",
+          "sha256": "c1e712deb361fc09e04d06dda4804a38d69dc042ca04b72b45b66d0a122ec67b"
+        }
+      ],
+      "managementRequests": 23,
+      "d1ApiRowsRead": 82,
+      "d1ApiRowsWritten": 0,
+      "productionBefore": [
+        {
+          "name": "cinatoken-proxy",
+          "settingsSha256": "4243eedd631abb9bcf0c1dd8dd9acbb9ca56edab0bf3048204abccbbd4261cfc"
+        },
+        {
+          "name": "cinatoken-admin",
+          "settingsSha256": "e2ee0adf7b6469d843c310f3dccd2a478230c0f0b75d5d6ad285efeec17ed6ab"
+        },
+        {
+          "name": "cinatoken-chain-worker",
+          "settingsSha256": "21f1b2c08db33d20c0f235e5a89533e637a761eaf7b4bef2fcf0061ad004a916"
+        }
+      ],
+      "productionAfter": [
+        {
+          "name": "cinatoken-proxy",
+          "settingsSha256": "4243eedd631abb9bcf0c1dd8dd9acbb9ca56edab0bf3048204abccbbd4261cfc"
+        },
+        {
+          "name": "cinatoken-admin",
+          "settingsSha256": "e2ee0adf7b6469d843c310f3dccd2a478230c0f0b75d5d6ad285efeec17ed6ab"
+        },
+        {
+          "name": "cinatoken-chain-worker",
+          "settingsSha256": "21f1b2c08db33d20c0f235e5a89533e637a761eaf7b4bef2fcf0061ad004a916"
+        }
+      ]
+    },
+    {
+      "sourceArtifact": ".wrangler/staging/image-lifetime-deploy-result.json",
+      "sourceSha256": "1687993a6c60110cdccaa5a9270e9481220f71c4d2dc44cb04e0a734b63a9e48",
+      "result": "PASS",
+      "preflight": "PASS",
+      "startedAt": "2026-09-07T02:57:13.839Z",
+      "finishedAt": "2026-09-07T02:58:21.054Z",
+      "deployment": {
+        "id": "fe16c129-2d5a-4d21-afef-2b8257f3ad28",
+        "created_on": "2026-09-07T02:58:02.598848Z",
+        "versions": [
+          {
+            "version_id": "1f3ece9f-9882-4ae7-b7dd-0366e38d53d4",
+            "percentage": 100
+          }
+        ]
+      },
+      "sources": [
+        {
+          "path": "packages/proxy/src/runtime/worker-handler.ts",
+          "sha256": "716c906cbd62332c5da61fce3c9cbe59ba0bed8947d40062449b46e630fa63f2"
+        },
+        {
+          "path": "packages/proxy/scripts/staging/images-gateway.ts",
+          "sha256": "5bc969638ab8bd3dfd84584bc7812d6990cc57fc6a7afc541d32c2c71f3a9b5f"
+        },
+        {
+          "path": ".wrangler/staging/images-proxy/wrangler.jsonc",
+          "sha256": "99ced15ff627a8e6a627fc98814d4b6214e6ac8b1b945a1a7f70191ef8d60931"
+        }
+      ],
+      "managementRequests": 23,
+      "d1ApiRowsRead": 82,
+      "d1ApiRowsWritten": 0,
+      "productionBefore": [
+        {
+          "name": "cinatoken-proxy",
+          "settingsSha256": "4243eedd631abb9bcf0c1dd8dd9acbb9ca56edab0bf3048204abccbbd4261cfc"
+        },
+        {
+          "name": "cinatoken-admin",
+          "settingsSha256": "e2ee0adf7b6469d843c310f3dccd2a478230c0f0b75d5d6ad285efeec17ed6ab"
+        },
+        {
+          "name": "cinatoken-chain-worker",
+          "settingsSha256": "21f1b2c08db33d20c0f235e5a89533e637a761eaf7b4bef2fcf0061ad004a916"
+        }
+      ],
+      "productionAfter": [
+        {
+          "name": "cinatoken-proxy",
+          "settingsSha256": "4243eedd631abb9bcf0c1dd8dd9acbb9ca56edab0bf3048204abccbbd4261cfc"
+        },
+        {
+          "name": "cinatoken-admin",
+          "settingsSha256": "e2ee0adf7b6469d843c310f3dccd2a478230c0f0b75d5d6ad285efeec17ed6ab"
+        },
+        {
+          "name": "cinatoken-chain-worker",
+          "settingsSha256": "21f1b2c08db33d20c0f235e5a89533e637a761eaf7b4bef2fcf0061ad004a916"
+        }
+      ]
+    },
+    {
+      "sourceArtifact": ".wrangler/staging/image-attempt-facts-deploy-result.json",
+      "sourceSha256": "6dc2f3474327e3fb355ce55a006e7e8c56fb95f338e90a5453a3ee2f4d6030f5",
+      "result": "PASS",
+      "preflight": "PASS",
+      "startedAt": "2026-09-07T03:06:11.753Z",
+      "finishedAt": "2026-09-07T03:07:04.669Z",
+      "deployment": {
+        "id": "4d8bd847-d759-4d16-a171-91bf90ee86be",
+        "created_on": "2026-09-07T03:06:42.006598Z",
+        "versions": [
+          {
+            "version_id": "6a32bee7-b025-48f8-9452-7a48adace8f0",
+            "percentage": 100
+          }
+        ]
+      },
+      "sources": [
+        {
+          "path": "packages/proxy/src/runtime/worker-handler.ts",
+          "sha256": "716c906cbd62332c5da61fce3c9cbe59ba0bed8947d40062449b46e630fa63f2"
+        },
+        {
+          "path": "packages/proxy/src/services/request-timing.ts",
+          "sha256": "61ae7d349d5f7b5e9faef2fcc2bc7648af348575bbbac4a5a7c3cb60d726c2af"
+        },
+        {
+          "path": "packages/proxy/src/services/egress/openai-images-driver.ts",
+          "sha256": "b81d7d37cf936c6c56a5f4cc56d434ab688d318d7312a9234492c12249bc558c"
+        },
+        {
+          "path": "packages/proxy/scripts/staging/images-gateway.ts",
+          "sha256": "5bc969638ab8bd3dfd84584bc7812d6990cc57fc6a7afc541d32c2c71f3a9b5f"
+        },
+        {
+          "path": ".wrangler/staging/images-proxy/wrangler.jsonc",
+          "sha256": "99ced15ff627a8e6a627fc98814d4b6214e6ac8b1b945a1a7f70191ef8d60931"
+        }
+      ],
+      "managementRequests": 23,
+      "d1ApiRowsRead": 82,
+      "d1ApiRowsWritten": 0,
+      "productionBefore": [
+        {
+          "name": "cinatoken-proxy",
+          "settingsSha256": "4243eedd631abb9bcf0c1dd8dd9acbb9ca56edab0bf3048204abccbbd4261cfc"
+        },
+        {
+          "name": "cinatoken-admin",
+          "settingsSha256": "e2ee0adf7b6469d843c310f3dccd2a478230c0f0b75d5d6ad285efeec17ed6ab"
+        },
+        {
+          "name": "cinatoken-chain-worker",
+          "settingsSha256": "21f1b2c08db33d20c0f235e5a89533e637a761eaf7b4bef2fcf0061ad004a916"
+        }
+      ],
+      "productionAfter": [
+        {
+          "name": "cinatoken-proxy",
+          "settingsSha256": "4243eedd631abb9bcf0c1dd8dd9acbb9ca56edab0bf3048204abccbbd4261cfc"
+        },
+        {
+          "name": "cinatoken-admin",
+          "settingsSha256": "e2ee0adf7b6469d843c310f3dccd2a478230c0f0b75d5d6ad285efeec17ed6ab"
+        },
+        {
+          "name": "cinatoken-chain-worker",
+          "settingsSha256": "21f1b2c08db33d20c0f235e5a89533e637a761eaf7b4bef2fcf0061ad004a916"
+        }
+      ]
+    }
+  ],
+  "runs": [
+    {
+      "attempt": 1,
+      "sourceArtifact": ".wrangler/staging/image-probe-attempt1-result.json",
+      "sourceSha256": "de9341bcbba145206555282db3cb42aefbb9dd0d35d674d4e5cd033171f019b6",
+      "harnessSha256": "ded68d7bc67373697ce20e9212ab965d3309252194581667342afdd7820733c2",
+      "startedAt": "2026-09-07T02:44:45.007Z",
+      "finishedAt": "2026-09-07T02:47:56.484Z",
+      "result": "FAIL",
+      "error": "Assertion failed: background usage rows arrived\n\n2 !== 4\n",
+      "version": "61a59281-5b1e-47ec-9b34-7f30a3a75d92",
+      "upstreamVersion": "e9bb6c18-d99b-40ba-8b34-62fc95f598f6",
+      "requests": [
+        {
+          "label": "access-readiness-0",
+          "path": "/health",
+          "startedAt": "2026-09-07T02:45:35.747Z",
+          "requestBytes": 0,
+          "declaredLength": false,
+          "generatedBytes": 0,
+          "readPauseMs": 0,
+          "readPauses": 0,
+          "cancelAfterBytes": 0,
+          "generationId": null,
+          "status": 404,
+          "responseBytes": 19984,
+          "responseSha256": "2000e6b28a1517ba1268e1649cd3163326ef839492edfdba31e8959830580976",
+          "ms": 1098,
+          "gatewayCode": null,
+          "cfRay": "a37260c02e54fc0c-SIN",
+          "contentType": "text/html; charset=UTF-8",
+          "errorMessage": null
+        },
+        {
+          "label": "access-readiness-1",
+          "path": "/health",
+          "startedAt": "2026-09-07T02:45:41.852Z",
+          "requestBytes": 0,
+          "declaredLength": false,
+          "generatedBytes": 0,
+          "readPauseMs": 0,
+          "readPauses": 0,
+          "cancelAfterBytes": 0,
+          "generationId": null,
+          "status": 401,
+          "responseBytes": 37790,
+          "responseSha256": "a3aaf92b6e96d3eee2a4e9257e1e912c6595e8d9750c5cd9a63d08482b60262d",
+          "ms": 2092,
+          "gatewayCode": null,
+          "cfRay": "a37260e6be1651fc-SIN",
+          "contentType": "text/html",
+          "errorMessage": null,
+          "passed": true
+        },
+        {
+          "label": "authorized-health",
+          "path": "/health",
+          "startedAt": "2026-09-07T02:45:43.946Z",
+          "requestBytes": 0,
+          "declaredLength": false,
+          "generatedBytes": 0,
+          "readPauseMs": 0,
+          "readPauses": 0,
+          "cancelAfterBytes": 0,
+          "generationId": null,
+          "status": 200,
+          "responseBytes": 43,
+          "responseSha256": "155462e85c280dba1aae35fcdcabd37c5abf62071a935bfd8e5d02fc8bd9194a",
+          "ms": -7262,
+          "gatewayCode": null,
+          "cfRay": "a37260f3be1a1e94-SIN",
+          "contentType": "application/json",
+          "errorMessage": null,
+          "passed": true
+        },
+        {
+          "label": "hashed-gateway-key-auth-image-catalog",
+          "path": "/v1/models?kind=image",
+          "startedAt": "2026-09-07T02:45:36.685Z",
+          "requestBytes": 0,
+          "declaredLength": false,
+          "generatedBytes": 0,
+          "readPauseMs": 0,
+          "readPauses": 0,
+          "cancelAfterBytes": 0,
+          "generationId": null,
+          "status": 200,
+          "responseBytes": 2985,
+          "responseSha256": "349603447b7ed768c24860851b737e1b4a18bfeaa28d3cbd791543afef33fbce",
+          "ms": 1641,
+          "gatewayCode": null,
+          "cfRay": "a37260f66cc951fc-SIN",
+          "contentType": "application/json",
+          "errorMessage": null,
+          "passed": true
+        },
+        {
+          "label": "slow-upload-complete",
+          "path": "/v1/images/generations",
+          "fixtureCase": "small-generations",
+          "probeId": "6cd4580a-569d-495b-853e-b2ff8e4ee661",
+          "startedAt": "2026-09-07T02:45:38.327Z",
+          "intendedBytes": 590,
+          "generatedBytes": 590,
+          "observedWhilePartial": {
+            "runId": "c02-success-1430152d-ba31-48b3-bb53-612ddb861c0d",
+            "probeId": "6cd4580a-569d-495b-853e-b2ff8e4ee661",
+            "mode": "release",
+            "phase": "armed"
+          },
+          "uploaderFinished": true,
+          "uploadEndedAt": "2026-09-07T02:45:41.525Z",
+          "status": 200,
+          "generationId": "gen-b5f5fc7e-f740-42fc-a2f6-825107c15789",
+          "responseBytes": 133,
+          "observation": {
+            "runId": "c02-success-1430152d-ba31-48b3-bb53-612ddb861c0d",
+            "probeId": "6cd4580a-569d-495b-853e-b2ff8e4ee661",
+            "mode": "release",
+            "phase": "terminal",
+            "events": [
+              {
+                "phase": "started",
+                "at": 1788749147794,
+                "signalAborted": false
+              },
+              {
+                "phase": "terminal",
+                "at": 1788749148217,
+                "reason": "released",
+                "signalAborted": false
+              }
+            ]
+          },
+          "passed": true,
+          "ms": 7016
+        },
+        {
+          "label": "cancel-before-upstream-headers",
+          "path": "/v1/images/generations",
+          "fixtureCase": "limit-generations",
+          "probeId": "c32a4861-d47d-4df5-a2cb-284793b8be7e",
+          "startedAt": "2026-09-07T02:45:45.344Z",
+          "intendedBytes": 590,
+          "generatedBytes": 590,
+          "uploaderFinished": true,
+          "uploadEndedAt": "2026-09-07T02:45:45.346Z",
+          "observedBeforeAbort": {
+            "runId": "c02-success-1430152d-ba31-48b3-bb53-612ddb861c0d",
+            "probeId": "c32a4861-d47d-4df5-a2cb-284793b8be7e",
+            "mode": "headers",
+            "phase": "started",
+            "events": [
+              {
+                "phase": "started",
+                "at": 1788749151632,
+                "signalAborted": false
+              }
+            ]
+          },
+          "clientAbortAt": "2026-09-07T02:45:48.127Z",
+          "networkError": "AbortError",
+          "observation": {
+            "runId": "c02-success-1430152d-ba31-48b3-bb53-612ddb861c0d",
+            "probeId": "c32a4861-d47d-4df5-a2cb-284793b8be7e",
+            "mode": "headers",
+            "phase": "terminal",
+            "events": [
+              {
+                "phase": "started",
+                "at": 1788749151632,
+                "signalAborted": false
+              },
+              {
+                "phase": "terminal",
+                "at": 1788749153950,
+                "reason": "request_abort",
+                "signalAborted": true
+              }
+            ]
+          },
+          "passed": true,
+          "ms": 4482
+        },
+        {
+          "label": "cancel-during-upstream-body",
+          "path": "/v1/images/generations",
+          "fixtureCase": "replacement-generations",
+          "probeId": "020efcb4-5be0-443a-8a8b-11d0ff6e74cb",
+          "startedAt": "2026-09-07T02:45:49.827Z",
+          "intendedBytes": 593,
+          "generatedBytes": 593,
+          "uploaderFinished": true,
+          "uploadEndedAt": "2026-09-07T02:45:50.549Z",
+          "observedBeforeAbort": {
+            "runId": "c02-success-1430152d-ba31-48b3-bb53-612ddb861c0d",
+            "probeId": "020efcb4-5be0-443a-8a8b-11d0ff6e74cb",
+            "mode": "body",
+            "phase": "body-prefix",
+            "events": [
+              {
+                "phase": "started",
+                "at": 1788749156769,
+                "signalAborted": false
+              },
+              {
+                "phase": "body-prefix",
+                "at": 1788749156939,
+                "signalAborted": false
+              }
+            ]
+          },
+          "clientAbortAt": "2026-09-07T02:45:52.678Z",
+          "networkError": "AbortError",
+          "observation": {
+            "runId": "c02-success-1430152d-ba31-48b3-bb53-612ddb861c0d",
+            "probeId": "020efcb4-5be0-443a-8a8b-11d0ff6e74cb",
+            "mode": "body",
+            "phase": "terminal",
+            "events": [
+              {
+                "phase": "started",
+                "at": 1788749156769,
+                "signalAborted": false
+              },
+              {
+                "phase": "body-prefix",
+                "at": 1788749156939,
+                "signalAborted": false
+              },
+              {
+                "phase": "terminal",
+                "at": 1788749158470,
+                "reason": "request_abort",
+                "signalAborted": true
+              }
+            ]
+          },
+          "passed": true,
+          "ms": 4553
+        },
+        {
+          "label": "cancel-incomplete-upload",
+          "path": "/v1/images/generations",
+          "fixtureCase": "over-generations",
+          "probeId": "b7cd42e9-4c4d-49fa-8530-409d18a1b573",
+          "startedAt": "2026-09-07T02:45:54.381Z",
+          "intendedBytes": 4301,
+          "generatedBytes": 1024,
+          "observedWhilePartial": {
+            "runId": "c02-success-1430152d-ba31-48b3-bb53-612ddb861c0d",
+            "probeId": "b7cd42e9-4c4d-49fa-8530-409d18a1b573",
+            "mode": "headers",
+            "phase": "armed"
+          },
+          "clientAbortAt": "2026-09-07T02:45:55.730Z",
+          "uploaderFinished": true,
+          "uploadEndedAt": "2026-09-07T02:45:55.731Z",
+          "networkError": "AbortError",
+          "observation": {
+            "runId": "c02-success-1430152d-ba31-48b3-bb53-612ddb861c0d",
+            "probeId": "b7cd42e9-4c4d-49fa-8530-409d18a1b573",
+            "mode": "headers",
+            "phase": "armed"
+          },
+          "passed": true,
+          "ms": 4940
+        },
+        {
+          "label": "recovery-after-cancellations",
+          "path": "/v1/images/generations",
+          "fixtureCase": "small-generations",
+          "probeId": "998b3d2b-c864-4cdd-8b08-394395498d56",
+          "startedAt": "2026-09-07T02:45:59.322Z",
+          "intendedBytes": 590,
+          "generatedBytes": 590,
+          "uploaderFinished": true,
+          "uploadEndedAt": "2026-09-07T02:46:00.091Z",
+          "status": 200,
+          "generationId": "gen-f01f8e99-fd8f-4396-8479-88f690295455",
+          "responseBytes": 133,
+          "observation": {
+            "runId": "c02-success-1430152d-ba31-48b3-bb53-612ddb861c0d",
+            "probeId": "998b3d2b-c864-4cdd-8b08-394395498d56",
+            "mode": "release",
+            "phase": "terminal",
+            "events": [
+              {
+                "phase": "started",
+                "at": 1788749166366,
+                "signalAborted": false
+              },
+              {
+                "phase": "terminal",
+                "at": 1788749166787,
+                "reason": "released",
+                "signalAborted": false
+              }
+            ]
+          },
+          "passed": true,
+          "ms": 3859
+        },
+        {
+          "label": "access-still-denies-after-images",
+          "path": "/health",
+          "startedAt": "2026-09-07T02:46:03.182Z",
+          "requestBytes": 0,
+          "declaredLength": false,
+          "generatedBytes": 0,
+          "readPauseMs": 0,
+          "readPauses": 0,
+          "cancelAfterBytes": 0,
+          "generationId": null,
+          "status": 401,
+          "responseBytes": 37790,
+          "responseSha256": "ce58c565d07aa3ccce1edec34070ef122f73efcfeca09bf102b888f20cee14a2",
+          "ms": 837,
+          "gatewayCode": null,
+          "cfRay": "a372619c084dfce7-SIN",
+          "contentType": "text/html",
+          "errorMessage": null,
+          "passed": true
+        }
+      ],
+      "usageLogs": [
+        {
+          "id": "gen-b5f5fc7e-f740-42fc-a2f6-825107c15789",
+          "model_id": "c02-success-1430152d-ba31-48b3-bb53-612ddb861c0d-small-generations",
+          "route_target_id": "c02-success-1430152d-ba31-48b3-bb53-612ddb861c0d-small-generations-r",
+          "status": "success",
+          "error_message": null,
+          "charged_cost": 0,
+          "metered_cost": 0,
+          "standard_cost": 0,
+          "budget_charged_micros": 0,
+          "input_image_count": 0,
+          "output_image_count": 1,
+          "upstream_request_id": "c02-probe-6cd4580a-569d-495b-853e-b2ff8e4ee661-ace4736c37aa1d87145efb4793a15b682a7e820654db6281ba0da8e1847b30a4",
+          "upstream_attempt_count": 1,
+          "request_body": null,
+          "upstream_request_body": null,
+          "raw_usage_chars": 94,
+          "pricing_audit_chars": 2943
+        },
+        {
+          "id": "gen-f01f8e99-fd8f-4396-8479-88f690295455",
+          "model_id": "c02-success-1430152d-ba31-48b3-bb53-612ddb861c0d-small-generations",
+          "route_target_id": "c02-success-1430152d-ba31-48b3-bb53-612ddb861c0d-small-generations-r",
+          "status": "success",
+          "error_message": null,
+          "charged_cost": 0,
+          "metered_cost": 0,
+          "standard_cost": 0,
+          "budget_charged_micros": 0,
+          "input_image_count": 0,
+          "output_image_count": 1,
+          "upstream_request_id": "c02-probe-998b3d2b-c864-4cdd-8b08-394395498d56-b7e442c3789a9f23ef04536aef100c27a146090c5a9d555a40581e751abe028e",
+          "upstream_attempt_count": 1,
+          "request_body": null,
+          "upstream_request_body": null,
+          "raw_usage_chars": 94,
+          "pricing_audit_chars": 2943
+        }
+      ],
+      "attempts": null,
+      "requiredChecks": null,
+      "readinessAttempts": 2,
+      "previousKnownTestHttp": 61,
+      "cumulativeKnownTestHttp": 71,
+      "managementRequests": 130,
+      "d1ApiRowsRead": 1399,
+      "d1ApiRowsWritten": 156,
+      "modelCalls": 0,
+      "kmsCalls": 0,
+      "serviceTokenId": "6d9e1adc-669e-4ae8-8d30-44693a36f677",
+      "cleanup": {
+        "ingressClosed": true,
+        "accessDenyAll": true,
+        "serviceTokenRevoked": true,
+        "gatewayKeyRevoked": true,
+        "fixtureRemoved": true,
+        "databaseRestored": true,
+        "productionUnchanged": true,
+        "privateUpstreamUnchangedAndClosed": true
+      },
+      "restoredTableCount": 52,
+      "restoredNonemptyTables": [
+        {
+          "table_name": "admin_api_keys",
+          "row_count": 1
+        },
+        {
+          "table_name": "d1_migrations",
+          "row_count": 68
+        },
+        {
+          "table_name": "model_endpoint_backfill_database_identity",
+          "row_count": 1
+        },
+        {
+          "table_name": "system_config",
+          "row_count": 12
+        }
+      ],
+      "productionAfter": [
+        {
+          "name": "cinatoken-proxy",
+          "settingsSha256": "4243eedd631abb9bcf0c1dd8dd9acbb9ca56edab0bf3048204abccbbd4261cfc"
+        },
+        {
+          "name": "cinatoken-admin",
+          "settingsSha256": "e2ee0adf7b6469d843c310f3dccd2a478230c0f0b75d5d6ad285efeec17ed6ab"
+        },
+        {
+          "name": "cinatoken-chain-worker",
+          "settingsSha256": "21f1b2c08db33d20c0f235e5a89533e637a761eaf7b4bef2fcf0061ad004a916"
+        }
+      ],
+      "providerEnvelopes": null,
+      "syntheticBalance": null
+    },
+    {
+      "attempt": 2,
+      "sourceArtifact": ".wrangler/staging/image-probe-attempt2-result.json",
+      "sourceSha256": "1aa17705ac1da7b9090d411d06ed8993f9e55d0b67237e19faec668ea31cf017",
+      "harnessSha256": "183c6845a4ab8a9d610625af5ff682b39dc0db5a61b487e565ba4a5d1b2e5330",
+      "startedAt": "2026-09-07T02:58:39.375Z",
+      "finishedAt": "2026-09-07T03:01:22.808Z",
+      "result": "FAIL",
+      "error": "Assertion failed: Expected values to be strictly equal:\n\n3 !== 4\n",
+      "version": "1f3ece9f-9882-4ae7-b7dd-0366e38d53d4",
+      "upstreamVersion": "e9bb6c18-d99b-40ba-8b34-62fc95f598f6",
+      "requests": [
+        {
+          "label": "access-readiness-0",
+          "path": "/health",
+          "startedAt": "2026-09-07T02:59:30.655Z",
+          "requestBytes": 0,
+          "declaredLength": false,
+          "generatedBytes": 0,
+          "readPauseMs": 0,
+          "readPauses": 0,
+          "cancelAfterBytes": 0,
+          "generationId": null,
+          "status": 401,
+          "responseBytes": 37790,
+          "responseSha256": "bae8b380bd2b03b296d53dfe3733f3b7abe6687e22451a553d3c7be856402e67",
+          "ms": 2067.846899999997,
+          "gatewayCode": null,
+          "cfRay": "a37275546e0006b6-SIN",
+          "contentType": "text/html",
+          "errorMessage": null,
+          "passed": true
+        },
+        {
+          "label": "authorized-health",
+          "path": "/health",
+          "startedAt": "2026-09-07T02:59:32.725Z",
+          "requestBytes": 0,
+          "declaredLength": false,
+          "generatedBytes": 0,
+          "readPauseMs": 0,
+          "readPauses": 0,
+          "cancelAfterBytes": 0,
+          "generationId": null,
+          "status": 200,
+          "responseBytes": 43,
+          "responseSha256": "155462e85c280dba1aae35fcdcabd37c5abf62071a935bfd8e5d02fc8bd9194a",
+          "ms": 1215.7006000000038,
+          "gatewayCode": null,
+          "cfRay": "a37275619ae244b7-SIN",
+          "contentType": "application/json",
+          "errorMessage": null,
+          "passed": true
+        },
+        {
+          "label": "hashed-gateway-key-auth-image-catalog",
+          "path": "/v1/models?kind=image",
+          "startedAt": "2026-09-07T02:59:33.942Z",
+          "requestBytes": 0,
+          "declaredLength": false,
+          "generatedBytes": 0,
+          "readPauseMs": 0,
+          "readPauses": 0,
+          "cancelAfterBytes": 0,
+          "generationId": null,
+          "status": 200,
+          "responseBytes": 2985,
+          "responseSha256": "187d06dfa8de103c44a55e88ffd1c8aee403cab981dc6b94add1d178fea45d6e",
+          "ms": 1413.4412000000011,
+          "gatewayCode": null,
+          "cfRay": "a37275644b9706b6-SIN",
+          "contentType": "application/json",
+          "errorMessage": null,
+          "passed": true
+        },
+        {
+          "label": "slow-upload-complete",
+          "path": "/v1/images/generations",
+          "fixtureCase": "small-generations",
+          "probeId": "37a5f085-29d6-4da0-88ba-7442559c6239",
+          "startedAt": "2026-09-07T02:59:35.357Z",
+          "intendedBytes": 590,
+          "generatedBytes": 590,
+          "observedWhilePartial": {
+            "runId": "c02-success-d04c940a-f623-4c9f-ae45-f3c80e657a1d",
+            "probeId": "37a5f085-29d6-4da0-88ba-7442559c6239",
+            "mode": "release",
+            "phase": "armed"
+          },
+          "uploaderFinished": true,
+          "uploadEndedAt": "2026-09-07T02:59:38.532Z",
+          "status": 200,
+          "generationId": "gen-7f376d44-9b9e-4772-9c12-f4ee109f7ba1",
+          "responseBytes": 133,
+          "observation": {
+            "runId": "c02-success-d04c940a-f623-4c9f-ae45-f3c80e657a1d",
+            "probeId": "37a5f085-29d6-4da0-88ba-7442559c6239",
+            "mode": "release",
+            "phase": "terminal",
+            "events": [
+              {
+                "phase": "started",
+                "at": 1788749984358,
+                "signalAborted": false
+              },
+              {
+                "phase": "terminal",
+                "at": 1788749984791,
+                "reason": "released",
+                "signalAborted": false
+              }
+            ]
+          },
+          "passed": true,
+          "ms": 7102.998599999999
+        },
+        {
+          "label": "cancel-before-upstream-headers",
+          "path": "/v1/images/generations",
+          "fixtureCase": "limit-generations",
+          "probeId": "aff2f2c1-0c11-43ac-aeb4-44b73b164175",
+          "startedAt": "2026-09-07T02:59:51.167Z",
+          "intendedBytes": 590,
+          "generatedBytes": 590,
+          "uploaderFinished": true,
+          "uploadEndedAt": "2026-09-07T02:59:51.169Z",
+          "observedBeforeAbort": {
+            "runId": "c02-success-d04c940a-f623-4c9f-ae45-f3c80e657a1d",
+            "probeId": "aff2f2c1-0c11-43ac-aeb4-44b73b164175",
+            "mode": "headers",
+            "phase": "started",
+            "events": [
+              {
+                "phase": "started",
+                "at": 1788749988228,
+                "signalAborted": false
+              }
+            ]
+          },
+          "clientAbortAt": "2026-09-07T02:59:54.131Z",
+          "networkError": "AbortError",
+          "observation": {
+            "runId": "c02-success-d04c940a-f623-4c9f-ae45-f3c80e657a1d",
+            "probeId": "aff2f2c1-0c11-43ac-aeb4-44b73b164175",
+            "mode": "headers",
+            "phase": "terminal",
+            "events": [
+              {
+                "phase": "started",
+                "at": 1788749988228,
+                "signalAborted": false
+              },
+              {
+                "phase": "terminal",
+                "at": 1788749990774,
+                "reason": "request_abort",
+                "signalAborted": true
+              }
+            ]
+          },
+          "passed": true,
+          "ms": 4765.078000000001
+        },
+        {
+          "label": "cancel-during-upstream-body",
+          "path": "/v1/images/generations",
+          "fixtureCase": "replacement-generations",
+          "probeId": "b00f7cd9-645b-4a42-8aa3-8d45bb3004ce",
+          "startedAt": "2026-09-07T02:59:55.933Z",
+          "intendedBytes": 593,
+          "generatedBytes": 593,
+          "uploaderFinished": true,
+          "uploadEndedAt": "2026-09-07T02:59:56.655Z",
+          "observedBeforeAbort": {
+            "runId": "c02-success-d04c940a-f623-4c9f-ae45-f3c80e657a1d",
+            "probeId": "b00f7cd9-645b-4a42-8aa3-8d45bb3004ce",
+            "mode": "body",
+            "phase": "body-prefix",
+            "events": [
+              {
+                "phase": "started",
+                "at": 1788749993704,
+                "signalAborted": false
+              },
+              {
+                "phase": "body-prefix",
+                "at": 1788749993884,
+                "signalAborted": false
+              }
+            ]
+          },
+          "clientAbortAt": "2026-09-07T02:59:58.897Z",
+          "networkError": "AbortError",
+          "observation": {
+            "runId": "c02-success-d04c940a-f623-4c9f-ae45-f3c80e657a1d",
+            "probeId": "b00f7cd9-645b-4a42-8aa3-8d45bb3004ce",
+            "mode": "body",
+            "phase": "terminal",
+            "events": [
+              {
+                "phase": "started",
+                "at": 1788749993704,
+                "signalAborted": false
+              },
+              {
+                "phase": "body-prefix",
+                "at": 1788749993884,
+                "signalAborted": false
+              },
+              {
+                "phase": "terminal",
+                "at": 1788749995547,
+                "reason": "request_abort",
+                "signalAborted": true
+              }
+            ]
+          },
+          "passed": true,
+          "ms": 4813.935700000002
+        },
+        {
+          "label": "cancel-incomplete-upload",
+          "path": "/v1/images/generations",
+          "fixtureCase": "over-generations",
+          "probeId": "4866627f-17b7-4687-b276-91ac9a9b2f88",
+          "startedAt": "2026-09-07T03:00:00.748Z",
+          "intendedBytes": 4301,
+          "generatedBytes": 1024,
+          "observedWhilePartial": {
+            "runId": "c02-success-d04c940a-f623-4c9f-ae45-f3c80e657a1d",
+            "probeId": "4866627f-17b7-4687-b276-91ac9a9b2f88",
+            "mode": "headers",
+            "phase": "armed"
+          },
+          "clientAbortAt": "2026-09-07T03:00:02.155Z",
+          "uploaderFinished": true,
+          "uploadEndedAt": "2026-09-07T03:00:02.155Z",
+          "networkError": "AbortError",
+          "observation": {
+            "runId": "c02-success-d04c940a-f623-4c9f-ae45-f3c80e657a1d",
+            "probeId": "4866627f-17b7-4687-b276-91ac9a9b2f88",
+            "mode": "headers",
+            "phase": "armed"
+          },
+          "passed": true,
+          "ms": 5074.027099999992
+        },
+        {
+          "label": "recovery-after-cancellations",
+          "path": "/v1/images/generations",
+          "fixtureCase": "small-generations",
+          "probeId": "6ca54265-858b-4731-89e2-2fa7befc2d56",
+          "startedAt": "2026-09-07T03:00:05.823Z",
+          "intendedBytes": 590,
+          "generatedBytes": 590,
+          "uploaderFinished": true,
+          "uploadEndedAt": "2026-09-07T03:00:06.547Z",
+          "status": 200,
+          "generationId": "gen-fb6fba8c-de11-45b3-95ee-783214680540",
+          "responseBytes": 133,
+          "observation": {
+            "runId": "c02-success-d04c940a-f623-4c9f-ae45-f3c80e657a1d",
+            "probeId": "6ca54265-858b-4731-89e2-2fa7befc2d56",
+            "mode": "release",
+            "phase": "terminal",
+            "events": [
+              {
+                "phase": "started",
+                "at": 1788750003632,
+                "signalAborted": false
+              },
+              {
+                "phase": "terminal",
+                "at": 1788750004059,
+                "reason": "released",
+                "signalAborted": false
+              }
+            ]
+          },
+          "passed": true,
+          "ms": 3883.0864999999903
+        },
+        {
+          "label": "access-still-denies-after-images",
+          "path": "/health",
+          "startedAt": "2026-09-07T03:00:09.707Z",
+          "requestBytes": 0,
+          "declaredLength": false,
+          "generatedBytes": 0,
+          "readPauseMs": 0,
+          "readPauses": 0,
+          "cancelAfterBytes": 0,
+          "generationId": null,
+          "status": 401,
+          "responseBytes": 37790,
+          "responseSha256": "d86ec4e159340fb26ade2eca9e52e54232c036611c3bb6be8e8d18be089cd579",
+          "ms": 773.5319000000018,
+          "gatewayCode": null,
+          "cfRay": "a372760d48f8fd8b-SIN",
+          "contentType": "text/html",
+          "errorMessage": null,
+          "passed": true
+        }
+      ],
+      "usageLogs": [
+        {
+          "id": "gen-7f376d44-9b9e-4772-9c12-f4ee109f7ba1",
+          "model_id": "c02-success-d04c940a-f623-4c9f-ae45-f3c80e657a1d-small-generations",
+          "route_target_id": "c02-success-d04c940a-f623-4c9f-ae45-f3c80e657a1d-small-generations-r",
+          "status": "success",
+          "error_message": null,
+          "charged_cost": 0,
+          "metered_cost": 0,
+          "standard_cost": 0,
+          "budget_charged_micros": 0,
+          "input_image_count": 0,
+          "output_image_count": 1,
+          "upstream_request_id": "c02-probe-37a5f085-29d6-4da0-88ba-7442559c6239-b735c2a851ffe39a7d95ab2a7acae1f6f43b4a5295e2cca0a3c0a9136898b259",
+          "upstream_attempt_count": 1,
+          "request_body": null,
+          "upstream_request_body": null,
+          "raw_usage_chars": 94,
+          "pricing_audit_chars": 2943
+        },
+        {
+          "id": "gen-aaae841c-03b1-41c9-af2e-f0cc7fb3d564",
+          "model_id": "c02-success-d04c940a-f623-4c9f-ae45-f3c80e657a1d-limit-generations",
+          "route_target_id": "c02-success-d04c940a-f623-4c9f-ae45-f3c80e657a1d-limit-generations-r",
+          "status": "error",
+          "error_message": "HTTP 499: Image generation was cancelled by the client",
+          "charged_cost": 0,
+          "metered_cost": 0,
+          "standard_cost": 0,
+          "budget_charged_micros": 0,
+          "input_image_count": 0,
+          "output_image_count": 0,
+          "upstream_request_id": null,
+          "upstream_attempt_count": 1,
+          "request_body": null,
+          "upstream_request_body": null,
+          "raw_usage_chars": 135,
+          "pricing_audit_chars": 757
+        },
+        {
+          "id": "gen-e80ccf81-1035-415a-8349-ce355ab9e830",
+          "model_id": "c02-success-d04c940a-f623-4c9f-ae45-f3c80e657a1d-replacement-generations",
+          "route_target_id": "c02-success-d04c940a-f623-4c9f-ae45-f3c80e657a1d-replacement-generations-r",
+          "status": "error",
+          "error_message": "HTTP 499: Image generation was cancelled by the client",
+          "charged_cost": 0,
+          "metered_cost": 0,
+          "standard_cost": 0,
+          "budget_charged_micros": 0,
+          "input_image_count": 0,
+          "output_image_count": 0,
+          "upstream_request_id": "c02-probe-b00f7cd9-645b-4a42-8aa3-8d45bb3004ce-a11b2142613bade279152f5fa89d0a0e0d0e46ee106fa7d4bc66194c0675c5ed",
+          "upstream_attempt_count": 1,
+          "request_body": null,
+          "upstream_request_body": null,
+          "raw_usage_chars": 135,
+          "pricing_audit_chars": 775
+        },
+        {
+          "id": "gen-fb6fba8c-de11-45b3-95ee-783214680540",
+          "model_id": "c02-success-d04c940a-f623-4c9f-ae45-f3c80e657a1d-small-generations",
+          "route_target_id": "c02-success-d04c940a-f623-4c9f-ae45-f3c80e657a1d-small-generations-r",
+          "status": "success",
+          "error_message": null,
+          "charged_cost": 0,
+          "metered_cost": 0,
+          "standard_cost": 0,
+          "budget_charged_micros": 0,
+          "input_image_count": 0,
+          "output_image_count": 1,
+          "upstream_request_id": "c02-probe-6ca54265-858b-4731-89e2-2fa7befc2d56-551bd3b4e9b333f4ce5eb18c1cd1c6c936f129b33d86793e20a5854ffacddb7f",
+          "upstream_attempt_count": 1,
+          "request_body": null,
+          "upstream_request_body": null,
+          "raw_usage_chars": 94,
+          "pricing_audit_chars": 2943
+        }
+      ],
+      "attempts": [
+        {
+          "request_log_id": "gen-7f376d44-9b9e-4772-9c12-f4ee109f7ba1",
+          "attempt_index": 1,
+          "outcome": "available",
+          "reason": "accepted",
+          "http_status": 200
+        },
+        {
+          "request_log_id": "gen-e80ccf81-1035-415a-8349-ce355ab9e830",
+          "attempt_index": 1,
+          "outcome": "available",
+          "reason": "accepted",
+          "http_status": 200
+        },
+        {
+          "request_log_id": "gen-fb6fba8c-de11-45b3-95ee-783214680540",
+          "attempt_index": 1,
+          "outcome": "available",
+          "reason": "accepted",
+          "http_status": 200
+        }
+      ],
+      "requiredChecks": null,
+      "readinessAttempts": 1,
+      "previousKnownTestHttp": 71,
+      "cumulativeKnownTestHttp": 80,
+      "managementRequests": 126,
+      "d1ApiRowsRead": 1405,
+      "d1ApiRowsWritten": 161,
+      "modelCalls": 0,
+      "kmsCalls": 0,
+      "serviceTokenId": "3eb03737-8814-4808-b8e5-f53aaa0fe4d3",
+      "cleanup": {
+        "ingressClosed": true,
+        "accessDenyAll": true,
+        "serviceTokenRevoked": true,
+        "gatewayKeyRevoked": true,
+        "fixtureRemoved": true,
+        "databaseRestored": true,
+        "productionUnchanged": true,
+        "privateUpstreamUnchangedAndClosed": true
+      },
+      "restoredTableCount": 52,
+      "restoredNonemptyTables": [
+        {
+          "table_name": "admin_api_keys",
+          "row_count": 1
+        },
+        {
+          "table_name": "d1_migrations",
+          "row_count": 68
+        },
+        {
+          "table_name": "model_endpoint_backfill_database_identity",
+          "row_count": 1
+        },
+        {
+          "table_name": "system_config",
+          "row_count": 12
+        }
+      ],
+      "productionAfter": [
+        {
+          "name": "cinatoken-proxy",
+          "settingsSha256": "4243eedd631abb9bcf0c1dd8dd9acbb9ca56edab0bf3048204abccbbd4261cfc"
+        },
+        {
+          "name": "cinatoken-admin",
+          "settingsSha256": "e2ee0adf7b6469d843c310f3dccd2a478230c0f0b75d5d6ad285efeec17ed6ab"
+        },
+        {
+          "name": "cinatoken-chain-worker",
+          "settingsSha256": "21f1b2c08db33d20c0f235e5a89533e637a761eaf7b4bef2fcf0061ad004a916"
+        }
+      ],
+      "providerEnvelopes": null,
+      "syntheticBalance": null
+    },
+    {
+      "attempt": 3,
+      "sourceArtifact": ".wrangler/staging/image-probe-attempt3-result.json",
+      "sourceSha256": "35dd590deef23d89d71a2b570e576ad08767ed68eab540bd4ea56fa7fc781df9",
+      "harnessSha256": "ddef694a15c5d3acc6957bfd698bcd69a7dfa7070da3ee0e4319846ca52be91c",
+      "startedAt": "2026-09-07T03:07:28.558Z",
+      "finishedAt": "2026-09-07T03:10:17.458Z",
+      "result": "PASS",
+      "error": null,
+      "version": "6a32bee7-b025-48f8-9452-7a48adace8f0",
+      "upstreamVersion": "e9bb6c18-d99b-40ba-8b34-62fc95f598f6",
+      "requests": [
+        {
+          "label": "access-readiness-0",
+          "path": "/health",
+          "startedAt": "2026-09-07T03:08:17.824Z",
+          "requestBytes": 0,
+          "declaredLength": false,
+          "generatedBytes": 0,
+          "readPauseMs": 0,
+          "readPauses": 0,
+          "cancelAfterBytes": 0,
+          "generationId": null,
+          "status": 401,
+          "responseBytes": 37790,
+          "responseSha256": "b0f663d745bc3516248ad78a4719060caa76ac5a2f0ad628f693bd79e297c932",
+          "ms": 2127.9838999999993,
+          "gatewayCode": null,
+          "cfRay": "a37282183cf1f853-SIN",
+          "contentType": "text/html",
+          "errorMessage": null,
+          "passed": true
+        },
+        {
+          "label": "authorized-health",
+          "path": "/health",
+          "startedAt": "2026-09-07T03:08:19.953Z",
+          "requestBytes": 0,
+          "declaredLength": false,
+          "generatedBytes": 0,
+          "readPauseMs": 0,
+          "readPauses": 0,
+          "cancelAfterBytes": 0,
+          "generationId": null,
+          "status": 200,
+          "responseBytes": 43,
+          "responseSha256": "155462e85c280dba1aae35fcdcabd37c5abf62071a935bfd8e5d02fc8bd9194a",
+          "ms": 1358.6240000000034,
+          "gatewayCode": null,
+          "cfRay": "a37282250f349aa3-SIN",
+          "contentType": "application/json",
+          "errorMessage": null,
+          "passed": true
+        },
+        {
+          "label": "hashed-gateway-key-auth-image-catalog",
+          "path": "/v1/models?kind=image",
+          "startedAt": "2026-09-07T03:08:21.314Z",
+          "requestBytes": 0,
+          "declaredLength": false,
+          "generatedBytes": 0,
+          "readPauseMs": 0,
+          "readPauses": 0,
+          "cancelAfterBytes": 0,
+          "generationId": null,
+          "status": 200,
+          "responseBytes": 2985,
+          "responseSha256": "3e5cd9e187e7e37b2587462c68149d66304623e678159aeb07fe53e35e93b139",
+          "ms": 1534.5347000000038,
+          "gatewayCode": null,
+          "cfRay": "a372822928f3f853-SIN",
+          "contentType": "application/json",
+          "errorMessage": null,
+          "passed": true
+        },
+        {
+          "label": "slow-upload-complete",
+          "path": "/v1/images/generations",
+          "fixtureCase": "small-generations",
+          "probeId": "e95949c8-f9b6-41f2-a45d-f0dcfd878400",
+          "startedAt": "2026-09-07T03:08:22.850Z",
+          "intendedBytes": 590,
+          "generatedBytes": 590,
+          "observedWhilePartial": {
+            "runId": "c02-success-05a626c6-c14e-4db3-9095-0a755bfc8b4e",
+            "probeId": "e95949c8-f9b6-41f2-a45d-f0dcfd878400",
+            "mode": "release",
+            "phase": "armed"
+          },
+          "uploaderFinished": true,
+          "uploadEndedAt": "2026-09-07T03:08:26.113Z",
+          "status": 200,
+          "generationId": "gen-20d421d6-8224-411f-a753-48617b3aa36f",
+          "responseBytes": 133,
+          "observation": {
+            "runId": "c02-success-05a626c6-c14e-4db3-9095-0a755bfc8b4e",
+            "probeId": "e95949c8-f9b6-41f2-a45d-f0dcfd878400",
+            "mode": "release",
+            "phase": "terminal",
+            "events": [
+              {
+                "phase": "started",
+                "at": 1788750507516,
+                "signalAborted": false
+              },
+              {
+                "phase": "terminal",
+                "at": 1788750507947,
+                "reason": "released",
+                "signalAborted": false
+              }
+            ]
+          },
+          "passed": true,
+          "ms": 7183.180499999995
+        },
+        {
+          "label": "cancel-before-upstream-headers",
+          "path": "/v1/images/generations",
+          "fixtureCase": "limit-generations",
+          "probeId": "efb44c71-3b52-4fb6-ae43-2ca67ec0ed8b",
+          "startedAt": "2026-09-07T03:08:30.034Z",
+          "intendedBytes": 590,
+          "generatedBytes": 590,
+          "uploaderFinished": true,
+          "uploadEndedAt": "2026-09-07T03:08:30.036Z",
+          "observedBeforeAbort": {
+            "runId": "c02-success-05a626c6-c14e-4db3-9095-0a755bfc8b4e",
+            "probeId": "efb44c71-3b52-4fb6-ae43-2ca67ec0ed8b",
+            "mode": "headers",
+            "phase": "started",
+            "events": [
+              {
+                "phase": "started",
+                "at": 1788750511405,
+                "signalAborted": false
+              }
+            ]
+          },
+          "clientAbortAt": "2026-09-07T03:08:33.069Z",
+          "networkError": "AbortError",
+          "observation": {
+            "runId": "c02-success-05a626c6-c14e-4db3-9095-0a755bfc8b4e",
+            "probeId": "efb44c71-3b52-4fb6-ae43-2ca67ec0ed8b",
+            "mode": "headers",
+            "phase": "terminal",
+            "events": [
+              {
+                "phase": "started",
+                "at": 1788750511405,
+                "signalAborted": false
+              },
+              {
+                "phase": "terminal",
+                "at": 1788750514076,
+                "reason": "request_abort",
+                "signalAborted": true
+              }
+            ]
+          },
+          "passed": true,
+          "ms": 4854.067299999995
+        },
+        {
+          "label": "cancel-during-upstream-body",
+          "path": "/v1/images/generations",
+          "fixtureCase": "replacement-generations",
+          "probeId": "783bdc3b-43f3-4499-acb2-f7b3fface90b",
+          "startedAt": "2026-09-07T03:08:34.889Z",
+          "intendedBytes": 593,
+          "generatedBytes": 593,
+          "uploaderFinished": true,
+          "uploadEndedAt": "2026-09-07T03:08:35.630Z",
+          "observedBeforeAbort": {
+            "runId": "c02-success-05a626c6-c14e-4db3-9095-0a755bfc8b4e",
+            "probeId": "783bdc3b-43f3-4499-acb2-f7b3fface90b",
+            "mode": "body",
+            "phase": "body-prefix",
+            "events": [
+              {
+                "phase": "started",
+                "at": 1788750517036,
+                "signalAborted": false
+              },
+              {
+                "phase": "body-prefix",
+                "at": 1788750517211,
+                "signalAborted": false
+              }
+            ]
+          },
+          "clientAbortAt": "2026-09-07T03:08:37.922Z",
+          "networkError": "AbortError",
+          "observation": {
+            "runId": "c02-success-05a626c6-c14e-4db3-9095-0a755bfc8b4e",
+            "probeId": "783bdc3b-43f3-4499-acb2-f7b3fface90b",
+            "mode": "body",
+            "phase": "terminal",
+            "events": [
+              {
+                "phase": "started",
+                "at": 1788750517036,
+                "signalAborted": false
+              },
+              {
+                "phase": "body-prefix",
+                "at": 1788750517211,
+                "signalAborted": false
+              },
+              {
+                "phase": "terminal",
+                "at": 1788750518900,
+                "reason": "request_abort",
+                "signalAborted": true
+              }
+            ]
+          },
+          "passed": true,
+          "ms": 4876.3348000000115
+        },
+        {
+          "label": "cancel-incomplete-upload",
+          "path": "/v1/images/generations",
+          "fixtureCase": "over-generations",
+          "probeId": "b7d6dab9-2074-4719-8e10-0cbc647a91cd",
+          "startedAt": "2026-09-07T03:08:39.766Z",
+          "intendedBytes": 4301,
+          "generatedBytes": 1024,
+          "observedWhilePartial": {
+            "runId": "c02-success-05a626c6-c14e-4db3-9095-0a755bfc8b4e",
+            "probeId": "b7d6dab9-2074-4719-8e10-0cbc647a91cd",
+            "mode": "headers",
+            "phase": "armed"
+          },
+          "clientAbortAt": "2026-09-07T03:08:41.165Z",
+          "uploaderFinished": true,
+          "uploadEndedAt": "2026-09-07T03:08:41.166Z",
+          "networkError": "AbortError",
+          "observation": {
+            "runId": "c02-success-05a626c6-c14e-4db3-9095-0a755bfc8b4e",
+            "probeId": "b7d6dab9-2074-4719-8e10-0cbc647a91cd",
+            "mode": "headers",
+            "phase": "armed"
+          },
+          "passed": true,
+          "ms": 5060.497700000007
+        },
+        {
+          "label": "recovery-after-cancellations",
+          "path": "/v1/images/generations",
+          "fixtureCase": "small-generations",
+          "probeId": "3d4faaf2-6225-4f2c-873f-b03b67cc9e5d",
+          "startedAt": "2026-09-07T03:08:44.828Z",
+          "intendedBytes": 590,
+          "generatedBytes": 590,
+          "uploaderFinished": true,
+          "uploadEndedAt": "2026-09-07T03:08:45.586Z",
+          "status": 200,
+          "generationId": "gen-75a13958-ab62-45da-bb73-a5dcefab5cbb",
+          "responseBytes": 133,
+          "observation": {
+            "runId": "c02-success-05a626c6-c14e-4db3-9095-0a755bfc8b4e",
+            "probeId": "3d4faaf2-6225-4f2c-873f-b03b67cc9e5d",
+            "mode": "release",
+            "phase": "terminal",
+            "events": [
+              {
+                "phase": "started",
+                "at": 1788750527380,
+                "signalAborted": false
+              },
+              {
+                "phase": "terminal",
+                "at": 1788750527824,
+                "reason": "released",
+                "signalAborted": false
+              }
+            ]
+          },
+          "passed": true,
+          "ms": 4287.558600000004
+        },
+        {
+          "label": "access-still-denies-after-images",
+          "path": "/health",
+          "startedAt": "2026-09-07T03:08:49.116Z",
+          "requestBytes": 0,
+          "declaredLength": false,
+          "generatedBytes": 0,
+          "readPauseMs": 0,
+          "readPauses": 0,
+          "cancelAfterBytes": 0,
+          "generationId": null,
+          "status": 401,
+          "responseBytes": 37790,
+          "responseSha256": "2694f411c2267778c1c768f0d21a533b9aff87a714003041f01b7522d830898e",
+          "ms": 817.4850000000006,
+          "gatewayCode": null,
+          "cfRay": "a37282d6fa043e47-SIN",
+          "contentType": "text/html",
+          "errorMessage": null,
+          "passed": true
+        }
+      ],
+      "usageLogs": [
+        {
+          "id": "gen-20d421d6-8224-411f-a753-48617b3aa36f",
+          "model_id": "c02-success-05a626c6-c14e-4db3-9095-0a755bfc8b4e-small-generations",
+          "route_target_id": "c02-success-05a626c6-c14e-4db3-9095-0a755bfc8b4e-small-generations-r",
+          "status": "success",
+          "error_message": null,
+          "charged_cost": 0,
+          "metered_cost": 0,
+          "standard_cost": 0,
+          "budget_charged_micros": 0,
+          "input_image_count": 0,
+          "output_image_count": 1,
+          "upstream_request_id": "c02-probe-e95949c8-f9b6-41f2-a45d-f0dcfd878400-7c286da880f9b2c1659704089d7c8d324ec28d703df4e1de1c05bfd3b2fdf459",
+          "upstream_attempt_count": 1,
+          "request_body": null,
+          "upstream_request_body": null,
+          "raw_usage_chars": 94,
+          "pricing_audit_chars": 2943
+        },
+        {
+          "id": "gen-57b2f2ea-0e48-43ab-8ac8-302325e74c31",
+          "model_id": "c02-success-05a626c6-c14e-4db3-9095-0a755bfc8b4e-limit-generations",
+          "route_target_id": "c02-success-05a626c6-c14e-4db3-9095-0a755bfc8b4e-limit-generations-r",
+          "status": "error",
+          "error_message": "HTTP 499: Image generation was cancelled by the client",
+          "charged_cost": 0,
+          "metered_cost": 0,
+          "standard_cost": 0,
+          "budget_charged_micros": 0,
+          "input_image_count": 0,
+          "output_image_count": 0,
+          "upstream_request_id": null,
+          "upstream_attempt_count": 1,
+          "request_body": null,
+          "upstream_request_body": null,
+          "raw_usage_chars": 135,
+          "pricing_audit_chars": 757
+        },
+        {
+          "id": "gen-e575cd1a-51df-49c7-b56b-6e08053bef6d",
+          "model_id": "c02-success-05a626c6-c14e-4db3-9095-0a755bfc8b4e-replacement-generations",
+          "route_target_id": "c02-success-05a626c6-c14e-4db3-9095-0a755bfc8b4e-replacement-generations-r",
+          "status": "error",
+          "error_message": "HTTP 499: Image generation was cancelled by the client",
+          "charged_cost": 0,
+          "metered_cost": 0,
+          "standard_cost": 0,
+          "budget_charged_micros": 0,
+          "input_image_count": 0,
+          "output_image_count": 0,
+          "upstream_request_id": "c02-probe-783bdc3b-43f3-4499-acb2-f7b3fface90b-e791a96bc32282c9cabcbd45be7b186be476748fb2fa9753a0dfcb93124a3b13",
+          "upstream_attempt_count": 1,
+          "request_body": null,
+          "upstream_request_body": null,
+          "raw_usage_chars": 135,
+          "pricing_audit_chars": 775
+        },
+        {
+          "id": "gen-75a13958-ab62-45da-bb73-a5dcefab5cbb",
+          "model_id": "c02-success-05a626c6-c14e-4db3-9095-0a755bfc8b4e-small-generations",
+          "route_target_id": "c02-success-05a626c6-c14e-4db3-9095-0a755bfc8b4e-small-generations-r",
+          "status": "success",
+          "error_message": null,
+          "charged_cost": 0,
+          "metered_cost": 0,
+          "standard_cost": 0,
+          "budget_charged_micros": 0,
+          "input_image_count": 0,
+          "output_image_count": 1,
+          "upstream_request_id": "c02-probe-3d4faaf2-6225-4f2c-873f-b03b67cc9e5d-0a5c687b79761508313fb34a56224f334d22d97a242a623553e12c880412b039",
+          "upstream_attempt_count": 1,
+          "request_body": null,
+          "upstream_request_body": null,
+          "raw_usage_chars": 94,
+          "pricing_audit_chars": 2943
+        }
+      ],
+      "attempts": [
+        {
+          "request_log_id": "gen-20d421d6-8224-411f-a753-48617b3aa36f",
+          "attempt_index": 1,
+          "outcome": "available",
+          "reason": "accepted",
+          "http_status": 200
+        },
+        {
+          "request_log_id": "gen-57b2f2ea-0e48-43ab-8ac8-302325e74c31",
+          "attempt_index": 1,
+          "outcome": "excluded",
+          "reason": "client_cancelled",
+          "http_status": null
+        },
+        {
+          "request_log_id": "gen-75a13958-ab62-45da-bb73-a5dcefab5cbb",
+          "attempt_index": 1,
+          "outcome": "available",
+          "reason": "accepted",
+          "http_status": 200
+        },
+        {
+          "request_log_id": "gen-e575cd1a-51df-49c7-b56b-6e08053bef6d",
+          "attempt_index": 1,
+          "outcome": "excluded",
+          "reason": "client_cancelled",
+          "http_status": 200
+        }
+      ],
+      "requiredChecks": 9,
+      "readinessAttempts": 1,
+      "previousKnownTestHttp": 80,
+      "cumulativeKnownTestHttp": 89,
+      "managementRequests": 131,
+      "d1ApiRowsRead": 1883,
+      "d1ApiRowsWritten": 162,
+      "modelCalls": 0,
+      "kmsCalls": 0,
+      "serviceTokenId": "ac157e60-a32f-4f61-8e22-1b5e11e9e587",
+      "cleanup": {
+        "ingressClosed": true,
+        "accessDenyAll": true,
+        "serviceTokenRevoked": true,
+        "gatewayKeyRevoked": true,
+        "fixtureRemoved": true,
+        "databaseRestored": true,
+        "productionUnchanged": true,
+        "privateUpstreamUnchangedAndClosed": true
+      },
+      "restoredTableCount": 52,
+      "restoredNonemptyTables": [
+        {
+          "table_name": "admin_api_keys",
+          "row_count": 1
+        },
+        {
+          "table_name": "d1_migrations",
+          "row_count": 68
+        },
+        {
+          "table_name": "model_endpoint_backfill_database_identity",
+          "row_count": 1
+        },
+        {
+          "table_name": "system_config",
+          "row_count": 12
+        }
+      ],
+      "productionAfter": [
+        {
+          "name": "cinatoken-proxy",
+          "settingsSha256": "4243eedd631abb9bcf0c1dd8dd9acbb9ca56edab0bf3048204abccbbd4261cfc"
+        },
+        {
+          "name": "cinatoken-admin",
+          "settingsSha256": "e2ee0adf7b6469d843c310f3dccd2a478230c0f0b75d5d6ad285efeec17ed6ab"
+        },
+        {
+          "name": "cinatoken-chain-worker",
+          "settingsSha256": "21f1b2c08db33d20c0f235e5a89533e637a761eaf7b4bef2fcf0061ad004a916"
+        }
+      ],
+      "providerEnvelopes": [
+        {
+          "id": "c02-success-05a626c6-c14e-4db3-9095-0a755bfc8b4e-p-limit",
+          "envelope": "enc:v2:"
+        },
+        {
+          "id": "c02-success-05a626c6-c14e-4db3-9095-0a755bfc8b4e-p-replacement",
+          "envelope": "enc:v2:"
+        },
+        {
+          "id": "c02-success-05a626c6-c14e-4db3-9095-0a755bfc8b4e-p-small",
+          "envelope": "enc:v2:"
+        }
+      ],
+      "syntheticBalance": {
+        "budget_max": 0,
+        "budget_spent": 0,
+        "budget_spent_micros": 0,
+        "budget_reserved_micros": 0
+      }
+    }
+  ],
+  "sources": [
+    {
+      "path": "packages/proxy/src/runtime/worker-handler.ts",
+      "sha256": "716c906cbd62332c5da61fce3c9cbe59ba0bed8947d40062449b46e630fa63f2"
+    },
+    {
+      "path": "packages/proxy/src/services/request-timing.ts",
+      "sha256": "61ae7d349d5f7b5e9faef2fcc2bc7648af348575bbbac4a5a7c3cb60d726c2af"
+    },
+    {
+      "path": "packages/proxy/src/services/egress/openai-images-driver.ts",
+      "sha256": "b81d7d37cf936c6c56a5f4cc56d434ab688d318d7312a9234492c12249bc558c"
+    },
+    {
+      "path": "packages/proxy/src/services/egress/image-request-lifecycle.test.ts",
+      "sha256": "477bb67d01b489fa03445540cad4cc00220a744a040e7e247086ecbc5c611445"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/images-worker-lifetime.test.mjs",
+      "sha256": "0376b6ef801b292ae68694973744cd2b141639029f9e434fd89f12ca7575fe52"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/images-probe-contract.ts",
+      "sha256": "45f3a90bb0e3e69db7fc3e32284d9153144450c42ba48b697a33ef02c416ed38"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/images-probe.ts",
+      "sha256": "6557115b81dd1799039888a9a4a1a1661121451e36084b6491b9bc25798107cc"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/images-probe.test.mjs",
+      "sha256": "30993d6e7f46ba74cf834b96e7cfea5120d5877c6e1f8634b0715cc06ba4968f"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/images-probe-chain.test.mjs",
+      "sha256": "68f0550d64394fdd196fb2889139102efd1eda236f5be6d28c937fde0694518b"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/images-upstream.ts",
+      "sha256": "b18a6eccf1f0c742ec634f8ee7b14e568ac5b5265ef5188193829e85b26451b9"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/images-upstream-env.d.ts",
+      "sha256": "6aeaea4dac6cbfd47f74e44a722083e2dabad14f9c39bf0d5810d22dd32c4eb5"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/wrangler.images-upstream.jsonc",
+      "sha256": "c1e712deb361fc09e04d06dda4804a38d69dc042ca04b72b45b66d0a122ec67b"
+    },
+    {
+      "path": "packages/proxy/package.json",
+      "sha256": "b61d159af92c47e52e34fc2f0e882073d0c70da7ba21d9a931911c98c0b2e825"
+    }
+  ],
+  "validation": {
+    "stagingTests": 32,
+    "dispatchSafetyTests": 2686,
+    "targetedTests": 75,
+    "typechecks": [
+      "proxy",
+      "dispatch-safety",
+      "images-staging"
+    ],
+    "gatewayDryRun": "PASS",
+    "upstreamDryRun": "PASS",
+    "node": "24.14.1",
+    "wrangler": "4.127.1",
+    "installedWorkersTypes": "5.20260829.1",
+    "retrievedWorkersTypes": "5.20260906.1",
+    "redGreen": [
+      "entry host hold: 2 fail before / 2 pass after",
+      "attempt facts: 2 fail before / 2 pass after"
+    ]
+  },
+  "limitations": [
+    "Synthetic supplier only; no paid inference, KMS, refunds or seller settlement",
+    "No isolate memory, mixed concurrency, capacity-pool activation, or response backpressure proof",
+    "waitUntil retains at most the platform window; no commit-confirmation-loss or restart recovery proof",
+    "Small JSON paced/cancelled inputs only; no large in-flight, Images edits/SSE remote cancellation coverage",
+    "Attempt 1 local wall clock moved backwards; attempts 2/3 use performance.now for duration; no cross-clock latency inference",
+    "Final Cloudflare incremental bill unverified; management/D1 API counters exclude Worker-internal operations"
+  ]
+}

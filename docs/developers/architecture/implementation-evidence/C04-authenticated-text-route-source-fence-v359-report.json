@@ -1,0 +1,83 @@
+{
+  "status": "PASS",
+  "cleanup": "PASS",
+  "binaryVersion": "postgres (PostgreSQL) 18.6",
+  "sourceSha256": {
+    "formalMigrations": "23afef61a8a670e0af8c90e3a138f522e6b283b454e380a592bf85bca83108dc",
+    "runtimeGrant": "8f20bdfd5ff9ac99198c7d08fab09b64d36ef6d111fe0d500ac3c1bd005a9a7f",
+    "capabilityProposal": "bbf06af6e9e2df6801c0e89442644d208d7213dbb6a7e202b96183b54d67fe9f",
+    "ceilingProposal": "3ce21a1502906f3b24753f62932ada1aa5299ed65365cce4e55c410476b392c4",
+    "fenceProposal": "52ba5207db94bf9f6fb5200c9de89c9ff4633eb453366eb8dcd28f643c1aa03f",
+    "fixture": "c735503883dd25e1ab20c2fd43a1f9d60821d385942e473449097f985757dc46"
+  },
+  "stages": [
+    {
+      "name": "formal-pg73-and-legacy-runtime-grants-installed",
+      "result": "PASS"
+    },
+    {
+      "name": "v356-capability-and-v357-one-target-ceiling-installed",
+      "result": "PASS"
+    },
+    {
+      "name": "preexisting-valid-looking-link-is-still-unattested",
+      "result": "PASS"
+    },
+    {
+      "name": "default-off-installation-rejects-role-contamination",
+      "result": "PASS"
+    },
+    {
+      "name": "preexisting-link-and-capability-cannot-quote-before-independent-attestation",
+      "result": "PASS"
+    },
+    {
+      "name": "runtime-cannot-attest-and-row-trigger-bypassing-truncate-is-rejected",
+      "result": "PASS"
+    },
+    {
+      "name": "attested-generation-is-stamped-into-one-target-fragment",
+      "result": "PASS"
+    },
+    {
+      "name": "runtime-provider-mutation-and-ABA-invalidate-even-identical-subject",
+      "result": "PASS"
+    },
+    {
+      "name": "stale-generation-attestation-rejected-fresh-attestation-restores-quote",
+      "result": "PASS"
+    },
+    {
+      "name": "endpoint-price-edit-invalidates-and-requote-uses-new-db-price",
+      "result": "PASS"
+    },
+    {
+      "name": "route-and-pool-no-op-updates-also-invalidate",
+      "result": "PASS"
+    },
+    {
+      "name": "link-fingerprint-edit-invalidates-until-independent-value-restored",
+      "result": "PASS"
+    },
+    {
+      "name": "old-immutable-fragment-remains-stale-and-broad-grant-rerun-blocked",
+      "result": "PASS"
+    },
+    {
+      "name": "route-delete-reinsert-keeps-generation-monotonic-and-requires-reattest",
+      "result": "PASS"
+    },
+    {
+      "name": "attestation-waits-for-source-writer-then-rejects-old-generation",
+      "result": "PASS"
+    }
+  ],
+  "limitations": [
+    "Review-only PG73 overlay; no formal migration, deployment, remote DB, Worker binding, or production verifier exists.",
+    "The separate verifier LOGIN is trusted to recompute the subject fingerprint from current decrypted provider configuration; SQL only checks its asserted fingerprint against the persisted link under source locks.",
+    "This generation covers route, provider, pool, endpoint, and link rows used by a single v357 fragment; it is not a complete request fallback manifest or credential-class proof.",
+    "An old fragment remains immutable. No budget hold or egress grant consumes its generation; a future grant must compare it against the live generation under lock.",
+    "Concurrent multi-row source mutations can deadlock and abort; an abort never attests stale data.",
+    "D1/MySQL parity, Linux CI, old-database lock duration and physical Worker/Hyperdrive behavior remain unproved."
+  ]
+}

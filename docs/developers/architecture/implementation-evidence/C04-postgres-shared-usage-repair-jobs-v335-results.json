@@ -1,0 +1,55 @@
+{
+  "version": "v335",
+  "date": "2026-09-24",
+  "status": "LOCAL_PG18_DURABLE_REPAIR_PROTOCOL_PASS_RUNTIME_DELIVERY_OPEN",
+  "goalComplete": false,
+  "formalMigrationCounts": { "postgres": 73, "d1": 68, "mysql": 64 },
+  "validation": {
+    "command": "GATEWAY_NATIVE_PG_BIN=<local-pg18-bin> node --import tsx --test scripts/db/cutover/postgres-shared-key-usage-repair-jobs.native.test.mjs",
+    "postgresVersion": "18.6",
+    "scope": "owned private loopback cluster",
+    "tests": 1,
+    "pass": 1,
+    "stages": 9,
+    "cleanup": "PASS",
+    "report": "C04-postgres-shared-usage-repair-jobs-v335-report.json",
+    "reportSha256": "351f5945c0ea824b8075744cebb290cfb1acd4e7270eeb7ef49e5639c25456c0",
+    "supersededFirstReportSha256": "5e833c414cef574251c68cb5f012de2976d818605fca4c5df61f078e50820136",
+    "independentRuntimeGrantNativeTest": "1/1 PASS; 73 formal migrations, partial install rollback, two grant reruns, actual role denial, catalog and inherited/unrelated ACL drift",
+    "scriptsWideTypecheck": "PASS",
+    "initialSandboxStartupError": "pg_ctl restricted token error 87; owned run-i6dCAd directory retained"
+  },
+  "behavior": {
+    "activationAndDefaultAclDriftRollback": true,
+    "disabledCreditOrHistoryTruncateTriggerPreflightRollback": true,
+    "replacedNoopCreditFunctionPreflightRollback": true,
+    "runtimeGrantRerunKeepsJobAndDefinersClosed": true,
+    "enqueueFailureRollsBackEarningCreditLedger": true,
+    "earningCreditAndRepairJobCommitTogether": true,
+    "repairRollbackKeepsJobWithoutDoubleCredit": true,
+    "concurrentEarningAndKeysetRepair": true,
+    "thirtyTwoLockedKeysDoNotHideThirtyThirdDueJob": true,
+    "definerExecuteRestrictedToOwner": true
+  },
+  "sourceSha256": {
+    "packages/core/migrations-proposals/postgres/shared-key-earnings-history-guard.sql": "454a720f9a6b7410e0aad99c2aaa2eb3327fbbac8c86bb3e3cd4537131e6611b",
+    "packages/core/migrations-proposals/postgres/shared-key-usage-repair-jobs.sql": "7b2f288ecb83e34207bcfd5a2a4eec934c0d6e156190826816ab033716c173d4",
+    "scripts/db/cutover/postgres-shared-key-usage-repair-jobs.native.test.mjs": "944c61a4cff0f8b5f3b71e1a2fa48b7ae1c242f0d25fe900aef8b1c67ed87d49",
+    "scripts/db/cutover/grant-postgres-runtime.ts": "f944d8fa06dd24fb5610ba9473575131378340ebe0adc3826ed49c90f39bea0e",
+    "scripts/db/cutover/postgres-shared-key-usage-repair-runtime-grant.native.test.mjs": "84e383a4a6b5f07f40bea8ae74d0258a2a542543862662486e9543842721a066"
+  },
+  "ci": { "nativeRepairAndGrantTestsRegistered": true, "linuxRunVerified": false },
+  "limits": {
+    "proposalInFormalMigration": false,
+    "dedicatedRuntimeCaller": false,
+    "scheduler": false,
+    "historicBackfill": false,
+    "boundedFailureBackoff": false,
+    "workersHyperdriveVerified": false,
+    "mysqlD1Verified": false,
+    "c04_7Complete": false,
+    "c04_GComplete": false,
+    "remoteSqlExecutions": 0,
+    "deployments": 0
+  }
+}

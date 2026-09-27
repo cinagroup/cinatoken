@@ -1,0 +1,25 @@
+# C04 v376 full hold-renewal and buyer ACL coexistence
+
+2026-09-25. **Review only, default off, non-activatable.** The [v376 SQL successor](../../../../packages/core/migrations-proposals/postgres/legacy-buyer-windowed-app-privileges-renewal-v376.sql) reapplies the narrow v374 buyer application ACL while pinning the complete v367 renewal fence, renewal function, append-only epoch table, role grants and exact trigger event shapes. It also pins the v361 private admission wrapper and requires direct v350/v351 admission entry points to stay revoked. The original v374 SQL is unchanged.
+
+## Discovered installation conflict
+
+The original v374 preflight requires the `cinatoken_gateway_budget_admission` LOGIN to have direct `EXECUTE` on `reserve_user_budget_v350`. The full v361 admission proposal revokes that direct entry and grants its private `admit_complete_flat_text_quote_v361` wrapper instead. In one PostgreSQL 18.6 database with the real v351–v366 chain installed, v374 returns **SQLSTATE `P0001`** even though its original v366 fence source pin matches. A transaction-local positive control temporarily restored only that v350 grant, ran v374 through preflight and postflight, and deliberately rolled back both changes. This isolates the contradictory prerequisite without leaving the direct entry open. After full v367 installation, v374 also rejects its replaced v366 fence body.
+
+The v376 successor keeps v374's buyer column grants and raw counter revokes, changes the admission prerequisite to require the v361 wrapper and reject direct v350/v351 calls, and pins the v367 function bodies. Its preflight rejects any non-owner direct ACL on the append-only renewal table, unexpected renewal function EXECUTE, missing renewal function right for the direct renewer LOGIN, and drifted trigger timing, events, row level, column filter or `WHEN` predicate. It uses the same explicit direct migrator transaction pattern with `cinatoken.legacy_buyer_windowed_app_privileges_v376_activation='reviewed-v1'`. This is a successor proposal, not an authorization to deploy it.
+
+## Native same-database proof
+
+The [owned PostgreSQL fixture](../../../../scripts/db/cutover/postgres-legacy-buyer-windowed-app-privileges-renewal-v376.native.test.mjs) installs formal PG73, the v2 economic producer and receipt, v347–v349 split, v350/v351, v353/v354, v356/v357/v359/v360/v361/v362/v365/v366, v368 counter policy and exact held writer, v371/v372, then the full v367 renewal SQL and v376 ACL. It exercises direct migrator, buyer, runtime, admission, renewer and shared producer LOGIN connections. The [machine-readable report](./C04-legacy-buyer-windowed-app-privileges-renewal-v376-report.json) records **27/27 PASS stages, cleanup PASS**, source SHA-256 values and PostgreSQL **18.6**.
+
+The same database verifies one v351 direct admission reserve/dispatch before v361, then confirms v350/v351 direct admission calls are denied after v361/v376. The exact v367 fence replaces v366; its isolated renewer can call only the renewal wrapper and cannot read the epoch table. The v376 ACL reruns, repairs a missing buyer audit INSERT grant and rejects transaction-local drift that gives the buyer epoch `INSERT`, adds `WHEN(false)` to the ordinary hold fence, narrows the epoch trigger to `UPDATE OF lease_until`, or revokes the renewer wrapper. The old runtime, v348 and v349 grant runners still fail before reopening raw authority.
+
+Under the final ACL, the current optional v372 buyer transaction commits a held debit, unreserved windows, request log, database-derived audit, stats, v2 event and receipt. Same-user requests with distinct API keys serialize to ordered audit snapshots. Replay, unsupported modes, wrong charge, BYOK, clamped account inversion, table-lock timeout and late audit failure either reject before writes or roll back the whole transaction. Buyer and runtime raw counter mutations remain denied.
+
+Run locally with `GATEWAY_NATIVE_PG_BIN=<owned PostgreSQL 18.6 bin> node --import tsx --test scripts/db/cutover/postgres-legacy-buyer-windowed-app-privileges-renewal-v376.native.test.mjs`.
+
+## Scope and remaining gate
+
+The legacy shared-key buyer requests in this fixture start with an already held ordinary reservation. The privileged migrator seeds each account increment and reservation in one `READ COMMITTED` transaction; the installed deferred v2 receipt trigger verifies `hold_verified=true`. This is a valid buyer write/ACL coexistence test, but it is **not** proof that v361's complete-text quote admission feeds the legacy shared-key buyer path. The v351 direct smoke check occurs before v361 intentionally revokes that entry. A production Guardrail admission route switch remains unverified.
+
+The v372 branch is limited to non-grant, current-epoch, charged-basis held actual/v2 settlement, with caller-supplied amount and usage. It lacks independently authenticated Provider cost, immutable result binding, unknown-COMMIT recovery, grant-linked buyer closure, other settlement branches, full production role routing and contention evidence. No remote SQL, deployment, paid Provider call or formal migration occurred. C04 remains open.

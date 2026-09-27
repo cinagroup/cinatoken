@@ -10,7 +10,7 @@ import {
 import { createD1Repositories } from './repositories-d1';
 import type { GatewayRepositories } from './repositories-types';
 import type { RuntimeDatabaseConfig } from './runtime-database-config';
-import { isTransientPostgresConnectionError } from './drizzle/client-postgres';
+import { withUnpublishedPostgresClient } from './postgres-initialization';
 
 export interface StorageContext {
 	readonly client: GatewayDatabaseClient;
@@ -28,9 +28,11 @@ export async function createPostgresStorageContext(
 	options: postgres.Options<Record<string, postgres.PostgresType>> = {}
 ): Promise<StorageContext> {
 	const client = await createPostgresDatabaseClient(connectionString, options);
-	const { createPostgresRepositories } = await import('./repositories-postgres');
-	const repositories = createPostgresRepositories(client);
-	return { client, repositories };
+	return withUnpublishedPostgresClient(client.raw, 'repositories', async () => {
+		const { createPostgresRepositories } = await import('./repositories-postgres');
+		const repositories = createPostgresRepositories(client);
+		return { client, repositories };
+	});
 }
 
 /**
@@ -45,22 +47,15 @@ export async function createWorkerStorageContext(
 		return createD1StorageContext(config.db);
 	}
 	const options: postgres.Options<Record<string, postgres.PostgresType>> = {
-		// Hyperdrive owns the upstream pool. Keeping one postgres.js session per
-		// request/message ensures the explicit search_path initialization applies
-		// to every query instead of only the first pooled connection.
+		// Bound this invocation's local client pool. This does NOT preserve SET
+		// state across Hyperdrive transactions; schema/settings scope is separate.
 		max: 1,
 		fetch_types: false,
 		prepare: true,
 	};
-	try {
-		return await createPostgresStorageContext(config.connectionString, options);
-	} catch (error) {
-		if (!isTransientPostgresConnectionError(error)) throw error;
-		console.warn('Transient Hyperdrive session initialization failed; retrying once', {
-			error: error instanceof Error ? error.message : String(error),
-		});
-		return createPostgresStorageContext(config.connectionString, options);
-	}
+	// A stopped caller must not cause a second initialization after a late
+	// connection error. Failed clients are closed by their initialization owner.
+	return createPostgresStorageContext(config.connectionString, options);
 }
 
 export async function createMySqlStorageContext(

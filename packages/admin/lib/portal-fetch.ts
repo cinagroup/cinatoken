@@ -20,3 +20,12 @@ export async function readPortalJson<T>(
 		return null;
 	}
 }
+
+/** Financial/overview screens must distinguish unavailable data from real zero. */
+export async function readRequiredPortalData<T>(response: Response): Promise<T> {
+	const result = await readPortalJson<T>(response);
+	if (!response.ok || result?.success !== true || result.data == null) {
+		throw new Error('Portal data unavailable');
+	}
+	return result.data;
+}

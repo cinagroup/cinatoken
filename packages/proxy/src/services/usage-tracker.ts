@@ -9,6 +9,8 @@
  */
 import type {
 	GatewayRepositories,
+	PostgresDatabaseClient,
+	SharedKeyEconomicOutboxInput,
 	UpstreamProtocol,
 	VerifiedModelEndpointSnapshot,
 } from '@octafuse/core';
@@ -42,6 +44,11 @@ import {
 import type { UsageFromStream } from './proxy';
 import { fireGatewayErrorWebhooks } from './alert-webhook';
 import { settleSharedKeyEarning } from './shared-key-earnings';
+import type {
+	SharedKeyQuoteAttemptHandoff,
+	SharedKeyQuoteAttemptReference,
+} from './shared-key-quote-attempt';
+import { providerUsageFacts } from './provider-usage-facts';
 import type { GatewayCircuitAlertEvent } from './circuit-alert-types';
 import type { RequestTimingSnapshot } from './request-timing';
 import {
@@ -129,6 +136,168 @@ export function ordinaryBudgetSettlementForCriticalWrite(
 		reason: settlement.unknownCost
 			? 'usage_unavailable_after_dispatch'
 			: 'request_usage_settled',
+	};
+}
+
+export type SharedKeyEconomicUsageHandoff = Readonly<{
+	handoff: SharedKeyQuoteAttemptHandoff;
+	selectedReference: SharedKeyQuoteAttemptReference | null;
+}>;
+
+/** A quoted POST past its fetch permit may be billed even when it returned an error. */
+export function hasPotentiallyBillableUnknownSharedKeyAttempt(
+	handoff: SharedKeyQuoteAttemptHandoff,
+): boolean {
+	if (!Array.isArray(handoff.quoteAttempts)
+		|| !Array.isArray(handoff.transport)
+		|| !Array.isArray(handoff.economicOutcomes)
+		|| handoff.quoteAttempts.length !== handoff.transport.length
+		|| handoff.quoteAttempts.length !== handoff.economicOutcomes.length) {
+		throw new Error('Shared-key economic handoff does not cover every quote attempt');
+	}
+	let unknownSentAttempt = false;
+	for (let index = 0; index < handoff.quoteAttempts.length; index += 1) {
+		const reference = handoff.quoteAttempts[index];
+		const observed = handoff.transport[index];
+		const outcome = handoff.economicOutcomes[index];
+		if (!reference || observed?.reference !== reference
+			|| outcome?.attemptId !== reference.attemptId
+			|| outcome.requestLogId !== reference.requestLogId
+			|| outcome.attemptIndex !== reference.attemptIndex
+			|| outcome.sharedKeyId !== reference.sharedKeyId
+			|| outcome.transitionId !== reference.transitionId
+			|| outcome.quoteVersionId !== reference.quoteVersionId
+			|| (outcome.usageCertainty !== 'actual' && outcome.usageCertainty !== 'unknown')) {
+			throw new Error('Shared-key economic handoff quote identity differs');
+		}
+		if (observed.stage === 'claimed_only') {
+			if (observed.upstreamHttpStatus !== null || outcome.usageCertainty !== 'unknown') {
+				throw new Error('Claim-only shared-key attempt has invalid transport or usage facts');
+			}
+		} else if (observed.stage === 'fetch_boundary_permitted'
+			|| observed.stage === 'transport_ambiguous') {
+			if (observed.upstreamHttpStatus !== null) {
+				throw new Error('Shared-key attempt has unowned upstream status');
+			}
+		} else if (observed.stage === 'upstream_headers_observed') {
+			if (!Number.isInteger(observed.upstreamHttpStatus)
+				|| observed.upstreamHttpStatus! < 100 || observed.upstreamHttpStatus! > 599) {
+				throw new Error('Shared-key attempt has invalid upstream status');
+			}
+		} else {
+			throw new Error('Shared-key attempt has invalid transport stage');
+		}
+		if (outcome.usageCertainty === 'actual'
+			&& (observed.stage !== 'upstream_headers_observed'
+				|| observed.upstreamHttpStatus! < 200 || observed.upstreamHttpStatus! >= 300)) {
+			throw new Error('Shared-key actual usage lacks observed successful headers');
+		}
+		if (observed.stage !== 'claimed_only' && outcome.usageCertainty === 'unknown') {
+			unknownSentAttempt = true;
+		}
+	}
+	return unknownSentAttempt;
+}
+
+/**
+ * Build the v2 event from the same settled buyer inputs sent to the critical
+ * writer. A successful buyer charge requires provider usage tied to the exact
+ * selected shared-key attempt; a charge inferred from gateway counters alone
+ * is not an actual buyer usage fact.
+ */
+export async function prepareSharedKeyEconomicUsageHandoff(input: Readonly<{
+	requestLogId: string;
+	providerKeyId: string | null;
+	routeTargetId: string | null;
+	usage: UsageFromStream;
+	shouldChargeBudget: boolean;
+	chargedCost: number;
+	ordinarySettlement: OrdinaryBudgetUsageSettlement | undefined;
+	economic: SharedKeyEconomicUsageHandoff;
+}>): Promise<SharedKeyEconomicOutboxInput> {
+	const { handoff, selectedReference } = input.economic;
+	if (!Array.isArray(handoff.quoteAttempts) || handoff.quoteAttempts.length < 1
+		|| handoff.quoteAttempts.length !== handoff.transport.length
+		|| handoff.quoteAttempts.length !== handoff.economicOutcomes.length) {
+		throw new Error('Shared-key economic handoff does not cover every quote attempt');
+	}
+	for (let index = 0; index < handoff.quoteAttempts.length; index += 1) {
+		const reference = handoff.quoteAttempts[index]!;
+		const observed = handoff.transport[index];
+		const outcome = handoff.economicOutcomes[index];
+		if (reference.requestLogId !== input.requestLogId
+			|| observed?.reference !== reference
+			|| outcome?.attemptId !== reference.attemptId
+			|| outcome.requestLogId !== reference.requestLogId
+			|| outcome.attemptIndex !== reference.attemptIndex
+			|| outcome.sharedKeyId !== reference.sharedKeyId
+			|| outcome.transitionId !== reference.transitionId
+			|| outcome.quoteVersionId !== reference.quoteVersionId) {
+			throw new Error('Shared-key economic handoff quote identity differs');
+		}
+		// Chat only observes provider usage. Neither endpoint tariff nor a cost
+		// field in a usage response proves the supplier's per-attempt bill.
+		if (outcome.providerCostCertainty !== 'unknown'
+			|| outcome.providerCostMicros !== null) {
+			throw new Error('Shared-key provider cost has no verified bill fact');
+		}
+	}
+	const selectedKey = input.providerKeyId?.startsWith('sharedkey:')
+		? input.providerKeyId.slice('sharedkey:'.length) : null;
+	if (selectedReference === null) {
+		if (selectedKey !== null) throw new Error('Selected shared key has no quote reference');
+	} else if (selectedKey !== selectedReference.sharedKeyId
+		|| selectedReference.routeTargetId !== input.routeTargetId
+		|| !handoff.quoteAttempts.includes(selectedReference)) {
+		throw new Error('Selected shared-key quote reference differs from the routed request');
+	}
+	if (handoff.economicOutcomes.some((outcome, index) =>
+		handoff.quoteAttempts[index] !== selectedReference
+		&& outcome.usageCertainty !== 'unknown')) {
+		throw new Error('Earlier shared-key attempt has unowned usage facts');
+	}
+	const basis = input.ordinarySettlement?.unknownCost === true
+		? 'reserved'
+		: input.shouldChargeBudget || input.ordinarySettlement !== undefined
+			? 'actual' : 'none';
+	if (hasPotentiallyBillableUnknownSharedKeyAttempt(handoff) && basis !== 'reserved') {
+		throw new Error('Potentially billable unknown shared-key attempt requires reserved buyer debit');
+	}
+	if (basis === 'none' && input.chargedCost !== 0) {
+		throw new Error('Uncharged shared-key economic handoff has a buyer charge');
+	}
+	if (basis === 'actual') {
+		const selectedIndex = selectedReference === null
+			? -1 : handoff.quoteAttempts.indexOf(selectedReference);
+		const selectedOutcome = handoff.economicOutcomes[selectedIndex];
+		const rawUsage = input.usage.raw_usage;
+		const providerFact = providerUsageFacts(input.usage);
+		if (!providerFact || typeof rawUsage !== 'string') {
+			throw new Error('Actual buyer usage has no matching selected provider fact');
+		}
+		// A later non-shared route may prove buyer usage; the earlier shared
+		// attempts were already checked above and remain unknown.
+		if (selectedReference !== null) {
+			if (selectedOutcome?.usageCertainty !== 'actual'
+				|| selectedOutcome.evidenceKind !== 'provider_usage'
+				|| selectedOutcome.inputTokens !== providerFact.inputTokens
+				|| selectedOutcome.outputTokens !== providerFact.outputTokens
+				|| selectedOutcome.cacheReadTokens !== providerFact.cacheReadTokens
+				|| selectedOutcome.cacheWriteTokens !== providerFact.cacheWriteTokens) {
+				throw new Error('Actual buyer usage has no matching selected provider fact');
+			}
+			const digest = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(rawUsage));
+			const evidenceSha256 = Array.from(new Uint8Array(digest), byte => byte.toString(16).padStart(2, '0')).join('');
+			if (selectedOutcome.evidenceSha256 !== evidenceSha256) {
+				throw new Error('Actual buyer usage digest differs from selected provider fact');
+			}
+		}
+	}
+	return {
+		eventVersion: 2,
+		buyerChargeBasis: basis,
+		buyerUsageCertainty: basis === 'actual' ? 'actual' : 'unknown',
+		attempts: handoff.economicOutcomes,
 	};
 }
 
@@ -292,8 +461,36 @@ export async function recordUsage(
 		};
 		/** Atomic ordinary-user budget lease settled with this request log. */
 		ordinary_budget_settlement?: OrdinaryBudgetUsageSettlement;
-	}
+		/** Review-only: the quote capture and buyer log must share one critical write. */
+		shared_key_economic_handoff?: SharedKeyEconomicUsageHandoff;
+	},
+	economicBuyerClient?: PostgresDatabaseClient,
 ): Promise<void> {
+	if ((params.shared_key_economic_handoff !== undefined) !== (economicBuyerClient !== undefined)) {
+		throw new Error('Shared-key economic usage requires a dedicated buyer critical writer');
+	}
+	if (economicBuyerClient && (repos.client.driver !== 'postgres'
+		|| repos.client.raw === economicBuyerClient.raw)) {
+		throw new Error('Shared-key economic buyer and runtime clients must be distinct PostgreSQL sessions');
+	}
+	if (economicBuyerClient && repos.client.driver === 'postgres') {
+		const [runtimeIdentity, buyerIdentity] = await Promise.all([
+			repos.client.raw.unsafe<Array<{ current_role: string; session_role: string }>>(
+				'SELECT CURRENT_USER::text AS current_role, SESSION_USER::text AS session_role',
+			),
+			economicBuyerClient.raw.unsafe<Array<{ current_role: string; session_role: string }>>(
+				'SELECT CURRENT_USER::text AS current_role, SESSION_USER::text AS session_role',
+			),
+		]);
+		if (runtimeIdentity.length !== 1
+			|| runtimeIdentity[0]?.current_role !== 'cinatoken_gateway_runtime'
+			|| runtimeIdentity[0]?.session_role !== 'cinatoken_gateway_runtime'
+			|| buyerIdentity.length !== 1
+			|| buyerIdentity[0]?.current_role !== 'cinatoken_gateway_buyer_settlement'
+			|| buyerIdentity[0]?.session_role !== 'cinatoken_gateway_buyer_settlement') {
+			throw new Error('Dedicated runtime and buyer settlement LOGINs required');
+		}
+	}
 	const basis = params.usage.input_tokens;
 	const requestStartedAtMs = params.request_started_at_ms;
 	const requestedPricingAtUtc =
@@ -473,12 +670,26 @@ export async function recordUsage(
 	const ordinarySettlement = params.ordinary_budget_settlement
 		? {
 				...params.ordinary_budget_settlement,
-				unknownCost: privateByokSettlementMode(
+				unknownCost: (params.shared_key_economic_handoff !== undefined
+					&& hasPotentiallyBillableUnknownSharedKeyAttempt(
+						params.shared_key_economic_handoff.handoff,
+					)) || privateByokSettlementMode(
 					isByok,
 					params.ordinary_budget_settlement.unknownCost ? 'reserved' : 'actual',
 				) === 'reserved',
 			}
 		: undefined;
+	const economicOutbox = params.shared_key_economic_handoff === undefined
+		? undefined : await prepareSharedKeyEconomicUsageHandoff({
+			requestLogId: id,
+			providerKeyId: params.provider_key_id ?? null,
+			routeTargetId: params.route_target_id ?? null,
+			usage: params.usage,
+			shouldChargeBudget,
+			chargedCost,
+			ordinarySettlement,
+			economic: params.shared_key_economic_handoff,
+		});
 	const ordinaryAuditTransition = ordinaryBudgetAuditSnapshotTransition({
 		settlement: ordinarySettlement,
 		currentBudgetEpoch: userRow == null ? null : Number(userRow.budget_epoch),
@@ -502,7 +713,7 @@ export async function recordUsage(
 			changed: changedFieldsToJson(computeChangedFields(beforeS, afterS)),
 		};
 	}
-	await insertRequestUsageAndChargeTx(repos, {
+	await insertRequestUsageAndChargeTx(economicBuyerClient ?? repos, {
 		userId: params.user_id,
 		requestLog: {
 			id,
@@ -535,6 +746,10 @@ export async function recordUsage(
 				surface: params.model_surface_id ?? null,
 				pool: params.route_pool_id ?? null,
 				target: params.route_target_id ?? null,
+				...(params.shared_key_economic_handoff?.selectedReference
+					? { selected_shared_quote_attempt_id:
+						params.shared_key_economic_handoff.selectedReference.attemptId }
+					: {}),
 				...(params.gemini_wire_action
 					? { gemini: { action: params.gemini_wire_action } }
 					: {}),
@@ -602,6 +817,7 @@ export async function recordUsage(
 		userBudgetSettlement: ordinaryBudgetSettlementForCriticalWrite(
 			ordinarySettlement,
 		),
+		economicOutbox,
 		audit: {
 			apiKeyId: params.api_key_id,
 			eventType: 'usage_charge',
@@ -653,6 +869,7 @@ export async function recordUsage(
 	}
 
 	// 共享密钥收益结算（`sharedkey:` 前缀识别；幂等于 request_log_id）
+	if (economicOutbox !== undefined) return;
 	await settleSharedKeyEarning(repos, {
 		requestLogId: id,
 		providerKeyId: params.provider_key_id ?? null,

@@ -5,7 +5,8 @@
  * proxy→core / admin→core，admin 不得依赖 proxy。
  *
  * 触发点：`usage-tracker.recordUsage` 落库后（`sharedkey:` 前缀识别）；
- * 补偿端点：admin `/admin/earnings/rederive` 对历史日志重跑（幂等）。
+ * 旧 admin `/admin/earnings/rederive` 只报告待审核历史候选；缺少原始报价
+ * 快照时不能用此函数按现价补历史收益。已入账事件的统计可按明细重建。
  * 幂等：`shared_key_earnings.request_log_id` UNIQUE；重复结算直接跳过。
  * 金额：gross = 卖家单价 × token 量；platform_fee = gross × SHARED_KEY_COMMISSION_RATE（默认 0.10）；
  * net 入账 `user_earnings.balance / contribution_value / lifetime_earned`。
@@ -44,6 +45,56 @@ export function parseSharedKeyId(providerKeyId: string | null | undefined): stri
 	return id.length > 0 ? id : null;
 }
 
+async function repairCommittedEarningSummary(
+	repos: GatewayRepositories,
+	requestLogId: string,
+	sharedKeyId: string,
+): Promise<SettleEarningStatus> {
+	let lastError: unknown = null;
+	for (let attempt = 1; attempt <= SETTLE_ATTEMPTS; attempt++) {
+		try {
+			await repos.portalLedger.rebuildSharedKeyUsageFromEarnings(requestLogId, sharedKeyId, new Date().toISOString());
+			return 'duplicate';
+		} catch (error) {
+			lastError = error;
+			if (attempt < SETTLE_ATTEMPTS) await sleep(RETRY_BASE_DELAY_MS * attempt);
+		}
+	}
+	console.error(JSON.stringify({
+		level: 'error', message: 'cinatoken.shared_key_usage_rebuild_pending', stage: 'summary',
+		requestLogId, sharedKeyId, attempts: SETTLE_ATTEMPTS,
+		error: lastError instanceof Error ? lastError.message : String(lastError),
+	}));
+	return 'failed';
+}
+
+async function repairCommittedEarningIfPresent(
+	repos: GatewayRepositories,
+	requestLogId: string,
+	sharedKeyId: string,
+): Promise<SettleEarningStatus | null> {
+	let existing;
+	try {
+		existing = await repos.portalLedger.getEarningByRequestLogId(requestLogId);
+	} catch (error) {
+		console.error(JSON.stringify({
+			level: 'error', message: 'cinatoken.shared_key_earning_lookup_failed',
+			requestLogId, sharedKeyId,
+			error: error instanceof Error ? error.message : String(error),
+		}));
+		return 'failed';
+	}
+	if (!existing) return null;
+	if (existing.sharedKeyId !== sharedKeyId) {
+		console.error(JSON.stringify({
+			level: 'error', message: 'cinatoken.shared_key_earning_identity_conflict',
+			requestLogId, sharedKeyId, recordedSharedKeyId: existing.sharedKeyId,
+		}));
+		return 'failed';
+	}
+	return repairCommittedEarningSummary(repos, requestLogId, existing.sharedKeyId);
+}
+
 export async function settleSharedKeyEarning(
 	repos: GatewayRepositories,
 	params: {
@@ -59,12 +110,14 @@ export async function settleSharedKeyEarning(
 		(params.usage.output_tokens ?? 0) +
 		(params.usage.cache_read_tokens ?? 0) +
 		(params.usage.cache_write_tokens ?? 0);
-	if (tokens <= 0) return 'zero-tokens';
+	if (tokens <= 0) return (await repairCommittedEarningIfPresent(repos, params.requestLogId, sharedKeyId)) ?? 'zero-tokens';
 
 	let key;
 	try {
 		key = await repos.sharedKeys.getSharedKeyById(sharedKeyId);
 	} catch (error) {
+		const repaired = await repairCommittedEarningIfPresent(repos, params.requestLogId, sharedKeyId);
+		if (repaired !== null) return repaired;
 		console.error(
 			JSON.stringify({
 				level: 'error',
@@ -77,7 +130,7 @@ export async function settleSharedKeyEarning(
 		);
 		return 'failed';
 	}
-	if (!key) return 'key-not-found';
+	if (!key) return (await repairCommittedEarningIfPresent(repos, params.requestLogId, sharedKeyId)) ?? 'key-not-found';
 
 	const gross =
 		((params.usage.input_tokens ?? 0) / TOKENS_PER_MILLION) * key.inputPrice +
@@ -85,7 +138,9 @@ export async function settleSharedKeyEarning(
 		((params.usage.cache_read_tokens ?? 0) / TOKENS_PER_MILLION) * (key.cacheReadPrice ?? 0) +
 		((params.usage.cache_write_tokens ?? 0) / TOKENS_PER_MILLION) * (key.cacheWritePrice ?? 0);
 	// 审计 M10：非有限数在此拦截（roundGatewayMoney 会把 NaN/∞ 静默映射为 0）
-	if (!Number.isFinite(gross) || gross <= 0) return 'zero-gross';
+	if (!Number.isFinite(gross) || gross <= 0) {
+		return (await repairCommittedEarningIfPresent(repos, params.requestLogId, sharedKeyId)) ?? 'zero-gross';
+	}
 
 	let commissionRate = DEFAULT_COMMISSION_RATE;
 	try {
@@ -103,15 +158,19 @@ export async function settleSharedKeyEarning(
 	const net = grossR - fee;
 	const nowIso = new Date().toISOString();
 
-	// The earning write is NOT in the same transaction as the request-log
-	// insert, so a persistent failure here would silently under-credit the
-	// seller (the buyer is already charged). Retry transient errors, then
-	// emit a structured, alertable event — the row stays recoverable by
-	// re-running settlement (idempotent on request_log_id).
+	// The earning write is NOT in the same transaction as the request log.
+	// Keep the normal projection update incremental, guarded by the key's
+	// original projection snapshot. A concurrent rebuild may include this
+	// earning before the increment; then CAS fails and the duplicate attempt
+	// rebuilds from authoritative detail. The same path handles lost ACKs.
 	let lastError: unknown = null;
+	let lastStage: 'earning' | 'summary' = 'earning';
+	let detailAccepted = false;
+	let insertedDuringCall = false;
 	for (let attempt = 1; attempt <= SETTLE_ATTEMPTS; attempt++) {
 		try {
 			await repos.portalLedger.ensureUserEarnings(key.sellerUserId);
+			lastStage = 'earning';
 			const inserted = await repos.portalLedger.recordEarningAndCredit({
 				id: crypto.randomUUID(),
 				requestLogId: params.requestLogId,
@@ -127,15 +186,27 @@ export async function settleSharedKeyEarning(
 				currency: 'USD',
 				nowIso,
 			});
-			if (!inserted) return 'duplicate'; // 幂等：同请求日志已结算
-			await repos.sharedKeys.addSharedKeyUsage(
-				key.id,
-				params.usage.input_tokens ?? 0,
-				params.usage.output_tokens ?? 0,
-				net,
-				nowIso,
-			);
-			return 'settled';
+			detailAccepted = true;
+			insertedDuringCall ||= inserted;
+			lastStage = 'summary';
+			if (inserted) {
+				const updated = await repos.sharedKeys.addSharedKeyUsage(
+					key.id,
+					params.usage.input_tokens ?? 0,
+					params.usage.output_tokens ?? 0,
+					net,
+					nowIso,
+					{
+						servedInputTokens: key.servedInputTokens,
+						servedOutputTokens: key.servedOutputTokens,
+						earnedTotalExact: key.earnedTotalExact ?? String(key.earnedTotal),
+					},
+				);
+				if (!updated) throw new Error('shared_key_usage_snapshot_changed');
+			} else {
+				await repos.portalLedger.rebuildSharedKeyUsageFromEarnings(params.requestLogId, key.id, nowIso);
+			}
+			return insertedDuringCall ? 'settled' : 'duplicate';
 		} catch (error) {
 			lastError = error;
 			if (attempt < SETTLE_ATTEMPTS) await sleep(RETRY_BASE_DELAY_MS * attempt);
@@ -144,13 +215,18 @@ export async function settleSharedKeyEarning(
 	console.error(
 		JSON.stringify({
 			level: 'error',
-			message: 'cinatoken.shared_key_earning_lost',
+			message: detailAccepted
+				? 'cinatoken.shared_key_usage_rebuild_pending'
+				: 'cinatoken.shared_key_earning_lost',
+			stage: lastStage,
 			requestLogId: params.requestLogId,
 			sharedKeyId: key.id,
-			sellerUserId: key.sellerUserId,
-			grossAmount: grossR,
-			platformFee: fee,
-			netAmount: net,
+			...(detailAccepted ? {} : {
+				sellerUserId: key.sellerUserId,
+				grossAmount: grossR,
+				platformFee: fee,
+				netAmount: net,
+			}),
 			attempts: SETTLE_ATTEMPTS,
 			error: lastError instanceof Error ? lastError.message : String(lastError),
 		}),

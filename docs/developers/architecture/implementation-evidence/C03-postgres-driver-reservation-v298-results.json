@@ -1,0 +1,346 @@
+{
+  "version": "v298",
+  "recordedAtUtc": "2026-09-21 11:33:34 UTC",
+  "checklistVersion": "1.195",
+  "previousGoalTurnClassification": "progress",
+  "status": "LOCAL_CANDIDATE_PASS_INSTALLED_DRIVER_FAIL_ACTIVATION_BLOCKED",
+  "goalStillActive": true,
+  "productionPathActivated": false,
+  "installedDependencyReplaced": false,
+  "scope": "Accepted BEGIN reservation independent of pipeline/write backpressure, plus delayed drain ownership guard; builds remain local isolated candidates",
+  "environment": {
+    "node": "24.14.1",
+    "postgresJs": "3.4.9",
+    "esbuild": "0.27.3",
+    "pglite": "0.5.8",
+    "postgresWasm": "18.3",
+    "workersTypesFallback": "5.20260829.1",
+    "baseMigrations": 68,
+    "localProposals": 4
+  },
+  "initialArtifactAudit": {
+    "v297": 4,
+    "allUnchanged": true
+  },
+  "failingEvidence": [
+    {
+      "name": "v297 exact capacity 0/1/2 and accepted false-write cases",
+      "tests": 5,
+      "pass": 0,
+      "fail": 5,
+      "exitCode": 1,
+      "durationMs": 771.6726,
+      "artifact": ".wrangler/staging/postgres-retirement-v297-PbB96g/postgres-esm.mjs",
+      "errors": [
+        "undefined connection queue",
+        "undefined connection onclose"
+      ],
+      "unhandledRejectionsNotSuppressed": true
+    },
+    {
+      "name": "hook-only delayed drain direct negative control",
+      "tests": 1,
+      "pass": 0,
+      "fail": 1,
+      "exitCode": 1,
+      "durationMs": 1017.0905,
+      "error": "drain must not offer a reserved idle callback connection to root SQL"
+    },
+    {
+      "name": "final installed unmodified driver baseline",
+      "tests": 3,
+      "pass": 2,
+      "fail": 1,
+      "skipped": 0,
+      "exitCode": 1,
+      "durationMs": 1343.6549,
+      "error": "Cannot read properties of null (reading 'write')",
+      "preservedAsFail": true
+    }
+  ],
+  "earlierRuns": [
+    {
+      "name": "CF output identifier assertion",
+      "harnessTests": 1,
+      "pass": 0,
+      "fail": 1,
+      "exitCode": 1,
+      "durationMs": 605.659,
+      "wireCasesExecuted": 0,
+      "reason": "esbuild renamed connection to connection2; corrected same-identifier regex"
+    },
+    {
+      "name": "22-case candidate intermediate",
+      "harnessTests": 3,
+      "pass": 3,
+      "fail": 0,
+      "exitCode": 0,
+      "durationMs": 4461.2563,
+      "esm": {
+        "tests": 22,
+        "pass": 22,
+        "durationMs": 1893.6626
+      },
+      "cjs": {
+        "tests": 22,
+        "pass": 22,
+        "durationMs": 1830.5254
+      }
+    },
+    {
+      "name": "parameter Result subclass oracle error",
+      "harnessTests": 3,
+      "pass": 0,
+      "fail": 3,
+      "exitCode": 1,
+      "durationMs": 6320.0546,
+      "esm": {
+        "tests": 26,
+        "pass": 25,
+        "fail": 1,
+        "durationMs": 2455.3328
+      },
+      "cjs": {
+        "tests": 26,
+        "pass": 25,
+        "fail": 1,
+        "durationMs": 3021.4459
+      },
+      "reason": "Result(0) is not strictly prototype-equal to []; verify length while retaining SQL count/order/transaction state assertions"
+    }
+  ],
+  "verification": [
+    {
+      "name": "final candidate construction and subprocess verification harness",
+      "tests": 5,
+      "pass": 5,
+      "fail": 0,
+      "durationMs": 6690.5266,
+      "exitCode": 0,
+      "notAdditionalBusinessCases": true
+    },
+    {
+      "name": "ESM complete candidate Node wire",
+      "tests": 26,
+      "pass": 26,
+      "fail": 0,
+      "skipped": 0,
+      "durationMs": 1989.5527,
+      "exitCode": 0,
+      "distinctScenarios": 23,
+      "sharedBaselineRepeatedAcrossFiles": 3
+    },
+    {
+      "name": "CJS complete candidate Node wire",
+      "tests": 26,
+      "pass": 26,
+      "fail": 0,
+      "skipped": 0,
+      "durationMs": 1965.6181,
+      "exitCode": 0,
+      "distinctScenarios": 23,
+      "sharedBaselineRepeatedAcrossFiles": 3
+    },
+    {
+      "name": "repeated independent subprocesses",
+      "runs": 6,
+      "testsPerRun": 26,
+      "pass": 156,
+      "fail": 0,
+      "skipped": 0,
+      "exitCode": 0,
+      "esmDurationsMs": [
+        2951.7048,
+        2783.5267,
+        2157.8655
+      ],
+      "cjsDurationsMs": [
+        2143.6844,
+        2274.7776,
+        2206.0631
+      ]
+    },
+    {
+      "name": "hook-only automated negative controls",
+      "expectedFailure": true,
+      "esm": {
+        "tests": 1,
+        "pass": 0,
+        "fail": 1,
+        "exitCode": 1,
+        "durationMs": 777.5648
+      },
+      "cjs": {
+        "tests": 1,
+        "pass": 0,
+        "fail": 1,
+        "exitCode": 1,
+        "durationMs": 801.5102
+      },
+      "wrapperPassRequiresSpecificFailure": true
+    },
+    {
+      "name": "owner and PGlite recovery runner regression",
+      "tests": 35,
+      "pass": 35,
+      "fail": 0,
+      "skipped": 0,
+      "exitCode": 0,
+      "durationMs": 17684.5002
+    },
+    {
+      "command": "node node_modules/typescript/bin/tsc -p packages/core/tsconfig.recovery-runner-postgres.json --noEmit",
+      "exitCode": 0
+    }
+  ],
+  "candidateBuild": {
+    "variants": {
+      "esm": {
+        "sha256": "9bdf3525f9697a1fd3f4f4af7727f66b3b70cd0a3b0c6ba100ea41afac2a0c2b",
+        "inputs": {
+          "node_modules/postgres/src/bytes.js": "53b73b5ee2919ab5561229c62a4e2db578f63ca613b795b380c23cb684f2d514",
+          "node_modules/postgres/src/connection.js": "ee3a218d9aa6a6f2887c1a19da50009335fe84c11a5431d5cab72d6bc528632f",
+          "node_modules/postgres/src/errors.js": "85cfbed9a5ab0db41ab8e97b806c881af29807dfe99bc656fdf1a18c1c13b6c6",
+          "node_modules/postgres/src/index.js": "4e21f5733e70d79cffc10d10d4ef01031de4a9ac862210e43f8870029fd103ed",
+          "node_modules/postgres/src/large.js": "05ea787f79cefaf16310f14119fbfd36d2fed0795581b0df1b0e63b591a3ed94",
+          "node_modules/postgres/src/query.js": "67c45a5151032aa46b587abc15381fe4efd97c696e5c1b53082b8161309c4ee2",
+          "node_modules/postgres/src/queue.js": "15e6345adb6708bf3b99ad39fc2231c2fb61de5f6cba4b7a7a6be881482a4ec3",
+          "node_modules/postgres/src/result.js": "001ff5e0c8d634674f483d07fbcd620a797e3101f842d6c20ca3ace936260465",
+          "node_modules/postgres/src/subscribe.js": "5d0b1ec9705281ed4a60236fe5f65654038bae117845a71d19e35374d34c0cfa",
+          "node_modules/postgres/src/types.js": "1883bd4536eab1c94b9e708d325b13708b0f18ec80020e3a825f34a72f603b81"
+        }
+      },
+      "cjs": {
+        "sha256": "c828cc2dbae498f7b54c6e006734849051b6604faaeae91ed80a787ca591f38e",
+        "inputs": {
+          "node_modules/postgres/cjs/src/bytes.js": "4e13b04c965e8dcc45104091a92318715af96e7f6d820faea9097a014930bc70",
+          "node_modules/postgres/cjs/src/connection.js": "ce6d375809baad79963ef9b3773e6ac757bcf6da2362d4d85482bb14c2c751be",
+          "node_modules/postgres/cjs/src/errors.js": "fad515c5d5e76e0f44e7e4408342301ec4df51517ffdbb836be9942cd48e5a99",
+          "node_modules/postgres/cjs/src/index.js": "d8fea1a5311c47e65004646bc81f57305ac64d48f99004a5b3ca27bcfc6babf8",
+          "node_modules/postgres/cjs/src/large.js": "40b498ca792f3d28b1ce8a99b931cbd9c04c2931366b9fdc93a19083e545b9ff",
+          "node_modules/postgres/cjs/src/query.js": "75ae9c69a1aaf3be4d8d65e4742c36018b89594907b85769e560c2590716c109",
+          "node_modules/postgres/cjs/src/queue.js": "7d20fa53a3930be070609d7912ecd14c347df3526805bca2f6cb7eb35d2e62cf",
+          "node_modules/postgres/cjs/src/result.js": "84b46a3940d3bd1fbea85e5beb5b7c652f3f1058fec2c6cc5ce351730533ee10",
+          "node_modules/postgres/cjs/src/subscribe.js": "5c6dfb4fa656f814a47749d342daa86a1dbaa9e695f43ac1c7050302c7e91fea",
+          "node_modules/postgres/cjs/src/types.js": "8ba968fc19489cdb670e8fc0d184b942eafa5f3d7a06dca4b165318fcd57e9fb"
+        }
+      },
+      "cf": {
+        "sha256": "16907daccb9d10673989a0d052f222d1f4427507db1352fafbbdda8627dba47e",
+        "inputs": {
+          "node_modules/postgres/cf/polyfills.js": "c9bfd7d57f1402676a42c8b6a49386ca18f95ccc687fdaad625f3a3fc7ba3f81",
+          "node_modules/postgres/cf/src/bytes.js": "368a278367814e80f7ae816e01e202279f3ce38347f2ac465b562ebeb61d84ca",
+          "node_modules/postgres/cf/src/connection.js": "3efad812b825f76708f2e62e8dd00088900206e04afed2dc4b75b9aecd435fa9",
+          "node_modules/postgres/cf/src/errors.js": "85cfbed9a5ab0db41ab8e97b806c881af29807dfe99bc656fdf1a18c1c13b6c6",
+          "node_modules/postgres/cf/src/index.js": "aca9c247b7ddb2aedf90d20ce8e6f52ac6ebd95865056599ca05ed4dab4baad7",
+          "node_modules/postgres/cf/src/large.js": "b02b13cf2b5d435368c7d61989af1692a9965b6edf9b60e1d0bc320ac42f48df",
+          "node_modules/postgres/cf/src/query.js": "67c45a5151032aa46b587abc15381fe4efd97c696e5c1b53082b8161309c4ee2",
+          "node_modules/postgres/cf/src/queue.js": "15e6345adb6708bf3b99ad39fc2231c2fb61de5f6cba4b7a7a6be881482a4ec3",
+          "node_modules/postgres/cf/src/result.js": "001ff5e0c8d634674f483d07fbcd620a797e3101f842d6c20ca3ace936260465",
+          "node_modules/postgres/cf/src/subscribe.js": "9ce6fd98780e0adff813d13cc03951e5b1c66d602637beb6f9494c40e7b9212e",
+          "node_modules/postgres/cf/src/types.js": "e6c9e8f43272ae853944613560e5eabb15955fd8b2981749e7fa1c9015f370db"
+        }
+      }
+    },
+    "versions": {
+      "postgres": "3.4.9",
+      "esbuild": "0.27.3"
+    },
+    "reservation": "complete",
+    "meaning": "local composite patch mode, not total acceptance",
+    "generatedDirectory": ".wrangler/staging/postgres-reservation-v298-complete-dP1FIp",
+    "repeatedDirectory": ".wrangler/staging/postgres-reservation-v298-complete-xJh7kS",
+    "reproducibleAcrossTwoBuilds": true,
+    "negativeDirectory": ".wrangler/staging/postgres-reservation-v298-hook-only-62toMe",
+    "negativeHashes": {
+      "esm": "c52181b12ce072a77d768a51bf4fcfe9ca50ec14839b82bdff7555dd8b756e6e",
+      "cjs": "fe1a5d70d671bb82a2c3959383b7a0932811c7fe07cc267f2f6982bfc880cd78",
+      "cf": "54053b23db304fc24308e39ff2bff1fdba9b1532b88213ba552054f152c0d8eb"
+    },
+    "indexAndConnectionPinned": true,
+    "otherInputHashesRecordedNotAllPinned": true
+  },
+  "fixture": {
+    "realNodeDriver": true,
+    "realLoopbackTcpBytes": true,
+    "executesSql": false,
+    "maxQueriesPerPeer": 20,
+    "maxProtocolBufferBytes": 32768,
+    "maxHeldResponseBytes": 65536,
+    "maxDescribedParameters": 4,
+    "fifoHeldResponses": true,
+    "transactionStatusCapturedAtReadyFrame": true,
+    "backpressureFalseSynthetic": true,
+    "delayedDrainSynthetic": true,
+    "globalSocketPrototypePatched": false,
+    "actualKernelCongestionProven": false
+  },
+  "gates": {
+    "nativeBusinessCasesExecuted": 0,
+    "workersRuntimeCasesExecuted": 0,
+    "cfCompileParityOnly": true,
+    "hyperdriveAccepted": false,
+    "trustedResourceReleaseImplemented": false,
+    "unknownBillingChanged": false,
+    "productionActivationAllowed": false,
+    "systemRuntimeAuthorizationUnchanged": true,
+    "financialRegressions208Rerun": false
+  },
+  "artifacts": [
+    {
+      "path": "scripts/db/diag/postgres-transaction-retirement.mjs",
+      "sha256": "2a6e866fbc488491a8a9db7834a68a213a562b111fd8648fc2b82948619b67f8"
+    },
+    {
+      "path": "scripts/db/diag/postgres-transaction-retirement.test.mjs",
+      "sha256": "1d7fd6519f9567cac80528206c27be5fb9dc782c2fd04141fcbcc5778724f68e"
+    },
+    {
+      "path": "packages/core/src/storage/recovery/postgres-recovery-operation-owner.wire.test.mjs",
+      "sha256": "c9ab017119f7534572d20e2652351f80fdf7525f0f85af3ca8ae9bd22379486b"
+    },
+    {
+      "path": "packages/core/src/storage/recovery/postgres-transaction-reservation.wire.test.mjs",
+      "sha256": "bb4174bd15554286da68e79484484f33d15178ab562683a8150f8b37d5381f4e"
+    },
+    {
+      "path": "packages/core/src/storage/recovery/postgres-transaction-retirement.wire.test.mjs",
+      "sha256": "4d6d18ea8952227e1001b44c578df8609eb72efabff3186322cdc0aa6ceab7b9"
+    }
+  ],
+  "unchangedPriorArtifacts": {
+    "v296": 7,
+    "v297": 1
+  },
+  "unchangedLockfiles": {
+    "package-lock.json": "9adebfebdb981bd51aac7644fb046d0a4f0e2a4586cf8b3786cefa097a1a415e",
+    "pnpm-lock.yaml": "65f935a4073ba42316da815df828c59e6626cbbe9cb14e7ae65cf7d8f273fb08"
+  },
+  "externalEffects": {
+    "publicWebToolCalls": 3,
+    "cloudManagementCalls": 0,
+    "remoteSqlCalls": 0,
+    "deployments": 0,
+    "modelCalls": 0,
+    "kmsCalls": 0,
+    "dependencyChanges": 0,
+    "systemRuntimeUpdates": 0,
+    "reboots": 0,
+    "stagingBudgetReset": false
+  },
+  "cleanup": {
+    "ownedLocalBuildDirectoriesRetained": 10,
+    "allRegenerable": true,
+    "userOrCloudDataRemoved": false,
+    "liveToolSessionsRemaining": 0,
+    "testOwnedSocketTeardown": true,
+    "inMemoryPGliteClosed": true
+  },
+  "nextPriority": "Implement disabled candidate adoption and verify actual Node/Workers build resolution, without changing production defaults; native/Workers and resource-release gates stay open",
+  "sources": [
+    "https://github.com/porsager/postgres/issues/1189",
+    "https://github.com/porsager/postgres/pull/1218",
+    "https://developers.cloudflare.com/workers/best-practices/workers-best-practices/"
+  ],
+  "upstreamPr1218StatusAtRead": "OPEN_NOT_MERGED"
+}

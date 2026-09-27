@@ -1,0 +1,37 @@
+{
+  "version": "v334",
+  "date": "2026-09-24",
+  "status": "LOCAL_SCRIPTS_TYPECHECK_PASS_C03_OPEN",
+  "goalComplete": false,
+  "validation": {
+    "scriptsTypecheck": {
+      "command": "npx tsc -p scripts/tsconfig.json --noEmit",
+      "exitCode": 0
+    },
+    "criticalWriteSmoke": {
+      "command": "node --import tsx --test scripts/smoke/test-critical-write-paths.ts",
+      "tests": 4,
+      "pass": 4,
+      "fail": 0
+    },
+    "nativeDatabaseSmokeRunThisTurn": false,
+    "v333NativeReplayReportsRerunThisTurn": false
+  },
+  "migrationCounts": { "postgresFormal": 73 },
+  "gates": { "c03_7Complete": false, "c03_GComplete": false },
+  "sourceSha256": {
+    "scripts/db/cutover/catalog-readiness-probe-worker.ts": "50ba04a2583735261b3e59f606e34a7b542400a7d359af7d290d5291d6e47202",
+    "scripts/smoke/test-critical-write-paths.ts": "1f02e967012d5993df48ccadfba7dd0a186d3d3bd450616f97f7dbb3cdaedbe2",
+    "scripts/smoke/test-postgres-core-routes.ts": "e3c8a6a67a5ef77b64e20d16042e2b8e78d529ab3ba9746285189a9d0de0dc7d",
+    "scripts/smoke/test-storage-concurrent-charge.ts": "d916286898886d8a1cd5bfb8bd9e3ade1b1f67addf11ef1eaae75832d15cff00",
+    "docs/developers/architecture/implementation-evidence/C03-scripts-typecheck-v334.md": "4c153cb4f7edf44d886de30e4e7030857ef3c4c5cf267569b3ffe491cb358dbe"
+  },
+  "limits": {
+    "productionLockWindowVerified": false,
+    "retentionContractApproved": false,
+    "historicalHandlersFullyVerified": false,
+    "workersHyperdriveQueueVerified": false,
+    "remoteSqlExecutions": 0,
+    "deployments": 0
+  }
+}

@@ -82,7 +82,7 @@ async function applyPostgres(
 
 	return client.raw.begin(async (tx) => {
 		const inserted = await tx<IdentityInboxRow[]>`
-			INSERT INTO identity_event_inbox (
+			INSERT INTO cinatoken_gateway.identity_event_inbox (
 				source, event_id, event_type, aggregate_type, aggregate_id,
 				payload_sha256, processor_token, occurred_at, processed_at
 			) VALUES (
@@ -95,7 +95,7 @@ async function applyPostgres(
 		if (inserted.length === 0) {
 			const existing = await tx<IdentityInboxRow[]>`
 				SELECT payload_sha256, processor_token
-				FROM identity_event_inbox
+				FROM cinatoken_gateway.identity_event_inbox
 				WHERE source = ${SOURCE} AND event_id = ${event.id}
 			`;
 			return existing[0]?.payload_sha256 === payloadSha256 ? 'duplicate' : 'conflict';
@@ -103,7 +103,7 @@ async function applyPostgres(
 
 		if (!membership) {
 			await tx`
-				INSERT INTO organizations (
+				INSERT INTO cinatoken_gateway.organizations (
 					id, source, name, slug, status, metadata_json,
 					source_updated_at, created_at, updated_at
 				) VALUES (
@@ -131,7 +131,7 @@ async function applyPostgres(
 		}
 
 		await tx`
-			INSERT INTO organizations (
+			INSERT INTO cinatoken_gateway.organizations (
 				id, source, name, status, source_updated_at, created_at, updated_at
 			) VALUES (
 				${organization.id}, ${SOURCE}, ${organization.id}, 'pending',
@@ -140,12 +140,12 @@ async function applyPostgres(
 			ON CONFLICT (id) DO NOTHING
 		`;
 		await tx`
-			INSERT INTO organization_memberships (
+			INSERT INTO cinatoken_gateway.organization_memberships (
 				organization_id, subject, user_id, email, roles_json, status,
 				source_updated_at, created_at, updated_at
 			) VALUES (
 				${membership.organizationId}, ${membership.subject},
-				(SELECT id FROM users WHERE external_system = ${SOURCE} AND external_user_id = ${membership.subject}),
+				(SELECT id FROM cinatoken_gateway.users WHERE external_system = ${SOURCE} AND external_user_id = ${membership.subject}),
 				${membership.email}, ${membership.rolesJson}, ${membership.status},
 				${membership.sourceUpdatedAt}, ${processedAt}, ${processedAt}
 			)
@@ -505,8 +505,8 @@ export async function listOrganizationMembershipsForSubject(
 				o.id AS organization_id, o.name AS organization_name,
 				o.slug AS organization_slug, o.status AS organization_status,
 				m.subject, m.user_id, m.email, m.roles_json, m.status, m.source_updated_at
-			FROM organization_memberships m
-			JOIN organizations o ON o.id = m.organization_id
+			FROM cinatoken_gateway.organization_memberships m
+			JOIN cinatoken_gateway.organizations o ON o.id = m.organization_id
 			WHERE m.subject = ${subject} AND m.status = 'active' AND o.status IN ('active', 'pending')
 			ORDER BY o.name ASC, o.id ASC
 		`;
@@ -542,7 +542,7 @@ export async function linkOrganizationMembershipsToUser(
 	}
 	if (client.driver === 'postgres') {
 		await client.raw`
-			UPDATE organization_memberships
+			UPDATE cinatoken_gateway.organization_memberships
 			SET user_id = ${userId}, updated_at = ${nowIso}
 			WHERE subject = ${subject} AND (user_id IS NULL OR user_id = ${userId})
 		`;

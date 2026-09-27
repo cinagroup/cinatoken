@@ -15,7 +15,7 @@ import { orderByWeightedRandom } from './weighted-random';
 import { orderByWeightPriority } from './weight-priority';
 import { orderByWeightedRoundRobin } from './weighted-round-robin';
 
-export type { RouteOrderContext, RouteOrderStrategy } from './types';
+export type { RouteOrderCandidate, RouteOrderContext, RouteOrderStrategy } from './types';
 
 export const ROUTE_STRATEGIES: Record<RouteStrategyName, RouteOrderStrategy> = {
 	hash_affinity: orderByHashAffinity,

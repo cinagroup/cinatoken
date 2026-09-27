@@ -1,0 +1,93 @@
+{
+  "version": "v332",
+  "date": "2026-09-24",
+  "status": "LOCAL_REPLAY_SCALE_COMPAT_EDITS_SERVER_DEADLINE_SUBSET_PASS_PRODUCTION_DISABLED",
+  "C03": "DOING",
+  "goalComplete": false,
+  "validation": {
+    "replayScaleLock": {
+      "pass": 1,
+      "fail": 0,
+      "stages": 10,
+      "cleanup": "PASS"
+    },
+    "replayReservationRegression": {
+      "pass": 1,
+      "fail": 0,
+      "stages": 19,
+      "cleanup": "PASS"
+    },
+    "legacyParentRegression": {
+      "pass": 1,
+      "fail": 0,
+      "stages": 10,
+      "cleanup": "PASS"
+    },
+    "legacyHandlerCompatibility": {
+      "pass": 1,
+      "fail": 0,
+      "stages": 5,
+      "cleanup": "PASS"
+    },
+    "httpEditsFinancial": {
+      "pass": 1,
+      "fail": 0,
+      "stages": 4,
+      "cleanup": "PASS"
+    },
+    "serverDeadline": {
+      "pass": 1,
+      "fail": 0,
+      "stages": 3,
+      "cleanup": "PASS"
+    },
+    "workflowYamlParsed": true,
+    "linuxCiStepsRegistered": true,
+    "linuxCiRunVerified": false
+  },
+  "sourceSha256": {
+    ".github/workflows/proxy-dispatch-safety.yml": "020f0982519164befb831158e7840b56ed07ccfa81b3026e31578daae1c6a180",
+    "scripts/db/cutover/build-postgres-replay-reservation-backfill.mjs": "7341e35e29d9615364f7177922d44755f37c0a5a71a12b26668d9f94447e8f91",
+    "scripts/db/cutover/postgres-replay-scale-lock.native.test.mjs": "489aa8c2e52e1b16ac87bde81e4e25abf3400ca3caf01eff5a35d5035897f2f5",
+    "scripts/db/cutover/postgres-replay-reservations.native.test.mjs": "c79eef21f5b6ec06603a47f6bb00f978e7cdafe209968fa8762fe81223775bbc",
+    "scripts/db/cutover/postgres-legacy-parent-activation.native.test.mjs": "9e6f4dcacd9ef8a88eadcf89f2a4fcd7f1e3a9457543a72943c6223d466029ff",
+    "scripts/db/cutover/postgres-legacy-handler-compat.native.test.mjs": "b2336480b264962a192466955d19c70b89df37605be2c3f5253890372ab8bc4f",
+    "scripts/db/cutover/postgres-image-edits-http-financial.native.test.mjs": "bed5d0fc82cd4e2c38b21568e273492d16a9bec0a331f22a1dcba268c1980baa",
+    "scripts/db/cutover/postgres-recovery-server-deadline.native.test.mjs": "6d27e08adc36de4eb9db04f6e559e2c217bb05c4a32d5686883885cff319cafa",
+    "docs/developers/architecture/implementation-evidence/C03-postgres-native-replay-scale-lock-v332-report.json": "7fefe517244f2e49f563f96d411f649f3b710defe332929948813854adf806c8",
+    "docs/developers/architecture/implementation-evidence/C03-postgres-native-replay-reservations-v332-report.json": "2ba7516ec7ea87b739599d6e3d437bec6772c36dc1e9cec8dde3496bce852536",
+    "docs/developers/architecture/implementation-evidence/C03-postgres-native-legacy-parent-activation-v332-report.json": "274f4f75460ada0a06aafb0685df42035ea060b3428b4fe014b49f97940fa996",
+    "docs/developers/architecture/implementation-evidence/C03-postgres-native-legacy-handler-compat-v332-report.json": "f889ba22a0e2231ead310e4e5e3e719d94f7d1bee879e5552b78c5d93b5591f1",
+    "docs/developers/architecture/implementation-evidence/C03-postgres-native-http-edits-financial-v332-report.json": "2c7446218052b113b8da654f46e3e3d4fc481db63ed2545698bacdeb1d4c6a77",
+    "docs/developers/architecture/implementation-evidence/C03-postgres-native-server-deadline-v332-report.json": "f256d70d437ba6fc72d985089e008f3e09a1361698e92e6d8b57590883770b21",
+    "docs/developers/architecture/implementation-evidence/C03-postgres-replay-scale-lock-v332.md": "1dc8acdff64f9d296e8fe0f0f4136a0437cdd3be1bec279c97374bc21eb083cc",
+    "docs/developers/architecture/implementation-evidence/C03-postgres-legacy-handler-compat-v332.md": "0f765bb7d982d9e9e290c7644f1a84ed380836b84e9b2419971d1627115b5cef",
+    "docs/developers/architecture/implementation-evidence/C03-postgres-server-deadline-v332.md": "6d3c42e77ea226102f4dbc7e2b5024005d60940fe9000ade8fed868ffc7bffb4",
+    "docs/developers/architecture/implementation-evidence/C03-postgres-replay-cutover-compat-v332.md": "1e288f99a6917239a579483fbbedc19df97aa102a62a7a1fe92257f2d55bf646"
+  },
+  "boundaries": {
+    "formalMigrations": 73,
+    "replayAndParentSqlReviewOnly": true,
+    "productionRecoveryEnabled": false,
+    "syntheticLegacyLogRows": 25000,
+    "replayBackfillTotalRows": 25000,
+    "replayBackfillPages": 51,
+    "retentionPolicyApproved": false,
+    "retentionDeleteAllowed": false,
+    "sourceHistoryDeleted": false,
+    "representativeProductionLockWindowVerified": false,
+    "historicalDeployedHandlersVerified": false,
+    "realWorkersHyperdriveQueueVerified": false,
+    "physicalSocketCloseReceiptVerified": false,
+    "DBL_04_05_06_08Complete": false,
+    "C03_7Complete": false,
+    "C03_GComplete": false,
+    "C01_GComplete": false,
+    "C02_GComplete": false,
+    "remoteSqlCalls": 0,
+    "deployments": 0,
+    "cloudModelCalls": 0,
+    "cloudKmsCalls": 0,
+    "stagingUsd2CapReset": false
+  }
+}

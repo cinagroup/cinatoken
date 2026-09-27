@@ -1,0 +1,30 @@
+name: Images SSE dual recovery Access safety
+on:
+  pull_request:
+    paths: ['scripts/deploy/**', 'packages/proxy/**', 'packages/core/**', 'package-lock.json', '.github/workflows/images-sse-recovery-access-safety.yml']
+  push:
+    branches: [main, develop]
+    paths: ['scripts/deploy/**', 'packages/proxy/**', 'packages/core/**', 'package-lock.json', '.github/workflows/images-sse-recovery-access-safety.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: sse-recovery-access-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  local-contract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    strategy:
+      matrix:
+        node: [22, 24]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+          cache: npm
+      - run: npm ci
+      - run: npm run build:node-index -w @octafuse/core
+      # Offline adapters and real local SQLite; no cloud credentials, deployment, or live models.
+      - run: node node_modules/tsx/dist/cli.mjs --test scripts/deploy/staging-sse-recovery-access.test.mjs scripts/deploy/staging-sse-reconciliation.test.mjs packages/proxy/scripts/staging/images-sse-snapshot-reconciliation.test.mjs

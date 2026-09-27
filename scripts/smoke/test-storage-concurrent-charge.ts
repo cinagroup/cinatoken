@@ -12,6 +12,7 @@
 import { pathToFileURL } from 'node:url';
 import type { InsertRequestLogParams } from '../../packages/core/src/db/request-logs-types';
 import { resolveNodeDatabaseConfig } from '../../packages/core/src/storage/runtime-database-config';
+import { defaultWorkspaceId } from '../../packages/core/src/workspaces';
 import {
 	PRICING_AUDIT_JSON_SCHEMA_VERSION,
 	changedFieldsToJson,
@@ -24,8 +25,8 @@ import {
 	snapshotToJson,
 	snapshotWithOverrides,
 	userRowToSnapshot,
-} from '../../packages/core/src/index.ts';
-import type { UserRow } from '../../packages/core/src/types.ts';
+} from '../../packages/core/src/index';
+import type { UserRow } from '../../packages/core/src/types';
 
 function pricingAuditStub(): string {
 	return JSON.stringify({
@@ -66,6 +67,7 @@ function buildRequestLog(params: {
 	id: string;
 	userId: string;
 	apiKeyId: string;
+	workspaceId: string;
 	charged: number;
 }): InsertRequestLogParams {
 	const c = roundGatewayMoney(params.charged);
@@ -73,6 +75,7 @@ function buildRequestLog(params: {
 		id: params.id,
 		userId: params.userId,
 		apiKeyId: params.apiKeyId,
+		workspaceId: params.workspaceId,
 		userEmail: 'storage-smoke@local',
 		modelId: 'smoke-model',
 		providerId: 'smoke-provider',
@@ -117,7 +120,7 @@ export async function runStorageConcurrentChargeSmoke(): Promise<void> {
 	const driver = cfg.driver;
 
 	const { createPostgresStorageContext, createMySqlStorageContext } = await import(
-		'../../packages/core/src/storage/context.ts'
+		'../../packages/core/src/storage/context'
 	);
 	const ctx =
 		driver === 'mysql'
@@ -135,9 +138,12 @@ export async function runStorageConcurrentChargeSmoke(): Promise<void> {
 		budget_base: 0,
 		metadata: null,
 	});
+	const workspaceId = defaultWorkspaceId('personal', user.id);
 
-	const k1 = await createKey(repos, { user_id: user.id, name: 'c1', provision_reason: tag });
-	const k2 = await createKey(repos, { user_id: user.id, name: 'c2', provision_reason: tag });
+	const k1 = await createKey(repos, { user_id: user.id, workspace_id: workspaceId,
+		name: 'c1', provision_reason: tag });
+	const k2 = await createKey(repos, { user_id: user.id, workspace_id: workspaceId,
+		name: 'c2', provision_reason: tag });
 
 	const u0 = await repos.users.getById(user.id);
 	if (!u0) throw new Error('user missing after create');
@@ -156,6 +162,7 @@ export async function runStorageConcurrentChargeSmoke(): Promise<void> {
 				id: log1,
 				userId: user.id,
 				apiKeyId: k1.key_id,
+				workspaceId,
 				charged: c1,
 			}),
 			shouldChargeBudget: true,
@@ -169,6 +176,7 @@ export async function runStorageConcurrentChargeSmoke(): Promise<void> {
 				id: log2,
 				userId: user.id,
 				apiKeyId: k2.key_id,
+				workspaceId,
 				charged: c2,
 			}),
 			shouldChargeBudget: true,
@@ -190,10 +198,13 @@ export async function runStorageConcurrentChargeSmoke(): Promise<void> {
 	await repos.users.deleteUserHard(user.id);
 	console.log('%s cleanup deleteUserHard ok', tag);
 
-	if (ctx.client.driver === 'postgres') {
-		await ctx.client.raw.end({ timeout: 5 });
+	const databaseClient = ctx.client;
+	if (databaseClient.driver === 'postgres') {
+		await databaseClient.raw.end({ timeout: 5 });
+	} else if (databaseClient.driver === 'mysql') {
+		await databaseClient.raw.end();
 	} else {
-		await ctx.client.raw.end();
+		throw new Error('SQL storage smoke requires a PostgreSQL or MySQL client');
 	}
 	console.log('%s done', tag);
 }

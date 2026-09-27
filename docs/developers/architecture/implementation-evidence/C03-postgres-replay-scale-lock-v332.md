@@ -1,0 +1,17 @@
+# C03 replay backfill scale and lock fixture (v332)
+
+This review-only fixture ran against a newly owned PostgreSQL 18.6 cluster bound to `127.0.0.1`. It applied all 73 formal migrations, seeded 25,000 synthetic old `api_key_request_logs` rows, installed the existing request parent and replay proposals, backfilled in 500-ID transactions, and activated the seven-source parent gate. The [machine report](./C03-postgres-native-replay-scale-lock-v332-report.json) records source SHA-256 values, timings, plans and cleanup.
+
+## Finding and change
+
+The v331 generator's explicit `COLLATE "C"` caused a sequential scan and sort at the midpoint even though `api_key_request_logs.id` has a primary-key index and this fixture database has C collation. After `ANALYZE`, a read-only `EXPLAIN (ANALYZE, BUFFERS)` took 8.362 ms and touched 610 shared buffers for the old `DISTINCT` selector. The source-column-collation query without redundant `DISTINCT` used an Index Only Scan on `api_key_request_logs_pkey`, took 0.150 ms and touched 19 shared buffers. These are single-query local measurements, not a throughput projection.
+
+The [backfill generator](../../../../scripts/db/cutover/build-postgres-replay-reservation-backfill.mjs) now uses each source column's own collation consistently for the cursor comparison, order and returned cursor. The six sources whose `request_id` or `id` is a primary key omit `DISTINCT`; `request_dispatch_intents` retains it because `(request_id, attempt_index)` is its primary key. This source revision supersedes the v331 generator SHA-256 `e1c93a71cf17e1dbf8e46f728fd25fe12e5ea4f47899d5978755a59459a39d7e`; the v332 SHA-256 is `7341e35e29d9615364f7177922d44755f37c0a5a71a12b26668d9f94447e8f91`.
+
+## Results
+
+- The [scale fixture](../../../../scripts/db/cutover/postgres-replay-scale-lock.native.test.mjs) passed 1/1, with cleanup PASS. All 25,000 IDs were reserved across 51 pages (including the empty terminal page) after resuming from the first committed cursor. A deliberately rolled-back page left the reservation count unchanged. The timed backfill pages totaled 702.863 ms; median 13.538 ms, p95 18.470 ms, maximum 20.239 ms. The 25,000-row log relation plus indexes used 10,518,528 bytes; the reservation relation plus indexes used 3,186,688 bytes.
+- A held `ROW EXCLUSIVE` lock made expand abort after 2,019 ms and the seven-source gate abort after 2,005 ms with `55P03`. Both left their DDL uncommitted, then succeeded after lock release; the successful local gate transaction took 30.503 ms. A new low-sorting log written after cursor advancement was reserved by its trigger.
+- The [replay regression](./C03-postgres-native-replay-reservations-v332-report.json) and [legacy parent regression](./C03-postgres-native-legacy-parent-activation-v332-report.json) passed 2/2 with cleanup PASS against the changed generator. They cover the seven source queries, long log IDs, final anti-join recovery, old history preservation, and atomic parent activation.
+
+The fixture uses C database collation, 16 MB shared buffers and synthetic history on local hardware. It does not establish the target database's cardinality, collation, index health, concurrent traffic, lock budget or maintenance window. The final seven-source anti-join remains the safety check for missed rows and cursor races. No retention period, deletion, archive, remote migration or production switch is approved by this fixture.

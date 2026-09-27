@@ -2,6 +2,7 @@ import {
 	applyVertexOpenAiModelPrefix,
 	resolveProviderUpstreamSecret,
 	resolveUpstreamEndpoint,
+	type RequestAuxiliaryAuthBudget,
 } from '@octafuse/core';
 import type { RouteResult } from '../model-router';
 import type { ProxyDispatchMeta } from '../failover-dispatch';
@@ -13,6 +14,9 @@ import { gatewayErrorResponse } from '../gateway-error-response';
 import { markUpstreamOutcomeUnknown } from '../failover-dispatch';
 import { extractUpstreamRequestId, normalizeUpstreamId } from './upstream-request-id';
 import { assertTextUpstreamHttpUrl } from './text-upstream-url';
+import { ownUpstreamResponse } from './owned-upstream-response';
+import { withOwnedJsonUpload } from './with-owned-json-upload';
+import type { ResourceCompletion } from '../resource-completion';
 import {
 	preDispatchCancelledTextResponse,
 	readBoundedTextJsonObject,
@@ -21,6 +25,10 @@ import {
 
 /** Large enough for sizeable float vectors while remaining bounded inside a Worker isolate. */
 export const OPENAI_EMBEDDINGS_RESPONSE_MAX_BYTES = 32 * 1024 * 1024;
+
+function httpStatusMayHideAcceptedWork(status: number): boolean {
+	return (status >= 300 && status < 400) || status === 408 || status === 499 || status >= 500;
+}
 
 const EMPTY_USAGE_LOCAL: UsageFromStream = {
 	input_tokens: 0,
@@ -165,6 +173,7 @@ async function normalizeSuccessfulEmbeddingsResponse(
 	publicModelId: string | undefined,
 	publicCorrelationId?: string,
 	timing?: RequestTimingCollector | null,
+	requestSignal?: AbortSignal,
 ): Promise<{
 	response: Response;
 	usagePromise: Promise<UsageFromStream>;
@@ -172,7 +181,7 @@ async function normalizeSuccessfulEmbeddingsResponse(
 }> {
 	const contentType = response.headers.get('Content-Type') ?? '';
 	if (!contentType.toLowerCase().includes('application/json')) {
-		await response.body?.cancel('invalid_embeddings_content_type').catch(() => undefined);
+		void response.body?.cancel('invalid_embeddings_content_type').catch(() => undefined);
 		timing?.markStreamComplete();
 		return invalidEmbeddingSuccess(publicCorrelationId);
 	}
@@ -181,6 +190,7 @@ async function normalizeSuccessfulEmbeddingsResponse(
 		skin: 'chat',
 		requestId: publicCorrelationId,
 		maxBytes: OPENAI_EMBEDDINGS_RESPONSE_MAX_BYTES,
+		signal: requestSignal,
 	});
 	timing?.markStreamComplete();
 	if (!materialized.ok) {
@@ -228,10 +238,12 @@ export async function dispatchOpenAiEmbeddingsRoute(
 	attempt?: RequestTimingAttempt,
 	beforeFetch?: () => Promise<void>,
 	publicCorrelationId?: string,
+	auxiliaryAuth?: RequestAuxiliaryAuthBudget,
 ): Promise<{
 	response: Response;
 	usagePromise: Promise<UsageFromStream>;
 	upstreamRequestId: string | null;
+	resourceCompletion?: ResourceCompletion;
 	meta?: ProxyDispatchMeta;
 }> {
 	const url = resolveUpstreamEndpoint('openai', 'embeddings', route.providerEndpoints, {
@@ -245,50 +257,64 @@ export async function dispatchOpenAiEmbeddingsRoute(
 		meta: {
 			failoverForbidden: true,
 			gatewayGeneratedError: true,
+			admissionDeniedPreDispatch: true,
 		} satisfies ProxyDispatchMeta,
 	});
 	if (requestSignal?.aborted) return cancelledBeforeDispatch();
-	const { secret } = await resolveProviderUpstreamSecret(route.providerApiKey);
 	const requestBody = {
 		...buildRouteRequestBody(route, body),
 		model: applyVertexOpenAiModelPrefix(url, route.providerModelName),
 	};
-	const serializedBody = JSON.stringify(requestBody);
-	const headers = {
-		'Content-Type': 'application/json',
-		Authorization: `Bearer ${secret}`,
-	};
-	new Headers(headers);
-
-	if (requestSignal?.aborted) return cancelledBeforeDispatch();
-	await beforeFetch?.();
-	if (requestSignal?.aborted) return cancelledBeforeDispatch();
-	let response: Response;
-	try {
-		response = await fetch(url, {
-			method: 'POST',
-			headers,
-			body: serializedBody,
-			signal: requestSignal,
+	return withOwnedJsonUpload(requestBody, requestSignal, async upload => {
+		const { secret } = await resolveProviderUpstreamSecret(route.providerApiKey, {
+			signal: requestSignal, auxiliaryAuth,
 		});
-	} catch (error) {
-		throw markUpstreamOutcomeUnknown(error);
-	}
-	timing?.markAttemptHeaders(attempt, response.status);
-	const upstreamRequestId = extractUpstreamRequestId(response.headers);
-	if (!response.ok) {
-		return {
-			response,
-			usagePromise: Promise.resolve({ ...EMPTY_USAGE_LOCAL }),
-			upstreamRequestId,
+		const headers = {
+			'Content-Type': 'application/json',
+			'Content-Length': String(upload.contentLength),
+			Authorization: `Bearer ${secret}`,
 		};
-	}
-	const normalized = await normalizeSuccessfulEmbeddingsResponse(
-		response,
-		requestBody,
-		route.gatewayModelId,
-		publicCorrelationId,
-		timing,
-	);
-	return { ...normalized, upstreamRequestId };
+		new Headers(headers);
+
+		if (requestSignal?.aborted) return cancelledBeforeDispatch();
+		await beforeFetch?.();
+		if (requestSignal?.aborted) return cancelledBeforeDispatch();
+		let response: Response;
+		try {
+			const init: RequestInit & { duplex: 'half' } = {
+				method: 'POST',
+				headers,
+				body: upload.body,
+				duplex: 'half',
+				signal: requestSignal,
+				redirect: 'manual',
+			};
+			response = await fetch(url, init);
+		} catch (error) {
+			throw markUpstreamOutcomeUnknown(error);
+		}
+		const owned = ownUpstreamResponse(response, requestSignal);
+		response = owned.response;
+		timing?.markAttemptHeaders(attempt, response.status);
+		const upstreamRequestId = extractUpstreamRequestId(response.headers);
+		if (!response.ok) {
+			const outcomeUnknown = httpStatusMayHideAcceptedWork(response.status);
+			return {
+				response,
+				usagePromise: Promise.resolve({ ...EMPTY_USAGE_LOCAL }),
+				upstreamRequestId,
+				resourceCompletion: owned.resourceCompletion,
+				...(outcomeUnknown ? { meta: { upstreamOutcomeUnknown: true, failoverForbidden: true } } : {}),
+			};
+		}
+		const normalized = await normalizeSuccessfulEmbeddingsResponse(
+			response,
+			requestBody,
+			route.gatewayModelId,
+			publicCorrelationId,
+			timing,
+			requestSignal,
+		);
+		return { ...normalized, upstreamRequestId, resourceCompletion: owned.resourceCompletion };
+	});
 }

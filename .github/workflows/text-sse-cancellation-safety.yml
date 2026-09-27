@@ -1,0 +1,35 @@
+name: Text SSE cancellation wire safety
+
+on:
+  pull_request:
+    paths:
+      - 'packages/core/**'
+      - 'packages/proxy/**'
+      - 'package-lock.json'
+      - '.github/workflows/text-sse-cancellation-safety.yml'
+  push:
+    branches: [main, develop]
+    paths:
+      - 'packages/core/**'
+      - 'packages/proxy/**'
+      - 'package-lock.json'
+      - '.github/workflows/text-sse-cancellation-safety.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  loopback-wire:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+          cache: npm
+      - run: npm ci
+      - run: npm run build:node-index -w @octafuse/core
+      # Synthetic credentials, loopback-only HTTP; not Workers acceptance.
+      - run: node node_modules/tsx/dist/cli.mjs --test --test-reporter=tap --test-concurrency=1 packages/proxy/src/services/egress/text-sse-cancellation-wire.test.mjs

@@ -1,0 +1,58 @@
+{
+  "version": "v317",
+  "date": "2026-09-24",
+  "status": "LOCAL_NATIVE_PRODUCER_PREFLIGHT_AND_COMMIT_RESPONSE_LOSS_PASS_PRODUCTION_DISABLED",
+  "C03": "DOING",
+  "goalComplete": false,
+  "validation": {
+    "proposalPglite": { "pass": 2, "fail": 0 },
+    "transactionBundleUnit": { "pass": 2, "fail": 0 },
+    "transactionBundlePglite": { "pass": 2, "fail": 0 },
+    "nativeFactProducerProposals": { "pass": 1, "fail": 0 },
+    "nativeCommitResponseLoss": { "pass": 1, "fail": 0 },
+    "nativeFormalMigrationCount": 73,
+    "nativePostgresVersion": "18.6",
+    "postgresMigrationContract": true,
+    "privatePostgresProcessesAfterTests": 0,
+    "ownedRunDirectoriesAfterTests": 0
+  },
+  "sourceSha256": {
+    "packages/core/migrations-proposals/postgres/dispatch-intent-producer-definer.sql": "7bdecf0414d8aeea264ef05008e10804cb66a184505dc710ac47b283c37d4fe5",
+    "packages/core/migrations-proposals/postgres/settlement-outbox-producer-definer.sql": "c3995e07159d4fe0b2aac5ab96ee2d14e6e11fddc3bf9868d258d43620612f52",
+    "packages/core/src/storage/recovery/dispatch-intent-producer-definer.proposal.pglite.test.mjs": "586c32021bbff9cc0c3c8e8a360c49b361b56c19438fc9581a9a5411096c6e0f",
+    "packages/core/src/storage/recovery/settlement-outbox-producer-definer.proposal.pglite.test.mjs": "cd9cb5e30a2f54e63d9efe7c850c363a13f61708d5735783146517d640c55537",
+    "scripts/db/cutover/postgres-fact-producer-proposals-bundle.mjs": "1b6a20ee1f1382bb67a3b6baf47880e0d59b149be242f03c9b89d593180b6815",
+    "scripts/db/cutover/postgres-fact-producer-proposals-bundle.test.mjs": "4b5c513f0dddc51ad5049f4a05d2158ac24debe3e1c10ae1255b8f04f47593a5",
+    "scripts/db/cutover/postgres-fact-producer-proposals-bundle.pglite.test.mjs": "8379563e211360392ec71d3231b22c21730f300946a22c4abac373954b25fb93",
+    "scripts/db/cutover/postgres-fact-producer-proposals.native.test.mjs": "13c7a4f8f153e754e20ebb87d104b380552f8df5c21c9a3babc379ce6fb27c91",
+    "scripts/db/cutover/postgres-recovery-commit-response-loss.native.test.mjs": "8f2dfc984275e0f003d02bbcb91c37ea39b227fb98ac2cf0f9a667933d090635",
+    "scripts/db/cutover/grant-postgres-runtime.ts": "5f36b5e732607ae6c4ee172f7a0b63bcd7248b1e6aa6d24584a813e87b95799e"
+  },
+  "evidenceSha256": {
+    "docs/developers/architecture/implementation-evidence/C03-postgres-fact-producer-proposals-v317-report.json": "b3ae5e6333c7ad576432cf19d5ead3445dcc242713e3ad27b8f4c34cf2b333ae",
+    "docs/developers/architecture/implementation-evidence/C03-postgres-native-commit-response-loss-v317-report.json": "bcea67f8d7f310750d08261ee91addc3f9fc0baf83ee47282e87c31932f580d3"
+  },
+  "boundaries": {
+    "productionActivated": false,
+    "formalProducerMigrationAdded": false,
+    "proposalBundleExecutesSql": false,
+    "proposalBundleOneTransactionPgliteVerified": true,
+    "nativeProducerRoleSyntheticNoLogin": true,
+    "producerTenantAuthorizationVerified": false,
+    "producerConnectedToWorkerOrNode": false,
+    "financialPostgresProtocolCommitResponseLossVerified": true,
+    "financialTcpAckPacketLossVerified": false,
+    "representativeLegacyTrafficLatencyConfirmed": false,
+    "originConnectionBudgetConfirmed": false,
+    "workersHyperdriveQueueLifecycleVerified": false,
+    "systemRuntimeInstalled": false,
+    "privateLocalRuntimeUsed": true,
+    "remoteSqlCalls": 0,
+    "cloudManagementCalls": 0,
+    "deployments": 0,
+    "modelCalls": 0,
+    "kmsCalls": 0,
+    "cumulativeStagingCapUsd": 2,
+    "capReset": false
+  }
+}

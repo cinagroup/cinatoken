@@ -1,0 +1,270 @@
+{
+  "status": "PASS",
+  "cleanup": "PASS",
+  "binaryVersion": "postgres (PostgreSQL) 18.6",
+  "scope": "seeded existing-layout database in owned loopback PG; review-only proposals, no production identity or remote database",
+  "limitations": [
+    "Synthetic data volume and local latency do not establish a production maintenance window.",
+    "A held transaction after proposal SQL intentionally extends successful lock duration."
+  ],
+  "stages": [
+    {
+      "name": "populated-existing-layout",
+      "result": "PASS",
+      "formalMigrations": 73,
+      "seed": {
+        "legacy_logs": 512,
+        "intents": 0,
+        "facts": 0
+      },
+      "optionalLegacyGuardActivated": true
+    },
+    {
+      "name": "ordinary-baseline",
+      "result": "PASS",
+      "traffic": {
+        "completed": 3,
+        "statementTimeoutMs": 1200,
+        "maxReadMs": 15.16,
+        "maxWriteMs": 26.695,
+        "probes": [
+          {
+            "id": "upgrade-baseline-0-712623c1-1b8a-436f-b8db-7c16ca3ee1f6",
+            "readMs": 15.16,
+            "writeMs": 26.695
+          },
+          {
+            "id": "upgrade-baseline-1-85ca3a46-77ba-4d1b-b416-c1b4a724674e",
+            "readMs": 0.846,
+            "writeMs": 3.63
+          },
+          {
+            "id": "upgrade-baseline-2-d653ecdb-ec58-4223-b4ea-ea67da013251",
+            "readMs": 1.03,
+            "writeMs": 2.518
+          }
+        ]
+      }
+    },
+    {
+      "name": "intent-proposal-lock-timeout-rollback",
+      "result": "PASS",
+      "lockTimeoutSqlState": "55P03",
+      "observedTimeoutMs": 2017.916,
+      "lockEvidence": {
+        "relation": "cinatoken_gateway.request_dispatch_intents",
+        "waiterPid": 15852,
+        "holderPid": 14420,
+        "waitEventType": "Lock",
+        "waitEvent": "relation",
+        "blockingPids": "{14420}",
+        "locks": [
+          {
+            "pid": 14420,
+            "locktype": "relation",
+            "mode": "AccessShareLock",
+            "granted": true
+          },
+          {
+            "pid": 14420,
+            "locktype": "relation",
+            "mode": "RowExclusiveLock",
+            "granted": true
+          },
+          {
+            "pid": 15852,
+            "locktype": "relation",
+            "mode": "ShareRowExclusiveLock",
+            "granted": false
+          }
+        ]
+      },
+      "ordinaryTrafficDuringWait": {
+        "completed": 3,
+        "statementTimeoutMs": 1200,
+        "maxReadMs": 0.926,
+        "maxWriteMs": 1.892,
+        "probes": [
+          {
+            "id": "upgrade-intent-wait-0-8c739ecb-84da-446e-8295-185c2074ed0d",
+            "readMs": 0.926,
+            "writeMs": 1.892
+          },
+          {
+            "id": "upgrade-intent-wait-1-2f452bce-b03e-48ca-9ead-8bc3c05d8b67",
+            "readMs": 0.527,
+            "writeMs": 1.667
+          },
+          {
+            "id": "upgrade-intent-wait-2-30d859a0-7316-4aa6-8a89-fe06737e4782",
+            "readMs": 0.659,
+            "writeMs": 1.872
+          }
+        ]
+      },
+      "originalFunctionUnchanged": true,
+      "heldWriterCommitted": true
+    },
+    {
+      "name": "outbox-proposal-lock-timeout-rollback",
+      "result": "PASS",
+      "lockTimeoutSqlState": "55P03",
+      "observedTimeoutMs": 2017.388,
+      "lockEvidence": {
+        "relation": "cinatoken_gateway.request_usage_settlements",
+        "waiterPid": 15852,
+        "holderPid": 14420,
+        "waitEventType": "Lock",
+        "waitEvent": "relation",
+        "blockingPids": "{14420}",
+        "locks": [
+          {
+            "pid": 14420,
+            "locktype": "relation",
+            "mode": "AccessShareLock",
+            "granted": true
+          },
+          {
+            "pid": 14420,
+            "locktype": "relation",
+            "mode": "RowExclusiveLock",
+            "granted": true
+          },
+          {
+            "pid": 14420,
+            "locktype": "relation",
+            "mode": "RowShareLock",
+            "granted": true
+          },
+          {
+            "pid": 15852,
+            "locktype": "relation",
+            "mode": "ShareRowExclusiveLock",
+            "granted": false
+          }
+        ]
+      },
+      "ordinaryTrafficDuringWait": {
+        "completed": 3,
+        "statementTimeoutMs": 1200,
+        "maxReadMs": 0.896,
+        "maxWriteMs": 1.568,
+        "probes": [
+          {
+            "id": "upgrade-outbox-wait-0-7a1fc77c-8c78-4257-a971-ccd1ffb5cb1e",
+            "readMs": 0.796,
+            "writeMs": 1.493
+          },
+          {
+            "id": "upgrade-outbox-wait-1-f6d2af91-ebfd-4031-ac6b-b0336b0d3066",
+            "readMs": 0.596,
+            "writeMs": 1.543
+          },
+          {
+            "id": "upgrade-outbox-wait-2-2352ce45-d016-4649-bee9-133d1edee8d1",
+            "readMs": 0.896,
+            "writeMs": 1.568
+          }
+        ]
+      },
+      "originalFunctionUnchanged": true,
+      "heldWriterCommitted": true
+    },
+    {
+      "name": "paired-proposals-single-transaction",
+      "result": "PASS",
+      "proposalSqlMs": 30.879,
+      "totalUpgradeMs": 43.377,
+      "intentionallyHeldForTrafficProbe": true,
+      "heldLocks": [
+        {
+          "relation": "cinatoken_gateway.request_dispatch_intents",
+          "mode": "ShareRowExclusiveLock",
+          "granted": true
+        },
+        {
+          "relation": "cinatoken_gateway.request_usage_settlement_outbox",
+          "mode": "ShareRowExclusiveLock",
+          "granted": true
+        },
+        {
+          "relation": "cinatoken_gateway.request_usage_settlements",
+          "mode": "ShareRowExclusiveLock",
+          "granted": true
+        }
+      ],
+      "ordinaryTrafficDuringHold": {
+        "completed": 3,
+        "statementTimeoutMs": 1200,
+        "maxReadMs": 0.878,
+        "maxWriteMs": 1.864,
+        "probes": [
+          {
+            "id": "upgrade-bundle-held-0-39a7fd9b-d96b-4523-9002-605dbeb88b62",
+            "readMs": 0.878,
+            "writeMs": 1.864
+          },
+          {
+            "id": "upgrade-bundle-held-1-ecbb0f05-c5e0-44a3-b71c-849b2056b1b8",
+            "readMs": 0.711,
+            "writeMs": 1.506
+          },
+          {
+            "id": "upgrade-bundle-held-2-6c8484be-893a-4cbc-b243-2dc75cde2a5d",
+            "readMs": 0.579,
+            "writeMs": 1.409
+          }
+        ]
+      },
+      "finalFunctions": {
+        "intent": {
+          "security_definer": true,
+          "source_md5": "9e7803525530eb0ee8dbbd5729f5ce4d",
+          "runtime_execute": false
+        },
+        "outbox": {
+          "security_definer": true,
+          "source_md5": "b6cacd63c11398551c262a436b9ae664",
+          "runtime_execute": false
+        }
+      }
+    },
+    {
+      "name": "ordinary-after-upgrade",
+      "result": "PASS",
+      "traffic": {
+        "completed": 3,
+        "statementTimeoutMs": 1200,
+        "maxReadMs": 0.633,
+        "maxWriteMs": 1.514,
+        "probes": [
+          {
+            "id": "upgrade-after-0-a7212b30-8a57-4a06-9616-8cc38fd98117",
+            "readMs": 0.622,
+            "writeMs": 1.514
+          },
+          {
+            "id": "upgrade-after-1-3b9ad8e9-5e86-41e1-9a4e-b68df4f3e34a",
+            "readMs": 0.633,
+            "writeMs": 1.354
+          },
+          {
+            "id": "upgrade-after-2-5cce615f-8ecc-49be-b543-d75bd74159c1",
+            "readMs": 0.587,
+            "writeMs": 1.208
+          }
+        ]
+      }
+    }
+  ],
+  "sourceSha256": {
+    "nativeTest": "17b0d8323c7d10739f73396c934e537dafcb07326425c385a3d3dfefaed7d616",
+    "optionalGuard": "24a601dbafd66f16cdd14dcc81017bc26199c6b833e311d389cdb07103010763",
+    "intentProposal": "7bdecf0414d8aeea264ef05008e10804cb66a184505dc710ac47b283c37d4fe5",
+    "outboxProposal": "c3995e07159d4fe0b2aac5ab96ee2d14e6e11fddc3bf9868d258d43620612f52",
+    "runtimeGrant": "5f36b5e732607ae6c4ee172f7a0b63bcd7248b1e6aa6d24584a813e87b95799e",
+    "nativeCluster": "6b5923be8d3bdcd061033eed1af2f67f3b87fa2fca1f2cf0a0b2eb0eb2cb8d2a",
+    "formalMigrationCorpus": "23afef61a8a670e0af8c90e3a138f522e6b283b454e380a592bf85bca83108dc"
+  },
+  "serverVersionNum": 180006
+}

@@ -1,0 +1,2258 @@
+{
+  "version": "Checklist v1.61",
+  "date": "2026-09-07",
+  "baseline": "Checklist v1.60",
+  "status": "STAGING_PASS_AUDIT_FAULT_ROLLBACK_RECOVERY_ONLY",
+  "c02GatePassed": false,
+  "files": [
+    {
+      "path": "packages/core/migrations-proposals/d1/request-dispatch-intents.sql",
+      "sha256": "f3f9df3723fbccfd62a7f566804abcb591ee03f8d20bab47f60cb623ee082083"
+    },
+    {
+      "path": "packages/core/migrations-proposals/d1/request-usage-recovery-jobs.sql",
+      "sha256": "4b1dfa909dc6c4abc4aaec929d12ac368adb1877ae975c7a00f35a6b9f01652d"
+    },
+    {
+      "path": "packages/core/migrations-proposals/d1/request-usage-settlements.sql",
+      "sha256": "d25ffb168ec74112f602befec2057b96456e0f2291fd2179d6e131f16ffbcb04"
+    },
+    {
+      "path": "packages/core/package.json",
+      "sha256": "71b4125dfa443e7311f8cc6034a34cb3ec35f9d4c736720339cdfa5de15bbc46"
+    },
+    {
+      "path": "packages/core/src/db/d1/critical-writes.impl.ts",
+      "sha256": "145df8a9f579573664f0dbec08a833d5c80f0e3bb0f021cb6ce3c5dd157053bb"
+    },
+    {
+      "path": "packages/core/src/storage/database-client.ts",
+      "sha256": "8b4f5abeec30c82215ab99e319e10e52e9cca99c70ca85ef08a97ed47f1c8881"
+    },
+    {
+      "path": "packages/core/src/storage/drizzle/client-d1.ts",
+      "sha256": "3f44525de77b026f42cf3651399f6247265cd5e55d74999f1c71e1cb58b9d567"
+    },
+    {
+      "path": "packages/core/src/storage/recovery/dispatch-intent-d1.ts",
+      "sha256": "7c8ef20c11eaebe95c0aaa10073ab8e1c502e3143ae0b76825a71e43fd534a5a"
+    },
+    {
+      "path": "packages/core/src/storage/recovery/run-usage-recovery-d1.ts",
+      "sha256": "c70a404a5475a5113ce77f52c183dc054afacda80b595ac8e21f87c0a98f1d53"
+    },
+    {
+      "path": "packages/core/src/storage/recovery/settlement-recovery-types.ts",
+      "sha256": "585e8d21450882602889b78478769ffa193bfb10d14026e0bab9e4ab6f0fe429"
+    },
+    {
+      "path": "packages/core/src/storage/recovery/usage-recovery-jobs-d1.ts",
+      "sha256": "74fdc5c1ae90040b3c40ece3f7fc193375c0f9b12b73963dd314d84a95eb869a"
+    },
+    {
+      "path": "packages/core/src/storage/recovery/usage-recovery-schema-artifact.ts",
+      "sha256": "c56b50f727c5a1a3046c915a4bd2960d6dd68934e8e346e666d82069d49fc3ce"
+    },
+    {
+      "path": "packages/core/src/storage/recovery/usage-recovery-schema-d1.ts",
+      "sha256": "3dfb09903da0208ce74cb35a79baac6b3951a40a855ded5379d6503aac92ade0"
+    },
+    {
+      "path": "packages/core/src/storage/recovery/usage-recovery-schema.d1.test.mjs",
+      "sha256": "f8d627a9b6d2fd2150db4f1d495a341a89b883efd56c06b4788c543eca9e1184"
+    },
+    {
+      "path": "packages/core/src/storage/recovery/usage-recovery.d1.test.mjs",
+      "sha256": "a580ea62133306e66237b2d4e71f04b701a998c287484187f4473cdb21dcacbe"
+    },
+    {
+      "path": "packages/core/src/storage/recovery/usage-recovery.fixture.mjs",
+      "sha256": "4444e608d1612f023ffd800293984f2cf8acf2d756d24869fd987489b30e994d"
+    },
+    {
+      "path": "packages/core/src/storage/recovery/usage-settlement-codec.ts",
+      "sha256": "7483200d4100963bb16c2ff74957d716fca09e8b20e11888ccf41b2566c4ef90"
+    },
+    {
+      "path": "packages/core/src/storage/recovery/usage-settlement-d1.ts",
+      "sha256": "3be75d8f00ec668c7e4edc372726b3abbba2079710648a55f391cf4d280e01fe"
+    },
+    {
+      "path": "packages/core/src/storage/recovery/usage-settlement-test-support.mjs",
+      "sha256": "abde9fc68c54844679da84f6a9cc48ac149e594a95b00c22732214433f30165b"
+    },
+    {
+      "path": "packages/core/src/storage/recovery/usage-settlement.d1.test.mjs",
+      "sha256": "fd18178f4af2f838b60fb4ae224d6e8703a1b2013d91f100e5d9f626065a86c2"
+    },
+    {
+      "path": "packages/core/src/storage/recovery/usage-settlement.fixture.mjs",
+      "sha256": "efa865ed3b55d9e9b3e590966c8b39be65c9d3320e6b4a727a0d229b59f66f07"
+    },
+    {
+      "path": "packages/core/tsconfig.dispatch-intent.json",
+      "sha256": "0f69e38e22681b5a05e67424e34153357c019c1b30d335d09d34f440dad3b9e3"
+    },
+    {
+      "path": "packages/proxy/package.json",
+      "sha256": "29fe94ced9257b680b003b60713d5634872493a98a469f72fe23e7df17e0faa8"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/images-recovery-chain.test.mjs",
+      "sha256": "f30df5058815980317f7ca16df385527e87bf0dc629c38466c39e1041afb3ad8"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/images-recovery-combinations.test.mjs",
+      "sha256": "a8c81edb42bca6db5c715e671c3b283172c04889b38d6f3cc98346e6f6fb825a"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/images-recovery-process.fixture.mjs",
+      "sha256": "e9fac590afd4ede317971de4b9d6ae440993abd057da36187da02421eaa49b22"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/images-recovery-process.test.mjs",
+      "sha256": "401b8a16e72b5182595a11de43b76229787d2046e6d307c6e82401ec933b197e"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/images-recovery-schema.test.mjs",
+      "sha256": "8d117058221993f1a9ba8e62619fbba2e5ac64420d60e72411ad5bd81e72e254"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/images-recovery-test-support.mjs",
+      "sha256": "131a35c12c10662229540b4abb40d0e541bcc051444023aeeb280f5d4f4b8dfe"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/measure-recovery-workset.mjs",
+      "sha256": "73e848997dd2334be90a656f18ccf5ea5e9ca0e8cd9c1ee2428f8915e6add9e6"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/tsconfig.json",
+      "sha256": "7822fb2eefd36af2218cabb11893a00d70d6fd98d6a8ba03f100d6e5fe438ed9"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/usage-recovery-control-env.d.ts",
+      "sha256": "297ec248927a4d0c296c24a103859db5cbe86f6a93eee52ec31a31a8a0fb14ad"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/usage-recovery-control-images.test.mjs",
+      "sha256": "efee7c10a7566961a4ad6fb2b90b6f40339c61094ffce40aa7d183dd9d37a3fd"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/usage-recovery-control-types.contract.ts",
+      "sha256": "6700255e1fcbd379cd8d950db85c18f6c1b6782229f3b6ca4053b1cfd1c5b659"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/usage-recovery-control-worker.ts",
+      "sha256": "9ee47eb3c021ae403ed81fb0b657efe004029d1a61cd896b01de115351531ae1"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/usage-recovery-control.test.mjs",
+      "sha256": "7c3912cb48ee51a42626b46b30e8519e21847c4247e52fa18b90fd9344dd7e45"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/usage-recovery-env.d.ts",
+      "sha256": "b9b9cf625b6709b92e1ddd7696032c0bd6df6bfb0d026e40d96e6f838d85cc9c"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/usage-recovery-host.test.mjs",
+      "sha256": "1fe28508e45df1e51e9562282b8228f24c412ee40baa6a795a0642e25e4922fc"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/usage-recovery-worker.ts",
+      "sha256": "3271c74ebe2df34e1ce962dda52f3a695fbfd904a8d4a1fc072cdb14e8bb07c6"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/wrangler.usage-recovery-control.jsonc",
+      "sha256": "f2e75e6f3625df0f666e2edd5c076d80707ba4eedfd382b29ffe87ed5ceea245"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/wrangler.usage-recovery.jsonc",
+      "sha256": "77dbd0f0096f50e5663554c09f9960e38042d520badfd448aa35fca8b69d3a15"
+    },
+    {
+      "path": "packages/proxy/src/app.ts",
+      "sha256": "ccead19795044c654062e02410fbfbaa4ce49cc5b1de8109773b6e6c24aab2d7"
+    },
+    {
+      "path": "packages/proxy/src/routes/v1/images.ts",
+      "sha256": "5b7b351a071e6aa5860bd61c0586653f12424aa8ed389fb4992d5c30c9b900d4"
+    },
+    {
+      "path": "packages/proxy/src/runtime/node.ts",
+      "sha256": "ac3e0f5bd8ab01daec890382354982afee65c3ecb70faeca4e12dc8a42185d14"
+    },
+    {
+      "path": "packages/proxy/src/runtime/usage-recovery-control.ts",
+      "sha256": "9e35e92e449f8df06c35840803dacc8bb26bb45eb8d25ec087a6a7358be96192"
+    },
+    {
+      "path": "packages/proxy/src/runtime/usage-recovery-host.ts",
+      "sha256": "5f86289e619ea50f07adb4102cf62d448ce81ec185532ca0df49668d290b9eb1"
+    },
+    {
+      "path": "packages/proxy/src/runtime/worker-handler.ts",
+      "sha256": "716c906cbd62332c5da61fce3c9cbe59ba0bed8947d40062449b46e630fa63f2"
+    },
+    {
+      "path": "packages/proxy/src/runtime/workers.ts",
+      "sha256": "8d3430ad8248daf970f177091030287ff95ecefd4e2a91b0510a45226bb842dc"
+    },
+    {
+      "path": "packages/proxy/src/services/gateway-error-codes.ts",
+      "sha256": "f8e4be5e446ed55982c176fa09bbd090350ff3c361965ef67c9247034e865d10"
+    },
+    {
+      "path": "packages/proxy/src/services/gateway-error-response.test.ts",
+      "sha256": "0437688397e27743b1b8743c5fd7d2b4103e37e31d4c588bf7ea1b9fc501a0a4"
+    },
+    {
+      "path": "packages/proxy/src/services/generation-metadata-snapshot.ts",
+      "sha256": "4c2b364ca1e8d87257f659b0a119acefee458e7dfab599a1ffc4b2bc64959dd0"
+    },
+    {
+      "path": "packages/proxy/src/services/generation-request-context.ts",
+      "sha256": "55c1a384b82b5f2352bf7b48c3fec0e26e69a20570494451b55cccc7f96be35d"
+    },
+    {
+      "path": "packages/proxy/src/services/image-usage-charge.test.ts",
+      "sha256": "c300aafef7666fdf15935ab1f44e1431f3820973fea85ec081c8c2cad533abb1"
+    },
+    {
+      "path": "packages/proxy/src/services/image-usage-charge.ts",
+      "sha256": "39d773d01483e1d393abfd329f54b088f61ac97d79a279665a1ccb8e039b4525"
+    },
+    {
+      "path": "packages/proxy/src/services/image-usage-recovery.ts",
+      "sha256": "713252d956bd64efaa6746243f9e779fca538732a1e9b377d27ae041c257e129"
+    },
+    {
+      "path": "packages/proxy/src/services/openrouter-error-protocol.ts",
+      "sha256": "ca1a363256a1ef7d4839c8eec017189726dc1904a0c60229e91c98c6338877d4"
+    },
+    {
+      "path": "packages/proxy/src/services/request-capacity.ts",
+      "sha256": "871875b50ea4730a3d7ad415a8de983a0044850ffa3139e57ec436facce1c10f"
+    },
+    {
+      "path": "packages/proxy/src/test-support/sqlite-d1.ts",
+      "sha256": "e28c1f8efe6dc96301307c8997dd02d402eac9431cfa8ece9f6b5aa572b2214b"
+    },
+    {
+      "path": "packages/proxy/wrangler.base.jsonc",
+      "sha256": "0687684a6870256283885ad5a1e4f154943c1909d0b866105aa5b8143f107833"
+    },
+    {
+      "path": "scripts/deploy/isolate-recovery-control-types.mjs",
+      "sha256": "f7cd7bd934764a30c0df2bf49a63a5448bd94487d0b242c5176a333552d27606"
+    },
+    {
+      "path": "scripts/deploy/prepare-proxy-staging.mjs",
+      "sha256": "37b089706d9c7ec33fdb7f009aec2a477d02f07151d51e8e3a189e8221fea7ef"
+    },
+    {
+      "path": "scripts/deploy/prepare-staging-recovery-experiment.mjs",
+      "sha256": "bef7a665093291992d9b26d5511d16c48037079895e64652b78f4dc830d6f249"
+    },
+    {
+      "path": "scripts/deploy/prepare-staging-recovery-experiment.test.mjs",
+      "sha256": "0781e297cd4a92aa173595fe7706f595f8379a5ebdc2748cf8f40a5fffc0774f"
+    },
+    {
+      "path": "scripts/deploy/validate-staging-usage-recovery.mjs",
+      "sha256": "d9988e4a4d5f484846ada1729916851ad1ff4d08f35a0e47ba3066cbc2d8e3dc"
+    },
+    {
+      "path": "scripts/deploy/validate-staging-usage-recovery.test.mjs",
+      "sha256": "8eec01a21cd6f4e409086a3982a8772d864eb0a98d88f1d2fb437ced8ced0ae7"
+    },
+    {
+      "path": "scripts/deploy/verify-recovery-schema-artifact.mjs",
+      "sha256": "927d8b55f264bee4e1045358c84f72a2382f03e2c6b815b5ad43229167644f5f"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/usage-recovery-paid-fixture.mjs",
+      "sha256": "e1eeabfc7a60d14d9365aa1c2a8c133f04134ed32fce28463e071e2a5cebbaf6"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/usage-recovery-paid-fixture.test.mjs",
+      "sha256": "51e61fba6eafae6556a4d12ce6e05f6c06303dd431c385ce635b43c8c0b3e641"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/usage-recovery-audit-fault.mjs",
+      "sha256": "ab4cea5c16be0faace56297c22c46a81302fb42719775296aaf51e115d5ee191"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/usage-recovery-audit-fault.test.mjs",
+      "sha256": "ea488f56f39d728f5367ac7e75b19a7772bf4b67af07d383fcdbdd91120b9640"
+    }
+  ],
+  "changedPriorFiles": [
+    "packages/proxy/package.json",
+    "packages/proxy/scripts/staging/usage-recovery-paid-fixture.mjs"
+  ],
+  "addedFiles": [
+    "packages/proxy/scripts/staging/usage-recovery-audit-fault.mjs",
+    "packages/proxy/scripts/staging/usage-recovery-audit-fault.test.mjs"
+  ],
+  "runtimeChanges": 0,
+  "permanentSchemaChanges": 0,
+  "temporarySchemaObjectsCreated": 1,
+  "temporarySchemaObjectsRemoved": 1,
+  "deployments": 0,
+  "cloud": {
+    "startedAt": "2026-09-07T09:10:27.461Z",
+    "firstRoundUsdCap": 2,
+    "capReset": false,
+    "modelCalls": 0,
+    "kmsCalls": 0,
+    "productionWrites": 0,
+    "fixture": {
+      "version": 1,
+      "id": "staging-recovery-76381950-86b8-437f-85fe-1349d10ff7f6",
+      "userId": "staging-recovery-76381950-86b8-437f-85fe-1349d10ff7f6-user",
+      "keyId": "staging-recovery-76381950-86b8-437f-85fe-1349d10ff7f6-key",
+      "workspaceId": "staging-recovery-76381950-86b8-437f-85fe-1349d10ff7f6-workspace",
+      "syntheticFundsOnly": true,
+      "cases": [
+        {
+          "requestId": "gen-d04ddc9f-fc29-4dac-9edc-c248040713a2",
+          "modelId": "staging-recovery-76381950-86b8-437f-85fe-1349d10ff7f6-model-0",
+          "cost": 0,
+          "recordedAt": "2026-09-06T23:59:59.000Z",
+          "payloadSha256": "e04207a548712dd647ea3be079097f432d9f4bc61b1a14b77e33857231e2cda8",
+          "payloadBytes": 2436
+        },
+        {
+          "requestId": "gen-ee88e881-b2a6-467b-b52a-bd53def7f717",
+          "modelId": "staging-recovery-76381950-86b8-437f-85fe-1349d10ff7f6-model-1",
+          "cost": 0.1,
+          "recordedAt": "2026-09-06T23:59:59.000Z",
+          "payloadSha256": "c8ea213c27c0b19f20e1b53e0e7aa47310302934d2a2db105a2627327f5248e5",
+          "payloadBytes": 2564
+        },
+        {
+          "requestId": "gen-de2265c2-76ee-465a-b7f4-648006111222",
+          "modelId": "staging-recovery-76381950-86b8-437f-85fe-1349d10ff7f6-model-2",
+          "cost": 0.2,
+          "recordedAt": "2026-09-06T23:59:59.000Z",
+          "payloadSha256": "98d857022d3b9fbff3f21bf0fbfdc9adf88708bda4ffbeb9fbf342918a74aa35",
+          "payloadBytes": 2564
+        }
+      ],
+      "expectedSpentMicros": 300000,
+      "expectedReservedMicros": 1000000,
+      "seedSha256": "742863280fb7bb0d6a62ce13d9b710217f982ecd981e026eef9dffe88299b8fc",
+      "seedStatements": 18
+    },
+    "fault": {
+      "name": "staging_recovery_audit_fault_7638195086b8437f85fe1349d10ff7f6",
+      "targetRequestId": "gen-ee88e881-b2a6-467b-b52a-bd53def7f717",
+      "create": "CREATE TRIGGER staging_recovery_audit_fault_7638195086b8437f85fe1349d10ff7f6 BEFORE INSERT ON user_audit_logs\nWHEN NEW.request_log_id='gen-ee88e881-b2a6-467b-b52a-bd53def7f717' AND NEW.user_id='staging-recovery-76381950-86b8-437f-85fe-1349d10ff7f6-user' AND NEW.api_key_id='staging-recovery-76381950-86b8-437f-85fe-1349d10ff7f6-key'\nBEGIN SELECT RAISE(ABORT,'staging_recovery_audit_fault'); END",
+      "drop": "DROP TRIGGER staging_recovery_audit_fault_7638195086b8437f85fe1349d10ff7f6"
+    },
+    "operations": [
+      {
+        "path": "/workers/scripts/cinatoken-proxy/settings",
+        "method": "GET",
+        "status": 200,
+        "success": true,
+        "codes": []
+      },
+      {
+        "path": "/workers/scripts/cinatoken-admin/settings",
+        "method": "GET",
+        "status": 200,
+        "success": true,
+        "codes": []
+      },
+      {
+        "path": "/workers/scripts/cinatoken-chain-worker/settings",
+        "method": "GET",
+        "status": 200,
+        "success": true,
+        "codes": []
+      },
+      {
+        "path": "/workers/scripts/cinatoken-proxy-staging/subdomain",
+        "method": "GET",
+        "status": 200,
+        "success": true,
+        "codes": []
+      },
+      {
+        "path": "/workers/scripts/cinatoken-staging-images-upstream/subdomain",
+        "method": "GET",
+        "status": 200,
+        "success": true,
+        "codes": []
+      },
+      {
+        "path": "/workers/scripts/cinatoken-staging-usage-recovery/subdomain",
+        "method": "GET",
+        "status": 200,
+        "success": true,
+        "codes": []
+      },
+      {
+        "path": "/workers/scripts/cinatoken-staging-recovery-control/subdomain",
+        "method": "GET",
+        "status": 200,
+        "success": true,
+        "codes": []
+      },
+      {
+        "path": "/workers/scripts/cinatoken-staging-usage-recovery/settings",
+        "method": "GET",
+        "status": 200,
+        "success": true,
+        "codes": []
+      },
+      {
+        "path": "/workers/scripts/cinatoken-staging-usage-recovery/deployments",
+        "method": "GET",
+        "status": 200,
+        "success": true,
+        "codes": []
+      },
+      {
+        "path": "/workers/scripts/cinatoken-staging-recovery-control/settings",
+        "method": "GET",
+        "status": 200,
+        "success": true,
+        "codes": []
+      },
+      {
+        "path": "/workers/scripts/cinatoken-staging-recovery-control/deployments",
+        "method": "GET",
+        "status": 200,
+        "success": true,
+        "codes": []
+      },
+      {
+        "path": "/access/apps/2ed1f9a7-7eb3-45ad-8cdc-392f7ae96bc0",
+        "method": "GET",
+        "status": 200,
+        "success": true,
+        "codes": []
+      },
+      {
+        "path": "/access/apps?per_page=100",
+        "method": "GET",
+        "status": 200,
+        "success": true,
+        "codes": []
+      },
+      {
+        "path": "/d1/database/6bf5d41e-fe0b-4afa-9f67-ff5cf82e23d1/query",
+        "method": "POST",
+        "status": 200,
+        "success": true,
+        "codes": []
+      },
+      {
+        "path": "/d1/database/6bf5d41e-fe0b-4afa-9f67-ff5cf82e23d1/query",
+        "method": "POST",
+        "status": 200,
+        "success": true,
+        "codes": []
+      },
+      {
+        "path": "/d1/database/6bf5d41e-fe0b-4afa-9f67-ff5cf82e23d1/query",
+        "method": "POST",
+        "status": 200,
+        "success": true,
+        "codes": []
+      },
+      {
+        "path": "/d1/database/6bf5d41e-fe0b-4afa-9f67-ff5cf82e23d1/query",
+        "method": "POST",
+        "status": 200,
+        "success": true,
+        "codes": []
+      },
+      {
+        "path": "/d1/database/6bf5d41e-fe0b-4afa-9f67-ff5cf82e23d1/query",
+        "method": "POST",
+        "status": 200,
+        "success": true,
+        "codes": []
+      },
+      {
+        "path": "/d1/database/6bf5d41e-fe0b-4afa-9f67-ff5cf82e23d1/query",
+        "method": "POST",
+        "status": 200,
+        "success": true,
+        "codes": []
+      },
+      {
+        "path": "/d1/database/6bf5d41e-fe0b-4afa-9f67-ff5cf82e23d1/query",
+        "method": "POST",
+        "status": 200,
+        "success": true,
+        "codes": []
+      },
+      {
+        "path": "/d1/database/6bf5d41e-fe0b-4afa-9f67-ff5cf82e23d1/query",
+        "method": "POST",
+        "status": 200,
+        "success": true,
+        "codes": []
+      },
+      {
+        "path": "/d1/database/6bf5d41e-fe0b-4afa-9f67-ff5cf82e23d1/query",
+        "method": "POST",
+        "status": 200,
+        "success": true,
+        "codes": []
+      },
+      {
+        "path": "/access/service_tokens",
+        "method": "POST",
+        "status": 201,
+        "success": true,
+        "codes": []
+      },
+      {
+        "path": "/access/apps/2ed1f9a7-7eb3-45ad-8cdc-392f7ae96bc0/policies/90c6c0ad-3830-4e1d-baee-9884ea09a7d0",
+        "method": "PUT",
+        "status": 200,
+        "success": true,
+        "codes": []
+      },
+      {
+        "path": "/access/apps/2ed1f9a7-7eb3-45ad-8cdc-392f7ae96bc0",
+        "method": "GET",
+        "status": 200,
+        "success": true,
+        "codes": []
+      },
+      {
+        "path": "/access/apps/2ed1f9a7-7eb3-45ad-8cdc-392f7ae96bc0",
+        "method": "PUT",
+        "status": 200,
+        "success": true,
+        "codes": []
+      },
+      {
+        "path": "/access/apps/2ed1f9a7-7eb3-45ad-8cdc-392f7ae96bc0",
+        "method": "GET",
+        "status": 200,
+        "success": true,
+        "codes": []
+      },
+      {
+        "path": "/workers/scripts/cinatoken-staging-recovery-control/subdomain",
+        "method": "POST",
+        "status": 200,
+        "success": true,
+        "codes": []
+      },
+      {
+        "path": "/d1/database/6bf5d41e-fe0b-4afa-9f67-ff5cf82e23d1/query",
+        "method": "POST",
+        "status": 200,
+        "success": true,
+        "codes": []
+      },
+      {
+        "path": "/d1/database/6bf5d41e-fe0b-4afa-9f67-ff5cf82e23d1/query",
+        "method": "POST",
+        "status": 200,
+        "success": true,
+        "codes": []
+      },
+      {
+        "path": "/d1/database/6bf5d41e-fe0b-4afa-9f67-ff5cf82e23d1/query",
+        "method": "POST",
+        "status": 200,
+        "success": true,
+        "codes": []
+      },
+      {
+        "path": "/d1/database/6bf5d41e-fe0b-4afa-9f67-ff5cf82e23d1/query",
+        "method": "POST",
+        "status": 200,
+        "success": true,
+        "codes": []
+      },
+      {
+        "path": "/d1/database/6bf5d41e-fe0b-4afa-9f67-ff5cf82e23d1/query",
+        "method": "POST",
+        "status": 200,
+        "success": true,
+        "codes": []
+      },
+      {
+        "path": "/d1/database/6bf5d41e-fe0b-4afa-9f67-ff5cf82e23d1/query",
+        "method": "POST",
+        "status": 200,
+        "success": true,
+        "codes": []
+      },
+      {
+        "path": "/d1/database/6bf5d41e-fe0b-4afa-9f67-ff5cf82e23d1/query",
+        "method": "POST",
+        "status": 200,
+        "success": true,
+        "codes": []
+      },
+      {
+        "path": "/d1/database/6bf5d41e-fe0b-4afa-9f67-ff5cf82e23d1/query",
+        "method": "POST",
+        "status": 200,
+        "success": true,
+        "codes": []
+      },
+      {
+        "path": "/d1/database/6bf5d41e-fe0b-4afa-9f67-ff5cf82e23d1/query",
+        "method": "POST",
+        "status": 200,
+        "success": true,
+        "codes": []
+      },
+      {
+        "path": "/workers/scripts/cinatoken-staging-recovery-control/subdomain",
+        "method": "POST",
+        "status": 200,
+        "success": true,
+        "codes": []
+      },
+      {
+        "path": "/workers/scripts/cinatoken-staging-recovery-control/subdomain",
+        "method": "GET",
+        "status": 200,
+        "success": true,
+        "codes": []
+      },
+      {
+        "path": "/access/service_tokens/9e660815-c48c-4bd6-a51b-8ab09b9cc4f6",
+        "method": "PUT",
+        "status": 200,
+        "success": true,
+        "codes": []
+      },
+      {
+        "path": "/access/apps/2ed1f9a7-7eb3-45ad-8cdc-392f7ae96bc0",
+        "method": "GET",
+        "status": 200,
+        "success": true,
+        "codes": []
+      },
+      {
+        "path": "/access/apps/2ed1f9a7-7eb3-45ad-8cdc-392f7ae96bc0",
+        "method": "PUT",
+        "status": 200,
+        "success": true,
+        "codes": []
+      },
+      {
+        "path": "/access/apps/2ed1f9a7-7eb3-45ad-8cdc-392f7ae96bc0/policies/90c6c0ad-3830-4e1d-baee-9884ea09a7d0",
+        "method": "PUT",
+        "status": 200,
+        "success": true,
+        "codes": []
+      },
+      {
+        "path": "/access/apps/2ed1f9a7-7eb3-45ad-8cdc-392f7ae96bc0",
+        "method": "GET",
+        "status": 200,
+        "success": true,
+        "codes": []
+      },
+      {
+        "path": "/access/service_tokens/9e660815-c48c-4bd6-a51b-8ab09b9cc4f6",
+        "method": "DELETE",
+        "status": 200,
+        "success": true,
+        "codes": []
+      },
+      {
+        "path": "/access/service_tokens",
+        "method": "GET",
+        "status": 200,
+        "success": true,
+        "codes": []
+      },
+      {
+        "path": "/workers/scripts/cinatoken-staging-recovery-control/subdomain",
+        "method": "GET",
+        "status": 200,
+        "success": true,
+        "codes": []
+      },
+      {
+        "path": "/d1/database/6bf5d41e-fe0b-4afa-9f67-ff5cf82e23d1/query",
+        "method": "POST",
+        "status": 200,
+        "success": true,
+        "codes": []
+      },
+      {
+        "path": "/d1/database/6bf5d41e-fe0b-4afa-9f67-ff5cf82e23d1/query",
+        "method": "POST",
+        "status": 200,
+        "success": true,
+        "codes": []
+      },
+      {
+        "path": "/workers/scripts/cinatoken-staging-recovery-control/subdomain",
+        "method": "GET",
+        "status": 200,
+        "success": true,
+        "codes": []
+      },
+      {
+        "path": "/access/apps/2ed1f9a7-7eb3-45ad-8cdc-392f7ae96bc0",
+        "method": "GET",
+        "status": 200,
+        "success": true,
+        "codes": []
+      },
+      {
+        "path": "/d1/database/6bf5d41e-fe0b-4afa-9f67-ff5cf82e23d1/query",
+        "method": "POST",
+        "status": 200,
+        "success": true,
+        "codes": []
+      },
+      {
+        "path": "/d1/database/6bf5d41e-fe0b-4afa-9f67-ff5cf82e23d1/query",
+        "method": "POST",
+        "status": 200,
+        "success": true,
+        "codes": []
+      },
+      {
+        "path": "/d1/database/6bf5d41e-fe0b-4afa-9f67-ff5cf82e23d1/query",
+        "method": "POST",
+        "status": 200,
+        "success": true,
+        "codes": []
+      },
+      {
+        "path": "/workers/scripts/cinatoken-proxy-staging/subdomain",
+        "method": "GET",
+        "status": 200,
+        "success": true,
+        "codes": []
+      },
+      {
+        "path": "/workers/scripts/cinatoken-staging-images-upstream/subdomain",
+        "method": "GET",
+        "status": 200,
+        "success": true,
+        "codes": []
+      },
+      {
+        "path": "/workers/scripts/cinatoken-staging-usage-recovery/subdomain",
+        "method": "GET",
+        "status": 200,
+        "success": true,
+        "codes": []
+      },
+      {
+        "path": "/workers/scripts/cinatoken-staging-recovery-control/subdomain",
+        "method": "GET",
+        "status": 200,
+        "success": true,
+        "codes": []
+      },
+      {
+        "path": "/access/apps/2ed1f9a7-7eb3-45ad-8cdc-392f7ae96bc0",
+        "method": "GET",
+        "status": 200,
+        "success": true,
+        "codes": []
+      },
+      {
+        "path": "/workers/scripts/cinatoken-staging-usage-recovery/settings",
+        "method": "GET",
+        "status": 200,
+        "success": true,
+        "codes": []
+      },
+      {
+        "path": "/workers/scripts/cinatoken-staging-usage-recovery/deployments",
+        "method": "GET",
+        "status": 200,
+        "success": true,
+        "codes": []
+      },
+      {
+        "path": "/workers/scripts/cinatoken-staging-recovery-control/settings",
+        "method": "GET",
+        "status": 200,
+        "success": true,
+        "codes": []
+      },
+      {
+        "path": "/workers/scripts/cinatoken-staging-recovery-control/deployments",
+        "method": "GET",
+        "status": 200,
+        "success": true,
+        "codes": []
+      },
+      {
+        "path": "/workers/scripts/cinatoken-proxy/settings",
+        "method": "GET",
+        "status": 200,
+        "success": true,
+        "codes": []
+      },
+      {
+        "path": "/workers/scripts/cinatoken-admin/settings",
+        "method": "GET",
+        "status": 200,
+        "success": true,
+        "codes": []
+      },
+      {
+        "path": "/workers/scripts/cinatoken-chain-worker/settings",
+        "method": "GET",
+        "status": 200,
+        "success": true,
+        "codes": []
+      },
+      {
+        "path": "/d1/database/6bf5d41e-fe0b-4afa-9f67-ff5cf82e23d1/query",
+        "method": "POST",
+        "status": 200,
+        "success": true,
+        "codes": []
+      },
+      {
+        "path": "/d1/database/6bf5d41e-fe0b-4afa-9f67-ff5cf82e23d1/query",
+        "method": "POST",
+        "status": 200,
+        "success": true,
+        "codes": []
+      },
+      {
+        "path": "/d1/database/6bf5d41e-fe0b-4afa-9f67-ff5cf82e23d1/query",
+        "method": "POST",
+        "status": 200,
+        "success": true,
+        "codes": []
+      },
+      {
+        "path": "/access/apps?per_page=100",
+        "method": "GET",
+        "status": 200,
+        "success": true,
+        "codes": []
+      }
+    ],
+    "http": [
+      {
+        "label": "unauthenticated-0",
+        "status": 403,
+        "bytes": 37790
+      },
+      {
+        "label": "invalid-token",
+        "status": 403,
+        "bytes": 37790
+      },
+      {
+        "label": "audit-fault-three",
+        "status": 200,
+        "bytes": 254,
+        "application": {
+          "status": "finished",
+          "runId": "5682fec5-1e0d-4dc3-8090-4bb9846cdbf7",
+          "result": {
+            "scanned": 3,
+            "claimed": 3,
+            "committed": 2,
+            "blocked": 0,
+            "deferred": 1,
+            "lostOwnership": 0,
+            "uncertain": 0,
+            "skipped": 0,
+            "capacityLimited": false,
+            "admissionStopped": false
+          },
+          "retry_safe": false
+        }
+      },
+      {
+        "label": "recover-after-fault-removed",
+        "status": 200,
+        "bytes": 254,
+        "application": {
+          "status": "finished",
+          "runId": "5ab12666-e543-4c55-bc8c-9197d80ca991",
+          "result": {
+            "scanned": 1,
+            "claimed": 1,
+            "committed": 1,
+            "blocked": 0,
+            "deferred": 0,
+            "lostOwnership": 0,
+            "uncertain": 0,
+            "skipped": 0,
+            "capacityLimited": false,
+            "admissionStopped": false
+          },
+          "retry_safe": false
+        }
+      },
+      {
+        "label": "repeat-after-verified-commit",
+        "status": 200,
+        "bytes": 254,
+        "application": {
+          "status": "finished",
+          "runId": "4be2f8ea-d78c-40c8-bc9e-617143265cdd",
+          "result": {
+            "scanned": 0,
+            "claimed": 0,
+            "committed": 0,
+            "blocked": 0,
+            "deferred": 0,
+            "lostOwnership": 0,
+            "uncertain": 0,
+            "skipped": 0,
+            "capacityLimited": false,
+            "admissionStopped": false
+          },
+          "retry_safe": false
+        }
+      }
+    ],
+    "cleanup": [
+      {
+        "label": "ingress-closed",
+        "status": "PASS"
+      },
+      {
+        "label": "token-disabled",
+        "status": "PASS"
+      },
+      {
+        "label": "access-deny-all",
+        "status": "PASS"
+      },
+      {
+        "label": "token-deleted",
+        "status": "PASS"
+      },
+      {
+        "label": "fault-trigger-removed",
+        "status": "PASS"
+      },
+      {
+        "label": "exact-fixture-cleanup",
+        "status": "PASS"
+      },
+      {
+        "label": "final-cloud-state",
+        "status": "PASS"
+      }
+    ],
+    "sqlStatements": 124,
+    "rowsRead": 6356,
+    "rowsWritten": 123,
+    "productionBefore": [
+      {
+        "name": "cinatoken-proxy",
+        "settingsSha256": "4243eedd631abb9bcf0c1dd8dd9acbb9ca56edab0bf3048204abccbbd4261cfc"
+      },
+      {
+        "name": "cinatoken-admin",
+        "settingsSha256": "e2ee0adf7b6469d843c310f3dccd2a478230c0f0b75d5d6ad285efeec17ed6ab"
+      },
+      {
+        "name": "cinatoken-chain-worker",
+        "settingsSha256": "21f1b2c08db33d20c0f235e5a89533e637a761eaf7b4bef2fcf0061ad004a916"
+      }
+    ],
+    "otherAppsBefore": [
+      {
+        "id": "ed5fd912-d6f1-4662-9575-02e0d6877af4",
+        "sha256": "4c0b917afba1fd8f9d9b8487a1c2672d01e6325bba2047ac4a0eb686a1b03ec3"
+      },
+      {
+        "id": "67dd5243-bf01-486c-9bba-6026c76ef5df",
+        "sha256": "df7c182690387132368b4d82a794f04942799f77f117bd74885cfcf198a5dfe4"
+      }
+    ],
+    "schemaBefore": {
+      "objects": 295,
+      "sha256": "1bc2f70306a5b464f789590e21445ddbb11372b3e2086ce95dcf626168e656f9"
+    },
+    "countsBefore": {
+      "admin_api_keys": 1,
+      "admin_sessions": 0,
+      "api_key_request_logs": 0,
+      "api_keys": 0,
+      "batch_items": 0,
+      "batches": 0,
+      "byok_keys": 0,
+      "chain_job_transactions": 0,
+      "d1_migrations": 68,
+      "generation_feedback": 0,
+      "guardrail_assignments": 0,
+      "guardrail_budget_reservations": 0,
+      "guardrail_budget_windows": 0,
+      "guardrail_versions": 0,
+      "guardrails": 0,
+      "identity_event_inbox": 0,
+      "management_api_keys": 0,
+      "model_endpoint_backfill_database_identity": 1,
+      "model_endpoint_backfill_runs": 0,
+      "model_endpoint_backfill_trust_registry": 0,
+      "model_endpoint_evidence_attestations": 0,
+      "model_endpoint_routes": 0,
+      "model_endpoints": 0,
+      "model_routes": 0,
+      "model_surfaces": 0,
+      "model_tags": 0,
+      "models": 0,
+      "nft_mints": 0,
+      "organization_memberships": 0,
+      "organizations": 0,
+      "portal_ledger_entries": 0,
+      "portal_sessions": 0,
+      "provider_attempt_availability": 0,
+      "providers": 0,
+      "public_model_daily_stats": 0,
+      "request_preset_versions": 0,
+      "request_presets": 0,
+      "route_data_policies": 0,
+      "route_data_policy_audit": 0,
+      "route_pool_sticky_bindings": 0,
+      "route_pools": 0,
+      "shared_key_earnings": 0,
+      "shared_keys": 0,
+      "system_config": 12,
+      "user_audit_logs": 0,
+      "user_budget_reservations": 0,
+      "user_earnings": 0,
+      "users": 0,
+      "withdrawals": 0,
+      "workspace_budgets": 0,
+      "workspace_memberships": 0,
+      "workspaces": 0,
+      "request_dispatch_intents": 0,
+      "request_usage_settlements": 0,
+      "request_usage_commit_receipts": 0,
+      "request_usage_recovery_jobs": 0
+    },
+    "emptyBefore": {
+      "account": [],
+      "key": [],
+      "intents": [],
+      "snapshots": [],
+      "jobs": [],
+      "reservations": [],
+      "receipts": [],
+      "logs": [],
+      "attempts": [],
+      "audit": [],
+      "stats": []
+    },
+    "pending": {
+      "account": [
+        {
+          "id": "staging-recovery-76381950-86b8-437f-85fe-1349d10ff7f6-user",
+          "status": "disabled",
+          "budget_spent_micros": 0,
+          "budget_reserved_micros": 1000000,
+          "budget_epoch": 0
+        }
+      ],
+      "key": [
+        {
+          "id": "staging-recovery-76381950-86b8-437f-85fe-1349d10ff7f6-key",
+          "status": "disabled",
+          "user_id": "staging-recovery-76381950-86b8-437f-85fe-1349d10ff7f6-user",
+          "workspace_id": "staging-recovery-76381950-86b8-437f-85fe-1349d10ff7f6-workspace"
+        }
+      ],
+      "intents": [
+        {
+          "request_id": "gen-d04ddc9f-fc29-4dac-9edc-c248040713a2",
+          "state": "dispatch_claimed",
+          "revision": 1
+        },
+        {
+          "request_id": "gen-de2265c2-76ee-465a-b7f4-648006111222",
+          "state": "dispatch_claimed",
+          "revision": 1
+        },
+        {
+          "request_id": "gen-ee88e881-b2a6-467b-b52a-bd53def7f717",
+          "state": "dispatch_claimed",
+          "revision": 1
+        }
+      ],
+      "snapshots": [
+        {
+          "request_id": "gen-d04ddc9f-fc29-4dac-9edc-c248040713a2",
+          "payload_sha256": "e04207a548712dd647ea3be079097f432d9f4bc61b1a14b77e33857231e2cda8",
+          "recorded_at": "2026-09-06T23:59:59.000Z",
+          "bytes": 2436
+        },
+        {
+          "request_id": "gen-de2265c2-76ee-465a-b7f4-648006111222",
+          "payload_sha256": "98d857022d3b9fbff3f21bf0fbfdc9adf88708bda4ffbeb9fbf342918a74aa35",
+          "recorded_at": "2026-09-06T23:59:59.000Z",
+          "bytes": 2564
+        },
+        {
+          "request_id": "gen-ee88e881-b2a6-467b-b52a-bd53def7f717",
+          "payload_sha256": "c8ea213c27c0b19f20e1b53e0e7aa47310302934d2a2db105a2627327f5248e5",
+          "recorded_at": "2026-09-06T23:59:59.000Z",
+          "bytes": 2564
+        }
+      ],
+      "jobs": [
+        {
+          "request_id": "gen-d04ddc9f-fc29-4dac-9edc-c248040713a2",
+          "state": "pending",
+          "revision": 0,
+          "attempts": 0,
+          "last_error": null,
+          "lease_token": null,
+          "lease_expires_at": null
+        },
+        {
+          "request_id": "gen-de2265c2-76ee-465a-b7f4-648006111222",
+          "state": "pending",
+          "revision": 0,
+          "attempts": 0,
+          "last_error": null,
+          "lease_token": null,
+          "lease_expires_at": null
+        },
+        {
+          "request_id": "gen-ee88e881-b2a6-467b-b52a-bd53def7f717",
+          "state": "pending",
+          "revision": 0,
+          "attempts": 0,
+          "last_error": null,
+          "lease_token": null,
+          "lease_expires_at": null
+        }
+      ],
+      "reservations": [
+        {
+          "request_id": "gen-de2265c2-76ee-465a-b7f4-648006111222",
+          "state": "dispatched",
+          "reserved_micros": 500000,
+          "settled_micros": 0
+        },
+        {
+          "request_id": "gen-ee88e881-b2a6-467b-b52a-bd53def7f717",
+          "state": "dispatched",
+          "reserved_micros": 500000,
+          "settled_micros": 0
+        }
+      ],
+      "receipts": [],
+      "logs": [],
+      "attempts": [],
+      "audit": [],
+      "stats": []
+    },
+    "schemaInstalled": {
+      "objects": 296,
+      "sha256": "80b1433a5578b606f8f99062320d57063f8acbd51365c07c694dd8846d6c5283"
+    },
+    "tokenName": "cinatoken-recovery-v161-1788772253946",
+    "tokenId": "9e660815-c48c-4bd6-a51b-8ab09b9cc4f6",
+    "afterFault": {
+      "account": [
+        {
+          "id": "staging-recovery-76381950-86b8-437f-85fe-1349d10ff7f6-user",
+          "status": "disabled",
+          "budget_spent_micros": 200000,
+          "budget_reserved_micros": 500000,
+          "budget_epoch": 0
+        }
+      ],
+      "key": [
+        {
+          "id": "staging-recovery-76381950-86b8-437f-85fe-1349d10ff7f6-key",
+          "status": "disabled",
+          "user_id": "staging-recovery-76381950-86b8-437f-85fe-1349d10ff7f6-user",
+          "workspace_id": "staging-recovery-76381950-86b8-437f-85fe-1349d10ff7f6-workspace"
+        }
+      ],
+      "intents": [
+        {
+          "request_id": "gen-d04ddc9f-fc29-4dac-9edc-c248040713a2",
+          "state": "dispatch_claimed",
+          "revision": 1
+        },
+        {
+          "request_id": "gen-de2265c2-76ee-465a-b7f4-648006111222",
+          "state": "dispatch_claimed",
+          "revision": 1
+        },
+        {
+          "request_id": "gen-ee88e881-b2a6-467b-b52a-bd53def7f717",
+          "state": "dispatch_claimed",
+          "revision": 1
+        }
+      ],
+      "snapshots": [
+        {
+          "request_id": "gen-d04ddc9f-fc29-4dac-9edc-c248040713a2",
+          "payload_sha256": "e04207a548712dd647ea3be079097f432d9f4bc61b1a14b77e33857231e2cda8",
+          "recorded_at": "2026-09-06T23:59:59.000Z",
+          "bytes": 2436
+        },
+        {
+          "request_id": "gen-de2265c2-76ee-465a-b7f4-648006111222",
+          "payload_sha256": "98d857022d3b9fbff3f21bf0fbfdc9adf88708bda4ffbeb9fbf342918a74aa35",
+          "recorded_at": "2026-09-06T23:59:59.000Z",
+          "bytes": 2564
+        },
+        {
+          "request_id": "gen-ee88e881-b2a6-467b-b52a-bd53def7f717",
+          "payload_sha256": "c8ea213c27c0b19f20e1b53e0e7aa47310302934d2a2db105a2627327f5248e5",
+          "recorded_at": "2026-09-06T23:59:59.000Z",
+          "bytes": 2564
+        }
+      ],
+      "jobs": [
+        {
+          "request_id": "gen-d04ddc9f-fc29-4dac-9edc-c248040713a2",
+          "state": "committed",
+          "revision": 2,
+          "attempts": 1,
+          "last_error": null,
+          "lease_token": null,
+          "lease_expires_at": null
+        },
+        {
+          "request_id": "gen-de2265c2-76ee-465a-b7f4-648006111222",
+          "state": "committed",
+          "revision": 2,
+          "attempts": 1,
+          "last_error": null,
+          "lease_token": null,
+          "lease_expires_at": null
+        },
+        {
+          "request_id": "gen-ee88e881-b2a6-467b-b52a-bd53def7f717",
+          "state": "pending",
+          "revision": 2,
+          "attempts": 1,
+          "last_error": "execution_error",
+          "lease_token": null,
+          "lease_expires_at": null
+        }
+      ],
+      "reservations": [
+        {
+          "request_id": "gen-de2265c2-76ee-465a-b7f4-648006111222",
+          "state": "settled",
+          "reserved_micros": 500000,
+          "settled_micros": 200000
+        },
+        {
+          "request_id": "gen-ee88e881-b2a6-467b-b52a-bd53def7f717",
+          "state": "dispatched",
+          "reserved_micros": 500000,
+          "settled_micros": 0
+        }
+      ],
+      "receipts": [
+        {
+          "request_id": "gen-d04ddc9f-fc29-4dac-9edc-c248040713a2",
+          "payload_sha256": "e04207a548712dd647ea3be079097f432d9f4bc61b1a14b77e33857231e2cda8",
+          "recorded_at": "2026-09-06T23:59:59.000Z",
+          "lease_revision": 1
+        },
+        {
+          "request_id": "gen-de2265c2-76ee-465a-b7f4-648006111222",
+          "payload_sha256": "98d857022d3b9fbff3f21bf0fbfdc9adf88708bda4ffbeb9fbf342918a74aa35",
+          "recorded_at": "2026-09-06T23:59:59.000Z",
+          "lease_revision": 1
+        }
+      ],
+      "logs": [
+        {
+          "id": "gen-d04ddc9f-fc29-4dac-9edc-c248040713a2",
+          "user_id": "staging-recovery-76381950-86b8-437f-85fe-1349d10ff7f6-user",
+          "api_key_id": "staging-recovery-76381950-86b8-437f-85fe-1349d10ff7f6-key",
+          "workspace_id": "staging-recovery-76381950-86b8-437f-85fe-1349d10ff7f6-workspace",
+          "model_id": "staging-recovery-76381950-86b8-437f-85fe-1349d10ff7f6-model-0",
+          "charged_cost": 0,
+          "budget_charged_micros": 0,
+          "created_at": "2026-09-06T23:59:59.000Z"
+        },
+        {
+          "id": "gen-de2265c2-76ee-465a-b7f4-648006111222",
+          "user_id": "staging-recovery-76381950-86b8-437f-85fe-1349d10ff7f6-user",
+          "api_key_id": "staging-recovery-76381950-86b8-437f-85fe-1349d10ff7f6-key",
+          "workspace_id": "staging-recovery-76381950-86b8-437f-85fe-1349d10ff7f6-workspace",
+          "model_id": "staging-recovery-76381950-86b8-437f-85fe-1349d10ff7f6-model-2",
+          "charged_cost": 0.2,
+          "budget_charged_micros": 200000,
+          "created_at": "2026-09-06T23:59:59.000Z"
+        }
+      ],
+      "attempts": [
+        {
+          "request_log_id": "gen-d04ddc9f-fc29-4dac-9edc-c248040713a2",
+          "attempt_index": 1,
+          "outcome": "available"
+        },
+        {
+          "request_log_id": "gen-de2265c2-76ee-465a-b7f4-648006111222",
+          "attempt_index": 1,
+          "outcome": "available"
+        }
+      ],
+      "audit": [
+        {
+          "request_log_id": "gen-de2265c2-76ee-465a-b7f4-648006111222",
+          "user_id": "staging-recovery-76381950-86b8-437f-85fe-1349d10ff7f6-user",
+          "api_key_id": "staging-recovery-76381950-86b8-437f-85fe-1349d10ff7f6-key",
+          "event_type": "usage_charge"
+        }
+      ],
+      "stats": [
+        {
+          "model_id": "staging-recovery-76381950-86b8-437f-85fe-1349d10ff7f6-model-0",
+          "stat_date": "2026-09-06",
+          "request_count": 1,
+          "success_count": 1,
+          "error_count": 0,
+          "output_tokens": 1,
+          "total_tokens": 11,
+          "latency_total_ms": 10,
+          "latency_sample_count": 1
+        },
+        {
+          "model_id": "staging-recovery-76381950-86b8-437f-85fe-1349d10ff7f6-model-2",
+          "stat_date": "2026-09-06",
+          "request_count": 1,
+          "success_count": 1,
+          "error_count": 0,
+          "output_tokens": 1,
+          "total_tokens": 11,
+          "latency_total_ms": 10,
+          "latency_sample_count": 1
+        }
+      ]
+    },
+    "backoff": {
+      "state": "pending",
+      "revision": 2,
+      "attempts": 1,
+      "available_at": 1788772271,
+      "updated_at": 1788772266,
+      "now_seconds": 1788772268
+    },
+    "schemaRemoved": {
+      "objects": 295,
+      "sha256": "1bc2f70306a5b464f789590e21445ddbb11372b3e2086ce95dcf626168e656f9"
+    },
+    "dueChecks": [
+      {
+        "state": "pending",
+        "revision": 2,
+        "attempts": 1,
+        "available_at": 1788772271,
+        "now_seconds": 1788772273,
+        "due": 1
+      }
+    ],
+    "committed": {
+      "account": [
+        {
+          "id": "staging-recovery-76381950-86b8-437f-85fe-1349d10ff7f6-user",
+          "status": "disabled",
+          "budget_spent_micros": 300000,
+          "budget_reserved_micros": 0,
+          "budget_epoch": 0
+        }
+      ],
+      "key": [
+        {
+          "id": "staging-recovery-76381950-86b8-437f-85fe-1349d10ff7f6-key",
+          "status": "disabled",
+          "user_id": "staging-recovery-76381950-86b8-437f-85fe-1349d10ff7f6-user",
+          "workspace_id": "staging-recovery-76381950-86b8-437f-85fe-1349d10ff7f6-workspace"
+        }
+      ],
+      "intents": [
+        {
+          "request_id": "gen-d04ddc9f-fc29-4dac-9edc-c248040713a2",
+          "state": "dispatch_claimed",
+          "revision": 1
+        },
+        {
+          "request_id": "gen-de2265c2-76ee-465a-b7f4-648006111222",
+          "state": "dispatch_claimed",
+          "revision": 1
+        },
+        {
+          "request_id": "gen-ee88e881-b2a6-467b-b52a-bd53def7f717",
+          "state": "dispatch_claimed",
+          "revision": 1
+        }
+      ],
+      "snapshots": [
+        {
+          "request_id": "gen-d04ddc9f-fc29-4dac-9edc-c248040713a2",
+          "payload_sha256": "e04207a548712dd647ea3be079097f432d9f4bc61b1a14b77e33857231e2cda8",
+          "recorded_at": "2026-09-06T23:59:59.000Z",
+          "bytes": 2436
+        },
+        {
+          "request_id": "gen-de2265c2-76ee-465a-b7f4-648006111222",
+          "payload_sha256": "98d857022d3b9fbff3f21bf0fbfdc9adf88708bda4ffbeb9fbf342918a74aa35",
+          "recorded_at": "2026-09-06T23:59:59.000Z",
+          "bytes": 2564
+        },
+        {
+          "request_id": "gen-ee88e881-b2a6-467b-b52a-bd53def7f717",
+          "payload_sha256": "c8ea213c27c0b19f20e1b53e0e7aa47310302934d2a2db105a2627327f5248e5",
+          "recorded_at": "2026-09-06T23:59:59.000Z",
+          "bytes": 2564
+        }
+      ],
+      "jobs": [
+        {
+          "request_id": "gen-d04ddc9f-fc29-4dac-9edc-c248040713a2",
+          "state": "committed",
+          "revision": 2,
+          "attempts": 1,
+          "last_error": null,
+          "lease_token": null,
+          "lease_expires_at": null
+        },
+        {
+          "request_id": "gen-de2265c2-76ee-465a-b7f4-648006111222",
+          "state": "committed",
+          "revision": 2,
+          "attempts": 1,
+          "last_error": null,
+          "lease_token": null,
+          "lease_expires_at": null
+        },
+        {
+          "request_id": "gen-ee88e881-b2a6-467b-b52a-bd53def7f717",
+          "state": "committed",
+          "revision": 4,
+          "attempts": 2,
+          "last_error": null,
+          "lease_token": null,
+          "lease_expires_at": null
+        }
+      ],
+      "reservations": [
+        {
+          "request_id": "gen-de2265c2-76ee-465a-b7f4-648006111222",
+          "state": "settled",
+          "reserved_micros": 500000,
+          "settled_micros": 200000
+        },
+        {
+          "request_id": "gen-ee88e881-b2a6-467b-b52a-bd53def7f717",
+          "state": "settled",
+          "reserved_micros": 500000,
+          "settled_micros": 100000
+        }
+      ],
+      "receipts": [
+        {
+          "request_id": "gen-d04ddc9f-fc29-4dac-9edc-c248040713a2",
+          "payload_sha256": "e04207a548712dd647ea3be079097f432d9f4bc61b1a14b77e33857231e2cda8",
+          "recorded_at": "2026-09-06T23:59:59.000Z",
+          "lease_revision": 1
+        },
+        {
+          "request_id": "gen-de2265c2-76ee-465a-b7f4-648006111222",
+          "payload_sha256": "98d857022d3b9fbff3f21bf0fbfdc9adf88708bda4ffbeb9fbf342918a74aa35",
+          "recorded_at": "2026-09-06T23:59:59.000Z",
+          "lease_revision": 1
+        },
+        {
+          "request_id": "gen-ee88e881-b2a6-467b-b52a-bd53def7f717",
+          "payload_sha256": "c8ea213c27c0b19f20e1b53e0e7aa47310302934d2a2db105a2627327f5248e5",
+          "recorded_at": "2026-09-06T23:59:59.000Z",
+          "lease_revision": 3
+        }
+      ],
+      "logs": [
+        {
+          "id": "gen-d04ddc9f-fc29-4dac-9edc-c248040713a2",
+          "user_id": "staging-recovery-76381950-86b8-437f-85fe-1349d10ff7f6-user",
+          "api_key_id": "staging-recovery-76381950-86b8-437f-85fe-1349d10ff7f6-key",
+          "workspace_id": "staging-recovery-76381950-86b8-437f-85fe-1349d10ff7f6-workspace",
+          "model_id": "staging-recovery-76381950-86b8-437f-85fe-1349d10ff7f6-model-0",
+          "charged_cost": 0,
+          "budget_charged_micros": 0,
+          "created_at": "2026-09-06T23:59:59.000Z"
+        },
+        {
+          "id": "gen-de2265c2-76ee-465a-b7f4-648006111222",
+          "user_id": "staging-recovery-76381950-86b8-437f-85fe-1349d10ff7f6-user",
+          "api_key_id": "staging-recovery-76381950-86b8-437f-85fe-1349d10ff7f6-key",
+          "workspace_id": "staging-recovery-76381950-86b8-437f-85fe-1349d10ff7f6-workspace",
+          "model_id": "staging-recovery-76381950-86b8-437f-85fe-1349d10ff7f6-model-2",
+          "charged_cost": 0.2,
+          "budget_charged_micros": 200000,
+          "created_at": "2026-09-06T23:59:59.000Z"
+        },
+        {
+          "id": "gen-ee88e881-b2a6-467b-b52a-bd53def7f717",
+          "user_id": "staging-recovery-76381950-86b8-437f-85fe-1349d10ff7f6-user",
+          "api_key_id": "staging-recovery-76381950-86b8-437f-85fe-1349d10ff7f6-key",
+          "workspace_id": "staging-recovery-76381950-86b8-437f-85fe-1349d10ff7f6-workspace",
+          "model_id": "staging-recovery-76381950-86b8-437f-85fe-1349d10ff7f6-model-1",
+          "charged_cost": 0.1,
+          "budget_charged_micros": 100000,
+          "created_at": "2026-09-06T23:59:59.000Z"
+        }
+      ],
+      "attempts": [
+        {
+          "request_log_id": "gen-d04ddc9f-fc29-4dac-9edc-c248040713a2",
+          "attempt_index": 1,
+          "outcome": "available"
+        },
+        {
+          "request_log_id": "gen-de2265c2-76ee-465a-b7f4-648006111222",
+          "attempt_index": 1,
+          "outcome": "available"
+        },
+        {
+          "request_log_id": "gen-ee88e881-b2a6-467b-b52a-bd53def7f717",
+          "attempt_index": 1,
+          "outcome": "available"
+        }
+      ],
+      "audit": [
+        {
+          "request_log_id": "gen-de2265c2-76ee-465a-b7f4-648006111222",
+          "user_id": "staging-recovery-76381950-86b8-437f-85fe-1349d10ff7f6-user",
+          "api_key_id": "staging-recovery-76381950-86b8-437f-85fe-1349d10ff7f6-key",
+          "event_type": "usage_charge"
+        },
+        {
+          "request_log_id": "gen-ee88e881-b2a6-467b-b52a-bd53def7f717",
+          "user_id": "staging-recovery-76381950-86b8-437f-85fe-1349d10ff7f6-user",
+          "api_key_id": "staging-recovery-76381950-86b8-437f-85fe-1349d10ff7f6-key",
+          "event_type": "usage_charge"
+        }
+      ],
+      "stats": [
+        {
+          "model_id": "staging-recovery-76381950-86b8-437f-85fe-1349d10ff7f6-model-0",
+          "stat_date": "2026-09-06",
+          "request_count": 1,
+          "success_count": 1,
+          "error_count": 0,
+          "output_tokens": 1,
+          "total_tokens": 11,
+          "latency_total_ms": 10,
+          "latency_sample_count": 1
+        },
+        {
+          "model_id": "staging-recovery-76381950-86b8-437f-85fe-1349d10ff7f6-model-1",
+          "stat_date": "2026-09-06",
+          "request_count": 1,
+          "success_count": 1,
+          "error_count": 0,
+          "output_tokens": 1,
+          "total_tokens": 11,
+          "latency_total_ms": 10,
+          "latency_sample_count": 1
+        },
+        {
+          "model_id": "staging-recovery-76381950-86b8-437f-85fe-1349d10ff7f6-model-2",
+          "stat_date": "2026-09-06",
+          "request_count": 1,
+          "success_count": 1,
+          "error_count": 0,
+          "output_tokens": 1,
+          "total_tokens": 11,
+          "latency_total_ms": 10,
+          "latency_sample_count": 1
+        }
+      ]
+    },
+    "afterRepeat": {
+      "account": [
+        {
+          "id": "staging-recovery-76381950-86b8-437f-85fe-1349d10ff7f6-user",
+          "status": "disabled",
+          "budget_spent_micros": 300000,
+          "budget_reserved_micros": 0,
+          "budget_epoch": 0
+        }
+      ],
+      "key": [
+        {
+          "id": "staging-recovery-76381950-86b8-437f-85fe-1349d10ff7f6-key",
+          "status": "disabled",
+          "user_id": "staging-recovery-76381950-86b8-437f-85fe-1349d10ff7f6-user",
+          "workspace_id": "staging-recovery-76381950-86b8-437f-85fe-1349d10ff7f6-workspace"
+        }
+      ],
+      "intents": [
+        {
+          "request_id": "gen-d04ddc9f-fc29-4dac-9edc-c248040713a2",
+          "state": "dispatch_claimed",
+          "revision": 1
+        },
+        {
+          "request_id": "gen-de2265c2-76ee-465a-b7f4-648006111222",
+          "state": "dispatch_claimed",
+          "revision": 1
+        },
+        {
+          "request_id": "gen-ee88e881-b2a6-467b-b52a-bd53def7f717",
+          "state": "dispatch_claimed",
+          "revision": 1
+        }
+      ],
+      "snapshots": [
+        {
+          "request_id": "gen-d04ddc9f-fc29-4dac-9edc-c248040713a2",
+          "payload_sha256": "e04207a548712dd647ea3be079097f432d9f4bc61b1a14b77e33857231e2cda8",
+          "recorded_at": "2026-09-06T23:59:59.000Z",
+          "bytes": 2436
+        },
+        {
+          "request_id": "gen-de2265c2-76ee-465a-b7f4-648006111222",
+          "payload_sha256": "98d857022d3b9fbff3f21bf0fbfdc9adf88708bda4ffbeb9fbf342918a74aa35",
+          "recorded_at": "2026-09-06T23:59:59.000Z",
+          "bytes": 2564
+        },
+        {
+          "request_id": "gen-ee88e881-b2a6-467b-b52a-bd53def7f717",
+          "payload_sha256": "c8ea213c27c0b19f20e1b53e0e7aa47310302934d2a2db105a2627327f5248e5",
+          "recorded_at": "2026-09-06T23:59:59.000Z",
+          "bytes": 2564
+        }
+      ],
+      "jobs": [
+        {
+          "request_id": "gen-d04ddc9f-fc29-4dac-9edc-c248040713a2",
+          "state": "committed",
+          "revision": 2,
+          "attempts": 1,
+          "last_error": null,
+          "lease_token": null,
+          "lease_expires_at": null
+        },
+        {
+          "request_id": "gen-de2265c2-76ee-465a-b7f4-648006111222",
+          "state": "committed",
+          "revision": 2,
+          "attempts": 1,
+          "last_error": null,
+          "lease_token": null,
+          "lease_expires_at": null
+        },
+        {
+          "request_id": "gen-ee88e881-b2a6-467b-b52a-bd53def7f717",
+          "state": "committed",
+          "revision": 4,
+          "attempts": 2,
+          "last_error": null,
+          "lease_token": null,
+          "lease_expires_at": null
+        }
+      ],
+      "reservations": [
+        {
+          "request_id": "gen-de2265c2-76ee-465a-b7f4-648006111222",
+          "state": "settled",
+          "reserved_micros": 500000,
+          "settled_micros": 200000
+        },
+        {
+          "request_id": "gen-ee88e881-b2a6-467b-b52a-bd53def7f717",
+          "state": "settled",
+          "reserved_micros": 500000,
+          "settled_micros": 100000
+        }
+      ],
+      "receipts": [
+        {
+          "request_id": "gen-d04ddc9f-fc29-4dac-9edc-c248040713a2",
+          "payload_sha256": "e04207a548712dd647ea3be079097f432d9f4bc61b1a14b77e33857231e2cda8",
+          "recorded_at": "2026-09-06T23:59:59.000Z",
+          "lease_revision": 1
+        },
+        {
+          "request_id": "gen-de2265c2-76ee-465a-b7f4-648006111222",
+          "payload_sha256": "98d857022d3b9fbff3f21bf0fbfdc9adf88708bda4ffbeb9fbf342918a74aa35",
+          "recorded_at": "2026-09-06T23:59:59.000Z",
+          "lease_revision": 1
+        },
+        {
+          "request_id": "gen-ee88e881-b2a6-467b-b52a-bd53def7f717",
+          "payload_sha256": "c8ea213c27c0b19f20e1b53e0e7aa47310302934d2a2db105a2627327f5248e5",
+          "recorded_at": "2026-09-06T23:59:59.000Z",
+          "lease_revision": 3
+        }
+      ],
+      "logs": [
+        {
+          "id": "gen-d04ddc9f-fc29-4dac-9edc-c248040713a2",
+          "user_id": "staging-recovery-76381950-86b8-437f-85fe-1349d10ff7f6-user",
+          "api_key_id": "staging-recovery-76381950-86b8-437f-85fe-1349d10ff7f6-key",
+          "workspace_id": "staging-recovery-76381950-86b8-437f-85fe-1349d10ff7f6-workspace",
+          "model_id": "staging-recovery-76381950-86b8-437f-85fe-1349d10ff7f6-model-0",
+          "charged_cost": 0,
+          "budget_charged_micros": 0,
+          "created_at": "2026-09-06T23:59:59.000Z"
+        },
+        {
+          "id": "gen-de2265c2-76ee-465a-b7f4-648006111222",
+          "user_id": "staging-recovery-76381950-86b8-437f-85fe-1349d10ff7f6-user",
+          "api_key_id": "staging-recovery-76381950-86b8-437f-85fe-1349d10ff7f6-key",
+          "workspace_id": "staging-recovery-76381950-86b8-437f-85fe-1349d10ff7f6-workspace",
+          "model_id": "staging-recovery-76381950-86b8-437f-85fe-1349d10ff7f6-model-2",
+          "charged_cost": 0.2,
+          "budget_charged_micros": 200000,
+          "created_at": "2026-09-06T23:59:59.000Z"
+        },
+        {
+          "id": "gen-ee88e881-b2a6-467b-b52a-bd53def7f717",
+          "user_id": "staging-recovery-76381950-86b8-437f-85fe-1349d10ff7f6-user",
+          "api_key_id": "staging-recovery-76381950-86b8-437f-85fe-1349d10ff7f6-key",
+          "workspace_id": "staging-recovery-76381950-86b8-437f-85fe-1349d10ff7f6-workspace",
+          "model_id": "staging-recovery-76381950-86b8-437f-85fe-1349d10ff7f6-model-1",
+          "charged_cost": 0.1,
+          "budget_charged_micros": 100000,
+          "created_at": "2026-09-06T23:59:59.000Z"
+        }
+      ],
+      "attempts": [
+        {
+          "request_log_id": "gen-d04ddc9f-fc29-4dac-9edc-c248040713a2",
+          "attempt_index": 1,
+          "outcome": "available"
+        },
+        {
+          "request_log_id": "gen-de2265c2-76ee-465a-b7f4-648006111222",
+          "attempt_index": 1,
+          "outcome": "available"
+        },
+        {
+          "request_log_id": "gen-ee88e881-b2a6-467b-b52a-bd53def7f717",
+          "attempt_index": 1,
+          "outcome": "available"
+        }
+      ],
+      "audit": [
+        {
+          "request_log_id": "gen-de2265c2-76ee-465a-b7f4-648006111222",
+          "user_id": "staging-recovery-76381950-86b8-437f-85fe-1349d10ff7f6-user",
+          "api_key_id": "staging-recovery-76381950-86b8-437f-85fe-1349d10ff7f6-key",
+          "event_type": "usage_charge"
+        },
+        {
+          "request_log_id": "gen-ee88e881-b2a6-467b-b52a-bd53def7f717",
+          "user_id": "staging-recovery-76381950-86b8-437f-85fe-1349d10ff7f6-user",
+          "api_key_id": "staging-recovery-76381950-86b8-437f-85fe-1349d10ff7f6-key",
+          "event_type": "usage_charge"
+        }
+      ],
+      "stats": [
+        {
+          "model_id": "staging-recovery-76381950-86b8-437f-85fe-1349d10ff7f6-model-0",
+          "stat_date": "2026-09-06",
+          "request_count": 1,
+          "success_count": 1,
+          "error_count": 0,
+          "output_tokens": 1,
+          "total_tokens": 11,
+          "latency_total_ms": 10,
+          "latency_sample_count": 1
+        },
+        {
+          "model_id": "staging-recovery-76381950-86b8-437f-85fe-1349d10ff7f6-model-1",
+          "stat_date": "2026-09-06",
+          "request_count": 1,
+          "success_count": 1,
+          "error_count": 0,
+          "output_tokens": 1,
+          "total_tokens": 11,
+          "latency_total_ms": 10,
+          "latency_sample_count": 1
+        },
+        {
+          "model_id": "staging-recovery-76381950-86b8-437f-85fe-1349d10ff7f6-model-2",
+          "stat_date": "2026-09-06",
+          "request_count": 1,
+          "success_count": 1,
+          "error_count": 0,
+          "output_tokens": 1,
+          "total_tokens": 11,
+          "latency_total_ms": 10,
+          "latency_sample_count": 1
+        }
+      ]
+    },
+    "auditFaultWorkersRpcD1": "PASS",
+    "result": "PASS",
+    "beforeCleanup": {
+      "account": [
+        {
+          "id": "staging-recovery-76381950-86b8-437f-85fe-1349d10ff7f6-user",
+          "status": "disabled",
+          "budget_spent_micros": 300000,
+          "budget_reserved_micros": 0,
+          "budget_epoch": 0
+        }
+      ],
+      "key": [
+        {
+          "id": "staging-recovery-76381950-86b8-437f-85fe-1349d10ff7f6-key",
+          "status": "disabled",
+          "user_id": "staging-recovery-76381950-86b8-437f-85fe-1349d10ff7f6-user",
+          "workspace_id": "staging-recovery-76381950-86b8-437f-85fe-1349d10ff7f6-workspace"
+        }
+      ],
+      "intents": [
+        {
+          "request_id": "gen-d04ddc9f-fc29-4dac-9edc-c248040713a2",
+          "state": "dispatch_claimed",
+          "revision": 1
+        },
+        {
+          "request_id": "gen-de2265c2-76ee-465a-b7f4-648006111222",
+          "state": "dispatch_claimed",
+          "revision": 1
+        },
+        {
+          "request_id": "gen-ee88e881-b2a6-467b-b52a-bd53def7f717",
+          "state": "dispatch_claimed",
+          "revision": 1
+        }
+      ],
+      "snapshots": [
+        {
+          "request_id": "gen-d04ddc9f-fc29-4dac-9edc-c248040713a2",
+          "payload_sha256": "e04207a548712dd647ea3be079097f432d9f4bc61b1a14b77e33857231e2cda8",
+          "recorded_at": "2026-09-06T23:59:59.000Z",
+          "bytes": 2436
+        },
+        {
+          "request_id": "gen-de2265c2-76ee-465a-b7f4-648006111222",
+          "payload_sha256": "98d857022d3b9fbff3f21bf0fbfdc9adf88708bda4ffbeb9fbf342918a74aa35",
+          "recorded_at": "2026-09-06T23:59:59.000Z",
+          "bytes": 2564
+        },
+        {
+          "request_id": "gen-ee88e881-b2a6-467b-b52a-bd53def7f717",
+          "payload_sha256": "c8ea213c27c0b19f20e1b53e0e7aa47310302934d2a2db105a2627327f5248e5",
+          "recorded_at": "2026-09-06T23:59:59.000Z",
+          "bytes": 2564
+        }
+      ],
+      "jobs": [
+        {
+          "request_id": "gen-d04ddc9f-fc29-4dac-9edc-c248040713a2",
+          "state": "committed",
+          "revision": 2,
+          "attempts": 1,
+          "last_error": null,
+          "lease_token": null,
+          "lease_expires_at": null
+        },
+        {
+          "request_id": "gen-de2265c2-76ee-465a-b7f4-648006111222",
+          "state": "committed",
+          "revision": 2,
+          "attempts": 1,
+          "last_error": null,
+          "lease_token": null,
+          "lease_expires_at": null
+        },
+        {
+          "request_id": "gen-ee88e881-b2a6-467b-b52a-bd53def7f717",
+          "state": "committed",
+          "revision": 4,
+          "attempts": 2,
+          "last_error": null,
+          "lease_token": null,
+          "lease_expires_at": null
+        }
+      ],
+      "reservations": [
+        {
+          "request_id": "gen-de2265c2-76ee-465a-b7f4-648006111222",
+          "state": "settled",
+          "reserved_micros": 500000,
+          "settled_micros": 200000
+        },
+        {
+          "request_id": "gen-ee88e881-b2a6-467b-b52a-bd53def7f717",
+          "state": "settled",
+          "reserved_micros": 500000,
+          "settled_micros": 100000
+        }
+      ],
+      "receipts": [
+        {
+          "request_id": "gen-d04ddc9f-fc29-4dac-9edc-c248040713a2",
+          "payload_sha256": "e04207a548712dd647ea3be079097f432d9f4bc61b1a14b77e33857231e2cda8",
+          "recorded_at": "2026-09-06T23:59:59.000Z",
+          "lease_revision": 1
+        },
+        {
+          "request_id": "gen-de2265c2-76ee-465a-b7f4-648006111222",
+          "payload_sha256": "98d857022d3b9fbff3f21bf0fbfdc9adf88708bda4ffbeb9fbf342918a74aa35",
+          "recorded_at": "2026-09-06T23:59:59.000Z",
+          "lease_revision": 1
+        },
+        {
+          "request_id": "gen-ee88e881-b2a6-467b-b52a-bd53def7f717",
+          "payload_sha256": "c8ea213c27c0b19f20e1b53e0e7aa47310302934d2a2db105a2627327f5248e5",
+          "recorded_at": "2026-09-06T23:59:59.000Z",
+          "lease_revision": 3
+        }
+      ],
+      "logs": [
+        {
+          "id": "gen-d04ddc9f-fc29-4dac-9edc-c248040713a2",
+          "user_id": "staging-recovery-76381950-86b8-437f-85fe-1349d10ff7f6-user",
+          "api_key_id": "staging-recovery-76381950-86b8-437f-85fe-1349d10ff7f6-key",
+          "workspace_id": "staging-recovery-76381950-86b8-437f-85fe-1349d10ff7f6-workspace",
+          "model_id": "staging-recovery-76381950-86b8-437f-85fe-1349d10ff7f6-model-0",
+          "charged_cost": 0,
+          "budget_charged_micros": 0,
+          "created_at": "2026-09-06T23:59:59.000Z"
+        },
+        {
+          "id": "gen-de2265c2-76ee-465a-b7f4-648006111222",
+          "user_id": "staging-recovery-76381950-86b8-437f-85fe-1349d10ff7f6-user",
+          "api_key_id": "staging-recovery-76381950-86b8-437f-85fe-1349d10ff7f6-key",
+          "workspace_id": "staging-recovery-76381950-86b8-437f-85fe-1349d10ff7f6-workspace",
+          "model_id": "staging-recovery-76381950-86b8-437f-85fe-1349d10ff7f6-model-2",
+          "charged_cost": 0.2,
+          "budget_charged_micros": 200000,
+          "created_at": "2026-09-06T23:59:59.000Z"
+        },
+        {
+          "id": "gen-ee88e881-b2a6-467b-b52a-bd53def7f717",
+          "user_id": "staging-recovery-76381950-86b8-437f-85fe-1349d10ff7f6-user",
+          "api_key_id": "staging-recovery-76381950-86b8-437f-85fe-1349d10ff7f6-key",
+          "workspace_id": "staging-recovery-76381950-86b8-437f-85fe-1349d10ff7f6-workspace",
+          "model_id": "staging-recovery-76381950-86b8-437f-85fe-1349d10ff7f6-model-1",
+          "charged_cost": 0.1,
+          "budget_charged_micros": 100000,
+          "created_at": "2026-09-06T23:59:59.000Z"
+        }
+      ],
+      "attempts": [
+        {
+          "request_log_id": "gen-d04ddc9f-fc29-4dac-9edc-c248040713a2",
+          "attempt_index": 1,
+          "outcome": "available"
+        },
+        {
+          "request_log_id": "gen-de2265c2-76ee-465a-b7f4-648006111222",
+          "attempt_index": 1,
+          "outcome": "available"
+        },
+        {
+          "request_log_id": "gen-ee88e881-b2a6-467b-b52a-bd53def7f717",
+          "attempt_index": 1,
+          "outcome": "available"
+        }
+      ],
+      "audit": [
+        {
+          "request_log_id": "gen-de2265c2-76ee-465a-b7f4-648006111222",
+          "user_id": "staging-recovery-76381950-86b8-437f-85fe-1349d10ff7f6-user",
+          "api_key_id": "staging-recovery-76381950-86b8-437f-85fe-1349d10ff7f6-key",
+          "event_type": "usage_charge"
+        },
+        {
+          "request_log_id": "gen-ee88e881-b2a6-467b-b52a-bd53def7f717",
+          "user_id": "staging-recovery-76381950-86b8-437f-85fe-1349d10ff7f6-user",
+          "api_key_id": "staging-recovery-76381950-86b8-437f-85fe-1349d10ff7f6-key",
+          "event_type": "usage_charge"
+        }
+      ],
+      "stats": [
+        {
+          "model_id": "staging-recovery-76381950-86b8-437f-85fe-1349d10ff7f6-model-0",
+          "stat_date": "2026-09-06",
+          "request_count": 1,
+          "success_count": 1,
+          "error_count": 0,
+          "output_tokens": 1,
+          "total_tokens": 11,
+          "latency_total_ms": 10,
+          "latency_sample_count": 1
+        },
+        {
+          "model_id": "staging-recovery-76381950-86b8-437f-85fe-1349d10ff7f6-model-1",
+          "stat_date": "2026-09-06",
+          "request_count": 1,
+          "success_count": 1,
+          "error_count": 0,
+          "output_tokens": 1,
+          "total_tokens": 11,
+          "latency_total_ms": 10,
+          "latency_sample_count": 1
+        },
+        {
+          "model_id": "staging-recovery-76381950-86b8-437f-85fe-1349d10ff7f6-model-2",
+          "stat_date": "2026-09-06",
+          "request_count": 1,
+          "success_count": 1,
+          "error_count": 0,
+          "output_tokens": 1,
+          "total_tokens": 11,
+          "latency_total_ms": 10,
+          "latency_sample_count": 1
+        }
+      ]
+    },
+    "afterCleanup": {
+      "account": [],
+      "key": [],
+      "intents": [],
+      "snapshots": [],
+      "jobs": [],
+      "reservations": [],
+      "receipts": [],
+      "logs": [],
+      "attempts": [],
+      "audit": [],
+      "stats": []
+    },
+    "closed": [
+      {
+        "name": "cinatoken-proxy-staging",
+        "enabled": false,
+        "previews_enabled": false
+      },
+      {
+        "name": "cinatoken-staging-images-upstream",
+        "enabled": false,
+        "previews_enabled": false
+      },
+      {
+        "name": "cinatoken-staging-usage-recovery",
+        "enabled": false,
+        "previews_enabled": false
+      },
+      {
+        "name": "cinatoken-staging-recovery-control",
+        "enabled": false,
+        "previews_enabled": false
+      }
+    ],
+    "productionAfter": [
+      {
+        "name": "cinatoken-proxy",
+        "settingsSha256": "4243eedd631abb9bcf0c1dd8dd9acbb9ca56edab0bf3048204abccbbd4261cfc"
+      },
+      {
+        "name": "cinatoken-admin",
+        "settingsSha256": "e2ee0adf7b6469d843c310f3dccd2a478230c0f0b75d5d6ad285efeec17ed6ab"
+      },
+      {
+        "name": "cinatoken-chain-worker",
+        "settingsSha256": "21f1b2c08db33d20c0f235e5a89533e637a761eaf7b4bef2fcf0061ad004a916"
+      }
+    ],
+    "schemaFinal": {
+      "objects": 295,
+      "sha256": "1bc2f70306a5b464f789590e21445ddbb11372b3e2086ce95dcf626168e656f9"
+    },
+    "countsAfter": {
+      "admin_api_keys": 1,
+      "admin_sessions": 0,
+      "api_key_request_logs": 0,
+      "api_keys": 0,
+      "batch_items": 0,
+      "batches": 0,
+      "byok_keys": 0,
+      "chain_job_transactions": 0,
+      "d1_migrations": 68,
+      "generation_feedback": 0,
+      "guardrail_assignments": 0,
+      "guardrail_budget_reservations": 0,
+      "guardrail_budget_windows": 0,
+      "guardrail_versions": 0,
+      "guardrails": 0,
+      "identity_event_inbox": 0,
+      "management_api_keys": 0,
+      "model_endpoint_backfill_database_identity": 1,
+      "model_endpoint_backfill_runs": 0,
+      "model_endpoint_backfill_trust_registry": 0,
+      "model_endpoint_evidence_attestations": 0,
+      "model_endpoint_routes": 0,
+      "model_endpoints": 0,
+      "model_routes": 0,
+      "model_surfaces": 0,
+      "model_tags": 0,
+      "models": 0,
+      "nft_mints": 0,
+      "organization_memberships": 0,
+      "organizations": 0,
+      "portal_ledger_entries": 0,
+      "portal_sessions": 0,
+      "provider_attempt_availability": 0,
+      "providers": 0,
+      "public_model_daily_stats": 0,
+      "request_preset_versions": 0,
+      "request_presets": 0,
+      "route_data_policies": 0,
+      "route_data_policy_audit": 0,
+      "route_pool_sticky_bindings": 0,
+      "route_pools": 0,
+      "shared_key_earnings": 0,
+      "shared_keys": 0,
+      "system_config": 12,
+      "user_audit_logs": 0,
+      "user_budget_reservations": 0,
+      "user_earnings": 0,
+      "users": 0,
+      "withdrawals": 0,
+      "workspace_budgets": 0,
+      "workspace_memberships": 0,
+      "workspaces": 0,
+      "request_dispatch_intents": 0,
+      "request_usage_settlements": 0,
+      "request_usage_commit_receipts": 0,
+      "request_usage_recovery_jobs": 0
+    },
+    "otherAppsUnchanged": true,
+    "cleanupPassed": true,
+    "finishedAt": "2026-09-07T09:12:02.873Z"
+  },
+  "tests": {
+    "auditFaultNew": {
+      "tests": 5,
+      "pass": 5,
+      "fail": 0,
+      "exitCode": 0
+    },
+    "paidAndFault": {
+      "tests": 12,
+      "pass": 12,
+      "fail": 0,
+      "exitCode": 0,
+      "durationMs": 3213.1065
+    },
+    "fullStaging": {
+      "command": "npm run test:images:staging -w @octafuse/proxy",
+      "startedAt": "2026-09-07T09:11:14.573Z",
+      "finishedAt": "2026-09-07T09:15:17.439Z",
+      "parts": [
+        {
+          "tests": 35,
+          "pass": 35,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "durationMs": 9428.0682
+        },
+        {
+          "tests": 7,
+          "pass": 7,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "durationMs": 1508.5864
+        },
+        {
+          "tests": 130,
+          "pass": 130,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "durationMs": 13338.228
+        },
+        {
+          "tests": 39,
+          "pass": 39,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "durationMs": 6785.1619
+        },
+        {
+          "tests": 65,
+          "pass": 65,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "durationMs": 389.6711
+        },
+        {
+          "tests": 88,
+          "pass": 88,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "durationMs": 3552.5564
+        },
+        {
+          "tests": 24,
+          "pass": 24,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "durationMs": 202445.0395
+        }
+      ],
+      "total": 388,
+      "exitCode": 0,
+      "result": "PASS",
+      "finalProcessSuiteWaitedToTerminal": true
+    },
+    "stagingTypecheck": {
+      "exitCode": 0
+    },
+    "fullCoreTypecheckRerun": false,
+    "historicalCoreDiagnostics": 32
+  },
+  "externalOperations": {
+    "managementRequests": 70,
+    "restSqlApiCalls": 26,
+    "restSqlStatements": 124,
+    "knownRestRowsRead": 6356,
+    "knownRestRowsWritten": 123,
+    "workerD1RowMetadataCollected": false,
+    "publicHttpThisTurn": 5,
+    "historicalPublicHttp": 130,
+    "firstRoundPublicHttp": 135,
+    "workerRpcCalls": 3,
+    "syntheticAccountingUsd": 0.3,
+    "modelCalls": 0,
+    "kmsCalls": 0,
+    "productionWrites": 0,
+    "deployments": 0,
+    "temporaryServiceTokensCreated": 1,
+    "temporaryServiceTokensDeleted": 1,
+    "firstRoundUsdCap": 2,
+    "capReset": false,
+    "finalIncrementalBillVerified": false
+  },
+  "notProven": [
+    "all possible database failure positions",
+    "real Images producer-to-consumer fault recovery",
+    "real platform termination/restart and acknowledgement loss",
+    "concurrent fencing and maximum snapshot physical capacity",
+    "Guardrail/BYOK/shared-key seller accounting policy acceptance",
+    "Node 22 acceptance",
+    "original missing-log incident resolved",
+    "C02.G and later gates"
+  ],
+  "next": "C02.B2.2: compose the real Workers Images producer through createWorkerHandler with opt-in recovery, preserve production defaults, then verify producer failure boundaries against private recovery without inference replay; continue platform termination and physical capacity acceptance.",
+  "sources": [
+    "https://developers.cloudflare.com/d1/worker-api/d1-database/",
+    "https://www.sqlite.org/lang_createtrigger.html"
+  ]
+}

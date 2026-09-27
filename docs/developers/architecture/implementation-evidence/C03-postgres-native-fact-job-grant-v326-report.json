@@ -1,0 +1,95 @@
+{
+  "status": "PASS",
+  "cleanup": "PASS",
+  "binaryVersion": "postgres (PostgreSQL) 18.6",
+  "scope": "owned loopback PostgreSQL 18; pinned migrations and proposals; default-disabled SQL candidate",
+  "limitations": [
+    "NOLOGIN SET ROLE is simulated locally by the owned superuser; production origin, credential and membership are unproven.",
+    "This grants fact/outbox/job persistence only. Dispatch, worker financial settlement and cloud cutover are separate gates."
+  ],
+  "sourceSha256": {
+    "test": "8bac62e8294685164ace85e388aeef589f95bc19c8d65f0d62752411e59aeda7",
+    "grant": "439be1b7a659cf47ceb7e128bddb444851e6d3f3bb774c0ad2827b77c47bfca6",
+    "factRepo": "8170b34cb965a77b35c49a6ca4a0a8ebe219230e9bedc9017376bf845f5a4e8e",
+    "jobRepo": "7ac1db1b02159b4827b2c0fee29711fee544246fc4e1fbbcbef420aca1c17429",
+    "cinatoken.dispatch_intent_definer_activation": "02cf4ffde6d37bb9253e9466cbde59047b5b8a0b19d73897ae69d60696db077d",
+    "cinatoken.request_dispatch_single_claim_activation": "6e62e12c25a94e4b32fe0121c728198a409f95427ef4cdcb14c51ebe1a629112",
+    "cinatoken.settlement_outbox_definer_activation": "c3995e07159d4fe0b2aac5ab96ee2d14e6e11fddc3bf9868d258d43620612f52",
+    "formalMigrationCorpus": "23afef61a8a670e0af8c90e3a138f522e6b283b454e380a592bf85bca83108dc"
+  },
+  "stages": [
+    {
+      "name": "formal-migrations",
+      "result": "PASS",
+      "count": 73
+    },
+    {
+      "name": "optional-parent-and-outbox-definers-installed",
+      "result": "PASS"
+    },
+    {
+      "name": "membership-drift-rolls-back",
+      "result": "PASS"
+    },
+    {
+      "name": "overbroad-column-drift-rolls-back",
+      "result": "PASS"
+    },
+    {
+      "name": "dispatch-role-column-leak-rolls-back",
+      "result": "PASS"
+    },
+    {
+      "name": "trigger-drift-rolls-back",
+      "result": "PASS"
+    },
+    {
+      "name": "foreign-key-drift-rolls-back",
+      "result": "PASS"
+    },
+    {
+      "name": "grant-idempotent",
+      "result": "PASS",
+      "exactColumnGrants": 49
+    },
+    {
+      "name": "set-role-fact-outbox-job",
+      "result": "PASS",
+      "currentUser": "cinatoken_gateway_fact_producer",
+      "stored": {
+        "fact": 1,
+        "outbox": 1,
+        "job": 1,
+        "receipt": 0,
+        "log": 0,
+        "spent": "0.000000"
+      },
+      "outboxTriggerUsedWithoutDirectInsert": true
+    },
+    {
+      "name": "set-role-denies-parent-and-financial-writes",
+      "result": "PASS",
+      "denials": 9,
+      "acl": {
+        "parent_execute": false,
+        "fact_table_insert": false,
+        "fact_column_insert": true,
+        "job_column_insert": true,
+        "outbox_insert": false
+      }
+    },
+    {
+      "name": "ordinary-runtime-denied",
+      "result": "PASS"
+    },
+    {
+      "name": "dispatch-role-denied-fact-and-job",
+      "result": "PASS"
+    },
+    {
+      "name": "post-grant-privilege-drift-fails-closed",
+      "result": "PASS"
+    }
+  ],
+  "serverVersionNum": 180006
+}

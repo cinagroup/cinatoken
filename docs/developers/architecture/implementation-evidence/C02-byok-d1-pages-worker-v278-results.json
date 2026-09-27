@@ -1,0 +1,759 @@
+{
+  "version": "v278",
+  "status": "LISTED_PAGES_WORKER_BINDINGS_OBSERVED_MAPPING_PENDING",
+  "previousEvidence": {
+    "path": "docs/developers/architecture/implementation-evidence/C02-byok-d1-pages-history-v277-results.json",
+    "sha256": "12d430fcea86b23c485485ebc581b7f4773627d405bfd4ab7d4af18e3e74a56c"
+  },
+  "priorArtifactsVerified": 47,
+  "priorEntireDependencyTreeRevalidated": false,
+  "unchangedMaintenanceGuardFiles": [
+    {
+      "path": "scripts/deploy/byok-d1-ingress-closure.mjs",
+      "sha256": "51224fa7c1075480ffad1db9d6581dbef1c7c40dc20f60d5b1a50efacb6e62bc"
+    },
+    {
+      "path": "scripts/deploy/byok-d1-maintenance-dispatch.mjs",
+      "sha256": "cde6e489c2ccc26aeca5e379f7a3369fc81c84064493c2941c34dbeca9aec793"
+    },
+    {
+      "path": "scripts/deploy/byok-d1-management.mjs",
+      "sha256": "0888e9c94b81e4c2fa0db5cd8d6269bce403db60886c48df5552b20ae2fbfb85"
+    },
+    {
+      "path": "scripts/deploy/byok-d1-operator.mjs",
+      "sha256": "d1f7825b5d0404ae52d3320f6a70bb081c63ed91708d510535dd4c52325e005a"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/byok-d1-cleanup.ts",
+      "sha256": "b015f0e3c6fca7412e32408e466577615c7d16364db09017446e0528c5b90847"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/byok-d1-maintenance-contract.ts",
+      "sha256": "4dfc3a8ca524f8c6e4f47d41240af0fa279220967ad67ccb9696af1f4a94bbe3"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/byok-d1-maintenance-host.ts",
+      "sha256": "962067df45d11d60ae1dbef958d697af20d1208945532e96de45abd71d8043be"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/byok-d1-maintenance-worker.ts",
+      "sha256": "d48a3ab7e37c5936e32ffa21ee13b554d1b4102cd83d5aa9039d2f6723c3347e"
+    }
+  ],
+  "local": {
+    "path": ".wrangler/staging/byok-pages-worker-v278-local/result.json",
+    "pass": 276
+  },
+  "cloud": {
+    "path": ".wrangler/staging/byok-pages-worker-v278-cloud/result.json",
+    "startedAt": "2026-09-21T05:00:22.760Z",
+    "finishedAt": "2026-09-21T05:02:46.752Z",
+    "elapsedMs": 143993,
+    "projects": 19,
+    "scripts": [
+      {
+        "name": "pages-worker--11827931-preview",
+        "project": "cinagroup",
+        "environment": "preview",
+        "catalogueState": "LISTED",
+        "listedCount": 4,
+        "details": 4,
+        "stable": true,
+        "errorCodes": [],
+        "urlAssociationStates": {
+          "SHORT_ID_CANDIDATE_ONLY": 4
+        }
+      },
+      {
+        "name": "pages-worker--11827931-production",
+        "project": "cinagroup",
+        "environment": "production",
+        "catalogueState": "LISTED",
+        "listedCount": 51,
+        "details": 51,
+        "stable": true,
+        "errorCodes": [],
+        "urlAssociationStates": {
+          "SHORT_ID_CANDIDATE_ONLY": 51
+        }
+      },
+      {
+        "name": "pages-worker--11849251-preview",
+        "project": "cnelec",
+        "environment": "preview",
+        "catalogueState": "NOT_FOUND_UNVERIFIED",
+        "listedCount": null,
+        "details": 0,
+        "stable": true,
+        "errorCodes": [
+          10007
+        ],
+        "urlAssociationStates": {}
+      },
+      {
+        "name": "pages-worker--11849251-production",
+        "project": "cnelec",
+        "environment": "production",
+        "catalogueState": "NOT_FOUND_UNVERIFIED",
+        "listedCount": null,
+        "details": 0,
+        "stable": true,
+        "errorCodes": [
+          10007
+        ],
+        "urlAssociationStates": {}
+      },
+      {
+        "name": "pages-worker--14050307-preview",
+        "project": "cinaseek",
+        "environment": "preview",
+        "catalogueState": "NOT_FOUND_UNVERIFIED",
+        "listedCount": null,
+        "details": 0,
+        "stable": true,
+        "errorCodes": [
+          10007
+        ],
+        "urlAssociationStates": {}
+      },
+      {
+        "name": "pages-worker--14050307-production",
+        "project": "cinaseek",
+        "environment": "production",
+        "catalogueState": "LISTED",
+        "listedCount": 2,
+        "details": 2,
+        "stable": true,
+        "errorCodes": [],
+        "urlAssociationStates": {
+          "SHORT_ID_CANDIDATE_ONLY": 2
+        }
+      },
+      {
+        "name": "pages-worker--14591570-preview",
+        "project": "cinatoken",
+        "environment": "preview",
+        "catalogueState": "NOT_FOUND_UNVERIFIED",
+        "listedCount": null,
+        "details": 0,
+        "stable": true,
+        "errorCodes": [
+          10007
+        ],
+        "urlAssociationStates": {}
+      },
+      {
+        "name": "pages-worker--14591570-production",
+        "project": "cinatoken",
+        "environment": "production",
+        "catalogueState": "LISTED",
+        "listedCount": 1,
+        "details": 1,
+        "stable": true,
+        "errorCodes": [],
+        "urlAssociationStates": {
+          "SHORT_ID_CANDIDATE_ONLY": 1
+        }
+      },
+      {
+        "name": "pages-worker--15081752-preview",
+        "project": "cinatoken-web",
+        "environment": "preview",
+        "catalogueState": "NOT_FOUND_UNVERIFIED",
+        "listedCount": null,
+        "details": 0,
+        "stable": true,
+        "errorCodes": [
+          10007
+        ],
+        "urlAssociationStates": {}
+      },
+      {
+        "name": "pages-worker--15081752-production",
+        "project": "cinatoken-web",
+        "environment": "production",
+        "catalogueState": "NOT_FOUND_UNVERIFIED",
+        "listedCount": null,
+        "details": 0,
+        "stable": true,
+        "errorCodes": [
+          10007
+        ],
+        "urlAssociationStates": {}
+      },
+      {
+        "name": "pages-worker--15081776-preview",
+        "project": "cinatoken-web-classic",
+        "environment": "preview",
+        "catalogueState": "NOT_FOUND_UNVERIFIED",
+        "listedCount": null,
+        "details": 0,
+        "stable": true,
+        "errorCodes": [
+          10007
+        ],
+        "urlAssociationStates": {}
+      },
+      {
+        "name": "pages-worker--15081776-production",
+        "project": "cinatoken-web-classic",
+        "environment": "production",
+        "catalogueState": "NOT_FOUND_UNVERIFIED",
+        "listedCount": null,
+        "details": 0,
+        "stable": true,
+        "errorCodes": [
+          10007
+        ],
+        "urlAssociationStates": {}
+      },
+      {
+        "name": "pages-worker--15160631-preview",
+        "project": "cinawalletkit",
+        "environment": "preview",
+        "catalogueState": "NOT_FOUND_UNVERIFIED",
+        "listedCount": null,
+        "details": 0,
+        "stable": true,
+        "errorCodes": [
+          10007
+        ],
+        "urlAssociationStates": {}
+      },
+      {
+        "name": "pages-worker--15160631-production",
+        "project": "cinawalletkit",
+        "environment": "production",
+        "catalogueState": "NOT_FOUND_UNVERIFIED",
+        "listedCount": null,
+        "details": 0,
+        "stable": true,
+        "errorCodes": [
+          10007
+        ],
+        "urlAssociationStates": {}
+      },
+      {
+        "name": "pages-worker--15259726-preview",
+        "project": "cinachain-nft-dapp",
+        "environment": "preview",
+        "catalogueState": "NOT_FOUND_UNVERIFIED",
+        "listedCount": null,
+        "details": 0,
+        "stable": true,
+        "errorCodes": [
+          10007
+        ],
+        "urlAssociationStates": {}
+      },
+      {
+        "name": "pages-worker--15259726-production",
+        "project": "cinachain-nft-dapp",
+        "environment": "production",
+        "catalogueState": "NOT_FOUND_UNVERIFIED",
+        "listedCount": null,
+        "details": 0,
+        "stable": true,
+        "errorCodes": [
+          10007
+        ],
+        "urlAssociationStates": {}
+      },
+      {
+        "name": "pages-worker--15305206-preview",
+        "project": "cinaadmin",
+        "environment": "preview",
+        "catalogueState": "LISTED",
+        "listedCount": 10,
+        "details": 10,
+        "stable": true,
+        "errorCodes": [],
+        "urlAssociationStates": {
+          "SHORT_ID_CANDIDATE_ONLY": 10
+        }
+      },
+      {
+        "name": "pages-worker--15305206-production",
+        "project": "cinaadmin",
+        "environment": "production",
+        "catalogueState": "LISTED",
+        "listedCount": 94,
+        "details": 94,
+        "stable": true,
+        "errorCodes": [],
+        "urlAssociationStates": {
+          "SHORT_ID_CANDIDATE_ONLY": 94
+        }
+      },
+      {
+        "name": "pages-worker--16094509-preview",
+        "project": "cinaauth-docs",
+        "environment": "preview",
+        "catalogueState": "NOT_FOUND_UNVERIFIED",
+        "listedCount": null,
+        "details": 0,
+        "stable": true,
+        "errorCodes": [
+          10007
+        ],
+        "urlAssociationStates": {}
+      },
+      {
+        "name": "pages-worker--16094509-production",
+        "project": "cinaauth-docs",
+        "environment": "production",
+        "catalogueState": "NOT_FOUND_UNVERIFIED",
+        "listedCount": null,
+        "details": 0,
+        "stable": true,
+        "errorCodes": [
+          10007
+        ],
+        "urlAssociationStates": {}
+      },
+      {
+        "name": "pages-worker--17188553-preview",
+        "project": "cinachain-dapp-v2",
+        "environment": "preview",
+        "catalogueState": "NOT_FOUND_UNVERIFIED",
+        "listedCount": null,
+        "details": 0,
+        "stable": true,
+        "errorCodes": [
+          10007
+        ],
+        "urlAssociationStates": {}
+      },
+      {
+        "name": "pages-worker--17188553-production",
+        "project": "cinachain-dapp-v2",
+        "environment": "production",
+        "catalogueState": "NOT_FOUND_UNVERIFIED",
+        "listedCount": null,
+        "details": 0,
+        "stable": true,
+        "errorCodes": [
+          10007
+        ],
+        "urlAssociationStates": {}
+      },
+      {
+        "name": "pages-worker--17275374-preview",
+        "project": "cinachain-portal",
+        "environment": "preview",
+        "catalogueState": "NOT_FOUND_UNVERIFIED",
+        "listedCount": null,
+        "details": 0,
+        "stable": true,
+        "errorCodes": [
+          10007
+        ],
+        "urlAssociationStates": {}
+      },
+      {
+        "name": "pages-worker--17275374-production",
+        "project": "cinachain-portal",
+        "environment": "production",
+        "catalogueState": "NOT_FOUND_UNVERIFIED",
+        "listedCount": null,
+        "details": 0,
+        "stable": true,
+        "errorCodes": [
+          10007
+        ],
+        "urlAssociationStates": {}
+      },
+      {
+        "name": "pages-worker--17275695-preview",
+        "project": "cinachain-docs",
+        "environment": "preview",
+        "catalogueState": "NOT_FOUND_UNVERIFIED",
+        "listedCount": null,
+        "details": 0,
+        "stable": true,
+        "errorCodes": [
+          10007
+        ],
+        "urlAssociationStates": {}
+      },
+      {
+        "name": "pages-worker--17275695-production",
+        "project": "cinachain-docs",
+        "environment": "production",
+        "catalogueState": "NOT_FOUND_UNVERIFIED",
+        "listedCount": null,
+        "details": 0,
+        "stable": true,
+        "errorCodes": [
+          10007
+        ],
+        "urlAssociationStates": {}
+      },
+      {
+        "name": "pages-worker--17380726-preview",
+        "project": "cinashop-admin",
+        "environment": "preview",
+        "catalogueState": "LISTED",
+        "listedCount": 2,
+        "details": 2,
+        "stable": true,
+        "errorCodes": [],
+        "urlAssociationStates": {
+          "SHORT_ID_CANDIDATE_ONLY": 2
+        }
+      },
+      {
+        "name": "pages-worker--17380726-production",
+        "project": "cinashop-admin",
+        "environment": "production",
+        "catalogueState": "LISTED",
+        "listedCount": 53,
+        "details": 53,
+        "stable": true,
+        "errorCodes": [],
+        "urlAssociationStates": {
+          "SHORT_ID_CANDIDATE_ONLY": 53
+        }
+      },
+      {
+        "name": "pages-worker--17382682-preview",
+        "project": "cinashop-pc",
+        "environment": "preview",
+        "catalogueState": "LISTED",
+        "listedCount": 1,
+        "details": 1,
+        "stable": true,
+        "errorCodes": [],
+        "urlAssociationStates": {
+          "SHORT_ID_CANDIDATE_ONLY": 1
+        }
+      },
+      {
+        "name": "pages-worker--17382682-production",
+        "project": "cinashop-pc",
+        "environment": "production",
+        "catalogueState": "LISTED",
+        "listedCount": 41,
+        "details": 41,
+        "stable": true,
+        "errorCodes": [],
+        "urlAssociationStates": {
+          "SHORT_ID_CANDIDATE_ONLY": 41
+        }
+      },
+      {
+        "name": "pages-worker--17383308-preview",
+        "project": "cinashop-h5",
+        "environment": "preview",
+        "catalogueState": "NOT_FOUND_UNVERIFIED",
+        "listedCount": null,
+        "details": 0,
+        "stable": true,
+        "errorCodes": [
+          10007
+        ],
+        "urlAssociationStates": {}
+      },
+      {
+        "name": "pages-worker--17383308-production",
+        "project": "cinashop-h5",
+        "environment": "production",
+        "catalogueState": "LISTED",
+        "listedCount": 62,
+        "details": 62,
+        "stable": true,
+        "errorCodes": [],
+        "urlAssociationStates": {
+          "SHORT_ID_CANDIDATE_ONLY": 62
+        }
+      },
+      {
+        "name": "pages-worker--17383787-preview",
+        "project": "cinashop-admin-ts",
+        "environment": "preview",
+        "catalogueState": "NOT_FOUND_UNVERIFIED",
+        "listedCount": null,
+        "details": 0,
+        "stable": true,
+        "errorCodes": [
+          10007
+        ],
+        "urlAssociationStates": {}
+      },
+      {
+        "name": "pages-worker--17383787-production",
+        "project": "cinashop-admin-ts",
+        "environment": "production",
+        "catalogueState": "LISTED",
+        "listedCount": 4,
+        "details": 4,
+        "stable": true,
+        "errorCodes": [],
+        "urlAssociationStates": {
+          "SHORT_ID_CANDIDATE_ONLY": 4
+        }
+      },
+      {
+        "name": "pages-worker--19301721-preview",
+        "project": "cinashop-supplier",
+        "environment": "preview",
+        "catalogueState": "NOT_FOUND_UNVERIFIED",
+        "listedCount": null,
+        "details": 0,
+        "stable": true,
+        "errorCodes": [
+          10007
+        ],
+        "urlAssociationStates": {}
+      },
+      {
+        "name": "pages-worker--19301721-production",
+        "project": "cinashop-supplier",
+        "environment": "production",
+        "catalogueState": "LISTED",
+        "listedCount": 20,
+        "details": 20,
+        "stable": true,
+        "errorCodes": [],
+        "urlAssociationStates": {
+          "SHORT_ID_CANDIDATE_ONLY": 20
+        }
+      },
+      {
+        "name": "pages-worker--19301725-preview",
+        "project": "cinashop-kefu",
+        "environment": "preview",
+        "catalogueState": "NOT_FOUND_UNVERIFIED",
+        "listedCount": null,
+        "details": 0,
+        "stable": true,
+        "errorCodes": [
+          10007
+        ],
+        "urlAssociationStates": {}
+      },
+      {
+        "name": "pages-worker--19301725-production",
+        "project": "cinashop-kefu",
+        "environment": "production",
+        "catalogueState": "LISTED",
+        "listedCount": 20,
+        "details": 20,
+        "stable": true,
+        "errorCodes": [],
+        "urlAssociationStates": {
+          "SHORT_ID_CANDIDATE_ONLY": 20
+        }
+      }
+    ],
+    "versionCount": 365,
+    "missingScripts": [
+      "pages-worker--11849251-preview",
+      "pages-worker--11849251-production",
+      "pages-worker--14050307-preview",
+      "pages-worker--14591570-preview",
+      "pages-worker--15081752-preview",
+      "pages-worker--15081752-production",
+      "pages-worker--15081776-preview",
+      "pages-worker--15081776-production",
+      "pages-worker--15160631-preview",
+      "pages-worker--15160631-production",
+      "pages-worker--15259726-preview",
+      "pages-worker--15259726-production",
+      "pages-worker--16094509-preview",
+      "pages-worker--16094509-production",
+      "pages-worker--17188553-preview",
+      "pages-worker--17188553-production",
+      "pages-worker--17275374-preview",
+      "pages-worker--17275374-production",
+      "pages-worker--17275695-preview",
+      "pages-worker--17275695-production",
+      "pages-worker--17383308-preview",
+      "pages-worker--17383787-preview",
+      "pages-worker--19301721-preview",
+      "pages-worker--19301725-preview"
+    ],
+    "edges": [],
+    "listedVersionBindingsObserved": true,
+    "historicalBindingsComplete": false,
+    "pagesDeploymentMappingComplete": false
+  },
+  "findings": {
+    "workerSettingsReadable": true,
+    "pagesServiceEndpointReturned404": true,
+    "versionListAndDetailsReadable": true,
+    "pagesDeploymentIdsDoNotEqualWorkerVersionIds": true,
+    "probeUrlMatchingLimitation": "The initial detail probe compared CF_PAGES_URL against the project name rather than the actual Pages subdomain and cannot prove absence of deployment association. The collector uses the API-returned subdomain and still treats a matching eight-character prefix as a candidate only."
+  },
+  "requests": {
+    "managementGetAttempts": 455,
+    "http200": 406,
+    "http404": 49,
+    "probes": 10,
+    "inventory": 445,
+    "noRecordedStatus": 0
+  },
+  "discoveryBudget": {
+    "timeoutMs": 600000,
+    "requestLimit": 1000,
+    "concurrency": 4,
+    "requestTimeoutMs": 20000,
+    "responseBytes": 2097152,
+    "maxProjects": 100,
+    "maxVersionsPerScript": 500
+  },
+  "journalRecordsVerified": 892,
+  "cloudWrites": 0,
+  "deployments": 0,
+  "sqlCalls": 0,
+  "publicWorkerCalls": 0,
+  "modelCalls": 0,
+  "kmsCalls": 0,
+  "firstRoundUsdCap": 2,
+  "capReset": false,
+  "billingRefreshed": false,
+  "allInvocationPathsInventoried": false,
+  "fullPreflightPassed": false,
+  "nativeTimingQualified": false,
+  "databaseQuiescenceProved": false,
+  "remaining": [
+    "PAGES_DEPLOYMENT_TO_WORKER_VERSION_MAPPING",
+    "MISSING_BACKING_SCRIPT_SEMANTICS",
+    "TOKEN_RESOURCE_VISIBILITY",
+    "ZONE_ROUTES",
+    "DISPATCH_NAMESPACES",
+    "CURRENT_INGRESS_CLOSURE",
+    "IN_FLIGHT_SQL_AND_EXTERNAL_D1_CLIENTS"
+  ],
+  "artifacts": [
+    {
+      "path": ".wrangler/staging/byok-pages-worker-v278-local/result.json",
+      "sha256": "498c4e52326072f346d21d3e120031ebb8d425221525a05bb6c948c1ddcd1495"
+    },
+    {
+      "path": ".wrangler/staging/byok-pages-worker-v278-cloud/result.json",
+      "sha256": "4ffc6d4997a703c93ed59ef46c57e7c2804e22d19980abb375256e92c3bdf471"
+    },
+    {
+      "path": ".wrangler/staging/byok-pages-worker-v278-cloud/.wrangler/staging/byok-d1-pages-worker-versions-reservation/journal.jsonl",
+      "sha256": "e505b0f6fa1d51406efe805a0313e29c5ff65b2e93f2d71e7447e6a759723cff"
+    },
+    {
+      "path": ".wrangler/staging/byok-pages-worker-v278-cloud/.wrangler/staging/byok-d1-pages-worker-versions-reservation/result.json",
+      "sha256": "e1eae5c20895e3413f9665dcbe180f4fecfe6778ccafd1f2edeef6f40bc047b4"
+    },
+    {
+      "path": "scripts/deploy/byok-d1-pages-worker-versions.mjs",
+      "sha256": "307c6661b9c1b7ff5b3db984243aca44c6b0f50818ccbfd22bbdbe9595040ae1"
+    },
+    {
+      "path": "scripts/deploy/byok-d1-pages-worker-versions.test.mjs",
+      "sha256": "34e4c1c34da79eb03acb75f4f8d8059535a49e641500c7c9d03c0b8b6c7b8b77"
+    },
+    {
+      "path": ".wrangler/staging/byok-pages-worker-v278-local/pages-worker-versions.mjs",
+      "sha256": "88f1226ca315159c35278b5ce1afdb9f88a5e0fec822dc2de33ed94caf7c7abe"
+    },
+    {
+      "path": ".wrangler/staging/byok-pages-worker-v278-local/pages-worker-versions.meta.json",
+      "sha256": "a402c0948fc92bd1846a26a59df18f046da4df02f80697fd6c03f78bcc8ab7a9"
+    },
+    {
+      "path": ".wrangler/staging/byok-pages-worker-v278-local/build.log",
+      "sha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b"
+    },
+    {
+      "path": ".wrangler/staging/byok-pages-worker-v278-local/source.log",
+      "sha256": "9caa8232cb40a4fdc7eaac36ddb3e61f78d98896ab08ca5d2ddfcabb6b2601c9"
+    },
+    {
+      "path": ".wrangler/staging/byok-pages-worker-v278-local/bundle.log",
+      "sha256": "47a466e15ee0bd8b556c0a9071f96fb51fdf72b9d030af9de95e9bfc32230df1"
+    },
+    {
+      "path": ".wrangler/staging/byok-pages-worker-v278-local/existing-pages-history.log",
+      "sha256": "5b9dd9dfa042abbb37e32add1ee6273f8b41fdf069e05ea8b2cf1e2e3e0307f3"
+    },
+    {
+      "path": ".wrangler/staging/byok-pages-worker-v278-local/existing-version-inventory.log",
+      "sha256": "cf4ead938154e706088f6ed645ed1cab29ed250cf6581ff821f81860ef5bb327"
+    },
+    {
+      "path": ".wrangler/staging/byok-pages-worker-v278-local/existing-inventory.log",
+      "sha256": "250a3ee87cdbf09d862703e63e0c8577dff4b7833e5c45dc1539f1d9dd1ef98b"
+    },
+    {
+      "path": ".wrangler/staging/byok-pages-worker-v278-local/existing-read-transport.log",
+      "sha256": "1aeb198c2946b34bdde715295dce0635522a39ded757373374280cb03e055e7c"
+    },
+    {
+      "path": ".wrangler/staging/byok-pages-worker-v278-probe/result.json",
+      "sha256": "860849b158bc3ec8df6fb568cb8f938e48dd0c0ff7e2510a1b2ba427462699fb"
+    },
+    {
+      "path": ".wrangler/staging/byok-pages-worker-v278-probe/journal.jsonl",
+      "sha256": "b5e625900f3cca84d916be37ec81f78cb862035247a818d7202c5549d6f9b062"
+    },
+    {
+      "path": ".wrangler/staging/byok-pages-versions-v278-probe/result.json",
+      "sha256": "7db4924dfea225158d50652539e0129db3f35dea4bce319c6d500c14af921402"
+    },
+    {
+      "path": ".wrangler/staging/byok-pages-versions-v278-probe/journal.jsonl",
+      "sha256": "aedb871d59716cc5d0f8b2867e4a8b2d19be3004b0657ba99b70a40b93d3ef08"
+    },
+    {
+      "path": ".wrangler/staging/byok-pages-version-detail-v278-probe/result.json",
+      "sha256": "c9955965a224a54dfc8fc735ab54455f2edd4e646d1b5887165109d87b30b187"
+    },
+    {
+      "path": ".wrangler/staging/byok-pages-version-detail-v278-probe/journal.jsonl",
+      "sha256": "6f2fb216208424fff74715090c86562d1ade267c399559567381ad19510f635a"
+    },
+    {
+      "path": ".wrangler/staging/probe-byok-pages-worker-v278.mjs",
+      "sha256": "b17f9541546173f7ad74c2be39b9def436c22eddf3f5af1c6b35ebcc076da307"
+    },
+    {
+      "path": ".wrangler/staging/probe-byok-pages-versions-v278.mjs",
+      "sha256": "d34ed30eecbdac6aa47c9494dc14c6780bab87ca55877c350dab33d07e21d48a"
+    },
+    {
+      "path": ".wrangler/staging/probe-byok-pages-version-detail-v278.mjs",
+      "sha256": "9f6cb4737492a2226fc32ee3838f3226c6f9ed6474b5ec698757e77f45d953ad"
+    },
+    {
+      "path": ".wrangler/staging/verify-byok-pages-worker-v278.mjs",
+      "sha256": "ed776b456c55ce61ef33f152db8c3f09455b545f9ef2f52f89d8bb7b2c801e1a"
+    },
+    {
+      "path": ".wrangler/staging/collect-byok-pages-worker-v278.mjs",
+      "sha256": "2b279a1eec4cf0091d2145c77cf5fce311be17206f9c072654fe8173635f6050"
+    },
+    {
+      "path": ".wrangler/staging/summarize-byok-pages-worker-v278.mjs",
+      "sha256": "d763254262257d1eb18f4b3d93d126a0e773ebfa3dcaefe7adb714144f89231b"
+    },
+    {
+      "path": ".firecrawl/pages-history-source-developer-v278.json",
+      "sha256": "4dcf2040b07c303c1566c649f1b0afbb38730090c66e6c397c3f860ba54eb802"
+    },
+    {
+      "path": ".firecrawl/pages-worker-settings-search-v278.json",
+      "sha256": "2c5a335d0224049e2281c444e1d8f86d413b88886a4260e63b795e41ee7fe004"
+    },
+    {
+      "path": ".firecrawl/pages-binding-contract-v278.md",
+      "sha256": "59cd4a55c4676b854e88dd3c3fb5d6f46d1ba03e49f1b6a65f13678d44319442"
+    },
+    {
+      "path": "node_modules/cloudflare/src/resources/pages/projects/projects.ts",
+      "sha256": "20683a25a4697ab300f1b668f468230b0ba484af4b0608c6be4701356a3dcdea"
+    },
+    {
+      "path": "node_modules/cloudflare/src/resources/workers/scripts/settings.ts",
+      "sha256": "356315b023a50d8f051879b5efc910486864347c78b4a0045f3314f94bc046e8"
+    }
+  ]
+}

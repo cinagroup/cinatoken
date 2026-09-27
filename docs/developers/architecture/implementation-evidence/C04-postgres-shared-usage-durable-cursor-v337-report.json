@@ -1,0 +1,146 @@
+{
+  "status": "PASS",
+  "cleanup": "PASS",
+  "binaryVersion": "postgres (PostgreSQL) 18.6",
+  "scope": "owned loopback PG18.6; 73 formal migrations; review-only history, repair jobs and private cursor",
+  "limitations": [
+    "A simulated lost COMMIT acknowledgement discards a successful client result; no physical packet loss is induced.",
+    "The isolated migrator receives database CREATE only after a negative test; provisioning does not grant it by default.",
+    "A second operator waiting more than 2s gets 55P03 and must retry; separate physical hosts are not exercised.",
+    "A late lower-sorting earning depends on the live enqueue trigger, not the advanced cursor.",
+    "No production data scale, maintenance window, real Worker/Hyperdrive/Queue, remote SQL or deployment is exercised."
+  ],
+  "sourceSha256": {
+    "formalMigrationCorpus": "23afef61a8a670e0af8c90e3a138f522e6b283b454e380a592bf85bca83108dc",
+    "historyGuard": "454a720f9a6b7410e0aad99c2aaa2eb3327fbbac8c86bb3e3cd4537131e6611b",
+    "repairJobs": "7b2f288ecb83e34207bcfd5a2a4eec934c0d6e156190826816ab033716c173d4",
+    "basePageGenerator": "42c8bfcf22523862a4081463ace99683743d45511e62cdb14bd9b5117b21a0f0",
+    "durableCursorGenerator": "ff0595f6c6b7fb334975f9ded25ebe1de9e1a25b5acd4fc292b3a0598173e72e",
+    "childCursorReader": "4fa4be47296d34bdfec34369185d118c315c54bb9273617939e2d10fc6315683",
+    "nativeTest": "1cabdcff6b78347e66a98eacd908437fe02be60820169b9e1987f4494975b922"
+  },
+  "stages": [
+    {
+      "name": "formal-schema-and-seven-credited-old-earnings",
+      "result": "PASS",
+      "migrations": 73
+    },
+    {
+      "name": "database-create-and-direct-migrator-login-required",
+      "result": "PASS"
+    },
+    {
+      "name": "noninherited-set-role-migrator-membership-rolls-back-activation",
+      "result": "PASS",
+      "ownerMembership": {
+        "inherited": false,
+        "can_set": true,
+        "member": true
+      }
+    },
+    {
+      "name": "private-migrator-owned-singleton-is-not-runtime-readable",
+      "result": "PASS",
+      "owners": {
+        "schema_owner": true,
+        "table_owner": true
+      }
+    },
+    {
+      "name": "wide-runtime-schema-acl-rejected-before-page",
+      "result": "PASS"
+    },
+    {
+      "name": "noninherited-set-role-all-data-memberships-reject-page",
+      "result": "PASS",
+      "builtinMembership": {
+        "pg_read_all_data": {
+          "inherited": false,
+          "can_set": true,
+          "member": true
+        },
+        "pg_write_all_data": {
+          "inherited": false,
+          "can_set": true,
+          "member": true
+        }
+      }
+    },
+    {
+      "name": "rolled-back-page-keeps-jobs-and-cursor-unchanged",
+      "result": "PASS"
+    },
+    {
+      "name": "first-page-and-cursor-commit-together",
+      "result": "PASS",
+      "first": {
+        "scanned": 2,
+        "enqueued": 2,
+        "afterEarningId": null,
+        "nextEarningId": "earning-02",
+        "pagesCommitted": 1
+      }
+    },
+    {
+      "name": "cursor-lock-timeout-leaves-page-unchanged-for-retry",
+      "result": "PASS",
+      "code": "55P03",
+      "timedWaitMs": 2055
+    },
+    {
+      "name": "lost-commit-ack-reads-authoritative-cursor-from-separate-process",
+      "result": "PASS",
+      "afterUnknown": {
+        "lastEarningId": "earning-04",
+        "pagesCommitted": 2
+      },
+      "separateProcessPid": 9040
+    },
+    {
+      "name": "two-operators-wait-and-consume-disjoint-pages",
+      "result": "PASS",
+      "blocked": {
+        "observedWaitMs": 2,
+        "waitEvent": "transactionid"
+      },
+      "operatorA": {
+        "scanned": 2,
+        "enqueued": 2,
+        "afterEarningId": "earning-04",
+        "nextEarningId": "earning-06",
+        "pagesCommitted": 3
+      },
+      "operatorB": {
+        "scanned": 1,
+        "enqueued": 1,
+        "afterEarningId": "earning-06",
+        "nextEarningId": "earning-07",
+        "pagesCommitted": 4
+      }
+    },
+    {
+      "name": "late-low-sorting-earning-is-live-trigger-only",
+      "result": "PASS",
+      "empty": {
+        "scanned": 0,
+        "enqueued": 0,
+        "afterEarningId": "earning-07",
+        "nextEarningId": "earning-07",
+        "pagesCommitted": 4
+      },
+      "late": {
+        "request_log_id": "log-!late-h"
+      }
+    },
+    {
+      "name": "repair-queueing-does-not-credit-seller-again",
+      "result": "PASS",
+      "economic": {
+        "earnings": 8,
+        "credits": 8,
+        "jobs": 8,
+        "balance": "80000"
+      }
+    }
+  ]
+}

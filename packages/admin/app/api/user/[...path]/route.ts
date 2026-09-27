@@ -14,6 +14,7 @@ import {
 	verifyCinaAuthConsolePrincipal,
 } from '@/lib/cinaauth/principal';
 import { getAccountCapabilities } from '@/lib/unified-session';
+import { withGatewayReadRetry } from '@/lib/gateway-read-retry';
 
 export const dynamic = 'force-dynamic';
 
@@ -76,15 +77,15 @@ async function handle(request: Request): Promise<Response> {
 			USER_PRINCIPAL: principal,
 		};
 		if (ctx) {
-			return app.fetch(internalReq, appBindings, ctx);
+			return await app.fetch(internalReq, appBindings, ctx);
 		}
-		return app.fetch(internalReq, appBindings);
+		return await app.fetch(internalReq, appBindings);
 	} catch (error) {
 		return handleGatewayApiError({ route: 'user.catch-all', error });
 	}
 }
 
-export const GET = (request: Request) => handle(request);
+export const GET = (request: Request) => withGatewayReadRetry(request, handle);
 export const POST = (request: Request) => handle(request);
 export const PUT = (request: Request) => handle(request);
 export const PATCH = (request: Request) => handle(request);

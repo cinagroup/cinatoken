@@ -1,0 +1,96 @@
+{
+  "version": "v334",
+  "date": "2026-09-24",
+  "status": "LOCAL_AUDIO_VECTOR_HIDDEN_RETRY_SUBSET_PASS_C02_OPEN",
+  "goalComplete": false,
+  "scope": {
+    "operations": ["audio.transcriptions.openai", "audio.transcriptions.dashscope.sync", "audio.transcriptions.dashscope.asyncSubmit", "audio.transcriptions.dashscope.multimodal", "embeddings", "rerank"],
+    "ambiguousHttpStatuses": ["300-399", 408, 499, "500-599"],
+    "clearRejectionRegression": [400, 401, 429],
+    "c02_5Complete": false,
+    "c02_6Complete": false,
+    "c02_GComplete": false
+  },
+  "beforeFixNativeLoopback": {
+    "audio307": {
+      "scenario": "full audio POST received by local Node server, HTTP 307 returned, two distinct gatewayCandidateIndex values and crossModelCandidateFailover enabled",
+      "openAiPostCount": 2,
+      "dashScopeSyncPostCount": 2,
+      "dashScopeAsyncSubmitPostCount": 2,
+      "redirectTargetHitCountPerOperation": 0,
+      "failingAssertions": { "openAi": 1, "dashScope": 2 }
+    },
+    "vector503": {
+      "scenario": "full vector POST received by first local Node endpoint, HTTP 503 returned, two provider routes",
+      "embeddingsPostCount": 2,
+      "rerankPostCount": 2,
+      "failingAssertions": 2
+    },
+    "observation": "local failing command output before edits; raw output was not saved separately"
+  },
+  "afterFixNativeLoopback": {
+    "openAiAudio307PostCount": 1,
+    "dashScopeSync307PostCount": 1,
+    "dashScopeAsyncSubmit307PostCount": 1,
+    "embeddings503PostCount": 1,
+    "rerank503PostCount": 1,
+    "audio307RedirectTargetHitCountPerOperation": 0,
+    "dispatchPermitsConsumedPerAudioOperation": 1,
+    "ambiguousOutcomeUnknown": true,
+    "ambiguousFailoverForbidden": true,
+    "clear429BoundedFallbackTested": true
+  },
+  "validation": {
+    "combinedCommand": "npx tsx --test --test-reporter=tap src/services/egress/openai-audio-driver.test.ts src/services/egress/dashscope-audio-driver.test.ts src/services/egress/asr-request-lifecycle.test.ts src/services/egress/openai-embeddings-driver.test.ts src/services/egress/openai-rerank-driver.test.ts",
+    "combinedWorkingDirectory": "packages/proxy",
+    "combinedTests": 202,
+    "combinedSuites": 13,
+    "combinedPass": 202,
+    "combinedFail": 0,
+    "individualTests": {
+      "openAiAudioDriver": 35,
+      "dashScopeAudioDriver": 33,
+      "asrRequestLifecycle": 109,
+      "openAiEmbeddingsDriver": 13,
+      "openAiRerankDriver": 12
+    },
+    "audioTranscriptionsPublicRoute": { "command": "npx tsx --test --test-reporter=tap src/routes/v1/audio-transcriptions.test.ts", "workingDirectory": "packages/proxy", "tests": 23, "pass": 23, "fail": 0 },
+    "embeddingsPackageScript": { "command": "npm run test:embeddings -w @octafuse/proxy", "workingDirectory": ".", "tests": 33, "pass": 33, "fail": 0 },
+    "rerankPackageScript": { "command": "npm run test:rerank -w @octafuse/proxy", "workingDirectory": ".", "tests": 16, "pass": 16, "fail": 0 },
+    "vectorResourceTests": { "command": "npx tsx --test --test-reporter=tap src/services/egress/vector-response-resource.test.mjs src/services/egress/vector-upload-resource.test.mjs", "workingDirectory": "packages/proxy", "tests": 75, "pass": 75, "fail": 0 },
+    "ciVectorCommandLocal": { "command": "node --import tsx --test src/services/egress/openai-embeddings-driver.test.ts src/services/egress/openai-rerank-driver.test.ts", "workingDirectory": "packages/proxy", "tests": 25, "pass": 25, "fail": 0 },
+    "proxyTypecheck": "PASS",
+    "gitDiffCheck": "PASS"
+  },
+  "ci": {
+    "audioTestsInProxyDispatchSafetyScript": true,
+    "workflowCallsProxyDispatchSafetyScript": true,
+    "vectorDriverTestsHaveDirectWorkflowStep": true,
+    "workflowPresentInWorkingTree": true,
+    "workflowTrackedByGit": false,
+    "linuxRunVerifiedForTheseEdits": false
+  },
+  "sourceSha256": {
+    "packages/proxy/src/services/egress/openai-audio-driver.ts": "f78ac034baf0b67019b238ea2708d35565bff10b69068efb90c4a7d1f2b35e9a",
+    "packages/proxy/src/services/egress/openai-audio-driver.test.ts": "036dcd6e81b37f0e96bc8e98b1d2ac3f4bdb9bb1ff937f2106e8e3c8f23959c4",
+    "packages/proxy/src/services/egress/dashscope-audio-driver.ts": "ef3e4ff63c3f92c35854f3f2de36aaeaaa05680321e914c6d3c3a91dbcc1d378",
+    "packages/proxy/src/services/egress/dashscope-audio-driver.test.ts": "64db36ef04254ad8628a44b387dfea8ea00ffb99fc69b3aecba7cb794b13d72f",
+    "packages/proxy/src/services/egress/asr-request-lifecycle.test.ts": "0d470fd0492cf8a19db17edcdc247fcd4e395cd8e09a4ed6c821e9c75f5ed5b3",
+    "packages/proxy/src/services/egress/openai-embeddings-driver.ts": "6b678b07946d92d867048a06cefac49d9845f979de282c80fff97229d3b950ca",
+    "packages/proxy/src/services/egress/openai-embeddings-driver.test.ts": "f3f0690c0a1db1c194a3f8d124e84e0c7a88937ae553a3164e4fa18ecb9b8051",
+    "packages/proxy/src/services/egress/openai-rerank-driver.ts": "97c9321d3c8ee3827f429d2ad26c7d4ece5b76876cfbf46e9e76125016c6d4b4",
+    "packages/proxy/src/services/egress/openai-rerank-driver.test.ts": "d54e3b0b980df038b66779abfc9b207d41d4a3ec54d658ca52ffe7a05b20dadf",
+    "packages/proxy/package.json": "d4204f3d5b10ca692424fb4d962c8cb2b116f550c48ae56ae2bf76a8a22889f3",
+    ".github/workflows/proxy-dispatch-safety.yml": "5194365065acd4279634a35b313419a8f4662d03abaf46e529e6cac97e8b9127",
+    "docs/developers/architecture/implementation-evidence/C02-audio-vector-hidden-retry-v334.md": "1b4b09b90b541ff52e12c39c900020c67edd0b2e02b525ebb96063cf302f71de"
+  },
+  "limits": {
+    "realWorkersCloudflareTransportVerified": false,
+    "intermediateProxyRetryVerified": false,
+    "supplierAcceptanceAndBillingVerified": false,
+    "allEgressDriversAndSdksVerified": false,
+    "fullC02AcceptanceVerified": false,
+    "externalProviderCalls": 0,
+    "deployments": 0
+  }
+}

@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import { describe, it } from 'node:test';
-import type { IncomingMessage } from 'node:http';
+import { IncomingMessage } from 'node:http';
+import { Socket } from 'node:net';
 import type { RouteResult } from '../services/model-router';
 import type { DashScopeRealtimeSessionLimits } from '../services/egress/dashscope-realtime-driver';
 import {
@@ -27,6 +28,7 @@ function route(overrides: Partial<RouteResult> = {}): RouteResult {
 			dashscope: { base: 'https://dashscope.aliyuncs.com/api/v1' },
 		},
 		providerApiKey: 'secret',
+		providerSharedChannelType: null,
 		priceOverrideRaw: null,
 		routeMeteredProfileJson: null,
 		routeChargedProfileJson: null,
@@ -56,6 +58,7 @@ class FakeSocket implements NodeWebSocket {
 	private readonly closeListeners: CloseListener[] = [];
 	private readonly errorListeners: ErrorListener[] = [];
 	private readonly openListeners: Array<() => void> = [];
+	private readonly rejectionListeners: Array<(request: IncomingMessage, response: IncomingMessage) => void> = [];
 
 	on(event: 'open', _listener: () => void): this;
 	on(event: 'upgrade', _listener: (_response: IncomingMessage) => void): this;
@@ -65,6 +68,7 @@ class FakeSocket implements NodeWebSocket {
 	on(event: 'error', listener: ErrorListener): this;
 	on(event: SocketEvent | 'open' | 'upgrade' | 'unexpected-response', listener: SocketListener | (() => void) | ((_response: IncomingMessage) => void) | ((_request: IncomingMessage, response: IncomingMessage) => void)): this {
 		if (event === 'open') this.openListeners.push(listener as () => void);
+		if (event === 'unexpected-response') this.rejectionListeners.push(listener as (request: IncomingMessage, response: IncomingMessage) => void);
 		if (event === 'message') this.messageListeners.push(listener as MessageListener);
 		if (event === 'close') this.closeListeners.push(listener as CloseListener);
 		if (event === 'error') this.errorListeners.push(listener as ErrorListener);
@@ -90,7 +94,12 @@ class FakeSocket implements NodeWebSocket {
 			if (index >= 0) this.openListeners.splice(index, 1);
 			return this;
 		}
-		if (event === 'upgrade' || event === 'unexpected-response') return this;
+		if (event === 'unexpected-response') {
+			const index = this.rejectionListeners.indexOf(listener as (request: IncomingMessage, response: IncomingMessage) => void);
+			if (index >= 0) this.rejectionListeners.splice(index, 1);
+			return this;
+		}
+		if (event === 'upgrade') return this;
 		const listeners = event === 'message'
 			? this.messageListeners
 			: event === 'close'
@@ -111,8 +120,16 @@ class FakeSocket implements NodeWebSocket {
 		for (const listener of [...this.closeListeners]) listener(code, Buffer.from(reason));
 	}
 
+	terminate(): void { this.close(); }
+
 	emitOpen(): void {
 		for (const listener of [...this.openListeners]) listener();
+	}
+
+	rejectHandshake(): void {
+		const response = new IncomingMessage(new Socket());
+		response.statusCode = 503;
+		for (const listener of [...this.rejectionListeners]) listener(response, response);
 	}
 
 	emitMessage(data: string | Buffer, isBinary = typeof data !== 'string'): void {
@@ -130,6 +147,49 @@ class FakeSocket implements NodeWebSocket {
 }
 
 describe('Node DashScope realtime adapter', () => {
+	for (const mode of ['gap_frames', 'invalid_candidate', 'gap_overflow', 'gap_frame_count', 'rewritten_overflow'] as const) {
+		it(`owns original unsent frames across candidate gaps: ${mode}`, async () => {
+			const client = new FakeSocket();
+			const upstreams: FakeSocket[] = [];
+			class Upstream extends FakeSocket {
+				constructor(_url: string) {
+					super(); upstreams.push(this);
+					queueMicrotask(() => upstreams.length === 1 ? this.rejectHandshake() : this.emitOpen());
+				}
+			}
+			const dispatch = createNodeDashScopeRealtimeDispatch(client, Upstream);
+			const limits: DashScopeRealtimeSessionLimits = {
+				maxSessionMs: 10_000, connectDeadlineAtMs: Date.now() + 2_000,
+				maxAudioDurationSeconds: 2, maxBillableAudioDurationSeconds: 3,
+				maxTextCharacters: 0, maxClientMessageBytes: 8 * 1024 * 1024,
+				maxClientBytes: 16 * 1024 * 1024, requirePcmAudio: true,
+			};
+			// Even frames delivered before the first dispatch callback have an owner.
+			client.emitMessage(JSON.stringify({ header: { action: 'run-task' }, payload: {
+				model: 'public-model', parameters: { format: 'pcm', sample_rate: 16_000 },
+			} }));
+			assert.equal((await dispatch(route(), 'audio.transcriptions.realtime.inference', undefined, undefined, undefined, limits)).response.status, 503);
+			client.emitMessage(Buffer.alloc(mode === 'gap_overflow' ? 4 * 1024 * 1024 : 32_000));
+			if (mode === 'gap_frame_count') for (let index = 0; index < 1_024; index++) client.emitMessage(Buffer.alloc(0));
+			const fallback = route({ providerModelName: mode === 'invalid_candidate' ? 'unsupported-pcm-model'
+				: mode === 'rewritten_overflow' ? `fun-asr-realtime-${'x'.repeat(4 * 1024 * 1024)}` : 'paraformer-realtime-v2' });
+			const result = await dispatch(fallback, 'audio.transcriptions.realtime.inference', undefined, undefined, undefined, limits);
+			assert.equal(upstreams[0]!.sent.length, 0);
+			if (mode !== 'gap_frames') {
+				assert.equal(client.readyState, 3);
+				assert.equal(upstreams.length, 1, 'revalidation/overflow must stop before a second constructor');
+				assert.equal(result.meta?.upstreamOutcomeUnknown, false);
+				return;
+			}
+			assert.equal(upstreams[1]!.sent.length, 2);
+			assert.equal(JSON.parse(String(upstreams[1]!.sent[0])).payload.model, 'paraformer-realtime-v2');
+			assert.equal((upstreams[1]!.sent[1] as Buffer).byteLength, 32_000);
+			upstreams[1]!.emitMessage(JSON.stringify({ header: { event: 'task-finished' }, payload: {} }));
+			upstreams[1]!.close();
+			const usage = await result.usagePromise;
+			assert.equal(usage.audio_duration_seconds, 1, 'candidate revalidation must not double-count PCM');
+		});
+	}
 	it('configures native ws payload ceilings before message assembly', () => {
 		const server = createNodeWebSocketServer() as unknown as { options: { maxPayload: number } };
 		assert.equal(server.options.maxPayload, DASHSCOPE_REALTIME_MAX_CLIENT_MESSAGE_BYTES);
@@ -153,23 +213,17 @@ describe('Node DashScope realtime adapter', () => {
 			requirePcmAudio: true,
 		};
 		const dispatch = createNodeDashScopeRealtimeDispatch(client, WebSocketCtor);
-		await assert.rejects(
-			dispatch(
-				route(),
-				'audio.transcriptions.realtime.inference',
-				undefined,
-				undefined,
-				undefined,
-				limits,
-			),
-			/connection deadline exceeded/i,
-		);
+		const result = await dispatch(route(), 'audio.transcriptions.realtime.inference', undefined, undefined, undefined, limits);
+		assert.equal(result.response.status, 504);
+		assert.equal(result.meta?.admissionDeniedPreDispatch, true);
+		assert.equal(result.meta?.upstreamOutcomeUnknown, false);
+		assert.match(await result.response.text(), /connection deadline exceeded/i);
 		assert.equal(constructed, false);
 	});
 
 	it('bridges text and binary frames while keeping the routed model and usage', async () => {
 		const client = new FakeSocket();
-		let upstream: FakeSocket | null = null;
+		const holder: { upstream: FakeSocket | null } = { upstream: null };
 		let upstreamUrl = '';
 		let dispatchMarked = false;
 		let providerMaxPayload = 0;
@@ -177,9 +231,9 @@ describe('Node DashScope realtime adapter', () => {
 			assert.equal(dispatchMarked, true);
 			upstreamUrl = url;
 			providerMaxPayload = options?.maxPayload ?? 0;
-			upstream = new FakeSocket();
-			queueMicrotask(() => upstream?.emitOpen());
-			return upstream;
+			holder.upstream = new FakeSocket();
+			queueMicrotask(() => holder.upstream?.emitOpen());
+			return holder.upstream;
 		} as unknown as NodeWebSocketConstructor;
 
 		const dispatch = createNodeDashScopeRealtimeDispatch(client, WebSocketCtor);
@@ -194,9 +248,8 @@ describe('Node DashScope realtime adapter', () => {
 				dispatchMarked = true;
 			},
 		);
-		await new Promise<void>((resolve) => queueMicrotask(resolve));
-		assert.ok(upstream);
 		const result = await resultPromise;
+		assert.ok(holder.upstream);
 
 		assert.match(upstreamUrl, /wss:\/\/dashscope/);
 		assert.equal(providerMaxPayload, DASHSCOPE_REALTIME_MAX_PROVIDER_MESSAGE_BYTES);
@@ -205,14 +258,14 @@ describe('Node DashScope realtime adapter', () => {
 			header: { action: 'run-task' },
 			payload: { model: 'gateway-model' },
 		}), false);
-		assert.equal(typeof upstream!.sent[0], 'string');
-		assert.equal(JSON.parse(String(upstream!.sent[0])).payload.model, 'fun-asr-realtime-v2');
+		assert.equal(typeof holder.upstream!.sent[0], 'string');
+		assert.equal(JSON.parse(String(holder.upstream!.sent[0])).payload.model, 'fun-asr-realtime-v2');
 
-		upstream!.emitUpstreamMessage(JSON.stringify({
+		holder.upstream!.emitUpstreamMessage(JSON.stringify({
 			header: { event: 'task-finished', task_id: 'task-1' },
 			payload: { usage: { duration: 1.5 } },
 		}), false);
-		upstream!.emitClose();
+		holder.upstream!.emitClose();
 		const usage = await result.usagePromise;
 		assert.equal(usage.audio_duration_seconds, 1.5);
 	});
@@ -220,29 +273,29 @@ describe('Node DashScope realtime adapter', () => {
 	it('closes both sockets when provider output exceeds client backpressure capacity', async () => {
 		const client = new FakeSocket();
 		client.bufferedAmount = 4 * 1024 * 1024;
-		let upstream: FakeSocket | null = null;
+		const holder: { upstream: FakeSocket | null } = { upstream: null };
 		const WebSocketCtor = function (): NodeWebSocket {
-			upstream = new FakeSocket();
-			queueMicrotask(() => upstream?.emitOpen());
-			return upstream;
+			holder.upstream = new FakeSocket();
+			queueMicrotask(() => holder.upstream?.emitOpen());
+			return holder.upstream;
 		} as unknown as NodeWebSocketConstructor;
 		const result = await createNodeDashScopeRealtimeDispatch(client, WebSocketCtor)(
 			route(), 'audio.transcriptions.realtime.inference',
 		);
-		upstream!.emitUpstreamMessage('{"header":{"event":"task-started"}}', false);
+		holder.upstream!.emitUpstreamMessage('{"header":{"event":"task-started"}}', false);
 		const usage = await result.usagePromise;
 		assert.match(usage.stream_error ?? '', /backpressure/i);
 		assert.equal(client.readyState, 3);
-		assert.equal(upstream!.readyState, 3);
+		assert.equal(holder.upstream!.readyState, 3);
 	});
 
 	it('bills verified Qwen session PCM when the terminal event omits usage', async () => {
 		const client = new FakeSocket();
-		let upstream: FakeSocket | null = null;
+		const holder: { upstream: FakeSocket | null } = { upstream: null };
 		const WebSocketCtor = function (): NodeWebSocket {
-			upstream = new FakeSocket();
-			queueMicrotask(() => upstream?.emitOpen());
-			return upstream;
+			holder.upstream = new FakeSocket();
+			queueMicrotask(() => holder.upstream?.emitOpen());
+			return holder.upstream;
 		} as unknown as NodeWebSocketConstructor;
 		const limits: DashScopeRealtimeSessionLimits = {
 			maxSessionMs: 10_000,
@@ -267,9 +320,8 @@ describe('Node DashScope realtime adapter', () => {
 			undefined,
 			limits,
 		);
-		await new Promise<void>((resolve) => queueMicrotask(resolve));
-		assert.ok(upstream);
 		const result = await resultPromise;
+		assert.ok(holder.upstream);
 
 		client.emitMessage(JSON.stringify({
 			type: 'session.update',
@@ -279,8 +331,8 @@ describe('Node DashScope realtime adapter', () => {
 			type: 'input_audio_buffer.append',
 			audio: Buffer.alloc(16_000).toString('base64'),
 		}), false);
-		upstream!.emitUpstreamMessage(JSON.stringify({ type: 'session.finished' }), false);
-		upstream!.emitClose();
+		holder.upstream!.emitUpstreamMessage(JSON.stringify({ type: 'session.finished' }), false);
+		holder.upstream!.emitClose();
 
 		const usage = await result.usagePromise;
 		assert.equal(usage.audio_duration_seconds, 1);

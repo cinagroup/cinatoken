@@ -2,6 +2,7 @@
  * 管理 API Hono 子应用：内部路由为 `/admin/*`；由 Next 对外暴露为 `/api/admin/*`。
  */
 import { Hono } from 'hono';
+import { HTTPException } from 'hono/http-exception';
 import { bodyLimit } from 'hono/body-limit';
 import { cors } from 'hono/cors';
 import { logger } from 'hono/logger';
@@ -32,9 +33,13 @@ import { adminDataPoliciesRoutes } from '@/lib/routes/admin/data-policies';
 import { getAdminAuthorizationDecision } from '@/lib/admin-permissions';
 import { hasAdminPermission } from '@/lib/admin-principal';
 import { rejectRateLimitedAdminAuth } from '@/lib/admin-auth-rate-limit';
+import { handleGatewayApiError } from '@/lib/api-error';
 
 export function createAdminApp(): Hono<AdminEnv> {
 	const app = new Hono<AdminEnv>();
+	app.onError((error, c) => error instanceof HTTPException
+		? error.getResponse()
+		: handleGatewayApiError({ route: c.req.path, error }));
 
 	app.use('*', logger());
 	// Admin API is JSON-only — keep bodies small (Node runtime memory safety).

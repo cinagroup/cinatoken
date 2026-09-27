@@ -1,0 +1,53 @@
+{
+  "status": "PASS",
+  "cleanup": "PASS",
+  "binaryVersion": "postgres (PostgreSQL) 18.6",
+  "scope": "owned loopback PG18.6; 73 formal migrations; four review-only proposals",
+  "stages": [
+    {
+      "name": "formal-73-and-v337-installed",
+      "result": "PASS"
+    },
+    {
+      "name": "negative-control-v337-repeats-head-cancellation-and-starves-healthy-key",
+      "result": "PASS"
+    },
+    {
+      "name": "exact-v338-activation-trigger-predicate-guard-and-atomic-install",
+      "result": "PASS"
+    },
+    {
+      "name": "cancel-propagates-earning-preserves-backoff-and-next-run-repairs-healthy-key",
+      "result": "PASS"
+    },
+    {
+      "name": "two-operators-claim-distinct-keys-and-stale-token-cannot-mutate",
+      "result": "PASS"
+    },
+    {
+      "name": "lost-claim-ack-and-expired-lease-retry-once-without-double-projection",
+      "result": "PASS"
+    },
+    {
+      "name": "fifth-cancelled-claim-is-quarantined-and-live-lease-blocks-manual-requeue",
+      "result": "PASS"
+    },
+    {
+      "name": "expired-dead-letter-requeue-recovers-projection-without-credit-replay",
+      "result": "PASS"
+    }
+  ],
+  "sourceSha256": {
+    "history": "454a720f9a6b7410e0aad99c2aaa2eb3327fbbac8c86bb3e3cd4537131e6611b",
+    "jobs": "7b2f288ecb83e34207bcfd5a2a4eec934c0d6e156190826816ab033716c173d4",
+    "isolation": "14a9be7e9ed354f63b7d74c81303502a0217c9be080f541009466804d3e19b63",
+    "durable": "b90fa530433a632280c91837b3981eba026e50ccf863cebc8d161871cc349338",
+    "nativeFixture": "2ddf13dabe677f2d227df40afd90f200366cfbc09d01b76e34fe7b3b4348380b"
+  },
+  "limitations": [
+    "No formal migration, remote SQL, deployment, actual Workers Cron or Hyperdrive run.",
+    "The fixture accelerates retry/lease timestamps and does not prove production queue throughput.",
+    "A fifth admitted attempt is quarantined even if cancellation leaves its outcome unknown.",
+    "The direct migrator is trusted; dedicated LOGIN and ACLs are checked by a separate fixture."
+  ]
+}

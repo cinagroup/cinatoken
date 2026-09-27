@@ -1,0 +1,40 @@
+{
+  "date": "2026-09-24",
+  "status": "review_only_pass",
+  "formalMigration": false,
+  "productionActivated": false,
+  "nativePostgres": "18.6",
+  "nativeDurableClaim": {
+    "report": "docs/developers/architecture/implementation-evidence/C04-postgres-native-shared-key-usage-repair-durable-claim-v338-report.json",
+    "reportSha256": "15161d745a61c301cb36a9f9d93ab0cb7ab54e3ec15f952033aa25f1b1b7c5be",
+    "stagesPassed": 8,
+    "cleanup": "PASS"
+  },
+  "nativeDirectLogin": {
+    "report": "docs/developers/architecture/implementation-evidence/C04-postgres-native-shared-key-usage-repair-login-v338-report.json",
+    "reportSha256": "22ca9b8c84ef9a97155847d4f8e6eee074c43a2eaed9ad9a250edbe7a01a573c",
+    "stagesPassed": 8,
+    "cleanup": "PASS"
+  },
+  "nativeRegressions": [
+    "postgres-shared-key-usage-repair-failure-isolation.native.test.mjs: 1/1 PASS",
+    "postgres-shared-key-usage-repair-runtime-grant.native.test.mjs: 1/1 PASS"
+  ],
+  "targetedNodeTests": "23/23 PASS",
+  "proxyTsc": "PASS",
+  "scriptsTsc": "PASS",
+  "sourceSha256": {
+    "packages/core/migrations-proposals/postgres/shared-key-usage-repair-jobs.sql": "7b2f288ecb83e34207bcfd5a2a4eec934c0d6e156190826816ab033716c173d4",
+    "packages/core/migrations-proposals/postgres/shared-key-usage-repair-failure-isolation.sql": "14a9be7e9ed354f63b7d74c81303502a0217c9be080f541009466804d3e19b63",
+    "packages/core/migrations-proposals/postgres/shared-key-usage-repair-durable-claim.sql": "b90fa530433a632280c91837b3981eba026e50ccf863cebc8d161871cc349338",
+    "packages/proxy/src/runtime/shared-key-usage-repair-worker.ts": "55eada34e0c11bda99e2c2961ab0fb707d0e71f9c5b1b2a2106bf834506badf8",
+    "packages/proxy/src/runtime/shared-key-usage-repair-worker.test.ts": "27b8764ec980bfedc38ea71cda45b8b3fdb7dda5297f2fb5da8673f1311cf3de",
+    "scripts/db/cutover/build-shared-key-usage-repair-direct-login-grant.ts": "c2f6fc4fa68af525d9283c95043d5c9b31949c0d2db3ea5d0014e678b52db189",
+    "scripts/db/cutover/build-shared-key-usage-repair-direct-login-grant.test.ts": "4d2a45af0e0a1b1f7011942536c28f53a14e11ace07822394b5297cc15972f7b",
+    "scripts/db/cutover/build-shared-key-usage-repair-direct-login-grant.native.test.mjs": "ce1d94291d14a82450dd9f3a6d0b2dcd1f19645fd78f416d8d137e96b2d3c537",
+    "scripts/db/cutover/postgres-shared-key-usage-repair-durable-claim.native.test.mjs": "2ddf13dabe677f2d227df40afd90f200366cfbc09d01b76e34fe7b3b4348380b",
+    "scripts/db/cutover/grant-postgres-runtime.ts": "c07358f59ddc2ff314d3cc3470587ab04e71627f81d2a80a63ed5bdf09a4fc20",
+    "scripts/deploy/gen-wrangler.mjs": "cfaf39ce5ad118b10de43f99c29a5bc59e8cd6f390ce4b4f6161a4322311607c",
+    "scripts/deploy/gen-wrangler.test.mjs": "e6c89cba4be0ecf4e376e3f3a6893e19c65935fcea076dc17b3a0f214606bef2"
+  }
+}

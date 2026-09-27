@@ -3,6 +3,7 @@
  * 与管理台 `/admin/*` 共享存储绑定但会话/权限完全独立（`user_session`）。
  */
 import { Hono } from "hono";
+import { HTTPException } from "hono/http-exception";
 import { logger } from "hono/logger";
 import { bodyLimit } from "hono/body-limit";
 import {
@@ -13,6 +14,7 @@ import {
 import type { UserEnv } from "@/lib/user-env";
 import { resolveAdminStorageContext } from "@/lib/storage-context";
 import { adminAppVersion as appVersion } from "@/lib/app-version";
+import { handleGatewayApiError } from "@/lib/api-error";
 import { getUserSessionToken, USER_SESSION_COOKIE } from "@/lib/user-auth";
 import { userSharedKeysRoutes } from "@/lib/routes/user/shared-keys";
 import { userEarningsRoutes } from "@/lib/routes/user/earnings";
@@ -65,6 +67,9 @@ export function createPortalMeResponse(
 
 export function createUserApp(): Hono<UserEnv> {
 	const app = new Hono<UserEnv>();
+	app.onError((error, c) => error instanceof HTTPException
+		? error.getResponse()
+		: handleGatewayApiError({ route: c.req.path, error }));
 
 	app.use("*", logger());
 	app.use("*", bodyLimit({ maxSize: 2 * 1024 * 1024 }));

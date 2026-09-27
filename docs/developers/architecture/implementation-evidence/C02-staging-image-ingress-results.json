@@ -1,0 +1,1215 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-09-07T01:14:10.251Z",
+  "attempts": [
+    {
+      "startedAt": "2026-09-07T01:05:06.037Z",
+      "scope": "real Workers Images admission only; no successful inference",
+      "budgetUsd": 2,
+      "newBudget": false,
+      "phaseRequestLimit": 28,
+      "phaseConcurrency": 1,
+      "account": "7ea8e46d8210bad342fa7595f7935fea",
+      "worker": "cinatoken-proxy-staging",
+      "database": "6bf5d41e-fe0b-4afa-9f67-ff5cf82e23d1",
+      "fixtureIds": {
+        "runId": "c02-ingress-bdba13c9-b3d0-4d05-9c9d-c58e977b7cb9",
+        "user": "c02-ingress-bdba13c9-b3d0-4d05-9c9d-c58e977b7cb9-user",
+        "workspace": "c02-ingress-bdba13c9-b3d0-4d05-9c9d-c58e977b7cb9-workspace",
+        "key": "c02-ingress-bdba13c9-b3d0-4d05-9c9d-c58e977b7cb9-key"
+      },
+      "requests": [],
+      "modelCalls": 0,
+      "kmsCalls": 0,
+      "d1ApiRowsRead": 323,
+      "d1ApiRowsWritten": 0,
+      "harnessSha256": "ceabfc028cdd21b157521fdcb487557739693cafe179ed4756bdc1700ac25180",
+      "version": "eaff1578-8e3c-43a7-bb25-67d282a87675",
+      "productionBefore": [
+        {
+          "name": "cinatoken-proxy",
+          "settingsSha256": "4243eedd631abb9bcf0c1dd8dd9acbb9ca56edab0bf3048204abccbbd4261cfc"
+        },
+        {
+          "name": "cinatoken-admin",
+          "settingsSha256": "e2ee0adf7b6469d843c310f3dccd2a478230c0f0b75d5d6ad285efeec17ed6ab"
+        },
+        {
+          "name": "cinatoken-chain-worker",
+          "settingsSha256": "21f1b2c08db33d20c0f235e5a89533e637a761eaf7b4bef2fcf0061ad004a916"
+        }
+      ],
+      "result": "FAIL",
+      "error": "Error: Cloudflare POST /d1/database/6bf5d41e-fe0b-4afa-9f67-ff5cf82e23d1/query: 400; codes 7500",
+      "productionAfter": [
+        {
+          "name": "cinatoken-proxy",
+          "settingsSha256": "4243eedd631abb9bcf0c1dd8dd9acbb9ca56edab0bf3048204abccbbd4261cfc"
+        },
+        {
+          "name": "cinatoken-admin",
+          "settingsSha256": "e2ee0adf7b6469d843c310f3dccd2a478230c0f0b75d5d6ad285efeec17ed6ab"
+        },
+        {
+          "name": "cinatoken-chain-worker",
+          "settingsSha256": "21f1b2c08db33d20c0f235e5a89533e637a761eaf7b4bef2fcf0061ad004a916"
+        }
+      ],
+      "productionUnchanged": true,
+      "managementRequests": 15,
+      "finishedAt": "2026-09-07T01:05:27.878Z"
+    },
+    {
+      "startedAt": "2026-09-07T01:07:13.511Z",
+      "scope": "real Workers Images admission only; no successful inference",
+      "budgetUsd": 2,
+      "newBudget": false,
+      "phaseRequestLimit": 28,
+      "phaseConcurrency": 1,
+      "account": "7ea8e46d8210bad342fa7595f7935fea",
+      "worker": "cinatoken-proxy-staging",
+      "database": "6bf5d41e-fe0b-4afa-9f67-ff5cf82e23d1",
+      "previousAttempt": {
+        "startedAt": "2026-09-07T01:05:06.037Z",
+        "requests": 0,
+        "result": "FAIL",
+        "error": "Error: Cloudflare POST /d1/database/6bf5d41e-fe0b-4afa-9f67-ff5cf82e23d1/query: 400; codes 7500"
+      },
+      "fixtureIds": {
+        "runId": "c02-ingress-3dcd930a-2879-45db-bbb8-811f0e408711",
+        "user": "c02-ingress-3dcd930a-2879-45db-bbb8-811f0e408711-user",
+        "workspace": "c02-ingress-3dcd930a-2879-45db-bbb8-811f0e408711-workspace",
+        "key": "c02-ingress-3dcd930a-2879-45db-bbb8-811f0e408711-key"
+      },
+      "requests": [],
+      "modelCalls": 0,
+      "kmsCalls": 0,
+      "d1ApiRowsRead": 323,
+      "d1ApiRowsWritten": 0,
+      "harnessSha256": "8f6bd2742973f118fe092205af6701de128c9fc875e586e68220ab0fff2f3219",
+      "version": "eaff1578-8e3c-43a7-bb25-67d282a87675",
+      "productionBefore": [
+        {
+          "name": "cinatoken-proxy",
+          "settingsSha256": "4243eedd631abb9bcf0c1dd8dd9acbb9ca56edab0bf3048204abccbbd4261cfc"
+        },
+        {
+          "name": "cinatoken-admin",
+          "settingsSha256": "e2ee0adf7b6469d843c310f3dccd2a478230c0f0b75d5d6ad285efeec17ed6ab"
+        },
+        {
+          "name": "cinatoken-chain-worker",
+          "settingsSha256": "21f1b2c08db33d20c0f235e5a89533e637a761eaf7b4bef2fcf0061ad004a916"
+        }
+      ],
+      "result": "FAIL",
+      "error": "Error: Cloudflare POST /d1/database/6bf5d41e-fe0b-4afa-9f67-ff5cf82e23d1/query: 400; codes 7500",
+      "productionAfter": [
+        {
+          "name": "cinatoken-proxy",
+          "settingsSha256": "4243eedd631abb9bcf0c1dd8dd9acbb9ca56edab0bf3048204abccbbd4261cfc"
+        },
+        {
+          "name": "cinatoken-admin",
+          "settingsSha256": "e2ee0adf7b6469d843c310f3dccd2a478230c0f0b75d5d6ad285efeec17ed6ab"
+        },
+        {
+          "name": "cinatoken-chain-worker",
+          "settingsSha256": "21f1b2c08db33d20c0f235e5a89533e637a761eaf7b4bef2fcf0061ad004a916"
+        }
+      ],
+      "productionUnchanged": true,
+      "managementRequests": 15,
+      "finishedAt": "2026-09-07T01:07:34.005Z"
+    },
+    {
+      "startedAt": "2026-09-07T01:08:53.096Z",
+      "scope": "real Workers Images admission only; no successful inference",
+      "budgetUsd": 2,
+      "newBudget": false,
+      "phaseRequestLimit": 28,
+      "phaseConcurrency": 1,
+      "account": "7ea8e46d8210bad342fa7595f7935fea",
+      "worker": "cinatoken-proxy-staging",
+      "database": "6bf5d41e-fe0b-4afa-9f67-ff5cf82e23d1",
+      "previousAttempt": {
+        "startedAt": "2026-09-07T01:07:13.511Z",
+        "requests": 0,
+        "result": "FAIL",
+        "error": "Error: Cloudflare POST /d1/database/6bf5d41e-fe0b-4afa-9f67-ff5cf82e23d1/query: 400; codes 7500"
+      },
+      "fixtureIds": {
+        "runId": "c02-ingress-096794c7-a7c4-4691-9bde-269f45c2324a",
+        "user": "c02-ingress-096794c7-a7c4-4691-9bde-269f45c2324a-user",
+        "workspace": "c02-ingress-096794c7-a7c4-4691-9bde-269f45c2324a-workspace",
+        "key": "c02-ingress-096794c7-a7c4-4691-9bde-269f45c2324a-key"
+      },
+      "requests": [
+        {
+          "label": "access-readiness-0",
+          "path": "/health",
+          "startedAt": "2026-09-07T01:09:19.376Z",
+          "requestBytes": 0,
+          "declaredLength": false,
+          "generatedBytes": 0,
+          "status": 404,
+          "responseBytes": 19984,
+          "ms": 1283,
+          "gatewayCode": null,
+          "cfRay": "a371d3c448e6fce0-SIN",
+          "contentType": "text/html; charset=UTF-8",
+          "errorMessage": null
+        },
+        {
+          "label": "access-readiness-1",
+          "path": "/health",
+          "startedAt": "2026-09-07T01:09:25.671Z",
+          "requestBytes": 0,
+          "declaredLength": false,
+          "generatedBytes": 0,
+          "status": 401,
+          "responseBytes": 37790,
+          "ms": 2015,
+          "gatewayCode": null,
+          "cfRay": "a371d3ea7a7ff906-SIN",
+          "contentType": "text/html",
+          "errorMessage": null,
+          "passed": true
+        },
+        {
+          "label": "authorized-health",
+          "path": "/health",
+          "startedAt": "2026-09-07T01:09:27.688Z",
+          "requestBytes": 0,
+          "declaredLength": false,
+          "generatedBytes": 0,
+          "status": 200,
+          "responseBytes": 43,
+          "ms": 1094,
+          "gatewayCode": null,
+          "cfRay": "a371d3f6de7d68f5-SIN",
+          "contentType": "application/json",
+          "errorMessage": null,
+          "passed": true
+        },
+        {
+          "label": "hashed-gateway-key-auth",
+          "path": "/v1/models",
+          "startedAt": "2026-09-07T01:09:28.784Z",
+          "requestBytes": 0,
+          "declaredLength": false,
+          "generatedBytes": 0,
+          "status": 200,
+          "responseBytes": 27,
+          "ms": 683,
+          "gatewayCode": null,
+          "cfRay": "a371d3f95b32f906-SIN",
+          "contentType": "application/json",
+          "errorMessage": null,
+          "passed": true
+        },
+        {
+          "label": "small-valid-input-no-model",
+          "path": "/v1/images/generations",
+          "startedAt": "2026-09-07T01:09:29.468Z",
+          "requestBytes": 67,
+          "declaredLength": false,
+          "generatedBytes": 67,
+          "status": 404,
+          "responseBytes": 148,
+          "ms": 970,
+          "gatewayCode": "gateway.model_not_found",
+          "cfRay": "a371d3fd8da668f5-SIN",
+          "contentType": "application/json; charset=UTF-8",
+          "errorMessage": "Model not found: c02-ingress-no-such-model",
+          "passed": true
+        },
+        {
+          "label": "model-256-chars",
+          "path": "/v1/images/generations",
+          "startedAt": "2026-09-07T01:09:30.440Z",
+          "requestBytes": 298,
+          "declaredLength": false,
+          "generatedBytes": 298,
+          "status": 404,
+          "responseBytes": 379,
+          "ms": 968,
+          "gatewayCode": "gateway.model_not_found",
+          "cfRay": "a371d403bb63f906-SIN",
+          "contentType": "application/json; charset=UTF-8",
+          "errorMessage": "Model not found: mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm",
+          "passed": true
+        },
+        {
+          "label": "model-257-chars",
+          "path": "/v1/images/generations",
+          "startedAt": "2026-09-07T01:09:31.409Z",
+          "requestBytes": 299,
+          "declaredLength": false,
+          "generatedBytes": 299,
+          "status": 400,
+          "responseBytes": 148,
+          "ms": 526,
+          "gatewayCode": "gateway.invalid_request",
+          "cfRay": "a371d409c9daf906-SIN",
+          "contentType": "application/json; charset=UTF-8",
+          "errorMessage": "model must be at most 256 characters",
+          "passed": true
+        },
+        {
+          "label": "size-65-chars",
+          "path": "/v1/images/generations",
+          "startedAt": "2026-09-07T01:09:31.936Z",
+          "requestBytes": 142,
+          "declaredLength": false,
+          "generatedBytes": 142,
+          "status": 400,
+          "responseBytes": 146,
+          "ms": 521,
+          "gatewayCode": "gateway.invalid_request",
+          "cfRay": "a371d40cfc1568f5-SIN",
+          "contentType": "application/json; charset=UTF-8",
+          "errorMessage": "size must be at most 64 characters",
+          "passed": true
+        },
+        {
+          "label": "property-name-256-chars",
+          "path": "/v1/images/generations",
+          "startedAt": "2026-09-07T01:09:32.459Z",
+          "requestBytes": 328,
+          "declaredLength": false,
+          "generatedBytes": 328,
+          "status": 404,
+          "responseBytes": 148,
+          "ms": 939,
+          "gatewayCode": "gateway.model_not_found",
+          "cfRay": "a371d4105a15f906-SIN",
+          "contentType": "application/json; charset=UTF-8",
+          "errorMessage": "Model not found: c02-ingress-no-such-model",
+          "passed": true
+        },
+        {
+          "label": "property-name-257-chars",
+          "path": "/v1/images/generations",
+          "startedAt": "2026-09-07T01:09:33.399Z",
+          "requestBytes": 329,
+          "declaredLength": false,
+          "generatedBytes": 329,
+          "status": 413,
+          "responseBytes": 182,
+          "ms": 514,
+          "gatewayCode": "gateway.payload_too_large",
+          "cfRay": "a371d416385cf906-SIN",
+          "contentType": "application/json; charset=UTF-8",
+          "errorMessage": "JSON structure exceeds the maximum property name characters of 256",
+          "passed": true
+        },
+        {
+          "label": "provider-json-16385-bytes",
+          "path": "/v1/images/generations",
+          "startedAt": "2026-09-07T01:09:33.915Z",
+          "requestBytes": 16464,
+          "declaredLength": false,
+          "generatedBytes": 16464,
+          "status": 400,
+          "responseBytes": 153,
+          "ms": 526,
+          "gatewayCode": "gateway.invalid_request",
+          "cfRay": "a371d4195b2568f5-SIN",
+          "contentType": "application/json; charset=UTF-8",
+          "errorMessage": "provider must be at most 16384 JSON bytes",
+          "passed": true
+        },
+        {
+          "label": "canonical-root-control-limit",
+          "path": "/v1/images",
+          "startedAt": "2026-09-07T01:09:34.442Z",
+          "requestBytes": 299,
+          "declaredLength": false,
+          "generatedBytes": 299,
+          "status": 400,
+          "responseBytes": 148,
+          "ms": 503,
+          "gatewayCode": "gateway.invalid_request",
+          "cfRay": "a371d41cbe5cf906-SIN",
+          "contentType": "application/json; charset=UTF-8",
+          "errorMessage": "model must be at most 256 characters",
+          "passed": true
+        },
+        {
+          "label": "api-alias-control-limit",
+          "path": "/api/v1/images/generations",
+          "startedAt": "2026-09-07T01:09:34.946Z",
+          "requestBytes": 299,
+          "declaredLength": false,
+          "generatedBytes": 299,
+          "status": 400,
+          "responseBytes": 148,
+          "ms": 514,
+          "gatewayCode": "gateway.invalid_request",
+          "cfRay": "a371d41fba8468f5-SIN",
+          "contentType": "application/json; charset=UTF-8",
+          "errorMessage": "model must be at most 256 characters",
+          "passed": true
+        },
+        {
+          "label": "json-exact-50MiB",
+          "path": "/v1/images/generations",
+          "startedAt": "2026-09-07T01:09:35.461Z",
+          "requestBytes": 52428800,
+          "declaredLength": false,
+          "generatedBytes": 52428800,
+          "status": 404,
+          "responseBytes": 148,
+          "ms": 17851,
+          "gatewayCode": "gateway.model_not_found",
+          "cfRay": "a371d4231caff906-SIN",
+          "contentType": "application/json; charset=UTF-8",
+          "errorMessage": "Model not found: c02-ingress-no-such-model",
+          "passed": true
+        },
+        {
+          "label": "json-stream-50MiB-plus-one",
+          "path": "/v1/images/generations",
+          "startedAt": "2026-09-07T01:09:53.315Z",
+          "requestBytes": 52428801,
+          "declaredLength": false,
+          "generatedBytes": 52428801,
+          "status": 413,
+          "responseBytes": 161,
+          "ms": 14806,
+          "gatewayCode": "gateway.payload_too_large",
+          "cfRay": "a371d4af48a5f906-SIN",
+          "contentType": "application/json; charset=UTF-8",
+          "errorMessage": "Request body exceeds the maximum allowed size",
+          "passed": true
+        },
+        {
+          "label": "json-declared-50MiB-plus-one",
+          "path": "/v1/images/generations",
+          "startedAt": "2026-09-07T01:10:08.122Z",
+          "requestBytes": 52428801,
+          "declaredLength": true,
+          "generatedBytes": 52428801,
+          "status": 413,
+          "responseBytes": 161,
+          "ms": 22175,
+          "gatewayCode": "gateway.payload_too_large",
+          "cfRay": "a371d519b9363413-SIN",
+          "contentType": "application/json; charset=UTF-8",
+          "errorMessage": "Request body exceeds the maximum allowed size",
+          "passed": true
+        },
+        {
+          "label": "multipart-file-exact-20MiB",
+          "path": "/v1/images/edits",
+          "startedAt": "2026-09-07T01:10:30.299Z",
+          "requestBytes": 20971897,
+          "declaredLength": false,
+          "generatedBytes": 20971897,
+          "status": 404,
+          "responseBytes": 148,
+          "ms": 10216,
+          "gatewayCode": "gateway.model_not_found",
+          "cfRay": "a371d59aee10fb86-SIN",
+          "contentType": "application/json; charset=UTF-8",
+          "errorMessage": "Model not found: c02-ingress-no-such-model",
+          "passed": true
+        },
+        {
+          "label": "multipart-file-20MiB-plus-one",
+          "path": "/v1/images/edits",
+          "startedAt": "2026-09-07T01:10:40.516Z",
+          "requestBytes": 20971898,
+          "declaredLength": false,
+          "generatedBytes": 20971898,
+          "status": 400,
+          "responseBytes": 147,
+          "ms": 6514,
+          "gatewayCode": "gateway.invalid_request",
+          "cfRay": "a371d5d64aa9fb86-SIN",
+          "contentType": "application/json; charset=UTF-8",
+          "errorMessage": "Image file exceeds the allowed size",
+          "passed": true
+        },
+        {
+          "label": "multipart-total-exact-50MiB",
+          "path": "/v1/images/edits",
+          "startedAt": "2026-09-07T01:10:47.032Z",
+          "requestBytes": 52428800,
+          "declaredLength": false,
+          "generatedBytes": 52428800,
+          "status": 404,
+          "responseBytes": 148,
+          "ms": 29189,
+          "gatewayCode": "gateway.model_not_found",
+          "cfRay": "a371d6036e88fda0-SIN",
+          "contentType": "application/json; charset=UTF-8",
+          "errorMessage": "Model not found: c02-ingress-no-such-model",
+          "passed": true
+        },
+        {
+          "label": "multipart-total-stream-50MiB-plus-one",
+          "path": "/v1/images/edits",
+          "startedAt": "2026-09-07T01:11:16.223Z",
+          "requestBytes": 52428801,
+          "declaredLength": false,
+          "generatedBytes": 52428801,
+          "status": 413,
+          "responseBytes": 161,
+          "ms": 20210,
+          "gatewayCode": "gateway.payload_too_large",
+          "cfRay": "a371d6934d261f6e-SIN",
+          "contentType": "application/json; charset=UTF-8",
+          "errorMessage": "Request body exceeds the maximum allowed size",
+          "passed": true
+        },
+        {
+          "label": "small-input-after-boundaries",
+          "path": "/v1/images/generations",
+          "startedAt": "2026-09-07T01:11:36.435Z",
+          "requestBytes": 67,
+          "declaredLength": false,
+          "generatedBytes": 67,
+          "status": 404,
+          "responseBytes": 148,
+          "ms": 1693,
+          "gatewayCode": "gateway.model_not_found",
+          "cfRay": "a371d7115a628de9-SIN",
+          "contentType": "application/json; charset=UTF-8",
+          "errorMessage": "Model not found: c02-ingress-no-such-model",
+          "passed": true
+        },
+        {
+          "label": "access-still-denies-after-images",
+          "path": "/health",
+          "startedAt": "2026-09-07T01:11:38.131Z",
+          "requestBytes": 0,
+          "declaredLength": false,
+          "generatedBytes": 0,
+          "status": 401,
+          "responseBytes": 37790,
+          "ms": 1317,
+          "gatewayCode": null,
+          "cfRay": "a371d71788771f6e-SIN",
+          "contentType": "text/html",
+          "errorMessage": null,
+          "passed": true
+        }
+      ],
+      "modelCalls": 0,
+      "kmsCalls": 0,
+      "d1ApiRowsRead": 1694,
+      "d1ApiRowsWritten": 29,
+      "harnessSha256": "b0d3e7f3a2cd2f08c9cf36415076ed38f8ec049d6aaa90f9a5eaa178c483ef7a",
+      "version": "eaff1578-8e3c-43a7-bb25-67d282a87675",
+      "productionBefore": [
+        {
+          "name": "cinatoken-proxy",
+          "settingsSha256": "4243eedd631abb9bcf0c1dd8dd9acbb9ca56edab0bf3048204abccbbd4261cfc"
+        },
+        {
+          "name": "cinatoken-admin",
+          "settingsSha256": "e2ee0adf7b6469d843c310f3dccd2a478230c0f0b75d5d6ad285efeec17ed6ab"
+        },
+        {
+          "name": "cinatoken-chain-worker",
+          "settingsSha256": "21f1b2c08db33d20c0f235e5a89533e637a761eaf7b4bef2fcf0061ad004a916"
+        }
+      ],
+      "tablesBefore": [
+        {
+          "table_name": "admin_api_keys",
+          "row_count": 1
+        },
+        {
+          "table_name": "admin_sessions",
+          "row_count": 0
+        },
+        {
+          "table_name": "api_key_request_logs",
+          "row_count": 0
+        },
+        {
+          "table_name": "api_keys",
+          "row_count": 0
+        },
+        {
+          "table_name": "batch_items",
+          "row_count": 0
+        },
+        {
+          "table_name": "batches",
+          "row_count": 0
+        },
+        {
+          "table_name": "byok_keys",
+          "row_count": 0
+        },
+        {
+          "table_name": "chain_job_transactions",
+          "row_count": 0
+        },
+        {
+          "table_name": "d1_migrations",
+          "row_count": 68
+        },
+        {
+          "table_name": "generation_feedback",
+          "row_count": 0
+        },
+        {
+          "table_name": "guardrail_assignments",
+          "row_count": 0
+        },
+        {
+          "table_name": "guardrail_budget_reservations",
+          "row_count": 0
+        },
+        {
+          "table_name": "guardrail_budget_windows",
+          "row_count": 0
+        },
+        {
+          "table_name": "guardrail_versions",
+          "row_count": 0
+        },
+        {
+          "table_name": "guardrails",
+          "row_count": 0
+        },
+        {
+          "table_name": "identity_event_inbox",
+          "row_count": 0
+        },
+        {
+          "table_name": "management_api_keys",
+          "row_count": 0
+        },
+        {
+          "table_name": "model_endpoint_backfill_database_identity",
+          "row_count": 1
+        },
+        {
+          "table_name": "model_endpoint_backfill_runs",
+          "row_count": 0
+        },
+        {
+          "table_name": "model_endpoint_backfill_trust_registry",
+          "row_count": 0
+        },
+        {
+          "table_name": "model_endpoint_evidence_attestations",
+          "row_count": 0
+        },
+        {
+          "table_name": "model_endpoint_routes",
+          "row_count": 0
+        },
+        {
+          "table_name": "model_endpoints",
+          "row_count": 0
+        },
+        {
+          "table_name": "model_routes",
+          "row_count": 0
+        },
+        {
+          "table_name": "model_surfaces",
+          "row_count": 0
+        },
+        {
+          "table_name": "model_tags",
+          "row_count": 0
+        },
+        {
+          "table_name": "models",
+          "row_count": 0
+        },
+        {
+          "table_name": "nft_mints",
+          "row_count": 0
+        },
+        {
+          "table_name": "organization_memberships",
+          "row_count": 0
+        },
+        {
+          "table_name": "organizations",
+          "row_count": 0
+        },
+        {
+          "table_name": "portal_ledger_entries",
+          "row_count": 0
+        },
+        {
+          "table_name": "portal_sessions",
+          "row_count": 0
+        },
+        {
+          "table_name": "provider_attempt_availability",
+          "row_count": 0
+        },
+        {
+          "table_name": "providers",
+          "row_count": 0
+        },
+        {
+          "table_name": "public_model_daily_stats",
+          "row_count": 0
+        },
+        {
+          "table_name": "request_preset_versions",
+          "row_count": 0
+        },
+        {
+          "table_name": "request_presets",
+          "row_count": 0
+        },
+        {
+          "table_name": "route_data_policies",
+          "row_count": 0
+        },
+        {
+          "table_name": "route_data_policy_audit",
+          "row_count": 0
+        },
+        {
+          "table_name": "route_pool_sticky_bindings",
+          "row_count": 0
+        },
+        {
+          "table_name": "route_pools",
+          "row_count": 0
+        },
+        {
+          "table_name": "shared_key_earnings",
+          "row_count": 0
+        },
+        {
+          "table_name": "shared_keys",
+          "row_count": 0
+        },
+        {
+          "table_name": "system_config",
+          "row_count": 12
+        },
+        {
+          "table_name": "user_audit_logs",
+          "row_count": 0
+        },
+        {
+          "table_name": "user_budget_reservations",
+          "row_count": 0
+        },
+        {
+          "table_name": "user_earnings",
+          "row_count": 0
+        },
+        {
+          "table_name": "users",
+          "row_count": 0
+        },
+        {
+          "table_name": "withdrawals",
+          "row_count": 0
+        },
+        {
+          "table_name": "workspace_budgets",
+          "row_count": 0
+        },
+        {
+          "table_name": "workspace_memberships",
+          "row_count": 0
+        },
+        {
+          "table_name": "workspaces",
+          "row_count": 0
+        }
+      ],
+      "fixtureCreated": true,
+      "serviceTokenId": "5ea0d36a-7f90-4954-9527-09a93f9dbccf",
+      "tablesBeforeCleanup": [
+        {
+          "table_name": "admin_api_keys",
+          "row_count": 1
+        },
+        {
+          "table_name": "admin_sessions",
+          "row_count": 0
+        },
+        {
+          "table_name": "api_key_request_logs",
+          "row_count": 0
+        },
+        {
+          "table_name": "api_keys",
+          "row_count": 1
+        },
+        {
+          "table_name": "batch_items",
+          "row_count": 0
+        },
+        {
+          "table_name": "batches",
+          "row_count": 0
+        },
+        {
+          "table_name": "byok_keys",
+          "row_count": 0
+        },
+        {
+          "table_name": "chain_job_transactions",
+          "row_count": 0
+        },
+        {
+          "table_name": "d1_migrations",
+          "row_count": 68
+        },
+        {
+          "table_name": "generation_feedback",
+          "row_count": 0
+        },
+        {
+          "table_name": "guardrail_assignments",
+          "row_count": 0
+        },
+        {
+          "table_name": "guardrail_budget_reservations",
+          "row_count": 0
+        },
+        {
+          "table_name": "guardrail_budget_windows",
+          "row_count": 0
+        },
+        {
+          "table_name": "guardrail_versions",
+          "row_count": 0
+        },
+        {
+          "table_name": "guardrails",
+          "row_count": 0
+        },
+        {
+          "table_name": "identity_event_inbox",
+          "row_count": 0
+        },
+        {
+          "table_name": "management_api_keys",
+          "row_count": 0
+        },
+        {
+          "table_name": "model_endpoint_backfill_database_identity",
+          "row_count": 1
+        },
+        {
+          "table_name": "model_endpoint_backfill_runs",
+          "row_count": 0
+        },
+        {
+          "table_name": "model_endpoint_backfill_trust_registry",
+          "row_count": 0
+        },
+        {
+          "table_name": "model_endpoint_evidence_attestations",
+          "row_count": 0
+        },
+        {
+          "table_name": "model_endpoint_routes",
+          "row_count": 0
+        },
+        {
+          "table_name": "model_endpoints",
+          "row_count": 0
+        },
+        {
+          "table_name": "model_routes",
+          "row_count": 0
+        },
+        {
+          "table_name": "model_surfaces",
+          "row_count": 0
+        },
+        {
+          "table_name": "model_tags",
+          "row_count": 0
+        },
+        {
+          "table_name": "models",
+          "row_count": 0
+        },
+        {
+          "table_name": "nft_mints",
+          "row_count": 0
+        },
+        {
+          "table_name": "organization_memberships",
+          "row_count": 0
+        },
+        {
+          "table_name": "organizations",
+          "row_count": 0
+        },
+        {
+          "table_name": "portal_ledger_entries",
+          "row_count": 0
+        },
+        {
+          "table_name": "portal_sessions",
+          "row_count": 0
+        },
+        {
+          "table_name": "provider_attempt_availability",
+          "row_count": 0
+        },
+        {
+          "table_name": "providers",
+          "row_count": 0
+        },
+        {
+          "table_name": "public_model_daily_stats",
+          "row_count": 0
+        },
+        {
+          "table_name": "request_preset_versions",
+          "row_count": 0
+        },
+        {
+          "table_name": "request_presets",
+          "row_count": 0
+        },
+        {
+          "table_name": "route_data_policies",
+          "row_count": 0
+        },
+        {
+          "table_name": "route_data_policy_audit",
+          "row_count": 0
+        },
+        {
+          "table_name": "route_pool_sticky_bindings",
+          "row_count": 0
+        },
+        {
+          "table_name": "route_pools",
+          "row_count": 0
+        },
+        {
+          "table_name": "shared_key_earnings",
+          "row_count": 0
+        },
+        {
+          "table_name": "shared_keys",
+          "row_count": 0
+        },
+        {
+          "table_name": "system_config",
+          "row_count": 12
+        },
+        {
+          "table_name": "user_audit_logs",
+          "row_count": 0
+        },
+        {
+          "table_name": "user_budget_reservations",
+          "row_count": 0
+        },
+        {
+          "table_name": "user_earnings",
+          "row_count": 0
+        },
+        {
+          "table_name": "users",
+          "row_count": 1
+        },
+        {
+          "table_name": "withdrawals",
+          "row_count": 0
+        },
+        {
+          "table_name": "workspace_budgets",
+          "row_count": 0
+        },
+        {
+          "table_name": "workspace_memberships",
+          "row_count": 0
+        },
+        {
+          "table_name": "workspaces",
+          "row_count": 1
+        }
+      ],
+      "syntheticBalance": {
+        "budget_max": 0,
+        "budget_spent": 0,
+        "budget_spent_micros": 0,
+        "budget_reserved_micros": 0
+      },
+      "result": "PASS",
+      "ingressClosed": true,
+      "accessDenyAll": true,
+      "serviceTokenRevoked": true,
+      "gatewayKeyRevoked": true,
+      "fixtureRemoved": true,
+      "tablesAfter": [
+        {
+          "table_name": "admin_api_keys",
+          "row_count": 1
+        },
+        {
+          "table_name": "admin_sessions",
+          "row_count": 0
+        },
+        {
+          "table_name": "api_key_request_logs",
+          "row_count": 0
+        },
+        {
+          "table_name": "api_keys",
+          "row_count": 0
+        },
+        {
+          "table_name": "batch_items",
+          "row_count": 0
+        },
+        {
+          "table_name": "batches",
+          "row_count": 0
+        },
+        {
+          "table_name": "byok_keys",
+          "row_count": 0
+        },
+        {
+          "table_name": "chain_job_transactions",
+          "row_count": 0
+        },
+        {
+          "table_name": "d1_migrations",
+          "row_count": 68
+        },
+        {
+          "table_name": "generation_feedback",
+          "row_count": 0
+        },
+        {
+          "table_name": "guardrail_assignments",
+          "row_count": 0
+        },
+        {
+          "table_name": "guardrail_budget_reservations",
+          "row_count": 0
+        },
+        {
+          "table_name": "guardrail_budget_windows",
+          "row_count": 0
+        },
+        {
+          "table_name": "guardrail_versions",
+          "row_count": 0
+        },
+        {
+          "table_name": "guardrails",
+          "row_count": 0
+        },
+        {
+          "table_name": "identity_event_inbox",
+          "row_count": 0
+        },
+        {
+          "table_name": "management_api_keys",
+          "row_count": 0
+        },
+        {
+          "table_name": "model_endpoint_backfill_database_identity",
+          "row_count": 1
+        },
+        {
+          "table_name": "model_endpoint_backfill_runs",
+          "row_count": 0
+        },
+        {
+          "table_name": "model_endpoint_backfill_trust_registry",
+          "row_count": 0
+        },
+        {
+          "table_name": "model_endpoint_evidence_attestations",
+          "row_count": 0
+        },
+        {
+          "table_name": "model_endpoint_routes",
+          "row_count": 0
+        },
+        {
+          "table_name": "model_endpoints",
+          "row_count": 0
+        },
+        {
+          "table_name": "model_routes",
+          "row_count": 0
+        },
+        {
+          "table_name": "model_surfaces",
+          "row_count": 0
+        },
+        {
+          "table_name": "model_tags",
+          "row_count": 0
+        },
+        {
+          "table_name": "models",
+          "row_count": 0
+        },
+        {
+          "table_name": "nft_mints",
+          "row_count": 0
+        },
+        {
+          "table_name": "organization_memberships",
+          "row_count": 0
+        },
+        {
+          "table_name": "organizations",
+          "row_count": 0
+        },
+        {
+          "table_name": "portal_ledger_entries",
+          "row_count": 0
+        },
+        {
+          "table_name": "portal_sessions",
+          "row_count": 0
+        },
+        {
+          "table_name": "provider_attempt_availability",
+          "row_count": 0
+        },
+        {
+          "table_name": "providers",
+          "row_count": 0
+        },
+        {
+          "table_name": "public_model_daily_stats",
+          "row_count": 0
+        },
+        {
+          "table_name": "request_preset_versions",
+          "row_count": 0
+        },
+        {
+          "table_name": "request_presets",
+          "row_count": 0
+        },
+        {
+          "table_name": "route_data_policies",
+          "row_count": 0
+        },
+        {
+          "table_name": "route_data_policy_audit",
+          "row_count": 0
+        },
+        {
+          "table_name": "route_pool_sticky_bindings",
+          "row_count": 0
+        },
+        {
+          "table_name": "route_pools",
+          "row_count": 0
+        },
+        {
+          "table_name": "shared_key_earnings",
+          "row_count": 0
+        },
+        {
+          "table_name": "shared_keys",
+          "row_count": 0
+        },
+        {
+          "table_name": "system_config",
+          "row_count": 12
+        },
+        {
+          "table_name": "user_audit_logs",
+          "row_count": 0
+        },
+        {
+          "table_name": "user_budget_reservations",
+          "row_count": 0
+        },
+        {
+          "table_name": "user_earnings",
+          "row_count": 0
+        },
+        {
+          "table_name": "users",
+          "row_count": 0
+        },
+        {
+          "table_name": "withdrawals",
+          "row_count": 0
+        },
+        {
+          "table_name": "workspace_budgets",
+          "row_count": 0
+        },
+        {
+          "table_name": "workspace_memberships",
+          "row_count": 0
+        },
+        {
+          "table_name": "workspaces",
+          "row_count": 0
+        }
+      ],
+      "databaseRestored": true,
+      "productionAfter": [
+        {
+          "name": "cinatoken-proxy",
+          "settingsSha256": "4243eedd631abb9bcf0c1dd8dd9acbb9ca56edab0bf3048204abccbbd4261cfc"
+        },
+        {
+          "name": "cinatoken-admin",
+          "settingsSha256": "e2ee0adf7b6469d843c310f3dccd2a478230c0f0b75d5d6ad285efeec17ed6ab"
+        },
+        {
+          "name": "cinatoken-chain-worker",
+          "settingsSha256": "21f1b2c08db33d20c0f235e5a89533e637a761eaf7b4bef2fcf0061ad004a916"
+        }
+      ],
+      "productionUnchanged": true,
+      "managementRequests": 46,
+      "finishedAt": "2026-09-07T01:12:09.999Z"
+    }
+  ],
+  "priorBasicSmoke": {
+    "requestAttempts": 9,
+    "passed": 8,
+    "source": "C02-staging-access-smoke-results.json"
+  },
+  "recordedStageHttpAttempts": 31,
+  "noNewBudget": true,
+  "cumulativeFirstRoundBudgetUsd": 2,
+  "actualIncrementalInvoiceUsd": null,
+  "generatedUploadBytes": 304106390,
+  "localVerification": {
+    "tests": 7,
+    "passed": 7,
+    "newTests": 2,
+    "head": "7eb59008f7d8e156e81fd18a57658fdef2553264",
+    "fixtureSha256": "56183492d1bd782d41b6db67094e2a7926e31966adf19b21bd2db47fcf749b56"
+  },
+  "productionModifiedOnAfter": {
+    "cinatoken-proxy": "2026-09-05T03:13:09.294024Z",
+    "cinatoken-admin": "2026-09-05T04:08:45.748253Z",
+    "cinatoken-chain-worker": "2026-09-05T03:13:07.725412Z"
+  },
+  "limitations": [
+    "Only admission on the real Worker/D1. No configured models/providers; model_not_found is the expected successful-parse marker, never inference success.",
+    "Synthetic multipart bytes have PNG MIME labels, not a decoded/rendered image assertion. JSON uses a large padding value, not full reference-image semantics.",
+    "Client generated bytes and chunked/no-Content-Length requests do not measure edge buffering, bytes consumed by the Worker, memory, or CPU.",
+    "The post-boundary small request may run on a different isolate; this is not same-isolate recovery or concurrent-capacity evidence.",
+    "No 32 MiB upstream response, expansion, OAuth, KMS, real model, background-settlement, failure-recovery, or production capacity acceptance.",
+    "D1 API rows in each attempt exclude Worker-originated queries and diagnostic calls. Request counts and budgets are not invoices.",
+    "Cleanup restores business table counts and removes exact synthetic tenants; it does not erase operational logs or D1 historical recovery data."
+  ]
+}

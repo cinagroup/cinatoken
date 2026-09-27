@@ -3,7 +3,7 @@ import { test } from 'node:test';
 import type { GatewayRepositories, UserRow } from '@octafuse/core';
 import { UserPlanPatchConflictError } from '@octafuse/core/services/user-plan-patch-service';
 import { AdminServiceError } from './errors';
-import { updateAdminUser } from './users-service';
+import { deleteAdminUser, updateAdminUser } from './users-service';
 
 const USER_ID = '00000000-0000-4000-8000-000000000001';
 
@@ -199,4 +199,44 @@ test('persistent plan CAS conflict maps to an explicit HTTP 409', async () => {
 	);
 	assert.equal(state.directPlanWrites(), 0);
 	assert.equal(state.read().status, 'active');
+});
+
+test('a blocked PostgreSQL user deletion maps to 409 without a separate success audit', async () => {
+	const state = mockRepositories(user());
+	state.repos.users.deleteUserHard = async () => { throw new Error('legacy delete path used'); };
+	state.repos.users.deleteUserHardWithAudit = async (id, audit) => {
+		assert.equal(id, USER_ID);
+		assert.equal(audit.userId, USER_ID);
+		assert.equal(audit.eventType, 'user_deleted');
+		return 'dispatch_history';
+	};
+	await assert.rejects(
+		() => deleteAdminUser(state.repos, USER_ID, 'admin-1'),
+		(error: unknown) => error instanceof AdminServiceError && error.status === 409,
+	);
+	assert.equal(state.profileAudits.length, 0);
+});
+
+test('a successful PostgreSQL user deletion delegates the audit atomically', async () => {
+	const state = mockRepositories(user());
+	let deleted = false;
+	state.repos.users.deleteUserHard = async () => { throw new Error('legacy delete path used'); };
+	state.repos.users.deleteUserHardWithAudit = async (id, audit) => {
+		assert.equal(id, USER_ID);
+		assert.equal(audit.userId, USER_ID);
+		assert.equal(audit.eventType, 'user_deleted');
+		deleted = true;
+		return 'deleted';
+	};
+	await deleteAdminUser(state.repos, USER_ID, 'admin-1');
+	assert.equal(deleted, true);
+	assert.equal(state.profileAudits.length, 0);
+});
+
+test('unrelated PostgreSQL user deletion failures pass through unchanged', async () => {
+	const state = mockRepositories(user());
+	const failure = new Error('unexpected audit write failure');
+	state.repos.users.deleteUserHardWithAudit = async () => { throw failure; };
+	await assert.rejects(() => deleteAdminUser(state.repos, USER_ID, 'admin-1'), error => error === failure);
+	assert.equal(state.profileAudits.length, 0);
 });

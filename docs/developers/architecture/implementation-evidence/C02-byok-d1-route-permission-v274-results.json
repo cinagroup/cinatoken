@@ -1,0 +1,250 @@
+{
+  "version": "v274-permission-supplement",
+  "result": "PARTIAL_ZONE_ROUTE_ACCESS",
+  "startedAt": "2026-09-21T03:42:32.663Z",
+  "finishedAt": "2026-09-21T03:45:26.273Z",
+  "scope": "Read-only permission follow-up; not a complete invocation inventory or a new native acceptance run",
+  "previousEvidence": {
+    "path": "docs/developers/architecture/implementation-evidence/C02-byok-d1-maintenance-timing-v273-results.json",
+    "sha256": "cca4823d0b81d8a2f3ab8cc939f30f82f4824a423c696a12c45b541ec95b67ac",
+    "priorDependenciesRevalidated": false
+  },
+  "requests": {
+    "managementGet": 19,
+    "http200": 8,
+    "http403": 11,
+    "zoneRouteGet": 17,
+    "zoneListGet": 2
+  },
+  "zones": [
+    {
+      "zone": "china-electric.com",
+      "status": 403,
+      "result": "API_REJECTION_OBSERVED",
+      "zoneStatus": "active",
+      "zonePaused": false,
+      "zoneType": "full",
+      "responseSha256": "fcdf5eed647f50bc87c19c74a2c19c04ccadf7c3adb4ed5d13592403bcb19d78"
+    },
+    {
+      "zone": "cinatoken.com",
+      "status": 200,
+      "result": "OBSERVED",
+      "routeCount": 2,
+      "zoneStatus": "active",
+      "zonePaused": false,
+      "zoneType": "full",
+      "responseSha256": "b285a921100d5e3181edc37afa785ce9d02db74bea1d14eab311f4dacc59c8de"
+    },
+    {
+      "zone": "cinachain.cn",
+      "status": 403,
+      "result": "API_REJECTION_OBSERVED",
+      "zoneStatus": "active",
+      "zonePaused": false,
+      "zoneType": "full",
+      "responseSha256": "fcdf5eed647f50bc87c19c74a2c19c04ccadf7c3adb4ed5d13592403bcb19d78"
+    },
+    {
+      "zone": "cinachain.com",
+      "status": 200,
+      "result": "OBSERVED",
+      "routeCount": 5,
+      "zoneStatus": "active",
+      "zonePaused": false,
+      "zoneType": "full",
+      "responseSha256": "092ccacd4b1130fb50cc85052eb46513d0836f97b4cba5408c49e02d6807bb6a"
+    },
+    {
+      "zone": "cinaclaw.cn",
+      "status": 403,
+      "result": "API_REJECTION_OBSERVED",
+      "zoneStatus": "active",
+      "zonePaused": false,
+      "zoneType": "full",
+      "responseSha256": "fcdf5eed647f50bc87c19c74a2c19c04ccadf7c3adb4ed5d13592403bcb19d78"
+    },
+    {
+      "zone": "cinaclaw.com",
+      "status": 403,
+      "result": "API_REJECTION_OBSERVED",
+      "zoneStatus": "active",
+      "zonePaused": false,
+      "zoneType": "full",
+      "responseSha256": "fcdf5eed647f50bc87c19c74a2c19c04ccadf7c3adb4ed5d13592403bcb19d78"
+    },
+    {
+      "zone": "cinacoin.cn",
+      "status": 403,
+      "result": "API_REJECTION_OBSERVED",
+      "zoneStatus": "active",
+      "zonePaused": false,
+      "zoneType": "full",
+      "responseSha256": "fcdf5eed647f50bc87c19c74a2c19c04ccadf7c3adb4ed5d13592403bcb19d78"
+    },
+    {
+      "zone": "cinacoin.com",
+      "status": 200,
+      "result": "OBSERVED",
+      "routeCount": 16,
+      "zoneStatus": "active",
+      "zonePaused": false,
+      "zoneType": "full",
+      "responseSha256": "c5bfccb0fd1a29625eddf7dbb4ef09c1ceb331bc23962f497df6f6ff598f00a3"
+    },
+    {
+      "zone": "cinagroup.cn",
+      "status": 403,
+      "result": "API_REJECTION_OBSERVED",
+      "zoneStatus": "active",
+      "zonePaused": false,
+      "zoneType": "full",
+      "responseSha256": "fcdf5eed647f50bc87c19c74a2c19c04ccadf7c3adb4ed5d13592403bcb19d78"
+    },
+    {
+      "zone": "cinagroup.com",
+      "status": 200,
+      "result": "OBSERVED",
+      "routeCount": 4,
+      "zoneStatus": "active",
+      "zonePaused": false,
+      "zoneType": "full",
+      "responseSha256": "f1ce62e59179164f70f7a12c1b280f3d198f19589a3bd5dd3113e16fb52e1942"
+    },
+    {
+      "zone": "cinaseek.ai",
+      "status": 200,
+      "result": "OBSERVED",
+      "routeCount": 1,
+      "zoneStatus": "active",
+      "zonePaused": false,
+      "zoneType": "full",
+      "responseSha256": "89f707c63ed4cfeb7a4a81e2c39dddd5f34c6347f30b0b3fc125470a35d6aa0a"
+    },
+    {
+      "zone": "cinaseek.cn",
+      "status": 403,
+      "result": "API_REJECTION_OBSERVED",
+      "zoneStatus": "active",
+      "zonePaused": false,
+      "zoneType": "full",
+      "responseSha256": "fcdf5eed647f50bc87c19c74a2c19c04ccadf7c3adb4ed5d13592403bcb19d78"
+    },
+    {
+      "zone": "cinaseek.com",
+      "status": 403,
+      "result": "API_REJECTION_OBSERVED",
+      "zoneStatus": "active",
+      "zonePaused": false,
+      "zoneType": "full",
+      "responseSha256": "fcdf5eed647f50bc87c19c74a2c19c04ccadf7c3adb4ed5d13592403bcb19d78"
+    },
+    {
+      "zone": "cinaskill.cn",
+      "status": 403,
+      "result": "API_REJECTION_OBSERVED",
+      "zoneStatus": "active",
+      "zonePaused": false,
+      "zoneType": "full",
+      "responseSha256": "fcdf5eed647f50bc87c19c74a2c19c04ccadf7c3adb4ed5d13592403bcb19d78"
+    },
+    {
+      "zone": "cinaskill.com",
+      "status": 403,
+      "result": "API_REJECTION_OBSERVED",
+      "zoneStatus": "active",
+      "zonePaused": false,
+      "zoneType": "full",
+      "responseSha256": "fcdf5eed647f50bc87c19c74a2c19c04ccadf7c3adb4ed5d13592403bcb19d78"
+    },
+    {
+      "zone": "cinatoken.cn",
+      "status": 403,
+      "result": "API_REJECTION_OBSERVED",
+      "zoneStatus": "active",
+      "zonePaused": false,
+      "zoneType": "full",
+      "responseSha256": "fcdf5eed647f50bc87c19c74a2c19c04ccadf7c3adb4ed5d13592403bcb19d78"
+    },
+    {
+      "zone": "海内集团.中国",
+      "status": 200,
+      "result": "OBSERVED",
+      "routeCount": 0,
+      "zoneStatus": "active",
+      "zonePaused": false,
+      "zoneType": "full",
+      "responseSha256": "c4d375cfbfea596f71080a0da436c33b0b3ebadbc8731f50967b6c0ff8674f26"
+    }
+  ],
+  "accessibleZones": 6,
+  "deniedZones": 11,
+  "accessibleRouteCount": 28,
+  "cloudWrites": 0,
+  "deployments": 0,
+  "sqlCalls": 0,
+  "publicWorkerCalls": 0,
+  "modelCalls": 0,
+  "kmsCalls": 0,
+  "firstRoundUsdCap": 2,
+  "capReset": false,
+  "billingRefreshed": false,
+  "processTokenMatchesUserAndMachine": {
+    "observed": true,
+    "source": "Boolean-only PowerShell environment comparison in this task; no credential values or hashes persisted"
+  },
+  "permissionVerifiedForAllKnownZones": false,
+  "allInvocationPathsInventoried": false,
+  "fullPreflightPassed": false,
+  "nativeTimingQualified": false,
+  "databaseQuiescenceProved": false,
+  "limitations": [
+    "403 does not by itself distinguish token resource scope from membership restrictions or a Cloudflare-side authorization issue.",
+    "Zone permissions arrays include #worker:read for both allowed and denied Zones; they do not prove route endpoint access.",
+    "The cinatoken.com diagnostic retained route count and response hash, not route target projections; no blanket zero-staging-route claim is made.",
+    "Zone membership stayed at the same 17 known IDs, but this is not an atomic snapshot, complete binding inventory, or fresh ingress closure.",
+    "No business code changed and no business test suite rerun. Three network runners passed node --check; report assertions verify 19 GETs and 38 journal records."
+  ],
+  "artifacts": [
+    {
+      "path": ".wrangler/staging/probe-byok-route-permission-v274.mjs",
+      "sha256": "0645e7eb476ed0c2cafedd95ed17386fd5e059cb103b8e806013a3eae4075a22"
+    },
+    {
+      "path": ".wrangler/staging/diagnose-byok-route-permission-v274.mjs",
+      "sha256": "641e51466b8b783293786915357742f2be68650d27cb5a0ec9fd1c539f3a17c3"
+    },
+    {
+      "path": ".wrangler/staging/complete-byok-route-permission-v274.mjs",
+      "sha256": "ef03d9dab18acfcd29a44b457cb32ffe1428b62bbaa14dbb52db831f8f036b20"
+    },
+    {
+      "path": ".wrangler/staging/summarize-byok-route-permission-v274.mjs",
+      "sha256": "50093a0ecab089f6f7c2a52bfea16f0e1c5b12d36790f6cef8f966d5879c91fb"
+    },
+    {
+      "path": ".wrangler/staging/byok-route-permission-v274/result.json",
+      "sha256": "709643105fec2d00f60b3649322113c755efcbf17bc2b4ae3fb00a6a8010711a"
+    },
+    {
+      "path": ".wrangler/staging/byok-route-permission-v274/journal.jsonl",
+      "sha256": "745cc3237577253a02aeac956fdee811ef3f70ecddb986b1ca23549f6321650d"
+    },
+    {
+      "path": ".wrangler/staging/byok-route-permission-v274-diagnostic/result.json",
+      "sha256": "ce3837a6badca59b039f8240e970d48a9c7a806c767c86eff0bb3ba99e82a637"
+    },
+    {
+      "path": ".wrangler/staging/byok-route-permission-v274-diagnostic/journal.jsonl",
+      "sha256": "1450d93338891b4eaf58341c3e94ee34873fc901d83755c9965731ad318a8140"
+    },
+    {
+      "path": ".wrangler/staging/byok-route-permission-v274-remaining/result.json",
+      "sha256": "47923843646d4587b9cf25eb7632f69cc48d06a7d4bf0eaf38670dae5b0c23b1"
+    },
+    {
+      "path": ".wrangler/staging/byok-route-permission-v274-remaining/journal.jsonl",
+      "sha256": "5b982109335e34620524e5fe419356f2d0af22ae3ec92ceff9abea3f3cf1d900"
+    }
+  ]
+}

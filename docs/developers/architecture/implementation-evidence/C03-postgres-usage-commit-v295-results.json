@@ -1,0 +1,193 @@
+{
+  "version": "v295",
+  "recordedAtUtc": "2026-09-21T10:34:37Z",
+  "checklistVersion": "1.192",
+  "status": "LOCAL_PASS_NATIVE_ACCEPTANCE_PENDING",
+  "scope": "C03.1/C03.3 immutable PostgreSQL usage receipt in the existing financial transaction and final lease fencing",
+  "goalStillActive": true,
+  "productionPathActivated": false,
+  "existingProductionCriticalWriterModified": true,
+  "environment": {
+    "node": "24.14.1",
+    "pglite": "0.5.8",
+    "postgres": "18.3",
+    "engine": "wasm32-unknown-emscripten",
+    "baseMigrations": 68,
+    "proposalsAppliedLocally": 4
+  },
+  "nativeBusinessCasesExecuted": 0,
+  "earlierRuns": [
+    {
+      "tests": 38,
+      "pass": 35,
+      "fail": 3,
+      "durationMs": 17438.5591,
+      "failures": [
+        "BYOK fixture missing existing generation metadata quartet",
+        "SQL numeric rounding disagreed with existing JS at 1.0000025",
+        "parent test failure"
+      ]
+    },
+    {
+      "tests": 39,
+      "pass": 39,
+      "fail": 0,
+      "durationMs": 18066.1462
+    },
+    {
+      "tests": 44,
+      "pass": 44,
+      "fail": 0,
+      "durationMs": 27147.9124
+    }
+  ],
+  "verification": [
+    {
+      "file": "packages/core/src/storage/recovery/usage-settlement.postgres.test.mjs",
+      "tests": 44,
+      "pass": 44,
+      "fail": 0,
+      "skipped": 0,
+      "includesParentTests": true,
+      "durationMs": 33788.0291
+    },
+    {
+      "files": [
+        "packages/core/src/storage/postgres-financial-schema-engine.test.mjs",
+        "packages/core/src/storage/recovery/usage-recovery-jobs.postgres.test.mjs",
+        "packages/core/src/storage/recovery/usage-settlement-facts.postgres.test.mjs"
+      ],
+      "tests": 164,
+      "pass": 164,
+      "fail": 0,
+      "skipped": 0,
+      "breakdown": {
+        "financial": 77,
+        "jobs": 43,
+        "facts": 44
+      },
+      "includesParentTests": true,
+      "durationMs": 65874.4516
+    },
+    {
+      "command": "node node_modules/typescript/bin/tsc -p packages/core/tsconfig.settlement-postgres.json --noEmit",
+      "exitCode": 0
+    },
+    {
+      "command": "node node_modules/typescript/bin/tsc -p packages/core/tsconfig.recovery-jobs-postgres.json --noEmit",
+      "exitCode": 0
+    }
+  ],
+  "rollbackFaultPoints": [
+    "receipt",
+    "users",
+    "ordinary reservation",
+    "request log",
+    "provider attempt availability",
+    "daily stats",
+    "audit",
+    "Guardrail reservation",
+    "Guardrail window",
+    "job completion"
+  ],
+  "moneyCompatibility": {
+    "changedExistingAmountAlgorithm": false,
+    "regressionInput": 1.0000025,
+    "expectedExistingJs": 1.000002,
+    "rejectedDirectNumericResult": 1.000003,
+    "edgeSamplesGreaterThan": 7000,
+    "verificationOnlySqlFunctions": true
+  },
+  "freshProcesses": {
+    "count": 3,
+    "phases": [
+      "persist",
+      "commit-lost-ack",
+      "confirm"
+    ],
+    "originalRequestOrProofPassed": false,
+    "finalReceipts": 1,
+    "finalLogs": 1,
+    "finalAudits": 1,
+    "finalSpent": "0.250000",
+    "finalReserved": "0",
+    "cleanCloseNotAbruptCrash": true
+  },
+  "priorArtifactHashesVerifiedUnchanged": {
+    "v291": 5,
+    "v292": 3,
+    "v293": 5,
+    "v294": 4
+  },
+  "priorArtifactsIntentionallyChanged": [
+    {
+      "path": "packages/core/src/storage/recovery/usage-recovery-jobs-postgres.ts",
+      "priorSha256": "7bfe888674d4105529530473393a20d7df96bec0e01e4332f4e67f2123a11948",
+      "reason": "Decode committed state and transition; no separate completion API"
+    }
+  ],
+  "limitations": [
+    "PGlite serial transactions, not native independent connections or actual row-lock competition",
+    "ACK/read failures injected in adapter, not actual native COMMIT protocol failure",
+    "Clean disk reopen is not abrupt crash, power loss or WAL acceptance",
+    "Deferred constraint validation assumes trusted writer keeps it deferred; no wall-clock WAL/ACK-before-TTL guarantee",
+    "Receipt readback checks fact/job/log, not arbitrary privileged tampering across all monetary tables",
+    "Raw NUL and lone UTF-16 surrogates preserved in fact but rejected before monetary BEGIN; lossless log representation remains open",
+    "Existing monetary epoch, expired-reservation and late-adjustment behavior retained, not new unknown billing approval",
+    "Current API-key workspace mismatch fails; C01.4 revocation/ownership policy not decided",
+    "No production factory/public export/route activation, runner, Queue or inference",
+    "Role/RLS, DDL/TRUNCATE/trigger disabling, retention and online migration compatibility not accepted",
+    "No C01.G/C02.G/C03.G approval; C04 remains TODO"
+  ],
+  "cleanup": {
+    "ownedSettlementFixtureDirectoriesRemaining": 0,
+    "ownedJobFixtureDirectoriesRemaining": 0,
+    "onlyRegenerableLocalFixturesRemoved": true,
+    "userOrStagingDataRemoved": false
+  },
+  "externalEffects": {
+    "publicNetworkQueries": 0,
+    "cloudManagementCalls": 0,
+    "remoteSqlCalls": 0,
+    "deployments": 0,
+    "modelCalls": 0,
+    "kmsCalls": 0,
+    "systemRuntimeUpdates": 0,
+    "reboots": 0,
+    "stagingBudgetReset": false
+  },
+  "artifacts": [
+    {
+      "path": "packages/core/migrations-proposals/postgres/request-usage-commit-receipts.sql",
+      "sha256": "a15d71873bf55340779e996c4710c50efa9f4461956693b4ec710c2f7ed9f734"
+    },
+    {
+      "path": "packages/core/src/storage/recovery/usage-settlement-postgres.ts",
+      "sha256": "2be4882f4d715f4de16fa2abe2663ffdb4d0bf736566939b63d2657f032ac00f"
+    },
+    {
+      "path": "packages/core/src/storage/recovery/usage-settlement-transaction-postgres.ts",
+      "sha256": "4603885fac544913eccafcf079a52b15aec8a495b5438ad65bcc382884601daf"
+    },
+    {
+      "path": "packages/core/src/storage/recovery/usage-settlement.postgres.test.mjs",
+      "sha256": "845e983a8032c0f979223b9d5a46e8fcc21bfe74730754b2ac15552fd9d360c9"
+    },
+    {
+      "path": "packages/core/src/test-support/postgres-usage-settlement-child.mjs",
+      "sha256": "d17ee1624308ba0c9065b00fcdc90b166f2619d740e8a6ffe7310d2ab6156764"
+    },
+    {
+      "path": "packages/core/tsconfig.settlement-postgres.json",
+      "sha256": "c6e5afe161ec48482091c12426ad5b4b2fa1c3837a709e3559e8256796d64386"
+    },
+    {
+      "path": "packages/core/src/db/postgres/critical-writes.impl.ts",
+      "sha256": "bef4013fdc4901ec85ddaa53b1df0802bf6fd7f6b563ab76b89e80cb4bfefe25"
+    },
+    {
+      "path": "packages/core/src/storage/recovery/usage-recovery-jobs-postgres.ts",
+      "sha256": "12f4ab7d83993e27acfc244b8ac9622ead5c007267d51771a166bfd77d6d1faa"
+    }
+  ]
+}

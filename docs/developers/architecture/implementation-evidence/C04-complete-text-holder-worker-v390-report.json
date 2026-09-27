@@ -1,0 +1,212 @@
+{
+  "status": "PASS",
+  "cleanup": "PASS",
+  "binaryVersion": "postgres (PostgreSQL) 18.6",
+  "sourceSha256": {
+    "formalMigrations": "23afef61a8a670e0af8c90e3a138f522e6b283b454e380a592bf85bca83108dc",
+    "shared-key-quote-versions.sql": "1249a7ff07f95b48c7b45a41833c96c9a028e4bfe3a47e44e9dc6b72c3c77246",
+    "shared-key-dispatch-quote-attempts.sql": "c89c79e803fd69a2d09d44b33be3301aeb8aa4ed72c5dff5518439ec29fafb83",
+    "shared-key-economic-outbox.sql": "f92835c72ff02cba23879ed90ad640832455ccb98764f28fe4ee04ce52aab1ac",
+    "shared-key-economic-outbox-producer.sql": "ea9ccc7138cbd641d386e14d1bb95b8cabee942501a49d6b0763e8e1b3eb0920",
+    "shared-key-snapshot-earning-consumer.sql": "66fbd89c3453320284133de06d72793d4e1d2f68aaf756087857c18493e955db",
+    "shared-key-buyer-debit-v2.sql": "fc327b411e8ae6a417a156ab4ba3b633a47a2e615d249b8861503fc4cbf68593",
+    "shared-key-economic-producer-v2.sql": "3871f01eed2a058c9df9e1ca7c2d6898e995e9fa007115ccb6d62082e57712f3",
+    "shared-key-buyer-budget-receipt-v2.sql": "56ebaecd1425206df81c9dc7981c34e5e246047f188355f5d14103e2dee3270c",
+    "budget-admission-login-v350.sql": "1b5067ec8df7130aee11877d9e4ac9969fef7e92b052a80374b91df2f060737c",
+    "guardrail-budget-admission-login-v351.sql": "d20e754b9c523597a6cc1e76d434aac90618045d543a431e3ae269836cf47a8d",
+    "authenticated-request-capability-login-v356.sql": "bbf06af6e9e2df6801c0e89442644d208d7213dbb6a7e202b96183b54d67fe9f",
+    "authenticated-text-route-ceiling-issuer-v357.sql": "3ce21a1502906f3b24753f62932ada1aa5299ed65365cce4e55c410476b392c4",
+    "authenticated-text-route-source-fence-v359.sql": "52ba5207db94bf9f6fb5200c9de89c9ff4633eb453366eb8dcd28f643c1aa03f",
+    "authenticated-complete-text-quote-v360.sql": "195eb0fa51df48dccc19c165900ae137f58daf1902fcc32e9673d7d124c2a08d",
+    "complete-text-quote-budget-admission-v361.sql": "486b9336eb09232966fb6b2198cb9f621abccea8d17ca09bebfc7f91ea057128",
+    "private-complete-text-observed-holder-v384.ts": "492da0d47e00d0afd004be5d6b092a3ad717017a806d78af15a0727bcc239453",
+    "complete-text-attempt-grant-v362.sql": "c9eb17e019dc1bbeeb7d4269cb1c2ce6b8861fab37e2bfed8ac3a8a97ce2d4f7",
+    "complete-text-send-start-v365.sql": "3e965d093394ad03a2a6c4694833a7dc65ce57487c92cf103400add19927a858",
+    "complete-text-private-route-reader-v366.sql": "5f1bd0e30d421c1f8bbe2da48d00403033a3135bc57dd4a3dccacb8eaa1a0286",
+    "complete-text-result-facts-v366.sql": "30322e8fde1e963872ee58411517da2c786752defdaa0babf452ae3a100b89af",
+    "complete-text-renewed-holder-facts-v370.sql": "9c87c16703fbc07bce09f1359f9b0c3ec5f66588e97a51353919365c07adc00d",
+    "private-complete-text-holder-v365.ts": "ed6c6d7c509712998a958cf78b658fd41ba3eb24eea446fb8b45740d560fd4db",
+    "postgres-complete-text-result-facts-v367.ts": "266f3790fae0813378bc870ead524130453c1cd67fcab0dfb07514ef393f2aea",
+    "guardrail-budget-lifecycle-login-v353.sql": "b0c97481d475b413fc2a2e77e6db018c680e667db10805f30605e3e78edf08ff",
+    "ordinary-budget-recovery-login-v354.sql": "2046bac92fd9d099ed577b26d9b1c56def0ede79b65f8cbe242ae03067d423aa",
+    "complete-text-legacy-reaper-fence-v366.sql": "1ff269a57bff76c3a54267a5c0ff78330335bf50bd5757ca011de04ae5ab60c0",
+    "complete-text-all-hold-renewal-v367.sql": "8cc9c1c2ade73aa96e545ebfbc437186f0cf44c0c0fb756bd7c1487f7fdb5fc4",
+    "fixture": "3a13542df568c4c801ea657d21475dcd1ed39abfb86ec9a8f1a218760bb3e624",
+    "packages/proxy/src/runtime/complete-text-holder-worker-v390.ts": "bf6640f799bf9a3302132b5b7c54fd2f3f4dca34bfbe31dbe0bd7c96a13ff110",
+    "packages/proxy/src/runtime/complete-text-holder-worker-v390.test.mjs": "30d1ec639d447d59d73ca31a956ad3a7fd02de5d27506492fbdcb1d504b85102",
+    "packages/proxy/src/services/private-complete-text-holder-v365.test.ts": "59f65f415e3c0b6545ccc15e455dedb97f343604aa614b295afa17d7749d1074",
+    "packages/proxy/src/runtime/complete-text-holder-v390-env.d.ts": "2334a6199338534d07c43992d4423d829b9fb252326a5335f83b2118762b4059",
+    "packages/proxy/wrangler.complete-text-holder-v390.jsonc": "1d50d58579488c26cad4d21a58b100b1b1be1ba8cd20ae0fb4633230901f7285",
+    "packages/proxy/src/services/chat-final-quote-input.ts": "aa330255fa7f9ca5f7aeb1b79b8e748340d20e65ea0b24accc19d0d4197cba37",
+    "packages/proxy/src/services/model-fallbacks.ts": "556df9a7940e9cc6f05a80ab693276d3ce43d60b425173d84e5e7d78137b4745",
+    "packages/proxy/src/services/complete-chat-holder-dispatch-v385.ts": "edeadc4bfde6ff9b6507fb5cdf68b8edf1c1af8b0430bcba47b104180092a2c3",
+    "packages/proxy/src/services/postgres-complete-chat-quote-v360.ts": "40fd6e9bd5d74d4a2012e89a4f3292e7b9c419a12f3a5fe9fca886d65827a51d",
+    "packages/proxy/src/services/postgres-complete-chat-admission-v361.ts": "09daf2cde502f6d359130926b931fc364ccc2ef9503a8cec18326731d29f57ca",
+    "packages/proxy/src/services/chat-text-holder-request-v363.ts": "e54332c63e229448f0657d2e0586cc7036ed5a06c085e38c2cdd390d7465484f",
+    "packages/proxy/src/services/postgres-private-complete-text-reader-v366.ts": "326ca816124e29af282cc12fe81b783fbf3e3ef0b0a045f7bca24d5c476bfea9",
+    "packages/proxy/src/services/postgres-complete-text-attempt-grant-v362.ts": "618e165e73ba595eaaa589fa491140a36cfcab6dcb2349ae7e9824d69adc34ec",
+    "packages/proxy/src/services/postgres-complete-text-send-start-v365.ts": "a7f78a3ccfbbdf148e68bfee7eae7a69047752e49f2ea32b55bef80a5149d62e",
+    "packages/proxy/src/services/postgres-complete-text-hold-renewal-v369.ts": "055b498079ec1cf23562f03f8407f17db278997fe950ed28ae6c47deea826444",
+    "packages/proxy/src/services/hyperdrive-dedicated-role-transport-v390.ts": "ac06caa0e45669d01d2df32d74c682555b0d1d465238acd51f3ddc72d1587bad",
+    "packages/core/src/test-support/postgres-journal-commit-ack-proxy-v381.mjs": "ab56fc79f90853c716694e8975f36f86cce756c79f901f0d4706d51122d12221"
+  },
+  "stages": [
+    {
+      "name": "formal-pg73-and-buyer-budget-split-prerequisites-installed",
+      "result": "PASS"
+    },
+    {
+      "name": "v361-default-off-and-role-drift-fail-before-atomic-install",
+      "result": "PASS"
+    },
+    {
+      "name": "v362-default-off-and-role-drift-fail-before-atomic-install",
+      "result": "PASS"
+    },
+    {
+      "name": "v365-default-off-and-holder-role-drift-fail-before-atomic-install",
+      "result": "PASS"
+    },
+    {
+      "name": "v366-private-reader-installed-with-distinct-login-and-no-raw-provider-select",
+      "result": "PASS"
+    },
+    {
+      "name": "v366-result-facts-default-off-installed-and-role-separated",
+      "result": "PASS"
+    },
+    {
+      "name": "distinct-direct-holder-login-has-custody-start-access-and-no-raw-access",
+      "result": "PASS",
+      "holderAcl": {
+        "start_call": true,
+        "custody_call": true,
+        "grant_call": false,
+        "raw_start": false,
+        "raw_custody": false,
+        "noinherit": true,
+        "memberships": 0
+      }
+    },
+    {
+      "name": "isolated-granter-only-and-old-dispatch-mark-side-door-closed",
+      "result": "PASS",
+      "grantAcl": {
+        "grant_call": true,
+        "raw_table": false,
+        "raw_ordinary_mark": false,
+        "raw_guardrail_mark": false
+      }
+    },
+    {
+      "name": "direct-admission-login-can-call-only-no-amount-reserve-wrapper",
+      "result": "PASS",
+      "acl": {
+        "wrapper": true,
+        "raw_ordinary": false,
+        "raw_guardrail": false
+      }
+    },
+    {
+      "name": "v367-renewal-installed-for-isolated-direct-renewer-login",
+      "result": "PASS"
+    },
+    {
+      "name": "authoritative-route-and-three-budget-source-fixture-ready",
+      "result": "PASS"
+    },
+    {
+      "name": "real-worker-default-login-chain-one-owned-post-and-bound-invocation-fact",
+      "result": "PASS",
+      "requestId": "v390-712bc051-ebb1-4ddd-943f-b81ef2161442",
+      "grantId": "2ed04215-d6b8-4002-a15f-6732134babb5",
+      "sendStartId": "c59656f5-a8fe-4f89-8ff5-07997e03f077",
+      "factId": "f90cc96c-fc77-4751-b8d5-fa7311e8d5d7",
+      "physicalPosts": 1,
+      "uploadBytes": 151,
+      "outboundBodySha256": "cb65728197edc4597c5f83045c48c0ff02a51a37996c9e91e3541d477f2b0c80"
+    },
+    {
+      "name": "same-worker-object-creates-new-holder-per-request-and-replay-cannot-resend",
+      "result": "PASS",
+      "freshRequestPosts": 1,
+      "replayAddedPosts": 0
+    },
+    {
+      "name": "worker-stream-eof-stops-owned-response-and-keeps-economic-unknown",
+      "result": "PASS",
+      "physicalPosts": 1,
+      "drainedWaitUntil": true
+    },
+    {
+      "name": "worker-stream-error-stops-owned-response-and-keeps-economic-unknown",
+      "result": "PASS",
+      "physicalPosts": 1,
+      "drainedWaitUntil": true
+    },
+    {
+      "name": "worker-stream-cancel-stops-owned-response-and-keeps-economic-unknown",
+      "result": "PASS",
+      "physicalPosts": 1,
+      "drainedWaitUntil": true
+    },
+    {
+      "name": "worker-stream-caller-stops-owned-response-and-keeps-economic-unknown",
+      "result": "PASS",
+      "physicalPosts": 1,
+      "drainedWaitUntil": true
+    },
+    {
+      "name": "worker-stream-deadline-stops-owned-response-and-keeps-economic-unknown",
+      "result": "PASS",
+      "physicalPosts": 1,
+      "drainedWaitUntil": true
+    },
+    {
+      "name": "worker-stream-rejected-stops-owned-response-and-keeps-economic-unknown",
+      "result": "PASS",
+      "physicalPosts": 1,
+      "drainedWaitUntil": true
+    },
+    {
+      "name": "actual-v369-renewal-commit-extends-all-four-holds-before-stream-cancel",
+      "result": "PASS",
+      "renewals": 1,
+      "matchingHoldLeases": 4
+    },
+    {
+      "name": "real-renewal-commit-response-loss-never-extends-worker-stream-authority",
+      "result": "PASS",
+      "proxyFacts": {
+        "connections": 1,
+        "commitCommands": 1,
+        "commitProtocol": "extended",
+        "backendCommitCompletes": 1,
+        "droppedCommitAcks": 1,
+        "forwardedBackendFrames": 38
+      },
+      "renewals": 1,
+      "drainedWaitUntil": true
+    },
+    {
+      "name": "no-provider-usage-bill-financial-log-or-terminal-created",
+      "result": "PASS",
+      "totalPhysicalPosts": 10
+    }
+  ],
+  "limitations": [
+    "Review-only PG73 proposal; no formal migration, deployed Worker, remote database or production credentials changed.",
+    "The v385 seam uses its default v360 quote and v361 no-amount admission clients. All SQL and role checks are real direct LOGIN connections to one owned PG18.6 cluster; no quote, admission or pending_unknown result is fabricated.",
+    "The actual FinalChatQuoteInput helper captures an owned flat-text body after fixture transformations. The production Chat route, preset and Guardrail middleware are not executed; the selected public plan is fixture data and the private route is reloaded by v366.",
+    "The physical POST goes to one owned 127.0.0.1 HTTP server. The counter and received upload bytes observe only that server; they do not observe a Provider.",
+    "The in-process Binding stand-in invokes the actual v390 Worker fetch handler, which performs real v366 reads. fetchUpstream rewrites the prepared HTTPS fixture URL to an owned HTTP loopback while preserving body and authorization. This does not establish quoted-URL socket transmission, Cloudflare Service Binding transport or a deployed Worker.",
+    "fetch_invoked means the holder called fetch, not that the Provider received every upload byte, accepted the request, or billed it. A committed send-start remains possible-send after all errors.",
+    "No provider_usage, zero-charge observation, provider_bill, buyer settlement or terminal closer is called. Streaming result parsing and renewed epoch 2+ result facts are outside this proof.",
+    "The v370 renewed fact successor is reviewed but not installed in this fixture; all appended facts bind initial custody/send-start epoch 1.",
+    "The actual v390 Worker fetch handler is invoked in Node. Its default role clients use trusted binding transport adapters and direct local PostgreSQL role URLs. No Cloudflare Hyperdrive transport or origin-session behavior is exercised.",
+    "The renewal ACK negative uses a cleartext PostgreSQL v3 proxy that forwards the original COMMIT, observes backend CommandComplete(COMMIT), suppresses that response and closes the client socket. A committed renewal does not extend stream authority without the client acknowledgement.",
+    "Local tests shorten the entry and unrenewed stream bounds to exercise cancellation and renewal. The default entry starts its own 300-second bound and cannot recover time already spent in the public Gateway.",
+    "The configured Hyperdrive IDs are placeholders and activation is disabled. No configured deployment, provider-source bill, production Chat route or financial closer is enabled.",
+    "D1/MySQL parity, Linux CI outcome and real Worker/Hyperdrive behavior are not established by this local run."
+  ]
+}

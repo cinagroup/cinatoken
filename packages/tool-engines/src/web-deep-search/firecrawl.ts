@@ -58,6 +58,7 @@ export async function deepSearchFirecrawl(params: WebDeepSearchParams): Promise<
 	const limit = clampDeepSearchCount(params.count);
 	const response = await fetchImpl(FIRECRAWL_SEARCH_ENDPOINT, {
 		method: 'POST',
+		redirect: 'manual',
 		headers: {
 			Authorization: `Bearer ${params.apiKey}`,
 			'Content-Type': 'application/json',

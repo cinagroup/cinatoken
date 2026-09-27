@@ -1,0 +1,72 @@
+{
+  "version": "v339",
+  "date": "2026-09-24",
+  "scope": "review-only PostgreSQL atomic pre-send shared-key quote attempt reference plus default-absent Chat and Completions bridge",
+  "status": "PASS_LOCAL_ONLY",
+  "formalMigration": false,
+  "formalMigrationsAppliedInFixture": 73,
+  "nativePostgres": {
+    "binaryVersion": "postgres (PostgreSQL) 18.6",
+    "command": "node --import tsx --test scripts/db/cutover/postgres-shared-key-dispatch-quote-attempts.native.test.mjs",
+    "passed": 1,
+    "total": 1,
+    "stagesPassed": 13,
+    "cleanup": "PASS",
+    "report": "C04-postgres-shared-key-dispatch-quote-attempt-v339-report.json",
+    "reportSha256": "e1f2403976e4d0c7b7feea8c98e2842e27b2cef79b72097e218be59cc85e05e2"
+  },
+  "nodeUnit": {
+    "command": "node --import tsx --test --test-reporter=dot packages/proxy/src/services/shared-key-quote-attempt.test.ts",
+    "passed": 6,
+    "total": 6
+  },
+  "typecheck": {
+    "command": "npm run typecheck -w @octafuse/proxy",
+    "status": "PASS"
+  },
+  "contract": {
+    "dependencyOrder": "73 formal PostgreSQL migrations, v338 shared-key-quote-versions.sql, v339 shared-key-dispatch-quote-attempts.sql",
+    "activation": "SET LOCAL cinatoken.shared_quote_attempt_activation = 'reviewed-v1' by direct migrator LOGIN; direct pre-provisioned cinatoken_gateway_shared_quote_attempt_producer LOGIN for claims",
+    "atomicClaim": "SECURITY DEFINER function takes request advisory lock then active shared-key FOR SHARE lock, selects current immutable quote transition and version, inserts request_log_id and one-based attempt_index with exact quote IDs in the same transaction",
+    "lateClaimFence": "Claim rejects an existing request log; companion economic outbox proposal must take the same request advisory lock before request-log INSERT",
+    "readiness": "Chat and legacy Completions create one request-scoped capture from the exact generation/request-log ID. Activation is absent by default. Enabled composition returns 503 before body read when the injected economic producer is absent; shipped runtimes inject none.",
+    "captureMeaning": "A committed row proves only pre-send quote admission. It does not prove physical send, usage or seller credit."
+  },
+  "negativeCoverage": [
+    "missing activation, disabled immutable quote trigger and no-op trigger function refuse companion installation",
+    "third-role access to quote dependency, plus hostile default SELECT/EXECUTE ACL on newly created evidence, roll back companion installation",
+    "hostile default EXECUTE WITH GRANT OPTION to dedicated producer also rolls back installation",
+    "ordinary runtime and producer cannot SELECT private attempt table; unrelated LOGIN cannot execute claim function",
+    "same attempt ID with changed target and same request/index with another UUID reject",
+    "competing revoke waits on held Key lock; new claim after revoke rejects while historical reference stays unchanged",
+    "claim after request log exists rejects; UPDATE and DELETE of attempt reference reject",
+    "invalid activation/backend, missing economic producer, claim error, malformed returned identity and non-delegated use do not send",
+    "budget denial after a committed quote capture leaves one pre-send reference and zero physical sends",
+    "partition-none global model loop forwards the same request-scoped capture"
+  ],
+  "sourceSha256": {
+    "quoteProposalDependency": "1249a7ff07f95b48c7b45a41833c96c9a028e4bfe3a47e44e9dc6b72c3c77246",
+    "attemptProposalSql": "c89c79e803fd69a2d09d44b33be3301aeb8aa4ed72c5dff5518439ec29fafb83",
+    "nativeTest": "6d34845c97292b5d15ae5442846a12badf429a6b50b16943f3df602212e6ae8e",
+    "bridgeService": "6032ea173575a8718de0e208e4d773fbb8edc7be0aaf4d179b7e874509c4b635",
+    "bridgeUnitTest": "b446442f186e288ce3f5171bcbc84bf085696ac44bdbbc11e4881ea6bc49b2e1",
+    "failoverDispatch": "dc365da0984a431fcae8046606c78d2d052df794036fb1fdf0956da661b57ef0",
+    "globalModelDispatch": "627d09ad2808e498be934e713ae6afa228ae215ca954ea6efbb6d57255b3fd3f",
+    "chatRoute": "52f7f7cec3f7276d379803bfd41bbdbb6ff9a247603bae78023f4936bebd8a87",
+    "appBindings": "4422da0ae5f6b9920ec113a371a8fdf233f9088a7546146197111639a5091359",
+    "formalMigrationCorpus": "23afef61a8a670e0af8c90e3a138f522e6b283b454e380a592bf85bca83108dc"
+  },
+  "remoteSql": false,
+  "deployment": false,
+  "billingActivated": false,
+  "linuxCiRun": false,
+  "limits": [
+    "Only Chat and legacy Completions route options are connected; Responses, Messages, Gemini, vectors, Audio, Images and Realtime are not connected.",
+    "No production economic producer implementation is supplied; the opt-in path cannot dispatch when enabled in a shipped runtime.",
+    "The future producer must persist typed per-attempt send/unknown/usage facts; the selected final route and request-level usage cannot reconstruct failed or billable earlier hops.",
+    "Current recordUsage and settleSharedKeyEarning still use mutable current key price/commission on the default path; no billing change is claimed.",
+    "The quote version proposal has seller prices/commission but buyer price and entitlement authority are not wired; C04.1 and C04.2 remain open.",
+    "A pre-send claim can remain without a send after budget denial, cancellation or an unknown COMMIT ACK; forensic review, reconciliation and retention are not implemented.",
+    "Outbox producer/consumer, formal migration, role provisioning, production grants, Workers/Hyperdrive, MySQL/D1 parity and Linux CI remain unverified."
+  ]
+}

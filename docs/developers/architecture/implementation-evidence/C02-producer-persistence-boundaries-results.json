@@ -1,0 +1,1740 @@
+{
+  "version": "Checklist v1.80",
+  "date": "2026-09-08",
+  "baseline": "Checklist v1.79",
+  "status": "LOCAL_LARGE_PRODUCER_PERSISTENCE_HANDOFF_PASS",
+  "c02GatePassed": false,
+  "files": [
+    {
+      "path": "packages/core/migrations-proposals/d1/request-dispatch-intents.sql",
+      "sha256": "f3f9df3723fbccfd62a7f566804abcb591ee03f8d20bab47f60cb623ee082083"
+    },
+    {
+      "path": "packages/core/migrations-proposals/d1/request-usage-recovery-jobs.sql",
+      "sha256": "4b1dfa909dc6c4abc4aaec929d12ac368adb1877ae975c7a00f35a6b9f01652d"
+    },
+    {
+      "path": "packages/core/migrations-proposals/d1/request-usage-settlements.sql",
+      "sha256": "d25ffb168ec74112f602befec2057b96456e0f2291fd2179d6e131f16ffbcb04"
+    },
+    {
+      "path": "packages/core/package.json",
+      "sha256": "71b4125dfa443e7311f8cc6034a34cb3ec35f9d4c736720339cdfa5de15bbc46"
+    },
+    {
+      "path": "packages/core/src/db/d1/critical-writes.impl.ts",
+      "sha256": "145df8a9f579573664f0dbec08a833d5c80f0e3bb0f021cb6ce3c5dd157053bb"
+    },
+    {
+      "path": "packages/core/src/storage/database-client.ts",
+      "sha256": "8b4f5abeec30c82215ab99e319e10e52e9cca99c70ca85ef08a97ed47f1c8881"
+    },
+    {
+      "path": "packages/core/src/storage/drizzle/client-d1.ts",
+      "sha256": "3f44525de77b026f42cf3651399f6247265cd5e55d74999f1c71e1cb58b9d567"
+    },
+    {
+      "path": "packages/core/src/storage/recovery/dispatch-intent-d1.ts",
+      "sha256": "7c8ef20c11eaebe95c0aaa10073ab8e1c502e3143ae0b76825a71e43fd534a5a"
+    },
+    {
+      "path": "packages/core/src/storage/recovery/run-usage-recovery-d1.ts",
+      "sha256": "c70a404a5475a5113ce77f52c183dc054afacda80b595ac8e21f87c0a98f1d53"
+    },
+    {
+      "path": "packages/core/src/storage/recovery/settlement-recovery-types.ts",
+      "sha256": "585e8d21450882602889b78478769ffa193bfb10d14026e0bab9e4ab6f0fe429"
+    },
+    {
+      "path": "packages/core/src/storage/recovery/usage-recovery-jobs-d1.ts",
+      "sha256": "74fdc5c1ae90040b3c40ece3f7fc193375c0f9b12b73963dd314d84a95eb869a"
+    },
+    {
+      "path": "packages/core/src/storage/recovery/usage-recovery-schema-artifact.ts",
+      "sha256": "c56b50f727c5a1a3046c915a4bd2960d6dd68934e8e346e666d82069d49fc3ce"
+    },
+    {
+      "path": "packages/core/src/storage/recovery/usage-recovery-schema-d1.ts",
+      "sha256": "3dfb09903da0208ce74cb35a79baac6b3951a40a855ded5379d6503aac92ade0"
+    },
+    {
+      "path": "packages/core/src/storage/recovery/usage-recovery-schema.d1.test.mjs",
+      "sha256": "f8d627a9b6d2fd2150db4f1d495a341a89b883efd56c06b4788c543eca9e1184"
+    },
+    {
+      "path": "packages/core/src/storage/recovery/usage-recovery.d1.test.mjs",
+      "sha256": "a580ea62133306e66237b2d4e71f04b701a998c287484187f4473cdb21dcacbe"
+    },
+    {
+      "path": "packages/core/src/storage/recovery/usage-recovery.fixture.mjs",
+      "sha256": "4444e608d1612f023ffd800293984f2cf8acf2d756d24869fd987489b30e994d"
+    },
+    {
+      "path": "packages/core/src/storage/recovery/usage-settlement-codec.ts",
+      "sha256": "7483200d4100963bb16c2ff74957d716fca09e8b20e11888ccf41b2566c4ef90"
+    },
+    {
+      "path": "packages/core/src/storage/recovery/usage-settlement-d1.ts",
+      "sha256": "3be75d8f00ec668c7e4edc372726b3abbba2079710648a55f391cf4d280e01fe"
+    },
+    {
+      "path": "packages/core/src/storage/recovery/usage-settlement-test-support.mjs",
+      "sha256": "abde9fc68c54844679da84f6a9cc48ac149e594a95b00c22732214433f30165b"
+    },
+    {
+      "path": "packages/core/src/storage/recovery/usage-settlement.d1.test.mjs",
+      "sha256": "fd18178f4af2f838b60fb4ae224d6e8703a1b2013d91f100e5d9f626065a86c2"
+    },
+    {
+      "path": "packages/core/src/storage/recovery/usage-settlement.fixture.mjs",
+      "sha256": "efa865ed3b55d9e9b3e590966c8b39be65c9d3320e6b4a727a0d229b59f66f07"
+    },
+    {
+      "path": "packages/core/tsconfig.dispatch-intent.json",
+      "sha256": "0f69e38e22681b5a05e67424e34153357c019c1b30d335d09d34f440dad3b9e3"
+    },
+    {
+      "path": "packages/proxy/package.json",
+      "sha256": "671b3080d4f185a54c6de2fca923549dcd4b054e4316a88315396c7eabfc32aa"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/images-abort-live-fixture.mjs",
+      "sha256": "98c318d77d8d62ff8e82c03106f1b5eba5b2ccf850a1195c966edf4b67ba827a"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/images-abort-live-fixture.test.mjs",
+      "sha256": "fdaa258b046be62c45d28d8cbb243d260b89140eedc6c0fcf9edb98e6ed08032"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/images-env.d.ts",
+      "sha256": "e3f83a405ed005e12de44b60232433bb9c055ed428d4bfe32adc0cd0bacb335f"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/images-fencing-gateway.ts",
+      "sha256": "3edf0123da1fd5cb96c1bbd52150e07470d9502d300dd08d6ec26d3be66d49a3"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/images-fencing-handler.ts",
+      "sha256": "20f686aa25b6b786beae17554b0f388b866827bc0f64c564bc797d530ed704e2"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/images-fencing.test.mjs",
+      "sha256": "1288ffc83249b74fff8973c6c4080315c88b83fbb30dca965edb408c9bf2f02b"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/images-gateway-handler.ts",
+      "sha256": "68181492214d8df33fc278b900d8871ffe1011c81f1a5f11ddea9c6fbb282c61"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/images-gateway.ts",
+      "sha256": "718efe4474e3c98fe5259927a7e0e472a8d92f6966d51250072f349f4ffa9d6e"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/images-host-expiry-chain.test.mjs",
+      "sha256": "232aa15186872d232e8eada2ef4a33c057bc5fa34e2ebf756f8635a3743ccf44"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/images-host-expiry-gateway.ts",
+      "sha256": "ab450e7f93de7c3e9cccc69a738b213444f4291328bc0a6cb392f7b9292406d9"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/images-host-expiry-handler.ts",
+      "sha256": "150a9d6a4cdbb6886a58bdc44e9605958cc144d6009a868a7fff14f42962c44b"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/images-host-expiry.test.mjs",
+      "sha256": "a29c1e0488b59f2c8ea2bcb50005bcb29e6dcbbb4d7cfc83134a29e0785cba07"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/images-partial-delivery-live-fixture.mjs",
+      "sha256": "4adfb7a691c548dcd8333422428d1eab170a22519e102ecfa63945d9139a252c"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/images-partial-delivery-live-fixture.test.mjs",
+      "sha256": "1ea45246ef6a2b9cfd9066013402ac8ce22cc55520e442aa5cec87f9a47d94be"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/images-recovery-chain.test.mjs",
+      "sha256": "f30df5058815980317f7ca16df385527e87bf0dc629c38466c39e1041afb3ad8"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/images-recovery-combinations.test.mjs",
+      "sha256": "a8c81edb42bca6db5c715e671c3b283172c04889b38d6f3cc98346e6f6fb825a"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/images-recovery-gateway.ts",
+      "sha256": "f218d7ca240212130f7ba700bfb731be5287dfc7745c9b9e4d6fbf3d7a6c6c55"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/images-recovery-live-fixture.mjs",
+      "sha256": "43bf3a5b1bea1413b7d878e92ba0f8758dc89965e37c08284490fd87f4ad5811"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/images-recovery-live-fixture.test.mjs",
+      "sha256": "7cf2448ba7525433c62fffa88517fda75296270d601a0f40f3e552ffd99cb160"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/images-recovery-process.fixture.mjs",
+      "sha256": "e9fac590afd4ede317971de4b9d6ae440993abd057da36187da02421eaa49b22"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/images-recovery-process.test.mjs",
+      "sha256": "401b8a16e72b5182595a11de43b76229787d2046e6d307c6e82401ec933b197e"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/images-recovery-schema.test.mjs",
+      "sha256": "8d117058221993f1a9ba8e62619fbba2e5ac64420d60e72411ad5bd81e72e254"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/images-recovery-test-support.mjs",
+      "sha256": "e770e4179c8391d85cb8b64cb0f3361c40bdebd1ae0894f1b888e2f806418c06"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/images-recovery-worker.test.mjs",
+      "sha256": "31facce1be813fde89fe498f5c07ff33b7593418d2b55caf253fd0217d22835a"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/images-storage-fault-contract.ts",
+      "sha256": "6ea3d44593a96c7cca1c873490628682b832b586d7447a481bcce54b3949f4be"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/images-storage-fault.test.mjs",
+      "sha256": "c669faac928f6c293b1661b433d580bc959fe09bab6896b30224715d10a5be6b"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/images-storage-fault.ts",
+      "sha256": "252fa27b63989abd5802dbdbe6ac290e08b2bb97fcfeaa418a977102a17a66e5"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/images-undelivered-chain.test.mjs",
+      "sha256": "bb9622999a71a9ba13ca82152dab438ab9eaacbeeac385e97a73ec4d5f31fb67"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/images-undelivered-gateway.ts",
+      "sha256": "c1852785c12d1d90133891731d824ae4b535a1bde91520b8a7a2bfc5b78c51fc"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/images-undelivered-handler.test.mjs",
+      "sha256": "9a60c098e1479fdd8113698ab083bd55e98b9a644ebd4487cffcc1b1b6baeda1"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/images-undelivered-handler.ts",
+      "sha256": "9f55601ea3ac6760b23f3e2d596d66bee87782d937c8e1c00537adf3bf6eb28a"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/measure-recovery-workset.mjs",
+      "sha256": "73e848997dd2334be90a656f18ccf5ea5e9ca0e8cd9c1ee2428f8915e6add9e6"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/recovery-fencing-probe.test.mjs",
+      "sha256": "ff1f4c4250eb1203bdc47a1e48da7e833203f1dd2e53bc1ca00e78402564fb2f"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/recovery-fencing-probe.ts",
+      "sha256": "596b5e11a611ea74e3aa444f31910f70b84997eb90f49696a9995dbd9861edc3"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/tsconfig.json",
+      "sha256": "7822fb2eefd36af2218cabb11893a00d70d6fd98d6a8ba03f100d6e5fe438ed9"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/usage-recovery-audit-fault.mjs",
+      "sha256": "ab4cea5c16be0faace56297c22c46a81302fb42719775296aaf51e115d5ee191"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/usage-recovery-audit-fault.test.mjs",
+      "sha256": "ea488f56f39d728f5367ac7e75b19a7772bf4b67af07d383fcdbdd91120b9640"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/usage-recovery-control-env.d.ts",
+      "sha256": "297ec248927a4d0c296c24a103859db5cbe86f6a93eee52ec31a31a8a0fb14ad"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/usage-recovery-control-images.test.mjs",
+      "sha256": "efee7c10a7566961a4ad6fb2b90b6f40339c61094ffce40aa7d183dd9d37a3fd"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/usage-recovery-control-types.contract.ts",
+      "sha256": "6700255e1fcbd379cd8d950db85c18f6c1b6782229f3b6ca4053b1cfd1c5b659"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/usage-recovery-control-worker.ts",
+      "sha256": "9ee47eb3c021ae403ed81fb0b657efe004029d1a61cd896b01de115351531ae1"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/usage-recovery-control.test.mjs",
+      "sha256": "7c3912cb48ee51a42626b46b30e8519e21847c4247e52fa18b90fd9344dd7e45"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/usage-recovery-env.d.ts",
+      "sha256": "b9b9cf625b6709b92e1ddd7696032c0bd6df6bfb0d026e40d96e6f838d85cc9c"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/usage-recovery-fencing-worker.ts",
+      "sha256": "25a708a9786bc50ed4ba23161fb44f5d9882e8a14a526eaf837eee170fa9b3c8"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/usage-recovery-host.test.mjs",
+      "sha256": "1fe28508e45df1e51e9562282b8228f24c412ee40baa6a795a0642e25e4922fc"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/usage-recovery-paid-fixture.mjs",
+      "sha256": "e1eeabfc7a60d14d9365aa1c2a8c133f04134ed32fce28463e071e2a5cebbaf6"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/usage-recovery-paid-fixture.test.mjs",
+      "sha256": "51e61fba6eafae6556a4d12ce6e05f6c06303dd431c385ce635b43c8c0b3e641"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/usage-recovery-worker.ts",
+      "sha256": "3271c74ebe2df34e1ce962dda52f3a695fbfd904a8d4a1fc072cdb14e8bb07c6"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/wrangler.usage-recovery-control.jsonc",
+      "sha256": "f2e75e6f3625df0f666e2edd5c076d80707ba4eedfd382b29ffe87ed5ceea245"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/wrangler.usage-recovery.jsonc",
+      "sha256": "77dbd0f0096f50e5663554c09f9960e38042d520badfd448aa35fca8b69d3a15"
+    },
+    {
+      "path": "packages/proxy/src/app.ts",
+      "sha256": "ccead19795044c654062e02410fbfbaa4ce49cc5b1de8109773b6e6c24aab2d7"
+    },
+    {
+      "path": "packages/proxy/src/index.ts",
+      "sha256": "22a6c56801c95cb955cc0949b78ef1a9eab7cf97ff9895a77169b43be11b91f7"
+    },
+    {
+      "path": "packages/proxy/src/routes/v1/images.ts",
+      "sha256": "5b7b351a071e6aa5860bd61c0586653f12424aa8ed389fb4992d5c30c9b900d4"
+    },
+    {
+      "path": "packages/proxy/src/runtime/node.ts",
+      "sha256": "ac3e0f5bd8ab01daec890382354982afee65c3ecb70faeca4e12dc8a42185d14"
+    },
+    {
+      "path": "packages/proxy/src/runtime/usage-recovery-control.ts",
+      "sha256": "9e35e92e449f8df06c35840803dacc8bb26bb45eb8d25ec087a6a7358be96192"
+    },
+    {
+      "path": "packages/proxy/src/runtime/usage-recovery-host.ts",
+      "sha256": "5f86289e619ea50f07adb4102cf62d448ce81ec185532ca0df49668d290b9eb1"
+    },
+    {
+      "path": "packages/proxy/src/runtime/worker-handler.ts",
+      "sha256": "987803235108fc993ec6703af85605fe8cd58a8cbd132546796fe218042f775d"
+    },
+    {
+      "path": "packages/proxy/src/runtime/workers.ts",
+      "sha256": "cd7d4881447b1ff4d5a78b19290b4948aeb509a031e0de4f51549082da2c92c1"
+    },
+    {
+      "path": "packages/proxy/src/services/gateway-error-codes.ts",
+      "sha256": "f8e4be5e446ed55982c176fa09bbd090350ff3c361965ef67c9247034e865d10"
+    },
+    {
+      "path": "packages/proxy/src/services/gateway-error-response.test.ts",
+      "sha256": "0437688397e27743b1b8743c5fd7d2b4103e37e31d4c588bf7ea1b9fc501a0a4"
+    },
+    {
+      "path": "packages/proxy/src/services/generation-metadata-snapshot.ts",
+      "sha256": "4c2b364ca1e8d87257f659b0a119acefee458e7dfab599a1ffc4b2bc64959dd0"
+    },
+    {
+      "path": "packages/proxy/src/services/generation-request-context.ts",
+      "sha256": "55c1a384b82b5f2352bf7b48c3fec0e26e69a20570494451b55cccc7f96be35d"
+    },
+    {
+      "path": "packages/proxy/src/services/image-usage-charge.test.ts",
+      "sha256": "c300aafef7666fdf15935ab1f44e1431f3820973fea85ec081c8c2cad533abb1"
+    },
+    {
+      "path": "packages/proxy/src/services/image-usage-charge.ts",
+      "sha256": "39d773d01483e1d393abfd329f54b088f61ac97d79a279665a1ccb8e039b4525"
+    },
+    {
+      "path": "packages/proxy/src/services/image-usage-recovery.ts",
+      "sha256": "713252d956bd64efaa6746243f9e779fca538732a1e9b377d27ae041c257e129"
+    },
+    {
+      "path": "packages/proxy/src/services/openrouter-error-protocol.ts",
+      "sha256": "ca1a363256a1ef7d4839c8eec017189726dc1904a0c60229e91c98c6338877d4"
+    },
+    {
+      "path": "packages/proxy/src/services/request-capacity.ts",
+      "sha256": "871875b50ea4730a3d7ad415a8de983a0044850ffa3139e57ec436facce1c10f"
+    },
+    {
+      "path": "packages/proxy/src/test-support/sqlite-d1.ts",
+      "sha256": "e28c1f8efe6dc96301307c8997dd02d402eac9431cfa8ece9f6b5aa572b2214b"
+    },
+    {
+      "path": "packages/proxy/wrangler.base.jsonc",
+      "sha256": "0687684a6870256283885ad5a1e4f154943c1909d0b866105aa5b8143f107833"
+    },
+    {
+      "path": "scripts/deploy/isolate-recovery-control-types.mjs",
+      "sha256": "f7cd7bd934764a30c0df2bf49a63a5448bd94487d0b242c5176a333552d27606"
+    },
+    {
+      "path": "scripts/deploy/prepare-proxy-staging-images.mjs",
+      "sha256": "526f7240d4a3b9d17df8e02faacb752f60f4959579aa99e48a88e164486a66a0"
+    },
+    {
+      "path": "scripts/deploy/prepare-proxy-staging-images.test.mjs",
+      "sha256": "b71686bec39a73ae9442262673bc4b6ba8dbadeada4981047d6aca76c2c4eb14"
+    },
+    {
+      "path": "scripts/deploy/prepare-proxy-staging.mjs",
+      "sha256": "37b089706d9c7ec33fdb7f009aec2a477d02f07151d51e8e3a189e8221fea7ef"
+    },
+    {
+      "path": "scripts/deploy/prepare-staging-host-expiry.mjs",
+      "sha256": "8543aec087a307a472b821c8f19cb13d59a20d87affaa271f6bc060663d0cb01"
+    },
+    {
+      "path": "scripts/deploy/prepare-staging-recovery-experiment.mjs",
+      "sha256": "272b8dd99851e5b5affe2be17af3800843496c04e620b872c7e575fe30ae5081"
+    },
+    {
+      "path": "scripts/deploy/prepare-staging-recovery-experiment.test.mjs",
+      "sha256": "67f44045817b7ba301faf1ff854b678b3fd2e47622ee5c3fdc92cf4e87cbccff"
+    },
+    {
+      "path": "scripts/deploy/prepare-staging-undelivered.mjs",
+      "sha256": "54d26eb75937ed9c17c8f794d938e7fb4c64ec19304e7cbc17e7f7cf87b4e05c"
+    },
+    {
+      "path": "scripts/deploy/validate-staging-usage-recovery.mjs",
+      "sha256": "d9988e4a4d5f484846ada1729916851ad1ff4d08f35a0e47ba3066cbc2d8e3dc"
+    },
+    {
+      "path": "scripts/deploy/validate-staging-usage-recovery.test.mjs",
+      "sha256": "8eec01a21cd6f4e409086a3982a8772d864eb0a98d88f1d2fb437ced8ced0ae7"
+    },
+    {
+      "path": "scripts/deploy/verify-recovery-schema-artifact.mjs",
+      "sha256": "927d8b55f264bee4e1045358c84f72a2382f03e2c6b815b5ad43229167644f5f"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/usage-recovery-max-snapshot-fixture.mjs",
+      "sha256": "41839a0d7841aca8977a70171e28a90779bffd4e7adb937f4ed4f8580ff62dd3"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/usage-recovery-max-snapshot.test.mjs",
+      "sha256": "be804555e6b336a4ff0eb279eebd988bb46fb87d04dc73784161cf355ffef226"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/usage-recovery-max-snapshot-result.mjs",
+      "sha256": "e3db04a166df78a2d72add9f701391eb94f1753497ad942dad4f74f208293fb0"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/usage-recovery-max-snapshot-result.test.mjs",
+      "sha256": "b606754449e31523970106df7979704461ec9f2bbe1ada33463bcd0914bb8afa"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/usage-recovery-max-snapshot-progress.mjs",
+      "sha256": "e0bec8eaac8cb3e388e250ceefccb2853478eb3df57d082d0a82d80efdd45ad8"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/usage-recovery-max-snapshot-progress.test.mjs",
+      "sha256": "8ed3920d6c276b075bc6038fe1c6b2ae8b12808625494bd14886cc9b0ffbfd7e"
+    },
+    {
+      "path": "scripts/deploy/staging-d1-transport-fixture.mjs",
+      "sha256": "015b8838e2051864645fad061a4da99862b3e40a784672ac5cb9c7128f540974"
+    },
+    {
+      "path": "scripts/deploy/staging-d1-transport-fixture.test.mjs",
+      "sha256": "fe1e1f7f75fe6e511f12942d36d40eadfe92a56bdfa23ee9023ad61bbf89c898"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/usage-recovery-seed-batches.mjs",
+      "sha256": "00f8f3897d5bd23ffa8c081ad81b9e011a659edb80489e189b41c169abe78afa"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/usage-recovery-seed-batches.test.mjs",
+      "sha256": "7629bac15d61c54b58aabc4b789a1b19b6c6de1f8e2d1684f870b41dfdd08c07"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/usage-recovery-five-fixture.mjs",
+      "sha256": "3e325f616d2487cc363d30914c276431ad826c905ccfc5a34d6492360e2a8932"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/usage-recovery-five-progress.mjs",
+      "sha256": "d81f19d2aff951d1e7569e56da972a088269ad7997109a3bf7be29946ee543dc"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/usage-recovery-five-seed.mjs",
+      "sha256": "99f052c083741f35dd185873418816c050545015ff5fb91f8a052c3eb86594f7"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/usage-recovery-five.test.mjs",
+      "sha256": "25e5d68d2de2e96c2570542d2fa95e9eb6fe54e6e7525dd63ee80af32db27d86"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/recovery-claim-delay-probe.ts",
+      "sha256": "50d4ad1b6f31795b730cd9baff44915548cf665a18be8dfbc8832c3775618ba6"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/usage-recovery-claim-delay-worker.ts",
+      "sha256": "7f40cbf6c8636ca711976b5dbb32a1cee0e31c3e101fa3c3b7d5e5793a189cb5"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/recovery-claim-delay-probe.test.mjs",
+      "sha256": "716f92265e3099d6860f0a1c4a89c61311bd2de5826ae8c538ed21378ab22a06"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/usage-recovery-backlog-progress.mjs",
+      "sha256": "ac644f3efc472807599ec9f41965b363e8471835102606b94b283a7120b7ef8e"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/usage-recovery-backlog-progress.test.mjs",
+      "sha256": "8e8d6d8612ee3332db47de480f28a2b6f80796c3225f854e3173ee62d92fd08b"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/images-producer-boundary-fixture.mjs",
+      "sha256": "b6d9924f47eecf9c35ad0ae33c88d328240a7bff0c1b5c2b8b24d99ea49ceb0c"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/images-producer-boundary.test.mjs",
+      "sha256": "d5ded66849f083a6d227b7c499a5f8385b5d419d0a0b9d38ae62e3a538892fad"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/images-producer-persistence-boundary.test.mjs",
+      "sha256": "2cc4ac7701ceb461295671ebd948647320e657540b9c48297ada4204141f0e94"
+    }
+  ],
+  "operationalArtifacts": [
+    {
+      "path": ".wrangler/staging/images-fencing-v168-cloud.mjs",
+      "bytes": 30254,
+      "sha256": "65888baaa6980a71f2acc7e08b2562f3eb66ee7d4792eccce84311682c8e1917"
+    },
+    {
+      "path": ".wrangler/staging/images-fencing-v168-reconcile.mjs",
+      "bytes": 22772,
+      "sha256": "021494779d98c05399eb2820d52e608d33f7cb25dc5fce076f94b7d31c26a21b"
+    },
+    {
+      "path": ".wrangler/staging/images-fencing-v168-run.mjs",
+      "bytes": 31469,
+      "sha256": "aa407ecead48b5548063a076073348669757934d679d4b9d972accff93ac1591"
+    },
+    {
+      "path": ".wrangler/staging/images-fencing-v168-run2.mjs",
+      "bytes": 32131,
+      "sha256": "335b7ac5649e69120939c3cbb36c2aff5fb3d6554d9cc6890ce2c5f7e3655707"
+    },
+    {
+      "path": ".wrangler/staging/images-fencing-v168-settings-read.json",
+      "bytes": 1606,
+      "sha256": "ec7476c6124e0b8e6c3c3a418e9e9eb47d6a14cbd59cbae117147ff2ca030208"
+    },
+    {
+      "path": ".wrangler/staging/images-fencing-v168-version-compare.mjs",
+      "bytes": 1277,
+      "sha256": "ef6cada46cacd4d11489b1f9acb3f29e4ff7fad74a3bbc84f05af09d56473dc4"
+    },
+    {
+      "path": ".wrangler/staging/images-fencing-v168-version-compare-result.json",
+      "bytes": 5007,
+      "sha256": "45c15a2c97d73363169e25e1bf1a4e9ffff10c2584a2505c8c087651df0e6850"
+    },
+    {
+      "path": ".wrangler/staging/images-fencing-v168-deploy-result.json",
+      "bytes": 30363,
+      "sha256": "e41b465c4c14ed74de5e046d53b70574e8c0d854e9a54196b2673282b81b963b"
+    },
+    {
+      "path": ".wrangler/staging/images-fencing-v168-reconcile-result.json",
+      "bytes": 34824,
+      "sha256": "9042a05c34dec265b16cb2720197c3dcdaaa90914ad0bb2654c1ce1d0bafd303"
+    },
+    {
+      "path": ".wrangler/staging/images-fencing-v168-run-result.json",
+      "bytes": 80722,
+      "sha256": "995146c5405604ed2ddd3c1ee5974d5c0062dc9121f08d497b601a2458818e66"
+    },
+    {
+      "path": ".wrangler/staging/images-fencing-v168-run2-result.json",
+      "bytes": 143846,
+      "sha256": "6ab43e3295f2c203a660b7635f9b15738a76aed8bb3937eda66f35cd68493fb7"
+    },
+    {
+      "path": ".wrangler/staging/staging-regression-v168.mjs",
+      "bytes": 1914,
+      "sha256": "82a029114331c9484406c4764faa1e0f2187e0d24a8ac9341955e649efc9937a"
+    },
+    {
+      "path": ".wrangler/staging/staging-regression-v168-result.json",
+      "bytes": 1238,
+      "sha256": "f64192e1eee74807428e4b642225d0d483786554d7bb282297ff5d2ab750620a"
+    },
+    {
+      "path": ".wrangler/staging/images-fencing-v166/wrangler.jsonc",
+      "bytes": 1646,
+      "sha256": "9c6d563e6f1976ac427f030568f2ae8d00c7af90c5aea6323bc7b218a9a6ed62"
+    },
+    {
+      "path": ".wrangler/staging/images-fencing-v166/generated-env.d.ts",
+      "bytes": 1298,
+      "sha256": "6a2cf66ebeaa93333e049df860f9d6d8e55f75d03841cc038157fb8673464c46"
+    },
+    {
+      "path": ".wrangler/staging/images-fencing-v166/bundle/images-fencing-gateway.js",
+      "bytes": 3802640,
+      "sha256": "310dcc40cae915f44af896d3ee54b187c1870955b1979044aa7978885131432b"
+    },
+    {
+      "path": ".wrangler/staging/recovery-fencing-v167/wrangler.jsonc",
+      "bytes": 1092,
+      "sha256": "00764bb8b6e2b1d3b73b1b19efe0f75811266049176c1449ba316996f16b156e"
+    },
+    {
+      "path": ".wrangler/staging/recovery-fencing-v167/generated-env.d.ts",
+      "bytes": 1407,
+      "sha256": "629e4cb220c3ec81e0c5ab664c910be8b76281e5f9cebcbe6931fdbf7fb9e34f"
+    },
+    {
+      "path": ".wrangler/staging/recovery-fencing-v167/bundle/usage-recovery-fencing-worker.js",
+      "bytes": 351205,
+      "sha256": "42785b103bc31946793902f039626660723dab9a45000b893d61562f8b6ff8c9"
+    },
+    {
+      "path": ".wrangler/staging/images-partial-v169.mjs",
+      "sha256": "0eae544b031b3be8b2a27b2ea9506fbf927128b5c0e31dfbb0a5132e80298eb6"
+    },
+    {
+      "path": ".wrangler/staging/images-partial-v169-result.json",
+      "sha256": "b39d6a25c60dbfd7f90310d462b8de36e5c0b88ccf5c9f8e3062cf44c24113e6"
+    },
+    {
+      "path": ".wrangler/staging/staging-regression-v169.mjs",
+      "sha256": "0f885c94412219ce54df43d969555e6ad88107111f023b8b310762aa34eb101f"
+    },
+    {
+      "path": ".wrangler/staging/staging-regression-v169-result.json",
+      "sha256": "177f09467d05855a02f3d8740714f71d1a628b31e617eacd46edcc36853e2949"
+    },
+    {
+      "path": ".wrangler/staging/images-undelivered-v170/wrangler.jsonc",
+      "sha256": "3bd77785bc798ebc7d08c3d8da1f9fd958ecb76c448378d77399c773ff3a7935"
+    },
+    {
+      "path": ".wrangler/staging/images-undelivered-v170/generated-env.d.ts",
+      "sha256": "e6eee0740f7eb6c0da3c1af5d77cc6c8c2e9134fc15f668bbe1d159e0b2c936a"
+    },
+    {
+      "path": ".wrangler/staging/images-undelivered-v170/bundle/images-undelivered-gateway.js",
+      "sha256": "998089e7f6031f113133ee69a970adfb6c7b9019e100dfb46c3bd19e42ae19c4"
+    },
+    {
+      "path": ".wrangler/staging/images-undelivered-v170/bundle/images-undelivered-gateway.js.map",
+      "sha256": "f25eaaaa5e0509ff3b1598887dc2b417e9e822c9d7683be30ace24b26689bc54"
+    },
+    {
+      "path": ".wrangler/staging/staging-regression-v170.mjs",
+      "sha256": "02247914b46e3616fe2f2e04c3f1d3af5e6719a2062e1c7e8a2f25a4be9fc6c4"
+    },
+    {
+      "path": ".wrangler/staging/staging-regression-v170-result.json",
+      "sha256": "4ed55615ecc1d5e3a86ef06381d8c6e52f0f99d5e3350384aed479da3fc74480"
+    },
+    {
+      "path": ".wrangler/staging/images-undelivered-v171.mjs",
+      "sha256": "bcc49d041e3ff2b03e4e229fb3a2a9cf4e2fde48861797665776707a0d5561ab"
+    },
+    {
+      "path": ".wrangler/staging/images-undelivered-v171-fixture.mjs",
+      "sha256": "21b5a009eb590f6e65ba67d03690c3b80f7e9d2de9ecab81e7d14d84e4c12960"
+    },
+    {
+      "path": ".wrangler/staging/images-undelivered-v171-fixture.test.mjs",
+      "sha256": "35fa3c02d7367406c4c60bb893c15557821b491419ffbe08ed2b1f53700deffb"
+    },
+    {
+      "path": ".wrangler/staging/images-undelivered-v171-deploy-result.json",
+      "sha256": "c5f704cc511e8add2217663082adab129e935976d42bb3088786c3bfa43d5fb4"
+    },
+    {
+      "path": ".wrangler/staging/images-undelivered-v171-run-result.json",
+      "sha256": "2311a175cc1291ece28704ad12c0315c96f7e8c1510c5ff5026c77db83af67ad"
+    },
+    {
+      "path": ".wrangler/staging/staging-regression-v171.mjs",
+      "sha256": "1fb5828bfa6f7e0362bc4e250f99a3b3973d393db0366c81fae0f92ed740cf2d"
+    },
+    {
+      "path": ".wrangler/staging/staging-regression-v171-result.json",
+      "sha256": "dd8ba92d03b2a88a23c6268f18f7a741a572ee4456bd506d975d4ce53452f480"
+    },
+    {
+      "path": ".wrangler/staging/publish-undelivered-v171.mjs",
+      "sha256": "3f7cc6656eb901e6c8c856ff23880e5bd2671be45e823eda20e84d2884fb95fb"
+    },
+    {
+      "path": ".wrangler/staging/staging-regression-v172.mjs",
+      "sha256": "61fad6522a425d6f18bac1e461d38ad717fc80cc87983018f0d15956aa972c47"
+    },
+    {
+      "path": ".wrangler/staging/staging-regression-v172-result.json",
+      "sha256": "ceebd5658dd6fde06c05066ede595edd8219d18153b696dba3cc7e3df9072141"
+    },
+    {
+      "path": ".wrangler/staging/prepare-host-expiry-v172.mjs",
+      "sha256": "525c995cab8d0be87c3d3cefef804c0aa13ef0edc29e5f39bbd55ef0128a9233"
+    },
+    {
+      "path": ".wrangler/staging/prepare-host-expiry-v172-result.json",
+      "sha256": "2c612a2cfc7a0200c7c61f76d66162433b98b566126f53e0cf1e7d04ecb852b2"
+    },
+    {
+      "path": ".wrangler/staging/images-host-expiry-v172/wrangler.jsonc",
+      "sha256": "13d71a05824ce3403bae654c804dbb4879ccab1c3381a498ac8778e34e0359e2"
+    },
+    {
+      "path": ".wrangler/staging/images-host-expiry-v172/generated-env.d.ts",
+      "sha256": "eec2aed8cd0a897b34531979bcf5422e0d72733b4a35f9e852d940d178a4f2f3"
+    },
+    {
+      "path": ".wrangler/staging/images-host-expiry-v172/bundle/images-host-expiry-gateway.js",
+      "sha256": "d7fee9a646a6cfb599bda35cd0c43ec6e18b89d3a9e5ca60df45bb24e81dec5d"
+    },
+    {
+      "path": ".wrangler/staging/images-host-expiry-v172/bundle/images-host-expiry-gateway.js.map",
+      "sha256": "ef9fea3704300fb52add2cf50c61e1bb177b89950e43d2cbdbdf23a82ba8d58c"
+    },
+    {
+      "path": ".wrangler/staging/publish-host-expiry-v172.mjs",
+      "sha256": "e673954c3bad97d421bfa664421a4e19611a75f9f999b537529ad8636bd3dffd"
+    },
+    {
+      "path": ".wrangler/staging/images-host-expiry-v173.mjs",
+      "sha256": "d74d7f2281352aef5cd18fd3d3cd160cebeb1c91c05843f3485f0fa769b08601"
+    },
+    {
+      "path": ".wrangler/staging/images-host-expiry-v173-fixture.mjs",
+      "sha256": "98b48367087651ac508351e10de5d0295fb12d1daf5696759832b11869393656"
+    },
+    {
+      "path": ".wrangler/staging/images-host-expiry-v173-fixture.test.mjs",
+      "sha256": "fdf87f6b8f521e0eca6bf169a00cffadd4e69d7a00bc9f527841d014034926ce"
+    },
+    {
+      "path": ".wrangler/staging/images-host-expiry-v173-deploy-result.json",
+      "sha256": "a7989577f8d54bb2addb8e3540a9ba32126df38ada039032eb04ff56ded3d7eb"
+    },
+    {
+      "path": ".wrangler/staging/images-host-expiry-v173-run-result.json",
+      "sha256": "f3b3783e66a8f002ff735d46ec7053394c96bd2f281ae9fe05c0e2f936941c45"
+    },
+    {
+      "path": ".wrangler/staging/staging-regression-v173.mjs",
+      "sha256": "11ad4263395f8a6a0b8d6f16b0f84df4f73985d019a9b69c2f638662734815ec"
+    },
+    {
+      "path": ".wrangler/staging/staging-regression-v173-result.json",
+      "sha256": "55941b88e10bf2063f26ff1cbcc0151bfcf4c3f37a9ce8f91e1d03a760b65b5e"
+    },
+    {
+      "path": ".wrangler/staging/publish-host-expiry-v173.mjs",
+      "sha256": "cabcc3d2057b8cd8513453c8ff42c977298c08e0bdb05e8e2686f9cdbc7e7848"
+    },
+    {
+      "path": ".wrangler/staging/images-host-expiry-v173-run2.mjs",
+      "sha256": "e5d8fb367d7f5c8da1b9532f3eccf6ecba37eb3727c535bcd97278f37401f13b"
+    },
+    {
+      "path": ".wrangler/staging/images-host-expiry-v173-run2-result.json",
+      "sha256": "bdb1086bcd167a27376f173124988e4638012ca1887c0337874db3b55a1accd2"
+    },
+    {
+      "path": ".wrangler/staging/images-host-expiry-v173-warning-v2.mjs",
+      "sha256": "a05d252858c3217c7a6b163b8b4d187c6183fb94e8ffa80168c903541a765105"
+    },
+    {
+      "path": ".wrangler/staging/images-host-expiry-v173-warning-v2.test.mjs",
+      "sha256": "2df4f8946ea8307605d2b0bd4dc3dee316745408bbd91ffd7d094b194ef36099"
+    },
+    {
+      "path": ".wrangler/staging/staging-regression-v173-run2.mjs",
+      "sha256": "e3e48854cb517e61641dae5c7a5d78ad90bb844a4a45cc8794b05cb4d8c9087e"
+    },
+    {
+      "path": ".wrangler/staging/staging-regression-v173-run2-result.json",
+      "sha256": "175294b9af4cf99ca2312031ebb62ed6cfe3f1f7d4ffe051ab2ef2a8d5fa5b20"
+    },
+    {
+      "path": ".wrangler/staging/recovery-max-snapshot-v174.mjs",
+      "sha256": "aa74eb1d48cc63680e5db6cf2f303311c7497001647d2ab20cb76cfb834cfc9c"
+    },
+    {
+      "path": ".wrangler/staging/recovery-max-snapshot-v174-result.json",
+      "sha256": "fc3e67fa2b6d9b98d45eb3a4bc90a788dcec0118bf10b4303358af11f365df66"
+    },
+    {
+      "path": ".wrangler/staging/recovery-max-snapshot-v174-run2.mjs",
+      "sha256": "78839e9967582169f4d379ee8d340e1a4e45d35f7734df7c9d1e49149bdeb663"
+    },
+    {
+      "path": ".wrangler/staging/recovery-max-snapshot-v174-run2-result.json",
+      "sha256": "24f970e40cf12dc785030e858d3f676fedae79e2c83c2771d185147846fb68fa"
+    },
+    {
+      "path": ".wrangler/staging/recovery-max-snapshot-v174-run3.mjs",
+      "sha256": "c95a78298d9d6dee51d16c014c2eac3760f68715c46315dcaccb76e7c4a94b2f"
+    },
+    {
+      "path": ".wrangler/staging/recovery-max-snapshot-v174-run3-result.json",
+      "sha256": "e43f1f6db1ce20a57fa8a727b059f89a9111e27d32deb96b12807655e5dec5fc"
+    },
+    {
+      "path": ".wrangler/staging/recovery-max-snapshot-v174-run4.mjs",
+      "sha256": "70a5c935b36e38798a43ff3e50d6e23b95e67401b3cc4b1f49dc35897eb04107"
+    },
+    {
+      "path": ".wrangler/staging/recovery-max-snapshot-v174-run4-result.json",
+      "sha256": "0930b75b900a6b0f133646aab2deb6fa61fa5f184cddb57c7fb2b746eacfe8cb"
+    },
+    {
+      "path": ".wrangler/staging/staging-regression-v174.mjs",
+      "sha256": "f259101be8bcda1272251ae228e92556415bcfd807c6f645b089feeecb8fd8fd"
+    },
+    {
+      "path": ".wrangler/staging/staging-regression-v174-result.json",
+      "sha256": "77d30ba56f8832cfd200419bd329e4cb3b6e906ba70d97288e229898ebd81328"
+    },
+    {
+      "path": ".wrangler/staging/staging-regression-v174-run2.mjs",
+      "sha256": "75e6b24425cf08447674313bfec566840f635716cd0ab21f161aede216655415"
+    },
+    {
+      "path": ".wrangler/staging/staging-regression-v174-run2-result.json",
+      "sha256": "b4eafcf1b68bda07fe99eca427b607c2c0699ca032a0c82f9c847ef8be5b5e34"
+    },
+    {
+      "path": ".wrangler/staging/staging-regression-v174-run3.mjs",
+      "sha256": "61908f2448d7a099ebb757dfc34260d456615d007ad5a362f2b339c92bf666b5"
+    },
+    {
+      "path": ".wrangler/staging/staging-regression-v174-run3-result.json",
+      "sha256": "217fc4ebd98272443caf6e9d2c5ae476de30d73de5e27c8db72662932d09d068"
+    },
+    {
+      "path": ".wrangler/staging/publish-max-snapshot-v174.mjs",
+      "sha256": "3b43460e9d899c37a9f73b890423f88ce095ec1db67377e24650a3ce97e41d58"
+    },
+    {
+      "path": ".wrangler/staging/d1-transport-v175.mjs",
+      "sha256": "d78c0dd484d19d96de98971d08faf4eff5d6f3e1adb2abd4b1ce05e180aaf70c"
+    },
+    {
+      "path": ".wrangler/staging/d1-transport-v175-result.json",
+      "sha256": "2f4a4e0f8d36f140c7d40b1e8cc0353f0e246c161cdbe533d792501d106f0b68"
+    },
+    {
+      "path": ".wrangler/staging/recovery-max-snapshot-v175.mjs",
+      "sha256": "61dd1ecb6fb26e490134764130eb60b35416da82b15840852bb57e8ae1c8a12d"
+    },
+    {
+      "path": ".wrangler/staging/recovery-max-snapshot-v175-result.json",
+      "sha256": "cbadd8b0a7225087af7a612708af170c116529271cb236087aa4555cdae571ff"
+    },
+    {
+      "path": ".wrangler/staging/staging-regression-v175.mjs",
+      "sha256": "7c9159fca60ef99f5ed57f60598df84a8fbda4363ff5f499436639194b817594"
+    },
+    {
+      "path": ".wrangler/staging/staging-regression-v175-result.json",
+      "sha256": "351ad84b47e271157633209ff06dcfbcbabd1409c21c975feea1f100e550385e"
+    },
+    {
+      "path": ".wrangler/staging/publish-max-snapshot-v175.mjs",
+      "sha256": "1e2aa88127afa115475783f1345f43e7c5a0de1c276e85dd905bfbcce809cbc2"
+    },
+    {
+      "path": ".wrangler/staging/recovery-five-v176.mjs",
+      "sha256": "28a13758edd159dff46f2d44638ffcbfbffd82bcd5f033697906637170dceb11"
+    },
+    {
+      "path": ".wrangler/staging/recovery-five-v176-result.json",
+      "sha256": "49e3cecb1113b393bcd6ec0f603bdbfc57993a4ef88a835d149fe0503c1b12ba"
+    },
+    {
+      "path": ".wrangler/staging/staging-regression-v176.mjs",
+      "sha256": "e6f028f8ff13cb47945f234f676c1aee3706d41db6715810061dfdb8bdb317c8"
+    },
+    {
+      "path": ".wrangler/staging/staging-regression-v176-result.json",
+      "sha256": "a841ffd11e05dfb98869b6d22a89ca352f9c3cb573b1d09470cafdce993be41e"
+    },
+    {
+      "path": ".wrangler/staging/recovery-five-v176-run2.mjs",
+      "sha256": "f71cc1525b291e54d80838e75973e0019e88923523a74a754efc5ed73323b97b"
+    },
+    {
+      "path": ".wrangler/staging/recovery-five-v176-run2-result.json",
+      "sha256": "2884d7b2a629e585dd6fe025504a824fb1bdc4bf56fa5677ba7c12a5d8809296"
+    },
+    {
+      "path": ".wrangler/staging/staging-regression-v176-run2.mjs",
+      "sha256": "ea851c742d737fe37a6563af2e11d0d2538ea504f97132511bf6bcc28e0b667f"
+    },
+    {
+      "path": ".wrangler/staging/staging-regression-v176-run2-result.json",
+      "sha256": "7f2b0ad8a848d98a9a8d0c6707a822a9aa2a96c46826af5caed67ecccea04a70"
+    },
+    {
+      "path": ".wrangler/staging/publish-five-v176.mjs",
+      "sha256": "723b863a46da7932ea43f5965e75f913eaf6014b27bba1b75bb921779b699697"
+    },
+    {
+      "path": ".wrangler/staging/recovery-claim-delay-v177-prepare.mjs",
+      "bytes": 8815,
+      "sha256": "f776462adadd0c4ec3e1c1ec2d7f44c1d96d37c988db3d83d8f512ef22053344"
+    },
+    {
+      "path": ".wrangler/staging/recovery-claim-delay-v177/wrangler.jsonc",
+      "bytes": 1096,
+      "sha256": "dea6319665499d7656fc7cab831a3a0a8957168ef82b1eb6376514f514fed0a0"
+    },
+    {
+      "path": ".wrangler/staging/recovery-claim-delay-v177/generated-env.d.ts",
+      "bytes": 1459,
+      "sha256": "39e47c1ae09b7e462b3146eff044c4c7fdaff4d621fef85fb9cc99a66cbe43f7"
+    },
+    {
+      "path": ".wrangler/staging/recovery-claim-delay-v177/bundle/meta.json",
+      "bytes": 331593,
+      "sha256": "822bce2e5f7522e2a68e2e2555e71b96b68e5926e2c3cfcf239baf7a053c3eda"
+    },
+    {
+      "path": ".wrangler/staging/recovery-claim-delay-v177/bundle/README.md",
+      "bytes": 133,
+      "sha256": "9f7eebc959b5ff6af7d6f49a083d7707adea7384736a8bc770c02f0ee960f557"
+    },
+    {
+      "path": ".wrangler/staging/recovery-claim-delay-v177/bundle/usage-recovery-claim-delay-worker.js",
+      "bytes": 357529,
+      "sha256": "22a4fb0e8551d427939cc226713518596e27d4ff9cd17bd3e58b4ee8cc44de16"
+    },
+    {
+      "path": ".wrangler/staging/recovery-claim-delay-v177/bundle/usage-recovery-claim-delay-worker.js.map",
+      "bytes": 863996,
+      "sha256": "1b9274fb7a36b3016a64c479314a54626efe3940486885e660d4492f1ade278e"
+    },
+    {
+      "path": ".wrangler/staging/recovery-claim-delay-v177/logs/dry-run.log",
+      "bytes": 1005,
+      "sha256": "aa3e431cdee29750a2c489e3a63bc85c98821c0327c43768807eb53e5f05dac7"
+    },
+    {
+      "path": ".wrangler/staging/recovery-claim-delay-v177/logs/staging-typecheck.log",
+      "bytes": 99,
+      "sha256": "b860b1f42eb4b734c7a493fe7ceda9445a70f065af9f106b2c245578b35154d0"
+    },
+    {
+      "path": ".wrangler/staging/recovery-claim-delay-v177/logs/types-check.log",
+      "bytes": 180,
+      "sha256": "cfab538bd6e192b100de44d492508b9c6700c7eb61be711238d2cabb783b0dfb"
+    },
+    {
+      "path": ".wrangler/staging/recovery-claim-delay-v177/logs/types.log",
+      "bytes": 1409,
+      "sha256": "417b2bc51d84753bc63650b7c973123288ad9e8c56c37ee5dbfd088b57184f1b"
+    },
+    {
+      "path": ".wrangler/staging/recovery-claim-delay-v177/logs/wrangler-dry-run.log",
+      "bytes": 4595,
+      "sha256": "fb5f8da8a97fd9134ae654a9394dc49fcc7eaa780f0132b7d4d64e346256ed03"
+    },
+    {
+      "path": ".wrangler/staging/recovery-claim-delay-v177/logs/wrangler-types-check.log",
+      "bytes": 3201,
+      "sha256": "dad5dd08d892364026c60aace82a208b8eaa8acf61157e40fa87edc733a0b545"
+    },
+    {
+      "path": ".wrangler/staging/recovery-claim-delay-v177/logs/wrangler-types.log",
+      "bytes": 4528,
+      "sha256": "aaf771982d04bf28f74024a483f6895a1b438aa303c4cb25abb8d16a6297622a"
+    },
+    {
+      "path": ".wrangler/staging/recovery-claim-delay-v177/logs/wrangler-version.log",
+      "bytes": 8,
+      "sha256": "674ef82f92f88e6c2dea4ca158c7e56f4cdba55966815cd6e7bfe39627a1c5ee"
+    },
+    {
+      "path": ".wrangler/staging/recovery-claim-delay-v177/logs/wrangler-wrangler-version.log",
+      "bytes": 650,
+      "sha256": "86aa94010f8cead092ec7cd87e3b369e575f2d8555c918807b72f4c59cfc7f71"
+    },
+    {
+      "path": ".wrangler/staging/recovery-claim-delay-v177-prepare-result.json",
+      "sha256": "860fe70b02f6342f3259113a50f61da1d69011e6bc54ed188edf4724fc41b661"
+    },
+    {
+      "path": ".wrangler/staging/recovery-claim-delay-v177-cloud.mjs",
+      "sha256": "bc9dd301830ea2328fc301e04549cc244eabbf39fd550c719d7a3bf063ddc2c2"
+    },
+    {
+      "path": ".wrangler/staging/recovery-claim-delay-v177-verify-result.json",
+      "sha256": "320d6c283c39bf58f7e43cd675dc6470a9d5d11b26dc2e60f454a23d34495e98"
+    },
+    {
+      "path": ".wrangler/staging/recovery-claim-delay-v177-deploy-result.json",
+      "sha256": "cffc0c423ce48388b3eaa31ce25673c21432ec87a1351f1415c01cedd4ca4302"
+    },
+    {
+      "path": ".wrangler/staging/recovery-claim-delay-v177-run-result.json",
+      "sha256": "9bd6dc24fa3ad56e9d3ee758185de9a936be3be2e26673f06fe975ffd6bdc822"
+    },
+    {
+      "path": ".wrangler/staging/staging-regression-v177.mjs",
+      "sha256": "d878f0b391b9604008bdeb88f13d87193b95fe48e4062b71003378a946ab6f3a"
+    },
+    {
+      "path": ".wrangler/staging/staging-regression-v177-result.json",
+      "sha256": "907a75f95c7324120dca0c0a5a0d6e834dda47096eb198b32ab2fd4d6dd9158b"
+    },
+    {
+      "path": ".wrangler/staging/publish-claim-delay-v177.mjs",
+      "sha256": "9b24002a0fb291ada86c2cfc725c1aeef63b91b5e269dcfc52e9bdd30c3290be"
+    },
+    {
+      "path": ".wrangler/staging/images-producer-calibration-v178.mjs",
+      "sha256": "20152076a3a995229830033f566c6c8f5f2309cfec98d262c850b96177fa7a30"
+    },
+    {
+      "path": ".wrangler/staging/images-producer-calibration-v178-result.json",
+      "sha256": "d1988fc470c81f02f7e48ea89056a97652f33a068f8fe4c2c4c5d6a29318c1ae"
+    },
+    {
+      "path": ".wrangler/staging/images-producer-calibration-v178-run2.mjs",
+      "sha256": "1840c8e8671d22a6a58681c60f17c5103a301ef332ad0a8f565830a200ccb203"
+    },
+    {
+      "path": ".wrangler/staging/images-producer-calibration-v178-run2-result.json",
+      "sha256": "d5298371b7dc45420ced641cbfc82383a1e2423f25385f24dc8c7b8ef3180013"
+    },
+    {
+      "path": ".wrangler/staging/publish-producer-calibration-v178.mjs",
+      "sha256": "1f82d95f3bb55bb207d9e902b41363e01c7fe437502a35c092a3044bcef297c6"
+    },
+    {
+      "path": ".wrangler/staging/v179-initial-images-producer-boundary-fixture.mjs.txt",
+      "sha256": "6f54841c5d8404fc19a72080df0f2b04639626bcf836a6c1d2b10d41065265b5"
+    },
+    {
+      "path": ".wrangler/staging/v179-initial-images-producer-boundary.test.mjs.txt",
+      "sha256": "d5ded66849f083a6d227b7c499a5f8385b5d419d0a0b9d38ae62e3a538892fad"
+    },
+    {
+      "path": ".wrangler/staging/images-producer-boundary-v179-initial-result.json",
+      "sha256": "5024451435e60892bfc25f6fb51f976443a87779599d255cda7259386e708324"
+    },
+    {
+      "path": ".wrangler/staging/v179-second-images-producer-boundary-fixture.mjs.txt",
+      "sha256": "11740ef7404ae9a4fa86d3a6c101d0b7f1fc7bb48192cae1ba861af04549837a"
+    },
+    {
+      "path": ".wrangler/staging/images-producer-boundary-v179-second-result.json",
+      "sha256": "082fac24f00821ca8447c4287b8d5b22276d6eafb6605e09fee0e281610935c2"
+    },
+    {
+      "path": ".wrangler/staging/images-producer-boundary-v179-run.mjs",
+      "sha256": "25726a14db68f9d5d3a95e455740f5e901a27900085a5d07d7d06c6e3a05923e"
+    },
+    {
+      "path": ".wrangler/staging/images-producer-boundary-v179-run-result.json",
+      "sha256": "1e98b2fe8f88b97ed5a4ecae73edab46f961c2d8dca3a14d31e3a6d054ee0a9c"
+    },
+    {
+      "path": ".wrangler/staging/publish-producer-boundaries-v179.mjs",
+      "sha256": "89b2b5aec025028cb36bb920f9eb6995522d93619f1fb44ab0b38711f7c2a752"
+    },
+    {
+      "path": ".wrangler/staging/producer-persistence-v180-preflight.json",
+      "sha256": "55d5b0daf8fab78a313ff5ae164d6dce114a71cceca9fe05897b416d60c539fc"
+    },
+    {
+      "path": ".wrangler/staging/staging-regression-v180.mjs",
+      "sha256": "255dbeaef3ffc747f3ce980636d997e59bc1da538825b8c17ab180e4fc6ab0e9"
+    },
+    {
+      "path": ".wrangler/staging/staging-regression-v180-result.json",
+      "sha256": "5e4eb3e33f8f6229fc18aafa1a5debc2f3545cec1eddf36a6a06f1c85cb05807"
+    },
+    {
+      "path": ".wrangler/staging/publish-producer-persistence-v180.mjs",
+      "sha256": "57d79111485864999d21b43a99fce544dfe8df1a34880d33054e13e7cfccc5ed"
+    }
+  ],
+  "evidenceDependencies": [
+    {
+      "path": "docs/developers/architecture/implementation-evidence/C02-staging-native-abort-recovery-results.json",
+      "sha256": "73b2fd7739e872d12259cacd5ba2b2cf27901c5c861c1a11943811bc273d96fd"
+    },
+    {
+      "path": "docs/developers/architecture/implementation-evidence/C02-staging-partial-delivery-results.json",
+      "sha256": "c8e9fedd683b7a944d71befb1242c872960c1b5815905316bbdbc0ac659756a5"
+    },
+    {
+      "path": "docs/developers/architecture/implementation-evidence/C02-staging-undelivered-preparation-results.json",
+      "sha256": "8aa91397e9becdedf351ed0043c500859d219bc54168f644aca60f31e1b02fe7"
+    },
+    {
+      "path": "docs/developers/architecture/implementation-evidence/C02-staging-undelivered-recovery-results.json",
+      "sha256": "5727a45a42e13882271da0738646fdc96f0045a00e441e34e413d3034a56ec0a"
+    },
+    {
+      "path": "docs/developers/architecture/implementation-evidence/C02-staging-host-expiry-preparation-results.json",
+      "sha256": "220ded0f054c29428e95873dc45b4013de9b3f85193bfb4798d406fcc258feaa"
+    },
+    {
+      "path": "docs/developers/architecture/implementation-evidence/C02-staging-host-expiry-recovery-results.json",
+      "sha256": "2125beccaf2e2bf12d891b2a72fd2c493513992bd1cb8176d7ce2b73dce5c1e8"
+    },
+    {
+      "path": "docs/developers/architecture/implementation-evidence/C02-staging-max-snapshot-recovery-results.json",
+      "sha256": "2487eacc912da1c1cf9f480889bcb8881d3bbf145f7b5c8995f1816a096d4183"
+    },
+    {
+      "path": "docs/developers/architecture/implementation-evidence/C02-staging-max-snapshot-completion-results.json",
+      "sha256": "32d216f5fb1ce106a3420c37a5e92be0a675507dd8fc9e6196d39155b1f31fd9"
+    },
+    {
+      "path": "docs/developers/architecture/implementation-evidence/C02-staging-five-snapshot-recovery-results.json",
+      "sha256": "1be37fb61f528254239aa7d8473c68f87a776f7c77ac22a5642cad8a7c57a359"
+    },
+    {
+      "path": "docs/developers/architecture/implementation-evidence/C02-staging-claim-delay-backlog-results.json",
+      "sha256": "17acab4410b5b5bfe37e7cb7726b93bfd4142e398bf96d40c6b90b3b0eca56aa"
+    },
+    {
+      "path": "docs/developers/architecture/implementation-evidence/C02-producer-snapshot-calibration-results.json",
+      "sha256": "1f5a8e0a5213297d9b34442cf578c0386970ea61108dc8b6c6d68c6a2d5f900d"
+    },
+    {
+      "path": "docs/developers/architecture/implementation-evidence/C02-producer-exact-boundaries-results.json",
+      "sha256": "ea1a44f178853b50fe7ab5ee85226428354de2e01cbea22a363d0b6ab3194173"
+    }
+  ],
+  "productionRuntimeSourceChanged": false,
+  "stagingRuntimeSourceChanged": false,
+  "deploymentsChanged": false,
+  "deployments": {
+    "gateway": [
+      {
+        "version_id": "4b089cf8-2ceb-4025-ad75-31c4081341b0",
+        "percentage": 100
+      }
+    ],
+    "consumer": [
+      {
+        "version_id": "b45d752e-361e-45d8-aca7-f24feca4afec",
+        "percentage": 100
+      }
+    ],
+    "controller": [
+      {
+        "version_id": "e3a1830b-cb71-4256-bffe-55d263cf75c9",
+        "percentage": 100
+      }
+    ],
+    "privateUpstream": [
+      {
+        "version_id": "e9bb6c18-d99b-40ba-8b34-62fc95f598f6",
+        "percentage": 100
+      }
+    ]
+  },
+  "lastCloudVerification": "2026-09-08T01:11:00.006Z",
+  "cloudReverifiedThisLocalRun": false,
+  "carriedForwardCloudSubgates": {
+    "fourProfilesFiveSnapshots": true,
+    "fiveItemScan": true,
+    "partialContinuation": true,
+    "interruptedContinuation": true,
+    "backlogBeyondFive": true,
+    "globalDuePrefix": true
+  },
+  "verification": {
+    "initialSmoke": {
+      "command": "node node_modules/tsx/dist/cli.mjs --test packages/proxy/scripts/staging/images-producer-persistence-boundary.test.mjs",
+      "tests": 30,
+      "pass": 30,
+      "fail": 0,
+      "exitCode": 0,
+      "durationMs": 16558.5992,
+      "syntheticDispatchesIncludingBaselines": 60,
+      "basis": "Observed terminal command output; full rerun output is recorded separately."
+    },
+    "regression": {
+      "result": "PASS",
+      "exitCode": 0,
+      "total": 616,
+      "parts": [
+        {
+          "tests": 47,
+          "pass": 47,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "durationMs": 9265.9353
+        },
+        {
+          "tests": 9,
+          "pass": 9,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "durationMs": 1292.8589
+        },
+        {
+          "tests": 192,
+          "pass": 192,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "durationMs": 19313.1078
+        },
+        {
+          "tests": 39,
+          "pass": 39,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "durationMs": 6692.5511
+        },
+        {
+          "tests": 66,
+          "pass": 66,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "durationMs": 390.7328
+        },
+        {
+          "tests": 88,
+          "pass": 88,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "durationMs": 3942.2843
+        },
+        {
+          "tests": 24,
+          "pass": 24,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "durationMs": 217693.7313
+        },
+        {
+          "tests": 5,
+          "pass": 5,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "durationMs": 1835.0198
+        },
+        {
+          "tests": 15,
+          "pass": 15,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "durationMs": 3830.6408
+        },
+        {
+          "tests": 3,
+          "pass": 3,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "durationMs": 1800.0108
+        },
+        {
+          "tests": 20,
+          "pass": 20,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "durationMs": 3669.4019
+        },
+        {
+          "tests": 7,
+          "pass": 7,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "durationMs": 1598.5828
+        },
+        {
+          "tests": 17,
+          "pass": 17,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "durationMs": 7892.4145
+        },
+        {
+          "tests": 9,
+          "pass": 9,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "durationMs": 6258.5016
+        },
+        {
+          "tests": 9,
+          "pass": 9,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "durationMs": 14973.9227
+        },
+        {
+          "tests": 18,
+          "pass": 18,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "durationMs": 23993.186
+        },
+        {
+          "tests": 48,
+          "pass": 48,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "durationMs": 15084.0431
+        }
+      ],
+      "startedAt": "2026-09-08T02:03:23.583Z",
+      "finishedAt": "2026-09-08T02:09:09.450Z",
+      "scope": "Complete versioned staging regression command, not all repository tests or cloud tests."
+    }
+  },
+  "local": {
+    "newTests": 30,
+    "cases": [
+      {
+        "operation": "generations",
+        "profile": "ascii",
+        "mode": "before-insert",
+        "status": 503,
+        "faults": 1,
+        "writesAttempted": 1,
+        "auditBytes": 65536,
+        "snapshotBytes": 70241,
+        "persisted": false,
+        "recovered": 0,
+        "sendsIncludingBaseline": 2
+      },
+      {
+        "operation": "generations",
+        "profile": "ascii",
+        "mode": "insert-ack-lost",
+        "status": 200,
+        "faults": 1,
+        "writesAttempted": 1,
+        "auditBytes": 65536,
+        "snapshotBytes": 70241,
+        "persisted": true,
+        "recovered": 0,
+        "sendsIncludingBaseline": 2
+      },
+      {
+        "operation": "generations",
+        "profile": "ascii",
+        "mode": "readback-only-unavailable",
+        "status": 503,
+        "faults": 1,
+        "writesAttempted": 1,
+        "auditBytes": 65536,
+        "snapshotBytes": 70241,
+        "persisted": true,
+        "recovered": 1,
+        "sendsIncludingBaseline": 2
+      },
+      {
+        "operation": "generations",
+        "profile": "ascii",
+        "mode": "insert-ack-and-readback-unavailable",
+        "status": 503,
+        "faults": 2,
+        "writesAttempted": 1,
+        "auditBytes": 65536,
+        "snapshotBytes": 70241,
+        "persisted": true,
+        "recovered": 1,
+        "sendsIncludingBaseline": 2
+      },
+      {
+        "operation": "generations",
+        "profile": "ascii",
+        "mode": "job-readback-unavailable",
+        "status": 503,
+        "faults": 1,
+        "writesAttempted": 1,
+        "auditBytes": 65536,
+        "snapshotBytes": 70241,
+        "persisted": true,
+        "recovered": 1,
+        "sendsIncludingBaseline": 2
+      },
+      {
+        "operation": "generations",
+        "profile": "unicode",
+        "mode": "before-insert",
+        "status": 503,
+        "faults": 1,
+        "writesAttempted": 1,
+        "auditBytes": 65536,
+        "snapshotBytes": 70240,
+        "persisted": false,
+        "recovered": 0,
+        "sendsIncludingBaseline": 2
+      },
+      {
+        "operation": "generations",
+        "profile": "unicode",
+        "mode": "insert-ack-lost",
+        "status": 200,
+        "faults": 1,
+        "writesAttempted": 1,
+        "auditBytes": 65536,
+        "snapshotBytes": 70240,
+        "persisted": true,
+        "recovered": 0,
+        "sendsIncludingBaseline": 2
+      },
+      {
+        "operation": "generations",
+        "profile": "unicode",
+        "mode": "readback-only-unavailable",
+        "status": 503,
+        "faults": 1,
+        "writesAttempted": 1,
+        "auditBytes": 65536,
+        "snapshotBytes": 70240,
+        "persisted": true,
+        "recovered": 1,
+        "sendsIncludingBaseline": 2
+      },
+      {
+        "operation": "generations",
+        "profile": "unicode",
+        "mode": "insert-ack-and-readback-unavailable",
+        "status": 503,
+        "faults": 2,
+        "writesAttempted": 1,
+        "auditBytes": 65536,
+        "snapshotBytes": 70240,
+        "persisted": true,
+        "recovered": 1,
+        "sendsIncludingBaseline": 2
+      },
+      {
+        "operation": "generations",
+        "profile": "unicode",
+        "mode": "job-readback-unavailable",
+        "status": 503,
+        "faults": 1,
+        "writesAttempted": 1,
+        "auditBytes": 65536,
+        "snapshotBytes": 70240,
+        "persisted": true,
+        "recovered": 1,
+        "sendsIncludingBaseline": 2
+      },
+      {
+        "operation": "generations",
+        "profile": "escaped",
+        "mode": "before-insert",
+        "status": 503,
+        "faults": 1,
+        "writesAttempted": 1,
+        "auditBytes": 65536,
+        "snapshotBytes": 133009,
+        "persisted": false,
+        "recovered": 0,
+        "sendsIncludingBaseline": 2
+      },
+      {
+        "operation": "generations",
+        "profile": "escaped",
+        "mode": "insert-ack-lost",
+        "status": 200,
+        "faults": 1,
+        "writesAttempted": 1,
+        "auditBytes": 65536,
+        "snapshotBytes": 133008,
+        "persisted": true,
+        "recovered": 0,
+        "sendsIncludingBaseline": 2
+      },
+      {
+        "operation": "generations",
+        "profile": "escaped",
+        "mode": "readback-only-unavailable",
+        "status": 503,
+        "faults": 1,
+        "writesAttempted": 1,
+        "auditBytes": 65536,
+        "snapshotBytes": 133008,
+        "persisted": true,
+        "recovered": 1,
+        "sendsIncludingBaseline": 2
+      },
+      {
+        "operation": "generations",
+        "profile": "escaped",
+        "mode": "insert-ack-and-readback-unavailable",
+        "status": 503,
+        "faults": 2,
+        "writesAttempted": 1,
+        "auditBytes": 65536,
+        "snapshotBytes": 133009,
+        "persisted": true,
+        "recovered": 1,
+        "sendsIncludingBaseline": 2
+      },
+      {
+        "operation": "generations",
+        "profile": "escaped",
+        "mode": "job-readback-unavailable",
+        "status": 503,
+        "faults": 1,
+        "writesAttempted": 1,
+        "auditBytes": 65536,
+        "snapshotBytes": 133008,
+        "persisted": true,
+        "recovered": 1,
+        "sendsIncludingBaseline": 2
+      },
+      {
+        "operation": "edits",
+        "profile": "ascii",
+        "mode": "before-insert",
+        "status": 503,
+        "faults": 1,
+        "writesAttempted": 1,
+        "auditBytes": 65536,
+        "snapshotBytes": 70181,
+        "persisted": false,
+        "recovered": 0,
+        "sendsIncludingBaseline": 2
+      },
+      {
+        "operation": "edits",
+        "profile": "ascii",
+        "mode": "insert-ack-lost",
+        "status": 200,
+        "faults": 1,
+        "writesAttempted": 1,
+        "auditBytes": 65536,
+        "snapshotBytes": 70181,
+        "persisted": true,
+        "recovered": 0,
+        "sendsIncludingBaseline": 2
+      },
+      {
+        "operation": "edits",
+        "profile": "ascii",
+        "mode": "readback-only-unavailable",
+        "status": 503,
+        "faults": 1,
+        "writesAttempted": 1,
+        "auditBytes": 65536,
+        "snapshotBytes": 70182,
+        "persisted": true,
+        "recovered": 1,
+        "sendsIncludingBaseline": 2
+      },
+      {
+        "operation": "edits",
+        "profile": "ascii",
+        "mode": "insert-ack-and-readback-unavailable",
+        "status": 503,
+        "faults": 2,
+        "writesAttempted": 1,
+        "auditBytes": 65536,
+        "snapshotBytes": 70180,
+        "persisted": true,
+        "recovered": 1,
+        "sendsIncludingBaseline": 2
+      },
+      {
+        "operation": "edits",
+        "profile": "ascii",
+        "mode": "job-readback-unavailable",
+        "status": 503,
+        "faults": 1,
+        "writesAttempted": 1,
+        "auditBytes": 65536,
+        "snapshotBytes": 70181,
+        "persisted": true,
+        "recovered": 1,
+        "sendsIncludingBaseline": 2
+      },
+      {
+        "operation": "edits",
+        "profile": "unicode",
+        "mode": "before-insert",
+        "status": 503,
+        "faults": 1,
+        "writesAttempted": 1,
+        "auditBytes": 65536,
+        "snapshotBytes": 70181,
+        "persisted": false,
+        "recovered": 0,
+        "sendsIncludingBaseline": 2
+      },
+      {
+        "operation": "edits",
+        "profile": "unicode",
+        "mode": "insert-ack-lost",
+        "status": 200,
+        "faults": 1,
+        "writesAttempted": 1,
+        "auditBytes": 65536,
+        "snapshotBytes": 70180,
+        "persisted": true,
+        "recovered": 0,
+        "sendsIncludingBaseline": 2
+      },
+      {
+        "operation": "edits",
+        "profile": "unicode",
+        "mode": "readback-only-unavailable",
+        "status": 503,
+        "faults": 1,
+        "writesAttempted": 1,
+        "auditBytes": 65536,
+        "snapshotBytes": 70180,
+        "persisted": true,
+        "recovered": 1,
+        "sendsIncludingBaseline": 2
+      },
+      {
+        "operation": "edits",
+        "profile": "unicode",
+        "mode": "insert-ack-and-readback-unavailable",
+        "status": 503,
+        "faults": 2,
+        "writesAttempted": 1,
+        "auditBytes": 65536,
+        "snapshotBytes": 70180,
+        "persisted": true,
+        "recovered": 1,
+        "sendsIncludingBaseline": 2
+      },
+      {
+        "operation": "edits",
+        "profile": "unicode",
+        "mode": "job-readback-unavailable",
+        "status": 503,
+        "faults": 1,
+        "writesAttempted": 1,
+        "auditBytes": 65536,
+        "snapshotBytes": 70181,
+        "persisted": true,
+        "recovered": 1,
+        "sendsIncludingBaseline": 2
+      },
+      {
+        "operation": "edits",
+        "profile": "escaped",
+        "mode": "before-insert",
+        "status": 503,
+        "faults": 1,
+        "writesAttempted": 1,
+        "auditBytes": 65536,
+        "snapshotBytes": 132997,
+        "persisted": false,
+        "recovered": 0,
+        "sendsIncludingBaseline": 2
+      },
+      {
+        "operation": "edits",
+        "profile": "escaped",
+        "mode": "insert-ack-lost",
+        "status": 200,
+        "faults": 1,
+        "writesAttempted": 1,
+        "auditBytes": 65536,
+        "snapshotBytes": 132997,
+        "persisted": true,
+        "recovered": 0,
+        "sendsIncludingBaseline": 2
+      },
+      {
+        "operation": "edits",
+        "profile": "escaped",
+        "mode": "readback-only-unavailable",
+        "status": 503,
+        "faults": 1,
+        "writesAttempted": 1,
+        "auditBytes": 65536,
+        "snapshotBytes": 132997,
+        "persisted": true,
+        "recovered": 1,
+        "sendsIncludingBaseline": 2
+      },
+      {
+        "operation": "edits",
+        "profile": "escaped",
+        "mode": "insert-ack-and-readback-unavailable",
+        "status": 503,
+        "faults": 2,
+        "writesAttempted": 1,
+        "auditBytes": 65536,
+        "snapshotBytes": 132997,
+        "persisted": true,
+        "recovered": 1,
+        "sendsIncludingBaseline": 2
+      },
+      {
+        "operation": "edits",
+        "profile": "escaped",
+        "mode": "job-readback-unavailable",
+        "status": 503,
+        "faults": 1,
+        "writesAttempted": 1,
+        "auditBytes": 65536,
+        "snapshotBytes": 132997,
+        "persisted": true,
+        "recovered": 1,
+        "sendsIncludingBaseline": 2
+      }
+    ],
+    "runtime": "Node v24.14.1 / SQLite, not Workers",
+    "directCapture": "Canonical JSON and SHA from actual INSERT bindings before execution; compared with stored values when present.",
+    "absencePolicy": "No snapshot: preserve dispatch intent and budget, zero recovery work; never restore captured test input or replay inference.",
+    "persistedUnknownPolicy": "Successful durable enqueue with unavailable readback: HTTP503, preserved budget, then exactly one recovery settlement from original immutable snapshot."
+  },
+  "accounting": {
+    "firstRoundUsdCap": 2,
+    "capReset": false,
+    "currentPublicTestHttp": 0,
+    "cumulativePublicTestHttp": 263,
+    "cloudCalls": 0,
+    "modelCalls": 0,
+    "kmsCalls": 0,
+    "productionWrites": 0,
+    "deployments": 0,
+    "newMatrixSyntheticDispatchesIncludingSmokeAndRerun": 120,
+    "existingRegressionSyntheticDispatchesNotAggregated": true,
+    "syntheticLedgerIsRealCharge": false,
+    "finalIncrementalBillVerified": false
+  },
+  "notVerified": [
+    "Public control/property-name and normalized usage boundary matrix integrated with this producer fixture.",
+    "Real Workers large producer boundary/persistence faults; actual client header delivery timing is not measured by the helper that drains background work.",
+    "Global reachable maximum, mixed-consumer physical memory, production SLO, real KMS/IAM, client idempotency/refund policy, Node 22 fallback."
+  ]
+}

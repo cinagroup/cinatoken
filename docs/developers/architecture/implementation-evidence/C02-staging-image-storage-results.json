@@ -1,0 +1,1071 @@
+{
+  "schemaVersion": 1,
+  "workPackage": "C02.B2.2",
+  "status": "DOING",
+  "recoveryGate": "NOT_PASSED",
+  "harnessPassMeaning": "Expected fault observations matched; NOT recovery acceptance",
+  "productionCapacityEnabled": false,
+  "head": "7eb59008f7d8e156e81fd18a57658fdef2553264",
+  "local": {
+    "node": "24.14.1",
+    "wrangler": "4.127.1",
+    "installedWorkersTypes": "5.20260829.1",
+    "retrievedLatestWorkersTypes": "5.20260907.1",
+    "tests": [
+      {
+        "command": "npm run test:images:staging -w @octafuse/proxy",
+        "passed": 42,
+        "groups": [
+          35,
+          7
+        ],
+        "failed": 0,
+        "skipped": 0,
+        "exitCode": 0
+      },
+      {
+        "command": "npm run typecheck:images:staging -w @octafuse/proxy",
+        "exitCode": 0
+      }
+    ],
+    "positiveReservationControl": {
+      "environment": "local in-memory SQLite only",
+      "chargedMicros": 100000,
+      "upstreamSends": 1,
+      "committedCriticalBatches": 1,
+      "usageLogs": 1,
+      "usageChargeAudits": 1,
+      "reservationState": "settled",
+      "reservedMicros": 0,
+      "backgroundErrors": 0
+    }
+  },
+  "cloud": {
+    "startedAt": "2026-09-07T03:28:25.871Z",
+    "finishedAt": "2026-09-07T03:31:07.566Z",
+    "scope": "D1 return-boundary fault injection with real Workers/SQL; harness PASS does not mean recovery gate PASS",
+    "recoveryGate": "NOT_PASSED",
+    "budgetUsd": 2,
+    "newBudget": false,
+    "phaseRequestLimit": 20,
+    "phaseConcurrency": 1,
+    "account": "7ea8e46d8210bad342fa7595f7935fea",
+    "worker": "cinatoken-proxy-staging",
+    "database": "6bf5d41e-fe0b-4afa-9f67-ff5cf82e23d1",
+    "version": "96f7e314-cf14-4cd7-9e12-14bdefd19b18",
+    "upstreamVersion": "e9bb6c18-d99b-40ba-8b34-62fc95f598f6",
+    "requests": [
+      {
+        "label": "access-readiness-0",
+        "path": "/health",
+        "startedAt": "2026-09-07T03:29:14.765Z",
+        "requestBytes": 0,
+        "declaredLength": false,
+        "generatedBytes": 0,
+        "readPauseMs": 0,
+        "readPauses": 0,
+        "cancelAfterBytes": 0,
+        "generationId": null,
+        "status": 401,
+        "responseBytes": 37790,
+        "responseSha256": "7a1021687b6ceb13cce6b21b28667055be3b03f5847ee568f1ab767b907eda6c",
+        "ms": 1983.268299999996,
+        "gatewayCode": null,
+        "cfRay": "a372a0c799d025fd-SIN",
+        "contentType": "text/html",
+        "errorMessage": null,
+        "passed": true
+      },
+      {
+        "label": "authorized-health",
+        "path": "/health",
+        "startedAt": "2026-09-07T03:29:16.750Z",
+        "requestBytes": 0,
+        "declaredLength": false,
+        "generatedBytes": 0,
+        "readPauseMs": 0,
+        "readPauses": 0,
+        "cancelAfterBytes": 0,
+        "generationId": null,
+        "status": 200,
+        "responseBytes": 43,
+        "responseSha256": "155462e85c280dba1aae35fcdcabd37c5abf62071a935bfd8e5d02fc8bd9194a",
+        "ms": 1182.0093000000052,
+        "gatewayCode": null,
+        "cfRay": "a372a0d4882bfd1e-SIN",
+        "contentType": "application/json",
+        "errorMessage": null,
+        "passed": true
+      },
+      {
+        "label": "hashed-gateway-key-auth-image-catalog",
+        "path": "/v1/models?kind=image",
+        "startedAt": "2026-09-07T03:29:17.934Z",
+        "requestBytes": 0,
+        "declaredLength": false,
+        "generatedBytes": 0,
+        "readPauseMs": 0,
+        "readPauses": 0,
+        "cancelAfterBytes": 0,
+        "generationId": null,
+        "status": 200,
+        "responseBytes": 2985,
+        "responseSha256": "0834aaf480af13319ac1553df976bf001ea48fde325e540cbe861e66f6087fa8",
+        "ms": 1466.3269999999975,
+        "gatewayCode": null,
+        "cfRay": "a372a0d6e8af25fd-SIN",
+        "contentType": "application/json",
+        "errorMessage": null,
+        "passed": true
+      },
+      {
+        "label": "storage-before-release",
+        "path": "/v1/images/generations",
+        "startedAt": "2026-09-07T03:29:19.403Z",
+        "requestBytes": 108,
+        "declaredLength": false,
+        "generatedBytes": 108,
+        "readPauseMs": 0,
+        "readPauses": 0,
+        "cancelAfterBytes": 0,
+        "generationId": "gen-fd0f3639-dd35-440b-981a-88c2f349e5e0",
+        "status": 200,
+        "responseBytes": 1082,
+        "responseSha256": "3fdd44060ca21eb023e358d6daf3a17c33d270ba65bd4b28d4a7021343ea4caf",
+        "ms": 1930.4383000000016,
+        "gatewayCode": null,
+        "cfRay": "a372a0e01f3b25fd-SIN",
+        "contentType": "application/json",
+        "errorMessage": null,
+        "faultObservation": {
+          "runId": "c02-success-b5d76906-1d12-4460-82ae-d034a64afd91",
+          "probeId": "5e5ec385-293e-4e24-af32-26f210505dc0",
+          "mode": "before-release",
+          "requestLogId": "gen-fd0f3639-dd35-440b-981a-88c2f349e5e0",
+          "phase": "held-before-commit"
+        },
+        "logsAtFaultBoundary": [],
+        "releasedAfterClientResponse": true,
+        "finalObservation": {
+          "runId": "c02-success-b5d76906-1d12-4460-82ae-d034a64afd91",
+          "probeId": "5e5ec385-293e-4e24-af32-26f210505dc0",
+          "mode": "before-release",
+          "requestLogId": "gen-fd0f3639-dd35-440b-981a-88c2f349e5e0",
+          "phase": "ack-returned"
+        },
+        "passed": true
+      },
+      {
+        "label": "storage-after-release",
+        "path": "/v1/images/generations",
+        "startedAt": "2026-09-07T03:29:25.987Z",
+        "requestBytes": 108,
+        "declaredLength": false,
+        "generatedBytes": 108,
+        "readPauseMs": 0,
+        "readPauses": 0,
+        "cancelAfterBytes": 0,
+        "generationId": "gen-618f7a5b-6792-48da-bd79-b15505e28092",
+        "status": 200,
+        "responseBytes": 1082,
+        "responseSha256": "3fdd44060ca21eb023e358d6daf3a17c33d270ba65bd4b28d4a7021343ea4caf",
+        "ms": 2761.9172000000035,
+        "gatewayCode": null,
+        "cfRay": "a372a10dea415ff1-SIN",
+        "contentType": "application/json",
+        "errorMessage": null,
+        "faultObservation": {
+          "runId": "c02-success-b5d76906-1d12-4460-82ae-d034a64afd91",
+          "probeId": "681d9b87-bf4f-410c-b546-a3adafc9b256",
+          "mode": "after-release",
+          "requestLogId": "gen-618f7a5b-6792-48da-bd79-b15505e28092",
+          "phase": "held-after-commit"
+        },
+        "logsAtFaultBoundary": [
+          {
+            "id": "gen-618f7a5b-6792-48da-bd79-b15505e28092",
+            "status": "success",
+            "charged_cost": 0
+          }
+        ],
+        "releasedAfterClientResponse": true,
+        "finalObservation": {
+          "runId": "c02-success-b5d76906-1d12-4460-82ae-d034a64afd91",
+          "probeId": "681d9b87-bf4f-410c-b546-a3adafc9b256",
+          "mode": "after-release",
+          "requestLogId": "gen-618f7a5b-6792-48da-bd79-b15505e28092",
+          "phase": "ack-returned"
+        },
+        "passed": true
+      },
+      {
+        "label": "storage-before-fail",
+        "path": "/v1/images/generations",
+        "startedAt": "2026-09-07T03:29:31.745Z",
+        "requestBytes": 108,
+        "declaredLength": false,
+        "generatedBytes": 108,
+        "readPauseMs": 0,
+        "readPauses": 0,
+        "cancelAfterBytes": 0,
+        "generationId": "gen-e420ac4e-9fca-4538-92ce-492320ec8ac0",
+        "status": 200,
+        "responseBytes": 1082,
+        "responseSha256": "3fdd44060ca21eb023e358d6daf3a17c33d270ba65bd4b28d4a7021343ea4caf",
+        "ms": 1774.5108999999939,
+        "gatewayCode": null,
+        "cfRay": "a372a12d4c865ff1-SIN",
+        "contentType": "application/json",
+        "errorMessage": null,
+        "faultObservation": {
+          "runId": "c02-success-b5d76906-1d12-4460-82ae-d034a64afd91",
+          "probeId": "b8eec3cf-57d9-4f40-a94b-5d24e2302153",
+          "mode": "before-fail",
+          "requestLogId": "gen-e420ac4e-9fca-4538-92ce-492320ec8ac0",
+          "phase": "failed-before-commit"
+        },
+        "logsAtFaultBoundary": [],
+        "finalObservation": {
+          "runId": "c02-success-b5d76906-1d12-4460-82ae-d034a64afd91",
+          "probeId": "b8eec3cf-57d9-4f40-a94b-5d24e2302153",
+          "mode": "before-fail",
+          "requestLogId": "gen-e420ac4e-9fca-4538-92ce-492320ec8ac0",
+          "phase": "failed-before-commit"
+        },
+        "passed": true
+      },
+      {
+        "label": "storage-after-fail",
+        "path": "/v1/images/generations",
+        "startedAt": "2026-09-07T03:29:34.712Z",
+        "requestBytes": 108,
+        "declaredLength": false,
+        "generatedBytes": 108,
+        "readPauseMs": 0,
+        "readPauses": 0,
+        "cancelAfterBytes": 0,
+        "generationId": "gen-54570216-ab1b-4508-95f4-384d6464cdb3",
+        "status": 200,
+        "responseBytes": 1082,
+        "responseSha256": "3fdd44060ca21eb023e358d6daf3a17c33d270ba65bd4b28d4a7021343ea4caf",
+        "ms": 1824.0693000000028,
+        "gatewayCode": null,
+        "cfRay": "a372a13fcbd45ff1-SIN",
+        "contentType": "application/json",
+        "errorMessage": null,
+        "faultObservation": {
+          "runId": "c02-success-b5d76906-1d12-4460-82ae-d034a64afd91",
+          "probeId": "012cb1ee-0835-4d1e-be72-3f996ad66d2e",
+          "mode": "after-fail",
+          "requestLogId": "gen-54570216-ab1b-4508-95f4-384d6464cdb3",
+          "phase": "committed-ack-lost"
+        },
+        "logsAtFaultBoundary": [
+          {
+            "id": "gen-54570216-ab1b-4508-95f4-384d6464cdb3",
+            "status": "success",
+            "charged_cost": 0
+          }
+        ],
+        "finalObservation": {
+          "runId": "c02-success-b5d76906-1d12-4460-82ae-d034a64afd91",
+          "probeId": "012cb1ee-0835-4d1e-be72-3f996ad66d2e",
+          "mode": "after-fail",
+          "requestLogId": "gen-54570216-ab1b-4508-95f4-384d6464cdb3",
+          "phase": "committed-ack-lost"
+        },
+        "passed": true
+      },
+      {
+        "label": "storage-normal-after-faults",
+        "path": "/v1/images/generations",
+        "startedAt": "2026-09-07T03:29:37.747Z",
+        "requestBytes": 108,
+        "declaredLength": false,
+        "generatedBytes": 108,
+        "readPauseMs": 0,
+        "readPauses": 0,
+        "cancelAfterBytes": 0,
+        "generationId": "gen-5e5fc391-23cb-4859-a907-fc41bfd4ffdf",
+        "status": 200,
+        "responseBytes": 1082,
+        "responseSha256": "3fdd44060ca21eb023e358d6daf3a17c33d270ba65bd4b28d4a7021343ea4caf",
+        "ms": 1941.459799999997,
+        "gatewayCode": null,
+        "cfRay": "a372a152cc5a5ff1-SIN",
+        "contentType": "application/json",
+        "errorMessage": null,
+        "passed": true
+      },
+      {
+        "label": "access-still-denies-after-images",
+        "path": "/health",
+        "startedAt": "2026-09-07T03:29:39.690Z",
+        "requestBytes": 0,
+        "declaredLength": false,
+        "generatedBytes": 0,
+        "readPauseMs": 0,
+        "readPauses": 0,
+        "cancelAfterBytes": 0,
+        "generationId": null,
+        "status": 401,
+        "responseBytes": 37790,
+        "responseSha256": "33e5bbd6444eba57757a3858f25504f393e4ae88202929e01d06aa45eb3452d7",
+        "ms": 790.6061999999947,
+        "gatewayCode": null,
+        "cfRay": "a372a15eee825ff1-SIN",
+        "contentType": "text/html",
+        "errorMessage": null,
+        "passed": true
+      }
+    ],
+    "usageLogs": [
+      {
+        "id": "gen-fd0f3639-dd35-440b-981a-88c2f349e5e0",
+        "model_id": "c02-success-b5d76906-1d12-4460-82ae-d034a64afd91-small-generations",
+        "route_target_id": "c02-success-b5d76906-1d12-4460-82ae-d034a64afd91-small-generations-r",
+        "status": "success",
+        "error_message": null,
+        "charged_cost": 0,
+        "metered_cost": 0,
+        "standard_cost": 0,
+        "budget_charged_micros": 0,
+        "input_image_count": 0,
+        "output_image_count": 1,
+        "upstream_request_id": "c02-small-61-60799bfa4ce753c462520337eacd58d72e8294e1570b59544f8dcc34da8a1ccf",
+        "upstream_attempt_count": 1,
+        "request_body": null,
+        "upstream_request_body": null,
+        "raw_usage_chars": 94,
+        "pricing_audit_chars": 2943
+      },
+      {
+        "id": "gen-618f7a5b-6792-48da-bd79-b15505e28092",
+        "model_id": "c02-success-b5d76906-1d12-4460-82ae-d034a64afd91-small-generations",
+        "route_target_id": "c02-success-b5d76906-1d12-4460-82ae-d034a64afd91-small-generations-r",
+        "status": "success",
+        "error_message": null,
+        "charged_cost": 0,
+        "metered_cost": 0,
+        "standard_cost": 0,
+        "budget_charged_micros": 0,
+        "input_image_count": 0,
+        "output_image_count": 1,
+        "upstream_request_id": "c02-small-61-60799bfa4ce753c462520337eacd58d72e8294e1570b59544f8dcc34da8a1ccf",
+        "upstream_attempt_count": 1,
+        "request_body": null,
+        "upstream_request_body": null,
+        "raw_usage_chars": 94,
+        "pricing_audit_chars": 2943
+      },
+      {
+        "id": "gen-54570216-ab1b-4508-95f4-384d6464cdb3",
+        "model_id": "c02-success-b5d76906-1d12-4460-82ae-d034a64afd91-small-generations",
+        "route_target_id": "c02-success-b5d76906-1d12-4460-82ae-d034a64afd91-small-generations-r",
+        "status": "success",
+        "error_message": null,
+        "charged_cost": 0,
+        "metered_cost": 0,
+        "standard_cost": 0,
+        "budget_charged_micros": 0,
+        "input_image_count": 0,
+        "output_image_count": 1,
+        "upstream_request_id": "c02-small-61-60799bfa4ce753c462520337eacd58d72e8294e1570b59544f8dcc34da8a1ccf",
+        "upstream_attempt_count": 1,
+        "request_body": null,
+        "upstream_request_body": null,
+        "raw_usage_chars": 94,
+        "pricing_audit_chars": 2943
+      },
+      {
+        "id": "gen-5e5fc391-23cb-4859-a907-fc41bfd4ffdf",
+        "model_id": "c02-success-b5d76906-1d12-4460-82ae-d034a64afd91-small-generations",
+        "route_target_id": "c02-success-b5d76906-1d12-4460-82ae-d034a64afd91-small-generations-r",
+        "status": "success",
+        "error_message": null,
+        "charged_cost": 0,
+        "metered_cost": 0,
+        "standard_cost": 0,
+        "budget_charged_micros": 0,
+        "input_image_count": 0,
+        "output_image_count": 1,
+        "upstream_request_id": "c02-small-61-60799bfa4ce753c462520337eacd58d72e8294e1570b59544f8dcc34da8a1ccf",
+        "upstream_attempt_count": 1,
+        "request_body": null,
+        "upstream_request_body": null,
+        "raw_usage_chars": 94,
+        "pricing_audit_chars": 2943
+      }
+    ],
+    "attempts": [
+      {
+        "request_log_id": "gen-54570216-ab1b-4508-95f4-384d6464cdb3",
+        "attempt_index": 1,
+        "outcome": "available",
+        "reason": "accepted",
+        "http_status": 200
+      },
+      {
+        "request_log_id": "gen-5e5fc391-23cb-4859-a907-fc41bfd4ffdf",
+        "attempt_index": 1,
+        "outcome": "available",
+        "reason": "accepted",
+        "http_status": 200
+      },
+      {
+        "request_log_id": "gen-618f7a5b-6792-48da-bd79-b15505e28092",
+        "attempt_index": 1,
+        "outcome": "available",
+        "reason": "accepted",
+        "http_status": 200
+      },
+      {
+        "request_log_id": "gen-fd0f3639-dd35-440b-981a-88c2f349e5e0",
+        "attempt_index": 1,
+        "outcome": "available",
+        "reason": "accepted",
+        "http_status": 200
+      }
+    ],
+    "syntheticBalance": {
+      "budget_max": 0,
+      "budget_spent": 0,
+      "budget_spent_micros": 0,
+      "budget_reserved_micros": 0
+    },
+    "observationRows": [
+      {
+        "key": "c02_images_storage:012cb1ee-0835-4d1e-be72-3f996ad66d2e",
+        "value": "{\"runId\":\"c02-success-b5d76906-1d12-4460-82ae-d034a64afd91\",\"probeId\":\"012cb1ee-0835-4d1e-be72-3f996ad66d2e\",\"mode\":\"after-fail\",\"requestLogId\":\"gen-54570216-ab1b-4508-95f4-384d6464cdb3\",\"phase\":\"committed-ack-lost\"}"
+      },
+      {
+        "key": "c02_images_storage:5e5ec385-293e-4e24-af32-26f210505dc0",
+        "value": "{\"runId\":\"c02-success-b5d76906-1d12-4460-82ae-d034a64afd91\",\"probeId\":\"5e5ec385-293e-4e24-af32-26f210505dc0\",\"mode\":\"before-release\",\"requestLogId\":\"gen-fd0f3639-dd35-440b-981a-88c2f349e5e0\",\"phase\":\"ack-returned\"}"
+      },
+      {
+        "key": "c02_images_storage:681d9b87-bf4f-410c-b546-a3adafc9b256",
+        "value": "{\"runId\":\"c02-success-b5d76906-1d12-4460-82ae-d034a64afd91\",\"probeId\":\"681d9b87-bf4f-410c-b546-a3adafc9b256\",\"mode\":\"after-release\",\"requestLogId\":\"gen-618f7a5b-6792-48da-bd79-b15505e28092\",\"phase\":\"ack-returned\"}"
+      },
+      {
+        "key": "c02_images_storage:b8eec3cf-57d9-4f40-a94b-5d24e2302153",
+        "value": "{\"runId\":\"c02-success-b5d76906-1d12-4460-82ae-d034a64afd91\",\"probeId\":\"b8eec3cf-57d9-4f40-a94b-5d24e2302153\",\"mode\":\"before-fail\",\"requestLogId\":\"gen-e420ac4e-9fca-4538-92ce-492320ec8ac0\",\"phase\":\"failed-before-commit\"}"
+      }
+    ],
+    "requiredChecks": 9,
+    "readinessAttempts": 1,
+    "recoveryGap": {
+      "clientSuccesses": 5,
+      "committedLogs": 4,
+      "requestLogMissingAfterPreCommitFailure": "gen-e420ac4e-9fca-4538-92ce-492320ec8ac0",
+      "syntheticFaultOnly": true,
+      "noAutomaticRecoveryObserved": true
+    },
+    "result": "PASS",
+    "ingressClosed": true,
+    "accessDenyAll": true,
+    "serviceTokenRevoked": true,
+    "gatewayKeyRevoked": true,
+    "fixtureRemoved": true,
+    "databaseRestored": true,
+    "productionUnchanged": true,
+    "privateUpstreamUnchangedAndClosed": true,
+    "productionBefore": [
+      {
+        "name": "cinatoken-proxy",
+        "settingsSha256": "4243eedd631abb9bcf0c1dd8dd9acbb9ca56edab0bf3048204abccbbd4261cfc"
+      },
+      {
+        "name": "cinatoken-admin",
+        "settingsSha256": "e2ee0adf7b6469d843c310f3dccd2a478230c0f0b75d5d6ad285efeec17ed6ab"
+      },
+      {
+        "name": "cinatoken-chain-worker",
+        "settingsSha256": "21f1b2c08db33d20c0f235e5a89533e637a761eaf7b4bef2fcf0061ad004a916"
+      }
+    ],
+    "productionAfter": [
+      {
+        "name": "cinatoken-proxy",
+        "settingsSha256": "4243eedd631abb9bcf0c1dd8dd9acbb9ca56edab0bf3048204abccbbd4261cfc"
+      },
+      {
+        "name": "cinatoken-admin",
+        "settingsSha256": "e2ee0adf7b6469d843c310f3dccd2a478230c0f0b75d5d6ad285efeec17ed6ab"
+      },
+      {
+        "name": "cinatoken-chain-worker",
+        "settingsSha256": "21f1b2c08db33d20c0f235e5a89533e637a761eaf7b4bef2fcf0061ad004a916"
+      }
+    ],
+    "tablesBefore": [
+      {
+        "table_name": "admin_api_keys",
+        "row_count": 1
+      },
+      {
+        "table_name": "admin_sessions",
+        "row_count": 0
+      },
+      {
+        "table_name": "api_key_request_logs",
+        "row_count": 0
+      },
+      {
+        "table_name": "api_keys",
+        "row_count": 0
+      },
+      {
+        "table_name": "batch_items",
+        "row_count": 0
+      },
+      {
+        "table_name": "batches",
+        "row_count": 0
+      },
+      {
+        "table_name": "byok_keys",
+        "row_count": 0
+      },
+      {
+        "table_name": "chain_job_transactions",
+        "row_count": 0
+      },
+      {
+        "table_name": "d1_migrations",
+        "row_count": 68
+      },
+      {
+        "table_name": "generation_feedback",
+        "row_count": 0
+      },
+      {
+        "table_name": "guardrail_assignments",
+        "row_count": 0
+      },
+      {
+        "table_name": "guardrail_budget_reservations",
+        "row_count": 0
+      },
+      {
+        "table_name": "guardrail_budget_windows",
+        "row_count": 0
+      },
+      {
+        "table_name": "guardrail_versions",
+        "row_count": 0
+      },
+      {
+        "table_name": "guardrails",
+        "row_count": 0
+      },
+      {
+        "table_name": "identity_event_inbox",
+        "row_count": 0
+      },
+      {
+        "table_name": "management_api_keys",
+        "row_count": 0
+      },
+      {
+        "table_name": "model_endpoint_backfill_database_identity",
+        "row_count": 1
+      },
+      {
+        "table_name": "model_endpoint_backfill_runs",
+        "row_count": 0
+      },
+      {
+        "table_name": "model_endpoint_backfill_trust_registry",
+        "row_count": 0
+      },
+      {
+        "table_name": "model_endpoint_evidence_attestations",
+        "row_count": 0
+      },
+      {
+        "table_name": "model_endpoint_routes",
+        "row_count": 0
+      },
+      {
+        "table_name": "model_endpoints",
+        "row_count": 0
+      },
+      {
+        "table_name": "model_routes",
+        "row_count": 0
+      },
+      {
+        "table_name": "model_surfaces",
+        "row_count": 0
+      },
+      {
+        "table_name": "model_tags",
+        "row_count": 0
+      },
+      {
+        "table_name": "models",
+        "row_count": 0
+      },
+      {
+        "table_name": "nft_mints",
+        "row_count": 0
+      },
+      {
+        "table_name": "organization_memberships",
+        "row_count": 0
+      },
+      {
+        "table_name": "organizations",
+        "row_count": 0
+      },
+      {
+        "table_name": "portal_ledger_entries",
+        "row_count": 0
+      },
+      {
+        "table_name": "portal_sessions",
+        "row_count": 0
+      },
+      {
+        "table_name": "provider_attempt_availability",
+        "row_count": 0
+      },
+      {
+        "table_name": "providers",
+        "row_count": 0
+      },
+      {
+        "table_name": "public_model_daily_stats",
+        "row_count": 0
+      },
+      {
+        "table_name": "request_preset_versions",
+        "row_count": 0
+      },
+      {
+        "table_name": "request_presets",
+        "row_count": 0
+      },
+      {
+        "table_name": "route_data_policies",
+        "row_count": 0
+      },
+      {
+        "table_name": "route_data_policy_audit",
+        "row_count": 0
+      },
+      {
+        "table_name": "route_pool_sticky_bindings",
+        "row_count": 0
+      },
+      {
+        "table_name": "route_pools",
+        "row_count": 0
+      },
+      {
+        "table_name": "shared_key_earnings",
+        "row_count": 0
+      },
+      {
+        "table_name": "shared_keys",
+        "row_count": 0
+      },
+      {
+        "table_name": "system_config",
+        "row_count": 12
+      },
+      {
+        "table_name": "user_audit_logs",
+        "row_count": 0
+      },
+      {
+        "table_name": "user_budget_reservations",
+        "row_count": 0
+      },
+      {
+        "table_name": "user_earnings",
+        "row_count": 0
+      },
+      {
+        "table_name": "users",
+        "row_count": 0
+      },
+      {
+        "table_name": "withdrawals",
+        "row_count": 0
+      },
+      {
+        "table_name": "workspace_budgets",
+        "row_count": 0
+      },
+      {
+        "table_name": "workspace_memberships",
+        "row_count": 0
+      },
+      {
+        "table_name": "workspaces",
+        "row_count": 0
+      }
+    ],
+    "tablesAfter": [
+      {
+        "table_name": "admin_api_keys",
+        "row_count": 1
+      },
+      {
+        "table_name": "admin_sessions",
+        "row_count": 0
+      },
+      {
+        "table_name": "api_key_request_logs",
+        "row_count": 0
+      },
+      {
+        "table_name": "api_keys",
+        "row_count": 0
+      },
+      {
+        "table_name": "batch_items",
+        "row_count": 0
+      },
+      {
+        "table_name": "batches",
+        "row_count": 0
+      },
+      {
+        "table_name": "byok_keys",
+        "row_count": 0
+      },
+      {
+        "table_name": "chain_job_transactions",
+        "row_count": 0
+      },
+      {
+        "table_name": "d1_migrations",
+        "row_count": 68
+      },
+      {
+        "table_name": "generation_feedback",
+        "row_count": 0
+      },
+      {
+        "table_name": "guardrail_assignments",
+        "row_count": 0
+      },
+      {
+        "table_name": "guardrail_budget_reservations",
+        "row_count": 0
+      },
+      {
+        "table_name": "guardrail_budget_windows",
+        "row_count": 0
+      },
+      {
+        "table_name": "guardrail_versions",
+        "row_count": 0
+      },
+      {
+        "table_name": "guardrails",
+        "row_count": 0
+      },
+      {
+        "table_name": "identity_event_inbox",
+        "row_count": 0
+      },
+      {
+        "table_name": "management_api_keys",
+        "row_count": 0
+      },
+      {
+        "table_name": "model_endpoint_backfill_database_identity",
+        "row_count": 1
+      },
+      {
+        "table_name": "model_endpoint_backfill_runs",
+        "row_count": 0
+      },
+      {
+        "table_name": "model_endpoint_backfill_trust_registry",
+        "row_count": 0
+      },
+      {
+        "table_name": "model_endpoint_evidence_attestations",
+        "row_count": 0
+      },
+      {
+        "table_name": "model_endpoint_routes",
+        "row_count": 0
+      },
+      {
+        "table_name": "model_endpoints",
+        "row_count": 0
+      },
+      {
+        "table_name": "model_routes",
+        "row_count": 0
+      },
+      {
+        "table_name": "model_surfaces",
+        "row_count": 0
+      },
+      {
+        "table_name": "model_tags",
+        "row_count": 0
+      },
+      {
+        "table_name": "models",
+        "row_count": 0
+      },
+      {
+        "table_name": "nft_mints",
+        "row_count": 0
+      },
+      {
+        "table_name": "organization_memberships",
+        "row_count": 0
+      },
+      {
+        "table_name": "organizations",
+        "row_count": 0
+      },
+      {
+        "table_name": "portal_ledger_entries",
+        "row_count": 0
+      },
+      {
+        "table_name": "portal_sessions",
+        "row_count": 0
+      },
+      {
+        "table_name": "provider_attempt_availability",
+        "row_count": 0
+      },
+      {
+        "table_name": "providers",
+        "row_count": 0
+      },
+      {
+        "table_name": "public_model_daily_stats",
+        "row_count": 0
+      },
+      {
+        "table_name": "request_preset_versions",
+        "row_count": 0
+      },
+      {
+        "table_name": "request_presets",
+        "row_count": 0
+      },
+      {
+        "table_name": "route_data_policies",
+        "row_count": 0
+      },
+      {
+        "table_name": "route_data_policy_audit",
+        "row_count": 0
+      },
+      {
+        "table_name": "route_pool_sticky_bindings",
+        "row_count": 0
+      },
+      {
+        "table_name": "route_pools",
+        "row_count": 0
+      },
+      {
+        "table_name": "shared_key_earnings",
+        "row_count": 0
+      },
+      {
+        "table_name": "shared_keys",
+        "row_count": 0
+      },
+      {
+        "table_name": "system_config",
+        "row_count": 12
+      },
+      {
+        "table_name": "user_audit_logs",
+        "row_count": 0
+      },
+      {
+        "table_name": "user_budget_reservations",
+        "row_count": 0
+      },
+      {
+        "table_name": "user_earnings",
+        "row_count": 0
+      },
+      {
+        "table_name": "users",
+        "row_count": 0
+      },
+      {
+        "table_name": "withdrawals",
+        "row_count": 0
+      },
+      {
+        "table_name": "workspace_budgets",
+        "row_count": 0
+      },
+      {
+        "table_name": "workspace_memberships",
+        "row_count": 0
+      },
+      {
+        "table_name": "workspaces",
+        "row_count": 0
+      }
+    ],
+    "modelCalls": 0,
+    "kmsCalls": 0,
+    "d1ApiRowsRead": 1875,
+    "d1ApiRowsWritten": 161,
+    "managementRequests": 130,
+    "previousKnownTestHttp": 89,
+    "cumulativeKnownTestHttp": 98
+  },
+  "deployment": {
+    "startedAt": "2026-09-07T03:26:26.256Z",
+    "budgetUsd": 2,
+    "newBudget": false,
+    "modelCalls": 0,
+    "kmsCalls": 0,
+    "productionBefore": [
+      {
+        "name": "cinatoken-proxy",
+        "settingsSha256": "4243eedd631abb9bcf0c1dd8dd9acbb9ca56edab0bf3048204abccbbd4261cfc"
+      },
+      {
+        "name": "cinatoken-admin",
+        "settingsSha256": "e2ee0adf7b6469d843c310f3dccd2a478230c0f0b75d5d6ad285efeec17ed6ab"
+      },
+      {
+        "name": "cinatoken-chain-worker",
+        "settingsSha256": "21f1b2c08db33d20c0f235e5a89533e637a761eaf7b4bef2fcf0061ad004a916"
+      }
+    ],
+    "d1ApiRowsRead": 82,
+    "d1ApiRowsWritten": 0,
+    "preflight": "PASS",
+    "sources": [
+      {
+        "path": "packages/proxy/src/runtime/worker-handler.ts",
+        "sha256": "716c906cbd62332c5da61fce3c9cbe59ba0bed8947d40062449b46e630fa63f2"
+      },
+      {
+        "path": "packages/proxy/scripts/staging/images-storage-fault-contract.ts",
+        "sha256": "4279ef1bfd3288a0c82d1eb056a53339b52468874911121ce39aa39154da213a"
+      },
+      {
+        "path": "packages/proxy/scripts/staging/images-storage-fault.ts",
+        "sha256": "a0a2c66df9cbbc5de52cec5476b7a0f2295d423f14501a123bc9e22cafa76202"
+      },
+      {
+        "path": "packages/proxy/scripts/staging/images-gateway.ts",
+        "sha256": "883121fc1322eceb8a60bf559843ed373a392e6f249cbe5e9f62d67d5fbce0a8"
+      },
+      {
+        "path": ".wrangler/staging/images-proxy/wrangler.jsonc",
+        "sha256": "99ced15ff627a8e6a627fc98814d4b6214e6ac8b1b945a1a7f70191ef8d60931"
+      }
+    ],
+    "deployment": {
+      "id": "00d3af1c-9400-43cb-83e7-e429a16f48e0",
+      "created_on": "2026-09-07T03:27:02.501427Z",
+      "versions": [
+        {
+          "version_id": "96f7e314-cf14-4cd7-9e12-14bdefd19b18",
+          "percentage": 100
+        }
+      ]
+    },
+    "productionAfter": [
+      {
+        "name": "cinatoken-proxy",
+        "settingsSha256": "4243eedd631abb9bcf0c1dd8dd9acbb9ca56edab0bf3048204abccbbd4261cfc"
+      },
+      {
+        "name": "cinatoken-admin",
+        "settingsSha256": "e2ee0adf7b6469d843c310f3dccd2a478230c0f0b75d5d6ad285efeec17ed6ab"
+      },
+      {
+        "name": "cinatoken-chain-worker",
+        "settingsSha256": "21f1b2c08db33d20c0f235e5a89533e637a761eaf7b4bef2fcf0061ad004a916"
+      }
+    ],
+    "result": "PASS",
+    "managementRequests": 23,
+    "finishedAt": "2026-09-07T03:27:21.408Z"
+  },
+  "preflight": {
+    "startedAt": "2026-09-07T03:19:16.026Z",
+    "finishedAt": "2026-09-07T03:19:42.839Z",
+    "result": "PASS",
+    "managementRequests": 20,
+    "d1ApiRowsRead": 82,
+    "d1ApiRowsWritten": 0
+  },
+  "actualIncrementalBillUsd": null,
+  "billCaveat": "Counters exclude Worker-internal D1 and Wrangler-internal API calls; not total billable usage.",
+  "artifacts": [
+    {
+      "path": ".wrangler/staging/image-storage-attempt1.mjs",
+      "sha256": "d619a718ba343047556e920bfb2f862afa0ed3788a903ac17db4ebec9ecd2c03"
+    },
+    {
+      "path": ".wrangler/staging/image-storage-attempt1-result.json",
+      "sha256": "f9862b8498e38888af89bef35c3ccadce0c7c215f0125ff377c7a2909fcadede"
+    },
+    {
+      "path": ".wrangler/staging/image-storage-deploy-result.json",
+      "sha256": "7de57235e4220f0c497c715c3184e547cf6c6f0ecd332a607ee1d9f5b64b9560"
+    },
+    {
+      "path": ".wrangler/staging/image-storage-preflight-result.json",
+      "sha256": "a45e059951286d4f907ba99b83f809a912d968aa49c23fe6f54b4ee34eae5ee4"
+    }
+  ],
+  "sources": [
+    {
+      "path": "packages/proxy/scripts/staging/images-storage-fault-contract.ts",
+      "sha256": "4279ef1bfd3288a0c82d1eb056a53339b52468874911121ce39aa39154da213a"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/images-storage-fault.ts",
+      "sha256": "a0a2c66df9cbbc5de52cec5476b7a0f2295d423f14501a123bc9e22cafa76202"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/images-storage-fault.test.mjs",
+      "sha256": "71f04a7be4dc33b0aee36903702fa15bcc56c1b08a29edc70927d9b55fac4f0f"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/images-gateway.ts",
+      "sha256": "883121fc1322eceb8a60bf559843ed373a392e6f249cbe5e9f62d67d5fbce0a8"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/images-upstream.ts",
+      "sha256": "b18a6eccf1f0c742ec634f8ee7b14e568ac5b5265ef5188193829e85b26451b9"
+    },
+    {
+      "path": "packages/proxy/src/runtime/worker-handler.ts",
+      "sha256": "716c906cbd62332c5da61fce3c9cbe59ba0bed8947d40062449b46e630fa63f2"
+    },
+    {
+      "path": "packages/proxy/src/routes/v1/images.ts",
+      "sha256": "343c5695e1afd2ef2fe6ec7ac99954c1dfd3dbf3913e3309d6d8ef38423f47fc"
+    },
+    {
+      "path": "packages/proxy/src/services/image-usage-charge.ts",
+      "sha256": "4cb48cf3468106b136c0c9b883529c964eec3006d3e7c623948a86a35b2f7439"
+    },
+    {
+      "path": "packages/core/src/db/d1/critical-writes.impl.ts",
+      "sha256": "761865dbf9fbc69f1f3a5410649960fb99f6ef27bd6c415e1ceb17e5eea506df"
+    },
+    {
+      "path": "packages/proxy/package.json",
+      "sha256": "6d4650a862559eea12c1eef60ef5225042efd47e065577cb0805494ac14240f9"
+    }
+  ]
+}

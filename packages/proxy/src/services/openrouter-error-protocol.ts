@@ -60,6 +60,8 @@ const ERROR_TYPE_BY_GATEWAY_CODE: Record<
 	[GatewayErrorCode.analyticsRateLimited]: "rate_limit_exceeded",
 	[GatewayErrorCode.publicCatalogUnavailable]: "server",
 	[GatewayErrorCode.internalError]: "server",
+	[GatewayErrorCode.imageSettlementUnconfirmed]: "server",
+	[GatewayErrorCode.capacityUnavailable]: "server",
 	[GatewayErrorCode.routeNotFound]: "not_found",
 	[GatewayErrorCode.payloadTooLarge]: "payload_too_large",
 	[GatewayErrorCode.noRoute]: "not_found",
@@ -75,6 +77,10 @@ const ERROR_TYPE_BY_GATEWAY_CODE: Record<
 	[GatewayErrorCode.dataCollectionNoRoute]: "not_found",
 	[GatewayErrorCode.zdrToolsUnsupported]: "invalid_request",
 	[GatewayErrorCode.upstreamRequestFailed]: "provider_unavailable",
+	[GatewayErrorCode.dispatchLimitExceeded]: "provider_unavailable",
+	[GatewayErrorCode.auxiliaryAuthLimitExceeded]: "provider_unavailable",
+	[GatewayErrorCode.requestDeadlineExceeded]: "timeout",
+	[GatewayErrorCode.requestCancelled]: "provider_unavailable",
 	[GatewayErrorCode.upstreamResponseTooLarge]: "provider_unavailable",
 	[GatewayErrorCode.responsesStateRouteUnavailable]: "invalid_request",
 	[GatewayErrorCode.responsesUnsupportedStateOperation]: "invalid_request",
@@ -242,6 +248,8 @@ export function openRouterStatusForErrorType(
 export function openRouterStatusForGatewayCode(
 	code: GatewayErrorCodeValue
 ): number {
+	if (code === GatewayErrorCode.capacityUnavailable) return 503;
+	if (code === GatewayErrorCode.imageSettlementUnconfirmed) return 503;
 	return openRouterStatusForErrorType(openRouterErrorTypeForGatewayCode(code));
 }
 
@@ -387,8 +395,12 @@ export function publicMessageForGatewayError(
 	message: string
 ): string {
 	switch (code) {
+		case GatewayErrorCode.capacityUnavailable:
+			return "Gateway capacity is unavailable";
 		case GatewayErrorCode.internalError:
 			return "Internal server error";
+		case GatewayErrorCode.imageSettlementUnconfirmed:
+			return "Image settlement persistence is unconfirmed. Upstream may have completed; do not automatically retry.";
 		case GatewayErrorCode.noRoute:
 		case GatewayErrorCode.zdrNoRoute:
 		case GatewayErrorCode.dataCollectionNoRoute:

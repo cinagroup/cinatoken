@@ -1,6 +1,6 @@
 import { sql } from "drizzle-orm";
 import {
-	pgTable,
+	pgSchema,
 	text,
 	timestamp,
 	integer,
@@ -14,7 +14,10 @@ import {
 	primaryKey,
 } from "drizzle-orm/pg-core";
 
-export const usersTable = pgTable(
+// Match the migration-owned schema without depending on pooled session state.
+const gatewaySchema = pgSchema("cinatoken_gateway");
+
+export const usersTable = gatewaySchema.table(
 	"users",
 	{
 		id: text("id").primaryKey(),
@@ -88,7 +91,7 @@ export const usersTable = pgTable(
 );
 
 /** CinaAuth-owned organization projected into the gateway product boundary. */
-export const organizationsTable = pgTable(
+export const organizationsTable = gatewaySchema.table(
 	"organizations",
 	{
 		id: text("id").primaryKey(),
@@ -120,7 +123,7 @@ export const organizationsTable = pgTable(
 );
 
 /** Organization membership keyed by CinaAuth OIDC subject, even before first login. */
-export const organizationMembershipsTable = pgTable(
+export const organizationMembershipsTable = gatewaySchema.table(
 	"organization_memberships",
 	{
 		organizationId: text("organization_id")
@@ -160,7 +163,7 @@ export const organizationMembershipsTable = pgTable(
 );
 
 /** Immutable receipt for idempotent identity-event application. */
-export const identityEventInboxTable = pgTable(
+export const identityEventInboxTable = gatewaySchema.table(
 	"identity_event_inbox",
 	{
 		source: text("source").notNull(),
@@ -183,7 +186,7 @@ export const identityEventInboxTable = pgTable(
 );
 
 /** CinaToken-owned gateway resource boundary; identity remains owned by CinaAuth. */
-export const workspacesTable = pgTable(
+export const workspacesTable = gatewaySchema.table(
 	"workspaces",
 	{
 		id: text("id").primaryKey(),
@@ -245,7 +248,7 @@ export const workspacesTable = pgTable(
 	]
 );
 
-export const workspaceBudgetsTable = pgTable(
+export const workspaceBudgetsTable = gatewaySchema.table(
 	"workspace_budgets",
 	{
 		id: text("id").primaryKey(),
@@ -268,7 +271,7 @@ export const workspaceBudgetsTable = pgTable(
 );
 
 /** Explicit access for non-default organization workspaces. */
-export const workspaceMembershipsTable = pgTable(
+export const workspaceMembershipsTable = gatewaySchema.table(
 	"workspace_memberships",
 	{
 		id: text("id").primaryKey(),
@@ -309,7 +312,7 @@ export const workspaceMembershipsTable = pgTable(
 	]
 );
 
-export const apiKeysTable = pgTable("api_keys", {
+export const apiKeysTable = gatewaySchema.table("api_keys", {
 	id: text("id").primaryKey(),
 	key: text("key").notNull(),
 	keyHash: text("key_hash"),
@@ -337,7 +340,7 @@ export const apiKeysTable = pgTable("api_keys", {
 	}).notNull(),
 });
 
-export const managementApiKeysTable = pgTable(
+export const managementApiKeysTable = gatewaySchema.table(
 	"management_api_keys",
 	{
 		id: text("id").primaryKey(),
@@ -408,7 +411,7 @@ export const managementApiKeysTable = pgTable(
 	]
 );
 
-export const byokKeysTable = pgTable(
+export const byokKeysTable = gatewaySchema.table(
 	"byok_keys",
 	{
 		id: text("id").primaryKey(),
@@ -460,7 +463,7 @@ export const byokKeysTable = pgTable(
 	]
 );
 
-export const providersTable = pgTable("providers", {
+export const providersTable = gatewaySchema.table("providers", {
 	id: text("id").primaryKey(),
 	name: text("name").notNull(),
 	/** JSON: `{ openai?: { base?, endpoints? }, … }` */
@@ -478,7 +481,7 @@ export const providersTable = pgTable("providers", {
 	}).notNull(),
 });
 
-export const modelsTable = pgTable("models", {
+export const modelsTable = gatewaySchema.table("models", {
 	id: text("id").primaryKey(),
 	displayName: text("display_name"),
 	vendor: text("vendor").notNull().default("other"),
@@ -500,7 +503,7 @@ export const modelsTable = pgTable("models", {
 });
 
 /** Endpoint-first provider implementation and its verified public capabilities. */
-export const modelEndpointsTable = pgTable(
+export const modelEndpointsTable = gatewaySchema.table(
 	"model_endpoints",
 	{
 		id: text("id").primaryKey(),
@@ -573,7 +576,7 @@ export const modelEndpointsTable = pgTable(
 	]
 );
 
-export const routePoolsTable = pgTable("route_pools", {
+export const routePoolsTable = gatewaySchema.table("route_pools", {
 	id: text("id").primaryKey(),
 	modelId: text("model_id").notNull(),
 	routeGroup: text("route_group").notNull().default("default"),
@@ -598,7 +601,7 @@ export const routePoolsTable = pgTable("route_pools", {
 	}).notNull(),
 });
 
-export const routePoolStickyBindingsTable = pgTable(
+export const routePoolStickyBindingsTable = gatewaySchema.table(
 	"route_pool_sticky_bindings",
 	{
 		routePoolId: text("route_pool_id").notNull(),
@@ -621,7 +624,7 @@ export const routePoolStickyBindingsTable = pgTable(
 	}
 );
 
-export const modelSurfacesTable = pgTable("model_surfaces", {
+export const modelSurfacesTable = gatewaySchema.table("model_surfaces", {
 	id: text("id").primaryKey(),
 	modelId: text("model_id").notNull(),
 	routeGroup: text("route_group").notNull().default("default"),
@@ -639,7 +642,7 @@ export const modelSurfacesTable = pgTable("model_surfaces", {
 	}).notNull(),
 });
 
-export const modelRoutesTable = pgTable("model_routes", {
+export const modelRoutesTable = gatewaySchema.table("model_routes", {
 	id: text("id").primaryKey(),
 	modelId: text("model_id").notNull(),
 	providerId: text("provider_id").notNull(),
@@ -663,7 +666,7 @@ export const modelRoutesTable = pgTable("model_routes", {
 });
 
 /** A route target belongs to at most one endpoint during the migration. */
-export const modelEndpointRoutesTable = pgTable(
+export const modelEndpointRoutesTable = gatewaySchema.table(
 	"model_endpoint_routes",
 	{
 		endpointId: text("endpoint_id")
@@ -689,7 +692,7 @@ export const modelEndpointRoutesTable = pgTable(
 	]
 );
 
-export const apiKeyRequestLogsTable = pgTable("api_key_request_logs", {
+export const apiKeyRequestLogsTable = gatewaySchema.table("api_key_request_logs", {
 	id: text("id").primaryKey(),
 	userId: text("user_id"),
 	apiKeyId: text("api_key_id"),
@@ -784,7 +787,7 @@ export const apiKeyRequestLogsTable = pgTable("api_key_request_logs", {
 	}).notNull(),
 });
 
-export const providerAttemptAvailabilityTable = pgTable(
+export const providerAttemptAvailabilityTable = gatewaySchema.table(
 	"provider_attempt_availability",
 	{
 		requestLogId: text("request_log_id").notNull().references(
@@ -823,7 +826,7 @@ export const providerAttemptAvailabilityTable = pgTable(
 	]
 );
 
-export const generationFeedbackTable = pgTable(
+export const generationFeedbackTable = gatewaySchema.table(
 	"generation_feedback",
 	{
 		id: text("id").primaryKey(),
@@ -874,7 +877,7 @@ export const generationFeedbackTable = pgTable(
 );
 
 /** 匿名公开排行专用的分片日汇总；公开请求不得回退扫描 api_key_request_logs。 */
-export const publicModelDailyStatsTable = pgTable(
+export const publicModelDailyStatsTable = gatewaySchema.table(
 	"public_model_daily_stats",
 	{
 		statDate: text("stat_date").notNull(),
@@ -914,7 +917,7 @@ export const publicModelDailyStatsTable = pgTable(
 	]
 );
 
-export const systemConfigTable = pgTable("system_config", {
+export const systemConfigTable = gatewaySchema.table("system_config", {
 	key: text("key").primaryKey(),
 	value: text("value").notNull(),
 	description: text("description"),
@@ -925,7 +928,7 @@ export const systemConfigTable = pgTable("system_config", {
 });
 
 /** OpenRouter-compatible request presets with immutable designated versions. */
-export const requestPresetsTable = pgTable(
+export const requestPresetsTable = gatewaySchema.table(
 	"request_presets",
 	{
 		id: text("id").primaryKey(),
@@ -968,7 +971,7 @@ export const requestPresetsTable = pgTable(
 	]
 );
 
-export const requestPresetVersionsTable = pgTable(
+export const requestPresetVersionsTable = gatewaySchema.table(
 	"request_preset_versions",
 	{
 		id: text("id").primaryKey(),
@@ -990,7 +993,7 @@ export const requestPresetVersionsTable = pgTable(
 	(t) => [uniqueIndex("uk_request_preset_versions").on(t.presetId, t.version)]
 );
 
-export const guardrailsTable = pgTable(
+export const guardrailsTable = gatewaySchema.table(
 	"guardrails",
 	{
 		id: text("id").primaryKey(),
@@ -1041,7 +1044,7 @@ export const guardrailsTable = pgTable(
 	]
 );
 
-export const guardrailVersionsTable = pgTable(
+export const guardrailVersionsTable = gatewaySchema.table(
 	"guardrail_versions",
 	{
 		id: text("id").primaryKey(),
@@ -1062,7 +1065,7 @@ export const guardrailVersionsTable = pgTable(
 	(t) => [uniqueIndex("uk_guardrail_versions").on(t.guardrailId, t.version)]
 );
 
-export const guardrailAssignmentsTable = pgTable(
+export const guardrailAssignmentsTable = gatewaySchema.table(
 	"guardrail_assignments",
 	{
 		id: text("id").primaryKey(),
@@ -1105,7 +1108,7 @@ export const guardrailAssignmentsTable = pgTable(
 	]
 );
 
-export const guardrailBudgetWindowsTable = pgTable(
+export const guardrailBudgetWindowsTable = gatewaySchema.table(
 	"guardrail_budget_windows",
 	{
 		workspaceId: text("workspace_id")
@@ -1160,7 +1163,7 @@ export const guardrailBudgetWindowsTable = pgTable(
 	]
 );
 
-export const guardrailBudgetReservationsTable = pgTable(
+export const guardrailBudgetReservationsTable = gatewaySchema.table(
 	"guardrail_budget_reservations",
 	{
 		id: text("id").primaryKey(),
@@ -1239,7 +1242,7 @@ export const guardrailBudgetReservationsTable = pgTable(
 	]
 );
 
-export const userBudgetReservationsTable = pgTable(
+export const userBudgetReservationsTable = gatewaySchema.table(
 	"user_budget_reservations",
 	{
 		requestId: text("request_id").primaryKey(),
@@ -1306,7 +1309,7 @@ export const userBudgetReservationsTable = pgTable(
 	]
 );
 
-export const routeDataPoliciesTable = pgTable(
+export const routeDataPoliciesTable = gatewaySchema.table(
 	"route_data_policies",
 	{
 		routeTargetId: text("route_target_id")
@@ -1350,7 +1353,7 @@ export const routeDataPoliciesTable = pgTable(
 	]
 );
 
-export const routeDataPolicyAuditTable = pgTable("route_data_policy_audit", {
+export const routeDataPolicyAuditTable = gatewaySchema.table("route_data_policy_audit", {
 	id: text("id").primaryKey(),
 	routeTargetId: text("route_target_id").references(() => modelRoutesTable.id, {
 		onDelete: "set null",
@@ -1364,7 +1367,7 @@ export const routeDataPolicyAuditTable = pgTable("route_data_policy_audit", {
 });
 
 /** 用户维度审计：预算、资料等；扩展载荷见 `change_payload`。 */
-export const userAuditLogsTable = pgTable("user_audit_logs", {
+export const userAuditLogsTable = gatewaySchema.table("user_audit_logs", {
 	id: text("id").primaryKey(),
 	userId: text("user_id"),
 	apiKeyId: text("api_key_id"),
@@ -1386,7 +1389,7 @@ export const userAuditLogsTable = pgTable("user_audit_logs", {
 	}).notNull(),
 });
 
-export const adminApiKeysTable = pgTable("admin_api_keys", {
+export const adminApiKeysTable = gatewaySchema.table("admin_api_keys", {
 	id: text("id").primaryKey(),
 	name: text("name").notNull().unique(),
 	description: text("description"),
@@ -1407,7 +1410,7 @@ export const adminApiKeysTable = pgTable("admin_api_keys", {
 	revokedAt: timestamp("revoked_at", { withTimezone: true, mode: "string" }),
 });
 
-export const adminSessionsTable = pgTable("admin_sessions", {
+export const adminSessionsTable = gatewaySchema.table("admin_sessions", {
 	tokenHash: text("token_hash").primaryKey(),
 	username: text("username").notNull(),
 	createdAt: timestamp("created_at", {
@@ -1421,7 +1424,7 @@ export const adminSessionsTable = pgTable("admin_sessions", {
 });
 
 /** 用户门户会话（`user_session` Cookie），独立于 admin_sessions。 */
-export const portalSessionsTable = pgTable("portal_sessions", {
+export const portalSessionsTable = gatewaySchema.table("portal_sessions", {
 	tokenHash: text("token_hash").primaryKey(),
 	/** CinaAuth OIDC `sub` */
 	subject: text("subject").notNull(),
@@ -1437,7 +1440,7 @@ export const portalSessionsTable = pgTable("portal_sessions", {
 });
 
 /** 卖家上架的个人上游 API Key（官方渠道白名单）。 */
-export const sharedKeysTable = pgTable(
+export const sharedKeysTable = gatewaySchema.table(
 	"shared_keys",
 	{
 		id: text("id").primaryKey(),
@@ -1501,7 +1504,7 @@ export const sharedKeysTable = pgTable(
 );
 
 /** 按请求结算的卖家收益流水；`request_log_id` 幂等。 */
-export const sharedKeyEarningsTable = pgTable(
+export const sharedKeyEarningsTable = gatewaySchema.table(
 	"shared_key_earnings",
 	{
 		id: text("id").primaryKey(),
@@ -1531,7 +1534,7 @@ export const sharedKeyEarningsTable = pgTable(
 );
 
 /** 卖家账本（1:1 users）。 */
-export const userEarningsTable = pgTable("user_earnings", {
+export const userEarningsTable = gatewaySchema.table("user_earnings", {
 	userId: text("user_id")
 		.primaryKey()
 		.references(() => usersTable.id, { onDelete: "cascade" }),
@@ -1583,7 +1586,7 @@ export const userEarningsTable = pgTable("user_earnings", {
 });
 
 /** Append-only balance journal. Mutations are owned by database triggers. */
-export const portalLedgerEntriesTable = pgTable(
+export const portalLedgerEntriesTable = gatewaySchema.table(
 	"portal_ledger_entries",
 	{
 		id: text("id").primaryKey(),
@@ -1615,7 +1618,7 @@ export const portalLedgerEntriesTable = pgTable(
 );
 
 /** 链上 CINA-C 自动提现单。 */
-export const withdrawalsTable = pgTable("withdrawals", {
+export const withdrawalsTable = gatewaySchema.table("withdrawals", {
 	id: text("id").primaryKey(),
 	userId: text("user_id")
 		.notNull()
@@ -1655,7 +1658,7 @@ export const withdrawalsTable = pgTable("withdrawals", {
 });
 
 /** cinachain CinaBadge 位阶徽章铸造记录。 */
-export const nftMintsTable = pgTable(
+export const nftMintsTable = gatewaySchema.table(
 	"nft_mints",
 	{
 		id: text("id").primaryKey(),
@@ -1686,7 +1689,7 @@ export const nftMintsTable = pgTable(
 );
 
 /** Signed transaction outbox used by the at-least-once chain queue consumer. */
-export const chainJobTransactionsTable = pgTable(
+export const chainJobTransactionsTable = gatewaySchema.table(
 	"chain_job_transactions",
 	{
 		jobKind: text("job_kind").notNull(),
@@ -1707,7 +1710,7 @@ export const chainJobTransactionsTable = pgTable(
 );
 
 /** Batch metadata only; request and response bodies stay in private R2 objects. */
-export const batchesTable = pgTable(
+export const batchesTable = gatewaySchema.table(
 	"batches",
 	{
 		id: text("id").primaryKey(),
@@ -1788,7 +1791,7 @@ export const batchesTable = pgTable(
 );
 
 /** Idempotent per-request ledger for an accepted batch. */
-export const batchItemsTable = pgTable(
+export const batchItemsTable = gatewaySchema.table(
 	"batch_items",
 	{
 		id: text("id").notNull().unique(),

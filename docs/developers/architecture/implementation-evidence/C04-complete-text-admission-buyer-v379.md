@@ -1,0 +1,30 @@
+# C04 v379: quote admission and current buyer writer in one database
+
+The [owned PostgreSQL fixture](../../../../scripts/db/cutover/postgres-complete-text-admission-buyer-v379.native.test.mjs) runs formal PG73 plus the reviewed v350/v351, v356/v357/v359/v360/v361/v362, v365/v366/v367, v368/v371/v372/v376, and economic proposal chain against one PostgreSQL 18.6 cluster. It first records the current counterexample, then installs the separate [v380 review-only fence](../../../../packages/core/migrations-proposals/postgres/complete-text-legacy-buyer-admission-fence-v380.sql) in the same database. The [native report](./C04-complete-text-admission-buyer-v379-report.json) records **26/26 PASS stages and cleanup PASS**. Here, PASS means the counterexample and fail-close behavior were reproduced; it is **not** a passing platform buyer settlement path.
+
+Run locally with `GATEWAY_NATIVE_PG_BIN=<owned PostgreSQL 18.6 bin> node --import tsx --test scripts/db/cutover/postgres-complete-text-admission-buyer-v379.native.test.mjs`.
+
+## Observed boundary
+
+The dedicated quote issuer creates a v360 flat-text platform-credential quote. The dedicated admission LOGIN calls `admit_complete_flat_text_quote_v361` for that exact request and quote, creating one ordinary and three charged-basis Guardrail holds, each for the quoted three-attempt ceiling of **90,003 micros**. The fixture then commits a v362 platform attempt grant for one request. Its `request_id` and `quote_id` match the admission and quote rows. The v376 buyer LOGIN has the intended narrow v372 application rights and lacks direct account, hold, or Guardrail-window update rights.
+
+Two buyer attempts establish the incompatibility:
+
+1. **Admission without a grant:** A separately claimed shared-key economic quote attempt can be attached to the same request ID even though its v360 route manifest says `credential_class = platform`. The current v372 writer accepts a synthetic actual usage log and settles the v361 holds as a legacy shared-key purchase. It commits one log, audit, economic event and buyer budget receipt. The producer marker and receipt have the same PostgreSQL transaction ID; the debit is one micro. No physical send or Provider result occurred in this fixture. This is a cross-domain accounting counterexample, not a valid platform purchase.
+2. **Admission with a grant:** The same v372 writer fails with SQLSTATE `23514`, constraint `complete_text_enrolled_buyer_v368`, at the v371 → v368 settlement call. That fence explicitly rejects a request present in `complete_text_attempt_grants_v362`. Its outer transaction rolls back the proposed log, audit, debit, event and receipt; the ordinary and three Guardrail holds remain dispatched.
+
+The v376 proposal rejects modified renewal grants/triggers in its activation transaction, and the fixture verifies buyer/runtime raw DML denial. Those rights coexist with real v361 admission, but they cannot complete a grant-linked platform buyer charge through the current v372 branch. The receipt in case 1 proves transaction atomicity for the wrong branch; it does not validate the billed usage or the credential route.
+
+## v380 fail-close proposal
+
+The v380 SQL adds three trigger fences without changing the reviewed v368/v371 function bodies or their source hashes. A v372 buyer LOGIN cannot insert a log for a stored v361 admission. A v361 admission cannot insert its admission row when a log already exists for that request. A buyer LOGIN cannot update an admitted ordinary hold even if a preexisting log reaches v371. The buyer log trigger and v361 admission use advisory key `(348, hashtext(request_id))`, so the native test confirms both commit orders under actual blocking. Failed admission rolls back its staged holds; failed buyer writes roll back log, debit, audit, event and receipt. The activation is default-off, migrator-only, checks its prerequisites, pins trigger shape and denies direct trigger-function execution to non-owner roles.
+
+The v380 test also proves a **genuine legacy hold** still settles: the ordinary and Guardrail holds were both created by the dedicated v350/v351 admission LOGIN before v361 revoked those direct calls. Its buyer event and receipt commit with matching transaction IDs. The synthetic shared-key usage outcome in this local control does not establish an actual Provider send.
+
+The v380 scope is the current v372 buyer LOGIN. Its log trigger does not acquire the new advisory lock for other log writers, whose lock order and collision behavior need their own review. Migrator changes and production deployment are outside this local proof.
+
+## Remaining platform buyer successor
+
+Add a dedicated platform buyer settlement path. In one buyer-owned transaction it must lock and match the request capability, v360 quote/route manifest, v361 admission, v362 grant, send custody/start, terminal result facts, and all ordinary and Guardrail holds. It must derive the charge from authenticated result usage and the committed quote tariff, enforce the reserved ceiling and epochs, settle every hold, write the request log and audit, and write a **platform** buyer receipt tied to the log transaction ID. It must not require or manufacture a shared-key quote attempt or shared-key seller event. An immutable unique terminal marker plus a read-only terminal lookup must handle replay and unknown commit outcomes. Grant only the narrow new entry point to an isolated platform buyer LOGIN; keep raw financial table DML revoked. The opt-in Worker branch should switch to this path only after its SQL, grants, result-fact prerequisite, and rollback tests pass atomically.
+
+At minimum, the successor native test should cover admission-only rejection, grant without send/result rejection, wrong request/quote/route/credential rejection, a real terminal result with exact amount, ceiling and epoch drift, late audit failure rollback, receipt/log transaction-ID equality, and replay after a lost commit acknowledgment. v379 intentionally does not claim those unfinished checks.

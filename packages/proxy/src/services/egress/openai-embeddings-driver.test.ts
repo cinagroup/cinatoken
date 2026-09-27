@@ -1,12 +1,19 @@
 import assert from 'node:assert/strict';
+import { createServer } from 'node:http';
+import type { AddressInfo } from 'node:net';
 import { describe, it } from 'node:test';
+import type { GatewayRepositories } from '@octafuse/core';
 import type { RouteResult } from '../model-router';
+import { proxyEmbeddings } from '../proxy';
+import { resetProviderCircuitStateForTests } from '../provider-circuit-breaker';
 import {
 	dispatchOpenAiEmbeddingsRoute,
 	OPENAI_EMBEDDINGS_RESPONSE_MAX_BYTES,
 	usageFromEmbeddings,
 } from './openai-embeddings-driver';
 import { GATEWAY_ERROR_CODE_HEADER, GatewayErrorCode } from '../gateway-error-codes';
+
+const nativeFetch = globalThis.fetch.bind(globalThis);
 
 function route(): RouteResult {
 	return {
@@ -53,13 +60,110 @@ describe('usageFromEmbeddings', () => {
 });
 
 describe('dispatchOpenAiEmbeddingsRoute', () => {
+	it('native embeddings HTTP 503 after full POST does not send to the next provider', async () => {
+		resetProviderCircuitStateForTests();
+		const posts: string[] = [];
+		const server = createServer(async (request, response) => {
+			for await (const _chunk of request) { /* Receive the complete upload. */ }
+			posts.push(request.url ?? '');
+			if (request.url === '/first/v1/embeddings') {
+				response.writeHead(503, { 'Content-Type': 'application/json' });
+				response.end(JSON.stringify({ error: { message: 'ambiguous failure' } }));
+				return;
+			}
+			response.writeHead(200, { 'Content-Type': 'application/json' });
+			response.end(JSON.stringify({ object: 'list', model: 'private',
+				data: [{ object: 'embedding', index: 0, embedding: [0.1] }] }));
+		});
+		await new Promise<void>(resolve => server.listen(0, '127.0.0.1', resolve));
+		const originalFetch = globalThis.fetch;
+		try {
+			globalThis.fetch = nativeFetch;
+			const port = (server.address() as AddressInfo).port;
+			const first = { ...route(), targetId: 'first', providerId: 'first', routePriority: 2,
+				providerEndpoints: { openai: { base: `http://127.0.0.1:${port}/first/v1` } } };
+			const second = { ...route(), targetId: 'second', providerId: 'second', routePriority: 1,
+				providerEndpoints: { openai: { base: `http://127.0.0.1:${port}/second/v1` } } };
+			const result = await proxyEmbeddings({} as GatewayRepositories, [first, second], { input: 'hello' },
+				undefined, { strategy: 'weight_priority' });
+			assert.deepEqual(posts, ['/first/v1/embeddings']);
+			assert.equal(result.response.status, 503);
+			assert.equal(result.meta?.upstreamOutcomeUnknown, true);
+			assert.equal(result.meta?.failoverForbidden, true);
+			assert.equal(result.dispatchBudget.permitsConsumed, 1);
+			await result.response.text();
+		} finally {
+			globalThis.fetch = originalFetch;
+			server.closeAllConnections();
+			await new Promise<void>((resolve, reject) => server.close(error => error ? reject(error) : resolve()));
+		}
+	});
+
+	it('classifies ambiguous HTTP statuses as unknown and clear rejections as known', async () => {
+		const originalFetch = globalThis.fetch;
+		try {
+			for (const status of [300, 301, 302, 303, 307, 308, 408, 499, 500, 503, 524]) {
+				let sends = 0;
+				globalThis.fetch = async (_input, init) => {
+					sends++;
+					assert.equal(init?.redirect, 'manual');
+					return new Response('{}', { status });
+				};
+				const result = await dispatchOpenAiEmbeddingsRoute(route(), { input: 'hello' });
+				assert.equal(result.response.status, status);
+				assert.equal(result.meta?.upstreamOutcomeUnknown, true, String(status));
+				assert.equal(result.meta?.failoverForbidden, true, String(status));
+				assert.equal(sends, 1);
+				await result.response.text();
+				assert.equal(await result.resourceCompletion, 'confirmed');
+			}
+			for (const status of [400, 401, 429]) {
+				globalThis.fetch = async () => new Response('{}', { status });
+				const result = await dispatchOpenAiEmbeddingsRoute(route(), { input: 'hello' });
+				assert.equal(result.response.status, status);
+				assert.notEqual(result.meta?.upstreamOutcomeUnknown, true, String(status));
+				assert.notEqual(result.meta?.failoverForbidden, true, String(status));
+				await result.response.text();
+				assert.equal(await result.resourceCompletion, 'confirmed');
+			}
+		} finally {
+			globalThis.fetch = originalFetch;
+		}
+	});
+
+	it('clear HTTP 429 rejection can use the bounded next provider', async () => {
+		resetProviderCircuitStateForTests();
+		const originalFetch = globalThis.fetch;
+		let sends = 0;
+		globalThis.fetch = async () => {
+			sends++;
+			return sends === 1
+				? Response.json({ error: { message: 'rate limited' } }, { status: 429 })
+				: Response.json({ object: 'list', model: 'private',
+					data: [{ object: 'embedding', index: 0, embedding: [0.1] }] });
+		};
+		try {
+			const first = { ...route(), targetId: 'first', providerId: 'first', routePriority: 2 };
+			const second = { ...route(), targetId: 'second', providerId: 'second', routePriority: 1 };
+			const result = await proxyEmbeddings({} as GatewayRepositories, [first, second], { input: 'hello' },
+				undefined, { strategy: 'weight_priority' });
+			assert.equal(sends, 2);
+			assert.equal(result.response.status, 200);
+			assert.notEqual(result.meta?.upstreamOutcomeUnknown, true);
+			assert.equal(result.dispatchBudget.permitsConsumed, 2);
+			await result.response.text();
+		} finally {
+			globalThis.fetch = originalFetch;
+		}
+	});
+
 	it('routes to /embeddings, keeps request overrides, rewrites the public model, and captures usage', async () => {
 		const originalFetch = globalThis.fetch;
 		let requestUrl = '';
 		let requestInit: RequestInit | undefined;
 		globalThis.fetch = async (input, init) => {
 			requestUrl = String(input);
-			requestInit = init;
+			requestInit = { ...init, body: await new Response(init?.body).text() };
 			return new Response(JSON.stringify({
 				id: 'embd-private-1', object: 'list', model: 'upstream-name',
 				data: [{ object: 'embedding', index: 0, embedding: 'AQIDBA==' }],

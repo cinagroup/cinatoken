@@ -116,7 +116,19 @@ export async function dispatchPlaygroundDashScopeRealtime(
 			Upgrade: 'websocket',
 		},
 		signal: requestSignal,
+		// A 307/308 must not send a second authenticated upgrade outside this dispatch.
+		redirect: 'manual',
 	});
+	if (upstreamResponse.status >= 300 && upstreamResponse.status < 400) {
+		void upstreamResponse.body?.cancel('playground_realtime_redirect_rejected').catch(() => undefined);
+		return {
+			response: new Response(JSON.stringify({ error: { message: 'Realtime upstream redirected the upgrade' } }), {
+				status: 502,
+				headers: { 'Content-Type': 'application/json', 'Cache-Control': 'no-store' },
+			}),
+			upstreamUrl: endpoint,
+		};
+	}
 	const upstream = upstreamResponse.webSocket;
 	if (upstreamResponse.status !== 101 || !upstream) {
 		return { response: upstreamResponse, upstreamUrl: endpoint };

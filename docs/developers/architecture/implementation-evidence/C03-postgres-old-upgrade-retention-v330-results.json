@@ -1,0 +1,132 @@
+{
+  "version": "v330",
+  "date": "2026-09-24",
+  "status": "LOCAL_OLD_UPGRADE_DELETE_RETENTION_SUBSET_PASS_PRODUCTION_DISABLED",
+  "C03": "DOING",
+  "goalComplete": false,
+  "validation": {
+    "nativeOldUpgrade": {
+      "pass": 1,
+      "fail": 0,
+      "stages": 10,
+      "cleanup": "PASS",
+      "postgresVersion": "18.6",
+      "legacyLogs": 512
+    },
+    "nativeKeyDeleteNegativeControl": {
+      "pass": 1,
+      "fail": 0,
+      "stages": 10,
+      "cleanup": "PASS",
+      "sqlState": "23001"
+    },
+    "nativeRetentionReview": {
+      "pass": 1,
+      "fail": 0,
+      "stages": 4,
+      "cleanup": "PASS",
+      "postgresVersion": "18.6",
+      "parentRows": 7,
+      "orphanRows": 1,
+      "deletedRows": 0
+    },
+    "nativeWorkspaceDelete": {
+      "pass": 2,
+      "fail": 0,
+      "cleanup": "PASS",
+      "actualConstraint": "request_dispatch_intents_workspace_id_fkey",
+      "httpStatus": 400
+    },
+    "nativeUserDeleteAudit": {
+      "pass": 1,
+      "fail": 0,
+      "cleanup": "PASS",
+      "postgresVersion": "18.6",
+      "recoveryConflictHttpStatusFromUnit": 409
+    },
+    "backendCompositionUnit": {
+      "pass": 27,
+      "fail": 0
+    },
+    "queueOwnerUnit": {
+      "pass": 14,
+      "fail": 0
+    },
+    "keyDeletePgliteUnit": {
+      "pass": 19,
+      "fail": 0,
+      "localEsmModuleRequired": true
+    },
+    "retentionGeneratorUnit": {
+      "pass": 1,
+      "fail": 0
+    },
+    "workspaceD1RouteUnit": {
+      "pass": 5,
+      "fail": 0
+    },
+    "adminUserUnit": {
+      "pass": 8,
+      "fail": 0
+    },
+    "postgresAuthSchemaRegression": {
+      "pass": 118,
+      "fail": 0
+    },
+    "adminTypecheck": true,
+    "proxyTypecheck": true,
+    "coreChangedFilesTypecheck": true,
+    "workflowYamlParsed": true,
+    "linuxCiStepsRegistered": true,
+    "linuxCiRunVerified": false
+  },
+  "sourceSha256": {
+    "packages/proxy/src/runtime/node.ts": "39b1d098e8895a2ab6689b596aac62edcf7ba8ee167a2ec44c4b30eba74d29a7",
+    "packages/proxy/src/runtime/workers.ts": "1520ef52b9044a2cee103764a597c2eeb853c093f25e24687d86eb4ad63f8bac",
+    "packages/proxy/src/runtime/postgres-recovery-backend-gate.test.ts": "76cbd7ffa73999617230958ad053c2c62e0abc7e49d8835aedfe374a2e07a042",
+    "packages/proxy/src/runtime/postgres-recovery-queue-owner.ts": "ee0929bb9bcbf8d956e799ed10be568a9e58462b6284ecb13f2625cdcb8320f0",
+    "packages/proxy/src/runtime/postgres-recovery-queue-owner.test.ts": "f2820cef42d225f5f4bf2131404d3839c6d579e9c94e23f1f902ab11c4ce2336",
+    "packages/proxy/package.json": "b5bfd3feba698b8a7247472a4dd64cc6430e44226555150c1a410ddab4073ede",
+    "packages/core/src/db/postgres/api-keys.impl.ts": "fa452092be7d4507939ef90a96610db11223cf2b747f25438cf31ad650a2e60e",
+    "packages/core/src/db/postgres/api-keys-delete-recovery.test.mjs": "949b64122cbc2a549c73f0ad1dbc009a39b353fe482c129ca8e67517cf3df63a",
+    "packages/core/src/storage/management-workspaces.ts": "cb21ab57ef7c0b9189a71725b57803461f870451db8d910a8a227b61a00d320a",
+    "packages/core/src/management-workspaces.ts": "b08f3183fc656883f5291973db13fb2b8dc9f307d134a7297914e0015d432a9e",
+    "packages/proxy/src/routes/v1/management-workspaces.ts": "00b7be4498b61ab85491ca82ed4630c76d5a3488da21bfa5552ee7468c637121",
+    "packages/core/src/storage/management-workspaces.postgres-native.test.mjs": "ef3285f9a57445d9cb77d40bcc11a84094523024861cfdb87c430903d598fae7",
+    "packages/core/src/db/postgres/users.impl.ts": "3b182f5fcb6985b9439b865d7f83dcbe048a63418fc61c581dc42bf9ce46cda1",
+    "packages/core/src/storage/gateway-repository-interfaces.ts": "7d9b0970d85dcc09e435e293ec7c3597016af111ce8283d035f794242c885e49",
+    "packages/admin/lib/services/admin/users-service.ts": "55de5cd7cf30f3ef531f342ec4fc4894a81b360cc55610cc96d814549e6c6491",
+    "packages/admin/lib/services/admin/users-service.test.ts": "f6254a2a2dc807c0c9912b1f1ffe3d537c1c244918a4d5c3b2f69e995494a12b",
+    "scripts/db/cutover/postgres-user-delete-audit.native.test.mjs": "fbc5689722974f1994109075441da339dcfa91b49a1ce113eaaaa230d6f94e38",
+    "scripts/db/cutover/postgres-recovery-old-database-upgrade.native.test.mjs": "799c145eb791a658d37bd1e13874465ca85e765622b1d1b98455ad2955050e46",
+    "scripts/db/cutover/build-postgres-recovery-retention-review.mjs": "132340c31ee5ed2f487fdddd0df158341e156672ef006bdcd0ae6d8c72d48f1c",
+    "scripts/db/cutover/build-postgres-recovery-retention-review.test.mjs": "be48cabae407c90e19f652b74b3d4f615b85904a6811ddb746570dba97910756",
+    "scripts/db/cutover/build-postgres-recovery-retention-review.native.test.mjs": "565ffe6cc7fe8aff5584ad53772fd4a5786008e4855987bde8049422c04a3b4c",
+    ".github/workflows/proxy-dispatch-safety.yml": "f9360b10d8929c5fc0dda64684ac13c16a5f8b4dd290b72b094210fdb9dfd93d",
+    "docs/developers/architecture/implementation-evidence/C03-postgres-native-key-delete-negative-v330-report.json": "9a64ade919e19186024ea4c1006c4c2e290bc3a7a95139f73a482c4d57a909fd",
+    "docs/developers/architecture/implementation-evidence/C03-postgres-native-old-database-upgrade-v330-report.json": "accd873134cb005ee28578721272c32ed0f1570451eb3202e5429e2fcfd3b0e3",
+    "docs/developers/architecture/implementation-evidence/C03-postgres-native-retention-review-v330-report.json": "d5a025a410e07b0098f1146146a06338116856d159758a3a5639552d8d5ac27e",
+    "docs/developers/architecture/implementation-evidence/C03-postgres-old-upgrade-retention-v330.md": "52acf792e56ab4f2443c8fa2c3f720bfd9a8e42da7a7186b363b9e599f9a51dc"
+  },
+  "boundaries": {
+    "formalMigrations": 73,
+    "defaultPostgresRecoveryEnabled": false,
+    "actualRecoveryBackfillPerformed": false,
+    "retentionPolicyApproved": false,
+    "durableRequestIdTombstoneImplemented": false,
+    "retentionDeleteAllowed": false,
+    "realWorkersHyperdriveQueueVerified": false,
+    "currentAuthenticatedCloudOriginBudget": false,
+    "productionGrantApplied": false,
+    "DBL_04_05_06_08Complete": false,
+    "C03_7Complete": false,
+    "C03_GComplete": false,
+    "C01_GComplete": false,
+    "C02_GComplete": false,
+    "remoteSqlCalls": 0,
+    "deployments": 0,
+    "cloudModelCalls": 0,
+    "cloudKmsCalls": 0,
+    "stagingUsd2CapReset": false
+  }
+}

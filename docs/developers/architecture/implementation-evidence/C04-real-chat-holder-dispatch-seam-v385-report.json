@@ -1,0 +1,44 @@
+{
+  "status": "PASS",
+  "scope": "default-unwired local Gateway-to-private-holder seam",
+  "date": "2026-09-26",
+  "nativePostgresInThisFixture": false,
+  "deployedWorkerInThisFixture": false,
+  "realProviderCall": false,
+  "sourceSha256": {
+    "complete-chat-holder-dispatch-v385.ts": "edeadc4bfde6ff9b6507fb5cdf68b8edf1c1af8b0430bcba47b104180092a2c3",
+    "complete-chat-holder-dispatch-v385.test.ts": "c9c20bf4e448cb63c6330e3642d15fbfc4c2d33f485e399a5670e45b71797dfe",
+    "chat-final-quote-input.ts": "aa330255fa7f9ca5f7aeb1b79b8e748340d20e65ea0b24accc19d0d4197cba37",
+    "postgres-complete-chat-quote-v360.ts": "40fd6e9bd5d74d4a2012e89a4f3292e7b9c419a12f3a5fe9fca886d65827a51d",
+    "postgres-complete-chat-admission-v361.ts": "09daf2cde502f6d359130926b931fc364ccc2ef9503a8cec18326731d29f57ca",
+    "chat-text-holder-request-v363.ts": "e54332c63e229448f0657d2e0586cc7036ed5a06c085e38c2cdd390d7465484f",
+    "private-complete-text-holder-v365.ts": "323d2cbe3a9179dbc49b200f8cc634aace9c3359df16fe44c6da1114b4263565",
+    "private-complete-text-observed-holder-v384.ts": "492da0d47e00d0afd004be5d6b092a3ad717017a806d78af15a0727bcc239453"
+  },
+  "checks": [
+    {
+      "command": "node --import tsx --test packages/proxy/src/services/complete-chat-holder-dispatch-v385.test.ts",
+      "result": "PASS",
+      "testsPassed": 5,
+      "testsFailed": 0
+    },
+    {
+      "command": "npx tsc -p packages/proxy/tsconfig.json --noEmit --pretty false",
+      "result": "PASS"
+    }
+  ],
+  "evidence": [
+    "Actual final Chat input capture is used in the positive local test; quote and admission receipts are test doubles.",
+    "The six-field Service Binding envelope invokes the real v384/v365 holder and makes exactly one POST to an owned 127.0.0.1 server.",
+    "Quote/admission ACK failure, plan/Guardrail/identity mutation, and post-send Binding failure block a second local send or preserve an unknown obligation.",
+    "The second-instance pending_unknown result and ordinary/Guardrail hold states are simulated SQL outcomes, not native PostgreSQL evidence in this fixture.",
+    "Only 200 SSE or JSON body is returned, with Provider/private headers removed; this does not reproduce all real Chat error and metadata behavior."
+  ],
+  "limitations": [
+    "No real Chat route calls this module; current opt-in route still uses the legacy budget owner and proxy.",
+    "v360 and v361 client/SQL behavior has separate PostgreSQL evidence, but no combined native PostgreSQL and Worker Service Binding run covers v385.",
+    "The public Gateway currently retains its existing shared-key encryption binding; this module adds no provider KEK port but does not prove deployed secret separation.",
+    "No trusted Provider bill, complete zero-charge authority, final financial closer, D1/MySQL parity or paid Provider call is established.",
+    "OpenRouter-specific server-owned user correlation, generation ID observation, and cross-key/echo behavior are not established."
+  ]
+}

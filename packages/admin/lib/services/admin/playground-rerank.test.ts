@@ -1,9 +1,8 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import type { GatewayRepositories } from '@octafuse/core';
 import { invokePlaygroundUpstream } from './playground-service';
 
-function rerankRepositories(protocol = 'openai'): GatewayRepositories {
+function rerankRepositories(protocol = 'openai'): Parameters<typeof invokePlaygroundUpstream>[0] {
 	return {
 		routes: {
 			async getModelRouteRowById(id: string) {
@@ -25,27 +24,33 @@ function rerankRepositories(protocol = 'openai'): GatewayRepositories {
 			},
 		},
 		providers: {
-			async getProviderById() {
-				return {
+			async getProvidersByIds(ids: string[]) {
+				assert.deepEqual(ids, ['deepseek-official']);
+				return [{
 					id: 'deepseek-official',
 					name: 'DeepSeek Official',
 					api_key: 'sk-test-rerank',
 					status: 'active',
+					description: null,
+					created_at: '2026-09-05',
 					endpoints: JSON.stringify({
 						openai: { base: 'https://api.example.com/v1' },
 					}),
-				};
+				}];
 			},
 		},
 		models: {
 			async getModelDetailWithRouteCounts() {
 				return {
 					id: 'deepseek-reranker',
+					display_name: 'Synthetic reranker', vendor: 'test', context_window: null, max_tokens: 0,
+					pricing_profile: null, tags: '[]', description: null, metadata: null, input_modalities: null,
+					released_at: null, route_policy: null, created_at: '2026-09-05', routes_count: 1, active_routes_count: 1,
 					output_modalities: JSON.stringify(['rerank']),
 				};
 			},
 		},
-	} as unknown as GatewayRepositories;
+	};
 }
 
 test('playground sends rerank JSON to the configured OpenAI rerank endpoint', async () => {
@@ -78,6 +83,7 @@ test('playground sends rerank JSON to the configured OpenAI rerank endpoint', as
 			model: 'deepseek-reranker',
 		});
 		assert.equal(result.upstreamWireBodyJson, calledBody);
+		await result.response.body?.cancel();
 	} finally {
 		globalThis.fetch = originalFetch;
 	}

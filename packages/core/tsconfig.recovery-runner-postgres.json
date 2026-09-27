@@ -1,0 +1,5 @@
+{
+  "extends": "./tsconfig.json",
+  "include": ["src/storage/recovery/run-usage-recovery-postgres.ts", "src/storage/recovery/supervise-usage-recovery-postgres.ts"],
+  "exclude": []
+}

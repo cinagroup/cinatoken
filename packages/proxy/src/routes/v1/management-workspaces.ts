@@ -250,6 +250,9 @@ managementWorkspaceRoutes.delete('/:id_or_slug', async (c) => {
 		if (result === 'active_keys') {
 			return invalid(c, 'A workspace with active API keys cannot be deleted');
 		}
+		if (result === 'recovery_history') {
+			return invalid(c, 'A workspace with request recovery history cannot be deleted');
+		}
 		if (result === 'account_default_anchor') {
 			return invalid(c, 'The last workspace anchoring the Account Default Guardrail cannot be deleted');
 		}

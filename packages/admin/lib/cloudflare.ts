@@ -19,6 +19,8 @@ interface GlobalWithCloudflare {
 	ASSETS?: CloudflareEnv['ASSETS'];
 	DB?: D1Database;
 	HYPERDRIVE?: HyperdriveBinding;
+	STATS_CLAIM_ISSUER?: Fetcher;
+	STATS_READER_HYPERDRIVE?: HyperdriveBinding;
 	CINAAUTH_AUTH_SERVICE?: Fetcher;
 	CINATOKEN_PROXY_SERVICE?: Fetcher;
 	CINAAUTH_ISSUER?: string;
@@ -72,6 +74,8 @@ export function getCloudflareEnv(request?: Request): CloudflareEnv | undefined {
 				ASSETS: globalEnv.ASSETS,
 				DB: globalEnv.DB,
 				HYPERDRIVE: globalEnv.HYPERDRIVE,
+				STATS_CLAIM_ISSUER: globalEnv.STATS_CLAIM_ISSUER,
+				STATS_READER_HYPERDRIVE: globalEnv.STATS_READER_HYPERDRIVE,
 				CINAAUTH_AUTH_SERVICE: globalEnv.CINAAUTH_AUTH_SERVICE,
 				CINATOKEN_PROXY_SERVICE: globalEnv.CINATOKEN_PROXY_SERVICE,
 				CINAAUTH_ISSUER: globalEnv.CINAAUTH_ISSUER,
@@ -91,7 +95,7 @@ export function getCloudflareEnv(request?: Request): CloudflareEnv | undefined {
 				ADMIN_USERNAME: globalEnv.ADMIN_USERNAME,
 				ADMIN_PASSWORD: globalEnv.ADMIN_PASSWORD,
 				ADMIN_COOKIE_SECURE: globalEnv.ADMIN_COOKIE_SECURE,
-			} as CloudflareEnv;
+			} as unknown as CloudflareEnv;
 		}
 	}
 

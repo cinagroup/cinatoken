@@ -1,0 +1,249 @@
+{
+  "workPackage": "C02.B2.2",
+  "scope": "OAuth lifecycle Node-local subset; no claim of request-wide auxiliary-attempt limits",
+  "date": "2026-09-05",
+  "status": "LOCAL_PASS_NODE_SUBSET",
+  "parentStatus": "DOING",
+  "head": "7eb59008f7d8e156e81fd18a57658fdef2553264",
+  "environment": {
+    "node": "24.14.1",
+    "requiredNode": "22",
+    "workersTypes": "5.20260829.1",
+    "miniflare": "5.20260828.0-alpha",
+    "workerd": "1.20260828.1",
+    "workersRuntimeVerified": false,
+    "realDatabaseVerified": false,
+    "realKmsOperations": false
+  },
+  "sourceFiles": [
+    {
+      "sha256": "90b6456e2b7ae19ee2e0d04c3f0b1e470f757bc11a91bd478c13b9830e7e0c0b",
+      "path": "packages/core/src/gcp-oauth-lifecycle.ts"
+    },
+    {
+      "sha256": "235988eb3d4b5367f2779a0fdf0d3fb56b61cd2239179d0f84d80beb30a9539c",
+      "path": "packages/core/src/gcp-service-account-token.ts"
+    },
+    {
+      "sha256": "0936c63cdc46c5944c33920c76541bf04fca221bd3b3eb0b274c24b0f67ad941",
+      "path": "packages/core/src/gcp-service-account-token.test.ts"
+    },
+    {
+      "sha256": "7c4c2fd1c02262e7f7ccf7a25da3d023197c66251c9a364400aa2cf5b437964c",
+      "path": "packages/proxy/src/services/egress/openai-driver.ts"
+    },
+    {
+      "sha256": "462cc43aa44d81c11ede01679271805bdcc3e1ed0c4adb7deac3406b502dfdb6",
+      "path": "packages/proxy/src/services/egress/openai-responses-driver.ts"
+    },
+    {
+      "sha256": "f9517d0d64922c048534c22da418101fe4606bc2b926b2025a95bc6ce1fc5fd0",
+      "path": "packages/proxy/src/services/egress/anthropic-driver.ts"
+    },
+    {
+      "sha256": "73b87db1b5fb79dc10ffb5dc8dbf5a414eaa4827aeeb0db7f667c944edf3f6a3",
+      "path": "packages/proxy/src/services/egress/gemini-driver.ts"
+    },
+    {
+      "sha256": "935c7a34030f50a0a743e8dfc85d1adb4979f6e46d5b18c3ca311cbfadee6fae",
+      "path": "packages/proxy/src/services/egress/vertex-service-account.test.ts"
+    },
+    {
+      "sha256": "f5025442f12a4fe9e70b7b66979a40420b24824770a8dfdd1500a4e1dbb541ea",
+      "path": "packages/proxy/src/services/egress/stream-abort-lifecycle.test.ts"
+    },
+    {
+      "sha256": "310a5ba31d8843991a98837af757f9d3a011fdb507b0ab81970ac9b6f34bd0d6",
+      "path": "packages/proxy/src/services/egress/fixtures/oauth-workerd-fixture.ts"
+    },
+    {
+      "sha256": "94f201fe5a715aec59f7119d420ef8fbbfaa72ce97df16f787a66da64bba9439",
+      "path": "packages/proxy/scripts/test-oauth-workerd.mjs"
+    },
+    {
+      "sha256": "92e3c04c850c31c1dd4a56d5661059eeafbca611628cbea56ebc289be600f40b",
+      "path": "packages/proxy/package.json"
+    },
+    {
+      "sha256": "68961923147bbdd496966161def7e1d6cae924b489ade1affffb3ced959122a6",
+      "path": "packages/proxy/tsconfig.dispatch-safety.json"
+    },
+    {
+      "sha256": "860a5c4bd68a0430bbb5ff2542dd4d8226d405169d555557e6daed4e66c825d5",
+      "path": ".github/workflows/proxy-dispatch-safety.yml"
+    },
+    {
+      "sha256": "bd4bb57f926dc36eb14c929da72548a3e08d21761b9af8ec6bc4495b65ee79bc",
+      "path": "packages/core/src/index.ts"
+    },
+    {
+      "sha256": "69cb7c4e79cbb82e746e327ba00f74025178d006531d3f5016806249e9e004d8",
+      "path": "packages/core/package.json"
+    },
+    {
+      "sha256": "ae26408bea55856b7e7cfa1ecf06217337aa31fec0093eb0ab94ea271f7bbcff",
+      "path": "packages/proxy/src/services/proxy.ts"
+    },
+    {
+      "sha256": "cceca881a82deb45a2298a0e65793bbbf77c88516687d91d60bd6dd1bee5951f",
+      "path": "packages/proxy/src/services/failover-dispatch.ts"
+    },
+    {
+      "sha256": "145b0dc9fb702d1ef67efe9c40593c92a61f9204bc538b0ae9d9d8c46f9c0869",
+      "path": "packages/proxy/src/services/request-deadline.ts"
+    },
+    {
+      "sha256": "bbba22c4e60ed34e7dcf2ec61b822ff9474beccac4f522656ff65649d2da2152",
+      "path": "packages/proxy/src/services/request-dispatch-budget.ts"
+    },
+    {
+      "sha256": "7ffb4a120ce0b83df428a1344fca5b16ea9d8784178d555e7377623511451b0c",
+      "path": "packages/proxy/wrangler.jsonc"
+    }
+  ],
+  "changedSourceAndConfigPaths": [
+    "packages/core/src/gcp-oauth-lifecycle.ts",
+    "packages/core/src/gcp-service-account-token.ts",
+    "packages/core/src/gcp-service-account-token.test.ts",
+    "packages/proxy/src/services/egress/openai-driver.ts",
+    "packages/proxy/src/services/egress/openai-responses-driver.ts",
+    "packages/proxy/src/services/egress/anthropic-driver.ts",
+    "packages/proxy/src/services/egress/gemini-driver.ts",
+    "packages/proxy/src/services/egress/vertex-service-account.test.ts",
+    "packages/proxy/src/services/egress/stream-abort-lifecycle.test.ts",
+    "packages/proxy/src/services/egress/fixtures/oauth-workerd-fixture.ts",
+    "packages/proxy/scripts/test-oauth-workerd.mjs",
+    "packages/proxy/package.json",
+    "packages/proxy/tsconfig.dispatch-safety.json",
+    ".github/workflows/proxy-dispatch-safety.yml"
+  ],
+  "baselinePreservation": {
+    "baselineFiles": 90,
+    "unchanged": 82,
+    "expectedChanges": 8,
+    "unexpected": [],
+    "changes": [
+      {
+        "path": ".github/workflows/proxy-dispatch-safety.yml",
+        "beforeSha256": "39da756ee3682ff680457d1f8c67a6f56ac7aaaf75fcdd02fff8b90ab81ff725",
+        "afterSha256": "860a5c4bd68a0430bbb5ff2542dd4d8226d405169d555557e6daed4e66c825d5"
+      },
+      {
+        "path": "docs/developers/architecture/implementation-evidence/README.md",
+        "beforeSha256": "ece26b3cfd1fbd098bc1eb45b9ecab9252239150acaab74e12d55a1e671d6545",
+        "afterSha256": "7934c37e19297bf49f78bb9d8836a639df99e1f11735cbc9fa10bf5b559b01b3"
+      },
+      {
+        "path": "packages/proxy/tsconfig.dispatch-safety.json",
+        "beforeSha256": "dd872100d78c5a274b8bfbdfde9bc55baf6f0313a4996f4e9efcc3a3fffd8c87",
+        "afterSha256": "68961923147bbdd496966161def7e1d6cae924b489ade1affffb3ced959122a6"
+      },
+      {
+        "path": "docs/developers/architecture/v2.1-openrouter-implementation-checklist.md",
+        "beforeSha256": "22511e1748cfcb28226da60898d17f5b943000ee5e8f084fe85a905825b40562",
+        "afterSha256": "7366cd7aa488f0d9550b4296479bfc2e50664889efe2cfc3de7cddab1c847edf"
+      },
+      {
+        "path": "packages/proxy/package.json",
+        "beforeSha256": "bdea134aaece4658027c2d751677fa8e851f97d35acc959639c2a2969b455034",
+        "afterSha256": "92e3c04c850c31c1dd4a56d5661059eeafbca611628cbea56ebc289be600f40b"
+      },
+      {
+        "path": "packages/proxy/src/services/egress/anthropic-driver.ts",
+        "beforeSha256": "7f801914943f0ad15902709524a23d96715e9956e12f38e8cfd7242ca1a36d71",
+        "afterSha256": "f9517d0d64922c048534c22da418101fe4606bc2b926b2025a95bc6ce1fc5fd0"
+      },
+      {
+        "path": "packages/proxy/src/services/egress/openai-driver.ts",
+        "beforeSha256": "45ff1fe40ad743c297ec47403519c4e5c98a189b630baef7776a629b326a9edc",
+        "afterSha256": "7c4c2fd1c02262e7f7ccf7a25da3d023197c66251c9a364400aa2cf5b437964c"
+      },
+      {
+        "path": "packages/proxy/src/services/egress/openai-responses-driver.ts",
+        "beforeSha256": "a9dfcd98471b778743815a40601181d5f21f0826eb7efc214f04455d40dc59b3",
+        "afterSha256": "462cc43aa44d81c11ede01679271805bdcc3e1ed0c4adb7deac3406b502dfdb6"
+      }
+    ]
+  },
+  "verifications": [
+    {
+      "command": "npm.cmd run typecheck -w @octafuse/proxy",
+      "exitCode": 0
+    },
+    {
+      "command": "npm.cmd run typecheck:dispatch-safety -w @octafuse/proxy",
+      "exitCode": 0
+    },
+    {
+      "command": "npm.cmd run test:unit -w @octafuse/core",
+      "exitCode": 0,
+      "mainTests": 366,
+      "mainSuites": 70,
+      "passed": 366,
+      "failed": 0,
+      "cancelled": 0,
+      "skipped": 0
+    },
+    {
+      "command": "npm.cmd test -w @octafuse/proxy",
+      "exitCode": 0,
+      "mainTests": 819,
+      "mainSuites": 134,
+      "passed": 819,
+      "failed": 0,
+      "cancelled": 0,
+      "skipped": 0
+    },
+    {
+      "command": "npm.cmd run test:dispatch-safety -w @octafuse/proxy",
+      "exitCode": 0,
+      "mainTests": 319,
+      "mainSuites": 23,
+      "passed": 319,
+      "failed": 0,
+      "cancelled": 0,
+      "skipped": 0
+    },
+    {
+      "command": "node packages/proxy/scripts/test-oauth-workerd.mjs",
+      "exitCode": 1,
+      "runtimeStarted": false,
+      "scenarioAssertionsExecuted": false,
+      "error": "ERR_RUNTIME_FAILURE; native Windows access violation 0xc0000005"
+    },
+    {
+      "command": "node packages/proxy/scripts/test-oauth-workerd.mjs --runtime-smoke",
+      "exitCode": 1,
+      "runtimeStarted": false,
+      "error": "Same native failure for a minimal empty Worker"
+    },
+    {
+      "command": "node_modules/@cloudflare/workerd-windows-64/bin/workerd.exe --version",
+      "exitCode": 0,
+      "result": "workerd 2026-08-28",
+      "provesRuntimeInvocation": false
+    },
+    {
+      "command": "node --check packages/proxy/scripts/test-oauth-workerd.mjs",
+      "exitCode": 0
+    },
+    {
+      "command": "git diff --check",
+      "exitCode": 0
+    }
+  ],
+  "verificationNotes": [
+    "43 new Node tests: 30 Core (38 total in file) and 13 Proxy (15 total in file). Suite counts overlap.",
+    "Core token_type validation accepts case-insensitive Bearer per RFC 6749; completed suites use final application code.",
+    "The workerd harness bundles in memory, generates a synthetic RSA key, intercepts OAuth and denies external Worker egress. The 5 scenario assertions were not reached on this host.",
+    "The local CI workflow now includes the workerd script on Ubuntu/Node 22; remote CI was not triggered and has no passing evidence."
+  ],
+  "limitations": [
+    "Per-exchange limits are 30 seconds, 64 KiB, and one non-redirecting fetch. No request-wide OAuth-attempt budget is implemented yet.",
+    "Completed-token cache has 256 slots, not a provider enrollment limit. Concurrent cold requests do not share in-flight I/O and may increase OAuth load.",
+    "Endpoint policy/SSRF and authorization freshness are not resolved by token caching; token_uri configuration remains supported.",
+    "Only Chat/Responses/Messages/Gemini callers pass cancellation here. Other modality/admin/real-time callers still need end-to-end auditing.",
+    "Node 22, Workers runtime, production database, phased headers/TTFT/idle, physical crypto/SQL cancellation and durable write recovery remain unverified/incomplete.",
+    "Google Cloud KMS selection unchanged; no cloud resources, paid inference, payment actions, real credentials or deployment."
+  ]
+}

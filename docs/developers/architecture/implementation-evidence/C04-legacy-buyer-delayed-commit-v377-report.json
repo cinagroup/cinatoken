@@ -1,0 +1,236 @@
+{
+  "status": "PASS",
+  "cleanup": "PASS",
+  "binaryVersion": "postgres (PostgreSQL) 18.6",
+  "sourceSha256": {
+    "formalMigrations": "23afef61a8a670e0af8c90e3a138f522e6b283b454e380a592bf85bca83108dc",
+    "grant-postgres-runtime.ts": "99fd6bded1f568a62339f3774fec8e9ce7e69a9423fdf625b46cf7794b8553ea",
+    "shared-key-quote-versions.sql": "1249a7ff07f95b48c7b45a41833c96c9a028e4bfe3a47e44e9dc6b72c3c77246",
+    "shared-key-dispatch-quote-attempts.sql": "c89c79e803fd69a2d09d44b33be3301aeb8aa4ed72c5dff5518439ec29fafb83",
+    "shared-key-economic-outbox.sql": "f92835c72ff02cba23879ed90ad640832455ccb98764f28fe4ee04ce52aab1ac",
+    "shared-key-economic-outbox-producer.sql": "ea9ccc7138cbd641d386e14d1bb95b8cabee942501a49d6b0763e8e1b3eb0920",
+    "shared-key-snapshot-earning-consumer.sql": "66fbd89c3453320284133de06d72793d4e1d2f68aaf756087857c18493e955db",
+    "shared-key-buyer-debit-v2.sql": "fc327b411e8ae6a417a156ab4ba3b633a47a2e615d249b8861503fc4cbf68593",
+    "shared-key-economic-producer-v2.sql": "3871f01eed2a058c9df9e1ca7c2d6898e995e9fa007115ccb6d62082e57712f3",
+    "shared-key-buyer-budget-receipt-v2.sql": "56ebaecd1425206df81c9dc7981c34e5e246047f188355f5d14103e2dee3270c",
+    "complete-text-legacy-buyer-held-writer-v368.sql": "c2162f7f180c5cc05c011242ca06ad8c37ea41ed76d783941c15754d66be6950",
+    "complete-text-legacy-buyer-window-accountant-v371.sql": "445d5cc7bb6e17794682694c17d8e76fa774240a8e61c9c73edb85b1462a90b0",
+    "fixture": "b2eb6509ea93a4d3028e599d98606766621741f6c0f0a0741e74a053cf3f016e",
+    "complete-text-legacy-buyer-window-acl-v372.sql": "0779bbed42ffe14b00423ee8ba51d6382eadc96eb677756b6378463dfd94c74d",
+    "legacy-buyer-terminal-reader-v375.sql": "4979a5404f768dc49b090125dcd71ef399f77a16fecef526610f37159aa451f0",
+    "legacy-buyer-terminal-reader-v375.ts": "ee369defcbf3d96cf026fc1f2d478c181478dbd251567c45bda069018b0798b3",
+    "budget-admission-login-v350.sql": "1b5067ec8df7130aee11877d9e4ac9969fef7e92b052a80374b91df2f060737c",
+    "critical-writes.impl.ts": "5eb87ae6c737f33488c5d03dc7fd797f3b1bf03504dad19c84166a9c9dfeff37",
+    "legacy-buyer-windowed-transaction-v372.ts": "880f94f1ba2acbbcf549727dd15ccaa058c79acc35c5b239ac4411ae39b6e07e",
+    "legacy-buyer-commit-ack-v376.ts": "77482c275a14729f2f5ad445e7111242a605626971245072ca4c726c6cb95b9f",
+    "postgres-delayed-commit-proxy-v377.mjs": "51ede8956547e54ef5c3565672902de84e5a312b6f4e4bf34ddc634da10fdf9e"
+  },
+  "stages": [
+    {
+      "name": "full-formal-pg73-schema-installed",
+      "result": "PASS"
+    },
+    {
+      "name": "v2-economic-producer-and-budget-receipt-proposals-installed",
+      "result": "PASS"
+    },
+    {
+      "name": "exact-v368-held-body-and-restricted-buyer-log-writer-installed",
+      "result": "PASS"
+    },
+    {
+      "name": "terminal-proposal-default-off-and-reader-execute-only",
+      "result": "PASS",
+      "readerAcl": {
+        "terminal_schema": true,
+        "terminal_execute": true,
+        "gateway_schema": false,
+        "economic_schema": false
+      }
+    },
+    {
+      "name": "default-off-and-successor-ACL-revoke-raw-old-bypass",
+      "result": "PASS",
+      "acl": {
+        "new_call": true,
+        "old_call": false,
+        "raw_update": false,
+        "seed_triggers": 1
+      }
+    },
+    {
+      "name": "broad-runtime-grant-rerun-preserves-v371-buyer-only-ACL",
+      "result": "PASS",
+      "rerunAcl": {
+        "runtime_call": false,
+        "buyer_call": true
+      }
+    },
+    {
+      "name": "v347-buyer-v2-producer-v348-v349-split-and-v350-admission-installed",
+      "result": "PASS"
+    },
+    {
+      "name": "app-buyer-log-audit-event-rights-without-raw-financial-updates",
+      "result": "PASS"
+    },
+    {
+      "name": "client-loses-complete-command-before-pg-commit-and-reader-sees-unconfirmed",
+      "result": "PASS",
+      "writerPid": 3268,
+      "readerPid": 12628,
+      "writerCalls": 1,
+      "writeError": "CONNECTION_CLOSED",
+      "backendState": "active",
+      "transactionOpen": true,
+      "before": {
+        "spent": "0.000000",
+        "reserved": "10",
+        "ordinary": "reserved",
+        "guardrail": "reserved",
+        "logs": 0,
+        "windows": [
+          {
+            "scope_type": "api_key",
+            "scope_id": "v371-key-delayed-commit-v377",
+            "unreserved": "0",
+            "settled": "0",
+            "reserved": "0"
+          },
+          {
+            "scope_type": "user",
+            "scope_id": "unrelated-delayed-commit-v377",
+            "unreserved": "0",
+            "settled": "0",
+            "reserved": "0"
+          },
+          {
+            "scope_type": "user",
+            "scope_id": "v371-user-delayed-commit-v377",
+            "unreserved": "0",
+            "settled": "0",
+            "reserved": "10"
+          },
+          {
+            "scope_type": "workspace",
+            "scope_id": "v371-workspace-delayed-commit-v377",
+            "unreserved": "0",
+            "settled": "0",
+            "reserved": "0"
+          }
+        ],
+        "audits": 0,
+        "events": 0,
+        "event_attempts": 0
+      },
+      "baselineReceipts": 2,
+      "beforeReceipts": 2
+    },
+    {
+      "name": "same-request-later-confirms-on-fresh-reader-after-real-pg-commit",
+      "result": "PASS",
+      "delay": {
+        "proxy": {
+          "connections": 1,
+          "commitCommands": 1,
+          "heldCommits": 1,
+          "releasedCommits": 1,
+          "commitCompletes": 1
+        },
+        "writerPid": 3268,
+        "firstReaderPid": 12628,
+        "secondReaderPid": 20500,
+        "first": "unconfirmed",
+        "later": "confirmed",
+        "writerCalls": 1,
+        "baselineReceipts": 2,
+        "afterReceipts": 3,
+        "receipt": {
+          "event_xact_id": "863",
+          "budget_xact_id": "863",
+          "spent_delta": "1.000000"
+        }
+      },
+      "after": {
+        "spent": "0.000001",
+        "reserved": "0",
+        "ordinary": "settled",
+        "guardrail": "settled",
+        "logs": 1,
+        "windows": [
+          {
+            "scope_type": "api_key",
+            "scope_id": "v371-key-delayed-commit-v377",
+            "unreserved": "1",
+            "settled": "0",
+            "reserved": "0"
+          },
+          {
+            "scope_type": "user",
+            "scope_id": "unrelated-delayed-commit-v377",
+            "unreserved": "0",
+            "settled": "0",
+            "reserved": "0"
+          },
+          {
+            "scope_type": "user",
+            "scope_id": "v371-user-delayed-commit-v377",
+            "unreserved": "0",
+            "settled": "1",
+            "reserved": "0"
+          },
+          {
+            "scope_type": "workspace",
+            "scope_id": "v371-workspace-delayed-commit-v377",
+            "unreserved": "1",
+            "settled": "0",
+            "reserved": "0"
+          }
+        ],
+        "audits": 1,
+        "events": 1,
+        "event_attempts": 1
+      }
+    },
+    {
+      "name": "committed-replay-rejected-after-delayed-commit",
+      "result": "PASS"
+    }
+  ],
+  "limitations": [
+    "Review-only local PG73 plus proposals; no formal migration, remote SQL, Worker, Provider or production credential changed.",
+    "The fixture installs the exact v368 body, v371/v372 successors, real v2 economic producer and budget receipt, v347/v348/v349 buyer-login split, and v350 ordinary admission; it uses a minimal v362 grant table, not every v351–v368 proposal.",
+    "The app writer receives manual fixture rights; the separate terminal LOGIN receives only CONNECT plus USAGE/EXECUTE on its isolated schema/function. The v374 production app-rights proposal is not installed here.",
+    "The reader confirms exact request/user/key/workspace, amount, tokens, reason, v2 event, every economic attempt, log xid marker and budget receipt. It does not bind route, protocol or provider request payload to an immutable intent digest.",
+    "Guardrail reservation terminal rows are checked, but no independent same-transaction marker binds those rows, unreserved windows, user audit or stats to the v2 event. Full application-transaction confirmation still requires a durable receipt covering these side effects.",
+    "Buyer log amount and usage evidence remain caller supplied; no independently authenticated final Provider result or bill binds the debit.",
+    "A transparent local PostgreSQL protocol proxy buffers the client COMMIT packet, disconnects the client, then forwards that original packet to native PG18.6 only after an independent terminal read. This proves intermediary delay; it does not show an already delivered COMMIT waiting inside PostgreSQL or manipulate TCP ACK packets.",
+    "The v376 wrapper invokes its supplied writer exactly once. An immediate unconfirmed read is a provisional observation and never authorizes another debit; the later confirmed read still cannot authenticate the complete route/protocol/Provider payload.",
+    "The wrapper depends on the caller to supply a genuinely fresh terminal-reader connection after failure; its TypeScript code checks the driver, while the v375 SQL checks SESSION_USER. The fixture proves separate backend PIDs and ACLs only for this run. Production factory and credential wiring are absent.",
+    "The proposed bounded persistent recheck contract is not installed or wired to a production scheduler. If a process dies after an uncertain COMMIT, current code cannot guarantee eventual recheck.",
+    "Only the narrow non-grant current-epoch charged-basis held actual/v2 path is covered. Reserved, old-epoch, late actual, BYOK, recovery, no-hold and grant-linked branches need successors.",
+    "The global SHARE ROW EXCLUSIVE window-table lock can reduce capacity; production-scale contention remains unmeasured."
+  ],
+  "delay": {
+    "proxy": {
+      "connections": 1,
+      "commitCommands": 1,
+      "heldCommits": 1,
+      "releasedCommits": 1,
+      "commitCompletes": 1
+    },
+    "writerPid": 3268,
+    "firstReaderPid": 12628,
+    "secondReaderPid": 20500,
+    "first": "unconfirmed",
+    "later": "confirmed",
+    "writerCalls": 1,
+    "baselineReceipts": 2,
+    "afterReceipts": 3,
+    "receipt": {
+      "event_xact_id": "863",
+      "budget_xact_id": "863",
+      "spent_delta": "1.000000"
+    }
+  }
+}

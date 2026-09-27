@@ -1,0 +1,8 @@
+{
+  "extends": "./tsconfig.json",
+  "include": [
+    "src/storage/recovery/postgres-observation-types.contract.ts",
+    "src/storage/recovery/supervise-usage-recovery-postgres.ts"
+  ],
+  "exclude": []
+}

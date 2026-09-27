@@ -1,0 +1,30 @@
+{
+  "version": "v385",
+  "date": "2026-09-26",
+  "status": "LOCAL_PASS",
+  "runtime": "Windows Node v24.14.1",
+  "command": "node --import tsx --test packages/proxy/scripts/staging/text-dispatch-post-headers-v385.test.mjs",
+  "tests": { "passed": 13, "failed": 0, "skipped": 0 },
+  "nodeCheck": "PASS",
+  "testSha256": "0dca06f9c8d73aa850d77fa92d22f6ac92d5ec961ab9695fde24d95f277275c5",
+  "directCases": {
+    "protocols": ["OpenAI Chat", "OpenAI Responses", "Anthropic Messages", "Gemini"],
+    "candidateCountPerCase": 40,
+    "modesPerProtocol": ["200_json_body_reset", "200_sse_silent_client_abort", "200_sse_body_reset"],
+    "gatewayPermitsPerCase": 1,
+    "completeProviderPostsPerCase": 1
+  },
+  "relayCounterexample": {
+    "firstProviderResponse": "HTTP 200 headers followed by broken JSON body",
+    "relayObservedStatuses": [200, 200],
+    "gatewayPermits": 1,
+    "relayPosts": 1,
+    "completeProviderPosts": 2,
+    "sameBodyAndBearer": true,
+    "deployedRelayPolicyVerified": false
+  },
+  "remoteSql": 0,
+  "deployments": 0,
+  "paidProviderCalls": 0,
+  "acceptanceGatesClosed": []
+}

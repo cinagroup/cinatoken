@@ -103,7 +103,7 @@ async function activeOrganizationMembers(
 	if (client.driver === 'postgres') {
 		return client.raw.unsafe<RawMemberRow[]>(`SELECT NULL AS id, '' AS workspace_id,
 			membership.subject AS user_id, membership.roles_json, membership.created_at
-			FROM organization_memberships membership
+			FROM cinatoken_gateway.organization_memberships membership
 			WHERE membership.organization_id = $1 AND membership.status = 'active'
 				AND membership.subject = ANY($2::text[])
 			ORDER BY membership.subject ASC`, [organizationId, userIds]);
@@ -140,9 +140,9 @@ async function explicitMembersBySubjects(
 	if (client.driver === 'postgres') {
 		return client.raw.unsafe<RawMemberRow[]>(`SELECT membership.id, membership.workspace_id,
 			membership.subject AS user_id, organization_membership.roles_json, membership.created_at
-			FROM workspace_memberships membership
-			JOIN workspaces workspace ON workspace.id = membership.workspace_id
-			JOIN organization_memberships organization_membership
+			FROM cinatoken_gateway.workspace_memberships membership
+			JOIN cinatoken_gateway.workspaces workspace ON workspace.id = membership.workspace_id
+			JOIN cinatoken_gateway.organization_memberships organization_membership
 				ON organization_membership.organization_id = workspace.organization_id
 				AND organization_membership.subject = membership.subject
 				AND organization_membership.status = 'active'
@@ -220,7 +220,7 @@ export async function listManagementWorkspaceMembers(
 		if (workspace.scope_type === 'personal') {
 			const rows = await client.raw.unsafe<RawMemberRow[]>(`SELECT NULL AS id, $1 AS workspace_id,
 				"user".external_user_id AS user_id, '[]' AS roles_json, "user".created_at
-				FROM users "user" WHERE "user".id = $2 AND "user".status = 'active'
+				FROM cinatoken_gateway.users "user" WHERE "user".id = $2 AND "user".status = 'active'
 					AND "user".external_system = 'cinaauth' AND "user".external_user_id IS NOT NULL`,
 			[workspace.id, workspace.personal_owner_user_id]);
 			const data = rows[0] && page.offset === 0 ? [await mapMember(rows[0], new Set<string>())] : [];
@@ -229,10 +229,10 @@ export async function listManagementWorkspaceMembers(
 		}
 		const organizationId = workspace.organization_id!;
 		const source = workspace.is_default
-			? `FROM organization_memberships membership
+			? `FROM cinatoken_gateway.organization_memberships membership
 				WHERE membership.organization_id = $1 AND membership.status = 'active'`
-			: `FROM workspace_memberships membership
-				JOIN organization_memberships organization_membership
+			: `FROM cinatoken_gateway.workspace_memberships membership
+				JOIN cinatoken_gateway.organization_memberships organization_membership
 					ON organization_membership.organization_id = $1
 					AND organization_membership.subject = membership.subject
 					AND organization_membership.status = 'active'
@@ -390,13 +390,13 @@ export async function addManagementWorkspaceMembers(
 	if (client.driver === 'postgres') {
 		const changed = await client.raw.begin(async (transaction) => {
 			const authorized = await transaction.unsafe<Array<{ id: string }>>(`SELECT workspace.id
-				FROM workspaces workspace JOIN management_api_keys management_key
+				FROM cinatoken_gateway.workspaces workspace JOIN cinatoken_gateway.management_api_keys management_key
 					ON management_key.id = $2 AND management_key.status = 'active'
 					AND (management_key.expires_at IS NULL OR management_key.expires_at > CURRENT_TIMESTAMP)
 					AND management_key.account_type = 'organization'
 					AND management_key.personal_owner_user_id IS NULL
 					AND management_key.organization_id = workspace.organization_id
-					AND EXISTS (SELECT 1 FROM organizations owner
+					AND EXISTS (SELECT 1 FROM cinatoken_gateway.organizations owner
 						WHERE owner.id = management_key.organization_id AND owner.status IN ('active', 'pending'))
 				WHERE workspace.id = $1 AND workspace.status = 'active'
 					AND workspace.scope_type = 'organization' AND workspace.is_default = FALSE
@@ -404,18 +404,18 @@ export async function addManagementWorkspaceMembers(
 			[workspace.id, principal.keyId, workspace.organization_id]);
 			if (authorized.length !== 1) return 0;
 			const members = await transaction.unsafe<Array<{ subject: string }>>(`SELECT subject
-				FROM organization_memberships WHERE organization_id = $1 AND status = 'active'
+				FROM cinatoken_gateway.organization_memberships WHERE organization_id = $1 AND status = 'active'
 					AND subject = ANY($2::text[]) FOR UPDATE`, [workspace.organization_id, userIds]);
 			if (members.length !== userIds.length) return -1;
 			for (const item of items) {
-				await transaction.unsafe(`INSERT INTO workspace_memberships (
+				await transaction.unsafe(`INSERT INTO cinatoken_gateway.workspace_memberships (
 					id, membership_key, workspace_id, subject, role, status,
 					granted_by_subject, created_at, updated_at
 				) VALUES ($1, $2, $3, $4, 'member', 'active', NULL, $5, $5)
 				ON CONFLICT (membership_key) DO UPDATE SET role = 'member', status = 'active', updated_at = EXCLUDED.updated_at`,
 				[item.id, item.membershipKey, workspace.id, item.subject, nowIso]);
 			}
-			await transaction.unsafe(`INSERT INTO user_audit_logs (
+			await transaction.unsafe(`INSERT INTO cinatoken_gateway.user_audit_logs (
 				id, user_id, api_key_id, event_type, actor_type, change_payload,
 				source, actor_id, reason_code, reason_text, created_at
 			) VALUES ($1, $2, NULL, 'workspace_members_added', 'service', $3,
@@ -506,8 +506,8 @@ async function hasActiveKeysForSubjects(
 		return row !== null;
 	}
 	if (client.driver === 'postgres') {
-		const rows = await client.raw.unsafe<Array<{ present: number }>>(`SELECT 1 AS present FROM api_keys api_key
-			JOIN users "user" ON "user".id = api_key.user_id
+		const rows = await client.raw.unsafe<Array<{ present: number }>>(`SELECT 1 AS present FROM cinatoken_gateway.api_keys api_key
+			JOIN cinatoken_gateway.users "user" ON "user".id = api_key.user_id
 			WHERE api_key.workspace_id = $1 AND api_key.status = 'active'
 				AND "user".external_system = 'cinaauth'
 				AND "user".external_user_id = ANY($2::text[]) LIMIT 1`, [workspaceId, userIds]);
@@ -608,32 +608,32 @@ export async function removeManagementWorkspaceMembers(
 	if (client.driver === 'postgres') {
 		const result = await client.raw.begin(async (transaction) => {
 			const authorized = await transaction.unsafe<Array<{ id: string }>>(`SELECT workspace.id
-				FROM workspaces workspace JOIN management_api_keys management_key
+				FROM cinatoken_gateway.workspaces workspace JOIN cinatoken_gateway.management_api_keys management_key
 					ON management_key.id = $2 AND management_key.status = 'active'
 					AND (management_key.expires_at IS NULL OR management_key.expires_at > CURRENT_TIMESTAMP)
 					AND management_key.account_type = 'organization'
 					AND management_key.personal_owner_user_id IS NULL
 					AND management_key.organization_id = workspace.organization_id
-					AND EXISTS (SELECT 1 FROM organizations owner
+					AND EXISTS (SELECT 1 FROM cinatoken_gateway.organizations owner
 						WHERE owner.id = management_key.organization_id AND owner.status IN ('active', 'pending'))
 				WHERE workspace.id = $1 AND workspace.status = 'active'
 					AND workspace.scope_type = 'organization' AND workspace.is_default = FALSE
 					AND workspace.organization_id = $3 FOR UPDATE OF workspace, management_key`,
 			[workspace.id, principal.keyId, workspace.organization_id]);
 			if (authorized.length !== 1) return null;
-			const active = await transaction.unsafe<Array<{ id: string }>>(`SELECT api_key.id FROM api_keys api_key
-				JOIN users "user" ON "user".id = api_key.user_id
+			const active = await transaction.unsafe<Array<{ id: string }>>(`SELECT api_key.id FROM cinatoken_gateway.api_keys api_key
+				JOIN cinatoken_gateway.users "user" ON "user".id = api_key.user_id
 				WHERE api_key.workspace_id = $1 AND api_key.status = 'active'
 					AND "user".external_system = 'cinaauth'
 					AND "user".external_user_id = ANY($2::text[]) LIMIT 1 FOR UPDATE OF api_key`,
 			[workspace.id, userIds]);
 			if (active.length > 0) return -1;
-			const removed = await transaction.unsafe<Array<{ id: string }>>(`UPDATE workspace_memberships
+			const removed = await transaction.unsafe<Array<{ id: string }>>(`UPDATE cinatoken_gateway.workspace_memberships
 				SET status = 'removed', updated_at = $1
 				WHERE workspace_id = $2 AND status = 'active' AND subject = ANY($3::text[])
 				RETURNING id`, [nowIso, workspace.id, userIds]);
 			if (removed.length > 0) {
-				await transaction.unsafe(`INSERT INTO user_audit_logs (
+				await transaction.unsafe(`INSERT INTO cinatoken_gateway.user_audit_logs (
 					id, user_id, api_key_id, event_type, actor_type, change_payload,
 					source, actor_id, reason_code, reason_text, created_at
 				) VALUES ($1, $2, NULL, 'workspace_members_removed', 'service', $3,

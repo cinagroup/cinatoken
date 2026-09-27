@@ -1,0 +1,93 @@
+{
+  "version": "v312",
+  "date": "2026-09-23",
+  "status": "LOCAL_ORDINARY_SQL_ADMISSION_PASS_ROLE_ORIGIN_PREFLIGHT_ONLY_PRODUCTION_DISABLED",
+  "C03": "DOING",
+  "goalComplete": false,
+  "validation": {
+    "ownerDeadlineAndFixedScanMock": { "pass": 50, "fail": 0 },
+    "candidateHarness": { "pass": 10, "fail": 0 },
+    "ordinaryStatementWirePerVariant": {
+      "esm": { "pass": 10, "fail": 0 },
+      "cjs": { "pass": 10, "fail": 0 },
+      "cfNodeLoopback": { "pass": 10, "fail": 0 }
+    },
+    "v311FixedScanRegressionPerVariant": {
+      "esm": { "pass": 13, "fail": 0 },
+      "cjs": { "pass": 13, "fail": 0 },
+      "cfNodeLoopback": { "pass": 13, "fail": 0 }
+    },
+    "v307NoDeadlineRegressionPerVariant": {
+      "esm": { "pass": 6, "fail": 0 },
+      "cjs": { "pass": 6, "fail": 0 },
+      "cfNodeLoopback": { "pass": 6, "fail": 0 }
+    },
+    "ownerToCandidateWirePerVariant": {
+      "esm": { "pass": 2, "fail": 0 },
+      "cjs": { "pass": 2, "fail": 0 },
+      "cfNodeLoopback": { "pass": 2, "fail": 0 }
+    },
+    "candidateBuildsByteIdentical": true,
+    "pgliteFinancialRunner": { "pass": 31, "fail": 0 },
+    "originBudgetPolicy": { "pass": 10, "fail": 0 },
+    "recoveryRolePolicy": { "pass": 5, "fail": 0 },
+    "coreRecoveryRunnerTypecheck": true,
+    "proxyTypecheck": true,
+    "cutoverPolicyIsolatedTypecheck": true,
+    "nativePostgresTests": 0,
+    "workersRuntimeTests": 0,
+    "generatedRoleSqlExecutions": 0
+  },
+  "candidateArtifactSha256": {
+    "esm": "10092a58fbbc79b060db6076c3c20a5c798e9dda14cb34cbb4113086204c3604",
+    "cjs": "a5d0d3230aa2ec8754faf8b4b497298a8db683c9a14a3231f20f8b75a6af1cd0",
+    "cf": "ec6abdd287b7eec74235d52ae63f40cf0dc0a7fd0df32dd2fac34e081d7ca2ef"
+  },
+  "sourceSha256": {
+    "packages/core/src/storage/recovery/postgres-recovery-operation-owner.ts": "4f6c3a7d26cc74a30e3fe6ad803c0ca307797d34c833438c6fd3ffc33560e194",
+    "packages/core/src/storage/recovery/run-usage-recovery-postgres.ts": "cdc91fea607b5483f504ba46b5c93b2ebd741f587de4beafe5bc1d4e98cad30c",
+    "packages/core/src/storage/recovery/postgres-recovery-operation-owner.test.mjs": "4e75c32eb9b0aec62beeef5811be75067d37f95aa6923e3dd474e02650443b2a",
+    "packages/core/src/storage/recovery/postgres-recovery-owned-scan.test.mjs": "81858caf81a8160291a7fa8777b38d92ef2f2bccb339c514331a82df946011fd",
+    "packages/core/src/storage/recovery/postgres-recovery-invocation-deadline.test.mjs": "db3a3ad6fd01f5a0fb528cb2459d1161caf018c0b48ef76de7a0096d82d989f1",
+    "packages/core/src/storage/recovery/postgres-recovery-statement-deadline.wire.test.mjs": "6099862d41816e82d4593a4b348f063c7143e30356873e1022452ac73632f3cf",
+    "packages/core/src/storage/recovery/postgres-recovery-statement-deadline.owner.wire.test.mjs": "cc5e389b19441e3b712fa12ee23a4f92cb1b70380b253b360dc397fba58beba0",
+    "scripts/db/diag/postgres-recovery-statement-deadline.mjs": "5c136b3b4da17be16abde4d74e670f78a8aa72dacdc63d1c86fef23ab440c938",
+    "scripts/db/diag/postgres-recovery-statement-deadline-v312.test.mjs": "e242651b56354877349cc482a484fb1472d5bd57156f6d5e153046e9f31546e4",
+    "scripts/db/cutover/postgres-recovery-origin-budget.ts": "685bde5396c7c7b85e8bce4608a28d90cedb5a889ffc270f293938d60e77786b",
+    "scripts/db/cutover/postgres-recovery-origin-budget-cli.ts": "a5e009b2ee69cd0b5fe1b044d58a227056b19d9b77a047473f5ee18c5f4f2aad",
+    "scripts/db/cutover/postgres-recovery-origin-budget.test.ts": "c8be19d43867a6aa1471ec699b5556a7e24ad3397101646fb55f20901aa2cebe",
+    "scripts/db/cutover/postgres-recovery-role-policy.ts": "2ddc314b2f08538a93ce4d24a106e809005a62e22ae619d6c8ac518d3aec5022",
+    "scripts/db/cutover/postgres-recovery-role-policy.test.ts": "3f5f1437e5080ddb9e85173e159dedaa27e6f3162ca8c3fca41eaa67ca824783"
+  },
+  "boundaries": {
+    "productionActivated": false,
+    "queueConfigured": false,
+    "candidateAdoptedByProductionPlugin": false,
+    "serverTimeoutPolicyImplemented": false,
+    "ordinaryRecoverySqlFinalDriverDispatchGateLocal": true,
+    "internalTransactionControlDispatchFenced": false,
+    "allSqlPathsCovered": false,
+    "dedicatedRecoveryRoleConfirmed": false,
+    "roleSqlGeneratedReviewOnly": true,
+    "roleSqlRuntimeCompatible": false,
+    "recoveryMigrationsFormalized": false,
+    "originConnectionBudgetConfirmed": false,
+    "originBudgetSnapshotArithmeticOnly": true,
+    "trustedPhysicalCloseProven": false,
+    "queueAckPolicyImplemented": false,
+    "remoteSqlCalls": 0,
+    "cloudManagementCalls": 0,
+    "deployments": 0,
+    "modelCalls": 0,
+    "kmsCalls": 0,
+    "cloudResourcesCreatedOrDeleted": 0,
+    "cumulativeStagingCapUsd": 2,
+    "capReset": false
+  },
+  "knownBlockers": [
+    "formal_recovery_migrations_missing",
+    "financial_writer_for_update_requires_unwanted_update_grant",
+    "public_acl_outside_gateway_unverified",
+    "native_privilege_and_timeout_behavior_unverified"
+  ]
+}

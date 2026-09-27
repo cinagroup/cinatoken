@@ -45,6 +45,7 @@ export async function deepSearchJina(params: WebDeepSearchParams): Promise<WebDe
 	const limit = clampDeepSearchCount(params.count);
 	const response = await fetchImpl(JINA_SEARCH_ENDPOINT, {
 		method: 'POST',
+		redirect: 'manual',
 		headers: {
 			Authorization: `Bearer ${params.apiKey}`,
 			Accept: 'application/json',

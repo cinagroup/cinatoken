@@ -1,0 +1,86 @@
+{
+  "status": "PASS",
+  "cleanup": "PASS",
+  "binaryVersion": "postgres (PostgreSQL) 18.6",
+  "sourceSha256": {
+    "formalMigrations": "23afef61a8a670e0af8c90e3a138f522e6b283b454e380a592bf85bca83108dc",
+    "runtimeGrant": "c07358f59ddc2ff314d3cc3470587ab04e71627f81d2a80a63ed5bdf09a4fc20",
+    "policy": "3ec31913a7d5f5924b4e3f7449a3a35ba1aa064f5cbe3400ce0e063b0df0064c",
+    "criticalWriter": "67504276b1ba4283514fb290a0073f208e5d9afdfca1d35b915a34638fd00570",
+    "fixture": "4e0c13f2233ff2fb473ec6e3031e58dcc59e5110df55731128f87e3d343cca59",
+    "v2Producer": "3871f01eed2a058c9df9e1ca7c2d6898e995e9fa007115ccb6d62082e57712f3"
+  },
+  "stages": [
+    {
+      "name": "formal-pg73-installed",
+      "result": "PASS"
+    },
+    {
+      "name": "default-off-then-test-only-policy-installed",
+      "result": "PASS"
+    },
+    {
+      "name": "ordinary-runtime-financial-writes-and-set-role-denied",
+      "result": "PASS",
+      "acl": {
+        "runtime_spend_update": false,
+        "runtime_seller_update": false,
+        "runtime_legacy_earning": false,
+        "buyer_spend_update": true,
+        "buyer_limit_update": false,
+        "buyer_key_identity_update": false
+      }
+    },
+    {
+      "name": "real-unreserved-critical-writer-commits-under-buyer-login",
+      "result": "PASS",
+      "state": {
+        "spent": "1.010000",
+        "held": "0",
+        "logs": 1,
+        "guardrail_micros": "10000",
+        "audits": 1,
+        "reservation_state": null,
+        "reservation_settled": null
+      }
+    },
+    {
+      "name": "real-reserved-critical-writer-and-replay-under-buyer-login",
+      "result": "PASS",
+      "state": {
+        "spent": "1.020000",
+        "held": "0",
+        "logs": 1,
+        "guardrail_micros": "10000",
+        "audits": 1,
+        "reservation_state": "settled",
+        "reservation_settled": "10000"
+      }
+    },
+    {
+      "name": "real-reserved-ceiling-critical-writer-under-buyer-login",
+      "result": "PASS"
+    },
+    {
+      "name": "buyer-login-cannot-change-policy-key-identity-or-seller-account",
+      "result": "PASS"
+    },
+    {
+      "name": "v2-producer-source-session-user-gate-is-incompatible-with-new-login",
+      "result": "PASS"
+    },
+    {
+      "name": "current-grant-rerun-reopens-ordinary-runtime-financial-writes",
+      "result": "PASS"
+    }
+  ],
+  "scope": "owned loopback PostgreSQL 18.6; PG73 non-economic critical writer only",
+  "limitations": [
+    "Review-only policy breaks existing management, admission and payout callers; no production role or grant changed.",
+    "The v2 economic producer hardcodes SESSION_USER=cinatoken_gateway_runtime, so a distinct buyer LOGIN cannot yet produce economic events.",
+    "C03 recovery has its separate NOLOGIN role and is not exercised by this buyer LOGIN fixture.",
+    "The dedicated buyer LOGIN can directly update its granted buyer financial columns; its credential must remain a separate trust boundary.",
+    "The current grant routine reopens ordinary runtime rights on rerun; a cutover must modify that routine atomically.",
+    "Worker/Hyperdrive binding, default ACL, direct public schema and role membership rollout, D1/MySQL, and production capacity are unverified."
+  ]
+}

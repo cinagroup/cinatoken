@@ -1,0 +1,42 @@
+{
+  "status": "PASS",
+  "cleanup": "PASS",
+  "binaryVersion": "postgres (PostgreSQL) 18.6",
+  "scope": "owned loopback PostgreSQL 18, 73 formal migrations and optional parent proposal; read-only review only",
+  "limitations": [
+    "Synthetic old rows are inserted by an isolated fixture superuser with triggers disabled, then scanned with normal triggers restored.",
+    "No deletion, approved duration, durable tombstone, representative old database, lock/capacity study, archive or production grant is provided.",
+    "No remote database, Worker, Hyperdrive, Queue, provider or financial charge is contacted."
+  ],
+  "stages": [
+    {
+      "name": "formal-migrations-and-parent-proposal",
+      "result": "PASS",
+      "migrations": 73
+    },
+    {
+      "name": "read-only-and-future-cutoff-preflight-reject",
+      "result": "PASS"
+    },
+    {
+      "name": "synthetic-historical-graph",
+      "result": "PASS",
+      "parentRows": 7,
+      "orphanRows": 1
+    },
+    {
+      "name": "bounded-read-only-blocker-report",
+      "result": "PASS",
+      "parentRows": 7,
+      "orphanRows": 1,
+      "deletedRows": 0,
+      "deleteAllowedRows": 0
+    }
+  ],
+  "sourceSha256": {
+    "generator": "132340c31ee5ed2f487fdddd0df158341e156672ef006bdcd0ae6d8c72d48f1c",
+    "test": "565ffe6cc7fe8aff5584ad53772fd4a5786008e4855987bde8049422c04a3b4c",
+    "parentProposal": "2e8c20088f72271ecf89bc4f43583ec3b2247893a11b84cc6a220563a72de8de",
+    "formalMigrationCorpus": "23afef61a8a670e0af8c90e3a138f522e6b283b454e380a592bf85bca83108dc"
+  }
+}

@@ -14,6 +14,8 @@ import type {
 	VerifiedModelEndpointSnapshot,
 } from '@octafuse/core';
 import {
+	preparationRead,
+	type PreparationControl,
 	effectiveUpstreamOperation,
 	computeRouteDataPolicySubjectFingerprintFromRows,
 	extractMeteredProfileFromPriceOverrideJson,
@@ -250,12 +252,15 @@ export async function resolveRoutesForSurface(
 		routeGroup: string;
 		requestProtocol: UpstreamProtocol;
 		requestOperation: string;
-	}
+	},
+	control?: PreparationControl,
 ): Promise<SurfaceRouteResolution> {
+	control?.throwIfStopped();
 	let surface: ResolvedModelSurfaceRow | null = null;
 	try {
-		surface = await repos.modelRouting.resolveModelSurface(params);
+		surface = await preparationRead(control, () => repos.modelRouting.resolveModelSurface(params));
 	} catch (error) {
+		control?.throwIfStopped();
 		console.warn('[Gateway Router] surface lookup unavailable; using legacy route selection', {
 			modelId: params.modelId,
 			requestProtocol: params.requestProtocol,
@@ -265,12 +270,12 @@ export async function resolveRoutesForSurface(
 	}
 
 	const rows = surface
-		? await repos.modelRouting.getModelRoutesByPoolId(surface.route_pool_id)
+		? await preparationRead(control, () => repos.modelRouting.getModelRoutesByPoolId(surface.route_pool_id))
 		: selectActiveRouteRows(
-				await repos.modelRouting.getModelRoutesByModelId(params.modelId),
+				await preparationRead(control, () => repos.modelRouting.getModelRoutesByModelId(params.modelId)),
 				params.routeGroup
 			);
-	const routes = (await resolveRouteResultsFromRows(repos, rows))
+	const routes = (await resolveRouteResultsFromRows(repos, rows, control))
 		.map((route) => ({
 			...route,
 			modelSurfaceId: surface?.id ?? null,
@@ -302,8 +307,10 @@ export async function resolveRoutesForSurface(
  */
 export async function resolveRouteResultsFromRows(
 	repos: GatewayRepositories,
-	rows: ModelRouteRow[]
+	rows: ModelRouteRow[],
+	control?: PreparationControl,
 ): Promise<RouteResult[]> {
+	control?.throwIfStopped();
 	const routeTargetIds = [...new Set(rows.map((route) => route.id))];
 	const providerIds = [...new Set(rows.map((route) => route.provider_id))];
 	if (routeTargetIds.length === 0) return [];
@@ -313,8 +320,8 @@ export async function resolveRouteResultsFromRows(
 
 	const now = new Date();
 	const [bindings, providers] = await Promise.all([
-		repos.modelEndpoints.listRuntimeBindingsByRouteTargetIds(routeTargetIds),
-		repos.providers.getProvidersByIds(providerIds),
+		preparationRead(control, () => repos.modelEndpoints.listRuntimeBindingsByRouteTargetIds(routeTargetIds)),
+		preparationRead(control, () => repos.providers.getProvidersByIds(providerIds, control)),
 	]);
 	const providersById = new Map(providers.map((provider) => [provider.id, provider]));
 	const bindingsByTarget = new Map<string, (typeof bindings)[number] | null>();
@@ -326,6 +333,7 @@ export async function resolveRouteResultsFromRows(
 	}
 
 	const resolved = await Promise.all(rows.map(async (route): Promise<RouteResult | null> => {
+		control?.throwIfStopped();
 		const binding = bindingsByTarget.get(route.id);
 		const provider = providersById.get(route.provider_id);
 		if (!binding || !providerIsCallableForRoute(provider, route)) return null;
@@ -339,10 +347,10 @@ export async function resolveRouteResultsFromRows(
 			return null;
 		}
 
-		const currentSubjectFingerprint = await computeRouteDataPolicySubjectFingerprintFromRows(
+		const currentSubjectFingerprint = await preparationRead(control, () => computeRouteDataPolicySubjectFingerprintFromRows(
 			route,
 			provider,
-		);
+		));
 		if (
 			!modelEndpointSubjectFingerprintIsValid(binding.subject_fingerprint)
 			|| binding.subject_fingerprint !== currentSubjectFingerprint

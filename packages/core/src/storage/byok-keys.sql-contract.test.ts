@@ -75,7 +75,7 @@ test('PostgreSQL BYOK reorder locks and swaps the complete set in one transactio
 		unsafe: async (sql: string, values: unknown[] = []) => {
 			calls.push({ sql, values });
 			if (/SELECT workspace\.id/u.test(sql)) return [{ id: 'personal:user-1' }];
-			if (/FROM byok_keys byok WHERE/u.test(sql)) return [row(ids[0]!, 0), row(ids[1]!, 1)];
+			if (/FROM cinatoken_gateway\.byok_keys byok WHERE/u.test(sql)) return [row(ids[0]!, 0), row(ids[1]!, 1)];
 			return [];
 		},
 	};
@@ -110,7 +110,7 @@ test('PostgreSQL BYOK reorder rejects a stale set before any mutation', async ()
 		unsafe: async (sql: string) => {
 			calls.push(sql);
 			if (/SELECT workspace\.id/u.test(sql)) return [{ id: 'personal:user-1' }];
-			if (/FROM byok_keys byok WHERE/u.test(sql)) return [row(ids[0]!, 0)];
+			if (/FROM cinatoken_gateway\.byok_keys byok WHERE/u.test(sql)) return [row(ids[0]!, 0)];
 			return [];
 		},
 	};
@@ -131,7 +131,7 @@ test('PostgreSQL BYOK portal reorder authorizes the active user and exact worksp
 		unsafe: async (sql: string, values: unknown[] = []) => {
 			calls.push({ sql, values });
 			if (/SELECT workspace\.id/u.test(sql)) return [{ id: 'personal:user-1' }];
-			if (/FROM byok_keys byok WHERE/u.test(sql)) return [row(ids[0]!, 0), row(ids[1]!, 1)];
+			if (/FROM cinatoken_gateway\.byok_keys byok WHERE/u.test(sql)) return [row(ids[0]!, 0), row(ids[1]!, 1)];
 			return [];
 		},
 	};
@@ -142,7 +142,7 @@ test('PostgreSQL BYOK portal reorder authorizes the active user and exact worksp
 	} as unknown as PostgresDatabaseClient);
 
 	assert.equal(await repository.reorderForManagement(portalParams()), 'updated');
-	assert.match(calls[0]!.sql, /JOIN users portal_user/u);
+	assert.match(calls[0]!.sql, /JOIN cinatoken_gateway\.users portal_user/u);
 	assert.doesNotMatch(calls[0]!.sql, /management_api_keys/u);
 	assert.deepEqual(calls[0]!.values, ['user-1', 'personal:user-1', 'user-1']);
 	assert.deepEqual(calls.at(-1)!.values.slice(1, 3), ['user-1', 'user']);

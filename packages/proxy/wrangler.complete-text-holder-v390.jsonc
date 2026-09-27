@@ -1,0 +1,21 @@
+{
+  "$schema": "../../node_modules/wrangler/config-schema.json",
+  "name": "cinatoken-complete-text-holder-review-v390",
+  "main": "src/runtime/complete-text-holder-worker-v390.ts",
+  "compatibility_date": "2026-09-26",
+  "compatibility_flags": ["nodejs_compat", "enable_request_signal"],
+  "workers_dev": false,
+  "preview_urls": false,
+  "routes": [],
+  "triggers": { "crons": [] },
+  "vars": { "COMPLETE_TEXT_HOLDER_ENABLED": "disabled" },
+  "secrets": { "required": ["PROVIDER_KEY_ENCRYPTION_SECRET"] },
+  "hyperdrive": [
+    { "binding": "COMPLETE_TEXT_READER", "id": "00000000000000000000000000000390a1" },
+    { "binding": "COMPLETE_TEXT_GRANTER", "id": "00000000000000000000000000000390a2" },
+    { "binding": "COMPLETE_TEXT_HOLDER", "id": "00000000000000000000000000000390a3" },
+    { "binding": "COMPLETE_TEXT_RENEWER", "id": "00000000000000000000000000000390a4" }
+  ],
+  "observability": { "enabled": true, "head_sampling_rate": 1 },
+  "send_metrics": false
+}

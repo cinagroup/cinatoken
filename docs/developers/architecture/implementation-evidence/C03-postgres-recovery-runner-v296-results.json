@@ -1,0 +1,220 @@
+{
+  "version": "v296",
+  "recordedAtUtc": "2026-09-21T11:00:15Z",
+  "checklistVersion": "1.193",
+  "status": "LOCAL_SQL_PASS_DRIVER_WIRE_FAIL_ACTIVATION_BLOCKED",
+  "goalStillActive": true,
+  "productionPathActivated": false,
+  "scope": "Admission/work-count bounded PostgreSQL recovery runner and independent SQL/transaction callback ownership; NOT full runtime acceptance",
+  "environment": {
+    "node": "24.14.1",
+    "pglite": "0.5.8",
+    "postgres": "18.3",
+    "postgresJs": "3.4.9",
+    "baseMigrations": 68,
+    "proposalsAppliedLocally": 4
+  },
+  "nativeBusinessCasesExecuted": 0,
+  "earlierRuns": [
+    {
+      "suite": "owner + SQL runner",
+      "tests": 30,
+      "pass": 27,
+      "fail": 3,
+      "durationMs": 8368.1547,
+      "reason": "assert.rejects requires a Promise/function, not the adapter's thenable object"
+    },
+    {
+      "suite": "wire simple-only fixture",
+      "tests": 3,
+      "pass": 1,
+      "fail": 2,
+      "durationMs": 798.8478
+    },
+    {
+      "suite": "wire extended-protocol fixture",
+      "tests": 3,
+      "pass": 2,
+      "fail": 1,
+      "durationMs": 779.1084
+    }
+  ],
+  "verification": [
+    {
+      "files": [
+        "packages/core/src/storage/recovery/postgres-recovery-operation-owner.test.mjs",
+        "packages/core/src/storage/recovery/usage-recovery.postgres.test.mjs"
+      ],
+      "tests": 35,
+      "pass": 35,
+      "fail": 0,
+      "skipped": 0,
+      "unitTests": 9,
+      "sqlTestsIncludingParent": 26,
+      "durationMs": 14797.9699
+    },
+    {
+      "files": [
+        "packages/core/src/storage/recovery/usage-settlement.postgres.test.mjs",
+        "packages/core/src/storage/recovery/usage-recovery-jobs.postgres.test.mjs",
+        "packages/core/src/storage/recovery/usage-settlement-facts.postgres.test.mjs",
+        "packages/core/src/storage/postgres-financial-schema-engine.test.mjs"
+      ],
+      "tests": 208,
+      "pass": 208,
+      "fail": 0,
+      "skipped": 0,
+      "includesParentTests": true,
+      "breakdown": {
+        "commit": 44,
+        "jobs": 43,
+        "facts": 44,
+        "financial": 77
+      },
+      "durationMs": 89680.4483
+    },
+    {
+      "file": "packages/core/src/storage/recovery/postgres-recovery-operation-owner.wire.test.mjs",
+      "tests": 3,
+      "pass": 2,
+      "fail": 1,
+      "skipped": 0,
+      "exitCode": 1,
+      "durationMs": 813.7801,
+      "status": "FAIL_NOT_ACCEPTED",
+      "peerExecutesSql": false,
+      "actualInstalledNodeDriver": true,
+      "teardownSeparatedByEventLoopTurns": 2
+    },
+    {
+      "command": "node node_modules/typescript/bin/tsc -p packages/core/tsconfig.recovery-runner-postgres.json --noEmit",
+      "exitCode": 0
+    },
+    {
+      "command": "node node_modules/typescript/bin/tsc -p packages/core/tsconfig.settlement-postgres.json --noEmit",
+      "exitCode": 0
+    }
+  ],
+  "initialTypecheck": {
+    "exitCode": 1,
+    "errors": [
+      "TS7034",
+      "TS7005"
+    ],
+    "fixed": "Explicit PostgresRecoveryCandidate[]"
+  },
+  "observedBlockingFailure": {
+    "test": "real postgres.js onclose rejects begin before its callback ends; owner waits and rejects callback SQL after closure",
+    "error": "TypeError: Cannot read properties of null (reading 'write')",
+    "site": "node_modules/postgres/src/connection.js:255",
+    "observedBoundary": "outer begin rejection precedes callback completion; driver-internal cleanup still reaches nextWrite after socket closure",
+    "universalDriverRootCauseClaim": false,
+    "activationAllowed": false,
+    "failedTestPreserved": true,
+    "skippedOrMarkedTodo": false,
+    "vendorPatched": false,
+    "sharedPoolClosedToHideFailure": false
+  },
+  "limits": {
+    "maxRegistrations": 50,
+    "maxItems": 50,
+    "maxConcurrency": 4,
+    "maxLeaseSeconds": 300,
+    "maxAdmissionBudgetMs": 60000,
+    "productionParametersApproved": false,
+    "memoryReservationProfileRequired": true,
+    "testMemoryProfileSynthetic": true,
+    "serverExecutionTimeoutImplemented": false,
+    "totalRuntimeCompletionBoundProven": false
+  },
+  "limitations": [
+    "Real installed-driver onclose wire regression remains FAIL; runner and owner explicitly blocked from activation",
+    "PGlite serial SQL engine is not native independent-connection concurrency or WAL acceptance",
+    "Loopback protocol peer executes no SQL, TLS/auth or Hyperdrive behavior",
+    "Any driver rejection conservatively retains logical capacity; trusted cleanup/release protocol not implemented",
+    "Local capacity retention is not a distributed limit or proof of physical resource release",
+    "Driver-internal continuation cannot be fully owned by current callback wrapper",
+    "No production factory/public export/route, scheduler or Queue integration",
+    "Lossless log representation, server deadlines, minimum privileges and migration/retention compatibility remain open",
+    "No unknown billing, authorization, quote, seller ledger or C04 completion approval"
+  ],
+  "priorArtifactHashesVerifiedUnchanged": {
+    "v295": 6
+  },
+  "priorArtifactsIntentionallyChanged": [
+    {
+      "path": "packages/core/src/storage/recovery/usage-recovery-jobs-postgres.ts",
+      "priorSha256": "12f4ab7d83993e27acfc244b8ac9622ead5c007267d51771a166bfd77d6d1faa",
+      "reason": "Export existing scope-owning validation for runner reuse"
+    },
+    {
+      "path": "packages/core/src/storage/recovery/usage-settlement-transaction-postgres.ts",
+      "priorSha256": "4603885fac544913eccafcf079a52b15aec8a495b5438ad65bcc382884601daf",
+      "reason": "Unsupported lossless text maps to fixed SettlementConflictError; no payload/amount modification"
+    }
+  ],
+  "cleanup": {
+    "ownedSettlementFixtureDirectoriesRemaining": 0,
+    "ownedJobFixtureDirectoriesRemaining": 0,
+    "userOrStagingDataRemoved": false,
+    "onlyRegenerableLocalFixturesRemoved": true
+  },
+  "externalEffects": {
+    "publicNetworkQueries": 0,
+    "loopbackWireRuns": 3,
+    "cloudManagementCalls": 0,
+    "remoteSqlCalls": 0,
+    "deployments": 0,
+    "modelCalls": 0,
+    "kmsCalls": 0,
+    "dependencyChanges": 0,
+    "systemRuntimeUpdates": 0,
+    "reboots": 0,
+    "stagingBudgetReset": false
+  },
+  "nextPriority": "Fix the installed-driver onclose/internal transaction cleanup boundary against the preserved failing wire test before expanding or activating the runner",
+  "artifacts": [
+    {
+      "path": "packages/core/src/storage/recovery/postgres-recovery-operation-owner.ts",
+      "sha256": "042fd74665e33456b697b0ab03aedd486c3812a900d2877f930b2764429bddca"
+    },
+    {
+      "path": "packages/core/src/storage/recovery/postgres-recovery-operation-owner.test.mjs",
+      "sha256": "7d64d7d7e211f901b27d78bc112bee295d13fecda604132bfbfbc516660c68c5"
+    },
+    {
+      "path": "packages/core/src/storage/recovery/postgres-recovery-operation-owner.wire.test.mjs",
+      "sha256": "bcca607ce1ac083b451a01d40e1821f20c52b7cc9113ccce7148727e0637140c"
+    },
+    {
+      "path": "packages/core/src/storage/recovery/run-usage-recovery-postgres.ts",
+      "sha256": "59ebbb932d4de19603491cecc9023041ec24e86adfc5988998e83fcb17e79a99"
+    },
+    {
+      "path": "packages/core/src/storage/recovery/usage-recovery.postgres.test.mjs",
+      "sha256": "aa3983f2851adb713114b289725b9c66d8cd0e3a9cc149c3e65166400d66a052"
+    },
+    {
+      "path": "packages/core/tsconfig.recovery-runner-postgres.json",
+      "sha256": "566df5b7ad0c8451be03159c5605f106c133bb08bb4198383140c6ce6623b087"
+    },
+    {
+      "path": "packages/core/src/storage/recovery/usage-recovery-jobs-postgres.ts",
+      "sha256": "12a234a783ecbe21c5a62770140b2b1e801cca5880e14130deedb476fd34f4e0"
+    },
+    {
+      "path": "packages/core/src/storage/recovery/usage-settlement-transaction-postgres.ts",
+      "sha256": "ae28231da3d3f5d2fe497c861c46db6282fee099de1743bf6849769aea925669"
+    }
+  ],
+  "inspectedVendorSources": [
+    {
+      "path": "node_modules/postgres/src/index.js",
+      "sha256": "4e21f5733e70d79cffc10d10d4ef01031de4a9ac862210e43f8870029fd103ed"
+    },
+    {
+      "path": "node_modules/postgres/src/connection.js",
+      "sha256": "ee3a218d9aa6a6f2887c1a19da50009335fe84c11a5431d5cab72d6bc528632f"
+    }
+  ]
+}

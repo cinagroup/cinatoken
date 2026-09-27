@@ -30,6 +30,7 @@ import { toPublicModelDailyStatsDelta } from '../public-model-daily-stats';
 import { roundGatewayMoney } from '../../lib/money-precision';
 import type { D1DatabaseClient } from '../../storage/database-client';
 import { nowIso, parseMoney } from '../../storage/critical-write-paths-utils';
+import type { SettlementLeaseProof } from '../../storage/recovery/settlement-recovery-types';
 import {
 	systemConfigTable as d1SystemConfigTable,
 	usersTable as d1UsersTable,
@@ -406,7 +407,7 @@ export async function applyUserBudgetTransitionWithAuditD1(
 	return (results[0]?.meta?.changes ?? 0) === 1;
 }
 
-type InsertRequestUsageAndChargeD1Params = {
+export type InsertRequestUsageAndChargeD1Params = {
 	requestLog: InsertRequestLogParams;
 	shouldChargeBudget: boolean;
 	userId: string;
@@ -420,14 +421,17 @@ type InsertRequestUsageAndChargeD1Params = {
 export async function insertRequestUsageAndChargeTxD1(
 	client: D1DatabaseClient,
 	params: InsertRequestUsageAndChargeD1Params,
+	/** Internal, opt-in recovery path only; the caller must validate the stored snapshot and receipt. */
+	recovery?: Readonly<{ payloadSha256: string; recordedAtIso: string; lease?: SettlementLeaseProof }>,
 ): Promise<void> {
-	await insertRequestUsageAndChargeTxD1Attempt(client, params, true);
+	await insertRequestUsageAndChargeTxD1Attempt(client, params, true, recovery);
 }
 
 async function insertRequestUsageAndChargeTxD1Attempt(
 	client: D1DatabaseClient,
 	params: InsertRequestUsageAndChargeD1Params,
 	allowLateActualExpiryRetry: boolean,
+	recovery?: Readonly<{ payloadSha256: string; recordedAtIso: string; lease?: SettlementLeaseProof }>,
 ): Promise<void> {
 	assertProviderAttemptAvailabilityFacts(params.requestLog.providerAttempts);
 	if (params.guardrailBudgetSettlement?.requestId !== undefined
@@ -580,9 +584,11 @@ async function insertRequestUsageAndChargeTxD1Attempt(
 		}
 	}
 	const now = nowIso();
-	const delta = toPublicModelDailyStatsDelta(params.requestLog, now);
+	// Freeze event attribution, not processing timestamps on live account/reservation rows.
+	const recordedAt = recovery?.recordedAtIso ?? now;
+	const delta = toPublicModelDailyStatsDelta(params.requestLog, recordedAt);
 	const statements: D1PreparedStatement[] = [
-		buildInsertRequestLogStatement(client.raw, { ...params.requestLog, budgetChargedMicros }, now),
+		buildInsertRequestLogStatement(client.raw, { ...params.requestLog, budgetChargedMicros }, recordedAt),
 		client.raw
 			.prepare(
 				`INSERT INTO public_model_daily_stats (
@@ -606,6 +612,18 @@ async function insertRequestUsageAndChargeTxD1Attempt(
 				delta.latencyTotalMs, delta.latencySampleCount, now
 			),
 	];
+	if (recovery) {
+		// The unique receipt and all existing accounting writes share ONE D1 batch.
+		// A missing/mismatched immutable snapshot fails the FK; a duplicate receipt
+		// rolls back this batch. Only the recovery caller may reconcile that receipt.
+		statements.unshift(recovery.lease
+			? client.raw.prepare(`INSERT INTO request_usage_commit_receipts
+				(request_id, payload_sha256, recorded_at, lease_token, lease_revision) VALUES (?, ?, ?, ?, ?)`)
+				.bind(params.requestLog.id, recovery.payloadSha256, recordedAt, recovery.lease.token, recovery.lease.revision)
+			: client.raw.prepare(`INSERT INTO request_usage_commit_receipts
+			(request_id, payload_sha256, recorded_at) VALUES (?, ?, ?)`)
+			.bind(params.requestLog.id, recovery.payloadSha256, recordedAt));
+	}
 	for (const attempt of params.requestLog.providerAttempts ?? []) {
 		statements.push(client.raw.prepare(`INSERT INTO provider_attempt_availability (
 			request_log_id, attempt_index, route_target_id, provider_id,
@@ -766,7 +784,7 @@ async function insertRequestUsageAndChargeTxD1Attempt(
 		}
 	}
 	if (budgetChargedMicros > 0) {
-		const budgetAccountedAt = params.requestLog.budgetAccountedAt ?? now;
+		const budgetAccountedAt = params.requestLog.budgetAccountedAt ?? recordedAt;
 		statements.push(client.raw.prepare(`UPDATE guardrail_budget_windows AS window
 			SET unreserved_micros = unreserved_micros + ?, updated_at = ?
 			WHERE ? >= window.period_start AND ? < window.period_end
@@ -838,7 +856,7 @@ async function insertRequestUsageAndChargeTxD1Attempt(
 				// this atomic batch. Retry exactly once from the newly observed
 				// expired state so the late-actual delta path is rebuilt. No other
 				// failure or state transition is retried.
-				await insertRequestUsageAndChargeTxD1Attempt(client, params, false);
+				await insertRequestUsageAndChargeTxD1Attempt(client, params, false, recovery);
 				return;
 			}
 		}

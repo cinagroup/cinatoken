@@ -1,0 +1,17 @@
+# C04 Chat request budget owner review candidate
+
+2026-09-25. This is a default-off local composition, not a production cutover or a completed C04 gate.
+
+`POSTGRES_CHAT_BUDGET_OWNER_ENABLED=reviewed-v1` requires `AUTHENTICATED_CHAT_BUDGET_PROOF_ENABLED=reviewed-v1`, PostgreSQL runtime storage, and separate `HYPERDRIVE`, `BUDGET_ADMISSION_HYPERDRIVE`, and `BUDGET_RECOVERY_HYPERDRIVE` connection strings. Invalid or missing configuration returns 503 before upstream fetch. The request owner fixes the authenticated request, user, key, and budget epoch before opening the v350/v354 Ordinary and v351/v353/v355/v356 Guardrail direct LOGIN ports. The proof passes only those ports to the route-aware coordinator, with Ordinary recovery failure set to fail closed. The standard route path is unchanged when the activation is absent.
+
+The owner opens after planning and closes through a resource completion receipt registered before response handoff. A foreground exit terminates both budget ledgers before close. A successful or failed response keeps the owner until the bounded background usage settlement finishes. Cancelled requests that complete owner open after cancellation close in the same path. An unconfirmed open, ledger termination, usage settlement, or close produces an unconfirmed resource receipt; with an HTTP capacity lease this conservatively holds numeric capacity. The opt-in owner allows one delegated dispatch boundary for the request and sets `stopAfterFirstGrantedDispatch` in both per-model and partition-none Chat dispatch. Quote-capture-only requests retain their existing fallback behavior.
+
+The proof's `open()` only creates a zero-cost local Ordinary lease before returning the admission object. Its paid Ordinary, Guardrail, and Gateway Key reservations occur later inside the dispatch methods. Thus an exception while opening the proof cannot leave an untracked privileged reservation. A focused test checks that neither direct LOGIN port receives a write during `open()`.
+
+Local checks:
+
+- `chat-budget-owner-lifecycle.test.ts`, `postgres-chat-budget-request-owner.test.ts`, and the authenticated proof tests: 12/12 pass, including no reservation during proof open, background ordering, cancellation/foreground cleanup, failed cleanup receipt, partial open, and idempotent close.
+- Real Chat handler with synthetic repositories: 503 configuration rejection before fetch, client cancellation and deadline during owner open with capacity held until close ACK, and first-upstream-503 one-send behavior in both model and partition-none paths. The ordinary authenticated-proof path without the new owner still sends twice on a 429 then 200. Focused route selection: 7/7 pass.
+- `npm run typecheck -w @octafuse/proxy` and `git diff --check` pass.
+
+The synthetic PostgreSQL facade in the one-send route tests intentionally lacks financial persistence and produces an unconfirmed accounting receipt. These tests prove handler and dispatcher control flow, not real LOGIN privileges, committed budget writes, or buyer settlement. Earlier native PostgreSQL fixtures validate the lower-level owners separately; no combined native request-to-background-usage test or real Hyperdrive credential deployment is claimed. The route quote remains Worker-computed, and neither this owner nor the one-send guard proves physical egress identity or authorization. C04.1–8 and C04/G remain open.

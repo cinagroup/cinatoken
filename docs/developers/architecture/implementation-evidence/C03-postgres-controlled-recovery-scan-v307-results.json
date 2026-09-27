@@ -1,0 +1,321 @@
+{
+  "version": "v307",
+  "date": "2026-09-23",
+  "status": "LOCAL_CONTROLLED_RECOVERY_SCAN_INTEGRATION_CANDIDATE_PASS_PRODUCTION_DISABLED",
+  "C03": "DOING",
+  "goalComplete": false,
+  "report": ".wrangler/staging/postgres-owned-cancel-v307-run-oUZ722/results.json",
+  "validation": {
+    "harness": {
+      "pass": 39,
+      "fail": 0
+    },
+    "childSuites": 36,
+    "esmOwnerAndCancelWire": {
+      "pass": 37,
+      "fail": 0
+    },
+    "esmLifecycle": {
+      "pass": 60,
+      "fail": 0
+    },
+    "esmLegacyCancel": {
+      "pass": 2,
+      "fail": 0
+    },
+    "esmPortableActiveSql": {
+      "pass": 1,
+      "fail": 0
+    },
+    "esmLocalShutdown": {
+      "pass": 15,
+      "fail": 0
+    },
+    "esmOwnedScanWire": {
+      "pass": 4,
+      "fail": 0
+    },
+    "esmReentryWire": {
+      "pass": 2,
+      "fail": 0
+    },
+    "esmNegativeWire": {
+      "pass": 2,
+      "fail": 0
+    },
+    "cjsOwnerAndCancelWire": {
+      "pass": 37,
+      "fail": 0
+    },
+    "cjsLifecycle": {
+      "pass": 60,
+      "fail": 0
+    },
+    "cjsLegacyCancel": {
+      "pass": 2,
+      "fail": 0
+    },
+    "cjsPortableActiveSql": {
+      "pass": 1,
+      "fail": 0
+    },
+    "cjsLocalShutdown": {
+      "pass": 15,
+      "fail": 0
+    },
+    "cjsOwnedScanWire": {
+      "pass": 4,
+      "fail": 0
+    },
+    "cjsReentryWire": {
+      "pass": 2,
+      "fail": 0
+    },
+    "cjsNegativeWire": {
+      "pass": 2,
+      "fail": 0
+    },
+    "cfSyntheticCloseNodeLoopback": {
+      "pass": 6,
+      "fail": 0
+    },
+    "cfGlobalShutdownNodeLoopback": {
+      "pass": 4,
+      "fail": 0
+    },
+    "cfPortableActiveSqlNodeLoopback": {
+      "pass": 1,
+      "fail": 0
+    },
+    "cfLocalShutdownNodeLoopback": {
+      "pass": 15,
+      "fail": 0
+    },
+    "cfOnlyRawClosedRejectionNodeLoopback": {
+      "pass": 1,
+      "fail": 0
+    },
+    "cfDirectProcessLocalSocketHook": {
+      "pass": 5,
+      "fail": 0
+    },
+    "cfOwnedScanWireNodeLoopback": {
+      "pass": 4,
+      "fail": 0
+    },
+    "cfReentryWireNodeLoopback": {
+      "pass": 2,
+      "fail": 0
+    },
+    "cfNegativeWireNodeLoopback": {
+      "pass": 2,
+      "fail": 0
+    },
+    "closedCatalog": {
+      "pass": 5,
+      "fail": 0
+    },
+    "ownedScanMock": {
+      "pass": 21,
+      "fail": 0
+    },
+    "ownerSupervisorFinancialSqlPglite": {
+      "pass": 66,
+      "fail": 0
+    },
+    "installedCancel": {
+      "pass": 2,
+      "fail": 0
+    },
+    "installedOncloseNegative": {
+      "pass": 2,
+      "fail": 1,
+      "expectedFailure": true
+    },
+    "historicalV302Harness": {
+      "pass": 3,
+      "fail": 0,
+      "skip": 1
+    },
+    "historicalV303Harness": {
+      "pass": 0,
+      "fail": 0,
+      "skip": 1
+    },
+    "historicalV304Harness": {
+      "pass": 0,
+      "fail": 0,
+      "skip": 1
+    },
+    "historicalV305Harness": {
+      "pass": 0,
+      "fail": 0,
+      "skip": 1
+    },
+    "historicalV306Harness": {
+      "pass": 0,
+      "fail": 0,
+      "skip": 1
+    },
+    "protectedInputsUnchanged": 16,
+    "sourceInputsHashed": 32,
+    "independentRepeatBuildsMatch": true,
+    "syntaxChecks": 3,
+    "typecheckExitCode": 0,
+    "nativePostgresTests": 0,
+    "workersRuntimeTests": 0,
+    "oldV306ArtifactScanFence": {
+      "pass": 3,
+      "fail": 0,
+      "scope": "SHA-pinned ESM/CJS/CF; synchronous TypeError before capacity, SQL, or socket"
+    }
+  },
+  "artifactSha256": {
+    "esm": "e2e2385dd7543d557d64312be9ef1045cec57a094cfc1aeec882d4c356c25521",
+    "cjs": "5d08e70c604566c2d2ed9c84000008c8d13a15a9b04df268c9b3ef218154098b",
+    "cf": "5704f05aeb495cf78a97ae7d140d3a980007130736e0c8bc6b77ed90ec47d72d"
+  },
+  "sourceSha256": {
+    "packages/core/src/storage/recovery/postgres-cancel-observation.wire.test.mjs": "eb31e5d560e4bb459ac654fd985e58a1445b5fe9df6152b1c37787c7c97fe463",
+    "packages/core/src/storage/recovery/postgres-owned-cancellation-cf-direct-shutdown.wire.test.mjs": "5205ad195ebdac88a7ab668a5fdb016999024c90f5d5ac1efde6752e34533394",
+    "packages/core/src/storage/recovery/postgres-owned-cancellation-cf.wire.test.mjs": "eee2b0bb5ac955821a17b3a48c7756387fe9f32220697c4d764d4d2a784434ed",
+    "packages/core/src/storage/recovery/postgres-owned-cancellation-owner.wire.test.mjs": "9464f3495921fee4af327bc3ab25f6d1525690335a6b39fd29bc36256d3ac93e",
+    "packages/core/src/storage/recovery/postgres-owned-cancellation-shutdown-local.wire.test.mjs": "8e007656156dbbd3255b755885edf25039cc8e0d5dc6e0ec03134b63f0feb24c",
+    "packages/core/src/storage/recovery/postgres-owned-cancellation-shutdown.wire.test.mjs": "b0f5a043ab8442745448402d54830511247db2267ae89fdcafe7dba2cd141a67",
+    "packages/core/src/storage/recovery/postgres-owned-cancellation.wire.test.mjs": "ce7eb30755f95cfd7cbf50dfd0c5b988a0e194e145e973f46e30871abe4ef72f",
+    "packages/core/src/storage/recovery/postgres-recovery-operation-owner.test.mjs": "2bd6b831f23862c95dc42953752d13526b617174da4879b263957bc02bba52c0",
+    "packages/core/src/storage/recovery/postgres-recovery-operation-owner.ts": "44d5ca84a0f36b58c76da12c80ad469bf5c4ef83679a5f2cbe3a9419e2c23e58",
+    "packages/core/src/storage/recovery/postgres-recovery-operation-owner.wire.test.mjs": "7a0d8d6c98f4c05f75704ae9a60837ffad227b0d94b044dc55b931800f22d546",
+    "packages/core/src/storage/recovery/postgres-recovery-owned-scan-old-artifact-gate.test.mjs": "c9803d2e29f437e0a53f94d24dde661bbf094c7fa32741beea828759ea93fe57",
+    "packages/core/src/storage/recovery/postgres-recovery-owned-scan-reentry-negative.wire.test.mjs": "4617c347f95f06863bddb1efd46cc236e755c044f7c560588809663d1e79b015",
+    "packages/core/src/storage/recovery/postgres-recovery-owned-scan-reentry.wire.test.mjs": "55c89a27249843a7dc4daf887e04d5853366a8aa0d44f8451c0709a4fcd59c58",
+    "packages/core/src/storage/recovery/postgres-recovery-owned-scan.test.mjs": "e160367e74540876d70e475c5fb4b60409ffd2197c060dcaf0a2f880a332a1b3",
+    "packages/core/src/storage/recovery/postgres-recovery-owned-scan.wire.test.mjs": "596f6cd191a5e5900861fd589dfc1b318facb84d4331ad4b16733201e45fe88b",
+    "packages/core/src/storage/recovery/postgres-transaction-completion.wire.test.mjs": "97183e58a0b66f05fac3d656b1b7365172dff7e97c016ff56c194a062711f2e9",
+    "packages/core/src/storage/recovery/postgres-transaction-reservation.wire.test.mjs": "bb4174bd15554286da68e79484484f33d15178ab562683a8150f8b37d5381f4e",
+    "packages/core/src/storage/recovery/postgres-transaction-retirement.wire.test.mjs": "4d6d18ea8952227e1001b44c578df8609eb72efabff3186322cdc0aa6ceab7b9",
+    "packages/core/src/storage/recovery/postgres-write-failure.wire.test.mjs": "ae91c69001758d59077b45ed611e53e675dd6ccd0e912af506ebd3026c033a91",
+    "packages/core/src/storage/recovery/run-usage-recovery-postgres.ts": "b133b47c0ab9a16526c080bdedc2d5b7a9054397608cee40f18d0d126907ca6c",
+    "packages/core/src/storage/recovery/supervise-usage-recovery-postgres.test.mjs": "23156b86ca955aa93d21c12878f56e6bb7be9149af21193af2c1683572ffe708",
+    "packages/core/src/storage/recovery/supervise-usage-recovery-postgres.ts": "d39a392767539ed0413394d4811e5daad8ebf8b59197dcec7c790eca585b9df1",
+    "packages/core/src/storage/recovery/usage-recovery-jobs-postgres-scan.test.mjs": "e47bf1520eda44523c2d5bac7ec119279e51432d7ecbf48b4defbf418676698e",
+    "packages/core/src/storage/recovery/usage-recovery-jobs-postgres.ts": "7ac1db1b02159b4827b2c0fee29711fee544246fc4e1fbbcbef420aca1c17429",
+    "packages/core/src/storage/recovery/usage-recovery.postgres.test.mjs": "db22fe233dd95d9cd6fc9298c4a16881c240d3dc3e42a7928c14a006f474d18a",
+    "scripts/db/diag/postgres-owned-cancellation-v303.test.mjs": "55e2fd901c9bc9f7fc24c774355d76845ae0f6f627d474852949676a34f8dc97",
+    "scripts/db/diag/postgres-owned-cancellation-v304.test.mjs": "4e9fba5ec68397a4fab27d13280ceef10cd02b680579df4e1545793e0925facb",
+    "scripts/db/diag/postgres-owned-cancellation-v305.test.mjs": "4289b9052e32c26e1fb9aed49b56aa673979057034ef474dea57c561ceb23b6e",
+    "scripts/db/diag/postgres-owned-cancellation-v306.test.mjs": "10782eeca33bd8b7cd00bcbae3a6f29cbeb216e9494b95ab608f04e3eaa097a7",
+    "scripts/db/diag/postgres-owned-cancellation-v307.test.mjs": "1d5905e8ecf82745e66f918f189f65239d473f3430fd296a9fdfb5df8e72766e",
+    "scripts/db/diag/postgres-owned-cancellation.mjs": "49435d64d5dbf94d84a6f3cb64c71faa68e74abc73ce2ce385f1f305f57cbc01",
+    "scripts/db/diag/postgres-owned-cancellation.test.mjs": "23e9e4c2a2bbac2acc8d56891ed36bafdaaa8bbdb4a47357b74cb7977075b2d7"
+  },
+  "protectedInputSha256": {
+    "package-lock.json": "9adebfebdb981bd51aac7644fb046d0a4f0e2a4586cf8b3786cefa097a1a415e",
+    "pnpm-lock.yaml": "65f935a4073ba42316da815df828c59e6626cbbe9cb14e7ae65cf7d8f273fb08",
+    "node_modules/postgres/package.json": "944d492614959389a5739ef2893bc1830fb773ff042159d9b331d43b2f6792e9",
+    "packages/core/package.json": "b9cbde48c8b70ff1e95db5a9dc772c366c16a218851f5e61b946f9a1ee24fbbb",
+    "packages/core/dist/index.js": "9f585cda9e7266c78dcc15f5f8157c4467a3caeaf6f67ac0baa8b8f3d06e1bc8",
+    "packages/proxy/package.json": "cc8b6750ee1aa27f778b8916ccba098df1d0d5b7992e062d2c3d389fb78e11ae",
+    "packages/proxy/wrangler.jsonc": "7ffb4a120ce0b83df428a1344fca5b16ea9d8784178d555e7377623511451b0c",
+    "node_modules/postgres/src/index.js": "4e21f5733e70d79cffc10d10d4ef01031de4a9ac862210e43f8870029fd103ed",
+    "node_modules/postgres/src/connection.js": "ee3a218d9aa6a6f2887c1a19da50009335fe84c11a5431d5cab72d6bc528632f",
+    "node_modules/postgres/src/query.js": "67c45a5151032aa46b587abc15381fe4efd97c696e5c1b53082b8161309c4ee2",
+    "node_modules/postgres/cjs/src/index.js": "d8fea1a5311c47e65004646bc81f57305ac64d48f99004a5b3ca27bcfc6babf8",
+    "node_modules/postgres/cjs/src/connection.js": "ce6d375809baad79963ef9b3773e6ac757bcf6da2362d4d85482bb14c2c751be",
+    "node_modules/postgres/cjs/src/query.js": "75ae9c69a1aaf3be4d8d65e4742c36018b89594907b85769e560c2590716c109",
+    "node_modules/postgres/cf/src/index.js": "aca9c247b7ddb2aedf90d20ce8e6f52ac6ebd95865056599ca05ed4dab4baad7",
+    "node_modules/postgres/cf/src/connection.js": "3efad812b825f76708f2e62e8dd00088900206e04afed2dc4b75b9aecd435fa9",
+    "node_modules/postgres/cf/src/query.js": "67c45a5151032aa46b587abc15381fe4efd97c696e5c1b53082b8161309c4ee2"
+  },
+  "sourceDriftDuringRun": [],
+  "historicalNegativeControl": {
+    "includedInFinalHarness": false,
+    "source": "local independent run against SHA-verified v306 artifacts",
+    "oldReport": ".wrangler/staging/postgres-owned-cancel-v306-run-uJkDDp/results.json",
+    "testFile": "packages/core/src/storage/recovery/postgres-recovery-owned-scan-reentry.wire.test.mjs",
+    "testNamePattern": "^v307 fixed scan:",
+    "expectedStatus": "not_dispatched",
+    "variants": {
+      "esm": {
+        "artifactSha256": "575b182b10d18ab47257581728316af17a09cf71b708f46b3198456fb34c62c6",
+        "tests": 2,
+        "pass": 0,
+        "fail": 2,
+        "cancelled": 0,
+        "skipped": 0,
+        "exitCode": 1,
+        "actualBuildReentryStatus": "not_exclusive",
+        "actualBindSerializerReentryStatus": "transport_closed"
+      },
+      "cjs": {
+        "artifactSha256": "dea841c24cd2e95172fd77bf154daee596a5c65690183e55ae987a5fddce5f25",
+        "tests": 2,
+        "pass": 0,
+        "fail": 2,
+        "cancelled": 0,
+        "skipped": 0,
+        "exitCode": 1,
+        "actualBuildReentryStatus": "not_exclusive",
+        "actualBindSerializerReentryStatus": "transport_closed"
+      },
+      "cf": {
+        "artifactSha256": "f3147efd782f73571caa11e433a80ec3d754b5a76565401554301dd63ab30747",
+        "tests": 2,
+        "pass": 0,
+        "fail": 2,
+        "cancelled": 0,
+        "skipped": 0,
+        "exitCode": 1,
+        "actualBuildReentryStatus": "not_exclusive",
+        "actualBindSerializerReentryStatus": "transport_closed"
+      }
+    },
+    "phase": "pre-v307-scan-fence historical observation",
+    "currentReproductionExpected": false,
+    "currentBehavior": "With the current v307 run/owner code, SHA-pinned old v306 ESM/CJS/CF artifacts synchronously fail TypeError before capacity, SQL, or socket; final harness verifies this 3/3."
+  },
+  "boundaries": {
+    "productionActivated": false,
+    "workersRuntimeTests": 0,
+    "nativePostgresTests": 0,
+    "remoteSqlCalls": 0,
+    "cloudManagementCalls": 0,
+    "deployments": 0,
+    "modelCalls": 0,
+    "kmsCalls": 0,
+    "cfArtifactTestsUseNodeLoopbackOrProcessLocalSocketHook": true,
+    "physicalClosureProvenByPolyfillCloseEvent": false,
+    "controlledScanCatalogNodeVerified": true,
+    "ownedScanMockNodeVerified": true,
+    "ownedScanWireNodeVerified": true,
+    "ownedScanNegativeWireNodeVerified": true,
+    "runLevelOwnedScansExplicitOptIn": true,
+    "runLevelFixedReadOnlySqlCatalog": true,
+    "lowLevelOwnedStatementArbitrarySqlStillAccepted": true,
+    "formalDriverAdoptionChanged": false,
+    "publicDriverTypesChanged": false,
+    "serverExecutionDeadlineAllPathsImplemented": false,
+    "trustworthyPhysicalReleaseImplemented": false,
+    "financialFullPathProven": false,
+    "crossNetworkExactlyOnceClaimed": false,
+    "unknownChargingPolicyDecided": false,
+    "cloudResourcesCreatedOrDeleted": 0,
+    "systemRuntimeUpdates": 0,
+    "cumulativeStagingCapUsd": 2,
+    "capReset": false,
+    "oldArtifactScanFenceNodeVerified": true,
+    "scanFenceRequiredAtRunAndOwner": true,
+    "node22RuntimeAccepted": false,
+    "cloudflareWorkerdTested": false
+  },
+  "localNodeVersion": "v24.14.1",
+  "supersededReport": {
+    "report": ".wrangler/staging/postgres-owned-cancel-v307-run-vjkvhk/results.json",
+    "harness": {
+      "pass": 38,
+      "fail": 0
+    },
+    "childSuites": 35,
+    "status": "superseded by oUZ722; not current acceptance evidence"
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "status": "PASS",
+  "cleanup": "PASS",
+  "binaryVersion": "postgres (PostgreSQL) 18.6",
+  "scope": "owned PG18.6; PG73 + review-only quote/attempt/outbox/orphan proposals; synthetic identities",
+  "stages": [
+    {
+      "name": "formal-pg73-installed",
+      "result": "PASS",
+      "migrations": 73
+    },
+    {
+      "name": "review-only-source-proposals-and-synthetic-quote-installed",
+      "result": "PASS"
+    },
+    {
+      "name": "review-proposal-default-off-install-rolls-back-atomically",
+      "result": "PASS"
+    },
+    {
+      "name": "worker-membership-and-recovery-inherit-role-probes-fail-closed",
+      "result": "PASS"
+    },
+    {
+      "name": "long-preinstall-claim-commits-before-locked-backfill-and-is-enqueued",
+      "result": "PASS"
+    },
+    {
+      "name": "ack-unknown-and-duplicate-claim-replay-preserve-one-job-and-exact-attempt-count",
+      "result": "PASS"
+    },
+    {
+      "name": "late-commit-claim-enqueues-atomically-despite-precommit-claimed-at",
+      "result": "PASS"
+    },
+    {
+      "name": "repeated-due-scan-lease-and-failure-acks-are-idempotent",
+      "result": "PASS"
+    },
+    {
+      "name": "skip-locked-zero-page-is-retryable-even-when-due-census-is-nonzero",
+      "result": "PASS"
+    },
+    {
+      "name": "eight-attempt-dead-letter-and-operator-token-requeue-have-immutable-audit",
+      "result": "PASS"
+    },
+    {
+      "name": "late-economic-event-serializes-with-lease-and-revokes-stale-worker-token",
+      "result": "PASS"
+    },
+    {
+      "name": "direct-role-boundary-and-unresolved-no-charge-with-monotonic-audit",
+      "result": "PASS"
+    }
+  ],
+  "sourceSha256": {
+    "quoteProposal": "1249a7ff07f95b48c7b45a41833c96c9a028e4bfe3a47e44e9dc6b72c3c77246",
+    "attemptProposal": "c89c79e803fd69a2d09d44b33be3301aeb8aa4ed72c5dff5518439ec29fafb83",
+    "outboxProposal": "f92835c72ff02cba23879ed90ad640832455ccb98764f28fe4ee04ce52aab1ac",
+    "reviewProposal": "aa299de2f5c2be07ca8f8a9b4fa91b70456d91b166ea5c70257d91b202626752",
+    "formalMigrationCorpus": "23afef61a8a670e0af8c90e3a138f522e6b283b454e380a592bf85bca83108dc",
+    "nativeTest": "6f830e1525240c5ae853d65844eb7de9102d393aad19d11fef7099db3829fd98"
+  },
+  "limitations": [
+    "No production role or binding, Workers/Hyperdrive, provider request, true send proof or financial correction is exercised.",
+    "The review job is a durable investigation pointer; absence of a log or event never means no egress or zero cost.",
+    "The fixture advances next_attempt_at with direct migrator SQL to exercise eight retries without wall-clock sleeps.",
+    "A due-list page can be empty or stale during concurrent locks; every scheduler pass must restart from its first page.",
+    "No production-scale backlog or lock-contention benchmark is measured."
+  ]
+}

@@ -438,7 +438,7 @@ describe('OpenAI image outcome certainty', () => {
 		}
 	});
 
-	it('bounds 2xx response buffering but keeps an explicit non-2xx known-zero', async () => {
+	it('bounds 2xx responses and distinguishes clear 4xx from ambiguous 3xx/5xx', async () => {
 		const tooLarge2xx = await dispatchOpenAiImageGenerations(
 			route(), { prompt: 'cat', n: 1 }, undefined, null, undefined,
 			{
@@ -466,6 +466,21 @@ describe('OpenAI image outcome certainty', () => {
 		assert.equal(explicit4xx.meta.upstreamOutcomeUnknown, undefined);
 		assert.equal(explicit4xx.meta.responseBodyTooLarge, undefined);
 		assert.equal(explicit4xx.meta.failoverForbidden, undefined);
+
+		for (const status of [307, 503]) {
+			const ambiguousResponse = await dispatchOpenAiImageGenerations(
+				route(), { prompt: 'cat', n: 1 }, undefined, null, undefined,
+				{
+					maxResponseBytes: 8,
+					fetchImpl: async () => new Response('0123456789', {
+						status, headers: { 'content-length': '10' },
+					}),
+				},
+			);
+			assert.equal(ambiguousResponse.response.status, status);
+			assert.equal(ambiguousResponse.meta.upstreamOutcomeUnknown, true);
+			assert.equal(ambiguousResponse.meta.failoverForbidden, true);
+		}
 	});
 
 	it('keeps a validated 2xx image result certain', async () => {

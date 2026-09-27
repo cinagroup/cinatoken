@@ -2,7 +2,11 @@
  * OpenAI `/audio/speech` 与 DashScope TTS 的协议驱动。
  * DashScope 统一使用 SSE 上游，以便边转发音频边读取最终真实 usage；不会用输入长度伪造最终用量。
  */
-import { resolveProviderUpstreamSecret, resolveUpstreamEndpoint } from '@octafuse/core';
+import { RequestAuxiliaryAuthLimitError, resolveProviderUpstreamSecret, resolveUpstreamEndpoint } from '@octafuse/core';
+import { createResourceCompletionGroup, observeResourceCleanup, type ResourceCompletion, type ResourceCompletionOutcome } from '../resource-completion';
+import { audioRequestAbortResponse, createAudioRequestLifecycle, validateAudioUpstreamUrl, type AudioRequestLifecycleOptions } from './audio-request-lifecycle';
+import { cancelSpeechReader, createSpeechStreamLifecycle, SpeechProtocolError, type SpeechRequestLifecycle } from './audio-speech-stream-lifecycle';
+import { responseTextWithinLimit } from './bounded-response-body';
 import { audioEndpointSpeechRequestCapabilities } from '@octafuse/core/model-endpoint-catalog';
 import type { RouteResult } from '../model-router';
 import { EMPTY_USAGE, type UsageFromStream } from '../proxy';
@@ -44,21 +48,37 @@ export type NormalizedAudioSpeechRequest = {
 	providerOptions?: AudioProviderOptions;
 };
 
+/** Initial local safety ceiling; production TTS SLOs still need C01 acceptance. */
+export const AUDIO_SPEECH_TIMEOUT_MS = 300_000;
+export const AUDIO_SPEECH_MAX_ERROR_RESPONSE_BYTES = 64 * 1024;
+
 type SpeechDispatchMeta = {
+	gatewayGeneratedError?: boolean;
+	admissionDeniedPreDispatch?: boolean;
 	upstreamOutcomeUnknown?: boolean;
 	failoverForbidden?: boolean;
 };
 
 type SpeechDispatchResult = {
+	resourceCompletion?: ResourceCompletion;
 	response: Response;
 	usagePromise: Promise<UsageFromStream>;
 	upstreamRequestId: string | null;
 	meta?: SpeechDispatchMeta;
 };
 
-export type AudioSpeechDispatchOptions = {
-	fetchImpl?: typeof fetch;
-};
+export type AudioSpeechDispatchOptions = AudioRequestLifecycleOptions;
+
+async function withSpeechResources(
+	run: (track: (task: ResourceCompletion) => void) => Promise<SpeechDispatchResult>,
+): Promise<SpeechDispatchResult> {
+	const resources = createResourceCompletionGroup();
+	try {
+		const result = await run(resources.track);
+		if (result.resourceCompletion) resources.track(result.resourceCompletion);
+		return { ...result, resourceCompletion: resources.completion };
+	} finally { resources.seal(); }
+}
 
 type DashScopeTtsKind = 'speech' | 'qwen' | 'minimax';
 
@@ -302,7 +322,7 @@ function bytesToBase64(bytes: Uint8Array): string {
 function buildStreamingOpenAiSpeechBody(
 	body: Record<string, unknown>,
 	parts: readonly AudioSpeechInputReferencePart[],
-): ReadableStream<Uint8Array> {
+): { body: ReadableStream<Uint8Array>; resourceCompletion: ResourceCompletion; stop(): void } {
 	const audio = parts.find((part) => part.type === 'input_audio');
 	if (audio?.type !== 'input_audio') {
 		throw new Error('Stateless voice cloning requires one reference audio part');
@@ -322,38 +342,79 @@ function buildStreamingOpenAiSpeechBody(
 		: '';
 	const prefix = `${serialized.slice(0, markerIndex + 1)}${dataUriPrefix}`;
 	const suffix = serialized.slice(markerIndex + quotedMarker.length - 1);
+	return createOwnedSpeechUpload(prefix, suffix, audio.inputAudio.bytes);
+}
+
+/** Own producer state separately from the caller's normalized request. */
+function createOwnedSpeechUpload(prefix: string, suffix: string, bytes: Uint8Array | null): {
+	body: ReadableStream<Uint8Array>; resourceCompletion: ResourceCompletion; stop(): void;
+} {
 	const encoder = new TextEncoder();
-	const bytes = audio.inputAudio.bytes;
 	// Divisible by three so every non-final chunk has no Base64 padding.
 	const chunkSize = 0x6000;
 	let phase: 'prefix' | 'audio' | 'suffix' | 'done' = 'prefix';
 	let offset = 0;
-	return new ReadableStream<Uint8Array>({
+	let closed = false;
+	let source: ReadableStreamDefaultController<Uint8Array>;
+	let resolveResource!: (outcome: ResourceCompletionOutcome) => void;
+	const resourceCompletion: ResourceCompletion = new Promise(resolve => { resolveResource = resolve; });
+	const finish = (outcome: ResourceCompletionOutcome) => {
+		if (closed) return;
+		closed = true;
+		phase = 'done';
+		// Drop this producer's references, without mutating the caller's payload.
+		bytes = null;
+		prefix = suffix = '';
+		offset = 0;
+		resolveResource(outcome);
+	};
+	const bodyStream = new ReadableStream<Uint8Array>({
+		start(controller) { source = controller; },
 		pull(controller) {
-			if (phase === 'prefix') {
-				phase = 'audio';
-				controller.enqueue(encoder.encode(prefix));
-				return;
+			if (closed) return;
+			try {
+				if (phase === 'prefix') {
+					phase = 'audio';
+					controller.enqueue(encoder.encode(prefix));
+					return;
+				}
+				if (phase === 'audio' && bytes && offset < bytes.byteLength) {
+					const chunk = bytes.subarray(offset, Math.min(offset + chunkSize, bytes.byteLength));
+					offset += chunk.byteLength;
+					controller.enqueue(encoder.encode(bytesToBase64(chunk)));
+					return;
+				}
+				if (phase === 'audio') phase = 'suffix';
+				if (phase === 'suffix') {
+					phase = 'done';
+					controller.enqueue(encoder.encode(suffix));
+					return;
+				}
+				controller.close();
+				finish('confirmed');
+			} catch {
+				controller.error(new SpeechProtocolError('Audio speech upload encoding failed'));
+				finish('unconfirmed');
 			}
-			if (phase === 'audio' && offset < bytes.byteLength) {
-				const chunk = bytes.subarray(offset, Math.min(offset + chunkSize, bytes.byteLength));
-				offset += chunk.byteLength;
-				controller.enqueue(encoder.encode(bytesToBase64(chunk)));
-				return;
-			}
-			if (phase === 'audio') phase = 'suffix';
-			if (phase === 'suffix') {
-				phase = 'done';
-				controller.enqueue(encoder.encode(suffix));
-				return;
-			}
-			controller.close();
 		},
 		cancel() {
-			phase = 'done';
-			offset = bytes.byteLength;
+			// Native consumer cancellation invokes our synchronous source cleanup.
+			finish('confirmed');
 		},
-	});
+	}, { highWaterMark: 0 });
+	return {
+		body: bodyStream,
+		resourceCompletion,
+		stop() {
+			if (closed) return;
+			const untouched = phase === 'prefix' && !bodyStream.locked;
+			// fetch may still own the reader when it returns early or ignores
+			// abort. Erroring our source is not its acknowledgement. Only an
+			// untouched, unlocked source has no handed-off upload work to confirm.
+			source.error(new SpeechProtocolError('Audio speech upload stopped'));
+			finish(untouched ? 'confirmed' : 'unconfirmed');
+		},
+	};
 }
 
 function copyResponseHeaders(headers: Headers): Headers {
@@ -366,6 +427,10 @@ function copyResponseHeaders(headers: Headers): Headers {
 function forbidSpeechFailover(meta: SpeechDispatchMeta): void {
 	meta.upstreamOutcomeUnknown = true;
 	meta.failoverForbidden = true;
+}
+
+function speechStatusMayHideAcceptedWork(status: number): boolean {
+	return (status >= 300 && status < 400) || status === 408 || status === 499 || status >= 500;
 }
 
 function unknownSpeechFailure(params: {
@@ -557,42 +622,26 @@ function dashScopeStreamResponse(options: {
 	initialEvents: unknown[];
 	kind: DashScopeTtsKind;
 	request: NormalizedAudioSpeechRequest;
+	lifecycle: SpeechRequestLifecycle;
 	timing?: RequestTimingCollector | null;
-	markUpstreamOutcomeUnknown?: () => void;
-}): { response: Response; usagePromise: Promise<UsageFromStream> } {
+	markUpstreamOutcomeUnknown: () => void;
+}): { response: Response; usagePromise: Promise<UsageFromStream>; resourceCompletion: ResourceCompletion } {
 	const usage: UsageFromStream = { ...EMPTY_USAGE };
-	let resolveUsage!: (value: UsageFromStream) => void;
-	const usagePromise = new Promise<UsageFromStream>((resolve) => {
-		resolveUsage = resolve;
-	});
-	let settled = false;
-	let terminal = false;
+	const owned = createSpeechStreamLifecycle(options.reader, options.lifecycle, usage, options.markUpstreamOutcomeUnknown, options.timing);
 	let emittedAudio = false;
 	const pending = [...options.initialEvents];
-	const finishUsage = (cancelled = false, streamError?: unknown) => {
-		if (settled) return;
-		settled = true;
-		if (cancelled) usage.cancelled = true;
-		if (streamError != null) {
-			usage.stream_error = streamError instanceof Error ? streamError.message : String(streamError);
-		}
-		options.timing?.markStreamComplete();
-		resolveUsage({ ...usage });
-	};
-
 	const body = new ReadableStream<Uint8Array>({
+		start: owned.start,
 		async pull(controller) {
+			if (owned.closed) return;
 			try {
-				while (!terminal) {
+				while (!owned.closed) {
 					if (pending.length === 0) {
-						const next = await options.reader.read();
-						if (next.done) {
-							pending.push(...options.parser.push(new Uint8Array(), true));
-							if (pending.length === 0) {
-								throw new Error('DashScope TTS stream ended before a terminal event');
-							}
-						} else {
-							pending.push(...options.parser.push(next.value));
+						const next = await owned.read();
+						if (owned.closed) return;
+						pending.push(...options.parser.push(next.value ?? new Uint8Array(), next.done));
+						if (next.done && pending.length === 0) {
+							throw new SpeechProtocolError('DashScope TTS stream ended before a terminal event');
 						}
 					}
 					const raw = pending.shift();
@@ -603,50 +652,34 @@ function dashScopeStreamResponse(options: {
 					if (event.audioBase64) {
 						emittedAudio = true;
 						options.timing?.markFirstByte();
-						controller.enqueue(
-							options.request.streamFormat === 'sse'
-								? speechDeltaEvent(event.audioBase64)
-								: base64ToBytes(event.audioBase64)
-						);
+						controller.enqueue(options.request.streamFormat === 'sse'
+							? speechDeltaEvent(event.audioBase64) : base64ToBytes(event.audioBase64));
 					}
 					if (event.terminal) {
-						if (!emittedAudio) throw new Error('DashScope TTS completed without audio data');
-						terminal = true;
+						if (!emittedAudio) throw new SpeechProtocolError('DashScope TTS completed without audio data');
 						if (options.request.streamFormat === 'sse') controller.enqueue(speechDoneEvent(usage));
-						controller.close();
-						finishUsage(false);
-						void options.reader.cancel();
+						owned.complete();
 						return;
 					}
 					if (event.audioBase64) return;
 				}
-			} catch (error) {
-				options.markUpstreamOutcomeUnknown?.();
-				finishUsage(false, error);
-				await options.reader.cancel('speech_sse_invalid_or_too_large').catch(() => undefined);
-				controller.error(error);
-			}
+			} catch (error) { owned.fail(error); }
 		},
-		async cancel() {
-			finishUsage(true);
-			await options.reader.cancel();
-		},
-	});
-
+		cancel: owned.cancel,
+	}, { highWaterMark: 0 });
 	return {
-		response: new Response(body, {
-			headers: {
-				'Content-Type': speechResponseContentType(options.request),
-				'Cache-Control': 'no-cache',
-			},
-		}),
-		usagePromise,
+		response: new Response(body, { headers: {
+			'Content-Type': speechResponseContentType(options.request), 'Cache-Control': 'no-cache',
+		} }),
+		usagePromise: owned.usagePromise,
+		resourceCompletion: owned.resourceCompletion,
 	};
 }
 
 async function firstDashScopeEvents(
 	response: Response,
-	kind: DashScopeTtsKind
+	kind: DashScopeTtsKind,
+	lifecycle: SpeechRequestLifecycle,
 ): Promise<{
 	reader: ReadableStreamDefaultReader<Uint8Array>;
 	parser: SpeechSseParser;
@@ -659,7 +692,7 @@ async function firstDashScopeEvents(
 	const parser = new SpeechSseParser();
 	try {
 		while (true) {
-			const next = await reader.read();
+			const next = await lifecycle.wait(() => reader.read());
 			const events = parser.push(next.value ?? new Uint8Array(), next.done);
 			if (events.length > 0) {
 				let requestId: string | null = null;
@@ -674,7 +707,7 @@ async function firstDashScopeEvents(
 			if (next.done) throw new Error('DashScope TTS returned no SSE event');
 		}
 	} catch (error) {
-		await reader.cancel('speech_sse_invalid_or_too_large').catch(() => undefined);
+		lifecycle.trackResourceCompletion(cancelSpeechReader(reader, 'speech_sse_invalid_or_stopped'));
 		throw error;
 	}
 }
@@ -826,6 +859,41 @@ export function buildDashScopeTtsBody(
 	});
 }
 
+async function boundedSpeechErrorResponse(response: Response, lifecycle: SpeechRequestLifecycle): Promise<Response> {
+	const text = await responseTextWithinLimit(response, AUDIO_SPEECH_MAX_ERROR_RESPONSE_BYTES, lifecycle.signal, undefined, lifecycle.trackResourceCompletion);
+	return new Response(text || null, { status: response.status, statusText: response.statusText, headers: copyResponseHeaders(response.headers) });
+}
+
+function failedSpeechDispatch(
+	lifecycle: SpeechRequestLifecycle,
+	upstreamStatus: number | null,
+	params: Parameters<typeof unknownSpeechFailure>[0],
+): SpeechDispatchResult {
+	if (lifecycle.admissionFailed || params.error instanceof RequestAuxiliaryAuthLimitError) throw params.error;
+	const explicitNonOk = upstreamStatus != null && (upstreamStatus < 200 || upstreamStatus >= 300);
+	const unknown = lifecycle.dispatchStarted
+		&& (!explicitNonOk || speechStatusMayHideAcceptedWork(upstreamStatus!));
+	const abortReason = lifecycle.getAbortReason();
+	if (!lifecycle.dispatchStarted) params.meta.admissionDeniedPreDispatch = true;
+	if (unknown) forbidSpeechFailover(params.meta);
+	if (abortReason !== 'none') {
+		params.meta.failoverForbidden = true;
+		if (!explicitNonOk) {
+			params.meta.gatewayGeneratedError = true;
+			return { response: audioRequestAbortResponse(abortReason === 'gateway_timeout'),
+				usagePromise: Promise.resolve(EMPTY_USAGE), upstreamRequestId: params.upstreamRequestId, meta: params.meta };
+		}
+	}
+	if (unknown) return unknownSpeechFailure(params);
+	return {
+		response: new Response(JSON.stringify({ error: { message: 'Audio speech upstream request failed' } }), {
+			status: explicitNonOk && upstreamStatus !== 304 && upstreamStatus !== 101 ? upstreamStatus! : 502,
+			headers: { 'Content-Type': 'application/json' },
+		}),
+		usagePromise: Promise.resolve(EMPTY_USAGE), upstreamRequestId: params.upstreamRequestId, meta: params.meta,
+	};
+}
+
 async function dispatchDashScopeTts(
 	route: RouteResult,
 	request: NormalizedAudioSpeechRequest,
@@ -835,97 +903,96 @@ async function dispatchDashScopeTts(
 	attempt?: RequestTimingAttempt,
 	options?: AudioSpeechDispatchOptions
 ): Promise<SpeechDispatchResult> {
-	const validationError = validateDashScopeRequest(kind, request);
-	if (validationError) {
-		return {
-			response: new Response(JSON.stringify({ error: { message: validationError } }), {
-				status: 400,
-				headers: { 'Content-Type': 'application/json' },
-			}),
-			usagePromise: Promise.resolve(EMPTY_USAGE),
-			upstreamRequestId: null,
-		};
-	}
-	const capability = kind === 'speech' ? 'audio.speech' : 'audio.speech.multimodal';
-	const url = resolveUpstreamEndpoint('dashscope', capability, route.providerEndpoints, {
-		providerId: route.providerId,
-	});
-	const upstreamLabel = sanitizeUpstreamUrlForLog(url);
-	const { secret } = await resolveProviderUpstreamSecret(route.providerApiKey);
-	const serializedBody = JSON.stringify(buildDashScopeTtsBody(route, request, kind));
-	const meta: SpeechDispatchMeta = {};
-	let dispatchStarted = false;
-	let upstreamStatus: number | null = null;
-	let observedUpstreamRequestId: string | null = null;
-	try {
-		dispatchStarted = true;
-		const response = await (options?.fetchImpl ?? fetch)(url, {
-			method: 'POST',
-			headers: {
-				Authorization: `Bearer ${secret}`,
-				'Content-Type': 'application/json',
-				'X-DashScope-SSE': 'enable',
-			},
-			body: serializedBody,
-			signal: requestSignal,
-		});
-		upstreamStatus = response.status;
-		timing?.markAttemptHeaders(attempt, response.status);
-		const headerRequestId = extractUpstreamRequestId(response.headers);
-		observedUpstreamRequestId = headerRequestId;
-		if (!response.ok) {
+	return withSpeechResources(async trackResourceCompletion => {
+		const validationError = validateDashScopeRequest(kind, request);
+		if (validationError) {
 			return {
-				response,
-				usagePromise: Promise.resolve(EMPTY_USAGE),
-				upstreamRequestId: headerRequestId,
-				meta,
-			};
-		}
-
-		const first = await firstDashScopeEvents(response, kind);
-		if (first.error) {
-			await first.reader.cancel();
-			forbidSpeechFailover(meta);
-			return {
-				response: new Response(JSON.stringify({ error: { message: first.error } }), {
-					status: 502,
+				response: new Response(JSON.stringify({ error: { message: validationError } }), {
+					status: 400,
 					headers: { 'Content-Type': 'application/json' },
 				}),
 				usagePromise: Promise.resolve(EMPTY_USAGE),
+				upstreamRequestId: null,
+			};
+		}
+		const capability = kind === 'speech' ? 'audio.speech' : 'audio.speech.multimodal';
+		const url = resolveUpstreamEndpoint('dashscope', capability, route.providerEndpoints, {
+			providerId: route.providerId,
+		});
+		const upstreamLabel = sanitizeUpstreamUrlForLog(url);
+		validateAudioUpstreamUrl(url);
+		const serializedBody = JSON.stringify(buildDashScopeTtsBody(route, request, kind));
+		const meta: SpeechDispatchMeta = {};
+		const lifecycle = createAudioRequestLifecycle(requestSignal, AUDIO_SPEECH_TIMEOUT_MS, { ...options, trackResourceCompletion });
+		let streamOwnsLifecycle = false;
+		let upstreamStatus: number | null = null;
+		let observedUpstreamRequestId: string | null = null;
+		try {
+			const { secret } = await resolveProviderUpstreamSecret(route.providerApiKey, { signal: lifecycle.signal, auxiliaryAuth: options?.auxiliaryAuth });
+			const response = await lifecycle.dispatch(url, {
+				method: 'POST',
+				headers: new Headers({
+					Authorization: `Bearer ${secret}`,
+					'Content-Type': 'application/json',
+					'X-DashScope-SSE': 'enable',
+				}),
+				body: serializedBody,
+				signal: lifecycle.signal,
+			});
+			upstreamStatus = response.status;
+			timing?.markAttemptHeaders(attempt, response.status);
+			const headerRequestId = extractUpstreamRequestId(response.headers);
+			observedUpstreamRequestId = headerRequestId;
+			if (!response.ok) {
+				if (speechStatusMayHideAcceptedWork(response.status)) forbidSpeechFailover(meta);
+				return {
+					response: await boundedSpeechErrorResponse(response, lifecycle),
+					usagePromise: Promise.resolve(EMPTY_USAGE),
+					upstreamRequestId: headerRequestId,
+					meta,
+				};
+			}
+
+			const first = await firstDashScopeEvents(response, kind, lifecycle);
+			if (first.error) {
+				lifecycle.trackResourceCompletion(cancelSpeechReader(first.reader, 'speech_application_error'));
+				forbidSpeechFailover(meta);
+				return {
+					response: new Response(JSON.stringify({ error: { message: first.error } }), {
+						status: 502,
+						headers: { 'Content-Type': 'application/json' },
+					}),
+					usagePromise: Promise.resolve(EMPTY_USAGE),
+					upstreamRequestId: first.requestId ?? headerRequestId,
+					meta,
+				};
+			}
+			const streamed = dashScopeStreamResponse({
+				reader: first.reader,
+				parser: first.parser,
+				initialEvents: first.events,
+				kind,
+				request,
+				lifecycle,
+				timing,
+				markUpstreamOutcomeUnknown: () => {
+					forbidSpeechFailover(meta);
+				},
+			});
+			streamOwnsLifecycle = true;
+			return {
+				...streamed,
 				upstreamRequestId: first.requestId ?? headerRequestId,
 				meta,
 			};
-		}
-		const streamed = dashScopeStreamResponse({
-			reader: first.reader,
-			parser: first.parser,
-			initialEvents: first.events,
-			kind,
-			request,
-			timing,
-			markUpstreamOutcomeUnknown: () => {
-				forbidSpeechFailover(meta);
-			},
-		});
-		return {
-			...streamed,
-			upstreamRequestId: first.requestId ?? headerRequestId,
-			meta,
-		};
-	} catch (error) {
-		if (dispatchStarted && (upstreamStatus == null || (upstreamStatus >= 200 && upstreamStatus < 300))) {
-			return unknownSpeechFailure({
-				operation: 'dashscope.tts',
-				providerId: route.providerId,
-				routeTargetId: route.targetId,
-				upstreamLabel,
-				error,
-				meta,
-				upstreamRequestId: observedUpstreamRequestId,
+		} catch (error) {
+			timing?.markStreamComplete();
+			return failedSpeechDispatch(lifecycle, upstreamStatus, {
+				operation: 'dashscope.tts', providerId: route.providerId, routeTargetId: route.targetId,
+				upstreamLabel, error, meta, upstreamRequestId: observedUpstreamRequestId,
 			});
-		}
-		throw error;
-	}
+		} finally { if (!streamOwnsLifecycle) lifecycle.clear(); }
+	});
 }
 
 function parseOpenAiSpeechUsage(event: unknown, usage: UsageFromStream): boolean {
@@ -940,67 +1007,52 @@ function parseOpenAiSpeechUsage(event: unknown, usage: UsageFromStream): boolean
 function wrapOpenAiSpeechBody(
 	body: ReadableStream<Uint8Array>,
 	streamFormat: AudioSpeechStreamFormat,
-	timing?: RequestTimingCollector | null,
-	markOutcomeUnknown?: () => void,
-): { body: ReadableStream<Uint8Array>; usagePromise: Promise<UsageFromStream> } {
+	lifecycle: SpeechRequestLifecycle,
+	timing: RequestTimingCollector | null | undefined,
+	markOutcomeUnknown: () => void,
+): { body: ReadableStream<Uint8Array>; usagePromise: Promise<UsageFromStream>; resourceCompletion: ResourceCompletion } {
 	const reader = body.getReader();
 	const parser = streamFormat === 'sse' ? new SpeechSseParser() : null;
 	const usage: UsageFromStream = { ...EMPTY_USAGE };
-	let resolveUsage!: (value: UsageFromStream) => void;
-	const usagePromise = new Promise<UsageFromStream>((resolve) => {
-		resolveUsage = resolve;
-	});
-	let settled = false;
+	const owned = createSpeechStreamLifecycle(reader, lifecycle, usage, markOutcomeUnknown, timing);
 	let sawTerminal = false;
 	let emittedBytes = false;
-	const finish = (cancelled = false, streamError?: unknown) => {
-		if (settled) return;
-		settled = true;
-		if (cancelled) usage.cancelled = true;
-		if (streamError != null) {
-			usage.stream_error = streamError instanceof Error ? streamError.message : String(streamError);
-		}
-		timing?.markStreamComplete();
-		resolveUsage({ ...usage });
-	};
 	return {
 		body: new ReadableStream<Uint8Array>({
+			start: owned.start,
 			async pull(controller) {
+				if (owned.closed) return;
 				try {
-					const next = await reader.read();
+					const next = await owned.read();
+					if (owned.closed) return;
 					if (next.done) {
 						for (const event of parser?.push(new Uint8Array(), true) ?? []) {
-							sawTerminal ||= parseOpenAiSpeechUsage(event, usage);
+							sawTerminal = parseOpenAiSpeechUsage(event, usage) || sawTerminal;
 						}
 						if (streamFormat === 'sse' && !sawTerminal) {
-							throw new Error('OpenAI speech SSE ended before speech.audio.done');
+							throw new SpeechProtocolError('OpenAI speech SSE ended before speech.audio.done');
 						}
 						if (streamFormat === 'audio' && !emittedBytes) {
-							throw new Error('OpenAI speech stream ended without audio data');
+							throw new SpeechProtocolError('OpenAI speech stream ended without audio data');
 						}
-						finish(false);
-						controller.close();
+						owned.complete(true);
 						return;
 					}
 					timing?.markFirstByte();
 					emittedBytes ||= next.value.byteLength > 0;
 					for (const event of parser?.push(next.value) ?? []) {
-						sawTerminal ||= parseOpenAiSpeechUsage(event, usage);
+						sawTerminal = parseOpenAiSpeechUsage(event, usage) || sawTerminal;
 					}
 					controller.enqueue(next.value);
-				} catch (error) {
-					markOutcomeUnknown?.();
-					finish(false, error);
-					await reader.cancel('speech_sse_invalid_or_too_large').catch(() => undefined);
-					controller.error(error);
-				}
+					// A valid protocol terminal event completes usage even if the
+					// provider keeps its HTTP connection open afterwards.
+					if (sawTerminal) owned.complete();
+				} catch (error) { owned.fail(error); }
 			},
-			async cancel() {
-				finish(true);
-				await reader.cancel();
-			},
-		}),
-		usagePromise,
+			cancel: owned.cancel,
+		}, { highWaterMark: 0 }),
+		usagePromise: owned.usagePromise,
+		resourceCompletion: owned.resourceCompletion,
 	};
 }
 
@@ -1012,104 +1064,107 @@ export async function dispatchOpenAiAudioSpeech(
 	attempt?: RequestTimingAttempt,
 	options?: AudioSpeechDispatchOptions
 ): Promise<SpeechDispatchResult> {
-	const url = resolveUpstreamEndpoint('openai', 'audio.speech', route.providerEndpoints, {
-		providerId: route.providerId,
-	});
-	const upstreamLabel = sanitizeUpstreamUrlForLog(url);
-	const { secret } = await resolveProviderUpstreamSecret(route.providerApiKey);
-	const providerOptions = resolveAudioProviderOptionsForRoute(request.providerOptions, route);
-	const upstreamBody = buildRouteRequestBody(route, {
-			...providerOptions,
-			model: route.providerModelName,
-			input: request.input,
-			...(request.voice ? { voice: request.voice } : {}),
-			response_format: request.responseFormat,
-			speed: request.speed,
-			stream_format: request.streamFormat,
-			...(request.instructions ? { instructions: request.instructions } : {}),
-	});
-	// Reference audio is a request-scoped, Guardrail-projected capability. Route
-	// defaults must never synthesize it outside the verified cloning gate.
-	delete upstreamBody.input_references;
-	const serializedBody: BodyInit = request.inputReferences
-		? buildStreamingOpenAiSpeechBody(upstreamBody, request.inputReferences)
-		: JSON.stringify(upstreamBody);
-	const meta: SpeechDispatchMeta = {};
-	let dispatchStarted = false;
-	let upstreamStatus: number | null = null;
-	let observedUpstreamRequestId: string | null = null;
-	try {
-		dispatchStarted = true;
-		const fetchInit: RequestInit & { duplex?: 'half' } = {
-			method: 'POST',
-			headers: {
-				Authorization: `Bearer ${secret}`,
-				'Content-Type': 'application/json',
-			},
-			body: serializedBody,
-			signal: requestSignal,
-			...(request.inputReferences ? { duplex: 'half' as const } : {}),
-		};
-		const response = await (options?.fetchImpl ?? fetch)(url, fetchInit);
-		upstreamStatus = response.status;
-		timing?.markAttemptHeaders(attempt, response.status);
-		const upstreamRequestId = extractUpstreamRequestId(response.headers);
-		observedUpstreamRequestId = upstreamRequestId;
-		if (!response.ok) {
-			return { response, usagePromise: Promise.resolve(EMPTY_USAGE), upstreamRequestId, meta };
-		}
-		if (!response.body) {
-			return unknownSpeechFailure({
-				operation: 'openai.speech',
-				providerId: route.providerId,
-				routeTargetId: route.targetId,
-				upstreamLabel,
-				error: new Error('OpenAI speech returned an empty response body'),
-				meta,
-				upstreamRequestId,
-			});
-		}
-		if (!isExpectedOpenAiSpeechContentType(response.headers.get('content-type'), request)) {
-			await response.body.cancel('speech_unexpected_content_type').catch(() => undefined);
-			return unknownSpeechFailure({
-				operation: 'openai.speech',
-				providerId: route.providerId,
-				routeTargetId: route.targetId,
-				upstreamLabel,
-				error: new Error('OpenAI speech returned an unexpected Content-Type'),
-				meta,
-				upstreamRequestId,
-			});
-		}
-		const wrapped = wrapOpenAiSpeechBody(response.body, request.streamFormat, timing, () => {
-			forbidSpeechFailover(meta);
+	return withSpeechResources(async trackResourceCompletion => {
+		const url = resolveUpstreamEndpoint('openai', 'audio.speech', route.providerEndpoints, {
+			providerId: route.providerId,
 		});
-		const responseHeaders = copyResponseHeaders(response.headers);
-		responseHeaders.set('Content-Type', speechResponseContentType(request));
-		return {
-			response: new Response(wrapped.body, {
-				status: response.status,
-				statusText: response.statusText,
-				headers: responseHeaders,
-			}),
-			usagePromise: wrapped.usagePromise,
-			upstreamRequestId,
-			meta,
-		};
-	} catch (error) {
-		if (dispatchStarted && (upstreamStatus == null || (upstreamStatus >= 200 && upstreamStatus < 300))) {
-			return unknownSpeechFailure({
-				operation: 'openai.speech',
-				providerId: route.providerId,
-				routeTargetId: route.targetId,
-				upstreamLabel,
-				error,
-				meta,
-				upstreamRequestId: observedUpstreamRequestId,
+		const upstreamLabel = sanitizeUpstreamUrlForLog(url);
+		validateAudioUpstreamUrl(url);
+		const providerOptions = resolveAudioProviderOptionsForRoute(request.providerOptions, route);
+		const upstreamBody = buildRouteRequestBody(route, {
+				...providerOptions,
+				model: route.providerModelName,
+				input: request.input,
+				...(request.voice ? { voice: request.voice } : {}),
+				response_format: request.responseFormat,
+				speed: request.speed,
+				stream_format: request.streamFormat,
+				...(request.instructions ? { instructions: request.instructions } : {}),
+		});
+		// Reference audio is a request-scoped, Guardrail-projected capability. Route
+		// defaults must never synthesize it outside the verified cloning gate.
+		delete upstreamBody.input_references;
+		const streamedUpload = request.inputReferences
+			? buildStreamingOpenAiSpeechBody(upstreamBody, request.inputReferences) : null;
+		if (streamedUpload) trackResourceCompletion(streamedUpload.resourceCompletion);
+		const serializedBody: BodyInit = streamedUpload?.body ?? JSON.stringify(upstreamBody);
+		const meta: SpeechDispatchMeta = {};
+		const lifecycle = createAudioRequestLifecycle(requestSignal, AUDIO_SPEECH_TIMEOUT_MS, { ...options, trackResourceCompletion });
+		let streamOwnsLifecycle = false;
+		let upstreamStatus: number | null = null;
+		let observedUpstreamRequestId: string | null = null;
+		try {
+			const { secret } = await resolveProviderUpstreamSecret(route.providerApiKey, { signal: lifecycle.signal, auxiliaryAuth: options?.auxiliaryAuth });
+			const fetchInit: RequestInit & { duplex?: 'half' } = {
+				method: 'POST',
+				headers: new Headers({
+					Authorization: `Bearer ${secret}`,
+					'Content-Type': 'application/json',
+				}),
+				body: serializedBody,
+				signal: lifecycle.signal,
+				...(request.inputReferences ? { duplex: 'half' as const } : {}),
+			};
+			const response = await lifecycle.dispatch(url, fetchInit);
+			upstreamStatus = response.status;
+			timing?.markAttemptHeaders(attempt, response.status);
+			const upstreamRequestId = extractUpstreamRequestId(response.headers);
+			observedUpstreamRequestId = upstreamRequestId;
+			if (!response.ok) {
+				if (speechStatusMayHideAcceptedWork(response.status)) forbidSpeechFailover(meta);
+				return { response: await boundedSpeechErrorResponse(response, lifecycle), usagePromise: Promise.resolve(EMPTY_USAGE), upstreamRequestId, meta };
+			}
+			if (!response.body) {
+				return unknownSpeechFailure({
+					operation: 'openai.speech',
+					providerId: route.providerId,
+					routeTargetId: route.targetId,
+					upstreamLabel,
+					error: new Error('OpenAI speech returned an empty response body'),
+					meta,
+					upstreamRequestId,
+				});
+			}
+			if (!isExpectedOpenAiSpeechContentType(response.headers.get('content-type'), request)) {
+				lifecycle.trackResourceCompletion(observeResourceCleanup(() => response.body!.cancel('speech_unexpected_content_type')));
+				return unknownSpeechFailure({
+					operation: 'openai.speech',
+					providerId: route.providerId,
+					routeTargetId: route.targetId,
+					upstreamLabel,
+					error: new Error('OpenAI speech returned an unexpected Content-Type'),
+					meta,
+					upstreamRequestId,
+				});
+			}
+			const wrapped = wrapOpenAiSpeechBody(response.body, request.streamFormat, lifecycle, timing, () => {
+				forbidSpeechFailover(meta);
 			});
+			streamOwnsLifecycle = true;
+			const responseHeaders = copyResponseHeaders(response.headers);
+			responseHeaders.set('Content-Type', speechResponseContentType(request));
+			return {
+				response: new Response(wrapped.body, {
+					status: response.status,
+					statusText: response.statusText,
+					headers: responseHeaders,
+				}),
+				usagePromise: wrapped.usagePromise,
+				resourceCompletion: wrapped.resourceCompletion,
+				upstreamRequestId,
+				meta,
+			};
+		} catch (error) {
+			timing?.markStreamComplete();
+			return failedSpeechDispatch(lifecycle, upstreamStatus, {
+				operation: 'openai.speech', providerId: route.providerId, routeTargetId: route.targetId,
+				upstreamLabel, error, meta, upstreamRequestId: observedUpstreamRequestId,
+			});
+		} finally {
+			if (!streamOwnsLifecycle) lifecycle.clear();
+			streamedUpload?.stop();
 		}
-		throw error;
-	}
+	});
 }
 
 export function dispatchDashScopeSpeechSynthesizer(

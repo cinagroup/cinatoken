@@ -1,0 +1,27 @@
+{
+  "status": "PASS",
+  "binaryVersion": "postgres (PostgreSQL) 18.6",
+  "node": "v24.14.1",
+  "scope": "owned loopback-only native PostgreSQL fixture",
+  "checks": [
+    "0069 formal migration lock timeout rolls back table and marker under legacy write lock",
+    "73 formal migrations applied as migrator",
+    "ordinary runtime INSERT before optional guard",
+    "REPEATABLE READ activation rejected before installing either guard",
+    "held ordinary INSERT blocks cutover; 2s timeout rolls back whole guard switch",
+    "ordinary grant script rerun preserves both guard EXECUTE denials",
+    "NOLOGIN recovery role, five timeout defaults, narrow catalog ACL and runtime fact denial",
+    "recovery key helper waits on native row lock without direct key UPDATE",
+    "ordinary runtime INSERT after optional guard without recovery SELECT",
+    "fact-first advisory lock serializes and rejects unfenced ordinary log",
+    "legacy-log-first advisory lock serializes and rejects later fact"
+  ],
+  "cleanup": "PASS",
+  "sourceSha256": {
+    "nativeTest": "c2208e0d3f4436b09b225ed39959a1bb66f62474674d9b94c8beddc6cbd21d52",
+    "rolePolicy": "a29f6d8df66b6837c2dceb4f4548fc8ff495d7076582098187cb0573c25b02de",
+    "runtimeGrant": "0974072ba6a15a7a72a0ad44fd88d16246e9c09a72f133e0f78084242633c303",
+    "formal0069": "0cca7e371a63cdc44c746202909293761aefa226cf221ce48752cb7d2fff646d",
+    "optionalGuard": "24a601dbafd66f16cdd14dcc81017bc26199c6b833e311d389cdb07103010763"
+  }
+}

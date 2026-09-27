@@ -1,0 +1,78 @@
+{
+  "status": "PASS",
+  "cleanup": "PASS",
+  "binaryVersion": "postgres (PostgreSQL) 18.6",
+  "scope": "owned loopback PG18.6, 73 formal migrations, history guard and repair job review-only proposals",
+  "limitations": [
+    "No cross-host durable cursor store, scheduler or automatic full-history completion observation is installed.",
+    "A lost COMMIT acknowledgement requires replay from the previously committed cursor; the SQL page itself cannot identify an external cursor file.",
+    "Late lower-sorting earnings are covered by the live enqueue trigger, not by the already-passed keyset cursor.",
+    "No production-size lock window, real Workers/Hyperdrive, remote SQL or deployment is exercised."
+  ],
+  "sourceSha256": {
+    "formalMigrationCorpus": "23afef61a8a670e0af8c90e3a138f522e6b283b454e380a592bf85bca83108dc",
+    "historyGuard": "454a720f9a6b7410e0aad99c2aaa2eb3327fbbac8c86bb3e3cd4537131e6611b",
+    "repairJobs": "7b2f288ecb83e34207bcfd5a2a4eec934c0d6e156190826816ab033716c173d4",
+    "pageGenerator": "42c8bfcf22523862a4081463ace99683743d45511e62cdb14bd9b5117b21a0f0",
+    "nativeTest": "4024aeff0927e13c38729bd0d0e97791d90e41b5394e29d8cc53e3cf42b838b4"
+  },
+  "stages": [
+    {
+      "name": "five-credited-historical-earnings-have-no-implicit-jobs",
+      "result": "PASS",
+      "formalMigrations": 73
+    },
+    {
+      "name": "set-role-delegate-cannot-run-migrator-backfill",
+      "result": "PASS"
+    },
+    {
+      "name": "target-function-body-or-trigger-when-drift-rejects-page",
+      "result": "PASS"
+    },
+    {
+      "name": "disabled-enqueue-or-wide-runtime-acl-rejects-page-before-write",
+      "result": "PASS"
+    },
+    {
+      "name": "first-page-commits-before-cursor-is-returned",
+      "result": "PASS",
+      "first": {
+        "scanned": 2,
+        "enqueued": 2,
+        "nextEarningId": "earning-02",
+        "afterEarningId": null
+      }
+    },
+    {
+      "name": "old-page-replay-cannot-overwrite-newer-trigger-job",
+      "result": "PASS",
+      "retainedRequestLog": "new-log-a"
+    },
+    {
+      "name": "rolled-back-page-keeps-old-cursor-and-retry-enqueues-once",
+      "result": "PASS",
+      "second": {
+        "scanned": 2,
+        "enqueued": 1,
+        "nextEarningId": "earning-03",
+        "afterEarningId": "earning-01"
+      }
+    },
+    {
+      "name": "concurrent-low-sorting-earning-covered-only-by-live-trigger",
+      "result": "PASS",
+      "scannedAfterCursor": 0,
+      "liveJob": "new-log-c"
+    },
+    {
+      "name": "all-five-key-projections-repaired-without-second-credit",
+      "result": "PASS",
+      "credit": {
+        "earnings": 7,
+        "ledger": 7,
+        "balance": "70000"
+      }
+    }
+  ]
+}

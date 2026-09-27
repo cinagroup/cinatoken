@@ -1,0 +1,24 @@
+name: Images SSE quarantine cleanup safety
+on:
+  pull_request:
+    paths: ['scripts/deploy/**', 'packages/core/**', 'packages/proxy/**', '.github/workflows/images-sse-quarantine-cleanup-safety.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  local-contract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    strategy:
+      matrix:
+        node: [22, 24]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+          cache: npm
+      - run: npm ci
+      - run: npm run build:node-index -w @octafuse/core
+      # Real SQLite and modeled closure/clock only. No remote cleanup command.
+      - run: node node_modules/tsx/dist/cli.mjs --test packages/proxy/scripts/staging/images-sse-rejected-quarantine-cleanup.test.mjs

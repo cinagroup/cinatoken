@@ -1,6 +1,7 @@
 import type {
 	GatewayRepositories,
 	GuardrailPreflightResult,
+	PreparationControl,
 } from '@octafuse/core';
 import { runRequestGuardrails } from './request-guardrails';
 
@@ -61,6 +62,7 @@ export async function runGeminiRequestGuardrails(
 		action: GeminiContentAction;
 		correlationId: string;
 		now: Date;
+		control?: PreparationControl;
 	},
 ): Promise<GuardrailPreflightResult> {
 	const result = await runRequestGuardrails(repositories, {
@@ -71,6 +73,7 @@ export async function runGeminiRequestGuardrails(
 		body: toSharedGuardrailBody(params.body, params.action),
 		correlationId: params.correlationId,
 		now: params.now,
+		control: params.control,
 	});
 	if (!result.ok) return result;
 	return { ...result, body: restoreGeminiBody(params.body, result.body) };

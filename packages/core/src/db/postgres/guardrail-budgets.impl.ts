@@ -38,11 +38,11 @@ type PgQuery = {
 };
 
 async function listByRequest(pg: PgQuery, requestId: string, forUpdate = false): Promise<GuardrailBudgetReservationRow[]> {
-	return await pg.unsafe<GuardrailBudgetReservationRow[]>(`SELECT * FROM guardrail_budget_reservations WHERE request_id = $1 ORDER BY assignment_id${forUpdate ? ' FOR UPDATE' : ''}`, [requestId]);
+	return await pg.unsafe<GuardrailBudgetReservationRow[]>(`SELECT * FROM cinatoken_gateway.guardrail_budget_reservations WHERE request_id = $1 ORDER BY assignment_id${forUpdate ? ' FOR UPDATE' : ''}`, [requestId]);
 }
 
 async function seedWindow(pg: PgQuery, intent: GuardrailBudgetIntent, nowIso: string): Promise<{ unreserved: number; settled: number; reserved: number }> {
-	const inserted = await pg.unsafe<Array<{ inserted: number }>>(`INSERT INTO guardrail_budget_windows (
+	const inserted = await pg.unsafe<Array<{ inserted: number }>>(`INSERT INTO cinatoken_gateway.guardrail_budget_windows (
 		workspace_id, scope_type, scope_id, period, period_start, period_end,
 		unreserved_micros, settled_micros, reserved_micros, seeded_at, updated_at
 	) VALUES ($1, $2, $3, $4, $5, $6, 0, 0, 0, $7, $7)
@@ -51,7 +51,7 @@ async function seedWindow(pg: PgQuery, intent: GuardrailBudgetIntent, nowIso: st
 		intent.workspaceId, intent.scopeType, intent.scopeId, intent.period, intent.periodStart, intent.periodEnd, nowIso,
 	]);
 	const rows = await pg.unsafe<Array<{ unreserved_micros: string | number; settled_micros: string | number; reserved_micros: string | number }>>(`SELECT unreserved_micros, settled_micros, reserved_micros
-		FROM guardrail_budget_windows
+		FROM cinatoken_gateway.guardrail_budget_windows
 		WHERE workspace_id = $1 AND scope_type = $2 AND scope_id = $3 AND period = $4 AND period_start = $5
 		FOR UPDATE`, [intent.workspaceId, intent.scopeType, intent.scopeId, intent.period, intent.periodStart]);
 	const window = rows[0];
@@ -70,13 +70,13 @@ async function seedWindow(pg: PgQuery, intent: GuardrailBudgetIntent, nowIso: st
 		log.budget_charged_micros,
 		ROUND(GREATEST(log.charged_cost, 0) * 1000000)::bigint
 	)), 0)::bigint AS spent
-	FROM api_key_request_logs AS log
+	FROM cinatoken_gateway.api_key_request_logs AS log
 	WHERE ${subjectPredicate}
 		AND COALESCE(log.budget_accounted_at, log.created_at) >= $2
 		AND COALESCE(log.budget_accounted_at, log.created_at) < $3
 		AND log.workspace_id = $4
 		AND NOT EXISTS (
-			SELECT 1 FROM guardrail_budget_reservations AS reservation
+			SELECT 1 FROM cinatoken_gateway.guardrail_budget_reservations AS reservation
 			WHERE reservation.request_id = log.id
 				AND reservation.workspace_id = $4
 				AND reservation.scope_type = $5
@@ -102,8 +102,8 @@ async function validateWorkspaceBudgetIntent(pg: PgQuery, intent: GuardrailBudge
 		workspace_status: string;
 	}>>(`SELECT budget.workspace_id, budget.reset_interval, budget.limit_micros,
 		budget.config_epoch, workspace.status AS workspace_status
-		FROM workspace_budgets budget
-		JOIN workspaces workspace ON workspace.id = budget.workspace_id
+		FROM cinatoken_gateway.workspace_budgets budget
+		JOIN cinatoken_gateway.workspaces workspace ON workspace.id = budget.workspace_id
 		WHERE budget.id = $1 FOR UPDATE OF budget`, [intent.assignmentId.slice('workspace-budget:'.length)]);
 	const row = rows[0];
 	if (!row
@@ -134,7 +134,7 @@ async function validateGatewayKeyLimitIntent(
 		limit_epoch: number;
 	}>>(`SELECT workspace_id, status, expires_at, limit_micros, limit_reset,
 		include_byok_in_limit, limit_epoch
-		FROM api_keys WHERE id = $1 FOR UPDATE`, [intent.scopeId]);
+		FROM cinatoken_gateway.api_keys WHERE id = $1 FOR UPDATE`, [intent.scopeId]);
 	const row = rows[0];
 	const activeAtAdmission = row
 		? row.expires_at === null || Date.parse(row.expires_at) > Date.parse(nowIso)
@@ -179,7 +179,7 @@ export function createPostgresGuardrailBudgetsRepository(client: PostgresDatabas
 						if (window.unreserved + window.settled + window.reserved + params.reservedMicros > intent.limitMicros) {
 							throw new GuardrailBudgetBlockedError(intent.assignmentId);
 						}
-						await tx.unsafe(`UPDATE guardrail_budget_windows
+						await tx.unsafe(`UPDATE cinatoken_gateway.guardrail_budget_windows
 							SET unreserved_micros = $1, reserved_micros = reserved_micros + $2,
 								period_end = $3, updated_at = $4
 							WHERE workspace_id = $5 AND scope_type = $6 AND scope_id = $7 AND period = $8 AND period_start = $9`, [
@@ -188,7 +188,7 @@ export function createPostgresGuardrailBudgetsRepository(client: PostgresDatabas
 						]);
 					}
 					for (const intent of sortedGuardrailBudgetIntents(params.intents)) {
-						await tx.unsafe(`INSERT INTO guardrail_budget_reservations (
+						await tx.unsafe(`INSERT INTO cinatoken_gateway.guardrail_budget_reservations (
 							id, workspace_id, request_id, assignment_id, guardrail_id, guardrail_version,
 							scope_type, scope_id, period, period_start, period_end,
 							limit_micros, reserved_micros, settled_micros, settlement_basis, state,
@@ -234,14 +234,14 @@ export function createPostgresGuardrailBudgetsRepository(client: PostgresDatabas
 						if (window.unreserved + window.settled + window.reserved + params.reservedMicros > intent.limitMicros) {
 							throw new GuardrailBudgetBlockedError(intent.assignmentId);
 						}
-						await tx.unsafe(`UPDATE guardrail_budget_windows
+						await tx.unsafe(`UPDATE cinatoken_gateway.guardrail_budget_windows
 							SET unreserved_micros = $1, reserved_micros = reserved_micros + $2,
 								period_end = $3, updated_at = $4
 							WHERE workspace_id = $5 AND scope_type = $6 AND scope_id = $7 AND period = $8 AND period_start = $9`, [
 							window.unreserved, params.reservedMicros, intent.periodEnd, params.nowIso,
 							intent.workspaceId, intent.scopeType, intent.scopeId, intent.period, intent.periodStart,
 						]);
-						await tx.unsafe(`INSERT INTO guardrail_budget_reservations (
+						await tx.unsafe(`INSERT INTO cinatoken_gateway.guardrail_budget_reservations (
 							id, workspace_id, request_id, assignment_id, guardrail_id, guardrail_version,
 							scope_type, scope_id, period, period_start, period_end,
 							limit_micros, reserved_micros, settled_micros, settlement_basis, state,
@@ -275,7 +275,7 @@ export function createPostgresGuardrailBudgetsRepository(client: PostgresDatabas
 				if (rows.length === 0) return false;
 				if (rows.every((row) => row.state === 'dispatched')) return true;
 				if (!rows.every((row) => row.state === 'reserved')) return false;
-				await tx.unsafe(`UPDATE guardrail_budget_reservations SET state = 'dispatched', dispatched_at = $1, expires_at = $2, updated_at = $1 WHERE request_id = $3 AND state = 'reserved'`, [nowIso, expiresAtIso, requestId]);
+				await tx.unsafe(`UPDATE cinatoken_gateway.guardrail_budget_reservations SET state = 'dispatched', dispatched_at = $1, expires_at = $2, updated_at = $1 WHERE request_id = $3 AND state = 'reserved'`, [nowIso, expiresAtIso, requestId]);
 				return true;
 			});
 		},
@@ -284,9 +284,9 @@ export function createPostgresGuardrailBudgetsRepository(client: PostgresDatabas
 			return await pg.begin(async (tx) => {
 				const rows = (await listByRequest(tx, requestId, true)).filter((row) => row.state === 'reserved');
 				for (const row of rows.sort((a, b) => [a.workspace_id, a.scope_type, a.scope_id, a.period, a.period_start].join('\u0000').localeCompare([b.workspace_id, b.scope_type, b.scope_id, b.period, b.period_start].join('\u0000')))) {
-					await tx.unsafe(`UPDATE guardrail_budget_windows SET reserved_micros = reserved_micros - $1, updated_at = $2 WHERE workspace_id = $3 AND scope_type = $4 AND scope_id = $5 AND period = $6 AND period_start = $7`, [Number(row.reserved_micros), nowIso, row.workspace_id, row.scope_type, row.scope_id, row.period, row.period_start]);
+					await tx.unsafe(`UPDATE cinatoken_gateway.guardrail_budget_windows SET reserved_micros = reserved_micros - $1, updated_at = $2 WHERE workspace_id = $3 AND scope_type = $4 AND scope_id = $5 AND period = $6 AND period_start = $7`, [Number(row.reserved_micros), nowIso, row.workspace_id, row.scope_type, row.scope_id, row.period, row.period_start]);
 				}
-				if (rows.length > 0) await tx.unsafe(`UPDATE guardrail_budget_reservations SET state = 'released', settled_micros = 0, terminal_at = $1, terminal_reason = $2, updated_at = $1 WHERE request_id = $3 AND state = 'reserved'`, [nowIso, reason.slice(0, 128), requestId]);
+				if (rows.length > 0) await tx.unsafe(`UPDATE cinatoken_gateway.guardrail_budget_reservations SET state = 'released', settled_micros = 0, terminal_at = $1, terminal_reason = $2, updated_at = $1 WHERE request_id = $3 AND state = 'reserved'`, [nowIso, reason.slice(0, 128), requestId]);
 				return rows.length;
 			});
 		},
@@ -295,9 +295,9 @@ export function createPostgresGuardrailBudgetsRepository(client: PostgresDatabas
 			return await pg.begin(async (tx) => {
 				const rows = (await listByRequest(tx, requestId, true)).filter((row) => row.state === 'reserved' || row.state === 'dispatched');
 				for (const row of rows.sort((a, b) => [a.workspace_id, a.scope_type, a.scope_id, a.period, a.period_start].join('\u0000').localeCompare([b.workspace_id, b.scope_type, b.scope_id, b.period, b.period_start].join('\u0000')))) {
-					await tx.unsafe(`UPDATE guardrail_budget_windows SET reserved_micros = reserved_micros - $1, settled_micros = settled_micros + $1, updated_at = $2 WHERE workspace_id = $3 AND scope_type = $4 AND scope_id = $5 AND period = $6 AND period_start = $7`, [Number(row.reserved_micros), nowIso, row.workspace_id, row.scope_type, row.scope_id, row.period, row.period_start]);
+					await tx.unsafe(`UPDATE cinatoken_gateway.guardrail_budget_windows SET reserved_micros = reserved_micros - $1, settled_micros = settled_micros + $1, updated_at = $2 WHERE workspace_id = $3 AND scope_type = $4 AND scope_id = $5 AND period = $6 AND period_start = $7`, [Number(row.reserved_micros), nowIso, row.workspace_id, row.scope_type, row.scope_id, row.period, row.period_start]);
 				}
-				if (rows.length > 0) await tx.unsafe(`UPDATE guardrail_budget_reservations SET state = 'expired', settled_micros = reserved_micros, terminal_at = $1, terminal_reason = $2, updated_at = $1 WHERE request_id = $3 AND state IN ('reserved', 'dispatched')`, [nowIso, reason.slice(0, 128), requestId]);
+				if (rows.length > 0) await tx.unsafe(`UPDATE cinatoken_gateway.guardrail_budget_reservations SET state = 'expired', settled_micros = reserved_micros, terminal_at = $1, terminal_reason = $2, updated_at = $1 WHERE request_id = $3 AND state IN ('reserved', 'dispatched')`, [nowIso, reason.slice(0, 128), requestId]);
 				return rows.length;
 			});
 		},
@@ -305,11 +305,11 @@ export function createPostgresGuardrailBudgetsRepository(client: PostgresDatabas
 		async expireBefore(nowIso, limit = 100) {
 			const bounded = Math.max(1, Math.min(Math.trunc(limit), 1000));
 			return await pg.begin(async (tx) => {
-				const rows = await tx.unsafe<GuardrailBudgetReservationRow[]>(`SELECT * FROM guardrail_budget_reservations WHERE state IN ('reserved', 'dispatched') AND expires_at <= $1 ORDER BY workspace_id, scope_type, scope_id, period, period_start, id FOR UPDATE SKIP LOCKED LIMIT $2`, [nowIso, bounded]);
+				const rows = await tx.unsafe<GuardrailBudgetReservationRow[]>(`SELECT * FROM cinatoken_gateway.guardrail_budget_reservations WHERE state IN ('reserved', 'dispatched') AND expires_at <= $1 ORDER BY workspace_id, scope_type, scope_id, period, period_start, id FOR UPDATE SKIP LOCKED LIMIT $2`, [nowIso, bounded]);
 				for (const row of rows) {
 					const settled = row.state === 'dispatched' ? Number(row.reserved_micros) : 0;
-					await tx.unsafe(`UPDATE guardrail_budget_windows SET reserved_micros = reserved_micros - $1, settled_micros = settled_micros + $2, updated_at = $3 WHERE workspace_id = $4 AND scope_type = $5 AND scope_id = $6 AND period = $7 AND period_start = $8`, [Number(row.reserved_micros), settled, nowIso, row.workspace_id, row.scope_type, row.scope_id, row.period, row.period_start]);
-					await tx.unsafe(`UPDATE guardrail_budget_reservations SET state = $1, settled_micros = $2, terminal_at = $3, terminal_reason = $4, updated_at = $3 WHERE id = $5 AND state = $6`, [row.state === 'dispatched' ? 'expired' : 'released', settled, nowIso, row.state === 'dispatched' ? 'lease_expired_after_dispatch' : 'lease_expired_before_dispatch', row.id, row.state]);
+					await tx.unsafe(`UPDATE cinatoken_gateway.guardrail_budget_windows SET reserved_micros = reserved_micros - $1, settled_micros = settled_micros + $2, updated_at = $3 WHERE workspace_id = $4 AND scope_type = $5 AND scope_id = $6 AND period = $7 AND period_start = $8`, [Number(row.reserved_micros), settled, nowIso, row.workspace_id, row.scope_type, row.scope_id, row.period, row.period_start]);
+					await tx.unsafe(`UPDATE cinatoken_gateway.guardrail_budget_reservations SET state = $1, settled_micros = $2, terminal_at = $3, terminal_reason = $4, updated_at = $3 WHERE id = $5 AND state = $6`, [row.state === 'dispatched' ? 'expired' : 'released', settled, nowIso, row.state === 'dispatched' ? 'lease_expired_after_dispatch' : 'lease_expired_before_dispatch', row.id, row.state]);
 				}
 				return rows.length;
 			});

@@ -9,7 +9,6 @@ import { resolveUpstreamEndpoint } from '@octafuse/core/provider-endpoints';
 import type { UsageFromStream } from '../services/proxy';
 import { EMPTY_USAGE } from '../services/proxy';
 import {
-	markUpstreamOutcomeUnknown,
 	type ProxyDispatchResult,
 } from '../services/failover-dispatch';
 import type { RouteResult } from '../services/model-router';
@@ -25,7 +24,6 @@ import {
 	applyDashScopeRealtimeMeasuredUsage,
 	enforceDashScopeRealtimeUsageCeiling,
 	rewriteDashScopeRealtimeClientMessage,
-	type DashScopeRealtimeSessionLimits,
 } from '../services/egress/dashscope-realtime-driver';
 import type {
 	RequestTimingAttempt,
@@ -33,6 +31,8 @@ import type {
 } from '../services/request-timing';
 import { extractUpstreamRequestId } from '../services/egress/upstream-request-id';
 import { DASHSCOPE_REALTIME_MAX_CLIENT_MESSAGE_BYTES } from '../services/dashscope-realtime-guardrails';
+
+import { createRealtimeConnectionLifecycle, realtimeCloseParameters, realtimeRejectedResponse, realtimeUpstreamHeaders, type RealtimeConnectionLifecycle, type RealtimeConnectionOptions } from '../services/egress/realtime-connection-lifecycle';
 
 const nodeRequire = createRequire(import.meta.url);
 const wsModule = nodeRequire('ws') as {
@@ -43,6 +43,7 @@ const wsModule = nodeRequire('ws') as {
 const NODE_WS_OPEN = 1;
 const NODE_WS_CLOSED = 3;
 const NODE_REALTIME_MAX_PENDING_BYTES = 4 * 1024 * 1024;
+const NODE_REALTIME_MAX_PENDING_MESSAGES = 1_024;
 
 export interface NodeWebSocket {
 	readonly readyState: number;
@@ -62,11 +63,12 @@ export interface NodeWebSocket {
 	off(event: 'error', listener: (error: Error) => void): this;
 	send(data: string | Buffer): void;
 	close(code?: number, reason?: string): void;
+	terminate(): void;
 }
 
 export type NodeWebSocketConstructor = new (
 	url: string,
-	options?: { headers?: Record<string, string>; maxPayload?: number }
+	options?: { headers?: Record<string, string>; maxPayload?: number; followRedirects?: false }
 ) => NodeWebSocket;
 
 export interface NodeWebSocketServer {
@@ -87,12 +89,10 @@ export type NodeWebSocketServerConstructor = new (options: {
 type OpenedUpstream = {
 	socket: NodeWebSocket;
 	requestId: string | null;
+	releaseErrorObserver(): void;
 };
 
-type RejectedUpstream = {
-	response: Response;
-	requestId: string | null;
-};
+type RejectedUpstream = { result: ProxyDispatchResult };
 
 function toHeaders(raw: IncomingHttpHeaders): Headers {
 	const headers = new Headers();
@@ -103,123 +103,96 @@ function toHeaders(raw: IncomingHttpHeaders): Headers {
 	return headers;
 }
 
+/** ws emits an asynchronous error when a CONNECTING socket is terminated. */
+function ownSocketErrorsUntilClose(socket: NodeWebSocket): () => void {
+	const ignore = () => {};
+	const release = () => { socket.off('error', ignore); socket.off('close', release); };
+	if (socket.readyState !== NODE_WS_CLOSED) { socket.on('error', ignore); socket.on('close', release); }
+	return release;
+}
+function terminateSocket(socket: NodeWebSocket): void {
+	if (socket.readyState === NODE_WS_CLOSED) return;
+	ownSocketErrorsUntilClose(socket);
+	try { socket.terminate(); } catch { /* Cleanup must not orphan settlement. */ }
+}
 function closeSocket(socket: NodeWebSocket, code = 1000, reason = ''): void {
 	if (socket.readyState === NODE_WS_CLOSED) return;
-	socket.close(code, reason.slice(0, 123));
-}
-
-function realtimeCapability(operation: DashScopeRealtimeOperation):
-	| 'audio.realtime.inference'
-	| 'audio.realtime.session' {
-	return operation.endsWith('.inference')
-		? 'audio.realtime.inference'
-		: 'audio.realtime.session';
+	ownSocketErrorsUntilClose(socket);
+	const safe = realtimeCloseParameters(code, reason);
+	try { socket.close(safe.code, safe.reason); } catch { terminateSocket(socket); }
 }
 
 async function connectUpstream(
-	route: RouteResult,
-	operation: DashScopeRealtimeOperation,
-	signal: AbortSignal | undefined,
-	timing: RequestTimingCollector | null | undefined,
-	attempt: RequestTimingAttempt | undefined,
-	WebSocketCtor: NodeWebSocketConstructor,
-	sessionLimits?: DashScopeRealtimeSessionLimits,
+	route: RouteResult, operation: DashScopeRealtimeOperation,
+	connection: RealtimeConnectionLifecycle,
+	timing: RequestTimingCollector | null | undefined, attempt: RequestTimingAttempt | undefined,
+	WebSocketCtor: NodeWebSocketConstructor, options: RealtimeConnectionOptions,
 	beforeUpstreamDispatch?: () => Promise<void>,
 ): Promise<OpenedUpstream | RejectedUpstream> {
-	if (signal?.aborted) {
-		throw new Error('Gateway request aborted');
-	}
-	if (sessionLimits && sessionLimits.connectDeadlineAtMs <= Date.now()) {
-		throw new Error('Realtime upstream connection deadline exceeded');
-	}
-	const endpoint = resolveUpstreamEndpoint(
-		'dashscope',
-		realtimeCapability(operation),
-		route.providerEndpoints,
-		{ providerId: route.providerId }
-	);
-	const url = new URL(endpoint);
+	connection.throwIfStopped();
+	const endpoint = resolveUpstreamEndpoint('dashscope', operation.endsWith('.inference') ? 'audio.realtime.inference' : 'audio.realtime.session', route.providerEndpoints, { providerId: route.providerId });
+	let url: URL;
+	try { url = new URL(endpoint); } catch { throw new Error('Invalid realtime upstream URL'); }
+	if (!['ws:', 'wss:'].includes(url.protocol) || url.username || url.password || url.hash) throw new Error('Invalid realtime upstream URL');
 	if (operation.endsWith('.session')) url.searchParams.set('model', route.providerModelName);
-
-	const { secret } = await resolveProviderUpstreamSecret(route.providerApiKey);
-	await beforeUpstreamDispatch?.();
+	const { secret } = await connection.wait(() => resolveProviderUpstreamSecret(route.providerApiKey, {
+		signal: connection.signal, auxiliaryAuth: options.auxiliaryAuth,
+	}));
+	// Validate before durable admission and before the ws constructor can send.
+	const headers = realtimeUpstreamHeaders(secret);
+	await connection.admit(beforeUpstreamDispatch);
+	connection.markDispatched();
 	const upstream = new WebSocketCtor(url.toString(), {
-		headers: { Authorization: `Bearer ${secret}` },
-		maxPayload: DASHSCOPE_REALTIME_MAX_PROVIDER_MESSAGE_BYTES,
+		headers: Object.fromEntries(headers.entries()),
+		maxPayload: DASHSCOPE_REALTIME_MAX_PROVIDER_MESSAGE_BYTES, followRedirects: false,
 	});
+	const releaseErrorObserver = ownSocketErrorsUntilClose(upstream);
 	let requestId: string | null = null;
 	let settled = false;
-
 	return new Promise<OpenedUpstream | RejectedUpstream>((resolve, reject) => {
-		let deadlineTimer: ReturnType<typeof setTimeout> | null = null;
 		const cleanup = () => {
-			if (deadlineTimer != null) clearTimeout(deadlineTimer);
-			signal?.removeEventListener('abort', onAbort);
-			upstream.off('open', onOpen);
-			upstream.off('upgrade', onUpgrade);
+			connection.signal.removeEventListener('abort', onAbort);
+			upstream.off('open', onOpen); upstream.off('upgrade', onUpgrade);
 			upstream.off('unexpected-response', onUnexpectedResponse);
-			upstream.off('error', onError);
+			upstream.off('error', onError); upstream.off('close', onClose);
 		};
-		const onAbort = () => {
+		const fail = (error: unknown) => {
 			if (settled) return;
-			settled = true;
-			cleanup();
-			closeSocket(upstream, 1000, 'Gateway request aborted');
-			reject(markUpstreamOutcomeUnknown(new Error('Gateway request aborted')));
+			settled = true; cleanup();
+			// Keep the independent error observer until ws emits its close event.
+			terminateSocket(upstream); reject(error);
 		};
-		const onError = (error: Error) => {
-			if (settled) return;
-			settled = true;
-			cleanup();
-			reject(markUpstreamOutcomeUnknown(error));
-		};
-		const onDeadline = () => {
-			if (settled) return;
-			settled = true;
-			cleanup();
-			closeSocket(upstream, 1000, 'Gateway connection deadline exceeded');
-			reject(markUpstreamOutcomeUnknown(
-				new Error('Realtime upstream connection deadline exceeded'),
-			));
-		};
+		const onAbort = () => fail(connection.signal.reason);
+		const onError = () => fail(new Error('Realtime upstream connection failed'));
+		const onClose = () => fail(new Error('Realtime upstream closed before opening'));
 		const onUpgrade = (response: IncomingMessage) => {
-			requestId = extractUpstreamRequestId(toHeaders(response.headers));
+			try { requestId = extractUpstreamRequestId(toHeaders(response.headers)); } catch { onError(); }
 		};
 		const onOpen = () => {
 			if (settled) return;
-			settled = true;
-			cleanup();
+			try { connection.throwIfStopped(); } catch (error) { fail(error); return; }
+			settled = true; cleanup();
 			timing?.markAttemptHeaders(attempt, 101);
-			resolve({ socket: upstream, requestId });
+			resolve({ socket: upstream, requestId, releaseErrorObserver });
 		};
 		const onUnexpectedResponse = (_request: IncomingMessage, response: IncomingMessage) => {
-			if (settled) return;
-			settled = true;
-			requestId = extractUpstreamRequestId(toHeaders(response.headers));
-			response.resume();
-			cleanup();
-			const status = response.statusCode && response.statusCode >= 200 && response.statusCode <= 599
-				? response.statusCode
-				: 502;
-			timing?.markAttemptHeaders(attempt, status);
-			resolve({ response: new Response(null, { status }), requestId });
+			if (settled) { response.destroy(); return; }
+			try {
+				const headers = toHeaders(response.headers);
+				requestId = extractUpstreamRequestId(headers);
+				const result = realtimeRejectedResponse(response.statusCode ?? 0, headers, requestId);
+				settled = true; cleanup();
+				// Explicit non-101 rejection: abandon the body, do not resume/drain it.
+				response.destroy(); terminateSocket(upstream);
+				timing?.markAttemptHeaders(attempt, result.response.status);
+				resolve({ result });
+			} catch (error) { response.destroy(); fail(error); }
 		};
-
-		upstream.on('upgrade', onUpgrade);
-		upstream.on('open', onOpen);
+		upstream.on('upgrade', onUpgrade); upstream.on('open', onOpen);
 		upstream.on('unexpected-response', onUnexpectedResponse);
-		upstream.on('error', onError);
-		if (signal?.aborted) {
-			onAbort();
-			return;
-		}
-		signal?.addEventListener('abort', onAbort, { once: true });
-		if (sessionLimits) {
-			deadlineTimer = setTimeout(
-				onDeadline,
-				Math.max(0, sessionLimits.connectDeadlineAtMs - Date.now()),
-			);
-		}
+		upstream.on('error', onError); upstream.on('close', onClose);
+		connection.signal.addEventListener('abort', onAbort, { once: true });
+		if (connection.signal.aborted) onAbort();
 	});
 }
 
@@ -238,227 +211,151 @@ function nodeRealtimeResponse(socket: NodeWebSocket): Response {
 }
 
 export function createNodeDashScopeRealtimeDispatch(
-	client: NodeWebSocket,
-	WebSocketCtor: NodeWebSocketConstructor = wsModule.WebSocket
+	client: NodeWebSocket, WebSocketCtor: NodeWebSocketConstructor = wsModule.WebSocket,
 ): DashScopeRealtimeNodeDispatch {
-	return (
-		route: RouteResult,
-		operation: DashScopeRealtimeOperation,
-		requestSignal?: AbortSignal,
-		timing?: RequestTimingCollector | null,
-		attempt?: RequestTimingAttempt,
-		sessionLimits?: DashScopeRealtimeSessionLimits,
-		beforeUpstreamDispatch?: () => Promise<void>,
-	): Promise<ProxyDispatchResult> =>
-		new Promise<ProxyDispatchResult>((resolve, reject) => {
-			const pendingMessages: Array<string | Buffer> = [];
-			const limiter = sessionLimits
-				? new DashScopeRealtimeSessionLimiter(
-						operation,
-						sessionLimits,
-						Date.now(),
-						route.providerModelName,
-					)
-				: null;
-			let pendingMessageBytes = 0;
-			let upstream: NodeWebSocket | null = null;
-			let streamError: string | null = null;
-			let clientClosedFirst = false;
-			let clientClosedBeforeOpen = false;
-			let usageSettled = false;
-			let resolveUsage!: (usage: UsageFromStream) => void;
-			const collector = new DashScopeRealtimeUsageCollector();
-			const outputLimiter = new DashScopeRealtimeOutputLimiter();
-			const usagePromise = new Promise<UsageFromStream>((usageResolve) => {
-				resolveUsage = usageResolve;
-			});
-			let sessionTimer: ReturnType<typeof setTimeout> | null = null;
-			function finishUsage(transportError?: string | null): void {
-				if (usageSettled) return;
-				usageSettled = true;
-				if (sessionTimer != null) clearTimeout(sessionTimer);
-				cleanupActiveListeners();
-				timing?.markStreamComplete();
-				resolveUsage(enforceDashScopeRealtimeUsageCeiling(
-					operation,
-					sessionLimits,
-					applyDashScopeRealtimeMeasuredUsage(
-						operation,
-						limiter,
-						collector.toUsage({
-							clientClosedFirst,
-							transportError: streamError ?? transportError,
-						}),
-					),
-				));
-			}
-			function discardUsage(): void {
-				if (usageSettled) return;
-				usageSettled = true;
-				if (sessionTimer != null) clearTimeout(sessionTimer);
-				cleanupActiveListeners();
-				resolveUsage(EMPTY_USAGE);
-			}
-			const sendToUpstream = (payload: string | Buffer) => {
-				if (!upstream || upstream.readyState !== NODE_WS_OPEN) {
-					const byteLength = typeof payload === 'string'
-						? Buffer.byteLength(payload)
-						: payload.byteLength;
-					pendingMessageBytes += byteLength;
-					if (pendingMessageBytes > NODE_REALTIME_MAX_PENDING_BYTES) {
-						throw new Error('Realtime pending client data limit exceeded');
-					}
-					pendingMessages.push(payload);
-					return;
-				}
-				upstream.send(payload);
-			};
-			const onClientMessage = (data: Buffer, isBinary: boolean) => {
-				try {
-					const payload = isBinary
-						? data
-						: rewriteDashScopeRealtimeClientMessage(route, operation, data.toString());
-					const decision = limiter?.inspect(payload);
-					if (decision && !decision.ok) {
-						streamError = decision.reason;
-						closeSocket(client, 1008, decision.reason);
-						if (upstream) closeSocket(upstream, 1008, decision.reason);
-						finishUsage(streamError);
-						return;
-					}
-					collector.observeClientActivity();
-					sendToUpstream(payload);
-				} catch (error) {
-					streamError = error instanceof Error ? error.message : String(error);
-					closeSocket(client, 1011, 'Gateway upstream send failed');
-					if (upstream) closeSocket(upstream, 1011, 'Gateway upstream send failed');
-					finishUsage(streamError);
-				}
-			};
-			const onClientClose = (code: number, reason: Buffer) => {
-				clientClosedFirst = true;
-				clientClosedBeforeOpen = upstream == null;
-				if (upstream) closeSocket(upstream, code, reason.toString());
-				finishUsage();
-			};
-			const onClientError = () => {
-				clientClosedFirst = true;
-				clientClosedBeforeOpen = upstream == null;
-				streamError = 'Client WebSocket transport error';
-				if (upstream) closeSocket(upstream, 1011, 'Client WebSocket error');
-				finishUsage(streamError);
-			};
-			const onUpstreamMessage = (data: Buffer, isBinary: boolean) => {
-				try {
-					const payload = isBinary ? data : data.toString();
-					const decision = outputLimiter.inspect(payload);
-					if (!decision.ok) {
-						streamError = decision.reason;
-						closeSocket(client, 1009, decision.reason);
-						if (upstream) closeSocket(upstream, 1009, decision.reason);
-						finishUsage(streamError);
-						return;
-					}
-					if (client.bufferedAmount + decision.messageBytes > NODE_REALTIME_MAX_PENDING_BYTES) {
-						streamError = 'Realtime client output backpressure limit exceeded';
-						closeSocket(client, 1009, streamError);
-						if (upstream) closeSocket(upstream, 1009, streamError);
-						finishUsage(streamError);
-						return;
-					}
-					if (!isBinary) collector.observeServerMessage(data.toString());
-					client.send(payload);
-				} catch (error) {
-					streamError = error instanceof Error ? error.message : String(error);
-					closeSocket(client, 1011, 'Gateway client send failed');
-					if (upstream) closeSocket(upstream, 1011, 'Gateway client send failed');
-					finishUsage(streamError);
-				}
-			};
-			const onUpstreamClose = (code: number, reason: Buffer) => {
-				closeSocket(client, code, reason.toString());
-				finishUsage(code === 1000 ? null : `Upstream WebSocket closed with code ${code}`);
-			};
-			const onUpstreamError = () => {
-				streamError = 'Upstream WebSocket transport error';
-				closeSocket(client, 1011, 'Upstream WebSocket error');
-				finishUsage(streamError);
-			};
-			const onAbort = () => {
-				streamError = 'Gateway request aborted';
-				closeSocket(client, 1000, 'Gateway request aborted');
-				if (upstream) closeSocket(upstream, 1000, 'Gateway request aborted');
-				finishUsage(streamError);
-			};
-			function cleanupActiveListeners(): void {
-				client.off('message', onClientMessage);
-				client.off('close', onClientClose);
-				client.off('error', onClientError);
-				upstream?.off('message', onUpstreamMessage);
-				upstream?.off('close', onUpstreamClose);
-				upstream?.off('error', onUpstreamError);
-				requestSignal?.removeEventListener('abort', onAbort);
-			}
-
-			client.on('message', onClientMessage);
-			client.on('close', onClientClose);
-			client.on('error', onClientError);
-			requestSignal?.addEventListener('abort', onAbort, { once: true });
-			if (limiter) {
-				sessionTimer = setTimeout(() => {
-					streamError = 'Realtime session duration limit exceeded';
-					closeSocket(client, 1008, 'Realtime session limit exceeded');
-					if (upstream) closeSocket(upstream, 1008, 'Realtime session limit exceeded');
-					finishUsage(streamError);
-				}, limiter.remainingSessionMs());
-			}
-
-			void connectUpstream(
-				route,
-				operation,
-				requestSignal,
-				timing,
-				attempt,
-				WebSocketCtor,
-				sessionLimits,
-				beforeUpstreamDispatch,
-			)
-				.then((opened) => {
-					if ('response' in opened) {
-						discardUsage();
-						resolve({
-							response: opened.response,
-							usagePromise: Promise.resolve(EMPTY_USAGE),
-							upstreamRequestId: opened.requestId,
-						});
-						return;
-					}
-					if (clientClosedBeforeOpen) {
-						closeSocket(opened.socket, 1000, 'Client WebSocket closed');
-						discardUsage();
-						reject(new Error('Client WebSocket closed before upstream connection'));
-						return;
-					}
-					upstream = opened.socket;
-					upstream.binaryType = 'nodebuffer';
-					upstream.on('message', onUpstreamMessage);
-					upstream.on('close', onUpstreamClose);
-					upstream.on('error', onUpstreamError);
-					for (const pending of pendingMessages.splice(0)) {
-						upstream.send(pending);
-					}
-					pendingMessageBytes = 0;
-					resolve({
-						response: nodeRealtimeResponse(client),
-						usagePromise,
-						upstreamRequestId: opened.requestId,
-					});
-				})
-				.catch((error) => {
-					discardUsage();
-					reject(upstream ? markUpstreamOutcomeUnknown(error) : error);
-				});
+	// The accepted client also needs an error owner during route preparation
+	// and between rejected handshake attempts, before a bridge listener exists.
+	ownSocketErrorsUntilClose(client);
+	// Frames not sent to any upstream belong to the accepted client, not a
+	// candidate. Keep their original bytes across explicit handshake rejection;
+	// each new candidate must validate and rewrite them against its own model.
+	const pendingMessages: Array<{ data: Buffer; isBinary: boolean }> = [];
+	let pendingMessageBytes = 0;
+	let activeMessageHandler: ((data: Buffer, isBinary: boolean) => void) | null = null;
+	const clearPending = () => { pendingMessages.length = 0; pendingMessageBytes = 0; };
+	const queuePending = (data: Buffer, isBinary: boolean): boolean => {
+		if (pendingMessages.length >= NODE_REALTIME_MAX_PENDING_MESSAGES
+			|| pendingMessageBytes + data.byteLength > NODE_REALTIME_MAX_PENDING_BYTES) return false;
+		pendingMessageBytes += data.byteLength;
+		pendingMessages.push({ data, isBinary });
+		return true;
+	};
+	const onMessage = (data: Buffer, isBinary: boolean) => {
+		if (activeMessageHandler) activeMessageHandler(data, isBinary);
+		else if (!queuePending(data, isBinary)) {
+			clearPending();
+			closeSocket(client, 1009, 'Realtime pending data limit exceeded');
+		}
+	};
+	const releasePendingOwner = () => {
+		clearPending();
+		client.off('message', onMessage); client.off('close', releasePendingOwner);
+	};
+	if (client.readyState !== NODE_WS_CLOSED) {
+		client.on('message', onMessage); client.on('close', releasePendingOwner);
+	}
+	return async (route, operation, requestSignal, timing, attempt, sessionLimits, beforeUpstreamDispatch, options = {}) => {
+		const controller = new AbortController();
+		const connection = createRealtimeConnectionLifecycle(controller.signal, {
+			...options, connectDeadlineAtMs: Math.min(options.connectDeadlineAtMs ?? Infinity, sessionLimits?.connectDeadlineAtMs ?? Infinity),
 		});
+		const limiter = sessionLimits ? new DashScopeRealtimeSessionLimiter(operation, sessionLimits, Date.now(), route.providerModelName) : null;
+		const collector = new DashScopeRealtimeUsageCollector();
+		const outputLimiter = new DashScopeRealtimeOutputLimiter();
+		let pendingRewrittenBytes = 0;
+		let upstream: NodeWebSocket | null = null;
+		let usageSettled = false;
+		let clientClosedFirst = false;
+		let resolveUsage!: (usage: UsageFromStream) => void;
+		const usagePromise = new Promise<UsageFromStream>(resolve => { resolveUsage = resolve; });
+		let sessionTimer: ReturnType<typeof setTimeout> | null = null;
+		function cleanup(): void {
+			if (sessionTimer != null) clearTimeout(sessionTimer);
+			activeMessageHandler = null;
+			client.off('close', onClientClose); client.off('error', onClientError);
+			upstream?.off('message', onUpstreamMessage); upstream?.off('close', onUpstreamClose); upstream?.off('error', onUpstreamError);
+			requestSignal?.removeEventListener('abort', onAbort);
+		}
+		function finish(error?: string | null, code = 1000, reason = '', discard = false, retainPending = false): void {
+			if (usageSettled) return;
+			usageSettled = true; cleanup();
+			if (!retainPending) clearPending();
+			if (!discard) {
+				// Stop receiving immediately; close acknowledgement may never arrive.
+				releasePendingOwner();
+				// In particular stop OAuth/admission/open when the client disappears.
+				controller.abort(requestSignal?.reason);
+				closeSocket(client, code, reason);
+				if (upstream) closeSocket(upstream, code, reason);
+				timing?.markStreamComplete();
+			}
+			resolveUsage(discard ? EMPTY_USAGE : enforceDashScopeRealtimeUsageCeiling(operation, sessionLimits,
+				applyDashScopeRealtimeMeasuredUsage(operation, limiter, collector.toUsage({ clientClosedFirst, transportError: error }))));
+		}
+		const onClientMessage = (data: Buffer, isBinary: boolean) => {
+			if (usageSettled) return;
+			try {
+				const payload = isBinary ? data : rewriteDashScopeRealtimeClientMessage(route, operation, data.toString());
+				const decision = limiter?.inspect(payload);
+				if (decision && !decision.ok) { finish(decision.reason, 1008, decision.reason); return; }
+				collector.observeClientActivity();
+				if (!upstream) {
+					pendingRewrittenBytes += typeof payload === 'string' ? Buffer.byteLength(payload) : payload.byteLength;
+					if (pendingRewrittenBytes > NODE_REALTIME_MAX_PENDING_BYTES || !queuePending(data, isBinary)) { finish('Realtime pending client data limit exceeded', 1009, 'Realtime pending data limit exceeded'); return; }
+				} else if (upstream.readyState === NODE_WS_OPEN) upstream.send(payload);
+				else finish('Realtime upstream is not open', 1011, 'Realtime upstream is not open');
+			} catch { finish('Gateway upstream send failed', 1011, 'Gateway upstream send failed'); }
+		};
+		const onClientClose = (code: number, reason: Buffer) => {
+			if (usageSettled) return;
+			clientClosedFirst = true; finish(null, code, reason.toString());
+		};
+		const onClientError = () => { clientClosedFirst = true; finish('Client WebSocket transport error', 1011, 'Client WebSocket error'); };
+		const onUpstreamMessage = (data: Buffer, isBinary: boolean) => {
+			if (usageSettled) return;
+			try {
+				const payload = isBinary ? data : data.toString();
+				const decision = outputLimiter.inspect(payload);
+				if (!decision.ok) { finish(decision.reason, 1009, decision.reason); return; }
+				if (client.bufferedAmount + decision.messageBytes > NODE_REALTIME_MAX_PENDING_BYTES) {
+					finish('Realtime client output backpressure limit exceeded', 1009, 'Realtime client backpressure limit exceeded'); return;
+				}
+				if (!isBinary) collector.observeServerMessage(data.toString());
+				client.send(payload);
+			} catch { finish('Gateway client send failed', 1011, 'Gateway client send failed'); }
+		};
+		const onUpstreamClose = (code: number, reason: Buffer) => finish(code === 1000 ? null : `Upstream WebSocket closed with code ${code}`, code, reason.toString());
+		const onUpstreamError = () => finish('Upstream WebSocket transport error', 1011, 'Upstream WebSocket error');
+		const onAbort = () => { clientClosedFirst = true; finish('Gateway request aborted', 1000, 'Gateway request aborted'); };
+		activeMessageHandler = onClientMessage;
+		client.on('close', onClientClose); client.on('error', onClientError);
+		requestSignal?.addEventListener('abort', onAbort, { once: true });
+		if (requestSignal?.aborted || client.readyState !== NODE_WS_OPEN) onAbort();
+		// Revalidate unsent frames exactly once for this candidate. Requeue only
+		// raw frames; never retain bytes that have crossed an accepted upstream.
+		const retained = pendingMessages.splice(0);
+		pendingMessageBytes = 0;
+		for (const frame of retained) onClientMessage(frame.data, frame.isBinary);
+		if (limiter && !usageSettled) sessionTimer = setTimeout(() => finish('Realtime session duration limit exceeded', 1008, 'Realtime session limit exceeded'), limiter.remainingSessionMs());
+		try {
+			const opened = await connectUpstream(route, operation, connection, timing, attempt, WebSocketCtor, options, beforeUpstreamDispatch);
+			if ('result' in opened) { finish(null, 1000, '', true, true); return opened.result; }
+			upstream = opened.socket;
+			try {
+				connection.throwIfStopped();
+				if (usageSettled || client.readyState !== NODE_WS_OPEN || upstream.readyState !== NODE_WS_OPEN) throw new Error('Realtime connection closed before bridging');
+				upstream.binaryType = 'nodebuffer';
+				upstream.on('message', onUpstreamMessage); upstream.on('close', onUpstreamClose); upstream.on('error', onUpstreamError);
+				opened.releaseErrorObserver();
+				for (const pending of pendingMessages.splice(0)) {
+					if (usageSettled) throw new Error('Realtime connection stopped during pending flush');
+					upstream.send(pending.isBinary ? pending.data
+						: rewriteDashScopeRealtimeClientMessage(route, operation, pending.data.toString()));
+				}
+				pendingMessageBytes = 0;
+				return { response: nodeRealtimeResponse(client), usagePromise, upstreamRequestId: opened.requestId };
+			} catch (error) { terminateSocket(upstream); throw error; }
+		} catch (error) {
+			// failure() may itself throw admission/unknown errors. Always finish
+			// the attempt so its timer/listeners cannot survive the outer catch.
+			let retainPending = false;
+			try {
+				const failure = connection.failure(error);
+				retainPending = failure.meta?.upstreamOutcomeUnknown !== true;
+				return failure;
+			} finally { finish(null, 1000, '', true, retainPending); }
+		} finally { connection.dispose(); }
+	};
 }
 
 export function createNodeWebSocketServer(): NodeWebSocketServer {

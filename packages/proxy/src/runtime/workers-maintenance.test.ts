@@ -1,9 +1,9 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import { workerApp } from './workers';
+import { createWorkerApp } from './workers';
 
 test('maintenance mode rejects traffic before a database binding is resolved', async () => {
-	const response = await workerApp.fetch(
+	const response = await createWorkerApp().fetch(
 		new Request('https://api.cinatoken.com/v1/models'),
 		{ CINATOKEN_MAINTENANCE_MODE: 'true' },
 		{} as ExecutionContext,

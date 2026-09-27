@@ -1,0 +1,54 @@
+{
+  "status": "UNIT_PASS_PENDING_NATIVE",
+  "startedAt": "2026-09-27T05:13:32.781Z",
+  "verifiedAt": "2026-09-27T05:13:34.239Z",
+  "command": [
+    "node",
+    "--test",
+    "--test-reporter=file:///C:/cinagroup/cinatoken/.wrangler/staging/v401-summary-reporter.mjs",
+    "--test-reporter=spec",
+    "--test-reporter-destination=stdout",
+    "--test-reporter-destination=C:\\cinagroup\\cinatoken\\.wrangler\\staging\\v402-unit-final.log",
+    "scripts/db/cutover/build-complete-text-platform-event-delivery-v402.test.mjs",
+    "scripts/db/cutover/postgres-complete-text-platform-event-delivery-v402.test.mjs",
+    "scripts/db/cutover/complete-text-platform-event-delivery-runner-v402.test.mjs"
+  ],
+  "exitCode": 0,
+  "counts": {
+    "tests": 75,
+    "failed": 0,
+    "passed": 75,
+    "cancelled": 0,
+    "skipped": 0,
+    "todo": 0,
+    "topLevel": 75,
+    "suites": 0
+  },
+  "sourceSha256": {
+    "scripts/db/cutover/build-complete-text-platform-event-delivery-v402.test.mjs": "2de090ee30bd0823fa8b47e2b7a13d1744b7210d445f8a94eb7f174c1c6d9fa5",
+    "scripts/db/cutover/postgres-complete-text-platform-event-delivery-v402.test.mjs": "7024fe87a105b95b64749f480ea5a5968f4a9fa422f973e0ed60b88d02c2ff43",
+    "scripts/db/cutover/complete-text-platform-event-delivery-runner-v402.test.mjs": "dce732c7070e9659b83edcfb9ab9839da851e29b5c41775f44faa334ae03e2bc",
+    "scripts/db/cutover/build-complete-text-platform-event-delivery-v402.mjs": "1d883b94a4047af8b5d37d334331835e90eb138e1e321cf2efe0a0b050941c52",
+    "scripts/db/cutover/postgres-complete-text-platform-event-delivery-v402.mjs": "2daad00f12ac999f711a63b8587803ecfd78d00726f1f99c228f50ebe8cd61f7",
+    "scripts/db/cutover/complete-text-platform-event-delivery-runner-v402.mjs": "04b3015dbc62b3fcad66c0aa9297b1c39e8b220ad903f3b66636c8ae49c61d4b",
+    "scripts/db/cutover/exercise-complete-text-platform-event-delivery-v402.ts": "1d8586cef14663310857a7df33112912c8f31b2f22a4bf43f36f145396eb6131",
+    "scripts/db/cutover/postgres-complete-text-platform-event-delivery-v402.native.test.mjs": "df028aaf4e17b3f4093a32733b86944f899738adfca21a471edb083311734867",
+    "scripts/db/cutover/postgres-complete-text-platform-event-delivery-v402.tsconfig.json": "ea429a3f1088b940e6f4ae06ae35e1aa80971af449cae8a8244b067b8ce50e17",
+    "scripts/db/cutover/fixtures/complete-text-platform-event-delivery-baseline-v402.json": "4647045c0e80b382594cb2b051de4e4dbf03b0ba25a8f146c5cd623be3148554",
+    "packages/core/migrations-proposals/postgres/complete-text-platform-event-delivery-v402.sql": "7b56aaca745ec91ff6db44d23598931f54c49eedab320b698f6b157c823c3cef",
+    ".github/workflows/proxy-dispatch-safety.yml": "ebbf5603bfc90b5a33f1d8014fc89df16e570895c7780e02115880b679f87ca0"
+  },
+  "coreCorpus": {
+    "files": 327,
+    "sha256": "8e89c59f1f7173ee57a323e29fe6f166cde203e6863393c202d3abdbe35a891e"
+  },
+  "proxyCorpus": {
+    "files": 454,
+    "sha256": "c744c8b57d4caecb2cd34403ec286657b8b71183cc61c8f61c04c61b7ca4dd7b"
+  },
+  "nativeEvidence": "C04-postgres-complete-text-platform-event-delivery-v402-report.json",
+  "limitations": [
+    "Unit SQL factories are synthetic; native PostgreSQL proof is recorded separately.",
+    "The local Queue adapter is not Cloudflare Queue. Linux CI, deployment and sent financial closure remain open."
+  ]
+}

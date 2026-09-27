@@ -1,0 +1,24 @@
+name: Images SSE monotonic operator safety
+on:
+  pull_request:
+    paths: ['packages/core/**', 'packages/proxy/**', 'scripts/deploy/**', 'package-lock.json', '.github/workflows/images-sse-monotonic-operator-safety.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  local-contracts:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    strategy:
+      matrix:
+        node: [22, 24]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+          cache: npm
+      - run: npm ci
+      - run: npm run build:node-index -w @octafuse/core
+      # Local API doubles and SQLite fixtures only; not proof of native Workers cancellation.
+      - run: node node_modules/tsx/dist/cli.mjs --test scripts/deploy/staging-sse-operator-clock.test.mjs scripts/deploy/staging-sse-operator-plan.test.mjs scripts/deploy/staging-sse-recovery-access-v2.test.mjs packages/proxy/scripts/staging/images-sse-host-expiry-monotonic.test.mjs

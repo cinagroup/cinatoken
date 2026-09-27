@@ -61,8 +61,8 @@ export function createPostgresGuardrailsRepository(db: PostgresDatabaseClient): 
 				AND ((a.scope_type = 'user' AND a.scope_id = $2) OR (a.scope_type = 'api_key' AND a.scope_id = $3))
 			WHERE request_workspace.id = $1 AND request_workspace.status = 'active'
 				AND (g.is_account_default OR g.is_workspace_default OR a.id IS NOT NULL)
-			ORDER BY CASE assignment_scope_type WHEN 'account' THEN 0 WHEN 'workspace' THEN 1
-				WHEN 'user' THEN 2 ELSE 3 END, assignment_id`, [workspaceId, userId, apiKeyId]); },
+			ORDER BY CASE WHEN g.is_account_default THEN 0 WHEN g.is_workspace_default THEN 1
+				WHEN a.scope_type = 'user' THEN 2 ELSE 3 END, assignment_id`, [workspaceId, userId, apiKeyId]); },
 		async createWithVersion(params) {
 			await pg.begin(async (tx) => {
 				await tx.unsafe(`INSERT INTO guardrails (id, workspace_id, owner_user_id, name, description, status, designated_version, latest_version, created_at, updated_at) VALUES ($1, $2, $3, $4, $5, 'active', 1, 1, $6, $6)`, [params.id, params.workspaceId, params.ownerUserId, params.name, params.description, params.nowIso]);

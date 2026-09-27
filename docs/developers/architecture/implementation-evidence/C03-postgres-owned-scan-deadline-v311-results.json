@@ -1,0 +1,54 @@
+{
+  "version": "v311",
+  "date": "2026-09-23",
+  "status": "LOCAL_FIXED_SCAN_ADMISSION_PASS_SERVER_TIMEOUT_NOT_IMPLEMENTED_PRODUCTION_DISABLED",
+  "C03": "DOING",
+  "goalComplete": false,
+  "validation": {
+    "ownerDeadlineAndFixedScanMock": { "pass": 47, "fail": 0 },
+    "candidateHarness": { "pass": 7, "fail": 0 },
+    "candidateWirePerVariant": { "esm": { "pass": 13, "fail": 0 }, "cjs": { "pass": 13, "fail": 0 }, "cfNodeLoopback": { "pass": 13, "fail": 0 } },
+    "v307NoDeadlineScanRegressionPerVariant": { "esm": { "pass": 6, "fail": 0 }, "cjs": { "pass": 6, "fail": 0 }, "cfNodeLoopback": { "pass": 6, "fail": 0 } },
+    "candidateBuildsByteIdentical": true,
+    "pgliteFirstRunMissingModuleFixture": { "pass": 0, "fail": 7 },
+    "pgliteFinancialRerunWithExistingLocalModule": { "pass": 162, "fail": 0 },
+    "v300AdoptionRegression": { "pass": 9, "fail": 0 },
+    "coreRecoveryRunnerTypecheck": true,
+    "proxyTypecheck": true,
+    "nativePostgresTests": 0,
+    "workersRuntimeTests": 0
+  },
+  "candidateArtifactSha256": {
+    "esm": "e6d33f3d5a150e95000ca1c980eb5cc4bf286c74dff4e15bc73b27a65f28945a",
+    "cjs": "354146c9561e28e1eb14745863ca0512ad665c96b825b8a2a19c3e83170a94c0",
+    "cf": "9e439b41a22e17b5d7d2e8dda83841acf111f76eea187be4067df72ad8bffea6"
+  },
+  "sourceSha256": {
+    "packages/core/src/storage/recovery/postgres-recovery-operation-owner.ts": "00621bc76910d1aef3e6d84aa8aa46594d5cc138b95369f9936c68d3cdc8c9e8",
+    "packages/core/src/storage/recovery/run-usage-recovery-postgres.ts": "acb41e5660899c43eac0bb447e80975934285e918557bd62ed7e5e86918020fe",
+    "packages/core/src/storage/recovery/postgres-recovery-operation-owner.test.mjs": "bbd30ba5bdf148b11290e9d20c17fbb1b56ba4cfec8a8e5e1fb4a906331986d2",
+    "packages/core/src/storage/recovery/postgres-recovery-owned-scan.test.mjs": "c7eb9db16ac58c974853413468f08e564426c21df11b5ad5309ff6c1a7004ca2",
+    "packages/core/src/storage/recovery/postgres-owned-scan-deadline.wire.test.mjs": "323ae181e248933ff3297a42675a6c17f9237b899121f3f1a11716ac126e251c",
+    "scripts/db/diag/postgres-owned-scan-deadline.mjs": "26b03a9b042ee778b33579c3b1adfeab41b48a48a9305760e3ea5d2bf4c92af1",
+    "scripts/db/diag/postgres-owned-scan-deadline-v311.test.mjs": "3db5912b9b7aea82ce3e06c9a12946468baa3609b9c6e9f43941a2071a115248"
+  },
+  "boundaries": {
+    "productionActivated": false,
+    "queueConfigured": false,
+    "serverTimeoutPolicyImplemented": false,
+    "finalDriverDispatchGateForFixedScansOnly": true,
+    "allSqlPathsCovered": false,
+    "dedicatedRecoveryRoleConfirmed": false,
+    "originConnectionBudgetConfirmed": false,
+    "trustedPhysicalCloseProven": false,
+    "queueAckPolicyImplemented": false,
+    "remoteSqlCalls": 0,
+    "cloudManagementCalls": 0,
+    "deployments": 0,
+    "modelCalls": 0,
+    "kmsCalls": 0,
+    "cloudResourcesCreatedOrDeleted": 0,
+    "cumulativeStagingCapUsd": 2,
+    "capReset": false
+  }
+}

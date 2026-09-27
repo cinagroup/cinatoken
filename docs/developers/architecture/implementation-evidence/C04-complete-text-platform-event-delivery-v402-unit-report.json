@@ -1,0 +1,99 @@
+{
+  "status": "UNIT_PASS_NATIVE_COMPONENT_PASS",
+  "startedAt": "2026-09-27T05:21:10.841Z",
+  "verifiedAt": "2026-09-27T05:21:14.999Z",
+  "command": [
+    "node",
+    "--test",
+    "--test-reporter=file:///C:/cinagroup/cinatoken/.wrangler/staging/v401-summary-reporter.mjs",
+    "--test-reporter=spec",
+    "--test-reporter-destination=stdout",
+    "--test-reporter-destination=C:\\cinagroup\\cinatoken\\.wrangler\\staging\\v402-unit-final.log",
+    "scripts/db/cutover/build-complete-text-platform-event-delivery-v402.test.mjs",
+    "scripts/db/cutover/postgres-complete-text-platform-event-delivery-v402.test.mjs",
+    "scripts/db/cutover/complete-text-platform-event-delivery-runner-v402.test.mjs"
+  ],
+  "exitCode": 0,
+  "counts": {
+    "tests": 76,
+    "failed": 0,
+    "passed": 76,
+    "cancelled": 0,
+    "skipped": 0,
+    "todo": 0,
+    "topLevel": 76,
+    "suites": 0
+  },
+  "environment": {
+    "GATEWAY_PGLITE_MODULE": "C:\\cinagroup\\cinatoken\\.wrangler\\staging\\pg-schema-v250\\package\\dist\\index.js"
+  },
+  "sourceSha256": {
+    "scripts/db/cutover/build-complete-text-platform-event-delivery-v402.test.mjs": "34d13a05a57f396f35c05c6b40f8670af0543354104f32363f6f8bd892842254",
+    "scripts/db/cutover/postgres-complete-text-platform-event-delivery-v402.test.mjs": "7024fe87a105b95b64749f480ea5a5968f4a9fa422f973e0ed60b88d02c2ff43",
+    "scripts/db/cutover/complete-text-platform-event-delivery-runner-v402.test.mjs": "dce732c7070e9659b83edcfb9ab9839da851e29b5c41775f44faa334ae03e2bc",
+    "scripts/db/cutover/build-complete-text-platform-event-delivery-v402.mjs": "d33964d367dc0568c3f7b07e9a7160e33481af7ea9e5e357364e11f22df33c5b",
+    "scripts/db/cutover/postgres-complete-text-platform-event-delivery-v402.mjs": "2daad00f12ac999f711a63b8587803ecfd78d00726f1f99c228f50ebe8cd61f7",
+    "scripts/db/cutover/complete-text-platform-event-delivery-runner-v402.mjs": "04b3015dbc62b3fcad66c0aa9297b1c39e8b220ad903f3b66636c8ae49c61d4b",
+    "scripts/db/cutover/exercise-complete-text-platform-event-delivery-v402.ts": "1d8586cef14663310857a7df33112912c8f31b2f22a4bf43f36f145396eb6131",
+    "scripts/db/cutover/postgres-complete-text-platform-event-delivery-v402.native.test.mjs": "df028aaf4e17b3f4093a32733b86944f899738adfca21a471edb083311734867",
+    "scripts/db/cutover/postgres-complete-text-platform-event-delivery-v402.tsconfig.json": "ea429a3f1088b940e6f4ae06ae35e1aa80971af449cae8a8244b067b8ce50e17",
+    "scripts/db/cutover/fixtures/complete-text-platform-event-delivery-baseline-v402.json": "4647045c0e80b382594cb2b051de4e4dbf03b0ba25a8f146c5cd623be3148554",
+    "packages/core/migrations-proposals/postgres/complete-text-platform-event-delivery-v402.sql": "27fd0ed66d065343223ecf7ca8c151511e76345977c496e49fdceee86012d940",
+    ".github/workflows/proxy-dispatch-safety.yml": "c6393451e3796e40961cf5cd70bb59b84822501566f541e4c7efa3473b73a09d"
+  },
+  "coreCorpus": {
+    "files": 327,
+    "sha256": "8e89c59f1f7173ee57a323e29fe6f166cde203e6863393c202d3abdbe35a891e"
+  },
+  "proxyCorpus": {
+    "files": 454,
+    "sha256": "c744c8b57d4caecb2cd34403ec286657b8b71183cc61c8f61c04c61b7ca4dd7b"
+  },
+  "nativeEvidence": "C04-postgres-complete-text-platform-event-delivery-v402-report.json",
+  "limitations": [
+    "Unit SQL factories are synthetic; the separate owned PG18.6 joint report proves the local actual role clients.",
+    "The local Queue adapter is not Cloudflare Queue. Linux CI, deployment and sent financial closure remain open.",
+    "Backoff scheduling uses bounded native-only new guard/companion time probes; the final seventh lease really expires on the server."
+  ],
+  "pendingNativeHistory": [
+    {
+      "report": "C04-complete-text-platform-event-delivery-v402-initial-unit-report.json",
+      "sha256": "caa1d3c591b13f3103be190169b3fa05e5efe8fc455ebd75bbc2499a65edf04e"
+    },
+    {
+      "status": "UNIT_PASS_PENDING_NATIVE",
+      "startedAt": "2026-09-27T05:21:10.841Z",
+      "verifiedAt": "2026-09-27T05:21:14.999Z"
+    }
+  ],
+  "failedNativeHistory": [
+    {
+      "report": "C04-postgres-complete-text-platform-event-delivery-v402-failed-first-run-report.json",
+      "sha256": "6f37eb1365c09106794043d5398fbf4fdee68706452bc8aa414df907da455909",
+      "stages": 146,
+      "cleanup": "PASS",
+      "failure": {
+        "message": "PostgresError: mismatched parentheses at or near \")\"\n    at ErrorResponse (file:///C:/cinagroup/cinatoken/node_modules/postgres/src/connection.js:815:30)\n    at handle (file:///C:/cinagroup/cinatoken/node_modules/postgres/src/connection.js:489:6)\n    at Socket.data (file:///C:/cinagroup/cinatoken/node_modules/postgres/src/connection.js:324:9)\n    at Socket.emit (node:events:508:28)\n    at addChunk (node:internal/streams/readable:563:12)\n    at readableAddChunkPushByteMode (node:internal/streams/readable:514:3)\n    at Readable.push (node:internal/streams/readable:394:5)\n    at TCP.onStreamRead (node:internal/stream_base_commons:189:23)",
+        "sqlstate": "42601",
+        "detail": null,
+        "constraint": null
+      }
+    }
+  ],
+  "nativeVerifiedAt": "2026-09-27T05:26:05.669Z",
+  "nativeVerification": {
+    "report": "C04-postgres-complete-text-platform-event-delivery-v402-report.json",
+    "sha256": "a38a28402df1fa666f82cabddda4b2a57d05d0ffd69da4941cf19521522539ab",
+    "stages": 166,
+    "cleanup": "PASS",
+    "ownedSession": 32427,
+    "totalPosts": 15,
+    "addedPosts": 0,
+    "sourceEvents": 6,
+    "receipts": 6
+  },
+  "typecheck": {
+    "command": "node node_modules/typescript/bin/tsc -p scripts/db/cutover/postgres-complete-text-platform-event-delivery-v402.tsconfig.json",
+    "exitCode": 0
+  }
+}

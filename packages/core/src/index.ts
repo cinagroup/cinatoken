@@ -7,6 +7,9 @@ export * from "./upstream-protocol";
 export * from "./provider-endpoints";
 export * from "./gemini-upstream-url";
 export * from "./gcp-service-account-token";
+export * from "./request-auxiliary-auth-budget";
+export * from "./request-deadline";
+export * from "./preparation-control";
 export * from "./vertex-openai-model";
 export * from "./route-topology";
 export * from "./realtime-protocol";
@@ -27,6 +30,7 @@ export * from "./organization-identity";
 export * from "./workspaces";
 
 export * from "./storage/context";
+export * from "./storage/postgres-initialization";
 export * from "./storage/database-client";
 export * from "./storage/runtime-database-config";
 export * from "./storage/repositories";
@@ -58,6 +62,10 @@ export * from "./db/route-routing-metadata";
 export * from "./db/route-pool-tier-strategies";
 export * from "./db/route-pool-sticky-types";
 export * from "./db/request-logs-types";
+export type {
+	SharedKeyEconomicAttemptOutcome,
+	SharedKeyEconomicOutboxInput,
+} from "./db/shared-key-economic-outbox-types";
 export * from "./db/analytics-query";
 export * from "./generation-metadata";
 export * from "./db/generation-feedback-types";

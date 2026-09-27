@@ -1,0 +1,16 @@
+{
+	"$schema": "../../node_modules/wrangler/config-schema.json",
+	"name": "cinatoken-shared-earning-scanner-review",
+	"main": "src/runtime/shared-earning-scanner-worker.ts",
+	"compatibility_date": "2026-08-24",
+	"compatibility_flags": ["nodejs_compat"],
+	"workers_dev": false,
+	"triggers": {
+		"crons": ["17 * * * *"]
+	},
+	"vars": {},
+	"observability": {
+		"enabled": true,
+		"head_sampling_rate": 1
+	}
+}

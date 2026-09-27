@@ -1,0 +1,97 @@
+{
+  "status": "PASS",
+  "cleanup": "PASS",
+  "binaryVersion": "postgres (PostgreSQL) 18.6",
+  "scope": "owned loopback PG; review-only partial unique index, no production dispatcher or origin",
+  "limitations": [
+    "One durable claim forbids even a later known nonbillable failover until a separately reviewed resolution protocol exists.",
+    "The index is outside formal migrations and its representative old-database lock/duplicate remediation is unverified."
+  ],
+  "stages": [
+    {
+      "name": "formal-existing-schema",
+      "result": "PASS",
+      "formalMigrations": 73
+    },
+    {
+      "name": "old-schema-cross-attempt-counterexample",
+      "result": "PASS",
+      "durableClaimsForOneRequest": 2
+    },
+    {
+      "name": "candidate-rejects-existing-duplicate",
+      "result": "PASS",
+      "error": {
+        "name": "PostgresError",
+        "code": "P0001",
+        "message": "Preexisting multiple dispatch claims for one request"
+      },
+      "existingClaimsPreserved": 2,
+      "indexAbsentAfterRollback": true
+    },
+    {
+      "name": "claim-authorization-definer-installed",
+      "result": "PASS",
+      "definer": {
+        "security_definer": true,
+        "runtime_execute": false
+      }
+    },
+    {
+      "name": "review-only-index-installed",
+      "result": "PASS",
+      "index": {
+        "unique": true,
+        "valid": true,
+        "predicate": "(dispatch_claim_id IS NOT NULL)"
+      }
+    },
+    {
+      "name": "concurrent-first-commit-blocks-sibling",
+      "result": "PASS",
+      "rollbackFirst": false,
+      "wait": {
+        "wait_event_type": "Lock",
+        "wait_event": "transactionid",
+        "blocked_by_holder": true
+      },
+      "firstState": "dispatch_claimed",
+      "secondState": "prepared",
+      "contender": {
+        "name": "PostgresDispatchClaimUncertainError",
+        "code": null,
+        "message": "Dispatch claim acknowledgement uncertain; do not send or retry inference"
+      },
+      "durableClaimsForOneRequest": 1
+    },
+    {
+      "name": "concurrent-first-rollback-allows-sibling",
+      "result": "PASS",
+      "rollbackFirst": true,
+      "wait": {
+        "wait_event_type": "Lock",
+        "wait_event": "transactionid",
+        "blocked_by_holder": true
+      },
+      "firstState": "prepared",
+      "secondState": "dispatch_claimed",
+      "contender": "granted",
+      "durableClaimsForOneRequest": 1
+    },
+    {
+      "name": "expired-before-dispatch-does-not-consume-claim",
+      "result": "PASS",
+      "firstState": "expired_before_dispatch",
+      "secondState": "dispatch_claimed"
+    }
+  ],
+  "sourceSha256": {
+    "nativeTest": "4d259281c27a0189900c31be9ffac5c3e77381feed8bda4627ba7aa625d69250",
+    "indexProposal": "a2c18950d5f5f956260ef38743ecf67c6d39a084c59af23f27107d8e4101eec3",
+    "claimAuthorizationProposal": "377b2293711fcea7a42fcaa58e114589e011a58bf6c2bd3cee8227d2fea1d4bb",
+    "dispatchRepository": "0e898ed87319fbb8ac4e325262795bf785aaee35e9508bc6062823a72d95fa4c",
+    "nativeCluster": "6b5923be8d3bdcd061033eed1af2f67f3b87fa2fca1f2cf0a0b2eb0eb2cb8d2a",
+    "formalMigrationCorpus": "23afef61a8a670e0af8c90e3a138f522e6b283b454e380a592bf85bca83108dc"
+  },
+  "serverVersionNum": 180006
+}

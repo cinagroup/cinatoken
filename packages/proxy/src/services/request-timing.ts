@@ -200,6 +200,15 @@ export class RequestTimingCollector {
 		this.upstreamFailoverCount += 1;
 	}
 
+	/** Record a dispatched caller cancellation, retaining any real HTTP headers. */
+	markAttemptClientCancelled(attempt: RequestTimingAttempt | undefined): void {
+		if (!attempt) return;
+		attempt.availability = 'excluded';
+		attempt.availability_reason = 'client_cancelled';
+		attempt.availability_http_status = attempt.status;
+		attempt.availability_observed_at = new Date().toISOString();
+	}
+
 	/** An outer model fallback continues after the final provider of one model failed. */
 	markModelFallback(hadUpstreamAttempt = true): void {
 		this.markEndpointFallback(true, hadUpstreamAttempt);

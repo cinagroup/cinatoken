@@ -1,0 +1,82 @@
+{
+  "status": "PASS",
+  "cleanup": "PASS",
+  "binaryVersion": "postgres (PostgreSQL) 18.6",
+  "scope": "owned loopback PG18.6, formal PG73 and review-only economic proposals; no Worker/Hyperdrive/remote SQL",
+  "sourceSha256": {
+    "formalMigrationCorpus": "23afef61a8a670e0af8c90e3a138f522e6b283b454e380a592bf85bca83108dc",
+    "quoteProposal": "1249a7ff07f95b48c7b45a41833c96c9a028e4bfe3a47e44e9dc6b72c3c77246",
+    "dispatchProposal": "c89c79e803fd69a2d09d44b33be3301aeb8aa4ed72c5dff5518439ec29fafb83",
+    "outboxProposal": "f92835c72ff02cba23879ed90ad640832455ccb98764f28fe4ee04ce52aab1ac",
+    "consumerProposal": "66fbd89c3453320284133de06d72793d4e1d2f68aaf756087857c18493e955db",
+    "deliveryProposal": "79e53d2ef830dc2641732d24ef0230befac344c9d1a30469487b44074f78ece8",
+    "backlogProposal": "855dc10543a13fd173ee7f3654b4b658d7b3d92a2b16e5f9f4c79b4b7302a02e",
+    "backlogObserver": "b78fbaf86ac05db99e8866a47725d6ae4b9468419c79f29ae805b6daba3f7ad5",
+    "nativeTest": "7bbf51c2ed9d64c9474b21ed9ca569494a86e0030e35554d51149586cb45ddb1"
+  },
+  "stages": [
+    {
+      "name": "formal-pg73-installed",
+      "result": "PASS"
+    },
+    {
+      "name": "review-only-economic-delivery-installed",
+      "result": "PASS"
+    },
+    {
+      "name": "default-off-installation-rejected",
+      "result": "PASS"
+    },
+    {
+      "name": "same-name-wrong-index-definition-rejected",
+      "result": "PASS"
+    },
+    {
+      "name": "narrow-definer-function-installed",
+      "result": "PASS"
+    },
+    {
+      "name": "empty-read-only-observation",
+      "result": "PASS"
+    },
+    {
+      "name": "unauthorized-roles-and-cap-bounds-denied",
+      "result": "PASS"
+    },
+    {
+      "name": "mixed-durable-jobs-seeded",
+      "result": "PASS"
+    },
+    {
+      "name": "capped-saturation-and-exact-below-cap",
+      "result": "PASS"
+    },
+    {
+      "name": "worker-backlog-observer-composes-with-real-function-and-direct-login",
+      "result": "PASS"
+    },
+    {
+      "name": "read-only-replay-preserves-jobs",
+      "result": "PASS"
+    }
+  ],
+  "limitations": [
+    "Counts are capped lower bounds when saturated; they are not full backlog totals.",
+    "Oldest pending due age measures next_attempt_at lateness, not original event residence age.",
+    "The dedicated Worker observation path is only locally composed; no Hyperdrive, alert or production database was used."
+  ],
+  "indexDefinitions": [
+    {
+      "relname": "shared_key_delivery_dead_letter",
+      "definition": "CREATE INDEX shared_key_delivery_dead_letter ON cinatoken_economic_delivery.shared_key_event_delivery_jobs USING btree (dead_at, event_id) WHERE (status = 'dead_letter'::text)"
+    },
+    {
+      "relname": "shared_key_delivery_expired_lease",
+      "definition": "CREATE INDEX shared_key_delivery_expired_lease ON cinatoken_economic_delivery.shared_key_event_delivery_jobs USING btree (lease_until, event_id) WHERE (status = 'leased'::text)"
+    },
+    {
+      "relname": "shared_key_delivery_pending_due",
+      "definition": "CREATE INDEX shared_key_delivery_pending_due ON cinatoken_economic_delivery.shared_key_event_delivery_jobs USING btree (next_attempt_at, event_id) WHERE (status = 'pending'::text)"
+    }
+  ]
+}

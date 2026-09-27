@@ -1,0 +1,69 @@
+{
+  "version": "v333",
+  "date": "2026-09-24",
+  "status": "LOCAL_IMAGES_HIDDEN_RETRY_SUBSET_PASS_C02_OPEN",
+  "goalComplete": false,
+  "scope": {
+    "operations": ["images.generations", "images.edits"],
+    "ambiguousHttpStatuses": ["300-399", 408, 499, "500-599"],
+    "clearRejectionRegression": [400, 401, 429],
+    "c02_5Complete": false,
+    "c02_6Complete": false,
+    "c02_GComplete": false
+  },
+  "beforeFixNativeLoopback": {
+    "scenario": "full POST accepted by local Node server, HTTP 307 returned, two route candidates with distinct gatewayCandidateIndex and crossModelCandidateFailover enabled",
+    "generationsPostCount": 2,
+    "editsPostCount": 2,
+    "redirectTargetHitCount": 0,
+    "targetedTestsPass": 0,
+    "targetedTestsFail": 2,
+    "observation": "local failing command output before edit; raw output was not saved separately"
+  },
+  "afterFixNativeLoopback": {
+    "generationsPostCount": 1,
+    "editsPostCount": 1,
+    "redirectTargetHitCount": 0,
+    "dispatchPermitsConsumedPerOperation": 1,
+    "lostResponsePostCountPerOperation": 1,
+    "publicRedirectResponseStatus": 502,
+    "publicLocationHeader": null,
+    "publicOutcomeUnknown": true,
+    "publicRetrySafe": false
+  },
+  "validation": {
+    "command": "npx tsx --test --test-reporter=tap src/services/egress/image-request-lifecycle.test.ts src/services/egress/openai-images-driver.test.ts src/routes/v1/image-request-lifecycle.test.ts",
+    "workingDirectory": "packages/proxy",
+    "tests": 561,
+    "suites": 9,
+    "pass": 561,
+    "fail": 0,
+    "cancelled": 0,
+    "skipped": 0,
+    "proxyTypecheck": "PASS",
+    "gitDiffCheck": "PASS"
+  },
+  "ci": {
+    "testsInProxyDispatchSafetyScript": true,
+    "workflowCallsProxyDispatchSafetyScript": true,
+    "linuxRunVerifiedForTheseEdits": false
+  },
+  "sourceSha256": {
+    "packages/proxy/src/services/egress/openai-images-driver.ts": "ea50b3cac0cbb6bead40068a1ad3326b32acee463e78fcfeff253239ed22d349",
+    "packages/proxy/src/services/egress/openai-images-driver.test.ts": "f6f3bf9dca119518093db7f47ccf6e6c36b3ba1f68bcedd3a030aa47e955713d",
+    "packages/proxy/src/services/egress/image-request-lifecycle.test.ts": "a67b9a5162fdf74ac456e91d7a9456f0f0b7b6a792d583ce63310c89ba618bfe",
+    "packages/proxy/src/routes/v1/image-request-lifecycle.test.ts": "962be1d3697538dc41d7128be77db888b1a43d0cfd5d532fa53779058da31c63",
+    "packages/proxy/package.json": "d4204f3d5b10ca692424fb4d962c8cb2b116f550c48ae56ae2bf76a8a22889f3",
+    ".github/workflows/proxy-dispatch-safety.yml": "51d16b7e7422552eaa6329c8826321ca8e943d4a19677b80219ee7d6bbe02e41",
+    "docs/developers/architecture/implementation-evidence/C02-images-hidden-retry-v333.md": "e215079dcf6243247c03f1f309733d1be23df9183d4f3bb92c0e14a48166864b"
+  },
+  "limits": {
+    "realWorkersCloudflareTransportVerified": false,
+    "intermediateProxyRetryVerified": false,
+    "supplierAcceptanceAndBillingVerified": false,
+    "allEgressDriversAndSdksVerified": false,
+    "fullC02AcceptanceVerified": false,
+    "externalProviderCalls": 0,
+    "deployments": 0
+  }
+}

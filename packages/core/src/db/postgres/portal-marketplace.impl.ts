@@ -65,6 +65,7 @@ function mapSharedKey(row: SharedKeySqlRow): SharedKeyRow {
 		cacheReadPrice: row.cacheReadPrice === null ? null : Number(row.cacheReadPrice),
 		cacheWritePrice: row.cacheWritePrice === null ? null : Number(row.cacheWritePrice),
 		earnedTotal: Number(row.earnedTotal),
+		earnedTotalExact: String(row.earnedTotal),
 	};
 }
 
@@ -175,7 +176,15 @@ export function createPostgresSharedKeysRepository(db: PostgresDatabaseClient): 
 		},
 		async listActiveSharedKeysByChannel(channelType) {
 			const rows = await drizzle.select().from(sharedKeysTable)
-				.where(and(eq(sharedKeysTable.channelType, channelType), eq(sharedKeysTable.status, 'active')))
+				.where(and(
+					eq(sharedKeysTable.channelType, channelType),
+					eq(sharedKeysTable.status, 'active'),
+					// The v346 buyer split revokes legacy seller settlement from the
+					// request LOGIN. Stop shared-key sends at the common pool lookup
+					// until a separate economic-only dispatch path is activated.
+					sql<boolean>`pg_catalog.has_table_privilege(session_user,
+						'cinatoken_gateway.shared_key_earnings', 'INSERT')`,
+				))
 				.orderBy(...SHARED_KEY_ORDER);
 			return rows.map(mapSharedKey);
 		},
@@ -211,14 +220,20 @@ export function createPostgresSharedKeysRepository(db: PostgresDatabaseClient): 
 				.returning({ id: sharedKeysTable.id });
 			return rows.length > 0;
 		},
-		async addSharedKeyUsage(id, inputTokens, outputTokens, netAmount, nowIso) {
-			await drizzle.update(sharedKeysTable).set({
+		async addSharedKeyUsage(id, inputTokens, outputTokens, netAmount, nowIso, expected) {
+			const rows = await drizzle.update(sharedKeysTable).set({
 				servedInputTokens: sql`${sharedKeysTable.servedInputTokens} + ${inputTokens}`,
 				servedOutputTokens: sql`${sharedKeysTable.servedOutputTokens} + ${outputTokens}`,
 				earnedTotal: sql`${sharedKeysTable.earnedTotal} + CAST(${netAmount} AS numeric)`,
 				lastUsedAt: nowIso,
 				updatedAt: nowIso,
-			}).where(eq(sharedKeysTable.id, id));
+			}).where(and(
+				eq(sharedKeysTable.id, id),
+				eq(sharedKeysTable.servedInputTokens, expected.servedInputTokens),
+				eq(sharedKeysTable.servedOutputTokens, expected.servedOutputTokens),
+				eq(sharedKeysTable.earnedTotal, expected.earnedTotalExact),
+			)).returning({ id: sharedKeysTable.id });
+			return rows.length === 1;
 		},
 	};
 }
@@ -270,6 +285,11 @@ export function createPostgresPortalLedgerRepository(db: PostgresDatabaseClient)
 			const row = await drizzle.select().from(userEarningsTable).where(eq(userEarningsTable.userId, userId)).limit(1);
 			return row[0] ? mapUserEarnings(row[0]) : null;
 		},
+		async getEarningByRequestLogId(requestLogId) {
+			const rows = await drizzle.select().from(sharedKeyEarningsTable)
+				.where(eq(sharedKeyEarningsTable.requestLogId, requestLogId)).limit(1);
+			return rows[0] ? mapEarning(rows[0]) : null;
+		},
 		async ensureUserEarnings(userId) {
 			await drizzle.insert(userEarningsTable).values({ userId, updatedAt: new Date().toISOString() })
 				.onConflictDoNothing({ target: userEarningsTable.userId });
@@ -288,6 +308,41 @@ export function createPostgresPortalLedgerRepository(db: PostgresDatabaseClient)
 			// The request_log_id conflict target prevents duplicate queue delivery
 			// from crediting the same earning twice.
 			return insertEarning(params);
+		},
+		async rebuildSharedKeyUsageFromEarnings(requestLogId, expectedSharedKeyId, nowIso) {
+			await db.raw.begin(async (tx) => {
+				// Lock the parent before reading detail: FK KEY SHARE locks from
+				// earning inserts cannot cross this FOR UPDATE lock. A normal writer
+				// whose earning was already included must fail its stale snapshot CAS.
+				const keys = await tx.unsafe<{ id: string }[]>(
+					'SELECT id FROM cinatoken_gateway.shared_keys WHERE id = $1 FOR UPDATE',
+					[expectedSharedKeyId],
+				);
+				if (keys.length !== 1) throw new Error('shared_key_usage_rebuild_key_missing');
+				const earnings = await tx.unsafe<{ shared_key_id: string }[]>(
+					'SELECT shared_key_id FROM cinatoken_gateway.shared_key_earnings WHERE request_log_id = $1',
+					[requestLogId],
+				);
+				if (earnings.length !== 1 || earnings[0]?.shared_key_id !== expectedSharedKeyId) {
+					throw new Error('shared_key_usage_rebuild_earning_missing_or_mismatched');
+				}
+				const updated = await tx.unsafe<{ id: string }[]>(`
+					UPDATE cinatoken_gateway.shared_keys AS sk
+					SET served_input_tokens = totals.input_tokens,
+						served_output_tokens = totals.output_tokens,
+						earned_total = totals.net_amount,
+						last_used_at = totals.last_used_at,
+						updated_at = $2
+					FROM (
+						SELECT COALESCE(SUM(input_tokens), 0) AS input_tokens,
+							COALESCE(SUM(output_tokens), 0) AS output_tokens,
+							COALESCE(SUM(net_amount), 0) AS net_amount,
+							MAX(created_at) AS last_used_at
+						FROM cinatoken_gateway.shared_key_earnings WHERE shared_key_id = $1
+					) AS totals
+					WHERE sk.id = $1 RETURNING sk.id`, [expectedSharedKeyId, nowIso]);
+				if (updated.length !== 1) throw new Error('shared_key_usage_rebuild_update_missing');
+			});
 		},
 		async creditEarningBalance(sellerUserId, netAmount, nowIso) {
 			const micros = moneyToMicros(netAmount).toString();

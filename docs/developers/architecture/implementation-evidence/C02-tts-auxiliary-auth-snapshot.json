@@ -1,0 +1,275 @@
+{
+  "version": 1,
+  "date": "2026-09-05",
+  "head": "7eb59008f7d8e156e81fd18a57658fdef2553264",
+  "status": "LOCAL_PASS_LISTED_NODE_SUBSET",
+  "wholeC02Gate": "DOING",
+  "evidence": "C02-tts-auxiliary-auth.md",
+  "environment": {
+    "os": "Windows",
+    "node": "24.14.1",
+    "workersTypes": "5.20260829.1",
+    "node22": "not_run",
+    "workersRuntime": "not_verified_prior_native_startup_failure_not_retried"
+  },
+  "limits": {
+    "inferencePermits": 3,
+    "auxiliaryAuthExchanges": 3,
+    "ttsDispatchAndStreamDeadlineMs": 300000,
+    "maxErrorResponseBytes": 65536,
+    "deadlineStartsAt": "shared_dispatch_budget_created_at_or_proxy_start_not_complete_ingress",
+    "callerDeadline": "can_tighten_never_extend",
+    "databaseAdmission": "await_commit_or_failure_then_check_stop_not_physically_cancelled",
+    "redirect": "manual"
+  },
+  "coverage": {
+    "wiredApplicationOAuthCalls": 14,
+    "remainingApplicationOAuthCalls": 3,
+    "newTests": 269,
+    "ttsDriverLifecycleNewTests": 161,
+    "ttsApiNewTests": 108,
+    "existingTtsTestsAddedToSafetyCollector": 22,
+    "publicQwen": "incompatible_WAV_only_adapter_and_MP3_PCM_ingress_six_refusal_tests_not_integrated",
+    "financialVerification": "real_route_to_SQL_parameters_synthetic_storage_not_database_atomicity",
+    "unknownTtsPolicy": "preserve_existing_reservation_ceiling_not_final_maximum_charge_authorization"
+  },
+  "verification": [
+    {
+      "command": "npm.cmd run typecheck -w @octafuse/proxy",
+      "exitCode": 0
+    },
+    {
+      "command": "./node_modules/.bin/tsc.cmd --noEmit -p packages/proxy/tsconfig.dispatch-safety.json",
+      "exitCode": 0
+    },
+    {
+      "command": "./node_modules/.bin/tsx.cmd --test packages/proxy/src/services/egress/audio-speech-driver.test.ts packages/proxy/src/services/egress/audio-speech-request-lifecycle.test.ts",
+      "exitCode": 0,
+      "tests": 183,
+      "suites": 3,
+      "failed": 0,
+      "cancelled": 0,
+      "skipped": 0
+    },
+    {
+      "command": "./node_modules/.bin/tsx.cmd --test --test-name-pattern=TTS packages/proxy/src/routes/v1/request-dispatch-limit.test.ts",
+      "exitCode": 0,
+      "tests": 108,
+      "failed": 0,
+      "cancelled": 0,
+      "skipped": 0
+    },
+    {
+      "command": "npm.cmd test -w @octafuse/proxy",
+      "exitCode": 0,
+      "mainTests": 1476,
+      "mainSuites": 135,
+      "failed": 0,
+      "cancelled": 0,
+      "skipped": 0
+    },
+    {
+      "command": "npm.cmd run test:dispatch-safety -w @octafuse/proxy",
+      "exitCode": 0,
+      "tests": 1075,
+      "suites": 44,
+      "failed": 0,
+      "cancelled": 0,
+      "skipped": 0
+    },
+    {
+      "command": "git diff --check",
+      "exitCode": 0
+    }
+  ],
+  "countsOverlap": true,
+  "coreFullSuite": "not_rerun_core_sources_unchanged",
+  "baselineAudit": {
+    "baselineFiles": 124,
+    "unchanged": 117,
+    "changed": [
+      "docs/developers/architecture/implementation-evidence/README.md",
+      "docs/developers/architecture/v2.1-openrouter-implementation-checklist.md",
+      "packages/proxy/package.json",
+      "packages/proxy/src/routes/v1/audio.ts",
+      "packages/proxy/src/routes/v1/request-dispatch-limit.test.ts",
+      "packages/proxy/src/services/proxy.ts",
+      "packages/proxy/tsconfig.dispatch-safety.json"
+    ],
+    "unexpectedChanges": [],
+    "newDirtyFiles": [
+      "docs/developers/architecture/implementation-evidence/C02-tts-auxiliary-auth.md",
+      "packages/proxy/src/services/egress/audio-speech-driver.test.ts",
+      "packages/proxy/src/services/egress/audio-speech-driver.ts",
+      "packages/proxy/src/services/egress/audio-speech-request-lifecycle.test.ts",
+      "packages/proxy/src/services/egress/audio-speech-stream-lifecycle.ts"
+    ],
+    "unexpectedNewDirtyFiles": [],
+    "headUnchanged": true,
+    "note": "Snapshot itself is added after this audit. Final validation checks its addition, documentation links and all hashes. Driver and existing driver test were tracked and clean at TTS turn start."
+  },
+  "files": [
+    {
+      "path": "packages/proxy/src/services/egress/audio-speech-driver.ts",
+      "sha256": "0a12a61971b5842a4d4260405bbc9c31fa7c2f19eb667049204677d195fa279e",
+      "role": "changed_in_tts_work"
+    },
+    {
+      "path": "packages/proxy/src/services/egress/audio-speech-driver.test.ts",
+      "sha256": "840d7c3dcc7657666d707a123cc868781ec709f35f10cc89d2dfa5c9c5f31c54",
+      "role": "changed_in_tts_work"
+    },
+    {
+      "path": "packages/proxy/src/services/egress/audio-speech-request-lifecycle.test.ts",
+      "sha256": "7e6dc375f57743b1263b749e223c75e371e0b52e5c6b0ecb7882df3bb206c5df",
+      "role": "changed_in_tts_work"
+    },
+    {
+      "path": "packages/proxy/src/services/egress/audio-speech-stream-lifecycle.ts",
+      "sha256": "537e88d2cb6fe4acd44aa104327bdad34608bf3305d5f678781457b5980473c2",
+      "role": "changed_in_tts_work"
+    },
+    {
+      "path": "packages/proxy/src/services/proxy.ts",
+      "sha256": "c6fff4029002683dc507041d97926986e9d27e7ebc3badf9079e45c34afd5349",
+      "role": "changed_in_tts_work"
+    },
+    {
+      "path": "packages/proxy/src/routes/v1/audio.ts",
+      "sha256": "76ea4e8ea7c03f773bffe5cf626f57bb443a6c85215bdd8c1b423520f0511987",
+      "role": "changed_in_tts_work"
+    },
+    {
+      "path": "packages/proxy/src/routes/v1/request-dispatch-limit.test.ts",
+      "sha256": "7c79d83677e6f296b15e5043a3cf7f67324c18e67f3bb308db1970549696c441",
+      "role": "changed_in_tts_work"
+    },
+    {
+      "path": "packages/proxy/package.json",
+      "sha256": "5c321ac8ce8832807d6d1edee65df0f22cdf0e2e546d4c68888f982542d4db2b",
+      "role": "changed_in_tts_work"
+    },
+    {
+      "path": "packages/proxy/tsconfig.dispatch-safety.json",
+      "sha256": "e3f0cf5f3a5c51e2467ee88c26674643faa0609a110107e903d6aeeb7efcd9b1",
+      "role": "changed_in_tts_work"
+    },
+    {
+      "path": "packages/proxy/src/services/egress/audio-request-lifecycle.ts",
+      "sha256": "7434a8bbd3289a55a0b410b963cccd1b1905270ac618aa30f9e3e37ea8402f81",
+      "role": "related_unchanged_since_asr_snapshot"
+    },
+    {
+      "path": "packages/proxy/src/services/egress/openai-audio-driver.ts",
+      "sha256": "660a2276902f0ff58ba7a540490e66ebe7dae388861ee6264b9a5bf84af90bf0",
+      "role": "related_unchanged_since_asr_snapshot"
+    },
+    {
+      "path": "packages/proxy/src/services/egress/dashscope-audio-driver.ts",
+      "sha256": "bfd8ee6f78d08ded868659bd2da272e2391a380f0e01d855c08c3b5cd830d7c3",
+      "role": "related_unchanged_since_asr_snapshot"
+    },
+    {
+      "path": "packages/proxy/src/routes/v1/dashscope-multimodal.ts",
+      "sha256": "2f2bca1f9c9d39766e658cdaf3fc9b7f2daafbb9678a63fb7a60213d207632e1",
+      "role": "related_unchanged_since_asr_snapshot"
+    },
+    {
+      "path": "packages/proxy/src/services/egress/dashscope-audio-driver.test.ts",
+      "sha256": "2acac819c4e872540cb4a0d2575aeab341d5e8f0bf6bc46e311d1cc923c6ab83",
+      "role": "related_unchanged_since_asr_snapshot"
+    },
+    {
+      "path": "packages/proxy/src/services/egress/asr-request-lifecycle.test.ts",
+      "sha256": "65ee86be04d4f3b6b5c28cb17e7130390e007de634a57736c73b45922f64015f",
+      "role": "related_unchanged_since_asr_snapshot"
+    },
+    {
+      "path": "packages/proxy/src/services/egress/openai-audio-driver.test.ts",
+      "sha256": "cd9c7874ebfd52cb1e554762d6b6485fea80ca21e2ad3d903dfe6c7739e9ddba",
+      "role": "related_unchanged_since_asr_snapshot"
+    },
+    {
+      "path": "packages/proxy/src/services/egress/bounded-response-body.ts",
+      "sha256": "6356f5a60c624994c69b25dd81c5a868d8bd9105c49799f74cf63750ad279275",
+      "role": "related_unchanged_since_asr_snapshot"
+    },
+    {
+      "path": "packages/proxy/src/services/request-deadline.ts",
+      "sha256": "145b0dc9fb702d1ef67efe9c40593c92a61f9204bc538b0ae9d9d8c46f9c0869",
+      "role": "related_unchanged_since_asr_snapshot"
+    },
+    {
+      "path": "packages/proxy/src/services/request-dispatch-budget.ts",
+      "sha256": "53115c21920845089c19d9002c7e3b6c70f5fccdd3107f2fee30c0874393a066",
+      "role": "related_unchanged_since_asr_snapshot"
+    },
+    {
+      "path": "packages/proxy/src/services/failover-dispatch.ts",
+      "sha256": "6a93147fcf1c5c4f17db99ed03a7805b5fba7a98786f3153eeb27143fa4d853f",
+      "role": "related_unchanged_since_asr_snapshot"
+    },
+    {
+      "path": "packages/core/src/gcp-service-account-token.ts",
+      "sha256": "f60f0c28d49c01306c520289d6747c511ed0d52cdc5878378997024bf7cd844c",
+      "role": "related_unchanged_since_asr_snapshot"
+    },
+    {
+      "path": "packages/core/src/gcp-oauth-lifecycle.ts",
+      "sha256": "90b6456e2b7ae19ee2e0d04c3f0b1e470f757bc11a91bd478c13b9830e7e0c0b",
+      "role": "related_unchanged_since_asr_snapshot"
+    },
+    {
+      "path": "packages/core/src/request-auxiliary-auth-budget.ts",
+      "sha256": "a2995a8cd480b150960beab7ccb2aae60352b46e5d3fc79fff5f813aa6ad197f",
+      "role": "related_unchanged_since_asr_snapshot"
+    },
+    {
+      "path": "packages/tool-engines/src/web-fetch/safe-redirect-fetch.ts",
+      "sha256": "5c9cf93676f58edd56b2f6d4fcbc44ecdba1c423b2b1bb6798b7a29d0e6046f8",
+      "role": "related_unchanged_since_asr_snapshot"
+    },
+    {
+      "path": "packages/proxy/src/app.ts",
+      "sha256": "0d261b5300a9695f416186ccd0bd6abed51d915af754d275b209fdd824696001",
+      "role": "related_unchanged_since_asr_snapshot"
+    },
+    {
+      "path": "packages/proxy/src/services/audio-usage-charge.ts",
+      "sha256": "645ff4c0cba7d5b4bfb5566c9f807f5229f6d7a55dc9eb51144213a2b6a1d0e9",
+      "role": "related_unchanged_since_asr_snapshot"
+    },
+    {
+      "path": "packages/proxy/src/services/ordinary-budget-lifecycle.ts",
+      "sha256": "9fef6a25be081efc6d0f4c0010eed7c80567c085866cfdd0b1fa1c7ce24bd896",
+      "role": "related_unchanged_since_asr_snapshot"
+    },
+    {
+      "path": "packages/proxy/src/services/multimedia-ordinary-budget.ts",
+      "sha256": "3e1d3a48449210b120a41daed4b9af687e7581b78ffdfd6aab4cd6e8337d7408",
+      "role": "related_unchanged_since_asr_snapshot"
+    },
+    {
+      "path": "packages/proxy/wrangler.jsonc",
+      "sha256": "7ffb4a120ce0b83df428a1344fca5b16ea9d8784178d555e7377623511451b0c",
+      "role": "related_unchanged_since_asr_snapshot"
+    },
+    {
+      "path": ".github/workflows/proxy-dispatch-safety.yml",
+      "sha256": "860a5c4bd68a0430bbb5ff2542dd4d8226d405169d555557e6daed4e66c825d5",
+      "role": "related_unchanged_since_asr_snapshot"
+    },
+    {
+      "path": ".nvmrc",
+      "sha256": "f14b4987904bcb5814e4459a057ed4d20f58a633152288a761214dcd28780b56",
+      "role": "related_unchanged_since_asr_snapshot"
+    },
+    {
+      "path": "package-lock.json",
+      "sha256": "9adebfebdb981bd51aac7644fb046d0a4f0e2a4586cf8b3786cefa097a1a415e",
+      "role": "related_unchanged_since_asr_snapshot"
+    }
+  ],
+  "externalActions": "public_documentation_only_no_cloud_account_recheck_no_mutation",
+  "nextWorkItem": "C02.B2.2: Realtime then independent Admin preview contract; complete ingress and staged timeouts remain"
+}

@@ -4,6 +4,8 @@ import type {
 	RoutePerformanceSample,
 } from '@octafuse/core';
 import {
+	preparationRead,
+	type PreparationControl,
 	collectRoutePerformanceSeries,
 	MIN_ROUTE_AVAILABILITY_OBSERVATIONS,
 	ROUTE_PERFORMANCE_MAX_ROUTES_PER_QUERY,
@@ -90,7 +92,9 @@ export async function applyProviderPerformanceRouting(
 	routes: RouteResult[],
 	preferences: ProviderPreferences,
 	now = new Date(),
+	control?: PreparationControl,
 ): Promise<RouteResult[]> {
+	control?.throwIfStopped();
 	const usesPerformance =
 		preferences.sort?.by === 'latency' ||
 		preferences.sort?.by === 'throughput' ||
@@ -110,18 +114,20 @@ export async function applyProviderPerformanceRouting(
 	for (let offset = 0; offset < routeTargetIds.length; offset += ROUTE_PERFORMANCE_MAX_ROUTES_PER_QUERY) {
 		const routeTargetBatch = routeTargetIds.slice(offset, offset + ROUTE_PERFORMANCE_MAX_ROUTES_PER_QUERY);
 		const [samples, availability] = await Promise.allSettled([
-			repos.requestLogs.getRecentRoutePerformanceSamples({
+			preparationRead(control, () => repos.requestLogs.getRecentRoutePerformanceSamples({
 				routeTargetIds: routeTargetBatch,
 				sinceIso,
 				maxSamplesPerRoute: ROUTE_PERFORMANCE_MAX_SAMPLES_PER_ROUTE,
-			}),
-			repos.requestLogs.getRouteAvailabilityAggregates({
+			})),
+			preparationRead(control, () => repos.requestLogs.getRouteAvailabilityAggregates({
 				routeTargetIds: routeTargetBatch,
 				since5mIso: sinceIso,
 				since30mIso,
 				since1dIso,
-			}),
+			})),
 		]);
+		// allSettled is for optional telemetry failures, not for swallowing abort.
+		control?.throwIfStopped();
 		if (samples.status === 'fulfilled') sampleBatches.push(...samples.value);
 		else performanceTelemetryFailed = true;
 		if (availability.status === 'fulfilled') {

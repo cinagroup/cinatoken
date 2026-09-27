@@ -871,13 +871,14 @@ export type RecordImageUsageParams = {
 	suppressErrorAlert?: boolean;
 };
 
-/**
- * 写入用量日志并在成功且 charged>0 时扣费。取消 / 超时 / 明确错误一律不扣。
- */
-export async function recordImageUsage(params: RecordImageUsageParams): Promise<{
-	requestLogId: string;
-	chargedCost: number;
-}> {
+export type ImageUsageWrite = Parameters<typeof insertRequestUsageAndChargeTx>[1];
+export type PreparedImageUsage = {
+	write: ImageUsageWrite;
+	result: { requestLogId: string; chargedCost: number };
+};
+
+/** Build the existing accounting DTO without writing money, logs or alerts. */
+export async function prepareImageUsageWrite(params: RecordImageUsageParams): Promise<PreparedImageUsage> {
 	const hasEndpointPricing = params.billing.endpoint != null;
 	const isByok = parseByokKeyId(params.providerKeyId) !== null;
 	if (
@@ -1171,13 +1172,7 @@ export async function recordImageUsage(params: RecordImageUsageParams): Promise<
 				: null);
 	const guardrailSettlementMode = nominalSettlementMode;
 
-	console.log(
-		`[Gateway Usage] recordImageUsage model_id=${params.modelId} status=${params.status} kind=${costs.billingKind} images=${logOutputImages} input_images=${logInputImages} metered=${meteredCost} standard=${standardCost} charged=${chargedCost}${
-			chargeUncertain ? ` uncertain_charge=1 reason=${imageAbortReason ?? 'precheck'}` : ''
-		}`
-	);
-
-	await insertRequestUsageAndChargeTx(params.repos, {
+	const write: ImageUsageWrite = {
 		userId: params.userId,
 		requestLog: {
 			id,
@@ -1300,8 +1295,17 @@ export async function recordImageUsage(params: RecordImageUsageParams): Promise<
 			correlationId: id,
 			source: 'gateway_usage',
 		},
-	});
+	};
+	return { write, result: { requestLogId: id, chargedCost } };
+}
 
+/** Existing default writer. The durable path uses prepareImageUsageWrite, never this writer as well. */
+export async function recordImageUsage(params: RecordImageUsageParams): Promise<PreparedImageUsage['result']> {
+	const prepared = await prepareImageUsageWrite(params);
+	const { requestLogId: id, chargedCost } = prepared.result;
+	const log = prepared.write.requestLog;
+	console.log(`[Gateway Usage] recordImageUsage model_id=${params.modelId} status=${params.status} kind=${log.billingKind} images=${log.outputImageCount} input_images=${log.inputImageCount} metered=${log.meteredCost} standard=${log.standardCost} charged=${chargedCost}`);
+	await insertRequestUsageAndChargeTx(params.repos, prepared.write);
 	if (params.status === 'error' && !params.suppressErrorAlert) {
 		await fireGatewayErrorWebhooks(params.repos, {
 			requestLogId: id,

@@ -1,6 +1,10 @@
 /**
  * Gemini generateContent / streamGenerateContent 出站：按 `providers.endpoints.gemini` 解析 URL、解析 JSON 或 SSE 中的 usageMetadata。
  */
+import type { ResourceCompletion, ResourceCompletionOutcome } from '../resource-completion';
+import { ownUpstreamResponse } from './owned-upstream-response';
+import { withOwnedJsonUpload } from './with-owned-json-upload';
+import { captureTextRouteIdentity, createPreparedTextAttempt, type PreparedTextAttempt } from './prepared-text-attempt';
 import {
   GEMINI_GENERATE_OPERATION,
   prepareGeminiUpstreamFetch,
@@ -9,14 +13,17 @@ import {
   resolveUpstreamEndpoint,
 } from '@octafuse/core';
 import type { RouteResult } from '../model-router';
+import type { RequestAuxiliaryAuthBudget } from '@octafuse/core';
 import type { UsageFromStream } from '../proxy';
+import { markTextStreamCancellation } from '../request-deadline';
 import { buildRouteRequestBody } from '../route-default-params';
 import { extractUpstreamRequestId, normalizeUpstreamId } from './upstream-request-id';
 import type { RequestTimingAttempt, RequestTimingCollector } from '../request-timing';
 import { markUpstreamOutcomeUnknown, type ProxyDispatchMeta, type ProxyDispatchResult } from '../failover-dispatch';
 import { parseSseDataLine } from './sse-data-line';
 import { assertTextUpstreamHttpUrl } from './text-upstream-url';
-import { readBoundedTextJsonObject, rebuildTextJsonResponse } from './text-json-response';
+import { ambiguousDispatchedStatusMeta } from './ambiguous-upstream-status';
+import { readBoundedTextJsonObject, rebuildTextJsonResponse, preDispatchCancelledTextResponse } from './text-json-response';
 
 const EMPTY_USAGE_LOCAL: UsageFromStream = {
   input_tokens: 0,
@@ -28,7 +35,7 @@ const EMPTY_USAGE_LOCAL: UsageFromStream = {
   raw_usage: null,
 };
 
-/** Keep stream settlement inside the Workers post-response waitUntil grace window. */
+/** @deprecated Historical exported limit only; cancellation no longer drains upstream. */
 export const GEMINI_POST_DISCONNECT_DRAIN_MS = 25_000;
 export const GEMINI_SSE_MAX_LINE_CHARS = 256 * 1024;
 
@@ -236,9 +243,10 @@ async function pumpWithUsageTracking(
   downstream: WritableStream<Uint8Array>,
   usage: UsageFromStream,
   resolveUsage: (u: UsageFromStream) => void,
+  stopDownstream: () => void,
   requestSignal?: AbortSignal,
   timing?: RequestTimingCollector | null
-): Promise<void> {
+): Promise<ResourceCompletionOutcome> {
   const reader = upstream.getReader();
   const writer = downstream.getWriter();
   const state: SSEState = {
@@ -246,19 +254,21 @@ async function pumpWithUsageTracking(
     decoder: new TextDecoder('utf-8', { fatal: true, ignoreBOM: true }),
   };
   let clientDisconnected = false;
-  let disconnectTime = 0;
-  let drainCancelTimer: ReturnType<typeof setTimeout> | undefined;
+  let finished = false;
+  let cleanupConfirmed = true;
+  let cancellation: Promise<void> | undefined;
+  const cancelUpstream = (reason?: unknown): void => {
+cancellation ??= reader.cancel(reason).catch(() => { cleanupConfirmed = false; });
+  };
 
   const markClientDisconnected = (): void => {
-    usage.cancelled = true;
+    if (finished || clientDisconnected) return;
+    markTextStreamCancellation(usage, requestSignal);
     clientDisconnected = true;
-    if (disconnectTime === 0) disconnectTime = Date.now();
-    if (drainCancelTimer !== undefined) return;
-    drainCancelTimer = setTimeout(() => {
-      void reader.cancel().catch(() => {
-        // The upstream already closed or was cancelled.
-      });
-    }, GEMINI_POST_DISCONNECT_DRAIN_MS);
+    cancelUpstream(requestSignal?.reason);
+    // Also unblock a write when the caller aborted but has not read/cancelled
+    // its downstream body. Cancelling the upstream reader alone cannot do it.
+    stopDownstream();
   };
   const onAbort = (): void => {
     markClientDisconnected();
@@ -268,14 +278,18 @@ async function pumpWithUsageTracking(
   } else {
     requestSignal?.addEventListener('abort', onAbort, { once: true });
   }
+  // A silent upstream has no next write at which downstream cancellation could
+  // otherwise be observed. This promise is owned by this pump, not a global.
+  void writer.closed.catch(markClientDisconnected);
 
   try {
-    while (true) {
+    while (!clientDisconnected) {
       const { done, value } = await reader.read();
       if (done) {
-        processRemainingLineBuffer(state, usage, timing);
+        if (!clientDisconnected) processRemainingLineBuffer(state, usage, timing);
         break;
       }
+      if (clientDisconnected) break;
 
       if (value.byteLength > 0) timing?.markFirstByte();
       parseSSEChunk(value, state, usage, timing);
@@ -288,49 +302,49 @@ async function pumpWithUsageTracking(
         }
       }
 
-      if (
-        clientDisconnected &&
-        disconnectTime > 0 &&
-        Date.now() - disconnectTime >= GEMINI_POST_DISCONNECT_DRAIN_MS
-      ) {
-        await reader.cancel();
-        break;
-      }
     }
   } catch (error) {
-    usage.stream_error = error instanceof Error ? error.message : String(error);
-    await reader.cancel('gemini_sse_invalid_or_too_large').catch(() => undefined);
+    if (!clientDisconnected) usage.stream_error = error instanceof Error ? error.message : String(error);
+    cancelUpstream('gemini_sse_invalid_or_too_large');
   } finally {
-    if (drainCancelTimer !== undefined) clearTimeout(drainCancelTimer);
+    // Usage/financial facts cannot depend on an untrusted cancel ACK.
+    // Keep abandoned reader ownership in the pump until cleanup settles below.
+    finished = true;
     requestSignal?.removeEventListener('abort', onAbort);
+    if (!cancellation) reader.releaseLock();
     timing?.markStreamComplete();
     resolveUsage(usage);
     try {
       await writer.close();
-    } catch (err) {
-      console.warn(
-        '[Gateway Proxy] gemini pump writer.close (non-fatal)',
-        err instanceof Error ? err.message : String(err),
-        { clientDisconnected, usageCancelled: usage.cancelled }
-      );
+    } catch {
+      console.warn(JSON.stringify({
+        event: 'gateway.gemini.writer_close_failed',
+        clientDisconnected, usageCancelled: usage.cancelled === true,
+      }));
+    }
+    if (cancellation) {
+      await cancellation;
+      reader.releaseLock();
     }
   }
+  return cleanupConfirmed ? 'confirmed' : 'unconfirmed';
 }
 
 function streamResponseWithUsage(
   response: Response,
   requestSignal?: AbortSignal,
   timing?: RequestTimingCollector | null
-): { response: Response; usagePromise: Promise<UsageFromStream> } {
+): { response: Response; usagePromise: Promise<UsageFromStream>; resourceCompletion: ResourceCompletion } {
   let resolveUsage!: (u: UsageFromStream) => void;
   const usagePromise = new Promise<UsageFromStream>((resolve) => {
     resolveUsage = resolve;
   });
   const usage: UsageFromStream = { ...EMPTY_USAGE_LOCAL };
-  const { readable, writable } = new TransformStream<Uint8Array, Uint8Array>();
-  pumpWithUsageTracking(response.body!, writable, usage, resolveUsage, requestSignal, timing).catch(() => {
-    // resolveUsage in finally
+  let stopDownstream!: () => void;
+  const { readable, writable } = new TransformStream<Uint8Array, Uint8Array>({
+    start(controller) { stopDownstream = () => controller.terminate(); },
   });
+  const resourceCompletion = pumpWithUsageTracking(response.body!, writable, usage, resolveUsage, stopDownstream, requestSignal, timing).catch(() => 'unconfirmed' as const);
 
   return {
     response: new Response(readable, {
@@ -342,12 +356,14 @@ function streamResponseWithUsage(
       },
     }),
     usagePromise,
+    resourceCompletion,
   };
 }
 
 async function nonStreamResponseWithUsage(
   response: Response,
-  timing?: RequestTimingCollector | null
+  timing?: RequestTimingCollector | null,
+  requestSignal?: AbortSignal,
 ): Promise<{ response: Response; usagePromise: Promise<UsageFromStream>; meta?: ProxyDispatchMeta }> {
   const contentType = response.headers.get('Content-Type') ?? '';
   if (!contentType.includes('application/json')) {
@@ -356,7 +372,7 @@ async function nonStreamResponseWithUsage(
       usagePromise: Promise.resolve(EMPTY_USAGE_LOCAL),
     };
   }
-  const parsed = await readBoundedTextJsonObject(response, { skin: 'chat' });
+  const parsed = await readBoundedTextJsonObject(response, { skin: 'chat', signal: requestSignal });
   if (!parsed.ok) {
     timing?.markStreamComplete();
     return { ...parsed, usagePromise: Promise.resolve(EMPTY_USAGE_LOCAL) };
@@ -384,8 +400,16 @@ export async function dispatchGeminiRoute(
   requestSignal?: AbortSignal,
   timing?: RequestTimingCollector | null,
   attempt?: RequestTimingAttempt,
-  beforeFetch?: () => Promise<void>,
+  beforeFetch?: (prepared: PreparedTextAttempt) => Promise<void>,
+  auxiliaryAuth?: RequestAuxiliaryAuthBudget,
 ): Promise<ProxyDispatchResult> {
+  const cancelledBeforeDispatch = (): ProxyDispatchResult => ({
+    response: preDispatchCancelledTextResponse('chat'),
+    usagePromise: Promise.resolve({ ...EMPTY_USAGE_LOCAL, cancelled: true }),
+    upstreamRequestId: null,
+    meta: { failoverForbidden: true, gatewayGeneratedError: true },
+  });
+  if (requestSignal?.aborted) return cancelledBeforeDispatch();
   const resolvedUrl = resolveUpstreamEndpoint(
     'gemini',
     GEMINI_GENERATE_OPERATION,
@@ -396,50 +420,74 @@ export async function dispatchGeminiRoute(
       providerId: route.providerId,
     }
   );
-  const resolved = await resolveProviderUpstreamSecret(route.providerApiKey);
-  const { url, headers } = prepareGeminiUpstreamFetch({
-    resolvedUrl,
-    modelName: route.providerModelName,
-    action,
-    apiKey: resolved.secret,
-    search,
-    auth: resolveGeminiAuthForUpstreamSecret(
-      route.providerEndpoints.gemini?.auth,
-      resolved.isServiceAccount
-    ),
-  });
-  assertTextUpstreamHttpUrl(url.toString());
-  new Headers(headers);
-
+  const routeIdentity = beforeFetch ? captureTextRouteIdentity(route) : null;
   const requestBody = buildRouteRequestBody(route, body);
-  const serializedBody = JSON.stringify(requestBody);
-  await beforeFetch?.();
-  let response: Response;
-  try {
-    response = await fetch(url.toString(), {
-      method: 'POST',
-      headers,
-      body: serializedBody,
+  return withOwnedJsonUpload(requestBody, requestSignal, async upload => {
+    const resolved = await resolveProviderUpstreamSecret(route.providerApiKey, { signal: requestSignal, auxiliaryAuth });
+    const { url, headers } = prepareGeminiUpstreamFetch({
+      resolvedUrl,
+      modelName: route.providerModelName,
+      action,
+      apiKey: resolved.secret,
+      search,
+      auth: resolveGeminiAuthForUpstreamSecret(
+        route.providerEndpoints.gemini?.auth,
+        resolved.isServiceAccount
+      ),
     });
-  } catch (error) {
-    throw markUpstreamOutcomeUnknown(error);
-  }
-  timing?.markAttemptHeaders(attempt, response.status);
-  const upstreamRequestId = extractUpstreamRequestId(response.headers);
+    const fetchUrl = url.toString();
+    assertTextUpstreamHttpUrl(fetchUrl);
+    headers['Content-Length'] = String(upload.contentLength);
+    new Headers(headers);
 
-  if (response.ok && response.body) {
-    const contentType = response.headers.get('Content-Type') ?? '';
-    if (contentType.includes('application/json') && action === 'generateContent') {
-      const result = await nonStreamResponseWithUsage(response, timing);
+    if (requestSignal?.aborted) return cancelledBeforeDispatch();
+    if (beforeFetch) {
+      const prepared = createPreparedTextAttempt({
+        routeIdentity: routeIdentity!, url: fetchUrl, method: 'POST', headers,
+        outboundBodySha256: await upload.digestSha256(),
+        outboundBodyBytes: upload.contentLength,
+      });
+      await beforeFetch(prepared);
+    }
+    if (requestSignal?.aborted) return cancelledBeforeDispatch();
+    let response: Response;
+    try {
+      const init: RequestInit & { duplex: 'half' } = {
+        method: 'POST',
+        // A redirect is another unbudgeted dispatch and may forward credentials.
+        redirect: 'error',
+        headers,
+        body: upload.body,
+        duplex: 'half',
+        signal: requestSignal,
+      };
+      response = await fetch(fetchUrl, init);
+    } catch (error) {
+      throw markUpstreamOutcomeUnknown(error);
+    }
+    timing?.markAttemptHeaders(attempt, response.status);
+    const upstreamRequestId = extractUpstreamRequestId(response.headers);
+
+    const nonStreamJson = (response.headers.get('Content-Type') ?? '').includes('application/json')
+      && action === 'generateContent';
+    if (response.ok && response.body && !nonStreamJson) {
+      // Retain Gemini's existing response classification and SSE pump ownership.
+      const result = streamResponseWithUsage(response, requestSignal, timing);
       return { ...result, upstreamRequestId };
     }
-    const result = streamResponseWithUsage(response, requestSignal, timing);
-    return { ...result, upstreamRequestId };
-  }
+    const owned = ownUpstreamResponse(response, requestSignal);
+    response = owned.response;
+    if (response.ok && response.body && nonStreamJson) {
+      const result = await nonStreamResponseWithUsage(response, timing, requestSignal);
+      return { ...result, upstreamRequestId, resourceCompletion: owned.resourceCompletion };
+    }
 
-  return {
-    response,
-    usagePromise: Promise.resolve(EMPTY_USAGE_LOCAL),
-    upstreamRequestId,
-  };
+    return {
+      response,
+      usagePromise: Promise.resolve(EMPTY_USAGE_LOCAL),
+      upstreamRequestId,
+      resourceCompletion: owned.resourceCompletion,
+      meta: ambiguousDispatchedStatusMeta(response.status),
+    };
+  });
 }

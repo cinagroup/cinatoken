@@ -1,0 +1,45 @@
+{
+  "version": "v337",
+  "date": "2026-09-24",
+  "status": "LOCAL_LEGACY_PARENT_LEDGER_LOCK_PASS_PRODUCTION_DISABLED",
+  "C03": "DOING",
+  "goalComplete": false,
+  "validation": {
+    "nativePostgres": { "pass": 1, "fail": 0, "stages": 12, "cleanup": "PASS", "serverVersionNum": 180006 },
+    "negativeControl": "unlocked bundle reached end against uncommitted ledger DELETE; fixture rolled back",
+    "boundedLockError": "55P03",
+    "boundedLockWaitMs": 2005,
+    "committedMissingVersionRejectedBeforeParentDdl": true,
+    "bundleUnitTests": { "pass": 1, "fail": 0 },
+    "existingCiUnitCommand": { "pass": 3, "fail": 0 },
+    "scriptsWideTypecheck": "PASS",
+    "targetedWhitespaceCheck": "PASS",
+    "existingLinuxCiCollectsBothTests": true,
+    "linuxCiRun": false
+  },
+  "sourceSha256": {
+    "formalMigrationCorpus": "23afef61a8a670e0af8c90e3a138f522e6b283b454e380a592bf85bca83108dc",
+    "generatedActivationBundle": "b36a46e027ed6f9feb1915d78b61633404d68419092cf37b6223f30fea62cefc",
+    "scripts/db/cutover/build-request-legacy-parent-default-acl-activation.mjs": "5f64c4a22eac6c10186379c06462db304f9d466ec748553d787933ba51f8ed44",
+    "scripts/db/cutover/build-request-legacy-parent-default-acl-activation.test.mjs": "4097dfd22fe4aa039802a4de602cda151e353ddd7040849a56f4c529bd9eef1e",
+    "scripts/db/cutover/postgres-legacy-parent-activation.native.test.mjs": "bd29414188f5a6d5855cce2f3b5904b4427c2190bb18145aa080d7072d8c8566"
+  },
+  "reportSha256": {
+    "docs/developers/architecture/implementation-evidence/C03-postgres-native-legacy-parent-ledger-lock-v337-report.json": "f5f8996a7248297c7755f79f57b2019d9c1102187bf0abf858d538e9a99c1969"
+  },
+  "boundaries": {
+    "formalPostgresMigrations": 73,
+    "concurrentLedgerDmlBlocksSwitch": true,
+    "historicalAppliedSqlContentVerified": false,
+    "fullSchemaAttestationCompleted": false,
+    "historicalDeployedHandlersVerified": false,
+    "representativeProductionLockWindowVerified": false,
+    "retentionPolicyApproved": false,
+    "contractMigrationApproved": false,
+    "realWorkersHyperdriveQueueVerified": false,
+    "productionRecoveryEnabled": false,
+    "remoteSqlCalls": 0,
+    "deployments": 0,
+    "cloudModelCalls": 0
+  }
+}

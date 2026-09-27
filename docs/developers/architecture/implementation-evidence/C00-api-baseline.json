@@ -1,0 +1,553 @@
+{
+  "source": "packages/proxy/src/app.ts",
+  "scope": "Registered handler inventory only; no HTTP server, database or upstream request",
+  "registeredHandlerCount": 123,
+  "distinctMethodPathCount": 109,
+  "routes": [
+    {
+      "method": "GET",
+      "path": "/health",
+      "handlerCount": 1
+    },
+    {
+      "method": "GET",
+      "path": "/v1/models/:author/:slug/endpoints",
+      "handlerCount": 2
+    },
+    {
+      "method": "GET",
+      "path": "/v1/endpoints/zdr",
+      "handlerCount": 2
+    },
+    {
+      "method": "GET",
+      "path": "/v1/images/models",
+      "handlerCount": 2
+    },
+    {
+      "method": "GET",
+      "path": "/v1/images/models/:author/:slug/endpoints",
+      "handlerCount": 2
+    },
+    {
+      "method": "GET",
+      "path": "/v1/generation",
+      "handlerCount": 2
+    },
+    {
+      "method": "POST",
+      "path": "/v1/generation/feedback",
+      "handlerCount": 2
+    },
+    {
+      "method": "POST",
+      "path": "/v1/chat/completions",
+      "handlerCount": 1
+    },
+    {
+      "method": "POST",
+      "path": "/v1/completions",
+      "handlerCount": 1
+    },
+    {
+      "method": "POST",
+      "path": "/v1/responses",
+      "handlerCount": 1
+    },
+    {
+      "method": "GET",
+      "path": "/v1/embeddings/models",
+      "handlerCount": 1
+    },
+    {
+      "method": "POST",
+      "path": "/v1/embeddings",
+      "handlerCount": 1
+    },
+    {
+      "method": "POST",
+      "path": "/v1/rerank",
+      "handlerCount": 1
+    },
+    {
+      "method": "POST",
+      "path": "/v1/images",
+      "handlerCount": 1
+    },
+    {
+      "method": "POST",
+      "path": "/v1/images/generations",
+      "handlerCount": 1
+    },
+    {
+      "method": "POST",
+      "path": "/v1/images/edits",
+      "handlerCount": 1
+    },
+    {
+      "method": "POST",
+      "path": "/v1/audio/transcriptions",
+      "handlerCount": 1
+    },
+    {
+      "method": "POST",
+      "path": "/v1/audio/speech",
+      "handlerCount": 1
+    },
+    {
+      "method": "GET",
+      "path": "/v1/dashscope/realtime",
+      "handlerCount": 1
+    },
+    {
+      "method": "POST",
+      "path": "/v1/dashscope/services/aigc/multimodal-generation/generation",
+      "handlerCount": 1
+    },
+    {
+      "method": "POST",
+      "path": "/v1/messages",
+      "handlerCount": 1
+    },
+    {
+      "method": "POST",
+      "path": "/v1beta/models/:modelAction",
+      "handlerCount": 1
+    },
+    {
+      "method": "GET",
+      "path": "/v1/me",
+      "handlerCount": 1
+    },
+    {
+      "method": "GET",
+      "path": "/v1/models",
+      "handlerCount": 1
+    },
+    {
+      "method": "GET",
+      "path": "/v1/providers",
+      "handlerCount": 1
+    },
+    {
+      "method": "POST",
+      "path": "/v1/tools/web-search",
+      "handlerCount": 1
+    },
+    {
+      "method": "POST",
+      "path": "/v1/tools/web-fetch",
+      "handlerCount": 1
+    },
+    {
+      "method": "POST",
+      "path": "/v1/tools/web-deep-search",
+      "handlerCount": 1
+    },
+    {
+      "method": "POST",
+      "path": "/v1/tools/ai-detection",
+      "handlerCount": 1
+    },
+    {
+      "method": "GET",
+      "path": "/v1/tools/pricing",
+      "handlerCount": 1
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/providers",
+      "handlerCount": 1
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/models",
+      "handlerCount": 1
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/models/count",
+      "handlerCount": 1
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/model/:author/:slug",
+      "handlerCount": 1
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/models/:author/:slug/endpoints",
+      "handlerCount": 4
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/key",
+      "handlerCount": 1
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/keys",
+      "handlerCount": 1
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/keys",
+      "handlerCount": 1
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/keys/:hash",
+      "handlerCount": 1
+    },
+    {
+      "method": "PATCH",
+      "path": "/api/v1/keys/:hash",
+      "handlerCount": 1
+    },
+    {
+      "method": "DELETE",
+      "path": "/api/v1/keys/:hash",
+      "handlerCount": 1
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/workspaces",
+      "handlerCount": 1
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/workspaces",
+      "handlerCount": 1
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/workspaces/:id_or_slug",
+      "handlerCount": 1
+    },
+    {
+      "method": "PATCH",
+      "path": "/api/v1/workspaces/:id_or_slug",
+      "handlerCount": 1
+    },
+    {
+      "method": "DELETE",
+      "path": "/api/v1/workspaces/:id_or_slug",
+      "handlerCount": 1
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/workspaces/:id_or_slug/members",
+      "handlerCount": 1
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/workspaces/:id_or_slug/members/add",
+      "handlerCount": 1
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/workspaces/:id_or_slug/members/remove",
+      "handlerCount": 1
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/workspaces/:id_or_slug/budgets",
+      "handlerCount": 1
+    },
+    {
+      "method": "PUT",
+      "path": "/api/v1/workspaces/:id_or_slug/budgets/:interval",
+      "handlerCount": 1
+    },
+    {
+      "method": "DELETE",
+      "path": "/api/v1/workspaces/:id_or_slug/budgets/:interval",
+      "handlerCount": 1
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/guardrails",
+      "handlerCount": 1
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/guardrails",
+      "handlerCount": 1
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/guardrails/assignments/keys",
+      "handlerCount": 1
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/guardrails/assignments/members",
+      "handlerCount": 1
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/guardrails/:id/assignments/keys",
+      "handlerCount": 1
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/guardrails/:id/assignments/keys/remove",
+      "handlerCount": 1
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/guardrails/:id/assignments/keys",
+      "handlerCount": 1
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/guardrails/:id/assignments/members",
+      "handlerCount": 1
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/guardrails/:id/assignments/members/remove",
+      "handlerCount": 1
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/guardrails/:id/assignments/members",
+      "handlerCount": 1
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/guardrails/:id",
+      "handlerCount": 1
+    },
+    {
+      "method": "PATCH",
+      "path": "/api/v1/guardrails/:id",
+      "handlerCount": 1
+    },
+    {
+      "method": "DELETE",
+      "path": "/api/v1/guardrails/:id",
+      "handlerCount": 1
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/byok",
+      "handlerCount": 1
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/byok",
+      "handlerCount": 1
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/byok/reorder",
+      "handlerCount": 1
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/byok/:id",
+      "handlerCount": 1
+    },
+    {
+      "method": "PATCH",
+      "path": "/api/v1/byok/:id",
+      "handlerCount": 1
+    },
+    {
+      "method": "DELETE",
+      "path": "/api/v1/byok/:id",
+      "handlerCount": 1
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/analytics/meta",
+      "handlerCount": 1
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/analytics/query",
+      "handlerCount": 1
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/endpoints/zdr",
+      "handlerCount": 2
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/images/models",
+      "handlerCount": 2
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/images/models/:author/:slug/endpoints",
+      "handlerCount": 2
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/generation",
+      "handlerCount": 2
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/generation/feedback",
+      "handlerCount": 2
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/chat/completions",
+      "handlerCount": 1
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/completions",
+      "handlerCount": 1
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/responses",
+      "handlerCount": 1
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/embeddings/models",
+      "handlerCount": 1
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/embeddings",
+      "handlerCount": 1
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/rerank",
+      "handlerCount": 1
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/images",
+      "handlerCount": 1
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/images/generations",
+      "handlerCount": 1
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/images/edits",
+      "handlerCount": 1
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/audio/transcriptions",
+      "handlerCount": 1
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/audio/speech",
+      "handlerCount": 1
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/messages",
+      "handlerCount": 1
+    },
+    {
+      "method": "GET",
+      "path": "/catalog/models",
+      "handlerCount": 1
+    },
+    {
+      "method": "GET",
+      "path": "/catalog/models/:vendor/:slug",
+      "handlerCount": 1
+    },
+    {
+      "method": "GET",
+      "path": "/catalog/providers",
+      "handlerCount": 1
+    },
+    {
+      "method": "GET",
+      "path": "/catalog/stats/models",
+      "handlerCount": 1
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/presets",
+      "handlerCount": 1
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/presets/:slug/versions/:version",
+      "handlerCount": 1
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/presets/:slug/versions",
+      "handlerCount": 1
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/presets/:slug/chat/completions",
+      "handlerCount": 1
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/presets/:slug/messages",
+      "handlerCount": 1
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/presets/:slug/responses",
+      "handlerCount": 1
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/presets/:slug",
+      "handlerCount": 1
+    },
+    {
+      "method": "GET",
+      "path": "/v1/presets",
+      "handlerCount": 1
+    },
+    {
+      "method": "GET",
+      "path": "/v1/presets/:slug/versions/:version",
+      "handlerCount": 1
+    },
+    {
+      "method": "GET",
+      "path": "/v1/presets/:slug/versions",
+      "handlerCount": 1
+    },
+    {
+      "method": "POST",
+      "path": "/v1/presets/:slug/chat/completions",
+      "handlerCount": 1
+    },
+    {
+      "method": "POST",
+      "path": "/v1/presets/:slug/messages",
+      "handlerCount": 1
+    },
+    {
+      "method": "POST",
+      "path": "/v1/presets/:slug/responses",
+      "handlerCount": 1
+    },
+    {
+      "method": "GET",
+      "path": "/v1/presets/:slug",
+      "handlerCount": 1
+    },
+    {
+      "method": "GET",
+      "path": "/",
+      "handlerCount": 1
+    }
+  ]
+}

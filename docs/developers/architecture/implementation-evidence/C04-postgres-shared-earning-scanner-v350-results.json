@@ -1,0 +1,51 @@
+{
+  "status": "PASS",
+  "cleanup": "PASS",
+  "binaryVersion": "postgres (PostgreSQL) 18.6",
+  "scope": "owned loopback PG18.6, formal PG73 and review-only economic proposals; no deployed Worker/Hyperdrive",
+  "sourceSha256": {
+    "formalMigrationCorpus": "23afef61a8a670e0af8c90e3a138f522e6b283b454e380a592bf85bca83108dc",
+    "quoteProposal": "1249a7ff07f95b48c7b45a41833c96c9a028e4bfe3a47e44e9dc6b72c3c77246",
+    "dispatchProposal": "c89c79e803fd69a2d09d44b33be3301aeb8aa4ed72c5dff5518439ec29fafb83",
+    "outboxProposal": "f92835c72ff02cba23879ed90ad640832455ccb98764f28fe4ee04ce52aab1ac",
+    "consumerProposal": "66fbd89c3453320284133de06d72793d4e1d2f68aaf756087857c18493e955db",
+    "deliveryProposal": "79e53d2ef830dc2641732d24ef0230befac344c9d1a30469487b44074f78ece8",
+    "scannerRuntime": "f34241ae2ea73cec4e7f76be5b0ce3f02317b70426aab4042110e51f473ad8d7",
+    "nativeTest": "d340a8995a4420a697926862700265a57df6c42a305ff0809bb265b3866cbe61"
+  },
+  "stages": [
+    {
+      "name": "formal-pg73-installed",
+      "result": "PASS"
+    },
+    {
+      "name": "review-only-event-delivery-and-consumer-installed",
+      "result": "PASS"
+    },
+    {
+      "name": "wrong-delivery-and-consumer-logins-denied",
+      "result": "PASS"
+    },
+    {
+      "name": "expired-lease-restart-credits-once",
+      "result": "PASS"
+    },
+    {
+      "name": "lost-ack-response-restart-does-not-double-credit",
+      "result": "PASS"
+    },
+    {
+      "name": "lost-consumer-response-marker-reconciled-without-recredit",
+      "result": "PASS"
+    },
+    {
+      "name": "earliest-housekeeping-does-not-delay-later-pending-event",
+      "result": "PASS"
+    }
+  ],
+  "limitations": [
+    "The native fixture exercises direct PostgreSQL clients, not Cloudflare Workers or Hyperdrive.",
+    "Synthetic events and local roles do not prove production credential custody, origin pool budget, or deployment.",
+    "The v342 proposal and v340 consumer remain review-only; scanner activation is absent from shipped Wrangler config."
+  ]
+}

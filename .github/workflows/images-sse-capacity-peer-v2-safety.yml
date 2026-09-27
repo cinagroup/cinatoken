@@ -1,0 +1,22 @@
+name: Images SSE capacity peer barriers safety
+on:
+  pull_request:
+    paths: ['scripts/deploy/**', 'packages/proxy/**', 'packages/core/**', 'package-lock.json', '.github/workflows/images-sse-capacity-peer-v2-safety.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  peer:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    strategy:
+      matrix:
+        node: [22, 24]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+          cache: npm
+      - run: npm ci
+      - run: node node_modules/tsx/dist/cli.mjs --test --test-concurrency=2 scripts/deploy/staging-sse-capacity-peer-protocol.test.mjs scripts/deploy/staging-sse-capacity-peer-client.test.mjs packages/proxy/scripts/staging/images-sse-capacity-peer-v2.test.mjs packages/proxy/scripts/staging/images-sse-capacity-peer-host-v2.test.mjs

@@ -1,0 +1,77 @@
+{
+  "status": "PASS",
+  "cleanup": "PASS",
+  "binaryVersion": "postgres (PostgreSQL) 18.6",
+  "scope": "owned loopback PostgreSQL 18; 73 formal migrations; three review-only proposals; actual runtime grant defaults",
+  "limitations": [
+    "The activation is generated but never put in formal migrations or a production entry point.",
+    "Only the exact known migrator/schema table SELECT and function EXECUTE defaults are admitted; other ACL layouts require separate review.",
+    "Synthetic empty-schema fixture does not establish maintenance-window lock duration, old-row backfill, production identity, or external origin behavior."
+  ],
+  "sourceSha256": {
+    "generator": "7e6ca14044cb904308750b51d106835705e21ed5bbc47061604683f59af0b1e3",
+    "nativeTest": "49cb994ccea5e8bab66bbc5aed958af013e397c4c46236d7e0759e4a909d0ddc",
+    "runtimeGrant": "09970100b97c7154ece423b5170868f2d69288351c69be4522c68728ed7adab8",
+    "definerProposal": "02cf4ffde6d37bb9253e9466cbde59047b5b8a0b19d73897ae69d60696db077d",
+    "singleClaimProposal": "6e62e12c25a94e4b32fe0121c728198a409f95427ef4cdcb14c51ebe1a629112",
+    "parentProposal": "2e8c20088f72271ecf89bc4f43583ec3b2247893a11b84cc6a220563a72de8de",
+    "formalMigrationCorpus": "23afef61a8a670e0af8c90e3a138f522e6b283b454e380a592bf85bca83108dc"
+  },
+  "stages": [
+    {
+      "name": "actual-runtime-default-acl-installed",
+      "result": "PASS",
+      "formalMigrations": 73,
+      "defaultAcl": [
+        {
+          "namespace": "16387",
+          "type": "S",
+          "acl": "{cinatoken_gateway_runtime=rwU/cinatoken_gateway_migrator}"
+        },
+        {
+          "namespace": "16387",
+          "type": "f",
+          "acl": "{cinatoken_gateway_runtime=X/cinatoken_gateway_migrator}"
+        },
+        {
+          "namespace": "16387",
+          "type": "r",
+          "acl": "{cinatoken_gateway_runtime=r/cinatoken_gateway_migrator}"
+        }
+      ]
+    },
+    {
+      "name": "plain-parent-proposal-rejects-copied-default-grant-atomically",
+      "result": "PASS"
+    },
+    {
+      "name": "unknown-schema-default-grant-fails-closed-without-mutation",
+      "result": "PASS"
+    },
+    {
+      "name": "unknown-global-default-grant-fails-closed-without-mutation",
+      "result": "PASS"
+    },
+    {
+      "name": "parent-preflight-failure-rolls-back-temporary-default-revokes-and-preserves-row",
+      "result": "PASS"
+    },
+    {
+      "name": "one-transaction-activation-restores-defaults-and-leaves-parent-closed",
+      "result": "PASS",
+      "parentAccess": {
+        "parent_table": false,
+        "intent_write": false,
+        "prepare": false,
+        "claim": false,
+        "classify": false,
+        "ordinary_select": true
+      }
+    },
+    {
+      "name": "runtime-grant-rerun-keeps-parent-closed-and-defaults-intact",
+      "result": "PASS"
+    }
+  ],
+  "serverVersionNum": 180006
+}

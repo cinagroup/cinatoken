@@ -122,6 +122,23 @@ describe('weight_priority / weighted_round_robin ordering', () => {
 		];
 		assert.deepEqual(firsts, ['p1', 'p1', 'p2']);
 	});
+
+	it('matches expanded rotation with fractional weights and duplicate providers over complete cycles', () => {
+		const routes = [makeRoute('a', { routeWeight: 2.8 }), makeRoute('b', { routeWeight: 0.5 }),
+			makeRoute('a', { routeWeight: 3 }), makeRoute('c', { routeWeight: 2 })];
+		const slots = routes.flatMap(route => Array.from({ length: Math.max(1, Math.floor(route.routeWeight)) }, () => route));
+		for (let start = 0; start < slots.length * 2; start++) {
+			const offset = start % slots.length;
+			const rotated = [...slots.slice(offset), ...slots.slice(0, offset)];
+			const expected = rotated.filter((route, index) => rotated.findIndex(other => other.providerId === route.providerId) === index);
+			assert.deepEqual(ROUTE_STRATEGIES.weighted_round_robin(routes, { affinityKey: 'k', tierKey: 'blocks' }), expected);
+		}
+	});
+
+	it('orders very large finite weights without allocating expanded slots', () => {
+		const routes = [makeRoute('a', { routeWeight: Number.MAX_VALUE }), makeRoute('b', { routeWeight: 1 })];
+		assert.deepEqual(ROUTE_STRATEGIES.weighted_round_robin(routes, { affinityKey: 'k', tierKey: 'large' }), routes);
+	});
 });
 
 describe('hash_affinity ordering', () => {

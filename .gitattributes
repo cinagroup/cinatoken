@@ -1,2 +1,10 @@
 * text=auto eol=lf
 *.{png,ico,icns} binary
+
+# Keep byte-based source pins and checklist evidence reproducible after checkout.
+packages/core/src/**/*.ts -text
+packages/proxy/src/**/*.ts -text
+packages/core/migrations-postgres/*.sql -text
+packages/core/migrations-proposals/postgres/*.sql -text
+scripts/db/cutover/** -text
+docs/developers/architecture/implementation-evidence/** -text

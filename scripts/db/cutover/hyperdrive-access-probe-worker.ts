@@ -73,6 +73,8 @@ type RuntimeProbe = {
 	batch_items_insert: boolean;
 	batch_items_update: boolean;
 	batch_items_delete: boolean;
+	recovery_tables_inaccessible: boolean;
+	recovery_helper_execute: boolean;
 	provider_attempt_retention_execute: boolean;
 	user_budget_reservations_delete: boolean;
 	migrations_select: boolean;
@@ -87,8 +89,8 @@ function migratorContractPassed(row: MigratorProbe | undefined): boolean {
 		!row.can_create_role &&
 		row.schema_usage &&
 		row.schema_create &&
-		row.migration_count === '67' &&
-		row.latest_migration === '0067_batch_jobs.sql' &&
+		row.migration_count === '73' &&
+		row.latest_migration === '0073_recovery_api_key_workspace_lock.sql' &&
 		row.latest_migration_applied;
 }
 
@@ -141,6 +143,8 @@ function runtimeContractPassed(row: RuntimeProbe | undefined): boolean {
 		row.batch_items_insert &&
 		row.batch_items_update &&
 		!row.batch_items_delete &&
+		row.recovery_tables_inaccessible &&
+		!row.recovery_helper_execute &&
 		row.provider_attempt_retention_execute &&
 		!row.user_budget_reservations_delete &&
 		!row.migrations_select &&
@@ -199,7 +203,7 @@ export default {
 						(SELECT MAX(version) FROM cinatoken_gateway.schema_migrations) AS latest_migration,
 						EXISTS (
 							SELECT 1 FROM cinatoken_gateway.schema_migrations
-							WHERE version = '0067_batch_jobs.sql'
+							WHERE version = '0073_recovery_api_key_workspace_lock.sql'
 						) AS latest_migration_applied
 				`;
 			const migratorPassed = migratorContractPassed(migratorRow);
@@ -316,6 +320,29 @@ export default {
 						has_table_privilege(
 							current_user, 'cinatoken_gateway.batch_items', 'DELETE'
 						) AS batch_items_delete,
+						(SELECT count(*) = 5 AND bool_and(NOT (
+							has_table_privilege(current_user, relation.oid, 'SELECT') OR
+							has_table_privilege(current_user, relation.oid, 'INSERT') OR
+							has_table_privilege(current_user, relation.oid, 'UPDATE') OR
+							has_table_privilege(current_user, relation.oid, 'DELETE') OR
+							has_table_privilege(current_user, relation.oid, 'TRUNCATE') OR
+							has_table_privilege(current_user, relation.oid, 'REFERENCES') OR
+							has_table_privilege(current_user, relation.oid, 'TRIGGER') OR
+							has_any_column_privilege(current_user, relation.oid, 'SELECT') OR
+							has_any_column_privilege(current_user, relation.oid, 'INSERT') OR
+							has_any_column_privilege(current_user, relation.oid, 'UPDATE') OR
+							has_any_column_privilege(current_user, relation.oid, 'REFERENCES')
+						)) FROM pg_catalog.pg_class relation
+						JOIN pg_catalog.pg_namespace namespace ON namespace.oid = relation.relnamespace
+						WHERE namespace.nspname = 'cinatoken_gateway'
+							AND relation.relname = ANY(ARRAY[
+								'request_dispatch_intents', 'request_usage_settlements',
+								'request_usage_settlement_outbox', 'request_usage_recovery_jobs',
+								'request_usage_commit_receipts'
+							]) AND relation.relkind = 'r') AS recovery_tables_inaccessible,
+						has_function_privilege(current_user,
+							'cinatoken_gateway.recovery_api_key_workspace_matches(text,text)',
+							'EXECUTE') AS recovery_helper_execute,
 						has_function_privilege(
 							current_user,
 							'cinatoken_gateway.delete_provider_attempt_availability_before(timestamptz, integer)',

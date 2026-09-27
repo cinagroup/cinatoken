@@ -2,11 +2,12 @@
  * 合并路由级默认参数：`custom_params` 与用户请求体深度合并（用户优先）。
  */
 import type { RouteResult } from './model-router';
+import { JsonStringPages } from './egress/json-string-pages';
 
 type JsonObject = Record<string, unknown>;
 
 function isPlainObject(value: unknown): value is JsonObject {
-  return typeof value === 'object' && value !== null && !Array.isArray(value);
+  return typeof value === 'object' && value !== null && !Array.isArray(value) && !(value instanceof JsonStringPages);
 }
 
 function deepMergeDefaults(defaultValue: unknown, userValue: unknown): unknown {

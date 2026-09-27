@@ -480,6 +480,10 @@ html[data-console-theme='dark'] {
 html[data-console-theme='dark'] .console-shell .bg-white { background-color: var(--console-panel) !important; }
 html[data-console-theme='dark'] .console-shell .bg-gray-50 { background-color: var(--console-bg) !important; }
 html[data-console-theme='dark'] .console-shell .bg-gray-100 { background-color: var(--console-panel-subtle) !important; }
+/* Opacity-qualified Tailwind surfaces used by model/provider/route screens. */
+html[data-console-theme='dark'] .console-shell [class~='bg-gray-100/90'],
+html[data-console-theme='dark'] .console-shell [class~='bg-gray-50/90'] { background-color: var(--console-bg) !important; }
+html[data-console-theme='dark'] .console-shell [class~='bg-white/90'] { background-color: var(--console-panel) !important; }
 html[data-console-theme='dark'] .console-shell .border-gray-50,
 html[data-console-theme='dark'] .console-shell .border-gray-100,
 html[data-console-theme='dark'] .console-shell .border-gray-200,

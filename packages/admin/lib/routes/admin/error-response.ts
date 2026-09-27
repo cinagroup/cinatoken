@@ -3,6 +3,8 @@
  */
 import type { Context } from 'hono';
 import { isAdminServiceError } from '@/lib/services/admin/errors';
+import { handleGatewayApiError } from '@/lib/api-error';
+import { isTransientPostgresConnectionError } from '@octafuse/core/storage/postgres-connection-error';
 
 /** 返回 `{ success: false, message }` JSON，不经过 Hono `c.json`（与部分路由错误体一致）。 */
 export function jsonErr(c: Context, status: number, message: string) {
@@ -18,6 +20,9 @@ export function jsonErr(c: Context, status: number, message: string) {
 export function handleAdminRouteError(c: Context, error: unknown, fallbackMessage: string) {
 	if (isAdminServiceError(error)) {
 		return jsonErr(c, error.status, error.message);
+	}
+	if (isTransientPostgresConnectionError(error)) {
+		return handleGatewayApiError({ route: c.req.path, error });
 	}
 	console.error('[admin] route error:', error);
 	return jsonErr(c, 500, fallbackMessage);

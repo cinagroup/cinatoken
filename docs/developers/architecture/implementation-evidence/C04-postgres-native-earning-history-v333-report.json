@@ -1,0 +1,57 @@
+{
+  "status": "PASS",
+  "cleanup": "PASS",
+  "binaryVersion": "postgres (PostgreSQL) 18.6",
+  "scope": "owned loopback PG18.6, 73 formal migrations and review-only earnings history guard",
+  "limitations": [
+    "The proposal is not a formal migration or deployed on a production database.",
+    "Only PostgreSQL is protected here; D1 and MySQL marketplace cascade policies remain open.",
+    "No immutable seller quote, price snapshot, economic outbox, adjustment or recovery consumer exists in this fixture."
+  ],
+  "stages": [
+    {
+      "name": "formal-schema-and-history-credit-trigger-installed",
+      "result": "PASS",
+      "migrations": 73
+    },
+    {
+      "name": "pre-guard-cascade-negative-control-rolled-back",
+      "result": "PASS",
+      "insideKeys": 0,
+      "insideEarnings": 0,
+      "insideLedger": 1,
+      "insideBalanceMicros": "40000"
+    },
+    {
+      "name": "activation-gated-lock-timeout-rollback-and-retry",
+      "result": "PASS",
+      "blockedMs": 2016
+    },
+    {
+      "name": "credited-history-and-parent-cascade-mutations-refused",
+      "result": "PASS",
+      "refused": [
+        "shared-key-cascade",
+        "seller-cascade",
+        "earning-delete",
+        "earning-update",
+        "earning-truncate"
+      ],
+      "durable": {
+        "keys": 1,
+        "earnings": 1,
+        "ledger": 1,
+        "balance": "40000"
+      }
+    },
+    {
+      "name": "duplicate-does-not-credit-and-unused-key-remains-deletable",
+      "result": "PASS"
+    }
+  ],
+  "sourceSha256": {
+    "formalMigrationCorpus": "23afef61a8a670e0af8c90e3a138f522e6b283b454e380a592bf85bca83108dc",
+    "nativeTest": "e260fbff0917bcf5cdd3ddb00a52bd7a6ecb39dbd9e14e1946d158429c4af557",
+    "historyGuardProposal": "454a720f9a6b7410e0aad99c2aaa2eb3327fbbac8c86bb3e3cd4537131e6611b"
+  }
+}

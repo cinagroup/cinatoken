@@ -1,0 +1,259 @@
+{
+  "version": 1,
+  "date": "2026-09-05",
+  "head": "7eb59008f7d8e156e81fd18a57658fdef2553264",
+  "status": "LOCAL_PASS_LISTED_NODE_SUBSET",
+  "wholeC02Gate": "DOING",
+  "evidence": "C02-image-auxiliary-auth.md",
+  "environment": {
+    "os": "Windows",
+    "node": "24.14.1",
+    "workersTypes": "5.20260829.1",
+    "node22": "not_run",
+    "workersRuntime": "not_verified_prior_native_startup_failure_not_retried"
+  },
+  "limits": {
+    "inferencePermits": 3,
+    "auxiliaryAuthExchanges": 3,
+    "imageDispatchDeadlineMs": 300000,
+    "imageDeadlineStartsAt": "shared_dispatch_budget_created_at_or_proxy_start_not_complete_ingress",
+    "callerDeadline": "can_tighten_never_extend",
+    "databaseAdmission": "await_commit_or_failure_then_check_stop_not_physically_cancelled",
+    "redirect": "manual"
+  },
+  "coverage": {
+    "wiredApplicationOAuthCalls": 8,
+    "remainingApplicationOAuthCalls": 9,
+    "newTests": 120,
+    "imageDriverLifecycleNewTests": 60,
+    "imageApiNewTests": 48,
+    "imageApiSseNewTests": 12,
+    "existingImageTestsAddedToSafetyCollector": 25,
+    "financialVerification": "real_route_to_generated_SQL_parameters_with_synthetic_storage_not_database_atomicity",
+    "imageAbortBuyerPolicy": "preserve_existing_zero_charge_policy_supplier_cost_liability_not_resolved"
+  },
+  "verification": [
+    {
+      "command": "npm.cmd run typecheck -w @octafuse/proxy",
+      "exitCode": 0
+    },
+    {
+      "command": "npm.cmd run typecheck:dispatch-safety -w @octafuse/proxy",
+      "exitCode": 0
+    },
+    {
+      "command": "tsx --test packages/proxy/src/services/egress/image-request-lifecycle.test.ts",
+      "exitCode": 0,
+      "tests": 60,
+      "suites": 1,
+      "failed": 0,
+      "cancelled": 0,
+      "skipped": 0
+    },
+    {
+      "command": "npm.cmd test -w @octafuse/proxy",
+      "exitCode": 0,
+      "mainTests": 1028,
+      "mainSuites": 135,
+      "failed": 0,
+      "cancelled": 0,
+      "skipped": 0
+    },
+    {
+      "command": "npm.cmd run test:dispatch-safety -w @octafuse/proxy",
+      "exitCode": 0,
+      "tests": 559,
+      "suites": 32,
+      "failed": 0,
+      "cancelled": 0,
+      "skipped": 0
+    },
+    {
+      "command": "git diff --check",
+      "exitCode": 0
+    }
+  ],
+  "countsOverlap": true,
+  "coreFullSuite": "not_rerun_core_sources_unchanged",
+  "baselineAudit": {
+    "baselineFiles": 110,
+    "unchanged": 104,
+    "changed": [
+      "docs/developers/architecture/implementation-evidence/README.md",
+      "docs/developers/architecture/v2.1-openrouter-implementation-checklist.md",
+      "packages/proxy/package.json",
+      "packages/proxy/src/routes/v1/request-dispatch-limit.test.ts",
+      "packages/proxy/src/services/proxy.ts",
+      "packages/proxy/tsconfig.dispatch-safety.json"
+    ],
+    "unexpectedChanges": [],
+    "newDirtyFiles": [
+      "packages/proxy/src/routes/v1/images.ts",
+      "packages/proxy/src/services/egress/openai-images-driver.ts",
+      "docs/developers/architecture/implementation-evidence/C02-image-auxiliary-auth.md",
+      "packages/proxy/src/services/egress/image-request-lifecycle.test.ts"
+    ],
+    "unexpectedNewDirtyFiles": [],
+    "headUnchanged": true,
+    "note": "Snapshot itself is added after this audit; final validation checks its addition and all tested hashes. Two newly dirty source files were tracked and clean at turn start."
+  },
+  "files": [
+    {
+      "path": "packages/proxy/src/services/egress/openai-images-driver.ts",
+      "sha256": "04528ed8c8a610842b2be93246741707fc1b1d70eabdddd528d587800e8902b8",
+      "role": "changed_this_turn"
+    },
+    {
+      "path": "packages/proxy/src/services/proxy.ts",
+      "sha256": "f3ce2689ef20f7b2bec0f3b17984cab948d6a796d5ad348aa91a4b150f5bd965",
+      "role": "changed_this_turn"
+    },
+    {
+      "path": "packages/proxy/src/routes/v1/images.ts",
+      "sha256": "041de2a005ca8287833733f2145a8735368a740ad4c1e22c439d727f267b9d26",
+      "role": "changed_this_turn"
+    },
+    {
+      "path": "packages/proxy/src/services/egress/image-request-lifecycle.test.ts",
+      "sha256": "ae1c328f0fdb86afa9f86db87cbdb574530c223d02406cde1a1db76dc8b877ae",
+      "role": "changed_this_turn"
+    },
+    {
+      "path": "packages/proxy/src/routes/v1/request-dispatch-limit.test.ts",
+      "sha256": "a23d001aa22b5f68cb5b3f80a72cfe8c5e1ddb3f815d6dea4897ce9d0cc9c67c",
+      "role": "changed_this_turn"
+    },
+    {
+      "path": "packages/proxy/package.json",
+      "sha256": "39758dcf53a533897c014b3a6e6b8514d3268315eea6f2a9a60179e04b670fdd",
+      "role": "changed_this_turn"
+    },
+    {
+      "path": "packages/proxy/tsconfig.dispatch-safety.json",
+      "sha256": "0e11e38cf5147d052fb6145d9e742a50145b8840fc4625cb2f41b6cdd02ae9fd",
+      "role": "changed_this_turn"
+    },
+    {
+      "path": "packages/core/src/gcp-service-account-token.ts",
+      "sha256": "f60f0c28d49c01306c520289d6747c511ed0d52cdc5878378997024bf7cd844c",
+      "role": "supporting_unchanged_this_turn"
+    },
+    {
+      "path": "packages/core/src/gcp-oauth-lifecycle.ts",
+      "sha256": "90b6456e2b7ae19ee2e0d04c3f0b1e470f757bc11a91bd478c13b9830e7e0c0b",
+      "role": "supporting_unchanged_this_turn"
+    },
+    {
+      "path": "packages/core/src/request-auxiliary-auth-budget.ts",
+      "sha256": "a2995a8cd480b150960beab7ccb2aae60352b46e5d3fc79fff5f813aa6ad197f",
+      "role": "supporting_unchanged_this_turn"
+    },
+    {
+      "path": "packages/proxy/src/services/request-deadline.ts",
+      "sha256": "145b0dc9fb702d1ef67efe9c40593c92a61f9204bc538b0ae9d9d8c46f9c0869",
+      "role": "supporting_unchanged_this_turn"
+    },
+    {
+      "path": "packages/proxy/src/services/failover-dispatch.ts",
+      "sha256": "6a93147fcf1c5c4f17db99ed03a7805b5fba7a98786f3153eeb27143fa4d853f",
+      "role": "supporting_unchanged_this_turn"
+    },
+    {
+      "path": "packages/proxy/src/services/request-dispatch-budget.ts",
+      "sha256": "53115c21920845089c19d9002c7e3b6c70f5fccdd3107f2fee30c0874393a066",
+      "role": "supporting_unchanged_this_turn"
+    },
+    {
+      "path": "packages/proxy/src/services/egress/bounded-response-body.ts",
+      "sha256": "6356f5a60c624994c69b25dd81c5a868d8bd9105c49799f74cf63750ad279275",
+      "role": "supporting_unchanged_this_turn"
+    },
+    {
+      "path": "packages/proxy/src/services/egress/openai-images-driver.test.ts",
+      "sha256": "7e87c5f1332ce55bc178dbbc34ffc549ccff3f6ee6ddceb8760a5ffe926e5a20",
+      "role": "supporting_unchanged_this_turn"
+    },
+    {
+      "path": "packages/proxy/src/services/request-budget-admission.ts",
+      "sha256": "1a0f28f8d3cf6926bb95c22954ffec7c6390bd2a26a0405cce427e48873e16f6",
+      "role": "supporting_unchanged_this_turn"
+    },
+    {
+      "path": "packages/proxy/src/services/request-log-record-status.ts",
+      "sha256": "3bb524663988d98195fc90e7c8327abc749288002c77c1b9f4ac400de1920113",
+      "role": "supporting_unchanged_this_turn"
+    },
+    {
+      "path": "packages/proxy/src/services/image-usage-charge.ts",
+      "sha256": "4cb48cf3468106b136c0c9b883529c964eec3006d3e7c623948a86a35b2f7439",
+      "role": "supporting_unchanged_this_turn"
+    },
+    {
+      "path": "packages/proxy/src/services/byok-key-pool.ts",
+      "sha256": "e3885782b22a841e7661a425d1046b003342aeba626041b11786f9bcc795a18f",
+      "role": "supporting_unchanged_this_turn"
+    },
+    {
+      "path": "packages/proxy/src/services/shared-key-pool.ts",
+      "sha256": "c65f12a6909c1130d89fb9aabe89b38878e1697df4d9b9c3801dee50c2d16174",
+      "role": "supporting_unchanged_this_turn"
+    },
+    {
+      "path": "packages/proxy/src/services/gateway-error-response.ts",
+      "sha256": "3132fc8736d9c5a7927f77bdf1f2e4dd2045b337abb87e0e2969ea7da0252ebc",
+      "role": "supporting_unchanged_this_turn"
+    },
+    {
+      "path": "packages/proxy/src/services/openrouter-error-protocol.ts",
+      "sha256": "ba8a00c14c2579016c741d9cce2272996fb240e8c9945d5d02cc015e311b22d9",
+      "role": "supporting_unchanged_this_turn"
+    },
+    {
+      "path": "packages/proxy/src/services/gateway-error-codes.ts",
+      "sha256": "591268ef7cfc2fb254a3dd2186d0340cb1b8f7903795ffafe605012b6d331fe5",
+      "role": "supporting_unchanged_this_turn"
+    },
+    {
+      "path": "packages/proxy/wrangler.jsonc",
+      "sha256": "7ffb4a120ce0b83df428a1344fca5b16ea9d8784178d555e7377623511451b0c",
+      "role": "supporting_unchanged_this_turn"
+    },
+    {
+      "path": "packages/core/src/db/d1/critical-writes.impl.ts",
+      "sha256": "761865dbf9fbc69f1f3a5410649960fb99f6ef27bd6c415e1ceb17e5eea506df",
+      "role": "supporting_unchanged_this_turn"
+    }
+  ],
+  "externalActions": {
+    "publicDocsRead": true,
+    "gcpReadOnlyMetadata": {
+      "projectId": "cinatoken",
+      "lifecycleState": "ACTIVE",
+      "activeCliLogin": true,
+      "kmsApiListedAsEnabled": false,
+      "initialCliAttempt": "sandbox_denied_then_approved_read_only_execution"
+    },
+    "cloudMutations": false,
+    "realOAuthOrModelCalls": false,
+    "kmsCryptographicOperations": false,
+    "databaseMigrations": false,
+    "deployment": false,
+    "remoteCi": false,
+    "payments": false,
+    "secretsRecorded": false,
+    "dataDeletion": false
+  },
+  "remaining": [
+    "audio_and_realtime_auth_budget_lifetime",
+    "independent_admin_playground_contract",
+    "vector_image_full_ingress_lifetime",
+    "multipart_memory_limits",
+    "database_physical_cancellation_and_durable_admission_recovery",
+    "headers_effective_ttft_idle",
+    "top_k_and_eliminate_full_pool_read_decrypt",
+    "real_workers_database_node22_validation",
+    "c01_supplier_cost_liability_and_kms_location_protection_level"
+  ],
+  "nextWorkItem": "C02.B2.2",
+  "nextScope": "audio_realtime_then_independent_admin_preview"
+}

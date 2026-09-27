@@ -1,0 +1,44 @@
+{
+  "version": "v339",
+  "date": "2026-09-24",
+  "status": "LOCAL_DISPATCH_SUITE_PASS_C02_OPEN",
+  "initialFullRun": { "passed": 4215, "total": 4273, "failed": 58 },
+  "finalFullRun": {
+    "command": "npm run test:dispatch-safety -w @octafuse/proxy",
+    "passed": 4291,
+    "total": 4291,
+    "failed": 0,
+    "log": ".wrangler/staging/dispatch-safety-v339-final.log",
+    "logSha256": "6952f8836b0b435e8cac20153d22a4f40fffccc53d877de0828858ba3a007507"
+  },
+  "focused": {
+    "realtimeAsrVertex": "362/362",
+    "globalFallback": "6/6",
+    "publicDispatchLimit": "701/701",
+    "imageRequestLifecycle": "96/96",
+    "dispatchSafetyTypecheck": "PASS",
+    "proxyTypecheck": "PASS"
+  },
+  "change": "Test fixtures use explicit 429 for replayable rejection; 503 remains unknown/no-replay with resource and budget assertions. Test-only TypeScript types clarified.",
+  "sourceSha256": {
+    "packages/proxy/src/runtime/node-realtime-ledger.test.ts": "6cd19a40805267cc1b0529c780306344e91ca6d3c87cdeb3bcf544b0f32ca20d",
+    "packages/proxy/src/services/egress/asr-resource-completion.test.mjs": "89119930027e0f264168fd3ec53850d0550ce0fa0a91121ee6a0d92cf59754ca",
+    "packages/proxy/src/services/egress/asr-upload-resource.test.mjs": "aece45a47dc3415e0f3094da0fdccfa88b635207821fb63cabc815dc5055b680",
+    "packages/proxy/src/services/egress/dashscope-upload-resource.test.mjs": "0531fca6cf14bb02794c07f042f3badbe10477f35b37f08762c9af56e65fe150",
+    "packages/proxy/src/services/egress/vertex-service-account.test.ts": "ccf6406c756fc84dc24a2e9aa13baf464526e1bde160503bddd22f64048cc5c1",
+    "packages/proxy/src/services/model-fallback-global-dispatch.test.ts": "2b9e091fd56024ccdbe63e44b6b4d1701953c344d68e15990bb3e69be85cfb05",
+    "packages/proxy/src/routes/v1/request-dispatch-limit.test.ts": "df9e2ca5910cfebed9eca369ad009dcffba92a4f73ef5b2511128aff406e0ec5",
+    "packages/proxy/src/services/egress/image-request-lifecycle.test.ts": "5a23f5fcf84eb41297f1ea31f7078e27db7095775dcb2116082e38d3a72b446e"
+  },
+  "limits": {
+    "linuxCiRun": false,
+    "workersTransportVerified": false,
+    "intermediateProxyRetryVerified": false,
+    "supplierAcceptanceAndBillingVerified": false,
+    "concurrentSharedBudgetVerified": false,
+    "durableFinancialSettlementVerified": false,
+    "C02_5Complete": false,
+    "C02_6Complete": false,
+    "C02_GComplete": false
+  }
+}

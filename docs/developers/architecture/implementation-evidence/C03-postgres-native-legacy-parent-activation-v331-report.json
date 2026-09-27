@@ -1,0 +1,117 @@
+{
+  "status": "PASS",
+  "cleanup": "PASS",
+  "binaryVersion": "postgres (PostgreSQL) 18.6",
+  "scope": "owned loopback PostgreSQL 18; review-only legacy-aware parent and replay reservation proposals",
+  "limitations": [
+    "Synthetic history does not measure a production lock window or prove archive/retention policy.",
+    "No old request digest, original attempt budget or original deadline is inferred; old intents remain outside trusted parent rows.",
+    "No runtime producer grant, provider send, Worker, Hyperdrive, Queue or remote database is activated."
+  ],
+  "sourceSha256": {
+    "formalMigrationCorpus": "23afef61a8a670e0af8c90e3a138f522e6b283b454e380a592bf85bca83108dc",
+    "definer": "02cf4ffde6d37bb9253e9466cbde59047b5b8a0b19d73897ae69d60696db077d",
+    "singleClaim": "6e62e12c25a94e4b32fe0121c728198a409f95427ef4cdcb14c51ebe1a629112",
+    "reservation": "3fa28e1f34f0a99f73bd7f9e4411ae7de8659a170a04d0b60ac468f92a055667",
+    "legacyParent": "49c59a2329d008f05f2bff2f4f1bb649a819ed69c7d9e66c3b193e7058b51758",
+    "parentGate": "ff02f46cb94d6f6cdd003d6c00a6913d7d70421bb70124d2ff9cbdc9749e7e29",
+    "nativeTest": "9e6f4dcacd9ef8a88eadcf89f2a4fcd7f1e3a9457543a72943c6223d466029ff",
+    "activationGenerator": "d78e359a59114964ca9d5d88c45a0fef2c33412034fc203a521c3f73d7106488",
+    "activationBundle": "e280df138e0f77396e90c00e78b7cea08636df892ea859a9df68f94244181cc0",
+    "reservationBackfillGenerator": "e1c93a71cf17e1dbf8e46f728fd25fe12e5ea4f47899d5978755a59459a39d7e",
+    "runtimeGrant": "97a42a0d2bd9994566377e08b43281a2ead4842443c81ca8fc80439469725334",
+    "generatedActivationBundle": "1fd249bfeb82dfd684f47b0bc393ea2a1fe651e82ec37ff42730467e9bb92d0b"
+  },
+  "stages": [
+    {
+      "name": "formal-schema-runtime-grant-and-pinned-proposals",
+      "result": "PASS",
+      "migrations": 73
+    },
+    {
+      "name": "populated-0069-and-legacy-log-history",
+      "result": "PASS",
+      "oldBefore": {
+        "intents": 1,
+        "logs": 1
+      }
+    },
+    {
+      "name": "missing-intent-reservation-rolls-back-parent-and-gate",
+      "result": "PASS"
+    },
+    {
+      "name": "nonowner-old-intent-writer-survives-expand-and-reserves-id",
+      "result": "PASS",
+      "liveReservation": {
+        "intents": 1,
+        "reservations": 1
+      }
+    },
+    {
+      "name": "active-old-rows-and-column-writer-must-drain-before-switch",
+      "result": "PASS",
+      "intentBackfill": {
+        "scanned": 1,
+        "reserved": 1,
+        "next_request_id": "legacy-intent"
+      },
+      "terminal": [
+        "legacy-intent",
+        "legacy-live"
+      ]
+    },
+    {
+      "name": "missing-log-only-reservation-rolls-back-parent-and-gate",
+      "result": "PASS"
+    },
+    {
+      "name": "atomic-legacy-aware-parent-and-gate-switch",
+      "result": "PASS",
+      "intentBackfill": {
+        "scanned": 1,
+        "reserved": 1,
+        "next_request_id": "legacy-intent"
+      },
+      "logBackfill": {
+        "scanned": 1,
+        "reserved": 1,
+        "next_request_id": "legacy-log-only"
+      },
+      "postSwitch": {
+        "old_intents": 2,
+        "parents": 0,
+        "reservations": 3,
+        "unknown_claims": 1
+      }
+    },
+    {
+      "name": "old-ids-closed-new-trusted-parent-admitted",
+      "result": "PASS",
+      "newRows": {
+        "parent": 1,
+        "intent": 1,
+        "reservation": 1,
+        "old_intent": 1,
+        "old_log": 1
+      },
+      "access": {
+        "runtime_prepare": false,
+        "runtime_parent_insert": false
+      }
+    },
+    {
+      "name": "ordinary-log-cannot-preempt-new-parent-financial-receipt",
+      "result": "PASS"
+    },
+    {
+      "name": "late-ordinary-log-reserved-without-direct-runtime-access",
+      "result": "PASS",
+      "late": {
+        "logs": 1,
+        "reservations": 1
+      }
+    }
+  ],
+  "serverVersionNum": 180006
+}

@@ -69,6 +69,12 @@ import migration0064 from '../../../packages/core/migrations-postgres/0064_byok_
 import migration0065 from '../../../packages/core/migrations-postgres/0065_guardrail_budget_settlement_basis.sql';
 import migration0066 from '../../../packages/core/migrations-postgres/0066_workspace_budget_usage_index.sql';
 import migration0067 from '../../../packages/core/migrations-postgres/0067_batch_jobs.sql';
+import migration0068 from '../../../packages/core/migrations-postgres/0068_function_schema_resolution.sql';
+import migration0069 from '../../../packages/core/migrations-postgres/0069_recovery_dispatch_intents.sql';
+import migration0070 from '../../../packages/core/migrations-postgres/0070_recovery_settlement_facts.sql';
+import migration0071 from '../../../packages/core/migrations-postgres/0071_recovery_jobs.sql';
+import migration0072 from '../../../packages/core/migrations-postgres/0072_recovery_commit_receipts.sql';
+import migration0073 from '../../../packages/core/migrations-postgres/0073_recovery_api_key_workspace_lock.sql';
 
 interface MigrationEnv {
 	MIGRATOR_HYPERDRIVE: { readonly connectionString: string };
@@ -144,6 +150,12 @@ const MIGRATIONS = [
 	['0065_guardrail_budget_settlement_basis.sql', migration0065],
 	['0066_workspace_budget_usage_index.sql', migration0066],
 	['0067_batch_jobs.sql', migration0067],
+	['0068_function_schema_resolution.sql', migration0068],
+	['0069_recovery_dispatch_intents.sql', migration0069],
+	['0070_recovery_settlement_facts.sql', migration0070],
+	['0071_recovery_jobs.sql', migration0071],
+	['0072_recovery_commit_receipts.sql', migration0072],
+	['0073_recovery_api_key_workspace_lock.sql', migration0073],
 ] as const;
 
 export default {

@@ -59,6 +59,8 @@ export interface SharedKeyRow {
 	servedInputTokens: number;
 	servedOutputTokens: number;
 	earnedTotal: number;
+	/** Exact stored decimal for optimistic usage projection writes. */
+	earnedTotalExact?: string;
 	createdAt: string;
 	updatedAt: string;
 }

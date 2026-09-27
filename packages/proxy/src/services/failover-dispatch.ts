@@ -5,8 +5,9 @@
  * - 全部候选因熔断不可用时返回 429 + Retry-After（而非 502）。
  * - 循环内复查：本次请求内刚被熔断的 provider（同 providerId 多 target）不再打。
  */
-import type { GatewayRepositories, RouteStrategyName, UpstreamProtocol } from '@octafuse/core';
-import { DEFAULT_ROUTE_STRATEGY, fingerprintProviderApiKey } from '@octafuse/core';
+import { createResourceCompletionGroup, observeResourceCleanup } from './resource-completion';
+import type { GatewayRepositories, PreparationControl, RouteStrategyName, UpstreamProtocol } from '@octafuse/core';
+import { DEFAULT_ROUTE_STRATEGY, fingerprintProviderApiKey, preparationRead, RequestAuxiliaryAuthLimitError, type RequestAuxiliaryAuthBudget } from '@octafuse/core';
 import type { RoutePoolStickyRoutingConfig } from '@octafuse/core/db/route-pool-sticky-types';
 import type { RouteResult } from './model-router';
 import type { UsageFromStream } from './proxy';
@@ -35,9 +36,20 @@ import {
 } from './upstream-failure-classifier';
 import type { RequestTimingAttempt, RequestTimingCollector } from './request-timing';
 import { GatewayErrorCode } from './gateway-error-codes';
+import type { SharedKeyQuoteAttemptCapture, SharedKeyQuoteAttemptReference } from './shared-key-quote-attempt';
 import { gatewayErrorResponse, gatewayNestedErrorResponse } from './gateway-error-response';
 import { RequestBudgetAdmissionError } from './request-budget-admission';
-import { responseTextWithinLimit } from './egress/bounded-response-body';
+import { buildOpenRouterErrorBody, type OpenRouterErrorSkin } from './openrouter-error-protocol';
+import { createRequestDeadline, RequestExecutionStoppedError, type RequestDeadline } from './request-deadline';
+import {
+	createRequestDispatchBudget,
+	RequestDispatchLimitError,
+	type RequestDispatchBudget,
+	type RequestDispatchBudgetSnapshot,
+} from './request-dispatch-budget';
+import { responseTextWithinLimit, UpstreamResponseBodyTooLargeError } from './egress/bounded-response-body';
+import { preparedTextAttemptMatchesRoute } from './egress/prepared-text-attempt';
+import { MAX_MATERIALIZED_ERROR_BODY_BYTES } from './request-log-record-status';
 import {
 	clearStickyBindingSync,
 	mergeStickyIntoAttempts,
@@ -65,12 +77,14 @@ const MAX_DISPATCH_TRACE_ERROR_BODY_BYTES = 8 * 1024;
 function maybeScheduleStickyStaleGc(
 	repos: GatewayRepositories,
 	session: StickySession,
-	nowMs = Date.now()
+	nowMs = Date.now(),
+	control?: PreparationControl,
 ): void {
 	if (Math.random() >= STICKY_STALE_GC_PROBABILITY) return;
 	const cutoffIso = new Date(nowMs - STICKY_STALE_GC_MAX_AGE_MS).toISOString();
+	const removeStale = () => repos.routePoolSticky.deleteStaleBefore(cutoffIso, STICKY_STALE_GC_LIMIT);
 	session.mutations.push(
-		repos.routePoolSticky.deleteStaleBefore(cutoffIso, STICKY_STALE_GC_LIMIT).catch((err) => {
+		(control ? control.runOwnedMutation(removeStale) : removeStale()).catch((err) => {
 			console.warn('[Gateway Sticky] stale GC failed', err);
 		})
 	);
@@ -88,6 +102,8 @@ export type ProxyDispatchMeta = {
 		completed: boolean;
 		done: boolean;
 		cancelled: boolean;
+		/** Local capacity rejection after accepted upstream work, not known zero usage. */
+		upstreamOutcomeUnknown?: boolean;
 		imageAbortReason?: ImageDispatchAbortReason;
 		errorMessage: string | null;
 		validImages: number;
@@ -112,7 +128,7 @@ export type ProxyDispatchMeta = {
 	failoverForbidden?: boolean;
 	/** The response body was generated and sanitized inside the gateway, not supplied by an upstream. */
 	gatewayGeneratedError?: boolean;
-	/** A request-local admission policy denied the attempt before any upstream network dispatch. */
+	/** This attempt was denied before dispatch; earlier attempts may have been sent. */
 	admissionDeniedPreDispatch?: boolean;
 };
 
@@ -142,6 +158,7 @@ export function shouldFailImmediatelyForImageAbort(meta?: ProxyDispatchMeta | nu
 
 export type ProxyDispatchResult = {
 	response: Response;
+	resourceCompletion?: import('./resource-completion').ResourceCompletion;
 	usagePromise: Promise<UsageFromStream>;
 	upstreamRequestId: string | null;
 	meta?: ProxyDispatchMeta;
@@ -149,6 +166,9 @@ export type ProxyDispatchResult = {
 
 export type ProxyFailoverResult = {
 	response: Response;
+	/** Exact quote claim for the selected dispatch result, when capture was enabled. */
+	quoteAttemptReference?: SharedKeyQuoteAttemptReference | null;
+	resourceCompletion?: import('./resource-completion').ResourceCompletion;
 	usagePromise: Promise<UsageFromStream>;
 	upstreamRequestId: string | null;
 	chosenRoute: RouteResult;
@@ -166,6 +186,8 @@ export type ProxyFailoverResult = {
 	stickyMutationPromise?: Promise<unknown> | null;
 	/** Bounded, sanitized request-level attempt history for model fallback audit. */
 	dispatchAttempts?: ProxyDispatchAttemptTrace[];
+	/** Independent of the bounded trace array; shared across model/key fallbacks. */
+	dispatchBudget?: RequestDispatchBudgetSnapshot;
 };
 
 export type ProxyDispatchAttemptTrace = {
@@ -181,6 +203,8 @@ export type ProxyDispatchAttemptTrace = {
 };
 
 export type FailoverDispatchOptions = {
+	/** Synchronous registration before dispatch; independent from usage/accounting. */
+	registerResourceCompletion?: (task: import('./resource-completion').ResourceCompletion) => void;
 	affinityKey: string;
 	tierKeyPrefix: string;
 	strategy: RouteStrategyName;
@@ -197,12 +221,25 @@ export type FailoverDispatchOptions = {
 	stickyRouteEligible?: ((route: RouteResult) => boolean) | null;
 	/** Outer cross-model orchestration will continue after a non-OK result. */
 	deferFinalAttempt?: boolean;
+	/** One request-scoped budget, including outer model loops and BYOK expansion. */
+	dispatchBudget?: RequestDispatchBudget;
+	/** Absolute request cutoff, shared by every outer model invocation. */
+	requestDeadlineAtMs?: number;
+	/** Optional ingress owner for credential/sticky preparation only. The caller
+	 * drains its mutations; protocol drivers still own response cancellation and settlement. */
+	preparationControl?: PreparationControl;
+	/** Supplied by the protocol entry point, not by upstream response headers. */
+	errorContext?: { skin: OpenRouterErrorSkin; requestId?: string };
 	/**
 	 * Request-scoped admission boundary. It is awaited immediately before the
 	 * first eligible dispatch callback and may fail closed without being
 	 * classified as an upstream fetch failure.
 	 */
-	beforeUpstreamDispatch?: (route: RouteResult) => Promise<void>;
+	beforeUpstreamDispatch?: (route: RouteResult, preparedAttempt?: unknown) => Promise<void>;
+	/** Opt-in text boundary: reject missing/stale driver identity before quote or grant. */
+	requirePreparedTextAttemptIdentity?: boolean;
+	/** Review-only exact quote reference capture at the delegated text pre-fetch boundary. */
+	quoteAttemptCapture?: SharedKeyQuoteAttemptCapture;
 	/**
 	 * Text drivers can prepare URL, credentials and serialized body first, then
 	 * invoke the admission boundary immediately beside fetch(). Other drivers
@@ -211,6 +248,13 @@ export type FailoverDispatchOptions = {
 	 * accounting preserves the admitted ceiling because replay is forbidden.
 	 */
 	delegateBeforeUpstreamDispatchToDriver?: boolean;
+	/**
+	 * A caller with a durable one-claim-per-request admission policy can stop
+	 * after the first granted dispatch, including a known non-2xx response.
+	 * Requires a delegated driver boundary and a callback that grants every
+	 * eligible route; this local option does not create the durable claim.
+	 */
+	stopAfterFirstGrantedDispatch?: boolean;
 	/**
 	 * Execute provider.sort.partition="none" as one request-level chain. A
 	 * request-shape 4xx stops only that model candidate; replay-forbidden
@@ -226,7 +270,9 @@ type DispatchFn = (
 	requestSignal?: AbortSignal,
 	timing?: RequestTimingCollector | null,
 	attempt?: RequestTimingAttempt,
-	beforeFetch?: () => Promise<void>,
+	beforeFetch?: (preparedAttempt?: unknown) => Promise<void>,
+	auxiliaryAuth?: RequestAuxiliaryAuthBudget,
+	upstreamHeadersObserved?: (status: number) => void,
 ) => Promise<ProxyDispatchResult>;
 
 function emptyRoute(protocol: UpstreamProtocol): RouteResult {
@@ -295,7 +341,230 @@ export async function failoverDispatch(
 	requestSignal?: AbortSignal,
 	options?: FailoverDispatchOptions
 ): Promise<ProxyFailoverResult> {
+	if (options?.stopAfterFirstGrantedDispatch === true && (
+		options.delegateBeforeUpstreamDispatchToDriver !== true
+		|| options.beforeUpstreamDispatch == null
+	)) {
+		throw new TypeError('stopAfterFirstGrantedDispatch requires delegated durable admission');
+	}
+	if (options?.quoteAttemptCapture && options.delegateBeforeUpstreamDispatchToDriver !== true) {
+		throw new TypeError('Shared-key quote capture requires a delegated pre-fetch boundary');
+	}
+	if (options?.requirePreparedTextAttemptIdentity === true
+		&& options.delegateBeforeUpstreamDispatchToDriver !== true) {
+		throw new TypeError('Prepared text identity requires a delegated pre-fetch boundary');
+	}
+	const resources = createResourceCompletionGroup();
+	try {
+		// The lease must be retained while the handler still owns it, including
+		// dispatches whose headers arrive after the deadline response was returned.
+		options?.registerResourceCompletion?.(resources.completion);
+		const ownedDispatch: DispatchFn = (...args) => {
+			const task = Promise.resolve().then(() => dispatch(...args));
+			resources.track(task.then(result => result.resourceCompletion ?? 'confirmed'));
+			return task;
+		};
+		const result = await failoverDispatchWithDeadline(repos, routes, expectedProtocol, ownedDispatch, requestSignal, options,
+			completion => resources.track(observeResourceCleanup(() => completion)));
+		return { ...result, resourceCompletion: resources.completion };
+	} finally { resources.seal(); }
+}
+
+async function failoverDispatchWithDeadline(
+	repos: GatewayRepositories,
+	routes: RouteResult[],
+	expectedProtocol: UpstreamProtocol | readonly UpstreamProtocol[],
+	dispatch: DispatchFn,
+	requestSignal?: AbortSignal,
+	options?: FailoverDispatchOptions,
+	observePreparation?: (completion: Promise<void>) => void,
+): Promise<ProxyFailoverResult> {
+	if (options?.requestDeadlineAtMs == null) {
+		return failoverDispatchWithinDeadline(repos, routes, expectedProtocol, dispatch, requestSignal, options);
+	}
+	let ownsPreparation = true;
+	const deadline = createRequestDeadline(options.requestDeadlineAtMs, requestSignal, undefined, completion => {
+		if (ownsPreparation) observePreparation?.(completion);
+	});
+	const dispatchBudget = options.dispatchBudget ?? createRequestDispatchBudget();
+	const execution: DeadlineExecution = {
+		deadline,
+		route: routes[0] ?? emptyRoute(Array.isArray(expectedProtocol) ? expectedProtocol[0]! : expectedProtocol as UpstreamProtocol),
+		quoteAttemptReference: null,
+		outcomeUnknown: false,
+		dispatchStarted: false,
+		upstreamRequestId: null,
+		usagePromise: Promise.resolve(EMPTY_USAGE),
+		attempts: [],
+		circuitEvents: [],
+	};
+	let responseOwnsDeadline = false;
+	try {
+		deadline.throwIfStopped();
+		const result = await failoverDispatchWithinDeadline(
+			repos, routes, expectedProtocol, dispatch, deadline.signal,
+			{ ...options, dispatchBudget }, execution,
+		);
+		// Raw reads already registered remain owned after cancellation. Future
+		// response pulls belong to the driver, not this soon-to-be-sealed group.
+		ownsPreparation = false;
+		if (!result.response.ok) {
+			// Materialize the bounded error body while this layer still owns the
+			// send/unknown facts. Timing out later in route logging would otherwise
+			// turn a known rejection into a generic exception/unknown settlement.
+			let response: Response;
+			let meta = result.meta;
+			try {
+				const text = await responseTextWithinLimit(result.response, MAX_MATERIALIZED_ERROR_BODY_BYTES, deadline.signal);
+				const headers = new Headers(result.response.headers);
+				headers.delete('Content-Length');
+				headers.delete('Content-Encoding');
+				headers.delete('Transfer-Encoding');
+				response = new Response(text, { status: result.response.status, statusText: result.response.statusText, headers });
+			} catch (error) {
+				if (!(error instanceof UpstreamResponseBodyTooLargeError)) throw error;
+				response = gatewayErrorResponse({
+					status: 502, code: GatewayErrorCode.upstreamResponseTooLarge,
+					message: 'Upstream error response exceeded the gateway size limit',
+					skin: options.errorContext?.skin, requestId: options.errorContext?.requestId,
+				});
+				meta = { ...meta, gatewayGeneratedError: true };
+			}
+			deadline.throwIfStopped();
+			return { ...result, response, meta };
+		}
+		deadline.throwIfStopped();
+		const response = deadline.wrapResponse(result.response);
+		responseOwnsDeadline = true;
+		return {
+			...result,
+			response,
+			usagePromise: result.usagePromise.then((usage) =>
+				deadline.signal.reason instanceof RequestExecutionStoppedError
+				&& deadline.signal.reason.reason === 'deadline_exceeded'
+					? { ...usage, stream_error: usage.stream_error ?? 'Request deadline exceeded' }
+					: usage,
+			),
+		};
+	} catch (error) {
+		if (!(error instanceof RequestExecutionStoppedError)) throw error;
+		void execution.response?.body?.cancel('request_execution_stopped').catch(() => undefined);
+		// Quote claims are durable admission writes. Wait for an in-flight claim
+		// before snapshotting the selected reference for this terminal result.
+		await deadline.drainOwnedMutations();
+		// A later candidate can be selected for preparation before it claims a
+		// quote. If it never reached a claim or dispatch, settle the last quoted
+		// attempt instead of returning that unclaimed route with no reference.
+		const priorQuotedAttempt = !execution.quoteAttemptReference && !execution.dispatchStarted
+			? execution.priorQuotedAttempt : null;
+		const selectedQuoteReference = execution.quoteAttemptReference ?? priorQuotedAttempt?.quoteAttemptReference;
+		console.warn(JSON.stringify({ message: 'request dispatch stopped', reason: error.reason }));
+		const status = error.reason === 'deadline_exceeded' ? 504 : 499;
+		const code = error.reason === 'deadline_exceeded' ? GatewayErrorCode.requestDeadlineExceeded : GatewayErrorCode.requestCancelled;
+		return {
+			response: new Response(JSON.stringify(buildOpenRouterErrorBody({
+				skin: options.errorContext?.skin ?? 'chat', status, legacyCode: code,
+				requestId: options.errorContext?.requestId,
+				errorType: error.reason === 'deadline_exceeded' ? 'timeout' : 'provider_unavailable',
+				message: error.message,
+			})), { status, headers: { 'Content-Type': 'application/json; charset=UTF-8', 'Cache-Control': 'no-store', 'X-OctaFuse-Error-Code': code } }),
+			usagePromise: priorQuotedAttempt?.usagePromise ?? execution.usagePromise,
+			...(selectedQuoteReference
+				? { quoteAttemptReference: selectedQuoteReference } : {}),
+			upstreamRequestId: priorQuotedAttempt?.upstreamRequestId ?? execution.upstreamRequestId,
+			chosenRoute: priorQuotedAttempt?.route ?? execution.route,
+			circuitEvents: execution.circuitEvents,
+			dispatchAttempts: [...execution.attempts],
+			dispatchBudget: dispatchBudget.snapshot(),
+			stickyTrace: () => resolveStickyTrace(execution.stickySession ?? null),
+			stickyMutationPromise: stickyMutationPromise(execution.stickySession ?? null),
+			suppressErrorAlert: true,
+			meta: {
+				gatewayGeneratedError: true, failoverForbidden: true,
+				upstreamOutcomeUnknown: priorQuotedAttempt?.outcomeUnknown ?? execution.outcomeUnknown,
+				admissionDeniedPreDispatch: !(priorQuotedAttempt?.dispatchStarted ?? execution.dispatchStarted),
+			},
+		};
+	} finally {
+		ownsPreparation = false;
+		await deadline.drainOwnedMutations();
+		if (!responseOwnsDeadline) deadline.dispose();
+	}
+}
+
+type DeadlineExecution = {
+	deadline: RequestDeadline;
+	route: RouteResult;
+	quoteAttemptReference: SharedKeyQuoteAttemptReference | null;
+	priorQuotedAttempt?: {
+		route: RouteResult;
+		quoteAttemptReference: SharedKeyQuoteAttemptReference;
+		outcomeUnknown: boolean;
+		dispatchStarted: boolean;
+		upstreamRequestId: string | null;
+		usagePromise: Promise<UsageFromStream>;
+	};
+	outcomeUnknown: boolean;
+	dispatchStarted: boolean;
+	stickySession?: StickySession | null;
+	upstreamRequestId: string | null;
+	response?: Response;
+	usagePromise: Promise<UsageFromStream>;
+	attempts: ProxyDispatchAttemptTrace[];
+	circuitEvents: GatewayCircuitAlertEvent[];
+};
+
+async function failoverDispatchWithinDeadline(
+	repos: GatewayRepositories,
+	routes: RouteResult[],
+	expectedProtocol: UpstreamProtocol | readonly UpstreamProtocol[],
+	dispatch: DispatchFn,
+	requestSignal?: AbortSignal,
+	options?: FailoverDispatchOptions,
+	execution?: DeadlineExecution,
+): Promise<ProxyFailoverResult> {
+	const deadline = execution?.deadline;
+	const preparationControl = deadline ?? options?.preparationControl;
+	const read = <T>(operation: () => Promise<T>): Promise<T> => preparationRead(preparationControl, operation);
+	preparationControl?.throwIfStopped();
 	const timing = options?.timing ?? null;
+	const dispatchBudget = options?.dispatchBudget ?? createRequestDispatchBudget();
+	const dispatchLimitResult = (
+		route: RouteResult,
+		circuitEvents: GatewayCircuitAlertEvent[] = [],
+		auxiliaryAuthLimit = false,
+	): ProxyFailoverResult => {
+		const snapshot = dispatchBudget.snapshot();
+		const reason = auxiliaryAuthLimit ? 'auxiliary_auth_limit_exceeded' : 'dispatch_limit_exceeded';
+		const metadata = {
+			dispatch_limit: snapshot.limit,
+			dispatch_permits_consumed: snapshot.permitsConsumed,
+			auxiliary_auth_limit: snapshot.auxiliaryAuth.limit,
+			auxiliary_auth_exchanges_started: snapshot.auxiliaryAuth.exchangesStarted,
+		};
+		console.warn(JSON.stringify({
+			message: 'request dispatch stopped',
+			reason,
+			...metadata,
+		}));
+		return {
+			response: gatewayErrorResponse({
+				status: 502,
+				code: auxiliaryAuthLimit ? GatewayErrorCode.auxiliaryAuthLimitExceeded : GatewayErrorCode.dispatchLimitExceeded,
+				message: auxiliaryAuthLimit ? 'Request auxiliary authentication limit reached' : 'Request upstream dispatch limit reached',
+				metadata,
+				skin: options?.errorContext?.skin,
+				requestId: options?.errorContext?.requestId,
+			}),
+			usagePromise: Promise.resolve(EMPTY_USAGE),
+			upstreamRequestId: null,
+			chosenRoute: route,
+			circuitEvents,
+			suppressErrorAlert: true,
+			dispatchBudget: snapshot,
+			meta: { gatewayGeneratedError: true, failoverForbidden: true, admissionDeniedPreDispatch: true },
+		};
+	};
 	timing?.markUpstreamDispatchStart();
 	const expectedProtocols = Array.isArray(expectedProtocol)
 		? expectedProtocol
@@ -319,9 +588,19 @@ export async function failoverDispatch(
 			usagePromise: Promise.resolve(EMPTY_USAGE),
 			upstreamRequestId: null,
 			chosenRoute: emptyRoute(fallbackProtocol),
+			dispatchBudget: dispatchBudget.snapshot(),
 			circuitEvents: [],
 			suppressErrorAlert: false,
 		};
+	}
+
+	// A previous model may have spent all permits. Stop before pool expansion,
+	// secret reads, sticky lookups, or an additional financial admission.
+	try {
+		dispatchBudget.assertAvailable();
+	} catch (error) {
+		if (!(error instanceof RequestDispatchLimitError)) throw error;
+		return dispatchLimitResult(protocolRoutes[0]!);
 	}
 
 	const affinityKey = options?.affinityKey ?? '';
@@ -334,6 +613,7 @@ export async function failoverDispatch(
 		options?.routePoolId ?? protocolRoutes.find((r) => r.routePoolId)?.routePoolId ?? null;
 
 	const circuitEvents: GatewayCircuitAlertEvent[] = [];
+	if (execution) execution.circuitEvents = circuitEvents;
 	const nowMs = Date.now();
 	const plan = buildRouteAttemptPlan(
 		protocolRoutes,
@@ -348,13 +628,14 @@ export async function failoverDispatch(
 	);
 	// 共享渠道 route 展开为「用户共享 key 固定序列 + provider 自有 key 兜底」；
 	// 共享 key 的熔断走复合键（见 circuitKeyForRoute），坏 key 不波及 provider。
-	const sharedAndPlatformAttempts = await expandAttemptsWithSharedKeys(repos, plan.attempts);
-	const credentialAttempts = await expandAttemptsWithPrivateByok(
+	const sharedAndPlatformAttempts = await read(() => expandAttemptsWithSharedKeys(repos, plan.attempts, preparationControl));
+	const credentialAttempts = await read(() => expandAttemptsWithPrivateByok(
 		repos,
 		plan.attempts,
 		sharedAndPlatformAttempts,
 		options?.byok,
-	);
+		preparationControl,
+	));
 	let earliestRetryAfterMs: number | null = null;
 	let skippedByCircuit = 0;
 	const availableAttempts = credentialAttempts.filter((route) => {
@@ -371,17 +652,31 @@ export async function failoverDispatch(
 		? protocolRoutes.filter(stickyRouteEligible)
 		: protocolRoutes;
 	const { session: stickySession, stickyRoute } = stickyConfig?.enabled && stickyCandidates.length > 0
-		? await resolveStickySession(repos, {
+		? await read(() => resolveStickySession(repos, {
 				routePoolId,
 				affinityKey,
 				config: stickyConfig,
 				candidates: stickyCandidates,
 				targetAvailable: (route) => availableTargetIds.has(route.targetId),
 				nowMs,
-			})
+				control: preparationControl,
+			}))
 		: { session: null, stickyRoute: null };
+	if (execution) execution.stickySession = stickySession;
+	const clearSticky = (): Promise<void> => {
+		if (!stickySession) return Promise.resolve();
+		const startClear = (): Promise<void> => {
+			const clear = () => clearStickyBindingSync(repos, stickySession);
+			const mutation = options?.preparationControl ? options.preparationControl.runOwnedMutation(clear) : clear();
+			stickySession.mutations.push(mutation);
+			return mutation;
+		};
+		// Text's deadline wrapper returns the background mutation on its error
+		// result. Images can throw to ingress instead, so its owner must drain it.
+		return execution ? read(startClear) : startClear();
+	};
 	if (stickySession) {
-		maybeScheduleStickyStaleGc(repos, stickySession, nowMs);
+		maybeScheduleStickyStaleGc(repos, stickySession, nowMs, options?.preparationControl);
 	}
 	const attempts = mergeStickyIntoAttempts(availableAttempts, stickyRoute);
 
@@ -398,6 +693,7 @@ export async function failoverDispatch(
 			usagePromise: Promise.resolve(EMPTY_USAGE),
 			upstreamRequestId: null,
 			chosenRoute: protocolRoutes[0]!,
+			dispatchBudget: dispatchBudget.snapshot(),
 			circuitEvents: [],
 			suppressErrorAlert: !noCredentials && skippedByCircuit > 0,
 			stickyTrace: () => resolveStickyTrace(stickySession),
@@ -407,14 +703,20 @@ export async function failoverDispatch(
 
 	let lastResponse: Response | null = null;
 	let lastRoute: RouteResult = protocolRoutes[0]!;
+	let lastQuoteReference: SharedKeyQuoteAttemptReference | null = null;
 	let lastDispatchMeta: ProxyDispatchMeta | undefined;
 	let lastTimingAttempt: RequestTimingAttempt | undefined;
 	let stickyAttemptCleared = false;
 	let stickyTargetAttempted = false;
 	let unknownOutcomeObserved = false;
 	let lastDispatchedCandidateIndex: number | null = null;
+	// A committed one-claim policy has only one opportunity to cross the
+	// delegated boundary. A driver that re-enters beforeFetch must not invoke
+	// its durable admission callback twice, even if it catches the first error.
+	let singleGrantBoundaryEntered = false;
 	const blockedCandidateIndexes = new Set<number>();
 	const dispatchAttempts: ProxyDispatchAttemptTrace[] = [];
+	if (execution) execution.attempts = dispatchAttempts;
 	const dispatchAttemptIndexByCandidate = new Map<number, number>();
 	const recordDispatchAttempt = (attempt: ProxyDispatchAttemptTrace): void => {
 		if (
@@ -448,6 +750,7 @@ export async function failoverDispatch(
 
 	const finish = (result: ProxyFailoverResult): ProxyFailoverResult => ({
 		...result,
+		dispatchBudget: dispatchBudget.snapshot(),
 		dispatchAttempts: [...dispatchAttempts],
 		stickyTrace: () => resolveStickyTrace(stickySession),
 		stickyMutationPromise: stickyMutationPromise(stickySession),
@@ -469,6 +772,7 @@ export async function failoverDispatch(
 
 	for (let attemptIndex = 0; attemptIndex < attempts.length; attemptIndex += 1) {
 		const route = attempts[attemptIndex]!;
+		deadline?.throwIfStopped();
 		const candidateIndex = candidateIndexOf(route);
 		if (candidateIndex != null && blockedCandidateIndexes.has(candidateIndex)) continue;
 
@@ -477,6 +781,42 @@ export async function failoverDispatch(
 				`[Gateway Proxy] provider cooling down mid-request, skipping providerId=${route.providerId} key=${route.providerKeyId ?? '-'}`
 			);
 			continue;
+		}
+		try {
+			dispatchBudget.assertAvailable();
+		} catch (error) {
+			if (!(error instanceof RequestDispatchLimitError)) throw error;
+			timing?.markFinalAttempt(lastTimingAttempt);
+			void lastResponse?.body?.cancel('dispatch_limit_exceeded').catch(() => undefined);
+			// The next candidate was never claimed. A quoted request settles
+			// against its last claimed route if it already reached an upstream.
+			return finish({
+				...dispatchLimitResult(lastResponse && lastQuoteReference ? lastRoute : route,
+					circuitEvents),
+				...(lastResponse && lastQuoteReference
+					? { quoteAttemptReference: lastQuoteReference } : {}),
+			});
+		}
+		if (execution) {
+			// The next eligible attempt owns the deadline facts. Retain the last
+			// response until this point so all-skipped candidates can still return it.
+			void execution.response?.body?.cancel('provider_endpoint_failed').catch(() => undefined);
+			execution.priorQuotedAttempt = execution.quoteAttemptReference
+				? {
+					route: execution.route,
+					quoteAttemptReference: execution.quoteAttemptReference,
+					outcomeUnknown: execution.outcomeUnknown,
+					dispatchStarted: execution.dispatchStarted,
+					upstreamRequestId: execution.upstreamRequestId,
+					usagePromise: execution.usagePromise,
+				} : undefined;
+			execution.route = route;
+			execution.quoteAttemptReference = null;
+			execution.dispatchStarted = false;
+			execution.outcomeUnknown = false;
+			execution.upstreamRequestId = null;
+			execution.response = undefined;
+			execution.usagePromise = Promise.resolve(EMPTY_USAGE);
 		}
 		const isStickyAttempt =
 			Boolean(stickyRoute)
@@ -507,6 +847,7 @@ export async function failoverDispatch(
 		if (!delegateAdmissionBoundary && budgetAdmissionRequired) {
 			try {
 				await options?.beforeUpstreamDispatch?.(route);
+				deadline?.throwIfStopped();
 			} catch (error) {
 				if (!(error instanceof RequestBudgetAdmissionError)) throw error;
 				timing?.markFinalAttempt(timingAttempt);
@@ -530,6 +871,10 @@ export async function failoverDispatch(
 			}
 		}
 		let admissionBoundaryFailed = false;
+		let durableAdmissionGranted = false;
+		let pendingAdmission: Promise<void> | undefined;
+		let quoteReference: SharedKeyQuoteAttemptReference | null = null;
+		let fetchBoundaryReached = false;
 		let stickyAttemptDispatched = false;
 		const markStickyAttemptDispatched = (): void => {
 			if (!isStickyAttempt || !stickySession) return;
@@ -537,10 +882,45 @@ export async function failoverDispatch(
 			stickyAttemptDispatched = true;
 			stickySession.attemptedTargetId = route.targetId;
 		};
-		const beforeFetch = delegateAdmissionBoundary && budgetAdmissionRequired
-			? async (): Promise<void> => {
-					try {
-						await options?.beforeUpstreamDispatch?.(route);
+		const beforeFetch = delegateAdmissionBoundary
+			? async (preparedAttempt?: unknown): Promise<void> => {
+				try {
+					deadline?.throwIfStopped();
+					if (options?.requirePreparedTextAttemptIdentity === true
+						&& !preparedTextAttemptMatchesRoute(preparedAttempt, route)) {
+						throw new RequestBudgetAdmissionError({
+							code: GatewayErrorCode.permissionDenied,
+							message: 'Text dispatch identity could not be verified',
+						});
+					}
+						if (options?.stopAfterFirstGrantedDispatch === true) {
+							if (singleGrantBoundaryEntered) {
+								throw new Error('Single-grant dispatch boundary was already entered');
+							}
+							singleGrantBoundaryEntered = true;
+						}
+						dispatchBudget.assertAvailable();
+						if (options?.quoteAttemptCapture) {
+							const claimQuote = async (): Promise<SharedKeyQuoteAttemptReference | null> => {
+								const claimed = await options.quoteAttemptCapture!.beforeFetch(route);
+								if (execution) execution.quoteAttemptReference = claimed;
+								return claimed;
+							};
+							quoteReference = await (deadline
+								? deadline.runOwnedMutation(claimQuote) : claimQuote());
+						}
+						deadline?.throwIfStopped();
+						pendingAdmission = options?.beforeUpstreamDispatch?.(route, preparedAttempt);
+						await pendingAdmission;
+						durableAdmissionGranted = true;
+						deadline?.throwIfStopped();
+						// Recheck after the await: another branch can share this budget.
+						dispatchBudget.consume();
+						if (quoteReference) {
+							options?.quoteAttemptCapture?.fetchBoundaryPermitted(quoteReference);
+							fetchBoundaryReached = true;
+						}
+						if (execution) { execution.outcomeUnknown = true; execution.dispatchStarted = true; }
 					} catch (error) {
 						admissionBoundaryFailed = true;
 						throw error;
@@ -553,16 +933,75 @@ export async function failoverDispatch(
 		let usagePromise: Promise<UsageFromStream>;
 		let upstreamRequestId: string | null = null;
 		let dispatchMeta: ProxyDispatchMeta | undefined;
+		const upstreamHeadersObserved = (status: number): void => {
+			if (quoteReference) options?.quoteAttemptCapture?.upstreamHeadersObserved(quoteReference, status);
+		};
 		try {
 			// Delegated drivers mark the attempt at their pre-fetch boundary so a
 			// local preparation/admission failure cannot masquerade as upstream I/O.
-			if (!beforeFetch) markStickyAttemptDispatched();
-			const dispatched = await dispatch(route, requestSignal, timing, timingAttempt, beforeFetch);
+			if (!beforeFetch) {
+				// Drivers not yet audited at fetch claim conservatively at entry.
+				dispatchBudget.consume();
+				if (execution) { execution.outcomeUnknown = true; execution.dispatchStarted = true; }
+				markStickyAttemptDispatched();
+			}
+			const run = () => dispatch(route, requestSignal, timing, timingAttempt, beforeFetch,
+				dispatchBudget.auxiliaryAuth, upstreamHeadersObserved);
+			const dispatched = deadline
+				? await deadline.wait(run, (late) => { void late.response.body?.cancel('request_execution_stopped').catch(() => undefined); })
+				: await run();
 			response = dispatched.response;
 			usagePromise = dispatched.usagePromise;
 			upstreamRequestId = dispatched.upstreamRequestId;
 			dispatchMeta = dispatched.meta;
+			if (execution) {
+				execution.usagePromise = usagePromise;
+				execution.upstreamRequestId = upstreamRequestId;
+				execution.response = response;
+				execution.outcomeUnknown = response.ok || dispatchMeta?.upstreamOutcomeUnknown === true;
+			}
 		} catch (err) {
+			if (quoteReference && fetchBoundaryReached) {
+				options?.quoteAttemptCapture?.transportAmbiguous(quoteReference);
+			}
+			if (err instanceof RequestExecutionStoppedError) {
+				// Do not orphan a durable reservation that may commit after expiry.
+				// Its caller still owns normal settlement; the late driver cannot send
+				// because the delegated boundary rechecks the stopped deadline.
+				await pendingAdmission;
+				if (execution?.outcomeUnknown) {
+					timing?.markAttemptError(timingAttempt, err, { clientCancelled: err.reason === 'client_cancelled' });
+					recordDispatchAttempt({
+						candidateIndex, modelId: route.gatewayModelId ?? null,
+						globalEndpointRank: route.gatewayGlobalEndpointRank ?? null,
+						routeTargetId: route.targetId, providerId: route.providerId,
+						status: null, outcome: 'fetch_error',
+					});
+				}
+				timing?.markFinalAttempt(timingAttempt);
+				throw err;
+			}
+			if (err instanceof RequestDispatchLimitError) {
+				timing?.markFinalAttempt(timingAttempt);
+				return finish({
+					...dispatchLimitResult(quoteReference || !lastResponse || !lastQuoteReference
+						? route : lastRoute, circuitEvents),
+					...(quoteReference || (lastResponse && lastQuoteReference)
+						? { quoteAttemptReference: quoteReference ?? lastQuoteReference } : {}),
+				});
+			}
+			if (err instanceof RequestAuxiliaryAuthLimitError) {
+				// A local auth stop is not a billable inference outcome or a
+				// provider fault. Do not trip circuits or continue outer model loops.
+				timing?.markFinalAttempt(timingAttempt);
+				return finish({
+					...dispatchLimitResult(quoteReference || !lastResponse || !lastQuoteReference
+						? route : lastRoute,
+						circuitEvents, true),
+					...(quoteReference || (lastResponse && lastQuoteReference)
+						? { quoteAttemptReference: quoteReference ?? lastQuoteReference } : {}),
+				});
+			}
 			// Admission persistence is a local fail-closed error, not an upstream
 			// network failure and must never trigger provider/model failover.
 			if (admissionBoundaryFailed) {
@@ -574,6 +1013,7 @@ export async function failoverDispatch(
 						code: err.code,
 						message: err.message,
 					}),
+					...(quoteReference ? { quoteAttemptReference: quoteReference } : {}),
 					usagePromise: Promise.resolve(EMPTY_USAGE),
 					upstreamRequestId: null,
 					chosenRoute: route,
@@ -599,7 +1039,7 @@ export async function failoverDispatch(
 				stickyAttemptDispatched &&
 				shouldInvalidateStickyBinding(fetchClassification)
 			) {
-				await clearStickyBindingSync(repos, stickySession);
+				await clearSticky();
 				stickyAttemptCleared = true;
 			}
 			// 与 route_resolution_failed 一致：把 fetch 层原文带给客户端（DNS/TLS/abort 等，不含凭据）
@@ -614,6 +1054,7 @@ export async function failoverDispatch(
 					: 'Upstream request failed',
 			});
 			lastRoute = route;
+			lastQuoteReference = quoteReference;
 			recordDispatchAttempt({
 				candidateIndex,
 				modelId: route.gatewayModelId ?? null,
@@ -623,16 +1064,20 @@ export async function failoverDispatch(
 				status: null,
 				outcome: 'fetch_error',
 			});
-			if (outcomeUnknown) {
+			if (outcomeUnknown || (options?.stopAfterFirstGrantedDispatch === true && durableAdmissionGranted)) {
 				timing?.markFinalAttempt(timingAttempt);
 				return finish({
 					response: lastResponse,
+					...(quoteReference ? { quoteAttemptReference: quoteReference } : {}),
 					usagePromise: Promise.resolve(EMPTY_USAGE),
 					upstreamRequestId: null,
 					chosenRoute: route,
 					circuitEvents,
 					suppressErrorAlert: false,
-					meta: { upstreamOutcomeUnknown: true, failoverForbidden: true },
+					meta: {
+						...(outcomeUnknown ? { upstreamOutcomeUnknown: true } : {}),
+						failoverForbidden: true,
+					},
 				});
 			}
 			if (hasNextAttempt) timing?.markAttemptFailover(timingAttempt);
@@ -642,6 +1087,7 @@ export async function failoverDispatch(
 
 		lastResponse = response;
 		lastRoute = route;
+		lastQuoteReference = quoteReference;
 
 		if (isSuccessfulDispatchResponse(response)) {
 			recordDispatchAttempt({
@@ -710,6 +1156,7 @@ export async function failoverDispatch(
 				: dispatchMeta;
 			return finish({
 				response,
+				...(quoteReference ? { quoteAttemptReference: quoteReference } : {}),
 				usagePromise,
 				upstreamRequestId,
 				chosenRoute: route,
@@ -719,16 +1166,20 @@ export async function failoverDispatch(
 			});
 		}
 		unknownOutcomeObserved ||= dispatchMeta?.upstreamOutcomeUnknown === true;
-		const replayForbidden = dispatchMeta?.failoverForbidden === true || unknownOutcomeObserved;
+		const stopAfterGrantedDispatch = options?.stopAfterFirstGrantedDispatch === true && durableAdmissionGranted;
+		const replayForbidden = dispatchMeta?.failoverForbidden === true || unknownOutcomeObserved || stopAfterGrantedDispatch;
 		lastDispatchMeta = unknownOutcomeObserved
 			? {
 					...(dispatchMeta ?? {}),
 					upstreamOutcomeUnknown: true,
 					failoverForbidden: true,
 				}
-			: dispatchMeta;
+			: stopAfterGrantedDispatch
+				? { ...(dispatchMeta ?? {}), failoverForbidden: true }
+				: dispatchMeta;
 
-		const classification: UpstreamFailureClassification = shouldFailImmediatelyForImageAbort(dispatchMeta) || replayForbidden
+		const classification: UpstreamFailureClassification = shouldFailImmediatelyForImageAbort(dispatchMeta)
+			|| dispatchMeta?.failoverForbidden === true || unknownOutcomeObserved
 			? { action: 'fail_immediately' }
 			: classifyUpstreamHttpFailure(response.status);
 		const attemptTrace: ProxyDispatchAttemptTrace = {
@@ -746,13 +1197,19 @@ export async function failoverDispatch(
 				attemptTrace.errorBodyText = await responseTextWithinLimit(
 					response.clone(),
 					MAX_DISPATCH_TRACE_ERROR_BODY_BYTES,
+					requestSignal,
 				);
-			} catch {
+			} catch (error) {
 				attemptTrace.errorBodyText = null;
+				if (error instanceof RequestExecutionStoppedError) {
+					recordDispatchAttempt(attemptTrace);
+					timing?.markFinalAttempt(timingAttempt);
+					throw error;
+				}
 			}
 		}
 		recordDispatchAttempt(attemptTrace);
-		logProviderSwitchAlert(route, classification, response.status);
+		if (!stopAfterGrantedDispatch) logProviderSwitchAlert(route, classification, response.status);
 
 		if (
 			stickySession &&
@@ -761,7 +1218,7 @@ export async function failoverDispatch(
 				imageAbort: shouldFailImmediatelyForImageAbort(dispatchMeta),
 			})
 		) {
-			await clearStickyBindingSync(repos, stickySession);
+			await clearSticky();
 			stickyAttemptCleared = true;
 		}
 
@@ -775,7 +1232,7 @@ export async function failoverDispatch(
 				blockedCandidateIndexes.add(candidateIndex);
 				if (hasLaterEligibleAttempt(attemptIndex)) {
 					timing?.markAttemptFailover(timingAttempt);
-					await response.body?.cancel('model_candidate_rejected').catch(() => undefined);
+					void response.body?.cancel('model_candidate_rejected').catch(() => undefined);
 					continue;
 				}
 			}
@@ -784,6 +1241,7 @@ export async function failoverDispatch(
 			}
 			return finish({
 				response,
+				...(quoteReference ? { quoteAttemptReference: quoteReference } : {}),
 				usagePromise: replayForbidden
 					? usagePromise
 					: Promise.resolve(EMPTY_USAGE),
@@ -829,6 +1287,19 @@ export async function failoverDispatch(
 				});
 			}
 		}
+		if (stopAfterGrantedDispatch) {
+			timing?.markFinalAttempt(timingAttempt);
+			return finish({
+				response,
+				...(quoteReference ? { quoteAttemptReference: quoteReference } : {}),
+				usagePromise,
+				upstreamRequestId,
+				chosenRoute: route,
+				circuitEvents,
+				suppressErrorAlert: false,
+				meta: lastDispatchMeta,
+			});
+		}
 		if (hasNextAttempt) timing?.markAttemptFailover(timingAttempt);
 		console.warn(
 			`[Gateway Proxy] provider non-OK, trying next candidate providerId=${route.providerId} status=${response.status}`
@@ -837,7 +1308,7 @@ export async function failoverDispatch(
 			options?.crossModelCandidateFailover === true
 			&& hasLaterEligibleAttempt(attemptIndex)
 		) {
-			await response.body?.cancel('provider_endpoint_failed').catch(() => undefined);
+			void response.body?.cancel('provider_endpoint_failed').catch(() => undefined);
 		}
 	}
 
@@ -859,6 +1330,7 @@ export async function failoverDispatch(
 	if (!options?.deferFinalAttempt) timing?.markFinalAttempt(lastTimingAttempt);
 	return finish({
 		response: lastResponse,
+		...(lastQuoteReference ? { quoteAttemptReference: lastQuoteReference } : {}),
 		usagePromise: Promise.resolve(EMPTY_USAGE),
 		upstreamRequestId: null,
 		chosenRoute: lastRoute,

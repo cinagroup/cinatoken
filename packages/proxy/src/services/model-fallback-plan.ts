@@ -6,6 +6,8 @@ import type {
 	UpstreamProtocol,
 } from '@octafuse/core';
 import {
+	preparationRead,
+	type PreparationControl,
 	comparableRoutePriceSortScore,
 	getBusinessTimezone,
 	resolveComparableRoutePrice,
@@ -199,6 +201,7 @@ function attachProviderRoutingTrace(
 }
 
 async function buildExecutionCandidates(params: {
+	control?: PreparationControl;
 	repos: GatewayRepositories;
 	candidates: ModelFallbackCandidatePlan[];
 	configuredTargetIdsByCandidate: string[][];
@@ -266,6 +269,7 @@ async function buildExecutionCandidates(params: {
 		orderedEntries.map((entry) => entry.route),
 		globalPreference!,
 		params.pricingAt,
+		params.control,
 	);
 	globallyOrderedRoutes = orderPriorityServiceTierFirst(
 		globallyOrderedRoutes,
@@ -336,8 +340,12 @@ export async function buildModelFallbackPlan(
 		requestOperation: string;
 		/** Request-start instant shared with admission and final settlement. */
 		pricingAt?: Date;
+		/** Same request-local owner used by entry reads and credential upgrades. */
+		control?: PreparationControl;
 	},
 ): Promise<ModelFallbackPlanResult> {
+	const control = params.control;
+	control?.throwIfStopped();
 	const serviceTierOperationSupported = (
 		params.requestProtocol === 'openai'
 		&& (params.requestOperation === 'chat' || params.requestOperation === 'responses')
@@ -375,7 +383,7 @@ export async function buildModelFallbackPlan(
 	}
 
 	const resolvedModels = await Promise.all(
-		params.modelIds.map((modelId) => resolveModelRouting(repos, modelId)),
+		params.modelIds.map((modelId) => resolveModelRouting(repos, modelId, control)),
 	);
 	for (let index = 0; index < resolvedModels.length; index += 1) {
 		if (!resolvedModels[index]) {
@@ -430,7 +438,7 @@ export async function buildModelFallbackPlan(
 		? params.pricingAt
 		: new Date();
 	const businessTimezone = usesGenericPriceRouting || canUseDefaultLoadBalancing
-		? await getBusinessTimezone(repos)
+		? await preparationRead(control, () => getBusinessTimezone(repos))
 		: 'UTC';
 	let surfaces: Awaited<ReturnType<typeof resolveRoutesForSurface>>[];
 	try {
@@ -441,10 +449,11 @@ export async function buildModelFallbackPlan(
 					routeGroup: candidate.explicitGroup?.trim() || 'default',
 					requestProtocol: params.requestProtocol,
 					requestOperation: params.requestOperation,
-				}),
+				}, control),
 			),
 		);
 	} catch (error) {
+		control?.throwIfStopped();
 		return {
 			ok: false,
 			status: 502,
@@ -461,6 +470,7 @@ export async function buildModelFallbackPlan(
 	const configuredTargetIdsByCandidate: string[][] = [];
 	let firstSkippedCandidateFailure: Extract<ModelFallbackPlanResult, { ok: false }> | null = null;
 	for (let index = 0; index < resolved.length; index += 1) {
+		control?.throwIfStopped();
 		const candidate = resolved[index]!;
 		const requestedModelId = params.modelIds[index]!;
 		let routes = surfaces[index]!.routes.map((route) => ({
@@ -507,7 +517,7 @@ export async function buildModelFallbackPlan(
 			// independent verified evidence, they cannot inherit the Provider's ZDR
 			// or no-collection assertion.
 			routes = routes.filter((route) => route.providerSharedChannelType == null);
-			const policies = await repos.routeDataPolicies.getByRouteTargetIds(routes.map((route) => route.targetId));
+			const policies = await preparationRead(control, () => repos.routeDataPolicies.getByRouteTargetIds(routes.map((route) => route.targetId)));
 			const byTarget = new Map(policies.map((policy) => [policy.route_target_id, policy]));
 			if (preparedProvider.value.requireZdr) {
 				routes = routes.filter((route) => routeDataPolicyAllowsZdr(
@@ -600,6 +610,7 @@ export async function buildModelFallbackPlan(
 				selectedRoutes,
 				candidatePreferences,
 				pricingAt,
+				control,
 			);
 		}
 		const shouldUseDefaultLoadBalancing = canUseDefaultLoadBalancing
@@ -644,7 +655,7 @@ export async function buildModelFallbackPlan(
 	const strategies = await Promise.all(
 		resolved.map((candidate, index) => {
 			const surface = surfaces[index]!.surface;
-			return resolveRouteStrategyPlan({
+			return preparationRead(control, () => resolveRouteStrategyPlan({
 				routePolicyRaw: candidate.model.route_policy ?? null,
 				poolStrategy: surface?.pool_strategy ?? null,
 				poolTierStrategies: surface?.pool_tier_strategies ?? null,
@@ -652,7 +663,7 @@ export async function buildModelFallbackPlan(
 				capability: params.requestOperation,
 				routeGroup: candidate.explicitGroup?.trim() || 'default',
 				repos,
-			});
+			}));
 		}),
 	);
 
@@ -669,6 +680,7 @@ export async function buildModelFallbackPlan(
 			routingPreferences: routingPreferencesByCandidate[index] ?? null,
 	}));
 	const finalized = await buildExecutionCandidates({
+		control,
 		repos,
 		candidates,
 		configuredTargetIdsByCandidate,
@@ -676,6 +688,7 @@ export async function buildModelFallbackPlan(
 		businessTimezone,
 		deferPriceRoutingToSurface,
 	});
+	control?.throwIfStopped();
 	return {
 		ok: true,
 		candidates: finalized.candidates,

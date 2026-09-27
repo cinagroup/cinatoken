@@ -25,6 +25,14 @@ export type UserBindings = {
 	/** Explicit comma-separated CinaAuth roles allowed organization-wide billing authority. */
 	CINAAUTH_ORGANIZATION_ADMIN_ROLES?: string;
 	SHARED_KEY_ENCRYPTION_SECRET?: string;
+	/** Review-only seller statistics reader; exact opt-in, default off. */
+	SHARED_KEY_CREDITED_USAGE_READER?: string;
+	/** Seller-only signed statistics route; exact review opt-in, default off. */
+	SIGNED_SELLER_STATS_READER?: string;
+	/** Review-only independent claim issuer, backed by an authority outside ordinary Gateway SQL. */
+	STATS_CLAIM_ISSUER?: Fetcher;
+	/** Review-only dedicated direct `cinatoken_gateway_stats_reader` LOGIN. */
+	STATS_READER_HYPERDRIVE?: HyperdriveBinding;
 	DEEPSEEK_API_KEY?: string;
 	CHAIN_JOBS?: Queue<ChainJobMessage>;
 	/** Node / 自托管数据库使用 `DATABASE_URL`；Cloudflare Postgres 只使用 `HYPERDRIVE`。 */

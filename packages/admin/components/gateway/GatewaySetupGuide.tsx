@@ -5,10 +5,11 @@ import {
 	ArrowsRightLeftIcon,
 	CpuChipIcon,
 	GlobeAltIcon,
+	CheckBadgeIcon,
 } from '@heroicons/react/24/outline';
 import { useTranslations } from 'next-intl';
 
-type SetupStep = 'provider' | 'model' | 'route';
+type SetupStep = 'provider' | 'model' | 'route' | 'endpoint';
 
 const STEPS: Array<{
 	key: SetupStep;
@@ -18,6 +19,7 @@ const STEPS: Array<{
 	{ key: 'provider', href: '/admin/providers', Icon: GlobeAltIcon },
 	{ key: 'model', href: '/admin/models', Icon: CpuChipIcon },
 	{ key: 'route', href: '/admin/routes', Icon: ArrowsRightLeftIcon },
+	{ key: 'endpoint', href: '/admin/endpoints', Icon: CheckBadgeIcon },
 ];
 
 export function GatewaySetupGuide({ activeStep }: { activeStep: SetupStep }) {
@@ -42,7 +44,7 @@ export function GatewaySetupGuide({ activeStep }: { activeStep: SetupStep }) {
 				</span>
 			</div>
 
-			<ol className="mt-4 grid gap-2 md:grid-cols-3">
+			<ol className="mt-4 grid gap-2 md:grid-cols-2 2xl:grid-cols-4">
 				{STEPS.map(({ key, href, Icon }, index) => {
 					const active = key === activeStep;
 					return (

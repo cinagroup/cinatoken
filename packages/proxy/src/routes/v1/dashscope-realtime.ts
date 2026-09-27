@@ -179,16 +179,33 @@ function realtimeOrdinaryBudgetSettlement(
 	};
 }
 
-async function terminateRealtimeOrdinaryBudgetSafely(
-	lease: OrdinaryBudgetLease,
+async function cleanupRealtimeBudgets(
+	ordinary: OrdinaryBudgetLease,
+	guardrail: RealtimeGuardrailBudgetLease,
 	reason: string,
+	preDispatchOnly = false,
 ): Promise<void> {
-	try {
-		await lease.terminateUnknown(reason);
-	} catch (error) {
-		console.error(
-			`[Gateway Realtime] ordinary budget cleanup failed requestId=${lease.requestId} state=${lease.state} reason=${reason} error=${error instanceof Error ? error.message : String(error)}`,
-		);
+	// Each ledger owns independent durable work. A rejected write in one must
+	// neither skip its sibling nor orphan the usage promise after an Upgrade.
+	const actions = [
+		{ ledger: 'guardrail', run: async () => {
+			if (!guardrail.dispatched) await guardrail.release(reason);
+			else if (!preDispatchOnly) await guardrail.forfeit(reason);
+		} },
+		{ ledger: 'ordinary', run: async () => {
+			if (ordinary.state === 'reserved') await ordinary.releasePreDispatch(reason);
+			else if (!preDispatchOnly) await ordinary.terminateUnknown(reason);
+		} },
+	];
+	const results = await Promise.allSettled(actions.map(action => action.run()));
+	for (const [index, result] of results.entries()) {
+		if (result.status !== 'rejected') continue;
+		// Persistence exceptions can contain SQL bindings. Retain the durable
+		// reservation for recovery and log only request/ledger/fixed reason.
+		console.error(JSON.stringify({
+			message: 'realtime budget cleanup failed', requestId: ordinary.requestId,
+			ledger: actions[index]!.ledger, reason,
+		}));
 	}
 }
 
@@ -323,29 +340,14 @@ function recordRealtimeUsage(params: {
 							)
 							: undefined,
 				});
-				if (guardrailBudgetLease.reserved && !guardrailBudgetLease.dispatched) {
-					await guardrailBudgetLease.release('realtime_upstream_dispatch_not_started');
-				}
-				if (ordinaryBudgetLease.state === 'reserved') {
-					await ordinaryBudgetLease.releasePreDispatch('realtime_upstream_dispatch_not_started');
-				}
+				await cleanupRealtimeBudgets(ordinaryBudgetLease, guardrailBudgetLease,
+					'realtime_upstream_dispatch_not_started', true);
 			})
-			.catch(async (error) => {
-				console.error(
-					`[Gateway Realtime] record usage failed modelId=${baseModelId} error=${error instanceof Error ? error.message : String(error)}`
-				);
-				await (guardrailBudgetLease.dispatched
-					? guardrailBudgetLease.forfeit('realtime_usage_settlement_failed')
-					: guardrailBudgetLease.release('realtime_usage_write_failed_before_dispatch'))
-					.catch((forfeitError: unknown) => {
-						console.error(
-							`[Gateway Realtime] guardrail forfeit failed requestId=${guardrailBudgetLease.requestId} error=${forfeitError instanceof Error ? forfeitError.message : String(forfeitError)}`,
-						);
-					});
-				await terminateRealtimeOrdinaryBudgetSafely(
-					ordinaryBudgetLease,
-					'realtime_usage_settlement_failed',
-				);
+			.catch(async () => {
+				console.error(JSON.stringify({ message: 'realtime usage settlement failed',
+					requestId: ordinaryBudgetLease.requestId }));
+				await cleanupRealtimeBudgets(ordinaryBudgetLease, guardrailBudgetLease,
+					'realtime_usage_settlement_failed');
 			})
 	);
 }
@@ -535,32 +537,17 @@ dashScopeRealtimeRoutes.get('/', async (c) => {
 					? null
 					: stickyConfigFromSurface(selectedPlan.surface),
 				beforeUpstreamDispatch: (route) => budgetAdmission.beforeUpstreamDispatch(route),
-				sessionLimits: {
-					...sessionLimits,
-					connectDeadlineAtMs:
-						Date.now() + DASHSCOPE_REALTIME_CONNECT_TIMEOUT_MS,
-				},
+				sessionLimits,
 				byok: privateByokContextForApiKey(apiKey),
 			}
 		);
 	} catch (error) {
-		if (guardrailBudgetLease.dispatched) {
-			await guardrailBudgetLease.forfeit('realtime_upstream_dispatch_failed');
-		} else {
-			await guardrailBudgetLease.release('realtime_upstream_dispatch_not_started');
-		}
-		await terminateRealtimeOrdinaryBudgetSafely(
-			ordinaryBudgetLease,
-			'realtime_upstream_dispatch_failed',
-		);
+		await cleanupRealtimeBudgets(ordinaryBudgetLease, guardrailBudgetLease,
+			'realtime_upstream_dispatch_failed');
 		throw error;
 	}
-	if (!guardrailBudgetLease.dispatched) {
-		await guardrailBudgetLease.release('realtime_upstream_dispatch_not_started');
-	}
-	if (ordinaryBudgetLease.state === 'reserved') {
-		await ordinaryBudgetLease.releasePreDispatch('realtime_upstream_dispatch_not_started');
-	}
+	await cleanupRealtimeBudgets(ordinaryBudgetLease, guardrailBudgetLease,
+		'realtime_upstream_dispatch_not_started', true);
 	const nodeUpgrade =
 		c.env.NODE_REALTIME_DISPATCH != null &&
 		proxyResult.response.headers.get('x-octafuse-realtime-upgrade') === '1';

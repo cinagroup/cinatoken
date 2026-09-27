@@ -100,6 +100,7 @@ async function detectTencentTmsSegment(
 	const fetchImpl = options?.fetchImpl ?? fetch;
 	const res = await fetchImpl(`https://${TMS_HOST}/`, {
 		method: 'POST',
+		redirect: 'manual',
 		headers: {
 			'Content-Type': 'application/json',
 			Host: TMS_HOST,

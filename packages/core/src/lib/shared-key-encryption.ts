@@ -1,5 +1,6 @@
 import type { SharedKeyRow, InsertSharedKeyParams } from '../db/shared-keys-types';
 import type { SharedKeysRepository } from '../storage/gateway-repository-interfaces';
+import { preparationRead, preparationMutation, type PreparationControl } from '../preparation-control';
 
 const ENVELOPE_PREFIX_V1 = 'enc:v1:';
 const ENVELOPE_PREFIX_V2 = 'enc:v2:';
@@ -35,27 +36,27 @@ export function isEncryptedSharedKeySecret(value: string): boolean {
  * v1（审计 L-1）：KEK = 单次无盐 SHA-256(passphrase) —— 弱口令 + 库泄露时可离线爆破。
  * 仅保留解密兼容，任何新写入一律 v2。
  */
-async function deriveKeyV1(secret: string): Promise<CryptoKey> {
-	const digest = await crypto.subtle.digest(
+async function deriveKeyV1(secret: string, control?: PreparationControl): Promise<CryptoKey> {
+	const digest = await preparationRead(control, () => crypto.subtle.digest(
 		'SHA-256',
 		new TextEncoder().encode(assertSharedKeyEncryptionSecret(secret)),
-	);
-	return crypto.subtle.importKey('raw', digest, { name: 'AES-GCM' }, false, [
+	));
+	return preparationRead(control, () => crypto.subtle.importKey('raw', digest, { name: 'AES-GCM' }, false, [
 		'encrypt',
 		'decrypt',
-	]);
+	]));
 }
 
 /** v2：HKDF-SHA-256（salt/info 绑定用途）， extracts/expand 的标准 KDF 步进。 */
-async function deriveKeyV2(secret: string): Promise<CryptoKey> {
-	const keyMaterial = await crypto.subtle.importKey(
+async function deriveKeyV2(secret: string, control?: PreparationControl): Promise<CryptoKey> {
+	const keyMaterial = await preparationRead(control, () => crypto.subtle.importKey(
 		'raw',
 		new TextEncoder().encode(assertSharedKeyEncryptionSecret(secret)),
 		'HKDF',
 		false,
 		['deriveBits'],
-	);
-	const bits = await crypto.subtle.deriveBits(
+	));
+	const bits = await preparationRead(control, () => crypto.subtle.deriveBits(
 		{
 			name: 'HKDF',
 			hash: 'SHA-256',
@@ -64,11 +65,11 @@ async function deriveKeyV2(secret: string): Promise<CryptoKey> {
 		},
 		keyMaterial,
 		256,
-	);
-	return crypto.subtle.importKey('raw', bits, { name: 'AES-GCM' }, false, [
+	));
+	return preparationRead(control, () => crypto.subtle.importKey('raw', bits, { name: 'AES-GCM' }, false, [
 		'encrypt',
 		'decrypt',
-	]);
+	]));
 }
 
 async function aesGcm(
@@ -77,8 +78,9 @@ async function aesGcm(
 	iv: Uint8Array<ArrayBuffer>,
 	key: CryptoKey,
 	authenticatedContext: string,
+	control?: PreparationControl,
 ): Promise<ArrayBuffer> {
-	return crypto.subtle[operation](
+	return preparationRead(control, () => crypto.subtle[operation](
 		{
 			name: 'AES-GCM',
 			iv,
@@ -86,21 +88,24 @@ async function aesGcm(
 		},
 		key,
 		plaintextOrCiphertext,
-	);
+	));
 }
 
 export async function encryptSharedKeySecret(
 	plaintext: string,
 	secret: string,
 	authenticatedContext: string,
+	control?: PreparationControl,
 ): Promise<string> {
+	control?.throwIfStopped();
 	const iv = crypto.getRandomValues(new Uint8Array(12));
 	const ciphertext = await aesGcm(
 		'encrypt',
 		new TextEncoder().encode(plaintext) as unknown as Uint8Array<ArrayBuffer>,
 		iv as unknown as Uint8Array<ArrayBuffer>,
-		await deriveKeyV2(secret),
+		await deriveKeyV2(secret, control),
 		authenticatedContext,
+		control,
 	);
 	return `${ENVELOPE_PREFIX_V2}${bytesToBase64(iv)}:${bytesToBase64(new Uint8Array(ciphertext))}`;
 }
@@ -114,7 +119,9 @@ export async function decryptSharedKeySecret(
 	envelope: string,
 	secret: string,
 	authenticatedContext: string,
+	control?: PreparationControl,
 ): Promise<string> {
+	control?.throwIfStopped();
 	if (!isEncryptedSharedKeySecret(envelope)) return envelope;
 	const v1 = isLegacyV1Envelope(envelope);
 	const prefix = v1 ? ENVELOPE_PREFIX_V1 : ENVELOPE_PREFIX_V2;
@@ -127,11 +134,13 @@ export async function decryptSharedKeySecret(
 			'decrypt',
 			base64ToBytes(parts[1]),
 			base64ToBytes(parts[0]),
-			await (v1 ? deriveKeyV1(secret) : deriveKeyV2(secret)),
+			await (v1 ? deriveKeyV1(secret, control) : deriveKeyV2(secret, control)),
 			authenticatedContext,
+			control,
 		);
 		return new TextDecoder().decode(plaintext);
 	} catch {
+		control?.throwIfStopped();
 		throw new Error('Shared key decryption failed');
 	}
 }
@@ -150,7 +159,8 @@ export function createEncryptedSharedKeysRepository(
 ): SharedKeysRepository {
 	assertSharedKeyEncryptionSecret(secret);
 
-	const reveal = async (row: SharedKeyRow | null): Promise<SharedKeyRow | null> => {
+	const reveal = async (row: SharedKeyRow | null, control?: PreparationControl): Promise<SharedKeyRow | null> => {
+		control?.throwIfStopped();
 		if (!row) return null;
 		const context = sharedKeyContext(row);
 		if (!repository.replaceSharedKeySecret) {
@@ -158,16 +168,16 @@ export function createEncryptedSharedKeysRepository(
 		}
 		if (!isEncryptedSharedKeySecret(row.apiKey)) {
 			// 明文行：首次读取即地加密（rollout 窗口内的在线迁移）
-			const encrypted = await encryptSharedKeySecret(row.apiKey, secret, context);
-			const migrated = await repository.replaceSharedKeySecret(row.id, encrypted);
+			const encrypted = await encryptSharedKeySecret(row.apiKey, secret, context, control);
+			const migrated = await preparationMutation(control, () => repository.replaceSharedKeySecret!(row.id, encrypted));
 			if (!migrated) throw new Error('Shared key plaintext migration lost its target row');
 			return row;
 		}
-		const plaintext = await decryptSharedKeySecret(row.apiKey, secret, context);
+		const plaintext = await decryptSharedKeySecret(row.apiKey, secret, context, control);
 		if (isLegacyV1Envelope(row.apiKey)) {
 			// v1 密文：解密成功后以 v2（HKDF）重封（审计 L-1 的在线升级路径）
-			const upgraded = await encryptSharedKeySecret(plaintext, secret, context);
-			const migrated = await repository.replaceSharedKeySecret(row.id, upgraded);
+			const upgraded = await encryptSharedKeySecret(plaintext, secret, context, control);
+			const migrated = await preparationMutation(control, () => repository.replaceSharedKeySecret!(row.id, upgraded));
 			if (!migrated) throw new Error('Shared key v1→v2 upgrade lost its target row');
 		}
 		return { ...row, apiKey: plaintext };
@@ -197,8 +207,17 @@ export function createEncryptedSharedKeysRepository(
 		async listAllSharedKeys(options) {
 			return revealMany(await repository.listAllSharedKeys(options));
 		},
-		async listActiveSharedKeysByChannel(channelType) {
-			return revealMany(await repository.listActiveSharedKeysByChannel(channelType));
+		async listActiveSharedKeysByChannel(channelType, control) {
+			const rows = await preparationRead(control, () => repository.listActiveSharedKeysByChannel(channelType, control));
+			if (!control) return revealMany(rows);
+			// Do not launch a whole pool's cryptographic work before cancellation can
+			// be observed. Top-K selection remains a separate C07/C09 requirement.
+			const revealed: SharedKeyRow[] = [];
+			for (const row of rows) {
+				const value = await reveal(row, control);
+				if (value) revealed.push(value);
+			}
+			return revealed;
 		},
 	};
 }

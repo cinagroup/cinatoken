@@ -1,0 +1,127 @@
+{
+  "status": "PASS",
+  "cleanup": "PASS",
+  "binaryVersion": "postgres (PostgreSQL) 18.6",
+  "scope": "owned loopback PostgreSQL 18; 73 formal migrations; three review-only proposals; separate synthetic NOLOGIN dispatch and fact roles",
+  "limitations": [
+    "The generated grant remains outside formal migrations and any production entry point.",
+    "The NOLOGIN roles are exercised through local superuser SET ROLE sessions; no distinct production credential or network identity is proven.",
+    "Function ACL tests do not prove a real origin, financial settlement, legacy-row upgrade, or full C03.5 identity separation."
+  ],
+  "sourceSha256": {
+    "generator": "3dfe08cd9eb0e7c10d63d06090b80210afb9d7028e60ea6a6974bf09340b62b2",
+    "nativeTest": "73d62da539ab0ce77c1717f5ee3786b74fa246cff7546d316ce374a9f4c00a57",
+    "parentActivation": "7e6ca14044cb904308750b51d106835705e21ed5bbc47061604683f59af0b1e3",
+    "runtimeGrant": "09970100b97c7154ece423b5170868f2d69288351c69be4522c68728ed7adab8",
+    "cinatoken.dispatch_intent_definer_activation": "02cf4ffde6d37bb9253e9466cbde59047b5b8a0b19d73897ae69d60696db077d",
+    "cinatoken.request_dispatch_single_claim_activation": "6e62e12c25a94e4b32fe0121c728198a409f95427ef4cdcb14c51ebe1a629112",
+    "cinatoken.request_dispatch_parent_activation": "2e8c20088f72271ecf89bc4f43583ec3b2247893a11b84cc6a220563a72de8de",
+    "formalMigrationCorpus": "23afef61a8a670e0af8c90e3a138f522e6b283b454e380a592bf85bca83108dc"
+  },
+  "stages": [
+    {
+      "name": "parent-installed-with-runtime-default-acl",
+      "result": "PASS",
+      "formalMigrations": 73
+    },
+    {
+      "name": "dispatch-and-fact-cannot-call-parent-before-explicit-grant",
+      "result": "PASS"
+    },
+    {
+      "name": "unexpected-role-membership-rejects-entire-grant",
+      "result": "PASS"
+    },
+    {
+      "name": "direct-parent-table-grant-rejected-before-function-grant",
+      "result": "PASS"
+    },
+    {
+      "name": "dispatch-parent-column-grant-rejected-before-function-grant",
+      "result": "PASS"
+    },
+    {
+      "name": "fact-parent-column-grant-rejected-before-function-grant",
+      "result": "PASS"
+    },
+    {
+      "name": "direct-key-read-drift-rejected-before-function-grant",
+      "result": "PASS"
+    },
+    {
+      "name": "fact-key-column-drift-rejected-before-function-grant",
+      "result": "PASS"
+    },
+    {
+      "name": "direct-runtime-parent-column-grant-rejected",
+      "result": "PASS"
+    },
+    {
+      "name": "inherited-runtime-parent-column-grant-rejected",
+      "result": "PASS"
+    },
+    {
+      "name": "public-parent-column-grant-rejected",
+      "result": "PASS"
+    },
+    {
+      "name": "ordinary-runtime-function-drift-rejected",
+      "result": "PASS"
+    },
+    {
+      "name": "fact-function-drift-rejected",
+      "result": "PASS"
+    },
+    {
+      "name": "effective-dispatch-only-functions-and-fact-runtime-direct-denials",
+      "result": "PASS",
+      "privilegeState": {
+        "producer_schema": true,
+        "producer_schema_create": false,
+        "producer_parent_table": false,
+        "producer_parent_column": false,
+        "producer_intent_table": false,
+        "producer_intent_column": false,
+        "producer_key_table": false,
+        "producer_key_column": false,
+        "producer_guard_execute": false,
+        "producer_prepare": true,
+        "producer_claim": true,
+        "producer_classify": true,
+        "runtime_parent_table": false,
+        "runtime_parent_column": false,
+        "runtime_prepare": false,
+        "runtime_claim": false,
+        "runtime_classify": false,
+        "fact_prepare": false,
+        "fact_claim": false,
+        "fact_classify": false,
+        "fact_parent_table": false,
+        "fact_parent_column": false,
+        "fact_intent_table": false,
+        "fact_intent_column": false,
+        "fact_key_table": false,
+        "fact_key_column": false
+      }
+    },
+    {
+      "name": "dispatch-prepares-claims-and-classifies-only-through-definers",
+      "result": "PASS",
+      "state": {
+        "claim_count": 1,
+        "prepared_count": 1,
+        "state": "outcome_unknown",
+        "dispatch_claim_id": "5b01173b-4446-4e36-abe1-cdf93059e7b9"
+      }
+    },
+    {
+      "name": "producer-grant-idempotent-and-runtime-rerun-keeps-role-separation",
+      "result": "PASS"
+    },
+    {
+      "name": "post-activation-inherited-runtime-drift-rejected",
+      "result": "PASS"
+    }
+  ],
+  "serverVersionNum": 180006
+}

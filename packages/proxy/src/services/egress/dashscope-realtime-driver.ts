@@ -6,9 +6,9 @@
  * 对外保持 DashScope 原生事件，网关只替换供应商模型名、转发帧并汇总真实 usage。
  */
 import { resolveProviderUpstreamSecret } from "@octafuse/core";
+import { createRealtimeConnectionLifecycle, realtimeCloseParameters, realtimeRejectedResponse, realtimeUpstreamHeaders, type RealtimeConnectionOptions } from "./realtime-connection-lifecycle";
 import { resolveUpstreamEndpoint } from "@octafuse/core/provider-endpoints";
 import {
-	markUpstreamOutcomeUnknown,
 	type ProxyDispatchResult,
 } from "../failover-dispatch";
 import type { RouteResult } from "../model-router";
@@ -43,7 +43,7 @@ type UsageSnapshot = {
 	raw: unknown;
 };
 
-export type DashScopeRealtimeDispatchOptions = {
+export type DashScopeRealtimeDispatchOptions = RealtimeConnectionOptions & {
 	fetchImpl?: typeof fetch;
 	/** 浏览器通过 Sec-WebSocket-Protocol 鉴权时，回写被选中的 token。 */
 	responseProtocol?: string;
@@ -63,6 +63,7 @@ export type DashScopeRealtimeNodeDispatch = (
 	attempt?: RequestTimingAttempt,
 	sessionLimits?: DashScopeRealtimeSessionLimits,
 	beforeUpstreamDispatch?: () => Promise<void>,
+	connectionOptions?: RealtimeConnectionOptions,
 ) => Promise<ProxyDispatchResult>;
 
 export type DashScopeRealtimeSessionLimits = {
@@ -681,174 +682,105 @@ function realtimeCapability(
 
 /** Workers 通过 HTTP(S) Upgrade 建立出站 WebSocket，fetch 不能直接接收 ws(s) URL。 */
 export function outboundWebSocketFetchUrl(endpoint: string): URL {
-	const url = new URL(endpoint);
+	let url: URL;
+	try { url = new URL(endpoint); } catch { throw new Error('Invalid realtime upstream URL'); }
 	if (url.protocol === "wss:") url.protocol = "https:";
 	if (url.protocol === "ws:") url.protocol = "http:";
+	if (!["http:", "https:"].includes(url.protocol) || url.username || url.password || url.hash) throw new Error("Invalid realtime upstream URL");
 	return url;
 }
 
 function closeSocket(socket: WebSocket, code = 1000, reason = ""): void {
-	// Workers' allowHalfOpen sockets remain CLOSING after the peer sends Close;
-	// calling close again is required to complete that handshake.
 	if (socket.readyState === WebSocket.CLOSED) return;
-	socket.close(code, reason.slice(0, 123));
+	const safe = realtimeCloseParameters(code, reason);
+	try { socket.close(safe.code, safe.reason); } catch {
+		// A failed transport must not prevent the other socket/usage from closing.
+		try { socket.close(1011, "Realtime transport closed"); } catch { /* Already unusable. */ }
+	}
+}
+
+function discardUpgrade(response: Response): void {
+	if (response.webSocket) {
+		try { response.webSocket.accept({ allowHalfOpen: true }); } catch { /* May already be accepted. */ }
+		closeSocket(response.webSocket, 1000, "Realtime connection stopped");
+	}
+	void response.body?.cancel("realtime_connection_stopped").catch(() => undefined);
 }
 
 function bridgeSockets(params: {
-	client: WebSocket;
-	server: WebSocket;
-	upstream: WebSocket;
-	route: RouteResult;
-	operation: DashScopeRealtimeOperation;
-	timing?: RequestTimingCollector | null;
-	sessionLimits?: DashScopeRealtimeSessionLimits;
+	server: WebSocket; upstream: WebSocket; route: RouteResult; operation: DashScopeRealtimeOperation;
+	timing?: RequestTimingCollector | null; sessionLimits?: DashScopeRealtimeSessionLimits; requestSignal?: AbortSignal;
 }): Promise<UsageFromStream> {
-	const { client, server, upstream, route, operation, timing, sessionLimits } = params;
+	const { server, upstream, route, operation, timing, sessionLimits, requestSignal } = params;
 	const collector = new DashScopeRealtimeUsageCollector();
 	const outputLimiter = new DashScopeRealtimeOutputLimiter();
-	const limiter = sessionLimits
-		? new DashScopeRealtimeSessionLimiter(
-				operation,
-				sessionLimits,
-				Date.now(),
-				route.providerModelName,
-			)
-		: null;
+	const limiter = sessionLimits ? new DashScopeRealtimeSessionLimiter(operation, sessionLimits, Date.now(), route.providerModelName) : null;
 	let settled = false;
 	let clientClosedFirst = false;
-
+	// Accept synchronously, so setup failure is caught by the dispatch owner.
+	server.binaryType = "arraybuffer";
+	server.accept({ allowHalfOpen: true });
+	upstream.binaryType = "arraybuffer";
+	upstream.accept({ allowHalfOpen: true });
 	return new Promise<UsageFromStream>((resolve) => {
 		let sessionTimer: ReturnType<typeof setTimeout> | null = null;
-		const finish = (transportError?: string | null) => {
+		const finish = (transportError?: string | null, code = 1000, reason = "") => {
 			if (settled) return;
 			settled = true;
 			if (sessionTimer != null) clearTimeout(sessionTimer);
+			server.removeEventListener("message", onClientMessage);
+			upstream.removeEventListener("message", onUpstreamMessage);
+			server.removeEventListener("close", onClientClose);
+			upstream.removeEventListener("close", onUpstreamClose);
+			server.removeEventListener("error", onClientError);
+			upstream.removeEventListener("error", onUpstreamError);
+			requestSignal?.removeEventListener("abort", onAbort);
+			// Settle ownership before close: synchronous/reentrant events cannot
+			// rewrite the original close cause or forward additional frames.
+			closeSocket(server, code, reason);
+			closeSocket(upstream, code, reason);
 			timing?.markStreamComplete();
-			resolve(enforceDashScopeRealtimeUsageCeiling(
-				operation,
-				sessionLimits,
-				applyDashScopeRealtimeMeasuredUsage(
-					operation,
-					limiter,
-					collector.toUsage({ clientClosedFirst, transportError }),
-				),
-			));
+			resolve(enforceDashScopeRealtimeUsageCeiling(operation, sessionLimits,
+				applyDashScopeRealtimeMeasuredUsage(operation, limiter, collector.toUsage({ clientClosedFirst, transportError }))));
 		};
-
-		server.binaryType = "arraybuffer";
-		server.accept({ allowHalfOpen: true });
-		upstream.binaryType = "arraybuffer";
-		// fetch 返回的出站 WebSocket 由 Worker 自己消费，必须显式 accept 后才能收发。
-		upstream.accept({ allowHalfOpen: true });
-		if (limiter) {
-			sessionTimer = setTimeout(() => {
-				closeSocket(server, 1008, "Realtime session limit exceeded");
-				closeSocket(upstream, 1008, "Realtime session limit exceeded");
-				finish("Realtime session duration limit exceeded");
-			}, limiter.remainingSessionMs());
-		}
-
-		server.addEventListener("message", (event) => {
+		const onClientMessage = (event: MessageEvent) => {
+			if (settled) return;
 			try {
-				const data =
-					typeof event.data === "string"
-						? rewriteDashScopeRealtimeClientMessage(
-								route,
-								operation,
-								event.data
-							  )
-							: event.data;
+				const data = typeof event.data === "string" ? rewriteDashScopeRealtimeClientMessage(route, operation, event.data) : event.data;
 				const decision = limiter?.inspect(data);
-				if (decision && !decision.ok) {
-					closeSocket(server, 1008, decision.reason);
-					closeSocket(upstream, 1008, decision.reason);
-					finish(decision.reason);
-					return;
-				}
+				if (decision && !decision.ok) { finish(decision.reason, 1008, decision.reason); return; }
 				collector.observeClientActivity();
 				upstream.send(data);
-			} catch (error) {
-				const message = error instanceof Error ? error.message : String(error);
-				closeSocket(server, 1011, "Gateway upstream send failed");
-				closeSocket(upstream, 1011, "Gateway upstream send failed");
-				finish(message);
-			}
-		});
-
-		upstream.addEventListener("message", (event) => {
+			} catch { finish("Gateway upstream send failed", 1011, "Gateway upstream send failed"); }
+		};
+		const onUpstreamMessage = (event: MessageEvent) => {
+			if (settled) return;
 			try {
 				const decision = outputLimiter.inspect(event.data);
-				if (!decision.ok) {
-					closeSocket(server, 1009, decision.reason);
-					closeSocket(upstream, 1009, decision.reason);
-					finish(decision.reason);
-					return;
-				}
-				if (typeof event.data === "string")
-					collector.observeServerMessage(event.data);
+				if (!decision.ok) { finish(decision.reason, 1009, decision.reason); return; }
+				if (typeof event.data === "string") collector.observeServerMessage(event.data);
 				server.send(event.data);
-			} catch (error) {
-				const message = error instanceof Error ? error.message : String(error);
-				closeSocket(server, 1011, "Gateway client send failed");
-				closeSocket(upstream, 1011, "Gateway client send failed");
-				finish(message);
-			}
-		});
-
-		server.addEventListener("close", (event) => {
-			clientClosedFirst = true;
-			closeSocket(upstream, event.code, event.reason);
-			// `server.accept({ allowHalfOpen: true })` leaves this side in CLOSING.
-			// Complete the client close handshake before recording usage.
-			closeSocket(server, event.code, event.reason);
-			finish();
-		});
-		upstream.addEventListener("close", (event) => {
-			closeSocket(server, event.code, event.reason);
-			finish(
-				event.code === 1000
-					? null
-					: `Upstream WebSocket closed with code ${event.code}`
-			);
-		});
-		server.addEventListener("error", () => {
-			clientClosedFirst = true;
-			closeSocket(upstream, 1011, "Client WebSocket error");
-			finish("Client WebSocket transport error");
-		});
-		upstream.addEventListener("error", () => {
-			closeSocket(server, 1011, "Upstream WebSocket error");
-			finish("Upstream WebSocket transport error");
-		});
+			} catch { finish("Gateway client send failed", 1011, "Gateway client send failed"); }
+		};
+		const onClientClose = (event: CloseEvent) => {
+			if (settled) return;
+			clientClosedFirst = true; finish(null, event.code, event.reason);
+		};
+		const onUpstreamClose = (event: CloseEvent) => finish(
+			event.code === 1000 ? null : `Upstream WebSocket closed with code ${event.code}`, event.code, event.reason);
+		const onClientError = () => { clientClosedFirst = true; finish("Client WebSocket transport error", 1011, "Client WebSocket error"); };
+		const onUpstreamError = () => finish("Upstream WebSocket transport error", 1011, "Upstream WebSocket error");
+		const onAbort = () => { clientClosedFirst = true; finish("Gateway request aborted", 1000, "Gateway request aborted"); };
+		server.addEventListener("message", onClientMessage);
+		upstream.addEventListener("message", onUpstreamMessage);
+		server.addEventListener("close", onClientClose);
+		upstream.addEventListener("close", onUpstreamClose);
+		server.addEventListener("error", onClientError);
+		upstream.addEventListener("error", onUpstreamError);
+		requestSignal?.addEventListener("abort", onAbort, { once: true });
+		if (requestSignal?.aborted) { onAbort(); return; }
+		if (limiter) sessionTimer = setTimeout(() => finish("Realtime session duration limit exceeded", 1008, "Realtime session limit exceeded"), limiter.remainingSessionMs());
 	});
-}
-
-function requestSignalWithDeadline(
-	requestSignal: AbortSignal | undefined,
-	deadlineAtMs: number | undefined,
-): { signal: AbortSignal | undefined; cleanup(): void } {
-	if (deadlineAtMs == null) return { signal: requestSignal, cleanup() {} };
-	const controller = new AbortController();
-	const abortFromRequest = () => controller.abort(requestSignal?.reason);
-	if (requestSignal?.aborted) abortFromRequest();
-	else requestSignal?.addEventListener("abort", abortFromRequest, { once: true });
-	const remaining = Math.max(0, deadlineAtMs - Date.now());
-	if (remaining === 0) {
-		controller.abort(new Error("Realtime upstream connection deadline exceeded"));
-	}
-	const timer = remaining === 0
-		? null
-		: setTimeout(
-				() => controller.abort(new Error("Realtime upstream connection deadline exceeded")),
-				remaining,
-			);
-	return {
-		signal: controller.signal,
-		cleanup() {
-			if (timer != null) clearTimeout(timer);
-			requestSignal?.removeEventListener("abort", abortFromRequest);
-		},
-	};
 }
 
 /** 使用 Workers outbound WebSocket fetch 建立上游，再通过 WebSocketPair 对外暴露本地连接。 */
@@ -869,6 +801,7 @@ export async function dispatchDashScopeRealtime(
 			attempt,
 			options.sessionLimits,
 			options.beforeUpstreamDispatch,
+			options,
 		);
 	}
 	if (typeof WebSocketPair === "undefined") {
@@ -887,79 +820,47 @@ export async function dispatchDashScopeRealtime(
 		};
 	}
 
-	const capability = realtimeCapability(operation);
-	const endpoint = resolveUpstreamEndpoint(
-		"dashscope",
-		capability,
-		route.providerEndpoints,
-		{
-			providerId: route.providerId,
-		}
-	);
-	const url = outboundWebSocketFetchUrl(endpoint);
-	if (isSessionOperation(operation))
-		url.searchParams.set("model", route.providerModelName);
-
-	const { secret } = await resolveProviderUpstreamSecret(route.providerApiKey);
-	const boundedSignal = requestSignalWithDeadline(
-		requestSignal,
-		options.sessionLimits?.connectDeadlineAtMs,
-	);
-	let upstreamResponse: Response;
-	try {
-		if (boundedSignal.signal?.aborted) {
-			throw new Error("Realtime upstream connection aborted before dispatch");
-		}
-		await options.beforeUpstreamDispatch?.();
-		try {
-			upstreamResponse = await (options.fetchImpl ?? fetch)(url.toString(), {
-				headers: {
-					Authorization: `Bearer ${secret}`,
-					Upgrade: "websocket",
-				},
-				signal: boundedSignal.signal,
-			});
-		} catch (error) {
-			throw markUpstreamOutcomeUnknown(error);
-		}
-	} finally {
-		boundedSignal.cleanup();
-	}
-	timing?.markAttemptHeaders(attempt, upstreamResponse.status);
-	const upstreamRequestId = extractUpstreamRequestId(upstreamResponse.headers);
-	const upstream = upstreamResponse.webSocket;
-	if (upstreamResponse.status !== 101 || !upstream) {
-		return {
-			response: upstreamResponse,
-			usagePromise: Promise.resolve(EMPTY_USAGE),
-			upstreamRequestId,
-		};
-	}
-
-	const pair = new WebSocketPair();
-	const client = pair[0];
-	const server = pair[1];
-	const usagePromise = bridgeSockets({
-		client,
-		server,
-		upstream,
-		route,
-		operation,
-		timing,
-		sessionLimits: options.sessionLimits,
+	const connection = createRealtimeConnectionLifecycle(requestSignal, {
+		...options,
+		connectDeadlineAtMs: Math.min(options.connectDeadlineAtMs ?? Infinity, options.sessionLimits?.connectDeadlineAtMs ?? Infinity),
 	});
-	return {
-		response: new Response(null, {
-			status: 101,
-			webSocket: client,
-			headers: {
-				"X-Octafuse-Realtime-Protocol": "dashscope",
-				...(options.responseProtocol
-					? { "Sec-WebSocket-Protocol": options.responseProtocol }
-					: {}),
-			},
-		}),
-		usagePromise,
-		upstreamRequestId,
-	};
+	let upstreamResponse: Response | undefined;
+	let server: WebSocket | undefined;
+	try {
+		connection.throwIfStopped();
+		const endpoint = resolveUpstreamEndpoint("dashscope", realtimeCapability(operation), route.providerEndpoints, { providerId: route.providerId });
+		const url = outboundWebSocketFetchUrl(endpoint);
+		if (isSessionOperation(operation)) url.searchParams.set("model", route.providerModelName);
+		const responseHeaders = new Headers({ "X-Octafuse-Realtime-Protocol": "dashscope" });
+		try { if (options.responseProtocol) responseHeaders.set("Sec-WebSocket-Protocol", options.responseProtocol); }
+		catch { throw new Error("Invalid realtime response protocol"); }
+		const { secret } = await connection.wait(() => resolveProviderUpstreamSecret(route.providerApiKey, {
+			signal: connection.signal, auxiliaryAuth: options.auxiliaryAuth,
+		}));
+		const headers = realtimeUpstreamHeaders(secret, true);
+		await connection.admit(options.beforeUpstreamDispatch);
+		upstreamResponse = await connection.wait(() => {
+			connection.markDispatched();
+			return (options.fetchImpl ?? fetch)(url.toString(), { headers, signal: connection.signal, redirect: "manual" });
+		}, discardUpgrade);
+		timing?.markAttemptHeaders(attempt, upstreamResponse.status);
+		const upstreamRequestId = extractUpstreamRequestId(upstreamResponse.headers);
+		if (upstreamResponse.status !== 101 || !upstreamResponse.webSocket) {
+			discardUpgrade(upstreamResponse);
+			return realtimeRejectedResponse(upstreamResponse.status, upstreamResponse.headers, upstreamRequestId);
+		}
+		connection.throwIfStopped();
+		const pair = new WebSocketPair();
+		server = pair[1];
+		const response = new Response(null, { status: 101, webSocket: pair[0], headers: responseHeaders });
+		const usagePromise = bridgeSockets({
+			server, upstream: upstreamResponse.webSocket, route, operation, timing,
+			sessionLimits: options.sessionLimits, requestSignal,
+		});
+		return { response, usagePromise, upstreamRequestId };
+	} catch (error) {
+		if (upstreamResponse) discardUpgrade(upstreamResponse);
+		if (server) closeSocket(server, 1011, "Realtime connection failed");
+		return connection.failure(error);
+	} finally { connection.dispose(); }
 }

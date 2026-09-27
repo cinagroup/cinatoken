@@ -1,0 +1,73 @@
+{
+  "status": "PASS",
+  "cleanup": "PASS",
+  "binaryVersion": "postgres (PostgreSQL) 18.6",
+  "scope": "owned loopback PostgreSQL; unchanged request-log repository and current two-argument ordinary critical writer; review-only parent switch",
+  "limitations": [
+    "Current repository and ordinary writer code are exercised directly; this is not an archived deployed Worker binary.",
+    "One synthetic tenant and two ordinary requests do not prove all old routes, production traffic or a maintenance lock window.",
+    "No real Worker, Hyperdrive, Queue, provider send, remote SQL, retention or contract migration is exercised."
+  ],
+  "sourceSha256": {
+    "formalMigrationCorpus": "23afef61a8a670e0af8c90e3a138f522e6b283b454e380a592bf85bca83108dc",
+    "nativeTest": "e323cfe82e6a5a79e731007a6ecf714040d54402e64570b7d7d0ad175c7ace7c",
+    "criticalWriter": "ab1155707ad740ef96288f50d16cf78b4e2b35371ef64c8076c45c3a4927c986",
+    "requestLogsRepository": "83e94164a87d17c4ae56e63cb50b3ba4b6055dfc6ee7e837e9f0a0bdbd526750",
+    "runtimeGrant": "0fd36a946063fd81dbe5b381c7e35b4aa5ad6932015d6935e33442afad092390",
+    "replayBackfill": "62d1cc9795693d6a043ae7b26d24084b6c0f01c80bfb142e09928f5fef7fd3d0",
+    "parentActivation": "481b5a423c814604a35a4e45344334fe758f87aa58fefcb542fb1a00dc7ba177",
+    "cinatoken.dispatch_intent_definer_activation": "02cf4ffde6d37bb9253e9466cbde59047b5b8a0b19d73897ae69d60696db077d",
+    "cinatoken.request_dispatch_single_claim_activation": "6e62e12c25a94e4b32fe0121c728198a409f95427ef4cdcb14c51ebe1a629112",
+    "cinatoken.request_dispatch_replay_reservations_activation": "e9dad8f79a5bbc302de85658fb93fd5f8c17a30f4e932c98c26d98adaa94f64c",
+    "activationBundle": "bac71c830e7a10f0c2641870d4b1804e9a2443f75e7d763eab8be117e09f8f58"
+  },
+  "stages": [
+    {
+      "name": "formal-expand-and-runtime-session",
+      "result": "PASS",
+      "migrations": 73,
+      "sessionRole": "cinatoken_gateway_runtime"
+    },
+    {
+      "name": "ordinary-two-argument-writer-and-owner-admin-stats-readers-before-switch",
+      "result": "PASS",
+      "requestId": "gen-76b4b256-e12e-49f8-a0f9-36cbc72aa4ca",
+      "listed": 1,
+      "tokens": 11,
+      "ownerScoped": true
+    },
+    {
+      "name": "bounded-legacy-backfill-and-atomic-parent-switch",
+      "result": "PASS",
+      "scanned": 1,
+      "firstSource": "legacy_log"
+    },
+    {
+      "name": "ordinary-two-argument-writer-and-readers-after-switch",
+      "result": "PASS",
+      "oldRequestId": "gen-76b4b256-e12e-49f8-a0f9-36cbc72aa4ca",
+      "newRequestId": "gen-67982007-5d9a-420b-afab-98aa9086cb40",
+      "listed": 2,
+      "tokens": 22,
+      "oldGenerationProjectionUnchanged": true,
+      "lateReservation": "legacy_log"
+    },
+    {
+      "name": "ordinary-critical-writer-parent-collision-rolls-back",
+      "result": "PASS",
+      "prior": {
+        "logs": 2,
+        "stats": 2
+      },
+      "post": {
+        "logs": 2,
+        "stats": 2
+      },
+      "collisionError": {
+        "code": "P0001",
+        "message": "Request log ID is permanently reserved or financial scope differs"
+      },
+      "trustedParentRetained": true
+    }
+  ]
+}

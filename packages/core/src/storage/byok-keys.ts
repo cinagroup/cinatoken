@@ -55,6 +55,24 @@ type MySqlByokKeyRow = RawByokKeyRow & RowDataPacket;
 type MySqlCountRow = RowDataPacket & { total_count: number | string };
 type SqlValue = string | number | boolean | null;
 
+type ByokSlot = { id: string; sort_order: number };
+
+/** Append without changing relative priority; reclaim holes only when the tail is exhausted. */
+function appendSlotPlan(rows: ByokSlot[]) {
+	if (rows.length >= BYOK_MAX_KEYS_PER_WORKSPACE_PROVIDER) {
+		throw new TypeError('BYOK key limit reached for this workspace and provider');
+	}
+	const next = rows.length === 0 ? 0 : rows[rows.length - 1]!.sort_order + 1;
+	if (next < BYOK_MAX_KEYS_PER_WORKSPACE_PROVIDER) return { sortOrder: next, mapping: null };
+	const prefix = `cinatoken-compact-${crypto.randomUUID().replaceAll('-', '')}-`;
+	return {
+		sortOrder: rows.length,
+		mapping: JSON.stringify(rows.map((row, sortOrder) => ({
+			id: row.id, sort_order: sortOrder, temporary_provider: `${prefix}${sortOrder}`,
+		}))),
+	};
+}
+
 const MAX_PAGE_OFFSET = 1_000_000;
 const METADATA_COLUMNS = `byok.id, byok.workspace_id, byok.provider, byok.name,
 	byok.label, byok.disabled, byok.is_fallback, byok.always_use_for_provider,
@@ -294,13 +312,14 @@ function postgresActiveOwnerPredicate(
 	alias = 'management_key',
 ): string {
 	return principal.accountType === 'personal'
-		? `EXISTS (SELECT 1 FROM users owner WHERE owner.id = ${alias}.personal_owner_user_id AND owner.status = 'active')`
-		: `EXISTS (SELECT 1 FROM organizations owner WHERE owner.id = ${alias}.organization_id AND owner.status IN ('active', 'pending'))`;
+		? `EXISTS (SELECT 1 FROM cinatoken_gateway.users owner WHERE owner.id = ${alias}.personal_owner_user_id AND owner.status = 'active')`
+		: `EXISTS (SELECT 1 FROM cinatoken_gateway.organizations owner WHERE owner.id = ${alias}.organization_id AND owner.status IN ('active', 'pending'))`;
 }
 
 function d1ActiveManagementKeyPredicate(
 	principal: ManagementApiKeyPrincipal,
 	alias = 'management_key',
+	authorizedBatchContinuation = false,
 ) {
 	const account = d1AccountPredicate(principal, 'workspace');
 	const owner = principal.accountType === 'personal'
@@ -308,7 +327,8 @@ function d1ActiveManagementKeyPredicate(
 		: `EXISTS (SELECT 1 FROM organizations owner WHERE owner.id = ${alias}.organization_id AND owner.status IN ('active', 'pending'))`;
 	return {
 		sql: `${alias}.id = ? AND ${alias}.status = 'active'
-			AND (${alias}.expires_at IS NULL OR ${alias}.expires_at > datetime('now'))
+			AND (${alias}.expires_at IS NULL OR ${alias}.expires_at > datetime('now')
+				${authorizedBatchContinuation ? 'OR changes() > 0' : ''})
 			AND ${alias}.account_type = ?
 			AND ((${alias}.account_type = 'personal' AND ${alias}.personal_owner_user_id = ? AND ${alias}.organization_id IS NULL)
 				OR (${alias}.account_type = 'organization' AND ${alias}.personal_owner_user_id IS NULL AND ${alias}.organization_id = ?))
@@ -328,9 +348,10 @@ function d1MutationAccess(
 	principal: ByokMutationPrincipal,
 	workspaceId: string,
 	workspaceAlias = 'workspace',
+	authorizedBatchContinuation = false,
 ) {
 	if (!isByokPortalUserPrincipal(principal)) {
-		const key = d1ActiveManagementKeyPredicate(principal);
+		const key = d1ActiveManagementKeyPredicate(principal, 'management_key', authorizedBatchContinuation);
 		return {
 			from: `management_api_keys management_key JOIN workspaces ${workspaceAlias}
 				ON ${workspaceAlias}.id = ?`,
@@ -503,14 +524,17 @@ function d1AuditStatement(
 		? 'AND byok.created_by_management_key_id = management_key.id'
 		: '';
 	if (!isByokPortalUserPrincipal(params.principal)) {
-		const key = d1ActiveManagementKeyPredicate(params.principal);
+		// Only called immediately after the authorized write in the same atomic D1
+		// batch. Expiry after that write must not suppress its audit. changes() is
+		// connection-local SQL evidence, never caller-supplied authorization.
+		const key = d1ActiveManagementKeyPredicate(params.principal, 'management_key', true);
 		return client.prepare(`INSERT INTO user_audit_logs (
 			id, user_id, api_key_id, event_type, actor_type, change_payload,
 			source, actor_id, reason_code, reason_text, created_at
 		) SELECT ?, ?, NULL, ?, ?, ?, ?, ?, ?, ?, ?
 		FROM byok_keys byok JOIN workspaces workspace ON workspace.id = byok.workspace_id
 		JOIN management_api_keys management_key ON management_key.id = ?
-		WHERE byok.id = ? AND byok.workspace_id = ? AND ${mutationPredicate}
+		WHERE changes() = 1 AND byok.id = ? AND byok.workspace_id = ? AND ${mutationPredicate}
 			${managementCreatedPredicate} AND ${key.sql} AND workspace.status = 'active'
 			AND ${key.workspaceSql}`).bind(
 			crypto.randomUUID(),
@@ -538,7 +562,7 @@ function d1AuditStatement(
 	) SELECT ?, ?, NULL, ?, ?, ?, ?, ?, ?, ?, ?
 	FROM byok_keys byok JOIN workspaces workspace ON workspace.id = byok.workspace_id
 	JOIN users portal_user ON portal_user.id = ?
-	WHERE byok.id = ? AND byok.workspace_id = ? AND ${mutationPredicate}
+	WHERE changes() = 1 AND byok.id = ? AND byok.workspace_id = ? AND ${mutationPredicate}
 		AND portal_user.status = 'active' AND workspace.status = 'active'
 		AND ${owner.sql}`).bind(
 		crypto.randomUUID(),
@@ -566,7 +590,7 @@ function d1ReorderAuditStatement(
 ) {
 	const { input } = params;
 	const actor = mutationActor(params.principal);
-	const tail = `AND (SELECT COUNT(*) FROM byok_keys current
+	const tail = `AND changes() = ? AND (SELECT COUNT(*) FROM byok_keys current
 			WHERE current.workspace_id = ? AND current.provider = ?
 				AND current.deleted_at IS NULL) = ?
 		AND (SELECT COUNT(*) FROM byok_keys current JOIN json_each(?) item
@@ -576,11 +600,12 @@ function d1ReorderAuditStatement(
 				AND current.sort_order = CAST(json_extract(item.value, '$.sort_order') AS INTEGER)
 				AND current.is_fallback = CAST(json_extract(item.value, '$.is_fallback') AS INTEGER)) = ?`;
 	const tailValues: SqlValue[] = [
+		input.keys.length,
 		input.workspaceId, input.provider, input.keys.length,
 		mappingJson, input.workspaceId, input.provider, params.nowIso, input.keys.length,
 	];
 	if (!isByokPortalUserPrincipal(params.principal)) {
-		const key = d1ActiveManagementKeyPredicate(params.principal);
+		const key = d1ActiveManagementKeyPredicate(params.principal, 'management_key', true);
 		return client.prepare(`INSERT INTO user_audit_logs (
 			id, user_id, api_key_id, event_type, actor_type, change_payload,
 			source, actor_id, reason_code, reason_text, created_at
@@ -689,13 +714,13 @@ export function createByokKeysRepository(
 				}
 				const where = filters.join(' AND ');
 				const counts = await client.raw.unsafe<Array<{ total_count: number | string }>>(
-					`SELECT COUNT(*) AS total_count FROM byok_keys byok
-					JOIN workspaces workspace ON workspace.id = byok.workspace_id WHERE ${where}`,
+					`SELECT COUNT(*) AS total_count FROM cinatoken_gateway.byok_keys byok
+					JOIN cinatoken_gateway.workspaces workspace ON workspace.id = byok.workspace_id WHERE ${where}`,
 					values,
 				);
 				values.push(options.limit, options.offset);
 				const rows = await client.raw.unsafe<RawByokKeyRow[]>(`SELECT ${METADATA_COLUMNS}
-					FROM byok_keys byok JOIN workspaces workspace ON workspace.id = byok.workspace_id
+					FROM cinatoken_gateway.byok_keys byok JOIN cinatoken_gateway.workspaces workspace ON workspace.id = byok.workspace_id
 					WHERE ${where} ORDER BY byok.created_at DESC, byok.id DESC
 					LIMIT $${values.length - 1} OFFSET $${values.length}`, values);
 				return {
@@ -736,7 +761,7 @@ export function createByokKeysRepository(
 			if (client.driver === 'postgres') {
 				const owner = postgresAccountPredicate(account, 'workspace', 2);
 				const rows = await client.raw.unsafe<RawByokKeyRow[]>(`SELECT ${METADATA_COLUMNS}
-					FROM byok_keys byok JOIN workspaces workspace ON workspace.id = byok.workspace_id
+					FROM cinatoken_gateway.byok_keys byok JOIN cinatoken_gateway.workspaces workspace ON workspace.id = byok.workspace_id
 					WHERE byok.id = $1 AND byok.deleted_at IS NULL AND workspace.status = 'active'
 						AND ${owner.sql} LIMIT 1`, [id, owner.value]);
 				return rows[0] ? mapMetadata(rows[0]) : null;
@@ -754,6 +779,39 @@ export function createByokKeysRepository(
 			const { input, principal } = params;
 			if (client.driver === 'd1') {
 				const access = d1MutationAccess(principal, input.workspaceId);
+				// The preceding restore statement changes rows only after authorized
+				// compaction. If it changes zero rows, creation still checks fresh expiry.
+				const insertAccess = d1MutationAccess(principal, input.workspaceId, 'workspace', true);
+				const prefix = `cinatoken-compact-${crypto.randomUUID().replaceAll('-', '')}-`;
+				const prefixEnd = `${prefix}~`;
+				// Freeze membership before changing providers. All five statements execute in one
+				// atomic D1 batch: no read/plan/write window or per-credential network round trips.
+				const compact = [
+					client.raw.prepare(`WITH compactable AS MATERIALIZED (
+						SELECT id FROM byok_keys WHERE workspace_id = ? AND provider = ? AND deleted_at IS NULL
+							AND (SELECT COUNT(*) FROM byok_keys existing WHERE existing.workspace_id = ?
+								AND existing.provider = ? AND existing.deleted_at IS NULL) < ?
+							AND (SELECT MAX(sort_order) FROM byok_keys existing WHERE existing.workspace_id = ?
+								AND existing.provider = ? AND existing.deleted_at IS NULL) = ?
+							AND EXISTS (SELECT 1 FROM ${access.from}
+								WHERE workspace.id = byok_keys.workspace_id AND ${access.where})
+					) UPDATE byok_keys SET provider = ? || sort_order WHERE id IN (SELECT id FROM compactable)`)
+						.bind(input.workspaceId, input.provider, input.workspaceId, input.provider,
+							BYOK_MAX_KEYS_PER_WORKSPACE_PROVIDER, input.workspaceId, input.provider,
+							BYOK_MAX_KEYS_PER_WORKSPACE_PROVIDER - 1, ...access.values, prefix),
+					// Rank by the immutable old slot encoded in the temporary provider, not by
+					// sort_order (which changes during this UPDATE). Each row owns its namespace.
+					client.raw.prepare(`UPDATE byok_keys SET sort_order = (
+						SELECT COUNT(*) FROM byok_keys sibling WHERE sibling.workspace_id = byok_keys.workspace_id
+							AND sibling.deleted_at IS NULL AND sibling.provider >= ? AND sibling.provider < ?
+							AND CAST(substr(sibling.provider, ?) AS INTEGER) < CAST(substr(byok_keys.provider, ?) AS INTEGER)
+					) WHERE workspace_id = ? AND deleted_at IS NULL AND provider >= ? AND provider < ?`)
+						.bind(prefix, prefixEnd, prefix.length + 1, prefix.length + 1,
+							input.workspaceId, prefix, prefixEnd),
+					client.raw.prepare(`UPDATE byok_keys SET provider = ?
+						WHERE workspace_id = ? AND deleted_at IS NULL AND provider >= ? AND provider < ?`)
+						.bind(input.provider, input.workspaceId, prefix, prefixEnd),
+				];
 				const insert = client.raw.prepare(`INSERT INTO byok_keys (
 					id, workspace_id, provider, name, api_key_encrypted, label, disabled,
 					is_fallback, always_use_for_provider, always_use_for_matching_models,
@@ -763,9 +821,9 @@ export function createByokKeysRepository(
 					COALESCE((SELECT MAX(existing.sort_order) + 1 FROM byok_keys existing
 						WHERE existing.workspace_id = workspace.id AND existing.provider = ?
 							AND existing.deleted_at IS NULL), 0),
-					?, ?, ?, ${access.createdBySql}, ?, ?
-				FROM ${access.from}
-				WHERE ${access.where}
+					?, ?, ?, ${insertAccess.createdBySql}, ?, ?
+				FROM ${insertAccess.from}
+				WHERE ${insertAccess.where}
 					AND (SELECT COUNT(*) FROM byok_keys existing WHERE existing.workspace_id = workspace.id
 						AND existing.provider = ? AND existing.deleted_at IS NULL) < ?`).bind(
 					params.id, input.provider, input.name, input.apiKey, input.label,
@@ -774,13 +832,14 @@ export function createByokKeysRepository(
 					input.alwaysUseForMatchingModels ? 1 : 0, input.provider,
 					json(input.allowedModels), json(input.allowedUserIds), json(input.allowedApiKeyHashes),
 					params.nowIso, params.nowIso,
-					...access.values,
+					...insertAccess.values,
 					input.provider, BYOK_MAX_KEYS_PER_WORKSPACE_PROVIDER,
 				);
 				const payload = auditPayload('created', {
 					id: params.id, workspace_id: input.workspaceId, provider: input.provider,
 				});
 				const results = await client.raw.batch([
+					...compact,
 					insert,
 					d1AuditStatement(client.raw, {
 						...params,
@@ -789,7 +848,8 @@ export function createByokKeysRepository(
 						payload,
 					}),
 				]);
-				if ((results[0]?.meta.changes ?? 0) !== 1 || (results[1]?.meta.changes ?? 0) !== 1) {
+				if ((results[compact.length]?.meta.changes ?? 0) !== 1
+					|| (results[compact.length + 1]?.meta.changes ?? 0) !== 1) {
 					return null;
 				}
 				return getD1(client.raw, params.id, mutationAccount(principal));
@@ -804,12 +864,12 @@ export function createByokKeysRepository(
 					);
 					const authorized = isByokPortalUserPrincipal(principal)
 						? await transaction.unsafe<Array<{ id: string }>>(`SELECT workspace.id
-							FROM workspaces workspace JOIN users portal_user ON portal_user.id = $1
+							FROM cinatoken_gateway.workspaces workspace JOIN cinatoken_gateway.users portal_user ON portal_user.id = $1
 							WHERE portal_user.status = 'active' AND workspace.id = $2
 								AND workspace.status = 'active' AND ${owner.sql}
 							FOR UPDATE OF workspace`, [principal.userId, input.workspaceId, owner.value])
 						: await transaction.unsafe<Array<{ id: string }>>(`SELECT workspace.id
-							FROM workspaces workspace JOIN management_api_keys management_key ON management_key.id = $1
+							FROM cinatoken_gateway.workspaces workspace JOIN cinatoken_gateway.management_api_keys management_key ON management_key.id = $1
 							WHERE management_key.status = 'active'
 								AND (management_key.expires_at IS NULL OR management_key.expires_at > CURRENT_TIMESTAMP)
 								AND management_key.account_type = $2
@@ -822,31 +882,44 @@ export function createByokKeysRepository(
 							principal.organizationId, input.workspaceId, owner.value,
 						]);
 					if (authorized.length !== 1) return false;
-					const count = await transaction.unsafe<Array<{ total_count: number | string }>>(
-						`SELECT COUNT(*) AS total_count FROM byok_keys
-						WHERE workspace_id = $1 AND provider = $2 AND deleted_at IS NULL`,
+					const slots = await transaction.unsafe<ByokSlot[]>(
+						`SELECT id, sort_order FROM cinatoken_gateway.byok_keys
+						WHERE workspace_id = $1 AND provider = $2 AND deleted_at IS NULL
+						ORDER BY sort_order, id LIMIT 101 FOR UPDATE`,
 						[input.workspaceId, input.provider],
 					);
-					if (Number(count[0]?.total_count ?? 0) >= BYOK_MAX_KEYS_PER_WORKSPACE_PROVIDER) {
-						throw new TypeError('BYOK key limit reached for this workspace and provider');
+					const plan = appendSlotPlan(slots);
+					if (plan.mapping !== null) {
+						const recordset = `jsonb_to_recordset($1::jsonb) AS mapping(
+							id text, temporary_provider text, sort_order integer)`;
+						await transaction.unsafe(`UPDATE cinatoken_gateway.byok_keys AS byok SET provider = mapping.temporary_provider
+							FROM ${recordset} WHERE byok.id = mapping.id AND byok.workspace_id = $2
+								AND byok.provider = $3 AND byok.deleted_at IS NULL`,
+						[plan.mapping, input.workspaceId, input.provider]);
+						await transaction.unsafe(`UPDATE cinatoken_gateway.byok_keys AS byok SET sort_order = mapping.sort_order
+							FROM ${recordset} WHERE byok.id = mapping.id AND byok.workspace_id = $2
+								AND byok.provider = mapping.temporary_provider AND byok.deleted_at IS NULL`,
+						[plan.mapping, input.workspaceId]);
+						await transaction.unsafe(`UPDATE cinatoken_gateway.byok_keys AS byok SET provider = $3
+							FROM ${recordset} WHERE byok.id = mapping.id AND byok.workspace_id = $2
+								AND byok.provider = mapping.temporary_provider AND byok.deleted_at IS NULL`,
+						[plan.mapping, input.workspaceId, input.provider]);
 					}
-					await transaction.unsafe(`INSERT INTO byok_keys (
+					await transaction.unsafe(`INSERT INTO cinatoken_gateway.byok_keys (
 						id, workspace_id, provider, name, api_key_encrypted, label, disabled,
 						is_fallback, always_use_for_provider, always_use_for_matching_models,
 						sort_order, allowed_models_json, allowed_user_ids_json,
 						allowed_api_key_hashes_json, created_by_management_key_id, created_at, updated_at
-					) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,
-						COALESCE((SELECT MAX(sort_order) + 1 FROM byok_keys
-							WHERE workspace_id = $2 AND provider = $3 AND deleted_at IS NULL), 0),
-						$11,$12,$13,$14,$15,$15)`, [
+					) VALUES ($1,$2,$3::text,$4,$5,$6,$7,$8,$9,$10,$16,$11,$12,$13,$14,$15,$15)`, [
 						params.id, input.workspaceId, input.provider, input.name, input.apiKey, input.label,
 						input.disabled, input.isFallback, input.alwaysUseForProvider,
 						input.alwaysUseForMatchingModels,
 						json(input.allowedModels), json(input.allowedUserIds),
 						json(input.allowedApiKeyHashes), mutationActor(principal).managementKeyId, params.nowIso,
+						plan.sortOrder,
 					]);
 					const actor = mutationActor(principal);
-					await transaction.unsafe(`INSERT INTO user_audit_logs (
+					await transaction.unsafe(`INSERT INTO cinatoken_gateway.user_audit_logs (
 						id, user_id, api_key_id, event_type, actor_type, change_payload, source,
 						actor_id, reason_code, reason_text, created_at
 					) VALUES ($1,$2,NULL,'byok_key_created',$3,$4,$5,
@@ -879,18 +952,35 @@ export function createByokKeysRepository(
 							JOIN management_api_keys management_key ON management_key.id = ?
 							WHERE ${key.sql.replaceAll("datetime('now')", 'UTC_TIMESTAMP(6)')}
 								AND workspace.id = ? AND workspace.status = 'active' AND ${key.workspaceSql}
-							FOR UPDATE`, [principal.keyId, ...key.values.slice(1), input.workspaceId, ...key.workspaceValues]);
+							FOR UPDATE`, [principal.keyId, ...key.values, input.workspaceId, ...key.workspaceValues]);
 					})();
 				if (authorized.length !== 1) {
 					await connection.rollback();
 					return null;
 				}
-				const count = await mysqlQueryRows<MySqlCountRow>(connection,
-					`SELECT COUNT(*) AS total_count FROM byok_keys
-					WHERE workspace_id = ? AND provider = ? AND deleted_at IS NULL`,
+				const slots = await mysqlQueryRows<RowDataPacket & ByokSlot>(connection,
+					`SELECT id, sort_order FROM byok_keys
+					WHERE workspace_id = ? AND provider = ? AND deleted_at IS NULL
+					ORDER BY sort_order, id LIMIT 101 FOR UPDATE`,
 					[input.workspaceId, input.provider]);
-				if (Number(count[0]?.total_count ?? 0) >= BYOK_MAX_KEYS_PER_WORKSPACE_PROVIDER) {
-					throw new TypeError('BYOK key limit reached for this workspace and provider');
+				const plan = appendSlotPlan(slots);
+				if (plan.mapping !== null) {
+					const jsonTable = `JSON_TABLE(?, '$[*]' COLUMNS (
+						id VARCHAR(64) PATH '$.id', temporary_provider VARCHAR(128) PATH '$.temporary_provider',
+						sort_order INT PATH '$.sort_order'
+					)) mapping`;
+					await mysqlExecute(connection, `UPDATE byok_keys byok JOIN ${jsonTable}
+						ON byok.id = mapping.id SET byok.provider = mapping.temporary_provider
+						WHERE byok.workspace_id = ? AND byok.provider = ? AND byok.deleted_at IS NULL`,
+					[plan.mapping, input.workspaceId, input.provider]);
+					await mysqlExecute(connection, `UPDATE byok_keys byok JOIN ${jsonTable}
+						ON byok.id = mapping.id SET byok.sort_order = mapping.sort_order
+						WHERE byok.workspace_id = ? AND byok.provider = mapping.temporary_provider AND byok.deleted_at IS NULL`,
+					[plan.mapping, input.workspaceId]);
+					await mysqlExecute(connection, `UPDATE byok_keys byok JOIN ${jsonTable}
+						ON byok.id = mapping.id SET byok.provider = ?
+						WHERE byok.workspace_id = ? AND byok.provider = mapping.temporary_provider AND byok.deleted_at IS NULL`,
+					[plan.mapping, input.provider, input.workspaceId]);
 				}
 				const mysqlNow = toMySqlDateTime(params.nowIso);
 				await mysqlExecute(connection, `INSERT INTO byok_keys (
@@ -898,14 +988,11 @@ export function createByokKeysRepository(
 					is_fallback, always_use_for_provider, always_use_for_matching_models,
 					sort_order, allowed_models_json, allowed_user_ids_json,
 					allowed_api_key_hashes_json, created_by_management_key_id, created_at, updated_at
-				) VALUES (?,?,?,?,?,?,?,?,?,?,
-					COALESCE((SELECT next_order FROM (SELECT MAX(sort_order) + 1 AS next_order FROM byok_keys
-						WHERE workspace_id = ? AND provider = ? AND deleted_at IS NULL) ordering), 0),
-					?,?,?,?,?,?)`, [
+				) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)`, [
 					params.id, input.workspaceId, input.provider, input.name, input.apiKey, input.label,
 					input.disabled, input.isFallback, input.alwaysUseForProvider,
 					input.alwaysUseForMatchingModels,
-					input.workspaceId, input.provider,
+					plan.sortOrder,
 					json(input.allowedModels), json(input.allowedUserIds), json(input.allowedApiKeyHashes),
 					mutationActor(principal).managementKeyId, mysqlNow, mysqlNow,
 				]);
@@ -1000,8 +1087,8 @@ export function createByokKeysRepository(
 					const owner = postgresAccountPredicate(account, 'workspace', portalPrincipal ? 4 : 6);
 					const rows = portalPrincipal
 						? await transaction.unsafe<RawByokKeyRow[]>(`SELECT ${METADATA_COLUMNS}
-							FROM byok_keys byok JOIN workspaces workspace ON workspace.id = byok.workspace_id
-							JOIN users portal_user ON portal_user.id = $1
+							FROM cinatoken_gateway.byok_keys byok JOIN cinatoken_gateway.workspaces workspace ON workspace.id = byok.workspace_id
+							JOIN cinatoken_gateway.users portal_user ON portal_user.id = $1
 							WHERE byok.id = $2 AND byok.workspace_id = $3 AND byok.deleted_at IS NULL
 								AND portal_user.status = 'active' AND workspace.status = 'active'
 								AND ${owner.sql} FOR UPDATE OF byok`, [
@@ -1010,8 +1097,8 @@ export function createByokKeysRepository(
 						: await (async () => {
 							const managementPrincipal = requireManagementPrincipal(params.principal);
 							return transaction.unsafe<RawByokKeyRow[]>(`SELECT ${METADATA_COLUMNS}
-							FROM byok_keys byok JOIN workspaces workspace ON workspace.id = byok.workspace_id
-							JOIN management_api_keys management_key ON management_key.id = $1
+							FROM cinatoken_gateway.byok_keys byok JOIN cinatoken_gateway.workspaces workspace ON workspace.id = byok.workspace_id
+							JOIN cinatoken_gateway.management_api_keys management_key ON management_key.id = $1
 							WHERE byok.id = $2 AND byok.deleted_at IS NULL AND workspace.status = 'active'
 								AND management_key.status = 'active'
 								AND (management_key.expires_at IS NULL OR management_key.expires_at > CURRENT_TIMESTAMP)
@@ -1029,10 +1116,10 @@ export function createByokKeysRepository(
 					const values = fields.map(([, value]) => typeof value === 'number' ? value === 1 : value);
 					values.push(params.nowIso, params.id);
 					const sets = fields.map(([column], index) => `${column} = $${index + 1}`).join(', ');
-					await transaction.unsafe(`UPDATE byok_keys SET ${sets}, updated_at = $${fields.length + 1}
+					await transaction.unsafe(`UPDATE cinatoken_gateway.byok_keys SET ${sets}, updated_at = $${fields.length + 1}
 						WHERE id = $${fields.length + 2}`, values);
 					const actor = mutationActor(params.principal);
-					await transaction.unsafe(`INSERT INTO user_audit_logs (
+					await transaction.unsafe(`INSERT INTO cinatoken_gateway.user_audit_logs (
 						id, user_id, api_key_id, event_type, actor_type, change_payload, source,
 						actor_id, reason_code, reason_text, created_at
 					) VALUES ($1,$2,NULL,'byok_key_updated',$3,$4,$5,
@@ -1069,7 +1156,7 @@ export function createByokKeysRepository(
 							WHERE byok.id = ? AND byok.deleted_at IS NULL AND workspace.status = 'active'
 								AND ${key.sql.replaceAll("datetime('now')", 'UTC_TIMESTAMP(6)')}
 								AND ${key.workspaceSql} FOR UPDATE`,
-						[managementPrincipal.keyId, params.id, ...key.values.slice(1), ...key.workspaceValues]);
+						[managementPrincipal.keyId, params.id, ...key.values, ...key.workspaceValues]);
 					})();
 				if (!rows[0]) {
 					await connection.rollback();
@@ -1197,12 +1284,12 @@ export function createByokKeysRepository(
 					);
 					const authorized = isByokPortalUserPrincipal(principal)
 						? await transaction.unsafe<Array<{ id: string }>>(`SELECT workspace.id
-							FROM workspaces workspace JOIN users portal_user ON portal_user.id = $1
+							FROM cinatoken_gateway.workspaces workspace JOIN cinatoken_gateway.users portal_user ON portal_user.id = $1
 							WHERE portal_user.status = 'active' AND workspace.id = $2
 								AND workspace.status = 'active' AND ${owner.sql} FOR UPDATE OF workspace`,
 						[principal.userId, input.workspaceId, owner.value])
 						: await transaction.unsafe<Array<{ id: string }>>(`SELECT workspace.id
-							FROM workspaces workspace JOIN management_api_keys management_key ON management_key.id = $1
+							FROM cinatoken_gateway.workspaces workspace JOIN cinatoken_gateway.management_api_keys management_key ON management_key.id = $1
 							WHERE management_key.status = 'active'
 								AND (management_key.expires_at IS NULL OR management_key.expires_at > CURRENT_TIMESTAMP)
 								AND management_key.account_type = $2
@@ -1216,7 +1303,7 @@ export function createByokKeysRepository(
 						]);
 					if (authorized.length !== 1) return 'not_found';
 					const rows = await transaction.unsafe<RawByokKeyRow[]>(`SELECT ${METADATA_COLUMNS}
-						FROM byok_keys byok WHERE byok.workspace_id = $1 AND byok.provider = $2
+						FROM cinatoken_gateway.byok_keys byok WHERE byok.workspace_id = $1 AND byok.provider = $2
 							AND byok.deleted_at IS NULL ORDER BY byok.id FOR UPDATE OF byok`,
 					[input.workspaceId, input.provider]);
 					if (!sameReorderSet(rows, input) || reorderViolatesAlwaysUse(rows, input)) {
@@ -1224,21 +1311,21 @@ export function createByokKeysRepository(
 					}
 					const recordset = `jsonb_to_recordset($1::jsonb) AS mapping(
 						id text, temporary_provider text, sort_order integer, is_fallback boolean)`;
-					await transaction.unsafe(`UPDATE byok_keys AS byok SET provider = mapping.temporary_provider
+					await transaction.unsafe(`UPDATE cinatoken_gateway.byok_keys AS byok SET provider = mapping.temporary_provider
 						FROM ${recordset} WHERE byok.id = mapping.id AND byok.workspace_id = $2
 							AND byok.provider = $3 AND byok.deleted_at IS NULL`,
 					[mappingJson, input.workspaceId, input.provider]);
-					await transaction.unsafe(`UPDATE byok_keys AS byok SET sort_order = mapping.sort_order,
+					await transaction.unsafe(`UPDATE cinatoken_gateway.byok_keys AS byok SET sort_order = mapping.sort_order,
 						is_fallback = mapping.is_fallback, updated_at = $2
 						FROM ${recordset} WHERE byok.id = mapping.id AND byok.workspace_id = $3
 							AND byok.provider = mapping.temporary_provider AND byok.deleted_at IS NULL`,
 					[mappingJson, params.nowIso, input.workspaceId]);
-					await transaction.unsafe(`UPDATE byok_keys AS byok SET provider = $2
+					await transaction.unsafe(`UPDATE cinatoken_gateway.byok_keys AS byok SET provider = $2
 						FROM ${recordset} WHERE byok.id = mapping.id AND byok.workspace_id = $3
 							AND byok.provider = mapping.temporary_provider AND byok.deleted_at IS NULL`,
 					[mappingJson, input.provider, input.workspaceId]);
 					const actor = mutationActor(principal);
-					await transaction.unsafe(`INSERT INTO user_audit_logs (
+					await transaction.unsafe(`INSERT INTO cinatoken_gateway.user_audit_logs (
 						id, user_id, api_key_id, event_type, actor_type, change_payload, source,
 						actor_id, reason_code, reason_text, created_at
 					) VALUES ($1,$2,NULL,'byok_key_reordered',$3,$4,$5,
@@ -1269,7 +1356,7 @@ export function createByokKeysRepository(
 							JOIN management_api_keys management_key ON management_key.id = ?
 							WHERE ${key.sql.replaceAll("datetime('now')", 'UTC_TIMESTAMP(6)')}
 								AND workspace.id = ? AND workspace.status = 'active' AND ${key.workspaceSql}
-							FOR UPDATE`, [principal.keyId, ...key.values.slice(1), input.workspaceId, ...key.workspaceValues]);
+							FOR UPDATE`, [principal.keyId, ...key.values, input.workspaceId, ...key.workspaceValues]);
 					})();
 				if (authorized.length !== 1) {
 					await connection.rollback();
@@ -1360,8 +1447,8 @@ export function createByokKeysRepository(
 					const owner = postgresAccountPredicate(account, 'workspace', portalPrincipal ? 4 : 6);
 					const rows = portalPrincipal
 						? await transaction.unsafe<RawByokKeyRow[]>(`SELECT ${METADATA_COLUMNS}
-							FROM byok_keys byok JOIN workspaces workspace ON workspace.id = byok.workspace_id
-							JOIN users portal_user ON portal_user.id = $1
+							FROM cinatoken_gateway.byok_keys byok JOIN cinatoken_gateway.workspaces workspace ON workspace.id = byok.workspace_id
+							JOIN cinatoken_gateway.users portal_user ON portal_user.id = $1
 							WHERE byok.id = $2 AND byok.workspace_id = $3 AND byok.deleted_at IS NULL
 								AND portal_user.status = 'active' AND workspace.status = 'active'
 								AND ${owner.sql} FOR UPDATE OF byok`, [
@@ -1370,8 +1457,8 @@ export function createByokKeysRepository(
 						: await (async () => {
 							const managementPrincipal = requireManagementPrincipal(params.principal);
 							return transaction.unsafe<RawByokKeyRow[]>(`SELECT ${METADATA_COLUMNS}
-							FROM byok_keys byok JOIN workspaces workspace ON workspace.id = byok.workspace_id
-							JOIN management_api_keys management_key ON management_key.id = $1
+							FROM cinatoken_gateway.byok_keys byok JOIN cinatoken_gateway.workspaces workspace ON workspace.id = byok.workspace_id
+							JOIN cinatoken_gateway.management_api_keys management_key ON management_key.id = $1
 							WHERE byok.id = $2 AND byok.deleted_at IS NULL AND workspace.status = 'active'
 								AND management_key.status = 'active'
 								AND (management_key.expires_at IS NULL OR management_key.expires_at > CURRENT_TIMESTAMP)
@@ -1385,12 +1472,12 @@ export function createByokKeysRepository(
 							]);
 						})();
 					if (!rows[0]) return false;
-					await transaction.unsafe(`UPDATE byok_keys SET api_key_encrypted = '', label = 'deleted',
+					await transaction.unsafe(`UPDATE cinatoken_gateway.byok_keys SET api_key_encrypted = '', label = 'deleted',
 						disabled = TRUE, allowed_models_json = NULL, allowed_user_ids_json = NULL,
 						allowed_api_key_hashes_json = NULL, deleted_at = $1, updated_at = $1 WHERE id = $2`,
 					[params.nowIso, params.id]);
 					const actor = mutationActor(params.principal);
-					await transaction.unsafe(`INSERT INTO user_audit_logs (
+					await transaction.unsafe(`INSERT INTO cinatoken_gateway.user_audit_logs (
 						id, user_id, api_key_id, event_type, actor_type, change_payload, source,
 						actor_id, reason_code, reason_text, created_at
 					) VALUES ($1,$2,NULL,'byok_key_deleted',$3,$4,$5,
@@ -1426,7 +1513,7 @@ export function createByokKeysRepository(
 							WHERE byok.id = ? AND byok.deleted_at IS NULL AND workspace.status = 'active'
 								AND ${key.sql.replaceAll("datetime('now')", 'UTC_TIMESTAMP(6)')}
 								AND ${key.workspaceSql} FOR UPDATE`,
-						[managementPrincipal.keyId, params.id, ...key.values.slice(1), ...key.workspaceValues]);
+						[managementPrincipal.keyId, params.id, ...key.values, ...key.workspaceValues]);
 					})();
 				if (!rows[0]) {
 					await connection.rollback();
@@ -1472,7 +1559,7 @@ export function createByokKeysRepository(
 				rows = (result.results ?? []).map((row) => mapRuntime(row));
 			} else if (client.driver === 'postgres') {
 				const result = await client.raw.unsafe<RawByokKeyRow[]>(`SELECT ${RUNTIME_COLUMNS}
-					FROM byok_keys byok JOIN workspaces workspace ON workspace.id = byok.workspace_id
+					FROM cinatoken_gateway.byok_keys byok JOIN cinatoken_gateway.workspaces workspace ON workspace.id = byok.workspace_id
 					WHERE byok.workspace_id = $1 AND byok.provider = $2 AND byok.disabled = FALSE
 						AND byok.deleted_at IS NULL AND workspace.status = 'active'
 					ORDER BY byok.is_fallback ASC, byok.sort_order ASC, byok.id ASC LIMIT $3`,
@@ -1509,7 +1596,7 @@ export function createByokKeysRepository(
 				rows = (result.results ?? []).map((row) => mapMetadata(row));
 			} else if (client.driver === 'postgres') {
 				const result = await client.raw.unsafe<RawByokKeyRow[]>(`SELECT ${METADATA_COLUMNS}
-					FROM byok_keys byok JOIN workspaces workspace ON workspace.id = byok.workspace_id
+					FROM cinatoken_gateway.byok_keys byok JOIN cinatoken_gateway.workspaces workspace ON workspace.id = byok.workspace_id
 					WHERE byok.workspace_id = $1 AND byok.provider = $2 AND byok.disabled = FALSE
 						AND byok.is_fallback = FALSE
 						AND (byok.always_use_for_provider = TRUE

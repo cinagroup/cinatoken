@@ -1,0 +1,27 @@
+name: Images SSE peer CLI safety
+on:
+  pull_request:
+    paths: ['scripts/deploy/**', '.github/workflows/images-sse-capacity-peer-cli-safety.yml']
+  push:
+    branches: [main, develop]
+    paths: ['scripts/deploy/**', '.github/workflows/images-sse-capacity-peer-cli-safety.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  local-contract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    strategy:
+      matrix:
+        node: [22, 24]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+          cache: npm
+      - run: npm ci
+      # Model management/child process and real temporary journal files only.
+      # Never invoke the deploy/run CLI and never supply cloud credentials.
+      - run: node --test scripts/deploy/staging-sse-capacity-peer-cli.test.mjs

@@ -1,0 +1,92 @@
+{
+  "version": "v334",
+  "date": "2026-09-24",
+  "status": "LOCAL_EARNING_PROJECTION_AND_D1_GUARD_SUBSET_PASS_C04_OPEN",
+  "goalComplete": false,
+  "validation": {
+    "proxyService": {
+      "command": "node --import tsx --test src/services/shared-key-earnings.test.ts",
+      "workingDirectory": "packages/proxy",
+      "tests": 9,
+      "pass": 9,
+      "fail": 0
+    },
+    "d1Repository": {
+      "command": "node --import tsx --test packages/core/src/db/d1/portal-marketplace-rebuild.test.ts",
+      "tests": 1,
+      "pass": 1,
+      "fail": 0
+    },
+    "pgliteRepository": {
+      "command": "GATEWAY_PGLITE_MODULE=<existing local module> node --import tsx --test packages/core/src/db/postgres/portal-marketplace-rebuild.pglite.test.mjs",
+      "tests": 1,
+      "pass": 1,
+      "fail": 0,
+      "nativeMultisession": false
+    },
+    "d1HistoryGuard": {
+      "command": "node --import tsx --test scripts/db/cutover/d1-shared-key-earnings-history.test.mjs",
+      "tests": 1,
+      "pass": 1,
+      "fail": 0,
+      "formalMigrationsLoaded": 68,
+      "negativeControl": "used key deletion removes earning while leaving ledger and 40000-micro balance"
+    },
+    "adminDeleteConflict": {
+      "command": "node --import tsx --test lib/routes/shared-key-history-error.test.ts",
+      "workingDirectory": "packages/admin",
+      "tests": 2,
+      "pass": 2,
+      "fail": 0
+    },
+    "typechecks": {
+      "coreSharedKeySummary": "PASS",
+      "proxy": "PASS",
+      "admin": "PASS"
+    },
+    "gitDiffCheck": "PASS"
+  },
+  "ci": {
+    "serviceAndD1TestsRegistered": true,
+    "coreScopedTypecheckRegistered": true,
+    "pgliteLocalOnly": true,
+    "workflowTrackedByGit": false,
+    "linuxRunVerifiedForTheseEdits": false
+  },
+  "migrationCounts": { "postgresFormal": 73, "d1Formal": 68, "mysqlFormal": 64 },
+  "sourceSha256": {
+    "packages/core/src/services/shared-key-earnings.ts": "6f6df05be79eb044b0a02c4e793a4e538196d84bcf90bd22c690f8923e0ca156",
+    "packages/core/src/storage/gateway-repository-interfaces.ts": "64039eade832db65153b62861467d27585e11024f30a917f71019aec4f8e8051",
+    "packages/core/src/db/shared-keys-types.ts": "c7162a39d87128085003a0941c6b21bf2b19cd2628bbab2fc7ce34061a6d641e",
+    "packages/core/src/db/d1/portal-marketplace.impl.ts": "dd624d80294448d883d902eb1f8f0edc726a9dd0e33bcdee722f0fb75b7024ec",
+    "packages/core/src/db/postgres/portal-marketplace.impl.ts": "6e02e6fcb15c5d2942001f0b8574f6521d7131f36f712db0f731aa19c35f7a8c",
+    "packages/core/src/db/mysql/portal-marketplace.impl.ts": "7d2aac6fc3e7753c40d85311013ab0895bbb2745973139a68dbacedea8de8c0c",
+    "packages/core/src/db/d1/portal-marketplace-rebuild.test.ts": "f430310c8b75fa16bdb250930cfd883ceb2e92159dafce0b85fdcc982203fe43",
+    "packages/core/src/db/postgres/portal-marketplace-rebuild.pglite.test.mjs": "06d30a72f2a7ce0102189d2732ea9473aa5837d4c90082c27ff18d50fe23eda7",
+    "packages/core/tsconfig.shared-key-summary.json": "fe6c55ef784dfd1cb6c454837c571eeebf9388ee9d00e94be7e027bb9e9bbae4",
+    "packages/core/package.json": "5bdbb6d41edbd0ccf6e8e92f9ec6da28e73655aa3936933d96fa388a04833dcd",
+    "packages/proxy/src/services/shared-key-earnings.test.ts": "60301e8795e4563186e31483adaeed8fb4caace74ed3e5120467f07cfc2d24c7",
+    "packages/core/migrations-proposals/d1/shared-key-earnings-history-guard.sql": "0c8379b4f73017b2ba84b080fd6302c7526a1570a5ffc64896c667d08099faa2",
+    "scripts/db/cutover/d1-shared-key-earnings-history.test.mjs": "2ee01a46f645e02223311c489541893d3f6887e48be63bbc6c6abe25f7ea938e",
+    "packages/admin/lib/routes/shared-key-history-error.ts": "6c4b8f0d2b6f1ea77e3f4cf903c4d9f483276cb712101af8c22c885ccf07ce57",
+    "packages/admin/lib/routes/shared-key-history-error.test.ts": "6f6f11b6a36093a27ad242f9fdd3c8c5a76a411b1e541eb0f4ded6817990f82c",
+    "packages/admin/lib/routes/admin/shared-keys.ts": "00fd9a81925d726039dfa52e25fe9c21fadc131bd0eaa123723ffc0d8e644091",
+    "packages/admin/lib/routes/user/shared-keys.ts": "705d69d86264e6d694f7b80d4443e22fd5e7c53863a29268a086723cec109a4a",
+    "packages/admin/package.json": "3803f1767602af1646b1c9374bbd8ae10ecf542c111b65c76f8d8a415896a80e",
+    "docs/developers/architecture/implementation-evidence/C04-mysql-earning-history-fk-gate-v334.md": "28cab5c81887d13d1ae509cf96242d1c908683bf2861f970bf084954cabc2e5f",
+    "docs/developers/architecture/implementation-evidence/C04-earning-projection-and-d1-guard-v334.md": "342e9ec62bca187a280da1408384cd1b6304414b23c074c69728e70ceee8716f",
+    ".github/workflows/proxy-dispatch-safety.yml": "5194365065acd4279634a35b313419a8f4662d03abaf46e529e6cac97e8b9127"
+  },
+  "limits": {
+    "c04_1Through8Complete": false,
+    "c04_GComplete": false,
+    "historyGuardFormalMigration": false,
+    "durableRepairDiscovery": false,
+    "sharedKeyAggregateIndex": false,
+    "nativePostgresConcurrencyVerified": false,
+    "mysqlEngineVerified": false,
+    "immutableQuoteAndTypedOutbox": false,
+    "remoteSqlExecutions": 0,
+    "deployments": 0
+  }
+}

@@ -1,11 +1,10 @@
-import type { RouteResult } from '../model-router';
-import type { RouteOrderContext } from './types';
+import type { RouteOrderCandidate, RouteOrderContext } from './types';
 
 /** 按 routeWeight 无放回加权随机打散。 */
-export function orderByWeightedRandom(routes: RouteResult[], _ctx: RouteOrderContext): RouteResult[] {
+export function orderByWeightedRandom<T extends RouteOrderCandidate>(routes: readonly T[], _ctx: RouteOrderContext): T[] {
 	if (routes.length <= 1) return [...routes];
 	const pool = [...routes];
-	const ordered: RouteResult[] = [];
+	const ordered: T[] = [];
 	while (pool.length > 0) {
 		const totalWeight = pool.reduce((sum, r) => sum + Math.max(1, r.routeWeight), 0);
 		let pick = Math.random() * totalWeight;

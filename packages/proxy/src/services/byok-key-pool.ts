@@ -11,6 +11,8 @@
  * route/key order.
  */
 import {
+	preparationRead,
+	type PreparationControl,
 	BYOK_MAX_RUNTIME_KEYS,
 	type ByokRuntimeKeyRow,
 	type GatewayRepositories,
@@ -78,20 +80,22 @@ async function loadPrivateKeys(
 	repos: GatewayRepositories,
 	context: PrivateByokRequestContext,
 	route: RouteResult,
+	control?: PreparationControl,
 ): Promise<{ keys: ByokRuntimeKeyRow[]; lookupFailed: boolean }> {
 	const provider = routeProviderSlug(route);
 	const modelId = routeModelId(route);
 	if (!provider || !modelId) return { keys: [], lookupFailed: false };
 	try {
-		const keys = await repos.byokKeys.listActiveForRequest({
+		const keys = await preparationRead(control, () => repos.byokKeys.listActiveForRequest({
 			workspaceId: context.workspaceId,
 			provider,
 			modelId,
 			userId: context.userId,
 			apiKeyHash: context.apiKeyHash,
-		});
+		}, control));
 		return { keys: keys.slice(0, BYOK_MAX_RUNTIME_KEYS), lookupFailed: false };
 	} catch (error) {
+		control?.throwIfStopped();
 		// BYOK lookup/decryption must not expose secret material. This route fails
 		// closed with respect to same-provider shared/platform capacity because the
 		// unreadable policy may explicitly prohibit that spend.
@@ -109,6 +113,7 @@ async function loadSharedCapacityPolicy(
 	repos: GatewayRepositories,
 	context: PrivateByokRequestContext,
 	route: RouteResult,
+	control?: PreparationControl,
 ): Promise<{ suppress: boolean; lookupFailed: boolean }> {
 	const provider = routeProviderSlug(route);
 	const modelId = routeModelId(route);
@@ -119,15 +124,16 @@ async function loadSharedCapacityPolicy(
 		return { suppress: false, lookupFailed: false };
 	}
 	try {
-		const suppress = await repos.byokKeys.shouldSuppressSharedCapacityForRequest({
+		const suppress = await preparationRead(control, () => repos.byokKeys.shouldSuppressSharedCapacityForRequest({
 			workspaceId: context.workspaceId,
 			provider,
 			modelId,
 			userId: context.userId,
 			apiKeyHash: context.apiKeyHash,
-		});
+		}));
 		return { suppress, lookupFailed: false };
 	} catch (error) {
+		control?.throwIfStopped();
 		console.warn(JSON.stringify({
 			message: 'private BYOK shared-capacity policy lookup failed',
 			provider,
@@ -148,7 +154,9 @@ export async function expandAttemptsWithPrivateByok(
 	baseAttempts: RouteResult[],
 	sharedAndPlatformAttempts: RouteResult[],
 	context?: PrivateByokRequestContext | null,
+	control?: PreparationControl,
 ): Promise<RouteResult[]> {
+	control?.throwIfStopped();
 	const credentialAttemptsByTarget = new Map<string, RouteResult[]>();
 	for (const attempt of sharedAndPlatformAttempts) {
 		// A blank credential must never reach an egress driver.
@@ -170,6 +178,7 @@ export async function expandAttemptsWithPrivateByok(
 	const sharedAndPlatformSection: RouteResult[] = [];
 	const fallbackByokAttempts: RouteResult[] = [];
 	for (const route of baseAttempts) {
+		control?.throwIfStopped();
 		const middle = credentialAttemptsByTarget.get(route.targetId) ?? [];
 		let keys: ByokRuntimeKeyRow[] = [];
 		let lookupFailed = false;
@@ -181,15 +190,16 @@ export async function expandAttemptsWithPrivateByok(
 				const cacheKey = `${provider}\u0000${modelId}`;
 				let pending = keyPromises.get(cacheKey);
 				if (!pending) {
-					pending = loadPrivateKeys(repos, context, route);
+					pending = loadPrivateKeys(repos, context, route, control);
 					keyPromises.set(cacheKey, pending);
 				}
 				let policyPending = sharedCapacityPolicyPromises.get(cacheKey);
 				if (!policyPending) {
-					policyPending = loadSharedCapacityPolicy(repos, context, route);
+					policyPending = loadSharedCapacityPolicy(repos, context, route, control);
 					sharedCapacityPolicyPromises.set(cacheKey, policyPending);
 				}
 				const [lookup, policy] = await Promise.all([pending, policyPending]);
+				control?.throwIfStopped();
 				keys = lookup.keys;
 				lookupFailed = lookup.lookupFailed || policy.lookupFailed;
 				suppressSharedCapacity = policy.suppress;

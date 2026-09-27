@@ -1,0 +1,106 @@
+{
+  "version": "v328",
+  "date": "2026-09-24",
+  "status": "LOCAL_WORKER_COMPOSITION_AND_FINANCIAL_LOGIN_SUBSET_PASS_PRODUCTION_DISABLED",
+  "C03": "DOING",
+  "goalComplete": false,
+  "validation": {
+    "appComposition": {
+      "fail": 0,
+      "pass": 5
+    },
+    "workerProducerOwner": {
+      "fail": 0,
+      "pass": 8
+    },
+    "financialConsumerUnit": {
+      "fail": 0,
+      "pass": 10
+    },
+    "coreRecoveryRepositoryPglite": {
+      "fail": 0,
+      "pass": 88
+    },
+    "coreTargetedTypecheckConfigs": 4,
+    "financialConsumerNative": {
+      "fail": 0,
+      "pass": 1,
+      "cleanup": "PASS",
+      "stages": 5,
+      "postgresVersion": "18.6"
+    },
+    "imageRoutesRelated": {
+      "fail": 0,
+      "pass": 457
+    },
+    "wranglerGenerator": {
+      "fail": 0,
+      "pass": 11
+    },
+    "postgresRecoveryCompositionCiScript": {
+      "fail": 0,
+      "pass": 23
+    },
+    "wranglerGeneratorCiStep": true,
+    "nativeFinancialFixtureCiRegistered": true,
+    "nativeFinancialFixtureCiRunVerified": false,
+    "proxyTypecheck": true,
+    "nodeBuild": true,
+    "workerDefaultAndExplicitInMemoryBundle": true,
+    "gitDiffCheck": true
+  },
+  "sourceSha256": {
+    "packages/proxy/src/app.ts": "c9de1cc366842a099ed6164c523f94b7b341491c55b9ad9ab33daff39ffb40af",
+    "packages/proxy/src/app-postgres-image-recovery.test.ts": "b99c6651f61b3fc1660dfae62ea4ebbc44dbdb768246c45ddebc9eedcd431d96",
+    "packages/proxy/src/runtime/workers.ts": "1ad9078974fe333bc96ce632c4703862c3b354b199a5ec55291e3edd2cf5a886",
+    "packages/proxy/src/runtime/node.ts": "025f0ee6dbe726bbbaf10b2debd097d5dbf4b669aaff461554c6b90e76d506eb",
+    "packages/proxy/src/runtime/worker-postgres-image-producer-owner.ts": "0f0ee5b099f257a2f27457d47883eed33dc1c578024c72113cc83d5ac0b39b1d",
+    "packages/proxy/src/runtime/worker-postgres-image-producer-owner.test.ts": "d7f8ede6490931fcea9c35a510226a2272c24d41b4bb79e9389d47bc72eadbdf",
+    "packages/proxy/src/runtime/postgres-financial-consumer.ts": "cdba4918b03c8b06c835279df2036ef52a98b0384a108b68ae02804d396f1273",
+    "packages/proxy/src/runtime/postgres-financial-consumer.test.mjs": "84110edbbe5c815cb0f2141883c862a34756653de960171a4f9f4d2b69cb6ab2",
+    "packages/proxy/src/services/image-usage-recovery-postgres.ts": "c591829f974fa8cc7d501e92f3471c8ce7bf748d54a0022c58f39019018c5c14",
+    "packages/core/src/storage/recovery/dispatch-intent-postgres-parent.ts": "00174a526451ab04b07aeb909fe3e3dd272048548c471595830f25fc04c17a9c",
+    "packages/core/src/storage/recovery/usage-settlement-facts-postgres.ts": "77dc26a02d8baf47eb07c41af768a519341ef2266d688224eba8016f167db60d",
+    "packages/core/src/storage/recovery/usage-recovery-jobs-postgres.ts": "fc87ef730ab93ab574db9351e4bee1830679206f66816c987aa7eaf7b2c8d435",
+    "scripts/deploy/gen-wrangler.mjs": "aafff1546e25f034e641946dff18499586dc4950c0d74a2d2e03dbe10ea73cdd",
+    "scripts/deploy/gen-wrangler.test.mjs": "6da1aee3d3ecce16728b1274e7b0e2d2078e00751aadaee9d449d9e9ff886b6b",
+    "scripts/db/cutover/postgres-financial-consumer-login.native.test.mjs": "dcd51c4951ab8e10a4ecb77969331472160a4966a3939180add3beea37fabb00",
+    "scripts/db/cutover/postgres-recovery-role-policy.ts": "a29f6d8df66b6837c2dceb4f4548fc8ff495d7076582098187cb0573c25b02de",
+    "docs/developers/architecture/implementation-evidence/C03-postgres-native-financial-consumer-login-v328-report.json": "674939fb90e8f9c7a671e5e0887614dd34efe38e5fdb3467159e910a0a2dca9e",
+    "packages/proxy/package.json": "20d0de400865b9f52beb17e4f03c59dccf2494659d26e5cc0e912d635ba48ccc",
+    ".github/workflows/proxy-dispatch-safety.yml": "ab69562f00ab0c4ab7f8cc333ec8aa96884fab44f3783aa38fec5d22c83fe234",
+    "docs/developers/architecture/implementation-evidence/C03-postgres-worker-consumer-composition-v328.md": "e50e16cfce83cae79d3b6df41272753b488834c8016637145f6c8a9e4373cc98"
+  },
+  "boundaries": {
+    "formalMigrations": 73,
+    "defaultWorkerPostgresRecoveryEnabled": false,
+    "defaultWorkerBundleIncludesProducerOpener": false,
+    "producerOriginUrlUsernameIsOriginProof": false,
+    "sameSessionSqlRoleChecks": true,
+    "applicationOpensProducersAfterApiKeyAuth": true,
+    "partialProducerCleanupUnconfirmedRetainsCapacity": true,
+    "financialDirectLoginNativeVerified": true,
+    "financialConsumerQueueAckSafe": false,
+    "newSyntheticCompositionTestsInCi": true,
+    "newWranglerGeneratorTestsInCi": true,
+    "nativeFinancialFixtureInCi": true,
+    "currentAuthenticatedCloudOriginBudget": false,
+    "liveWorkersHyperdriveLifecycleVerified": false,
+    "fullHttpPostgresFinanceChainVerified": false,
+    "productionFinancialGrantProvisioned": false,
+    "oldDatabaseBackfillVerified": false,
+    "parentRetentionImplemented": false,
+    "DBL_04_05_06_08Complete": false,
+    "C03_4Complete": false,
+    "C03_5Complete": false,
+    "C03_7Complete": false,
+    "C03_GComplete": false,
+    "remoteSqlCalls": 0,
+    "cloudManagementCalls": 0,
+    "deployments": 0,
+    "modelCalls": 0,
+    "kmsCalls": 0,
+    "cumulativeStagingCapUsd": 2,
+    "capReset": false
+  }
+}

@@ -1,0 +1,245 @@
+{
+  "schemaVersion": 1,
+  "workPackage": "C02.B2.2",
+  "checklistVersion": "1.51",
+  "recordedAtUtc": "2026-09-07 05:03:43 UTC",
+  "status": "LOCAL_PASS_SUBSET",
+  "recoveryGate": "NOT_PASSED",
+  "capacityGate": "NOT_PASSED",
+  "productionCapacityEnabled": false,
+  "owner": "Codex",
+  "reviewer": "Codex self-review; independent reviewer not assigned",
+  "baseline": {
+    "head": "7eb59008f7d8e156e81fd18a57658fdef2553264",
+    "dirtyWorktree": true,
+    "committed": false
+  },
+  "scope": {
+    "runtime": "Node 24.14.1 + real node:sqlite D1 adapter; not workerd or Cloudflare D1",
+    "formalMigrations": 68,
+    "proposalFiles": 3,
+    "automaticMigration": false,
+    "routeEnabled": false,
+    "independentBoundedRunnerImplemented": true,
+    "deployedConsumer": false,
+    "providerIO": false,
+    "preDispatchQuoteImplemented": false
+  },
+  "tests": [
+    {
+      "command": "npm run test:dispatch-intent -w @octafuse/core",
+      "parts": [
+        {
+          "suite": "intent",
+          "pass": 19
+        },
+        {
+          "suite": "posttest settlement",
+          "pass": 37
+        },
+        {
+          "suite": "nested posttest recovery",
+          "pass": 32
+        }
+      ],
+      "exitCode": 0,
+      "fail": 0,
+      "skipped": 0
+    },
+    {
+      "command": "npm run test:usage-recovery -w @octafuse/core",
+      "pass": 32,
+      "fail": 0,
+      "skipped": 0,
+      "exitCode": 0
+    },
+    {
+      "command": "npm run test:ordinary-budget -w @octafuse/core",
+      "pass": 33,
+      "fail": 0,
+      "skipped": 0,
+      "exitCode": 0
+    },
+    {
+      "command": "npm run test:images:staging -w @octafuse/proxy",
+      "pass": 42,
+      "parts": [
+        35,
+        7
+      ],
+      "fail": 0,
+      "skipped": 0,
+      "exitCode": 0
+    },
+    {
+      "command": "npm run typecheck:dispatch-intent -w @octafuse/core",
+      "exitCode": 0
+    },
+    {
+      "command": "npm run typecheck:dispatch-safety -w @octafuse/proxy",
+      "exitCode": 0
+    },
+    {
+      "command": "npm run typecheck:images:staging -w @octafuse/proxy",
+      "exitCode": 0
+    }
+  ],
+  "typecheck": {
+    "fullCoreTypecheck": "FAIL",
+    "diagnosticCount": 32,
+    "exactlyMatchesV150ByFileStartCodeMessage": true,
+    "priorDiagnostics": "C02-usage-settlement-local-results.json",
+    "method": "TypeScript Compiler API full core tsconfig, no modules excluded; comparison command node .wrangler/staging/verify-usage-recovery-types.mjs",
+    "initialDirectedFailure": {
+      "code": "TS2339",
+      "reason": "claim result union could not narrow lease"
+    },
+    "fix": "split claim status into three discriminated union members"
+  },
+  "limits": {
+    "maxItems": 50,
+    "maxConcurrency": 4,
+    "maxRecoveryClaims": 5,
+    "leaseSeconds": [
+      1,
+      300
+    ],
+    "admissionBudgetMs": [
+      1,
+      60000
+    ],
+    "backoffSeconds": [
+      5,
+      10,
+      20,
+      40
+    ],
+    "productionReservedBytes": null,
+    "testOnlyLogicalReservedBytes": 1024,
+    "hardD1Cancellation": false
+  },
+  "crashTests": {
+    "count": 6,
+    "exitCode": 73,
+    "boundaries": [
+      "after claim commit",
+      "before accounting batch",
+      "after accounting commit"
+    ],
+    "localSyntheticCharges": [
+      0,
+      0.25
+    ],
+    "recoveryInput": "database filename and test clock only; independent process scans jobs",
+    "originalDTOOrReferencePassed": false,
+    "cloudIsolateTermination": false
+  },
+  "externalOperations": {
+    "cloudManagementCalls": 0,
+    "cloudDeployments": 0,
+    "remoteSqlCalls": 0,
+    "realModelCalls": 0,
+    "realKmsCalls": 0,
+    "historicalStagingHttpRequests": 98,
+    "firstRoundUsdCap": 2,
+    "capReset": false,
+    "finalIncrementalBillVerified": false,
+    "cloudClosure": "historical evidence only; not queried this turn"
+  },
+  "references": [
+    "https://developers.cloudflare.com/workers/best-practices/workers-best-practices/",
+    "https://developers.cloudflare.com/d1/worker-api/d1-database/"
+  ],
+  "types": {
+    "installed": "5.20260829.1",
+    "latestReadOnlyVerified": "5.20260907.1",
+    "upgraded": false
+  },
+  "remaining": [
+    "trusted producer and delivery boundary; no new/legacy double accounting",
+    "protected bounded trigger entrypoint",
+    "Workers/D1 recovery and capacity verification",
+    "unpersisted result remains unknown",
+    "pre-dispatch quote/rights/credential-owner freeze and seller outbox",
+    "production runtime capacity profile and SLO",
+    "other database backends"
+  ],
+  "files": [
+    {
+      "path": "packages/core/migrations-proposals/d1/request-dispatch-intents.sql",
+      "sha256": "f3f9df3723fbccfd62a7f566804abcb591ee03f8d20bab47f60cb623ee082083"
+    },
+    {
+      "path": "packages/core/migrations-proposals/d1/request-usage-recovery-jobs.sql",
+      "sha256": "4b1dfa909dc6c4abc4aaec929d12ac368adb1877ae975c7a00f35a6b9f01652d"
+    },
+    {
+      "path": "packages/core/migrations-proposals/d1/request-usage-settlements.sql",
+      "sha256": "d25ffb168ec74112f602befec2057b96456e0f2291fd2179d6e131f16ffbcb04"
+    },
+    {
+      "path": "packages/core/package.json",
+      "sha256": "9b4c7c3b5813d473c5da196a348fbcc411c1239aa55bc504030a66cfef555bb0"
+    },
+    {
+      "path": "packages/core/src/db/d1/critical-writes.impl.ts",
+      "sha256": "145df8a9f579573664f0dbec08a833d5c80f0e3bb0f021cb6ce3c5dd157053bb"
+    },
+    {
+      "path": "packages/core/src/storage/recovery/dispatch-intent-d1.ts",
+      "sha256": "7c8ef20c11eaebe95c0aaa10073ab8e1c502e3143ae0b76825a71e43fd534a5a"
+    },
+    {
+      "path": "packages/core/src/storage/recovery/run-usage-recovery-d1.ts",
+      "sha256": "148ea770fb6ec08e7183d8fba6925dd991b222864071bee1169c388100a2c632"
+    },
+    {
+      "path": "packages/core/src/storage/recovery/settlement-recovery-types.ts",
+      "sha256": "585e8d21450882602889b78478769ffa193bfb10d14026e0bab9e4ab6f0fe429"
+    },
+    {
+      "path": "packages/core/src/storage/recovery/usage-recovery-jobs-d1.ts",
+      "sha256": "74fdc5c1ae90040b3c40ece3f7fc193375c0f9b12b73963dd314d84a95eb869a"
+    },
+    {
+      "path": "packages/core/src/storage/recovery/usage-recovery.d1.test.mjs",
+      "sha256": "f8fd795da4c4d853805f936ffe008d8f1ace5868b6f599c2c85f0f77bde083ac"
+    },
+    {
+      "path": "packages/core/src/storage/recovery/usage-recovery.fixture.mjs",
+      "sha256": "4444e608d1612f023ffd800293984f2cf8acf2d756d24869fd987489b30e994d"
+    },
+    {
+      "path": "packages/core/src/storage/recovery/usage-settlement-codec.ts",
+      "sha256": "7483200d4100963bb16c2ff74957d716fca09e8b20e11888ccf41b2566c4ef90"
+    },
+    {
+      "path": "packages/core/src/storage/recovery/usage-settlement-d1.ts",
+      "sha256": "3be75d8f00ec668c7e4edc372726b3abbba2079710648a55f391cf4d280e01fe"
+    },
+    {
+      "path": "packages/core/src/storage/recovery/usage-settlement-test-support.mjs",
+      "sha256": "abde9fc68c54844679da84f6a9cc48ac149e594a95b00c22732214433f30165b"
+    },
+    {
+      "path": "packages/core/src/storage/recovery/usage-settlement.d1.test.mjs",
+      "sha256": "fd18178f4af2f838b60fb4ae224d6e8703a1b2013d91f100e5d9f626065a86c2"
+    },
+    {
+      "path": "packages/core/src/storage/recovery/usage-settlement.fixture.mjs",
+      "sha256": "efa865ed3b55d9e9b3e590966c8b39be65c9d3320e6b4a727a0d229b59f66f07"
+    },
+    {
+      "path": "packages/core/tsconfig.dispatch-intent.json",
+      "sha256": "0f69e38e22681b5a05e67424e34153357c019c1b30d335d09d34f440dad3b9e3"
+    },
+    {
+      "path": "packages/proxy/src/services/request-capacity.ts",
+      "sha256": "871875b50ea4730a3d7ad415a8de983a0044850ffa3139e57ec436facce1c10f"
+    },
+    {
+      "path": "packages/proxy/src/test-support/sqlite-d1.ts",
+      "sha256": "e28c1f8efe6dc96301307c8997dd02d402eac9431cfa8ece9f6b5aa572b2214b"
+    }
+  ]
+}

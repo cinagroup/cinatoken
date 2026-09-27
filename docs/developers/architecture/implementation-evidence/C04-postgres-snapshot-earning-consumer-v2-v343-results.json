@@ -1,0 +1,149 @@
+{
+  "status": "PASS",
+  "cleanup": "PASS",
+  "binaryVersion": "postgres (PostgreSQL) 18.6",
+  "sourceSha256": {
+    "formalMigrationCorpus": "23afef61a8a670e0af8c90e3a138f522e6b283b454e380a592bf85bca83108dc",
+    "shared-key-quote-versions.sql": "1249a7ff07f95b48c7b45a41833c96c9a028e4bfe3a47e44e9dc6b72c3c77246",
+    "shared-key-dispatch-quote-attempts.sql": "c89c79e803fd69a2d09d44b33be3301aeb8aa4ed72c5dff5518439ec29fafb83",
+    "shared-key-economic-outbox.sql": "f92835c72ff02cba23879ed90ad640832455ccb98764f28fe4ee04ce52aab1ac",
+    "shared-key-economic-outbox-producer.sql": "ea9ccc7138cbd641d386e14d1bb95b8cabee942501a49d6b0763e8e1b3eb0920",
+    "shared-key-snapshot-earning-consumer.sql": "66fbd89c3453320284133de06d72793d4e1d2f68aaf756087857c18493e955db",
+    "shared-key-buyer-debit-v2.sql": "fc327b411e8ae6a417a156ab4ba3b633a47a2e615d249b8861503fc4cbf68593",
+    "nativeTest": "e68ecec3e731ac593d69476657bdb0745b2c96807aa82b3ab4389d1ce8c40579",
+    "shared-key-snapshot-earning-consumer-v2.sql": "272158acbed2ab52965d154f342ef6452d626d1e4393c40cae32d5f519f4b984"
+  },
+  "stages": [
+    {
+      "name": "formal-pg73-installed",
+      "result": "PASS"
+    },
+    {
+      "name": "quote-dispatch-v1-producer-and-consumer-installed",
+      "result": "PASS"
+    },
+    {
+      "name": "default-off-and-exact-pg73-ledger-drift-rollback",
+      "result": "PASS"
+    },
+    {
+      "name": "v1-consumer-catalog-drift-rejected-before-v2-install",
+      "result": "PASS"
+    },
+    {
+      "name": "third-role-default-function-grants-roll-back-entire-v2-install",
+      "result": "PASS"
+    },
+    {
+      "name": "third-role-default-marker-table-grant-rolls-back-v2-install",
+      "result": "PASS"
+    },
+    {
+      "name": "v2-schema-installed-without-new-runtime-privileges",
+      "result": "PASS"
+    },
+    {
+      "name": "runtime-and-consumer-cannot-read-private-debit-or-run-guard",
+      "result": "PASS"
+    },
+    {
+      "name": "synthetic-buyer-seller-and-pre-egress-quote-ready",
+      "result": "PASS"
+    },
+    {
+      "name": "old-v1-event-and-consumer-remain-compatible",
+      "result": "PASS"
+    },
+    {
+      "name": "reserved-ceiling-debit-differs-from-guardrail-and-old-consumer-blocked",
+      "result": "PASS"
+    },
+    {
+      "name": "precommitted-reservation-cannot-be-adopted-by-later-event",
+      "result": "PASS"
+    },
+    {
+      "name": "terminal-reservation-insert-cannot-fabricate-settlement-marker",
+      "result": "PASS"
+    },
+    {
+      "name": "terminal-reservation-mutation-cannot-refresh-prior-debit-marker",
+      "result": "PASS"
+    },
+    {
+      "name": "v2-actual-also-blocked-from-old-credit-function",
+      "result": "PASS"
+    },
+    {
+      "name": "wrong-reserved-debit-rolls-back-log-reservation-and-buyer-budget",
+      "result": "PASS"
+    },
+    {
+      "name": "reserved-state-and-actual-amount-mismatches-rejected",
+      "result": "PASS"
+    },
+    {
+      "name": "versioned-debit-shape-rejects-null-v2-and-nonnull-v1",
+      "result": "PASS"
+    },
+    {
+      "name": "immutable-v2-fact-and-old-producer-still-rejects-reserved",
+      "result": "PASS"
+    },
+    {
+      "name": "v2-consumer-default-off-and-catalog-drift-rollback",
+      "result": "PASS"
+    },
+    {
+      "name": "v2-consumer-hostile-default-acl-rejected",
+      "result": "PASS"
+    },
+    {
+      "name": "version-aware-wrapper-installed-after-v2-debit",
+      "result": "PASS"
+    },
+    {
+      "name": "private-v1-core-and-attempt-table-remain-inaccessible",
+      "result": "PASS"
+    },
+    {
+      "name": "v2-actual-debit-credits-pinned-quote-once-with-atomic-ledger",
+      "result": "PASS"
+    },
+    {
+      "name": "v1-and-v2-ack-loss-replay-return-immutable-decision",
+      "result": "PASS"
+    },
+    {
+      "name": "fresh-v1-actual-event-still-credits-through-versioned-wrapper",
+      "result": "PASS"
+    },
+    {
+      "name": "reserved-v2-event-stays-pending-with-no-seller-credit",
+      "result": "PASS"
+    },
+    {
+      "name": "two-confirmed-attempt-reserved-v2-event-pends-every-attempt",
+      "result": "PASS"
+    },
+    {
+      "name": "no-charge-v2-event-with-confirmed-attempt-stays-pending",
+      "result": "PASS"
+    },
+    {
+      "name": "ledger-conflict-rolls-back-detail-and-balance",
+      "result": "PASS"
+    },
+    {
+      "name": "two-consumer-race-serializes-on-event-and-credits-once",
+      "result": "PASS"
+    }
+  ],
+  "limitations": [
+    "No v2 runtime producer, real recordUsage bridge, adjustment event or production worker is installed.",
+    "The synthetic fixture performs a buyer budget update; it does not prove a real recordUsage caller or Workers/Hyperdrive transaction identity.",
+    "A late actual reconciliation for enrolled reserved v2 requests is rejected until a reviewed adjustment event is designed.",
+    "The v340 core credits current withdrawable seller balance; C12 release/hold policy remains open."
+  ],
+  "consumerBodyMd5": "1f80bb19a381a30bcdceffcc74d9f982"
+}

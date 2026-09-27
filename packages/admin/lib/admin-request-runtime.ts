@@ -54,6 +54,18 @@ export async function resolveAdminRequestRuntime(request?: Request): Promise<{
 		CINAAUTH_ORGANIZATION_ADMIN_ROLES: env?.CINAAUTH_ORGANIZATION_ADMIN_ROLES,
 		SHARED_KEY_ENCRYPTION_SECRET:
 			env?.SHARED_KEY_ENCRYPTION_SECRET ?? process.env.SHARED_KEY_ENCRYPTION_SECRET,
+		SHARED_KEY_CREDITED_USAGE_READER: cloudflareRuntime
+			? (env as { SHARED_KEY_CREDITED_USAGE_READER?: string } | undefined)?.SHARED_KEY_CREDITED_USAGE_READER
+			: process.env.SHARED_KEY_CREDITED_USAGE_READER,
+		SIGNED_SELLER_STATS_READER: cloudflareRuntime
+			? (env as { SIGNED_SELLER_STATS_READER?: string } | undefined)?.SIGNED_SELLER_STATS_READER
+			: process.env.SIGNED_SELLER_STATS_READER,
+		STATS_CLAIM_ISSUER: cloudflareRuntime
+			? (env as { STATS_CLAIM_ISSUER?: Fetcher } | undefined)?.STATS_CLAIM_ISSUER
+			: undefined,
+		STATS_READER_HYPERDRIVE: cloudflareRuntime
+			? (env as { STATS_READER_HYPERDRIVE?: { connectionString: string } } | undefined)?.STATS_READER_HYPERDRIVE
+			: undefined,
 		DEEPSEEK_API_KEY: env?.DEEPSEEK_API_KEY ?? process.env.DEEPSEEK_API_KEY,
 		CHAIN_JOBS: env?.CHAIN_JOBS,
 		AUTH_RATE_LIMITER: env?.AUTH_RATE_LIMITER,

@@ -1,0 +1,70 @@
+{
+  "version": "v300",
+  "date": "2026-09-21",
+  "checklist": "v1.197",
+  "status": "LOCAL_CANDIDATE_NODE_WIRE_PASS_PRODUCTION_DISABLED",
+  "C03": "DOING",
+  "goalComplete": false,
+  "reports": {
+    "lifecycle": ".wrangler/staging/postgres-lifecycle-v300-run-yyrp3S/results.json",
+    "adoption": ".wrangler/staging/postgres-adoption-v300-0JNH3d/results.json"
+  },
+  "validation": {
+    "lifecycleHarness": { "tests": 6, "pass": 6, "fail": 0, "durationMs": 12799.5163 },
+    "esm": { "tests": 60, "pass": 60, "fail": 0, "durationMs": 4276.1619 },
+    "cjs": { "tests": 60, "pass": 60, "fail": 0, "durationMs": 4122.9445 },
+    "distinctWireScenarios": 51,
+    "newWireScenarios": 28,
+    "legacyNegativeEsm": { "pass": 0, "fail": 2, "expected": true, "durationMs": 1558.6397 },
+    "legacyNegativeCjs": { "pass": 0, "fail": 2, "expected": true, "durationMs": 1573.7026 },
+    "actualFactory": { "tests": 60, "pass": 60, "fail": 0, "durationMs": 9047.3673 },
+    "initialization": { "tests": 7, "pass": 7, "fail": 0, "durationMs": 5177.0839 },
+    "adoptionHarness": { "tests": 9, "pass": 9, "fail": 0, "durationMs": 21143.5151 },
+    "v298Harness": { "tests": 5, "pass": 5, "fail": 0, "durationMs": 6191.4577, "esmPass": 26, "cjsPass": 26 },
+    "runnerAndOwner": { "tests": 35, "pass": 35, "fail": 0, "durationMs": 14897.0066 },
+    "installedDriverNegative": { "tests": 3, "pass": 2, "fail": 1, "durationMs": 732.0361, "error": "nextWrite null socket" },
+    "runnerTypecheckExitCode": 0,
+    "syntaxChecks": 7,
+    "wranglerDryRuns": 1,
+    "workersRuntimeTests": 0,
+    "nativePostgresTests": 0
+  },
+  "retainedFailures": [
+    { "stage": "initial probes", "pass": 0, "fail": 2, "durationMs": 2295.0317, "note": "escaped tx is real; write probe did not execute because assert.rejects received an owner thenable" },
+    { "stage": "corrected write probe against v298", "pass": 0, "fail": 1, "durationMs": 1083.2456, "attempts": 2, "accepted": 2 },
+    { "stage": "pre-quarantine v300 extended write suite", "pass": 15, "fail": 1, "durationMs": 1108.835, "note": "late test observer exposed an early root-query rejection while close was held" },
+    { "stage": "pre-quarantine isolated probe with timely observer", "pass": 0, "fail": 1, "durationMs": 838.6966, "note": "busy connection selected before actual close" },
+    { "directory": "postgres-lifecycle-v300-run-YmiojY", "pass": 3, "fail": 3, "durationMs": 11961.8023, "note": "positive branches both 60/60; async assert.rejects validator was invalid" }
+  ],
+  "sourceSha256": {
+    "scripts/db/diag/postgres-transaction-retirement.mjs": "38ebacbcf31789c0fc9a02ca375b5b45a322b37f4c4ffa376df80e4d68462803",
+    "scripts/db/diag/postgres-transaction-lifecycle.test.mjs": "322c161568e7afeeda20dfba875ff6469566df3c7a2462b67cb47bf2c5231cbd",
+    "scripts/db/diag/postgres-candidate-adoption.mjs": "66436e3f6ef2d05bae4fd835756c1afa6c3b4a838b8285368e619083824e1f27",
+    "scripts/db/diag/postgres-candidate-adoption.test.mjs": "a163cf254d26ed2c932195a55810b874488497c59acb2ad75152b44ace1d2129",
+    "packages/core/src/storage/recovery/postgres-recovery-operation-owner.wire.test.mjs": "7c72957be745786d90702483c32956ce5cb138154aa4e2f19e384ae2e3e7929a",
+    "packages/core/src/storage/recovery/postgres-transaction-completion.wire.test.mjs": "97183e58a0b66f05fac3d656b1b7365172dff7e97c016ff56c194a062711f2e9",
+    "packages/core/src/storage/recovery/postgres-write-failure.wire.test.mjs": "ae91c69001758d59077b45ed611e53e675dd6ccd0e912af506ebd3026c033a91"
+  },
+  "candidateSha256": {
+    "esm": "11d254010752b959949f3c3848962f045d3f12a1dd3fe18a8bacf1dcaf2802a5",
+    "cjs": "b0e352ca72d7a4d53653882a0de1d7fcd7184236c5f80858b8f9802b528576f8",
+    "cf": "24b86aa39e3400b64c4c07b14d957b549513307c933f2968980251f033b703f9"
+  },
+  "boundaries": {
+    "defaultDisabled": true,
+    "installedDriverChanged": false,
+    "lockfilesChanged": false,
+    "sharedDistChanged": false,
+    "productionConfigurationChanged": false,
+    "productionActivated": false,
+    "cloudManagementCalls": 0,
+    "remoteSqlCalls": 0,
+    "deployments": 0,
+    "modelCalls": 0,
+    "kmsCalls": 0,
+    "cloudResourcesCreatedOrDeleted": 0,
+    "cumulativeStagingCapUsd": 2,
+    "capReset": false
+  },
+  "next": "C03 database operation execution/cancellation/close ownership and deadlines, retaining unconfirmed capacity until authoritative evidence; native PostgreSQL and Workers gates remain."
+}

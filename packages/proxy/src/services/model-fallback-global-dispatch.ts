@@ -87,7 +87,13 @@ export async function dispatchGlobalModelFallback(params: {
 	requestSignal?: AbortSignal;
 	publicCorrelationId?: string;
 	timing: NonNullable<FailoverDispatchOptions['timing']>;
-	beforeUpstreamDispatch: (route: RouteResult) => Promise<void>;
+	beforeUpstreamDispatch: NonNullable<FailoverDispatchOptions['beforeUpstreamDispatch']>;
+	quoteAttemptCapture?: FailoverDispatchOptions['quoteAttemptCapture'];
+	requirePreparedTextAttemptIdentity?: FailoverDispatchOptions['requirePreparedTextAttemptIdentity'];
+	stopAfterFirstGrantedDispatch?: FailoverDispatchOptions['stopAfterFirstGrantedDispatch'];
+	dispatchBudget?: FailoverDispatchOptions['dispatchBudget'];
+	registerResourceCompletion?: FailoverDispatchOptions['registerResourceCompletion'];
+	requestDeadlineAtMs?: FailoverDispatchOptions['requestDeadlineAtMs'];
 	proxy: GlobalTextProxy;
 	affinityKey: string;
 	tierKeyPrefix: string;
@@ -136,6 +142,12 @@ export async function dispatchGlobalModelFallback(params: {
 			routePoolId: null,
 			sticky: null,
 			beforeUpstreamDispatch: params.beforeUpstreamDispatch,
+			quoteAttemptCapture: params.quoteAttemptCapture,
+			requirePreparedTextAttemptIdentity: params.requirePreparedTextAttemptIdentity,
+			stopAfterFirstGrantedDispatch: params.stopAfterFirstGrantedDispatch,
+			dispatchBudget: params.dispatchBudget,
+			registerResourceCompletion: params.registerResourceCompletion,
+			requestDeadlineAtMs: params.requestDeadlineAtMs,
 			crossModelCandidateFailover: true,
 			byok: params.byok,
 		},

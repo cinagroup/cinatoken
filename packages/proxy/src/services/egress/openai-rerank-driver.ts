@@ -2,6 +2,7 @@ import {
 	applyVertexOpenAiModelPrefix,
 	resolveProviderUpstreamSecret,
 	resolveUpstreamEndpoint,
+	type RequestAuxiliaryAuthBudget,
 } from '@octafuse/core';
 import type { ProxyDispatchMeta } from '../failover-dispatch';
 import { markUpstreamOutcomeUnknown } from '../failover-dispatch';
@@ -11,6 +12,9 @@ import { buildRouteRequestBody } from '../route-default-params';
 import type { RequestTimingAttempt, RequestTimingCollector } from '../request-timing';
 import { extractUpstreamRequestId, normalizeUpstreamId } from './upstream-request-id';
 import { assertTextUpstreamHttpUrl } from './text-upstream-url';
+import { ownUpstreamResponse } from './owned-upstream-response';
+import { withOwnedJsonUpload } from './with-owned-json-upload';
+import type { ResourceCompletion } from '../resource-completion';
 import {
 	cancelInvalidTextSuccessResponse,
 	invalidTextSuccessResponse,
@@ -21,6 +25,10 @@ import {
 
 /** Bounded above the ingress limit while leaving room for response metadata. */
 export const OPENAI_RERANK_RESPONSE_MAX_BYTES = 16 * 1024 * 1024;
+
+function httpStatusMayHideAcceptedWork(status: number): boolean {
+	return (status >= 300 && status < 400) || status === 408 || status === 499 || status >= 500;
+}
 
 const EMPTY_USAGE_LOCAL: UsageFromStream = {
 	input_tokens: 0,
@@ -178,6 +186,7 @@ async function normalizeSuccessfulRerankResponse(
 	route: RouteResult,
 	publicCorrelationId?: string,
 	timing?: RequestTimingCollector | null,
+	requestSignal?: AbortSignal,
 ): Promise<{
 	response: Response;
 	usagePromise: Promise<UsageFromStream>;
@@ -199,6 +208,7 @@ async function normalizeSuccessfulRerankResponse(
 		skin: 'chat',
 		requestId: publicCorrelationId,
 		maxBytes: OPENAI_RERANK_RESPONSE_MAX_BYTES,
+		signal: requestSignal,
 	});
 	timing?.markStreamComplete();
 	if (!materialized.ok) {
@@ -280,10 +290,12 @@ export async function dispatchOpenAiRerankRoute(
 	attempt?: RequestTimingAttempt,
 	beforeFetch?: () => Promise<void>,
 	publicCorrelationId?: string,
+	auxiliaryAuth?: RequestAuxiliaryAuthBudget,
 ): Promise<{
 	response: Response;
 	usagePromise: Promise<UsageFromStream>;
 	upstreamRequestId: string | null;
+	resourceCompletion?: ResourceCompletion;
 	meta?: ProxyDispatchMeta;
 }> {
 	const url = resolveUpstreamEndpoint('openai', 'rerank', route.providerEndpoints, {
@@ -297,44 +309,57 @@ export async function dispatchOpenAiRerankRoute(
 		meta: {
 			failoverForbidden: true,
 			gatewayGeneratedError: true,
+			admissionDeniedPreDispatch: true,
 		} satisfies ProxyDispatchMeta,
 	});
 	if (requestSignal?.aborted) return cancelledBeforeDispatch();
 	const requestBody = rerankRequestBodyForRoute(route, body, url);
-	const { secret } = await resolveProviderUpstreamSecret(route.providerApiKey);
-	const serializedBody = JSON.stringify(requestBody);
-	const headers = {
-		'Content-Type': 'application/json',
-		Authorization: `Bearer ${secret}`,
-	};
-	new Headers(headers);
-
-	if (requestSignal?.aborted) return cancelledBeforeDispatch();
-	await beforeFetch?.();
-	if (requestSignal?.aborted) return cancelledBeforeDispatch();
-	let response: Response;
-	try {
-		response = await fetch(url, {
-			method: 'POST', headers, body: serializedBody, signal: requestSignal,
+	return withOwnedJsonUpload(requestBody, requestSignal, async upload => {
+		const { secret } = await resolveProviderUpstreamSecret(route.providerApiKey, {
+			signal: requestSignal, auxiliaryAuth,
 		});
-	} catch (error) {
-		throw markUpstreamOutcomeUnknown(error);
-	}
-	timing?.markAttemptHeaders(attempt, response.status);
-	const upstreamRequestId = extractUpstreamRequestId(response.headers);
-	if (!response.ok) {
-		return {
-			response,
-			usagePromise: Promise.resolve({ ...EMPTY_USAGE_LOCAL }),
-			upstreamRequestId,
+		const headers = {
+			'Content-Type': 'application/json',
+			'Content-Length': String(upload.contentLength),
+			Authorization: `Bearer ${secret}`,
 		};
-	}
-	const normalized = await normalizeSuccessfulRerankResponse(
-		response,
-		requestBody,
-		route,
-		publicCorrelationId,
-		timing,
-	);
-	return { ...normalized, upstreamRequestId };
+		new Headers(headers);
+
+		if (requestSignal?.aborted) return cancelledBeforeDispatch();
+		await beforeFetch?.();
+		if (requestSignal?.aborted) return cancelledBeforeDispatch();
+		let response: Response;
+		try {
+			const init: RequestInit & { duplex: 'half' } = {
+				method: 'POST', headers, body: upload.body, signal: requestSignal, duplex: 'half',
+				redirect: 'manual',
+			};
+			response = await fetch(url, init);
+		} catch (error) {
+			throw markUpstreamOutcomeUnknown(error);
+		}
+		const owned = ownUpstreamResponse(response, requestSignal);
+		response = owned.response;
+		timing?.markAttemptHeaders(attempt, response.status);
+		const upstreamRequestId = extractUpstreamRequestId(response.headers);
+		if (!response.ok) {
+			const outcomeUnknown = httpStatusMayHideAcceptedWork(response.status);
+			return {
+				response,
+				usagePromise: Promise.resolve({ ...EMPTY_USAGE_LOCAL }),
+				upstreamRequestId,
+				resourceCompletion: owned.resourceCompletion,
+				...(outcomeUnknown ? { meta: { upstreamOutcomeUnknown: true, failoverForbidden: true } } : {}),
+			};
+		}
+		const normalized = await normalizeSuccessfulRerankResponse(
+			response,
+			requestBody,
+			route,
+			publicCorrelationId,
+			timing,
+			requestSignal,
+		);
+		return { ...normalized, upstreamRequestId, resourceCompletion: owned.resourceCompletion };
+	});
 }

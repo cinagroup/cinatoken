@@ -1,0 +1,43 @@
+{
+  "version": "v336",
+  "date": "2026-09-24",
+  "status": "LOCAL_HISTORICAL_REPAIR_BACKFILL_PASS_PRODUCTION_DISABLED",
+  "C04": "DOING",
+  "goalComplete": false,
+  "validation": {
+    "nativePostgres": { "pass": 1, "fail": 0, "stages": 9, "cleanup": "PASS" },
+    "generatorUnitTests": { "pass": 2, "fail": 0 },
+    "ciEntries": { "unit": 1, "native": 1, "yamlParse": "PASS", "linuxJobRun": false }
+  },
+  "protocol": {
+    "maximumEarningsPerPage": 500,
+    "cursorReturnedAfterCommitAcknowledgement": true,
+    "unknownCommitReplayPreviousCursor": true,
+    "oldPageCannotOverwriteNewerTriggerJob": true,
+    "lowerSortingLateEarningRequiresLiveTrigger": true,
+    "crossHostDurableCursorStoreImplemented": false,
+    "automaticHistoricalBackfillImplemented": false
+  },
+  "sourceSha256": {
+    "formalPostgresMigrationCorpus": "23afef61a8a670e0af8c90e3a138f522e6b283b454e380a592bf85bca83108dc",
+    "packages/core/migrations-proposals/postgres/shared-key-earnings-history-guard.sql": "454a720f9a6b7410e0aad99c2aaa2eb3327fbbac8c86bb3e3cd4537131e6611b",
+    "packages/core/migrations-proposals/postgres/shared-key-usage-repair-jobs.sql": "7b2f288ecb83e34207bcfd5a2a4eec934c0d6e156190826816ab033716c173d4",
+    "scripts/db/cutover/build-postgres-shared-usage-repair-backfill.mjs": "42c8bfcf22523862a4081463ace99683743d45511e62cdb14bd9b5117b21a0f0",
+    "scripts/db/cutover/build-postgres-shared-usage-repair-backfill.test.mjs": "809a179310789b56ad974c94767dafbccb982e1ceb04c7dd0e09422e3da9291a",
+    "scripts/db/cutover/postgres-shared-usage-repair-backfill.native.test.mjs": "4024aeff0927e13c38729bd0d0e97791d90e41b5394e29d8cc53e3cf42b838b4",
+    "docs/developers/architecture/implementation-evidence/C04-postgres-shared-usage-backfill-v336.md": "4b5f72a0dcc6fe22b1400026fb923b376544427d5fa025b3862c2296fa40560e"
+  },
+  "reportSha256": {
+    "docs/developers/architecture/implementation-evidence/C04-postgres-shared-usage-backfill-v336-report.json": "bbd37b6483095091e2788cbc7df119881d02cab7497a2e28d3dd23d6042e7c86"
+  },
+  "boundaries": {
+    "formalPostgresMigrations": 73,
+    "formalMigrationInstalled": false,
+    "representativeProductionLockWindowVerified": false,
+    "realWorkersHyperdriveQueueVerified": false,
+    "productionRecoveryEnabled": false,
+    "remoteSqlCalls": 0,
+    "deployments": 0,
+    "cloudModelCalls": 0
+  }
+}

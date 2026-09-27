@@ -3,10 +3,18 @@
  * 使用 Web Crypto，兼容 Cloudflare Workers 与 Node。token 只缓存在进程内存。
  */
 
+import {
+	createGcpOAuthLifecycle, discardGcpOAuthResponse, readGcpOAuthResponse,
+	GcpTokenExchangeError, type GcpOAuthLifecycle,
+} from './gcp-oauth-lifecycle';
+import { RequestAuxiliaryAuthLimitError, type RequestAuxiliaryAuthBudget } from './request-auxiliary-auth-budget';
+export { GcpTokenExchangeError, GCP_OAUTH_TIMEOUT_MS, GCP_OAUTH_MAX_RESPONSE_BYTES } from './gcp-oauth-lifecycle';
+
 export const GCP_OAUTH_TOKEN_URL = 'https://oauth2.googleapis.com/token';
 export const GCP_CLOUD_PLATFORM_SCOPE = 'https://www.googleapis.com/auth/cloud-platform';
 const TOKEN_REFRESH_SKEW_MS = 5 * 60 * 1000;
 const JWT_LIFETIME_SECONDS = 3600;
+export const GCP_TOKEN_CACHE_MAX_ENTRIES = 256;
 
 export type GcpServiceAccount = {
 	type: 'service_account';
@@ -18,6 +26,11 @@ export type GcpServiceAccount = {
 export type ResolveProviderUpstreamSecretOptions = {
 	fetchImpl?: typeof fetch;
 	nowMs?: () => number;
+	signal?: AbortSignal;
+	/** May tighten, never raise, the fixed local OAuth ceiling. */
+	timeoutMs?: number;
+	/** Request-local owner; never recreate inside a model/key fallback. */
+	auxiliaryAuth?: RequestAuxiliaryAuthBudget;
 };
 
 export type ResolvedProviderUpstreamSecret = {
@@ -32,7 +45,9 @@ type CachedToken = {
 };
 
 const tokenCache = new Map<string, CachedToken>();
-const inflight = new Map<string, Promise<string>>();
+// Cache only completed data, never another request's fetch/stream/Promise.
+// Replacement also prevents a pre-clear exchange from repopulating this cache.
+let cacheGeneration = {};
 
 export function parseGcpServiceAccountJson(raw: string): GcpServiceAccount | null {
 	const trimmed = raw.trim();
@@ -62,18 +77,19 @@ export function isGcpServiceAccountJson(raw: string | null | undefined): boolean
 }
 
 export function gcpServiceAccountCacheKey(account: GcpServiceAccount): string {
-	return `${account.client_email}\n${account.private_key}`;
+	return JSON.stringify([account.client_email, account.private_key, account.token_uri?.trim() || GCP_OAUTH_TOKEN_URL, GCP_CLOUD_PLATFORM_SCOPE]);
 }
 
 export function clearGcpServiceAccountTokenCache(): void {
 	tokenCache.clear();
-	inflight.clear();
+	cacheGeneration = {};
 }
 
 export async function resolveProviderUpstreamSecret(
 	raw: string,
 	options: ResolveProviderUpstreamSecretOptions = {}
 ): Promise<ResolvedProviderUpstreamSecret> {
+	if (options.signal?.aborted) throw new GcpTokenExchangeError('cancelled');
 	const account = parseGcpServiceAccountJson(raw);
 	if (!account) {
 		return { secret: raw, isServiceAccount: false };
@@ -91,73 +107,106 @@ export async function getGcpAccessToken(
 	options: ResolveProviderUpstreamSecretOptions = {}
 ): Promise<string> {
 	const nowMs = options.nowMs ?? Date.now;
-	const cacheKey = gcpServiceAccountCacheKey(account);
-	const cached = tokenCache.get(cacheKey);
-	if (cached && cached.expiresAtMs - TOKEN_REFRESH_SKEW_MS > nowMs()) {
-		return cached.accessToken;
-	}
-
-	const pending = inflight.get(cacheKey);
-	if (pending) return pending;
-
-	const request = exchangeGcpAccessToken(account, options)
-		.then((token) => {
+	const owner = createGcpOAuthLifecycle(options.signal, options.timeoutMs);
+	const generation = cacheGeneration;
+	try {
+		// Do not retain PEM private keys as module-level cache keys.
+		const digest = await owner.wait(() => crypto.subtle.digest('SHA-256', new TextEncoder().encode(gcpServiceAccountCacheKey(account))));
+		const cacheKey = base64UrlEncode(new Uint8Array(digest));
+		for (const [key, token] of tokenCache) {
+			if (token.expiresAtMs - TOKEN_REFRESH_SKEW_MS <= nowMs()) tokenCache.delete(key);
+		}
+		const cached = tokenCache.get(cacheKey);
+		if (cached) {
+			tokenCache.delete(cacheKey);
+			tokenCache.set(cacheKey, cached);
+			return cached.accessToken;
+		}
+		const token = await exchangeGcpAccessToken(account, options, owner);
+		owner.check();
+		if (generation === cacheGeneration && token.expiresAtMs - TOKEN_REFRESH_SKEW_MS > nowMs()) {
+			tokenCache.delete(cacheKey);
+			while (tokenCache.size >= GCP_TOKEN_CACHE_MAX_ENTRIES) {
+				const oldest = tokenCache.keys().next();
+				if (!oldest.done) tokenCache.delete(oldest.value);
+			}
 			tokenCache.set(cacheKey, token);
-			return token.accessToken;
-		})
-		.finally(() => {
-			inflight.delete(cacheKey);
-		});
-	inflight.set(cacheKey, request);
-	return request;
+		}
+		return token.accessToken;
+	} catch (error) {
+		owner.check();
+		// Raw OAuth bodies, JWTs, client abort reasons and transport errors may
+		// contain credentials. Only fixed messages leave this boundary.
+		if (error instanceof RequestAuxiliaryAuthLimitError) throw error;
+		throw error instanceof GcpTokenExchangeError ? error : new GcpTokenExchangeError('failed');
+	} finally {
+		owner.dispose();
+	}
 }
 
 async function exchangeGcpAccessToken(
 	account: GcpServiceAccount,
-	options: ResolveProviderUpstreamSecretOptions
+	options: ResolveProviderUpstreamSecretOptions,
+	owner: GcpOAuthLifecycle,
 ): Promise<CachedToken> {
 	const nowMs = options.nowMs ?? Date.now;
 	const fetchImpl = options.fetchImpl ?? fetch;
 	const tokenUrl = account.token_uri?.trim() || GCP_OAUTH_TOKEN_URL;
-	const assertion = await signGcpServiceAccountJwt(account, tokenUrl, nowMs);
+	// Only cold exchanges need a permit. Reject before signing when exhausted,
+	// then claim atomically at fetch after any asynchronous preparation.
+	options.auxiliaryAuth?.assertAvailable();
+	const assertion = await signGcpServiceAccountJwt(account, tokenUrl, nowMs, owner);
 	const body = new URLSearchParams({
 		grant_type: 'urn:ietf:params:oauth:grant-type:jwt-bearer',
 		assertion,
 	});
-	const response = await fetchImpl(tokenUrl, {
-		method: 'POST',
-		headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-		body: body.toString(),
-	});
-	const text = await response.text();
+	const requestedAtMs = nowMs();
+	const response = await owner.wait(() => {
+		options.auxiliaryAuth?.consume();
+		return fetchImpl(tokenUrl, {
+			method: 'POST',
+			headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+			body: body.toString(),
+			signal: owner.signal,
+			redirect: 'manual',
+		});
+	}, discardGcpOAuthResponse);
 	if (!response.ok) {
-		throw new Error(`GCP token exchange failed (${response.status}): ${truncateError(text)}`);
+		discardGcpOAuthResponse(response);
+		throw new GcpTokenExchangeError('http_error', response.status);
 	}
-	let payload: { access_token?: unknown; expires_in?: unknown };
+	const text = await readGcpOAuthResponse(response, owner);
+	let payload: unknown;
 	try {
-		payload = JSON.parse(text) as { access_token?: unknown; expires_in?: unknown };
+		payload = JSON.parse(text);
 	} catch {
-		throw new Error('GCP token exchange returned non-JSON');
+		throw new GcpTokenExchangeError('invalid_response');
 	}
-	const accessToken = typeof payload.access_token === 'string' ? payload.access_token.trim() : '';
-	if (!accessToken) {
-		throw new Error('GCP token exchange response missing access_token');
+	if (payload == null || typeof payload !== 'object' || Array.isArray(payload)
+		|| !('access_token' in payload) || typeof payload.access_token !== 'string'
+		|| !/^[\x21-\x7e]+$/.test(payload.access_token)
+		|| !('expires_in' in payload) || typeof payload.expires_in !== 'number'
+		|| !Number.isFinite(payload.expires_in) || payload.expires_in <= 0
+		|| ('token_type' in payload && (typeof payload.token_type !== 'string' || payload.token_type.toLowerCase() !== 'bearer'))) {
+		throw new GcpTokenExchangeError('invalid_response');
 	}
-	const expiresIn =
-		typeof payload.expires_in === 'number' && Number.isFinite(payload.expires_in)
-			? payload.expires_in
-			: JWT_LIFETIME_SECONDS;
+	// Never extend a short/unknown lifetime. Count from request initiation so
+	// slow delivery cannot make us reuse a token beyond the server's expiry.
+	const expiresAtMs = requestedAtMs + Math.min(JWT_LIFETIME_SECONDS, payload.expires_in) * 1000;
+	if (expiresAtMs <= nowMs()) throw new GcpTokenExchangeError('invalid_response');
 	return {
-		accessToken,
-		expiresAtMs: nowMs() + Math.max(60, expiresIn) * 1000,
+		accessToken: payload.access_token,
+		expiresAtMs,
 	};
 }
 
 export async function signGcpServiceAccountJwt(
 	account: GcpServiceAccount,
 	audience: string,
-	nowMs: () => number = Date.now
+	nowMs: () => number = Date.now,
+	owner?: GcpOAuthLifecycle,
 ): Promise<string> {
+	owner?.check();
 	const nowSeconds = Math.floor(nowMs() / 1000);
 	const header = { alg: 'RS256', typ: 'JWT' };
 	const claims = {
@@ -169,12 +218,13 @@ export async function signGcpServiceAccountJwt(
 		scope: GCP_CLOUD_PLATFORM_SCOPE,
 	};
 	const signingInput = `${base64UrlJson(header)}.${base64UrlJson(claims)}`;
-	const key = await importRsaPrivateKey(account.private_key);
-	const signature = await crypto.subtle.sign(
+	const key = await (owner ? owner.wait(() => importRsaPrivateKey(account.private_key)) : importRsaPrivateKey(account.private_key));
+	const sign = () => crypto.subtle.sign(
 		'RSASSA-PKCS1-v1_5',
 		key,
 		bytesToArrayBuffer(new TextEncoder().encode(signingInput))
 	);
+	const signature = await (owner ? owner.wait(sign) : sign());
 	return `${signingInput}.${base64UrlEncode(new Uint8Array(signature))}`;
 }
 
@@ -266,9 +316,4 @@ function uint8FromBase64(base64: string): Uint8Array {
 	const bytes = new Uint8Array(binary.length);
 	for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
 	return bytes;
-}
-
-function truncateError(text: string): string {
-	const compact = text.replace(/\s+/g, ' ').trim();
-	return compact.length > 240 ? `${compact.slice(0, 240)}…` : compact;
 }

@@ -1,0 +1,63 @@
+{
+  "version": "v337",
+  "date": "2026-09-24",
+  "status": "LOCAL_OUTER_INNER_SOCKET_BUDGET_SUBSET_PASS_C02_OPEN",
+  "goalComplete": false,
+  "gitHeadAtEvidence": "7eb59008f7d8e156e81fd18a57658fdef2553264",
+  "scope": {
+    "publicPath": "/v1/chat/completions",
+    "modelCount": 5,
+    "routeFanoutByModel": [2, 40, 40, 40, 40],
+    "configuredRoutes": 162,
+    "syntheticDistinctCredentials": true,
+    "transport": "native Node fetch to loopback HTTP server, server reads full POST body",
+    "c02_5Complete": false,
+    "c02_6Complete": false,
+    "c02_GComplete": false
+  },
+  "observed": {
+    "all429": {
+      "serverReceivedFullPosts": 3,
+      "modelOrder": ["private-model-0", "private-model-0-1", "private-model-1"],
+      "distinctCredentialCount": 3,
+      "publicErrorCode": "gateway.dispatch_limit_exceeded",
+      "terminalUsageBatches": 1
+    },
+    "429ThenResetAfterFullPost": {
+      "serverReceivedFullPosts": 2,
+      "modelOrder": ["private-model-0", "private-model-0-1"],
+      "distinctCredentialCount": 2,
+      "publicErrorCode": "upstream.server_error",
+      "terminalUsageBatches": 1
+    }
+  },
+  "validation": {
+    "newLoopbackTests": { "tests": 2, "pass": 2, "fail": 0 },
+    "requestDispatchLimitFile": { "tests": 689, "pass": 689, "fail": 0 },
+    "proxyTypecheck": "PASS",
+    "staleFixtureCorrection": "known-then cases use clear 429 instead of ambiguous 503",
+    "linuxCiRun": false
+  },
+  "ci": {
+    "testFileInProxyDispatchSafetyScript": true,
+    "testFileInProxyUnitScript": true,
+    "proxyDispatchSafetyWorkflowCallsScript": true
+  },
+  "sourceSha256": {
+    "packages/proxy/src/routes/v1/request-dispatch-limit.test.ts": "bb8612fc64d0709dca88f60ddd05a975f333072177ea1935e44be0dd85ef8c88",
+    "packages/proxy/src/services/failover-dispatch.ts": "44c8e04e12fe085978464faa7a06ef271731b7ac2b4416d071469e9a2680ebd8",
+    "packages/proxy/src/services/request-dispatch-budget.ts": "53115c21920845089c19d9002c7e3b6c70f5fccdd3107f2fee30c0874393a066",
+    "packages/proxy/package.json": "ef24c5a2b0e5475648ad06cc6157ec3579e7f9888a8ca52c0d69d8268fa81c7a",
+    ".github/workflows/proxy-dispatch-safety.yml": "f340bfff2a4992bfd6a2dc795377ecfebc5a687ab277d91a0aaabf44d40673e0"
+  },
+  "limits": {
+    "allProtocolsVerified": false,
+    "concurrentSharedBudgetVerified": false,
+    "realWorkersAndCloudflareTransportVerified": false,
+    "intermediateProxyRetryVerified": false,
+    "supplierInternalRetryVerified": false,
+    "supplierAcceptanceAndBillingVerified": false,
+    "externalProviderCalls": 0,
+    "deployments": 0
+  }
+}

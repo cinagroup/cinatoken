@@ -1,0 +1,162 @@
+{
+  "scope": "In-process Hono requests with empty repositories and explicit REQUEST_BODY_LOGGING=off bindings; no server, database, auth secret or upstream call",
+  "fixtures": [
+    {
+      "request": {
+        "label": "unknown_route",
+        "method": "GET",
+        "path": "/api/v1/does-not-exist",
+        "expectedStatus": 404
+      },
+      "observed": {
+        "status": 404,
+        "code": "gateway.route_not_found",
+        "cacheControl": "no-store",
+        "body": {
+          "error": {
+            "code": 404,
+            "message": "Resource not found",
+            "metadata": {
+              "error_type": "not_found"
+            }
+          },
+          "code": "gateway.route_not_found"
+        }
+      },
+      "pass": true
+    },
+    {
+      "request": {
+        "label": "oversized_header",
+        "method": "POST",
+        "path": "/api/v1/does-not-exist",
+        "headers": {
+          "Content-Type": "application/json",
+          "Content-Length": "52428801"
+        },
+        "body": "{}",
+        "expectedStatus": 413
+      },
+      "observed": {
+        "status": 413,
+        "code": "gateway.payload_too_large",
+        "cacheControl": "no-store",
+        "body": {
+          "error": {
+            "code": 413,
+            "message": "Request body exceeds the maximum allowed size",
+            "metadata": {
+              "error_type": "payload_too_large"
+            }
+          },
+          "code": "gateway.payload_too_large"
+        }
+      },
+      "pass": true
+    },
+    {
+      "request": {
+        "label": "byok_requires_auth",
+        "method": "GET",
+        "path": "/api/v1/byok",
+        "expectedStatus": 401
+      },
+      "observed": {
+        "status": 401,
+        "code": "gateway.auth_failed",
+        "cacheControl": "private, no-store",
+        "body": {
+          "error": {
+            "code": 401,
+            "message": "Missing or invalid Management API key",
+            "metadata": {
+              "error_type": "authentication"
+            }
+          },
+          "code": "gateway.auth_failed"
+        }
+      },
+      "pass": true
+    },
+    {
+      "request": {
+        "label": "analytics_requires_management_auth",
+        "method": "GET",
+        "path": "/api/v1/analytics/meta",
+        "expectedStatus": 401
+      },
+      "observed": {
+        "status": 401,
+        "code": "gateway.auth_failed",
+        "cacheControl": "no-store",
+        "body": {
+          "error": {
+            "code": 401,
+            "message": "Missing or invalid Management API key",
+            "metadata": {
+              "error_type": "authentication"
+            }
+          },
+          "code": "gateway.auth_failed"
+        }
+      },
+      "pass": true
+    },
+    {
+      "request": {
+        "label": "rerank_requires_auth",
+        "method": "POST",
+        "path": "/api/v1/rerank",
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "body": "{}",
+        "expectedStatus": 401
+      },
+      "observed": {
+        "status": 401,
+        "code": "gateway.auth_failed",
+        "cacheControl": "no-store",
+        "body": {
+          "error": {
+            "code": 401,
+            "message": "Missing or invalid API key",
+            "metadata": {
+              "error_type": "authentication"
+            }
+          },
+          "code": "gateway.auth_failed"
+        }
+      },
+      "pass": true
+    },
+    {
+      "request": {
+        "label": "batch_not_registered",
+        "method": "POST",
+        "path": "/api/beta/batches",
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "body": "{}",
+        "expectedStatus": 404
+      },
+      "observed": {
+        "status": 404,
+        "code": "gateway.route_not_found",
+        "cacheControl": "no-store",
+        "body": {
+          "error": {
+            "code": 404,
+            "message": "Resource not found",
+            "metadata": {
+              "error_type": "not_found"
+            }
+          },
+          "code": "gateway.route_not_found"
+        }
+      },
+      "pass": true
+    }
+  ]
+}

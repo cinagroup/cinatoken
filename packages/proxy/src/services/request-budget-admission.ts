@@ -9,6 +9,7 @@ import { isPrivateByokRoute } from './byok-key-pool';
 import type { RouteResult } from './model-router';
 import {
 	reserveOrdinaryUserBudget,
+	type OrdinaryBudgetRepositories,
 	type OrdinaryBudgetLease,
 	type ReserveOrdinaryBudgetParams,
 } from './ordinary-budget-lifecycle';
@@ -18,7 +19,27 @@ import {
 	markRequestGuardrailBudgetsDispatched,
 	releaseRequestGuardrailBudgets,
 	reserveRequestGuardrailBudgets,
+	type GuardrailBudgetAdmissionResult,
 } from './request-guardrails';
+
+/** Request-fixed, function-only Guardrail owner; its reserve performs strict recovery. */
+export type GuardrailBudgetRequestPort = Readonly<{
+	identity: Readonly<{ requestId: string; userId: string; apiKeyId: string }>;
+	reserve(params: {
+		intents: GuardrailBudgetIntent[];
+		reservedMicros: number;
+		settlementBasis?: 'charged' | 'gateway_key_route';
+		now: Date;
+	}): Promise<GuardrailBudgetAdmissionResult>;
+	extend(params: {
+		intents: GuardrailBudgetIntent[];
+		reservedMicros: number;
+		now: Date;
+	}): Promise<GuardrailBudgetAdmissionResult>;
+	markDispatched(now: Date): Promise<void>;
+	releasePreDispatch(reason: string): Promise<void>;
+	forfeitPostDispatch(reason: string): Promise<void>;
+}>;
 
 /** A request-local policy denial raised immediately before upstream dispatch. */
 export class RequestBudgetAdmissionError extends Error {
@@ -41,10 +62,21 @@ export type RouteAwareBudgetAdmission = {
 	readonly guardrailTerminal: boolean;
 	/** Invoke at the failover boundary immediately adjacent to the selected credential dispatch. */
 	beforeUpstreamDispatch(route: RouteResult): Promise<void>;
+	/** Local single-grant candidate: reserve first, then resolve a PostgreSQL claim before any dispatch mark. */
+	prepareSingleGrant(route: RouteResult): Promise<SingleGrantBudgetTicket>;
 	releaseGuardrailPreDispatch(reason: string): Promise<void>;
 	forfeitGuardrailPostDispatch(reason: string): Promise<void>;
 	terminateGuardrailUnknown(reason: string): Promise<void>;
 };
+
+export type SingleGrantBudgetTicket = Readonly<{
+	/** Call only after the one request-level claim COMMIT has been acknowledged. */
+	markAfterCommittedClaim(): Promise<void>;
+	/** A definitive no-claim result proves this owner cannot have sent a provider request. */
+	releaseAfterDefiniteNoClaim(): Promise<void>;
+	/** A lost claim acknowledgement leaves admission reserved for bounded recovery. */
+	holdAfterUncertainClaim(): void;
+}>;
 
 export type CreateRouteAwareBudgetAdmissionParams = {
 	ordinary: ReserveOrdinaryBudgetParams;
@@ -79,8 +111,46 @@ function admissionError(
 export async function createRouteAwareBudgetAdmission(
 	repositories: GatewayRepositories,
 	params: CreateRouteAwareBudgetAdmissionParams,
+	options: {
+		ordinaryBudgetRepositories?: OrdinaryBudgetRepositories;
+		ordinaryRecoveryFailureMode?: 'warn' | 'fail_closed';
+		guardrailBudgetRequestPort?: GuardrailBudgetRequestPort;
+	} = {},
 ): Promise<RouteAwareBudgetAdmission> {
-	const freeAdmission = await reserveOrdinaryUserBudget(repositories, {
+	// Callers may retain and mutate their input objects while admission awaits
+	// database work. Keep both ledgers on the same request, quote and intents.
+	params = {
+		ordinary: {
+			...params.ordinary,
+			now: params.ordinary.now === undefined
+				? undefined : new Date(params.ordinary.now.getTime()),
+		},
+		guardrail: {
+			...params.guardrail,
+			intents: params.guardrail.intents.map(intent => ({ ...intent })),
+			now: params.guardrail.now === undefined
+				? undefined : new Date(params.guardrail.now.getTime()),
+		},
+		privateByokGatewayKey: { ...params.privateByokGatewayKey },
+	};
+	// Keep the validated request owner fixed across the free admission await and
+	// every later credential-aware route transition.
+	const guardrailPort = options.guardrailBudgetRequestPort;
+	const ordinaryRecoveryFailureMode = options.ordinaryRecoveryFailureMode;
+	if (guardrailPort) {
+		const guardrailIdentity = guardrailPort.identity;
+		if (guardrailIdentity?.requestId !== params.ordinary.requestId
+			|| guardrailIdentity.userId !== params.ordinary.userId
+			|| guardrailIdentity.apiKeyId !== params.ordinary.apiKeyId) {
+			throw new TypeError('Guardrail request owner identity differs from authenticated budget request');
+		}
+		if (!(params.guardrail.now instanceof Date)
+			|| !Number.isFinite(params.guardrail.now.getTime())) {
+			throw new TypeError('Guardrail request owner requires a fixed admission time');
+		}
+	}
+	const ordinaryRepositories = options.ordinaryBudgetRepositories ?? repositories;
+	const freeAdmission = await reserveOrdinaryUserBudget(ordinaryRepositories, {
 		...params.ordinary,
 		estimatedChargedCost: 0,
 	});
@@ -96,6 +166,7 @@ export async function createRouteAwareBudgetAdmission(
 	let paidAdmissionPromise: Promise<void> | null = null;
 	let byokAdmissionPromise: Promise<void> | null = null;
 	let dispatchPromise: Promise<void> | null = null;
+	let admissionMode: 'none' | 'legacy' | 'single_grant' = 'none';
 	const gatewayKeyIntent = params.guardrail.intents.find((intent) =>
 		isGatewayKeyLimitIntent(intent) && intent.scopeId === params.ordinary.apiKeyId
 	) ?? null;
@@ -130,21 +201,41 @@ export async function createRouteAwareBudgetAdmission(
 	): Promise<void> => {
 		if (lease.state !== 'reserved') return;
 		await lease.releasePreDispatch(reason);
+		// A confirmed release may restore the original BYOK/free view. A failed
+		// write must leave the reserved delegate reachable by the request owner.
+		if (activeOrdinaryLease === lease) activeOrdinaryLease = freeAdmission.lease;
 	};
 
 	const ensurePaidAdmission = async (): Promise<void> => {
 		paidAdmissionPromise ??= (async () => {
 			const ordinaryAdmission = await reserveOrdinaryUserBudget(
-				repositories,
+				ordinaryRepositories,
 				params.ordinary,
+				{ recoveryFailureMode: ordinaryRecoveryFailureMode },
 			);
 			if (!ordinaryAdmission.ok) {
 				throw admissionError(GatewayErrorCode.budgetExceeded, ordinaryAdmission.error.message);
 			}
+			// Publish ownership as soon as the reservation exists. Guardrail
+			// admission or its compensating release can fail; the outer request
+			// owner must still be able to retry Ordinary cleanup in that case.
+			activeOrdinaryLease = ordinaryAdmission.lease;
 
-			let guardrailAdmission: Awaited<ReturnType<typeof reserveRequestGuardrailBudgets>>;
+			let guardrailAdmission: GuardrailBudgetAdmissionResult;
 			try {
-				guardrailAdmission = byokKeyReservationEstablished
+				guardrailAdmission = guardrailPort
+					? byokKeyReservationEstablished
+						? await guardrailPort.extend({
+							intents: params.guardrail.intents,
+							reservedMicros: params.guardrail.reservedMicros,
+							now: params.guardrail.now ?? new Date(),
+						})
+						: await guardrailPort.reserve({
+							intents: params.guardrail.intents,
+							reservedMicros: params.guardrail.reservedMicros,
+							now: params.guardrail.now ?? new Date(),
+						})
+					: byokKeyReservationEstablished
 					? await extendDispatchedRequestGuardrailBudgets(repositories, {
 							requestId: params.ordinary.requestId,
 							intents: params.guardrail.intents,
@@ -178,7 +269,6 @@ export async function createRouteAwareBudgetAdmission(
 				throw new Error(`Guardrail budget admission failed: ${guardrailAdmission.message}`);
 			}
 
-			activeOrdinaryLease = ordinaryAdmission.lease;
 			guardrailReserved = guardrailReserved || guardrailAdmission.reserved;
 			// A previous BYOK dispatch only transitioned the key-limit lease. The
 			// newly installed ordinary lease must cross its own dispatch boundary.
@@ -194,7 +284,14 @@ export async function createRouteAwareBudgetAdmission(
 			|| params.privateByokGatewayKey.reservedMicros === 0
 		) return;
 		byokAdmissionPromise ??= (async () => {
-			const admission = await reserveRequestGuardrailBudgets(repositories, {
+			const admission = guardrailPort
+				? await guardrailPort.reserve({
+					intents: [gatewayKeyIntent],
+					reservedMicros: params.privateByokGatewayKey.reservedMicros,
+					settlementBasis: 'gateway_key_route',
+					now: params.guardrail.now ?? new Date(),
+				})
+				: await reserveRequestGuardrailBudgets(repositories, {
 				requestId: params.ordinary.requestId,
 				intents: [gatewayKeyIntent],
 				reservedMicros: params.privateByokGatewayKey.reservedMicros,
@@ -218,12 +315,16 @@ export async function createRouteAwareBudgetAdmission(
 		if (guardrailDispatched) {
 			throw new Error('A dispatched Guardrail budget reservation cannot be released');
 		}
-		await releaseRequestGuardrailBudgets(
-			repositories,
-			params.ordinary.requestId,
-			guardrailReserved,
-			reason,
-		);
+		if (guardrailPort) {
+			await guardrailPort.releasePreDispatch(reason);
+		} else {
+			await releaseRequestGuardrailBudgets(
+				repositories,
+				params.ordinary.requestId,
+				guardrailReserved,
+				reason,
+			);
+		}
 		guardrailTerminal = true;
 		guardrailReserved = false;
 	};
@@ -234,32 +335,46 @@ export async function createRouteAwareBudgetAdmission(
 			await releaseGuardrailPreDispatch(reason);
 			return;
 		}
-		await forfeitRequestGuardrailBudgets(
-			repositories,
-			params.ordinary.requestId,
-			guardrailReserved,
-			reason,
-		);
+		if (guardrailPort) {
+			await guardrailPort.forfeitPostDispatch(reason);
+		} else {
+			await forfeitRequestGuardrailBudgets(
+				repositories,
+				params.ordinary.requestId,
+				guardrailReserved,
+				reason,
+			);
+		}
 		guardrailTerminal = true;
 		guardrailReserved = false;
 	};
 
-	const beforeUpstreamDispatch = async (route: RouteResult): Promise<void> => {
+	const reserveForRoute = async (route: RouteResult): Promise<boolean> => {
 		if (isPrivateByokRoute(route) && activeOrdinaryLease.state !== 'dispatched') {
 			await ensurePrivateByokKeyAdmission();
-			if (!byokKeyReservationEstablished) return;
+			return byokKeyReservationEstablished;
 		} else {
 			await ensurePaidAdmission();
+			return true;
 		}
+	};
+
+	const markDispatched = async (): Promise<void> => {
 		dispatchPromise ??= (async () => {
 			if (guardrailReserved && !guardrailDispatched) {
 				try {
-					await markRequestGuardrailBudgetsDispatched(
-						repositories,
-						params.ordinary.requestId,
-						guardrailReserved,
-						params.guardrail.now,
-					);
+					if (guardrailPort) {
+						await guardrailPort.markDispatched(
+							params.guardrail.now ?? new Date(),
+						);
+					} else {
+						await markRequestGuardrailBudgetsDispatched(
+							repositories,
+							params.ordinary.requestId,
+							guardrailReserved,
+							params.guardrail.now,
+						);
+					}
 					guardrailDispatched = true;
 				} catch (error) {
 					await releaseGuardrailPreDispatch('upstream_dispatch_not_started').catch(() => undefined);
@@ -281,12 +396,51 @@ export async function createRouteAwareBudgetAdmission(
 		await dispatchPromise;
 	};
 
+	const beforeUpstreamDispatch = async (route: RouteResult): Promise<void> => {
+		if (admissionMode === 'single_grant') throw new Error('Single-grant budget admission already owns this request');
+		admissionMode = 'legacy';
+		if (await reserveForRoute(route)) await markDispatched();
+	};
+
+	const prepareSingleGrant = async (route: RouteResult): Promise<SingleGrantBudgetTicket> => {
+		if (admissionMode !== 'none') throw new Error('Request budget admission mode already selected');
+		// Freeze the mode before yielding so a sibling cannot use the legacy dispatch path.
+		admissionMode = 'single_grant';
+		const shouldMark = await reserveForRoute(route);
+		const preparedOrdinaryLease = activeOrdinaryLease;
+		let state: 'prepared' | 'marking' | 'dispatched' | 'releasing' | 'release_failed' | 'released' | 'unknown' = 'prepared';
+		return Object.freeze({
+			async markAfterCommittedClaim(): Promise<void> {
+				if (state !== 'prepared') throw new Error('Single-grant budget ticket already resolved');
+				state = 'marking';
+				try { if (shouldMark) await markDispatched(); state = 'dispatched'; }
+				catch (error) { state = 'unknown'; throw error; }
+			},
+			async releaseAfterDefiniteNoClaim(): Promise<void> {
+				if (state !== 'prepared' && state !== 'release_failed') {
+					throw new Error('Single-grant budget ticket cannot be released');
+				}
+				state = 'releasing';
+				try {
+					await releaseGuardrailPreDispatch('dispatch_claim_not_granted');
+					await releasePaidOrdinaryAdmission(preparedOrdinaryLease, 'dispatch_claim_not_granted');
+					state = 'released';
+				} catch (error) { state = 'release_failed'; throw error; }
+			},
+			holdAfterUncertainClaim(): void {
+				if (state !== 'prepared') throw new Error('Single-grant budget ticket already resolved');
+				state = 'unknown';
+			},
+		});
+	};
+
 	return {
 		ordinaryLease,
 		get guardrailReserved() { return guardrailReserved; },
 		get guardrailDispatched() { return guardrailDispatched; },
 		get guardrailTerminal() { return guardrailTerminal; },
 		beforeUpstreamDispatch,
+		prepareSingleGrant,
 		releaseGuardrailPreDispatch,
 		forfeitGuardrailPostDispatch,
 		async terminateGuardrailUnknown(reason: string): Promise<void> {

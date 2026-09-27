@@ -1,0 +1,18 @@
+# C04 v345: Chat per-attempt provider usage bridge
+
+Status: **default off; C04.2 and C04.3 remain open**. The shipped Chat and legacy Completions routes still create no quote capture without `SHARED_KEY_QUOTE_ATTEMPTS_ENABLED=reviewed-v1`. Explicit quote capture still returns 503 before dispatch unless an economic producer is injected. No production producer, economic outbox call, migration, or seller credit was enabled in this step.
+
+## Fact boundary
+
+The selected successful failover result now carries the exact committed quote attempt reference back to Chat. After its existing usage safety wait, Chat offers that result's usage to the request-scoped capture. The capture upgrades **only that reference** to `usageCertainty: actual` when the same attempt observed raw 2xx upstream headers, the completed OpenAI-compatible provider usage object explicitly reports both input and output counters, the normalized counters match that object, and neither cancellation nor stream error occurred. It stores the four normalized token counters and a SHA-256 digest of the raw provider usage JSON in the existing `SharedKeyEconomicAttemptOutcome[]` typed handoff. Chat never offers a safety-timeout placeholder. The digest identifies the observed response object; it is not an independent provider bill or cryptographic attestation by the provider.
+
+Every other attempt remains `usageCertainty: unknown` with null counters, including a quote-only claim, a granted fetch without headers, an ambiguous transport, a rejected HTTP response, and a malformed or incomplete usage object. A provider-reported zero-token object is `actual` usage with zero counters; it is not a `confirmed_zero` cost assertion. `providerCostCertainty` remains `unknown` and `providerCostMicros` remains null for every attempt because this route has no authenticated per-attempt provider bill. The existing typed outbox validator accepts the resulting mixed actual/unknown attempt array when a caller separately supplies a valid buyer charge basis; this bridge does not infer that basis from a quote, selected response, or aggregate request usage.
+
+## Verification
+
+- `node --import tsx --test packages/proxy/src/services/shared-key-quote-attempt.test.ts packages/proxy/src/services/failover-dispatch.test.ts packages/proxy/src/services/model-fallback-global-dispatch.test.ts`: **77/77 passed**. The loopback 429-to-200 case binds provider usage to only the second quote and prepares a typed mixed-certainty outbox payload. Negative cases cover pre-send observations, missing/partial usage, cancellation, stream error, conflicting replay, wrong reference ownership, reported zero usage, rejection and ambiguity.
+- `npm run typecheck -w @octafuse/proxy`: **passed**.
+
+Source SHA-256: capture `6bd35d8c75d17ccd785b4a9db50470031b94bbbb97d2605f3e5fba664a13c874`; capture test `b5d9acf9029567411d449834b48326794d36cb1dcd445839bb22d3e1a05ad63a`; failover dispatcher `520d916db8dd031393d01eeb379f1707a9c49e45f5aeb8c78bb8330e1180de20`; proxy result type `b7ab322ea4722aceb527c45fbec55a6d8629ea8a11c1a0f09e52e6c67c655f2e`; Chat route `894815fd733163fa417043e3c2f50ab33172fc54f1f1f5f1fbd359a3bfc40267`.
+
+The remaining gate is a real typed producer that derives buyer basis from a verified ordinary-user settlement and commits the buyer log/debit and one event covering **all** quote attempts in one transaction. A separate provider bill or reconciliation source is needed to establish provider cost and resolve pending attempts. This local bridge has not run under Workers/Hyperdrive or Linux CI, and it does not change other protocol drivers, old mutable-price seller settlement, or unknown adjustment policy.

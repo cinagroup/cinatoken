@@ -1,0 +1,63 @@
+{
+  "version": "v337",
+  "date": "2026-09-24",
+  "scope": "review-only PostgreSQL catchable SQL repair failure isolation and exact dedicated consumer grant",
+  "status": "PASS_LOCAL_ONLY",
+  "formalMigrations": 73,
+  "nativePostgres": {
+    "binaryVersion": "postgres (PostgreSQL) 18.6",
+    "tests": 2,
+    "passed": 2,
+    "failureIsolationStages": 7,
+    "directLoginStages": 7,
+    "cleanup": "PASS",
+    "failureIsolationReport": "C04-postgres-shared-usage-failure-isolation-v337-report.json",
+    "failureIsolationReportSha256": "dd3e07062d418f9c5479b894973a107c5c125a0c0016f23f95d91b99d237817b",
+    "directLoginReport": "C04-shared-key-usage-repair-direct-login-v337-report.json",
+    "directLoginReportSha256": "eb0c31d8205937d10cf6cce30530ad7e7cbe824d3499459dcd85dc50838bdd1a"
+  },
+  "nativeRegressions": {
+    "tests": 3,
+    "passed": 3,
+    "cases": ["v335 repair jobs", "runtime grant reruns", "v336 bounded historical backfill"],
+    "baseReport": "C04-shared-key-usage-repair-base-regression-v337-report.json",
+    "baseReportSha256": "a77552e7f3c8a9c3bcfdbadb88271c5821ca5e1e3bc8043ba0c5713c1c237dd2",
+    "backfillReport": "C04-shared-key-usage-repair-backfill-regression-v337-report.json",
+    "backfillReportSha256": "bbd37b6483095091e2788cbc7df119881d02cab7497a2e28d3dd23d6042e7c86"
+  },
+  "unitTests": {
+    "repairRunner": "6/6 PASS",
+    "directLoginGrant": "2/2 PASS",
+    "wranglerGenerator": "13/13 PASS",
+    "deployEntry": "2/2 PASS"
+  },
+  "typecheck": {
+    "proxy": "PASS",
+    "scripts": "PASS"
+  },
+  "sourceSha256": {
+    "baseJobsProposal": "7b2f288ecb83e34207bcfd5a2a4eec934c0d6e156190826816ab033716c173d4",
+    "failureIsolationProposal": "14a9be7e9ed354f63b7d74c81303502a0217c9be080f541009466804d3e19b63",
+    "failureIsolationNativeTest": "1737d2f345a88eb5654109dd5a6f6f79187619d16e7dda66fccdf5f61d4b3b11",
+    "directLoginGrantGenerator": "fa5d607eb2b3f3a575e8c9cc46c7bb9195d4feeb04049af3bf18fecd0b509507",
+    "directLoginGrantUnitTest": "fb140358aad1c82bc6d3c4e37dda2d8e3769190e6ed2e3434712af2b8adf37f7",
+    "directLoginGrantNativeTest": "cfbb98be0ce7b09e697980b8aa1a82ce17ea8763cec909c5dba6b787ba59710a",
+    "runtimeGrant": "3757182ca64793765577d10d74f8da1d36f95b01915ab7df6eeaa505a12afd69",
+    "repairRunner": "c0c440f034c3c93b52209ffad115abb1f9f92e380f281d5d90bfbabdf407a610",
+    "repairRunnerUnitTest": "059ca8fa9cfc072b4adb8282003e2faf80fccb3ad142d7ada454c42386333062",
+    "wranglerGenerator": "0f0d5f18ffbb2122bfaf19bca02b83875f9b7ce8a0550522d9fe66649f9d5ae5",
+    "wranglerGeneratorTest": "cc37a37db87a45e8ee40785d4661817886f916ad6fdacdebe7439dde28f664e9"
+  },
+  "ci": "failure isolation native step registered in proxy-dispatch-safety.yml; Linux run unverified",
+  "remoteSql": false,
+  "deployment": false,
+  "open": [
+    "formal migration and controlled installation",
+    "production role, Hyperdrive origin and instance-wide connection budget review",
+    "live Cron operation, backlog/dead-letter monitoring and alerting",
+    "representative queue scale, index write amplification and installation lock window",
+    "query-cancelled or connection-failed key starvation and backlog/dead-letter alerting",
+    "trusted migrator serialization for independent function DDL during activation",
+    "D1 and MySQL matching protocols"
+  ]
+}

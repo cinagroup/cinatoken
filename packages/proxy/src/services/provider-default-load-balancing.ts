@@ -1,16 +1,22 @@
 import type { RouteResult } from './model-router';
 import { isProviderRecentlyDegraded } from './provider-circuit-breaker';
 
-type PricedRoute = {
-	route: RouteResult;
+export type DefaultLoadBalanceCandidate = Readonly<{ providerId: string; routePriority: number }>;
+type DefaultLoadBalanceAnnotations = {
+	gatewayDefaultLoadBalanceRank?: number;
+	gatewayProviderRecentlyDegraded?: boolean;
+};
+
+type PricedRoute<T extends DefaultLoadBalanceCandidate> = {
+	route: T;
 	price: number | null;
 	recentlyDegraded: boolean;
 	originalIndex: number;
 };
 
-export type DefaultProviderLoadBalanceResult = {
+export type DefaultProviderLoadBalanceResult<T extends DefaultLoadBalanceCandidate = RouteResult> = {
 	applied: boolean;
-	routes: RouteResult[];
+	routes: (T & DefaultLoadBalanceAnnotations)[];
 };
 
 function secureRandomUnit(): number {
@@ -26,13 +32,13 @@ function boundedRandomUnit(randomUnit: () => number): number {
 	return value;
 }
 
-function weightedPositivePriceOrder(
-	entries: PricedRoute[],
+function weightedPositivePriceOrder<T extends DefaultLoadBalanceCandidate>(
+	entries: PricedRoute<T>[],
 	randomUnit: () => number,
-): PricedRoute[] {
+): PricedRoute<T>[] {
 	if (entries.length <= 1) return [...entries];
 	const pool = [...entries];
-	const ordered: PricedRoute[] = [];
+	const ordered: PricedRoute<T>[] = [];
 	while (pool.length > 0) {
 		const minimumPrice = Math.min(...pool.map((entry) => entry.price!));
 		const weights = pool.map((entry) => {
@@ -55,9 +61,9 @@ function weightedPositivePriceOrder(
 	return ordered;
 }
 
-function uniformOrder(entries: PricedRoute[], randomUnit: () => number): PricedRoute[] {
+function uniformOrder<T extends DefaultLoadBalanceCandidate>(entries: PricedRoute<T>[], randomUnit: () => number): PricedRoute<T>[] {
 	const pool = [...entries];
-	const ordered: PricedRoute[] = [];
+	const ordered: PricedRoute<T>[] = [];
 	while (pool.length > 0) {
 		const index = Math.min(
 			pool.length - 1,
@@ -69,7 +75,7 @@ function uniformOrder(entries: PricedRoute[], randomUnit: () => number): PricedR
 	return ordered;
 }
 
-function orderHealthTier(entries: PricedRoute[], randomUnit: () => number): PricedRoute[] {
+function orderHealthTier<T extends DefaultLoadBalanceCandidate>(entries: PricedRoute<T>[], randomUnit: () => number): PricedRoute<T>[] {
 	const free = entries.filter((entry) => entry.price === 0);
 	const positive = entries.filter((entry) => entry.price != null && entry.price > 0);
 	const unpriced = entries.filter((entry) => entry.price == null);
@@ -85,16 +91,16 @@ function orderHealthTier(entries: PricedRoute[], randomUnit: () => number): Pric
  * provider order disables load balancing. At least one comparable price is
  * required; otherwise the configured route policy remains authoritative.
  */
-export function applyDefaultProviderLoadBalancing(params: {
-	routes: RouteResult[];
-	priceScore: (route: RouteResult) => number | null;
+export function applyDefaultProviderLoadBalancing<T extends DefaultLoadBalanceCandidate>(params: {
+	routes: T[];
+	priceScore: (route: T) => number | null;
 	now?: number;
 	randomUnit?: () => number;
-}): DefaultProviderLoadBalanceResult {
+}): DefaultProviderLoadBalanceResult<T> {
 	if (params.routes.length <= 1) return { applied: false, routes: params.routes };
 	const now = params.now ?? Date.now();
 	const randomUnit = params.randomUnit ?? secureRandomUnit;
-	const priced = params.routes.map((route, originalIndex): PricedRoute => {
+	const priced = params.routes.map((route, originalIndex): PricedRoute<T> => {
 		const candidate = params.priceScore(route);
 		return {
 			route,

@@ -1,0 +1,55 @@
+{
+  "status": "PASS",
+  "cleanup": "PASS",
+  "binaryVersion": "postgres (PostgreSQL) 18.6",
+  "scope": "owned loopback PG18.6, 73 formal migrations and two review-only proposals",
+  "stages": [
+    {
+      "name": "formal-schema-and-history-guard-installed",
+      "result": "PASS",
+      "formalMigrations": 73
+    },
+    {
+      "name": "activation-trigger-body-and-default-acl-drift-rollback",
+      "result": "PASS"
+    },
+    {
+      "name": "runtime-grant-rerun-keeps-job-and-definers-closed",
+      "result": "PASS"
+    },
+    {
+      "name": "enqueue-failure-rolls-back-earning-credit-and-ledger",
+      "result": "PASS"
+    },
+    {
+      "name": "earning-credit-and-repair-job-commit-together",
+      "result": "PASS"
+    },
+    {
+      "name": "repair-rollback-retains-job-and-retry-does-not-credit-again",
+      "result": "PASS"
+    },
+    {
+      "name": "concurrent-earning-lock-order-and-keyset-repair",
+      "result": "PASS"
+    },
+    {
+      "name": "skip-locked-keyset-does-not-hide-33rd-due-job",
+      "result": "PASS"
+    },
+    {
+      "name": "definer-execute-confined-to-owner",
+      "result": "PASS"
+    }
+  ],
+  "limitations": [
+    "The job and history guard proposals are not formal migrations or deployed.",
+    "No dedicated runtime role, scheduler, bounded backfill or failure backoff is installed.",
+    "The fixture does not test Cloudflare Workers, Hyperdrive or MySQL."
+  ],
+  "sourceSha256": {
+    "historyGuardProposal": "454a720f9a6b7410e0aad99c2aaa2eb3327fbbac8c86bb3e3cd4537131e6611b",
+    "repairJobsProposal": "7b2f288ecb83e34207bcfd5a2a4eec934c0d6e156190826816ab033716c173d4",
+    "runtimeGrantSource": "3757182ca64793765577d10d74f8da1d36f95b01915ab7df6eeaa505a12afd69"
+  }
+}

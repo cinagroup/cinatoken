@@ -1,0 +1,45 @@
+{
+  "status": "PASS",
+  "cleanup": "PASS",
+  "binaryVersion": "postgres (PostgreSQL) 18.6",
+  "sourceSha256": {
+    "client": "266f3790fae0813378bc870ead524130453c1cd67fcab0dfb07514ef393f2aea",
+    "v366Sql": "30322e8fde1e963872ee58411517da2c786752defdaa0babf452ae3a100b89af"
+  },
+  "stages": [
+    {
+      "name": "no-fetch",
+      "result": "PASS"
+    },
+    {
+      "name": "fetch-invoked",
+      "result": "PASS"
+    },
+    {
+      "name": "transport-unknown",
+      "result": "PASS"
+    },
+    {
+      "name": "zero-observation",
+      "result": "PASS"
+    },
+    {
+      "name": "provider-usage",
+      "result": "PASS"
+    },
+    {
+      "name": "bill-zero",
+      "result": "PASS"
+    },
+    {
+      "name": "bill-max",
+      "result": "PASS"
+    }
+  ],
+  "limitations": [
+    "This local fixture checks Postgres.js parameter encoding, JSONB object type, canonical text and SHA-256 equality. It does not install the v366 writer or authenticate a bill source.",
+    "The v366 evidence grammar restricts references to ASCII letters, digits and ._:/-. Non-ASCII, quotes and backslashes are rejected before this digest boundary.",
+    "The injected transaction tests client argument mapping only; the separate v366 SQL fixture covers real roles, grants, writes and append-only rows.",
+    "No remote database, provider, Worker or production credential is used."
+  ]
+}

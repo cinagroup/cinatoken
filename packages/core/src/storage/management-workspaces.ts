@@ -147,7 +147,7 @@ function postgresActiveManagementKeyPredicate(
 				AND (${alias}.expires_at IS NULL OR ${alias}.expires_at > CURRENT_TIMESTAMP)
 				AND ${alias}.account_type = 'personal'
 				AND ${alias}.personal_owner_user_id = $${firstParam + 1} AND ${alias}.organization_id IS NULL
-				AND EXISTS (SELECT 1 FROM users owner WHERE owner.id = ${alias}.personal_owner_user_id AND owner.status = 'active')`,
+				AND EXISTS (SELECT 1 FROM cinatoken_gateway.users owner WHERE owner.id = ${alias}.personal_owner_user_id AND owner.status = 'active')`,
 			values: [principal.keyId, account.personalOwnerUserId],
 		}
 		: {
@@ -155,7 +155,7 @@ function postgresActiveManagementKeyPredicate(
 				AND (${alias}.expires_at IS NULL OR ${alias}.expires_at > CURRENT_TIMESTAMP)
 				AND ${alias}.account_type = 'organization'
 				AND ${alias}.personal_owner_user_id IS NULL AND ${alias}.organization_id = $${firstParam + 1}
-				AND EXISTS (SELECT 1 FROM organizations owner WHERE owner.id = ${alias}.organization_id AND owner.status IN ('active', 'pending'))`,
+				AND EXISTS (SELECT 1 FROM cinatoken_gateway.organizations owner WHERE owner.id = ${alias}.organization_id AND owner.status IN ('active', 'pending'))`,
 			values: [principal.keyId, account.organizationId],
 		};
 }
@@ -189,6 +189,32 @@ function duplicateWorkspaceError(error: unknown): never {
 	throw error;
 }
 
+function isRecoveryHistoryWorkspaceDeleteRestriction(error: unknown): boolean {
+	if (typeof error !== 'object' || error === null) return false;
+	const pgError = error as {
+		code?: unknown;
+		constraint_name?: unknown;
+		constraint?: unknown;
+		schema_name?: unknown;
+		schema?: unknown;
+		table_name?: unknown;
+		table?: unknown;
+	};
+	const constraints = new Set([
+		'request_dispatch_intents_workspace_id_fkey',
+		'request_dispatch_intents_api_key_id_fkey',
+	]);
+	const constraint = pgError.constraint_name ?? pgError.constraint;
+	return (pgError.code === '23001' || pgError.code === '23503')
+		&& typeof constraint === 'string' && constraints.has(constraint)
+		&& (pgError.constraint_name === undefined || pgError.constraint_name === constraint)
+		&& (pgError.constraint === undefined || pgError.constraint === constraint)
+		&& (pgError.schema_name === undefined || pgError.schema_name === 'cinatoken_gateway')
+		&& (pgError.schema === undefined || pgError.schema === 'cinatoken_gateway')
+		&& (pgError.table_name === undefined || pgError.table_name === 'request_dispatch_intents')
+		&& (pgError.table === undefined || pgError.table === 'request_dispatch_intents');
+}
+
 export async function listManagementWorkspaces(
 	client: GatewayDatabaseClient,
 	account: ManagementApiKeyAccount,
@@ -211,11 +237,11 @@ export async function listManagementWorkspaces(
 	if (client.driver === 'postgres') {
 		const predicate = postgresAccountPredicate(account);
 		const counts = await client.raw.unsafe<Array<{ total_count: number | string }>>(
-			`SELECT COUNT(*) AS total_count FROM workspaces workspace WHERE workspace.status = 'active' AND ${predicate.sql}`,
+			`SELECT COUNT(*) AS total_count FROM cinatoken_gateway.workspaces workspace WHERE workspace.status = 'active' AND ${predicate.sql}`,
 			[predicate.value],
 		);
 		const rows = await client.raw.unsafe<RawManagementWorkspaceRow[]>(`SELECT ${SELECT_COLUMNS}
-			FROM workspaces workspace LEFT JOIN users creator ON creator.id = workspace.created_by_user_id
+			FROM cinatoken_gateway.workspaces workspace LEFT JOIN cinatoken_gateway.users creator ON creator.id = workspace.created_by_user_id
 			WHERE workspace.status = 'active' AND ${predicate.sql}
 			ORDER BY workspace.created_at ASC, workspace.id ASC LIMIT $2 OFFSET $3`,
 		[predicate.value, page.limit, page.offset]);
@@ -252,7 +278,7 @@ export async function getManagementWorkspace(
 	if (client.driver === 'postgres') {
 		const predicate = postgresAccountPredicate(account, 'workspace', 2);
 		const rows = await client.raw.unsafe<RawManagementWorkspaceRow[]>(`SELECT ${SELECT_COLUMNS}
-			FROM workspaces workspace LEFT JOIN users creator ON creator.id = workspace.created_by_user_id
+			FROM cinatoken_gateway.workspaces workspace LEFT JOIN cinatoken_gateway.users creator ON creator.id = workspace.created_by_user_id
 			WHERE workspace.status = 'active' AND (workspace.id = $1 OR workspace.slug = $1) AND ${predicate.sql}
 			ORDER BY CASE WHEN workspace.id = $1 THEN 0 ELSE 1 END LIMIT 1`, [resolved, predicate.value]);
 		return rows[0] ? mapRow(rows[0]) : null;
@@ -332,30 +358,30 @@ export async function createManagementWorkspace(
 		if (client.driver === 'postgres') {
 			const created = await client.raw.begin(async (transaction) => {
 				const key = postgresActiveManagementKeyPredicate(principal, 'management_key', 11);
-				const rows = await transaction.unsafe<Array<{ id: string }>>(`INSERT INTO workspaces (
+				const rows = await transaction.unsafe<Array<{ id: string }>>(`INSERT INTO cinatoken_gateway.workspaces (
 					id, scope_type, organization_id, personal_owner_user_id, name, slug, description,
 					is_default, default_scope_key, status, settings_json, created_by_user_id, created_at, updated_at
 				) SELECT $1, $2, $3, $4, $5, $6, $7, FALSE, NULL, 'active', $8,
-					CASE WHEN EXISTS (SELECT 1 FROM users creator WHERE creator.id = $9 AND creator.status = 'active') THEN $9 ELSE NULL END,
-					$10, $10 FROM management_api_keys management_key WHERE ${key.sql}
+					CASE WHEN EXISTS (SELECT 1 FROM cinatoken_gateway.users creator WHERE creator.id = $9 AND creator.status = 'active') THEN $9 ELSE NULL END,
+					$10, $10 FROM cinatoken_gateway.management_api_keys management_key WHERE ${key.sql}
 				RETURNING id`, [
 					id, account.accountType, account.organizationId, account.personalOwnerUserId,
 					input.name, input.slug, input.description, settingsJson,
 					principal.createdByUserId, nowIso, ...key.values,
 				]);
 				if (rows.length !== 1) return false;
-				await transaction.unsafe(`INSERT INTO guardrails (
+				await transaction.unsafe(`INSERT INTO cinatoken_gateway.guardrails (
 					id, workspace_id, owner_user_id, name, description, status,
 					designated_version, latest_version, created_at, updated_at, is_workspace_default
 				) VALUES ($1, $2, $3, $4, NULL, 'active', 1, 1, $5, $5, TRUE)`, [
 					defaultGuardrailId, id, principal.createdByUserId, defaultGuardrailName, nowIso,
 				]);
-				await transaction.unsafe(`INSERT INTO guardrail_versions (
+				await transaction.unsafe(`INSERT INTO cinatoken_gateway.guardrail_versions (
 					id, guardrail_id, version, config_json, created_by_user_id, created_at
 				) VALUES ($1, $2, 1, '{}', $3, $4)`, [
 					defaultGuardrailVersionId, defaultGuardrailId, principal.createdByUserId, nowIso,
 				]);
-				await transaction.unsafe(`INSERT INTO user_audit_logs (
+				await transaction.unsafe(`INSERT INTO cinatoken_gateway.user_audit_logs (
 					id, user_id, api_key_id, event_type, actor_type, change_payload,
 					source, actor_id, reason_code, reason_text, created_at
 				) VALUES ($1, $2, NULL, 'workspace_created', 'service', $3,
@@ -485,7 +511,7 @@ export async function updateManagementWorkspace(
 			const workspaceId = await client.raw.begin(async (transaction) => {
 				const accountPredicate = postgresAccountPredicate(account, 'workspace', 2);
 				const currentRows = await transaction.unsafe<RawManagementWorkspaceRow[]>(`SELECT ${SELECT_COLUMNS}
-					FROM workspaces workspace LEFT JOIN users creator ON creator.id = workspace.created_by_user_id
+					FROM cinatoken_gateway.workspaces workspace LEFT JOIN cinatoken_gateway.users creator ON creator.id = workspace.created_by_user_id
 					WHERE workspace.status = 'active' AND (workspace.id = $1 OR workspace.slug = $1)
 						AND ${accountPredicate.sql}
 					ORDER BY CASE WHEN workspace.id = $1 THEN 0 ELSE 1 END LIMIT 1 FOR UPDATE OF workspace`,
@@ -493,10 +519,10 @@ export async function updateManagementWorkspace(
 				if (!currentRows[0]) return null;
 				const current = mapRow(currentRows[0]);
 				const key = postgresActiveManagementKeyPredicate(principal, 'management_key', 7);
-				const updated = await transaction.unsafe<Array<{ id: string }>>(`UPDATE workspaces AS workspace SET
+				const updated = await transaction.unsafe<Array<{ id: string }>>(`UPDATE cinatoken_gateway.workspaces AS workspace SET
 					name = $1, slug = $2, description = $3, settings_json = $4, updated_at = $5
 				WHERE workspace.id = $6 AND EXISTS (
-					SELECT 1 FROM management_api_keys management_key WHERE ${key.sql}
+					SELECT 1 FROM cinatoken_gateway.management_api_keys management_key WHERE ${key.sql}
 				) RETURNING workspace.id`, [
 					patch.name ?? current.name, patch.slug ?? current.slug,
 					patch.description === undefined ? current.description : patch.description,
@@ -504,7 +530,7 @@ export async function updateManagementWorkspace(
 					nowIso, current.id, ...key.values,
 				]);
 				if (updated.length !== 1) return null;
-				await transaction.unsafe(`INSERT INTO user_audit_logs (
+				await transaction.unsafe(`INSERT INTO cinatoken_gateway.user_audit_logs (
 					id, user_id, api_key_id, event_type, actor_type, change_payload,
 					source, actor_id, reason_code, reason_text, created_at
 				) VALUES ($1, $2, NULL, 'workspace_updated', 'service', $3,
@@ -659,7 +685,7 @@ export async function deleteManagementWorkspace(
 		return client.raw.begin(async (transaction) => {
 			const owner = postgresAccountPredicate(account, 'workspace', 2);
 			const rows = await transaction.unsafe<RawManagementWorkspaceRow[]>(`SELECT ${SELECT_COLUMNS}
-				FROM workspaces workspace LEFT JOIN users creator ON creator.id = workspace.created_by_user_id
+				FROM cinatoken_gateway.workspaces workspace LEFT JOIN cinatoken_gateway.users creator ON creator.id = workspace.created_by_user_id
 				WHERE workspace.status = 'active' AND (workspace.id = $1 OR workspace.slug = $1) AND ${owner.sql}
 				ORDER BY CASE WHEN workspace.id = $1 THEN 0 ELSE 1 END LIMIT 1 FOR UPDATE OF workspace`,
 			[resolved, owner.value]);
@@ -667,14 +693,14 @@ export async function deleteManagementWorkspace(
 			const current = mapRow(rows[0]);
 			if (current.is_default && !confirmDefaultDeletion) return 'confirmation_required';
 			const active = await transaction.unsafe<Array<{ id: string }>>(
-				`SELECT id FROM api_keys WHERE workspace_id = $1 AND status = 'active' LIMIT 1 FOR UPDATE`, [current.id]);
+				`SELECT id FROM cinatoken_gateway.api_keys WHERE workspace_id = $1 AND status = 'active' LIMIT 1 FOR UPDATE`, [current.id]);
 			if (active.length > 0) return 'active_keys';
 			const accountDefault = await transaction.unsafe<Array<{ id: string }>>(
-				`SELECT id FROM guardrails WHERE workspace_id = $1 AND is_account_default LIMIT 1 FOR UPDATE`,
+				`SELECT id FROM cinatoken_gateway.guardrails WHERE workspace_id = $1 AND is_account_default LIMIT 1 FOR UPDATE`,
 				[current.id]);
 			let accountDefaultAnchor: string | null = null;
 			if (accountDefault.length > 0) {
-				const alternative = await transaction.unsafe<Array<{ id: string }>>(`SELECT id FROM workspaces
+				const alternative = await transaction.unsafe<Array<{ id: string }>>(`SELECT id FROM cinatoken_gateway.workspaces
 					WHERE id <> $1 AND status = 'active' AND scope_type = $2
 						AND (($2 = 'personal' AND personal_owner_user_id = $3 AND organization_id IS NULL)
 							OR ($2 = 'organization' AND organization_id = $4 AND personal_owner_user_id IS NULL))
@@ -685,16 +711,16 @@ export async function deleteManagementWorkspace(
 			}
 			const key = postgresActiveManagementKeyPredicate(principal, 'management_key', 1);
 			const authorized = await transaction.unsafe<Array<{ id: string }>>(
-				`SELECT management_key.id FROM management_api_keys management_key WHERE ${key.sql} FOR UPDATE`, key.values);
+				`SELECT management_key.id FROM cinatoken_gateway.management_api_keys management_key WHERE ${key.sql} FOR UPDATE`, key.values);
 			if (authorized.length !== 1) return 'not_found';
 			if (accountDefaultAnchor) {
-				await transaction.unsafe(`UPDATE guardrails SET workspace_id = $1, updated_at = $2
+				await transaction.unsafe(`UPDATE cinatoken_gateway.guardrails SET workspace_id = $1, updated_at = $2
 					WHERE workspace_id = $3 AND is_account_default`,
 				[accountDefaultAnchor, nowIso, current.id]);
 			}
-			await transaction.unsafe(`DELETE FROM workspaces WHERE id = $1`, [current.id]);
+			await transaction.unsafe(`DELETE FROM cinatoken_gateway.workspaces WHERE id = $1`, [current.id]);
 			if (current.is_default) {
-				await transaction.unsafe(`INSERT INTO workspaces (
+				await transaction.unsafe(`INSERT INTO cinatoken_gateway.workspaces (
 					id, scope_type, organization_id, personal_owner_user_id, name, slug, description,
 					is_default, default_scope_key, status, settings_json, created_by_user_id, created_at, updated_at
 				) VALUES ($1, $2, $3, $4, $5, $6, NULL, TRUE, $1, 'archived', NULL, NULL, $7, $8)`, [
@@ -702,7 +728,7 @@ export async function deleteManagementWorkspace(
 					current.name, current.slug, current.created_at, nowIso,
 				]);
 			}
-			await transaction.unsafe(`INSERT INTO user_audit_logs (
+			await transaction.unsafe(`INSERT INTO cinatoken_gateway.user_audit_logs (
 				id, user_id, api_key_id, event_type, actor_type, change_payload,
 				source, actor_id, reason_code, reason_text, created_at
 			) VALUES ($1, $2, NULL, 'workspace_deleted', 'service', $3,
@@ -712,6 +738,9 @@ export async function deleteManagementWorkspace(
 				`service:management_key:${principal.keyId}`, nowIso,
 			]);
 			return 'deleted';
+		}).catch((error: unknown) => {
+			if (isRecoveryHistoryWorkspaceDeleteRestriction(error)) return 'recovery_history';
+			throw error;
 		});
 	}
 

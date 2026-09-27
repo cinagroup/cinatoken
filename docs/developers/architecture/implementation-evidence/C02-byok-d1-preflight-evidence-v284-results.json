@@ -1,0 +1,3209 @@
+{
+  "version": "v284",
+  "status": "READ_ONLY_PREFLIGHT_EVIDENCE_COMPONENT_LOCAL_PASS_FULL_ADMISSION_PENDING",
+  "date": "2026-09-21T07:03:36.228Z",
+  "previousEvidence": {
+    "path": "docs/developers/architecture/implementation-evidence/C02-byok-d1-source-freeze-v283-results.json",
+    "sha256": "9a74c84b816844c5f14312911d310825ac285c2b35d5ffe83bd7bdf26ce39eb8"
+  },
+  "priorArtifactsVerified": 638,
+  "priorEntireDependencyTreeRevalidated": false,
+  "unchangedMaintenanceGuardFiles": [
+    {
+      "path": "scripts/deploy/byok-d1-ingress-closure.mjs",
+      "sha256": "51224fa7c1075480ffad1db9d6581dbef1c7c40dc20f60d5b1a50efacb6e62bc"
+    },
+    {
+      "path": "scripts/deploy/byok-d1-maintenance-dispatch.mjs",
+      "sha256": "cde6e489c2ccc26aeca5e379f7a3369fc81c84064493c2941c34dbeca9aec793"
+    },
+    {
+      "path": "scripts/deploy/byok-d1-management.mjs",
+      "sha256": "0888e9c94b81e4c2fa0db5cd8d6269bce403db60886c48df5552b20ae2fbfb85"
+    },
+    {
+      "path": "scripts/deploy/byok-d1-operator.mjs",
+      "sha256": "d1f7825b5d0404ae52d3320f6a70bb081c63ed91708d510535dd4c52325e005a"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/byok-d1-cleanup.ts",
+      "sha256": "b015f0e3c6fca7412e32408e466577615c7d16364db09017446e0528c5b90847"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/byok-d1-maintenance-contract.ts",
+      "sha256": "4dfc3a8ca524f8c6e4f47d41240af0fa279220967ad67ccb9696af1f4a94bbe3"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/byok-d1-maintenance-host.ts",
+      "sha256": "962067df45d11d60ae1dbef958d697af20d1208945532e96de45abd71d8043be"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/byok-d1-maintenance-worker.ts",
+      "sha256": "d48a3ab7e37c5936e32ffa21ee13b554d1b4102cd83d5aa9039d2f6723c3347e"
+    }
+  ],
+  "historicalRuns": [
+    {
+      "path": ".wrangler/staging/byok-preflight-evidence-v284-local-first/result.json",
+      "status": "PASS",
+      "pass": 165,
+      "sourceRemapping": {
+        "scripts/deploy/byok-d1-preflight-evidence.mjs": ".wrangler/staging/byok-preflight-evidence-v284-first-source/byok-d1-preflight-evidence.mjs",
+        "scripts/deploy/byok-d1-preflight-evidence.test.mjs": ".wrangler/staging/byok-preflight-evidence-v284-first-source/byok-d1-preflight-evidence.test.mjs",
+        ".wrangler/staging/verify-byok-preflight-evidence-v284.mjs": ".wrangler/staging/byok-preflight-evidence-v284-first-source/verify-byok-preflight-evidence-v284.mjs"
+      },
+      "historicalDependencyTreeRevalidated": false
+    },
+    {
+      "path": ".wrangler/staging/byok-preflight-evidence-v284-local-final/result.json",
+      "status": "PASS",
+      "pass": 181,
+      "sourceRemapping": {
+        "scripts/deploy/byok-d1-preflight-evidence.mjs": ".wrangler/staging/byok-preflight-evidence-v284-final-source/byok-d1-preflight-evidence.mjs",
+        "scripts/deploy/byok-d1-preflight-evidence.test.mjs": ".wrangler/staging/byok-preflight-evidence-v284-final-source/byok-d1-preflight-evidence.test.mjs",
+        ".wrangler/staging/verify-byok-preflight-evidence-v284.mjs": ".wrangler/staging/byok-preflight-evidence-v284-final-source/verify-byok-preflight-evidence-v284.mjs"
+      },
+      "historicalDependencyTreeRevalidated": false
+    }
+  ],
+  "local": {
+    "path": ".wrangler/staging/byok-preflight-evidence-v284-local-verified/result.json",
+    "pass": 185,
+    "tests": [
+      {
+        "name": "component-discovery-tests",
+        "pass": 46
+      },
+      {
+        "name": "component-verified-tests",
+        "pass": 46
+      },
+      {
+        "name": "existing-paid-plan",
+        "pass": 71
+      },
+      {
+        "name": "existing-prior-code",
+        "pass": 22
+      }
+    ],
+    "sourceFiles": 443,
+    "absentConfigPaths": 270,
+    "workerDryRuns": 3,
+    "producerInputFiles": 347,
+    "syntheticGets": 19,
+    "compositeElapsedMs": 1585,
+    "peakActive": 4,
+    "journals": {
+      "parent": {
+        "records": 3,
+        "lastSha256": "bcf6c18cbaa2c8de8b72dba7b33b03d677877d6ef896529b4ba1a211895bbc99"
+      },
+      "priorCode": {
+        "records": 35,
+        "lastSha256": "47dbfb4e8639871e769012dba2d52031957f55cf0356827a89698bfefb3a5e64"
+      },
+      "paidPlan": {
+        "records": 10,
+        "lastSha256": "8243baaa64e76f6b88a6036b456a49208c037f7617f8218c83a932135789f7a8"
+      }
+    },
+    "evidenceSha256": "e8a25312afae6a37a5104a36af6b306cd8befbb1410f0d6b59174e6bbd4cb494",
+    "sourceEvidenceSha256": "f8560c13616c383345d9bab44798fda791eb6d009003554a4d642d4713ef4731",
+    "fullBusinessSuiteRerun": false,
+    "typescriptCheckRerun": false,
+    "nativeRuntimeExercised": false
+  },
+  "missing": [
+    "ALL_INVOCATION_PATHS_UNPROVEN",
+    "EXCLUSIVE_OWNERSHIP_UNPROVEN",
+    "CUMULATIVE_BUDGET_UNPROVEN",
+    "NATIVE_MAINTENANCE_TIMING_UNPROVEN"
+  ],
+  "operatorProofProviderConnected": false,
+  "fullPreflightPassed": false,
+  "allInvocationPathsInventoried": false,
+  "nativeTimingQualified": false,
+  "databaseQuiescenceProved": false,
+  "atomicSnapshot": false,
+  "realCloudCalls": 0,
+  "deployments": 0,
+  "cloudWrites": 0,
+  "sqlCalls": 0,
+  "publicWorkerCalls": 0,
+  "modelCalls": 0,
+  "kmsCalls": 0,
+  "firstRoundUsdCap": 2,
+  "capReset": false,
+  "billingUsageRefreshed": false,
+  "artifacts": [
+    {
+      "path": "docs/developers/architecture/implementation-evidence/C02-byok-d1-source-freeze-v283-results.json",
+      "sha256": "9a74c84b816844c5f14312911d310825ac285c2b35d5ffe83bd7bdf26ce39eb8"
+    },
+    {
+      "path": "docs/developers/architecture/implementation-evidence/C02-byok-d1-route-permission-v282-results.json",
+      "sha256": "2e418f93188b1ba02f8872b6222051113e0d8b553db53567faa2b253a83ae7df"
+    },
+    {
+      "path": ".wrangler/staging/probe-byok-route-permission-v282.mjs",
+      "sha256": "9b1fcb8672aeecc26f56ded88648a2faf74589b0c7829d439843129309cb0028"
+    },
+    {
+      "path": ".wrangler/staging/summarize-byok-route-permission-v282.mjs",
+      "sha256": "c6563d8f8674f17447f0765ea9e038302b3d0684630a1d58d32534fc0b851dff"
+    },
+    {
+      "path": ".wrangler/staging/byok-route-permission-v282/result.json",
+      "sha256": "725d1485cb81ed5d3ec8946079ae76c23feb17097b168406099acff12c48e064"
+    },
+    {
+      "path": ".wrangler/staging/byok-route-permission-v282/journal.jsonl",
+      "sha256": "0ac6e54655b27ac686cf7043975943aa72baee6f52195b054322381f6f401476"
+    },
+    {
+      "path": ".wrangler/staging/byok-inventory-v272-catalog-probe/result.json",
+      "sha256": "beb3aeb6e81b1b531993a6727b3650f96987e570e7768365570212046bf10cf6"
+    },
+    {
+      "path": "node_modules/cloudflare/src/resources/workers/routes.ts",
+      "sha256": "71616bebee3df4a85181e62c65966a83f39b22d0f245c2d961a2adaabafc7c2a"
+    },
+    {
+      "path": "scripts/deploy/byok-d1-ingress-closure.mjs",
+      "sha256": "51224fa7c1075480ffad1db9d6581dbef1c7c40dc20f60d5b1a50efacb6e62bc"
+    },
+    {
+      "path": "scripts/deploy/byok-d1-maintenance-dispatch.mjs",
+      "sha256": "cde6e489c2ccc26aeca5e379f7a3369fc81c84064493c2941c34dbeca9aec793"
+    },
+    {
+      "path": "scripts/deploy/byok-d1-management.mjs",
+      "sha256": "0888e9c94b81e4c2fa0db5cd8d6269bce403db60886c48df5552b20ae2fbfb85"
+    },
+    {
+      "path": "scripts/deploy/byok-d1-operator.mjs",
+      "sha256": "d1f7825b5d0404ae52d3320f6a70bb081c63ed91708d510535dd4c52325e005a"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/byok-d1-cleanup.ts",
+      "sha256": "b015f0e3c6fca7412e32408e466577615c7d16364db09017446e0528c5b90847"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/byok-d1-maintenance-contract.ts",
+      "sha256": "4dfc3a8ca524f8c6e4f47d41240af0fa279220967ad67ccb9696af1f4a94bbe3"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/byok-d1-maintenance-host.ts",
+      "sha256": "962067df45d11d60ae1dbef958d697af20d1208945532e96de45abd71d8043be"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/byok-d1-maintenance-worker.ts",
+      "sha256": "d48a3ab7e37c5936e32ffa21ee13b554d1b4102cd83d5aa9039d2f6723c3347e"
+    },
+    {
+      "path": "scripts/deploy/byok-d1-source-freeze.mjs",
+      "sha256": "2bd57d8582c8a1e313661c8ef5d0617c1bc9c0efb1d26815303c9ea2cff14f2b"
+    },
+    {
+      "path": "scripts/deploy/byok-d1-source-freeze.test.mjs",
+      "sha256": "f1f63348498f958fa72d619896c0e4054ca2e4494de52f025dfe0c07695c239e"
+    },
+    {
+      "path": ".wrangler/staging/verify-byok-source-freeze-v283.mjs",
+      "sha256": "c7274b63baf7e62e54af611b7e930f1fa743294e154cd9619d0462b7f0ab8122"
+    },
+    {
+      "path": "scripts/deploy/byok-worker-content.mjs",
+      "sha256": "e79c9831c7cb0d9afb6d54d37cbb556c5b1d2641990c47c0f672a91a08f1bdcb"
+    },
+    {
+      "path": "node_modules/drizzle-orm/entity.js",
+      "sha256": "9024b501ecb09d3e6cb8fe1d25e16533544cdf69849da846f0a149d8289f1f44"
+    },
+    {
+      "path": "node_modules/drizzle-orm/column.js",
+      "sha256": "d2d16916b18d7c912e50b1f7fa31330da3c7012ea564fd1e3e287022de3e1555"
+    },
+    {
+      "path": "node_modules/drizzle-orm/column-builder.js",
+      "sha256": "49574520e9f52b18cd4ba701995717256f0525b42542f40062cab2d8548717b4"
+    },
+    {
+      "path": "node_modules/drizzle-orm/table.utils.js",
+      "sha256": "16fea519f3f971d3a470f7f8fddb2ac1fb911cdf40e4555afed8b847bd208cd6"
+    },
+    {
+      "path": "node_modules/drizzle-orm/pg-core/foreign-keys.js",
+      "sha256": "c90c2b1056cccb7e1597b690de16e262ce3dc116dd79c83ddc660001b61769f1"
+    },
+    {
+      "path": "node_modules/drizzle-orm/tracing-utils.js",
+      "sha256": "f80fef8fba287e202eb685594ac29f9ca14f96944e7a946b718de1f9d43d2571"
+    },
+    {
+      "path": "node_modules/drizzle-orm/pg-core/unique-constraint.js",
+      "sha256": "596ca62eebcf8783dcb347a57039877402450587ad39c4adf2520fbc04f775ea"
+    },
+    {
+      "path": "node_modules/drizzle-orm/pg-core/utils/array.js",
+      "sha256": "e8946dff787f03435715873e5536b36a98ee9bab888a56118ebd922b229f30a9"
+    },
+    {
+      "path": "node_modules/drizzle-orm/pg-core/columns/common.js",
+      "sha256": "8319bdcce492572e95e5755a6a876990610508f9ec83671bd58e118f422fd050"
+    },
+    {
+      "path": "node_modules/drizzle-orm/pg-core/columns/enum.js",
+      "sha256": "046a1abbfb4340d05d0186f13f80fabdff1a343e84790993d0d3be2d8f3b7282"
+    },
+    {
+      "path": "node_modules/drizzle-orm/subquery.js",
+      "sha256": "1c5f4b67b806225e6a6f0f50fc404a573e8ceb4af0821e1fa8b624de992ef767"
+    },
+    {
+      "path": "node_modules/drizzle-orm/version.js",
+      "sha256": "81ea18344e18599a76495124ed925a2d0c8573c2d0b2262f76b055b7c6bf95a6"
+    },
+    {
+      "path": "node_modules/drizzle-orm/tracing.js",
+      "sha256": "faade73f36a14892a19145425ce6c6fff0dcbaa102b9ac72840261ea14083410"
+    },
+    {
+      "path": "node_modules/drizzle-orm/view-common.js",
+      "sha256": "e66f51090406186b15ecc1a75b519ec2629a7ce07018f432c0a1b2d4f91d343d"
+    },
+    {
+      "path": "node_modules/drizzle-orm/table.js",
+      "sha256": "a3b9b22a3ee8e9d2de5b2136c7ff0c5eed61cad2fb81e743f0d7b074077f243c"
+    },
+    {
+      "path": "node_modules/drizzle-orm/sql/sql.js",
+      "sha256": "dbabfc58b93ef1e8e57059baf6ee63df958aab5d64eaa9b84e92ff531b6100f1"
+    },
+    {
+      "path": "node_modules/drizzle-orm/alias.js",
+      "sha256": "ecda0fe78aaf2c5e312a769d37f3c3fd99ec4b3827bd4924bd4e555baa18049d"
+    },
+    {
+      "path": "node_modules/drizzle-orm/errors.js",
+      "sha256": "ca0578184ceea0af8abfc8b547a10c906e9e70d6c2d957668f12dc39ccac7144"
+    },
+    {
+      "path": "node_modules/drizzle-orm/logger.js",
+      "sha256": "64dde0d1e9b781179401e4de92ea8495c5c93e2e201c9c1d9b9b8e0025e0f465"
+    },
+    {
+      "path": "node_modules/drizzle-orm/operations.js",
+      "sha256": "01c297f0da0998e534c359bdbf8b2d4833d8779123056fcee56b22f4c645c0a3"
+    },
+    {
+      "path": "node_modules/drizzle-orm/query-promise.js",
+      "sha256": "8b16eb6e7386506587bd72be3c8535944def0b5432cef85c84f3ea488d975995"
+    },
+    {
+      "path": "node_modules/drizzle-orm/utils.js",
+      "sha256": "6363d99f639c5d7c19d4862d5126f7e9e6148fd7f226de5407e1d4fb9f2ecdae"
+    },
+    {
+      "path": "node_modules/drizzle-orm/pg-core/columns/int.common.js",
+      "sha256": "67bee8388a064321090164d98a3bcdd6bd827e8bf47751946201ba4a1d6dc446"
+    },
+    {
+      "path": "node_modules/drizzle-orm/pg-core/columns/bigint.js",
+      "sha256": "60fb4de2192bf14ef1711c931acb7df1a36694783e08ca4596bc8c2759fd72c1"
+    },
+    {
+      "path": "node_modules/drizzle-orm/pg-core/columns/bigserial.js",
+      "sha256": "59ff4f99ea12c608a0da401ccfac3d39c5f8958fa93b404397577e04209d530f"
+    },
+    {
+      "path": "node_modules/drizzle-orm/pg-core/columns/boolean.js",
+      "sha256": "aaccee7082d53a4ac26e0f69432234fb2ab3546d34f5593c13c603728ac6afb6"
+    },
+    {
+      "path": "node_modules/drizzle-orm/pg-core/columns/char.js",
+      "sha256": "e173c2a497689c7c2ce2133bb5e8cb07f1756f3ffa0652ace09686fa0c685f49"
+    },
+    {
+      "path": "node_modules/drizzle-orm/pg-core/columns/cidr.js",
+      "sha256": "7c03aae5c3463c0152aa2ae02f15dc60b7282fe12dfc9d6906220e2bbc756dbf"
+    },
+    {
+      "path": "node_modules/drizzle-orm/pg-core/columns/custom.js",
+      "sha256": "058727eb4a054d90ac8d66f7f830f456461d8ba737bfb64cde23996f7b0ffaa6"
+    },
+    {
+      "path": "node_modules/drizzle-orm/pg-core/columns/date.common.js",
+      "sha256": "f997a0cbe871cdb741339d13fbf7070ea103e533eacfadfbc0de038ed8446895"
+    },
+    {
+      "path": "node_modules/drizzle-orm/pg-core/columns/date.js",
+      "sha256": "e8ed7bc27d6b61ff92930af9f029e57605779d7da2d638297bfd87398064e386"
+    },
+    {
+      "path": "node_modules/drizzle-orm/pg-core/columns/double-precision.js",
+      "sha256": "f58e5c6b7a495776183bdf633b762289277a11d4e523a1bb5f30dc8281395878"
+    },
+    {
+      "path": "node_modules/drizzle-orm/pg-core/columns/inet.js",
+      "sha256": "44d7d45286d26502ea5e9e8822a2f4515e521bbe65fa76234d747d29fe7fe5bc"
+    },
+    {
+      "path": "node_modules/drizzle-orm/pg-core/columns/integer.js",
+      "sha256": "ff1c082e57262f77135959a8fa55f5bd92866056d5848bcc43101b91e5f86b22"
+    },
+    {
+      "path": "node_modules/drizzle-orm/pg-core/columns/interval.js",
+      "sha256": "a4f8c635e4697cdc2b31012f80adb04c797ecfbc6feb96c4238d0c0549f3bb12"
+    },
+    {
+      "path": "node_modules/drizzle-orm/pg-core/columns/json.js",
+      "sha256": "ed7629153547ad80c2e88b844b03b28215ee8fbd0752a73667ff758b0ff62d39"
+    },
+    {
+      "path": "node_modules/drizzle-orm/pg-core/columns/jsonb.js",
+      "sha256": "590456e05c6d09399cc37180fabb5651f4da38cc9f4fd56a51641153e0b1e874"
+    },
+    {
+      "path": "node_modules/drizzle-orm/pg-core/columns/line.js",
+      "sha256": "49e47514bbc8bb338ccd7cdf308100dc9c22d2a61e533e588ac3f3ce2ab5fb50"
+    },
+    {
+      "path": "node_modules/drizzle-orm/pg-core/columns/macaddr.js",
+      "sha256": "f287c6312bb61238e948b6ada2f56df9105890a5195f262fcb8b65077ac15012"
+    },
+    {
+      "path": "node_modules/drizzle-orm/pg-core/columns/macaddr8.js",
+      "sha256": "a43ae8e3120a2152bc95c3b81f3d6cc98e996844f65b4e1de76aa1b5f1c1e96c"
+    },
+    {
+      "path": "node_modules/drizzle-orm/pg-core/columns/numeric.js",
+      "sha256": "560c731f58a7c1acddb36f3bd7718ad9023172579b51d2b594df52cb02595298"
+    },
+    {
+      "path": "node_modules/drizzle-orm/pg-core/columns/point.js",
+      "sha256": "1a861ff3e2051f403fbf43869d8febdd619735a7ecb9535f6572f007b34e320a"
+    },
+    {
+      "path": "node_modules/drizzle-orm/pg-core/columns/postgis_extension/utils.js",
+      "sha256": "f39dde33f1a97bee8e6290d3244227ccf19ce903e5ac7c235e65cdadce0d1406"
+    },
+    {
+      "path": "node_modules/drizzle-orm/pg-core/columns/postgis_extension/geometry.js",
+      "sha256": "e9bd03472f32e4d301504e5437b22a632c882451a3c5a1f3ea312c259b1d13c5"
+    },
+    {
+      "path": "node_modules/drizzle-orm/pg-core/columns/real.js",
+      "sha256": "7fe40c32dba2df694700ae949f63dfdde7b1499e61d36a3d8393b3ac2003c907"
+    },
+    {
+      "path": "node_modules/drizzle-orm/pg-core/columns/serial.js",
+      "sha256": "1c1f4c9dea64218ffa165c723e1b13fcabbd8f52cb3f85451e5c07be46986758"
+    },
+    {
+      "path": "node_modules/drizzle-orm/pg-core/columns/smallint.js",
+      "sha256": "275eb5fde53d315f5d2701f0f670210d55e39a97ca758066bd4474e7e49aea8a"
+    },
+    {
+      "path": "node_modules/drizzle-orm/pg-core/columns/smallserial.js",
+      "sha256": "16798b6e420f5da517eb1b88139ca62a76a62f3c00a00358651d75143a842286"
+    },
+    {
+      "path": "node_modules/drizzle-orm/pg-core/columns/text.js",
+      "sha256": "ed80e1c9a7e9a99aebc95c0950b163b081415f96c3676e2980b890e5d55f7138"
+    },
+    {
+      "path": "node_modules/drizzle-orm/pg-core/columns/time.js",
+      "sha256": "3c269ca4f12fbaf5b4ec33cb4ff74097181c0595878a59c2226b1447d817fdd6"
+    },
+    {
+      "path": "node_modules/drizzle-orm/pg-core/columns/timestamp.js",
+      "sha256": "d903316b96274428378ee2d475171f9df2f6011cb28d8bb82c6d0a18a89ed602"
+    },
+    {
+      "path": "node_modules/drizzle-orm/pg-core/columns/uuid.js",
+      "sha256": "ad79195405958c20e72c9481d41da573c041ade74ff30acd6850f54a73005de9"
+    },
+    {
+      "path": "node_modules/drizzle-orm/pg-core/columns/varchar.js",
+      "sha256": "7ecc77a3359f14d6998efde4c1052bd292c4c864334d4d75673239cd4c9b315d"
+    },
+    {
+      "path": "node_modules/drizzle-orm/pg-core/columns/vector_extension/bit.js",
+      "sha256": "e51fb5c69429c829b5bea261afab1b15c0b9c179375e06419c911b4a9c53f82e"
+    },
+    {
+      "path": "node_modules/drizzle-orm/pg-core/columns/vector_extension/halfvec.js",
+      "sha256": "7c28d5e6bc3bd9bbc7052e6a33dac647861a96cd77bafd06352f3755cca31aed"
+    },
+    {
+      "path": "node_modules/drizzle-orm/pg-core/columns/vector_extension/sparsevec.js",
+      "sha256": "976ea3c9997fadb110762c6e51b63ec9034b8c21f33ac83272321ca82bc769d5"
+    },
+    {
+      "path": "node_modules/drizzle-orm/pg-core/columns/vector_extension/vector.js",
+      "sha256": "2ec2bae38c1a977251568082c64ae13d5256be3adbe1aa1d64965d73017d9b4b"
+    },
+    {
+      "path": "node_modules/drizzle-orm/pg-core/columns/all.js",
+      "sha256": "c8e6a672ce79663ca907c029b6882fe68ffd3aa564a77ac472fabb190ab50034"
+    },
+    {
+      "path": "node_modules/drizzle-orm/pg-core/table.js",
+      "sha256": "d4b20b49d3bd38b2301e7761a7ce2cd7c8402f5cf64fff9c5bf3392bccc25468"
+    },
+    {
+      "path": "node_modules/drizzle-orm/pg-core/primary-keys.js",
+      "sha256": "873f3ad704e8fae59f628ab85d0a68712ed98daea9dd57d601ef6dcb4981edea"
+    },
+    {
+      "path": "node_modules/drizzle-orm/sql/expressions/conditions.js",
+      "sha256": "7bea9726b54e29c157505c9cc623a5ca69bd864701ae921b1f71401714e1611e"
+    },
+    {
+      "path": "node_modules/drizzle-orm/sql/expressions/select.js",
+      "sha256": "06a473e6d0ea2e76475d7cea58d4f2014604077f22b02cc3767e63e824d72e2e"
+    },
+    {
+      "path": "node_modules/drizzle-orm/sql/expressions/index.js",
+      "sha256": "c5454ff285dc056eea04e1bcdef489b9fe92538ee2da985fbc46234bfe29c143"
+    },
+    {
+      "path": "node_modules/drizzle-orm/relations.js",
+      "sha256": "75ed22516acac6045391f18ea80e1db8bdb26b3fedb6f3913316b21809c47593"
+    },
+    {
+      "path": "node_modules/drizzle-orm/sql/functions/aggregate.js",
+      "sha256": "ca17533320571dba829867de85bb5c0c6e2dd2f04b8343d251925ee0d4291b22"
+    },
+    {
+      "path": "node_modules/drizzle-orm/sql/functions/vector.js",
+      "sha256": "5625978e037811e3c67c08640cf773eb2edafd908d37e7588b2812d8d2187667"
+    },
+    {
+      "path": "node_modules/drizzle-orm/sql/functions/index.js",
+      "sha256": "5e6a0e364a61720d288ac50031b8e629622607c0e50de329b98890ae5d8a9630"
+    },
+    {
+      "path": "node_modules/drizzle-orm/sql/index.js",
+      "sha256": "98f351b96f66d11224fcd6506e9be40155829f0afdc784a8c002de7440af120f"
+    },
+    {
+      "path": "node_modules/drizzle-orm/index.js",
+      "sha256": "82787790acc7d7e41b9afc8f0a56e0b4e4081fb9f5cc86bf4e5f62e006cac04d"
+    },
+    {
+      "path": "node_modules/drizzle-orm/pg-core/alias.js",
+      "sha256": "327aa38a6d2d6d9f8df744558111541eb147db7c29141beb2cce71be9907eceb"
+    },
+    {
+      "path": "node_modules/drizzle-orm/pg-core/checks.js",
+      "sha256": "258ffb0b9e95ee115891185f4afbcd1fd02c5a98000b3fe9bc203bc821dd7f4b"
+    },
+    {
+      "path": "node_modules/drizzle-orm/pg-core/columns/index.js",
+      "sha256": "f6d16ba0001b5322f8c16c0ad66a2e349e4ceb31d166b0d8680766d04d69d01a"
+    },
+    {
+      "path": "node_modules/drizzle-orm/selection-proxy.js",
+      "sha256": "51f2604c4e1e4b59e390b7a63af5f47ab5ce5b85764d73182090887c8e9a959b"
+    },
+    {
+      "path": "node_modules/drizzle-orm/pg-core/indexes.js",
+      "sha256": "d4b8326376b087303cbb64f266ed04b368a8b6f08f2286a917f5ad4782df2877"
+    },
+    {
+      "path": "node_modules/drizzle-orm/pg-core/policies.js",
+      "sha256": "2fb2fe0e09ea0121a3766ec8046ba91cd577a6428a0e14423c5d269d03534518"
+    },
+    {
+      "path": "node_modules/drizzle-orm/pg-core/view-common.js",
+      "sha256": "7903045e8bd8ea3b237b1a1ee1e8fa4372e2bcbd2e2def67339b4d889d40d24f"
+    },
+    {
+      "path": "node_modules/drizzle-orm/casing.js",
+      "sha256": "1e9df5391900f23d2e96e849f8935782940667e6696950736cf42d323186ac97"
+    },
+    {
+      "path": "node_modules/drizzle-orm/pg-core/view-base.js",
+      "sha256": "19ad1b63033f7ff122899c25d275f84d70f6d24406cd0f09b60bc31cc487bfc1"
+    },
+    {
+      "path": "node_modules/drizzle-orm/pg-core/dialect.js",
+      "sha256": "a7d7921c939b228a3f1295be5f024a8c264169e368f591c2d29072ffe079b14e"
+    },
+    {
+      "path": "node_modules/drizzle-orm/query-builders/query-builder.js",
+      "sha256": "8fe8f8865b59f30a2d6cd08ed40984b07f3c80783231e098d8246dd21d5b2dd7"
+    },
+    {
+      "path": "node_modules/drizzle-orm/pg-core/query-builders/select.js",
+      "sha256": "038d8f66ca94497a24a52ff0bc6f495817e3b0fa7466a2af65f881e8dbe55559"
+    },
+    {
+      "path": "node_modules/drizzle-orm/pg-core/query-builders/query-builder.js",
+      "sha256": "3b99ad37255052d289de8ac75f29be30b4670d3823c01a4d64d221e7988f32c5"
+    },
+    {
+      "path": "node_modules/drizzle-orm/pg-core/view.js",
+      "sha256": "b86ef71c7b9daa967b6dd48c5f89edf9165f195bf15a284c542e0c4fe5b59a97"
+    },
+    {
+      "path": "node_modules/drizzle-orm/pg-core/utils.js",
+      "sha256": "6fdfc1fb8b150ef2296e4c15eae2ddc35e3235890549382d1c23b6743d0bbfac"
+    },
+    {
+      "path": "node_modules/drizzle-orm/pg-core/query-builders/delete.js",
+      "sha256": "504f23ed49a160324bfef0ff96cccf47af0d5cabe004b1b29a63075b33bfcfec"
+    },
+    {
+      "path": "node_modules/drizzle-orm/pg-core/query-builders/insert.js",
+      "sha256": "b1d34b02fdfb4a9d4e051d958c52d5f505d5cd28041a45314236547acf1cc93c"
+    },
+    {
+      "path": "node_modules/drizzle-orm/pg-core/query-builders/refresh-materialized-view.js",
+      "sha256": "6c66b431d503dfee43713149158c3a9037897c1f549e8534d4dd493203592334"
+    },
+    {
+      "path": "node_modules/drizzle-orm/pg-core/query-builders/select.types.js",
+      "sha256": "b6123208b421ffb4fbd073d75f15a9cd4521bd33ee8085aa2e1a3375c14a9896"
+    },
+    {
+      "path": "node_modules/drizzle-orm/pg-core/query-builders/update.js",
+      "sha256": "08c9d567362bb86546b09fa108ae8e77038f3160a2d673c27801fde8168ef0e0"
+    },
+    {
+      "path": "node_modules/drizzle-orm/pg-core/query-builders/index.js",
+      "sha256": "f3e7ba3ee2f0e388e3f9f09a5c97a0417e0de92a29dfc7cbe35994bf19e6a139"
+    },
+    {
+      "path": "node_modules/drizzle-orm/pg-core/query-builders/count.js",
+      "sha256": "460b475f57b156f02f82388b52b844edb9e7d928fda07524c6648ac3581b5c34"
+    },
+    {
+      "path": "node_modules/drizzle-orm/pg-core/query-builders/query.js",
+      "sha256": "015202fd0c4c4a1616d68214a31c8b419ba07545a89378f72971ce922478fe64"
+    },
+    {
+      "path": "node_modules/drizzle-orm/pg-core/query-builders/raw.js",
+      "sha256": "8a138baf50d14cfdb664ade7335dcff0a962effcc19bedc2ea06fb8aa547a887"
+    },
+    {
+      "path": "node_modules/drizzle-orm/pg-core/db.js",
+      "sha256": "614b1bb0f2cfab9a3ffd841244dccfaa88a1399184afc01ba767983c604b56d1"
+    },
+    {
+      "path": "node_modules/drizzle-orm/pg-core/roles.js",
+      "sha256": "57da19732e052a7831cf42cc6e37a19939548aa61140d7cfb415cef5ffef50a5"
+    },
+    {
+      "path": "node_modules/drizzle-orm/pg-core/sequence.js",
+      "sha256": "85367b332bb9d7e6216387e9b354cd4bd5041781719707c401198df16b75681b"
+    },
+    {
+      "path": "node_modules/drizzle-orm/pg-core/schema.js",
+      "sha256": "2293bea6f11bf9feb1bc8e95453e28f0a6025a510628020fc661bd945b301446"
+    },
+    {
+      "path": "node_modules/drizzle-orm/cache/core/cache.js",
+      "sha256": "1c1e8cf571045a88ad71493ac57fc82a79b9c15b1cc644d67ac1674a0d6f3d42"
+    },
+    {
+      "path": "node_modules/drizzle-orm/pg-core/session.js",
+      "sha256": "57c3a206e679148757e97b2d41159091b4644e5c1aafdb7c01148fa4ce3b7d17"
+    },
+    {
+      "path": "node_modules/drizzle-orm/pg-core/subquery.js",
+      "sha256": "01e90bdcf2d644bac5085911f561ad936ec3afa018082cc18892d325a60748a6"
+    },
+    {
+      "path": "node_modules/drizzle-orm/pg-core/utils/index.js",
+      "sha256": "7cc7c1917e4a75de9ded23c737107da623eb85449cb15b8ec1731a6b3b3e7d68"
+    },
+    {
+      "path": "node_modules/drizzle-orm/pg-core/index.js",
+      "sha256": "7a858794d312b3f0e2c165210f428a24671a4a3a4bdbaeb16700bf6633044e2f"
+    },
+    {
+      "path": "node_modules/postgres/src/query.js",
+      "sha256": "67c45a5151032aa46b587abc15381fe4efd97c696e5c1b53082b8161309c4ee2"
+    },
+    {
+      "path": "node_modules/postgres/src/errors.js",
+      "sha256": "85cfbed9a5ab0db41ab8e97b806c881af29807dfe99bc656fdf1a18c1c13b6c6"
+    },
+    {
+      "path": "node_modules/postgres/src/types.js",
+      "sha256": "1883bd4536eab1c94b9e708d325b13708b0f18ec80020e3a825f34a72f603b81"
+    },
+    {
+      "path": "node_modules/postgres/src/result.js",
+      "sha256": "001ff5e0c8d634674f483d07fbcd620a797e3101f842d6c20ca3ace936260465"
+    },
+    {
+      "path": "node_modules/postgres/src/queue.js",
+      "sha256": "15e6345adb6708bf3b99ad39fc2231c2fb61de5f6cba4b7a7a6be881482a4ec3"
+    },
+    {
+      "path": "node_modules/postgres/src/bytes.js",
+      "sha256": "53b73b5ee2919ab5561229c62a4e2db578f63ca613b795b380c23cb684f2d514"
+    },
+    {
+      "path": "node_modules/postgres/src/connection.js",
+      "sha256": "ee3a218d9aa6a6f2887c1a19da50009335fe84c11a5431d5cab72d6bc528632f"
+    },
+    {
+      "path": "node_modules/postgres/src/subscribe.js",
+      "sha256": "5d0b1ec9705281ed4a60236fe5f65654038bae117845a71d19e35374d34c0cfa"
+    },
+    {
+      "path": "node_modules/postgres/src/large.js",
+      "sha256": "05ea787f79cefaf16310f14119fbfd36d2fed0795581b0df1b0e63b591a3ed94"
+    },
+    {
+      "path": "node_modules/postgres/src/index.js",
+      "sha256": "4e21f5733e70d79cffc10d10d4ef01031de4a9ac862210e43f8870029fd103ed"
+    },
+    {
+      "path": "node_modules/drizzle-orm/cache/core/index.js",
+      "sha256": "52ddb2c19a8e080879e471902e024e9e648cf5e9bcab5c7e3bb6641eba666827"
+    },
+    {
+      "path": "node_modules/drizzle-orm/postgres-js/session.js",
+      "sha256": "d118fa954432ca3c4554cca14f26a1049ef04939a7cc7a0b96eaee0738bf6980"
+    },
+    {
+      "path": "node_modules/drizzle-orm/postgres-js/driver.js",
+      "sha256": "7a4601128f03d54d70ce3a856bd0e24c1e2b49b5143a179a0cff1ea65d3047b6"
+    },
+    {
+      "path": "node_modules/drizzle-orm/postgres-js/index.js",
+      "sha256": "3066234a6394653038119bb4855d306a8107c55baa4bb0d12c41451df3114cf6"
+    },
+    {
+      "path": "node_modules/drizzle-orm/mysql-core/alias.js",
+      "sha256": "327aa38a6d2d6d9f8df744558111541eb147db7c29141beb2cce71be9907eceb"
+    },
+    {
+      "path": "node_modules/drizzle-orm/mysql-core/checks.js",
+      "sha256": "af28366b441ef03a97cd408236f7da77249c0dc27a8489a956a14cb8d486ab65"
+    },
+    {
+      "path": "node_modules/drizzle-orm/mysql-core/foreign-keys.js",
+      "sha256": "0c758b3e1b352bef011626e1e386f290c7248f33d152ef0c5cc8e660ad013a90"
+    },
+    {
+      "path": "node_modules/drizzle-orm/mysql-core/unique-constraint.js",
+      "sha256": "4eacae76034c8d21a34a56c6bc26aad1df3b7d3a623d4f5ca211263211d901a4"
+    },
+    {
+      "path": "node_modules/drizzle-orm/mysql-core/columns/common.js",
+      "sha256": "39038dce01368467bd8870b613b0bbcc36980ba0d5e517f73865928c7223bcc3"
+    },
+    {
+      "path": "node_modules/drizzle-orm/mysql-core/columns/bigint.js",
+      "sha256": "31140775e6836e12f360141e6e33b2c3d07045c4925db8a3a880c152c950354f"
+    },
+    {
+      "path": "node_modules/drizzle-orm/mysql-core/columns/binary.js",
+      "sha256": "17edf57c8fcebc3c8637bc8af71c4c48409e0465221b7a626f2b0e532b06d92a"
+    },
+    {
+      "path": "node_modules/drizzle-orm/mysql-core/columns/boolean.js",
+      "sha256": "761692d607a1f60a7cb79564c6e5ccaf57559d51093739e176defae9cd75a235"
+    },
+    {
+      "path": "node_modules/drizzle-orm/mysql-core/columns/char.js",
+      "sha256": "cd35a1b289fea7845d1643f5f4f43a92720c3322f1d30d2e8272552142a4b0fa"
+    },
+    {
+      "path": "node_modules/drizzle-orm/mysql-core/columns/custom.js",
+      "sha256": "cc8cbe1d1a2d842b2bd2a7bf19320b8bf7b63b3447a7e362abd007b4fcdabd53"
+    },
+    {
+      "path": "node_modules/drizzle-orm/mysql-core/columns/date.js",
+      "sha256": "dd274c9e5efeffb3b6c3795e5e6e3d720f3f347b2010a2c54c8e178e9de00de0"
+    },
+    {
+      "path": "node_modules/drizzle-orm/mysql-core/columns/datetime.js",
+      "sha256": "ead46c49d1d0228ac5174d02ccb16d475473d0c7f96ee4a5f941d9510ae808c1"
+    },
+    {
+      "path": "node_modules/drizzle-orm/mysql-core/columns/decimal.js",
+      "sha256": "65a920c98a60e7b809630c45a7a2b6b8983cb97b697e31cacbbec3542a363e3c"
+    },
+    {
+      "path": "node_modules/drizzle-orm/mysql-core/columns/double.js",
+      "sha256": "98fe950aa73536e3a213c11fe0248e63620537e40938fed805cbc9f3ad130c12"
+    },
+    {
+      "path": "node_modules/drizzle-orm/mysql-core/columns/enum.js",
+      "sha256": "247e72ac64ec4464586424bf25841076df58416e09c62e4ea2355a666cfc7a21"
+    },
+    {
+      "path": "node_modules/drizzle-orm/mysql-core/columns/float.js",
+      "sha256": "e384e6d3cd534ce437e82a5c4d4375cc5b8253149f0676f6240ddeed6d8356de"
+    },
+    {
+      "path": "node_modules/drizzle-orm/mysql-core/columns/int.js",
+      "sha256": "024868d00f47845022570114beae5caf149a5720bf023e9c55aba87639202fb0"
+    },
+    {
+      "path": "node_modules/drizzle-orm/mysql-core/columns/json.js",
+      "sha256": "f4f94c1b669251251ada13591d4ca9b02ac82d71eb4854cacbce6fabcb1ac349"
+    },
+    {
+      "path": "node_modules/drizzle-orm/mysql-core/columns/mediumint.js",
+      "sha256": "eda20ad8dc97b9faaf9c84f580818877340d9569b91e132433f2e99de9ed6243"
+    },
+    {
+      "path": "node_modules/drizzle-orm/mysql-core/columns/real.js",
+      "sha256": "5a4a05ee7cec63cebd30c9dc464a6690fb385645d148ab826d8576b0e8c9863a"
+    },
+    {
+      "path": "node_modules/drizzle-orm/mysql-core/columns/serial.js",
+      "sha256": "aa944a221260f3084be9bf2ea7b2e3ae21911c61d5e2050d793451c1cb1d44f3"
+    },
+    {
+      "path": "node_modules/drizzle-orm/mysql-core/columns/smallint.js",
+      "sha256": "cf11d08c3947b6db782ccd2d591b6e8d50b476b21fc7d45056df92de3d3f4598"
+    },
+    {
+      "path": "node_modules/drizzle-orm/mysql-core/columns/text.js",
+      "sha256": "d1eb6a6cae2a168677fcbd5ccec28a771a45c96e39696bb8aa76100d2a74ffaa"
+    },
+    {
+      "path": "node_modules/drizzle-orm/mysql-core/columns/time.js",
+      "sha256": "235d552d745401493ebf6cf1e8c897e7f235b31c248c6f1bdac8ca4cfb44a1b9"
+    },
+    {
+      "path": "node_modules/drizzle-orm/mysql-core/columns/date.common.js",
+      "sha256": "f866e650c6c8c79dc429cd86a0f7618c2cc9b40f599ffdf538f7022edf1b7a25"
+    },
+    {
+      "path": "node_modules/drizzle-orm/mysql-core/columns/timestamp.js",
+      "sha256": "152cfb6a597f725e0c33066f2e5f9bc653de9b08184058e888308e0529154105"
+    },
+    {
+      "path": "node_modules/drizzle-orm/mysql-core/columns/tinyint.js",
+      "sha256": "2da08a9a0f0b89d09f90e4e6f9bc02973da497e311b294501e71d2d87b4e0c25"
+    },
+    {
+      "path": "node_modules/drizzle-orm/mysql-core/columns/varbinary.js",
+      "sha256": "8cc2f0200e6c59c8a5a952960c1b05c77181271a43cca685d16979353912de98"
+    },
+    {
+      "path": "node_modules/drizzle-orm/mysql-core/columns/varchar.js",
+      "sha256": "72d3f91caee539b8e59a78af4032124d6dc05b59c67a699c38b3366cfcaa242e"
+    },
+    {
+      "path": "node_modules/drizzle-orm/mysql-core/columns/year.js",
+      "sha256": "0f1b640cd07abad118f47f62ab9a091b80768b16dd28d38377cf172a848f774f"
+    },
+    {
+      "path": "node_modules/drizzle-orm/mysql-core/columns/index.js",
+      "sha256": "35e432704c51dd79411fee9ef91a4657d8fb4d4167bf4f9e168d169cc9ec6326"
+    },
+    {
+      "path": "node_modules/drizzle-orm/mysql-core/query-builders/count.js",
+      "sha256": "c080c4eebefd97f894f7ed33c1aa39cadd9256096d1408bb05df701315fb31b5"
+    },
+    {
+      "path": "node_modules/drizzle-orm/mysql-core/indexes.js",
+      "sha256": "6c6afae1963b9655dcd6fb071d95c0560428d30fab56b0cec022bbc1f9da9624"
+    },
+    {
+      "path": "node_modules/drizzle-orm/mysql-core/columns/all.js",
+      "sha256": "a4a804259326bdf776d164182fcfbb4dbd4c5bd30f80ba7d8cbfae9f37c123ca"
+    },
+    {
+      "path": "node_modules/drizzle-orm/mysql-core/table.js",
+      "sha256": "1a8d516bcd084b7539025b78f8cdf087ccc5011c406861a9be1fd8c1bafba568"
+    },
+    {
+      "path": "node_modules/drizzle-orm/mysql-core/primary-keys.js",
+      "sha256": "f0782152f7a3f7c256d2e6182d8a120ddfcdae1c48885e3a3dcf563677ae9349"
+    },
+    {
+      "path": "node_modules/drizzle-orm/mysql-core/view-common.js",
+      "sha256": "8e75fdfa1131afd9c318deb1633eba231a61a8df7f2182752d4073d706384eb5"
+    },
+    {
+      "path": "node_modules/drizzle-orm/mysql-core/utils.js",
+      "sha256": "f14e7c0db262aa9b21b0288df47ad0de692d900e6b0a68d9b22be098c5971176"
+    },
+    {
+      "path": "node_modules/drizzle-orm/mysql-core/query-builders/delete.js",
+      "sha256": "0a90815528e5eb258e8b52f4fab9f058badba50079efe26f1660d81356d703ba"
+    },
+    {
+      "path": "node_modules/drizzle-orm/mysql-core/view-base.js",
+      "sha256": "6e4b099b3af37369e9d1a2c33abfd3ae7580f346b2b8c5309eee178cafe4ba0c"
+    },
+    {
+      "path": "node_modules/drizzle-orm/mysql-core/dialect.js",
+      "sha256": "986e27ed4f7b8008f50378df4ac924953d41773e53341a8bebda71b344691f26"
+    },
+    {
+      "path": "node_modules/drizzle-orm/mysql-core/query-builders/select.js",
+      "sha256": "37a0ffea98eef9d7f7bc5971ed47f504815e54898309630f6e0b33ca4f470bbe"
+    },
+    {
+      "path": "node_modules/drizzle-orm/mysql-core/query-builders/query-builder.js",
+      "sha256": "b26b144f7035b06a810fb697d1d50a166b83ca0195f4043efad8adb0fef54c28"
+    },
+    {
+      "path": "node_modules/drizzle-orm/mysql-core/query-builders/insert.js",
+      "sha256": "48bc5e797e7ef83aae341670868f224eb1a9d2e82780c590213b09d2d08b2e88"
+    },
+    {
+      "path": "node_modules/drizzle-orm/mysql-core/query-builders/select.types.js",
+      "sha256": "b6123208b421ffb4fbd073d75f15a9cd4521bd33ee8085aa2e1a3375c14a9896"
+    },
+    {
+      "path": "node_modules/drizzle-orm/mysql-core/query-builders/update.js",
+      "sha256": "0cf6330d0e6a82652a663fd026a25cd0cebc94c43b97c0ce3184f25b3cc1ecc5"
+    },
+    {
+      "path": "node_modules/drizzle-orm/mysql-core/query-builders/index.js",
+      "sha256": "9cb913c9241e187473c0c9979d545562afd473cabf3abcfcdb2009616cd08c61"
+    },
+    {
+      "path": "node_modules/drizzle-orm/mysql-core/query-builders/query.js",
+      "sha256": "0ee8f2556bdc9b45f4ac6ae0b1d462ffbe35f1a16ae0fc98ba92323e707eb72f"
+    },
+    {
+      "path": "node_modules/drizzle-orm/mysql-core/db.js",
+      "sha256": "d133f9bef85405a47fa8e7f6813b75baf5d921572ecf063844a08300167d846c"
+    },
+    {
+      "path": "node_modules/drizzle-orm/mysql-core/view.js",
+      "sha256": "840b4c2e4821590578376beeec7024e47bde91757cf479226fb7b31a8740ade3"
+    },
+    {
+      "path": "node_modules/drizzle-orm/mysql-core/schema.js",
+      "sha256": "4054a46132dd99bf8db868f26306a3a9e1a773e49175729aca7a134bca92fa5a"
+    },
+    {
+      "path": "node_modules/drizzle-orm/mysql-core/session.js",
+      "sha256": "60aba8ed329c82c787d6679b966948db72d75bae0f8ac4fb4e0285044d1e8308"
+    },
+    {
+      "path": "node_modules/drizzle-orm/mysql-core/subquery.js",
+      "sha256": "01e90bdcf2d644bac5085911f561ad936ec3afa018082cc18892d325a60748a6"
+    },
+    {
+      "path": "node_modules/drizzle-orm/mysql-core/index.js",
+      "sha256": "d58cdaf1b959e197d3131090e87ad74f1cd6115022aa66dc814401d2ac801db3"
+    },
+    {
+      "path": "node_modules/drizzle-orm/sqlite-core/foreign-keys.js",
+      "sha256": "76bb3b226d8db0af48d99a74d253aa6d63639f52148e19bbd175c9a2f295f8bc"
+    },
+    {
+      "path": "node_modules/drizzle-orm/sqlite-core/unique-constraint.js",
+      "sha256": "f6667d626a0f0625377162b160cd9b72e6bd34e2965aeef85bab182e01b4a059"
+    },
+    {
+      "path": "node_modules/drizzle-orm/sqlite-core/columns/common.js",
+      "sha256": "cb57c6e4e3409ae8c99cbd66ba8b3692ffc6351981ddca0897baccd14fa49f69"
+    },
+    {
+      "path": "node_modules/drizzle-orm/sqlite-core/columns/blob.js",
+      "sha256": "bb641100717284f0b31975ad57ab45fc5eb0e53673a8f00a48c3fe65237da3cb"
+    },
+    {
+      "path": "node_modules/drizzle-orm/sqlite-core/columns/custom.js",
+      "sha256": "f00f50f9ba6c58a751e917dc6fbadc0c4e2280e9e52c68ad0364a7031dbd8c23"
+    },
+    {
+      "path": "node_modules/drizzle-orm/sqlite-core/columns/integer.js",
+      "sha256": "806773d86d49c280e26ac85178c634acda455a13552d3b49fc538f785c76f7b1"
+    },
+    {
+      "path": "node_modules/drizzle-orm/sqlite-core/columns/numeric.js",
+      "sha256": "35064a09ecbac29bd431b0c6c3586fdcf9ab0e78e33e20ad723c1b0da165ab09"
+    },
+    {
+      "path": "node_modules/drizzle-orm/sqlite-core/columns/real.js",
+      "sha256": "b0b389f17ac3ab83ff6dd6797363cb6ae3810ffb652b3cc7f9906751d9d39d20"
+    },
+    {
+      "path": "node_modules/drizzle-orm/sqlite-core/columns/text.js",
+      "sha256": "e880c8cec0d12c2a41f74dd8c5bfcdb869a60b1ca43083fc2ccc189a58ca14db"
+    },
+    {
+      "path": "node_modules/drizzle-orm/sqlite-core/columns/all.js",
+      "sha256": "815419d6674cee7d98c97df8d705f7fb3b58cca77382ee72e400999a1705dc1d"
+    },
+    {
+      "path": "node_modules/drizzle-orm/sqlite-core/table.js",
+      "sha256": "8f60776334dc3d1aceff1d1a98e0f6210176f1cbab8afaa10c6f2a6f061776fe"
+    },
+    {
+      "path": "node_modules/drizzle-orm/sqlite-core/checks.js",
+      "sha256": "832c777bc822d6a4ce3b7e3458157d5493b3b2d2067a6d16f276247bd32d054e"
+    },
+    {
+      "path": "node_modules/drizzle-orm/sqlite-core/indexes.js",
+      "sha256": "6ff8b8ef73799bba7ebd670fd1944c887ae9851722e1a062a1264b1adcb8ce34"
+    },
+    {
+      "path": "node_modules/drizzle-orm/sqlite-core/primary-keys.js",
+      "sha256": "a7ea5e854446ec86b09d534aaed320cef9950e65922f5b8b111b7beda455188c"
+    },
+    {
+      "path": "node_modules/drizzle-orm/sqlite-core/utils.js",
+      "sha256": "31292b9b6fe2aca023e10e275ea1e328fb8c914f76a1d9930232be92e78d01e7"
+    },
+    {
+      "path": "node_modules/drizzle-orm/sqlite-core/query-builders/delete.js",
+      "sha256": "e70efcb11bea4314c0bd17f8d16039e6d8f9c4c2483b2217c2163e353309cada"
+    },
+    {
+      "path": "node_modules/drizzle-orm/sqlite-core/columns/index.js",
+      "sha256": "405dc0d2828c5b02927e1905748be8f6a632bf8cb20f110e97e222f3332e5875"
+    },
+    {
+      "path": "node_modules/drizzle-orm/sqlite-core/view-base.js",
+      "sha256": "4458c6c6cfac171cb7537d03107e7764f8b9cb31e06d8eb613ddc606735ad648"
+    },
+    {
+      "path": "node_modules/drizzle-orm/sqlite-core/dialect.js",
+      "sha256": "bdfdc50408b0b175b413692fcc49c13f9ebcffc41805b7159a9022328aee281f"
+    },
+    {
+      "path": "node_modules/drizzle-orm/sqlite-core/query-builders/select.js",
+      "sha256": "cc74843460e355dddcfb019b483e8976cbf8f86de15a222ec4265bfbd15d84a3"
+    },
+    {
+      "path": "node_modules/drizzle-orm/sqlite-core/query-builders/query-builder.js",
+      "sha256": "6f377a78788802fcacd9e61e843db3c3e8d45ae4e55fc916c29eba2b967b2afa"
+    },
+    {
+      "path": "node_modules/drizzle-orm/sqlite-core/query-builders/insert.js",
+      "sha256": "23b240bfafcaf64216e46db9f4f2d1d61478df0b6f837322b5492490c77f27d0"
+    },
+    {
+      "path": "node_modules/drizzle-orm/sqlite-core/query-builders/select.types.js",
+      "sha256": "b6123208b421ffb4fbd073d75f15a9cd4521bd33ee8085aa2e1a3375c14a9896"
+    },
+    {
+      "path": "node_modules/drizzle-orm/sqlite-core/query-builders/update.js",
+      "sha256": "70c7c363cf7da6c9a78753013c2ecbc8205adc4d695c2a8fc63c7c235af56a39"
+    },
+    {
+      "path": "node_modules/drizzle-orm/sqlite-core/query-builders/index.js",
+      "sha256": "9cb913c9241e187473c0c9979d545562afd473cabf3abcfcdb2009616cd08c61"
+    },
+    {
+      "path": "node_modules/drizzle-orm/sqlite-core/query-builders/count.js",
+      "sha256": "8e78b2f760f485c3825f712bde3f6126d65094db5964fff2d16032122ce846ae"
+    },
+    {
+      "path": "node_modules/drizzle-orm/sqlite-core/query-builders/query.js",
+      "sha256": "cbbfe37ca0bfd29b88dd7718962bad49f36e3bdf8ace68806e77b3ca7b63841f"
+    },
+    {
+      "path": "node_modules/drizzle-orm/sqlite-core/query-builders/raw.js",
+      "sha256": "d5d0bdcd4687c6bcf9b3b1e31444c4e3734556a789c30f2ed0d2085a87124e6a"
+    },
+    {
+      "path": "node_modules/drizzle-orm/sqlite-core/db.js",
+      "sha256": "d6d93a69162838fe0dd36218bdc12c0ec3e86427b89270fd5bd9f0de000c5b53"
+    },
+    {
+      "path": "node_modules/drizzle-orm/sqlite-core/alias.js",
+      "sha256": "327aa38a6d2d6d9f8df744558111541eb147db7c29141beb2cce71be9907eceb"
+    },
+    {
+      "path": "node_modules/drizzle-orm/sqlite-core/session.js",
+      "sha256": "2bee9c89e750ee2567793b23b73f2d69da61c4194d7686c9a93b20a9e12f85a9"
+    },
+    {
+      "path": "node_modules/drizzle-orm/sqlite-core/subquery.js",
+      "sha256": "01e90bdcf2d644bac5085911f561ad936ec3afa018082cc18892d325a60748a6"
+    },
+    {
+      "path": "node_modules/drizzle-orm/sqlite-core/view.js",
+      "sha256": "725770b62a5d39ef7eac097003dcddba03d5ef7599628f6e9bc5552f0a78768f"
+    },
+    {
+      "path": "node_modules/drizzle-orm/sqlite-core/index.js",
+      "sha256": "f29a30bb6dee288036cc0420dd8afd6f4899d5a32c5c32e0315e55b9e97c1c07"
+    },
+    {
+      "path": "node_modules/drizzle-orm/d1/session.js",
+      "sha256": "2c0ee59a44d772abe4a17ace3d0e49f0d3e7b67acd3b4b2aabd8f550d5dc4f96"
+    },
+    {
+      "path": "node_modules/drizzle-orm/d1/driver.js",
+      "sha256": "5f4a10f4cc340a0fe9c54a090f4661622fa55ba8ca2531b4c35cb94b4fc2580b"
+    },
+    {
+      "path": "node_modules/drizzle-orm/d1/index.js",
+      "sha256": "3066234a6394653038119bb4855d306a8107c55baa4bb0d12c41451df3114cf6"
+    },
+    {
+      "path": "node_modules/sql-escaper/lib/index.js",
+      "sha256": "957b87fb3a55b05763f28911fc878fcdb168d3d675c3b39960953e6105b18475"
+    },
+    {
+      "path": "node_modules/mysql2/lib/constants/client.js",
+      "sha256": "81148c028cc1536e8762214739a68353b1fb4ae213cdac9134f4f0d115aee818"
+    },
+    {
+      "path": "node_modules/mysql2/lib/constants/charsets.js",
+      "sha256": "752a71ac24bee3651dfad46cae49b6b6fba697f0cb2f212d6def312093a5fa0c"
+    },
+    {
+      "path": "node_modules/mysql2/package.json",
+      "sha256": "e8e8e37f24a4b7431c51f2ef9824ec0294b625d1f5c11f8326fe3f36c2c372e1"
+    },
+    {
+      "path": "node_modules/aws-ssl-profiles/lib/profiles/ca/defaults.js",
+      "sha256": "c3667ba6c7e502e2213602948d37bbbfd000aebeb88b787d7e267fd580892469"
+    },
+    {
+      "path": "node_modules/aws-ssl-profiles/lib/profiles/ca/proxies.js",
+      "sha256": "3ea4f0b5bb0b3aaf22143c6b0bc03ffea27c1e0223eb645062fab8bd402d7b18"
+    },
+    {
+      "path": "node_modules/aws-ssl-profiles/lib/index.js",
+      "sha256": "4bcda47ea0d35bec8b9e4719206661b26204a000a0d5f06a18959b85186f9430"
+    },
+    {
+      "path": "node_modules/mysql2/lib/constants/ssl_profiles.js",
+      "sha256": "5c75777072a25d6f7d8b18f438190ca41540839e12aff98fbc5c7f4386a643f1"
+    },
+    {
+      "path": "node_modules/mysql2/lib/connection_config.js",
+      "sha256": "d03578f281a8ded708da7ab81ec57c725e143b2b1444962d3c6c09c90e5ec07f"
+    },
+    {
+      "path": "node_modules/lru.min/lib/index.js",
+      "sha256": "2f822e6e9a454cc6e6e58d257cfd239d9c6be56f4c9c3ae03096a8fb93b81785"
+    },
+    {
+      "path": "node_modules/mysql2/lib/parsers/parser_cache.js",
+      "sha256": "b50ccfc6729f8b4055cb839cb072543fcfda32a0adec1073c1c837fde4b67af3"
+    },
+    {
+      "path": "node_modules/denque/index.js",
+      "sha256": "61e3335c88fa7415d0b0522ca2cbeed17b7a9b4911aa1e41d1006a2e782e553e"
+    },
+    {
+      "path": "node_modules/mysql2/lib/constants/errors.js",
+      "sha256": "4778749caf383bcdef6e45750fcc1fbe99d530806367a74c485409ce79156164"
+    },
+    {
+      "path": "node_modules/long/umd/index.js",
+      "sha256": "ea6da8d5fff04abc358b94488dbbb7eeb46e5027cc05303b1761cea94bef7821"
+    },
+    {
+      "path": "node_modules/safer-buffer/safer.js",
+      "sha256": "37f9716144105051ab302f6a0c30a52ff5de7269b9e1173ac22be798fc11ccad"
+    },
+    {
+      "path": "node_modules/iconv-lite/lib/bom-handling.js",
+      "sha256": "e4019126f7695139538bfdeb9f0c933948ddde1d91b2989fbef46bad65aed0d4"
+    },
+    {
+      "path": "node_modules/iconv-lite/lib/helpers/merge-exports.js",
+      "sha256": "040baa601833402217e617a104dd32beb27615645f6c16924596ae2d9a58e1dc"
+    },
+    {
+      "path": "node_modules/iconv-lite/encodings/internal.js",
+      "sha256": "320313a132361c02f7f033b52eb579df8799a0e1429febf56d2c374f6c7a7ff1"
+    },
+    {
+      "path": "node_modules/iconv-lite/encodings/utf32.js",
+      "sha256": "8f92ad4f3275e98176b5a7a7a2db3e99cc2930c57ce1e3d7816826d1c4e24396"
+    },
+    {
+      "path": "node_modules/iconv-lite/encodings/utf16.js",
+      "sha256": "f1307071fdc27db4bad98cb4845279880a5c5d6f28b44ddc2ec2e2f1790227ce"
+    },
+    {
+      "path": "node_modules/iconv-lite/encodings/utf7.js",
+      "sha256": "0a1ac8158e64def6a57da3bb8f158d8c1bd57f8c68eb4a232d6f101f73397fe7"
+    },
+    {
+      "path": "node_modules/iconv-lite/encodings/sbcs-codec.js",
+      "sha256": "d622479bee6d119d8df4d126f14acc2882213554ee46fbf27f2dc68970e315c7"
+    },
+    {
+      "path": "node_modules/iconv-lite/encodings/sbcs-data.js",
+      "sha256": "00885e0a6a2a199845ea9c96337d0e273bb57696abce2b4cc2de5c524dc85de8"
+    },
+    {
+      "path": "node_modules/iconv-lite/encodings/sbcs-data-generated.js",
+      "sha256": "2cf44b3f70c61c9cdd59fda7ec085bc3180809638f208c7239688ccb90a48866"
+    },
+    {
+      "path": "node_modules/iconv-lite/encodings/dbcs-codec.js",
+      "sha256": "ee0cfbf10e4dc34906bf8a4aa0aaa991f8a50ac08966eaf65a31acfc5b33b8d1"
+    },
+    {
+      "path": "node_modules/iconv-lite/encodings/tables/shiftjis.json",
+      "sha256": "02b0b120f697c48133e8b547e8dc594bc5b9f1c1799b50c2c5ff917298548558"
+    },
+    {
+      "path": "node_modules/iconv-lite/encodings/tables/eucjp.json",
+      "sha256": "7c4fe279000f7e99fc7cd59afb1da21725dcebdc1babd9e3b883253a77abb042"
+    },
+    {
+      "path": "node_modules/iconv-lite/encodings/tables/cp936.json",
+      "sha256": "8225bb693efd380279ed7280b8f8419fd069c5f018d20d5946bf187ad92c0cf7"
+    },
+    {
+      "path": "node_modules/iconv-lite/encodings/tables/gbk-added.json",
+      "sha256": "10cbb08708f3a431977271887b2663f734390a22cedf90875fac9fdbd4bb5317"
+    },
+    {
+      "path": "node_modules/iconv-lite/encodings/tables/gb18030-ranges.json",
+      "sha256": "5a3cc11e38f05a0908442acbf1c921d0b73f2a304fb6a9e4484e26eb1ca07d76"
+    },
+    {
+      "path": "node_modules/iconv-lite/encodings/tables/cp949.json",
+      "sha256": "77a56ea83d0d94d1dc620042ad3c897f0e40814bb05c0085d3aeed0018e8a3e8"
+    },
+    {
+      "path": "node_modules/iconv-lite/encodings/tables/cp950.json",
+      "sha256": "99e2114dc4b39092617967c763f9eaeb4d8e70551afc5884baa3fb92827f3420"
+    },
+    {
+      "path": "node_modules/iconv-lite/encodings/tables/big5-added.json",
+      "sha256": "db94db5e5d3ab696ddb0025685cfa85da1864839a4a26aab2f8f86f6b8382288"
+    },
+    {
+      "path": "node_modules/iconv-lite/encodings/dbcs-data.js",
+      "sha256": "17f52a22ed26a2fe1cfab8164ad07152d60e6e38087e492e85ee4aec249f1f2c"
+    },
+    {
+      "path": "node_modules/iconv-lite/encodings/index.js",
+      "sha256": "a96a42738187fbb6eed876c843c8fd88c6d88729902159a983025d7341e50abd"
+    },
+    {
+      "path": "node_modules/iconv-lite/lib/streams.js",
+      "sha256": "8c30f663ec5d7ced629d9eaa4dc427538e89574013e0cc845bf90568dda30bcb"
+    },
+    {
+      "path": "node_modules/iconv-lite/lib/index.js",
+      "sha256": "59759a24727cd37306bc039512307c8b87992568fc7a2145fcbb8a4fd404fb3c"
+    },
+    {
+      "path": "node_modules/mysql2/lib/parsers/string.js",
+      "sha256": "72d96ffca58d233ec936d29491db82c746eab32c3ea2eb46f3a43acbe293b8ee"
+    },
+    {
+      "path": "node_modules/mysql2/lib/constants/types.js",
+      "sha256": "7a0ca576c46ab457e9ccc5734c64088dbb93dfb66c3b926246150e8897866ef1"
+    },
+    {
+      "path": "node_modules/mysql2/lib/packets/packet.js",
+      "sha256": "0d96c43e8a40e81b66eedb05cffc2d79440ec4781114d1fd45e375a3c3e22172"
+    },
+    {
+      "path": "node_modules/mysql2/lib/packet_parser.js",
+      "sha256": "ceb1db3229dc07eefee45cb57761d5995fc91c7face59da3240c1ecd6f95527f"
+    },
+    {
+      "path": "node_modules/mysql2/lib/packets/auth_next_factor.js",
+      "sha256": "7e6dca0b11716cc5a1bafad62e130765d9773e22eba2a115b94a7b3f18536bc1"
+    },
+    {
+      "path": "node_modules/mysql2/lib/packets/auth_switch_request.js",
+      "sha256": "11ff290cc15f10248d99477d245d7fb59c914a4d5d4d09847d47a3ebca7e2bff"
+    },
+    {
+      "path": "node_modules/mysql2/lib/packets/auth_switch_request_more_data.js",
+      "sha256": "a0bd4ab17968b59e8f5ca7ccbb68f4a540914e21643eadf0579285bb27873252"
+    },
+    {
+      "path": "node_modules/mysql2/lib/packets/auth_switch_response.js",
+      "sha256": "017ead9282f1715db84c7782c8c709b7382773c5e87d56a64d5cc93b613fa3dc"
+    },
+    {
+      "path": "node_modules/mysql2/lib/packets/binary_row.js",
+      "sha256": "611341ab2858680427478d42210aaaa18520f13843958d86c6e60f6a992ada11"
+    },
+    {
+      "path": "node_modules/mysql2/lib/constants/commands.js",
+      "sha256": "83d752a9b848d081c07b26da27fef789f613a4da91561b0342999ff958529ea0"
+    },
+    {
+      "path": "node_modules/mysql2/lib/packets/binlog_dump.js",
+      "sha256": "b68bb8e0b187aea964da9fa6c9ee57f9515ce52b758ffbeeb44e2b98d75247d4"
+    },
+    {
+      "path": "node_modules/mysql2/lib/auth_41.js",
+      "sha256": "1e05381b2fb9a4dfaea23327f6f1deedf55d56c35ad0f4e69fd060283fd18a13"
+    },
+    {
+      "path": "node_modules/mysql2/lib/constants/charset_encodings.js",
+      "sha256": "c9e82d5315621d0fa886ca35fab31fa45a8944f25727e44141b016f6c925336f"
+    },
+    {
+      "path": "node_modules/mysql2/lib/packets/change_user.js",
+      "sha256": "b73bb89e085e7b2a0dcb7efc4c4a586a2588beeecc8ca09fc0a6b321e05768da"
+    },
+    {
+      "path": "node_modules/mysql2/lib/packets/close_statement.js",
+      "sha256": "40428bace1162612a41372ecb18d5d146ce4b38b65b46fcd2441aeddc9313a59"
+    },
+    {
+      "path": "node_modules/mysql2/lib/constants/field_flags.js",
+      "sha256": "6e10d228a15efa9c2393ee5551ef9639cb31ad211035424c0f5a5e7631419c2e"
+    },
+    {
+      "path": "node_modules/mysql2/lib/packets/column_definition.js",
+      "sha256": "d491dfa7fad8f7a9e7874c8a983dccb867fa8b2bbf01e18cf84a081528c329d8"
+    },
+    {
+      "path": "node_modules/mysql2/lib/constants/cursor.js",
+      "sha256": "440f1b182804f1b80ff749d4afd327994549524e4d98d5e1ae023829fbfd131a"
+    },
+    {
+      "path": "node_modules/mysql2/lib/packets/encode_parameter.js",
+      "sha256": "231ec02877edc0e349cf90015936f6ef827a3a1a635fb798f83cabaabf17bac2"
+    },
+    {
+      "path": "node_modules/mysql2/lib/packets/execute.js",
+      "sha256": "bb76e2e2f97da2a86b6a34192776fe67d7902fafcbaa1f407add0db764d80941"
+    },
+    {
+      "path": "node_modules/mysql2/lib/packets/handshake.js",
+      "sha256": "3fefa7e904cfe55977f14e1283af62a013eca95cf6e4160d55dbddb1bbb0c55f"
+    },
+    {
+      "path": "node_modules/mysql2/lib/packets/handshake_response.js",
+      "sha256": "690882c18407af19474179c605fd3f562845cf3b7bfb8882f4f2a73c047afade"
+    },
+    {
+      "path": "node_modules/mysql2/lib/packets/prepare_statement.js",
+      "sha256": "228bace8626d8180a755f5cf9864f9180de27760608b10518883b1ddd523dce3"
+    },
+    {
+      "path": "node_modules/mysql2/lib/packets/prepared_statement_header.js",
+      "sha256": "871f2b27e7bc56bbf887640b08398fd3b1efb8f9f8b18f39b059affb7ea33a36"
+    },
+    {
+      "path": "node_modules/mysql2/lib/packets/query.js",
+      "sha256": "cfdf1403be6bc49ec9549b79e14434d6317cd333158d9eeab12bd6df76c42739"
+    },
+    {
+      "path": "node_modules/mysql2/lib/packets/register_slave.js",
+      "sha256": "d65b79be6f13422fe1a23ccaf06816f31fce16fbb87977a363002b8ce5fe7acc"
+    },
+    {
+      "path": "node_modules/mysql2/lib/packets/reset_connection.js",
+      "sha256": "55ee07d313dbbc24a5906266c2c4867505a4c7d6c64d3081f5d6b6fd3919643e"
+    },
+    {
+      "path": "node_modules/mysql2/lib/constants/server_status.js",
+      "sha256": "85dfcaeb3c8c0a4e9188fd1f04671da9d15dbe2e0ff785ff31cb2950709f6928"
+    },
+    {
+      "path": "node_modules/mysql2/lib/constants/encoding_charset.js",
+      "sha256": "c1f433ccb07eba7bfbafc519898e8f433310abdb8698862d8ab281ee11787c9a"
+    },
+    {
+      "path": "node_modules/mysql2/lib/constants/session_track.js",
+      "sha256": "9e02bd9330245798c1e8cde4c2a44d327237d4d084195c433b4d1a389b2fb22c"
+    },
+    {
+      "path": "node_modules/mysql2/lib/packets/resultset_header.js",
+      "sha256": "96fed8b96c52eec930864e6f486767bcd38d9298c25b169ceb790f12acea55f2"
+    },
+    {
+      "path": "node_modules/mysql2/lib/packets/ssl_request.js",
+      "sha256": "946315a1bc2f196536024edc0763df4e36c4db30d63a2a4cf4f4f8fe68d4ba7d"
+    },
+    {
+      "path": "node_modules/mysql2/lib/packets/text_row.js",
+      "sha256": "b7f7047e08dcedd8247c806b444f214c42806b8f4e7b9f12f1514d5b8a1ba08f"
+    },
+    {
+      "path": "node_modules/mysql2/lib/packets/index.js",
+      "sha256": "e85731b4df15fb779fc3f5f56d06c11c59d053b43d8b0b3de1ad5be8182ba7ce"
+    },
+    {
+      "path": "node_modules/mysql2/lib/commands/command.js",
+      "sha256": "f94521022f77fce0a0af821a063bc6ca5631f975dc167ee6bd9d4994c76be338"
+    },
+    {
+      "path": "node_modules/mysql2/lib/auth_plugins/sha256_password.js",
+      "sha256": "a5c91ac46d2daf279ac1ab7db41a9c31d6250cc272501cbf9f863c9dcd415cd2"
+    },
+    {
+      "path": "node_modules/mysql2/lib/auth_plugins/caching_sha2_password.js",
+      "sha256": "97941af76f6faa981b4b5a633f9b848c6f9d51771539cd5cdc823298248d3737"
+    },
+    {
+      "path": "node_modules/mysql2/lib/auth_plugins/mysql_native_password.js",
+      "sha256": "ebc6adda94378ec13bfdaf33e5c6ea74dae7a132b6feeef35fff4f3921c3cbeb"
+    },
+    {
+      "path": "node_modules/mysql2/lib/auth_plugins/mysql_clear_password.js",
+      "sha256": "e1d69443ec68e689bfd75c86a81a556d64413c85421b5ea8928cd918adea9d70"
+    },
+    {
+      "path": "node_modules/mysql2/lib/commands/auth_switch.js",
+      "sha256": "d57bf0b39f91493f9ed33f0f44b2bca0e38dba47338e8ceac2d9784afb6c0391"
+    },
+    {
+      "path": "node_modules/mysql2/lib/compressed_protocol.js",
+      "sha256": "dfcad486f34af09b9e552ecb1fe2f068932b625f74f0e1571a0d3c9ab8e84e01"
+    },
+    {
+      "path": "node_modules/mysql2/lib/commands/client_handshake.js",
+      "sha256": "04f4f67ea87f31eef91284715614f993ee6660485f4f926208e1d3daa36fb6c1"
+    },
+    {
+      "path": "node_modules/mysql2/lib/commands/server_handshake.js",
+      "sha256": "bf12455d53e800365b238f3882644ab5625f3cbda38e15f889f6833204a7ddd1"
+    },
+    {
+      "path": "node_modules/mysql2/lib/helpers.js",
+      "sha256": "cf6788ea02251d9280017073b8a67edd4db9609d6c0a3a36a3a2032c86c568b0"
+    },
+    {
+      "path": "node_modules/is-property/is-property.js",
+      "sha256": "4c6963cce2dc8f5fde0693a7a4f93c2d85aae03d4a21ba28388a236ecd1a51b3"
+    },
+    {
+      "path": "node_modules/generate-function/index.js",
+      "sha256": "aa1a9d1f0a4911573768a56ed889e251d2860165894134f097fd49650c490cfd"
+    },
+    {
+      "path": "node_modules/mysql2/lib/parsers/text_parser.js",
+      "sha256": "fdc3ae1f6bb77814401103f15ee446591ad54b5e04942491c76d69444ec64f9a"
+    },
+    {
+      "path": "node_modules/mysql2/lib/parsers/static_text_parser.js",
+      "sha256": "c04e6add9c8824b875ee73c1618681e5aa56ddacc7da9149fc54bee4f2a0480f"
+    },
+    {
+      "path": "node_modules/mysql2/lib/commands/query.js",
+      "sha256": "a31877d278719bfe28c9edb89abec27f218ca7d9ed7a820d79afc68819ff5ea5"
+    },
+    {
+      "path": "node_modules/mysql2/lib/commands/close_statement.js",
+      "sha256": "89448de135b2ba1f9e341599e0395c104da44f7d397f475d95f024a05928d0bd"
+    },
+    {
+      "path": "node_modules/mysql2/lib/parsers/binary_parser.js",
+      "sha256": "62a7c90ba9af2b04a86185b605334542f1f0ece8c59785098520d68f40acf122"
+    },
+    {
+      "path": "node_modules/mysql2/lib/parsers/static_binary_parser.js",
+      "sha256": "75645e75fe622b5504cf312d4c93ad3ebfd61f0315e65a46712e81943345641e"
+    },
+    {
+      "path": "node_modules/mysql2/lib/commands/execute.js",
+      "sha256": "2c7750801bdaa530aca2fe33408750acf5d74d06339d28b657110c24d8de49a2"
+    },
+    {
+      "path": "node_modules/mysql2/lib/commands/prepare.js",
+      "sha256": "f8f8f95787de59c4627ccb0b687c9cc46050ca38e5c037fd6ca6cfa5f2677da4"
+    },
+    {
+      "path": "node_modules/mysql2/lib/commands/ping.js",
+      "sha256": "3ae71094a7fd1961bfa4832f2bfeca623591fa28d1dfdc5372f701e0ace520e9"
+    },
+    {
+      "path": "node_modules/mysql2/lib/commands/register_slave.js",
+      "sha256": "acf6345d7b5cfe356589f47d40eca41164adedf6475463977f6edcb89d163763"
+    },
+    {
+      "path": "node_modules/mysql2/lib/packets/binlog_query_statusvars.js",
+      "sha256": "00b38759d5e9d7b2bc11e8a583f9268b85e0397cab7aa738522bb482ffeedf2e"
+    },
+    {
+      "path": "node_modules/mysql2/lib/commands/binlog_dump.js",
+      "sha256": "4d8801166fe724dec47a5811fe9b0f43e83e28fc4a9d3844ea18322a0175a34b"
+    },
+    {
+      "path": "node_modules/mysql2/lib/commands/change_user.js",
+      "sha256": "3a8b3db6821b61ea0134e78bd2795c66d788aae5cb638d67b78a4c821bc7fb6e"
+    },
+    {
+      "path": "node_modules/mysql2/lib/commands/reset_connection.js",
+      "sha256": "8a72d74a9296019e2c5a7389e5e3a71fc5047780d40241d9467fceac75e994d6"
+    },
+    {
+      "path": "node_modules/mysql2/lib/commands/quit.js",
+      "sha256": "d2087f7bcd21a46bfac2baa81a1688e51312503794062c89d077f3365080bcac"
+    },
+    {
+      "path": "node_modules/mysql2/lib/commands/index.js",
+      "sha256": "b2c8953aa342ea6528d7ed37d81b5cd0de6bcb91081d3e5e4edea683e1584893"
+    },
+    {
+      "path": "node_modules/mysql2/lib/tracing.js",
+      "sha256": "f2f80ebe063e71058ee81b9482a83d7c51407aeeaee2af71c44a76e413d13acd"
+    },
+    {
+      "path": "node_modules/named-placeholders/index.js",
+      "sha256": "321429a6343d1ae21a5366312bb6acaed313848c77534e9a3b4f17418347cc68"
+    },
+    {
+      "path": "node_modules/mysql2/lib/base/connection.js",
+      "sha256": "e7cceba9a9f2edf2b2734369052c6e800191b2177d03efa33ef39e67c3f9f718"
+    },
+    {
+      "path": "node_modules/mysql2/lib/promise/make_done_cb.js",
+      "sha256": "e082b2dcac9a839c9076f126de877513ecca31ee6147e72598b20ffc7d1e144d"
+    },
+    {
+      "path": "node_modules/mysql2/lib/promise/prepared_statement_info.js",
+      "sha256": "674b807ec7beb5137d86ec126f419dd70dda07a64e835bd4230b5aaa6728b7f6"
+    },
+    {
+      "path": "node_modules/mysql2/lib/promise/inherit_events.js",
+      "sha256": "6c989ec632c554165182a737c8096a565133da6ab2504a9c22a67e75c6508762"
+    },
+    {
+      "path": "node_modules/mysql2/lib/promise/connection.js",
+      "sha256": "caec651ad17afc7fa4d388214f94e51f61899af20a5bbdb5835739458d617130"
+    },
+    {
+      "path": "node_modules/mysql2/lib/connection.js",
+      "sha256": "3282d2cb7af3032699ff7690c2451cd92d34871421bb8f53af17f553056b9b6a"
+    },
+    {
+      "path": "node_modules/mysql2/lib/create_connection.js",
+      "sha256": "ac6e22b1f9952a15038802598f2d58ac4b45789e168d295b6bf58f1fe8ea710b"
+    },
+    {
+      "path": "node_modules/mysql2/lib/promise/pool_connection.js",
+      "sha256": "a001cca337a8af6433c7b0f5d4b0d725a7db728d523472ab60c7351adf0a2d0d"
+    },
+    {
+      "path": "node_modules/mysql2/lib/pool_connection.js",
+      "sha256": "be6309630e898a8bc1d8d013799a4510735b9a0b8324b72921de277f6e42473b"
+    },
+    {
+      "path": "node_modules/mysql2/lib/base/pool.js",
+      "sha256": "7f9174da55aac60d2c058384afb863ebf14d5895c7edb0aba9fcd6a27ec525da"
+    },
+    {
+      "path": "node_modules/mysql2/lib/promise/pool.js",
+      "sha256": "720fe4ecf532bdf71adaf2b3dea1dd41ebcd85e2515d7027c11fd3dcdca966e2"
+    },
+    {
+      "path": "node_modules/mysql2/lib/pool.js",
+      "sha256": "38e5b2eb0dbbe491c5f5b8fc90e7db14bbc4eb13d5b1d725ba0da1efe6f8ef17"
+    },
+    {
+      "path": "node_modules/mysql2/lib/pool_config.js",
+      "sha256": "a2535b84cfa95fd93bbfd981cfd0141dae8437faa9965ad70db10c7ae2922f03"
+    },
+    {
+      "path": "node_modules/mysql2/lib/pool_cluster.js",
+      "sha256": "4e38755e60ce341f987d0e732dc0635d363203321a3d35c25555a0c679dd30e9"
+    },
+    {
+      "path": "node_modules/mysql2/lib/create_pool.js",
+      "sha256": "55cd1b7a5a9e70b2d14cd0dbb2e607ee109e2e25e421154b734803e5b4c2eda7"
+    },
+    {
+      "path": "node_modules/mysql2/lib/create_pool_cluster.js",
+      "sha256": "49bc050d0756c0b2e8aab7bc2f0b0bd99f9da69cefdd0cf35b55e7fdf9882d95"
+    },
+    {
+      "path": "node_modules/mysql2/lib/server.js",
+      "sha256": "3c0201ade466e78ff5cc457a5bbce20ba95c4650f63f63ec81740a8e3e580738"
+    },
+    {
+      "path": "node_modules/mysql2/lib/auth_plugins/index.js",
+      "sha256": "bab3ab9abb7fc833671eeb4d712e2d76028d29ebcbeb7b90def2b9b91651641e"
+    },
+    {
+      "path": "node_modules/mysql2/lib/promise/pool_cluster.js",
+      "sha256": "21a1b12860b91188025e2bbced65281a2c197bb3a75f118ddc55723447476bf6"
+    },
+    {
+      "path": "node_modules/mysql2/promise.js",
+      "sha256": "4abb3bd3eee5335a0a2ca9109092b4e43ccf06566b8ffeced81fa15c456ad866"
+    },
+    {
+      "path": "node_modules/mysql2/index.js",
+      "sha256": "747cc233b0b1c996068f016fadc93fc37361893975736face7d8e29449edc23c"
+    },
+    {
+      "path": "node_modules/drizzle-orm/mysql2/session.js",
+      "sha256": "f02ee630806edb530a87c9cbec5a906b0970e52e81eddd95827fccee6e9ea794"
+    },
+    {
+      "path": "node_modules/drizzle-orm/mysql2/driver.js",
+      "sha256": "d7d48676ea1b10fee4b0b22f034d2e12974037a7217e4af0d7eef643deea9199"
+    },
+    {
+      "path": "node_modules/drizzle-orm/mysql2/index.js",
+      "sha256": "3066234a6394653038119bb4855d306a8107c55baa4bb0d12c41451df3114cf6"
+    },
+    {
+      "path": "packages/core/dist/index.js",
+      "sha256": "9f585cda9e7266c78dcc15f5f8157c4467a3caeaf6f67ac0baa8b8f3d06e1bc8"
+    },
+    {
+      "path": "scripts/deploy/staging-image-success-fixture.mjs",
+      "sha256": "3e33b6541530ea743319295b8a7a3510754acfb392f0f3f74de438f64ace39f9"
+    },
+    {
+      "path": "scripts/deploy/staging-image-sse-fixture.mjs",
+      "sha256": "fe8ed2e91fd07ef684aa847241bb07c1aa96fb40346d1cfe6b75252d3ed92853"
+    },
+    {
+      "path": "scripts/deploy/staging-sse-reconciliation.mjs",
+      "sha256": "5e68550edb90cba9a7a11a8faec5f485a3c205cdc442a7c422ec2fa92946f33a"
+    },
+    {
+      "path": "scripts/deploy/staging-sse-recovery-access.mjs",
+      "sha256": "078118f8b2d3349c533f18ddf0de39116895d5fc669facd93095f1e8dbe7f26a"
+    },
+    {
+      "path": "scripts/deploy/staging-sse-operator-plan.mjs",
+      "sha256": "e838914e6e0ec35856dc2b817f78b38b565949e99e14546bdd716ad96a2a7c7f"
+    },
+    {
+      "path": "scripts/deploy/staging-sse-recovery-access-v2.mjs",
+      "sha256": "8d13675c18b9aad8e69073658a7a414d2d60d94cbf86ddcc00a6af8e9f1258e4"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/byok-d1-install-contract.ts",
+      "sha256": "a7b3b135ee01d4efe848d4cb3f72cafb0b2523c44ee429f681b4b87b84f9b368"
+    },
+    {
+      "path": "scripts/deploy/byok-d1-deployment.mjs",
+      "sha256": "43ab62cba7cc3616e5e320588de0436608f2ab43d2f6059f9f36cfe41feaed0c"
+    },
+    {
+      "path": ".wrangler/staging/byok-source-freeze-v283-local-final/result.json",
+      "sha256": "eda49ad4b2b6642d9bae4ccc23581fc98be40b8070890f5ac33ed6fbf9bebe1b"
+    },
+    {
+      "path": ".wrangler/staging/byok-source-freeze-v283-local-final/source-snapshot.json",
+      "sha256": "58f863eed5b7921c88e5f4bfa376bf51918af8c7d19f3d9448c41a01f95bc59f"
+    },
+    {
+      "path": "node_modules/.pnpm/@esbuild+win32-x64@0.28.1/node_modules/@esbuild/win32-x64/esbuild.exe",
+      "sha256": "ec02ee9b14ab332416fedd10614dfb80eed5304d94f67745067c011934a8c3c3"
+    },
+    {
+      "path": "node_modules/.pnpm/@esbuild+win32-x64@0.28.1/node_modules/@esbuild/win32-x64/package.json",
+      "sha256": "4a63b84fa1059fef348e29e3a39c26168213bb7f0aa1ac0174e439cc1e62a9f8"
+    },
+    {
+      "path": "node_modules/.pnpm/esbuild@0.28.1/node_modules/esbuild/bin/esbuild",
+      "sha256": "fe9a7b65a540d8df1a0f59941d52e7c1260c36fed9a2af3dd966f15381b6eb76"
+    },
+    {
+      "path": "node_modules/.pnpm/esbuild@0.28.1/node_modules/esbuild/lib/main.js",
+      "sha256": "8331fe1d8b3a07381f33cc425fcfaa94776e263113653f80ec3ba433e9657e73"
+    },
+    {
+      "path": "node_modules/.pnpm/esbuild@0.28.1/node_modules/esbuild/package.json",
+      "sha256": "d55d1d19fcc5b6079e4a71dd4111340c79c682bc36835ac7058a0c364c7db58a"
+    },
+    {
+      "path": "node_modules/@esbuild/win32-x64/esbuild.exe",
+      "sha256": "f0dd2091eaf58d11b96c64e0c4516f8ecf94486a28d2a8e7a968bd6770db3ffe"
+    },
+    {
+      "path": "node_modules/@esbuild/win32-x64/package.json",
+      "sha256": "fba0a44e5f43b9175c4e538d7c6a9791430aaa61756aa082c9ddbe0cf36fa69e"
+    },
+    {
+      "path": "node_modules/aws-ssl-profiles/package.json",
+      "sha256": "dd350d0071d35ec3e585cfef9afefb5342f7de13ebe22209110df2fbf77ff726"
+    },
+    {
+      "path": "node_modules/denque/package.json",
+      "sha256": "b84d3e7e26500d9a9ebbe103b627bda007049fa7f0672ceae96533992cc2fc9c"
+    },
+    {
+      "path": "node_modules/drizzle-orm/package.json",
+      "sha256": "9fd30ce718965c19178ac6936462b77017f1fffe56865124d0cfe55850de09ff"
+    },
+    {
+      "path": "node_modules/esbuild/bin/esbuild",
+      "sha256": "866bf9803dd390ca24f96c02e58850a0649e9b52b36029045835044e7c364fe2"
+    },
+    {
+      "path": "node_modules/esbuild/lib/main.js",
+      "sha256": "b090fe57c79c677256a242703ea07bb2191eced357bece2f9a25539443da070c"
+    },
+    {
+      "path": "node_modules/esbuild/package.json",
+      "sha256": "24655ca1d9c91fe7517a99ec27bf1125b46efae71b54a55125d2a930b6ad61f9"
+    },
+    {
+      "path": "node_modules/generate-function/package.json",
+      "sha256": "1726f2afc0c63cf76c6476efd8d2f581c238274dab10bc99137ca5bcde22747b"
+    },
+    {
+      "path": "node_modules/iconv-lite/package.json",
+      "sha256": "6b82b2d7c3b90ebb2412fb135bc65ef1466c433eec92115b0336db4d61c11bd2"
+    },
+    {
+      "path": "node_modules/is-property/package.json",
+      "sha256": "333f5b8f801c13729b10aa319d5ef3341183ea6966d1b6191c2ae24a50eada22"
+    },
+    {
+      "path": "node_modules/long/package.json",
+      "sha256": "982e554a35d140981c7962fbba77855563e5890de200f8dc0a249135e4d9acb8"
+    },
+    {
+      "path": "node_modules/long/umd/package.json",
+      "sha256": "8005a3491db7d92f36ac66369861589f9c47123d3a7c71e643fc2c06168cd45a"
+    },
+    {
+      "path": "node_modules/lru.min/package.json",
+      "sha256": "743873e9c3512ffe64290cd111e9e24b48549525f212d95ad1742ae4d176e080"
+    },
+    {
+      "path": "node_modules/named-placeholders/package.json",
+      "sha256": "0b44a6c87dc2784ab7f3ad4ab5af2cd6a3a46128182cdf0fdc3b930175e14004"
+    },
+    {
+      "path": "node_modules/postgres/cf/polyfills.js",
+      "sha256": "c9bfd7d57f1402676a42c8b6a49386ca18f95ccc687fdaad625f3a3fc7ba3f81"
+    },
+    {
+      "path": "node_modules/postgres/cf/src/bytes.js",
+      "sha256": "368a278367814e80f7ae816e01e202279f3ce38347f2ac465b562ebeb61d84ca"
+    },
+    {
+      "path": "node_modules/postgres/cf/src/connection.js",
+      "sha256": "3efad812b825f76708f2e62e8dd00088900206e04afed2dc4b75b9aecd435fa9"
+    },
+    {
+      "path": "node_modules/postgres/cf/src/errors.js",
+      "sha256": "85cfbed9a5ab0db41ab8e97b806c881af29807dfe99bc656fdf1a18c1c13b6c6"
+    },
+    {
+      "path": "node_modules/postgres/cf/src/index.js",
+      "sha256": "aca9c247b7ddb2aedf90d20ce8e6f52ac6ebd95865056599ca05ed4dab4baad7"
+    },
+    {
+      "path": "node_modules/postgres/cf/src/large.js",
+      "sha256": "b02b13cf2b5d435368c7d61989af1692a9965b6edf9b60e1d0bc320ac42f48df"
+    },
+    {
+      "path": "node_modules/postgres/cf/src/query.js",
+      "sha256": "67c45a5151032aa46b587abc15381fe4efd97c696e5c1b53082b8161309c4ee2"
+    },
+    {
+      "path": "node_modules/postgres/cf/src/queue.js",
+      "sha256": "15e6345adb6708bf3b99ad39fc2231c2fb61de5f6cba4b7a7a6be881482a4ec3"
+    },
+    {
+      "path": "node_modules/postgres/cf/src/result.js",
+      "sha256": "001ff5e0c8d634674f483d07fbcd620a797e3101f842d6c20ca3ace936260465"
+    },
+    {
+      "path": "node_modules/postgres/cf/src/subscribe.js",
+      "sha256": "9ce6fd98780e0adff813d13cc03951e5b1c66d602637beb6f9494c40e7b9212e"
+    },
+    {
+      "path": "node_modules/postgres/cf/src/types.js",
+      "sha256": "e6c9e8f43272ae853944613560e5eabb15955fd8b2981749e7fa1c9015f370db"
+    },
+    {
+      "path": "node_modules/postgres/package.json",
+      "sha256": "944d492614959389a5739ef2893bc1830fb773ff042159d9b331d43b2f6792e9"
+    },
+    {
+      "path": "node_modules/safer-buffer/package.json",
+      "sha256": "4247a3a63c45a6a7ced1557fe4dd9d2a163af4915d594b95e5867b69a53edb52"
+    },
+    {
+      "path": "node_modules/sql-escaper/package.json",
+      "sha256": "56fb2712fac941fa21b1e6dbc59ff0190a31af97b99da5755695c5d4930691e2"
+    },
+    {
+      "path": "node_modules/wrangler/bin/wrangler.js",
+      "sha256": "780661a508810f3b65786895b1ca9aacbc4f55d329ae6b8c1e49ec8433569f77"
+    },
+    {
+      "path": "node_modules/wrangler/config-schema.json",
+      "sha256": "e42dc556dcb039aa1103d4811b1f58497e2676aceee20488d9ceb1d8ab712018"
+    },
+    {
+      "path": "node_modules/wrangler/package.json",
+      "sha256": "5d6bc5d81260d127d676dd67432927291084172bf2f17d16145fe0796f9fc65a"
+    },
+    {
+      "path": "node_modules/wrangler/wrangler-dist/cli.js",
+      "sha256": "ba531de00d3c21615f3d523df4e83a94d487de68d77225aa703463b6a2979406"
+    },
+    {
+      "path": "package-lock.json",
+      "sha256": "9adebfebdb981bd51aac7644fb046d0a4f0e2a4586cf8b3786cefa097a1a415e"
+    },
+    {
+      "path": "package.json",
+      "sha256": "e5e720d0757d3904c887d72911cdae48010fc4e0c2e103f99b0d25a0f18f4637"
+    },
+    {
+      "path": "packages/core/package.json",
+      "sha256": "b9cbde48c8b70ff1e95db5a9dc772c366c16a218851f5e61b946f9a1ee24fbbb"
+    },
+    {
+      "path": "packages/core/src/db/byok-keys-types.ts",
+      "sha256": "122d98b97bd4c1703ab4e1354b6b29c2fc393d21a609b37fdaf55ea3a99c1f9f"
+    },
+    {
+      "path": "packages/core/src/db/management-api-keys-types.ts",
+      "sha256": "11781796e3ecc12327e34000e2258807e45d452013047da7783862f3e0b54f07"
+    },
+    {
+      "path": "packages/core/src/db/mysql/mysql2-compat.ts",
+      "sha256": "bd4c31031b2c3b6126442250e16d951cf48d189ad52700eec639791d7f8e4d3e"
+    },
+    {
+      "path": "packages/core/src/lib/shared-key-encryption.ts",
+      "sha256": "e1f9992fcc4cebd45bb7d574359354518942c76aa25547db8ca022ff005afcc2"
+    },
+    {
+      "path": "packages/core/src/preparation-control.ts",
+      "sha256": "06ccde2cefc43c06d211ff87613567917ee19d93eb8eb8593f38c39d20233f08"
+    },
+    {
+      "path": "packages/core/src/storage/byok-keys.ts",
+      "sha256": "17b973d4393818ca4b77209ea5a201303d55b3f94bbbc3118da46a6f9d92da10"
+    },
+    {
+      "path": "packages/core/src/storage/database-client.ts",
+      "sha256": "8b4f5abeec30c82215ab99e319e10e52e9cca99c70ca85ef08a97ed47f1c8881"
+    },
+    {
+      "path": "packages/core/src/storage/drizzle/client-d1.ts",
+      "sha256": "3f44525de77b026f42cf3651399f6247265cd5e55d74999f1c71e1cb58b9d567"
+    },
+    {
+      "path": "packages/core/src/storage/drizzle/client-mysql.ts",
+      "sha256": "1300ba0de3706f2836a11fb55c2a7898a66459fd83e2d56d5dfe6c8f9cc69845"
+    },
+    {
+      "path": "packages/core/src/storage/drizzle/client-postgres.ts",
+      "sha256": "8178fb1145d0492b9b962b1b14570da4d37ec69160dc06fd23c171958b4e661b"
+    },
+    {
+      "path": "packages/core/src/storage/drizzle/schema.d1.ts",
+      "sha256": "bdca6d6f0dc1a42c0839b2322727f8d2be566486a3722ee29c5bb282cbbd4139"
+    },
+    {
+      "path": "packages/core/src/storage/drizzle/schema.mysql.ts",
+      "sha256": "1199c7a58b4f8fec41f272ef08edcf8b778fe5db04e307355660e277ec75d4d2"
+    },
+    {
+      "path": "packages/core/src/storage/drizzle/schema.pg.ts",
+      "sha256": "e8be18b8b6a540f9b7960e42db37c2787f2ad6d71a4cc74a910f0798635cf8bc"
+    },
+    {
+      "path": "packages/core/src/storage/postgres-connection-error.ts",
+      "sha256": "d5faa1cc69a40411d0cd383cfe2f328d528ee4a5329018ece9dec63f418e0b76"
+    },
+    {
+      "path": "packages/core/src/storage/postgres-initialization.ts",
+      "sha256": "1bdb2198b428e5c68e65eae59689db18b9e1596efb004726dd4cc943940c1802"
+    },
+    {
+      "path": "packages/core/tsconfig.json",
+      "sha256": "351401e898e919a811ab9e3b0b678e60e49ead3459b18785b171723025781a0b"
+    },
+    {
+      "path": "packages/proxy/package.json",
+      "sha256": "cc8b6750ee1aa27f778b8916ccba098df1d0d5b7992e062d2c3d389fb78e11ae"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/byok-d1-acceptance.ts",
+      "sha256": "95f82225bfa0bf22aac90dd6a2dc712966b05eca8d31e9a18882738405e8b967"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/byok-d1-cleanup-ownership.ts",
+      "sha256": "fd483f018e9a6c54dda719438bd852f760bb7ba6f76e19c9a6038b32ad300b7d"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/byok-d1-gateway-worker.ts",
+      "sha256": "ee4abb181d6462baa7af704e79c7f90179383f46af3b0a1f887eb132f8030a62"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/byok-d1-gateway.ts",
+      "sha256": "d16230d9df678446ee604b456706a89aa313c921fe414c377d69365cfc733241"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/byok-d1-guard.ts",
+      "sha256": "af515abe855ae85d04cfa758aae73e7cbf2e69052ec287495369499e9a30df38"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/byok-d1-install.ts",
+      "sha256": "88a77c3d5aa1f86c078bb4be92b456f002d07ec452d6a4cedab2a261c0be70f3"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/byok-d1-maintenance-control-worker.ts",
+      "sha256": "d5ecd6e39088d0bba7772d3e69473b5fedf3e70aa502d161b6e6dac1cc69c6c1"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/byok-d1-maintenance-control.ts",
+      "sha256": "e4d735890e53f9ffad47de41cb070441f6aeab3d98ad835eaa1ca9dabb34cac7"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/byok-d1-one-shot.ts",
+      "sha256": "9249a633adb3bc2000c9a358c8b073952abb3c50a430117e9c618cede76091a8"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/byok-d1-write-fence.ts",
+      "sha256": "fe7fdf079a308a2e1284667fb9962615afa6d2d08e998d41e151914cc0ec1eb4"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/tsconfig.json",
+      "sha256": "7822fb2eefd36af2218cabb11893a00d70d6fd98d6a8ba03f100d6e5fe438ed9"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/wrangler.byok-d1-gateway.jsonc",
+      "sha256": "8e2009467b4b4025ba49ff9d8985f333041994c0c3323b2930de6a250b6470db"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/wrangler.byok-d1-maintenance-control.jsonc",
+      "sha256": "ddeb344ed44275e7a7d6a9123b45bc5c2b400357d16c5808c69af340ba808923"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/wrangler.byok-d1-maintenance.jsonc",
+      "sha256": "2817827dcddfc2b4d44a4c6d458c76b696132a603f755d24482b5fc89bf9db26"
+    },
+    {
+      "path": "packages/proxy/src/runtime/usage-recovery-control.ts",
+      "sha256": "f5bdae32073d06c8f44ef69a3fa548149a2349de1366ce9debb33ac2bcf51737"
+    },
+    {
+      "path": "packages/proxy/tsconfig.json",
+      "sha256": "17a7ba9ad8f962b2998aed42dc73e5ad1584b379d3035a694e8a3b3fb10c1064"
+    },
+    {
+      "path": "pnpm-lock.yaml",
+      "sha256": "65f935a4073ba42316da815df828c59e6626cbbe9cb14e7ae65cf7d8f273fb08"
+    },
+    {
+      "path": "scripts/deploy/byok-d1-access.mjs",
+      "sha256": "11423f4351f011b2ca0c75f57b384ee61c49aa462c6068eaceb8a966e2458c70"
+    },
+    {
+      "path": "scripts/deploy/byok-d1-case-dispatch.mjs",
+      "sha256": "6f9b101dec58c7576a1f1bc5d7dc8386faa9d1db5d689d8f005b411c96d50ce1"
+    },
+    {
+      "path": "scripts/deploy/byok-d1-deployment.test.mjs",
+      "sha256": "5b5f4313e05236c346bdaa382f3f6a489e913b7b58e2e4d8e4a8b408a405d63f"
+    },
+    {
+      "path": "scripts/deploy/byok-d1-install-dispatch.mjs",
+      "sha256": "8cb4d1eecbdb24c9e3f2dbdac9d321be7ba689e779a08626881d2e2865a7b7d8"
+    },
+    {
+      "path": "scripts/deploy/byok-d1-operator-journal.mjs",
+      "sha256": "78d4d772f3e2b603951c599cff2f93c8299de5014cc8f60306f986bf9a9c89e3"
+    },
+    {
+      "path": "scripts/deploy/byok-d1-operator.test.mjs",
+      "sha256": "f9517208ff8e02522c2dafa4f6cc795eeb32298bbda68937927d0572466d58b4"
+    },
+    {
+      "path": "scripts/deploy/byok-d1-read-transport.mjs",
+      "sha256": "3b2cca95da882d47848b8951e54c760f6ea1f686ef43312860913cee94881388"
+    },
+    {
+      "path": "scripts/deploy/staging-sse-operator-clock.mjs",
+      "sha256": "bc7bf73ebf46e31e776b51ddbce5ada7424f17d37adcb101918bcc7ade8c789c"
+    },
+    {
+      "path": "scripts/tsconfig.json",
+      "sha256": "4f85d2bb3125796b55f56bcc6c58600e5a6e5ece7ad58e1ee2d0d1318ab31721"
+    },
+    {
+      "path": "tsconfig.base.json",
+      "sha256": "67b06fcd644d967441140264f8f88d7072db6eb8b9bc51c553919597cc2f7492"
+    },
+    {
+      "path": "tsconfig.json",
+      "sha256": "46eb4b59d61d4b2029a6931c8b696b4a0e0d2e0f9bc672a4b85f75d577c0c4b7"
+    },
+    {
+      "path": ".wrangler/staging/byok-source-freeze-v283-local-final/wrangler-version.log",
+      "sha256": "f1102a41d8256c5e6eb764e0a219400040e825189415ee77714a8439d047073e"
+    },
+    {
+      "path": ".wrangler/staging/byok-source-freeze-v283-local-final/discovery-receiver.log",
+      "sha256": "e33e57675002794820acbf81814554c04ccff15b95505711e6be5c918fd2389a"
+    },
+    {
+      "path": ".wrangler/staging/byok-source-freeze-v283-local-final/discovery-controller.log",
+      "sha256": "bd3bbe503148a002d1425702543394897ed3d1512302664559118e77962823a2"
+    },
+    {
+      "path": ".wrangler/staging/byok-source-freeze-v283-local-final/discovery-gateway.log",
+      "sha256": "01ca3626174c35ece3150b7dc50c68909957f2b2c1c61db0c80b57ca73473ff6"
+    },
+    {
+      "path": ".wrangler/staging/byok-source-freeze-v283-local-final/discovery-operator.log",
+      "sha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b"
+    },
+    {
+      "path": ".wrangler/staging/byok-source-freeze-v283-local-final/verified-receiver.log",
+      "sha256": "e33e57675002794820acbf81814554c04ccff15b95505711e6be5c918fd2389a"
+    },
+    {
+      "path": ".wrangler/staging/byok-source-freeze-v283-local-final/verified-controller.log",
+      "sha256": "bd3bbe503148a002d1425702543394897ed3d1512302664559118e77962823a2"
+    },
+    {
+      "path": ".wrangler/staging/byok-source-freeze-v283-local-final/verified-gateway.log",
+      "sha256": "01ca3626174c35ece3150b7dc50c68909957f2b2c1c61db0c80b57ca73473ff6"
+    },
+    {
+      "path": ".wrangler/staging/byok-source-freeze-v283-local-final/verified-operator.log",
+      "sha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b"
+    },
+    {
+      "path": ".wrangler/staging/byok-source-freeze-v283-local-final/freeze-build.log",
+      "sha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b"
+    },
+    {
+      "path": ".wrangler/staging/byok-source-freeze-v283-local-final/freeze-source.log",
+      "sha256": "becc93daf034cf577e8ba0ee4fea7a6a155ec2c982feed0ea89f79970ac80b8b"
+    },
+    {
+      "path": ".wrangler/staging/byok-source-freeze-v283-local-final/freeze-bundle.log",
+      "sha256": "a55e5d76845318a2277b961441cf785f99888b0d472a090c36f9c56b71c5ab3e"
+    },
+    {
+      "path": ".wrangler/staging/byok-source-freeze-v283-local-final/operator-source.log",
+      "sha256": "526f4a654e73cc5283930a8f59548fa6888a3b96aadb3a86abd2e20104a0c98e"
+    },
+    {
+      "path": ".wrangler/staging/byok-source-freeze-v283-local-final/operator-frozen-bundle.log",
+      "sha256": "61d1f653b6da665ae683825d226900da3608c89028d38e2063e526231c88c605"
+    },
+    {
+      "path": ".wrangler/staging/byok-source-freeze-v283-local-final/deployment-real-artifacts.log",
+      "sha256": "20e41f392c47575379977cfd716a07a8b5d77305ad892a63eba5df606e95378a"
+    },
+    {
+      "path": ".wrangler/staging/byok-source-freeze-v283-local-final/source-freeze.mjs",
+      "sha256": "d634573d1be14b7598052340f128484cbf3ff4a49b49a8560980a6c0c7b97462"
+    },
+    {
+      "path": ".wrangler/staging/byok-source-freeze-v283-local-final/source-freeze.meta.json",
+      "sha256": "c4290548be2f79762d34f0b2491b71b7b4cb06ebca711a92d09fecb9eed9353a"
+    },
+    {
+      "path": ".wrangler/staging/byok-source-freeze-v283-local-final/verified/receiver.meta.json",
+      "sha256": "37753cb89ed7f13565ea02652e407b692b782c79ab9a453f947a1f6664bc76d2"
+    },
+    {
+      "path": ".wrangler/staging/byok-source-freeze-v283-local-final/verified/maintenance/byok-d1-maintenance-worker.js.map",
+      "sha256": "9a59d78ac282e7e82782e35fd70ef36df248180fa9a57483e1195f6b35d45a18"
+    },
+    {
+      "path": ".wrangler/staging/byok-source-freeze-v283-local-final/verified/maintenance/byok-d1-maintenance-worker.js",
+      "sha256": "c5ebd26cd60a685b31603cf28627c2d2217f6e2ebfc9b908e010736b3070912f"
+    },
+    {
+      "path": ".wrangler/staging/byok-source-freeze-v283-local-final/verified/controller.meta.json",
+      "sha256": "dc48401937719d1b81e52595b0f4ff72d4aba8e75b01712e3d4e1530990c4522"
+    },
+    {
+      "path": ".wrangler/staging/byok-source-freeze-v283-local-final/verified/maintenance-control/byok-d1-maintenance-control-worker.js.map",
+      "sha256": "c8938183a3e6cb3e87ac2f21fa414a9945d060a8a9840a903e6c77a90ebb84e6"
+    },
+    {
+      "path": ".wrangler/staging/byok-source-freeze-v283-local-final/verified/maintenance-control/byok-d1-maintenance-control-worker.js",
+      "sha256": "c991d072facc54910b343047aa3ed4b3cd3ea380a3f36bb2d71026657443af7d"
+    },
+    {
+      "path": ".wrangler/staging/byok-source-freeze-v283-local-final/verified/gateway.meta.json",
+      "sha256": "3dcbca79a896346c73a7cad841f26c5c17967a24496e140a396cedcfcd4f287f"
+    },
+    {
+      "path": ".wrangler/staging/byok-source-freeze-v283-local-final/verified/gateway/byok-d1-gateway-worker.js.map",
+      "sha256": "2d6e7ec99b381271af7d3c2f96c96ce2956665c96117cba914860d87a89c0845"
+    },
+    {
+      "path": ".wrangler/staging/byok-source-freeze-v283-local-final/verified/gateway/byok-d1-gateway-worker.js",
+      "sha256": "efc80a5b58a5182f604013db5f9cb4da716ed0b17b2d6abb8acd2235ce2d4658"
+    },
+    {
+      "path": ".wrangler/staging/byok-source-freeze-v283-local-final/verified/operator.meta.json",
+      "sha256": "c2a6689a332654fb4a635388fcf2b542588faa503cbd0dd4298efafc58b229d8"
+    },
+    {
+      "path": ".wrangler/staging/byok-source-freeze-v283-local-final/verified/operator.mjs",
+      "sha256": "b6b7252318752d98a59f22c7c814174210872d819f06b8ec6f401a844dec2352"
+    },
+    {
+      "path": ".wrangler/staging/byok-source-freeze-v283-local-final/discovery/receiver.meta.json",
+      "sha256": "2b8d9a7f9f1595199766806f56c2c6e6f9abdc9627ff325b29e31372bf573b83"
+    },
+    {
+      "path": ".wrangler/staging/byok-source-freeze-v283-local-final/discovery/maintenance/byok-d1-maintenance-worker.js.map",
+      "sha256": "480667a4bd1dc1c78a8b052dcc8ec11566883778bdd9c41dc0592af09c9be556"
+    },
+    {
+      "path": ".wrangler/staging/byok-source-freeze-v283-local-final/discovery/maintenance/byok-d1-maintenance-worker.js",
+      "sha256": "c5ebd26cd60a685b31603cf28627c2d2217f6e2ebfc9b908e010736b3070912f"
+    },
+    {
+      "path": ".wrangler/staging/byok-source-freeze-v283-local-final/discovery/controller.meta.json",
+      "sha256": "c06bfffd45e16407afc4e18ea6db4634038627729a23875849c0eccf572074ab"
+    },
+    {
+      "path": ".wrangler/staging/byok-source-freeze-v283-local-final/discovery/maintenance-control/byok-d1-maintenance-control-worker.js.map",
+      "sha256": "5811fb22b59afc76f5518b6a09d37b68f5d58054f1163c13a1e413452107e2ab"
+    },
+    {
+      "path": ".wrangler/staging/byok-source-freeze-v283-local-final/discovery/maintenance-control/byok-d1-maintenance-control-worker.js",
+      "sha256": "c991d072facc54910b343047aa3ed4b3cd3ea380a3f36bb2d71026657443af7d"
+    },
+    {
+      "path": ".wrangler/staging/byok-source-freeze-v283-local-final/discovery/gateway.meta.json",
+      "sha256": "283ee05aca9e81948f89fd78d018d447563750817ada74834af040f97f467419"
+    },
+    {
+      "path": ".wrangler/staging/byok-source-freeze-v283-local-final/discovery/gateway/byok-d1-gateway-worker.js.map",
+      "sha256": "ed4b8d9715257e1b6ff886270f4b0d3c06f480717463acb5e37d6cfb824e65c6"
+    },
+    {
+      "path": ".wrangler/staging/byok-source-freeze-v283-local-final/discovery/gateway/byok-d1-gateway-worker.js",
+      "sha256": "efc80a5b58a5182f604013db5f9cb4da716ed0b17b2d6abb8acd2235ce2d4658"
+    },
+    {
+      "path": ".wrangler/staging/byok-source-freeze-v283-local-final/discovery/operator.meta.json",
+      "sha256": "e8b3fc698e51f637f6fc73c1de779c126acce39474b85b4b051ccf402c78ca9c"
+    },
+    {
+      "path": ".wrangler/staging/byok-source-freeze-v283-local-final/discovery/operator.mjs",
+      "sha256": "b6b7252318752d98a59f22c7c814174210872d819f06b8ec6f401a844dec2352"
+    },
+    {
+      "path": ".wrangler/staging/byok-source-freeze-v283-local-first/result.json",
+      "sha256": "d585801bbbbb1ddc667f2cde2ac322f3fbc53bd5c5656790abb31d79a2abd8db"
+    },
+    {
+      "path": ".wrangler/staging/byok-source-freeze-v283-local-first/wrangler-version.log",
+      "sha256": "f1102a41d8256c5e6eb764e0a219400040e825189415ee77714a8439d047073e"
+    },
+    {
+      "path": ".wrangler/staging/byok-source-freeze-v283-local-first/discovery-receiver.log",
+      "sha256": "e33e57675002794820acbf81814554c04ccff15b95505711e6be5c918fd2389a"
+    },
+    {
+      "path": ".wrangler/staging/byok-source-freeze-v283-local-first/discovery-controller.log",
+      "sha256": "bd3bbe503148a002d1425702543394897ed3d1512302664559118e77962823a2"
+    },
+    {
+      "path": ".wrangler/staging/byok-source-freeze-v283-local-first/discovery-gateway.log",
+      "sha256": "01ca3626174c35ece3150b7dc50c68909957f2b2c1c61db0c80b57ca73473ff6"
+    },
+    {
+      "path": ".wrangler/staging/byok-source-freeze-v283-local-first/discovery-operator.log",
+      "sha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b"
+    },
+    {
+      "path": ".wrangler/staging/byok-source-freeze-v283-local-first/discovery/receiver.meta.json",
+      "sha256": "037f36dcfe9af86cc6c701bede5a476c33be4f6ae385a336c79a473e3804be59"
+    },
+    {
+      "path": ".wrangler/staging/byok-source-freeze-v283-local-first/discovery/maintenance/byok-d1-maintenance-worker.js.map",
+      "sha256": "29b4445f9553195da9355d068a08badba7a751cd4bfccac1d0fc7d85b27a8f91"
+    },
+    {
+      "path": ".wrangler/staging/byok-source-freeze-v283-local-first/discovery/maintenance/byok-d1-maintenance-worker.js",
+      "sha256": "c5ebd26cd60a685b31603cf28627c2d2217f6e2ebfc9b908e010736b3070912f"
+    },
+    {
+      "path": ".wrangler/staging/byok-source-freeze-v283-local-first/discovery/controller.meta.json",
+      "sha256": "0133ab177f5b9e8315a95625b2d5221a5ce7ebffe94af84d5b0e7a7157b2d9bc"
+    },
+    {
+      "path": ".wrangler/staging/byok-source-freeze-v283-local-first/discovery/maintenance-control/byok-d1-maintenance-control-worker.js.map",
+      "sha256": "f0fca94bd539cc272da33e19d7aaf96e0ef094f626d694d94e25068df1d916e4"
+    },
+    {
+      "path": ".wrangler/staging/byok-source-freeze-v283-local-first/discovery/maintenance-control/byok-d1-maintenance-control-worker.js",
+      "sha256": "c991d072facc54910b343047aa3ed4b3cd3ea380a3f36bb2d71026657443af7d"
+    },
+    {
+      "path": ".wrangler/staging/byok-source-freeze-v283-local-first/discovery/gateway.meta.json",
+      "sha256": "0129d4c0726dc46fdbbef8b9258680e059d017959d95f6d3c10b9f9059a21d65"
+    },
+    {
+      "path": ".wrangler/staging/byok-source-freeze-v283-local-first/discovery/gateway/byok-d1-gateway-worker.js.map",
+      "sha256": "a6aeccdacf15ec8a97781c76d0f31f72d094e7674ec22ba0a49f5fd7044898a4"
+    },
+    {
+      "path": ".wrangler/staging/byok-source-freeze-v283-local-first/discovery/gateway/byok-d1-gateway-worker.js",
+      "sha256": "efc80a5b58a5182f604013db5f9cb4da716ed0b17b2d6abb8acd2235ce2d4658"
+    },
+    {
+      "path": ".wrangler/staging/byok-source-freeze-v283-local-first/discovery/operator.meta.json",
+      "sha256": "012349bf713bada105cb257e581f4a4319d675340d3a30cccd5a87a6e0b0bc80"
+    },
+    {
+      "path": ".wrangler/staging/byok-source-freeze-v283-local-first/discovery/operator.mjs",
+      "sha256": "b6b7252318752d98a59f22c7c814174210872d819f06b8ec6f401a844dec2352"
+    },
+    {
+      "path": ".wrangler/staging/byok-source-freeze-v283-first-source/byok-d1-source-freeze.mjs",
+      "sha256": "d41f2166daee8d43082084898e7eb6c0548910c8ae114590dab4edfcd4041432"
+    },
+    {
+      "path": ".wrangler/staging/byok-source-freeze-v283-first-source/byok-d1-source-freeze.test.mjs",
+      "sha256": "d4faa520e69fbfb0d89f78e4fae32efc6865fe504afc0aa82f635783d5e59025"
+    },
+    {
+      "path": ".wrangler/staging/byok-source-freeze-v283-first-source/verify-byok-source-freeze-v283.mjs",
+      "sha256": "542fbfeab76154189c102281cc3c9de092d6ee13a5e6539ebbfb657f0e4fd9c7"
+    },
+    {
+      "path": ".wrangler/staging/byok-source-freeze-v283-local-second/result.json",
+      "sha256": "0812d19562f474f147f8ee5a4a6d27d774fa346bf540d86a1d922e4a39d5d512"
+    },
+    {
+      "path": ".wrangler/staging/byok-source-freeze-v283-local-second/wrangler-version.log",
+      "sha256": "f1102a41d8256c5e6eb764e0a219400040e825189415ee77714a8439d047073e"
+    },
+    {
+      "path": ".wrangler/staging/byok-source-freeze-v283-local-second/discovery-receiver.log",
+      "sha256": "e33e57675002794820acbf81814554c04ccff15b95505711e6be5c918fd2389a"
+    },
+    {
+      "path": ".wrangler/staging/byok-source-freeze-v283-local-second/discovery-controller.log",
+      "sha256": "bd3bbe503148a002d1425702543394897ed3d1512302664559118e77962823a2"
+    },
+    {
+      "path": ".wrangler/staging/byok-source-freeze-v283-local-second/discovery-gateway.log",
+      "sha256": "01ca3626174c35ece3150b7dc50c68909957f2b2c1c61db0c80b57ca73473ff6"
+    },
+    {
+      "path": ".wrangler/staging/byok-source-freeze-v283-local-second/discovery-operator.log",
+      "sha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b"
+    },
+    {
+      "path": ".wrangler/staging/byok-source-freeze-v283-local-second/discovery/receiver.meta.json",
+      "sha256": "5ba424a58befb2cb7a5238fab681fa5269d55c5918a517565575936722de64f7"
+    },
+    {
+      "path": ".wrangler/staging/byok-source-freeze-v283-local-second/discovery/maintenance/byok-d1-maintenance-worker.js.map",
+      "sha256": "c09d79a7731fe9a1a255ecb2ddc58d69ba7d7419c0343c5f4d3e2377270e4772"
+    },
+    {
+      "path": ".wrangler/staging/byok-source-freeze-v283-local-second/discovery/maintenance/byok-d1-maintenance-worker.js",
+      "sha256": "c5ebd26cd60a685b31603cf28627c2d2217f6e2ebfc9b908e010736b3070912f"
+    },
+    {
+      "path": ".wrangler/staging/byok-source-freeze-v283-local-second/discovery/controller.meta.json",
+      "sha256": "597e9dc34b498ca4a97150ebf941540b5d15aed9c4e466a6a33d68a94e9ee0cf"
+    },
+    {
+      "path": ".wrangler/staging/byok-source-freeze-v283-local-second/discovery/maintenance-control/byok-d1-maintenance-control-worker.js.map",
+      "sha256": "26f141a8bc04b753555c5e399f22a597286a5f0523b62a98367441241b08da6b"
+    },
+    {
+      "path": ".wrangler/staging/byok-source-freeze-v283-local-second/discovery/maintenance-control/byok-d1-maintenance-control-worker.js",
+      "sha256": "c991d072facc54910b343047aa3ed4b3cd3ea380a3f36bb2d71026657443af7d"
+    },
+    {
+      "path": ".wrangler/staging/byok-source-freeze-v283-local-second/discovery/gateway.meta.json",
+      "sha256": "dfeb8942de15cd4ad69de0e0c40b7e76a10b67cf9521d6a76135d354a2ca3a23"
+    },
+    {
+      "path": ".wrangler/staging/byok-source-freeze-v283-local-second/discovery/gateway/byok-d1-gateway-worker.js.map",
+      "sha256": "d209ce6d2e2638237b49f8f99fc4a3585c03a45902c477d5985bae87484ed627"
+    },
+    {
+      "path": ".wrangler/staging/byok-source-freeze-v283-local-second/discovery/gateway/byok-d1-gateway-worker.js",
+      "sha256": "efc80a5b58a5182f604013db5f9cb4da716ed0b17b2d6abb8acd2235ce2d4658"
+    },
+    {
+      "path": ".wrangler/staging/byok-source-freeze-v283-local-second/discovery/operator.meta.json",
+      "sha256": "89682c32842b2ebc475efd108e446de035fa118bf9a536b6d8cc1d4afcb34f6e"
+    },
+    {
+      "path": ".wrangler/staging/byok-source-freeze-v283-local-second/discovery/operator.mjs",
+      "sha256": "b6b7252318752d98a59f22c7c814174210872d819f06b8ec6f401a844dec2352"
+    },
+    {
+      "path": ".wrangler/staging/byok-source-freeze-v283-second-source/byok-d1-source-freeze.mjs",
+      "sha256": "99521362e65a2248ccf5fc34a2b2db4671c5fe0e090f6a6f7e0cfcbbabbb859e"
+    },
+    {
+      "path": ".wrangler/staging/byok-source-freeze-v283-second-source/byok-d1-source-freeze.test.mjs",
+      "sha256": "0e9ba84ef02fe0812f124fcc05c2b3e5ea9dc482816d5f64e3ec13df90252763"
+    },
+    {
+      "path": ".wrangler/staging/byok-source-freeze-v283-second-source/verify-byok-source-freeze-v283.mjs",
+      "sha256": "542fbfeab76154189c102281cc3c9de092d6ee13a5e6539ebbfb657f0e4fd9c7"
+    },
+    {
+      "path": ".wrangler/staging/byok-source-freeze-v283-local-third/result.json",
+      "sha256": "2545c3ff95bc6ca4a888e509ab42658aac7343dfe11390775b5107fe6c36458c"
+    },
+    {
+      "path": ".wrangler/staging/byok-source-freeze-v283-local-third/wrangler-version.log",
+      "sha256": "f1102a41d8256c5e6eb764e0a219400040e825189415ee77714a8439d047073e"
+    },
+    {
+      "path": ".wrangler/staging/byok-source-freeze-v283-local-third/discovery-receiver.log",
+      "sha256": "e33e57675002794820acbf81814554c04ccff15b95505711e6be5c918fd2389a"
+    },
+    {
+      "path": ".wrangler/staging/byok-source-freeze-v283-local-third/discovery-controller.log",
+      "sha256": "bd3bbe503148a002d1425702543394897ed3d1512302664559118e77962823a2"
+    },
+    {
+      "path": ".wrangler/staging/byok-source-freeze-v283-local-third/discovery-gateway.log",
+      "sha256": "01ca3626174c35ece3150b7dc50c68909957f2b2c1c61db0c80b57ca73473ff6"
+    },
+    {
+      "path": ".wrangler/staging/byok-source-freeze-v283-local-third/discovery-operator.log",
+      "sha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b"
+    },
+    {
+      "path": ".wrangler/staging/byok-source-freeze-v283-local-third/discovery/receiver.meta.json",
+      "sha256": "4eff2e3f34625583074469751d0bb0ac6c27d1206a291bdbcfcc0c57924ecb11"
+    },
+    {
+      "path": ".wrangler/staging/byok-source-freeze-v283-local-third/discovery/maintenance/byok-d1-maintenance-worker.js.map",
+      "sha256": "80a10d747385ddde0427de81c709be2b18cb03ab2ec0d60bb83f9a343a6de04a"
+    },
+    {
+      "path": ".wrangler/staging/byok-source-freeze-v283-local-third/discovery/maintenance/byok-d1-maintenance-worker.js",
+      "sha256": "c5ebd26cd60a685b31603cf28627c2d2217f6e2ebfc9b908e010736b3070912f"
+    },
+    {
+      "path": ".wrangler/staging/byok-source-freeze-v283-local-third/discovery/controller.meta.json",
+      "sha256": "72c1b6a9b469bb88f2bf486db511b2cb48c6fc3b921645c002d7356b82115dfa"
+    },
+    {
+      "path": ".wrangler/staging/byok-source-freeze-v283-local-third/discovery/maintenance-control/byok-d1-maintenance-control-worker.js.map",
+      "sha256": "6732809fac44bfc2076048ff78dabdcec93c9068e0aba056942534d684a52565"
+    },
+    {
+      "path": ".wrangler/staging/byok-source-freeze-v283-local-third/discovery/maintenance-control/byok-d1-maintenance-control-worker.js",
+      "sha256": "c991d072facc54910b343047aa3ed4b3cd3ea380a3f36bb2d71026657443af7d"
+    },
+    {
+      "path": ".wrangler/staging/byok-source-freeze-v283-local-third/discovery/gateway.meta.json",
+      "sha256": "e9236ac4fc1efbc4a549e1ddeae6a9f53f8270b13daa5ad00a718551fdfe8307"
+    },
+    {
+      "path": ".wrangler/staging/byok-source-freeze-v283-local-third/discovery/gateway/byok-d1-gateway-worker.js.map",
+      "sha256": "7173a6a87b7cb7c4fb6474469b94b27337581cfd0a304ba10a3993d23e3db329"
+    },
+    {
+      "path": ".wrangler/staging/byok-source-freeze-v283-local-third/discovery/gateway/byok-d1-gateway-worker.js",
+      "sha256": "efc80a5b58a5182f604013db5f9cb4da716ed0b17b2d6abb8acd2235ce2d4658"
+    },
+    {
+      "path": ".wrangler/staging/byok-source-freeze-v283-local-third/discovery/operator.meta.json",
+      "sha256": "e489b6bf736b6e4874e9bc5263e91a51fe07c9a3e3fdc34c3c64a03f69ee08f5"
+    },
+    {
+      "path": ".wrangler/staging/byok-source-freeze-v283-local-third/discovery/operator.mjs",
+      "sha256": "b6b7252318752d98a59f22c7c814174210872d819f06b8ec6f401a844dec2352"
+    },
+    {
+      "path": ".wrangler/staging/byok-source-freeze-v283-third-source/byok-d1-source-freeze.mjs",
+      "sha256": "b197d18c4234628b8f7c367689a92f8afc7d5af2997e44bb457b8e380140bb97"
+    },
+    {
+      "path": ".wrangler/staging/byok-source-freeze-v283-third-source/byok-d1-source-freeze.test.mjs",
+      "sha256": "0e9ba84ef02fe0812f124fcc05c2b3e5ea9dc482816d5f64e3ec13df90252763"
+    },
+    {
+      "path": ".wrangler/staging/byok-source-freeze-v283-third-source/verify-byok-source-freeze-v283.mjs",
+      "sha256": "7a400d6b2e6a5ce0eb573808351c7daa42d72d0d0734539069ddf284f70072d5"
+    },
+    {
+      "path": ".wrangler/staging/byok-source-freeze-v283-local-fourth/result.json",
+      "sha256": "c5e253d3db570efff5ae912a530e6277bd05108ba2fbebfc0b4c18d0cf39fc8c"
+    },
+    {
+      "path": ".wrangler/staging/byok-source-freeze-v283-local-fourth/wrangler-version.log",
+      "sha256": "f1102a41d8256c5e6eb764e0a219400040e825189415ee77714a8439d047073e"
+    },
+    {
+      "path": ".wrangler/staging/byok-source-freeze-v283-local-fourth/discovery-receiver.log",
+      "sha256": "e33e57675002794820acbf81814554c04ccff15b95505711e6be5c918fd2389a"
+    },
+    {
+      "path": ".wrangler/staging/byok-source-freeze-v283-local-fourth/discovery-controller.log",
+      "sha256": "bd3bbe503148a002d1425702543394897ed3d1512302664559118e77962823a2"
+    },
+    {
+      "path": ".wrangler/staging/byok-source-freeze-v283-local-fourth/discovery-gateway.log",
+      "sha256": "01ca3626174c35ece3150b7dc50c68909957f2b2c1c61db0c80b57ca73473ff6"
+    },
+    {
+      "path": ".wrangler/staging/byok-source-freeze-v283-local-fourth/discovery-operator.log",
+      "sha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b"
+    },
+    {
+      "path": ".wrangler/staging/byok-source-freeze-v283-local-fourth/verified-receiver.log",
+      "sha256": "e33e57675002794820acbf81814554c04ccff15b95505711e6be5c918fd2389a"
+    },
+    {
+      "path": ".wrangler/staging/byok-source-freeze-v283-local-fourth/verified-controller.log",
+      "sha256": "bd3bbe503148a002d1425702543394897ed3d1512302664559118e77962823a2"
+    },
+    {
+      "path": ".wrangler/staging/byok-source-freeze-v283-local-fourth/verified-gateway.log",
+      "sha256": "01ca3626174c35ece3150b7dc50c68909957f2b2c1c61db0c80b57ca73473ff6"
+    },
+    {
+      "path": ".wrangler/staging/byok-source-freeze-v283-local-fourth/verified-operator.log",
+      "sha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b"
+    },
+    {
+      "path": ".wrangler/staging/byok-source-freeze-v283-local-fourth/freeze-build.log",
+      "sha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b"
+    },
+    {
+      "path": ".wrangler/staging/byok-source-freeze-v283-local-fourth/freeze-source.log",
+      "sha256": "706df73b6450d2886b40c289ca083fe65e416ea3e555baa9a9e83536018c471e"
+    },
+    {
+      "path": ".wrangler/staging/byok-source-freeze-v283-local-fourth/freeze-bundle.log",
+      "sha256": "c9f0a042d3eb74b74817980f2bdd2493f55526e7090f80d68effbfd3421687bb"
+    },
+    {
+      "path": ".wrangler/staging/byok-source-freeze-v283-local-fourth/operator-source.log",
+      "sha256": "e0e0a240bbeba348f2282be3608a03c803ff0f2251b6aad0e6eaa83051a3b72d"
+    },
+    {
+      "path": ".wrangler/staging/byok-source-freeze-v283-local-fourth/operator-frozen-bundle.log",
+      "sha256": "5c6e7fd2e3a38c220470707b7910295cd4be30d377423b32b938f51a386d175e"
+    },
+    {
+      "path": ".wrangler/staging/byok-source-freeze-v283-local-fourth/deployment-real-artifacts.log",
+      "sha256": "7881ae10f6005a3678980e40e4f1eff6511340a32aaa35ede7cb63d0c02c3a46"
+    },
+    {
+      "path": ".wrangler/staging/byok-source-freeze-v283-local-fourth/discovery/receiver.meta.json",
+      "sha256": "5f9c945e1630ff259d46066d879ad327f3e619769fc80d64922799d14ed9fa40"
+    },
+    {
+      "path": ".wrangler/staging/byok-source-freeze-v283-local-fourth/discovery/maintenance/byok-d1-maintenance-worker.js.map",
+      "sha256": "68f33db7fb2ceff427c0b2fc5788fd0cfe10ecd05126e72fc1d2e8cfd1098e82"
+    },
+    {
+      "path": ".wrangler/staging/byok-source-freeze-v283-local-fourth/discovery/maintenance/byok-d1-maintenance-worker.js",
+      "sha256": "c5ebd26cd60a685b31603cf28627c2d2217f6e2ebfc9b908e010736b3070912f"
+    },
+    {
+      "path": ".wrangler/staging/byok-source-freeze-v283-local-fourth/discovery/controller.meta.json",
+      "sha256": "0ef34e36a77c3cb61334a33ed40249d4bbe12f9824f67f18f9648ca65fe25644"
+    },
+    {
+      "path": ".wrangler/staging/byok-source-freeze-v283-local-fourth/discovery/maintenance-control/byok-d1-maintenance-control-worker.js.map",
+      "sha256": "29163160b26af9578324b5ad86f9b43f88972b39bf1e69a25ec41704d350bfc6"
+    },
+    {
+      "path": ".wrangler/staging/byok-source-freeze-v283-local-fourth/discovery/maintenance-control/byok-d1-maintenance-control-worker.js",
+      "sha256": "c991d072facc54910b343047aa3ed4b3cd3ea380a3f36bb2d71026657443af7d"
+    },
+    {
+      "path": ".wrangler/staging/byok-source-freeze-v283-local-fourth/discovery/gateway.meta.json",
+      "sha256": "89a953898c07f6c21cfebe9ecab80e284e9b958265d897c9a5bd9d8a20867bb6"
+    },
+    {
+      "path": ".wrangler/staging/byok-source-freeze-v283-local-fourth/discovery/gateway/byok-d1-gateway-worker.js.map",
+      "sha256": "4789e6ad8737794f6c9637855c44fbfe6555db1b46d7e38934bf30f7e08ddbdd"
+    },
+    {
+      "path": ".wrangler/staging/byok-source-freeze-v283-local-fourth/discovery/gateway/byok-d1-gateway-worker.js",
+      "sha256": "efc80a5b58a5182f604013db5f9cb4da716ed0b17b2d6abb8acd2235ce2d4658"
+    },
+    {
+      "path": ".wrangler/staging/byok-source-freeze-v283-local-fourth/discovery/operator.meta.json",
+      "sha256": "3b60d32fed05526a9f7ed8e7b33517827dd226be565fe7e69ccdcc32b6dc197e"
+    },
+    {
+      "path": ".wrangler/staging/byok-source-freeze-v283-local-fourth/discovery/operator.mjs",
+      "sha256": "b6b7252318752d98a59f22c7c814174210872d819f06b8ec6f401a844dec2352"
+    },
+    {
+      "path": ".wrangler/staging/byok-source-freeze-v283-local-fourth/verified/receiver.meta.json",
+      "sha256": "8bc2b6606a0cb41172d5e85a91a9bbe92523eabf9c479f89b1974ba24d63c4e1"
+    },
+    {
+      "path": ".wrangler/staging/byok-source-freeze-v283-local-fourth/verified/maintenance/byok-d1-maintenance-worker.js.map",
+      "sha256": "19d0f75b5f0990d340dbab5470bfe22889998839f6f787ac383dec6736e05327"
+    },
+    {
+      "path": ".wrangler/staging/byok-source-freeze-v283-local-fourth/verified/maintenance/byok-d1-maintenance-worker.js",
+      "sha256": "c5ebd26cd60a685b31603cf28627c2d2217f6e2ebfc9b908e010736b3070912f"
+    },
+    {
+      "path": ".wrangler/staging/byok-source-freeze-v283-local-fourth/verified/controller.meta.json",
+      "sha256": "4c6a46a60f0be9698df04dd6b18ee9a1d8d41c0182a0a8eb8654231ff6c9823d"
+    },
+    {
+      "path": ".wrangler/staging/byok-source-freeze-v283-local-fourth/verified/maintenance-control/byok-d1-maintenance-control-worker.js.map",
+      "sha256": "54b103ad3123da1e4c749745fdd56faa8168f45a4571fb085026ee6245b1bdd2"
+    },
+    {
+      "path": ".wrangler/staging/byok-source-freeze-v283-local-fourth/verified/maintenance-control/byok-d1-maintenance-control-worker.js",
+      "sha256": "c991d072facc54910b343047aa3ed4b3cd3ea380a3f36bb2d71026657443af7d"
+    },
+    {
+      "path": ".wrangler/staging/byok-source-freeze-v283-local-fourth/verified/gateway.meta.json",
+      "sha256": "48c3888faecea46579df68fd48a6f97b127e0de9f6869621716a2109520bcd4c"
+    },
+    {
+      "path": ".wrangler/staging/byok-source-freeze-v283-local-fourth/verified/gateway/byok-d1-gateway-worker.js.map",
+      "sha256": "6c34071d997fd8728aecc4261c2d5b91efbdd542a59f8d1445f44580c3407872"
+    },
+    {
+      "path": ".wrangler/staging/byok-source-freeze-v283-local-fourth/verified/gateway/byok-d1-gateway-worker.js",
+      "sha256": "efc80a5b58a5182f604013db5f9cb4da716ed0b17b2d6abb8acd2235ce2d4658"
+    },
+    {
+      "path": ".wrangler/staging/byok-source-freeze-v283-local-fourth/verified/operator.meta.json",
+      "sha256": "dc8880e3889651cbffba4b2d996bf346830e72aecd3863a97bcbb726e1f302ea"
+    },
+    {
+      "path": ".wrangler/staging/byok-source-freeze-v283-local-fourth/verified/operator.mjs",
+      "sha256": "b6b7252318752d98a59f22c7c814174210872d819f06b8ec6f401a844dec2352"
+    },
+    {
+      "path": ".wrangler/staging/byok-source-freeze-v283-fourth-source/byok-d1-source-freeze.mjs",
+      "sha256": "0e5a551d8d45af8000f07b6e7e7ccdc3fa2fc586255b94ea9f828692c167d103"
+    },
+    {
+      "path": ".wrangler/staging/byok-source-freeze-v283-fourth-source/byok-d1-source-freeze.test.mjs",
+      "sha256": "2083c07dbc11e6ef53eceb07c6a70dec6beb5895ac102928952efb392147885b"
+    },
+    {
+      "path": ".wrangler/staging/byok-source-freeze-v283-fourth-source/verify-byok-source-freeze-v283.mjs",
+      "sha256": "7a400d6b2e6a5ce0eb573808351c7daa42d72d0d0734539069ddf284f70072d5"
+    },
+    {
+      "path": ".wrangler/staging/byok-source-freeze-v283-local-fifth/result.json",
+      "sha256": "bfa41fdd4b9456c72b336926f5d87918377fc597eb85abfa29cc97ab28ca4feb"
+    },
+    {
+      "path": ".wrangler/staging/byok-source-freeze-v283-local-fifth/wrangler-version.log",
+      "sha256": "f1102a41d8256c5e6eb764e0a219400040e825189415ee77714a8439d047073e"
+    },
+    {
+      "path": ".wrangler/staging/byok-source-freeze-v283-local-fifth/discovery-receiver.log",
+      "sha256": "e33e57675002794820acbf81814554c04ccff15b95505711e6be5c918fd2389a"
+    },
+    {
+      "path": ".wrangler/staging/byok-source-freeze-v283-local-fifth/discovery-controller.log",
+      "sha256": "bd3bbe503148a002d1425702543394897ed3d1512302664559118e77962823a2"
+    },
+    {
+      "path": ".wrangler/staging/byok-source-freeze-v283-local-fifth/discovery-gateway.log",
+      "sha256": "01ca3626174c35ece3150b7dc50c68909957f2b2c1c61db0c80b57ca73473ff6"
+    },
+    {
+      "path": ".wrangler/staging/byok-source-freeze-v283-local-fifth/discovery-operator.log",
+      "sha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b"
+    },
+    {
+      "path": ".wrangler/staging/byok-source-freeze-v283-local-fifth/verified-receiver.log",
+      "sha256": "e33e57675002794820acbf81814554c04ccff15b95505711e6be5c918fd2389a"
+    },
+    {
+      "path": ".wrangler/staging/byok-source-freeze-v283-local-fifth/verified-controller.log",
+      "sha256": "bd3bbe503148a002d1425702543394897ed3d1512302664559118e77962823a2"
+    },
+    {
+      "path": ".wrangler/staging/byok-source-freeze-v283-local-fifth/verified-gateway.log",
+      "sha256": "01ca3626174c35ece3150b7dc50c68909957f2b2c1c61db0c80b57ca73473ff6"
+    },
+    {
+      "path": ".wrangler/staging/byok-source-freeze-v283-local-fifth/verified-operator.log",
+      "sha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b"
+    },
+    {
+      "path": ".wrangler/staging/byok-source-freeze-v283-local-fifth/freeze-build.log",
+      "sha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b"
+    },
+    {
+      "path": ".wrangler/staging/byok-source-freeze-v283-local-fifth/freeze-source.log",
+      "sha256": "bbc7e95469c732653c5ef5b196d4d45b5834b6b701bd0c8e19af7aa4b4c65714"
+    },
+    {
+      "path": ".wrangler/staging/byok-source-freeze-v283-local-fifth/freeze-bundle.log",
+      "sha256": "b0a9f174e6dc35b6dbfd3e64adb8f0726b8d073a23a257eecaacad86c0fc2b92"
+    },
+    {
+      "path": ".wrangler/staging/byok-source-freeze-v283-local-fifth/operator-source.log",
+      "sha256": "5b2266e7558a683bdcf224b0c0d126efc4a05506301abea9bbbc902c4d4e25ea"
+    },
+    {
+      "path": ".wrangler/staging/byok-source-freeze-v283-local-fifth/operator-frozen-bundle.log",
+      "sha256": "d403ea07d3d5d246ac3181e146e162e041085cf5cb6f57979863b28265fbc922"
+    },
+    {
+      "path": ".wrangler/staging/byok-source-freeze-v283-local-fifth/deployment-real-artifacts.log",
+      "sha256": "9724f0f9a3db57a2ff5dfbddefce69c72c59b4929a93a58f1dd95f7d6b39cd78"
+    },
+    {
+      "path": ".wrangler/staging/byok-source-freeze-v283-local-fifth/discovery/receiver.meta.json",
+      "sha256": "a4c9fa4ed477b33c399e699047b53a39c2f8fdf9baf24a7658b7b238cbe2110b"
+    },
+    {
+      "path": ".wrangler/staging/byok-source-freeze-v283-local-fifth/discovery/maintenance/byok-d1-maintenance-worker.js.map",
+      "sha256": "8cdb0119715655f4f8948af680cc3f973bd8f0a02958d223dbff80ca0d241f54"
+    },
+    {
+      "path": ".wrangler/staging/byok-source-freeze-v283-local-fifth/discovery/maintenance/byok-d1-maintenance-worker.js",
+      "sha256": "c5ebd26cd60a685b31603cf28627c2d2217f6e2ebfc9b908e010736b3070912f"
+    },
+    {
+      "path": ".wrangler/staging/byok-source-freeze-v283-local-fifth/discovery/controller.meta.json",
+      "sha256": "d452299b31dde57015a3bc329c7eefc1830a35fe503cdfc915d28b6342350591"
+    },
+    {
+      "path": ".wrangler/staging/byok-source-freeze-v283-local-fifth/discovery/maintenance-control/byok-d1-maintenance-control-worker.js.map",
+      "sha256": "5116522785752880764ce2561e0ffe27bc81910df40ae73a0a666cd9ee7c47eb"
+    },
+    {
+      "path": ".wrangler/staging/byok-source-freeze-v283-local-fifth/discovery/maintenance-control/byok-d1-maintenance-control-worker.js",
+      "sha256": "c991d072facc54910b343047aa3ed4b3cd3ea380a3f36bb2d71026657443af7d"
+    },
+    {
+      "path": ".wrangler/staging/byok-source-freeze-v283-local-fifth/discovery/gateway.meta.json",
+      "sha256": "44151f07e81fa9ac5c68c3e23a9355d6adc04245fc85a72e3625a3520d3664ad"
+    },
+    {
+      "path": ".wrangler/staging/byok-source-freeze-v283-local-fifth/discovery/gateway/byok-d1-gateway-worker.js.map",
+      "sha256": "20865184986f7ecd8b769d44fe41446cb80ec8192ea174dd0a77d3f1f746ca45"
+    },
+    {
+      "path": ".wrangler/staging/byok-source-freeze-v283-local-fifth/discovery/gateway/byok-d1-gateway-worker.js",
+      "sha256": "efc80a5b58a5182f604013db5f9cb4da716ed0b17b2d6abb8acd2235ce2d4658"
+    },
+    {
+      "path": ".wrangler/staging/byok-source-freeze-v283-local-fifth/discovery/operator.meta.json",
+      "sha256": "9fb291cb25177560c7e3dba799ff116b5f14d60d6ba43daed6befddc612b5e0e"
+    },
+    {
+      "path": ".wrangler/staging/byok-source-freeze-v283-local-fifth/discovery/operator.mjs",
+      "sha256": "b6b7252318752d98a59f22c7c814174210872d819f06b8ec6f401a844dec2352"
+    },
+    {
+      "path": ".wrangler/staging/byok-source-freeze-v283-local-fifth/verified/receiver.meta.json",
+      "sha256": "63dc43e7188581e8b65ab3c6249ea7d307c67395a0e377fed43cb7ebd91c1976"
+    },
+    {
+      "path": ".wrangler/staging/byok-source-freeze-v283-local-fifth/verified/maintenance/byok-d1-maintenance-worker.js.map",
+      "sha256": "23f8294d76e56228e8cdb0e6221a67e2e760d9e34fb9c76cb5fa4acd1b46e2cb"
+    },
+    {
+      "path": ".wrangler/staging/byok-source-freeze-v283-local-fifth/verified/maintenance/byok-d1-maintenance-worker.js",
+      "sha256": "c5ebd26cd60a685b31603cf28627c2d2217f6e2ebfc9b908e010736b3070912f"
+    },
+    {
+      "path": ".wrangler/staging/byok-source-freeze-v283-local-fifth/verified/controller.meta.json",
+      "sha256": "0946b7250790b76fbdf421ab0fcf88758eda44b47e3448d821ea7255c43208d2"
+    },
+    {
+      "path": ".wrangler/staging/byok-source-freeze-v283-local-fifth/verified/maintenance-control/byok-d1-maintenance-control-worker.js.map",
+      "sha256": "a0bb3f2255f8fb0866f13f99beea2c62780ace9c646f1591ae2d3f371cce2ca0"
+    },
+    {
+      "path": ".wrangler/staging/byok-source-freeze-v283-local-fifth/verified/maintenance-control/byok-d1-maintenance-control-worker.js",
+      "sha256": "c991d072facc54910b343047aa3ed4b3cd3ea380a3f36bb2d71026657443af7d"
+    },
+    {
+      "path": ".wrangler/staging/byok-source-freeze-v283-local-fifth/verified/gateway.meta.json",
+      "sha256": "81b5b2b09fffc23e42433d0f68c8c0093830ea5644a1f2f98df6253bea6e12c8"
+    },
+    {
+      "path": ".wrangler/staging/byok-source-freeze-v283-local-fifth/verified/gateway/byok-d1-gateway-worker.js.map",
+      "sha256": "31a513eb324b7323cef40ac3210ad1ae313011a98903b628bb64679f53d142fc"
+    },
+    {
+      "path": ".wrangler/staging/byok-source-freeze-v283-local-fifth/verified/gateway/byok-d1-gateway-worker.js",
+      "sha256": "efc80a5b58a5182f604013db5f9cb4da716ed0b17b2d6abb8acd2235ce2d4658"
+    },
+    {
+      "path": ".wrangler/staging/byok-source-freeze-v283-local-fifth/verified/operator.meta.json",
+      "sha256": "c6c02902afe8b59b5229469a6f0ca12bab8f31b0f1d4d5a244d9bdb0a98994a9"
+    },
+    {
+      "path": ".wrangler/staging/byok-source-freeze-v283-local-fifth/verified/operator.mjs",
+      "sha256": "b6b7252318752d98a59f22c7c814174210872d819f06b8ec6f401a844dec2352"
+    },
+    {
+      "path": ".wrangler/staging/byok-source-freeze-v283-fifth-source/byok-d1-source-freeze.mjs",
+      "sha256": "9ae7f24433fda98dfd498309eca6d6200d9df9531768fe4e68976accee6233fa"
+    },
+    {
+      "path": ".wrangler/staging/byok-source-freeze-v283-fifth-source/byok-d1-source-freeze.test.mjs",
+      "sha256": "f1f63348498f958fa72d619896c0e4054ca2e4494de52f025dfe0c07695c239e"
+    },
+    {
+      "path": ".wrangler/staging/byok-source-freeze-v283-fifth-source/verify-byok-source-freeze-v283.mjs",
+      "sha256": "7a400d6b2e6a5ce0eb573808351c7daa42d72d0d0734539069ddf284f70072d5"
+    },
+    {
+      "path": ".wrangler/staging/byok-source-freeze-v283-deployment-prior/byok-d1-deployment.test.mjs",
+      "sha256": "fba5cab86a48b188d979065f45df5983de7168e0cabd2ef6956e0e809e2796ac"
+    },
+    {
+      "path": ".wrangler/staging/summarize-byok-source-freeze-v283.mjs",
+      "sha256": "9e3ed5f40aade011885273531f5c7bda19d91f14ef251f19eb4d3db7a3bf50ce"
+    },
+    {
+      "path": ".wrangler/staging/probe-byok-source-freeze-v283.mjs",
+      "sha256": "2130df85804ca8816e16ea10d7088952cc4113364167306d4a64aab3b4318b91"
+    },
+    {
+      "path": ".wrangler/staging/byok-source-freeze-v283-probe/version.log",
+      "sha256": "f1102a41d8256c5e6eb764e0a219400040e825189415ee77714a8439d047073e"
+    },
+    {
+      "path": ".wrangler/staging/byok-source-freeze-v283-probe/help.log",
+      "sha256": "3d2f47a2b0c54f1ac5b278e9892fdc33e4a584f59b9ec937776cda20c5e80b5e"
+    },
+    {
+      "path": ".wrangler/staging/byok-source-freeze-v283-probe/gateway.log",
+      "sha256": "01ca3626174c35ece3150b7dc50c68909957f2b2c1c61db0c80b57ca73473ff6"
+    },
+    {
+      "path": ".wrangler/staging/byok-source-freeze-v283-probe/gateway.meta.json",
+      "sha256": "b6a5fe8bd3fcac08983fa7ec5573f014d09071e65af1d1b2d47c73c379bea7db"
+    },
+    {
+      "path": ".wrangler/staging/byok-source-freeze-v283-probe/gateway/byok-d1-gateway-worker.js",
+      "sha256": "efc80a5b58a5182f604013db5f9cb4da716ed0b17b2d6abb8acd2235ce2d4658"
+    },
+    {
+      "path": ".wrangler/staging/byok-source-freeze-v283-probe/gateway/byok-d1-gateway-worker.js.map",
+      "sha256": "ac1cd8a93cb287ee547676971d88b32130487c9951945e5f190165031d6fc3e9"
+    },
+    {
+      "path": ".wrangler/staging/byok-preflight-evidence-v284-local-first/result.json",
+      "sha256": "94ca45044e361aa0df9345690d2477a684f091ce2eb97c6dcc96454972ea3321"
+    },
+    {
+      "path": ".wrangler/staging/byok-preflight-evidence-v284-first-source/byok-d1-preflight-evidence.mjs",
+      "sha256": "c7de52d3624af4a4386643f027d8b57b949dbf90df954d0fa45eceb2fa03c969"
+    },
+    {
+      "path": ".wrangler/staging/byok-preflight-evidence-v284-first-source/byok-d1-preflight-evidence.test.mjs",
+      "sha256": "acc43c25a0c3ba0104ce5db29c08621dba334145a5e5604901b131b68f58d785"
+    },
+    {
+      "path": ".wrangler/staging/byok-preflight-evidence-v284-first-source/verify-byok-preflight-evidence-v284.mjs",
+      "sha256": "ba989617d02b2904c57de8607f1286dc14b767ec4a22be4641888dfebf57d4fe"
+    },
+    {
+      "path": ".wrangler/staging/byok-preflight-evidence-v284-local-first/discovery-producer-build.log",
+      "sha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b"
+    },
+    {
+      "path": ".wrangler/staging/byok-preflight-evidence-v284-local-first/component-discovery-tests.log",
+      "sha256": "10f54e87ee1233100217a447dbbeeacd324978a801af957e03f7fffba593dfcc"
+    },
+    {
+      "path": ".wrangler/staging/byok-preflight-evidence-v284-local-first/wrangler-version.log",
+      "sha256": "f1102a41d8256c5e6eb764e0a219400040e825189415ee77714a8439d047073e"
+    },
+    {
+      "path": ".wrangler/staging/byok-preflight-evidence-v284-local-first/verified-receiver.log",
+      "sha256": "e33e57675002794820acbf81814554c04ccff15b95505711e6be5c918fd2389a"
+    },
+    {
+      "path": ".wrangler/staging/byok-preflight-evidence-v284-local-first/verified-controller.log",
+      "sha256": "bd3bbe503148a002d1425702543394897ed3d1512302664559118e77962823a2"
+    },
+    {
+      "path": ".wrangler/staging/byok-preflight-evidence-v284-local-first/verified-gateway.log",
+      "sha256": "01ca3626174c35ece3150b7dc50c68909957f2b2c1c61db0c80b57ca73473ff6"
+    },
+    {
+      "path": ".wrangler/staging/byok-preflight-evidence-v284-local-first/verified-operator-build.log",
+      "sha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b"
+    },
+    {
+      "path": ".wrangler/staging/byok-preflight-evidence-v284-local-first/verified-producer-build.log",
+      "sha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b"
+    },
+    {
+      "path": ".wrangler/staging/byok-preflight-evidence-v284-local-first/component-verified-tests.log",
+      "sha256": "8317779911e6f4bb5b86535295949ab91baee07427b627cf2eff12f7dbe37a20"
+    },
+    {
+      "path": ".wrangler/staging/byok-preflight-evidence-v284-local-first/existing-paid-plan.log",
+      "sha256": "9dfabc386a8346678e8e20f1304c4ad4a0757788410ab7db777b547f6f65ce1e"
+    },
+    {
+      "path": ".wrangler/staging/byok-preflight-evidence-v284-local-first/existing-prior-code.log",
+      "sha256": "3b985ae8e0381a88ae04f93fad5217673b9580dcef7910e0b41331b463ce561e"
+    },
+    {
+      "path": ".wrangler/staging/byok-preflight-evidence-v284-local-first/discovery/preflight-evidence.mjs",
+      "sha256": "707d4abdb77ffe8080d1e48f6ccd8557dae25befc6f053de957a521d878bcded"
+    },
+    {
+      "path": ".wrangler/staging/byok-preflight-evidence-v284-local-first/discovery/preflight-evidence.meta.json",
+      "sha256": "b73030069cdd514137bfbf1c36a000577b8c5c256375b510168d0a03f6f08e78"
+    },
+    {
+      "path": ".wrangler/staging/byok-preflight-evidence-v284-local-first/verified/preflight-evidence.mjs",
+      "sha256": "707d4abdb77ffe8080d1e48f6ccd8557dae25befc6f053de957a521d878bcded"
+    },
+    {
+      "path": ".wrangler/staging/byok-preflight-evidence-v284-local-first/verified/preflight-evidence.meta.json",
+      "sha256": "ed4ecfb0ee8a591635193bdd09bb5c7164d3ed72e27228751e1fda962bce0720"
+    },
+    {
+      "path": ".wrangler/staging/byok-preflight-evidence-v284-local-first/verified/receiver.meta.json",
+      "sha256": "9d6a75f2cd92c4b8d0e34bee21e3e6fa364ae55589de075e3c7eacec11559aba"
+    },
+    {
+      "path": ".wrangler/staging/byok-preflight-evidence-v284-local-first/verified/maintenance/byok-d1-maintenance-worker.js.map",
+      "sha256": "ff924f17524a5cef2cbfc5f698ccd2fd8be2cfe6c236dbdb32076fccfcbb4d1c"
+    },
+    {
+      "path": ".wrangler/staging/byok-preflight-evidence-v284-local-first/verified/maintenance/byok-d1-maintenance-worker.js",
+      "sha256": "c5ebd26cd60a685b31603cf28627c2d2217f6e2ebfc9b908e010736b3070912f"
+    },
+    {
+      "path": ".wrangler/staging/byok-preflight-evidence-v284-local-first/verified/controller.meta.json",
+      "sha256": "c065e1edca83635f2c11b7f5eb2632b50438fc1c7e38e7adedca127f2266284b"
+    },
+    {
+      "path": ".wrangler/staging/byok-preflight-evidence-v284-local-first/verified/maintenance-control/byok-d1-maintenance-control-worker.js.map",
+      "sha256": "b6743e194f551793e13695c5aa40fd8c26c8ec0f98b2945b623d3ca240087282"
+    },
+    {
+      "path": ".wrangler/staging/byok-preflight-evidence-v284-local-first/verified/maintenance-control/byok-d1-maintenance-control-worker.js",
+      "sha256": "c991d072facc54910b343047aa3ed4b3cd3ea380a3f36bb2d71026657443af7d"
+    },
+    {
+      "path": ".wrangler/staging/byok-preflight-evidence-v284-local-first/verified/gateway.meta.json",
+      "sha256": "55981dfa524bb3f645fc99ea8b9f52a5365ea43bf8919570c19f9f2e026bb6ea"
+    },
+    {
+      "path": ".wrangler/staging/byok-preflight-evidence-v284-local-first/verified/gateway/byok-d1-gateway-worker.js.map",
+      "sha256": "d6a82659ec9ac9d2f587825e060304783e3dc2ed222f91b6de962e8acb0e4d4b"
+    },
+    {
+      "path": ".wrangler/staging/byok-preflight-evidence-v284-local-first/verified/gateway/byok-d1-gateway-worker.js",
+      "sha256": "efc80a5b58a5182f604013db5f9cb4da716ed0b17b2d6abb8acd2235ce2d4658"
+    },
+    {
+      "path": ".wrangler/staging/byok-preflight-evidence-v284-local-first/verified/operator.meta.json",
+      "sha256": "75ab53bc2ab92ce643b06cfea0263fb2476a5031add3404ff7ef1fe9a3b40d37"
+    },
+    {
+      "path": ".wrangler/staging/byok-preflight-evidence-v284-local-first/verified/operator.mjs",
+      "sha256": "b6b7252318752d98a59f22c7c814174210872d819f06b8ec6f401a844dec2352"
+    },
+    {
+      "path": ".wrangler/staging/byok-preflight-evidence-v284-local-first/source-snapshot.json",
+      "sha256": "d748a0bcac27823ce481fe05d277615c2e8dddbb152c83be710372c60f37f854"
+    },
+    {
+      "path": ".wrangler/staging/byok-preflight-evidence-v284-local-first/integrated-result.json",
+      "sha256": "1cb9bdb77bc127f5308f026a4bd3171f0df6b7042cce656aab9e0280131da4d5"
+    },
+    {
+      "path": ".wrangler/staging/byok-preflight-evidence-v284-local-first/integrated/.wrangler/staging/byok-d1-preflight-evidence-reservation/result.json",
+      "sha256": "7e9951d82eee6ef7edb88ec63581ae32411281c18595db826cd3f0cd37148af0"
+    },
+    {
+      "path": ".wrangler/staging/byok-preflight-evidence-v284-local-first/integrated/.wrangler/staging/byok-d1-preflight-evidence-reservation/.wrangler/staging/byok-d1-prior-code-reservation/result.json",
+      "sha256": "c8761e0bbda5be43801988661225533eb63643ce5961fdd1cf4fb071698b6c81"
+    },
+    {
+      "path": ".wrangler/staging/byok-preflight-evidence-v284-local-first/integrated/.wrangler/staging/byok-d1-preflight-evidence-reservation/.wrangler/staging/byok-d1-paid-plan-reservation/result.json",
+      "sha256": "58f3257955454126c63a09d82656f4a50f338dd6b963cb660c5704026746aa5e"
+    },
+    {
+      "path": ".wrangler/staging/byok-preflight-evidence-v284-local-first/integrated/.wrangler/staging/byok-d1-preflight-evidence-reservation/.wrangler/staging/byok-d1-prior-code-reservation/journal.jsonl",
+      "sha256": "d525412b53aecc9e3695ab8edb082ff9acbec7470afa789f8f33e820f855fde9"
+    },
+    {
+      "path": ".wrangler/staging/byok-preflight-evidence-v284-local-first/integrated/.wrangler/staging/byok-d1-preflight-evidence-reservation/.wrangler/staging/byok-d1-paid-plan-reservation/journal.jsonl",
+      "sha256": "5beb78f9dbfbc0bbd974f987e5b25ec55991105898763aefa37c1df6fa778a4d"
+    },
+    {
+      "path": ".wrangler/staging/byok-preflight-evidence-v284-local-first/integrated/.wrangler/staging/byok-d1-preflight-evidence-reservation/.wrangler/staging/byok-d1-prior-code-reservation/cinatoken-proxy-staging-0.bin",
+      "sha256": "877b44083de577ef9d0b0f0329c441391afed421d6cfd58fa1d91a39d74ba97f"
+    },
+    {
+      "path": ".wrangler/staging/byok-preflight-evidence-v284-local-first/integrated/.wrangler/staging/byok-d1-preflight-evidence-reservation/.wrangler/staging/byok-d1-prior-code-reservation/cinatoken-staging-recovery-control-0.bin",
+      "sha256": "877b44083de577ef9d0b0f0329c441391afed421d6cfd58fa1d91a39d74ba97f"
+    },
+    {
+      "path": ".wrangler/staging/byok-preflight-evidence-v284-local-first/integrated/.wrangler/staging/byok-d1-preflight-evidence-reservation/.wrangler/staging/byok-d1-prior-code-reservation/cinatoken-staging-usage-recovery-0.bin",
+      "sha256": "877b44083de577ef9d0b0f0329c441391afed421d6cfd58fa1d91a39d74ba97f"
+    },
+    {
+      "path": ".wrangler/staging/byok-preflight-evidence-v284-local-first/integrated/.wrangler/staging/byok-d1-preflight-evidence-reservation/journal.jsonl",
+      "sha256": "fb45f321ca87d3c8cb4a9e002c0a1b319253f16a08f1bd4fe9012215f93867b0"
+    },
+    {
+      "path": ".wrangler/staging/byok-preflight-evidence-v284-local-final/result.json",
+      "sha256": "3a341d60ca1ee9177ebeaef00e72e19edfa8214cdd1eb46a2d1aad44d8a5dff1"
+    },
+    {
+      "path": ".wrangler/staging/byok-preflight-evidence-v284-final-source/byok-d1-preflight-evidence.mjs",
+      "sha256": "0c85e33f03d8b052205427f07acf2d75a61161d73f12fc4ec081aae18f4b9aac"
+    },
+    {
+      "path": ".wrangler/staging/byok-preflight-evidence-v284-final-source/byok-d1-preflight-evidence.test.mjs",
+      "sha256": "087516725e70db9ff29a82b97e31e06b1ff571a1f13a2e7938a1d163e9bcadd6"
+    },
+    {
+      "path": ".wrangler/staging/byok-preflight-evidence-v284-final-source/verify-byok-preflight-evidence-v284.mjs",
+      "sha256": "ba989617d02b2904c57de8607f1286dc14b767ec4a22be4641888dfebf57d4fe"
+    },
+    {
+      "path": ".wrangler/staging/byok-preflight-evidence-v284-local-final/discovery-producer-build.log",
+      "sha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b"
+    },
+    {
+      "path": ".wrangler/staging/byok-preflight-evidence-v284-local-final/component-discovery-tests.log",
+      "sha256": "ab21c982e7be2bd6e60602011699f834b4511e0f7966e58470720f61f6ac219f"
+    },
+    {
+      "path": ".wrangler/staging/byok-preflight-evidence-v284-local-final/wrangler-version.log",
+      "sha256": "f1102a41d8256c5e6eb764e0a219400040e825189415ee77714a8439d047073e"
+    },
+    {
+      "path": ".wrangler/staging/byok-preflight-evidence-v284-local-final/verified-receiver.log",
+      "sha256": "e33e57675002794820acbf81814554c04ccff15b95505711e6be5c918fd2389a"
+    },
+    {
+      "path": ".wrangler/staging/byok-preflight-evidence-v284-local-final/verified-controller.log",
+      "sha256": "bd3bbe503148a002d1425702543394897ed3d1512302664559118e77962823a2"
+    },
+    {
+      "path": ".wrangler/staging/byok-preflight-evidence-v284-local-final/verified-gateway.log",
+      "sha256": "01ca3626174c35ece3150b7dc50c68909957f2b2c1c61db0c80b57ca73473ff6"
+    },
+    {
+      "path": ".wrangler/staging/byok-preflight-evidence-v284-local-final/verified-operator-build.log",
+      "sha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b"
+    },
+    {
+      "path": ".wrangler/staging/byok-preflight-evidence-v284-local-final/verified-producer-build.log",
+      "sha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b"
+    },
+    {
+      "path": ".wrangler/staging/byok-preflight-evidence-v284-local-final/component-verified-tests.log",
+      "sha256": "b269eb88127763cfdd2cee9a174ccc16e7910dfde8d18c26f3e4dad21e9dedfe"
+    },
+    {
+      "path": ".wrangler/staging/byok-preflight-evidence-v284-local-final/existing-paid-plan.log",
+      "sha256": "dc627fb52a386b2a07fb2d8fd818de7c77a32e45411e0338b58e27e6fcf49934"
+    },
+    {
+      "path": ".wrangler/staging/byok-preflight-evidence-v284-local-final/existing-prior-code.log",
+      "sha256": "6650c520038e74e88af9c64bbfa7c7a62e20e5ab04444061ff65fe9e0c76bb2a"
+    },
+    {
+      "path": ".wrangler/staging/byok-preflight-evidence-v284-local-final/discovery/preflight-evidence.mjs",
+      "sha256": "24b899a89be98cc0106c16a2d3ac9afe8288113251a1de6ff4f16053faacaacb"
+    },
+    {
+      "path": ".wrangler/staging/byok-preflight-evidence-v284-local-final/discovery/preflight-evidence.meta.json",
+      "sha256": "6d2082150c7db0396f5641a2b96e4e4e759b76c4caf597515c5d478822550845"
+    },
+    {
+      "path": ".wrangler/staging/byok-preflight-evidence-v284-local-final/verified/preflight-evidence.mjs",
+      "sha256": "24b899a89be98cc0106c16a2d3ac9afe8288113251a1de6ff4f16053faacaacb"
+    },
+    {
+      "path": ".wrangler/staging/byok-preflight-evidence-v284-local-final/verified/preflight-evidence.meta.json",
+      "sha256": "e53472eac879f2cfbf890a51e51c4f21b9e3d8c2c709cf94957c8edd6860cff9"
+    },
+    {
+      "path": ".wrangler/staging/byok-preflight-evidence-v284-local-final/verified/receiver.meta.json",
+      "sha256": "5e1ae9bf36dc05c56f31b207b8c48f7bbd215a4cd28d058c364ebef801926721"
+    },
+    {
+      "path": ".wrangler/staging/byok-preflight-evidence-v284-local-final/verified/maintenance/byok-d1-maintenance-worker.js.map",
+      "sha256": "97095e7b364a05220755c0ec5c04a0b49b0293923815eaf917072002a8787cc3"
+    },
+    {
+      "path": ".wrangler/staging/byok-preflight-evidence-v284-local-final/verified/maintenance/byok-d1-maintenance-worker.js",
+      "sha256": "c5ebd26cd60a685b31603cf28627c2d2217f6e2ebfc9b908e010736b3070912f"
+    },
+    {
+      "path": ".wrangler/staging/byok-preflight-evidence-v284-local-final/verified/controller.meta.json",
+      "sha256": "3527b376ceabe9390012b952a830bbca76723f035a4a1f92275a1c21c243bede"
+    },
+    {
+      "path": ".wrangler/staging/byok-preflight-evidence-v284-local-final/verified/maintenance-control/byok-d1-maintenance-control-worker.js.map",
+      "sha256": "ef070de3cd36106624365d9d3f82e1f58db986919e9663721e9e0ad481d56734"
+    },
+    {
+      "path": ".wrangler/staging/byok-preflight-evidence-v284-local-final/verified/maintenance-control/byok-d1-maintenance-control-worker.js",
+      "sha256": "c991d072facc54910b343047aa3ed4b3cd3ea380a3f36bb2d71026657443af7d"
+    },
+    {
+      "path": ".wrangler/staging/byok-preflight-evidence-v284-local-final/verified/gateway.meta.json",
+      "sha256": "95c87bb69e578edc631ea3b02ff89b700ba0a693e97b65cedbcf881da52b2a53"
+    },
+    {
+      "path": ".wrangler/staging/byok-preflight-evidence-v284-local-final/verified/gateway/byok-d1-gateway-worker.js.map",
+      "sha256": "a857194cddf5c41afc5cb7522c97acc5eeeebe6e7bdfbd9dc221fd5e4d3fd23e"
+    },
+    {
+      "path": ".wrangler/staging/byok-preflight-evidence-v284-local-final/verified/gateway/byok-d1-gateway-worker.js",
+      "sha256": "efc80a5b58a5182f604013db5f9cb4da716ed0b17b2d6abb8acd2235ce2d4658"
+    },
+    {
+      "path": ".wrangler/staging/byok-preflight-evidence-v284-local-final/verified/operator.meta.json",
+      "sha256": "264a26b70f2a158b75034a82783a769cfbdd8fd4cf4d7b3e286445985826bf56"
+    },
+    {
+      "path": ".wrangler/staging/byok-preflight-evidence-v284-local-final/verified/operator.mjs",
+      "sha256": "b6b7252318752d98a59f22c7c814174210872d819f06b8ec6f401a844dec2352"
+    },
+    {
+      "path": ".wrangler/staging/byok-preflight-evidence-v284-local-final/source-snapshot.json",
+      "sha256": "8b80f9b5fc8f4af6029c009fcaf07881c8b6ce75d4faaf1d8d62485b04080990"
+    },
+    {
+      "path": ".wrangler/staging/byok-preflight-evidence-v284-local-final/integrated-result.json",
+      "sha256": "a1e23b0c48f67931c784ad3b8fc12dc0c8ff58655e587957142126613cae5483"
+    },
+    {
+      "path": ".wrangler/staging/byok-preflight-evidence-v284-local-final/integrated/.wrangler/staging/byok-d1-preflight-evidence-reservation/result.json",
+      "sha256": "f19221f9d8e5fb51aac54d48e65c00ab5e02dc2091b2521fcf7c1c613ebd7750"
+    },
+    {
+      "path": ".wrangler/staging/byok-preflight-evidence-v284-local-final/integrated/.wrangler/staging/byok-d1-preflight-evidence-reservation/.wrangler/staging/byok-d1-prior-code-reservation/result.json",
+      "sha256": "fc6a1b160c21a3904331a2424765a1abd3e866a7bd432f05495fd03f4730deee"
+    },
+    {
+      "path": ".wrangler/staging/byok-preflight-evidence-v284-local-final/integrated/.wrangler/staging/byok-d1-preflight-evidence-reservation/.wrangler/staging/byok-d1-paid-plan-reservation/result.json",
+      "sha256": "ae276dc317a537714658cc5516185661d2404377f26ae97a31ea3ba9eef69966"
+    },
+    {
+      "path": ".wrangler/staging/byok-preflight-evidence-v284-local-final/integrated/.wrangler/staging/byok-d1-preflight-evidence-reservation/.wrangler/staging/byok-d1-prior-code-reservation/journal.jsonl",
+      "sha256": "aa0121c76286f427a5260a839cc7c5ba1f544303c7c695c5d761cf422b71a088"
+    },
+    {
+      "path": ".wrangler/staging/byok-preflight-evidence-v284-local-final/integrated/.wrangler/staging/byok-d1-preflight-evidence-reservation/.wrangler/staging/byok-d1-paid-plan-reservation/journal.jsonl",
+      "sha256": "9ecfe3d8ee9b63ec759d59e10cd90025a23fb25ddabd21ececdbee089b74258d"
+    },
+    {
+      "path": ".wrangler/staging/byok-preflight-evidence-v284-local-final/integrated/.wrangler/staging/byok-d1-preflight-evidence-reservation/.wrangler/staging/byok-d1-prior-code-reservation/cinatoken-proxy-staging-0.bin",
+      "sha256": "877b44083de577ef9d0b0f0329c441391afed421d6cfd58fa1d91a39d74ba97f"
+    },
+    {
+      "path": ".wrangler/staging/byok-preflight-evidence-v284-local-final/integrated/.wrangler/staging/byok-d1-preflight-evidence-reservation/.wrangler/staging/byok-d1-prior-code-reservation/cinatoken-staging-recovery-control-0.bin",
+      "sha256": "877b44083de577ef9d0b0f0329c441391afed421d6cfd58fa1d91a39d74ba97f"
+    },
+    {
+      "path": ".wrangler/staging/byok-preflight-evidence-v284-local-final/integrated/.wrangler/staging/byok-d1-preflight-evidence-reservation/.wrangler/staging/byok-d1-prior-code-reservation/cinatoken-staging-usage-recovery-0.bin",
+      "sha256": "877b44083de577ef9d0b0f0329c441391afed421d6cfd58fa1d91a39d74ba97f"
+    },
+    {
+      "path": ".wrangler/staging/byok-preflight-evidence-v284-local-final/integrated/.wrangler/staging/byok-d1-preflight-evidence-reservation/journal.jsonl",
+      "sha256": "53b4bd31dcff98bda8c96c9e659e9f810505168547284c4e4f12b9ea821b2610"
+    },
+    {
+      "path": ".wrangler/staging/byok-preflight-evidence-v284-local-verified/result.json",
+      "sha256": "4751104c5ec485931000d21dae163722bb6d9459782c40a9c731c5dc7c858cab"
+    },
+    {
+      "path": "scripts/deploy/byok-d1-preflight-evidence.mjs",
+      "sha256": "cd156de51492494c7e4008ef2cf7fd20f26ee11ca0108404cf2dca164a0fcd34"
+    },
+    {
+      "path": "scripts/deploy/byok-d1-preflight-evidence.test.mjs",
+      "sha256": "f01aed94b827735a0e0b6dbfc5fbdb4c37e532158e651b961e62ba2174f82b33"
+    },
+    {
+      "path": ".wrangler/staging/verify-byok-preflight-evidence-v284.mjs",
+      "sha256": "ba989617d02b2904c57de8607f1286dc14b767ec4a22be4641888dfebf57d4fe"
+    },
+    {
+      "path": ".wrangler/staging/byok-preflight-evidence-v284-local-verified/discovery-producer-build.log",
+      "sha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b"
+    },
+    {
+      "path": ".wrangler/staging/byok-preflight-evidence-v284-local-verified/component-discovery-tests.log",
+      "sha256": "e058b47143810838b4b2a74a042a12cce28543d972db056173ec246dbf2c126b"
+    },
+    {
+      "path": ".wrangler/staging/byok-preflight-evidence-v284-local-verified/wrangler-version.log",
+      "sha256": "f1102a41d8256c5e6eb764e0a219400040e825189415ee77714a8439d047073e"
+    },
+    {
+      "path": ".wrangler/staging/byok-preflight-evidence-v284-local-verified/verified-receiver.log",
+      "sha256": "e33e57675002794820acbf81814554c04ccff15b95505711e6be5c918fd2389a"
+    },
+    {
+      "path": ".wrangler/staging/byok-preflight-evidence-v284-local-verified/verified-controller.log",
+      "sha256": "bd3bbe503148a002d1425702543394897ed3d1512302664559118e77962823a2"
+    },
+    {
+      "path": ".wrangler/staging/byok-preflight-evidence-v284-local-verified/verified-gateway.log",
+      "sha256": "01ca3626174c35ece3150b7dc50c68909957f2b2c1c61db0c80b57ca73473ff6"
+    },
+    {
+      "path": ".wrangler/staging/byok-preflight-evidence-v284-local-verified/verified-operator-build.log",
+      "sha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b"
+    },
+    {
+      "path": ".wrangler/staging/byok-preflight-evidence-v284-local-verified/verified-producer-build.log",
+      "sha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b"
+    },
+    {
+      "path": ".wrangler/staging/byok-preflight-evidence-v284-local-verified/component-verified-tests.log",
+      "sha256": "51078be15f59d49aa0955b3f00cd7d1c0a835830a9317fa4cdf061dbaa209f82"
+    },
+    {
+      "path": ".wrangler/staging/byok-preflight-evidence-v284-local-verified/existing-paid-plan.log",
+      "sha256": "d6d8de8cf045aa0bed64014dd8c6a6313caad636c70d34159ebe37dd146cd0f5"
+    },
+    {
+      "path": ".wrangler/staging/byok-preflight-evidence-v284-local-verified/existing-prior-code.log",
+      "sha256": "3ba4c3aac63342a13e222c0510438ba444b3642c1f39d9b3697ddd88edd97648"
+    },
+    {
+      "path": ".wrangler/staging/byok-preflight-evidence-v284-local-verified/discovery/preflight-evidence.mjs",
+      "sha256": "d80df4f1a07c497ef91a8e237040d46856b0bbde27399805330511d9b9676e70"
+    },
+    {
+      "path": ".wrangler/staging/byok-preflight-evidence-v284-local-verified/discovery/preflight-evidence.meta.json",
+      "sha256": "7d7338b3dd9f7f013e0a60e560d1effd8709ac9d997418ed45f6e670ec44bfcb"
+    },
+    {
+      "path": ".wrangler/staging/byok-preflight-evidence-v284-local-verified/verified/preflight-evidence.mjs",
+      "sha256": "d80df4f1a07c497ef91a8e237040d46856b0bbde27399805330511d9b9676e70"
+    },
+    {
+      "path": ".wrangler/staging/byok-preflight-evidence-v284-local-verified/verified/preflight-evidence.meta.json",
+      "sha256": "e58f74cbf68237bc2d5b5811b7186f198ffe03dc50b5186c32b014769422fdc5"
+    },
+    {
+      "path": ".wrangler/staging/byok-preflight-evidence-v284-local-verified/verified/receiver.meta.json",
+      "sha256": "62501a52fe415a1aaebdb31580326c6f0d3ed0a2599be3a6593d5074b97fcad7"
+    },
+    {
+      "path": ".wrangler/staging/byok-preflight-evidence-v284-local-verified/verified/maintenance/byok-d1-maintenance-worker.js.map",
+      "sha256": "97c50d6ebe3c3f62a73706a0340e9b8245487d6d47073c4e785ec9ffe4fa00ec"
+    },
+    {
+      "path": ".wrangler/staging/byok-preflight-evidence-v284-local-verified/verified/maintenance/byok-d1-maintenance-worker.js",
+      "sha256": "c5ebd26cd60a685b31603cf28627c2d2217f6e2ebfc9b908e010736b3070912f"
+    },
+    {
+      "path": ".wrangler/staging/byok-preflight-evidence-v284-local-verified/verified/controller.meta.json",
+      "sha256": "b2f11c21a9ec6827abbbfb7ac22811f0dcd7d6149ea361ea1837b072c5215fcb"
+    },
+    {
+      "path": ".wrangler/staging/byok-preflight-evidence-v284-local-verified/verified/maintenance-control/byok-d1-maintenance-control-worker.js.map",
+      "sha256": "9f4a80c328c9324ebdca5922c86d810737cc116b64888869d84010bfa481a1bd"
+    },
+    {
+      "path": ".wrangler/staging/byok-preflight-evidence-v284-local-verified/verified/maintenance-control/byok-d1-maintenance-control-worker.js",
+      "sha256": "c991d072facc54910b343047aa3ed4b3cd3ea380a3f36bb2d71026657443af7d"
+    },
+    {
+      "path": ".wrangler/staging/byok-preflight-evidence-v284-local-verified/verified/gateway.meta.json",
+      "sha256": "2eeae3102ed35f48b95c54e5fd33f0c99dcac18213cb32ff1a7e262c3df5b5f0"
+    },
+    {
+      "path": ".wrangler/staging/byok-preflight-evidence-v284-local-verified/verified/gateway/byok-d1-gateway-worker.js.map",
+      "sha256": "ebbeecc413124c38d5033cef7c619590ce62c0d3807c41f618e3d8b9d58e8fd3"
+    },
+    {
+      "path": ".wrangler/staging/byok-preflight-evidence-v284-local-verified/verified/gateway/byok-d1-gateway-worker.js",
+      "sha256": "efc80a5b58a5182f604013db5f9cb4da716ed0b17b2d6abb8acd2235ce2d4658"
+    },
+    {
+      "path": ".wrangler/staging/byok-preflight-evidence-v284-local-verified/verified/operator.meta.json",
+      "sha256": "b9b718b8a9a8aecd56cd924f2dba05bd4ba118690d4115d66b39223e404dd356"
+    },
+    {
+      "path": ".wrangler/staging/byok-preflight-evidence-v284-local-verified/verified/operator.mjs",
+      "sha256": "b6b7252318752d98a59f22c7c814174210872d819f06b8ec6f401a844dec2352"
+    },
+    {
+      "path": ".wrangler/staging/byok-preflight-evidence-v284-local-verified/source-snapshot.json",
+      "sha256": "8c863899ed7173f645ecb50d91b0a6ccb12282a35e79eac41e4c396d53616ea8"
+    },
+    {
+      "path": ".wrangler/staging/byok-preflight-evidence-v284-local-verified/integrated-result.json",
+      "sha256": "9be917915ef612233b578bba0e5a275ef2f3ce6ecc244a17ba49108f342abbcc"
+    },
+    {
+      "path": ".wrangler/staging/byok-preflight-evidence-v284-local-verified/integrated/.wrangler/staging/byok-d1-preflight-evidence-reservation/result.json",
+      "sha256": "a727a5d0781bf052231812662569aba8232b5c42b1ebd8262795c278f03c04ce"
+    },
+    {
+      "path": ".wrangler/staging/byok-preflight-evidence-v284-local-verified/integrated/.wrangler/staging/byok-d1-preflight-evidence-reservation/.wrangler/staging/byok-d1-prior-code-reservation/result.json",
+      "sha256": "f4c714d894cea342dfa1ac36db1ebb37612d56ef62eff3661220b4cbd477fa48"
+    },
+    {
+      "path": ".wrangler/staging/byok-preflight-evidence-v284-local-verified/integrated/.wrangler/staging/byok-d1-preflight-evidence-reservation/.wrangler/staging/byok-d1-paid-plan-reservation/result.json",
+      "sha256": "ea8fcd43fcfef8947aaa22fecf4d34934d2d710d6e06de637ffa7be3b6e5dc42"
+    },
+    {
+      "path": ".wrangler/staging/byok-preflight-evidence-v284-local-verified/integrated/.wrangler/staging/byok-d1-preflight-evidence-reservation/.wrangler/staging/byok-d1-prior-code-reservation/journal.jsonl",
+      "sha256": "fbc359f3a16b48d1d056df6ea04600ff1b16d90b4fc78b4fe30f1058790e575a"
+    },
+    {
+      "path": ".wrangler/staging/byok-preflight-evidence-v284-local-verified/integrated/.wrangler/staging/byok-d1-preflight-evidence-reservation/.wrangler/staging/byok-d1-paid-plan-reservation/journal.jsonl",
+      "sha256": "9bc32c1deecf0e3665934a0c953b2efa8829836fd5b625c201e5b3bb084ff9eb"
+    },
+    {
+      "path": ".wrangler/staging/byok-preflight-evidence-v284-local-verified/integrated/.wrangler/staging/byok-d1-preflight-evidence-reservation/.wrangler/staging/byok-d1-prior-code-reservation/cinatoken-proxy-staging-0.bin",
+      "sha256": "877b44083de577ef9d0b0f0329c441391afed421d6cfd58fa1d91a39d74ba97f"
+    },
+    {
+      "path": ".wrangler/staging/byok-preflight-evidence-v284-local-verified/integrated/.wrangler/staging/byok-d1-preflight-evidence-reservation/.wrangler/staging/byok-d1-prior-code-reservation/cinatoken-staging-recovery-control-0.bin",
+      "sha256": "877b44083de577ef9d0b0f0329c441391afed421d6cfd58fa1d91a39d74ba97f"
+    },
+    {
+      "path": ".wrangler/staging/byok-preflight-evidence-v284-local-verified/integrated/.wrangler/staging/byok-d1-preflight-evidence-reservation/.wrangler/staging/byok-d1-prior-code-reservation/cinatoken-staging-usage-recovery-0.bin",
+      "sha256": "877b44083de577ef9d0b0f0329c441391afed421d6cfd58fa1d91a39d74ba97f"
+    },
+    {
+      "path": ".wrangler/staging/byok-preflight-evidence-v284-local-verified/integrated/.wrangler/staging/byok-d1-preflight-evidence-reservation/journal.jsonl",
+      "sha256": "0f8067ce3b403bc8483302b0645b00f01fa58754dbb25796e69b10b7a9b3981d"
+    },
+    {
+      "path": "scripts/deploy/byok-d1-paid-plan.mjs",
+      "sha256": "8d24d987548a59c3635bcb4d109b1fdaad01eb15d0a2ef3140188d135b011260"
+    },
+    {
+      "path": "scripts/deploy/byok-d1-paid-plan.test.mjs",
+      "sha256": "f6a09d5e55af3fb0578893749d39cfe677dc82af012cea3b40bc10348f99d663"
+    },
+    {
+      "path": "scripts/deploy/byok-d1-prior-code.mjs",
+      "sha256": "0b1b3d02b70c3e4916fff1a0260dd4d49c5e45ba414ef4c0761c3a184de12236"
+    },
+    {
+      "path": "scripts/deploy/byok-d1-prior-code.test.mjs",
+      "sha256": "2a5b4a84a94412e6e081b4e78920014c348a5c02aebc5050760c6f930dcd4d50"
+    },
+    {
+      "path": ".wrangler/staging/summarize-byok-preflight-evidence-v284.mjs",
+      "sha256": "70619785d2084ddda798a45060555aaf5f6c3cfe9ef5235877008e6cdd69baab"
+    }
+  ]
+}

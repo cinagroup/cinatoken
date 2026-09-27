@@ -1,0 +1,25 @@
+name: Images SSE snapshot native D1 metadata safety
+on:
+  pull_request:
+    paths: ['packages/core/**', 'packages/proxy/**', 'scripts/deploy/**', 'package-lock.json', '.github/workflows/images-sse-snapshot-v2-safety.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  native-sqlite-contract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    strategy:
+      matrix:
+        node: [22, 24]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+          cache: npm
+      - run: npm ci
+      - run: npm run build:node-index -w @octafuse/core
+      - run: npm run typecheck:images:staging -w @octafuse/proxy
+      # Local SQL total_changes deltas include real triggers; no cloud authorization or deployment.
+      - run: node node_modules/tsx/dist/cli.mjs --test packages/proxy/scripts/staging/images-sse-snapshot-fault-v2.test.mjs packages/proxy/scripts/staging/images-sse-snapshot-reconciliation-v2.test.mjs packages/proxy/src/services/image-sse-delivery-gate.test.ts scripts/deploy/staging-sql-row-guard.test.mjs

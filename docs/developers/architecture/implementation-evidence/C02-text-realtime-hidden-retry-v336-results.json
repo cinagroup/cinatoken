@@ -1,0 +1,74 @@
+{
+  "version": "v336",
+  "date": "2026-09-24",
+  "status": "LOCAL_TEXT_REALTIME_HIDDEN_RETRY_SUBSET_PASS_C02_OPEN",
+  "goalComplete": false,
+  "gitHeadAtEvidence": "7eb59008f7d8e156e81fd18a57658fdef2553264",
+  "scope": {
+    "textProtocols": ["openai.chat", "openai.responses", "anthropic.messages", "gemini.generateContent/streamGenerateContent"],
+    "realtimeOperations": ["audio.transcriptions.realtime.inference", "audio.transcriptions.realtime.session", "audio.speech.realtime.inference", "audio.speech.realtime.session"],
+    "realtimeRuntimes": ["Node ws fixture", "Worker Upgrade fixture"],
+    "ambiguousHttpStatuses": ["300-399", 408, 499, "500-599"],
+    "clearRejectionStatuses": [400, 401, 429],
+    "c02_5Complete": false,
+    "c02_6Complete": false,
+    "c02_GComplete": false
+  },
+  "beforeFix": {
+    "text503": { "protocolScenarios": 4, "candidateCount": 2, "postCountPerScenario": 2, "serverReceivedFullPost": true },
+    "text408And499": { "postCountPerScenario": 1, "unknownMetaPresent": false },
+    "realtime503": { "operationRuntimeScenarios": 8, "candidateCount": 12, "connectionCountPerScenario": 3, "source": "existing synthetic lifecycle fixture expectation" }
+  },
+  "afterFix": {
+    "text503": { "postCountPerScenario": 1, "unknownMetaPresent": true, "failoverForbidden": true },
+    "text408And499": { "postCountPerScenario": 1, "unknownMetaPresent": true, "failoverForbidden": true },
+    "realtime503": { "connectionCountPerScenario": 1, "unknownMetaPresent": true, "failoverForbidden": true },
+    "clearText429": { "candidateCount": 2, "postCount": 2 },
+    "nativeNodeWs": { "followRedirects": false, "nativeLoopbackUpgradeRequestCount": 1 },
+    "workerUpgrade": { "fetchRedirectMode": "manual" }
+  },
+  "validation": {
+    "combinedTestFiles": 8,
+    "combinedTests": 350,
+    "combinedPass": 350,
+    "combinedFail": 0,
+    "newTextLoopbackTests": { "tests": 20, "pass": 20 },
+    "existingTextWireTests": { "tests": 112, "pass": 112 },
+    "realtimeTests": { "tests": 194, "pass": 194 },
+    "textBoundaryTests": { "tests": 24, "pass": 24 },
+    "proxyTextStreamScript": { "tests": 188, "pass": 188, "overlapsCombinedFiles": true },
+    "proxyTypecheck": "PASS",
+    "gitDiffCheck": "PASS"
+  },
+  "ci": {
+    "newTextAndExistingWireTestsInProxyDispatchSafetyScript": true,
+    "newTextAndExistingWireTestsInProxyUnitScript": true,
+    "newTextAndExistingWireTestsInProxyTextStreamScript": true,
+    "realtimeTestsInProxyDispatchSafetyScript": true,
+    "linuxRunVerifiedForTheseEdits": false
+  },
+  "sourceSha256": {
+    "packages/proxy/src/services/egress/ambiguous-upstream-status.ts": "92010933e8648ff0ab85104f33f7e5bfa1a17db3a40a4fad0c6e9b1931745fd5",
+    "packages/proxy/src/services/egress/openai-driver.ts": "8a88653f8bdd8e7113ff46b5604472c5993e471601ead132c944021f0dd1550e",
+    "packages/proxy/src/services/egress/openai-responses-driver.ts": "b3602e6b986812b2446d559d288248ea464bb5f261a2dae86ae705b8b4d3ae33",
+    "packages/proxy/src/services/egress/anthropic-driver.ts": "b00d71aaae75deb75de9ee14fb159d55da79ff3953b95d2775ac16f2ffcdfcaf",
+    "packages/proxy/src/services/egress/gemini-driver.ts": "4d6c550ad9e1881f4ccf0219fbf245b309b18eca88767294d2a2ac2605811b7a",
+    "packages/proxy/src/services/egress/realtime-connection-lifecycle.ts": "c9aade83692d91368d95309757e7709a33b61afc95e125e4f7c9be2c91849d99",
+    "packages/proxy/src/services/egress/realtime-connection-lifecycle.test.ts": "183512384f9b9393e35867ee82675fa81f95bc5df6d499ac6f22aee826e39a4c",
+    "packages/proxy/src/services/egress/text-hidden-retry.test.mjs": "b1f1df5616348210bbad1f33436bb03b07b54dd016157db7c89cad9bd9d4b2e9",
+    "packages/proxy/src/services/egress/text-redirect-wire.test.mjs": "c84b856f0a44d09ee6a39d69bd840fc78639d78fabf0718efbfea4c01271fcac",
+    "packages/proxy/package.json": "ef24c5a2b0e5475648ad06cc6157ec3579e7f9888a8ca52c0d69d8268fa81c7a"
+  },
+  "limits": {
+    "alertWebhookRedirectsAudited": true,
+    "alertWebhookEvidence": "C02-webhook-redirect-v336-results.json",
+    "auxiliaryCoreAndToolEngineNetworkRetriesAudited": false,
+    "realWorkersCloudflareTransportVerified": false,
+    "intermediateProxyRetryVerified": false,
+    "supplierInternalRetryVerified": false,
+    "supplierAcceptanceAndBillingVerified": false,
+    "fullC02AcceptanceVerified": false,
+    "externalProviderCalls": 0,
+    "deployments": 0
+  }
+}

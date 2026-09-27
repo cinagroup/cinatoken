@@ -36,6 +36,7 @@ export async function fetchJinaUrl(params: WebFetchParams): Promise<WebFetchResu
 	const fetchImpl = params.fetchImpl ?? fetch;
 	const response = await fetchImpl(JINA_ENDPOINT, {
 		method: 'POST',
+		redirect: 'manual',
 		headers: {
 			Authorization: `Bearer ${params.apiKey}`,
 			Accept: 'application/json',

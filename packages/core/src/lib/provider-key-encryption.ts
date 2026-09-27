@@ -12,6 +12,7 @@
  * salt/info 将其与共享密钥用途域分离）。
  */
 import type { ProvidersRepository } from "../storage/gateway-repository-interfaces";
+import { preparationRead, preparationMutation, type PreparationControl } from '../preparation-control';
 import { isProviderApiKeyEnvironmentReference } from "./provider-key-environment";
 import {
 	assertSharedKeyEncryptionSecret,
@@ -48,13 +49,16 @@ function providerContext(providerId: string): string {
 export async function decryptProviderApiKeyReadOnly(
 	providerId: string,
 	storedApiKey: string,
-	secret: string | undefined
+	secret: string | undefined,
+	control?: PreparationControl,
 ): Promise<string> {
+	control?.throwIfStopped();
 	if (!isEncryptedSharedKeySecret(storedApiKey)) return storedApiKey;
 	return decryptSharedKeySecret(
 		storedApiKey,
 		assertSharedKeyEncryptionSecret(secret),
-		providerContext(providerId)
+		providerContext(providerId),
+		control,
 	);
 }
 
@@ -72,8 +76,10 @@ export function createEncryptedProvidersRepository(
 
 	const reveal = async <T extends ProviderRowLike>(
 		row: T | null,
-		allowOnlineUpgrade = true
+		allowOnlineUpgrade = true,
+		control?: PreparationControl,
 	): Promise<T | null> => {
+		control?.throwIfStopped();
 		if (!row) return null;
 		const stored = row.api_key;
 		if (!stored) return row;
@@ -85,23 +91,24 @@ export function createEncryptedProvidersRepository(
 		if (!isEncryptedSharedKeySecret(stored)) {
 			// 明文旧行：首次读取即地加密
 			if (allowOnlineUpgrade) {
-				const encrypted = await encryptSharedKeySecret(stored, secret, context);
-				await repository.updateProviderByPatch(row.id, { api_key: encrypted });
+				const encrypted = await encryptSharedKeySecret(stored, secret, context, control);
+				await preparationMutation(control, () => repository.updateProviderByPatch(row.id, { api_key: encrypted }));
 			}
 			return row;
 		}
 		const plaintext = await decryptProviderApiKeyReadOnly(
 			row.id,
 			stored,
-			secret
+			secret,
+			control,
 		);
 		if (
 			allowOnlineUpgrade &&
 			isLegacyV1Envelope(stored) &&
 			repository.updateProviderByPatch
 		) {
-			const upgraded = await encryptSharedKeySecret(plaintext, secret, context);
-			await repository.updateProviderByPatch(row.id, { api_key: upgraded });
+			const upgraded = await encryptSharedKeySecret(plaintext, secret, context, control);
+			await preparationMutation(control, () => repository.updateProviderByPatch(row.id, { api_key: upgraded }));
 		}
 		return { ...row, api_key: plaintext };
 	};
@@ -160,8 +167,15 @@ export function createEncryptedProvidersRepository(
 		async listProviders() {
 			return revealMany(await repository.listProviders());
 		},
-		async getProvidersByIds(ids) {
-			return revealMany(await repository.getProvidersByIds(ids));
+		async getProvidersByIds(ids, control) {
+			const rows = await preparationRead(control, () => repository.getProvidersByIds(ids, control));
+			if (!control) return revealMany(rows);
+			const revealed: typeof rows = [];
+			for (const [index, row] of rows.entries()) {
+				const value = await reveal(row, index < MAX_ONLINE_KEY_UPGRADES_PER_BATCH, control);
+				if (value) revealed.push(value);
+			}
+			return revealed;
 		},
 		async getProviderById(id) {
 			return reveal(await repository.getProviderById(id));

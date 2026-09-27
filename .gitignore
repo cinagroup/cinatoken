@@ -36,3 +36,9 @@ cloudflare-worker/_deploy-common.sh
 cloudflare-worker/deploy-soloent.sh
 cloudflare-worker/deploy-octarouter.sh
 .zcode/
+
+# Local Firecrawl output (untrusted fetched content)
+.firecrawl/
+
+# Local pnpm content-addressable cache
+.pnpm-store/

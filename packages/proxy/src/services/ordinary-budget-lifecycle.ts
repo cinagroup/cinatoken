@@ -36,6 +36,7 @@ export type OrdinaryBudgetLifecycleErrorCode =
 	| 'invalid_time'
 	| 'invalid_reason'
 	| 'reserve_persistence_failed'
+	| 'recovery_persistence_failed'
 	| 'dispatch_persistence_failed'
 	| 'release_persistence_failed'
 	| 'forfeit_persistence_failed';
@@ -475,6 +476,7 @@ async function releaseRejectedReservationBestEffort(
 export async function reserveOrdinaryUserBudget(
 	repositories: OrdinaryBudgetRepositories,
 	params: ReserveOrdinaryBudgetParams,
+	options: { recoveryFailureMode?: 'warn' | 'fail_closed' } = {},
 ): Promise<OrdinaryBudgetAdmissionResult> {
 	const identityError = validateIdentity(params);
 	if (identityError) return identityError;
@@ -511,6 +513,15 @@ export async function reserveOrdinaryUserBudget(
 			if (recovered < ORDINARY_BUDGET_RECOVERY_PAGE_SIZE) break;
 		}
 	} catch (error) {
+		if (options.recoveryFailureMode === 'fail_closed') {
+			throw lifecycleError({
+				code: 'recovery_persistence_failed',
+				message: 'Ordinary budget lease recovery could not be confirmed',
+				requestId: params.requestId,
+				leaseState: null,
+				cause: error,
+			});
+		}
 		console.warn(JSON.stringify({
 			message: 'ordinary budget lease recovery failed',
 			error: error instanceof Error ? error.message : String(error),

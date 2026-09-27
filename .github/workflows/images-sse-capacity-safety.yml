@@ -1,0 +1,23 @@
+name: Images SSE capacity ownership safety
+on:
+  pull_request:
+    paths: ['scripts/deploy/**', 'packages/proxy/**', 'packages/core/**', 'package-lock.json', '.github/workflows/images-sse-capacity-safety.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  ownership:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    strategy:
+      matrix:
+        node: [22, 24]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+          cache: npm
+      - run: npm ci
+      # Real local SQLite, synthetic credentials; external fetch forbidden by fixture.
+      - run: node node_modules/tsx/dist/cli.mjs --test packages/proxy/scripts/staging/images-sse-capacity-ownership.test.mjs packages/proxy/src/services/request-capacity.test.ts packages/proxy/src/services/capacity-response-body.test.ts packages/proxy/src/app-request-capacity.test.ts packages/proxy/src/runtime/schedule-background-work.test.ts packages/proxy/src/runtime/workers-maintenance.test.ts

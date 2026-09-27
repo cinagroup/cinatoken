@@ -81,6 +81,7 @@ export type ManagementWorkspaceDeleteResult =
 	| 'deleted'
 	| 'not_found'
 	| 'active_keys'
+	| 'recovery_history'
 	| 'account_default_anchor'
 	| 'confirmation_required';
 

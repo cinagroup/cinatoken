@@ -1,0 +1,218 @@
+{
+  "version": 1,
+  "date": "2026-09-05",
+  "head": "7eb59008f7d8e156e81fd18a57658fdef2553264",
+  "status": "LOCAL_PASS_LISTED_NODE_SUBSET",
+  "wholeC02Gate": "DOING",
+  "evidence": "C02-vector-auxiliary-auth.md",
+  "environment": {
+    "os": "Windows",
+    "node": "24.14.1",
+    "workersTypes": "5.20260829.1",
+    "node22": "not_run",
+    "workersRuntime": "not_verified_prior_native_startup_failure_not_retried"
+  },
+  "limits": {
+    "inferencePermits": 3,
+    "auxiliaryAuthExchanges": 3,
+    "vectorDispatchDeadlineMs": 300000,
+    "vectorDeadlineStartsAt": "proxy_dispatch_not_ingress"
+  },
+  "coverage": {
+    "wiredApplicationOAuthCalls": 6,
+    "remainingApplicationOAuthCalls": 11,
+    "newTests": 56,
+    "vertexNewTests": 32,
+    "vectorApiNewTests": 24,
+    "financialVerification": "real_route_to_generated_SQL_parameters_with_synthetic_storage_not_database_atomicity"
+  },
+  "verification": [
+    {
+      "command": "npm.cmd run typecheck -w @octafuse/proxy",
+      "exitCode": 0
+    },
+    {
+      "command": "npm.cmd run typecheck:dispatch-safety -w @octafuse/proxy",
+      "exitCode": 0
+    },
+    {
+      "command": "tsx --test packages/proxy/src/services/egress/vertex-service-account.test.ts packages/proxy/src/routes/v1/request-dispatch-limit.test.ts",
+      "exitCode": 0,
+      "tests": 177,
+      "suites": 1,
+      "failed": 0,
+      "cancelled": 0,
+      "skipped": 0
+    },
+    {
+      "command": "npm.cmd test -w @octafuse/proxy",
+      "exitCode": 0,
+      "mainTests": 908,
+      "mainSuites": 134,
+      "failed": 0,
+      "cancelled": 0,
+      "skipped": 0
+    },
+    {
+      "command": "npm.cmd run test:dispatch-safety -w @octafuse/proxy",
+      "exitCode": 0,
+      "tests": 414,
+      "suites": 23,
+      "failed": 0,
+      "cancelled": 0,
+      "skipped": 0
+    },
+    {
+      "command": "git diff --check",
+      "exitCode": 0
+    }
+  ],
+  "countsOverlap": true,
+  "coreFullSuite": "not_rerun_core_sources_unchanged",
+  "baselineAudit": {
+    "baselineFiles": 104,
+    "unchanged": 99,
+    "changed": [
+      "docs/developers/architecture/implementation-evidence/README.md",
+      "docs/developers/architecture/v2.1-openrouter-implementation-checklist.md",
+      "packages/proxy/src/routes/v1/request-dispatch-limit.test.ts",
+      "packages/proxy/src/services/egress/vertex-service-account.test.ts",
+      "packages/proxy/src/services/proxy.ts"
+    ],
+    "unexpectedChanges": [],
+    "newDirtyFiles": [
+      "docs/developers/architecture/implementation-evidence/C02-vector-auxiliary-auth.md",
+      "packages/proxy/src/routes/v1/embeddings.ts",
+      "packages/proxy/src/routes/v1/rerank.ts",
+      "packages/proxy/src/services/egress/openai-embeddings-driver.ts",
+      "packages/proxy/src/services/egress/openai-rerank-driver.ts"
+    ],
+    "unexpectedNewDirtyFiles": [],
+    "headUnchanged": true,
+    "note": "Snapshot itself is added after this audit; four newly dirty source files were tracked and clean at turn start."
+  },
+  "files": [
+    {
+      "path": "packages/proxy/src/services/egress/openai-embeddings-driver.ts",
+      "sha256": "d74df4e729e1747f6d847074fbab2b9c0428b9e1ae904716c28924308d9bdfd7",
+      "role": "changed_this_turn"
+    },
+    {
+      "path": "packages/proxy/src/services/egress/openai-rerank-driver.ts",
+      "sha256": "22d917ca513df743a8fdf665082ef55a580f0ff183101f89a55889e28df16a8f",
+      "role": "changed_this_turn"
+    },
+    {
+      "path": "packages/proxy/src/services/proxy.ts",
+      "sha256": "ee88637ae86ca467d42afd8f34fca3bea9f3ace48fe463c069e6be1d7ef410f4",
+      "role": "changed_this_turn"
+    },
+    {
+      "path": "packages/proxy/src/routes/v1/embeddings.ts",
+      "sha256": "c4d8ff176ab3869f9361a19ab06d2492a4aa1bd6032403d73c99c5df276fba62",
+      "role": "changed_this_turn"
+    },
+    {
+      "path": "packages/proxy/src/routes/v1/rerank.ts",
+      "sha256": "f123bd00943794079baf3c06caefb40288172b497b6b3040f96fa32a0f29ecd7",
+      "role": "changed_this_turn"
+    },
+    {
+      "path": "packages/proxy/src/services/egress/vertex-service-account.test.ts",
+      "sha256": "93a76e55cba4b362482400cc46812b938499c8757d3f9c9e6df3ee1ba86892a2",
+      "role": "changed_this_turn"
+    },
+    {
+      "path": "packages/proxy/src/routes/v1/request-dispatch-limit.test.ts",
+      "sha256": "a94bd304eac4b9c4ae428ee41a1dd5f5725d93a865079f28a44f22fece407e0c",
+      "role": "changed_this_turn"
+    },
+    {
+      "path": "packages/core/src/gcp-service-account-token.ts",
+      "sha256": "f60f0c28d49c01306c520289d6747c511ed0d52cdc5878378997024bf7cd844c",
+      "role": "supporting_unchanged_this_turn"
+    },
+    {
+      "path": "packages/core/src/gcp-oauth-lifecycle.ts",
+      "sha256": "90b6456e2b7ae19ee2e0d04c3f0b1e470f757bc11a91bd478c13b9830e7e0c0b",
+      "role": "supporting_unchanged_this_turn"
+    },
+    {
+      "path": "packages/core/src/request-auxiliary-auth-budget.ts",
+      "sha256": "a2995a8cd480b150960beab7ccb2aae60352b46e5d3fc79fff5f813aa6ad197f",
+      "role": "supporting_unchanged_this_turn"
+    },
+    {
+      "path": "packages/core/src/index.ts",
+      "sha256": "f1d201e1571e5d2a067c8933b985af4c9cf202937f71cd1c124e7ae543dd6109",
+      "role": "supporting_unchanged_this_turn"
+    },
+    {
+      "path": "packages/proxy/src/services/failover-dispatch.ts",
+      "sha256": "6a93147fcf1c5c4f17db99ed03a7805b5fba7a98786f3153eeb27143fa4d853f",
+      "role": "supporting_unchanged_this_turn"
+    },
+    {
+      "path": "packages/proxy/src/services/request-dispatch-budget.ts",
+      "sha256": "53115c21920845089c19d9002c7e3b6c70f5fccdd3107f2fee30c0874393a066",
+      "role": "supporting_unchanged_this_turn"
+    },
+    {
+      "path": "packages/proxy/src/services/request-deadline.ts",
+      "sha256": "145b0dc9fb702d1ef67efe9c40593c92a61f9204bc538b0ae9d9d8c46f9c0869",
+      "role": "supporting_unchanged_this_turn"
+    },
+    {
+      "path": "packages/proxy/src/services/request-budget-admission.ts",
+      "sha256": "1a0f28f8d3cf6926bb95c22954ffec7c6390bd2a26a0405cce427e48873e16f6",
+      "role": "supporting_unchanged_this_turn"
+    },
+    {
+      "path": "packages/proxy/src/services/text-usage-settlement.ts",
+      "sha256": "833fdeb7161e2564f57e1dc4dafe2fe74434856137c7cf3ec5305532f4863390",
+      "role": "supporting_unchanged_this_turn"
+    },
+    {
+      "path": "packages/proxy/src/services/egress/text-json-response.ts",
+      "sha256": "a13f20c95aa29dd458e9591961050d71553ae67a8ba6f3a14f49d5d9ed5b9063",
+      "role": "supporting_unchanged_this_turn"
+    },
+    {
+      "path": "packages/proxy/src/services/egress/bounded-response-body.ts",
+      "sha256": "6356f5a60c624994c69b25dd81c5a868d8bd9105c49799f74cf63750ad279275",
+      "role": "supporting_unchanged_this_turn"
+    },
+    {
+      "path": "packages/proxy/src/services/usage-tracker.ts",
+      "sha256": "35304404b9de40b4adadfa8cd54d3320319ba9de18f85ea7cebe5e3fb0344967",
+      "role": "supporting_unchanged_this_turn"
+    },
+    {
+      "path": "packages/core/src/db/d1/critical-writes.impl.ts",
+      "sha256": "761865dbf9fbc69f1f3a5410649960fb99f6ef27bd6c415e1ceb17e5eea506df",
+      "role": "supporting_unchanged_this_turn"
+    },
+    {
+      "path": "packages/proxy/package.json",
+      "sha256": "d102bcb1463e7e05a17d6d22155dd4a9b12845a8380e07e405eaa59f59a40d52",
+      "role": "supporting_unchanged_this_turn"
+    },
+    {
+      "path": "packages/proxy/tsconfig.dispatch-safety.json",
+      "sha256": "c4a4260e9cbe5249fe1d64f97f557eeca484e996bbbf187ca8190879710de153",
+      "role": "supporting_unchanged_this_turn"
+    },
+    {
+      "path": "packages/proxy/wrangler.jsonc",
+      "sha256": "7ffb4a120ce0b83df428a1344fca5b16ea9d8784178d555e7377623511451b0c",
+      "role": "supporting_unchanged_this_turn"
+    },
+    {
+      "path": ".github/workflows/proxy-dispatch-safety.yml",
+      "sha256": "860a5c4bd68a0430bbb5ff2542dd4d8226d405169d555557e6daed4e66c825d5",
+      "role": "supporting_unchanged_this_turn"
+    }
+  ],
+  "externalActions": [],
+  "next": "C02.B2.2 Images generations/edits auxiliary auth ownership"
+}

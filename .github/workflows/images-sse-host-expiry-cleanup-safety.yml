@@ -1,0 +1,24 @@
+name: Images SSE host expiry cleanup safety
+on:
+  pull_request:
+    paths: ['packages/core/**', 'packages/proxy/**', 'scripts/deploy/**', 'package-lock.json', '.github/workflows/images-sse-host-expiry-cleanup-safety.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  cleanup-contract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    strategy:
+      matrix:
+        node: [22, 24]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+          cache: npm
+      - run: npm ci
+      - run: npm run build:node-index -w @octafuse/core
+      # These are local transaction/state contracts, not native Cloudflare termination proof.
+      - run: node node_modules/tsx/dist/cli.mjs --test packages/proxy/scripts/staging/images-sse-host-expiry-reconciliation.test.mjs packages/proxy/scripts/staging/images-sse-host-expiry-evidence.test.mjs

@@ -1,0 +1,31 @@
+{
+  "status": "PASS",
+  "cleanup": "PASS",
+  "scope": "owned loopback PG18.6; review-only generated login and ACL; no production SQL, Hyperdrive or Queue",
+  "binaryVersion": "postgres (PostgreSQL) 18.6",
+  "stages": [
+    "73-formal-migrations-guard-and-runtime-acl",
+    "superuser-created-scram-login-without-pg18-membership",
+    "callable-function-drift-blocks-grant",
+    "callable-function-body-drift-blocks-grant",
+    "unexpected-trigger-blocks-grant",
+    "public-column-drift-blocks-atomic-grant-then-exact-grant-succeeds",
+    "direct-password-login-defaults-and-cross-role-denials",
+    "session-overridden-deadline-rejected-before-scan-and-capacity",
+    "clean-login-empty-financial-scan",
+    "server-transaction-timeout-terminates-long-transaction"
+  ],
+  "sourceSha256": {
+    "generator": "8f36d42a19e4672ace9b4ec59ecbb016f9bca02813862a42a09e4e93abb51cb9",
+    "unitTest": "6da318528fc9d6a37f4623daddcec5e399efb7d8c5525463f85ef5442b867834",
+    "nativeTest": "f5b0680a0fd3ed8cbb18ea479daf132fcbb43b8fc75212c05eecaa3e048e2571",
+    "roleCatalogue": "a29f6d8df66b6837c2dceb4f4548fc8ff495d7076582098187cb0573c25b02de",
+    "consumer": "1df6c296a651b7d128b7a1d383494f30885f970592e4e245dcc8f27b0eb0b8ef"
+  },
+  "limitations": [
+    "SCRAM verifier structure cannot prove password entropy",
+    "role connection limit requires separate live instance-wide origin budget",
+    "grant fixture scans no financial job; durable commit is covered by the separate v328 fixture",
+    "role default timeouts are session mutable; consumer rejects changed pg_settings source"
+  ]
+}

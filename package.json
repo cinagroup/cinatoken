@@ -54,7 +54,7 @@
 		"test:gateway:sql-storage-smoke": "dotenv -c -- tsx scripts/smoke/test-storage-concurrent-charge.ts",
 		"test:public-catalog-readiness": "tsx scripts/smoke/test-public-catalog-readiness.ts",
 		"test:public-catalog-readiness:contract": "tsx --test scripts/smoke/test-public-catalog-readiness.test.ts",
-		"test:deploy": "node --test scripts/deploy/*.test.mjs",
+		"test:deploy": "node scripts/ci/run-deploy-unit-tests.mjs",
 		"verify:proxy-bundle": "node scripts/ci/verify-proxy-bundle-externals.mjs",
 		"test:d1-portal-ledger": "node scripts/ci/verify-d1-portal-ledger.mjs",
 		"test:postgres-migration": "node scripts/ci/verify-postgres-migration-contract.mjs",

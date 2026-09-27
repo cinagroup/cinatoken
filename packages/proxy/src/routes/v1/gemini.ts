@@ -1,6 +1,7 @@
 /**
  * 用户路由：`POST /v1beta/models/{model}:{generateContent|streamGenerateContent}`（Gemini 风格路径）。
  */
+import { scheduleResourceCompletion } from '../../runtime/schedule-resource-completion';
 import { GEMINI_GENERATE_OPERATION } from '@octafuse/core';
 import { Hono } from 'hono';
 import type { Env } from '../../app';
@@ -53,6 +54,8 @@ import {
   textUsageWithSafetyTimeout,
 } from '../../services/text-usage-settlement';
 import { privateByokContextForApiKey } from '../../services/byok-key-pool';
+import { assertTextRequestActive, textRequestFailureResponse, waitForTextRequestRead } from '../../middleware/text-request-lifecycle';
+import { createRequestDispatchBudget } from '../../services/request-dispatch-budget';
 
 /** usage Promise 兜底超时（与 OpenAI/Anthropic 路由一致）。 */
 const USAGE_SAFETY_TIMEOUT_MS = 5 * 60 * 1000;
@@ -131,7 +134,10 @@ geminiRoutes.use('*', assignGenerationId);
 geminiRoutes.post('/models/:modelAction', async (c) => {
   const repos = c.get('repositories');
   const apiKey = c.get('apiKey');
-  const start = Date.now();
+  const lifecycle = c.get('textRequestLifecycle');
+  const dispatchBudget = lifecycle?.dispatchBudget ?? createRequestDispatchBudget();
+  const start = dispatchBudget.createdAtMs;
+  assertTextRequestActive(c);
   const requestCorrelationId = c.get('generationId')!;
   const timing = new RequestTimingCollector();
   const parsedAction = parseGeminiAction(c.req.param('modelAction'));
@@ -148,7 +154,9 @@ geminiRoutes.post('/models/:modelAction', async (c) => {
   let body: Record<string, unknown>;
   try {
     body = await c.req.json();
-  } catch {
+  } catch (error) {
+    const failure = textRequestFailureResponse(error, c);
+    if (failure) return failure;
     return gatewayErrorJson(c, {
       status: 400,
       code: GatewayErrorCode.invalidJson,
@@ -156,7 +164,8 @@ geminiRoutes.post('/models/:modelAction', async (c) => {
     });
   }
 
-  const guardrail = await runGeminiRequestGuardrails(repos, {
+  assertTextRequestActive(c);
+  const guardrail = await waitForTextRequestRead(c, runGeminiRequestGuardrails, repos, {
     workspaceId: apiKey.workspaceId,
     userId: apiKey.userId,
     apiKeyId: apiKey.keyId,
@@ -165,7 +174,9 @@ geminiRoutes.post('/models/:modelAction', async (c) => {
     action,
     correlationId: requestCorrelationId,
     now: new Date(start),
+    control: lifecycle?.deadline,
   });
+  assertTextRequestActive(c);
   if (!guardrail.ok) {
     return gatewayErrorJson(c, {
       status: guardrail.status,
@@ -177,7 +188,8 @@ geminiRoutes.post('/models/:modelAction', async (c) => {
   }
   body = guardrail.body;
 
-  const fallbackPlan = await buildModelFallbackPlan(repos, {
+  const fallbackPlan = await waitForTextRequestRead(c, buildModelFallbackPlan, repos, {
+    control: lifecycle?.deadline,
     modelIds: [pathModelId],
     body,
     requestProtocol: 'gemini',
@@ -235,6 +247,7 @@ geminiRoutes.post('/models/:modelAction', async (c) => {
 		guardrailBudgetMicros,
 		estimateGatewayKeyByokBudgetMicros(fallbackPlan.candidates),
 	);
+  assertTextRequestActive(c);
   const budgetAdmission = await createRouteAwareBudgetAdmission(repos, {
     ordinary: {
       requestId: requestCorrelationId,
@@ -290,6 +303,10 @@ geminiRoutes.post('/models/:modelAction', async (c) => {
       c.req.url.includes('?') ? c.req.url.slice(c.req.url.indexOf('?')) : '',
       requestSignal,
       {
+        dispatchBudget,
+        registerResourceCompletion: task => scheduleResourceCompletion(c, task),
+        preparationControl: lifecycle?.deadline,
+        errorContext: { skin: 'chat', requestId: requestCorrelationId },
         affinityKey,
         tierKeyPrefix,
         strategy: selectedPlan.strategy.base,
@@ -330,7 +347,10 @@ geminiRoutes.post('/models/:modelAction', async (c) => {
   if (stickyMutationPromise) {
     scheduleBackgroundWork(c, stickyMutationPromise);
   }
-  let { response, errorBodyText } = await materializeNonOkResponse(proxyResult.response).catch(
+  let { response, errorBodyText } = await materializeNonOkResponse(proxyResult.response, {
+    trustedGatewayError: proxyResult.meta?.gatewayGeneratedError === true,
+    skin: 'chat', requestId: requestCorrelationId,
+  }).catch(
     async (error: unknown) => {
       await forfeitGuardrailBudget('upstream_response_materialization_failed');
       await terminateOrdinaryBudget('upstream_response_materialization_failed');
@@ -418,6 +438,7 @@ geminiRoutes.post('/models/:modelAction', async (c) => {
           cancelled: Boolean(usageCollected.cancelled),
           responseOk: response.ok,
           incomplete,
+          streamError: Boolean(usageCollected.stream_error),
         });
         const costUnknown = textUsageCostIsUnknown({
           upstreamResponseOk,
@@ -443,7 +464,11 @@ geminiRoutes.post('/models/:modelAction', async (c) => {
             errorBodyText
           );
         } else {
-          errorMessage = `HTTP ${response.status}`;
+          errorMessage = usageCollected.stream_error
+            ? usageCollected.stream_error === 'Request deadline exceeded'
+              ? 'Request deadline exceeded'
+              : 'Gemini upstream response stream failed'
+            : `HTTP ${response.status}`;
         }
         const upstreamRequestBodyForLog = geminiUpstreamWireBodyForLog(chosenRoute, upstreamBody, action);
         const loggedRequestId = resolveGeminiLoggedRequestId({

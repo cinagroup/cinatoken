@@ -79,8 +79,8 @@ const D1_SELECT = `SELECT budget.id, budget.workspace_id, budget.reset_interval,
 const POSTGRES_SELECT = `SELECT budget.id, budget.workspace_id, budget.reset_interval,
 	budget.limit_micros, budget.config_epoch, workspace.created_at AS workspace_created_at,
 	budget.created_at, budget.updated_at
-	FROM workspace_budgets budget
-	JOIN workspaces workspace ON workspace.id = budget.workspace_id
+	FROM cinatoken_gateway.workspace_budgets budget
+	JOIN cinatoken_gateway.workspaces workspace ON workspace.id = budget.workspace_id
 	WHERE budget.workspace_id = $1 AND workspace.status = 'active'
 	ORDER BY CASE budget.reset_interval
 		WHEN 'daily' THEN 1 WHEN 'weekly' THEN 2 WHEN 'monthly' THEN 3 ELSE 4 END`;
@@ -138,7 +138,7 @@ async function readWorkspaceBudgetWindow(
 	if (client.driver === 'postgres') {
 		const rows = await client.raw.unsafe<RawWorkspaceBudgetWindow[]>(`SELECT
 			unreserved_micros, settled_micros, reserved_micros
-			FROM guardrail_budget_windows
+			FROM cinatoken_gateway.guardrail_budget_windows
 			WHERE workspace_id = $1 AND scope_type = 'workspace' AND scope_id = $1
 				AND period = $2 AND period_start = $3::timestamptz AND period_end = $4::timestamptz
 			LIMIT 1`, [params.workspaceId, params.period, params.periodStart, params.periodEnd]);
@@ -180,7 +180,7 @@ async function readWorkspaceBudgetLogUsage(
 				budget_charged_micros,
 				ROUND(GREATEST(charged_cost, 0) * 1000000)::bigint
 			)), 0) AS spent_micros
-			FROM api_key_request_logs
+			FROM cinatoken_gateway.api_key_request_logs
 			WHERE workspace_id = $1
 				AND COALESCE(budget_accounted_at, created_at) >= $2::timestamptz
 				AND COALESCE(budget_accounted_at, created_at) < $3::timestamptz`, [
@@ -291,7 +291,7 @@ export async function resolveWorkspaceSlugForManagementAccount(
 
 	if (client.driver === 'postgres') {
 		const personal = account.accountType === 'personal';
-		const rows = await client.raw.unsafe<Array<{ id: string }>>(`SELECT id FROM workspaces
+		const rows = await client.raw.unsafe<Array<{ id: string }>>(`SELECT id FROM cinatoken_gateway.workspaces
 			WHERE slug = $1 AND status = 'active' AND scope_type = $2
 				AND ${personal
 					? 'personal_owner_user_id = $3 AND organization_id IS NULL'
@@ -375,7 +375,7 @@ export async function upsertWorkspaceBudget(
 	if (client.driver === 'postgres') {
 		return await client.raw.begin(async (transaction) => {
 			const workspaceRows = await transaction.unsafe<Array<{ id: string }>>(
-				`SELECT id FROM workspaces WHERE id = $1 AND status = 'active' FOR UPDATE`,
+				`SELECT id FROM cinatoken_gateway.workspaces WHERE id = $1 AND status = 'active' FOR UPDATE`,
 				[params.workspaceId],
 			);
 			if (workspaceRows.length === 0) return null;
@@ -384,7 +384,7 @@ export async function upsertWorkspaceBudget(
 				[params.workspaceId],
 			);
 			assertProposedOrdering(rows.map(mapRow), interval, params.limitMicros);
-			await transaction.unsafe(`INSERT INTO workspace_budgets (
+			await transaction.unsafe(`INSERT INTO cinatoken_gateway.workspace_budgets (
 				id, workspace_id, reset_interval, limit_micros, config_epoch, created_at, updated_at
 			) VALUES ($1, $2, $3, $4, 0, $5, $5)
 			ON CONFLICT (workspace_id, reset_interval) DO UPDATE SET
@@ -449,11 +449,11 @@ export async function deleteWorkspaceBudget(
 	if (client.driver === 'postgres') {
 		return await client.raw.begin(async (transaction) => {
 			const workspace = await transaction.unsafe<Array<{ id: string }>>(
-				`SELECT id FROM workspaces WHERE id = $1 AND status = 'active' FOR UPDATE`,
+				`SELECT id FROM cinatoken_gateway.workspaces WHERE id = $1 AND status = 'active' FOR UPDATE`,
 				[workspaceId],
 			);
 			if (workspace.length === 0) return false;
-			await transaction.unsafe(`DELETE FROM workspace_budgets WHERE workspace_id = $1 AND reset_interval = $2`, [workspaceId, interval]);
+			await transaction.unsafe(`DELETE FROM cinatoken_gateway.workspace_budgets WHERE workspace_id = $1 AND reset_interval = $2`, [workspaceId, interval]);
 			return true;
 		});
 	}

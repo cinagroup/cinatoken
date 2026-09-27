@@ -358,6 +358,8 @@ async function postJsonWithTimeout(url: string, body: unknown, timeoutMs: number
 	try {
 		return await fetch(url, {
 			method: 'POST',
+			// A redirect can replay an already delivered alert POST outside any send budget.
+			redirect: 'manual',
 			headers: { 'Content-Type': 'application/json; charset=utf-8' },
 			body: JSON.stringify(body),
 			signal: ac.signal,

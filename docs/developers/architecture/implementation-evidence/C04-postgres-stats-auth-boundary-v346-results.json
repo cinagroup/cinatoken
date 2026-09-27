@@ -1,0 +1,41 @@
+{
+  "status": "PASS",
+  "cleanup": "PASS",
+  "binaryVersion": "postgres (PostgreSQL) 18.6",
+  "scope": "owned loopback PG18.6; formal PG73 and actual grant-postgres-runtime.ts",
+  "sourceSha256": {
+    "formalMigrationCorpus": "23afef61a8a670e0af8c90e3a138f522e6b283b454e380a592bf85bca83108dc",
+    "nativeFixture": "72fcf9bdca7437a76cbc8cfcd71efd77fd391a56cf68478555d6ef409450a219",
+    "runtimeGrant": "c07358f59ddc2ff314d3cc3470587ab04e71627f81d2a80a63ed5bdf09a4fc20",
+    "portalAuth": "2a49b39195eb0df23e505c1c5f940e9d0bce9b4164af61846f324b868d8c6490",
+    "portalSessionHash": "9e0ce04781e665b2a96dfa16bfd3d2a404b58512a70ae0376e6b1fcab98153fa",
+    "statsReader": "1a9cc67854e71e6245aa6ea0c88b96ee666bbbbfe53cfe5d2c8a3d9977211b5c"
+  },
+  "stages": [
+    {
+      "name": "exact-formal-pg73-installed",
+      "result": "PASS"
+    },
+    {
+      "name": "real-broad-grant-leaves-portal-session-and-user-writes-to-runtime",
+      "result": "PASS"
+    },
+    {
+      "name": "runtime-can-mint-bearer-credential-for-existing-seller",
+      "result": "PASS"
+    },
+    {
+      "name": "caller-controlled-guc-cannot-authenticate-seller",
+      "result": "PASS"
+    },
+    {
+      "name": "formal-pg73-has-no-executable-stats-reader",
+      "result": "PASS"
+    }
+  ],
+  "limitations": [
+    "Negative authorization proof only. It does not install or grant a stats reader.",
+    "A separate read LOGIN alone is not a per-request seller identity; a claim minted from mutable portal_sessions is forgeable by the ordinary runtime.",
+    "No independent claim signer, DB verification key, Admin all-seller grant, or production cutover is supplied."
+  ]
+}

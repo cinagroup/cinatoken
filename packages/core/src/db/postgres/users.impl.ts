@@ -9,10 +9,13 @@ import type { UsersRepository } from '../../storage/gateway-repository-interface
 import {
 	guardrailsTable as pgGuardrailsTable,
 	guardrailVersionsTable as pgGuardrailVersionsTable,
+	userAuditLogsTable as pgUserAuditLogsTable,
 	usersTable as pgUsersTable,
 	workspacesTable as pgWorkspacesTable,
 } from '../../storage/drizzle/schema.pg';
 import type { InsertUserParams, UserMaxBudgetFilter } from '../users-types';
+import type { InsertUserAuditLogParams } from '../user-audit-logs-types';
+import { toUserAuditLogDrizzleInsert } from '../user-audit-drizzle-insert';
 import { defaultWorkspaceId } from '../../workspaces';
 import {
 	DEFAULT_USER_LIST_ORDER,
@@ -21,6 +24,49 @@ import {
 	type UserListSortOrder,
 } from '../users-list-sort';
 import { parseMoney } from '../../storage/critical-write-paths-utils';
+
+class UserDeleteDidNotMatchError extends Error {}
+
+const DISPATCH_HISTORY_USER_FK_CONSTRAINTS = new Set([
+	'request_dispatch_intents_user_id_fkey',
+	'request_dispatch_intents_api_key_id_fkey',
+	'request_dispatch_intents_workspace_id_fkey',
+]);
+
+function isDispatchHistoryUserDeleteRestrictionAtLevel(error: unknown): boolean {
+	if (typeof error !== 'object' || error === null) return false;
+	const pgError = error as {
+		code?: unknown;
+		constraint_name?: unknown;
+		constraint?: unknown;
+		schema_name?: unknown;
+		schema?: unknown;
+		table_name?: unknown;
+		table?: unknown;
+	};
+	const constraintName = pgError.constraint_name ?? pgError.constraint;
+	if (!DISPATCH_HISTORY_USER_FK_CONSTRAINTS.has(constraintName as string)) return false;
+	const matchesIfPresent = (value: unknown, expected: string) => value === undefined || value === expected;
+	return (
+		(pgError.code === '23001' || pgError.code === '23503') &&
+		matchesIfPresent(pgError.constraint_name, constraintName as string) &&
+		matchesIfPresent(pgError.constraint, constraintName as string) &&
+		matchesIfPresent(pgError.schema_name, 'cinatoken_gateway') &&
+		matchesIfPresent(pgError.schema, 'cinatoken_gateway') &&
+		matchesIfPresent(pgError.table_name, 'request_dispatch_intents') &&
+		matchesIfPresent(pgError.table, 'request_dispatch_intents')
+	);
+}
+
+function isDispatchHistoryUserDeleteRestriction(error: unknown): boolean {
+	let current = error;
+	for (let depth = 0; depth < 3; depth++) {
+		if (isDispatchHistoryUserDeleteRestrictionAtLevel(current)) return true;
+		if (typeof current !== 'object' || current === null || !('cause' in current)) break;
+		current = current.cause;
+	}
+	return false;
+}
 
 function userListOrderByClauses(sort: UserListSortField, order: UserListSortOrder) {
 	const isAsc = order === 'asc';
@@ -348,13 +394,44 @@ export function createPostgresUsersRepository(db: PostgresDatabaseClient): Users
 		},
 
 		async deleteUserHard(id: string): Promise<boolean> {
-			const rows = await db.raw.unsafe<Array<{ id: string }>>(`DELETE FROM users subject
+			const rows = await db.raw.unsafe<Array<{ id: string }>>(`DELETE FROM cinatoken_gateway.users subject
 				WHERE subject.id = $1 AND NOT EXISTS (
-					SELECT 1 FROM guardrails guardrail
+					SELECT 1 FROM cinatoken_gateway.guardrails guardrail
 					WHERE guardrail.owner_user_id = subject.id
 						AND (guardrail.is_workspace_default OR guardrail.is_account_default)
 				) RETURNING subject.id`, [id]);
 			return rows.length > 0;
+		},
+
+		async deleteUserHardWithAudit(
+			id: string,
+			audit: InsertUserAuditLogParams
+		): Promise<'deleted' | 'not_deleted' | 'dispatch_history'> {
+			if (audit.userId !== id || audit.eventType !== 'user_deleted') {
+				throw new TypeError('User deletion audit must identify the deleted user');
+			}
+			try {
+				return await drizzle.transaction(async (tx) => {
+					const existing = await tx.select({ id: pgUsersTable.id })
+						.from(pgUsersTable).where(eq(pgUsersTable.id, id)).for('update');
+					if (existing.length === 0) return 'not_deleted' as const;
+					await tx.insert(pgUserAuditLogsTable).values(
+						toUserAuditLogDrizzleInsert(audit, new Date().toISOString())
+					);
+					const rows = await tx.execute(sql`DELETE FROM cinatoken_gateway.users subject
+						WHERE subject.id = ${id} AND NOT EXISTS (
+							SELECT 1 FROM cinatoken_gateway.guardrails guardrail
+							WHERE guardrail.owner_user_id = subject.id
+								AND (guardrail.is_workspace_default OR guardrail.is_account_default)
+						) RETURNING subject.id`);
+					if (!Array.isArray(rows) || rows.length === 0) throw new UserDeleteDidNotMatchError();
+					return 'deleted' as const;
+				});
+			} catch (error) {
+				if (error instanceof UserDeleteDidNotMatchError) return 'not_deleted';
+				if (isDispatchHistoryUserDeleteRestriction(error)) return 'dispatch_history';
+				throw error;
+			}
 		},
 
 		async getUsersCount() {

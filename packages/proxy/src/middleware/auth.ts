@@ -10,6 +10,8 @@ import { GatewayErrorCode } from "../services/gateway-error-codes";
 import { gatewayErrorJson } from "../services/gateway-error-response";
 import { parseDashScopeRealtimeAuthProtocol } from "@octafuse/core/realtime-protocol";
 import { hashLookupKey } from "@octafuse/core";
+import { assertTextRequestActive, waitForTextRequestRead } from './text-request-lifecycle';
+import { isDashScopeRealtimePath } from '../services/dashscope-realtime-path';
 
 /** 与 `authenticateApiKey` 结果一致，供 `/v1/*` 处理器使用。 */
 export type ApiKeyContext = {
@@ -61,7 +63,7 @@ function extractApiKey(c: {
 	}
 
 	// 浏览器 WebSocket 无法自定义 Authorization；实时入口从协商子协议读取 Key。
-	if (c.req.path.startsWith("/v1/dashscope/realtime")) {
+	if (isDashScopeRealtimePath(c.req.path)) {
 		const realtimeAuth = parseDashScopeRealtimeAuthProtocol(
 			c.req.header("Sec-WebSocket-Protocol")
 		);
@@ -103,11 +105,13 @@ function extractApiKey(c: {
 export async function throttleAuthFailure(
 	c: Context<Env>
 ): Promise<Response | null> {
+	assertTextRequestActive(c);
 	const limiter = c.env.AUTH_RATE_LIMITER ?? c.env.RATE_LIMITER;
 	if (!limiter) return null;
 	const ip = c.req.header("CF-Connecting-IP") ?? "unknown";
 	try {
 		const { success } = await limiter.limit({ key: ip });
+		assertTextRequestActive(c);
 		if (success) return null;
 		return gatewayErrorJson(c, {
 			status: 429,
@@ -116,6 +120,7 @@ export async function throttleAuthFailure(
 			headers: { "Retry-After": "60" },
 		});
 	} catch {
+		assertTextRequestActive(c);
 		return null;
 	}
 }
@@ -124,6 +129,7 @@ export async function throttleAuthFailure(
  * 校验 API Key 并注入上下文；未授权返回 401，超额预算返回 402（部分路由豁免，见内联注释）。
  */
 export const requireApiKey = createMiddleware<Env>(async (c, next) => {
+	assertTextRequestActive(c);
 	const key = extractApiKey(c);
 	if (!key) {
 		console.warn(
@@ -140,7 +146,7 @@ export const requireApiKey = createMiddleware<Env>(async (c, next) => {
 	}
 
 	const repos = c.get("repositories");
-	const authResult = await authenticateApiKey(repos, key);
+	const authResult = await authenticateApiKey(repos, key, c.get('textRequestLifecycle')?.deadline);
 	if (!authResult) {
 		// Never log any substring of a credential. Even a prefix/suffix preview is
 		// reusable correlation material and can expose short or structured keys.
@@ -220,7 +226,7 @@ export const requireApiKey = createMiddleware<Env>(async (c, next) => {
 			"/dashscope/services/aigc/multimodal-generation/generation"
 		);
 	const isRealtimeRoute =
-		c.req.method === "GET" && /\/dashscope\/realtime\/?$/.test(c.req.path);
+		c.req.method === "GET" && isDashScopeRealtimePath(c.req.path);
 	const isToolsPricingRoute =
 		c.req.method === "GET" && /\/tools\/pricing\/?$/.test(c.req.path);
 	if (
@@ -246,7 +252,8 @@ export const requireApiKey = createMiddleware<Env>(async (c, next) => {
 		});
 	}
 
-	const lookupHash = await hashLookupKey(key);
+	const lookupHash = await waitForTextRequestRead(c, hashLookupKey, key);
+	assertTextRequestActive(c);
 	const apiKeyHash = lookupHash.startsWith("sha256:")
 		? lookupHash.slice("sha256:".length)
 		: lookupHash;

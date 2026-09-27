@@ -1,0 +1,22 @@
+{
+  "$schema": "../../../../node_modules/wrangler/config-schema.json",
+  // Exclusive-stage candidate for the existing gateway. Never auto-provision.
+  "name": "cinatoken-proxy-staging",
+  "account_id": "7ea8e46d8210bad342fa7595f7935fea",
+  "main": "byok-d1-gateway-worker.ts",
+  "compatibility_date": "2026-09-16",
+  "compatibility_flags": ["nodejs_compat"],
+  // Explicit CPU setting, not a strict billing cap or D1 cancellation guarantee.
+  "limits": {"cpu_ms": 30000},
+  "send_metrics": false,
+  "workers_dev": false,
+  "preview_urls": false,
+  "routes": [],
+  "triggers": {"crons": []},
+  "observability": {"enabled": true,"head_sampling_rate": 1,"logs": {"invocation_logs": false}},
+  // Empty grant disables native fence installation. A run-specific frozen
+  // grant holds only token/schema hashes and expiry; never a plaintext bearer.
+  "vars": {"BYOK_GATEWAY_ENVIRONMENT": "staging","BYOK_GATEWAY_ENABLED": "false","BYOK_GATEWAY_ACCESS_AUD": "","BYOK_GATEWAY_INSTALL_GRANT": ""},
+  "d1_databases": [{"binding": "BYOK_DB","database_name": "cinatoken-staging",
+    "database_id": "6bf5d41e-fe0b-4afa-9f67-ff5cf82e23d1","remote": false}]
+}

@@ -1,0 +1,526 @@
+{
+  "version": "Checklist v1.56",
+  "recordedAtUtc": "2026-09-07 07:29:23 UTC",
+  "status": "LOCAL_PASS_SUBSET",
+  "c02GatePassed": false,
+  "baseline": "C02-image-recovery-control-local-results.json",
+  "scope": "Recovery main-schema definition and local migration source artifact verification; no SQL migration, financial algorithm or default enablement change",
+  "newTests": {
+    "total": 67,
+    "coreSchemaAndSource": 47,
+    "imagesSchemaIntegration": 20
+  },
+  "artifact": {
+    "version": 1,
+    "formalMigrations": 68,
+    "proposals": 3,
+    "baseMigrationSetSha256": "7c9572bdb1c8d858e291868b213c7064f4f86d8f783894f88e4b749277b3d23f",
+    "objects": 24,
+    "tables": 4,
+    "explicitIndexes": 4,
+    "autoIndexes": 7,
+    "triggers": 9,
+    "definitionBytes": 10072,
+    "sqliteVersion": "3.51.2",
+    "sourceCheck": "LOCAL_ARTIFACT_MATCH",
+    "sourceCheckCommand": "npm run check:usage-recovery-schema -w @octafuse/core",
+    "sourceSqlExecutedOnlyInMemory": true,
+    "remoteDefinitionsVerified": false,
+    "independentReviewer": false,
+    "signedArtifact": false
+  },
+  "runtime": {
+    "query": "Read-only main.sqlite_master",
+    "resultRowLimit": 25,
+    "definitionByteLimit": 4096,
+    "objectTypeCharacterLimit": 16,
+    "nameCharacterLimit": 128,
+    "sqlParameterCount": 30,
+    "comparison": "Exact type/name/table/SQL byte count and full SHA-256; no whitespace normalization",
+    "extraOrMissingObjectsRejected": true,
+    "successfulResultCache": false,
+    "rawSqlErrorExposure": false,
+    "consumerCapacityHeldUntilActualQueryAndHashFinish": true,
+    "consumerRechecksAbortAndDeadlineBeforeScan": true,
+    "producerChecks": [
+      "before dispatch admission",
+      "after owned settlement DTO and before snapshot persistence",
+      "fast-path before lookup and claim"
+    ],
+    "sameLengthPredicateAndCheckMutationRejected": true,
+    "guaranteesPhysicalMemoryBound": false,
+    "guaranteesConstantDatabaseScanCost": false
+  },
+  "proofLimits": [
+    "Point-in-time main recovery-object definitions only, not the whole database",
+    "No proof of remote DML backfill or receipt/job/log/account data consistency",
+    "No protection against concurrent DDL, malicious DBA or repository/deployment administrators",
+    "No verification of TEMP shadows, connection PRAGMA or internal B-tree integrity",
+    "SQLite normalization/version differences must fail closed and be reviewed; no auto-blessing",
+    "No real Workers RPC/D1/cancellation/termination or physical-capacity proof"
+  ],
+  "testAdjustments": [
+    "Existing payload-corruption test restores exact immutable trigger after editing payload, so it still isolates payload blocking with unchanged financial assertions.",
+    "Missing enqueue trigger after provider response now rejects before persistence: expected snapshot count 1 becomes 0; 503, one provider dispatch, zero jobs/logs unchanged."
+  ],
+  "fullStaging": {
+    "command": "npm run test:images:staging -w @octafuse/proxy",
+    "parts": [
+      {
+        "tests": 35,
+        "pass": 35,
+        "fail": 0,
+        "durationMs": 24114.7323
+      },
+      {
+        "tests": 7,
+        "pass": 7,
+        "fail": 0,
+        "durationMs": 2500.4895
+      },
+      {
+        "tests": 130,
+        "pass": 130,
+        "fail": 0,
+        "durationMs": 18232.5246
+      },
+      {
+        "tests": 39,
+        "pass": 39,
+        "fail": 0,
+        "durationMs": 9061.3879
+      },
+      {
+        "tests": 48,
+        "pass": 48,
+        "fail": 0,
+        "durationMs": 396.0175
+      },
+      {
+        "tests": 60,
+        "pass": 60,
+        "fail": 0,
+        "durationMs": 3741.0456
+      },
+      {
+        "tests": 24,
+        "pass": 24,
+        "fail": 0,
+        "durationMs": 220616.0364
+      }
+    ],
+    "total": 343,
+    "exitCode": 0,
+    "cancelled": 0,
+    "skipped": 0,
+    "finalProcessSuiteWaitedToTerminal": true
+  },
+  "coreChain": {
+    "command": "npm run test:dispatch-intent -w @octafuse/core",
+    "parts": [
+      {
+        "tests": 19,
+        "pass": 19,
+        "fail": 0,
+        "durationMs": 8002.9683
+      },
+      {
+        "tests": 37,
+        "pass": 37,
+        "fail": 0,
+        "durationMs": 30734.1202
+      },
+      {
+        "tests": 32,
+        "pass": 32,
+        "fail": 0,
+        "durationMs": 38783.9717
+      },
+      {
+        "tests": 47,
+        "pass": 47,
+        "fail": 0,
+        "durationMs": 15975.3429
+      }
+    ],
+    "total": 135,
+    "exitCode": 0
+  },
+  "targetedImages": {
+    "command": "node --import tsx --test packages/proxy/scripts/staging/images-recovery-schema.test.mjs packages/proxy/scripts/staging/images-recovery-chain.test.mjs",
+    "tests": 68,
+    "pass": 68,
+    "fail": 0,
+    "exitCode": 0,
+    "durationMs": 10776.6106,
+    "overlapsFullStaging": true
+  },
+  "fullDispatchSafetyBehaviorSuiteRerun": false,
+  "types": {
+    "wrangler": "4.127.1",
+    "installedWorkers": "5.20260829.1",
+    "latestWorkersReadOnly": "5.20260907.1",
+    "upgraded": false,
+    "generatedServiceType": true,
+    "controlModuleScoped": true,
+    "compiledExactEnvAndZeroArgContract": true,
+    "receiverCheck": "PASS",
+    "directedStaging": "PASS",
+    "directedDispatchSafety": "PASS",
+    "fullCore": "FAIL",
+    "fullCoreDiagnostics": 32,
+    "exactV151BaselineMatch": true,
+    "fullCoreVerifierExitCode": 0,
+    "fullCoreVerifierIsNotTypecheckSuccess": true,
+    "controlCheck": "PASS",
+    "directedCoreRecovery": "PASS"
+  },
+  "build": {
+    "command": "node node_modules/wrangler/bin/wrangler.js deploy --dry-run --no-autoconfig --config packages/proxy/scripts/staging/wrangler.usage-recovery.jsonc --outdir C:/cinagroup/cinatoken/.wrangler/staging/usage-recovery-v156-dry-run --metafile C:/cinagroup/cinatoken/.wrangler/staging/usage-recovery-v156-dry-run/bundle-meta.json",
+    "exitCode": 0,
+    "jsBytes": 342080,
+    "gzipKiB": 64.95,
+    "exports": [
+      "UsageRecovery",
+      "default"
+    ],
+    "externalImports": [
+      "cloudflare:workers"
+    ],
+    "sha256": "4e24d242c20ebf76a8bd3f60b3d2497f83e193736c25b395b1d0f24e98fa5f51",
+    "deployed": false,
+    "runtimeMemoryProof": false
+  },
+  "configuration": {
+    "controllerEnabled": false,
+    "receiverEnabled": false,
+    "receiverCapacityBytes": 0,
+    "receiverWorksetBytes": 0,
+    "publicRoutes": false,
+    "crons": false,
+    "defaultFactoriesUseRecovery": false,
+    "defaultFactoriesUseCapacity": false,
+    "formalSqlPromoted": false,
+    "dedicatedControlAccessPolicyVerified": false,
+    "remoteBackfillVerified": false
+  },
+  "externalOperations": {
+    "cloudManagementCalls": 3,
+    "cloudManagementMethods": [
+      "GET"
+    ],
+    "cloudDeployments": 0,
+    "remoteSqlCalls": 0,
+    "realModelCalls": 0,
+    "realKmsCalls": 0,
+    "historicalStagingHttpRequests": 98,
+    "firstRoundUsdCap": 2,
+    "capReset": false,
+    "finalIncrementalBillVerified": false,
+    "permissionReadback": {
+      "at": "2026-09-07T07:28:13.979Z",
+      "readOnly": true,
+      "checks": [
+        {
+          "name": "d1",
+          "httpStatus": 200,
+          "expectedIsolatedDatabase": true
+        },
+        {
+          "name": "stagingIngress",
+          "httpStatus": 200,
+          "enabled": false,
+          "previewsEnabled": false
+        },
+        {
+          "name": "accessPolicy",
+          "httpStatus": 200,
+          "policyCount": 1,
+          "decision": "deny",
+          "includeEveryone": true
+        }
+      ],
+      "writePermissionRetested": false,
+      "productionAccessed": false
+    },
+    "cloudClosure": "Fresh GET confirms existing staging Gateway workers.dev/previews disabled and its Access policy deny-all; does not verify a new recovery-control Access application"
+  },
+  "diagnosticNotes": [
+    "Wrangler --version/--help succeeded, but default user-profile log write was denied by local sandbox; this is not a Cloudflare permission failure. Scoped GET checks subsequently passed without modifying system configuration."
+  ],
+  "remaining": [
+    "Explicit experimental capacity profile including schema-query/hash workset; no production default",
+    "Fresh complete staging identity/bindings and dedicated control Access application plus minimal service-auth policy verification",
+    "Controlled staging SQL promotion, actual D1 definition compatibility and backfill/data consistency checks",
+    "Real Workers authorization/RPC/no-body POST/cancellation/termination and recovery tests",
+    "Complete physical workset, cross-consumer concurrency and SLO",
+    "Historical missing-log event, full financial combinations, quote/rights/owner, outboxes and C02.G/C03-C20 acceptance"
+  ],
+  "references": [
+    "https://www.sqlite.org/schematab.html",
+    "https://developers.cloudflare.com/d1/sql-api/sql-statements/",
+    "https://developers.cloudflare.com/workers/best-practices/workers-best-practices/"
+  ],
+  "changedPriorFiles": [
+    "packages/core/package.json",
+    "packages/core/src/storage/recovery/run-usage-recovery-d1.ts",
+    "packages/core/src/storage/recovery/usage-recovery.d1.test.mjs",
+    "packages/proxy/package.json",
+    "packages/proxy/scripts/staging/images-recovery-chain.test.mjs",
+    "packages/proxy/src/services/image-usage-recovery.ts"
+  ],
+  "files": [
+    {
+      "path": "packages/core/migrations-proposals/d1/request-dispatch-intents.sql",
+      "sha256": "f3f9df3723fbccfd62a7f566804abcb591ee03f8d20bab47f60cb623ee082083"
+    },
+    {
+      "path": "packages/core/migrations-proposals/d1/request-usage-recovery-jobs.sql",
+      "sha256": "4b1dfa909dc6c4abc4aaec929d12ac368adb1877ae975c7a00f35a6b9f01652d"
+    },
+    {
+      "path": "packages/core/migrations-proposals/d1/request-usage-settlements.sql",
+      "sha256": "d25ffb168ec74112f602befec2057b96456e0f2291fd2179d6e131f16ffbcb04"
+    },
+    {
+      "path": "packages/core/package.json",
+      "sha256": "71b4125dfa443e7311f8cc6034a34cb3ec35f9d4c736720339cdfa5de15bbc46"
+    },
+    {
+      "path": "packages/core/src/db/d1/critical-writes.impl.ts",
+      "sha256": "145df8a9f579573664f0dbec08a833d5c80f0e3bb0f021cb6ce3c5dd157053bb"
+    },
+    {
+      "path": "packages/core/src/storage/database-client.ts",
+      "sha256": "8b4f5abeec30c82215ab99e319e10e52e9cca99c70ca85ef08a97ed47f1c8881"
+    },
+    {
+      "path": "packages/core/src/storage/drizzle/client-d1.ts",
+      "sha256": "3f44525de77b026f42cf3651399f6247265cd5e55d74999f1c71e1cb58b9d567"
+    },
+    {
+      "path": "packages/core/src/storage/recovery/dispatch-intent-d1.ts",
+      "sha256": "7c8ef20c11eaebe95c0aaa10073ab8e1c502e3143ae0b76825a71e43fd534a5a"
+    },
+    {
+      "path": "packages/core/src/storage/recovery/run-usage-recovery-d1.ts",
+      "sha256": "c70a404a5475a5113ce77f52c183dc054afacda80b595ac8e21f87c0a98f1d53"
+    },
+    {
+      "path": "packages/core/src/storage/recovery/settlement-recovery-types.ts",
+      "sha256": "585e8d21450882602889b78478769ffa193bfb10d14026e0bab9e4ab6f0fe429"
+    },
+    {
+      "path": "packages/core/src/storage/recovery/usage-recovery-jobs-d1.ts",
+      "sha256": "74fdc5c1ae90040b3c40ece3f7fc193375c0f9b12b73963dd314d84a95eb869a"
+    },
+    {
+      "path": "packages/core/src/storage/recovery/usage-recovery-schema-artifact.ts",
+      "sha256": "c56b50f727c5a1a3046c915a4bd2960d6dd68934e8e346e666d82069d49fc3ce"
+    },
+    {
+      "path": "packages/core/src/storage/recovery/usage-recovery-schema-d1.ts",
+      "sha256": "3dfb09903da0208ce74cb35a79baac6b3951a40a855ded5379d6503aac92ade0"
+    },
+    {
+      "path": "packages/core/src/storage/recovery/usage-recovery-schema.d1.test.mjs",
+      "sha256": "f8d627a9b6d2fd2150db4f1d495a341a89b883efd56c06b4788c543eca9e1184"
+    },
+    {
+      "path": "packages/core/src/storage/recovery/usage-recovery.d1.test.mjs",
+      "sha256": "a580ea62133306e66237b2d4e71f04b701a998c287484187f4473cdb21dcacbe"
+    },
+    {
+      "path": "packages/core/src/storage/recovery/usage-recovery.fixture.mjs",
+      "sha256": "4444e608d1612f023ffd800293984f2cf8acf2d756d24869fd987489b30e994d"
+    },
+    {
+      "path": "packages/core/src/storage/recovery/usage-settlement-codec.ts",
+      "sha256": "7483200d4100963bb16c2ff74957d716fca09e8b20e11888ccf41b2566c4ef90"
+    },
+    {
+      "path": "packages/core/src/storage/recovery/usage-settlement-d1.ts",
+      "sha256": "3be75d8f00ec668c7e4edc372726b3abbba2079710648a55f391cf4d280e01fe"
+    },
+    {
+      "path": "packages/core/src/storage/recovery/usage-settlement-test-support.mjs",
+      "sha256": "abde9fc68c54844679da84f6a9cc48ac149e594a95b00c22732214433f30165b"
+    },
+    {
+      "path": "packages/core/src/storage/recovery/usage-settlement.d1.test.mjs",
+      "sha256": "fd18178f4af2f838b60fb4ae224d6e8703a1b2013d91f100e5d9f626065a86c2"
+    },
+    {
+      "path": "packages/core/src/storage/recovery/usage-settlement.fixture.mjs",
+      "sha256": "efa865ed3b55d9e9b3e590966c8b39be65c9d3320e6b4a727a0d229b59f66f07"
+    },
+    {
+      "path": "packages/core/tsconfig.dispatch-intent.json",
+      "sha256": "0f69e38e22681b5a05e67424e34153357c019c1b30d335d09d34f440dad3b9e3"
+    },
+    {
+      "path": "packages/proxy/package.json",
+      "sha256": "4be6e0e5018422c6866f8c06f7102ca58de4062c0c42663a9139d08013c00154"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/images-recovery-chain.test.mjs",
+      "sha256": "f30df5058815980317f7ca16df385527e87bf0dc629c38466c39e1041afb3ad8"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/images-recovery-combinations.test.mjs",
+      "sha256": "a8c81edb42bca6db5c715e671c3b283172c04889b38d6f3cc98346e6f6fb825a"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/images-recovery-process.fixture.mjs",
+      "sha256": "e9fac590afd4ede317971de4b9d6ae440993abd057da36187da02421eaa49b22"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/images-recovery-process.test.mjs",
+      "sha256": "401b8a16e72b5182595a11de43b76229787d2046e6d307c6e82401ec933b197e"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/images-recovery-schema.test.mjs",
+      "sha256": "8d117058221993f1a9ba8e62619fbba2e5ac64420d60e72411ad5bd81e72e254"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/images-recovery-test-support.mjs",
+      "sha256": "131a35c12c10662229540b4abb40d0e541bcc051444023aeeb280f5d4f4b8dfe"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/tsconfig.json",
+      "sha256": "7822fb2eefd36af2218cabb11893a00d70d6fd98d6a8ba03f100d6e5fe438ed9"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/usage-recovery-control-env.d.ts",
+      "sha256": "297ec248927a4d0c296c24a103859db5cbe86f6a93eee52ec31a31a8a0fb14ad"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/usage-recovery-control-images.test.mjs",
+      "sha256": "efee7c10a7566961a4ad6fb2b90b6f40339c61094ffce40aa7d183dd9d37a3fd"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/usage-recovery-control-types.contract.ts",
+      "sha256": "6700255e1fcbd379cd8d950db85c18f6c1b6782229f3b6ca4053b1cfd1c5b659"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/usage-recovery-control-worker.ts",
+      "sha256": "9ee47eb3c021ae403ed81fb0b657efe004029d1a61cd896b01de115351531ae1"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/usage-recovery-control.test.mjs",
+      "sha256": "25f6358bf373ac23517f296b91183211a3cc1230735b48930b1cad2f51d05a67"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/usage-recovery-env.d.ts",
+      "sha256": "b9b9cf625b6709b92e1ddd7696032c0bd6df6bfb0d026e40d96e6f838d85cc9c"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/usage-recovery-host.test.mjs",
+      "sha256": "1fe28508e45df1e51e9562282b8228f24c412ee40baa6a795a0642e25e4922fc"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/usage-recovery-worker.ts",
+      "sha256": "3271c74ebe2df34e1ce962dda52f3a695fbfd904a8d4a1fc072cdb14e8bb07c6"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/wrangler.usage-recovery-control.jsonc",
+      "sha256": "f2e75e6f3625df0f666e2edd5c076d80707ba4eedfd382b29ffe87ed5ceea245"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/wrangler.usage-recovery.jsonc",
+      "sha256": "77dbd0f0096f50e5663554c09f9960e38042d520badfd448aa35fca8b69d3a15"
+    },
+    {
+      "path": "packages/proxy/src/app.ts",
+      "sha256": "ccead19795044c654062e02410fbfbaa4ce49cc5b1de8109773b6e6c24aab2d7"
+    },
+    {
+      "path": "packages/proxy/src/routes/v1/images.ts",
+      "sha256": "5b7b351a071e6aa5860bd61c0586653f12424aa8ed389fb4992d5c30c9b900d4"
+    },
+    {
+      "path": "packages/proxy/src/runtime/node.ts",
+      "sha256": "ac3e0f5bd8ab01daec890382354982afee65c3ecb70faeca4e12dc8a42185d14"
+    },
+    {
+      "path": "packages/proxy/src/runtime/usage-recovery-control.ts",
+      "sha256": "5f8299db35076875e8f490c041c39cd4fcbbc768bf84f3b63d1aa9b73b60ea8f"
+    },
+    {
+      "path": "packages/proxy/src/runtime/usage-recovery-host.ts",
+      "sha256": "5f86289e619ea50f07adb4102cf62d448ce81ec185532ca0df49668d290b9eb1"
+    },
+    {
+      "path": "packages/proxy/src/runtime/worker-handler.ts",
+      "sha256": "716c906cbd62332c5da61fce3c9cbe59ba0bed8947d40062449b46e630fa63f2"
+    },
+    {
+      "path": "packages/proxy/src/runtime/workers.ts",
+      "sha256": "8d3430ad8248daf970f177091030287ff95ecefd4e2a91b0510a45226bb842dc"
+    },
+    {
+      "path": "packages/proxy/src/services/gateway-error-codes.ts",
+      "sha256": "f8e4be5e446ed55982c176fa09bbd090350ff3c361965ef67c9247034e865d10"
+    },
+    {
+      "path": "packages/proxy/src/services/gateway-error-response.test.ts",
+      "sha256": "0437688397e27743b1b8743c5fd7d2b4103e37e31d4c588bf7ea1b9fc501a0a4"
+    },
+    {
+      "path": "packages/proxy/src/services/generation-metadata-snapshot.ts",
+      "sha256": "4c2b364ca1e8d87257f659b0a119acefee458e7dfab599a1ffc4b2bc64959dd0"
+    },
+    {
+      "path": "packages/proxy/src/services/generation-request-context.ts",
+      "sha256": "55c1a384b82b5f2352bf7b48c3fec0e26e69a20570494451b55cccc7f96be35d"
+    },
+    {
+      "path": "packages/proxy/src/services/image-usage-charge.test.ts",
+      "sha256": "c300aafef7666fdf15935ab1f44e1431f3820973fea85ec081c8c2cad533abb1"
+    },
+    {
+      "path": "packages/proxy/src/services/image-usage-charge.ts",
+      "sha256": "39d773d01483e1d393abfd329f54b088f61ac97d79a279665a1ccb8e039b4525"
+    },
+    {
+      "path": "packages/proxy/src/services/image-usage-recovery.ts",
+      "sha256": "713252d956bd64efaa6746243f9e779fca538732a1e9b377d27ae041c257e129"
+    },
+    {
+      "path": "packages/proxy/src/services/openrouter-error-protocol.ts",
+      "sha256": "ca1a363256a1ef7d4839c8eec017189726dc1904a0c60229e91c98c6338877d4"
+    },
+    {
+      "path": "packages/proxy/src/services/request-capacity.ts",
+      "sha256": "871875b50ea4730a3d7ad415a8de983a0044850ffa3139e57ec436facce1c10f"
+    },
+    {
+      "path": "packages/proxy/src/test-support/sqlite-d1.ts",
+      "sha256": "e28c1f8efe6dc96301307c8997dd02d402eac9431cfa8ece9f6b5aa572b2214b"
+    },
+    {
+      "path": "packages/proxy/wrangler.base.jsonc",
+      "sha256": "0687684a6870256283885ad5a1e4f154943c1909d0b866105aa5b8143f107833"
+    },
+    {
+      "path": "scripts/deploy/isolate-recovery-control-types.mjs",
+      "sha256": "f7cd7bd934764a30c0df2bf49a63a5448bd94487d0b242c5176a333552d27606"
+    },
+    {
+      "path": "scripts/deploy/prepare-proxy-staging.mjs",
+      "sha256": "37b089706d9c7ec33fdb7f009aec2a477d02f07151d51e8e3a189e8221fea7ef"
+    },
+    {
+      "path": "scripts/deploy/validate-staging-usage-recovery.mjs",
+      "sha256": "d9988e4a4d5f484846ada1729916851ad1ff4d08f35a0e47ba3066cbc2d8e3dc"
+    },
+    {
+      "path": "scripts/deploy/validate-staging-usage-recovery.test.mjs",
+      "sha256": "8eec01a21cd6f4e409086a3982a8772d864eb0a98d88f1d2fb437ced8ced0ae7"
+    },
+    {
+      "path": "scripts/deploy/verify-recovery-schema-artifact.mjs",
+      "sha256": "927d8b55f264bee4e1045358c84f72a2382f03e2c6b815b5ad43229167644f5f"
+    }
+  ]
+}

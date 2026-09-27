@@ -8,35 +8,31 @@ import {
 	DEEPSEEK_OFFICIAL_ENVIRONMENT_SECRET_POLICY,
 	assertSharedKeyEncryptionSecret,
 	resolveNodeDatabaseConfig,
+	type RuntimeDatabaseConfig,
 	type StorageContext,
 } from '@octafuse/core';
 import { createAdaptorServer } from '@hono/node-server';
-import type { IncomingMessage } from 'node:http';
 import { pathToFileURL } from 'node:url';
-import { createProxyApp } from '../app';
+import { createProxyApp, type ProxyAppOptions } from '../app';
 import {
-	createNodeDashScopeRealtimeDispatch,
 	createNodeWebSocketServer,
-	type NodeWebSocket,
 } from './node-realtime';
+import { handleNodeRealtimeUpgrade } from './node-realtime-upgrade';
 import { createInMemoryPublicStatsRuntimeGuard } from '../services/public-stats-runtime-guard';
+import { createSharedStorageInitializer } from './shared-storage-initializer';
 
-let nodeStoragePromise: Promise<StorageContext> | null = null;
+const resolveSharedNodeStorage = createSharedStorageInitializer((config: RuntimeDatabaseConfig) =>
+	config.driver === 'mysql'
+		? createMySqlStorageContext(config.connectionString)
+		: config.driver === 'postgres'
+			? createPostgresStorageContext(config.connectionString)
+			: Promise.reject(new Error('Unexpected Node storage driver')),
+);
 
 async function resolveNodeStorage(): Promise<StorageContext> {
 	const config = resolveNodeDatabaseConfig(process.env);
-	if (nodeStoragePromise === null) {
-		const p =
-			config.driver === 'mysql'
-				? createMySqlStorageContext(config.connectionString)
-				: createPostgresStorageContext(config.connectionString);
-		nodeStoragePromise = p.catch((err) => {
-			nodeStoragePromise = null;
-			throw err;
-		});
-	}
-	const storage = await nodeStoragePromise;
 	const secret = assertSharedKeyEncryptionSecret(process.env.SHARED_KEY_ENCRYPTION_SECRET);
+	const storage = await resolveSharedNodeStorage(config);
 	return {
 		...storage,
 		repositories: {
@@ -54,11 +50,19 @@ async function resolveNodeStorage(): Promise<StorageContext> {
 	};
 }
 
-export function createNodeApp() {
+export function createNodeApp(options?: Pick<ProxyAppOptions, 'postgresImageRecovery' | 'httpCapacity'>) {
+	if (options?.postgresImageRecovery && resolveNodeDatabaseConfig(process.env).driver !== 'postgres') {
+		throw new TypeError('PostgreSQL Images recovery requires a PostgreSQL Node database driver');
+	}
 	return createProxyApp(async () => resolveNodeStorage(), {
+		// Initialization belongs to the process-wide pool, not this cancelled request.
+		// Still await its terminal result in the request resource receipt; never end it here.
+		disposeUnusedStorage: async () => {},
 		requestBodyLogging: process.env.REQUEST_BODY_LOGGING,
 		organizationAdminRoles: process.env.CINAAUTH_ORGANIZATION_ADMIN_ROLES,
 		publicStatsRuntime: createInMemoryPublicStatsRuntimeGuard(),
+		postgresImageRecovery: options?.postgresImageRecovery,
+		httpCapacity: options?.httpCapacity,
 	});
 }
 
@@ -137,50 +141,11 @@ export async function startNodeServer(port = Number(process.env.PORT ?? 8787)): 
 	const app = createNodeApp();
 	const server = createAdaptorServer({ fetch: app.fetch });
 	const websocketServer = createNodeWebSocketServer();
-	// HTTP upgrade 先由 ws 完成握手，再把已接受的 socket 注入共享 Hono 路由。
+	// Authentication and route validation run before ws accepts the client.
 	server.on('upgrade', (request, socket, head) => {
-		const pathname = new URL(
-			request.url ?? '/',
-			`http://${request.headers.host ?? '127.0.0.1'}`
-		).pathname;
-		if (pathname !== '/v1/dashscope/realtime') {
-			socket.destroy();
-			return;
-		}
-		websocketServer.handleUpgrade(request, socket, head, (client) => {
-			void handleNodeRealtimeUpgrade(app, request, client);
-		});
+		void handleNodeRealtimeUpgrade(app, request, socket, head, websocketServer);
 	});
 	server.listen(port);
-}
-
-async function handleNodeRealtimeUpgrade(
-	app: ReturnType<typeof createNodeApp>,
-	request: IncomingMessage,
-	client: NodeWebSocket
-): Promise<void> {
-	const protocol = (request.socket as { encrypted?: boolean }).encrypted ? 'https' : 'http';
-	const url = `${protocol}://${request.headers.host ?? '127.0.0.1'}${request.url ?? '/'}`;
-	const headers = new Headers();
-	for (const [key, value] of Object.entries(request.headers)) {
-		if (typeof value === 'string') headers.set(key, value);
-		else if (Array.isArray(value)) headers.set(key, value.join(', '));
-	}
-	const fetchRequest = new Request(url, {
-		method: 'GET',
-		headers,
-	});
-	try {
-		const response = await app.fetch(fetchRequest, {
-			NODE_REALTIME_DISPATCH: createNodeDashScopeRealtimeDispatch(client),
-		});
-		if (response.headers.get('x-octafuse-realtime-upgrade') === '1') return;
-		const message = (await response.clone().text()).trim() || `HTTP ${response.status}`;
-		if (client.readyState !== 3) client.close(1008, message.slice(0, 123));
-	} catch (error) {
-		const message = error instanceof Error ? error.message : String(error);
-		if (client.readyState !== 3) client.close(1011, message.slice(0, 123));
-	}
 }
 
 if (import.meta.url === pathToFileURL(process.argv[1]!).href) {

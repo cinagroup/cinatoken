@@ -1,0 +1,1385 @@
+{
+  "schema": "cinatoken.c02.staging-images-chain.v1",
+  "date": "2026-09-07",
+  "scope": "real Workers + real isolated D1 + private synthetic service binding; free synthetic accounting only",
+  "overallGate": "C02.G NOT PASSED",
+  "budget": {
+    "cumulativeCapUsd": 2,
+    "newBudget": false,
+    "paidModelCalls": 0,
+    "kmsCalls": 0,
+    "actualCloudflareIncrementalBillVerified": false
+  },
+  "http": {
+    "thisPhase": 20,
+    "previousRecorded": 31,
+    "totalRecorded": 51,
+    "passingAttempt": 4,
+    "passingAttemptChecks": 11
+  },
+  "localValidation": {
+    "dispatchSafety": {
+      "pass": 2678,
+      "fail": 0
+    },
+    "imagesStaging": {
+      "pass": 14,
+      "fail": 0
+    },
+    "typechecks": [
+      "proxy",
+      "dispatch-safety",
+      "scripts/staging"
+    ],
+    "wrangler": "4.127.1",
+    "node": "24.14.1",
+    "latestTypesReviewed": "5.20260906.1",
+    "installedTypes": "5.20260829.1"
+  },
+  "deployments": [
+    {
+      "name": "cinatoken-staging-images-upstream",
+      "id": "10a6c21b-a952-448a-b811-d3c58e0d9589",
+      "versions": [
+        {
+          "version_id": "1a31fd9c-0a63-4b06-8b98-9ce8f07471cb",
+          "percentage": 100
+        }
+      ],
+      "created_on": "2026-09-07T01:40:33.82882Z"
+    },
+    {
+      "name": "cinatoken-proxy-staging",
+      "id": "b89ec149-0715-449d-9f93-efef73545d1e",
+      "versions": [
+        {
+          "version_id": "61a59281-5b1e-47ec-9b34-7f30a3a75d92",
+          "percentage": 100
+        }
+      ],
+      "created_on": "2026-09-07T01:40:56.449534Z"
+    }
+  ],
+  "attempts": [
+    {
+      "attempt": 1,
+      "startedAt": "2026-09-07T01:44:57.671Z",
+      "finishedAt": "2026-09-07T01:46:25.029Z",
+      "result": "FAIL",
+      "error": "Assertion failed: The expression evaluated to a falsy value:\n\n  assert.ok([401,403].includes(denied.row.status))\n",
+      "version": "61a59281-5b1e-47ec-9b34-7f30a3a75d92",
+      "harnessSha256": "3a6dacbe604bf7c839c4427093e30f65c824de3c6bc3e60fd50b76e548b043ff",
+      "serviceTokenId": "304f26ab-6731-4d45-8bea-0b9cdd9b4af8",
+      "requests": [
+        {
+          "label": "access-readiness-0",
+          "path": "/health",
+          "startedAt": "2026-09-07T01:45:41.493Z",
+          "requestBytes": 0,
+          "declaredLength": false,
+          "generatedBytes": 0,
+          "status": 302,
+          "responseBytes": 143,
+          "responseSha256": "12755429beb15d5eb57eafa45b8dba326343dd099bf0552038694c3856e8860e",
+          "ms": 1110,
+          "gatewayCode": null,
+          "cfRay": "a37209167c9df876-SIN",
+          "contentType": "text/html; charset=UTF-8",
+          "errorMessage": null
+        }
+      ],
+      "managementRequests": 94,
+      "d1ApiRowsRead": 1342,
+      "d1ApiRowsWritten": 135,
+      "ingressClosed": true,
+      "accessDenyAll": true,
+      "serviceTokenRevoked": true,
+      "gatewayKeyRevoked": true,
+      "fixtureRemoved": true,
+      "databaseRestored": true,
+      "productionUnchanged": true
+    },
+    {
+      "attempt": 2,
+      "startedAt": "2026-09-07T01:47:07.292Z",
+      "finishedAt": "2026-09-07T01:48:33.547Z",
+      "result": "FAIL",
+      "error": "Assertion failed: Expected values to be strictly deep-equal:\n+ actual - expected\n\n+ []\n- [\n-   'c02-success-5357403a-bd80-484d-bcfa-d8a15ac661b8-limit-generations',\n-   'c02-success-5357403a-bd80-484d-bcfa-d8a15ac661b8-over-generations',\n-   'c02-success-5357403a-bd80-484d-bcfa-d8a15ac661b8-replacement-generations',\n-   'c02-success-5357403a-bd80-484d-bcfa-d8a15ac661b8-small-edits',\n-   'c02-success-5357403a-bd80-484d-bcfa-d8a15ac661b8-small-generations'\n- ]\n",
+      "version": "61a59281-5b1e-47ec-9b34-7f30a3a75d92",
+      "harnessSha256": "9d1c8b6a31585ba2e1523e8a587faabb759491a75377ab661f4251d92254da2c",
+      "serviceTokenId": "24adaa94-8cc0-427b-9ba1-203a63172860",
+      "accessAppConfirmed": {
+        "id": "ed5fd912-d6f1-4662-9575-02e0d6877af4",
+        "domain": "cinatoken-proxy-staging.cinagroup.workers.dev",
+        "service_auth_401_redirect": true
+      },
+      "requests": [
+        {
+          "label": "access-readiness-0",
+          "path": "/health",
+          "startedAt": "2026-09-07T01:47:50.936Z",
+          "requestBytes": 0,
+          "declaredLength": false,
+          "generatedBytes": 0,
+          "status": 401,
+          "responseBytes": 37790,
+          "responseSha256": "dde8dc718f06d1f3176f26ab0a2ae6ae4a18a621453d4b8f39354306b09184f8",
+          "ms": 1755,
+          "gatewayCode": null,
+          "cfRay": "a3720c3fbeb05941-SIN",
+          "contentType": "text/html",
+          "errorMessage": null,
+          "passed": true
+        },
+        {
+          "label": "authorized-health",
+          "path": "/health",
+          "startedAt": "2026-09-07T01:47:52.693Z",
+          "requestBytes": 0,
+          "declaredLength": false,
+          "generatedBytes": 0,
+          "status": 200,
+          "responseBytes": 43,
+          "responseSha256": "155462e85c280dba1aae35fcdcabd37c5abf62071a935bfd8e5d02fc8bd9194a",
+          "ms": 1117,
+          "gatewayCode": null,
+          "cfRay": "a3720c4a49a1fdba-SIN",
+          "contentType": "application/json",
+          "errorMessage": null,
+          "passed": true
+        },
+        {
+          "label": "hashed-gateway-key-auth",
+          "path": "/v1/models",
+          "startedAt": "2026-09-07T01:47:53.811Z",
+          "requestBytes": 0,
+          "declaredLength": false,
+          "generatedBytes": 0,
+          "status": 200,
+          "responseBytes": 27,
+          "responseSha256": "49c64eb258b2e815adaa6659b3b88661bf7379c254b63407784dc15b8769f1ac",
+          "ms": 1432,
+          "gatewayCode": null,
+          "cfRay": "a3720c4cea2a5941-SIN",
+          "contentType": "application/json",
+          "errorMessage": null
+        }
+      ],
+      "managementRequests": 95,
+      "d1ApiRowsRead": 1342,
+      "d1ApiRowsWritten": 135,
+      "ingressClosed": true,
+      "accessDenyAll": true,
+      "serviceTokenRevoked": true,
+      "gatewayKeyRevoked": true,
+      "fixtureRemoved": true,
+      "databaseRestored": true,
+      "productionUnchanged": true
+    },
+    {
+      "attempt": 3,
+      "startedAt": "2026-09-07T01:49:09.159Z",
+      "finishedAt": "2026-09-07T01:51:16.769Z",
+      "result": "FAIL",
+      "error": "Assertion failed: small-generations\n\n400 !== 200\n",
+      "version": "61a59281-5b1e-47ec-9b34-7f30a3a75d92",
+      "harnessSha256": "55bd944073e1527d34323f67dc7b9059e5168c32ba4de2e708b5fcdafcfdb54f",
+      "serviceTokenId": "6d4ed3b6-1350-4274-8620-27e1c74fa9f7",
+      "accessAppConfirmed": {
+        "id": "ed5fd912-d6f1-4662-9575-02e0d6877af4",
+        "domain": "cinatoken-proxy-staging.cinagroup.workers.dev",
+        "service_auth_401_redirect": true
+      },
+      "requests": [
+        {
+          "label": "access-readiness-0",
+          "path": "/health",
+          "startedAt": "2026-09-07T01:49:54.010Z",
+          "requestBytes": 0,
+          "declaredLength": false,
+          "generatedBytes": 0,
+          "status": 404,
+          "responseBytes": 19984,
+          "responseSha256": "2000e6b28a1517ba1268e1649cd3163326ef839492edfdba31e8959830580976",
+          "ms": 1053,
+          "gatewayCode": null,
+          "cfRay": "a3720f499e25fda6-SIN",
+          "contentType": "text/html; charset=UTF-8",
+          "errorMessage": null
+        },
+        {
+          "label": "access-readiness-1",
+          "path": "/health",
+          "startedAt": "2026-09-07T01:50:00.071Z",
+          "requestBytes": 0,
+          "declaredLength": false,
+          "generatedBytes": 0,
+          "status": 401,
+          "responseBytes": 37790,
+          "responseSha256": "61cde3d4a1076eaa850aa77a7415c7ac09b90ee083280368f89a8da24fc316a8",
+          "ms": 1648,
+          "gatewayCode": null,
+          "cfRay": "a3720f6fad3029dc-SIN",
+          "contentType": "text/html",
+          "errorMessage": null,
+          "passed": true
+        },
+        {
+          "label": "authorized-health",
+          "path": "/health",
+          "startedAt": "2026-09-07T01:50:01.720Z",
+          "requestBytes": 0,
+          "declaredLength": false,
+          "generatedBytes": 0,
+          "status": 200,
+          "responseBytes": 43,
+          "responseSha256": "155462e85c280dba1aae35fcdcabd37c5abf62071a935bfd8e5d02fc8bd9194a",
+          "ms": 1211,
+          "gatewayCode": null,
+          "cfRay": "a3720f7a6de68325-SIN",
+          "contentType": "application/json",
+          "errorMessage": null,
+          "passed": true
+        },
+        {
+          "label": "hashed-gateway-key-auth-image-catalog",
+          "path": "/v1/models?kind=image",
+          "startedAt": "2026-09-07T01:50:02.932Z",
+          "requestBytes": 0,
+          "declaredLength": false,
+          "generatedBytes": 0,
+          "status": 200,
+          "responseBytes": 2985,
+          "responseSha256": "62d72af67b1a65274ff58830e494f50352e9e5679e474c710d03e30300bdf058",
+          "ms": 1406,
+          "gatewayCode": null,
+          "cfRay": "a3720f7d09c729dc-SIN",
+          "contentType": "application/json",
+          "errorMessage": null,
+          "passed": true
+        },
+        {
+          "label": "small-generations",
+          "path": "/v1/images/generations",
+          "startedAt": "2026-09-07T01:50:04.339Z",
+          "requestBytes": 121,
+          "declaredLength": false,
+          "generatedBytes": 121,
+          "status": 400,
+          "responseBytes": 340,
+          "responseSha256": "0c8388db2350fa5cf1f76df58f6419222288b242388711acdebcfb08005c636c",
+          "ms": 1453,
+          "gatewayCode": "gateway.invalid_request",
+          "cfRay": "a3720f85dabb29dc-SIN",
+          "contentType": "application/json; charset=UTF-8",
+          "errorMessage": "No configured standard endpoint is available; service-tier and unclassified variant endpoints require an exact provider.order or provider.only slug for model \"c02-success-faf42938-bbd0-47a5-aa9c-0acaff9bbfe6-small-generations\""
+        }
+      ],
+      "managementRequests": 95,
+      "d1ApiRowsRead": 1342,
+      "d1ApiRowsWritten": 135,
+      "ingressClosed": true,
+      "accessDenyAll": true,
+      "serviceTokenRevoked": true,
+      "gatewayKeyRevoked": true,
+      "fixtureRemoved": true,
+      "databaseRestored": true,
+      "productionUnchanged": true
+    },
+    {
+      "attempt": 4,
+      "startedAt": "2026-09-07T01:52:50.091Z",
+      "finishedAt": "2026-09-07T01:55:48.252Z",
+      "result": "PASS",
+      "version": "61a59281-5b1e-47ec-9b34-7f30a3a75d92",
+      "harnessSha256": "b1caf213884799c58b7895e59e7af0cd5fc4ee7508167370baba3fa151c49cb2",
+      "serviceTokenId": "0d946368-f218-4185-9953-ab7389cf3ebc",
+      "accessAppConfirmed": {
+        "id": "ed5fd912-d6f1-4662-9575-02e0d6877af4",
+        "domain": "cinatoken-proxy-staging.cinagroup.workers.dev",
+        "service_auth_401_redirect": true
+      },
+      "requests": [
+        {
+          "label": "access-readiness-0",
+          "path": "/health",
+          "startedAt": "2026-09-07T01:53:35.205Z",
+          "requestBytes": 0,
+          "declaredLength": false,
+          "generatedBytes": 0,
+          "status": 401,
+          "responseBytes": 37790,
+          "responseSha256": "3c5f62159a1afb3f1fb1e6c3ba96150727bf69661b7cc6fffd30fa3826e0caea",
+          "ms": 2014,
+          "gatewayCode": null,
+          "cfRay": "a37214bdcbefb486-SIN",
+          "contentType": "text/html",
+          "errorMessage": null,
+          "passed": true
+        },
+        {
+          "label": "authorized-health",
+          "path": "/health",
+          "startedAt": "2026-09-07T01:53:37.220Z",
+          "requestBytes": 0,
+          "declaredLength": false,
+          "generatedBytes": 0,
+          "status": 200,
+          "responseBytes": 43,
+          "responseSha256": "155462e85c280dba1aae35fcdcabd37c5abf62071a935bfd8e5d02fc8bd9194a",
+          "ms": 1124,
+          "gatewayCode": null,
+          "cfRay": "a37214ca6d30d4a5-SIN",
+          "contentType": "application/json",
+          "errorMessage": null,
+          "passed": true
+        },
+        {
+          "label": "hashed-gateway-key-auth-image-catalog",
+          "path": "/v1/models?kind=image",
+          "startedAt": "2026-09-07T01:53:38.346Z",
+          "requestBytes": 0,
+          "declaredLength": false,
+          "generatedBytes": 0,
+          "status": 200,
+          "responseBytes": 2985,
+          "responseSha256": "8a6066111aa2ce16c67848011c39f96bb662043c439efe18cf9ca3d9dab770ef",
+          "ms": 1377,
+          "gatewayCode": null,
+          "cfRay": "a37214ccea8bb486-SIN",
+          "contentType": "application/json",
+          "errorMessage": null,
+          "passed": true
+        },
+        {
+          "label": "small-generations",
+          "path": "/v1/images/generations",
+          "startedAt": "2026-09-07T01:53:39.724Z",
+          "requestBytes": 121,
+          "declaredLength": false,
+          "generatedBytes": 121,
+          "status": 200,
+          "responseBytes": 1082,
+          "responseSha256": "3fdd44060ca21eb023e358d6daf3a17c33d270ba65bd4b28d4a7021343ea4caf",
+          "ms": 1797,
+          "gatewayCode": null,
+          "cfRay": "a37214d58a8ab486-SIN",
+          "contentType": "application/json",
+          "errorMessage": null,
+          "fixtureCase": "small-generations",
+          "passed": true
+        },
+        {
+          "label": "small-edits",
+          "path": "/v1/images/edits",
+          "startedAt": "2026-09-07T01:53:41.523Z",
+          "requestBytes": 393,
+          "declaredLength": false,
+          "generatedBytes": 393,
+          "status": 200,
+          "responseBytes": 1082,
+          "responseSha256": "3fdd44060ca21eb023e358d6daf3a17c33d270ba65bd4b28d4a7021343ea4caf",
+          "ms": 1772,
+          "gatewayCode": null,
+          "cfRay": "a37214e0c93db486-SIN",
+          "contentType": "application/json",
+          "errorMessage": null,
+          "fixtureCase": "small-edits",
+          "passed": true
+        },
+        {
+          "label": "response-exact-32MiB",
+          "path": "/v1/images/generations",
+          "startedAt": "2026-09-07T01:53:43.297Z",
+          "requestBytes": 121,
+          "declaredLength": false,
+          "generatedBytes": 121,
+          "status": 200,
+          "responseBytes": 33554490,
+          "responseSha256": "56c7caec2d5e1a8ae07bc3ba60322bc9774799a6dded5bf495aa4e508125eab8",
+          "ms": 3436,
+          "gatewayCode": null,
+          "cfRay": "a37214ebdec5b486-SIN",
+          "contentType": "application/json",
+          "errorMessage": null,
+          "fixtureCase": "limit-generations",
+          "passed": true
+        },
+        {
+          "label": "response-32MiB-plus-one",
+          "path": "/v1/images/generations",
+          "startedAt": "2026-09-07T01:53:46.752Z",
+          "requestBytes": 120,
+          "declaredLength": false,
+          "generatedBytes": 120,
+          "status": 502,
+          "responseBytes": 147,
+          "responseSha256": "70922e027508245bd799b6909540fc185c9064c0a652220f5520ed42df221048",
+          "ms": 2869,
+          "gatewayCode": "upstream.server_error",
+          "cfRay": "a37215017e72b486-SIN",
+          "contentType": "application/json; charset=UTF-8",
+          "errorMessage": "Upstream provider is unavailable",
+          "fixtureCase": "over-generations",
+          "passed": true
+        },
+        {
+          "label": "replacement-expansion-32MiB",
+          "path": "/v1/images/generations",
+          "startedAt": "2026-09-07T01:53:49.623Z",
+          "requestBytes": 127,
+          "declaredLength": false,
+          "generatedBytes": 127,
+          "status": 200,
+          "responseBytes": 100663176,
+          "responseSha256": "d7bcff5ab815e0414835b646f95930d1ba7c95f8412c39e6421572f519c965a5",
+          "ms": 13809,
+          "gatewayCode": null,
+          "cfRay": "a3721517cb867ac6-SIN",
+          "contentType": "application/json",
+          "errorMessage": null,
+          "fixtureCase": "replacement-generations",
+          "passed": true
+        },
+        {
+          "label": "json-50MiB-success",
+          "path": "/v1/images/generations",
+          "startedAt": "2026-09-07T01:54:03.486Z",
+          "requestBytes": 52428800,
+          "declaredLength": false,
+          "generatedBytes": 52428800,
+          "status": 200,
+          "responseBytes": 1082,
+          "responseSha256": "3fdd44060ca21eb023e358d6daf3a17c33d270ba65bd4b28d4a7021343ea4caf",
+          "ms": 22797,
+          "gatewayCode": null,
+          "cfRay": "a372154d3c415f93-SIN",
+          "contentType": "application/json",
+          "errorMessage": null,
+          "fixtureCase": "small-generations",
+          "passed": true
+        },
+        {
+          "label": "multipart-20MiB-file-success",
+          "path": "/v1/images/edits",
+          "startedAt": "2026-09-07T01:54:26.286Z",
+          "requestBytes": 20971897,
+          "declaredLength": false,
+          "generatedBytes": 20971897,
+          "status": 200,
+          "responseBytes": 1082,
+          "responseSha256": "3fdd44060ca21eb023e358d6daf3a17c33d270ba65bd4b28d4a7021343ea4caf",
+          "ms": 9160,
+          "gatewayCode": null,
+          "cfRay": "a37215d6ea6b5f93-SIN",
+          "contentType": "application/json",
+          "errorMessage": null,
+          "fixtureCase": "small-edits",
+          "passed": true
+        },
+        {
+          "label": "access-still-denies-after-images",
+          "path": "/health",
+          "startedAt": "2026-09-07T01:54:35.448Z",
+          "requestBytes": 0,
+          "declaredLength": false,
+          "generatedBytes": 0,
+          "status": 401,
+          "responseBytes": 37790,
+          "responseSha256": "e9ad05ce65469ce069e42f22e31089d4fff0b75408c4fe9ae9ff46ab0ed87fd6",
+          "ms": 816,
+          "gatewayCode": null,
+          "cfRay": "a37216103aa95f93-SIN",
+          "contentType": "text/html",
+          "errorMessage": null,
+          "passed": true
+        }
+      ],
+      "managementRequests": 101,
+      "d1ApiRowsRead": 1889,
+      "d1ApiRowsWritten": 155,
+      "ingressClosed": true,
+      "accessDenyAll": true,
+      "serviceTokenRevoked": true,
+      "gatewayKeyRevoked": true,
+      "fixtureRemoved": true,
+      "databaseRestored": true,
+      "productionUnchanged": true
+    }
+  ],
+  "passingUsageLogs": [
+    {
+      "id": "gen-88969db9-e5ac-439f-9fa1-f4259100eaa4",
+      "model_id": "c02-success-6d0eaff2-70c9-4b55-9675-efe410e9f5bf-small-generations",
+      "route_target_id": "c02-success-6d0eaff2-70c9-4b55-9675-efe410e9f5bf-small-generations-r",
+      "status": "success",
+      "charged_cost": 0,
+      "metered_cost": 0,
+      "standard_cost": 0,
+      "budget_charged_micros": 0,
+      "input_image_count": 0,
+      "output_image_count": 1,
+      "upstream_request_id": "c02-small-61",
+      "upstream_attempt_count": 1,
+      "request_body": null,
+      "upstream_request_body": null,
+      "raw_usage_chars": 94,
+      "pricing_audit_chars": 2943
+    },
+    {
+      "id": "gen-a2b3c5f6-09bc-44c5-bec0-56fc7273bb7c",
+      "model_id": "c02-success-6d0eaff2-70c9-4b55-9675-efe410e9f5bf-small-edits",
+      "route_target_id": "c02-success-6d0eaff2-70c9-4b55-9675-efe410e9f5bf-small-edits-r",
+      "status": "success",
+      "charged_cost": 0,
+      "metered_cost": 0,
+      "standard_cost": 0,
+      "budget_charged_micros": 0,
+      "input_image_count": 1,
+      "output_image_count": 1,
+      "upstream_request_id": "c02-small-563",
+      "upstream_attempt_count": 1,
+      "request_body": null,
+      "upstream_request_body": null,
+      "raw_usage_chars": 94,
+      "pricing_audit_chars": 2889
+    },
+    {
+      "id": "gen-5f65101b-9d3d-48d5-b886-7683cb20723b",
+      "model_id": "c02-success-6d0eaff2-70c9-4b55-9675-efe410e9f5bf-limit-generations",
+      "route_target_id": "c02-success-6d0eaff2-70c9-4b55-9675-efe410e9f5bf-limit-generations-r",
+      "status": "success",
+      "charged_cost": 0,
+      "metered_cost": 0,
+      "standard_cost": 0,
+      "budget_charged_micros": 0,
+      "input_image_count": 0,
+      "output_image_count": 1,
+      "upstream_request_id": "c02-limit-61",
+      "upstream_attempt_count": 1,
+      "request_body": null,
+      "upstream_request_body": null,
+      "raw_usage_chars": 94,
+      "pricing_audit_chars": 2943
+    },
+    {
+      "id": "gen-118c2a62-448f-4d2b-aeef-a1864cfafe06",
+      "model_id": "c02-success-6d0eaff2-70c9-4b55-9675-efe410e9f5bf-over-generations",
+      "route_target_id": "c02-success-6d0eaff2-70c9-4b55-9675-efe410e9f5bf-over-generations-r",
+      "status": "error",
+      "charged_cost": 0,
+      "metered_cost": 0,
+      "standard_cost": 0,
+      "budget_charged_micros": 0,
+      "input_image_count": 0,
+      "output_image_count": 0,
+      "upstream_request_id": "c02-over-61",
+      "upstream_attempt_count": 1,
+      "request_body": null,
+      "upstream_request_body": null,
+      "raw_usage_chars": null,
+      "pricing_audit_chars": 689
+    },
+    {
+      "id": "gen-3cb07238-c7fc-4fe5-b746-9487365a043f",
+      "model_id": "c02-success-6d0eaff2-70c9-4b55-9675-efe410e9f5bf-replacement-generations",
+      "route_target_id": "c02-success-6d0eaff2-70c9-4b55-9675-efe410e9f5bf-replacement-generations-r",
+      "status": "success",
+      "charged_cost": 0,
+      "metered_cost": 0,
+      "standard_cost": 0,
+      "budget_charged_micros": 0,
+      "input_image_count": 0,
+      "output_image_count": 1,
+      "upstream_request_id": "c02-replacement-61",
+      "upstream_attempt_count": 1,
+      "request_body": null,
+      "upstream_request_body": null,
+      "raw_usage_chars": 94,
+      "pricing_audit_chars": 3015
+    },
+    {
+      "id": "gen-dde30997-47eb-477b-9103-f64e73b0f45b",
+      "model_id": "c02-success-6d0eaff2-70c9-4b55-9675-efe410e9f5bf-small-generations",
+      "route_target_id": "c02-success-6d0eaff2-70c9-4b55-9675-efe410e9f5bf-small-generations-r",
+      "status": "success",
+      "charged_cost": 0,
+      "metered_cost": 0,
+      "standard_cost": 0,
+      "budget_charged_micros": 0,
+      "input_image_count": 0,
+      "output_image_count": 1,
+      "upstream_request_id": "c02-small-61",
+      "upstream_attempt_count": 1,
+      "request_body": null,
+      "upstream_request_body": null,
+      "raw_usage_chars": 94,
+      "pricing_audit_chars": 2943
+    },
+    {
+      "id": "gen-18defb22-7357-4049-9959-fb874024724b",
+      "model_id": "c02-success-6d0eaff2-70c9-4b55-9675-efe410e9f5bf-small-edits",
+      "route_target_id": "c02-success-6d0eaff2-70c9-4b55-9675-efe410e9f5bf-small-edits-r",
+      "status": "success",
+      "charged_cost": 0,
+      "metered_cost": 0,
+      "standard_cost": 0,
+      "budget_charged_micros": 0,
+      "input_image_count": 1,
+      "output_image_count": 1,
+      "upstream_request_id": "c02-small-20972067",
+      "upstream_attempt_count": 1,
+      "request_body": null,
+      "upstream_request_body": null,
+      "raw_usage_chars": 94,
+      "pricing_audit_chars": 2889
+    }
+  ],
+  "passingProviderAttempts": [
+    {
+      "request_log_id": "gen-88969db9-e5ac-439f-9fa1-f4259100eaa4",
+      "attempt_index": 1,
+      "outcome": "available",
+      "reason": "accepted",
+      "http_status": 200
+    },
+    {
+      "request_log_id": "gen-a2b3c5f6-09bc-44c5-bec0-56fc7273bb7c",
+      "attempt_index": 1,
+      "outcome": "available",
+      "reason": "accepted",
+      "http_status": 200
+    },
+    {
+      "request_log_id": "gen-5f65101b-9d3d-48d5-b886-7683cb20723b",
+      "attempt_index": 1,
+      "outcome": "available",
+      "reason": "accepted",
+      "http_status": 200
+    },
+    {
+      "request_log_id": "gen-118c2a62-448f-4d2b-aeef-a1864cfafe06",
+      "attempt_index": 1,
+      "outcome": "available",
+      "reason": "accepted",
+      "http_status": 200
+    },
+    {
+      "request_log_id": "gen-3cb07238-c7fc-4fe5-b746-9487365a043f",
+      "attempt_index": 1,
+      "outcome": "available",
+      "reason": "accepted",
+      "http_status": 200
+    },
+    {
+      "request_log_id": "gen-dde30997-47eb-477b-9103-f64e73b0f45b",
+      "attempt_index": 1,
+      "outcome": "available",
+      "reason": "accepted",
+      "http_status": 200
+    },
+    {
+      "request_log_id": "gen-18defb22-7357-4049-9959-fb874024724b",
+      "attempt_index": 1,
+      "outcome": "available",
+      "reason": "accepted",
+      "http_status": 200
+    }
+  ],
+  "providerEnvelopePrefixes": [
+    {
+      "id": "c02-success-6d0eaff2-70c9-4b55-9675-efe410e9f5bf-p-small",
+      "envelope": "enc:v2:"
+    },
+    {
+      "id": "c02-success-6d0eaff2-70c9-4b55-9675-efe410e9f5bf-p-limit",
+      "envelope": "enc:v2:"
+    },
+    {
+      "id": "c02-success-6d0eaff2-70c9-4b55-9675-efe410e9f5bf-p-over",
+      "envelope": "enc:v2:"
+    },
+    {
+      "id": "c02-success-6d0eaff2-70c9-4b55-9675-efe410e9f5bf-p-replacement",
+      "envelope": "enc:v2:"
+    }
+  ],
+  "syntheticBalance": {
+    "budget_max": 0,
+    "budget_spent": 0,
+    "budget_spent_micros": 0,
+    "budget_reserved_micros": 0
+  },
+  "tablesBefore": [
+    {
+      "table_name": "admin_api_keys",
+      "row_count": 1
+    },
+    {
+      "table_name": "admin_sessions",
+      "row_count": 0
+    },
+    {
+      "table_name": "api_key_request_logs",
+      "row_count": 0
+    },
+    {
+      "table_name": "api_keys",
+      "row_count": 0
+    },
+    {
+      "table_name": "batch_items",
+      "row_count": 0
+    },
+    {
+      "table_name": "batches",
+      "row_count": 0
+    },
+    {
+      "table_name": "byok_keys",
+      "row_count": 0
+    },
+    {
+      "table_name": "chain_job_transactions",
+      "row_count": 0
+    },
+    {
+      "table_name": "d1_migrations",
+      "row_count": 68
+    },
+    {
+      "table_name": "generation_feedback",
+      "row_count": 0
+    },
+    {
+      "table_name": "guardrail_assignments",
+      "row_count": 0
+    },
+    {
+      "table_name": "guardrail_budget_reservations",
+      "row_count": 0
+    },
+    {
+      "table_name": "guardrail_budget_windows",
+      "row_count": 0
+    },
+    {
+      "table_name": "guardrail_versions",
+      "row_count": 0
+    },
+    {
+      "table_name": "guardrails",
+      "row_count": 0
+    },
+    {
+      "table_name": "identity_event_inbox",
+      "row_count": 0
+    },
+    {
+      "table_name": "management_api_keys",
+      "row_count": 0
+    },
+    {
+      "table_name": "model_endpoint_backfill_database_identity",
+      "row_count": 1
+    },
+    {
+      "table_name": "model_endpoint_backfill_runs",
+      "row_count": 0
+    },
+    {
+      "table_name": "model_endpoint_backfill_trust_registry",
+      "row_count": 0
+    },
+    {
+      "table_name": "model_endpoint_evidence_attestations",
+      "row_count": 0
+    },
+    {
+      "table_name": "model_endpoint_routes",
+      "row_count": 0
+    },
+    {
+      "table_name": "model_endpoints",
+      "row_count": 0
+    },
+    {
+      "table_name": "model_routes",
+      "row_count": 0
+    },
+    {
+      "table_name": "model_surfaces",
+      "row_count": 0
+    },
+    {
+      "table_name": "model_tags",
+      "row_count": 0
+    },
+    {
+      "table_name": "models",
+      "row_count": 0
+    },
+    {
+      "table_name": "nft_mints",
+      "row_count": 0
+    },
+    {
+      "table_name": "organization_memberships",
+      "row_count": 0
+    },
+    {
+      "table_name": "organizations",
+      "row_count": 0
+    },
+    {
+      "table_name": "portal_ledger_entries",
+      "row_count": 0
+    },
+    {
+      "table_name": "portal_sessions",
+      "row_count": 0
+    },
+    {
+      "table_name": "provider_attempt_availability",
+      "row_count": 0
+    },
+    {
+      "table_name": "providers",
+      "row_count": 0
+    },
+    {
+      "table_name": "public_model_daily_stats",
+      "row_count": 0
+    },
+    {
+      "table_name": "request_preset_versions",
+      "row_count": 0
+    },
+    {
+      "table_name": "request_presets",
+      "row_count": 0
+    },
+    {
+      "table_name": "route_data_policies",
+      "row_count": 0
+    },
+    {
+      "table_name": "route_data_policy_audit",
+      "row_count": 0
+    },
+    {
+      "table_name": "route_pool_sticky_bindings",
+      "row_count": 0
+    },
+    {
+      "table_name": "route_pools",
+      "row_count": 0
+    },
+    {
+      "table_name": "shared_key_earnings",
+      "row_count": 0
+    },
+    {
+      "table_name": "shared_keys",
+      "row_count": 0
+    },
+    {
+      "table_name": "system_config",
+      "row_count": 12
+    },
+    {
+      "table_name": "user_audit_logs",
+      "row_count": 0
+    },
+    {
+      "table_name": "user_budget_reservations",
+      "row_count": 0
+    },
+    {
+      "table_name": "user_earnings",
+      "row_count": 0
+    },
+    {
+      "table_name": "users",
+      "row_count": 0
+    },
+    {
+      "table_name": "withdrawals",
+      "row_count": 0
+    },
+    {
+      "table_name": "workspace_budgets",
+      "row_count": 0
+    },
+    {
+      "table_name": "workspace_memberships",
+      "row_count": 0
+    },
+    {
+      "table_name": "workspaces",
+      "row_count": 0
+    }
+  ],
+  "tablesBeforeCleanup": [
+    {
+      "table_name": "admin_api_keys",
+      "row_count": 1
+    },
+    {
+      "table_name": "admin_sessions",
+      "row_count": 0
+    },
+    {
+      "table_name": "api_key_request_logs",
+      "row_count": 7
+    },
+    {
+      "table_name": "api_keys",
+      "row_count": 1
+    },
+    {
+      "table_name": "batch_items",
+      "row_count": 0
+    },
+    {
+      "table_name": "batches",
+      "row_count": 0
+    },
+    {
+      "table_name": "byok_keys",
+      "row_count": 0
+    },
+    {
+      "table_name": "chain_job_transactions",
+      "row_count": 0
+    },
+    {
+      "table_name": "d1_migrations",
+      "row_count": 68
+    },
+    {
+      "table_name": "generation_feedback",
+      "row_count": 0
+    },
+    {
+      "table_name": "guardrail_assignments",
+      "row_count": 0
+    },
+    {
+      "table_name": "guardrail_budget_reservations",
+      "row_count": 0
+    },
+    {
+      "table_name": "guardrail_budget_windows",
+      "row_count": 0
+    },
+    {
+      "table_name": "guardrail_versions",
+      "row_count": 0
+    },
+    {
+      "table_name": "guardrails",
+      "row_count": 0
+    },
+    {
+      "table_name": "identity_event_inbox",
+      "row_count": 0
+    },
+    {
+      "table_name": "management_api_keys",
+      "row_count": 0
+    },
+    {
+      "table_name": "model_endpoint_backfill_database_identity",
+      "row_count": 1
+    },
+    {
+      "table_name": "model_endpoint_backfill_runs",
+      "row_count": 0
+    },
+    {
+      "table_name": "model_endpoint_backfill_trust_registry",
+      "row_count": 0
+    },
+    {
+      "table_name": "model_endpoint_evidence_attestations",
+      "row_count": 0
+    },
+    {
+      "table_name": "model_endpoint_routes",
+      "row_count": 5
+    },
+    {
+      "table_name": "model_endpoints",
+      "row_count": 5
+    },
+    {
+      "table_name": "model_routes",
+      "row_count": 5
+    },
+    {
+      "table_name": "model_surfaces",
+      "row_count": 0
+    },
+    {
+      "table_name": "model_tags",
+      "row_count": 0
+    },
+    {
+      "table_name": "models",
+      "row_count": 5
+    },
+    {
+      "table_name": "nft_mints",
+      "row_count": 0
+    },
+    {
+      "table_name": "organization_memberships",
+      "row_count": 0
+    },
+    {
+      "table_name": "organizations",
+      "row_count": 0
+    },
+    {
+      "table_name": "portal_ledger_entries",
+      "row_count": 0
+    },
+    {
+      "table_name": "portal_sessions",
+      "row_count": 0
+    },
+    {
+      "table_name": "provider_attempt_availability",
+      "row_count": 7
+    },
+    {
+      "table_name": "providers",
+      "row_count": 4
+    },
+    {
+      "table_name": "public_model_daily_stats",
+      "row_count": 6
+    },
+    {
+      "table_name": "request_preset_versions",
+      "row_count": 0
+    },
+    {
+      "table_name": "request_presets",
+      "row_count": 0
+    },
+    {
+      "table_name": "route_data_policies",
+      "row_count": 0
+    },
+    {
+      "table_name": "route_data_policy_audit",
+      "row_count": 0
+    },
+    {
+      "table_name": "route_pool_sticky_bindings",
+      "row_count": 0
+    },
+    {
+      "table_name": "route_pools",
+      "row_count": 0
+    },
+    {
+      "table_name": "shared_key_earnings",
+      "row_count": 0
+    },
+    {
+      "table_name": "shared_keys",
+      "row_count": 0
+    },
+    {
+      "table_name": "system_config",
+      "row_count": 12
+    },
+    {
+      "table_name": "user_audit_logs",
+      "row_count": 0
+    },
+    {
+      "table_name": "user_budget_reservations",
+      "row_count": 0
+    },
+    {
+      "table_name": "user_earnings",
+      "row_count": 0
+    },
+    {
+      "table_name": "users",
+      "row_count": 1
+    },
+    {
+      "table_name": "withdrawals",
+      "row_count": 0
+    },
+    {
+      "table_name": "workspace_budgets",
+      "row_count": 0
+    },
+    {
+      "table_name": "workspace_memberships",
+      "row_count": 0
+    },
+    {
+      "table_name": "workspaces",
+      "row_count": 1
+    }
+  ],
+  "tablesAfter": [
+    {
+      "table_name": "admin_api_keys",
+      "row_count": 1
+    },
+    {
+      "table_name": "admin_sessions",
+      "row_count": 0
+    },
+    {
+      "table_name": "api_key_request_logs",
+      "row_count": 0
+    },
+    {
+      "table_name": "api_keys",
+      "row_count": 0
+    },
+    {
+      "table_name": "batch_items",
+      "row_count": 0
+    },
+    {
+      "table_name": "batches",
+      "row_count": 0
+    },
+    {
+      "table_name": "byok_keys",
+      "row_count": 0
+    },
+    {
+      "table_name": "chain_job_transactions",
+      "row_count": 0
+    },
+    {
+      "table_name": "d1_migrations",
+      "row_count": 68
+    },
+    {
+      "table_name": "generation_feedback",
+      "row_count": 0
+    },
+    {
+      "table_name": "guardrail_assignments",
+      "row_count": 0
+    },
+    {
+      "table_name": "guardrail_budget_reservations",
+      "row_count": 0
+    },
+    {
+      "table_name": "guardrail_budget_windows",
+      "row_count": 0
+    },
+    {
+      "table_name": "guardrail_versions",
+      "row_count": 0
+    },
+    {
+      "table_name": "guardrails",
+      "row_count": 0
+    },
+    {
+      "table_name": "identity_event_inbox",
+      "row_count": 0
+    },
+    {
+      "table_name": "management_api_keys",
+      "row_count": 0
+    },
+    {
+      "table_name": "model_endpoint_backfill_database_identity",
+      "row_count": 1
+    },
+    {
+      "table_name": "model_endpoint_backfill_runs",
+      "row_count": 0
+    },
+    {
+      "table_name": "model_endpoint_backfill_trust_registry",
+      "row_count": 0
+    },
+    {
+      "table_name": "model_endpoint_evidence_attestations",
+      "row_count": 0
+    },
+    {
+      "table_name": "model_endpoint_routes",
+      "row_count": 0
+    },
+    {
+      "table_name": "model_endpoints",
+      "row_count": 0
+    },
+    {
+      "table_name": "model_routes",
+      "row_count": 0
+    },
+    {
+      "table_name": "model_surfaces",
+      "row_count": 0
+    },
+    {
+      "table_name": "model_tags",
+      "row_count": 0
+    },
+    {
+      "table_name": "models",
+      "row_count": 0
+    },
+    {
+      "table_name": "nft_mints",
+      "row_count": 0
+    },
+    {
+      "table_name": "organization_memberships",
+      "row_count": 0
+    },
+    {
+      "table_name": "organizations",
+      "row_count": 0
+    },
+    {
+      "table_name": "portal_ledger_entries",
+      "row_count": 0
+    },
+    {
+      "table_name": "portal_sessions",
+      "row_count": 0
+    },
+    {
+      "table_name": "provider_attempt_availability",
+      "row_count": 0
+    },
+    {
+      "table_name": "providers",
+      "row_count": 0
+    },
+    {
+      "table_name": "public_model_daily_stats",
+      "row_count": 0
+    },
+    {
+      "table_name": "request_preset_versions",
+      "row_count": 0
+    },
+    {
+      "table_name": "request_presets",
+      "row_count": 0
+    },
+    {
+      "table_name": "route_data_policies",
+      "row_count": 0
+    },
+    {
+      "table_name": "route_data_policy_audit",
+      "row_count": 0
+    },
+    {
+      "table_name": "route_pool_sticky_bindings",
+      "row_count": 0
+    },
+    {
+      "table_name": "route_pools",
+      "row_count": 0
+    },
+    {
+      "table_name": "shared_key_earnings",
+      "row_count": 0
+    },
+    {
+      "table_name": "shared_keys",
+      "row_count": 0
+    },
+    {
+      "table_name": "system_config",
+      "row_count": 12
+    },
+    {
+      "table_name": "user_audit_logs",
+      "row_count": 0
+    },
+    {
+      "table_name": "user_budget_reservations",
+      "row_count": 0
+    },
+    {
+      "table_name": "user_earnings",
+      "row_count": 0
+    },
+    {
+      "table_name": "users",
+      "row_count": 0
+    },
+    {
+      "table_name": "withdrawals",
+      "row_count": 0
+    },
+    {
+      "table_name": "workspace_budgets",
+      "row_count": 0
+    },
+    {
+      "table_name": "workspace_memberships",
+      "row_count": 0
+    },
+    {
+      "table_name": "workspaces",
+      "row_count": 0
+    }
+  ],
+  "productionBefore": [
+    {
+      "name": "cinatoken-proxy",
+      "settingsSha256": "4243eedd631abb9bcf0c1dd8dd9acbb9ca56edab0bf3048204abccbbd4261cfc"
+    },
+    {
+      "name": "cinatoken-admin",
+      "settingsSha256": "e2ee0adf7b6469d843c310f3dccd2a478230c0f0b75d5d6ad285efeec17ed6ab"
+    },
+    {
+      "name": "cinatoken-chain-worker",
+      "settingsSha256": "21f1b2c08db33d20c0f235e5a89533e637a761eaf7b4bef2fcf0061ad004a916"
+    }
+  ],
+  "productionAfter": [
+    {
+      "name": "cinatoken-proxy",
+      "settingsSha256": "4243eedd631abb9bcf0c1dd8dd9acbb9ca56edab0bf3048204abccbbd4261cfc"
+    },
+    {
+      "name": "cinatoken-admin",
+      "settingsSha256": "e2ee0adf7b6469d843c310f3dccd2a478230c0f0b75d5d6ad285efeec17ed6ab"
+    },
+    {
+      "name": "cinatoken-chain-worker",
+      "settingsSha256": "21f1b2c08db33d20c0f235e5a89533e637a761eaf7b4bef2fcf0061ad004a916"
+    }
+  ],
+  "sourceSha256": {
+    "packages/proxy/src/app.ts": "cf7357e44d5cb4c8779848606bbfa183bf9d55b2718891b5e600176c53ccce61",
+    "packages/proxy/src/index.ts": "22a6c56801c95cb955cc0949b78ef1a9eab7cf97ff9895a77169b43be11b91f7",
+    "packages/proxy/src/runtime/workers.ts": "8d3430ad8248daf970f177091030287ff95ecefd4e2a91b0510a45226bb842dc",
+    "packages/proxy/src/runtime/worker-handler.ts": "0109f2c20228c3b3291e0f774b66e1509074d323ce9a95d013104c0b7767ba17",
+    "packages/proxy/src/routes/v1/images.ts": "343c5695e1afd2ef2fe6ec7ac99954c1dfd3dbf3913e3309d6d8ef38423f47fc",
+    "packages/proxy/src/services/proxy.ts": "2308f20694847b510845b5ebbbbd0c7876748fdc90d51522d0fbb5da6358da97",
+    "packages/proxy/scripts/staging/images-gateway.ts": "5bc969638ab8bd3dfd84584bc7812d6990cc57fc6a7afc541d32c2c71f3a9b5f",
+    "packages/proxy/scripts/staging/images-upstream.ts": "2effdf51c02f565c90dc657e544005521c31dfad8bc1327cf1d5f07e48f27cd3",
+    "packages/proxy/scripts/staging/wrangler.images-upstream.jsonc": "936a8cadf7039f98d6641a4a3abde6b7313846a6ff1043b4f3f1c6d64ab0e7af",
+    "packages/proxy/scripts/staging/images-env.d.ts": "e3f83a405ed005e12de44b60232433bb9c055ed428d4bfe32adc0cd0bacb335f",
+    "scripts/deploy/prepare-proxy-staging-images.mjs": "dd2fdc9b30dca39ec80d17261556ee149ba2496afd6e2b153acafaa7f6720751",
+    "scripts/deploy/staging-image-success-fixture.mjs": "b3100e4cafdd75f1970d1a69a5eff0da9eb78a29ceddb69d6c1f9d6f83fc12de"
+  }
+}

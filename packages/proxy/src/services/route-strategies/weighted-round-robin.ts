@@ -1,31 +1,29 @@
-import type { RouteResult } from '../model-router';
-import type { RouteOrderContext } from './types';
+import type { RouteOrderCandidate, RouteOrderContext } from './types';
 
 /** tierKey → 下次起始偏移（进程内存）。 */
 const counters = new Map<string, number>();
 
 /**
- * 按 weight 展开序列，再按进程内计数器轮转；去重后保持首次出现顺序。
+ * 按 weight 对应的连续区块定位轮转起点；去重后保持首次出现顺序。
  */
-export function orderByWeightedRoundRobin(routes: RouteResult[], ctx: RouteOrderContext): RouteResult[] {
+export function orderByWeightedRoundRobin<T extends RouteOrderCandidate>(routes: readonly T[], ctx: RouteOrderContext): T[] {
 	if (routes.length <= 1) return [...routes];
 
-	const expanded: RouteResult[] = [];
-	for (const route of routes) {
-		const n = Math.max(1, Math.floor(route.routeWeight));
-		for (let i = 0; i < n; i++) {
-			expanded.push(route);
-		}
-	}
-
+	// Locate the same slot as the expanded sequence without allocating one
+	// element per unit of weight. BigInt also keeps large finite weights exact.
+	const weights = routes.map(route => BigInt(Number.isFinite(route.routeWeight)
+		? Math.max(1, Math.floor(route.routeWeight)) : 1));
+	const total = weights.reduce((sum, weight) => sum + weight, 0n);
 	const start = counters.get(ctx.tierKey) ?? 0;
 	counters.set(ctx.tierKey, start + 1);
-	const offset = expanded.length === 0 ? 0 : ((start % expanded.length) + expanded.length) % expanded.length;
-	const rotated = [...expanded.slice(offset), ...expanded.slice(0, offset)];
+	let offset = ((BigInt(start) % total) + total) % total;
+	let first = 0;
+	while (offset >= weights[first]!) { offset -= weights[first]!; first++; }
 
 	const seen = new Set<string>();
-	const ordered: RouteResult[] = [];
-	for (const route of rotated) {
+	const ordered: T[] = [];
+	for (let index = 0; index < routes.length; index++) {
+		const route = routes[(first + index) % routes.length]!;
 		if (seen.has(route.providerId)) continue;
 		seen.add(route.providerId);
 		ordered.push(route);

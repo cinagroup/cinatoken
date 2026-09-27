@@ -1,0 +1,53 @@
+{
+  "version": "v326",
+  "date": "2026-09-24",
+  "status": "LOCAL_IMAGES_DISPATCH_FACT_ROLE_SPLIT_PASS_PRODUCTION_DISABLED",
+  "C03": "DOING",
+  "goalComplete": false,
+  "validation": {
+    "parentDispatchGrantNative": { "pass": 2, "fail": 0, "stages": 17, "cleanup": "PASS", "postgresVersion": "18.6" },
+    "factJobGrantNative": { "pass": 2, "fail": 0, "stages": 13, "cleanup": "PASS", "postgresVersion": "18.6", "exactColumnGrants": 49 },
+    "postgresImageFactoryNative": { "pass": 1, "fail": 0, "stages": 7, "cleanup": "PASS", "postgresVersion": "18.6" },
+    "postgresImageFactoryUnit": { "pass": 8, "fail": 0 },
+    "proxyTypecheck": true,
+    "gitDiffCheck": true
+  },
+  "sourceSha256": {
+    "scripts/db/cutover/build-request-parent-producer-grant.mjs": "3dfe08cd9eb0e7c10d63d06090b80210afb9d7028e60ea6a6974bf09340b62b2",
+    "scripts/db/cutover/build-request-parent-producer-grant.native.test.mjs": "73d62da539ab0ce77c1717f5ee3786b74fa246cff7546d316ce374a9f4c00a57",
+    "scripts/db/cutover/build-image-fact-job-producer-grant.mjs": "439be1b7a659cf47ceb7e128bddb444851e6d3f3bb774c0ad2827b77c47bfca6",
+    "scripts/db/cutover/build-image-fact-job-producer-grant.native.test.mjs": "8bac62e8294685164ace85e388aeef589f95bc19c8d65f0d62752411e59aeda7",
+    "scripts/db/cutover/postgres-image-recovery-factory.native.test.mjs": "89abc5153bd2837d598d781c17233639e1392ecd1df5a9bd4c086d1ea6e9b407",
+    "packages/proxy/src/services/image-usage-recovery-postgres.ts": "6b6017d71d9294c646145ab72ac6641adf3069100977c0498369b7c867035978",
+    "packages/proxy/src/services/image-usage-recovery-postgres.test.ts": "70e6f4fa2dd11dcc327661a36b7de1ef8a66cf3b4d0ad234393b9dc8375378b8",
+    "docs/developers/architecture/implementation-evidence/C03-postgres-native-parent-dispatch-grant-v326-report.json": "408d260362dca222e00e290c5dbe900262c706319cbed0ae335b89e1953e41dc",
+    "docs/developers/architecture/implementation-evidence/C03-postgres-native-fact-job-grant-v326-report.json": "c2012167759ce029e1a4a3f43970181bf1f172607a40b692170c1871297c56e0",
+    "docs/developers/architecture/implementation-evidence/C03-postgres-native-image-factory-v326-report.json": "57c21528422b39ebb74670f9639d3ff221d312f4f07d25a17a9f6c1fe8710b07"
+  },
+  "boundaries": {
+    "formalMigrations": 73,
+    "parentAndFactJobGrantsReviewOnly": true,
+    "syntheticNoLoginDispatchAndFactRolesLocallySeparated": true,
+    "factoryProducerRoleChecksBoundToStatementSession": true,
+    "factoryRuntimeRoleCheckSampledOnly": true,
+    "factJobExactColumnGrantLocallyVerified": true,
+    "factoryConnectedToApp": false,
+    "realSeparateProducerLoginOriginsVerified": false,
+    "realCredentialRotationVerified": false,
+    "originConnectionBudgetConfirmed": false,
+    "postgresFactoryFinancialConsumerConnected": false,
+    "knownNon2xxPostgresFactSettlementVerified": false,
+    "existingIntentsBackfilled": false,
+    "parentRetentionImplemented": false,
+    "workersHyperdriveQueueLifecycleVerified": false,
+    "C03_5Complete": false,
+    "C03_GComplete": false,
+    "remoteSqlCalls": 0,
+    "cloudManagementCalls": 0,
+    "deployments": 0,
+    "modelCalls": 0,
+    "kmsCalls": 0,
+    "cumulativeStagingCapUsd": 2,
+    "capReset": false
+  }
+}

@@ -45,6 +45,7 @@ export async function fetchTavilyUrl(params: WebFetchParams): Promise<WebFetchRe
 	const fetchImpl = params.fetchImpl ?? fetch;
 	const response = await fetchImpl(TAVILY_EXTRACT_ENDPOINT, {
 		method: 'POST',
+		redirect: 'manual',
 		headers: {
 			Authorization: `Bearer ${params.apiKey}`,
 			'Content-Type': 'application/json',

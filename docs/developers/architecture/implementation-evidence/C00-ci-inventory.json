@@ -1,0 +1,440 @@
+{
+  "scope": "Static npm script reachability including pre/post hooks; workflow text scan only, no GitHub API checks",
+  "selectedTestCoverage": [
+    {
+      "path": "packages/core/src/db/analytics-query.d1.test.ts",
+      "reachableThroughRootUnitScripts": [
+        "@octafuse/core:test:unit"
+      ]
+    },
+    {
+      "path": "packages/core/src/storage/byok-keys.d1.test.ts",
+      "reachableThroughRootUnitScripts": [
+        "@octafuse/core:test:management-keys"
+      ]
+    },
+    {
+      "path": "packages/core/src/storage/byok-keys.sql-contract.test.ts",
+      "reachableThroughRootUnitScripts": [
+        "@octafuse/core:test:management-keys"
+      ]
+    },
+    {
+      "path": "packages/core/src/db/byok-keys-types.test.ts",
+      "reachableThroughRootUnitScripts": [
+        "@octafuse/core:test:management-keys"
+      ]
+    },
+    {
+      "path": "packages/core/src/db/batch-types.test.ts",
+      "reachableThroughRootUnitScripts": [
+        "@octafuse/core:test:batches"
+      ]
+    },
+    {
+      "path": "packages/core/src/storage/batches.d1.test.ts",
+      "reachableThroughRootUnitScripts": [
+        "@octafuse/core:test:batches"
+      ]
+    },
+    {
+      "path": "packages/core/src/storage/batches.sql-contract.test.ts",
+      "reachableThroughRootUnitScripts": [
+        "@octafuse/core:test:batches"
+      ]
+    },
+    {
+      "path": "packages/core/src/storage/runtime-database-config.test.ts",
+      "reachableThroughRootUnitScripts": [
+        "@octafuse/core:test:unit"
+      ]
+    },
+    {
+      "path": "packages/core/src/lib/shared-key-encryption.test.ts",
+      "reachableThroughRootUnitScripts": [
+        "@octafuse/core:test:unit"
+      ]
+    },
+    {
+      "path": "packages/core/src/lib/key-hash.test.ts",
+      "reachableThroughRootUnitScripts": [
+        "@octafuse/core:test:unit"
+      ]
+    },
+    {
+      "path": "packages/proxy/src/routes/v1/byok.test.ts",
+      "reachableThroughRootUnitScripts": [
+        "@octafuse/proxy:test:management-keys"
+      ]
+    },
+    {
+      "path": "packages/proxy/src/routes/v1/analytics.test.ts",
+      "reachableThroughRootUnitScripts": [
+        "@octafuse/proxy:test:management-keys"
+      ]
+    },
+    {
+      "path": "packages/proxy/src/routes/v1/rerank.test.ts",
+      "reachableThroughRootUnitScripts": [
+        "@octafuse/proxy:test:rerank"
+      ]
+    },
+    {
+      "path": "packages/proxy/src/runtime/batch-queue.test.ts",
+      "reachableThroughRootUnitScripts": [
+        "@octafuse/proxy:test:batch"
+      ]
+    },
+    {
+      "path": "packages/proxy/src/services/batch-authorization.test.ts",
+      "reachableThroughRootUnitScripts": [
+        "@octafuse/proxy:test:batch"
+      ]
+    },
+    {
+      "path": "packages/proxy/src/services/batch-item-input.test.ts",
+      "reachableThroughRootUnitScripts": [
+        "@octafuse/proxy:test:batch"
+      ]
+    },
+    {
+      "path": "packages/proxy/src/services/batch-jsonl.test.ts",
+      "reachableThroughRootUnitScripts": [
+        "@octafuse/proxy:test:batch"
+      ]
+    },
+    {
+      "path": "packages/proxy/src/services/batch-object-storage.test.ts",
+      "reachableThroughRootUnitScripts": [
+        "@octafuse/proxy:test:batch"
+      ]
+    },
+    {
+      "path": "packages/proxy/src/services/byok-key-pool.test.ts",
+      "reachableThroughRootUnitScripts": [
+        "@octafuse/proxy:test:unit"
+      ]
+    },
+    {
+      "path": "packages/proxy/src/services/byok-billing-policy.test.ts",
+      "reachableThroughRootUnitScripts": [
+        "@octafuse/proxy:test:unit"
+      ]
+    },
+    {
+      "path": "packages/proxy/src/services/request-budget-admission.test.ts",
+      "reachableThroughRootUnitScripts": [
+        "@octafuse/proxy:test:unit"
+      ]
+    },
+    {
+      "path": "packages/proxy/src/services/shared-key-earnings.test.ts",
+      "reachableThroughRootUnitScripts": [
+        "@octafuse/proxy:test:unit"
+      ]
+    },
+    {
+      "path": "packages/proxy/src/services/provider-circuit-breaker.test.ts",
+      "reachableThroughRootUnitScripts": [
+        "@octafuse/proxy:test:unit"
+      ]
+    },
+    {
+      "path": "packages/proxy/src/services/egress/openai-rerank-driver.test.ts",
+      "reachableThroughRootUnitScripts": [
+        "@octafuse/proxy:test:rerank"
+      ]
+    },
+    {
+      "path": "packages/proxy/src/services/egress/text-dispatch-boundary.test.ts",
+      "reachableThroughRootUnitScripts": [
+        "@octafuse/proxy:test:text-stream",
+        "@octafuse/proxy:test:unit"
+      ]
+    },
+    {
+      "path": "packages/proxy/src/services/egress/stream-abort-lifecycle.test.ts",
+      "reachableThroughRootUnitScripts": [
+        "@octafuse/proxy:test:text-stream",
+        "@octafuse/proxy:test:unit"
+      ]
+    },
+    {
+      "path": "packages/proxy/src/app-api-v1-aliases.test.ts",
+      "reachableThroughRootUnitScripts": [
+        "@octafuse/proxy:test:api-aliases"
+      ]
+    },
+    {
+      "path": "packages/proxy/src/app-global-errors.test.ts",
+      "reachableThroughRootUnitScripts": [
+        "@octafuse/proxy:test:api-aliases"
+      ]
+    },
+    {
+      "path": "packages/proxy/src/app-cors-openrouter.test.ts",
+      "reachableThroughRootUnitScripts": [
+        "@octafuse/proxy:test:api-aliases"
+      ]
+    },
+    {
+      "path": "packages/proxy/src/routes/v1/management-keys.test.ts",
+      "reachableThroughRootUnitScripts": [
+        "@octafuse/proxy:test:management-keys"
+      ]
+    },
+    {
+      "path": "packages/proxy/src/routes/v1/management-guardrails.test.ts",
+      "reachableThroughRootUnitScripts": [
+        "@octafuse/proxy:test:management-keys"
+      ]
+    },
+    {
+      "path": "packages/proxy/src/routes/v1/management-workspaces.test.ts",
+      "reachableThroughRootUnitScripts": [
+        "@octafuse/proxy:test:management-keys"
+      ]
+    },
+    {
+      "path": "packages/proxy/src/routes/v1/management-workspace-budgets.test.ts",
+      "reachableThroughRootUnitScripts": [
+        "@octafuse/proxy:test:management-keys"
+      ]
+    },
+    {
+      "path": "packages/proxy/src/routes/v1/current-key.test.ts",
+      "reachableThroughRootUnitScripts": [
+        "@octafuse/proxy:test:management-keys"
+      ]
+    },
+    {
+      "path": "packages/proxy/src/routes/v1/presets.test.ts",
+      "reachableThroughRootUnitScripts": [
+        "@octafuse/proxy:test:presets"
+      ]
+    }
+  ],
+  "scripts": [
+    {
+      "package": "cinatoken",
+      "script": "test:unit",
+      "command": "npm run test:deploy && npm run test:d1-portal-ledger && npm run test:postgres-migration && npm run test:mysql-migration && npm run test:endpoint-backfill-plan && npm run test:public-catalog-readiness:contract && npm run test:postgres-role-provisioning && npm run test:unit -w @octafuse/core && npm run test:unit -w @octafuse/tool-engines && npm run test:unit -w @octafuse/proxy && npm run test:unit -w @octafuse/admin && npm run test:unit -w @cinatoken/chain-worker"
+    },
+    {
+      "package": "cinatoken",
+      "script": "test:deploy",
+      "command": "node --test scripts/deploy/*.test.mjs"
+    },
+    {
+      "package": "cinatoken",
+      "script": "test:d1-portal-ledger",
+      "command": "node scripts/ci/verify-d1-portal-ledger.mjs"
+    },
+    {
+      "package": "cinatoken",
+      "script": "test:postgres-migration",
+      "command": "node scripts/ci/verify-postgres-migration-contract.mjs"
+    },
+    {
+      "package": "cinatoken",
+      "script": "test:mysql-migration",
+      "command": "node scripts/ci/verify-mysql-migration-contract.mjs"
+    },
+    {
+      "package": "cinatoken",
+      "script": "test:endpoint-backfill-plan",
+      "command": "tsx --test scripts/db/model-endpoints/*.test.ts"
+    },
+    {
+      "package": "cinatoken",
+      "script": "test:public-catalog-readiness:contract",
+      "command": "tsx --test scripts/smoke/test-public-catalog-readiness.test.ts"
+    },
+    {
+      "package": "cinatoken",
+      "script": "test:postgres-role-provisioning",
+      "command": "tsx --test scripts/db/cutover/postgres-role-provisioning.test.ts scripts/db/cutover/diagnostic-auth.test.ts scripts/db/cutover/preflight-d1-source.test.ts scripts/db/cutover/hyperdrive-bootstrap-worker.test.ts"
+    },
+    {
+      "package": "@octafuse/core",
+      "script": "pretest:unit",
+      "command": "npm run test:ordinary-budget -w @octafuse/core && npm run test:workspaces -w @octafuse/core && npm run test:generation-lookup -w @octafuse/core && npm run test:model-endpoints -w @octafuse/core && npm run test:management-keys -w @octafuse/core && npm run test:key-expiry -w @octafuse/core && npm run test:key-limits -w @octafuse/core && npm run test:availability -w @octafuse/core && npm run test:batches -w @octafuse/core"
+    },
+    {
+      "package": "@octafuse/core",
+      "script": "test:ordinary-budget",
+      "command": "tsx --test src/storage/api-key-auth.d1.test.ts src/storage/user-budget-spent-micros-migration.d1.test.ts src/storage/user-budget.d1.test.ts src/storage/user-budget-critical-write.d1.test.ts"
+    },
+    {
+      "package": "@octafuse/core",
+      "script": "test:workspaces",
+      "command": "tsx --test src/storage/workspaces.d1.test.ts src/storage/workspaces.postgres.test.ts src/storage/preset-guardrail-workspaces.d1.test.ts src/storage/management-workspaces.d1.test.ts src/storage/workspace-budget-usage.d1.test.ts src/storage/workspace-budget-usage.sql-contract.test.ts"
+    },
+    {
+      "package": "@octafuse/core",
+      "script": "test:generation-lookup",
+      "command": "tsx --test src/db/request-logs-generation-lookup.contract.test.ts src/db/request-logs-generation-feedback.contract.test.ts"
+    },
+    {
+      "package": "@octafuse/core",
+      "script": "test:model-endpoints",
+      "command": "tsx --test src/model-endpoint-catalog.test.ts src/model-endpoint-runtime.test.ts src/model-endpoint-backfill.test.ts src/storage/model-endpoints.sql-repositories.test.ts"
+    },
+    {
+      "package": "@octafuse/core",
+      "script": "test:management-keys",
+      "command": "tsx --test src/storage/management-api-keys.d1.test.ts src/storage/management-gateway-keys.d1.test.ts src/storage/byok-keys.d1.test.ts src/storage/byok-keys.sql-contract.test.ts src/db/byok-keys-types.test.ts src/db/management-gateway-keys-usage.contract.test.ts"
+    },
+    {
+      "package": "@octafuse/core",
+      "script": "test:key-expiry",
+      "command": "tsx --test src/services/key-service.test.ts src/storage/api-key-auth.d1.test.ts"
+    },
+    {
+      "package": "@octafuse/core",
+      "script": "test:key-limits",
+      "command": "tsx --test src/gateway-key-limits.test.ts src/workspace-budgets.test.ts"
+    },
+    {
+      "package": "@octafuse/core",
+      "script": "test:availability",
+      "command": "tsx --test src/db/provider-attempt-availability.test.ts"
+    },
+    {
+      "package": "@octafuse/core",
+      "script": "test:batches",
+      "command": "tsx --test src/db/batch-types.test.ts src/storage/batches.d1.test.ts src/storage/batches.sql-contract.test.ts"
+    },
+    {
+      "package": "@octafuse/core",
+      "script": "test:unit",
+      "command": "tsx --test src/storage/drizzle/client-postgres.test.ts src/storage/organization-identity.d1.test.ts src/storage/guardrail-budget.d1.test.ts src/storage/route-data-policy-subject.d1.test.ts src/storage/model-endpoints.d1.test.ts src/storage/request-session-id-migration.d1.test.ts src/request-presets.test.ts src/guardrails.test.ts src/route-comparable-price.test.ts src/route-performance.test.ts src/route-planner-preview.test.ts src/public-model-catalog.test.ts src/route-data-policy.test.ts src/organization-identity.test.ts src/chain-jobs.test.ts src/db/admin-access-key-mutation.test.ts src/db/guardrail-assignment-policy.test.ts src/db/model-routing-embeddings.contract.test.ts src/db/request-logs-user-stats.d1.test.ts src/db/request-activity-groups.contract.test.ts src/db/analytics-query.d1.test.ts src/db/route-performance-sampling.test.ts src/db/image-token-usage.test.ts src/db/audio-token-usage.test.ts src/db/image-per-image-usage.test.ts src/db/pricing-profile.test.ts src/db/pricing-schedule.test.ts src/db/user-charged-cost-factors.test.ts src/db/model-modalities.test.ts src/db/model-route-policy.test.ts src/db/route-routing-metadata.test.ts src/db/postgres/model-route-patch.test.ts src/db/postgres/model-routes.test.ts src/db/route-pool-tier-strategies.test.ts src/db/route-pool-sticky-types.test.ts src/db/route-pool-sticky-bindings.contract.test.ts src/db/public-model-daily-stats.test.ts src/db/public-model-daily-stats-write.contract.test.ts src/lib/business-timezone.test.ts src/lib/shared-key-encryption.test.ts src/lib/provider-key-encryption.test.ts src/lib/provider-key-environment.test.ts src/lib/key-hash.test.ts src/lib/public-model-slug.test.ts src/services/budget-transition-service.test.ts src/services/user-plan-patch-service.test.ts src/storage/runtime-database-config.test.ts src/upstream-protocol-images-url.test.ts src/provider-endpoints.test.ts src/route-topology.test.ts src/realtime-protocol.test.ts src/gcp-service-account-token.test.ts src/vertex-openai-model.test.ts"
+    },
+    {
+      "package": "@octafuse/tool-engines",
+      "script": "test:unit",
+      "command": "tsx --test src/http/bounded-response.test.ts"
+    },
+    {
+      "package": "@octafuse/proxy",
+      "script": "pretest:unit",
+      "command": "npm run build:node-index -w @octafuse/core && npm run test:ordinary-budget -w @octafuse/proxy && npm run test:embeddings -w @octafuse/proxy && npm run test:rerank -w @octafuse/proxy && npm run test:models -w @octafuse/proxy && npm run test:generation -w @octafuse/proxy && npm run test:request-log-status -w @octafuse/proxy && npm run test:api-aliases -w @octafuse/proxy && npm run test:management-keys -w @octafuse/proxy && npm run test:presets -w @octafuse/proxy && npm run test:text-stream -w @octafuse/proxy && npm run test:batch -w @octafuse/proxy"
+    },
+    {
+      "package": "@octafuse/core",
+      "script": "build:node-index",
+      "command": "esbuild src/index.ts --bundle --platform=node --format=esm --outfile=dist/index.js --packages=external --log-level=warning"
+    },
+    {
+      "package": "@octafuse/proxy",
+      "script": "test:ordinary-budget",
+      "command": "tsx --test src/services/ordinary-budget-lifecycle.test.ts src/services/ordinary-budget-usage-settlement.test.ts src/services/text-usage-settlement.test.ts"
+    },
+    {
+      "package": "@octafuse/proxy",
+      "script": "test:embeddings",
+      "command": "tsx --test src/routes/v1/embeddings.test.ts src/services/egress/openai-embeddings-driver.test.ts src/services/egress/upstream-request-id.test.ts"
+    },
+    {
+      "package": "@octafuse/proxy",
+      "script": "test:rerank",
+      "command": "tsx --test src/routes/v1/rerank.test.ts src/services/egress/openai-rerank-driver.test.ts"
+    },
+    {
+      "package": "@octafuse/proxy",
+      "script": "test:models",
+      "command": "tsx --test src/routes/v1/models.test.ts src/routes/v1/endpoints.test.ts src/routes/v1/openrouter-public-catalog.test.ts src/services/public-model-endpoints.test.ts src/services/public-image-endpoints.test.ts"
+    },
+    {
+      "package": "@octafuse/proxy",
+      "script": "test:generation",
+      "command": "tsx --test src/middleware/generation-id.test.ts src/routes/v1/generation.test.ts src/services/generation-metadata-snapshot.test.ts src/services/generation-request-context.test.ts"
+    },
+    {
+      "package": "@octafuse/proxy",
+      "script": "test:request-log-status",
+      "command": "tsx --test src/services/request-log-record-status.test.ts"
+    },
+    {
+      "package": "@octafuse/proxy",
+      "script": "test:api-aliases",
+      "command": "tsx --test src/app-api-v1-aliases.test.ts src/app-cors-openrouter.test.ts src/app-global-errors.test.ts src/routes/v1/completions.test.ts src/routes/v1/openrouter-session-routes.test.ts"
+    },
+    {
+      "package": "@octafuse/proxy",
+      "script": "test:management-keys",
+      "command": "tsx --test src/routes/v1/management-keys.test.ts src/routes/v1/management-guardrails.test.ts src/routes/v1/management-workspace-budgets.test.ts src/routes/v1/management-workspaces.test.ts src/routes/v1/byok.test.ts src/routes/v1/current-key.test.ts src/routes/v1/analytics.test.ts"
+    },
+    {
+      "package": "@octafuse/proxy",
+      "script": "test:presets",
+      "command": "tsx --test src/routes/v1/presets.test.ts"
+    },
+    {
+      "package": "@octafuse/proxy",
+      "script": "test:text-stream",
+      "command": "tsx --test src/services/egress/openai-responses-driver.test.ts src/services/egress/stream-abort-lifecycle.test.ts src/services/egress/text-dispatch-boundary.test.ts src/services/egress/text-json-response.test.ts src/services/egress/text-stream-openrouter-contract.test.ts src/services/legacy-completions-compat.test.ts"
+    },
+    {
+      "package": "@octafuse/proxy",
+      "script": "test:batch",
+      "command": "tsx --test src/services/batch-jsonl.test.ts src/services/batch-object-storage.test.ts src/services/batch-item-input.test.ts src/services/batch-authorization.test.ts src/runtime/batch-queue.test.ts"
+    },
+    {
+      "package": "@octafuse/proxy",
+      "script": "test:unit",
+      "command": "tsx --test src/app-request-logging.test.ts src/middleware/generation-id.test.ts src/lib/model-list-parse.test.ts src/routes/catalog.test.ts src/routes/v1/audio-transcriptions.test.ts src/routes/v1/completions.test.ts src/routes/v1/tools/web-search.test.ts src/services/public-catalog-stats.test.ts src/services/public-stats-runtime-guard.test.ts src/services/provider-attempt-retention.test.ts src/services/audio-usage-charge.test.ts src/services/audio-request-guardrails.test.ts src/services/endpoint-audio-billing-pricing.test.ts src/services/endpoint-image-billing-pricing.test.ts src/services/image-provider-price-routing.test.ts src/services/image-usage-charge.test.ts src/services/image-generation-extras.test.ts src/services/guardrail-budget-estimate.test.ts src/services/dashscope-realtime-guardrails.test.ts src/services/gemini-request-guardrails.test.ts src/services/egress/openai-images-driver.test.ts src/services/egress/openai-audio-driver.test.ts src/services/egress/dashscope-audio-driver.test.ts src/services/egress/audio-speech-driver.test.ts src/services/egress/dashscope-realtime-driver.test.ts src/services/egress/openai-responses-driver.test.ts src/services/egress/openai-stream-usage-request.test.ts src/services/egress/text-dispatch-boundary.test.ts src/services/egress/stream-abort-lifecycle.test.ts src/services/egress/public-model-response.test.ts src/services/egress/vertex-service-account.test.ts src/runtime/node-realtime.test.ts src/runtime/schedule-background-work.test.ts src/runtime/workers-maintenance.test.ts src/services/model-router.test.ts src/services/model-fallback-plan.test.ts src/services/model-fallback-global-dispatch.test.ts src/services/model-fallbacks.test.ts src/services/openrouter-router-metadata.test.ts src/services/openrouter-session-routing.test.ts src/services/legacy-completions-compat.test.ts src/services/request-timing.test.ts src/services/request-body-log-policy.test.ts src/services/route-default-params.test.ts src/services/request-guardrails.test.ts src/services/tool-request-guardrails.test.ts src/services/tool-usage-charge.test.ts src/services/usage-tracker-byok.test.ts src/services/byok-billing-policy.test.ts src/services/request-budget-admission.test.ts src/services/egress/timing-delta.test.ts src/services/provider-circuit-breaker.test.ts src/services/provider-default-load-balancing.test.ts src/services/user-model-circuit-breaker.test.ts src/services/gateway-error-response.test.ts src/services/provider-routing-preferences.test.ts src/services/provider-performance-routing.test.ts src/services/route-attempt-planner.test.ts src/services/route-strategies/route-strategies.test.ts src/services/failover-dispatch.test.ts src/services/provider-sticky-routing.test.ts src/routes/v1/images-multipart.test.ts src/routes/v1/responses-state.test.ts src/services/shared-key-pool.test.ts src/services/byok-key-pool.test.ts src/services/shared-key-earnings.test.ts"
+    },
+    {
+      "package": "@octafuse/admin",
+      "script": "pretest:unit",
+      "command": "npm run build:node-index -w @octafuse/core && npm run test:endpoints-ui -w @octafuse/admin && npm run test:resilience -w @octafuse/admin"
+    },
+    {
+      "package": "@octafuse/admin",
+      "script": "test:endpoints-ui",
+      "command": "tsx --test app/gateway/endpoints/endpoint-api.test.ts"
+    },
+    {
+      "package": "@octafuse/admin",
+      "script": "test:resilience",
+      "command": "tsx --test lib/gateway-read-retry.test.ts lib/portal-fetch.test.ts lib/data-load-error.test.tsx"
+    },
+    {
+      "package": "@octafuse/admin",
+      "script": "test:unit",
+      "command": "tsx --test lib/admin-auth-rate-limit.test.ts lib/admin-nav.test.ts lib/browser-mutation.test.ts lib/cinaauth/*.test.ts lib/evm-signature.test.ts lib/portal-contract.test.ts lib/routes/user/guardrails-effective.test.ts lib/public-catalog.test.ts lib/public-gateway.test.ts lib/public-chat.test.ts lib/public-routes.test.ts lib/unified-session.test.ts lib/wallet-challenge.test.ts lib/workspace-cookie.test.ts lib/summarize-charged-cost-factors.test.ts lib/services/admin/*.test.ts lib/services/user/*.test.ts lib/playground/proxy-response-headers.test.ts lib/dashscope-realtime-client.test.ts lib/pricing-ui-image.test.ts lib/image-generations.test.ts lib/simulator/endpoint.test.ts lib/playground/sse-event-summary.test.ts lib/playground/response-observations.test.ts lib/playground/samples/index.test.ts app/gateway/models/types.test.ts app/gateway/simulator/simulator-utils.test.ts app/gateway/playground/playground-utils.test.ts app/gateway/routes/route-utils.test.ts app/gateway/routes/route-strategy-meta.test.ts app/gateway/providers/provider-utils.test.ts app/gateway/tools/components/provider-card-state.test.ts app/gateway/request-logs/request-log-display.test.ts"
+    },
+    {
+      "package": "@cinatoken/chain-worker",
+      "script": "test:unit",
+      "command": "tsx --test src/*.test.ts && node --test scripts/*.test.mjs"
+    }
+  ],
+  "workflows": [
+    {
+      "path": ".github/workflows/cinatoken-docker-images.yml",
+      "unitTestEntrypoints": []
+    },
+    {
+      "path": ".github/workflows/delete-ghcr-tag.yml",
+      "unitTestEntrypoints": []
+    },
+    {
+      "path": ".github/workflows/deploy-cloudflare-admin.yml",
+      "unitTestEntrypoints": []
+    },
+    {
+      "path": ".github/workflows/docker-compose-smoke.yml",
+      "unitTestEntrypoints": []
+    },
+    {
+      "path": ".github/workflows/release.yml",
+      "unitTestEntrypoints": []
+    },
+    {
+      "path": ".github/workflows/verify-package-versions.yml",
+      "unitTestEntrypoints": []
+    }
+  ]
+}

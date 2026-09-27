@@ -1,0 +1,111 @@
+{
+  "workPackage": "C02.B1",
+  "date": "2026-09-05",
+  "status": "LOCAL_PASS",
+  "parentStatus": "C02.B/C02 DOING",
+  "head": "7eb59008f7d8e156e81fd18a57658fdef2553264",
+  "environment": {
+    "os": "Windows",
+    "node": "24.14.1",
+    "requiredNode": "22",
+    "workersTypes": "5.20260829.1",
+    "workersRuntimeTested": false,
+    "realDatabasesTested": false,
+    "cloudKmsTested": false
+  },
+  "sourceFiles": [
+    {
+      "path": "packages/proxy/src/services/request-deadline.ts",
+      "sha256": "6f293b2ba818cac48b154598e03de8661e7a207964b6d57e1c9f82c4d2afe000"
+    },
+    {
+      "path": "packages/proxy/src/services/request-deadline.test.ts",
+      "sha256": "ac6d1a350c29e55766c53b4c8861a43eaa1b9d9784950bee5d19ba44c23f92b3"
+    },
+    {
+      "path": "packages/proxy/src/services/request-deadline-dispatch.test.ts",
+      "sha256": "c378e4a096b2846b02b30f8a90615624970564bde03b0903dba3b611bb0f0a72"
+    },
+    {
+      "path": "packages/proxy/src/services/request-dispatch-budget.ts",
+      "sha256": "bbba22c4e60ed34e7dcf2ec61b822ff9474beccac4f522656ff65649d2da2152"
+    },
+    {
+      "path": "packages/proxy/src/services/failover-dispatch.ts",
+      "sha256": "11486f96e96bf0b2e950dd21a88e45ff7ecd70f5b57baa270e6a0b55cd52cdc4"
+    },
+    {
+      "path": "packages/proxy/src/services/proxy.ts",
+      "sha256": "ae26408bea55856b7e7cfa1ecf06217337aa31fec0093eb0ab94ea271f7bbcff"
+    },
+    {
+      "path": "packages/proxy/src/services/model-fallback-global-dispatch.ts",
+      "sha256": "c8646ba24a24bfbbaceb61535717aba6d268d7186de33a51ef6f66017cad8346"
+    },
+    {
+      "path": "packages/proxy/src/services/gateway-error-codes.ts",
+      "sha256": "3150ae1b06ac049f59b55d32767b86f7a60b005c7c0ff1e8ed3f121c886ef206"
+    },
+    {
+      "path": "packages/proxy/src/services/openrouter-error-protocol.ts",
+      "sha256": "95a097492392c6ef929e0b886bccca5d2219c77040f62f776a4429f62604b926"
+    },
+    {
+      "path": "packages/proxy/src/services/egress/bounded-response-body.ts",
+      "sha256": "6356f5a60c624994c69b25dd81c5a868d8bd9105c49799f74cf63750ad279275"
+    },
+    {
+      "path": "packages/proxy/src/services/egress/text-json-response.ts",
+      "sha256": "a13f20c95aa29dd458e9591961050d71553ae67a8ba6f3a14f49d5d9ed5b9063"
+    },
+    {
+      "path": "packages/proxy/src/services/egress/openai-driver.ts",
+      "sha256": "45ff1fe40ad743c297ec47403519c4e5c98a189b630baef7776a629b326a9edc"
+    },
+    {
+      "path": "packages/proxy/src/services/egress/anthropic-driver.ts",
+      "sha256": "7f801914943f0ad15902709524a23d96715e9956e12f38e8cfd7242ca1a36d71"
+    },
+    {
+      "path": "packages/proxy/src/services/egress/openai-responses-driver.ts",
+      "sha256": "a9dfcd98471b778743815a40601181d5f21f0826eb7efc214f04455d40dc59b3"
+    },
+    {
+      "path": "packages/proxy/src/routes/v1/request-dispatch-limit.test.ts",
+      "sha256": "b472e28d03b35a835c9889328a1ff3d94581c387bb9f114d759fc388b2c33d00"
+    },
+    {
+      "path": "packages/proxy/tsconfig.dispatch-safety.json",
+      "sha256": "003760e96c1e30726043548f2dea511c06b315d41b7f766f05a94778a3062030"
+    },
+    {
+      "path": "packages/proxy/package.json",
+      "sha256": "4618c060684aabe864781dd6a35775d0355fce6df4c6279d3cdd805f084406de"
+    }
+  ],
+  "verification": [
+    {
+      "command": "npm.cmd run typecheck -w @octafuse/proxy",
+      "exitCode": 0
+    },
+    {
+      "command": "npm.cmd run typecheck:dispatch-safety -w @octafuse/proxy",
+      "exitCode": 0
+    },
+    {
+      "command": "npm.cmd test -w @octafuse/proxy",
+      "exitCode": 0,
+      "mainTests": 724,
+      "mainSuites": 134,
+      "mainPassed": 724
+    },
+    {
+      "command": "npm.cmd run test:dispatch-safety -w @octafuse/proxy",
+      "exitCode": 0,
+      "tests": 184,
+      "suites": 17,
+      "passed": 184
+    }
+  ],
+  "scope": "Synthetic repositories/intercepted fetch only. Counts overlap; full incoming lifecycle, staged timeouts, durable admission recovery, other modalities and production gates remain incomplete."
+}

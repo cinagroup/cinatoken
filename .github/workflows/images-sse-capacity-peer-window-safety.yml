@@ -1,0 +1,31 @@
+name: Images SSE peer window safety
+on:
+  pull_request:
+    paths: ['packages/core/**', 'packages/proxy/**', 'scripts/deploy/**', 'package-lock.json', '.github/workflows/images-sse-capacity-peer-window-safety.yml']
+  push:
+    branches: [main, develop]
+    paths: ['packages/core/**', 'packages/proxy/**', 'scripts/deploy/**', 'package-lock.json', '.github/workflows/images-sse-capacity-peer-window-safety.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: sse-peer-window-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  local-contract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    strategy:
+      matrix:
+        node: [22, 24]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+          cache: npm
+      - run: npm ci
+      - run: npm run build:node-index -w @octafuse/core
+      - run: npm run typecheck:images:staging -w @octafuse/proxy
+      # Local modeled API/tail/pool observations and real SQLite only. No cloud credentials.
+      - run: node node_modules/tsx/dist/cli.mjs --test packages/proxy/scripts/staging/images-sse-capacity-peer-acceptance.test.mjs packages/proxy/scripts/staging/images-sse-capacity-peer-finalizer.test.mjs packages/proxy/scripts/staging/images-sse-capacity-peer-window.test.mjs scripts/deploy/staging-sse-ingress-confirmation.test.mjs scripts/deploy/staging-sse-recovery-access-v2.test.mjs

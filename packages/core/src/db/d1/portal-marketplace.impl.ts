@@ -65,6 +65,7 @@ function mapSharedKey(row: SharedKeySqlRow): SharedKeyRow {
 		servedInputTokens: Number(row.served_input_tokens),
 		servedOutputTokens: Number(row.served_output_tokens),
 		earnedTotal: Number(row.earned_total),
+		earnedTotalExact: String(row.earned_total),
 		createdAt: row.created_at,
 		updatedAt: row.updated_at,
 	};
@@ -183,14 +184,16 @@ export function createD1SharedKeysRepository(db: D1DatabaseClient): SharedKeysRe
 			const result = await raw.prepare('DELETE FROM shared_keys WHERE id = ?').bind(id).run();
 			return Number(result.meta.changes ?? 0) > 0;
 		},
-		async addSharedKeyUsage(id, inputTokens, outputTokens, netAmount, nowIso) {
-			await raw.prepare(`UPDATE shared_keys
+		async addSharedKeyUsage(id, inputTokens, outputTokens, netAmount, nowIso, expected) {
+			const result = await raw.prepare(`UPDATE shared_keys
           SET served_input_tokens = served_input_tokens + ?,
               served_output_tokens = served_output_tokens + ?,
               earned_total = earned_total + ?,
               last_used_at = ?, updated_at = ?
-          WHERE id = ?`)
-				.bind(inputTokens, outputTokens, netAmount, nowIso, nowIso, id).run();
+			  WHERE id = ? AND served_input_tokens = ? AND served_output_tokens = ? AND earned_total = ?`)
+				.bind(inputTokens, outputTokens, netAmount, nowIso, nowIso, id,
+					expected.servedInputTokens, expected.servedOutputTokens, expected.earnedTotalExact).run();
+			return Number(result.meta.changes ?? 0) === 1;
 		},
 	};
 }
@@ -229,6 +232,25 @@ export function createD1PortalLedgerRepository(db: D1DatabaseClient): PortalLedg
 				updatedAt: row.updated_at,
 			};
 		},
+		async getEarningByRequestLogId(requestLogId) {
+			const row = await raw.prepare(`SELECT id, request_log_id, shared_key_id, seller_user_id,
+				input_tokens, output_tokens, cache_read_tokens, cache_write_tokens,
+				gross_amount, platform_fee, net_amount, currency, created_at
+				FROM shared_key_earnings WHERE request_log_id = ? LIMIT 1`)
+				.bind(requestLogId).first<{
+					id: string; request_log_id: string; shared_key_id: string; seller_user_id: string;
+					input_tokens: number; output_tokens: number; cache_read_tokens: number; cache_write_tokens: number;
+					gross_amount: number; platform_fee: number; net_amount: number; currency: string; created_at: string;
+				}>();
+			return row ? {
+				id: row.id, requestLogId: row.request_log_id, sharedKeyId: row.shared_key_id,
+				sellerUserId: row.seller_user_id, inputTokens: row.input_tokens,
+				outputTokens: row.output_tokens, cacheReadTokens: row.cache_read_tokens,
+				cacheWriteTokens: row.cache_write_tokens, grossAmount: Number(row.gross_amount),
+				platformFee: Number(row.platform_fee), netAmount: Number(row.net_amount),
+				currency: row.currency, createdAt: row.created_at,
+			} : null;
+		},
 		async ensureUserEarnings(userId) {
 			await raw.prepare('INSERT OR IGNORE INTO user_earnings (user_id) VALUES (?)').bind(userId).run();
 		},
@@ -266,6 +288,25 @@ export function createD1PortalLedgerRepository(db: D1DatabaseClient): PortalLedg
 			// an AFTER INSERT trigger. INSERT OR IGNORE makes request_log_id the
 			// idempotency key, so duplicate delivery cannot credit twice.
 			return this.insertEarning(params);
+		},
+		async rebuildSharedKeyUsageFromEarnings(requestLogId, expectedSharedKeyId, nowIso) {
+			// One SQLite write statement reads a consistent earning snapshot and
+			// assigns the complete derived projection. It never increments balance
+			// or statistics, so repeated repair cannot double count.
+			const result = await raw.prepare(`UPDATE shared_keys
+				SET served_input_tokens = (SELECT COALESCE(SUM(input_tokens), 0) FROM shared_key_earnings WHERE shared_key_id = ?),
+					served_output_tokens = (SELECT COALESCE(SUM(output_tokens), 0) FROM shared_key_earnings WHERE shared_key_id = ?),
+					earned_total = (SELECT COALESCE(SUM(net_amount), 0) FROM shared_key_earnings WHERE shared_key_id = ?),
+					last_used_at = (SELECT MAX(created_at) FROM shared_key_earnings WHERE shared_key_id = ?),
+					updated_at = ?
+				WHERE id = ? AND EXISTS (
+					SELECT 1 FROM shared_key_earnings WHERE request_log_id = ? AND shared_key_id = ?
+				)`)
+				.bind(expectedSharedKeyId, expectedSharedKeyId, expectedSharedKeyId, expectedSharedKeyId,
+					nowIso, expectedSharedKeyId, requestLogId, expectedSharedKeyId).run();
+			if (Number(result.meta.changes ?? 0) !== 1) {
+				throw new Error('shared_key_usage_rebuild_earning_or_key_missing_or_mismatched');
+			}
 		},
 		async creditEarningBalance(sellerUserId, netAmount, nowIso) {
 			const amountMicros = Math.round(netAmount * 1_000_000);

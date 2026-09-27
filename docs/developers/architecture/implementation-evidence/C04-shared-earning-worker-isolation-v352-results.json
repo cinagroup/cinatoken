@@ -1,0 +1,29 @@
+{
+  "candidate": "C04.6 dedicated scanner Worker v352",
+  "date": "2026-09-25",
+  "mode": "local review only; default off; no activated config written",
+  "cloudflare_calls": 0,
+  "remote_sql_calls": 0,
+  "tests": {
+    "scanner_unit": { "passed": 10, "total": 10 },
+    "dedicated_generator_and_bundle": { "passed": 6, "total": 6 },
+    "general_generator": { "passed": 15, "total": 15 },
+    "proxy_typecheck": "pass",
+    "git_diff_check": "pass"
+  },
+  "source_sha256": {
+    "packages/proxy/src/app.ts": "4422da0ae5f6b9920ec113a371a8fdf233f9088a7546146197111639a5091359",
+    "packages/proxy/src/runtime/worker-handler.ts": "02c46972bdea36d72093fdc2a31d61bac5e46bd69cf0e3d9235aa7da9aa5ecbb",
+    "packages/proxy/src/runtime/postgres-shared-earning-scanner.ts": "34e6138e5351a793310327076a879df22658be61683912bdb56ecec93a95591b",
+    "packages/proxy/src/runtime/shared-earning-scanner-worker.ts": "e5b62955e2fd50edc100477720fb39a589b0fbb1356a931c899906084adde189",
+    "packages/proxy/src/runtime/postgres-shared-earning-scanner.test.mjs": "e0e85f5c75c75c5fcf51195342aafe166e1feba4d3f79abe2c05a3cb2717e3b9",
+    "packages/proxy/wrangler.shared-earning-scanner.base.jsonc": "3d264cace27ddd644d0038354e5d3a762ef7339d04d23b9470318bebb66e3928",
+    "scripts/deploy/gen-wrangler.mjs": "f70cb90671d252052929a49bc01f034c9be4f3de3794e113a6aebd04f30cc519",
+    "scripts/deploy/gen-wrangler.test.mjs": "3385521048ca0ddb55dcdcd21c6cd7a2bb2ae570455e3583469eaa6b89e1f3a4",
+    "scripts/deploy/gen-shared-earning-scanner-wrangler.mjs": "4f8440a29c2ab910ff765ecfa2a0e5ccf87ffd16966b855e6e12fe19ff1fe754",
+    "scripts/deploy/gen-shared-earning-scanner-wrangler.test.mjs": "2bac7fdf5f8e8977dac99a9ef64c9eb85edeb5e3e92360dd61963093b28ba102"
+  },
+  "capacity_upper_bound_events_per_hour": 20,
+  "capacity_proof": "absent",
+  "deployment_proof": "absent"
+}

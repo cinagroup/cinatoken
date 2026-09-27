@@ -1,0 +1,150 @@
+{
+  "status": "PASS",
+  "cleanup": "PASS",
+  "binaryVersion": "postgres (PostgreSQL) 18.6",
+  "stages": [
+    {
+      "name": "default-off-install-preflight-and-pg18-schema",
+      "result": "PASS"
+    },
+    {
+      "name": "journal-and-reader-logins-have-no-cross-authority-or-table-access",
+      "result": "PASS"
+    },
+    {
+      "name": "null-fractional-and-malformed-financial-facts-rejected-before-writer",
+      "result": "PASS"
+    },
+    {
+      "name": "second-backend-commit-visibility-and-immutable-intent",
+      "result": "PASS"
+    },
+    {
+      "name": "caller-reported-ack-remains-due-and-reader-login-uses-v375-stub",
+      "result": "PASS"
+    },
+    {
+      "name": "undefined-rejection-is-uncertain-and-never-replays-writer",
+      "result": "PASS"
+    },
+    {
+      "name": "false-ack-cannot-suppress-recheck",
+      "result": "PASS"
+    },
+    {
+      "name": "stale-prepared-is-swept-without-any-writer-call",
+      "result": "PASS"
+    },
+    {
+      "name": "synthetic-lost-prepare-response-keeps-committed-intent-and-skips-writer",
+      "result": "PASS"
+    },
+    {
+      "name": "one-lease-at-a-time-expiry-reclaim-and-stale-token-rejection",
+      "result": "PASS"
+    },
+    {
+      "name": "discarded-completion-response-cannot-repeat-terminal-probe",
+      "result": "PASS"
+    },
+    {
+      "name": "reader-error-stays-pending-until-authenticated-later-read",
+      "result": "PASS"
+    },
+    {
+      "name": "seven-unconfirmed-probes-end-in-durable-operator-quarantine",
+      "result": "PASS"
+    },
+    {
+      "name": "seven-abandoned-leases-bound-total-reader-opportunities",
+      "result": "PASS"
+    },
+    {
+      "name": "conflict-quarantines-immediately",
+      "result": "PASS"
+    },
+    {
+      "name": "deadline-quarantines-unattended-prepared-intent",
+      "result": "PASS"
+    },
+    {
+      "name": "post-lock-clock-rejects-expired-lease-completion",
+      "result": "PASS"
+    },
+    {
+      "name": "batch-runner-stops-when-no-entry-is-due-and-rejects-unbounded-work",
+      "result": "PASS"
+    }
+  ],
+  "sourceSha256": {
+    "legacy-buyer-commit-journal-v378.sql": "fa4f937f6ef876185d1c358029040677b419c25ac97c40c29d61cc7b57812f05",
+    "legacy-buyer-commit-journal-v378.ts": "114a9d6d24ea433d0c5f69c5ffbd7d1f5e3e5e901943326ec4e43bd635f8100c",
+    "fixture": "ecbaad8eff3e55dea1569a28c5a749f22722bcd06969135c953d4565d88c955c"
+  },
+  "limitations": [
+    "Review-only proposal and direct TS caller; no production integration, formal migration, remote SQL, Worker, Provider, or production credential is changed.",
+    "This fixture uses a controlled v375-signature stub to vary terminal observations. The exact v375 SQL reader and real v372 buyer transaction were proved by separate v375-v377 native fixtures; this fixture does not repeat that full integration.",
+    "fullRequestSha256 is caller supplied and not compared with a database-bound complete request/response digest; financial_facts_confirmed is only the v375 checked financial subset.",
+    "The journal cannot independently authenticate Provider billing or prove Guardrail, audit, stats, and unreserved window changes share the writer transaction.",
+    "The fixture uses privileged local time warps and row locks to test long schedules and lease expiry without waiting 600 seconds."
+  ],
+  "exhaustedProbes": [
+    {
+      "probe_number": 1,
+      "observation": "unconfirmed",
+      "lease_generation": "1"
+    },
+    {
+      "probe_number": 2,
+      "observation": "unconfirmed",
+      "lease_generation": "2"
+    },
+    {
+      "probe_number": 3,
+      "observation": "unconfirmed",
+      "lease_generation": "3"
+    },
+    {
+      "probe_number": 4,
+      "observation": "unconfirmed",
+      "lease_generation": "4"
+    },
+    {
+      "probe_number": 5,
+      "observation": "unconfirmed",
+      "lease_generation": "5"
+    },
+    {
+      "probe_number": 6,
+      "observation": "unconfirmed",
+      "lease_generation": "6"
+    },
+    {
+      "probe_number": 7,
+      "observation": "unconfirmed",
+      "lease_generation": "7"
+    }
+  ],
+  "readerBackendPids": [
+    16992,
+    8488,
+    2864,
+    14756,
+    12824,
+    19700,
+    7576,
+    18012,
+    12196,
+    14404,
+    3792,
+    2748,
+    11312,
+    21228,
+    18984,
+    6752,
+    18416,
+    2152,
+    12860,
+    12412
+  ]
+}

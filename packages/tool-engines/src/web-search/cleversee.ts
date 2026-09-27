@@ -51,6 +51,7 @@ export async function searchCleverSeeWeb(params: WebSearchParams): Promise<WebSe
 
 	const response = await fetchImpl(CLEVERSEE_ENDPOINT, {
 		method: 'POST',
+		redirect: 'manual',
 		headers: {
 			Authorization: `Bearer ${params.apiKey}`,
 			'Content-Type': 'application/json',

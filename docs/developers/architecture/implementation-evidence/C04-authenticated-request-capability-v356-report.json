@@ -1,0 +1,82 @@
+{
+  "status": "PASS",
+  "cleanup": "PASS",
+  "binaryVersion": "postgres (PostgreSQL) 18.6",
+  "sourceSha256": {
+    "formalMigrations": "23afef61a8a670e0af8c90e3a138f522e6b283b454e380a592bf85bca83108dc",
+    "runtimeGrant": "8f20bdfd5ff9ac99198c7d08fab09b64d36ef6d111fe0d500ac3c1bd005a9a7f",
+    "proposal": "bbf06af6e9e2df6801c0e89442644d208d7213dbb6a7e202b96183b54d67fe9f",
+    "fixture": "c4c11dff6781b771c7dbbcba2ed32ab6a46053741e9af56844d1e641539711cd"
+  },
+  "stages": [
+    {
+      "name": "formal-pg73-and-current-runtime-grants-installed",
+      "result": "PASS"
+    },
+    {
+      "name": "default-off-contaminated-role-rejection-and-concurrent-grant-interlock",
+      "result": "PASS"
+    },
+    {
+      "name": "legacy-runtime-grant-rerun-rejects-before-broad-regrant",
+      "result": "PASS"
+    },
+    {
+      "name": "two-direct-logins-have-only-their-own-function-and-no-table-dml",
+      "result": "PASS",
+      "acl": {
+        "issuer_issue": true,
+        "issuer_claim": false,
+        "claim_issue": false,
+        "claim_claim": true,
+        "runtime_issue": false,
+        "issuer_table": false,
+        "claim_table": false
+      }
+    },
+    {
+      "name": "bearer-hashref-pair-namespace-personal-owner-and-current-expiry-required",
+      "result": "PASS"
+    },
+    {
+      "name": "one-request-verifier-stored-only-as-hash-and-claim-is-one-shot",
+      "result": "PASS"
+    },
+    {
+      "name": "simultaneous-claim-serializes-to-one-winner",
+      "result": "PASS"
+    },
+    {
+      "name": "row-lock-waits-crossing-capability-or-key-deadline-fail-closed",
+      "result": "PASS"
+    },
+    {
+      "name": "epochs-status-and-id-ABA-invalidation-spares-expired-history",
+      "result": "PASS"
+    },
+    {
+      "name": "security-definer-lock-wait-is-bounded-at-two-seconds",
+      "result": "PASS"
+    },
+    {
+      "name": "neither-function-accepts-numeric-budget-and-capability-record-has-no-amount",
+      "result": "PASS",
+      "shape": {
+        "amount_columns": 0,
+        "issue_args": 3,
+        "claim_args": 3
+      }
+    }
+  ],
+  "limitations": [
+    "Review-only PG73 SQL; no formal migration, production role, Worker binding, or remote DB changed.",
+    "The bearer is sent to PostgreSQL as a bound parameter; production transport and query logging policy are unverified.",
+    "This one-shot authentication capability has no route, price, budget ceiling, financial hold, dispatch permission, or settlement effect.",
+    "The body digest is supplied by the issuer caller and is not independently reconstructed by PostgreSQL.",
+    "Legacy plaintext Gateway Keys are deliberately rejected until backfilled to hashref storage.",
+    "This first phase admits personal workspaces only; organization membership is not independently proved.",
+    "Expired capability rows are excluded from invalidation scans but still need an owned retention and purge policy.",
+    "Production invalidation-trigger scan and write capacity under Key, user, and Workspace churn is unmeasured.",
+    "D1/MySQL parity and Linux CI are not proved by this native fixture."
+  ]
+}

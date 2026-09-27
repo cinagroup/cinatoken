@@ -6,11 +6,14 @@
  */
 import {
 	parseOpenAiAudioTokenUsage,
+	RequestAuxiliaryAuthLimitError,
 	resolveProviderUpstreamSecret,
 	resolveUpstreamEndpoint,
 	type AudioTokenUsage,
 } from '@octafuse/core';
 import type { RouteResult } from '../model-router';
+import { withBufferedAudioResources } from './buffered-audio-resources';
+import { createAudioTranscriptionUpload } from './audio-transcription-upload';
 import type { UsageFromStream } from '../proxy';
 import { EMPTY_USAGE } from '../proxy';
 import { buildRouteRequestBody } from '../route-default-params';
@@ -31,6 +34,7 @@ import {
 } from './upstream-observability';
 import { GatewayErrorCode } from '../gateway-error-codes';
 import { gatewayErrorResponse } from '../gateway-error-response';
+import { audioRequestAbortResponse, createAudioRequestLifecycle, validateAudioUpstreamUrl, type AudioRequestLifecycleOptions } from './audio-request-lifecycle';
 import {
 	resolveAudioProviderOptionsForRoute as resolveRouteAudioProviderOptions,
 	type AudioProviderOptions,
@@ -38,6 +42,11 @@ import {
 
 export const AUDIO_TRANSCRIPTION_TIMEOUT_MS = 120_000;
 export const AUDIO_TRANSCRIPTION_MAX_RESPONSE_BYTES = 2 * 1024 * 1024;
+// Redirects and gateway/server failures can arrive after the transcription
+// was accepted. The status alone cannot authorize another paid upload.
+function audioStatusMayHideAcceptedWork(status: number): boolean {
+	return (status >= 300 && status < 400) || status >= 500 || status === 408 || status === 499;
+}
 /** OpenAI Whisper 官方上限 25MB；Gateway 略收紧以保护 Worker 内存 */
 export const AUDIO_MAX_BYTES_PER_FILE = 25 * 1024 * 1024;
 export const AUDIO_ALLOWED_MIME = new Set([
@@ -71,7 +80,7 @@ export type AudioTranscriptionProviderOptions = Readonly<
 	Record<string, Readonly<Record<string, AudioTranscriptionProviderOptionValue>>>
 >;
 
-export type OpenAiAudioTranscriptionDispatchOptions = {
+export type OpenAiAudioTranscriptionDispatchOptions = AudioRequestLifecycleOptions & {
 	fetchImpl?: typeof fetch;
 	maxResponseBytes?: number;
 };
@@ -193,34 +202,6 @@ export type AudioTranscriptionResult = {
 	/** 按客户端 format 裁剪后的 body（用于回包） */
 	clientBody: unknown;
 };
-
-type AudioAbortReason = 'none' | 'client_abort' | 'gateway_timeout';
-
-function withTimeoutSignal(
-	requestSignal: AbortSignal | undefined,
-	timeoutMs: number
-): { signal: AbortSignal; clear: () => void; getAbortReason: () => AudioAbortReason } {
-	const controller = new AbortController();
-	let reason: AudioAbortReason = 'none';
-	const onClientAbort = () => {
-		if (reason === 'none') reason = 'client_abort';
-		controller.abort();
-	};
-	requestSignal?.addEventListener('abort', onClientAbort, { once: true });
-	if (requestSignal?.aborted) onClientAbort();
-	const timer = setTimeout(() => {
-		if (reason === 'none') reason = 'gateway_timeout';
-		controller.abort();
-	}, timeoutMs);
-	return {
-		signal: controller.signal,
-		clear: () => {
-			clearTimeout(timer);
-			requestSignal?.removeEventListener('abort', onClientAbort);
-		},
-		getAbortReason: () => reason,
-	};
-}
 
 export function validateAudioUpload(file: AudioUpload): string | null {
 	if (!file.bytes || file.bytes.byteLength === 0) {
@@ -419,7 +400,14 @@ export function buildAudioTranscriptionClientResponse(
 /**
  * `POST …/audio/transcriptions`（multipart）
  */
-export async function dispatchOpenAiAudioTranscriptions(
+export function dispatchOpenAiAudioTranscriptions(...args: Parameters<typeof dispatchOpenAiAudioTranscriptionsOwned>) {
+	const [route, req, signal, timing, attempt, options = {}] = args;
+	return withBufferedAudioResources(trackResourceCompletion => dispatchOpenAiAudioTranscriptionsOwned(
+		route, req, signal, timing, attempt, { ...options, trackResourceCompletion },
+	));
+}
+
+async function dispatchOpenAiAudioTranscriptionsOwned(
 	route: RouteResult,
 	req: NormalizedAudioTranscriptionRequest,
 	requestSignal?: AbortSignal,
@@ -439,6 +427,8 @@ export async function dispatchOpenAiAudioTranscriptions(
 		upstreamOutcomeUnknown?: boolean;
 		responseBodyTooLarge?: boolean;
 		failoverForbidden?: boolean;
+		gatewayGeneratedError?: boolean;
+		admissionDeniedPreDispatch?: boolean;
 	};
 }> {
 	const file = req.file;
@@ -449,6 +439,7 @@ export async function dispatchOpenAiAudioTranscriptions(
 		providerId: route.providerId,
 	});
 	const upstreamLabel = sanitizeUpstreamUrlForLog(url);
+	validateAudioUpstreamUrl(url);
 	console.log(JSON.stringify({
 		event: 'gateway.audio.upstream_start',
 		operation: 'transcriptions',
@@ -486,46 +477,47 @@ export async function dispatchOpenAiAudioTranscriptions(
 			form.append(k, String(v));
 		}
 	}
-	// Copy into a fresh Uint8Array — `BlobPart` typing rejects some ArrayBufferView brands under Workers TS.
-	const blob = new Blob([new Uint8Array(file.bytes)], {
-		type: file.mimeType || 'application/octet-stream',
-	});
-	form.append(
-		'file',
-		blob,
-		resolveAudioUploadFilename(file.filename || '', file.mimeType || '')
-	);
-
 	const startedAt = Date.now();
-	const { signal, clear, getAbortReason } = withTimeoutSignal(
+	const lifecycle = createAudioRequestLifecycle(
 		requestSignal,
-		AUDIO_TRANSCRIPTION_TIMEOUT_MS
+		AUDIO_TRANSCRIPTION_TIMEOUT_MS,
+		options,
 	);
+	const { signal, clear, getAbortReason } = lifecycle;
 	const responseByteLimit = resolveResponseByteLimit(
 		options.maxResponseBytes,
 		AUDIO_TRANSCRIPTION_MAX_RESPONSE_BYTES,
 	);
-	let dispatchStarted = false;
 	let upstreamStatus: number | null = null;
 	let observedUpstreamRequestId: string | null = null;
+	let upload: ReturnType<typeof createAudioTranscriptionUpload> | undefined;
 	try {
 		if (signal.aborted) throw new DOMException('Aborted', 'AbortError');
-		const { secret } = await resolveProviderUpstreamSecret(route.providerApiKey);
+		upload = createAudioTranscriptionUpload(form, {
+			filename: resolveAudioUploadFilename(file.filename || '', file.mimeType || ''),
+			mimeType: file.mimeType || 'application/octet-stream',
+			bytes: file.bytes,
+		}, signal);
+		lifecycle.trackResourceCompletion(upload.resourceCompletion);
+		const { secret } = await resolveProviderUpstreamSecret(route.providerApiKey, { signal, auxiliaryAuth: options.auxiliaryAuth });
 		if (signal.aborted) throw new DOMException('Aborted', 'AbortError');
-		dispatchStarted = true;
-		const response = await (options.fetchImpl ?? fetch)(url, {
+		const fetchInit: RequestInit & { duplex: 'half' } = {
 			method: 'POST',
-			headers: {
+			headers: new Headers({
 				Authorization: `Bearer ${secret}`,
-			},
-			body: form,
+				'Content-Type': upload.contentType,
+				'Content-Length': String(upload.contentLength),
+			}),
+			body: upload.body,
+			duplex: 'half',
 			signal,
-		});
+		};
+		const response = await lifecycle.dispatch(url, fetchInit);
 		upstreamStatus = response.status;
 		timing?.markAttemptHeaders(attempt, response.status);
 		const upstreamRequestId = extractUpstreamRequestId(response.headers);
 		observedUpstreamRequestId = upstreamRequestId;
-		const text = await responseTextWithinLimit(response, responseByteLimit);
+		const text = await responseTextWithinLimit(response, responseByteLimit, signal, undefined, lifecycle.trackResourceCompletion);
 		timing?.markStreamComplete();
 		let upstreamBody: unknown = null;
 		let jsonValid = true;
@@ -614,9 +606,13 @@ export async function dispatchOpenAiAudioTranscriptions(
 				audioDurationSource,
 				audioFileBytes: file.bytes.byteLength,
 				audioTokenUsage,
+				...(audioStatusMayHideAcceptedWork(response.status)
+					? { upstreamOutcomeUnknown: true, failoverForbidden: true }
+					: {}),
 			},
 		};
 	} catch (err) {
+		if (lifecycle.admissionFailed || err instanceof RequestAuxiliaryAuthLimitError) throw err;
 		timing?.markStreamComplete();
 		const abortReason = getAbortReason();
 		const aborted =
@@ -626,7 +622,9 @@ export async function dispatchOpenAiAudioTranscriptions(
 		const resolvedAbort =
 			abortReason === 'none' && requestSignal?.aborted ? 'client_abort' : abortReason;
 		const explicitNonOk = upstreamStatus != null && (upstreamStatus < 200 || upstreamStatus >= 300);
-		const upstreamOutcomeUnknown = dispatchStarted && !explicitNonOk;
+		const upstreamOutcomeUnknown = lifecycle.dispatchStarted
+			&& (!explicitNonOk || audioStatusMayHideAcceptedWork(upstreamStatus!));
+		const gatewayAbort = aborted && !explicitNonOk;
 		const responseBodyTooLarge =
 			err instanceof UpstreamResponseBodyTooLargeError && upstreamOutcomeUnknown;
 		const message = aborted
@@ -650,7 +648,7 @@ export async function dispatchOpenAiAudioTranscriptions(
 			},
 		};
 		return {
-			response: new Response(JSON.stringify(errorBody), {
+			response: gatewayAbort ? audioRequestAbortResponse(resolvedAbort === 'gateway_timeout') : new Response(JSON.stringify(errorBody), {
 				status: explicitNonOk
 					? upstreamStatus!
 					: aborted && resolvedAbort === 'gateway_timeout'
@@ -668,6 +666,9 @@ export async function dispatchOpenAiAudioTranscriptions(
 				audioDurationSource: null,
 				audioFileBytes: file.bytes.byteLength,
 				audioTokenUsage: null,
+				...(!lifecycle.dispatchStarted ? { admissionDeniedPreDispatch: true } : {}),
+				...(aborted ? { failoverForbidden: true } : {}),
+				...(gatewayAbort ? { gatewayGeneratedError: true } : {}),
 				...(upstreamOutcomeUnknown
 					? { upstreamOutcomeUnknown: true, failoverForbidden: true }
 					: {}),
@@ -675,6 +676,7 @@ export async function dispatchOpenAiAudioTranscriptions(
 			},
 		};
 	} finally {
+		upload?.stop();
 		clear();
 	}
 }

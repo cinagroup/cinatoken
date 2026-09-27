@@ -1,0 +1,120 @@
+{
+  "baselineHead": "7eb59008f7d8e156e81fd18a57658fdef2553264",
+  "environment": {
+    "node": "v24.14.1",
+    "npm": "11.11.0",
+    "databases": "In-memory SQLite plus SQL-capture mocks; no real PostgreSQL/MySQL or cloud access"
+  },
+  "checks": [
+    {
+      "id": "C00-V01",
+      "command": "npm.cmd run build:node-index -w @octafuse/core",
+      "exitCode": 0,
+      "result": "Local generated core dist/index.js refreshed; no full prebuild clean",
+      "proof": "exec chunk b0c232"
+    },
+    {
+      "id": "C00-V02",
+      "command": "npm.cmd run typecheck -w @octafuse/proxy",
+      "exitCode": 0,
+      "result": "tsc --noEmit passed",
+      "proof": "exec chunks 3e7b51 / 77e8c6"
+    },
+    {
+      "id": "C00-V03",
+      "command": "node --import tsx --test --test-reporter=spec packages/core/src/db/analytics-query.d1.test.ts packages/core/src/storage/byok-keys.d1.test.ts packages/core/src/storage/byok-keys.sql-contract.test.ts packages/core/src/db/byok-keys-types.test.ts packages/core/src/db/batch-types.test.ts packages/core/src/storage/batches.d1.test.ts packages/core/src/storage/batches.sql-contract.test.ts packages/core/src/storage/runtime-database-config.test.ts packages/core/src/lib/shared-key-encryption.test.ts packages/core/src/lib/key-hash.test.ts packages/proxy/src/routes/v1/byok.test.ts packages/proxy/src/routes/v1/analytics.test.ts packages/proxy/src/routes/v1/rerank.test.ts packages/proxy/src/runtime/batch-queue.test.ts packages/proxy/src/services/batch-authorization.test.ts packages/proxy/src/services/batch-item-input.test.ts packages/proxy/src/services/batch-jsonl.test.ts packages/proxy/src/services/batch-object-storage.test.ts packages/proxy/src/services/byok-key-pool.test.ts packages/proxy/src/services/byok-billing-policy.test.ts packages/proxy/src/services/request-budget-admission.test.ts packages/proxy/src/services/shared-key-earnings.test.ts packages/proxy/src/services/provider-circuit-breaker.test.ts packages/proxy/src/services/egress/openai-rerank-driver.test.ts packages/proxy/src/services/egress/text-dispatch-boundary.test.ts packages/proxy/src/services/egress/stream-abort-lifecycle.test.ts packages/proxy/src/app-api-v1-aliases.test.ts packages/proxy/src/app-global-errors.test.ts packages/proxy/src/app-cors-openrouter.test.ts packages/proxy/src/routes/v1/management-keys.test.ts packages/proxy/src/routes/v1/management-guardrails.test.ts packages/proxy/src/routes/v1/management-workspaces.test.ts packages/proxy/src/routes/v1/management-workspace-budgets.test.ts packages/proxy/src/routes/v1/current-key.test.ts packages/proxy/src/routes/v1/presets.test.ts",
+      "exitCode": 0,
+      "files": [
+        "packages/core/src/db/analytics-query.d1.test.ts",
+        "packages/core/src/storage/byok-keys.d1.test.ts",
+        "packages/core/src/storage/byok-keys.sql-contract.test.ts",
+        "packages/core/src/db/byok-keys-types.test.ts",
+        "packages/core/src/db/batch-types.test.ts",
+        "packages/core/src/storage/batches.d1.test.ts",
+        "packages/core/src/storage/batches.sql-contract.test.ts",
+        "packages/core/src/storage/runtime-database-config.test.ts",
+        "packages/core/src/lib/shared-key-encryption.test.ts",
+        "packages/core/src/lib/key-hash.test.ts",
+        "packages/proxy/src/routes/v1/byok.test.ts",
+        "packages/proxy/src/routes/v1/analytics.test.ts",
+        "packages/proxy/src/routes/v1/rerank.test.ts",
+        "packages/proxy/src/runtime/batch-queue.test.ts",
+        "packages/proxy/src/services/batch-authorization.test.ts",
+        "packages/proxy/src/services/batch-item-input.test.ts",
+        "packages/proxy/src/services/batch-jsonl.test.ts",
+        "packages/proxy/src/services/batch-object-storage.test.ts",
+        "packages/proxy/src/services/byok-key-pool.test.ts",
+        "packages/proxy/src/services/byok-billing-policy.test.ts",
+        "packages/proxy/src/services/request-budget-admission.test.ts",
+        "packages/proxy/src/services/shared-key-earnings.test.ts",
+        "packages/proxy/src/services/provider-circuit-breaker.test.ts",
+        "packages/proxy/src/services/egress/openai-rerank-driver.test.ts",
+        "packages/proxy/src/services/egress/text-dispatch-boundary.test.ts",
+        "packages/proxy/src/services/egress/stream-abort-lifecycle.test.ts",
+        "packages/proxy/src/app-api-v1-aliases.test.ts",
+        "packages/proxy/src/app-global-errors.test.ts",
+        "packages/proxy/src/app-cors-openrouter.test.ts",
+        "packages/proxy/src/routes/v1/management-keys.test.ts",
+        "packages/proxy/src/routes/v1/management-guardrails.test.ts",
+        "packages/proxy/src/routes/v1/management-workspaces.test.ts",
+        "packages/proxy/src/routes/v1/management-workspace-budgets.test.ts",
+        "packages/proxy/src/routes/v1/current-key.test.ts",
+        "packages/proxy/src/routes/v1/presets.test.ts"
+      ],
+      "result": {
+        "tests": 196,
+        "pass": 196,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "suites": 17,
+        "durationMs": 57867.1057
+      },
+      "summary": "ℹ tests 196\nℹ suites 17\nℹ pass 196\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 57867.1057\n"
+    },
+    {
+      "id": "C00-V04",
+      "command": "npm.cmd run test:postgres-migration",
+      "exitCode": 0,
+      "output": "> cinatoken@2.8.0 test:postgres-migration\n> node scripts/ci/verify-postgres-migration-contract.mjs\n\nPostgreSQL cinatoken_gateway migration contract: PASS"
+    },
+    {
+      "id": "C00-V05",
+      "command": "npm.cmd run test:mysql-migration",
+      "exitCode": 0,
+      "output": "> cinatoken@2.8.0 test:mysql-migration\n> node scripts/ci/verify-mysql-migration-contract.mjs\n\nMySQL Guardrail/user/Workspace budget, identity, routing, endpoint-first, session, feedback, default Guardrail, provider-attempt availability, public model total-token, Generation response-metadata, private BYOK, shared-capacity policy, route-selective settlement, Workspace usage-index, and Batch metadata contract: PASS"
+    },
+    {
+      "id": "C00-V06",
+      "command": "npm.cmd run verify:package-versions",
+      "exitCode": 0,
+      "output": "> cinatoken@2.8.0 verify:package-versions\n> node scripts/ci/verify-package-versions.mjs\n\nOK: all package versions == 2.8.0"
+    },
+    {
+      "id": "C00-V07",
+      "command": "node --import tsx --input-type=module -e '\nimport assert from \"node:assert/strict\";\nimport { readFileSync } from \"node:fs\";\nimport { createProxyApp } from \"./packages/proxy/src/app.ts\";\nconst {fixtures}=JSON.parse(readFileSync(\"docs/developers/architecture/implementation-evidence/C00-api-contract-fixtures.json\",\"utf8\"));\nconst app=createProxyApp(async()=>({repositories:{}}),{requestBodyLogging:\"off\"});\nconst log=console.log;console.log=()=>{};\nfor(const f of fixtures){const c=f.request;const r=await app.request(c.path,{method:c.method,headers:c.headers,body:c.body},{REQUEST_BODY_LOGGING:\"off\"});assert.equal(r.status,c.expectedStatus);assert.deepEqual({status:r.status,code:r.headers.get(\"X-OctaFuse-Error-Code\"),cacheControl:r.headers.get(\"Cache-Control\"),body:await r.json()},f.observed);}\nconsole.log=log;console.log(\"C00 API fixtures: \"+fixtures.length+\" passed\");\n'",
+      "exitCode": 0,
+      "result": "Six in-process golden API/error fixtures replayed with explicit bindings",
+      "output": "[Gateway] client error response {\n  method: 'GET',\n  path: '/api/v1/does-not-exist',\n  status: 404,\n  code: 'gateway.route_not_found'\n}\n[Gateway] client error response {\n  method: 'GET',\n  path: '/api/v1/byok',\n  status: 401,\n  code: 'gateway.auth_failed'\n}\n[Gateway] client error response {\n  method: 'GET',\n  path: '/api/v1/analytics/meta',\n  status: 401,\n  code: 'gateway.auth_failed'\n}\n[Gateway Auth] 401: missing API key in supported auth locations\n[Gateway] client error response {\n  method: 'POST',\n  path: '/api/v1/rerank',\n  status: 401,\n  code: 'gateway.auth_failed'\n}\n[Gateway] client error response {\n  method: 'POST',\n  path: '/api/beta/batches',\n  status: 404,\n  code: 'gateway.route_not_found'\n}\nC00 API fixtures: 6 passed"
+    }
+  ],
+  "notExecuted": [
+    "Full monorepo unit suite",
+    "Admin build/typecheck",
+    "Real PostgreSQL/MySQL integration",
+    "Docker compose smoke",
+    "Remote migrations, deployment and production configuration queries",
+    "KMS/Broker/provider real integration or paid inference"
+  ],
+  "probeCorrections": [
+    "An initial extra API fixture probe omitted Hono environment bindings and produced three 500 responses. The harness was corrected to match the supported test setup; no business code was changed. This probe is separate from the 196-test run."
+  ],
+  "sourcePreservation": {
+    "checkedFiles": 52,
+    "expectedDocumentationChanges": [
+      "docs/developers/architecture/v2.1-openrouter-implementation-checklist.md"
+    ],
+    "unexpectedSourceChanges": [],
+    "headUnchanged": true
+  }
+}

@@ -7,6 +7,8 @@ import { maskProviderApiKeyForAdmin } from '@octafuse/core';
 import type { AdminEnv } from '@/lib/admin-env';
 import { requireAdminPrincipal } from '@/lib/middleware/admin-auth';
 import { handleAdminRouteError } from './error-response';
+import { isSharedKeyEarningHistoryDeleteError } from '../shared-key-history-error';
+import { projectCurrentSellerCreditedUsage } from '@/lib/shared-key-credited-usage-reader';
 
 export const adminSharedKeysRoutes = new Hono<AdminEnv>();
 
@@ -17,7 +19,10 @@ adminSharedKeysRoutes.get('/', async (c) => {
 		const repos = c.get('repositories');
 		const status = c.req.query('status') || undefined;
 		const channelType = c.req.query('channelType') || undefined;
-		const rows = await repos.sharedKeys.listAllSharedKeys({ status, channelType });
+		const listed = await repos.sharedKeys.listAllSharedKeys({ status, channelType });
+		const rows = c.env?.SHARED_KEY_CREDITED_USAGE_READER === 'reviewed-v1'
+			? await projectCurrentSellerCreditedUsage(repos, listed)
+			: listed;
 		const sellerCache = new Map<string, string>();
 		const data = [];
 		for (const row of rows) {
@@ -83,6 +88,13 @@ adminSharedKeysRoutes.delete('/:id', async (c) => {
 		if (!deleted) return c.json({ success: false, message: 'Not found' }, 404);
 		return c.json({ success: true, message: 'Shared key deleted' });
 	} catch (error) {
+		if (isSharedKeyEarningHistoryDeleteError(error)) {
+			return c.json({
+				success: false,
+				code: 'shared_key_earning_history_immutable',
+				message: 'Shared key has credited earnings and cannot be deleted',
+			}, 409);
+		}
 		return handleAdminRouteError(c, error, 'Failed to delete shared key');
 	}
 });

@@ -1,0 +1,71 @@
+{
+  "version": "v336",
+  "date": "2026-09-24",
+  "scope": "review-only repair-only PostgreSQL LOGIN grant and owned loopback PG18.6 fixture",
+  "status": "PASS_LOCAL_ONLY",
+  "formalMigrations": 73,
+  "nativePostgres": {
+    "binaryVersion": "postgres (PostgreSQL) 18.6",
+    "tests": 1,
+    "passed": 1,
+    "stages": 7,
+    "cleanup": "PASS",
+    "report": "C04-shared-key-usage-repair-direct-login-v336-report.json",
+    "reportSha256": "67a362755ba4f9944490acbe56120998f41622da3a1df23983210c8bef664d68"
+  },
+  "unitTests": {
+    "command": "node --import tsx --test scripts/db/cutover/build-shared-key-usage-repair-direct-login-grant.test.ts",
+    "passed": 2,
+    "total": 2
+  },
+  "workerRunnerUnitTests": {
+    "command": "node --import tsx --test packages/proxy/src/runtime/shared-key-usage-repair-worker.test.ts",
+    "passed": 5,
+    "total": 5
+  },
+  "wranglerGeneratorTests": {
+    "command": "node --test scripts/deploy/gen-wrangler.test.mjs",
+    "passed": 13,
+    "total": 13,
+    "defaultGeneratedConfig": "REPAIR_HYPERDRIVE and SHARED_KEY_USAGE_REPAIR_ENABLED absent",
+    "enabledConfig": "reviewed-v1 emits proxy-only REPAIR_HYPERDRIVE with distinct canonical UUID",
+    "invalidInput": "rejected before generated config writes"
+  },
+  "deployEntryRegression": {
+    "command": "node --test scripts/deploy/deploy-instance.test.mjs",
+    "passed": 2,
+    "total": 2
+  },
+  "typecheck": {
+    "command": "npx tsc --noEmit --project scripts/tsconfig.json",
+    "status": "PASS"
+  },
+  "proxyTypecheck": {
+    "command": "npm run typecheck -w @octafuse/proxy",
+    "status": "PASS"
+  },
+  "sourceSha256": {
+    "generator": "d90747cf24a38fac70fe16dc17cc9b19138ffc2e945d7635eac72d8303ae4d10",
+    "unitTest": "55c7e0bac297e57c8b33e08ac994f9b16e825513fa8c371331551c695829408e",
+    "nativeTest": "870a1749f366fb26cd4b1f83f41cb8eaafcaefc89bd001773118fac87b092d2a",
+    "runtimeGrant": "1220a50b9af38d2cc59b7a7f6d9022c11182a5b6d5439e4e3937e39be664884b",
+    "repairRunner": "99b3627bf6e27dd87bba92ef7204d657a2774378721a4fdae11dd58c5a153755",
+    "repairRunnerTest": "7ce36e4424c2637a6d4bbca704b860b20bad1dde2ddf0d2ffb28b67630cf48fa",
+    "workerHandler": "02c46972bdea36d72093fdc2a31d61bac5e46bd69cf0e3d9235aa7da9aa5ecbb",
+    "wranglerGenerator": "fdd4c8b67e3578186469c67a3ed0200f16e531712dddce60d68fd316c1d3e126",
+    "wranglerGeneratorTest": "bb4797d97043088d153e9bb9d80c17fb09aaf19d26c0ed0f312b0ae3aab3ed1e",
+    "repairJobsProposal": "7b2f288ecb83e34207bcfd5a2a4eec934c0d6e156190826816ab033716c173d4",
+    "historyGuardProposal": "454a720f9a6b7410e0aad99c2aaa2eb3327fbbac8c86bb3e3cd4537131e6611b"
+  },
+  "ci": "unit and native PG18 steps registered in proxy-dispatch-safety.yml; Linux run unverified",
+  "remoteSql": false,
+  "deployment": false,
+  "open": [
+    "formal migration and controlled grant activation",
+    "dedicated Hyperdrive origin and connection budget verification",
+    "Cron operation and production monitoring",
+    "sustained enqueue throughput above the current hourly 20-key cap",
+    "bounded historical backfill and deterministic failure backoff",
+    "D1 and MySQL matching protocols"
+  ]
+}

@@ -1,0 +1,163 @@
+{
+  "status": "PASS",
+  "cleanup": "PASS",
+  "binaryVersion": "postgres (PostgreSQL) 18.6",
+  "sourceSha256": {
+    "formalMigrations": "23afef61a8a670e0af8c90e3a138f522e6b283b454e380a592bf85bca83108dc",
+    "runtimeGrant": "9725d93d94beaf85fd144017f87760efdfe4f18099fbcde4ad9bbad5dc848081",
+    "criticalWriter": "67504276b1ba4283514fb290a0073f208e5d9afdfca1d35b915a34638fd00570",
+    "fixture": "603646803c82d3209987260ad682a34169b4e53ca7b03b672d818e3a28d7cc13",
+    "shared-key-quote-versions.sql": "1249a7ff07f95b48c7b45a41833c96c9a028e4bfe3a47e44e9dc6b72c3c77246",
+    "shared-key-dispatch-quote-attempts.sql": "c89c79e803fd69a2d09d44b33be3301aeb8aa4ed72c5dff5518439ec29fafb83",
+    "shared-key-economic-outbox.sql": "f92835c72ff02cba23879ed90ad640832455ccb98764f28fe4ee04ce52aab1ac",
+    "shared-key-economic-outbox-producer.sql": "ea9ccc7138cbd641d386e14d1bb95b8cabee942501a49d6b0763e8e1b3eb0920",
+    "shared-key-snapshot-earning-consumer.sql": "66fbd89c3453320284133de06d72793d4e1d2f68aaf756087857c18493e955db",
+    "shared-key-buyer-debit-v2.sql": "fc327b411e8ae6a417a156ab4ba3b633a47a2e615d249b8861503fc4cbf68593",
+    "shared-key-economic-producer-v2.sql": "3871f01eed2a058c9df9e1ca7c2d6898e995e9fa007115ccb6d62082e57712f3",
+    "shared-key-buyer-budget-receipt-v2.sql": "56ebaecd1425206df81c9dc7981c34e5e246047f188355f5d14103e2dee3270c",
+    "buyer-critical-writer-privilege-split-v346.sql": "3ec31913a7d5f5924b4e3f7449a3a35ba1aa064f5cbe3400ce0e063b0df0064c",
+    "shared-key-economic-producer-buyer-login-v347.sql": "f5692bc9a309ce8695db1ea2003c71a8cbaf8eee8db0aa459ef3b522af0ef62f",
+    "shared-key-guardrail-post-reservation-denial-v348.sql": "d679aecdef28a66bbc82b1e2afebface4d140ec2c7b7b38380133d64d960affb",
+    "denialBuilder": "6b73b24b26a91348df6ccc3c15656244daabb8021ccf856679bf6ed52afec034",
+    "chatRoute": "a1f313b1f2461098fc10785821fe8f785baff2e85446b07509fdd47c69d83e0a",
+    "budgetAdmission": "91a85f75dbeb16216611413f2027a8c8c0056ae3390de7e277b3160008037516"
+  },
+  "stages": [
+    {
+      "name": "formal-pg73-and-current-runtime-grant-installed",
+      "result": "PASS"
+    },
+    {
+      "name": "v2-producer-v344-receipt-and-v346-buyer-split-installed",
+      "result": "PASS"
+    },
+    {
+      "name": "v2-function-body-diff-is-exactly-login-gate-and-diagnostic",
+      "result": "PASS"
+    },
+    {
+      "name": "successor-default-off-and-source-catalog-drift-fail-closed",
+      "result": "PASS"
+    },
+    {
+      "name": "v348-default-off-release-proof-and-narrow-v2-validator-replacement",
+      "result": "PASS"
+    },
+    {
+      "name": "private-v2-execute-moves-to-buyer-login-with-v1-revoked",
+      "result": "PASS",
+      "acl": {
+        "runtime_v2_execute": false,
+        "runtime_v1_execute": false,
+        "buyer_v2_execute": true,
+        "buyer_receipt_insert": false,
+        "runtime_spend_update": false,
+        "buyer_seller_update": false
+      }
+    },
+    {
+      "name": "synthetic-buyer-seller-and-frozen-quote-installed",
+      "result": "PASS"
+    },
+    {
+      "name": "v346-v347-buyer-login-cannot-reserve-without-a-separate-admission-grant",
+      "result": "PASS"
+    },
+    {
+      "name": "test-only-buyer-reservation-insert-grant-installed",
+      "result": "PASS"
+    },
+    {
+      "name": "released-zero-with-private-pre-send-proof-commits-one-buyer-log-and-unresolved-v2-event",
+      "result": "PASS"
+    },
+    {
+      "name": "pre-send-denial-rejects-actual-buyer-or-attempt-usage",
+      "result": "PASS"
+    },
+    {
+      "name": "late-guardrail-reservation-cannot-invalidate-committed-zero-buyer-proof",
+      "result": "PASS"
+    },
+    {
+      "name": "buyer-cannot-forge-private-proof-or-rewrite-supported-terminal-reason",
+      "result": "PASS"
+    },
+    {
+      "name": "ordinary-release-without-exact-denial-proof-cannot-create-zero-buyer-event",
+      "result": "PASS"
+    },
+    {
+      "name": "released-row-after-possible-dispatch-never-becomes-no-egress-proof",
+      "result": "PASS"
+    },
+    {
+      "name": "uncommitted-earlier-guardrail-insert-serializes-release-and-prevents-zero-proof",
+      "result": "PASS"
+    },
+    {
+      "name": "release-failure-reserved-lease-remains-unresolved-without-buyer-log-or-v2-event",
+      "result": "PASS"
+    },
+    {
+      "name": "real-chat-guardrail-403-releases-ordinary-hold-and-commits-claim-log-v2-none-zero-send",
+      "result": "PASS"
+    },
+    {
+      "name": "real-chat-release-failure-keeps-reserved-claim-for-manual-recovery-without-buyer-event",
+      "result": "PASS"
+    },
+    {
+      "name": "runtime-cannot-assume-buyer-or-call-either-producer-and-buyer-cannot-write-seller-or-receipt",
+      "result": "PASS"
+    },
+    {
+      "name": "real-buyer-login-critical-writer-commits-debit-private-receipt-and-v2-event",
+      "result": "PASS",
+      "state": {
+        "spent": "1.010000",
+        "logs": 1,
+        "events": 1,
+        "attempts": 1,
+        "receipt_spent": "10000"
+      }
+    },
+    {
+      "name": "buyer-v2-replay-verifies-without-double-charge-or-post-commit-recreate",
+      "result": "PASS"
+    },
+    {
+      "name": "buyer-login-reserved-ceiling-uses-v344-same-transaction-receipt",
+      "result": "PASS"
+    },
+    {
+      "name": "invalid-quote-rolls-back-buyer-debit-log-receipt-and-event",
+      "result": "PASS"
+    },
+    {
+      "name": "runtime-forged-log-rolls-back-and-cannot-create-private-v2-event",
+      "result": "PASS"
+    },
+    {
+      "name": "current-grant-rerun-reopens-gateway-writes-but-not-outbox-producer-execute",
+      "result": "PASS",
+      "acl": {
+        "runtime_spend_update": true,
+        "runtime_v2_execute": false,
+        "runtime_v1_execute": false
+      }
+    }
+  ],
+  "scope": "owned loopback PostgreSQL 18.6; PG73 plus review-only C04 v348 denial proposal",
+  "limitations": [
+    "No production role, migration, grant routine, secret, Worker, Queue, or Hyperdrive binding changed.",
+    "The buyer LOGIN is a trusted financial capability and still has direct UPDATE rights on granted buyer columns.",
+    "The v1 producer is disabled for the ordinary runtime; every old v1 caller needs a reviewed migration gate before cutover.",
+    "In this buyer-split-marker-absent v346/v347 fixture, the legacy grant routine rerun restores ordinary runtime gateway financial writes; the separate v348 buyer-split marker blocks that routine after activation.",
+    "The current buyer-split v348 marker and grant reconciler pin the v347 producer body, so neither can first activate after this v348 denial SQL until a compatibility proposal is reviewed; the reverse order is not tested here.",
+    "Seller consumer, release/adjustment, management, payout, admission ownership, C03 recovery, D1/MySQL, and Linux CI are not covered.",
+    "The private denial receipt trusts the buyer LOGIN release reason and the mark-before-fetch contract; no independent Guardrail-denial record is present.",
+    "The Chat fixture adds buyer INSERT on reservations and SELECT on system_config/workspace_budgets only after proving the existing role lacks admission permission; this is not a reviewed production admission role.",
+    "A failed release leaves a reserved orphan for independent manual review; this proposal does not infer buyer or provider cost."
+  ]
+}

@@ -209,7 +209,7 @@
 		},
 		"publishedEmpty": {
 			"title": "尚未发布模型",
-			"description": "网关连接正常，但管理员仍需启用供应商、定义模型并发布至少一条有效路由。"
+			"description": "目前没有可公开的模型端点。管理员需核验端点证据，并关联匹配且已启用的模型、供应商和可调用路由。"
 		},
 		"empty": {
 			"title": "没有符合筛选条件的模型",
@@ -294,7 +294,7 @@
 		},
 		"publishedEmpty": {
 			"title": "尚未发布供应商",
-			"description": "管理员发布第一条有效模型路由后，这里会显示对应供应商。"
+			"description": "供应商拥有已核验、未过期的模型端点，并关联匹配且已启用的可调用路由后，才会显示在这里。"
 		},
 		"empty": {
 			"title": "没有符合搜索条件的供应商",
@@ -437,6 +437,8 @@
 		"operatorConsole": "运营控制台"
 	},
 	"common": {
+		"dataLoadFailed": "数据加载失败，余额和统计暂时不可用，不代表数值为零。请重试。",
+		"retry": "重试",
 		"loading": "加载中...",
 		"loadingEllipsis": "加载中…",
 		"saving": "保存中…",
@@ -545,8 +547,8 @@
 	},
 	"gatewaySetup": {
 		"title": "真实模型上线流程",
-		"description": "模型 API 地址属于供应商，不属于模型条目。依次完成供应商凭据与 Base URL、模型定义、路由绑定，模型才会在网关中可用。",
-		"badge": "3 步完成",
+		"description": "先配置供应商 API Key 与 Base URL、定义模型并绑定可调用路由；随后核验并关联模型端点，模型才会出现在公开目录。",
+		"badge": "4 步完成",
 		"stepLabel": "第 {step} 步",
 		"steps": {
 			"provider": {
@@ -558,8 +560,12 @@
 				"description": "导入目录模型，或填写真实 model id 与计费信息。"
 			},
 			"route": {
-				"title": "绑定并发布路由",
+				"title": "绑定可调用路由",
 				"description": "选择供应商、协议及上游模型名，保存为可用路由。"
+			},
+			"endpoint": {
+				"title": "核验并发布端点",
+				"description": "录入价格和能力证据，关联匹配路由，核验端点后进入公开目录。"
 			}
 		}
 	},

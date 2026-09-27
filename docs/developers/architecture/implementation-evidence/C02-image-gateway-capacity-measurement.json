@@ -1,0 +1,1660 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-09-06",
+  "head": "7eb59008f7d8e156e81fd18a57658fdef2553264",
+  "command": "node packages/proxy/scripts/measure-image-gateway-capacity.mjs",
+  "exitCode": 0,
+  "records": [
+    {
+      "kind": "configuration",
+      "node": "v24.14.1",
+      "platform": "win32",
+      "arch": "x64",
+      "smoke": false,
+      "inputBytes": 52428800,
+      "upstreamBytes": 33554432,
+      "cases": 6,
+      "note": "Synthetic SQL acknowledgement; no real DB/Workers. Sampled peaks can miss synchronous peaks; OS maxRSS includes startup. arrayBuffers is part of external. --expose-gc only used after terminal."
+    },
+    {
+      "kind": "case",
+      "name": "json-ascii-drain-1",
+      "operation": "generations",
+      "concurrency": 1,
+      "replacement": false,
+      "unread": false,
+      "baseline": {
+        "id": 1,
+        "memory": {
+          "rss": 296263680,
+          "heapTotal": 168677376,
+          "heapUsed": 44711520,
+          "external": 10209778,
+          "arrayBuffers": 131536
+        },
+        "sampledPeak": {
+          "rss": 296263680,
+          "heapTotal": 168677376,
+          "heapUsed": 45234216,
+          "external": 10209778,
+          "arrayBuffers": 131536
+        },
+        "maxRssKiB": 329876,
+        "cpuMicros": {
+          "user": 0,
+          "system": 0
+        },
+        "pool": {
+          "maxRequests": 1,
+          "maxReservedBytes": 1,
+          "requests": 0,
+          "reservedBytes": 0
+        },
+        "stats": {
+          "auth": 0,
+          "guardrail": 0,
+          "models": 0,
+          "storage": 0,
+          "batchesStarted": 0,
+          "batchesCompleted": 0,
+          "statements": 0
+        },
+        "sends": 0,
+        "errors": 0,
+        "expectedDisconnects": 0,
+        "pendingBackground": 0
+      },
+      "stages": {
+        "responseAndAccounting": {
+          "id": 2,
+          "memory": {
+            "rss": 383356928,
+            "heapTotal": 260599808,
+            "heapUsed": 118751872,
+            "external": 98344035,
+            "arrayBuffers": 88040317
+          },
+          "sampledPeak": {
+            "rss": 383356928,
+            "heapTotal": 260599808,
+            "heapUsed": 118751872,
+            "external": 98344035,
+            "arrayBuffers": 88040317
+          },
+          "maxRssKiB": 393184,
+          "cpuMicros": {
+            "user": 1703000,
+            "system": 140000
+          },
+          "pool": {
+            "maxRequests": 1,
+            "maxReservedBytes": 1,
+            "requests": 1,
+            "reservedBytes": 1
+          },
+          "stats": {
+            "auth": 1,
+            "guardrail": 1,
+            "models": 1,
+            "storage": 1,
+            "batchesStarted": 1,
+            "batchesCompleted": 0,
+            "statements": 3
+          },
+          "sends": 1,
+          "errors": 0,
+          "expectedDisconnects": 0,
+          "pendingBackground": 1
+        },
+        "denials": {
+          "id": 3,
+          "memory": {
+            "rss": 386002944,
+            "heapTotal": 260599808,
+            "heapUsed": 120304232,
+            "external": 100637823,
+            "arrayBuffers": 90334105
+          },
+          "sampledPeak": {
+            "rss": 386002944,
+            "heapTotal": 260599808,
+            "heapUsed": 120304232,
+            "external": 100637823,
+            "arrayBuffers": 90334105
+          },
+          "maxRssKiB": 393184,
+          "cpuMicros": {
+            "user": 1719000,
+            "system": 140000
+          },
+          "pool": {
+            "maxRequests": 1,
+            "maxReservedBytes": 1,
+            "requests": 1,
+            "reservedBytes": 1
+          },
+          "stats": {
+            "auth": 1,
+            "guardrail": 1,
+            "models": 1,
+            "storage": 1,
+            "batchesStarted": 1,
+            "batchesCompleted": 0,
+            "statements": 3
+          },
+          "sends": 1,
+          "errors": 0,
+          "expectedDisconnects": 0,
+          "pendingBackground": 1
+        },
+        "deliveryEndedAccountingHeld": {
+          "id": 4,
+          "memory": {
+            "rss": 304717824,
+            "heapTotal": 268464128,
+            "heapUsed": 115782064,
+            "external": 19896859,
+            "arrayBuffers": 9593136
+          },
+          "sampledPeak": {
+            "rss": 398340096,
+            "heapTotal": 268464128,
+            "heapUsed": 121981160,
+            "external": 114596991,
+            "arrayBuffers": 102523801
+          },
+          "maxRssKiB": 393184,
+          "cpuMicros": {
+            "user": 1828000,
+            "system": 156000
+          },
+          "pool": {
+            "maxRequests": 1,
+            "maxReservedBytes": 1,
+            "requests": 1,
+            "reservedBytes": 1
+          },
+          "stats": {
+            "auth": 1,
+            "guardrail": 1,
+            "models": 1,
+            "storage": 1,
+            "batchesStarted": 1,
+            "batchesCompleted": 0,
+            "statements": 3
+          },
+          "sends": 1,
+          "errors": 0,
+          "expectedDisconnects": 0,
+          "pendingBackground": 1
+        },
+        "terminal": {
+          "id": 6,
+          "memory": {
+            "rss": 304717824,
+            "heapTotal": 268464128,
+            "heapUsed": 115835576,
+            "external": 19896916,
+            "arrayBuffers": 9593193
+          },
+          "sampledPeak": {
+            "rss": 398340096,
+            "heapTotal": 268464128,
+            "heapUsed": 121981160,
+            "external": 114596991,
+            "arrayBuffers": 102523801
+          },
+          "maxRssKiB": 393184,
+          "cpuMicros": {
+            "user": 1828000,
+            "system": 156000
+          },
+          "pool": {
+            "maxRequests": 1,
+            "maxReservedBytes": 1,
+            "requests": 0,
+            "reservedBytes": 0
+          },
+          "stats": {
+            "auth": 1,
+            "guardrail": 1,
+            "models": 1,
+            "storage": 1,
+            "batchesStarted": 1,
+            "batchesCompleted": 1,
+            "statements": 3
+          },
+          "sends": 1,
+          "errors": 0,
+          "expectedDisconnects": 0,
+          "pendingBackground": 0
+        },
+        "afterForcedGc": {
+          "id": 7,
+          "memory": {
+            "rss": 304410624,
+            "heapTotal": 170946560,
+            "heapUsed": 17131928,
+            "external": 19896940,
+            "arrayBuffers": 8020353
+          },
+          "sampledPeak": {
+            "rss": 398340096,
+            "heapTotal": 268464128,
+            "heapUsed": 121981160,
+            "external": 114596991,
+            "arrayBuffers": 102523801
+          },
+          "maxRssKiB": 393184,
+          "cpuMicros": {
+            "user": 1828000,
+            "system": 156000
+          },
+          "pool": {
+            "maxRequests": 1,
+            "maxReservedBytes": 1,
+            "requests": 0,
+            "reservedBytes": 0
+          },
+          "stats": {
+            "auth": 1,
+            "guardrail": 1,
+            "models": 1,
+            "storage": 1,
+            "batchesStarted": 1,
+            "batchesCompleted": 1,
+            "statements": 3
+          },
+          "sends": 1,
+          "errors": 0,
+          "expectedDisconnects": 0,
+          "pendingBackground": 0
+        }
+      },
+      "delivered": [
+        {
+          "bytes": 33554490,
+          "sha256": "eddef4c5fa90d03226620b414e74763ab144531a2e64596612bed9d02c5d5070"
+        }
+      ],
+      "upstreamStats": {
+        "requests": 1,
+        "requestBytes": [
+          52428808
+        ],
+        "responseBytes": 33554432,
+        "errors": 0
+      },
+      "exit": {
+        "code": 0,
+        "signal": null
+      }
+    },
+    {
+      "kind": "case",
+      "name": "json-replacement-drain-1",
+      "operation": "generations",
+      "concurrency": 1,
+      "replacement": true,
+      "unread": false,
+      "baseline": {
+        "id": 1,
+        "memory": {
+          "rss": 296235008,
+          "heapTotal": 166055936,
+          "heapUsed": 44711688,
+          "external": 10209778,
+          "arrayBuffers": 131536
+        },
+        "sampledPeak": {
+          "rss": 296235008,
+          "heapTotal": 166055936,
+          "heapUsed": 44711688,
+          "external": 10209778,
+          "arrayBuffers": 131536
+        },
+        "maxRssKiB": 330484,
+        "cpuMicros": {
+          "user": 0,
+          "system": 0
+        },
+        "pool": {
+          "maxRequests": 1,
+          "maxReservedBytes": 1,
+          "requests": 0,
+          "reservedBytes": 0
+        },
+        "stats": {
+          "auth": 0,
+          "guardrail": 0,
+          "models": 0,
+          "storage": 0,
+          "batchesStarted": 0,
+          "batchesCompleted": 0,
+          "statements": 0
+        },
+        "sends": 0,
+        "errors": 0,
+        "expectedDisconnects": 0,
+        "pendingBackground": 0
+      },
+      "stages": {
+        "responseAndAccounting": {
+          "id": 2,
+          "memory": {
+            "rss": 400007168,
+            "heapTotal": 225361920,
+            "heapUsed": 80575048,
+            "external": 97339789,
+            "arrayBuffers": 87036066
+          },
+          "sampledPeak": {
+            "rss": 431312896,
+            "heapTotal": 258105344,
+            "heapUsed": 120019768,
+            "external": 113216035,
+            "arrayBuffers": 102908019
+          },
+          "maxRssKiB": 438220,
+          "cpuMicros": {
+            "user": 3469000,
+            "system": 406000
+          },
+          "pool": {
+            "maxRequests": 1,
+            "maxReservedBytes": 1,
+            "requests": 1,
+            "reservedBytes": 1
+          },
+          "stats": {
+            "auth": 1,
+            "guardrail": 1,
+            "models": 1,
+            "storage": 1,
+            "batchesStarted": 1,
+            "batchesCompleted": 0,
+            "statements": 3
+          },
+          "sends": 1,
+          "errors": 0,
+          "expectedDisconnects": 0,
+          "pendingBackground": 1
+        },
+        "denials": {
+          "id": 3,
+          "memory": {
+            "rss": 306311168,
+            "heapTotal": 224686080,
+            "heapUsed": 77727312,
+            "external": 10394167,
+            "arrayBuffers": 90444
+          },
+          "sampledPeak": {
+            "rss": 431312896,
+            "heapTotal": 258105344,
+            "heapUsed": 120019768,
+            "external": 113216035,
+            "arrayBuffers": 102908019
+          },
+          "maxRssKiB": 438220,
+          "cpuMicros": {
+            "user": 3516000,
+            "system": 406000
+          },
+          "pool": {
+            "maxRequests": 1,
+            "maxReservedBytes": 1,
+            "requests": 1,
+            "reservedBytes": 1
+          },
+          "stats": {
+            "auth": 1,
+            "guardrail": 1,
+            "models": 1,
+            "storage": 1,
+            "batchesStarted": 1,
+            "batchesCompleted": 0,
+            "statements": 3
+          },
+          "sends": 1,
+          "errors": 0,
+          "expectedDisconnects": 0,
+          "pendingBackground": 1
+        },
+        "deliveryEndedAccountingHeld": {
+          "id": 4,
+          "memory": {
+            "rss": 306311168,
+            "heapTotal": 224686080,
+            "heapUsed": 77736568,
+            "external": 10394195,
+            "arrayBuffers": 90472
+          },
+          "sampledPeak": {
+            "rss": 431312896,
+            "heapTotal": 258105344,
+            "heapUsed": 120019768,
+            "external": 113216035,
+            "arrayBuffers": 102908019
+          },
+          "maxRssKiB": 438220,
+          "cpuMicros": {
+            "user": 3516000,
+            "system": 406000
+          },
+          "pool": {
+            "maxRequests": 1,
+            "maxReservedBytes": 1,
+            "requests": 1,
+            "reservedBytes": 1
+          },
+          "stats": {
+            "auth": 1,
+            "guardrail": 1,
+            "models": 1,
+            "storage": 1,
+            "batchesStarted": 1,
+            "batchesCompleted": 0,
+            "statements": 3
+          },
+          "sends": 1,
+          "errors": 0,
+          "expectedDisconnects": 0,
+          "pendingBackground": 1
+        },
+        "terminal": {
+          "id": 6,
+          "memory": {
+            "rss": 306311168,
+            "heapTotal": 224686080,
+            "heapUsed": 77756368,
+            "external": 10394252,
+            "arrayBuffers": 90529
+          },
+          "sampledPeak": {
+            "rss": 431312896,
+            "heapTotal": 258105344,
+            "heapUsed": 120019768,
+            "external": 113216035,
+            "arrayBuffers": 102908019
+          },
+          "maxRssKiB": 438220,
+          "cpuMicros": {
+            "user": 3516000,
+            "system": 406000
+          },
+          "pool": {
+            "maxRequests": 1,
+            "maxReservedBytes": 1,
+            "requests": 0,
+            "reservedBytes": 0
+          },
+          "stats": {
+            "auth": 1,
+            "guardrail": 1,
+            "models": 1,
+            "storage": 1,
+            "batchesStarted": 1,
+            "batchesCompleted": 1,
+            "statements": 3
+          },
+          "sends": 1,
+          "errors": 0,
+          "expectedDisconnects": 0,
+          "pendingBackground": 0
+        },
+        "afterForcedGc": {
+          "id": 7,
+          "memory": {
+            "rss": 306499584,
+            "heapTotal": 162033664,
+            "heapUsed": 17162936,
+            "external": 10394276,
+            "arrayBuffers": 90412
+          },
+          "sampledPeak": {
+            "rss": 431312896,
+            "heapTotal": 258105344,
+            "heapUsed": 120019768,
+            "external": 113216035,
+            "arrayBuffers": 102908019
+          },
+          "maxRssKiB": 438220,
+          "cpuMicros": {
+            "user": 3532000,
+            "system": 406000
+          },
+          "pool": {
+            "maxRequests": 1,
+            "maxReservedBytes": 1,
+            "requests": 0,
+            "reservedBytes": 0
+          },
+          "stats": {
+            "auth": 1,
+            "guardrail": 1,
+            "models": 1,
+            "storage": 1,
+            "batchesStarted": 1,
+            "batchesCompleted": 1,
+            "statements": 3
+          },
+          "sends": 1,
+          "errors": 0,
+          "expectedDisconnects": 0,
+          "pendingBackground": 0
+        }
+      },
+      "delivered": [
+        {
+          "bytes": 100540272,
+          "sha256": "7b84bbacef3c193dabfd1fee4d0368a1a9b6521f16250a7da5c34dd04cf39962"
+        }
+      ],
+      "upstreamStats": {
+        "requests": 1,
+        "requestBytes": [
+          52428808
+        ],
+        "responseBytes": 33554432,
+        "errors": 0
+      },
+      "exit": {
+        "code": 0,
+        "signal": null
+      }
+    },
+    {
+      "kind": "case",
+      "name": "multipart-ascii-drain-1",
+      "operation": "edits",
+      "concurrency": 1,
+      "replacement": false,
+      "unread": false,
+      "baseline": {
+        "id": 1,
+        "memory": {
+          "rss": 296558592,
+          "heapTotal": 167280640,
+          "heapUsed": 45122280,
+          "external": 10215355,
+          "arrayBuffers": 137113
+        },
+        "sampledPeak": {
+          "rss": 296558592,
+          "heapTotal": 167280640,
+          "heapUsed": 45122280,
+          "external": 10215355,
+          "arrayBuffers": 137113
+        },
+        "maxRssKiB": 330632,
+        "cpuMicros": {
+          "user": 0,
+          "system": 0
+        },
+        "pool": {
+          "maxRequests": 1,
+          "maxReservedBytes": 1,
+          "requests": 0,
+          "reservedBytes": 0
+        },
+        "stats": {
+          "auth": 0,
+          "guardrail": 0,
+          "models": 0,
+          "storage": 0,
+          "batchesStarted": 0,
+          "batchesCompleted": 0,
+          "statements": 0
+        },
+        "sends": 0,
+        "errors": 0,
+        "expectedDisconnects": 0,
+        "pendingBackground": 0
+      },
+      "stages": {
+        "responseAndAccounting": {
+          "id": 2,
+          "memory": {
+            "rss": 395202560,
+            "heapTotal": 182743040,
+            "heapUsed": 61792888,
+            "external": 113219477,
+            "arrayBuffers": 102917164
+          },
+          "sampledPeak": {
+            "rss": 431386624,
+            "heapTotal": 182743040,
+            "heapUsed": 61792888,
+            "external": 148804752,
+            "arrayBuffers": 138502434
+          },
+          "maxRssKiB": 430512,
+          "cpuMicros": {
+            "user": 984000,
+            "system": 203000
+          },
+          "pool": {
+            "maxRequests": 1,
+            "maxReservedBytes": 1,
+            "requests": 1,
+            "reservedBytes": 1
+          },
+          "stats": {
+            "auth": 1,
+            "guardrail": 1,
+            "models": 1,
+            "storage": 1,
+            "batchesStarted": 1,
+            "batchesCompleted": 0,
+            "statements": 3
+          },
+          "sends": 1,
+          "errors": 0,
+          "expectedDisconnects": 0,
+          "pendingBackground": 1
+        },
+        "denials": {
+          "id": 3,
+          "memory": {
+            "rss": 293441536,
+            "heapTotal": 199258112,
+            "heapUsed": 55976832,
+            "external": 11834554,
+            "arrayBuffers": 1532241
+          },
+          "sampledPeak": {
+            "rss": 431386624,
+            "heapTotal": 199258112,
+            "heapUsed": 61792888,
+            "external": 148804752,
+            "arrayBuffers": 138502434
+          },
+          "maxRssKiB": 430512,
+          "cpuMicros": {
+            "user": 1015000,
+            "system": 219000
+          },
+          "pool": {
+            "maxRequests": 1,
+            "maxReservedBytes": 1,
+            "requests": 1,
+            "reservedBytes": 1
+          },
+          "stats": {
+            "auth": 1,
+            "guardrail": 1,
+            "models": 1,
+            "storage": 1,
+            "batchesStarted": 1,
+            "batchesCompleted": 0,
+            "statements": 3
+          },
+          "sends": 1,
+          "errors": 0,
+          "expectedDisconnects": 0,
+          "pendingBackground": 1
+        },
+        "deliveryEndedAccountingHeld": {
+          "id": 4,
+          "memory": {
+            "rss": 301187072,
+            "heapTotal": 199520256,
+            "heapUsed": 57038168,
+            "external": 18978006,
+            "arrayBuffers": 8675688
+          },
+          "sampledPeak": {
+            "rss": 431386624,
+            "heapTotal": 199520256,
+            "heapUsed": 61792888,
+            "external": 148804752,
+            "arrayBuffers": 138502434
+          },
+          "maxRssKiB": 430512,
+          "cpuMicros": {
+            "user": 1031000,
+            "system": 234000
+          },
+          "pool": {
+            "maxRequests": 1,
+            "maxReservedBytes": 1,
+            "requests": 1,
+            "reservedBytes": 1
+          },
+          "stats": {
+            "auth": 1,
+            "guardrail": 1,
+            "models": 1,
+            "storage": 1,
+            "batchesStarted": 1,
+            "batchesCompleted": 0,
+            "statements": 3
+          },
+          "sends": 1,
+          "errors": 0,
+          "expectedDisconnects": 0,
+          "pendingBackground": 1
+        },
+        "terminal": {
+          "id": 6,
+          "memory": {
+            "rss": 301187072,
+            "heapTotal": 199520256,
+            "heapUsed": 57058456,
+            "external": 18978063,
+            "arrayBuffers": 8675745
+          },
+          "sampledPeak": {
+            "rss": 431386624,
+            "heapTotal": 199520256,
+            "heapUsed": 61792888,
+            "external": 148804752,
+            "arrayBuffers": 138502434
+          },
+          "maxRssKiB": 430512,
+          "cpuMicros": {
+            "user": 1031000,
+            "system": 234000
+          },
+          "pool": {
+            "maxRequests": 1,
+            "maxReservedBytes": 1,
+            "requests": 0,
+            "reservedBytes": 0
+          },
+          "stats": {
+            "auth": 1,
+            "guardrail": 1,
+            "models": 1,
+            "storage": 1,
+            "batchesStarted": 1,
+            "batchesCompleted": 1,
+            "statements": 3
+          },
+          "sends": 1,
+          "errors": 0,
+          "expectedDisconnects": 0,
+          "pendingBackground": 0
+        },
+        "afterForcedGc": {
+          "id": 7,
+          "memory": {
+            "rss": 301080576,
+            "heapTotal": 162033664,
+            "heapUsed": 16693280,
+            "external": 18978087,
+            "arrayBuffers": 7889337
+          },
+          "sampledPeak": {
+            "rss": 431386624,
+            "heapTotal": 199520256,
+            "heapUsed": 61792888,
+            "external": 148804752,
+            "arrayBuffers": 138502434
+          },
+          "maxRssKiB": 430512,
+          "cpuMicros": {
+            "user": 1031000,
+            "system": 234000
+          },
+          "pool": {
+            "maxRequests": 1,
+            "maxReservedBytes": 1,
+            "requests": 0,
+            "reservedBytes": 0
+          },
+          "stats": {
+            "auth": 1,
+            "guardrail": 1,
+            "models": 1,
+            "storage": 1,
+            "batchesStarted": 1,
+            "batchesCompleted": 1,
+            "statements": 3
+          },
+          "sends": 1,
+          "errors": 0,
+          "expectedDisconnects": 0,
+          "pendingBackground": 0
+        }
+      },
+      "delivered": [
+        {
+          "bytes": 33554490,
+          "sha256": "eddef4c5fa90d03226620b414e74763ab144531a2e64596612bed9d02c5d5070"
+        }
+      ],
+      "upstreamStats": {
+        "requests": 1,
+        "requestBytes": [
+          52428975
+        ],
+        "responseBytes": 33554432,
+        "errors": 0
+      },
+      "exit": {
+        "code": 0,
+        "signal": null
+      }
+    },
+    {
+      "kind": "case",
+      "name": "json-ascii-unread-1",
+      "operation": "generations",
+      "concurrency": 1,
+      "replacement": false,
+      "unread": true,
+      "baseline": {
+        "id": 1,
+        "memory": {
+          "rss": 296636416,
+          "heapTotal": 166318080,
+          "heapUsed": 45186280,
+          "external": 10209778,
+          "arrayBuffers": 131536
+        },
+        "sampledPeak": {
+          "rss": 296636416,
+          "heapTotal": 166318080,
+          "heapUsed": 45186280,
+          "external": 10209778,
+          "arrayBuffers": 131536
+        },
+        "maxRssKiB": 330164,
+        "cpuMicros": {
+          "user": 0,
+          "system": 0
+        },
+        "pool": {
+          "maxRequests": 1,
+          "maxReservedBytes": 1,
+          "requests": 0,
+          "reservedBytes": 0
+        },
+        "stats": {
+          "auth": 0,
+          "guardrail": 0,
+          "models": 0,
+          "storage": 0,
+          "batchesStarted": 0,
+          "batchesCompleted": 0,
+          "statements": 0
+        },
+        "sends": 0,
+        "errors": 0,
+        "expectedDisconnects": 0,
+        "pendingBackground": 0
+      },
+      "stages": {
+        "responseAndAccounting": {
+          "id": 2,
+          "memory": {
+            "rss": 376745984,
+            "heapTotal": 263483392,
+            "heapUsed": 117051760,
+            "external": 88644707,
+            "arrayBuffers": 78340989
+          },
+          "sampledPeak": {
+            "rss": 379244544,
+            "heapTotal": 263483392,
+            "heapUsed": 117051760,
+            "external": 96447011,
+            "arrayBuffers": 86138995
+          },
+          "maxRssKiB": 397964,
+          "cpuMicros": {
+            "user": 1641000,
+            "system": 156000
+          },
+          "pool": {
+            "maxRequests": 1,
+            "maxReservedBytes": 1,
+            "requests": 1,
+            "reservedBytes": 1
+          },
+          "stats": {
+            "auth": 1,
+            "guardrail": 1,
+            "models": 1,
+            "storage": 1,
+            "batchesStarted": 1,
+            "batchesCompleted": 0,
+            "statements": 3
+          },
+          "sends": 1,
+          "errors": 0,
+          "expectedDisconnects": 0,
+          "pendingBackground": 1
+        },
+        "denials": {
+          "id": 3,
+          "memory": {
+            "rss": 376950784,
+            "heapTotal": 263745536,
+            "heapUsed": 118299456,
+            "external": 88644735,
+            "arrayBuffers": 78341017
+          },
+          "sampledPeak": {
+            "rss": 379244544,
+            "heapTotal": 263745536,
+            "heapUsed": 118299456,
+            "external": 96447011,
+            "arrayBuffers": 86138995
+          },
+          "maxRssKiB": 397964,
+          "cpuMicros": {
+            "user": 1657000,
+            "system": 156000
+          },
+          "pool": {
+            "maxRequests": 1,
+            "maxReservedBytes": 1,
+            "requests": 1,
+            "reservedBytes": 1
+          },
+          "stats": {
+            "auth": 1,
+            "guardrail": 1,
+            "models": 1,
+            "storage": 1,
+            "batchesStarted": 1,
+            "batchesCompleted": 0,
+            "statements": 3
+          },
+          "sends": 1,
+          "errors": 0,
+          "expectedDisconnects": 0,
+          "pendingBackground": 1
+        },
+        "deliveryEndedAccountingHeld": {
+          "id": 4,
+          "memory": {
+            "rss": 376971264,
+            "heapTotal": 263745536,
+            "heapUsed": 118410656,
+            "external": 88644763,
+            "arrayBuffers": 78341040
+          },
+          "sampledPeak": {
+            "rss": 379244544,
+            "heapTotal": 263745536,
+            "heapUsed": 118410656,
+            "external": 96447011,
+            "arrayBuffers": 86138995
+          },
+          "maxRssKiB": 397964,
+          "cpuMicros": {
+            "user": 1657000,
+            "system": 156000
+          },
+          "pool": {
+            "maxRequests": 1,
+            "maxReservedBytes": 1,
+            "requests": 1,
+            "reservedBytes": 1
+          },
+          "stats": {
+            "auth": 1,
+            "guardrail": 1,
+            "models": 1,
+            "storage": 1,
+            "batchesStarted": 1,
+            "batchesCompleted": 0,
+            "statements": 3
+          },
+          "sends": 1,
+          "errors": 0,
+          "expectedDisconnects": 1,
+          "pendingBackground": 1
+        },
+        "terminal": {
+          "id": 6,
+          "memory": {
+            "rss": 376971264,
+            "heapTotal": 263745536,
+            "heapUsed": 118429080,
+            "external": 88644820,
+            "arrayBuffers": 78341097
+          },
+          "sampledPeak": {
+            "rss": 379244544,
+            "heapTotal": 263745536,
+            "heapUsed": 118429080,
+            "external": 96447011,
+            "arrayBuffers": 86138995
+          },
+          "maxRssKiB": 397964,
+          "cpuMicros": {
+            "user": 1657000,
+            "system": 156000
+          },
+          "pool": {
+            "maxRequests": 1,
+            "maxReservedBytes": 1,
+            "requests": 0,
+            "reservedBytes": 0
+          },
+          "stats": {
+            "auth": 1,
+            "guardrail": 1,
+            "models": 1,
+            "storage": 1,
+            "batchesStarted": 1,
+            "batchesCompleted": 1,
+            "statements": 3
+          },
+          "sends": 1,
+          "errors": 0,
+          "expectedDisconnects": 1,
+          "pendingBackground": 0
+        },
+        "afterForcedGc": {
+          "id": 7,
+          "memory": {
+            "rss": 370839552,
+            "heapTotal": 168849408,
+            "heapUsed": 17098216,
+            "external": 88644844,
+            "arrayBuffers": 71197113
+          },
+          "sampledPeak": {
+            "rss": 379244544,
+            "heapTotal": 263745536,
+            "heapUsed": 118429080,
+            "external": 96447011,
+            "arrayBuffers": 86138995
+          },
+          "maxRssKiB": 397964,
+          "cpuMicros": {
+            "user": 1657000,
+            "system": 156000
+          },
+          "pool": {
+            "maxRequests": 1,
+            "maxReservedBytes": 1,
+            "requests": 0,
+            "reservedBytes": 0
+          },
+          "stats": {
+            "auth": 1,
+            "guardrail": 1,
+            "models": 1,
+            "storage": 1,
+            "batchesStarted": 1,
+            "batchesCompleted": 1,
+            "statements": 3
+          },
+          "sends": 1,
+          "errors": 0,
+          "expectedDisconnects": 1,
+          "pendingBackground": 0
+        }
+      },
+      "delivered": null,
+      "upstreamStats": {
+        "requests": 1,
+        "requestBytes": [
+          52428808
+        ],
+        "responseBytes": 33554432,
+        "errors": 0
+      },
+      "exit": {
+        "code": 0,
+        "signal": null
+      }
+    },
+    {
+      "kind": "case",
+      "name": "json-ascii-drain-2",
+      "operation": "generations",
+      "concurrency": 2,
+      "replacement": false,
+      "unread": false,
+      "baseline": {
+        "id": 1,
+        "memory": {
+          "rss": 295960576,
+          "heapTotal": 167456768,
+          "heapUsed": 45487176,
+          "external": 10215361,
+          "arrayBuffers": 137119
+        },
+        "sampledPeak": {
+          "rss": 295960576,
+          "heapTotal": 167456768,
+          "heapUsed": 45487176,
+          "external": 10215361,
+          "arrayBuffers": 137119
+        },
+        "maxRssKiB": 329784,
+        "cpuMicros": {
+          "user": 0,
+          "system": 0
+        },
+        "pool": {
+          "maxRequests": 2,
+          "maxReservedBytes": 2,
+          "requests": 0,
+          "reservedBytes": 0
+        },
+        "stats": {
+          "auth": 0,
+          "guardrail": 0,
+          "models": 0,
+          "storage": 0,
+          "batchesStarted": 0,
+          "batchesCompleted": 0,
+          "statements": 0
+        },
+        "sends": 0,
+        "errors": 0,
+        "expectedDisconnects": 0,
+        "pendingBackground": 0
+      },
+      "stages": {
+        "responseAndAccounting": {
+          "id": 2,
+          "memory": {
+            "rss": 443269120,
+            "heapTotal": 373059584,
+            "heapUsed": 218041736,
+            "external": 111580904,
+            "arrayBuffers": 101278596
+          },
+          "sampledPeak": {
+            "rss": 443269120,
+            "heapTotal": 373059584,
+            "heapUsed": 218041736,
+            "external": 138975743,
+            "arrayBuffers": 128672020
+          },
+          "maxRssKiB": 475036,
+          "cpuMicros": {
+            "user": 3297000,
+            "system": 485000
+          },
+          "pool": {
+            "maxRequests": 2,
+            "maxReservedBytes": 2,
+            "requests": 2,
+            "reservedBytes": 2
+          },
+          "stats": {
+            "auth": 2,
+            "guardrail": 2,
+            "models": 2,
+            "storage": 2,
+            "batchesStarted": 2,
+            "batchesCompleted": 0,
+            "statements": 6
+          },
+          "sends": 2,
+          "errors": 0,
+          "expectedDisconnects": 0,
+          "pendingBackground": 2
+        },
+        "denials": {
+          "id": 3,
+          "memory": {
+            "rss": 450654208,
+            "heapTotal": 373583872,
+            "heapUsed": 220035840,
+            "external": 116758276,
+            "arrayBuffers": 106455963
+          },
+          "sampledPeak": {
+            "rss": 450654208,
+            "heapTotal": 373583872,
+            "heapUsed": 220035840,
+            "external": 138975743,
+            "arrayBuffers": 128672020
+          },
+          "maxRssKiB": 475036,
+          "cpuMicros": {
+            "user": 3343000,
+            "system": 485000
+          },
+          "pool": {
+            "maxRequests": 2,
+            "maxReservedBytes": 2,
+            "requests": 2,
+            "reservedBytes": 2
+          },
+          "stats": {
+            "auth": 2,
+            "guardrail": 2,
+            "models": 2,
+            "storage": 2,
+            "batchesStarted": 2,
+            "batchesCompleted": 0,
+            "statements": 6
+          },
+          "sends": 2,
+          "errors": 0,
+          "expectedDisconnects": 0,
+          "pendingBackground": 2
+        },
+        "deliveryEndedAccountingHeld": {
+          "id": 4,
+          "memory": {
+            "rss": 452423680,
+            "heapTotal": 373583872,
+            "heapUsed": 220252520,
+            "external": 118265632,
+            "arrayBuffers": 107963314
+          },
+          "sampledPeak": {
+            "rss": 452423680,
+            "heapTotal": 373583872,
+            "heapUsed": 220252520,
+            "external": 138975743,
+            "arrayBuffers": 128672020
+          },
+          "maxRssKiB": 475036,
+          "cpuMicros": {
+            "user": 3343000,
+            "system": 485000
+          },
+          "pool": {
+            "maxRequests": 2,
+            "maxReservedBytes": 2,
+            "requests": 2,
+            "reservedBytes": 2
+          },
+          "stats": {
+            "auth": 2,
+            "guardrail": 2,
+            "models": 2,
+            "storage": 2,
+            "batchesStarted": 2,
+            "batchesCompleted": 0,
+            "statements": 6
+          },
+          "sends": 2,
+          "errors": 0,
+          "expectedDisconnects": 0,
+          "pendingBackground": 2
+        },
+        "terminal": {
+          "id": 6,
+          "memory": {
+            "rss": 452423680,
+            "heapTotal": 373583872,
+            "heapUsed": 220279320,
+            "external": 118265689,
+            "arrayBuffers": 107963371
+          },
+          "sampledPeak": {
+            "rss": 452423680,
+            "heapTotal": 373583872,
+            "heapUsed": 220279320,
+            "external": 138975743,
+            "arrayBuffers": 128672020
+          },
+          "maxRssKiB": 475036,
+          "cpuMicros": {
+            "user": 3343000,
+            "system": 485000
+          },
+          "pool": {
+            "maxRequests": 2,
+            "maxReservedBytes": 2,
+            "requests": 0,
+            "reservedBytes": 0
+          },
+          "stats": {
+            "auth": 2,
+            "guardrail": 2,
+            "models": 2,
+            "storage": 2,
+            "batchesStarted": 2,
+            "batchesCompleted": 2,
+            "statements": 6
+          },
+          "sends": 2,
+          "errors": 0,
+          "expectedDisconnects": 0,
+          "pendingBackground": 0
+        },
+        "afterForcedGc": {
+          "id": 7,
+          "memory": {
+            "rss": 443547648,
+            "heapTotal": 173568000,
+            "heapUsed": 17047704,
+            "external": 118265713,
+            "arrayBuffers": 93152259
+          },
+          "sampledPeak": {
+            "rss": 452423680,
+            "heapTotal": 373583872,
+            "heapUsed": 220279320,
+            "external": 138975743,
+            "arrayBuffers": 128672020
+          },
+          "maxRssKiB": 475036,
+          "cpuMicros": {
+            "user": 3390000,
+            "system": 500000
+          },
+          "pool": {
+            "maxRequests": 2,
+            "maxReservedBytes": 2,
+            "requests": 0,
+            "reservedBytes": 0
+          },
+          "stats": {
+            "auth": 2,
+            "guardrail": 2,
+            "models": 2,
+            "storage": 2,
+            "batchesStarted": 2,
+            "batchesCompleted": 2,
+            "statements": 6
+          },
+          "sends": 2,
+          "errors": 0,
+          "expectedDisconnects": 0,
+          "pendingBackground": 0
+        }
+      },
+      "delivered": [
+        {
+          "bytes": 33554490,
+          "sha256": "eddef4c5fa90d03226620b414e74763ab144531a2e64596612bed9d02c5d5070"
+        },
+        {
+          "bytes": 33554490,
+          "sha256": "eddef4c5fa90d03226620b414e74763ab144531a2e64596612bed9d02c5d5070"
+        }
+      ],
+      "upstreamStats": {
+        "requests": 2,
+        "requestBytes": [
+          52428808,
+          52428808
+        ],
+        "responseBytes": 67108864,
+        "errors": 0
+      },
+      "exit": {
+        "code": 0,
+        "signal": null
+      }
+    },
+    {
+      "kind": "case",
+      "name": "json-replacement-unread-2",
+      "operation": "generations",
+      "concurrency": 2,
+      "replacement": true,
+      "unread": true,
+      "baseline": {
+        "id": 1,
+        "memory": {
+          "rss": 297259008,
+          "heapTotal": 166494208,
+          "heapUsed": 45076160,
+          "external": 10215361,
+          "arrayBuffers": 137119
+        },
+        "sampledPeak": {
+          "rss": 297259008,
+          "heapTotal": 166494208,
+          "heapUsed": 45076160,
+          "external": 10215361,
+          "arrayBuffers": 137119
+        },
+        "maxRssKiB": 330608,
+        "cpuMicros": {
+          "user": 0,
+          "system": 0
+        },
+        "pool": {
+          "maxRequests": 2,
+          "maxReservedBytes": 2,
+          "requests": 0,
+          "reservedBytes": 0
+        },
+        "stats": {
+          "auth": 0,
+          "guardrail": 0,
+          "models": 0,
+          "storage": 0,
+          "batchesStarted": 0,
+          "batchesCompleted": 0,
+          "statements": 0
+        },
+        "sends": 0,
+        "errors": 0,
+        "expectedDisconnects": 0,
+        "pendingBackground": 0
+      },
+      "stages": {
+        "responseAndAccounting": {
+          "id": 2,
+          "memory": {
+            "rss": 481599488,
+            "heapTotal": 321814528,
+            "heapUsed": 185120392,
+            "external": 156218910,
+            "arrayBuffers": 145916600
+          },
+          "sampledPeak": {
+            "rss": 491048960,
+            "heapTotal": 329805824,
+            "heapUsed": 185120392,
+            "external": 173303397,
+            "arrayBuffers": 162411259
+          },
+          "maxRssKiB": 485840,
+          "cpuMicros": {
+            "user": 4235000,
+            "system": 500000
+          },
+          "pool": {
+            "maxRequests": 2,
+            "maxReservedBytes": 2,
+            "requests": 2,
+            "reservedBytes": 2
+          },
+          "stats": {
+            "auth": 2,
+            "guardrail": 2,
+            "models": 2,
+            "storage": 2,
+            "batchesStarted": 2,
+            "batchesCompleted": 0,
+            "statements": 6
+          },
+          "sends": 2,
+          "errors": 0,
+          "expectedDisconnects": 0,
+          "pendingBackground": 2
+        },
+        "denials": {
+          "id": 3,
+          "memory": {
+            "rss": 373739520,
+            "heapTotal": 297046016,
+            "heapUsed": 139187296,
+            "external": 77771760,
+            "arrayBuffers": 67469450
+          },
+          "sampledPeak": {
+            "rss": 491048960,
+            "heapTotal": 329805824,
+            "heapUsed": 185120392,
+            "external": 173303397,
+            "arrayBuffers": 162411259
+          },
+          "maxRssKiB": 485840,
+          "cpuMicros": {
+            "user": 4360000,
+            "system": 547000
+          },
+          "pool": {
+            "maxRequests": 2,
+            "maxReservedBytes": 2,
+            "requests": 2,
+            "reservedBytes": 2
+          },
+          "stats": {
+            "auth": 2,
+            "guardrail": 2,
+            "models": 2,
+            "storage": 2,
+            "batchesStarted": 2,
+            "batchesCompleted": 0,
+            "statements": 6
+          },
+          "sends": 2,
+          "errors": 0,
+          "expectedDisconnects": 0,
+          "pendingBackground": 2
+        },
+        "deliveryEndedAccountingHeld": {
+          "id": 4,
+          "memory": {
+            "rss": 373846016,
+            "heapTotal": 297046016,
+            "heapUsed": 139289856,
+            "external": 77771788,
+            "arrayBuffers": 67469470
+          },
+          "sampledPeak": {
+            "rss": 491048960,
+            "heapTotal": 329805824,
+            "heapUsed": 185120392,
+            "external": 173303397,
+            "arrayBuffers": 162411259
+          },
+          "maxRssKiB": 485840,
+          "cpuMicros": {
+            "user": 4360000,
+            "system": 547000
+          },
+          "pool": {
+            "maxRequests": 2,
+            "maxReservedBytes": 2,
+            "requests": 2,
+            "reservedBytes": 2
+          },
+          "stats": {
+            "auth": 2,
+            "guardrail": 2,
+            "models": 2,
+            "storage": 2,
+            "batchesStarted": 2,
+            "batchesCompleted": 0,
+            "statements": 6
+          },
+          "sends": 2,
+          "errors": 0,
+          "expectedDisconnects": 1,
+          "pendingBackground": 2
+        },
+        "terminal": {
+          "id": 6,
+          "memory": {
+            "rss": 373850112,
+            "heapTotal": 297046016,
+            "heapUsed": 139344960,
+            "external": 77771845,
+            "arrayBuffers": 67469527
+          },
+          "sampledPeak": {
+            "rss": 491048960,
+            "heapTotal": 329805824,
+            "heapUsed": 185120392,
+            "external": 173303397,
+            "arrayBuffers": 162411259
+          },
+          "maxRssKiB": 485840,
+          "cpuMicros": {
+            "user": 4360000,
+            "system": 547000
+          },
+          "pool": {
+            "maxRequests": 2,
+            "maxReservedBytes": 2,
+            "requests": 0,
+            "reservedBytes": 0
+          },
+          "stats": {
+            "auth": 2,
+            "guardrail": 2,
+            "models": 2,
+            "storage": 2,
+            "batchesStarted": 2,
+            "batchesCompleted": 2,
+            "statements": 6
+          },
+          "sends": 2,
+          "errors": 0,
+          "expectedDisconnects": 2,
+          "pendingBackground": 0
+        },
+        "afterForcedGc": {
+          "id": 7,
+          "memory": {
+            "rss": 373235712,
+            "heapTotal": 168325120,
+            "heapUsed": 16810952,
+            "external": 77771869,
+            "arrayBuffers": 66003070
+          },
+          "sampledPeak": {
+            "rss": 491048960,
+            "heapTotal": 329805824,
+            "heapUsed": 185120392,
+            "external": 173303397,
+            "arrayBuffers": 162411259
+          },
+          "maxRssKiB": 485840,
+          "cpuMicros": {
+            "user": 4422000,
+            "system": 563000
+          },
+          "pool": {
+            "maxRequests": 2,
+            "maxReservedBytes": 2,
+            "requests": 0,
+            "reservedBytes": 0
+          },
+          "stats": {
+            "auth": 2,
+            "guardrail": 2,
+            "models": 2,
+            "storage": 2,
+            "batchesStarted": 2,
+            "batchesCompleted": 2,
+            "statements": 6
+          },
+          "sends": 2,
+          "errors": 0,
+          "expectedDisconnects": 2,
+          "pendingBackground": 0
+        }
+      },
+      "delivered": null,
+      "upstreamStats": {
+        "requests": 2,
+        "requestBytes": [
+          52428808,
+          52428808
+        ],
+        "responseBytes": 67108864,
+        "errors": 0
+      },
+      "exit": {
+        "code": 0,
+        "signal": null
+      }
+    }
+  ]
+}

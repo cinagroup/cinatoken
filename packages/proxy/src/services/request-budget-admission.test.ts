@@ -5,6 +5,7 @@ import type { RouteResult } from './model-router';
 import {
 	createRouteAwareBudgetAdmission,
 	RequestBudgetAdmissionError,
+	type GuardrailBudgetRequestPort,
 } from './request-budget-admission';
 
 const NOW = new Date('2026-09-03T08:00:00.000Z');
@@ -94,6 +95,7 @@ function repositories(overrides: {
 async function coordinator(
 	repos: GatewayRepositories,
 	includePrivateByokInBudget = false,
+	options: Parameters<typeof createRouteAwareBudgetAdmission>[2] = {},
 ) {
 	return createRouteAwareBudgetAdmission(repos, {
 		ordinary: {
@@ -114,10 +116,177 @@ async function coordinator(
 			includeInLimit: includePrivateByokInBudget,
 			reservedMicros: 250_000,
 		},
-	});
+	}, options);
 }
 
 describe('route-aware request budget admission', () => {
+	it('uses the strict request-fixed Guardrail port for BYOK then paid fallback', async () => {
+		const noRuntimeGuardrail = async (): Promise<never> => {
+			throw new Error('runtime Guardrail repository reached');
+		};
+		const { repos, calls } = repositories({
+			guardrailReserve: noRuntimeGuardrail,
+			guardrailExtend: noRuntimeGuardrail,
+			guardrailMarkDispatched: noRuntimeGuardrail,
+		});
+		const portCalls: string[] = [];
+		const port: GuardrailBudgetRequestPort = {
+			identity: { requestId: 'request-1', userId: 'user-1', apiKeyId: 'key-1' },
+			reserve: async values => {
+				portCalls.push(`reserve:${values.settlementBasis ?? 'charged'}`);
+				assert.equal(values.intents.length, 1);
+				return { ok: true, reserved: true };
+			},
+			extend: async values => {
+				portCalls.push('extend');
+				assert.equal(values.intents.length, 2);
+				return { ok: true, reserved: true };
+			},
+			markDispatched: async () => { portCalls.push('mark'); },
+			releasePreDispatch: async () => { portCalls.push('release'); },
+			forfeitPostDispatch: async () => { portCalls.push('forfeit'); },
+		};
+		const admission = await coordinator(repos, true, { guardrailBudgetRequestPort: port });
+		await admission.beforeUpstreamDispatch(route('byok:private-1'));
+		await admission.beforeUpstreamDispatch(route('provider-1'));
+		assert.deepEqual(portCalls, ['reserve:gateway_key_route', 'mark', 'extend']);
+		assert.deepEqual(calls, ['ordinary:reserve', 'ordinary:dispatch']);
+		assert.equal(admission.ordinaryLease.state, 'dispatched');
+	});
+
+	it('strict Guardrail recovery failure stops paid dispatch without runtime fallback or replay', async () => {
+		const { repos, calls } = repositories();
+		let attempts = 0;
+		const port: GuardrailBudgetRequestPort = {
+			identity: { requestId: 'request-1', userId: 'user-1', apiKeyId: 'key-1' },
+			reserve: async () => { attempts++; throw new Error('recovery COMMIT unconfirmed'); },
+			extend: async () => { throw new Error('extension must not run'); },
+			markDispatched: async () => { throw new Error('dispatch must not run'); },
+			releasePreDispatch: async () => { throw new Error('release must not run'); },
+			forfeitPostDispatch: async () => { throw new Error('forfeit must not run'); },
+		};
+		const admission = await coordinator(repos, false, { guardrailBudgetRequestPort: port });
+		for (let retry = 0; retry < 2; retry += 1) {
+			await assert.rejects(admission.beforeUpstreamDispatch(route('provider-1')),
+				/recovery COMMIT unconfirmed/);
+		}
+		assert.equal(attempts, 1, 'an uncertain recovery must not be replayed');
+		assert.deepEqual(calls, ['ordinary:reserve', 'ordinary:release']);
+		assert.equal(admission.guardrailDispatched, false);
+	});
+
+	it('rejects a Guardrail owner for another request before ordinary admission', async () => {
+		const { repos, calls } = repositories();
+		const wrong = {
+			identity: { requestId: 'other-request', userId: 'user-1', apiKeyId: 'key-1' },
+			reserve: async () => { throw new Error('wrong owner used'); },
+			extend: async () => { throw new Error('wrong owner used'); },
+			markDispatched: async () => { throw new Error('wrong owner used'); },
+			releasePreDispatch: async () => { throw new Error('wrong owner used'); },
+			forfeitPostDispatch: async () => { throw new Error('wrong owner used'); },
+		} satisfies GuardrailBudgetRequestPort;
+		await assert.rejects(coordinator(repos, false, { guardrailBudgetRequestPort: wrong }),
+			/identity differs/);
+		assert.deepEqual(calls, []);
+	});
+
+	it('keeps owner and budget inputs fixed across an asynchronous free admission', async () => {
+		const { repos, calls } = repositories();
+		const seen: string[] = [];
+		const port: GuardrailBudgetRequestPort = {
+			identity: { requestId: 'request-1', userId: 'user-1', apiKeyId: 'key-1' },
+			reserve: async values => {
+				seen.push(`reserve:${values.intents[0]?.assignmentId}:${values.reservedMicros}:${values.now.toISOString()}`);
+				return { ok: true, reserved: true };
+			},
+			extend: async () => { throw new Error('unexpected extension'); },
+			markDispatched: async now => { seen.push(`mark:${now.toISOString()}`); },
+			releasePreDispatch: async () => {},
+			forfeitPostDispatch: async () => {},
+		};
+		const wrong: GuardrailBudgetRequestPort = {
+			...port,
+			identity: { requestId: 'swapped', userId: 'swapped', apiKeyId: 'swapped' },
+			reserve: async () => { throw new Error('swapped owner called'); },
+		};
+		const params: Parameters<typeof createRouteAwareBudgetAdmission>[1] = {
+			ordinary: {
+				requestId: 'request-1', userId: 'user-1', apiKeyId: 'key-1',
+				budgetMax: 10, expectedBudgetEpoch: 7, estimatedChargedCost: 0.25,
+				now: new Date(NOW),
+			},
+			guardrail: { intents: [{ ...intent }], reservedMicros: 250_000, now: new Date(NOW) },
+			privateByokGatewayKey: { includeInLimit: false, reservedMicros: 250_000 },
+		};
+		const options: NonNullable<Parameters<typeof createRouteAwareBudgetAdmission>[2]> = {
+			guardrailBudgetRequestPort: port,
+		};
+		const admission = await createRouteAwareBudgetAdmission(repos, params, options);
+		params.ordinary.requestId = 'swapped';
+		params.ordinary.userId = 'swapped';
+		params.guardrail.intents[0]!.assignmentId = 'swapped';
+		params.guardrail.reservedMicros = 1;
+		params.guardrail.now!.setUTCFullYear(2030);
+		options.guardrailBudgetRequestPort = wrong;
+		await admission.beforeUpstreamDispatch(route('provider-1'));
+		assert.equal(admission.ordinaryLease.requestId, 'request-1');
+		assert.deepEqual(seen, [
+			`reserve:assignment-1:250000:${NOW.toISOString()}`,
+			`mark:${NOW.toISOString()}`,
+		]);
+		assert.deepEqual(calls, ['ordinary:reserve', 'ordinary:dispatch']);
+	});
+
+	it('holds both ledgers at reservation until an acknowledged single grant is ready to send', async () => {
+		const { repos, calls } = repositories();
+		const admission = await coordinator(repos);
+		const ticket = await admission.prepareSingleGrant(route('provider-1'));
+		assert.deepEqual(calls, ['ordinary:reserve', 'guardrail:reserve']);
+		assert.equal(admission.ordinaryLease.state, 'reserved');
+		assert.equal(admission.guardrailDispatched, false);
+		await ticket.markAfterCommittedClaim();
+		assert.deepEqual(calls, [
+			'ordinary:reserve', 'guardrail:reserve', 'guardrail:dispatch', 'ordinary:dispatch',
+		]);
+		assert.equal(admission.ordinaryLease.state, 'dispatched');
+		await assert.rejects(ticket.markAfterCommittedClaim(), /already resolved/u);
+		await assert.rejects(ticket.releaseAfterDefiniteNoClaim(), /cannot be released/u);
+	});
+
+	it('releases reserved ledgers after a definitive no-claim result without marking dispatch', async () => {
+		const { repos, calls } = repositories();
+		const admission = await coordinator(repos);
+		const ticket = await admission.prepareSingleGrant(route('provider-1'));
+		await ticket.releaseAfterDefiniteNoClaim();
+		assert.deepEqual(calls, [
+			'ordinary:reserve', 'guardrail:reserve', 'guardrail:release', 'ordinary:release',
+		]);
+		assert.equal(admission.ordinaryLease.kind, 'free');
+		assert.equal(admission.guardrailDispatched, false);
+		await assert.rejects(ticket.markAfterCommittedClaim(), /already resolved/u);
+		await assert.rejects(admission.prepareSingleGrant(route('provider-2')), /mode already selected/u);
+	});
+
+	it('keeps the reservation and blocks another dispatch when claim acknowledgement is uncertain', async () => {
+		const { repos, calls } = repositories();
+		const admission = await coordinator(repos);
+		const ticket = await admission.prepareSingleGrant(route('provider-1'));
+		ticket.holdAfterUncertainClaim();
+		assert.deepEqual(calls, ['ordinary:reserve', 'guardrail:reserve']);
+		assert.equal(admission.ordinaryLease.state, 'reserved');
+		await assert.rejects(ticket.markAfterCommittedClaim(), /already resolved/u);
+		await assert.rejects(admission.beforeUpstreamDispatch(route('provider-2')), /already owns/u);
+	});
+
+	it('keeps an excluded private BYOK single-grant ticket free of ledger writes', async () => {
+		const { repos, calls } = repositories();
+		const admission = await coordinator(repos);
+		const ticket = await admission.prepareSingleGrant(route('byok:private-1'));
+		await ticket.markAfterCommittedClaim();
+		assert.deepEqual(calls, []);
+		assert.equal(admission.ordinaryLease.state, 'unmetered');
+	});
+
 	it('does not reserve either gateway ledger for an excluded private BYOK route', async () => {
 		const { repos, calls } = repositories();
 		const admission = await coordinator(repos);

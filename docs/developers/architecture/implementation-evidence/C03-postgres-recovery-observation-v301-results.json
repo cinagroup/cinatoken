@@ -1,0 +1,68 @@
+{
+  "version": "v301",
+  "date": "2026-09-21",
+  "checklist": "v1.198",
+  "status": "LOCAL_OBSERVATION_PASS_PRODUCTION_DISABLED",
+  "C03": "DOING",
+  "goalComplete": false,
+  "reports": {
+    "observation": ".wrangler/staging/postgres-observation-v301-XruR4e/results.json",
+    "lifecycleRegression": ".wrangler/staging/postgres-lifecycle-v300-run-T8Vm3X/results.json"
+  },
+  "validation": {
+    "harness": { "pass": 7, "fail": 0, "durationMs": 20599.4564 },
+    "sourceSql": { "pass": 62, "fail": 0, "durationMs": 16412.7403, "owner": 10, "supervisor": 21, "sqlIncludingParent": 31 },
+    "compiledSupervisor": { "pass": 21, "fail": 0, "durationMs": 829.977 },
+    "installedCancel": { "pass": 2, "fail": 0, "durationMs": 741.6198 },
+    "esmCancel": { "pass": 2, "fail": 0, "durationMs": 718.7443 },
+    "cjsCancel": { "pass": 2, "fail": 0, "durationMs": 705.9442 },
+    "lifecycleHarness": { "pass": 6, "fail": 0, "durationMs": 11810.5418 },
+    "esmRegression": { "pass": 60, "fail": 0, "durationMs": 3956.6769 },
+    "cjsRegression": { "pass": 60, "fail": 0, "durationMs": 3813.4379 },
+    "legacyNegativeEsm": { "pass": 0, "fail": 2, "expected": true, "durationMs": 1432.9379 },
+    "legacyNegativeCjs": { "pass": 0, "fail": 2, "expected": true, "durationMs": 1452.6695 },
+    "installedOncloseNegative": { "pass": 2, "fail": 1, "durationMs": 728.8547, "error": "nextWrite null socket" },
+    "newDistinctScenarios": 29,
+    "typecheckExitCode": 0,
+    "syntaxChecks": 5,
+    "workersRuntimeTests": 0,
+    "nativePostgresTests": 0,
+    "wranglerDryRuns": 0,
+    "protectedInputsUnchanged": 13,
+    "v300SourceHashesUnchanged": 7
+  },
+  "sourceSha256": {
+    "packages/core/src/storage/recovery/postgres-recovery-operation-owner.ts": "2719ada1079987b7f5be871b9c5eb414bfb60424d63fbf2b6e70257c66af34a1",
+    "packages/core/src/storage/recovery/postgres-recovery-operation-owner.test.mjs": "664c176f2119b5dd5edb2cd1d02f34395762ba86c5acddfcc1cb1795105ab482",
+    "packages/core/src/storage/recovery/run-usage-recovery-postgres.ts": "3c0d9ecdbe8de00d8da7f1f030f017d8426a6c2eae8257c4a0379d1f04b89b84",
+    "packages/core/src/storage/recovery/supervise-usage-recovery-postgres.ts": "d39a392767539ed0413394d4811e5daad8ebf8b59197dcec7c790eca585b9df1",
+    "packages/core/src/storage/recovery/supervise-usage-recovery-postgres.test.mjs": "23156b86ca955aa93d21c12878f56e6bb7be9149af21193af2c1683572ffe708",
+    "packages/core/src/storage/recovery/usage-recovery.postgres.test.mjs": "db22fe233dd95d9cd6fc9298c4a16881c240d3dc3e42a7928c14a006f474d18a",
+    "packages/core/src/storage/recovery/postgres-cancel-observation.wire.test.mjs": "eb31e5d560e4bb459ac654fd985e58a1445b5fe9df6152b1c37787c7c97fe463",
+    "scripts/db/diag/postgres-recovery-observation.test.mjs": "3165aeb486a1501d053a8fe718d1f676fd971f376cc924d9081c354664f96eb8",
+    "packages/core/tsconfig.recovery-runner-postgres.json": "d0a4b202a45f922dca9195d4496e3e92c95eac9ef6eb462ec163a05780ee5cce"
+  },
+  "artifactSha256": {
+    "node": "685c7764bd78e4a76655f6322d52a0c970b3c063447af9e6ec28ecfeca0b2a14",
+    "workersCompileOnly": "c1eef06b66f2cc9b09d3bd06d52623f0f96def3d72f209bbd56295ec7172545b"
+  },
+  "boundaries": {
+    "productionActivated": false,
+    "installedDriverChanged": false,
+    "lockfilesChanged": false,
+    "sharedDistChanged": false,
+    "productionConfigurationChanged": false,
+    "serverExecutionDeadlineImplemented": false,
+    "automaticSqlCancellationImplemented": false,
+    "unconfirmedResourceReleaseImplemented": false,
+    "cloudManagementCalls": 0,
+    "remoteSqlCalls": 0,
+    "deployments": 0,
+    "modelCalls": 0,
+    "kmsCalls": 0,
+    "cloudResourcesCreatedOrDeleted": 0,
+    "cumulativeStagingCapUsd": 2,
+    "capReset": false
+  },
+  "next": "DBL-04 owned cancellation transport and target-generation isolation in default-disabled candidate; then DBL-05 server execution limits and DBL-06 authoritative resource release, retaining native/Workers gates."
+}

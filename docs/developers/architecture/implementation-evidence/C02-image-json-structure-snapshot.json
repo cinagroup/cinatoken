@@ -1,0 +1,670 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-09-06",
+  "scope": "C02.B2.2 Images pre-parse JSON node/depth admission, upstream accepted/rejected replay boundaries, SSE event admission and synthetic Node working-set observations; whole-string representation, aggregate capacity and runtime gates remain open",
+  "head": "7eb59008f7d8e156e81fd18a57658fdef2553264",
+  "baselineDirtyFileCount": 184,
+  "runtime": "Node.js v24.14.1 on Windows; synthetic discrete JSON memory stages only; no new Workers/Node 22/managed DB evidence",
+  "files": [
+    {
+      "path": ".github/workflows/proxy-dispatch-safety.yml",
+      "sha256": "e6a91059a698e0b9627a00f8cd773081e8346210ead57b22be4cdb407770afed"
+    },
+    {
+      "path": ".nvmrc",
+      "sha256": "f14b4987904bcb5814e4459a057ed4d20f58a633152288a761214dcd28780b56"
+    },
+    {
+      "path": "docs/developers/api/user.md",
+      "sha256": "4239e3a1257095d4c3ffbf628e959e3e1e557f608e067736146070f5c174a881"
+    },
+    {
+      "path": "docs/developers/architecture/implementation-evidence/C01-google-cloud-kms-selection.md",
+      "sha256": "296aea4055d7825e0caa4de348844dd6bacec01eef12242835c02b6584debf89"
+    },
+    {
+      "path": "docs/developers/architecture/implementation-evidence/C02-image-json-structure-memory.json",
+      "sha256": "bea6af51083ded23be0e4d68e56d1f0364f90830a273fd4cd67c20beb707eafe"
+    },
+    {
+      "path": "docs/developers/architecture/implementation-evidence/C02-image-multipart-streaming-memory.json",
+      "sha256": "10743884992933fa0b856d5d5246a221daadac576d1284355fc78becbce20f6e"
+    },
+    {
+      "path": "docs/developers/reference/image-models.md",
+      "sha256": "9e4bc7c41cf742b69088839c52412ca4c09dc4570bf3ea24bb0fe2710a514c3d"
+    },
+    {
+      "path": "package-lock.json",
+      "sha256": "9adebfebdb981bd51aac7644fb046d0a4f0e2a4586cf8b3786cefa097a1a415e"
+    },
+    {
+      "path": "packages/admin/app/api/admin/[...path]/route.ts",
+      "sha256": "c659ba9682b3441206ac5fadbc9488eea581d9575092204c6118dbbd8422e216"
+    },
+    {
+      "path": "packages/admin/lib/api-error.ts",
+      "sha256": "2ca204a2e7e4927c8cc3fc097f16ca4343b55cad966c7596c85f845554e4ca27"
+    },
+    {
+      "path": "packages/admin/lib/routes/admin/error-response.ts",
+      "sha256": "f617be1fa6c18d999c7a0ce273cad8b56562df123b1ce90e8824e03955180aa4"
+    },
+    {
+      "path": "packages/admin/lib/routes/admin/playground.ts",
+      "sha256": "7685e0f68892c6ac5ae176c55964bb720d4d28a2e40bf4ef102bc37070e012e5"
+    },
+    {
+      "path": "packages/admin/lib/services/admin/playground-request-lifecycle.test.ts",
+      "sha256": "6e16f2c97b0592efe5c4fe84dea31ab851d1b574f9338a3cbbfbf1070618925c"
+    },
+    {
+      "path": "packages/admin/lib/services/admin/playground-request-lifecycle.ts",
+      "sha256": "be31e36f28ae87b839f5991d4927ccd1523b073876783fe29cd2f423cb68dd8a"
+    },
+    {
+      "path": "packages/admin/lib/services/admin/playground-rerank.test.ts",
+      "sha256": "3a8d87d32c17c99850c2a94c55f64b52ce273e2822bff2d57eca371c90891a7e"
+    },
+    {
+      "path": "packages/admin/lib/services/admin/playground-service.ts",
+      "sha256": "a1eb4159ec9b022ec983b50753ab3763ddbbfac59788f0e938faf1cf90e1ab07"
+    },
+    {
+      "path": "packages/admin/package.json",
+      "sha256": "1db694ba43ff4443b250d76364bd2ab240cd9412a1f3596d0c620c7ae64251d6"
+    },
+    {
+      "path": "packages/admin/wrangler.base.jsonc",
+      "sha256": "b0d9822973b85bcf68c025bd52710aac15150c22a1e9a793faf8e8b6579cbef7"
+    },
+    {
+      "path": "packages/admin/wrangler.jsonc",
+      "sha256": "1022331ce4b0f4643fae96102644b6a435c762daa37bfb6d675ddc9fc0f851d1"
+    },
+    {
+      "path": "packages/core/migrations-d1/0001_baseline.sql",
+      "sha256": "4fd93b7b84e2eddb58be5c61927e20862b7a17a4132a913c9f06c6372967f2b4"
+    },
+    {
+      "path": "packages/core/migrations-d1/0002_seed.sql",
+      "sha256": "c27df441c6b2de085030166bfbbd9a1ab55ce6cd7ac46d484e0fca5dae0fa101"
+    },
+    {
+      "path": "packages/core/migrations-d1/0003_model_modalities_released.sql",
+      "sha256": "9567e9736f84f566794186b12d363dd2207d7c75cbee269ac1bd016e43a1ec3a"
+    },
+    {
+      "path": "packages/core/migrations-d1/0004_provider_api_keys.sql",
+      "sha256": "f69923ae383f4c566b2efa1ce3f512aded12750be3ec002c4f79765fd7081510"
+    },
+    {
+      "path": "packages/core/migrations-d1/0005_drop_providers_api_key.sql",
+      "sha256": "3e18c1d415e588c9aa2ac0ac1f5a595e5f00fdaf0ea8e3117a88a3909d1fa24d"
+    },
+    {
+      "path": "packages/core/migrations-d1/0006_upstream_trace_ids.sql",
+      "sha256": "44013e67cbdfe4e12179a45d2471f481bb5a5723bea11a6c802a3595c0085464"
+    },
+    {
+      "path": "packages/core/migrations-d1/0007_key_limits_and_sticky_config.sql",
+      "sha256": "97d8223dc9ce302f8e9f391b7e6c6a156ddf81b83d840634740fa4914097958e"
+    },
+    {
+      "path": "packages/core/migrations-d1/0008_request_timing_metrics.sql",
+      "sha256": "9040d262e0d28aa54cfbd7f7d922347a06fc7c58f4ca95a935ed8ea2776db277"
+    },
+    {
+      "path": "packages/core/migrations-d1/0009_first_reasoning_token_ms.sql",
+      "sha256": "3f840cb400b1beac3e9d4928e760bba72bfadf71e93df58080f090608bdf1b3b"
+    },
+    {
+      "path": "packages/core/migrations-d1/0010_models_max_tokens_nullable.sql",
+      "sha256": "fc3d3c9fc7758755b921c20c6af46ba2af327380a29e117902faa981811bca76"
+    },
+    {
+      "path": "packages/core/migrations-d1/0011_provider_endpoints.sql",
+      "sha256": "8c2076d782b02d1fc0a1bc77bfd59aed84f28be26fc3b02ecf9c4cda3e9bb0d0"
+    },
+    {
+      "path": "packages/core/migrations-d1/0012_drop_provider_base_url_columns.sql",
+      "sha256": "01e19e1c8a2d63bc9e6651ed99f5514a5831f6fcc5c7f85e29ec26b2928a5799"
+    },
+    {
+      "path": "packages/core/migrations-d1/0013_request_log_image_billing.sql",
+      "sha256": "714ffbbbcdf11ef47d599b7064b1b2a3058fd09b34258ec192aeac50bbd1312a"
+    },
+    {
+      "path": "packages/core/migrations-d1/0014_request_log_audio_billing.sql",
+      "sha256": "2aa26bc6bfb38999d0993860f1303859ee999c509cda340db01ad43430b537fb"
+    },
+    {
+      "path": "packages/core/migrations-d1/0015_single_provider_key.sql",
+      "sha256": "5da08276fa6e4342a0c6f98756dee1dafccfa5b1c15e295e71bf7aceb8fbecbe"
+    },
+    {
+      "path": "packages/core/migrations-d1/0016_route_surfaces_pools.sql",
+      "sha256": "b783ad44cce579a477074e730960718fc84268aef715b37642187b4721c4d38a"
+    },
+    {
+      "path": "packages/core/migrations-d1/0017_gemini_models_generate.sql",
+      "sha256": "d5f24e32b91d86cea8496cf09877a61833673a8e179d643001e4ac27efc5c609"
+    },
+    {
+      "path": "packages/core/migrations-d1/0018_route_pool_tier_strategies.sql",
+      "sha256": "8e59448c6fd269446f9ebb0959171e231b70a6bf1a8ce1e9c44011ad69dfc4f8"
+    },
+    {
+      "path": "packages/core/migrations-d1/0019_route_strategy_canonical_ids.sql",
+      "sha256": "5c733e21b8b47ac9d071c9ef1d2ec2c775f553882ca6074abdb53ac42a44565f"
+    },
+    {
+      "path": "packages/core/migrations-d1/0020_route_pool_sticky_routing.sql",
+      "sha256": "03386142e5113e58383fd25b99715278c2be611938f64f6b1938479ba4da76ce"
+    },
+    {
+      "path": "packages/core/migrations-d1/0021_route_strategy_display_ids.sql",
+      "sha256": "2049345664102ff0fbcb8c31ca5c1936efe901c12c9538bf3ec622324f2fd52a"
+    },
+    {
+      "path": "packages/core/migrations-d1/0022_request_log_audio_characters.sql",
+      "sha256": "0f1d11a0c1f65625f1c0972e2cfd1414458092c0af9da1c7feb9d0aa4b8eb745"
+    },
+    {
+      "path": "packages/core/migrations-d1/0023_admin_access_identity.sql",
+      "sha256": "0c03bec200e342f8895bf663085e821fa47710140ee678042aa50e9998ee250b"
+    },
+    {
+      "path": "packages/core/migrations-d1/0024_drop_legacy_master_key_config.sql",
+      "sha256": "9b51f185c29e14e3c6f7b076d1e8ccca5236493fee40992a4cb9247a6ebe2e20"
+    },
+    {
+      "path": "packages/core/migrations-d1/0025_user_audit_actor_index.sql",
+      "sha256": "ca2aa66602f3975ee83c6c1eb161fa39a3f1237770996c129328b7004f2e310a"
+    },
+    {
+      "path": "packages/core/migrations-d1/0026_user_charged_cost_factors.sql",
+      "sha256": "53f56090b5d849ab259a8715aa13fe12f2129bf14781f19ed5d1fa54011ff507"
+    },
+    {
+      "path": "packages/core/migrations-d1/0027_user_portal_shared_keys.sql",
+      "sha256": "91851023a3d71b28dcb935fab05495f02eaad3cf41ad4b37b57674da0ec3550e"
+    },
+    {
+      "path": "packages/core/migrations-d1/0028_portal_marketplace_config.sql",
+      "sha256": "3b7300386612ebf9fd2fcb0943fe9b1c82fa5fdfafaf7b283aa60135d8b82261"
+    },
+    {
+      "path": "packages/core/migrations-d1/0029_portal_integer_ledger.sql",
+      "sha256": "884de45eddfb94bf0e43c828ee2030273c8c82b2b8d5f209d5bb8716c31cb950"
+    },
+    {
+      "path": "packages/core/migrations-d1/0030_chain_job_transactions.sql",
+      "sha256": "a17137d05657d4e1b5558b98ac03f875b9a0a0280149cfd0a000a37c76e4c4f6"
+    },
+    {
+      "path": "packages/core/migrations-d1/0031_ledger_integrity_guards.sql",
+      "sha256": "9da7e1bc492bbd63e2fc570f72072d166f8d2f6003be8875618259fee20fc4ff"
+    },
+    {
+      "path": "packages/core/migrations-d1/0032_key_hash_lookup.sql",
+      "sha256": "c75fd42528e078e7a0853f3c256cd8cb81a1526c492b7acea1122234af5d3195"
+    },
+    {
+      "path": "packages/core/migrations-d1/0033_gateway_key_secret_removal.sql",
+      "sha256": "255528fe294b9b5549d5239ba98cd82a5fe689f0013f4299b0fa48a71b04d77d"
+    },
+    {
+      "path": "packages/core/migrations-d1/0034_public_model_daily_stats.sql",
+      "sha256": "32115baa3a6f0388132aa86f6bf1812ce2f6dff71263dae447a13d48987eaf26"
+    },
+    {
+      "path": "packages/core/migrations-d1/0035_request_presets.sql",
+      "sha256": "f2be9d0144fb30863ad0b3d06eba5db692eabe09882542bb1cf25eb2c178690e"
+    },
+    {
+      "path": "packages/core/migrations-d1/0036_guardrails.sql",
+      "sha256": "da59bef1e2c158fe7d9f0da34b78274449e42e93810a4be982f82c8c3b8ec3e1"
+    },
+    {
+      "path": "packages/core/migrations-d1/0037_route_data_policies.sql",
+      "sha256": "0894731e2ecb59d805ae4a0b8709d954c4c93b8ab191249c2dd8fcd32fe24e7e"
+    },
+    {
+      "path": "packages/core/migrations-d1/0038_organization_identity_projection.sql",
+      "sha256": "f7115396a05a5e2172995747e18f75ec0cbe0dd32dfc1e0ed0b5670ae9a9d1e4"
+    },
+    {
+      "path": "packages/core/migrations-d1/0039_guardrail_budget_reservations.sql",
+      "sha256": "eccde64544791b2e9a01ae6f679b8a4ed2070a5ce1b847d0fcfbf222a3941a09"
+    },
+    {
+      "path": "packages/core/migrations-d1/0040_user_budget_reservations.sql",
+      "sha256": "6c685dedb5b52435b0b848a78a03ebd3dcd3cf44db5a0b5b427afb54a0c0df61"
+    },
+    {
+      "path": "packages/core/migrations-d1/0041_user_budget_spent_micros.sql",
+      "sha256": "d1bc412fa2fab93f74144009818e878e3d24b449697c4e65d2a1fe31a2ec3689"
+    },
+    {
+      "path": "packages/core/migrations-d1/0042_workspaces.sql",
+      "sha256": "b2526f3743ed9d5de2e530156b928ae1ad7b8a65416b551b6b6fba5d3f85bb0a"
+    },
+    {
+      "path": "packages/core/migrations-d1/0043_gateway_keys_workspace.sql",
+      "sha256": "445da1ee5c61f19b53956efb59e0000f943bc9e53f2f0c0ca5edd9c668cb3a0e"
+    },
+    {
+      "path": "packages/core/migrations-d1/0044_workspace_presets_guardrails.sql",
+      "sha256": "38a0c966b383ce17227d8d908d9d53c0dd8875b973896598bc050feedf45f62b"
+    },
+    {
+      "path": "packages/core/migrations-d1/0045_route_routing_metadata.sql",
+      "sha256": "6cc8bc3dff8f7a0eaa1e8068ef4a998ecf44fe8d460b99ce0124b737efd0d9ce"
+    },
+    {
+      "path": "packages/core/migrations-d1/0046_route_data_policy_subject_fingerprint.sql",
+      "sha256": "65a6b5580634404e739057f9253a061605e3f08718d5ceb0f3e968a6447d1720"
+    },
+    {
+      "path": "packages/core/migrations-d1/0047_model_endpoints.sql",
+      "sha256": "a1ca29464a324827086c50220fe58cdabbdfba813c7ef0e6b2a2d5dd1ef6bde9"
+    },
+    {
+      "path": "packages/core/migrations-d1/0048_model_endpoint_route_subject_fingerprint.sql",
+      "sha256": "3c14bbe88d1bd9f7f412bea47f5b4f7190d261bdfa8e8c5b152ae54405cd9185"
+    },
+    {
+      "path": "packages/core/migrations-d1/0049_model_endpoint_audio_capabilities.sql",
+      "sha256": "6ee8172ec11fbc62ccf1e29312ad69660f3af28c6a848e8f543dcf5088d0e0cb"
+    },
+    {
+      "path": "packages/core/migrations-d1/0050_model_endpoint_evidence_ledger.sql",
+      "sha256": "01232920b06593314eced3acbe3a36f646ba900c542c6407365ce825ca372893"
+    },
+    {
+      "path": "packages/core/migrations-d1/0051_management_api_keys.sql",
+      "sha256": "b81e4babdbd99fee1ddd06d6bdf3f2b7c4ed8386adc917e134aadc24e40413a2"
+    },
+    {
+      "path": "packages/core/migrations-d1/0052_gateway_key_expiry.sql",
+      "sha256": "6f5e6565a3686d1b3a40138284f8a92387e7be2973f2f08c54d5f717ef8eef37"
+    },
+    {
+      "path": "packages/core/migrations-d1/0053_gateway_key_limits.sql",
+      "sha256": "911c975c85b60bc49a3855f0fa4a67bae92d680d7de92e08865a01286a2efb63"
+    },
+    {
+      "path": "packages/core/migrations-d1/0054_workspace_budgets.sql",
+      "sha256": "fdda65383106f5e457e26adc42a8920c255e28609e4b08fb13ae07dfd752f60c"
+    },
+    {
+      "path": "packages/core/migrations-d1/0055_generation_metadata_snapshots.sql",
+      "sha256": "5d99eee544bfc3e9476c6fc691932b709d9cb586d1c0c2b03670e44f74462d65"
+    },
+    {
+      "path": "packages/core/migrations-d1/0056_request_session_id.sql",
+      "sha256": "f7a66bafaf15b014bd567996a404b36e8f0d9a133074e197568630fd56aa13f4"
+    },
+    {
+      "path": "packages/core/migrations-d1/0057_generation_feedback.sql",
+      "sha256": "9d8c949ca2bb195f2c643b561ebf9269c2013666e0dd643702fd53bad8f68963"
+    },
+    {
+      "path": "packages/core/migrations-d1/0058_guardrail_assignment_management_source.sql",
+      "sha256": "d6bcc73db3b95c2080dc82b16ae68db5eceb6fb2ed91366886d5ae7fcae250f5"
+    },
+    {
+      "path": "packages/core/migrations-d1/0059_workspace_default_guardrails.sql",
+      "sha256": "67b114b5391bc276f9c2e6641f9133edccef6e4e455cc75708ce93b14797d8a3"
+    },
+    {
+      "path": "packages/core/migrations-d1/0060_account_default_guardrails.sql",
+      "sha256": "9c9f579c4163dd0e2a8092e88c13210656fce5b20c8449c4180887d97a9b20d3"
+    },
+    {
+      "path": "packages/core/migrations-d1/0061_provider_attempt_availability.sql",
+      "sha256": "9dee6f665ac42a2aef2e10996bd9e323040d39fd871e47f26b0ea5911d857a42"
+    },
+    {
+      "path": "packages/core/migrations-d1/0062_public_model_total_tokens.sql",
+      "sha256": "724666557389ccffc4f2a0656990df7eff73c51d0b730a6ad28d9b384508ed8c"
+    },
+    {
+      "path": "packages/core/migrations-d1/0063_generation_service_tier.sql",
+      "sha256": "31645b09f2fc97daef9694a328d4770cf07a51e326e9088294402175eb0a792e"
+    },
+    {
+      "path": "packages/core/migrations-d1/0064_private_byok.sql",
+      "sha256": "3d82dc93c423556cdf94b280a3e019ef5c2487e8fb3d248638362e2e637b77f6"
+    },
+    {
+      "path": "packages/core/migrations-d1/0065_byok_always_use_for_provider.sql",
+      "sha256": "d8e06af4c94ee0a3d42244cd97dbe4769d7d8fa1a316b2ed879f3152ea64b08e"
+    },
+    {
+      "path": "packages/core/migrations-d1/0066_guardrail_budget_settlement_basis.sql",
+      "sha256": "642474b01ba9bb62527c2139ff4d34948a02b8a08b52d65d4fbc1a23f70edd74"
+    },
+    {
+      "path": "packages/core/migrations-d1/0067_workspace_budget_usage_index.sql",
+      "sha256": "03c276c2b39ffb8527de61956006b8fbada088b4c6e488ea52c0f6485b2feada"
+    },
+    {
+      "path": "packages/core/migrations-d1/0068_batch_jobs.sql",
+      "sha256": "1a3f24822535229cebf3e513ae803dd9f752228cd506536f98a2e54c1d3e860d"
+    },
+    {
+      "path": "packages/core/src/db/d1/critical-writes.impl.ts",
+      "sha256": "761865dbf9fbc69f1f3a5410649960fb99f6ef27bd6c415e1ceb17e5eea506df"
+    },
+    {
+      "path": "packages/core/src/db/d1/guardrail-budgets.impl.ts",
+      "sha256": "daf0a06b9f6f5f185f301449e9f4b8019cd8bdcda15ab9b4f2490ec8c03fcf95"
+    },
+    {
+      "path": "packages/core/src/db/d1/user-budget-reservations.impl.ts",
+      "sha256": "ae26e081b3d2989ed5371ebf5404c18e400310e2d862424b6c7d3db7017fb704"
+    },
+    {
+      "path": "packages/core/src/gcp-oauth-lifecycle.ts",
+      "sha256": "90b6456e2b7ae19ee2e0d04c3f0b1e470f757bc11a91bd478c13b9830e7e0c0b"
+    },
+    {
+      "path": "packages/core/src/gcp-service-account-token.ts",
+      "sha256": "f60f0c28d49c01306c520289d6747c511ed0d52cdc5878378997024bf7cd844c"
+    },
+    {
+      "path": "packages/core/src/guardrails.ts",
+      "sha256": "9bea51e34b5ab0d34126d3a4e7ae7f06aa61fdbd72a5318adb03cfadb47b9165"
+    },
+    {
+      "path": "packages/core/src/index.ts",
+      "sha256": "536fbce839c16c20e567571983957533ae90446501a1a56d29c09eb01d92b267"
+    },
+    {
+      "path": "packages/core/src/lib/byok-key-encryption.ts",
+      "sha256": "2febf1c727fb836cc41bf16729a74a205b24e10ad0535e70359e4e5ac79ddbb4"
+    },
+    {
+      "path": "packages/core/src/lib/shared-key-encryption.ts",
+      "sha256": "e1f9992fcc4cebd45bb7d574359354518942c76aa25547db8ca022ff005afcc2"
+    },
+    {
+      "path": "packages/core/src/preparation-control.ts",
+      "sha256": "06ccde2cefc43c06d211ff87613567917ee19d93eb8eb8593f38c39d20233f08"
+    },
+    {
+      "path": "packages/core/src/request-auxiliary-auth-budget.ts",
+      "sha256": "a2995a8cd480b150960beab7ccb2aae60352b46e5d3fc79fff5f813aa6ad197f"
+    },
+    {
+      "path": "packages/core/src/request-deadline.ts",
+      "sha256": "077ef3d13c65f0cf5f4c15a7f535968dd189f4f688ac81dc8aa8a50e521c0b4f"
+    },
+    {
+      "path": "packages/core/src/storage/byok-keys.ts",
+      "sha256": "9d87434b0f8d29312123b53f7ad9fc563e19b1b574e54238e1e62993cd28f384"
+    },
+    {
+      "path": "packages/core/src/storage/postgres-connection-error.ts",
+      "sha256": "d5faa1cc69a40411d0cd383cfe2f328d528ee4a5329018ece9dec63f418e0b76"
+    },
+    {
+      "path": "packages/core/src/storage/user-budget-critical-write.d1.test.ts",
+      "sha256": "a1d8160d1d13fec381e8eb4abbdca672046f9492aae2d1ddabc947149e6085af"
+    },
+    {
+      "path": "packages/core/src/storage/workspace-budgets.ts",
+      "sha256": "c464b50d5c8c9439dcc6d1a3db1073ff88cbc76cd3480ba4464b926b4d175015"
+    },
+    {
+      "path": "packages/proxy/package.json",
+      "sha256": "a9d0845787048b5005a5c73c69a06a362edadcf74fcf43e73489d82aa4659479"
+    },
+    {
+      "path": "packages/proxy/scripts/measure-image-json-memory.mjs",
+      "sha256": "b7274829f5ad1a0573c57d2ce3b413cda7e24021a7dd3cb85b93de2e8a5ff9dd"
+    },
+    {
+      "path": "packages/proxy/scripts/measure-image-upload-memory.mjs",
+      "sha256": "7a31f888e2a0b2192ab7daccc5cc2655508cc7d5b5dcbf72e047ea8561027619"
+    },
+    {
+      "path": "packages/proxy/src/app.ts",
+      "sha256": "a5edc99b981ca11cc43b3702206997db88edb2e0cbfbe6f98355c24eda04b5d6"
+    },
+    {
+      "path": "packages/proxy/src/middleware/auth.ts",
+      "sha256": "1bc980e5079c7f7da3addfea7e0784cab81dfac311fcc29e6947782b00385065"
+    },
+    {
+      "path": "packages/proxy/src/middleware/text-request-lifecycle.ts",
+      "sha256": "eb6543d6473c93749b4e4eb3ce44f57894517595db2230533b92ba30510830a1"
+    },
+    {
+      "path": "packages/proxy/src/routes/v1/dashscope-realtime.ts",
+      "sha256": "ce68d1e2e6619b5af35f18424248e14b88140d05905eb938826cd681f6615090"
+    },
+    {
+      "path": "packages/proxy/src/routes/v1/embeddings.ts",
+      "sha256": "31c8d929c28210b1d0af31e66c60ee499082ada3e857eb21ea3a8f5b4a8cf22f"
+    },
+    {
+      "path": "packages/proxy/src/routes/v1/image-request-lifecycle.test.ts",
+      "sha256": "d7a331ee569711a76c0b56a603cfc8ea47cabfea6cb7f46111b335de3de5ae2e"
+    },
+    {
+      "path": "packages/proxy/src/routes/v1/images-multipart.test.ts",
+      "sha256": "e753d2a4d6d2b0dba60e6c672245a047ce061377969e147d4d38bc9758559eaf"
+    },
+    {
+      "path": "packages/proxy/src/routes/v1/request-dispatch-limit.test.ts",
+      "sha256": "7c79d83677e6f296b15e5043a3cf7f67324c18e67f3bb308db1970549696c441"
+    },
+    {
+      "path": "packages/proxy/src/routes/v1/rerank.ts",
+      "sha256": "b6c33fb1b460b97bf2e70e41faf9f59bc642a47082001e3b52b751bd39a12ec9"
+    },
+    {
+      "path": "packages/proxy/src/routes/v1/vector-request-lifecycle.test.ts",
+      "sha256": "305f403d71a88f6973743c40424a5c5b70b99e432833e8a842b924623f9add34"
+    },
+    {
+      "path": "packages/proxy/src/runtime/node-realtime-ledger.test.ts",
+      "sha256": "acf5e8e1bcbc717a51bf52508018146eec1c583d24b8bb4ecca0ac2a10fedbba"
+    },
+    {
+      "path": "packages/proxy/src/runtime/node-realtime-upgrade.test.ts",
+      "sha256": "ab88715ad969a949c7d19de5a56bef93082e868e3c24fc361c684d95219cfc37"
+    },
+    {
+      "path": "packages/proxy/src/runtime/node-realtime-upgrade.ts",
+      "sha256": "5ccc903ffc3ae71f5cd114d088066e74eeab0ff05c5bbe34420327d5bb9cf814"
+    },
+    {
+      "path": "packages/proxy/src/runtime/node-realtime.test.ts",
+      "sha256": "919ee1d002479451930789f1c0ce86f69e6e3f19064dda3f96ed6a8304189ec7"
+    },
+    {
+      "path": "packages/proxy/src/runtime/node-realtime.ts",
+      "sha256": "05af67af8b70fb54db6d74a05c7a2c7752509ac4bc2edb65d9c9920f82f59373"
+    },
+    {
+      "path": "packages/proxy/src/runtime/node.ts",
+      "sha256": "ac3e0f5bd8ab01daec890382354982afee65c3ecb70faeca4e12dc8a42185d14"
+    },
+    {
+      "path": "packages/proxy/src/runtime/schedule-background-work.ts",
+      "sha256": "c8dfe74ee3a34a068aebd1e4cbee56f5505c8feeb7e2ee4cb72c3ffbcee95f7e"
+    },
+    {
+      "path": "packages/proxy/src/services/api-key-auth.ts",
+      "sha256": "cf5407f5fe79a281226449000342a0a16192ae4ab2b478fbf86b63649965fe7c"
+    },
+    {
+      "path": "packages/proxy/src/services/audio-usage-charge.ts",
+      "sha256": "645ff4c0cba7d5b4bfb5566c9f807f5229f6d7a55dc9eb51144213a2b6a1d0e9"
+    },
+    {
+      "path": "packages/proxy/src/services/byok-key-pool.ts",
+      "sha256": "e3885782b22a841e7661a425d1046b003342aeba626041b11786f9bcc795a18f"
+    },
+    {
+      "path": "packages/proxy/src/services/dashscope-realtime-guardrails.test.ts",
+      "sha256": "2c82d3e5576e842b06fd7d7eb9108132cf1b2a5af57e9667b90dadc32569a005"
+    },
+    {
+      "path": "packages/proxy/src/services/dashscope-realtime-guardrails.ts",
+      "sha256": "9f406222e06cd91931ee616759b4e73c95b29a97abfa50a6e84a95d7f0b0f52d"
+    },
+    {
+      "path": "packages/proxy/src/services/dashscope-realtime-path.ts",
+      "sha256": "c8cf69dc22e24b66dbc1f267705326e74c2ee388aa1bfd770600dc3a259c9f42"
+    },
+    {
+      "path": "packages/proxy/src/services/egress/audio-request-lifecycle.ts",
+      "sha256": "7434a8bbd3289a55a0b410b963cccd1b1905270ac618aa30f9e3e37ea8402f81"
+    },
+    {
+      "path": "packages/proxy/src/services/egress/audio-speech-driver.ts",
+      "sha256": "0a12a61971b5842a4d4260405bbc9c31fa7c2f19eb667049204677d195fa279e"
+    },
+    {
+      "path": "packages/proxy/src/services/egress/audio-speech-stream-lifecycle.ts",
+      "sha256": "537e88d2cb6fe4acd44aa104327bdad34608bf3305d5f678781457b5980473c2"
+    },
+    {
+      "path": "packages/proxy/src/services/egress/bounded-json-request.test.ts",
+      "sha256": "eabb42d3ae24365af2e847ae809275d878ff68360ebb39482371a9a2a18ef0b4"
+    },
+    {
+      "path": "packages/proxy/src/services/egress/bounded-json-request.ts",
+      "sha256": "389eb8c006f1b789925f341081f71cbe82083224e1d7fa96d5a0f62dd289fef2"
+    },
+    {
+      "path": "packages/proxy/src/services/egress/dashscope-audio-driver.ts",
+      "sha256": "bfd8ee6f78d08ded868659bd2da272e2391a380f0e01d855c08c3b5cd830d7c3"
+    },
+    {
+      "path": "packages/proxy/src/services/egress/dashscope-realtime-driver.test.ts",
+      "sha256": "1a87aa7575ab57ca5e585abbcafc3c73629f815e9e245d0c8d228cad48ca8a69"
+    },
+    {
+      "path": "packages/proxy/src/services/egress/dashscope-realtime-driver.ts",
+      "sha256": "2ca5db90a44fa72bb57f2218bc32df0411884c6d210a076719456e6367f132bb"
+    },
+    {
+      "path": "packages/proxy/src/services/egress/image-response-memory.test.ts",
+      "sha256": "77df7e544df8ed22e719826d595089a31c7b951cc2ff5261801fc582fb1514b8"
+    },
+    {
+      "path": "packages/proxy/src/services/egress/multipart-upload-body.ts",
+      "sha256": "27114db5d458325ce858c887237fc8fd4d305dc873904ddf3ab01f0d759fae9d"
+    },
+    {
+      "path": "packages/proxy/src/services/egress/openai-embeddings-driver.ts",
+      "sha256": "c8bc80890d9ae35bc4104d6001aeafd3aabd3ac3cb4fac5328cca9e31aa74f81"
+    },
+    {
+      "path": "packages/proxy/src/services/egress/openai-images-driver.ts",
+      "sha256": "f7c0aa7a98148d96287b766e71241ce9dd5261877b38d3778ae329de60b1978c"
+    },
+    {
+      "path": "packages/proxy/src/services/egress/openai-rerank-driver.ts",
+      "sha256": "804cb52c930d64a5c058d3bf3adde86ab2ba5152e0c2788c87433c12e4b0f9aa"
+    },
+    {
+      "path": "packages/proxy/src/services/egress/realtime-connection-lifecycle.test.ts",
+      "sha256": "4e8f1c9572c0763526f7f0d6385e0547070de89daada91c236cfbd55b2aca3f7"
+    },
+    {
+      "path": "packages/proxy/src/services/egress/realtime-connection-lifecycle.ts",
+      "sha256": "0868e848ed5550c33cdddf19b173570dbeceb7571c720b8b3023b9293508eed6"
+    },
+    {
+      "path": "packages/proxy/src/services/failover-dispatch.ts",
+      "sha256": "df4420dca0098d468bdaa85a3995c6175840fdbda5de789a95825fcdb7c19547"
+    },
+    {
+      "path": "packages/proxy/src/services/image-usage-charge.ts",
+      "sha256": "4cb48cf3468106b136c0c9b883529c964eec3006d3e7c623948a86a35b2f7439"
+    },
+    {
+      "path": "packages/proxy/src/services/json-structure-budget.test.ts",
+      "sha256": "3378265b6342c806ddbd90b70312b7f8c1378cb8c7fc077208bd4765f16ddcde"
+    },
+    {
+      "path": "packages/proxy/src/services/json-structure-budget.ts",
+      "sha256": "aace3380f721953ed3e6f25cdc7613841dddcea0390dc63ec67132dc933b5b69"
+    },
+    {
+      "path": "packages/proxy/src/services/multipart-body-inspector.test.ts",
+      "sha256": "ad7881154ec07771579c3d820d7198a44f83776fa0e9b2f2d1078f9a89597f1c"
+    },
+    {
+      "path": "packages/proxy/src/services/multipart-body-inspector.ts",
+      "sha256": "15ca8379fe5a63a96dca6db2f8ae3b709e92acea24ed5638e16d5bd674a4c650"
+    },
+    {
+      "path": "packages/proxy/src/services/ordinary-budget-lifecycle.ts",
+      "sha256": "9fef6a25be081efc6d0f4c0010eed7c80567c085866cfdd0b1fa1c7ce24bd896"
+    },
+    {
+      "path": "packages/proxy/src/services/provider-sticky-routing.ts",
+      "sha256": "20c034a68bbdcc0baccc2d9dba90d897d07262f7b5df68e4f7e9244c929b1a78"
+    },
+    {
+      "path": "packages/proxy/src/services/proxy.ts",
+      "sha256": "3b1d928641e65b7a09256e6b259231cb414ece5fe5d796411ae8b9e2c73a7160"
+    },
+    {
+      "path": "packages/proxy/src/services/request-budget-admission.ts",
+      "sha256": "cd63d518df70ebc6cea1a65e03635f124b7eee8382f6864852045f7a52436b38"
+    },
+    {
+      "path": "packages/proxy/src/services/request-deadline.ts",
+      "sha256": "33efe31863ce5c8d45d75faab888010e79caabef07b387a554487721fb8192ca"
+    },
+    {
+      "path": "packages/proxy/src/services/request-dispatch-budget.ts",
+      "sha256": "53115c21920845089c19d9002c7e3b6c70f5fccdd3107f2fee30c0874393a066"
+    },
+    {
+      "path": "packages/proxy/src/services/request-guardrails.ts",
+      "sha256": "164f7bba3f04176ebc2da7fcbdeb44e4fd1c9d6428d1cccabc9b14b1209b080c"
+    },
+    {
+      "path": "packages/proxy/src/services/shared-key-pool.ts",
+      "sha256": "c65f12a6909c1130d89fb9aabe89b38878e1697df4d9b9c3801dee50c2d16174"
+    },
+    {
+      "path": "packages/proxy/src/services/streaming-multipart-body.test.ts",
+      "sha256": "c1a5f8faa56b96a93684ce8a7a69908d344ce3cf211642c242f4c3b7dab3165a"
+    },
+    {
+      "path": "packages/proxy/src/services/streaming-multipart-body.ts",
+      "sha256": "4022296035e4d03c64e96ee84aab103396a928d476a930477d54d221ef7041d4"
+    },
+    {
+      "path": "packages/proxy/src/test-support/sqlite-d1.ts",
+      "sha256": "283570b1b7781a7d79eb5efbb5a503003746e88b4de9779c40b7fd0f99c79940"
+    },
+    {
+      "path": "packages/proxy/tsconfig.dispatch-safety.json",
+      "sha256": "63193c46aaa364ed1151ce636d45d1cf64e92e6d9bc8c98dd575fc05e0bf8ba5"
+    },
+    {
+      "path": "packages/proxy/wrangler.base.jsonc",
+      "sha256": "0687684a6870256283885ad5a1e4f154943c1909d0b866105aa5b8143f107833"
+    },
+    {
+      "path": "packages/proxy/wrangler.jsonc",
+      "sha256": "7ffb4a120ce0b83df428a1344fca5b16ea9d8784178d555e7377623511451b0c"
+    },
+    {
+      "path": "scripts/deploy/gen-wrangler.mjs",
+      "sha256": "7d4d42bfd1ac974da1582102f44131ce1d84c6788503306e333d7f9e3312ac9e"
+    }
+  ]
+}

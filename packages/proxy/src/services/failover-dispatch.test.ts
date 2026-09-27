@@ -1,8 +1,10 @@
 import { beforeEach, describe, it, mock } from 'node:test';
 import assert from 'node:assert/strict';
+import { createServer } from 'node:http';
+import { createHash } from 'node:crypto';
 import type { ByokRuntimeKeyRow, GatewayRepositories, SharedKeyRow } from '@octafuse/core';
 import type { RouteResult } from './model-router';
-import { EMPTY_USAGE, proxyDashScopeMultimodalPassthrough } from './proxy';
+import { EMPTY_USAGE, proxyChatCompletions, proxyDashScopeMultimodalPassthrough } from './proxy';
 import {
 	failoverDispatch,
 	isSuccessfulDispatchResponse,
@@ -19,6 +21,7 @@ import {
 	createRouteAwareBudgetAdmission,
 	RequestBudgetAdmissionError,
 } from './request-budget-admission';
+import { captureTextRouteIdentity, createPreparedTextAttempt, preparedTextAttemptMatchesRoute } from './egress/prepared-text-attempt';
 
 function makeRoute(providerId: string, overrides: Partial<RouteResult> = {}): RouteResult {
 	return {
@@ -115,7 +118,7 @@ describe('dispatch success response', () => {
 });
 
 describe('failoverDispatch — private BYOK credentials', () => {
-	it('attempts primary BYOK, shared, platform, then fallback BYOK for one route target', async () => {
+	it('spends the same three permits on primary BYOK, shared and platform before denying fallback BYOK', async () => {
 		const sharedKey: SharedKeyRow = {
 			id: 'shared-1',
 			sellerUserId: 'seller-1',
@@ -176,9 +179,10 @@ describe('failoverDispatch — private BYOK credentials', () => {
 			'byok:primary-1',
 			'sharedkey:shared-1',
 			'provider-1',
-			'byok:fallback-1',
 		]);
-		assert.equal(result.response.status, 200);
+		assert.equal(result.response.status, 502);
+		assert.equal(result.response.headers.get('X-OctaFuse-Error-Code'), 'gateway.dispatch_limit_exceeded');
+		assert.equal(result.meta?.failoverForbidden, true);
 		assert.equal(result.chosenRoute.providerKeyId, 'byok:fallback-1');
 	});
 
@@ -714,7 +718,7 @@ describe('failoverDispatch — partition none request-level chain', () => {
 		crossModelCandidateFailover: true,
 	};
 
-	it('preserves the exact globally interleaved M2/M1/M2/M1 attempt order', async () => {
+	it('preserves global M2/M1/M2 order and refuses the fourth endpoint', async () => {
 		const routes = [
 			globalRoute('m2-a', 1, 'm2', 4, 1),
 			globalRoute('m1-a', 0, 'm1', 3, 2),
@@ -741,7 +745,9 @@ describe('failoverDispatch — partition none request-level chain', () => {
 			crossModelOptions,
 		);
 
-		assert.deepEqual(seen, ['m2-a', 'm1-a', 'm2-b', 'm1-b']);
+		assert.deepEqual(seen, ['m2-a', 'm1-a', 'm2-b']);
+		assert.equal(result.response.status, 502);
+		assert.equal(result.meta?.admissionDeniedPreDispatch, true);
 		assert.equal(result.chosenRoute.targetId, 'm1-b');
 		assert.deepEqual(
 			result.dispatchAttempts?.map((attempt) => [
@@ -751,7 +757,7 @@ describe('failoverDispatch — partition none request-level chain', () => {
 			]),
 			[
 				['m2-b', 1, 3],
-				['m1-b', 0, 4],
+				['m1-a', 0, 2],
 			],
 		);
 	});
@@ -920,8 +926,9 @@ describe('failoverDispatch — partition none request-level chain', () => {
 			['m2-shared', 'sharedkey:key-a', 1, 'm2'],
 			['m2-shared', 'sharedkey:key-b', 1, 'm2'],
 			['m2-shared', 'shared-provider', 1, 'm2'],
-			['m1-direct', 'm1-direct', 0, 'm1'],
 		]);
+		assert.equal(result.response.status, 502);
+		assert.equal(result.meta?.failoverForbidden, true);
 		assert.deepEqual(
 			result.dispatchAttempts?.map((attempt) => [
 				attempt.routeTargetId,
@@ -930,7 +937,6 @@ describe('failoverDispatch — partition none request-level chain', () => {
 			]),
 			[
 				['m2-shared', 1, 1],
-				['m1-direct', 0, 2],
 			],
 		);
 	});
@@ -1123,6 +1129,44 @@ describe('failoverDispatch — pre-dispatch admission boundary', () => {
 		assert.deepEqual(events, ['prepare', 'admission', 'fetch']);
 	});
 
+	it('rejects a missing, mutable, stale or mutated prepared text identity before quote, grant or fetch when required', async () => {
+		for (const mode of ['missing', 'unfrozen', 'stale', 'mutated'] as const) {
+			let grants = 0;
+			let fetches = 0;
+			const result = await failoverDispatch(
+				emptyRepos,
+				[makeRoute('p1')],
+				'openai',
+				async (selected, _signal, _timing, _attempt, beforeFetch) => {
+					const preparedRoute = mode === 'stale' ? makeRoute('other') : selected;
+					const prepared = mode !== 'missing' ? createPreparedTextAttempt({
+						routeIdentity: captureTextRouteIdentity(preparedRoute),
+						url: 'https://example.com/v1/chat/completions',
+						method: 'POST', headers: { Authorization: 'Bearer sk-other' },
+						outboundBodySha256: createHash('sha256').update('{}').digest('hex'),
+						outboundBodyBytes: 2,
+					}) : undefined;
+					if (mode === 'mutated') selected.providerApiKey = 'rotated-after-prepare';
+					await beforeFetch?.(mode === 'unfrozen' ? { ...prepared } : prepared);
+					fetches += 1;
+					return { response: new Response('unexpected', { status: 200 }),
+						usagePromise: Promise.resolve(EMPTY_USAGE), upstreamRequestId: null };
+				},
+				undefined,
+				{
+					...defaultOptions,
+					delegateBeforeUpstreamDispatchToDriver: true,
+					requirePreparedTextAttemptIdentity: true,
+					beforeUpstreamDispatch: async () => { grants += 1; },
+				},
+			);
+			assert.equal(result.response.status, 403);
+			assert.equal(result.meta?.admissionDeniedPreDispatch, true);
+			assert.equal(grants, 0);
+			assert.equal(fetches, 0);
+		}
+	});
+
 	it('does not cross the delegated boundary for local preparation errors', async () => {
 		const events: string[] = [];
 		let calls = 0;
@@ -1228,6 +1272,236 @@ describe('failoverDispatch — pre-dispatch admission boundary', () => {
 		assert.equal(result.response.headers.get('X-OctaFuse-Error-Code'), 'gateway.guardrail_blocked');
 		assert.equal(result.meta?.failoverForbidden, true);
 		assert.equal(result.meta?.admissionDeniedPreDispatch, true);
+	});
+});
+
+describe('failoverDispatch — opt-in durable single claim', () => {
+	const routes = [
+		makeRoute('single-claim-first', { routePriority: 2 }),
+		makeRoute('single-claim-second', { routePriority: 1 }),
+	];
+
+	it('rejects a second delegated boundary entry before another admission or send', async () => {
+		let grants = 0;
+		let sends = 0;
+		await assert.rejects(
+			failoverDispatch(emptyRepos, routes, 'openai',
+				async (_route, _signal, _timing, _attempt, beforeFetch) => {
+					await beforeFetch?.();
+					await beforeFetch?.();
+					sends += 1;
+					return {
+						response: new Response('unexpected', { status: 200 }),
+						usagePromise: Promise.resolve(EMPTY_USAGE),
+						upstreamRequestId: null,
+					};
+				}, undefined, {
+					...defaultOptions,
+					delegateBeforeUpstreamDispatchToDriver: true,
+					stopAfterFirstGrantedDispatch: true,
+					beforeUpstreamDispatch: async () => { grants += 1; },
+				}),
+			/Single-grant dispatch boundary was already entered/,
+		);
+		assert.equal(grants, 1);
+		assert.equal(sends, 0);
+	});
+
+	it('sends only once through the real text fetch driver after an opt-in grant', async () => {
+		let sends = 0;
+		let grants = 0;
+		const server = createServer((request, response) => {
+			sends += 1;
+			request.resume();
+			response.writeHead(503, { 'Content-Type': 'application/json' });
+			response.end('{"error":"upstream unavailable"}');
+		});
+		try {
+			await new Promise<void>(resolve => server.listen(0, '127.0.0.1', resolve));
+			const address = server.address();
+			assert.ok(address && typeof address !== 'string');
+			const upstream = { openai: { base: `http://127.0.0.1:${address.port}/v1` } };
+			const result = await proxyChatCompletions(emptyRepos, [
+				makeRoute('physical-first', { routePriority: 2, providerEndpoints: upstream }),
+				makeRoute('physical-second', { routePriority: 1, providerEndpoints: upstream }),
+			], { model: 'model-x', messages: [{ role: 'user', content: 'hello' }] }, undefined, {
+				...defaultOptions,
+				stopAfterFirstGrantedDispatch: true,
+				requirePreparedTextAttemptIdentity: true,
+				beforeUpstreamDispatch: async (selected, prepared) => {
+					assert.equal(preparedTextAttemptMatchesRoute(prepared, selected), true);
+					grants += 1;
+				},
+			});
+			assert.equal(result.response.status, 503);
+			assert.equal(result.chosenRoute.providerId, 'physical-first');
+			assert.equal(grants, 1);
+			assert.equal(sends, 1);
+		} finally {
+			server.closeAllConnections();
+			await new Promise<void>(resolve => server.close(() => resolve()));
+		}
+	});
+
+	it('returns the first granted non-2xx response with its route and usage', async () => {
+		const response = new Response('first upstream failure', { status: 503 });
+		const usage = { ...EMPTY_USAGE, cache_read_tokens: 17 };
+		const seen: RouteResult[] = [];
+		let grants = 0;
+		const result = await failoverDispatch(
+			emptyRepos,
+			routes,
+			'openai',
+			async (route, _signal, _timing, _attempt, beforeFetch) => {
+				seen.push(route);
+				await beforeFetch?.();
+				return {
+					response,
+					usagePromise: Promise.resolve(usage),
+					upstreamRequestId: 'upstream-first',
+				};
+			},
+			undefined,
+			{
+				...defaultOptions,
+				delegateBeforeUpstreamDispatchToDriver: true,
+				stopAfterFirstGrantedDispatch: true,
+				beforeUpstreamDispatch: async () => { grants += 1; },
+			},
+		);
+
+		assert.equal(grants, 1);
+		assert.equal(seen.length, 1);
+		assert.equal(result.response, response);
+		assert.equal(await result.response.text(), 'first upstream failure');
+		assert.equal(result.chosenRoute, seen[0]);
+		assert.equal(await result.usagePromise, usage);
+		assert.equal(result.upstreamRequestId, 'upstream-first');
+		assert.equal(result.dispatchBudget?.permitsConsumed, 1);
+		assert.equal(result.dispatchAttempts?.length, 1);
+		assert.equal(result.meta?.failoverForbidden, true);
+		assert.equal(result.meta?.upstreamOutcomeUnknown, undefined);
+	});
+
+	it('keeps ordinary route failover when the option is absent', async () => {
+		let grants = 0;
+		let dispatches = 0;
+		const result = await failoverDispatch(
+			emptyRepos,
+			routes,
+			'openai',
+			async (_route, _signal, _timing, _attempt, beforeFetch) => {
+				dispatches += 1;
+				await beforeFetch?.();
+				return {
+					response: new Response(dispatches === 1 ? 'failure' : 'ok', { status: dispatches === 1 ? 503 : 200 }),
+					usagePromise: Promise.resolve(EMPTY_USAGE),
+					upstreamRequestId: null,
+				};
+			},
+			undefined,
+			{
+				...defaultOptions,
+				delegateBeforeUpstreamDispatchToDriver: true,
+				beforeUpstreamDispatch: async () => { grants += 1; },
+			},
+		);
+
+		assert.equal(result.response.status, 200);
+		assert.equal(dispatches, 2);
+		assert.equal(grants, 2);
+	});
+
+	it('can continue after a pre-grant local failure and stop after the later grant', async () => {
+		let grants = 0;
+		let dispatches = 0;
+		const result = await failoverDispatch(
+			emptyRepos,
+			routes,
+			'openai',
+			async (_route, _signal, _timing, _attempt, beforeFetch) => {
+				dispatches += 1;
+				if (dispatches === 1) {
+					return {
+						response: new Response('local preparation failed', { status: 502 }),
+						usagePromise: Promise.resolve(EMPTY_USAGE),
+						upstreamRequestId: null,
+						meta: { gatewayGeneratedError: true, admissionDeniedPreDispatch: true },
+					};
+				}
+				await beforeFetch?.();
+				return {
+					response: new Response('second upstream failure', { status: 503 }),
+					usagePromise: Promise.resolve(EMPTY_USAGE),
+					upstreamRequestId: 'upstream-second',
+				};
+			},
+			undefined,
+			{
+				...defaultOptions,
+				delegateBeforeUpstreamDispatchToDriver: true,
+				stopAfterFirstGrantedDispatch: true,
+				beforeUpstreamDispatch: async () => { grants += 1; },
+			},
+		);
+
+		assert.equal(dispatches, 2);
+		assert.equal(grants, 1);
+		assert.equal(result.response.status, 503);
+		assert.equal(await result.response.text(), 'second upstream failure');
+		assert.equal(result.upstreamRequestId, 'upstream-second');
+		assert.equal(result.meta?.failoverForbidden, true);
+		assert.equal(result.meta?.upstreamOutcomeUnknown, undefined);
+	});
+
+	it('stops after a granted thrown failure while preserving its known outcome', async () => {
+		let dispatches = 0;
+		const result = await failoverDispatch(
+			emptyRepos,
+			routes,
+			'openai',
+			async (_route, _signal, _timing, _attempt, beforeFetch) => {
+				dispatches += 1;
+				await beforeFetch?.();
+				throw new Error('post-grant local failure');
+			},
+			undefined,
+			{
+				...defaultOptions,
+				delegateBeforeUpstreamDispatchToDriver: true,
+				stopAfterFirstGrantedDispatch: true,
+				beforeUpstreamDispatch: async () => {},
+			},
+		);
+
+		assert.equal(dispatches, 1);
+		assert.equal(result.response.status, 502);
+		assert.equal(result.meta?.failoverForbidden, true);
+		assert.equal(result.meta?.upstreamOutcomeUnknown, undefined);
+	});
+
+	it('rejects the option without a delegated admission grant', async () => {
+		const dispatch = mock.fn(async () => ({
+			response: new Response('unexpected', { status: 200 }),
+			usagePromise: Promise.resolve(EMPTY_USAGE),
+			upstreamRequestId: null,
+		}));
+		await assert.rejects(
+			failoverDispatch(emptyRepos, routes, 'openai', dispatch, undefined, {
+				...defaultOptions,
+				stopAfterFirstGrantedDispatch: true,
+			}),
+			TypeError,
+		);
+		await assert.rejects(
+			failoverDispatch(emptyRepos, routes, 'openai', dispatch, undefined, {
+				...defaultOptions,
+				delegateBeforeUpstreamDispatchToDriver: true,
+				stopAfterFirstGrantedDispatch: true,
+			}),
+			TypeError,
+		);
+		assert.equal(dispatch.mock.callCount(), 0);
 	});
 });
 

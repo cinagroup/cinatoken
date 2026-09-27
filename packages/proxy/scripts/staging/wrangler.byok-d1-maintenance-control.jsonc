@@ -1,0 +1,19 @@
+{
+  "$schema": "../../../../node_modules/wrangler/config-schema.json",
+  // Alternative candidate for the existing controller. Remains publicly closed.
+  "name": "cinatoken-staging-recovery-control",
+  "account_id": "7ea8e46d8210bad342fa7595f7935fea",
+  "main": "byok-d1-maintenance-control-worker.ts",
+  "compatibility_date": "2026-09-16",
+  "compatibility_flags": ["nodejs_compat"],
+  // Explicit CPU setting, not a strict billing cap or D1 cancellation guarantee.
+  "limits": {"cpu_ms": 30000},
+  "send_metrics": false,
+  "workers_dev": false,
+  "preview_urls": false,
+  "routes": [],
+  "triggers": {"crons": []},
+  "observability": {"enabled": true,"head_sampling_rate": 1,"logs": {"invocation_logs": false}},
+  "vars": {"BYOK_MAINTENANCE_CONTROL_ENVIRONMENT": "staging","BYOK_MAINTENANCE_CONTROL_ENABLED": "false","BYOK_MAINTENANCE_ACCESS_AUD": ""},
+  "services": [{"binding": "USAGE_RECOVERY","service": "cinatoken-staging-usage-recovery","entrypoint": "UsageRecovery","remote": false}]
+}

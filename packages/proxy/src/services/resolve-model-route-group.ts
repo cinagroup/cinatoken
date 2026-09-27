@@ -2,6 +2,7 @@
  * 解析请求体里的 `model` 字符串：`baseId` 与可选后缀 `baseId:route_group`（显式指定计费通道）。
  */
 import type { GatewayRepositories, ModelRow } from '@octafuse/core';
+import { preparationRead, type PreparationControl } from '@octafuse/core';
 import type { ServiceTierModelVariant } from './provider-routing-preferences';
 
 export interface ResolvedModelRouting {
@@ -23,14 +24,16 @@ export interface ResolvedModelRouting {
  */
 export async function resolveModelRouting(
   repos: GatewayRepositories,
-  rawModelId: string
+  rawModelId: string,
+  control?: PreparationControl,
 ): Promise<ResolvedModelRouting | null> {
+  control?.throwIfStopped();
   const t = rawModelId.trim();
   if (!t) {
     return null;
   }
 
-  const direct = await repos.modelRouting.getModelById(t);
+  const direct = await preparationRead(control, () => repos.modelRouting.getModelById(t));
   if (direct) {
     return {
       model: direct,
@@ -51,7 +54,7 @@ export async function resolveModelRouting(
     return null;
   }
 
-  const baseRow = await repos.modelRouting.getModelById(baseId);
+  const baseRow = await preparationRead(control, () => repos.modelRouting.getModelById(baseId));
   if (!baseRow) {
     return null;
   }

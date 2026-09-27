@@ -2,7 +2,7 @@
  * Route Pool Provider sticky routing — lookup / plan merge / CAS bind·touch·clear.
  * Orthogonal to layer-in strategies (`hash_affinity` etc.).
  */
-import type { GatewayRepositories } from '@octafuse/core';
+import { preparationRead, type GatewayRepositories, type PreparationControl } from '@octafuse/core';
 import { hashAffinityKey } from '@octafuse/core/db/route-affinity-key';
 import {
 	coerceStickyEnabled,
@@ -14,6 +14,12 @@ import type { RouteResult } from './model-router';
 import { isPrivateByokRoute } from './byok-key-pool';
 import { getProviderCircuitRemainingMs } from './provider-circuit-breaker';
 import type { UpstreamFailureClassification } from './upstream-failure-classifier';
+
+export type StickyRoutingPorts = Readonly<{
+	routePoolSticky: Pick<GatewayRepositories['routePoolSticky'], 'getBinding' | 'tryBind' | 'touchBinding' | 'clearBinding'>;
+}>;
+export type StickyRoutingCandidate = Readonly<{ targetId: string; providerId: string }>;
+type StickyCredentialCandidate = Pick<RouteResult, 'targetId' | 'providerKeyId' | 'gatewayPrivateByokFallback'>;
 
 export { hashAffinityKey } from '@octafuse/core/db/route-affinity-key';
 
@@ -92,13 +98,13 @@ export function shouldInvalidateStickyBinding(
 	return classification.action === 'retry_key';
 }
 
-export function mergeStickyIntoAttempts(
-	attempts: RouteResult[],
-	stickyRoute: RouteResult | null
-): RouteResult[] {
+export function mergeStickyIntoAttempts<T extends StickyCredentialCandidate>(
+	attempts: T[],
+	stickyRoute: T | null
+): T[] {
 	if (!stickyRoute) return attempts;
 	if (!attempts.some((route) => route.targetId === stickyRoute.targetId)) return attempts;
-	const prioritizeStickyTarget = (section: RouteResult[]): RouteResult[] => [
+	const prioritizeStickyTarget = (section: T[]): T[] => [
 		...section.filter((route) => route.targetId === stickyRoute.targetId),
 		...section.filter((route) => route.targetId !== stickyRoute.targetId),
 	];
@@ -147,18 +153,19 @@ export async function resolveStickyTrace(session: StickySession | null): Promise
 /**
  * Resolve sticky binding for this request. Fail-open on storage errors.
  */
-export async function resolveStickySession(
-	repos: GatewayRepositories,
+export async function resolveStickySession<T extends StickyRoutingCandidate>(
+	repos: StickyRoutingPorts,
 	params: {
 		routePoolId: string | null | undefined;
 		affinityKey: string;
 		config: RoutePoolStickyRoutingConfig;
-		candidates: RouteResult[];
+		candidates: T[];
 		/** Request-local credential/circuit availability for this route target. */
-		targetAvailable?: (route: RouteResult) => boolean;
+		targetAvailable?: (route: T) => boolean;
 		nowMs?: number;
+		control?: PreparationControl;
 	}
-): Promise<{ session: StickySession | null; stickyRoute: RouteResult | null }> {
+): Promise<{ session: StickySession | null; stickyRoute: T | null }> {
 	const routePoolId = params.routePoolId?.trim() || '';
 	if (!routePoolId || !params.config.enabled || !params.affinityKey) {
 		return { session: null, stickyRoute: null };
@@ -167,8 +174,9 @@ export async function resolveStickySession(
 	const nowMs = params.nowMs ?? Date.now();
 	let affinityHash: string;
 	try {
-		affinityHash = await hashAffinityKey(params.affinityKey);
+		affinityHash = await preparationRead(params.control, () => hashAffinityKey(params.affinityKey));
 	} catch (err) {
+		params.control?.throwIfStopped();
 		console.warn('[Gateway Sticky] affinity hash failed; sticky disabled for request', err);
 		return {
 			session: {
@@ -203,7 +211,7 @@ export async function resolveStickySession(
 	};
 
 	try {
-		const row = await repos.routePoolSticky.getBinding(routePoolId, affinityHash);
+		const row = await preparationRead(params.control, () => repos.routePoolSticky.getBinding(routePoolId, affinityHash));
 		if (!row) {
 			session.lookup = 'miss';
 			return { session, stickyRoute: null };
@@ -240,6 +248,7 @@ export async function resolveStickySession(
 		session.boundTargetId = row.route_target_id;
 		return { session, stickyRoute };
 	} catch (err) {
+		params.control?.throwIfStopped();
 		console.warn('[Gateway Sticky] lookup failed; failing open to normal routing', err);
 		session.lookup = 'miss';
 		session.result = 'storage_error';
@@ -248,7 +257,7 @@ export async function resolveStickySession(
 }
 
 async function performStickyTouchIfNeeded(
-	repos: GatewayRepositories,
+	repos: StickyRoutingPorts,
 	session: StickySession,
 	nowMs = Date.now()
 ): Promise<void> {
@@ -283,7 +292,7 @@ async function performStickyTouchIfNeeded(
 }
 
 export function scheduleStickyTouchIfNeeded(
-	repos: GatewayRepositories,
+	repos: StickyRoutingPorts,
 	session: StickySession,
 	nowMs = Date.now()
 ): void {
@@ -292,7 +301,7 @@ export function scheduleStickyTouchIfNeeded(
 
 /** Delay the idle-window refresh until the response stream has completed successfully. */
 export function scheduleStickyTouchAfter(
-	repos: GatewayRepositories,
+	repos: StickyRoutingPorts,
 	session: StickySession,
 	ready: Promise<boolean>
 ): void {
@@ -303,7 +312,7 @@ export function scheduleStickyTouchAfter(
 }
 
 export async function clearStickyBindingSync(
-	repos: GatewayRepositories,
+	repos: StickyRoutingPorts,
 	session: StickySession
 ): Promise<void> {
 	if (!session.bindingToken) {
@@ -328,9 +337,9 @@ export async function clearStickyBindingSync(
 }
 
 async function performStickyBind(
-	repos: GatewayRepositories,
+	repos: StickyRoutingPorts,
 	session: StickySession,
-	route: RouteResult,
+	route: Pick<StickyRoutingCandidate, 'targetId'>,
 	opts?: { rebound?: boolean; nowMs?: number }
 ): Promise<void> {
 	const nowMs = opts?.nowMs ?? Date.now();
@@ -364,9 +373,9 @@ async function performStickyBind(
 }
 
 export function scheduleStickyBind(
-	repos: GatewayRepositories,
+	repos: StickyRoutingPorts,
 	session: StickySession,
-	route: RouteResult,
+	route: Pick<StickyRoutingCandidate, 'targetId'>,
 	opts?: { rebound?: boolean; nowMs?: number }
 ): void {
 	session.mutations.push(performStickyBind(repos, session, route, opts));
@@ -374,9 +383,9 @@ export function scheduleStickyBind(
 
 /** Delay a bind/rebind until the caller's stream/cache activation predicate succeeds. */
 export function scheduleStickyBindAfter(
-	repos: GatewayRepositories,
+	repos: StickyRoutingPorts,
 	session: StickySession,
-	route: RouteResult,
+	route: Pick<StickyRoutingCandidate, 'targetId'>,
 	ready: Promise<boolean>,
 	opts?: { rebound?: boolean }
 ): void {

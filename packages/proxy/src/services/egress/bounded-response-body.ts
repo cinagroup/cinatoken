@@ -1,3 +1,5 @@
+import { observeResourceCleanup, type ResourceCompletion } from '../resource-completion';
+
 /** Error raised after an upstream response exceeded the local buffering ceiling. */
 export class UpstreamResponseBodyTooLargeError extends Error {
 	constructor(readonly upstreamStatus: number) {
@@ -7,45 +9,102 @@ export class UpstreamResponseBodyTooLargeError extends Error {
 }
 
 /**
- * Buffer a response body without trusting Content-Length. The reader is
+ * Consume decoded pieces without retaining the complete response text. The reader is
  * cancelled as soon as the declared or observed byte ceiling is crossed.
  */
-export async function responseTextWithinLimit(
+export async function consumeResponseTextWithinLimit(
 	response: Response,
 	maxBytes: number,
-): Promise<string> {
+	consumeText: (text: string) => void,
+	signal?: AbortSignal,
+	trackResourceCompletion?: (task: ResourceCompletion) => void,
+): Promise<void> {
+	let cancellation: ResourceCompletion | undefined;
+	const cancel = (source: { cancel(reason?: unknown): Promise<unknown> } | null, reason: unknown): void => {
+		if (!source || cancellation) return;
+		cancellation = observeResourceCleanup(() => source.cancel(reason));
+		trackResourceCompletion?.(cancellation);
+	};
+	if (signal?.aborted) {
+		cancel(response.body, signal.reason);
+		signal.throwIfAborted();
+	}
 	const declaredLength = Number(response.headers.get('content-length'));
 	if (Number.isFinite(declaredLength) && declaredLength > maxBytes) {
-		await response.body?.cancel('upstream_response_too_large').catch(() => undefined);
+		cancel(response.body, 'upstream_response_too_large');
 		throw new UpstreamResponseBodyTooLargeError(response.status);
 	}
-	if (!response.body) return '';
+	if (!response.body) return;
 
 	const reader = response.body.getReader();
-	const chunks: Uint8Array[] = [];
+	// Decode while each borrowed transport chunk is owned by this read. Keeping
+	// every byte chunk and concatenating it later retained two complete binary
+	// copies (and allowed a transport reusing its buffer to corrupt prior data).
+	const decoder = new TextDecoder();
 	let byteLength = 0;
+	let rejectPendingRead: ((reason: unknown) => void) | undefined;
+	const onAbort = (): void => {
+		rejectPendingRead?.(signal?.reason);
+		// A tee/custom transport may never acknowledge cancellation. The read
+		// itself must still terminate; observe cancellation without awaiting it.
+		cancel(reader, signal?.reason);
+	};
+	signal?.addEventListener('abort', onAbort, { once: true });
 	try {
 		while (true) {
-			const { done, value } = await reader.read();
+			signal?.throwIfAborted();
+			const { done, value } = await new Promise<ReadableStreamReadResult<Uint8Array>>((resolve, reject) => {
+				rejectPendingRead = reject;
+				void reader.read().then(resolve, reject);
+			});
+			rejectPendingRead = undefined;
+			signal?.throwIfAborted();
 			if (done) break;
 			byteLength += value.byteLength;
 			if (byteLength > maxBytes) {
-				await reader.cancel('upstream_response_too_large').catch(() => undefined);
+				cancel(reader, 'upstream_response_too_large');
 				throw new UpstreamResponseBodyTooLargeError(response.status);
 			}
-			chunks.push(value);
+			try {
+				// Transport chunks can be arbitrarily large. The consumer never receives
+				// a second full-response text representation from a single decode.
+				for (let offset = 0; offset < value.byteLength; offset += 64 * 1024) {
+					signal?.throwIfAborted();
+					consumeText(decoder.decode(value.subarray(offset, offset + 64 * 1024), { stream: true }));
+				}
+			} catch (error) {
+				cancel(reader, 'upstream_response_inspection_failed');
+				throw error;
+			}
 		}
+		consumeText(decoder.decode());
+	} catch (error) {
+		cancel(reader, 'upstream_response_read_failed');
+		throw error;
 	} finally {
+		rejectPendingRead = undefined;
+		signal?.removeEventListener('abort', onAbort);
 		reader.releaseLock();
 	}
 
-	const bytes = new Uint8Array(byteLength);
-	let offset = 0;
-	for (const chunk of chunks) {
-		bytes.set(chunk, offset);
-		offset += chunk.byteLength;
-	}
-	return new TextDecoder().decode(bytes);
+}
+
+/** Buffer bounded text for existing small-body consumers; large JSON can use the sink directly. */
+export async function responseTextWithinLimit(
+	response: Response,
+	maxBytes: number,
+	signal?: AbortSignal,
+	inspectText?: (text: string) => void,
+	trackResourceCompletion?: (task: ResourceCompletion) => void,
+): Promise<string> {
+	const parts: string[] = []; let page = '';
+	await consumeResponseTextWithinLimit(response, maxBytes, text => {
+		inspectText?.(text);
+		page += text;
+		if (page.length >= 64 * 1024) { parts.push(page); page = ''; }
+	}, signal, trackResourceCompletion);
+	if (page) parts.push(page);
+	return parts.join('');
 }
 
 export function resolveResponseByteLimit(configured: number | undefined, hardLimit: number): number {

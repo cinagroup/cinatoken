@@ -1,0 +1,86 @@
+{
+  "runtime": "v24.14.1",
+  "scope": "synthetic upload parse + serialized upload; observed samples, not continuous peak",
+  "runs": [
+    {
+      "mode": "native",
+      "rawBytes": 52428800,
+      "fileBytes": [
+        20971520,
+        20971520,
+        10485339
+      ],
+      "outboundBytes": 52428828,
+      "retainedPageBytes": 0,
+      "retainedPageBytesAfterRelease": 0,
+      "baseline": {
+        "rss": 376528896,
+        "heapTotal": 175558656,
+        "heapUsed": 39381544,
+        "external": 11085226,
+        "arrayBuffers": 8493411
+      },
+      "afterParse": {
+        "rss": 482803712,
+        "heapTotal": 177131520,
+        "heapUsed": 50310472,
+        "external": 64980588,
+        "arrayBuffers": 113371546
+      },
+      "observedMaximum": {
+        "rss": 566775808,
+        "heapTotal": 178180096,
+        "heapUsed": 50353592,
+        "external": 169814894,
+        "arrayBuffers": 197234997
+      },
+      "afterReleaseGc": {
+        "rss": 446066688,
+        "heapTotal": 177655808,
+        "heapUsed": 40369848,
+        "external": 75439294,
+        "arrayBuffers": 60919362
+      }
+    },
+    {
+      "mode": "paged",
+      "rawBytes": 52428800,
+      "fileBytes": [
+        20971520,
+        20971520,
+        10485339
+      ],
+      "outboundBytes": 52428900,
+      "retainedPageBytes": 52428800,
+      "retainedPageBytesAfterRelease": 0,
+      "baseline": {
+        "rss": 336019456,
+        "heapTotal": 193646592,
+        "heapUsed": 39588128,
+        "external": 11094729,
+        "arrayBuffers": 8487572
+      },
+      "afterParse": {
+        "rss": 390725632,
+        "heapTotal": 194170880,
+        "heapUsed": 52010624,
+        "external": 64974599,
+        "arrayBuffers": 60937212
+      },
+      "observedMaximum": {
+        "rss": 428257280,
+        "heapTotal": 194433024,
+        "heapUsed": 53332296,
+        "external": 102970578,
+        "arrayBuffers": 98931122
+      },
+      "afterReleaseGc": {
+        "rss": 428257280,
+        "heapTotal": 177393664,
+        "heapUsed": 41276680,
+        "external": 102970578,
+        "arrayBuffers": 93359905
+      }
+    }
+  ]
+}

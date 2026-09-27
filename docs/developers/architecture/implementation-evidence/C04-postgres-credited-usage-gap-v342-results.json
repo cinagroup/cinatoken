@@ -1,0 +1,65 @@
+{
+  "status": "PASS",
+  "cleanup": "PASS",
+  "binaryVersion": "postgres (PostgreSQL) 18.6",
+  "scope": "owned loopback PG18.6, exact PG73 plus v338/v339/v340 review proposals",
+  "sourceSha256": {
+    "formalMigrationCorpus": "23afef61a8a670e0af8c90e3a138f522e6b283b454e380a592bf85bca83108dc",
+    "quoteProposal": "1249a7ff07f95b48c7b45a41833c96c9a028e4bfe3a47e44e9dc6b72c3c77246",
+    "dispatchProposal": "c89c79e803fd69a2d09d44b33be3301aeb8aa4ed72c5dff5518439ec29fafb83",
+    "outboxProposal": "f92835c72ff02cba23879ed90ad640832455ccb98764f28fe4ee04ce52aab1ac",
+    "consumerProposal": "66fbd89c3453320284133de06d72793d4e1d2f68aaf756087857c18493e955db",
+    "auditSql": "796ec5789c9a9f13672d97c0e1596b89c283aa8dd6b44049a45a191991daf8b5",
+    "legacyRebuildSource": "6e02e6fcb15c5d2942001f0b8574f6521d7131f36f712db0f731aa19c35f7a8c",
+    "nativeFixture": "713583fdeb5ebfebfd03c5eb920fd464002bf9f1a4a8bbb78a3928d7720bf1ea"
+  },
+  "stages": [
+    {
+      "name": "formal-pg73-installed",
+      "result": "PASS"
+    },
+    {
+      "name": "legacy-rebuild-source-pinned-to-earnings-only",
+      "result": "PASS"
+    },
+    {
+      "name": "review-proposals-installed-with-exact-activation",
+      "result": "PASS"
+    },
+    {
+      "name": "seller-buyer-and-quote-seeded",
+      "result": "PASS"
+    },
+    {
+      "name": "legacy-credit-economic-credit-and-pending-manual-committed",
+      "result": "PASS"
+    },
+    {
+      "name": "read-only-audit-detects-committed-economic-credit-missing-from-key",
+      "result": "PASS",
+      "projected": "0.000000",
+      "credited": "7.625000"
+    },
+    {
+      "name": "legacy-only-rebuild-still-omits-economic-credit",
+      "result": "PASS"
+    },
+    {
+      "name": "concurrent-economic-credits-remain-durable-while-projection-stays-stale",
+      "result": "PASS"
+    },
+    {
+      "name": "owner-transfer-audit-keeps-historic-seller-snapshots",
+      "result": "PASS"
+    },
+    {
+      "name": "audit-installs-no-write-object-and-runtime-cannot-read-private-details",
+      "result": "PASS"
+    }
+  ],
+  "limitations": [
+    "Read-only audit only; no canonical projection, worker, reader cutover, or production activation.",
+    "The audit scans one key history inside a read-only snapshot. Large-history keyset backfill and incremental repair need a separately reviewed write-side contract.",
+    "The legacy-only rebuild is reproduced with its exact SQL aggregate, not invoked through the TypeScript repository runtime."
+  ]
+}

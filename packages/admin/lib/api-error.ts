@@ -1,6 +1,9 @@
 /**
  * `/api/admin/*` 等 BFF 的兜底错误处理：打结构化日志并返回 500（响应体含 `requestId` 便于对齐日志）。
  */
+import { isTransientPostgresConnectionError } from '@octafuse/core/storage/postgres-connection-error';
+import { DATABASE_UNAVAILABLE_CODE } from './gateway-read-retry';
+
 type GatewayApiErrorOptions = {
   /** 用于日志定位，如 `gateway.keys.GET` */
   route: string;
@@ -50,6 +53,7 @@ function toErrorDetails(error: unknown, seen = new Set<unknown>(), depth = 0): E
 export function handleGatewayApiError({ route, error, context }: GatewayApiErrorOptions) {
   const requestId = crypto.randomUUID();
   const details = toErrorDetails(error);
+  const databaseUnavailable = isTransientPostgresConnectionError(error);
 
   console.error('Gateway API error', {
     requestId,
@@ -61,9 +65,13 @@ export function handleGatewayApiError({ route, error, context }: GatewayApiError
   return Response.json(
     {
       success: false,
-      message: 'Internal server error',
+      message: databaseUnavailable ? 'Database temporarily unavailable. Please retry.' : 'Internal server error',
+      ...(databaseUnavailable ? { code: DATABASE_UNAVAILABLE_CODE } : {}),
       error: { requestId },
     },
-    { status: 500 }
+    {
+      status: databaseUnavailable ? 503 : 500,
+      headers: { 'Cache-Control': 'no-store', ...(databaseUnavailable ? { 'Retry-After': '2' } : {}) },
+    }
   );
 }

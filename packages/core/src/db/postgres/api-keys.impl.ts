@@ -51,6 +51,32 @@ import type { AdminApiKeyListItem } from "../../storage/repository-dtos";
 import { parseMoney } from "../../storage/critical-write-paths-utils";
 import { normalizeGatewayKeyLimitReset } from "../../gateway-key-limits";
 
+function isDispatchIntentApiKeyDeleteRestriction(error: unknown): boolean {
+	if (typeof error !== "object" || error === null) return false;
+	const pgError = error as {
+		code?: unknown;
+		constraint_name?: unknown;
+		constraint?: unknown;
+		schema_name?: unknown;
+		schema?: unknown;
+		table_name?: unknown;
+		table?: unknown;
+	};
+	const expectedConstraint = "request_dispatch_intents_api_key_id_fkey";
+	const matchesIfPresent = (value: unknown, expected: string) =>
+		value === undefined || value === expected;
+	return (
+		(pgError.code === "23001" || pgError.code === "23503") &&
+		(pgError.constraint_name === expectedConstraint || pgError.constraint === expectedConstraint) &&
+		matchesIfPresent(pgError.constraint_name, expectedConstraint) &&
+		matchesIfPresent(pgError.constraint, expectedConstraint) &&
+		matchesIfPresent(pgError.schema_name, "cinatoken_gateway") &&
+		matchesIfPresent(pgError.schema, "cinatoken_gateway") &&
+		matchesIfPresent(pgError.table_name, "request_dispatch_intents") &&
+		matchesIfPresent(pgError.table, "request_dispatch_intents")
+	);
+}
+
 function apiKeyListOrderBy(
 	sort: ApiKeyListSortField,
 	order: ApiKeyListSortOrder
@@ -261,33 +287,33 @@ const pgManagementUsageSelect = `
 		k.limit_micros, k.limit_reset, k.include_byok_in_limit, k.limit_epoch,
 		k.created_at, k.updated_at,
 		COALESCE((SELECT budget_window.unreserved_micros + budget_window.settled_micros
-			FROM guardrail_budget_windows budget_window
+			FROM cinatoken_gateway.guardrail_budget_windows budget_window
 			WHERE budget_window.workspace_id = k.workspace_id
 				AND budget_window.scope_type = 'api_key' AND budget_window.scope_id = k.id
 				AND budget_window.period = COALESCE(k.limit_reset, 'lifetime')
 				AND budget_window.period_start <= CURRENT_TIMESTAMP
 				AND budget_window.period_end > CURRENT_TIMESTAMP
 			ORDER BY budget_window.period_start DESC LIMIT 1), 0) AS limit_consumed_micros,
-		COALESCE((SELECT SUM(log.charged_cost) FROM api_key_request_logs log
+		COALESCE((SELECT SUM(log.charged_cost) FROM cinatoken_gateway.api_key_request_logs log
 			WHERE log.api_key_id = k.id), 0) AS usage,
-		COALESCE((SELECT SUM(log.charged_cost) FROM api_key_request_logs log
+		COALESCE((SELECT SUM(log.charged_cost) FROM cinatoken_gateway.api_key_request_logs log
 			WHERE log.api_key_id = k.id AND log.created_at >= date_trunc('day', CURRENT_TIMESTAMP)), 0) AS usage_daily,
-		COALESCE((SELECT SUM(log.charged_cost) FROM api_key_request_logs log
+		COALESCE((SELECT SUM(log.charged_cost) FROM cinatoken_gateway.api_key_request_logs log
 			WHERE log.api_key_id = k.id AND log.created_at >= date_trunc('week', CURRENT_TIMESTAMP)), 0) AS usage_weekly,
-		COALESCE((SELECT SUM(log.charged_cost) FROM api_key_request_logs log
+		COALESCE((SELECT SUM(log.charged_cost) FROM cinatoken_gateway.api_key_request_logs log
 			WHERE log.api_key_id = k.id AND log.created_at >= date_trunc('month', CURRENT_TIMESTAMP)), 0) AS usage_monthly,
-		COALESCE((SELECT SUM(log.standard_cost) FROM api_key_request_logs log
+		COALESCE((SELECT SUM(log.standard_cost) FROM cinatoken_gateway.api_key_request_logs log
 			WHERE log.api_key_id = k.id AND log.is_byok IS TRUE), 0) AS byok_usage,
-		COALESCE((SELECT SUM(log.standard_cost) FROM api_key_request_logs log
+		COALESCE((SELECT SUM(log.standard_cost) FROM cinatoken_gateway.api_key_request_logs log
 			WHERE log.api_key_id = k.id AND log.is_byok IS TRUE
 				AND log.created_at >= date_trunc('day', CURRENT_TIMESTAMP)), 0) AS byok_usage_daily,
-		COALESCE((SELECT SUM(log.standard_cost) FROM api_key_request_logs log
+		COALESCE((SELECT SUM(log.standard_cost) FROM cinatoken_gateway.api_key_request_logs log
 			WHERE log.api_key_id = k.id AND log.is_byok IS TRUE
 				AND log.created_at >= date_trunc('week', CURRENT_TIMESTAMP)), 0) AS byok_usage_weekly,
-		COALESCE((SELECT SUM(log.standard_cost) FROM api_key_request_logs log
+		COALESCE((SELECT SUM(log.standard_cost) FROM cinatoken_gateway.api_key_request_logs log
 			WHERE log.api_key_id = k.id AND log.is_byok IS TRUE
 				AND log.created_at >= date_trunc('month', CURRENT_TIMESTAMP)), 0) AS byok_usage_monthly
-	FROM api_keys k INNER JOIN workspaces w ON w.id = k.workspace_id`;
+	FROM cinatoken_gateway.api_keys k INNER JOIN cinatoken_gateway.workspaces w ON w.id = k.workspace_id`;
 
 const resolvedCols = {
 	id: pgApiKeysTable.id,
@@ -468,9 +494,9 @@ export function createPostgresApiKeysRepository(
 			const account = pgManagementAccountPredicate(params, values.length + 1);
 			values.push(account.value);
 			const rows = await raw.unsafe<{ id: string }[]>(
-				`UPDATE api_keys SET ${sets.join(", ")}
+				`UPDATE cinatoken_gateway.api_keys SET ${sets.join(", ")}
 				WHERE key_hash = $${hashPlaceholder} AND EXISTS (
-					SELECT 1 FROM workspaces w WHERE w.id = api_keys.workspace_id
+					SELECT 1 FROM cinatoken_gateway.workspaces w WHERE w.id = api_keys.workspace_id
 						AND w.status = 'active' AND ${account.sql}
 				) RETURNING id`,
 				values as never[]
@@ -480,29 +506,37 @@ export function createPostgresApiKeysRepository(
 
 		async deleteByHashForManagement(params) {
 			const account = pgManagementAccountPredicate(params, 2);
-			const rows = await raw.unsafe<{ id: string }[]>(
-				`DELETE FROM api_keys WHERE key_hash = $1
+			let rows: { id: string }[];
+			try {
+				rows = await raw.unsafe<{ id: string }[]>(
+					`DELETE FROM cinatoken_gateway.api_keys WHERE key_hash = $1
 					AND EXISTS (
-						SELECT 1 FROM workspaces w WHERE w.id = api_keys.workspace_id
+						SELECT 1 FROM cinatoken_gateway.workspaces w WHERE w.id = api_keys.workspace_id
 							AND w.status = 'active' AND ${account.sql}
 					)
 					AND NOT EXISTS (
-						SELECT 1 FROM user_budget_reservations reservation
+						SELECT 1 FROM cinatoken_gateway.user_budget_reservations reservation
 						WHERE reservation.api_key_id = api_keys.id
 							AND reservation.state IN ('reserved', 'dispatched')
 					)
 					AND NOT EXISTS (
-						SELECT 1 FROM guardrail_budget_reservations reservation
+						SELECT 1 FROM cinatoken_gateway.guardrail_budget_reservations reservation
 						WHERE reservation.scope_type = 'api_key'
 							AND reservation.scope_id = api_keys.id
 							AND reservation.state IN ('reserved', 'dispatched')
 					)
 					AND NOT EXISTS (
-						SELECT 1 FROM api_key_request_logs request_log
+						SELECT 1 FROM cinatoken_gateway.api_key_request_logs request_log
 						WHERE request_log.api_key_id = api_keys.id
 					) RETURNING id`,
-				[params.keyHash, account.value]
-			);
+					[params.keyHash, account.value]
+				);
+			} catch (error) {
+				// 0069 adds an ON DELETE RESTRICT intent FK. Let the FK arbitrate races
+				// without referencing that table on databases still below migration 0069.
+				if (isDispatchIntentApiKeyDeleteRestriction(error)) return false;
+				throw error;
+			}
 			return rows.length === 1;
 		},
 
@@ -780,27 +814,33 @@ export function createPostgresApiKeysRepository(
 		},
 
 		async deleteApiKeyHard(id: string, _secretKey: string): Promise<boolean> {
-			const deleted = await raw.unsafe<Array<{ id: string }>>(
-				`DELETE FROM api_keys
+			let deleted: { id: string }[];
+			try {
+				deleted = await raw.unsafe<Array<{ id: string }>>(
+					`DELETE FROM cinatoken_gateway.api_keys
 				WHERE id = $1
 					AND NOT EXISTS (
-						SELECT 1 FROM user_budget_reservations
+						SELECT 1 FROM cinatoken_gateway.user_budget_reservations
 						WHERE api_key_id = api_keys.id
 							AND state IN ('reserved', 'dispatched')
 					)
 					AND NOT EXISTS (
-						SELECT 1 FROM guardrail_budget_reservations
+						SELECT 1 FROM cinatoken_gateway.guardrail_budget_reservations
 						WHERE scope_type = 'api_key'
 							AND scope_id = api_keys.id
 							AND state IN ('reserved', 'dispatched')
 					)
 					AND NOT EXISTS (
-						SELECT 1 FROM api_key_request_logs
+						SELECT 1 FROM cinatoken_gateway.api_key_request_logs
 						WHERE api_key_id = api_keys.id
 					)
 				RETURNING id`,
-				[id]
-			);
+					[id]
+				);
+			} catch (error) {
+				if (isDispatchIntentApiKeyDeleteRestriction(error)) return false;
+				throw error;
+			}
 			return deleted.length > 0;
 		},
 

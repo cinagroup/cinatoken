@@ -1,0 +1,39 @@
+{
+  "status": "PASS",
+  "cleanup": "PASS",
+  "binaryVersion": "postgres (PostgreSQL) 18.6",
+  "scope": "owned loopback-only PG17+ fixture; synthetic LOGIN and table; no production origin",
+  "stages": [
+    {
+      "name": "implicit-statement-server-termination",
+      "result": "PASS",
+      "error": {
+        "name": "Error",
+        "code": "ECONNRESET",
+        "severity": null
+      },
+      "backendGone": true
+    },
+    {
+      "name": "explicit-transaction-server-termination-and-rollback",
+      "result": "PASS",
+      "error": {
+        "name": "Error",
+        "code": "ECONNRESET",
+        "severity": null
+      },
+      "backendGone": true,
+      "persistedRows": 0
+    },
+    {
+      "name": "server-log-timeout-attribution",
+      "result": "PASS",
+      "transactionTimeoutTerminations": 2
+    }
+  ],
+  "sourceSha256": {
+    "nativeTest": "6d27e08adc36de4eb9db04f6e559e2c217bb05c4a32d5686883885cff319cafa",
+    "nativeCluster": "6b5923be8d3bdcd061033eed1af2f67f3b87fa2fca1f2cf0a0b2eb0eb2cb8d2a"
+  },
+  "serverVersionNum": 180006
+}

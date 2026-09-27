@@ -1,0 +1,55 @@
+{
+  "status": "PASS",
+  "cleanup": "PASS",
+  "binaryVersion": "postgres (PostgreSQL) 18.6",
+  "scope": "owned loopback PG18.6, 73 formal migrations, four review-only repair proposals and direct LOGIN grant",
+  "stages": [
+    {
+      "name": "formal-migrations-and-review-only-proposals-installed",
+      "result": "PASS"
+    },
+    {
+      "name": "isolated-scram-login-and-server-defaults",
+      "result": "PASS"
+    },
+    {
+      "name": "trigger-predicate-and-function-drift-block-atomic-grant",
+      "result": "PASS"
+    },
+    {
+      "name": "public-column-drift-blocks-grant-then-exact-grant-succeeds",
+      "result": "PASS"
+    },
+    {
+      "name": "ordinary-runtime-rerun-keeps-definer-and-job-closed",
+      "result": "PASS"
+    },
+    {
+      "name": "direct-login-role-defaults-and-table-function-denials",
+      "result": "PASS"
+    },
+    {
+      "name": "direct-login-runner-repairs-one-durable-job-without-second-credit",
+      "result": "PASS"
+    },
+    {
+      "name": "real-15-second-server-timeout-rolls-back-finish-and-runner-repairs-healthy-key-in-same-tick",
+      "result": "PASS"
+    }
+  ],
+  "sourceSha256": {
+    "generator": "c2f6fc4fa68af525d9283c95043d5c9b31949c0d2db3ea5d0014e678b52db189",
+    "nativeTest": "ce1d94291d14a82450dd9f3a6d0b2dcd1f19645fd78f416d8d137e96b2d3c537",
+    "runtimeGrant": "c07358f59ddc2ff314d3cc3470587ab04e71627f81d2a80a63ed5bdf09a4fc20",
+    "repairRunner": "55eada34e0c11bda99e2c2961ab0fb707d0e71f9c5b1b2a2106bf834506badf8",
+    "repairJobsProposal": "7b2f288ecb83e34207bcfd5a2a4eec934c0d6e156190826816ab033716c173d4",
+    "failureIsolationProposal": "14a9be7e9ed354f63b7d74c81303502a0217c9be080f541009466804d3e19b63",
+    "durableClaimProposal": "b90fa530433a632280c91837b3981eba026e50ccf863cebc8d161871cc349338",
+    "historyGuardProposal": "454a720f9a6b7410e0aad99c2aaa2eb3327fbbac8c86bb3e3cd4537131e6611b"
+  },
+  "limitations": [
+    "No production SQL, remote database, Hyperdrive, Workers Cron, Queue or deployment is exercised.",
+    "A SCRAM verifier format cannot prove externally generated password entropy or origin binding.",
+    "The role connection limit must be reconciled with the live instance-wide connection budget."
+  ]
+}

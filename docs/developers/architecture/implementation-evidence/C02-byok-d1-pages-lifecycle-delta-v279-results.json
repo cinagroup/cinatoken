@@ -1,0 +1,184 @@
+{
+  "version": "v279",
+  "status": "OFFLINE_SNAPSHOT_DELTA_OBSERVED",
+  "inputs": [
+    {
+      "path": "docs/developers/architecture/implementation-evidence/C02-byok-d1-pages-lifecycle-v279-results.json",
+      "sha256": "a37365032ba25cdc1c939342a5e47f357a7970fa74a90ddce59a30ea6534b3b3"
+    },
+    {
+      "path": ".wrangler/staging/byok-pages-lifecycle-v279-final-cloud/result.json",
+      "sha256": "ab67ce2b84e9b269863bb1bbbeafdcc7ad0e99475672d1818f568b9ba320f294"
+    },
+    {
+      "path": ".wrangler/staging/byok-pages-history-v277-verified-cloud/result.json",
+      "sha256": "2d87f6d99ca998dbd1036d3c0a9895f99142b33b05e99483e1c14b179534456e"
+    },
+    {
+      "path": ".wrangler/staging/byok-pages-worker-v278-cloud/result.json",
+      "sha256": "4ffc6d4997a703c93ed59ef46c57e7c2804e22d19980abb375256e92c3bdf471"
+    }
+  ],
+  "previousDeploymentCount": 1560,
+  "currentDeploymentCount": 1565,
+  "metadataUnchanged": 1559,
+  "added": [
+    {
+      "project": "cinashop-admin",
+      "id": "4813729e-aae3-43ff-91e9-729ef3948e07",
+      "environment": "production",
+      "usesFunctions": true,
+      "isSkipped": false,
+      "createdOn": "2026-09-21T05:20:07.475557Z",
+      "modifiedOn": "2026-09-21T05:20:09.278876Z",
+      "metadataSha256": "9a393ba49072ef09e7540f495d48d0fd490f2c939cf5aba1d05ee62297047148"
+    },
+    {
+      "project": "cinashop-h5",
+      "id": "136b9e2a-3a11-4f58-8ab3-3840e65a34c6",
+      "environment": "production",
+      "usesFunctions": true,
+      "isSkipped": false,
+      "createdOn": "2026-09-21T05:20:00.026622Z",
+      "modifiedOn": "2026-09-21T05:20:01.794699Z",
+      "metadataSha256": "0c5ef4ed85f32c91b48facedd634332e106dd05f4f85cd40972b48c45467ee1e"
+    },
+    {
+      "project": "cinashop-kefu",
+      "id": "d2381a85-77ad-406c-9d12-3424150e69f3",
+      "environment": "production",
+      "usesFunctions": true,
+      "isSkipped": false,
+      "createdOn": "2026-09-21T05:20:02.102051Z",
+      "modifiedOn": "2026-09-21T05:20:04.594539Z",
+      "metadataSha256": "e460fe7ce6f1fb1c11cbdc9558ea4f455868697227ac790254daf0f423f8b609"
+    },
+    {
+      "project": "cinashop-pc",
+      "id": "b4d86172-5ced-40ee-84fc-8b89dcae0f98",
+      "environment": "production",
+      "usesFunctions": true,
+      "isSkipped": false,
+      "createdOn": "2026-09-21T05:20:07.658459Z",
+      "modifiedOn": "2026-09-21T05:20:09.117065Z",
+      "metadataSha256": "2cdc0dd8502228f2688e4bdc6bbe2603aa48edd43a699ca8991e317eebe3c004"
+    },
+    {
+      "project": "cinashop-supplier",
+      "id": "4b7e0c7b-a4d0-4415-b6a0-f69d59324485",
+      "environment": "production",
+      "usesFunctions": true,
+      "isSkipped": false,
+      "createdOn": "2026-09-21T05:20:03.90164Z",
+      "modifiedOn": "2026-09-21T05:20:05.369485Z",
+      "metadataSha256": "ee1bbda35db95bf6634d94c0b8e8c86d44e0f0d3b887a7fa0249c6308e60a832"
+    }
+  ],
+  "removed": [],
+  "changed": [
+    {
+      "before": {
+        "project": "cinashop-pc",
+        "id": "c224e558-7b50-4070-a706-cd7cc0fce35f",
+        "environment": "production",
+        "usesFunctions": true,
+        "isSkipped": false,
+        "createdOn": "2026-09-14T06:47:38.024078Z",
+        "modifiedOn": "2026-09-14T06:47:39.630317Z",
+        "metadataSha256": "a63694441bf39a3c618376a50308987fc118e43bae2a320a76da06238fcb4383"
+      },
+      "after": {
+        "project": "cinashop-pc",
+        "id": "c224e558-7b50-4070-a706-cd7cc0fce35f",
+        "environment": "production",
+        "usesFunctions": true,
+        "isSkipped": false,
+        "createdOn": "2026-09-14T06:47:38.024078Z",
+        "modifiedOn": "2026-09-14T06:47:39.630317Z",
+        "metadataSha256": "0193607dcf6ff94ae43070a739af7e281c7993232a9251af561e91a6ec013b28"
+      },
+      "changedProjectedFields": [
+        "metadataSha256"
+      ]
+    }
+  ],
+  "stageCounts": {
+    "false/build/failure": 136,
+    "true/queued/skipped": 4,
+    "false/clone_repo/failure": 8,
+    "false/initialize/failure": 3,
+    "false/deploy/active": 1,
+    "false/build/canceled": 1
+  },
+  "unresolved": [
+    {
+      "project": "cinaseek",
+      "id": "4c3f58d9-11b9-4875-adba-ad8165ff3180",
+      "environment": "production",
+      "usesFunctions": null,
+      "isSkipped": false,
+      "createdOn": "2026-05-22T18:34:19.206408Z",
+      "modifiedOn": "2026-05-22T18:43:42.393533Z",
+      "metadataSha256": "f5134310ff845065dd60e45710a368db9e318a5c2260a29e87804575a4a43699",
+      "lifecycle": {
+        "functionsFieldState": "NULL",
+        "latestStage": {
+          "name": "deploy",
+          "status": "active",
+          "startedOn": "2026-05-22T18:43:29.125833Z",
+          "endedOn": null
+        },
+        "stages": [
+          {
+            "name": "queued",
+            "status": "success",
+            "startedOn": "2026-05-22T18:34:19.346562Z",
+            "endedOn": "2026-05-22T18:34:19.351097Z"
+          },
+          {
+            "name": "initialize",
+            "status": "success",
+            "startedOn": "2026-05-22T18:34:19.351097Z",
+            "endedOn": "2026-05-22T18:34:22.621012Z"
+          },
+          {
+            "name": "clone_repo",
+            "status": "success",
+            "startedOn": "2026-05-22T18:34:22.621012Z",
+            "endedOn": "2026-05-22T18:34:33.052499Z"
+          },
+          {
+            "name": "build",
+            "status": "success",
+            "startedOn": "2026-05-22T18:34:33.052499Z",
+            "endedOn": "2026-05-22T18:43:29.125833Z"
+          },
+          {
+            "name": "deploy",
+            "status": "active",
+            "startedOn": "2026-05-22T18:43:29.125833Z",
+            "endedOn": null
+          }
+        ],
+        "latestStageConsistent": true,
+        "timestampAnomalies": [],
+        "classification": "INCOMPLETE_ACTIVE_OR_INCONSISTENT",
+        "runtimeAbsenceProved": false
+      }
+    }
+  ],
+  "previousVersionSnapshotFinishedAt": "2026-09-21T05:02:46.752Z",
+  "currentLifecycleSnapshotFinishedAt": "2026-09-21T05:32:29.674Z",
+  "addedRowsCreatedAfterPreviousVersionSnapshot": true,
+  "currentWorkerVersionsRecollected": false,
+  "currentSnapshotVersionBindingsComplete": false,
+  "changesAttributableToThisGetOnlyRun": false,
+  "projectBackingNamesChanged": false,
+  "runtimeAbsenceProved": false,
+  "fullPreflightPassed": false,
+  "cloudCalls": 0,
+  "runner": {
+    "path": ".wrangler/staging/analyze-byok-pages-lifecycle-delta-v279.mjs",
+    "sha256": "8be90f993eb46f73bb4b7964661382c36ef93b0db7e795b2b1adf9a81defa520"
+  }
+}

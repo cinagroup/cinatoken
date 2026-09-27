@@ -78,6 +78,7 @@ import { GatewayErrorCode } from '../../services/gateway-error-codes';
 import { gatewayErrorJson } from '../../services/gateway-error-response';
 import { RequestTimingCollector } from '../../services/request-timing';
 import { scheduleBackgroundWork } from '../../runtime/schedule-background-work';
+import { scheduleResourceCompletion } from '../../runtime/schedule-resource-completion';
 import { stickyConfigFromSurface } from '../../services/provider-sticky-routing';
 import { buildModelFallbackPlan } from '../../services/model-fallback-plan';
 import {
@@ -1035,6 +1036,8 @@ audioRoutes.post('/transcriptions', async (c) => {
 			transcription,
 			c.req.raw.signal,
 			{
+				registerResourceCompletion: task => scheduleResourceCompletion(c, task),
+				errorContext: { skin: 'chat', requestId: requestCorrelationId },
 				affinityKey,
 				tierKeyPrefix,
 				strategy: selectedPlan.strategy.base,
@@ -1535,6 +1538,8 @@ audioRoutes.post('/speech', async (c) => {
 			speech,
 			c.req.raw.signal,
 			{
+				registerResourceCompletion: task => scheduleResourceCompletion(c, task),
+				errorContext: { skin: 'chat', requestId: requestCorrelationId },
 				affinityKey,
 				tierKeyPrefix,
 				strategy: selectedPlan.strategy.base,
@@ -1627,7 +1632,10 @@ async function finalizeSpeechResponse(params: {
 		stickyMutationPromise,
 	} = proxyResult;
 	if (stickyMutationPromise) scheduleBackgroundWork(c, stickyMutationPromise);
-	const { response, errorBodyText } = await materializeNonOkResponse(proxyResult.response).catch(
+	const { response, errorBodyText } = await materializeNonOkResponse(proxyResult.response, {
+		requestId: guardrailBudgetLease.requestId,
+		trustedGatewayError: proxyResult.meta?.gatewayGeneratedError === true,
+	}).catch(
 		async (error: unknown) => {
 			await guardrailBudgetLease.forfeit('upstream_response_materialization_failed');
 			await terminateAudioOrdinaryBudget(
@@ -1641,7 +1649,8 @@ async function finalizeSpeechResponse(params: {
 	let userModelCircuitEvent = null;
 	if (response.ok) {
 		markUserModelSuccess(apiKey.userId, baseModelId);
-	} else if (errorBodyText != null) {
+	} else if (errorBodyText != null && proxyResult.meta?.gatewayGeneratedError !== true
+		&& proxyResult.meta?.admissionDeniedPreDispatch !== true) {
 		userModelCircuitEvent = maybeTriggerUserModelCircuitFromUpstream(
 			apiKey.userId,
 			baseModelId,
@@ -1846,7 +1855,10 @@ async function finalizeAudioResponse(params: {
 	if (stickyMutationPromise) {
 		scheduleBackgroundWork(c, stickyMutationPromise);
 	}
-	const { response, errorBodyText } = await materializeNonOkResponse(proxyResult.response).catch(
+	const { response, errorBodyText } = await materializeNonOkResponse(proxyResult.response, {
+		requestId: guardrailBudgetLease.requestId,
+		trustedGatewayError: proxyResult.meta?.gatewayGeneratedError === true,
+	}).catch(
 		async (error: unknown) => {
 			await guardrailBudgetLease.forfeit('upstream_response_materialization_failed');
 			await terminateAudioOrdinaryBudget(
@@ -1877,7 +1889,8 @@ async function finalizeAudioResponse(params: {
 	let userModelCircuitEvent = null;
 	if (response.ok) {
 		markUserModelSuccess(apiKey.userId, baseModelId);
-	} else if (errorBodyText != null) {
+	} else if (errorBodyText != null && meta?.gatewayGeneratedError !== true
+		&& meta?.admissionDeniedPreDispatch !== true) {
 		userModelCircuitEvent = maybeTriggerUserModelCircuitFromUpstream(
 			apiKey.userId,
 			baseModelId,

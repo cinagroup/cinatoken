@@ -1,0 +1,56 @@
+{
+  "version": "v309",
+  "date": "2026-09-23",
+  "status": "LOCAL_CONTRACT_PASS_QUEUE_NOT_DEPLOYABLE_PRODUCTION_DISABLED",
+  "C03": "DOING",
+  "goalComplete": false,
+  "validation": {
+    "ordinaryOwner": { "pass": 15, "fail": 0 },
+    "observationOwnedScanAndCatalog": { "pass": 47, "fail": 0 },
+    "pgliteFinancialRunnerAfterLocalModuleSet": { "pass": 31, "fail": 0 },
+    "observationPackageExport": { "pass": 1, "fail": 0 },
+    "queueOwnerCandidate": { "pass": 8, "fail": 0 },
+    "v300AdoptionRegression": { "pass": 9, "fail": 0 },
+    "coreRecoveryRunnerTypecheck": true,
+    "corePublicObservationTypecheck": true,
+    "proxyTypecheck": true,
+    "v308HistoricalSourcePinFailedAsExpected": true,
+    "v308CurrentFullRerunAccepted": false,
+    "workersRuntimeTests": 0,
+    "nativePostgresTests": 0
+  },
+  "sourceSha256": {
+    "packages/core/src/storage/recovery/postgres-recovery-operation-owner.ts": "daeb01afe2c6b32b3c8f63efa1d9a952aee8ca6de11ff4234febe70ae48a4c2a",
+    "packages/core/src/storage/recovery/supervise-usage-recovery-postgres.ts": "fe6665d60e7eb2c3eedd6f124fd08b139bc3fc12f2bcc3c5695466066d9b1fbf",
+    "packages/core/src/storage/recovery/postgres-observation-types.ts": "d828199a9f0873845f7e1c0df6e85924159a92d03fe107b8e7f07ea004caca50",
+    "packages/core/src/storage/recovery/postgres-observation-types.contract.ts": "f731fec653b0b1c45f655cdbcd95d476005018fe8efbb6789eafd80afea74489",
+    "packages/core/src/storage/recovery/postgres-observation-exports.test.mjs": "cf066b7249488578fa7bdbd7f72c91a4cec334cdd6aa15684186fc1f57fb2230",
+    "packages/core/package.json": "cc046ecde422957902dcb5a24f45f48d3235916ee4c0042adf3ca0d42efce919",
+    "packages/proxy/src/runtime/postgres-recovery-queue-owner.ts": "b4dbb2bbd0c10c0cb659034c2f87cd767cc765388a7989a5784a4eff1fb55637",
+    "packages/proxy/src/runtime/postgres-recovery-queue-owner.test.ts": "9e4108f6db4b796df7b031d47f88d4dd0ac0432eb0b9f7a7f37b9f8ddff04eef"
+  },
+  "candidateArtifactSha256": {
+    "esm": "e2e2385dd7543d557d64312be9ef1045cec57a094cfc1aeec882d4c356c25521",
+    "cjs": "5d08e70c604566c2d2ed9c84000008c8d13a15a9b04df268c9b3ef218154098b",
+    "cf": "5704f05aeb495cf78a97ae7d140d3a980007130736e0c8bc6b77ed90ec47d72d"
+  },
+  "boundaries": {
+    "productionActivated": false,
+    "queueConfigured": false,
+    "queueAckPolicyImplemented": false,
+    "crossIsolateLockImplemented": false,
+    "physicalCloseProven": false,
+    "serverExecutionDeadlineAllPathsImplemented": false,
+    "trustworthyResourceReleaseImplemented": false,
+    "unknownChargingPolicyDecided": false,
+    "crossNetworkExactlyOnceClaimed": false,
+    "remoteSqlCalls": 0,
+    "cloudManagementCalls": 0,
+    "deployments": 0,
+    "modelCalls": 0,
+    "kmsCalls": 0,
+    "cloudResourcesCreatedOrDeleted": 0,
+    "cumulativeStagingCapUsd": 2,
+    "capReset": false
+  }
+}

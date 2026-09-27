@@ -1,0 +1,105 @@
+{
+  "status": "PASS",
+  "cleanup": "PASS",
+  "binaryVersion": "postgres (PostgreSQL) 18.6",
+  "scope": "owned loopback PostgreSQL with actual parent adapter, budget coordinator and Images generations driver; fake budgets and fetch",
+  "limitations": [
+    "Budget repositories are in-memory witnesses; no financial settlement, recovery reconciliation or production budget persistence is proven.",
+    "The request digest is synthetic and not derived from an authenticated canonical HTTP request.",
+    "The claim ACK delay and loss are wrapper simulations after a real COMMIT, not network packet loss.",
+    "Only Images generations is exercised. No production factory, runtime EXECUTE grant or real origin is activated."
+  ],
+  "sourceSha256": {
+    "nativeTest": "df988b8d1417ddcc38589af48554fc534fe94c808879c340e72cb8a7309d81a6",
+    "parentAdapter": "566da9984f7e4fca28d91a77d71cb9456848ea344b61698ba2c908f2d8c345a0",
+    "budgetAdmission": "91a85f75dbeb16216611413f2027a8c8c0056ae3390de7e277b3160008037516",
+    "authProposal": "02cf4ffde6d37bb9253e9466cbde59047b5b8a0b19d73897ae69d60696db077d",
+    "singleClaimProposal": "6e62e12c25a94e4b32fe0121c728198a409f95427ef4cdcb14c51ebe1a629112",
+    "parentProposal": "2e8c20088f72271ecf89bc4f43583ec3b2247893a11b84cc6a220563a72de8de",
+    "proxy": "07b093ad1909d612e2ad2b707fb608f214816bfe2e3bd8629fe7fba699e1ed19",
+    "failover": "de3021f862d2a5c8b6396f9604627a9928eb570dd7cdc79351c7390b88dbb3e3",
+    "imagesDriver": "161f4ef24d943e2e8bbcb7f9064f638e1cd01277b86ecfc4b1b9fc4159e37389",
+    "nativeCluster": "6b5923be8d3bdcd061033eed1af2f67f3b87fa2fca1f2cf0a0b2eb0eb2cb8d2a",
+    "formalMigrationCorpus": "23afef61a8a670e0af8c90e3a138f522e6b283b454e380a592bf85bca83108dc"
+  },
+  "stages": [
+    {
+      "name": "formal-schema-and-three-review-only-proposals",
+      "result": "PASS",
+      "formalMigrations": 73,
+      "index": {
+        "unique": true,
+        "valid": true
+      }
+    },
+    {
+      "name": "durable-claim-before-client-ack-holds-both-reservations-zero-fetch",
+      "result": "PASS",
+      "durableClaims": 1,
+      "providerFetches": 0,
+      "budgetState": {
+        "ordinary": "reserved",
+        "guardrail": "reserved"
+      }
+    },
+    {
+      "name": "acknowledged-parent-grant-marks-both-budgets-before-one-fetch",
+      "result": "PASS",
+      "eventOrder": [
+        "ordinary:reserve",
+        "guardrail:reserve",
+        "prepare:sql",
+        "prepare:durable_commit",
+        "prepare:commit_ack",
+        "claim:sql",
+        "claim:durable_commit",
+        "claim:commit_ack",
+        "claim:granted",
+        "guardrail:dispatch",
+        "ordinary:dispatch",
+        "fetch"
+      ],
+      "providerFetches": 1,
+      "responseStatus": 503,
+      "providerId": "first",
+      "usageTotalTokens": 10
+    },
+    {
+      "name": "definitive-sibling-no-claim-releases-both-budgets-zero-fetch",
+      "result": "PASS",
+      "eventOrder": [
+        "ordinary:reserve",
+        "guardrail:reserve",
+        "prepare:sql",
+        "prepare:durable_commit",
+        "prepare:commit_ack",
+        "claim:sql",
+        "claim:durable_commit",
+        "claim:commit_ack",
+        "claim:not_granted",
+        "guardrail:release",
+        "ordinary:release"
+      ],
+      "preparedAttempts": 2,
+      "durableClaims": 1,
+      "providerFetches": 0
+    },
+    {
+      "name": "simulated-lost-claim-ack-holds-both-budgets-zero-fetch",
+      "result": "PASS",
+      "eventOrder": [
+        "ordinary:reserve",
+        "guardrail:reserve",
+        "prepare:sql",
+        "prepare:durable_commit",
+        "prepare:commit_ack",
+        "claim:sql",
+        "claim:durable_commit",
+        "claim:uncertain"
+      ],
+      "durableClaims": 1,
+      "providerFetches": 0
+    }
+  ],
+  "serverVersionNum": 180006
+}

@@ -1,0 +1,64 @@
+{
+  "version": "v315",
+  "date": "2026-09-24",
+  "status": "LOCAL_NATIVE_RECOVERY_FINANCIAL_SUBSET_PASS_PRODUCTION_DISABLED",
+  "C03": "DOING",
+  "goalComplete": false,
+  "validation": {
+    "nativeRecoverySettlement": { "pass": 1, "fail": 0, "commitsUnderSetRole": 3 },
+    "nativeRecoveryRoleAndGuard": { "pass": 1, "fail": 0 },
+    "nativeFormalMigrationCount": 73,
+    "legacyGuardSwitchPglite": { "pass": 2, "fail": 0 },
+    "recoveryRoleSqlPglite": { "pass": 1, "fail": 0 },
+    "legacyGuardBundle": { "pass": 1, "fail": 0 },
+    "recoveryRolePolicyOffline": { "pass": 6, "fail": 0 },
+    "postgresMigrationContract": true,
+    "diffCheck": true,
+    "nativePostgresVersion": "18.6",
+    "nativeFinancialReport": "docs/developers/architecture/implementation-evidence/C03-postgres-native-recovery-settlement-v315-report.json",
+    "nativeRoleReport": "docs/developers/architecture/implementation-evidence/C03-postgres-native-role-guard-v315-report.json"
+  },
+  "sourceSha256": {
+    "scripts/db/cutover/postgres-recovery-legacy-log-guard.activate.sql": "24a601dbafd66f16cdd14dcc81017bc26199c6b833e311d389cdb07103010763",
+    "scripts/db/cutover/postgres-recovery-role-policy.ts": "a29f6d8df66b6837c2dceb4f4548fc8ff495d7076582098187cb0573c25b02de",
+    "scripts/db/cutover/postgres-recovery-role-policy.test.ts": "9f702ffa6ff0457df4e7e47a51f079d3db72ea6c7d51e7da6272981cf226c42f",
+    "scripts/db/cutover/postgres-recovery-role-policy.pglite.test.ts": "5265e7938f41d76979a531fe1549855f61547c49036c1367db1277dcff4ab001",
+    "packages/core/src/storage/recovery/recovery-legacy-log-guard-switch.postgres.test.mjs": "dcf32397c424fdb1341f058fe44bbf3dba18ff0ba3bbeaa3f63cbe37a5d9dbd9",
+    "scripts/db/cutover/postgres-recovery-settlement.native.test.mjs": "d4cd521c060cbed084e6261b3590f84e253dfcea4e3f7f57c8fd1b5436721ebe",
+    "scripts/db/cutover/postgres-recovery-role-policy.native.test.mjs": "c2208e0d3f4436b09b225ed39959a1bb66f62474674d9b94c8beddc6cbd21d52"
+  },
+  "evidenceSha256": {
+    "docs/developers/architecture/implementation-evidence/C03-postgres-native-recovery-settlement-v315-report.json": "2fb7aaca8877354c28d2ec5ffd6bd946ae855b222b333ca64948774ac04bf63b",
+    "docs/developers/architecture/implementation-evidence/C03-postgres-native-role-guard-v315-report.json": "8e25da5a744d57ea64da8f7dba1d0d21f43b0a1f6f2c879665fd3a7f831019ec"
+  },
+  "boundaries": {
+    "productionActivated": false,
+    "automaticMigrationInstallsLegacyGuard": false,
+    "legacyGuardInstalledOutsideLocalFixture": false,
+    "dedicatedRecoveryRoleActivatedOutsideLocalFixture": false,
+    "roleSqlRuntimeCompatible": false,
+    "nativeRecoveryConsumerThreeFinancialBranchesPassed": true,
+    "allRecoveryFinancialVariantsUnderRoleVerified": false,
+    "productionFactProducerAuthorized": false,
+    "representativeLegacyTrafficLatencyConfirmed": false,
+    "originConnectionBudgetConfirmed": false,
+    "workersHyperdriveQueueLifecycleVerified": false,
+    "systemRuntimeInstalled": false,
+    "privateLocalRuntimeUsed": true,
+    "remoteSqlCalls": 0,
+    "cloudManagementCalls": 0,
+    "deployments": 0,
+    "modelCalls": 0,
+    "kmsCalls": 0,
+    "cumulativeStagingCapUsd": 2,
+    "capReset": false
+  },
+  "knownBlockers": [
+    "guard_switch_not_installed_outside_local_fixture",
+    "fact_producer_identity_unassigned_and_dispatch_for_share_acl_open",
+    "representative_legacy_traffic_latency_deadlock_and_upgrade_locks_unverified",
+    "current_origin_capacity_unverified",
+    "other_recovery_financial_and_failure_variants_unverified_under_role",
+    "workers_hyperdrive_queue_lifecycle_unverified"
+  ]
+}

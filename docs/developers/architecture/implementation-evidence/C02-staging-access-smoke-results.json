@@ -1,0 +1,212 @@
+{
+  "initialAttempt": {
+    "startedAt": "2026-09-06T12:26:21.862Z",
+    "budgetUsd": 2,
+    "account": "7ea8e46d8210bad342fa7595f7935fea",
+    "worker": "cinatoken-proxy-staging",
+    "database": "6bf5d41e-fe0b-4afa-9f67-ff5cf82e23d1",
+    "domain": "cinatoken-proxy-staging.cinagroup.workers.dev",
+    "requests": [
+      {
+        "label": "access-no-credentials",
+        "path": "/health",
+        "status": 404,
+        "bytes": 19984,
+        "ms": 1377,
+        "gatewayError": null,
+        "cfRay": "a36d768c3af4afe4-SIN",
+        "contentType": "text/html; charset=UTF-8"
+      }
+    ],
+    "modelCalls": 0,
+    "kmsCalls": 0,
+    "serviceTokenId": "31be1b14-1d6a-4644-aea5-6f324fba8494",
+    "accessAppId": "ed5fd912-d6f1-4662-9575-02e0d6877af4",
+    "accessPolicyVerified": true,
+    "smoke": "FAIL",
+    "error": "Unauthenticated request was not blocked",
+    "ingressClosed": true,
+    "revocationError": "Cloudflare DELETE /access/service_tokens/31be1b14-1d6a-4644-aea5-6f324fba8494: HTTP 400, codes 12139",
+    "finishedAt": "2026-09-06T12:26:41.189Z",
+    "managementRequests": 12
+  },
+  "passingAttempt": {
+    "startedAt": "2026-09-06T12:33:50.904Z",
+    "budgetUsd": 2,
+    "account": "7ea8e46d8210bad342fa7595f7935fea",
+    "worker": "cinatoken-proxy-staging",
+    "database": "6bf5d41e-fe0b-4afa-9f67-ff5cf82e23d1",
+    "domain": "cinatoken-proxy-staging.cinagroup.workers.dev",
+    "requests": [
+      {
+        "label": "access-no-credentials-readiness-1",
+        "path": "/health",
+        "startedAt": "2026-09-06T12:34:13.250Z",
+        "status": 401,
+        "bytes": 37790,
+        "ms": 2602,
+        "gatewayError": null,
+        "cfRay": "a36d81b79ccb9d08-SIN",
+        "contentType": "text/html"
+      },
+      {
+        "label": "access-wrong-credentials",
+        "path": "/health",
+        "startedAt": "2026-09-06T12:34:15.852Z",
+        "status": 401,
+        "bytes": 37790,
+        "ms": 2164,
+        "gatewayError": null,
+        "cfRay": "a36d81c7dae44f20-SIN",
+        "contentType": "text/html"
+      },
+      {
+        "label": "authorized-health",
+        "path": "/health",
+        "startedAt": "2026-09-06T12:34:18.016Z",
+        "status": 200,
+        "bytes": 43,
+        "ms": 545,
+        "gatewayError": null,
+        "cfRay": "a36d81cf0b6e9d08-SIN",
+        "contentType": "application/json"
+      },
+      {
+        "label": "gateway-missing-key",
+        "path": "/v1/models",
+        "startedAt": "2026-09-06T12:34:18.561Z",
+        "status": 401,
+        "bytes": 133,
+        "ms": 717,
+        "gatewayError": null,
+        "cfRay": "a36d81d25ddf4f20-SIN",
+        "contentType": "application/json; charset=UTF-8"
+      },
+      {
+        "label": "gateway-invalid-key",
+        "path": "/v1/models",
+        "startedAt": "2026-09-06T12:34:19.279Z",
+        "status": 401,
+        "bytes": 122,
+        "ms": 798,
+        "gatewayError": null,
+        "cfRay": "a36d81d6fa879d08-SIN",
+        "contentType": "application/json; charset=UTF-8"
+      },
+      {
+        "label": "authorized-empty-catalog",
+        "path": "/catalog/models",
+        "startedAt": "2026-09-06T12:34:20.077Z",
+        "status": 200,
+        "bytes": 94,
+        "ms": 611,
+        "gatewayError": null,
+        "cfRay": "a36d81dba8914f20-SIN",
+        "contentType": "application/json"
+      },
+      {
+        "label": "authorized-empty-catalog",
+        "path": "/catalog/providers",
+        "startedAt": "2026-09-06T12:34:20.689Z",
+        "status": 200,
+        "bytes": 94,
+        "ms": 619,
+        "gatewayError": null,
+        "cfRay": "a36d81dfba979d08-SIN",
+        "contentType": "application/json"
+      },
+      {
+        "label": "access-no-credentials-after-catalog",
+        "path": "/catalog/models",
+        "startedAt": "2026-09-06T12:34:21.308Z",
+        "status": 401,
+        "bytes": 37790,
+        "ms": 550,
+        "gatewayError": null,
+        "cfRay": "a36d81e39e189d08-SIN",
+        "contentType": "text/html"
+      }
+    ],
+    "previousHttpAttempts": 1,
+    "modelCalls": 0,
+    "kmsCalls": 0,
+    "ingressClosed": true,
+    "serviceTokenId": "4a2059c6-a221-4456-87b4-4ee345b8d8a6",
+    "accessAppId": "ed5fd912-d6f1-4662-9575-02e0d6877af4",
+    "accessPolicyVerified": true,
+    "smoke": "PASS",
+    "serviceTokenDisabled": true,
+    "accessPolicyHeldDenyAll": true,
+    "serviceTokenRevoked": true,
+    "finishedAt": "2026-09-06T12:34:36.718Z",
+    "managementRequests": 21
+  },
+  "before": {
+    "timestamp": "2026-09-06T12:25:42.580Z",
+    "account": "7ea8e46d8210bad342fa7595f7935fea",
+    "ingress": {
+      "enabled": false,
+      "previews_enabled": false
+    },
+    "production": [
+      {
+        "name": "cinatoken-proxy",
+        "modified_on": "2026-09-05T03:13:09.294024Z",
+        "settingsSha256": "4243eedd631abb9bcf0c1dd8dd9acbb9ca56edab0bf3048204abccbbd4261cfc"
+      },
+      {
+        "name": "cinatoken-admin",
+        "modified_on": "2026-09-05T04:08:45.748253Z",
+        "settingsSha256": "e2ee0adf7b6469d843c310f3dccd2a478230c0f0b75d5d6ad285efeec17ed6ab"
+      },
+      {
+        "name": "cinatoken-chain-worker",
+        "modified_on": "2026-09-05T03:13:07.725412Z",
+        "settingsSha256": "21f1b2c08db33d20c0f235e5a89533e637a761eaf7b4bef2fcf0061ad004a916"
+      }
+    ],
+    "stagingApps": [],
+    "stagingTokens": []
+  },
+  "after": {
+    "timestamp": "2026-09-06T12:36:31.314Z",
+    "ingress": {
+      "enabled": false,
+      "previews_enabled": false
+    },
+    "accessAppId": "ed5fd912-d6f1-4662-9575-02e0d6877af4",
+    "accessPolicy": "deny-all",
+    "temporaryTokensRemoved": true,
+    "production": [
+      {
+        "name": "cinatoken-proxy",
+        "modified_on": "2026-09-05T03:13:09.294024Z",
+        "settingsSha256": "4243eedd631abb9bcf0c1dd8dd9acbb9ca56edab0bf3048204abccbbd4261cfc",
+        "unchanged": true
+      },
+      {
+        "name": "cinatoken-admin",
+        "modified_on": "2026-09-05T04:08:45.748253Z",
+        "settingsSha256": "e2ee0adf7b6469d843c310f3dccd2a478230c0f0b75d5d6ad285efeec17ed6ab",
+        "unchanged": true
+      },
+      {
+        "name": "cinatoken-chain-worker",
+        "modified_on": "2026-09-05T03:13:07.725412Z",
+        "settingsSha256": "21f1b2c08db33d20c0f235e5a89533e637a761eaf7b4bef2fcf0061ad004a916",
+        "unchanged": true
+      }
+    ],
+    "workerVersion": "eaff1578-8e3c-43a7-bb25-67d282a87675",
+    "tests": 8,
+    "totalHttpAttempts": 9,
+    "modelCalls": 0,
+    "kmsCalls": 0
+  },
+  "harnessSha256": "830eff7bfaf5add0aed2e35e0d4ebc8d163631448e7f5d339ecb6ca7626fda71",
+  "limitations": [
+    "gatewayError is not validated: the probe queried x-gateway-error-code, not the actual X-OctaFuse-Error-Code header. Null does not prove the server omitted its error header.",
+    "Client elapsed times are not CPU time, runtime capacity, or percentile latency measurements.",
+    "No inference, valid Gateway Key, billing recovery, KMS, or large-payload test was performed."
+  ]
+}

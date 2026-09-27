@@ -1,0 +1,389 @@
+{
+  "schemaVersion": 1,
+  "workPackage": "C02.B2.2",
+  "checklistVersion": "1.50",
+  "recordedAtUtc": "2026-09-07T04:31:32Z",
+  "status": "LOCAL_PASS_SUBSET",
+  "recoveryGate": "NOT_PASSED",
+  "capacityGate": "NOT_PASSED",
+  "productionCapacityEnabled": false,
+  "owner": "Codex",
+  "reviewer": "Codex self-review; independent reviewer not assigned",
+  "baseline": {
+    "head": "7eb59008f7d8e156e81fd18a57658fdef2553264",
+    "dirtyWorktree": true,
+    "committed": false
+  },
+  "scope": {
+    "runtime": "Node 24.14.1 + real node:sqlite D1 adapter (not Cloudflare runtime)",
+    "installedWorkersTypes": "5.20260829.1",
+    "latestWorkersTypesReadOnlyVerified": "5.20260907.1",
+    "wrangler": "4.127.1",
+    "formalMigrationCount": 68,
+    "proposalAutoApplied": false,
+    "routeEnabled": false,
+    "independentConsumerImplemented": false,
+    "providerIO": false,
+    "fullPreDispatchQuoteImplemented": false
+  },
+  "tests": [
+    {
+      "command": "npm run test:usage-settlement -w @octafuse/core",
+      "tests": 37,
+      "pass": 37,
+      "fail": 0,
+      "skipped": 0,
+      "exitCode": 0
+    },
+    {
+      "command": "npm run test:dispatch-intent -w @octafuse/core",
+      "tests": 19,
+      "pass": 19,
+      "fail": 0,
+      "skipped": 0,
+      "exitCode": 0,
+      "note": "posttest also ran the then-current 36 settlement tests; final 37-test settlement suite separately rerun after cross-field fix"
+    },
+    {
+      "command": "npm run test:ordinary-budget -w @octafuse/core",
+      "tests": 33,
+      "pass": 33,
+      "fail": 0,
+      "skipped": 0,
+      "exitCode": 0
+    },
+    {
+      "command": "npm run test:images:staging -w @octafuse/proxy",
+      "tests": 42,
+      "pass": 42,
+      "fail": 0,
+      "skipped": 0,
+      "exitCode": 0,
+      "parts": [
+        35,
+        7
+      ]
+    },
+    {
+      "command": "npm run typecheck:dispatch-intent -w @octafuse/core",
+      "exitCode": 0
+    },
+    {
+      "command": "npm run typecheck:images:staging -w @octafuse/proxy",
+      "exitCode": 0
+    }
+  ],
+  "redGreen": {
+    "test": "snapshot rejects conflicting precomputed budget micros and final route identity",
+    "before": {
+      "exitCode": 1,
+      "message": "Missing expected rejection"
+    },
+    "after": {
+      "exitCode": 0,
+      "fullSuite": 37
+    }
+  },
+  "crashTests": {
+    "count": 8,
+    "exitCode": 73,
+    "boundaries": [
+      "before snapshot persistence",
+      "after snapshot persistence",
+      "before final transaction",
+      "after final transaction"
+    ],
+    "localBudgetCharges": [
+      0,
+      0.25
+    ],
+    "independentRecoveryProcess": true,
+    "cloudIsolateTermination": false,
+    "persistBeforeExpected": "missing immutable payload; no log/receipt or invented usage",
+    "otherBoundariesExpected": "exactly one log/attempt/receipt and correct original budget debit",
+    "cleanup": "only fixed allowlisted SQLite files in test-created temporary directories; empty directories removed"
+  },
+  "limits": {
+    "serializedJsonBytes": 262144,
+    "rawUsageAndPricingAuditEachBytes": 65536,
+    "otherJsonAuditFieldBytes": 32768,
+    "generalTextBytes": 512,
+    "maxTreeDepth": 8,
+    "maxTreeNodes": 4096,
+    "maxArrayItems": 128,
+    "notPublicApiLimits": true,
+    "notWorkerHeapBounds": true
+  },
+  "fullCoreTypecheck": {
+    "fullCoreTypecheck": "FAIL",
+    "diagnosticCount": 32,
+    "exactlyMatchesPriorBaseline": true,
+    "diagnostics": [
+      {
+        "file": "packages/core/src/db/provider-key-utils.test.ts",
+        "start": 37,
+        "code": 2307,
+        "message": "Cannot find module 'vitest' or its corresponding type declarations."
+      },
+      {
+        "file": "packages/core/src/gemini-upstream-url.test.ts",
+        "start": 37,
+        "code": 2307,
+        "message": "Cannot find module 'vitest' or its corresponding type declarations."
+      },
+      {
+        "file": "packages/core/src/lib/resolve-me-metadata.test.ts",
+        "start": 37,
+        "code": 2307,
+        "message": "Cannot find module 'vitest' or its corresponding type declarations."
+      },
+      {
+        "file": "packages/core/src/model-endpoint-catalog.test.ts",
+        "start": 3577,
+        "code": 2339,
+        "message": "Property 'price' does not exist on type 'AudioEndpointPricingMeter'.\n  Property 'price' does not exist on type 'AudioTokenPricingMeter'."
+      },
+      {
+        "file": "packages/core/src/services/user-plan-patch-service.test.ts",
+        "start": 2244,
+        "code": 2339,
+        "message": "Property 'expectedBudgetMax' does not exist on type 'never'."
+      },
+      {
+        "file": "packages/core/src/services/user-plan-patch-service.test.ts",
+        "start": 2291,
+        "code": 2339,
+        "message": "Property 'expectedBudgetBase' does not exist on type 'never'."
+      },
+      {
+        "file": "packages/core/src/services/user-plan-patch-service.test.ts",
+        "start": 2339,
+        "code": 2339,
+        "message": "Property 'expectedBudgetSpent' does not exist on type 'never'."
+      },
+      {
+        "file": "packages/core/src/services/user-plan-patch-service.test.ts",
+        "start": 2387,
+        "code": 2339,
+        "message": "Property 'expectedBudgetPeriod' does not exist on type 'never'."
+      },
+      {
+        "file": "packages/core/src/services/user-plan-patch-service.test.ts",
+        "start": 2444,
+        "code": 2339,
+        "message": "Property 'expectedBudgetResetAt' does not exist on type 'never'."
+      },
+      {
+        "file": "packages/core/src/services/user-plan-patch-service.test.ts",
+        "start": 2519,
+        "code": 2339,
+        "message": "Property 'expectedBudgetEpoch' does not exist on type 'never'."
+      },
+      {
+        "file": "packages/core/src/services/user-plan-patch-service.test.ts",
+        "start": 2567,
+        "code": 2339,
+        "message": "Property 'expectedBudgetReservedMicros' does not exist on type 'never'."
+      },
+      {
+        "file": "packages/core/src/services/user-plan-patch-service.test.ts",
+        "start": 2632,
+        "code": 2339,
+        "message": "Property 'resetEpoch' does not exist on type 'never'."
+      },
+      {
+        "file": "packages/core/src/services/user-plan-patch-service.test.ts",
+        "start": 2690,
+        "code": 2339,
+        "message": "Property 'metadata' does not exist on type 'never'."
+      },
+      {
+        "file": "packages/core/src/services/user-plan-patch-service.test.ts",
+        "start": 2762,
+        "code": 2339,
+        "message": "Property 'audit' does not exist on type 'never'."
+      },
+      {
+        "file": "packages/core/src/services/user-plan-patch-service.test.ts",
+        "start": 2826,
+        "code": 2339,
+        "message": "Property 'audit' does not exist on type 'never'."
+      },
+      {
+        "file": "packages/core/src/services/user-plan-patch-service.test.ts",
+        "start": 2904,
+        "code": 2339,
+        "message": "Property 'audit' does not exist on type 'never'."
+      },
+      {
+        "file": "packages/core/src/storage/batches.d1.test.ts",
+        "start": 3185,
+        "code": 2769,
+        "message": "No overload matches this call.\n  Overload 1 of 3, '(path: PathOrFileDescriptor, options?: { encoding?: null | undefined; flag?: string | undefined; } | null | undefined): NonSharedBuffer', gave the following error.\n    Argument of type 'URL' is not assignable to parameter of type 'PathOrFileDescriptor'.\n      Type 'URL' is not assignable to type 'import(\"node:url\").URL'.\n        The types returned by 'searchParams.entries()' are incompatible between these types.\n          Property '[Symbol.dispose]' is missing in type 'IterableIterator<[key: string, value: string]>' but required in type 'URLSearchParamsIterator<[string, string]>'.\n  Overload 2 of 3, '(path: PathOrFileDescriptor, options: { encoding: BufferEncoding; flag?: string | undefined; } | BufferEncoding): string', gave the following error.\n    Argument of type 'URL' is not assignable to parameter of type 'PathOrFileDescriptor'.\n      Type 'URL' is not assignable to type 'import(\"node:url\").URL'.\n        The types returned by 'searchParams.entries()' are incompatible between these types.\n          Property '[Symbol.dispose]' is missing in type 'IterableIterator<[key: string, value: string]>' but required in type 'URLSearchParamsIterator<[string, string]>'.\n  Overload 3 of 3, '(path: PathOrFileDescriptor, options?: BufferEncoding | (ObjectEncodingOptions & { flag?: string | undefined; }) | null | undefined): string | NonSharedBuffer', gave the following error.\n    Argument of type 'URL' is not assignable to parameter of type 'PathOrFileDescriptor'.\n      Type 'URL' is not assignable to type 'import(\"node:url\").URL'.\n        The types returned by 'searchParams.entries()' are incompatible between these types.\n          Property '[Symbol.dispose]' is missing in type 'IterableIterator<[key: string, value: string]>' but required in type 'URLSearchParamsIterator<[string, string]>'."
+      },
+      {
+        "file": "packages/core/src/storage/byok-keys.d1.test.ts",
+        "start": 2984,
+        "code": 2769,
+        "message": "No overload matches this call.\n  Overload 1 of 3, '(path: PathOrFileDescriptor, options?: { encoding?: null | undefined; flag?: string | undefined; } | null | undefined): NonSharedBuffer', gave the following error.\n    Argument of type 'URL' is not assignable to parameter of type 'PathOrFileDescriptor'.\n      Type 'URL' is not assignable to type 'import(\"node:url\").URL'.\n        The types returned by 'searchParams.entries()' are incompatible between these types.\n          Property '[Symbol.dispose]' is missing in type 'IterableIterator<[key: string, value: string]>' but required in type 'URLSearchParamsIterator<[string, string]>'.\n  Overload 2 of 3, '(path: PathOrFileDescriptor, options: { encoding: BufferEncoding; flag?: string | undefined; } | BufferEncoding): string', gave the following error.\n    Argument of type 'URL' is not assignable to parameter of type 'PathOrFileDescriptor'.\n      Type 'URL' is not assignable to type 'import(\"node:url\").URL'.\n        The types returned by 'searchParams.entries()' are incompatible between these types.\n          Property '[Symbol.dispose]' is missing in type 'IterableIterator<[key: string, value: string]>' but required in type 'URLSearchParamsIterator<[string, string]>'.\n  Overload 3 of 3, '(path: PathOrFileDescriptor, options?: BufferEncoding | (ObjectEncodingOptions & { flag?: string | undefined; }) | null | undefined): string | NonSharedBuffer', gave the following error.\n    Argument of type 'URL' is not assignable to parameter of type 'PathOrFileDescriptor'.\n      Type 'URL' is not assignable to type 'import(\"node:url\").URL'.\n        The types returned by 'searchParams.entries()' are incompatible between these types.\n          Property '[Symbol.dispose]' is missing in type 'IterableIterator<[key: string, value: string]>' but required in type 'URLSearchParamsIterator<[string, string]>'."
+      },
+      {
+        "file": "packages/core/src/storage/byok-keys.d1.test.ts",
+        "start": 3127,
+        "code": 2769,
+        "message": "No overload matches this call.\n  Overload 1 of 3, '(path: PathOrFileDescriptor, options?: { encoding?: null | undefined; flag?: string | undefined; } | null | undefined): NonSharedBuffer', gave the following error.\n    Argument of type 'URL' is not assignable to parameter of type 'PathOrFileDescriptor'.\n      Type 'URL' is not assignable to type 'import(\"node:url\").URL'.\n        The types returned by 'searchParams.entries()' are incompatible between these types.\n          Property '[Symbol.dispose]' is missing in type 'IterableIterator<[key: string, value: string]>' but required in type 'URLSearchParamsIterator<[string, string]>'.\n  Overload 2 of 3, '(path: PathOrFileDescriptor, options: { encoding: BufferEncoding; flag?: string | undefined; } | BufferEncoding): string', gave the following error.\n    Argument of type 'URL' is not assignable to parameter of type 'PathOrFileDescriptor'.\n      Type 'URL' is not assignable to type 'import(\"node:url\").URL'.\n        The types returned by 'searchParams.entries()' are incompatible between these types.\n          Property '[Symbol.dispose]' is missing in type 'IterableIterator<[key: string, value: string]>' but required in type 'URLSearchParamsIterator<[string, string]>'.\n  Overload 3 of 3, '(path: PathOrFileDescriptor, options?: BufferEncoding | (ObjectEncodingOptions & { flag?: string | undefined; }) | null | undefined): string | NonSharedBuffer', gave the following error.\n    Argument of type 'URL' is not assignable to parameter of type 'PathOrFileDescriptor'.\n      Type 'URL' is not assignable to type 'import(\"node:url\").URL'.\n        The types returned by 'searchParams.entries()' are incompatible between these types.\n          Property '[Symbol.dispose]' is missing in type 'IterableIterator<[key: string, value: string]>' but required in type 'URLSearchParamsIterator<[string, string]>'."
+      },
+      {
+        "file": "packages/core/src/storage/guardrail-budget.d1.test.ts",
+        "start": 26723,
+        "code": 2532,
+        "message": "Object is possibly 'undefined'."
+      },
+      {
+        "file": "packages/core/src/storage/guardrail-budget.d1.test.ts",
+        "start": 6575,
+        "code": 2345,
+        "message": "Argument of type 'URL' is not assignable to parameter of type 'string | URL'.\n  Type 'URL' is not assignable to type 'import(\"node:url\").URL'.\n    The types returned by 'searchParams.entries()' are incompatible between these types.\n      Property '[Symbol.dispose]' is missing in type 'IterableIterator<[key: string, value: string]>' but required in type 'URLSearchParamsIterator<[string, string]>'."
+      },
+      {
+        "file": "packages/core/src/storage/management-workspaces.d1.test.ts",
+        "start": 14688,
+        "code": 2339,
+        "message": "Property 'reason' does not exist on type 'never'."
+      },
+      {
+        "file": "packages/core/src/storage/management-workspaces.d1.test.ts",
+        "start": 16191,
+        "code": 2339,
+        "message": "Property 'reason' does not exist on type 'never'."
+      },
+      {
+        "file": "packages/core/src/storage/model-endpoints.d1.test.ts",
+        "start": 5210,
+        "code": 2769,
+        "message": "No overload matches this call.\n  Overload 1 of 3, '(path: PathOrFileDescriptor, options?: { encoding?: null | undefined; flag?: string | undefined; } | null | undefined): NonSharedBuffer', gave the following error.\n    Argument of type 'URL' is not assignable to parameter of type 'PathOrFileDescriptor'.\n      Type 'URL' is not assignable to type 'import(\"node:url\").URL'.\n        The types returned by 'searchParams.entries()' are incompatible between these types.\n          Property '[Symbol.dispose]' is missing in type 'IterableIterator<[key: string, value: string]>' but required in type 'URLSearchParamsIterator<[string, string]>'.\n  Overload 2 of 3, '(path: PathOrFileDescriptor, options: { encoding: BufferEncoding; flag?: string | undefined; } | BufferEncoding): string', gave the following error.\n    Argument of type 'URL' is not assignable to parameter of type 'PathOrFileDescriptor'.\n      Type 'URL' is not assignable to type 'import(\"node:url\").URL'.\n        The types returned by 'searchParams.entries()' are incompatible between these types.\n          Property '[Symbol.dispose]' is missing in type 'IterableIterator<[key: string, value: string]>' but required in type 'URLSearchParamsIterator<[string, string]>'.\n  Overload 3 of 3, '(path: PathOrFileDescriptor, options?: BufferEncoding | (ObjectEncodingOptions & { flag?: string | undefined; }) | null | undefined): string | NonSharedBuffer', gave the following error.\n    Argument of type 'URL' is not assignable to parameter of type 'PathOrFileDescriptor'.\n      Type 'URL' is not assignable to type 'import(\"node:url\").URL'.\n        The types returned by 'searchParams.entries()' are incompatible between these types.\n          Property '[Symbol.dispose]' is missing in type 'IterableIterator<[key: string, value: string]>' but required in type 'URLSearchParamsIterator<[string, string]>'."
+      },
+      {
+        "file": "packages/core/src/storage/model-endpoints.d1.test.ts",
+        "start": 5800,
+        "code": 2769,
+        "message": "No overload matches this call.\n  Overload 1 of 3, '(path: PathOrFileDescriptor, options?: { encoding?: null | undefined; flag?: string | undefined; } | null | undefined): NonSharedBuffer', gave the following error.\n    Argument of type 'URL' is not assignable to parameter of type 'PathOrFileDescriptor'.\n      Type 'URL' is not assignable to type 'import(\"node:url\").URL'.\n        The types returned by 'searchParams.entries()' are incompatible between these types.\n          Property '[Symbol.dispose]' is missing in type 'IterableIterator<[key: string, value: string]>' but required in type 'URLSearchParamsIterator<[string, string]>'.\n  Overload 2 of 3, '(path: PathOrFileDescriptor, options: { encoding: BufferEncoding; flag?: string | undefined; } | BufferEncoding): string', gave the following error.\n    Argument of type 'URL' is not assignable to parameter of type 'PathOrFileDescriptor'.\n      Type 'URL' is not assignable to type 'import(\"node:url\").URL'.\n        The types returned by 'searchParams.entries()' are incompatible between these types.\n          Property '[Symbol.dispose]' is missing in type 'IterableIterator<[key: string, value: string]>' but required in type 'URLSearchParamsIterator<[string, string]>'.\n  Overload 3 of 3, '(path: PathOrFileDescriptor, options?: BufferEncoding | (ObjectEncodingOptions & { flag?: string | undefined; }) | null | undefined): string | NonSharedBuffer', gave the following error.\n    Argument of type 'URL' is not assignable to parameter of type 'PathOrFileDescriptor'.\n      Type 'URL' is not assignable to type 'import(\"node:url\").URL'.\n        The types returned by 'searchParams.entries()' are incompatible between these types.\n          Property '[Symbol.dispose]' is missing in type 'IterableIterator<[key: string, value: string]>' but required in type 'URLSearchParamsIterator<[string, string]>'."
+      },
+      {
+        "file": "packages/core/src/storage/model-endpoints.d1.test.ts",
+        "start": 6239,
+        "code": 2769,
+        "message": "No overload matches this call.\n  Overload 1 of 3, '(path: PathOrFileDescriptor, options?: { encoding?: null | undefined; flag?: string | undefined; } | null | undefined): NonSharedBuffer', gave the following error.\n    Argument of type 'URL' is not assignable to parameter of type 'PathOrFileDescriptor'.\n      Type 'URL' is not assignable to type 'import(\"node:url\").URL'.\n        The types returned by 'searchParams.entries()' are incompatible between these types.\n          Property '[Symbol.dispose]' is missing in type 'IterableIterator<[key: string, value: string]>' but required in type 'URLSearchParamsIterator<[string, string]>'.\n  Overload 2 of 3, '(path: PathOrFileDescriptor, options: { encoding: BufferEncoding; flag?: string | undefined; } | BufferEncoding): string', gave the following error.\n    Argument of type 'URL' is not assignable to parameter of type 'PathOrFileDescriptor'.\n      Type 'URL' is not assignable to type 'import(\"node:url\").URL'.\n        The types returned by 'searchParams.entries()' are incompatible between these types.\n          Property '[Symbol.dispose]' is missing in type 'IterableIterator<[key: string, value: string]>' but required in type 'URLSearchParamsIterator<[string, string]>'.\n  Overload 3 of 3, '(path: PathOrFileDescriptor, options?: BufferEncoding | (ObjectEncodingOptions & { flag?: string | undefined; }) | null | undefined): string | NonSharedBuffer', gave the following error.\n    Argument of type 'URL' is not assignable to parameter of type 'PathOrFileDescriptor'.\n      Type 'URL' is not assignable to type 'import(\"node:url\").URL'.\n        The types returned by 'searchParams.entries()' are incompatible between these types.\n          Property '[Symbol.dispose]' is missing in type 'IterableIterator<[key: string, value: string]>' but required in type 'URLSearchParamsIterator<[string, string]>'."
+      },
+      {
+        "file": "packages/core/src/storage/organization-identity.d1.test.ts",
+        "start": 2425,
+        "code": 2769,
+        "message": "No overload matches this call.\n  Overload 1 of 3, '(path: PathOrFileDescriptor, options?: { encoding?: null | undefined; flag?: string | undefined; } | null | undefined): NonSharedBuffer', gave the following error.\n    Argument of type 'URL' is not assignable to parameter of type 'PathOrFileDescriptor'.\n      Type 'URL' is not assignable to type 'import(\"node:url\").URL'.\n        The types returned by 'searchParams.entries()' are incompatible between these types.\n          Property '[Symbol.dispose]' is missing in type 'IterableIterator<[key: string, value: string]>' but required in type 'URLSearchParamsIterator<[string, string]>'.\n  Overload 2 of 3, '(path: PathOrFileDescriptor, options: { encoding: BufferEncoding; flag?: string | undefined; } | BufferEncoding): string', gave the following error.\n    Argument of type 'URL' is not assignable to parameter of type 'PathOrFileDescriptor'.\n      Type 'URL' is not assignable to type 'import(\"node:url\").URL'.\n        The types returned by 'searchParams.entries()' are incompatible between these types.\n          Property '[Symbol.dispose]' is missing in type 'IterableIterator<[key: string, value: string]>' but required in type 'URLSearchParamsIterator<[string, string]>'.\n  Overload 3 of 3, '(path: PathOrFileDescriptor, options?: BufferEncoding | (ObjectEncodingOptions & { flag?: string | undefined; }) | null | undefined): string | NonSharedBuffer', gave the following error.\n    Argument of type 'URL' is not assignable to parameter of type 'PathOrFileDescriptor'.\n      Type 'URL' is not assignable to type 'import(\"node:url\").URL'.\n        The types returned by 'searchParams.entries()' are incompatible between these types.\n          Property '[Symbol.dispose]' is missing in type 'IterableIterator<[key: string, value: string]>' but required in type 'URLSearchParamsIterator<[string, string]>'."
+      },
+      {
+        "file": "packages/core/src/storage/organization-identity.d1.test.ts",
+        "start": 983,
+        "code": 2352,
+        "message": "Conversion of type '{ success: true; results: never[]; meta: { changes: number; }; }' to type 'D1Result' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.\n  Type '{ success: true; results: never[]; meta: { changes: number; }; }' is not comparable to type 'D1Response'.\n    Types of property 'meta' are incompatible.\n      Type '{ changes: number; }' is not comparable to type 'D1Meta & Record<string, unknown>'.\n        Type '{ changes: number; }' is missing the following properties from type 'D1Meta': duration, size_after, rows_read, rows_written, and 2 more."
+      },
+      {
+        "file": "packages/core/src/storage/route-data-policy-subject.d1.test.ts",
+        "start": 3665,
+        "code": 2769,
+        "message": "No overload matches this call.\n  Overload 1 of 3, '(path: PathOrFileDescriptor, options?: { encoding?: null | undefined; flag?: string | undefined; } | null | undefined): NonSharedBuffer', gave the following error.\n    Argument of type 'URL' is not assignable to parameter of type 'PathOrFileDescriptor'.\n      Type 'URL' is not assignable to type 'import(\"node:url\").URL'.\n        The types returned by 'searchParams.entries()' are incompatible between these types.\n          Property '[Symbol.dispose]' is missing in type 'IterableIterator<[key: string, value: string]>' but required in type 'URLSearchParamsIterator<[string, string]>'.\n  Overload 2 of 3, '(path: PathOrFileDescriptor, options: { encoding: BufferEncoding; flag?: string | undefined; } | BufferEncoding): string', gave the following error.\n    Argument of type 'URL' is not assignable to parameter of type 'PathOrFileDescriptor'.\n      Type 'URL' is not assignable to type 'import(\"node:url\").URL'.\n        The types returned by 'searchParams.entries()' are incompatible between these types.\n          Property '[Symbol.dispose]' is missing in type 'IterableIterator<[key: string, value: string]>' but required in type 'URLSearchParamsIterator<[string, string]>'.\n  Overload 3 of 3, '(path: PathOrFileDescriptor, options?: BufferEncoding | (ObjectEncodingOptions & { flag?: string | undefined; }) | null | undefined): string | NonSharedBuffer', gave the following error.\n    Argument of type 'URL' is not assignable to parameter of type 'PathOrFileDescriptor'.\n      Type 'URL' is not assignable to type 'import(\"node:url\").URL'.\n        The types returned by 'searchParams.entries()' are incompatible between these types.\n          Property '[Symbol.dispose]' is missing in type 'IterableIterator<[key: string, value: string]>' but required in type 'URLSearchParamsIterator<[string, string]>'."
+      },
+      {
+        "file": "packages/core/src/storage/workspaces.d1.test.ts",
+        "start": 1015,
+        "code": 2352,
+        "message": "Conversion of type '{ success: true; results: never[]; meta: { changes: number; }; }' to type 'D1Result' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.\n  Type '{ success: true; results: never[]; meta: { changes: number; }; }' is not comparable to type 'D1Response'.\n    Types of property 'meta' are incompatible.\n      Type '{ changes: number; }' is not comparable to type 'D1Meta & Record<string, unknown>'.\n        Type '{ changes: number; }' is missing the following properties from type 'D1Meta': duration, size_after, rows_read, rows_written, and 2 more."
+      },
+      {
+        "file": "packages/core/src/storage/workspaces.d1.test.ts",
+        "start": 2717,
+        "code": 2769,
+        "message": "No overload matches this call.\n  Overload 1 of 3, '(path: PathOrFileDescriptor, options?: { encoding?: null | undefined; flag?: string | undefined; } | null | undefined): NonSharedBuffer', gave the following error.\n    Argument of type 'URL' is not assignable to parameter of type 'PathOrFileDescriptor'.\n      Type 'URL' is not assignable to type 'import(\"node:url\").URL'.\n        The types returned by 'searchParams.entries()' are incompatible between these types.\n          Property '[Symbol.dispose]' is missing in type 'IterableIterator<[key: string, value: string]>' but required in type 'URLSearchParamsIterator<[string, string]>'.\n  Overload 2 of 3, '(path: PathOrFileDescriptor, options: { encoding: BufferEncoding; flag?: string | undefined; } | BufferEncoding): string', gave the following error.\n    Argument of type 'URL' is not assignable to parameter of type 'PathOrFileDescriptor'.\n      Type 'URL' is not assignable to type 'import(\"node:url\").URL'.\n        The types returned by 'searchParams.entries()' are incompatible between these types.\n          Property '[Symbol.dispose]' is missing in type 'IterableIterator<[key: string, value: string]>' but required in type 'URLSearchParamsIterator<[string, string]>'.\n  Overload 3 of 3, '(path: PathOrFileDescriptor, options?: BufferEncoding | (ObjectEncodingOptions & { flag?: string | undefined; }) | null | undefined): string | NonSharedBuffer', gave the following error.\n    Argument of type 'URL' is not assignable to parameter of type 'PathOrFileDescriptor'.\n      Type 'URL' is not assignable to type 'import(\"node:url\").URL'.\n        The types returned by 'searchParams.entries()' are incompatible between these types.\n          Property '[Symbol.dispose]' is missing in type 'IterableIterator<[key: string, value: string]>' but required in type 'URLSearchParamsIterator<[string, string]>'."
+      },
+      {
+        "file": "packages/core/src/storage/workspaces.d1.test.ts",
+        "start": 3487,
+        "code": 2769,
+        "message": "No overload matches this call.\n  Overload 1 of 3, '(path: PathOrFileDescriptor, options?: { encoding?: null | undefined; flag?: string | undefined; } | null | undefined): NonSharedBuffer', gave the following error.\n    Argument of type 'URL' is not assignable to parameter of type 'PathOrFileDescriptor'.\n      Type 'URL' is not assignable to type 'import(\"node:url\").URL'.\n        The types returned by 'searchParams.entries()' are incompatible between these types.\n          Property '[Symbol.dispose]' is missing in type 'IterableIterator<[key: string, value: string]>' but required in type 'URLSearchParamsIterator<[string, string]>'.\n  Overload 2 of 3, '(path: PathOrFileDescriptor, options: { encoding: BufferEncoding; flag?: string | undefined; } | BufferEncoding): string', gave the following error.\n    Argument of type 'URL' is not assignable to parameter of type 'PathOrFileDescriptor'.\n      Type 'URL' is not assignable to type 'import(\"node:url\").URL'.\n        The types returned by 'searchParams.entries()' are incompatible between these types.\n          Property '[Symbol.dispose]' is missing in type 'IterableIterator<[key: string, value: string]>' but required in type 'URLSearchParamsIterator<[string, string]>'.\n  Overload 3 of 3, '(path: PathOrFileDescriptor, options?: BufferEncoding | (ObjectEncodingOptions & { flag?: string | undefined; }) | null | undefined): string | NonSharedBuffer', gave the following error.\n    Argument of type 'URL' is not assignable to parameter of type 'PathOrFileDescriptor'.\n      Type 'URL' is not assignable to type 'import(\"node:url\").URL'.\n        The types returned by 'searchParams.entries()' are incompatible between these types.\n          Property '[Symbol.dispose]' is missing in type 'IterableIterator<[key: string, value: string]>' but required in type 'URLSearchParamsIterator<[string, string]>'."
+      }
+    ]
+  },
+  "cloud": {
+    "mutationsThisTurn": 0,
+    "httpTestRequestsThisTurn": 0,
+    "historicalRoundHttpTestRequests": 98,
+    "realModelCallsThisTurn": 0,
+    "realKmsCallsThisTurn": 0,
+    "historicalRealModelKmsCalls": 0,
+    "roundCapUsd": 2,
+    "capReset": false,
+    "finalBillVerified": false,
+    "remoteStateRequeriedThisTurn": false,
+    "lastVerifiedGatewayVersion": "96f7e314-cf14-4cd7-9e12-14bdefd19b18",
+    "lastVerifiedState": "public entry disabled; Access deny-all; fixtures and temporary tokens cleaned; prior turn evidence only"
+  },
+  "files": [
+    {
+      "path": "packages/core/src/db/d1/critical-writes.impl.ts",
+      "sha256": "a92ddc6a752d83dd124fca092067972c61d3f7041ea06f786e216f7c828c603f"
+    },
+    {
+      "path": "packages/core/src/storage/recovery/usage-settlement-codec.ts",
+      "sha256": "7483200d4100963bb16c2ff74957d716fca09e8b20e11888ccf41b2566c4ef90"
+    },
+    {
+      "path": "packages/core/src/storage/recovery/usage-settlement-d1.ts",
+      "sha256": "f07ec6e84973f5481a56fa0b5dd2c1bce0c2823521163e861e1278ea17ded33b"
+    },
+    {
+      "path": "packages/core/migrations-proposals/d1/request-usage-settlements.sql",
+      "sha256": "d25ffb168ec74112f602befec2057b96456e0f2291fd2179d6e131f16ffbcb04"
+    },
+    {
+      "path": "packages/core/src/storage/recovery/usage-settlement.d1.test.mjs",
+      "sha256": "fd18178f4af2f838b60fb4ae224d6e8703a1b2013d91f100e5d9f626065a86c2"
+    },
+    {
+      "path": "packages/core/src/storage/recovery/usage-settlement.fixture.mjs",
+      "sha256": "efa865ed3b55d9e9b3e590966c8b39be65c9d3320e6b4a727a0d229b59f66f07"
+    },
+    {
+      "path": "packages/core/src/storage/recovery/usage-settlement-test-support.mjs",
+      "sha256": "abde9fc68c54844679da84f6a9cc48ac149e594a95b00c22732214433f30165b"
+    },
+    {
+      "path": "packages/core/package.json",
+      "sha256": "03c3c800135880fce004ca926e348c27b7d9bf27a8a4337a40bff4beb074545f"
+    },
+    {
+      "path": "packages/core/tsconfig.dispatch-intent.json",
+      "sha256": "31f97067fd9d3158446a6edbdfb95f0e7ebbe0510605269229c107c36c52559e"
+    },
+    {
+      "path": "packages/core/src/storage/recovery/dispatch-intent-d1.ts",
+      "sha256": "7c8ef20c11eaebe95c0aaa10073ab8e1c502e3143ae0b76825a71e43fd534a5a"
+    },
+    {
+      "path": "packages/core/migrations-proposals/d1/request-dispatch-intents.sql",
+      "sha256": "f3f9df3723fbccfd62a7f566804abcb591ee03f8d20bab47f60cb623ee082083"
+    },
+    {
+      "path": "packages/proxy/src/test-support/sqlite-d1.ts",
+      "sha256": "e28c1f8efe6dc96301307c8997dd02d402eac9431cfa8ece9f6b5aa572b2214b"
+    }
+  ],
+  "remaining": [
+    "bounded independent recovery scheduling, leasing/fencing, retry/backoff and conflict terminal states",
+    "trusted producer/route persistence boundary and data minimization contract",
+    "staging migrations only after schema review",
+    "real Workers fault and termination validation",
+    "full workload memory/CPU/DB capacity",
+    "C04 pre-dispatch quotation/owner snapshot and earnings outbox",
+    "full Core typecheck baseline failures"
+  ]
+}

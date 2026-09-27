@@ -1,0 +1,319 @@
+{
+  "capturedAt": "2026-09-05T04:37:18.1253941Z",
+  "root": "C:\\cinagroup\\cinatoken",
+  "head": "7eb59008f7d8e156e81fd18a57658fdef2553264",
+  "node": "v24.14.1",
+  "npm": "11.11.0",
+  "scope": "Local C00 baseline; no remote environment or secret values read. Core generated index refreshed before capture; no source edited.",
+  "status": [
+    " M docs/operators/migrations/d1-postgres-cutover.md",
+    " M packages/admin/app/account/page.tsx",
+    " M packages/admin/app/api/admin/[...path]/route.ts",
+    " M packages/admin/app/api/auth/check/route.ts",
+    " M packages/admin/app/api/user/[...path]/route.ts",
+    " M packages/admin/app/dashboard/page.tsx",
+    " M packages/admin/app/gateway/endpoints/page.tsx",
+    " M packages/admin/app/globals.css",
+    " M packages/admin/components/gateway/GatewaySetupGuide.tsx",
+    " M packages/admin/lib/admin-app.ts",
+    " M packages/admin/lib/api-error.ts",
+    " M packages/admin/lib/portal-fetch.ts",
+    " M packages/admin/lib/routes/admin/error-response.ts",
+    " M packages/admin/lib/user-app.ts",
+    " M packages/admin/messages/en.json",
+    " M packages/admin/messages/ja.json",
+    " M packages/admin/messages/ko.json",
+    " M packages/admin/messages/zh.json",
+    " M packages/admin/package.json",
+    " M packages/core/package.json",
+    " M packages/core/src/storage/drizzle/client-postgres.ts",
+    "?? packages/admin/components/DataLoadError.tsx",
+    "?? packages/admin/lib/data-load-error.test.tsx",
+    "?? packages/admin/lib/gateway-read-retry.test.ts",
+    "?? packages/admin/lib/gateway-read-retry.ts",
+    "?? packages/admin/lib/portal-fetch.test.ts",
+    "?? packages/core/src/storage/postgres-connection-error.ts"
+  ],
+  "files": [
+    {
+      "path": ".github/workflows/docker-compose-smoke.yml",
+      "sha256": "0028125b52b4e340fe6f0599eac7e7b069ae5f3700b6aace938a84d097e96fed",
+      "dirty": false
+    },
+    {
+      "path": ".github/workflows/release.yml",
+      "sha256": "33bae1d16e3b003fe54420b5628efa50c8b1f28943e14667197e76abecc23d28",
+      "dirty": false
+    },
+    {
+      "path": ".github/workflows/verify-package-versions.yml",
+      "sha256": "2ac2de6bb83ab2768fd67a33d34bebed5328667e973195686c3e19700a9564fe",
+      "dirty": false
+    },
+    {
+      "path": ".nvmrc",
+      "sha256": "f14b4987904bcb5814e4459a057ed4d20f58a633152288a761214dcd28780b56",
+      "dirty": false
+    },
+    {
+      "path": "docs/developers/architecture/v2.1-openrouter-implementation-checklist.md",
+      "sha256": "778f0ba23390d7f685912eaf28c0defd15b8188165bb976ef2c79cdd75aa59c4",
+      "dirty": false
+    },
+    {
+      "path": "docs/operators/migrations/d1-postgres-cutover.md",
+      "sha256": "93ab0a0d602ddb52940cb1ec5208d5a97d757d5c83e364c3b84448c1f9a3a02b",
+      "dirty": true
+    },
+    {
+      "path": "package-lock.json",
+      "sha256": "9adebfebdb981bd51aac7644fb046d0a4f0e2a4586cf8b3786cefa097a1a415e",
+      "dirty": false
+    },
+    {
+      "path": "package.json",
+      "sha256": "e5e720d0757d3904c887d72911cdae48010fc4e0c2e103f99b0d25a0f18f4637",
+      "dirty": false
+    },
+    {
+      "path": "packages/admin/app/account/page.tsx",
+      "sha256": "8bcd175e1c0e0f9d48a687d03872a9a9a5e21fd7fe0546d910619264f48b0422",
+      "dirty": true
+    },
+    {
+      "path": "packages/admin/app/api/admin/[...path]/route.ts",
+      "sha256": "c659ba9682b3441206ac5fadbc9488eea581d9575092204c6118dbbd8422e216",
+      "dirty": true
+    },
+    {
+      "path": "packages/admin/app/api/auth/check/route.ts",
+      "sha256": "da008bd5690c8f98b0550bcb26305fe1199055d4f63c9e671c51b8ec22eb1444",
+      "dirty": true
+    },
+    {
+      "path": "packages/admin/app/api/user/[...path]/route.ts",
+      "sha256": "1430841400af3d307beb1c76051e491905ebacc612ef7cac11e55ea3e32d41b9",
+      "dirty": true
+    },
+    {
+      "path": "packages/admin/app/dashboard/page.tsx",
+      "sha256": "ddc8737f5b7aa4f25bed530fa1c02b06d2a4a5b2d79269e314fde69595a87390",
+      "dirty": true
+    },
+    {
+      "path": "packages/admin/app/gateway/endpoints/page.tsx",
+      "sha256": "21a304f39fd30f5ecb6f9ceca60dbdbc32f5cef9713c8ee3939eb88da46a87ba",
+      "dirty": true
+    },
+    {
+      "path": "packages/admin/app/globals.css",
+      "sha256": "cacb0c10e35cc6c7976d8170fd31da5289002c892260d43700ef72443ed57353",
+      "dirty": true
+    },
+    {
+      "path": "packages/admin/components/DataLoadError.tsx",
+      "sha256": "a8365fe7b227c5f25d9fd6906d091074054485c07a95e6947a18ff914974db65",
+      "dirty": true
+    },
+    {
+      "path": "packages/admin/components/gateway/GatewaySetupGuide.tsx",
+      "sha256": "ae6f42e9d9206f26c950fe868a7f4e7e650de452138d4eba19a5570a747f2972",
+      "dirty": true
+    },
+    {
+      "path": "packages/admin/lib/admin-app.ts",
+      "sha256": "14feb92595441c7ee903fc434ea3effac49a785c2b9afef2e52fcebf11117b1e",
+      "dirty": true
+    },
+    {
+      "path": "packages/admin/lib/api-error.ts",
+      "sha256": "2ca204a2e7e4927c8cc3fc097f16ca4343b55cad966c7596c85f845554e4ca27",
+      "dirty": true
+    },
+    {
+      "path": "packages/admin/lib/data-load-error.test.tsx",
+      "sha256": "3e4e63fdff8ce89ad78113c81c703e263be0e60be50888b3a60c02c59f4a7d58",
+      "dirty": true
+    },
+    {
+      "path": "packages/admin/lib/gateway-read-retry.test.ts",
+      "sha256": "c18caa5a6e382c7cdc1335f8a9356dc84e8ff88cbd69fc41b1c768ec4db03c06",
+      "dirty": true
+    },
+    {
+      "path": "packages/admin/lib/gateway-read-retry.ts",
+      "sha256": "55e3bafd1874222d52f82c80afdc012ff85ee3217497e0d8ea4f0a8d8f6e1fe7",
+      "dirty": true
+    },
+    {
+      "path": "packages/admin/lib/portal-fetch.test.ts",
+      "sha256": "2549a2eb99743d9b1dae56b18258ee339e5aff07ffaa3da1af879eaa84f4fd22",
+      "dirty": true
+    },
+    {
+      "path": "packages/admin/lib/portal-fetch.ts",
+      "sha256": "4d88a36d5c556e4b39a84e933e9ae998f0c30ae358c8845e5f3c5f55206f00c3",
+      "dirty": true
+    },
+    {
+      "path": "packages/admin/lib/routes/admin/error-response.ts",
+      "sha256": "f617be1fa6c18d999c7a0ce273cad8b56562df123b1ce90e8824e03955180aa4",
+      "dirty": true
+    },
+    {
+      "path": "packages/admin/lib/user-app.ts",
+      "sha256": "5af652b7a1cdbdb61d955fb7b3a36c74f836f7ece512a4b65c1a4126fc1cd3cf",
+      "dirty": true
+    },
+    {
+      "path": "packages/admin/messages/en.json",
+      "sha256": "8b4a0d22705fd2c053214626f41be5af930f2f36b66313859f8257cc5d3d81d6",
+      "dirty": true
+    },
+    {
+      "path": "packages/admin/messages/ja.json",
+      "sha256": "0efff12f72cee081452624cf8057c49e3f68af95961500d9645fbe1afd709754",
+      "dirty": true
+    },
+    {
+      "path": "packages/admin/messages/ko.json",
+      "sha256": "2c908f7e15c845d84d624fb5f51363d57d836ac83c7decbb0151fff6d875a329",
+      "dirty": true
+    },
+    {
+      "path": "packages/admin/messages/zh.json",
+      "sha256": "40497a699427df98c750f8555ea21f394245790bce2dd2196dff73ba3eeb4930",
+      "dirty": true
+    },
+    {
+      "path": "packages/admin/package.json",
+      "sha256": "a6756118963a60b32a01ea30887870ad71c29f02d710c91d910fc772134d377a",
+      "dirty": true
+    },
+    {
+      "path": "packages/core/package.json",
+      "sha256": "69cb7c4e79cbb82e746e327ba00f74025178d006531d3f5016806249e9e004d8",
+      "dirty": true
+    },
+    {
+      "path": "packages/core/src/lib/shared-key-encryption.ts",
+      "sha256": "9f3b3ae2b51c6a6b2098e93e0a2a796031eda5912a5c772f8ca001f3d279cacd",
+      "dirty": false
+    },
+    {
+      "path": "packages/core/src/services/shared-key-earnings.ts",
+      "sha256": "344462c062be1b037d3ade4712ac586f2530f1988191a5211437642ba8717d91",
+      "dirty": false
+    },
+    {
+      "path": "packages/core/src/storage/drizzle/client-postgres.ts",
+      "sha256": "27b747dd9389e9a93226beafde34ae05667df59aa33586996599719d85b64b82",
+      "dirty": true
+    },
+    {
+      "path": "packages/core/src/storage/postgres-connection-error.ts",
+      "sha256": "d5faa1cc69a40411d0cd383cfe2f328d528ee4a5329018ece9dec63f418e0b76",
+      "dirty": true
+    },
+    {
+      "path": "packages/core/src/storage/runtime-database-config.ts",
+      "sha256": "b1d66f45599bbd6789eddfd9d4ff109d2de19bd38b5e4a75e66b759d43333d54",
+      "dirty": false
+    },
+    {
+      "path": "packages/proxy/package.json",
+      "sha256": "b6a70667eda719535b6f5300e1dc9ff1555354aad5c748a0bf4d040c2689f7ff",
+      "dirty": false
+    },
+    {
+      "path": "packages/proxy/src/app.ts",
+      "sha256": "b38da00997c4af3d6da8022c5ebe14bc06fea4806b3d38e8f5ee53138b7fa048",
+      "dirty": false
+    },
+    {
+      "path": "packages/proxy/src/runtime/batch-queue.ts",
+      "sha256": "0f3d8209eb64f00d9f4563478746acfbb0adf4dc1f6d2f65dd70fdc746452a4d",
+      "dirty": false
+    },
+    {
+      "path": "packages/proxy/src/runtime/node.ts",
+      "sha256": "f9cf34a369b6c797495339d7ebcfb894583ef3bcfd0ae6f35c4dc22af3dda5e9",
+      "dirty": false
+    },
+    {
+      "path": "packages/proxy/src/runtime/workers.ts",
+      "sha256": "16ab0bbfdf6b69f8240c4d4841c35b93ae1037bcbb23274b2687fefa4004c6e3",
+      "dirty": false
+    },
+    {
+      "path": "packages/proxy/src/services/byok-billing-policy.ts",
+      "sha256": "2697ed7a1f00341d43594b6bf6e8e58dfd208b7d23240c7d5ce805233e589246",
+      "dirty": false
+    },
+    {
+      "path": "packages/proxy/src/services/byok-key-pool.ts",
+      "sha256": "08d31243105b32af1b34e8623bb9de5b5df5a3f22eabc30eab195a54c2a6c1cc",
+      "dirty": false
+    },
+    {
+      "path": "packages/proxy/src/services/egress/openai-rerank-driver.ts",
+      "sha256": "14abe576a153e0d99f7cb3499f8d037f62a83b196632de070249d5ba4697f540",
+      "dirty": false
+    },
+    {
+      "path": "packages/proxy/src/services/failover-dispatch.ts",
+      "sha256": "e927de823f97da8e5d9d63eb2bfc011eacad6b27001a1f24845fa202cff54f34",
+      "dirty": false
+    },
+    {
+      "path": "packages/proxy/src/services/provider-circuit-breaker.ts",
+      "sha256": "66957245a00ae1e0964ae1479981be6cfef4ad9e897213be8fdb6083c73d3499",
+      "dirty": false
+    },
+    {
+      "path": "packages/proxy/src/services/request-budget-admission.ts",
+      "sha256": "1a0f28f8d3cf6926bb95c22954ffec7c6390bd2a26a0405cce427e48873e16f6",
+      "dirty": false
+    },
+    {
+      "path": "packages/proxy/src/services/route-attempt-planner.ts",
+      "sha256": "2934e45b6ac3d84dbfae8231bd2b02fd78a7b7a6b16d7d36a389d427e0d77e2f",
+      "dirty": false
+    },
+    {
+      "path": "packages/proxy/src/services/shared-key-pool.ts",
+      "sha256": "a430e9816ed70bd7f141697159fc5d8441f74735a1c2934cd0e63a71cd3f1c19",
+      "dirty": false
+    },
+    {
+      "path": "scripts/ci/verify-mysql-migration-contract.mjs",
+      "sha256": "32d104e45d516bcd442dbd248ee1ae7e0efa8d766b947b386a1230193ce9ae10",
+      "dirty": false
+    },
+    {
+      "path": "scripts/ci/verify-postgres-migration-contract.mjs",
+      "sha256": "420c931ff0589d89b1948fa74b8c068f85c42deb4fa6de1b1151d3f179b34c4e",
+      "dirty": false
+    }
+  ],
+  "migrations": [
+    {
+      "backend": "d1",
+      "count": 68,
+      "last": "0068_batch_jobs.sql",
+      "remoteApplied": "UNKNOWN_NOT_QUERIED"
+    },
+    {
+      "backend": "postgres",
+      "count": 67,
+      "last": "0067_batch_jobs.sql",
+      "remoteApplied": "UNKNOWN_NOT_QUERIED"
+    },
+    {
+      "backend": "mysql",
+      "count": 64,
+      "last": "0064_batch_jobs.sql",
+      "remoteApplied": "UNKNOWN_NOT_QUERIED"
+    }
+  ]
+}

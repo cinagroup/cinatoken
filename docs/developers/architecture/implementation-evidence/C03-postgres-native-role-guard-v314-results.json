@@ -1,0 +1,71 @@
+{
+  "version": "v314",
+  "date": "2026-09-24",
+  "status": "LOCAL_NATIVE_ROLE_GUARD_SUBSET_PASS_PRODUCTION_DISABLED",
+  "C03": "DOING",
+  "goalComplete": false,
+  "validation": {
+    "legacyGuardSwitchPglite": { "pass": 2, "fail": 0 },
+    "recoveryRoleSqlPglite": { "pass": 1, "fail": 0 },
+    "legacyGuardBundle": { "pass": 1, "fail": 0 },
+    "recoveryRolePolicyOffline": { "pass": 6, "fail": 0 },
+    "nativeDispatchIntent": { "pass": 12, "fail": 0 },
+    "nativeRecoveryRoleAndGuard": { "pass": 1, "fail": 0 },
+    "nativeFormalMigrationCount": 73,
+    "postgresMigrationContract": true,
+    "diffCheck": true,
+    "workersRuntimeTests": 0,
+    "nativePostgresVersion": "18.6",
+    "pglitePostgresVersion": "18.3",
+    "nativeRoleReport": "docs/developers/architecture/implementation-evidence/C03-postgres-native-role-guard-v314-native-report.json",
+    "nativeDispatchReport": "docs/developers/architecture/implementation-evidence/C03-postgres-native-role-guard-v314-dispatch-report.json"
+  },
+  "sourceSha256": {
+    "scripts/db/cutover/postgres-recovery-legacy-log-guard.activate.sql": "d636f4c810ff9b90a8778b642133a12932ebfeb1731af0553b1eb2d13dc51884",
+    "scripts/db/cutover/postgres-recovery-legacy-log-guard-bundle.mjs": "06bad0c735393f5fc4dca1f02cfbea02f38e542823a8b2b95549ae3939f05c84",
+    "scripts/db/cutover/postgres-recovery-legacy-log-guard-bundle.test.mjs": "de6645f509abd752d05b58ef7f076582b1d06fc2cf4f5598d5e1eb343ed92682",
+    "packages/core/src/storage/recovery/recovery-legacy-log-guard-switch.postgres.test.mjs": "f6a5660fffaf3f172cee2386a28b625f86189c14be0b806d115c809b2f7613dc",
+    "scripts/db/cutover/postgres-recovery-role-policy.ts": "cf10ea1bd53776ea545cef323d3bf91fcfa0c65a31f4dabf5e1e18006b355ee7",
+    "scripts/db/cutover/postgres-recovery-role-policy.test.ts": "696e67a1643146b6d14be02e6b5b5bf2cc69b75e5a8c4728104bbb8777fdd9a4",
+    "scripts/db/cutover/postgres-recovery-role-policy.pglite.test.ts": "16e57e25dafa46be19ddd0f3b5d833252967df493040c59242baf5f5db4f3e6a",
+    "scripts/db/cutover/postgres-recovery-role-policy.native.test.mjs": "7a5fc03ece8c2131a0966e800909040a0b0888141192176719cb4e3e90bab76c",
+    "scripts/db/cutover/grant-postgres-runtime.ts": "0974072ba6a15a7a72a0ad44fd88d16246e9c09a72f133e0f78084242633c303",
+    "packages/core/src/test-support/postgres-native-cluster.mjs": "6b5923be8d3bdcd061033eed1af2f67f3b87fa2fca1f2cf0a0b2eb0eb2cb8d2a",
+    "packages/core/src/storage/recovery/dispatch-intent.postgres-native.test.mjs": "cfc34dc2b4df6e4d0762ede6ad815627da46bc0e4b1404d5ef53827303ecd49c"
+  },
+  "evidenceSha256": {
+    "docs/developers/architecture/implementation-evidence/C03-postgres-native-role-guard-v314-native-report.json": "5ef690d89af7ca73d7b47c804095442739943120b436ba50304fbf9d6b3754d1",
+    "docs/developers/architecture/implementation-evidence/C03-postgres-native-role-guard-v314-dispatch-report.json": "3ecc9a2fc4d4191d4a56fb40f25cb38c26989532da8b490299addf784c125f81"
+  },
+  "boundaries": {
+    "productionActivated": false,
+    "automaticMigrationInstallsLegacyGuard": false,
+    "legacyGuardInstalledOutsideLocalFixture": false,
+    "dedicatedRecoveryRoleActivatedOutsideLocalFixture": false,
+    "roleSqlRuntimeCompatible": false,
+    "nativeRoleAndConcurrencySubsetPassed": true,
+    "representativeLegacyLockDurationConfirmed": false,
+    "representativeOrdinaryTrafficLatencyConfirmed": false,
+    "fullRecoveryFinancialWriterUnderRoleConfirmed": false,
+    "originConnectionBudgetConfirmed": false,
+    "queueAckPolicyImplemented": false,
+    "systemRuntimeInstalled": false,
+    "privateLocalRuntimeUsed": true,
+    "remoteSqlCalls": 0,
+    "cloudManagementCalls": 0,
+    "deployments": 0,
+    "modelCalls": 0,
+    "kmsCalls": 0,
+    "cumulativeStagingCapUsd": 2,
+    "capReset": false
+  },
+  "knownBlockers": [
+    "guard_switch_not_installed_outside_local_fixture",
+    "representative_legacy_traffic_latency_deadlock_and_upgrade_locks_unverified",
+    "current_origin_capacity_unverified",
+    "full_dedicated_role_financial_writer_unverified",
+    "fact_producer_identity_unassigned",
+    "dispatch_producer_for_share_acl_open",
+    "workers_hyperdrive_queue_lifecycle_unverified"
+  ]
+}

@@ -1,0 +1,68 @@
+{
+  "version": "v336",
+  "date": "2026-09-24",
+  "status": "LOCAL_WEBHOOK_REDIRECT_SUBSET_PASS_C02_OPEN",
+  "goalComplete": false,
+  "gitHeadAtEvidence": "7eb59008f7d8e156e81fd18a57658fdef2553264",
+  "scope": {
+    "senders": ["wecom", "feishu"],
+    "statuses": [307, 308],
+    "usesNativeFetch": true,
+    "outerCandidateRetryPresent": false,
+    "c02_5Complete": false,
+    "c02_6Complete": false,
+    "c02_GComplete": false
+  },
+  "beforeFixNativeLoopback": {
+    "scenarios": 4,
+    "originalAddressPostCountPerScenario": 1,
+    "redirectTargetPostCountPerScenario": 1,
+    "sameBodyByteLength": true,
+    "webhookCallIncorrectlySucceeded": true,
+    "newRegressionTests": { "tests": 4, "pass": 0, "fail": 4 }
+  },
+  "afterFixNativeLoopback": {
+    "scenarios": 4,
+    "originalAddressPostCountPerScenario": 1,
+    "redirectTargetPostCountPerScenario": 0,
+    "webhookCallRejectsHttpRedirect": true,
+    "newRegressionTests": { "tests": 4, "pass": 4, "fail": 0 }
+  },
+  "reviewedOtherEgress": {
+    "coreGcpTokenPostRedirectMode": "manual",
+    "toolEngineProviderPostWithDefaultRedirectCount": 10,
+    "toolEngineProviderPostFamilies": { "webSearch": 4, "webFetch": 3, "webDeepSearch": 2, "aiDetection": 1 },
+    "toolEngineDispatchersHaveCandidateRetryLoop": false,
+    "toolEngineDefaultRedirectGapClosed": true,
+    "toolEngineFollowupEvidence": "C02-tool-provider-redirect-v336-results.json",
+    "safeRedirectFetchProtectsThesePostDrivers": false
+  },
+  "validation": {
+    "newNodeLoopbackTests": 4,
+    "newNodeLoopbackPass": 4,
+    "newNodeLoopbackFail": 0,
+    "proxyTypecheck": "PASS",
+    "gitDiffCheck": "PASS",
+    "scriptRegistrationCheck": "PASS",
+    "linuxCiVerified": false
+  },
+  "ci": {
+    "testInProxyDispatchSafetyScript": true,
+    "testInProxyUnitScript": true
+  },
+  "sourceSha256": {
+    "packages/proxy/src/services/alert-webhook.ts": "6e946d0dd416c3abfe00aa2b4f3f4de84c68df6e1c38761a0fb529b13e68e67d",
+    "packages/proxy/src/services/alert-webhook-redirect.test.mjs": "ef77088e310a6535aa6a2f58daa2a2e4db9b0764ccd3513d321a1c78ceac31cc",
+    "packages/proxy/package.json": "ef24c5a2b0e5475648ad06cc6157ec3579e7f9888a8ca52c0d69d8268fa81c7a",
+    "packages/core/src/gcp-service-account-token.ts": "f60f0c28d49c01306c520289d6747c511ed0d52cdc5878378997024bf7cd844c"
+  },
+  "limits": {
+    "toolEngineProviderPostRedirectsClosed": true,
+    "webhookDurableDeduplicationVerified": false,
+    "realWorkersCloudflareTransportVerified": false,
+    "intermediateProxyRetryVerified": false,
+    "supplierInternalRetryVerified": false,
+    "externalProviderCalls": 0,
+    "deployments": 0
+  }
+}

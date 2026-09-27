@@ -1,0 +1,492 @@
+{
+  "version": "Checklist v1.62",
+  "baseline": "Checklist v1.61",
+  "date": "2026-09-07",
+  "status": "LOCAL_PASS_WORKER_PRODUCER_COMPOSITION_ONLY",
+  "c02GatePassed": false,
+  "head": "7eb59008f7d8e156e81fd18a57658fdef2553264",
+  "dirtyWorktree": true,
+  "baselineFiles": 70,
+  "changedBaselineFiles": [
+    "packages/proxy/package.json",
+    "packages/proxy/scripts/staging/images-recovery-test-support.mjs",
+    "packages/proxy/src/runtime/worker-handler.ts",
+    "packages/proxy/src/runtime/workers.ts"
+  ],
+  "files": [
+    {
+      "path": "packages/core/migrations-proposals/d1/request-dispatch-intents.sql",
+      "sha256": "f3f9df3723fbccfd62a7f566804abcb591ee03f8d20bab47f60cb623ee082083"
+    },
+    {
+      "path": "packages/core/migrations-proposals/d1/request-usage-recovery-jobs.sql",
+      "sha256": "4b1dfa909dc6c4abc4aaec929d12ac368adb1877ae975c7a00f35a6b9f01652d"
+    },
+    {
+      "path": "packages/core/migrations-proposals/d1/request-usage-settlements.sql",
+      "sha256": "d25ffb168ec74112f602befec2057b96456e0f2291fd2179d6e131f16ffbcb04"
+    },
+    {
+      "path": "packages/core/package.json",
+      "sha256": "71b4125dfa443e7311f8cc6034a34cb3ec35f9d4c736720339cdfa5de15bbc46"
+    },
+    {
+      "path": "packages/core/src/db/d1/critical-writes.impl.ts",
+      "sha256": "145df8a9f579573664f0dbec08a833d5c80f0e3bb0f021cb6ce3c5dd157053bb"
+    },
+    {
+      "path": "packages/core/src/storage/database-client.ts",
+      "sha256": "8b4f5abeec30c82215ab99e319e10e52e9cca99c70ca85ef08a97ed47f1c8881"
+    },
+    {
+      "path": "packages/core/src/storage/drizzle/client-d1.ts",
+      "sha256": "3f44525de77b026f42cf3651399f6247265cd5e55d74999f1c71e1cb58b9d567"
+    },
+    {
+      "path": "packages/core/src/storage/recovery/dispatch-intent-d1.ts",
+      "sha256": "7c8ef20c11eaebe95c0aaa10073ab8e1c502e3143ae0b76825a71e43fd534a5a"
+    },
+    {
+      "path": "packages/core/src/storage/recovery/run-usage-recovery-d1.ts",
+      "sha256": "c70a404a5475a5113ce77f52c183dc054afacda80b595ac8e21f87c0a98f1d53"
+    },
+    {
+      "path": "packages/core/src/storage/recovery/settlement-recovery-types.ts",
+      "sha256": "585e8d21450882602889b78478769ffa193bfb10d14026e0bab9e4ab6f0fe429"
+    },
+    {
+      "path": "packages/core/src/storage/recovery/usage-recovery-jobs-d1.ts",
+      "sha256": "74fdc5c1ae90040b3c40ece3f7fc193375c0f9b12b73963dd314d84a95eb869a"
+    },
+    {
+      "path": "packages/core/src/storage/recovery/usage-recovery-schema-artifact.ts",
+      "sha256": "c56b50f727c5a1a3046c915a4bd2960d6dd68934e8e346e666d82069d49fc3ce"
+    },
+    {
+      "path": "packages/core/src/storage/recovery/usage-recovery-schema-d1.ts",
+      "sha256": "3dfb09903da0208ce74cb35a79baac6b3951a40a855ded5379d6503aac92ade0"
+    },
+    {
+      "path": "packages/core/src/storage/recovery/usage-recovery-schema.d1.test.mjs",
+      "sha256": "f8d627a9b6d2fd2150db4f1d495a341a89b883efd56c06b4788c543eca9e1184"
+    },
+    {
+      "path": "packages/core/src/storage/recovery/usage-recovery.d1.test.mjs",
+      "sha256": "a580ea62133306e66237b2d4e71f04b701a998c287484187f4473cdb21dcacbe"
+    },
+    {
+      "path": "packages/core/src/storage/recovery/usage-recovery.fixture.mjs",
+      "sha256": "4444e608d1612f023ffd800293984f2cf8acf2d756d24869fd987489b30e994d"
+    },
+    {
+      "path": "packages/core/src/storage/recovery/usage-settlement-codec.ts",
+      "sha256": "7483200d4100963bb16c2ff74957d716fca09e8b20e11888ccf41b2566c4ef90"
+    },
+    {
+      "path": "packages/core/src/storage/recovery/usage-settlement-d1.ts",
+      "sha256": "3be75d8f00ec668c7e4edc372726b3abbba2079710648a55f391cf4d280e01fe"
+    },
+    {
+      "path": "packages/core/src/storage/recovery/usage-settlement-test-support.mjs",
+      "sha256": "abde9fc68c54844679da84f6a9cc48ac149e594a95b00c22732214433f30165b"
+    },
+    {
+      "path": "packages/core/src/storage/recovery/usage-settlement.d1.test.mjs",
+      "sha256": "fd18178f4af2f838b60fb4ae224d6e8703a1b2013d91f100e5d9f626065a86c2"
+    },
+    {
+      "path": "packages/core/src/storage/recovery/usage-settlement.fixture.mjs",
+      "sha256": "efa865ed3b55d9e9b3e590966c8b39be65c9d3320e6b4a727a0d229b59f66f07"
+    },
+    {
+      "path": "packages/core/tsconfig.dispatch-intent.json",
+      "sha256": "0f69e38e22681b5a05e67424e34153357c019c1b30d335d09d34f440dad3b9e3"
+    },
+    {
+      "path": "packages/proxy/package.json",
+      "sha256": "28f541328c05961acab3375056aa2df781d8963f2b7ec5cf3babd5a88f0630eb"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/images-env.d.ts",
+      "sha256": "e3f83a405ed005e12de44b60232433bb9c055ed428d4bfe32adc0cd0bacb335f"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/images-gateway-handler.ts",
+      "sha256": "9ed165c5c849305220238e1aae7b89e8a446c31006f969450191f5d03b621b46"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/images-gateway.ts",
+      "sha256": "718efe4474e3c98fe5259927a7e0e472a8d92f6966d51250072f349f4ffa9d6e"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/images-recovery-chain.test.mjs",
+      "sha256": "f30df5058815980317f7ca16df385527e87bf0dc629c38466c39e1041afb3ad8"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/images-recovery-combinations.test.mjs",
+      "sha256": "a8c81edb42bca6db5c715e671c3b283172c04889b38d6f3cc98346e6f6fb825a"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/images-recovery-gateway.ts",
+      "sha256": "f218d7ca240212130f7ba700bfb731be5287dfc7745c9b9e4d6fbf3d7a6c6c55"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/images-recovery-process.fixture.mjs",
+      "sha256": "e9fac590afd4ede317971de4b9d6ae440993abd057da36187da02421eaa49b22"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/images-recovery-process.test.mjs",
+      "sha256": "401b8a16e72b5182595a11de43b76229787d2046e6d307c6e82401ec933b197e"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/images-recovery-schema.test.mjs",
+      "sha256": "8d117058221993f1a9ba8e62619fbba2e5ac64420d60e72411ad5bd81e72e254"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/images-recovery-test-support.mjs",
+      "sha256": "4375f4ae8ef6496e3284f9cd3e582418094df220d2e4fff7b01fcc4ad1823ee7"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/images-recovery-worker.test.mjs",
+      "sha256": "7d9c167a22a4fa31d6a1c170fdba72cdc794e628c95520c145012bacf3ad6998"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/measure-recovery-workset.mjs",
+      "sha256": "73e848997dd2334be90a656f18ccf5ea5e9ca0e8cd9c1ee2428f8915e6add9e6"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/tsconfig.json",
+      "sha256": "7822fb2eefd36af2218cabb11893a00d70d6fd98d6a8ba03f100d6e5fe438ed9"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/usage-recovery-audit-fault.mjs",
+      "sha256": "ab4cea5c16be0faace56297c22c46a81302fb42719775296aaf51e115d5ee191"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/usage-recovery-audit-fault.test.mjs",
+      "sha256": "ea488f56f39d728f5367ac7e75b19a7772bf4b67af07d383fcdbdd91120b9640"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/usage-recovery-control-env.d.ts",
+      "sha256": "297ec248927a4d0c296c24a103859db5cbe86f6a93eee52ec31a31a8a0fb14ad"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/usage-recovery-control-images.test.mjs",
+      "sha256": "efee7c10a7566961a4ad6fb2b90b6f40339c61094ffce40aa7d183dd9d37a3fd"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/usage-recovery-control-types.contract.ts",
+      "sha256": "6700255e1fcbd379cd8d950db85c18f6c1b6782229f3b6ca4053b1cfd1c5b659"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/usage-recovery-control-worker.ts",
+      "sha256": "9ee47eb3c021ae403ed81fb0b657efe004029d1a61cd896b01de115351531ae1"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/usage-recovery-control.test.mjs",
+      "sha256": "7c3912cb48ee51a42626b46b30e8519e21847c4247e52fa18b90fd9344dd7e45"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/usage-recovery-env.d.ts",
+      "sha256": "b9b9cf625b6709b92e1ddd7696032c0bd6df6bfb0d026e40d96e6f838d85cc9c"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/usage-recovery-host.test.mjs",
+      "sha256": "1fe28508e45df1e51e9562282b8228f24c412ee40baa6a795a0642e25e4922fc"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/usage-recovery-paid-fixture.mjs",
+      "sha256": "e1eeabfc7a60d14d9365aa1c2a8c133f04134ed32fce28463e071e2a5cebbaf6"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/usage-recovery-paid-fixture.test.mjs",
+      "sha256": "51e61fba6eafae6556a4d12ce6e05f6c06303dd431c385ce635b43c8c0b3e641"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/usage-recovery-worker.ts",
+      "sha256": "3271c74ebe2df34e1ce962dda52f3a695fbfd904a8d4a1fc072cdb14e8bb07c6"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/wrangler.usage-recovery-control.jsonc",
+      "sha256": "f2e75e6f3625df0f666e2edd5c076d80707ba4eedfd382b29ffe87ed5ceea245"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/wrangler.usage-recovery.jsonc",
+      "sha256": "77dbd0f0096f50e5663554c09f9960e38042d520badfd448aa35fca8b69d3a15"
+    },
+    {
+      "path": "packages/proxy/src/app.ts",
+      "sha256": "ccead19795044c654062e02410fbfbaa4ce49cc5b1de8109773b6e6c24aab2d7"
+    },
+    {
+      "path": "packages/proxy/src/index.ts",
+      "sha256": "22a6c56801c95cb955cc0949b78ef1a9eab7cf97ff9895a77169b43be11b91f7"
+    },
+    {
+      "path": "packages/proxy/src/routes/v1/images.ts",
+      "sha256": "5b7b351a071e6aa5860bd61c0586653f12424aa8ed389fb4992d5c30c9b900d4"
+    },
+    {
+      "path": "packages/proxy/src/runtime/node.ts",
+      "sha256": "ac3e0f5bd8ab01daec890382354982afee65c3ecb70faeca4e12dc8a42185d14"
+    },
+    {
+      "path": "packages/proxy/src/runtime/usage-recovery-control.ts",
+      "sha256": "9e35e92e449f8df06c35840803dacc8bb26bb45eb8d25ec087a6a7358be96192"
+    },
+    {
+      "path": "packages/proxy/src/runtime/usage-recovery-host.ts",
+      "sha256": "5f86289e619ea50f07adb4102cf62d448ce81ec185532ca0df49668d290b9eb1"
+    },
+    {
+      "path": "packages/proxy/src/runtime/worker-handler.ts",
+      "sha256": "987803235108fc993ec6703af85605fe8cd58a8cbd132546796fe218042f775d"
+    },
+    {
+      "path": "packages/proxy/src/runtime/workers.ts",
+      "sha256": "cd7d4881447b1ff4d5a78b19290b4948aeb509a031e0de4f51549082da2c92c1"
+    },
+    {
+      "path": "packages/proxy/src/services/gateway-error-codes.ts",
+      "sha256": "f8e4be5e446ed55982c176fa09bbd090350ff3c361965ef67c9247034e865d10"
+    },
+    {
+      "path": "packages/proxy/src/services/gateway-error-response.test.ts",
+      "sha256": "0437688397e27743b1b8743c5fd7d2b4103e37e31d4c588bf7ea1b9fc501a0a4"
+    },
+    {
+      "path": "packages/proxy/src/services/generation-metadata-snapshot.ts",
+      "sha256": "4c2b364ca1e8d87257f659b0a119acefee458e7dfab599a1ffc4b2bc64959dd0"
+    },
+    {
+      "path": "packages/proxy/src/services/generation-request-context.ts",
+      "sha256": "55c1a384b82b5f2352bf7b48c3fec0e26e69a20570494451b55cccc7f96be35d"
+    },
+    {
+      "path": "packages/proxy/src/services/image-usage-charge.test.ts",
+      "sha256": "c300aafef7666fdf15935ab1f44e1431f3820973fea85ec081c8c2cad533abb1"
+    },
+    {
+      "path": "packages/proxy/src/services/image-usage-charge.ts",
+      "sha256": "39d773d01483e1d393abfd329f54b088f61ac97d79a279665a1ccb8e039b4525"
+    },
+    {
+      "path": "packages/proxy/src/services/image-usage-recovery.ts",
+      "sha256": "713252d956bd64efaa6746243f9e779fca538732a1e9b377d27ae041c257e129"
+    },
+    {
+      "path": "packages/proxy/src/services/openrouter-error-protocol.ts",
+      "sha256": "ca1a363256a1ef7d4839c8eec017189726dc1904a0c60229e91c98c6338877d4"
+    },
+    {
+      "path": "packages/proxy/src/services/request-capacity.ts",
+      "sha256": "871875b50ea4730a3d7ad415a8de983a0044850ffa3139e57ec436facce1c10f"
+    },
+    {
+      "path": "packages/proxy/src/test-support/sqlite-d1.ts",
+      "sha256": "e28c1f8efe6dc96301307c8997dd02d402eac9431cfa8ece9f6b5aa572b2214b"
+    },
+    {
+      "path": "packages/proxy/wrangler.base.jsonc",
+      "sha256": "0687684a6870256283885ad5a1e4f154943c1909d0b866105aa5b8143f107833"
+    },
+    {
+      "path": "scripts/deploy/isolate-recovery-control-types.mjs",
+      "sha256": "f7cd7bd934764a30c0df2bf49a63a5448bd94487d0b242c5176a333552d27606"
+    },
+    {
+      "path": "scripts/deploy/prepare-proxy-staging-images.mjs",
+      "sha256": "1d5a5ea1ec75d9b50f9b670b13b7c376f32f2245ce6c586b4a17c45b785baed6"
+    },
+    {
+      "path": "scripts/deploy/prepare-proxy-staging-images.test.mjs",
+      "sha256": "e9a957443fe2282333ca85059908d0aa50c8f046867b9c468ff0e7569cdeb87d"
+    },
+    {
+      "path": "scripts/deploy/prepare-proxy-staging.mjs",
+      "sha256": "37b089706d9c7ec33fdb7f009aec2a477d02f07151d51e8e3a189e8221fea7ef"
+    },
+    {
+      "path": "scripts/deploy/prepare-staging-recovery-experiment.mjs",
+      "sha256": "bef7a665093291992d9b26d5511d16c48037079895e64652b78f4dc830d6f249"
+    },
+    {
+      "path": "scripts/deploy/prepare-staging-recovery-experiment.test.mjs",
+      "sha256": "0781e297cd4a92aa173595fe7706f595f8379a5ebdc2748cf8f40a5fffc0774f"
+    },
+    {
+      "path": "scripts/deploy/validate-staging-usage-recovery.mjs",
+      "sha256": "d9988e4a4d5f484846ada1729916851ad1ff4d08f35a0e47ba3066cbc2d8e3dc"
+    },
+    {
+      "path": "scripts/deploy/validate-staging-usage-recovery.test.mjs",
+      "sha256": "8eec01a21cd6f4e409086a3982a8772d864eb0a98d88f1d2fb437ced8ced0ae7"
+    },
+    {
+      "path": "scripts/deploy/verify-recovery-schema-artifact.mjs",
+      "sha256": "927d8b55f264bee4e1045358c84f72a2382f03e2c6b815b5ad43229167644f5f"
+    }
+  ],
+  "tests": {
+    "newWorkerComposition": {
+      "tests": 28,
+      "pass": 28,
+      "exitCode": 0,
+      "durationMs": 6822.3115
+    },
+    "newConfigTests": 1,
+    "fullStaging": {
+      "startedAt": "2026-09-07T09:29:06.114Z",
+      "command": "npm run test:images:staging -w @octafuse/proxy",
+      "parts": [
+        {
+          "tests": 35,
+          "pass": 35,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "durationMs": 10533.3602
+        },
+        {
+          "tests": 8,
+          "pass": 8,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "durationMs": 1282.0899
+        },
+        {
+          "tests": 158,
+          "pass": 158,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "durationMs": 11476.4943
+        },
+        {
+          "tests": 39,
+          "pass": 39,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "durationMs": 6015.0552
+        },
+        {
+          "tests": 65,
+          "pass": 65,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "durationMs": 366.9296
+        },
+        {
+          "tests": 88,
+          "pass": 88,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "durationMs": 3456.7835
+        },
+        {
+          "tests": 24,
+          "pass": 24,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "durationMs": 218747.9138
+        }
+      ],
+      "exitCode": 0,
+      "finishedAt": "2026-09-07T09:33:22.963Z",
+      "stderrTail": "",
+      "stdoutTail": "\n",
+      "total": 417,
+      "result": "PASS"
+    },
+    "typecheck": {
+      "command": "npm run typecheck:images:staging -w @octafuse/proxy",
+      "exitCode": 0
+    },
+    "fullCoreTypecheck": "Not rerun; previous 32 diagnostics remain unverified this turn"
+  },
+  "build": {
+    "wrangler": "4.127.1",
+    "node": "24.14.1",
+    "reviewedWorkersTypes": "5.20260907.1",
+    "dryRunExitCode": 0,
+    "typesExitCode": 0,
+    "generatedBindingFieldsEqualLegacy": true,
+    "inputs": 791,
+    "javascriptBytes": 3800382,
+    "gzipKiB": 668.88,
+    "consumerEntrypointsInBundle": false,
+    "artifacts": [
+      {
+        "path": ".wrangler/staging/images-recovery-v162/wrangler.jsonc",
+        "sha256": "1d9b85c5106c4ada5cad5657e1d225003b0626436d169e6d30fe362a4c3b627c",
+        "bytes": 1647
+      },
+      {
+        "path": ".wrangler/staging/images-recovery-v162/generated-env.d.ts",
+        "sha256": "cc879ef63acba9f42eee0505ce5ae38af3801cad760bc2fdd725949821698f17",
+        "bytes": 1278
+      },
+      {
+        "path": ".wrangler/staging/images-recovery-v162/bundle/images-recovery-gateway.js",
+        "sha256": "7c293f6c9c3902bbe80031bdf26b1e099d393322b1aa28f99573e1e4ea906a11",
+        "bytes": 3800382
+      },
+      {
+        "path": ".wrangler/staging/images-recovery-v162/bundle-meta.json",
+        "sha256": "57297ee9b2d049ef0bd28698b68ed670064a8608d85786a9e4a0e1727057925d",
+        "bytes": 751376
+      }
+    ]
+  },
+  "readOnlyCloudChecks": {
+    "managementRequests": 4,
+    "httpStatuses": [
+      200,
+      200,
+      200,
+      200
+    ],
+    "gatewayIngress": {
+      "enabled": false,
+      "previews_enabled": false
+    },
+    "recoveryControlIngress": {
+      "enabled": false,
+      "previews_enabled": false
+    },
+    "gatewayAccess": "deny everyone",
+    "database": {
+      "uuid": "6bf5d41e-fe0b-4afa-9f67-ff5cf82e23d1",
+      "name": "cinatoken-staging"
+    },
+    "writePermissionRetested": false,
+    "productionFingerprintsRetested": false
+  },
+  "externalActions": {
+    "deployments": 0,
+    "cloudWrites": 0,
+    "publicTestHttp": 0,
+    "firstRoundCumulativePublicTestHttp": 135,
+    "modelCalls": 0,
+    "kmsCalls": 0,
+    "productionOperations": 0,
+    "cumulativeBudgetUsd": 2,
+    "finalIncrementalBillVerified": false
+  },
+  "operationalFailures": [
+    "Initial Wrangler version query could not write default profile log; subsequent commands used workspace log path.",
+    "Local config preparation used incorrect relative import; fixed before successful dry-run and type generation. Initial dependent commands failed because config was absent.",
+    "First evidence hash lookup assumed cwd-relative bundle output; Wrangler had resolved outdir against config. Repeated dry-run with absolute output paths before hashing."
+  ],
+  "remaining": [
+    "Deploy explicit producer to isolated protected staging and verify end-to-end with existing private upstream and consumer",
+    "Platform termination and ambiguous acknowledgement",
+    "Concurrent fencing and physical working set",
+    "SSE, Node 22, other modalities and C02.G"
+  ]
+}

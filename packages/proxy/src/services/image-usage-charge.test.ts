@@ -14,6 +14,7 @@ import {
 	imageGuardrailSettlementMode,
 	multipleImageBillingMode,
 	recordImageUsage,
+	prepareImageUsageWrite,
 	shouldChargeUncertainImageResult,
 	withClientAbortPrecheckAudit,
 	withUncertainResultAudit,
@@ -1065,6 +1066,26 @@ describe('shouldChargeUncertainImageResult', () => {
 });
 
 type ImageCapturedStatement = { sql: string; values: unknown[] };
+
+it('prepares positive priced Images accounting facts without submitting economic writes', async () => {
+	const batches: ImageCapturedStatement[][] = [];
+	const params = {
+		repos:captureD1ImageRepositories(batches),requestLogId:'image-prepare-only',
+		userId:'user-1',apiKeyId:'key-1',workspaceId:'workspace-1',userEmail:null,
+		modelId:'openai/image-model',providerId:'provider-1',requestProtocol:'openai' as const,
+		upstreamProtocol:'openai' as const,requestOperation:'images.generations',routeGroup:'default',
+		status:'success' as const,latencyMs:10,effectiveImageCount:1,resultConfirmed:true,
+		billing:{modelPricingProfileJson:PER_IMAGE_PROFILE,imageCount:1,operation:'generations' as const},
+	};
+	const prepared = await prepareImageUsageWrite(params);
+	assert.equal(batches.length,0);
+	assert.equal(prepared.result.chargedCost,0.04);
+	assert.equal(prepared.write.requestLog.id,params.requestLogId);
+	assert.equal(prepared.write.chargedCost,prepared.write.requestLog.chargedCost);
+	await recordImageUsage(params);
+	assert.equal(batches.length,1);
+	assert.equal(imageRequestLogColumn(findImageRequestLogInsert(batches[0]!), 'charged_cost'),prepared.result.chargedCost);
+});
 
 function captureD1ImageRepositories(
 	batches: ImageCapturedStatement[][],

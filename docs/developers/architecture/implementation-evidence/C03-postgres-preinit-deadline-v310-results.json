@@ -1,0 +1,46 @@
+{
+  "version": "v310",
+  "date": "2026-09-23",
+  "status": "LOCAL_ADMISSION_DEADLINE_PASS_SERVER_TIMEOUT_NOT_IMPLEMENTED_PRODUCTION_DISABLED",
+  "C03": "DOING",
+  "goalComplete": false,
+  "validation": {
+    "newDeadlineAndRunner": { "pass": 5, "fail": 0 },
+    "queueCandidate": { "pass": 11, "fail": 0 },
+    "ownerObservationAndFixedScans": { "pass": 62, "fail": 0 },
+    "pgliteFinancialRunner": { "pass": 31, "fail": 0 },
+    "typeOnlyExport": { "pass": 1, "fail": 0 },
+    "v300AdoptionRegression": { "pass": 9, "fail": 0 },
+    "coreRecoveryRunnerTypecheck": true,
+    "proxyTypecheck": true,
+    "v308CurrentFullRerunAccepted": false,
+    "workersRuntimeTests": 0,
+    "nativePostgresTests": 0
+  },
+  "sourceSha256": {
+    "packages/core/src/storage/recovery/postgres-recovery-invocation-deadline.ts": "e0c1bdf78958c11d5c6572cf68df42283cb7ad2aed861193f517d1dced478017",
+    "packages/core/src/storage/recovery/postgres-recovery-invocation-deadline.test.mjs": "ec0d8fc6d47c05806cb26d404cc964749f3a235354f35ed87efdfaefaa5c66a7",
+    "packages/core/src/storage/recovery/run-usage-recovery-postgres.ts": "81df8c003bb7306bcc0ee69f50b7431b0151795ee9e3884731f94db318736fa2",
+    "packages/proxy/src/runtime/postgres-recovery-queue-owner.ts": "69916a26323f99d1e3e3cdc68cdef7c67cc22df6120fcb5c97e132e03a4156a0",
+    "packages/proxy/src/runtime/postgres-recovery-queue-owner.test.ts": "185ccf19220f19b8b490e7d97257e603099406b54b1639057a7106f924467d12"
+  },
+  "boundaries": {
+    "productionActivated": false,
+    "queueConfigured": false,
+    "serverTimeoutPolicyImplemented": false,
+    "driverQueueDispatchDeadlineImplemented": false,
+    "allSqlPathsCovered": false,
+    "transactionTimeoutRequiresPostgres17": true,
+    "dynamicTransactionTimeoutSetLocalAccepted": false,
+    "trustedPhysicalCloseProven": false,
+    "queueAckPolicyImplemented": false,
+    "remoteSqlCalls": 0,
+    "cloudManagementCalls": 0,
+    "deployments": 0,
+    "modelCalls": 0,
+    "kmsCalls": 0,
+    "cloudResourcesCreatedOrDeleted": 0,
+    "cumulativeStagingCapUsd": 2,
+    "capReset": false
+  }
+}

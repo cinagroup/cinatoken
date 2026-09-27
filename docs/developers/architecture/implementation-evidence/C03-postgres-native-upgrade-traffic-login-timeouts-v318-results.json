@@ -1,0 +1,59 @@
+{
+  "version": "v318",
+  "date": "2026-09-24",
+  "status": "LOCAL_NATIVE_UPGRADE_TRAFFIC_AND_LOGIN_TIMEOUT_SEMANTICS_PASS_PRODUCTION_DISABLED",
+  "C03": "DOING",
+  "goalComplete": false,
+  "validation": {
+    "nativeUpgradeTraffic": { "pass": 1, "fail": 0 },
+    "nativeRecoveryLoginTimeouts": { "pass": 1, "fail": 0 },
+    "nativeFormalMigrationCount": 73,
+    "nativePostgresVersion": "18.6",
+    "seededLegacyLogRows": 512,
+    "postgresMigrationContract": true,
+    "nativeTestSyntaxChecks": true,
+    "gitDiffCheck": true,
+    "privatePostgresProcessesAfterTests": 0,
+    "ownedRunDirectoriesAfterTests": 0
+  },
+  "sourceSha256": {
+    "scripts/db/cutover/postgres-recovery-upgrade-traffic.native.test.mjs": "17b0d8323c7d10739f73396c934e537dafcb07326425c385a3d3dfefaed7d616",
+    "scripts/db/cutover/postgres-recovery-login-timeouts.native.test.mjs": "61a2e9b4345a003fbae902cfbbfcbd9b80919a4ceb6827aa35907ed42a23f54c",
+    "scripts/db/cutover/postgres-recovery-legacy-log-guard.activate.sql": "24a601dbafd66f16cdd14dcc81017bc26199c6b833e311d389cdb07103010763",
+    "packages/core/migrations-proposals/postgres/dispatch-intent-producer-definer.sql": "7bdecf0414d8aeea264ef05008e10804cb66a184505dc710ac47b283c37d4fe5",
+    "packages/core/migrations-proposals/postgres/settlement-outbox-producer-definer.sql": "c3995e07159d4fe0b2aac5ab96ee2d14e6e11fddc3bf9868d258d43620612f52",
+    "scripts/db/cutover/grant-postgres-runtime.ts": "5f36b5e732607ae6c4ee172f7a0b63bcd7248b1e6aa6d24584a813e87b95799e",
+    "scripts/db/cutover/postgres-recovery-role-policy.ts": "a29f6d8df66b6837c2dceb4f4548fc8ff495d7076582098187cb0573c25b02de",
+    "packages/core/src/test-support/postgres-native-cluster.mjs": "6b5923be8d3bdcd061033eed1af2f67f3b87fa2fca1f2cf0a0b2eb0eb2cb8d2a",
+    "packages/core/migrations-postgres/* (ordered corpus)": "23afef61a8a670e0af8c90e3a138f522e6b283b454e380a592bf85bca83108dc"
+  },
+  "evidenceSha256": {
+    "docs/developers/architecture/implementation-evidence/C03-postgres-native-upgrade-traffic-v318-report.json": "71e121dcaad11abdb3ab16c6fe47540cc49deb100f958d3440589ddc7c46c92a",
+    "docs/developers/architecture/implementation-evidence/C03-postgres-native-recovery-login-timeouts-v318-report.json": "8a37bd152bb4c85976eae6d82781521add80e050a9fd947458b632ec59d52a6f"
+  },
+  "boundaries": {
+    "productionActivated": false,
+    "formalProducerMigrationAdded": false,
+    "optionalLegacyGuardAutomaticallyInstalled": false,
+    "syntheticLegacyLogTrafficVerified": true,
+    "representativeLegacyDatabaseVerified": false,
+    "productionMaintenanceWindowConfirmed": false,
+    "setRoleLoadsRecoveryLoginTimeouts": false,
+    "recoveryRoleHasLogin": false,
+    "actualRecoveryLoginTimeoutsVerified": false,
+    "separateFixtureLoginStatementTimeoutVerified": true,
+    "producerTenantAuthorizationVerified": false,
+    "producerConnectedToWorkerOrNode": false,
+    "originConnectionBudgetConfirmed": false,
+    "workersHyperdriveQueueLifecycleVerified": false,
+    "systemRuntimeInstalled": false,
+    "privateLocalRuntimeUsed": true,
+    "remoteSqlCalls": 0,
+    "cloudManagementCalls": 0,
+    "deployments": 0,
+    "modelCalls": 0,
+    "kmsCalls": 0,
+    "cumulativeStagingCapUsd": 2,
+    "capReset": false
+  }
+}

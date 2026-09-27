@@ -1,0 +1,63 @@
+{
+  "status": "PASS",
+  "cleanup": "PASS",
+  "binaryVersion": "postgres (PostgreSQL) 18.6",
+  "sourceSha256": {
+    "formalMigrations": "23afef61a8a670e0af8c90e3a138f522e6b283b454e380a592bf85bca83108dc",
+    "runtimeGrant": "c07358f59ddc2ff314d3cc3470587ab04e71627f81d2a80a63ed5bdf09a4fc20",
+    "fixture": "dcb8eeb6334817109d338d7b8914d99ffe804d827aad3e8e5805fa3adbb2eee3"
+  },
+  "stages": [
+    {
+      "name": "formal-pg73-installed",
+      "result": "PASS"
+    },
+    {
+      "name": "current-runtime-effective-acl",
+      "result": "PASS",
+      "privileges": {
+        "earning_insert": true,
+        "earning_update": false,
+        "seller_account_insert": true,
+        "seller_account_update": true,
+        "buyer_account_update": true,
+        "reservation_insert": true,
+        "reservation_update": true,
+        "recovery_fact_insert": false
+      }
+    },
+    {
+      "name": "legacy-runtime-insert-invokes-seller-credit-trigger",
+      "result": "PASS"
+    },
+    {
+      "name": "runtime-can-update-seller-and-buyer-balances-without-settlement",
+      "result": "PASS"
+    },
+    {
+      "name": "targeted-revokes-break-legacy-writers-and-protect-balances",
+      "result": "PASS"
+    },
+    {
+      "name": "current-grant-rerun-reopens-direct-writes",
+      "result": "PASS",
+      "privileges": {
+        "earning_insert": true,
+        "earning_update": false,
+        "seller_account_insert": true,
+        "seller_account_update": true,
+        "buyer_account_update": true,
+        "reservation_insert": true,
+        "reservation_update": true,
+        "recovery_fact_insert": false
+      }
+    }
+  ],
+  "scope": "owned loopback PostgreSQL 18.6; formal PG73 and current runtime grant",
+  "limitations": [
+    "No C03.5 or C04 producer/consumer is installed by this fixture.",
+    "The revokes are deliberately temporary on an owned database; they are not a production cutover.",
+    "The dedicated seller consumer is proven by its separate v340/v343 native fixtures.",
+    "No dedicated buyer critical-writer identity or Worker/Hyperdrive routing is supplied."
+  ]
+}

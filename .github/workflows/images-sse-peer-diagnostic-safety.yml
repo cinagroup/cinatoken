@@ -1,0 +1,23 @@
+name: Images SSE peer mismatch diagnostic safety
+on:
+  pull_request:
+    paths: ['scripts/deploy/**', 'packages/proxy/**', 'packages/core/**', 'package-lock.json', '.github/workflows/images-sse-peer-diagnostic-safety.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  diagnostic:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    strategy:
+      matrix:
+        node: [22, 24]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+          cache: npm
+      - run: npm ci
+      - run: node node_modules/tsx/dist/cli.mjs --test --test-concurrency=2 packages/proxy/scripts/staging/images-sse-peer-diagnostic.test.mjs packages/proxy/scripts/staging/images-sse-capacity-peer-v3.test.mjs scripts/deploy/staging-sse-capacity-peer-protocol-v3.test.mjs scripts/deploy/staging-sse-capacity-peer-client-v3.test.mjs
+      - run: node node_modules/typescript/bin/tsc --noEmit -p packages/proxy/scripts/staging/tsconfig.json

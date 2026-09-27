@@ -1,0 +1,292 @@
+{
+  "status": "PASS",
+  "cleanup": "PASS",
+  "binaryVersion": "postgres (PostgreSQL) 18.6",
+  "scope": "fresh owned loopback PostgreSQL 18.6; 73 formal migrations; 25,000 synthetic legacy logs; review-only proposals",
+  "limitations": [
+    "Synthetic local timings do not establish a production data-size, hardware, traffic, collation or maintenance-window budget.",
+    "No production lock wait, Worker, Queue, Hyperdrive or remote database was exercised.",
+    "No deletion or archival is authorized; permanent replay reservations have unbounded growth pending reviewed policy."
+  ],
+  "fixture": {
+    "rowCount": 25000,
+    "batchSize": 500,
+    "listenAddress": "127.0.0.1",
+    "fsync": "on",
+    "sharedBuffers": "16MB",
+    "configuration": {
+      "collation": "C",
+      "shared_buffers": "16MB",
+      "fsync": "on"
+    },
+    "midpointPlans": {
+      "priorExplicitCAndDistinct": {
+        "executionMs": 8.137,
+        "nodes": [
+          {
+            "type": "Limit",
+            "relation": null,
+            "index": null
+          },
+          {
+            "type": "Sort",
+            "relation": null,
+            "index": null
+          },
+          {
+            "type": "Aggregate",
+            "relation": null,
+            "index": null
+          },
+          {
+            "type": "Seq Scan",
+            "relation": "api_key_request_logs",
+            "index": null
+          }
+        ],
+        "topSharedHitBlocks": 610
+      },
+      "explicitCWithoutDistinct": {
+        "executionMs": 4.259,
+        "nodes": [
+          {
+            "type": "Limit",
+            "relation": null,
+            "index": null
+          },
+          {
+            "type": "Sort",
+            "relation": null,
+            "index": null
+          },
+          {
+            "type": "Seq Scan",
+            "relation": "api_key_request_logs",
+            "index": null
+          }
+        ],
+        "topSharedHitBlocks": 610
+      },
+      "nativeCollationWithDistinct": {
+        "executionMs": 0.407,
+        "nodes": [
+          {
+            "type": "Limit",
+            "relation": null,
+            "index": null
+          },
+          {
+            "type": "Unique",
+            "relation": null,
+            "index": null
+          },
+          {
+            "type": "Index Only Scan",
+            "relation": "api_key_request_logs",
+            "index": "api_key_request_logs_pkey"
+          }
+        ],
+        "topSharedHitBlocks": 19
+      },
+      "generatedNativeKeyset": {
+        "executionMs": 0.17,
+        "nodes": [
+          {
+            "type": "Limit",
+            "relation": null,
+            "index": null
+          },
+          {
+            "type": "Index Only Scan",
+            "relation": "api_key_request_logs",
+            "index": "api_key_request_logs_pkey"
+          }
+        ],
+        "topSharedHitBlocks": 19
+      }
+    }
+  },
+  "sourceSha256": {
+    "formalMigrationCorpus": "23afef61a8a670e0af8c90e3a138f522e6b283b454e380a592bf85bca83108dc",
+    "nativeTest": "5375efcdd61cf91836a01c989bf34de7f371ba4d6138d46b7c5ecc66f8897ba1",
+    "reservationProposal": "3fa28e1f34f0a99f73bd7f9e4411ae7de8659a170a04d0b60ac468f92a055667",
+    "parentGateProposal": "ff02f46cb94d6f6cdd003d6c00a6913d7d70421bb70124d2ff9cbdc9749e7e29",
+    "backfillGenerator": "f858fee18dc0c0540afb2dd5197e53049365a37fdc4efdeecc5f62bdf7ab7b3c",
+    "runtimeGrant": "97a42a0d2bd9994566377e08b43281a2ead4842443c81ca8fc80439469725334"
+  },
+  "stages": [
+    {
+      "name": "formal-schema-and-owned-postgresql-identity",
+      "result": "PASS",
+      "migrations": 73,
+      "configuration": {
+        "collation": "C",
+        "shared_buffers": "16MB",
+        "fsync": "on"
+      }
+    },
+    {
+      "name": "synthetic-legacy-log-history-created",
+      "result": "PASS",
+      "rows": 25001,
+      "seedMs": 2302.564,
+      "logBytes": 10518528
+    },
+    {
+      "name": "synthetic-log-planner-statistics-refreshed",
+      "result": "PASS"
+    },
+    {
+      "name": "review-only-parent-and-runtime-default-acl-installed",
+      "result": "PASS"
+    },
+    {
+      "name": "expand-lock-timeout-rolls-back-then-retries",
+      "result": "PASS",
+      "expandWaitMs": 2027.974,
+      "expandMs": 7.401
+    },
+    {
+      "name": "native-collation-indexed-keyset-plan",
+      "result": "PASS",
+      "midpointPlans": {
+        "priorExplicitCAndDistinct": {
+          "executionMs": 8.137,
+          "nodes": [
+            {
+              "type": "Limit",
+              "relation": null,
+              "index": null
+            },
+            {
+              "type": "Sort",
+              "relation": null,
+              "index": null
+            },
+            {
+              "type": "Aggregate",
+              "relation": null,
+              "index": null
+            },
+            {
+              "type": "Seq Scan",
+              "relation": "api_key_request_logs",
+              "index": null
+            }
+          ],
+          "topSharedHitBlocks": 610
+        },
+        "explicitCWithoutDistinct": {
+          "executionMs": 4.259,
+          "nodes": [
+            {
+              "type": "Limit",
+              "relation": null,
+              "index": null
+            },
+            {
+              "type": "Sort",
+              "relation": null,
+              "index": null
+            },
+            {
+              "type": "Seq Scan",
+              "relation": "api_key_request_logs",
+              "index": null
+            }
+          ],
+          "topSharedHitBlocks": 610
+        },
+        "nativeCollationWithDistinct": {
+          "executionMs": 0.407,
+          "nodes": [
+            {
+              "type": "Limit",
+              "relation": null,
+              "index": null
+            },
+            {
+              "type": "Unique",
+              "relation": null,
+              "index": null
+            },
+            {
+              "type": "Index Only Scan",
+              "relation": "api_key_request_logs",
+              "index": "api_key_request_logs_pkey"
+            }
+          ],
+          "topSharedHitBlocks": 19
+        },
+        "generatedNativeKeyset": {
+          "executionMs": 0.17,
+          "nodes": [
+            {
+              "type": "Limit",
+              "relation": null,
+              "index": null
+            },
+            {
+              "type": "Index Only Scan",
+              "relation": "api_key_request_logs",
+              "index": "api_key_request_logs_pkey"
+            }
+          ],
+          "topSharedHitBlocks": 19
+        }
+      }
+    },
+    {
+      "name": "empty-legacy-id-included-and-empty-cursor-resumes-after-it",
+      "result": "PASS",
+      "firstPageLastId": "old-log-00000499",
+      "resumedNextId": "old-log-00000001"
+    },
+    {
+      "name": "first-batch-commits-and-interrupted-batch-rolls-back",
+      "result": "PASS",
+      "firstPage": {
+        "scanned": 500,
+        "reserved": 500,
+        "next_request_id": "old-log-00000499",
+        "ms": 9.208
+      },
+      "savedCursor": "old-log-00000499",
+      "rowsAfterRollback": 500
+    },
+    {
+      "name": "bounded-resume-covers-all-history",
+      "result": "PASS",
+      "scanned": 25001,
+      "reserved": 25001,
+      "pages": 52,
+      "savedCursor": "old-log-00000499",
+      "finalCursor": "old-log-00025000",
+      "pageMs": {
+        "min": 7.326,
+        "median": 13.246,
+        "p95": 18.594,
+        "max": 19.547,
+        "total": 693.992
+      },
+      "relationBytes": {
+        "log": 10518528,
+        "reservation": 3194880
+      }
+    },
+    {
+      "name": "post-cursor-low-sorting-live-log-reserved",
+      "result": "PASS",
+      "late": {
+        "n": 1
+      }
+    },
+    {
+      "name": "seven-source-gate-lock-timeout-rollback-and-retry",
+      "result": "PASS",
+      "gateWaitMs": 2014.842,
+      "gateMs": 30.693,
+      "sourceTablesLocked": 7
+    }
+  ]
+}

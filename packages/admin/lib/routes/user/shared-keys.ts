@@ -2,7 +2,7 @@
  * 用户路由：`/user/shared-keys` — 卖家共享密钥上架/管理。
  * 明文密钥仅创建响应回显一次；列表只返回掩码 + 指纹。
  */
-import { Hono } from 'hono';
+import { Hono, type Context } from 'hono';
 import {
 	fingerprintProviderApiKey,
 	getSharedChannelDefinition,
@@ -15,6 +15,9 @@ import type { SharedKeyRow } from '@octafuse/core';
 import type { UserEnv } from '@/lib/user-env';
 import { loadPortalMarketplaceConfig } from '@/lib/portal-config';
 import { validateSharedKey } from '@/lib/shared-key-validation';
+import { isSharedKeyEarningHistoryDeleteError } from '../shared-key-history-error';
+import { projectCurrentSellerCreditedUsage } from '@/lib/shared-key-credited-usage-reader';
+import { projectSellerCreditedUsageWithSignedClaims } from '@/lib/shared-key-signed-stats-reader';
 
 export const userSharedKeysRoutes = new Hono<UserEnv>();
 
@@ -59,11 +62,26 @@ function maskSharedKey(row: SharedKeyRow) {
 	return { ...rest, apiKeyMasked: maskProviderApiKeyForAdmin(row.apiKey) };
 }
 
+async function projectSellerRows(
+	c: Context<UserEnv>,
+	rows: SharedKeyRow[],
+): Promise<SharedKeyRow[]> {
+	if (c.env?.SIGNED_SELLER_STATS_READER === 'reviewed-v1') {
+		return projectSellerCreditedUsageWithSignedClaims(
+			c.get('repositories'), rows, c.get('principal').userId, c.req.raw, c.env);
+	}
+	if (c.env?.SHARED_KEY_CREDITED_USAGE_READER === 'reviewed-v1') {
+		return projectCurrentSellerCreditedUsage(
+			c.get('repositories'), rows, c.get('principal').userId);
+	}
+	return rows;
+}
+
 userSharedKeysRoutes.get('/', async (c) => {
 	const repositories = c.get('repositories');
-	const principal = c.get('principal');
-	const rows = await repositories.sharedKeys.listSharedKeysBySeller(principal.userId);
-	return c.json({ success: true, data: rows.map(maskSharedKey) });
+	const rows = await repositories.sharedKeys.listSharedKeysBySeller(c.get('principal').userId);
+	const projected = await projectSellerRows(c, rows);
+	return c.json({ success: true, data: projected.map(maskSharedKey) });
 });
 
 userSharedKeysRoutes.get('/channels', async (c) => {
@@ -227,7 +245,8 @@ userSharedKeysRoutes.patch('/:id', async (c) => {
 	}
 	await repositories.sharedKeys.updateSharedKey(id, patch);
 	const updated = await repositories.sharedKeys.getSharedKeyById(id);
-	return c.json({ success: true, data: updated ? maskSharedKey(updated) : null });
+	const projected = updated ? (await projectSellerRows(c, [updated]))[0] : null;
+	return c.json({ success: true, data: projected ? maskSharedKey(projected) : null });
 });
 
 userSharedKeysRoutes.delete('/:id', async (c) => {
@@ -238,7 +257,18 @@ userSharedKeysRoutes.delete('/:id', async (c) => {
 	if (!row || row.sellerUserId !== principal.userId) {
 		return c.json({ success: false, message: 'Not found' }, 404);
 	}
-	await repositories.sharedKeys.deleteSharedKey(id);
+	try {
+		await repositories.sharedKeys.deleteSharedKey(id);
+	} catch (error) {
+		if (isSharedKeyEarningHistoryDeleteError(error)) {
+			return c.json({
+				success: false,
+				code: 'shared_key_earning_history_immutable',
+				message: 'Shared key has credited earnings and cannot be deleted',
+			}, 409);
+		}
+		throw error;
+	}
 	return c.json({ success: true });
 });
 
@@ -264,5 +294,6 @@ userSharedKeysRoutes.post('/:id/revalidate', async (c) => {
 		await repositories.sharedKeys.markSharedKeyFailure(id, validation.reason ?? 'validation failed', nowIso);
 	}
 	const updated = await repositories.sharedKeys.getSharedKeyById(id);
-	return c.json({ success: true, data: updated ? maskSharedKey(updated) : null });
+	const projected = updated ? (await projectSellerRows(c, [updated]))[0] : null;
+	return c.json({ success: true, data: projected ? maskSharedKey(projected) : null });
 });

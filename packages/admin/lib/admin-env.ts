@@ -24,6 +24,13 @@ export type AdminBindings = {
 	CINATOKEN_IDENTITY_EVENTS_SECRET?: string;
 	CINAAUTH_ORGANIZATION_ADMIN_ROLES?: string;
 	SHARED_KEY_ENCRYPTION_SECRET?: string;
+	/** Review-only seller statistics reader; exact opt-in, default off. */
+	SHARED_KEY_CREDITED_USAGE_READER?: string;
+	/** Seller-only signed statistics route; exact review opt-in, default off. */
+	SIGNED_SELLER_STATS_READER?: string;
+	/** Review-only independent seller claim issuer and dedicated reader binding. */
+	STATS_CLAIM_ISSUER?: Fetcher;
+	STATS_READER_HYPERDRIVE?: HyperdriveBinding;
 	DEEPSEEK_API_KEY?: string;
 	CHAIN_JOBS?: Queue<ChainJobMessage>;
 	/** Workers rate-limiting binding（wrangler.base.jsonc ratelimits）。认证失败限速；未注入时跳过。 */

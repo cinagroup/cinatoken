@@ -57,6 +57,7 @@ export async function searchTavilyWeb(params: WebSearchParams): Promise<WebSearc
 
 	const response = await fetchImpl(TAVILY_ENDPOINT, {
 		method: 'POST',
+		redirect: 'manual',
 		headers: {
 			Authorization: `Bearer ${params.apiKey}`,
 			'Content-Type': 'application/json',

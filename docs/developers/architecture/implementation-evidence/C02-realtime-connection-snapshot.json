@@ -1,0 +1,138 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-09-05",
+  "scope": "C02.B2.2 Realtime connection/bridge local subset; Workers fixtures are not workerd acceptance",
+  "head": "7eb59008f7d8e156e81fd18a57658fdef2553264",
+  "baselineDirtyFileCount": 130,
+  "runtime": "Node.js v24.14.1 on Windows; Node 22 unverified",
+  "files": [
+    {
+      "path": "packages/proxy/src/services/egress/dashscope-realtime-driver.ts",
+      "sha256": "2ca5db90a44fa72bb57f2218bc32df0411884c6d210a076719456e6367f132bb"
+    },
+    {
+      "path": "packages/proxy/src/runtime/node-realtime.ts",
+      "sha256": "56ab6c4fed8b47a60492b6a097bd9996186acbba8166e6bed1c67166eaf69a8c"
+    },
+    {
+      "path": "packages/proxy/src/services/proxy.ts",
+      "sha256": "3b1d928641e65b7a09256e6b259231cb414ece5fe5d796411ae8b9e2c73a7160"
+    },
+    {
+      "path": "packages/proxy/src/services/egress/realtime-connection-lifecycle.ts",
+      "sha256": "0868e848ed5550c33cdddf19b173570dbeceb7571c720b8b3023b9293508eed6"
+    },
+    {
+      "path": "packages/proxy/src/services/egress/realtime-connection-lifecycle.test.ts",
+      "sha256": "4e8f1c9572c0763526f7f0d6385e0547070de89daada91c236cfbd55b2aca3f7"
+    },
+    {
+      "path": "packages/proxy/src/runtime/node-realtime.test.ts",
+      "sha256": "6d64e45f6e5a60d7d9833df540100e21a58a7d19c1c7e8735abb9db9615a9c07"
+    },
+    {
+      "path": "packages/proxy/package.json",
+      "sha256": "b757821e49f29e74c7af4141492a1f8885dac72c2b38672325283d6b8ae7ff03"
+    },
+    {
+      "path": "packages/proxy/tsconfig.dispatch-safety.json",
+      "sha256": "0657e67b2830ae439068f72a7c566b7c8a38171ee49737744002628443a3b6f1"
+    },
+    {
+      "path": "packages/core/src/gcp-service-account-token.ts",
+      "sha256": "f60f0c28d49c01306c520289d6747c511ed0d52cdc5878378997024bf7cd844c"
+    },
+    {
+      "path": "packages/core/src/gcp-oauth-lifecycle.ts",
+      "sha256": "90b6456e2b7ae19ee2e0d04c3f0b1e470f757bc11a91bd478c13b9830e7e0c0b"
+    },
+    {
+      "path": "packages/core/src/request-auxiliary-auth-budget.ts",
+      "sha256": "a2995a8cd480b150960beab7ccb2aae60352b46e5d3fc79fff5f813aa6ad197f"
+    },
+    {
+      "path": "packages/proxy/src/services/request-deadline.ts",
+      "sha256": "145b0dc9fb702d1ef67efe9c40593c92a61f9204bc538b0ae9d9d8c46f9c0869"
+    },
+    {
+      "path": "packages/proxy/src/services/request-dispatch-budget.ts",
+      "sha256": "53115c21920845089c19d9002c7e3b6c70f5fccdd3107f2fee30c0874393a066"
+    },
+    {
+      "path": "packages/proxy/src/services/failover-dispatch.ts",
+      "sha256": "6a93147fcf1c5c4f17db99ed03a7805b5fba7a98786f3153eeb27143fa4d853f"
+    },
+    {
+      "path": "packages/proxy/src/services/byok-key-pool.ts",
+      "sha256": "e3885782b22a841e7661a425d1046b003342aeba626041b11786f9bcc795a18f"
+    },
+    {
+      "path": "packages/proxy/src/services/shared-key-pool.ts",
+      "sha256": "c65f12a6909c1130d89fb9aabe89b38878e1697df4d9b9c3801dee50c2d16174"
+    },
+    {
+      "path": "packages/proxy/src/services/dashscope-realtime-guardrails.ts",
+      "sha256": "9f406222e06cd91931ee616759b4e73c95b29a97abfa50a6e84a95d7f0b0f52d"
+    },
+    {
+      "path": "packages/proxy/src/services/dashscope-realtime-guardrails.test.ts",
+      "sha256": "2c82d3e5576e842b06fd7d7eb9108132cf1b2a5af57e9667b90dadc32569a005"
+    },
+    {
+      "path": "packages/proxy/src/routes/v1/dashscope-realtime.ts",
+      "sha256": "03ee7fea2ea27c9151549827e1f86045b32a8392f88158bdedd3932c59540b3f"
+    },
+    {
+      "path": "packages/proxy/src/runtime/node.ts",
+      "sha256": "f9cf34a369b6c797495339d7ebcfb894583ef3bcfd0ae6f35c4dc22af3dda5e9"
+    },
+    {
+      "path": "packages/proxy/src/services/egress/dashscope-realtime-driver.test.ts",
+      "sha256": "1a87aa7575ab57ca5e585abbcafc3c73629f815e9e245d0c8d228cad48ca8a69"
+    },
+    {
+      "path": "packages/proxy/src/services/egress/audio-speech-driver.ts",
+      "sha256": "0a12a61971b5842a4d4260405bbc9c31fa7c2f19eb667049204677d195fa279e"
+    },
+    {
+      "path": "packages/proxy/src/services/egress/audio-speech-stream-lifecycle.ts",
+      "sha256": "537e88d2cb6fe4acd44aa104327bdad34608bf3305d5f678781457b5980473c2"
+    },
+    {
+      "path": "packages/proxy/src/services/egress/audio-request-lifecycle.ts",
+      "sha256": "7434a8bbd3289a55a0b410b963cccd1b1905270ac618aa30f9e3e37ea8402f81"
+    },
+    {
+      "path": "packages/proxy/src/services/egress/dashscope-audio-driver.ts",
+      "sha256": "bfd8ee6f78d08ded868659bd2da272e2391a380f0e01d855c08c3b5cd830d7c3"
+    },
+    {
+      "path": "packages/proxy/src/services/egress/openai-images-driver.ts",
+      "sha256": "04528ed8c8a610842b2be93246741707fc1b1d70eabdddd528d587800e8902b8"
+    },
+    {
+      "path": "packages/proxy/src/routes/v1/request-dispatch-limit.test.ts",
+      "sha256": "7c79d83677e6f296b15e5043a3cf7f67324c18e67f3bb308db1970549696c441"
+    },
+    {
+      "path": "packages/proxy/src/app.ts",
+      "sha256": "0d261b5300a9695f416186ccd0bd6abed51d915af754d275b209fdd824696001"
+    },
+    {
+      "path": "packages/proxy/wrangler.jsonc",
+      "sha256": "7ffb4a120ce0b83df428a1344fca5b16ea9d8784178d555e7377623511451b0c"
+    },
+    {
+      "path": "packages/admin/lib/services/admin/playground-service.ts",
+      "sha256": "22b89e225b34d2ce145a02492b16d9d6528a205ef34db6308d928d5f0004b1c4"
+    },
+    {
+      "path": "package-lock.json",
+      "sha256": "9adebfebdb981bd51aac7644fb046d0a4f0e2a4586cf8b3786cefa097a1a415e"
+    },
+    {
+      "path": ".nvmrc",
+      "sha256": "f14b4987904bcb5814e4459a057ed4d20f58a633152288a761214dcd28780b56"
+    }
+  ]
+}

@@ -1,0 +1,172 @@
+{
+  "status": "PASS",
+  "cleanup": "PASS",
+  "binaryVersion": "postgres (PostgreSQL) 18.6",
+  "sourceSha256": {
+    "scripts/db/cutover/postgres-complete-text-manifest-selection-v393.native.test.mjs": "5a1fb5fce8b43b0f57fe40305f90b6c9a384ff7ee80e3a663bbe9c0b04a7c1f0",
+    "scripts/db/cutover/postgres-complete-text-manifest-selection-v393.tsconfig.json": "85f4354cb5b0bab2660ec05e8c85df5dd7fda53b45472fcd025ec88f2d4dc282",
+    "scripts/db/cutover/grant-postgres-runtime.ts": "99fd6bded1f568a62339f3774fec8e9ce7e69a9423fdf625b46cf7794b8553ea",
+    "packages/core/src/test-support/postgres-native-cluster.mjs": "6b5923be8d3bdcd061033eed1af2f67f3b87fa2fca1f2cf0a0b2eb0eb2cb8d2a",
+    "packages/core/src/db/postgres/model-endpoints.impl.ts": "08091a909aa7c1bed11abf953891bc1ec865b7831043bf4e788826d0c1f47364",
+    "packages/core/src/storage/model-endpoints.sql-repositories.test.ts": "81f82eeddb69f5583aeec0e268b7f3d2acdb24901b25347a51a3c7adbb212afb",
+    "node_modules/drizzle-orm/postgres-js/driver.js": "7a4601128f03d54d70ce3a856bd0e24c1e2b49b5143a179a0cff1ea65d3047b6",
+    "node_modules/drizzle-orm/package.json": "9fd30ce718965c19178ac6936462b77017f1fffe56865124d0cfe55850de09ff",
+    "node_modules/postgres/src/types.js": "1883bd4536eab1c94b9e708d325b13708b0f18ec80020e3a825f34a72f603b81",
+    "node_modules/postgres/package.json": "944d492614959389a5739ef2893bc1830fb773ff042159d9b331d43b2f6792e9",
+    "packages/proxy/src/services/model-router.ts": "d0723ce93df9b63819cc0c1fad65c84ce6c8b3d2d9881512bb8ee5ce9cb3819b",
+    "packages/proxy/src/services/route-selection.ts": "c312967e20ce2aed7454cc04fd4d6becfa077319f1667f65c676a301b6855ed6",
+    "packages/proxy/src/services/model-fallback-plan.ts": "cd3b46aa78b64fe2b52d0934ac0f41a6fcd621ce70a8bb65a11f2cc809ea179a",
+    "packages/proxy/src/services/provider-routing-preferences.ts": "ca88928f8df70144a09ca3b264a6f752b37b1b24970b4590c08dfd7a3ded3740",
+    "packages/proxy/src/services/provider-performance-routing.ts": "380206c1158d1ca1c31e5e74a2d83a159c66ded822b0e02244b731e7f2d74d90",
+    "packages/proxy/src/services/provider-default-load-balancing.ts": "122a5092aa133ac8e3a181f723c092da2e5446f9df2a0e274fcf26af1b30b91b",
+    "packages/proxy/src/services/provider-circuit-breaker.ts": "66957245a00ae1e0964ae1479981be6cfef4ad9e897213be8fdb6083c73d3499",
+    "packages/proxy/src/services/resolve-model-route-group.ts": "007581a932a26d597a0f28c054e49eee754cfc3b2d6541e9dab10ab58bfcd35f",
+    "packages/proxy/src/services/route-strategies/index.ts": "9e328e978d1f4164b0e700a6b07913c3f8ef58432134b2c4903bc332faf20efd",
+    "packages/proxy/src/services/route-strategies/hash-affinity.ts": "651263b3fd24bdacd8ccac9fd2169cd6672c4f3fab55c53aca25294436eacca7",
+    "packages/proxy/src/services/route-strategies/weighted-random.ts": "4c3e0e3c9e542f42b325629431e38e8de7a2030df4f908813ac2869550c4e7d0",
+    "packages/proxy/src/services/route-strategies/weight-priority.ts": "3bc0856e9129492a9b4c13f73dfef6f96b0767832bda82f7f36afce581797a5c",
+    "packages/proxy/src/services/route-strategies/weighted-round-robin.ts": "4fe97c0f895637d0c49572149175d73323d70d2e0c4c02a53ba5fa4839ed5c95",
+    "packages/proxy/src/services/route-strategies/route-affinity-hash.ts": "2667743f6f5c47788e380ef8ab7f157a88bf09ac0e174d68d99792fad5f39a3f",
+    "packages/proxy/src/services/gateway-error-codes.ts": "f8e4be5e446ed55982c176fa09bbd090350ff3c361965ef67c9247034e865d10",
+    "packages/core/migrations-proposals/postgres/authenticated-request-capability-login-v356.sql": "bbf06af6e9e2df6801c0e89442644d208d7213dbb6a7e202b96183b54d67fe9f",
+    "packages/core/migrations-proposals/postgres/authenticated-text-route-ceiling-issuer-v357.sql": "3ce21a1502906f3b24753f62932ada1aa5299ed65365cce4e55c410476b392c4",
+    "packages/core/migrations-proposals/postgres/authenticated-text-route-source-fence-v359.sql": "52ba5207db94bf9f6fb5200c9de89c9ff4633eb453366eb8dcd28f643c1aa03f",
+    "packages/core/migrations-proposals/postgres/authenticated-complete-text-quote-v360.sql": "195eb0fa51df48dccc19c165900ae137f58daf1902fcc32e9673d7d124c2a08d",
+    "packages/core/migrations-proposals/postgres/complete-text-secretless-plan-v365.sql": "3b3a319f2b2f3136cdc6da295a53bf2230ce970ea49a06fa442b2a0575ed3ac2"
+  },
+  "coreSourceCorpus": {
+    "files": 327,
+    "sha256": "8e89c59f1f7173ee57a323e29fe6f166cde203e6863393c202d3abdbe35a891e"
+  },
+  "stages": [
+    {
+      "name": "formal-pg73-and-real-v356-v357-v359-v360-v365-proposals-installed",
+      "result": "PASS"
+    },
+    {
+      "name": "real-repository-runtime-and-separate-secretless-planner-logins",
+      "result": "PASS",
+      "runtimeIdentity": {
+        "current_user": "cinatoken_gateway_runtime",
+        "session_user": "cinatoken_gateway_runtime"
+      },
+      "plannerIdentity": {
+        "current_user": "cinatoken_gateway_complete_text_ingress_planner",
+        "session_user": "cinatoken_gateway_complete_text_ingress_planner"
+      }
+    },
+    {
+      "name": "two-model-three-route-exact-and-wildcard-topology-genuinely-attested",
+      "result": "PASS"
+    },
+    {
+      "name": "three-jsonb-array-repository-reads-work-through-real-drizzle-postgres-client",
+      "result": "PASS",
+      "runtimeBindings": 1,
+      "routeLinks": 2,
+      "discoveryBindings": 1
+    },
+    {
+      "name": "real-repository-provider-endpoint-capability-and-subject-parse-controls",
+      "result": "PASS"
+    },
+    {
+      "name": "actual-chat-selector-prefers-exact-surface-and-excludes-valid-wildcard-pool",
+      "result": "PASS",
+      "selectedSurfaceId": "v393-surface-exact",
+      "selectedPoolId": "v393-pool-a",
+      "eligibleAlpha": [
+        "v393-route-z"
+      ],
+      "eligibleBeta": [
+        "v393-route-beta"
+      ],
+      "independentlyValidWildcardPool": [
+        "v393-route-a"
+      ]
+    },
+    {
+      "name": "actual-chat-fallback-plan-accepts-same-body-and-keeps-only-surface-eligible-routes",
+      "result": "PASS",
+      "candidates": [
+        {
+          "modelId": "v393-alpha",
+          "eligibleRoutes": [
+            "v393-route-z"
+          ],
+          "strategy": "hash_affinity"
+        },
+        {
+          "modelId": "v393-beta",
+          "eligibleRoutes": [
+            "v393-route-beta"
+          ],
+          "strategy": "hash_affinity"
+        }
+      ]
+    },
+    {
+      "name": "genuine-v360-quote-accepts-two-models-and-all-three-attested-routes",
+      "result": "PASS",
+      "status": "quoted_complete_subset",
+      "routeCount": 3
+    },
+    {
+      "name": "genuine-v365-secretless-manifest-orders-unselected-route-before-eligible-route",
+      "result": "PASS",
+      "status": "planned_complete_subset",
+      "orderedModelIds": [
+        "v393-alpha",
+        "v393-beta"
+      ],
+      "routes": [
+        {
+          "modelId": "v393-alpha",
+          "routeTargetId": "v393-route-a",
+          "candidateIndex": 0,
+          "sourceGeneration": "3",
+          "attestedSourceSha256": "9b397d0c62f6ad2b6b8eceb8a5f06407dde68a7c080e2a41217dd579c5db7546"
+        },
+        {
+          "modelId": "v393-alpha",
+          "routeTargetId": "v393-route-z",
+          "candidateIndex": 0,
+          "sourceGeneration": "3",
+          "attestedSourceSha256": "3ccfa25591623597bb027eed02d6863889ed7dc653b20b6747d0ab0e5ad0e3c4"
+        },
+        {
+          "modelId": "v393-beta",
+          "routeTargetId": "v393-route-beta",
+          "candidateIndex": 1,
+          "sourceGeneration": "3",
+          "attestedSourceSha256": "021de4f0b7f7ef8186469dc3dbfb61dc5607a0d8457cac186edd0c139ace65cc"
+        }
+      ]
+    },
+    {
+      "name": "manifest-first-is-not-current-chat-eligible-without-any-source-mutation",
+      "result": "PASS",
+      "proposedManifestFirst": "v393-route-a",
+      "actualEligible": [
+        "v393-route-z"
+      ],
+      "blocker": "A future secretless Gateway must derive trusted surface eligibility before route strategy and grant selection."
+    },
+    {
+      "name": "loaded-fixture-all-file-pins-and-core-source-corpus-remain-unchanged",
+      "result": "PASS"
+    }
+  ],
+  "limitations": [
+    "PASS proves an integration blocker: the v360/v365 route manifest is a budget/source superset, not a complete eligible Chat route order.",
+    "Review-only local PG73 plus existing v356/v357/v359/v360/v365 proposals; no migration, remote database, Worker binding or deployment changed.",
+    "The baseline uses the actual resolveRoutesForSurface, buildModelFallbackPlan and PostgreSQL repositories with the legacy runtime role. That credential-aware role is a comparison oracle, not a proposed secretless Gateway identity.",
+    "Provider credentials and endpoint evidence are synthetic. No decryption, provider POST, admission, send grant, result fact or settlement is attempted.",
+    "This two-model exact/wildcard surface counterexample does not establish full route-strategy, sticky, provider-control or fallback equivalence. Those remain obligations of a future credential-free selector.",
+    "Node/local PostgreSQL execution does not establish workerd, Service Binding or Hyperdrive behavior."
+  ],
+  "formalMigrations": {
+    "files": 73,
+    "sha256": "23afef61a8a670e0af8c90e3a138f522e6b283b454e380a592bf85bca83108dc"
+  }
+}

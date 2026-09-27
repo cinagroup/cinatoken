@@ -1,0 +1,97 @@
+{
+  "status": "PASS",
+  "cleanup": "PASS",
+  "scope": "owned loopback-only PG18+ cluster, password-authenticated direct producer identities; no Hyperdrive or production origin",
+  "binaryVersion": "postgres (PostgreSQL) 18.6",
+  "stages": [
+    {
+      "name": "createrole-user-fails-closed-before-automatic-membership",
+      "result": "PASS",
+      "adminIdentity": {
+        "session_user": "cinatoken_producer_provision_probe",
+        "current_user": "cinatoken_producer_provision_probe",
+        "superuser": false,
+        "createrole": true
+      }
+    },
+    {
+      "name": "dry-run-rolls-back-new-logins",
+      "result": "PASS"
+    },
+    {
+      "name": "superuser-created-zero-membership",
+      "result": "PASS",
+      "catalog": [
+        {
+          "rolname": "cinatoken_gateway_dispatch_producer",
+          "rolcanlogin": true,
+          "rolinherit": false,
+          "rolsuper": false,
+          "rolcreaterole": false,
+          "rolconnlimit": 2,
+          "memberships": 0
+        },
+        {
+          "rolname": "cinatoken_gateway_fact_producer",
+          "rolcanlogin": true,
+          "rolinherit": false,
+          "rolsuper": false,
+          "rolcreaterole": false,
+          "rolconnlimit": 2,
+          "memberships": 0
+        }
+      ]
+    },
+    {
+      "name": "direct-login-defaults-and-cross-role-denials",
+      "result": "PASS",
+      "identities": [
+        {
+          "session_user": "cinatoken_gateway_dispatch_producer",
+          "current_user": "cinatoken_gateway_dispatch_producer",
+          "transaction_timeout": "30s",
+          "statement_timeout": "15s",
+          "lock_timeout": "2s",
+          "idle_timeout": "10s",
+          "search_path": "pg_catalog, pg_temp"
+        },
+        {
+          "session_user": "cinatoken_gateway_fact_producer",
+          "current_user": "cinatoken_gateway_fact_producer",
+          "transaction_timeout": "30s",
+          "statement_timeout": "15s",
+          "lock_timeout": "2s",
+          "idle_timeout": "10s",
+          "search_path": "pg_catalog, pg_temp"
+        }
+      ],
+      "passwordDenialSqlstate": "28P01",
+      "otherDatabaseDenialSqlstate": "42501"
+    },
+    {
+      "name": "idempotent-run-preserves-existing-passwords",
+      "result": "PASS"
+    },
+    {
+      "name": "existing-login-null-and-md5-verifiers-rejected",
+      "result": "PASS"
+    },
+    {
+      "name": "dry-run-rolls-back-password-rotation",
+      "result": "PASS"
+    },
+    {
+      "name": "explicit-password-rotation",
+      "result": "PASS"
+    },
+    {
+      "name": "existing-nologin-roles-transition-to-direct-password-login",
+      "result": "PASS"
+    }
+  ],
+  "sourceSha256": {
+    "nativeTest": "d03238781b604ee7d5740bf133ee26b1952faed339a7d265ab1c7b87b6a0f551",
+    "provisioner": "942abe764f402ea40932bcfb119c1199c3e4981e742ce08a04bdb3153bb0e136",
+    "nativeCluster": "6b5923be8d3bdcd061033eed1af2f67f3b87fa2fca1f2cf0a0b2eb0eb2cb8d2a"
+  }
+}

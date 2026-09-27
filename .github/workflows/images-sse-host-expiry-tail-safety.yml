@@ -1,0 +1,24 @@
+name: Images SSE native tail evidence safety
+on:
+  pull_request:
+    paths: ['packages/core/**', 'packages/proxy/**', 'scripts/deploy/**', 'package-lock.json', '.github/workflows/images-sse-host-expiry-tail-safety.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  evidence-contract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    strategy:
+      matrix:
+        node: [22, 24]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+          cache: npm
+      - run: npm ci
+      - run: npm run build:node-index -w @octafuse/core
+      # Synthetic local evidence and transaction tests; not proof of native platform cancellation.
+      - run: node node_modules/tsx/dist/cli.mjs --test packages/proxy/scripts/staging/images-sse-host-expiry-evidence-v2.test.mjs packages/proxy/scripts/staging/images-sse-host-expiry-reconciliation-v2.test.mjs packages/proxy/scripts/staging/images-sse-host-expiry-telemetry.test.mjs packages/proxy/scripts/staging/images-sse-host-expiry-telemetry-regression.test.mjs packages/proxy/scripts/staging/images-sse-host-expiry-clock-incident.test.mjs

@@ -1,0 +1,69 @@
+{
+  "status": "PASS",
+  "cleanup": "PASS",
+  "binaryVersion": "postgres (PostgreSQL) 18.6",
+  "scope": "owned PG18.6; formal PG73, real broad grant, review-only claim primitive",
+  "sourceSha256": {
+    "formalMigrationCorpus": "23afef61a8a670e0af8c90e3a138f522e6b283b454e380a592bf85bca83108dc",
+    "proposal": "6ded328640ab6c63a7a0e8a20572b760df9ca52b4aeb1b90eb3f7edd8485ff54",
+    "nativeFixture": "4336da8c3959942942fe77ba9b5ce0a6ca5e6ebddb3a99438fb8f704d928029a",
+    "runtimeGrant": "9725d93d94beaf85fd144017f87760efdfe4f18099fbcde4ad9bbad5dc848081"
+  },
+  "stages": [
+    {
+      "name": "formal-pg73-installed",
+      "result": "PASS"
+    },
+    {
+      "name": "real-broad-runtime-grant-installed",
+      "result": "PASS"
+    },
+    {
+      "name": "default-off-and-reader-role-membership-install-denied",
+      "result": "PASS"
+    },
+    {
+      "name": "default-off-install-and-private-pgcrypto-schema",
+      "result": "PASS"
+    },
+    {
+      "name": "independently-signed-seller-scope-consumed-once",
+      "result": "PASS"
+    },
+    {
+      "name": "concurrent-same-nonce-has-one-winner",
+      "result": "PASS"
+    },
+    {
+      "name": "explicit-read-transaction-rollback-allows-limited-reuse",
+      "result": "PASS"
+    },
+    {
+      "name": "seller-key-scope-audience-and-order-tampering-denied",
+      "result": "PASS"
+    },
+    {
+      "name": "expired-and-overlong-claims-denied",
+      "result": "PASS"
+    },
+    {
+      "name": "ordinary-runtime-and-reader-direct-secret-access-denied",
+      "result": "PASS"
+    },
+    {
+      "name": "migrator-revocation-stops-future-claims",
+      "result": "PASS"
+    },
+    {
+      "name": "current-runtime-grant-rerun-does-not-open-private-claim-schema",
+      "result": "PASS"
+    }
+  ],
+  "limitations": [
+    "No independent production issuer, secret provisioning or rotation, app binding, audited credited-usage reader, or admin claim is activated.",
+    "The dedicated reader LOGIN only exercises claim verification here; this fixture does not authorize a statistics read.",
+    "Nonce uniqueness is durable only after commit; an explicit rollback after disclosure permits reuse until the claim expires.",
+    "Nonce rows are retained indefinitely in this proposal pending a reviewed expiry-safe retention policy.",
+    "pgcrypto availability and lock/latency behavior need validation in the target PostgreSQL deployment."
+  ]
+}

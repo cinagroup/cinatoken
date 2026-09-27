@@ -1,0 +1,180 @@
+{
+  "version": "v302",
+  "date": "2026-09-21",
+  "checklist": "v1.199",
+  "status": "LOCAL_CANCEL_CANDIDATE_PASS_PRODUCTION_DISABLED",
+  "C03": "DOING",
+  "goalComplete": false,
+  "report": ".wrangler/staging/postgres-owned-cancel-v302-run-UoF6E6/results.json",
+  "validation": {
+    "harness": {
+      "pass": 16,
+      "fail": 0,
+      "durationMs": 49246.9766
+    },
+    "esm-owned": {
+      "pass": 28,
+      "fail": 0,
+      "expectedFailure": false,
+      "durationMs": 2438.472
+    },
+    "esm-lifecycle": {
+      "pass": 60,
+      "fail": 0,
+      "expectedFailure": false,
+      "durationMs": 4302.9738
+    },
+    "esm-legacy-cancel": {
+      "pass": 2,
+      "fail": 0,
+      "expectedFailure": false,
+      "durationMs": 826.9829
+    },
+    "esm-negative": {
+      "pass": 0,
+      "fail": 1,
+      "expectedFailure": true,
+      "durationMs": 856.8928
+    },
+    "cjs-owned": {
+      "pass": 28,
+      "fail": 0,
+      "expectedFailure": false,
+      "durationMs": 2396.1413
+    },
+    "cjs-lifecycle": {
+      "pass": 60,
+      "fail": 0,
+      "expectedFailure": false,
+      "durationMs": 4033.4115
+    },
+    "cjs-legacy-cancel": {
+      "pass": 2,
+      "fail": 0,
+      "expectedFailure": false,
+      "durationMs": 942.7994
+    },
+    "cjs-negative": {
+      "pass": 0,
+      "fail": 1,
+      "expectedFailure": true,
+      "durationMs": 932.2436
+    },
+    "installed-cancel": {
+      "pass": 2,
+      "fail": 0,
+      "expectedFailure": false,
+      "durationMs": 1248.6987
+    },
+    "installed-onclose": {
+      "pass": 2,
+      "fail": 1,
+      "expectedFailure": true,
+      "durationMs": 1086.0292
+    },
+    "source-sql": {
+      "pass": 62,
+      "fail": 0,
+      "expectedFailure": false,
+      "durationMs": 20007.2635
+    },
+    "typecheckExitCode": 0,
+    "syntaxChecks": 4,
+    "distinctNewWireScenarios": 25,
+    "wireIncludesExistingBaselineScenarios": 3,
+    "workersRuntimeTests": 0,
+    "nativePostgresTests": 0,
+    "wranglerDryRuns": 0,
+    "protectedInputsUnchanged": 16,
+    "v301SourceHashesUnchanged": 9,
+    "v300SourceHashesUnchanged": 6,
+    "v300FixtureIntentionallyExtended": true
+  },
+  "sourceSha256": {
+    "scripts/db/diag/postgres-owned-cancellation.mjs": "309bf6ed0de344ecdc02164a62963e89be11a7692df87c4c51bce478dc63b96d",
+    "scripts/db/diag/postgres-owned-cancellation.test.mjs": "2f559479543a020462f206fff0e555588517d555b7c91bc06e2a9d20f9edf37d",
+    "packages/core/src/storage/recovery/postgres-owned-cancellation.wire.test.mjs": "fa6f4c99eab8de324405216e323095215c0be58c86dde625cf5db4447ca32d55",
+    "packages/core/src/storage/recovery/postgres-recovery-operation-owner.wire.test.mjs": "c149a7c16424bb061643524d57830118bc6f24cf2dcf316f3c0182ac63141c28"
+  },
+  "artifactSha256": {
+    "esm": "9435652844ec71ed35ed07ac2d0bffa0ded5a667b72797c63f9189949e447f59",
+    "cjs": "d15789a995a68f8e72dd4e6f3dde2c8ccab63d5764df6e43665d412b7c984180",
+    "cf": "cb513cd0645f0690f6001ce7d7aa779d333c9e7c3585f20c600302735b066ce1"
+  },
+  "protectedInputSha256": {
+    "package-lock.json": "9adebfebdb981bd51aac7644fb046d0a4f0e2a4586cf8b3786cefa097a1a415e",
+    "pnpm-lock.yaml": "65f935a4073ba42316da815df828c59e6626cbbe9cb14e7ae65cf7d8f273fb08",
+    "node_modules/postgres/package.json": "944d492614959389a5739ef2893bc1830fb773ff042159d9b331d43b2f6792e9",
+    "packages/core/package.json": "b9cbde48c8b70ff1e95db5a9dc772c366c16a218851f5e61b946f9a1ee24fbbb",
+    "packages/core/dist/index.js": "9f585cda9e7266c78dcc15f5f8157c4467a3caeaf6f67ac0baa8b8f3d06e1bc8",
+    "packages/proxy/package.json": "cc8b6750ee1aa27f778b8916ccba098df1d0d5b7992e062d2c3d389fb78e11ae",
+    "packages/proxy/wrangler.jsonc": "7ffb4a120ce0b83df428a1344fca5b16ea9d8784178d555e7377623511451b0c",
+    "node_modules/postgres/src/index.js": "4e21f5733e70d79cffc10d10d4ef01031de4a9ac862210e43f8870029fd103ed",
+    "node_modules/postgres/src/connection.js": "ee3a218d9aa6a6f2887c1a19da50009335fe84c11a5431d5cab72d6bc528632f",
+    "node_modules/postgres/src/query.js": "67c45a5151032aa46b587abc15381fe4efd97c696e5c1b53082b8161309c4ee2",
+    "node_modules/postgres/cjs/src/index.js": "d8fea1a5311c47e65004646bc81f57305ac64d48f99004a5b3ca27bcfc6babf8",
+    "node_modules/postgres/cjs/src/connection.js": "ce6d375809baad79963ef9b3773e6ac757bcf6da2362d4d85482bb14c2c751be",
+    "node_modules/postgres/cjs/src/query.js": "75ae9c69a1aaf3be4d8d65e4742c36018b89594907b85769e560c2590716c109",
+    "node_modules/postgres/cf/src/index.js": "aca9c247b7ddb2aedf90d20ce8e6f52ac6ebd95865056599ca05ed4dab4baad7",
+    "node_modules/postgres/cf/src/connection.js": "3efad812b825f76708f2e62e8dd00088900206e04afed2dc4b75b9aecd435fa9",
+    "node_modules/postgres/cf/src/query.js": "67c45a5151032aa46b587abc15381fe4efd97c696e5c1b53082b8161309c4ee2"
+  },
+  "historicalAttempts": [
+    {
+      "kind": "source-anchor",
+      "result": "two build failures: Query reject anchor was not unique; fixed before building"
+    },
+    {
+      "kind": "initial-wire",
+      "candidate": "postgres-owned-cancel-v302-m8ZtPj",
+      "pass": 23,
+      "fail": 0,
+      "cancelled": 5,
+      "result": "four mode rejection paths stranded a connection; reserve test used cold pool. Fixed admission validation and warmed reserved-handle fixture"
+    },
+    {
+      "kind": "harness",
+      "directory": ".wrangler/staging/postgres-owned-cancel-v302-run-5vlFwf",
+      "pass": 11,
+      "fail": 3,
+      "cancelled": 2,
+      "result": "cold-connection negative control did not reproduce pipelining; 25-second SQL child timed out; parent expired during typecheck. Kept logs"
+    },
+    {
+      "kind": "harness",
+      "directory": ".wrangler/staging/postgres-owned-cancel-v302-run-lheFD3",
+      "pass": 16,
+      "fail": 0,
+      "durationMs": 49286.9965,
+      "result": "warm-session negative control reproduced; all regression passed"
+    },
+    {
+      "kind": "harness-budgets",
+      "result": "local test budgets increased to parent 120s, child 45s, typecheck 20s; not production execution deadlines"
+    }
+  ],
+  "boundaries": {
+    "productionActivated": false,
+    "applicationOwnerIntegrated": false,
+    "adoptionPluginChanged": false,
+    "installedDriverChanged": false,
+    "lockfilesChanged": false,
+    "sharedDistChanged": false,
+    "productionConfigurationChanged": false,
+    "automaticSqlCancellationImplemented": false,
+    "serverExecutionDeadlineImplemented": false,
+    "unconfirmedResourceReleaseImplemented": false,
+    "cloudManagementCalls": 0,
+    "remoteSqlCalls": 0,
+    "deployments": 0,
+    "modelCalls": 0,
+    "kmsCalls": 0,
+    "cloudResourcesCreatedOrDeleted": 0,
+    "systemRuntimeUpdates": 0,
+    "cumulativeStagingCapUsd": 2,
+    "capReset": false,
+    "workersCloseEventIsPhysicalReceipt": false,
+    "nativeRuntimeApprovalPending": true
+  },
+  "next": "DBL-04 explicit candidate adoption/mode boundaries and application ownership of cancellation transport; then DBL-05 full-path server limits and DBL-06 trusted cleanup. Native/Workers/Hyperdrive and all existing gates remain open."
+}

@@ -1,0 +1,39 @@
+{
+  "version": "v336",
+  "date": "2026-09-24",
+  "status": "LOCAL_LEGACY_PARENT_LEDGER_PASS_PRODUCTION_DISABLED",
+  "C03": "DOING",
+  "goalComplete": false,
+  "validation": {
+    "nativePostgres": { "pass": 1, "fail": 0, "stages": 11, "cleanup": "PASS" },
+    "bundleUnitTests": { "pass": 1, "fail": 0 },
+    "scriptsWideTypecheck": "PASS",
+    "diffCheck": "PASS",
+    "linuxCiRun": false
+  },
+  "sourceSha256": {
+    "formalMigrationCorpus": "23afef61a8a670e0af8c90e3a138f522e6b283b454e380a592bf85bca83108dc",
+    "generatedActivationBundle": "bcaec45026a58ce35588bbc6c57c5449227e62e93ea220ede4a442f7a76c4396",
+    "scripts/db/cutover/build-request-legacy-parent-default-acl-activation.mjs": "959ff603d4027ca6b3da2636eea8e9aadafe752cddebec914bab677af522c3b1",
+    "scripts/db/cutover/build-request-legacy-parent-default-acl-activation.test.mjs": "542a8755554a5791f9a7b83f2eeb7e10c6d20badd9f6cb1600e1ade318ce7e12",
+    "scripts/db/cutover/postgres-legacy-parent-activation.native.test.mjs": "e1e31aaf1d59db0e4242dd69d3f1f316035f983898e4c99c87869fcca6ff19b9",
+    "docs/developers/architecture/implementation-evidence/C03-postgres-legacy-parent-ledger-v336.md": "32b5fe2ef24ce36f0139427491c67e73ea4e13fe0f62c5e6cbf812040fe5d72f"
+  },
+  "reportSha256": {
+    "docs/developers/architecture/implementation-evidence/C03-postgres-native-legacy-parent-ledger-v336-report.json": "005200e102b7dd93757785a989355b1729053a5125b97f6f84e2a5a663bee26c"
+  },
+  "boundaries": {
+    "formalPostgresMigrations": 73,
+    "exactLedgerVersionSetVerified": true,
+    "historicalAppliedSqlContentVerified": false,
+    "historicalDeployedHandlersVerified": false,
+    "representativeProductionLockWindowVerified": false,
+    "retentionPolicyApproved": false,
+    "contractMigrationApproved": false,
+    "realWorkersHyperdriveQueueVerified": false,
+    "productionRecoveryEnabled": false,
+    "remoteSqlCalls": 0,
+    "deployments": 0,
+    "cloudModelCalls": 0
+  }
+}

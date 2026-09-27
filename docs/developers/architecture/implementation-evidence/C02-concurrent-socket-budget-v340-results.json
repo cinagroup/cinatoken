@@ -1,0 +1,55 @@
+{
+  "version": "v340",
+  "date": "2026-09-25",
+  "status": "LOCAL_CONCURRENT_SOCKET_BUDGET_PASS_C02_OPEN",
+  "goalComplete": false,
+  "scope": {
+    "concurrentChains": 8,
+    "candidatesPerChain": 2,
+    "totalCandidates": 16,
+    "budgetLimit": 3,
+    "transport": "native Node fetch to owned loopback HTTP server; full POST bodies counted at server",
+    "responses": "two explicit 429 responses; socket reset after complete third POST body",
+    "database": "synthetic repository; no durable financial persistence"
+  },
+  "observed": {
+    "fetchCalls": 3,
+    "fullPostBodies": 3,
+    "distinctModels": 3,
+    "distinctCredentials": 3,
+    "permitsConsumed": 3,
+    "unknownOutcomeResults": 1,
+    "dispatchLimitResults": 7,
+    "beforeDispatchAdmissions": 8
+  },
+  "validation": {
+    "newCasesPass": 1,
+    "newCasesTotal": 1,
+    "testFile": "packages/proxy/src/services/request-dispatch-budget.test.ts",
+    "testFilePass": 12,
+    "testFileTotal": 12,
+    "proxyDispatchSafetyPass": 4292,
+    "proxyDispatchSafetyTotal": 4292,
+    "diffCheck": "PASS",
+    "proxyDispatchSafetyTypecheck": "PASS",
+    "linuxCiRun": false
+  },
+  "sourceSha256": {
+    "packages/proxy/src/services/request-dispatch-budget.test.ts": "defe963081007a4723b778d8cceb65f5af8e4107bbe1e538bb5c2e42862ef7ab",
+    "packages/proxy/src/services/request-dispatch-budget.ts": "53115c21920845089c19d9002c7e3b6c70f5fccdd3107f2fee30c0874393a066"
+  },
+  "boundaries": {
+    "sameProcessSharedBudgetVerified": true,
+    "crossInstanceBudgetVerified": false,
+    "workersTransportVerified": false,
+    "intermediateProxyRetryVerified": false,
+    "supplierAcceptanceAndBillingVerified": false,
+    "durableFinancialSettlementVerified": false,
+    "C02_5Complete": false,
+    "C02_6Complete": false,
+    "C02_GComplete": false,
+    "remoteSqlCalls": 0,
+    "deployments": 0,
+    "externalSupplierCalls": 0
+  }
+}

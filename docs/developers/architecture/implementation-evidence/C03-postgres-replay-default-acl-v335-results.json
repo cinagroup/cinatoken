@@ -1,0 +1,40 @@
+{
+  "version": "v335",
+  "date": "2026-09-24",
+  "status": "LOCAL_REPLAY_DEFAULT_ACL_PASS_PRODUCTION_DISABLED",
+  "C03": "DOING",
+  "goalComplete": false,
+  "validation": {
+    "nativePostgres": { "pass": 3, "fail": 0, "cleanupPass": 3 },
+    "reportStages": {
+      "replayReservations": 22,
+      "financialReplayGrant": 15,
+      "legacyHandlerCompatibility": 5
+    },
+    "financialGrantUnitTests": { "pass": 4, "fail": 0 },
+    "scriptsWideTypecheck": "PASS"
+  },
+  "sourceSha256": {
+    "packages/core/migrations-proposals/postgres/request-dispatch-replay-reservations.sql": "c288bbc43fad3bbb8b3b1a88fa1b1d01b9e5f2f9f520753873e0cdf21643c3d8",
+    "scripts/db/cutover/postgres-replay-reservations.native.test.mjs": "d95055419a04465c7c172ff0b8426bd0b928bd538e4dad80f9442229abd5e269",
+    "scripts/db/cutover/build-financial-consumer-direct-login-grant.ts": "63bb365307628feea68cc18493fc8064e5eddc92948a855fd53bd867edae04f8",
+    "docs/developers/architecture/implementation-evidence/C03-postgres-replay-default-acl-v335.md": "d153041f6ef6c1b5f78af50e3bf5ee5b548c314c93a8d48fc83d886790a99d8d"
+  },
+  "reportSha256": {
+    "docs/developers/architecture/implementation-evidence/C03-postgres-native-replay-reservations-v335-report.json": "a146cc68f909883d228056d37f316c7a83b51b909bca8585000f8a4a34723446",
+    "docs/developers/architecture/implementation-evidence/C03-postgres-native-financial-replay-grant-v335-report.json": "5e4d6f0f9104136e3838bdb920afdd6d4bd403f2ca7a84eae32d13469ff03aa5",
+    "docs/developers/architecture/implementation-evidence/C03-postgres-native-legacy-handler-compat-v335-report.json": "0a20a9da24c2e647da8eb6855b9fd517498409bdc82b713e39f44e6009e85683"
+  },
+  "boundaries": {
+    "formalPostgresMigrations": 73,
+    "historicalDeployedHandlersVerified": false,
+    "representativeProductionLockWindowVerified": false,
+    "retentionPolicyApproved": false,
+    "contractMigrationApproved": false,
+    "realWorkersHyperdriveQueueVerified": false,
+    "productionRecoveryEnabled": false,
+    "remoteSqlCalls": 0,
+    "deployments": 0,
+    "cloudModelCalls": 0
+  }
+}

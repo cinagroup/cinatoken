@@ -8,6 +8,8 @@
 
 实例 env 文件约定：[cloudflare-worker/README.md](../../../cloudflare-worker/README.md)。表结构以 **`packages/core/migrations-d1/`** 为准。Docker 自托管见 [docker.md](./docker.md)。
 
+**C02 独立 staging 验收**使用 [cloudflare-staging.md](./cloudflare-staging.md) 的专用配置。不要仅改实例名沿用本页生产生成器：生产 routes 和 Cron 可能仍被继承。
+
 > 本仓库不以 Cloudflare Deploy Button 作为主路径：官方 Deploy Button 无法一次装齐 monorepo 双 Worker + 共享 D1。
 
 ---

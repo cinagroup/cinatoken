@@ -1,0 +1,100 @@
+{
+  "status": "PASS",
+  "cleanup": "PASS",
+  "binaryVersion": "postgres (PostgreSQL) 18.6",
+  "sourceSha256": {
+    "formalMigrationCorpus": "23afef61a8a670e0af8c90e3a138f522e6b283b454e380a592bf85bca83108dc",
+    "shared-key-dispatch-quote-attempts.sql": "c89c79e803fd69a2d09d44b33be3301aeb8aa4ed72c5dff5518439ec29fafb83",
+    "shared-key-quote-versions.sql": "1249a7ff07f95b48c7b45a41833c96c9a028e4bfe3a47e44e9dc6b72c3c77246",
+    "shared-key-economic-outbox-producer.sql": "ea9ccc7138cbd641d386e14d1bb95b8cabee942501a49d6b0763e8e1b3eb0920",
+    "shared-key-economic-outbox.sql": "f92835c72ff02cba23879ed90ad640832455ccb98764f28fe4ee04ce52aab1ac",
+    "nativeTest": "ccaa36f723115cdf92035ccb180f727edee8f34e7d09ed5a9f955ac95c9082f6"
+  },
+  "stages": [
+    {
+      "name": "formal-pg73-installed",
+      "result": "PASS"
+    },
+    {
+      "name": "producer-default-off",
+      "result": "PASS"
+    },
+    {
+      "name": "exact-pg73-ledger-rejects-middle-version-drift",
+      "result": "PASS"
+    },
+    {
+      "name": "third-role-default-grant-drift-rolls-back",
+      "result": "PASS"
+    },
+    {
+      "name": "disabled-legacy-double-pay-guard-rolls-back-activation",
+      "result": "PASS"
+    },
+    {
+      "name": "rebound-event-insert-guard-rolls-back-activation",
+      "result": "PASS"
+    },
+    {
+      "name": "no-op-claim-immutability-guard-rolls-back-activation",
+      "result": "PASS"
+    },
+    {
+      "name": "disabled-outcome-immutability-guard-rolls-back-activation",
+      "result": "PASS"
+    },
+    {
+      "name": "same-transaction-producer-installed",
+      "result": "PASS"
+    },
+    {
+      "name": "function-attestation-lock-blocks-concurrent-replacement",
+      "result": "PASS"
+    },
+    {
+      "name": "runtime-has-execute-only-private-privilege",
+      "result": "PASS"
+    },
+    {
+      "name": "reserved-ceiling-and-charged-none-rejected-before-mutation",
+      "result": "PASS"
+    },
+    {
+      "name": "critical-writer-buyer-log-budget-event-outcome-one-commit",
+      "result": "PASS"
+    },
+    {
+      "name": "post-commit-replay-verifies-without-double-charge-or-backfill",
+      "result": "PASS"
+    },
+    {
+      "name": "actual-ordinary-reservation-settles-once-with-economic-event",
+      "result": "PASS"
+    },
+    {
+      "name": "conflicting-replay-rejected",
+      "result": "PASS"
+    },
+    {
+      "name": "producer-error-rolls-back-buyer-log-and-budget",
+      "result": "PASS"
+    },
+    {
+      "name": "missing-event-deferred-guard-rolls-back-legacy-writer",
+      "result": "PASS"
+    },
+    {
+      "name": "wrong-mode-extra-json-and-stale-isolation-rejected",
+      "result": "PASS"
+    },
+    {
+      "name": "direct-execute-rejects-reserved-and-expired-as-actual",
+      "result": "PASS"
+    }
+  ],
+  "limitations": [
+    "The opt-in core writer is not connected to recordUsage or a production economic producer.",
+    "The caller must supply observed per-attempt usage/cost certainty; quote admission alone is not billable evidence.",
+    "This fixture uses a direct local runtime LOGIN and does not prove Hyperdrive, Workers or any consumer/payout."
+  ]
+}

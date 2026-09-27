@@ -3,6 +3,8 @@
  */
 import { authenticateAdminRequest } from '@/lib/auth';
 import { resolveAdminRequestRuntime } from '@/lib/admin-request-runtime';
+import { handleGatewayApiError } from '@/lib/api-error';
+import { withGatewayReadRetry } from '@/lib/gateway-read-retry';
 import {
 	CinaAuthConsoleVerificationUnavailableError,
 	verifyCinaAuthConsolePrincipal,
@@ -10,7 +12,7 @@ import {
 
 export const dynamic = 'force-dynamic';
 
-export async function GET(request: Request) {
+async function checkSession(request: Request): Promise<Response> {
   try {
 		const { bindings, storage } = await resolveAdminRequestRuntime(request);
 		const principal = await authenticateAdminRequest(request, storage.repositories);
@@ -47,10 +49,10 @@ export async function GET(request: Request) {
 			{ headers: { 'Cache-Control': 'no-store' } },
 		);
   } catch (error) {
-    console.error('Auth check error:', error);
-    return Response.json(
-      { authenticated: false },
-			{ status: 500, headers: { 'Cache-Control': 'no-store' } }
-    );
+    // An unavailable database cannot prove either authentication or logout.
+    // Keep cookies untouched; the UI treats non-2xx checks as indeterminate.
+    return handleGatewayApiError({ route: 'auth.check', error });
   }
 }
+
+export const GET = (request: Request) => withGatewayReadRetry(request, checkSession);

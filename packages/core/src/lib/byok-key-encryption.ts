@@ -4,6 +4,7 @@ import type {
 	ByokRuntimeKeyRow,
 } from '../db/byok-keys-types';
 import type { ByokKeysRepository } from '../storage/gateway-repository-interfaces';
+import { preparationRead, type PreparationControl } from '../preparation-control';
 import {
 	assertSharedKeyEncryptionSecret,
 	decryptSharedKeySecret,
@@ -32,7 +33,9 @@ export function createEncryptedByokKeysRepository(
 
 	const revealRuntime = async (
 		row: ByokRuntimeKeyRow,
+		control?: PreparationControl,
 	): Promise<ByokRuntimeKeyRow> => {
+		control?.throwIfStopped();
 		if (!isEncryptedSharedKeySecret(row.api_key)) {
 			throw new Error('BYOK credential is not encrypted at rest');
 		}
@@ -42,6 +45,7 @@ export function createEncryptedByokKeysRepository(
 				row.api_key,
 				secret,
 				byokContext(row),
+				control,
 			),
 		};
 	};
@@ -88,9 +92,12 @@ export function createEncryptedByokKeysRepository(
 				},
 			});
 		},
-		async listActiveForRequest(params) {
-			const rows = await repository.listActiveForRequest(params);
-			return Promise.all(rows.map(revealRuntime));
+		async listActiveForRequest(params, control) {
+			const rows = await preparationRead(control, () => repository.listActiveForRequest(params, control));
+			if (!control) return Promise.all(rows.map((row) => revealRuntime(row)));
+			const revealed: ByokRuntimeKeyRow[] = [];
+			for (const row of rows) revealed.push(await revealRuntime(row, control));
+			return revealed;
 		},
 		shouldSuppressSharedCapacityForRequest(params) {
 			return repository.shouldSuppressSharedCapacityForRequest(params);

@@ -1,0 +1,226 @@
+{
+  "version": "v280",
+  "status": "TARGETED_BINDINGS_OBSERVED_EXTERNAL_CONTRACT_PENDING",
+  "previousEvidence": {
+    "path": "docs/developers/architecture/implementation-evidence/C02-byok-d1-pages-lifecycle-v279-results.json",
+    "sha256": "a37365032ba25cdc1c939342a5e47f357a7970fa74a90ddce59a30ea6534b3b3"
+  },
+  "priorArtifactsVerified": 94,
+  "deltaEvidence": {
+    "path": "docs/developers/architecture/implementation-evidence/C02-byok-d1-pages-lifecycle-delta-v279-results.json",
+    "sha256": "af4fc303fc8bfde3c4203eef2484db03aa43ec4cb3f84c5705404651092f28b7"
+  },
+  "unchangedMaintenanceGuardFiles": [
+    {
+      "path": "scripts/deploy/byok-d1-ingress-closure.mjs",
+      "sha256": "51224fa7c1075480ffad1db9d6581dbef1c7c40dc20f60d5b1a50efacb6e62bc"
+    },
+    {
+      "path": "scripts/deploy/byok-d1-maintenance-dispatch.mjs",
+      "sha256": "cde6e489c2ccc26aeca5e379f7a3369fc81c84064493c2941c34dbeca9aec793"
+    },
+    {
+      "path": "scripts/deploy/byok-d1-management.mjs",
+      "sha256": "0888e9c94b81e4c2fa0db5cd8d6269bce403db60886c48df5552b20ae2fbfb85"
+    },
+    {
+      "path": "scripts/deploy/byok-d1-operator.mjs",
+      "sha256": "d1f7825b5d0404ae52d3320f6a70bb081c63ed91708d510535dd4c52325e005a"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/byok-d1-cleanup.ts",
+      "sha256": "b015f0e3c6fca7412e32408e466577615c7d16364db09017446e0528c5b90847"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/byok-d1-maintenance-contract.ts",
+      "sha256": "4dfc3a8ca524f8c6e4f47d41240af0fa279220967ad67ccb9696af1f4a94bbe3"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/byok-d1-maintenance-host.ts",
+      "sha256": "962067df45d11d60ae1dbef958d697af20d1208945532e96de45abd71d8043be"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/byok-d1-maintenance-worker.ts",
+      "sha256": "d48a3ab7e37c5936e32ffa21ee13b554d1b4102cd83d5aa9039d2f6723c3347e"
+    }
+  ],
+  "probe": {
+    "path": ".wrangler/staging/byok-pages-delta-v280-probe/result.json",
+    "sha256": "b98ab30bea249aa7fd0c3e0f043685f5306866134f963cd0a111474c621cf8c8"
+  },
+  "checks": [
+    {
+      "file": ".wrangler/staging/probe-byok-pages-delta-v280.mjs",
+      "exitCode": 0,
+      "log": {
+        "path": ".wrangler/staging/byok-pages-targeted-v280-local/syntax-0.log",
+        "sha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b"
+      }
+    },
+    {
+      "file": ".wrangler/staging/summarize-byok-pages-targeted-v280.mjs",
+      "exitCode": 0,
+      "log": {
+        "path": ".wrangler/staging/byok-pages-targeted-v280-local/syntax-1.log",
+        "sha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b"
+      }
+    }
+  ],
+  "startedAt": "2026-09-21T05:44:29.232Z",
+  "finishedAt": "2026-09-21T05:45:13.343Z",
+  "elapsedMs": 44111,
+  "managementGetAttempts": 32,
+  "http200": 32,
+  "journalRecords": 66,
+  "selectedProjects": 6,
+  "listedVersionCounts": [
+    {
+      "project": "cinaseek",
+      "count": 2
+    },
+    {
+      "project": "cinashop-admin",
+      "count": 54
+    },
+    {
+      "project": "cinashop-h5",
+      "count": 63
+    },
+    {
+      "project": "cinashop-kefu",
+      "count": 21
+    },
+    {
+      "project": "cinashop-pc",
+      "count": 42
+    },
+    {
+      "project": "cinashop-supplier",
+      "count": 21
+    }
+  ],
+  "versionDetailsRead": 7,
+  "newVersionDetailsRead": 5,
+  "candidates": [
+    {
+      "project": "cinashop-admin",
+      "deploymentId": "4813729e-aae3-43ff-91e9-729ef3948e07",
+      "versionId": "11626427-8ddc-44f9-a7e4-d8e74ccf7599",
+      "bindingTypes": {
+        "plain_text": 4
+      }
+    },
+    {
+      "project": "cinashop-h5",
+      "deploymentId": "136b9e2a-3a11-4f58-8ab3-3840e65a34c6",
+      "versionId": "8c19fc4d-50a8-42d7-bbea-53a546671d41",
+      "bindingTypes": {
+        "plain_text": 4
+      }
+    },
+    {
+      "project": "cinashop-kefu",
+      "deploymentId": "d2381a85-77ad-406c-9d12-3424150e69f3",
+      "versionId": "b8915f3a-3d50-47b8-90a9-65c5c13397d4",
+      "bindingTypes": {
+        "plain_text": 4
+      }
+    },
+    {
+      "project": "cinashop-pc",
+      "deploymentId": "b4d86172-5ced-40ee-84fc-8b89dcae0f98",
+      "versionId": "366423ba-63ce-4c5a-9ff1-60332fd99268",
+      "bindingTypes": {
+        "plain_text": 4
+      }
+    },
+    {
+      "project": "cinashop-supplier",
+      "deploymentId": "4b7e0c7b-a4d0-4415-b6a0-f69d59324485",
+      "versionId": "d723c2ed-1867-4b54-9063-1a4a7cdb5004",
+      "bindingTypes": {
+        "plain_text": 4
+      }
+    }
+  ],
+  "stagingEdges": [],
+  "activeDeployment": {
+    "id": "4c3f58d9-11b9-4875-adba-ad8165ff3180",
+    "shortId": "4c3f58d9",
+    "lifecycleMatchesPriorList": true,
+    "rawMetadataHashMatchesPriorList": false,
+    "listedProductionVersions": 2,
+    "matchingCandidates": 0,
+    "runtimeAbsenceProved": false
+  },
+  "fullPreflightPassed": false,
+  "allInvocationPathsInventoried": false,
+  "currentAllPagesVersionBindingsComplete": false,
+  "nativeTimingQualified": false,
+  "databaseQuiescenceProved": false,
+  "cloudWrites": 0,
+  "deployments": 0,
+  "sqlCalls": 0,
+  "publicWorkerCalls": 0,
+  "modelCalls": 0,
+  "kmsCalls": 0,
+  "firstRoundUsdCap": 2,
+  "capReset": false,
+  "billingRefreshed": false,
+  "externallySubmitted": false,
+  "businessSourceModified": false,
+  "businessSuitesRerun": false,
+  "remaining": [
+    "PAGES_RUNTIME_IDENTITY_CONTRACT",
+    "ZONE_ROUTE_READ_SCOPE",
+    "DISPATCH_PRODUCT_VISIBILITY",
+    "COMPLETE_FRESH_PREFLIGHT",
+    "NATIVE_BYOK_ACCEPTANCE"
+  ],
+  "artifacts": [
+    {
+      "path": ".wrangler/staging/probe-byok-pages-delta-v280.mjs",
+      "sha256": "2d57f420bd2bce39b7c62be8089b73f38b43113f70e0c5a578bb7bd1a09230cc"
+    },
+    {
+      "path": ".wrangler/staging/byok-pages-delta-v280-probe/result.json",
+      "sha256": "b98ab30bea249aa7fd0c3e0f043685f5306866134f963cd0a111474c621cf8c8"
+    },
+    {
+      "path": ".wrangler/staging/byok-pages-delta-v280-probe/journal.jsonl",
+      "sha256": "733c83d60d71d995d289cd99c00579b9b261228fc25a2497660ba58310e2d5cb"
+    },
+    {
+      "path": "scripts/deploy/byok-d1-pages-lifecycle.mjs",
+      "sha256": "504bd0fe3d4d19f9fb7984dec1ee634816bddea6e7f6db8a5fde9833d9de464a"
+    },
+    {
+      "path": ".wrangler/staging/summarize-byok-pages-targeted-v280.mjs",
+      "sha256": "c1eb2dacfe74d6058078daeb9cf641397c81610bdb33e773f816d62c93c2953f"
+    },
+    {
+      "path": ".wrangler/staging/byok-pages-targeted-v280-local/syntax-0.log",
+      "sha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b"
+    },
+    {
+      "path": ".wrangler/staging/byok-pages-targeted-v280-local/syntax-1.log",
+      "sha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b"
+    },
+    {
+      "path": ".firecrawl/pages-worker-identity-developer-v280.json",
+      "sha256": "a34809a4d573356fa1a12728146700a9d851112d784e12b4bce66fffc39cf22e"
+    },
+    {
+      "path": ".firecrawl/pages-worker-identity-search-v280.json",
+      "sha256": "67b060533bd53d0293976981bde300f862a06e3e1dd95ef7fe7da7b66a12be0f"
+    },
+    {
+      "path": ".firecrawl/cloudflare-version-contract-v280.md",
+      "sha256": "477230f8e08748cd92a4a70ea9f978405f9bcd19aac4f4d62ce6c7e7225aa989"
+    },
+    {
+      "path": "docs/developers/architecture/implementation-evidence/C02-pages-provider-questions-v280.md",
+      "sha256": "353fdc33c95617d5af4a0814717f53c1eb4cb91d06711c8d71c259151679847c"
+    }
+  ]
+}

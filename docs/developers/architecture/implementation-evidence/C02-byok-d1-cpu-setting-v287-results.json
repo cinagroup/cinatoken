@@ -1,0 +1,520 @@
+{
+  "version": "v287",
+  "status": "LOCAL_PASS_EXPLICIT_CPU_CONFIGURATION_NOT_BILLING_CAP",
+  "date": "2026-09-21T07:37:49.312Z",
+  "previousEvidence": {
+    "path": "docs/developers/architecture/implementation-evidence/C02-byok-d1-budget-assessment-v286-results.json",
+    "sha256": "10a8182a93eebce905348c2b06f61df0fb40ccaeda1a752f8946e117fe2073d0"
+  },
+  "historicalValidation": [
+    {
+      "path": "docs/developers/architecture/implementation-evidence/C02-byok-d1-budget-assessment-v286-results.json",
+      "records": 33,
+      "originalSourceRemapping": [
+        {
+          "original": "scripts/deploy/byok-d1-deployment.mjs",
+          "path": ".wrangler/staging/byok-cpu-v287-before/byok-d1-deployment.mjs",
+          "sha256": "43ab62cba7cc3616e5e320588de0436608f2ab43d2f6059f9f36cfe41feaed0c"
+        },
+        {
+          "original": "scripts/deploy/byok-d1-deployment.test.mjs",
+          "path": ".wrangler/staging/byok-cpu-v287-before/byok-d1-deployment.test.mjs",
+          "sha256": "5b5f4313e05236c346bdaa382f3f6a489e913b7b58e2e4d8e4a8b408a405d63f"
+        },
+        {
+          "original": "scripts/deploy/byok-d1-operator.test.mjs",
+          "path": ".wrangler/staging/byok-cpu-v287-before/byok-d1-operator.test.mjs",
+          "sha256": "f9517208ff8e02522c2dafa4f6cc795eeb32298bbda68937927d0572466d58b4"
+        },
+        {
+          "original": "packages/proxy/scripts/staging/wrangler.byok-d1-gateway.jsonc",
+          "path": ".wrangler/staging/byok-cpu-v287-before/wrangler.byok-d1-gateway.jsonc",
+          "sha256": "8e2009467b4b4025ba49ff9d8985f333041994c0c3323b2930de6a250b6470db"
+        },
+        {
+          "original": "packages/proxy/scripts/staging/wrangler.byok-d1-maintenance.jsonc",
+          "path": ".wrangler/staging/byok-cpu-v287-before/wrangler.byok-d1-maintenance.jsonc",
+          "sha256": "2817827dcddfc2b4d44a4c6d458c76b696132a603f755d24482b5fc89bf9db26"
+        },
+        {
+          "original": "packages/proxy/scripts/staging/wrangler.byok-d1-maintenance-control.jsonc",
+          "path": ".wrangler/staging/byok-cpu-v287-before/wrangler.byok-d1-maintenance-control.jsonc",
+          "sha256": "ddeb344ed44275e7a7d6a9123b45bc5c2b400357d16c5808c69af340ba808923"
+        }
+      ]
+    },
+    {
+      "path": "docs/developers/architecture/implementation-evidence/C02-byok-d1-preflight-evidence-v284-results.json",
+      "records": 767,
+      "originalSourceRemapping": [
+        {
+          "original": "scripts/deploy/byok-d1-deployment.mjs",
+          "path": ".wrangler/staging/byok-cpu-v287-before/byok-d1-deployment.mjs",
+          "sha256": "43ab62cba7cc3616e5e320588de0436608f2ab43d2f6059f9f36cfe41feaed0c"
+        },
+        {
+          "original": "scripts/deploy/byok-d1-deployment.test.mjs",
+          "path": ".wrangler/staging/byok-cpu-v287-before/byok-d1-deployment.test.mjs",
+          "sha256": "5b5f4313e05236c346bdaa382f3f6a489e913b7b58e2e4d8e4a8b408a405d63f"
+        },
+        {
+          "original": "scripts/deploy/byok-d1-operator.test.mjs",
+          "path": ".wrangler/staging/byok-cpu-v287-before/byok-d1-operator.test.mjs",
+          "sha256": "f9517208ff8e02522c2dafa4f6cc795eeb32298bbda68937927d0572466d58b4"
+        },
+        {
+          "original": "packages/proxy/scripts/staging/wrangler.byok-d1-gateway.jsonc",
+          "path": ".wrangler/staging/byok-cpu-v287-before/wrangler.byok-d1-gateway.jsonc",
+          "sha256": "8e2009467b4b4025ba49ff9d8985f333041994c0c3323b2930de6a250b6470db"
+        },
+        {
+          "original": "packages/proxy/scripts/staging/wrangler.byok-d1-maintenance.jsonc",
+          "path": ".wrangler/staging/byok-cpu-v287-before/wrangler.byok-d1-maintenance.jsonc",
+          "sha256": "2817827dcddfc2b4d44a4c6d458c76b696132a603f755d24482b5fc89bf9db26"
+        },
+        {
+          "original": "packages/proxy/scripts/staging/wrangler.byok-d1-maintenance-control.jsonc",
+          "path": ".wrangler/staging/byok-cpu-v287-before/wrangler.byok-d1-maintenance-control.jsonc",
+          "sha256": "ddeb344ed44275e7a7d6a9123b45bc5c2b400357d16c5808c69af340ba808923"
+        }
+      ]
+    }
+  ],
+  "priorEntireDependencyTreeRevalidated": false,
+  "sourceArchive": {
+    "path": ".wrangler/staging/byok-cpu-v287-before/result.json",
+    "sha256": "ac66e348188d04e9cbb0bc9301e5ba39cfdab8593ea08377458941c9231083b3"
+  },
+  "unchangedMaintenanceGuardFiles": [
+    {
+      "path": "scripts/deploy/byok-d1-ingress-closure.mjs",
+      "sha256": "51224fa7c1075480ffad1db9d6581dbef1c7c40dc20f60d5b1a50efacb6e62bc"
+    },
+    {
+      "path": "scripts/deploy/byok-d1-maintenance-dispatch.mjs",
+      "sha256": "cde6e489c2ccc26aeca5e379f7a3369fc81c84064493c2941c34dbeca9aec793"
+    },
+    {
+      "path": "scripts/deploy/byok-d1-management.mjs",
+      "sha256": "0888e9c94b81e4c2fa0db5cd8d6269bce403db60886c48df5552b20ae2fbfb85"
+    },
+    {
+      "path": "scripts/deploy/byok-d1-operator.mjs",
+      "sha256": "d1f7825b5d0404ae52d3320f6a70bb081c63ed91708d510535dd4c52325e005a"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/byok-d1-cleanup.ts",
+      "sha256": "b015f0e3c6fca7412e32408e466577615c7d16364db09017446e0528c5b90847"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/byok-d1-maintenance-contract.ts",
+      "sha256": "4dfc3a8ca524f8c6e4f47d41240af0fa279220967ad67ccb9696af1f4a94bbe3"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/byok-d1-maintenance-host.ts",
+      "sha256": "962067df45d11d60ae1dbef958d697af20d1208945532e96de45abd71d8043be"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/byok-d1-maintenance-worker.ts",
+      "sha256": "d48a3ab7e37c5936e32ffa21ee13b554d1b4102cd83d5aa9039d2f6723c3347e"
+    }
+  ],
+  "local": {
+    "path": ".wrangler/staging/byok-cpu-v287-local-final/result.json",
+    "pass": 373,
+    "newIndependentDeploymentTests": 26,
+    "tests": [
+      {
+        "name": "deployment-source",
+        "pass": 85
+      },
+      {
+        "name": "deployment-bundle-artifacts",
+        "pass": 86
+      },
+      {
+        "name": "operator-regression",
+        "pass": 73
+      },
+      {
+        "name": "budget-regression",
+        "pass": 83
+      },
+      {
+        "name": "preflight-regression",
+        "pass": 46
+      }
+    ],
+    "workerDryRuns": 3,
+    "bindingTypesGenerated": 3,
+    "runtimeTypesGenerated": false,
+    "stagingTypescriptPassed": true,
+    "nodeVersion": "v24.14.1",
+    "wranglerVersion": "4.127.1",
+    "fallbackWorkersTypesVersion": "5.20260829.1",
+    "sourceFreezeRenewed": false,
+    "fullBusinessSuiteRerun": false,
+    "node22RuntimeVerified": false,
+    "nativeAcceptanceProved": false
+  },
+  "failedAttempt": {
+    "path": ".wrangler/staging/byok-cpu-v287-local-first/result.json",
+    "stage": "types-maintenance",
+    "failure": "Windows workerd structured exception 0xc0000005 during runtime type generation",
+    "causeProved": false,
+    "originalRunner": {
+      "path": ".wrangler/staging/byok-cpu-v287-before/verify-byok-cpu-v287-first.mjs",
+      "sha256": "dfa67e4a36fc290c1b0b089e06ea3da6fb300132addea74d961148f3625d1aa4"
+    },
+    "fallback": "Generate binding types with --include-runtime false; not native runtime verification"
+  },
+  "configuredCpuMs": 30000,
+  "remoteCpuSettingObserved": false,
+  "cpuBillingUpperBoundProved": false,
+  "d1CostUpperBoundProved": false,
+  "nativeD1CancellationProved": false,
+  "fullPreflightPassed": false,
+  "allInvocationPathsInventoried": false,
+  "cumulativeBudgetReserved": false,
+  "cloudManagementCalls": 0,
+  "cloudWrites": 0,
+  "deployments": 0,
+  "sqlCalls": 0,
+  "publicWorkerCalls": 0,
+  "modelCalls": 0,
+  "kmsCalls": 0,
+  "firstRoundUsdCap": 2,
+  "capReset": false,
+  "billingUsageRefreshed": false,
+  "documentation": {
+    "tool": "Firecrawl CLI",
+    "publicScrapes": 2,
+    "chargesReconciled": false,
+    "sources": [
+      "https://developers.cloudflare.com/workers/platform/limits/",
+      "https://developers.cloudflare.com/workers/best-practices/workers-best-practices/"
+    ]
+  },
+  "artifacts": [
+    {
+      "path": ".wrangler/staging/byok-cpu-v287-local-final/result.json",
+      "sha256": "ab55040322f313308ea75cf3754dad4d099b3a6f7118071dec33251472965336"
+    },
+    {
+      "path": ".wrangler/staging/byok-cpu-v287-before/result.json",
+      "sha256": "ac66e348188d04e9cbb0bc9301e5ba39cfdab8593ea08377458941c9231083b3"
+    },
+    {
+      "path": "scripts/deploy/byok-d1-deployment.mjs",
+      "sha256": "498622ca2bc967f6c602200a424c7fa8b909683e27564dcc7a5af84242082df8"
+    },
+    {
+      "path": "scripts/deploy/byok-d1-deployment.test.mjs",
+      "sha256": "50b342b4f210752eb8fb0d6f7fc23ecf52c79ff7656d472c9d197003661a885a"
+    },
+    {
+      "path": "scripts/deploy/byok-d1-operator.test.mjs",
+      "sha256": "990d27182d5174e11ddf4e1c5c38ff37b0745e7c5863e62b15ae710c47b11e7b"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/wrangler.byok-d1-gateway.jsonc",
+      "sha256": "58bbba80a79c3bb838c377e9bc58c358e7f9f0e1416b15c610f89deacd898dbf"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/wrangler.byok-d1-maintenance.jsonc",
+      "sha256": "b8e35dbdef71da97fb6573b7bdb456d0b1e3ace123e7e530c7e64db9a58da549"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/wrangler.byok-d1-maintenance-control.jsonc",
+      "sha256": "64c02b75b2c4503d8186189ed35ba136fd86adc78af163366c3976c3d37942cc"
+    },
+    {
+      "path": ".wrangler/staging/verify-byok-cpu-v287.mjs",
+      "sha256": "f3bc95304b15de4077a943dbe78528c6e5b3e7c290eb1c424a9530e7def212f5"
+    },
+    {
+      "path": ".firecrawl/cloudflare-workers-limits-v287.md",
+      "sha256": "f1eea6d242ebe6cad2758caae4bfb2758095b9bbd429bdce0bb8a888461cdc4b"
+    },
+    {
+      "path": ".firecrawl/cloudflare-workers-best-practices-v287.md",
+      "sha256": "6f539658e2824d4c16712efe33dacede1057768f9e1905be6061a02498013e5d"
+    },
+    {
+      "path": "node_modules/wrangler/config-schema.json",
+      "sha256": "e42dc556dcb039aa1103d4811b1f58497e2676aceee20488d9ceb1d8ab712018"
+    },
+    {
+      "path": ".wrangler/staging/byok-cpu-v287-local-final/maintenance.env.d.ts",
+      "sha256": "f1916b32e06c1c2ed3c2f365278119cb1d30144798248d9cb742c57843a02e04"
+    },
+    {
+      "path": ".wrangler/staging/byok-cpu-v287-local-final/maintenance-control.env.d.ts",
+      "sha256": "630f858984900a27c2da00636b401ecef3c09fdc8ca8d2b1771ad42fe0662c50"
+    },
+    {
+      "path": ".wrangler/staging/byok-cpu-v287-local-final/gateway.env.d.ts",
+      "sha256": "8906b834c12023e3d83466c43db8de3503b48f61fceff6c7f8555df2d6cfefe1"
+    },
+    {
+      "path": ".wrangler/staging/byok-cpu-v287-local-final/deployment-source.log",
+      "sha256": "6b83bc6ca3c31cb2d67d202603a0e9b2c1e7ab4379fe8354f940afa5e393cb67"
+    },
+    {
+      "path": ".wrangler/staging/byok-cpu-v287-local-final/wrangler-version.log",
+      "sha256": "f1102a41d8256c5e6eb764e0a219400040e825189415ee77714a8439d047073e"
+    },
+    {
+      "path": ".wrangler/staging/byok-cpu-v287-local-final/wrangler-deploy-help.log",
+      "sha256": "3d2f47a2b0c54f1ac5b278e9892fdc33e4a584f59b9ec937776cda20c5e80b5e"
+    },
+    {
+      "path": ".wrangler/staging/byok-cpu-v287-local-final/wrangler-types-help.log",
+      "sha256": "40fbb083415bffa6f75e95822a690abc18450d5c8646bfbe2f28d2ba5f4fcf0c"
+    },
+    {
+      "path": ".wrangler/staging/byok-cpu-v287-local-final/dry-run-maintenance.log",
+      "sha256": "7a6ac03fe69d1cc69860c34be379361bcb9e320903a51d6fe959e906818e1d04"
+    },
+    {
+      "path": ".wrangler/staging/byok-cpu-v287-local-final/types-maintenance.log",
+      "sha256": "f9d27dbe82079ce8839b55e43aae130988831c537c4dbb8ce628a465bb78719e"
+    },
+    {
+      "path": ".wrangler/staging/byok-cpu-v287-local-final/dry-run-maintenance-control.log",
+      "sha256": "92f4cbef264d9ed1127cd189bf149e5f04a4df9010ef2abea580a664862de6ac"
+    },
+    {
+      "path": ".wrangler/staging/byok-cpu-v287-local-final/types-maintenance-control.log",
+      "sha256": "c87716897d7adb132831a4683aaa385668804e188c9b1b20208d2e6faf4d7d22"
+    },
+    {
+      "path": ".wrangler/staging/byok-cpu-v287-local-final/dry-run-gateway.log",
+      "sha256": "c7586d2b4a1623b4afc2de64d8fa6c6b79d4ed37dd7a42e248180c4f74165d2b"
+    },
+    {
+      "path": ".wrangler/staging/byok-cpu-v287-local-final/types-gateway.log",
+      "sha256": "62fa92333372b75a71aeb5a485508c4debafcb5a31620709f0a29f7e0e7b8c4b"
+    },
+    {
+      "path": ".wrangler/staging/byok-cpu-v287-local-final/types-check.log",
+      "sha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b"
+    },
+    {
+      "path": ".wrangler/staging/byok-cpu-v287-local-final/deployment-build.log",
+      "sha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b"
+    },
+    {
+      "path": ".wrangler/staging/byok-cpu-v287-local-final/deployment-bundle-artifacts.log",
+      "sha256": "d78f008139c619901416ccbebfc311d62123ed1b154ee3478688cb212d0825a1"
+    },
+    {
+      "path": ".wrangler/staging/byok-cpu-v287-local-final/operator-regression.log",
+      "sha256": "d294ff389476a09c173712cb82f811eff57bdce8eb632e390ae8aa029166d4ba"
+    },
+    {
+      "path": ".wrangler/staging/byok-cpu-v287-local-final/budget-regression.log",
+      "sha256": "af501a6c528d0e675924bc407810bb318f0abf1b116dcfb77b9d89b52421390a"
+    },
+    {
+      "path": ".wrangler/staging/byok-cpu-v287-local-final/preflight-build.log",
+      "sha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b"
+    },
+    {
+      "path": ".wrangler/staging/byok-cpu-v287-local-final/preflight-regression.log",
+      "sha256": "9f0f978a8aaa93f416bc8541be1adf42bf3d5b84554f96a5bf7a08228371aa69"
+    },
+    {
+      "path": ".wrangler/staging/byok-cpu-v287-local-final/deployment.mjs",
+      "sha256": "65e7d5b60140de0980ee4d354610756549d353f081ff4c6b2dc3cf1e95012de9"
+    },
+    {
+      "path": ".wrangler/staging/byok-cpu-v287-local-final/deployment.meta.json",
+      "sha256": "7b612821a814db43f61312e1164a10e6ed95728e9abf641ba115eb763ed49cad"
+    },
+    {
+      "path": ".wrangler/staging/byok-cpu-v287-local-final/preflight-evidence.mjs",
+      "sha256": "91cba9b89ad5f0035d0548c964bb95b19d8758f32b47acbbc4046e1bef83a262"
+    },
+    {
+      "path": ".wrangler/staging/byok-cpu-v287-local-final/preflight-evidence.meta.json",
+      "sha256": "919f8101d759c964f3b9f3eb27ecc68dcba238ae64240dd1d8926adad05634ef"
+    },
+    {
+      "path": "scripts/deploy/byok-d1-ingress-closure.mjs",
+      "sha256": "51224fa7c1075480ffad1db9d6581dbef1c7c40dc20f60d5b1a50efacb6e62bc"
+    },
+    {
+      "path": "scripts/deploy/byok-d1-maintenance-dispatch.mjs",
+      "sha256": "cde6e489c2ccc26aeca5e379f7a3369fc81c84064493c2941c34dbeca9aec793"
+    },
+    {
+      "path": "scripts/deploy/byok-d1-management.mjs",
+      "sha256": "0888e9c94b81e4c2fa0db5cd8d6269bce403db60886c48df5552b20ae2fbfb85"
+    },
+    {
+      "path": "scripts/deploy/byok-d1-operator.mjs",
+      "sha256": "d1f7825b5d0404ae52d3320f6a70bb081c63ed91708d510535dd4c52325e005a"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/byok-d1-cleanup.ts",
+      "sha256": "b015f0e3c6fca7412e32408e466577615c7d16364db09017446e0528c5b90847"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/byok-d1-maintenance-contract.ts",
+      "sha256": "4dfc3a8ca524f8c6e4f47d41240af0fa279220967ad67ccb9696af1f4a94bbe3"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/byok-d1-maintenance-host.ts",
+      "sha256": "962067df45d11d60ae1dbef958d697af20d1208945532e96de45abd71d8043be"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/byok-d1-maintenance-worker.ts",
+      "sha256": "d48a3ab7e37c5936e32ffa21ee13b554d1b4102cd83d5aa9039d2f6723c3347e"
+    },
+    {
+      "path": ".wrangler/staging/byok-cpu-v287-before/byok-d1-deployment.mjs",
+      "sha256": "43ab62cba7cc3616e5e320588de0436608f2ab43d2f6059f9f36cfe41feaed0c"
+    },
+    {
+      "path": ".wrangler/staging/byok-cpu-v287-before/byok-d1-deployment.test.mjs",
+      "sha256": "5b5f4313e05236c346bdaa382f3f6a489e913b7b58e2e4d8e4a8b408a405d63f"
+    },
+    {
+      "path": ".wrangler/staging/byok-cpu-v287-before/byok-d1-operator.test.mjs",
+      "sha256": "f9517208ff8e02522c2dafa4f6cc795eeb32298bbda68937927d0572466d58b4"
+    },
+    {
+      "path": ".wrangler/staging/byok-cpu-v287-before/wrangler.byok-d1-gateway.jsonc",
+      "sha256": "8e2009467b4b4025ba49ff9d8985f333041994c0c3323b2930de6a250b6470db"
+    },
+    {
+      "path": ".wrangler/staging/byok-cpu-v287-before/wrangler.byok-d1-maintenance.jsonc",
+      "sha256": "2817827dcddfc2b4d44a4c6d458c76b696132a603f755d24482b5fc89bf9db26"
+    },
+    {
+      "path": ".wrangler/staging/byok-cpu-v287-before/wrangler.byok-d1-maintenance-control.jsonc",
+      "sha256": "ddeb344ed44275e7a7d6a9123b45bc5c2b400357d16c5808c69af340ba808923"
+    },
+    {
+      "path": ".wrangler/staging/byok-cpu-v287-before/deployment-legacy.mjs",
+      "sha256": "7e84623c23640fdee58823552b5707aef76d4b856a581aba44207c4cddede0a8"
+    },
+    {
+      "path": ".wrangler/staging/byok-cpu-v287-before/deployment-legacy.meta.json",
+      "sha256": "1b5a34625986ab6c1eb5c18db22c27b634570910880061e994a226d8063f0fa4"
+    },
+    {
+      "path": ".wrangler/staging/byok-cpu-v287-before/build.log",
+      "sha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b"
+    },
+    {
+      "path": ".wrangler/staging/capture-byok-cpu-v287-before.mjs",
+      "sha256": "621712fb466fc4244efb4d4757cd60bbe639af0767f66eb3995a597d56baeec2"
+    },
+    {
+      "path": "node_modules/@cloudflare/workers-types/package.json",
+      "sha256": "5b42650b5bf81776a2c6c5a9e02941ffda952cfda0368f63cb8bb8fc52653a44"
+    },
+    {
+      "path": "node_modules/@cloudflare/workers-types/index.d.ts",
+      "sha256": "a00b4783854c9028158f776d605790d9a3e17e6a97f4d255beb70035c59c40dd"
+    },
+    {
+      "path": "node_modules/wrangler/wrangler-dist/cli.js",
+      "sha256": "ba531de00d3c21615f3d523df4e83a94d487de68d77225aa703463b6a2979406"
+    },
+    {
+      "path": "docs/developers/architecture/implementation-evidence/C02-byok-d1-budget-assessment-v286-results.json",
+      "sha256": "10a8182a93eebce905348c2b06f61df0fb40ccaeda1a752f8946e117fe2073d0"
+    },
+    {
+      "path": "docs/developers/architecture/implementation-evidence/C02-byok-d1-preflight-evidence-v284-results.json",
+      "sha256": "e8bfe282e0f47c084e01b6b45174633609251188bb8e83ceef8e2553e100da65"
+    },
+    {
+      "path": ".wrangler/staging/byok-cpu-v287-local-final/maintenance.meta.json",
+      "sha256": "7fc64a0fc718093adea8c831ad6aef7cf15809bfe697490326eef6ae524a46e9"
+    },
+    {
+      "path": ".wrangler/staging/byok-cpu-v287-local-final/maintenance/byok-d1-maintenance-worker.js",
+      "sha256": "c5ebd26cd60a685b31603cf28627c2d2217f6e2ebfc9b908e010736b3070912f"
+    },
+    {
+      "path": ".wrangler/staging/byok-cpu-v287-local-final/maintenance/byok-d1-maintenance-worker.js.map",
+      "sha256": "0bb247617aed621d0cdd40637efedbf42fd87cae514b8318f56beb2aec6bd5fa"
+    },
+    {
+      "path": ".wrangler/staging/byok-cpu-v287-local-final/maintenance-control.meta.json",
+      "sha256": "2a658100ac40de8b6e6bdcf242032bd428fc60392d859cf50924d5cb411081c4"
+    },
+    {
+      "path": ".wrangler/staging/byok-cpu-v287-local-final/maintenance-control/byok-d1-maintenance-control-worker.js",
+      "sha256": "c991d072facc54910b343047aa3ed4b3cd3ea380a3f36bb2d71026657443af7d"
+    },
+    {
+      "path": ".wrangler/staging/byok-cpu-v287-local-final/maintenance-control/byok-d1-maintenance-control-worker.js.map",
+      "sha256": "79b51a440763da78e468204c0b763138335e0819cb7093e90f3447662a49ee3c"
+    },
+    {
+      "path": ".wrangler/staging/byok-cpu-v287-local-final/gateway.meta.json",
+      "sha256": "93a191411162d31724f14b9325138044c3c745b716163a15155c1a5674a479f0"
+    },
+    {
+      "path": ".wrangler/staging/byok-cpu-v287-local-final/gateway/byok-d1-gateway-worker.js",
+      "sha256": "efc80a5b58a5182f604013db5f9cb4da716ed0b17b2d6abb8acd2235ce2d4658"
+    },
+    {
+      "path": ".wrangler/staging/byok-cpu-v287-local-final/gateway/byok-d1-gateway-worker.js.map",
+      "sha256": "01bd0cb7842f860a51769aa889670fc83cc042b2d17b84d73f321eb146e2a17d"
+    },
+    {
+      "path": ".wrangler/staging/byok-cpu-v287-local-first/result.json",
+      "sha256": "a1f939ad2c2617cd42d2e33d12baa0638e26b1053678d1a96b4db14d3897295e"
+    },
+    {
+      "path": ".wrangler/staging/byok-cpu-v287-before/verify-byok-cpu-v287-first.mjs",
+      "sha256": "dfa67e4a36fc290c1b0b089e06ea3da6fb300132addea74d961148f3625d1aa4"
+    },
+    {
+      "path": ".wrangler/staging/byok-cpu-v287-local-first/deployment-source.log",
+      "sha256": "3306b4b56647408a9e7b4e3bbbf33cc3c3e9e2be0e06c05bd2563f5c28f09e14"
+    },
+    {
+      "path": ".wrangler/staging/byok-cpu-v287-local-first/wrangler-version.log",
+      "sha256": "f1102a41d8256c5e6eb764e0a219400040e825189415ee77714a8439d047073e"
+    },
+    {
+      "path": ".wrangler/staging/byok-cpu-v287-local-first/wrangler-deploy-help.log",
+      "sha256": "3d2f47a2b0c54f1ac5b278e9892fdc33e4a584f59b9ec937776cda20c5e80b5e"
+    },
+    {
+      "path": ".wrangler/staging/byok-cpu-v287-local-first/wrangler-types-help.log",
+      "sha256": "40fbb083415bffa6f75e95822a690abc18450d5c8646bfbe2f28d2ba5f4fcf0c"
+    },
+    {
+      "path": ".wrangler/staging/byok-cpu-v287-local-first/dry-run-maintenance.log",
+      "sha256": "7a6ac03fe69d1cc69860c34be379361bcb9e320903a51d6fe959e906818e1d04"
+    },
+    {
+      "path": ".wrangler/staging/byok-cpu-v287-local-first/types-maintenance.log",
+      "sha256": "9dd5ffda595b3cecbf696e0afd21dcc6d6f233e9baea701ff9bc8f279b89119e"
+    },
+    {
+      "path": ".wrangler/staging/byok-cpu-v287-local-first/maintenance.meta.json",
+      "sha256": "0a5d49929eb16020e7a4e9a9b86fc0ac9e8385e38c3998a08e120bf25d5adcc7"
+    },
+    {
+      "path": ".wrangler/staging/byok-cpu-v287-local-first/maintenance/byok-d1-maintenance-worker.js",
+      "sha256": "c5ebd26cd60a685b31603cf28627c2d2217f6e2ebfc9b908e010736b3070912f"
+    },
+    {
+      "path": ".wrangler/staging/byok-cpu-v287-local-first/maintenance/byok-d1-maintenance-worker.js.map",
+      "sha256": "6bd048c889b45b39834876792f84391cee8ff2dfd5b9ca47a30e10a3196a3a43"
+    },
+    {
+      "path": ".wrangler/staging/summarize-byok-cpu-v287.mjs",
+      "sha256": "6736c09217a64fc1c13eef6f0c93e45825b076c4359b690c599cbec85123ad86"
+    }
+  ]
+}

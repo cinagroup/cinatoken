@@ -1,0 +1,27 @@
+{
+  "$schema": "../../../../node_modules/wrangler/config-schema.json",
+  "name": "cinatoken-staging-recovery-control",
+  "account_id": "7ea8e46d8210bad342fa7595f7935fea",
+  "main": "usage-recovery-control-worker.ts",
+  "compatibility_date": "2026-09-07",
+  "compatibility_flags": ["nodejs_compat"],
+  "send_metrics": false,
+  "workers_dev": false,
+  "preview_urls": false,
+  "routes": [],
+  "triggers": { "crons": [] },
+  "observability": { "enabled": true, "head_sampling_rate": 1, "logs": { "invocation_logs": false } },
+  "vars": {
+    "RECOVERY_CONTROL_ENVIRONMENT": "staging",
+    "RECOVERY_CONTROL_ENABLED": "false",
+    // Dedicated Access application audience, not a shared gateway/account app.
+    // Reverify its exact policy and destinations before creating an enabled artifact.
+    "RECOVERY_CONTROL_ACCESS_AUD": ""
+  },
+  "services": [{
+    "binding": "USAGE_RECOVERY",
+    "service": "cinatoken-staging-usage-recovery",
+    "entrypoint": "UsageRecovery",
+    "remote": false
+  }]
+}

@@ -1,0 +1,54 @@
+{
+  "version": "v339",
+  "date": "2026-09-24",
+  "status": "LOCAL_PG18_FUNCTION_DDL_LOCK_PASS_C03_OPEN",
+  "goalComplete": false,
+  "scope": {
+    "postgres": "owned loopback PostgreSQL 18.6",
+    "formalMigrations": 73,
+    "functions": [
+      "cinatoken_gateway.reserve_request_dispatch_intent_id()",
+      "cinatoken_gateway.reserve_request_log_replay_id()"
+    ],
+    "lockAnchor": "ALTER FUNCTION ... COST 100 before catalog attestation, within the parent-switch transaction",
+    "activation": "review-only; no formal migration or production deployment"
+  },
+  "observed": {
+    "negativeControlWithoutFunctionTupleLocks": "concurrent migrator replaced log reservation function while table and advisory locks were held",
+    "positiveControl": [
+      { "ddl": "log function CREATE OR REPLACE", "sqlstate": "55P03", "boundedWaitMs": 505 },
+      { "ddl": "intent function CREATE OR REPLACE", "sqlstate": "55P03", "boundedWaitMs": 517 },
+      { "ddl": "log function SECURITY INVOKER", "sqlstate": "55P03", "boundedWaitMs": 515 }
+    ],
+    "preexistingSearchPathDrift": "rejected before parent DDL",
+    "rollbackLeavesParentAbsent": true
+  },
+  "validation": {
+    "nativeTest": "scripts/db/cutover/postgres-legacy-parent-activation.native.test.mjs",
+    "nativePass": 1,
+    "nativeTotal": 1,
+    "nativeStagesPass": 19,
+    "nativeCleanup": "PASS",
+    "generatorUnitPass": 1,
+    "generatorUnitTotal": 1,
+    "diffCheck": "PASS",
+    "linuxCiRun": false
+  },
+  "sourceSha256": {
+    "scripts/db/cutover/build-request-legacy-parent-default-acl-activation.mjs": "ae0f3d312d491f9f47e9d2752e43949df2b45767df9c6439dddd6054435a3b02",
+    "scripts/db/cutover/build-request-legacy-parent-default-acl-activation.test.mjs": "7b900ce911eac8733b9e13bf2b9634196eb889e262967dbaa72d424c2aaef1bd",
+    "scripts/db/cutover/postgres-legacy-parent-activation.native.test.mjs": "222023c6a51051dcaa0bb27c921d1b8fe464a81d17670b2478d0bed5ccc6c4d6",
+    "generatedActivationBundle": "86aa50cf4cd26cdcb212fa7d3eba2c277b7b247a3f482d4e98659b199aebaa82",
+    "docs/developers/architecture/implementation-evidence/C03-postgres-native-legacy-parent-function-lock-v339-report.json": "56b538de53fc07a8286dfebff5baf7a94fba44b041dad1fbb37c5550cd28bbdb"
+  },
+  "boundaries": {
+    "allTrustedMigratorDdlFormsVerified": false,
+    "postCommitTrustedMigratorModificationPrevented": false,
+    "productionLockWindowMeasured": false,
+    "formalMigrationAdded": false,
+    "remoteSqlCalls": 0,
+    "deployments": 0,
+    "C03_7Complete": false,
+    "C03_GComplete": false
+  }
+}

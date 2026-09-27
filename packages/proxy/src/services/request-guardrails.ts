@@ -6,6 +6,9 @@ import {
 	listWorkspaceBudgets,
 	WORKSPACE_BUDGET_INTENT_PREFIX,
 	enforceRequestGuardrails,
+	preparationRead,
+	preparationMutation,
+	type PreparationControl,
 	type GatewayRepositories,
 	type GuardrailFilter,
 	type GuardrailPreflightResult,
@@ -58,7 +61,7 @@ export async function reserveRequestGuardrailBudgets(
 	return guardrailBudgetAdmissionResult(result);
 }
 
-function guardrailBudgetAdmissionResult(
+export function guardrailBudgetAdmissionResult(
 	result: Awaited<ReturnType<GatewayRepositories['guardrailBudgets']['reserveMany']>>,
 ): GuardrailBudgetAdmissionResult {
 	if (result.status === 'reserved' || result.status === 'idempotent') return { ok: true, reserved: true };
@@ -174,6 +177,7 @@ export async function auditGuardrailDecision(
 		modelIds: string[];
 		correlationId: string;
 		result: GuardrailPreflightResult;
+		control?: PreparationControl;
 	},
 ): Promise<void> {
 	const blocked = !params.result.ok;
@@ -186,7 +190,11 @@ export async function auditGuardrailDecision(
 	const reasonCode = params.result.ok
 		? redactionCount > 0 ? 'guardrail_input_redacted' : 'guardrail_input_flagged'
 		: params.result.code;
-	await repositories.userAuditLogs.insertUserAuditLog({
+	const modelFingerprint = await preparationRead(params.control, () => sha256(params.modelIds.join('\n')));
+	const decisionFingerprint = await preparationRead(params.control, () => sha256(params.result.ok
+		? JSON.stringify({ redaction_count: redactionCount, flag_count: flagCount, builtins: params.result.builtinDetections })
+		: params.result.message));
+	await preparationMutation(params.control, () => repositories.userAuditLogs.insertUserAuditLog({
 		id: crypto.randomUUID(),
 		userId: params.userId,
 		apiKeyId: params.apiKeyId,
@@ -201,14 +209,8 @@ export async function auditGuardrailDecision(
 		changePayload: JSON.stringify({
 			v: 1,
 			workspace_id: params.workspaceId,
-			model_fingerprint: await sha256(params.modelIds.join('\n')),
-			decision_fingerprint: await sha256(params.result.ok
-				? JSON.stringify({
-					redaction_count: redactionCount,
-					flag_count: flagCount,
-					builtins: params.result.builtinDetections,
-				})
-				: params.result.message),
+			model_fingerprint: modelFingerprint,
+			decision_fingerprint: decisionFingerprint,
 			assignments: params.result.trace.map((item) => ({
 				assignment_id: item.assignmentId,
 				guardrail_id: item.guardrailId,
@@ -220,7 +222,7 @@ export async function auditGuardrailDecision(
 			builtin_detections: params.result.ok ? params.result.builtinDetections : [],
 			blocked_builtin: params.result.ok ? null : params.result.blockedBuiltin ?? null,
 		}),
-	});
+	}));
 }
 
 export async function runRequestGuardrails(
@@ -240,9 +242,11 @@ export async function runRequestGuardrails(
 		 * fail closed unless they implement filtering at that later boundary.
 		 */
 		inputFilterSupport?: 'request_body' | 'unsupported';
+		/** Preparation reads may stop early; audit writes remain owned until confirmed. */
+		control?: PreparationControl;
 	},
 ): Promise<GuardrailPreflightResult> {
-	const preflight = await enforceRequestGuardrails(repositories, params);
+	const preflight = await preparationRead(params.control, () => enforceRequestGuardrails(repositories, params));
 	const result: GuardrailPreflightResult =
 		preflight.ok &&
 		params.inputFilterSupport === 'unsupported' &&
@@ -259,8 +263,8 @@ export async function runRequestGuardrails(
 	if (!result.ok) return result;
 	const budgetNow = params.now ?? new Date();
 	const [key, workspaceBudgets] = await Promise.all([
-		repositories.apiKeys.getApiKeyByIdInWorkspace(params.apiKeyId, params.workspaceId),
-		listWorkspaceBudgets(repositories.client, params.workspaceId),
+		preparationRead(params.control, () => repositories.apiKeys.getApiKeyByIdInWorkspace(params.apiKeyId, params.workspaceId)),
+		preparationRead(params.control, () => listWorkspaceBudgets(repositories.client, params.workspaceId)),
 	]);
 	if (!key) {
 		return {
@@ -330,20 +334,24 @@ export async function auditGuardrailOutputDecision(
 		trace: Extract<GuardrailPreflightResult, { ok: true }>['trace'];
 		blockedBy: string | null;
 		redactionCount: number;
+		control?: PreparationControl;
 	},
 ): Promise<void> {
 	if (!params.blockedBy && params.redactionCount === 0) return;
-	await repositories.userAuditLogs.insertUserAuditLog({
+	const modelFingerprint = await preparationRead(params.control, () => sha256(params.modelIds.join('\n')));
+	const filterFingerprint = params.blockedBy
+		? await preparationRead(params.control, () => sha256(params.blockedBy!)) : null;
+	await preparationMutation(params.control, () => repositories.userAuditLogs.insertUserAuditLog({
 		id: crypto.randomUUID(), userId: params.userId, apiKeyId: params.apiKeyId,
 		eventType: params.blockedBy ? 'guardrail_blocked' : 'guardrail_redacted', actorType: 'system',
 		source: 'gateway_guardrails', reasonCode: params.blockedBy ? 'guardrail_output_blocked' : 'guardrail_output_redacted',
 		reasonText: params.blockedBy ? 'Guardrail blocked response output' : 'Guardrail redacted response output',
 		correlationId: params.correlationId,
 		changePayload: JSON.stringify({
-			v: 1, workspace_id: params.workspaceId, direction: 'output', model_fingerprint: await sha256(params.modelIds.join('\n')),
-			filter_fingerprint: params.blockedBy ? await sha256(params.blockedBy) : null,
+			v: 1, workspace_id: params.workspaceId, direction: 'output', model_fingerprint: modelFingerprint,
+			filter_fingerprint: filterFingerprint,
 			assignments: params.trace.map((item) => ({ assignment_id: item.assignmentId, guardrail_id: item.guardrailId, version: item.version, scope_type: item.scopeType })),
 			redaction_count: params.redactionCount,
 		}),
-	});
+	}));
 }

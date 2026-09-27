@@ -49,6 +49,7 @@ export async function searchBochaWeb(params: WebSearchParams): Promise<WebSearch
 
 	const response = await fetchImpl(BOCHA_ENDPOINT, {
 		method: 'POST',
+		redirect: 'manual',
 		headers: {
 			Authorization: `Bearer ${params.apiKey}`,
 			'Content-Type': 'application/json',

@@ -10,6 +10,7 @@
  * - 429/5xx：仅该 key 复合熔断键短冷却，不影响 provider 自有 key 与其他卖家。
  */
 import type { GatewayRepositories, SharedKeyRow } from '@octafuse/core';
+import { preparationRead, type PreparationControl } from '@octafuse/core';
 import type { RouteResult } from './model-router';
 import { parseByokKeyId } from './byok-key-pool';
 
@@ -69,11 +70,13 @@ export function resetSharedKeyPoolStateForTests(): void {
 /** 拉取指定渠道的有序候选（固定排序；读取失败不阻塞请求 → 空池）。 */
 export async function loadOrderedSharedKeys(
 	repos: GatewayRepositories,
-	channelType: string
+	channelType: string,
+	control?: PreparationControl,
 ): Promise<SharedKeyRow[]> {
 	try {
-		return await repos.sharedKeys.listActiveSharedKeysByChannel(channelType);
+		return await preparationRead(control, () => repos.sharedKeys.listActiveSharedKeysByChannel(channelType, control));
 	} catch (error) {
+		control?.throwIfStopped();
 		console.warn(
 			`[Gateway SharedKeys] pool lookup failed channel=${channelType} error=${error instanceof Error ? error.message : String(error)}`
 		);
@@ -98,14 +101,17 @@ export function applySharedKeyToRoute(route: RouteResult, key: SharedKeyRow): Ro
  */
 export async function expandAttemptsWithSharedKeys(
 	repos: GatewayRepositories,
-	attempts: RouteResult[]
+	attempts: RouteResult[],
+	control?: PreparationControl,
 ): Promise<RouteResult[]> {
+	control?.throwIfStopped();
 	const sharedRoutes = attempts.filter((route) => route.providerSharedChannelType);
 	if (sharedRoutes.length === 0) return attempts;
 
 	const poolByChannel = new Map<string, SharedKeyRow[]>();
 	const expanded: RouteResult[] = [];
 	for (const route of attempts) {
+		control?.throwIfStopped();
 		const channelType = route.providerSharedChannelType;
 		if (!channelType) {
 			expanded.push(route);
@@ -113,11 +119,12 @@ export async function expandAttemptsWithSharedKeys(
 		}
 		let pool = poolByChannel.get(channelType);
 		if (!pool) {
-			pool = await loadOrderedSharedKeys(repos, channelType);
+			pool = await loadOrderedSharedKeys(repos, channelType, control);
 			poolByChannel.set(channelType, pool);
 		}
 		const now = Date.now();
 		for (const key of pool) {
+			control?.throwIfStopped();
 			if (getSharedKeyCooldownRemainingMs(key.id, now) > 0) continue;
 			expanded.push(applySharedKeyToRoute(route, key));
 		}

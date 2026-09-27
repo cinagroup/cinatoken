@@ -1,0 +1,129 @@
+{
+  "status": "PASS",
+  "cleanup": "PASS",
+  "binaryVersion": "postgres (PostgreSQL) 18.6",
+  "scope": "private PG18.6, 73 formal migrations, review-only isolated quote proposal",
+  "stages": [
+    {
+      "name": "formal-schema-installed",
+      "result": "PASS",
+      "migrations": 73
+    },
+    {
+      "name": "formal-ledger-dml-lock-blocks-activation-with-two-second-timeout",
+      "result": "PASS"
+    },
+    {
+      "name": "missing-final-formal-migration-rejected-with-rollback",
+      "result": "PASS"
+    },
+    {
+      "name": "forged-middle-migration-rejected-at-same-count-and-terminal-version",
+      "result": "PASS"
+    },
+    {
+      "name": "formal-seller-price-precision-drift-rejected-with-rollback",
+      "result": "PASS"
+    },
+    {
+      "name": "direct-migrator-login-and-non-superuser-runtime-required",
+      "result": "PASS"
+    },
+    {
+      "name": "runtime-role-inheritance-rejected",
+      "result": "PASS",
+      "roles": [
+        "cinatoken_gateway_migrator",
+        "pg_read_all_data",
+        "pg_write_all_data"
+      ]
+    },
+    {
+      "name": "activation-and-preexisting-wide-schema-rejected-with-rollback",
+      "result": "PASS"
+    },
+    {
+      "name": "schema-create-requires-database-privilege-and-set-role-cannot-activate",
+      "result": "PASS"
+    },
+    {
+      "name": "postflight-effective-runtime-acl-rejected-with-rollback",
+      "result": "PASS"
+    },
+    {
+      "name": "all-required-fields-have-no-defaults-and-missing-values-rejected",
+      "result": "PASS",
+      "columns": [
+        "version_id",
+        "shared_key_id",
+        "seller_user_id",
+        "input_price_per_million",
+        "output_price_per_million",
+        "cache_read_price_per_million",
+        "cache_write_price_per_million",
+        "commission_rate",
+        "currency",
+        "price_unit",
+        "billing_mode",
+        "entitlement_version",
+        "effective_from",
+        "effective_until"
+      ]
+    },
+    {
+      "name": "all-four-seller-prices-reject-postgres-numeric-nan",
+      "result": "PASS"
+    },
+    {
+      "name": "price-rate-enumeration-interval-and-key-owner-validation",
+      "result": "PASS"
+    },
+    {
+      "name": "client-supplied-recorded-at-replaced-by-database-clock",
+      "result": "PASS"
+    },
+    {
+      "name": "set-role-proxy-cannot-insert-a-quote",
+      "result": "PASS"
+    },
+    {
+      "name": "version-id-and-effective-overlap-refused-adjacent-and-other-key-accepted",
+      "result": "PASS"
+    },
+    {
+      "name": "concurrent-same-key-overlap-serializes-and-rejects-loser",
+      "result": "PASS"
+    },
+    {
+      "name": "stale-snapshot-and-bulk-insert-protocols-refused",
+      "result": "PASS"
+    },
+    {
+      "name": "mutation-and-parent-delete-refused",
+      "result": "PASS"
+    },
+    {
+      "name": "ordinary-runtime-denied-after-two-broad-grant-reruns",
+      "result": "PASS",
+      "acl": {
+        "schema_usage": false,
+        "table_select": false,
+        "table_insert": false,
+        "table_update": false,
+        "table_delete": false,
+        "function_execute": false
+      }
+    }
+  ],
+  "limitations": [
+    "No active quote producer, dispatch attachment, typed outbox, earnings consumer or deployment.",
+    "The quote fields missing from existing shared_keys must come from a future trusted authority; fixture values are synthetic.",
+    "The contract uses explicit finite intervals and one row per READ COMMITTED INSERT; operational quote rotation is not yet designed.",
+    "D1, MySQL, real Workers and production concurrency are not proven by this local PostgreSQL fixture."
+  ],
+  "sourceSha256": {
+    "proposal": "8f371631c14456077d37228535a3bd0415953cba69932174d2041de663b8c360",
+    "nativeTest": "f80db3a8d9caee2cbe67805636a82171dbc4e77e4a22b7e00f6e2206434f1bf5",
+    "formalMigrationCorpus": "23afef61a8a670e0af8c90e3a138f522e6b283b454e380a592bf85bca83108dc"
+  }
+}

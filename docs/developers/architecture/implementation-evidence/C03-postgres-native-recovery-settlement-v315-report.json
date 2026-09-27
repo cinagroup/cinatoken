@@ -1,0 +1,171 @@
+{
+  "status": "PASS",
+  "binaryVersion": "postgres (PostgreSQL) 18.6",
+  "node": "v24.14.1",
+  "scope": "owned loopback-only native fixture; synthetic identities; fixture migrator produces facts; no production producer or authorization",
+  "stages": [
+    {
+      "name": "formal-migrations",
+      "result": "PASS",
+      "count": 73
+    },
+    {
+      "name": "role-and-guard",
+      "result": "PASS",
+      "login": false,
+      "runtimeCompatible": false
+    },
+    {
+      "name": "post-set-role-acl",
+      "result": "PASS",
+      "currentUser": "cinatoken_gateway_recovery",
+      "key_update": false,
+      "log_update": false,
+      "log_insert": true,
+      "fact_insert": false,
+      "receipt_insert": true,
+      "job_insert": true,
+      "directKeyAndLogUpdatesRejected": true
+    },
+    {
+      "name": "claimed-intent-and-fact",
+      "result": "PASS",
+      "requestId": "gen-bfc76171-aaae-483e-affe-62d37d7bc3bd"
+    },
+    {
+      "name": "recovery-role-ensure",
+      "result": "PASS"
+    },
+    {
+      "name": "recovery-role-claim",
+      "result": "PASS"
+    },
+    {
+      "name": "recovery-role-financial-commit",
+      "result": "PASS"
+    },
+    {
+      "name": "unreserved-final-durable-state",
+      "result": "PASS",
+      "final": {
+        "receipts": 1,
+        "logs": 1,
+        "audits": 1,
+        "spent": "1.250000",
+        "job_state": "committed"
+      }
+    },
+    {
+      "name": "ordinary-temp-key-shadow",
+      "result": "PASS",
+      "tempCreated": true,
+      "rejectedSqlstate": "23503"
+    },
+    {
+      "name": "recovery-temp-key-shadow",
+      "result": "PASS",
+      "tempCreated": true,
+      "rejectedSqlstate": "23503"
+    },
+    {
+      "name": "trigger-only-execute-revoked",
+      "result": "PASS",
+      "functions": [
+        "guard_usage_recovery_job()",
+        "guard_usage_commit_receipt()",
+        "check_usage_commit_transaction()",
+        "guard_fact_owned_usage_log()",
+        "guard_fact_without_legacy_log()"
+      ]
+    },
+    {
+      "name": "recovery-role-commit-without-trigger-execute",
+      "result": "PASS"
+    },
+    {
+      "name": "trigger-revocation-final-state",
+      "result": "PASS",
+      "final": {
+        "receipts": 1,
+        "logs": 1,
+        "job_state": "committed"
+      }
+    },
+    {
+      "name": "reserved-guardrail-fact",
+      "result": "PASS",
+      "requestId": "gen-5c09b12b-598a-4203-afc3-70fdb755a487"
+    },
+    {
+      "name": "recovery-role-reserved-guardrail-commit",
+      "result": "PASS"
+    },
+    {
+      "name": "reserved-final-durable-state",
+      "result": "PASS",
+      "final": {
+        "receipts": 1,
+        "logs": 1,
+        "spent": "1.750000",
+        "user_reserved": "0",
+        "user_reservation": "settled",
+        "job_state": "committed"
+      },
+      "guardrailReservations": [
+        {
+          "scope_type": "api_key",
+          "state": "settled",
+          "reserved": "500000",
+          "settled": "250000"
+        },
+        {
+          "scope_type": "user",
+          "state": "settled",
+          "reserved": "500000",
+          "settled": "250000"
+        },
+        {
+          "scope_type": "workspace",
+          "state": "settled",
+          "reserved": "500000",
+          "settled": "250000"
+        }
+      ],
+      "guardrailWindows": [
+        {
+          "scope_type": "api_key",
+          "reserved": "0",
+          "settled": "250000"
+        },
+        {
+          "scope_type": "user",
+          "reserved": "0",
+          "settled": "250000"
+        },
+        {
+          "scope_type": "workspace",
+          "reserved": "0",
+          "settled": "250000"
+        }
+      ],
+      "totals": {
+        "receipts": 3,
+        "logs": 3,
+        "audits": 3
+      }
+    }
+  ],
+  "cleanup": "PASS",
+  "sourceSha256": {
+    "nativeTest": "d4cd521c060cbed084e6261b3590f84e253dfcea4e3f7f57c8fd1b5436721ebe",
+    "rolePolicy": "a29f6d8df66b6837c2dceb4f4548fc8ff495d7076582098187cb0573c25b02de",
+    "runtimeGrant": "0974072ba6a15a7a72a0ad44fd88d16246e9c09a72f133e0f78084242633c303",
+    "guardSwitch": "24a601dbafd66f16cdd14dcc81017bc26199c6b833e311d389cdb07103010763",
+    "migration0068": "cf49030dac3b851788438ff80a2859dd17eadc819db5adcb6f4225b22b8663ec",
+    "migration0073": "07025d295d1cf672235c9d45cea77c4bbef8f3859199708206833d945345593b",
+    "criticalWriter": "ab1155707ad740ef96288f50d16cf78b4e2b35371ef64c8076c45c3a4927c986",
+    "settlementRepository": "2be4882f4d715f4de16fa2abe2663ffdb4d0bf736566939b63d2657f032ac00f",
+    "recoveryJobs": "7ac1db1b02159b4827b2c0fee29711fee544246fc4e1fbbcbef420aca1c17429"
+  },
+  "serverVersionNum": 180006
+}

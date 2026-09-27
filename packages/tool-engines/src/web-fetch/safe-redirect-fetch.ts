@@ -17,6 +17,8 @@ export type SafeRedirectFetchResult = {
 
 /**
  * Fetch a provider-returned public URL while revalidating every redirect hop.
+ * This is only for bodyless resource downloads. A redirected POST could replay
+ * already accepted work because the same RequestInit is used at every hop.
  * This blocks literal private destinations; callers that accept attacker-owned
  * DNS still need a deployment-specific hostname allowlist or DNS pinning.
  */
@@ -28,10 +30,20 @@ export async function fetchWithSafeRedirects(
 		maxRedirects?: number;
 		requireHttps?: boolean;
 		allowIpLiterals?: boolean;
+		/** Optional caller-owned, abortable disposal; invoked once for every redirect body. */
+		cancelResponseBody?: (response: Response, reason: string) => Promise<void>;
 	} = {},
 ): Promise<SafeRedirectFetchResult> {
+	const method = options.init?.method?.toUpperCase() ?? 'GET';
+	if ((method !== 'GET' && method !== 'HEAD') || options.init?.body != null) {
+		throw new UnsafeFetchDestinationError('safe redirect fetch requires a bodyless GET or HEAD');
+	}
+	const requestedRedirects = options.maxRedirects ?? 5;
+	if (!Number.isSafeInteger(requestedRedirects) || requestedRedirects < 0) {
+		throw new UnsafeFetchDestinationError('invalid redirect limit');
+	}
 	const fetchImpl = options.fetchImpl ?? fetch;
-	const maxRedirects = Math.min(10, Math.max(0, Math.floor(options.maxRedirects ?? 5)));
+	const maxRedirects = Math.min(10, requestedRedirects);
 	let current = rawUrl;
 	let previousOrigin: string | null = null;
 	const headers = new Headers(options.init?.headers);
@@ -60,7 +72,8 @@ export async function fetchWithSafeRedirects(
 			return { response, finalUrl: parsed.toString(), redirects };
 		}
 		const location = response.headers.get('location');
-		await response.body?.cancel('safe_redirect_follow').catch(() => undefined);
+		if (options.cancelResponseBody) await options.cancelResponseBody(response, 'safe_redirect_follow');
+		else await response.body?.cancel('safe_redirect_follow').catch(() => undefined);
 		if (!location) throw new UnsafeFetchDestinationError('redirect response has no location');
 		if (redirects >= maxRedirects) throw new UnsafeFetchDestinationError('redirect limit exceeded');
 		previousOrigin = parsed.origin;

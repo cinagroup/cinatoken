@@ -1,0 +1,293 @@
+{
+  "status": "PASS",
+  "cleanup": "PASS",
+  "binaryVersion": "postgres (PostgreSQL) 18.6",
+  "scope": "fresh owned loopback PostgreSQL 18.6; 73 formal migrations; 25,000 nonempty legacy logs plus one empty ID; review-only proposals",
+  "limitations": [
+    "Synthetic local timings do not establish a production data-size, hardware, traffic, collation or maintenance-window budget.",
+    "No production lock wait, Worker, Queue, Hyperdrive or remote database was exercised.",
+    "No deletion or archival is authorized; permanent replay reservations have unbounded growth pending reviewed policy."
+  ],
+  "fixture": {
+    "nonemptyRows": 25000,
+    "emptyIdRows": 1,
+    "batchSize": 500,
+    "listenAddress": "127.0.0.1",
+    "fsync": "on",
+    "sharedBuffers": "16MB",
+    "configuration": {
+      "collation": "C",
+      "shared_buffers": "16MB",
+      "fsync": "on"
+    },
+    "midpointPlans": {
+      "priorExplicitCAndDistinct": {
+        "executionMs": 7.844,
+        "nodes": [
+          {
+            "type": "Limit",
+            "relation": null,
+            "index": null
+          },
+          {
+            "type": "Sort",
+            "relation": null,
+            "index": null
+          },
+          {
+            "type": "Aggregate",
+            "relation": null,
+            "index": null
+          },
+          {
+            "type": "Seq Scan",
+            "relation": "api_key_request_logs",
+            "index": null
+          }
+        ],
+        "topSharedHitBlocks": 610
+      },
+      "explicitCWithoutDistinct": {
+        "executionMs": 4.118,
+        "nodes": [
+          {
+            "type": "Limit",
+            "relation": null,
+            "index": null
+          },
+          {
+            "type": "Sort",
+            "relation": null,
+            "index": null
+          },
+          {
+            "type": "Seq Scan",
+            "relation": "api_key_request_logs",
+            "index": null
+          }
+        ],
+        "topSharedHitBlocks": 610
+      },
+      "nativeCollationWithDistinct": {
+        "executionMs": 0.45,
+        "nodes": [
+          {
+            "type": "Limit",
+            "relation": null,
+            "index": null
+          },
+          {
+            "type": "Unique",
+            "relation": null,
+            "index": null
+          },
+          {
+            "type": "Index Only Scan",
+            "relation": "api_key_request_logs",
+            "index": "api_key_request_logs_pkey"
+          }
+        ],
+        "topSharedHitBlocks": 19
+      },
+      "generatedNativeKeyset": {
+        "executionMs": 0.153,
+        "nodes": [
+          {
+            "type": "Limit",
+            "relation": null,
+            "index": null
+          },
+          {
+            "type": "Index Only Scan",
+            "relation": "api_key_request_logs",
+            "index": "api_key_request_logs_pkey"
+          }
+        ],
+        "topSharedHitBlocks": 19
+      }
+    }
+  },
+  "sourceSha256": {
+    "formalMigrationCorpus": "23afef61a8a670e0af8c90e3a138f522e6b283b454e380a592bf85bca83108dc",
+    "nativeTest": "f61f74d71e5e0156246d3cb72c0dbd6a35c684e35baead62c09a1c48b2eb41e1",
+    "reservationProposal": "e9dad8f79a5bbc302de85658fb93fd5f8c17a30f4e932c98c26d98adaa94f64c",
+    "parentGateProposal": "1079eb858811c70dd850b95be68f64e5c7b8361926e8c3f0a9e80621f6125b10",
+    "backfillGenerator": "62d1cc9795693d6a043ae7b26d24084b6c0f01c80bfb142e09928f5fef7fd3d0",
+    "runtimeGrant": "0fd36a946063fd81dbe5b381c7e35b4aa5ad6932015d6935e33442afad092390"
+  },
+  "stages": [
+    {
+      "name": "formal-schema-and-owned-postgresql-identity",
+      "result": "PASS",
+      "migrations": 73,
+      "configuration": {
+        "collation": "C",
+        "shared_buffers": "16MB",
+        "fsync": "on"
+      }
+    },
+    {
+      "name": "synthetic-legacy-log-history-created",
+      "result": "PASS",
+      "rows": 25001,
+      "seedMs": 2819.335,
+      "logBytes": 10518528
+    },
+    {
+      "name": "synthetic-log-planner-statistics-refreshed",
+      "result": "PASS"
+    },
+    {
+      "name": "review-only-parent-and-runtime-default-acl-installed",
+      "result": "PASS"
+    },
+    {
+      "name": "expand-lock-timeout-rolls-back-then-retries",
+      "result": "PASS",
+      "expandWaitMs": 2019.225,
+      "expandMs": 7.599
+    },
+    {
+      "name": "native-collation-indexed-keyset-plan",
+      "result": "PASS",
+      "midpointPlans": {
+        "priorExplicitCAndDistinct": {
+          "executionMs": 7.844,
+          "nodes": [
+            {
+              "type": "Limit",
+              "relation": null,
+              "index": null
+            },
+            {
+              "type": "Sort",
+              "relation": null,
+              "index": null
+            },
+            {
+              "type": "Aggregate",
+              "relation": null,
+              "index": null
+            },
+            {
+              "type": "Seq Scan",
+              "relation": "api_key_request_logs",
+              "index": null
+            }
+          ],
+          "topSharedHitBlocks": 610
+        },
+        "explicitCWithoutDistinct": {
+          "executionMs": 4.118,
+          "nodes": [
+            {
+              "type": "Limit",
+              "relation": null,
+              "index": null
+            },
+            {
+              "type": "Sort",
+              "relation": null,
+              "index": null
+            },
+            {
+              "type": "Seq Scan",
+              "relation": "api_key_request_logs",
+              "index": null
+            }
+          ],
+          "topSharedHitBlocks": 610
+        },
+        "nativeCollationWithDistinct": {
+          "executionMs": 0.45,
+          "nodes": [
+            {
+              "type": "Limit",
+              "relation": null,
+              "index": null
+            },
+            {
+              "type": "Unique",
+              "relation": null,
+              "index": null
+            },
+            {
+              "type": "Index Only Scan",
+              "relation": "api_key_request_logs",
+              "index": "api_key_request_logs_pkey"
+            }
+          ],
+          "topSharedHitBlocks": 19
+        },
+        "generatedNativeKeyset": {
+          "executionMs": 0.153,
+          "nodes": [
+            {
+              "type": "Limit",
+              "relation": null,
+              "index": null
+            },
+            {
+              "type": "Index Only Scan",
+              "relation": "api_key_request_logs",
+              "index": "api_key_request_logs_pkey"
+            }
+          ],
+          "topSharedHitBlocks": 19
+        }
+      }
+    },
+    {
+      "name": "empty-legacy-id-included-and-empty-cursor-resumes-after-it",
+      "result": "PASS",
+      "firstPageLastId": "old-log-00000499",
+      "resumedNextId": "old-log-00000001"
+    },
+    {
+      "name": "first-batch-commits-and-interrupted-batch-rolls-back",
+      "result": "PASS",
+      "firstPage": {
+        "scanned": 500,
+        "reserved": 500,
+        "next_request_id": "old-log-00000499",
+        "ms": 9.382
+      },
+      "savedCursor": "old-log-00000499",
+      "rowsAfterRollback": 500
+    },
+    {
+      "name": "bounded-resume-covers-all-history",
+      "result": "PASS",
+      "scanned": 25001,
+      "reserved": 25001,
+      "pages": 52,
+      "savedCursor": "old-log-00000499",
+      "finalCursor": "old-log-00025000",
+      "pageMs": {
+        "min": 7.503,
+        "median": 14.8,
+        "p95": 18.97,
+        "max": 19.598,
+        "total": 733.473
+      },
+      "relationBytes": {
+        "log": 10518528,
+        "reservation": 3194880
+      }
+    },
+    {
+      "name": "post-cursor-low-sorting-live-log-reserved",
+      "result": "PASS",
+      "late": {
+        "n": 1
+      }
+    },
+    {
+      "name": "seven-source-gate-lock-timeout-rollback-and-retry",
+      "result": "PASS",
+      "gateWaitMs": 2004.382,
+      "gateMs": 31.636,
+      "sourceTablesLocked": 7
+    }
+  ]
+}

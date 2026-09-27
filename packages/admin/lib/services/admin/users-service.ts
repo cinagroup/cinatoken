@@ -645,34 +645,41 @@ export async function deleteAdminUser(repos: GatewayRepositories, raw: string, a
 	const bbase = row.budget_base ?? null;
 	const bperiod = row.budget_period ?? null;
 	const breset = row.budget_reset_at ?? null;
-	await repos.userAuditLogs.insertUserAuditLog(
-		userBudgetAuditToInsertRowFull(userId, {
-			id: crypto.randomUUID(),
-			apiKeyId: null,
-			eventType: 'user_deleted',
-			actorType: 'admin',
-			actorId,
-			reasonCode: 'admin_user_delete',
-			reasonText: 'User permanently deleted',
-			beforeSpent: spent,
-			deltaSpent: 0,
-			afterSpent: spent,
-			beforeBudgetMax: bmax,
-			afterBudgetMax: bmax,
-			beforeBudgetBase: bbase,
-			afterBudgetBase: bbase,
-			beforeBudgetPeriod: bperiod,
-			afterBudgetPeriod: bperiod,
-			beforeBudgetResetAt: breset,
-			afterBudgetResetAt: breset,
-			changePayloadMerge: JSON.stringify({ deleted_user_id: userId, deleted_user_email: row.email ?? null }),
-			beforeUserSnapshot: beforeUserSnap,
-			afterUserSnapshot: null,
-			changedFields: null,
-			source: 'admin_users',
-			correlationId: crypto.randomUUID(),
-		})
-	);
+	const deletionAudit = userBudgetAuditToInsertRowFull(userId, {
+		id: crypto.randomUUID(),
+		apiKeyId: null,
+		eventType: 'user_deleted',
+		actorType: 'admin',
+		actorId,
+		reasonCode: 'admin_user_delete',
+		reasonText: 'User permanently deleted',
+		beforeSpent: spent,
+		deltaSpent: 0,
+		afterSpent: spent,
+		beforeBudgetMax: bmax,
+		afterBudgetMax: bmax,
+		beforeBudgetBase: bbase,
+		afterBudgetBase: bbase,
+		beforeBudgetPeriod: bperiod,
+		afterBudgetPeriod: bperiod,
+		beforeBudgetResetAt: breset,
+		afterBudgetResetAt: breset,
+		changePayloadMerge: JSON.stringify({ deleted_user_id: userId, deleted_user_email: row.email ?? null }),
+		beforeUserSnapshot: beforeUserSnap,
+		afterUserSnapshot: null,
+		changedFields: null,
+		source: 'admin_users',
+		correlationId: crypto.randomUUID(),
+	});
+	if (repos.users.deleteUserHardWithAudit) {
+		const result = await repos.users.deleteUserHardWithAudit(userId, deletionAudit);
+		if (result === 'dispatch_history') {
+			throw conflict('User cannot be deleted while dispatch recovery history references it');
+		}
+		if (result !== 'deleted') throw notFound('User not found');
+		return;
+	}
+	await repos.userAuditLogs.insertUserAuditLog(deletionAudit);
 	const ok = await repos.users.deleteUserHard(userId);
 	if (!ok) throw notFound('User not found');
 }

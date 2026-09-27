@@ -1,0 +1,300 @@
+{
+  "schemaVersion": 1,
+  "workPackage": "C02.B2.2",
+  "checklistVersion": "1.52",
+  "recordedAtUtc": "2026-09-07 05:41:40 UTC",
+  "status": "LOCAL_PASS_SUBSET",
+  "recoveryGate": "NOT_PASSED",
+  "capacityGate": "NOT_PASSED",
+  "productionCapacityEnabled": false,
+  "owner": "Codex",
+  "reviewer": "Codex self-review; independent reviewer not assigned",
+  "baseline": {
+    "head": "7eb59008f7d8e156e81fd18a57658fdef2553264",
+    "dirtyWorktree": true,
+    "committed": false
+  },
+  "scope": {
+    "runtime": "Node 24.14.1 + shared Hono routes + Workers storage resolver + real node:sqlite D1 adapter; not Cloudflare",
+    "routeIntegration": "explicit createProxyApp composition only; ordinary Images generations/edits",
+    "defaultEnabled": false,
+    "cloudEnabled": false,
+    "formalMigrations": 68,
+    "proposalFiles": 3,
+    "automaticMigration": false,
+    "deployedConsumer": false,
+    "sseDurableGuarantee": false,
+    "preDispatchQuoteImplemented": false
+  },
+  "tests": [
+    {
+      "command": "npm run test:images:staging -w @octafuse/proxy",
+      "parts": [
+        {
+          "suite": "existing local staging",
+          "pass": 35
+        },
+        {
+          "suite": "deploy/fixture local",
+          "pass": 7
+        },
+        {
+          "suite": "posttest:images:recovery (42 new route/producer + 36 pricing + 12 error tests)",
+          "pass": 90
+        }
+      ],
+      "exitCode": 0,
+      "fail": 0,
+      "skipped": 0,
+      "cancelled": 0
+    },
+    {
+      "command": "npm run test:dispatch-safety -w @octafuse/proxy",
+      "pass": 2687,
+      "exitCode": 0,
+      "fail": 0,
+      "skipped": 0,
+      "cancelled": 0
+    },
+    {
+      "command": "npm run test:dispatch-intent -w @octafuse/core",
+      "parts": [
+        19,
+        37,
+        32
+      ],
+      "exitCode": 0,
+      "fail": 0,
+      "skipped": 0,
+      "cancelled": 0
+    },
+    {
+      "command": "npm run test:ordinary-budget -w @octafuse/core",
+      "pass": 33,
+      "exitCode": 0,
+      "fail": 0,
+      "skipped": 0,
+      "cancelled": 0
+    },
+    {
+      "command": "npm run test:ordinary-budget -w @octafuse/proxy",
+      "pass": 38,
+      "exitCode": 0,
+      "fail": 0,
+      "skipped": 0,
+      "cancelled": 0
+    },
+    {
+      "command": "npm run typecheck:dispatch-intent -w @octafuse/core",
+      "exitCode": 0
+    },
+    {
+      "command": "npm run typecheck:dispatch-safety -w @octafuse/proxy",
+      "exitCode": 0
+    },
+    {
+      "command": "npm run typecheck:images:staging -w @octafuse/proxy",
+      "exitCode": 0
+    }
+  ],
+  "newTests": 44,
+  "testCountsOverlap": true,
+  "typecheck": {
+    "fullCore": "FAIL",
+    "diagnosticCount": 32,
+    "exactlyMatchesV151LinkedBaseline": true,
+    "diagnosticsReference": "C02-usage-settlement-local-results.json#/fullCoreTypecheck/diagnostics",
+    "command": "node .wrangler/staging/verify-image-recovery-v152-types.mjs",
+    "initialDirectedFailure": "TS2339 nested closure lost D1 discriminant narrowing; fixed by capturing narrowed binding"
+  },
+  "failureHistory": [
+    "initial route failures exposed generic internal_error status/message canonicalization; added fixed image_settlement_unconfirmed code",
+    "corrected per-image generic token assertion to normalized raw usage and handled expected abort-body cancellation rejection",
+    "initial local baseline verifier referenced nonexistent field; corrected read-only comparison to v1.51 linked full diagnostic baseline"
+  ],
+  "acceptance": {
+    "awaitSnapshotAndExactJob": true,
+    "schemaTriggerPresencePreflight": 9,
+    "schemaAuthenticityCheck": false,
+    "legacyFallbackAfterAmbiguousPersistence": false,
+    "upstreamReplayByRecovery": false,
+    "currentPriceReadDuringReplay": false,
+    "clientRetryDeduplication": false,
+    "ambiguousPersistenceResponse": {
+      "status": 503,
+      "code": "gateway.image_settlement_unconfirmed",
+      "outcome_unknown": true,
+      "retry_safe": false
+    },
+    "errorWebhookRecovery": false,
+    "privacyProjection": "opt-in technical accounting projection, not an approved product retention policy or arbitrary-string redaction"
+  },
+  "processEvidence": {
+    "newRouteSubprocessExitTests": 0,
+    "existingCoreProcessExitTestsRerun": true,
+    "cloudIsolateTermination": false
+  },
+  "limits": {
+    "serializedSnapshotBytes": 262144,
+    "productionReservedBytes": null,
+    "testOnlyLogicalConsumerReservedBytes": 1024,
+    "hardD1Cancellation": false
+  },
+  "externalOperations": {
+    "cloudManagementCalls": 0,
+    "cloudDeployments": 0,
+    "remoteSqlCalls": 0,
+    "realModelCalls": 0,
+    "realKmsCalls": 0,
+    "historicalStagingHttpRequests": 98,
+    "firstRoundUsdCap": 2,
+    "capReset": false,
+    "finalIncrementalBillVerified": false,
+    "cloudClosure": "historical evidence only; not queried this turn"
+  },
+  "remaining": [
+    "route producer process-exit, fallback, private BYOK and nonempty Guardrail combinations",
+    "protected bounded recovery trigger and runtime ownership",
+    "SSE recovery/delivery contract and large-response worksets",
+    "Workers/D1 termination and recovery verification",
+    "client SDK retry handling/idempotency contract",
+    "production metadata retention compatibility, schema artifact checks and error alert outbox",
+    "unpersisted outcome remains unknown; no seller outbox, pre-dispatch owner/rights/quote freeze",
+    "measured capacity/SLO and other database backends"
+  ],
+  "references": [
+    "https://developers.cloudflare.com/workers/best-practices/workers-best-practices/",
+    "https://developers.cloudflare.com/d1/worker-api/d1-database/"
+  ],
+  "types": {
+    "installed": "5.20260829.1",
+    "latestReadOnlyVerified": "5.20260907.1",
+    "upgraded": false
+  },
+  "files": [
+    {
+      "path": "packages/core/migrations-proposals/d1/request-dispatch-intents.sql",
+      "sha256": "f3f9df3723fbccfd62a7f566804abcb591ee03f8d20bab47f60cb623ee082083"
+    },
+    {
+      "path": "packages/core/migrations-proposals/d1/request-usage-recovery-jobs.sql",
+      "sha256": "4b1dfa909dc6c4abc4aaec929d12ac368adb1877ae975c7a00f35a6b9f01652d"
+    },
+    {
+      "path": "packages/core/migrations-proposals/d1/request-usage-settlements.sql",
+      "sha256": "d25ffb168ec74112f602befec2057b96456e0f2291fd2179d6e131f16ffbcb04"
+    },
+    {
+      "path": "packages/core/package.json",
+      "sha256": "187bde35157ff5b0de6cd8d6761dd4e2354b21a416b01e64e5a4261137bef57e"
+    },
+    {
+      "path": "packages/core/src/db/d1/critical-writes.impl.ts",
+      "sha256": "145df8a9f579573664f0dbec08a833d5c80f0e3bb0f021cb6ce3c5dd157053bb"
+    },
+    {
+      "path": "packages/core/src/storage/recovery/dispatch-intent-d1.ts",
+      "sha256": "7c8ef20c11eaebe95c0aaa10073ab8e1c502e3143ae0b76825a71e43fd534a5a"
+    },
+    {
+      "path": "packages/core/src/storage/recovery/run-usage-recovery-d1.ts",
+      "sha256": "148ea770fb6ec08e7183d8fba6925dd991b222864071bee1169c388100a2c632"
+    },
+    {
+      "path": "packages/core/src/storage/recovery/settlement-recovery-types.ts",
+      "sha256": "585e8d21450882602889b78478769ffa193bfb10d14026e0bab9e4ab6f0fe429"
+    },
+    {
+      "path": "packages/core/src/storage/recovery/usage-recovery-jobs-d1.ts",
+      "sha256": "74fdc5c1ae90040b3c40ece3f7fc193375c0f9b12b73963dd314d84a95eb869a"
+    },
+    {
+      "path": "packages/core/src/storage/recovery/usage-recovery.d1.test.mjs",
+      "sha256": "f8fd795da4c4d853805f936ffe008d8f1ace5868b6f599c2c85f0f77bde083ac"
+    },
+    {
+      "path": "packages/core/src/storage/recovery/usage-recovery.fixture.mjs",
+      "sha256": "4444e608d1612f023ffd800293984f2cf8acf2d756d24869fd987489b30e994d"
+    },
+    {
+      "path": "packages/core/src/storage/recovery/usage-settlement-codec.ts",
+      "sha256": "7483200d4100963bb16c2ff74957d716fca09e8b20e11888ccf41b2566c4ef90"
+    },
+    {
+      "path": "packages/core/src/storage/recovery/usage-settlement-d1.ts",
+      "sha256": "3be75d8f00ec668c7e4edc372726b3abbba2079710648a55f391cf4d280e01fe"
+    },
+    {
+      "path": "packages/core/src/storage/recovery/usage-settlement-test-support.mjs",
+      "sha256": "abde9fc68c54844679da84f6a9cc48ac149e594a95b00c22732214433f30165b"
+    },
+    {
+      "path": "packages/core/src/storage/recovery/usage-settlement.d1.test.mjs",
+      "sha256": "fd18178f4af2f838b60fb4ae224d6e8703a1b2013d91f100e5d9f626065a86c2"
+    },
+    {
+      "path": "packages/core/src/storage/recovery/usage-settlement.fixture.mjs",
+      "sha256": "efa865ed3b55d9e9b3e590966c8b39be65c9d3320e6b4a727a0d229b59f66f07"
+    },
+    {
+      "path": "packages/core/tsconfig.dispatch-intent.json",
+      "sha256": "0f69e38e22681b5a05e67424e34153357c019c1b30d335d09d34f440dad3b9e3"
+    },
+    {
+      "path": "packages/proxy/package.json",
+      "sha256": "683720e83169c48c2282fec09a83165c75417f4c0d3fe6743dcaf48072a8dca8"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/images-recovery-chain.test.mjs",
+      "sha256": "046270f1b642ca00dd0a984a253db2b2504db8b635d9496a19ef49e1e3926eaf"
+    },
+    {
+      "path": "packages/proxy/src/app.ts",
+      "sha256": "ccead19795044c654062e02410fbfbaa4ce49cc5b1de8109773b6e6c24aab2d7"
+    },
+    {
+      "path": "packages/proxy/src/routes/v1/images.ts",
+      "sha256": "5b7b351a071e6aa5860bd61c0586653f12424aa8ed389fb4992d5c30c9b900d4"
+    },
+    {
+      "path": "packages/proxy/src/runtime/node.ts",
+      "sha256": "ac3e0f5bd8ab01daec890382354982afee65c3ecb70faeca4e12dc8a42185d14"
+    },
+    {
+      "path": "packages/proxy/src/runtime/workers.ts",
+      "sha256": "8d3430ad8248daf970f177091030287ff95ecefd4e2a91b0510a45226bb842dc"
+    },
+    {
+      "path": "packages/proxy/src/services/gateway-error-codes.ts",
+      "sha256": "f8e4be5e446ed55982c176fa09bbd090350ff3c361965ef67c9247034e865d10"
+    },
+    {
+      "path": "packages/proxy/src/services/gateway-error-response.test.ts",
+      "sha256": "0437688397e27743b1b8743c5fd7d2b4103e37e31d4c588bf7ea1b9fc501a0a4"
+    },
+    {
+      "path": "packages/proxy/src/services/image-usage-charge.test.ts",
+      "sha256": "c300aafef7666fdf15935ab1f44e1431f3820973fea85ec081c8c2cad533abb1"
+    },
+    {
+      "path": "packages/proxy/src/services/image-usage-charge.ts",
+      "sha256": "39d773d01483e1d393abfd329f54b088f61ac97d79a279665a1ccb8e039b4525"
+    },
+    {
+      "path": "packages/proxy/src/services/image-usage-recovery.ts",
+      "sha256": "e19c18b17d2fcdf20c22a138c1e560e210087cc922d8a34dd5a0b83cc288554f"
+    },
+    {
+      "path": "packages/proxy/src/services/openrouter-error-protocol.ts",
+      "sha256": "ca1a363256a1ef7d4839c8eec017189726dc1904a0c60229e91c98c6338877d4"
+    },
+    {
+      "path": "packages/proxy/src/services/request-capacity.ts",
+      "sha256": "871875b50ea4730a3d7ad415a8de983a0044850ffa3139e57ec436facce1c10f"
+    },
+    {
+      "path": "packages/proxy/src/test-support/sqlite-d1.ts",
+      "sha256": "e28c1f8efe6dc96301307c8997dd02d402eac9431cfa8ece9f6b5aa572b2214b"
+    }
+  ]
+}

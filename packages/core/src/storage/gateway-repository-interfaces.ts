@@ -1,3 +1,4 @@
+import type { PreparationControl } from '../preparation-control';
 import type {
 	GlobalUserAuditLogRow,
 	ModelRow,
@@ -269,7 +270,7 @@ export interface ByokKeysRepository {
 	reorderForManagement(params: ByokKeyReorderParams): Promise<ByokKeyReorderResult>;
 	deleteForManagement(params: ByokManagementMutation): Promise<boolean>;
 	/** Bounded, deterministic runtime candidates: primary first, fallback last. */
-	listActiveForRequest(params: ByokRuntimeLookup): Promise<ByokRuntimeKeyRow[]>;
+	listActiveForRequest(params: ByokRuntimeLookup, control?: PreparationControl): Promise<ByokRuntimeKeyRow[]>;
 	/**
 	 * Whether an eligible prioritized credential forbids shared/platform
 	 * capacity for this provider and model. The matching-model policy applies
@@ -725,6 +726,11 @@ export interface UsersRepository {
 		externalUserId: string | null
 	): Promise<boolean>;
 	deleteUserHard(id: string): Promise<boolean>;
+	/** PostgreSQL admin deletion: write the success audit and delete atomically. */
+	deleteUserHardWithAudit?(
+		id: string,
+		audit: InsertUserAuditLogParams
+	): Promise<'deleted' | 'not_deleted' | 'dispatch_history'>;
 	getUsersCount(): Promise<EntityCountSnapshot>;
 }
 
@@ -898,7 +904,7 @@ export interface RoutePoolStickyBindingsRepository {
 export interface ProvidersRepository {
 	listProviders(): Promise<ProviderAdminRow[]>;
 	/** Bounded provider read; callers must pass no more than 100 raw ids. */
-	getProvidersByIds(ids: string[]): Promise<ProviderRow[]>;
+	getProvidersByIds(ids: string[], control?: PreparationControl): Promise<ProviderRow[]>;
 	providerIdExists(id: string): Promise<boolean>;
 	insertProvider(params: {
 		id: string;
@@ -1089,7 +1095,7 @@ export interface SharedKeysRepository {
 		channelType?: string;
 	}): Promise<SharedKeyRow[]>;
 	/** 调度候选：指定渠道全部 active key，已按固定顺序排好（seller_priority DESC → weight DESC → id ASC）。 */
-	listActiveSharedKeysByChannel(channelType: string): Promise<SharedKeyRow[]>;
+	listActiveSharedKeysByChannel(channelType: string, control?: PreparationControl): Promise<SharedKeyRow[]>;
 	updateSharedKey(id: string, patch: UpdateSharedKeyPatch): Promise<boolean>;
 	/** Internal encryption migration/write path; never exposed to an HTTP route. */
 	replaceSharedKeySecret?(
@@ -1103,19 +1109,22 @@ export interface SharedKeysRepository {
 		nowIso: string
 	): Promise<void>;
 	deleteSharedKey(id: string): Promise<boolean>;
-	/** 收益入账后累计使用统计（与收益事务同批执行）。 */
+	/** Fast post-credit projection; false if the key row changed or disappeared. */
 	addSharedKeyUsage(
 		id: string,
 		inputTokens: number,
 		outputTokens: number,
 		netAmount: number,
-		nowIso: string
-	): Promise<void>;
+		nowIso: string,
+		expected: Pick<SharedKeyRow, 'servedInputTokens' | 'servedOutputTokens'> & { earnedTotalExact: string },
+	): Promise<boolean>;
 }
 
 /** 门户账本：卖家收益、余额、提现、NFT 铸造。 */
 export interface PortalLedgerRepository {
 	getUserEarnings(userId: string): Promise<UserEarningsRow | null>;
+	/** Read the committed earning identity before any historical repair/retry. */
+	getEarningByRequestLogId(requestLogId: string): Promise<SharedKeyEarningRow | null>;
 	/** 幂等建立 1:1 账本行（首次登录/首次上架时调用）。 */
 	ensureUserEarnings(userId: string): Promise<void>;
 	updateWallet(
@@ -1132,6 +1141,17 @@ export interface PortalLedgerRepository {
 	recordEarningAndCredit(
 		params: InsertSharedKeyEarningParams
 	): Promise<boolean>;
+	/**
+	 * Rebuild a shared key's usage projection from committed earning detail.
+	 * The request-log earning must exist and name the expected key. Repeating this
+	 * operation must not add to either the earning detail or seller balance.
+	 * Missing/mismatched detail or a deleted key fails closed.
+	 */
+	rebuildSharedKeyUsageFromEarnings(
+		requestLogId: string,
+		expectedSharedKeyId: string,
+		nowIso: string,
+	): Promise<void>;
 	/** 收益入账：balance/contribution_value/lifetime_earned 增加 net（与请求计费同批/独立事务均可）。 */
 	creditEarningBalance(
 		sellerUserId: string,

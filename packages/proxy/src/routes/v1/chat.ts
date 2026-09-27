@@ -2,6 +2,7 @@
  * 用户路由：`POST /v1/chat/completions`（OpenAI 协议）。
  * 流程：鉴权 → 解析 model 与 route_group → 预算校验 → 按协议筛选路由并 proxy 故障转移 → 异步记账。
  */
+import { scheduleResourceCompletion } from '../../runtime/schedule-resource-completion';
 import { Hono, type Context } from 'hono';
 import type { Env } from '../../app';
 import { requireApiKey } from '../../middleware/auth';
@@ -16,7 +17,17 @@ import { finalizeRequestLogJson } from '../../services/request-log-shared';
 import { generationRequestLogContext } from '../../services/generation-request-context';
 import { summarizeOpenAiToolsForLog } from '../../services/request-log-tools-summary';
 import { buildRouteRequestBody } from '../../services/route-default-params';
-import { recordUsage } from '../../services/usage-tracker';
+import {
+  hasPotentiallyBillableUnknownSharedKeyAttempt,
+  recordUsage,
+} from '../../services/usage-tracker';
+import { parseSharedKeyId } from '../../services/shared-key-pool';
+import {
+  createConfiguredSharedKeyQuoteAttemptCapture,
+  type SharedKeyQuoteAttemptCapture,
+  type SharedKeyQuoteAttemptHandoff,
+  type SharedKeyQuoteAttemptReference,
+} from '../../services/shared-key-quote-attempt';
 import { scheduleBackgroundWork } from '../../runtime/schedule-background-work';
 import {
   computeRequestLogStatus,
@@ -52,7 +63,17 @@ import {
 	estimateGatewayKeyByokBudgetMicros,
   estimateOrdinaryBudgetChargedCost,
 } from '../../services/guardrail-budget-estimate';
-import { createRouteAwareBudgetAdmission } from '../../services/request-budget-admission';
+import {
+  createRouteAwareBudgetAdmission,
+  RequestBudgetAdmissionError,
+  type RouteAwareBudgetAdmission,
+} from '../../services/request-budget-admission';
+import {
+	AuthenticatedChatBudgetProofError,
+	createAuthenticatedChatBudgetProof,
+} from '../../services/authenticated-chat-budget-proof';
+import { createRequestDispatchBudget } from '../../services/request-dispatch-budget';
+import { assertTextRequestActive, textRequestFailureResponse, waitForTextRequestRead } from '../../middleware/text-request-lifecycle';
 import {
   textUsageCostIsUnknown,
   textUsageWithSafetyTimeout,
@@ -78,6 +99,18 @@ import {
   resolveOpenRouterStickyRouting,
 } from '../../services/openrouter-session-routing';
 import { privateByokContextForApiKey } from '../../services/byok-key-pool';
+import {
+  openPostgresChatBudgetRequestOwner,
+  type PostgresChatBudgetRequestOwner,
+} from '../../services/postgres-chat-budget-request-owner';
+import { chatBudgetOwnerResourceCompletion } from '../../services/chat-budget-owner-lifecycle';
+import {
+  createFinalChatQuoteInput,
+  FinalChatQuoteInputError,
+  originalChatBodySha256,
+  type FinalChatQuoteInput,
+} from '../../services/chat-final-quote-input';
+import { preparedTextAttemptMatchesRoute } from '../../services/egress/prepared-text-attempt';
 
 /** 流若长期不结束（上游挂死），超过此时长仍无 usage 则按 incomplete 记账；正常/取消场景通常很快结束。 */
 const USAGE_SAFETY_TIMEOUT_MS = 5 * 60 * 1000; // 5 min
@@ -131,16 +164,86 @@ export async function handleChatCompletion(
   const apiKey = c.get('apiKey');
   const start = Date.now();
   const requestCorrelationId = c.get('generationId')!;
+  let quoteAttemptCapture: SharedKeyQuoteAttemptCapture | null;
+  try {
+    quoteAttemptCapture = createConfiguredSharedKeyQuoteAttemptCapture({
+      activation: c.env.SHARED_KEY_QUOTE_ATTEMPTS_ENABLED,
+      connectionString: c.env.QUOTE_ATTEMPT_HYPERDRIVE?.connectionString,
+      databaseDriver: repos.client.driver,
+      requestLogId: requestCorrelationId,
+    });
+  } catch {
+    return gatewayErrorJson(c, {
+      status: 503,
+      code: GatewayErrorCode.capacityUnavailable,
+      message: 'Shared-key quote attempt producer is not ready',
+    });
+  }
+  const economicProducer = c.get('sharedKeyEconomicProducer');
+  // A quote reference alone cannot replace the current mutable-price seller
+  // settlement. No opt-in route may send until a typed economic writer owns it.
+  if (quoteAttemptCapture && !economicProducer) {
+    return gatewayErrorJson(c, {
+      status: 503,
+      code: GatewayErrorCode.capacityUnavailable,
+      message: 'Shared-key economic producer is not ready',
+    });
+  }
+  if (economicProducer && !quoteAttemptCapture) {
+    return gatewayErrorJson(c, {
+      status: 503,
+      code: GatewayErrorCode.capacityUnavailable,
+      message: 'Shared-key quote attempt producer is not ready',
+    });
+  }
+  if (quoteAttemptCapture && c.env.AUTHENTICATED_CHAT_BUDGET_PROOF_ENABLED !== 'reviewed-v1') {
+    return gatewayErrorJson(c, {
+      status: 503,
+      code: GatewayErrorCode.capacityUnavailable,
+      message: 'Aggregate Chat budget proof is not ready',
+    });
+  }
+  const recordQuotedUsage = (
+    usage: Parameters<typeof recordUsage>[1],
+    selectedReference: SharedKeyQuoteAttemptReference | null,
+    handoff: SharedKeyQuoteAttemptHandoff | null,
+  ): Promise<void> => {
+    if (quoteAttemptCapture && handoff?.quoteAttempts.length === 0
+      && parseSharedKeyId(usage.provider_key_id) !== null) {
+      throw new Error('Selected shared key has no quote attempt');
+    }
+    return handoff && handoff.quoteAttempts.length > 0
+      ? economicProducer!.recordUsageAndOutbox(repos, usage, handoff, selectedReference)
+      : recordUsage(repos, usage);
+  };
   const timing = new RequestTimingCollector();
+  const dispatchBudget = c.get('textRequestLifecycle')?.dispatchBudget ?? createRequestDispatchBudget();
   const routerMetadataEnabled = openRouterMetadataRequested(c.req.raw.headers);
   const routerMetadataProtocol = mode === 'legacy-completions' ? 'completions' : 'chat';
   let legacyResponseOptions: LegacyCompletionResponseOptions | null = null;
   let legacyAdaptationFailure = Promise.resolve<string | null>(null);
 
   let body: { model?: string; [k: string]: unknown };
+  let originalBodySha256: string | null = null;
   try {
+    if (c.env.POSTGRES_CHAT_BUDGET_OWNER_ENABLED === 'reviewed-v1') {
+      // Clone only in the explicit review path. The ingress middleware already
+      // bounds the source stream; this hashes its original bytes before any
+      // preset, Guardrail or model-list transformation can change the body.
+      originalBodySha256 = await originalChatBodySha256(await c.req.raw.clone().arrayBuffer());
+      assertTextRequestActive(c);
+    }
     body = await c.req.json();
-  } catch {
+  } catch (error) {
+    const failure = textRequestFailureResponse(error, c);
+    if (failure) return failure;
+    if (error instanceof FinalChatQuoteInputError) {
+      return gatewayErrorJson(c, {
+        status: 413,
+        code: GatewayErrorCode.payloadTooLarge,
+        message: error.message,
+      });
+    }
     return gatewayErrorJson(c, {
       status: 400,
       code: GatewayErrorCode.invalidJson,
@@ -175,7 +278,8 @@ export async function handleChatCompletion(
     };
   }
 
-  const presetResolution = await resolveRequestPreset(repos, apiKey.workspaceId, apiKey.userId, body, 'chat');
+  assertTextRequestActive(c);
+  const presetResolution = await waitForTextRequestRead(c, resolveRequestPreset, repos, apiKey.workspaceId, apiKey.userId, body, 'chat');
   if (!presetResolution.ok) {
     return gatewayErrorJson(c, {
       status: presetResolution.status,
@@ -199,6 +303,7 @@ export async function handleChatCompletion(
   }
   const preGuardrailModelIds = [...parsedModels.value.modelIds];
 
+  assertTextRequestActive(c);
   const guardrail = await runRequestGuardrails(repos, {
     workspaceId: apiKey.workspaceId,
     userId: apiKey.userId,
@@ -208,6 +313,7 @@ export async function handleChatCompletion(
     correlationId: requestCorrelationId,
 	now: new Date(start),
   });
+  assertTextRequestActive(c);
   if (!guardrail.ok) {
     const guardrailResponse = gatewayErrorJson(c, {
       status: guardrail.status,
@@ -215,7 +321,8 @@ export async function handleChatCompletion(
       message: guardrail.message,
     });
     const diagnosticPlan = routerMetadataEnabled
-      ? await buildModelFallbackPlan(repos, {
+      ? await waitForTextRequestRead(c, buildModelFallbackPlan, repos, {
+          control: c.get('textRequestLifecycle')?.deadline,
           modelIds: preGuardrailModelIds,
           body: parsedModels.value.upstreamBody,
           requestProtocol: 'openai',
@@ -261,13 +368,15 @@ export async function handleChatCompletion(
       },
     );
   }
+  const finalParsedModels = parsedModels.value;
   sessionRouting = resolveOpenRouterStickyRouting(sessionRouting, body, 'chat');
   const requestedModelIds = [...parsedModels.value.modelIds];
   const routerMetadataPipeline: RouterMetadataPipelineStage[] = [];
   if (guardrail.flagCount > 0) routerMetadataPipeline.push(routerMetadataGuardrailStage('request', 'flagged', guardrail.flagCount));
   if (guardrail.redactionCount > 0) routerMetadataPipeline.push(routerMetadataGuardrailStage('request', 'redacted', guardrail.redactionCount));
 
-  const fallbackPlan = await buildModelFallbackPlan(repos, {
+  const fallbackPlan = await waitForTextRequestRead(c, buildModelFallbackPlan, repos, {
+    control: c.get('textRequestLifecycle')?.deadline,
     modelIds: parsedModels.value.modelIds,
     body: parsedModels.value.upstreamBody,
     requestProtocol: 'openai',
@@ -306,6 +415,32 @@ export async function handleChatCompletion(
     pipeline: routerMetadataPipeline,
   });
 
+  let finalQuoteInput: FinalChatQuoteInput | null = null;
+  if (c.env.POSTGRES_CHAT_BUDGET_OWNER_ENABLED === 'reviewed-v1') {
+    if (mode !== 'chat' || originalBodySha256 === null) {
+      return attachRoutedMetadata(gatewayErrorJson(c, {
+        status: 503,
+        code: GatewayErrorCode.capacityUnavailable,
+        message: 'Final Chat quote input is not available for this operation',
+      }));
+    }
+    try {
+      finalQuoteInput = await createFinalChatQuoteInput({
+        requestId: requestCorrelationId,
+        originalBodySha256,
+        finalBody: body,
+        parsed: finalParsedModels,
+        plan: fallbackPlan,
+      });
+    } catch (error) {
+      return attachRoutedMetadata(gatewayErrorJson(c, {
+        status: 503,
+        code: GatewayErrorCode.capacityUnavailable,
+        message: error instanceof Error ? error.message : 'Final Chat quote input is invalid',
+      }));
+    }
+  }
+
   const requestBodyForLog = openAiRequestBodyForLog(body as Record<string, unknown>);
   const requestSignal = c.req.raw.signal;
   const ordinaryEstimate = estimateOrdinaryBudgetChargedCost(
@@ -327,7 +462,95 @@ export async function handleChatCompletion(
 		guardrailBudgetMicros,
 		estimateGatewayKeyByokBudgetMicros(fallbackPlan.candidates),
 	);
-  const budgetAdmission = await createRouteAwareBudgetAdmission(repos, {
+  assertTextRequestActive(c);
+  let budgetAdmission!: RouteAwareBudgetAdmission;
+  let budgetAdmissionOpened = false;
+  let postgresBudgetOwner: PostgresChatBudgetRequestOwner | null = null;
+  let usageSettlementTask: Promise<void> | null = null;
+  try {
+  if (c.env.POSTGRES_CHAT_BUDGET_OWNER_ENABLED !== undefined
+    && c.env.POSTGRES_CHAT_BUDGET_OWNER_ENABLED !== 'reviewed-v1') {
+    return attachRoutedMetadata(gatewayErrorJson(c, {
+      status: 503,
+      code: GatewayErrorCode.capacityUnavailable,
+      message: 'PostgreSQL Chat budget owner activation invalid',
+    }));
+  }
+  if (c.env.POSTGRES_CHAT_BUDGET_OWNER_ENABLED === 'reviewed-v1') {
+    const runtimeConnectionString = c.env.HYPERDRIVE?.connectionString;
+    const admissionConnectionString = c.env.BUDGET_ADMISSION_HYPERDRIVE?.connectionString;
+    const recoveryConnectionString = c.env.BUDGET_RECOVERY_HYPERDRIVE?.connectionString;
+    if (c.env.AUTHENTICATED_CHAT_BUDGET_PROOF_ENABLED !== 'reviewed-v1'
+      || repos.client.driver !== 'postgres'
+      || !runtimeConnectionString || !admissionConnectionString || !recoveryConnectionString) {
+      return attachRoutedMetadata(gatewayErrorJson(c, {
+        status: 503,
+        code: GatewayErrorCode.capacityUnavailable,
+        message: 'PostgreSQL Chat budget owner is not configured',
+      }));
+    }
+    try {
+      postgresBudgetOwner = await (c.get('chatBudgetRequestOwnerFactory')
+        ?? openPostgresChatBudgetRequestOwner)({
+          runtimeClient: repos.client,
+          runtimeConnectionString,
+          admissionConnectionString,
+          recoveryConnectionString,
+          finalQuoteInput: finalQuoteInput!,
+          identity: {
+            requestId: requestCorrelationId,
+            userId: apiKey.userId,
+            apiKeyId: apiKey.keyId,
+            expectedBudgetEpoch: apiKey.budgetEpoch,
+          },
+        });
+    } catch (error) {
+      // An opener can fail after one direct LOGIN was created. Its cleanup
+      // receipt is not available to this route, so hold numeric capacity.
+      scheduleResourceCompletion(c, Promise.resolve('unconfirmed'));
+      throw error;
+    }
+    if (!postgresBudgetOwner || typeof postgresBudgetOwner.close !== 'function'
+      || !postgresBudgetOwner.ordinaryBudgetRepositories
+      || !postgresBudgetOwner.guardrailBudgetRequestPort) {
+      scheduleResourceCompletion(c, Promise.resolve('unconfirmed'));
+      throw new TypeError('PostgreSQL Chat budget owner did not provide both request ports and close receipt');
+    }
+    assertTextRequestActive(c);
+  }
+  let authenticatedBudgetProof: ReturnType<typeof createAuthenticatedChatBudgetProof> | null = null;
+  if (c.env.AUTHENTICATED_CHAT_BUDGET_PROOF_ENABLED === 'reviewed-v1') {
+    try {
+      authenticatedBudgetProof = createAuthenticatedChatBudgetProof({
+        requestId: requestCorrelationId,
+        authenticatedKey: apiKey,
+        plan: fallbackPlan,
+        budgetIntents: guardrail.budgetIntents,
+        now: postgresBudgetOwner ? new Date() : new Date(start),
+      });
+      budgetAdmission = await authenticatedBudgetProof.open(repos, postgresBudgetOwner
+        ? {
+            ordinaryBudgetRepositories: postgresBudgetOwner.ordinaryBudgetRepositories,
+            ordinaryRecoveryFailureMode: 'fail_closed',
+            guardrailBudgetRequestPort: postgresBudgetOwner.guardrailBudgetRequestPort,
+          }
+        : undefined);
+      budgetAdmissionOpened = true;
+    } catch (error) {
+      if (!(error instanceof AuthenticatedChatBudgetProofError)) throw error;
+      return attachRoutedMetadata(gatewayErrorJson(c, {
+        status: 502,
+        code: GatewayErrorCode.routeResolutionFailed,
+        message: error.message,
+      }));
+    }
+  } else if (c.env.AUTHENTICATED_CHAT_BUDGET_PROOF_ENABLED !== undefined) {
+    return attachRoutedMetadata(gatewayErrorJson(c, {
+      status: 503,
+      code: GatewayErrorCode.routeResolutionFailed,
+      message: 'Authenticated Chat budget proof activation invalid',
+    }));
+  } else budgetAdmission = await createRouteAwareBudgetAdmission(repos, {
     ordinary: {
       requestId: requestCorrelationId,
       userId: apiKey.userId,
@@ -347,6 +570,8 @@ export async function handleChatCompletion(
 			reservedMicros: byokGatewayKeyBudgetMicros,
 		},
   });
+  budgetAdmissionOpened = true;
+  assertTextRequestActive(c);
   const ordinaryBudgetLease = budgetAdmission.ordinaryLease;
   const terminateOrdinaryBudget = async (reason: string): Promise<void> => {
     try {
@@ -367,8 +592,43 @@ export async function handleChatCompletion(
       );
     }
   };
-  const beforeUpstreamDispatch = (route: RouteResult): Promise<void> =>
-    budgetAdmission.beforeUpstreamDispatch(route);
+  let optInDispatchGrantUsed = false;
+  const beforeUpstreamDispatch = async (route: RouteResult, preparedAttempt?: unknown): Promise<void> => {
+    finalQuoteInput?.assertCurrent(body, finalParsedModels, fallbackPlan);
+    assertTextRequestActive(c);
+    if (postgresBudgetOwner && !preparedTextAttemptMatchesRoute(preparedAttempt, route)) {
+      throw new RequestBudgetAdmissionError({
+        code: GatewayErrorCode.permissionDenied,
+        message: 'Text dispatch identity could not be verified',
+      });
+    }
+    if (postgresBudgetOwner && optInDispatchGrantUsed) {
+      throw new RequestBudgetAdmissionError({
+        code: GatewayErrorCode.budgetExceeded,
+        message: 'Chat request dispatch grant has already been consumed',
+      });
+    }
+    // A failed DB acknowledgement may still have committed. Never enter the
+    // privileged dispatch boundary twice in this review-only mode.
+    if (postgresBudgetOwner) optInDispatchGrantUsed = true;
+    const quotedSharedKey = quoteAttemptCapture && parseSharedKeyId(route.providerKeyId) !== null;
+    if (quotedSharedKey && (apiKey.budgetMax === null
+      || ordinaryEstimate.estimatedChargedCost <= 0)) {
+      throw new RequestBudgetAdmissionError({
+        code: GatewayErrorCode.budgetExceeded,
+        message: 'Quoted shared-key dispatch requires a finite ordinary budget hold',
+      });
+    }
+    await budgetAdmission.beforeUpstreamDispatch(route);
+    assertTextRequestActive(c);
+    if (quotedSharedKey
+      && (!ordinaryBudgetLease.reserved || ordinaryBudgetLease.state !== 'dispatched')) {
+      throw new RequestBudgetAdmissionError({
+        code: GatewayErrorCode.budgetExceeded,
+        message: 'Quoted shared-key dispatch requires a finite ordinary budget hold',
+      });
+    }
+  };
   timing.markGatewayComplete();
   const fallbackAttempts: ModelFallbackTraceAttempt[] = [];
   const accumulatedCircuitEvents: NonNullable<ProxyResult['circuitEvents']> = [];
@@ -391,6 +651,11 @@ export async function handleChatCompletion(
         publicCorrelationId: requestCorrelationId,
         timing,
         beforeUpstreamDispatch,
+        quoteAttemptCapture: quoteAttemptCapture ?? undefined,
+        requirePreparedTextAttemptIdentity: postgresBudgetOwner !== null,
+        stopAfterFirstGrantedDispatch: postgresBudgetOwner !== null,
+        dispatchBudget,
+        registerResourceCompletion: task => scheduleResourceCompletion(c, task),
         proxy: proxyChatCompletions,
         affinityKey: sessionRouting.stickyKeyDigest != null && sessionRouting.stickySource != null
           ? buildOpenRouterSessionAffinityKey({
@@ -529,6 +794,11 @@ export async function handleChatCompletion(
           stickyRouteEligible: sessionDispatch.stickyRouteEligible,
           deferFinalAttempt: !isLastCandidate,
           beforeUpstreamDispatch,
+          quoteAttemptCapture: quoteAttemptCapture ?? undefined,
+          requirePreparedTextAttemptIdentity: postgresBudgetOwner !== null,
+          stopAfterFirstGrantedDispatch: postgresBudgetOwner !== null,
+          dispatchBudget,
+          registerResourceCompletion: task => scheduleResourceCompletion(c, task),
           byok: privateByokContextForApiKey(apiKey),
         },
         requestCorrelationId,
@@ -607,6 +877,8 @@ export async function handleChatCompletion(
     proxyResult = result;
     response = materialized.response;
     errorBodyText = materialized.errorBodyText;
+    // A terminal denial/unknown outcome must also stop the outer model loop.
+    break;
   }
   }
 
@@ -694,9 +966,7 @@ export async function handleChatCompletion(
     EMPTY_USAGE,
   );
 
-  scheduleBackgroundWork(
-    c,
-    usageOrSafety
+  usageSettlementTask = usageOrSafety
       .then(async ({ usage: usageCollected, incomplete, timedOut }) => {
         // A hung upstream is already bounded by the existing usage safety timer;
         // do not let the compatibility observer extend that background lifetime.
@@ -750,11 +1020,25 @@ export async function handleChatCompletion(
           errorMessage = usageCollected.stream_error || `HTTP ${response.status}`;
         }
         const upstreamRequestBodyForLog = openAiUpstreamWireBodyForLog(chosenRoute, upstreamBody);
-        return recordUsage(repos, {
-          api_key_id: apiKey.keyId,
-		  workspace_id: apiKey.workspaceId,
+		// The selected result carries its own quote reference. Earlier attempts
+		// retain unknown facts, and a timed-out usage placeholder is never evidence.
+		if (quoteAttemptCapture && proxyResult.quoteAttemptReference && !timedOut) {
+			await quoteAttemptCapture.observeProviderUsage(
+				proxyResult.quoteAttemptReference, usageCollected,
+			);
+		}
+		const settledStickyTrace = stickyTrace ? await stickyTrace() : null;
+		authenticatedBudgetProof?.assertSettlementSnapshot(chosenRoute, pricingRoute);
+		finalQuoteInput?.assertCurrent(body, finalParsedModels, fallbackPlan);
+		const chargedKey = authenticatedBudgetProof?.authenticatedKeySnapshot ?? apiKey;
+        const economicHandoff = quoteAttemptCapture?.handoff() ?? null;
+        const requestCostUnknown = costUnknown || (economicHandoff !== null
+          && hasPotentiallyBillableUnknownSharedKeyAttempt(economicHandoff));
+        return recordQuotedUsage({
+		  api_key_id: chargedKey.keyId,
+		  workspace_id: chargedKey.workspaceId,
           request_log_id: requestCorrelationId,
-          user_id: apiKey.userId,
+		  user_id: chargedKey.userId,
           user_email: apiKey.userEmail,
           model_id: baseModelId,
           provider_id: chosenRoute.providerId,
@@ -776,14 +1060,14 @@ export async function handleChatCompletion(
           route_pool_id: chosenRoute.routePoolId,
           route_target_id: chosenRoute.targetId,
           adapter: chosenRoute.adapter,
-          sticky_trace: stickyTrace ? await stickyTrace() : null,
+          sticky_trace: settledStickyTrace,
           model_fallback_trace: modelFallbackTrace,
           provider_routing_trace: chosenRoute.providerRoutingTrace ?? null,
           usage: usageCollected,
           endpoint_pricing_snapshot: pricingRoute.endpoint ?? null,
           model_pricing_profile: model.pricing_profile ?? null,
           route_price_override_json: pricingRoute.priceOverrideRaw,
-          user_charged_cost_factors_json: apiKey.chargedCostFactors,
+          user_charged_cost_factors_json: chargedKey.chargedCostFactors,
           route_metered_profile_json: pricingRoute.routeMeteredProfileJson,
           route_charged_profile_json: pricingRoute.routeChargedProfileJson,
           request_started_at_ms: start,
@@ -801,7 +1085,7 @@ export async function handleChatCompletion(
           suppress_error_alert: suppressErrorAlert || undefined,
           charge_on_error: outputGuardrailBlocked || adaptationFailure != null || undefined,
           guardrail_budget_settlement: budgetAdmission.guardrailReserved
-            ? { requestId: requestCorrelationId, unknownCost: costUnknown }
+            ? { requestId: requestCorrelationId, unknownCost: requestCostUnknown }
             : undefined,
           ordinary_budget_settlement:
             ordinaryBudgetLease.reserved && ordinaryBudgetLease.state === 'dispatched'
@@ -809,21 +1093,40 @@ export async function handleChatCompletion(
                   requestId: requestCorrelationId,
                   budgetEpoch: ordinaryBudgetLease.budgetEpoch!,
                   reservedMicros: ordinaryBudgetLease.reservedMicros,
-                  unknownCost: costUnknown,
+                  unknownCost: requestCostUnknown,
                 }
               : undefined,
-        });
+        }, proxyResult.quoteAttemptReference ?? null, economicHandoff);
       })
       .catch(async (err) => {
         console.error(
           `[Gateway Chat] recordUsage failed baseModelId=${baseModelId} keyId=${apiKey.keyId} error=${err instanceof Error ? err.message : String(err)}`
         );
+        if (postgresBudgetOwner) {
+          const cleanup = await Promise.allSettled([
+            budgetAdmission.terminateGuardrailUnknown('request_usage_settlement_failed'),
+            ordinaryBudgetLease.terminateUnknown('request_usage_settlement_failed'),
+          ]);
+          const failures = cleanup.flatMap(result => result.status === 'rejected' ? [result.reason] : []);
+          throw failures.length > 0
+            ? new AggregateError([err, ...failures], 'Chat usage settlement and budget cleanup failed')
+            : err;
+        }
         await forfeitGuardrailBudget('request_usage_settlement_failed');
         await terminateOrdinaryBudget('request_usage_settlement_failed');
-      })
-  );
+      });
+  scheduleBackgroundWork(c, usageSettlementTask);
 
   return response;
+  } finally {
+    if (postgresBudgetOwner) {
+      scheduleResourceCompletion(c, chatBudgetOwnerResourceCompletion(
+        postgresBudgetOwner,
+        budgetAdmissionOpened ? budgetAdmission : null,
+        usageSettlementTask,
+      ));
+    }
+  }
 }
 
 chatRoutes.post('/', (c) => handleChatCompletion(c));

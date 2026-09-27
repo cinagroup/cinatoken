@@ -1,6 +1,10 @@
 import assert from 'node:assert/strict';
+import { createServer } from 'node:http';
+import type { AddressInfo } from 'node:net';
 import { describe, it } from 'node:test';
+import type { GatewayRepositories } from '@octafuse/core';
 import type { RouteResult } from '../model-router';
+import { failoverDispatch } from '../failover-dispatch';
 import type { NormalizedAudioTranscriptionRequest } from './openai-audio-driver';
 import {
 	audioUploadToDataUrl,
@@ -56,6 +60,156 @@ function request(overrides: Partial<NormalizedAudioTranscriptionRequest> = {}): 
 		...overrides,
 	};
 }
+
+function endpoint(providerId: string): NonNullable<RouteResult['endpoint']> {
+	return {
+		id: `${providerId}-endpoint`, modelId: 'audio-model', providerId, providerSlug: providerId,
+		selectorSlug: providerId, endpointClass: null, region: null,
+		contextLength: 8_192, maxPromptTokens: null, maxCompletionTokens: null,
+		quantization: null, supportedParameters: [],
+		pricing: { currency: 'USD', prompt: '0', completion: '0', audio: '0' },
+		capabilities: {
+			implicit_caching: false, voice_cloning: false,
+			tool_choice: { auto: false, function: false, none: false, required: false },
+		},
+		imageCapabilities: null,
+		evidenceUrl: 'https://provider.test/evidence', verifiedBy: 'test',
+		verifiedAt: '2026-01-01T00:00:00.000Z', expiresAt: '2099-01-01T00:00:00.000Z',
+	};
+}
+
+for (const mode of ['sync', 'async'] as const) {
+	it(`native DashScope ${mode} 307 submit neither follows Location nor replays another model`, async () => {
+		let posts = 0, redirected = 0;
+		const server = createServer(async (incoming, outgoing) => {
+			for await (const _chunk of incoming) { /* Receive the complete upload. */ }
+			if (incoming.url === '/redirected') {
+				redirected++;
+				outgoing.writeHead(200, { 'Content-Type': 'application/json' });
+				outgoing.end(JSON.stringify({ output: { text: 'unexpected replay' } }));
+				return;
+			}
+			posts++;
+			outgoing.writeHead(307, { Location: '/redirected', 'Content-Type': 'application/json' });
+			outgoing.end(JSON.stringify({ error: { message: 'synthetic redirect' } }));
+		});
+		await new Promise<void>(resolve => server.listen(0, '127.0.0.1', resolve));
+		try {
+			const port = (server.address() as AddressInfo).port;
+			const providerEndpoints = { dashscope: { base: `http://127.0.0.1:${port}/api/v1` } };
+			const candidates = [0, 1].map(index => route({
+				targetId: `target-${index}`, providerId: `provider-${index}`,
+				gatewayCandidateIndex: index, routePriority: 2 - index,
+				endpoint: endpoint(`provider-${index}`), providerEndpoints,
+				...(mode === 'async' ? {
+					providerModelName: 'qwen3-asr-flash-filetrans',
+					upstreamOperation: 'audio.transcriptions.async',
+					adapter: 'dashscope-asr-file-async',
+				} : {}),
+			}));
+			const transcriptRequest = mode === 'sync'
+				? request()
+				: request({ file: null, fileSourceUrl: 'https://audio.example/sample.wav' });
+			const originalLog = console.log, originalError = console.error;
+			console.log = () => {};
+			console.error = () => {};
+			const result = await (async () => {
+				try {
+					return await failoverDispatch({} as GatewayRepositories, candidates, 'dashscope',
+					(candidate, signal, timing, attempt) => mode === 'sync'
+						? dispatchDashScopeSyncAsr(candidate, transcriptRequest, signal, timing, attempt)
+						: dispatchDashScopeAsyncAsr(candidate, transcriptRequest, signal, timing, attempt),
+					undefined, { affinityKey: `dashscope-${mode}-307`, tierKeyPrefix: `dashscope-${mode}-307`,
+						strategy: 'weight_priority', crossModelCandidateFailover: true });
+				} finally {
+					console.log = originalLog;
+					console.error = originalError;
+				}
+			})();
+			assert.equal(posts, 1);
+			assert.equal(redirected, 0);
+			assert.equal(result.response.status, 307);
+			assert.equal(result.meta?.upstreamOutcomeUnknown, true);
+			assert.equal(result.meta?.failoverForbidden, true);
+			assert.equal(result.dispatchBudget.permitsConsumed, 1);
+			await result.response.text();
+		} finally {
+			server.closeAllConnections();
+			await new Promise<void>((resolve, reject) => server.close(error => error ? reject(error) : resolve()));
+		}
+	});
+
+	it(`DashScope ${mode} distinguishes ambiguous submit statuses from clear rejection`, async () => {
+		const candidate = route(mode === 'async' ? {
+			providerModelName: 'qwen3-asr-flash-filetrans',
+			upstreamOperation: 'audio.transcriptions.async',
+			adapter: 'dashscope-asr-file-async',
+		} : {});
+		const transcriptRequest = mode === 'sync'
+			? request()
+			: request({ file: null, fileSourceUrl: 'https://audio.example/sample.wav' });
+		for (const status of [300, 301, 302, 303, 307, 308, 408, 499, 500, 503, 524, 400, 401, 429]) {
+			let sends = 0;
+			const fetchImpl = async (_url: string | URL | Request, init?: RequestInit) => {
+				sends++;
+				assert.equal(init?.redirect, 'manual');
+				return Response.json({ error: { message: 'synthetic rejection' } }, { status });
+			};
+			const result = mode === 'sync'
+				? await dispatchDashScopeSyncAsr(candidate, transcriptRequest, undefined, null, undefined, { fetchImpl })
+				: await dispatchDashScopeAsyncAsr(candidate, transcriptRequest, undefined, null, undefined, { fetchImpl });
+			const unknown = status >= 300 && status < 400 || status === 408 || status === 499 || status >= 500;
+			assert.equal(sends, 1);
+			assert.equal(result.response.status, status);
+			assert.equal(result.meta.upstreamOutcomeUnknown === true, unknown);
+			assert.equal(result.meta.failoverForbidden === true, unknown);
+			await result.response.text();
+		}
+	});
+
+	it(`DashScope ${mode} preserves outcome certainty when an error body exceeds its limit`, async () => {
+		const candidate = route(mode === 'async' ? {
+			providerModelName: 'qwen3-asr-flash-filetrans',
+			upstreamOperation: 'audio.transcriptions.async',
+			adapter: 'dashscope-asr-file-async',
+		} : {});
+		const transcriptRequest = mode === 'sync'
+			? request()
+			: request({ file: null, fileSourceUrl: 'https://audio.example/sample.wav' });
+		for (const status of [307, 503, 429]) {
+			const fetchImpl = async () => new Response('0123456789', {
+				status, headers: { 'content-length': '10' },
+			});
+			const result = mode === 'sync'
+				? await dispatchDashScopeSyncAsr(candidate, transcriptRequest, undefined, null, undefined,
+					{ maxResponseBytes: 8, fetchImpl })
+				: await dispatchDashScopeAsyncAsr(candidate, transcriptRequest, undefined, null, undefined,
+					{ maxResponseBytes: 8, fetchImpl });
+			assert.equal(result.response.status, status);
+			assert.equal(result.meta.upstreamOutcomeUnknown === true, status !== 429);
+			assert.equal(result.meta.failoverForbidden === true, status !== 429);
+			await result.response.text();
+		}
+	});
+}
+
+it('DashScope native multimodal passthrough keeps ambiguous failures outcome-unknown', async () => {
+	for (const status of [307, 503, 429]) {
+		const result = await dispatchDashScopeMultimodalPassthrough(
+			route({ adapter: 'passthrough' }),
+			{ model: 'public-asr', input: { messages: [] } },
+			undefined, null, undefined,
+			{ fetchImpl: async (_url, init) => {
+				assert.equal(init?.redirect, 'manual');
+				return Response.json({ error: { message: 'synthetic failure' } }, { status });
+			} },
+		);
+		assert.equal(result.response.status, status);
+		assert.equal(result.meta.upstreamOutcomeUnknown === true, status !== 429);
+		assert.equal(result.meta.failoverForbidden === true, status !== 429);
+		await result.response.text();
+	}
+});
 
 describe('DashScope ASR request mapping', () => {
 	it('encodes uploaded audio as a Data URL for synchronous Qwen-ASR', () => {
@@ -310,7 +464,7 @@ describe('DashScope ASR dispatch', () => {
 			undefined,
 			{
 				fetchImpl: async (_input, init) => {
-					requestInit = init;
+					requestInit = { ...init, body: await new Response(init?.body).text() };
 					return new Response(
 						JSON.stringify({
 							request_id: 'req-audio30',
@@ -357,7 +511,7 @@ describe('DashScope ASR dispatch', () => {
 			undefined,
 			{
 				fetchImpl: async (_input, init) => {
-					requestInit = init;
+					requestInit = { ...init, body: await new Response(init?.body).text() };
 					return new Response(
 						JSON.stringify({
 							request_id: 'req-pass',
@@ -454,24 +608,24 @@ describe('DashScope ASR dispatch', () => {
 
 	it('does not write upstream when dispatch admission fails', async () => {
 		let fetchCalled = false;
-		const result = await dispatchDashScopeMultimodalPassthrough(
+		const failure = new Error('lease rejected');
+		// The dispatcher must receive the original local persistence failure;
+		// returning an upstream 502 here would make it eligible for replay.
+		await assert.rejects(dispatchDashScopeMultimodalPassthrough(
 			route({ adapter: 'passthrough' }),
 			{ model: 'public-asr', input: { messages: [] } },
 			undefined,
 			null,
 			undefined,
 			{
-				beforeUpstreamDispatch: async () => { throw new Error('lease rejected'); },
+				beforeUpstreamDispatch: async () => { throw failure; },
 				fetchImpl: async () => {
 					fetchCalled = true;
 					return new Response('{}', { status: 200 });
 				},
 			},
-		);
-
-		assert.equal(result.response.status, 502);
+		), error => error === failure);
 		assert.equal(fetchCalled, false);
-		assert.equal(result.meta.upstreamOutcomeUnknown, undefined);
 	});
 
 	it('does not acquire a multimodal dispatch lease for an already-cancelled request', async () => {
@@ -539,7 +693,8 @@ describe('DashScope ASR dispatch', () => {
 		assert.equal(result.response.status, 499);
 		assert.equal(fetchCalls, 0);
 		assert.equal(result.meta.upstreamOutcomeUnknown, undefined);
-		assert.equal(result.meta.failoverForbidden, undefined);
+		assert.equal(result.meta.failoverForbidden, true);
+		assert.equal(result.meta.admissionDeniedPreDispatch, true);
 	});
 
 	it('bounds a 200 multimodal body as it streams and cancels it', async () => {
@@ -592,7 +747,8 @@ describe('DashScope ASR dispatch', () => {
 
 		assert.equal(result.response.status, 500);
 		assert.equal(result.meta.responseBodyTooLarge, true);
-		assert.equal(result.meta.upstreamOutcomeUnknown, undefined);
+		assert.equal(result.meta.upstreamOutcomeUnknown, true);
+		assert.equal(result.meta.failoverForbidden, true);
 		assert.equal(cancelled, true);
 		assert.match(JSON.stringify(await result.response.json()), /exceeds the configured limit/);
 	});
@@ -610,7 +766,7 @@ describe('DashScope ASR dispatch', () => {
 			undefined,
 			{
 				fetchImpl: async (_input, init) => {
-					requestInit = init;
+					requestInit = { ...init, body: await new Response(init?.body).text() };
 					return new Response(
 						JSON.stringify({
 							request_id: 'req-fun',
@@ -668,6 +824,7 @@ describe('DashScope ASR dispatch', () => {
 				}),
 				{ status: 200 },
 			),
+			new Response(null, { status: 302, headers: { Location: 'https://cdn.example/transcript.json' } }),
 			new Response(
 				JSON.stringify({
 					transcripts: [{ channel_id: 0, text: '异步结果', sentences: [] }],
@@ -675,8 +832,9 @@ describe('DashScope ASR dispatch', () => {
 				{ status: 200 },
 			),
 		];
-		const fetchImpl = async (input: string | URL | Request) => {
+		const fetchImpl = async (input: string | URL | Request, init?: RequestInit) => {
 			calls.push(String(input));
+			if (calls.length >= 3) assert.equal(init?.method ?? 'GET', 'GET');
 			return responses.shift()!;
 		};
 		const result = await dispatchDashScopeAsyncAsr(
@@ -697,6 +855,7 @@ describe('DashScope ASR dispatch', () => {
 			'https://workspace.example/api/v1/services/audio/asr/transcription',
 			'https://workspace.example/api/v1/tasks/task%2F1',
 			'https://result.example/transcript.json',
+			'https://cdn.example/transcript.json',
 		]);
 		assert.deepEqual(await result.response.json(), { text: '异步结果', usage: { seconds: 3 } });
 		assert.equal(result.meta.audioDurationSeconds, 3);

@@ -1,8 +1,11 @@
 import assert from 'node:assert/strict';
+import { createServer } from 'node:http';
+import type { AddressInfo } from 'node:net';
 import { describe, it } from 'node:test';
 import type { GatewayRepositories } from '@octafuse/core';
 import type { RouteResult } from '../model-router';
 import { failoverDispatch } from '../failover-dispatch';
+import { resetProviderCircuitStateForTests } from '../provider-circuit-breaker';
 import {
 	dispatchOpenAiAudioTranscriptions,
 	isUsableAudioTranscriptionBody,
@@ -14,6 +17,7 @@ import {
 } from './openai-audio-driver';
 
 const CANARY_SECRET = 'CANARY_SECRET';
+const nativeFetch = globalThis.fetch.bind(globalThis);
 
 function endpoint(providerId = 'openai', providerSlug = 'openai'): NonNullable<RouteResult['endpoint']> {
 	return {
@@ -52,6 +56,102 @@ function request() {
 		},
 		clientResponseFormat: 'json' as const,
 	};
+}
+
+it('native audio 307 neither follows Location nor resubmits to another model', async () => {
+	let posts = 0, redirected = 0;
+	const server = createServer(async (request, response) => {
+		for await (const _chunk of request) { /* Receive the complete upload. */ }
+		if (request.url === '/redirected') {
+			redirected++;
+			response.writeHead(200, { 'Content-Type': 'application/json' });
+			response.end(JSON.stringify({ text: 'unexpected replay' }));
+			return;
+		}
+		posts++;
+		response.writeHead(307, { Location: '/redirected', 'Content-Type': 'application/json' });
+		response.end(JSON.stringify({ error: { message: 'synthetic redirect' } }));
+	});
+	await new Promise<void>(resolve => server.listen(0, '127.0.0.1', resolve));
+	try {
+		const port = (server.address() as AddressInfo).port;
+		const providerEndpoints = { openai: { base: `http://127.0.0.1:${port}/v1` } };
+		const first = route({ targetId: 'target-0', providerId: 'provider-0', endpoint: endpoint('provider-0'),
+			gatewayCandidateIndex: 0, routePriority: 2, providerEndpoints });
+		const second = route({ targetId: 'target-1', providerId: 'provider-1', endpoint: endpoint('provider-1'),
+			gatewayCandidateIndex: 1, routePriority: 1, providerEndpoints });
+		const result = await captureConsole(() => failoverDispatch({} as GatewayRepositories,
+			[first, second], 'openai',
+			(candidate, signal, timing, attempt) => dispatchOpenAiAudioTranscriptions(
+				candidate, request(), signal, timing, attempt, { fetchImpl: nativeFetch }),
+			undefined, { affinityKey: 'asr-redirect', tierKeyPrefix: 'asr-redirect',
+				strategy: 'weight_priority', crossModelCandidateFailover: true }));
+		assert.equal(posts, 1);
+		assert.equal(redirected, 0);
+		assert.equal(result.value.response.status, 307);
+		assert.equal(result.value.meta?.upstreamOutcomeUnknown, true);
+		assert.equal(result.value.meta?.failoverForbidden, true);
+		assert.equal(result.value.dispatchBudget.permitsConsumed, 1);
+		await result.value.response.text();
+	} finally {
+		server.closeAllConnections();
+		await new Promise<void>((resolve, reject) => server.close(error => error ? reject(error) : resolve()));
+	}
+});
+
+for (const status of [300, 301, 302, 303, 307, 308, 408, 499, 500, 503, 524]) {
+	it(`audio HTTP ${status} cannot replay across model candidates`, async () => {
+		resetProviderCircuitStateForTests();
+		let sends = 0;
+		const first = route({ targetId: 'target-0', providerId: 'provider-0', endpoint: endpoint('provider-0'),
+			gatewayCandidateIndex: 0, routePriority: 2 });
+		const second = route({ targetId: 'target-1', providerId: 'provider-1', endpoint: endpoint('provider-1'),
+			gatewayCandidateIndex: 1, routePriority: 1 });
+		const result = await captureConsole(() => failoverDispatch({} as GatewayRepositories,
+			[first, second], 'openai',
+			(candidate, signal, timing, attempt) => dispatchOpenAiAudioTranscriptions(
+				candidate, request(), signal, timing, attempt, { fetchImpl: async (_url, init) => {
+					sends++;
+					assert.equal(init?.redirect, 'manual');
+					return Response.json({ error: { message: 'synthetic failure' } }, { status });
+				} }),
+			undefined, { affinityKey: `asr-${status}`, tierKeyPrefix: `asr-${status}`,
+				strategy: 'weight_priority', crossModelCandidateFailover: true }));
+		assert.equal(sends, 1);
+		assert.equal(result.value.response.status, status);
+		assert.equal(result.value.meta?.upstreamOutcomeUnknown, true);
+		assert.equal(result.value.meta?.failoverForbidden, true);
+		assert.equal(result.value.dispatchBudget.permitsConsumed, 1);
+		await result.value.response.text();
+	});
+}
+
+for (const status of [400, 401, 429]) {
+	it(`audio clear HTTP ${status} can use one bounded fallback`, async () => {
+		resetProviderCircuitStateForTests();
+		let sends = 0;
+		const first = route({ targetId: 'target-0', providerId: 'provider-0', endpoint: endpoint('provider-0'),
+			gatewayCandidateIndex: 0, routePriority: 2 });
+		const second = route({ targetId: 'target-1', providerId: 'provider-1', endpoint: endpoint('provider-1'),
+			gatewayCandidateIndex: 1, routePriority: 1 });
+		const result = await captureConsole(() => failoverDispatch({} as GatewayRepositories,
+			[first, second], 'openai',
+			(candidate, signal, timing, attempt) => dispatchOpenAiAudioTranscriptions(
+				candidate, request(), signal, timing, attempt, { fetchImpl: async (_url, init) => {
+					sends++;
+					assert.equal(init?.redirect, 'manual');
+					return sends === 1
+						? Response.json({ error: { message: 'clear rejection' } }, { status })
+						: Response.json({ text: 'transcribed', duration: 1 });
+				} }),
+			undefined, { affinityKey: `asr-clear-${status}`, tierKeyPrefix: `asr-clear-${status}`,
+				strategy: 'weight_priority', crossModelCandidateFailover: true }));
+		assert.equal(sends, 2);
+		assert.equal(result.value.response.status, 200);
+		assert.notEqual(result.value.meta?.upstreamOutcomeUnknown, true);
+		assert.equal(result.value.dispatchBudget.permitsConsumed, 2);
+		await result.value.response.text();
+	});
 }
 
 async function captureConsole<T>(run: () => Promise<T>): Promise<{ value: T; output: string }> {
@@ -239,7 +339,7 @@ describe('OpenRouter transcription success usage', () => {
 			undefined,
 			{
 				fetchImpl: async (_input, init) => {
-					const form = init?.body as FormData;
+					const form = await new Response(init?.body, { headers: init?.headers }).formData();
 					observedPrompt = form.get('prompt');
 					observedFlag = form.get('custom_flag');
 					return Response.json({ text: 'hello', duration: 1 });
@@ -318,7 +418,7 @@ describe('OpenAI transcription outcome certainty', () => {
 		}
 	});
 
-	it('bounds 2xx response buffering while preserving explicit non-2xx known-zero', async () => {
+	it('bounds accepted response bodies and preserves clear 400 rejection', async () => {
 		const tooLarge2xx = await dispatchOpenAiAudioTranscriptions(
 			route(), request(), undefined, null, undefined,
 			{
@@ -346,6 +446,22 @@ describe('OpenAI transcription outcome certainty', () => {
 		assert.equal(explicit4xx.meta.upstreamOutcomeUnknown, undefined);
 		assert.equal(explicit4xx.meta.responseBodyTooLarge, undefined);
 		assert.equal(explicit4xx.meta.failoverForbidden, undefined);
+
+		for (const status of [307, 503]) {
+			const ambiguous = await dispatchOpenAiAudioTranscriptions(
+				route(), request(), undefined, null, undefined,
+				{
+					maxResponseBytes: 8,
+					fetchImpl: async () => new Response('0123456789', {
+						status, headers: { 'content-length': '10' },
+					}),
+				},
+			);
+			assert.equal(ambiguous.response.status, status);
+			assert.equal(ambiguous.meta.upstreamOutcomeUnknown, true);
+			assert.equal(ambiguous.meta.responseBodyTooLarge, true);
+			assert.equal(ambiguous.meta.failoverForbidden, true);
+		}
 	});
 
 	it('keeps a usable 2xx transcript certain', async () => {

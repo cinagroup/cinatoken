@@ -1,6 +1,12 @@
+import type { ResourceCompletion, ResourceCompletionOutcome } from '../resource-completion';
+import { ownUpstreamResponse } from './owned-upstream-response';
+import { withOwnedJsonUpload } from './with-owned-json-upload';
+import { captureTextRouteIdentity, createPreparedTextAttempt, type PreparedTextAttempt } from './prepared-text-attempt';
 import { applyVertexOpenAiModelPrefix, resolveProviderUpstreamSecret, resolveUpstreamEndpoint } from '@octafuse/core';
 import type { RouteResult } from '../model-router';
+import type { RequestAuxiliaryAuthBudget } from '@octafuse/core';
 import type { UsageFromStream } from '../proxy';
+import { markTextStreamCancellation } from '../request-deadline';
 import { buildRouteRequestBody } from '../route-default-params';
 import { extractUpstreamRequestId, normalizeUpstreamId } from './upstream-request-id';
 import type { RequestTimingAttempt, RequestTimingCollector } from '../request-timing';
@@ -16,6 +22,7 @@ import {
 	type ProxyDispatchMeta,
 } from '../failover-dispatch';
 import { assertTextUpstreamHttpUrl } from './text-upstream-url';
+import { ambiguousDispatchedStatusMeta } from './ambiguous-upstream-status';
 import {
 	buildResponsesFailedEvent,
 	sanitizePublicErrorMessage,
@@ -490,11 +497,12 @@ async function pumpResponsesWithUsageTracking(
 	downstream: WritableStream<Uint8Array>,
 	usage: UsageFromStream,
 	resolveUsage: (u: UsageFromStream) => void,
+	stopDownstream: (reason: unknown) => void,
 	requestSignal?: AbortSignal,
 	timing?: RequestTimingCollector | null,
 	publicModelId?: string,
 	publicCorrelationId?: string,
-): Promise<void> {
+): Promise<ResourceCompletionOutcome> {
 	const decoder = new TextDecoder();
 	const reader = upstream.getReader();
 	const writer = downstream.getWriter();
@@ -508,21 +516,32 @@ async function pumpResponsesWithUsageTracking(
 		MAX_RESPONSES_SSE_EVENT_CHARS,
 		'Responses SSE event exceeded the gateway framing limit',
 	);
-	let clientDisconnected = requestSignal?.aborted === true;
+	let clientDisconnected = false;
+	let finished = false;
+	let cleanupConfirmed = true;
+	let cancellation: Promise<void> | undefined;
+	const cancelUpstream = (reason?: unknown): void => {
+cancellation ??= reader.cancel(reason).catch(() => { cleanupConfirmed = false; });
+	};
 
 	const markClientDisconnected = (): void => {
-		usage.cancelled = true;
+		if (finished || clientDisconnected) return;
+		markTextStreamCancellation(usage, requestSignal);
 		clientDisconnected = true;
-		void reader.cancel(requestSignal?.reason).catch(() => undefined);
+		cancelUpstream(requestSignal?.reason);
+		// Cancelling the reader alone cannot unblock a backpressured write.
+		stopDownstream(requestSignal?.reason ?? new Error('Text response delivery stopped'));
 	};
 
 	const onAbort = (): void => {
 		markClientDisconnected();
 	};
-	if (clientDisconnected) markClientDisconnected();
+	if (requestSignal?.aborted) markClientDisconnected();
 	else {
 		requestSignal?.addEventListener('abort', onAbort, { once: true });
 	}
+	// Observe read-side cancellation even when upstream has no next event.
+	void writer.closed.catch(markClientDisconnected);
 
 	const writeChunk = async (text: string): Promise<void> => {
 		if (!text || clientDisconnected) return;
@@ -541,6 +560,7 @@ async function pumpResponsesWithUsageTracking(
 		publicModelId,
 	});
 	const handleEvent = async (event: string): Promise<boolean> => {
+		if (clientDisconnected) return true;
 		const processed = processEvent(event);
 		await writeChunk(processed.wire);
 		return processed.stop || clientDisconnected;
@@ -550,6 +570,7 @@ async function pumpResponsesWithUsageTracking(
 		while (true) {
 			if (clientDisconnected) break;
 			const { done, value } = await reader.read();
+			if (clientDisconnected) break;
 			if (done) {
 				const stopped = await framer.push(decoder.decode(), handleEvent);
 				const remainder = stopped ? '' : framer.finish();
@@ -572,13 +593,13 @@ async function pumpResponsesWithUsageTracking(
 			if (value.byteLength > 0) timing?.markFirstByte();
 			const stop = await framer.push(decoder.decode(value, { stream: true }), handleEvent);
 			if (stop || clientDisconnected) {
-				await reader.cancel(stop ? 'Responses SSE terminal error/marker received' : requestSignal?.reason).catch(() => undefined);
+				cancelUpstream(stop ? 'Responses SSE terminal error/marker received' : requestSignal?.reason);
 				break;
 			}
 		}
 	} catch (err) {
 		if (!clientDisconnected) {
-			await reader.cancel('Responses SSE processing failed').catch(() => undefined);
+			cancelUpstream('Responses SSE processing failed');
 			console.warn('[Gateway Responses] pump error', err instanceof Error ? err.message : String(err));
 			usage.stream_error = usage.stream_error ?? sanitizePublicErrorMessage(
 				err instanceof Error ? err.message : String(err),
@@ -594,7 +615,11 @@ async function pumpResponsesWithUsageTracking(
 			}
 		}
 	} finally {
+		// Usage/financial facts cannot depend on an untrusted cancel ACK.
+		// The pump keeps the abandoned reader until cleanup settles below.
+		finished = true;
 		requestSignal?.removeEventListener('abort', onAbort);
+		if (!clientDisconnected) reader.releaseLock();
 		timing?.markStreamComplete();
 		resolveUsage(usage);
 		try {
@@ -606,7 +631,10 @@ async function pumpResponsesWithUsageTracking(
 				{ clientDisconnected, usageCancelled: usage.cancelled },
 			);
 		}
+		await cancellation;
+		if (clientDisconnected) reader.releaseLock();
 	}
+	return cleanupConfirmed ? 'confirmed' : 'unconfirmed';
 }
 
 function streamResponseWithUsage(
@@ -615,29 +643,30 @@ function streamResponseWithUsage(
 	timing?: RequestTimingCollector | null,
 	publicModelId?: string,
 	publicCorrelationId?: string,
-): { response: Response; usagePromise: Promise<UsageFromStream> } {
+): { response: Response; usagePromise: Promise<UsageFromStream>; resourceCompletion: ResourceCompletion } {
 	let resolveUsage!: (u: UsageFromStream) => void;
 	const usagePromise = new Promise<UsageFromStream>((resolve) => {
 		resolveUsage = resolve;
 	});
 
 	const usage: UsageFromStream = { ...EMPTY_USAGE_LOCAL };
-	const { readable, writable } = new TransformStream<Uint8Array, Uint8Array>();
+	let stopDownstream!: (reason: unknown) => void;
+	const { readable, writable } = new TransformStream<Uint8Array, Uint8Array>({
+		// Preserve graceful read-side cancellation while rejecting blocked writes.
+		start(controller) { stopDownstream = () => controller.terminate(); },
+	});
 
-	pumpResponsesWithUsageTracking(
+	const resourceCompletion = pumpResponsesWithUsageTracking(
 		response.body!,
 		writable,
 		usage,
 		resolveUsage,
+		stopDownstream,
 		requestSignal,
 		timing,
 		publicModelId,
 		publicCorrelationId,
-	).catch(
-		() => {
-			// resolveUsage already called in finally
-		},
-	);
+	).catch(() => 'unconfirmed' as const);
 
 	return {
 		response: new Response(readable, {
@@ -649,6 +678,7 @@ function streamResponseWithUsage(
 			},
 		}),
 		usagePromise,
+		resourceCompletion,
 	};
 }
 
@@ -681,6 +711,7 @@ async function nonStreamResponseWithUsage(
 	timing?: RequestTimingCollector | null,
 	publicModelId?: string,
 	publicCorrelationId?: string,
+	requestSignal?: AbortSignal,
 ): Promise<{
 	response: Response;
 	usagePromise: Promise<UsageFromStream>;
@@ -689,6 +720,7 @@ async function nonStreamResponseWithUsage(
 	const materialized = await readBoundedTextJsonObject(response, {
 		skin: 'responses',
 		requestId: publicCorrelationId,
+		signal: requestSignal,
 	});
 	timing?.markStreamComplete();
 	if (!materialized.ok) {
@@ -739,11 +771,13 @@ export async function dispatchOpenAiResponsesRoute(
 	requestSignal?: AbortSignal,
 	timing?: RequestTimingCollector | null,
 	attempt?: RequestTimingAttempt,
-	beforeFetch?: () => Promise<void>,
+	beforeFetch?: (prepared: PreparedTextAttempt) => Promise<void>,
 	publicCorrelationId?: string,
+	auxiliaryAuth?: RequestAuxiliaryAuthBudget,
 ): Promise<{
 	response: Response;
 	usagePromise: Promise<UsageFromStream>;
+	resourceCompletion?: ResourceCompletion;
 	upstreamRequestId: string | null;
 	meta?: ProxyDispatchMeta;
 }> {
@@ -751,6 +785,7 @@ export async function dispatchOpenAiResponsesRoute(
 		providerId: route.providerId,
 	});
 	assertTextUpstreamHttpUrl(url);
+	const routeIdentity = beforeFetch ? captureTextRouteIdentity(route) : null;
 	const cancelledBeforeDispatch = () => ({
 		response: preDispatchCancelledTextResponse('responses', publicCorrelationId),
 		usagePromise: Promise.resolve({ ...EMPTY_USAGE_LOCAL, cancelled: true }),
@@ -761,74 +796,87 @@ export async function dispatchOpenAiResponsesRoute(
 		} satisfies ProxyDispatchMeta,
 	});
 	if (requestSignal?.aborted) return cancelledBeforeDispatch();
-	const { secret } = await resolveProviderUpstreamSecret(route.providerApiKey);
 	const requestBody: Record<string, unknown> = {
 		...buildRouteRequestBody(route, body),
 		model: applyVertexOpenAiModelPrefix(url, route.providerModelName),
 	};
-	const serializedBody = JSON.stringify(requestBody);
-	const headers = {
-		'Content-Type': 'application/json',
-		Authorization: `Bearer ${secret}`,
-	};
-	new Headers(headers);
-
-	if (requestSignal?.aborted) return cancelledBeforeDispatch();
-	await beforeFetch?.();
-	if (requestSignal?.aborted) return cancelledBeforeDispatch();
-	let response: Response;
-	try {
-		response = await fetch(url, {
-			method: 'POST',
-			headers,
-			body: serializedBody,
-			signal: requestSignal,
-		});
-	} catch (error) {
-		throw markUpstreamOutcomeUnknown(error);
-	}
-	timing?.markAttemptHeaders(attempt, response.status);
-	const upstreamRequestId = extractUpstreamRequestId(response.headers);
-
-	if (response.ok) {
-		const contentType = response.headers.get('Content-Type') ?? '';
-		const normalizedContentType = contentType.toLowerCase();
-		const streamRequested = requestBody.stream === true;
-		if (!streamRequested && normalizedContentType.includes('application/json')) {
-			const result = await nonStreamResponseWithUsage(
-				response,
-				timing,
-				route.gatewayModelId,
-				publicCorrelationId,
-			);
-			return { ...result, upstreamRequestId };
-		}
-		if (streamRequested && response.body && normalizedContentType.includes('text/event-stream')) {
-			const result = streamResponseWithUsage(
-				response,
-				requestSignal,
-				timing,
-				route.gatewayModelId,
-				publicCorrelationId,
-			);
-			return { ...result, upstreamRequestId };
-		}
-		const invalid = await cancelInvalidTextSuccessResponse(response, {
-			skin: 'responses',
-			protocol: 'Responses',
-			requestId: publicCorrelationId,
-		});
-		timing?.markStreamComplete();
-		return {
-			...invalid,
-			usagePromise: Promise.resolve({ ...EMPTY_USAGE_LOCAL }),
-			upstreamRequestId,
+	return withOwnedJsonUpload(requestBody, requestSignal, async upload => {
+		const { secret } = await resolveProviderUpstreamSecret(route.providerApiKey, { signal: requestSignal, auxiliaryAuth });
+		const headers = {
+			'Content-Type': 'application/json',
+			'Content-Length': String(upload.contentLength),
+			Authorization: `Bearer ${secret}`,
 		};
-	}
+		new Headers(headers);
 
-	return {
-		response,
-		usagePromise: Promise.resolve(EMPTY_USAGE_LOCAL),
-		upstreamRequestId,
-	};
+		if (requestSignal?.aborted) return cancelledBeforeDispatch();
+		if (beforeFetch) {
+			const prepared = createPreparedTextAttempt({
+				routeIdentity: routeIdentity!, url, method: 'POST', headers,
+				outboundBodySha256: await upload.digestSha256(),
+				outboundBodyBytes: upload.contentLength,
+			});
+			await beforeFetch(prepared);
+		}
+		if (requestSignal?.aborted) return cancelledBeforeDispatch();
+		let response: Response;
+		try {
+			const init: RequestInit & { duplex: 'half' } = {
+				method: 'POST',
+				// A redirect is another unbudgeted dispatch and may forward credentials.
+				redirect: 'error',
+				headers,
+				body: upload.body,
+				duplex: 'half',
+				signal: requestSignal,
+			};
+			response = await fetch(url, init);
+		} catch (error) {
+			throw markUpstreamOutcomeUnknown(error);
+		}
+		timing?.markAttemptHeaders(attempt, response.status);
+		const upstreamRequestId = extractUpstreamRequestId(response.headers);
+
+		const normalizedContentType = (response.headers.get('Content-Type') ?? '').toLowerCase();
+		const streamRequested = requestBody.stream === true;
+		if (response.ok && streamRequested && response.body && normalizedContentType.includes('text/event-stream')) {
+			// Preserve the existing SSE pump's reader and cancellation ownership.
+			const result = streamResponseWithUsage(response, requestSignal, timing, route.gatewayModelId, publicCorrelationId);
+			return { ...result, upstreamRequestId };
+		}
+		const owned = ownUpstreamResponse(response, requestSignal);
+		response = owned.response;
+		if (response.ok) {
+			if (!streamRequested && normalizedContentType.includes('application/json')) {
+				const result = await nonStreamResponseWithUsage(
+					response,
+					timing,
+					route.gatewayModelId,
+					publicCorrelationId,
+					requestSignal,
+				);
+				return { ...result, upstreamRequestId, resourceCompletion: owned.resourceCompletion };
+			}
+			const invalid = await cancelInvalidTextSuccessResponse(response, {
+				skin: 'responses',
+				protocol: 'Responses',
+				requestId: publicCorrelationId,
+			});
+			timing?.markStreamComplete();
+			return {
+				...invalid,
+				usagePromise: Promise.resolve({ ...EMPTY_USAGE_LOCAL }),
+				upstreamRequestId,
+				resourceCompletion: owned.resourceCompletion,
+			};
+		}
+
+		return {
+			response,
+			usagePromise: Promise.resolve(EMPTY_USAGE_LOCAL),
+			upstreamRequestId,
+			resourceCompletion: owned.resourceCompletion,
+			meta: ambiguousDispatchedStatusMeta(response.status),
+		};
+	});
 }

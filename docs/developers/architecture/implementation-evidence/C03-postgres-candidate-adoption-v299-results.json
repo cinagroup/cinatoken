@@ -1,0 +1,56 @@
+{
+  "version": "v299",
+  "date": "2026-09-21",
+  "status": "LOCAL_BUILD_AND_NODE_WIRE_PASS_PRODUCTION_DISABLED",
+  "checklist": "v1.196",
+  "goalComplete": false,
+  "C03": "DOING",
+  "finalGeneratedReport": ".wrangler/staging/postgres-adoption-v299-FQqOzE/results.json",
+  "validation": {
+    "adoptionHarness": { "tests": 9, "pass": 9, "fail": 0, "durationMs": 14509.6039 },
+    "actualCoreFactoryWire": { "tests": 26, "distinctTransactionScenarios": 23, "pass": 26, "fail": 0, "durationMs": 3580.77 },
+    "actualCoreInitializationWire": { "tests": 7, "pass": 7, "fail": 0, "durationMs": 5045.0833 },
+    "v298Harness": { "tests": 5, "pass": 5, "fail": 0, "durationMs": 6143.8722, "esmWirePass": 26, "cjsWirePass": 26, "expectedHookOnlyFailures": 2 },
+    "runnerAndOwner": { "tests": 35, "pass": 35, "fail": 0, "durationMs": 14686.267 },
+    "installedDriverNegative": { "tests": 3, "pass": 2, "fail": 1, "durationMs": 730.3717, "failure": "nextWrite null socket.write" },
+    "runnerTypecheckExitCode": 0,
+    "syntaxChecks": 4,
+    "defaultCoreBytesUnchanged": true,
+    "defaultProxyBytesMatchLegacyOptions": true,
+    "freshCoreScratchBuild": true,
+    "wranglerDryRuns": 4,
+    "workersRuntimeTests": 0,
+    "nativePostgresTests": 0
+  },
+  "retainedRuns": [
+    { "directory": "postgres-adoption-v299-5fizx6", "pass": 4, "fail": 3, "durationMs": 13314.7849, "transactionCasesExecuted": 0, "cause": "Windows wrapper import URL and Wrangler config-relative metafile audit" },
+    { "directory": "postgres-adoption-v299-WVRlc8", "pass": 7, "fail": 0, "durationMs": 14543.3534, "limitation": "before Drizzle transitive-constructor closure" },
+    { "directory": "postgres-adoption-v299-fNOteG", "pass": 8, "fail": 0, "durationMs": 15636.5724 },
+    { "directory": "postgres-adoption-v299-FQqOzE", "pass": 9, "fail": 0, "durationMs": 14509.6039 }
+  ],
+  "sourceSha256": {
+    "scripts/db/diag/postgres-candidate-adoption.mjs": "a13e78ac8e619368713e0b4d43ce82041c85bf9199c4d5cfc8b35a32bfff4bc6",
+    "scripts/db/diag/postgres-candidate-adoption.test.mjs": "c9c66464b463192f32d97bf0f19385bc75a2b695b7c0a127463fd9c9b5d862e4",
+    "scripts/db/diag/fixtures/offline-build.cjs": "fc941bc9710977c4d488f8374cd4a07a938eed4586dedd6e3251ef75d7b390c7",
+    "scripts/db/diag/fixtures/build-only.env": "b656ab9ce9ed27acdcb2b243b59a49b3229c738c2edc940a05e0268ad4051069",
+    "scripts/db/diag/fixtures/wrangler.postgres-adoption.jsonc": "6670462ae7738c531b5cdd449263a183493c3fb59a002bdbc3ae79bc152988ca",
+    "packages/proxy/scripts/build.mjs": "2e9d213c473525d05d3ad4453a5fad6eb9e75758c713850e7be8596532c62fdd",
+    "packages/core/src/storage/recovery/postgres-recovery-operation-owner.wire.test.mjs": "fbc2595252674f7f8a8b6c9c4bf3b29df666adac0fa29858fefd651f199dcce3"
+  },
+  "boundaries": {
+    "installedDriverChanged": false,
+    "lockfilesChanged": false,
+    "sharedDistChanged": false,
+    "productionDefaultsChanged": false,
+    "productionActivated": false,
+    "cloudManagementCalls": 0,
+    "remoteSqlCalls": 0,
+    "deployments": 0,
+    "modelCalls": 0,
+    "kmsCalls": 0,
+    "cloudResourcesCreatedOrDeleted": 0,
+    "cumulativeStagingCapUsd": 2,
+    "capReset": false
+  },
+  "next": "Test escaped transaction handles after normal COMMIT/ROLLBACK and synchronous socket.write errors before extending full DB execution/cleanup deadlines; native PostgreSQL and Workers acceptance remain required."
+}

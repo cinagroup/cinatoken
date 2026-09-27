@@ -1,0 +1,17 @@
+{
+  "extends": "../../../tsconfig.base.json",
+  "compilerOptions": {
+    "types": ["@cloudflare/workers-types", "node"],
+    "jsx": "react-jsx",
+    "jsxImportSource": "hono/jsx",
+    "resolveJsonModule": true,
+    "allowJs": true,
+    "checkJs": false,
+    "baseUrl": "../../..",
+    "paths": {
+      "@octafuse/core": ["packages/core/src/index.ts"]
+    }
+  },
+  "files": ["exercise-complete-text-platform-event-delivery-v402.ts"],
+  "include": []
+}

@@ -1,0 +1,276 @@
+{
+  "workPackage": "C02.B2.2",
+  "scope": "Preparation cancellation and ownership of started compatibility migrations only",
+  "date": "2026-09-05",
+  "status": "LOCAL_PASS_SUBSET",
+  "parentStatus": "DOING",
+  "head": "7eb59008f7d8e156e81fd18a57658fdef2553264",
+  "environment": {
+    "node": "24.14.1",
+    "requiredNode": "22",
+    "workersTypes": "5.20260829.1",
+    "workersRuntimeVerified": false,
+    "realDatabaseVerified": false,
+    "realKmsOperations": false
+  },
+  "sourceFiles": [
+    {
+      "path": "packages/core/src/preparation-control.ts",
+      "sha256": "06ccde2cefc43c06d211ff87613567917ee19d93eb8eb8593f38c39d20233f08"
+    },
+    {
+      "path": "packages/core/src/index.ts",
+      "sha256": "bd4bb57f926dc36eb14c929da72548a3e08d21761b9af8ec6bc4495b65ee79bc"
+    },
+    {
+      "path": "packages/core/src/storage/gateway-repository-interfaces.ts",
+      "sha256": "fcd433714ba5e3be21ecbaaa8f2d7c258e54c7585e41f5f5b308f3bea6b48817"
+    },
+    {
+      "path": "packages/core/src/lib/shared-key-encryption.ts",
+      "sha256": "e1f9992fcc4cebd45bb7d574359354518942c76aa25547db8ca022ff005afcc2"
+    },
+    {
+      "path": "packages/core/src/lib/provider-key-encryption.ts",
+      "sha256": "132b78a88075b8fc537a96e90a5b8653e7514a56487540849ec0ab869248dc9a"
+    },
+    {
+      "path": "packages/core/src/lib/provider-key-environment.ts",
+      "sha256": "90e0d595b1fdeae6083a935d06e76f909609101609cda20fc3aa859b9053fa57"
+    },
+    {
+      "path": "packages/core/src/lib/byok-key-encryption.ts",
+      "sha256": "2febf1c727fb836cc41bf16729a74a205b24e10ad0535e70359e4e5ac79ddbb4"
+    },
+    {
+      "path": "packages/proxy/src/services/request-deadline.ts",
+      "sha256": "145b0dc9fb702d1ef67efe9c40593c92a61f9204bc538b0ae9d9d8c46f9c0869"
+    },
+    {
+      "path": "packages/proxy/src/middleware/text-request-lifecycle.ts",
+      "sha256": "dc69899917a21d71c8c40eb45d52a95ae979feea3d676907e84e307e522a7ff4"
+    },
+    {
+      "path": "packages/proxy/src/services/resolve-model-route-group.ts",
+      "sha256": "007581a932a26d597a0f28c054e49eee754cfc3b2d6541e9dab10ab58bfcd35f"
+    },
+    {
+      "path": "packages/proxy/src/services/model-router.ts",
+      "sha256": "d0723ce93df9b63819cc0c1fad65c84ce6c8b3d2d9881512bb8ee5ce9cb3819b"
+    },
+    {
+      "path": "packages/proxy/src/services/model-fallback-plan.ts",
+      "sha256": "cd3b46aa78b64fe2b52d0934ac0f41a6fcd621ce70a8bb65a11f2cc809ea179a"
+    },
+    {
+      "path": "packages/proxy/src/services/provider-performance-routing.ts",
+      "sha256": "380206c1158d1ca1c31e5e74a2d83a159c66ded822b0e02244b731e7f2d74d90"
+    },
+    {
+      "path": "packages/proxy/src/services/shared-key-pool.ts",
+      "sha256": "c65f12a6909c1130d89fb9aabe89b38878e1697df4d9b9c3801dee50c2d16174"
+    },
+    {
+      "path": "packages/proxy/src/services/byok-key-pool.ts",
+      "sha256": "e3885782b22a841e7661a425d1046b003342aeba626041b11786f9bcc795a18f"
+    },
+    {
+      "path": "packages/proxy/src/services/failover-dispatch.ts",
+      "sha256": "cceca881a82deb45a2298a0e65793bbbf77c88516687d91d60bd6dd1bee5951f"
+    },
+    {
+      "path": "packages/proxy/src/routes/v1/chat.ts",
+      "sha256": "5e7b8d3271f5bb4dc955dac16af899516949fac1e6a78b19d246b0014e49b2a1"
+    },
+    {
+      "path": "packages/proxy/src/routes/v1/messages.ts",
+      "sha256": "2444765d13f6a88b7e0dd74de069bc2b135c47de0b842b24fc67dfe467df1ad9"
+    },
+    {
+      "path": "packages/proxy/src/routes/v1/responses.ts",
+      "sha256": "fbb300df3ac94028eec4277f1322e784d4d66ef1c301caba9d1373f4dba294c4"
+    },
+    {
+      "path": "packages/proxy/src/services/preparation-cancellation.test.ts",
+      "sha256": "932c4e27adecb47f717853f09431d6d4ad93d2544ce6691a8abb31b89ac673c4"
+    },
+    {
+      "path": "packages/proxy/src/routes/v1/request-dispatch-limit.test.ts",
+      "sha256": "e68d53e225f8e5ec71299f3b0c2bbb3af218a22efc56277f258648e40ab6670c"
+    },
+    {
+      "path": "packages/proxy/package.json",
+      "sha256": "bdea134aaece4658027c2d751677fa8e851f97d35acc959639c2a2969b455034"
+    },
+    {
+      "path": "packages/proxy/tsconfig.dispatch-safety.json",
+      "sha256": "dd872100d78c5a274b8bfbdfde9bc55baf6f0313a4996f4e9efcc3a3fffd8c87"
+    },
+    {
+      "path": "packages/core/package.json",
+      "sha256": "69cb7c4e79cbb82e746e327ba00f74025178d006531d3f5016806249e9e004d8"
+    },
+    {
+      "path": "packages/proxy/src/app.ts",
+      "sha256": "0d261b5300a9695f416186ccd0bd6abed51d915af754d275b209fdd824696001"
+    },
+    {
+      "path": "packages/proxy/src/services/request-dispatch-budget.ts",
+      "sha256": "bbba22c4e60ed34e7dcf2ec61b822ff9474beccac4f522656ff65649d2da2152"
+    },
+    {
+      "path": "packages/proxy/wrangler.jsonc",
+      "sha256": "7ffb4a120ce0b83df428a1344fca5b16ea9d8784178d555e7377623511451b0c"
+    },
+    {
+      "path": ".github/workflows/proxy-dispatch-safety.yml",
+      "sha256": "39da756ee3682ff680457d1f8c67a6f56ac7aaaf75fcdd02fff8b90ab81ff725"
+    }
+  ],
+  "changedSourcePaths": [
+    "packages/core/src/preparation-control.ts",
+    "packages/core/src/index.ts",
+    "packages/core/src/storage/gateway-repository-interfaces.ts",
+    "packages/core/src/lib/shared-key-encryption.ts",
+    "packages/core/src/lib/provider-key-encryption.ts",
+    "packages/core/src/lib/provider-key-environment.ts",
+    "packages/core/src/lib/byok-key-encryption.ts",
+    "packages/proxy/src/services/request-deadline.ts",
+    "packages/proxy/src/middleware/text-request-lifecycle.ts",
+    "packages/proxy/src/services/resolve-model-route-group.ts",
+    "packages/proxy/src/services/model-router.ts",
+    "packages/proxy/src/services/model-fallback-plan.ts",
+    "packages/proxy/src/services/provider-performance-routing.ts",
+    "packages/proxy/src/services/shared-key-pool.ts",
+    "packages/proxy/src/services/byok-key-pool.ts",
+    "packages/proxy/src/services/failover-dispatch.ts",
+    "packages/proxy/src/routes/v1/chat.ts",
+    "packages/proxy/src/routes/v1/messages.ts",
+    "packages/proxy/src/routes/v1/responses.ts",
+    "packages/proxy/src/services/preparation-cancellation.test.ts",
+    "packages/proxy/src/routes/v1/request-dispatch-limit.test.ts",
+    "packages/proxy/package.json",
+    "packages/proxy/tsconfig.dispatch-safety.json"
+  ],
+  "baselinePreservation": {
+    "baselineFiles": 74,
+    "unchangedFiles": 63,
+    "expectedChangedFiles": 11,
+    "missingFiles": 0,
+    "unexpectedChanges": 0,
+    "changes": [
+      {
+        "path": "docs/developers/architecture/implementation-evidence/README.md",
+        "beforeSha256": "9339defc52ddf2b0524786c8ad658242779e500169497fdb7bd06c424fd12277",
+        "afterSha256": "ece26b3cfd1fbd098bc1eb45b9ecab9252239150acaab74e12d55a1e671d6545"
+      },
+      {
+        "path": "packages/proxy/src/middleware/text-request-lifecycle.ts",
+        "beforeSha256": "47c3e1b3481d21b7164ab9547ddca01288dc82775be608d293cc87c0f28af397",
+        "afterSha256": "dc69899917a21d71c8c40eb45d52a95ae979feea3d676907e84e307e522a7ff4"
+      },
+      {
+        "path": "packages/proxy/src/routes/v1/request-dispatch-limit.test.ts",
+        "beforeSha256": "2956ca1238dfa3a005cbe7fec44a87b6950496addfd4f19bc9826fa7912e439a",
+        "afterSha256": "e68d53e225f8e5ec71299f3b0c2bbb3af218a22efc56277f258648e40ab6670c"
+      },
+      {
+        "path": "packages/proxy/src/services/request-deadline.ts",
+        "beforeSha256": "6f293b2ba818cac48b154598e03de8661e7a207964b6d57e1c9f82c4d2afe000",
+        "afterSha256": "145b0dc9fb702d1ef67efe9c40593c92a61f9204bc538b0ae9d9d8c46f9c0869"
+      },
+      {
+        "path": "packages/proxy/tsconfig.dispatch-safety.json",
+        "beforeSha256": "9aaaabe4704c552be479e1194a9fa24f3543eedf1f203ad3f9a51707c86548ef",
+        "afterSha256": "dd872100d78c5a274b8bfbdfde9bc55baf6f0313a4996f4e9efcc3a3fffd8c87"
+      },
+      {
+        "path": "docs/developers/architecture/v2.1-openrouter-implementation-checklist.md",
+        "beforeSha256": "3ec8cdfda72fe096f5a954e847f14ca00dc7cf90cd311b422de436a0c9580a6c",
+        "afterSha256": "22511e1748cfcb28226da60898d17f5b943000ee5e8f084fe85a905825b40562"
+      },
+      {
+        "path": "packages/proxy/package.json",
+        "beforeSha256": "4e3d2667d2ff052912cbf5a26a51015301d89230ebf90e08e0c8f5acefcf18d8",
+        "afterSha256": "bdea134aaece4658027c2d751677fa8e851f97d35acc959639c2a2969b455034"
+      },
+      {
+        "path": "packages/proxy/src/routes/v1/chat.ts",
+        "beforeSha256": "5bdbdf7f13b3d20756349623977d4420455b12b90eb5e53543dabd669c0cccd1",
+        "afterSha256": "5e7b8d3271f5bb4dc955dac16af899516949fac1e6a78b19d246b0014e49b2a1"
+      },
+      {
+        "path": "packages/proxy/src/routes/v1/messages.ts",
+        "beforeSha256": "e3fd49246b3414a7f7b54fa27ac2a148c291451434b84d3d859ba6a8778aa1e9",
+        "afterSha256": "2444765d13f6a88b7e0dd74de069bc2b135c47de0b842b24fc67dfe467df1ad9"
+      },
+      {
+        "path": "packages/proxy/src/routes/v1/responses.ts",
+        "beforeSha256": "2ebb9bc7f2eaac723740af961c0604abfece6d6b45f4a9aa74051a883b7562de",
+        "afterSha256": "fbb300df3ac94028eec4277f1322e784d4d66ef1c301caba9d1373f4dba294c4"
+      },
+      {
+        "path": "packages/proxy/src/services/failover-dispatch.ts",
+        "beforeSha256": "11486f96e96bf0b2e950dd21a88e45ff7ecd70f5b57baa270e6a0b55cd52cdc4",
+        "afterSha256": "cceca881a82deb45a2298a0e65793bbbf77c88516687d91d60bd6dd1bee5951f"
+      }
+    ]
+  },
+  "verifications": [
+    {
+      "command": "npm.cmd run typecheck -w @octafuse/proxy",
+      "exitCode": 0
+    },
+    {
+      "command": "npm.cmd run typecheck:dispatch-safety -w @octafuse/proxy",
+      "exitCode": 0
+    },
+    {
+      "command": "npm.cmd test -w @octafuse/proxy",
+      "exitCode": 0,
+      "mainTests": 806,
+      "mainSuites": 134,
+      "passed": 806,
+      "failed": 0,
+      "cancelled": 0,
+      "skipped": 0
+    },
+    {
+      "command": "npm.cmd run test:dispatch-safety -w @octafuse/proxy",
+      "exitCode": 0,
+      "mainTests": 266,
+      "mainSuites": 17,
+      "passed": 266,
+      "failed": 0,
+      "cancelled": 0,
+      "skipped": 0
+    },
+    {
+      "command": "npm.cmd run test:unit -w @octafuse/core",
+      "exitCode": 0,
+      "mainTests": 336,
+      "mainSuites": 69,
+      "passed": 336,
+      "failed": 0,
+      "cancelled": 0,
+      "skipped": 0
+    },
+    {
+      "command": "git diff --check",
+      "exitCode": 0
+    }
+  ],
+  "verificationNotes": [
+    "35 new tests are included in overlapping main and dispatch-safety suites; counts must not be summed.",
+    "After full Proxy/Core runs, only two contract comments changed; dispatch-safety and both typechecks were rerun on the final source snapshot.",
+    "Core npm lifecycle includes local SQLite and mocked backend contract suites, not a real Postgres/MySQL/Workers validation."
+  ],
+  "limitations": [
+    "Already-running SQL/Web Crypto operations are not physically cancelled; logical continuation is checked at the documented boundaries.",
+    "Started compatibility writes are drained and may extend request lifetime beyond the absolute deadline; no durable migration recovery is added.",
+    "Vertex service-account OAuth and phased headers/valid-TTFT/idle limits remain incomplete.",
+    "Controlled pool reads/decryption remain O(N); no metadata Top-K or Credential Vault implementation is included.",
+    "Google Cloud KMS selection is unchanged; production project/location/protection/IAM/hosting are not configured.",
+    "No deployment, remote migration, cloud resources, paid inference, or payment operations."
+  ]
+}

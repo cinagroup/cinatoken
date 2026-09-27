@@ -1,0 +1,693 @@
+{
+  "version": "v277",
+  "status": "HISTORY_METADATA_OBSERVED_BINDING_SEMANTICS_PENDING",
+  "previousEvidence": {
+    "path": "docs/developers/architecture/implementation-evidence/C02-byok-d1-version-budget-v276-results.json",
+    "sha256": "cd5055ee5745dfb8986474e7791c517fd4d5b175267c87ec032a1cf8fb5df027"
+  },
+  "verifiedPriorCounts": {
+    "artifacts": 20,
+    "remapped": 35,
+    "maintenanceGuards": 8
+  },
+  "priorEntireDependencyTreeRevalidated": false,
+  "local": {
+    "path": ".wrangler/staging/byok-pages-v277-verified-local/result.json",
+    "pass": 244,
+    "oldNullRegression": {
+      "pass": 0,
+      "fail": 1,
+      "expectedFailure": true
+    }
+  },
+  "archivedInitialSources": [
+    {
+      "originalPath": "scripts/deploy/byok-d1-pages-history.mjs",
+      "path": ".wrangler/staging/byok-pages-v277-prior/byok-d1-pages-history.mjs",
+      "sha256": "aeee4efb8196d02e8d14e89b25d6dddfb2a2afb760084ec4a1a0353569fa7ed4"
+    },
+    {
+      "originalPath": "scripts/deploy/byok-d1-pages-history.test.mjs",
+      "path": ".wrangler/staging/byok-pages-v277-prior/byok-d1-pages-history.test.mjs",
+      "sha256": "90c220265a80b9efcfe185ac064525f3f211766aea6a3d09dcff0bba1f281f4f"
+    }
+  ],
+  "unchangedMaintenanceGuardFiles": [
+    {
+      "path": "scripts/deploy/byok-d1-ingress-closure.mjs",
+      "sha256": "51224fa7c1075480ffad1db9d6581dbef1c7c40dc20f60d5b1a50efacb6e62bc"
+    },
+    {
+      "path": "scripts/deploy/byok-d1-maintenance-dispatch.mjs",
+      "sha256": "cde6e489c2ccc26aeca5e379f7a3369fc81c84064493c2941c34dbeca9aec793"
+    },
+    {
+      "path": "scripts/deploy/byok-d1-management.mjs",
+      "sha256": "0888e9c94b81e4c2fa0db5cd8d6269bce403db60886c48df5552b20ae2fbfb85"
+    },
+    {
+      "path": "scripts/deploy/byok-d1-operator.mjs",
+      "sha256": "d1f7825b5d0404ae52d3320f6a70bb081c63ed91708d510535dd4c52325e005a"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/byok-d1-cleanup.ts",
+      "sha256": "b015f0e3c6fca7412e32408e466577615c7d16364db09017446e0528c5b90847"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/byok-d1-maintenance-contract.ts",
+      "sha256": "4dfc3a8ca524f8c6e4f47d41240af0fa279220967ad67ccb9696af1f4a94bbe3"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/byok-d1-maintenance-host.ts",
+      "sha256": "962067df45d11d60ae1dbef958d697af20d1208945532e96de45abd71d8043be"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/byok-d1-maintenance-worker.ts",
+      "sha256": "d48a3ab7e37c5936e32ffa21ee13b554d1b4102cd83d5aa9039d2f6723c3347e"
+    }
+  ],
+  "cloud": {
+    "path": ".wrangler/staging/byok-pages-history-v277-verified-cloud/result.json",
+    "startedAt": "2026-09-21T04:43:10.749Z",
+    "finishedAt": "2026-09-21T04:44:19.643Z",
+    "elapsedMs": 68896,
+    "projects": [
+      {
+        "name": "cinaadmin",
+        "environments": {
+          "production": {
+            "count": 94,
+            "pages": 4
+          },
+          "preview": {
+            "count": 10,
+            "pages": 1
+          }
+        },
+        "deployments": 104,
+        "stable": true,
+        "functionsTrue": 104,
+        "functionsFalse": 0,
+        "functionsUnknown": 0
+      },
+      {
+        "name": "cinaauth-docs",
+        "environments": {
+          "production": {
+            "count": 3,
+            "pages": 1
+          },
+          "preview": {
+            "count": 0,
+            "pages": 1
+          }
+        },
+        "deployments": 3,
+        "stable": true,
+        "functionsTrue": 0,
+        "functionsFalse": 3,
+        "functionsUnknown": 0
+      },
+      {
+        "name": "cinachain-dapp-v2",
+        "environments": {
+          "production": {
+            "count": 95,
+            "pages": 4
+          },
+          "preview": {
+            "count": 3,
+            "pages": 1
+          }
+        },
+        "deployments": 98,
+        "stable": true,
+        "functionsTrue": 0,
+        "functionsFalse": 98,
+        "functionsUnknown": 0
+      },
+      {
+        "name": "cinachain-docs",
+        "environments": {
+          "production": {
+            "count": 65,
+            "pages": 3
+          },
+          "preview": {
+            "count": 2,
+            "pages": 1
+          }
+        },
+        "deployments": 67,
+        "stable": true,
+        "functionsTrue": 0,
+        "functionsFalse": 67,
+        "functionsUnknown": 0
+      },
+      {
+        "name": "cinachain-nft-dapp",
+        "environments": {
+          "production": {
+            "count": 39,
+            "pages": 2
+          },
+          "preview": {
+            "count": 1,
+            "pages": 1
+          }
+        },
+        "deployments": 40,
+        "stable": true,
+        "functionsTrue": 0,
+        "functionsFalse": 40,
+        "functionsUnknown": 0
+      },
+      {
+        "name": "cinachain-portal",
+        "environments": {
+          "production": {
+            "count": 73,
+            "pages": 3
+          },
+          "preview": {
+            "count": 2,
+            "pages": 1
+          }
+        },
+        "deployments": 75,
+        "stable": true,
+        "functionsTrue": 0,
+        "functionsFalse": 75,
+        "functionsUnknown": 0
+      },
+      {
+        "name": "cinagroup",
+        "environments": {
+          "production": {
+            "count": 630,
+            "pages": 26
+          },
+          "preview": {
+            "count": 15,
+            "pages": 1
+          }
+        },
+        "deployments": 645,
+        "stable": true,
+        "functionsTrue": 51,
+        "functionsFalse": 508,
+        "functionsUnknown": 86
+      },
+      {
+        "name": "cinaseek",
+        "environments": {
+          "production": {
+            "count": 275,
+            "pages": 11
+          },
+          "preview": {
+            "count": 3,
+            "pages": 1
+          }
+        },
+        "deployments": 278,
+        "stable": true,
+        "functionsTrue": 2,
+        "functionsFalse": 209,
+        "functionsUnknown": 67
+      },
+      {
+        "name": "cinashop-admin",
+        "environments": {
+          "production": {
+            "count": 61,
+            "pages": 3
+          },
+          "preview": {
+            "count": 2,
+            "pages": 1
+          }
+        },
+        "deployments": 63,
+        "stable": true,
+        "functionsTrue": 55,
+        "functionsFalse": 8,
+        "functionsUnknown": 0
+      },
+      {
+        "name": "cinashop-admin-ts",
+        "environments": {
+          "production": {
+            "count": 4,
+            "pages": 1
+          },
+          "preview": {
+            "count": 0,
+            "pages": 1
+          }
+        },
+        "deployments": 4,
+        "stable": true,
+        "functionsTrue": 4,
+        "functionsFalse": 0,
+        "functionsUnknown": 0
+      },
+      {
+        "name": "cinashop-h5",
+        "environments": {
+          "production": {
+            "count": 64,
+            "pages": 3
+          },
+          "preview": {
+            "count": 0,
+            "pages": 1
+          }
+        },
+        "deployments": 64,
+        "stable": true,
+        "functionsTrue": 62,
+        "functionsFalse": 2,
+        "functionsUnknown": 0
+      },
+      {
+        "name": "cinashop-kefu",
+        "environments": {
+          "production": {
+            "count": 20,
+            "pages": 1
+          },
+          "preview": {
+            "count": 0,
+            "pages": 1
+          }
+        },
+        "deployments": 20,
+        "stable": true,
+        "functionsTrue": 20,
+        "functionsFalse": 0,
+        "functionsUnknown": 0
+      },
+      {
+        "name": "cinashop-pc",
+        "environments": {
+          "production": {
+            "count": 42,
+            "pages": 2
+          },
+          "preview": {
+            "count": 1,
+            "pages": 1
+          }
+        },
+        "deployments": 43,
+        "stable": true,
+        "functionsTrue": 42,
+        "functionsFalse": 1,
+        "functionsUnknown": 0
+      },
+      {
+        "name": "cinashop-supplier",
+        "environments": {
+          "production": {
+            "count": 20,
+            "pages": 1
+          },
+          "preview": {
+            "count": 0,
+            "pages": 1
+          }
+        },
+        "deployments": 20,
+        "stable": true,
+        "functionsTrue": 20,
+        "functionsFalse": 0,
+        "functionsUnknown": 0
+      },
+      {
+        "name": "cinatoken",
+        "environments": {
+          "production": {
+            "count": 16,
+            "pages": 1
+          },
+          "preview": {
+            "count": 0,
+            "pages": 1
+          }
+        },
+        "deployments": 16,
+        "stable": true,
+        "functionsTrue": 1,
+        "functionsFalse": 15,
+        "functionsUnknown": 0
+      },
+      {
+        "name": "cinatoken-web",
+        "environments": {
+          "production": {
+            "count": 5,
+            "pages": 1
+          },
+          "preview": {
+            "count": 0,
+            "pages": 1
+          }
+        },
+        "deployments": 5,
+        "stable": true,
+        "functionsTrue": 0,
+        "functionsFalse": 5,
+        "functionsUnknown": 0
+      },
+      {
+        "name": "cinatoken-web-classic",
+        "environments": {
+          "production": {
+            "count": 2,
+            "pages": 1
+          },
+          "preview": {
+            "count": 0,
+            "pages": 1
+          }
+        },
+        "deployments": 2,
+        "stable": true,
+        "functionsTrue": 0,
+        "functionsFalse": 2,
+        "functionsUnknown": 0
+      },
+      {
+        "name": "cinawalletkit",
+        "environments": {
+          "production": {
+            "count": 0,
+            "pages": 1
+          },
+          "preview": {
+            "count": 3,
+            "pages": 1
+          }
+        },
+        "deployments": 3,
+        "stable": true,
+        "functionsTrue": 0,
+        "functionsFalse": 3,
+        "functionsUnknown": 0
+      },
+      {
+        "name": "cnelec",
+        "environments": {
+          "production": {
+            "count": 10,
+            "pages": 1
+          },
+          "preview": {
+            "count": 0,
+            "pages": 1
+          }
+        },
+        "deployments": 10,
+        "stable": true,
+        "functionsTrue": 0,
+        "functionsFalse": 10,
+        "functionsUnknown": 0
+      }
+    ],
+    "deploymentCount": 1560,
+    "historyCatalogueComplete": true,
+    "reportedBindingMapsObserved": true,
+    "historicalBindingsComplete": false,
+    "fieldCoverage": {
+      "services": {
+        "explicit": 0,
+        "absentUnverified": 1560,
+        "nullUnverified": 0,
+        "returnedEntries": 0
+      },
+      "d1_databases": {
+        "explicit": 51,
+        "absentUnverified": 1509,
+        "nullUnverified": 0,
+        "returnedEntries": 51
+      },
+      "durable_object_namespaces": {
+        "explicit": 0,
+        "absentUnverified": 1560,
+        "nullUnverified": 0,
+        "returnedEntries": 0
+      }
+    },
+    "edges": []
+  },
+  "initialFailure": {
+    "path": ".wrangler/staging/byok-pages-history-v277-cloud/result.json",
+    "phase": "history-sweep-before",
+    "operations": 34,
+    "http200": 31,
+    "noRecordedStatus": 3,
+    "cause": "Historical skipped deployment uses_functions:null rejected by initial parser; exact nullable-field regression failed against archived initial source and passed after correction."
+  },
+  "diagnosticLimitation": "The single-page shape diagnostic validTimes booleans used an overescaped regex and are not evidence of malformed timestamps. Its field types establish uses_functions:null at row index 11; no timestamp parser change was made.",
+  "discoveryBudget": {
+    "timeoutMs": 600000,
+    "requestLimit": 1000,
+    "concurrency": 4,
+    "requestTimeoutMs": 20000,
+    "responseBytes": 2097152,
+    "maxProjects": 100,
+    "maxDeployments": 10000
+  },
+  "journals": [
+    {
+      "path": ".wrangler/staging/byok-pages-history-v277-cloud/.wrangler/staging/byok-d1-pages-history-reservation/journal.jsonl",
+      "records": 70
+    },
+    {
+      "path": ".wrangler/staging/byok-pages-history-v277-verified-cloud/.wrangler/staging/byok-d1-pages-history-reservation/journal.jsonl",
+      "records": 366
+    }
+  ],
+  "requests": {
+    "managementGetAttempts": 227,
+    "http200": 224,
+    "noRecordedStatus": 3,
+    "probes": 11,
+    "initial": 34,
+    "verified": 182
+  },
+  "cloudWrites": 0,
+  "deployments": 0,
+  "sqlCalls": 0,
+  "publicWorkerCalls": 0,
+  "modelCalls": 0,
+  "kmsCalls": 0,
+  "firstRoundUsdCap": 2,
+  "capReset": false,
+  "billingRefreshed": false,
+  "allInvocationPathsInventoried": false,
+  "fullPreflightPassed": false,
+  "nativeTimingQualified": false,
+  "databaseQuiescenceProved": false,
+  "snapshotIsAtomic": false,
+  "remaining": [
+    "PAGES_BINDING_ABSENCE_SEMANTICS",
+    "PAGES_OTHER_BINDING_SOURCES",
+    "TOKEN_RESOURCE_VISIBILITY",
+    "ZONE_ROUTES",
+    "DISPATCH_NAMESPACES",
+    "CURRENT_INGRESS_CLOSURE",
+    "IN_FLIGHT_SQL_AND_EXTERNAL_D1_CLIENTS"
+  ],
+  "artifacts": [
+    {
+      "path": ".wrangler/staging/byok-pages-v277-prior/result.json",
+      "sha256": "4bfc03523ed7fd4f5cdea666b82711dacbc11ced4d40accdc984f685b3706e94"
+    },
+    {
+      "path": ".wrangler/staging/byok-pages-v277-prior/byok-d1-pages-history.mjs",
+      "sha256": "aeee4efb8196d02e8d14e89b25d6dddfb2a2afb760084ec4a1a0353569fa7ed4"
+    },
+    {
+      "path": ".wrangler/staging/byok-pages-v277-prior/byok-d1-pages-history.test.mjs",
+      "sha256": "90c220265a80b9efcfe185ac064525f3f211766aea6a3d09dcff0bba1f281f4f"
+    },
+    {
+      "path": ".wrangler/staging/byok-pages-v277-local/result.json",
+      "sha256": "88068795d59518345911ae5197266506beb290214a31d1cc28309953827b8d91"
+    },
+    {
+      "path": ".wrangler/staging/byok-pages-v277-verified-local/result.json",
+      "sha256": "b1d0cb3bde30ced8dcc31afaee5aa20af727e19cee170cdfd30cf7f4fdf09736"
+    },
+    {
+      "path": ".wrangler/staging/byok-pages-history-v277-cloud/result.json",
+      "sha256": "ae0c57981eb79cce9aac7258931b52b1ca217775ed02b8afe18c136dc7f87ce2"
+    },
+    {
+      "path": ".wrangler/staging/byok-pages-history-v277-verified-cloud/result.json",
+      "sha256": "2d87f6d99ca998dbd1036d3c0a9895f99142b33b05e99483e1c14b179534456e"
+    },
+    {
+      "path": ".wrangler/staging/byok-pages-history-v277-cloud/.wrangler/staging/byok-d1-pages-history-reservation/journal.jsonl",
+      "sha256": "58355a32396989b45366803406b8020103ca885a2641406b186ba64a9dd7c954"
+    },
+    {
+      "path": ".wrangler/staging/byok-pages-history-v277-verified-cloud/.wrangler/staging/byok-d1-pages-history-reservation/journal.jsonl",
+      "sha256": "90af6fa4a10214c5e8ad42b86a0911858cc0e5de5ee6cf5c61b482133ebd95db"
+    },
+    {
+      "path": ".wrangler/staging/byok-pages-history-v277-cloud/.wrangler/staging/byok-d1-pages-history-reservation/result.json",
+      "sha256": "7fe08d965786e53fb3b02029ca8feb2e7624cb360fb38aa020115eb6338a836b"
+    },
+    {
+      "path": ".wrangler/staging/byok-pages-history-v277-verified-cloud/.wrangler/staging/byok-d1-pages-history-reservation/result.json",
+      "sha256": "b2f45c2cc827d6a03c8987c316916797792f0739109bd3ccf8a417d95f241fff"
+    },
+    {
+      "path": ".wrangler/staging/byok-pages-v277-local/pages-history.mjs",
+      "sha256": "dd7631181db8b8de365482c2cd197b692ae664ed7436ed235b8dcd5e98594004"
+    },
+    {
+      "path": ".wrangler/staging/byok-pages-v277-local/pages-history.meta.json",
+      "sha256": "9e68ab8b4c3d008289b9a38f5dff71759ecf8e493a6039780340d39c902cfa8f"
+    },
+    {
+      "path": ".wrangler/staging/byok-pages-v277-local/build.log",
+      "sha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b"
+    },
+    {
+      "path": ".wrangler/staging/byok-pages-v277-local/source.log",
+      "sha256": "ca813e21a3087a09ddf915799d7f9ebf67c60aa8a1413b01e11cca0eaa71a3de"
+    },
+    {
+      "path": ".wrangler/staging/byok-pages-v277-local/bundle.log",
+      "sha256": "94d98d629cac3a1bbbb400bada5e5aa7f7b11881ec5c457de914f0aa68802604"
+    },
+    {
+      "path": ".wrangler/staging/byok-pages-v277-local/existing-version-inventory.log",
+      "sha256": "64878771c905b72df2511c83c20131b807a8e5eeb9c5a8e520f1ae08410a5913"
+    },
+    {
+      "path": ".wrangler/staging/byok-pages-v277-local/existing-inventory.log",
+      "sha256": "4244615c99d942eb85e3764544970b2d4431e2864b51a85ad0cb9ada0c9acadd"
+    },
+    {
+      "path": ".wrangler/staging/byok-pages-v277-local/existing-read-transport.log",
+      "sha256": "b61d3ba1f0b1089332c751e3a837e5cd9347af00f34bce2d377f50d4d04d4b84"
+    },
+    {
+      "path": ".wrangler/staging/byok-pages-v277-verified-local/pages-history.mjs",
+      "sha256": "d4e10d891a83b4e228d9b2e722e89f9772838a82d3ef4eabc04ae27fb72e1181"
+    },
+    {
+      "path": ".wrangler/staging/byok-pages-v277-verified-local/pages-history.meta.json",
+      "sha256": "12a43855ad90d87ec71cc2e6761178e1884a096b1690eafdc54352e57d38949c"
+    },
+    {
+      "path": ".wrangler/staging/byok-pages-v277-verified-local/build.log",
+      "sha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b"
+    },
+    {
+      "path": ".wrangler/staging/byok-pages-v277-verified-local/source.log",
+      "sha256": "0d3a0588fa55f9b3f55b638353e0fa1fd8498ed8118cac852c76b1a61223bee1"
+    },
+    {
+      "path": ".wrangler/staging/byok-pages-v277-verified-local/bundle.log",
+      "sha256": "3482c2573a914650d7887f5e9072ea747706f25fdca002875db80a2619e38328"
+    },
+    {
+      "path": ".wrangler/staging/byok-pages-v277-verified-local/existing-version-inventory.log",
+      "sha256": "a284857af593844d916a8b6267edc4bdc7367cd431316fb4577f5f0304f6b311"
+    },
+    {
+      "path": ".wrangler/staging/byok-pages-v277-verified-local/existing-inventory.log",
+      "sha256": "f1925d44ad3da32e81d7c571ee62e393453ed805e18855af37d4a4be02ce400a"
+    },
+    {
+      "path": ".wrangler/staging/byok-pages-v277-verified-local/existing-read-transport.log",
+      "sha256": "6a11210ca88cf821c4eddcb556cfd0391d0ae1d08d58f4cf27b0ef70c01e57b2"
+    },
+    {
+      "path": ".wrangler/staging/byok-pages-v277-verified-local/old-null-regression.log",
+      "sha256": "344af153f3d31e9afc6030977de59e345425a79f64583b18780109611709af31"
+    },
+    {
+      "path": "scripts/deploy/byok-d1-pages-history.mjs",
+      "sha256": "436b1bec0a8a5c83710072fc2c7bd045067da94bfc46567479ee5387e818d6ba"
+    },
+    {
+      "path": "scripts/deploy/byok-d1-pages-history.test.mjs",
+      "sha256": "641a5b111128716443d31fad624057ca1ba0f9944f461e6ff147a63c9588a246"
+    },
+    {
+      "path": ".wrangler/staging/byok-pages-history-v277-probe/result.json",
+      "sha256": "45da6077fcc9158ee301d10ed4aabd1e38cb60b2404ecfa0cf7c35975612087c"
+    },
+    {
+      "path": ".wrangler/staging/byok-pages-history-v277-probe/journal.jsonl",
+      "sha256": "40c938b076a51d4d09f5a85566427daaa9f303dcd1f48e1eae093ddc08d788cc"
+    },
+    {
+      "path": ".wrangler/staging/byok-pages-filters-v277-probe/result.json",
+      "sha256": "ae6a396590aae5439184aa0134c24a054d16ed8525d94525afa1a141cd87a283"
+    },
+    {
+      "path": ".wrangler/staging/byok-pages-filters-v277-probe/journal.jsonl",
+      "sha256": "9d14fb8a2c3b26c648f9142d6029642f74d5005e4f54916c0306d190e97d682d"
+    },
+    {
+      "path": ".wrangler/staging/byok-pages-shape-diagnostic-v277/result.json",
+      "sha256": "e5b87e76e8fae42b15404fdb9c5f468e0dbe4fa52b76a1dc8f784a6b186d1153"
+    },
+    {
+      "path": ".wrangler/staging/byok-pages-shape-diagnostic-v277/journal.jsonl",
+      "sha256": "df75173ad00d1264b6d122a9ea397fb6ca4397b9d99b39b1e61890c45ba3c021"
+    },
+    {
+      "path": ".wrangler/staging/probe-byok-pages-history-v277.mjs",
+      "sha256": "bc5627a79242b78321f4fc7097e9a65585cc0ad186efbb91673f105f12bb78c4"
+    },
+    {
+      "path": ".wrangler/staging/probe-byok-pages-filters-v277.mjs",
+      "sha256": "c3c9e66f9985ddc387da385886b294b15971a18be2558db0ca91f4663f882cd0"
+    },
+    {
+      "path": ".wrangler/staging/diagnose-byok-pages-shape-v277.mjs",
+      "sha256": "c61efaa6cc2862becc1bc31c0efd4d72ac7bf3dd25c22d0c3bfd130e46a10e91"
+    },
+    {
+      "path": ".wrangler/staging/prepare-byok-pages-null-v277.mjs",
+      "sha256": "55a056732d99302250486dc610f39d76b77641e2429587e4e0217dbadd4006c4"
+    },
+    {
+      "path": ".wrangler/staging/verify-byok-pages-history-v277.mjs",
+      "sha256": "942bfa16dfa664f2dff69f08e2ddb573c0bda3d5d57b29ed64ee609cbfe4391f"
+    },
+    {
+      "path": ".wrangler/staging/verify-byok-pages-history-verified-v277.mjs",
+      "sha256": "e747bc307354e58d3e63d76817ec7040b1a9da0fe193499fc8206dc8378acef0"
+    },
+    {
+      "path": ".wrangler/staging/collect-byok-pages-history-v277.mjs",
+      "sha256": "59acb58c25a0d43ff82af01c0a81e3cc4b5c758016fdd8b3a25a6d4e328818f9"
+    },
+    {
+      "path": ".wrangler/staging/collect-byok-pages-history-verified-v277.mjs",
+      "sha256": "49a535cac16850e8d5dab55b8cc259ca818d9052e83fba7eaf87e7ebf90574c8"
+    },
+    {
+      "path": ".wrangler/staging/summarize-byok-pages-history-v277.mjs",
+      "sha256": "1d48703c4d0de6f9a5e696187e952e447bacef2b75f9e9a3e6c3900a3502be0e"
+    },
+    {
+      "path": ".firecrawl/pages-history-bindings-developer-v277.json",
+      "sha256": "de47bf987e608473c5bdaa6d9ba4a1729616a5d96e1660e1eca1a94a0a468bb8"
+    },
+    {
+      "path": ".firecrawl/pages-deployment-metadata-developer-v277.json",
+      "sha256": "dad0f2bac55dc33f6cbc65e21df37618b9de80a7a531408b0529ca158179909c"
+    }
+  ]
+}

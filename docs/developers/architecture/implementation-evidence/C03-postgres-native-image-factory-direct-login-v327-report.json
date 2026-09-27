@@ -1,0 +1,101 @@
+{
+  "status": "PASS",
+  "cleanup": "PASS",
+  "binaryVersion": "postgres (PostgreSQL) 18.6",
+  "scope": "owned loopback PostgreSQL 18; 73 formal migrations; review-only parent/outbox proposals; distinct password-authenticated LOGIN runtime/dispatch/fact roles",
+  "limitations": [
+    "Direct LOGIN role connections use random fixture-only passwords; no production credential, origin, Hyperdrive binding or cloud deployment is proven.",
+    "The budget ticket callback is synthetic; real PostgreSQL origin admission and financial recovery are not exercised.",
+    "Parent and fact/job grants are default-disabled local proposals, not formal migrations or a production activation.",
+    "The prepared ingress SHA and selected route are supplied by the fixture; this test does not exercise HTTP parsing or real provider fetch."
+  ],
+  "sourceSha256": {
+    "test": "f6d19f2fd2ba7283d8d8b8a0c5ac01f23053a1870e33737b16b1d3c8e416b61f",
+    "factory": "623b36d6216a86d329813b0cc5e7e9872a396dd02184c0661a5f780835cca0dc",
+    "attemptContext": "d57ae9c0f56230fd1a4f775926d58c235897470ffec3aad110cef251eb4b8f3e",
+    "parentGrant": "099aa455ea59f9a6b0231a54524632f89c3befdf53c4a35327a5057019f0bc1d",
+    "factJobGrant": "796b576519f54b9dd76fb3dcae53999adc23a8afbe213b60351120a42ba7a70b",
+    "cinatoken.dispatch_intent_definer_activation": "02cf4ffde6d37bb9253e9466cbde59047b5b8a0b19d73897ae69d60696db077d",
+    "cinatoken.request_dispatch_single_claim_activation": "6e62e12c25a94e4b32fe0121c728198a409f95427ef4cdcb14c51ebe1a629112",
+    "cinatoken.request_dispatch_parent_activation": "2e8c20088f72271ecf89bc4f43583ec3b2247893a11b84cc6a220563a72de8de",
+    "cinatoken.settlement_outbox_definer_activation": "c3995e07159d4fe0b2aac5ab96ee2d14e6e11fddc3bf9868d258d43620612f52",
+    "formalMigrationCorpus": "23afef61a8a670e0af8c90e3a138f522e6b283b454e380a592bf85bca83108dc"
+  },
+  "stages": [
+    {
+      "name": "formal-migrations",
+      "result": "PASS",
+      "count": 73
+    },
+    {
+      "name": "reviewed-parent-and-outbox-definers-with-function-only-parent-grant",
+      "result": "PASS"
+    },
+    {
+      "name": "password-authenticated-runtime-dispatch-and-fact-origins",
+      "result": "PASS",
+      "currentEqualsSession": true,
+      "wrongCredentialRejected": true,
+      "roleMemberships": 0
+    },
+    {
+      "name": "separate-direct-login-dispatch-and-fact-roles-with-default-fact-denial",
+      "result": "PASS",
+      "acl": {
+        "dispatch_prepare": true,
+        "fact_prepare": false,
+        "runtime_prepare": false,
+        "dispatch_parent_dml": false,
+        "fact_parent_dml": false,
+        "dispatch_intent_dml": false,
+        "fact_intent_dml": false,
+        "dispatch_fact_insert": false,
+        "fact_fact_insert": false,
+        "runtime_fact_insert": false
+      }
+    },
+    {
+      "name": "prepared-route-mismatch-rejected-before-parent",
+      "result": "PASS"
+    },
+    {
+      "name": "real-claim-and-budget-mark-but-ungranted-fact-write-fails-closed",
+      "result": "PASS",
+      "sqlstate": "42501",
+      "durable": {
+        "facts": 0,
+        "outbox": 0,
+        "jobs": 0
+      }
+    },
+    {
+      "name": "reviewed-fact-and-job-column-grants",
+      "result": "PASS",
+      "granted": {
+        "fact_column_insert": true,
+        "job_column_insert": true,
+        "intent_dml": false,
+        "parent_dml": false,
+        "outbox_insert": false,
+        "dispatch_fact_insert": false
+      }
+    },
+    {
+      "name": "factory-parent-claim-budget-mark-fact-outbox-and-pending-job",
+      "result": "PASS",
+      "durable": {
+        "parents": 1,
+        "claims": 1,
+        "facts": 1,
+        "outbox": 1,
+        "pending_jobs": 1,
+        "financial_logs": 0,
+        "financial_audits": 0,
+        "budget_spent": "0.000000"
+      },
+      "contextSha256": "0c56d30b47c1c63be4b7d352216910b3118dedcd5772d4fc2170e0f3ac46338a",
+      "sanitized": true
+    }
+  ],
+  "serverVersionNum": 180006
+}

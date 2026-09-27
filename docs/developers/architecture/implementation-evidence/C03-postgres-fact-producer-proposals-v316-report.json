@@ -1,0 +1,91 @@
+{
+  "status": "PASS",
+  "cleanup": "PASS",
+  "binaryVersion": "postgres (PostgreSQL) 18.6",
+  "scope": "owned loopback-only PG fixture; two proposal SQL files outside formal migrations; synthetic NOLOGIN producer only",
+  "stages": [
+    {
+      "name": "formal-migrations",
+      "result": "PASS",
+      "count": 73
+    },
+    {
+      "name": "optional-proposals-applied",
+      "result": "PASS",
+      "formalChainUntouched": true
+    },
+    {
+      "name": "narrow-producer-acl",
+      "result": "PASS",
+      "currentUser": "cinatoken_gateway_fact_producer",
+      "key_select": false,
+      "key_update": false,
+      "outbox_insert": false,
+      "fact_update": false,
+      "intent_guard_execute": false,
+      "enqueue_execute": false,
+      "runtimeAclAfterGrantRerun": {
+        "intent_guard_execute": false,
+        "enqueue_execute": false
+      },
+      "directDenials": [
+        "api_keys SELECT",
+        "api_keys UPDATE",
+        "outbox INSERT"
+      ]
+    },
+    {
+      "name": "producer-intent-fact-outbox",
+      "result": "PASS",
+      "requestId": "gen-19ef3aaf-71a7-4b8c-bcc8-1b5e69cb3416",
+      "durable": {
+        "facts": 1,
+        "outbox": 1,
+        "intent_state": "dispatch_claimed",
+        "spent": "1.000000"
+      },
+      "outboxInsertedByTriggerWithoutDirectGrant": true
+    },
+    {
+      "name": "intent-key-lock-first",
+      "result": "PASS",
+      "waitEvent": "transactionid",
+      "blockers": "{15012}",
+      "heldByExpectedSession": true,
+      "committedOrder": "intent before reassignment",
+      "historicalIntentWorkspace": "workspace",
+      "currentKeyWorkspace": "other-workspace"
+    },
+    {
+      "name": "key-reassignment-lock-first",
+      "result": "PASS",
+      "waitEvent": "transactionid",
+      "blockers": "{2824}",
+      "heldByExpectedSession": true,
+      "staleWorkspaceIntentRejected": true,
+      "committedIntents": 0
+    },
+    {
+      "name": "intent-definer-temp-trigger",
+      "result": "PASS",
+      "attachmentWithoutExecuteDenied": true,
+      "misgrantStillFailsOnRelation": true
+    },
+    {
+      "name": "outbox-definer-temp-trigger",
+      "result": "PASS",
+      "attachmentWithoutExecuteDenied": true,
+      "misgrantStillFailsOnRelation": true
+    }
+  ],
+  "sourceSha256": {
+    "nativeTest": "13c7a4f8f153e754e20ebb87d104b380552f8df5c21c9a3babc379ce6fb27c91",
+    "intentProposal": "16d7bb38b67e4dedb6f47684f1db1c72f290c3ae3394f12d2b63b38efac157c2",
+    "outboxProposal": "58b31a3a540fb7a6cd016bfbc928204f98b613f6d5451da330275a5fac6367ed",
+    "guardSwitch": "24a601dbafd66f16cdd14dcc81017bc26199c6b833e311d389cdb07103010763",
+    "runtimeGrant": "5f36b5e732607ae6c4ee172f7a0b63bcd7248b1e6aa6d24584a813e87b95799e",
+    "intentRepository": "0e898ed87319fbb8ac4e325262795bf785aaee35e9508bc6062823a72d95fa4c",
+    "factRepository": "8170b34cb965a77b35c49a6ca4a0a8ebe219230e9bedc9017376bf845f5a4e8e"
+  },
+  "serverVersionNum": 180006
+}

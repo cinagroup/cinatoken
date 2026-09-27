@@ -1,3 +1,6 @@
+import { RequestExecutionStoppedError } from '@octafuse/core';
+import { RequestBodyTooLargeError } from '../bounded-request-body';
+
 export type BoundedJsonRequestFailureKind =
 	| 'invalid_json'
 	| 'invalid_request'
@@ -76,7 +79,7 @@ export async function readBoundedJsonObject(
 	}
 	const declaredLength = declaredContentLength(request);
 	if (declaredLength != null && declaredLength > params.maxBytes) {
-		await request.body?.cancel('bounded_json_request_too_large').catch(() => undefined);
+		void request.body?.cancel('bounded_json_request_too_large').catch(() => undefined);
 		throw new BoundedJsonRequestError(
 			'payload_too_large',
 			`${params.label} must be at most ${params.maxBytes} bytes`,
@@ -125,7 +128,10 @@ export async function readBoundedJsonObject(
 		}
 		return parsed;
 	} catch (error) {
-		await reader.cancel('bounded_json_request_rejected').catch(() => undefined);
+		// A tee/custom transport may never acknowledge cancellation. Observe it,
+		// but do not make a size/cancellation response depend on that acknowledgement.
+		void reader.cancel('bounded_json_request_rejected').catch(() => undefined);
+		if (error instanceof RequestExecutionStoppedError || error instanceof RequestBodyTooLargeError) throw error;
 		if (error instanceof BoundedJsonRequestError) throw error;
 		if (request.signal.aborted) {
 			throw new BoundedJsonRequestError('cancelled', 'JSON request was cancelled');

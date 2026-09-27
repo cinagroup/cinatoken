@@ -1,0 +1,115 @@
+{
+  "workPackage": "C02.B2.1",
+  "date": "2026-09-05",
+  "status": "LOCAL_PASS_SUBSET",
+  "parentStatus": "DOING",
+  "head": "7eb59008f7d8e156e81fd18a57658fdef2553264",
+  "environment": {
+    "node": "24.14.1",
+    "requiredNode": "22",
+    "workersTypes": "5.20260829.1",
+    "workersRuntimeVerified": false,
+    "realDatabaseVerified": false,
+    "realKmsOperations": false
+  },
+  "sourceFiles": [
+    {
+      "sha256": "0d261b5300a9695f416186ccd0bd6abed51d915af754d275b209fdd824696001",
+      "path": "packages/proxy/src/app.ts"
+    },
+    {
+      "sha256": "1b18df34cfc704c89b16e2e0c27f0ab0b93735ce1af7980769bd3fe044e3e89c",
+      "path": "packages/proxy/src/middleware/auth.ts"
+    },
+    {
+      "sha256": "47c3e1b3481d21b7164ab9547ddca01288dc82775be608d293cc87c0f28af397",
+      "path": "packages/proxy/src/middleware/text-request-lifecycle.ts"
+    },
+    {
+      "sha256": "cf5407f5fe79a281226449000342a0a16192ae4ab2b478fbf86b63649965fe7c",
+      "path": "packages/proxy/src/services/api-key-auth.ts"
+    },
+    {
+      "sha256": "c1fac40bb0a1a3dacf9b55cde0013982c7e0c25d2e493638f8e28e39ea27751b",
+      "path": "packages/proxy/src/services/bounded-request-body.ts"
+    },
+    {
+      "sha256": "8ae4d0c5926d806798aa2af6a1eb0ce3c399fefa748ae97368f2d8e7896938a8",
+      "path": "packages/proxy/src/services/bounded-request-body.test.ts"
+    },
+    {
+      "sha256": "5bdbdf7f13b3d20756349623977d4420455b12b90eb5e53543dabd669c0cccd1",
+      "path": "packages/proxy/src/routes/v1/chat.ts"
+    },
+    {
+      "sha256": "e3fd49246b3414a7f7b54fa27ac2a148c291451434b84d3d859ba6a8778aa1e9",
+      "path": "packages/proxy/src/routes/v1/messages.ts"
+    },
+    {
+      "sha256": "2ebb9bc7f2eaac723740af961c0604abfece6d6b45f4a9aa74051a883b7562de",
+      "path": "packages/proxy/src/routes/v1/responses.ts"
+    },
+    {
+      "sha256": "2956ca1238dfa3a005cbe7fec44a87b6950496addfd4f19bc9826fa7912e439a",
+      "path": "packages/proxy/src/routes/v1/request-dispatch-limit.test.ts"
+    },
+    {
+      "sha256": "4e3d2667d2ff052912cbf5a26a51015301d89230ebf90e08e0c8f5acefcf18d8",
+      "path": "packages/proxy/package.json"
+    },
+    {
+      "sha256": "9aaaabe4704c552be479e1194a9fa24f3543eedf1f203ad3f9a51707c86548ef",
+      "path": "packages/proxy/tsconfig.dispatch-safety.json"
+    },
+    {
+      "sha256": "6f293b2ba818cac48b154598e03de8661e7a207964b6d57e1c9f82c4d2afe000",
+      "path": "packages/proxy/src/services/request-deadline.ts"
+    },
+    {
+      "sha256": "bbba22c4e60ed34e7dcf2ec61b822ff9474beccac4f522656ff65649d2da2152",
+      "path": "packages/proxy/src/services/request-dispatch-budget.ts"
+    },
+    {
+      "sha256": "7ffb4a120ce0b83df428a1344fca5b16ea9d8784178d555e7377623511451b0c",
+      "path": "packages/proxy/wrangler.jsonc"
+    }
+  ],
+  "verifications": [
+    {
+      "command": "npm.cmd run typecheck -w @octafuse/proxy",
+      "exitCode": 0
+    },
+    {
+      "command": "npm.cmd run typecheck:dispatch-safety -w @octafuse/proxy",
+      "exitCode": 0
+    },
+    {
+      "command": "npm.cmd test -w @octafuse/proxy",
+      "exitCode": 0,
+      "mainTests": 771,
+      "mainSuites": 134,
+      "passed": 771,
+      "failed": 0,
+      "cancelled": 0,
+      "skipped": 0
+    },
+    {
+      "command": "npm.cmd run test:dispatch-safety -w @octafuse/proxy",
+      "exitCode": 0,
+      "tests": 231,
+      "suites": 17,
+      "passed": 231,
+      "failed": 0,
+      "cancelled": 0,
+      "skipped": 0
+    }
+  ],
+  "limitations": [
+    "Test counts overlap; synthetic HTTP and SQL are not real database or financial evidence.",
+    "Deadline starts at the first application middleware, not TCP/TLS ingress.",
+    "Storage, auth migration/reset, guardrail writes, and financial writes may outlive the deadline.",
+    "Planner wait is bounded; inner reads/decryption are not yet fully cancellable.",
+    "Headers/TTFT/idle phase timers and other modalities remain incomplete.",
+    "No deployment, cloud resources, KMS calls, paid inference, or payment operations."
+  ]
+}

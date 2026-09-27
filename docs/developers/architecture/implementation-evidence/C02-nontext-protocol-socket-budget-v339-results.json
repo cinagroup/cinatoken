@@ -1,0 +1,56 @@
+{
+  "version": "v339",
+  "date": "2026-09-24",
+  "status": "LOCAL_NONTEXT_PROTOCOL_SOCKET_BUDGET_PASS_C02_OPEN",
+  "goalComplete": false,
+  "scope": {
+    "publicPaths": [
+      "/v1/images/generations",
+      "/v1/embeddings",
+      "/v1/rerank"
+    ],
+    "configuredRoutesPerRequest": 40,
+    "loopbackCases": 6,
+    "transport": "native Node fetch to owned loopback HTTP server; full POST bodies counted at server",
+    "database": "synthetic repository and usage sink, not durable financial persistence"
+  },
+  "observedPerPath": {
+    "all429": {
+      "fullPostBodies": 3,
+      "publicErrorCode": "gateway.dispatch_limit_exceeded",
+      "terminalUsageWrites": 1
+    },
+    "429ThenSocketResetAfterFullSecondPost": {
+      "fullPostBodies": 2,
+      "publicErrorCode": "upstream.server_error",
+      "terminalUsageWrites": 1
+    }
+  },
+  "validation": {
+    "newCasesPass": 6,
+    "newCasesTotal": 6,
+    "testFile": "packages/proxy/src/routes/v1/request-dispatch-limit.test.ts",
+    "testFilePass": 701,
+    "testFileTotal": 701,
+    "proxyTypecheck": "PASS",
+    "diffCheck": "PASS",
+    "linuxCiRun": false
+  },
+  "sourceSha256": {
+    "packages/proxy/src/routes/v1/request-dispatch-limit.test.ts": "df9e2ca5910cfebed9eca369ad009dcffba92a4f73ef5b2511128aff406e0ec5"
+  },
+  "boundaries": {
+    "allProtocolsVerified": false,
+    "concurrentSharedBudgetVerified": false,
+    "workersTransportVerified": false,
+    "intermediateProxyRetryVerified": false,
+    "supplierAcceptanceAndBillingVerified": false,
+    "durableFinancialSettlementVerified": false,
+    "C02_5Complete": false,
+    "C02_6Complete": false,
+    "C02_GComplete": false,
+    "remoteSqlCalls": 0,
+    "deployments": 0,
+    "externalSupplierCalls": 0
+  }
+}

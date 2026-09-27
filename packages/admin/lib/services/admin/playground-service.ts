@@ -6,6 +6,17 @@ import {
 	applyVertexOpenAiModelPrefix,
 	isGcpServiceAccountJson,
 	resolveProviderUpstreamSecret,
+	createRequestAuxiliaryAuthBudget,
+	createRequestDeadline,
+	GcpTokenExchangeError,
+	GCP_OAUTH_TIMEOUT_MS,
+	preparationRead,
+	RequestAuxiliaryAuthLimitError,
+	RequestExecutionStoppedError,
+	type PreparationControl,
+	type RequestDeadline,
+	type RequestAuxiliaryAuthBudget,
+	type ResolveProviderUpstreamSecretOptions,
 } from '@octafuse/core';
 import {
 	isAudioModel as isCatalogAudioModel,
@@ -31,6 +42,9 @@ import { modelKindFromFlags, resolveOpenaiUpstreamCapability } from '@/lib/invok
 import { AdminServiceError, badRequest, notFound } from './errors';
 import { isPendingProviderImportApiKey } from '@octafuse/core/db/provider-key-utils';
 import { fetchWithSafeRedirects } from '@octafuse/tool-engines/web-fetch';
+import { isTransientPostgresConnectionError } from '@octafuse/core/storage/postgres-connection-error';
+import { discardPlaygroundResponse, playgroundStoppedError, PLAYGROUND_REQUEST_DEADLINE_MS,
+	readPlaygroundJson, waitPlaygroundPoll } from './playground-request-lifecycle';
 
 /** 与 Proxy `RouteResult` 对齐的最小子集，供合并默认参数与拼 URL。 */
 export type PlaygroundResolvedRoute = {
@@ -52,7 +66,7 @@ export type PlaygroundResolvedRoute = {
 
 type PlaygroundRouteRepositories = {
 	routes: Pick<GatewayRepositories['routes'], 'getModelRouteRowById'>;
-	providers: Pick<GatewayRepositories['providers'], 'getProviderById'>;
+	providers: Pick<GatewayRepositories['providers'], 'getProvidersByIds'>;
 	models: Pick<GatewayRepositories['models'], 'getModelDetailWithRouteCounts'>;
 };
 
@@ -108,18 +122,22 @@ function parseJsonObject(raw: string | null | undefined): Record<string, unknown
 export async function resolvePlaygroundRoute(
 	repos: PlaygroundRouteRepositories,
 	routeId: string,
+	control?: PreparationControl,
 ): Promise<PlaygroundResolvedRoute> {
 	const id = String(routeId ?? '').trim();
 	if (!id) {
 		throw badRequest('routeId is required');
 	}
 
-	const row = await repos.routes.getModelRouteRowById(id);
+	const row = await preparationRead(control, () => repos.routes.getModelRouteRowById(id));
 	if (!row) {
 		throw notFound('Route not found');
 	}
 
-	const provider = await repos.providers.getProviderById(row.provider_id);
+	// This selective repository path propagates cancellation through decryption
+	// and owns any legacy-envelope writeback before the request can end.
+	const providers = await preparationRead(control, () => repos.providers.getProvidersByIds([row.provider_id], control));
+	const provider = providers.find(provider => provider.id === row.provider_id);
 	if (!provider) {
 		throw badRequest('Provider not found for this route');
 	}
@@ -127,7 +145,7 @@ export async function resolvePlaygroundRoute(
 		throw badRequest('Provider is disabled');
 	}
 
-	// `getProviderById` is the runtime read boundary: envelope-encrypted values
+	// `getProvidersByIds` is the runtime read boundary: envelope-encrypted values
 	// are decrypted and approved `env:NAME` references are resolved there.
 	// The separate plaintext/reveal method intentionally preserves `env:NAME`
 	// for Admin display and must never be used as an upstream credential.
@@ -150,7 +168,7 @@ export async function resolvePlaygroundRoute(
 		throw badRequest('Invalid custom_params JSON on route');
 	}
 
-	const model = await repos.models.getModelDetailWithRouteCounts(row.model_id);
+	const model = await preparationRead(control, () => repos.models.getModelDetailWithRouteCounts(row.model_id));
 	const isImageModel = model
 		? isImageGenerationModel({
 				output_modalities: model.output_modalities as string | null | undefined,
@@ -182,9 +200,13 @@ export async function resolvePlaygroundRoute(
 /** 服务账号 JSON 换成 access token，并强制 Gemini 走 Bearer。 */
 export async function applyPlaygroundUpstreamCredential(
 	route: PlaygroundResolvedRoute,
+	options: ResolveProviderUpstreamSecretOptions = {},
 ): Promise<PlaygroundResolvedRoute> {
 	try {
-		const resolved = await resolveProviderUpstreamSecret(route.providerApiKey);
+		const resolved = await resolveProviderUpstreamSecret(route.providerApiKey, {
+			...options,
+			auxiliaryAuth: options.auxiliaryAuth ?? createRequestAuxiliaryAuthBudget(1),
+		});
 		if (!resolved.isServiceAccount) return route;
 		const gemini = route.providerEndpoints.gemini;
 		return {
@@ -196,7 +218,12 @@ export async function applyPlaygroundUpstreamCredential(
 			},
 		};
 	} catch (e) {
-		throw badRequest(e instanceof Error ? e.message : 'Failed to resolve provider credential');
+		if (e instanceof RequestAuxiliaryAuthLimitError) throw new AdminServiceError(429, 'Playground authentication limit reached');
+		if (e instanceof GcpTokenExchangeError) {
+			if (e.code === 'cancelled') throw new AdminServiceError(499, 'Playground authentication cancelled');
+			if (e.code === 'timeout') throw new AdminServiceError(504, 'Playground authentication timed out');
+		}
+		throw new AdminServiceError(502, 'Playground provider authentication failed');
 	}
 }
 
@@ -799,9 +826,9 @@ export function buildPlaygroundDashScopeAsyncAsrRequest(
 async function pollPlaygroundDashScopeAsyncAsr(
 	route: PlaygroundResolvedRoute,
 	submitResponse: Response,
-	requestSignal?: AbortSignal,
+	owner: RequestDeadline,
 ): Promise<Response> {
-	const submitBody = (await submitResponse.json()) as unknown;
+	const submitBody = await readPlaygroundJson(submitResponse, owner);
 	const output = isPlainObject(submitBody) && isPlainObject(submitBody.output) ? submitBody.output : null;
 	const taskId = output && typeof output.task_id === 'string' ? output.task_id.trim() : '';
 	if (!taskId) {
@@ -812,24 +839,14 @@ async function pollPlaygroundDashScopeAsyncAsr(
 		taskId,
 	});
 	for (let attempt = 0; attempt < 60; attempt++) {
-		await new Promise<void>((resolve, reject) => {
-			const timer = setTimeout(resolve, 1000);
-			const onAbort = () => {
-				clearTimeout(timer);
-				reject(new DOMException('Aborted', 'AbortError'));
-			};
-			if (requestSignal?.aborted) {
-				onAbort();
-				return;
-			}
-			requestSignal?.addEventListener('abort', onAbort, { once: true });
-		});
-		const queryResponse = await fetch(queryUrl, {
+		await waitPlaygroundPoll(owner);
+		const queryResponse = await owner.wait(() => fetch(queryUrl, {
 			method: 'GET',
 			headers: { Authorization: `Bearer ${route.providerApiKey}` },
-			signal: requestSignal,
-		});
-		const queryBody = (await queryResponse.json()) as unknown;
+			signal: owner.signal,
+			redirect: 'manual',
+		}), discardPlaygroundResponse);
+		const queryBody = await readPlaygroundJson(queryResponse, owner);
 		if (!queryResponse.ok) {
 			return new Response(JSON.stringify(queryBody), {
 				status: queryResponse.status,
@@ -851,12 +868,17 @@ async function pollPlaygroundDashScopeAsyncAsr(
 		if (!transcriptionUrl) {
 			throw new AdminServiceError(502, 'DashScope asynchronous ASR result has no transcription_url');
 		}
-		const { response: resultResponse } = await fetchWithSafeRedirects(transcriptionUrl, {
-			init: { signal: requestSignal },
+		const { response: resultResponse } = await owner.wait(() => fetchWithSafeRedirects(transcriptionUrl, {
+			fetchImpl: (url, init) => owner.wait(() => fetch(url, init), discardPlaygroundResponse),
+			init: { signal: owner.signal },
 			requireHttps: true,
 			allowIpLiterals: false,
-		});
-		const resultBody = (await resultResponse.json()) as unknown;
+		}), result => discardPlaygroundResponse(result.response));
+		if (!resultResponse.ok) {
+			discardPlaygroundResponse(resultResponse);
+			throw new AdminServiceError(502, `DashScope ASR result download failed: HTTP ${resultResponse.status}`);
+		}
+		const resultBody = await readPlaygroundJson(resultResponse, owner);
 		return new Response(
 			JSON.stringify({
 				output: {
@@ -890,15 +912,50 @@ export type PlaygroundInvokeResult = {
  * 发起一次上游请求并透传 `Response`（含 body stream）。不计费、不写日志。
  */
 export async function invokePlaygroundUpstream(
-	repos: GatewayRepositories,
+	repos: PlaygroundRouteRepositories,
 	input: PlaygroundInvokeInput,
 	requestSignal?: AbortSignal,
 ): Promise<PlaygroundInvokeResult> {
-	const route = await applyPlaygroundUpstreamCredential(await resolvePlaygroundRoute(repos, input.routeId));
+	const owner = createRequestDeadline(Date.now() + PLAYGROUND_REQUEST_DEADLINE_MS, requestSignal);
+	// Preview is one route with no failover: at most one cold OAuth exchange.
+	const auxiliaryAuth = createRequestAuxiliaryAuthBudget(1);
+	try {
+		const result = await invokeOwnedPlaygroundUpstream(repos, input, owner, auxiliaryAuth);
+		try { owner.throwIfStopped(); } catch (error) { discardPlaygroundResponse(result.response); throw error; }
+		return { ...result, response: owner.wrapResponse(result.response) };
+	} catch (error) {
+		owner.dispose();
+		if (owner.signal.reason instanceof RequestExecutionStoppedError) throw playgroundStoppedError(owner.signal.reason);
+		if (error instanceof RequestExecutionStoppedError) throw playgroundStoppedError(error);
+		if (error instanceof AdminServiceError) throw error;
+		if (isTransientPostgresConnectionError(error)) throw error;
+		// Transport exceptions can contain signed URLs, headers or credentials.
+		throw new AdminServiceError(502, 'Playground upstream request failed');
+	} finally {
+		// A timed-out selective provider read may have already begun a legacy
+		// writeback. Do not orphan it, or start OAuth while it is still pending.
+		await owner.drainOwnedMutations();
+	}
+}
+
+async function invokeOwnedPlaygroundUpstream(
+	repos: PlaygroundRouteRepositories,
+	input: PlaygroundInvokeInput,
+	owner: RequestDeadline,
+	auxiliaryAuth: RequestAuxiliaryAuthBudget,
+): Promise<PlaygroundInvokeResult> {
 	const userBody = input.body;
 	if (!isPlainObject(userBody)) {
 		throw badRequest('body must be a JSON object');
 	}
+	const unresolved = await resolvePlaygroundRoute(repos, input.routeId, owner);
+	owner.throwIfStopped();
+	const route = await applyPlaygroundUpstreamCredential(unresolved, {
+		signal: owner.signal,
+		timeoutMs: Math.max(1, Math.min(GCP_OAUTH_TIMEOUT_MS, owner.deadlineAtMs - Date.now())),
+		auxiliaryAuth,
+	});
+	owner.throwIfStopped();
 
 	const merged = mergePlaygroundRequestBody(route, userBody);
 	let url: string;
@@ -1160,15 +1217,16 @@ export async function invokePlaygroundUpstream(
 
 	let response: Response;
 	try {
-		response = await fetch(url, {
+		response = await owner.wait(() => fetch(url, {
 			method: 'POST',
 			headers,
 			body: fetchBody,
-			signal: requestSignal,
-		});
+			signal: owner.signal,
+			redirect: 'manual',
+		}), discardPlaygroundResponse);
 	} catch (e) {
-		const msg = e instanceof Error ? e.message : 'Upstream fetch failed';
-		throw new AdminServiceError(502, msg);
+		owner.throwIfStopped();
+		throw new AdminServiceError(502, 'Playground upstream request failed');
 	}
 	if (
 		route.upstreamProtocol === 'dashscope' &&
@@ -1176,7 +1234,7 @@ export async function invokePlaygroundUpstream(
 		response.ok &&
 		(response.headers.get('content-type') ?? '').includes('application/json')
 	) {
-		const body = (await response.json()) as unknown;
+		const body = await readPlaygroundJson(response, owner);
 		const output = isPlainObject(body) && isPlainObject(body.output) ? body.output : null;
 		const audio = output && isPlainObject(output.audio) ? output.audio : null;
 		const audioUrl = audio && typeof audio.url === 'string' ? audio.url : '';
@@ -1184,12 +1242,14 @@ export async function invokePlaygroundUpstream(
 			throw new AdminServiceError(502, 'DashScope TTS response has no output.audio.url');
 		}
 		try {
-			const { response: audioResponse } = await fetchWithSafeRedirects(audioUrl, {
-				init: { signal: requestSignal },
+			const { response: audioResponse } = await owner.wait(() => fetchWithSafeRedirects(audioUrl, {
+				fetchImpl: (url, init) => owner.wait(() => fetch(url, init), discardPlaygroundResponse),
+				init: { signal: owner.signal },
 				requireHttps: true,
 				allowIpLiterals: false,
-			});
+			}), result => discardPlaygroundResponse(result.response));
 			if (!audioResponse.ok) {
+				discardPlaygroundResponse(audioResponse);
 				throw new AdminServiceError(502, `DashScope TTS audio download failed: HTTP ${audioResponse.status}`);
 			}
 			// 非流式接口返回签名 URL；调试台需要拿到真实音频响应才能播放和下载。
@@ -1199,11 +1259,9 @@ export async function invokePlaygroundUpstream(
 				headers: audioResponse.headers,
 			});
 		} catch (error) {
+			owner.throwIfStopped();
 			if (error instanceof AdminServiceError) throw error;
-			throw new AdminServiceError(
-				502,
-				`DashScope TTS audio download failed: ${error instanceof Error ? error.message : String(error)}`,
-			);
+			throw new AdminServiceError(502, 'DashScope TTS audio download failed');
 		}
 	}
 	if (
@@ -1211,7 +1269,7 @@ export async function invokePlaygroundUpstream(
 		route.upstreamOperation === 'audio.transcriptions.async' &&
 		response.ok
 	) {
-		response = await pollPlaygroundDashScopeAsyncAsr(route, response, requestSignal);
+		response = await pollPlaygroundDashScopeAsyncAsr(route, response, owner);
 	}
 
 	const latencyMs = Date.now() - start;

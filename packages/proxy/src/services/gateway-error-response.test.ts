@@ -10,6 +10,18 @@ import {
 } from './gateway-error-response';
 
 describe('gateway-error-response', () => {
+	it('publishes a fixed ambiguous Images settlement error without leaking storage details', async () => {
+		const response = gatewayErrorResponse({ status:503, code:GatewayErrorCode.imageSettlementUnconfirmed,
+			message:'SQL failure with private-secret-marker', metadata:{request_id:'gen-recovery',outcome_unknown:true,retry_safe:false} });
+		assert.equal(response.status,503);
+		assert.equal(response.headers.get('Cache-Control'),'no-store');
+		assert.equal(response.headers.get('Retry-After'),null);
+		const body = await response.json();
+		assert.equal(body.code,GatewayErrorCode.imageSettlementUnconfirmed);
+		assert.match(body.error.message,/may have completed/);
+		assert.equal(JSON.stringify(body).includes('private-secret-marker'),false);
+		assert.equal(body.error.metadata.retry_safe,false);
+	});
 	it('emits OpenRouter nested errors and keeps the legacy code/header as additive compatibility', async () => {
 		const app = new Hono();
 		app.get('/v1/chat/completions', (c) =>

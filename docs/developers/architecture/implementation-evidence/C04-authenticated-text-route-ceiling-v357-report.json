@@ -1,0 +1,89 @@
+{
+  "status": "PASS",
+  "cleanup": "PASS",
+  "binaryVersion": "postgres (PostgreSQL) 18.6",
+  "sourceSha256": {
+    "formalMigrations": "23afef61a8a670e0af8c90e3a138f522e6b283b454e380a592bf85bca83108dc",
+    "runtimeGrant": "8f20bdfd5ff9ac99198c7d08fab09b64d36ef6d111fe0d500ac3c1bd005a9a7f",
+    "capabilityProposal": "bbf06af6e9e2df6801c0e89442644d208d7213dbb6a7e202b96183b54d67fe9f",
+    "ceilingProposal": "3ce21a1502906f3b24753f62932ada1aa5299ed65365cce4e55c410476b392c4",
+    "fixture": "25186e7b24c310b1b45fdf490356539593aeb7ab0bbe89596fd835920cc661bb"
+  },
+  "stages": [
+    {
+      "name": "formal-pg73-and-current-runtime-grants-installed",
+      "result": "PASS"
+    },
+    {
+      "name": "default-off-installation-rejects-contaminated-role-and-installs-explicitly",
+      "result": "PASS"
+    },
+    {
+      "name": "direct-quote-login-only-has-function-execute-no-source-or-quote-dml",
+      "result": "PASS",
+      "acl": {
+        "quote_execute": true,
+        "cap_issue_execute": false,
+        "cap_claim_execute": false,
+        "runtime_execute": false,
+        "quote_table": false,
+        "runtime_table": false
+      }
+    },
+    {
+      "name": "missing-route-subject-fingerprint-fails-closed-before-quote",
+      "result": "PASS"
+    },
+    {
+      "name": "one-shot-bearer-capability-binds-db-derived-17001-and-51003-micros",
+      "result": "PASS"
+    },
+    {
+      "name": "declared-capacities-above-context-increase-db-derived-ceiling",
+      "result": "PASS"
+    },
+    {
+      "name": "source-change-does-not-rewrite-insert-only-quote-fragment",
+      "result": "PASS"
+    },
+    {
+      "name": "user-factor-route-override-and-multimedia-price-fail-closed",
+      "result": "PASS"
+    },
+    {
+      "name": "missing-or-null-currency-cannot-produce-free-usd-fragment",
+      "result": "PASS"
+    },
+    {
+      "name": "zero-is-derived-only-from-zero-db-prices",
+      "result": "PASS"
+    },
+    {
+      "name": "key-revocation-reactivation-invalidates-unconsumed-quote-capability",
+      "result": "PASS"
+    },
+    {
+      "name": "expired-endpoint-evidence-cannot-produce-fragment",
+      "result": "PASS"
+    },
+    {
+      "name": "no-numeric-function-arguments-and-legacy-broad-grant-remains-blocked",
+      "result": "PASS",
+      "shape": {
+        "issue_args": 4,
+        "derived_amount_columns": 2
+      }
+    }
+  ],
+  "limitations": [
+    "Review-only PG73 proposal; no formal migration, production credential, Worker binding or remote database changed.",
+    "This quote fragment covers one simple text route only. It does not prove the complete eligible fallback plan, provider credential identity, selected route, or seller/upstream economics.",
+    "No reserve, dispatch grant, buyer critical write, or physical egress check consumes this record.",
+    "The v356 body digest is caller asserted; PostgreSQL does not reconstruct HTTP request bytes.",
+    "The quoted source snapshot is immutable, but mutable live route and price sources need fresh validation at a future grant.",
+    "A persisted route subject fingerprint is required but PostgreSQL does not recompute its freshness after provider or route mutation; no budget hold or dispatch grant may use this fragment.",
+    "The ceiling assumes one text attempt uses at most the verified endpoint context for input and for output; other operations and pricing dimensions fail closed.",
+    "Only personal Workspace and modern hashref Key rows are supported via the v356 capability.",
+    "D1/MySQL parity, Linux CI and Worker/Hyperdrive behavior remain unproved."
+  ]
+}

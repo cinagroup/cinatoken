@@ -1,0 +1,56 @@
+{
+  "status": "PASS",
+  "cleanup": "PASS",
+  "binaryVersion": "postgres (PostgreSQL) 18.6",
+  "scope": "owned loopback PG18; 73 formal migrations, 10000 synthetic earnings, review-only index",
+  "stages": [
+    {
+      "name": "formal-schema-installed",
+      "result": "PASS",
+      "migrations": 73
+    },
+    {
+      "name": "synthetic-earning-scale-baseline",
+      "result": "PASS",
+      "earnings": 10000,
+      "ledger": 10000,
+      "beforePlan": "Aggregate  (cost=312.50..312.51 rows=1 width=56) (actual time=1.309..1.310 rows=1.00 loops=1)\n  Buffers: shared hit=187\n  ->  Seq Scan on shared_key_earnings  (cost=0.00..312.00 rows=50 width=21) (actual time=0.011..1.278 rows=50.00 loops=1)\n        Filter: (shared_key_id = 'projection-key-1'::text)\n        Rows Removed by Filter: 9950\n        Buffers: shared hit=187\nPlanning:\n  Buffers: shared hit=42 read=8\nPlanning Time: 2.330 ms\nExecution Time: 1.336 ms"
+    },
+    {
+      "name": "exclusive-lock-timeout-leaves-no-index",
+      "result": "PASS",
+      "blockedMs": 520
+    },
+    {
+      "name": "concurrent-index-build-waits-for-writer-then-validates",
+      "result": "PASS",
+      "indexWait": "virtualxid",
+      "buildMs": 68,
+      "indexBytes": 688128,
+      "afterPlan": "Aggregate  (cost=5.69..5.70 rows=1 width=56) (actual time=0.038..0.039 rows=1.00 loops=1)\n  Buffers: shared hit=3\n  ->  Index Only Scan using idx_shared_key_earnings_key_projection on shared_key_earnings  (cost=0.29..5.18 rows=51 width=21) (actual time=0.015..0.021 rows=51.00 loops=1)\n        Index Cond: (shared_key_id = 'projection-key-1'::text)\n        Heap Fetches: 0\n        Index Searches: 1\n        Buffers: shared hit=3\nPlanning:\n  Buffers: shared hit=43\nPlanning Time: 2.000 ms\nExecution Time: 0.076 ms"
+    },
+    {
+      "name": "writer-first-commit-then-rebuild-includes-detail-once",
+      "result": "PASS",
+      "repairWait": "transactionid",
+      "projection": {
+        "input": "412",
+        "output": "557",
+        "net": "0.530000",
+        "last_used_at": "2026-09-24 08:45:00+08"
+      },
+      "earnings": 10002,
+      "ledger": 10002
+    }
+  ],
+  "limitations": [
+    "Synthetic data, local hardware and planner statistics do not predict a production build window.",
+    "The index proposal is not a formal migration and was not deployed.",
+    "This fixture covers the PG repository lock and index only; no durable repair scanner is installed."
+  ],
+  "sourceSha256": {
+    "formalMigrationCorpus": "23afef61a8a670e0af8c90e3a138f522e6b283b454e380a592bf85bca83108dc",
+    "indexProposal": "6a0501b08476a37a3fca3ea24e9360806d19cd8fdd75109671f3a07eebc42048",
+    "nativeTest": "bf35707f50385ace181c16c1b55fd9182273d030a5b9028e8707191645e6579d"
+  }
+}

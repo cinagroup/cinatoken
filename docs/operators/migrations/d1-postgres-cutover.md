@@ -1,14 +1,16 @@
 # D1 → `cinatoken_gateway` PostgreSQL 迁移与切换
 
+2026-09-21：[ADR-0001](../../developers/architecture/decisions/ADR-0001-production-financial-authority.md) 已批准 PostgreSQL 为本次共享平台生产预算 / 资金唯一权威。该选择仅用于设计与本地实现，**不授权执行本手册命令或证明迁移已完成**。实施前仍须核对当前迁移目录、源 / 目标实际状态及新增恢复能力；下文历史迁移尾版本不能直接当作当前发布版本。
+
 本文定义 CinaToken 将业务数据从 Cloudflare D1 迁入 PostgreSQL 的生产边界和操作顺序。目标 PostgreSQL 可以与 CinaAuth 共用同一数据库实例，但 CinaToken 只拥有 **`cinatoken_gateway` Schema**；不得读写 CinaAuth 的身份、会话或迁移表。
 
-> 当前仓库切换合同：源 D1 迁移链尾为 `0068_batch_jobs.sql`，目标 PostgreSQL 迁移链尾为 `0067_batch_jobs.sql`。D1 的 `0041_user_budget_spent_micros.sql` 是专用精度升级，目标仍以精确 `NUMERIC(18,6)` 保存 `budget_spent`，因此两个后端的尾版本号有意相差一。最终备份、源写入冻结、ETL（包含 `generation_feedback`、provider-attempt 可用率事实、公开模型总 Token 聚合、Generation service tier、私有 BYOK、Batch 元数据与请求项账本、三档共享容量策略及 route-selective Key 限额结算、Guardrail 分配来源、Workspace Default 与 Account Default Guardrail）、零差异对账和灰度仍是独立的生产放行门。
+> 当前仓库切换合同：源 D1 迁移链尾为 `0068_batch_jobs.sql`，目标 PostgreSQL 迁移链尾为 `0073_recovery_api_key_workspace_lock.sql`。D1 的 `0041_user_budget_spent_micros.sql` 是专用精度升级，目标仍以精确 `NUMERIC(18,6)` 保存 `budget_spent`；两后端到 Batch 为止的版本号相差一。PostgreSQL `0068`–`0073` 为后续函数与恢复能力的独立迁移，不能按尾版本号推断跨后端等价性。`0069`–`0073` 只准备恢复 Schema：普通 runtime 无权访问新增五张表或执行恢复 Key helper，既有请求日志 INSERT guard 尚未启用，C03 恢复仍关闭。最终备份、源写入冻结、ETL（包含 `generation_feedback`、provider-attempt 可用率事实、公开模型总 Token 聚合、Generation service tier、私有 BYOK、Batch 元数据与请求项账本、三档共享容量策略及 route-selective Key 限额结算、Guardrail 分配来源、Workspace Default 与 Account Default Guardrail）、零差异对账和灰度仍是独立的生产放行门。
 
 ## 1. 不变量
 
 - 业务表固定在 `cinatoken_gateway`，运行时 `search_path=cinatoken_gateway,public`。
 - 若只存在历史 `octafuse_gateway`，迁移器会在持有 advisory lock 后将其原地改名；若新旧 Schema 同时存在，迁移器拒绝继续，必须人工对账。
-- 源 D1 应完成 `0068_batch_jobs.sql`（且包含 D1 专用 `0041_user_budget_spent_micros.sql`），目标 PostgreSQL 必须完成 `0067_batch_jobs.sql`；不得只按相同版本号推断跨后端等价性。
+- 源 D1 应完成 `0068_batch_jobs.sql`（且包含 D1 专用 `0041_user_budget_spent_micros.sql`），目标 PostgreSQL 必须完成 `0073_recovery_api_key_workspace_lock.sql`；其中 `0067_batch_jobs.sql` 仍是 ETL 的 Batch Schema 最低依赖，不代表当前完整迁移链尾。
 - Endpoint-first 迁移只建表，不从旧 `providers.endpoints`、`model_routes.routing_metadata`、`price_override` 或 `models.pricing_profile` 猜测证据；D1 `0048`/PostgreSQL `0047` 为每条 `model_endpoint_routes` 绑定增加 nullable `subject_fingerprint`，D1 `0049`/PostgreSQL `0048` 增加 operation-scoped `audio_capabilities`。旧链接保持 `NULL`、旧音频证据保持 `{}`，并在读取门禁启用后 fail closed。ETL 只复制已显式写入的 `model_endpoints` / `model_endpoint_routes`；切换读取路径前必须另行完成 dual-write、可审计 backfill/reverify 与逐路由对账。
 - `portal_sessions`、`admin_sessions` 不迁移，目标会话会被清空；切换后普通用户和管理员都必须重新登录。
 - D1 普通用户预算以 `users.budget_spent_micros INTEGER` 为权威状态，`budget_spent REAL` 只作兼容投影；PostgreSQL 没有该 D1 专用列，以精确 `NUMERIC(18,6)` 保存同一微单位金额。
@@ -83,7 +85,7 @@ npm run db:migrate:pg
 npm run db:grant:pg-runtime
 ```
 
-`db:grant:pg-runtime` 会验证当前用户和 Schema owner 都是 `cinatoken_gateway_migrator`、目标迁移已到 `0067_batch_jobs.sql`，然后向 runtime 授予所有业务表/序列/函数的最小运行权限，并明确撤销其对 `schema_migrations` 的全部权限。`generation_feedback` 与 `provider_attempt_availability` 只授予 `SELECT/INSERT`，不得 `UPDATE/DELETE`；`batches` 与 `batch_items` 允许 Batch 状态机使用 `SELECT/INSERT/UPDATE`，但 runtime 不得直接 `DELETE`；`byok_keys` 需要完整 DML，供 Management API 管理密钥并供推理路径只读解密。Provider 密钥明文只存在于单次请求内存，数据库仅保存 `enc:v2:` 密文，软删除会在同一事务中擦除密文。Provider-attempt 过期数据只能通过 migrator-owned `delete_provider_attempt_availability_before(timestamptz, integer)` 删除；runtime 仅有 `EXECUTE`，函数本身强制单批最多 5,000 行且拒绝删除 25 小时内的事实。
+`db:grant:pg-runtime` 会验证当前用户和 Schema owner 都是 `cinatoken_gateway_migrator`、目标迁移已到 `0073_recovery_api_key_workspace_lock.sql`，然后向 runtime 授予既有业务表/序列/函数的运行权限，并明确撤销其对 `schema_migrations` 和五张新增恢复表的全部权限，以及对 `recovery_api_key_workspace_matches(text,text)` 的执行权。`generation_feedback` 与 `provider_attempt_availability` 只授予 `SELECT/INSERT`，不得 `UPDATE/DELETE`；`batches` 与 `batch_items` 允许 Batch 状态机使用 `SELECT/INSERT/UPDATE`，但 runtime 不得直接 `DELETE`；`byok_keys` 需要完整 DML，供 Management API 管理密钥并供推理路径只读解密。Provider 密钥明文只存在于单次请求内存，数据库仅保存 `enc:v2:` 密文，软删除会在同一事务中擦除密文。Provider-attempt 过期数据只能通过 migrator-owned `delete_provider_attempt_availability_before(timestamptz, integer)` 删除；runtime 仅有 `EXECUTE`，函数本身强制单批最多 5,000 行且拒绝删除 25 小时内的事实。
 
 迁移必须可重复执行。随后用只读 SQL 验证：
 
@@ -95,9 +97,9 @@ FROM cinatoken_gateway.schema_migrations
 ORDER BY version;
 ```
 
-预期 `current_schema()` 为 `cinatoken_gateway`，迁移记录完整到 `0067_batch_jobs.sql`。若 `octafuse_gateway` 与 `cinatoken_gateway` 同时存在，停止操作，不得删除或自动合并任一侧。
+预期 `current_schema()` 为 `cinatoken_gateway`，迁移记录完整到 `0073_recovery_api_key_workspace_lock.sql`。若 `octafuse_gateway` 与 `cinatoken_gateway` 同时存在，停止操作，不得删除或自动合并任一侧。
 
-在仅持有 Hyperdrive、无明文连接串的 Cloudflare 操作环境中，使用 `postgres-migrations-worker.ts` 将固定的 67 个 PostgreSQL SQL 模块打包到一次性 Worker。入口只接受强 Bearer Token，不接受任意 SQL；迁移和 advisory lock 位于同一事务，成功后调用同一套 runtime 授权逻辑。验证幂等重跑为 0 新执行/67 跳过后删除迁移 Worker。
+在仅持有 Hyperdrive、无明文连接串的 Cloudflare 操作环境中，使用 `postgres-migrations-worker.ts` 将固定的 73 个 PostgreSQL SQL 模块打包到一次性 Worker。入口只接受强 Bearer Token，不接受任意 SQL；迁移和 advisory lock 位于同一事务，成功后调用同一套 runtime 授权逻辑。验证幂等重跑为 0 新执行/73 跳过后删除迁移 Worker。`0069`/`0072` 会建立指向既有热表的外键，取得的锁在该 Worker 的整批迁移事务提交前不会释放；2 秒 `lock_timeout` 只限制等待获取锁的时间，不限制持锁时长。生产执行前须在隔离的原生 PostgreSQL 上用代表性的既有数据与并发写入完成升级和锁时长演练，设定维护窗口与退出条件；当前本地 Schema 测试不构成 C03.7 生产锁放行证据。
 
 ### 3.3 创建专用 Hyperdrive
 
@@ -105,7 +107,17 @@ ORDER BY version;
 
 临时诊断 Worker 必须先通过 stdin/秘密管理器配置至少 32 字符的 `PREFLIGHT_TOKEN` Secret，并由不会记录 Authorization Header 的受控客户端访问。两个诊断入口在 Secret 缺失或 Bearer Token 不匹配时均 fail closed；验证结束后删除整个临时 Worker，而不是只删除 Secret。
 
-两个 Hyperdrive 必须保持独立：`cinatoken-gateway-migrator` 只用于迁移/ETL，`cinatoken-gateway-runtime` 用于长期业务运行，二者均禁用 SQL 结果缓存。`hyperdrive-access-probe-worker.ts` 的双身份探针必须验证角色、Schema owner、`0067_batch_jobs.sql`/67 条目标迁移记录、业务表 DML、`byok_keys` 的完整 DML、`generation_feedback` 与 `provider_attempt_availability` 的表级只追加权限、Batch 两表禁止直接删除、受约束 retention 函数执行权、禁止 `TRUNCATE`、禁止访问迁移表等合同；验证后删除探针 Worker。生产配置只预置 runtime Hyperdrive ID；在最终 ETL/对账和放行门完成前不得设置 `DATABASE_DRIVER=postgres`。
+两个 Hyperdrive 必须保持独立：`cinatoken-gateway-migrator` 只用于迁移/ETL，`cinatoken-gateway-runtime` 用于长期业务运行，二者均禁用 SQL 结果缓存。`hyperdrive-access-probe-worker.ts` 的双身份探针必须验证角色、Schema owner、`0073_recovery_api_key_workspace_lock.sql`/73 条目标迁移记录、业务表 DML、新增恢复表与 helper 的普通 runtime 禁权、`byok_keys` 的完整 DML、`generation_feedback` 与 `provider_attempt_availability` 的表级只追加权限、Batch 两表禁止直接删除、受约束 retention 函数执行权、禁止 `TRUNCATE`、禁止访问迁移表等合同；验证后删除探针 Worker。生产配置只预置 runtime Hyperdrive ID；在最终 ETL/对账和放行门完成前不得设置 `DATABASE_DRIVER=postgres`。
+
+#### 共享实例的连接预算
+
+Hyperdrive 的连接上限必须按**同一实例所有服务的总量**配置，而不是分别按数据库上限配置。2026-09-05 核验生产 PS-5 实例的 `max_connections=25`、`superuser_reserved_connections=3`，并捕获到 PostgreSQL `53300`（普通连接名额耗尽）。当时 CinaAuth 与 CinaToken runtime 的 Hyperdrive 上限各为 15，migrator 另为 5，合计配置已超过可用容量。
+
+本次只将 `cinatoken-gateway-runtime` 的 `origin_connection_limit` 从 15 调整为 **5**；CinaAuth、migrator、数据库规格、凭据、目标地址和禁用缓存设置均保持不变。这是小规格共享实例的保守运行预算，不是吞吐能力承诺。[Hyperdrive 的连接上限是软限制](https://developers.cloudflare.com/hyperdrive/concepts/connection-pooling/)，还须为平台、运维以及连接波动留余量。
+
+- 再次执行迁移、增加服务或提高池上限前，核对 `pg_stat_database.numbackends`、实例限制及各连接池总预算；当前配置不代表迁移池可以与全部运行池同时满额使用。
+- 连接预算不足时，先协调降低其他池的预算或申请扩容；不得擅自结束 CinaAuth 连接，也不得把更换驱动或无限重试当作连接容量修复。
+- 未获 `pg_read_all_stats` 的 runtime 角色可能看不到其他角色的 `backend_type` / `state`；不要把按这些字段过滤的 `pg_stat_activity` 计数当成全实例连接总数。
 
 公开目录发布前可把 `catalog-readiness-probe-worker.ts` 作为一次性 Worker 绑定到 **runtime Hyperdrive**。它复用 Proxy 的 verified Endpoint 与公开序列化逻辑，并额外只返回模型、Provider、Route、Endpoint/绑定的非敏感聚合计数；不接受 SQL 或查询参数。探针使用同样的 `PREFLIGHT_TOKEN` 约束，runtime 角色无权读取 `schema_migrations`，因此迁移版本仍须由 migrator 身份单独证明。探针结束后删除整个 Worker，再运行 `npm run test:public-catalog-readiness` 验证公开 API 至少发布一个模型、Provider 和 Endpoint。
 

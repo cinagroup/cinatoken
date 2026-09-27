@@ -1,0 +1,70 @@
+{
+  "status": "PASS",
+  "cleanup": "PASS",
+  "binaryVersion": "postgres (PostgreSQL) 18.6",
+  "sourceSha256": {
+    "formalMigrations": "23afef61a8a670e0af8c90e3a138f522e6b283b454e380a592bf85bca83108dc",
+    "complete-text-legacy-buyer-held-writer-v368.sql": "c2162f7f180c5cc05c011242ca06ad8c37ea41ed76d783941c15754d66be6950",
+    "complete-text-legacy-buyer-window-accountant-v371.sql": "445d5cc7bb6e17794682694c17d8e76fa774240a8e61c9c73edb85b1462a90b0",
+    "fixture": "ea250dc87725f2c174d2361ecb1dbd71f0302fce8669e372e826be31ea5eae6d"
+  },
+  "stages": [
+    {
+      "name": "full-formal-pg73-schema-installed",
+      "result": "PASS"
+    },
+    {
+      "name": "exact-v368-held-body-and-restricted-buyer-log-writer-installed",
+      "result": "PASS"
+    },
+    {
+      "name": "default-off-and-successor-ACL-revoke-raw-old-bypass",
+      "result": "PASS",
+      "acl": {
+        "new_call": true,
+        "old_call": false,
+        "raw_update": false,
+        "seed_triggers": 1
+      }
+    },
+    {
+      "name": "creator-commits-before-lock-buyer-sees-and-accounts-window",
+      "result": "PASS",
+      "blockedBuyerPid": 12340,
+      "unreservedWindowRows": 2
+    },
+    {
+      "name": "creator-after-lock-waits-for-commit-and-seeds-from-buyer-log",
+      "result": "PASS",
+      "blockedCreatorPid": 21328,
+      "unreservedWindowRows": 1
+    },
+    {
+      "name": "terminal-replay-cannot-double-debit-held-or-unreserved-windows",
+      "result": "PASS"
+    },
+    {
+      "name": "outer-rollback-restores-log-account-holds-and-windows",
+      "result": "PASS"
+    },
+    {
+      "name": "wrong-charge-and-byok-rejected-before-financial-writes",
+      "result": "PASS"
+    },
+    {
+      "name": "workspace-scope-spoof-and-mismatched-positive-history-denied",
+      "result": "PASS"
+    },
+    {
+      "name": "contended-window-table-lock-times-out-and-rolls-back-buyer",
+      "result": "PASS"
+    }
+  ],
+  "limitations": [
+    "Review-only PG73-local SQL proposal; no formal migration, remote SQL, Worker, Provider or production credential changed.",
+    "The native fixture installs the exact v368 function body on full PG73 tables with a minimal v362 grant table, but does not install every v351–v368 proposal or the real economic event producer.",
+    "The buyer log and its actual charge are still caller supplied; no immutable final result or trusted Provider bill authenticates the amount.",
+    "The global SHARE ROW EXCLUSIVE window-table lock serializes all writers and may cause capacity loss or deadlock retries. Production-scale contention and complete writer cutover remain unproven.",
+    "Only the narrow non-grant, current-epoch, charged-basis held actual path is covered; reserved, old-epoch, late actual, BYOK, recovery, no-hold and event replay need successors."
+  ]
+}

@@ -72,8 +72,9 @@ async function assertPreAbortedSignalSettles(
 	dispatch: (signal: AbortSignal) => Promise<StreamDispatchResult>,
 	expectedTotalTokens: number,
 ): Promise<void> {
+	let fetches = 0;
 	await withMockFetch(
-		() => new Response(responseBody, { headers: { 'Content-Type': 'text/event-stream' } }),
+		() => { fetches++; return new Response(responseBody, { headers: { 'Content-Type': 'text/event-stream' } }); },
 		async () => {
 			const controller = new AbortController();
 			controller.abort();
@@ -81,6 +82,8 @@ async function assertPreAbortedSignalSettles(
 			const usage = await within(result.usagePromise);
 			assert.equal(usage.cancelled, true);
 			assert.equal(usage.total_tokens, expectedTotalTokens);
+			assert.equal(fetches, 0, 'a pre-cancelled request must never initiate upstream fetch');
+			assert.equal(result.response.status, 499);
 			await result.response.body?.cancel();
 		},
 	);
@@ -201,7 +204,7 @@ describe('stream driver client-abort lifecycle', () => {
 				'',
 				signal,
 			),
-			5,
+			0,
 		);
 	});
 

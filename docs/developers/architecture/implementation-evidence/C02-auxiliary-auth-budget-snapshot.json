@@ -1,0 +1,235 @@
+{
+  "version": 1,
+  "date": "2026-09-05",
+  "head": "7eb59008f7d8e156e81fd18a57658fdef2553264",
+  "status": "LOCAL_PASS_LISTED_NODE_SUBSET",
+  "wholeC02Gate": "DOING",
+  "evidence": "C02-auxiliary-auth-budget.md",
+  "environment": {
+    "os": "Windows",
+    "node": "24.14.1",
+    "workersTypes": "5.20260829.1",
+    "node22": "not_run",
+    "workersRuntime": "not_verified_prior_startup_failure_not_retried"
+  },
+  "localLimits": {
+    "inferencePermits": 3,
+    "auxiliaryAuthExchanges": 3,
+    "note": "Independent request-local ceilings; only explicitly wired OAuth callers contribute."
+  },
+  "coverage": {
+    "wiredApplicationOAuthCalls": 4,
+    "remainingApplicationOAuthCalls": 13,
+    "newTests": 39,
+    "coreNewTests": 6,
+    "vertexNewTests": 17,
+    "textApiNewTests": 16
+  },
+  "verification": [
+    {
+      "command": "npm.cmd run typecheck -w @octafuse/proxy",
+      "exitCode": 0
+    },
+    {
+      "command": "npm.cmd run typecheck:dispatch-safety -w @octafuse/proxy",
+      "exitCode": 0
+    },
+    {
+      "command": "npm.cmd test -w @octafuse/proxy",
+      "exitCode": 0,
+      "mainTests": 852,
+      "mainSuites": 134,
+      "failed": 0,
+      "cancelled": 0,
+      "skipped": 0
+    },
+    {
+      "command": "npm.cmd run test:unit -w @octafuse/core",
+      "exitCode": 0,
+      "mainTests": 372,
+      "mainSuites": 70,
+      "failed": 0,
+      "cancelled": 0,
+      "skipped": 0
+    },
+    {
+      "command": "npm.cmd run test:dispatch-safety -w @octafuse/proxy",
+      "exitCode": 0,
+      "tests": 358,
+      "suites": 23,
+      "failed": 0,
+      "cancelled": 0,
+      "skipped": 0
+    },
+    {
+      "command": "git diff --check",
+      "exitCode": 0
+    }
+  ],
+  "countsOverlap": true,
+  "baselineAudit": {
+    "baselineFiles": 100,
+    "unchanged": 79,
+    "changed": [
+      "docs/developers/architecture/implementation-evidence/C01-google-cloud-kms-selection.md",
+      "docs/developers/architecture/implementation-evidence/README.md",
+      "docs/developers/architecture/v2.1-openrouter-implementation-checklist.md",
+      "packages/core/package.json",
+      "packages/core/src/gcp-service-account-token.ts",
+      "packages/core/src/index.ts",
+      "packages/proxy/package.json",
+      "packages/proxy/src/routes/v1/request-dispatch-limit.test.ts",
+      "packages/proxy/src/services/egress/anthropic-driver.ts",
+      "packages/proxy/src/services/egress/gemini-driver.ts",
+      "packages/proxy/src/services/egress/openai-driver.ts",
+      "packages/proxy/src/services/egress/openai-responses-driver.ts",
+      "packages/proxy/src/services/egress/vertex-service-account.test.ts",
+      "packages/proxy/src/services/failover-dispatch.ts",
+      "packages/proxy/src/services/gateway-error-codes.ts",
+      "packages/proxy/src/services/model-fallback-global-dispatch.test.ts",
+      "packages/proxy/src/services/openrouter-error-protocol.ts",
+      "packages/proxy/src/services/proxy.ts",
+      "packages/proxy/src/services/request-dispatch-budget.test.ts",
+      "packages/proxy/src/services/request-dispatch-budget.ts",
+      "packages/proxy/tsconfig.dispatch-safety.json"
+    ],
+    "unexpected": []
+  },
+  "changedSourceAndConfig": [
+    {
+      "path": "packages/core/src/request-auxiliary-auth-budget.ts",
+      "sha256": "A2995A8CD480B150960BEAB7CCB2AAE60352B46E5D3FC79FFF5F813AA6AD197F"
+    },
+    {
+      "path": "packages/core/src/request-auxiliary-auth-budget.test.ts",
+      "sha256": "780E6754936D260974C6443D07367E387B640A500047729673AB70AD8BB5727E"
+    },
+    {
+      "path": "packages/core/src/gcp-service-account-token.ts",
+      "sha256": "F60F0C28D49C01306C520289D6747C511ED0D52CDC5878378997024BF7CD844C"
+    },
+    {
+      "path": "packages/core/src/index.ts",
+      "sha256": "F1D201E1571E5D2A067C8933B985AF4C9CF202937F71CD1C124E7AE543DD6109"
+    },
+    {
+      "path": "packages/core/package.json",
+      "sha256": "ABC43FA6CDC4CC17ED7FB28543FF1C9EEA3142CAF68CEB324B4F70844F0D07A7"
+    },
+    {
+      "path": "packages/proxy/src/services/request-dispatch-budget.ts",
+      "sha256": "53115C21920845089C19D9002C7E3B6C70F5FCCDD3107F2FEE30C0874393A066"
+    },
+    {
+      "path": "packages/proxy/src/services/failover-dispatch.ts",
+      "sha256": "6A93147FCF1C5C4F17DB99ED03A7805B5FBA7A98786F3153EEB27143FA4D853F"
+    },
+    {
+      "path": "packages/proxy/src/services/gateway-error-codes.ts",
+      "sha256": "591268EF7CFC2FB254A3DD2186D0340CB1B8F7903795FFAFE605012B6D331FE5"
+    },
+    {
+      "path": "packages/proxy/src/services/openrouter-error-protocol.ts",
+      "sha256": "BA8A00C14C2579016C741D9CCE2272996FB240E8C9945D5D02CC015E311B22D9"
+    },
+    {
+      "path": "packages/proxy/src/services/proxy.ts",
+      "sha256": "2ABA937D115455056FEEA870525EBEB828110B093FD105DD9EB19E2A20CE91E4"
+    },
+    {
+      "path": "packages/proxy/src/services/egress/openai-driver.ts",
+      "sha256": "C498B731F4A4092107CFCE2A496B5DBD4F06EFF97A2B97F0723CB3A208427DFC"
+    },
+    {
+      "path": "packages/proxy/src/services/egress/openai-responses-driver.ts",
+      "sha256": "564A341AF3C1A6D162B517BEE129145127E677C330F635E79C014A0AC6DBB749"
+    },
+    {
+      "path": "packages/proxy/src/services/egress/anthropic-driver.ts",
+      "sha256": "9D94EBCDF3945F0445D9E3C16090C3B496D1271C3ABE97254AAADB5CBEB0D009"
+    },
+    {
+      "path": "packages/proxy/src/services/egress/gemini-driver.ts",
+      "sha256": "1E8CDB3BB708E40FABB85B0D8FEDF1857E2CFBC0361092A0320DF2F34E0D934C"
+    },
+    {
+      "path": "packages/proxy/src/services/egress/vertex-service-account.test.ts",
+      "sha256": "F8E1813290E7174F7451640392A79EF7BB5F62EBAF2E7399D07EABA9F05A477A"
+    },
+    {
+      "path": "packages/proxy/src/services/request-dispatch-budget.test.ts",
+      "sha256": "7A7070144D8EC4C45275CFE31C6A9F8A01CE640903F4EE11BE13A8257BE46ACB"
+    },
+    {
+      "path": "packages/proxy/src/services/model-fallback-global-dispatch.test.ts",
+      "sha256": "C6A2A4232F02F803AAB9C3783F3035335B65C771D4D106B8C3784C2FF3FA1C89"
+    },
+    {
+      "path": "packages/proxy/src/routes/v1/request-dispatch-limit.test.ts",
+      "sha256": "25D0C976456336D2DA2DDA591865430CEF0C0ADF6CD81A3651934500DDB269F6"
+    },
+    {
+      "path": "packages/proxy/package.json",
+      "sha256": "D102BCB1463E7E05A17D6D22155DD4A9B12845A8380E07E405EAA59F59A40D52"
+    },
+    {
+      "path": "packages/proxy/tsconfig.dispatch-safety.json",
+      "sha256": "C4A4260E9CBE5249FE1D64F97F557EECA484E996BBBF187CA8190879710DE153"
+    }
+  ],
+  "supportingFiles": [
+    {
+      "path": "packages/core/src/gcp-oauth-lifecycle.ts",
+      "sha256": "90B6456E2B7AE19EE2E0D04C3F0B1E470F757BC11A91BD478C13B9830E7E0C0B"
+    },
+    {
+      "path": "packages/proxy/src/middleware/text-request-lifecycle.ts",
+      "sha256": "DC69899917A21D71C8C40EB45D52A95AE979FEEA3D676907E84E307E522A7FF4"
+    },
+    {
+      "path": "packages/proxy/src/routes/v1/chat.ts",
+      "sha256": "5E7B8D3271F5BB4DC955DAC16AF899516949FAC1E6A78B19D246B0014E49B2A1"
+    },
+    {
+      "path": "packages/proxy/src/routes/v1/responses.ts",
+      "sha256": "FBB300DF3AC94028EEC4277F1322E784D4D66EF1C301CABA9D1373F4DBA294C4"
+    },
+    {
+      "path": "packages/proxy/src/routes/v1/messages.ts",
+      "sha256": "2444765D13F6A88B7E0DD74DE069BC2B135C47DE0B842B24FC67DFE467DF1AD9"
+    },
+    {
+      "path": "packages/proxy/src/services/model-fallback-global-dispatch.ts",
+      "sha256": "C8646BA24A24BFBBACEB61535717ABA6D268D7186DE33A51EF6F66017CAD8346"
+    },
+    {
+      "path": "packages/proxy/src/services/request-deadline.ts",
+      "sha256": "145B0DC9FB702D1EF67EFE9C40593C92A61F9204BC538B0AE9D9D8C46F9C0869"
+    },
+    {
+      "path": "packages/proxy/wrangler.jsonc",
+      "sha256": "7FFB4A120CE0B83DF428A1344FCA5B16EA9D8784178D555E7377623511451B0C"
+    },
+    {
+      "path": ".github/workflows/proxy-dispatch-safety.yml",
+      "sha256": "860A5C4BD68A0430BBB5FF2542DD4D8226D405169D555557E6DAED4E66C825D5"
+    }
+  ],
+  "externalOperations": {
+    "gcpProject": "cinatoken",
+    "scope": "Read-only active login, default project, selected project metadata, KMS enabled-service query",
+    "writes": false,
+    "kmsCryptoOperations": false,
+    "projectStatus": "ACTIVE",
+    "defaultProject": "unset",
+    "kmsEnabledServiceMatch": false
+  },
+  "remaining": [
+    "Unwired OAuth callers",
+    "Database cancellation and durable write recovery",
+    "Stage-specific timeouts",
+    "Top-K credential preparation",
+    "Workers and Node 22 validation",
+    "C01 remaining decisions and C03-C20 gates"
+  ]
+}

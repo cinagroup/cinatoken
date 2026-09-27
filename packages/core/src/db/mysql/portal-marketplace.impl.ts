@@ -66,6 +66,7 @@ function mapSharedKey(row: SharedKeySqlRow): SharedKeyRow {
 		servedInputTokens: Number(row.served_input_tokens),
 		servedOutputTokens: Number(row.served_output_tokens),
 		earnedTotal: Number(row.earned_total),
+		earnedTotalExact: String(row.earned_total),
 		createdAt: row.created_at,
 		updatedAt: row.updated_at,
 	};
@@ -207,16 +208,18 @@ export function createMySqlSharedKeysRepository(db: MySqlDatabaseClient): Shared
 			const [result] = await pool.execute<ResultSetHeader>('DELETE FROM shared_keys WHERE id = ?', [id]);
 			return result.affectedRows > 0;
 		},
-		async addSharedKeyUsage(id, inputTokens, outputTokens, netAmount, nowIso) {
-			await pool.execute<ResultSetHeader>(
+		async addSharedKeyUsage(id, inputTokens, outputTokens, netAmount, nowIso, expected) {
+			const [result] = await pool.execute<ResultSetHeader>(
 				`UPDATE shared_keys
           SET served_input_tokens = served_input_tokens + ?,
               served_output_tokens = served_output_tokens + ?,
               earned_total = earned_total + ?,
               last_used_at = ?, updated_at = ?
-          WHERE id = ?`,
-				[inputTokens, outputTokens, netAmount, nowIso, nowIso, id]
+		  WHERE id = ? AND served_input_tokens = ? AND served_output_tokens = ? AND earned_total = ?`,
+				[inputTokens, outputTokens, netAmount, nowIso, nowIso, id,
+					expected.servedInputTokens, expected.servedOutputTokens, expected.earnedTotalExact]
 			);
+			return result.affectedRows === 1;
 		},
 	};
 }
@@ -371,6 +374,14 @@ export function createMySqlPortalLedgerRepository(db: MySqlDatabaseClient): Port
 			);
 			return rows[0] ? mapUserEarnings(rows[0] as unknown as UserEarningsSqlRow) : null;
 		},
+		async getEarningByRequestLogId(requestLogId) {
+			const [rows] = await pool.execute<RowDataPacket[]>(
+				`SELECT id, request_log_id, shared_key_id, seller_user_id, input_tokens, output_tokens,
+					cache_read_tokens, cache_write_tokens, gross_amount, platform_fee, net_amount, currency, created_at
+				 FROM shared_key_earnings WHERE request_log_id = ? LIMIT 1`, [requestLogId],
+			);
+			return rows[0] ? mapEarning(rows[0] as EarningSqlRow) : null;
+		},
 		async ensureUserEarnings(userId) {
 			await pool.execute<ResultSetHeader>(
 				'INSERT IGNORE INTO user_earnings (user_id) VALUES (?)',
@@ -445,6 +456,45 @@ export function createMySqlPortalLedgerRepository(db: MySqlDatabaseClient): Port
 				);
 				await connection.commit();
 				return true;
+			} catch (error) {
+				await connection.rollback();
+				throw error;
+			} finally {
+				connection.release();
+			}
+		},
+		async rebuildSharedKeyUsageFromEarnings(requestLogId, expectedSharedKeyId, nowIso) {
+			const connection = await pool.getConnection();
+			try {
+				await connection.beginTransaction();
+				// InnoDB's parent row lock conflicts with the shared FK lock of a
+				// concurrent earning insert. Take it before the first consistent read.
+				const [keys] = await connection.execute<RowDataPacket[]>(
+					'SELECT id FROM shared_keys WHERE id = ? FOR UPDATE', [expectedSharedKeyId],
+				);
+				if (keys.length !== 1) throw new Error('shared_key_usage_rebuild_key_missing');
+				const [earnings] = await connection.execute<RowDataPacket[]>(
+					'SELECT shared_key_id FROM shared_key_earnings WHERE request_log_id = ?', [requestLogId],
+				);
+				if (earnings.length !== 1 || earnings[0]?.shared_key_id !== expectedSharedKeyId) {
+					throw new Error('shared_key_usage_rebuild_earning_missing_or_mismatched');
+				}
+				await connection.execute<ResultSetHeader>(`
+					UPDATE shared_keys AS sk
+					JOIN (
+						SELECT COALESCE(SUM(input_tokens), 0) AS input_tokens,
+							COALESCE(SUM(output_tokens), 0) AS output_tokens,
+							COALESCE(SUM(net_amount), 0) AS net_amount,
+							MAX(created_at) AS last_used_at
+						FROM shared_key_earnings WHERE shared_key_id = ?
+					) AS totals
+					SET sk.served_input_tokens = totals.input_tokens,
+						sk.served_output_tokens = totals.output_tokens,
+						sk.earned_total = totals.net_amount,
+						sk.last_used_at = totals.last_used_at,
+						sk.updated_at = ?
+					WHERE sk.id = ?`, [expectedSharedKeyId, nowIso, expectedSharedKeyId]);
+				await connection.commit();
 			} catch (error) {
 				await connection.rollback();
 				throw error;

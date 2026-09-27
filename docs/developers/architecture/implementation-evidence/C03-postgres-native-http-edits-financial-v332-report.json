@@ -1,0 +1,84 @@
+{
+  "status": "PASS",
+  "cleanup": "PASS",
+  "binaryVersion": "postgres (PostgreSQL) 18.6",
+  "scope": "owned loopback PG18, actual Hono multipart Images edits route, real runtime/dispatch/fact/financial LOGIN sessions",
+  "limitations": [
+    "Three local direct URLs emulate separate Hyperdrive bindings; no real Worker, Hyperdrive or cloud origin was run.",
+    "The provider response is a controlled local fetch function; no provider credential or external provider was called.",
+    "No Queue delivery, ACK, cross-isolate exclusion or deployment was exercised.",
+    "The parent, replay registry, outbox and producer grants are reviewed local proposals, not formal migrations."
+  ],
+  "stages": [
+    {
+      "name": "formal-schema-and-reviewed-local-roles",
+      "result": "PASS",
+      "formalMigrations": 73
+    },
+    {
+      "name": "seeded-real-runtime-routing-and-hashed-api-key",
+      "result": "PASS",
+      "endpointFingerprint": "1b08c687e0b1d197dafecf652317498f8d148b051bd535118c3eb929289b2ece",
+      "arrayBindingQueries": 4
+    },
+    {
+      "name": "http-auth-route-fetch-parent-claim-fact-outbox-pending-job",
+      "result": "PASS",
+      "responseStatus": 200,
+      "sends": 1,
+      "fetchBoundaryObservations": [
+        {
+          "phase": "before-provider-wait",
+          "committed_claims": 1,
+          "facts": 0,
+          "open_producer_transactions": 0
+        },
+        {
+          "phase": "during-provider-wait",
+          "committed_claims": 1,
+          "facts": 0,
+          "open_producer_transactions": 0
+        }
+      ],
+      "durable": {
+        "parents": 1,
+        "replay_reservations": 1,
+        "claims": 1,
+        "facts": 1,
+        "outbox": 1,
+        "pending_jobs": 1,
+        "logs": 0,
+        "spent": "0.000000"
+      },
+      "chargedCost": 0.04
+    },
+    {
+      "name": "dedicated-financial-login-committed-http-fact",
+      "result": "PASS",
+      "durable": {
+        "receipts": 1,
+        "logs": 1,
+        "attempts": 1,
+        "audits": 1,
+        "spent": "0.040000",
+        "job_state": "committed"
+      },
+      "queueAckSafe": false
+    }
+  ],
+  "sourceSha256": {
+    "test": "bed5d0fc82cd4e2c38b21568e273492d16a9bec0a331f22a1dcba268c1980baa",
+    "app": "c9de1cc366842a099ed6164c523f94b7b341491c55b9ad9ab33daff39ffb40af",
+    "images": "6eb174df6ece1ed5f72c003dc0dc5a0b2137c7dcf9023934eabc3e22080c3aa4",
+    "owner": "0f0ee5b099f257a2f27457d47883eed33dc1c578024c72113cc83d5ac0b39b1d",
+    "consumer": "1df6c296a651b7d128b7a1d383494f30885f970592e4e245dcc8f27b0eb0b8ef",
+    "financialAcl": "00eb58dd465249b75d1ae39318eed1757ec430111c1175ecf071e003033ab5d0",
+    "financialGrant": "a6549a81a003efb9c93cecbb4f554c4aadb2854fd1721319df090ad94a8169e5",
+    "runtimeGrant": "97a42a0d2bd9994566377e08b43281a2ead4842443c81ca8fc80439469725334",
+    "parentGrant": "099aa455ea59f9a6b0231a54524632f89c3befdf53c4a35327a5057019f0bc1d",
+    "factGrant": "6f45f91594451bcfb5f0da7d526387f45696dc7b757a5ad62105b8e1a18a0c18",
+    "replayBase": "3fa28e1f34f0a99f73bd7f9e4411ae7de8659a170a04d0b60ac468f92a055667",
+    "replayGate": "ff02f46cb94d6f6cdd003d6c00a6913d7d70421bb70124d2ff9cbdc9749e7e29",
+    "formalMigrationCorpus": "23afef61a8a670e0af8c90e3a138f522e6b283b454e380a592bf85bca83108dc"
+  }
+}

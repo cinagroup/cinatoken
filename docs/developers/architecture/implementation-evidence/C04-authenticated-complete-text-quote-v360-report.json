@@ -1,0 +1,82 @@
+{
+  "status": "PASS",
+  "cleanup": "PASS",
+  "binaryVersion": "postgres (PostgreSQL) 18.6",
+  "sourceSha256": {
+    "formalMigrations": "23afef61a8a670e0af8c90e3a138f522e6b283b454e380a592bf85bca83108dc",
+    "runtimeGrant": "8f20bdfd5ff9ac99198c7d08fab09b64d36ef6d111fe0d500ac3c1bd005a9a7f",
+    "authenticated-request-capability-login-v356.sql": "bbf06af6e9e2df6801c0e89442644d208d7213dbb6a7e202b96183b54d67fe9f",
+    "authenticated-text-route-ceiling-issuer-v357.sql": "3ce21a1502906f3b24753f62932ada1aa5299ed65365cce4e55c410476b392c4",
+    "authenticated-text-route-source-fence-v359.sql": "52ba5207db94bf9f6fb5200c9de89c9ff4633eb453366eb8dcd28f643c1aa03f",
+    "authenticated-complete-text-quote-v360.sql": "195eb0fa51df48dccc19c165900ae137f58daf1902fcc32e9673d7d124c2a08d",
+    "fixture": "bf43350602f779a9f6bd626e136490d7bcbdac36d1bbd75fc0e8a432570a8390"
+  },
+  "stages": [
+    {
+      "name": "formal-pg73-and-current-runtime-grants-installed",
+      "result": "PASS"
+    },
+    {
+      "name": "default-off-v356-v357-v359-v360-chain-installed",
+      "result": "PASS"
+    },
+    {
+      "name": "separate-direct-login-has-only-execute-not-source-or-manifest-dml",
+      "result": "PASS",
+      "acl": {
+        "execute": true,
+        "direct_dml": false,
+        "runtime_execute": false
+      }
+    },
+    {
+      "name": "three-routes-across-two-models-independently-attested",
+      "result": "PASS"
+    },
+    {
+      "name": "bad-capability-unsupported-body-and-missing-candidate-list-never-consume-capability",
+      "result": "PASS"
+    },
+    {
+      "name": "one-transaction-parent-and-all-three-targets-have-checked-three-attempt-max",
+      "result": "PASS",
+      "routes": [
+        "v360-a-cheap",
+        "v360-a-expensive",
+        "v360-b-middle"
+      ],
+      "ceiling": 90003
+    },
+    {
+      "name": "explicit-output-cap-above-endpoint-context-raises-every-route-ceiling",
+      "result": "PASS"
+    },
+    {
+      "name": "cross-model-active-surface-is-rejected-instead-of-omitting-selectable-target",
+      "result": "PASS"
+    },
+    {
+      "name": "possible-private-credential-rejects-entire-request-until-removed",
+      "result": "PASS"
+    },
+    {
+      "name": "shared-channel-path-rejects-all-routes-and-provider-ABA-needs-reattest",
+      "result": "PASS"
+    },
+    {
+      "name": "one-unpriced-fallback-route-rejects-atomic-parent-and-preserves-capability",
+      "result": "PASS"
+    }
+  ],
+  "limitations": [
+    "Review-only PG73 proposal; no formal migration, deployment, remote database, production verifier or Worker credential holder changed.",
+    "Issuer covers a strict plain-text OpenAI Chat platform-credential class. Shared Keys, active private BYOK, nonzero Endpoint discounts, route overrides, service tiers, provider preferences, multimodal content and unsupported tariffs reject the entire request.",
+    "Final UTF-8 body is capped at 1 MiB, below the 50 MiB ingress cap; larger Chat bodies intentionally fail closed for this quote subset.",
+    "The v356 original-body digest and the v360 final-body bytes are supplied through different trust boundaries. The database does not prove preset or Guardrail transformations between them.",
+    "The route-source verifier is trusted to compute the subject fingerprint from current decrypted source configuration. SQL checks the attested generation and persisted link.",
+    "The table-level route and credential locks prove a complete current predicate snapshot in this review candidate but are too broad for production throughput.",
+    "A matching surface with cross-model pool topology rejects the request; same-model surfaces are included by the all-active-route superset.",
+    "The parent is a quote ceiling, not a financial reservation or upstream egress grant. Future admission and credential holder must check the committed quote, live generations and exact physical credential.",
+    "D1/MySQL parity, Linux CI and real Worker/Hyperdrive behavior remain unproved."
+  ]
+}

@@ -1,0 +1,41 @@
+{
+  "version": "v294",
+  "recordedAtUtc": "2026-09-21T10:02:34Z",
+  "checklistVersion": "1.191",
+  "status": "LOCAL_PASS_NATIVE_ACCEPTANCE_PENDING",
+  "scope": "C03.1/C03.3 PostgreSQL recovery job registration, lease claim, failure fencing and finite retries only",
+  "goalStillActive": true,
+  "environment": { "node": "24.14.1", "pglite": "0.5.8", "postgres": "18.3", "engine": "wasm32-unknown-emscripten", "baseMigrations": 68 },
+  "nativeBusinessCasesExecuted": 0,
+  "priorArtifactHashesVerifiedUnchanged": { "v291": 5, "v292": 3, "v293": 5 },
+  "earlierRuns": [
+    { "tests": 39, "pass": 39, "fail": 0, "durationMs": 19976.3569 },
+    { "tests": 41, "pass": 41, "fail": 0, "durationMs": 27158.3694 }
+  ],
+  "verification": [
+    { "file": "packages/core/src/storage/recovery/usage-recovery-jobs.postgres.test.mjs", "tests": 43, "pass": 43, "fail": 0, "skipped": 0, "includesParentTests": true, "durationMs": 29451.7885 },
+    { "files": ["packages/core/src/storage/recovery/usage-settlement-facts.postgres.test.mjs", "packages/core/src/storage/recovery/usage-recovery.d1.test.mjs"], "tests": 76, "postgresFactsTests": 44, "d1RecoveryTests": 32, "pass": 76, "fail": 0, "skipped": 0, "includesParentTests": true, "durationMs": 40821.0347 },
+    { "command": "node node_modules/typescript/bin/tsc -p packages/core/tsconfig.recovery-jobs-postgres.json --noEmit", "exitCode": 0 }
+  ],
+  "technicalPrototypePolicy": { "maxRecoveryClaims": 5, "leaseSecondsMin": 1, "leaseSecondsMax": 300, "backoffSeconds": [5,10,20,40], "productionC0110Approval": false },
+  "negativeControls": ["transaction_timestamp incorrectly admits failure after in-transaction delay", "test-only DB clock oracle for backoff sequence and backward-clock guard"],
+  "limitations": [
+    "PGlite serial transactions, not native independent connections or actual row-lock competition",
+    "ACK failures injected in adapter, not native protocol disruption",
+    "clean three-process disk reopen, not abrupt crash/WAL acceptance",
+    "task mutation fencing only, not final financial transaction fencing or receipt",
+    "no committed state, complete/commit/renew/dispatch API, runner or production export",
+    "no role/RLS, DDL/TRUNCATE/trigger-disabling protection or online migration acceptance",
+    "scan output is bounded; production scheduler fairness, capacity and I/O lifecycle remain open",
+    "no C01.G/C02.G/C03.G approval; C04 remains TODO and unknown policy unchanged"
+  ],
+  "cleanup": { "ownedJobFixtureDirectoriesRemaining": 0, "onlyRegenerableLocalFixturesRemoved": true, "userOrStagingDataRemoved": false },
+  "externalEffects": { "publicNetworkQueries": 0, "cloudManagementCalls": 0, "remoteSqlCalls": 0, "deployments": 0, "modelCalls": 0, "kmsCalls": 0, "systemRuntimeUpdates": 0, "reboots": 0, "stagingBudgetReset": false },
+  "artifacts": [
+    { "path": "packages/core/migrations-proposals/postgres/request-usage-recovery-jobs.sql", "sha256": "e3e1e1b4954fd60a8607a8269ffb925c66feb03c814a11a9b19e7d32f0160643" },
+    { "path": "packages/core/src/storage/recovery/usage-recovery-jobs-postgres.ts", "sha256": "7bfe888674d4105529530473393a20d7df96bec0e01e4332f4e67f2123a11948" },
+    { "path": "packages/core/src/storage/recovery/usage-recovery-jobs.postgres.test.mjs", "sha256": "dd2f2a375fde976c68a60ab3d1244d4b439becc54654c65c9df6d81d5317d303" },
+    { "path": "packages/core/src/test-support/postgres-recovery-jobs-child.mjs", "sha256": "91f3abd1b6477d2d32c70fe784ab74a01fb3561fe12e6703dab014aff8c159b9" },
+    { "path": "packages/core/tsconfig.recovery-jobs-postgres.json", "sha256": "d9f5db148e811e9626f1886849663f92e73d148ea0c6d4be0a5a89a93338fd49" }
+  ]
+}

@@ -21,6 +21,17 @@ export const adminPlaygroundRoutes = new Hono<AdminEnv>();
 
 adminPlaygroundRoutes.use('*', requireAdminPrincipal);
 
+function refusePlaygroundRedirect(response: Response): Response | null {
+	if (response.status < 300 || response.status >= 400) return null;
+	// Returning 307/308 plus Location to the browser would replay this POST
+	// through the Admin route even though the server-side fetch used manual redirect.
+	void response.body?.cancel('playground_upstream_redirect_refused').catch(() => undefined);
+	return new Response(JSON.stringify({ success: false, message: 'Playground upstream redirect refused' }), {
+		status: 502,
+		headers: { 'content-type': 'application/json; charset=utf-8' },
+	});
+}
+
 adminPlaygroundRoutes.get('/realtime', async (c) => {
 	if (c.req.header('Upgrade')?.toLowerCase() !== 'websocket') {
 		return c.json({ success: false as const, message: 'Expected a WebSocket upgrade request' }, 426);
@@ -96,6 +107,8 @@ adminPlaygroundRoutes.post('/', async (c) => {
 					},
 					c.req.raw.signal
 				);
+			const redirectError = refusePlaygroundRedirect(response);
+			if (redirectError) return redirectError;
 
 			const headers = copyPlaygroundUpstreamHeaders(response.headers);
 			headers.set('x-playground-latency-ms', String(latencyMs));
@@ -153,6 +166,8 @@ adminPlaygroundRoutes.post('/', async (c) => {
 				},
 				c.req.raw.signal
 			);
+		const redirectError = refusePlaygroundRedirect(response);
+		if (redirectError) return redirectError;
 
 		const headers = copyPlaygroundUpstreamHeaders(response.headers);
 		headers.set('x-playground-latency-ms', String(latencyMs));

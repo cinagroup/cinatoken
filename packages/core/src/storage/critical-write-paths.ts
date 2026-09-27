@@ -2,6 +2,7 @@ import type { D1Database } from '@cloudflare/workers-types';
 import type { InsertUserBudgetAuditLogParams } from '../db/user-budget-audit-params';
 import type { InsertKeyParams } from '../db/api-keys-types';
 import type { InsertRequestLogParams } from '../db/request-logs-types';
+import type { SharedKeyEconomicOutboxInput } from '../db/shared-key-economic-outbox-types';
 import {
 	createApiKeyWithAuditD1,
 	getSystemConfigValueD1,
@@ -141,10 +142,20 @@ export async function insertRequestUsageAndChargeTx(
 		chargedCost: number;
 		guardrailBudgetSettlement?: GuardrailBudgetSettlement;
 		userBudgetSettlement?: UserBudgetSettlement;
+		/** Review-only PostgreSQL path; caller must supply every observed attempt fact. */
+		economicOutbox?: SharedKeyEconomicOutboxInput;
+		/** Review-only PostgreSQL v371 accountant; default path remains unchanged. */
+		legacyBuyerWindowedV371?: 'review-only';
 		audit: Omit<InsertUserBudgetAuditLogParams, 'id' | 'afterSpent' | 'deltaSpent'>;
 	}
 ): Promise<void> {
 	const client = resolveDatabaseClient(storage);
+	if (params.economicOutbox !== undefined && client.driver !== 'postgres') {
+		throw new Error('Shared-key economic outbox requires PostgreSQL');
+	}
+	if (params.legacyBuyerWindowedV371 !== undefined && client.driver !== 'postgres') {
+		throw new Error('Legacy buyer windowed settlement requires PostgreSQL');
+	}
 	if (client.driver === 'd1') {
 		await insertRequestUsageAndChargeTxD1(client, params);
 		return;

@@ -1,0 +1,132 @@
+{
+  "status": "PASS",
+  "createdAt": "2026-09-23T23:22:58.227Z",
+  "binaryVersion": "postgres (PostgreSQL) 18.6",
+  "server": {
+    "data_directory": "C:/cinagroup/cinatoken/.wrangler/staging/pg-native-dispatch-tests/run-AObf4o/data",
+    "listen_addresses": "127.0.0.1",
+    "port": "61523",
+    "fsync": "on",
+    "synchronous_commit": "on",
+    "full_page_writes": "on",
+    "version": "PostgreSQL 18.6 on x86_64-windows, compiled by msvc-19.44.35228, 64-bit",
+    "pid": 10052
+  },
+  "node": "v24.14.1",
+  "cases": [
+    {
+      "name": "isolated native identity and eight independent sessions produce one grant",
+      "status": "PASS",
+      "pids": [
+        14984,
+        2832,
+        8660,
+        5508,
+        3308,
+        10208,
+        1604,
+        5924
+      ],
+      "results": [
+        "not_granted",
+        "granted",
+        "not_granted",
+        "not_granted",
+        "not_granted",
+        "not_granted",
+        "not_granted",
+        "not_granted"
+      ]
+    },
+    {
+      "name": "unchanged row lock waits past expiry: fresh database clock rejects claim",
+      "status": "PASS",
+      "wait": {
+        "pid": 4860,
+        "wait_event_type": "Lock",
+        "wait_event": "transactionid",
+        "blockers": "{14528}",
+        "held_by_expected_session": true
+      }
+    },
+    {
+      "name": "native negative control: transaction-start timestamp grants incorrectly after lock wait",
+      "status": "PASS",
+      "wait": {
+        "pid": 14944,
+        "wait_event_type": "Lock",
+        "wait_event": "transactionid",
+        "blockers": "{6132}",
+        "held_by_expected_session": true
+      },
+      "expectedBadGrant": true
+    },
+    {
+      "name": "real lock_timeout is uncertain, has no write and performs no implicit claim replay",
+      "status": "PASS",
+      "wait": {
+        "pid": 11588,
+        "wait_event_type": "Lock",
+        "wait_event": "transactionid",
+        "blockers": "{6264}",
+        "held_by_expected_session": true
+      }
+    },
+    {
+      "name": "terminating a blocked native backend before UPDATE grants nothing and rolls back",
+      "status": "PASS",
+      "wait": {
+        "pid": 11260,
+        "wait_event_type": "Lock",
+        "wait_event": "transactionid",
+        "blockers": "{14692}",
+        "held_by_expected_session": true
+      }
+    },
+    {
+      "name": "native uniqueness conflict across distinct attempts rolls back one transaction",
+      "status": "PASS"
+    },
+    {
+      "name": "actual COMMIT ACK dropped over TCP, prepare=true: no grant and no replay",
+      "status": "PASS",
+      "proxy": {
+        "connections": 1,
+        "commitCommands": 1,
+        "claimUpdates": 1,
+        "droppedCommitAcks": 1
+      }
+    },
+    {
+      "name": "actual COMMIT ACK dropped over TCP, prepare=false: no grant and no replay",
+      "status": "PASS",
+      "proxy": {
+        "connections": 1,
+        "commitCommands": 1,
+        "claimUpdates": 1,
+        "droppedCommitAcks": 1
+      }
+    },
+    {
+      "name": "scope, context and revision mismatches do not grant over native wire",
+      "status": "PASS"
+    },
+    {
+      "name": "permission probe exposes creation key-lock privilege gap without granting it",
+      "status": "PASS",
+      "sqlstate": "42501",
+      "openFinding": "C03.5: SECURITY INVOKER creation FOR SHARE requires API-key UPDATE privilege; no such privilege granted, production role design remains open"
+    },
+    {
+      "name": "expired claimed rows classify as unknown without mutating financial state",
+      "status": "PASS"
+    }
+  ],
+  "shutdown": {
+    "stopped": true,
+    "cluster": "run-AObf4o"
+  },
+  "scope": "isolated native localhost PostgreSQL; not Hyperdrive/Workers, production roles or full C03 acceptance",
+  "baseMigrations": 68,
+  "fixtureRemoved": true
+}

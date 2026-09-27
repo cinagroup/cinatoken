@@ -5,16 +5,18 @@
 import type { RouteStrategyName } from '@octafuse/core';
 import type { RouteResult } from './model-router';
 import { getProviderCircuitRemainingMs } from './provider-circuit-breaker';
-import { ROUTE_STRATEGIES } from './route-strategies';
+import { ROUTE_STRATEGIES, type RouteOrderCandidate } from './route-strategies';
 
-export type RouteAttemptPlan = {
-	attempts: RouteResult[];
+export type RouteAttemptCandidate = RouteOrderCandidate & Readonly<{ routePriority: number }>;
+
+export type RouteAttemptPlan<T extends RouteAttemptCandidate = RouteResult> = {
+	attempts: T[];
 	earliestRetryAfterMs: number | null;
 	skippedByCircuit: number;
 };
 
-function groupRoutesByPriorityDesc(routes: RouteResult[]): Array<{ priority: number; routes: RouteResult[] }> {
-	const groups = new Map<number, RouteResult[]>();
+function groupRoutesByPriorityDesc<T extends RouteAttemptCandidate>(routes: readonly T[]): Array<{ priority: number; routes: T[] }> {
+	const groups = new Map<number, T[]>();
 	for (const route of routes) {
 		const bucket = groups.get(route.routePriority) ?? [];
 		bucket.push(route);
@@ -29,15 +31,15 @@ function groupRoutesByPriorityDesc(routes: RouteResult[]): Array<{ priority: num
  * 构建本次请求的 route 尝试计划。
  * `tierOverrides` 按 priority 覆盖 `strategyName`（未配置的层仍用 base）。
  */
-export function buildRouteAttemptPlan(
-	routes: RouteResult[],
+export function buildRouteAttemptPlan<T extends RouteAttemptCandidate>(
+	routes: readonly T[],
 	ctx: { affinityKey: string; tierKeyPrefix: string },
 	strategyName: RouteStrategyName,
 	now = Date.now(),
 	tierOverrides?: ReadonlyMap<number, RouteStrategyName> | null,
 	options?: { filterCircuit?: boolean },
-): RouteAttemptPlan {
-	const attempts: RouteResult[] = [];
+): RouteAttemptPlan<T> {
+	const attempts: T[] = [];
 	let earliestRetryAfterMs: number | null = null;
 	let skippedByCircuit = 0;
 

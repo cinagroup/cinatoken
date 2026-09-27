@@ -1,0 +1,264 @@
+{
+  "version": "v282",
+  "status": "PARTIAL_ZONE_ROUTE_ACCESS_UNCHANGED",
+  "startedAt": "2026-09-21T06:14:37.550Z",
+  "finishedAt": "2026-09-21T06:14:49.606Z",
+  "elapsedMs": 12056,
+  "previousEvidence": {
+    "path": "docs/developers/architecture/implementation-evidence/C02-byok-d1-paid-plan-v281-results.json",
+    "sha256": "de3f256dc28c2a12ddb92fac7c1d933ef9da0e6e20cf1261c5a8aa5118643966"
+  },
+  "priorArtifactsVerified": 20,
+  "priorEntireDependencyTreeRevalidated": false,
+  "unchangedMaintenanceGuardFiles": [
+    {
+      "path": "scripts/deploy/byok-d1-ingress-closure.mjs",
+      "sha256": "51224fa7c1075480ffad1db9d6581dbef1c7c40dc20f60d5b1a50efacb6e62bc"
+    },
+    {
+      "path": "scripts/deploy/byok-d1-maintenance-dispatch.mjs",
+      "sha256": "cde6e489c2ccc26aeca5e379f7a3369fc81c84064493c2941c34dbeca9aec793"
+    },
+    {
+      "path": "scripts/deploy/byok-d1-management.mjs",
+      "sha256": "0888e9c94b81e4c2fa0db5cd8d6269bce403db60886c48df5552b20ae2fbfb85"
+    },
+    {
+      "path": "scripts/deploy/byok-d1-operator.mjs",
+      "sha256": "d1f7825b5d0404ae52d3320f6a70bb081c63ed91708d510535dd4c52325e005a"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/byok-d1-cleanup.ts",
+      "sha256": "b015f0e3c6fca7412e32408e466577615c7d16364db09017446e0528c5b90847"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/byok-d1-maintenance-contract.ts",
+      "sha256": "4dfc3a8ca524f8c6e4f47d41240af0fa279220967ad67ccb9696af1f4a94bbe3"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/byok-d1-maintenance-host.ts",
+      "sha256": "962067df45d11d60ae1dbef958d697af20d1208945532e96de45abd71d8043be"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/byok-d1-maintenance-worker.ts",
+      "sha256": "d48a3ab7e37c5936e32ffa21ee13b554d1b4102cd83d5aa9039d2f6723c3347e"
+    }
+  ],
+  "requests": 19,
+  "http200": 8,
+  "http403": 11,
+  "journalRecords": 38,
+  "zoneCatalogueStable": true,
+  "zoneCount": 17,
+  "routeListsObserved": 6,
+  "totalRoutesObserved": 28,
+  "stagingTargetRoutesWithinObservedLists": [],
+  "permissionVerifiedForAllKnownZones": false,
+  "allInvocationPathsInventoried": false,
+  "fullPreflightPassed": false,
+  "databaseQuiescenceProved": false,
+  "nativeTimingQualified": false,
+  "atomicSnapshot": false,
+  "rejectionProjectionLimitation": "HTTP 403, success=false and response hashes retained; strict error-code integer validation rejected error projection. No error text claimed and no automatic retry.",
+  "tokenEnvironmentCheck": {
+    "source": "PowerShell read-only tool output; no API call or token/hash persisted",
+    "checkedAt": "2026-09-21T06:15:25.1120193Z",
+    "processPresent": true,
+    "userPresent": true,
+    "machinePresent": true,
+    "processEqualsUser": true,
+    "processEqualsMachine": true
+  },
+  "rows": [
+    {
+      "zone": "china-electric.com",
+      "status": 403,
+      "result": "FAILED_RETAINED",
+      "routeCount": null,
+      "responseSha256": "fcdf5eed647f50bc87c19c74a2c19c04ccadf7c3adb4ed5d13592403bcb19d78",
+      "projectedRoutesSha256": null,
+      "stagingTargetRoutes": null
+    },
+    {
+      "zone": "cinachain.cn",
+      "status": 403,
+      "result": "FAILED_RETAINED",
+      "routeCount": null,
+      "responseSha256": "fcdf5eed647f50bc87c19c74a2c19c04ccadf7c3adb4ed5d13592403bcb19d78",
+      "projectedRoutesSha256": null,
+      "stagingTargetRoutes": null
+    },
+    {
+      "zone": "cinachain.com",
+      "status": 200,
+      "result": "ROUTES_OBSERVED",
+      "routeCount": 5,
+      "responseSha256": "092ccacd4b1130fb50cc85052eb46513d0836f97b4cba5408c49e02d6807bb6a",
+      "projectedRoutesSha256": "59cbadb286cca6f4ded05ad8273a00a3bb91a8b3ee101574181a931c5ba93c58",
+      "stagingTargetRoutes": []
+    },
+    {
+      "zone": "cinaclaw.cn",
+      "status": 403,
+      "result": "FAILED_RETAINED",
+      "routeCount": null,
+      "responseSha256": "fcdf5eed647f50bc87c19c74a2c19c04ccadf7c3adb4ed5d13592403bcb19d78",
+      "projectedRoutesSha256": null,
+      "stagingTargetRoutes": null
+    },
+    {
+      "zone": "cinaclaw.com",
+      "status": 403,
+      "result": "FAILED_RETAINED",
+      "routeCount": null,
+      "responseSha256": "fcdf5eed647f50bc87c19c74a2c19c04ccadf7c3adb4ed5d13592403bcb19d78",
+      "projectedRoutesSha256": null,
+      "stagingTargetRoutes": null
+    },
+    {
+      "zone": "cinacoin.cn",
+      "status": 403,
+      "result": "FAILED_RETAINED",
+      "routeCount": null,
+      "responseSha256": "fcdf5eed647f50bc87c19c74a2c19c04ccadf7c3adb4ed5d13592403bcb19d78",
+      "projectedRoutesSha256": null,
+      "stagingTargetRoutes": null
+    },
+    {
+      "zone": "cinacoin.com",
+      "status": 200,
+      "result": "ROUTES_OBSERVED",
+      "routeCount": 16,
+      "responseSha256": "c5bfccb0fd1a29625eddf7dbb4ef09c1ceb331bc23962f497df6f6ff598f00a3",
+      "projectedRoutesSha256": "15f861b2132180b30833ca39097075e8967d75d49f194288fd08b280a11994c4",
+      "stagingTargetRoutes": []
+    },
+    {
+      "zone": "cinagroup.cn",
+      "status": 403,
+      "result": "FAILED_RETAINED",
+      "routeCount": null,
+      "responseSha256": "fcdf5eed647f50bc87c19c74a2c19c04ccadf7c3adb4ed5d13592403bcb19d78",
+      "projectedRoutesSha256": null,
+      "stagingTargetRoutes": null
+    },
+    {
+      "zone": "cinagroup.com",
+      "status": 200,
+      "result": "ROUTES_OBSERVED",
+      "routeCount": 4,
+      "responseSha256": "f1ce62e59179164f70f7a12c1b280f3d198f19589a3bd5dd3113e16fb52e1942",
+      "projectedRoutesSha256": "718a16ffd294ee9d9a7160bffaa3e68c0656a6d0ba403ab7fc322f1aab29646e",
+      "stagingTargetRoutes": []
+    },
+    {
+      "zone": "cinaseek.ai",
+      "status": 200,
+      "result": "ROUTES_OBSERVED",
+      "routeCount": 1,
+      "responseSha256": "89f707c63ed4cfeb7a4a81e2c39dddd5f34c6347f30b0b3fc125470a35d6aa0a",
+      "projectedRoutesSha256": "4a8a8f84f178db702bebe21e2a6888cd35ce7f774ab2a8848d6887afd2c08bc5",
+      "stagingTargetRoutes": []
+    },
+    {
+      "zone": "cinaseek.cn",
+      "status": 403,
+      "result": "FAILED_RETAINED",
+      "routeCount": null,
+      "responseSha256": "fcdf5eed647f50bc87c19c74a2c19c04ccadf7c3adb4ed5d13592403bcb19d78",
+      "projectedRoutesSha256": null,
+      "stagingTargetRoutes": null
+    },
+    {
+      "zone": "cinaseek.com",
+      "status": 403,
+      "result": "FAILED_RETAINED",
+      "routeCount": null,
+      "responseSha256": "fcdf5eed647f50bc87c19c74a2c19c04ccadf7c3adb4ed5d13592403bcb19d78",
+      "projectedRoutesSha256": null,
+      "stagingTargetRoutes": null
+    },
+    {
+      "zone": "cinaskill.cn",
+      "status": 403,
+      "result": "FAILED_RETAINED",
+      "routeCount": null,
+      "responseSha256": "fcdf5eed647f50bc87c19c74a2c19c04ccadf7c3adb4ed5d13592403bcb19d78",
+      "projectedRoutesSha256": null,
+      "stagingTargetRoutes": null
+    },
+    {
+      "zone": "cinaskill.com",
+      "status": 403,
+      "result": "FAILED_RETAINED",
+      "routeCount": null,
+      "responseSha256": "fcdf5eed647f50bc87c19c74a2c19c04ccadf7c3adb4ed5d13592403bcb19d78",
+      "projectedRoutesSha256": null,
+      "stagingTargetRoutes": null
+    },
+    {
+      "zone": "cinatoken.cn",
+      "status": 403,
+      "result": "FAILED_RETAINED",
+      "routeCount": null,
+      "responseSha256": "fcdf5eed647f50bc87c19c74a2c19c04ccadf7c3adb4ed5d13592403bcb19d78",
+      "projectedRoutesSha256": null,
+      "stagingTargetRoutes": null
+    },
+    {
+      "zone": "cinatoken.com",
+      "status": 200,
+      "result": "ROUTES_OBSERVED",
+      "routeCount": 2,
+      "responseSha256": "b285a921100d5e3181edc37afa785ce9d02db74bea1d14eab311f4dacc59c8de",
+      "projectedRoutesSha256": "f9c20d84fa782ece11d1f728ce39e7fbf06181378c6aa8f2f5503f241ddf83dd",
+      "stagingTargetRoutes": []
+    },
+    {
+      "zone": "海内集团.中国",
+      "status": 200,
+      "result": "ROUTES_OBSERVED",
+      "routeCount": 0,
+      "responseSha256": "c4d375cfbfea596f71080a0da436c33b0b3ebadbc8731f50967b6c0ff8674f26",
+      "projectedRoutesSha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "stagingTargetRoutes": []
+    }
+  ],
+  "cloudWrites": 0,
+  "deployments": 0,
+  "sqlCalls": 0,
+  "publicWorkerCalls": 0,
+  "modelCalls": 0,
+  "kmsCalls": 0,
+  "firstRoundUsdCap": 2,
+  "capReset": false,
+  "billingUsageRefreshed": false,
+  "businessCodeChanged": false,
+  "businessTestsRerun": false,
+  "artifacts": [
+    {
+      "path": ".wrangler/staging/probe-byok-route-permission-v282.mjs",
+      "sha256": "9b1fcb8672aeecc26f56ded88648a2faf74589b0c7829d439843129309cb0028"
+    },
+    {
+      "path": ".wrangler/staging/summarize-byok-route-permission-v282.mjs",
+      "sha256": "c6563d8f8674f17447f0765ea9e038302b3d0684630a1d58d32534fc0b851dff"
+    },
+    {
+      "path": ".wrangler/staging/byok-route-permission-v282/result.json",
+      "sha256": "725d1485cb81ed5d3ec8946079ae76c23feb17097b168406099acff12c48e064"
+    },
+    {
+      "path": ".wrangler/staging/byok-route-permission-v282/journal.jsonl",
+      "sha256": "0ac6e54655b27ac686cf7043975943aa72baee6f52195b054322381f6f401476"
+    },
+    {
+      "path": ".wrangler/staging/byok-inventory-v272-catalog-probe/result.json",
+      "sha256": "beb3aeb6e81b1b531993a6727b3650f96987e570e7768365570212046bf10cf6"
+    },
+    {
+      "path": "node_modules/cloudflare/src/resources/workers/routes.ts",
+      "sha256": "71616bebee3df4a85181e62c65966a83f39b22d0f245c2d961a2adaabafc7c2a"
+    }
+  ]
+}

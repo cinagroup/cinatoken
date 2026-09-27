@@ -1,0 +1,55 @@
+{
+  "version": "v338",
+  "date": "2026-09-24",
+  "status": "LOCAL_TEXT_PROTOCOL_SOCKET_BUDGET_PASS_C02_OPEN",
+  "goalComplete": false,
+  "scope": {
+    "publicPaths": [
+      "/v1/chat/completions",
+      "/v1/completions",
+      "/v1/responses",
+      "/v1/messages"
+    ],
+    "modelsPerRequest": 5,
+    "configuredRoutesPerRequest": 162,
+    "loopbackCases": 8,
+    "transport": "native Node fetch to owned loopback HTTP server; full POST bodies counted at server",
+    "database": "synthetic repository and usage sink, not durable financial persistence"
+  },
+  "observedPerPath": {
+    "all429": {
+      "fullPostBodies": 3,
+      "publicErrorCode": "gateway.dispatch_limit_exceeded",
+      "terminalUsageWrites": 1
+    },
+    "429ThenSocketResetAfterFullSecondPost": {
+      "fullPostBodies": 2,
+      "publicErrorCode": "upstream.server_error",
+      "terminalUsageWrites": 1
+    }
+  },
+  "validation": {
+    "testFile": "packages/proxy/src/routes/v1/request-dispatch-limit.test.ts",
+    "testFilePass": 695,
+    "testFileTotal": 695,
+    "proxyTypecheck": "PASS",
+    "linuxCiRun": false
+  },
+  "sourceSha256": {
+    "packages/proxy/src/routes/v1/request-dispatch-limit.test.ts": "e15d866ef132aaf87f66673cda447a56b33c565f751373a90ca9b98d4c7de2ef"
+  },
+  "boundaries": {
+    "allProtocolsVerified": false,
+    "concurrentSharedBudgetVerified": false,
+    "workersTransportVerified": false,
+    "intermediateProxyRetryVerified": false,
+    "supplierAcceptanceAndBillingVerified": false,
+    "durableFinancialSettlementVerified": false,
+    "C02_5Complete": false,
+    "C02_6Complete": false,
+    "C02_GComplete": false,
+    "remoteSqlCalls": 0,
+    "deployments": 0,
+    "externalSupplierCalls": 0
+  }
+}

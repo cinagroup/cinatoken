@@ -1259,9 +1259,51 @@ Authorization: Bearer <USER_API_KEY>
 
 ## Images（图片生成 / 编辑）
 
+普通 Images 的结果不明错误合同（2026-09-08，本地实现、尚未部署）：当已出站请求的结果无法确认，例如尚未收到上游响应头的传输异常、上游 2xx 后 usage/属性名超限或没有有效图片结果，公开错误的 `error.metadata` 增加 `outcome_unknown: true`、`retry_safe: false` 和网关 `request_id`，保留原有 HTTP 状态、兼容 `code` 与脱敏文案。客户端遇到该标志不得自动重放生成/编辑请求，应使用请求 ID 查询或人工核对结果；该 ID 本身不是已实现的幂等键。即使买家名义费用为零，也不能据此认定上游没有执行。持久化未确认仍返回 `503 gateway.image_settlement_unconfirmed` 及同样标志。成功和明确上游拒绝不添加未知标志；**没有标志不等于承诺可以安全重试**。SSE 使用下述独立流内错误合同；客户端已断开或平台终止时不能保证错误交付。
+
+SSE 流内错误补充（2026-09-08，本地实现、尚未部署）：网关的 `type: error` 事件保留原有 `error.code/message`，并在 `error.metadata` 加入 `retry_safe: false` 及与响应头 `X-Generation-Id` 相同的 `request_id`。空 body、解析/容量拒绝、缺少图片/用量/DONE、流中断和超时另带 `outcome_unknown: true`。在任何图片事件前收到含非空 message 的明确供应商错误时省略未知标志；已观察 partial/completed 图片后再收到供应商错误，或错误结构不完整时仍标记未知。不透传供应商的重试元数据；正常完成不增加错误标志。流内错误后以 `[DONE]` 结束，不把已发送的 HTTP 200 改写成 502/504；客户端不得自动重放。网络中断、客户端取消或平台终止可能使错误/DONE 无法交付。历史错误合同见 [SSE 合同与验收边界](../architecture/implementation-evidence/C02-images-sse-outcome-contract.md)，成功结算边界以下述新规则为准。
+
+SSE 成功结算规则（2026-09-08 用户确认，已修复并部署到独立 staging；未生产上线）：**网关已验证有效 completed 图片及上游 `[DONE]` 后，成功结算不可逆；后续取消、断连或交付超时不撤销费用。** 仅收到 completed、尚未验证上游 DONE 时保留原有取消/失败规则；不能把网关为错误生成的 DONE 当作上游成功。客户端是否读到 DONE、流是否 EOF 不再决定收费。下游 DONE 等待账务提交，或服务端显式启用耐久 SSE 恢复后的快照及恢复任务持久化确认。该交付等待最多 15 秒；失败/超时会先发 `gateway.image_settlement_unconfirmed` 流内错误（`outcome_unknown: true`、`retry_safe: false`、可信 `request_id`）再结束，不能据此认定免费或重新发起生成。晚到的持久化/恢复可以继续，交付超时不取消账务。详见 [成功结算与恢复证据](../architecture/implementation-evidence/C02-images-sse-settlement-window.md)。
+
 > 模型清单、Provider、参数对照、计费折算与验收清单见权威整理：[文生图模型（Image Models）](../reference/image-models.md)。
 
+本地待部署的资源合同（2026-09-06）：生成请求的 JSON，以及 Images 普通 JSON 响应 / 单个 SSE 事件，最多 64 层对象/数组、65,536 个结构节点（容器、标量值及属性名，重复属性也计数）。生成请求超限返回 413 `gateway.payload_too_large`，不进入模型出站；上游 2xx 后结构超限不能重放，SSE 走 error / DONE 终态。原始请求体 50 MiB、普通图片 JSON 上游读取上限 32 MiB 不变（规范化后的下游输出可能更大）；这不是并发内存验收，也不替代其它参数校验。详见 [结构准入与验证范围](../architecture/implementation-evidence/C02-image-json-structure.md)。
+
+同属本地待部署的解析/交付行为：普通图片 JSON 的长字符串值从解析到输出保持分段，仍等完整 EOF、原生语法和业务验证后再交付；保留 Unicode、metadata、重复键、usage 及原有 UTF-8 替换解码。无需转义的解码片段不再重复拼接引号、原生解析或序列化；含转义/控制字符的片段仍走原生语法处理，完整校验不跳过。内部片段不会作为对象暴露到公开 JSON；原始 usage 在结算边界直接从分段值生成完整审计 JSON 字符串，不再先还原整棵大字符串树。替换解码和规范化可能扩大下游字节数，32 MiB 上游不等于 32 MiB 输出。正文继续使用请求剩余总时限，读完/取消释放编码器所有权；慢读/不读到期可能表现为 **200 headers 之后正文读取失败**，不能事后改成 504，不表示上游未生成，不触发模型重放或新增退款政策。SSE 仍以 error / DONE 终止；新增属性名/审计容量拒绝按下节保留成本未知。剩余解析峰值、网络接收确认、真实账务政策及统一容量仍待验收。详见 [长字符串分段与剩余边界](../architecture/implementation-evidence/C02-image-json-string-pages.md)。
+
+生成入口也已改为直接读取受限请求流，避免 Hono 完整文本缓存。参考图和透传参数中的长字符串从入口到发送保持内部片段；参考图计数、去空白、默认参数合并和重试保持原有公开值语义。提示词先逐页去首尾空白，验证既有 4,000 字符限制后才还原原生字符串，在等待 Guardrail 前释放原始空白填充的持有者；格式/顺序生成等字段遵循既有 trim、透传、类型或存在性规则。model/n/size/quality/background/service_tier 的字符串与 provider 整个最终值须先通过下列公开限额，才跨入原生消费边界；错误类型的标量容器内长值保持分段，仍由既有业务校验处理。Guardrail 投影不扩大。上游请求在发送准入前固定字段、按 JSON 转义和 UTF-8 规则直接计算精确内容长度（不重复编码字符串预检），再按页发送；不因早期响应 headers 截断在途上传。50 MiB 原始入口容量保留，但 UTF-8 替换/JSON 转义可扩大出站内容，不将其偷换为 50 MiB 编码后限制。[当前控制字段容量证据](../architecture/implementation-evidence/C02-image-control-limits.md)新增 102 项测试，17 组测量确认超大 size 不再整值合并；[前轮工作集证据](../architecture/implementation-evidence/C02-image-json-working-set.md)保留。解码持有量、长键/数字/usage、默认参数和发送缓冲仍待治理，不代表已经部署或整个实例内存验收通过。 分段入口与普通 Images 响应的裸数字现也逐段处理：有界保留有效位/指数/非零尾部，再由原生 Number 舍入，保持负零及原有数值，不再合并完整数字文本，也不新增公开数字位数限制。SSE 和其他原生 JSON 消费者不自动获得此行为。详见 [数字解析证据与 CPU 权衡](../architecture/implementation-evidence/C02-json-numeric-scalars.md)。
+
 OpenAI 兼容 Images API，供桌面 Agent 的 `generate_image` 等工具调用。鉴权与 Chat 相同（用户 API Key）；模型须在目录中配置 **OpenAI 协议**路由及有效的 `image_billing_mode`：`token` 模式需在 `pricing_profile.tiers` 配置 Image token 单价，`per_image` 模式需配置 `pricing_profile.image` 按张单价（见 Admin 模型页与 [文生图模型说明](../reference/image-models.md)）。
+
+### 生成 JSON 控制字段长度上限
+
+内部内存实现补充（本地待部署）：Images JSON 入口和普通响应使用分段解析、按需编码与紧凑字符串页；已消费 token 的页及时转交/释放，被覆盖子树不物化，额外长键 Map 已移除。根据用户新授权，属性名和完整审计字符串按下节限额准入；usage 也使用紧凑页，仅在通过审计字节检查后直接序列化，不先构造完整原生用量树。响应与后台记账仍有独立持有期，这些限制不等于整个实例内存验收。见 [当前属性名与审计限额](../architecture/implementation-evidence/C02-image-audit-limits.md)；[此前长键测量](../architecture/implementation-evidence/C02-json-key-restore.md)记录旧容量合同下的观察值，不代表新限额已完成真实 Workers 容量证明。
+
+2026-09-06 用户批准、本地实现待部署。仅适用于 `POST /v1/images`、`/v1/images/generations` 及对应 `/api/v1` 别名；这些是本平台限制，不是 OpenRouter 限额声明。
+
+| 根字段 | 最大值 |
+| --- | ---: |
+| `model`（包括路由后缀） | 256 字符 |
+| `n` 的字符串形式 | 32 字符；数值仍须为 1–10 的整数 |
+| `size`、`quality`、`background`、`service_tier` | 各 64 字符 |
+| `provider` 整个最终值，包括未知键及嵌套内容 | 16,384 字节的紧凑 JSON UTF-8 表示 |
+
+字符数按 JSON 解码后的 UTF-16 单元、**去空白前**计算；常用 emoji 占两个单元，`\u0041` 占一个。provider 包含引号/转义/属性名等，不计原始 JSON 格式空白。超限返回 **400 `gateway.invalid_request`**，例如 `size must be at most 64 characters`，不回显提交值，不进入 Guardrail、模型发送或用量结算。
+
+完整 EOF、语法、字节和结构限制先检查，再检查上述容量，再执行其他业务校验。重复字段以最后值为准（包括转义等价名字）；被覆盖内容仍计入请求字节/节点并必须语法有效。字段在长度范围内仍须符合原有类型、枚举等业务规则。这是兼容收紧：过去可能接受的超长字符串或空白填充现在拒绝。prompt 仍是去空白后最多 4,000 字符，图片数据与 50 MiB 总请求上限不变；本表不自动应用于 multipart edits、管理员默认参数、管理端或其他模态。
+
+### JSON 属性名与上游 usage 审计上限
+
+2026-09-06 用户进一步批准，本地实现待部署；均为本平台的公开兼容限制。
+
+| 对象 | 上限与计量方式 |
+| --- | --- |
+| 生成请求 JSON、generations/edits 普通上游 JSON、单个 Images SSE 事件的每个属性名 | **256 个解码后的 UTF-16 单元**；任意层级、未知键、重复键及被覆盖子树均检查。不是 UTF-8 字节数，也不限制图片等字符串值 |
+| 实际生成的每份 `raw_usage` | **65,536 字节（64 KiB）**，按规范化、补充计量别名后的完整紧凑 JSON UTF-8 表示计算；包含未知字段、嵌套内容、属性名和转义 |
+
+属性名在读取/解析准入阶段检查，不必等待完整 EOF；请求超限返回 **413 `gateway.payload_too_large`**，不进入 Guardrail、选路、发送或记账。普通上游 2xx 后超限返回脱敏 **502** 并禁止自动重放；已有明确非 2xx 保持其状态和原有可重试判断。SSE 已发送 headers 后无法改状态，发出一次 error 和 `[DONE]`，不交付该 completed 图片；新增两类容量拒绝标记为上游成本未知，按既有不确定结算保留适用预留上界，不把未知审计当成零用量。客户端主动取消/超时仍按既有政策处理。
+
+审计限额在完整上游解析、重复键决议和响应规范化之后、生成完整审计字符串**之前**检查，不静默截断、不丢弃未知字段后伪装为完整审计。原始格式空白与被覆盖的 usage 不计入最终审计大小，但仍受原始字节/节点/语法限制；因此它不是 usage 原始网络字节上限。非对象 usage 仍按原有缺失/类型规则处理。本次不自动修改 multipart 表单内嵌 provider JSON、默认配置、Admin 或其他模态，也不降低 50 MiB 请求、20 MiB 单文件和 32 MiB 普通上游容量。
 
 ### 生成
 
@@ -1328,7 +1370,7 @@ Image 模型支持两种 `pricing_profile.image_billing_mode`（再乘路由 `ch
 
 1. **预检额度**：token 模式用 quality×size **估算** tokens；per_image 模式用请求张数 × 单价；均取全候选路由最高 `charged_factor`。预检只决定能不能打上游，**不**等于最终扣费
 2. **成功出图**：token 按 **`usage` 真实分项**；per_image 按 **有效返回图片数**（忽略 usage tokens）
-3. **客户端取消 / Gateway 超时**（请求已发出，合成 504）：token / per_image **均零费用**。合成 504 **不** failover
+3. **客户端取消 / Gateway 超时**：未达到上述 SSE 成功结算点时沿用 token / per_image 零费用规则；验证有效 completed + 上游 DONE 后，后续取消/超时不撤销成功费用。合成 504 **不** failover。
 4. **明确上游 4xx/5xx、网络合成 502、空结果**：零费用日志
 5. Request log **不**保存 prompt 原文、参考图或 Base64；列含 `billing_kind`、`input_image_count`、`output_image_count`；`raw_usage` / `pricing_audit` 供审计
 6. 须配置对应模式目录价；无合法 mode/价格则不计费。详见 [image-models.md](../reference/image-models.md)

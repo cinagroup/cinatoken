@@ -1,0 +1,25 @@
+{
+  "version": "v291",
+  "recordedAtUtc": "2026-09-21T08:52:49Z",
+  "updatedAtUtc": "2026-09-21T08:57:45Z",
+  "status": "LOCAL_PASS_NATIVE_ACCEPTANCE_PENDING",
+  "scope": "C03.1/C03.3 PostgreSQL Images dispatch intent subset only",
+  "checklistVersion": "1.188",
+  "environment": { "node": "24.14.1", "pglite": "0.5.8", "postgres": "18.3", "engine": "wasm32-unknown-emscripten", "baseMigrations": 68 },
+  "initialRun": { "tests": 47, "pass": 45, "fail": 2, "leafFailures": 1, "cause": "test expected 15 columns instead of actual 14" },
+  "verification": [
+    { "file": "packages/core/src/storage/recovery/dispatch-intent.postgres.test.mjs", "tests": 49, "pass": 49, "fail": 0, "skipped": 0, "includesParentTests": true, "durationMs": 19666.9338 },
+    { "file": "packages/core/src/storage/recovery/dispatch-intent.d1.test.mjs", "tests": 19, "pass": 19, "fail": 0, "skipped": 0, "durationMs": 7276.4659 },
+    { "file": "packages/core/src/storage/postgres-financial-schema-engine.test.mjs", "tests": 77, "pass": 77, "fail": 0, "skipped": 0, "includesParentTests": true, "durationMs": 16760.426 },
+    { "command": "node node_modules/typescript/bin/tsc -p packages/core/tsconfig.dispatch-intent-postgres.json --noEmit", "exitCode": 0 }
+  ],
+  "limitations": ["PGlite transaction serialization, not native multi-session concurrency", "synthetic post-lock delay, not native lock wait", "clean child-process disk reopen, not abrupt crash/WAL acceptance", "no role/RLS or old-reader deletion compatibility acceptance", "no production wiring, request-level unknown gate or financial settlement recovery", "no C01.G/C02.G/C03.G approval"],
+  "externalEffects": { "publicDocumentationScrapes": 2, "cloudManagementCalls": 0, "remoteSqlCalls": 0, "deployments": 0, "modelCalls": 0, "kmsCalls": 0, "stagingBudgetReset": false },
+  "artifacts": [
+    { "path": "packages/core/src/storage/recovery/dispatch-intent-postgres.ts", "sha256": "0e898ed87319fbb8ac4e325262795bf785aaee35e9508bc6062823a72d95fa4c" },
+    { "path": "packages/core/migrations-proposals/postgres/request-dispatch-intents.sql", "sha256": "38d9b1c322d377bad4545fe567e7ac6f4c25c818ef9ac477b71c9c406383e2e8" },
+    { "path": "packages/core/src/storage/recovery/dispatch-intent.postgres.test.mjs", "sha256": "fcc88d5cad3dda6d6bdb288e635b30f929267990353e6eaf362ebd2c9e484f4a" },
+    { "path": "packages/core/src/test-support/postgres-dispatch-intent-child.mjs", "sha256": "2df513b4dff0f076c2d694fbf40ecd710eca8a7a33372de4013ea139145aaf04" },
+    { "path": "packages/core/tsconfig.dispatch-intent-postgres.json", "sha256": "85c2f3125d8517da53648a190aa4618925b97695bbc6aee7500bd5d152485cf5" }
+  ]
+}

@@ -1,0 +1,919 @@
+{
+  "runtime": "v24.14.1",
+  "platform": "win32",
+  "scope": "50 MiB synthetic Hono cached json+native outgoing Request vs direct Images parser+owned JSON upload; discrete/GC observations, not a complete gateway, continuous peak or Workers capacity gate",
+  "runs": [
+    {
+      "mode": "native-cache/ascii/cancel",
+      "readBytes": 52428800,
+      "outputBytes": 0,
+      "expectedBytes": 52428800,
+      "largestChunk": 0,
+      "cacheKeys": [
+        "text"
+      ],
+      "ingressReaderLocked": true,
+      "elapsedMs": 399.1104,
+      "stages": {
+        "baseline": {
+          "rss": 79720448,
+          "heapTotal": 18690048,
+          "heapUsed": 8710304,
+          "external": 3686005,
+          "arrayBuffers": 1148819
+        },
+        "afterParse": {
+          "rss": 244899840,
+          "heapTotal": 73216000,
+          "heapUsed": 63181136,
+          "external": 109892918,
+          "arrayBuffers": 53580563
+        },
+        "parsedAndContextHeldAfterGc": {
+          "rss": 245059584,
+          "heapTotal": 81604608,
+          "heapUsed": 63076168,
+          "external": 109892918,
+          "arrayBuffers": 1151763
+        },
+        "afterUploadPrepared": {
+          "rss": 297336832,
+          "heapTotal": 134037504,
+          "heapUsed": 115547696,
+          "external": 109892918,
+          "arrayBuffers": 53580563
+        },
+        "contextAndUnreadUploadHeldAfterGc": {
+          "rss": 298389504,
+          "heapTotal": 150028288,
+          "heapUsed": 115473312,
+          "external": 109892918,
+          "arrayBuffers": 53580563
+        },
+        "afterTerminal": {
+          "rss": 298389504,
+          "heapTotal": 150028288,
+          "heapUsed": 115496728,
+          "external": 109892918,
+          "arrayBuffers": 53580563
+        },
+        "releasedSameJobAfterGc": {
+          "rss": 88662016,
+          "heapTotal": 45428736,
+          "heapUsed": 10613120,
+          "external": 57464118,
+          "arrayBuffers": 1151763
+        },
+        "releasedAfterGc": {
+          "rss": 88846336,
+          "heapTotal": 45690880,
+          "heapUsed": 10684584,
+          "external": 5101262,
+          "arrayBuffers": 1151971
+        }
+      },
+      "observedMaximum": {
+        "rss": 298389504,
+        "heapTotal": 150028288,
+        "heapUsed": 115547696,
+        "external": 109892918,
+        "arrayBuffers": 53580563
+      }
+    },
+    {
+      "mode": "native-cache/ascii/drain",
+      "readBytes": 52428800,
+      "outputBytes": 52428800,
+      "expectedBytes": 52428800,
+      "largestChunk": 52428800,
+      "cacheKeys": [
+        "text"
+      ],
+      "ingressReaderLocked": true,
+      "elapsedMs": 429.6291,
+      "stages": {
+        "baseline": {
+          "rss": 65757184,
+          "heapTotal": 18690048,
+          "heapUsed": 8555624,
+          "external": 3660050,
+          "arrayBuffers": 1139240
+        },
+        "afterParse": {
+          "rss": 231776256,
+          "heapTotal": 72691712,
+          "heapUsed": 63032024,
+          "external": 109883347,
+          "arrayBuffers": 53570984
+        },
+        "parsedAndContextHeldAfterGc": {
+          "rss": 231968768,
+          "heapTotal": 81342464,
+          "heapUsed": 62927312,
+          "external": 109883347,
+          "arrayBuffers": 1142184
+        },
+        "afterUploadPrepared": {
+          "rss": 283930624,
+          "heapTotal": 133775360,
+          "heapUsed": 115398760,
+          "external": 109883347,
+          "arrayBuffers": 53570984
+        },
+        "contextAndUnreadUploadHeldAfterGc": {
+          "rss": 284856320,
+          "heapTotal": 150290432,
+          "heapUsed": 115333752,
+          "external": 109883347,
+          "arrayBuffers": 53570984
+        },
+        "afterTerminal": {
+          "rss": 285265920,
+          "heapTotal": 150290432,
+          "heapUsed": 115804984,
+          "external": 109883347,
+          "arrayBuffers": 53570984
+        },
+        "releasedSameJobAfterGc": {
+          "rss": 75804672,
+          "heapTotal": 45690880,
+          "heapUsed": 10782368,
+          "external": 57454547,
+          "arrayBuffers": 1142184
+        },
+        "releasedAfterGc": {
+          "rss": 76120064,
+          "heapTotal": 45953024,
+          "heapUsed": 10838320,
+          "external": 5091491,
+          "arrayBuffers": 1142392
+        }
+      },
+      "observedMaximum": {
+        "rss": 285265920,
+        "heapTotal": 150290432,
+        "heapUsed": 115804984,
+        "external": 109883347,
+        "arrayBuffers": 53570984
+      }
+    },
+    {
+      "mode": "native-cache/mixed-string/cancel",
+      "readBytes": 52428800,
+      "outputBytes": 0,
+      "expectedBytes": 52428800,
+      "largestChunk": 0,
+      "cacheKeys": [
+        "text"
+      ],
+      "ingressReaderLocked": true,
+      "elapsedMs": 562.2554,
+      "stages": {
+        "baseline": {
+          "rss": 65298432,
+          "heapTotal": 18427904,
+          "heapUsed": 8550648,
+          "external": 3660052,
+          "arrayBuffers": 1139242
+        },
+        "afterParse": {
+          "rss": 335618048,
+          "heapTotal": 125644800,
+          "heapUsed": 115455784,
+          "external": 162312147,
+          "arrayBuffers": 53570986
+        },
+        "parsedAndContextHeldAfterGc": {
+          "rss": 335491072,
+          "heapTotal": 133771264,
+          "heapUsed": 115351072,
+          "external": 162312147,
+          "arrayBuffers": 1142186
+        },
+        "afterUploadPrepared": {
+          "rss": 440524800,
+          "heapTotal": 238632960,
+          "heapUsed": 220251320,
+          "external": 162312147,
+          "arrayBuffers": 53570986
+        },
+        "contextAndUnreadUploadHeldAfterGc": {
+          "rss": 441556992,
+          "heapTotal": 254885888,
+          "heapUsed": 220185184,
+          "external": 162312147,
+          "arrayBuffers": 53570986
+        },
+        "afterTerminal": {
+          "rss": 441561088,
+          "heapTotal": 254885888,
+          "heapUsed": 220204808,
+          "external": 162312147,
+          "arrayBuffers": 53570986
+        },
+        "releasedSameJobAfterGc": {
+          "rss": 74555392,
+          "heapTotal": 45166592,
+          "heapUsed": 10467976,
+          "external": 57454549,
+          "arrayBuffers": 1142186
+        },
+        "releasedAfterGc": {
+          "rss": 75071488,
+          "heapTotal": 45428736,
+          "heapUsed": 10525544,
+          "external": 5091493,
+          "arrayBuffers": 1142394
+        }
+      },
+      "observedMaximum": {
+        "rss": 441561088,
+        "heapTotal": 254885888,
+        "heapUsed": 220251320,
+        "external": 162312147,
+        "arrayBuffers": 53570986
+      }
+    },
+    {
+      "mode": "native-cache/mixed-string/drain",
+      "readBytes": 52428800,
+      "outputBytes": 52428800,
+      "expectedBytes": 52428800,
+      "largestChunk": 52428800,
+      "cacheKeys": [
+        "text"
+      ],
+      "ingressReaderLocked": true,
+      "elapsedMs": 583.7161,
+      "stages": {
+        "baseline": {
+          "rss": 65531904,
+          "heapTotal": 18165760,
+          "heapUsed": 8553016,
+          "external": 3660052,
+          "arrayBuffers": 1139242
+        },
+        "afterParse": {
+          "rss": 336130048,
+          "heapTotal": 125644800,
+          "heapUsed": 115455992,
+          "external": 162312147,
+          "arrayBuffers": 53570986
+        },
+        "parsedAndContextHeldAfterGc": {
+          "rss": 336441344,
+          "heapTotal": 133771264,
+          "heapUsed": 115351280,
+          "external": 162312147,
+          "arrayBuffers": 1142186
+        },
+        "afterUploadPrepared": {
+          "rss": 440950784,
+          "heapTotal": 238632960,
+          "heapUsed": 220251528,
+          "external": 162312147,
+          "arrayBuffers": 53570986
+        },
+        "contextAndUnreadUploadHeldAfterGc": {
+          "rss": 442044416,
+          "heapTotal": 254885888,
+          "heapUsed": 220185240,
+          "external": 162312147,
+          "arrayBuffers": 53570986
+        },
+        "afterTerminal": {
+          "rss": 442347520,
+          "heapTotal": 254885888,
+          "heapUsed": 220656472,
+          "external": 162312147,
+          "arrayBuffers": 53570986
+        },
+        "releasedSameJobAfterGc": {
+          "rss": 75599872,
+          "heapTotal": 45428736,
+          "heapUsed": 10777344,
+          "external": 57454549,
+          "arrayBuffers": 1142186
+        },
+        "releasedAfterGc": {
+          "rss": 75907072,
+          "heapTotal": 45690880,
+          "heapUsed": 10833216,
+          "external": 5091493,
+          "arrayBuffers": 1142394
+        }
+      },
+      "observedMaximum": {
+        "rss": 442347520,
+        "heapTotal": 254885888,
+        "heapUsed": 220656472,
+        "external": 162312147,
+        "arrayBuffers": 53570986
+      }
+    },
+    {
+      "mode": "native-cache/replacement/cancel",
+      "readBytes": 52428800,
+      "outputBytes": 0,
+      "expectedBytes": 157286294,
+      "largestChunk": 0,
+      "cacheKeys": [
+        "text"
+      ],
+      "ingressReaderLocked": true,
+      "elapsedMs": 1219.5706,
+      "stages": {
+        "baseline": {
+          "rss": 65802240,
+          "heapTotal": 18427904,
+          "heapUsed": 8552504,
+          "external": 3856658,
+          "arrayBuffers": 1335848
+        },
+        "afterParse": {
+          "rss": 333934592,
+          "heapTotal": 238632960,
+          "heapUsed": 220311880,
+          "external": 57651155,
+          "arrayBuffers": 53767592
+        },
+        "parsedAndContextHeldAfterGc": {
+          "rss": 282124288,
+          "heapTotal": 255148032,
+          "heapUsed": 220208880,
+          "external": 5222355,
+          "arrayBuffers": 1338792
+        },
+        "afterUploadPrepared": {
+          "rss": 544079872,
+          "heapTotal": 360009728,
+          "heapUsed": 325109128,
+          "external": 162508649,
+          "arrayBuffers": 158625086
+        },
+        "contextAndUnreadUploadHeldAfterGc": {
+          "rss": 545173504,
+          "heapTotal": 393564160,
+          "heapUsed": 325043064,
+          "external": 162508649,
+          "arrayBuffers": 158625086
+        },
+        "afterTerminal": {
+          "rss": 545173504,
+          "heapTotal": 393564160,
+          "heapUsed": 325065816,
+          "external": 162508649,
+          "arrayBuffers": 158625086
+        },
+        "releasedSameJobAfterGc": {
+          "rss": 73318400,
+          "heapTotal": 79245312,
+          "heapUsed": 10468272,
+          "external": 162508649,
+          "arrayBuffers": 1338792
+        },
+        "releasedAfterGc": {
+          "rss": 73666560,
+          "heapTotal": 79245312,
+          "heapUsed": 10525456,
+          "external": 5288099,
+          "arrayBuffers": 1339000
+        }
+      },
+      "observedMaximum": {
+        "rss": 545173504,
+        "heapTotal": 393564160,
+        "heapUsed": 325109128,
+        "external": 162508649,
+        "arrayBuffers": 158625086
+      }
+    },
+    {
+      "mode": "native-cache/replacement/drain",
+      "readBytes": 52428800,
+      "outputBytes": 157286294,
+      "expectedBytes": 157286294,
+      "largestChunk": 157286294,
+      "cacheKeys": [
+        "text"
+      ],
+      "ingressReaderLocked": true,
+      "elapsedMs": 1315.6471,
+      "stages": {
+        "baseline": {
+          "rss": 65449984,
+          "heapTotal": 18690048,
+          "heapUsed": 8550160,
+          "external": 3856658,
+          "arrayBuffers": 1335848
+        },
+        "afterParse": {
+          "rss": 333471744,
+          "heapTotal": 238895104,
+          "heapUsed": 220312112,
+          "external": 57651155,
+          "arrayBuffers": 53767592
+        },
+        "parsedAndContextHeldAfterGc": {
+          "rss": 281776128,
+          "heapTotal": 255148032,
+          "heapUsed": 220209112,
+          "external": 5222355,
+          "arrayBuffers": 1338792
+        },
+        "afterUploadPrepared": {
+          "rss": 543854592,
+          "heapTotal": 360009728,
+          "heapUsed": 325109360,
+          "external": 162508649,
+          "arrayBuffers": 158625086
+        },
+        "contextAndUnreadUploadHeldAfterGc": {
+          "rss": 544919552,
+          "heapTotal": 393564160,
+          "heapUsed": 325043144,
+          "external": 162508649,
+          "arrayBuffers": 158625086
+        },
+        "afterTerminal": {
+          "rss": 545193984,
+          "heapTotal": 393564160,
+          "heapUsed": 325514448,
+          "external": 162508649,
+          "arrayBuffers": 158625086
+        },
+        "releasedSameJobAfterGc": {
+          "rss": 73482240,
+          "heapTotal": 79245312,
+          "heapUsed": 10777736,
+          "external": 162508649,
+          "arrayBuffers": 1338792
+        },
+        "releasedAfterGc": {
+          "rss": 73777152,
+          "heapTotal": 79507456,
+          "heapUsed": 10833608,
+          "external": 5288099,
+          "arrayBuffers": 1339000
+        }
+      },
+      "observedMaximum": {
+        "rss": 545193984,
+        "heapTotal": 393564160,
+        "heapUsed": 325514448,
+        "external": 162508649,
+        "arrayBuffers": 158625086
+      }
+    },
+    {
+      "mode": "direct-paged-upload/ascii/cancel",
+      "readBytes": 52428800,
+      "outputBytes": 0,
+      "expectedBytes": 52428800,
+      "largestChunk": 0,
+      "cacheKeys": [],
+      "ingressReaderLocked": false,
+      "elapsedMs": 588.4073000000001,
+      "stages": {
+        "baseline": {
+          "rss": 65613824,
+          "heapTotal": 17903616,
+          "heapUsed": 8542544,
+          "external": 3660050,
+          "arrayBuffers": 1139240
+        },
+        "afterParse": {
+          "rss": 236187648,
+          "heapTotal": 232337408,
+          "heapUsed": 160046560,
+          "external": 5025747,
+          "arrayBuffers": 1142184
+        },
+        "parsedAndContextHeldAfterGc": {
+          "rss": 236228608,
+          "heapTotal": 200617984,
+          "heapUsed": 63450432,
+          "external": 5025747,
+          "arrayBuffers": 1142184
+        },
+        "afterUploadPrepared": {
+          "rss": 262516736,
+          "heapTotal": 200880128,
+          "heapUsed": 117715488,
+          "external": 5091283,
+          "arrayBuffers": 1207720
+        },
+        "contextAndUnreadUploadHeldAfterGc": {
+          "rss": 262615040,
+          "heapTotal": 199045120,
+          "heapUsed": 63466984,
+          "external": 5091283,
+          "arrayBuffers": 1142184
+        },
+        "afterTerminal": {
+          "rss": 262615040,
+          "heapTotal": 199045120,
+          "heapUsed": 63482848,
+          "external": 5091283,
+          "arrayBuffers": 1142184
+        },
+        "releasedSameJobAfterGc": {
+          "rss": 262615040,
+          "heapTotal": 199045120,
+          "heapUsed": 63458392,
+          "external": 5025747,
+          "arrayBuffers": 1142184
+        },
+        "releasedAfterGc": {
+          "rss": 210489344,
+          "heapTotal": 146878464,
+          "heapUsed": 11083312,
+          "external": 5091491,
+          "arrayBuffers": 1142392
+        }
+      },
+      "observedMaximum": {
+        "rss": 262615040,
+        "heapTotal": 232337408,
+        "heapUsed": 160046560,
+        "external": 5091491,
+        "arrayBuffers": 1207720
+      }
+    },
+    {
+      "mode": "direct-paged-upload/ascii/drain",
+      "readBytes": 52428800,
+      "outputBytes": 52428800,
+      "expectedBytes": 52428800,
+      "largestChunk": 65536,
+      "cacheKeys": [],
+      "ingressReaderLocked": false,
+      "elapsedMs": 760.6674,
+      "stages": {
+        "baseline": {
+          "rss": 65732608,
+          "heapTotal": 18165760,
+          "heapUsed": 8535112,
+          "external": 3660050,
+          "arrayBuffers": 1139240
+        },
+        "afterParse": {
+          "rss": 243994624,
+          "heapTotal": 235745280,
+          "heapUsed": 123753336,
+          "external": 5025747,
+          "arrayBuffers": 1142184
+        },
+        "parsedAndContextHeldAfterGc": {
+          "rss": 244121600,
+          "heapTotal": 201928704,
+          "heapUsed": 63444896,
+          "external": 5025747,
+          "arrayBuffers": 1142184
+        },
+        "afterUploadPrepared": {
+          "rss": 254578688,
+          "heapTotal": 202190848,
+          "heapUsed": 117709952,
+          "external": 5091283,
+          "arrayBuffers": 1207720
+        },
+        "contextAndUnreadUploadHeldAfterGc": {
+          "rss": 254660608,
+          "heapTotal": 198782976,
+          "heapUsed": 63461448,
+          "external": 5091283,
+          "arrayBuffers": 1142184
+        },
+        "afterTerminal": {
+          "rss": 334393344,
+          "heapTotal": 198782976,
+          "heapUsed": 121419752,
+          "external": 57520083,
+          "arrayBuffers": 53636520
+        },
+        "releasedSameJobAfterGc": {
+          "rss": 268173312,
+          "heapTotal": 146616320,
+          "heapUsed": 11097376,
+          "external": 57520083,
+          "arrayBuffers": 39611816
+        },
+        "releasedAfterGc": {
+          "rss": 229658624,
+          "heapTotal": 146616320,
+          "heapUsed": 11149008,
+          "external": 5091491,
+          "arrayBuffers": 1142392
+        }
+      },
+      "observedMaximum": {
+        "rss": 334393344,
+        "heapTotal": 235745280,
+        "heapUsed": 123753336,
+        "external": 57520083,
+        "arrayBuffers": 53636520
+      }
+    },
+    {
+      "mode": "direct-paged-upload/mixed-string/cancel",
+      "readBytes": 52428800,
+      "outputBytes": 0,
+      "expectedBytes": 52428800,
+      "largestChunk": 0,
+      "cacheKeys": [],
+      "ingressReaderLocked": false,
+      "elapsedMs": 649.2897,
+      "stages": {
+        "baseline": {
+          "rss": 65343488,
+          "heapTotal": 18427904,
+          "heapUsed": 8535232,
+          "external": 3660052,
+          "arrayBuffers": 1139242
+        },
+        "afterParse": {
+          "rss": 296636416,
+          "heapTotal": 288698368,
+          "heapUsed": 176045368,
+          "external": 5025749,
+          "arrayBuffers": 1142186
+        },
+        "parsedAndContextHeldAfterGc": {
+          "rss": 296693760,
+          "heapTotal": 253571072,
+          "heapUsed": 115873328,
+          "external": 5025749,
+          "arrayBuffers": 1142186
+        },
+        "afterUploadPrepared": {
+          "rss": 306790400,
+          "heapTotal": 253833216,
+          "heapUsed": 170146520,
+          "external": 5091285,
+          "arrayBuffers": 1207722
+        },
+        "contextAndUnreadUploadHeldAfterGc": {
+          "rss": 306905088,
+          "heapTotal": 251736064,
+          "heapUsed": 115889880,
+          "external": 5091285,
+          "arrayBuffers": 1142186
+        },
+        "afterTerminal": {
+          "rss": 306020352,
+          "heapTotal": 251736064,
+          "heapUsed": 115905744,
+          "external": 5091285,
+          "arrayBuffers": 1142186
+        },
+        "releasedSameJobAfterGc": {
+          "rss": 306106368,
+          "heapTotal": 251473920,
+          "heapUsed": 115881288,
+          "external": 5025749,
+          "arrayBuffers": 1142186
+        },
+        "releasedAfterGc": {
+          "rss": 201715712,
+          "heapTotal": 146878464,
+          "heapUsed": 11077576,
+          "external": 5091493,
+          "arrayBuffers": 1142394
+        }
+      },
+      "observedMaximum": {
+        "rss": 306905088,
+        "heapTotal": 288698368,
+        "heapUsed": 176045368,
+        "external": 5091493,
+        "arrayBuffers": 1207722
+      }
+    },
+    {
+      "mode": "direct-paged-upload/mixed-string/drain",
+      "readBytes": 52428800,
+      "outputBytes": 52428800,
+      "expectedBytes": 52428800,
+      "largestChunk": 65536,
+      "cacheKeys": [],
+      "ingressReaderLocked": false,
+      "elapsedMs": 840.537,
+      "stages": {
+        "baseline": {
+          "rss": 65396736,
+          "heapTotal": 18952192,
+          "heapUsed": 8542104,
+          "external": 3660052,
+          "arrayBuffers": 1139242
+        },
+        "afterParse": {
+          "rss": 297177088,
+          "heapTotal": 288436224,
+          "heapUsed": 176118624,
+          "external": 5025749,
+          "arrayBuffers": 1142186
+        },
+        "parsedAndContextHeldAfterGc": {
+          "rss": 297185280,
+          "heapTotal": 253833216,
+          "heapUsed": 115880832,
+          "external": 5025749,
+          "arrayBuffers": 1142186
+        },
+        "afterUploadPrepared": {
+          "rss": 307134464,
+          "heapTotal": 254095360,
+          "heapUsed": 170154024,
+          "external": 5091285,
+          "arrayBuffers": 1207722
+        },
+        "contextAndUnreadUploadHeldAfterGc": {
+          "rss": 307331072,
+          "heapTotal": 251473920,
+          "heapUsed": 115897384,
+          "external": 5091285,
+          "arrayBuffers": 1142186
+        },
+        "afterTerminal": {
+          "rss": 386691072,
+          "heapTotal": 251473920,
+          "heapUsed": 173863824,
+          "external": 57520085,
+          "arrayBuffers": 53636522
+        },
+        "releasedSameJobAfterGc": {
+          "rss": 243970048,
+          "heapTotal": 146878464,
+          "heapUsed": 11104568,
+          "external": 57520085,
+          "arrayBuffers": 15625642
+        },
+        "releasedAfterGc": {
+          "rss": 229502976,
+          "heapTotal": 146354176,
+          "heapUsed": 11155800,
+          "external": 5091493,
+          "arrayBuffers": 1142394
+        }
+      },
+      "observedMaximum": {
+        "rss": 386691072,
+        "heapTotal": 288436224,
+        "heapUsed": 176118624,
+        "external": 57520085,
+        "arrayBuffers": 53636522
+      }
+    },
+    {
+      "mode": "direct-paged-upload/replacement/cancel",
+      "readBytes": 52428800,
+      "outputBytes": 0,
+      "expectedBytes": 157286294,
+      "largestChunk": 0,
+      "cacheKeys": [],
+      "ingressReaderLocked": false,
+      "elapsedMs": 1160.6729,
+      "stages": {
+        "baseline": {
+          "rss": 65863680,
+          "heapTotal": 18690048,
+          "heapUsed": 8535624,
+          "external": 3856658,
+          "arrayBuffers": 1335848
+        },
+        "afterParse": {
+          "rss": 382464000,
+          "heapTotal": 344686592,
+          "heapUsed": 241027648,
+          "external": 5222355,
+          "arrayBuffers": 1338792
+        },
+        "parsedAndContextHeldAfterGc": {
+          "rss": 381812736,
+          "heapTotal": 251736064,
+          "heapUsed": 115867808,
+          "external": 5222355,
+          "arrayBuffers": 1338792
+        },
+        "afterUploadPrepared": {
+          "rss": 381968384,
+          "heapTotal": 252260352,
+          "heapUsed": 160849792,
+          "external": 5287891,
+          "arrayBuffers": 1404328
+        },
+        "contextAndUnreadUploadHeldAfterGc": {
+          "rss": 382021632,
+          "heapTotal": 251736064,
+          "heapUsed": 115891120,
+          "external": 5287891,
+          "arrayBuffers": 1338792
+        },
+        "afterTerminal": {
+          "rss": 382025728,
+          "heapTotal": 251736064,
+          "heapUsed": 115906984,
+          "external": 5287891,
+          "arrayBuffers": 1338792
+        },
+        "releasedSameJobAfterGc": {
+          "rss": 382058496,
+          "heapTotal": 251473920,
+          "heapUsed": 115882576,
+          "external": 5222355,
+          "arrayBuffers": 1338792
+        },
+        "releasedAfterGc": {
+          "rss": 277536768,
+          "heapTotal": 146354176,
+          "heapUsed": 11078632,
+          "external": 5288099,
+          "arrayBuffers": 1339000
+        }
+      },
+      "observedMaximum": {
+        "rss": 382464000,
+        "heapTotal": 344686592,
+        "heapUsed": 241027648,
+        "external": 5288099,
+        "arrayBuffers": 1404328
+      }
+    },
+    {
+      "mode": "direct-paged-upload/replacement/drain",
+      "readBytes": 52428800,
+      "outputBytes": 157286294,
+      "expectedBytes": 157286294,
+      "largestChunk": 65535,
+      "cacheKeys": [],
+      "ingressReaderLocked": false,
+      "elapsedMs": 1577.6047,
+      "stages": {
+        "baseline": {
+          "rss": 68571136,
+          "heapTotal": 18690048,
+          "heapUsed": 8535464,
+          "external": 3856658,
+          "arrayBuffers": 1335848
+        },
+        "afterParse": {
+          "rss": 384258048,
+          "heapTotal": 345481216,
+          "heapUsed": 240688032,
+          "external": 5222355,
+          "arrayBuffers": 1338792
+        },
+        "parsedAndContextHeldAfterGc": {
+          "rss": 383361024,
+          "heapTotal": 252260352,
+          "heapUsed": 115868968,
+          "external": 5222355,
+          "arrayBuffers": 1338792
+        },
+        "afterUploadPrepared": {
+          "rss": 383533056,
+          "heapTotal": 252522496,
+          "heapUsed": 160849864,
+          "external": 5287891,
+          "arrayBuffers": 1404328
+        },
+        "contextAndUnreadUploadHeldAfterGc": {
+          "rss": 383741952,
+          "heapTotal": 251211776,
+          "heapUsed": 115891848,
+          "external": 5287891,
+          "arrayBuffers": 1338792
+        },
+        "afterTerminal": {
+          "rss": 408616960,
+          "heapTotal": 252784640,
+          "heapUsed": 132222992,
+          "external": 26718163,
+          "arrayBuffers": 22834600
+        },
+        "releasedSameJobAfterGc": {
+          "rss": 282177536,
+          "heapTotal": 146616320,
+          "heapUsed": 11098320,
+          "external": 26718163,
+          "arrayBuffers": 1338792
+        },
+        "releasedAfterGc": {
+          "rss": 282169344,
+          "heapTotal": 146616320,
+          "heapUsed": 11151240,
+          "external": 5288099,
+          "arrayBuffers": 1339000
+        }
+      },
+      "observedMaximum": {
+        "rss": 457109504,
+        "heapTotal": 345481216,
+        "heapUsed": 240688032,
+        "external": 75608019,
+        "arrayBuffers": 71200168
+      }
+    }
+  ]
+}

@@ -1,0 +1,12 @@
+{
+  "extends": "./tsconfig.json",
+  "include": [
+    "src/storage/recovery/dispatch-intent-d1.ts",
+    "src/storage/recovery/dispatch-intent-postgres-parent.ts",
+    "src/storage/recovery/usage-settlement-codec.ts",
+    "src/storage/recovery/usage-settlement-d1.ts",
+    "src/storage/recovery/run-usage-recovery-d1.ts",
+    "../proxy/src/test-support/sqlite-d1.ts"
+  ],
+  "exclude": []
+}

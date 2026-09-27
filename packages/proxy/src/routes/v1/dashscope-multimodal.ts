@@ -38,6 +38,7 @@ import { GatewayErrorCode } from '../../services/gateway-error-codes';
 import { gatewayErrorJson } from '../../services/gateway-error-response';
 import { RequestTimingCollector } from '../../services/request-timing';
 import { scheduleBackgroundWork } from '../../runtime/schedule-background-work';
+import { scheduleResourceCompletion } from '../../runtime/schedule-resource-completion';
 import { stickyConfigFromSurface } from '../../services/provider-sticky-routing';
 import { buildModelFallbackPlan } from '../../services/model-fallback-plan';
 import {
@@ -314,7 +315,9 @@ dashScopeMultimodalRoutes.post('/', async (c) => {
 			guardedRequestBody,
 			c.req.raw.signal,
 			{
+				registerResourceCompletion: task => scheduleResourceCompletion(c, task),
 				affinityKey: buildAffinityKey(apiKey.userId, baseModelId, effectiveRouteGroup, 'dashscope'),
+				errorContext: { skin: 'chat', requestId: requestCorrelationId },
 				tierKeyPrefix: buildTierKeyPrefix(baseModelId, effectiveRouteGroup, 'dashscope'),
 				strategy: selectedPlan.strategy.base,
 				tierStrategies: selectedPlan.strategy.tierOverrides,
@@ -412,7 +415,10 @@ async function finalizeMultimodalResponse(params: {
 	if (stickyMutationPromise) {
 		scheduleBackgroundWork(c, stickyMutationPromise);
 	}
-	let { response, errorBodyText } = await materializeNonOkResponse(proxyResult.response).catch(
+	let { response, errorBodyText } = await materializeNonOkResponse(proxyResult.response, {
+		requestId: requestCorrelationId,
+		trustedGatewayError: proxyResult.meta?.gatewayGeneratedError === true,
+	}).catch(
 		async (error: unknown) => {
 			await terminateMultimodalGuardrailBudget(
 				guardrailBudgetLease,
@@ -451,7 +457,8 @@ async function finalizeMultimodalResponse(params: {
 	let userModelCircuitEvent = null;
 	if (upstreamResponseOk) {
 		markUserModelSuccess(apiKey.userId, baseModelId);
-	} else if (errorBodyText != null) {
+	} else if (errorBodyText != null && meta?.gatewayGeneratedError !== true
+		&& meta?.admissionDeniedPreDispatch !== true) {
 		userModelCircuitEvent = maybeTriggerUserModelCircuitFromUpstream(
 			apiKey.userId,
 			baseModelId,

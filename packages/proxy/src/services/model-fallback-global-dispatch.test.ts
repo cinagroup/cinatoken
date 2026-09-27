@@ -13,6 +13,7 @@ import { EMPTY_USAGE, proxyChatCompletions } from './proxy';
 import { RequestTimingCollector } from './request-timing';
 import { resetSharedKeyPoolStateForTests } from './shared-key-pool';
 import { resetUserModelCircuitStateForTests } from './user-model-circuit-breaker';
+import { createRequestDispatchBudget } from './request-dispatch-budget';
 
 const originalFetch = globalThis.fetch;
 const emptyRepos = {} as GatewayRepositories;
@@ -229,24 +230,24 @@ describe('partition none global model fallback dispatch', () => {
 		});
 	});
 
-	it('performs real fetches in M2/M1/M2/M1 order with each candidate body and route model', async () => {
+	it('can succeed on the third actual fetch in M2/M1/M2 order with each candidate body', async () => {
 		const fixture = globalFixture();
 		const fetches: Array<{ target: string; marker: string; model: string }> = [];
 		globalThis.fetch = async (input, init) => {
 			const target = new URL(String(input)).hostname.split('.')[0]!;
-			const body = JSON.parse(String(init?.body)) as { marker: string; model: string };
+			const body = await new Response(init?.body).json() as { marker: string; model: string };
 			fetches.push({ target, marker: body.marker, model: body.model });
-			if (target !== 'm1-b') {
+			if (target !== 'm2-b') {
 				return Response.json(
 					{ error: { message: `unavailable ${target}` } },
-					{ status: 503 },
+					{ status: 429 },
 				);
 			}
 			return Response.json({
 				id: 'chatcmpl-success',
 				object: 'chat.completion',
 				created: 1_700_000_000,
-				model: 'private-m1-b',
+				model: 'private-m2-b',
 				choices: [{
 					index: 0,
 					message: { role: 'assistant', content: 'ok' },
@@ -274,13 +275,13 @@ describe('partition none global model fallback dispatch', () => {
 			{ target: 'm2-a', marker: 'body-m2', model: 'private-m2-a' },
 			{ target: 'm1-a', marker: 'body-m1', model: 'private-m1-a' },
 			{ target: 'm2-b', marker: 'body-m2', model: 'private-m2-b' },
-			{ target: 'm1-b', marker: 'body-m1', model: 'private-m1-b' },
 		]);
-		assert.equal(dispatched.selectedPlan.baseModelId, 'm1');
-		assert.equal(dispatched.result.chosenRoute.targetId, 'm1-b');
+		assert.equal(dispatched.result.response.status, 200);
+		assert.equal(dispatched.selectedPlan.baseModelId, 'm2');
+		assert.equal(dispatched.result.chosenRoute.targetId, 'm2-b');
 		assert.equal(
 			dispatched.result.chosenRoute.providerRoutingTrace?.global_endpoint_rank,
-			4,
+			3,
 		);
 		assert.deepEqual(
 			dispatched.fallbackAttempts.map((attempt) => [
@@ -289,8 +290,8 @@ describe('partition none global model fallback dispatch', () => {
 				attempt.outcome,
 			]),
 			[
-				['m2', 'm2-b', 'error'],
-				['m1', 'm1-b', 'success'],
+				['m1', 'm1-a', 'error'],
+				['m2', 'm2-b', 'success'],
 			],
 		);
 		assert.deepEqual(
@@ -298,7 +299,7 @@ describe('partition none global model fallback dispatch', () => {
 			{
 				original_model: 'm1',
 				requested_models: ['m1', 'm2'],
-				final_model: 'm1',
+				final_model: 'm2',
 				fallback_count: 1,
 				attempts: dispatched.fallbackAttempts,
 			},
@@ -380,7 +381,7 @@ describe('partition none global model fallback dispatch', () => {
 		assert.equal(trace?.attempts.at(-1)?.route_target_id, 'm2-b');
 	});
 
-	it('keeps fallback and circuit summaries bounded across 120 globally ranked endpoints', async () => {
+	it('caps actual fetches and summaries across 120 globally ranked endpoints', async () => {
 		const endpointCount = 120;
 		const candidateCount = 8;
 		const routes = Array.from({ length: endpointCount }, (_, index) => {
@@ -425,7 +426,7 @@ describe('partition none global model fallback dispatch', () => {
 				});
 			}
 			return new Response('x'.repeat(4 * 1024), {
-				status: 503,
+				status: 429,
 				headers: { 'Content-Type': 'text/plain' },
 			});
 		};
@@ -442,30 +443,62 @@ describe('partition none global model fallback dispatch', () => {
 			tierKeyPrefix: 'global|partition-none|openai',
 		});
 
-		assert.equal(fetches, endpointCount);
+		assert.equal(fetches, 3);
 		assert.equal(dispatched.ok, true);
 		if (!dispatched.ok) return;
-		assert.equal(dispatched.result.dispatchAttempts?.length, candidateCount);
+		assert.equal(dispatched.result.response.status, 502);
+		assert.equal(dispatched.result.meta?.failoverForbidden, true);
+		assert.equal(dispatched.result.dispatchAttempts?.length, 3);
 		assert.deepEqual(
 			dispatched.result.dispatchAttempts?.map((attempt) => attempt.routeTargetId),
-			Array.from({ length: candidateCount }, (_, candidateIndex) =>
-				`c${candidateIndex}-e${112 + candidateIndex}`,
+			Array.from({ length: 3 }, (_, candidateIndex) =>
+				`c${candidateIndex}-e${candidateIndex}`,
 			),
 		);
 		const retainedErrorBytes = (dispatched.result.dispatchAttempts ?? []).reduce(
 			(total, attempt) => total + new TextEncoder().encode(attempt.errorBodyText ?? '').byteLength,
 			0,
 		);
-		assert.ok(retainedErrorBytes <= candidateCount * 8 * 1024);
-		assert.equal(dispatched.fallbackAttempts.length, candidateCount);
-		assert.equal(dispatched.fallbackAttempts.at(-1)?.base_model, 'm7');
-		assert.equal(dispatched.fallbackAttempts.at(-1)?.outcome, 'success');
-		assert.equal(dispatched.userModelCircuitEvents.length, 1);
-		const circuitEvent = dispatched.userModelCircuitEvents[0]!;
-		assert.equal(circuitEvent.kind, 'user_model');
-		if (circuitEvent.kind !== 'user_model') return;
-		assert.equal(circuitEvent.modelId, 'm0');
-		assert.equal(circuitEvent.reason, 'client_error');
-		assert.deepEqual(dispatched.result.circuitEvents, []);
+		assert.ok(retainedErrorBytes <= 3 * 8 * 1024);
+		assert.equal(dispatched.fallbackAttempts.length, 4);
+		assert.equal(dispatched.fallbackAttempts.at(-1)?.base_model, 'm3');
+		assert.equal(dispatched.fallbackAttempts.at(-1)?.error_code, 'gateway.dispatch_limit_exceeded');
+		assert.equal(dispatched.fallbackAttempts.at(-1)?.provider_id, undefined);
+		assert.equal(dispatched.userModelCircuitEvents.length, 0);
+		assert.deepEqual(
+			dispatched.result.circuitEvents.map((event) => [
+				event.kind,
+				event.kind === 'provider' ? event.providerId : null,
+				event.kind === 'provider' ? event.failureKind : null,
+			]),
+			[
+				['provider', 'c0-e0', 'rate_limit'],
+				['provider', 'c1-e1', 'rate_limit'],
+				['provider', 'c2-e2', 'rate_limit'],
+			],
+		);
+	});
+
+	it('forwards the existing request budget instead of resetting it for global dispatch', async () => {
+		const fixture = globalFixture();
+		const dispatchBudget = createRequestDispatchBudget();
+		dispatchBudget.consume();
+		dispatchBudget.consume();
+		let fetches = 0;
+		globalThis.fetch = async () => {
+			fetches += 1;
+			return Response.json({ error: { message: 'unavailable' } }, { status: 429 });
+		};
+		const dispatched = await dispatchGlobalModelFallback({
+			repos: emptyRepos, candidates: fixture.candidates, globalRoutes: fixture.routes,
+			userId: 'user-shared-budget', timing: new RequestTimingCollector(),
+			beforeUpstreamDispatch: async () => undefined, dispatchBudget,
+			proxy: proxyChatCompletions, affinityKey: '', tierKeyPrefix: '',
+		});
+		assert.equal(fetches, 1);
+		assert.equal(dispatched.ok, true);
+		if (!dispatched.ok) return;
+		assert.equal(dispatched.result.meta?.failoverForbidden, true);
+		assert.deepEqual(dispatched.result.dispatchBudget, { limit: 3, permitsConsumed: 3, auxiliaryAuth: { limit: 3, exchangesStarted: 0 } });
 	});
 });

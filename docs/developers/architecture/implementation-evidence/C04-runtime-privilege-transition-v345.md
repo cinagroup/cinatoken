@@ -1,0 +1,40 @@
+# C04 / C03.5 v345: PostgreSQL runtime privilege transition contract
+
+Status: **review only; production default off**. This is a dependency map and a local revocation probe. It adds no formal migration, runtime flag, role, Worker binding, or grant change. PostgreSQL formal head remains **73**. The SQL revokes in the fixture run only against a newly owned loopback database and are reopened before that database is deleted.
+
+## Current write dependency and proposed owner
+
+| State | Current direct write by `cinatoken_gateway_runtime` | Transition boundary |
+| --- | --- | --- |
+| Legacy shared-key earning | `settleSharedKeyEarning` calls `ensureUserEarnings` and `recordEarningAndCredit`. The latter inserts `shared_key_earnings`; the PG73 invoker trigger then updates `user_earnings` and inserts `portal_ledger_entries`. The service separately updates or rebuilds `shared_keys` usage totals. | Retire the legacy earning caller after economic outbox delivery is authoritative. The reviewed `cinatoken_gateway_shared_earning_consumer` LOGIN can call only the migrator-owned `SECURITY DEFINER` consumer; the v343 wrapper checks `SESSION_USER` and the immutable event before its private core credits seller account and ledger. Revoke ordinary runtime `INSERT` on `shared_key_earnings` and seller financial-column updates only when all other account mutations have separate authorized paths. |
+| Seller account and withdrawal management | `portal-marketplace.impl.ts` also inserts `user_earnings` for account setup, updates wallet and badge fields, and updates financial columns for withdrawal-related repository methods. PG73 withdrawal triggers update `user_earnings` and append ledger entries under invoker privileges. | A blanket `user_earnings` DML revoke breaks these active paths. Define separate management/payout authority or narrow reviewed functions, and test withdrawal request, confirm, refund, wallet, badge, and account creation before withdrawing direct DML. The earning consumer identity must not inherit that authority. |
+| Ordinary-buyer admission | `user-budget-reservations.impl.ts` directly increments `users.budget_reserved_micros`, inserts `user_budget_reservations`, and later updates reservation state and the account on release/expiry. | Keep admission and its account hold in one authorized transaction. The v344 admission receipt proves a verified hold for v2 economic events, but is not a grant boundary. A future dedicated admission identity or narrow invoker-safe function needs an exact input and replay contract. |
+| Ordinary-buyer usage settlement | `insertRequestUsageAndChargeTxPg` directly updates `users.budget_spent`, `users.budget_reserved_micros`, and `user_budget_reservations` inside the request-log transaction; unreserved charge and reservation settlement take different branches. C03 recovery uses this same critical writer with fact receipt/job writes in the transaction. | Route the complete critical transaction through a dedicated settlement identity. Preserve one PostgreSQL transaction and its receipt/lease identity; splitting the account update from the log, v2 event, or recovery receipt would invalidate the v344 buyer proof and C03 ACK-loss protocol. Revoke runtime financial-column updates only after ordinary, reserved, expired, old-epoch, replay and recovery paths run under the new identity. |
+| Budget management | `updateUserBudgetWithAuditTxPg` and `applyUserBudgetTransitionWithAuditPg` update `users` budget configuration and counters with audit rows; other user/profile routes also need `users` writes. | A whole-table `UPDATE users` revoke is a breaking cutover. Inventory nonfinancial columns and management entry points, then use reviewed column grants or bounded functions plus separate management identity. Table-level `UPDATE` cannot remain because it overrides column restrictions. |
+
+The [current grant routine](../../../../scripts/db/cutover/grant-postgres-runtime.ts) grants `SELECT, INSERT, UPDATE, DELETE` on **all** gateway tables, then revokes only selected writes. It removes `UPDATE, DELETE` from `shared_key_earnings`, but leaves `INSERT`; it leaves `INSERT, UPDATE` on `user_earnings`, `UPDATE` on `users`, and `INSERT, UPDATE` on `user_budget_reservations`. It correctly denies the ordinary role direct C03 recovery fact/receipt/job table access. A later grant-routine rerun restores the broad rights after an isolated manual revoke. Therefore a durable privilege transition must change and test that routine in the eventual reviewed cutover; an ad hoc revoke is not sufficient.
+
+The [v344 buyer budget receipt](./C04-buyer-budget-receipt-v344.md) binds a v2 event to same-transaction buyer spend/hold changes. It does not prevent an ordinary runtime with `UPDATE users` from changing `budget_spent` later, or from changing `user_earnings` balance without a ledger entry. The existing [v343 seller consumer](./C04-postgres-snapshot-earning-consumer-v2-v343.md) shows the narrower pattern for seller credit. Chat has an optional request-local producer handoff, but no deployed producer/consumer cutover or worker routing is active.
+
+## Local evidence
+
+Run with the owned PostgreSQL 18.6 binary directory:
+
+```powershell
+$env:GATEWAY_NATIVE_PG_BIN = 'C:\cinagroup\cinatoken\.wrangler\staging\pg-native-v292-binaries\extracted\pgsql\bin'
+node --import tsx --test scripts/db/cutover/postgres-runtime-privilege-transition-v345.native.test.mjs
+```
+
+The [native fixture](../../../../scripts/db/cutover/postgres-runtime-privilege-transition-v345.native.test.mjs) passed **1/1 test, 6/6 stages, cleanup PASS** on an owned loopback PostgreSQL 18.6 cluster. The [machine result](./C04-runtime-privilege-transition-v345-results.json) pins the PG73 corpus, grant routine and fixture hashes. It observed the actual effective ACL, committed a legacy runtime earning whose PG73 trigger credited seller balance and appended a ledger row, demonstrated direct seller and buyer balance updates without settlement inside rolled-back transactions, and showed `42501` for the legacy earning, seller account creation, buyer account update, and reservation insert after test-only revokes. Rerunning the current grant routine restored those direct writes.
+
+This fixture does not install a seller consumer or prove that a dedicated buyer identity is ready. Its positive dedicated-consumer evidence is the separate v340/v343 native suite; its purpose is to pin the **current breaking dependencies** and grant-rerun failure mode. It does not test Workers/Hyperdrive identity, C03.5 fact producer, D1/MySQL, long-running rollout, or withdrawal/management behavior under proposed column-level ACLs.
+
+## Required cutover gates
+
+1. Authorize and connect the immutable quote, buyer debit/receipt, economic producer, delivery and dedicated seller consumer chain to real `recordUsage` outcomes. Prove replay and pending states before stopping legacy earning writes.
+2. Define separate admission, critical settlement, management and payout authorities with no role inheritance or `SET ROLE` escape to migrator/runtime. The critical settlement identity must retain the request log, buyer account, reservation, economic event and C03 recovery receipt/job in one transaction. Review direct-login behavior and connection budget.
+3. Inventory exact `users` and `user_earnings` column mutations, withdrawal triggers, sequences and function execution. Replace direct financial writes with narrow authorities; keep management/profile writes working. Do not assume a table-level revoke is harmless.
+4. Change the runtime grant routine and default-ACL policy in the actual cutover so every rerun stays closed. Assert effective privileges, role memberships, grant options, trigger/function ownership and source, plus rollback behavior under drift.
+5. Drain or reconcile pre-cutover reservations/earnings, exercise old-epoch and late-adjustment policy, then run native and Workers/Hyperdrive end-to-end tests before any production activation.
+
+None of these gates is closed by v345 alone.

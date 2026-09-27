@@ -1,0 +1,32 @@
+{
+  "$schema": "../../../../node_modules/wrangler/config-schema.json",
+  "name": "cinatoken-staging-usage-recovery",
+  "account_id": "7ea8e46d8210bad342fa7595f7935fea",
+  "main": "usage-recovery-worker.ts",
+  "compatibility_date": "2026-09-07",
+  "compatibility_flags": ["nodejs_compat"],
+  "send_metrics": false,
+  "workers_dev": false,
+  "preview_urls": false,
+  "routes": [],
+  "triggers": { "crons": [] },
+  "observability": { "enabled": true, "head_sampling_rate": 1 },
+  "vars": {
+    "RECOVERY_ENVIRONMENT": "staging",
+    "RECOVERY_ENABLED": "false",
+    "RECOVERY_MAX_ITEMS": "5",
+    "RECOVERY_CONCURRENCY": "1",
+    "RECOVERY_LEASE_SECONDS": "30",
+    "RECOVERY_RUN_BUDGET_MS": "5000",
+    // No production memory estimate is implied. Explicit experiment/profile required.
+    "RECOVERY_RESERVED_BYTES": "0",
+    "RECOVERY_INSTANCE_BYTES": "0"
+  },
+  "d1_databases": [{
+    "binding": "RECOVERY_DB",
+    "database_name": "cinatoken-staging",
+    // Pinned historical staging ID; reverify identity/schema before any deployment.
+    "database_id": "6bf5d41e-fe0b-4afa-9f67-ff5cf82e23d1",
+    "remote": false
+  }]
+}

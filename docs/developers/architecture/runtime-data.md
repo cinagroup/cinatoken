@@ -1,5 +1,7 @@
 # 运行时与数据存储架构（cinatoken）
 
+> 2026-09-21 已批准的 V2.1 生产目标：[ADR-0001](./decisions/ADR-0001-production-financial-authority.md) 固定 PostgreSQL 为预算 / 资金唯一权威，Workers 优先、Node 备选。下述多后端矩阵描述通用代码能力，不表示各后端均获本次发行版生产授权，也不证明已经完成切换。D1 staging 及兼容实现保留。
+
 `@octafuse/core` 承载统一的类型、仓储与领域逻辑；**对外交付形态**由两套正交选择决定：
 
 1. **运行时**：**Cloudflare 边缘**（Worker / Pages + OpenNext）或 **Node.js**（本机/Docker/K8s 等）。
@@ -26,11 +28,11 @@
 
 | 模式 | 代理服务 | 管理后台 | 数据库 | 典型场景 |
 |------|---------|--------|--------|----------|
-| **A. Cloudflare 全托管（默认）** | Worker | Pages（OpenNext） | **共用 D1** | 生产默认；运维最简单 |
-| **A′. Cloudflare + Hyperdrive** | Worker | OpenNext Worker | **共用 PostgreSQL `cinatoken_gateway`** | D1→PG 迁移完成后的目标拓扑；须按切换 runbook 放行 |
-| **B. Hybrid** | **Node**（容器/VPS） | 仍为 **Cloudflare Pages** | 代理服务=**Postgres**，管理后台=**D1**（两库需分别迁移/对齐，适合分阶段上 PG） | 推理侧先行迁 PG，管理端仍在 CF |
+| **A. Cloudflare + D1（通用代码默认）** | Worker | Pages（OpenNext） | **共用 D1** | 既有兼容路径 / 隔离 staging；不是本次 V2.1 预算与资金的生产目标 |
+| **A′. Cloudflare + Hyperdrive** | Worker | OpenNext Worker | **共用 PostgreSQL `cinatoken_gateway`** | 已选择的生产方向，未代表完成实现 / 验收 / 切换；须按切换 runbook 放行 |
+| **B. Hybrid（隔离开发 / 离线迁移限定）** | **Node**（容器/VPS） | Cloudflare Pages | 代理侧 Postgres、管理侧 D1 必须是隔离数据集或离线迁移两端 | **禁止用于同一生产资金域**，不能以异步对齐代替唯一权威 |
 | **C. Full Node + Postgres** | Node | Node（Next 容器等） | **同一 Postgres** | 全自托管、与 K8s/Docker 一致；见 Docker 文档 |
-| **C′. Full Node + MySQL 8** | Node | Node（Next 容器等） | **同一 MySQL** | 与 C 相同交付形态；迁移目录 `migrations-mysql/` |
+| **C′. Full Node + MySQL 8（通用兼容能力）** | Node | Node（Next 容器等） | **同一 MySQL** | 保留迁移目录 `migrations-mysql/`；不是本次 V2.1 预算与资金的生产目标 |
 
 详细步骤与变量（本表为 SSOT；其它文档只摘要并链回此处）：
 

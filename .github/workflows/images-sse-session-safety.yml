@@ -1,0 +1,23 @@
+name: Images SSE operator session safety
+on:
+  pull_request:
+    paths: ['scripts/deploy/**', 'packages/proxy/**', 'packages/core/**', 'package-lock.json', '.github/workflows/images-sse-session-safety.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  session:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    strategy:
+      matrix:
+        node: [22, 24]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+          cache: npm
+      - run: npm ci
+      # Uses loopback HTTP and synthetic native-tail records, never Cloudflare credentials.
+      - run: node --test scripts/deploy/staging-sse-host-expiry-session.test.mjs

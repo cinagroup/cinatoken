@@ -1,0 +1,65 @@
+{
+  "version": "v337",
+  "date": "2026-09-24",
+  "status": "LOCAL_DURABLE_SHARED_USAGE_BACKFILL_CURSOR_PASS_PRODUCTION_DISABLED",
+  "C04": "DOING",
+  "goalComplete": false,
+  "validation": {
+    "nativePostgres": { "pass": 1, "fail": 0, "stages": 13, "cleanup": "PASS", "postgresVersion": "18.6" },
+    "generatorUnitTests": { "pass": 2, "fail": 0 },
+    "combinedBackfillUnitTests": { "pass": 4, "fail": 0 },
+    "scriptsWideTypecheck": "PASS",
+    "targetedWhitespaceCheck": "PASS",
+    "linuxCiRegistrationNeeded": false,
+    "linuxCiRun": false
+  },
+  "protocol": {
+    "maximumEarningsPerPage": 500,
+    "directMigratorLoginRequired": true,
+    "databaseCreateRequiredForActivation": true,
+    "ordinaryRuntimeCursorAccessDenied": true,
+    "nonInheritedSetRoleMigratorMembershipRejected": true,
+    "nonInheritedSetRoleReadAllDataMembershipRejected": true,
+    "nonInheritedSetRoleWriteAllDataMembershipRejected": true,
+    "enqueueAndCursorAdvanceSameTransaction": true,
+    "unknownCommitReadsDatabaseCursor": true,
+    "separateLocalProcessCursorRead": true,
+    "separatePhysicalHostsTested": false,
+    "twoOperatorWaitAndDisjointPages": true,
+    "operatorLockTimeoutCode": "55P03",
+    "operatorLockTimeoutMs": 2055,
+    "operatorRetryOnLockTimeoutRequired": true,
+    "lateLowSortingEarningUsesLiveTrigger": true
+  },
+  "sourceSha256": {
+    "formalPostgresMigrationCorpus": "23afef61a8a670e0af8c90e3a138f522e6b283b454e380a592bf85bca83108dc",
+    "packages/core/migrations-proposals/postgres/shared-key-earnings-history-guard.sql": "454a720f9a6b7410e0aad99c2aaa2eb3327fbbac8c86bb3e3cd4537131e6611b",
+    "packages/core/migrations-proposals/postgres/shared-key-usage-repair-jobs.sql": "7b2f288ecb83e34207bcfd5a2a4eec934c0d6e156190826816ab033716c173d4",
+    "scripts/db/cutover/build-postgres-shared-usage-repair-backfill.mjs": "42c8bfcf22523862a4081463ace99683743d45511e62cdb14bd9b5117b21a0f0",
+    "scripts/db/cutover/build-postgres-shared-usage-repair-durable-cursor.mjs": "ff0595f6c6b7fb334975f9ded25ebe1de9e1a25b5acd4fc292b3a0598173e72e",
+    "scripts/db/cutover/build-postgres-shared-usage-repair-durable-cursor.test.mjs": "e027df34db207c4f44589c5e2d6972d3aea883633a75c234caac6efc55a0b7bd",
+    "scripts/db/cutover/read-postgres-shared-usage-repair-cursor.child.mjs": "4fa4be47296d34bdfec34369185d118c315c54bb9273617939e2d10fc6315683",
+    "scripts/db/cutover/postgres-shared-usage-repair-durable-cursor.native.test.mjs": "1cabdcff6b78347e66a98eacd908437fe02be60820169b9e1987f4494975b922",
+    "docs/developers/architecture/implementation-evidence/C04-postgres-shared-usage-durable-cursor-v337.md": "9a70f240c2b2b6484efa50c0dd0e826a09e983d196c043072ccfc539d19f5903"
+  },
+  "reportSha256": {
+    "docs/developers/architecture/implementation-evidence/C04-postgres-shared-usage-durable-cursor-v337-report.json": "a295f873f3f600c9e29f5c5e87bdad9da8baec4a7a4e9d8d9aa4edde1cad1788"
+  },
+  "ciCommandsRegistered": [
+    "node --test scripts/db/cutover/build-postgres-shared-usage-repair-durable-cursor.test.mjs",
+    "node --import tsx --test scripts/db/cutover/postgres-shared-usage-repair-durable-cursor.native.test.mjs"
+  ],
+  "boundaries": {
+    "formalPostgresMigrations": 73,
+    "formalMigrationInstalled": false,
+    "crossPhysicalHostVerified": false,
+    "schedulerInstalled": false,
+    "automaticHistoricalCompletionObserved": false,
+    "representativeProductionLockWindowVerified": false,
+    "realWorkersHyperdriveQueueVerified": false,
+    "productionRecoveryEnabled": false,
+    "remoteSqlCalls": 0,
+    "deployments": 0,
+    "cloudModelCalls": 0
+  }
+}

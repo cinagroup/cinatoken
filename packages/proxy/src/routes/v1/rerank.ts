@@ -5,6 +5,7 @@ import type { Env } from '../../app';
 import { requireApiKey } from '../../middleware/auth';
 import { assignGenerationId } from '../../middleware/generation-id';
 import { scheduleBackgroundWork } from '../../runtime/schedule-background-work';
+import { scheduleResourceCompletion } from '../../runtime/schedule-resource-completion';
 import {
 	BoundedJsonRequestError,
 	readBoundedJsonObject,
@@ -21,6 +22,8 @@ import { buildModelFallbackPlan } from '../../services/model-fallback-plan';
 import type { RouteResult } from '../../services/model-router';
 import { parseOpenRouterSessionHeader } from '../../services/openrouter-session-routing';
 import { privateByokContextForApiKey } from '../../services/byok-key-pool';
+import { assertTextRequestActive, textRequestFailureResponse, waitForTextRequestRead } from '../../middleware/text-request-lifecycle';
+import { createRequestDispatchBudget } from '../../services/request-dispatch-budget';
 import { proxyRerank, EMPTY_USAGE } from '../../services/proxy';
 import { createRouteAwareBudgetAdmission } from '../../services/request-budget-admission';
 import { runRequestGuardrails } from '../../services/request-guardrails';
@@ -224,7 +227,10 @@ function upstreamRerankBodyForLog(
 rerankRoutes.post('/', async (c) => {
 	const repos = c.get('repositories');
 	const apiKey = c.get('apiKey');
-	const start = Date.now();
+	const lifecycle = c.get('textRequestLifecycle');
+	const dispatchBudget = lifecycle?.dispatchBudget ?? createRequestDispatchBudget();
+	const start = dispatchBudget.createdAtMs;
+	assertTextRequestActive(c);
 	const requestId = c.get('generationId')!;
 	const timing = new RequestTimingCollector();
 	const parsedSession = parseOpenRouterSessionHeader(c.req.raw.headers);
@@ -237,11 +243,14 @@ rerankRoutes.post('/', async (c) => {
 
 	let body: Record<string, unknown>;
 	try {
-		body = await readBoundedJsonObject(c.req.raw, {
+		body = await waitForTextRequestRead(c, readBoundedJsonObject, c.req.raw, {
 			maxBytes: RERANK_REQUEST_MAX_BYTES,
 			label: 'Rerank request',
 		});
 	} catch (error) {
+		assertTextRequestActive(c);
+		const stopped = textRequestFailureResponse(error, c);
+		if (stopped) return stopped;
 		if (error instanceof BoundedJsonRequestError) {
 			return gatewayErrorJson(c, {
 				status: error.kind === 'payload_too_large' ? 413 : 400,
@@ -267,6 +276,7 @@ rerankRoutes.post('/', async (c) => {
 	}
 
 	const guardrail = await runRequestGuardrails(repos, {
+		control: lifecycle?.deadline,
 		workspaceId: apiKey.workspaceId,
 		userId: apiKey.userId,
 		apiKeyId: apiKey.keyId,
@@ -290,7 +300,8 @@ rerankRoutes.post('/', async (c) => {
 		return gatewayErrorJson(c, { status: 400, code: validation.code, message: validation.message });
 	}
 
-	const fallbackPlan = await buildModelFallbackPlan(repos, {
+	const fallbackPlan = await waitForTextRequestRead(c, buildModelFallbackPlan, repos, {
+		control: lifecycle?.deadline,
 		modelIds: [validation.modelId],
 		body,
 		requestProtocol: 'openai',
@@ -350,6 +361,7 @@ rerankRoutes.post('/', async (c) => {
 			validation.documentCount,
 		),
 	);
+	assertTextRequestActive(c);
 	const budgetAdmission = await createRouteAwareBudgetAdmission(repos, {
 		ordinary: {
 			requestId,
@@ -414,6 +426,8 @@ rerankRoutes.post('/', async (c) => {
 				routePoolId: candidate.surface?.route_pool_id ?? candidate.routes[0]?.routePoolId ?? null,
 				sticky: candidate.hasProviderPreferences ? null : stickyConfigFromSurface(candidate.surface),
 				beforeUpstreamDispatch,
+				registerResourceCompletion: task => scheduleResourceCompletion(c, task),
+				dispatchBudget,
 				byok: privateByokContextForApiKey(apiKey),
 			},
 			requestId,
@@ -447,9 +461,10 @@ rerankRoutes.post('/', async (c) => {
 	});
 	const response = materialized.response;
 	const errorBodyText = materialized.errorBodyText;
+	// A local auth/admission stop also forbids replay, but is not accepted work.
+	// Invalid accepted responses carry explicit upstreamOutcomeUnknown below.
 	const acceptedUpstreamResponse = response.ok
-		|| proxyResult.meta?.responseBodyTooLarge === true
-		|| proxyResult.meta?.failoverForbidden === true;
+		|| proxyResult.meta?.responseBodyTooLarge === true;
 	const circuitEvents = [...proxyResult.circuitEvents];
 	if (response.ok) {
 		markUserModelSuccess(apiKey.userId, candidate.baseModelId);

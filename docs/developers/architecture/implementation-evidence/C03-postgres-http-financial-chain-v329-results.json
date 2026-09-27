@@ -1,0 +1,139 @@
+{
+  "version": "v329",
+  "date": "2026-09-24",
+  "status": "LOCAL_HTTP_POSTGRES_FINANCIAL_CHAIN_SUBSET_PASS_PRODUCTION_DISABLED",
+  "C03": "DOING",
+  "goalComplete": false,
+  "validation": {
+    "nativeHttpPostgresFinancial": {
+      "pass": 1,
+      "fail": 0,
+      "stages": 4,
+      "cleanup": "PASS",
+      "postgresVersion": "18.6",
+      "providerSends": 1,
+      "chargedCostUsd": 0.04
+    },
+    "nativeFinancialDirectGrant": {
+      "pass": 1,
+      "fail": 0,
+      "stages": 10,
+      "cleanup": "PASS",
+      "postgresVersion": "18.6"
+    },
+    "nativeFactGrantWithLegacyGuard": {
+      "pass": 2,
+      "fail": 0,
+      "stages": [
+        17,
+        5
+      ],
+      "cleanup": [
+        "PASS",
+        "PASS"
+      ],
+      "postgresVersion": "18.6"
+    },
+    "nativeFinancialConsumerLoginRerun": {
+      "pass": 1,
+      "fail": 0,
+      "stages": 5,
+      "cleanup": "PASS",
+      "postgresVersion": "18.6"
+    },
+    "financialDirectGrantUnit": {
+      "pass": 3,
+      "fail": 0
+    },
+    "postgresRecoveryCompositionUnit": {
+      "pass": 25,
+      "fail": 0
+    },
+    "coreGuardrailsAndEndpointUnit": {
+      "pass": 10,
+      "fail": 0
+    },
+    "workerOwnerWorkerdBundleStatic": {
+      "pass": 1,
+      "fail": 0
+    },
+    "workerOwnerWorkerdRuntimeLocalVerified": false,
+    "workerOwnerWorkerdRuntimeLocalFailure": "Windows workerd 0xc0000005 before module evaluation",
+    "imagesStagingSuiteExitCode": 0,
+    "proxyTypecheck": true,
+    "proxyDispatchSafetyTypecheck": true,
+    "coreDispatchIntentTypecheck": true,
+    "workflowYamlParsed": true,
+    "newLinuxCiStepsRegistered": true,
+    "linuxCiRunVerified": false,
+    "coreChangedFilesTypecheck": true
+  },
+  "sourceSha256": {
+    "packages/core/src/db/postgres/guardrails.impl.ts": "b33b8a7d7c04cbed9efe9bce36d3aaa9831c9e615ccc92d3836819e49e300b2e",
+    "packages/core/src/db/postgres/model-endpoints.impl.ts": "a4d37e50d28e0b9f62222fefa670b11839852da717bc6b105bd14c6d4e8bbe35",
+    "packages/core/src/db/postgres/route-data-policies.impl.ts": "bedb56404c416359337556bf21edae599e052717cf779660945faceacb5ec40b",
+    "packages/core/src/storage/model-endpoints.sql-repositories.test.ts": "81f82eeddb69f5583aeec0e268b7f3d2acdb24901b25347a51a3c7adbb212afb",
+    "scripts/db/cutover/build-image-fact-job-producer-grant.mjs": "6f45f91594451bcfb5f0da7d526387f45696dc7b757a5ad62105b8e1a18a0c18",
+    "scripts/db/cutover/build-image-fact-job-producer-grant.native.test.mjs": "b8e86af9c0685e1342fa540703b4342fabb8c79664cb313980dbea56e559f540",
+    "scripts/db/cutover/build-financial-consumer-direct-login-grant.ts": "8f36d42a19e4672ace9b4ec59ecbb016f9bca02813862a42a09e4e93abb51cb9",
+    "scripts/db/cutover/build-financial-consumer-direct-login-grant.test.ts": "6da318528fc9d6a37f4623daddcec5e399efb7d8c5525463f85ef5442b867834",
+    "scripts/db/cutover/build-financial-consumer-direct-login-grant.native.test.mjs": "f5b0680a0fd3ed8cbb18ea479daf132fcbb43b8fc75212c05eecaa3e048e2571",
+    "scripts/db/cutover/postgres-image-http-financial.native.test.mjs": "9e19f894f51eadae718b0affda6e5b2c464e3dde7c8d1477b8d697a0afd8e75f",
+    "packages/proxy/src/runtime/postgres-financial-consumer.ts": "1df6c296a651b7d128b7a1d383494f30885f970592e4e245dcc8f27b0eb0b8ef",
+    "packages/proxy/src/runtime/postgres-financial-consumer.test.mjs": "98afabfa4cf09b6fa581d4262c764c99a1a277c9ac9165b757b4c596fd251f0e",
+    "packages/proxy/scripts/test-postgres-image-owner-workerd.test.mjs": "54167d37b1da3734c664045a7f2cce4891a662bbc9f580d460e9e01f1fc2d252",
+    "packages/proxy/src/runtime/fixtures/postgres-image-owner-workerd-fixture.ts": "642fedc73aa109eac403344538ccd0c3a5bdda4b50fbe64958fa70a05257d12f",
+    ".github/workflows/proxy-dispatch-safety.yml": "d22c16e19bf6ceb7b3258124a1aace6b9f38e7e86db623efaef36d6b30ca9fbd",
+    "docs/developers/architecture/implementation-evidence/C03-postgres-native-image-http-financial-v329-report.json": "888266623b5bab2dd588ca030ad300f3dfd493b53167de46eed836f7a28845ac",
+    "docs/developers/architecture/implementation-evidence/C03-postgres-native-financial-consumer-login-v329-report.json": "c87eec0a056a72d4d3526348e2e20857c82655216ce135231faa7125e0d32b2f",
+    "docs/developers/architecture/implementation-evidence/C03-postgres-native-financial-direct-grant-v329-report.json": "282675df1c9463e1dda7aa52458ced7159b4c4457c21e8fb2e3516f12a2cd369",
+    "docs/developers/architecture/implementation-evidence/C03-postgres-native-fact-job-guard-grant-v329-report.json": "86c69e764cb70b58cf4e43e24a17a63b0bd87e0bcbd4e5d7bf8c38509ea10ab6",
+    "docs/developers/architecture/implementation-evidence/C03-postgres-native-fact-job-guard-direct-login-v329-report.json": "be948987a7c6159d00829b0a2e67ec8e0b0dd4fb78b4f9a869b68f64a3850f32",
+    "docs/developers/architecture/implementation-evidence/C03-postgres-http-financial-chain-v329.md": "a6cbe013855b8f0b35f45dca02fa78b531d0b02b72c7fd09134274581603cc7d"
+  },
+  "boundaries": {
+    "formalMigrations": 73,
+    "defaultWorkerPostgresRecoveryEnabled": false,
+    "nativeHttpChainUsesRealPostgres": true,
+    "nativeHttpChainUsesControlledProviderFetch": true,
+    "nativeHttpChainUsesLocalDirectUrlsInsteadOfHyperdrive": true,
+    "nativeHttpFactBeforeFinance": {
+      "parents": 1,
+      "claims": 1,
+      "facts": 1,
+      "outbox": 1,
+      "pendingJobs": 1,
+      "logs": 0,
+      "spentUsd": 0
+    },
+    "nativeHttpFactAfterFinance": {
+      "receipts": 1,
+      "logs": 1,
+      "attempts": 1,
+      "audits": 1,
+      "committedJobs": 1,
+      "spentUsd": 0.04
+    },
+    "financialConsumerQueueAckSafe": false,
+    "productionFinancialGrantApplied": false,
+    "currentAuthenticatedCloudOriginBudget": false,
+    "liveWorkersHyperdriveLifecycleVerified": false,
+    "queueDeliveryAckRetryVerified": false,
+    "oldDatabaseBackfillVerified": false,
+    "parentRetentionImplemented": false,
+    "DBL_04_05_06_08Complete": false,
+    "C03_4Complete": false,
+    "C03_5Complete": false,
+    "C03_7Complete": false,
+    "C03_GComplete": false,
+    "C01_GComplete": false,
+    "C02_GComplete": false,
+    "remoteSqlCalls": 0,
+    "cloudManagementCalls": 0,
+    "deployments": 0,
+    "modelCalls": 0,
+    "kmsCalls": 0,
+    "cumulativeStagingCapUsd": 2,
+    "capReset": false
+  }
+}

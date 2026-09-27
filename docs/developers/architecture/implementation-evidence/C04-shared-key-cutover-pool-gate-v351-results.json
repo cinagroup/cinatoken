@@ -1,0 +1,29 @@
+{
+  "status": "PASS",
+  "scope": "owned loopback PostgreSQL 18.6; formal PG73; review-only v346 and v348 split proposals",
+  "native": [
+    {
+      "fixture": "scripts/db/cutover/postgres-buyer-critical-writer-split-v346.native.test.mjs",
+      "stagesPassed": 11,
+      "cleanup": "PASS",
+      "legacyPoolBeforeSplit": 1,
+      "legacyPoolAfterSplit": 0,
+      "legacyPoolAfterUnsafeOldGrantRerun": 1
+    },
+    {
+      "fixture": "scripts/db/cutover/postgres-buyer-split-grant-rerun-v348.native.test.mjs",
+      "stagesPassed": 14,
+      "cleanup": "PASS",
+      "legacyPoolBeforeSplit": 1,
+      "legacyPoolAfterSplit": 0,
+      "legacyPoolAfterReviewedGrantRerun": 0,
+      "oldGrantRerunRejected": true
+    }
+  ],
+  "sharedKeyPoolTests": { "passed": 8, "failed": 0 },
+  "coreSharedKeySummaryTypecheck": "PASS",
+  "coreNodeIndexBuild": "PASS",
+  "formalMigrationHeads": { "postgres": 73, "d1": 68, "mysql": 64 },
+  "productionEnabled": false,
+  "remoteSqlOrDeployment": false
+}

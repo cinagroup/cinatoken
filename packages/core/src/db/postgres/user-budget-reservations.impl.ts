@@ -52,7 +52,7 @@ async function getReservation(
 	forUpdate = false,
 ): Promise<UserBudgetReservationRow | null> {
 	const rows = await pg.unsafe<UserBudgetReservationRow[]>(
-		`SELECT * FROM user_budget_reservations WHERE request_id = $1${forUpdate ? ' FOR UPDATE' : ''}`,
+		`SELECT * FROM cinatoken_gateway.user_budget_reservations WHERE request_id = $1${forUpdate ? ' FOR UPDATE' : ''}`,
 		[requestId],
 	);
 	return rows[0] ? normalizeReservation(rows[0]) : null;
@@ -66,7 +66,7 @@ async function getAccount(
 	const rows = await pg.unsafe<UserBudgetAccountRow[]>(`SELECT
 		id, budget_max, budget_spent, budget_period, budget_reset_at,
 		budget_epoch, budget_reserved_micros
-		FROM users WHERE id = $1${forUpdate ? ' FOR UPDATE' : ''}`, [userId]);
+		FROM cinatoken_gateway.users WHERE id = $1${forUpdate ? ' FOR UPDATE' : ''}`, [userId]);
 	return rows[0]
 		? { ...rows[0], budget_reset_at: timestampString(rows[0].budget_reset_at) }
 		: null;
@@ -77,7 +77,7 @@ async function lockActiveApiKeyOwnership(
 	apiKeyId: string,
 	userId: string,
 ): Promise<boolean> {
-	const rows = await pg.unsafe<Array<{ id: string }>>(`SELECT id FROM api_keys
+	const rows = await pg.unsafe<Array<{ id: string }>>(`SELECT id FROM cinatoken_gateway.api_keys
 		WHERE id = $1 AND user_id = $2 AND status = 'active'
 		FOR SHARE`, [apiKeyId, userId]);
 	return rows.length === 1;
@@ -148,7 +148,7 @@ async function updateCurrentEpochAccount(
 	if (Number(account.budget_reserved_micros) < reservedMicros) {
 		throw new Error('user_budget_reserved_counter_invariant');
 	}
-	const updated = await pg.unsafe<Array<{ id: string }>>(`UPDATE users
+	const updated = await pg.unsafe<Array<{ id: string }>>(`UPDATE cinatoken_gateway.users
 		SET budget_reserved_micros = budget_reserved_micros - $1::bigint,
 			budget_spent = ROUND(GREATEST(
 				budget_spent + ($2::numeric / 1000000::numeric),
@@ -176,7 +176,7 @@ async function terminalize(
 	reason: string,
 ): Promise<void> {
 	await updateCurrentEpochAccount(pg, row, nowIso, settledMicros);
-	const updated = await pg.unsafe<Array<{ request_id: string }>>(`UPDATE user_budget_reservations
+	const updated = await pg.unsafe<Array<{ request_id: string }>>(`UPDATE cinatoken_gateway.user_budget_reservations
 		SET state = $1, settled_micros = $2::bigint, terminal_at = $3::timestamptz,
 			terminal_reason = $4, updated_at = $3::timestamptz
 		WHERE request_id = $5 AND state = $6
@@ -215,7 +215,7 @@ export function createPostgresUserBudgetReservationsRepository(
 						return { status: 'blocked', remainingMicros: classified.remainingMicros };
 					}
 
-					const updated = await tx.unsafe<Array<{ id: string }>>(`UPDATE users
+					const updated = await tx.unsafe<Array<{ id: string }>>(`UPDATE cinatoken_gateway.users
 						SET budget_reserved_micros = budget_reserved_micros + $1::bigint,
 							updated_at = $2::timestamptz
 						WHERE id = $3 AND budget_epoch = $4::bigint AND budget_max IS NOT NULL
@@ -238,7 +238,7 @@ export function createPostgresUserBudgetReservationsRepository(
 							: { status: 'blocked', remainingMicros: latest.remainingMicros };
 					}
 
-					await tx.unsafe(`INSERT INTO user_budget_reservations (
+					await tx.unsafe(`INSERT INTO cinatoken_gateway.user_budget_reservations (
 						request_id, user_id, api_key_id, budget_epoch, limit_micros,
 						reserved_micros, settled_micros, state, expires_at, created_at, updated_at
 					) VALUES ($1, $2, $3, $4::bigint, $5::bigint, $6::bigint, 0, 'reserved',
@@ -287,7 +287,7 @@ export function createPostgresUserBudgetReservationsRepository(
 					return false;
 				}
 				if (row.state === 'dispatched') return true;
-				const updated = await tx.unsafe<Array<{ request_id: string }>>(`UPDATE user_budget_reservations
+				const updated = await tx.unsafe<Array<{ request_id: string }>>(`UPDATE cinatoken_gateway.user_budget_reservations
 					SET state = 'dispatched', dispatched_at = $1::timestamptz,
 						expires_at = $2::timestamptz, updated_at = $1::timestamptz
 					WHERE request_id = $3 AND state = 'reserved'
@@ -322,7 +322,7 @@ export function createPostgresUserBudgetReservationsRepository(
 			const bounded = userBudgetRecoveryLimit(limit);
 			return await pg.begin(async (tx) => {
 				const rows = await tx.unsafe<UserBudgetReservationRow[]>(`SELECT *
-					FROM user_budget_reservations
+					FROM cinatoken_gateway.user_budget_reservations
 					WHERE state IN ('reserved', 'dispatched') AND expires_at <= $1::timestamptz
 					ORDER BY user_id, budget_epoch, request_id
 					LIMIT $2 FOR UPDATE SKIP LOCKED`, [nowIso, bounded]);

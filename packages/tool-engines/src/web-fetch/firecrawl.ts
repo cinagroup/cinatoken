@@ -38,6 +38,7 @@ export async function fetchFirecrawlUrl(params: WebFetchParams): Promise<WebFetc
 	const fetchImpl = params.fetchImpl ?? fetch;
 	const response = await fetchImpl(FIRECRAWL_ENDPOINT, {
 		method: 'POST',
+		redirect: 'manual',
 		headers: {
 			Authorization: `Bearer ${params.apiKey}`,
 			'Content-Type': 'application/json',

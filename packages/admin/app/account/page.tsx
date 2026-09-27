@@ -3,7 +3,8 @@
 import { useCallback, useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useTranslations } from 'next-intl';
-import { readPortalJson } from '@/lib/portal-fetch';
+import { readRequiredPortalData } from '@/lib/portal-fetch';
+import { DataLoadError } from '@/components/DataLoadError';
 
 type EarningsSummary = {
   balance: number;
@@ -39,20 +40,27 @@ export default function AccountOverviewPage() {
   const [keys, setKeys] = useState<SharedKeyRow[]>([]);
   const [tiers, setTiers] = useState<Tier[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [loadFailed, setLoadFailed] = useState(false);
 
   const load = useCallback(async () => {
+    setIsLoading(true);
+    setLoadFailed(false);
     try {
       const [earningsRes, keysRes, tiersRes] = await Promise.all([
         fetch('/api/user/earnings/summary', { cache: 'no-store' }),
         fetch('/api/user/shared-keys', { cache: 'no-store' }),
         fetch('/api/user/nft/tiers', { cache: 'no-store' }),
       ]);
-      const earningsData = await readPortalJson<EarningsSummary>(earningsRes);
-      const keysData = await readPortalJson<SharedKeyRow[]>(keysRes);
-      const tiersData = await readPortalJson<{ tiers: Tier[] }>(tiersRes);
-      if (earningsData?.success) setSummary(earningsData.data ?? null);
-      if (keysData?.success) setKeys(keysData.data ?? []);
-      if (tiersData?.success) setTiers(tiersData.data?.tiers ?? []);
+      const [earningsData, keysData, tiersData] = await Promise.all([
+        readRequiredPortalData<EarningsSummary>(earningsRes),
+        readRequiredPortalData<SharedKeyRow[]>(keysRes),
+        readRequiredPortalData<{ tiers: Tier[] }>(tiersRes),
+      ]);
+      setSummary(earningsData);
+      setKeys(keysData);
+      setTiers(tiersData.tiers);
+    } catch {
+      setLoadFailed(true);
     } finally {
       setIsLoading(false);
     }
@@ -64,6 +72,10 @@ export default function AccountOverviewPage() {
 
   if (isLoading) {
     return <div className="py-12 text-center text-gray-500">{t('common.loading')}</div>;
+  }
+
+  if (loadFailed || !summary) {
+    return <DataLoadError onRetry={() => void load()} />;
   }
 
   const activeKeys = keys.filter((key) => key.status === 'active').length;

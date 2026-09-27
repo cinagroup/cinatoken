@@ -1,0 +1,219 @@
+{
+  "status": "PASS",
+  "cleanup": "PASS",
+  "binaryVersion": "postgres (PostgreSQL) 18.6",
+  "sourceSha256": {
+    "formalMigrations": "23afef61a8a670e0af8c90e3a138f522e6b283b454e380a592bf85bca83108dc",
+    "grant-postgres-runtime.ts": "99fd6bded1f568a62339f3774fec8e9ce7e69a9423fdf625b46cf7794b8553ea",
+    "shared-key-quote-versions.sql": "1249a7ff07f95b48c7b45a41833c96c9a028e4bfe3a47e44e9dc6b72c3c77246",
+    "shared-key-dispatch-quote-attempts.sql": "c89c79e803fd69a2d09d44b33be3301aeb8aa4ed72c5dff5518439ec29fafb83",
+    "shared-key-economic-outbox.sql": "f92835c72ff02cba23879ed90ad640832455ccb98764f28fe4ee04ce52aab1ac",
+    "shared-key-economic-outbox-producer.sql": "ea9ccc7138cbd641d386e14d1bb95b8cabee942501a49d6b0763e8e1b3eb0920",
+    "shared-key-snapshot-earning-consumer.sql": "66fbd89c3453320284133de06d72793d4e1d2f68aaf756087857c18493e955db",
+    "shared-key-buyer-debit-v2.sql": "fc327b411e8ae6a417a156ab4ba3b633a47a2e615d249b8861503fc4cbf68593",
+    "shared-key-economic-producer-v2.sql": "3871f01eed2a058c9df9e1ca7c2d6898e995e9fa007115ccb6d62082e57712f3",
+    "shared-key-buyer-budget-receipt-v2.sql": "56ebaecd1425206df81c9dc7981c34e5e246047f188355f5d14103e2dee3270c",
+    "complete-text-legacy-buyer-held-writer-v368.sql": "c2162f7f180c5cc05c011242ca06ad8c37ea41ed76d783941c15754d66be6950",
+    "budget-admission-login-v350.sql": "1b5067ec8df7130aee11877d9e4ac9969fef7e92b052a80374b91df2f060737c",
+    "complete-text-legacy-reaper-fence-v366.sql": "1ff269a57bff76c3a54267a5c0ff78330335bf50bd5757ca011de04ae5ab60c0",
+    "buyer-split-counter-grant-policy-v368.sql": "8026d46babea21001cf4bf2e1c7a2c13a9f96559f014b068f72a47c112f5722e",
+    "complete-text-legacy-buyer-window-accountant-v371.sql": "445d5cc7bb6e17794682694c17d8e76fa774240a8e61c9c73edb85b1462a90b0",
+    "fixture": "15518430b8939e223da7a64c885fe0afd2e4b9accfd818b2db153d8440ca5567",
+    "complete-text-legacy-buyer-window-acl-v372.sql": "0779bbed42ffe14b00423ee8ba51d6382eadc96eb677756b6378463dfd94c74d",
+    "legacy-buyer-windowed-app-privileges-v374.sql": "36d79e470b0c28c70931e085dbecb6ba0c13594174b2e5add7f01d683c667289",
+    "critical-writes.impl.ts": "5eb87ae6c737f33488c5d03dc7fd797f3b1bf03504dad19c84166a9c9dfeff37",
+    "legacy-buyer-windowed-transaction-v372.ts": "880f94f1ba2acbbcf549727dd15ccaa058c79acc35c5b239ac4411ae39b6e07e"
+  },
+  "stages": [
+    {
+      "name": "full-formal-pg73-schema-installed",
+      "result": "PASS"
+    },
+    {
+      "name": "v2-economic-producer-and-budget-receipt-proposals-installed",
+      "result": "PASS"
+    },
+    {
+      "name": "exact-v368-held-body-and-restricted-buyer-log-writer-installed",
+      "result": "PASS"
+    },
+    {
+      "name": "v347-buyer-v2-producer-v348-v349-split-and-v350-admission-installed",
+      "result": "PASS"
+    },
+    {
+      "name": "v368-policy-preconditions-observed",
+      "result": "PASS",
+      "pre368": {
+        "role": "cinatoken_gateway_migrator",
+        "migration_hash": "ca1ea96a1b4bcd0675642f30dcf48042",
+        "marker_348": "SELECT 'buyer_split_v348'::text",
+        "marker_349": "SELECT 'buyer_split_guardrail_v349'::text",
+        "writer_hash": "abeb0cc33ab91be53a41e42c8f8aeb16",
+        "buyer_exec": true,
+        "runtime_exec": false,
+        "buyer_spent": true,
+        "buyer_reserved": true,
+        "buyer_window": true,
+        "fence_triggers": 2
+      }
+    },
+    {
+      "name": "v368-full-counter-policy-revokes-raw-buyer-rights-and-supersedes-old-grants",
+      "result": "PASS"
+    },
+    {
+      "name": "default-off-and-successor-ACL-revoke-raw-old-bypass",
+      "result": "PASS",
+      "acl": {
+        "new_call": true,
+        "old_call": false,
+        "raw_update": false,
+        "seed_triggers": 1
+      }
+    },
+    {
+      "name": "v374-policy-preconditions-observed",
+      "result": "PASS",
+      "pre374": {
+        "fence_hash": "b6d4cedc5d6ae06052331e426028620a",
+        "window_hash": "b29c5550a985893dede144627a4a5c45",
+        "window_config": "{\"search_path=pg_catalog, pg_temp\",lock_timeout=2s}",
+        "producer_hash": "60a5e195951633119537e913169abb5e",
+        "marker_368": "SELECT 'buyer_counter_writer_v368'::text",
+        "buyer_key_update": false,
+        "buyer_key_other_update": 0,
+        "buyer_user_update": false,
+        "buyer_hold_update": false,
+        "buyer_guardrail_dml": false,
+        "buyer_stats_extra": false,
+        "runtime_window_dml": true,
+        "runtime_window_column_dml": true,
+        "runtime_hold_dml": false,
+        "owned_tables": 9,
+        "memberships": 0,
+        "buyer_audit_select": false,
+        "buyer_attempt_select": false,
+        "buyer_window_exec": true,
+        "buyer_producer_exec": true,
+        "runtime_producer_exec": false,
+        "runtime_window_exec": false,
+        "admission_exec": true
+      }
+    },
+    {
+      "name": "v374-default-off-broad-update-drift-repair-rerun-and-old-runners-fail-closed",
+      "result": "PASS"
+    },
+    {
+      "name": "buyer-login-has-exact-app-rights-without-raw-financial-update",
+      "result": "PASS",
+      "appAcl": {
+        "window_update": false,
+        "runtime_window_update": false,
+        "runtime_reservation_update": false,
+        "user_update": false,
+        "key_broad_update": false,
+        "key_broad_select": false,
+        "key_secret_select": false,
+        "key_id_select": true,
+        "key_workspace_select": true,
+        "workspace_broad_select": false,
+        "key_row_lock": true,
+        "audit_insert": true,
+        "v2_event": true
+      }
+    },
+    {
+      "name": "creator-commits-before-lock-buyer-sees-and-accounts-window",
+      "result": "PASS",
+      "blockedBuyerPid": 14204,
+      "unreservedWindowRows": 2
+    },
+    {
+      "name": "creator-after-lock-waits-for-commit-and-seeds-from-buyer-log",
+      "result": "PASS",
+      "blockedCreatorPid": 14496,
+      "unreservedWindowRows": 1
+    },
+    {
+      "name": "terminal-replay-cannot-double-debit-held-or-unreserved-windows",
+      "result": "PASS"
+    },
+    {
+      "name": "outer-rollback-restores-log-account-holds-and-windows",
+      "result": "PASS"
+    },
+    {
+      "name": "wrong-charge-and-byok-rejected-before-financial-writes",
+      "result": "PASS"
+    },
+    {
+      "name": "workspace-scope-spoof-and-mismatched-positive-history-denied",
+      "result": "PASS"
+    },
+    {
+      "name": "contended-window-table-lock-times-out-and-rolls-back-buyer",
+      "result": "PASS"
+    },
+    {
+      "name": "actual-app-writer-commits-held-unreserved-log-audit-v2-event-and-receipt",
+      "result": "PASS",
+      "receipt": {
+        "debit": "1",
+        "log_xact_id": "941",
+        "receipt_xact_id": "941",
+        "spent_delta": "1.000000"
+      }
+    },
+    {
+      "name": "app-replay-and-unsupported-mode-fail-without-double-debit",
+      "result": "PASS"
+    },
+    {
+      "name": "same-user-distinct-key-concurrent-admissions-derive-ordered-audit-baselines",
+      "result": "PASS",
+      "observed": [
+        [
+          0,
+          0.000001,
+          20,
+          10
+        ],
+        [
+          0.000001,
+          0.000002,
+          10,
+          0
+        ]
+      ],
+      "sameReceipts": {
+        "events": 2,
+        "transactions": 2,
+        "receipts": 2
+      }
+    },
+    {
+      "name": "caller-pre-state-and-supplied-user-snapshots-cannot-set-audit-money",
+      "result": "PASS"
+    },
+    {
+      "name": "clamped-account-inversion-fails-and-rolls-back-every-write",
+      "result": "PASS"
+    },
+    {
+      "name": "late-audit-failure-rolls-back-holds-windows-log-event-and-stats",
+      "result": "PASS"
+    }
+  ],
+  "limitations": [
+    "Review-only local PG73 plus proposals; no formal migration, remote SQL, Worker, Provider or production credential changed.",
+    "The fixture installs the exact v368 writer body and full v368 counter grant policy, v371/v372 successors, real v2 economic producer and receipt, v347/v348/v349 buyer-login split, and v350 ordinary admission.",
+    "For the v368 policy precondition, the fixture extracts the exact v366 hold-fence trigger function and both trigger declarations from the v366 proposal. It uses a minimal v362 grant table and does not install every v351–v368 proposal.",
+    "The v374 ACL is a reviewed proposal, not a formal production migration. Its coverage is limited to the v372 opt-in buyer branch.",
+    "The buyer log amount and usage evidence are caller supplied; no immutable final result or independently authenticated Provider bill binds the debit.",
+    "The audit snapshot is derived from the locked database account and settled hold. This fixture checks two same-user requests with separate API keys and caller pre-state corruption, but production-scale contention remains unmeasured.",
+    "The global SHARE ROW EXCLUSIVE window-table lock serializes all writers and may cause capacity loss or deadlock retries. Production-scale contention remains unmeasured.",
+    "Only the narrow non-grant, current-epoch, charged-basis held actual/v2 path is covered. Reserved, old-epoch, late actual, BYOK, recovery, no-hold and commit-unknown replay need successors."
+  ]
+}

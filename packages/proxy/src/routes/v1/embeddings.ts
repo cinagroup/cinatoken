@@ -17,6 +17,7 @@ import { buildAffinityKey, buildTierKeyPrefix } from '../../services/route-strat
 import { proxyEmbeddings, EMPTY_USAGE } from '../../services/proxy';
 import { stickyConfigFromSurface } from '../../services/provider-sticky-routing';
 import { scheduleBackgroundWork } from '../../runtime/schedule-background-work';
+import { scheduleResourceCompletion } from '../../runtime/schedule-resource-completion';
 import { RequestTimingCollector } from '../../services/request-timing';
 import { finalizeRequestLogJson } from '../../services/request-log-shared';
 import { generationRequestLogContext } from '../../services/generation-request-context';
@@ -49,6 +50,8 @@ import {
 import { recordUsage } from '../../services/usage-tracker';
 import { parseOpenRouterSessionHeader } from '../../services/openrouter-session-routing';
 import { privateByokContextForApiKey } from '../../services/byok-key-pool';
+import { assertTextRequestActive, textRequestFailureResponse, waitForTextRequestRead } from '../../middleware/text-request-lifecycle';
+import { createRequestDispatchBudget } from '../../services/request-dispatch-budget';
 
 const USAGE_SAFETY_TIMEOUT_MS = 5 * 60 * 1000;
 export const MAX_EMBEDDING_INPUT_ITEMS = 2_048;
@@ -313,7 +316,10 @@ embeddingsRoutes.get('/models', async (c) => {
 embeddingsRoutes.post('/', async (c) => {
 	const repos = c.get('repositories');
 	const apiKey = c.get('apiKey');
-	const start = Date.now();
+	const lifecycle = c.get('textRequestLifecycle');
+	const dispatchBudget = lifecycle?.dispatchBudget ?? createRequestDispatchBudget();
+	const start = dispatchBudget.createdAtMs;
+	assertTextRequestActive(c);
 	const requestId = c.get('generationId')!;
 	const timing = new RequestTimingCollector();
 	const parsedSession = parseOpenRouterSessionHeader(c.req.raw.headers);
@@ -326,8 +332,11 @@ embeddingsRoutes.post('/', async (c) => {
 
 	let body: Record<string, unknown>;
 	try {
-		body = await c.req.json<Record<string, unknown>>();
-	} catch {
+		body = await waitForTextRequestRead(c, () => c.req.json<Record<string, unknown>>());
+	} catch (error) {
+		assertTextRequestActive(c);
+		const stopped = textRequestFailureResponse(error, c);
+		if (stopped) return stopped;
 		return gatewayErrorJson(c, {
 			status: 400, code: GatewayErrorCode.invalidJson, message: 'Invalid JSON body',
 		});
@@ -343,6 +352,7 @@ embeddingsRoutes.post('/', async (c) => {
 	}
 
 	const guardrail = await runRequestGuardrails(repos, {
+		control: lifecycle?.deadline,
 		workspaceId: apiKey.workspaceId,
 		userId: apiKey.userId,
 		apiKeyId: apiKey.keyId,
@@ -366,7 +376,8 @@ embeddingsRoutes.post('/', async (c) => {
 		return gatewayErrorJson(c, { status: 400, code: validation.code, message: validation.message });
 	}
 
-	const fallbackPlan = await buildModelFallbackPlan(repos, {
+	const fallbackPlan = await waitForTextRequestRead(c, buildModelFallbackPlan, repos, {
+		control: lifecycle?.deadline,
 		modelIds: [validation.modelId],
 		body,
 		requestProtocol: 'openai',
@@ -416,6 +427,7 @@ embeddingsRoutes.post('/', async (c) => {
 		guardrailMicros,
 		estimateEmbeddingGatewayKeyByokBudgetMicros(fallbackPlan.candidates, validation.input.count),
 	);
+	assertTextRequestActive(c);
 	const budgetAdmission = await createRouteAwareBudgetAdmission(repos, {
 		ordinary: {
 			requestId,
@@ -481,6 +493,8 @@ embeddingsRoutes.post('/', async (c) => {
 				routePoolId: candidate.surface?.route_pool_id ?? candidate.routes[0]?.routePoolId ?? null,
 				sticky: candidate.hasProviderPreferences ? null : stickyConfigFromSurface(candidate.surface),
 				beforeUpstreamDispatch,
+				registerResourceCompletion: task => scheduleResourceCompletion(c, task),
+				dispatchBudget,
 				byok: privateByokContextForApiKey(apiKey),
 			},
 			requestId,
@@ -514,9 +528,10 @@ embeddingsRoutes.post('/', async (c) => {
 	});
 	const response = materialized.response;
 	const errorBodyText = materialized.errorBodyText;
+	// A local auth/admission stop also forbids replay, but is not accepted work.
+	// Invalid accepted responses carry explicit upstreamOutcomeUnknown below.
 	const acceptedUpstreamResponse = response.ok
-		|| proxyResult.meta?.responseBodyTooLarge === true
-		|| proxyResult.meta?.failoverForbidden === true;
+		|| proxyResult.meta?.responseBodyTooLarge === true;
 	const circuitEvents = [...proxyResult.circuitEvents];
 	if (response.ok) {
 		markUserModelSuccess(apiKey.userId, candidate.baseModelId);

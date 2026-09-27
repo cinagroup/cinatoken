@@ -1,0 +1,367 @@
+{
+  "version": "v275",
+  "status": "PARTIAL_VERSION_BINDINGS_DEADLINE_RETAINED",
+  "scope": "Default-service current deployment versions including 0% and all listed versions for enabled Preview URLs; not full preflight",
+  "previousEvidence": {
+    "path": "docs/developers/architecture/implementation-evidence/C02-byok-d1-route-permission-v274-results.json",
+    "sha256": "1971edd943fe2ca3a18f68709b5291613e64f6f40a8b2a1cf9cc62ff0926ecae"
+  },
+  "previousCoreEvidence": {
+    "path": "docs/developers/architecture/implementation-evidence/C02-byok-d1-maintenance-timing-v273-results.json",
+    "sha256": "cca4823d0b81d8a2f3ab8cc939f30f82f4824a423c696a12c45b541ec95b67ac"
+  },
+  "priorDependencyTreeRevalidated": false,
+  "local": {
+    "path": ".wrangler/staging/byok-version-v275-local/result.json",
+    "pass": 177
+  },
+  "cloud": {
+    "path": ".wrangler/staging/byok-version-inventory-v275-cloud-verified/result.json",
+    "startedAt": "2026-09-21T04:00:31.592Z",
+    "finishedAt": "2026-09-21T04:05:31.599Z",
+    "elapsedMs": 300009,
+    "workers": 69,
+    "stableWorkers": 68,
+    "incompleteWorkers": [
+      {
+        "name": "cinashop-api",
+        "previewVersionCount": 168,
+        "detailsRead": 154
+      }
+    ],
+    "currentDeploymentVersions": 69,
+    "versionDetails": 389,
+    "previewEnabled": [
+      {
+        "name": "cinaclassics",
+        "versions": 8
+      },
+      {
+        "name": "cinaseek-api-proxy",
+        "versions": 3
+      },
+      {
+        "name": "cinaseek-main",
+        "versions": 1
+      },
+      {
+        "name": "cinashop-api",
+        "versions": 168
+      },
+      {
+        "name": "cinatoken-backend",
+        "versions": 32
+      },
+      {
+        "name": "cinatoken-mock-upstream",
+        "versions": 1
+      },
+      {
+        "name": "cinatoken-rust-api-staging",
+        "versions": 32
+      },
+      {
+        "name": "cinawalletkit-playground-v2",
+        "versions": 5
+      },
+      {
+        "name": "cinawalletkit-site-production",
+        "versions": 11
+      },
+      {
+        "name": "cinawalletkit-with-create-react-app",
+        "versions": 6
+      },
+      {
+        "name": "cinawalletkit-with-next",
+        "versions": 4
+      },
+      {
+        "name": "cinawalletkit-with-next-app",
+        "versions": 7
+      },
+      {
+        "name": "cinawalletkit-with-next-app-i18n",
+        "versions": 7
+      },
+      {
+        "name": "cinawalletkit-with-next-app-production",
+        "versions": 1
+      },
+      {
+        "name": "cinawalletkit-with-next-custom-button",
+        "versions": 4
+      },
+      {
+        "name": "cinawalletkit-with-next-custom-button-production",
+        "versions": 1
+      },
+      {
+        "name": "cinawalletkit-with-next-mint-nft",
+        "versions": 6
+      },
+      {
+        "name": "cinawalletkit-with-next-production",
+        "versions": 25
+      },
+      {
+        "name": "cinawalletkit-with-next-rainbow-button",
+        "versions": 6
+      },
+      {
+        "name": "cinawalletkit-with-next-rainbow-button-production",
+        "versions": 2
+      },
+      {
+        "name": "cinawalletkit-with-next-siwe-iron-session",
+        "versions": 5
+      },
+      {
+        "name": "cinawalletkit-with-next-siwe-iron-session-production",
+        "versions": 1
+      },
+      {
+        "name": "cinawalletkit-with-next-siwe-next-auth",
+        "versions": 7
+      },
+      {
+        "name": "cinawalletkit-with-next-wallet-button",
+        "versions": 5
+      },
+      {
+        "name": "cinawalletkit-with-react-router",
+        "versions": 1
+      },
+      {
+        "name": "cinawalletkit-with-remix",
+        "versions": 2
+      },
+      {
+        "name": "cinawalletkit-with-vite",
+        "versions": 8
+      },
+      {
+        "name": "pmtiles-server",
+        "versions": 1
+      },
+      {
+        "name": "project-registry-api",
+        "versions": 3
+      }
+    ],
+    "edges": [
+      {
+        "kind": "d1",
+        "source": "worker:cinatoken-proxy-staging/production@0c75c8b9-527d-4b3f-882f-fc2b1c3e0bb3",
+        "target": "6bf5d41e-fe0b-4afa-9f67-ff5cf82e23d1",
+        "binding": "DB"
+      },
+      {
+        "kind": "service",
+        "source": "worker:cinatoken-proxy-staging/production@0c75c8b9-527d-4b3f-882f-fc2b1c3e0bb3",
+        "target": "cinatoken-staging-images-upstream",
+        "binding": "IMAGE_UPSTREAM",
+        "environment": "production"
+      },
+      {
+        "kind": "d1",
+        "source": "worker:cinatoken-staging-images-upstream/production@c6939802-a8a9-4f09-9d51-4a772cbce8b2",
+        "target": "6bf5d41e-fe0b-4afa-9f67-ff5cf82e23d1",
+        "binding": "PROBE_DB"
+      },
+      {
+        "kind": "service",
+        "source": "worker:cinatoken-staging-recovery-control/production@e3a1830b-cb71-4256-bffe-55d263cf75c9",
+        "target": "cinatoken-staging-usage-recovery",
+        "binding": "USAGE_RECOVERY",
+        "environment": "production",
+        "entrypoint": "UsageRecovery"
+      },
+      {
+        "kind": "d1",
+        "source": "worker:cinatoken-staging-usage-recovery/production@b45d752e-361e-45d8-aca7-f24feca4afec",
+        "target": "6bf5d41e-fe0b-4afa-9f67-ff5cf82e23d1",
+        "binding": "RECOVERY_DB"
+      }
+    ],
+    "callableDefaultVersionBindingsObserved": false
+  },
+  "requests": {
+    "managementGetAttempts": 883,
+    "http200": 878,
+    "noRecordedStatus": 5,
+    "secondCollectionGet": 860
+  },
+  "retainedFirstFailure": {
+    "path": ".wrangler/staging/byok-version-inventory-v275-cloud/result.json",
+    "firstCause": "Not determined by the original runner; the subsequent single-interface diagnostic succeeded"
+  },
+  "cloudWrites": 0,
+  "deployments": 0,
+  "sqlCalls": 0,
+  "publicWorkerCalls": 0,
+  "modelCalls": 0,
+  "kmsCalls": 0,
+  "firstRoundUsdCap": 2,
+  "capReset": false,
+  "billingRefreshed": false,
+  "allInvocationPathsInventoried": false,
+  "fullPreflightPassed": false,
+  "nativeTimingQualified": false,
+  "databaseQuiescenceProved": false,
+  "snapshotIsAtomic": false,
+  "remaining": [
+    "ACTIVE_AND_PREVIEW_VERSION_BINDINGS",
+    "TOKEN_RESOURCE_VISIBILITY",
+    "HISTORICAL_PAGES_DEPLOYMENT_BINDINGS",
+    "DISPATCH_NAMESPACES",
+    "ZONE_ROUTES",
+    "NON_CATALOGUED_INVOCATION_SOURCES",
+    "CURRENT_INGRESS_CLOSURE",
+    "IN_FLIGHT_SQL_AND_EXTERNAL_D1_CLIENTS"
+  ],
+  "nextAction": "Use the observed catalogue size and latency to qualify a bounded read-only discovery budget or scheduling strategy; keep native 5/10/15-second maintenance freshness unchanged and never mark this partial sample complete.",
+  "journalRecordsVerified": 1752,
+  "artifacts": [
+    {
+      "path": ".wrangler/staging/byok-version-v275-local/result.json",
+      "sha256": "3fa8460217437f06904c2fc4749444a085a19f80cc8a89ef5d86acfee2d7830c"
+    },
+    {
+      "path": ".wrangler/staging/byok-version-inventory-v275-cloud/result.json",
+      "sha256": "87f5a0d51997c6b9cb43f2a3cec8c706b3dc0e6fd873d2c91cf7bdf5f004f26a"
+    },
+    {
+      "path": ".wrangler/staging/byok-version-inventory-v275-cloud-verified/result.json",
+      "sha256": "effb1f46b5c97158c758602bc2a7eb39b84b5c0efc82dd84be41d2871688dc28"
+    },
+    {
+      "path": ".wrangler/staging/byok-version-shapes-v275/result.json",
+      "sha256": "9db57b2643b7e1c30b7bb7dc8a8520de6c75e4baa43cc2eb16fc6e50f178f2d1"
+    },
+    {
+      "path": ".wrangler/staging/byok-version-read-v275-diagnostic/result.json",
+      "sha256": "b8c678d2f551461dfd69299ee3fd86d9171925af3afc69643784a823b0972342"
+    },
+    {
+      "path": "scripts/deploy/byok-d1-version-inventory.mjs",
+      "sha256": "91e988bb512c3a43a6c86597e041a537a55cfdbd399d9b8b347248187b6cab9c"
+    },
+    {
+      "path": "scripts/deploy/byok-d1-version-inventory.test.mjs",
+      "sha256": "ba2c53b0864a0568556cd168558e23ed29a137b8787bf16b7a4f1b0e95ce117a"
+    },
+    {
+      "path": "scripts/deploy/byok-d1-inventory.mjs",
+      "sha256": "30d0b2891f2df8e7f9bd3da74cf29217957f01a51873dae27d449869a19cbfa0"
+    },
+    {
+      "path": "scripts/deploy/byok-d1-inventory.test.mjs",
+      "sha256": "533bb57abf8bba5f088072af09059eba908483d0646299214182346c135b8ed6"
+    },
+    {
+      "path": "scripts/deploy/byok-d1-read-transport.mjs",
+      "sha256": "3b2cca95da882d47848b8951e54c760f6ea1f686ef43312860913cee94881388"
+    },
+    {
+      "path": "scripts/deploy/byok-d1-read-transport.test.mjs",
+      "sha256": "53e71c2cbcff5166d891b0d8084e24a8226020892584446586afd5fac58613c2"
+    },
+    {
+      "path": ".wrangler/staging/byok-version-v275-prior/byok-d1-version-inventory.mjs",
+      "sha256": "74c73ce0e116d26c9307647efe240b5f43371bbcee29a65c95aecd8ca2a898c4"
+    },
+    {
+      "path": ".wrangler/staging/byok-version-v275-prior/byok-d1-version-inventory.test.mjs",
+      "sha256": "440f22d67da5c76f07a5a4a4ee94f9b219c5f26d5de340a2df2a75017a9be36f"
+    },
+    {
+      "path": ".wrangler/staging/probe-byok-version-shapes-v275.mjs",
+      "sha256": "42159956ec0ce7729c9ed3803836c53eca5aba69a860907fcba8b373653648d5"
+    },
+    {
+      "path": ".wrangler/staging/diagnose-byok-version-read-v275.mjs",
+      "sha256": "4fd21e55d800bde49edb46a141b92af7ed3861020086eecc02a9f1c8f37017b3"
+    },
+    {
+      "path": ".wrangler/staging/verify-byok-version-inventory-v275.mjs",
+      "sha256": "b7665c5a9d62834418fb607183d9c2e2cb39d8b0026cbd97084a4cfc825fd87d"
+    },
+    {
+      "path": ".wrangler/staging/collect-byok-version-inventory-v275.mjs",
+      "sha256": "951ed74503736b044a5cd7d0375bedae4167ba3cb5f8daccc2ef60c5a5a5357b"
+    },
+    {
+      "path": ".wrangler/staging/collect-byok-version-inventory-verified-v275.mjs",
+      "sha256": "11c5b12f28b32ae34efa80b1cf234d6985985b85b8ae974f1b1eea150ba4969a"
+    },
+    {
+      "path": ".wrangler/staging/summarize-byok-version-inventory-v275.mjs",
+      "sha256": "7b7ec4a95f9cd223a01e7870f85cb8d64eb1e55294eb4902e389dabc8cc8a38b"
+    },
+    {
+      "path": ".firecrawl/cloudflare-worker-versions-list-v275.md",
+      "sha256": "b5e4ce03b179830de327b1b45415080951f7543ada48244757ad34a44362543a"
+    },
+    {
+      "path": ".firecrawl/cloudflare-worker-versions-get-v275.md",
+      "sha256": "82d05a49cce147f4146eb68035d576745fcebdbe2a998212b220bf080a469635"
+    },
+    {
+      "path": ".firecrawl/cloudflare-worker-deployments-list-v275.md",
+      "sha256": "3de68adf951ee5fc058719d65742906cb7bb77fa67b3e40e5c860b3a01290b7a"
+    },
+    {
+      "path": ".firecrawl/cloudflare-worker-previews-v275.md",
+      "sha256": "5ba8e2bb9b0dda7af2d75e31c203bd881fc831309d47ffba9968373e2f69ec8f"
+    },
+    {
+      "path": ".firecrawl/cloudflare-worker-version-overrides-v275.md",
+      "sha256": "d6655e4f9c94d69bb18df9d46bb685acf764133f33cbe8b9e37db1b9eb1ef9f1"
+    },
+    {
+      "path": ".wrangler/staging/byok-version-v275-local/build.log",
+      "sha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b"
+    },
+    {
+      "path": ".wrangler/staging/byok-version-v275-local/source.log",
+      "sha256": "926e8f7407ad3c50c8b271b48982b4c3cdc8de1e445fca8b0dc364e0fbdab3ee"
+    },
+    {
+      "path": ".wrangler/staging/byok-version-v275-local/bundle.log",
+      "sha256": "80d9ef57e9bbb413fe97c72e6db0d806f4d9ce820866a1b86a88c4954e5fed57"
+    },
+    {
+      "path": ".wrangler/staging/byok-version-v275-local/existing-current-inventory.log",
+      "sha256": "5ae0f58a29d1e76c27ee6ebdb771b658241efc70d052414f2e8fcabb1371ea33"
+    },
+    {
+      "path": ".wrangler/staging/byok-version-v275-local/existing-read-transport.log",
+      "sha256": "a6c86c9ee30253622bc5acaa95ab071c0840ce62b9fe3d043553df70e4cdd705"
+    },
+    {
+      "path": ".wrangler/staging/byok-version-v275-local/version-inventory.mjs",
+      "sha256": "df64c818f3b73713ff1b23b2e9c84bdc2a28e39cb6f87bc06ed920488335ed8d"
+    },
+    {
+      "path": ".wrangler/staging/byok-version-v275-local/version-inventory.meta.json",
+      "sha256": "8bfc34232c8217e39310c73ca0b4b362c9ee398615d117f39d25e093b8f001d0"
+    },
+    {
+      "path": ".wrangler/staging/byok-version-inventory-v275-cloud/.wrangler/staging/byok-d1-version-inventory-reservation/journal.jsonl",
+      "sha256": "4cee43f57201d112d330235508db28637fe2133d70e24787518704f22f9e1db0"
+    },
+    {
+      "path": ".wrangler/staging/byok-version-inventory-v275-cloud/.wrangler/staging/byok-d1-version-inventory-reservation/result.json",
+      "sha256": "154a08132cf4091482a5ef16851c5ec38a739ccf2af5e0b118cae84df3b93411"
+    },
+    {
+      "path": ".wrangler/staging/byok-version-inventory-v275-cloud-verified/.wrangler/staging/byok-d1-version-inventory-reservation/journal.jsonl",
+      "sha256": "f3e3ed7a30e6679bd3d4a6f82a31d818e316be823abe3db8288620262daebeae"
+    },
+    {
+      "path": ".wrangler/staging/byok-version-inventory-v275-cloud-verified/.wrangler/staging/byok-d1-version-inventory-reservation/result.json",
+      "sha256": "0e73e79d7c718fc74198a7d4666d096e6b1f9a6b381a3894552b732c98960987"
+    }
+  ]
+}

@@ -1,0 +1,41 @@
+{
+  "version": "v293",
+  "recordedAtUtc": "2026-09-21T09:42:41Z",
+  "checklistVersion": "1.190",
+  "status": "LOCAL_PASS_NATIVE_ACCEPTANCE_PENDING",
+  "scope": "C03.1/C03.3 existing v1 Images final-request settlement input + atomic discovery only",
+  "goalStillActive": true,
+  "environment": { "node": "24.14.1", "pglite": "0.5.8", "postgres": "18.3", "engine": "wasm32-unknown-emscripten", "baseMigrations": 68 },
+  "nativeBusinessCasesExecuted": 0,
+  "priorArtifactHashesVerifiedUnchanged": { "v291": 5, "v292": 3 },
+  "iterations": [
+    { "tests": 41, "pass": 39, "fail": 2, "leafFailures": 1, "durationMs": 13161.3985, "cause": "fixture used already-forbidden NUL in User-Agent" },
+    { "tests": 41, "pass": 39, "fail": 2, "leafFailures": 1, "durationMs": 11073.7612, "cause": "allowed errorMessage NUL exposed PostgreSQL JSON field extraction incompatibility" },
+    { "tests": 41, "pass": 41, "fail": 0, "durationMs": 11179.1968, "change": "exact v1 envelope framing plus one opaque JSON params object; no character rewriting" },
+    { "tests": 44, "pass": 43, "fail": 1, "durationMs": 19521.8499, "cause": "new child fixture expected numeric 0 instead of database numeric wire string 0.000000" }
+  ],
+  "verification": [
+    { "file": "packages/core/src/storage/recovery/usage-settlement-facts.postgres.test.mjs", "tests": 44, "pass": 44, "fail": 0, "skipped": 0, "includesParentTests": true, "durationMs": 17237.0988 },
+    { "files": ["packages/core/src/storage/recovery/dispatch-intent.postgres.test.mjs", "packages/core/src/storage/recovery/usage-settlement.d1.test.mjs"], "tests": 86, "postgresIntentTests": 49, "d1SettlementTests": 37, "pass": 86, "fail": 0, "skipped": 0, "includesParentTests": true, "durationMs": 48692.2397 },
+    { "command": "node node_modules/typescript/bin/tsc -p packages/core/tsconfig.settlement-facts-postgres.json --noEmit", "exitCode": 0 }
+  ],
+  "limitations": [
+    "PGlite transaction serialization, not native multi-session or network protocol acceptance",
+    "clean child-process disk reopen, not abrupt crash/WAL acceptance",
+    "existing v1 final-request DTO, not pre-dispatch quote or all-attempt economic events",
+    "immutable discovery entry, not jobs/leases/financial commit or seller outbox",
+    "pagination cursor is not a durable processed watermark; future full sweeps and deduplication required",
+    "database v1 framing is not a full DTO codec; application validates before write and on load",
+    "no roles/RLS, DDL/TRUNCATE protection, retention or online upgrade acceptance",
+    "no production wiring or C01.G/C02.G/C03.G approval; C04 remains TODO"
+  ],
+  "cleanup": { "ownedFactsFixtureDirectoriesRemaining": 0, "onlyRegenerableLocalFixturesRemoved": true, "userOrStagingDataRemoved": false },
+  "externalEffects": { "publicDocumentationScrapes": 2, "fallbackPublicDocumentationReads": 1, "cloudManagementCalls": 0, "remoteSqlCalls": 0, "deployments": 0, "modelCalls": 0, "kmsCalls": 0, "systemRuntimeUpdates": 0, "reboots": 0, "stagingBudgetReset": false },
+  "artifacts": [
+    { "path": "packages/core/migrations-proposals/postgres/request-usage-settlement-facts.sql", "sha256": "840c483a83a8f08135e787a08ba8c69f1e0fc2a13b35bfbdba5ee1daa0ca443e" },
+    { "path": "packages/core/src/storage/recovery/usage-settlement-facts-postgres.ts", "sha256": "8170b34cb965a77b35c49a6ca4a0a8ebe219230e9bedc9017376bf845f5a4e8e" },
+    { "path": "packages/core/src/storage/recovery/usage-settlement-facts.postgres.test.mjs", "sha256": "94a4a5c5fa22342cf08663aa3a6c05e77c180a0a9a357d3173f8417c1c3c911d" },
+    { "path": "packages/core/src/test-support/postgres-settlement-facts-child.mjs", "sha256": "56f5e3830eb79fac7e364375d8d06074452f6d0d20e3d22f6e40347bb662de95" },
+    { "path": "packages/core/tsconfig.settlement-facts-postgres.json", "sha256": "677f3d7cf085014d92fd701ed19b7f47fd081e39152a4f79215c3bf263b6737d" }
+  ]
+}
