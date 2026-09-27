@@ -1,6 +1,6 @@
 {
   "schema": "checklist-v402-existing-services-isolated-deployment-v1",
-  "recordedAtUtc": "2026-09-27T10:37:32.880Z",
+  "recordedAtUtc": "2026-09-27T10:58:26.333Z",
   "status": "DEPLOYED_VERIFIED_PUBLIC_GET_AND_LINUX_WORKER_GATE",
   "sourceCommit": "14eadad8742d6fc3dd0eebd445992e65d1d607db",
   "runtimeFixCommit": "3b7c5b6bef33dec5354f46d90cab2345f08b6d0c",
@@ -164,8 +164,12 @@
   "cleanup": {
     "primaryOwnedDryRunDirectoriesRemoved": true,
     "primaryWranglerLocalConfigRestored": true,
-    "managedWorktreeArchive": "pending until all owned tests complete",
-    "ignoredLogs": "preserve in primary .wrangler/publish-20260927/isolated/",
+    "managedWorktreeArchive": "ARCHIVED",
+    "ignoredLogs": {
+      "path": "C:\\cinagroup\\cinatoken\\.wrangler\\publish-20260927\\isolated",
+      "files": 34,
+      "byteExact": true
+    },
     "portableNode22Diagnostic": {
       "status": "REMOVED",
       "removedAtUtc": "2026-09-27T10:00:21.9327948Z",
@@ -178,9 +182,24 @@
       "preCleanupProcessInventory": "Unavailable: sandbox WMI read denied; child agents confirmed all owned tests terminal before removal.",
       "postCleanupProcessInventory": "Elevated read-only WMI inventory completed.",
       "evidenceSha256": "3b6dfd7e53805e3fc62e5a61885d7b8dead54520f5865a1b513d8660f30de52b"
+    },
+    "managedWorktree": {
+      "root": "C:\\Users\\cina\\.codex\\worktrees\\checklist-release\\cinatoken",
+      "artifactId": "01a0e27f-6206-7ec3-9f07-35e6fe9e2cee",
+      "archivedAtUtc": "2026-09-27T10:53:14.000Z",
+      "recoverableVia": "restore_worktree"
+    },
+    "deployedEnvironmentPreserved": {
+      "checkedAtUtc": "2026-09-27T10:45:55.785Z",
+      "deployedEnvironmentBytesPreservedInPrimary": true,
+      "valuesPrinted": false
+    },
+    "finalEvidence": {
+      "path": "docs/operators/deployment/releases/2026-09-27-release-cleanup-report.json",
+      "sha256": "b13cda90eb32b1b2e86c8dd6d5304ab5e14e7d6d92b31079bc7ed7458feac22a"
     }
   },
-  "latestCi": "1edbf325: 18 actual push runs, 16 SUCCESS/2 FAILURE; full unit 4346/4346, ordinary native Worker 3 cases/4 modes, native SQL workflow commands7–113 all107, Images11/22 and four independent gates plus Docker PASS. v364 holder5/6: cancel observation missing, later dispatch28–65 SKIPPED. Release Version PR still denied by unchanged repository permissions. HTTP cancellation comparison pending fresh Linux execution.",
+  "latestCi": "f4601a47: 18 actual push runs, 16 SUCCESS/2 FAILURE; full unit 4346/4346, ordinary native Worker 3 cases/4 modes, native SQL workflow commands7–113 all107, Images11 workflows/22 jobs and four independent gates plus Docker PASS. v364 holder5/6: direct HTTP cancellation observation missing, later dispatch28–65 SKIPPED. Cause UNKNOWN. Release Version PR denied by unchanged repository permissions.",
   "deploymentHistory": [
     {
       "sourceCommit": "a8029350760d9442f866ac1eab59d4d2845eed4a",
@@ -294,18 +313,64 @@
     "No production paid Provider request or production SQL/migration was executed.",
     "Default-off holder/credential-free review paths retain separately documented redirect:error risks; this ordinary-driver fix does not enable or validate them.",
     "Public GET checks prove those public endpoints only; synthetic Linux Worker transport tests are separately recorded.",
-    "Historical Proxy versions retain the known Worker redirect:error incompatibility and are not a fix for this issue."
+    "Historical Proxy versions retain the known Worker redirect:error incompatibility and are not a fix for this issue.",
+    "The review holder native cancellation gate failed and later dispatch steps28–65 were skipped; C04 remains incomplete and default-off.",
+    "The Release workflow cannot create the automatic Version PR under unchanged repository permissions."
   ],
-  "latestCiSourceCommit": "1edbf325b35ae4fa7a05ebaaeb3aae2573b37f66",
+  "latestCiSourceCommit": "f4601a47fa188ae5faa8b49a241c4302068bb38e",
   "reviewHolderCancellationGate": {
+    "status": "CANCELLATION_UNPROVEN",
     "defaultOff": true,
     "checklistActivationGatesChecked": false,
-    "sourceCommit": "1edbf325b35ae4fa7a05ebaaeb3aae2573b37f66",
+    "sourceCommit": "f4601a47fa188ae5faa8b49a241c4302068bb38e",
     "testsPassed": 5,
     "testsTotal": 6,
     "nativeBoundsAndStreaming": "PASS",
     "nativeCancellationObservation": "FAIL",
-    "cause": "Unconfirmed: KV null does not distinguish cancellation propagation from asynchronous observation lifetime.",
-    "nextComparison": "Test-only direct HTTP consumer, original cancellation assertion and timeout preserved."
-  }
+    "actualHttpEntryAcceptedAndFirstChunkVerified": true,
+    "readerCancelCompleted": true,
+    "observationBoundaryUnchanged": "100 x 10ms",
+    "laterDispatchSteps": "28–65 SKIPPED",
+    "cause": "UNKNOWN: KV null does not distinguish cancellation propagation from asynchronous KV execution-context lifetime or establish an exact upstream binary match.",
+    "comparisonStatus": "Both special HTTP bridge and direct HTTP consumer failed to observe native holder cancellation; review gap frozen.",
+    "furtherFixtureTimeoutRuntimeVendorChanges": false
+  },
+  "ciHistory": [
+    {
+      "sourceCommit": "1edbf325b35ae4fa7a05ebaaeb3aae2573b37f66",
+      "summary": "1edbf325: 18 actual push runs, 16 SUCCESS/2 FAILURE; full unit 4346/4346, ordinary native Worker 3 cases/4 modes, native SQL workflow commands7–113 all107, Images11/22 and four independent gates plus Docker PASS. v364 holder5/6: cancel observation missing, later dispatch28–65 SKIPPED. Release Version PR still denied by unchanged repository permissions. HTTP cancellation comparison pending fresh Linux execution."
+    }
+  ],
+  "latestCiEvidence": [
+    {
+      "path": "docs/operators/deployment/releases/2026-09-27-f4601a47-remote-ci-report.json",
+      "sha256": "4ab240c1187d21581634d8e4129298de22b3670e4627ccbeb5e4e05ef5521d5e"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-09-27-f4601a47-images-independent-ci-report.json",
+      "sha256": "d12be0b5eaaae396793882b78fe0b947125e01a1748052920cfc0d4f040180c5"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-09-27-f4601a47-linux-proxy-ci-report.json",
+      "sha256": "bbfb036394f11c15ccf9c4b5159d6c78a326090420c461f16900bb46a69f190d"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-09-27-f4601a47-linux-worker-machine-report.json",
+      "sha256": "46ba1bc852620cfb360f75b1e5fad4e499e937d58e3b65cb0dee27573045983d"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-09-27-f4601a47-v364-cancellation-unproven.md",
+      "sha256": "b724dc9d7a7e9058f25d842d9153c1d557f258c9a153d41b915846633514400d"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-09-27-f4601a47-v364-http-cancel-failed.txt",
+      "sha256": "16bb5df0e3b6935d19b74efe143abf09493c184da8d0f2e34e3a2055a6174e5b"
+    }
+  ],
+  "latestCiIndependentReview": {
+    "path": ".wrangler/publish-20260927/f4601a47-cancellation-gap-final-independent-review.json",
+    "sha256": "56e828aae12a2e3f256f9317f435fae223bdbf7cfc5949d6612404bfb444e2be"
+  },
+  "publicationMilestoneComplete": true,
+  "checklistComplete": false
 }

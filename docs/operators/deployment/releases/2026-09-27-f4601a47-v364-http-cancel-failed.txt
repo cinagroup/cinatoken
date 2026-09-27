@@ -1,0 +1,67 @@
+2026-09-27T10:44:40.6081263Z ##[group]Run node --import tsx --test scripts/staging/chat-holder-binding-v364.node.test.mjs scripts/staging/chat-holder-binding-v364-http-cancel-successor.test.mjs
+2026-09-27T10:44:40.6083543Z [36;1mnode --import tsx --test scripts/staging/chat-holder-binding-v364.node.test.mjs scripts/staging/chat-holder-binding-v364-http-cancel-successor.test.mjs[0m
+2026-09-27T10:44:40.6146225Z shell: /usr/bin/bash -e {0}
+2026-09-27T10:44:40.6146505Z ##[endgroup]
+2026-09-27T10:44:40.6680577Z TAP version 13
+2026-09-27T10:44:41.5770059Z # Subtest: v364 configs keep the synthetic holder private and bind only the named holder
+2026-09-27T10:44:41.5792804Z ok 1 - v364 configs keep the synthetic holder private and bind only the named holder
+2026-09-27T10:44:41.5811214Z   ---
+2026-09-27T10:44:41.5811592Z   duration_ms: 1.810853
+2026-09-27T10:44:41.5811900Z   type: 'test'
+2026-09-27T10:44:41.5812117Z   ...
+2026-09-27T10:44:42.0684747Z # Subtest: private Worker rejects oversized, foreign, and malformed six-field requests without disclosing holder data
+2026-09-27T10:44:42.0687196Z ok 2 - private Worker rejects oversized, foreign, and malformed six-field requests without disclosing holder data
+2026-09-27T10:44:42.0689036Z   ---
+2026-09-27T10:44:42.0690496Z   duration_ms: 503.709898
+2026-09-27T10:44:42.0691404Z   type: 'test'
+2026-09-27T10:44:42.0692158Z   ...
+2026-09-27T10:44:42.4533210Z # Subtest: one holder Response streams through the Service Binding before its final chunk is released
+2026-09-27T10:44:42.4540059Z ok 3 - one holder Response streams through the Service Binding before its final chunk is released
+2026-09-27T10:44:42.4540956Z   ---
+2026-09-27T10:44:42.4541383Z   duration_ms: 384.954717
+2026-09-27T10:44:42.4541707Z   type: 'test'
+2026-09-27T10:44:42.4541922Z   ...
+2026-09-27T10:44:44.0373870Z # Subtest: response-body cancellation is observed inside the private holder
+2026-09-27T10:44:44.0378796Z not ok 4 - response-body cancellation is observed inside the private holder
+2026-09-27T10:44:44.0380174Z   ---
+2026-09-27T10:44:44.0380579Z   duration_ms: 1583.426124
+2026-09-27T10:44:44.0381015Z   type: 'test'
+2026-09-27T10:44:44.0384324Z   location: '/home/runner/work/cinatoken/cinatoken/packages/proxy/scripts/staging/chat-holder-binding-v364-http-cancel-successor.test.mjs:184:1'
+2026-09-27T10:44:44.0385848Z   failureType: 'testCodeFailure'
+2026-09-27T10:44:44.0386401Z   error: |-
+2026-09-27T10:44:44.0386719Z     Expected values to be strictly equal:
+2026-09-27T10:44:44.0387011Z     
+2026-09-27T10:44:44.0387218Z     null !== 'observed'
+2026-09-27T10:44:44.0387440Z     
+2026-09-27T10:44:44.0387635Z   code: 'ERR_ASSERTION'
+2026-09-27T10:44:44.0387874Z   name: 'AssertionError'
+2026-09-27T10:44:44.0388129Z   expected: 'observed'
+2026-09-27T10:44:44.0388351Z   actual: ~
+2026-09-27T10:44:44.0388559Z   operator: 'strictEqual'
+2026-09-27T10:44:44.0388799Z   stack: |-
+2026-09-27T10:44:44.0390756Z     TestContext.<anonymous> (file:///home/runner/work/cinatoken/cinatoken/packages/proxy/scripts/staging/chat-holder-binding-v364-http-cancel-successor.test.mjs:199:10)
+2026-09-27T10:44:44.0392010Z     async Test.run (node:internal/test_runner/test:1054:7)
+2026-09-27T10:44:44.0392536Z     async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+2026-09-27T10:44:44.0393185Z   ...
+2026-09-27T10:44:44.0710911Z # Subtest: v364 in-process contract: private holder bounds and validates six fields; gateway forwards no auth or provider data
+2026-09-27T10:44:44.0712784Z ok 5 - v364 in-process contract: private holder bounds and validates six fields; gateway forwards no auth or provider data
+2026-09-27T10:44:44.0713718Z   ---
+2026-09-27T10:44:44.0714119Z   duration_ms: 77.049693
+2026-09-27T10:44:44.0714536Z   type: 'test'
+2026-09-27T10:44:44.0714859Z   ...
+2026-09-27T10:44:44.0715964Z # Subtest: v364 in-process contract: one Response yields a first chunk before holder release and cancellation reaches source
+2026-09-27T10:44:44.0718233Z ok 6 - v364 in-process contract: one Response yields a first chunk before holder release and cancellation reaches source
+2026-09-27T10:44:44.0719074Z   ---
+2026-09-27T10:44:44.0719687Z   duration_ms: 57.974358
+2026-09-27T10:44:44.0720057Z   type: 'test'
+2026-09-27T10:44:44.0720352Z   ...
+2026-09-27T10:44:44.0720620Z 1..6
+2026-09-27T10:44:44.0720881Z # tests 6
+2026-09-27T10:44:44.0721154Z # suites 0
+2026-09-27T10:44:44.0721428Z # pass 5
+2026-09-27T10:44:44.0721700Z # fail 1
+2026-09-27T10:44:44.0721971Z # cancelled 0
+2026-09-27T10:44:44.0722253Z # skipped 0
+2026-09-27T10:44:44.0722534Z # todo 0
+2026-09-27T10:44:44.0722834Z # duration_ms 3419.955757
+2026-09-27T10:44:44.0787747Z ##[error]Process completed with exit code 1.

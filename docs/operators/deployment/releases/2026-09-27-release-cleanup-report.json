@@ -1,0 +1,244 @@
+{
+  "schema": "existing-services-release-cleanup-v1",
+  "recordedAtUtc": "2026-09-27T10:58:26.326Z",
+  "status": "OWNED_RELEASE_WORKTREE_ARCHIVED_EVIDENCE_PRESERVED",
+  "managedWorktree": {
+    "schema": "managed-release-worktree-archive-v1",
+    "recordedAtUtc": "2026-09-27T10:54:54.965Z",
+    "status": "ARCHIVED",
+    "tool": "mcp__codex_app__archive_worktree",
+    "artifact": {
+      "id": "01a0e27f-6206-7ec3-9f07-35e6fe9e2cee",
+      "attachmentType": "archived_worktree",
+      "identityKey": "C:\\Users\\cina\\.codex\\worktrees\\checklist-release\\cinatoken",
+      "payload": {
+        "worktree": {
+          "root": "C:\\Users\\cina\\.codex\\worktrees\\checklist-release\\cinatoken",
+          "workspaceRoot": "C:\\Users\\cina\\.codex\\worktrees\\checklist-release\\cinatoken",
+          "sourceCwd": "C:\\cinagroup\\cinatoken",
+          "sourceGitRoot": "C:/cinagroup/cinatoken",
+          "worktreesRoot": "C:\\Users\\cina\\.codex\\worktrees"
+        },
+        "pullRequests": []
+      },
+      "createdAt": 1790506394
+    },
+    "archivedAtUtc": "2026-09-27T10:53:14.000Z",
+    "chatKeptOpen": true,
+    "localProcessesReliedOnCheckout": false,
+    "ignoredLogsPreservationReceipt": ".wrangler/publish-20260927/isolated-log-preservation.json",
+    "deployedEnvironmentPreservationReceipt": ".wrangler/publish-20260927/release-env-preserved.json",
+    "recovery": "Restore the archived_worktree artifact using restore_worktree when recovery is requested.",
+    "evidenceSha256": "942fff880a66ce833fa2dae154c59f62bd80f1cc31693dd109c156788064370d"
+  },
+  "preservedLogs": {
+    "checkedAtUtc": "2026-09-27T10:52:45.0685726Z",
+    "source": "C:\\Users\\cina\\.codex\\worktrees\\checklist-release\\cinatoken\\.wrangler\\publish-20260927-isolated",
+    "destination": "C:\\cinagroup\\cinatoken\\.wrangler\\publish-20260927\\isolated",
+    "count": 34,
+    "byteExact": true,
+    "files": [
+      {
+        "name": "admin-before-retry-deployments.json",
+        "bytes": 4428,
+        "sha256": "6efcc4695a1719d77b1596c7b3233449f618a6011be50fb0f78e1166349a4e42"
+      },
+      {
+        "name": "admin-build.log",
+        "bytes": 9871,
+        "sha256": "1600c44aba83b7dea2428c40393ebe5125822110a5152006949322d31d9fc3a7"
+      },
+      {
+        "name": "admin-deployments.json",
+        "bytes": 4366,
+        "sha256": "718da2646c93dcb304d9531da0247ca9c9e82223478c30cac75d9c2a037b6c5d"
+      },
+      {
+        "name": "admin-retry-deploy.log",
+        "bytes": 17536,
+        "sha256": "37eadbcabfa353140bd41d1ff1f4ac97aefe1e14ce90f23fea2e4055ea83b8bf"
+      },
+      {
+        "name": "admin-typecheck.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "name": "admin-typegen.log",
+        "bytes": 2291,
+        "sha256": "10e65cd822e236b1184c41dfb46d9f6104e159d89c9055718677e99f9f14c204"
+      },
+      {
+        "name": "chain-deployments.json",
+        "bytes": 4287,
+        "sha256": "e9d3f27bff91db4850ed5c3d78cf8d3d9476da6ea4bfe3e63ea25207dc0f9002"
+      },
+      {
+        "name": "chain-dry-run.log",
+        "bytes": 868,
+        "sha256": "47f42a3bb5fa4d92e8eba124aaf71302c444b6cfddd42c25c80694c199ab404e"
+      },
+      {
+        "name": "chain-typecheck.log",
+        "bytes": 80,
+        "sha256": "6a38975144f62ca4b4addb570edef9f493308e40cd637e54dd9f0e0277327239"
+      },
+      {
+        "name": "chain-typegen.log",
+        "bytes": 1479,
+        "sha256": "6784e36216c9587ecb9656e10b949e082f2325ce1066cf6cbfe3f78deb453767"
+      },
+      {
+        "name": "cinatoken-admin-final-deployments.json",
+        "bytes": 4202,
+        "sha256": "dbb12f06eb32b388bd6bf5819ea1d6c8490f41dd73e9ebc4535d9cd52b5a76c5"
+      },
+      {
+        "name": "cinatoken-chain-worker-final-deployments.json",
+        "bytes": 4124,
+        "sha256": "183c3d2e2f977adbcce3d93c88090798aacf1643f4fe13fc0ea4ecf63054c932"
+      },
+      {
+        "name": "cinatoken-proxy-final-deployments.json",
+        "bytes": 4201,
+        "sha256": "8740c142f06f6195126420b27786aec0a542428c87f0cda2b3e415fc9ebb26aa"
+      },
+      {
+        "name": "core-build.log",
+        "bytes": 460,
+        "sha256": "5dbf770ba241968d970db2270ac53a63317b93a5a0902278162f682d3df856a2"
+      },
+      {
+        "name": "f658-text-upload-manual-fixture-final-targeted.log",
+        "bytes": 14203,
+        "sha256": "b733e815e964f4dd3743b8ae719dc9bfcde3e14ed6ccc793211e8c94d87d596e"
+      },
+      {
+        "name": "f658-text-upload-stale-expectation-first-repro.log",
+        "bytes": 1127,
+        "sha256": "a020c2f02580ec5bbdab36feec3d0ab2b454b0ebf76b46ecc479ec980434639d"
+      },
+      {
+        "name": "final-deployment-report.json",
+        "bytes": 5369,
+        "sha256": "f7607b7eb7c3fdc64fce29342d0796cfd60a8edb794e567bbb69456ec4d0e63a"
+      },
+      {
+        "name": "final-dispatch-typecheck.log",
+        "bytes": 104,
+        "sha256": "445d88b7b7d42d787ffb27cde09fa8f02f8b1acb3170fcd2a054867f4710706f"
+      },
+      {
+        "name": "npm-ci.log",
+        "bytes": 1134,
+        "sha256": "70a976ded933b2e83a7faddef55bde46ea0e13ea7733e94c19a0badce8ad1e2b"
+      },
+      {
+        "name": "production-config.log",
+        "bytes": 618,
+        "sha256": "ef115a778f5e5c9c673dd32b01d4bef9238088917c50d845c56504689870d1c5"
+      },
+      {
+        "name": "production-deploy.log",
+        "bytes": 19410,
+        "sha256": "eced8fbecb4f774bd69c388ad3942738c3d2a852999792fb973421f1df19c2f1"
+      },
+      {
+        "name": "proxy-deployments.json",
+        "bytes": 4365,
+        "sha256": "92cf40d0aeb4e24c8320363ab8583e4a01a1a31e96988b291aa1689a70ebefe8"
+      },
+      {
+        "name": "proxy-dispatch-typecheck.log",
+        "bytes": 104,
+        "sha256": "445d88b7b7d42d787ffb27cde09fa8f02f8b1acb3170fcd2a054867f4710706f"
+      },
+      {
+        "name": "proxy-dry-run.log",
+        "bytes": 1654,
+        "sha256": "86a579f607951d33ef38223478325ea3fead906157832492f45cc4020f3be5e5"
+      },
+      {
+        "name": "proxy-manual-dry-run.log",
+        "bytes": 1654,
+        "sha256": "27ceb03e4358bd6c51a2db16f53e6d561501aa065d4848bfe1c2f921182fb1a7"
+      },
+      {
+        "name": "proxy-manual-production-deploy.log",
+        "bytes": 3438,
+        "sha256": "23bda21a48579a8e27d2eab4842f2dc6bf34caf91d98e5e5f88c2db2ea92f939"
+      },
+      {
+        "name": "proxy-typecheck.log",
+        "bytes": 72,
+        "sha256": "5b412817655beeb52f3648f1e464a6c0ba376db18ddb317a108491d538c07c18"
+      },
+      {
+        "name": "text-manual-304-final-targeted-node22.log",
+        "bytes": 59892,
+        "sha256": "f700fd5c8cdb72590d1f14659602f73d9481c34dfb94111ebdca9864898f5630"
+      },
+      {
+        "name": "text-manual-targeted-node22.log",
+        "bytes": 52320,
+        "sha256": "52a0fc8989f7cc7e1629d23e1ccd8cc406790f8df0d4ef9320301c8b1885f367"
+      },
+      {
+        "name": "v364-successor-node-bundle-probe.json",
+        "bytes": 927,
+        "sha256": "f4607018315034e31e89824704ce4987cd2f370b70d580c0c8012273ffad6f08"
+      },
+      {
+        "name": "v364-workerd-date-successor-selected-local.log",
+        "bytes": 965,
+        "sha256": "9f57d18c678c5104969824f670c5b484d381b73237a7cf1d102da791ccc0c75f"
+      },
+      {
+        "name": "workerd-wire-successor-first-local.log",
+        "bytes": 3333,
+        "sha256": "816c46957ccb952fccb4ae74aa3a1f6423c85cc43a5b45a5e097eb5c0465ddef"
+      },
+      {
+        "name": "workerd-wire-successor-node22-bundle-relay-final.log",
+        "bytes": 1139,
+        "sha256": "f9908b530e488cd9ac194c439884b4c3594069e6dec85f63a4d0324dd3624cfd"
+      },
+      {
+        "name": "workerd-wire-successor-node22-relay.log",
+        "bytes": 5818,
+        "sha256": "3f40626ac2f6bab3108684af89f9512e83aa0f0b677e007f196475f2e31e2052"
+      }
+    ],
+    "evidenceSha256": "7fe2a97a94b1c9fa33d22866b6c3cc52abad1ddc67700ec88bb1b8981c6514ad"
+  },
+  "deployedEnvironment": {
+    "checkedAtUtc": "2026-09-27T10:45:55.785Z",
+    "deployedEnvironmentBytesPreservedInPrimary": true,
+    "valuesPrinted": false,
+    "evidenceSha256": "3b297baf41e298f8b4115e1fc5bc3487bda72bc9b5d97b51aadc354b03b77a5f"
+  },
+  "portableNode22Diagnostic": {
+    "status": "REMOVED",
+    "removedAtUtc": "2026-09-27T10:00:21.9327948Z",
+    "target": "C:\\cinagroup\\cinatoken\\.wrangler\\publish-20260927\\node22-diagnostic",
+    "filesRemoved": 2035,
+    "reparseEntries": 0,
+    "ownedRunningProcesses": 0,
+    "verifiedArtifactPreserved": true,
+    "officialChecksumsPreserved": true,
+    "preCleanupProcessInventory": "Unavailable: sandbox WMI read denied; child agents confirmed all owned tests terminal before removal.",
+    "postCleanupProcessInventory": "Elevated read-only WMI inventory completed.",
+    "evidenceSha256": "3b6dfd7e53805e3fc62e5a61885d7b8dead54520f5865a1b513d8660f30de52b"
+  },
+  "preservedWorkspaceScope": {
+    "independentWebFrontend": "Preserved locally and excluded from this publication",
+    "concurrentAdminCoreAndOtherChanges": "Preserved locally and excluded from this publication",
+    "chatKeptOpen": true,
+    "entirePrimaryWorkingTreeClaimedClean": false
+  },
+  "limitations": [
+    "Ignored logs and environment files are preserved in the primary workspace; the archived snapshot does not preserve ignored files.",
+    "The environment comparison records equality only and exposes no secret values.",
+    "No arbitrary shared Node, Git or application process was terminated for cleanup."
+  ]
+}
