@@ -80,6 +80,14 @@ jobs:
       - run: npm run test:dispatch-safety -w @octafuse/proxy
       # Local workerd and a loopback provider count physical text POSTs at the transport boundary.
       - run: node --import tsx --test packages/proxy/scripts/staging/text-dispatch-workerd-wire-worker-conditions-successor.test.mjs
+      - name: Preserve native Worker transport evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: native-worker-transport-evidence
+          path: .wrangler/publish-20260927/workerd-wire-successor/report-*.json
+          if-no-files-found: warn
+          retention-days: 14
       # A response reset can make an intermediary replay a complete POST behind one Gateway permit.
       - run: node --import tsx --test packages/proxy/scripts/staging/text-dispatch-relay-reset-v376.test.mjs
       # Direct text drivers must stop fallback when a fully uploaded POST loses its response.
@@ -531,7 +539,7 @@ jobs:
             node --import tsx --test scripts/db/cutover/postgres-shared-key-stats-signed-claim-v348.native.test.mjs
       - run: |
           gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
-            node --import tsx --test scripts/db/cutover/postgres-shared-key-stats-claim-reader-v349.native.test.mjs
+            node --import tsx --test scripts/db/cutover/postgres-shared-key-stats-claim-reader-v349-cjs-loader-successor.native.test.mjs
       - run: |
           gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
             node --import tsx --test scripts/db/cutover/postgres-shared-key-snapshot-earning-consumer-v2.native.test.mjs

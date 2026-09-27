@@ -455,7 +455,7 @@ export async function dispatchGeminiRoute(
       const init: RequestInit & { duplex: 'half' } = {
         method: 'POST',
         // A redirect is another unbudgeted dispatch and may forward credentials.
-        redirect: 'error',
+        redirect: 'manual',
         headers,
         body: upload.body,
         duplex: 'half',

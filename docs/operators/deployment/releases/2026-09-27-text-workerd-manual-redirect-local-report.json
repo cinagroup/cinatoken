@@ -1,0 +1,144 @@
+{
+  "schemaVersion": 1,
+  "recordedAt": "2026-09-27T08:57:49.590Z",
+  "status": "LOCAL_TARGETS_PASS_LINUX_WORKER_PENDING",
+  "predecessorCommit": "94c12c1e37e7346330486cf9a3a3246af00d95c5",
+  "executionWorkspace": "C:/Users/cina/.codex/worktrees/checklist-release/cinatoken",
+  "node": "v22.23.2",
+  "nodeBinarySha256": "0d0f5e39f9f3d9587bc19f73eab3c2c9c4903fd02d6dbf9c853dd81b3d95fad4",
+  "runtimeDelta": {
+    "drivers": "Exactly four redirect:error→manual literals; inverse equals saved bytes",
+    "callers": "Exactly three status304→null body selections across two constructor owners; inverse equals saved bytes"
+  },
+  "tests": {
+    "total": 282,
+    "pass": 282,
+    "fail": 0,
+    "skip": 0,
+    "suites": 2,
+    "redirectWire": 137,
+    "uploadResource": 104,
+    "hiddenRetry": 20,
+    "preHeaderResetV377": 16,
+    "requestLogMaterialization": 5
+  },
+  "types": {
+    "proxy": {
+      "exitCode": 0
+    },
+    "dispatchSafety": {
+      "exitCode": 0
+    }
+  },
+  "corpora": {
+    "core": {
+      "files": 327,
+      "sha256": "477233bf3c31f1ef3ca847ba3e36179fef50f85e1ba3c909a847706bff2800b0",
+      "changed": false
+    },
+    "proxy": {
+      "files": 454,
+      "sha256": "1c0e8004ed308eeae2209ed03dede60b458eb1e0b14991d0fa7bdd65c6fb645f"
+    }
+  },
+  "sourcePins": [
+    {
+      "path": "packages/proxy/src/services/egress/openai-driver.ts",
+      "sha256": "6f0a0cf741a43e690e11150a4639746bdaae47a00a9843f89a07099fe6179118"
+    },
+    {
+      "path": "packages/proxy/src/services/egress/openai-responses-driver.ts",
+      "sha256": "183b2950dea081577df0731ad46f95c247bfd333799ca635865e772477512590"
+    },
+    {
+      "path": "packages/proxy/src/services/egress/anthropic-driver.ts",
+      "sha256": "9d86470f4f0b853386cae9139d84bf4253d4f71e52e9681f4b45b7c462309056"
+    },
+    {
+      "path": "packages/proxy/src/services/egress/gemini-driver.ts",
+      "sha256": "6f85845f9ed5619f7e6f302429c3a84669d08962b7783d1a1603141e9087300e"
+    },
+    {
+      "path": "packages/proxy/src/services/failover-dispatch.ts",
+      "sha256": "d4c78d5d76c7f801b5db82fef5026121c154492e7b4f55ba6ee78824d07fa452"
+    },
+    {
+      "path": "packages/proxy/src/services/request-log-record-status.ts",
+      "sha256": "6932dce340cdd9f6c1da56ab2ca54987e03290254c284a174c454528d4d8fe1c"
+    },
+    {
+      "path": "packages/proxy/src/services/egress/text-upload-resource.test.mjs",
+      "sha256": "e5d56c2ea9b6474f17ca216095abd537ec9d74d293b38f843f7c64a88ce02526"
+    },
+    {
+      "path": "packages/proxy/src/services/egress/text-redirect-wire.test.mjs",
+      "sha256": "cadd2bb615d82c73d1f96a792a7241e771f96efaec44acfa11c957e7e52b910d"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/text-dispatch-workerd-wire-worker-conditions-successor.test.mjs",
+      "sha256": "268298b09c574e16178329a29bc6bda02ce0e16238bf698afc5eb9eebedaa24a"
+    },
+    {
+      "path": "docs/developers/reference/upstream-redirect-policy.md",
+      "sha256": "93cf21bc5532eb0a268ab457bf3cf0588d3a841ff97732a16798ad6dcfd93639"
+    },
+    {
+      "path": "packages/proxy/src/services/private-complete-text-holder-v365.ts",
+      "sha256": "ed6c6d7c509712998a958cf78b658fd41ba3eb24eea446fb8b45740d560fd4db"
+    },
+    {
+      "path": "packages/proxy/src/services/complete-chat-holder-dispatch-v385.ts",
+      "sha256": "edeadc4bfde6ff9b6507fb5cdf68b8edf1c1af8b0430bcba47b104180092a2c3"
+    },
+    {
+      "path": "packages/proxy/src/services/complete-chat-credential-free-dispatch-v400.ts",
+      "sha256": "93c86c8168df429307b00857ce4b57687143f518ea8de4a9afcf6e496ff3a0d6"
+    },
+    {
+      "path": "packages/proxy/src/services/credential-free-chat-ingress-v401.ts",
+      "sha256": "c9a3567e6c0ae98e2a1316795b7c5a0cb98804c53213f3d45e84b5afc19163d6"
+    },
+    {
+      "path": "packages/proxy/wrangler.complete-text-holder-v390.jsonc",
+      "sha256": "1d50d58579488c26cad4d21a58b100b1b1be1ba8cd20ae0fb4633230901f7285"
+    },
+    {
+      "path": "packages/proxy/wrangler.complete-text-response-holder-v394.jsonc",
+      "sha256": "7ddf575729b7b35adc7317a5a54e84bdf88825240670c575f4a0ef95d4e96909"
+    },
+    {
+      "path": "packages/proxy/src/services/egress/ambiguous-upstream-status.ts",
+      "sha256": "92010933e8648ff0ab85104f33f7e5bfa1a17db3a40a4fad0c6e9b1931745fd5"
+    },
+    {
+      "path": "packages/proxy/src/services/upstream-error-code.ts",
+      "sha256": "f5641379b8d7bd4bb5af04e4906adfc035809043493a6d85b1bd9a761ae7a8bc"
+    },
+    {
+      "path": "packages/proxy/src/services/egress/text-hidden-retry.test.mjs",
+      "sha256": "b1f1df5616348210bbad1f33436bb03b07b54dd016157db7c89cad9bd9d4b2e9"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/text-dispatch-response-reset-v377.test.mjs",
+      "sha256": "098cebcc03effdd3e60acc490c4e6055b32195a713a21e2e0a5202bdc5b072f7"
+    },
+    {
+      "path": "packages/proxy/src/services/request-log-record-status.test.ts",
+      "sha256": "4d01eb66366b92231014b8f1218638a8aefdb9d36c80f340ab7c96c937920209"
+    },
+    {
+      "path": "packages/core/dist/index.js",
+      "sha256": "527f77bf141c0167ace4bfa0a9646c6cbd5df3c47a6e7d9b2d0efd25551b989b"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-09-27-text-workerd-manual-redirect-local-tests.txt",
+      "sha256": "f700fd5c8cdb72590d1f14659602f73d9481c34dfb94111ebdca9864898f5630"
+    }
+  ],
+  "limitations": [
+    "Local Node22 synthetic and owned loopback only; Linux native Worker full matrix is pending",
+    "No deployment, remote SQL, paid Provider, local PostgreSQL or Core build in this task",
+    "Frozen v374 and prior evidence unchanged; review-only holder transports not fixed or enabled",
+    "Source hash pins and inverse comparisons establish patch scope, not financial correctness or deployed intermediary exactly-once"
+  ]
+}

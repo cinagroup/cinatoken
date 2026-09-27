@@ -153,7 +153,7 @@ export async function materializeNonOkResponse(
     headers.delete('Content-Encoding');
     headers.delete('Transfer-Encoding');
     return {
-      response: new Response(errorBodyText, {
+      response: new Response(response.status === 304 ? null : errorBodyText, {
         status: response.status,
         statusText: response.statusText,
         headers,
@@ -162,7 +162,7 @@ export async function materializeNonOkResponse(
     };
   }
   const normalized = withUpstreamErrorCodeHeader(
-    new Response(errorBodyText, {
+    new Response(response.status === 304 ? null : errorBodyText, {
       status: response.status,
       statusText: response.statusText,
       headers: response.headers,

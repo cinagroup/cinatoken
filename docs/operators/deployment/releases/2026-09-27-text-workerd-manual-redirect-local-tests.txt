@@ -1,0 +1,1812 @@
+TAP version 13
+# Subtest: OpenAI Chat stream=false driver marks a completed POST plus response reset as unknown
+ok 1 - OpenAI Chat stream=false driver marks a completed POST plus response reset as unknown
+  ---
+  duration_ms: 82.2984
+  type: 'test'
+  ...
+# Subtest: OpenAI Chat stream=false Gateway stops 40 candidate routes after completed POST plus response reset
+ok 2 - OpenAI Chat stream=false Gateway stops 40 candidate routes after completed POST plus response reset
+  ---
+  duration_ms: 29.3266
+  type: 'test'
+  ...
+# Subtest: OpenAI Chat stream=true driver marks a completed POST plus response reset as unknown
+ok 3 - OpenAI Chat stream=true driver marks a completed POST plus response reset as unknown
+  ---
+  duration_ms: 14.8834
+  type: 'test'
+  ...
+# Subtest: OpenAI Chat stream=true Gateway stops 40 candidate routes after completed POST plus response reset
+ok 4 - OpenAI Chat stream=true Gateway stops 40 candidate routes after completed POST plus response reset
+  ---
+  duration_ms: 16.688
+  type: 'test'
+  ...
+# Subtest: OpenAI Responses stream=false driver marks a completed POST plus response reset as unknown
+ok 5 - OpenAI Responses stream=false driver marks a completed POST plus response reset as unknown
+  ---
+  duration_ms: 15.5387
+  type: 'test'
+  ...
+# Subtest: OpenAI Responses stream=false Gateway stops 40 candidate routes after completed POST plus response reset
+ok 6 - OpenAI Responses stream=false Gateway stops 40 candidate routes after completed POST plus response reset
+  ---
+  duration_ms: 20.7679
+  type: 'test'
+  ...
+# Subtest: OpenAI Responses stream=true driver marks a completed POST plus response reset as unknown
+ok 7 - OpenAI Responses stream=true driver marks a completed POST plus response reset as unknown
+  ---
+  duration_ms: 12.5187
+  type: 'test'
+  ...
+# Subtest: OpenAI Responses stream=true Gateway stops 40 candidate routes after completed POST plus response reset
+ok 8 - OpenAI Responses stream=true Gateway stops 40 candidate routes after completed POST plus response reset
+  ---
+  duration_ms: 10.8921
+  type: 'test'
+  ...
+# Subtest: Anthropic Messages stream=false driver marks a completed POST plus response reset as unknown
+ok 9 - Anthropic Messages stream=false driver marks a completed POST plus response reset as unknown
+  ---
+  duration_ms: 17.3128
+  type: 'test'
+  ...
+# Subtest: Anthropic Messages stream=false Gateway stops 40 candidate routes after completed POST plus response reset
+ok 10 - Anthropic Messages stream=false Gateway stops 40 candidate routes after completed POST plus response reset
+  ---
+  duration_ms: 16.7357
+  type: 'test'
+  ...
+# Subtest: Anthropic Messages stream=true driver marks a completed POST plus response reset as unknown
+ok 11 - Anthropic Messages stream=true driver marks a completed POST plus response reset as unknown
+  ---
+  duration_ms: 10.4729
+  type: 'test'
+  ...
+# Subtest: Anthropic Messages stream=true Gateway stops 40 candidate routes after completed POST plus response reset
+ok 12 - Anthropic Messages stream=true Gateway stops 40 candidate routes after completed POST plus response reset
+  ---
+  duration_ms: 13.6858
+  type: 'test'
+  ...
+# Subtest: Gemini stream=false driver marks a completed POST plus response reset as unknown
+ok 13 - Gemini stream=false driver marks a completed POST plus response reset as unknown
+  ---
+  duration_ms: 19.6846
+  type: 'test'
+  ...
+# Subtest: Gemini stream=false Gateway stops 40 candidate routes after completed POST plus response reset
+ok 14 - Gemini stream=false Gateway stops 40 candidate routes after completed POST plus response reset
+  ---
+  duration_ms: 14.7468
+  type: 'test'
+  ...
+# Subtest: Gemini stream=true driver marks a completed POST plus response reset as unknown
+ok 15 - Gemini stream=true driver marks a completed POST plus response reset as unknown
+  ---
+  duration_ms: 18.4088
+  type: 'test'
+  ...
+# Subtest: Gemini stream=true Gateway stops 40 candidate routes after completed POST plus response reset
+ok 16 - Gemini stream=true Gateway stops 40 candidate routes after completed POST plus response reset
+  ---
+  duration_ms: 16.4914
+  type: 'test'
+  ...
+# Subtest: sent text POST chat HTTP 408 cannot switch candidates
+ok 17 - sent text POST chat HTTP 408 cannot switch candidates
+  ---
+  duration_ms: 112.8765
+  type: 'test'
+  ...
+# Subtest: sent text POST chat HTTP 499 cannot switch candidates
+ok 18 - sent text POST chat HTTP 499 cannot switch candidates
+  ---
+  duration_ms: 23.1971
+  type: 'test'
+  ...
+# Subtest: sent text POST chat HTTP 503 cannot switch candidates
+ok 19 - sent text POST chat HTTP 503 cannot switch candidates
+  ---
+  duration_ms: 14.7369
+  type: 'test'
+  ...
+# Subtest: sent text POST responses HTTP 408 cannot switch candidates
+ok 20 - sent text POST responses HTTP 408 cannot switch candidates
+  ---
+  duration_ms: 20.2063
+  type: 'test'
+  ...
+# Subtest: sent text POST responses HTTP 499 cannot switch candidates
+ok 21 - sent text POST responses HTTP 499 cannot switch candidates
+  ---
+  duration_ms: 14.7028
+  type: 'test'
+  ...
+# Subtest: sent text POST responses HTTP 503 cannot switch candidates
+ok 22 - sent text POST responses HTTP 503 cannot switch candidates
+  ---
+  duration_ms: 9.4061
+  type: 'test'
+  ...
+# Subtest: sent text POST messages HTTP 408 cannot switch candidates
+ok 23 - sent text POST messages HTTP 408 cannot switch candidates
+  ---
+  duration_ms: 10.3023
+  type: 'test'
+  ...
+# Subtest: sent text POST messages HTTP 499 cannot switch candidates
+ok 24 - sent text POST messages HTTP 499 cannot switch candidates
+  ---
+  duration_ms: 13.377
+  type: 'test'
+  ...
+# Subtest: sent text POST messages HTTP 503 cannot switch candidates
+ok 25 - sent text POST messages HTTP 503 cannot switch candidates
+  ---
+  duration_ms: 15.5298
+  type: 'test'
+  ...
+# Subtest: sent text POST gemini HTTP 408 cannot switch candidates
+ok 26 - sent text POST gemini HTTP 408 cannot switch candidates
+  ---
+  duration_ms: 23.6274
+  type: 'test'
+  ...
+# Subtest: sent text POST gemini HTTP 499 cannot switch candidates
+ok 27 - sent text POST gemini HTTP 499 cannot switch candidates
+  ---
+  duration_ms: 12.045
+  type: 'test'
+  ...
+# Subtest: sent text POST gemini HTTP 503 cannot switch candidates
+ok 28 - sent text POST gemini HTTP 503 cannot switch candidates
+  ---
+  duration_ms: 21.8616
+  type: 'test'
+  ...
+# Subtest: clear text POST chat HTTP 400 retains bounded candidate switch
+ok 29 - clear text POST chat HTTP 400 retains bounded candidate switch
+  ---
+  duration_ms: 12.2998
+  type: 'test'
+  ...
+# Subtest: clear text POST chat HTTP 429 retains bounded candidate switch
+ok 30 - clear text POST chat HTTP 429 retains bounded candidate switch
+  ---
+  duration_ms: 22.2692
+  type: 'test'
+  ...
+# Subtest: clear text POST responses HTTP 400 retains bounded candidate switch
+ok 31 - clear text POST responses HTTP 400 retains bounded candidate switch
+  ---
+  duration_ms: 10.9195
+  type: 'test'
+  ...
+# Subtest: clear text POST responses HTTP 429 retains bounded candidate switch
+ok 32 - clear text POST responses HTTP 429 retains bounded candidate switch
+  ---
+  duration_ms: 19.2755
+  type: 'test'
+  ...
+# Subtest: clear text POST messages HTTP 400 retains bounded candidate switch
+ok 33 - clear text POST messages HTTP 400 retains bounded candidate switch
+  ---
+  duration_ms: 8.4329
+  type: 'test'
+  ...
+# Subtest: clear text POST messages HTTP 429 retains bounded candidate switch
+ok 34 - clear text POST messages HTTP 429 retains bounded candidate switch
+  ---
+  duration_ms: 18.1077
+  type: 'test'
+  ...
+# Subtest: clear text POST gemini HTTP 400 retains bounded candidate switch
+ok 35 - clear text POST gemini HTTP 400 retains bounded candidate switch
+  ---
+  duration_ms: 20.2183
+  type: 'test'
+  ...
+# Subtest: clear text POST gemini HTTP 429 retains bounded candidate switch
+ok 36 - clear text POST gemini HTTP 429 retains bounded candidate switch
+  ---
+  duration_ms: 20.6342
+  type: 'test'
+  ...
+# Subtest: wire redirect blocked: chat 301 stream=false sameOrigin=false
+ok 37 - wire redirect blocked: chat 301 stream=false sameOrigin=false
+  ---
+  duration_ms: 110.8281
+  type: 'test'
+  ...
+# {"originRequests":1,"redirectRequests":0,"permits":1}
+# Subtest: wire redirect blocked: chat 301 stream=false sameOrigin=true
+ok 38 - wire redirect blocked: chat 301 stream=false sameOrigin=true
+  ---
+  duration_ms: 18.2127
+  type: 'test'
+  ...
+# {"originRequests":1,"redirectRequests":0,"permits":1}
+# Subtest: wire redirect blocked: chat 301 stream=true sameOrigin=false
+ok 39 - wire redirect blocked: chat 301 stream=true sameOrigin=false
+  ---
+  duration_ms: 17.7433
+  type: 'test'
+  ...
+# {"originRequests":1,"redirectRequests":0,"permits":1}
+# Subtest: wire redirect blocked: chat 301 stream=true sameOrigin=true
+ok 40 - wire redirect blocked: chat 301 stream=true sameOrigin=true
+  ---
+  duration_ms: 15.5059
+  type: 'test'
+  ...
+# {"originRequests":1,"redirectRequests":0,"permits":1}
+# Subtest: wire redirect blocked: chat 302 stream=false sameOrigin=false
+ok 41 - wire redirect blocked: chat 302 stream=false sameOrigin=false
+  ---
+  duration_ms: 14.7734
+  type: 'test'
+  ...
+# {"originRequests":1,"redirectRequests":0,"permits":1}
+# Subtest: wire redirect blocked: chat 302 stream=false sameOrigin=true
+ok 42 - wire redirect blocked: chat 302 stream=false sameOrigin=true
+  ---
+  duration_ms: 12.6469
+  type: 'test'
+  ...
+# {"originRequests":1,"redirectRequests":0,"permits":1}
+# Subtest: wire redirect blocked: chat 302 stream=true sameOrigin=false
+ok 43 - wire redirect blocked: chat 302 stream=true sameOrigin=false
+  ---
+  duration_ms: 11.6843
+  type: 'test'
+  ...
+# {"originRequests":1,"redirectRequests":0,"permits":1}
+# Subtest: wire redirect blocked: chat 302 stream=true sameOrigin=true
+ok 44 - wire redirect blocked: chat 302 stream=true sameOrigin=true
+  ---
+  duration_ms: 15.6417
+  type: 'test'
+  ...
+# {"originRequests":1,"redirectRequests":0,"permits":1}
+# Subtest: wire redirect blocked: chat 303 stream=false sameOrigin=false
+ok 45 - wire redirect blocked: chat 303 stream=false sameOrigin=false
+  ---
+  duration_ms: 22.779
+  type: 'test'
+  ...
+# {"originRequests":1,"redirectRequests":0,"permits":1}
+# Subtest: wire redirect blocked: chat 303 stream=false sameOrigin=true
+ok 46 - wire redirect blocked: chat 303 stream=false sameOrigin=true
+  ---
+  duration_ms: 10.7887
+  type: 'test'
+  ...
+# {"originRequests":1,"redirectRequests":0,"permits":1}
+# Subtest: wire redirect blocked: chat 303 stream=true sameOrigin=false
+ok 47 - wire redirect blocked: chat 303 stream=true sameOrigin=false
+  ---
+  duration_ms: 13.565
+  type: 'test'
+  ...
+# {"originRequests":1,"redirectRequests":0,"permits":1}
+# Subtest: wire redirect blocked: chat 303 stream=true sameOrigin=true
+ok 48 - wire redirect blocked: chat 303 stream=true sameOrigin=true
+  ---
+  duration_ms: 9.8512
+  type: 'test'
+  ...
+# {"originRequests":1,"redirectRequests":0,"permits":1}
+# Subtest: wire redirect blocked: chat 304 stream=false sameOrigin=false
+ok 49 - wire redirect blocked: chat 304 stream=false sameOrigin=false
+  ---
+  duration_ms: 11.5467
+  type: 'test'
+  ...
+# {"originRequests":1,"redirectRequests":0,"permits":1}
+# Subtest: wire redirect blocked: chat 304 stream=false sameOrigin=true
+ok 50 - wire redirect blocked: chat 304 stream=false sameOrigin=true
+  ---
+  duration_ms: 10.8776
+  type: 'test'
+  ...
+# {"originRequests":1,"redirectRequests":0,"permits":1}
+# Subtest: wire redirect blocked: chat 304 stream=true sameOrigin=false
+ok 51 - wire redirect blocked: chat 304 stream=true sameOrigin=false
+  ---
+  duration_ms: 9.2487
+  type: 'test'
+  ...
+# {"originRequests":1,"redirectRequests":0,"permits":1}
+# Subtest: wire redirect blocked: chat 304 stream=true sameOrigin=true
+ok 52 - wire redirect blocked: chat 304 stream=true sameOrigin=true
+  ---
+  duration_ms: 8.5733
+  type: 'test'
+  ...
+# {"originRequests":1,"redirectRequests":0,"permits":1}
+# Subtest: wire redirect blocked: chat 307 stream=false sameOrigin=false
+ok 53 - wire redirect blocked: chat 307 stream=false sameOrigin=false
+  ---
+  duration_ms: 19.5516
+  type: 'test'
+  ...
+# {"originRequests":1,"redirectRequests":0,"permits":1}
+# Subtest: wire redirect blocked: chat 307 stream=false sameOrigin=true
+ok 54 - wire redirect blocked: chat 307 stream=false sameOrigin=true
+  ---
+  duration_ms: 11.3206
+  type: 'test'
+  ...
+# {"originRequests":1,"redirectRequests":0,"permits":1}
+# Subtest: wire redirect blocked: chat 307 stream=true sameOrigin=false
+ok 55 - wire redirect blocked: chat 307 stream=true sameOrigin=false
+  ---
+  duration_ms: 13.7547
+  type: 'test'
+  ...
+# {"originRequests":1,"redirectRequests":0,"permits":1}
+# Subtest: wire redirect blocked: chat 307 stream=true sameOrigin=true
+ok 56 - wire redirect blocked: chat 307 stream=true sameOrigin=true
+  ---
+  duration_ms: 9.9387
+  type: 'test'
+  ...
+# {"originRequests":1,"redirectRequests":0,"permits":1}
+# Subtest: wire redirect blocked: chat 308 stream=false sameOrigin=false
+ok 57 - wire redirect blocked: chat 308 stream=false sameOrigin=false
+  ---
+  duration_ms: 11.4062
+  type: 'test'
+  ...
+# {"originRequests":1,"redirectRequests":0,"permits":1}
+# Subtest: wire redirect blocked: chat 308 stream=false sameOrigin=true
+ok 58 - wire redirect blocked: chat 308 stream=false sameOrigin=true
+  ---
+  duration_ms: 16.797
+  type: 'test'
+  ...
+# {"originRequests":1,"redirectRequests":0,"permits":1}
+# Subtest: wire redirect blocked: chat 308 stream=true sameOrigin=false
+ok 59 - wire redirect blocked: chat 308 stream=true sameOrigin=false
+  ---
+  duration_ms: 12.4422
+  type: 'test'
+  ...
+# {"originRequests":1,"redirectRequests":0,"permits":1}
+# Subtest: wire redirect blocked: chat 308 stream=true sameOrigin=true
+ok 60 - wire redirect blocked: chat 308 stream=true sameOrigin=true
+  ---
+  duration_ms: 19.7309
+  type: 'test'
+  ...
+# {"originRequests":1,"redirectRequests":0,"permits":1}
+# Subtest: wire redirect blocked: responses 301 stream=false sameOrigin=false
+ok 61 - wire redirect blocked: responses 301 stream=false sameOrigin=false
+  ---
+  duration_ms: 13.3933
+  type: 'test'
+  ...
+# {"originRequests":1,"redirectRequests":0,"permits":1}
+# Subtest: wire redirect blocked: responses 301 stream=false sameOrigin=true
+ok 62 - wire redirect blocked: responses 301 stream=false sameOrigin=true
+  ---
+  duration_ms: 10.9681
+  type: 'test'
+  ...
+# {"originRequests":1,"redirectRequests":0,"permits":1}
+# Subtest: wire redirect blocked: responses 301 stream=true sameOrigin=false
+ok 63 - wire redirect blocked: responses 301 stream=true sameOrigin=false
+  ---
+  duration_ms: 26.8591
+  type: 'test'
+  ...
+# {"originRequests":1,"redirectRequests":0,"permits":1}
+# Subtest: wire redirect blocked: responses 301 stream=true sameOrigin=true
+ok 64 - wire redirect blocked: responses 301 stream=true sameOrigin=true
+  ---
+  duration_ms: 10.5396
+  type: 'test'
+  ...
+# {"originRequests":1,"redirectRequests":0,"permits":1}
+# Subtest: wire redirect blocked: responses 302 stream=false sameOrigin=false
+ok 65 - wire redirect blocked: responses 302 stream=false sameOrigin=false
+  ---
+  duration_ms: 17.5085
+  type: 'test'
+  ...
+# {"originRequests":1,"redirectRequests":0,"permits":1}
+# Subtest: wire redirect blocked: responses 302 stream=false sameOrigin=true
+ok 66 - wire redirect blocked: responses 302 stream=false sameOrigin=true
+  ---
+  duration_ms: 15.8005
+  type: 'test'
+  ...
+# {"originRequests":1,"redirectRequests":0,"permits":1}
+# Subtest: wire redirect blocked: responses 302 stream=true sameOrigin=false
+ok 67 - wire redirect blocked: responses 302 stream=true sameOrigin=false
+  ---
+  duration_ms: 10.4866
+  type: 'test'
+  ...
+# {"originRequests":1,"redirectRequests":0,"permits":1}
+# Subtest: wire redirect blocked: responses 302 stream=true sameOrigin=true
+ok 68 - wire redirect blocked: responses 302 stream=true sameOrigin=true
+  ---
+  duration_ms: 10.3092
+  type: 'test'
+  ...
+# {"originRequests":1,"redirectRequests":0,"permits":1}
+# Subtest: wire redirect blocked: responses 303 stream=false sameOrigin=false
+ok 69 - wire redirect blocked: responses 303 stream=false sameOrigin=false
+  ---
+  duration_ms: 9.1535
+  type: 'test'
+  ...
+# {"originRequests":1,"redirectRequests":0,"permits":1}
+# Subtest: wire redirect blocked: responses 303 stream=false sameOrigin=true
+ok 70 - wire redirect blocked: responses 303 stream=false sameOrigin=true
+  ---
+  duration_ms: 11.2537
+  type: 'test'
+  ...
+# {"originRequests":1,"redirectRequests":0,"permits":1}
+# Subtest: wire redirect blocked: responses 303 stream=true sameOrigin=false
+ok 71 - wire redirect blocked: responses 303 stream=true sameOrigin=false
+  ---
+  duration_ms: 12.1285
+  type: 'test'
+  ...
+# {"originRequests":1,"redirectRequests":0,"permits":1}
+# Subtest: wire redirect blocked: responses 303 stream=true sameOrigin=true
+ok 72 - wire redirect blocked: responses 303 stream=true sameOrigin=true
+  ---
+  duration_ms: 11.8205
+  type: 'test'
+  ...
+# {"originRequests":1,"redirectRequests":0,"permits":1}
+# Subtest: wire redirect blocked: responses 304 stream=false sameOrigin=false
+ok 73 - wire redirect blocked: responses 304 stream=false sameOrigin=false
+  ---
+  duration_ms: 10.6796
+  type: 'test'
+  ...
+# {"originRequests":1,"redirectRequests":0,"permits":1}
+# Subtest: wire redirect blocked: responses 304 stream=false sameOrigin=true
+ok 74 - wire redirect blocked: responses 304 stream=false sameOrigin=true
+  ---
+  duration_ms: 20.8864
+  type: 'test'
+  ...
+# {"originRequests":1,"redirectRequests":0,"permits":1}
+# Subtest: wire redirect blocked: responses 304 stream=true sameOrigin=false
+ok 75 - wire redirect blocked: responses 304 stream=true sameOrigin=false
+  ---
+  duration_ms: 31.4489
+  type: 'test'
+  ...
+# {"originRequests":1,"redirectRequests":0,"permits":1}
+# Subtest: wire redirect blocked: responses 304 stream=true sameOrigin=true
+ok 76 - wire redirect blocked: responses 304 stream=true sameOrigin=true
+  ---
+  duration_ms: 18.5054
+  type: 'test'
+  ...
+# {"originRequests":1,"redirectRequests":0,"permits":1}
+# Subtest: wire redirect blocked: responses 307 stream=false sameOrigin=false
+ok 77 - wire redirect blocked: responses 307 stream=false sameOrigin=false
+  ---
+  duration_ms: 11.9802
+  type: 'test'
+  ...
+# {"originRequests":1,"redirectRequests":0,"permits":1}
+# Subtest: wire redirect blocked: responses 307 stream=false sameOrigin=true
+ok 78 - wire redirect blocked: responses 307 stream=false sameOrigin=true
+  ---
+  duration_ms: 14.5031
+  type: 'test'
+  ...
+# {"originRequests":1,"redirectRequests":0,"permits":1}
+# Subtest: wire redirect blocked: responses 307 stream=true sameOrigin=false
+ok 79 - wire redirect blocked: responses 307 stream=true sameOrigin=false
+  ---
+  duration_ms: 10.3684
+  type: 'test'
+  ...
+# {"originRequests":1,"redirectRequests":0,"permits":1}
+# Subtest: wire redirect blocked: responses 307 stream=true sameOrigin=true
+ok 80 - wire redirect blocked: responses 307 stream=true sameOrigin=true
+  ---
+  duration_ms: 31.6639
+  type: 'test'
+  ...
+# {"originRequests":1,"redirectRequests":0,"permits":1}
+# Subtest: wire redirect blocked: responses 308 stream=false sameOrigin=false
+ok 81 - wire redirect blocked: responses 308 stream=false sameOrigin=false
+  ---
+  duration_ms: 26.157
+  type: 'test'
+  ...
+# {"originRequests":1,"redirectRequests":0,"permits":1}
+# Subtest: wire redirect blocked: responses 308 stream=false sameOrigin=true
+ok 82 - wire redirect blocked: responses 308 stream=false sameOrigin=true
+  ---
+  duration_ms: 9.3871
+  type: 'test'
+  ...
+# {"originRequests":1,"redirectRequests":0,"permits":1}
+# Subtest: wire redirect blocked: responses 308 stream=true sameOrigin=false
+ok 83 - wire redirect blocked: responses 308 stream=true sameOrigin=false
+  ---
+  duration_ms: 8.5216
+  type: 'test'
+  ...
+# {"originRequests":1,"redirectRequests":0,"permits":1}
+# Subtest: wire redirect blocked: responses 308 stream=true sameOrigin=true
+ok 84 - wire redirect blocked: responses 308 stream=true sameOrigin=true
+  ---
+  duration_ms: 8.5791
+  type: 'test'
+  ...
+# {"originRequests":1,"redirectRequests":0,"permits":1}
+# Subtest: wire redirect blocked: messages 301 stream=false sameOrigin=false
+ok 85 - wire redirect blocked: messages 301 stream=false sameOrigin=false
+  ---
+  duration_ms: 10.2365
+  type: 'test'
+  ...
+# {"originRequests":1,"redirectRequests":0,"permits":1}
+# Subtest: wire redirect blocked: messages 301 stream=false sameOrigin=true
+ok 86 - wire redirect blocked: messages 301 stream=false sameOrigin=true
+  ---
+  duration_ms: 9.8187
+  type: 'test'
+  ...
+# {"originRequests":1,"redirectRequests":0,"permits":1}
+# Subtest: wire redirect blocked: messages 301 stream=true sameOrigin=false
+ok 87 - wire redirect blocked: messages 301 stream=true sameOrigin=false
+  ---
+  duration_ms: 8.1458
+  type: 'test'
+  ...
+# {"originRequests":1,"redirectRequests":0,"permits":1}
+# Subtest: wire redirect blocked: messages 301 stream=true sameOrigin=true
+ok 88 - wire redirect blocked: messages 301 stream=true sameOrigin=true
+  ---
+  duration_ms: 10.5305
+  type: 'test'
+  ...
+# {"originRequests":1,"redirectRequests":0,"permits":1}
+# Subtest: wire redirect blocked: messages 302 stream=false sameOrigin=false
+ok 89 - wire redirect blocked: messages 302 stream=false sameOrigin=false
+  ---
+  duration_ms: 11.3421
+  type: 'test'
+  ...
+# {"originRequests":1,"redirectRequests":0,"permits":1}
+# Subtest: wire redirect blocked: messages 302 stream=false sameOrigin=true
+ok 90 - wire redirect blocked: messages 302 stream=false sameOrigin=true
+  ---
+  duration_ms: 19.5148
+  type: 'test'
+  ...
+# {"originRequests":1,"redirectRequests":0,"permits":1}
+# Subtest: wire redirect blocked: messages 302 stream=true sameOrigin=false
+ok 91 - wire redirect blocked: messages 302 stream=true sameOrigin=false
+  ---
+  duration_ms: 14.5979
+  type: 'test'
+  ...
+# {"originRequests":1,"redirectRequests":0,"permits":1}
+# Subtest: wire redirect blocked: messages 302 stream=true sameOrigin=true
+ok 92 - wire redirect blocked: messages 302 stream=true sameOrigin=true
+  ---
+  duration_ms: 11.852
+  type: 'test'
+  ...
+# {"originRequests":1,"redirectRequests":0,"permits":1}
+# Subtest: wire redirect blocked: messages 303 stream=false sameOrigin=false
+ok 93 - wire redirect blocked: messages 303 stream=false sameOrigin=false
+  ---
+  duration_ms: 14.2986
+  type: 'test'
+  ...
+# {"originRequests":1,"redirectRequests":0,"permits":1}
+# Subtest: wire redirect blocked: messages 303 stream=false sameOrigin=true
+ok 94 - wire redirect blocked: messages 303 stream=false sameOrigin=true
+  ---
+  duration_ms: 17.8206
+  type: 'test'
+  ...
+# {"originRequests":1,"redirectRequests":0,"permits":1}
+# Subtest: wire redirect blocked: messages 303 stream=true sameOrigin=false
+ok 95 - wire redirect blocked: messages 303 stream=true sameOrigin=false
+  ---
+  duration_ms: 13.5989
+  type: 'test'
+  ...
+# {"originRequests":1,"redirectRequests":0,"permits":1}
+# Subtest: wire redirect blocked: messages 303 stream=true sameOrigin=true
+ok 96 - wire redirect blocked: messages 303 stream=true sameOrigin=true
+  ---
+  duration_ms: 12.3397
+  type: 'test'
+  ...
+# {"originRequests":1,"redirectRequests":0,"permits":1}
+# Subtest: wire redirect blocked: messages 304 stream=false sameOrigin=false
+ok 97 - wire redirect blocked: messages 304 stream=false sameOrigin=false
+  ---
+  duration_ms: 10.1051
+  type: 'test'
+  ...
+# {"originRequests":1,"redirectRequests":0,"permits":1}
+# Subtest: wire redirect blocked: messages 304 stream=false sameOrigin=true
+ok 98 - wire redirect blocked: messages 304 stream=false sameOrigin=true
+  ---
+  duration_ms: 9.8034
+  type: 'test'
+  ...
+# {"originRequests":1,"redirectRequests":0,"permits":1}
+# Subtest: wire redirect blocked: messages 304 stream=true sameOrigin=false
+ok 99 - wire redirect blocked: messages 304 stream=true sameOrigin=false
+  ---
+  duration_ms: 10.7529
+  type: 'test'
+  ...
+# {"originRequests":1,"redirectRequests":0,"permits":1}
+# Subtest: wire redirect blocked: messages 304 stream=true sameOrigin=true
+ok 100 - wire redirect blocked: messages 304 stream=true sameOrigin=true
+  ---
+  duration_ms: 12.2402
+  type: 'test'
+  ...
+# {"originRequests":1,"redirectRequests":0,"permits":1}
+# Subtest: wire redirect blocked: messages 307 stream=false sameOrigin=false
+ok 101 - wire redirect blocked: messages 307 stream=false sameOrigin=false
+  ---
+  duration_ms: 13.304
+  type: 'test'
+  ...
+# {"originRequests":1,"redirectRequests":0,"permits":1}
+# Subtest: wire redirect blocked: messages 307 stream=false sameOrigin=true
+ok 102 - wire redirect blocked: messages 307 stream=false sameOrigin=true
+  ---
+  duration_ms: 11.8629
+  type: 'test'
+  ...
+# {"originRequests":1,"redirectRequests":0,"permits":1}
+# Subtest: wire redirect blocked: messages 307 stream=true sameOrigin=false
+ok 103 - wire redirect blocked: messages 307 stream=true sameOrigin=false
+  ---
+  duration_ms: 12.0252
+  type: 'test'
+  ...
+# {"originRequests":1,"redirectRequests":0,"permits":1}
+# Subtest: wire redirect blocked: messages 307 stream=true sameOrigin=true
+ok 104 - wire redirect blocked: messages 307 stream=true sameOrigin=true
+  ---
+  duration_ms: 12.3947
+  type: 'test'
+  ...
+# {"originRequests":1,"redirectRequests":0,"permits":1}
+# Subtest: wire redirect blocked: messages 308 stream=false sameOrigin=false
+ok 105 - wire redirect blocked: messages 308 stream=false sameOrigin=false
+  ---
+  duration_ms: 11.7306
+  type: 'test'
+  ...
+# {"originRequests":1,"redirectRequests":0,"permits":1}
+# Subtest: wire redirect blocked: messages 308 stream=false sameOrigin=true
+ok 106 - wire redirect blocked: messages 308 stream=false sameOrigin=true
+  ---
+  duration_ms: 9.9524
+  type: 'test'
+  ...
+# {"originRequests":1,"redirectRequests":0,"permits":1}
+# Subtest: wire redirect blocked: messages 308 stream=true sameOrigin=false
+ok 107 - wire redirect blocked: messages 308 stream=true sameOrigin=false
+  ---
+  duration_ms: 8.9644
+  type: 'test'
+  ...
+# {"originRequests":1,"redirectRequests":0,"permits":1}
+# Subtest: wire redirect blocked: messages 308 stream=true sameOrigin=true
+ok 108 - wire redirect blocked: messages 308 stream=true sameOrigin=true
+  ---
+  duration_ms: 10.0084
+  type: 'test'
+  ...
+# {"originRequests":1,"redirectRequests":0,"permits":1}
+# Subtest: wire redirect blocked: gemini 301 stream=false sameOrigin=false
+ok 109 - wire redirect blocked: gemini 301 stream=false sameOrigin=false
+  ---
+  duration_ms: 24.5192
+  type: 'test'
+  ...
+# {"originRequests":1,"redirectRequests":0,"permits":1}
+# Subtest: wire redirect blocked: gemini 301 stream=false sameOrigin=true
+ok 110 - wire redirect blocked: gemini 301 stream=false sameOrigin=true
+  ---
+  duration_ms: 9.3451
+  type: 'test'
+  ...
+# {"originRequests":1,"redirectRequests":0,"permits":1}
+# Subtest: wire redirect blocked: gemini 301 stream=true sameOrigin=false
+ok 111 - wire redirect blocked: gemini 301 stream=true sameOrigin=false
+  ---
+  duration_ms: 10.2258
+  type: 'test'
+  ...
+# {"originRequests":1,"redirectRequests":0,"permits":1}
+# Subtest: wire redirect blocked: gemini 301 stream=true sameOrigin=true
+ok 112 - wire redirect blocked: gemini 301 stream=true sameOrigin=true
+  ---
+  duration_ms: 12.0774
+  type: 'test'
+  ...
+# {"originRequests":1,"redirectRequests":0,"permits":1}
+# Subtest: wire redirect blocked: gemini 302 stream=false sameOrigin=false
+ok 113 - wire redirect blocked: gemini 302 stream=false sameOrigin=false
+  ---
+  duration_ms: 13.2536
+  type: 'test'
+  ...
+# {"originRequests":1,"redirectRequests":0,"permits":1}
+# Subtest: wire redirect blocked: gemini 302 stream=false sameOrigin=true
+ok 114 - wire redirect blocked: gemini 302 stream=false sameOrigin=true
+  ---
+  duration_ms: 11.6443
+  type: 'test'
+  ...
+# {"originRequests":1,"redirectRequests":0,"permits":1}
+# Subtest: wire redirect blocked: gemini 302 stream=true sameOrigin=false
+ok 115 - wire redirect blocked: gemini 302 stream=true sameOrigin=false
+  ---
+  duration_ms: 11.312
+  type: 'test'
+  ...
+# {"originRequests":1,"redirectRequests":0,"permits":1}
+# Subtest: wire redirect blocked: gemini 302 stream=true sameOrigin=true
+ok 116 - wire redirect blocked: gemini 302 stream=true sameOrigin=true
+  ---
+  duration_ms: 9.7459
+  type: 'test'
+  ...
+# {"originRequests":1,"redirectRequests":0,"permits":1}
+# Subtest: wire redirect blocked: gemini 303 stream=false sameOrigin=false
+ok 117 - wire redirect blocked: gemini 303 stream=false sameOrigin=false
+  ---
+  duration_ms: 11.6175
+  type: 'test'
+  ...
+# {"originRequests":1,"redirectRequests":0,"permits":1}
+# Subtest: wire redirect blocked: gemini 303 stream=false sameOrigin=true
+ok 118 - wire redirect blocked: gemini 303 stream=false sameOrigin=true
+  ---
+  duration_ms: 9.2911
+  type: 'test'
+  ...
+# {"originRequests":1,"redirectRequests":0,"permits":1}
+# Subtest: wire redirect blocked: gemini 303 stream=true sameOrigin=false
+ok 119 - wire redirect blocked: gemini 303 stream=true sameOrigin=false
+  ---
+  duration_ms: 9.4205
+  type: 'test'
+  ...
+# {"originRequests":1,"redirectRequests":0,"permits":1}
+# Subtest: wire redirect blocked: gemini 303 stream=true sameOrigin=true
+ok 120 - wire redirect blocked: gemini 303 stream=true sameOrigin=true
+  ---
+  duration_ms: 10.9634
+  type: 'test'
+  ...
+# {"originRequests":1,"redirectRequests":0,"permits":1}
+# Subtest: wire redirect blocked: gemini 304 stream=false sameOrigin=false
+ok 121 - wire redirect blocked: gemini 304 stream=false sameOrigin=false
+  ---
+  duration_ms: 11.172
+  type: 'test'
+  ...
+# {"originRequests":1,"redirectRequests":0,"permits":1}
+# Subtest: wire redirect blocked: gemini 304 stream=false sameOrigin=true
+ok 122 - wire redirect blocked: gemini 304 stream=false sameOrigin=true
+  ---
+  duration_ms: 8.9284
+  type: 'test'
+  ...
+# {"originRequests":1,"redirectRequests":0,"permits":1}
+# Subtest: wire redirect blocked: gemini 304 stream=true sameOrigin=false
+ok 123 - wire redirect blocked: gemini 304 stream=true sameOrigin=false
+  ---
+  duration_ms: 10.9473
+  type: 'test'
+  ...
+# {"originRequests":1,"redirectRequests":0,"permits":1}
+# Subtest: wire redirect blocked: gemini 304 stream=true sameOrigin=true
+ok 124 - wire redirect blocked: gemini 304 stream=true sameOrigin=true
+  ---
+  duration_ms: 10.6046
+  type: 'test'
+  ...
+# {"originRequests":1,"redirectRequests":0,"permits":1}
+# Subtest: wire redirect blocked: gemini 307 stream=false sameOrigin=false
+ok 125 - wire redirect blocked: gemini 307 stream=false sameOrigin=false
+  ---
+  duration_ms: 10.5915
+  type: 'test'
+  ...
+# {"originRequests":1,"redirectRequests":0,"permits":1}
+# Subtest: wire redirect blocked: gemini 307 stream=false sameOrigin=true
+ok 126 - wire redirect blocked: gemini 307 stream=false sameOrigin=true
+  ---
+  duration_ms: 12.4749
+  type: 'test'
+  ...
+# {"originRequests":1,"redirectRequests":0,"permits":1}
+# Subtest: wire redirect blocked: gemini 307 stream=true sameOrigin=false
+ok 127 - wire redirect blocked: gemini 307 stream=true sameOrigin=false
+  ---
+  duration_ms: 10.3466
+  type: 'test'
+  ...
+# {"originRequests":1,"redirectRequests":0,"permits":1}
+# Subtest: wire redirect blocked: gemini 307 stream=true sameOrigin=true
+ok 128 - wire redirect blocked: gemini 307 stream=true sameOrigin=true
+  ---
+  duration_ms: 15.9893
+  type: 'test'
+  ...
+# {"originRequests":1,"redirectRequests":0,"permits":1}
+# Subtest: wire redirect blocked: gemini 308 stream=false sameOrigin=false
+ok 129 - wire redirect blocked: gemini 308 stream=false sameOrigin=false
+  ---
+  duration_ms: 14.3468
+  type: 'test'
+  ...
+# {"originRequests":1,"redirectRequests":0,"permits":1}
+# Subtest: wire redirect blocked: gemini 308 stream=false sameOrigin=true
+ok 130 - wire redirect blocked: gemini 308 stream=false sameOrigin=true
+  ---
+  duration_ms: 11.9631
+  type: 'test'
+  ...
+# {"originRequests":1,"redirectRequests":0,"permits":1}
+# Subtest: wire redirect blocked: gemini 308 stream=true sameOrigin=false
+ok 131 - wire redirect blocked: gemini 308 stream=true sameOrigin=false
+  ---
+  duration_ms: 12.645
+  type: 'test'
+  ...
+# {"originRequests":1,"redirectRequests":0,"permits":1}
+# Subtest: wire redirect blocked: gemini 308 stream=true sameOrigin=true
+ok 132 - wire redirect blocked: gemini 308 stream=true sameOrigin=true
+  ---
+  duration_ms: 9.9411
+  type: 'test'
+  ...
+# {"originRequests":1,"redirectRequests":0,"permits":1}
+# Subtest: redirect cannot become another model/key attempt: chat 304 candidates=4
+ok 133 - redirect cannot become another model/key attempt: chat 304 candidates=4
+  ---
+  duration_ms: 25.1367
+  type: 'test'
+  ...
+# Subtest: redirect cannot become another model/key attempt: chat 307 candidates=4
+ok 134 - redirect cannot become another model/key attempt: chat 307 candidates=4
+  ---
+  duration_ms: 18.3591
+  type: 'test'
+  ...
+# Subtest: redirect cannot become another model/key attempt: chat 308 candidates=4
+ok 135 - redirect cannot become another model/key attempt: chat 308 candidates=4
+  ---
+  duration_ms: 30.9667
+  type: 'test'
+  ...
+# Subtest: redirect cannot become another model/key attempt: chat 304 candidates=40
+ok 136 - redirect cannot become another model/key attempt: chat 304 candidates=40
+  ---
+  duration_ms: 18.0692
+  type: 'test'
+  ...
+# Subtest: redirect cannot become another model/key attempt: chat 307 candidates=40
+ok 137 - redirect cannot become another model/key attempt: chat 307 candidates=40
+  ---
+  duration_ms: 14.688
+  type: 'test'
+  ...
+# Subtest: redirect cannot become another model/key attempt: chat 308 candidates=40
+ok 138 - redirect cannot become another model/key attempt: chat 308 candidates=40
+  ---
+  duration_ms: 12.9916
+  type: 'test'
+  ...
+# Subtest: redirect cannot become another model/key attempt: responses 304 candidates=4
+ok 139 - redirect cannot become another model/key attempt: responses 304 candidates=4
+  ---
+  duration_ms: 10.914
+  type: 'test'
+  ...
+# Subtest: redirect cannot become another model/key attempt: responses 307 candidates=4
+ok 140 - redirect cannot become another model/key attempt: responses 307 candidates=4
+  ---
+  duration_ms: 11.5724
+  type: 'test'
+  ...
+# Subtest: redirect cannot become another model/key attempt: responses 308 candidates=4
+ok 141 - redirect cannot become another model/key attempt: responses 308 candidates=4
+  ---
+  duration_ms: 13.9676
+  type: 'test'
+  ...
+# Subtest: redirect cannot become another model/key attempt: responses 304 candidates=40
+ok 142 - redirect cannot become another model/key attempt: responses 304 candidates=40
+  ---
+  duration_ms: 13.2179
+  type: 'test'
+  ...
+# Subtest: redirect cannot become another model/key attempt: responses 307 candidates=40
+ok 143 - redirect cannot become another model/key attempt: responses 307 candidates=40
+  ---
+  duration_ms: 11.693
+  type: 'test'
+  ...
+# Subtest: redirect cannot become another model/key attempt: responses 308 candidates=40
+ok 144 - redirect cannot become another model/key attempt: responses 308 candidates=40
+  ---
+  duration_ms: 12.6637
+  type: 'test'
+  ...
+# Subtest: redirect cannot become another model/key attempt: messages 304 candidates=4
+ok 145 - redirect cannot become another model/key attempt: messages 304 candidates=4
+  ---
+  duration_ms: 12.014
+  type: 'test'
+  ...
+# Subtest: redirect cannot become another model/key attempt: messages 307 candidates=4
+ok 146 - redirect cannot become another model/key attempt: messages 307 candidates=4
+  ---
+  duration_ms: 11.7821
+  type: 'test'
+  ...
+# Subtest: redirect cannot become another model/key attempt: messages 308 candidates=4
+ok 147 - redirect cannot become another model/key attempt: messages 308 candidates=4
+  ---
+  duration_ms: 22.5162
+  type: 'test'
+  ...
+# Subtest: redirect cannot become another model/key attempt: messages 304 candidates=40
+ok 148 - redirect cannot become another model/key attempt: messages 304 candidates=40
+  ---
+  duration_ms: 20.0494
+  type: 'test'
+  ...
+# Subtest: redirect cannot become another model/key attempt: messages 307 candidates=40
+ok 149 - redirect cannot become another model/key attempt: messages 307 candidates=40
+  ---
+  duration_ms: 12.1293
+  type: 'test'
+  ...
+# Subtest: redirect cannot become another model/key attempt: messages 308 candidates=40
+ok 150 - redirect cannot become another model/key attempt: messages 308 candidates=40
+  ---
+  duration_ms: 10.254
+  type: 'test'
+  ...
+# Subtest: redirect cannot become another model/key attempt: gemini 304 candidates=4
+ok 151 - redirect cannot become another model/key attempt: gemini 304 candidates=4
+  ---
+  duration_ms: 10.56
+  type: 'test'
+  ...
+# Subtest: redirect cannot become another model/key attempt: gemini 307 candidates=4
+ok 152 - redirect cannot become another model/key attempt: gemini 307 candidates=4
+  ---
+  duration_ms: 10.9341
+  type: 'test'
+  ...
+# Subtest: redirect cannot become another model/key attempt: gemini 308 candidates=4
+ok 153 - redirect cannot become another model/key attempt: gemini 308 candidates=4
+  ---
+  duration_ms: 12.56
+  type: 'test'
+  ...
+# Subtest: redirect cannot become another model/key attempt: gemini 304 candidates=40
+ok 154 - redirect cannot become another model/key attempt: gemini 304 candidates=40
+  ---
+  duration_ms: 10.7835
+  type: 'test'
+  ...
+# Subtest: redirect cannot become another model/key attempt: gemini 307 candidates=40
+ok 155 - redirect cannot become another model/key attempt: gemini 307 candidates=40
+  ---
+  duration_ms: 11.1485
+  type: 'test'
+  ...
+# Subtest: redirect cannot become another model/key attempt: gemini 308 candidates=40
+ok 156 - redirect cannot become another model/key attempt: gemini 308 candidates=40
+  ---
+  duration_ms: 9.9199
+  type: 'test'
+  ...
+# Subtest: trusted 304 error materialization preserves null body and status without a constructor exception
+ok 157 - trusted 304 error materialization preserves null body and status without a constructor exception
+  ---
+  duration_ms: 0.5576
+  type: 'test'
+  ...
+# Subtest: sent POST rejection respects replay boundary: chat 429 candidates=4
+ok 158 - sent POST rejection respects replay boundary: chat 429 candidates=4
+  ---
+  duration_ms: 35.4166
+  type: 'test'
+  ...
+# Subtest: sent POST rejection respects replay boundary: chat 503 candidates=4
+ok 159 - sent POST rejection respects replay boundary: chat 503 candidates=4
+  ---
+  duration_ms: 8.9532
+  type: 'test'
+  ...
+# Subtest: sent POST rejection respects replay boundary: chat 429 candidates=40
+ok 160 - sent POST rejection respects replay boundary: chat 429 candidates=40
+  ---
+  duration_ms: 34.9348
+  type: 'test'
+  ...
+# Subtest: sent POST rejection respects replay boundary: chat 503 candidates=40
+ok 161 - sent POST rejection respects replay boundary: chat 503 candidates=40
+  ---
+  duration_ms: 7.838
+  type: 'test'
+  ...
+# Subtest: sent POST rejection respects replay boundary: responses 429 candidates=4
+ok 162 - sent POST rejection respects replay boundary: responses 429 candidates=4
+  ---
+  duration_ms: 23.8331
+  type: 'test'
+  ...
+# Subtest: sent POST rejection respects replay boundary: responses 503 candidates=4
+ok 163 - sent POST rejection respects replay boundary: responses 503 candidates=4
+  ---
+  duration_ms: 7.617
+  type: 'test'
+  ...
+# Subtest: sent POST rejection respects replay boundary: responses 429 candidates=40
+ok 164 - sent POST rejection respects replay boundary: responses 429 candidates=40
+  ---
+  duration_ms: 24.3302
+  type: 'test'
+  ...
+# Subtest: sent POST rejection respects replay boundary: responses 503 candidates=40
+ok 165 - sent POST rejection respects replay boundary: responses 503 candidates=40
+  ---
+  duration_ms: 9.2333
+  type: 'test'
+  ...
+# Subtest: sent POST rejection respects replay boundary: messages 429 candidates=4
+ok 166 - sent POST rejection respects replay boundary: messages 429 candidates=4
+  ---
+  duration_ms: 20.8205
+  type: 'test'
+  ...
+# Subtest: sent POST rejection respects replay boundary: messages 503 candidates=4
+ok 167 - sent POST rejection respects replay boundary: messages 503 candidates=4
+  ---
+  duration_ms: 10.243
+  type: 'test'
+  ...
+# Subtest: sent POST rejection respects replay boundary: messages 429 candidates=40
+ok 168 - sent POST rejection respects replay boundary: messages 429 candidates=40
+  ---
+  duration_ms: 14.633
+  type: 'test'
+  ...
+# Subtest: sent POST rejection respects replay boundary: messages 503 candidates=40
+ok 169 - sent POST rejection respects replay boundary: messages 503 candidates=40
+  ---
+  duration_ms: 11.7896
+  type: 'test'
+  ...
+# Subtest: sent POST rejection respects replay boundary: gemini 429 candidates=4
+ok 170 - sent POST rejection respects replay boundary: gemini 429 candidates=4
+  ---
+  duration_ms: 28.5992
+  type: 'test'
+  ...
+# Subtest: sent POST rejection respects replay boundary: gemini 503 candidates=4
+ok 171 - sent POST rejection respects replay boundary: gemini 503 candidates=4
+  ---
+  duration_ms: 11.0187
+  type: 'test'
+  ...
+# Subtest: sent POST rejection respects replay boundary: gemini 429 candidates=40
+ok 172 - sent POST rejection respects replay boundary: gemini 429 candidates=40
+  ---
+  duration_ms: 26.5313
+  type: 'test'
+  ...
+# Subtest: sent POST rejection respects replay boundary: gemini 503 candidates=40
+ok 173 - sent POST rejection respects replay boundary: gemini 503 candidates=40
+  ---
+  duration_ms: 11.5481
+  type: 'test'
+  ...
+# Subtest: text upload chat/json/full
+ok 174 - text upload chat/json/full
+  ---
+  duration_ms: 34.7305
+  type: 'test'
+  ...
+# Subtest: text upload chat/json/unused
+ok 175 - text upload chat/json/unused
+  ---
+  duration_ms: 3.162
+  type: 'test'
+  ...
+# Subtest: text upload chat/json/cancel
+ok 176 - text upload chat/json/cancel
+  ---
+  duration_ms: 4.5658
+  type: 'test'
+  ...
+# Subtest: text upload chat/json/locked
+ok 177 - text upload chat/json/locked
+  ---
+  duration_ms: 5.8037
+  type: 'test'
+  ...
+# Subtest: text upload chat/json/partial
+ok 178 - text upload chat/json/partial
+  ---
+  duration_ms: 15.174
+  type: 'test'
+  ...
+# Subtest: text upload chat/json/last-page
+ok 179 - text upload chat/json/last-page
+  ---
+  duration_ms: 1.9224
+  type: 'test'
+  ...
+# Subtest: text upload chat/sse/full
+ok 180 - text upload chat/sse/full
+  ---
+  duration_ms: 10.208
+  type: 'test'
+  ...
+# Subtest: text upload chat/sse/unused
+ok 181 - text upload chat/sse/unused
+  ---
+  duration_ms: 3.2893
+  type: 'test'
+  ...
+# Subtest: text upload chat/sse/cancel
+ok 182 - text upload chat/sse/cancel
+  ---
+  duration_ms: 3.4585
+  type: 'test'
+  ...
+# Subtest: text upload chat/sse/locked
+ok 183 - text upload chat/sse/locked
+  ---
+  duration_ms: 5.6016
+  type: 'test'
+  ...
+# Subtest: text upload chat/sse/partial
+ok 184 - text upload chat/sse/partial
+  ---
+  duration_ms: 6.1915
+  type: 'test'
+  ...
+# Subtest: text upload chat/sse/last-page
+ok 185 - text upload chat/sse/last-page
+  ---
+  duration_ms: 4.269
+  type: 'test'
+  ...
+# Subtest: text upload responses/json/full
+ok 186 - text upload responses/json/full
+  ---
+  duration_ms: 4.2984
+  type: 'test'
+  ...
+# Subtest: text upload responses/json/unused
+ok 187 - text upload responses/json/unused
+  ---
+  duration_ms: 2.8351
+  type: 'test'
+  ...
+# Subtest: text upload responses/json/cancel
+ok 188 - text upload responses/json/cancel
+  ---
+  duration_ms: 4.3102
+  type: 'test'
+  ...
+# Subtest: text upload responses/json/locked
+ok 189 - text upload responses/json/locked
+  ---
+  duration_ms: 2.9663
+  type: 'test'
+  ...
+# Subtest: text upload responses/json/partial
+ok 190 - text upload responses/json/partial
+  ---
+  duration_ms: 5.2096
+  type: 'test'
+  ...
+# Subtest: text upload responses/json/last-page
+ok 191 - text upload responses/json/last-page
+  ---
+  duration_ms: 2.1487
+  type: 'test'
+  ...
+# Subtest: text upload responses/sse/full
+ok 192 - text upload responses/sse/full
+  ---
+  duration_ms: 3.7233
+  type: 'test'
+  ...
+# Subtest: text upload responses/sse/unused
+ok 193 - text upload responses/sse/unused
+  ---
+  duration_ms: 1.17
+  type: 'test'
+  ...
+# Subtest: text upload responses/sse/cancel
+ok 194 - text upload responses/sse/cancel
+  ---
+  duration_ms: 4.1705
+  type: 'test'
+  ...
+# Subtest: text upload responses/sse/locked
+ok 195 - text upload responses/sse/locked
+  ---
+  duration_ms: 2.7066
+  type: 'test'
+  ...
+# Subtest: text upload responses/sse/partial
+ok 196 - text upload responses/sse/partial
+  ---
+  duration_ms: 5.4131
+  type: 'test'
+  ...
+# Subtest: text upload responses/sse/last-page
+ok 197 - text upload responses/sse/last-page
+  ---
+  duration_ms: 2.0339
+  type: 'test'
+  ...
+# Subtest: text upload messages/json/full
+ok 198 - text upload messages/json/full
+  ---
+  duration_ms: 3.7903
+  type: 'test'
+  ...
+# Subtest: text upload messages/json/unused
+ok 199 - text upload messages/json/unused
+  ---
+  duration_ms: 1.8225
+  type: 'test'
+  ...
+# Subtest: text upload messages/json/cancel
+ok 200 - text upload messages/json/cancel
+  ---
+  duration_ms: 1.075
+  type: 'test'
+  ...
+# Subtest: text upload messages/json/locked
+ok 201 - text upload messages/json/locked
+  ---
+  duration_ms: 0.9361
+  type: 'test'
+  ...
+# Subtest: text upload messages/json/partial
+ok 202 - text upload messages/json/partial
+  ---
+  duration_ms: 5.6234
+  type: 'test'
+  ...
+# Subtest: text upload messages/json/last-page
+ok 203 - text upload messages/json/last-page
+  ---
+  duration_ms: 1.6297
+  type: 'test'
+  ...
+# Subtest: text upload messages/sse/full
+ok 204 - text upload messages/sse/full
+  ---
+  duration_ms: 2.6716
+  type: 'test'
+  ...
+# Subtest: text upload messages/sse/unused
+ok 205 - text upload messages/sse/unused
+  ---
+  duration_ms: 1.322
+  type: 'test'
+  ...
+# Subtest: text upload messages/sse/cancel
+ok 206 - text upload messages/sse/cancel
+  ---
+  duration_ms: 5.6727
+  type: 'test'
+  ...
+# Subtest: text upload messages/sse/locked
+ok 207 - text upload messages/sse/locked
+  ---
+  duration_ms: 3.2023
+  type: 'test'
+  ...
+# Subtest: text upload messages/sse/partial
+ok 208 - text upload messages/sse/partial
+  ---
+  duration_ms: 6.7363
+  type: 'test'
+  ...
+# Subtest: text upload messages/sse/last-page
+ok 209 - text upload messages/sse/last-page
+  ---
+  duration_ms: 2.8888
+  type: 'test'
+  ...
+# Subtest: text upload gemini/json/full
+ok 210 - text upload gemini/json/full
+  ---
+  duration_ms: 8.5397
+  type: 'test'
+  ...
+# Subtest: text upload gemini/json/unused
+ok 211 - text upload gemini/json/unused
+  ---
+  duration_ms: 2.1285
+  type: 'test'
+  ...
+# Subtest: text upload gemini/json/cancel
+ok 212 - text upload gemini/json/cancel
+  ---
+  duration_ms: 1.7802
+  type: 'test'
+  ...
+# Subtest: text upload gemini/json/locked
+ok 213 - text upload gemini/json/locked
+  ---
+  duration_ms: 1.7424
+  type: 'test'
+  ...
+# Subtest: text upload gemini/json/partial
+ok 214 - text upload gemini/json/partial
+  ---
+  duration_ms: 5.5626
+  type: 'test'
+  ...
+# Subtest: text upload gemini/json/last-page
+ok 215 - text upload gemini/json/last-page
+  ---
+  duration_ms: 1.6429
+  type: 'test'
+  ...
+# Subtest: text upload gemini/sse/full
+ok 216 - text upload gemini/sse/full
+  ---
+  duration_ms: 2.2163
+  type: 'test'
+  ...
+# Subtest: text upload gemini/sse/unused
+ok 217 - text upload gemini/sse/unused
+  ---
+  duration_ms: 1.2057
+  type: 'test'
+  ...
+# Subtest: text upload gemini/sse/cancel
+ok 218 - text upload gemini/sse/cancel
+  ---
+  duration_ms: 1.4684
+  type: 'test'
+  ...
+# Subtest: text upload gemini/sse/locked
+ok 219 - text upload gemini/sse/locked
+  ---
+  duration_ms: 1.1784
+  type: 'test'
+  ...
+# Subtest: text upload gemini/sse/partial
+ok 220 - text upload gemini/sse/partial
+  ---
+  duration_ms: 3.5725
+  type: 'test'
+  ...
+# Subtest: text upload gemini/sse/last-page
+ok 221 - text upload gemini/sse/last-page
+  ---
+  duration_ms: 1.6389
+  type: 'test'
+  ...
+# Subtest: text upload preparation chat/snapshot
+ok 222 - text upload preparation chat/snapshot
+  ---
+  duration_ms: 51.6206
+  type: 'test'
+  ...
+# Subtest: text upload preparation chat/cancel-admission
+ok 223 - text upload preparation chat/cancel-admission
+  ---
+  duration_ms: 3.1976
+  type: 'test'
+  ...
+# Subtest: text upload preparation chat/throw-admission
+ok 224 - text upload preparation chat/throw-admission
+  ---
+  duration_ms: 2.4942
+  type: 'test'
+  ...
+# Subtest: text upload preparation chat/bad-header
+ok 225 - text upload preparation chat/bad-header
+  ---
+  duration_ms: 0.7207
+  type: 'test'
+  ...
+# Subtest: text upload preparation chat/fetch-reject
+ok 226 - text upload preparation chat/fetch-reject
+  ---
+  duration_ms: 2.0067
+  type: 'test'
+  ...
+# Subtest: text upload preparation responses/snapshot
+ok 227 - text upload preparation responses/snapshot
+  ---
+  duration_ms: 2.1963
+  type: 'test'
+  ...
+# Subtest: text upload preparation responses/cancel-admission
+ok 228 - text upload preparation responses/cancel-admission
+  ---
+  duration_ms: 1.6635
+  type: 'test'
+  ...
+# Subtest: text upload preparation responses/throw-admission
+ok 229 - text upload preparation responses/throw-admission
+  ---
+  duration_ms: 0.7951
+  type: 'test'
+  ...
+# Subtest: text upload preparation responses/bad-header
+ok 230 - text upload preparation responses/bad-header
+  ---
+  duration_ms: 0.6616
+  type: 'test'
+  ...
+# Subtest: text upload preparation responses/fetch-reject
+ok 231 - text upload preparation responses/fetch-reject
+  ---
+  duration_ms: 0.7847
+  type: 'test'
+  ...
+# Subtest: text upload preparation messages/snapshot
+ok 232 - text upload preparation messages/snapshot
+  ---
+  duration_ms: 1.4625
+  type: 'test'
+  ...
+# Subtest: text upload preparation messages/cancel-admission
+ok 233 - text upload preparation messages/cancel-admission
+  ---
+  duration_ms: 1.0277
+  type: 'test'
+  ...
+# Subtest: text upload preparation messages/throw-admission
+ok 234 - text upload preparation messages/throw-admission
+  ---
+  duration_ms: 0.629
+  type: 'test'
+  ...
+# Subtest: text upload preparation messages/bad-header
+ok 235 - text upload preparation messages/bad-header
+  ---
+  duration_ms: 0.3643
+  type: 'test'
+  ...
+# Subtest: text upload preparation messages/fetch-reject
+ok 236 - text upload preparation messages/fetch-reject
+  ---
+  duration_ms: 0.7536
+  type: 'test'
+  ...
+# Subtest: text upload preparation gemini/snapshot
+ok 237 - text upload preparation gemini/snapshot
+  ---
+  duration_ms: 2.0328
+  type: 'test'
+  ...
+# Subtest: text upload preparation gemini/cancel-admission
+ok 238 - text upload preparation gemini/cancel-admission
+  ---
+  duration_ms: 1.5547
+  type: 'test'
+  ...
+# Subtest: text upload preparation gemini/throw-admission
+ok 239 - text upload preparation gemini/throw-admission
+  ---
+  duration_ms: 0.6489
+  type: 'test'
+  ...
+# Subtest: text upload preparation gemini/bad-header
+ok 240 - text upload preparation gemini/bad-header
+  ---
+  duration_ms: 0.3613
+  type: 'test'
+  ...
+# Subtest: text upload preparation gemini/fetch-reject
+ok 241 - text upload preparation gemini/fetch-reject
+  ---
+  duration_ms: 0.5923
+  type: 'test'
+  ...
+# Subtest: text upload and response chat/full/resolve
+ok 242 - text upload and response chat/full/resolve
+  ---
+  duration_ms: 7.0385
+  type: 'test'
+  ...
+# Subtest: text upload and response chat/full/reject
+ok 243 - text upload and response chat/full/reject
+  ---
+  duration_ms: 2.9234
+  type: 'test'
+  ...
+# Subtest: text upload and response chat/partial/resolve
+ok 244 - text upload and response chat/partial/resolve
+  ---
+  duration_ms: 2.7855
+  type: 'test'
+  ...
+# Subtest: text upload and response chat/partial/reject
+ok 245 - text upload and response chat/partial/reject
+  ---
+  duration_ms: 1.6689
+  type: 'test'
+  ...
+# Subtest: text upload and response responses/full/resolve
+ok 246 - text upload and response responses/full/resolve
+  ---
+  duration_ms: 1.2062
+  type: 'test'
+  ...
+# Subtest: text upload and response responses/full/reject
+ok 247 - text upload and response responses/full/reject
+  ---
+  duration_ms: 1.5861
+  type: 'test'
+  ...
+# Subtest: text upload and response responses/partial/resolve
+ok 248 - text upload and response responses/partial/resolve
+  ---
+  duration_ms: 1.6075
+  type: 'test'
+  ...
+# Subtest: text upload and response responses/partial/reject
+ok 249 - text upload and response responses/partial/reject
+  ---
+  duration_ms: 1.186
+  type: 'test'
+  ...
+# Subtest: text upload and response messages/full/resolve
+ok 250 - text upload and response messages/full/resolve
+  ---
+  duration_ms: 1.222
+  type: 'test'
+  ...
+# Subtest: text upload and response messages/full/reject
+ok 251 - text upload and response messages/full/reject
+  ---
+  duration_ms: 2.9628
+  type: 'test'
+  ...
+# Subtest: text upload and response messages/partial/resolve
+ok 252 - text upload and response messages/partial/resolve
+  ---
+  duration_ms: 2.9962
+  type: 'test'
+  ...
+# Subtest: text upload and response messages/partial/reject
+ok 253 - text upload and response messages/partial/reject
+  ---
+  duration_ms: 1.4805
+  type: 'test'
+  ...
+# Subtest: text upload and response gemini/full/resolve
+ok 254 - text upload and response gemini/full/resolve
+  ---
+  duration_ms: 1.0884
+  type: 'test'
+  ...
+# Subtest: text upload and response gemini/full/reject
+ok 255 - text upload and response gemini/full/reject
+  ---
+  duration_ms: 1.2162
+  type: 'test'
+  ...
+# Subtest: text upload and response gemini/partial/resolve
+ok 256 - text upload and response gemini/partial/resolve
+  ---
+  duration_ms: 1.8438
+  type: 'test'
+  ...
+# Subtest: text upload and response gemini/partial/reject
+ok 257 - text upload and response gemini/partial/reject
+  ---
+  duration_ms: 2.1261
+  type: 'test'
+  ...
+# Subtest: text upload projection before OAuth chat/cycle
+ok 258 - text upload projection before OAuth chat/cycle
+  ---
+  duration_ms: 1.3337
+  type: 'test'
+  ...
+# Subtest: text upload projection before OAuth chat/bigint
+ok 259 - text upload projection before OAuth chat/bigint
+  ---
+  duration_ms: 0.4196
+  type: 'test'
+  ...
+# Subtest: text upload projection before OAuth chat/getter
+ok 260 - text upload projection before OAuth chat/getter
+  ---
+  duration_ms: 0.6542
+  type: 'test'
+  ...
+# Subtest: text upload projection before OAuth responses/cycle
+ok 261 - text upload projection before OAuth responses/cycle
+  ---
+  duration_ms: 0.7611
+  type: 'test'
+  ...
+# Subtest: text upload projection before OAuth responses/bigint
+ok 262 - text upload projection before OAuth responses/bigint
+  ---
+  duration_ms: 0.9365
+  type: 'test'
+  ...
+# Subtest: text upload projection before OAuth responses/getter
+ok 263 - text upload projection before OAuth responses/getter
+  ---
+  duration_ms: 0.4044
+  type: 'test'
+  ...
+# Subtest: text upload projection before OAuth messages/cycle
+ok 264 - text upload projection before OAuth messages/cycle
+  ---
+  duration_ms: 0.3753
+  type: 'test'
+  ...
+# Subtest: text upload projection before OAuth messages/bigint
+ok 265 - text upload projection before OAuth messages/bigint
+  ---
+  duration_ms: 0.3338
+  type: 'test'
+  ...
+# Subtest: text upload projection before OAuth messages/getter
+ok 266 - text upload projection before OAuth messages/getter
+  ---
+  duration_ms: 0.5119
+  type: 'test'
+  ...
+# Subtest: text upload projection before OAuth gemini/cycle
+ok 267 - text upload projection before OAuth gemini/cycle
+  ---
+  duration_ms: 0.3928
+  type: 'test'
+  ...
+# Subtest: text upload projection before OAuth gemini/bigint
+ok 268 - text upload projection before OAuth gemini/bigint
+  ---
+  duration_ms: 0.2623
+  type: 'test'
+  ...
+# Subtest: text upload projection before OAuth gemini/getter
+ok 269 - text upload projection before OAuth gemini/getter
+  ---
+  duration_ms: 0.4919
+  type: 'test'
+  ...
+# Subtest: text upload snapshot precedes OAuth and invokes toJSON once chat
+ok 270 - text upload snapshot precedes OAuth and invokes toJSON once chat
+  ---
+  duration_ms: 54.1167
+  type: 'test'
+  ...
+# Subtest: text upload snapshot precedes OAuth and invokes toJSON once responses
+ok 271 - text upload snapshot precedes OAuth and invokes toJSON once responses
+  ---
+  duration_ms: 6.4468
+  type: 'test'
+  ...
+# Subtest: text upload snapshot precedes OAuth and invokes toJSON once messages
+ok 272 - text upload snapshot precedes OAuth and invokes toJSON once messages
+  ---
+  duration_ms: 10.275
+  type: 'test'
+  ...
+# Subtest: text upload snapshot precedes OAuth and invokes toJSON once gemini
+ok 273 - text upload snapshot precedes OAuth and invokes toJSON once gemini
+  ---
+  duration_ms: 7.0496
+  type: 'test'
+  ...
+# Subtest: text upload native Node HTTP chat
+ok 274 - text upload native Node HTTP chat
+  ---
+  duration_ms: 65.9688
+  type: 'test'
+  ...
+# Subtest: text upload native Node HTTP responses
+ok 275 - text upload native Node HTTP responses
+  ---
+  duration_ms: 59.0125
+  type: 'test'
+  ...
+# Subtest: text upload native Node HTTP messages
+ok 276 - text upload native Node HTTP messages
+  ---
+  duration_ms: 17.9122
+  type: 'test'
+  ...
+# Subtest: text upload native Node HTTP gemini
+ok 277 - text upload native Node HTTP gemini
+  ---
+  duration_ms: 21.7938
+  type: 'test'
+  ...
+# Subtest: request log stream status
+    # Subtest: records a native 2xx stream error as failed
+    ok 1 - records a native 2xx stream error as failed
+      ---
+      duration_ms: 14.787
+      type: 'test'
+      ...
+    1..1
+ok 278 - request log stream status
+  ---
+  duration_ms: 17.0953
+  type: 'suite'
+  ...
+# Subtest: bounded upstream error materialization
+    # Subtest: preserves only explicitly trusted gateway-generated errors
+    ok 1 - preserves only explicitly trusted gateway-generated errors
+      ---
+      duration_ms: 130.5341
+      type: 'test'
+      ...
+    # Subtest: cancels an oversized body without Content-Length and returns a fixed gateway error
+    ok 2 - cancels an oversized body without Content-Length and returns a fixed gateway error
+      ---
+      duration_ms: 6.4101
+      type: 'test'
+      ...
+    # Subtest: keeps ordinary bounded upstream errors intact
+    ok 3 - keeps ordinary bounded upstream errors intact
+      ---
+      duration_ms: 4.7694
+      type: 'test'
+      ...
+    # Subtest: renders provider errors in Responses and Anthropic skins
+    ok 4 - renders provider errors in Responses and Anthropic skins
+      ---
+      duration_ms: 2.8421
+      type: 'test'
+      ...
+    1..4
+ok 279 - bounded upstream error materialization
+  ---
+  duration_ms: 145.0984
+  type: 'suite'
+  ...
+1..279
+# tests 282
+# suites 2
+# pass 282
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 5449.3395

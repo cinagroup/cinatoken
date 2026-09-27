@@ -270,7 +270,7 @@ test('a retrying HTTP intermediary can turn one admitted Gateway fetch into two 
         assert.deepEqual(Buffer.from(replayBody, 'utf8'), receivedBytes,
           'synthetic JSON must retain every byte when converted to a replayable body');
         // Deliberately use a default-follow transport to show the unobservable
-        // inner hop. The Gateway's own fetch has redirect: 'error'.
+        // inner hop. The Gateway's own fetch has redirect: 'manual'.
         // Node 22's fetch transfers a Buffer backing store on its first send, so
         // its 307 replay fails on a detached ArrayBuffer. This local JSON fixture
         // uses a byte-checked string; production upload handling is unchanged.

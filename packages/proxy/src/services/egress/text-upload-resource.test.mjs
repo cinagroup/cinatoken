@@ -45,7 +45,7 @@ for (const p of profiles) for (const stream of [false,true]) for (const mode of 
 test(`text upload ${p.name}/${stream?'sse':'json'}/${mode}`,{timeout:5000},async t=>{
   const parent=new AbortController(),body=input(p,mode==='partial'?'x'.repeat(200000):'中😀\n"\\\ud800',stream),expected=JSON.stringify(wire(p,body));let sends=0,reader;
   t.mock.method(globalThis,'fetch',async(_url,init)=>{
-    sends++;assert.ok(init.body instanceof ReadableStream);assert.equal(init.duplex,'half');assert.equal(init.redirect,'error');
+    sends++;assert.ok(init.body instanceof ReadableStream);assert.equal(init.duplex,'half');assert.equal(init.redirect,'manual');
     assert.equal(Number(new Headers(init.headers).get('Content-Length')),Buffer.byteLength(expected));
     if(mode==='full'){const chunks=[];for await(const chunk of init.body){assert.ok(chunk.byteLength<=65536);chunks.push(chunk);}assert.equal(Buffer.concat(chunks).toString(),expected);}
     if(mode==='cancel')await init.body.cancel();

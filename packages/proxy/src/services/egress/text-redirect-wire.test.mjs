@@ -8,6 +8,7 @@ import {dispatchGeminiRoute} from './gemini-driver.ts';
 import {proxyChatCompletions,proxyResponses,proxyAnthropicMessages,proxyGeminiContent} from '../proxy.ts';
 import {createRequestDispatchBudget} from '../request-dispatch-budget.ts';
 import {resetProviderCircuitStateForTests} from '../provider-circuit-breaker.ts';
+import {materializeNonOkResponse} from '../request-log-record-status.ts';
 
 // Real Node fetch and HTTP sockets, synthetic credentials only. This does not
 // emulate Workers cancellation or prove financial persistence / heap capacity.
@@ -36,7 +37,7 @@ async function wire(t,status,sameOrigin=false){
   const receive=(kind,req,res)=>{
     const row={kind,method:req.method,bytes:0,credentialPresent:Boolean(req.headers.authorization||req.headers['x-api-key']||new URL(req.url,'http://localhost').searchParams.has('key'))};
     hits.push(row);req.on('data',chunk=>{row.bytes+=chunk.length;if(row.bytes>4096)req.destroy();});req.on('end',()=>{
-      if(kind==='origin'&&status>=300&&status<400){res.writeHead(status,{Location:destination+'/sink'});res.end();}
+      if(kind==='origin'&&status>=300&&status<400){res.writeHead(status,{Location:destination+'/sink',ETag:'synthetic-cache-validator'});res.end();}
       else {res.writeHead(kind==='sink'?400:status,{'Content-Type':'application/json'});res.end('{"error":{"message":"synthetic rejection"}}');}
     });
   };
@@ -50,9 +51,9 @@ async function wire(t,status,sameOrigin=false){
     assert.ok([base,sinkOrigin].includes(url.origin),'No external transport allowed');
     return nativeFetch(input,init);
   });
-  return {base:base+'/v1',hits};
+  return {base:base+'/v1',hits,destination};
 }
-for(const p of profiles)for(const status of [301,302,303,307,308])for(const stream of [false,true])for(const sameOrigin of [false,true])
+for(const p of profiles)for(const status of [301,302,303,304,307,308])for(const stream of [false,true])for(const sameOrigin of [false,true])
 test(`wire redirect blocked: ${p.name} ${status} stream=${stream} sameOrigin=${sameOrigin}`,{timeout:10000},async t=>{
   const f=await wire(t,status,sameOrigin),budget=createRequestDispatchBudget();let result,error;
   try{result=await p.direct(route(p,f.base),{messages:[],input:'synthetic',stream},undefined,undefined,undefined,async()=>budget.consume());}
@@ -61,17 +62,37 @@ test(`wire redirect blocked: ${p.name} ${status} stream=${stream} sameOrigin=${s
   t.diagnostic(JSON.stringify({originRequests:f.hits.filter(h=>h.kind==='origin').length,redirectRequests:f.hits.filter(h=>h.kind==='sink').length,permits:budget.snapshot().permitsConsumed}));
   assert.equal(f.hits.filter(h=>h.kind==='sink').length,0,'No unbudgeted redirect GET/POST, body or credential forwarding');
   assert.equal(f.hits.length,1);assert.equal(f.hits[0].method,'POST');assert.ok(f.hits[0].bytes>0);
-  assert.equal(budget.snapshot().permitsConsumed,1);assert.equal(error?.upstreamOutcomeUnknown,true);
+  assert.equal(budget.snapshot().permitsConsumed,1);assert.equal(error,undefined);assert.equal(result?.response.status,status);
+  assert.equal(result?.meta?.upstreamOutcomeUnknown,true);assert.equal(result?.meta?.failoverForbidden,true);
 });
-for(const p of profiles)for(const count of [4,40])for(const status of [307,308])
+for(const p of profiles)for(const count of [4,40])for(const status of [304,307,308])
 test(`redirect cannot become another model/key attempt: ${p.name} ${status} candidates=${count}`,{timeout:10000},async t=>{
   resetProviderCircuitStateForTests();const f=await wire(t,status),budget=createRequestDispatchBudget();
   for(const method of ['log','warn','error'])t.mock.method(console,method,()=>{});
   const result=await p.proxy({},Array.from({length:count},(_,i)=>route(p,f.base,i)),{messages:[],input:'synthetic'},undefined,
-    {affinityKey:'',tierKeyPrefix:'',strategy:'weight_priority',dispatchBudget:budget});
+    {affinityKey:'',tierKeyPrefix:'',strategy:'weight_priority',dispatchBudget:budget,
+      ...(status===304?{requestDeadlineAtMs:Date.now()+5000}:{})});
   await result.response.body?.cancel();await result.usagePromise;
   assert.equal(f.hits.filter(h=>h.kind==='sink').length,0);assert.equal(f.hits.length,1);
   assert.equal(budget.snapshot().permitsConsumed,1);assert.equal(result.meta?.upstreamOutcomeUnknown,true);assert.equal(result.meta?.failoverForbidden,true);
+  if(status===304){
+    assert.equal(result.response.status,304);assert.equal(result.response.body,null);
+    assert.equal(result.response.headers.get('Location'),f.destination+'/sink');
+    assert.equal(result.response.headers.get('ETag'),'synthetic-cache-validator');
+    const publicError=await materializeNonOkResponse(result.response);
+    assert.equal(publicError.response.status,502);
+    assert.equal(publicError.response.headers.get('Location'),null);
+    assert.equal(publicError.response.headers.get('ETag'),null);
+    assert.equal((await publicError.response.json()).error.metadata.error_type,'provider_unavailable');
+    assert.equal(result.meta.upstreamOutcomeUnknown,true);assert.equal(result.meta.failoverForbidden,true);
+  }
+});
+test('trusted 304 error materialization preserves null body and status without a constructor exception',async()=>{
+  const result=await materializeNonOkResponse(new Response(null,{status:304,headers:{ETag:'trusted-cache-validator'}}),
+    {trustedGatewayError:true});
+  assert.equal(result.response.status,304);assert.equal(result.response.body,null);
+  assert.equal(result.response.headers.get('ETag'),'trusted-cache-validator');
+  assert.equal(result.response.headers.get('Cache-Control'),'no-store');assert.equal(result.errorBodyText,'');
 });
 for(const p of profiles)for(const count of [4,40])for(const status of [429,503])
 test(`sent POST rejection respects replay boundary: ${p.name} ${status} candidates=${count}`,{timeout:10000},async t=>{

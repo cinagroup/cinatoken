@@ -1,0 +1,103 @@
+{
+  "schema": "disabled-reviewed-holder-redirect-risk-v1",
+  "recordedAtUtc": "2026-09-27T08:48:16.722Z",
+  "discoveredFromCommit": "94c12c1e37e7346330486cf9a3a3246af00d95c5",
+  "evidence": {
+    "log": ".wrangler/publish-20260927/github-dispatch-94c12c1e-full.log",
+    "error": "Invalid redirect value, must be one of follow or manual; error is not implemented at the edge",
+    "testedPath": "Ordinary OpenAI driver native Worker fetch; zero physical provider requests",
+    "holderPathsIndividuallyExecutedByThisReview": false
+  },
+  "risks": [
+    {
+      "path": "packages/proxy/src/services/complete-chat-credential-free-dispatch-v400.ts",
+      "line": 124,
+      "operation": "Constructs Service Binding request with redirect:error after quote/admission acknowledgements",
+      "caller": "packages/proxy/src/services/credential-free-chat-ingress-v401.ts:283",
+      "activation": {
+        "flag": "CREDENTIAL_FREE_CHAT_INGRESS_V401_ENABLED",
+        "enabledValue": "reviewed-v1",
+        "default": "Undefined skips middleware at credential-free-chat-ingress-v401.ts:228; any other defined value rejects at :239",
+        "productionConfigFlagPresent": false,
+        "productionConfigPaths": [
+          "packages/proxy/wrangler.jsonc",
+          "packages/proxy/wrangler.base.jsonc"
+        ]
+      },
+      "conclusion": "Strong static workerd RequestInit compatibility risk in disabled profile; not independently executed by this audit"
+    },
+    {
+      "path": "packages/proxy/src/services/complete-chat-holder-dispatch-v385.ts",
+      "line": 200,
+      "operation": "Constructs Service Binding request with redirect:error",
+      "activation": {
+        "flag": null,
+        "default": "Dormant review-only factory; no non-test production TS caller",
+        "factory": "createCompleteChatHolderDispatchV385",
+        "contractCommentLine": 111
+      },
+      "conclusion": "Strong static workerd RequestInit compatibility risk; no currently registered production route"
+    },
+    {
+      "path": "packages/proxy/src/services/private-complete-text-holder-v365.ts",
+      "line": 427,
+      "operation": "Actual physical upstream fetch has redirect:error after grant, custody and send-start",
+      "callers": [
+        "private-complete-text-observed-holder-v384.ts -> runtime/complete-text-holder-worker-v390.ts",
+        "private-complete-text-response-holder-v392.ts -> runtime/complete-text-response-holder-worker-v394.ts"
+      ],
+      "activation": {
+        "flag": "COMPLETE_TEXT_HOLDER_ENABLED",
+        "enabledValue": "reviewed-v1",
+        "gate": "packages/proxy/src/runtime/complete-text-holder-worker-v390.ts:244",
+        "defaultResult": "503 without touching reader role database",
+        "separateConfigs": [
+          "packages/proxy/wrangler.complete-text-holder-v390.jsonc",
+          "packages/proxy/wrangler.complete-text-response-holder-v394.jsonc"
+        ],
+        "configuredValue": "disabled",
+        "workersDev": false,
+        "routes": [],
+        "productionCoreProxyChainAdminDeployIncludesTheseSeparateWorkers": false
+      },
+      "conclusion": "Same incompatible physical-fetch redirect option as the actual failing native test; disabled separate Workers remain outside this release activation"
+    }
+  ],
+  "recommendedDisposition": "Record known disabled-profile compatibility risk separately. Before any future reviewed activation, adapt transport contract to workerd-supported manual redirects and run actual Worker transport and financial no-leak/one-send gates.",
+  "currentRuntimeFixScope": "Only the four ordinary egress drivers are authorized in this round; no holder enable flags, role bindings, grants, SQL or separate Worker deployment added.",
+  "sourcePins": [
+    {
+      "path": "packages/proxy/src/services/complete-chat-credential-free-dispatch-v400.ts",
+      "sha256": "93c86c8168df429307b00857ce4b57687143f518ea8de4a9afcf6e496ff3a0d6"
+    },
+    {
+      "path": "packages/proxy/src/services/credential-free-chat-ingress-v401.ts",
+      "sha256": "c9a3567e6c0ae98e2a1316795b7c5a0cb98804c53213f3d45e84b5afc19163d6"
+    },
+    {
+      "path": "packages/proxy/src/services/complete-chat-holder-dispatch-v385.ts",
+      "sha256": "edeadc4bfde6ff9b6507fb5cdf68b8edf1c1af8b0430bcba47b104180092a2c3"
+    },
+    {
+      "path": "packages/proxy/src/services/private-complete-text-holder-v365.ts",
+      "sha256": "ed6c6d7c509712998a958cf78b658fd41ba3eb24eea446fb8b45740d560fd4db"
+    },
+    {
+      "path": "packages/proxy/src/runtime/complete-text-holder-worker-v390.ts",
+      "sha256": "07f1d75e887b0e9935bdd957ee61dcf71e638f7b9323e9192bd8a72cca8244dd"
+    },
+    {
+      "path": "packages/proxy/src/runtime/complete-text-response-holder-worker-v394.ts",
+      "sha256": "1fca838580a959465c1049ad4ac6027904cdd87df2538303e646ff8e234a847a"
+    },
+    {
+      "path": "packages/proxy/wrangler.complete-text-holder-v390.jsonc",
+      "sha256": "1d50d58579488c26cad4d21a58b100b1b1be1ba8cd20ae0fb4633230901f7285"
+    },
+    {
+      "path": "packages/proxy/wrangler.complete-text-response-holder-v394.jsonc",
+      "sha256": "7ddf575729b7b35adc7317a5a54e84bdf88825240670c575f4a0ef95d4e96909"
+    }
+  ],
+  "limitation": "Static dormant-holder review does not prove successful future activation, committed-role cleanup, physical-send outcome or request/Worker resource lifecycle."
+}

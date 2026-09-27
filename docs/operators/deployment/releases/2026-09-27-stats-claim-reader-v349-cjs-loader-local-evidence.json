@@ -1,0 +1,190 @@
+{
+  "schema": "v349-real-admin-cjs-loader-successor-local-verification-v1",
+  "recordedAtUtc": "2026-09-27T08:58:02.768Z",
+  "status": "PASS",
+  "historicalBaseCommit": "94c12c1e37e7346330486cf9a3a3246af00d95c5",
+  "rootCause": "Node22+tsx loads the Admin package as CommonJS; the historical named ESM import failed during module instantiation before PG startup. The real reader function is available on the default module export.",
+  "patchScope": {
+    "source": {
+      "path": "scripts/db/cutover/postgres-shared-key-stats-claim-reader-v349-cjs-loader-successor.native.test.mjs",
+      "sha256": "82cbba9203902cdfdd2cebe686f5a2f9ce12502b952f4d299d5a415fb5fefab7"
+    },
+    "productionReaderEdited": false,
+    "coreBuildRun": false,
+    "productionSqlOrAclEdited": false,
+    "fixtureChanges": [
+      "Import the real Admin default CommonJS module, destructure the signed reader, and assert it is a function.",
+      "Assert the frozen historical fixture SHA; preserve all original SQL, role, financial, ownership, nonce replay, and rollback assertions.",
+      "Write a unique owned local machine report, preserving the historical C04 report."
+    ],
+    "workflow": "Only the step 99 native test literal changed to the successor; concurrent evidence upload changes preserved."
+  },
+  "localNative": {
+    "command": "Official portable Node22.23.2 --import tsx --test v349-cjs-loader-successor with explicit existing portable PG18.6 binary path",
+    "nodeVersion": "v22.23.2",
+    "binaryVersion": "postgres (PostgreSQL) 18.6",
+    "tests": 1,
+    "pass": 1,
+    "fail": 0,
+    "skipped": 0,
+    "stages": 20,
+    "allStagesPass": true,
+    "cleanup": "PASS",
+    "observedExitCode": 0,
+    "scope": "Only a fresh owned loopback cluster; no Docker, production connection, remote provider, or other optional native gate.",
+    "rawMachineReport": {
+      "path": ".wrangler/staging/pg-native-dispatch-tests/report-stats-claim-reader-v349-cjs-loader-successor-57c0d767-2bc0-4803-b8d8-0cd9ce90e306.json",
+      "sha256": "2af14dd01567ec36b07c9c9c501a1aa60ed946d60247ac95c4fb01d47262ec06"
+    },
+    "committedMachineReport": {
+      "path": "docs/operators/deployment/releases/2026-09-27-stats-claim-reader-v349-cjs-loader-local-report.json",
+      "sha256": "2af14dd01567ec36b07c9c9c501a1aa60ed946d60247ac95c4fb01d47262ec06"
+    },
+    "byteExactReportCopy": true,
+    "log": {
+      "path": ".wrangler/publish-20260927/stats-claim-reader-v349-cjs-loader-native-node22.log",
+      "sha256": "5d9c4b412c5b351b9e216988e18e540e6a5cc913b58f138262f1439193e8e191"
+    }
+  },
+  "lineage": {
+    "status": "PASS_STATIC_LINEAGE",
+    "historicalFixtureSha256": "095f8ec4748cd92e35f37b86891ef8762bc8b8b5ca65ab49abc55b067c1d9be9",
+    "successorFixtureSha256": "82cbba9203902cdfdd2cebe686f5a2f9ce12502b952f4d299d5a415fb5fefab7",
+    "originalAssertionsPreserved": true,
+    "originalSqlCallsPreserved": true,
+    "originalAppReaderCallsPreserved": true,
+    "originalStageOrderPreserved": true,
+    "counts": {
+      "assertionsBefore": 72,
+      "assertionsAfter": 74,
+      "sqlCallsBefore": 49,
+      "sqlCallsAfter": 49,
+      "stagesBefore": 19,
+      "stagesAfter": 20
+    },
+    "stages": [
+      "admin-commonjs-default-loader-resolves-real-signed-reader-export",
+      "formal-pg73-installed",
+      "quote-dispatch-outbox-and-consumer-installed",
+      "legacy-economic-and-pending-historical-sources-seeded",
+      "reader-install-requires-explicit-review-flag",
+      "signed-claim-and-bound-reader-default-off-install",
+      "reader-and-activation-fail-before-both-backfills",
+      "audited-read-replays-without-pending-credit-or-double-count",
+      "signed-reader-projects-audited-credit-and-committed-replay-denied",
+      "admin-reader-client-uses-dedicated-login-and-bound-function",
+      "explicit-rollback-after-disclosure-permits-replay-until-expiry",
+      "seller-key-and-audience-tampering-denied-by-bound-reader",
+      "valid-claim-cannot-project-another-seller-or-unowned-key",
+      "runtime-and-reader-direct-private-probes-denied",
+      "ready-row-and-backfill-cursor-drift-close-signed-reader",
+      "owner-transfer-excludes-historical-seller-credit-from-current-owner-view",
+      "post-transfer-credit-appears-only-for-new-owner",
+      "disabled-source-trigger-closes-reader",
+      "ordinary-runtime-can-forge-portal-session-and-user-mapping",
+      "broad-gateway-runtime-grant-rerun-does-not-expose-private-reader"
+    ],
+    "frozenPins": [
+      {
+        "path": "scripts/db/cutover/postgres-shared-key-stats-claim-reader-v349.native.test.mjs",
+        "sha256": "095f8ec4748cd92e35f37b86891ef8762bc8b8b5ca65ab49abc55b067c1d9be9",
+        "byteIdenticalTo94c": true
+      },
+      {
+        "path": "docs/developers/architecture/implementation-evidence/C04-stats-claim-reader-v349-results.json",
+        "sha256": "05b48b6d5e20b3dc201e288204175cbf6dd75fd1d5e3645e3eea9c40ca661dae",
+        "byteIdenticalTo94c": true
+      },
+      {
+        "path": "docs/developers/architecture/implementation-evidence/C04-stats-claim-reader-v349.md",
+        "sha256": "0ced12e5a61e40782afbcbc86942dda9d574ccc431a75a0f928fb295bdd67185",
+        "byteIdenticalTo94c": true
+      },
+      {
+        "path": "packages/admin/lib/shared-key-signed-stats-reader.ts",
+        "sha256": "b0e0b5f930a5558b1cde8d890464068df1c83df166781c4f7f920b6de3c62867",
+        "byteIdenticalTo94c": true
+      },
+      {
+        "path": "packages/core/migrations-proposals/postgres/shared-key-stats-claim-reader-v349.sql",
+        "sha256": "f60c9a0d0fcd2351b003845d2151da3d3b5a1a744b6f2ea07c2bd753e64cf39a",
+        "byteIdenticalTo94c": true
+      }
+    ],
+    "scope": "Only real Admin CJS export loading, lineage, and new owned local report path changed; SQL, ACL, production reader, historical fixture, and historical reports unchanged.",
+    "staticProof": {
+      "path": ".wrangler/publish-20260927/stats-claim-reader-v349-cjs-loader-static-lineage.json",
+      "sha256": "b16f50a6e463e66feb8c1b8462b4ae401915a605861d1fc5ee3883551e4add35"
+    },
+    "independentReview": {
+      "path": ".wrangler/publish-20260927/v349-cjs-loader-successor-static-review.json",
+      "sha256": "8f99a000f79d689d339bdd977120ef9d676125c6b3336058bfcacddd9d5f61b3"
+    },
+    "firstLinuxFailure": {
+      "path": "docs/operators/deployment/releases/2026-09-27-stats-claim-reader-v349-first-linux-failed.log",
+      "sha256": "4a885e319a8a16ac770205c78c01bcca992447c29a38d0c9002577c560748184"
+    },
+    "failureWasBeforePgStartup": true,
+    "nativeTailImportReview": {
+      "path": ".wrangler/publish-20260927/94c-native-tail-module-import-review.json",
+      "sha256": "009b8e1df432a5771c3680f8e7a42d724cde41a379c23d6c1855c8d00d9bc91b"
+    },
+    "nativeTail100Through113RunLocally": false
+  },
+  "runtimeInvariants": {
+    "baseCommit": "94c12c1e37e7346330486cf9a3a3246af00d95c5",
+    "coreCorpus": {
+      "files": 327,
+      "sha256": "477233bf3c31f1ef3ca847ba3e36179fef50f85e1ba3c909a847706bff2800b0",
+      "byteIdenticalToBase": true,
+      "changedPaths": []
+    },
+    "formalPostgres": {
+      "files": 73,
+      "sha256": "23afef61a8a670e0af8c90e3a138f522e6b283b454e380a592bf85bca83108dc",
+      "byteIdenticalToBase": true,
+      "changedPaths": []
+    },
+    "coreNodeBundle": {
+      "path": "packages/core/dist/index.js",
+      "sha256": "527f77bf141c0167ace4bfa0a9646c6cbd5df3c47a6e7d9b2d0efd25551b989b",
+      "ignoredGeneratedArtifact": true,
+      "unchangedFromPriorFrozenLocalBundle": true
+    }
+  },
+  "sourcePins": {
+    "formalMigrationCorpus": "23afef61a8a670e0af8c90e3a138f522e6b283b454e380a592bf85bca83108dc",
+    "quoteProposal": "1249a7ff07f95b48c7b45a41833c96c9a028e4bfe3a47e44e9dc6b72c3c77246",
+    "dispatchProposal": "c89c79e803fd69a2d09d44b33be3301aeb8aa4ed72c5dff5518439ec29fafb83",
+    "outboxProposal": "f92835c72ff02cba23879ed90ad640832455ccb98764f28fe4ee04ce52aab1ac",
+    "consumerProposal": "66fbd89c3453320284133de06d72793d4e1d2f68aaf756087857c18493e955db",
+    "guardProposal": "454a720f9a6b7410e0aad99c2aaa2eb3327fbbac8c86bb3e3cd4537131e6611b",
+    "storeProposal": "72dc6bfdcfd1b369e8465374168995f7680ee8593a037496487a7fdd7afd1d4e",
+    "readerProposal": "1a9cc67854e71e6245aa6ea0c88b96ee666bbbbfe53cfe5d2c8a3d9977211b5c",
+    "claimProposal": "6ded328640ab6c63a7a0e8a20572b760df9ca52b4aeb1b90eb3f7edd8485ff54",
+    "boundProposal": "f60c9a0d0fcd2351b003845d2151da3d3b5a1a744b6f2ea07c2bd753e64cf39a",
+    "nativeFixture": "82cbba9203902cdfdd2cebe686f5a2f9ce12502b952f4d299d5a415fb5fefab7",
+    "adminSignedReader": "b0e0b5f930a5558b1cde8d890464068df1c83df166781c4f7f920b6de3c62867",
+    "adminSellerRoute": "807060ff2618b282d801426de20b140570e70856a4c127a1cb727e0ee8d82ada",
+    "runtimeGrant": "99fd6bded1f568a62339f3774fec8e9ce7e69a9423fdf625b46cf7794b8553ea",
+    "historicalFixture": "095f8ec4748cd92e35f37b86891ef8762bc8b8b5ca65ab49abc55b067c1d9be9"
+  },
+  "toolProvenance": {
+    "officialPortableNode22Binary": {
+      "path": ".wrangler/publish-20260927/node22-diagnostic/node-v22.23.2-win-x64/node.exe",
+      "sha256": "0d0f5e39f9f3d9587bc19f73eab3c2c9c4903fd02d6dbf9c853dd81b3d95fad4"
+    },
+    "archiveVerification": {
+      "path": ".wrangler/publish-20260927/node22-diagnostic/verified-artifact.json",
+      "sha256": "b104eb96fb48cf9f81cc61a396584a96cb06f3b7dde67649a84672ae2be94184"
+    }
+  },
+  "limitations": [
+    "Loader-only successor: no Admin reader, production guard, SQL proposal, formal migration, role, or ACL change.",
+    "Review-only SQL and local application reader only; no independent production issuer, secret provisioning, formal migration or production activation.",
+    "Full-history readiness audit is tested on a small fixture, not benchmarked for production data volume.",
+    "The dedicated direct stats-reader LOGIN is the only caller. Ordinary runtime and direct verifier access remain denied.",
+    "Nonce uniqueness is only committed-transaction replay protection: explicit rollback after disclosure permits replay until the short claim expiry.",
+    "This local Windows Node22+PG18.6 result does not claim fresh Linux CI PASS or execution of later native steps 100 through 113."
+  ]
+}

@@ -420,7 +420,7 @@ async function failoverDispatchWithDeadline(
 				headers.delete('Content-Length');
 				headers.delete('Content-Encoding');
 				headers.delete('Transfer-Encoding');
-				response = new Response(text, { status: result.response.status, statusText: result.response.statusText, headers });
+				response = new Response(result.response.status === 304 ? null : text, { status: result.response.status, statusText: result.response.statusText, headers });
 			} catch (error) {
 				if (!(error instanceof UpstreamResponseBodyTooLargeError)) throw error;
 				response = gatewayErrorResponse({
