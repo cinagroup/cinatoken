@@ -1,0 +1,99 @@
+2026-09-27T10:11:03.1779109Z ##[group]Run node --import tsx --test scripts/staging/chat-holder-binding-v364.node.test.mjs scripts/staging/chat-holder-binding-v364-workerd-date-successor.test.mjs
+2026-09-27T10:11:03.1780397Z [36;1mnode --import tsx --test scripts/staging/chat-holder-binding-v364.node.test.mjs scripts/staging/chat-holder-binding-v364-workerd-date-successor.test.mjs[0m
+2026-09-27T10:11:03.1845069Z shell: /usr/bin/bash -e {0}
+2026-09-27T10:11:03.1845361Z ##[endgroup]
+2026-09-27T10:11:03.2383265Z TAP version 13
+2026-09-27T10:11:04.1473003Z # Subtest: v364 configs keep the synthetic holder private and bind only the named holder
+2026-09-27T10:11:04.1500576Z ok 1 - v364 configs keep the synthetic holder private and bind only the named holder
+2026-09-27T10:11:04.1504685Z   ---
+2026-09-27T10:11:04.1505532Z   duration_ms: 1.783992
+2026-09-27T10:11:04.1508689Z   type: 'test'
+2026-09-27T10:11:04.1509871Z   ...
+2026-09-27T10:11:04.6471539Z # Subtest: private Worker rejects oversized, foreign, and malformed six-field requests without disclosing holder data
+2026-09-27T10:11:04.6477269Z not ok 2 - private Worker rejects oversized, foreign, and malformed six-field requests without disclosing holder data
+2026-09-27T10:11:04.6477964Z   ---
+2026-09-27T10:11:04.6478420Z   duration_ms: 354.012908
+2026-09-27T10:11:04.6479101Z   type: 'test'
+2026-09-27T10:11:04.6480086Z   location: '/home/runner/work/cinatoken/cinatoken/packages/proxy/scripts/staging/chat-holder-binding-v364-workerd-date-successor.test.mjs:121:1'
+2026-09-27T10:11:04.6481326Z   failureType: 'testCodeFailure'
+2026-09-27T10:11:04.6482149Z   error: 'Failed to parse URL from [object Request]'
+2026-09-27T10:11:04.6482695Z   code: 'ERR_TEST_FAILURE'
+2026-09-27T10:11:04.6483196Z   name: 'TypeError'
+2026-09-27T10:11:04.6483635Z   stack: |-
+2026-09-27T10:11:04.6484626Z     new Request (/home/runner/work/cinatoken/cinatoken/node_modules/undici/lib/web/fetch/request.js:136:15)
+2026-09-27T10:11:04.6486186Z     new _Request (/home/runner/work/cinatoken/cinatoken/node_modules/miniflare/src/http/request.ts:34:3)
+2026-09-27T10:11:04.6487471Z     ProxyStubHandler.#fetcherFetchCall (/home/runner/work/cinatoken/cinatoken/node_modules/miniflare/src/plugins/core/proxy/client.ts:732:23)
+2026-09-27T10:11:04.6489455Z     ProxyStubHandler.#call (/home/runner/work/cinatoken/cinatoken/node_modules/miniflare/src/plugins/core/proxy/client.ts:635:52)
+2026-09-27T10:11:04.6491459Z     Proxy.fetch (/home/runner/work/cinatoken/cinatoken/node_modules/miniflare/src/plugins/core/proxy/client.ts:618:25)
+2026-09-27T10:11:04.6494091Z     Object.post (file:///home/runner/work/cinatoken/cinatoken/packages/proxy/scripts/staging/chat-holder-binding-v364-workerd-date-successor.test.mjs:99:20)
+2026-09-27T10:11:04.6496905Z     TestContext.<anonymous> (file:///home/runner/work/cinatoken/cinatoken/packages/proxy/scripts/staging/chat-holder-binding-v364-workerd-date-successor.test.mjs:136:30)
+2026-09-27T10:11:04.6509619Z     process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+2026-09-27T10:11:04.6510645Z     async Test.run (node:internal/test_runner/test:1054:7)
+2026-09-27T10:11:04.6511250Z     async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+2026-09-27T10:11:04.6511858Z   ...
+2026-09-27T10:11:04.9113871Z # Subtest: one holder Response streams through the Service Binding before its final chunk is released
+2026-09-27T10:11:04.9120326Z not ok 3 - one holder Response streams through the Service Binding before its final chunk is released
+2026-09-27T10:11:04.9121523Z   ---
+2026-09-27T10:11:04.9128744Z   duration_ms: 419.903411
+2026-09-27T10:11:04.9129275Z   type: 'test'
+2026-09-27T10:11:04.9130078Z   location: '/home/runner/work/cinatoken/cinatoken/packages/proxy/scripts/staging/chat-holder-binding-v364-workerd-date-successor.test.mjs:146:1'
+2026-09-27T10:11:04.9131172Z   failureType: 'testCodeFailure'
+2026-09-27T10:11:04.9131679Z   error: 'Failed to parse URL from [object Request]'
+2026-09-27T10:11:04.9132321Z   code: 'ERR_TEST_FAILURE'
+2026-09-27T10:11:04.9133068Z   name: 'TypeError'
+2026-09-27T10:11:04.9133445Z   stack: |-
+2026-09-27T10:11:04.9134374Z     new Request (/home/runner/work/cinatoken/cinatoken/node_modules/undici/lib/web/fetch/request.js:136:15)
+2026-09-27T10:11:04.9135662Z     new _Request (/home/runner/work/cinatoken/cinatoken/node_modules/miniflare/src/http/request.ts:34:3)
+2026-09-27T10:11:04.9136930Z     ProxyStubHandler.#fetcherFetchCall (/home/runner/work/cinatoken/cinatoken/node_modules/miniflare/src/plugins/core/proxy/client.ts:732:23)
+2026-09-27T10:11:04.9138514Z     ProxyStubHandler.#call (/home/runner/work/cinatoken/cinatoken/node_modules/miniflare/src/plugins/core/proxy/client.ts:635:52)
+2026-09-27T10:11:04.9140301Z     Proxy.fetch (/home/runner/work/cinatoken/cinatoken/node_modules/miniflare/src/plugins/core/proxy/client.ts:618:25)
+2026-09-27T10:11:04.9142611Z     Object.post (file:///home/runner/work/cinatoken/cinatoken/packages/proxy/scripts/staging/chat-holder-binding-v364-workerd-date-successor.test.mjs:99:20)
+2026-09-27T10:11:04.9143981Z     TestContext.<anonymous> (file:///home/runner/work/cinatoken/cinatoken/packages/proxy/scripts/staging/chat-holder-binding-v364-workerd-date-successor.test.mjs:150:28)
+2026-09-27T10:11:04.9145126Z     process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+2026-09-27T10:11:04.9145675Z     async Test.run (node:internal/test_runner/test:1054:7)
+2026-09-27T10:11:04.9146205Z     async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+2026-09-27T10:11:04.9146617Z   ...
+2026-09-27T10:11:05.1670486Z # Subtest: response-body cancellation is observed inside the private holder
+2026-09-27T10:11:05.1676567Z not ok 4 - response-body cancellation is observed inside the private holder
+2026-09-27T10:11:05.1677319Z   ---
+2026-09-27T10:11:05.1677559Z   duration_ms: 256.920425
+2026-09-27T10:11:05.1677970Z   type: 'test'
+2026-09-27T10:11:05.1679292Z   location: '/home/runner/work/cinatoken/cinatoken/packages/proxy/scripts/staging/chat-holder-binding-v364-workerd-date-successor.test.mjs:171:1'
+2026-09-27T10:11:05.1680600Z   failureType: 'testCodeFailure'
+2026-09-27T10:11:05.1681263Z   error: 'Failed to parse URL from [object Request]'
+2026-09-27T10:11:05.1681854Z   code: 'ERR_TEST_FAILURE'
+2026-09-27T10:11:05.1682498Z   name: 'TypeError'
+2026-09-27T10:11:05.1682883Z   stack: |-
+2026-09-27T10:11:05.1683758Z     new Request (/home/runner/work/cinatoken/cinatoken/node_modules/undici/lib/web/fetch/request.js:136:15)
+2026-09-27T10:11:05.1685224Z     new _Request (/home/runner/work/cinatoken/cinatoken/node_modules/miniflare/src/http/request.ts:34:3)
+2026-09-27T10:11:05.1687005Z     ProxyStubHandler.#fetcherFetchCall (/home/runner/work/cinatoken/cinatoken/node_modules/miniflare/src/plugins/core/proxy/client.ts:732:23)
+2026-09-27T10:11:05.1688949Z     ProxyStubHandler.#call (/home/runner/work/cinatoken/cinatoken/node_modules/miniflare/src/plugins/core/proxy/client.ts:635:52)
+2026-09-27T10:11:05.1690661Z     Proxy.fetch (/home/runner/work/cinatoken/cinatoken/node_modules/miniflare/src/plugins/core/proxy/client.ts:618:25)
+2026-09-27T10:11:05.1692768Z     Object.post (file:///home/runner/work/cinatoken/cinatoken/packages/proxy/scripts/staging/chat-holder-binding-v364-workerd-date-successor.test.mjs:99:20)
+2026-09-27T10:11:05.1694336Z     TestContext.<anonymous> (file:///home/runner/work/cinatoken/cinatoken/packages/proxy/scripts/staging/chat-holder-binding-v364-workerd-date-successor.test.mjs:175:28)
+2026-09-27T10:11:05.1695322Z     process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+2026-09-27T10:11:05.1695867Z     async Test.run (node:internal/test_runner/test:1054:7)
+2026-09-27T10:11:05.1696391Z     async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+2026-09-27T10:11:05.1697021Z   ...
+2026-09-27T10:11:05.2010196Z # Subtest: v364 in-process contract: private holder bounds and validates six fields; gateway forwards no auth or provider data
+2026-09-27T10:11:05.2012996Z ok 5 - v364 in-process contract: private holder bounds and validates six fields; gateway forwards no auth or provider data
+2026-09-27T10:11:05.2014221Z   ---
+2026-09-27T10:11:05.2014638Z   duration_ms: 71.796189
+2026-09-27T10:11:05.2015125Z   type: 'test'
+2026-09-27T10:11:05.2015539Z   ...
+2026-09-27T10:11:05.2016848Z # Subtest: v364 in-process contract: one Response yields a first chunk before holder release and cancellation reaches source
+2026-09-27T10:11:05.2018891Z ok 6 - v364 in-process contract: one Response yields a first chunk before holder release and cancellation reaches source
+2026-09-27T10:11:05.2019975Z   ---
+2026-09-27T10:11:05.2020328Z   duration_ms: 58.550089
+2026-09-27T10:11:05.2020751Z   type: 'test'
+2026-09-27T10:11:05.2021102Z   ...
+2026-09-27T10:11:05.2021389Z 1..6
+2026-09-27T10:11:05.2021605Z # tests 6
+2026-09-27T10:11:05.2021815Z # suites 0
+2026-09-27T10:11:05.2022389Z # pass 3
+2026-09-27T10:11:05.2022610Z # fail 3
+2026-09-27T10:11:05.2022819Z # cancelled 0
+2026-09-27T10:11:05.2023065Z # skipped 0
+2026-09-27T10:11:05.2023271Z # todo 0
+2026-09-27T10:11:05.2023527Z # duration_ms 1979.144275
+2026-09-27T10:11:05.2085913Z ##[error]Process completed with exit code 1.

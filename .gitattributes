@@ -17,3 +17,5 @@ docs/operators/deployment/releases/2026-09-27-replay-reservations-backend-lifecy
 docs/operators/deployment/releases/2026-09-27-v364-workerd-date-successor-first-linux-failed.txt -text
 docs/operators/deployment/releases/2026-09-27-v364-workerd-date-successor-selected-local-tests.txt -text
 docs/operators/deployment/releases/2026-09-27-v364-workerd-date-successor-node-only-bundle-report.json -text
+docs/operators/deployment/releases/2026-09-27-v364-miniflare-input-successor-first-linux-failed.txt -text
+docs/operators/deployment/releases/2026-09-27-v364-miniflare-input-successor-node-boundary-report.json -text

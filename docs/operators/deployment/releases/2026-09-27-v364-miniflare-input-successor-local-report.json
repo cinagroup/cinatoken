@@ -1,0 +1,73 @@
+{
+  "schema": "v364-miniflare-input-successor-local-v1",
+  "recordedAtUtc": "2026-09-27T10:16:54.617Z",
+  "status": "PARTIAL_NODE_BOUNDARY_PASS_NATIVE_LINUX_PENDING",
+  "predecessorCommit": "a0cbbac7ec3f99acc19c0a8af2312ea3d99b16b5",
+  "successor": {
+    "path": "packages/proxy/scripts/staging/chat-holder-binding-v364-miniflare-input-successor.test.mjs",
+    "sha256": "961cd304321d1bbcbe270448c9fdb9366b865d6d7caf569dea25105b8e501351"
+  },
+  "previousDateSuccessorPreserved": {
+    "path": "packages/proxy/scripts/staging/chat-holder-binding-v364-workerd-date-successor.test.mjs",
+    "sha256": "89be9986165a6b9ee47e3685a5bea6c584858a10a6530fcf317b39c807a4bd77"
+  },
+  "delta": {
+    "byteExactInverse": true,
+    "assertions": 39,
+    "testTitles": 4,
+    "fullTestCallBodiesUnchanged": true,
+    "change": "Only fixture.post passes URL string and unchanged init directly to gateway.fetch; adds explanatory comments",
+    "preserved": "Body bytes, Content-Type, POST method, target URL, bindings, flags, cancellation/stream assertions and local fixtureCompatibilityDate2026-09-04"
+  },
+  "actualNodeBoundary": {
+    "path": "docs/operators/deployment/releases/2026-09-27-v364-miniflare-input-successor-node-boundary-report.json",
+    "sha256": "ec46a3b4f0697692161d4e803ff61c582be65dece8d5a5108b1b8dcf91a297aa",
+    "node": "v24.14.1",
+    "status": "NODE_ONLY_ACTUAL_MINIFLARE_INPUT_BOUNDARY_PASS",
+    "oldGlobalRequest": {
+      "result": "EXPECTED_FAILURE",
+      "error": {
+        "name": "TypeError",
+        "message": "Failed to parse URL from [object Request]",
+        "cause": "Invalid URL"
+      }
+    },
+    "newUrlAndSameInit": {
+      "result": "PASS",
+      "url": "https://gateway.fixture.invalid/fixture/complete-text",
+      "method": "POST",
+      "headers": [
+        [
+          "content-type",
+          "application/json"
+        ]
+      ],
+      "bodyBytes": 160,
+      "bodySha256": "af7cf3ec0a0f52b49b92e1d00ff16faf3543cde02ab6b062975dcd9c68ec9c57",
+      "byteEqualToOriginal": true
+    },
+    "miniflarePackageVersion": "5.20260828.0-alpha",
+    "undiciPackageVersion": "7.29.0",
+    "versionsMatchImmutableLock": true,
+    "miniflarePackageMatchesActualLinuxArtifact": true,
+    "nativeStarted": false,
+    "providerCalls": 0
+  },
+  "historicalLinuxFailure": {
+    "ciReport": {
+      "path": "docs/operators/deployment/releases/2026-09-27-a0cbbac7-linux-proxy-ci-report.json",
+      "sha256": "708cab00ec7e624a900e0836c65cc60506464c978e8fc5e024da5356f4fa99bd"
+    },
+    "extractedLog": {
+      "path": "docs/operators/deployment/releases/2026-09-27-v364-miniflare-input-successor-first-linux-failed.txt",
+      "sha256": "64e3de61b7eec5a9587a83c85b77fd55fcd1a200445fb1ba5732cfb57f48015b"
+    },
+    "message": "Failed to parse URL from [object Request]"
+  },
+  "requiredLinuxCommand": "node --import tsx --test packages/proxy/scripts/staging/chat-holder-binding-v364.node.test.mjs packages/proxy/scripts/staging/chat-holder-binding-v364-miniflare-input-successor.test.mjs",
+  "limitations": [
+    "The local actual constructor proof used Node24.14.1; the full LinuxNode22 native binding three cases remain pending.",
+    "Native tests retain the local compatibilityDate2026-09-04 and cannot certify frozen JSONC2026-09-25 semantics.",
+    "No production runtime/default-off holder, old source/config/report, dependency, workflow, checklist, build or financial/SQL authority change. No repeat Windows native attempt."
+  ]
+}

@@ -1,0 +1,49 @@
+{
+  "status": "NODE_ONLY_ACTUAL_MINIFLARE_INPUT_BOUNDARY_PASS",
+  "node": "v24.14.1",
+  "oldGlobalRequest": {
+    "result": "EXPECTED_FAILURE",
+    "error": {
+      "name": "TypeError",
+      "message": "Failed to parse URL from [object Request]",
+      "cause": "Invalid URL"
+    }
+  },
+  "newUrlAndSameInit": {
+    "result": "PASS",
+    "url": "https://gateway.fixture.invalid/fixture/complete-text",
+    "method": "POST",
+    "headers": [
+      [
+        "content-type",
+        "application/json"
+      ]
+    ],
+    "bodyBytes": 160,
+    "bodySha256": "af7cf3ec0a0f52b49b92e1d00ff16faf3543cde02ab6b062975dcd9c68ec9c57",
+    "byteEqualToOriginal": true
+  },
+  "miniflarePackageVersion": "5.20260828.0-alpha",
+  "undiciPackageVersion": "7.29.0",
+  "sourcePins": [
+    {
+      "path": "node_modules/miniflare/package.json",
+      "sha256": "d43d063fc65818a57e5df8c5503bcfddaef5320099d2479097b16b6cb7a5a288"
+    },
+    {
+      "path": "node_modules/miniflare/dist/src/index.js",
+      "sha256": "58ca83056cf67838add064edcbfd1d654ed204527b8eb01307ba208d7e59fa20"
+    },
+    {
+      "path": "node_modules/undici/package.json",
+      "sha256": "d2fb5736b5adad6a74c3fba9345d756258e1e953a3a2a13c03fca1bd6c9f6c52"
+    },
+    {
+      "path": "node_modules/undici/lib/web/fetch/request.js",
+      "sha256": "b4b36815f3c0d082ab8f413a27085f0b197f8cdf04880db15bf7d1f0084d780a"
+    }
+  ],
+  "nativeStarted": false,
+  "providerCalls": 0,
+  "limitation": "Actual locked Miniflare Request constructor boundary only on local Node24; native Service Binding cases on LinuxNode22 remain pending"
+}

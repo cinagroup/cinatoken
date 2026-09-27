@@ -1,0 +1,271 @@
+{
+  "schema": "a0cbbac7-linux-proxy-ci-v1",
+  "recordedAtUtc": "2026-09-27T10:16:54.611Z",
+  "status": "FULL_UNIT_AND_NATIVE_WORKER_PASS_DISPATCH_JOB_FAILED_AT_STEP27",
+  "commit": "a0cbbac7ec3f99acc19c0a8af2312ea3d99b16b5",
+  "githubRun": 36311481604,
+  "dispatchJob": 108598145117,
+  "url": "https://github.com/cinagroup/cinatoken/actions/runs/36311481604/job/108598145117",
+  "fullUnit": {
+    "step": 9,
+    "status": "PASS",
+    "tests": 4346,
+    "pass": 4346,
+    "fail": 0,
+    "skip": 0
+  },
+  "nativeWorker": {
+    "step": 10,
+    "status": "PASS",
+    "node": "v22.23.2",
+    "platform": "linux",
+    "executionScope": {
+      "expectedCases": 3,
+      "executedCases": 3,
+      "expectedNativeModes": 4,
+      "executedNativeModes": 4,
+      "nativeMatrixComplete": true
+    },
+    "cases": [
+      {
+        "name": "production Chat dispatch bundles into a native Worker with fixed loopback provider",
+        "status": "PASS",
+        "elapsedMs": 338.6129540000002
+      },
+      {
+        "name": "native Worker fetch never follows 307/308 or retries an unknown send; explicit 429 uses three permits",
+        "status": "PASS",
+        "elapsedMs": 517.7185600000003
+      },
+      {
+        "name": "a retrying HTTP intermediary can turn one admitted Gateway fetch into two physical provider POSTs",
+        "status": "PASS",
+        "elapsedMs": 44.821030000000064
+      }
+    ],
+    "nativeModes": [
+      {
+        "mode": "redirect307",
+        "result": {
+          "status": 307,
+          "permits": 1,
+          "unknown": true,
+          "failoverForbidden": true
+        },
+        "providerPosts": 1,
+        "redirectTargetPosts": 0
+      },
+      {
+        "mode": "redirect308",
+        "result": {
+          "status": 308,
+          "permits": 1,
+          "unknown": true,
+          "failoverForbidden": true
+        },
+        "providerPosts": 1,
+        "redirectTargetPosts": 0
+      },
+      {
+        "mode": "reset",
+        "result": {
+          "status": 502,
+          "permits": 1,
+          "unknown": true,
+          "failoverForbidden": true
+        },
+        "providerPosts": 1,
+        "redirectTargetPosts": 0
+      },
+      {
+        "mode": "reject429",
+        "result": {
+          "status": 502,
+          "permits": 3,
+          "unknown": false,
+          "failoverForbidden": true
+        },
+        "providerPosts": 3,
+        "redirectTargetPosts": 0
+      }
+    ],
+    "relay": {
+      "gatewayPermits": 1,
+      "relayPosts": 1,
+      "providerPosts": 2,
+      "repeatedBodyAndCredential": true,
+      "providerHits": [
+        {
+          "path": "/v1/chat/completions",
+          "method": "POST",
+          "body": "{\"messages\":[{\"role\":\"user\",\"content\":\"fixture\"}],\"model\":\"synthetic-model\"}",
+          "credential": "Bearer synthetic-relay-secret"
+        },
+        {
+          "path": "/sink",
+          "method": "POST",
+          "body": "{\"messages\":[{\"role\":\"user\",\"content\":\"fixture\"}],\"model\":\"synthetic-model\"}",
+          "credential": "Bearer synthetic-relay-secret"
+        }
+      ],
+      "relayErrors": []
+    },
+    "cleanup": [
+      {
+        "resource": "worker-provider",
+        "closed": true
+      },
+      {
+        "resource": "worker-provider",
+        "closed": true
+      },
+      {
+        "resource": "worker-runtime",
+        "closed": true
+      },
+      {
+        "resource": "relay-provider",
+        "closed": true
+      },
+      {
+        "resource": "relay",
+        "closed": true
+      }
+    ],
+    "cleanupErrors": [],
+    "machineReport": {
+      "path": "docs/operators/deployment/releases/2026-09-27-a0cbbac7-linux-worker-machine-report.json",
+      "sha256": "7994bbc550c800b5ceddc22ce00add4aa6d06c652718bd93e800c520e6821548",
+      "byteExactArtifactCopy": true
+    },
+    "artifact": {
+      "id": 10928982360,
+      "name": "native-worker-transport-evidence",
+      "sizeInBytes": 41877,
+      "githubAdvertisedDigest": "sha256:2433d63b57d77a5f63c7229a222ab308231f1cf01584181ade67424c6e9b0f36",
+      "uploadStep": 11,
+      "status": "SUCCESS",
+      "downloadedOnce": true
+    }
+  },
+  "sourceVerification": {
+    "totalPins": 646,
+    "trackedPins": 309,
+    "allTrackedPinsMatchImmutableCommit": true,
+    "runtimePins": [
+      {
+        "path": "packages/proxy/src/services/egress/openai-driver.ts",
+        "sha256": "6f0a0cf741a43e690e11150a4639746bdaae47a00a9843f89a07099fe6179118",
+        "commitSha256": "6f0a0cf741a43e690e11150a4639746bdaae47a00a9843f89a07099fe6179118",
+        "matchesCommit": true
+      },
+      {
+        "path": "packages/proxy/src/services/egress/openai-responses-driver.ts",
+        "sha256": "183b2950dea081577df0731ad46f95c247bfd333799ca635865e772477512590",
+        "commitSha256": "183b2950dea081577df0731ad46f95c247bfd333799ca635865e772477512590",
+        "matchesCommit": true
+      },
+      {
+        "path": "packages/proxy/src/services/egress/anthropic-driver.ts",
+        "sha256": "9d86470f4f0b853386cae9139d84bf4253d4f71e52e9681f4b45b7c462309056",
+        "commitSha256": "9d86470f4f0b853386cae9139d84bf4253d4f71e52e9681f4b45b7c462309056",
+        "matchesCommit": true
+      },
+      {
+        "path": "packages/proxy/src/services/egress/gemini-driver.ts",
+        "sha256": "6f85845f9ed5619f7e6f302429c3a84669d08962b7783d1a1603141e9087300e",
+        "commitSha256": "6f85845f9ed5619f7e6f302429c3a84669d08962b7783d1a1603141e9087300e",
+        "matchesCommit": true
+      },
+      {
+        "path": "packages/proxy/src/services/failover-dispatch.ts",
+        "sha256": "d4c78d5d76c7f801b5db82fef5026121c154492e7b4f55ba6ee78824d07fa452",
+        "commitSha256": "d4c78d5d76c7f801b5db82fef5026121c154492e7b4f55ba6ee78824d07fa452",
+        "matchesCommit": true
+      },
+      {
+        "path": "packages/proxy/src/services/request-log-record-status.ts",
+        "sha256": "6932dce340cdd9f6c1da56ab2ca54987e03290254c284a174c454528d4d8fe1c",
+        "commitSha256": "6932dce340cdd9f6c1da56ab2ca54987e03290254c284a174c454528d4d8fe1c",
+        "matchesCommit": true
+      }
+    ],
+    "bundles": [
+      {
+        "platform": "browser",
+        "conditions": [
+          "workerd",
+          "worker",
+          "browser"
+        ],
+        "coreSource": true,
+        "coreDist": false,
+        "inputsCount": 639
+      },
+      {
+        "platform": "browser",
+        "conditions": [
+          "workerd",
+          "worker",
+          "browser"
+        ],
+        "coreSource": true,
+        "coreDist": false,
+        "inputsCount": 639
+      }
+    ],
+    "untrackedPins": 337,
+    "untrackedMismatch": [
+      {
+        "path": "packages/core/dist/index.js",
+        "sha256": "527f77bf141c0167ace4bfa0a9646c6cbd5df3c47a6e7d9b2d0efd25551b989b",
+        "localFileExists": true,
+        "localSha256": "a93bfa51f3dcbd6cb3950004a9e472b9d286c7879ff8c4fc947cfd9e13d344d9",
+        "matchesLocal": false,
+        "comparisonScope": "Generated ignored Node barrel, outside browser Worker graph"
+      }
+    ],
+    "independentVerifier": {
+      "path": ".wrangler/publish-20260927/a0cbbac7-linux-native-worker-artifact-review.json",
+      "sha256": "a7a4d543bd3a4093a611c355e7ce07b5bf17c0023363380853a61e69ae35553c"
+    }
+  },
+  "dispatchSteps": {
+    "successful": "1–26 inclusive",
+    "failed": {
+      "step": 27,
+      "command": "node --import tsx --test scripts/staging/chat-holder-binding-v364.node.test.mjs scripts/staging/chat-holder-binding-v364-workerd-date-successor.test.mjs",
+      "tests": 6,
+      "pass": 3,
+      "fail": 3,
+      "skip": 0,
+      "cause": "Date check and Worker startup were passed; three native cases failed at the Node fixture gateway.fetch input boundary because the locked Miniflare undici Request constructor does not recognize Node global Request and parsed [object Request] as a URL.",
+      "message": "Failed to parse URL from [object Request]",
+      "source": {
+        "path": "packages/proxy/scripts/staging/chat-holder-binding-v364-workerd-date-successor.test.mjs",
+        "sha256": "89be9986165a6b9ee47e3685a5bea6c584858a10a6530fcf317b39c807a4bd77"
+      },
+      "extractedStepLog": {
+        "path": "docs/operators/deployment/releases/2026-09-27-v364-miniflare-input-successor-first-linux-failed.txt",
+        "sha256": "64e3de61b7eec5a9587a83c85b77fd55fcd1a200445fb1ba5732cfb57f48015b"
+      },
+      "nativeCompatibilityDate": "2026-09-04",
+      "frozenJsoncCompatibilityDate": "2026-09-25",
+      "noClaimOf0925Semantics": true
+    },
+    "skipped": "28–65 inclusive; no acceptance claimed for these steps",
+    "jobConclusion": "FAILURE"
+  },
+  "decodedFullJobLog": {
+    "path": ".wrangler/publish-20260927/github-dispatch-a0cbbac7-full.log",
+    "sha256": "31880389a5cfe8b2b6cc4b483d5436bef52c89be62e63974d854877fdf1781dc",
+    "includesOriginalAnsiDiagnostics": true
+  },
+  "limitations": [
+    "Native Worker evidence is the actual Linux local workerd fixture with owned loopback providers; it is not a paid Provider or deployed full Proxy request proof.",
+    "The ignored generated Core Node barrel differs from the current primary disk. It is separately reported and is absent from both browser Worker graphs (Core/src, zero Core/dist). All tracked source pins match this immutable commit.",
+    "Five closed resources and zero cleanup errors prove fixture servers and workerd disposal only, not production HTTP/SQL financial closure.",
+    "Full unit and four native modes passed, while the complete dispatch job failed later at step27. Later skipped steps remain unverified on this commit.",
+    "No production runtime, feature defaults, holder source/config, SQL, dependencies, checklist or workflow was changed while collecting this evidence."
+  ]
+}
