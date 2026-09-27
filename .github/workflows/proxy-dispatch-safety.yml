@@ -334,7 +334,7 @@ jobs:
             node --import tsx --test scripts/db/cutover/postgres-shared-key-buyer-debit-v2.native.test.mjs
       - run: |
           gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
-            node --import tsx --test scripts/db/cutover/postgres-shared-key-economic-producer-v2.native.test.mjs
+            node --import tsx --test scripts/db/cutover/postgres-shared-key-economic-producer-v2-aggregate-proof.native.test.mjs
       - run: |
           gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
             node --import tsx --test scripts/db/cutover/postgres-budget-admission-login-v350.native.test.mjs

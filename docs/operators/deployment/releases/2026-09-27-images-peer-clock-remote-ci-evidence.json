@@ -1,0 +1,859 @@
+{
+  "schema": "images-peer-clock-remote-ci-v1",
+  "recordedAtUtc": "2026-09-27T07:34:47.1938062Z",
+  "status": "PASS_ACTUAL_AUTOMATIC_IMAGES_CI",
+  "commit": "3b7c5b6bef33dec5354f46d90cab2345f08b6d0c",
+  "observedAutomaticRuns": 18,
+  "imagesAutomaticWorkflows": 11,
+  "imagesNodeJobs": 22,
+  "coverageNote": "Only the 11 Images workflows actually triggered by push at this full commit SHA are verified here. This does not claim all 40 workflows or untriggered pull_request-only workflows passed Linux CI.",
+  "peerCliNote": "The peer CLI workflow has narrow scripts/deploy or own-workflow push path filters and was not triggered by this commit.",
+  "runs": [
+    {
+      "workflow": "Images SSE peer management safety",
+      "runId": 36303244842,
+      "url": "https://github.com/cinagroup/cinatoken/actions/runs/36303244842",
+      "headSha": "3b7c5b6bef33dec5354f46d90cab2345f08b6d0c",
+      "status": "completed",
+      "conclusion": "success",
+      "jobs": [
+        {
+          "id": 108574792247,
+          "name": "local-contract (24)",
+          "status": "completed",
+          "conclusion": "success",
+          "startedAt": "2026-09-27T07:29:22Z",
+          "completedAt": "2026-09-27T07:30:43Z",
+          "steps": [
+            {
+              "name": "Run npm ci",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Run npm run build:node-index -w @octafuse/core",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Run npm run typecheck:images:staging -w @octafuse/proxy",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Run node node_modules/tsx/dist/cli.mjs --test packages/proxy/scripts/staging/images-sse-capacity-peer-acceptance.test.mjs packages/proxy/scripts/staging/images-sse-capacity-peer-finalizer.test.mjs packages/proxy/scripts/staging/images-sse-capacity-peer-window.test.mjs scripts/deploy/staging-sse-capacity-peer-transport.test.mjs scripts/deploy/staging-sse-ingress-confirmation.test.mjs scripts/deploy/staging-sse-recovery-access-v2.test.mjs",
+              "status": "completed",
+              "conclusion": "success"
+            }
+          ]
+        },
+        {
+          "id": 108574792387,
+          "name": "local-contract (22)",
+          "status": "completed",
+          "conclusion": "success",
+          "startedAt": "2026-09-27T07:29:23Z",
+          "completedAt": "2026-09-27T07:30:42Z",
+          "steps": [
+            {
+              "name": "Run npm ci",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Run npm run build:node-index -w @octafuse/core",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Run npm run typecheck:images:staging -w @octafuse/proxy",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Run node node_modules/tsx/dist/cli.mjs --test packages/proxy/scripts/staging/images-sse-capacity-peer-acceptance.test.mjs packages/proxy/scripts/staging/images-sse-capacity-peer-finalizer.test.mjs packages/proxy/scripts/staging/images-sse-capacity-peer-window.test.mjs scripts/deploy/staging-sse-capacity-peer-transport.test.mjs scripts/deploy/staging-sse-ingress-confirmation.test.mjs scripts/deploy/staging-sse-recovery-access-v2.test.mjs",
+              "status": "completed",
+              "conclusion": "success"
+            }
+          ]
+        }
+      ],
+      "metadataFile": ".wrangler/publish-20260927/images-clock-36303244842-jobs.json",
+      "metadataSha256": "90f2c091855ff9d4385e4c119d514f80679f24af7eb911c216f6dd7fbf9a95d9"
+    },
+    {
+      "workflow": "Images SSE peer run safety",
+      "runId": 36303244834,
+      "url": "https://github.com/cinagroup/cinatoken/actions/runs/36303244834",
+      "headSha": "3b7c5b6bef33dec5354f46d90cab2345f08b6d0c",
+      "status": "completed",
+      "conclusion": "success",
+      "jobs": [
+        {
+          "id": 108574792201,
+          "name": "local-contract (24)",
+          "status": "completed",
+          "conclusion": "success",
+          "startedAt": "2026-09-27T07:29:22Z",
+          "completedAt": "2026-09-27T07:30:37Z",
+          "steps": [
+            {
+              "name": "Run npm ci",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Run npm run build:node-index -w @octafuse/core",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Run npm run typecheck:images:staging -w @octafuse/proxy",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Run node node_modules/tsx/dist/cli.mjs --test packages/proxy/scripts/staging/images-sse-capacity-peer-acceptance.test.mjs packages/proxy/scripts/staging/images-sse-capacity-peer-finalizer.test.mjs packages/proxy/scripts/staging/images-sse-capacity-peer-window.test.mjs packages/proxy/scripts/staging/images-sse-capacity-peer-run.test.mjs scripts/deploy/staging-sse-capacity-peer-transport.test.mjs scripts/deploy/staging-sse-ingress-confirmation.test.mjs scripts/deploy/staging-sse-recovery-access-v2.test.mjs",
+              "status": "completed",
+              "conclusion": "success"
+            }
+          ]
+        },
+        {
+          "id": 108574792414,
+          "name": "local-contract (22)",
+          "status": "completed",
+          "conclusion": "success",
+          "startedAt": "2026-09-27T07:29:22Z",
+          "completedAt": "2026-09-27T07:30:17Z",
+          "steps": [
+            {
+              "name": "Run npm ci",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Run npm run build:node-index -w @octafuse/core",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Run npm run typecheck:images:staging -w @octafuse/proxy",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Run node node_modules/tsx/dist/cli.mjs --test packages/proxy/scripts/staging/images-sse-capacity-peer-acceptance.test.mjs packages/proxy/scripts/staging/images-sse-capacity-peer-finalizer.test.mjs packages/proxy/scripts/staging/images-sse-capacity-peer-window.test.mjs packages/proxy/scripts/staging/images-sse-capacity-peer-run.test.mjs scripts/deploy/staging-sse-capacity-peer-transport.test.mjs scripts/deploy/staging-sse-ingress-confirmation.test.mjs scripts/deploy/staging-sse-recovery-access-v2.test.mjs",
+              "status": "completed",
+              "conclusion": "success"
+            }
+          ]
+        }
+      ],
+      "metadataFile": ".wrangler/publish-20260927/images-clock-36303244834-jobs.json",
+      "metadataSha256": "84ea0bf65bc0eb5a50bb423482db2ec333b1180f6506be4414338d53b7368468"
+    },
+    {
+      "workflow": "Images SSE peer finalizer safety",
+      "runId": 36303244830,
+      "url": "https://github.com/cinagroup/cinatoken/actions/runs/36303244830",
+      "headSha": "3b7c5b6bef33dec5354f46d90cab2345f08b6d0c",
+      "status": "completed",
+      "conclusion": "success",
+      "jobs": [
+        {
+          "id": 108574792287,
+          "name": "local-contract (24)",
+          "status": "completed",
+          "conclusion": "success",
+          "startedAt": "2026-09-27T07:29:23Z",
+          "completedAt": "2026-09-27T07:30:29Z",
+          "steps": [
+            {
+              "name": "Run npm ci",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Run npm run build:node-index -w @octafuse/core",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Run npm run typecheck:images:staging -w @octafuse/proxy",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Run node node_modules/tsx/dist/cli.mjs --test packages/proxy/scripts/staging/images-sse-capacity-peer-acceptance.test.mjs packages/proxy/scripts/staging/images-sse-capacity-peer-finalizer.test.mjs scripts/deploy/staging-sse-ingress-confirmation.test.mjs scripts/deploy/staging-sse-recovery-access-v2.test.mjs",
+              "status": "completed",
+              "conclusion": "success"
+            }
+          ]
+        },
+        {
+          "id": 108574792356,
+          "name": "local-contract (22)",
+          "status": "completed",
+          "conclusion": "success",
+          "startedAt": "2026-09-27T07:29:23Z",
+          "completedAt": "2026-09-27T07:30:34Z",
+          "steps": [
+            {
+              "name": "Run npm ci",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Run npm run build:node-index -w @octafuse/core",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Run npm run typecheck:images:staging -w @octafuse/proxy",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Run node node_modules/tsx/dist/cli.mjs --test packages/proxy/scripts/staging/images-sse-capacity-peer-acceptance.test.mjs packages/proxy/scripts/staging/images-sse-capacity-peer-finalizer.test.mjs scripts/deploy/staging-sse-ingress-confirmation.test.mjs scripts/deploy/staging-sse-recovery-access-v2.test.mjs",
+              "status": "completed",
+              "conclusion": "success"
+            }
+          ]
+        }
+      ],
+      "metadataFile": ".wrangler/publish-20260927/images-clock-36303244830-jobs.json",
+      "metadataSha256": "5e5a8dd0843b01495d019294d72e48dcdcd83b9f4e5239db1ef743485bbbd143"
+    },
+    {
+      "workflow": "Images SSE durable staging safety",
+      "runId": 36303244751,
+      "url": "https://github.com/cinagroup/cinatoken/actions/runs/36303244751",
+      "headSha": "3b7c5b6bef33dec5354f46d90cab2345f08b6d0c",
+      "status": "completed",
+      "conclusion": "success",
+      "jobs": [
+        {
+          "id": 108574792117,
+          "name": "local-contract (24)",
+          "status": "completed",
+          "conclusion": "success",
+          "startedAt": "2026-09-27T07:30:04Z",
+          "completedAt": "2026-09-27T07:30:55Z",
+          "steps": [
+            {
+              "name": "Run npm ci",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Run npm run build:node-index -w @octafuse/core",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Run npm run typecheck:images:staging -w @octafuse/proxy",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Run node node_modules/tsx/dist/cli.mjs --test packages/proxy/scripts/staging/images-sse-durable-reconciliation.test.mjs packages/proxy/scripts/staging/images-sse-settlement-window.test.mjs packages/proxy/src/services/image-sse-delivery-gate.test.ts",
+              "status": "completed",
+              "conclusion": "success"
+            }
+          ]
+        },
+        {
+          "id": 108574792200,
+          "name": "local-contract (22)",
+          "status": "completed",
+          "conclusion": "success",
+          "startedAt": "2026-09-27T07:30:01Z",
+          "completedAt": "2026-09-27T07:31:06Z",
+          "steps": [
+            {
+              "name": "Run npm ci",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Run npm run build:node-index -w @octafuse/core",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Run npm run typecheck:images:staging -w @octafuse/proxy",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Run node node_modules/tsx/dist/cli.mjs --test packages/proxy/scripts/staging/images-sse-durable-reconciliation.test.mjs packages/proxy/scripts/staging/images-sse-settlement-window.test.mjs packages/proxy/src/services/image-sse-delivery-gate.test.ts",
+              "status": "completed",
+              "conclusion": "success"
+            }
+          ]
+        }
+      ],
+      "metadataFile": ".wrangler/publish-20260927/images-clock-36303244751-jobs.json",
+      "metadataSha256": "495a3105f4187c06da63253019561d86bb6c7a9a8862566c307986b7b4e57acd"
+    },
+    {
+      "workflow": "Images SSE snapshot boundary safety",
+      "runId": 36303244698,
+      "url": "https://github.com/cinagroup/cinatoken/actions/runs/36303244698",
+      "headSha": "3b7c5b6bef33dec5354f46d90cab2345f08b6d0c",
+      "status": "completed",
+      "conclusion": "success",
+      "jobs": [
+        {
+          "id": 108574791903,
+          "name": "local-contract (22)",
+          "status": "completed",
+          "conclusion": "success",
+          "startedAt": "2026-09-27T07:29:23Z",
+          "completedAt": "2026-09-27T07:31:02Z",
+          "steps": [
+            {
+              "name": "Run npm ci",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Run npm run build:node-index -w @octafuse/core",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Run npm run typecheck:images:staging -w @octafuse/proxy",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Run node node_modules/tsx/dist/cli.mjs --test packages/proxy/scripts/staging/images-sse-snapshot-fault.test.mjs packages/proxy/scripts/staging/images-sse-settlement-window.test.mjs packages/proxy/src/services/image-sse-delivery-gate.test.ts",
+              "status": "completed",
+              "conclusion": "success"
+            }
+          ]
+        },
+        {
+          "id": 108574792127,
+          "name": "local-contract (24)",
+          "status": "completed",
+          "conclusion": "success",
+          "startedAt": "2026-09-27T07:29:22Z",
+          "completedAt": "2026-09-27T07:30:49Z",
+          "steps": [
+            {
+              "name": "Run npm ci",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Run npm run build:node-index -w @octafuse/core",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Run npm run typecheck:images:staging -w @octafuse/proxy",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Run node node_modules/tsx/dist/cli.mjs --test packages/proxy/scripts/staging/images-sse-snapshot-fault.test.mjs packages/proxy/scripts/staging/images-sse-settlement-window.test.mjs packages/proxy/src/services/image-sse-delivery-gate.test.ts",
+              "status": "completed",
+              "conclusion": "success"
+            }
+          ]
+        }
+      ],
+      "metadataFile": ".wrangler/publish-20260927/images-clock-36303244698-jobs.json",
+      "metadataSha256": "f4e7e4df5cb522073057c4e2d5178b539be0aba51bfa3bbb32c138d624d0a123"
+    },
+    {
+      "workflow": "Images SSE dual recovery Access safety",
+      "runId": 36303244901,
+      "url": "https://github.com/cinagroup/cinatoken/actions/runs/36303244901",
+      "headSha": "3b7c5b6bef33dec5354f46d90cab2345f08b6d0c",
+      "status": "completed",
+      "conclusion": "success",
+      "jobs": [
+        {
+          "id": 108574792577,
+          "name": "local-contract (24)",
+          "status": "completed",
+          "conclusion": "success",
+          "startedAt": "2026-09-27T07:29:23Z",
+          "completedAt": "2026-09-27T07:30:28Z",
+          "steps": [
+            {
+              "name": "Run npm ci",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Run npm run build:node-index -w @octafuse/core",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Run node node_modules/tsx/dist/cli.mjs --test scripts/deploy/staging-sse-recovery-access.test.mjs scripts/deploy/staging-sse-reconciliation.test.mjs packages/proxy/scripts/staging/images-sse-snapshot-reconciliation.test.mjs",
+              "status": "completed",
+              "conclusion": "success"
+            }
+          ]
+        },
+        {
+          "id": 108574792648,
+          "name": "local-contract (22)",
+          "status": "completed",
+          "conclusion": "success",
+          "startedAt": "2026-09-27T07:29:22Z",
+          "completedAt": "2026-09-27T07:30:27Z",
+          "steps": [
+            {
+              "name": "Run npm ci",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Run npm run build:node-index -w @octafuse/core",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Run node node_modules/tsx/dist/cli.mjs --test scripts/deploy/staging-sse-recovery-access.test.mjs scripts/deploy/staging-sse-reconciliation.test.mjs packages/proxy/scripts/staging/images-sse-snapshot-reconciliation.test.mjs",
+              "status": "completed",
+              "conclusion": "success"
+            }
+          ]
+        }
+      ],
+      "metadataFile": ".wrangler/publish-20260927/images-clock-36303244901-jobs.json",
+      "metadataSha256": "64882119f818f59c42922547216aed500b9a3e48d698d57d4c7df4b51a0323ba"
+    },
+    {
+      "workflow": "Images SSE completed window safety",
+      "runId": 36303244900,
+      "url": "https://github.com/cinagroup/cinatoken/actions/runs/36303244900",
+      "headSha": "3b7c5b6bef33dec5354f46d90cab2345f08b6d0c",
+      "status": "completed",
+      "conclusion": "success",
+      "jobs": [
+        {
+          "id": 108574792370,
+          "name": "local-contract (24)",
+          "status": "completed",
+          "conclusion": "success",
+          "startedAt": "2026-09-27T07:29:23Z",
+          "completedAt": "2026-09-27T07:30:13Z",
+          "steps": [
+            {
+              "name": "Run npm ci",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Run npm run build:node-index -w @octafuse/core",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Run npm run typecheck:images:staging -w @octafuse/proxy",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Run node node_modules/tsx/dist/cli.mjs --test packages/proxy/scripts/staging/images-sse-window-probe.test.mjs packages/proxy/scripts/staging/images-sse-settlement-window.test.mjs packages/proxy/src/services/image-sse-delivery-gate.test.ts",
+              "status": "completed",
+              "conclusion": "success"
+            }
+          ]
+        },
+        {
+          "id": 108574792534,
+          "name": "local-contract (22)",
+          "status": "completed",
+          "conclusion": "success",
+          "startedAt": "2026-09-27T07:29:22Z",
+          "completedAt": "2026-09-27T07:30:22Z",
+          "steps": [
+            {
+              "name": "Run npm ci",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Run npm run build:node-index -w @octafuse/core",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Run npm run typecheck:images:staging -w @octafuse/proxy",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Run node node_modules/tsx/dist/cli.mjs --test packages/proxy/scripts/staging/images-sse-window-probe.test.mjs packages/proxy/scripts/staging/images-sse-settlement-window.test.mjs packages/proxy/src/services/image-sse-delivery-gate.test.ts",
+              "status": "completed",
+              "conclusion": "success"
+            }
+          ]
+        }
+      ],
+      "metadataFile": ".wrangler/publish-20260927/images-clock-36303244900-jobs.json",
+      "metadataSha256": "3b5891ca234b8b27848784baa82089b4381cceabd7525e4aa8e881415d1e3b24"
+    },
+    {
+      "workflow": "Images SSE snapshot reconciliation safety",
+      "runId": 36303244713,
+      "url": "https://github.com/cinagroup/cinatoken/actions/runs/36303244713",
+      "headSha": "3b7c5b6bef33dec5354f46d90cab2345f08b6d0c",
+      "status": "completed",
+      "conclusion": "success",
+      "jobs": [
+        {
+          "id": 108574791968,
+          "name": "local-contract (24)",
+          "status": "completed",
+          "conclusion": "success",
+          "startedAt": "2026-09-27T07:29:22Z",
+          "completedAt": "2026-09-27T07:30:49Z",
+          "steps": [
+            {
+              "name": "Run npm ci",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Run npm run build:node-index -w @octafuse/core",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Run npm run typecheck:images:staging -w @octafuse/proxy",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Run node node_modules/tsx/dist/cli.mjs --test packages/proxy/scripts/staging/images-sse-snapshot-reconciliation.test.mjs packages/proxy/scripts/staging/images-sse-snapshot-fault.test.mjs scripts/deploy/staging-sse-reconciliation.test.mjs",
+              "status": "completed",
+              "conclusion": "success"
+            }
+          ]
+        },
+        {
+          "id": 108574792087,
+          "name": "local-contract (22)",
+          "status": "completed",
+          "conclusion": "success",
+          "startedAt": "2026-09-27T07:29:22Z",
+          "completedAt": "2026-09-27T07:31:04Z",
+          "steps": [
+            {
+              "name": "Run npm ci",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Run npm run build:node-index -w @octafuse/core",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Run npm run typecheck:images:staging -w @octafuse/proxy",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Run node node_modules/tsx/dist/cli.mjs --test packages/proxy/scripts/staging/images-sse-snapshot-reconciliation.test.mjs packages/proxy/scripts/staging/images-sse-snapshot-fault.test.mjs scripts/deploy/staging-sse-reconciliation.test.mjs",
+              "status": "completed",
+              "conclusion": "success"
+            }
+          ]
+        }
+      ],
+      "metadataFile": ".wrangler/publish-20260927/images-clock-36303244713-jobs.json",
+      "metadataSha256": "db0e73f70a859150c19681d0bdda2225c50a4ad8fe1e863018db7e44384d26dc"
+    },
+    {
+      "workflow": "Images SSE peer rejection safety",
+      "runId": 36303244730,
+      "url": "https://github.com/cinagroup/cinatoken/actions/runs/36303244730",
+      "headSha": "3b7c5b6bef33dec5354f46d90cab2345f08b6d0c",
+      "status": "completed",
+      "conclusion": "success",
+      "jobs": [
+        {
+          "id": 108574792023,
+          "name": "local-contract (24)",
+          "status": "completed",
+          "conclusion": "success",
+          "startedAt": "2026-09-27T07:29:22Z",
+          "completedAt": "2026-09-27T07:30:20Z",
+          "steps": [
+            {
+              "name": "Run npm ci",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Run npm run build:node-index -w @octafuse/core",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Run node node_modules/tsx/dist/cli.mjs --test scripts/deploy/staging-sse-peer-rejection-capture.test.mjs packages/proxy/scripts/staging/images-sse-peer-rejection-run.test.mjs",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Run node node_modules/typescript/bin/tsc --noEmit -p packages/proxy/scripts/staging/tsconfig.json",
+              "status": "completed",
+              "conclusion": "success"
+            }
+          ]
+        },
+        {
+          "id": 108574792251,
+          "name": "local-contract (22)",
+          "status": "completed",
+          "conclusion": "success",
+          "startedAt": "2026-09-27T07:30:20Z",
+          "completedAt": "2026-09-27T07:31:23Z",
+          "steps": [
+            {
+              "name": "Run npm ci",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Run npm run build:node-index -w @octafuse/core",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Run node node_modules/tsx/dist/cli.mjs --test scripts/deploy/staging-sse-peer-rejection-capture.test.mjs packages/proxy/scripts/staging/images-sse-peer-rejection-run.test.mjs",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Run node node_modules/typescript/bin/tsc --noEmit -p packages/proxy/scripts/staging/tsconfig.json",
+              "status": "completed",
+              "conclusion": "success"
+            }
+          ]
+        }
+      ],
+      "metadataFile": ".wrangler/publish-20260927/images-clock-36303244730-jobs.json",
+      "metadataSha256": "37d5828b75fd7d97c69d9e21987f840124c3513f3d6264510e5b45425270d46c"
+    },
+    {
+      "workflow": "Images SSE operator fixture safety",
+      "runId": 36303244856,
+      "url": "https://github.com/cinagroup/cinatoken/actions/runs/36303244856",
+      "headSha": "3b7c5b6bef33dec5354f46d90cab2345f08b6d0c",
+      "status": "completed",
+      "conclusion": "success",
+      "jobs": [
+        {
+          "id": 108574792399,
+          "name": "local-contract (24)",
+          "status": "completed",
+          "conclusion": "success",
+          "startedAt": "2026-09-27T07:30:31Z",
+          "completedAt": "2026-09-27T07:31:33Z",
+          "steps": [
+            {
+              "name": "Run npm ci",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Run npm run build:node-index -w @octafuse/core",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Run node node_modules/tsx/dist/cli.mjs --test packages/proxy/scripts/staging/images-sse-operator-fixture.test.mjs scripts/deploy/staging-sql-row-guard.test.mjs packages/proxy/scripts/staging/images-sse-snapshot-reconciliation.test.mjs scripts/deploy/staging-sse-recovery-access.test.mjs",
+              "status": "completed",
+              "conclusion": "success"
+            }
+          ]
+        },
+        {
+          "id": 108574792479,
+          "name": "local-contract (22)",
+          "status": "completed",
+          "conclusion": "success",
+          "startedAt": "2026-09-27T07:30:32Z",
+          "completedAt": "2026-09-27T07:31:38Z",
+          "steps": [
+            {
+              "name": "Run npm ci",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Run npm run build:node-index -w @octafuse/core",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Run node node_modules/tsx/dist/cli.mjs --test packages/proxy/scripts/staging/images-sse-operator-fixture.test.mjs scripts/deploy/staging-sql-row-guard.test.mjs packages/proxy/scripts/staging/images-sse-snapshot-reconciliation.test.mjs scripts/deploy/staging-sse-recovery-access.test.mjs",
+              "status": "completed",
+              "conclusion": "success"
+            }
+          ]
+        }
+      ],
+      "metadataFile": ".wrangler/publish-20260927/images-clock-36303244856-jobs.json",
+      "metadataSha256": "72d6a02cd679f1c5c7d2cb1d367763af3083a314bd606bac711e294f6e21d8f0"
+    },
+    {
+      "workflow": "Images SSE peer window safety",
+      "runId": 36303244763,
+      "url": "https://github.com/cinagroup/cinatoken/actions/runs/36303244763",
+      "headSha": "3b7c5b6bef33dec5354f46d90cab2345f08b6d0c",
+      "status": "completed",
+      "conclusion": "success",
+      "jobs": [
+        {
+          "id": 108574792103,
+          "name": "local-contract (22)",
+          "status": "completed",
+          "conclusion": "success",
+          "startedAt": "2026-09-27T07:29:35Z",
+          "completedAt": "2026-09-27T07:30:50Z",
+          "steps": [
+            {
+              "name": "Run npm ci",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Run npm run build:node-index -w @octafuse/core",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Run npm run typecheck:images:staging -w @octafuse/proxy",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Run node node_modules/tsx/dist/cli.mjs --test packages/proxy/scripts/staging/images-sse-capacity-peer-acceptance.test.mjs packages/proxy/scripts/staging/images-sse-capacity-peer-finalizer.test.mjs packages/proxy/scripts/staging/images-sse-capacity-peer-window.test.mjs scripts/deploy/staging-sse-ingress-confirmation.test.mjs scripts/deploy/staging-sse-recovery-access-v2.test.mjs",
+              "status": "completed",
+              "conclusion": "success"
+            }
+          ]
+        },
+        {
+          "id": 108574792206,
+          "name": "local-contract (24)",
+          "status": "completed",
+          "conclusion": "success",
+          "startedAt": "2026-09-27T07:30:16Z",
+          "completedAt": "2026-09-27T07:31:29Z",
+          "steps": [
+            {
+              "name": "Run npm ci",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Run npm run build:node-index -w @octafuse/core",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Run npm run typecheck:images:staging -w @octafuse/proxy",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Run node node_modules/tsx/dist/cli.mjs --test packages/proxy/scripts/staging/images-sse-capacity-peer-acceptance.test.mjs packages/proxy/scripts/staging/images-sse-capacity-peer-finalizer.test.mjs packages/proxy/scripts/staging/images-sse-capacity-peer-window.test.mjs scripts/deploy/staging-sse-ingress-confirmation.test.mjs scripts/deploy/staging-sse-recovery-access-v2.test.mjs",
+              "status": "completed",
+              "conclusion": "success"
+            }
+          ]
+        }
+      ],
+      "metadataFile": ".wrangler/publish-20260927/images-clock-36303244763-jobs.json",
+      "metadataSha256": "85074c3f56955de8a671ac0f38af983c6d1719706e25f48db3c2affc076898b2"
+    }
+  ],
+  "prioritySuccessfulLogs": [
+    {
+      "workflowGroup": "management",
+      "file": ".wrangler/publish-20260927/images-peer-management-3b7c5b6-success.log",
+      "bytes": 634025,
+      "sha256": "5546b4d117fad2368d07a67712c5d83a68e4932b4e18b2b22b0985aac3ff56cd",
+      "jobs": [
+        {
+          "matrixNode": 22,
+          "actualNodeVersion": "v22.23.2",
+          "runnerImage": "ubuntu-24.04",
+          "testCounts": {
+            "pass": 151,
+            "todo": 0,
+            "fail": 0,
+            "tests": 151,
+            "cancelled": 0,
+            "skipped": 0
+          }
+        },
+        {
+          "matrixNode": 24,
+          "actualNodeVersion": "v24.21.0",
+          "runnerImage": "ubuntu-24.04",
+          "testCounts": {
+            "pass": 151,
+            "todo": 0,
+            "fail": 0,
+            "tests": 151,
+            "cancelled": 0,
+            "skipped": 0
+          }
+        }
+      ]
+    },
+    {
+      "workflowGroup": "window",
+      "file": ".wrangler/publish-20260927/images-peer-window-3b7c5b6-success.log",
+      "bytes": 473723,
+      "sha256": "35e0b5e460df269d97a7951bc220610c466a0c425522409b9b283eeb7bfb30ea",
+      "jobs": [
+        {
+          "matrixNode": 22,
+          "actualNodeVersion": "v22.23.2",
+          "runnerImage": "ubuntu-24.04",
+          "testCounts": {
+            "pass": 123,
+            "todo": 0,
+            "fail": 0,
+            "tests": 123,
+            "cancelled": 0,
+            "skipped": 0
+          }
+        },
+        {
+          "matrixNode": 24,
+          "actualNodeVersion": "v24.21.0",
+          "runnerImage": "ubuntu-24.04",
+          "testCounts": {
+            "pass": 123,
+            "todo": 0,
+            "fail": 0,
+            "tests": 123,
+            "cancelled": 0,
+            "skipped": 0
+          }
+        }
+      ]
+    }
+  ],
+  "snapshotFile": ".wrangler/publish-20260927/images-peer-clock-successor-runs.json",
+  "snapshotSha256": "f1c78e3f73b0f0d8775431162fd2b021cfb0b18a0276fc1690d1f13451734ae3",
+  "sourceModified": false,
+  "localBuildOrNativeExecution": false
+}

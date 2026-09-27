@@ -1,0 +1,81 @@
+{
+  "schema": "proxy-dispatch-node22-mocktimers-warning-warmup-v1",
+  "recordedAtUtc": "2026-09-27T07:46:03.4290822Z",
+  "status": "LOCAL_NODE24_PASS_NODE22_CI_PENDING",
+  "baseCommit": "3b7c5b6bef33dec5354f46d90cab2345f08b6d0c",
+  "failureRunId": 36303244833,
+  "failureStep": "Run npm run test:dispatch-safety -w @octafuse/proxy",
+  "failureLog": ".wrangler/publish-20260927/github-proxy-dispatch-3b7c5b6b-failed.log",
+  "failureLogSha256": "66a9d205dbc8d1f53866667210e0f70303f56e462129dfd1eabbc8dcb4f5bbe0",
+  "failureCause": "Exactly two after hooks collected only the standard Node 22 MockTimers ExperimentalWarning. Business assertions completed; error collectors asserted unexpected runtime warning strings were business errors.",
+  "implementation": "File-level before hook instantiates mock.timers without enabling timer mocks, then awaits native setImmediate before any fixture installs console.error capture. Node 22 prints its one-time warning normally. No warning handlers, filters, console-error exclusions, suppression flags, or production changes are introduced.",
+  "officialNode22Source": {
+    "oneTimeWarning": "https://github.com/nodejs/node/blob/v22.23.2/lib/internal/util.js#L297",
+    "constructor": "https://github.com/nodejs/node/blob/v22.23.2/lib/internal/test_runner/mock/mock_timers.js#L129",
+    "lazyGetter": "https://github.com/nodejs/node/blob/v22.23.2/lib/internal/test_runner/mock/mock.js#L399"
+  },
+  "files": [
+    {
+      "file": "packages/proxy/src/routes/v1/image-request-lifecycle.test.ts",
+      "beforeSha256": "962be1d3697538dc41d7128be77db888b1a43d0cfd5d532fa53779058da31c63",
+      "afterSha256": "9afbe4477dc55207fc39886ed093df3e9a116f3a7557de45c543a9728e868553",
+      "crlfCount": 0,
+      "consoleErrorCollectorAndAfterAssertionByteEquivalent": true
+    },
+    {
+      "file": "packages/proxy/src/routes/v1/vector-request-lifecycle.test.ts",
+      "beforeSha256": "816f565c965094146256886f1caf2c2b245bf65f81338f8e63ee2676b5625525",
+      "afterSha256": "2d77803bbd64a1016c9ebba20428a5bb8324e230eadac674a0eee4ad097ca348",
+      "crlfCount": 0,
+      "consoleErrorCollectorAndAfterAssertionByteEquivalent": true
+    }
+  ],
+  "localNodeVersion": "v24.14.1",
+  "positiveTests": [
+    {
+      "scope": "targeted",
+      "counts": {
+        "skipped": 0,
+        "fail": 0,
+        "cancelled": 0,
+        "tests": 3,
+        "pass": 3,
+        "todo": 0
+      },
+      "log": ".wrangler/publish-20260927/proxy-mocktimers-warning-targeted-node24.log",
+      "logSha256": "a895e7a0992d8ab815c5bd7325ed159aee0e59371b396b2a42867add11c5778a"
+    },
+    {
+      "scope": "full-two-files",
+      "counts": {
+        "skipped": 0,
+        "fail": 0,
+        "cancelled": 0,
+        "tests": 587,
+        "pass": 587,
+        "todo": 0
+      },
+      "log": ".wrangler/publish-20260927/proxy-mocktimers-warning-files-node24.log",
+      "logSha256": "a8f529bc28ea1695ff43b918e626023e4219a1ccce22b5b496ece5c646be07a4"
+    }
+  ],
+  "businessErrorNegativeControl": {
+    "status": "EXPECTED_FAILURE_PROVES_BUSINESS_ERROR_DETECTION",
+    "nodeVersion": "v24.14.1",
+    "exitCode": 1,
+    "hookFailures": 3,
+    "sentinelPresent": true,
+    "log": ".wrangler/publish-20260927/proxy-console-error-negative-tap-node24.log",
+    "logSha256": "747140d12620e4c91cf5b469f6955c7abc283c3bbb14da3d2e48c4a1e28dad82"
+  },
+  "negativePreloadFile": ".wrangler/publish-20260927/proxy-console-error-negative-preload.mjs",
+  "negativePreloadSha256": "ee62cd4a5cca8d91b7dd9d5145fb20837fb5f5d773b6646d0652716778cdca35",
+  "node22Local": "Not available in PATH, common nvm/fnm/Volta paths or npm npx cache. Bundled Codex runtime is Node 24.19.0. No runtime was installed; exact Node22 execution remains for remote CI.",
+  "patchFile": ".wrangler/publish-20260927/proxy-mocktimers-warning-warmup.patch",
+  "patchSha256": "3a6dfde4535522599caceb62fa9b06d4e4b3eb783348f19b11d2dda5b37a4e76",
+  "scopedDiffCheck": "PASS",
+  "productionRuntimeChangedByPatch": false,
+  "historicalFrozenEvidenceChanged": false,
+  "foreignWebAdminChangesTouched": false,
+  "committed": false
+}

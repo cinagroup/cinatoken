@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { createHash, generateKeyPairSync } from 'node:crypto';
 import { getEventListeners } from 'node:events';
-import { beforeEach, it, type TestContext } from 'node:test';
+import { before, beforeEach, it, mock, type TestContext } from 'node:test';
 import { setImmediate as nextTurn } from 'node:timers/promises';
 import { Hono } from 'hono';
 import type { D1Database, D1PreparedStatement, D1Result } from '@cloudflare/workers-types';
@@ -210,6 +210,11 @@ async function fixture(t: TestContext, operation: Operation, credential = 'synth
 	return { app, storage, repos, key, model, calls, hooks, batches: () => batches };
 }
 
+before(async () => {
+	// Let Node 22 print its one-time MockTimers warning before fixtures capture console.error.
+	void mock.timers;
+	await nextTurn();
+});
 beforeEach(() => { clearGcpServiceAccountTokenCache(); resetProviderCircuitStateForTests(); resetUserModelCircuitStateForTests(); });
 
 for (const prefix of ['/v1', '/api/v1']) for (const suffix of ['/images', '/images/generations']) {

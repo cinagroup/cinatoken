@@ -3,7 +3,7 @@ import { generateKeyPairSync } from 'node:crypto';
 import { getEventListeners } from 'node:events';
 import { createServer } from 'node:http';
 import type { AddressInfo } from 'node:net';
-import { beforeEach, it, type TestContext } from 'node:test';
+import { before, beforeEach, it, mock, type TestContext } from 'node:test';
 import { setImmediate as nextTurn } from 'node:timers/promises';
 import type { D1Database, D1PreparedStatement, D1Result } from '@cloudflare/workers-types';
 import {
@@ -209,6 +209,11 @@ it(`${prefix}${operation}: ${mode} upload ownership does not rewrite successful 
 	if (reader) await assert.rejects(reader.read(), /JSON upload stopped/);
 });
 
+before(async () => {
+	// Let Node 22 print its one-time MockTimers warning before fixtures capture console.error.
+	void mock.timers;
+	await nextTurn();
+});
 beforeEach(() => { clearGcpServiceAccountTokenCache(); resetProviderCircuitStateForTests(); resetUserModelCircuitStateForTests(); });
 
 function blockingPolicy(): EffectiveGuardrailRow {

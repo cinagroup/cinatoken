@@ -1,0 +1,27 @@
+{
+  "schema": "proxy-dispatch-multipart-preamble-native-observation-v1",
+  "recordedAtUtc": "2026-09-27T07:48:31.224Z",
+  "baseCommit": "3b7c5b6bef33dec5354f46d90cab2345f08b6d0c",
+  "status": "LOCAL_NODE24_PASS_NODE22_CI_PENDING",
+  "failureRunId": 36303244833,
+  "failureCause": "Node22 native Response.formData rejects both preambles before the old test reached inspector assertions.",
+  "file": "packages/proxy/src/services/multipart-body-inspector.test.ts",
+  "beforeSha256": "ad7881154ec07771579c3d820d7198a44f83776fa0e9b2f2d1078f9a89597f1c",
+  "afterSha256": "20d4484246590fb5e64474eaaeb540cc16f13a164aa9ead965ae873c1248b06b",
+  "inspectorAssertions": "All two-chunk splits still require maxFiles=2 acceptance and maxFiles=1 files/400 rejection, before native parser observation.",
+  "nativeObservation": "A successful native parse must contain exactly two image files; only exact TypeError Failed to parse body as FormData. is accepted as a native runtime difference. Inspector failures are never caught or skipped.",
+  "localNodeVersion": "v24.14.1",
+  "localTests": {
+    "tests": 75,
+    "pass": 75,
+    "fail": 0,
+    "cancelled": 0,
+    "skipped": 0,
+    "todo": 0
+  },
+  "log": ".wrangler/publish-20260927/multipart-preamble-successor-local.log",
+  "logSha256": "579a0c959f2176c23ae8f97dc96d35a8abb653d2479229bfcd43d6fde38edfc9",
+  "productionRuntimeChanged": false,
+  "historicalReportsRewritten": false,
+  "node22RemoteCi": "pending"
+}

@@ -1,0 +1,101 @@
+{
+  "schema": "proxy-node22-three-fixture-corpus-successor-v1",
+  "recordedAtUtc": "2026-09-27T07:49:50.783Z",
+  "status": "SOURCE_FREEZE_PASS_NODE22_CI_PENDING",
+  "baseCommit": "3b7c5b6bef33dec5354f46d90cab2345f08b6d0c",
+  "corpusAlgorithm": "Existing v402 walk: all .ts/.tsx paths sorted; SHA256 of path + LF + raw UTF8 file content joined by LF; no newline normalization",
+  "formalPgAlgorithm": "Sorted .sql filenames; SHA256 of filename + LF + raw UTF8 file content joined by LF; no newline normalization",
+  "core": {
+    "predecessor": {
+      "files": 327,
+      "sha256": "477233bf3c31f1ef3ca847ba3e36179fef50f85e1ba3c909a847706bff2800b0"
+    },
+    "successor": {
+      "files": 327,
+      "sha256": "477233bf3c31f1ef3ca847ba3e36179fef50f85e1ba3c909a847706bff2800b0"
+    },
+    "changed": []
+  },
+  "proxy": {
+    "predecessor": {
+      "files": 454,
+      "sha256": "0411a59a1d05e35af0e82fe8aae6a849a79d41a113aa23230076f1e65b848b27"
+    },
+    "successor": {
+      "files": 454,
+      "sha256": "110ae5a44cf5c052bfb9851b112bce6e03a69503e2e8880ea088729031c96499"
+    },
+    "changed": [
+      {
+        "path": "packages/proxy/src/routes/v1/image-request-lifecycle.test.ts",
+        "beforeSha256": "962be1d3697538dc41d7128be77db888b1a43d0cfd5d532fa53779058da31c63",
+        "afterSha256": "9afbe4477dc55207fc39886ed093df3e9a116f3a7557de45c543a9728e868553",
+        "beforeCRLF": 0,
+        "afterCRLF": 0
+      },
+      {
+        "path": "packages/proxy/src/routes/v1/vector-request-lifecycle.test.ts",
+        "beforeSha256": "816f565c965094146256886f1caf2c2b245bf65f81338f8e63ee2676b5625525",
+        "afterSha256": "2d77803bbd64a1016c9ebba20428a5bb8324e230eadac674a0eee4ad097ca348",
+        "beforeCRLF": 0,
+        "afterCRLF": 0
+      },
+      {
+        "path": "packages/proxy/src/services/multipart-body-inspector.test.ts",
+        "beforeSha256": "ad7881154ec07771579c3d820d7198a44f83776fa0e9b2f2d1078f9a89597f1c",
+        "afterSha256": "20d4484246590fb5e64474eaaeb540cc16f13a164aa9ead965ae873c1248b06b",
+        "beforeCRLF": 0,
+        "afterCRLF": 0
+      }
+    ]
+  },
+  "formalPostgres": {
+    "files": 73,
+    "sha256": "23afef61a8a670e0af8c90e3a138f522e6b283b454e380a592bf85bca83108dc",
+    "byteIdenticalToBase": true
+  },
+  "productionCoreRuntimeByteIdenticalToBase": true,
+  "productionProxyRuntimeByteIdenticalToBase": true,
+  "reviewedFixtureContracts": {
+    "multipart": {
+      "mandatoryEverySplitInspectorAssertionsUnchanged": true,
+      "mandatoryAssertionsPrecedeNativeObservation": true,
+      "nativeRejectionOnlyExactTypeErrorAndMessage": true,
+      "nativeSuccessStillRequiresTwoFiles": true
+    },
+    "mockTimers": {
+      "noEnable": true,
+      "noWarningOrConsoleErrorFilter": true,
+      "originalBusinessErrorCollectorsAndAfterAssertionsPreserved": true,
+      "warmupEvidence": {
+        "path": ".wrangler/publish-20260927/proxy-mocktimers-warning-warmup-verification.json",
+        "sha256": "f13499f73ee57527af35bc1c4fbdf58129d0d2a73e49e8c698571959d5eee5b7",
+        "status": "LOCAL_NODE24_PASS_NODE22_CI_PENDING"
+      },
+      "localFullTwoFileCounts": {
+        "skipped": 0,
+        "fail": 0,
+        "cancelled": 0,
+        "tests": 587,
+        "pass": 587,
+        "todo": 0
+      },
+      "negativeControl": {
+        "status": "EXPECTED_FAILURE_PROVES_BUSINESS_ERROR_DETECTION",
+        "nodeVersion": "v24.14.1",
+        "exitCode": 1,
+        "hookFailures": 3,
+        "sentinelPresent": true,
+        "log": ".wrangler/publish-20260927/proxy-console-error-negative-tap-node24.log",
+        "logSha256": "747140d12620e4c91cf5b469f6955c7abc283c3bbb14da3d2e48c4a1e28dad82"
+      }
+    }
+  },
+  "patch": {
+    "path": ".wrangler/publish-20260927/proxy-node22-three-fixture-successor.patch",
+    "sha256": "ed63320472ba2eb1e7f9201bfb4c9725e20dcbe71154f8bfaa4de84132be57da"
+  },
+  "historicalFrozenReportsModified": false,
+  "generatedCoreBundleExcluded": true,
+  "committed": false
+}

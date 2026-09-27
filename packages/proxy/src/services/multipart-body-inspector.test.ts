@@ -70,14 +70,22 @@ for (const padding of [' ', '\t', ' \t \t']) {
 	});
 }
 for (const preamble of ['synthetic preamble\r\n', 'synthetic inline preamble']) {
-	it(`counts the first file even when the native parser accepts ${JSON.stringify(preamble)}`, async () => {
+	it(`counts the first file across every split with ${JSON.stringify(preamble)}`, async t => {
 		const bytes = wire(preamble + part('image', 'abc', 'x.png') + part('image', 'def', 'y.png'));
-		const native = await new Response(bytes, { headers: { 'Content-Type': TYPE } }).formData();
-		assert.equal(native.getAll('image').length, 2);
 		for (let split = 0; split <= bytes.length; split++) {
 			await check(bytes, { split, maxFileBytes: 3, maxFiles: 2 });
 			await assert.rejects(check(bytes, { split, maxFiles: 1 }), failure('files', 400));
 		}
+		// Native preamble support differs between Node versions; inspector limits above are mandatory.
+		let native: FormData;
+		try { native = await new Response(bytes, { headers: { 'Content-Type': TYPE } }).formData(); }
+		catch (error) {
+			assert.ok(error instanceof TypeError);
+			assert.equal(error.message, 'Failed to parse body as FormData.');
+			t.diagnostic(`Native parser rejects the preamble on ${process.version}`);
+			return;
+		}
+		assert.equal(native.getAll('image').length, 2);
 	});
 }
 it('unfinished transport padding has a finite framing limit', async () => {
