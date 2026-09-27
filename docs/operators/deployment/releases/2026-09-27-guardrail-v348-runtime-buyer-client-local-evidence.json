@@ -1,0 +1,246 @@
+{
+  "schema": "guardrail-v348-runtime-buyer-client-successor-v1",
+  "recordedAtUtc": "2026-09-27T08:28:29.901Z",
+  "status": "LOCAL_PG18_6_SUCCESSOR_PASS_REMOTE_CI_PENDING",
+  "baseCommit": "a8029350760d9442f866ac1eab59d4d2845eed4a",
+  "ciFailure": {
+    "runId": 36304654272,
+    "url": "https://github.com/cinagroup/cinatoken/actions/runs/36304654272",
+    "reportedNativeStep": 94,
+    "path": ".wrangler/publish-20260927/github-native-financial-a8029350-failed.log",
+    "sha256": "e2ddf2e964967d76d0a39f2f2ab399bba1ac7757899867f555e192978614d7d2",
+    "cause": "Historical v348 bare-Hono fixture calls createPostgresSharedKeyEconomicProducer() without its explicit PostgreSQL buyer client; current factory throws before route execution, producing 500 instead of the preserved expected 403. The successor also binds a distinct runtime repository client and exact authenticated aggregate proof activation required by the current contract."
+  },
+  "nativeValidation": {
+    "nodeVersion": "v24.14.1",
+    "binaryVersion": "postgres (PostgreSQL) 18.6",
+    "exitCode": 0,
+    "tests": 1,
+    "pass": 1,
+    "fail": 0,
+    "cancelled": 0,
+    "skipped": 0,
+    "todo": 0,
+    "stages": 27,
+    "cleanup": "PASS",
+    "log": {
+      "path": ".wrangler/publish-20260927/guardrail-v348-runtime-buyer-client-successor-native.log",
+      "sha256": "a373eb3d7f6db12402fd60db66cae0b83c7cbe57e64d1e807c27bd665cfa80fe"
+    },
+    "originalMachineReport": {
+      "path": ".wrangler/staging/pg-native-dispatch-tests/report-guardrail-post-reservation-denial-v348-runtime-buyer-client-successor-7eacd7d7-9c37-4e7c-88df-042601b6a0d4.json",
+      "sha256": "fd54085e0c0059fea024805c58f0303c0ad5b6906fedc296918eae7c6131f087"
+    },
+    "committedMachineReportTarget": {
+      "path": "docs/operators/deployment/releases/2026-09-27-guardrail-v348-runtime-buyer-client-local-report.json",
+      "sha256": "fd54085e0c0059fea024805c58f0303c0ad5b6906fedc296918eae7c6131f087"
+    },
+    "reportCopyByteIdentical": true,
+    "isolation": "Existing startNativePostgres helper creates only a new mkdtemp-owned loopback cluster with a dynamically reserved port, rejects DATABASE_URL fallback, validates durability settings, stops its own data directory and checks stopped/postmaster.pid before removing it."
+  },
+  "review": {
+    "reviewer": "publish_deploy_audit",
+    "plan": "PASS",
+    "finalSuccessorDiff": "PASS"
+  },
+  "historicalFrozenArtifacts": [
+    {
+      "path": "scripts/db/cutover/postgres-shared-key-guardrail-post-reservation-denial-v348.native.test.mjs",
+      "sha256": "603646803c82d3209987260ad682a34169b4e53ca7b03b672d818e3a28d7cc13",
+      "byteIdenticalToBase": true
+    },
+    {
+      "path": "docs/developers/architecture/implementation-evidence/C04-guardrail-post-reservation-denial-v348.md",
+      "sha256": "338f21b8f24b072518c4b08b4f681ba8d9cc477b8bb682f763bc1077e77bfebe",
+      "byteIdenticalToBase": true
+    },
+    {
+      "path": "docs/developers/architecture/implementation-evidence/C04-guardrail-post-reservation-denial-v348-results.json",
+      "sha256": "33370a867232eea0f3caf79fb7435e02a3406e050adfb5be60a984435620e343",
+      "byteIdenticalToBase": true
+    }
+  ],
+  "staticLineage": {
+    "artifact": {
+      "path": ".wrangler/publish-20260927/guardrail-v348-runtime-buyer-client-successor-static-lineage.json",
+      "sha256": "996ee8b0cfc183943f04c8f8bfe1cea719c1fb56fc3f495d3ad191f4e2afe6db"
+    },
+    "proof": {
+      "schema": "v348-successor-static-lineage-v1",
+      "status": "PASS",
+      "historical": {
+        "path": "scripts/db/cutover/postgres-shared-key-guardrail-post-reservation-denial-v348.native.test.mjs",
+        "sha256": "603646803c82d3209987260ad682a34169b4e53ca7b03b672d818e3a28d7cc13",
+        "assertionCalls": 57,
+        "stageNames": [
+          "formal-pg73-and-current-runtime-grant-installed",
+          "v2-producer-v344-receipt-and-v346-buyer-split-installed",
+          "v2-function-body-diff-is-exactly-login-gate-and-diagnostic",
+          "successor-default-off-and-source-catalog-drift-fail-closed",
+          "v348-default-off-release-proof-and-narrow-v2-validator-replacement",
+          "private-v2-execute-moves-to-buyer-login-with-v1-revoked",
+          "synthetic-buyer-seller-and-frozen-quote-installed",
+          "v346-v347-buyer-login-cannot-reserve-without-a-separate-admission-grant",
+          "test-only-buyer-reservation-insert-grant-installed",
+          "released-zero-with-private-pre-send-proof-commits-one-buyer-log-and-unresolved-v2-event",
+          "pre-send-denial-rejects-actual-buyer-or-attempt-usage",
+          "late-guardrail-reservation-cannot-invalidate-committed-zero-buyer-proof",
+          "buyer-cannot-forge-private-proof-or-rewrite-supported-terminal-reason",
+          "ordinary-release-without-exact-denial-proof-cannot-create-zero-buyer-event",
+          "released-row-after-possible-dispatch-never-becomes-no-egress-proof",
+          "uncommitted-earlier-guardrail-insert-serializes-release-and-prevents-zero-proof",
+          "release-failure-reserved-lease-remains-unresolved-without-buyer-log-or-v2-event",
+          "real-chat-guardrail-403-releases-ordinary-hold-and-commits-claim-log-v2-none-zero-send",
+          "real-chat-release-failure-keeps-reserved-claim-for-manual-recovery-without-buyer-event",
+          "runtime-cannot-assume-buyer-or-call-either-producer-and-buyer-cannot-write-seller-or-receipt",
+          "real-buyer-login-critical-writer-commits-debit-private-receipt-and-v2-event",
+          "buyer-v2-replay-verifies-without-double-charge-or-post-commit-recreate",
+          "buyer-login-reserved-ceiling-uses-v344-same-transaction-receipt",
+          "invalid-quote-rolls-back-buyer-debit-log-receipt-and-event",
+          "runtime-forged-log-rolls-back-and-cannot-create-private-v2-event",
+          "current-grant-rerun-reopens-gateway-writes-but-not-outbox-producer-execute"
+        ],
+        "grantSqlExpressions": 3,
+        "grantsSha256": "e040b2ac0e6e1bd555e8de68d032b6216cd5177a4bb2aefb89ea21bb16caec91",
+        "crlf": 0
+      },
+      "successor": {
+        "path": "scripts/db/cutover/postgres-shared-key-guardrail-post-reservation-denial-v348-runtime-buyer-client-successor.native.test.mjs",
+        "sha256": "1abd4fff8b9819b49904121503270c75ce490e3170904b0e7c8e70db2fd92455",
+        "assertionCalls": 61,
+        "stageNames": [
+          "formal-pg73-and-current-runtime-grant-installed",
+          "v2-producer-v344-receipt-and-v346-buyer-split-installed",
+          "v2-function-body-diff-is-exactly-login-gate-and-diagnostic",
+          "successor-default-off-and-source-catalog-drift-fail-closed",
+          "v348-default-off-release-proof-and-narrow-v2-validator-replacement",
+          "private-v2-execute-moves-to-buyer-login-with-v1-revoked",
+          "successor-runtime-buyer-clients-have-distinct-owned-login-identities",
+          "synthetic-buyer-seller-and-frozen-quote-installed",
+          "v346-v347-buyer-login-cannot-reserve-without-a-separate-admission-grant",
+          "test-only-buyer-reservation-insert-grant-installed",
+          "released-zero-with-private-pre-send-proof-commits-one-buyer-log-and-unresolved-v2-event",
+          "pre-send-denial-rejects-actual-buyer-or-attempt-usage",
+          "late-guardrail-reservation-cannot-invalidate-committed-zero-buyer-proof",
+          "buyer-cannot-forge-private-proof-or-rewrite-supported-terminal-reason",
+          "ordinary-release-without-exact-denial-proof-cannot-create-zero-buyer-event",
+          "released-row-after-possible-dispatch-never-becomes-no-egress-proof",
+          "uncommitted-earlier-guardrail-insert-serializes-release-and-prevents-zero-proof",
+          "release-failure-reserved-lease-remains-unresolved-without-buyer-log-or-v2-event",
+          "real-chat-guardrail-403-releases-ordinary-hold-and-commits-claim-log-v2-none-zero-send",
+          "real-chat-release-failure-keeps-reserved-claim-for-manual-recovery-without-buyer-event",
+          "runtime-cannot-assume-buyer-or-call-either-producer-and-buyer-cannot-write-seller-or-receipt",
+          "real-buyer-login-critical-writer-commits-debit-private-receipt-and-v2-event",
+          "buyer-v2-replay-verifies-without-double-charge-or-post-commit-recreate",
+          "buyer-login-reserved-ceiling-uses-v344-same-transaction-receipt",
+          "invalid-quote-rolls-back-buyer-debit-log-receipt-and-event",
+          "runtime-forged-log-rolls-back-and-cannot-create-private-v2-event",
+          "current-grant-rerun-reopens-gateway-writes-but-not-outbox-producer-execute"
+        ],
+        "grantSqlExpressions": 3,
+        "grantsSha256": "e040b2ac0e6e1bd555e8de68d032b6216cd5177a4bb2aefb89ea21bb16caec91",
+        "crlf": 0
+      },
+      "allHistoricalAssertionsPreservedInOrder": true,
+      "allHistoricalStageNamesPreservedInOrder": true,
+      "allHistoricalGrantSqlByteEquivalent": true,
+      "addedStages": [
+        "successor-runtime-buyer-clients-have-distinct-owned-login-identities"
+      ]
+    }
+  },
+  "runtimeSourceInvariants": {
+    "artifact": {
+      "path": ".wrangler/publish-20260927/a802-ci-fixture-successor-source-invariants.json",
+      "sha256": "809ffa8d34796145d9f53db1570cc3015f37a140441a99bc8ef279ec00d87b70"
+    },
+    "proof": {
+      "schema": "a8029350-ci-fixture-successor-source-invariants-v1",
+      "recordedAtUtc": "2026-09-27T08:26:38.688Z",
+      "status": "PASS",
+      "baseCommit": "a8029350760d9442f866ac1eab59d4d2845eed4a",
+      "coreCorpus": {
+        "files": 327,
+        "sha256": "477233bf3c31f1ef3ca847ba3e36179fef50f85e1ba3c909a847706bff2800b0",
+        "byteIdenticalToBase": true,
+        "changedPaths": []
+      },
+      "proxyCorpus": {
+        "files": 454,
+        "sha256": "110ae5a44cf5c052bfb9851b112bce6e03a69503e2e8880ea088729031c96499",
+        "byteIdenticalToBase": true,
+        "changedPaths": []
+      },
+      "formalPostgres": {
+        "files": 73,
+        "sha256": "23afef61a8a670e0af8c90e3a138f522e6b283b454e380a592bf85bca83108dc",
+        "byteIdenticalToBase": true,
+        "changedPaths": []
+      },
+      "coreNodeBundle": {
+        "path": "packages/core/dist/index.js",
+        "sha256": "527f77bf141c0167ace4bfa0a9646c6cbd5df3c47a6e7d9b2d0efd25551b989b",
+        "ignoredGeneratedArtifact": true,
+        "gitBaseComparison": "Not applicable: generated bundle is ignored and not contained in Git commit. Hash recorded for comparison with individual native reports."
+      },
+      "algorithm": "Historical raw UTF8 corpus: sorted source paths (or SQL filenames) + LF + unmodified UTF8 content, each item joined by LF.",
+      "comparison": "Every current Core/Proxy TS/TSX and formal SQL file read as Buffer and compared byte-for-byte to immutable Git blob from a8029350.",
+      "cleanupBoundary": "This source verification does not prove native cluster, request-resource or Worker lifecycle cleanup.",
+      "sourceFilesEdited": false,
+      "coreBuildRun": false,
+      "nativeTestsRun": false
+    }
+  },
+  "directLoadedSourcePins": [
+    {
+      "path": "packages/core/dist/index.js",
+      "sha256": "527f77bf141c0167ace4bfa0a9646c6cbd5df3c47a6e7d9b2d0efd25551b989b"
+    },
+    {
+      "path": "packages/proxy/src/services/shared-key-quote-attempt.ts",
+      "sha256": "288683d09f213e8379ebab58ad21d8f00964649d5377d42c1a7676120d8e9860"
+    },
+    {
+      "path": "packages/proxy/src/services/authenticated-chat-budget-proof.ts",
+      "sha256": "fb24b5e920a57d8bf7da8f39b50b5439274fb6a0cfa03a027ef6fe4b99bbd987"
+    },
+    {
+      "path": "packages/proxy/src/routes/v1/chat.ts",
+      "sha256": "638dbd734aa953060c7f20ebdd0873532028b14cbb4448827cc75e30f8501d4f"
+    },
+    {
+      "path": "packages/core/src/test-support/postgres-native-cluster.mjs",
+      "sha256": "6b5923be8d3bdcd061033eed1af2f67f3b87fa2fca1f2cf0a0b2eb0eb2cb8d2a"
+    }
+  ],
+  "contract": {
+    "runtimeRole": "cinatoken_gateway_runtime",
+    "buyerRole": "cinatoken_gateway_buyer_settlement",
+    "runtimeAndBuyerRawDistinct": true,
+    "currentUserAndSessionUserBothExactForBothRoles": true,
+    "producerArgument": "buyerDb",
+    "chatRepositoryClient": "runtimeDb",
+    "testOnlyAdmission": "Only userBudgets uses the historical buyerRepositories.userBudgets capability. Its original owned admission methods and two old test-only grant statements are unchanged; this is not a reviewed production admission identity.",
+    "aggregateActivation": "AUTHENTICATED_CHAT_BUDGET_PROOF_ENABLED=reviewed-v1",
+    "quoteActivation": "SHARED_KEY_QUOTE_ATTEMPTS_ENABLED=reviewed-v1",
+    "postgresChatBudgetOwnerActivation": "unset"
+  },
+  "preservedControls": [
+    "All 57 original assert calls and 26 stage names remain in order; one actual role/client identity stage is added.",
+    "All 3 GRANT SQL expressions, including the 2 historical test-only statements, remain byte-equivalent.",
+    "Guardrail 403 has zero upstream sends and released settled=0/buyer_charge_basis=none/debit=0, proof=1/claim=1/log=1.",
+    "Injected release failure returns 500 with zero upstream sends, reserved state/proofs=0/claims=1/logs=0.",
+    "Original mutual SET ROLE denials, runtime financial/producer denials, buyer seller/private-receipt denials, same-transaction/idempotent/rollback/race controls and legacy grant-rerun checks passed unchanged."
+  ],
+  "workflowChange": {
+    "path": ".github/workflows/proxy-dispatch-safety.yml",
+    "ownedScope": "Only replace historical v348 native test invocation with its runtime-buyer-client successor. Other gates, including the separate workerd step owned by another agent, are outside this patch.",
+    "successor": "scripts/db/cutover/postgres-shared-key-guardrail-post-reservation-denial-v348-runtime-buyer-client-successor.native.test.mjs"
+  },
+  "productionRuntimeCoreSqlAclChanged": false,
+  "coreBuildPerformed": false,
+  "optionalNativeGatesExpanded": false,
+  "historicalFailureLogPreserved": true,
+  "committed": false,
+  "remoteLinuxCi": "pending"
+}

@@ -1,0 +1,102 @@
+{
+  "schemaVersion": 1,
+  "fixture": "text-dispatch-workerd-wire-worker-conditions-successor",
+  "startedAt": "2026-09-27T08:22:00.521Z",
+  "node": "v22.23.2",
+  "platform": "win32",
+  "nativeWorkerOptIn": false,
+  "network": "owned 127.0.0.1 HTTP servers; no remote SQL, cloud origin or paid Provider",
+  "cases": [
+    {
+      "name": "a retrying HTTP intermediary can turn one admitted Gateway fetch into two physical provider POSTs",
+      "status": "FAIL",
+      "error": {
+        "name": "AssertionError",
+        "message": "{\"responseBody\":\"{\\\"relayFailure\\\":{\\\"name\\\":\\\"TypeError\\\",\\\"message\\\":\\\"fetch failed\\\",\\\"code\\\":null,\\\"stack\\\":\\\"TypeError: fetch failed\\\\n    at node:internal/deps/undici/undici:15157:13\\\\n    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)\\\\n    at async Server.<anonymous> (file:///C:/Users/cina/.codex/worktrees/checklist-release/cinatoken/packages/proxy/scripts/staging/text-dispatch-workerd-wire-worker-conditions-successor.test.mjs:261:26)\\\",\\\"cause\\\":{\\\"name\\\":\\\"TypeError\\\",\\\"message\\\":\\\"Cannot perform ArrayBuffer.prototype.slice on a detached ArrayBuffer\\\",\\\"code\\\":null,\\\"stack\\\":\\\"TypeError: Cannot perform ArrayBuffer.prototype.slice on a detached ArrayBuffer\\\\n    at ArrayBuffer.slice (<anonymous>)\\\\n    at extractBody (node:internal/deps/undici/undici:5673:47)\\\\n    at safelyExtractBody (node:internal/deps/undici/undici:5781:14)\\\\n    at httpRedirectFetch (node:internal/deps/undici/undici:11183:24)\\\\n    at httpFetch (node:internal/deps/undici/undici:11126:28)\\\\n    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)\\\\n    at async node:internal/deps/undici/undici:10863:20\\\\n    at async mainFetch (node:internal/deps/undici/undici:10853:20)\\\",\\\"cause\\\":null}}}\",\"relayErrors\":[{\"name\":\"TypeError\",\"message\":\"fetch failed\",\"code\":null,\"stack\":\"TypeError: fetch failed\\n    at node:internal/deps/undici/undici:15157:13\\n    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)\\n    at async Server.<anonymous> (file:///C:/Users/cina/.codex/worktrees/checklist-release/cinatoken/packages/proxy/scripts/staging/text-dispatch-workerd-wire-worker-conditions-successor.test.mjs:261:26)\",\"cause\":{\"name\":\"TypeError\",\"message\":\"Cannot perform ArrayBuffer.prototype.slice on a detached ArrayBuffer\",\"code\":null,\"stack\":\"TypeError: Cannot perform ArrayBuffer.prototype.slice on a detached ArrayBuffer\\n    at ArrayBuffer.slice (<anonymous>)\\n    at extractBody (node:internal/deps/undici/undici:5673:47)\\n    at safelyExtractBody (node:internal/deps/undici/undici:5781:14)\\n    at httpRedirectFetch (node:internal/deps/undici/undici:11183:24)\\n    at httpFetch (node:internal/deps/undici/undici:11126:28)\\n    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)\\n    at async node:internal/deps/undici/undici:10863:20\\n    at async mainFetch (node:internal/deps/undici/undici:10853:20)\",\"cause\":null}}],\"relayHits\":[\"/v1/chat/completions\"],\"providerHits\":[{\"path\":\"/v1/chat/completions\",\"method\":\"POST\",\"body\":\"{\\\"messages\\\":[{\\\"role\\\":\\\"user\\\",\\\"content\\\":\\\"fixture\\\"}],\\\"model\\\":\\\"synthetic-model\\\"}\",\"credential\":\"Bearer synthetic-relay-secret\"}]}\n\n502 !== 200\n",
+        "code": "ERR_ASSERTION",
+        "stack": "AssertionError [ERR_ASSERTION]: {\"responseBody\":\"{\\\"relayFailure\\\":{\\\"name\\\":\\\"TypeError\\\",\\\"message\\\":\\\"fetch failed\\\",\\\"code\\\":null,\\\"stack\\\":\\\"TypeError: fetch failed\\\\n    at node:internal/deps/undici/undici:15157:13\\\\n    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)\\\\n    at async Server.<anonymous> (file:///C:/Users/cina/.codex/worktrees/checklist-release/cinatoken/packages/proxy/scripts/staging/text-dispatch-workerd-wire-worker-conditions-successor.test.mjs:261:26)\\\",\\\"cause\\\":{\\\"name\\\":\\\"TypeError\\\",\\\"message\\\":\\\"Cannot perform ArrayBuffer.prototype.slice on a detached ArrayBuffer\\\",\\\"code\\\":null,\\\"stack\\\":\\\"TypeError: Cannot perform ArrayBuffer.prototype.slice on a detached ArrayBuffer\\\\n    at ArrayBuffer.slice (<anonymous>)\\\\n    at extractBody (node:internal/deps/undici/undici:5673:47)\\\\n    at safelyExtractBody (node:internal/deps/undici/undici:5781:14)\\\\n    at httpRedirectFetch (node:internal/deps/undici/undici:11183:24)\\\\n    at httpFetch (node:internal/deps/undici/undici:11126:28)\\\\n    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)\\\\n    at async node:internal/deps/undici/undici:10863:20\\\\n    at async mainFetch (node:internal/deps/undici/undici:10853:20)\\\",\\\"cause\\\":null}}}\",\"relayErrors\":[{\"name\":\"TypeError\",\"message\":\"fetch failed\",\"code\":null,\"stack\":\"TypeError: fetch failed\\n    at node:internal/deps/undici/undici:15157:13\\n    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)\\n    at async Server.<anonymous> (file:///C:/Users/cina/.codex/worktrees/checklist-release/cinatoken/packages/proxy/scripts/staging/text-dispatch-workerd-wire-worker-conditions-successor.test.mjs:261:26)\",\"cause\":{\"name\":\"TypeError\",\"message\":\"Cannot perform ArrayBuffer.prototype.slice on a detached ArrayBuffer\",\"code\":null,\"stack\":\"TypeError: Cannot perform ArrayBuffer.prototype.slice on a detached ArrayBuffer\\n    at ArrayBuffer.slice (<anonymous>)\\n    at extractBody (node:internal/deps/undici/undici:5673:47)\\n    at safelyExtractBody (node:internal/deps/undici/undici:5781:14)\\n    at httpRedirectFetch (node:internal/deps/undici/undici:11183:24)\\n    at httpFetch (node:internal/deps/undici/undici:11126:28)\\n    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)\\n    at async node:internal/deps/undici/undici:10863:20\\n    at async mainFetch (node:internal/deps/undici/undici:10853:20)\",\"cause\":null}}],\"relayHits\":[\"/v1/chat/completions\"],\"providerHits\":[{\"path\":\"/v1/chat/completions\",\"method\":\"POST\",\"body\":\"{\\\"messages\\\":[{\\\"role\\\":\\\"user\\\",\\\"content\\\":\\\"fixture\\\"}],\\\"model\\\":\\\"synthetic-model\\\"}\",\"credential\":\"Bearer synthetic-relay-secret\"}]}\n\n502 !== 200\n\n    at file:///C:/Users/cina/.codex/worktrees/checklist-release/cinatoken/packages/proxy/scripts/staging/text-dispatch-workerd-wire-worker-conditions-successor.test.mjs:299:12\n    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)\n    at async TestContext.<anonymous> (file:///C:/Users/cina/.codex/worktrees/checklist-release/cinatoken/packages/proxy/scripts/staging/text-dispatch-workerd-wire-worker-conditions-successor.test.mjs:45:11)\n    at async Test.run (node:internal/test_runner/test:1054:7)\n    at async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)",
+        "cause": null
+      },
+      "elapsedMs": 115.3806999999997
+    }
+  ],
+  "bundles": [],
+  "nativeModes": [],
+  "relay": {
+    "gatewayPermits": 1,
+    "relayPosts": 1,
+    "providerPosts": 1,
+    "providerHits": [
+      {
+        "path": "/v1/chat/completions",
+        "method": "POST",
+        "body": "{\"messages\":[{\"role\":\"user\",\"content\":\"fixture\"}],\"model\":\"synthetic-model\"}",
+        "credential": "Bearer synthetic-relay-secret"
+      }
+    ],
+    "relayErrors": [
+      {
+        "name": "TypeError",
+        "message": "fetch failed",
+        "code": null,
+        "stack": "TypeError: fetch failed\n    at node:internal/deps/undici/undici:15157:13\n    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)\n    at async Server.<anonymous> (file:///C:/Users/cina/.codex/worktrees/checklist-release/cinatoken/packages/proxy/scripts/staging/text-dispatch-workerd-wire-worker-conditions-successor.test.mjs:261:26)",
+        "cause": {
+          "name": "TypeError",
+          "message": "Cannot perform ArrayBuffer.prototype.slice on a detached ArrayBuffer",
+          "code": null,
+          "stack": "TypeError: Cannot perform ArrayBuffer.prototype.slice on a detached ArrayBuffer\n    at ArrayBuffer.slice (<anonymous>)\n    at extractBody (node:internal/deps/undici/undici:5673:47)\n    at safelyExtractBody (node:internal/deps/undici/undici:5781:14)\n    at httpRedirectFetch (node:internal/deps/undici/undici:11183:24)\n    at httpFetch (node:internal/deps/undici/undici:11126:28)\n    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)\n    at async node:internal/deps/undici/undici:10863:20\n    at async mainFetch (node:internal/deps/undici/undici:10853:20)",
+          "cause": null
+        }
+      }
+    ],
+    "responseStatus": 502
+  },
+  "cleanup": [
+    {
+      "server": "relay-provider",
+      "closed": true
+    },
+    {
+      "server": "relay",
+      "closed": true
+    }
+  ],
+  "sourcePins": [
+    {
+      "path": "node_modules/esbuild/package.json",
+      "sha256": "24655ca1d9c91fe7517a99ec27bf1125b46efae71b54a55125d2a930b6ad61f9"
+    },
+    {
+      "path": "node_modules/miniflare/package.json",
+      "sha256": "d43d063fc65818a57e5df8c5503bcfddaef5320099d2479097b16b6cb7a5a288"
+    },
+    {
+      "path": "node_modules/workerd/package.json",
+      "sha256": "84a166529ea8d4de0bcdf2af781996846cd64e33367f357d88bbc3d514c06fe2"
+    },
+    {
+      "path": "package-lock.json",
+      "sha256": "f9f477d173c8553fe2c10ee1f7217ca7a36db8d11afd056402afe98d71f940ff"
+    },
+    {
+      "path": "packages/core/package.json",
+      "sha256": "5bdbb6d41edbd0ccf6e8e92f9ec6da28e73655aa3936933d96fa388a04833dcd"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/text-dispatch-workerd-wire-v374.test.mjs",
+      "sha256": "9b6a96ba25259f0cdca27dad9ed9baeed0b779091639032de93c459f397a1aa2"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/text-dispatch-workerd-wire-worker-conditions-successor.test.mjs",
+      "sha256": "1088ab2d8a1a44618f5de29ca6f6ed3e43e41df930bc8919643d38317eb1797d"
+    }
+  ],
+  "endedAt": "2026-09-27T08:22:00.827Z",
+  "nodeExecutableSha256": "0d0f5e39f9f3d9587bc19f73eab3c2c9c4903fd02d6dbf9c853dd81b3d95fad4",
+  "status": "FAIL",
+  "limitations": [
+    "Browser package resolution matches Wrangler defaults; this dispatch-only esbuild fixture is not the deployed full Worker bundle.",
+    "Windows native runtime failure is retained as FAIL when opted in; no native transport result can be inferred from it.",
+    "The unsafe local relay counterexample does not establish actual deployed intermediary retry or redirect policy."
+  ]
+}

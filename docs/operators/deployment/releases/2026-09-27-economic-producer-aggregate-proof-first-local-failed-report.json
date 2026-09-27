@@ -1,0 +1,109 @@
+{
+  "status": "FAIL",
+  "cleanup": "PASS",
+  "binaryVersion": "postgres (PostgreSQL) 18.6",
+  "sourceSha256": {
+    "formalMigrationCorpus": "23afef61a8a670e0af8c90e3a138f522e6b283b454e380a592bf85bca83108dc",
+    "shared-key-quote-versions.sql": "1249a7ff07f95b48c7b45a41833c96c9a028e4bfe3a47e44e9dc6b72c3c77246",
+    "shared-key-dispatch-quote-attempts.sql": "c89c79e803fd69a2d09d44b33be3301aeb8aa4ed72c5dff5518439ec29fafb83",
+    "shared-key-economic-outbox.sql": "f92835c72ff02cba23879ed90ad640832455ccb98764f28fe4ee04ce52aab1ac",
+    "shared-key-economic-outbox-producer.sql": "ea9ccc7138cbd641d386e14d1bb95b8cabee942501a49d6b0763e8e1b3eb0920",
+    "shared-key-snapshot-earning-consumer.sql": "66fbd89c3453320284133de06d72793d4e1d2f68aaf756087857c18493e955db",
+    "shared-key-buyer-debit-v2.sql": "fc327b411e8ae6a417a156ab4ba3b633a47a2e615d249b8861503fc4cbf68593",
+    "shared-key-economic-producer-v2.sql": "3871f01eed2a058c9df9e1ca7c2d6898e995e9fa007115ccb6d62082e57712f3",
+    "criticalWriter": "69a7c8e621aeb87a687411b9687c2e53e052829c819ccfd6e0bd757073c38408",
+    "outboxInputTypes": "2b6eb303295b1af192f9a3bc4b405834789a02cd0eda10b5a555dfa4e50a128e",
+    "nativeTest": "d4d4ccb7acef8979fc024c65e32d54db1458f70881edd5a154b9348db9a47c81",
+    "predecessorNative": "d33b946e3c4386313df893384bcce81989b6a9e7089f5e278a68a5fb6453d795",
+    "aggregateBudgetProof": "fb24b5e920a57d8bf7da8f39b50b5439274fb6a0cfa03a027ef6fe4b99bbd987",
+    "coreNodeBundle": "527f77bf141c0167ace4bfa0a9646c6cbd5df3c47a6e7d9b2d0efd25551b989b",
+    "usageTracker": "7e136b969de321245d0e5e55c1a0c3630422b42f2985fd00128d3ff934c212ce",
+    "quoteAttemptBridge": "288683d09f213e8379ebab58ad21d8f00964649d5377d42c1a7676120d8e9860",
+    "providerUsageFacts": "71513bd2d3695135b459d466d206f5b716cce47294daeeb698c041ef08a68e9b",
+    "chatRoute": "638dbd734aa953060c7f20ebdd0873532028b14cbb4448827cc75e30f8501d4f",
+    "failoverDispatch": "e0341ef487bce44f03051d4160888c6979ae7b3a12fadfcb20ec10b3538df42a",
+    "shared-key-buyer-budget-receipt-v2.sql": "56ebaecd1425206df81c9dc7981c34e5e246047f188355f5d14103e2dee3270c",
+    "buyer-critical-writer-privilege-split-v346.sql": "3ec31913a7d5f5924b4e3f7449a3a35ba1aa064f5cbe3400ce0e063b0df0064c",
+    "shared-key-economic-producer-buyer-login-v347.sql": "f5692bc9a309ce8695db1ea2003c71a8cbaf8eee8db0aa459ef3b522af0ef62f"
+  },
+  "stages": [
+    {
+      "name": "formal-pg73-installed",
+      "result": "PASS"
+    },
+    {
+      "name": "quote-dispatch-v1-producer-consumer-and-v2-debit-installed",
+      "result": "PASS"
+    },
+    {
+      "name": "default-off-and-v1-producer-catalog-drift-roll-back-install",
+      "result": "PASS"
+    },
+    {
+      "name": "third-role-default-function-and-table-grants-roll-back-install",
+      "result": "PASS"
+    },
+    {
+      "name": "v2-producer-installed-with-execute-only-privilege",
+      "result": "PASS"
+    },
+    {
+      "name": "fixture-identities-and-pinned-quote-installed",
+      "result": "PASS"
+    },
+    {
+      "name": "v2-actual-debit-and-idempotent-critical-writer-replay",
+      "result": "PASS"
+    },
+    {
+      "name": "v2-reserved-ceiling-differs-from-guardrail-without-double-debit",
+      "result": "PASS"
+    },
+    {
+      "name": "v2-replay-verifies-exact-debit-and-cannot-recreate-post-commit",
+      "result": "PASS"
+    },
+    {
+      "name": "existing-v1-five-argument-producer-still-works",
+      "result": "PASS"
+    },
+    {
+      "name": "invalid-outcome-rolls-back-buyer-log-budget-and-event",
+      "result": "PASS"
+    },
+    {
+      "name": "receipt-and-buyer-login-successors-move-financial-writes-off-runtime",
+      "result": "PASS"
+    },
+    {
+      "name": "real-record-usage-atomically-writes-buyer-log-and-v2-event-without-legacy-seller",
+      "result": "PASS"
+    },
+    {
+      "name": "pre-send-budget-denial-claim-persists-v2-none-without-reservation-or-debit",
+      "result": "PASS"
+    },
+    {
+      "name": "real-chat-handler-budget-402-hands-claimed-only-reference-to-zero-debit-v2-event",
+      "result": "PASS"
+    },
+    {
+      "name": "released-ordinary-reservation-rejects-v2-none-and-remains-open-gate",
+      "result": "PASS"
+    }
+  ],
+  "limitations": [
+    "Successor supplies the current exact aggregate budget-proof opt-in for the original budget-denied Chat case; production gates and role grants are unchanged.",
+    "The recordUsage adapter is review-only and is not bound to shipped app activation.",
+    "The local direct buyer LOGIN does not prove Workers or Hyperdrive transaction identity.",
+    "The owned 402 wire fixture temporarily grants the old runtime ordinary-admission columns, then revokes and verifies them; a dedicated production admission identity is still an open gate.",
+    "This combined regression installs v344 after earlier synthetic v2 compatibility events; a production cutover must install the receipt before any v2 traffic and separately review historical synthetic rows.",
+    "The adapter-stage provider usage is synthetic and its provider cost stays unknown.",
+    "Early returns, terminal failures and unverified non-shared usage are not yet durably settled."
+  ],
+  "failure": {
+    "code": null,
+    "constraint": null,
+    "message": "Error: Potentially billable unknown shared-key attempt requires reserved buyer debit\n    at prepareSharedKeyEconomicUsageHandoff (C:\\cinagroup\\cinatoken\\packages\\proxy\\src\\services\\usage-tracker.ts:264:9)\n    at recordUsage (C:\\cinagroup\\cinatoken\\packages\\proxy\\src\\services\\usage-tracker.ts:683:23)\n    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n    at async Object.recordUsageAndOutbox (C:\\cinagroup\\cinatoken\\packages\\proxy\\src\\services\\shared-key-quote-attempt.ts:189:4)\n    at async TestContext.<anonymous> (file:///C:/cinagroup/cinatoken/scripts/db/cutover/postgres-shared-key-economic-producer-v2-aggregate-proof.native.test.mjs:671:7)\n    at async Test.run (node:internal/test_runner/test:1125:7)\n    at async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3)"
+  }
+}

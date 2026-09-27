@@ -1,0 +1,40 @@
+✔ production Chat dispatch bundles into a native Worker with fixed loopback provider (452.8588ms)
+ℹ {"platform":"browser","conditions":["workerd","worker","browser"],"coreSource":true,"coreDist":false,"inputCount":639}
+There was an access violation in the runtime.
+On Windows, this may be caused by an outdated Microsoft Visual C++ Redistributable library.
+Check that you have the latest version installed.
+See https://learn.microsoft.com/en-us/cpp/windows/latest-supported-vc-redist
+[Gateway Proxy] calling provider providerId=relay-provider-39 model=synthetic-model
+✖ native Worker fetch never follows 307/308 or retries an unknown send; explicit 429 uses three permits (1629.2651ms)
+ℹ {"platform":"browser","conditions":["workerd","worker","browser"],"coreSource":true,"coreDist":false,"inputCount":639}
+✔ a retrying HTTP intermediary can turn one admitted Gateway fetch into two physical provider POSTs (144.9542ms)
+ℹ {"gatewayPermits":1,"relayPosts":1,"providerPosts":2,"repeatedBodyAndCredential":true}
+ℹ tests 3
+ℹ suites 0
+ℹ pass 2
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 6087.2836
+
+✖ failing tests:
+
+test at packages\proxy\scripts\staging\text-dispatch-workerd-wire-worker-conditions-successor.test.mjs:126:1
+✖ native Worker fetch never follows 307/308 or retries an unknown send; explicit 429 uses three permits (1629.2651ms)
+  MiniflareCoreError [ERR_RUNTIME_FAILURE]: The Workers runtime failed to start. There was likely a problem with the workerd binary or your configuration.
+  Runtime stderr:
+  *** Received structured exception #0xc0000005: access violation; stack: 7fff3e558c33 7ff74175044d 7ff741750513 7ff74173305c 7ff741733010 7ff740b3a006 7ff740b3a78f 7ff73f5c603f 7ff740ce8b72 7ff740cefa76 7ff740ce90cb 7ff740cefa76 7ff740ce661b 7ff73f5b1ea8 7ff742c320ce 7fff87aecd86 7fff89cacaeb
+      at StartupLogBuffer.handleStartupFailure (C:\Users\cina\.codex\worktrees\checklist-release\cinatoken\node_modules\miniflare\src\runtime\index.ts:224:10)
+      at Runtime.updateConfig (C:\Users\cina\.codex\worktrees\checklist-release\cinatoken\node_modules\miniflare\src\runtime\index.ts:345:21)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async _Miniflare.#assembleAndUpdateConfig (C:\Users\cina\.codex\worktrees\checklist-release\cinatoken\node_modules\miniflare\src\index.ts:2590:28)
+      at async <anonymous> (C:\Users\cina\.codex\worktrees\checklist-release\cinatoken\node_modules\miniflare\src\index.ts:984:5)
+      at async Mutex.runWith (C:\Users\cina\.codex\worktrees\checklist-release\cinatoken\node_modules\miniflare\src\workers\shared\sync.ts:67:45)
+      at async _Miniflare.#waitForReady (C:\Users\cina\.codex\worktrees\checklist-release\cinatoken\node_modules\miniflare\src\index.ts:2755:3)
+      at async _Miniflare.dispatchFetch (C:\Users\cina\.codex\worktrees\checklist-release\cinatoken\node_modules\miniflare\src\index.ts:2998:3)
+      at async TestContext.<anonymous> (file:///C:/Users/cina/.codex/worktrees/checklist-release/cinatoken/packages/proxy/scripts/staging/text-dispatch-workerd-wire-worker-conditions-successor.test.mjs:144:24)
+      at async Test.run (node:internal/test_runner/test:1125:7) {
+    code: 'ERR_RUNTIME_FAILURE',
+    cause: undefined
+  }

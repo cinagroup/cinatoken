@@ -79,7 +79,7 @@ jobs:
       # Synthetic repositories and intercepted fetch only; no cloud credentials.
       - run: npm run test:dispatch-safety -w @octafuse/proxy
       # Local workerd and a loopback provider count physical text POSTs at the transport boundary.
-      - run: node --import tsx --test packages/proxy/scripts/staging/text-dispatch-workerd-wire-v374.test.mjs
+      - run: node --import tsx --test packages/proxy/scripts/staging/text-dispatch-workerd-wire-worker-conditions-successor.test.mjs
       # A response reset can make an intermediary replay a complete POST behind one Gateway permit.
       - run: node --import tsx --test packages/proxy/scripts/staging/text-dispatch-relay-reset-v376.test.mjs
       # Direct text drivers must stop fallback when a fully uploaded POST loses its response.
@@ -516,7 +516,7 @@ jobs:
             node --import tsx --test scripts/db/cutover/postgres-shared-key-economic-buyer-login-v347.native.test.mjs
       - run: |
           gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
-            node --import tsx --test scripts/db/cutover/postgres-shared-key-guardrail-post-reservation-denial-v348.native.test.mjs
+            node --import tsx --test scripts/db/cutover/postgres-shared-key-guardrail-post-reservation-denial-v348-runtime-buyer-client-successor.native.test.mjs
       - run: |
           gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
             node --import tsx --test scripts/db/cutover/postgres-buyer-split-grant-rerun-v348.native.test.mjs
