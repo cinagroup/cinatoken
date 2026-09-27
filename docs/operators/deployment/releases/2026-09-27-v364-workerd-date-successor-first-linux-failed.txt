@@ -1,0 +1,111 @@
+2026-09-27T09:44:55.4410552Z ##[group]Run node --import tsx --test scripts/staging/chat-holder-binding-v364.node.test.mjs scripts/staging/chat-holder-binding-v364.test.mjs
+2026-09-27T09:44:55.4412386Z [36;1mnode --import tsx --test scripts/staging/chat-holder-binding-v364.node.test.mjs scripts/staging/chat-holder-binding-v364.test.mjs[0m
+2026-09-27T09:44:55.4474120Z shell: /usr/bin/bash -e {0}
+2026-09-27T09:44:55.4474390Z ##[endgroup]
+2026-09-27T09:44:55.4994287Z TAP version 13
+2026-09-27T09:44:55.8037033Z # Subtest: v364 in-process contract: private holder bounds and validates six fields; gateway forwards no auth or provider data
+2026-09-27T09:44:55.8038189Z ok 1 - v364 in-process contract: private holder bounds and validates six fields; gateway forwards no auth or provider data
+2026-09-27T09:44:55.8038829Z   ---
+2026-09-27T09:44:55.8039055Z   duration_ms: 69.469216
+2026-09-27T09:44:55.8039317Z   type: 'test'
+2026-09-27T09:44:55.8039526Z   ...
+2026-09-27T09:44:55.8628668Z # Subtest: v364 in-process contract: one Response yields a first chunk before holder release and cancellation reaches source
+2026-09-27T09:44:55.8720735Z ok 2 - v364 in-process contract: one Response yields a first chunk before holder release and cancellation reaches source
+2026-09-27T09:44:55.8722533Z   ---
+2026-09-27T09:44:55.8723067Z   duration_ms: 58.567633
+2026-09-27T09:44:55.8723973Z   type: 'test'
+2026-09-27T09:44:55.8724481Z   ...
+2026-09-27T09:44:56.4030229Z # Subtest: v364 configs keep the synthetic holder private and bind only the named holder
+2026-09-27T09:44:56.4034841Z ok 3 - v364 configs keep the synthetic holder private and bind only the named holder
+2026-09-27T09:44:56.4035859Z   ---
+2026-09-27T09:44:56.4036192Z   duration_ms: 1.683365
+2026-09-27T09:44:56.4036595Z   type: 'test'
+2026-09-27T09:44:56.4036947Z   ...
+2026-09-27T09:44:56.4833611Z # service core:user:cinatoken-staging-chat-holder-gateway-fixture-v364: This Worker requires compatibility date "2026-09-25", but the newest date supported by this server binary is "2026-09-04".
+2026-09-27T09:44:56.6121139Z # Subtest: private Worker rejects oversized, foreign, and malformed six-field requests without disclosing holder data
+2026-09-27T09:44:56.6125661Z not ok 4 - private Worker rejects oversized, foreign, and malformed six-field requests without disclosing holder data
+2026-09-27T09:44:56.6127093Z   ---
+2026-09-27T09:44:56.6128009Z   duration_ms: 90.541281
+2026-09-27T09:44:56.6128632Z   type: 'test'
+2026-09-27T09:44:56.6129907Z   location: '/home/runner/work/cinatoken/cinatoken/packages/proxy/scripts/staging/chat-holder-binding-v364.test.mjs:115:1'
+2026-09-27T09:44:56.6131057Z   failureType: 'testCodeFailure'
+2026-09-27T09:44:56.6131520Z   error: |-
+2026-09-27T09:44:56.6132448Z     The Workers runtime failed to start. There was likely a problem with the workerd binary or your configuration.
+2026-09-27T09:44:56.6133282Z     Runtime stderr:
+2026-09-27T09:44:56.6134772Z     {"timestamp":"1790502296473","level":"error","source":"src/workerd/server/json-logger.c++:127","message":"service core:user:cinatoken-staging-chat-holder-gateway-fixture-v364: This Worker requires compatibility date \"2026-09-25\", but the newest date supported by this server binary is \"2026-09-04\".","context_depth":0}
+2026-09-27T09:44:56.6136329Z   code: 'ERR_RUNTIME_FAILURE'
+2026-09-27T09:44:56.6136668Z   name: 'MiniflareCoreError [ERR_RUNTIME_FAILURE]'
+2026-09-27T09:44:56.6136988Z   stack: |-
+2026-09-27T09:44:56.6138117Z     StartupLogBuffer.handleStartupFailure (/home/runner/work/cinatoken/cinatoken/node_modules/miniflare/src/runtime/index.ts:224:10)
+2026-09-27T09:44:56.6139478Z     Runtime.updateConfig (/home/runner/work/cinatoken/cinatoken/node_modules/miniflare/src/runtime/index.ts:345:21)
+2026-09-27T09:44:56.6140837Z     process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+2026-09-27T09:44:56.6142245Z     async _Miniflare.#assembleAndUpdateConfig (/home/runner/work/cinatoken/cinatoken/node_modules/miniflare/src/index.ts:2590:28)
+2026-09-27T09:44:56.6144047Z     async <anonymous> (/home/runner/work/cinatoken/cinatoken/node_modules/miniflare/src/index.ts:984:5)
+2026-09-27T09:44:56.6145702Z     async Mutex.runWith (/home/runner/work/cinatoken/cinatoken/node_modules/miniflare/src/workers/shared/sync.ts:67:45)
+2026-09-27T09:44:56.6147212Z     async _Miniflare.#waitForReady (/home/runner/work/cinatoken/cinatoken/node_modules/miniflare/src/index.ts:2755:3)
+2026-09-27T09:44:56.6148715Z     async _Miniflare._getProxyClient (/home/runner/work/cinatoken/cinatoken/node_modules/miniflare/src/index.ts:3084:3)
+2026-09-27T09:44:56.6150205Z     async _Miniflare.getBindings (/home/runner/work/cinatoken/cinatoken/node_modules/miniflare/src/index.ts:3107:23)
+2026-09-27T09:44:56.6151833Z     async fixture (file:///home/runner/work/cinatoken/cinatoken/packages/proxy/scripts/staging/chat-holder-binding-v364.test.mjs:77:27)
+2026-09-27T09:44:56.6152876Z   ...
+2026-09-27T09:44:56.6651300Z # service core:user:cinatoken-staging-chat-holder-gateway-fixture-v364: This Worker requires compatibility date "2026-09-25", but the newest date supported by this server binary is "2026-09-04".
+2026-09-27T09:44:56.6723403Z # Subtest: one holder Response streams through the Service Binding before its final chunk is released
+2026-09-27T09:44:56.6731892Z not ok 5 - one holder Response streams through the Service Binding before its final chunk is released
+2026-09-27T09:44:56.6733499Z   ---
+2026-09-27T09:44:56.6734157Z   duration_ms: 187.73139
+2026-09-27T09:44:56.6735117Z   type: 'test'
+2026-09-27T09:44:56.6736430Z   location: '/home/runner/work/cinatoken/cinatoken/packages/proxy/scripts/staging/chat-holder-binding-v364.test.mjs:140:1'
+2026-09-27T09:44:56.6737873Z   failureType: 'testCodeFailure'
+2026-09-27T09:44:56.6738600Z   error: |-
+2026-09-27T09:44:56.6739774Z     The Workers runtime failed to start. There was likely a problem with the workerd binary or your configuration.
+2026-09-27T09:44:56.6740990Z     Runtime stderr:
+2026-09-27T09:44:56.6743668Z     {"timestamp":"1790502296663","level":"error","source":"src/workerd/server/json-logger.c++:127","message":"service core:user:cinatoken-staging-chat-holder-gateway-fixture-v364: This Worker requires compatibility date \"2026-09-25\", but the newest date supported by this server binary is \"2026-09-04\".","context_depth":0}
+2026-09-27T09:44:56.6746619Z   code: 'ERR_RUNTIME_FAILURE'
+2026-09-27T09:44:56.6747430Z   name: 'MiniflareCoreError [ERR_RUNTIME_FAILURE]'
+2026-09-27T09:44:56.6748186Z   stack: |-
+2026-09-27T09:44:56.6749534Z     StartupLogBuffer.handleStartupFailure (/home/runner/work/cinatoken/cinatoken/node_modules/miniflare/src/runtime/index.ts:224:10)
+2026-09-27T09:44:56.6751506Z     Runtime.updateConfig (/home/runner/work/cinatoken/cinatoken/node_modules/miniflare/src/runtime/index.ts:345:21)
+2026-09-27T09:44:56.6753090Z     process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+2026-09-27T09:44:56.6754778Z     async _Miniflare.#assembleAndUpdateConfig (/home/runner/work/cinatoken/cinatoken/node_modules/miniflare/src/index.ts:2590:28)
+2026-09-27T09:44:56.6756834Z     async <anonymous> (/home/runner/work/cinatoken/cinatoken/node_modules/miniflare/src/index.ts:984:5)
+2026-09-27T09:44:56.6758695Z     async Mutex.runWith (/home/runner/work/cinatoken/cinatoken/node_modules/miniflare/src/workers/shared/sync.ts:67:45)
+2026-09-27T09:44:56.6760723Z     async _Miniflare.#waitForReady (/home/runner/work/cinatoken/cinatoken/node_modules/miniflare/src/index.ts:2755:3)
+2026-09-27T09:44:56.6763233Z     async _Miniflare._getProxyClient (/home/runner/work/cinatoken/cinatoken/node_modules/miniflare/src/index.ts:3084:3)
+2026-09-27T09:44:56.6765735Z     async _Miniflare.getBindings (/home/runner/work/cinatoken/cinatoken/node_modules/miniflare/src/index.ts:3107:23)
+2026-09-27T09:44:56.6767765Z     async fixture (file:///home/runner/work/cinatoken/cinatoken/packages/proxy/scripts/staging/chat-holder-binding-v364.test.mjs:77:27)
+2026-09-27T09:44:56.6769156Z   ...
+2026-09-27T09:44:56.7007221Z # service core:user:cinatoken-staging-chat-holder-gateway-fixture-v364: This Worker requires compatibility date "2026-09-25", but the newest date supported by this server binary is "2026-09-04".
+2026-09-27T09:44:56.7048752Z # Subtest: response-body cancellation is observed inside the private holder
+2026-09-27T09:44:56.7049917Z not ok 6 - response-body cancellation is observed inside the private holder
+2026-09-27T09:44:56.7050612Z   ---
+2026-09-27T09:44:56.7050964Z   duration_ms: 32.904942
+2026-09-27T09:44:56.7051357Z   type: 'test'
+2026-09-27T09:44:56.7052398Z   location: '/home/runner/work/cinatoken/cinatoken/packages/proxy/scripts/staging/chat-holder-binding-v364.test.mjs:165:1'
+2026-09-27T09:44:56.7053483Z   failureType: 'testCodeFailure'
+2026-09-27T09:44:56.7053924Z   error: |-
+2026-09-27T09:44:56.7054806Z     The Workers runtime failed to start. There was likely a problem with the workerd binary or your configuration.
+2026-09-27T09:44:56.7055962Z     Runtime stderr:
+2026-09-27T09:44:56.7058392Z     {"timestamp":"1790502296699","level":"error","source":"src/workerd/server/json-logger.c++:127","message":"service core:user:cinatoken-staging-chat-holder-gateway-fixture-v364: This Worker requires compatibility date \"2026-09-25\", but the newest date supported by this server binary is \"2026-09-04\".","context_depth":0}
+2026-09-27T09:44:56.7060602Z   code: 'ERR_RUNTIME_FAILURE'
+2026-09-27T09:44:56.7061142Z   name: 'MiniflareCoreError [ERR_RUNTIME_FAILURE]'
+2026-09-27T09:44:56.7061822Z   stack: |-
+2026-09-27T09:44:56.7064208Z     StartupLogBuffer.handleStartupFailure (/home/runner/work/cinatoken/cinatoken/node_modules/miniflare/src/runtime/index.ts:224:10)
+2026-09-27T09:44:56.7066161Z     Runtime.updateConfig (/home/runner/work/cinatoken/cinatoken/node_modules/miniflare/src/runtime/index.ts:345:21)
+2026-09-27T09:44:56.7067475Z     process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+2026-09-27T09:44:56.7068934Z     async _Miniflare.#assembleAndUpdateConfig (/home/runner/work/cinatoken/cinatoken/node_modules/miniflare/src/index.ts:2590:28)
+2026-09-27T09:44:56.7070479Z     async <anonymous> (/home/runner/work/cinatoken/cinatoken/node_modules/miniflare/src/index.ts:984:5)
+2026-09-27T09:44:56.7071946Z     async Mutex.runWith (/home/runner/work/cinatoken/cinatoken/node_modules/miniflare/src/workers/shared/sync.ts:67:45)
+2026-09-27T09:44:56.7073495Z     async _Miniflare.#waitForReady (/home/runner/work/cinatoken/cinatoken/node_modules/miniflare/src/index.ts:2755:3)
+2026-09-27T09:44:56.7075239Z     async _Miniflare._getProxyClient (/home/runner/work/cinatoken/cinatoken/node_modules/miniflare/src/index.ts:3084:3)
+2026-09-27T09:44:56.7076784Z     async _Miniflare.getBindings (/home/runner/work/cinatoken/cinatoken/node_modules/miniflare/src/index.ts:3107:23)
+2026-09-27T09:44:56.7078480Z     async fixture (file:///home/runner/work/cinatoken/cinatoken/packages/proxy/scripts/staging/chat-holder-binding-v364.test.mjs:77:27)
+2026-09-27T09:44:56.7079548Z   ...
+2026-09-27T09:44:56.7372730Z 1..6
+2026-09-27T09:44:56.7373053Z # tests 6
+2026-09-27T09:44:56.7373341Z # suites 0
+2026-09-27T09:44:56.7373635Z # pass 3
+2026-09-27T09:44:56.7374038Z # fail 3
+2026-09-27T09:44:56.7374757Z # cancelled 0
+2026-09-27T09:44:56.7384223Z # skipped 0
+2026-09-27T09:44:56.7384623Z # todo 0
+2026-09-27T09:44:56.7385286Z # duration_ms 1253.718805
+2026-09-27T09:44:56.7440186Z ##[error]Process completed with exit code 1.

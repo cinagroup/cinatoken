@@ -1,18 +1,20 @@
 {
   "schema": "checklist-v402-existing-services-isolated-deployment-v1",
-  "recordedAtUtc": "2026-09-27T08:16:24.945Z",
-  "status": "DEPLOYED_VERIFIED",
-  "sourceCommit": "a8029350760d9442f866ac1eab59d4d2845eed4a",
+  "recordedAtUtc": "2026-09-27T09:52:31.393Z",
+  "status": "DEPLOYED_VERIFIED_PUBLIC_GET_AND_LINUX_WORKER_GATE",
+  "sourceCommit": "14eadad8742d6fc3dd0eebd445992e65d1d607db",
   "runtimeFixCommit": "3b7c5b6bef33dec5354f46d90cab2345f08b6d0c",
   "services": [
     {
       "name": "cinatoken-proxy",
-      "versionId": "e3ce197a-0427-4622-9240-76aaac146d5d",
+      "versionId": "09f2d633-c4bc-4b0e-b939-4e680280762f",
       "trafficPercent": 100,
-      "deploymentId": "588f2845-c7f7-4a4a-99d7-71de5e4fc7a1",
-      "deployedAtUtc": "2026-09-27T07:59:02.71912Z",
-      "previousVersionId": "5c723923-b20d-4a97-8c78-f3cfaca0fb96",
-      "deploymentListSha256": "92cf40d0aeb4e24c8320363ab8583e4a01a1a31e96988b291aa1689a70ebefe8"
+      "deploymentId": "4038361b-684d-48b9-9a5d-8272ee27b9ee",
+      "deployedAtUtc": "2026-09-27T09:48:18.358465Z",
+      "previousVersionId": "e3ce197a-0427-4622-9240-76aaac146d5d",
+      "deploymentListSha256": "8740c142f06f6195126420b27786aec0a542428c87f0cda2b3e415fc9ebb26aa",
+      "sourceCommit": "14eadad8742d6fc3dd0eebd445992e65d1d607db",
+      "changedInFinalForwardDeployment": true
     },
     {
       "name": "cinatoken-chain-worker",
@@ -21,7 +23,9 @@
       "deploymentId": "0a2f4b36-d389-48a6-8b05-a8f5afdf6cbd",
       "deployedAtUtc": "2026-09-27T07:59:48.107236Z",
       "previousVersionId": "e88ed4ea-62b6-40df-ad9d-021623fdcd05",
-      "deploymentListSha256": "e9d3f27bff91db4850ed5c3d78cf8d3d9476da6ea4bfe3e63ea25207dc0f9002"
+      "deploymentListSha256": "183c3d2e2f977adbcce3d93c88090798aacf1643f4fe13fc0ea4ecf63054c932",
+      "sourceCommit": "a8029350760d9442f866ac1eab59d4d2845eed4a",
+      "changedInFinalForwardDeployment": false
     },
     {
       "name": "cinatoken-admin",
@@ -30,11 +34,13 @@
       "deploymentId": "ab2a8d8a-f35b-4ad5-a855-8c167dbafe11",
       "deployedAtUtc": "2026-09-27T08:11:50.80497Z",
       "previousVersionId": "a87fa5b9-a37c-4ca1-8805-670a59c6aa0d",
-      "deploymentListSha256": "718da2646c93dcb304d9531da0247ca9c9e82223478c30cac75d9c2a037b6c5d"
+      "deploymentListSha256": "dbb12f06eb32b388bd6bf5819ea1d6c8490f41dd73e9ebc4535d9cd52b5a76c5",
+      "sourceCommit": "a8029350760d9442f866ac1eab59d4d2845eed4a",
+      "changedInFinalForwardDeployment": false
     }
   ],
   "smoke": {
-    "checkedAt": "2026-09-27T08:12:41.583Z",
+    "checkedAt": "2026-09-27T09:51:12.518Z",
     "results": [
       {
         "name": "proxy-health",
@@ -68,7 +74,8 @@
         "status": 200,
         "contentType": "text/html; charset=utf-8"
       }
-    ]
+    ],
+    "sha256": "6ff333e3a686ed581cab158b2608f1d76ed2df5e089415002d5517404c75ca3d"
   },
   "deployAttempts": [
     {
@@ -82,6 +89,13 @@
       "exitCode": 0,
       "result": "Admin uploaded and activated",
       "logSha256": "37eadbcabfa353140bd41d1ff1f4ac97aefe1e14ce90f23fea2e4055ea83b8bf"
+    },
+    {
+      "sourceCommit": "14eadad8742d6fc3dd0eebd445992e65d1d607db",
+      "command": "node scripts/deploy/deploy-instance.mjs production --proxy-only",
+      "exitCode": 0,
+      "result": "Proxy uploaded and activated at 100%; Chain and Admin remain at their second-round validated versions.",
+      "logSha256": "23bda21a48579a8e27d2eab4842f2dc6bf34caf91d98e5e5f88c2db2ea92f939"
     }
   ],
   "isolatedGateLogs": [
@@ -152,5 +166,120 @@
     "managedWorktreeArchive": "pending until all owned tests complete",
     "ignoredLogs": "preserve in primary .wrangler/publish-20260927/isolated/"
   },
-  "latestCi": "a8029350 Images11/Docker success; Proxy full unit success, later workerd/native fixture corrections in progress; Release PR permission unchanged"
+  "latestCi": "14eadad8: 4346/4346 full unit, actual Worker 3 cases/4 modes and Docker PASS; later v364 runtime-startup fixture failure pending successor. Release automated Version PR still denied by unchanged repository permissions.",
+  "deploymentHistory": [
+    {
+      "sourceCommit": "a8029350760d9442f866ac1eab59d4d2845eed4a",
+      "services": [
+        {
+          "name": "cinatoken-proxy",
+          "versionId": "e3ce197a-0427-4622-9240-76aaac146d5d",
+          "trafficPercent": 100,
+          "deploymentId": "588f2845-c7f7-4a4a-99d7-71de5e4fc7a1",
+          "deployedAtUtc": "2026-09-27T07:59:02.71912Z",
+          "previousVersionId": "5c723923-b20d-4a97-8c78-f3cfaca0fb96",
+          "deploymentListSha256": "92cf40d0aeb4e24c8320363ab8583e4a01a1a31e96988b291aa1689a70ebefe8"
+        },
+        {
+          "name": "cinatoken-chain-worker",
+          "versionId": "46555522-a51a-44f7-81e3-31ba9bd3a933",
+          "trafficPercent": 100,
+          "deploymentId": "0a2f4b36-d389-48a6-8b05-a8f5afdf6cbd",
+          "deployedAtUtc": "2026-09-27T07:59:48.107236Z",
+          "previousVersionId": "e88ed4ea-62b6-40df-ad9d-021623fdcd05",
+          "deploymentListSha256": "e9d3f27bff91db4850ed5c3d78cf8d3d9476da6ea4bfe3e63ea25207dc0f9002"
+        },
+        {
+          "name": "cinatoken-admin",
+          "versionId": "c2576736-8ec0-46b9-a4e4-b62d310e5e6e",
+          "trafficPercent": 100,
+          "deploymentId": "ab2a8d8a-f35b-4ad5-a855-8c167dbafe11",
+          "deployedAtUtc": "2026-09-27T08:11:50.80497Z",
+          "previousVersionId": "a87fa5b9-a37c-4ca1-8805-670a59c6aa0d",
+          "deploymentListSha256": "718da2646c93dcb304d9531da0247ca9c9e82223478c30cac75d9c2a037b6c5d"
+        }
+      ],
+      "smoke": {
+        "checkedAt": "2026-09-27T08:12:41.583Z",
+        "results": [
+          {
+            "name": "proxy-health",
+            "url": "https://api.cinatoken.com/health",
+            "status": 200,
+            "contentType": "application/json",
+            "result": {
+              "status": "ok",
+              "service": "cinatoken-proxy"
+            }
+          },
+          {
+            "name": "proxy-catalog",
+            "url": "https://api.cinatoken.com/catalog/models",
+            "status": 200,
+            "contentType": "application/json"
+          },
+          {
+            "name": "admin-auth-check",
+            "url": "https://cinatoken.com/api/auth/check",
+            "status": 200,
+            "contentType": "application/json",
+            "result": {
+              "authenticated": false,
+              "verification": "none"
+            }
+          },
+          {
+            "name": "admin-account-page",
+            "url": "https://cinatoken.com/account",
+            "status": 200,
+            "contentType": "text/html; charset=utf-8"
+          }
+        ]
+      },
+      "deployAttempts": [
+        {
+          "command": "node scripts/deploy/deploy-instance.mjs production",
+          "exitCode": 1,
+          "result": "Proxy and Chain successful; Admin built but uploader fetch failed",
+          "logSha256": "eced8fbecb4f774bd69c388ad3942738c3d2a852999792fb973421f1df19c2f1"
+        },
+        {
+          "command": "node scripts/deploy/deploy-instance.mjs production --admin-only",
+          "exitCode": 0,
+          "result": "Admin uploaded and activated",
+          "logSha256": "37eadbcabfa353140bd41d1ff1f4ac97aefe1e14ce90f23fea2e4055ea83b8bf"
+        }
+      ],
+      "limitation": "Public GET 200 did not prove paid text driver workerd compatibility. Earlier Proxy versions retain the known redirect:error incompatibility."
+    }
+  ],
+  "runtimeFixCommits": [
+    "3b7c5b6bef33dec5354f46d90cab2345f08b6d0c",
+    "f6586260e6e0274902cb7569135d3550c89fdabd"
+  ],
+  "verifiedForwardGate": {
+    "ciSourceCommit": "14eadad8742d6fc3dd0eebd445992e65d1d607db",
+    "fullUnit": {
+      "passed": 4346,
+      "total": 4346
+    },
+    "actualLinuxWorker": {
+      "casesPassed": 3,
+      "casesTotal": 3,
+      "nativeModesPassed": 4,
+      "nativeModesTotal": 4
+    },
+    "workerMachineReportSha256": "c70b9eb6ff85ddfa9aefa79d1ac30b746c563e99a258bacc80b75dc606fbd74d",
+    "trackedPinsVerified": 309,
+    "runtimeFixPinsVerified": 6,
+    "coreDistSourcesInWorkerBundle": 0,
+    "limitation": "The entire dispatch job was not green: later v364 fixture could not start with a compatibility date newer than the locked workerd supports. Its native cases and subsequent steps require independent successor verification."
+  },
+  "isolatedGateLogsSourceCommit": "a8029350760d9442f866ac1eab59d4d2845eed4a",
+  "limitations": [
+    "No production paid Provider request or production SQL/migration was executed.",
+    "Default-off holder/credential-free review paths retain separately documented redirect:error risks; this ordinary-driver fix does not enable or validate them.",
+    "Public GET checks prove those public endpoints only; synthetic Linux Worker transport tests are separately recorded.",
+    "Historical Proxy versions retain the known Worker redirect:error incompatibility and are not a fix for this issue."
+  ]
 }
