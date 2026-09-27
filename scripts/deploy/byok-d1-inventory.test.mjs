@@ -107,8 +107,9 @@ test('decoded size bound is independent of Content-Length and compression',async
   const f=setup();f.setHook(()=>new Response(' '.repeat(2097153),{headers:{'Content-Type':'application/json','Content-Encoding':'gzip','Content-Length':'1'}}));
   assert.equal((await f.make().run()).currentConfigurationInventoryComplete,false);assert.equal(f.calls.length,1);
 });
-test('abort and late response cannot mutate the sealed report or journal',async()=>{
-  let finish,cancelled=0;const f=setup({timeoutMs:20});f.setHook(()=>new Promise(r=>finish=r));const c=f.make(),r=await c.run();
+test('abort and late response cannot mutate the sealed report or journal',{timeout:5000},async()=>{
+  // Reserve durably before exercising the late response from an in-flight fetch.
+  let finish,cancelled=0;const f=setup({timeoutMs:1000});f.setHook(()=>new Promise(r=>finish=r));const c=f.make(),r=await c.run();
   assert.equal(r.result,'FAILED_RETAINED');const log=fs.readFileSync(resolve(f.dir,'journal.jsonl'),'utf8');
   finish(new Response(new ReadableStream({cancel(){cancelled++;}})));await tick();await tick();
   assert.equal(cancelled,1);assert.deepEqual(c.report(),r);assert.equal(fs.readFileSync(resolve(f.dir,'journal.jsonl'),'utf8'),log);

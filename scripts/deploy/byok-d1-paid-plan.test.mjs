@@ -116,8 +116,9 @@ test('caller cancellation bounds noncooperative fetch and ignores its late body'
   const before=fs.readFileSync(resolve(f.directory,'journal.jsonl'),'utf8');release(new Response(new ReadableStream({cancel(){cancelled++;}})));
   await tick();await tick();assert.equal(cancelled,1);assert.equal(fs.readFileSync(resolve(f.directory,'journal.jsonl'),'utf8'),before);assert.deepEqual(reader.report(),result);
 });
-test('collection deadline is finite even when fetch ignores cancellation',async()=>{
-  const f=setup({timeoutMs:20});f.setHook(()=>new Promise(()=>{}));const r=await f.make().run();assert.equal(r.paidPlanObserved,false);assert.equal(f.calls.length,1);
+test('collection deadline is finite even when fetch ignores cancellation',{timeout:5000},async()=>{
+  // Allow durable reservation to finish on loaded CI hosts before testing a hung fetch.
+  const f=setup({timeoutMs:1000});f.setHook(()=>new Promise(()=>{}));const r=await f.make().run();assert.equal(r.paidPlanObserved,false);assert.equal(f.calls.length,1);
 });
 test('options reject credentials containing whitespace and excessive timeouts before I/O',()=>{
   const f=setup();for(const extra of [{apiToken:'a b'},{timeoutMs:60001},{timeoutMs:0},{fetchImpl:1},{signal:1},{io:{}}])assert.throws(()=>create({...f.opts,...extra}),/byok_paid_plan_options_invalid/);

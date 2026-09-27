@@ -155,8 +155,9 @@ test('compressed dishonest Content-Length cannot bypass decoded body bound',asyn
   const f=setup();f.hook(()=>new Response(' '.repeat(2097153),{headers:{'Content-Type':'application/json','Content-Encoding':'gzip','Content-Length':'1'}}));
   assert.equal((await f.make().run()).historyCatalogueComplete,false);assert.equal(f.calls.length,1);
 });
-test('timeout cancels late noncooperative response without mutating terminal evidence',async()=>{
-  let finish,cancelled=0;const f=setup({timeoutMs:20});f.hook(()=>new Promise(resolve=>{finish=resolve;}));
+test('timeout cancels late noncooperative response without mutating terminal evidence',{timeout:5000},async()=>{
+  // Allow durable reservation and PENDING persistence before exercising the hung fetch.
+  let finish,cancelled=0;const f=setup({timeoutMs:1000});f.hook(()=>new Promise(resolve=>{finish=resolve;}));
   const c=f.make(),r=await c.run(),log=fs.readFileSync(resolve(f.dir,'journal.jsonl'),'utf8');assert.equal(r.result,'FAILED_RETAINED');
   finish(new Response(new ReadableStream({cancel(){cancelled++;}})));await tick();await tick();
   assert.equal(cancelled,1);assert.deepEqual(c.report(),r);assert.equal(fs.readFileSync(resolve(f.dir,'journal.jsonl'),'utf8'),log);

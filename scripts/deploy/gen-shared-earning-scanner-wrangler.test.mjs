@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { spawnSync } from 'node:child_process';
-import { existsSync, readFileSync, statSync } from 'node:fs';
+import { copyFileSync, mkdirSync, mkdtempSync, readFileSync, statSync, writeFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import test from 'node:test';
@@ -10,7 +10,6 @@ import { buildSharedEarningScannerConfig } from './gen-shared-earning-scanner-wr
 const root=fileURLToPath(new URL('../../',import.meta.url));
 const base=JSON.parse(readFileSync(resolve(root,
   'packages/proxy/wrangler.shared-earning-scanner.base.jsonc'),'utf8'));
-const output=resolve(root,'packages/proxy/wrangler.shared-earning-scanner.jsonc');
 const deliveryId='11111111-2222-4333-8444-555555555555';
 const consumerId='22222222-3333-4444-8555-666666666666';
 const runtimeId='33333333-4444-4555-8666-777777777777';
@@ -23,6 +22,26 @@ const http=[{name:'cinatoken-proxy',main:'src/index.ts',
   hyperdrive:[{binding:'HYPERDRIVE',id:runtimeId}]},
 {name:'cinatoken-chain-worker',main:'src/index.ts',
   hyperdrive:[{binding:'HYPERDRIVE',id:runtimeId}]}];
+
+function cliFixture(){
+  const staging=resolve(root,'.wrangler/staging');
+  mkdirSync(staging,{recursive:true});
+  const workspace=mkdtempSync(resolve(staging,'shared-earning-scanner-cli-test-'));
+  const generator='scripts/deploy/gen-shared-earning-scanner-wrangler.mjs';
+  mkdirSync(resolve(workspace,'scripts/deploy'),{recursive:true});
+  copyFileSync(resolve(root,generator),resolve(workspace,generator));
+  for(const [index,name] of ['proxy','admin','chain-worker'].entries()){
+    mkdirSync(resolve(workspace,'packages',name),{recursive:true});
+    writeFileSync(resolve(workspace,'packages',name,'wrangler.jsonc'),JSON.stringify(http[index])+'\n');
+  }
+  copyFileSync(resolve(root,'packages/proxy/wrangler.shared-earning-scanner.base.jsonc'),
+    resolve(workspace,'packages/proxy/wrangler.shared-earning-scanner.base.jsonc'));
+  const output=resolve(workspace,'packages/proxy/wrangler.shared-earning-scanner.jsonc');
+  writeFileSync(output,'existing fixture output\n');
+  return {output,run:args=>spawnSync(process.execPath,[generator,...args],
+    {cwd:workspace,encoding:'utf8',env:{...process.env,...environment,
+      SHARED_EARNING_SCANNER_WORKER_NAME:base.name}})};
+}
 
 test('separate scheduled config contains only two earning authorities and no HTTP surface',()=>{
   const config=buildSharedEarningScannerConfig(environment,http,base);
@@ -96,25 +115,25 @@ test('generator rejects credential alias, HTTP exposure and hostile base config'
   }
 });
 
-test('print mode validates current generated HTTP configs without writing',()=>{
-  const before=existsSync(output)?statSync(output).mtimeMs:null;
-  const result=spawnSync(process.execPath,
-    ['scripts/deploy/gen-shared-earning-scanner-wrangler.mjs','--print'],
-    {cwd:root,encoding:'utf8',env:{...process.env,...environment}});
+test('print mode validates isolated generated HTTP configs without writing',()=>{
+  const fixture=cliFixture(),before=statSync(fixture.output).mtimeMs;
+  const bytes=readFileSync(fixture.output);
+  const result=fixture.run(['--print']);
   assert.equal(result.status,0,result.stderr);
   const config=JSON.parse(result.stdout);
   assert.deepEqual(config.hyperdrive,[
     {binding:'EARNING_DELIVERY_HYPERDRIVE',id:deliveryId},
     {binding:'EARNING_CONSUMER_HYPERDRIVE',id:consumerId}]);
-  assert.equal(existsSync(output)?statSync(output).mtimeMs:null,before);
+  assert.equal(statSync(fixture.output).mtimeMs,before);
+  assert.deepEqual(readFileSync(fixture.output),bytes);
 });
 
 test('default CLI invocation writes no activated scanner config',()=>{
-  const before=existsSync(output)?statSync(output).mtimeMs:null;
-  const result=spawnSync(process.execPath,
-    ['scripts/deploy/gen-shared-earning-scanner-wrangler.mjs'],
-    {cwd:root,encoding:'utf8',env:{...process.env,...environment}});
+  const fixture=cliFixture(),before=statSync(fixture.output).mtimeMs;
+  const bytes=readFileSync(fixture.output);
+  const result=fixture.run([]);
   assert.notEqual(result.status,0);
   assert.match(result.stderr,/Use --print or --write/);
-  assert.equal(existsSync(output)?statSync(output).mtimeMs:null,before);
+  assert.equal(statSync(fixture.output).mtimeMs,before);
+  assert.deepEqual(readFileSync(fixture.output),bytes);
 });

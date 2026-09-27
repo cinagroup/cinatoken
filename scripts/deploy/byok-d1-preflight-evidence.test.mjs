@@ -136,8 +136,9 @@ for(const mode of ['403','settings-drift','version-drift','free-plan','plan-chan
   });
 }
 test('aborted before run does not create reservation or request',async()=>{const f=fixture({signal:AbortSignal.abort()}),p=f.make();assert.equal((await p.run()).result,'FAILED_RETAINED');assert.equal(f.calls.length,0);assert.equal(fs.existsSync(f.directory),false);});
-test('deadline with noncooperative fetch returns and late headers do not change final evidence',async()=>{
-  const f=fixture({timeoutMs:40}),releases=[];f.setHook(()=>new Promise(resolve=>releases.push(resolve)));const p=f.make(),r=await p.run();
+test('deadline with noncooperative fetch returns and late headers do not change final evidence',{timeout:5000},async()=>{
+  // The deadline must outlast durable reservation so this exercises an in-flight fetch.
+  const f=fixture({timeoutMs:1000}),releases=[];f.setHook(()=>new Promise(resolve=>releases.push(resolve)));const p=f.make(),r=await p.run();
   assert.equal(r.result,'FAILED_RETAINED');assert.ok(r.unsettledFetchRequests>0);const before=JSON.stringify(p.report());
   for(const release of releases)release(new Response('{}',{headers:{'Content-Type':'application/json'}}));await tick();await tick();assert.equal(JSON.stringify(p.report()),before);
 });

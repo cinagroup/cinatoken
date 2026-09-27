@@ -59,9 +59,11 @@ test('extra non-entry module is archived too; known entry hash is not a whole-co
   const f=setup();f.setHook(path=>{if(names.some(n=>path.endsWith('/'+n))){const form=new FormData();form.set('main.js',code);form.set('extra.js','extra');const r=new Response(form);r.headers.set('cf-entrypoint','main.js');return r;}});
   const r=await f.make().run();assert.equal(r.codeComplete,true);assert.ok(r.workers.every(w=>w.modules.length===2));
 });
-test('timeout cancels late response without changing finished evidence',async()=>{
-  const releases=[],f=setup({timeoutMs:20});f.setHook(()=>new Promise(resolve=>releases.push(resolve)));
+test('timeout cancels late response without changing finished evidence',{timeout:5000},async()=>{
+  // Allow durable reservation and PENDING persistence before exercising the hung fetch.
+  const releases=[],f=setup({timeoutMs:1000});f.setHook(()=>new Promise(resolve=>releases.push(resolve)));
   const reader=f.make(),r=await reader.run();assert.equal(r.codeComplete,false);const before=fs.readFileSync(resolve(f.directory,'journal.jsonl'),'utf8');
+  assert.ok(releases.length>0,'The deadline must interrupt an in-flight fetch');
   let cancelled=0;for(const done of releases)done(new Response(new ReadableStream({cancel(){cancelled++;}})));
   await tick();await tick();assert.equal(cancelled,releases.length);assert.equal(fs.readFileSync(resolve(f.directory,'journal.jsonl'),'utf8'),before);assert.deepEqual(reader.report(),r);
 });

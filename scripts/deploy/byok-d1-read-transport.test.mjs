@@ -101,14 +101,16 @@ test('fixed concurrency ceiling and settlement before close',async t=>{
   assert.throws(()=>f.transport.close());await assert.rejects(f.transport.api(path));assert.equal(f.calls.length,4);
   for(const release of releases)release();await Promise.all(pending);await f.transport.settle();assert.equal(f.transport.report().peakActive,4);
 });
-test('failed read aborts and settles peer logical calls without waiting for noncooperative fetch',async t=>{
-  let fail;const f=setup(t,{timeoutMs:50,fetchImpl:()=>new Promise((_,reject)=>{fail??=reject;})});
+test('failed read aborts and settles peer logical calls without waiting for noncooperative fetch',{timeout:5000},async t=>{
+  // Four durable PENDING writes must finish before testing failure of an admitted fetch.
+  let fail;const f=setup(t,{timeoutMs:1000,fetchImpl:()=>new Promise((_,reject)=>{fail??=reject;})});
   const pending=Array.from({length:4},()=>f.transport.api(path));await tick();fail(Error(apiToken));
   assert.ok((await Promise.allSettled(pending)).every(r=>r.status==='rejected'));await f.transport.settle();
   assert.equal(f.transport.report().active,0);assert.equal(f.transport.report().httpAttempts,4);assert.equal(f.transport.report().remoteReadsDrained,false);
 });
-test('timeout is not replayable and late body is cancelled without modifying closed evidence',async t=>{
-  let release,cancelled=0;const f=setup(t,{timeoutMs:20,fetchImpl:()=>new Promise(r=>release=r)});
+test('timeout is not replayable and late body is cancelled without modifying closed evidence',{timeout:5000},async t=>{
+  // Allow durable PENDING persistence before exercising the hung fetch.
+  let release,cancelled=0;const f=setup(t,{timeoutMs:1000,fetchImpl:()=>new Promise(r=>release=r)});
   await assert.rejects(f.transport.api(path));await f.transport.settle();f.transport.close();const before=f.log(),report=f.transport.report();
   release(new Response(new ReadableStream({cancel(){cancelled++;}})));await tick();await tick();
   assert.equal(cancelled,1);assert.equal(f.log(),before);assert.deepEqual(f.transport.report(),report);
