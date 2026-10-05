@@ -1,0 +1,91 @@
+{
+  "at": "2026-10-05T11:20:03.593Z",
+  "actualExit": 0,
+  "script": "cinatoken-web",
+  "mutationSent": true,
+  "secretValuesRecorded": false,
+  "apiReference": "https://developers.cloudflare.com/api/resources/workers/subresources/scripts/subresources/subdomain/methods/create/",
+  "before": {
+    "settings": {
+      "enabled": true,
+      "previews_enabled": true
+    },
+    "live": {
+      "routes": [
+        {
+          "id": "5738534653ef46f48a44e3f3b22e5d8e",
+          "pattern": "cinatoken.com/*",
+          "script": "cinatoken-web",
+          "request_limit_fail_open": false
+        },
+        {
+          "id": "2712df1859d340ffb6d68a7e53eb1853",
+          "pattern": "cinatoken.com/web-assets/*",
+          "script": "cinatoken-web",
+          "request_limit_fail_open": false
+        },
+        {
+          "id": "242dce09c515462e833d69bd0738bdfc",
+          "pattern": "api.cinatoken.com/*",
+          "script": "cinatoken-proxy",
+          "request_limit_fail_open": false
+        }
+      ],
+      "deploymentId": "c9998949-0650-41b0-8eb1-de18cb87c3e3",
+      "versions": [
+        {
+          "version_id": "ecba2f94-90a3-4e32-af20-9fd9d3718811",
+          "percentage": 100
+        }
+      ]
+    }
+  },
+  "mutation": {
+    "enabled": false,
+    "previews_enabled": false
+  },
+  "after": {
+    "settings": {
+      "enabled": false,
+      "previews_enabled": false
+    },
+    "live": {
+      "routes": [
+        {
+          "id": "5738534653ef46f48a44e3f3b22e5d8e",
+          "pattern": "cinatoken.com/*",
+          "script": "cinatoken-web",
+          "request_limit_fail_open": false
+        },
+        {
+          "id": "2712df1859d340ffb6d68a7e53eb1853",
+          "pattern": "cinatoken.com/web-assets/*",
+          "script": "cinatoken-web",
+          "request_limit_fail_open": false
+        },
+        {
+          "id": "242dce09c515462e833d69bd0738bdfc",
+          "pattern": "api.cinatoken.com/*",
+          "script": "cinatoken-proxy",
+          "request_limit_fail_open": false
+        }
+      ],
+      "deploymentId": "c9998949-0650-41b0-8eb1-de18cb87c3e3",
+      "versions": [
+        {
+          "version_id": "ecba2f94-90a3-4e32-af20-9fd9d3718811",
+          "percentage": 100
+        }
+      ]
+    }
+  },
+  "production": {
+    "origin": "https://cinatoken.com",
+    "path": "/en",
+    "status": 200,
+    "bytes": 23177,
+    "webAssets": true,
+    "nextAssets": false
+  },
+  "finishedAt": "2026-10-05T11:20:18.078Z"
+}

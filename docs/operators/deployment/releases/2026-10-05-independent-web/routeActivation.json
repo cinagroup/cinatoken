@@ -1,0 +1,28 @@
+{
+  "at": "2026-10-05T11:04:00.493Z",
+  "apply": true,
+  "from": "cinatoken-admin",
+  "to": "cinatoken-web",
+  "expectedVersion": "ecba2f94-90a3-4e32-af20-9fd9d3718811",
+  "before": {
+    "id": "5738534653ef46f48a44e3f3b22e5d8e",
+    "pattern": "cinatoken.com/*",
+    "script": "cinatoken-admin",
+    "request_limit_fail_open": false
+  },
+  "after": {
+    "id": "5738534653ef46f48a44e3f3b22e5d8e",
+    "pattern": "cinatoken.com/*",
+    "script": "cinatoken-web",
+    "request_limit_fail_open": false
+  },
+  "mutation": {
+    "id": "5738534653ef46f48a44e3f3b22e5d8e",
+    "pattern": "cinatoken.com/*",
+    "script": "cinatoken-web",
+    "request_limit_fail_open": false
+  },
+  "secretValuesRecorded": false,
+  "finishedAt": "2026-10-05T11:04:04.529Z",
+  "actualExit": 0
+}

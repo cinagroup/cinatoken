@@ -1,0 +1,56 @@
+{
+  "at": "2026-10-05T10:51:51.709Z",
+  "origin": "https://cinatoken-web.cinagroup.workers.dev",
+  "requests": [
+    {
+      "path": "/en",
+      "method": "HEAD",
+      "status": 200,
+      "bytes": 0,
+      "cacheControl": "no-store",
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/en/models",
+      "method": "HEAD",
+      "status": 200,
+      "bytes": 0,
+      "cacheControl": "no-store",
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/account/keys",
+      "method": "HEAD",
+      "status": 200,
+      "bytes": 0,
+      "cacheControl": "no-store",
+      "contentType": "text/html"
+    },
+    {
+      "path": "/admin/models",
+      "method": "HEAD",
+      "status": 200,
+      "bytes": 0,
+      "cacheControl": "no-store",
+      "contentType": "text/html"
+    },
+    {
+      "path": "/web-assets/logo.png",
+      "method": "HEAD",
+      "status": 200,
+      "bytes": 0,
+      "cacheControl": "no-cache",
+      "contentType": "image/png"
+    },
+    {
+      "path": "/web-assets/static/absent-cutover-smoke.js",
+      "method": "HEAD",
+      "status": 404,
+      "bytes": 0,
+      "cacheControl": "no-store",
+      "contentType": null
+    }
+  ],
+  "actualExit": 0,
+  "finishedAt": "2026-10-05T10:52:00.996Z"
+}

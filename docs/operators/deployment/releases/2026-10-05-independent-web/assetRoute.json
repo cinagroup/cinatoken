@@ -1,0 +1,22 @@
+{
+  "at": "2026-10-05T11:03:26.403Z",
+  "actualExit": 0,
+  "pattern": "cinatoken.com/web-assets/*",
+  "target": "cinatoken-web",
+  "purpose": "Preserve Web resources for existing tabs if the main route is rolled back to Admin",
+  "requestSent": true,
+  "secretValuesRecorded": false,
+  "created": {
+    "id": "2712df1859d340ffb6d68a7e53eb1853",
+    "pattern": "cinatoken.com/web-assets/*",
+    "script": "cinatoken-web",
+    "request_limit_fail_open": false
+  },
+  "after": {
+    "id": "2712df1859d340ffb6d68a7e53eb1853",
+    "pattern": "cinatoken.com/web-assets/*",
+    "script": "cinatoken-web",
+    "request_limit_fail_open": false
+  },
+  "finishedAt": "2026-10-05T11:03:32.850Z"
+}

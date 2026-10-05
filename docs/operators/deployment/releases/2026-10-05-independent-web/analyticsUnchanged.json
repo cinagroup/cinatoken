@@ -1,0 +1,32 @@
+{
+  "at": "2026-10-05T11:22:32.472Z",
+  "actualExit": 0,
+  "readOnly": true,
+  "writeAttemptHttp": 403,
+  "resolutionBlockedByCloudflarePermissions": true,
+  "secretValuesRecorded": false,
+  "ruleList": {
+    "ruleset": {
+      "zone_tag": "bd42026e3facf3317ae32d55de5e2044",
+      "zone_name": "cinatoken.com",
+      "enabled": true,
+      "id": "4e2b52a8-2c7d-46bc-8c4a-e34f93c4e822",
+      "lite": true
+    },
+    "rules": [
+      {
+        "host": "*",
+        "paths": [
+          "*"
+        ],
+        "inclusive": true,
+        "created": "2026-03-28T00:54:20.611066Z",
+        "is_paused": false,
+        "priority": 1000,
+        "id": "56335312-5016-4ae1-859b-2a31f25181d1"
+      }
+    ]
+  },
+  "ruleMutationSucceeded": false,
+  "finishedAt": "2026-10-05T11:22:34.757Z"
+}

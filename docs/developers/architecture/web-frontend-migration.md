@@ -4,7 +4,7 @@
 
 目标是以 `packages/web` 的 React、Rsbuild 与现有 UI 基础作为 cinatoken 前端，覆盖公开发现、账户中心及管理后台的全部现有能力。首个交付切片是认证、工作区和网关密钥闭环；切片通过不代表整个迁移完成。
 
-**可行性结论：可行。** 当前仓库已具备独立 Web 工程、UI 基础和 cinatoken API 适配；实施采用逐路由迁移，继续由 Admin 提供认证、用户/管理 API 和 BFF，公开页面在迁移期保留 Next SSR。完成完整功能矩阵、真实联调和双平台发布验收后，再退役旧页面。现有本地实现与测试证明工程路径可执行，尚未证明全量迁移或生产切换完成。
+**可行性结论：可行。** `packages/web` 的 React、Rsbuild 与现有 UI 已作为独立 `cinatoken-web` 部署，并于2026-10-05接管生产主入口及公开SSR。Admin继续提供认证、用户/管理API、BFF与兼容旧路由。生产前门切流和页面功能检查已完成；分析脚本冲突、严格浏览器验收、完整功能矩阵、真实身份/资金/链、双平台及旧页面退役仍按原门槛推进。
 
 本文同时保存方案、checklist 和进度，不另建会分叉的实施清单。按以下入口阅读：
 
@@ -26,9 +26,9 @@
 
 文档范围：按“将 checklist 整理成一个 md 文件，推进实施随时更新”的要求维护本文。完整清单为 **102 项主任务（99 项 P0–P8 任务、3 项来源任务）**，配套 G0–G8 验收门槛、页面/API/权限矩阵及批次记录；实施使用原任务 ID 持续更新，不另建主清单。
 
-当前发布（2026-10-05）：Admin/Proxy 34c742d1 已部署并验收；按用户“切流到独立web”继续独立Web前门切换。5055c5bf 的Linux Web CI与冻结产物通过，但真实route-empty预览发现公开目录SSR和sitemap503；独立SSR Request redirect修复已通过146项定向与Web类型检查。主域名仍在Admin，正在准备修后同SHA发布、29页面开关与实际Cloudflare/浏览器验收。真实登录/资金/链及完整G0–G8未提前完成。
+当前发布（2026-10-05）：`cinatoken.com/*` 已切到独立 `cinatoken-web`，源码 bdc1bfcf、version ecba2f94-90a3-4e32-af20-9fd9d3718811、100%流量、29页面开关启用；资源专用Route保留，Workers.dev/Preview已关闭。Linux Web CI37297885577同SHA成功，冻结产物/2289 Git输入精确核对；实际Cloudflare预览浏览器45/45、生产45项页面功能与移动交互通过；生产严格浏览器验收因69条自动分析记录实际退出1，修配置API403未完成。生产GET23/HEAD6、认证转发3、135资源逐字节匹配、深色→中文→390px刷新均通过。Admin/Proxy保持34c742d1版本，API/OIDC与数据库职责不变。真实登录/资金/链及完整G0–G8、退役未提前完成，详见5.71。
 
-当前推进：目标 active，继续完整迁移。NEXT-13 J6 完整剩余497个Admin TS/TSX格式修复本地验收完成（5.69）：3320236→3379236 B，Root完整有界AST与独立Babel/TypeScript497/497通过；11文件18直接JSX父节点中的21原文本节点逐个转换为单字符串表达式，保留children类型/数量/顺序/值，1128评论/7427属性runtime值保持。完整Admin格式651通过/0告警/parse0，七CLI与审计0；fresh Admin types/lint、主unit1008＋相关5/30、Web1582均0。新Next I8iEBXkv6HbVKv644OYUc 的4045输入/2827产物实际构建与冻结0；旧新各8真实产品React流程＋10HTTP场景通过，6采样截图对原字节同，范围是受控SQLite/身份夹具与实际冻结Next，不证明全应用/真实身份/原生平台。临时before备份335和Mirror ordinary产物1983缺失已从独立/冻结副本按原hash恢复；修复前失败和原因未明的链接观察保留，不能声称产物从未漂移。Web2289/source4aaa…与P71 Root633不变。102主任务/54矩阵/G0–G8/E00–E08/211checkbox状态完整保持，主任务仅P6-11勾选；326来源、真实身份/原生三库/链、Node22 LinuxCI/双平台/发布回滚及旧页退役继续待验，RootP66/29string false/public origin空、未部署。
+当前推进：生产独立Web前门已切流并完成功能检查，分析注入冲突及严格浏览器复验仍待，完整迁移继续按未完成门槛推进。账户/管理页本轮证明匿名权限拦截和实际资源加载；真实CinaAuth授权、账户/Console业务、资金/链、非空目录推理、326来源、原生平台、实际回滚演练与旧页退役继续待验。102主任务/54矩阵/G0–G8/E00–E08/211任务checkbox原状态保持，主任务仅P6-11勾选。J6格式、临时产物缺失/精确恢复和其本地验证作为5.69历史保留；当前版本与部署证据以5.70–5.71为准。
 
 上一批状态：NEXT-41四语公开署名修复与NEXT-13 B1五个活跃文件修复完成本地验收（5.54）。新P66 Web1401/1401、完整Web/Edge types及Web lint/format、三目标build/freeze/gen0；同一492产物真实Node HTTP45、Node compiled Worker77、Chrome JS32/真正NoJS36通过，68HTML实际footer英文原文/lang=en/译文/链接均通过。Admin源组件Chrome19/相关unit26/保留合同AST22、完整types与目标lint/format0；全量lint实际67E9W→58E5W，仍未全量通过。本地来源946文件tree/修复前1795观察已补，不能当上游导入ref/日期。P65原24/32缺英文、修前测试40失败与其他历史失败完整保留；workerd产品/最小例0xc0000005、WSL E_ACCESSDENIED，0原生case获验。29入口false、未部署；下一步NEXT-13 B2/B3按真实行为清理及来源/真实身份/三库/目录/链/LinuxCI/双平台/发布回滚，完整102主任务/54矩阵/G0–G8/E00–E08未提前完成。
 
@@ -64,11 +64,11 @@ P48为2026-09-30历史Web候选（仅证明原冻结范围）：protocol-07 与�
 | P3 数据与请求层 | 进行中 | NEXT-42 canonical预期user/workspace组合、62账户调用绑定及未知写不重放已接入；B1新Next六exports旧A/B请求在Admin/IdP/workspace/domain之前409，401/400/403/409/500及成功响应private,no-store，统一退出另由精确配置保障（5.63） | 完整金额/日期/权限、缓存/Retry-After、原生三库并发及Queue/链/账本对账继续；独立两case构造观测不读取或修改请求体，不能替代真实领域平台验收。 |
 | P4 账户中心 | 本地证据补齐，完整验收待办 | 十组路由/十五能力已实现，P6 244 fixture及5.62 P70 Keys/NFT/Preset Chrome10保留；B1同一新Next合法NFT POST在显式受控tier105配置下实际创建SQL行/Queue1，身份拒绝无领域增量，两退出通过（5.63） | 受控Node SQLite执行77正式D1迁移不等于原生D1/PG/MySQL；正式tier200–203配置未改，真实ACC-01–15授权、预算/收益账本、钱包/链与平台继续。 |
 | P5 管理后台 | 本地证据持续补齐，整域待验 | 5.45提现/NFT完整Screen/API/四语/旧Next桥；P53历史、5.46 P54焦点48/48；5.47 NEXT-38完整四域源码及新P58三域270/270、Routes126unique、已发写切scope8/8本地证据，Root1062/类型/两构建0 | 其余域和真实身份/三库/链/账本/经济证据/Proxy/平台与G5继续；MySQL无journal模型待验 |
-| P6 公开页与 SEO | 公开SSR/署名与源码下载本地批次通过，整域待验 | J1新P71英语桌面/中文390px经真实public footer→source index→原生下载各4233656 B/090e77cc…，与当前74a1…/4aaa…合同匹配（5.64）；P69四语JS/NoJS源码8context、P68 SSR/署名历史分别保留 | J1仅2个来源下载流程，不重复声称八组四语SSR/完整Auth或目录已重验；真实Auth/目录/完整聊天/上游来源/发布及G6继续，保留Next fallback。 |
-| P7 双平台部署 | 待验收；持续实施 | J6 新Next I8iEBXkv6HbVKv644OYUc 实际CSS/webpack/types/standalone构建0，4045输入/2827普通产物冻结与恢复后原hash核；冻结副本派生的实际旧新React/HTTP验证通过。源Web及P71 Root633不变（5.69） | 临时镜像/链接缺失和同字节恢复另记，不能当部署产物一直未漂移；未安装或恢复shared依赖链接。RootP66、29string false/public origin空，Linux Node22/CI、原生Cloudflare/workerd、Docker/nginx/TLS、真实服务与灰度回滚待验，未部署。 |
-| P8 发布与退役 | 未完成 | CI 与发布验证流程已配置 | 全矩阵证据、性能、观测、文档审查及旧 UI 退役 |
+| P6 公开页与 SEO | 生产Web公开SSR冒烟通过，整域待验 | bdc1bfcf真实Cloudflare四语SSR、robots/sitemap与匿名catalog通过；预览/生产Chrome公开7页及缺失模型404各8种通过，主题/中文/移动刷新正常（5.71）；原署名/源码下载证据保留 | 当前catalog为空/USD；真实Auth、非空目录/完整聊天、上游来源和G6继续。生产公开页已由Web SSR提供，兼容路由保留Admin。 |
+| P7 双平台部署 | Cloudflare生产前门已切流，完整双平台待验 | 同bdc1bfcf Linux Node22 WebCI/冻结/三目标与镜像Nginx检查成功；原生Cloudflare Web100%、29开关、Route读回、GET23/HEAD6/认证转发3/135资源通过；Chrome45项页面功能过、严格遥测检查actual1，临时预览已关（5.71） | 本轮未重部署Admin/Proxy或修改数据库；分析注入配置需RUM写或Config Rules Edit权限，当前403；真实身份/资金/链、生产回滚演练和完整Docker/TLS部署仍待验。历史Windows workerd失败与CI缺口保留，不宣称全仓库CI通过。 |
+| P8 发布与退役 | 独立Web前门发布完成，整体未完成 | 精确版本/路由/CI/生产冒烟和回滚命令已持久记录，资源Route与冻结版本至少保留14天（5.71） | 全矩阵真实业务、性能/观测、生产回滚演练、文档审查及旧 UI 退役 |
 
-5.7 的 `index.7ff2962b93.js` 是已记录的冻结检查点，不能证明后续 Chat、Models 或公开页面源码已构建。生产公开页面仍由 Next SSR 承载；本地 Web 路由或开发代理不表示生产入口已经切换。
+5.7 的 `index.7ff2962b93.js` 仅是历史冻结检查点。当前生产公开页面由5.71的独立Web SSR承载，账户/管理HTML选路已开启；`/dashboard`、`/gateway/*`等兼容路由仍回到Admin，旧页面尚未退役。
 
 ### 0.2 更新与完成规则
 
@@ -2203,13 +2203,17 @@ CI夹具修复已完成：Web Docker补齐两个--env；Docker PG精确核对全
 
 提交SHA、Linux构建、实际PostgreSQL迁移、Cloudflare版本及线上冒烟持续写入 [本轮发布证据](../../operators/deployment/releases/2026-10-05-web-frontend-cloudflare-release.json)。最新生产源码34c742d161edbf2c16c7578221578d0b805d35c0已正常推送，Run37292049973全部发布步骤成功，两Worker均100%流量。此前Run37282521598与37285277889均在Worker部署前取消（Proxy/Admin deploy均skipped）；39b76f42/Run37288251610部署成功后实际冒烟揭示BFF/主题问题，原始失败收据保留，现已最小修复并重新发布通过线上复验。自动Release创建PR被仓库Actions权限拒绝，记录为独立运维限制；不修改该权限。整体任务与G0–G8勾选状态保持原状。
 
-### 5.71 独立 Web 前门切流（2026-10-05，准备与真实预览）
+### 5.71 独立 Web 前门切流（2026-10-05，已切流；分析脚本冲突待解决）
 
-用户明确授权“切流到独立web”。目标是独立 `cinatoken-web` 接管现有 `cinatoken.com/*` Zone Route，API/OIDC原样经 `CINATOKEN_ADMIN_SERVICE` 保留，Proxy域名、数据库与资金状态不变。29页面开关按已实现公开/账户/管理入口验收后启用；`/dashboard`、`/gateway/*` 等兼容路由仍由Admin提供。
+用户明确授权“切流到独立web”。已将原Zone Route `cinatoken.com/*` 从Admin切至独立 `cinatoken-web`，version `ecba2f94-90a3-4e32-af20-9fd9d3718811`、源码 `bdc1bfcf15d93a9b2769d3f52352bfa39eab8928`、100%流量、29页面开关启用。提前创建资源Route `cinatoken.com/web-assets/*`（2712df1859d340ffb6d68a7e53eb1853），主入口回滚时仍保留旧Web标签页的资源。API/OIDC经Admin Service Binding转发，Admin/Proxy保持34c742d1原版本，Proxy Route、数据库和资金状态未因本轮改变；Web没有DB、Queue或业务Secret。
 
-Linux Web CI Run37294574618同5055c5bf全部通过，下载后的冻结manifest SHA348a9b43…校验通过；route-empty原生Cloudflare baseline版本b7a629a6…实际 `/en`200、公开API200、匿名me401，但models/providers503及sitemap503，baseline不能切流。SSR匿名adapter最小error→manual修复：baseline43项42通过1失败，修后146/146与typecheck/format通过，3xx仍拒绝且私密header/正文不透出。Admin默认route移除防止下次部署抢回主域；配置21/21、切流owner/version/drift/回滚守卫6/6通过。
+原5055c5bf的CI成功，但真实Cloudflare models/providers/sitemap503，不能用于切流。匿名SSR Request redirect的error→manual修复后146/146与类型检查通过，3xx仍拒绝/私密内容不透出；Admin默认route移除防止后续部署抢回主域，配置21/21、切流owner/version/drift/回滚守卫6/6通过。修后Linux Node22 Web CI [Run37297885577](https://github.com/cinagroup/cinatoken/actions/runs/37297885577)同bdc1bfcf成功，包含Web完整检查/三目标/冻结和镜像Nginx检查，以及Admin合同与SSR构建。下载artifact11340652772，manifest SHA89b9dc83…；2289份已提交Git输入/18179801 B精确匹配Linux源码SHAa2c8676a…，本地忽略参考文件与Windows EOL差异未混入CI输入。
 
-[发布记录](../../operators/deployment/releases/2026-10-05-independent-web-cutover.json) 保存原Admin/Proxy版本、原Route、baseline负面证据与后续状态；[操作手册](../../operators/deployment/cloudflare-web.md)说明同SHA产物、路由预检、切流及14天资产回滚保留。仍待修后新冻结产物、真实公开/私有入口与资源验证、Route写入/读回及生产浏览器验收；不沿用旧产物声称修后通过，不勾选真实登录/资金/链及完整迁移门槛。
+预览和切流后的生产均通过真实Cloudflare GET23、HEAD6和135/135资源字节/SHA核对；生产认证转发3项通过（check匿名false、Portal/Admin授权302、正确生产callback与HttpOnly/Secure/SameSite=lax属性），未完成真实登录。Chrome147真实预览严格45/45；生产45项页面功能与交互通过，严格QA实际退出1：公开7个固定页+缺失模型404、账户10页、管理27条选择器入口含独立APIKeys/用户详情门；账户与管理仅验证匿名sign-in gate。两轮深色选择→中文→390×844刷新正常、无横溢。预览pageerror/warning/requestfailure/未知HTTP/未知console均0，原始38条console准确对应匿名user/me401×37和缺失模型404×1。生产pageerror/warning/未知HTTP为0，但原始console107、failedrequest69：原38加Cloudflare自动分析脚本37条CSP阻断与32条RUM POST被只读守卫阻断。除这69条遥测外无其他失败请求或未知console，业务写0。生产严格结果actual1完整保留，browser/context已关闭、未超时，不能声称全通过。
+
+QA v1曾误读不存在的bootstrap.origin导致退出1，产品/en为200且非空无运行错误；v2改为真实canonical/og DOM及严格现有bootstrap schema，保留完整45项与权限/错误边界，负面原始证据和纠正均持久保存。原503、工具格式/source核对失败及Windows workerd失败不删除。生产分析注入属于既有zone自动配置（site566e5ee06705450abf29272ec21b3b76、ruleset4e2b52a8…）：只针对cinatoken.com新增排除规则的API返回403，备用Configuration Rules只读入口也403；实际读回原规则未变。Cua管理会话初始化不可用。未放宽CSP、未改其他域分析配置；仍需具备RUM规则写或Config Rules Edit权限的凭据，精准关闭此主机注入后再做严格浏览器复验。验收后通过该脚本subdomain API关闭Workers.dev与Preview，两值false、三条Route和精确version/deployment不变，生产/en仍200。
+
+[发布记录](../../operators/deployment/releases/2026-10-05-independent-web-cutover.json)保存原/现版本、Route实际写入读回、CI/产物与原始JSON字节/SHA；[操作手册](../../operators/deployment/cloudflare-web.md)保存固定路由守卫与原Admin回滚命令，Web资源/冻结版本至少保留至2026-10-19。此次未执行生产回滚演练，不回滚数据库。真实CinaAuth业务、资金/链/非空目录推理、双平台完整验收、326来源及旧页退役继续待验；102主任务/54矩阵/G0–G8/E00–E08/211任务checkbox不因匿名前门切流而提前勾选。
 
 ## 6. 更新记录
 
@@ -2413,3 +2417,5 @@ Linux Web CI Run37294574618同5055c5bf全部通过，下载后的冻结manifest 
 
 
 2026-10-05发布最终验收：源码34c742d161edbf2c16c7578221578d0b805d35c0，Cloudflare Run37292049973 Linux构建、Core/Proxy/Admin契约、Proxy bundle及两部署全部成功；cinatoken-proxy=6e235009-78db-443e-9387-6ec9d963d9d1（100%）；cinatoken-admin=a5ce22c4-edae-42e9-8c2b-7b0df63e5b66（100%）。实际14个匿名GET结果符合预期、BFF与Proxy公开ID/货币一致；Playwright Chromium 147.0.7727.15 在1440×1000与390×844核对身份/非空/无overlay，无pageerror或未解释console错误，匿名/api/user/me401按精确URL+响应解释并保留raw。深色选择→中文Cookie→mobile刷新存储及显示都保持dark/zh，无横向溢出。真实登录/资金写入及独立Web切换仍未验收，未来holder/recovery与自动PR CI问题继续保留。原Web CI旧redirect:error测试断言失败已test-only修正，回调外核查manual/匿名头，边界6/6、目录17/17及Proxy类型通过；原34的失败收据不改写。211checkbox保持；后续仅提交测试预期和最终文档/证据，产品源码不变，不重复迁移或部署。
+
+2026-10-05：完成独立Web生产前门切流（5.71）。同bdc1bfcf Linux CI/冻结产物与Git输入核验通过；Web100%/29开关、主Route与资源Route读回、预览严格45/45、生产45页面功能/交互及GET23/HEAD6/认证转发3/135资源通过；生产严格QA因69遥测记录actual1，分析规则修复API403仍待，Workers.dev/Preview已关，Admin/Proxy/数据库保持。原503和QA字段错误负面证据保留；真实身份/资金/链/完整双平台/生产回滚演练/旧页退役仍待，完整任务与G/E状态不提前完成。

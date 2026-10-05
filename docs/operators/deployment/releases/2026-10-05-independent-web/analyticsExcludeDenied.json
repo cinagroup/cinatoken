@@ -1,0 +1,47 @@
+{
+  "at": "2026-10-05T11:16:41.662Z",
+  "actualExit": 1,
+  "mutationSent": true,
+  "host": "cinatoken.com",
+  "reason": "Stop injected analytics script conflicting with existing Web CSP; keep other hosts and CSP unchanged",
+  "secretValuesRecorded": false,
+  "siteTokensRecorded": false,
+  "snippetsRecorded": false,
+  "apiReference": "https://developers.cloudflare.com/api/resources/rum/subresources/rules/methods/create/",
+  "before": {
+    "ruleset": {
+      "zone_tag": "bd42026e3facf3317ae32d55de5e2044",
+      "zone_name": "cinatoken.com",
+      "enabled": true,
+      "id": "4e2b52a8-2c7d-46bc-8c4a-e34f93c4e822",
+      "lite": true
+    },
+    "rules": [
+      {
+        "host": "*",
+        "paths": [
+          "*"
+        ],
+        "inclusive": true,
+        "created": "2026-03-28T00:54:20.611066Z",
+        "is_paused": false,
+        "priority": 1000,
+        "id": "56335312-5016-4ae1-859b-2a31f25181d1"
+      }
+    ]
+  },
+  "otherSitesBefore": {
+    "count": 5,
+    "sha256": "8a5b1de793f44ce6651b53d871978faa518d4aa07d042065d0eb7d4bfe1afaec"
+  },
+  "requestBody": {
+    "host": "cinatoken.com",
+    "paths": [
+      "*"
+    ],
+    "inclusive": false,
+    "is_paused": false
+  },
+  "error": "Cloudflare HTTP 403\n\n403 !== 200\n",
+  "finishedAt": "2026-10-05T11:16:46.098Z"
+}

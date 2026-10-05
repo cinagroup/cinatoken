@@ -1,5 +1,5 @@
 {
-  "status": "preparing-independent-web-cutover",
+  "status": "independent-web-production-cutover-functional-checks-complete-telemetry-open",
   "at": "2026-10-05T10:35:04.112Z",
   "userAuthorization": "切流到独立web",
   "baselineArtifactCommit": "5055c5bf0dbcc749cadf1d31461d838c86e38a4f",
@@ -14,11 +14,11 @@
     "public models/provider SSR 503",
     "sitemap 503"
   ],
-  "productionRouteChanged": false,
+  "productionRouteChanged": true,
   "route": {
     "id": "5738534653ef46f48a44e3f3b22e5d8e",
     "pattern": "cinatoken.com/*",
-    "script": "cinatoken-admin",
+    "script": "cinatoken-web",
     "request_limit_fail_open": false
   },
   "proxyRoute": {
@@ -97,18 +97,563 @@
       "path": "docs/operators/deployment/releases/2026-10-05-independent-web/adminRouteConfigTests.json",
       "bytes": 615,
       "sha256": "896da462a0672893090db324d9292801c09a5dca59e6ffaaa458114593cc0bf0"
+    },
+    "fixedCI": {
+      "path": "docs/operators/deployment/releases/2026-10-05-independent-web/fixedCI.json",
+      "bytes": 7122,
+      "sha256": "a836557372349f5a84e3a81aade67ea35252ce0c25b5d51d786fcc0b1c085089"
+    },
+    "artifactMetadata": {
+      "path": "docs/operators/deployment/releases/2026-10-05-independent-web/artifactMetadata.json",
+      "bytes": 712,
+      "sha256": "b88ed41e242286ed10ca4a5cd586177bfb478ae34499e567e7d244b1420b18e9"
+    },
+    "artifactProvenance": {
+      "path": "docs/operators/deployment/releases/2026-10-05-independent-web/artifactProvenance.json",
+      "bytes": 1028,
+      "sha256": "228cbef183425a4d93e2cc1667d60d24222c57e70a3d3d7c95df4ac19a75d01f"
+    },
+    "previewLive": {
+      "path": "docs/operators/deployment/releases/2026-10-05-independent-web/previewLive.json",
+      "bytes": 6016,
+      "sha256": "245c12bfe4fcce5eb68e88b7ffe6ce36387763bea7777c0a5111327c07922826"
+    },
+    "previewHTTP": {
+      "path": "docs/operators/deployment/releases/2026-10-05-independent-web/previewHTTP.json",
+      "bytes": 10974,
+      "sha256": "267957cb3ef563f7f8d0a6b8b419b151d203ed87aaae78e6391c5e019265c8fd"
+    },
+    "previewHEAD": {
+      "path": "docs/operators/deployment/releases/2026-10-05-independent-web/previewHEAD.json",
+      "bytes": 1271,
+      "sha256": "bdab16b3660ef69ccd54ae44e38a3210f293d176f2c20071b63c35b75211d1fd"
+    },
+    "previewAssets": {
+      "path": "docs/operators/deployment/releases/2026-10-05-independent-web/previewAssets.json",
+      "bytes": 53298,
+      "sha256": "49deda0c693f30f591ba2e24cbe9ef6597888e8dda60c002aa7935bed11439cb"
+    },
+    "previewBrowser": {
+      "path": "docs/operators/deployment/releases/2026-10-05-independent-web/previewBrowser.json",
+      "bytes": 13705,
+      "sha256": "97d7d42a96b094a1a989d66c862b9a6e08f8b66e2977e230a34bae252c0a30ea"
+    },
+    "previewBrowserRaw": {
+      "path": "docs/operators/deployment/releases/2026-10-05-independent-web/previewBrowserRaw.json",
+      "bytes": 153810,
+      "sha256": "eed7f4129b18a1d7651f2bc42f9a11c113125c9b8b7f44c66eda46eeb5c4c384"
+    },
+    "previewBrowserExecution": {
+      "path": "docs/operators/deployment/releases/2026-10-05-independent-web/previewBrowserExecution.json",
+      "bytes": 5007,
+      "sha256": "8b83f5a32a092a24fdfd89e181b72c4156d3c8376f222b5f0e7d4e70525ae9aa"
+    },
+    "previewBrowserQaFailure": {
+      "path": "docs/operators/deployment/releases/2026-10-05-independent-web/previewBrowserQaFailure.json",
+      "bytes": 13265,
+      "sha256": "100dec38fc381b044392104fc06e3df4d67be47040ca805dbd658923cd54e434"
+    },
+    "previewBrowserQaFailureExecution": {
+      "path": "docs/operators/deployment/releases/2026-10-05-independent-web/previewBrowserQaFailureExecution.json",
+      "bytes": 3379,
+      "sha256": "7e15a7c518ce9992b947afb809bc4687632f20936674dfbd46d599e49db753ab"
+    },
+    "previewBrowserQaCorrection": {
+      "path": "docs/operators/deployment/releases/2026-10-05-independent-web/previewBrowserQaCorrection.json",
+      "bytes": 3406,
+      "sha256": "5c7337b1be90a3640abf5374ee64a3300dcca676745b54408c074a33efdcc5e1"
+    },
+    "routeActivation": {
+      "path": "docs/operators/deployment/releases/2026-10-05-independent-web/routeActivation.json",
+      "bytes": 771,
+      "sha256": "ca5eb4b6591b60eac8cc71de4bd712c9a5c391dd464cf41de426ec897dc85195"
+    },
+    "assetRoute": {
+      "path": "docs/operators/deployment/releases/2026-10-05-independent-web/assetRoute.json",
+      "bytes": 685,
+      "sha256": "fd99dbd59c136eff6eaffef5e1a31bbcab25de83eae9d5973476e9607d14aff4"
+    },
+    "productionHTTP": {
+      "path": "docs/operators/deployment/releases/2026-10-05-independent-web/productionHTTP.json",
+      "bytes": 10952,
+      "sha256": "9579d01a2b372f07990229d5f5524cd1ad5773f9ebe06317aa317e7c0586b006"
+    },
+    "productionHEAD": {
+      "path": "docs/operators/deployment/releases/2026-10-05-independent-web/productionHEAD.json",
+      "bytes": 1249,
+      "sha256": "fbb65643907459ab1532ad0e0feaf149ab33152006306f72a1891851c120d2e5"
+    },
+    "productionAuthForwarding": {
+      "path": "docs/operators/deployment/releases/2026-10-05-independent-web/productionAuthForwarding.json",
+      "bytes": 2073,
+      "sha256": "5d2d54192c516e00a6c0e1dc656667d004c1ace2f1d70a57f35597bffb0eeaa0"
+    },
+    "productionAssets": {
+      "path": "docs/operators/deployment/releases/2026-10-05-independent-web/productionAssets.json",
+      "bytes": 53276,
+      "sha256": "853ff053a494de8996fadf3b4d11ce6ae2c607009a722598b09d2f5800996572"
+    },
+    "productionBrowser": {
+      "path": "docs/operators/deployment/releases/2026-10-05-independent-web/productionBrowser.json",
+      "bytes": 15848,
+      "sha256": "ce028bda226f7a78a666713dfef02720d2dedb3d398a8da0a989270361329b1b"
+    },
+    "productionBrowserRaw": {
+      "path": "docs/operators/deployment/releases/2026-10-05-independent-web/productionBrowserRaw.json",
+      "bytes": 230992,
+      "sha256": "2500754ce7470909f7940367a04890ef5146127489c42cb128ef4fd729976067"
+    },
+    "productionBrowserExecution": {
+      "path": "docs/operators/deployment/releases/2026-10-05-independent-web/productionBrowserExecution.json",
+      "bytes": 5241,
+      "sha256": "8cc3ba77ef5a2a9ed32157eff86c73d7173fcf9c4ad4d22c9a3ed60f80dd5de6"
+    },
+    "productionBrowserConfig": {
+      "path": "docs/operators/deployment/releases/2026-10-05-independent-web/productionBrowserConfig.json",
+      "bytes": 569,
+      "sha256": "24da682b84ef0733ae9067d59f09e483aa30a3e21851608d9d5893ec187aa14c"
+    },
+    "productionBrowserLive": {
+      "path": "docs/operators/deployment/releases/2026-10-05-independent-web/productionBrowserLive.json",
+      "bytes": 6014,
+      "sha256": "8405b2d22fbf8f11601a4c9da206992ceb20ee4aa2cbc9527a430fa3212a69f2"
+    },
+    "previewDisabled": {
+      "path": "docs/operators/deployment/releases/2026-10-05-independent-web/previewDisabled.json",
+      "bytes": 2450,
+      "sha256": "ecb42d39e4c3d4807caa06c199c02a32a07a0987007b5363bf07aef38a34d2f7"
+    },
+    "finalLive": {
+      "path": "docs/operators/deployment/releases/2026-10-05-independent-web/finalLive.json",
+      "bytes": 6014,
+      "sha256": "1e08e929e265b8cf2178aaeab3f8e630662faa87223723fc66afd6dae460c2e4"
+    },
+    "analyticsInventory": {
+      "path": "docs/operators/deployment/releases/2026-10-05-independent-web/analyticsInventory.json",
+      "bytes": 1711,
+      "sha256": "34c4098a707c3b60be579b7ef6de6aaec4f166f6a155184e58d896d4493aaa8e"
+    },
+    "analyticsRulesBefore": {
+      "path": "docs/operators/deployment/releases/2026-10-05-independent-web/analyticsRulesBefore.json",
+      "bytes": 1364,
+      "sha256": "bc47b7fbe5549382210e9624489a57e459ab53984cb24801abd04a67b64e4160"
+    },
+    "analyticsExcludeDenied": {
+      "path": "docs/operators/deployment/releases/2026-10-05-independent-web/analyticsExcludeDenied.json",
+      "bytes": 1292,
+      "sha256": "7579023d5523e95be0b72f36792f929177c9824cd11547b8fc3234b680829f28"
+    },
+    "analyticsConfigReadDenied": {
+      "path": "docs/operators/deployment/releases/2026-10-05-independent-web/analyticsConfigReadDenied.json",
+      "bytes": 338,
+      "sha256": "872468d182aed88aa5060ec2d4300254ce2f94fb4ef057fc2fe47c130fa3f328"
+    },
+    "analyticsUnchanged": {
+      "path": "docs/operators/deployment/releases/2026-10-05-independent-web/analyticsUnchanged.json",
+      "bytes": 783,
+      "sha256": "eb3ed578909d3718ac3183477c3656d64273fc2e83dc63585ef2c2ea43030ac4"
+    },
+    "production-web-browser-observe-v2.mjs": {
+      "path": "docs/operators/deployment/releases/2026-10-05-independent-web/production-web-browser-observe-v2.mjs",
+      "bytes": 15695,
+      "sha256": "415d123bbc71cfdb5d8ed02bf91f01d9021031358667cd7aaf2f0fd6edcd55be"
+    },
+    "execute-web-browser-observe-v2.mjs": {
+      "path": "docs/operators/deployment/releases/2026-10-05-independent-web/execute-web-browser-observe-v2.mjs",
+      "bytes": 3432,
+      "sha256": "ffd074ec8b52d5ce7c9dbd8a9dace29ec29130b661e0290e72f1f2d2d0424ed8"
+    },
+    "web-route-matrix.mjs": {
+      "path": "docs/operators/deployment/releases/2026-10-05-independent-web/web-route-matrix.mjs",
+      "bytes": 1770,
+      "sha256": "c8a3211d07979c037022f689aa442bd95de9b7c11843fb52b9ae9fa93ac01e61"
     }
   },
   "remaining": [
-    "fresh fixed same-commit Linux artifact",
-    "real Cloudflare fixed SSR and asset/private entry validation",
-    "route activation and readback",
-    "production browser/API smoke"
+    "Disable conflicting injected Web Analytics on exact cinatoken.com host using a credential with RUM rule write or Config Rules Edit permission; current attempts returned Cloudflare 403",
+    "Repeat strict production browser gate after verified telemetry configuration change"
   ],
   "unverified": [
-    "real authenticated business flows",
-    "financial/chain writes"
+    "real CinaAuth sign-in and authenticated account/Console business flows",
+    "financial/chain writes and live inference with nonempty catalog",
+    "production rollback drill and complete G0-G8 / dual-platform migration gates"
   ],
   "wholeMigrationComplete": false,
-  "secretValuesRecorded": false
+  "secretValuesRecorded": false,
+  "completedAt": "2026-10-05T11:24:09.487Z",
+  "runtimeCommit": "bdc1bfcf15d93a9b2769d3f52352bfa39eab8928",
+  "ci": {
+    "run": 37297885577,
+    "conclusion": "success",
+    "url": "https://github.com/cinagroup/cinatoken/actions/runs/37297885577",
+    "headSha": "bdc1bfcf15d93a9b2769d3f52352bfa39eab8928"
+  },
+  "artifact": {
+    "id": 11340652772,
+    "bytes": 6966543,
+    "zipDigest": "sha256:c0bed368d0dd7603ec6cc21376f287e148368b471647428356b21933ee198d39",
+    "manifestSha256": "89b9dc83c0900852e7f27807af7fa5def3cb017b10c823bcccd579385d2123b8",
+    "buildContract": {
+      "version": 2,
+      "buildId": "16e69bf9-6aed-4600-a616-8670d767b7a7",
+      "sourceSha256": "a2c8676a3f552f8667ba79f9bdea835e8dff53a6a4dbdea89f13ced3950663b9"
+    },
+    "committedInputFiles": 2289,
+    "committedSourceSha256": "a2c8676a3f552f8667ba79f9bdea835e8dff53a6a4dbdea89f13ced3950663b9",
+    "assets": 135,
+    "serverFiles": 35
+  },
+  "activatedAt": "2026-10-05T11:04:04.529Z",
+  "routeBefore": {
+    "id": "5738534653ef46f48a44e3f3b22e5d8e",
+    "pattern": "cinatoken.com/*",
+    "script": "cinatoken-admin",
+    "request_limit_fail_open": false
+  },
+  "assetRoute": {
+    "id": "2712df1859d340ffb6d68a7e53eb1853",
+    "pattern": "cinatoken.com/web-assets/*",
+    "script": "cinatoken-web",
+    "request_limit_fail_open": false
+  },
+  "web": {
+    "name": "cinatoken-web",
+    "versionId": "ecba2f94-90a3-4e32-af20-9fd9d3718811",
+    "percentage": 100,
+    "commitTag": "bdc1bfcf15d93a9b2769d3f52352bfa39eab8928",
+    "deploymentId": "c9998949-0650-41b0-8eb1-de18cb87c3e3",
+    "bindings": [
+      {
+        "name": "ASSETS",
+        "type": "assets"
+      },
+      {
+        "name": "CINATOKEN_ADMIN_SERVICE",
+        "type": "service",
+        "service": "cinatoken-admin"
+      },
+      {
+        "name": "CINATOKEN_WEB_ACCOUNT_ENABLED",
+        "type": "plain_text",
+        "value": "true"
+      },
+      {
+        "name": "CINATOKEN_WEB_ADMIN_ACCESS_KEYS_ENABLED",
+        "type": "plain_text",
+        "value": "true"
+      },
+      {
+        "name": "CINATOKEN_WEB_ADMIN_BUDGET_AUDIT_ENABLED",
+        "type": "plain_text",
+        "value": "true"
+      },
+      {
+        "name": "CINATOKEN_WEB_ADMIN_CONFIG_ENABLED",
+        "type": "plain_text",
+        "value": "true"
+      },
+      {
+        "name": "CINATOKEN_WEB_ADMIN_CONFIG_TIMEZONE_ENABLED",
+        "type": "plain_text",
+        "value": "true"
+      },
+      {
+        "name": "CINATOKEN_WEB_ADMIN_DASHBOARD_ENABLED",
+        "type": "plain_text",
+        "value": "true"
+      },
+      {
+        "name": "CINATOKEN_WEB_ADMIN_DATA_POLICIES_ENABLED",
+        "type": "plain_text",
+        "value": "true"
+      },
+      {
+        "name": "CINATOKEN_WEB_ADMIN_ENDPOINTS_ENABLED",
+        "type": "plain_text",
+        "value": "true"
+      },
+      {
+        "name": "CINATOKEN_WEB_ADMIN_GUARDRAILS_ENABLED",
+        "type": "plain_text",
+        "value": "true"
+      },
+      {
+        "name": "CINATOKEN_WEB_ADMIN_KEYS_ENABLED",
+        "type": "plain_text",
+        "value": "true"
+      },
+      {
+        "name": "CINATOKEN_WEB_ADMIN_MODEL_ANALYTICS_ENABLED",
+        "type": "plain_text",
+        "value": "true"
+      },
+      {
+        "name": "CINATOKEN_WEB_ADMIN_MODELS_ENABLED",
+        "type": "plain_text",
+        "value": "true"
+      },
+      {
+        "name": "CINATOKEN_WEB_ADMIN_NFT_MINTS_ENABLED",
+        "type": "plain_text",
+        "value": "true"
+      },
+      {
+        "name": "CINATOKEN_WEB_ADMIN_PLAYGROUND_ENABLED",
+        "type": "plain_text",
+        "value": "true"
+      },
+      {
+        "name": "CINATOKEN_WEB_ADMIN_PRESETS_ENABLED",
+        "type": "plain_text",
+        "value": "true"
+      },
+      {
+        "name": "CINATOKEN_WEB_ADMIN_PROVIDER_ANALYTICS_ENABLED",
+        "type": "plain_text",
+        "value": "true"
+      },
+      {
+        "name": "CINATOKEN_WEB_ADMIN_PROVIDERS_ENABLED",
+        "type": "plain_text",
+        "value": "true"
+      },
+      {
+        "name": "CINATOKEN_WEB_ADMIN_RELIABILITY_ENABLED",
+        "type": "plain_text",
+        "value": "true"
+      },
+      {
+        "name": "CINATOKEN_WEB_ADMIN_REQUEST_LOGS_ENABLED",
+        "type": "plain_text",
+        "value": "true"
+      },
+      {
+        "name": "CINATOKEN_WEB_ADMIN_ROUTES_ENABLED",
+        "type": "plain_text",
+        "value": "true"
+      },
+      {
+        "name": "CINATOKEN_WEB_ADMIN_SHARED_KEYS_ENABLED",
+        "type": "plain_text",
+        "value": "true"
+      },
+      {
+        "name": "CINATOKEN_WEB_ADMIN_SIMULATOR_ENABLED",
+        "type": "plain_text",
+        "value": "true"
+      },
+      {
+        "name": "CINATOKEN_WEB_ADMIN_TOOL_INVOCATIONS_ENABLED",
+        "type": "plain_text",
+        "value": "true"
+      },
+      {
+        "name": "CINATOKEN_WEB_ADMIN_TOOLS_ENABLED",
+        "type": "plain_text",
+        "value": "true"
+      },
+      {
+        "name": "CINATOKEN_WEB_ADMIN_USER_ANALYTICS_ENABLED",
+        "type": "plain_text",
+        "value": "true"
+      },
+      {
+        "name": "CINATOKEN_WEB_ADMIN_USER_DETAIL_ENABLED",
+        "type": "plain_text",
+        "value": "true"
+      },
+      {
+        "name": "CINATOKEN_WEB_ADMIN_USERS_ENABLED",
+        "type": "plain_text",
+        "value": "true"
+      },
+      {
+        "name": "CINATOKEN_WEB_ADMIN_WITHDRAWALS_ENABLED",
+        "type": "plain_text",
+        "value": "true"
+      },
+      {
+        "name": "CINATOKEN_WEB_PROXY_ORIGINS",
+        "type": "plain_text",
+        "value": "https://api.cinatoken.com"
+      },
+      {
+        "name": "CINATOKEN_WEB_PUBLIC_ENABLED",
+        "type": "plain_text",
+        "value": "true"
+      },
+      {
+        "name": "CINATOKEN_WEB_PUBLIC_ORIGIN",
+        "type": "plain_text",
+        "value": "https://cinatoken.com"
+      }
+    ],
+    "flags": {
+      "total": 29,
+      "enabled": 29
+    },
+    "workersDevEnabled": false,
+    "previewsEnabled": false
+  },
+  "backendsAfter": [
+    {
+      "name": "cinatoken-admin",
+      "versionId": "a5ce22c4-edae-42e9-8c2b-7b0df63e5b66",
+      "percentage": 100,
+      "commitTag": "34c742d161edbf2c16c7578221578d0b805d35c0",
+      "deploymentId": "e4f33725-d427-4efb-ac8b-b9e7db7a456b"
+    },
+    {
+      "name": "cinatoken-proxy",
+      "versionId": "6e235009-78db-443e-9387-6ec9d963d9d1",
+      "percentage": 100,
+      "commitTag": "34c742d161edbf2c16c7578221578d0b805d35c0",
+      "deploymentId": "3f08168a-4866-415f-8a35-d446e94af76a"
+    }
+  ],
+  "actualWebFlags": {
+    "total": 29,
+    "enabled": 29
+  },
+  "productionValidation": {
+    "get": 23,
+    "head": 6,
+    "authForwarding": 3,
+    "exactAssets": 135,
+    "functionalBrowser": {
+      "pagesPassed": 45,
+      "publicKinds": 8,
+      "accountPages": 10,
+      "adminPages": 27,
+      "themeLocaleMobilePassed": true,
+      "states": [
+        {
+          "step": "desktop-dark-selected",
+          "url": "https://cinatoken.com/en",
+          "lang": "en",
+          "className": "dark",
+          "dark": true,
+          "hydrationFailure": false,
+          "themeCookie": "cinatoken-theme=dark",
+          "localeCookie": null,
+          "width": 1440,
+          "documentWidth": 1440
+        },
+        {
+          "step": "language-zh-navigated",
+          "url": "https://cinatoken.com/zh",
+          "lang": "zh",
+          "className": "dark",
+          "dark": true,
+          "hydrationFailure": false,
+          "themeCookie": "cinatoken-theme=dark",
+          "localeCookie": "NEXT_LOCALE=zh",
+          "width": 1440,
+          "documentWidth": 1440
+        },
+        {
+          "step": "mobile-zh-dark-reload",
+          "url": "https://cinatoken.com/zh",
+          "lang": "zh",
+          "className": "dark",
+          "dark": true,
+          "hydrationFailure": false,
+          "themeCookie": "cinatoken-theme=dark",
+          "localeCookie": "NEXT_LOCALE=zh",
+          "width": 390,
+          "documentWidth": 390
+        }
+      ],
+      "pageErrors": 0,
+      "warnings": 0,
+      "unknownHTTPResponses": 0,
+      "rawHTTPErrors": 38,
+      "exactExpectedAnonymous401": 37,
+      "exactExpectedMissingModel404": 1
+    },
+    "strictBrowserPassed": false,
+    "strictBrowserActualExit": 1,
+    "strictBrowser": {
+      "rawConsoleErrors": 107,
+      "initialHarnessExplainedConsole": 38,
+      "initialHarnessUnknownConsole": 69,
+      "failedRequests": 69,
+      "refusedNonReadRequests": 32,
+      "statement": "The original strict production QA remains actual1. Exact diagnostic classification does not rewrite its JSON, assertion, outcome, logs or execution result."
+    },
+    "exactTelemetryClassification": {
+      "rum": {
+        "url": "https://cinatoken.com/cdn-cgi/rum?",
+        "method": "POST",
+        "attempts": 32,
+        "allAbortedByGETHEADGuard": true,
+        "failedRequests": 32,
+        "consoleErrors": 32,
+        "errorText": "net::ERR_BLOCKED_BY_CLIENT.Inspector"
+      },
+      "beacon": {
+        "url": "https://static.cloudflareinsights.com/beacon.min.js/v31edd6df95cf4e85bb4c19e7a9bdbcba1788362987495",
+        "method": "GET",
+        "CSPBlockedRequests": 37,
+        "consoleErrors": 37,
+        "actualCSPDirective": "script-src 'self' 'unsafe-inline'",
+        "privateLocationsExact": true
+      },
+      "otherFailedRequests": 0,
+      "otherInitiallyUnknownConsole": 0,
+      "classification": "Cloudflare Web Analytics endpoints; Root independently owns zone-injection settings review, no configuration change by this agent"
+    },
+    "authenticatedBusinessWrites": 0,
+    "databaseChanges": 0,
+    "realLoginCompleted": false
+  },
+  "previewValidation": {
+    "browserPages": 45,
+    "exactAssets": 135,
+    "http": 23,
+    "head": 6,
+    "baselineReadinessPassed": false
+  },
+  "qaCorrection": {
+    "actualExit": 1,
+    "classification": "QA assumed undefined bootstrap.origin; formal strict schema intentionally has no origin",
+    "productObservation": "/en200, real content, no page/console/HTTP errors, browser/context closed",
+    "correction": "v2 validates actual canonical/og DOM and no-canonical/noindex error metadata; strict defined bootstrap fields, all45 and security/error checks retained"
+  },
+  "rollback": {
+    "command": "node scripts/deploy/switch-web-route.mjs --to admin --expected-version a5ce22c4-edae-42e9-8c2b-7b0df63e5b66 --record <new-rollback.json> --apply",
+    "preserveAssetRoute": {
+      "id": "2712df1859d340ffb6d68a7e53eb1853",
+      "pattern": "cinatoken.com/web-assets/*",
+      "script": "cinatoken-web",
+      "request_limit_fail_open": false
+    },
+    "preserveFrozenArtifactsUntil": "2026-10-19",
+    "databaseRollback": false,
+    "liveRollbackPerformed": false,
+    "routeGuardUnitTests": 6
+  },
+  "legacyFallbacks": [
+    "/dashboard",
+    "/gateway/*",
+    "complex encoded user detail and unknown paths"
+  ],
+  "analyticsConflict": {
+    "functionalPagesPassed": 45,
+    "strictBrowserPassed": false,
+    "existingCspPreserved": true,
+    "ruleMutationSucceeded": false,
+    "apiWriteStatus": 403,
+    "configRulesReadStatus": 403,
+    "browserManagementRuntimeUnavailable": true,
+    "affectedSite": "566e5ee06705450abf29272ec21b3b76",
+    "rulesetId": "4e2b52a8-2c7d-46bc-8c4a-e34f93c4e822",
+    "targetHost": "cinatoken.com",
+    "originalAnalyticsRulePreserved": true
+  },
+  "knownNonBlockingLimits": [
+    "current public catalog is empty and returns USD",
+    "Windows native workerd 0xc0000005 remains; this gate used actual Cloudflare runtime",
+    "future Proxy native PG73/private-holder tests and automatic Release PR permissions remain separately tracked; this report does not assert every repository workflow is green"
+  ]
 }

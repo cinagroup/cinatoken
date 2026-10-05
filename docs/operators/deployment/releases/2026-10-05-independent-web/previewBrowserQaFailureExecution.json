@@ -1,0 +1,74 @@
+{
+  "schema": "cinatoken-independent-web-browser-execution-v1",
+  "label": "preview-bdc1bfcf-v1-02b36479",
+  "startedAt": "2026-10-05T10:51:47.306Z",
+  "processExecutable": "C:\\Program Files\\nodejs\\node.exe",
+  "inputScripts": [
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-independent-web-browser-696cc8df85ea423aa0d2545df155d197\\execute-web-browser-observe-v1.mjs",
+      "bytes": 3432,
+      "sha256": "a161e91bc89803c3ce715716cb80aa26e785a350ef5a187eddc16868c748b1bf"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-independent-web-browser-696cc8df85ea423aa0d2545df155d197\\production-web-browser-observe-v1.mjs",
+      "bytes": 14804,
+      "sha256": "df82884516183ed90712e9a3f0658a3b0f732f4c690a50e6721c7d7fe6fc03aa"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-independent-web-browser-696cc8df85ea423aa0d2545df155d197\\web-route-matrix.mjs",
+      "bytes": 1770,
+      "sha256": "c8a3211d07979c037022f689aa442bd95de9b7c11843fb52b9ae9fa93ac01e61"
+    }
+  ],
+  "configRaw": {
+    "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-independent-web-cutover-20261005-5ed6f4d3b75a4531a5194a0242edca1d/preview.browser-config.json",
+    "bytes": 591,
+    "sha256": "a3ceb3a0de8af7c037d49e53b4a4b87a9ded550f315c343adfe2d57b2687a5e1"
+  },
+  "expectedGitSHA": "bdc1bfcf15d93a9b2769d3f52352bfa39eab8928",
+  "expectedWorkerVersionId": "ecba2f94-90a3-4e32-af20-9fd9d3718811",
+  "phase": "preview",
+  "targetOrigin": "https://cinatoken-web.cinagroup.workers.dev",
+  "commandArguments": [
+    "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-independent-web-browser-696cc8df85ea423aa0d2545df155d197\\production-web-browser-observe-v1.mjs",
+    "preview-bdc1bfcf-v1-02b36479",
+    "C:/Users/cina/AppData/Local/Temp/cinatoken-independent-web-cutover-20261005-5ed6f4d3b75a4531a5194a0242edca1d/preview.browser-config.json"
+  ],
+  "sourceWrites": 0,
+  "deployments": 0,
+  "databaseWrites": 0,
+  "timedOut": false,
+  "exit": {
+    "code": 1,
+    "signal": null
+  },
+  "actualExit": 1,
+  "finishedAt": "2026-10-05T10:51:55.240Z",
+  "stdout": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-independent-web-browser-696cc8df85ea423aa0d2545df155d197\\preview-bdc1bfcf-v1-02b36479-stdout.log",
+    "bytes": 1352,
+    "sha256": "b6fb223a10306de96678152fbc39c30b4a1455aa6bcb97b0b1a082bc05e84810"
+  },
+  "stderr": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-independent-web-browser-696cc8df85ea423aa0d2545df155d197\\preview-bdc1bfcf-v1-02b36479-stderr.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "browserResult": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-independent-web-browser-696cc8df85ea423aa0d2545df155d197\\preview-bdc1bfcf-v1-02b36479.json",
+    "bytes": 13265,
+    "sha256": "100dec38fc381b044392104fc06e3df4d67be47040ca805dbd658923cd54e434"
+  },
+  "browserActualExit": 1,
+  "outcome": "FAILED",
+  "browserClosed": true,
+  "contextClosed": true,
+  "screenshots": [
+    {
+      "name": "failure",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-independent-web-browser-696cc8df85ea423aa0d2545df155d197\\preview-bdc1bfcf-v1-02b36479-failure.png",
+      "bytes": 54114,
+      "sha256": "3c3002c14200c075db9cb4077fc6926e1543c1dbc907150ee4981237dd71fbe6"
+    }
+  ]
+}

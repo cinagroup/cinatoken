@@ -1,0 +1,14 @@
+{
+  "gitSHA": "bdc1bfcf15d93a9b2769d3f52352bfa39eab8928",
+  "workerVersionId": "ecba2f94-90a3-4e32-af20-9fd9d3718811",
+  "phase": "cutover",
+  "targetOrigin": "https://cinatoken.com",
+  "canonicalOrigin": "https://cinatoken.com",
+  "operatorVerifiedLiveVersion": true,
+  "all29FlagsEnabled": true,
+  "liveProof": {
+    "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-independent-web-cutover-20261005-5ed6f4d3b75a4531a5194a0242edca1d/cutover.live-proof.json",
+    "bytes": 6014,
+    "sha256": "8405b2d22fbf8f11601a4c9da206992ceb20ee4aa2cbc9527a430fa3212a69f2"
+  }
+}

@@ -1,0 +1,65 @@
+{
+  "at": "2026-10-05T10:55:00.649Z",
+  "classification": "QA_TEMP_FIELD_ERROR_CORRECTION_ONLY",
+  "sourceWrites": 0,
+  "sourceBasis": [
+    {
+      "path": "C:\\cinagroup\\cinatoken\\packages\\web\\src\\cinatoken\\public\\ssr\\public-bootstrap.ts",
+      "bytes": 5917,
+      "sha256": "67efe09793c84a4ba4e9774fbabdb70f7fd3d039e8bf30c86ba19fa66596acd5"
+    },
+    {
+      "path": "C:\\cinagroup\\cinatoken\\packages\\web\\src\\cinatoken\\public-server\\metadata.ts",
+      "bytes": 3021,
+      "sha256": "d9eafbee377b4d98a5e21faa4da6b452822e42afd00095464966933b6f3639ae"
+    },
+    {
+      "path": "C:\\cinagroup\\cinatoken\\packages\\web\\src\\cinatoken\\public-server\\public-response.tsx",
+      "bytes": 11176,
+      "sha256": "81e7420b3f3cb5e1bea9fd8ad583b477643f15c788ab46aba21c6121fd37cabc"
+    }
+  ],
+  "correction": "Formal strict publicBootstrapSchema has version, locale, pathname, search, status, records and has no origin. Validate defined bootstrap values; validate trusted canonical via actual DOM link+og URL; errors have no canonical and noindex, nofollow exactly per publicMetadata.",
+  "retainedFailure": [
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-independent-web-browser-696cc8df85ea423aa0d2545df155d197\\preview-bdc1bfcf-v1-02b36479.json",
+      "bytes": 13265,
+      "sha256": "100dec38fc381b044392104fc06e3df4d67be47040ca805dbd658923cd54e434"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-independent-web-browser-696cc8df85ea423aa0d2545df155d197\\preview-bdc1bfcf-v1-02b36479-execution-closed.json",
+      "bytes": 3379,
+      "sha256": "7e15a7c518ce9992b947afb809bc4687632f20936674dfbd46d599e49db753ab"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-independent-web-browser-696cc8df85ea423aa0d2545df155d197\\preview-bdc1bfcf-v1-02b36479-failure.png",
+      "bytes": 54114,
+      "sha256": "3c3002c14200c075db9cb4077fc6926e1543c1dbc907150ee4981237dd71fbe6"
+    }
+  ],
+  "originalScripts": [
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-independent-web-browser-696cc8df85ea423aa0d2545df155d197\\production-web-browser-observe-v1.mjs",
+      "bytes": 14804,
+      "sha256": "df82884516183ed90712e9a3f0658a3b0f732f4c690a50e6721c7d7fe6fc03aa"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-independent-web-browser-696cc8df85ea423aa0d2545df155d197\\execute-web-browser-observe-v1.mjs",
+      "bytes": 3432,
+      "sha256": "a161e91bc89803c3ce715716cb80aa26e785a350ef5a187eddc16868c748b1bf"
+    }
+  ],
+  "newScripts": [
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-independent-web-browser-696cc8df85ea423aa0d2545df155d197\\production-web-browser-observe-v2.mjs",
+      "bytes": 15695,
+      "sha256": "415d123bbc71cfdb5d8ed02bf91f01d9021031358667cd7aaf2f0fd6edcd55be"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-independent-web-browser-696cc8df85ea423aa0d2545df155d197\\execute-web-browser-observe-v2.mjs",
+      "bytes": 3432,
+      "sha256": "ffd074ec8b52d5ce7c9dbd8a9dace29ec29130b661e0290e72f1f2d2d0424ed8"
+    }
+  ],
+  "assertionStrength": "Canonical policy enforced in real DOM instead of undefined field; real bootstrap version/status/path/search/locale additionally exact. All45/no runtime error/unknownHTTP/console/mutation/refused privilege/theme+locale+mobile unchanged."
+}

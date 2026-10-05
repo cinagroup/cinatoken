@@ -1,0 +1,15 @@
+{
+  "at": "2026-10-05T11:19:32.568Z",
+  "readOnly": true,
+  "actualExit": 1,
+  "secretValuesRecorded": false,
+  "httpStatus": 403,
+  "success": false,
+  "errors": [
+    {
+      "message": "request is not authorized"
+    }
+  ],
+  "error": "Configuration rules inventory denied or unavailable",
+  "finishedAt": "2026-10-05T11:19:34.837Z"
+}

@@ -1,0 +1,122 @@
+{
+  "schema": "cinatoken-independent-web-real-browser-v1",
+  "startedAt": "2026-10-05T10:51:47.702Z",
+  "label": "preview-bdc1bfcf-v1-02b36479",
+  "config": {
+    "gitSHA": "bdc1bfcf15d93a9b2769d3f52352bfa39eab8928",
+    "workerVersionId": "ecba2f94-90a3-4e32-af20-9fd9d3718811",
+    "phase": "preview",
+    "targetOrigin": "https://cinatoken-web.cinagroup.workers.dev",
+    "canonicalOrigin": "https://cinatoken.com",
+    "operatorVerifiedLiveVersion": true,
+    "all29FlagsEnabled": true,
+    "liveProof": {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-independent-web-cutover-20261005-5ed6f4d3b75a4531a5194a0242edca1d/preview.live-proof.json",
+      "bytes": 6016,
+      "sha256": "245c12bfe4fcce5eb68e88b7ffe6ce36387763bea7777c0a5111327c07922826"
+    }
+  },
+  "configRaw": {
+    "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-independent-web-cutover-20261005-5ed6f4d3b75a4531a5194a0242edca1d/preview.browser-config.json",
+    "bytes": 591,
+    "sha256": "a3ceb3a0de8af7c037d49e53b4a4b87a9ded550f315c343adfe2d57b2687a5e1"
+  },
+  "inputScripts": [
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-independent-web-browser-696cc8df85ea423aa0d2545df155d197\\production-web-browser-observe-v1.mjs",
+      "bytes": 14804,
+      "sha256": "df82884516183ed90712e9a3f0658a3b0f732f4c690a50e6721c7d7fe6fc03aa"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-independent-web-browser-696cc8df85ea423aa0d2545df155d197\\web-route-matrix.mjs",
+      "bytes": 1770,
+      "sha256": "c8a3211d07979c037022f689aa442bd95de9b7c11843fb52b9ae9fa93ac01e61"
+    }
+  ],
+  "scope": "Real independent Web public SSR/hydration and 37 anonymous private route gates; desktop/theme/locale/mobile",
+  "browserPlugin": "absent",
+  "fallbackReason": "Browser plugin not available; existing bundled Playwright and cached Chromium",
+  "realLogin": false,
+  "financialWrites": false,
+  "businessWrites": false,
+  "previewOriginLimit": "Workers.dev UI does not certify production-host Cookie/OIDC/CSRF; Root must separately validate public-URL Service Binding forwarding",
+  "pages": [
+    {
+      "route": "/en",
+      "kind": "public",
+      "http": 200,
+      "finalURL": "https://cinatoken-web.cinagroup.workers.dev/en",
+      "title": "CinaToken — Unified AI gateway",
+      "state": {
+        "url": "https://cinatoken-web.cinagroup.workers.dev/en",
+        "lang": "en",
+        "className": "light",
+        "dark": false,
+        "hydrationFailure": false,
+        "themeCookie": null,
+        "localeCookie": null,
+        "width": 1440,
+        "documentWidth": 1440
+      },
+      "bootstrap": {
+        "pathname": "/en",
+        "search": "",
+        "locale": "en"
+      },
+      "nonblank": true,
+      "mainText": "CINATOKEN GATEWAY\n\nBring your AI resources together.\n\nOne gateway for models, tools and your own providers. Manage access, budgets and usage from your workspace.\n\nOpen your account\nBrowse models\nOpen console\nView docs\nModel catalog\nModel providers\nCompare models\nModel rankings\nGateway benchmarks\nChat\nFeatures\nArchitecture\nDeployment\nChat\nResponses\nImages\nTools\n\nPOST https://api.cinatoken.com/v1/chat/completions\n\nREQUEST\n{\n  \"model\": \"your-model\",\n  \"messages\": [\n    {\n      \"role\": \"user\",\n      \"content\": \"Say hello.\"\n    }\n  ]\n}\nRESPONSE\n{\n  \"object\": \"chat.completion\",\n  \"choices\": [\n    {\n      \"message\": {\n        \"content\": \"...\"\n      }\n    }\n  ]\n}\n\nIllustrative examples only. No request is sent.\n\nConnect your resources\nBring model providers and agent tools into a shared gateway with a consistent API.\nControl access and budgets\nKeep keys, workspace permissions and usage budgets connected to your account.\nUnderstand your usage\nFollow real requests, routing decisions and accounting records from one place.\nAn AI capability gateway built for builders\n\nFlexible access, intelligent routing, controlled cost, and end-to-end observability.\n\n/v1/chat/completions\n/v1/responses\n/v1/images/*\n/v1/audio/*\n/v1/tools/*\nUnified protocols\n\nUse one Gateway Base URL for model inference, media capabilities, and agent tools.\n\nChat · Responses · Images · Audio · Tools\n\nIntelligent routing\n\nSend each request surface into a route pool and fail over safely across upstream targets.\n\nPriority · Weight · Failover · Sticky routing\n\nBudgets and keys\n\nIssue separate keys to real consumers and control cost with periodic budgets and actual usage.\n\nUsers · API keys · Periodic budgets · Three ledgers\n\nLogs and analytics\n\nRecord request paths and budget events, then inspect usage, cost, and quality f",
+      "body": "Skip to content\nC\nCinaToken\nModels\nAccount\nLanguage\nEnglish\n简体中文\n日本語\n한국어\nAppearance\nSystem\nLight\nDark\nSign in with CinaAuth\n\nCINATOKEN GATEWAY\n\nBring your AI resources together.\n\nOne gateway for models, tools and your own providers. Manage access, budgets and usage from your workspace.\n\nOpen your account\nBrowse models\nOpen console\nView docs\nModel catalog\nModel providers\nCompare models\nModel rankings\nGateway benchmarks\nChat\nFeatures\nArchitecture\nDeployment\nChat\nResponses\nImages\nTools\n\nPOST https://api.cinatoken.com/v1/chat/completions\n\nREQUEST\n{\n  \"model\": \"your-model\",\n  \"messages\": [\n    {\n      \"role\": \"user\",\n      \"content\": \"Say hello.\"\n    }\n  ]\n}\nRESPONSE\n{\n  \"object\": \"chat.completion\",\n  \"choices\": [\n    {\n      \"message\": {\n        \"content\": \"...\"\n      }\n    }\n  ]\n}\n\nIllustrative examples only. No request is sent.\n\nConnect your resources\nBring model providers and agent tools into a shared gateway with a consistent API.\nControl access and budgets\nKeep keys, workspace permissions and usage budgets connected to your account.\nUnderstand your usage\nFollow real requests, routing decisions and accounting records from one place.\nAn AI capability gateway built for builders\n\nFlexible access, intelligent routing, controlled cost, and end-to-end observability.\n\n/v1/chat/completions\n/v1/responses\n/v1/images/*\n/v1/audio/*\n/v1/tools/*\nUnified protocols\n\nUse one Gateway Base URL for model inference, media capabilities, and agent tools.\n\nChat · Responses · Images · Audio · Tools\n\nIntelligent routing\n\nSend each request surface into a route pool and fail over safely across upstream targets.\n\nPriority · Weight · Failover · Sticky routing\n\nBudgets and keys\n\nIssue separate keys to real consumers and control cost with periodic budgets and actual usage.\n\nUsers · API keys · Periodic budgets · Three ledgers\n\nLogs and analytics\n\nRecord request paths and budget events, then inspect usage, cost, and quality from multiple dimensions.\n\nRequest logs · Audit logs · Model/provider/user analytics\n\nFrom provider to reliable traffic in four steps\n1\nConnect providers\n\nConfigure upstream endpoints and credentials\n\n2\nPublish models and routes\n\nDefine protocol surfaces, route pools, and failover\n\n3\nIssue user keys\n\nAssign API keys and budgets by user, project, or customer\n\n4\nObserve every call\n\nContinuously improve with logs, audits, and analytics\n\nRun on your infrastructure\nCloudflare Workers + D1\n\nDeploy the proxy and admin console on Cloudflare with Workers and D1.\n\nView deployment docs\nDocker + Postgres / MySQL\n\nSelf-host with Postgres or MySQL and keep control of the data plane and runtime.\n\nView deployment docs\nReady to unify your AI capabilities?\n\nStart with one endpoint, then add models, media capabilities, and agent tools as you grow.\n\nOpen console\nView deployment docs\n\nCinaToken\n\nAI capability gateway and operations control plane\n\nGitHub\nDocs\n\n© 2026 CinaGroup\n\nFrontend design and development by New API contributors. Original project Frontend source",
+      "frameworkOverlay": false
+    }
+  ],
+  "pageErrors": [],
+  "consoleErrors": [],
+  "warnings": [],
+  "httpErrors": [],
+  "requestFailures": [],
+  "expectedAnonymous401": [],
+  "expectedMissingModel404": [],
+  "unknownHTTPErrors": [],
+  "explainedConsoleErrors": [],
+  "unexplainedConsoleErrors": [],
+  "refusedMutations": [],
+  "screenshots": [
+    {
+      "name": "failure",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-independent-web-browser-696cc8df85ea423aa0d2545df155d197\\preview-bdc1bfcf-v1-02b36479-failure.png",
+      "bytes": 54114,
+      "sha256": "3c3002c14200c075db9cb4077fc6926e1543c1dbc907150ee4981237dd71fbe6"
+    }
+  ],
+  "interactions": [],
+  "browserVersion": "147.0.7727.15",
+  "initialCookies": [],
+  "actualExit": 1,
+  "outcome": "FAILED",
+  "failure": {
+    "name": "AssertionError",
+    "message": "Expected values to be strictly equal:\n+ actual - expected\n\n+ undefined\n- 'https://cinatoken.com'\n",
+    "stack": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n+ actual - expected\n\n+ undefined\n- 'https://cinatoken.com'\n\n    at checkPage (file:///C:/Users/cina/AppData/Local/Temp/cinatoken-independent-web-browser-696cc8df85ea423aa0d2545df155d197/production-web-browser-observe-v1.mjs:96:27)\n    at async file:///C:/Users/cina/AppData/Local/Temp/cinatoken-independent-web-browser-696cc8df85ea423aa0d2545df155d197/production-web-browser-observe-v1.mjs:138:37"
+  },
+  "failureScreenshot": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-independent-web-browser-696cc8df85ea423aa0d2545df155d197\\preview-bdc1bfcf-v1-02b36479-failure.png",
+    "bytes": 54114,
+    "sha256": "3c3002c14200c075db9cb4077fc6926e1543c1dbc907150ee4981237dd71fbe6"
+  },
+  "failureState": {
+    "url": "https://cinatoken-web.cinagroup.workers.dev/en",
+    "lang": "en",
+    "className": "light",
+    "dark": false,
+    "hydrationFailure": false,
+    "themeCookie": null,
+    "localeCookie": null,
+    "width": 1440,
+    "documentWidth": 1440
+  },
+  "failureBody": "Skip to content\nC\nCinaToken\nModels\nAccount\nLanguage\nEnglish\n简体中文\n日本語\n한국어\nAppearance\nSystem\nLight\nDark\nSign in with CinaAuth\n\nCINATOKEN GATEWAY\n\nBring your AI resources together.\n\nOne gateway for models, tools and your own providers. Manage access, budgets and usage from your workspace.\n\nOpen your account\nBrowse models\nOpen console\nView docs\nModel catalog\nModel providers\nCompare models\nModel rankings\nGateway benchmarks\nChat\nFeatures\nArchitecture\nDeployment\nChat\nResponses\nImages\nTools\n\nPOST https://api.cinatoken.com/v1/chat/completions\n\nREQUEST\n{\n  \"model\": \"your-model\",\n  \"messages\": [\n    {\n      \"role\": \"user\",\n      \"content\": \"Say hello.\"\n    }\n  ]\n}\nRESPONSE\n{\n  \"object\": \"chat.completion\",\n  \"choices\": [\n    {\n      \"message\": {\n        \"content\": \"...\"\n      }\n    }\n  ]\n}\n\nIllustrative examples only. No request is sent.\n\nConnect your resources\nBring model providers and agent tools into a shared gateway with a consistent API.\nControl access and budgets\nKeep keys, workspace permissions and usage budgets connected to your account.\nUnderstand your usage\nFollow real requests, routing decisions and accounting records from one place.\nAn AI capability gateway built for builders\n\nFlexible access, intelligent routing, controlled cost, and end-to-end observability.\n\n/v1/chat/completions\n/v1/responses\n/v1/images/*\n/v1/audio/*\n/v1/tools/*\nUnified protocols\n\nUse one Gateway Base URL for model inference, media capabilities, and agent tools.\n\nChat · Responses · Images · Audio · Tools\n\nIntelligent routing\n\nSend each request surface into a route pool and fail over safely across upstream targets.\n\nPriority · Weight · Failover · Sticky routing\n\nBudgets and keys\n\nIssue separate keys to real consumers and control cost with periodic budgets and actual usage.\n\nUsers · API keys · Periodic budgets · Three ledgers\n\nLogs and analytics\n\nRecord request paths and budget events, then inspect usage, cost, and quality from multiple dimensions.\n\nRequest logs · Audit logs · Model/provider/user analytics\n\nFrom provider to reliable traffic in four steps\n1\nConnect providers\n\nConfigure upstream endpoints and credentials\n\n2\nPublish models and routes\n\nDefine protocol surfaces, route pools, and failover\n\n3\nIssue user keys\n\nAssign API keys and budgets by user, project, or customer\n\n4\nObserve every call\n\nContinuously improve with logs, audits, and analytics\n\nRun on your infrastructure\nCloudflare Workers + D1\n\nDeploy the proxy and admin console on Cloudflare with Workers and D1.\n\nView deployment docs\nDocker + Postgres / MySQL\n\nSelf-host with Postgres or MySQL and keep control of the data plane and runtime.\n\nView deployment docs\nReady to unify your AI capabilities?\n\nStart with one endpoint, then add models, media capabilities, and agent tools as you grow.\n\nOpen console\nView deployment docs\n\nCinaToken\n\nAI capability gateway and operations control plane\n\nGitHub\nDocs\n\n© 2026 CinaGroup\n\nFrontend design and development by New API contributors. Original project Frontend source",
+  "contextClosed": true,
+  "browserClosed": true,
+  "finishedAt": "2026-10-05T10:51:55.212Z",
+  "liveProofRawStillSame": true
+}
