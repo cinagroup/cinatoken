@@ -1,0 +1,5 @@
+{
+  "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-source-retention-review-1b6039fbc4534bb38847c3a946778cc5\\FINAL-source-archive-retention-STOP-v1.json",
+  "bytes": 12534,
+  "sha256": "8c5979491097100c1212535cbef8a5201503379f7df262b2d00b9438810c3f11"
+}

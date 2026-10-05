@@ -1,0 +1,458 @@
+{
+  "schema": "cinatoken-web-source-retention-local-v1",
+  "at": "2026-10-05T12:50:00.694Z",
+  "status": "local-fix-verified-awaiting-linux-ci-and-production",
+  "productionBefore": {
+    "sourceCommit": "3847955ccdb4c670f0f9aa099ef976889357e6b2",
+    "webVersionId": "dbe1800e-cd09-4f47-ba5e-b2a256898ae4",
+    "percentage": 100,
+    "flagsEnabled": 29
+  },
+  "actualProductionFailure": {
+    "sourceCommit": "bdc1bfcf15d93a9b2769d3f52352bfa39eab8928",
+    "archive": "sources/web.a4fb45ab08bf639f695134f2c693d5292f3126944d67db96e08596640930e910.tar.gz",
+    "HEAD": 404,
+    "GET": 404,
+    "actualExit": 1
+  },
+  "localChecks": {
+    "newRegressionBefore": {
+      "passed": 0,
+      "failed": 4,
+      "actualExit": 1
+    },
+    "newRegressionAfter": {
+      "passed": 4,
+      "failed": 0,
+      "actualExit": 0
+    },
+    "fullWebUnit": {
+      "passed": 1596,
+      "failed": 0,
+      "skipped": 0,
+      "actualExit": 0
+    },
+    "typecheck": 0,
+    "lint": 0,
+    "format": 0
+  },
+  "scope": {
+    "main": 102,
+    "matrix": 54,
+    "gates": 9,
+    "evidence": 9,
+    "taskCheckboxes": 211,
+    "literalCheckboxLines": 213,
+    "statesUnchanged": true,
+    "wholeMigrationComplete": false
+  },
+  "limitations": [
+    "Awaiting new commit Linux CI, artifact fingerprint verification and production activation",
+    "Real identity, financial/chain, full Docker/TLS and production rollback remain separate gates",
+    "Native CI sealed inventory summary and failure excerpts included; its full 3.7MB raw failed log is retained in owned Temp and hosted Actions, not copied here"
+  ],
+  "raw": [
+    {
+      "sourcePath": "C:/Users/cina/AppData/Local/Temp/cinatoken-source-retention-review-1b6039fbc4534bb38847c3a946778cc5/FINAL-source-archive-retention-STOP-v1.json",
+      "path": "docs/operators/deployment/releases/2026-10-05-web-resource-retention/local.FINAL-source-archive-retention-STOP-v1.json",
+      "bytes": 12534,
+      "sha256": "8c5979491097100c1212535cbef8a5201503379f7df262b2d00b9438810c3f11"
+    },
+    {
+      "sourcePath": "C:/Users/cina/AppData/Local/Temp/cinatoken-source-retention-review-1b6039fbc4534bb38847c3a946778cc5/baseline.closed.json",
+      "path": "docs/operators/deployment/releases/2026-10-05-web-resource-retention/local.baseline.closed.json",
+      "bytes": 763,
+      "sha256": "1cdf3a6ed744c52f68305d49b2c6dc7ac8c461c96a4abb433554aa263536bbb0"
+    },
+    {
+      "sourcePath": "C:/Users/cina/AppData/Local/Temp/cinatoken-source-retention-review-1b6039fbc4534bb38847c3a946778cc5/baseline.stderr.txt",
+      "path": "docs/operators/deployment/releases/2026-10-05-web-resource-retention/local.baseline.stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "sourcePath": "C:/Users/cina/AppData/Local/Temp/cinatoken-source-retention-review-1b6039fbc4534bb38847c3a946778cc5/baseline.stdout.txt",
+      "path": "docs/operators/deployment/releases/2026-10-05-web-resource-retention/local.baseline.stdout.txt",
+      "bytes": 5336,
+      "sha256": "5884bb02e1a101424773f387ea08114ac37e37feaa66932259ea2ab06b747dd9"
+    },
+    {
+      "sourcePath": "C:/Users/cina/AppData/Local/Temp/cinatoken-source-retention-review-1b6039fbc4534bb38847c3a946778cc5/diff-check.closed.json",
+      "path": "docs/operators/deployment/releases/2026-10-05-web-resource-retention/local.diff-check.closed.json",
+      "bytes": 698,
+      "sha256": "fd24e46ef0f08594a8d2b58e88c7e57c9bf0da1c1781da33c7f536dbb94e080a"
+    },
+    {
+      "sourcePath": "C:/Users/cina/AppData/Local/Temp/cinatoken-source-retention-review-1b6039fbc4534bb38847c3a946778cc5/diff-check.stderr.txt",
+      "path": "docs/operators/deployment/releases/2026-10-05-web-resource-retention/local.diff-check.stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "sourcePath": "C:/Users/cina/AppData/Local/Temp/cinatoken-source-retention-review-1b6039fbc4534bb38847c3a946778cc5/diff-check.stdout.txt",
+      "path": "docs/operators/deployment/releases/2026-10-05-web-resource-retention/local.diff-check.stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "sourcePath": "C:/Users/cina/AppData/Local/Temp/cinatoken-source-retention-review-1b6039fbc4534bb38847c3a946778cc5/final-seal.closed.json",
+      "path": "docs/operators/deployment/releases/2026-10-05-web-resource-retention/local.final-seal.closed.json",
+      "bytes": 628,
+      "sha256": "7d981a70a8c90aadfe81c1a7f98b0561d54a1a71804648e5fad9c25abad62055"
+    },
+    {
+      "sourcePath": "C:/Users/cina/AppData/Local/Temp/cinatoken-source-retention-review-1b6039fbc4534bb38847c3a946778cc5/final-seal.stderr.txt",
+      "path": "docs/operators/deployment/releases/2026-10-05-web-resource-retention/local.final-seal.stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "sourcePath": "C:/Users/cina/AppData/Local/Temp/cinatoken-source-retention-review-1b6039fbc4534bb38847c3a946778cc5/final-seal.stdout.txt",
+      "path": "docs/operators/deployment/releases/2026-10-05-web-resource-retention/local.final-seal.stdout.txt",
+      "bytes": 265,
+      "sha256": "d7493e9b7dc57318802dda88275d3575871f79c0125d6a1524ed2078e5471e55"
+    },
+    {
+      "sourcePath": "C:/Users/cina/AppData/Local/Temp/cinatoken-source-retention-review-1b6039fbc4534bb38847c3a946778cc5/fixed.closed.json",
+      "path": "docs/operators/deployment/releases/2026-10-05-web-resource-retention/local.fixed.closed.json",
+      "bytes": 757,
+      "sha256": "781895cb0bd1389931204ffdf38e785d9d47e24a0dcb1a4e46c0cd3555dfd42d"
+    },
+    {
+      "sourcePath": "C:/Users/cina/AppData/Local/Temp/cinatoken-source-retention-review-1b6039fbc4534bb38847c3a946778cc5/fixed.stderr.txt",
+      "path": "docs/operators/deployment/releases/2026-10-05-web-resource-retention/local.fixed.stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "sourcePath": "C:/Users/cina/AppData/Local/Temp/cinatoken-source-retention-review-1b6039fbc4534bb38847c3a946778cc5/fixed.stdout.txt",
+      "path": "docs/operators/deployment/releases/2026-10-05-web-resource-retention/local.fixed.stdout.txt",
+      "bytes": 529,
+      "sha256": "312a1b828ac72bf63eede0a37882dfe03f4453fac6f12082e56beff5bf474681"
+    },
+    {
+      "sourcePath": "C:/Users/cina/AppData/Local/Temp/cinatoken-source-retention-review-1b6039fbc4534bb38847c3a946778cc5/format-write-corrected.closed.json",
+      "path": "docs/operators/deployment/releases/2026-10-05-web-resource-retention/local.format-write-corrected.closed.json",
+      "bytes": 759,
+      "sha256": "bdc1ed597c5635ba8a67d717c97e342276ef795cae45b941e325e43573fdd989"
+    },
+    {
+      "sourcePath": "C:/Users/cina/AppData/Local/Temp/cinatoken-source-retention-review-1b6039fbc4534bb38847c3a946778cc5/format-write-corrected.stderr.txt",
+      "path": "docs/operators/deployment/releases/2026-10-05-web-resource-retention/local.format-write-corrected.stderr.txt",
+      "bytes": 113,
+      "sha256": "7b54f6df556d90a1e0de2a7607b1a9a75f01d7888fcccda3afb6a00bda71d738"
+    },
+    {
+      "sourcePath": "C:/Users/cina/AppData/Local/Temp/cinatoken-source-retention-review-1b6039fbc4534bb38847c3a946778cc5/format-write-corrected.stdout.txt",
+      "path": "docs/operators/deployment/releases/2026-10-05-web-resource-retention/local.format-write-corrected.stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "sourcePath": "C:/Users/cina/AppData/Local/Temp/cinatoken-source-retention-review-1b6039fbc4534bb38847c3a946778cc5/format-write-web.closed.json",
+      "path": "docs/operators/deployment/releases/2026-10-05-web-resource-retention/local.format-write-web.closed.json",
+      "bytes": 695,
+      "sha256": "78fa34da3023d7c61069ceb92b01dad320adef077a2832e9424e727194a883fd"
+    },
+    {
+      "sourcePath": "C:/Users/cina/AppData/Local/Temp/cinatoken-source-retention-review-1b6039fbc4534bb38847c3a946778cc5/format-write-web.stderr.txt",
+      "path": "docs/operators/deployment/releases/2026-10-05-web-resource-retention/local.format-write-web.stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "sourcePath": "C:/Users/cina/AppData/Local/Temp/cinatoken-source-retention-review-1b6039fbc4534bb38847c3a946778cc5/format-write-web.stdout.txt",
+      "path": "docs/operators/deployment/releases/2026-10-05-web-resource-retention/local.format-write-web.stdout.txt",
+      "bytes": 130,
+      "sha256": "b98c7409645c8a6d4044ce35779270521a4499fc4a9368c8f5eff4f6e5141cd1"
+    },
+    {
+      "sourcePath": "C:/Users/cina/AppData/Local/Temp/cinatoken-source-retention-review-1b6039fbc4534bb38847c3a946778cc5/format-write.closed.json",
+      "path": "docs/operators/deployment/releases/2026-10-05-web-resource-retention/local.format-write.closed.json",
+      "bytes": 726,
+      "sha256": "914f04af559e3439b5ae0694a2f47b1a50e6bdc65581875ba450a8c2705566c6"
+    },
+    {
+      "sourcePath": "C:/Users/cina/AppData/Local/Temp/cinatoken-source-retention-review-1b6039fbc4534bb38847c3a946778cc5/format-write.stderr.txt",
+      "path": "docs/operators/deployment/releases/2026-10-05-web-resource-retention/local.format-write.stderr.txt",
+      "bytes": 711,
+      "sha256": "93645c30576cd8435280be2d8148ff597486748cd6ff47c8d1c198f22189f40b"
+    },
+    {
+      "sourcePath": "C:/Users/cina/AppData/Local/Temp/cinatoken-source-retention-review-1b6039fbc4534bb38847c3a946778cc5/format-write.stdout.txt",
+      "path": "docs/operators/deployment/releases/2026-10-05-web-resource-retention/local.format-write.stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "sourcePath": "C:/Users/cina/AppData/Local/Temp/cinatoken-source-retention-review-1b6039fbc4534bb38847c3a946778cc5/full-web-format.closed.json",
+      "path": "docs/operators/deployment/releases/2026-10-05-web-resource-retention/local.full-web-format.closed.json",
+      "bytes": 648,
+      "sha256": "40b789ad0bdcca8f6add62a02242c912413bd49ec9db0e526a3066216a20e4c5"
+    },
+    {
+      "sourcePath": "C:/Users/cina/AppData/Local/Temp/cinatoken-source-retention-review-1b6039fbc4534bb38847c3a946778cc5/full-web-format.stderr.txt",
+      "path": "docs/operators/deployment/releases/2026-10-05-web-resource-retention/local.full-web-format.stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "sourcePath": "C:/Users/cina/AppData/Local/Temp/cinatoken-source-retention-review-1b6039fbc4534bb38847c3a946778cc5/full-web-format.stdout.txt",
+      "path": "docs/operators/deployment/releases/2026-10-05-web-resource-retention/local.full-web-format.stdout.txt",
+      "bytes": 526,
+      "sha256": "2b0035c6efe61dde18467e93abfae487b1218cc9033b8e77a6e847442bf4b52c"
+    },
+    {
+      "sourcePath": "C:/Users/cina/AppData/Local/Temp/cinatoken-source-retention-review-1b6039fbc4534bb38847c3a946778cc5/full-web-lint.closed.json",
+      "path": "docs/operators/deployment/releases/2026-10-05-web-resource-retention/local.full-web-lint.closed.json",
+      "bytes": 636,
+      "sha256": "f30f4482ec190e4f1b0e50dcea045e4329dfa60eb35f1279831ed67e7690b4a3"
+    },
+    {
+      "sourcePath": "C:/Users/cina/AppData/Local/Temp/cinatoken-source-retention-review-1b6039fbc4534bb38847c3a946778cc5/full-web-lint.stderr.txt",
+      "path": "docs/operators/deployment/releases/2026-10-05-web-resource-retention/local.full-web-lint.stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "sourcePath": "C:/Users/cina/AppData/Local/Temp/cinatoken-source-retention-review-1b6039fbc4534bb38847c3a946778cc5/full-web-lint.stdout.txt",
+      "path": "docs/operators/deployment/releases/2026-10-05-web-resource-retention/local.full-web-lint.stdout.txt",
+      "bytes": 117,
+      "sha256": "f3ba516bde29fd499321f1375fc5d965e048b42a611a0adc77944b00de9b4099"
+    },
+    {
+      "sourcePath": "C:/Users/cina/AppData/Local/Temp/cinatoken-source-retention-review-1b6039fbc4534bb38847c3a946778cc5/full-web-types.closed.json",
+      "path": "docs/operators/deployment/releases/2026-10-05-web-resource-retention/local.full-web-types.closed.json",
+      "bytes": 615,
+      "sha256": "f444c694a3008ec253c639021d445b1c4be751149fe989ed2001a43a027d487d"
+    },
+    {
+      "sourcePath": "C:/Users/cina/AppData/Local/Temp/cinatoken-source-retention-review-1b6039fbc4534bb38847c3a946778cc5/full-web-types.stderr.txt",
+      "path": "docs/operators/deployment/releases/2026-10-05-web-resource-retention/local.full-web-types.stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "sourcePath": "C:/Users/cina/AppData/Local/Temp/cinatoken-source-retention-review-1b6039fbc4534bb38847c3a946778cc5/full-web-types.stdout.txt",
+      "path": "docs/operators/deployment/releases/2026-10-05-web-resource-retention/local.full-web-types.stdout.txt",
+      "bytes": 145,
+      "sha256": "e8686b831448219f02dfec0083f1cdf5dcf47d85fdf301d2464408c48b20a989"
+    },
+    {
+      "sourcePath": "C:/Users/cina/AppData/Local/Temp/cinatoken-source-retention-review-1b6039fbc4534bb38847c3a946778cc5/full-web-unit.closed.json",
+      "path": "docs/operators/deployment/releases/2026-10-05-web-resource-retention/local.full-web-unit.closed.json",
+      "bytes": 547,
+      "sha256": "746eb388810e1aeb125e709bae18d62cd816e056aa1c46a15464261dad97bee5"
+    },
+    {
+      "sourcePath": "C:/Users/cina/AppData/Local/Temp/cinatoken-source-retention-review-1b6039fbc4534bb38847c3a946778cc5/full-web-unit.stderr.txt",
+      "path": "docs/operators/deployment/releases/2026-10-05-web-resource-retention/local.full-web-unit.stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "sourcePath": "C:/Users/cina/AppData/Local/Temp/cinatoken-source-retention-review-1b6039fbc4534bb38847c3a946778cc5/full-web-unit.stdout.txt",
+      "path": "docs/operators/deployment/releases/2026-10-05-web-resource-retention/local.full-web-unit.stdout.txt",
+      "bytes": 158595,
+      "sha256": "5f43856a1bd1ac082c58e7d9c8b476e005f8269f9fa4d9a56f513055c4bd0939"
+    },
+    {
+      "sourcePath": "C:/Users/cina/AppData/Local/Temp/cinatoken-source-retention-review-1b6039fbc4534bb38847c3a946778cc5/owned-diff.closed.json",
+      "path": "docs/operators/deployment/releases/2026-10-05-web-resource-retention/local.owned-diff.closed.json",
+      "bytes": 683,
+      "sha256": "8e312526e541df3f3818f7ce047182bb244249cf778f3606a1a120df15550103"
+    },
+    {
+      "sourcePath": "C:/Users/cina/AppData/Local/Temp/cinatoken-source-retention-review-1b6039fbc4534bb38847c3a946778cc5/owned-diff.stderr.txt",
+      "path": "docs/operators/deployment/releases/2026-10-05-web-resource-retention/local.owned-diff.stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "sourcePath": "C:/Users/cina/AppData/Local/Temp/cinatoken-source-retention-review-1b6039fbc4534bb38847c3a946778cc5/owned-diff.stdout.txt",
+      "path": "docs/operators/deployment/releases/2026-10-05-web-resource-retention/local.owned-diff.stdout.txt",
+      "bytes": 11449,
+      "sha256": "d9817066f67b9d71b3ef896f23910d2f686c53430338ae23813486dc8e0bfb00"
+    },
+    {
+      "sourcePath": "C:/Users/cina/AppData/Local/Temp/cinatoken-source-retention-review-1b6039fbc4534bb38847c3a946778cc5/run-web.mjs",
+      "path": "docs/operators/deployment/releases/2026-10-05-web-resource-retention/local.run-web.mjs",
+      "bytes": 1451,
+      "sha256": "5232edccdf1074b75452f7914ff1037c5cb53609ba0b554b1b0dddea92f43cc6"
+    },
+    {
+      "sourcePath": "C:/Users/cina/AppData/Local/Temp/cinatoken-source-retention-review-1b6039fbc4534bb38847c3a946778cc5/run.mjs",
+      "path": "docs/operators/deployment/releases/2026-10-05-web-resource-retention/local.run.mjs",
+      "bytes": 1438,
+      "sha256": "7421ca7284cabd9bdea199ac532168a10933731fbeb951463691f4bbd41af074"
+    },
+    {
+      "sourcePath": "C:/Users/cina/AppData/Local/Temp/cinatoken-source-retention-review-1b6039fbc4534bb38847c3a946778cc5/seal.mjs",
+      "path": "docs/operators/deployment/releases/2026-10-05-web-resource-retention/local.seal.mjs",
+      "bytes": 3689,
+      "sha256": "4441726093c448dee1673bf19fe17a790a8accf1ac87b72e635fe19ea0938bd4"
+    },
+    {
+      "sourcePath": "C:/Users/cina/AppData/Local/Temp/cinatoken-web-retention-40bda77a453343d89d5fe50706d58326/compose-production-release.mjs",
+      "path": "docs/operators/deployment/releases/2026-10-05-web-resource-retention/operator.compose-production-release.mjs",
+      "bytes": 4603,
+      "sha256": "46c28e34ca54c7e58ad8144e34b07c178adaef934aa3def4ec17613d6f216558"
+    },
+    {
+      "sourcePath": "C:/Users/cina/AppData/Local/Temp/cinatoken-web-retention-40bda77a453343d89d5fe50706d58326/old-source-before.proof.json",
+      "path": "docs/operators/deployment/releases/2026-10-05-web-resource-retention/operator.old-source-before.proof.json",
+      "bytes": 1623,
+      "sha256": "5c0077799be90c92ab1dd832d9eb2f95f58ca491efb3b59aaf0806bec8490c7f"
+    },
+    {
+      "sourcePath": "C:/Users/cina/AppData/Local/Temp/cinatoken-web-retention-40bda77a453343d89d5fe50706d58326/old-source-before.result.json",
+      "path": "docs/operators/deployment/releases/2026-10-05-web-resource-retention/operator.old-source-before.result.json",
+      "bytes": 687,
+      "sha256": "469a9892bf04009f51296b49b6316437e4772ba6d4c47480806bb89affcbaf16"
+    },
+    {
+      "sourcePath": "C:/Users/cina/AppData/Local/Temp/cinatoken-web-retention-40bda77a453343d89d5fe50706d58326/old-source-before.stderr.log",
+      "path": "docs/operators/deployment/releases/2026-10-05-web-resource-retention/operator.old-source-before.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "sourcePath": "C:/Users/cina/AppData/Local/Temp/cinatoken-web-retention-40bda77a453343d89d5fe50706d58326/old-source-before.stdout.log",
+      "path": "docs/operators/deployment/releases/2026-10-05-web-resource-retention/operator.old-source-before.stdout.log",
+      "bytes": 1200,
+      "sha256": "636ca2535f2d2d81bfae8222331f7c01f71b170753a60b31b998c0c9b00eb3fa"
+    },
+    {
+      "sourcePath": "C:/Users/cina/AppData/Local/Temp/cinatoken-web-retention-40bda77a453343d89d5fe50706d58326/probe-source-archives.mjs",
+      "path": "docs/operators/deployment/releases/2026-10-05-web-resource-retention/operator.probe-source-archives.mjs",
+      "bytes": 1968,
+      "sha256": "3ab7c93985b803c284386ee64d61dda7b23a5be787e114b57c3e92c36467dce2"
+    },
+    {
+      "sourcePath": "C:/Users/cina/AppData/Local/Temp/cinatoken-web-retention-40bda77a453343d89d5fe50706d58326/production-before.result.json",
+      "path": "docs/operators/deployment/releases/2026-10-05-web-resource-retention/operator.production-before.result.json",
+      "bytes": 755,
+      "sha256": "0e085575350dbb454ec35767304e60508f04f6ec755a6489d3731f56ac229607"
+    },
+    {
+      "sourcePath": "C:/Users/cina/AppData/Local/Temp/cinatoken-web-retention-40bda77a453343d89d5fe50706d58326/production-before.stderr.log",
+      "path": "docs/operators/deployment/releases/2026-10-05-web-resource-retention/operator.production-before.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "sourcePath": "C:/Users/cina/AppData/Local/Temp/cinatoken-web-retention-40bda77a453343d89d5fe50706d58326/production-before.stdout.log",
+      "path": "docs/operators/deployment/releases/2026-10-05-web-resource-retention/operator.production-before.stdout.log",
+      "bytes": 793,
+      "sha256": "89bca45f3b1e411336ebe33afe5e5b8157f5f5a9ea55e1560b59539939e5ad65"
+    },
+    {
+      "sourcePath": "C:/Users/cina/AppData/Local/Temp/cinatoken-web-retention-40bda77a453343d89d5fe50706d58326/run-command.mjs",
+      "path": "docs/operators/deployment/releases/2026-10-05-web-resource-retention/operator.run-command.mjs",
+      "bytes": 1809,
+      "sha256": "24a807fcc3ba2e309528c3edbc8e9a96e9e417f40e903a0694af9444f280837f"
+    },
+    {
+      "sourcePath": "C:/Users/cina/AppData/Local/Temp/cinatoken-web-retention-40bda77a453343d89d5fe50706d58326/scope-before-ci-corrected.result.json",
+      "path": "docs/operators/deployment/releases/2026-10-05-web-resource-retention/operator.scope-before-ci-corrected.result.json",
+      "bytes": 631,
+      "sha256": "21d2f7cc0985395321b961c7f85045ad2c3d1b5d741133f8aea444632744d400"
+    },
+    {
+      "sourcePath": "C:/Users/cina/AppData/Local/Temp/cinatoken-web-retention-40bda77a453343d89d5fe50706d58326/scope-before-ci-corrected.stderr.log",
+      "path": "docs/operators/deployment/releases/2026-10-05-web-resource-retention/operator.scope-before-ci-corrected.stderr.log",
+      "bytes": 699,
+      "sha256": "26eb397f4d628d07a9c44a0368f92ce33745d50a964d7ad1046fcd85f879a528"
+    },
+    {
+      "sourcePath": "C:/Users/cina/AppData/Local/Temp/cinatoken-web-retention-40bda77a453343d89d5fe50706d58326/scope-before-ci-corrected.stdout.log",
+      "path": "docs/operators/deployment/releases/2026-10-05-web-resource-retention/operator.scope-before-ci-corrected.stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "sourcePath": "C:/Users/cina/AppData/Local/Temp/cinatoken-web-retention-40bda77a453343d89d5fe50706d58326/scope-before-ci-final.result.json",
+      "path": "docs/operators/deployment/releases/2026-10-05-web-resource-retention/operator.scope-before-ci-final.result.json",
+      "bytes": 623,
+      "sha256": "010506d2212a6d8a5eaabb425eb8dc5a7a2ad2dafaa035e301235a7e1234bf89"
+    },
+    {
+      "sourcePath": "C:/Users/cina/AppData/Local/Temp/cinatoken-web-retention-40bda77a453343d89d5fe50706d58326/scope-before-ci-final.stderr.log",
+      "path": "docs/operators/deployment/releases/2026-10-05-web-resource-retention/operator.scope-before-ci-final.stderr.log",
+      "bytes": 699,
+      "sha256": "48c0ed8c2f43840189d9d27e3f9442f59884ff2f1d7726721a6e7817ce776699"
+    },
+    {
+      "sourcePath": "C:/Users/cina/AppData/Local/Temp/cinatoken-web-retention-40bda77a453343d89d5fe50706d58326/scope-before-ci-final.stdout.log",
+      "path": "docs/operators/deployment/releases/2026-10-05-web-resource-retention/operator.scope-before-ci-final.stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "sourcePath": "C:/Users/cina/AppData/Local/Temp/cinatoken-web-retention-40bda77a453343d89d5fe50706d58326/scope-before-ci-verified.result.json",
+      "path": "docs/operators/deployment/releases/2026-10-05-web-resource-retention/operator.scope-before-ci-verified.result.json",
+      "bytes": 629,
+      "sha256": "74052f965a80c6f8a57081b109e37483ea2909a7df55157683d6f27649480863"
+    },
+    {
+      "sourcePath": "C:/Users/cina/AppData/Local/Temp/cinatoken-web-retention-40bda77a453343d89d5fe50706d58326/scope-before-ci-verified.stderr.log",
+      "path": "docs/operators/deployment/releases/2026-10-05-web-resource-retention/operator.scope-before-ci-verified.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "sourcePath": "C:/Users/cina/AppData/Local/Temp/cinatoken-web-retention-40bda77a453343d89d5fe50706d58326/scope-before-ci-verified.stdout.log",
+      "path": "docs/operators/deployment/releases/2026-10-05-web-resource-retention/operator.scope-before-ci-verified.stdout.log",
+      "bytes": 249,
+      "sha256": "e8c274a046366f3d06565d61fcd75a6747473928f3c936650923992b7c3575b8"
+    },
+    {
+      "sourcePath": "C:/Users/cina/AppData/Local/Temp/cinatoken-web-retention-40bda77a453343d89d5fe50706d58326/scope-before-ci.result.json",
+      "path": "docs/operators/deployment/releases/2026-10-05-web-resource-retention/operator.scope-before-ci.result.json",
+      "bytes": 611,
+      "sha256": "163300f6d40752d73fae6ebe6f549f8aee58a9d1af341dd19c6703b398fa6db4"
+    },
+    {
+      "sourcePath": "C:/Users/cina/AppData/Local/Temp/cinatoken-web-retention-40bda77a453343d89d5fe50706d58326/scope-before-ci.stderr.log",
+      "path": "docs/operators/deployment/releases/2026-10-05-web-resource-retention/operator.scope-before-ci.stderr.log",
+      "bytes": 697,
+      "sha256": "7e72c5c52bb873758c57d482dcf68564f63392557b1df74160a1e8eeb21e7c0b"
+    },
+    {
+      "sourcePath": "C:/Users/cina/AppData/Local/Temp/cinatoken-web-retention-40bda77a453343d89d5fe50706d58326/scope-before-ci.stdout.log",
+      "path": "docs/operators/deployment/releases/2026-10-05-web-resource-retention/operator.scope-before-ci.stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "sourcePath": "C:/Users/cina/AppData/Local/Temp/cinatoken-web-retention-40bda77a453343d89d5fe50706d58326/seal-local-evidence.mjs",
+      "path": "docs/operators/deployment/releases/2026-10-05-web-resource-retention/operator.seal-local-evidence.mjs",
+      "bytes": 3310,
+      "sha256": "1d1b379f45710a6f1c4024c2038140cb606f7034fcf830991e269925f5c3f6ed"
+    },
+    {
+      "sourcePath": "C:/Users/cina/AppData/Local/Temp/cinatoken-web-retention-40bda77a453343d89d5fe50706d58326/verify-assets.mjs",
+      "path": "docs/operators/deployment/releases/2026-10-05-web-resource-retention/operator.verify-assets.mjs",
+      "bytes": 2053,
+      "sha256": "943ef5f7bb1dcf5c67853ee7246f53f5c8f8b853a318085e145f9c635124e72e"
+    },
+    {
+      "sourcePath": "C:/Users/cina/AppData/Local/Temp/cinatoken-web-retention-40bda77a453343d89d5fe50706d58326/verify-checklist-scope.mjs",
+      "path": "docs/operators/deployment/releases/2026-10-05-web-resource-retention/operator.verify-checklist-scope.mjs",
+      "bytes": 1398,
+      "sha256": "9c58a07a9e6fafd3ef6e01d7647cce2f2466ecb3dc35748ce093feedba56af65"
+    },
+    {
+      "sourcePath": "C:/Users/cina/AppData/Local/Temp/cinatoken-web-html-integrity-20261005-463533d1f4514516803e726a963bfb90/retention-production-before.deployment-guard.json",
+      "path": "docs/operators/deployment/releases/2026-10-05-web-resource-retention/operator.production-before.deployment-guard.json",
+      "bytes": 1030,
+      "sha256": "be7b2f37c1a8d02a0db25d099b48752ba6cebbce3939be877e90d32c3506ba15"
+    },
+    {
+      "sourcePath": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-ci-inventory-d7b57ac3c0804fc0a7fbddb860e5bc8e/FINAL-native-ci-inventory-v2.json",
+      "path": "docs/operators/deployment/releases/2026-10-05-web-resource-retention/inventory.FINAL-native-ci-inventory-v2.json",
+      "bytes": 94215,
+      "sha256": "f438a29e21e9aa9943b04159fd7811062960f0fe3ea629d874e0c61bb4e69f64"
+    }
+  ]
+}

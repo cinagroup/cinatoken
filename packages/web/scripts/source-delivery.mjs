@@ -102,6 +102,8 @@ export function verifySourceDelivery(
 			!isSourceArchiveAsset(archive.path) ||
 			archives.has(archive.path) ||
 			!file ||
+			(archive.path !== delivery.currentArchive &&
+				archive.source !== 'retained') ||
 			!equal(
 				[archive.bytes, archive.sha256, archive.source, archive.lastCurrentAt],
 				[file.bytes, file.sha256, file.source, file.lastCurrentAt]
@@ -151,9 +153,9 @@ export function verifySourceDelivery(
 	if (buildContract?.version === 2 && delivery.currentArchive === null)
 		throw new Error('Version 2 build requires corresponding source')
 	const paths = []
-	const referenced = new Set(
-		delivery.currentArchive ? [delivery.currentArchive] : []
-	)
+	// Verified retained archives can remain available without a final browser
+	// hash mapping. Their TTL and byte/descriptor bindings above still apply;
+	// independent retention never contributes to asset coverage below.
 	for (const mapping of delivery.assetSources) {
 		const file = assetFiles.get(mapping.path)
 		if (
@@ -167,7 +169,6 @@ export function verifySourceDelivery(
 		for (const archive of mapping.archives) {
 			if (!archives.has(archive))
 				throw new Error('Missing mapped source archive')
-			referenced.add(archive)
 		}
 		if (mapping.archives.length === 0 && !mapping.unresolved)
 			throw new Error('Unavailable source must be marked unresolved')
@@ -184,7 +185,6 @@ export function verifySourceDelivery(
 			paths,
 			files.filter((file) => isHashedAsset(file.path)).map((file) => file.path)
 		) ||
-		referenced.size !== archives.size ||
 		delivery.coverageComplete !==
 			(Boolean(delivery.currentArchive) &&
 				delivery.assetSources.every(

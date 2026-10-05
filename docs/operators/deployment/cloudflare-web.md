@@ -6,11 +6,19 @@
 
 ## 发布产物
 
-1. 选用对应提交已通过 Web frontend CI 的 `.release/web/<SHA>` 产物，或运行 `npm run build:web` 后使用 `packages/web/scripts/package-release.mjs` 冻结新版本。禁止直接发布旧 `dist`。
-2. 执行 `node packages/web/scripts/package-release.mjs --verify <release-id>`，记录源码提交、manifest SHA、三目标 build contract 与 Worker version。
+1. 选用对应提交已通过 Web frontend CI 的 `.release/web/<SHA>` 产物。CI 产物只包含该构建的资源；生产换版还必须合入当前线上发布的保留资源。禁止直接发布旧 `dist`，也不要覆盖已冻结的 CI 产物。
+2. 先核对当前 Worker version、源码提交和对应冻结产物，再用新的 release ID 执行下方合成命令。`--current-release` 选定已验证的 CI 构建与对应源码，`--previous` 指向当前线上完整资源链；此模式复用冻结的 browser/Node/Worker 文件，不从工作区重新构建。执行 `--verify <activation-id>`，记录两个输入及输出的 manifest SHA、源码提交、三目标 build contract 与 Worker version。部署配置须指向合成产物，Worker tag 仍记录所选 CI 源码提交。
 3. 生成配置时设置 `CINATOKEN_WEB_PUBLIC_ORIGIN=https://cinatoken.com`、`CINATOKEN_WEB_PROXY_ORIGINS=https://api.cinatoken.com`。29 个 `CINATOKEN_WEB_*_ENABLED` 是页面开关；API 与 OIDC 始终转发原始请求至 Admin。
 4. 先保持 Web `routes: []`，部署并通过预览/Service Binding 验证。只对临时预览开启 `workers_dev`，正式切流后关闭它。后续正式配置使用 `workers_dev:false`、`preview_urls:false`，不要复用开启预览的临时配置。公开 SSR 必须实际经过 Cloudflare；Node 测试不能证明所有 workerd API 可用。
 5. 验收公开四语 SSR、静态资源与懒加载、账户和管理页面的权限拦截、匿名 API 401、同源认证 URL、移动布局、语言及主题刷新。真实登录、资金和链操作按其专项证据单独记录。
+
+```powershell
+node packages/web/scripts/package-release.mjs --id <new-activation-id> --at <UTC-time> --current-release <passed-ci-SHA> --previous <currently-published-release-id> --retention-days 14
+node packages/web/scripts/package-release.mjs --verify <new-activation-id>
+node packages/web/scripts/gen-web-wrangler.mjs --release <new-activation-id>
+```
+
+保留期内的源码归档应继续出现在公开下载目录中，即使两次发布的 hashed JS/CSS 完全相同。归档保留不能伪造资源来源映射或提高来源覆盖率。下一次换版须把本次实际部署的合成 release ID 作为 `--previous`，逐项验证仍在保留期的旧资源 GET/HEAD 与精确摘要；不能只保留本地文件或旧 Worker version。过期归档沿原 `lastCurrentAt` 和 `retentionDays` 淘汰，不因合成操作刷新时间。
 
 ## 切流与回滚
 

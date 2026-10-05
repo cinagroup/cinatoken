@@ -1,0 +1,114 @@
+✖ same-browser releases retain each previous source archive without inventing asset mappings (1117.4378ms)
+✖ source archives remain downloadable through their exact cutoff without renewing their age (1368.702ms)
+✖ a previous source archive with no hashed assets is retained independently of coverage (1197.2497ms)
+✖ independently retained source archives do not resolve an unknown legacy asset (1203.6008ms)
+ℹ tests 4
+ℹ suites 0
+ℹ pass 0
+ℹ fail 4
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 5524.8063
+
+✖ failing tests:
+
+test at packages\web\scripts\package-release.test.mjs:747:1
+✖ same-browser releases retain each previous source archive without inventing asset mappings (1117.4378ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  1 !== 2
+  
+      at TestContext.<anonymous> (file:///C:/cinagroup/cinatoken/packages/web/scripts/package-release.test.mjs:758:9)
+      at Test.runInAsyncScope (node:async_hooks:228:14)
+      at Test.run (node:internal/test_runner/test:1118:25)
+      at Test.start (node:internal/test_runner/test:1015:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:358:17) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 1,
+    expected: 2,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at packages\web\scripts\package-release.test.mjs:785:1
+✖ source archives remain downloadable through their exact cutoff without renewing their age (1368.702ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + undefined
+  - '2026-09-01T00:00:00.000Z'
+  
+      at TestContext.<anonymous> (file:///C:/cinagroup/cinatoken/packages/web/scripts/package-release.test.mjs:795:9)
+      at Test.runInAsyncScope (node:async_hooks:228:14)
+      at Test.run (node:internal/test_runner/test:1118:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:787:18)
+      at Test.postRun (node:internal/test_runner/test:1247:19)
+      at Test.run (node:internal/test_runner/test:1175:12)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: '2026-09-01T00:00:00.000Z',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at packages\web\scripts\package-release.test.mjs:808:1
+✖ a previous source archive with no hashed assets is retained independently of coverage (1197.2497ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+  + undefined
+  - {
+  -   buildContract: {
+  -     buildId: 'db97d76a-5f35-4ca2-a535-01a7a297bb62',
+  -     sourceSha256: '78eb374a8da46af737596f8d629858d363b9efcef9c05b8ce5d47fc31ea5817d',
+  -     version: 2
+  -   },
+  -   bytes: 3761,
+  -   fileCount: 27,
+  -   inputPolicySha256: 'c36a8b224da31f0e68326744e80f0a0ee0812722c0f2e50cbd90ece640e53f1f',
+  -   lastCurrentAt: '2026-09-01T00:00:00.000Z',
+  -   path: 'sources/web.71b6047860095465d7d81c45d01612bc4e0ef15b1dbd39aac802b28daa8113e9.tar.gz',
+  -   sha256: '71b6047860095465d7d81c45d01612bc4e0ef15b1dbd39aac802b28daa8113e9',
+  -   source: 'retained',
+  -   totalSourceBytes: 431
+  - }
+  
+      at TestContext.<anonymous> (file:///C:/cinagroup/cinatoken/packages/web/scripts/package-release.test.mjs:818:9)
+      at Test.runInAsyncScope (node:async_hooks:228:14)
+      at Test.run (node:internal/test_runner/test:1118:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:787:18)
+      at Test.postRun (node:internal/test_runner/test:1247:19)
+      at Test.run (node:internal/test_runner/test:1175:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:787:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: { path: 'sources/web.71b6047860095465d7d81c45d01612bc4e0ef15b1dbd39aac802b28daa8113e9.tar.gz', bytes: 3761, sha256: '71b6047860095465d7d81c45d01612bc4e0ef15b1dbd39aac802b28daa8113e9', buildContract: { version: 2, buildId: 'db97d76a-5f35-4ca2-a535-01a7a297bb62', sourceSha256: '78eb374a8da46af737596f8d629858d363b9efcef9c05b8ce5d47fc31ea5817d' }, inputPolicySha256: 'c36a8b224da31f0e68326744e80f0a0ee0812722c0f2e50cbd90ece640e53f1f', fileCount: 27, totalSourceBytes: 431, source: 'retained', lastCurrentAt: '2026-09-01T00:00:00.000Z' },
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at packages\web\scripts\package-release.test.mjs:833:1
+✖ independently retained source archives do not resolve an unknown legacy asset (1203.6008ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  1 !== 2
+  
+      at TestContext.<anonymous> (file:///C:/cinagroup/cinatoken/packages/web/scripts/package-release.test.mjs:844:9)
+      at Test.runInAsyncScope (node:async_hooks:228:14)
+      at Test.run (node:internal/test_runner/test:1118:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:787:18)
+      at Test.postRun (node:internal/test_runner/test:1247:19)
+      at Test.run (node:internal/test_runner/test:1175:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:787:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 1,
+    expected: 2,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

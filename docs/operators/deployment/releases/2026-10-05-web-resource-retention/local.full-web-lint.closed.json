@@ -1,0 +1,17 @@
+{
+  "startedAt": "2026-10-05T12:45:02.522Z",
+  "finishedAt": "2026-10-05T12:47:12.325Z",
+  "executable": "C:/Program Files/nodejs/node.exe",
+  "args": [
+    "C:/Program Files/nodejs/node_modules/npm/bin/npm-cli.js",
+    "run",
+    "lint",
+    "-w",
+    "@cinatoken/web"
+  ],
+  "actualExitCode": 0,
+  "signal": null,
+  "error": null,
+  "stdoutPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-source-retention-review-1b6039fbc4534bb38847c3a946778cc5\\full-web-lint.stdout.txt",
+  "stderrPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-source-retention-review-1b6039fbc4534bb38847c3a946778cc5\\full-web-lint.stderr.txt"
+}

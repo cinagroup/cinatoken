@@ -1,0 +1,13 @@
+{
+  "startedAt": "2026-10-05T12:49:25.084Z",
+  "finishedAt": "2026-10-05T12:49:25.287Z",
+  "executable": "C:/Program Files/nodejs/node.exe",
+  "args": [
+    "C:/Users/cina/AppData/Local/Temp/cinatoken-source-retention-review-1b6039fbc4534bb38847c3a946778cc5/seal.mjs"
+  ],
+  "actualExitCode": 0,
+  "signal": null,
+  "error": null,
+  "stdoutPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-source-retention-review-1b6039fbc4534bb38847c3a946778cc5\\final-seal.stdout.txt",
+  "stderrPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-source-retention-review-1b6039fbc4534bb38847c3a946778cc5\\final-seal.stderr.txt"
+}

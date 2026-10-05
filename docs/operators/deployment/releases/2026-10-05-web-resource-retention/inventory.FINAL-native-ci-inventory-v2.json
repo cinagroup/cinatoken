@@ -1,0 +1,2160 @@
+{
+  "schema": 1,
+  "generatedAt": "2026-10-05T12:37:36.450Z",
+  "mode": "read-only inventory; no test, workflow dispatch, deploy, DB or auth operation",
+  "scope": "Web migration Linux/native remaining CI inventory",
+  "head": "5a13f59e851ec7e2ef6a94b50e5d4d4da26e9462",
+  "latestProxyRun": {
+    "runId": 37297885860,
+    "headSha": "bdc1bfcf15d93a9b2769d3f52352bfa39eab8928",
+    "status": "completed",
+    "conclusion": "failure",
+    "url": "https://github.com/cinagroup/cinatoken/actions/runs/37297885860",
+    "jobs": [
+      {
+        "id": 111723360335,
+        "name": "config-cutover-contracts",
+        "status": "completed",
+        "conclusion": "success",
+        "url": "https://github.com/cinagroup/cinatoken/actions/runs/37297885860/job/111723360335",
+        "successSteps": 13,
+        "skippedSteps": 0,
+        "failedSteps": [],
+        "steps": [
+          {
+            "number": 1,
+            "name": "Set up job",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "number": 2,
+            "name": "Run actions/checkout@v4",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "number": 3,
+            "name": "Run actions/setup-node@v4",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "number": 4,
+            "name": "Run npm ci --ignore-scripts",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "number": 5,
+            "name": "Run npm run build:node-index -w @octafuse/core",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "number": 6,
+            "name": "Run npx tsc -p tsconfig.json --noEmit --pretty false",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "number": 7,
+            "name": "Run npx tsx --test scripts/db/lib/config-cutover-reconcile.test.ts scripts/db/cutover/preflight-d1-source.test.ts",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "number": 8,
+            "name": "Run npm run test:d1-portal-ledger",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "number": 9,
+            "name": "Run npm run test:mysql-migration",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "number": 10,
+            "name": "Run npm run test:postgres-migration",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "number": 19,
+            "name": "Post Run actions/setup-node@v4",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "number": 20,
+            "name": "Post Run actions/checkout@v4",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "number": 21,
+            "name": "Complete job",
+            "status": "completed",
+            "conclusion": "success"
+          }
+        ]
+      },
+      {
+        "id": 111723360507,
+        "name": "admin-playground-safety",
+        "status": "completed",
+        "conclusion": "success",
+        "url": "https://github.com/cinagroup/cinatoken/actions/runs/37297885860/job/111723360507",
+        "successSteps": 15,
+        "skippedSteps": 0,
+        "failedSteps": [],
+        "steps": [
+          {
+            "number": 1,
+            "name": "Set up job",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "number": 2,
+            "name": "Run actions/checkout@v4",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "number": 3,
+            "name": "Run actions/setup-node@v4",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "number": 4,
+            "name": "Run npm ci",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "number": 5,
+            "name": "Run npm run build:node-index -w @octafuse/core",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "number": 6,
+            "name": "Run npm run typecheck -w @octafuse/admin",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "number": 7,
+            "name": "Run node --import tsx --test lib/services/admin/users-service.test.ts",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "number": 8,
+            "name": "Run node --import tsx --test lib/routes/admin/earnings.test.ts",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "number": 9,
+            "name": "Run node --import tsx --test lib/routes/shared-key-history-error.test.ts",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "number": 10,
+            "name": "Run node --import tsx --test lib/shared-key-credited-usage-reader.test.ts",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "number": 11,
+            "name": "Run node --import tsx --test lib/shared-key-signed-stats-reader.test.ts",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "number": 12,
+            "name": "Run npm run test:playground -w @octafuse/admin",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "number": 23,
+            "name": "Post Run actions/setup-node@v4",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "number": 24,
+            "name": "Post Run actions/checkout@v4",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "number": 25,
+            "name": "Complete job",
+            "status": "completed",
+            "conclusion": "success"
+          }
+        ]
+      },
+      {
+        "id": 111723360577,
+        "name": "native-financial-consumer",
+        "status": "completed",
+        "conclusion": "failure",
+        "url": "https://github.com/cinagroup/cinatoken/actions/runs/37297885860/job/111723360577",
+        "successSteps": 16,
+        "skippedSteps": 100,
+        "failedSteps": [
+          {
+            "completedAt": "2026-10-05T10:40:37Z",
+            "conclusion": "failure",
+            "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+            "number": 14,
+            "startedAt": "2026-10-05T10:40:34Z",
+            "status": "completed"
+          }
+        ],
+        "steps": [
+          {
+            "number": 1,
+            "name": "Set up job",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "number": 2,
+            "name": "Initialize containers",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "number": 3,
+            "name": "Run actions/checkout@v4",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "number": 4,
+            "name": "Run actions/setup-node@v4",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "number": 5,
+            "name": "Run npm ci",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "number": 6,
+            "name": "Run npm run build:node-index -w @octafuse/core",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "number": 7,
+            "name": "Run install -d -o postgres -g postgres -m 0755 .wrangler/staging .wrangler/staging/pg-native-dispatch-tests",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "number": 8,
+            "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "number": 9,
+            "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "number": 10,
+            "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "number": 11,
+            "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "number": 12,
+            "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "number": 13,
+            "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "number": 14,
+            "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+            "status": "completed",
+            "conclusion": "failure"
+          },
+          {
+            "number": 15,
+            "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+            "status": "completed",
+            "conclusion": "skipped"
+          },
+          {
+            "number": 16,
+            "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+            "status": "completed",
+            "conclusion": "skipped"
+          },
+          {
+            "number": 17,
+            "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+            "status": "completed",
+            "conclusion": "skipped"
+          },
+          {
+            "number": 18,
+            "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+            "status": "completed",
+            "conclusion": "skipped"
+          },
+          {
+            "number": 19,
+            "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+            "status": "completed",
+            "conclusion": "skipped"
+          },
+          {
+            "number": 20,
+            "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+            "status": "completed",
+            "conclusion": "skipped"
+          },
+          {
+            "number": 21,
+            "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+            "status": "completed",
+            "conclusion": "skipped"
+          },
+          {
+            "number": 22,
+            "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+            "status": "completed",
+            "conclusion": "skipped"
+          },
+          {
+            "number": 23,
+            "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+            "status": "completed",
+            "conclusion": "skipped"
+          },
+          {
+            "number": 24,
+            "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+            "status": "completed",
+            "conclusion": "skipped"
+          },
+          {
+            "number": 25,
+            "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+            "status": "completed",
+            "conclusion": "skipped"
+          },
+          {
+            "number": 26,
+            "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+            "status": "completed",
+            "conclusion": "skipped"
+          },
+          {
+            "number": 27,
+            "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+            "status": "completed",
+            "conclusion": "skipped"
+          },
+          {
+            "number": 28,
+            "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+            "status": "completed",
+            "conclusion": "skipped"
+          },
+          {
+            "number": 29,
+            "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+            "status": "completed",
+            "conclusion": "skipped"
+          },
+          {
+            "number": 30,
+            "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+            "status": "completed",
+            "conclusion": "skipped"
+          },
+          {
+            "number": 31,
+            "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+            "status": "completed",
+            "conclusion": "skipped"
+          },
+          {
+            "number": 32,
+            "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+            "status": "completed",
+            "conclusion": "skipped"
+          },
+          {
+            "number": 33,
+            "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+            "status": "completed",
+            "conclusion": "skipped"
+          },
+          {
+            "number": 34,
+            "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+            "status": "completed",
+            "conclusion": "skipped"
+          },
+          {
+            "number": 35,
+            "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+            "status": "completed",
+            "conclusion": "skipped"
+          },
+          {
+            "number": 36,
+            "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+            "status": "completed",
+            "conclusion": "skipped"
+          },
+          {
+            "number": 37,
+            "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+            "status": "completed",
+            "conclusion": "skipped"
+          },
+          {
+            "number": 38,
+            "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+            "status": "completed",
+            "conclusion": "skipped"
+          },
+          {
+            "number": 39,
+            "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+            "status": "completed",
+            "conclusion": "skipped"
+          },
+          {
+            "number": 40,
+            "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+            "status": "completed",
+            "conclusion": "skipped"
+          },
+          {
+            "number": 41,
+            "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+            "status": "completed",
+            "conclusion": "skipped"
+          },
+          {
+            "number": 42,
+            "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+            "status": "completed",
+            "conclusion": "skipped"
+          },
+          {
+            "number": 43,
+            "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+            "status": "completed",
+            "conclusion": "skipped"
+          },
+          {
+            "number": 44,
+            "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+            "status": "completed",
+            "conclusion": "skipped"
+          },
+          {
+            "number": 45,
+            "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+            "status": "completed",
+            "conclusion": "skipped"
+          },
+          {
+            "number": 46,
+            "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+            "status": "completed",
+            "conclusion": "skipped"
+          },
+          {
+            "number": 47,
+            "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+            "status": "completed",
+            "conclusion": "skipped"
+          },
+          {
+            "number": 48,
+            "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+            "status": "completed",
+            "conclusion": "skipped"
+          },
+          {
+            "number": 49,
+            "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+            "status": "completed",
+            "conclusion": "skipped"
+          },
+          {
+            "number": 50,
+            "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+            "status": "completed",
+            "conclusion": "skipped"
+          },
+          {
+            "number": 51,
+            "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+            "status": "completed",
+            "conclusion": "skipped"
+          },
+          {
+            "number": 52,
+            "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+            "status": "completed",
+            "conclusion": "skipped"
+          },
+          {
+            "number": 53,
+            "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+            "status": "completed",
+            "conclusion": "skipped"
+          },
+          {
+            "number": 54,
+            "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+            "status": "completed",
+            "conclusion": "skipped"
+          },
+          {
+            "number": 55,
+            "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+            "status": "completed",
+            "conclusion": "skipped"
+          },
+          {
+            "number": 56,
+            "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+            "status": "completed",
+            "conclusion": "skipped"
+          },
+          {
+            "number": 57,
+            "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+            "status": "completed",
+            "conclusion": "skipped"
+          },
+          {
+            "number": 58,
+            "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+            "status": "completed",
+            "conclusion": "skipped"
+          },
+          {
+            "number": 59,
+            "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+            "status": "completed",
+            "conclusion": "skipped"
+          },
+          {
+            "number": 60,
+            "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+            "status": "completed",
+            "conclusion": "skipped"
+          },
+          {
+            "number": 61,
+            "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+            "status": "completed",
+            "conclusion": "skipped"
+          },
+          {
+            "number": 62,
+            "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+            "status": "completed",
+            "conclusion": "skipped"
+          },
+          {
+            "number": 63,
+            "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+            "status": "completed",
+            "conclusion": "skipped"
+          },
+          {
+            "number": 64,
+            "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+            "status": "completed",
+            "conclusion": "skipped"
+          },
+          {
+            "number": 65,
+            "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+            "status": "completed",
+            "conclusion": "skipped"
+          },
+          {
+            "number": 66,
+            "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+            "status": "completed",
+            "conclusion": "skipped"
+          },
+          {
+            "number": 67,
+            "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+            "status": "completed",
+            "conclusion": "skipped"
+          },
+          {
+            "number": 68,
+            "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+            "status": "completed",
+            "conclusion": "skipped"
+          },
+          {
+            "number": 69,
+            "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+            "status": "completed",
+            "conclusion": "skipped"
+          },
+          {
+            "number": 70,
+            "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+            "status": "completed",
+            "conclusion": "skipped"
+          },
+          {
+            "number": 71,
+            "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+            "status": "completed",
+            "conclusion": "skipped"
+          },
+          {
+            "number": 72,
+            "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+            "status": "completed",
+            "conclusion": "skipped"
+          },
+          {
+            "number": 73,
+            "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+            "status": "completed",
+            "conclusion": "skipped"
+          },
+          {
+            "number": 74,
+            "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+            "status": "completed",
+            "conclusion": "skipped"
+          },
+          {
+            "number": 75,
+            "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+            "status": "completed",
+            "conclusion": "skipped"
+          },
+          {
+            "number": 76,
+            "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+            "status": "completed",
+            "conclusion": "skipped"
+          },
+          {
+            "number": 77,
+            "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+            "status": "completed",
+            "conclusion": "skipped"
+          },
+          {
+            "number": 78,
+            "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+            "status": "completed",
+            "conclusion": "skipped"
+          },
+          {
+            "number": 79,
+            "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+            "status": "completed",
+            "conclusion": "skipped"
+          },
+          {
+            "number": 80,
+            "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+            "status": "completed",
+            "conclusion": "skipped"
+          },
+          {
+            "number": 81,
+            "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+            "status": "completed",
+            "conclusion": "skipped"
+          },
+          {
+            "number": 82,
+            "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+            "status": "completed",
+            "conclusion": "skipped"
+          },
+          {
+            "number": 83,
+            "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+            "status": "completed",
+            "conclusion": "skipped"
+          },
+          {
+            "number": 84,
+            "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+            "status": "completed",
+            "conclusion": "skipped"
+          },
+          {
+            "number": 85,
+            "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+            "status": "completed",
+            "conclusion": "skipped"
+          },
+          {
+            "number": 86,
+            "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+            "status": "completed",
+            "conclusion": "skipped"
+          },
+          {
+            "number": 87,
+            "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+            "status": "completed",
+            "conclusion": "skipped"
+          },
+          {
+            "number": 88,
+            "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+            "status": "completed",
+            "conclusion": "skipped"
+          },
+          {
+            "number": 89,
+            "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+            "status": "completed",
+            "conclusion": "skipped"
+          },
+          {
+            "number": 90,
+            "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+            "status": "completed",
+            "conclusion": "skipped"
+          },
+          {
+            "number": 91,
+            "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+            "status": "completed",
+            "conclusion": "skipped"
+          },
+          {
+            "number": 92,
+            "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+            "status": "completed",
+            "conclusion": "skipped"
+          },
+          {
+            "number": 93,
+            "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+            "status": "completed",
+            "conclusion": "skipped"
+          },
+          {
+            "number": 94,
+            "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+            "status": "completed",
+            "conclusion": "skipped"
+          },
+          {
+            "number": 95,
+            "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+            "status": "completed",
+            "conclusion": "skipped"
+          },
+          {
+            "number": 96,
+            "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+            "status": "completed",
+            "conclusion": "skipped"
+          },
+          {
+            "number": 97,
+            "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+            "status": "completed",
+            "conclusion": "skipped"
+          },
+          {
+            "number": 98,
+            "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+            "status": "completed",
+            "conclusion": "skipped"
+          },
+          {
+            "number": 99,
+            "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+            "status": "completed",
+            "conclusion": "skipped"
+          },
+          {
+            "number": 100,
+            "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+            "status": "completed",
+            "conclusion": "skipped"
+          },
+          {
+            "number": 101,
+            "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+            "status": "completed",
+            "conclusion": "skipped"
+          },
+          {
+            "number": 102,
+            "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+            "status": "completed",
+            "conclusion": "skipped"
+          },
+          {
+            "number": 103,
+            "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+            "status": "completed",
+            "conclusion": "skipped"
+          },
+          {
+            "number": 104,
+            "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+            "status": "completed",
+            "conclusion": "skipped"
+          },
+          {
+            "number": 105,
+            "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+            "status": "completed",
+            "conclusion": "skipped"
+          },
+          {
+            "number": 106,
+            "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+            "status": "completed",
+            "conclusion": "skipped"
+          },
+          {
+            "number": 107,
+            "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+            "status": "completed",
+            "conclusion": "skipped"
+          },
+          {
+            "number": 108,
+            "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+            "status": "completed",
+            "conclusion": "skipped"
+          },
+          {
+            "number": 109,
+            "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+            "status": "completed",
+            "conclusion": "skipped"
+          },
+          {
+            "number": 110,
+            "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+            "status": "completed",
+            "conclusion": "skipped"
+          },
+          {
+            "number": 111,
+            "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+            "status": "completed",
+            "conclusion": "skipped"
+          },
+          {
+            "number": 112,
+            "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+            "status": "completed",
+            "conclusion": "skipped"
+          },
+          {
+            "number": 113,
+            "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+            "status": "completed",
+            "conclusion": "skipped"
+          },
+          {
+            "number": 224,
+            "name": "Post Run actions/setup-node@v4",
+            "status": "completed",
+            "conclusion": "skipped"
+          },
+          {
+            "number": 225,
+            "name": "Post Run actions/checkout@v4",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "number": 226,
+            "name": "Stop containers",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "number": 227,
+            "name": "Complete job",
+            "status": "completed",
+            "conclusion": "success"
+          }
+        ]
+      },
+      {
+        "id": 111723360595,
+        "name": "dispatch-safety",
+        "status": "completed",
+        "conclusion": "failure",
+        "url": "https://github.com/cinagroup/cinatoken/actions/runs/37297885860/job/111723360595",
+        "successSteps": 28,
+        "skippedSteps": 39,
+        "failedSteps": [
+          {
+            "completedAt": "2026-10-05T10:45:27Z",
+            "conclusion": "failure",
+            "name": "Run node --import tsx --test scripts/staging/chat-holder-binding-v364.node.test.mjs scripts/staging/chat-holder-binding-v364-http-cancel-successor.test.mjs",
+            "number": 27,
+            "startedAt": "2026-10-05T10:45:24Z",
+            "status": "completed"
+          }
+        ],
+        "steps": [
+          {
+            "number": 1,
+            "name": "Set up job",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "number": 2,
+            "name": "Run actions/checkout@v4",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "number": 3,
+            "name": "Run actions/setup-node@v4",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "number": 4,
+            "name": "Run npm ci",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "number": 5,
+            "name": "Run npm run typecheck -w @octafuse/proxy",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "number": 6,
+            "name": "Run npm run typecheck -w @octafuse/tool-engines",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "number": 7,
+            "name": "Run npm run typecheck:shared-key-summary -w @octafuse/core",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "number": 8,
+            "name": "Run npm run typecheck:dispatch-safety -w @octafuse/proxy",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "number": 9,
+            "name": "Run npm run test:dispatch-safety -w @octafuse/proxy",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "number": 10,
+            "name": "Run node --import tsx --test packages/proxy/scripts/staging/text-dispatch-workerd-wire-worker-conditions-successor.test.mjs",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "number": 11,
+            "name": "Preserve native Worker transport evidence",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "number": 12,
+            "name": "Run node --import tsx --test packages/proxy/scripts/staging/text-dispatch-relay-reset-v376.test.mjs",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "number": 13,
+            "name": "Run node --import tsx --test packages/proxy/scripts/staging/text-dispatch-response-reset-v377.test.mjs",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "number": 14,
+            "name": "Run node --import tsx --test packages/proxy/scripts/staging/text-dispatch-post-headers-v385.test.mjs",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "number": 15,
+            "name": "Run node --import tsx --test packages/core/src/storage/shared-key-economic-unsupported-backends.test.mjs",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "number": 16,
+            "name": "Run npm run test:unit -w @octafuse/tool-engines",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "number": 17,
+            "name": "Run node --import tsx --test src/services/egress/openai-embeddings-driver.test.ts src/services/egress/openai-rerank-driver.test.ts",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "number": 18,
+            "name": "Run node --import tsx --test src/services/shared-key-earnings.test.ts",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "number": 19,
+            "name": "Run node --import tsx --test src/services/shared-key-quote-attempt.test.ts",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "number": 20,
+            "name": "Run node --import tsx --test src/services/shared-key-economic-usage-handoff.test.ts",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "number": 21,
+            "name": "Run node --import tsx --test src/services/postgres-ordinary-budget-admission.test.ts src/services/request-budget-admission.test.ts",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "number": 22,
+            "name": "Run node --import tsx --test src/services/postgres-ordinary-budget-recovery.test.ts",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "number": 23,
+            "name": "Run node --import tsx --test src/services/postgres-ordinary-budget-request-owner.test.ts",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "number": 24,
+            "name": "Run node --import tsx --test src/services/authenticated-chat-budget-proof.test.ts",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "number": 25,
+            "name": "Run node --import tsx --test src/services/chat-budget-owner-lifecycle.test.ts src/services/postgres-chat-budget-request-owner.test.ts",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "number": 26,
+            "name": "Run npm run test:complete-chat-quote -w @octafuse/proxy",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "number": 27,
+            "name": "Run node --import tsx --test scripts/staging/chat-holder-binding-v364.node.test.mjs scripts/staging/chat-holder-binding-v364-http-cancel-successor.test.mjs",
+            "status": "completed",
+            "conclusion": "failure"
+          },
+          {
+            "number": 28,
+            "name": "Run node --import tsx --test src/services/complete-chat-holder-dispatch-v385.test.ts",
+            "status": "completed",
+            "conclusion": "skipped"
+          },
+          {
+            "number": 29,
+            "name": "Run node --import tsx --test src/services/postgres-complete-text-no-fetch-close-v388.test.ts",
+            "status": "completed",
+            "conclusion": "skipped"
+          },
+          {
+            "number": 30,
+            "name": "Run node --import tsx --test src/services/postgres-complete-text-no-fetch-recovery-v389.test.ts src/services/hyperdrive-dedicated-role-transport-v390.test.ts src/runtime/complete-text-no-fetch-recovery-worker-v389.test.ts src/runtime/complete-text-holder-worker-v390.test.mjs",
+            "status": "completed",
+            "conclusion": "skipped"
+          },
+          {
+            "number": 31,
+            "name": "Run node --import tsx --test src/services/postgres-complete-text-secretless-plan-v391.test.mjs src/services/complete-text-response-observation-v392.test.ts src/services/postgres-complete-text-response-observation-v392.test.ts src/runtime/complete-text-response-holder-worker-v394.test.mjs",
+            "status": "completed",
+            "conclusion": "skipped"
+          },
+          {
+            "number": 32,
+            "name": "Run node --import tsx --test src/services/postgres-personal-key-auth-v395.test.mjs src/services/postgres-complete-text-routing-projection-v396.test.ts src/services/credential-free-route-attempts-v398.test.ts src/services/postgres-complete-text-sticky-routing-v398.test.mjs src/services/route-strategies/route-strategies.test.ts src/services/provider-sticky-routing.test.ts src/services/provider-routing-preferences.test.ts",
+            "status": "completed",
+            "conclusion": "skipped"
+          },
+          {
+            "number": 33,
+            "name": "Run node --import tsx --test src/services/complete-chat-credential-free-dispatch-v400.test.ts",
+            "status": "completed",
+            "conclusion": "skipped"
+          },
+          {
+            "number": 34,
+            "name": "Run node --import tsx --test src/services/credential-free-chat-preparation-v401.test.ts src/app-credential-free-chat-ingress-v401.test.ts",
+            "status": "completed",
+            "conclusion": "skipped"
+          },
+          {
+            "number": 35,
+            "name": "Run node --test scripts/db/cutover/build-complete-text-auth-routing-recovery-coinstall-v400.test.mjs",
+            "status": "completed",
+            "conclusion": "skipped"
+          },
+          {
+            "number": 36,
+            "name": "Run npm install --prefix .wrangler/v402-pglite-unit --no-save --no-package-lock @electric-sql/pglite@0.5.8",
+            "status": "completed",
+            "conclusion": "skipped"
+          },
+          {
+            "number": 37,
+            "name": "Run node --test scripts/db/cutover/build-complete-text-platform-event-delivery-v402.test.mjs scripts/db/cutover/postgres-complete-text-platform-event-delivery-v402.test.mjs scripts/db/cutover/complete-text-platform-event-delivery-runner-v402.test.mjs",
+            "status": "completed",
+            "conclusion": "skipped"
+          },
+          {
+            "number": 38,
+            "name": "Run node --import tsx --test src/storage/model-endpoints.sql-repositories.test.ts",
+            "status": "completed",
+            "conclusion": "skipped"
+          },
+          {
+            "number": 39,
+            "name": "Run node --import tsx --test --test-name-pattern=\"opt-in authenticated Chat budget proof\" src/routes/v1/request-dispatch-limit.test.ts",
+            "status": "completed",
+            "conclusion": "skipped"
+          },
+          {
+            "number": 40,
+            "name": "Run node --import tsx --test --test-name-pattern=\"PostgreSQL Chat owner|stopped Chat request|dispatcher sends once after a PostgreSQL owner grant\" src/routes/v1/request-dispatch-limit.test.ts",
+            "status": "completed",
+            "conclusion": "skipped"
+          },
+          {
+            "number": 41,
+            "name": "Run node --import tsx --test src/services/postgres-guardrail-budget-admission.test.ts",
+            "status": "completed",
+            "conclusion": "skipped"
+          },
+          {
+            "number": 42,
+            "name": "Run node --import tsx --test src/services/postgres-guardrail-budget-lifecycle-v353.test.ts",
+            "status": "completed",
+            "conclusion": "skipped"
+          },
+          {
+            "number": 43,
+            "name": "Run node --import tsx --test src/services/postgres-guardrail-budget-extension-v355.test.ts",
+            "status": "completed",
+            "conclusion": "skipped"
+          },
+          {
+            "number": 44,
+            "name": "Run node --import tsx --test src/services/postgres-guardrail-budget-request-port-v356.test.ts",
+            "status": "completed",
+            "conclusion": "skipped"
+          },
+          {
+            "number": 45,
+            "name": "Run node --import tsx --test src/runtime/postgres-shared-earning-consumer.test.mjs",
+            "status": "completed",
+            "conclusion": "skipped"
+          },
+          {
+            "number": 46,
+            "name": "Run node --import tsx --test src/runtime/postgres-shared-earning-delivery.test.mjs",
+            "status": "completed",
+            "conclusion": "skipped"
+          },
+          {
+            "number": 47,
+            "name": "Run node --import tsx --test src/runtime/postgres-shared-earning-scanner.test.mjs",
+            "status": "completed",
+            "conclusion": "skipped"
+          },
+          {
+            "number": 48,
+            "name": "Run npm run test:postgres-recovery-composition -w @octafuse/proxy",
+            "status": "completed",
+            "conclusion": "skipped"
+          },
+          {
+            "number": 49,
+            "name": "Run npm run test:postgres-recovery-queue-owner -w @octafuse/proxy",
+            "status": "completed",
+            "conclusion": "skipped"
+          },
+          {
+            "number": 50,
+            "name": "Run node --test scripts/deploy/gen-wrangler.test.mjs",
+            "status": "completed",
+            "conclusion": "skipped"
+          },
+          {
+            "number": 51,
+            "name": "Run node --test scripts/deploy/gen-shared-earning-scanner-wrangler.test.mjs",
+            "status": "completed",
+            "conclusion": "skipped"
+          },
+          {
+            "number": 52,
+            "name": "Run node --import tsx --test scripts/db/cutover/build-financial-consumer-direct-login-grant.test.ts",
+            "status": "completed",
+            "conclusion": "skipped"
+          },
+          {
+            "number": 53,
+            "name": "Run node --import tsx --test scripts/db/cutover/build-shared-key-usage-repair-direct-login-grant.test.ts",
+            "status": "completed",
+            "conclusion": "skipped"
+          },
+          {
+            "number": 54,
+            "name": "Run node --test scripts/db/cutover/openrouter-generation-cost-candidate-v372.test.mjs",
+            "status": "completed",
+            "conclusion": "skipped"
+          },
+          {
+            "number": 55,
+            "name": "Run node --test scripts/db/cutover/build-postgres-shared-usage-repair-backfill.test.mjs",
+            "status": "completed",
+            "conclusion": "skipped"
+          },
+          {
+            "number": 56,
+            "name": "Run node --test scripts/db/cutover/build-postgres-shared-usage-repair-durable-cursor.test.mjs",
+            "status": "completed",
+            "conclusion": "skipped"
+          },
+          {
+            "number": 57,
+            "name": "Run node --test scripts/db/cutover/build-postgres-recovery-retention-review.test.mjs",
+            "status": "completed",
+            "conclusion": "skipped"
+          },
+          {
+            "number": 58,
+            "name": "Run node --import tsx --test scripts/db/cutover/d1-shared-key-earnings-history.test.mjs",
+            "status": "completed",
+            "conclusion": "skipped"
+          },
+          {
+            "number": 59,
+            "name": "Run node --import tsx --test scripts/db/cutover/d1-shared-key-earnings-projection-index.test.mjs",
+            "status": "completed",
+            "conclusion": "skipped"
+          },
+          {
+            "number": 60,
+            "name": "Run node --import tsx --test packages/core/src/db/d1/portal-marketplace-rebuild.test.ts",
+            "status": "completed",
+            "conclusion": "skipped"
+          },
+          {
+            "number": 61,
+            "name": "Run node --test scripts/db/cutover/build-request-legacy-parent-census.test.mjs scripts/db/cutover/build-request-legacy-parent-activation.test.mjs scripts/db/cutover/build-request-legacy-parent-default-acl-activation.test.mjs",
+            "status": "completed",
+            "conclusion": "skipped"
+          },
+          {
+            "number": 62,
+            "name": "Run node --test packages/proxy/scripts/test-postgres-image-owner-workerd.test.mjs",
+            "status": "completed",
+            "conclusion": "skipped"
+          },
+          {
+            "number": 63,
+            "name": "Run npm run typecheck:images:staging -w @octafuse/proxy",
+            "status": "completed",
+            "conclusion": "skipped"
+          },
+          {
+            "number": 64,
+            "name": "Run npm run test:images:staging -w @octafuse/proxy",
+            "status": "completed",
+            "conclusion": "skipped"
+          },
+          {
+            "number": 65,
+            "name": "Run npm run test:oauth:workerd -w @octafuse/proxy",
+            "status": "completed",
+            "conclusion": "skipped"
+          },
+          {
+            "number": 129,
+            "name": "Post Run actions/setup-node@v4",
+            "status": "completed",
+            "conclusion": "skipped"
+          },
+          {
+            "number": 130,
+            "name": "Post Run actions/checkout@v4",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "number": 131,
+            "name": "Complete job",
+            "status": "completed",
+            "conclusion": "success"
+          }
+        ]
+      }
+    ]
+  },
+  "publishedWebRun": {
+    "runId": 37305448322,
+    "headSha": "3847955ccdb4c670f0f9aa099ef976889357e6b2",
+    "status": "completed",
+    "conclusion": "success",
+    "url": "https://github.com/cinagroup/cinatoken/actions/runs/37305448322",
+    "jobs": [
+      {
+        "id": 111747900157,
+        "name": "web",
+        "status": "completed",
+        "conclusion": "success",
+        "url": "https://github.com/cinagroup/cinatoken/actions/runs/37305448322/job/111747900157",
+        "successSteps": 17,
+        "skippedSteps": 0,
+        "failedSteps": [],
+        "steps": [
+          {
+            "number": 1,
+            "name": "Set up job",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "number": 2,
+            "name": "Run actions/checkout@v4",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "number": 3,
+            "name": "Run actions/setup-node@v4",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "number": 4,
+            "name": "Run npm ci --ignore-scripts",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "number": 5,
+            "name": "Run npm run verify:package-versions",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "number": 6,
+            "name": "Run npm run format:check -w @cinatoken/web",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "number": 7,
+            "name": "Run npm run test:web",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "number": 8,
+            "name": "Run npm run lint -w @cinatoken/web",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "number": 9,
+            "name": "Run bash -n docker/web/entrypoint.sh",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "number": 10,
+            "name": "Run npm run build:web",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "number": 11,
+            "name": "Freeze and verify release artifact",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "number": 12,
+            "name": "Generate verified production Worker configuration",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "number": 13,
+            "name": "Validate release image and Nginx configuration",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "number": 14,
+            "name": "Run actions/upload-artifact@v4",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "number": 27,
+            "name": "Post Run actions/setup-node@v4",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "number": 28,
+            "name": "Post Run actions/checkout@v4",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "number": 29,
+            "name": "Complete job",
+            "status": "completed",
+            "conclusion": "success"
+          }
+        ]
+      },
+      {
+        "id": 111747900343,
+        "name": "Admin contracts and public SSR build",
+        "status": "completed",
+        "conclusion": "success",
+        "url": "https://github.com/cinagroup/cinatoken/actions/runs/37305448322/job/111747900343",
+        "successSteps": 19,
+        "skippedSteps": 0,
+        "failedSteps": [],
+        "steps": [
+          {
+            "number": 1,
+            "name": "Set up job",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "number": 2,
+            "name": "Run actions/checkout@v4",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "number": 3,
+            "name": "Run actions/setup-node@v4",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "number": 4,
+            "name": "Run npm ci --ignore-scripts",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "number": 5,
+            "name": "Run npm run typecheck -w @octafuse/core",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "number": 6,
+            "name": "Run npm run build:node-index -w @octafuse/core",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "number": 7,
+            "name": "Validate account repository types and database contracts",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "number": 8,
+            "name": "Validate integration-key atomic audits and migration contracts",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "number": 9,
+            "name": "Validate Tools atomic configuration, single snapshots and private clients",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "number": 10,
+            "name": "Validate global Gateway Key paging and atomic profile conditions",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "number": 11,
+            "name": "Validate Shared Keys state guards and formal earning history protection",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "number": 12,
+            "name": "Validate Shared Keys atomic governance and exact request log detail",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "number": 13,
+            "name": "Validate authority currency failures and anonymous catalog boundary",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "number": 14,
+            "name": "Run npm run typecheck -w @octafuse/admin",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "number": 15,
+            "name": "Validate auth, workspace, keys, account and public BFF contracts",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "number": 16,
+            "name": "Build Admin public SSR and standalone output",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "number": 31,
+            "name": "Post Run actions/setup-node@v4",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "number": 32,
+            "name": "Post Run actions/checkout@v4",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "number": 33,
+            "name": "Complete job",
+            "status": "completed",
+            "conclusion": "success"
+          }
+        ]
+      }
+    ]
+  },
+  "currentHeadRuns": [
+    {
+      "conclusion": "success",
+      "createdAt": "2026-10-05T12:24:13Z",
+      "databaseId": 37309283416,
+      "event": "push",
+      "headSha": "5a13f59e851ec7e2ef6a94b50e5d4d4da26e9462",
+      "status": "completed",
+      "url": "https://github.com/cinagroup/cinatoken/actions/runs/37309283416",
+      "workflowName": "Verify package versions"
+    },
+    {
+      "conclusion": "failure",
+      "createdAt": "2026-10-05T12:24:13Z",
+      "databaseId": 37309283370,
+      "event": "push",
+      "headSha": "5a13f59e851ec7e2ef6a94b50e5d4d4da26e9462",
+      "status": "completed",
+      "url": "https://github.com/cinagroup/cinatoken/actions/runs/37309283370",
+      "workflowName": "Release"
+    }
+  ],
+  "latestDeployRuns": [
+    {
+      "conclusion": "success",
+      "createdAt": "2026-10-05T09:44:39Z",
+      "databaseId": 37292049973,
+      "event": "workflow_dispatch",
+      "headSha": "34c742d161edbf2c16c7578221578d0b805d35c0",
+      "status": "completed",
+      "url": "https://github.com/cinagroup/cinatoken/actions/runs/37292049973"
+    },
+    {
+      "conclusion": "success",
+      "createdAt": "2026-10-05T09:10:07Z",
+      "databaseId": 37288251610,
+      "event": "workflow_dispatch",
+      "headSha": "39b76f42bdd6e21d43ad190d2e3530c338a2a59d",
+      "status": "completed",
+      "url": "https://github.com/cinagroup/cinatoken/actions/runs/37288251610"
+    },
+    {
+      "conclusion": "cancelled",
+      "createdAt": "2026-10-05T08:42:16Z",
+      "databaseId": 37285277889,
+      "event": "workflow_dispatch",
+      "headSha": "b68f0f565b7d98aedbe4ea9df59876fba30b4674",
+      "status": "completed",
+      "url": "https://github.com/cinagroup/cinatoken/actions/runs/37285277889"
+    }
+  ],
+  "sources": [
+    {
+      "file": ".github/workflows/proxy-dispatch-safety.yml",
+      "baselineGitBytes": 45882,
+      "baselineGitSha256": "ed33fec56d1260e651b733d4b61c002c9f8ebea762e440e700c8c564797374ef",
+      "currentGitBytes": 45882,
+      "currentGitSha256": "ed33fec56d1260e651b733d4b61c002c9f8ebea762e440e700c8c564797374ef",
+      "gitBytesUnchangedSinceRun": true,
+      "workingTreeRawBytes": 45882,
+      "workingTreeRawSha256": "ed33fec56d1260e651b733d4b61c002c9f8ebea762e440e700c8c564797374ef",
+      "workingTreeEqualGitAfterCRLFNormalization": true
+    },
+    {
+      "file": ".github/workflows/web-frontend.yml",
+      "baselineGitBytes": 8549,
+      "baselineGitSha256": "2d8fea0981f4219f9511612d272840c0da34b38b781c5981160aaace1aa7a098",
+      "currentGitBytes": 8549,
+      "currentGitSha256": "2d8fea0981f4219f9511612d272840c0da34b38b781c5981160aaace1aa7a098",
+      "gitBytesUnchangedSinceRun": true,
+      "workingTreeRawBytes": 8549,
+      "workingTreeRawSha256": "2d8fea0981f4219f9511612d272840c0da34b38b781c5981160aaace1aa7a098",
+      "workingTreeEqualGitAfterCRLFNormalization": true
+    },
+    {
+      "file": ".github/workflows/deploy-cloudflare-admin.yml",
+      "baselineGitBytes": 4689,
+      "baselineGitSha256": "0a4fb27134b62dd878c24cded03b8087aec42e4a37a50c3f830dead622f696eb",
+      "currentGitBytes": 4689,
+      "currentGitSha256": "0a4fb27134b62dd878c24cded03b8087aec42e4a37a50c3f830dead622f696eb",
+      "gitBytesUnchangedSinceRun": true,
+      "workingTreeRawBytes": 4689,
+      "workingTreeRawSha256": "0a4fb27134b62dd878c24cded03b8087aec42e4a37a50c3f830dead622f696eb",
+      "workingTreeEqualGitAfterCRLFNormalization": true
+    },
+    {
+      "file": "scripts/db/cutover/postgres-replay-scale-lock.native.test.mjs",
+      "baselineGitBytes": 17687,
+      "baselineGitSha256": "34a4eeb6ef021e0c71bd733e4ea2ff06b7b0ba38a7e98ffd02c52a818a0419ba",
+      "currentGitBytes": 17687,
+      "currentGitSha256": "34a4eeb6ef021e0c71bd733e4ea2ff06b7b0ba38a7e98ffd02c52a818a0419ba",
+      "gitBytesUnchangedSinceRun": true,
+      "workingTreeRawBytes": 17687,
+      "workingTreeRawSha256": "34a4eeb6ef021e0c71bd733e4ea2ff06b7b0ba38a7e98ffd02c52a818a0419ba",
+      "workingTreeEqualGitAfterCRLFNormalization": true
+    },
+    {
+      "file": "scripts/db/cutover/pg73-native-fixture.mjs",
+      "baselineGitBytes": 6849,
+      "baselineGitSha256": "124ddd43c2594d0daaac66a4e7158e5df90b00a6d73f03cbcac9e8f853a7346f",
+      "currentGitBytes": 6849,
+      "currentGitSha256": "124ddd43c2594d0daaac66a4e7158e5df90b00a6d73f03cbcac9e8f853a7346f",
+      "gitBytesUnchangedSinceRun": true,
+      "workingTreeRawBytes": 6849,
+      "workingTreeRawSha256": "124ddd43c2594d0daaac66a4e7158e5df90b00a6d73f03cbcac9e8f853a7346f",
+      "workingTreeEqualGitAfterCRLFNormalization": true
+    },
+    {
+      "file": "packages/proxy/scripts/staging/chat-holder-binding-v364-http-cancel-successor.test.mjs",
+      "baselineGitBytes": 13354,
+      "baselineGitSha256": "d23d1c710b539b6c64655fbb1fa4e4de85b228bab19c757bc0e4de48528972e5",
+      "currentGitBytes": 13354,
+      "currentGitSha256": "d23d1c710b539b6c64655fbb1fa4e4de85b228bab19c757bc0e4de48528972e5",
+      "gitBytesUnchangedSinceRun": true,
+      "workingTreeRawBytes": 13354,
+      "workingTreeRawSha256": "d23d1c710b539b6c64655fbb1fa4e4de85b228bab19c757bc0e4de48528972e5",
+      "workingTreeEqualGitAfterCRLFNormalization": true
+    },
+    {
+      "file": "packages/proxy/scripts/staging/chat-holder-private-v364.ts",
+      "baselineGitBytes": 5367,
+      "baselineGitSha256": "44070fcbb7058b915329a150634eaa649c1b3601724495a1620e94ce2d54d1bf",
+      "currentGitBytes": 5367,
+      "currentGitSha256": "44070fcbb7058b915329a150634eaa649c1b3601724495a1620e94ce2d54d1bf",
+      "gitBytesUnchangedSinceRun": true,
+      "workingTreeRawBytes": 5367,
+      "workingTreeRawSha256": "44070fcbb7058b915329a150634eaa649c1b3601724495a1620e94ce2d54d1bf",
+      "workingTreeEqualGitAfterCRLFNormalization": true
+    },
+    {
+      "file": "packages/proxy/scripts/staging/chat-holder-gateway-v364.ts",
+      "baselineGitBytes": 1534,
+      "baselineGitSha256": "8c85b01ba54daa9b7302c726d20693d08ccb3395350ea6a333817eed46441eaf",
+      "currentGitBytes": 1534,
+      "currentGitSha256": "8c85b01ba54daa9b7302c726d20693d08ccb3395350ea6a333817eed46441eaf",
+      "gitBytesUnchangedSinceRun": true,
+      "workingTreeRawBytes": 1534,
+      "workingTreeRawSha256": "8c85b01ba54daa9b7302c726d20693d08ccb3395350ea6a333817eed46441eaf",
+      "workingTreeEqualGitAfterCRLFNormalization": true
+    },
+    {
+      "file": "packages/proxy/scripts/staging/wrangler.chat-holder-private-v364.jsonc",
+      "baselineGitBytes": 568,
+      "baselineGitSha256": "6b897d8aa7b01087b75d4b74968d4004e2b6ddb87650bad1203c7693160b2047",
+      "currentGitBytes": 568,
+      "currentGitSha256": "6b897d8aa7b01087b75d4b74968d4004e2b6ddb87650bad1203c7693160b2047",
+      "gitBytesUnchangedSinceRun": true,
+      "workingTreeRawBytes": 568,
+      "workingTreeRawSha256": "6b897d8aa7b01087b75d4b74968d4004e2b6ddb87650bad1203c7693160b2047",
+      "workingTreeEqualGitAfterCRLFNormalization": true
+    },
+    {
+      "file": "packages/proxy/scripts/staging/wrangler.chat-holder-gateway-v364.jsonc",
+      "baselineGitBytes": 598,
+      "baselineGitSha256": "e1a0354ff5bf7915c6c125f3003683a56b708d8bdd6006cce6b33c4ff8a6bb77",
+      "currentGitBytes": 598,
+      "currentGitSha256": "e1a0354ff5bf7915c6c125f3003683a56b708d8bdd6006cce6b33c4ff8a6bb77",
+      "gitBytesUnchangedSinceRun": true,
+      "workingTreeRawBytes": 598,
+      "workingTreeRawSha256": "e1a0354ff5bf7915c6c125f3003683a56b708d8bdd6006cce6b33c4ff8a6bb77",
+      "workingTreeEqualGitAfterCRLFNormalization": true
+    },
+    {
+      "file": "packages/proxy/src/services/credential-free-chat-ingress-v401.ts",
+      "baselineGitBytes": 20878,
+      "baselineGitSha256": "c9a3567e6c0ae98e2a1316795b7c5a0cb98804c53213f3d45e84b5afc19163d6",
+      "currentGitBytes": 20878,
+      "currentGitSha256": "c9a3567e6c0ae98e2a1316795b7c5a0cb98804c53213f3d45e84b5afc19163d6",
+      "gitBytesUnchangedSinceRun": true,
+      "workingTreeRawBytes": 20878,
+      "workingTreeRawSha256": "c9a3567e6c0ae98e2a1316795b7c5a0cb98804c53213f3d45e84b5afc19163d6",
+      "workingTreeEqualGitAfterCRLFNormalization": true
+    }
+  ],
+  "findings": [
+    {
+      "id": "native-pg73-replay-scale",
+      "provenFailure": "ReferenceError: migrator is not defined at postgres-replay-scale-lock.native.test.mjs:163:48",
+      "rootCauseProven": "Local variable is named sql at line 104; helper call uses shorthand migrator without declaration at line 163",
+      "safeCandidateScope": "Test-only call parameter migrator: sql; preserve PG73 corpus, temporary audit grant, proposals and assertions; requires actual Linux PG18 rerun to prove next steps",
+      "unknown": "Later native steps skipped after step 14; whole native job not validated"
+    },
+    {
+      "id": "synthetic-v364-private-holder-cancel",
+      "provenFailure": "HTTP response socket close succeeds but KV cancel observation remains null; strict assert at :278 fails; 7/8 pass, 0 skip",
+      "rootCauseProven": "Failure boundary is missing private source cancellation observation, after client/socket close; exact transport/lifetime cause is not established by existing evidence",
+      "notProven": "Does not establish a production Web SSE defect, RPC cancellation loss, or adequate timeout; do not waive or loosen the assertion",
+      "safeCandidateScope": "Isolated Miniflare/workerd diagnostic comparison preserving strict observer, single acceptance and no-release guards; keep production holder disabled"
+    },
+    {
+      "id": "release-current-head-actions-permission",
+      "runId": 37309283370,
+      "headSha": "5a13f59e851ec7e2ef6a94b50e5d4d4da26e9462",
+      "jobName": "Changesets",
+      "failedStep": "Create Version PR or push tags",
+      "provenFailure": "GitHub Actions is not permitted to create or approve pull requests",
+      "scope": "Repository Actions/Changesets automatic version PR, separate from production Web CI or deployment",
+      "safeCandidateScope": "Requires explicit operations decision about repo policy or token; no policy/secret change made by this read-only inventory"
+    }
+  ],
+  "gateInterpretation": {
+    "G1": "Definition at checklist :370 requires clean install, Web type/lint/format/build, renderable entry, artifact env/license checks. Web workflow 37305448322 is successful at published SHA. These two isolated failures are absent from Web and production deploy commands; they do prevent claiming all-repository CI green.",
+    "G7": "Definition at :470 requires real Cloudflare AND Docker same-origin auth/write/assets/SSE/gray/rollback. Synthetic staging holder and review-only PG73 replay proposals are not equivalent to these runtime requirements and do not waive them. Production authenticated SSE/WebSocket and full Docker/TLS/rollback remain independently unproven.",
+    "historicalNext18": "NEXT-18 explicitly lists native job as its own broader engineering followup. Keep its failure visible; do not treat all native steps as proven by formal production PG81 migrations."
+  },
+  "collectorLimitations": [
+    "Initial collector wrapper close-listener race caused collector exit 1, original stdout/stderr and v1 retained. Fixed wrapper closed nine GH read commands at exit 0. Short-SHA current-HEAD list returned an unusable empty selection; full 40-character SHA query corrected it and proved two actual current-HEAD runs; original short query retained.",
+    "No source or fixture edited; output files are owned temporary evidence only."
+  ],
+  "evidence": [
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-ci-inventory-d7b57ac3c0804fc0a7fbddb860e5bc8e\\head-release-details.result.json",
+      "bytes": 654,
+      "sha256": "3b75a40a15b03d3e56b10bac18f7a9493c77995f23eab7b5c387dcd19a7411d3"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-ci-inventory-d7b57ac3c0804fc0a7fbddb860e5bc8e\\head-release-details.stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-ci-inventory-d7b57ac3c0804fc0a7fbddb860e5bc8e\\head-release-details.stdout.txt",
+      "bytes": 2081,
+      "sha256": "ac5076d0ed554c81fab1121b479b0265ab8fae2aaa8bb8134a7a4e3ac27fc485"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-ci-inventory-d7b57ac3c0804fc0a7fbddb860e5bc8e\\head-release-failed-log.result.json",
+      "bytes": 613,
+      "sha256": "97a168de1c98d8f48406638c0d3f80ecab4b4bbbfc4239baa4121fd1fb128ddf"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-ci-inventory-d7b57ac3c0804fc0a7fbddb860e5bc8e\\head-release-failed-log.stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-ci-inventory-d7b57ac3c0804fc0a7fbddb860e5bc8e\\head-release-failed-log.stdout.txt",
+      "bytes": 5656,
+      "sha256": "aaafe38821eb75900d0975d0ffb656714c7bb4fef8591e53cab6b0eaa2cd4d48"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-ci-inventory-d7b57ac3c0804fc0a7fbddb860e5bc8e\\head-runs-full-sha.result.json",
+      "bytes": 743,
+      "sha256": "f5434bae000767e311d8b1cd8b01546756769cc0bf89129ea3a8e63dc16a2939"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-ci-inventory-d7b57ac3c0804fc0a7fbddb860e5bc8e\\head-runs-full-sha.stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-ci-inventory-d7b57ac3c0804fc0a7fbddb860e5bc8e\\head-runs-full-sha.stdout.txt",
+      "bytes": 560,
+      "sha256": "adbb7942074fe3aad8811bc5b3b1e6df7f518cc2dbfe6bb1de7e12f646c0f950"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-ci-inventory-d7b57ac3c0804fc0a7fbddb860e5bc8e\\head-runs-v2.result.json",
+      "bytes": 697,
+      "sha256": "d3dd4516829d41aca303a6fba4e1a4e8fb9351d358ec8fb21efbaffc0b7d5bee"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-ci-inventory-d7b57ac3c0804fc0a7fbddb860e5bc8e\\head-runs-v2.stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-ci-inventory-d7b57ac3c0804fc0a7fbddb860e5bc8e\\head-runs-v2.stdout.txt",
+      "bytes": 3,
+      "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-ci-inventory-d7b57ac3c0804fc0a7fbddb860e5bc8e\\head-runs.stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-ci-inventory-d7b57ac3c0804fc0a7fbddb860e5bc8e\\head-runs.stdout.txt",
+      "bytes": 3,
+      "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-ci-inventory-d7b57ac3c0804fc0a7fbddb860e5bc8e\\latest-deploy-runs-v2.result.json",
+      "bytes": 724,
+      "sha256": "6859f342c9fb18a902a8761b09f0b4596e7ed2c163b275ce1bdad84e291e418b"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-ci-inventory-d7b57ac3c0804fc0a7fbddb860e5bc8e\\latest-deploy-runs-v2.stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-ci-inventory-d7b57ac3c0804fc0a7fbddb860e5bc8e\\latest-deploy-runs-v2.stdout.txt",
+      "bytes": 781,
+      "sha256": "388e9482686bd418e6fe6ca20a2e9305f24dd0deb58fe6ec4e0aa0f5a65d6c42"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-ci-inventory-d7b57ac3c0804fc0a7fbddb860e5bc8e\\latest-deploy-runs.stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-ci-inventory-d7b57ac3c0804fc0a7fbddb860e5bc8e\\latest-deploy-runs.stdout.txt",
+      "bytes": 781,
+      "sha256": "388e9482686bd418e6fe6ca20a2e9305f24dd0deb58fe6ec4e0aa0f5a65d6c42"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-ci-inventory-d7b57ac3c0804fc0a7fbddb860e5bc8e\\native-ci-inventory.json",
+      "bytes": 77578,
+      "sha256": "527e625f54c15d8e3f6a131b63db0461fbdd15c87c7540b294d9ac748f631eda"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-ci-inventory-d7b57ac3c0804fc0a7fbddb860e5bc8e\\proxy-run-latest-details.result.json",
+      "bytes": 663,
+      "sha256": "d9960c7387b2ec4380826a606bc3342f6bd90168eeda9874cabaf336160b9f05"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-ci-inventory-d7b57ac3c0804fc0a7fbddb860e5bc8e\\proxy-run-latest-details.stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-ci-inventory-d7b57ac3c0804fc0a7fbddb860e5bc8e\\proxy-run-latest-details.stdout.txt",
+      "bytes": 49392,
+      "sha256": "9798c006840b21eab7b959ef64c641aaab8edddab598c923a68bbf2643eceeb6"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-ci-inventory-d7b57ac3c0804fc0a7fbddb860e5bc8e\\proxy-run-latest-failed-log.result.json",
+      "bytes": 624,
+      "sha256": "73fe77f70d2c85045f0c4dfd3ef28cabd23601694e3be7ce04edda1c660d963f"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-ci-inventory-d7b57ac3c0804fc0a7fbddb860e5bc8e\\proxy-run-latest-failed-log.stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-ci-inventory-d7b57ac3c0804fc0a7fbddb860e5bc8e\\proxy-run-latest-failed-log.stdout.txt",
+      "bytes": 3794329,
+      "sha256": "af6809db84c3c6118690a7c48ee3728c8b0d60a49292740c4c5f50f66c44d2c6"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-ci-inventory-d7b57ac3c0804fc0a7fbddb860e5bc8e\\proxy-run-list-v2.result.json",
+      "bytes": 749,
+      "sha256": "7648bd9fc2b51a4b90d260c5fbe908b40d24889004e5d7438982b0f917294bc8"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-ci-inventory-d7b57ac3c0804fc0a7fbddb860e5bc8e\\proxy-run-list-v2.stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-ci-inventory-d7b57ac3c0804fc0a7fbddb860e5bc8e\\proxy-run-list-v2.stdout.txt",
+      "bytes": 2319,
+      "sha256": "83f29bc44fbd8990c1735279f25a8759597191fea87675c04d60a7f833ddbbf7"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-ci-inventory-d7b57ac3c0804fc0a7fbddb860e5bc8e\\proxy-run-list.stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-ci-inventory-d7b57ac3c0804fc0a7fbddb860e5bc8e\\proxy-run-list.stdout.txt",
+      "bytes": 4627,
+      "sha256": "9d946b23f6ade6cafb1888349064c417a02516c8c3b79f8dec052d1cc7f43936"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-ci-inventory-d7b57ac3c0804fc0a7fbddb860e5bc8e\\run-readonly-v1.mjs",
+      "bytes": 1672,
+      "sha256": "bbd12ae675130ecd08010567a5707ebd33c9d849b359acdfd2fc44b0cd235b39"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-ci-inventory-d7b57ac3c0804fc0a7fbddb860e5bc8e\\run-readonly.mjs",
+      "bytes": 1733,
+      "sha256": "b8d7236bc2c97a1ad6a2dbabdd5f81beb74268e072a4dfef0afc4d1e826a924b"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-ci-inventory-d7b57ac3c0804fc0a7fbddb860e5bc8e\\seal-final-v2.stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-ci-inventory-d7b57ac3c0804fc0a7fbddb860e5bc8e\\seal-final-v2.stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-ci-inventory-d7b57ac3c0804fc0a7fbddb860e5bc8e\\seal-inventory.mjs",
+      "bytes": 6467,
+      "sha256": "3b1b5effb19439fbde0fc70b61a5c84a741f5d6237ff4902e10199a2b6576690"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-ci-inventory-d7b57ac3c0804fc0a7fbddb860e5bc8e\\seal-inventory.result.json",
+      "bytes": 664,
+      "sha256": "a9354aefe8636e3eb7a4103b40262e73fbf2f6b6f6e7e0f0887340a1a064bbb2"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-ci-inventory-d7b57ac3c0804fc0a7fbddb860e5bc8e\\seal-inventory.stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-ci-inventory-d7b57ac3c0804fc0a7fbddb860e5bc8e\\seal-inventory.stdout.txt",
+      "bytes": 1631,
+      "sha256": "960c47cd0b87336fc51fbc9c4060685faff8b8a13a3fcf75799a3a316c672f15"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-ci-inventory-d7b57ac3c0804fc0a7fbddb860e5bc8e\\web-product-run-v2.result.json",
+      "bytes": 650,
+      "sha256": "527a05b4c217bc6ffce4ca6bd4df7a45e3e4ede4713c6c97de3f81c430782d5d"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-ci-inventory-d7b57ac3c0804fc0a7fbddb860e5bc8e\\web-product-run-v2.stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-ci-inventory-d7b57ac3c0804fc0a7fbddb860e5bc8e\\web-product-run-v2.stdout.txt",
+      "bytes": 7122,
+      "sha256": "c3a6f3c5713ae0a71818f78509c52dead5976c3ca674613d2cc49eeace4e43fd"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-ci-inventory-d7b57ac3c0804fc0a7fbddb860e5bc8e\\web-product-run.stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-ci-inventory-d7b57ac3c0804fc0a7fbddb860e5bc8e\\web-product-run.stdout.txt",
+      "bytes": 7122,
+      "sha256": "c3a6f3c5713ae0a71818f78509c52dead5976c3ca674613d2cc49eeace4e43fd"
+    }
+  ],
+  "currentHeadReleaseRun": {
+    "conclusion": "failure",
+    "databaseId": 37309283370,
+    "headSha": "5a13f59e851ec7e2ef6a94b50e5d4d4da26e9462",
+    "jobs": [
+      {
+        "completedAt": "2026-10-05T12:25:00Z",
+        "conclusion": "failure",
+        "databaseId": 111760444867,
+        "name": "Changesets",
+        "startedAt": "2026-10-05T12:24:16Z",
+        "status": "completed",
+        "steps": [
+          {
+            "completedAt": "2026-10-05T12:24:18Z",
+            "conclusion": "success",
+            "name": "Set up job",
+            "number": 1,
+            "startedAt": "2026-10-05T12:24:17Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-05T12:24:23Z",
+            "conclusion": "success",
+            "name": "Checkout",
+            "number": 2,
+            "startedAt": "2026-10-05T12:24:18Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-05T12:24:28Z",
+            "conclusion": "success",
+            "name": "Setup Node.js",
+            "number": 3,
+            "startedAt": "2026-10-05T12:24:23Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-05T12:24:54Z",
+            "conclusion": "success",
+            "name": "Install dependencies",
+            "number": 4,
+            "startedAt": "2026-10-05T12:24:28Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-05T12:24:54Z",
+            "conclusion": "success",
+            "name": "Verify package versions (no drift)",
+            "number": 5,
+            "startedAt": "2026-10-05T12:24:54Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-05T12:24:58Z",
+            "conclusion": "failure",
+            "name": "Create Version PR or push tags",
+            "number": 6,
+            "startedAt": "2026-10-05T12:24:54Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-05T12:24:58Z",
+            "conclusion": "skipped",
+            "name": "Dispatch Docker images workflow when tag did not chain-trigger",
+            "number": 7,
+            "startedAt": "2026-10-05T12:24:58Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-05T12:24:58Z",
+            "conclusion": "skipped",
+            "name": "Post Setup Node.js",
+            "number": 13,
+            "startedAt": "2026-10-05T12:24:58Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-05T12:24:58Z",
+            "conclusion": "success",
+            "name": "Post Checkout",
+            "number": 14,
+            "startedAt": "2026-10-05T12:24:58Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-05T12:24:58Z",
+            "conclusion": "success",
+            "name": "Complete job",
+            "number": 15,
+            "startedAt": "2026-10-05T12:24:58Z",
+            "status": "completed"
+          }
+        ],
+        "url": "https://github.com/cinagroup/cinatoken/actions/runs/37309283370/job/111760444867"
+      }
+    ],
+    "status": "completed",
+    "url": "https://github.com/cinagroup/cinatoken/actions/runs/37309283370"
+  },
+  "failureExcerpts": [
+    {
+      "source": "proxy-run-latest-failed-log.stdout.txt",
+      "firstLine": 529,
+      "lastLine": 553,
+      "text": "native-financial-consumer\tUNKNOWN STEP\t2026-10-05T10:40:37.4691815Z not ok 1 - native PostgreSQL replay backfill scale, bounded lock and resume\nnative-financial-consumer\tUNKNOWN STEP\t2026-10-05T10:40:37.4692577Z   ---\nnative-financial-consumer\tUNKNOWN STEP\t2026-10-05T10:40:37.4692967Z   duration_ms: 2623.314699\nnative-financial-consumer\tUNKNOWN STEP\t2026-10-05T10:40:37.4693410Z   type: 'test'\nnative-financial-consumer\tUNKNOWN STEP\t2026-10-05T10:40:37.4694378Z   location: '/__w/cinatoken/cinatoken/scripts/db/cutover/postgres-replay-scale-lock.native.test.mjs:76:1'\nnative-financial-consumer\tUNKNOWN STEP\t2026-10-05T10:40:37.4695720Z   failureType: 'testCodeFailure'\nnative-financial-consumer\tUNKNOWN STEP\t2026-10-05T10:40:37.4696609Z   error: 'migrator is not defined'\nnative-financial-consumer\tUNKNOWN STEP\t2026-10-05T10:40:37.4697087Z   code: 'ERR_TEST_FAILURE'\nnative-financial-consumer\tUNKNOWN STEP\t2026-10-05T10:40:37.4697481Z   name: 'ReferenceError'\nnative-financial-consumer\tUNKNOWN STEP\t2026-10-05T10:40:37.4697879Z   stack: |-\nnative-financial-consumer\tUNKNOWN STEP\t2026-10-05T10:40:37.4698864Z     TestContext.<anonymous> (file:///__w/cinatoken/cinatoken/scripts/db/cutover/postgres-replay-scale-lock.native.test.mjs:163:48)\nnative-financial-consumer\tUNKNOWN STEP\t2026-10-05T10:40:37.4700152Z     process.processTicksAndRejections (node:internal/process/task_queues:103:5)\nnative-financial-consumer\tUNKNOWN STEP\t2026-10-05T10:40:37.4701023Z     async Test.run (node:internal/test_runner/test:1054:7)\nnative-financial-consumer\tUNKNOWN STEP\t2026-10-05T10:40:37.4701837Z     async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)\nnative-financial-consumer\tUNKNOWN STEP\t2026-10-05T10:40:37.4702461Z   ...\nnative-financial-consumer\tUNKNOWN STEP\t2026-10-05T10:40:37.4845283Z 1..1\nnative-financial-consumer\tUNKNOWN STEP\t2026-10-05T10:40:37.4847852Z # tests 1\nnative-financial-consumer\tUNKNOWN STEP\t2026-10-05T10:40:37.4849019Z # suites 0\nnative-financial-consumer\tUNKNOWN STEP\t2026-10-05T10:40:37.4850148Z # pass 0\nnative-financial-consumer\tUNKNOWN STEP\t2026-10-05T10:40:37.4852010Z # fail 1\nnative-financial-consumer\tUNKNOWN STEP\t2026-10-05T10:40:37.4858024Z # cancelled 0\nnative-financial-consumer\tUNKNOWN STEP\t2026-10-05T10:40:37.4858757Z # skipped 0\nnative-financial-consumer\tUNKNOWN STEP\t2026-10-05T10:40:37.4859069Z # todo 0\nnative-financial-consumer\tUNKNOWN STEP\t2026-10-05T10:40:37.4859391Z # duration_ms 2865.835003\nnative-financial-consumer\tUNKNOWN STEP\t2026-10-05T10:40:37.4945065Z ##[error]Process completed with exit code 1."
+    },
+    {
+      "source": "proxy-run-latest-failed-log.stdout.txt",
+      "firstLine": 35573,
+      "lastLine": 35618,
+      "text": "dispatch-safety\tUNKNOWN STEP\t2026-10-05T10:45:27.5123048Z not ok 5 - response-body cancellation is observed inside the private holder\ndispatch-safety\tUNKNOWN STEP\t2026-10-05T10:45:27.5124277Z   ---\ndispatch-safety\tUNKNOWN STEP\t2026-10-05T10:45:27.5124815Z   duration_ms: 1601.564601\ndispatch-safety\tUNKNOWN STEP\t2026-10-05T10:45:27.5125326Z   type: 'test'\ndispatch-safety\tUNKNOWN STEP\t2026-10-05T10:45:27.5126687Z   location: '/home/runner/work/cinatoken/cinatoken/packages/proxy/scripts/staging/chat-holder-binding-v364-http-cancel-successor.test.mjs:260:1'\ndispatch-safety\tUNKNOWN STEP\t2026-10-05T10:45:27.5128105Z   failureType: 'testCodeFailure'\ndispatch-safety\tUNKNOWN STEP\t2026-10-05T10:45:27.5128620Z   error: |-\ndispatch-safety\tUNKNOWN STEP\t2026-10-05T10:45:27.5129346Z     Expected values to be strictly equal:\ndispatch-safety\tUNKNOWN STEP\t2026-10-05T10:45:27.5129873Z     \ndispatch-safety\tUNKNOWN STEP\t2026-10-05T10:45:27.5130248Z     null !== 'observed'\ndispatch-safety\tUNKNOWN STEP\t2026-10-05T10:45:27.5130667Z     \ndispatch-safety\tUNKNOWN STEP\t2026-10-05T10:45:27.5131056Z   code: 'ERR_ASSERTION'\ndispatch-safety\tUNKNOWN STEP\t2026-10-05T10:45:27.5131513Z   name: 'AssertionError'\ndispatch-safety\tUNKNOWN STEP\t2026-10-05T10:45:27.5131973Z   expected: 'observed'\ndispatch-safety\tUNKNOWN STEP\t2026-10-05T10:45:27.5132401Z   actual: ~\ndispatch-safety\tUNKNOWN STEP\t2026-10-05T10:45:27.5132809Z   operator: 'strictEqual'\ndispatch-safety\tUNKNOWN STEP\t2026-10-05T10:45:27.5133263Z   stack: |-\ndispatch-safety\tUNKNOWN STEP\t2026-10-05T10:45:27.5134586Z     TestContext.<anonymous> (file:///home/runner/work/cinatoken/cinatoken/packages/proxy/scripts/staging/chat-holder-binding-v364-http-cancel-successor.test.mjs:278:10)\ndispatch-safety\tUNKNOWN STEP\t2026-10-05T10:45:27.5135503Z     async Test.run (node:internal/test_runner/test:1054:7)\ndispatch-safety\tUNKNOWN STEP\t2026-10-05T10:45:27.5136031Z     async Test.processPendingSubtests (node:internal/test_runner/test:744:7)\ndispatch-safety\tUNKNOWN STEP\t2026-10-05T10:45:27.5136435Z   ...\ndispatch-safety\tUNKNOWN STEP\t2026-10-05T10:45:27.5452895Z # Subtest: v364 in-process contract: private holder bounds and validates six fields; gateway forwards no auth or provider data\ndispatch-safety\tUNKNOWN STEP\t2026-10-05T10:45:27.5454859Z ok 6 - v364 in-process contract: private holder bounds and validates six fields; gateway forwards no auth or provider data\ndispatch-safety\tUNKNOWN STEP\t2026-10-05T10:45:27.5455926Z   ---\ndispatch-safety\tUNKNOWN STEP\t2026-10-05T10:45:27.5456889Z   duration_ms: 81.001827\ndispatch-safety\tUNKNOWN STEP\t2026-10-05T10:45:27.5457418Z   type: 'test'\ndispatch-safety\tUNKNOWN STEP\t2026-10-05T10:45:27.5457827Z   ...\ndispatch-safety\tUNKNOWN STEP\t2026-10-05T10:45:27.5459468Z # Subtest: v364 in-process contract: one Response yields a first chunk before holder release and cancellation reaches source\ndispatch-safety\tUNKNOWN STEP\t2026-10-05T10:45:27.5461332Z ok 7 - v364 in-process contract: one Response yields a first chunk before holder release and cancellation reaches source\ndispatch-safety\tUNKNOWN STEP\t2026-10-05T10:45:27.5462417Z   ---\ndispatch-safety\tUNKNOWN STEP\t2026-10-05T10:45:27.5462816Z   duration_ms: 62.602941\ndispatch-safety\tUNKNOWN STEP\t2026-10-05T10:45:27.5463277Z   type: 'test'\ndispatch-safety\tUNKNOWN STEP\t2026-10-05T10:45:27.5463662Z   ...\ndispatch-safety\tUNKNOWN STEP\t2026-10-05T10:45:27.5464721Z # Subtest: v364 in-process cancellation retains the asynchronous holder observation in its request lifetime\ndispatch-safety\tUNKNOWN STEP\t2026-10-05T10:45:27.5466380Z ok 8 - v364 in-process cancellation retains the asynchronous holder observation in its request lifetime\ndispatch-safety\tUNKNOWN STEP\t2026-10-05T10:45:27.5467319Z   ---\ndispatch-safety\tUNKNOWN STEP\t2026-10-05T10:45:27.5467721Z   duration_ms: 4.938205\ndispatch-safety\tUNKNOWN STEP\t2026-10-05T10:45:27.5468205Z   type: 'test'\ndispatch-safety\tUNKNOWN STEP\t2026-10-05T10:45:27.5468621Z   ...\ndispatch-safety\tUNKNOWN STEP\t2026-10-05T10:45:27.5469388Z 1..8\ndispatch-safety\tUNKNOWN STEP\t2026-10-05T10:45:27.5469782Z # tests 8\ndispatch-safety\tUNKNOWN STEP\t2026-10-05T10:45:27.5470158Z # suites 0\ndispatch-safety\tUNKNOWN STEP\t2026-10-05T10:45:27.5470588Z # pass 7\ndispatch-safety\tUNKNOWN STEP\t2026-10-05T10:45:27.5470958Z # fail 1\ndispatch-safety\tUNKNOWN STEP\t2026-10-05T10:45:27.5471363Z # cancelled 0\ndispatch-safety\tUNKNOWN STEP\t2026-10-05T10:45:27.5471763Z # skipped 0"
+    },
+    {
+      "source": "head-release-failed-log.stdout.txt",
+      "firstLine": 46,
+      "lastLine": 48,
+      "text": "Changesets\tCreate Version PR or push tags\t2026-10-05T12:24:58.0535171Z creating pull request\nChangesets\tCreate Version PR or push tags\t2026-10-05T12:24:58.2377101Z ##[error]HttpError: GitHub Actions is not permitted to create or approve pull requests. - https://docs.github.com/rest/pulls/pulls#create-a-pull-request\nChangesets\tCreate Version PR or push tags\t2026-10-05T12:24:58.2384911Z ##[error]GitHub Actions is not permitted to create or approve pull requests. - https://docs.github.com/rest/pulls/pulls#create-a-pull-request"
+    }
+  ]
+}

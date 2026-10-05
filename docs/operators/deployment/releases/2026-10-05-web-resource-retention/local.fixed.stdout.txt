@@ -1,0 +1,12 @@
+✔ same-browser releases retain each previous source archive without inventing asset mappings (1554.66ms)
+✔ source archives remain downloadable through their exact cutoff without renewing their age (1327.7979ms)
+✔ a previous source archive with no hashed assets is retained independently of coverage (1059.2129ms)
+✔ independently retained source archives do not resolve an unknown legacy asset (1367.6101ms)
+ℹ tests 4
+ℹ suites 0
+ℹ pass 4
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 5760.2417

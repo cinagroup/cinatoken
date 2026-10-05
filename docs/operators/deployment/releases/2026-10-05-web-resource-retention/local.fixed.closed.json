@@ -1,0 +1,18 @@
+{
+  "startedAt": "2026-10-05T12:42:46.943Z",
+  "finishedAt": "2026-10-05T12:42:52.813Z",
+  "executable": "C:/Program Files/nodejs/node.exe",
+  "args": [
+    "--import",
+    "tsx",
+    "--test",
+    "--test-name-pattern",
+    "same-browser releases|source archives remain downloadable|previous source archive with no hashed|independently retained source",
+    "packages/web/scripts/package-release.test.mjs"
+  ],
+  "actualExitCode": 0,
+  "signal": null,
+  "error": null,
+  "stdoutPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-source-retention-review-1b6039fbc4534bb38847c3a946778cc5\\fixed.stdout.txt",
+  "stderrPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-source-retention-review-1b6039fbc4534bb38847c3a946778cc5\\fixed.stderr.txt"
+}

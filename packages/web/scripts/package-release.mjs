@@ -523,6 +523,12 @@ export function packageRelease({
 				add(archivePath, item.assets, 'retained', item.descriptor.lastCurrentAt)
 			descriptors.set(archivePath, { ...item.descriptor, source: 'retained' })
 		}
+		// A published source download has its own retention window. Identical
+		// browser hashes may come from different server/source builds, so keeping
+		// only archives referenced by the final hash mappings would drop old URLs.
+		// Eligibility above keeps the original age; inclusion does not prove any
+		// additional asset origin or resolve unknown historical source coverage.
+		for (const archivePath of available.keys()) includeArchive(archivePath)
 		const assetSources = [...plan.values()]
 			.filter((file) => isHashedAsset(file.path))
 			.sort((a, b) => (a.path < b.path ? -1 : a.path > b.path ? 1 : 0))

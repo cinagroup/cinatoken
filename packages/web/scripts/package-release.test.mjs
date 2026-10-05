@@ -27,6 +27,7 @@ import {
 } from './gen-web-wrangler.mjs'
 import { packageRelease, verifyRelease } from './package-release.mjs'
 import { verifySourceArchive } from './source-archive.mjs'
+import { verifySourceDelivery } from './source-delivery.mjs'
 
 const OLD = 'static/js/async/account.12345678.js'
 const NEW = 'static/js/async/account.87654321.js'
@@ -741,6 +742,216 @@ test('legacy retained chunks remain explicitly unresolved instead of acquiring c
 	assert.deepEqual(mapping, { path: OLD, archives: [], unresolved: true })
 	assert.equal(next.manifest.sourceDelivery.coverageComplete, false)
 	assert.equal(verifyRelease(root, 'legacy').manifest.schemaVersion, 2)
+})
+
+test('same-browser releases retain each previous source archive without inventing asset mappings', (t) => {
+	const root = fixture(t)
+	resetBuild(root, 'same-browser', OLD)
+	writeServers(root, 'source-a', 2)
+	const a = release(root, 'source-a')
+	const original = a.manifest.sourceDelivery.archives[0]
+	resetBuild(root, 'same-browser', OLD)
+	writeServers(root, 'source-b', 2)
+	const b = release(root, 'source-b', '2026-09-02', { previous: 'source-a' })
+	assert.deepEqual(
+		readFileSync(join(a.assets, OLD)),
+		readFileSync(join(b.assets, OLD))
+	)
+	assert.notEqual(
+		a.manifest.sourceDelivery.currentArchive,
+		b.manifest.sourceDelivery.currentArchive
+	)
+	assert.equal(b.manifest.sourceDelivery.archives.length, 2)
+	const retained = b.manifest.sourceDelivery.archives.find(
+		(item) => item.path === original.path
+	)
+	assert.deepEqual(retained, { ...original, source: 'retained' })
+	assert.deepEqual(
+		readFileSync(join(b.assets, original.path)),
+		readFileSync(join(a.assets, original.path))
+	)
+	assert.equal(
+		b.manifest.files.find((file) => file.path === original.path).lastCurrentAt,
+		START
+	)
+	assert.equal(
+		b.manifest.files.find((file) => file.path === OLD).source,
+		'current'
+	)
+	assert.deepEqual(b.manifest.sourceDelivery.assetSources, [
+		{
+			path: OLD,
+			archives: [b.manifest.sourceDelivery.currentArchive],
+			unresolved: false,
+		},
+	])
+	assert.equal(b.manifest.sourceDelivery.coverageComplete, true)
+	const current = b.manifest.sourceDelivery.archives.find(
+		(item) => item.path === b.manifest.sourceDelivery.currentArchive
+	)
+	assert.equal(current.source, 'current')
+	assert.equal(current.lastCurrentAt, b.manifest.createdAt)
+	assert.deepEqual(current.buildContract, b.manifest.buildContract)
+	assert.ok(
+		readFileSync(join(b.assets, 'sources/index.html'), 'utf8').includes(
+			`/web-assets/${original.path}`
+		)
+	)
+	assert.doesNotThrow(() => verifyRelease(root, 'source-b'))
+	// Recompose only verified artifacts; unbuilt working-tree source must be ignored.
+	writeFileSync(join(root, 'packages/core/src/fixture.ts'), 'unbuilt input\n')
+	const restored = release(root, 'source-restored', '2026-09-03', {
+		previous: 'source-b',
+		currentRelease: 'source-a',
+	})
+	assert.equal(restored.manifest.sourceDelivery.currentArchive, original.path)
+	assert.deepEqual(restored.manifest.buildContract, a.manifest.buildContract)
+	assert.equal(restored.manifest.sourceDelivery.archives.length, 2)
+	const newer = restored.manifest.sourceDelivery.archives.find(
+		(item) => item.path === current.path
+	)
+	assert.deepEqual(newer, { ...current, source: 'retained' })
+	assert.deepEqual(
+		readFileSync(join(restored.assets, newer.path)),
+		readFileSync(join(b.assets, newer.path))
+	)
+	assert.deepEqual(restored.manifest.sourceDelivery.assetSources, [
+		{ path: OLD, archives: [original.path], unresolved: false },
+	])
+	assert.doesNotThrow(() => verifyRelease(root, 'source-restored'))
+})
+
+test('source archives remain downloadable through their exact cutoff without renewing their age', (t) => {
+	const root = fixture(t)
+	resetBuild(root, 'same-browser', OLD)
+	writeServers(root, 'source-a', 2)
+	const a = release(root, 'source-a')
+	const original = a.manifest.sourceDelivery.archives[0]
+	resetBuild(root, 'same-browser', OLD)
+	writeServers(root, 'source-b', 2)
+	release(root, 'source-b', '2026-09-02', {
+		previous: 'source-a',
+		retentionDays: 2,
+	})
+	const cutoff = release(root, 'source-cutoff', '2026-09-03', {
+		previous: 'source-b',
+		currentRelease: 'source-b',
+		retentionDays: 2,
+	})
+	assert.equal(
+		cutoff.manifest.sourceDelivery.archives.find(
+			(item) => item.path === original.path
+		)?.lastCurrentAt,
+		START
+	)
+	assert.equal(
+		cutoff.manifest.files.find((item) => item.path === original.path)?.source,
+		'retained'
+	)
+	assert.deepEqual(
+		readFileSync(join(cutoff.assets, original.path)),
+		readFileSync(join(a.assets, original.path))
+	)
+	const expired = release(root, 'source-expired', '2026-09-03T00:00:00.001Z', {
+		previous: 'source-cutoff',
+		currentRelease: 'source-cutoff',
+		retentionDays: 2,
+	})
+	assert.equal(
+		expired.manifest.sourceDelivery.archives.some(
+			(item) => item.path === original.path
+		),
+		false
+	)
+	assert.equal(
+		expired.manifest.files.some((item) => item.path === original.path),
+		false
+	)
+	assert.equal(existsSync(join(expired.assets, original.path)), false)
+	assert.equal(expired.manifest.sourceDelivery.archives.length, 1)
+	assert.equal(
+		expired.manifest.files.find((item) => item.path === OLD).source,
+		'current'
+	)
+	assert.equal(expired.manifest.sourceDelivery.coverageComplete, true)
+	assert.doesNotThrow(() => verifyRelease(root, 'source-expired'))
+})
+
+test('a previous source archive with no hashed assets is retained independently of coverage', (t) => {
+	const root = fixture(t)
+	write(root, 'index.html', '<html>source-only build</html>')
+	writeServers(root, 'source-only', 2)
+	const original = release(root, 'source-only')
+	assert.deepEqual(original.manifest.sourceDelivery.assetSources, [])
+	const archive = original.manifest.sourceDelivery.archives[0]
+	resetBuild(root, 'next', NEW)
+	writeServers(root, 'next', 2)
+	const next = release(root, 'next', '2026-09-02', { previous: 'source-only' })
+	assert.deepEqual(
+		next.manifest.sourceDelivery.archives.find(
+			(item) => item.path === archive.path
+		),
+		{ ...archive, source: 'retained' }
+	)
+	assert.equal(
+		next.manifest.sourceDelivery.assetSources.some((mapping) =>
+			mapping.archives.includes(archive.path)
+		),
+		false
+	)
+	assert.deepEqual(
+		readFileSync(join(next.assets, archive.path)),
+		readFileSync(join(original.assets, archive.path))
+	)
+	assert.doesNotThrow(() => verifyRelease(root, 'next'))
+	const delivery = structuredClone(next.manifest.sourceDelivery)
+	const files = structuredClone(next.manifest.files)
+	const independentlyRetained = delivery.archives.find(
+		(item) => item.path === archive.path
+	)
+	const asset = files.find((item) => item.path === archive.path)
+	for (const item of [independentlyRetained, asset]) {
+		item.source = 'current'
+		item.lastCurrentAt = next.manifest.createdAt
+	}
+	assert.throws(
+		() =>
+			verifySourceDelivery(delivery, {
+				assets: next.assets,
+				files,
+				buildContract: next.manifest.buildContract,
+				createdAt: next.manifest.createdAt,
+				retentionDays: next.manifest.retentionDays,
+			}),
+		/Source archive asset binding mismatch/
+	)
+})
+
+test('independently retained source archives do not resolve an unknown legacy asset', (t) => {
+	const root = fixture(t)
+	resetBuild(root, 'legacy', OLD)
+	writeServers(root, 'legacy')
+	release(root, 'legacy')
+	resetBuild(root, 'same-browser', NEW)
+	writeServers(root, 'source-a', 2)
+	const a = release(root, 'source-a', '2026-09-02', { previous: 'legacy' })
+	resetBuild(root, 'same-browser', NEW)
+	writeServers(root, 'source-b', 2)
+	const b = release(root, 'source-b', '2026-09-03', { previous: 'source-a' })
+	assert.equal(b.manifest.sourceDelivery.archives.length, 2)
+	assert.ok(
+		b.manifest.sourceDelivery.archives.some(
+			(item) =>
+				item.path === a.manifest.sourceDelivery.currentArchive &&
+				item.source === 'retained'
+		)
+	)
+	assert.deepEqual(
+		b.manifest.sourceDelivery.assetSources.find((item) => item.path === OLD),
+		{ path: OLD, archives: [], unresolved: true }
+	)
+	assert.equal(b.manifest.sourceDelivery.coverageComplete, false)
+	assert.doesNotThrow(() => verifyRelease(root, 'source-b'))
 })
 
 test('retained source archives keep original timestamps and expire with their chunks', (t) => {

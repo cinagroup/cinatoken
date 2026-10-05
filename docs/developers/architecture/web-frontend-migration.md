@@ -492,19 +492,19 @@ rg -n 'Routes\.(get|post|put|patch|delete)\(' packages/admin/lib/routes/user pac
 
 每个证据记录应包括：对应 checklist/矩阵 ID、代码版本或文件范围、可复现命令、结果/时间、运行平台及数据库、浏览器视口/语言/角色/工作区、失败与修复、局限、审查结论。截图应脱敏；不存在的真实身份/部署验收必须明确写“待验证”。
 
-下表P65公开SSR/Auth历史本地检查为5.53：Web1364、HTTP45、compiledWorker/Node77、JS-enabled Chrome32、真正无JS36、公开popup20、旧private7、实际React取消10与在途API1通过；同一482产物与源码核验无漂移，29入口保持false。P59及P60–P64各轮只证明原时点与记录范围；失败与Temp修正均保留。NEXT-40真实门槛与部署继续待验，额外Auth deadline/生命周期8、native transport8及实际跨源COOP4均通过，Auth七项本地子任务完成；真实门槛继续。
+下表当前发布证据以5.72为准：源码3847955、Linux Node22 Web CI37305448322两个job/36步骤全部成功，独立Web version dbe1800e100%流量、29入口true，生产严格Chrome45/45及主题/中文/移动刷新actual0；Admin/Proxy仍为34c742d1。5.71首轮strictactual1和配置403、P65/P69/P71等本地批次均保留其原范围，不能用历史29false或“未部署”描述当前生产，也不能用当前匿名切流覆盖真实身份、三库/链、完整Docker/TLS与回滚验收。5.73已发现旧bdc源码归档HEAD/GET404，资源保留修复正在实施，尚无新CI/发布通过证据。
 
 | 证据 ID | 范围 | 当前状态 | 完成证明 |
 | --- | --- | --- | --- |
-| E00 | G0、SRC、页面/API/权限基线 | S3原P67归档/原三target与external pin历史保留；J1新P71 source archive精确2289输入，579映射=253有对应源码证明＋326 unknown。P67原121资产raw仍相同且有效绑定：11当前P71、89 retained由P70原包、21 retained由P67原包（5.64）。 | 326 inherited仍unresolved/coveragefalse；上游ref/导入日期/逐文件归属、许可及正式渠道待验。当前或历史archive与unsigned selfSHA不证明上游来源或签名，G0/SRC未完成。 |
-| E01 | G1 工程接入 | J6 497件完整有界AST及独立双AST通过，原评论/指令/属性和JSX runtime children保持；完整formatter651pass/0warning、七CLI及审计0。fresh完整Admin types/lint、主unit1008＋5/30、Web1582和fresh Next I8i…实际构建/4045输入/2827普通产物冻结通过；实际旧新React/HTTP受控验收通过（5.69） | G1整体仍未完成：326来源与上游、Core全范围、Node22/LinuxCI及原生平台待验。Web源码未变，本轮未重跑Web生产types/build；Temp缺件/恢复、所有失败及真实服务边界保留，不把格式完成当完整迁移完成。 |
+| E00 | G0、SRC、页面/API/权限基线 | 当前3847955的CI冻结产物与2289已提交Git输入/18187583 B精确匹配，源码指纹b8ef2ef6…与manifest33859681…已核（5.72）。P67/P71来源盘点保留为历史：P71的579映射=253有对应源码证明＋326 unknown，原121资产的P67/P70/P71绑定见5.64。 | 当前CI输入对应证明与历史326 inherited unknown分列，不能把326当作当前生产135资产的缺失计数，也不以新归档覆盖其未解决来源。上游ref/导入日期/逐文件归属、许可及正式渠道仍待验；自行计算的摘要不证明上游来源，G0/SRC未完成。旧bdc归档生产404已列5.73，保留期交付待修复。 |
+| E01 | G1 工程接入 | 同3847955的Linux Node22 Web CI37305448322两个job/36步骤全部success：锁文件安装、完整Web unit/types/lint/format、三目标build/freeze、镜像/Nginx检查与Admin合同/SSR构建通过（5.72）。J6完整formatter651/有界AST497及Admin本地检查、旧新React/HTTP对照仍为5.69历史证据。 | 不再把该Web范围的Node22/LinuxCI列为未运行；G1及完整工程逐项验收仍未闭合，来源/许可、历史债务和其他原生范围保留。Proxy safety最新37297885860的PG73 replay-scale未声明migrator与synthetic v364严格取消仍失败，后续步骤skipped；本批起始HEAD5a13f59e的Release37309283370另因Actions PR权限失败（5.73），不声称全仓库CI绿灯。 |
 | E02 | G2 首个认证/工作区/Key 闭环 | NEXT-42 B1实际Portal Cookie鉴权之后、Admin会话/IdP/workspace/domain之前核expected user；新Next旧A/B请求早拒409及same-subject角色正控/撤销/暂不可用、跨subject能力隔离、两logout通过（5.63）；原P70 Keys/NFT/Preset Chrome10历史保留 | IdP与组织成员为受控binding，原生HTTP入口不证明真实CinaAuth/数据库/同源部署或完整Key闭环；直接user logout与统一auth logout语义分列，G2待验。 |
 | E03 | G3 数据与请求层 | NEXT-42 canonical user/workspace组合与62账户调用绑定、未知写不重放保留；B1新Next六exports与七GET验证早拒/单次Portal读取，400/401/403/409/500与成功private,no-store、Unicode/headerless兼容；独立2case构造观测和合法POST验证重写合同（5.63） | 原全局no-store已禁缓存，早期private覆盖FAIL不证明共享缓存泄漏。Request观察器只记录native getter元数据、不读/改body；金额/日期/真实权限/Retry-After/三库完整合同继续。 |
 | E04 | G4 全部账户能力 | 原P6账户244 fixture与5.62新P70 Chrome10/旧10POST＋5读409零领域增量历史保留；B1新Next45真实HTTP含显式受控tier105合法POST创建SQL行/Queue1与两退出，Node SQLite执行77正式D1迁移（5.63） | 正式配置仍200–203、产品/迁移未改；受控IdP/组织权限/SQLite D1形binding/Queue不能替代ACC-01–15全部真实授权、账本、原生三库/链及平台验收，G4待验。 |
 | E05 | G5 全部管理能力 | 保留P53金融完整流程、P54焦点48/48、P58三域270/Routes126unique及已发写切scope8；当前P59 Presets/Guardrails204与DataPolicies136共340unique实际通过，原失败与网络记录保留；三旧Next同Screen及当前Core/Admin合同本地通过（5.48） | 真实登录/权限/原生三库并发/链/账本/经济/Proxy/平台及旧writer排空、MySQLjournal模型等继续待验；声明本地fixture不等于G5通过。 |
-| E06 | G6 公开页面与SEO | P69四语×JS/trueNoJS8context（全390px）、16原生下载/两归档、8原生JSON点击与原bytes一致，16图实际目视/index无overflow；共享footer及compiled沿P68原产物复用（5.61） | 本轮新下载验收是compiled SSR/普通静态夹具+实际owned同源archiveHTTP，非真实Auth/目录/聊天/平台；P68旧HTTP45/Chrome64只证其原范围，不计新业务执行，G6待验。 |
-| E07 | G7 双平台部署 | P69 schema3/501文件/两版本source archive，原P68 currentcompiled与archive exact；实际Root/runtime校验0、Node compiled Worker源码HTTP16（含两包GET/HEAD/304/206）及10helper无展开源码CLI0/29false（5.61） | previous/currentReleaseId=P68只是本地复用输入，Root真实配置未切换；CF/workerd/Docker/Nginx、LinuxNode22/CI、真实身份/DB/链/灰度/线上指针/回滚未验，未部署，完整G7未完成。 |
-| E08 | G8 全量发布 | J6 fresh Next I8iEBXkv6HbVKv644OYUc 的4045输入/2827普通产物冻结与实际产品React/HTTP受控对照通过，临时ordinary缺件同字节恢复单独记录。Web2289/source4aaa…与P71 Root633未变；旧发布证据保留历史范围（5.69） | RootP66、29string false/public origin空，P71仍为本地候选；真实身份/原生三库/链、Node22 LinuxCI、原生CF/Docker/nginx/TLS、灰度回滚与旧页退役待验。暂存镜像shared依赖链接未恢复，不等于可直接正式发布。目标active，完整迁移未完成。 |
+| E06 | G6 公开页面与SEO | 当前3847955在真实Cloudflare提供四语公开SSR、robots/sitemap及匿名catalog；Chrome公开7固定页/缺失模型404与完整45入口、深色→中文→390px刷新严格actual0，4个HTML/CSP/no-transform实测通过（5.72）。该时点135资产最终匹配含当前源码归档定向重试；P69四语JS/trueNoJS共8 context、16下载/两归档、8 JSON点击及16图仅保留5.61原范围。 | 当前catalog为空/USD，真实Auth、非空目录/完整聊天、完整SEO与来源门槛继续；匿名页面不证明全部G6业务。5.72的135核对仅覆盖当时manifest，不能证明旧bdc源码保留：其HEAD/GET404在5.73保留并修复中，G6未完成。 |
+| E07 | G7 双平台部署 | 独立Web已实际承接cinatoken.com主Route与资源Route，dbe1800e100%/29true、预览双false；同3847955 Linux CI36步骤、冻结产物/三目标与Docker/Nginx检查通过，生产GET23/HEAD6/认证入口GET3及Chrome45严格actual0（5.72）。Admin/Proxy保持34c742d1。P69 schema3/501、源码HTTP16及29false仅为5.61本地历史。 | Cloudflare前门已部署，不代表完整G7：真实CinaAuth及角色业务/写请求、三库/链、生产SSE/WebSocket、Docker完整SSR/TLS同源部署、灰度和实际回滚演练仍待验。CI镜像检查不替代Docker生产部署；5.73旧源码404证明资源保留仍有缺口，原失败及未通过native/Release CI不豁免。 |
+| E08 | G8 全量发布 | 当前3847955已commit/push/deploy，版本/Route/冻结输入与生产严格匿名QA有5.72持久证据；5.71首轮负面结果保留。J6 Next4045/2827与P71本地候选及临时缺件恢复仅证明5.69历史范围，不能沿用旧RootP66/29false/公有origin空作为当前生产状态。 | G8未完成、目标active：全矩阵真实身份/权限/资金链账本/非空目录、三库、性能观测、完整双平台、灰度/实际回滚和旧页退役继续。5.73旧bdc源码404正在修复，未把14天保留约定当作已验证交付；完整102主任务/54矩阵/G0–G8/E00–E08及211任务checkbox原状态保持。 |
 
 推进顺序：P0/P1 → P2 首个闭环 → P3 → P4/P5（可并行）→ P6 → P7/P8。部署验证从首个闭环开始逐步加入；完整上线仍必须通过所有门槛。
 
@@ -2232,6 +2232,14 @@ QA v1曾误读不存在的bootstrap.origin导致退出1，产品/en为200且非�
 原5.71的strictactual1/69遥测、QA字段错误、503和RUM/Config权限403原样保留。此次未写RUM配置，原ruleset/default包含规则已重新GET并严格比较不变；生产注入问题通过HTML响应合同解决，不声称权限403已解除。bdc1bfcf/ecba旧Web与Admin回退版本、资源Route和冻结产物至少保留至2026-10-19，未执行生产回滚演练或旧UI退役。
 
 持久版本、命令闭合、HTTP/HTML/浏览器/截图及原始hash见[本批发布证据](../../operators/deployment/releases/2026-10-05-web-html-integrity.json)。本批部署与匿名浏览器验收完成；完整102主任务、54矩阵、G0–G8/E00–E08和211任务checkbox不提前完成，真实身份业务/角色、资金链账本/非空目录推理、326来源、原生双平台与回滚/退役继续。
+
+### 5.73 旧 Web 资源保留修复（2026-10-05，实施中，待CI与发布）
+
+当前生产仍为5.72的3847955/dbe1800e、100%流量、29入口true，其Linux CI36步骤和严格生产匿名45/45通过。后续真实只读保留期检查发现：旧bdc1bfcf manifest89b9dc83…声明的源码归档 `sources/web.a4fb45ab08bf639f695134f2c693d5292f3126944d67db96e08596640930e910.tar.gz`，预期4237024 B/SHA256 a4fb45ab…，在12:38:55.955–12:38:58.787 UTC的生产HEAD和GET均404/0 B，探针及闭合命令actual1。该失败证明旧源码资源尚未在当前前门保持可访问，不覆盖5.72当前manifest的135资产核对，也不删除旧版本保留约定。已封存[旧源码检查](../../operators/deployment/releases/2026-10-05-web-resource-retention/operator.old-source-before.proof.json)与[闭合结果](../../operators/deployment/releases/2026-10-05-web-resource-retention/operator.old-source-before.result.json)已持久封存其失败原字节；修后部署仍待验。
+
+本地修复已完成：独立保留所有已获资格、未过期的源码归档，允许严格验证后的retained归档没有最终hashed资产映射，但不伪造来源或提高coverage；current绑定、原TTL/哈希/命名空间/预算及历史导入资格校验保持。新四回归修前0/4、修后4/4；完整Web1596/1596（skip0）、types/lint/format与Root scope核对actual0。原404、失败与工具修正均已封存在[本地修复记录](../../operators/deployment/releases/2026-10-05-web-resource-retention-local.json)。尚未取得新SHA Linux CI、生产发布及旧/当前资源GET/HEAD复验成功证据；候选将从已验证CI冻结输入合成，避免读取旧dist。未完成生产回滚演练或旧UI退役，不勾选主任务、矩阵或G/E门槛。
+
+并行只读CI盘点保留独立失败范围：最新Proxy safety [Run37297885860](https://github.com/cinagroup/cinatoken/actions/runs/37297885860)为bdc1bfcf，config-cutover/admin-playground成功；native-financial step14因PG73 replay-scale测试163行未声明migrator失败，后续100步骤skipped；dispatch step27的synthetic v364严格HTTP取消观察实际null而非observed，8测试7通过/1失败、后续39步骤skipped。11份相关Git源码至本批起始HEAD5a13f59e未变。它们未被当前Web workflow/部署命令调用，不能当作生产Web回归，也不能称全仓库CI通过；NEXT-18和真实SSE/原生平台要求继续。该起始HEAD的[Release37309283370](https://github.com/cinagroup/cinatoken/actions/runs/37309283370)因Actions无创建PR权限失败，Verify package versions37309283416成功；未改权限、触发工作流或部署。原始哈希/失败日志节选和闭合读命令见[本批只读CI盘点](../../operators/deployment/releases/2026-10-05-web-resource-retention/inventory.FINAL-native-ci-inventory-v2.json)，94,215 B/SHA256 f438a29e21e9aa9943b04159fd7811062960f0fe3ea629d874e0c61bb4e69f64；已封存该摘要与失败节选，完整原日志仍在自有Temp/hosted Actions，不以该盘点代替新发布验收。
 
 ## 6. 更新记录
 

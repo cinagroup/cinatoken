@@ -1,0 +1,17 @@
+{
+  "startedAt": "2026-10-05T12:43:25.533Z",
+  "finishedAt": "2026-10-05T12:43:25.609Z",
+  "executable": "C:/Program Files/nodejs/node.exe",
+  "args": [
+    "node_modules/prettier/bin/prettier.cjs",
+    "--write",
+    "packages/web/scripts/package-release.mjs",
+    "packages/web/scripts/package-release.test.mjs",
+    "packages/web/scripts/source-delivery.mjs"
+  ],
+  "actualExitCode": 1,
+  "signal": null,
+  "error": null,
+  "stdoutPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-source-retention-review-1b6039fbc4534bb38847c3a946778cc5\\format-write.stdout.txt",
+  "stderrPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-source-retention-review-1b6039fbc4534bb38847c3a946778cc5\\format-write.stderr.txt"
+}
