@@ -10,6 +10,7 @@ import { Hono } from "hono";
 import { getAccountCapabilities } from "@/lib/unified-session";
 import type { UserEnv } from "@/lib/user-env";
 import { userManagementKeysRoutes } from "@/lib/routes/user/management-keys";
+import { userWorkspacePrecondition } from "@/lib/user-workspace-precondition";
 
 const personalWorkspace: WorkspaceAccessProjection = {
 	id: "personal:user-1",
@@ -94,6 +95,7 @@ function fixture(workspace: WorkspaceAccessProjection = personalWorkspace) {
 		});
 		await next();
 	});
+	app.use("*", userWorkspacePrecondition);
 	app.route("/management-keys", userManagementKeysRoutes);
 	return {
 		app,
@@ -162,4 +164,27 @@ test("portal revocation attributes the authenticated user to the audit write", a
 	});
 	assert.equal(response.status, 200);
 	assert.equal(getRevokedActor(), "user-1");
+});
+
+test("a stale workspace cannot create or revoke an account-wide management key", async () => {
+	for (const method of ["POST", "DELETE"]) {
+		const { app, getInserted, getRevokedActor } = fixture();
+		const response = await app.request(
+			method === "POST" ? "/management-keys" : "/management-keys/management-1",
+			{
+				method,
+				headers: {
+					"Content-Type": "application/json",
+					"X-CinaToken-Workspace": encodeURIComponent("workspace:other"),
+				},
+				body:
+					method === "POST"
+						? JSON.stringify({ name: "Do not create" })
+						: undefined,
+			}
+		);
+		assert.equal(response.status, 409);
+		assert.equal(getInserted(), null);
+		assert.equal(getRevokedActor(), "");
+	}
 });

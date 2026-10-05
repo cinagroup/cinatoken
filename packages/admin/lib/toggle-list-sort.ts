@@ -1,4 +1,4 @@
-export type ListSortDir = 'asc' | 'desc';
+export type ListSortDir = "asc" | "desc";
 
 /**
  * 列表表头排序：任意列点击均按降序（切换列亦重置为降序）。
@@ -6,9 +6,9 @@ export type ListSortDir = 'asc' | 'desc';
 export function nextListSortState(
 	_currentKey: string,
 	_currentDir: ListSortDir,
-	clickedKey: string,
+	clickedKey: string
 ): { sortKey: string; sortDir: ListSortDir } {
-	return { sortKey: clickedKey, sortDir: 'desc' };
+	return { sortKey: clickedKey, sortDir: "desc" };
 }
 
 /**
@@ -17,10 +17,13 @@ export function nextListSortState(
 export function nextListSortStateWithAscToggle(
 	currentKey: string,
 	currentDir: ListSortDir,
-	clickedKey: string,
+	clickedKey: string
 ): { sortKey: string; sortDir: ListSortDir } {
 	if (currentKey === clickedKey) {
-		return { sortKey: clickedKey, sortDir: currentDir === 'desc' ? 'asc' : 'desc' };
+		return {
+			sortKey: clickedKey,
+			sortDir: currentDir === "desc" ? "asc" : "desc",
+		};
 	}
-	return { sortKey: clickedKey, sortDir: 'desc' };
+	return { sortKey: clickedKey, sortDir: "desc" };
 }

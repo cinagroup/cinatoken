@@ -252,8 +252,7 @@ describe("endpoint admin form mapping", () => {
 				success: true,
 				data: {
 					provider_id: "deepseek-official",
-					evidence_url:
-						"https://api-docs.deepseek.com/quick_start/pricing/",
+					evidence_url: "https://api-docs.deepseek.com/quick_start/pricing/",
 					evidence_expires_at: "2026-09-15T06:00:00.000Z",
 					pricing_basis: "peak",
 					published: 2,
@@ -266,10 +265,7 @@ describe("endpoint admin form mapping", () => {
 		};
 		try {
 			const result = await publishOfficialDeepSeekEndpoints();
-			assert.equal(
-				requestedUrl,
-				"/api/admin/endpoints/bootstrap/deepseek"
-			);
+			assert.equal(requestedUrl, "/api/admin/endpoints/bootstrap/deepseek");
 			assert.equal(requestedInit?.method, "POST");
 			assert.deepEqual(JSON.parse(String(requestedInit?.body)), {
 				publish: true,

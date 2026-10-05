@@ -5,13 +5,13 @@
  *
  * 不会覆盖已有文件；生产请用 Worker Secret，勿依赖此默认值。
  */
-import fs from 'fs';
-import path from 'path';
-import { fileURLToPath } from 'url';
+import fs from "fs";
+import path from "path";
+import { fileURLToPath } from "url";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const pkgRoot = path.join(__dirname, '..');
-const target = path.join(pkgRoot, '.dev.vars');
+const pkgRoot = path.join(__dirname, "..");
+const target = path.join(pkgRoot, ".dev.vars");
 
 const DEFAULT_CONTENTS = `# Auto-created for local OpenNext preview (gitignored). Do not use in production.
 # Cloudflare runtime uses D1 via wrangler binding — do not set DATABASE_URL here.
@@ -24,14 +24,14 @@ if (fs.existsSync(target)) {
 }
 
 try {
-	fs.writeFileSync(target, DEFAULT_CONTENTS, { encoding: 'utf8', flag: 'wx' });
+	fs.writeFileSync(target, DEFAULT_CONTENTS, { encoding: "utf8", flag: "wx" });
 	console.log(
-		'[ensure-dev-vars] created packages/admin/.dev.vars — console login: admin / admin (local only)',
+		"[ensure-dev-vars] created packages/admin/.dev.vars — console login: admin / admin (local only)"
 	);
 } catch (e) {
-	if (e && typeof e === 'object' && 'code' in e && e.code === 'EEXIST') {
+	if (e && typeof e === "object" && "code" in e && e.code === "EEXIST") {
 		process.exit(0);
 	}
-	console.error('[ensure-dev-vars] failed to create .dev.vars', e);
+	console.error("[ensure-dev-vars] failed to create .dev.vars", e);
 	process.exit(1);
 }

@@ -545,11 +545,11 @@ function parseDeclaredContentLength(request: Request): number | null {
 async function readWithAbort(
 	reader: ReadableStreamDefaultReader<Uint8Array>,
 	signal: AbortSignal,
-): Promise<ReadableStreamReadResult<Uint8Array>> {
+): Promise<Awaited<ReturnType<typeof reader.read>>> {
 	if (signal.aborted) {
 		throw new OpenRouterSpeechJsonError('cancelled', 'Audio speech request was cancelled');
 	}
-	return new Promise<ReadableStreamReadResult<Uint8Array>>((resolve, reject) => {
+	return new Promise<Awaited<ReturnType<typeof reader.read>>>((resolve, reject) => {
 		const cleanup = () => signal.removeEventListener('abort', onAbort);
 		const onAbort = () => {
 			cleanup();

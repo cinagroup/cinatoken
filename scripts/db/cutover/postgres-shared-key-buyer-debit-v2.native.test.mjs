@@ -1,11 +1,12 @@
 // Review-only PG18.6 fixture. Fresh owned loopback cluster and synthetic facts.
 import assert from 'node:assert/strict';
 import { createHash, randomBytes, randomUUID } from 'node:crypto';
-import { readFile, readdir, writeFile } from 'node:fs/promises';
+import { readFile, writeFile } from 'node:fs/promises';
 import { dirname, join } from 'node:path';
 import test from 'node:test';
 import postgres from 'postgres';
 import { startNativePostgres } from '../../../packages/core/src/test-support/postgres-native-cluster.mjs';
+import { listPg73Migrations } from './pg73-native-fixture.mjs';
 
 const gateway = 'cinatoken_gateway';
 const quotes = 'cinatoken_economic_quotes';
@@ -134,8 +135,7 @@ test('native PG18 v2 ordinary buyer debit is separate and v1 consumer stays gate
       clients.push(migrator, runtime, quoteProducer, consumer);
       await migrator.unsafe(`CREATE TABLE ${gateway}.schema_migrations
         (version text PRIMARY KEY, applied_at timestamptz NOT NULL DEFAULT now())`);
-      const formal = (await readdir(migrations))
-        .filter(name => name.endsWith('.sql')).sort();
+      const formal = await listPg73Migrations();
       assert.equal(formal.length, 73);
       const corpus = [];
       for (const name of formal) {

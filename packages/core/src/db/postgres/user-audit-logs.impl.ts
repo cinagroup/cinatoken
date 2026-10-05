@@ -1,10 +1,10 @@
 /**
  * Postgres：`user_audit_logs`。
  */
-import { and, count, desc, eq, gte, inArray, lt, or, sql } from 'drizzle-orm';
+import { and, count, desc, eq, gte, inArray, lt, lte, or, sql, type SQL, type SQLWrapper } from 'drizzle-orm';
 import type { GlobalUserAuditLogRow, UserAuditLogRow } from '../../types';
 import type { PostgresDatabaseClient } from '../../storage/database-client';
-import type { UserAuditLogsRepository } from '../../storage/gateway-repository-interfaces';
+import type { GlobalUserAuditLogFilters, UserAuditLogsRepository } from '../../storage/gateway-repository-interfaces';
 import {
 	userAuditLogsTable as pgUserAuditLogsTable,
 	usersTable as pgUsersTable,
@@ -13,6 +13,10 @@ import type { InsertUserAuditLogParams } from '../user-audit-logs-types';
 import { toUserAuditLogDrizzleInsert } from '../user-audit-drizzle-insert';
 import { deriveUserAuditBudgetFromSnapshots } from '../user-audit-log-derived';
 import { normalizeUserAuditActorKinds, userAuditActorKindPrefixRange } from '../user-audit-catalog';
+import {
+	USER_AUDIT_EXPORT_QUERY_TIMEOUT_MS,
+	USER_AUDIT_EXPORT_TEXT_LIMITS as exportLimits,
+} from '../user-audit-export-limits';
 
 type PgAuditSelectRow = {
 	id: string;
@@ -62,6 +66,92 @@ function mapPgAuditRow(r: PgAuditSelectRow): UserAuditLogRow {
 	};
 }
 
+function globalAuditWhere(options: GlobalUserAuditLogFilters): SQL | undefined {
+	const conditions: SQL[] = [];
+	if (options.userId) conditions.push(eq(pgUserAuditLogsTable.userId, options.userId));
+	if (options.apiKeyId) conditions.push(eq(pgUserAuditLogsTable.apiKeyId, options.apiKeyId));
+	if (options.userEmail) conditions.push(eq(pgUsersTable.email, options.userEmail));
+	if (options.eventTypes?.length) conditions.push(inArray(pgUserAuditLogsTable.eventType, options.eventTypes));
+	if (options.actorTypes?.length) conditions.push(inArray(pgUserAuditLogsTable.actorType, options.actorTypes));
+	if (options.actorId) conditions.push(eq(pgUserAuditLogsTable.actorId, options.actorId));
+	const actorKinds = normalizeUserAuditActorKinds(options.actorKinds ?? []);
+	if (actorKinds.length) {
+		conditions.push(or(...actorKinds.map((kind) => {
+			const { lower, upper } = userAuditActorKindPrefixRange(kind);
+			return and(gte(pgUserAuditLogsTable.actorId, lower), lt(pgUserAuditLogsTable.actorId, upper));
+		}))!);
+	}
+	if (options.reasonCodes?.length) conditions.push(inArray(pgUserAuditLogsTable.reasonCode, options.reasonCodes));
+	if (options.sources?.length) conditions.push(inArray(pgUserAuditLogsTable.source, options.sources));
+	if (options.correlationId) conditions.push(eq(pgUserAuditLogsTable.correlationId, options.correlationId));
+	// Input is validated UTC wall time; do not let a Postgres session timezone reinterpret it.
+	if (options.startDate) conditions.push(sql`${pgUserAuditLogsTable.createdAt} >= (${options.startDate}::timestamp AT TIME ZONE 'UTC')`);
+	if (options.endDate) conditions.push(options.endDateExclusive
+		? sql`${pgUserAuditLogsTable.createdAt} < (${options.endDate}::timestamp AT TIME ZONE 'UTC')`
+		: sql`${pgUserAuditLogsTable.createdAt} <= (${options.endDate}::timestamp AT TIME ZONE 'UTC')`);
+	return conditions.length ? and(...conditions) : undefined;
+}
+
+const globalAuditSelectColumns = {
+	id: pgUserAuditLogsTable.id,
+	userId: pgUserAuditLogsTable.userId,
+	apiKeyId: pgUserAuditLogsTable.apiKeyId,
+	eventType: pgUserAuditLogsTable.eventType,
+	actorType: pgUserAuditLogsTable.actorType,
+	requestLogId: pgUserAuditLogsTable.requestLogId,
+	changePayload: pgUserAuditLogsTable.changePayload,
+	beforeUserSnapshot: pgUserAuditLogsTable.beforeUserSnapshot,
+	afterUserSnapshot: pgUserAuditLogsTable.afterUserSnapshot,
+	changedFields: pgUserAuditLogsTable.changedFields,
+	correlationId: pgUserAuditLogsTable.correlationId,
+	source: pgUserAuditLogsTable.source,
+	actorId: pgUserAuditLogsTable.actorId,
+	reasonCode: pgUserAuditLogsTable.reasonCode,
+	reasonText: pgUserAuditLogsTable.reasonText,
+	createdAt: pgUserAuditLogsTable.createdAt,
+	user_email: pgUsersTable.email,
+};
+
+const exportTextColumns: readonly [SQLWrapper, number][] = [
+	[pgUserAuditLogsTable.id, exportLimits.id],
+	[pgUserAuditLogsTable.requestLogId, exportLimits.requestLogId],
+	[pgUserAuditLogsTable.correlationId, exportLimits.correlationId],
+	[pgUserAuditLogsTable.eventType, exportLimits.eventType],
+	[pgUserAuditLogsTable.source, exportLimits.source],
+	[pgUserAuditLogsTable.reasonCode, exportLimits.reasonCode],
+	[pgUserAuditLogsTable.reasonText, exportLimits.reasonText],
+	[pgUserAuditLogsTable.actorType, exportLimits.actorType],
+	[pgUserAuditLogsTable.actorId, exportLimits.actorId],
+	[pgUserAuditLogsTable.userId, exportLimits.userId],
+	[pgUsersTable.email, exportLimits.userEmail],
+	[pgUserAuditLogsTable.apiKeyId, exportLimits.apiKeyId],
+	[pgUserAuditLogsTable.beforeUserSnapshot, exportLimits.userSnapshot],
+	[pgUserAuditLogsTable.afterUserSnapshot, exportLimits.userSnapshot],
+];
+const capped = (column: SQLWrapper, max: number) =>
+	sql<string | null>`CASE WHEN octet_length(${column}) > ${max} THEN NULL ELSE ${column} END`;
+const oversized = sql<number>`CASE WHEN ${sql.join(exportTextColumns.map(([column, max]) =>
+	sql`octet_length(${column}) > ${max}`
+), sql` OR `)} THEN 1 ELSE 0 END`;
+const exportSelectColumns = {
+	id: capped(pgUserAuditLogsTable.id, exportLimits.id),
+	requestLogId: capped(pgUserAuditLogsTable.requestLogId, exportLimits.requestLogId),
+	correlationId: capped(pgUserAuditLogsTable.correlationId, exportLimits.correlationId),
+	eventType: capped(pgUserAuditLogsTable.eventType, exportLimits.eventType),
+	source: capped(pgUserAuditLogsTable.source, exportLimits.source),
+	reasonCode: capped(pgUserAuditLogsTable.reasonCode, exportLimits.reasonCode),
+	reasonText: capped(pgUserAuditLogsTable.reasonText, exportLimits.reasonText),
+	actorType: capped(pgUserAuditLogsTable.actorType, exportLimits.actorType),
+	actorId: capped(pgUserAuditLogsTable.actorId, exportLimits.actorId),
+	userId: capped(pgUserAuditLogsTable.userId, exportLimits.userId),
+	userEmail: capped(pgUsersTable.email, exportLimits.userEmail),
+	apiKeyId: capped(pgUserAuditLogsTable.apiKeyId, exportLimits.apiKeyId),
+	beforeUserSnapshot: capped(pgUserAuditLogsTable.beforeUserSnapshot, exportLimits.userSnapshot),
+	afterUserSnapshot: capped(pgUserAuditLogsTable.afterUserSnapshot, exportLimits.userSnapshot),
+	oversized,
+	createdAt: pgUserAuditLogsTable.createdAt,
+};
+
 export function createPostgresUserAuditLogsRepository(db: PostgresDatabaseClient): UserAuditLogsRepository {
 	const drizzle = db.drizzle;
 	return {
@@ -109,42 +199,12 @@ export function createPostgresUserAuditLogsRepository(db: PostgresDatabaseClient
 			correlationId?: string;
 			startDate?: string;
 			endDate?: string;
+			endDateExclusive?: boolean;
 		}): Promise<{ logs: GlobalUserAuditLogRow[]; total: number }> {
 			const page = options.page || 1;
 			const pageSize = Math.min(options.pageSize || 20, 100);
 			const offset = (page - 1) * pageSize;
-			const conditions = [];
-			if (options.userId) conditions.push(eq(pgUserAuditLogsTable.userId, options.userId));
-			if (options.apiKeyId) conditions.push(eq(pgUserAuditLogsTable.apiKeyId, options.apiKeyId));
-			if (options.userEmail) conditions.push(eq(pgUsersTable.email, options.userEmail));
-			if (options.eventTypes && options.eventTypes.length > 0) {
-				conditions.push(inArray(pgUserAuditLogsTable.eventType, options.eventTypes));
-			}
-			if (options.actorTypes && options.actorTypes.length > 0) {
-				conditions.push(inArray(pgUserAuditLogsTable.actorType, options.actorTypes));
-			}
-			if (options.actorId) conditions.push(eq(pgUserAuditLogsTable.actorId, options.actorId));
-			const actorKinds = normalizeUserAuditActorKinds(options.actorKinds ?? []);
-			if (actorKinds.length > 0) {
-				conditions.push(
-					or(
-						...actorKinds.map((kind) => {
-							const { lower, upper } = userAuditActorKindPrefixRange(kind);
-							return and(gte(pgUserAuditLogsTable.actorId, lower), lt(pgUserAuditLogsTable.actorId, upper));
-						})
-					)!
-				);
-			}
-			if (options.reasonCodes && options.reasonCodes.length > 0) {
-				conditions.push(inArray(pgUserAuditLogsTable.reasonCode, options.reasonCodes));
-			}
-			if (options.sources && options.sources.length > 0) {
-				conditions.push(inArray(pgUserAuditLogsTable.source, options.sources));
-			}
-			if (options.correlationId) conditions.push(eq(pgUserAuditLogsTable.correlationId, options.correlationId));
-			if (options.startDate) conditions.push(sql`${pgUserAuditLogsTable.createdAt} >= ${options.startDate}`);
-			if (options.endDate) conditions.push(sql`${pgUserAuditLogsTable.createdAt} <= ${options.endDate}`);
-			const whereExpr = conditions.length > 0 ? and(...conditions) : undefined;
+			const whereExpr = globalAuditWhere(options);
 
 			let countQ = drizzle
 				.select({ total: count() })
@@ -154,30 +214,12 @@ export function createPostgresUserAuditLogsRepository(db: PostgresDatabaseClient
 			const total = Number((await countQ)[0]?.total ?? 0);
 
 			let listQ = drizzle
-				.select({
-					id: pgUserAuditLogsTable.id,
-					userId: pgUserAuditLogsTable.userId,
-					apiKeyId: pgUserAuditLogsTable.apiKeyId,
-					eventType: pgUserAuditLogsTable.eventType,
-					actorType: pgUserAuditLogsTable.actorType,
-					requestLogId: pgUserAuditLogsTable.requestLogId,
-					changePayload: pgUserAuditLogsTable.changePayload,
-					beforeUserSnapshot: pgUserAuditLogsTable.beforeUserSnapshot,
-					afterUserSnapshot: pgUserAuditLogsTable.afterUserSnapshot,
-					changedFields: pgUserAuditLogsTable.changedFields,
-					correlationId: pgUserAuditLogsTable.correlationId,
-					source: pgUserAuditLogsTable.source,
-					actorId: pgUserAuditLogsTable.actorId,
-					reasonCode: pgUserAuditLogsTable.reasonCode,
-					reasonText: pgUserAuditLogsTable.reasonText,
-					createdAt: pgUserAuditLogsTable.createdAt,
-					user_email: pgUsersTable.email,
-				})
+				.select(globalAuditSelectColumns)
 				.from(pgUserAuditLogsTable)
 				.leftJoin(pgUsersTable, eq(pgUserAuditLogsTable.userId, pgUsersTable.id));
 			if (whereExpr) listQ = listQ.where(whereExpr) as typeof listQ;
 			const rows = await listQ
-				.orderBy(desc(pgUserAuditLogsTable.createdAt))
+				.orderBy(desc(pgUserAuditLogsTable.createdAt), desc(pgUserAuditLogsTable.id))
 				.limit(pageSize)
 				.offset(offset);
 
@@ -188,6 +230,46 @@ export function createPostgresUserAuditLogsRepository(db: PostgresDatabaseClient
 				}),
 				total,
 			};
+		},
+
+		async scanGlobalUserAuditLogsForExport({ filters, limit, after, highWater }) {
+			if (!Number.isInteger(limit) || limit < 1 || limit > 100) throw new RangeError('Invalid audit export batch size');
+			const conditions: SQL[] = [];
+			const filtered = globalAuditWhere(filters);
+			if (filtered) conditions.push(filtered);
+			if (highWater) conditions.push(or(
+				lt(pgUserAuditLogsTable.createdAt, highWater.createdAt),
+				and(eq(pgUserAuditLogsTable.createdAt, highWater.createdAt), lte(pgUserAuditLogsTable.id, highWater.id)),
+			)!);
+			if (after) conditions.push(or(
+				lt(pgUserAuditLogsTable.createdAt, after.createdAt),
+				and(eq(pgUserAuditLogsTable.createdAt, after.createdAt), lt(pgUserAuditLogsTable.id, after.id)),
+			)!);
+			const whereExpr = conditions.length ? and(...conditions) : undefined;
+			const rows = await drizzle.transaction(async (tx) => {
+				// SET LOCAL and SELECT share one pinned PostgreSQL transaction. A
+				// statement timeout aborts server work and cannot leak to the pool.
+				await tx.execute(sql`SET LOCAL statement_timeout = ${sql.raw(String(USER_AUDIT_EXPORT_QUERY_TIMEOUT_MS))}`);
+				let query = tx.select(exportSelectColumns).from(pgUserAuditLogsTable)
+					.leftJoin(pgUsersTable, eq(pgUserAuditLogsTable.userId, pgUsersTable.id));
+				if (whereExpr) query = query.where(whereExpr) as typeof query;
+				return query.orderBy(desc(pgUserAuditLogsTable.createdAt), desc(pgUserAuditLogsTable.id)).limit(limit);
+			});
+			return rows.map((row) => {
+				return {
+					log: {
+						id: row.id ?? '', created_at: row.createdAt, request_log_id: row.requestLogId,
+						correlation_id: row.correlationId, event_type: row.eventType ?? '',
+						source: row.source, reason_code: row.reasonCode, reason_text: row.reasonText,
+						actor_type: row.actorType ?? '', actor_id: row.actorId, user_id: row.userId,
+						user_email: row.userEmail, api_key_id: row.apiKeyId,
+						before_user_snapshot: row.beforeUserSnapshot,
+						after_user_snapshot: row.afterUserSnapshot,
+					},
+					cursor: { createdAt: row.createdAt, id: row.id ?? '' },
+					oversized: Number(row.oversized) === 1,
+				};
+			});
 		},
 
 		async getGlobalUserAuditLogFilterOptions(): Promise<{ reasonCodes: string[] }> {

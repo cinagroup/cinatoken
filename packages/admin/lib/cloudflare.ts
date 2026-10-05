@@ -2,9 +2,9 @@
  * 读取 Cloudflare / OpenNext 运行时绑定（`DB`、`ASSETS`、`ADMIN_*` 等）。
  * 按优先级尝试：`getCloudflareContext` → `request.ctx` → `globalThis` → `process.env`，兼容 `next dev` 与 Pages 预览。
  */
-import type { D1Database } from '@cloudflare/workers-types';
-import type { HyperdriveBinding } from '@octafuse/core';
-import { getCloudflareContext } from '@opennextjs/cloudflare';
+import type { D1Database } from "@cloudflare/workers-types";
+import type { HyperdriveBinding } from "@octafuse/core";
+import { getCloudflareContext } from "@opennextjs/cloudflare";
 
 interface RequestWithCloudflare extends Request {
 	ctx?: {
@@ -16,7 +16,7 @@ interface RequestWithCloudflare extends Request {
 }
 
 interface GlobalWithCloudflare {
-	ASSETS?: CloudflareEnv['ASSETS'];
+	ASSETS?: CloudflareEnv["ASSETS"];
 	DB?: D1Database;
 	HYPERDRIVE?: HyperdriveBinding;
 	STATS_CLAIM_ISSUER?: Fetcher;
@@ -35,7 +35,7 @@ interface GlobalWithCloudflare {
 	CINAAUTH_ORGANIZATION_ADMIN_ROLES?: string;
 	SHARED_KEY_ENCRYPTION_SECRET?: string;
 	DEEPSEEK_API_KEY?: string;
-	AUTH_RATE_LIMITER?: CloudflareEnv['AUTH_RATE_LIMITER'];
+	AUTH_RATE_LIMITER?: CloudflareEnv["AUTH_RATE_LIMITER"];
 	DATABASE_DRIVER?: string;
 	ADMIN_USERNAME?: string;
 	ADMIN_PASSWORD?: string;
@@ -67,9 +67,16 @@ export function getCloudflareEnv(request?: Request): CloudflareEnv | undefined {
 		}
 	}
 
-	if (typeof globalThis !== 'undefined') {
+	if (typeof globalThis !== "undefined") {
 		const globalEnv = globalThis as unknown as GlobalWithCloudflare;
-		if (globalEnv.ASSETS || globalEnv.DB || globalEnv.HYPERDRIVE || globalEnv.CINAAUTH_AUTH_SERVICE || globalEnv.CINATOKEN_PROXY_SERVICE || globalEnv.AUTH_RATE_LIMITER) {
+		if (
+			globalEnv.ASSETS ||
+			globalEnv.DB ||
+			globalEnv.HYPERDRIVE ||
+			globalEnv.CINAAUTH_AUTH_SERVICE ||
+			globalEnv.CINATOKEN_PROXY_SERVICE ||
+			globalEnv.AUTH_RATE_LIMITER
+		) {
 			return {
 				ASSETS: globalEnv.ASSETS,
 				DB: globalEnv.DB,
@@ -85,9 +92,12 @@ export function getCloudflareEnv(request?: Request): CloudflareEnv | undefined {
 				CINATOKEN_REQUIRED_ROLES: globalEnv.CINATOKEN_REQUIRED_ROLES,
 				CINATOKEN_OIDC_CLIENT_SECRET: globalEnv.CINATOKEN_OIDC_CLIENT_SECRET,
 				CINATOKEN_OIDC_BRIDGE_SECRET: globalEnv.CINATOKEN_OIDC_BRIDGE_SECRET,
-				CINATOKEN_OIDC_TRANSACTION_SECRET: globalEnv.CINATOKEN_OIDC_TRANSACTION_SECRET,
-				CINATOKEN_IDENTITY_EVENTS_SECRET: globalEnv.CINATOKEN_IDENTITY_EVENTS_SECRET,
-				CINAAUTH_ORGANIZATION_ADMIN_ROLES: globalEnv.CINAAUTH_ORGANIZATION_ADMIN_ROLES,
+				CINATOKEN_OIDC_TRANSACTION_SECRET:
+					globalEnv.CINATOKEN_OIDC_TRANSACTION_SECRET,
+				CINATOKEN_IDENTITY_EVENTS_SECRET:
+					globalEnv.CINATOKEN_IDENTITY_EVENTS_SECRET,
+				CINAAUTH_ORGANIZATION_ADMIN_ROLES:
+					globalEnv.CINAAUTH_ORGANIZATION_ADMIN_ROLES,
 				SHARED_KEY_ENCRYPTION_SECRET: globalEnv.SHARED_KEY_ENCRYPTION_SECRET,
 				DEEPSEEK_API_KEY: globalEnv.DEEPSEEK_API_KEY,
 				AUTH_RATE_LIMITER: globalEnv.AUTH_RATE_LIMITER,
@@ -99,7 +109,7 @@ export function getCloudflareEnv(request?: Request): CloudflareEnv | undefined {
 		}
 	}
 
-	if (typeof process !== 'undefined') {
+	if (typeof process !== "undefined") {
 		const proc = process as unknown as ProcessWithEnv;
 		if (
 			proc.env?.CINAAUTH_ISSUER ||

@@ -35,9 +35,13 @@ export const ETL_TABLE_ORDER = [
 	"user_budget_reservations",
 	"public_model_daily_stats",
 	"system_config",
+	"config_change_audit",
+	"config_group_audit",
 	"user_audit_logs",
 	"admin_api_keys",
+	"admin_access_key_audit",
 	"shared_keys",
+	"admin_shared_key_audit",
 	"user_earnings",
 	"shared_key_earnings",
 	"withdrawals",
@@ -93,9 +97,13 @@ export const TABLE_CONFLICT_KEYS: Record<EtlTableName, string[]> = {
 	user_budget_reservations: ["request_id"],
 	public_model_daily_stats: ["stat_date", "model_id", "shard"],
 	system_config: ["key"],
+	config_change_audit: ["id"],
+	config_group_audit: ["id"],
 	user_audit_logs: ["id"],
 	admin_api_keys: ["id"],
+	admin_access_key_audit: ["id"],
 	shared_keys: ["id"],
+	admin_shared_key_audit: ["id"],
 	user_earnings: ["user_id"],
 	shared_key_earnings: ["id"],
 	withdrawals: ["id"],
@@ -112,6 +120,9 @@ export const ETL_EXCLUDED_SESSION_TABLES = [
 	"portal_sessions",
 	"admin_sessions",
 ] as const;
+
+/** Seeded by target migrations; D1 has no mutex table to copy or truncate. */
+export const ETL_TARGET_ONLY_TABLES = ["system_config_write_mutex"] as const;
 
 /** SQLite persists booleans as 0/1 while PostgreSQL requires true/false. */
 export const TABLE_BOOLEAN_COLUMNS: Partial<

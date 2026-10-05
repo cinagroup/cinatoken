@@ -45,7 +45,9 @@ export function draftPricesOk(d: PriceTripleDraft): boolean {
 	);
 }
 
-export function isLossPricing(value: Pick<PriceTripleDraft, 'metered' | 'charged'>): boolean {
+export function isLossPricing(
+	value: Pick<PriceTripleDraft, "metered" | "charged">
+): boolean {
 	const metered = parseDraftMoney(value.metered);
 	const charged = parseDraftMoney(value.charged);
 	if (metered == null || charged == null) {
@@ -67,7 +69,7 @@ function sortKeysDeep(value: unknown): unknown {
 	if (Array.isArray(value)) {
 		return value.map(sortKeysDeep);
 	}
-	if (value != null && typeof value === 'object') {
+	if (value != null && typeof value === "object") {
 		const obj = value as Record<string, unknown>;
 		const out: Record<string, unknown> = {};
 		for (const key of Object.keys(obj).sort()) {
@@ -94,7 +96,8 @@ export function resolveProviderCardStatus(input: {
 }): ProviderCardStatusFlags {
 	const isImplemented = input.isImplemented !== false;
 	return {
-		isActive: input.savedActiveId != null && input.providerId === input.savedActiveId,
+		isActive:
+			input.savedActiveId != null && input.providerId === input.savedActiveId,
 		isSelected: input.providerId === input.selectedId,
 		isDirty: isDraftDirty(input.draft, input.savedDraft),
 		isConfigured: input.isConfigured,
@@ -138,9 +141,9 @@ export function wouldClearSavedActiveCredentials(input: {
 
 /** 紧凑总览价格摘要：`S 0.003 · C 0.002 · M 0.001`（Standard / Charged / Metered）。 */
 export function formatPriceSummary(prices: PriceTripleDraft): string {
-	const standard = prices.standard.trim() || '—';
-	const charged = prices.charged.trim() || '—';
-	const metered = prices.metered.trim() || '—';
+	const standard = prices.standard.trim() || "—";
+	const charged = prices.charged.trim() || "—";
+	const metered = prices.metered.trim() || "—";
 	return `S ${standard} · C ${charged} · M ${metered}`;
 }
 
@@ -150,16 +153,23 @@ export type PriceSummaryParts = {
 	metered: string;
 };
 
-export function getPriceSummaryParts(prices: PriceTripleDraft): PriceSummaryParts {
+export function getPriceSummaryParts(
+	prices: PriceTripleDraft
+): PriceSummaryParts {
 	return {
-		standard: prices.standard.trim() || '—',
-		charged: prices.charged.trim() || '—',
-		metered: prices.metered.trim() || '—',
+		standard: prices.standard.trim() || "—",
+		charged: prices.charged.trim() || "—",
+		metered: prices.metered.trim() || "—",
 	};
 }
 
 /** 紧凑总览上显示为文字的异常/关键状态（不含普通「已配置」）。 */
-export type CompactStatusBadgeKind = 'active' | 'unsaved' | 'missing' | 'unavailable' | 'loss';
+export type CompactStatusBadgeKind =
+	| "active"
+	| "unsaved"
+	| "missing"
+	| "unavailable"
+	| "loss";
 
 /**
  * 紧凑徽章优先级：Active → 未保存 → 不可用/缺凭证 → 亏损。
@@ -170,18 +180,18 @@ export function resolveCompactStatusBadges(
 ): CompactStatusBadgeKind[] {
 	const badges: CompactStatusBadgeKind[] = [];
 	if (status.isActive) {
-		badges.push('active');
+		badges.push("active");
 	}
 	if (status.isDirty) {
-		badges.push('unsaved');
+		badges.push("unsaved");
 	}
 	if (!status.isImplemented) {
-		badges.push('unavailable');
+		badges.push("unavailable");
 	} else if (!status.isConfigured) {
-		badges.push('missing');
+		badges.push("missing");
 	}
 	if (status.isLossPricing) {
-		badges.push('loss');
+		badges.push("loss");
 	}
 	return badges;
 }

@@ -18,14 +18,15 @@ import {
 	type AdminDeepSeekEndpointBootstrapInput,
 } from "@/lib/services/admin/deepseek-endpoint-bootstrap";
 import { handleAdminRouteError } from "./error-response";
+import {
+	adminDomainContract,
+	domainAcknowledgement,
+} from "@/lib/services/admin/domain-contract";
 
 export const adminModelEndpointsRoutes = new Hono<AdminEnv>();
 
 adminModelEndpointsRoutes.use("*", requireAdminPrincipal);
-adminModelEndpointsRoutes.use("*", async (c, next) => {
-	c.header("Cache-Control", "private, no-store");
-	await next();
-});
+adminModelEndpointsRoutes.use("*", adminDomainContract);
 
 adminModelEndpointsRoutes.get("/", async (c) => {
 	try {
@@ -56,7 +57,12 @@ adminModelEndpointsRoutes.post("/", async (c) => {
 			c.get("principal").id
 		);
 		return c.json(
-			{ success: true, message: "Model endpoint created successfully", data },
+			{
+				success: true,
+				message: "Model endpoint created successfully",
+				data,
+				acknowledgement: domainAcknowledgement("endpoints", "create", data.id),
+			},
 			201
 		);
 	} catch (error) {
@@ -80,6 +86,7 @@ adminModelEndpointsRoutes.post("/bootstrap/deepseek", async (c) => {
 		return c.json({
 			success: true,
 			message: "Official DeepSeek endpoints processed",
+			acknowledgement: domainAcknowledgement("endpoints", "bootstrap"),
 			data,
 		});
 	} catch (error) {
@@ -120,6 +127,11 @@ adminModelEndpointsRoutes.patch("/:id", async (c) => {
 		return c.json({
 			success: true,
 			message: "Model endpoint updated successfully",
+			acknowledgement: domainAcknowledgement(
+				"endpoints",
+				"update",
+				c.req.param("id")
+			),
 			data,
 		});
 	} catch (error) {
@@ -133,6 +145,11 @@ adminModelEndpointsRoutes.delete("/:id", async (c) => {
 		return c.json({
 			success: true,
 			message: "Model endpoint deleted successfully",
+			acknowledgement: domainAcknowledgement(
+				"endpoints",
+				"delete",
+				c.req.param("id")
+			),
 		});
 	} catch (error) {
 		return handleAdminRouteError(c, error, "Failed to delete model endpoint");
@@ -147,7 +164,16 @@ adminModelEndpointsRoutes.post("/:id/routes/:routeTargetId", async (c) => {
 			c.req.param("routeTargetId")
 		);
 		return c.json(
-			{ success: true, message: "Route linked to model endpoint" },
+			{
+				success: true,
+				message: "Route linked to model endpoint",
+				acknowledgement: domainAcknowledgement(
+					"endpoints",
+					"link",
+					c.req.param("id"),
+					c.req.param("routeTargetId")
+				),
+			},
 			201
 		);
 	} catch (error) {
@@ -169,6 +195,12 @@ adminModelEndpointsRoutes.delete("/:id/routes/:routeTargetId", async (c) => {
 		return c.json({
 			success: true,
 			message: "Route unlinked from model endpoint",
+			acknowledgement: domainAcknowledgement(
+				"endpoints",
+				"unlink",
+				c.req.param("id"),
+				c.req.param("routeTargetId")
+			),
 		});
 	} catch (error) {
 		return handleAdminRouteError(

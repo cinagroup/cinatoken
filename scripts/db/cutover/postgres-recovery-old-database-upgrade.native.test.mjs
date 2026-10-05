@@ -2,7 +2,7 @@
 // Never uses DATABASE_URL or an existing PostgreSQL data directory.
 import assert from 'node:assert/strict';
 import { createHash, randomBytes, randomUUID } from 'node:crypto';
-import { readFile, readdir, writeFile } from 'node:fs/promises';
+import { readFile, writeFile } from 'node:fs/promises';
 import { dirname, join } from 'node:path';
 import { performance } from 'node:perf_hooks';
 import test from 'node:test';
@@ -12,7 +12,7 @@ import { startNativePostgres } from '../../../packages/core/src/test-support/pos
 import { createPostgresApiKeysRepository } from '../../../packages/core/src/db/postgres/api-keys.impl.ts';
 import { createPostgresRequestLogsRepository } from '../../../packages/core/src/db/postgres/request-logs.impl.ts';
 import { pgCoreSchema } from '../../../packages/core/src/storage/drizzle/schema.pg.ts';
-import { grantPostgresRuntime } from './grant-postgres-runtime.ts';
+import { grantPg73RuntimeFixture, listPg73Migrations } from './pg73-native-fixture.mjs';
 
 const g = 'cinatoken_gateway';
 const migrationDir = new URL('../../../packages/core/migrations-postgres/', import.meta.url);
@@ -112,7 +112,7 @@ test('native populated 0067 database upgrades through formal recovery migrations
       const migratorUrl = `postgres://cinatoken_gateway_migrator:${migratorPassword}@127.0.0.1:${cluster.port}/postgres`;
       await migrator.unsafe(`CREATE TABLE ${g}.schema_migrations (
         version text PRIMARY KEY, applied_at timestamptz NOT NULL DEFAULT now())`);
-      const files = (await readdir(migrationDir)).filter(name => name.endsWith('.sql')).sort();
+      const files = await listPg73Migrations();
       assert.equal(files.length, 73);
       assert.equal(files[66], '0067_batch_jobs.sql');
       assert.equal(files.at(-1), '0073_recovery_api_key_workspace_lock.sql');
@@ -223,7 +223,7 @@ test('native populated 0067 database upgrades through formal recovery migrations
         sqlState: '55P03', elapsedMs, waitEvidence, trafficDuringWait, rolledBack });
 
       for (const name of files.slice(68)) await apply(name);
-      await grantPostgresRuntime({ DATABASE_URL: migratorUrl });
+      await grantPg73RuntimeFixture({ cluster, migrator, migratorUrl });
       const after = await legacySnapshot(migrator);
       assert.deepEqual(after, before, '0068-0073 must not rewrite existing request logs');
       const [postHead] = await admin.unsafe(`SELECT count(*)::int AS n FROM ${g}.schema_migrations`);
@@ -260,7 +260,7 @@ test('native populated 0067 database upgrades through formal recovery migrations
         await tx.unsafe(await readFile(intentProposalUrl, 'utf8')).simple();
         await tx.unsafe(await readFile(outboxProposalUrl, 'utf8')).simple();
       });
-      await grantPostgresRuntime({ DATABASE_URL: migratorUrl });
+      await grantPg73RuntimeFixture({ cluster, migrator, migratorUrl });
       const oldAfterSwitch = await ordinaryWrite(ordinary, 'after-guard');
       assert.equal(oldAfterSwitch.budget_spent, '1.030000');
       const readerAfterGuard = await requestLogs.getRequestLogsByKeyId('key', 1, 10);

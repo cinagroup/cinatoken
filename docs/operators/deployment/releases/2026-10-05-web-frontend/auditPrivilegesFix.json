@@ -1,0 +1,100 @@
+{
+  "at": "2026-10-05T16:01:56.6954423+08:00",
+  "actualExit": 0,
+  "stopped": true,
+  "source": [
+    {
+      "path": "C:\\cinagroup\\cinatoken\\packages\\core\\src\\db\\postgres\\system-config.impl.ts",
+      "bytes": 7897,
+      "sha256": "7e3458b771c5a998b2eb8caf68ff753ea99af385448b063ba6b9801ce930c1ad"
+    },
+    {
+      "path": "C:\\cinagroup\\cinatoken\\packages\\core\\src\\db\\system-config-audit.test.ts",
+      "bytes": 29187,
+      "sha256": "f0290ac0b4a4a0b3b5757fefaee0d7db34febf7f37f875eed5c475b171057f47"
+    },
+    {
+      "path": "C:\\cinagroup\\cinatoken\\packages\\core\\src\\db\\system-config-audit-privileges.pglite.test.mjs",
+      "bytes": 9127,
+      "sha256": "5239ac3b372865e58002f4a534105835d185f3d9dec96b9101e54a5186fbe9d9"
+    },
+    {
+      "path": "C:\\cinagroup\\cinatoken\\packages\\core\\package.json",
+      "bytes": 13537,
+      "sha256": "eef3793fdc1098c901c18a0e97160d4204fb765a786c3445bc558ce7efc49e1e"
+    }
+  ],
+  "sourceScope": "Core PGconfig impl, existing audit unit stub, new actualACL PGlite test, Core package entry and pinned test-only dependency",
+  "grantChanged": false,
+  "formalSqlChanged": false,
+  "rootLockChangedByThisAgent": false,
+  "adminWebOrMdChanged": false,
+  "gitWrites": 0,
+  "externalMutations": 0,
+  "targetedTests": {
+    "command": "node --import tsx --test packages/core/src/db/system-config-audit-privileges.pglite.test.mjs packages/core/src/db/system-config-audit.test.ts packages/core/src/db/system-config-group.contract.test.ts",
+    "actualExit": 0,
+    "tests": 101,
+    "pass": 101,
+    "fail": 0,
+    "skip": 0,
+    "cancel": 0,
+    "node": "24.14.1",
+    "PGlite": "0.5.8",
+    "mode": "actual PGWASM SQL+SET ROLE, single local connection, no native isolation/pool proof"
+  },
+  "coreTypecheck": {
+    "command": "node --max-old-space-size=4096 node_modules/typescript/bin/tsc -p packages/core/tsconfig.json --noEmit --pretty false --incremental false",
+    "actualExit": 0
+  },
+  "whitespaceCheckActualExit": 0,
+  "oldWriterCounterexample": {
+    "actualExit": 1,
+    "purpose": "Same new actual role regression run before modifying implementation proves RETURNING id cannot run under INSERT-only audit ACL",
+    "failure": "permission denied for table config_change_audit",
+    "retained": true
+  },
+  "packageWriteFailure": {
+    "commandActualExit": 0,
+    "filesystemWriteSucceeded": false,
+    "error": "file mapped region prevented WriteAllText; no unit entry change",
+    "recoveredWith": "apply_patch once; Corepackage writer nowSTOP"
+  },
+  "evidence": [
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-release-config-audit-acl-fix-5b9a1bac32f049ae87b95fc8eaf604a6\\baseline-old-writer-privileges.log",
+      "bytes": 19952,
+      "sha256": "f2b8ebc391bccfbc23ab9b2a1bdbd978fd01e44d0bc29889b71a31fb78fdbb46"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-release-config-audit-acl-fix-5b9a1bac32f049ae87b95fc8eaf604a6\\core-package.before.json",
+      "bytes": 13448,
+      "sha256": "53f6478dfb4f7a2ec8578a0e812517eac725a43a2e93255b609bf59e51eb70cf"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-release-config-audit-acl-fix-5b9a1bac32f049ae87b95fc8eaf604a6\\fixed-config-audit-targeted-tests.log",
+      "bytes": 10940,
+      "sha256": "a12159b8511a12f81122a68293380bf5799a8a7077d85c4bfadc95122584d593"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-release-config-audit-acl-fix-5b9a1bac32f049ae87b95fc8eaf604a6\\fixed-core-typecheck.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-release-config-audit-acl-fix-5b9a1bac32f049ae87b95fc8eaf604a6\\required-production-migration-catalog-preflight-v1.json",
+      "bytes": 4083,
+      "sha256": "43f5bf76b8249e7a277211982a87ac7892abb130af2693ab61e5f2877e8a7345"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-release-config-audit-acl-fix-5b9a1bac32f049ae87b95fc8eaf604a6\\system-config-audit.test.before.ts",
+      "bytes": 29199,
+      "sha256": "1225112ada390d023508c3272ef8553ad9efb64ae9fa3c6abaa120eead5e29de"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-release-config-audit-acl-fix-5b9a1bac32f049ae87b95fc8eaf604a6\\system-config.impl.before.ts",
+      "bytes": 7769,
+      "sha256": "2a62720d0543c9b6ba2dc80480128c107156d2e25193549da8261b46c14ed0e3"
+    }
+  ]
+}

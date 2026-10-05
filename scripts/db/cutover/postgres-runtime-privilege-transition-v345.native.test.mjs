@@ -2,12 +2,12 @@
 // Revocations below are local probes, not a migration or an activation recipe.
 import assert from 'node:assert/strict';
 import { createHash, randomBytes, randomUUID } from 'node:crypto';
-import { readFile, readdir, writeFile } from 'node:fs/promises';
+import { readFile, writeFile } from 'node:fs/promises';
 import { dirname, join } from 'node:path';
 import test from 'node:test';
 import postgres from 'postgres';
 import { startNativePostgres } from '../../../packages/core/src/test-support/postgres-native-cluster.mjs';
-import { grantPostgresRuntime } from './grant-postgres-runtime.ts';
+import { grantPg73RuntimeFixture, listPg73Migrations } from './pg73-native-fixture.mjs';
 
 const schema = 'cinatoken_gateway';
 const migrations = new URL('../../../packages/core/migrations-postgres/', import.meta.url);
@@ -81,7 +81,7 @@ test('PG73 runtime privilege transition requires writer separation and grant-rer
       clients.push(migrator, runtime);
       await migrator.unsafe(`CREATE TABLE ${schema}.schema_migrations
         (version text PRIMARY KEY, applied_at timestamptz NOT NULL DEFAULT now())`);
-      const names = (await readdir(migrations)).filter(name => name.endsWith('.sql')).sort();
+      const names = await listPg73Migrations();
       assert.equal(names.length, 73);
       assert.equal(names.at(-1), '0073_recovery_api_key_workspace_lock.sql');
       const corpus = [];
@@ -101,7 +101,7 @@ test('PG73 runtime privilege transition requires writer separation and grant-rer
 
       const migratorUrl = `postgres://cinatoken_gateway_migrator:${migratorPassword}`
         + `@127.0.0.1:${cluster.port}/postgres`;
-      await grantPostgresRuntime({ DATABASE_URL: migratorUrl });
+      await grantPg73RuntimeFixture({ cluster, migrator, migratorUrl });
       const before = await privileges(migrator);
       assert.deepEqual(before, { earning_insert: true, earning_update: false,
         seller_account_insert: true, seller_account_update: true,
@@ -199,7 +199,7 @@ test('PG73 runtime privilege transition requires writer separation and grant-rer
       '900000');
       stage('targeted-revokes-break-legacy-writers-and-protect-balances');
 
-      await grantPostgresRuntime({ DATABASE_URL: migratorUrl });
+      await grantPg73RuntimeFixture({ cluster, migrator, migratorUrl });
       const reopened = await privileges(migrator);
       assert.deepEqual(reopened, before);
       stage('current-grant-rerun-reopens-direct-writes', { privileges: reopened });

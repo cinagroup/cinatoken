@@ -3,6 +3,7 @@ import test from 'node:test';
 import {resolve} from 'node:path';
 import {pathToFileURL} from 'node:url';
 import {createHash} from 'node:crypto';
+import {readFileSync,readdirSync} from 'node:fs';
 import {byokCleanupFixture} from './byok-d1-cleanup-fixture.mjs';
 import {BYOK_D1_CONTROL_KEY} from './byok-d1-one-shot.ts';
 const {captureByokD1CleanupBaseline,createByokD1Cleanup,BYOK_CLEANUP_TABLES}=await import(process.env.BYOK_D1_CLEANUP_MODULE
@@ -33,6 +34,25 @@ test('baseline refuses incomplete 51-table migration-only schema and wrong schem
   const current=f.schema(),digest=createHash('sha256').update(JSON.stringify(current)).digest('hex');
   assert.equal(current.filter(r=>r.type==='table'&&!r.name.startsWith('sqlite_')).length,51);
   await assert.rejects(captureByokD1CleanupBaseline(f.raw,digest),/all_tables/);
+});
+
+test('formal migrations69–77 cannot be relabelled as the frozen68 cleanup candidate',async t=>{
+  const f=byokCleanupFixture();t.after(()=>f.close());
+  assert.equal(f.counts().d1_migrations,68);assert.equal(BYOK_CLEANUP_TABLES.length,56);
+  const directory=new URL('../../../core/migrations-d1/',import.meta.url);
+  const later=readdirSync(directory).filter(name=>name.endsWith('.sql')&&Number(name.slice(0,4))>=69&&Number(name.slice(0,4))<=77).sort();
+  assert.equal(later.length,9);
+  for(const name of later){
+    f.db.exec(readFileSync(new URL(name,directory),'utf8'));
+    f.db.prepare('INSERT INTO d1_migrations(id,name) VALUES(?,?)').run(Number(name.slice(0,4)),name);
+  }
+  assert.equal(f.db.prepare('SELECT count(*) n FROM d1_migrations').get().n,77);
+  const before=f.db.prepare('SELECT type,name,tbl_name,sql FROM sqlite_master ORDER BY type,name').all();
+  await assert.rejects(captureByokD1CleanupBaseline(f.raw,f.schemaSha256),/schema_mismatch/);
+  const digest=createHash('sha256').update(JSON.stringify(f.schema())).digest('hex');
+  await assert.rejects(captureByokD1CleanupBaseline(f.raw,digest),/all_tables/);
+  assert.equal(f.batches.length,0);
+  assert.deepEqual(f.db.prepare('SELECT type,name,tbl_name,sql FROM sqlite_master ORDER BY type,name').all(),before);
 });
 test('live legacy admin cannot establish a cleanup baseline',async t=>{
   const f=byokCleanupFixture();t.after(()=>f.close());f.db.exec("UPDATE admin_api_keys SET status='active'");

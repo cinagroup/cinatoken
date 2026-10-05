@@ -1,10 +1,13 @@
-import type { RequestPresetVersionRow, RequestPresetWithVersionRow } from '@octafuse/core';
+import type {
+	RequestPresetVersionRow,
+	RequestPresetWithVersionRow,
+} from "@octafuse/core";
 
 function parseConfig(configJson: string): Record<string, unknown> | null {
 	try {
 		const parsed = JSON.parse(configJson) as unknown;
-		return parsed && typeof parsed === 'object' && !Array.isArray(parsed)
-			? parsed as Record<string, unknown>
+		return parsed && typeof parsed === "object" && !Array.isArray(parsed)
+			? (parsed as Record<string, unknown>)
 			: null;
 	} catch {
 		return null;

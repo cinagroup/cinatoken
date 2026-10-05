@@ -1,11 +1,12 @@
 // Review-only, owned loopback PostgreSQL 18.6 fixture for the local one-shot runner.
 import assert from 'node:assert/strict';
 import { createHash, randomBytes, randomUUID } from 'node:crypto';
-import { readFile, readdir, writeFile } from 'node:fs/promises';
+import { readFile, writeFile } from 'node:fs/promises';
 import { dirname, join } from 'node:path';
 import test from 'node:test';
 import postgres from 'postgres';
 import { startNativePostgres } from '../../../packages/core/src/test-support/postgres-native-cluster.mjs';
+import { listPg73Migrations } from './pg73-native-fixture.mjs';
 import { createPostgresSharedEarningConsumer, SHARED_EARNING_CONSUMER_ROLE,
 } from '../../../packages/proxy/src/runtime/postgres-shared-earning-consumer.ts';
 
@@ -80,7 +81,7 @@ test('native PG18 one-shot shared earning runner uses only dedicated LOGIN and r
       clients.push(migrator, runtime, producer, consumerA, consumerB);
       await migrator.unsafe(`CREATE TABLE ${gateway}.schema_migrations
         (version text PRIMARY KEY, applied_at timestamptz NOT NULL DEFAULT now())`);
-      const files = (await readdir(migrationPath)).filter(name => name.endsWith('.sql')).sort();
+const files = await listPg73Migrations();
       assert.equal(files.length, 73);
       const corpus = [];
       for (const name of files) {

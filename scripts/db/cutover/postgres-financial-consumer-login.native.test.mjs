@@ -2,7 +2,7 @@
 // Never reads an ambient database URL and never provisions a remote origin.
 import assert from 'node:assert/strict';
 import { createHash, randomBytes, randomUUID } from 'node:crypto';
-import { readFile, readdir, writeFile } from 'node:fs/promises';
+import { readFile, writeFile } from 'node:fs/promises';
 import { dirname, join } from 'node:path';
 import test from 'node:test';
 import postgres from 'postgres';
@@ -14,7 +14,7 @@ import { createUsageSettlementFactsRepositoryPostgres } from '../../../packages/
 import { sample } from '../../../packages/core/src/storage/recovery/usage-settlement-test-support.mjs';
 import { createPostgresFinancialConsumer, FINANCIAL_RECOVERY_ROLE } from '../../../packages/proxy/src/runtime/postgres-financial-consumer.ts';
 import { RECOVERY_TABLE_GRANTS, RECOVERY_FUNCTION_GRANTS } from './postgres-recovery-role-policy.ts';
-import { grantPostgresRuntime } from './grant-postgres-runtime.ts';
+import { grantPg73RuntimeFixture, listPg73Migrations } from './pg73-native-fixture.mjs';
 
 const schema = 'cinatoken_gateway';
 const migrations = new URL('../../../packages/core/migrations-postgres/', import.meta.url);
@@ -133,7 +133,7 @@ test('native PG18 financial consumer direct LOGIN and least-privilege fixture',
       const migratorUrl = `postgres://cinatoken_gateway_migrator:${migratorPassword}@127.0.0.1:${cluster.port}/postgres`;
       await migrator.unsafe(`CREATE TABLE ${schema}.schema_migrations (
         version text PRIMARY KEY, applied_at timestamptz NOT NULL DEFAULT now())`);
-      const files = (await readdir(migrations)).filter(name => name.endsWith('.sql')).sort();
+      const files = await listPg73Migrations();
       assert.equal(files.length, 73);
       for (const name of files) {
         const body = await readFile(new URL(name, migrations), 'utf8');
@@ -142,13 +142,13 @@ test('native PG18 financial consumer direct LOGIN and least-privilege fixture',
           await tx.unsafe(`INSERT INTO ${schema}.schema_migrations(version) VALUES ($1)`, [name]);
         });
       }
-      await grantPostgresRuntime({ DATABASE_URL: migratorUrl });
+      await grantPg73RuntimeFixture({ cluster, migrator, migratorUrl });
       const guard = await readFile(guardSwitch, 'utf8');
       await migrator.begin(async tx => {
         await tx.unsafe("SET LOCAL cinatoken.recovery_log_guard_activation = 'reviewed-v1'");
         await tx.unsafe(guard).simple();
       });
-      await grantPostgresRuntime({ DATABASE_URL: migratorUrl });
+      await grantPg73RuntimeFixture({ cluster, migrator, migratorUrl });
       stage('formal-migrations-and-guard', { count: files.length });
       await provisionFixture(admin, migrator, consumerPassword);
       const consumerRaw = ownClient(FINANCIAL_RECOVERY_ROLE, consumerPassword, 'financial-direct-login');

@@ -16,8 +16,8 @@ import { applyUserBudgetTransitionWithAuditTx } from '../storage/critical-write-
 import {
 	budgetLazyResetNeedsPersist,
 	computeFirstReset,
-	getUserInfo,
 	maybeResetBudget,
+	normalizeBudgetResetAt,
 	persistLazyBudgetResetIfNeeded,
 } from './user-service';
 import { isSafeUserBudgetMicros, userBudgetAmount } from '../db/user-budget-reservation-types';
@@ -32,7 +32,23 @@ export type BudgetTransitionParams = {
 	reset_spent?: boolean;
 	metadata?: Record<string, unknown>;
 	reason?: string;
+	/** Optional confirmation guard: a stale preview must never silently recalculate. */
+	expected_before?: BudgetTransitionSnapshot;
 };
+
+export class BudgetTransitionStalePreviewError extends Error {
+	constructor() {
+		super('Budget transition preview is stale');
+		this.name = 'BudgetTransitionStalePreviewError';
+	}
+}
+
+export class BudgetTransitionInvalidTargetError extends Error {
+	constructor() {
+		super('Budget transition would produce a negative budget limit');
+		this.name = 'BudgetTransitionInvalidTargetError';
+	}
+}
 
 export type BudgetTransitionSnapshot = {
 	budget_max: number | null;
@@ -40,6 +56,7 @@ export type BudgetTransitionSnapshot = {
 	budget_spent: number;
 	budget_period: string;
 	budget_reset_at: string | null;
+	budget_epoch: number;
 	budget_reserved_micros: number;
 };
 
@@ -57,14 +74,29 @@ function snapshotFromUserRow(row: UserRow): BudgetTransitionSnapshot {
 		row.budget_max,
 		row.budget_base
 	);
+	const due = budgetLazyResetNeedsPersist(
+		{ budget_spent: row.budget_spent, budget_reset_at: row.budget_reset_at, budget_max: row.budget_max },
+		{ budget_spent: lazy.budget_spent, budget_reset_at: lazy.budget_reset_at, budget_max: lazy.budget_max },
+	);
 	return {
 		budget_max: lazy.budget_max,
 		budget_base: roundGatewayMoney(Number(row.budget_base ?? 0)),
 		budget_spent: lazy.budget_spent,
 		budget_period: row.budget_period,
 		budget_reset_at: lazy.budget_reset_at,
-		budget_reserved_micros: row.budget_reserved_micros,
+		budget_epoch: row.budget_epoch + (due ? 1 : 0),
+		budget_reserved_micros: due ? 0 : row.budget_reserved_micros,
 	};
+}
+
+function matchesExpectedBefore(actual: BudgetTransitionSnapshot, expected: BudgetTransitionSnapshot): boolean {
+	return actual.budget_max === expected.budget_max &&
+		actual.budget_base === expected.budget_base &&
+		actual.budget_spent === expected.budget_spent &&
+		actual.budget_period === expected.budget_period &&
+		normalizeBudgetResetAt(actual.budget_reset_at) === normalizeBudgetResetAt(expected.budget_reset_at) &&
+		actual.budget_epoch === expected.budget_epoch &&
+		actual.budget_reserved_micros === expected.budget_reserved_micros;
 }
 
 function resolveBudgetResetAt(input: BudgetTransitionParams): string | null {
@@ -95,6 +127,9 @@ export function computeBudgetTransition(
 			? roundGatewayMoney(currentMax - currentSpent - currentReserved)
 			: 0;
 	const nextMax = roundGatewayMoney(targetBase + carryover);
+	if (!Number.isFinite(nextMax) || nextMax < 0) {
+		throw new BudgetTransitionInvalidTargetError();
+	}
 	const nextSpent = resetSpent ? 0 : currentSpent;
 	const budgetResetAt = resolveBudgetResetAt(input);
 
@@ -106,6 +141,7 @@ export function computeBudgetTransition(
 			budget_spent: nextSpent,
 			budget_period: input.budget_period,
 			budget_reset_at: budgetResetAt,
+			budget_epoch: before.budget_epoch + (resetSpent ? 1 : 0),
 			budget_reserved_micros: resetSpent ? 0 : before.budget_reserved_micros,
 		},
 		carryover,
@@ -125,25 +161,15 @@ function mergeMetadataJson(
 	return JSON.stringify({ ...existing, ...metadataPatch });
 }
 
-/**
- * 只读预览：先触发与 `getUserInfo` 一致的懒重置，再计算 before/after。
- */
+/** Read-only preview of the effective state; a due lazy reset is simulated, not persisted. */
 export async function previewBudgetTransition(
 	repos: GatewayRepositories,
 	userId: string,
 	input: BudgetTransitionParams
 ): Promise<BudgetTransitionPreview | null> {
-	const info = await getUserInfo(repos, userId);
-	if (!info) return null;
-	const before: BudgetTransitionSnapshot = {
-		budget_max: info.budget_max,
-		budget_base: info.budget_base,
-		budget_spent: info.budget_spent,
-		budget_period: info.budget_period,
-		budget_reset_at: info.budget_reset_at,
-		budget_reserved_micros: info.budget_reserved_micros,
-	};
-	return computeBudgetTransition(before, input);
+	const row = await repos.users.getById(userId);
+	if (!row) return null;
+	return computeBudgetTransition(snapshotFromUserRow(row), input);
 }
 
 async function applyBudgetTransitionAttempt(
@@ -155,6 +181,10 @@ async function applyBudgetTransitionAttempt(
 ): Promise<{ preview: BudgetTransitionPreview; applied: BudgetTransitionSnapshot } | null> {
 	const initialRow = await repos.users.getById(userId);
 	if (!initialRow) return null;
+	// Reject a stale confirmation before even the due lazy-reset write below.
+	if (input.expected_before && !matchesExpectedBefore(snapshotFromUserRow(initialRow), input.expected_before)) {
+		throw new BudgetTransitionStalePreviewError();
+	}
 
 	// A due lazy reset is itself a real accounting-period transition. Persist it
 	// before applying an admin transition so even `reset_spent: false` cannot
@@ -171,6 +201,9 @@ async function applyBudgetTransitionAttempt(
 	if (!row) return null;
 
 	const before = snapshotFromUserRow(row);
+	if (input.expected_before && !matchesExpectedBefore(before, input.expected_before)) {
+		throw new BudgetTransitionStalePreviewError();
+	}
 	if (budgetLazyResetNeedsPersist(
 		{
 			budget_spent: row.budget_spent,

@@ -7,8 +7,11 @@ import {
 	TrashIcon,
 } from "@heroicons/react/24/outline";
 import { useTranslations } from "next-intl";
-import { useEffect, useId, useState } from "react";
-import { protocolFormHasOverrides, protocolFormIsConfigured } from "../provider-utils";
+import { useId, useState } from "react";
+import {
+	protocolFormHasOverrides,
+	protocolFormIsConfigured,
+} from "../provider-utils";
 import type { UpstreamProtocol } from "@octafuse/core/upstream-protocol";
 import type {
 	GatewayProvider,
@@ -38,13 +41,32 @@ const inputClass =
 
 const PROTOCOL_TABS: Array<{
 	key: UpstreamProtocol;
-	labelKey: "openaiOptional" | "anthropicOptional" | "geminiOptional" | "dashscopeOptional";
+	labelKey:
+		| "openaiOptional"
+		| "anthropicOptional"
+		| "geminiOptional"
+		| "dashscopeOptional";
 }> = [
 	{ key: "openai", labelKey: "openaiOptional" },
 	{ key: "anthropic", labelKey: "anthropicOptional" },
 	{ key: "gemini", labelKey: "geminiOptional" },
 	{ key: "dashscope", labelKey: "dashscopeOptional" },
 ];
+
+function firstConfiguredProtocol(formData: ProviderFormData): UpstreamProtocol {
+	return (
+		PROTOCOL_TABS.find(({ key }) =>
+			protocolFormIsConfigured(key, formData[key])
+		)?.key ?? "openai"
+	);
+}
+
+type EndpointTabSelection = {
+	open: boolean;
+	providerId: string | null;
+	duplicateSourceId: string | null;
+	tab: UpstreamProtocol;
+};
 
 function ProtocolFields(props: {
 	baseUrlLabel: string;
@@ -272,16 +294,19 @@ function ProtocolFields(props: {
 							<>
 								{form.legacyPerAction ? (
 									<div className="rounded-md border border-amber-200 bg-amber-50 px-3 py-2 text-xs text-amber-900">
-										<p className="font-medium">{capLabels.legacyPerActionNotice}</p>
+										<p className="font-medium">
+											{capLabels.legacyPerActionNotice}
+										</p>
 										<ul className="mt-1 list-inside list-disc break-all">
 											{form.legacyPerAction.generateContent ? (
 												<li>
-													generateContent: {form.legacyPerAction.generateContent}
+													{"generateContent: "}
+													{form.legacyPerAction.generateContent}
 												</li>
 											) : null}
 											{form.legacyPerAction.streamGenerateContent ? (
 												<li>
-													streamGenerateContent:{' '}
+													streamGenerateContent:{" "}
 													{form.legacyPerAction.streamGenerateContent}
 												</li>
 											) : null}
@@ -380,37 +405,52 @@ export function ProviderModal(props: ProviderModalProps) {
 	const t = useTranslations("providers.modal");
 	const tCommon = useTranslations("common");
 	const titleId = useId();
-	const [endpointTab, setEndpointTab] = useState<UpstreamProtocol>("openai");
-
-	useEffect(() => {
-		if (!open) return;
-		const firstConfigured = PROTOCOL_TABS.find(({ key }) =>
-			protocolFormIsConfigured(key, formData[key])
-		);
-		setEndpointTab(firstConfigured?.key ?? "openai");
-		// 仅在打开不同供应商时选中已配置协议；输入过程中不重置 Tab。
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [open, editingProvider?.id, duplicateSourceId]);
+	const providerId = editingProvider?.id ?? null;
+	const [tabSelection, setTabSelection] = useState<EndpointTabSelection>(
+		() => ({
+			open,
+			providerId,
+			duplicateSourceId,
+			tab: open ? firstConfiguredProtocol(formData) : "openai",
+		})
+	);
+	if (
+		tabSelection.open !== open ||
+		(open &&
+			(tabSelection.providerId !== providerId ||
+				tabSelection.duplicateSourceId !== duplicateSourceId))
+	) {
+		// Preserve the chosen tab while editing; reset only when a modal opens or its source changes.
+		setTabSelection({
+			open,
+			providerId,
+			duplicateSourceId,
+			tab: open ? firstConfiguredProtocol(formData) : tabSelection.tab,
+		});
+	}
+	const endpointTab = tabSelection.tab;
+	const setEndpointTab = (tab: UpstreamProtocol) =>
+		setTabSelection((current) => ({ ...current, tab }));
 
 	if (!open) return null;
 
 	const capLabels = {
-		chat: t('capChat'),
-		responses: t('capResponses'),
-		imagesGenerations: t('capImagesGenerations'),
-		imagesEdits: t('capImagesEdits'),
-		audioTranscriptions: t('capAudioTranscriptions'),
-		audioTranscriptionsMultimodal: t('capAudioTranscriptionsMultimodal'),
-		audioTranscriptionsTasks: t('capAudioTranscriptionsTasks'),
-		audioSpeech: t('capAudioSpeech'),
-		audioSpeechMultimodal: t('capAudioSpeechMultimodal'),
-		audioRealtimeInference: t('capAudioRealtimeInference'),
-		audioRealtimeSession: t('capAudioRealtimeSession'),
-		audioHotwords: t('capAudioHotwords'),
-		audioVoices: t('capAudioVoices'),
-		messages: t('capMessages'),
-		modelsGenerate: t('capModelsGenerate'),
-		legacyPerActionNotice: t('legacyPerActionNotice'),
+		chat: t("capChat"),
+		responses: t("capResponses"),
+		imagesGenerations: t("capImagesGenerations"),
+		imagesEdits: t("capImagesEdits"),
+		audioTranscriptions: t("capAudioTranscriptions"),
+		audioTranscriptionsMultimodal: t("capAudioTranscriptionsMultimodal"),
+		audioTranscriptionsTasks: t("capAudioTranscriptionsTasks"),
+		audioSpeech: t("capAudioSpeech"),
+		audioSpeechMultimodal: t("capAudioSpeechMultimodal"),
+		audioRealtimeInference: t("capAudioRealtimeInference"),
+		audioRealtimeSession: t("capAudioRealtimeSession"),
+		audioHotwords: t("capAudioHotwords"),
+		audioVoices: t("capAudioVoices"),
+		messages: t("capMessages"),
+		modelsGenerate: t("capModelsGenerate"),
+		legacyPerActionNotice: t("legacyPerActionNotice"),
 	};
 
 	return (
@@ -504,7 +544,9 @@ export function ProviderModal(props: ProviderModalProps) {
 								</div>
 								<div>
 									<label className="mb-1 block text-sm font-medium text-gray-700">
-										{editingProvider ? t("apiKeyOptional") : t("apiKeyRequired")}
+										{editingProvider
+											? t("apiKeyOptional")
+											: t("apiKeyRequired")}
 									</label>
 									<input
 										type="password"
@@ -531,7 +573,10 @@ export function ProviderModal(props: ProviderModalProps) {
 									<select
 										value={formData.shared_channel_type}
 										onChange={(e) =>
-											onFormChange({ ...formData, shared_channel_type: e.target.value })
+											onFormChange({
+												...formData,
+												shared_channel_type: e.target.value,
+											})
 										}
 										className="w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
 									>
@@ -541,7 +586,9 @@ export function ProviderModal(props: ProviderModalProps) {
 										<option value="zhipu">Zhipu GLM</option>
 										<option value="deepseek">DeepSeek</option>
 									</select>
-									<p className="mt-1 text-xs text-gray-500">{t("sharedChannelHint")}</p>
+									<p className="mt-1 text-xs text-gray-500">
+										{t("sharedChannelHint")}
+									</p>
 								</div>
 							</div>
 							<div className="flex min-h-0 flex-col">
@@ -586,7 +633,10 @@ export function ProviderModal(props: ProviderModalProps) {
 							>
 								{PROTOCOL_TABS.map(({ key, labelKey }) => {
 									const selected = endpointTab === key;
-									const configured = protocolFormIsConfigured(key, formData[key]);
+									const configured = protocolFormIsConfigured(
+										key,
+										formData[key]
+									);
 									return (
 										<button
 											key={key}

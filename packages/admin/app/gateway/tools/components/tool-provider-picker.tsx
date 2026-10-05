@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import type { ReactNode } from 'react';
-import { useTranslations } from 'next-intl';
+import type { ReactNode } from "react";
+import { useTranslations } from "next-intl";
 import {
 	formatPriceSummary,
 	getPriceSummaryParts,
@@ -10,7 +10,7 @@ import {
 	type CompactStatusBadgeKind,
 	type PriceTripleDraft,
 	type ProviderCardStatusFlags,
-} from './provider-card-state';
+} from "./provider-card-state";
 
 export type ToolProviderPickerItem = {
 	id: string;
@@ -20,16 +20,16 @@ export type ToolProviderPickerItem = {
 };
 
 const BADGE_CLASS: Record<CompactStatusBadgeKind, string> = {
-	active: 'bg-emerald-50 text-emerald-800 ring-emerald-200',
-	unsaved: 'bg-amber-50 text-amber-800 ring-amber-200',
-	missing: 'bg-red-50 text-red-700 ring-red-200',
-	unavailable: 'bg-gray-100 text-gray-600 ring-gray-200',
-	loss: 'bg-amber-50 text-amber-900 ring-amber-300',
+	active: "bg-emerald-50 text-emerald-800 ring-emerald-200",
+	unsaved: "bg-amber-50 text-amber-800 ring-amber-200",
+	missing: "bg-red-50 text-red-700 ring-red-200",
+	unavailable: "bg-gray-100 text-gray-600 ring-gray-200",
+	loss: "bg-amber-50 text-amber-900 ring-amber-300",
 };
 
 function cardClassName(status: ProviderCardStatusFlags): string {
 	const base =
-		'flex h-[4.5rem] flex-col justify-between rounded-md border px-2.5 py-2 text-left transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500';
+		"flex h-[4.5rem] flex-col justify-between rounded-md border px-2.5 py-2 text-left transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500";
 	if (status.isSelected) {
 		return `${base} border-blue-400 bg-blue-50/60 ring-1 ring-blue-200`;
 	}
@@ -47,11 +47,11 @@ function cardClassName(status: ProviderCardStatusFlags): string {
 
 /** 页面级提示 + 价格图例（各工具区不再重复）。 */
 export function ToolProviderOverviewHints() {
-	const t = useTranslations('tools.providerCards');
+	const t = useTranslations("tools.providerCards");
 	return (
 		<div className="mb-4 flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
-			<p className="text-xs text-gray-500">{t('selectHint')}</p>
-			<p className="text-[10px] text-gray-400">{t('priceLegend')}</p>
+			<p className="text-xs text-gray-500">{t("selectHint")}</p>
+			<p className="text-[10px] text-gray-400">{t("priceLegend")}</p>
 		</div>
 	);
 }
@@ -72,7 +72,7 @@ export function ToolOverviewSection({
 	headerExtra?: ReactNode;
 	children: ReactNode;
 }) {
-	const t = useTranslations('tools.providerCards');
+	const t = useTranslations("tools.providerCards");
 	return (
 		<section
 			id={id}
@@ -84,15 +84,18 @@ export function ToolOverviewSection({
 						<h2 className="text-base font-semibold text-gray-900">{title}</h2>
 						{activeLabel ? (
 							<span className="inline-flex items-center rounded-full bg-emerald-50 px-2 py-0.5 text-[10px] font-medium text-emerald-800 ring-1 ring-inset ring-emerald-200">
-								{t('activeSummary', { name: activeLabel })}
+								{t("activeSummary", { name: activeLabel })}
 							</span>
 						) : (
 							<span className="inline-flex items-center rounded-full bg-gray-50 px-2 py-0.5 text-[10px] font-medium text-gray-500 ring-1 ring-inset ring-gray-200">
-								{t('noActive')}
+								{t("noActive")}
 							</span>
 						)}
 					</div>
-					<p className="mt-0.5 line-clamp-1 text-xs text-gray-500" title={description}>
+					<p
+						className="mt-0.5 line-clamp-1 text-xs text-gray-500"
+						title={description}
+					>
 						{description}
 					</p>
 				</div>
@@ -105,9 +108,11 @@ export function ToolOverviewSection({
 
 function PriceSummaryLine({ prices }: { prices: PriceTripleDraft }) {
 	const parts = getPriceSummaryParts(prices);
-	const tPrices = useTranslations('tools.unitPrices');
+	const tPrices = useTranslations("tools.unitPrices");
 	const summary = formatPriceSummary(prices);
-	const tip = `${tPrices('standard')} (S) · ${tPrices('charged')} (C) · ${tPrices('metered')} (M)`;
+	const tip = `${tPrices("standard")} (S) · ${tPrices(
+		"charged"
+	)} (C) · ${tPrices("metered")} (M)`;
 
 	return (
 		<p
@@ -135,19 +140,19 @@ export function ToolProviderPicker({
 	items: ToolProviderPickerItem[];
 	onSelect: (id: string) => void;
 }) {
-	const t = useTranslations('tools.providerCards');
+	const t = useTranslations("tools.providerCards");
 	const labelFor = (kind: CompactStatusBadgeKind): string => {
 		switch (kind) {
-			case 'active':
-				return t('active');
-			case 'unsaved':
-				return t('unsaved');
-			case 'missing':
-				return t('missingCredentials');
-			case 'unavailable':
-				return t('unavailable');
-			case 'loss':
-				return t('lossPricing');
+			case "active":
+				return t("active");
+			case "unsaved":
+				return t("unsaved");
+			case "missing":
+				return t("missingCredentials");
+			case "unavailable":
+				return t("unavailable");
+			case "loss":
+				return t("lossPricing");
 		}
 	};
 
@@ -155,7 +160,7 @@ export function ToolProviderPicker({
 		<div
 			className="grid grid-cols-1 gap-2 sm:grid-cols-2 xl:grid-cols-4"
 			role="group"
-			aria-label={t('selectHint')}
+			aria-label={t("selectHint")}
 		>
 			{items.map((item) => {
 				const badges = resolveCompactStatusBadges(item.status);
@@ -177,8 +182,8 @@ export function ToolProviderPicker({
 								{configuredDot ? (
 									<span
 										className="h-1.5 w-1.5 rounded-full bg-slate-400"
-										title={t('configured')}
-										aria-label={t('configured')}
+										title={t("configured")}
+										aria-label={t("configured")}
 									/>
 								) : null}
 								{badges.map((kind) => (
@@ -216,8 +221,8 @@ export function ToolProviderSaveActions({
 	onSaveAndActivate: () => void;
 	feedback?: ReactNode;
 }) {
-	const t = useTranslations('tools.providerCards');
-	const tCommon = useTranslations('common');
+	const t = useTranslations("tools.providerCards");
+	const tCommon = useTranslations("common");
 
 	return (
 		<div className="flex flex-wrap items-center gap-3">
@@ -228,7 +233,7 @@ export function ToolProviderSaveActions({
 					disabled={saving || !canSaveConfig}
 					className="rounded-md bg-gray-900 px-4 py-2 text-sm font-medium text-white hover:bg-gray-800 disabled:opacity-50"
 				>
-					{saving ? tCommon('saving') : t('saveConfig')}
+					{saving ? tCommon("saving") : t("saveConfig")}
 				</button>
 			) : (
 				<>
@@ -238,7 +243,7 @@ export function ToolProviderSaveActions({
 						disabled={saving || !canSaveAndActivate}
 						className="rounded-md bg-gray-900 px-4 py-2 text-sm font-medium text-white hover:bg-gray-800 disabled:opacity-50"
 					>
-						{saving ? tCommon('saving') : t('saveAndActivate')}
+						{saving ? tCommon("saving") : t("saveAndActivate")}
 					</button>
 					<button
 						type="button"
@@ -246,7 +251,7 @@ export function ToolProviderSaveActions({
 						disabled={saving || !canSaveConfig}
 						className="rounded-md border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 disabled:opacity-50"
 					>
-						{t('saveConfigOnly')}
+						{t("saveConfigOnly")}
 					</button>
 				</>
 			)}

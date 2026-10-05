@@ -3,9 +3,9 @@
  */
 
 function fmtVal(v: unknown): string {
-	if (v == null) return '—';
-	if (typeof v === 'string') return v.length > 120 ? `${v.slice(0, 120)}…` : v;
-	if (typeof v === 'number' || typeof v === 'boolean') return String(v);
+	if (v == null) return "—";
+	if (typeof v === "string") return v.length > 120 ? `${v.slice(0, 120)}…` : v;
+	if (typeof v === "number" || typeof v === "boolean") return String(v);
 	try {
 		const s = JSON.stringify(v);
 		return s.length > 120 ? `${s.slice(0, 120)}…` : s;
@@ -14,12 +14,14 @@ function fmtVal(v: unknown): string {
 	}
 }
 
-function parseJsonObject(raw: string | null | undefined): Record<string, unknown> | null {
+function parseJsonObject(
+	raw: string | null | undefined
+): Record<string, unknown> | null {
 	const t = raw?.trim();
 	if (!t) return null;
 	try {
 		const o = JSON.parse(t) as unknown;
-		if (o && typeof o === 'object' && !Array.isArray(o)) {
+		if (o && typeof o === "object" && !Array.isArray(o)) {
 			return o as Record<string, unknown>;
 		}
 	} catch {
@@ -34,7 +36,7 @@ function parseChangedFields(raw: string | null | undefined): string[] | null {
 	try {
 		const a = JSON.parse(t) as unknown;
 		if (!Array.isArray(a)) return null;
-		return a.filter((x): x is string => typeof x === 'string' && x.length > 0);
+		return a.filter((x): x is string => typeof x === "string" && x.length > 0);
 	} catch {
 		return null;
 	}
@@ -60,7 +62,9 @@ export function summarizeUserSnapshotDiffLines(options: {
 	const keys =
 		fields && fields.length > 0
 			? fields
-			: Array.from(new Set([...Object.keys(before ?? {}), ...Object.keys(after ?? {})])).filter((k) => k !== 'id');
+			: Array.from(
+					new Set([...Object.keys(before ?? {}), ...Object.keys(after ?? {})])
+			  ).filter((k) => k !== "id");
 
 	const lines: string[] = [];
 	for (const k of keys) {

@@ -59,8 +59,18 @@ test('formal recovery migrations are ordered, parseable and leave the legacy log
 
   await t.test('empty database applies the complete formal chain', async tcase => {
     const f = await createFinancialEngine(); tcase.after(() => f.pg.close());
-    assert.equal(f.migrations.length, 73);
-    assert.deepEqual(f.migrations.slice(-5), recoveryMigrations);
+    assert.equal(f.migrations.length, 81);
+    assert.deepEqual(f.migrations.slice(68, 73), recoveryMigrations);
+    assert.deepEqual(f.migrations.slice(-8), [
+      '0074_config_change_audit.sql',
+      '0075_system_config_revision.sql',
+      '0076_user_audit_export_order_index.sql',
+      '0077_admin_access_key_audit.sql',
+      '0078_shared_key_earnings_history_guard.sql',
+      '0079_admin_shared_key_audit.sql',
+      '0080_admin_shared_key_actor_bounds.sql',
+      '0081_tools_config_group_audit.sql',
+    ]);
     await inspectRecoverySchema(f.pg);
     await f.reset('pg_catalog,cinatoken_gateway,pg_temp');
     await charge(f.client, chargeParams('legacy-after-fresh', 0.2));

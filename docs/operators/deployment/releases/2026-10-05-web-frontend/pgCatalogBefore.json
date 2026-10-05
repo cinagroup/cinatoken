@@ -1,0 +1,643 @@
+{
+  "schema": "cinatoken-cloudflare-release-readonly-pg-catalog-closed-v2",
+  "startedAt": "2026-10-05T07:56:25.323Z",
+  "workerName": "cinatoken-release-catalog-20261005-3fc64cc0",
+  "accountId": "7ea8e46d8210bad342fa7595f7935fea",
+  "workerArtifact": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-release-cf-catalog-20261005-json-Q2UWL0/catalog-worker.mjs",
+    "bytes": 86632,
+    "sha256": "dc52694538b11d43a54a425b179480b74b6544ba4ee415b73c67b9ee2c6e2cc2"
+  },
+  "existingProbeSource": "Temp wrapper with fixed pg_catalog SELECT and readonly transaction",
+  "secretValuesPrinted": false,
+  "secretPersisted": false,
+  "previousFailedResult": "C:/Users/cina/AppData/Local/Temp/cinatoken-release-cf-catalog-20261005-pC6jNr/closed-result.json",
+  "SQLWrites": false,
+  "SQLMigrations": false,
+  "SQLGrants": false,
+  "rootSourceWrites": false,
+  "existingWorkerWrites": false,
+  "calls": [
+    {
+      "kind": "unique_worker_absence_precheck",
+      "method": "GET",
+      "apiPath": "/workers/scripts/cinatoken-release-catalog-20261005-3fc64cc0/settings",
+      "http": 404,
+      "success": false,
+      "errors": [
+        {
+          "code": 10007
+        }
+      ],
+      "at": "2026-10-05T07:56:27.382Z"
+    },
+    {
+      "kind": "account_workers_subdomain",
+      "method": "GET",
+      "apiPath": "/workers/subdomain",
+      "http": 200,
+      "success": true,
+      "errors": [],
+      "at": "2026-10-05T07:56:28.601Z"
+    },
+    {
+      "kind": "upload_unique_readonly_probe",
+      "method": "PUT",
+      "apiPath": "/workers/scripts/cinatoken-release-catalog-20261005-3fc64cc0",
+      "http": 200,
+      "success": true,
+      "errors": [],
+      "at": "2026-10-05T07:56:31.446Z"
+    },
+    {
+      "kind": "enable_temporary_workers_dev",
+      "method": "POST",
+      "apiPath": "/workers/scripts/cinatoken-release-catalog-20261005-3fc64cc0/subdomain",
+      "http": 200,
+      "success": true,
+      "errors": [],
+      "at": "2026-10-05T07:56:32.844Z"
+    },
+    {
+      "kind": "read_temporary_workers_dev_state",
+      "method": "GET",
+      "apiPath": "/workers/scripts/cinatoken-release-catalog-20261005-3fc64cc0/subdomain",
+      "http": 200,
+      "success": true,
+      "errors": [],
+      "at": "2026-10-05T07:56:34.139Z"
+    },
+    {
+      "kind": "readonly_probe_deployment_version",
+      "method": "GET",
+      "apiPath": "/workers/scripts/cinatoken-release-catalog-20261005-3fc64cc0/deployments",
+      "http": 200,
+      "success": true,
+      "errors": [],
+      "at": "2026-10-05T07:56:35.323Z"
+    },
+    {
+      "kind": "delete_unique_readonly_probe",
+      "method": "DELETE",
+      "apiPath": "/workers/scripts/cinatoken-release-catalog-20261005-3fc64cc0",
+      "http": 200,
+      "success": true,
+      "errors": [],
+      "at": "2026-10-05T07:56:38.593Z"
+    },
+    {
+      "kind": "verify_unique_readonly_probe_absent",
+      "method": "GET",
+      "apiPath": "/workers/scripts/cinatoken-release-catalog-20261005-3fc64cc0/settings",
+      "http": 404,
+      "success": false,
+      "errors": [
+        {
+          "code": 10007
+        }
+      ],
+      "at": "2026-10-05T07:56:39.870Z"
+    }
+  ],
+  "probes": [
+    {
+      "path": "/catalog",
+      "attempts": [
+        {
+          "attempt": 1,
+          "http": 200,
+          "contentType": "application/json",
+          "json": {
+            "ok": true,
+            "schema": "cinatoken_gateway",
+            "checks": {
+              "migratorIdentity": true,
+              "transactionReadOnly": true,
+              "exactFormal67": true,
+              "v356Absent": true,
+              "v348Absent": true,
+              "runtimeRestrictedDirectLogin": true,
+              "requestParentNotPartial": true,
+              "requestParentAbsent": true,
+              "noPartialNew0074To0081": true,
+              "all0068OriginalFunctionsExist": true,
+              "all0078ForeignKeysExistAndValidated": true,
+              "optionalReplayAndRepairAbsent": true
+            },
+            "metadata": {
+              "identity": {
+                "user_name": "cinatoken_gateway_migrator",
+                "transaction_read_only": "on",
+                "schema_owner": "cinatoken_gateway_migrator",
+                "lock_timeout": "2s",
+                "statement_timeout": "10s"
+              },
+              "migrations": [
+                {
+                  "version": "0001_baseline.sql"
+                },
+                {
+                  "version": "0002_seed.sql"
+                },
+                {
+                  "version": "0003_model_modalities_released.sql"
+                },
+                {
+                  "version": "0004_provider_api_keys.sql"
+                },
+                {
+                  "version": "0005_drop_providers_api_key.sql"
+                },
+                {
+                  "version": "0006_upstream_trace_ids.sql"
+                },
+                {
+                  "version": "0007_key_limits_and_sticky_config.sql"
+                },
+                {
+                  "version": "0008_request_timing_metrics.sql"
+                },
+                {
+                  "version": "0009_first_reasoning_token_ms.sql"
+                },
+                {
+                  "version": "0010_models_max_tokens_nullable.sql"
+                },
+                {
+                  "version": "0011_provider_endpoints.sql"
+                },
+                {
+                  "version": "0012_drop_provider_base_url_columns.sql"
+                },
+                {
+                  "version": "0013_request_log_image_billing.sql"
+                },
+                {
+                  "version": "0014_request_log_audio_billing.sql"
+                },
+                {
+                  "version": "0015_single_provider_key.sql"
+                },
+                {
+                  "version": "0016_route_surfaces_pools.sql"
+                },
+                {
+                  "version": "0017_gemini_models_generate.sql"
+                },
+                {
+                  "version": "0018_route_pool_tier_strategies.sql"
+                },
+                {
+                  "version": "0019_route_strategy_canonical_ids.sql"
+                },
+                {
+                  "version": "0020_route_pool_sticky_routing.sql"
+                },
+                {
+                  "version": "0021_route_strategy_display_ids.sql"
+                },
+                {
+                  "version": "0022_request_log_audio_characters.sql"
+                },
+                {
+                  "version": "0023_admin_access_identity.sql"
+                },
+                {
+                  "version": "0024_drop_legacy_master_key_config.sql"
+                },
+                {
+                  "version": "0025_user_audit_actor_index.sql"
+                },
+                {
+                  "version": "0026_user_charged_cost_factors.sql"
+                },
+                {
+                  "version": "0027_user_portal_shared_keys.sql"
+                },
+                {
+                  "version": "0028_portal_marketplace_config.sql"
+                },
+                {
+                  "version": "0029_portal_integer_ledger.sql"
+                },
+                {
+                  "version": "0030_chain_job_transactions.sql"
+                },
+                {
+                  "version": "0031_ledger_integrity_guards.sql"
+                },
+                {
+                  "version": "0032_key_hash_lookup.sql"
+                },
+                {
+                  "version": "0033_gateway_key_secret_removal.sql"
+                },
+                {
+                  "version": "0034_public_model_daily_stats.sql"
+                },
+                {
+                  "version": "0035_request_presets.sql"
+                },
+                {
+                  "version": "0036_guardrails.sql"
+                },
+                {
+                  "version": "0037_route_data_policies.sql"
+                },
+                {
+                  "version": "0038_organization_identity_projection.sql"
+                },
+                {
+                  "version": "0039_guardrail_budget_reservations.sql"
+                },
+                {
+                  "version": "0040_user_budget_reservations.sql"
+                },
+                {
+                  "version": "0041_workspaces.sql"
+                },
+                {
+                  "version": "0042_gateway_keys_workspace.sql"
+                },
+                {
+                  "version": "0043_workspace_presets_guardrails.sql"
+                },
+                {
+                  "version": "0044_route_routing_metadata.sql"
+                },
+                {
+                  "version": "0045_route_data_policy_subject_fingerprint.sql"
+                },
+                {
+                  "version": "0046_model_endpoints.sql"
+                },
+                {
+                  "version": "0047_model_endpoint_route_subject_fingerprint.sql"
+                },
+                {
+                  "version": "0048_model_endpoint_audio_capabilities.sql"
+                },
+                {
+                  "version": "0049_model_endpoint_evidence_ledger.sql"
+                },
+                {
+                  "version": "0050_management_api_keys.sql"
+                },
+                {
+                  "version": "0051_gateway_key_expiry.sql"
+                },
+                {
+                  "version": "0052_gateway_key_limits.sql"
+                },
+                {
+                  "version": "0053_workspace_budgets.sql"
+                },
+                {
+                  "version": "0054_generation_metadata_snapshots.sql"
+                },
+                {
+                  "version": "0055_request_session_id.sql"
+                },
+                {
+                  "version": "0056_generation_feedback.sql"
+                },
+                {
+                  "version": "0057_guardrail_assignment_management_source.sql"
+                },
+                {
+                  "version": "0058_workspace_default_guardrails.sql"
+                },
+                {
+                  "version": "0059_account_default_guardrails.sql"
+                },
+                {
+                  "version": "0060_provider_attempt_availability.sql"
+                },
+                {
+                  "version": "0061_public_model_total_tokens.sql"
+                },
+                {
+                  "version": "0062_generation_service_tier.sql"
+                },
+                {
+                  "version": "0063_private_byok.sql"
+                },
+                {
+                  "version": "0064_byok_always_use_for_provider.sql"
+                },
+                {
+                  "version": "0065_guardrail_budget_settlement_basis.sql"
+                },
+                {
+                  "version": "0066_workspace_budget_usage_index.sql"
+                },
+                {
+                  "version": "0067_batch_jobs.sql"
+                }
+              ],
+              "runtimeRoles": [
+                {
+                  "rolname": "cinatoken_gateway_runtime",
+                  "rolcanlogin": true,
+                  "rolsuper": false,
+                  "rolcreatedb": false,
+                  "rolcreaterole": false,
+                  "rolreplication": false,
+                  "rolbypassrls": false,
+                  "membership_count": 0
+                }
+              ],
+              "relations": [
+                {
+                  "name": "admin_access_key_audit",
+                  "object_name": null
+                },
+                {
+                  "name": "admin_shared_key_audit",
+                  "object_name": null
+                },
+                {
+                  "name": "authenticated_request_capabilities_v356",
+                  "object_name": null
+                },
+                {
+                  "name": "config_change_audit",
+                  "object_name": null
+                },
+                {
+                  "name": "config_group_audit",
+                  "object_name": null
+                },
+                {
+                  "name": "idx_admin_access_key_audit_key_created",
+                  "object_name": null
+                },
+                {
+                  "name": "idx_admin_shared_key_audit_key_created",
+                  "object_name": null
+                },
+                {
+                  "name": "idx_config_change_audit_created",
+                  "object_name": null
+                },
+                {
+                  "name": "idx_config_change_audit_key_created",
+                  "object_name": null
+                },
+                {
+                  "name": "idx_config_group_audit_family_created",
+                  "object_name": null
+                },
+                {
+                  "name": "idx_shared_keys_admin_order",
+                  "object_name": null
+                },
+                {
+                  "name": "idx_user_audit_export_created_id",
+                  "object_name": null
+                },
+                {
+                  "name": "request_dispatch_replay_tombstones",
+                  "object_name": null
+                },
+                {
+                  "name": "request_dispatch_requests",
+                  "object_name": null
+                },
+                {
+                  "name": "shared_key_usage_repair_jobs",
+                  "object_name": null
+                },
+                {
+                  "name": "system_config_write_mutex",
+                  "object_name": null
+                }
+              ],
+              "functions": [
+                {
+                  "name": "attempt_one_shared_key_usage_repair()",
+                  "object_name": null,
+                  "owner_name": null
+                },
+                {
+                  "name": "buyer_split_grant_policy_v348()",
+                  "object_name": null,
+                  "owner_name": null
+                },
+                {
+                  "name": "claim_one_shared_key_usage_repair()",
+                  "object_name": null,
+                  "owner_name": null
+                },
+                {
+                  "name": "claim_request_capability_v356(text,text,text)",
+                  "object_name": null,
+                  "owner_name": null
+                },
+                {
+                  "name": "claim_request_dispatch_intent_v1(text,integer,text,text,text,text,text,text,bigint,text)",
+                  "object_name": null,
+                  "owner_name": null
+                },
+                {
+                  "name": "classify_request_dispatch_intent_v1(text,integer,text,text,text,text,text,text,bigint)",
+                  "object_name": null,
+                  "owner_name": null
+                },
+                {
+                  "name": "delete_provider_attempt_availability_before(timestamptz,integer)",
+                  "object_name": "cinatoken_gateway.delete_provider_attempt_availability_before(timestamp with time zone,integer)",
+                  "owner_name": "cinatoken_gateway_migrator"
+                },
+                {
+                  "name": "enforce_guardrail_assignment_api_key_workspace()",
+                  "object_name": "cinatoken_gateway.enforce_guardrail_assignment_api_key_workspace()",
+                  "owner_name": "cinatoken_gateway_migrator"
+                },
+                {
+                  "name": "enforce_request_log_workspace()",
+                  "object_name": "cinatoken_gateway.enforce_request_log_workspace()",
+                  "owner_name": "cinatoken_gateway_migrator"
+                },
+                {
+                  "name": "enforce_workspace_budget_order()",
+                  "object_name": "cinatoken_gateway.enforce_workspace_budget_order()",
+                  "owner_name": "cinatoken_gateway_migrator"
+                },
+                {
+                  "name": "enqueue_shared_key_usage_repair()",
+                  "object_name": null,
+                  "owner_name": null
+                },
+                {
+                  "name": "finish_claimed_shared_key_usage_repair(text,uuid)",
+                  "object_name": null,
+                  "owner_name": null
+                },
+                {
+                  "name": "guard_request_dispatch_replay_insert()",
+                  "object_name": null,
+                  "owner_name": null
+                },
+                {
+                  "name": "guard_request_log_replay_id_update()",
+                  "object_name": null,
+                  "owner_name": null
+                },
+                {
+                  "name": "issue_request_capability_v356(text,text,text)",
+                  "object_name": null,
+                  "owner_name": null
+                },
+                {
+                  "name": "prepare_request_dispatch_intent_v1(text,integer,text,text,text,text,text,text,bigint,integer)",
+                  "object_name": null,
+                  "owner_name": null
+                },
+                {
+                  "name": "reject_model_endpoint_ledger_mutation()",
+                  "object_name": "cinatoken_gateway.reject_model_endpoint_ledger_mutation()",
+                  "owner_name": "cinatoken_gateway_migrator"
+                },
+                {
+                  "name": "reject_request_dispatch_replay_mutation()",
+                  "object_name": null,
+                  "owner_name": null
+                },
+                {
+                  "name": "reject_shared_key_earnings_history_mutation()",
+                  "object_name": null,
+                  "owner_name": null
+                },
+                {
+                  "name": "repair_one_shared_key_usage()",
+                  "object_name": null,
+                  "owner_name": null
+                },
+                {
+                  "name": "requeue_shared_key_usage_repair_dead_letter(text,text)",
+                  "object_name": null,
+                  "owner_name": null
+                },
+                {
+                  "name": "reserve_request_dispatch_intent_id()",
+                  "object_name": null,
+                  "owner_name": null
+                },
+                {
+                  "name": "reserve_request_dispatch_parent_id()",
+                  "object_name": null,
+                  "owner_name": null
+                },
+                {
+                  "name": "reserve_request_log_replay_id()",
+                  "object_name": null,
+                  "owner_name": null
+                },
+                {
+                  "name": "shared_key_earnings_credit_after_insert_fn()",
+                  "object_name": "cinatoken_gateway.shared_key_earnings_credit_after_insert_fn()",
+                  "owner_name": "cinatoken_gateway_migrator"
+                },
+                {
+                  "name": "withdrawals_confirm_after_status_update_fn()",
+                  "object_name": "cinatoken_gateway.withdrawals_confirm_after_status_update_fn()",
+                  "owner_name": "cinatoken_gateway_migrator"
+                },
+                {
+                  "name": "withdrawals_lock_after_insert_fn()",
+                  "object_name": "cinatoken_gateway.withdrawals_lock_after_insert_fn()",
+                  "owner_name": "cinatoken_gateway_migrator"
+                },
+                {
+                  "name": "withdrawals_refund_after_status_update_fn()",
+                  "object_name": "cinatoken_gateway.withdrawals_refund_after_status_update_fn()",
+                  "owner_name": "cinatoken_gateway_migrator"
+                },
+                {
+                  "name": "withdrawals_validate_lock_before_insert_fn()",
+                  "object_name": "cinatoken_gateway.withdrawals_validate_lock_before_insert_fn()",
+                  "owner_name": "cinatoken_gateway_migrator"
+                }
+              ],
+              "revisionColumns": [],
+              "earningsHistoryTriggers": [],
+              "earningsForeignKeys": [
+                {
+                  "conname": "shared_key_earnings_request_log_id_fkey",
+                  "contype": "f",
+                  "convalidated": true,
+                  "confupdtype": "a",
+                  "confdeltype": "r",
+                  "definition": "FOREIGN KEY (request_log_id) REFERENCES cinatoken_gateway.api_key_request_logs(id) ON DELETE RESTRICT"
+                },
+                {
+                  "conname": "shared_key_earnings_seller_user_id_fkey",
+                  "contype": "f",
+                  "convalidated": true,
+                  "confupdtype": "a",
+                  "confdeltype": "c",
+                  "definition": "FOREIGN KEY (seller_user_id) REFERENCES cinatoken_gateway.users(id) ON DELETE CASCADE"
+                },
+                {
+                  "conname": "shared_key_earnings_shared_key_id_fkey",
+                  "contype": "f",
+                  "convalidated": true,
+                  "confupdtype": "a",
+                  "confdeltype": "c",
+                  "definition": "FOREIGN KEY (shared_key_id) REFERENCES cinatoken_gateway.shared_keys(id) ON DELETE CASCADE"
+                }
+              ]
+            },
+            "SQLWrites": false,
+            "businessRowsRead": false
+          },
+          "rawBodyBytes": 9329,
+          "rawBodySha256": "1f9caef8acecb4d0ce54c633cccdd782f418a1ea84176049d206d4dcb69718e8",
+          "at": "2026-10-05T07:56:36.763Z"
+        }
+      ]
+    }
+  ],
+  "cleanup": {
+    "deleteSucceeded": true,
+    "absentConfirmed": true
+  },
+  "actualExit": 0,
+  "workerURL": "https://cinatoken-release-catalog-20261005-3fc64cc0.cinagroup.workers.dev",
+  "uploadedVersion": {
+    "id": "cinatoken-release-catalog-20261005-3fc64cc0",
+    "etag": "0eeb922d8ef8a5cf45801ae7137e42ff09479fe2db344312ba0d8b0ef6050f13",
+    "deployment_id": "d952d4ceb0c347faaaf939051b20132b",
+    "created_on": "2026-10-05T07:56:30.456339Z",
+    "modified_on": "2026-10-05T07:56:30.456339Z"
+  },
+  "workersDevEnableResult": {
+    "enabled": true,
+    "previews_enabled": false
+  },
+  "workersDevReadResult": {
+    "enabled": true,
+    "previews_enabled": false
+  },
+  "deployment": {
+    "id": "c4729c2f-b308-47fe-84b4-2208b3a65a59",
+    "source": "api",
+    "strategy": "percentage",
+    "author_email": "qq198210@gmail.com",
+    "annotations": {
+      "workers/message": "Automatic deployment on upload.",
+      "workers/triggered_by": "upload"
+    },
+    "versions": [
+      {
+        "version_id": "d952d4ce-b0c3-47fa-aaf9-39051b20132b",
+        "percentage": 100
+      }
+    ],
+    "created_on": "2026-10-05T07:56:30.456339Z"
+  },
+  "platformReady": true,
+  "result": "READONLY_PG_CATALOG_PASS",
+  "finishedAt": "2026-10-05T07:56:39.872Z"
+}

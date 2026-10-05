@@ -1,6 +1,6 @@
-'use client';
+"use client";
 
-import type { ImagePreviewItem } from '@/lib/image-generations';
+import type { ImagePreviewItem } from "@/lib/image-generations";
 
 type Props = {
 	images: ImagePreviewItem[];

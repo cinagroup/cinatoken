@@ -8,13 +8,18 @@
 declare namespace Cloudflare {
 	interface Env {
 		DB: D1Database;
-		HYPERDRIVE?: import('@octafuse/core').HyperdriveBinding;
+		HYPERDRIVE?: import("@octafuse/core").HyperdriveBinding;
 		ASSETS: Fetcher;
 		CINAAUTH_AUTH_SERVICE: Fetcher;
 		CINATOKEN_PROXY_SERVICE: Fetcher;
 		CINAAUTH_ISSUER: string;
 		CINAAUTH_ACCOUNT_ORIGIN: string;
 		CINATOKEN_APP_ORIGIN: string;
+		CINATOKEN_ADMIN_CONFIG_REQUIRE_REVISION?: string;
+		CINATOKEN_ADMIN_KEYS_REQUIRE_REVISION?: string;
+		CINATOKEN_ADMIN_SHARED_KEYS_REQUIRE_REVISION?: string;
+		CINATOKEN_ADMIN_TOOLS_REQUIRE_VERSION?: string;
+		CINATOKEN_ADMIN_MODELS_REQUIRE_ROUTE_POLICY_PRECONDITION?: string;
 		CINATOKEN_OIDC_CLIENT_ID: string;
 		CINATOKEN_REQUIRED_ROLES: string;
 		CINATOKEN_OIDC_CLIENT_SECRET: string;
@@ -24,7 +29,7 @@ declare namespace Cloudflare {
 		CINAAUTH_ORGANIZATION_ADMIN_ROLES?: string;
 		SHARED_KEY_ENCRYPTION_SECRET: string;
 		DEEPSEEK_API_KEY?: string;
-		CHAIN_JOBS: Queue<import('@octafuse/core').ChainJobMessage>;
+		CHAIN_JOBS: Queue<import("@octafuse/core").ChainJobMessage>;
 		AUTH_RATE_LIMITER: RateLimit;
 		ADMIN_USERNAME?: string;
 		ADMIN_PASSWORD?: string;

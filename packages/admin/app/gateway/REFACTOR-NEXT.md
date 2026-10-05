@@ -4,10 +4,10 @@
 
 ## 已抽取的跨页共享件
 
-| 路径 | 用途 |
-|------|------|
-| `app/gateway/components/filter-nav.tsx` | `FilterNavSection` / `FilterNavButton`（models、routes 侧边筛选） |
-| `lib/format-compact-tokens.ts` | `formatCompactTokens` / `trimTrailingZeros`（models、routes 展示） |
+| 路径                                    | 用途                                                               |
+| --------------------------------------- | ------------------------------------------------------------------ |
+| `app/gateway/components/filter-nav.tsx` | `FilterNavSection` / `FilterNavButton`（models、routes 侧边筛选）  |
+| `lib/format-compact-tokens.ts`          | `formatCompactTokens` / `trimTrailingZeros`（models、routes 展示） |
 
 ## 阶段 2：列表页集群（优先）
 
@@ -38,13 +38,13 @@
 
 ## 暂缓 / 不建议过度抽象
 
-| 页面 | 理由 |
-|------|------|
-| `providers` | 已是目标形态 |
-| `config` | 每卡片领域逻辑不同，拆文件收益有限 |
-| 通用 CRUD Form Builder | 各页校验与字段差异大 |
-| models/routes 定价重算 | 保留在各自 `*-utils.ts`，勿做「万能 pricing hook」 |
-| playground ↔ simulator 合并 | 调用链不同，仅共享流式 UI |
+| 页面                        | 理由                                               |
+| --------------------------- | -------------------------------------------------- |
+| `providers`                 | 已是目标形态                                       |
+| `config`                    | 每卡片领域逻辑不同，拆文件收益有限                 |
+| 通用 CRUD Form Builder      | 各页校验与字段差异大                               |
+| models/routes 定价重算      | 保留在各自 `*-utils.ts`，勿做「万能 pricing hook」 |
+| playground ↔ simulator 合并 | 调用链不同，仅共享流式 UI                          |
 
 ## 推荐目录模板（新页 / 大 refactor 时）
 

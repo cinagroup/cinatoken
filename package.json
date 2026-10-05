@@ -13,6 +13,7 @@
 		"packages/tool-engines",
 		"packages/proxy",
 		"packages/admin",
+		"packages/web",
 		"packages/chain-worker"
 	],
 	"scripts": {
@@ -25,6 +26,10 @@
 		"dev:proxy:node": "dotenv -c -- npm run dev:node -w @octafuse/proxy",
 		"dev:admin": "npm run preview -w @octafuse/admin",
 		"dev:admin:node": "dotenv -c -- npm run dev:node -w @octafuse/admin",
+		"dev:web": "npm run dev -w @cinatoken/web",
+		"build:web": "npm run build:check -w @cinatoken/web",
+		"typecheck:web": "npm run typecheck -w @cinatoken/web",
+		"test:web": "npm run test:unit -w @cinatoken/web",
 		"deploy:proxy": "npm run gen:wrangler -- --remote && npm run deploy -w @octafuse/proxy",
 		"deploy:admin": "npm run build -w @octafuse/core && npm run gen:wrangler -- --remote && npm run deploy -w @octafuse/admin",
 		"deploy:chain": "npm run build -w @octafuse/core && npm run gen:wrangler -- --remote && npm run deploy -w @cinatoken/chain-worker",
@@ -61,7 +66,8 @@
 		"test:mysql-migration": "node scripts/ci/verify-mysql-migration-contract.mjs",
 		"test:endpoint-backfill-plan": "tsx --test scripts/db/model-endpoints/*.test.ts",
 		"test:postgres-role-provisioning": "tsx --test scripts/db/cutover/postgres-role-provisioning.test.ts scripts/db/cutover/diagnostic-auth.test.ts scripts/db/cutover/preflight-d1-source.test.ts scripts/db/cutover/hyperdrive-bootstrap-worker.test.ts",
-		"test:unit": "npm run test:deploy && npm run test:d1-portal-ledger && npm run test:postgres-migration && npm run test:mysql-migration && npm run test:endpoint-backfill-plan && npm run test:public-catalog-readiness:contract && npm run test:postgres-role-provisioning && npm run test:unit -w @octafuse/core && npm run test:unit -w @octafuse/tool-engines && npm run test:unit -w @octafuse/proxy && npm run test:unit -w @octafuse/admin && npm run test:unit -w @cinatoken/chain-worker"
+		"test:unit": "npm run test:deploy && npm run test:d1-portal-ledger && npm run test:postgres-migration && npm run test:mysql-migration && npm run test:endpoint-backfill-plan && npm run test:public-catalog-readiness:contract && npm run test:postgres-role-provisioning && npm run test:unit -w @octafuse/core && npm run test:unit -w @octafuse/tool-engines && npm run test:unit -w @octafuse/proxy && npm run test:unit -w @octafuse/admin && npm run test:unit -w @cinatoken/chain-worker && npm run test:web",
+		"test:public-catalog-boundary": "tsx --tsconfig packages/admin/tsconfig.json --test packages/proxy/src/routes/catalog-public-boundary.test.ts"
 	},
 	"devDependencies": {
 		"@changesets/changelog-github": "^0.5.1",

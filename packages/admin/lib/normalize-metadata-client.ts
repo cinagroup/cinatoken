@@ -7,12 +7,12 @@ export type NormalizeMetadataResult =
 
 export function normalizeMetadataClient(raw: string): NormalizeMetadataResult {
 	const t = raw.trim();
-	if (t === '') {
+	if (t === "") {
 		return { ok: true, value: null };
 	}
 	try {
 		return { ok: true, value: JSON.stringify(JSON.parse(t)) };
 	} catch {
-		return { ok: false, message: 'Metadata must be valid JSON' };
+		return { ok: false, message: "Metadata must be valid JSON" };
 	}
 }

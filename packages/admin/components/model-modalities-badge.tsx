@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 /**
  * OpenRouter-style modality chips: colored icon badges for input → output.
@@ -8,42 +8,46 @@ import {
 	DocumentIcon,
 	PhotoIcon,
 	VideoCameraIcon,
-} from '@heroicons/react/24/solid';
-import { parseModelModalitiesJson } from '@octafuse/core/db/model-modalities';
-import { useTranslations } from 'next-intl';
+} from "@heroicons/react/24/solid";
+import { parseModelModalitiesJson } from "@octafuse/core/db/model-modalities";
+import { useTranslations } from "next-intl";
 
-const MODALITY_ORDER = ['text', 'image', 'audio', 'video', 'file'] as const;
+const MODALITY_ORDER = ["text", "image", "audio", "video", "file"] as const;
 
 type ModalityKey = (typeof MODALITY_ORDER)[number];
 
 const MODALITY_STYLES: Record<
 	ModalityKey,
-	{ labelKey: ModalityKey; chip: string; icon?: 'text' | 'photo' | 'audio' | 'video' | 'file' }
+	{
+		labelKey: ModalityKey;
+		chip: string;
+		icon?: "text" | "photo" | "audio" | "video" | "file";
+	}
 > = {
 	text: {
-		labelKey: 'text',
-		chip: 'bg-blue-100 text-blue-700 ring-blue-200/80',
-		icon: 'text',
+		labelKey: "text",
+		chip: "bg-blue-100 text-blue-700 ring-blue-200/80",
+		icon: "text",
 	},
 	image: {
-		labelKey: 'image',
-		chip: 'bg-emerald-100 text-emerald-700 ring-emerald-200/80',
-		icon: 'photo',
+		labelKey: "image",
+		chip: "bg-emerald-100 text-emerald-700 ring-emerald-200/80",
+		icon: "photo",
 	},
 	audio: {
-		labelKey: 'audio',
-		chip: 'bg-violet-100 text-violet-700 ring-violet-200/80',
-		icon: 'audio',
+		labelKey: "audio",
+		chip: "bg-violet-100 text-violet-700 ring-violet-200/80",
+		icon: "audio",
 	},
 	video: {
-		labelKey: 'video',
-		chip: 'bg-amber-100 text-amber-700 ring-amber-200/80',
-		icon: 'video',
+		labelKey: "video",
+		chip: "bg-amber-100 text-amber-700 ring-amber-200/80",
+		icon: "video",
 	},
 	file: {
-		labelKey: 'file',
-		chip: 'bg-slate-100 text-slate-600 ring-slate-200/80',
-		icon: 'file',
+		labelKey: "file",
+		chip: "bg-slate-100 text-slate-600 ring-slate-200/80",
+		icon: "file",
 	},
 };
 
@@ -54,7 +58,12 @@ function sortModalities(modalities: string[]): ModalityKey[] {
 
 function AudioWaveIcon({ className }: { className?: string }) {
 	return (
-		<svg viewBox="0 0 16 16" fill="currentColor" className={className} aria-hidden>
+		<svg
+			viewBox="0 0 16 16"
+			fill="currentColor"
+			className={className}
+			aria-hidden
+		>
 			<rect x="1" y="6" width="1.5" height="4" rx="0.75" />
 			<rect x="4" y="4" width="1.5" height="8" rx="0.75" />
 			<rect x="7" y="2" width="1.5" height="12" rx="0.75" />
@@ -69,17 +78,18 @@ function ModalityChip({
 	size,
 }: {
 	modality: ModalityKey;
-	size: 'sm' | 'md';
+	size: "sm" | "md";
 }) {
-	const t = useTranslations('modalities');
+	const t = useTranslations("modalities");
 	const style = MODALITY_STYLES[modality];
 	const label = t(style.labelKey);
 	const box =
-		size === 'sm'
-			? 'h-5 w-5 rounded-[4px] ring-1'
-			: 'h-6 w-6 rounded-[5px] ring-1';
-	const iconClass = size === 'sm' ? 'h-3 w-3' : 'h-3.5 w-3.5';
-	const textClass = size === 'sm' ? 'text-[10px] font-bold' : 'text-[11px] font-bold';
+		size === "sm"
+			? "h-5 w-5 rounded-[4px] ring-1"
+			: "h-6 w-6 rounded-[5px] ring-1";
+	const iconClass = size === "sm" ? "h-3 w-3" : "h-3.5 w-3.5";
+	const textClass =
+		size === "sm" ? "text-[10px] font-bold" : "text-[11px] font-bold";
 
 	return (
 		<span
@@ -87,13 +97,13 @@ function ModalityChip({
 			title={label}
 			aria-label={label}
 		>
-			{style.icon === 'text' ? (
+			{style.icon === "text" ? (
 				<span className={`leading-none ${textClass}`}>T</span>
-			) : style.icon === 'photo' ? (
+			) : style.icon === "photo" ? (
 				<PhotoIcon className={iconClass} />
-			) : style.icon === 'audio' ? (
+			) : style.icon === "audio" ? (
 				<AudioWaveIcon className={iconClass} />
-			) : style.icon === 'video' ? (
+			) : style.icon === "video" ? (
 				<VideoCameraIcon className={iconClass} />
 			) : (
 				<DocumentIcon className={iconClass} />
@@ -104,10 +114,10 @@ function ModalityChip({
 
 export function ModelModalityChips({
 	modalities,
-	size = 'sm',
+	size = "sm",
 }: {
 	modalities: string[] | null | undefined;
-	size?: 'sm' | 'md';
+	size?: "sm" | "md";
 }) {
 	return <ModalityGroup modalities={modalities} size={size} />;
 }
@@ -117,12 +127,12 @@ function ModalityGroup({
 	size,
 }: {
 	modalities: string[] | null | undefined;
-	size: 'sm' | 'md';
+	size: "sm" | "md";
 }) {
-	const tCommon = useTranslations('common');
+	const tCommon = useTranslations("common");
 	const sorted = sortModalities(modalities ?? []);
 	if (sorted.length === 0) {
-		return <span className="text-xs text-gray-400">{tCommon('noData')}</span>;
+		return <span className="text-xs text-gray-400">{tCommon("noData")}</span>;
 	}
 	return (
 		<span className="inline-flex items-center gap-1">
@@ -136,10 +146,12 @@ function ModalityGroup({
 export function parseModalitiesValue(value: unknown): string[] | null {
 	if (value == null) return null;
 	if (Array.isArray(value)) {
-		const list = value.map((m) => String(m).trim().toLowerCase()).filter(Boolean);
+		const list = value
+			.map((m) => String(m).trim().toLowerCase())
+			.filter(Boolean);
 		return list.length > 0 ? list : null;
 	}
-	if (typeof value === 'string') {
+	if (typeof value === "string") {
 		return parseModelModalitiesJson(value);
 	}
 	return null;
@@ -148,30 +160,30 @@ export function parseModalitiesValue(value: unknown): string[] | null {
 export function ModelModalitiesBadge({
 	inputModalities,
 	outputModalities,
-	size = 'sm',
-	className = '',
+	size = "sm",
+	className = "",
 }: {
 	inputModalities: string[] | null | undefined;
 	outputModalities: string[] | null | undefined;
-	size?: 'sm' | 'md';
+	size?: "sm" | "md";
 	className?: string;
 }) {
-	const t = useTranslations('modalities');
-	const tCommon = useTranslations('common');
+	const t = useTranslations("modalities");
+	const tCommon = useTranslations("common");
 	const input = sortModalities(inputModalities ?? []);
 	const output = sortModalities(outputModalities ?? []);
 	if (input.length === 0 && output.length === 0) {
-		return <span className="text-xs text-gray-400">{tCommon('noData')}</span>;
+		return <span className="text-xs text-gray-400">{tCommon("noData")}</span>;
 	}
 
-	const arrowClass = size === 'sm' ? 'text-[10px]' : 'text-xs';
+	const arrowClass = size === "sm" ? "text-[10px]" : "text-xs";
 
 	return (
 		<span
 			className={`inline-flex flex-wrap items-center gap-x-1 gap-y-1 ${className}`}
-			aria-label={t('ariaSummary', {
-				input: input.join(', ') || t('none'),
-				output: output.join(', ') || t('none'),
+			aria-label={t("ariaSummary", {
+				input: input.join(", ") || t("none"),
+				output: output.join(", ") || t("none"),
 			})}
 		>
 			<ModalityGroup modalities={input} size={size} />
@@ -186,12 +198,12 @@ export function ModelModalitiesBadge({
 export function ModelModalitiesBadgeFromRaw({
 	inputRaw,
 	outputRaw,
-	size = 'sm',
-	className = '',
+	size = "sm",
+	className = "",
 }: {
 	inputRaw: string | null | undefined;
 	outputRaw: string | null | undefined;
-	size?: 'sm' | 'md';
+	size?: "sm" | "md";
 	className?: string;
 }) {
 	return (

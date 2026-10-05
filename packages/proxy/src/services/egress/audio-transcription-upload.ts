@@ -1,4 +1,5 @@
 import type { ResourceCompletion, ResourceCompletionOutcome } from '../resource-completion';
+import type { WorkerdLengthAwareSource } from './workerd-length-aware-source';
 
 const PAGE_BYTES = 64 * 1024;
 const TEXT_UNITS = 8 * 1024;
@@ -54,7 +55,7 @@ function ownUpload(parts: Array<string | Uint8Array>, signal: AbortSignal) {
 		parts.length = 0; index = offset = 0;
 		resolveResource(outcome);
 	};
-	const body = new ReadableStream<Uint8Array>({
+	const streamSource = {
 		// workerd preserves the exact source length when constructing an HTTP body.
 		// Node ignores this extension and uses the explicit Content-Length header.
 		expectedLength: contentLength,
@@ -80,7 +81,8 @@ function ownUpload(parts: Array<string | Uint8Array>, signal: AbortSignal) {
 			}
 		},
 		cancel() { finish('confirmed'); },
-	}, { highWaterMark: 0 });
+	} satisfies WorkerdLengthAwareSource;
+	const body = new ReadableStream<Uint8Array>(streamSource, { highWaterMark: 0 });
 	function stop() {
 		if (closed) return;
 		const untouched = !pulled && !body.locked;

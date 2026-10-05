@@ -6,11 +6,11 @@ import type {
 	ApiKeyBudgetAuditLogRow,
 	GlobalApiKeyBudgetAuditLogRow,
 	RequestLogRow,
-} from '@octafuse/core';
-import type { ModelRouteJoinRow } from '@octafuse/core';
-import type { UpstreamProtocol } from '@octafuse/core/upstream-protocol';
+} from "@octafuse/core";
+import type { ModelRouteJoinRow } from "@octafuse/core";
+import type { UpstreamProtocol } from "@octafuse/core/upstream-protocol";
 
-export type BudgetPeriod = 'none' | 'daily' | 'weekly' | 'monthly';
+export type BudgetPeriod = "none" | "daily" | "weekly" | "monthly";
 
 export type JsonObject = Record<string, unknown>;
 export type AdminDataRow = Record<string, unknown>;
@@ -56,10 +56,12 @@ export type AdminBudgetTransitionInput = {
 	target_budget_base: number;
 	budget_period: BudgetPeriod;
 	budget_reset_at?: string | null;
-	carryover_strategy?: 'remaining_or_overage' | 'none';
+	carryover_strategy?: "remaining_or_overage" | "none";
 	reset_spent?: boolean;
 	metadata?: Record<string, unknown>;
 	reason?: string;
+	/** Send preview.before to reject a transition if the budget changed meanwhile. */
+	expected_before?: AdminBudgetTransitionSnapshot;
 };
 
 export type AdminBudgetTransitionSnapshot = {
@@ -68,6 +70,8 @@ export type AdminBudgetTransitionSnapshot = {
 	budget_spent: number;
 	budget_period: string;
 	budget_reset_at: string | null;
+	budget_epoch: number;
+	budget_reserved_micros: number;
 };
 
 export type AdminBudgetTransitionPreviewOutput = {
@@ -91,6 +95,7 @@ export type AdminKeyCreateInput = {
 };
 
 export type AdminKeyUpdateInput = {
+	expected_revision?: string;
 	metadata?: unknown;
 	metadata_replace?: unknown;
 	status?: string;
@@ -143,6 +148,8 @@ export type AdminProvidersImportOutput = {
 
 /** ---------- `/admin/models` 请求体 ---------- */
 export type AdminModelMutationInput = {
+	/** Exact raw value read from GET; explicit null differs from omission. */
+	expected_route_policy?: string | null;
 	id?: unknown;
 	display_name?: unknown;
 	vendor?: unknown;
@@ -189,6 +196,9 @@ export type AdminModelRouteMutationInput = {
 
 /** ---------- `/admin/config` PUT 单键更新 ---------- */
 export type AdminConfigUpdateInput = {
+	tools_version?: unknown;
+	reason?: unknown;
+	accept_loss_pricing?: unknown;
 	key?: string;
 	value?: string;
 };
@@ -204,7 +214,7 @@ export type AdminStaticModelPresetCatalogItem = {
 	display_name: string | null;
 	vendor: string;
 	/** LLM / 文生图 / 语音转写（与列表页 Kind 一致）。 */
-	kind: 'llm' | 'image' | 'audio';
+	kind: "llm" | "image" | "audio";
 	context_window: number | null;
 	max_tokens: number | null;
 	/** English fallback used by non-localized Admin clients and on import. */
@@ -304,7 +314,9 @@ export type AdminKeyListItem = {
 	budget_period: string;
 	budget_reset_at: string | null;
 	status: string;
-	metadata: string | null;
+	metadata_preview: string | null;
+	metadata_unavailable: boolean;
+	profile_revision: string;
 	created_at: string;
 	updated_at: string;
 	[key: string]: unknown;
@@ -318,10 +330,19 @@ export type AdminKeyListOutput = {
 };
 
 export type AdminKeyCreateOutput = {
+	id: string;
 	key: string;
 	key_id: string;
 	user_id: string;
 	workspace_id: string;
+	status: string;
+	name: string | null;
+	profile_revision: string;
+	owner: {
+		email: string;
+		external_system: string | null;
+		external_user_id: string | null;
+	};
 };
 
 export type AdminKeyLogsOutput = {
@@ -346,25 +367,7 @@ export type AdminGlobalBudgetAuditLogsOutput = {
 	page_size: number;
 };
 
-export type AdminKeyUpdateOutput =
-	| {
-			id: string;
-			updated: true;
-	  }
-	| {
-			id: string;
-			key_id: string;
-			user_id: string;
-			workspace_id: string;
-			name: string | null;
-			user_email: string | null;
-			budget_max: number | null;
-			budget_base?: number;
-			budget_spent: number;
-			budget_period: string;
-			budget_reset_at: string | null;
-			metadata?: JsonObject;
-	  };
+export type AdminKeyUpdateOutput = AdminKeyDetailOutput & { key_id: string };
 
 export type AdminKeyDetailOutput = {
 	id: string;
@@ -381,6 +384,10 @@ export type AdminKeyDetailOutput = {
 	budget_reset_at: string | null;
 	status: string;
 	metadata?: JsonObject;
+	metadata_raw: string | null;
+	metadata_unavailable: boolean;
+	metadata_preview: string | null;
+	profile_revision: string;
 	created_at: string;
 	updated_at: string;
 	spend: number;
@@ -403,6 +410,12 @@ export type AdminConfigRow = {
 	value: string;
 	description: string | null;
 };
+
+/** Analytics pages may show occurrence summaries, not logs.read-only details. */
+export type AdminAnalyticsRecentLog = Pick<
+	RequestLogRow,
+	"id" | "model_id" | "provider_id" | "provider_name" | "status" | "created_at"
+>;
 
 /** `GET /admin/stats` 仪表盘数据结构 */
 export type AdminStatsOutput = {
@@ -466,9 +479,9 @@ export type AdminStatsOutput = {
 		avg_latency_ms: number | null;
 		cache_hit_rate: number;
 	}>;
-	granularity: 'hour' | 'day';
-	recentLogs: RequestLogRow[];
-	recentErrors: RequestLogRow[];
+	granularity: "hour" | "day";
+	recentLogs: AdminAnalyticsRecentLog[];
+	recentErrors: AdminAnalyticsRecentLog[];
 };
 
 /** ---------- `/admin/analytics/*` 装配后的行类型 ---------- */
@@ -592,5 +605,5 @@ export type AdminReliabilityModelProviderRow = {
 export type AdminReliabilityAnalyticsOutput = {
 	providers: AdminReliabilityProviderRow[];
 	modelProviders: AdminReliabilityModelProviderRow[];
-	recentErrors: RequestLogRow[];
+	recentErrors: AdminAnalyticsRecentLog[];
 };

@@ -1,10 +1,11 @@
 // Review-only owned PostgreSQL 18.6 fixture for bounded delivery backlog observation.
 import assert from 'node:assert/strict';
 import { createHash, randomBytes, randomUUID } from 'node:crypto';
-import { readFile, readdir, writeFile } from 'node:fs/promises';
+import { readFile, writeFile } from 'node:fs/promises';
 import test from 'node:test';
 import postgres from 'postgres';
 import { startNativePostgres } from '../../../packages/core/src/test-support/postgres-native-cluster.mjs';
+import { listPg73Migrations } from './pg73-native-fixture.mjs';
 import { observeDedicatedSharedEarningBacklog } from '../../../packages/proxy/src/runtime/postgres-shared-earning-backlog-observer.ts';
 
 const migrations = new URL('../../../packages/core/migrations-postgres/', import.meta.url);
@@ -84,7 +85,7 @@ test('PG18 backlog summary is capped, replayable and executable only by delivery
       clients.push(migrator, runtime, producer, earning, delivery, recovery);
       await migrator.unsafe(`CREATE TABLE cinatoken_gateway.schema_migrations
         (version text PRIMARY KEY,applied_at timestamptz NOT NULL DEFAULT now())`);
-      const files = (await readdir(migrations)).filter(name => name.endsWith('.sql')).sort();
+const files = await listPg73Migrations();
       assert.equal(files.length, 73);
       const corpus = [];
       for (const name of files) {

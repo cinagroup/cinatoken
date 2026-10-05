@@ -13,7 +13,8 @@ import {
 	resolveGatewayApiKeyPreview,
 } from "../../lib/key-hash";
 import type { D1DatabaseClient } from "../../storage/database-client";
-import type { ApiKeysRepository } from "../../storage/gateway-repository-interfaces";
+import type { AdminKeyMutationWithAudit, ApiKeysRepository } from "../../storage/gateway-repository-interfaces";
+import { assertAdminKeyMutation } from '../admin-key-mutation';
 import type { ApiKeysD1Statements } from "./d1-repository-extras";
 import type {
 	BudgetFilter,
@@ -724,6 +725,79 @@ export function createD1ApiKeysRepository(
 				.bind(name, id)
 				.run();
 			return result.meta.changes > 0;
+		},
+
+		async applyAdminKeyMutationWithAudit(input: AdminKeyMutationWithAudit): Promise<'applied' | 'conflict' | 'not_found'> {
+			const mutation = assertAdminKeyMutation(input);
+			const { id, expected, patch, audit } = mutation;
+			const sets: string[] = [];
+			const values: Array<string | null> = [];
+			if (Object.prototype.hasOwnProperty.call(patch, 'name')) {
+				sets.push('name = ?'); values.push(patch.name ?? null);
+			}
+			if (Object.prototype.hasOwnProperty.call(patch, 'status')) {
+				sets.push('status = ?'); values.push(patch.status!);
+			}
+			if (Object.prototype.hasOwnProperty.call(patch, 'metadata')) {
+				sets.push('metadata = ?'); values.push(patch.metadata ?? null);
+			}
+			sets.push("updated_at = datetime('now')");
+			const cas: Array<string | number | null> = [id, expected.userId, expected.name, expected.status, expected.metadata];
+			let where = 'id = ? AND user_id = ? AND name IS ? AND status = ? AND metadata IS ?';
+			if (expected.workspaceId !== undefined) {
+				where += ' AND workspace_id = ?'; cas.push(expected.workspaceId);
+			}
+			if (mutation.expectedUserSnapshot) {
+				const user = mutation.expectedUserSnapshot;
+				where += ` AND EXISTS (SELECT 1 FROM users audit_user WHERE
+					audit_user.id = ? AND audit_user.email IS ?
+					AND ROUND(audit_user.budget_max, 6) IS ? AND ROUND(audit_user.budget_base, 6) IS ?
+					AND ROUND(audit_user.budget_spent, 6) IS ? AND audit_user.budget_period IS ?
+					AND audit_user.budget_reset_at IS ? AND audit_user.budget_epoch IS ?
+					AND audit_user.budget_reserved_micros IS ? AND audit_user.status IS ?
+					AND audit_user.metadata IS ? AND audit_user.charged_cost_factors IS ?
+					AND audit_user.external_system IS ? AND audit_user.external_user_id IS ?)`;
+				cas.push(
+					user.id, user.email, user.budget_max, user.budget_base, user.budget_spent,
+					user.budget_period, user.budget_reset_at, user.budget_epoch,
+					user.budget_reserved_micros, user.status, user.metadata,
+					user.charged_cost_factors, user.external_system, user.external_user_id
+				);
+			}
+			const statements: D1PreparedStatement[] = [];
+			if (audit) {
+				statements.push(raw.prepare(`INSERT INTO user_audit_logs (
+					id, user_id, api_key_id, event_type, actor_type, request_log_id,
+					change_payload, before_user_snapshot, after_user_snapshot, changed_fields,
+					correlation_id, source, actor_id, reason_code, reason_text
+				) SELECT ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? FROM api_keys
+				WHERE ${where}`).bind(
+					audit.id, audit.userId, audit.apiKeyId ?? null, audit.eventType,
+					audit.actorType, audit.requestLogId ?? null, audit.changePayload ?? null,
+					audit.beforeUserSnapshot ?? null, audit.afterUserSnapshot ?? null,
+					audit.changedFields ?? null, audit.correlationId ?? null, audit.source ?? null,
+					audit.actorId ?? null, audit.reasonCode ?? null, audit.reasonText ?? null,
+					...cas,
+				));
+			}
+			const auditGate = audit ? ' AND EXISTS (SELECT 1 FROM user_audit_logs WHERE id = ? AND api_key_id = ?)' : '';
+			statements.push(raw.prepare(`UPDATE api_keys SET ${sets.join(', ')} WHERE ${where}${auditGate}`).bind(...values, ...cas, ...(audit ? [audit.id, id] : [])));
+			const mutationIndex = statements.length - 1;
+			if (audit) {
+				// D1 batch rolls back on SQL errors. Fail INSIDE the batch if a trigger
+				// ignored the UPDATE after the audit INSERT, before either can commit.
+				statements.push(raw.prepare(`SELECT CASE WHEN
+					EXISTS (SELECT 1 FROM user_audit_logs WHERE id = ? AND api_key_id = ?)
+					AND changes() != 1 THEN json('admin_key_audit_commit_guard_failure')
+					ELSE 1 END AS audit_commit_guard`).bind(audit.id, id));
+			}
+			const results = await raw.batch(statements);
+			const updated = results[mutationIndex]?.meta.changes ?? 0;
+			const audited = audit ? results[0]?.meta.changes ?? 0 : updated;
+			if (audited !== updated || updated > 1) throw new Error('D1 Admin Key mutation audit mismatch');
+			if (updated === 1) return 'applied';
+			const row = await raw.prepare('SELECT id FROM api_keys WHERE id = ?').bind(id).first();
+			return row ? 'conflict' : 'not_found';
 		},
 
 		async getAllApiKeys(options?: {

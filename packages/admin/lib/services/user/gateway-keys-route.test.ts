@@ -6,6 +6,7 @@ import type {
 	D1Result,
 } from "@cloudflare/workers-types";
 import type {
+	ApiKeyRow,
 	GatewayRepositories,
 	WorkspaceAccessProjection,
 } from "@octafuse/core";
@@ -13,6 +14,7 @@ import { Hono } from "hono";
 import { getAccountCapabilities } from "@/lib/unified-session";
 import type { UserEnv } from "@/lib/user-env";
 import { userGatewayKeysRoutes } from "@/lib/routes/user/gateway-keys";
+import { userWorkspacePrecondition } from "@/lib/user-workspace-precondition";
 
 class CapturingStatement {
 	values: unknown[] = [];
@@ -41,7 +43,21 @@ const workspace: WorkspaceAccessProjection = {
 	updatedAt: "2026-08-31T00:00:00.000Z",
 };
 
-function fixture() {
+function fixture(
+	rows: Pick<
+		ApiKeyRow,
+		| "id"
+		| "key"
+		| "workspace_id"
+		| "name"
+		| "status"
+		| "limit_micros"
+		| "limit_reset"
+		| "expires_at"
+		| "last_used_at"
+		| "created_at"
+	>[] = []
+) {
 	const batches: CapturingStatement[][] = [];
 	const raw = {
 		prepare: (sql: string) =>
@@ -49,11 +65,22 @@ function fixture() {
 		async batch(statements: D1PreparedStatement[]) {
 			batches.push(statements as unknown as CapturingStatement[]);
 			return statements.map(
-				() => ({ success: true, results: [], meta: {} }) as unknown as D1Result
+				() => ({ success: true, results: [], meta: {} } as unknown as D1Result)
 			);
 		},
 	} as unknown as D1Database;
 	const repositories = {
+		systemConfig: { getConfig: async () => " cny " },
+		apiKeys: {
+			listKeysByWorkspaceId: async (
+				workspaceId: string,
+				options: { creatorUserId: string }
+			) => {
+				assert.equal(workspaceId, workspace.id);
+				assert.equal(options.creatorUserId, "user-1");
+				return rows;
+			},
+		},
 		client: { driver: "d1", raw, drizzle: {} },
 		users: {
 			getById: async () => ({
@@ -93,6 +120,7 @@ function fixture() {
 		});
 		await next();
 	});
+	app.use("*", userWorkspacePrecondition);
 	app.route("/gateway-keys", userGatewayKeysRoutes);
 	return { app, batches };
 }
@@ -143,5 +171,57 @@ test("portal rejects an invalid Gateway Key limit", async () => {
 		body: JSON.stringify({ name: "Invalid", limit: -1 }),
 	});
 	assert.equal(response.status, 400);
+	assert.equal(batches.length, 0);
+});
+
+test("empty gateway list identifies the authorized workspace and normalized billing currency", async () => {
+	const { app } = fixture();
+	const response = await app.request("/gateway-keys");
+	assert.equal(response.status, 200);
+	assert.deepEqual(await response.json(), {
+		success: true,
+		data: [],
+		workspaceId: workspace.id,
+		billingCurrency: "CNY",
+	});
+});
+
+test("gateway listings preserve disabled state while exposing only a masked credential", async () => {
+	const secret = `sk-${"a".repeat(32)}`;
+	const { app } = fixture([
+		{
+			id: "key-1",
+			key: secret,
+			workspace_id: workspace.id,
+			name: "Disabled",
+			status: "disabled",
+			limit_micros: 1,
+			limit_reset: "monthly",
+			expires_at: null,
+			last_used_at: null,
+			created_at: "",
+		},
+	]);
+	const response = await app.request("/gateway-keys");
+	const body = (await response.json()) as {
+		data: { key: string; status: string; limit: number }[];
+	};
+	assert.equal(body.data[0]?.status, "disabled");
+	assert.equal(body.data[0]?.limit, 0.000001);
+	assert.equal(body.data[0]?.key, `${secret.slice(0, 8)}…${secret.slice(-4)}`);
+	assert.equal(JSON.stringify(body).includes(secret), false);
+});
+
+test("stale workspace prevents gateway creation before any storage batch", async () => {
+	const { app, batches } = fixture();
+	const response = await app.request("/gateway-keys", {
+		method: "POST",
+		headers: {
+			"Content-Type": "application/json",
+			"X-CinaToken-Workspace": encodeURIComponent("workspace:team"),
+		},
+		body: JSON.stringify({ name: "Do not create" }),
+	});
+	assert.equal(response.status, 409);
 	assert.equal(batches.length, 0);
 });

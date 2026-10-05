@@ -970,7 +970,10 @@ describe("model endpoint admin service", () => {
 			{
 				name: "pending provider credential",
 				route: route("route-1"),
-				provider: { ...ACTIVE_PROVIDER, api_key: "__OCTAFUSE_PENDING_PROVIDER_API_KEY__" },
+				provider: {
+					...ACTIVE_PROVIDER,
+					api_key: "__OCTAFUSE_PENDING_PROVIDER_API_KEY__",
+				},
 				error: /provider credential/,
 			},
 			{

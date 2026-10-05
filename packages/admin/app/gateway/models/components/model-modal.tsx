@@ -1,15 +1,15 @@
-'use client';
+"use client";
 
-import { TrashIcon } from '@heroicons/react/24/outline';
-import { useTranslations } from 'next-intl';
-import { useMemo } from 'react';
+import { TrashIcon } from "@heroicons/react/24/outline";
+import { useTranslations } from "next-intl";
+import { useMemo } from "react";
 import {
 	MODEL_INPUT_MODALITIES,
 	MODEL_OUTPUT_MODALITIES,
-} from '@octafuse/core/db/model-modalities';
-import { ModelModalitiesBadgeFromRaw } from '@/components/model-modalities-badge';
-import { PricingTiersEditor } from '@/components/pricing-tiers-editor';
-import { MODEL_VENDOR_OPTIONS } from '@/lib/model-vendor';
+} from "@octafuse/core/db/model-modalities";
+import { ModelModalitiesBadgeFromRaw } from "@/components/model-modalities-badge";
+import { PricingTiersEditor } from "@/components/pricing-tiers-editor";
+import { MODEL_VENDOR_OPTIONS } from "@/lib/model-vendor";
 import {
 	createDefaultAudioCharacterPricingDraft,
 	createDefaultAudioPricingDraft,
@@ -19,13 +19,13 @@ import {
 	type ImageBillingModeDraft,
 	type ImagePerImageDraft,
 	type PricingTierDraftRow,
-} from '@/lib/pricing-tiers-draft';
+} from "@/lib/pricing-tiers-draft";
 import {
 	publicCatalogTopProviderEditorState,
 	tagBadgeClass,
 	updatePublicCatalogTopProviderMetadata,
-} from '../model-utils';
-import type { ModelFormData, ModelFormKind, ModelListItem } from '../types';
+} from "../model-utils";
+import type { ModelFormData, ModelFormKind, ModelListItem } from "../types";
 
 type Props = {
 	open: boolean;
@@ -51,7 +51,10 @@ type Props = {
 	onTagInputChange: (value: string) => void;
 	onAddTag: () => void;
 	onRemoveTag: (tag: string) => void;
-	onToggleModality: (kind: 'input_modalities' | 'output_modalities', modality: string) => void;
+	onToggleModality: (
+		kind: "input_modalities" | "output_modalities",
+		modality: string
+	) => void;
 	/** 切换 LLM / Image / Audio / Rerank Kind（同步 modalities 与默认 pricing） */
 	onKindChange: (kind: ModelFormKind) => void;
 	onSave: () => void;
@@ -65,7 +68,7 @@ export function ModelModal(props: Props) {
 		formData,
 		formKind,
 		pricingTierRows,
-		imageBillingMode = 'token',
+		imageBillingMode = "token",
 		onImageBillingModeChange,
 		imagePerImageDraft,
 		onImagePerImageDraftChange,
@@ -88,59 +91,62 @@ export function ModelModal(props: Props) {
 		onDelete,
 	} = props;
 
-	const t = useTranslations('models.modal');
-	const tCommon = useTranslations('common');
-	const isImageModel = formKind === 'image';
-	const isAudioModel = formKind === 'audio';
-	const isRerankModel = formKind === 'rerank';
+	const t = useTranslations("models.modal");
+	const tCommon = useTranslations("common");
+	const isImageModel = formKind === "image";
+	const isAudioModel = formKind === "audio";
+	const isRerankModel = formKind === "rerank";
 	const audioCapability =
-		isAudioModel && audioPricingDraft?.mode === 'per_character'
-			? 'speech'
-			: 'transcription';
+		isAudioModel && audioPricingDraft?.mode === "per_character"
+			? "speech"
+			: "transcription";
 	const hideContextWindow = isImageModel || isAudioModel;
 	const hideMaxTokens = hideContextWindow || isRerankModel;
 	// 音频能力沿用下方“音频定价”的分段控件样式，保持弹窗内的视觉一致性。
 	const audioCapabilityOptions = [
 		{
-			id: 'transcription' as const,
-			label: t('audioCapabilityTranscription'),
+			id: "transcription" as const,
+			label: t("audioCapabilityTranscription"),
 		},
 		{
-			id: 'speech' as const,
-			label: t('audioCapabilitySpeech'),
+			id: "speech" as const,
+			label: t("audioCapabilitySpeech"),
 		},
 	] as const;
 	const topProviderEditor = useMemo(
 		() => publicCatalogTopProviderEditorState(formData.metadata),
 		[formData.metadata]
 	);
-	const topProviderReady = topProviderEditor.status === 'ready'
-		? topProviderEditor
-		: null;
+	const topProviderReady =
+		topProviderEditor.status === "ready" ? topProviderEditor : null;
 	const setTopProviderMetadata = (
 		selector: { endpointTag: string; isModerated: boolean } | null
 	) => {
-		const updated = updatePublicCatalogTopProviderMetadata(formData.metadata, selector);
+		const updated = updatePublicCatalogTopProviderMetadata(
+			formData.metadata,
+			selector
+		);
 		if (!updated.ok) return;
 		onFormChange({ ...formData, metadata: updated.value });
 	};
 
 	/** 音频能力是显式配置项：同步设置模态和计费，避免保存出 TTS + 按秒这类矛盾组合。 */
-	const changeAudioCapability = (next: 'transcription' | 'speech') => {
-		if (!isAudioModel || !onAudioPricingDraftChange || next === audioCapability) return;
-		if (next === 'speech') {
+	const changeAudioCapability = (next: "transcription" | "speech") => {
+		if (!isAudioModel || !onAudioPricingDraftChange || next === audioCapability)
+			return;
+		if (next === "speech") {
 			onFormChange({
 				...formData,
-				input_modalities: ['text'],
-				output_modalities: ['speech'],
+				input_modalities: ["text"],
+				output_modalities: ["speech"],
 			});
 			onAudioPricingDraftChange(createDefaultAudioCharacterPricingDraft());
 			return;
 		}
 		onFormChange({
 			...formData,
-			input_modalities: ['audio'],
-			output_modalities: ['transcription'],
+			input_modalities: ["audio"],
+			output_modalities: ["transcription"],
 		});
 		onAudioPricingDraftChange(createDefaultAudioPricingDraft());
 	};
@@ -159,14 +165,14 @@ export function ModelModal(props: Props) {
 			<div className="bg-white rounded-lg shadow-xl max-w-3xl w-full max-h-[90vh] overflow-y-auto">
 				<div className="px-6 py-4 border-b flex justify-between items-center sticky top-0 bg-white">
 					<h2 className="text-xl font-bold text-gray-900">
-						{editingModel ? t('editTitle') : t('newTitle')}
+						{editingModel ? t("editTitle") : t("newTitle")}
 					</h2>
 					<button
 						type="button"
 						onClick={onClose}
 						className="text-gray-400 hover:text-gray-600 disabled:opacity-50"
 						disabled={isSaving || isDeleting}
-						aria-label={tCommon('close')}
+						aria-label={tCommon("close")}
 					>
 						x
 					</button>
@@ -182,19 +188,19 @@ export function ModelModal(props: Props) {
 					<div className="grid grid-cols-2 gap-4">
 						<div className="col-span-2">
 							<label className="block text-sm font-medium text-gray-700 mb-1.5">
-								{t('kind')}
+								{t("kind")}
 							</label>
 							<div
 								className="inline-flex rounded-md border border-gray-200 bg-gray-50 p-0.5"
 								role="group"
-								aria-label={t('kind')}
+								aria-label={t("kind")}
 							>
 								{(
 									[
-										{ id: 'llm' as const, label: t('kindLlm') },
-										{ id: 'image' as const, label: t('kindImage') },
-										{ id: 'audio' as const, label: t('kindAudio') },
-										{ id: 'rerank' as const, label: t('kindRerank') },
+										{ id: "llm" as const, label: t("kindLlm") },
+										{ id: "image" as const, label: t("kindImage") },
+										{ id: "audio" as const, label: t("kindAudio") },
+										{ id: "rerank" as const, label: t("kindRerank") },
 									] as const
 								).map((opt) => {
 									const active = formKind === opt.id;
@@ -208,8 +214,8 @@ export function ModelModal(props: Props) {
 											}}
 											className={
 												active
-													? 'rounded px-3 py-1.5 text-sm font-medium bg-white text-gray-900 shadow-sm'
-													: 'rounded px-3 py-1.5 text-sm font-medium text-gray-600 hover:text-gray-900'
+													? "rounded px-3 py-1.5 text-sm font-medium bg-white text-gray-900 shadow-sm"
+													: "rounded px-3 py-1.5 text-sm font-medium text-gray-600 hover:text-gray-900"
 											}
 										>
 											{opt.label}
@@ -219,23 +225,23 @@ export function ModelModal(props: Props) {
 							</div>
 							<p className="mt-1.5 text-[11px] text-gray-500 leading-relaxed">
 								{isRerankModel
-									? t('kindHintRerank')
+									? t("kindHintRerank")
 									: isAudioModel
-									? t('kindHintAudio')
+									? t("kindHintAudio")
 									: isImageModel
-										? t('kindHintImage')
-										: t('kindHintLlm')}
+									? t("kindHintImage")
+									: t("kindHintLlm")}
 							</p>
 						</div>
 						{isAudioModel ? (
 							<div className="col-span-2 rounded-md border border-gray-200 bg-gray-50/80 p-3">
 								<p className="text-sm font-medium text-gray-800">
-									{t('audioCapability')}
+									{t("audioCapability")}
 								</p>
 								<div
 									className="mt-2 inline-flex rounded-md border border-gray-200 bg-gray-50 p-0.5"
 									role="group"
-									aria-label={t('audioCapability')}
+									aria-label={t("audioCapability")}
 								>
 									{audioCapabilityOptions.map((option) => (
 										<button
@@ -246,52 +252,64 @@ export function ModelModal(props: Props) {
 											aria-pressed={audioCapability === option.id}
 											className={
 												audioCapability === option.id
-												? 'rounded px-3 py-1.5 text-sm font-medium bg-white text-gray-900 shadow-sm'
-												: 'rounded px-3 py-1.5 text-sm font-medium text-gray-600 hover:text-gray-900'
-										}
+													? "rounded px-3 py-1.5 text-sm font-medium bg-white text-gray-900 shadow-sm"
+													: "rounded px-3 py-1.5 text-sm font-medium text-gray-600 hover:text-gray-900"
+											}
 										>
 											{option.label}
 										</button>
 									))}
 								</div>
 								<p className="mt-2 text-[11px] leading-relaxed text-gray-500">
-									{audioCapability === 'speech'
-										? t('audioCapabilityHintSpeech')
-										: t('audioCapabilityHintTranscription')}
+									{audioCapability === "speech"
+										? t("audioCapabilityHintSpeech")
+										: t("audioCapabilityHintTranscription")}
 								</p>
 							</div>
 						) : null}
 						<div>
-							<label className="block text-sm font-medium text-gray-700 mb-1">{t('modelIdRequired')}</label>
+							<label className="block text-sm font-medium text-gray-700 mb-1">
+								{t("modelIdRequired")}
+							</label>
 							<input
 								type="text"
 								value={formData.id}
-								onChange={(e) => onFormChange({ ...formData, id: e.target.value })}
+								onChange={(e) =>
+									onFormChange({ ...formData, id: e.target.value })
+								}
 								className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-								placeholder={t('modelIdPlaceholder')}
+								placeholder={t("modelIdPlaceholder")}
 								required
 								disabled={!!editingModel}
 							/>
 						</div>
 						<div>
-							<label className="block text-sm font-medium text-gray-700 mb-1">{t('displayName')}</label>
+							<label className="block text-sm font-medium text-gray-700 mb-1">
+								{t("displayName")}
+							</label>
 							<input
 								type="text"
 								value={formData.display_name}
-								onChange={(e) => onFormChange({ ...formData, display_name: e.target.value })}
+								onChange={(e) =>
+									onFormChange({ ...formData, display_name: e.target.value })
+								}
 								className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-								placeholder={t('displayNamePlaceholder')}
+								placeholder={t("displayNamePlaceholder")}
 							/>
 						</div>
 						<div>
-							<label className="block text-sm font-medium text-gray-700 mb-1">{t('vendor')}</label>
+							<label className="block text-sm font-medium text-gray-700 mb-1">
+								{t("vendor")}
+							</label>
 							<select
 								value={
 									MODEL_VENDOR_OPTIONS.some((o) => o.key === formData.vendor)
 										? formData.vendor
-										: 'other'
+										: "other"
 								}
-								onChange={(e) => onFormChange({ ...formData, vendor: e.target.value })}
+								onChange={(e) =>
+									onFormChange({ ...formData, vendor: e.target.value })
+								}
 								className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
 							>
 								{MODEL_VENDOR_OPTIONS.map((o) => (
@@ -302,53 +320,62 @@ export function ModelModal(props: Props) {
 							</select>
 						</div>
 						<div>
-							<label className="block text-sm font-medium text-gray-700 mb-1">{t('released')}</label>
+							<label className="block text-sm font-medium text-gray-700 mb-1">
+								{t("released")}
+							</label>
 							<input
 								type="date"
 								value={formData.released_at}
-								onChange={(e) => onFormChange({ ...formData, released_at: e.target.value })}
+								onChange={(e) =>
+									onFormChange({ ...formData, released_at: e.target.value })
+								}
 								className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
 							/>
 						</div>
 						{!hideContextWindow ? (
-								<div>
-									<label className="block text-sm font-medium text-gray-700 mb-1">
-										{t('contextWindow')}
-									</label>
-									<input
-										type="number"
-										value={formData.context_window}
-										onChange={(e) =>
-											onFormChange({ ...formData, context_window: e.target.value })
-										}
-										className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-										placeholder={t('contextWindowPlaceholder')}
-									/>
-								</div>
+							<div>
+								<label className="block text-sm font-medium text-gray-700 mb-1">
+									{t("contextWindow")}
+								</label>
+								<input
+									type="number"
+									value={formData.context_window}
+									onChange={(e) =>
+										onFormChange({
+											...formData,
+											context_window: e.target.value,
+										})
+									}
+									className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+									placeholder={t("contextWindowPlaceholder")}
+								/>
+							</div>
 						) : null}
 						{!hideMaxTokens ? (
-								<div>
-									<label className="block text-sm font-medium text-gray-700 mb-1">
-										{t('maxTokens')}
-									</label>
-									<input
-										type="number"
-										value={formData.max_tokens}
-										onChange={(e) =>
-											onFormChange({ ...formData, max_tokens: e.target.value })
-										}
-										className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-										placeholder={t('maxTokensPlaceholder')}
-									/>
-								</div>
+							<div>
+								<label className="block text-sm font-medium text-gray-700 mb-1">
+									{t("maxTokens")}
+								</label>
+								<input
+									type="number"
+									value={formData.max_tokens}
+									onChange={(e) =>
+										onFormChange({ ...formData, max_tokens: e.target.value })
+									}
+									className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+									placeholder={t("maxTokensPlaceholder")}
+								/>
+							</div>
 						) : null}
 						{hideContextWindow ? (
 							<div className="col-span-2 rounded-md border border-amber-100 bg-amber-50/70 px-3 py-2 text-xs text-amber-800">
-								{isAudioModel ? t('audioNoTokenLimits') : t('imageNoTokenLimits')}
+								{isAudioModel
+									? t("audioNoTokenLimits")
+									: t("imageNoTokenLimits")}
 							</div>
 						) : isRerankModel ? (
 							<div className="rounded-md border border-emerald-100 bg-emerald-50/70 px-3 py-2 text-xs text-emerald-800">
-								{t('rerankNoMaxTokens')}
+								{t("rerankNoMaxTokens")}
 							</div>
 						) : null}
 						<div className="col-span-2 rounded-md border border-gray-200 bg-gray-50/80 px-3 py-2.5">
@@ -356,7 +383,7 @@ export function ModelModal(props: Props) {
 								<div className="min-w-0 flex-1 space-y-2.5">
 									<div className="grid gap-2 sm:grid-cols-[4.5rem_minmax(0,1fr)] sm:items-center">
 										<p className="text-[11px] font-semibold uppercase tracking-wide text-gray-500">
-											{t('input')}
+											{t("input")}
 										</p>
 										<div className="flex flex-wrap gap-2">
 											{MODEL_INPUT_MODALITIES.map((m) => (
@@ -364,12 +391,19 @@ export function ModelModal(props: Props) {
 													key={m}
 													className="inline-flex items-center gap-1.5 rounded-md border border-gray-200 bg-white px-2 py-1 text-xs text-gray-700"
 												>
-											<input
-												type="checkbox"
-												checked={formData.input_modalities.includes(m)}
-												onChange={() => onToggleModality('input_modalities', m)}
-											disabled={isAudioModel || isRerankModel || isSaving || isDeleting}
-												className="h-3.5 w-3.5 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+													<input
+														type="checkbox"
+														checked={formData.input_modalities.includes(m)}
+														onChange={() =>
+															onToggleModality("input_modalities", m)
+														}
+														disabled={
+															isAudioModel ||
+															isRerankModel ||
+															isSaving ||
+															isDeleting
+														}
+														className="h-3.5 w-3.5 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
 													/>
 													{m}
 												</label>
@@ -378,7 +412,7 @@ export function ModelModal(props: Props) {
 									</div>
 									<div className="grid gap-2 sm:grid-cols-[4.5rem_minmax(0,1fr)] sm:items-center">
 										<p className="text-[11px] font-semibold uppercase tracking-wide text-gray-500">
-											{t('output')}
+											{t("output")}
 										</p>
 										<div className="flex flex-wrap gap-2">
 											{MODEL_OUTPUT_MODALITIES.map((m) => (
@@ -386,12 +420,19 @@ export function ModelModal(props: Props) {
 													key={m}
 													className="inline-flex items-center gap-1.5 rounded-md border border-gray-200 bg-white px-2 py-1 text-xs text-gray-700"
 												>
-											<input
-												type="checkbox"
-												checked={formData.output_modalities.includes(m)}
-												onChange={() => onToggleModality('output_modalities', m)}
-											disabled={isAudioModel || isRerankModel || isSaving || isDeleting}
-												className="h-3.5 w-3.5 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+													<input
+														type="checkbox"
+														checked={formData.output_modalities.includes(m)}
+														onChange={() =>
+															onToggleModality("output_modalities", m)
+														}
+														disabled={
+															isAudioModel ||
+															isRerankModel ||
+															isSaving ||
+															isDeleting
+														}
+														className="h-3.5 w-3.5 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
 													/>
 													{m}
 												</label>
@@ -401,7 +442,7 @@ export function ModelModal(props: Props) {
 								</div>
 								<div className="shrink-0 rounded-md border border-gray-200 bg-white px-3 py-2 sm:min-w-32">
 									<p className="text-[11px] font-semibold uppercase tracking-wide text-gray-500">
-										{t('preview')}
+										{t("preview")}
 									</p>
 									<div className="mt-1.5">
 										<ModelModalitiesBadgeFromRaw
@@ -414,35 +455,40 @@ export function ModelModal(props: Props) {
 							</div>
 						</div>
 						<div className="col-span-2">
-							{isAudioModel && audioPricingDraft && onAudioPricingDraftChange ? (
+							{isAudioModel &&
+							audioPricingDraft &&
+							onAudioPricingDraftChange ? (
 								<div className="space-y-3 rounded-md border border-gray-200 bg-white p-3">
-									<p className="text-sm font-medium text-gray-800">{t('audioPricing')}</p>
+									<p className="text-sm font-medium text-gray-800">
+										{t("audioPricing")}
+									</p>
 									<div className="space-y-1.5">
 										<p className="text-[11px] font-medium text-gray-600">
-											{t('audioBillingMode')}
+											{t("audioBillingMode")}
 										</p>
 										<div
 											className="inline-flex rounded-md border border-gray-200 bg-gray-50 p-0.5"
 											role="group"
-											aria-label={t('audioBillingMode')}
+											aria-label={t("audioBillingMode")}
 										>
-										{(audioCapability === 'speech'
-											? [
-												{
-													id: 'per_character' as const,
-													label: t('audioBillingModePerCharacter'),
-												},
-											]
-											: [
-												{
-													id: 'per_second' as const,
-												label: t('audioBillingModePerSecond'),
-											},
-											{
-													id: 'token' as const,
-													label: t('audioBillingModeToken'),
-												},
-											]).map((opt) => {
+											{(audioCapability === "speech"
+												? [
+														{
+															id: "per_character" as const,
+															label: t("audioBillingModePerCharacter"),
+														},
+												  ]
+												: [
+														{
+															id: "per_second" as const,
+															label: t("audioBillingModePerSecond"),
+														},
+														{
+															id: "token" as const,
+															label: t("audioBillingModeToken"),
+														},
+												  ]
+											).map((opt) => {
 												const active = audioPricingDraft.mode === opt.id;
 												return (
 													<button
@@ -451,49 +497,53 @@ export function ModelModal(props: Props) {
 														onClick={() => {
 															if (audioPricingDraft.mode === opt.id) return;
 															const nextMode: AudioBillingModeDraft = opt.id;
-															if (nextMode === 'per_second') {
+															if (nextMode === "per_second") {
 																onAudioPricingDraftChange({
 																	...createDefaultAudioPricingDraft(),
 																	price_per_second:
-																		audioPricingDraft.price_per_second.trim() !== ''
+																		audioPricingDraft.price_per_second.trim() !==
+																		""
 																			? audioPricingDraft.price_per_second
 																			: createDefaultAudioPricingDraft()
 																					.price_per_second,
 																	minimum_seconds:
-																		audioPricingDraft.minimum_seconds.trim() !== ''
+																		audioPricingDraft.minimum_seconds.trim() !==
+																		""
 																			? audioPricingDraft.minimum_seconds
 																			: createDefaultAudioPricingDraft()
 																					.minimum_seconds,
 																});
-														return;
-													}
-													if (nextMode === 'per_character') {
-														onAudioPricingDraftChange({
-															...createDefaultAudioCharacterPricingDraft(),
-															price_per_character:
-																audioPricingDraft.price_per_character.trim() !== ''
-																	? audioPricingDraft.price_per_character
-																	: '',
-															minimum_characters:
-																audioPricingDraft.minimum_characters.trim() !== ''
-																	? audioPricingDraft.minimum_characters
-																	: '0',
-														});
-														return;
-													}
+																return;
+															}
+															if (nextMode === "per_character") {
+																onAudioPricingDraftChange({
+																	...createDefaultAudioCharacterPricingDraft(),
+																	price_per_character:
+																		audioPricingDraft.price_per_character.trim() !==
+																		""
+																			? audioPricingDraft.price_per_character
+																			: "",
+																	minimum_characters:
+																		audioPricingDraft.minimum_characters.trim() !==
+																		""
+																			? audioPricingDraft.minimum_characters
+																			: "0",
+																});
+																return;
+															}
 															onAudioPricingDraftChange(
 																audioPricingDraft.tiers.length > 0
 																	? {
 																			...audioPricingDraft,
-																			mode: 'token',
-																		}
+																			mode: "token",
+																	  }
 																	: createDefaultAudioTokenPricingDraft()
 															);
 														}}
 														className={
 															active
-																? 'rounded px-3 py-1.5 text-sm font-medium bg-white text-gray-900 shadow-sm'
-																: 'rounded px-3 py-1.5 text-sm font-medium text-gray-600 hover:text-gray-900'
+																? "rounded px-3 py-1.5 text-sm font-medium bg-white text-gray-900 shadow-sm"
+																: "rounded px-3 py-1.5 text-sm font-medium text-gray-600 hover:text-gray-900"
 														}
 													>
 														{opt.label}
@@ -502,11 +552,11 @@ export function ModelModal(props: Props) {
 											})}
 										</div>
 									</div>
-									{audioPricingDraft.mode === 'token' ? (
+									{audioPricingDraft.mode === "token" ? (
 										<div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
 											<div>
 												<label className="mb-1 block text-xs font-medium text-gray-600">
-													{t('audioInputPricePerM')}
+													{t("audioInputPricePerM")}
 													<span className="ml-1 font-normal text-gray-400">
 														({billingCurrency}/1M)
 													</span>
@@ -515,14 +565,14 @@ export function ModelModal(props: Props) {
 													type="number"
 													step="any"
 													min="0"
-													value={audioPricingDraft.tiers[0]?.input_price ?? ''}
+													value={audioPricingDraft.tiers[0]?.input_price ?? ""}
 													onChange={(e) => {
 														const base =
 															audioPricingDraft.tiers[0] ??
 															createDefaultAudioTokenPricingDraft().tiers[0]!;
 														onAudioPricingDraftChange({
 															...audioPricingDraft,
-															mode: 'token',
+															mode: "token",
 															tiers: [
 																{
 																	...base,
@@ -536,7 +586,7 @@ export function ModelModal(props: Props) {
 											</div>
 											<div>
 												<label className="mb-1 block text-xs font-medium text-gray-600">
-													{t('audioOutputPricePerM')}
+													{t("audioOutputPricePerM")}
 													<span className="ml-1 font-normal text-gray-400">
 														({billingCurrency}/1M)
 													</span>
@@ -545,14 +595,14 @@ export function ModelModal(props: Props) {
 													type="number"
 													step="any"
 													min="0"
-													value={audioPricingDraft.tiers[0]?.output_price ?? ''}
+													value={audioPricingDraft.tiers[0]?.output_price ?? ""}
 													onChange={(e) => {
 														const base =
 															audioPricingDraft.tiers[0] ??
 															createDefaultAudioTokenPricingDraft().tiers[0]!;
 														onAudioPricingDraftChange({
 															...audioPricingDraft,
-															mode: 'token',
+															mode: "token",
 															tiers: [
 																{
 																	...base,
@@ -565,11 +615,11 @@ export function ModelModal(props: Props) {
 												/>
 											</div>
 										</div>
-									) : audioPricingDraft.mode === 'per_character' ? (
+									) : audioPricingDraft.mode === "per_character" ? (
 										<div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
 											<div>
 												<label className="mb-1 block text-xs font-medium text-gray-600">
-													{t('audioPricePerCharacter')}
+													{t("audioPricePerCharacter")}
 													<span className="ml-1 font-normal text-gray-400">
 														({billingCurrency}/char)
 													</span>
@@ -582,7 +632,7 @@ export function ModelModal(props: Props) {
 													onChange={(e) =>
 														onAudioPricingDraftChange({
 															...audioPricingDraft,
-															mode: 'per_character',
+															mode: "per_character",
 															price_per_character: e.target.value,
 														})
 													}
@@ -591,7 +641,7 @@ export function ModelModal(props: Props) {
 											</div>
 											<div>
 												<label className="mb-1 block text-xs font-medium text-gray-600">
-													{t('audioMinimumCharacters')}
+													{t("audioMinimumCharacters")}
 												</label>
 												<input
 													type="number"
@@ -601,7 +651,7 @@ export function ModelModal(props: Props) {
 													onChange={(e) =>
 														onAudioPricingDraftChange({
 															...audioPricingDraft,
-															mode: 'per_character',
+															mode: "per_character",
 															minimum_characters: e.target.value,
 														})
 													}
@@ -613,7 +663,7 @@ export function ModelModal(props: Props) {
 										<div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
 											<div>
 												<label className="mb-1 block text-xs font-medium text-gray-600">
-													{t('audioPricePerSecond')}
+													{t("audioPricePerSecond")}
 													<span className="ml-1 font-normal text-gray-400">
 														({billingCurrency}/s)
 													</span>
@@ -626,7 +676,7 @@ export function ModelModal(props: Props) {
 													onChange={(e) =>
 														onAudioPricingDraftChange({
 															...audioPricingDraft,
-															mode: 'per_second',
+															mode: "per_second",
 															price_per_second: e.target.value,
 														})
 													}
@@ -635,7 +685,7 @@ export function ModelModal(props: Props) {
 											</div>
 											<div>
 												<label className="mb-1 block text-xs font-medium text-gray-600">
-													{t('audioMinimumSeconds')}
+													{t("audioMinimumSeconds")}
 												</label>
 												<input
 													type="number"
@@ -645,7 +695,7 @@ export function ModelModal(props: Props) {
 													onChange={(e) =>
 														onAudioPricingDraftChange({
 															...audioPricingDraft,
-															mode: 'per_second',
+															mode: "per_second",
 															minimum_seconds: e.target.value,
 														})
 													}
@@ -657,7 +707,7 @@ export function ModelModal(props: Props) {
 								</div>
 							) : isImageModel ? (
 								<PricingTiersEditor
-									title={t('imageTokenPricing')}
+									title={t("imageTokenPricing")}
 									rows={pricingTierRows}
 									onChange={onPricingTierRowsChange}
 									billingCurrencyCode={billingCurrency}
@@ -670,7 +720,7 @@ export function ModelModal(props: Props) {
 								/>
 							) : (
 								<PricingTiersEditor
-									title={t('pricingProfile')}
+									title={t("pricingProfile")}
 									rows={pricingTierRows}
 									onChange={onPricingTierRowsChange}
 									billingCurrencyCode={billingCurrency}
@@ -679,19 +729,23 @@ export function ModelModal(props: Props) {
 							)}
 						</div>
 						<div className="col-span-2">
-							<label className="block text-sm font-medium text-gray-700 mb-1">{t('tags')}</label>
+							<label className="block text-sm font-medium text-gray-700 mb-1">
+								{t("tags")}
+							</label>
 							<div className="flex flex-wrap gap-2 mb-2">
 								{formData.tags.map((tag) => (
 									<span
 										key={tag}
-										className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-sm ${tagBadgeClass(tag)}`}
+										className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-sm ${tagBadgeClass(
+											tag
+										)}`}
 									>
 										{tag}
 										<button
 											type="button"
 											onClick={() => onRemoveTag(tag)}
 											className="text-gray-500 hover:text-red-600"
-											aria-label={t('removeTag', { tag })}
+											aria-label={t("removeTag", { tag })}
 										>
 											×
 										</button>
@@ -704,41 +758,45 @@ export function ModelModal(props: Props) {
 									value={tagInput}
 									onChange={(e) => onTagInputChange(e.target.value)}
 									onKeyDown={(e) => {
-										if (e.key === 'Enter' || e.key === ',') {
+										if (e.key === "Enter" || e.key === ",") {
 											e.preventDefault();
 											onAddTag();
 										}
 									}}
 									className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-									placeholder={t('tagsPlaceholder')}
+									placeholder={t("tagsPlaceholder")}
 								/>
 								<button
 									type="button"
 									onClick={onAddTag}
 									className="px-3 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50"
 								>
-									{tCommon('add')}
+									{tCommon("add")}
 								</button>
 							</div>
 						</div>
 						<div className="col-span-2">
-							<label className="block text-sm font-medium text-gray-700 mb-1">{t('description')}</label>
+							<label className="block text-sm font-medium text-gray-700 mb-1">
+								{t("description")}
+							</label>
 							<textarea
 								rows={3}
 								value={formData.description}
-								onChange={(e) => onFormChange({ ...formData, description: e.target.value })}
+								onChange={(e) =>
+									onFormChange({ ...formData, description: e.target.value })
+								}
 								className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-								placeholder={t('descriptionPlaceholder')}
+								placeholder={t("descriptionPlaceholder")}
 							/>
 						</div>
 						<div className="col-span-2 rounded-md border border-gray-200 bg-gray-50/80 p-3">
 							<div className="flex flex-wrap items-start justify-between gap-3">
 								<div>
 									<p className="text-sm font-medium text-gray-800">
-										{t('publicCatalogTopProvider')}
+										{t("publicCatalogTopProvider")}
 									</p>
 									<p className="mt-1 text-[11px] leading-relaxed text-gray-500">
-										{t('publicCatalogTopProviderHint')}
+										{t("publicCatalogTopProviderHint")}
 									</p>
 								</div>
 								<label className="inline-flex items-center gap-2 text-sm text-gray-700">
@@ -749,29 +807,33 @@ export function ModelModal(props: Props) {
 											topProviderReady === null || isSaving || isDeleting
 										}
 										onChange={(event) => {
-											setTopProviderMetadata(event.target.checked
-												? { endpointTag: '', isModerated: false }
-												: null);
+											setTopProviderMetadata(
+												event.target.checked
+													? { endpointTag: "", isModerated: false }
+													: null
+											);
 										}}
 										className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
 									/>
-									{t('publicCatalogTopProviderEnabled')}
+									{t("publicCatalogTopProviderEnabled")}
 								</label>
 							</div>
 							{topProviderReady?.enabled ? (
 								<div className="mt-3 grid gap-3 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-end">
 									<div>
 										<label className="mb-1 block text-xs font-medium text-gray-600">
-											{t('publicCatalogTopProviderEndpointTag')}
+											{t("publicCatalogTopProviderEndpointTag")}
 										</label>
 										<input
 											type="text"
 											value={topProviderReady.endpointTag}
 											disabled={isSaving || isDeleting}
-											onChange={(event) => setTopProviderMetadata({
-												endpointTag: event.target.value,
-												isModerated: topProviderReady.isModerated,
-											})}
+											onChange={(event) =>
+												setTopProviderMetadata({
+													endpointTag: event.target.value,
+													isModerated: topProviderReady.isModerated,
+												})
+											}
 											className="w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
 											placeholder="deepseek/standard"
 											aria-invalid={!topProviderReady.selectorValid}
@@ -782,34 +844,41 @@ export function ModelModal(props: Props) {
 											type="checkbox"
 											checked={topProviderReady.isModerated}
 											disabled={isSaving || isDeleting}
-											onChange={(event) => setTopProviderMetadata({
-												endpointTag: topProviderReady.endpointTag,
-												isModerated: event.target.checked,
-											})}
+											onChange={(event) =>
+												setTopProviderMetadata({
+													endpointTag: topProviderReady.endpointTag,
+													isModerated: event.target.checked,
+												})
+											}
 											className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
 										/>
-										{t('publicCatalogTopProviderModerated')}
+										{t("publicCatalogTopProviderModerated")}
 									</label>
 								</div>
 							) : null}
-							{topProviderEditor.status === 'metadata-invalid' ? (
+							{topProviderEditor.status === "metadata-invalid" ? (
 								<p className="mt-2 text-xs text-red-600">
-									{t('publicCatalogTopProviderInvalidMetadata')}
+									{t("publicCatalogTopProviderInvalidMetadata")}
 								</p>
-							) : topProviderReady?.enabled && !topProviderReady.selectorValid ? (
+							) : topProviderReady?.enabled &&
+							  !topProviderReady.selectorValid ? (
 								<p className="mt-2 text-xs text-red-600">
-									{t('publicCatalogTopProviderInvalidSelector')}
+									{t("publicCatalogTopProviderInvalidSelector")}
 								</p>
 							) : null}
 						</div>
 						<div className="col-span-2">
-							<label className="block text-sm font-medium text-gray-700 mb-1">{t('metadataJson')}</label>
+							<label className="block text-sm font-medium text-gray-700 mb-1">
+								{t("metadataJson")}
+							</label>
 							<textarea
 								rows={6}
 								value={formData.metadata}
-								onChange={(e) => onFormChange({ ...formData, metadata: e.target.value })}
+								onChange={(e) =>
+									onFormChange({ ...formData, metadata: e.target.value })
+								}
 								className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 font-mono text-sm"
-								placeholder={t('metadataPlaceholder')}
+								placeholder={t("metadataPlaceholder")}
 							/>
 						</div>
 					</div>
@@ -825,7 +894,7 @@ export function ModelModal(props: Props) {
 								className="inline-flex items-center gap-1.5 px-3 py-2 border border-red-200 rounded-md text-sm font-medium text-red-700 bg-red-50 hover:bg-red-100 disabled:opacity-50 disabled:cursor-not-allowed"
 							>
 								<TrashIcon className="h-4 w-4" />
-								{isDeleting ? tCommon('deleting') : t('deleteModel')}
+								{isDeleting ? tCommon("deleting") : t("deleteModel")}
 							</button>
 						)}
 					</div>
@@ -836,7 +905,7 @@ export function ModelModal(props: Props) {
 							className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50"
 							disabled={isSaving || isDeleting}
 						>
-							{tCommon('cancel')}
+							{tCommon("cancel")}
 						</button>
 						<button
 							type="button"
@@ -844,7 +913,7 @@ export function ModelModal(props: Props) {
 							disabled={isSaving || isDeleting}
 							className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:opacity-50"
 						>
-							{isSaving ? tCommon('savingDots') : tCommon('save')}
+							{isSaving ? tCommon("savingDots") : tCommon("save")}
 						</button>
 					</div>
 				</div>

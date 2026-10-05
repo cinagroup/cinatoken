@@ -360,8 +360,8 @@ test('D1 Workspace membership mutations project current organization roles and a
 			db, orgPrincipal, 'production', ['subject-admin', 'subject-member'], new Set(['org-admin']),
 			{ nowIso: '2026-09-01T02:00:00.000Z' },
 		);
-		assert.equal(added.ok, true);
 		if (!added.ok) assert.fail(added.reason);
+		assert.equal(added.ok, true);
 		assert.equal(added.changedCount, 2);
 		assert.deepEqual(added.data.map((row) => [row.user_id, row.role]), [
 			['subject-admin', 'admin'],
@@ -395,8 +395,8 @@ test('D1 Workspace membership mutations project current organization roles and a
 			db, orgPrincipal, 'production', ['subject-admin', 'subject-member'],
 			{ nowIso: '2026-09-01T03:00:00.000Z' },
 		);
-		assert.equal(removed.ok, true);
 		if (!removed.ok) assert.fail(removed.reason);
+		assert.equal(removed.ok, true);
 		assert.equal(removed.changedCount, 2);
 		assert.equal(database.prepare(`SELECT COUNT(*) AS total FROM user_audit_logs
 			WHERE event_type = 'workspace_members_added'`).get()?.total, 1);

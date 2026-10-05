@@ -7,37 +7,45 @@ import {
 	isAudioTranscriptionModel,
 	isImageGenerationModel,
 	type ModelKindFields,
-} from '@octafuse/core/db/model-modalities';
-import { GATEWAY_TOOLS_PROVIDER_ID } from '@/lib/gateway-tools';
+} from "@octafuse/core/db/model-modalities";
+import { GATEWAY_TOOLS_PROVIDER_ID } from "@/lib/gateway-tools";
 
-export type GeminiWireAction = 'generateContent' | 'streamGenerateContent';
+export type GeminiWireAction = "generateContent" | "streamGenerateContent";
 
-export type RequestLogFeatureKind = 'llm' | 'image' | 'tts' | 'asr' | 'tool';
+export type RequestLogFeatureKind = "llm" | "image" | "tts" | "asr" | "tool";
 
 export type RequestLogFeatureTag =
-	| { key: 'kind'; kind: RequestLogFeatureKind }
-	| { key: 'stream' }
-	| { key: 'realtime' }
-	| { key: 'reasoning' }
-	| { key: 'failover' };
+	| { key: "kind"; kind: RequestLogFeatureKind }
+	| { key: "stream" }
+	| { key: "realtime" }
+	| { key: "reasoning" }
+	| { key: "failover" };
 
-export function parseGeminiWireAction(routeTrace: string | null | undefined): GeminiWireAction | undefined {
+export function parseGeminiWireAction(
+	routeTrace: string | null | undefined
+): GeminiWireAction | undefined {
 	if (!routeTrace?.trim()) return undefined;
 	try {
 		const parsed = JSON.parse(routeTrace) as { gemini?: { action?: unknown } };
-		const action = typeof parsed.gemini?.action === 'string' ? parsed.gemini.action.trim() : '';
-		if (action === 'generateContent' || action === 'streamGenerateContent') return action;
+		const action =
+			typeof parsed.gemini?.action === "string"
+				? parsed.gemini.action.trim()
+				: "";
+		if (action === "generateContent" || action === "streamGenerateContent")
+			return action;
 	} catch {
 		return undefined;
 	}
 	return undefined;
 }
 
-function readJsonObject(raw: string | null | undefined): Record<string, unknown> | null {
+function readJsonObject(
+	raw: string | null | undefined
+): Record<string, unknown> | null {
 	if (!raw?.trim()) return null;
 	try {
 		const parsed = JSON.parse(raw) as unknown;
-		return parsed && typeof parsed === 'object' && !Array.isArray(parsed)
+		return parsed && typeof parsed === "object" && !Array.isArray(parsed)
 			? (parsed as Record<string, unknown>)
 			: null;
 	} catch {
@@ -48,8 +56,8 @@ function readJsonObject(raw: string | null | undefined): Record<string, unknown>
 function streamFlagFromBody(raw: string | null | undefined): boolean | null {
 	const body = readJsonObject(raw);
 	if (!body) return null;
-	if (body._gemini_action === 'streamGenerateContent') return true;
-	if (body._gemini_action === 'generateContent') return false;
+	if (body._gemini_action === "streamGenerateContent") return true;
+	if (body._gemini_action === "generateContent") return false;
 	if (body.stream === true) return true;
 	if (body.stream === false) return false;
 	return null;
@@ -64,27 +72,33 @@ export function isRequestLogStreaming(log: {
 	upstream_request_body?: string | null;
 }): boolean {
 	const geminiAction = parseGeminiWireAction(log.route_trace);
-	if (geminiAction === 'streamGenerateContent') return true;
-	if (geminiAction === 'generateContent') return false;
+	if (geminiAction === "streamGenerateContent") return true;
+	if (geminiAction === "generateContent") return false;
 
-	const operation = `${log.request_operation ?? ''} ${log.upstream_operation ?? ''}`;
-	if (operation.includes('.realtime.')) return true;
+	const operation = `${log.request_operation ?? ""} ${
+		log.upstream_operation ?? ""
+	}`;
+	if (operation.includes(".realtime.")) return true;
 
-	return streamFlagFromBody(log.request_body) ?? streamFlagFromBody(log.upstream_request_body) ?? false;
+	return (
+		streamFlagFromBody(log.request_body) ??
+		streamFlagFromBody(log.upstream_request_body) ??
+		false
+	);
 }
 
 function joinedOperations(log: {
 	request_operation?: string | null;
 	upstream_operation?: string | null;
 }): string {
-	return `${log.request_operation ?? ''} ${log.upstream_operation ?? ''}`;
+	return `${log.request_operation ?? ""} ${log.upstream_operation ?? ""}`;
 }
 
 export function isRequestLogRealtime(log: {
 	request_operation?: string | null;
 	upstream_operation?: string | null;
 }): boolean {
-	return joinedOperations(log).includes('.realtime.');
+	return joinedOperations(log).includes(".realtime.");
 }
 
 export function requestLogFeatureKind(
@@ -95,29 +109,34 @@ export function requestLogFeatureKind(
 		request_operation?: string | null;
 		upstream_operation?: string | null;
 	},
-	catalogModel?: ModelKindFields | null,
+	catalogModel?: ModelKindFields | null
 ): RequestLogFeatureKind {
-	const modelId = log.model_id?.trim() ?? '';
-	if (log.provider_id === GATEWAY_TOOLS_PROVIDER_ID || modelId.startsWith('tool:')) {
-		return 'tool';
+	const modelId = log.model_id?.trim() ?? "";
+	if (
+		log.provider_id === GATEWAY_TOOLS_PROVIDER_ID ||
+		modelId.startsWith("tool:")
+	) {
+		return "tool";
 	}
 
-	const billing = log.billing_kind?.trim() ?? '';
-	if (billing === 'image_per_image' || billing === 'image_tokens') return 'image';
-	if (billing === 'audio_per_character') return 'tts';
-	if (billing === 'audio_per_second' || billing === 'audio_tokens') return 'asr';
+	const billing = log.billing_kind?.trim() ?? "";
+	if (billing === "image_per_image" || billing === "image_tokens")
+		return "image";
+	if (billing === "audio_per_character") return "tts";
+	if (billing === "audio_per_second" || billing === "audio_tokens")
+		return "asr";
 
 	const operation = joinedOperations(log);
-	if (operation.includes('images.')) return 'image';
-	if (operation.includes('audio.speech')) return 'tts';
-	if (operation.includes('audio.transcriptions')) return 'asr';
+	if (operation.includes("images.")) return "image";
+	if (operation.includes("audio.speech")) return "tts";
+	if (operation.includes("audio.transcriptions")) return "asr";
 
 	if (catalogModel) {
-		if (isImageGenerationModel(catalogModel)) return 'image';
-		if (isAudioSpeechModel(catalogModel)) return 'tts';
-		if (isAudioTranscriptionModel(catalogModel)) return 'asr';
+		if (isImageGenerationModel(catalogModel)) return "image";
+		if (isAudioSpeechModel(catalogModel)) return "tts";
+		if (isAudioTranscriptionModel(catalogModel)) return "asr";
 	}
-	return 'llm';
+	return "llm";
 }
 
 /** 列表特性标签：模型类型始终在前，其余仅在命中时出现。实时请求不再重复标流式。 */
@@ -135,22 +154,25 @@ export function requestLogFeatureTags(
 		first_reasoning_token_ms?: number | null;
 		upstream_failover_count?: number | null;
 	},
-	catalogModel?: ModelKindFields | null,
+	catalogModel?: ModelKindFields | null
 ): RequestLogFeatureTag[] {
-	const tags: RequestLogFeatureTag[] = [{ key: 'kind', kind: requestLogFeatureKind(log, catalogModel) }];
+	const tags: RequestLogFeatureTag[] = [
+		{ key: "kind", kind: requestLogFeatureKind(log, catalogModel) },
+	];
 	if (isRequestLogRealtime(log)) {
-		tags.push({ key: 'realtime' });
+		tags.push({ key: "realtime" });
 	} else if (isRequestLogStreaming(log)) {
-		tags.push({ key: 'stream' });
+		tags.push({ key: "stream" });
 	}
 	if (
-		(log.first_reasoning_token_ms != null && Number.isFinite(log.first_reasoning_token_ms)) ||
+		(log.first_reasoning_token_ms != null &&
+			Number.isFinite(log.first_reasoning_token_ms)) ||
 		(log.reasoning_tokens != null && log.reasoning_tokens > 0)
 	) {
-		tags.push({ key: 'reasoning' });
+		tags.push({ key: "reasoning" });
 	}
 	if ((log.upstream_failover_count ?? 0) > 0) {
-		tags.push({ key: 'failover' });
+		tags.push({ key: "failover" });
 	}
 	return tags;
 }

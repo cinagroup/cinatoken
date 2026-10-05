@@ -1,4 +1,6 @@
 import type { D1DatabaseClient } from '../../storage/database-client';
+import { createD1SharedKeyAdminRepository } from '../admin-shared-key-repository';
+import { assertSellerSharedKeyPatch, assertSharedKeyValidation, SHARED_KEY_STATE_COLUMNS, sharedKeySellerAssignments, sharedKeyStateValues } from '../shared-key-state';
 import type {
 	PortalAccessRepository,
 	PortalLedgerRepository,
@@ -17,6 +19,47 @@ import type {
 	UserEarningsRow,
 	WithdrawalRow,
 } from '../shared-keys-types';
+
+const WITHDRAWAL_COLUMNS = `id, user_id AS userId, amount, fee, net_amount AS netAmount, currency,
+  wallet_address AS walletAddress, status, token_amount AS tokenAmount, tx_hash AS txHash,
+  chain_id AS chainId, failure_reason AS failureReason, created_at AS createdAt,
+  updated_at AS updatedAt, confirmed_at AS confirmedAt`;
+
+const WITHDRAWAL_REFUND_TRIGGER = 'withdrawals_refund_after_status_update';
+// Complete sqlite_master definitions produced by formal 0077, with LF/CRLF.
+// Do not normalize SQL: even whitespace in a literal can change its meaning.
+const WITHDRAWAL_REFUND_DEFINITIONS = new Map([
+	['4f5b4aec1fe24c8e57503317a8dc9ce7569892f81d702bdceef554451f7b49b6', 1078],
+	['55cd97b1e5ec065ab3b644644ddfe0e9612ece32c277aa1eba3dedd81c648837', 1098],
+]);
+
+async function approvedWithdrawalRefundDefinition(raw: D1DatabaseClient['raw']): Promise<string> {
+	try {
+		// Inspect the actual trigger on every attempt, not a migration marker or
+		// a cached successful check. Bound the returned definition and row count.
+		const result = await raw.prepare(`SELECT type AS object_type, name AS object_name,
+			tbl_name AS table_name, length(CAST(sql AS BLOB)) AS sql_bytes,
+			CASE WHEN length(CAST(sql AS BLOB)) <= ? THEN sql END AS definition
+			FROM main.sqlite_master WHERE name = ? COLLATE BINARY LIMIT 2`)
+			.bind(4096, WITHDRAWAL_REFUND_TRIGGER).all<unknown>();
+		if (result.success !== true || !Array.isArray(result.results) || result.results.length !== 1) throw new Error();
+		const row = result.results[0];
+		if (!row || typeof row !== 'object' || Array.isArray(row)
+			|| !('object_type' in row) || row.object_type !== 'trigger'
+			|| !('object_name' in row) || row.object_name !== WITHDRAWAL_REFUND_TRIGGER
+			|| !('table_name' in row) || row.table_name !== 'withdrawals'
+			|| !('definition' in row) || typeof row.definition !== 'string' || row.definition.length > 4096
+			|| !('sql_bytes' in row)) throw new Error();
+		const bytes = new TextEncoder().encode(row.definition);
+		const digest = Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256', bytes)),
+			byte => byte.toString(16).padStart(2, '0')).join('');
+		if (bytes.length !== row.sql_bytes || WITHDRAWAL_REFUND_DEFINITIONS.get(digest) !== row.sql_bytes) throw new Error();
+		return row.definition;
+	} catch {
+		// Never expose trigger text or adapter diagnostics through an Admin error.
+		throw new Error('withdrawal_rejection_schema_unavailable');
+	}
+}
 
 type SharedKeySqlRow = {
 	id: string;
@@ -118,6 +161,7 @@ export function createD1PortalAccessRepository(db: D1DatabaseClient): PortalAcce
 export function createD1SharedKeysRepository(db: D1DatabaseClient): SharedKeysRepository {
 	const raw = db.raw;
 	return {
+		...createD1SharedKeyAdminRepository(db),
 		async insertSharedKey(params: InsertSharedKeyParams) {
 			await raw.prepare(`INSERT INTO shared_keys
           (id, seller_user_id, channel_type, api_key, key_fingerprint, label, status, weight,
@@ -167,9 +211,30 @@ export function createD1SharedKeysRepository(db: D1DatabaseClient): SharedKeysRe
 		async updateSharedKey(id, patch) {
 			const { sets, values } = buildSharedKeyPatch(patch);
 			if (sets.length === 0) return false;
-			const result = await raw.prepare(`UPDATE shared_keys SET ${sets.join(', ')}, updated_at = datetime('now') WHERE id = ?`)
+			if (patch.status === 'invalid' || patch.status === 'validating') sets.push('validated_at = NULL');
+			const statusGuard = patch.status === 'active' ? " AND status IN ('active','paused') AND validated_at IS NOT NULL"
+				: patch.status === 'paused' ? " AND status IN ('active','paused','disabled')" : '';
+			const result = await raw.prepare(`UPDATE shared_keys SET ${sets.join(', ')}, updated_at = datetime('now') WHERE id = ?${statusGuard}`)
 				.bind(...values, id).run();
 			return Number(result.meta.changes ?? 0) > 0;
+		},
+		async updateSharedKeyForSeller(id, patch, expected) {
+			const ownedPatch = assertSellerSharedKeyPatch(patch, expected);
+			const { sets, values } = sharedKeySellerAssignments(ownedPatch);
+			if (sets.length === 0) return false;
+			const condition = SHARED_KEY_STATE_COLUMNS.map(column => `${column} IS ?`).join(' AND ');
+			const result = await raw.prepare(`UPDATE shared_keys SET ${sets.join(', ')}, updated_at = datetime('now') WHERE id = ? AND ${condition}`)
+				.bind(...values, id, ...sharedKeyStateValues(expected)).run();
+			return Number(result.meta.changes ?? 0) === 1;
+		},
+		async completeSharedKeyValidation(id, expected, result, nowIso) {
+			assertSharedKeyValidation(expected, result, nowIso);
+			const condition = SHARED_KEY_STATE_COLUMNS.map(column => `${column} IS ?`).join(' AND ');
+			const written = await raw.prepare(`UPDATE shared_keys SET status = ?, validated_at = ?, failure_reason = ?,
+				last_failure_at = CASE WHEN ? = 1 THEN last_failure_at ELSE ? END, updated_at = ? WHERE id = ? AND ${condition}`)
+				.bind(result.valid ? 'active' : 'invalid', result.valid ? nowIso : null, result.valid ? null : result.reason,
+					result.valid ? 1 : 0, nowIso, nowIso, id, ...sharedKeyStateValues(expected)).run();
+			return Number(written.meta.changes ?? 0) === 1;
 		},
 		async replaceSharedKeySecret(id, protectedSecret) {
 			const result = await raw.prepare("UPDATE shared_keys SET api_key = ?, updated_at = datetime('now') WHERE id = ?")
@@ -177,7 +242,7 @@ export function createD1SharedKeysRepository(db: D1DatabaseClient): SharedKeysRe
 			return Number(result.meta.changes ?? 0) > 0;
 		},
 		async markSharedKeyFailure(id, reason, nowIso) {
-			await raw.prepare(`UPDATE shared_keys SET status = 'invalid', failure_reason = ?, last_failure_at = ?, updated_at = ? WHERE id = ?`)
+			await raw.prepare(`UPDATE shared_keys SET status = 'invalid', validated_at = NULL, failure_reason = ?, last_failure_at = ?, updated_at = ? WHERE id = ? AND status = 'active'`)
 				.bind(reason, nowIso, nowIso, id).run();
 		},
 		async deleteSharedKey(id) {
@@ -261,6 +326,14 @@ export function createD1PortalLedgerRepository(db: D1DatabaseClient): PortalLedg
             wallet_verified_at = excluded.wallet_verified_at, updated_at = excluded.updated_at`)
 				.bind(userId, walletAddress, verifiedAtIso).run();
 		},
+		async updateWalletIfChallengeUnused(userId, walletAddress, verifiedAtIso, challengeCreatedAtIso) {
+			const result = await raw.prepare(`UPDATE user_earnings
+          SET wallet_address = ?, wallet_verified_at = ?, updated_at = ?
+          WHERE user_id = ? AND (wallet_verified_at IS NULL
+            OR julianday(wallet_verified_at) < julianday(?))`)
+				.bind(walletAddress, verifiedAtIso, verifiedAtIso, userId, challengeCreatedAtIso).run();
+			return Number(result.meta.changes ?? 0) > 0;
+		},
 		async insertEarning(params: InsertSharedKeyEarningParams) {
 			const result = await raw.prepare(`INSERT OR IGNORE INTO shared_key_earnings
           (id, request_log_id, shared_key_id, seller_user_id, input_tokens, output_tokens,
@@ -327,8 +400,11 @@ export function createD1PortalLedgerRepository(db: D1DatabaseClient): PortalLedg
 		},
 		async listEarningsBySeller(sellerUserId, page, pageSize) {
 			const offset = (page - 1) * pageSize;
-			const rows = await raw.prepare(`SELECT id, request_log_id, shared_key_id, seller_user_id, input_tokens, output_tokens,
-          cache_read_tokens, cache_write_tokens, gross_amount, platform_fee, net_amount, currency, created_at
+			const rows = await raw.prepare(`SELECT id, request_log_id AS requestLogId, shared_key_id AS sharedKeyId,
+          seller_user_id AS sellerUserId, input_tokens AS inputTokens, output_tokens AS outputTokens,
+          cache_read_tokens AS cacheReadTokens, cache_write_tokens AS cacheWriteTokens,
+          gross_amount AS grossAmount, platform_fee AS platformFee, net_amount AS netAmount,
+          currency, created_at AS createdAt
           FROM shared_key_earnings WHERE seller_user_id = ? ORDER BY created_at DESC, id DESC LIMIT ? OFFSET ?`)
 				.bind(sellerUserId, pageSize, offset).all<SharedKeyEarningRow & Record<string, unknown>>();
 			const totalRow = await raw.prepare('SELECT COUNT(*) AS total FROM shared_key_earnings WHERE seller_user_id = ?')
@@ -336,6 +412,10 @@ export function createD1PortalLedgerRepository(db: D1DatabaseClient): PortalLedg
 			return {
 				rows: (rows.results ?? []).map((row) => ({
 					...row,
+					inputTokens: Number(row.inputTokens),
+					outputTokens: Number(row.outputTokens),
+					cacheReadTokens: Number(row.cacheReadTokens),
+					cacheWriteTokens: Number(row.cacheWriteTokens),
 					grossAmount: Number(row.grossAmount),
 					platformFee: Number(row.platformFee),
 					netAmount: Number(row.netAmount),
@@ -378,22 +458,19 @@ export function createD1PortalLedgerRepository(db: D1DatabaseClient): PortalLedg
 			}
 		},
 		async getWithdrawal(id) {
-			const row = await raw.prepare(`SELECT id, user_id, amount, fee, net_amount, currency, wallet_address, status,
-          token_amount, tx_hash, chain_id, failure_reason, created_at, updated_at, confirmed_at
+			const row = await raw.prepare(`SELECT ${WITHDRAWAL_COLUMNS}
           FROM withdrawals WHERE id = ?`).bind(id).first<WithdrawalRow & Record<string, unknown>>();
-			return row ? { ...row, amount: Number(row.amount), fee: Number(row.fee), netAmount: Number(row.netAmount), tokenAmount: row.tokenAmount == null ? null : Number(row.tokenAmount) } as WithdrawalRow : null;
+			return row ? { ...row, amount: Number(row.amount), fee: Number(row.fee), netAmount: Number(row.netAmount), tokenAmount: row.tokenAmount == null ? null : Number(row.tokenAmount), chainId: row.chainId == null ? null : Number(row.chainId) } as WithdrawalRow : null;
 		},
 		async getActiveWithdrawalByUser(userId) {
-			const row = await raw.prepare(`SELECT id, user_id, amount, fee, net_amount, currency, wallet_address, status,
-          token_amount, tx_hash, chain_id, failure_reason, created_at, updated_at, confirmed_at
+			const row = await raw.prepare(`SELECT ${WITHDRAWAL_COLUMNS}
           FROM withdrawals WHERE user_id = ? AND status IN ('requested', 'processing', 'submitted') LIMIT 1`)
 				.bind(userId).first<WithdrawalRow & Record<string, unknown>>();
-			return row ? { ...row, amount: Number(row.amount), fee: Number(row.fee), netAmount: Number(row.netAmount), tokenAmount: row.tokenAmount == null ? null : Number(row.tokenAmount) } as WithdrawalRow : null;
+			return row ? { ...row, amount: Number(row.amount), fee: Number(row.fee), netAmount: Number(row.netAmount), tokenAmount: row.tokenAmount == null ? null : Number(row.tokenAmount), chainId: row.chainId == null ? null : Number(row.chainId) } as WithdrawalRow : null;
 		},
 		async listWithdrawalsByUser(userId, page, pageSize) {
 			const offset = (page - 1) * pageSize;
-			const rows = await raw.prepare(`SELECT id, user_id, amount, fee, net_amount, currency, wallet_address, status,
-          token_amount, tx_hash, chain_id, failure_reason, created_at, updated_at, confirmed_at
+			const rows = await raw.prepare(`SELECT ${WITHDRAWAL_COLUMNS}
           FROM withdrawals WHERE user_id = ? ORDER BY created_at DESC, id DESC LIMIT ? OFFSET ?`)
 				.bind(userId, pageSize, offset).all<WithdrawalRow & Record<string, unknown>>();
 			const totalRow = await raw.prepare('SELECT COUNT(*) AS total FROM withdrawals WHERE user_id = ?')
@@ -405,17 +482,16 @@ export function createD1PortalLedgerRepository(db: D1DatabaseClient): PortalLedg
 					fee: Number(row.fee),
 					netAmount: Number(row.netAmount),
 					tokenAmount: row.tokenAmount == null ? null : Number(row.tokenAmount),
+					chainId: row.chainId == null ? null : Number(row.chainId),
 				})) as WithdrawalRow[],
 				total: Number(totalRow?.total ?? 0),
 			};
 		},
 		async listAllWithdrawals(status) {
 			const stmt = status
-				? raw.prepare(`SELECT id, user_id, amount, fee, net_amount, currency, wallet_address, status,
-            token_amount, tx_hash, chain_id, failure_reason, created_at, updated_at, confirmed_at
+				? raw.prepare(`SELECT ${WITHDRAWAL_COLUMNS}
             FROM withdrawals WHERE status = ? ORDER BY created_at DESC, id DESC`)
-				: raw.prepare(`SELECT id, user_id, amount, fee, net_amount, currency, wallet_address, status,
-            token_amount, tx_hash, chain_id, failure_reason, created_at, updated_at, confirmed_at
+				: raw.prepare(`SELECT ${WITHDRAWAL_COLUMNS}
             FROM withdrawals ORDER BY created_at DESC, id DESC`);
 			const rows = await (status ? stmt.bind(status) : stmt).all<WithdrawalRow & Record<string, unknown>>();
 			return (rows.results ?? []).map((row) => ({
@@ -424,6 +500,7 @@ export function createD1PortalLedgerRepository(db: D1DatabaseClient): PortalLedg
 				fee: Number(row.fee),
 				netAmount: Number(row.netAmount),
 				tokenAmount: row.tokenAmount == null ? null : Number(row.tokenAmount),
+				chainId: row.chainId == null ? null : Number(row.chainId),
 			})) as WithdrawalRow[];
 		},
 		async lockBalanceForWithdrawal(userId, amount, nowIso) {
@@ -447,6 +524,39 @@ export function createD1PortalLedgerRepository(db: D1DatabaseClient): PortalLedg
           WHERE id = ? AND status IN ('requested', 'processing', 'submitted')`)
 				.bind(reason, nowIso, id).run();
 		},
+		async rejectRequestedWithdrawal(id, reason, nowIso) {
+			const refundDefinition = await approvedWithdrawalRefundDefinition(raw);
+			// One SQLite write arbitrates against the chain worker's requested ->
+			// processing CAS. The refund and journal trigger share this statement.
+			// Recheck the exact approved definition inside the write, so a dropped
+			// or replaced trigger after the read cannot admit an unfunded success.
+			const result = await raw.prepare(`UPDATE withdrawals
+				SET status = 'failed', failure_reason = ?, updated_at = ?
+				WHERE id = ? AND status = 'requested' AND tx_hash IS NULL
+				AND NOT EXISTS (SELECT 1 FROM chain_job_transactions
+					WHERE job_kind = 'withdrawal' AND job_id = withdrawals.id)
+				AND EXISTS (SELECT 1 FROM main.sqlite_master
+					WHERE type = 'trigger' AND name = ? COLLATE BINARY
+					AND tbl_name = 'withdrawals' AND sql = ? COLLATE BINARY)
+				RETURNING id`)
+				.bind(reason, nowIso, id, WITHDRAWAL_REFUND_TRIGGER, refundDefinition).all<{ id: string }>();
+			// D1 meta.changes is total_changes(), including refund/journal and
+			// nested trigger writes. Only RETURNING identifies the CAS winner.
+			if (result.success !== true || !Array.isArray(result.results) || result.results.length > 1) {
+				throw new Error('withdrawal_rejection_result_uncertain');
+			}
+			if (result.results.length === 1) {
+				if (result.results[0]?.id !== id) throw new Error('withdrawal_rejection_result_uncertain');
+				return { kind: 'rejected', withdrawalId: id };
+			}
+			// A schema race is unready/unknown, not an ordinary row-state conflict.
+			if (await approvedWithdrawalRefundDefinition(raw) !== refundDefinition) {
+				throw new Error('withdrawal_rejection_schema_unavailable');
+			}
+			const existing = await raw.prepare('SELECT id FROM withdrawals WHERE id = ?')
+				.bind(id).first<{ id: string }>();
+			return existing ? { kind: 'conflict' } : { kind: 'not-found' };
+		},
 		async updateWithdrawalStatus(id, patch) {
 			const sets: string[] = ['updated_at = ?'];
 			const values: unknown[] = [patch.nowIso];
@@ -469,22 +579,36 @@ export function createD1PortalLedgerRepository(db: D1DatabaseClient): PortalLedg
 			return Number(result.meta.changes ?? 0) > 0;
 		},
 		async getNftMintsByUser(userId) {
-			const rows = await raw.prepare(`SELECT id, user_id, badge_token_id, tier_name, wallet_address, status,
-          tx_hash, chain_id, value_snapshot, failure_reason, created_at, confirmed_at
+			const rows = await raw.prepare(`SELECT id, user_id AS userId, badge_token_id AS badgeTokenId,
+          tier_name AS tierName, wallet_address AS walletAddress, status,
+          tx_hash AS txHash, chain_id AS chainId, value_snapshot AS valueSnapshot,
+          failure_reason AS failureReason, created_at AS createdAt, confirmed_at AS confirmedAt
           FROM nft_mints WHERE user_id = ? ORDER BY created_at DESC`)
 				.bind(userId).all<NftMintRow & Record<string, unknown>>();
-			return (rows.results ?? []).map((row) => ({ ...row, valueSnapshot: Number(row.valueSnapshot) })) as NftMintRow[];
+			return (rows.results ?? []).map((row) => ({
+				...row, badgeTokenId: Number(row.badgeTokenId),
+				chainId: row.chainId === null ? null : Number(row.chainId),
+				valueSnapshot: Number(row.valueSnapshot),
+			})) as NftMintRow[];
 		},
 		async listAllNftMints(status) {
 			const stmt = status
-				? raw.prepare(`SELECT id, user_id, badge_token_id, tier_name, wallet_address, status,
-            tx_hash, chain_id, value_snapshot, failure_reason, created_at, confirmed_at
+				? raw.prepare(`SELECT id, user_id AS userId, badge_token_id AS badgeTokenId,
+            tier_name AS tierName, wallet_address AS walletAddress, status,
+            tx_hash AS txHash, chain_id AS chainId, value_snapshot AS valueSnapshot,
+            failure_reason AS failureReason, created_at AS createdAt, confirmed_at AS confirmedAt
             FROM nft_mints WHERE status = ? ORDER BY created_at DESC`)
-				: raw.prepare(`SELECT id, user_id, badge_token_id, tier_name, wallet_address, status,
-            tx_hash, chain_id, value_snapshot, failure_reason, created_at, confirmed_at
+				: raw.prepare(`SELECT id, user_id AS userId, badge_token_id AS badgeTokenId,
+            tier_name AS tierName, wallet_address AS walletAddress, status,
+            tx_hash AS txHash, chain_id AS chainId, value_snapshot AS valueSnapshot,
+            failure_reason AS failureReason, created_at AS createdAt, confirmed_at AS confirmedAt
             FROM nft_mints ORDER BY created_at DESC`);
 			const rows = await (status ? stmt.bind(status) : stmt).all<NftMintRow & Record<string, unknown>>();
-			return (rows.results ?? []).map((row) => ({ ...row, valueSnapshot: Number(row.valueSnapshot) })) as NftMintRow[];
+			return (rows.results ?? []).map((row) => ({
+				...row, badgeTokenId: Number(row.badgeTokenId),
+				chainId: row.chainId === null ? null : Number(row.chainId),
+				valueSnapshot: Number(row.valueSnapshot),
+			})) as NftMintRow[];
 		},
 		async updateNftMintStatus(id, patch) {
 			const sets: string[] = [];

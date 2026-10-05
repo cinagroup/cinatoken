@@ -1,12 +1,13 @@
 // Owned loopback PostgreSQL only. No ambient DATABASE_URL or remote database is used.
 import assert from 'node:assert/strict';
 import { randomUUID } from 'node:crypto';
-import { readFile, readdir } from 'node:fs/promises';
+import { readFile } from 'node:fs/promises';
 import test from 'node:test';
 import { drizzle } from 'drizzle-orm/postgres-js';
 import { createPostgresUsersRepository } from '../../../packages/core/src/db/postgres/users.impl.ts';
 import { pgCoreSchema } from '../../../packages/core/src/storage/drizzle/schema.pg.ts';
 import { startNativePostgres } from '../../../packages/core/src/test-support/postgres-native-cluster.mjs';
+import { listPg73Migrations } from './pg73-native-fixture.mjs';
 
 const gateway = 'cinatoken_gateway';
 const migrationDir = new URL('../../../packages/core/migrations-postgres/', import.meta.url);
@@ -29,7 +30,7 @@ test('native PostgreSQL user deletion keeps audit truthful before and after reco
       const [version] = await admin.unsafe(`SELECT current_setting('server_version_num')::int AS version_num`);
       assert.ok(version.version_num >= 180000);
       await admin.unsafe(`CREATE SCHEMA ${gateway}`);
-      const files = (await readdir(migrationDir)).filter(name => name.endsWith('.sql')).sort();
+      const files = await listPg73Migrations();
       assert.equal(files.at(-1), '0073_recovery_api_key_workspace_lock.sql');
       const migrate = async name => admin.begin(async tx => {
         await tx.unsafe(await readFile(new URL(name, migrationDir), 'utf8')).simple();

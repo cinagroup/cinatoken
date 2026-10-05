@@ -1,0 +1,166 @@
+{
+  "schema": "cinatoken-cloudflare-reviewed-pg-migration-closed-v1",
+  "startedAt": "2026-10-05T07:59:29.559Z",
+  "workerName": "cinatoken-release-migrate-20261005-ca7b90fa",
+  "accountId": "7ea8e46d8210bad342fa7595f7935fea",
+  "workerArtifact": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-release-cf-migrate-prep-20261005-wDBduU\\migration-worker.mjs",
+    "bytes": 302436,
+    "sha256": "7cfa9361d1125a877fe0d5d3e619da14f6118916e5be8ba2e42c2e52309f46f2"
+  },
+  "executionInstruction": "Root explicitly authorized after independent review",
+  "expectedApplied": 14,
+  "expectedSkipped": 67,
+  "expectedTotal": 81,
+  "SQLMutationRequested": true,
+  "SQLMutationResultKnown": true,
+  "D1OrMySQLMigrations": false,
+  "databaseDriverChange": false,
+  "chainQueueChanges": false,
+  "existingWorkerWrites": false,
+  "rootSourceWrites": false,
+  "secretValuesPrinted": false,
+  "secretPersisted": false,
+  "calls": [
+    {
+      "kind": "unique_worker_absence_precheck",
+      "method": "GET",
+      "apiPath": "/workers/scripts/cinatoken-release-migrate-20261005-ca7b90fa/settings",
+      "http": 404,
+      "success": false,
+      "errors": [
+        {
+          "code": 10007
+        }
+      ],
+      "at": "2026-10-05T07:59:31.604Z"
+    },
+    {
+      "kind": "account_workers_subdomain",
+      "method": "GET",
+      "apiPath": "/workers/subdomain",
+      "http": 200,
+      "success": true,
+      "errors": [],
+      "at": "2026-10-05T07:59:32.816Z"
+    },
+    {
+      "kind": "upload_unique_reviewed_migration_worker",
+      "method": "PUT",
+      "apiPath": "/workers/scripts/cinatoken-release-migrate-20261005-ca7b90fa",
+      "http": 200,
+      "success": true,
+      "errors": [],
+      "at": "2026-10-05T07:59:36.433Z"
+    },
+    {
+      "kind": "enable_temporary_workers_dev",
+      "method": "POST",
+      "apiPath": "/workers/scripts/cinatoken-release-migrate-20261005-ca7b90fa/subdomain",
+      "http": 200,
+      "success": true,
+      "errors": [],
+      "at": "2026-10-05T07:59:37.841Z"
+    },
+    {
+      "kind": "read_temporary_workers_dev_state",
+      "method": "GET",
+      "apiPath": "/workers/scripts/cinatoken-release-migrate-20261005-ca7b90fa/subdomain",
+      "http": 200,
+      "success": true,
+      "errors": [],
+      "at": "2026-10-05T07:59:39.233Z"
+    },
+    {
+      "kind": "reviewed_migration_deployment_version",
+      "method": "GET",
+      "apiPath": "/workers/scripts/cinatoken-release-migrate-20261005-ca7b90fa/deployments",
+      "http": 200,
+      "success": true,
+      "errors": [],
+      "at": "2026-10-05T07:59:40.412Z"
+    },
+    {
+      "kind": "delete_unique_reviewed_migration_worker",
+      "method": "DELETE",
+      "apiPath": "/workers/scripts/cinatoken-release-migrate-20261005-ca7b90fa",
+      "http": 200,
+      "success": true,
+      "errors": [],
+      "at": "2026-10-05T07:59:47.218Z"
+    },
+    {
+      "kind": "verify_unique_reviewed_migration_worker_absent",
+      "method": "GET",
+      "apiPath": "/workers/scripts/cinatoken-release-migrate-20261005-ca7b90fa/settings",
+      "http": 404,
+      "success": false,
+      "errors": [
+        {
+          "code": 10007
+        }
+      ],
+      "at": "2026-10-05T07:59:48.382Z"
+    }
+  ],
+  "readiness": [
+    {
+      "attempt": 1,
+      "http": 404,
+      "contentType": "text/plain;charset=UTF-8",
+      "rawBodyBytes": 9,
+      "rawBodySha256": "e3ebaa16dd9d9b9fc107c42183fb6cf9d22927e1af03dbbdfa0ccc38e4e4ac31",
+      "actualWorkerNotFound": true,
+      "at": "2026-10-05T07:59:41.718Z"
+    }
+  ],
+  "cleanup": {
+    "deleteSucceeded": true,
+    "absentConfirmed": true
+  },
+  "actualExit": 0,
+  "workerURL": "https://cinatoken-release-migrate-20261005-ca7b90fa.cinagroup.workers.dev",
+  "uploadedVersion": {
+    "deployment_id": "40462339a8b04972be75ceb57bc37990",
+    "etag": "3e3b6f7091bee83183ecc190721b5e0a8b8a641660edbdc65988bab4ac046a31",
+    "created_on": "2026-10-05T07:59:35.55399Z",
+    "modified_on": "2026-10-05T07:59:35.55399Z"
+  },
+  "workersDevEnableResult": {
+    "enabled": true,
+    "previews_enabled": false
+  },
+  "workersDevReadResult": {
+    "enabled": true,
+    "previews_enabled": false
+  },
+  "deployment": {
+    "id": "dcef74b0-4f31-4b4c-9e2c-4ff649345fc8",
+    "strategy": "percentage",
+    "versions": [
+      {
+        "version_id": "40462339-a8b0-4972-be75-ceb57bc37990",
+        "percentage": 100
+      }
+    ],
+    "created_on": "2026-10-05T07:59:35.55399Z"
+  },
+  "migration": {
+    "http": 200,
+    "contentType": "application/json",
+    "json": {
+      "ok": true,
+      "role": "cinatoken_gateway_migrator",
+      "schema": "cinatoken_gateway",
+      "applied": 14,
+      "skipped": 67,
+      "total": 81,
+      "runtime_grants_applied": true
+    },
+    "rawBodyBytes": 143,
+    "rawBodySha256": "813977d86c6125e03431f8d8d8528b4076e3b435ecff82c151f7cbf1e52cbd49",
+    "at": "2026-10-05T07:59:45.199Z"
+  },
+  "result": "EXPECTED14_PG_MIGRATIONS_AND_RUNTIME_GRANTS_PASS",
+  "finishedAt": "2026-10-05T07:59:48.382Z"
+}

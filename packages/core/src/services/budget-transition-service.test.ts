@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
 import { assertAndFinalizeUserAuditInsert } from '../db/user-audit-catalog';
-import { computeBudgetTransition } from './budget-transition-service';
+import { BudgetTransitionInvalidTargetError, computeBudgetTransition } from './budget-transition-service';
 
 test('computeBudgetTransition carries remaining budget forward', () => {
 	const result = computeBudgetTransition(
@@ -11,6 +11,7 @@ test('computeBudgetTransition carries remaining budget forward', () => {
 			budget_spent: 1,
 			budget_period: 'monthly',
 			budget_reset_at: '2026-06-23T15:31:49.000Z',
+			budget_epoch: 4,
 			budget_reserved_micros: 0,
 		},
 		{
@@ -25,6 +26,7 @@ test('computeBudgetTransition carries remaining budget forward', () => {
 	assert.equal(result.after.budget_max, 109);
 	assert.equal(result.after.budget_spent, 0);
 	assert.equal(result.after.budget_base, 100);
+	assert.equal(result.after.budget_epoch, 5);
 });
 
 test('computeBudgetTransition deducts overage from next period', () => {
@@ -35,6 +37,7 @@ test('computeBudgetTransition deducts overage from next period', () => {
 			budget_spent: 12,
 			budget_period: 'monthly',
 			budget_reset_at: '2026-06-23T15:31:49.000Z',
+			budget_epoch: 4,
 			budget_reserved_micros: 0,
 		},
 		{
@@ -49,6 +52,21 @@ test('computeBudgetTransition deducts overage from next period', () => {
 	assert.equal(result.after.budget_spent, 0);
 });
 
+test('computeBudgetTransition rejects overage that would make the next limit negative', () => {
+	assert.throws(() => computeBudgetTransition({
+		budget_max: 1,
+		budget_base: 1,
+		budget_spent: 10,
+		budget_period: 'none',
+		budget_reset_at: null,
+		budget_epoch: 1,
+		budget_reserved_micros: 0,
+	}, {
+		target_budget_base: 2,
+		budget_period: 'monthly',
+	}), BudgetTransitionInvalidTargetError);
+});
+
 test('computeBudgetTransition does not carry active reservation capacity into a reset period', () => {
 	const result = computeBudgetTransition(
 		{
@@ -57,6 +75,7 @@ test('computeBudgetTransition does not carry active reservation capacity into a 
 			budget_spent: 1,
 			budget_period: 'monthly',
 			budget_reset_at: '2026-06-23T15:31:49.000Z',
+			budget_epoch: 4,
 			budget_reserved_micros: 2_500_000,
 		},
 		{
@@ -79,6 +98,7 @@ test('computeBudgetTransition none strategy skips carryover', () => {
 			budget_spent: 1,
 			budget_period: 'monthly',
 			budget_reset_at: null,
+			budget_epoch: 4,
 			budget_reserved_micros: 0,
 		},
 		{
@@ -100,6 +120,7 @@ test('computeBudgetTransition preserves active reservations when spent is not re
 			budget_spent: 1,
 			budget_period: 'monthly',
 			budget_reset_at: null,
+			budget_epoch: 4,
 			budget_reserved_micros: 250_000,
 		},
 		{
@@ -111,6 +132,7 @@ test('computeBudgetTransition preserves active reservations when spent is not re
 	);
 	assert.equal(result.after.budget_spent, 1);
 	assert.equal(result.after.budget_reserved_micros, 250_000);
+	assert.equal(result.after.budget_epoch, 4);
 });
 
 test('assertAndFinalizeUserAuditInsert accepts admin_budget_transition source', () => {

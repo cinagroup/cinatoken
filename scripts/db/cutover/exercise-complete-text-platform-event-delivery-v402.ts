@@ -8,7 +8,7 @@ import * as runners from './complete-text-platform-event-delivery-runner-v402.mj
 
 type Sql = PostgresDatabaseClient['raw'];
 type Item = { eventId: string; attemptCount: number; leaseUntil: string };
-type Claim = { leaseNonce: string; items: Item[] };
+type Claim = { leaseNonce: string; items: readonly Item[] };
 type Params = {
  auditor: Sql; publisherConnectionString: string; consumerConnectionString: string; operatorConnectionString: string;
  /** Exact installed catalog equality, including guards, is required after every artificial time advance. */
@@ -69,6 +69,11 @@ export async function exerciseCompleteTextPlatformEventDeliveryV402(p: Params) {
  }
  p.stage('v402-actual-publisher-consumer-LOGIN-denies-raw-secret-financial-receipt-and-unrelated-function-authority', { sqlstate: '42501', authorityDenials });
  const observe = (eventId: string) => delivery.observePostgresCompleteTextPlatformEventV402({ connectionString: consumer, eventId });
+ const observeJob = async (eventId: string) => {
+  const state = await observe(eventId);
+  assert.ok(state.job, 'Expected durable platform event job');
+  return state.job;
+ };
  const claim = async (limit = 1): Promise<Claim> => {
   const leaseNonce = randomUUID();
   const result = await delivery.claimPostgresCompleteTextPlatformEventsV402({ connectionString: publisher, limit, leaseNonce });
@@ -173,7 +178,7 @@ export async function exerciseCompleteTextPlatformEventDeliveryV402(p: Params) {
  const scan = await delivery.scanPostgresCompleteTextPlatformEventsV402({ connectionString: publisher, limit: 20 });
  assert.equal(scan.status, 'scanned'); assert.equal(scan.enqueued, 6);
  assert.equal((await delivery.scanPostgresCompleteTextPlatformEventsV402({ connectionString: publisher, limit: 20 })).enqueued, 0);
- assert.equal((await observe(firstId)).job.status, 'delivered'); assert.equal((await observe(firstId)).job.attemptCount, 0);
+ assert.equal((await observeJob(firstId)).status, 'delivered'); assert.equal((await observeJob(firstId)).attemptCount, 0);
  p.stage('v402-unwatermarked-scan-discovers-six-existing-events-idempotent-and-already-consumed-job');
 
  const beforeBad = await counts();
@@ -188,7 +193,7 @@ export async function exerciseCompleteTextPlatformEventDeliveryV402(p: Params) {
  const claimProxy = await lostAck(publisher, connectionString => delivery.claimPostgresCompleteTextPlatformEventsV402({ connectionString, limit: 1, leaseNonce: uncertainNonce }));
  const uncertain = await p.auditor.unsafe(`SELECT event_id::text FROM ${d}.jobs_v402 WHERE lease_nonce=$1`, [uncertainNonce]);
  assert.equal(uncertain.length, 1); const uncertainId = String(uncertain[0]!.event_id);
- assert.equal((await observe(uncertainId)).job.status, 'publishing'); assert.equal((await observe(uncertainId)).job.attemptCount, 1);
+ assert.equal((await observeJob(uncertainId)).status, 'publishing'); assert.equal((await observeJob(uncertainId)).attemptCount, 1);
  const replayedClaim = await delivery.claimPostgresCompleteTextPlatformEventsV402({ connectionString: publisher, limit: 1, leaseNonce: uncertainNonce });
  assert.equal(replayedClaim.items.length, 1); assert.equal(replayedClaim.items[0].eventId, uncertainId); assert.equal(replayedClaim.items[0].attemptCount, 1);
  const beforeConflict = await jobsImage();
@@ -201,7 +206,7 @@ export async function exerciseCompleteTextPlatformEventDeliveryV402(p: Params) {
  const published = await runners.publishCompleteTextPlatformEventsV402({ connectionString: publisher, limit: 1, leaseNonce: randomUUID(), queue });
  assert.equal(published.publications.length, 1); const publishedId = published.publications[0].eventId;
  assert.equal(published.publications[0].outcome, 'published'); assert.equal((await observe(publishedId)).status, 'pending');
- assert.equal((await observe(publishedId)).job.status, 'published'); assert.equal((await observe(publishedId)).receipt, null);
+ assert.equal((await observeJob(publishedId)).status, 'published'); assert.equal((await observe(publishedId)).receipt, null);
  p.stage('v402-actual-publisher-runner-UUID-only-queue-broker-ACK-is-not-consumption', { eventId: publishedId });
 
  let heldId = '';
@@ -233,7 +238,7 @@ export async function exerciseCompleteTextPlatformEventDeliveryV402(p: Params) {
  const [raced, publicationRace] = await Promise.all([Promise.all([delivery.consumePostgresCompleteTextPlatformEventV402({ connectionString: consumer, eventId: raceId }),
   delivery.consumePostgresCompleteTextPlatformEventV402({ connectionString: consumer, eventId: raceId })]), finish(raceId, left.leaseNonce, 'published')]);
  assert.deepEqual(raced.map((x: { status: string }) => x.status).sort(), ['already_consumed', 'consumed']);
- assert.ok(['published', 'already_consumed'].includes(publicationRace.status)); assert.equal((await observe(raceId)).job.status, 'delivered');
+ assert.ok(['published', 'already_consumed'].includes(publicationRace.status)); assert.equal((await observeJob(raceId)).status, 'delivered');
  assert.equal((await finish(raceId, left.leaseNonce, 'published')).status, 'already_consumed');
  p.stage('v402-concurrent-real-publishers-distinct-leases-publish-finish-and-duplicate-consumers-one-receipt', { publicationRaceStatus: publicationRace.status });
 
@@ -245,7 +250,7 @@ export async function exerciseCompleteTextPlatformEventDeliveryV402(p: Params) {
  assert.equal(reacquired.items[0]!.eventId, uncertainId); assert.equal(reacquired.items[0]!.attemptCount, 2);
  await queue.send(uncertainId);
  const finishProxy = await lostAck(publisher, connectionString => delivery.finishPostgresCompleteTextPlatformPublishV402({ connectionString, eventId: uncertainId, leaseNonce: reacquired.leaseNonce, outcome: 'published' }));
- assert.equal((await observe(uncertainId)).job.status, 'published'); assert.equal((await observe(uncertainId)).status, 'pending');
+ assert.equal((await observeJob(uncertainId)).status, 'published'); assert.equal((await observe(uncertainId)).status, 'pending');
  p.stage('v402-real-publish-finish-COMMIT-response-loss-independent-read-retains-pending-consumption', { eventId: uncertainId, proxyFacts: finishProxy });
  await advance(uncertainId, 'next_attempt_at');
  const redelivery = await runners.publishCompleteTextPlatformEventsV402({ connectionString: publisher, limit: 1, leaseNonce: randomUUID(), queue });
@@ -262,7 +267,7 @@ export async function exerciseCompleteTextPlatformEventDeliveryV402(p: Params) {
  const queueAckLost = await runners.publishCompleteTextPlatformEventsV402({ connectionString: publisher, limit: 1, leaseNonce: randomUUID(),
   queue: { async send(eventId: string) { await queue.send(eventId); throw new Error('Owned queue accepted ID but publication ACK was lost'); } } });
  assert.equal(queueAckLost.publications[0].eventId, publishedId); assert.equal(queueAckLost.publications[0].outcome, 'failed');
- assert.equal((await observe(publishedId)).job.status, 'pending'); assert.equal((await observe(publishedId)).receipt, null);
+ assert.equal((await observeJob(publishedId)).status, 'pending'); assert.equal((await observe(publishedId)).receipt, null);
  assert.equal((await consumeMessage(publishedId)).status, 'consumed');
  assert.equal((await finish(publishedId, queueAckLost.claim.leaseNonce, 'failed')).status, 'already_consumed');
  p.stage('v402-broker-publication-ACK-loss-and-delayed-consumer-never-create-second-effect');
@@ -282,7 +287,7 @@ export async function exerciseCompleteTextPlatformEventDeliveryV402(p: Params) {
      if (actualServerNow < leaseUntil) await new Promise(resolve => setTimeout(resolve, Math.min(1000, leaseUntil - actualServerNow)));
     }
     const afterExpiry = await claim(); assert.equal(afterExpiry.items.length, 0);
-    assert.equal((await observe(deadId)).job.status, 'dead_letter');
+    assert.equal((await observeJob(deadId)).status, 'dead_letter');
     p.stage('v402-real-server-thirty-second-seventh-lease-expiry-reaches-dead-letter-without-time-probe',
      { eventId: deadId, leaseUntil: active.items[0]!.leaseUntil, actualServerNow: new Date(actualServerNow).toISOString(), elapsedMs: Math.round(performance.now() - started) });
     assert.equal((await finish(deadId, active.leaseNonce, 'failed')).status, 'lease_lost'); break;
@@ -292,7 +297,7 @@ export async function exerciseCompleteTextPlatformEventDeliveryV402(p: Params) {
    assert.equal(result.status, attempt === 7 ? 'dead_letter' : 'retry_scheduled');
    assert.equal(result.attemptCount, attempt);
    if (attempt < 7) {
-    const waiting = await observe(deadId); assert.equal(waiting.job.status, 'pending');
+    const waiting = await observe(deadId); assert.ok(waiting.job); assert.equal(waiting.job.status, 'pending');
     const delay = Date.parse(waiting.job.nextAttemptAt) - Date.parse(String(clock!.now));
     assert.ok(delay >= backoffs[attempt - 1]! * 1000 && delay < backoffs[attempt - 1]! * 1000 + 5000);
     assert.equal((await claim()).items.length, 0, 'backoff prevents a premature publication lease');
@@ -320,7 +325,8 @@ export async function exerciseCompleteTextPlatformEventDeliveryV402(p: Params) {
 
  assert.deepEqual(await counts(), { projections: 6, receipts: 6, jobs: 6 });
  for (const row of source) {
-  const state = await observe(String(row.event_id)); assert.equal(state.status, 'consumed'); assert.equal(state.job.status, 'delivered');
+  const state = await observe(String(row.event_id)); assert.equal(state.status, 'consumed');
+  assert.ok(state.job); assert.ok(state.receipt); assert.equal(state.job.status, 'delivered');
   assert.equal(state.receipt.terminalId, row.terminal_id); assert.equal(state.receipt.requestId, row.request_id);
   assert.equal(state.receipt.payloadSha256, row.payload_sha256); assert.equal(state.receipt.eventType, 'platform_text_no_fetch_closed'); assert.equal(state.receipt.eventVersion, 1);
  }

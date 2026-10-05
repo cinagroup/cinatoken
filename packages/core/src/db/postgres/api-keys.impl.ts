@@ -24,9 +24,10 @@ import {
 	prepareGatewayApiKeyForStorage,
 	resolveGatewayApiKeyPreview,
 } from "../../lib/key-hash";
-import type { ApiKeysRepository } from "../../storage/gateway-repository-interfaces";
+import type { AdminKeyMutationWithAudit, ApiKeysRepository } from "../../storage/gateway-repository-interfaces";
 import {
 	apiKeysTable as pgApiKeysTable,
+	userAuditLogsTable as pgUserAuditLogsTable,
 	organizationMembershipsTable as pgOrganizationMembershipsTable,
 	organizationsTable as pgOrganizationsTable,
 	usersTable as pgUsersTable,
@@ -50,6 +51,8 @@ import {
 import type { AdminApiKeyListItem } from "../../storage/repository-dtos";
 import { parseMoney } from "../../storage/critical-write-paths-utils";
 import { normalizeGatewayKeyLimitReset } from "../../gateway-key-limits";
+import { assertAdminKeyMutation, matchesAdminKeyProfile, matchesAdminUserAuditSnapshot } from '../admin-key-mutation';
+import { toUserAuditLogDrizzleInsert } from '../user-audit-drizzle-insert';
 
 function isDispatchIntentApiKeyDeleteRestriction(error: unknown): boolean {
 	if (typeof error !== "object" || error === null) return false;
@@ -911,6 +914,44 @@ export function createPostgresApiKeysRepository(
 			return updated.length > 0;
 		},
 
+		async applyAdminKeyMutationWithAudit(input: AdminKeyMutationWithAudit): Promise<'applied' | 'conflict' | 'not_found'> {
+			const mutation = assertAdminKeyMutation(input);
+			return drizzle.transaction(async (tx) => {
+				if (mutation.expectedUserSnapshot) {
+					const users = await tx.select().from(pgUsersTable)
+						.where(eq(pgUsersTable.id, mutation.expectedUserSnapshot.id)).limit(1).for('update');
+					if (!users[0]) return 'not_found' as const;
+					if (!matchesAdminUserAuditSnapshot(users[0], mutation.expectedUserSnapshot)) return 'conflict' as const;
+				}
+				const rows = await tx.select({
+					userId: pgApiKeysTable.userId,
+					workspaceId: pgApiKeysTable.workspaceId,
+					name: pgApiKeysTable.name,
+					status: pgApiKeysTable.status,
+					metadata: pgApiKeysTable.metadata,
+				}).from(pgApiKeysTable).where(eq(pgApiKeysTable.id, mutation.id)).for('update');
+				const row = rows[0];
+				if (!row) return 'not_found' as const;
+				if (!matchesAdminKeyProfile(row, mutation.expected)) return 'conflict' as const;
+				const patch: {
+					name?: string | null; status?: string; metadata?: string | null; updatedAt: string;
+				} = { updatedAt: new Date().toISOString() };
+				if (Object.prototype.hasOwnProperty.call(mutation.patch, 'name')) patch.name = mutation.patch.name ?? null;
+				if (Object.prototype.hasOwnProperty.call(mutation.patch, 'status')) patch.status = mutation.patch.status;
+				if (Object.prototype.hasOwnProperty.call(mutation.patch, 'metadata')) patch.metadata = mutation.patch.metadata ?? null;
+				const updated = await tx.update(pgApiKeysTable).set(patch)
+					.where(eq(pgApiKeysTable.id, mutation.id)).returning({ id: pgApiKeysTable.id });
+				if (updated.length !== 1) throw new Error('Locked Admin Key disappeared before update');
+				if (mutation.audit) {
+					const inserted = await tx.insert(pgUserAuditLogsTable).values(
+						toUserAuditLogDrizzleInsert(mutation.audit, new Date().toISOString())
+					).returning({ id: pgUserAuditLogsTable.id });
+					if (inserted.length !== 1) throw new Error('Admin Key audit was not inserted');
+				}
+				return 'applied' as const;
+			});
+		},
+
 		async getAllApiKeys(options?: {
 			email?: string;
 			userId?: string;
@@ -986,7 +1027,7 @@ export function createPostgresApiKeysRepository(
 			const sort = options?.sort ?? DEFAULT_API_KEY_LIST_SORT;
 			const order = options?.order ?? DEFAULT_API_KEY_LIST_ORDER;
 			const rows = await listQ
-				.orderBy(apiKeyListOrderBy(sort, order))
+				.orderBy(apiKeyListOrderBy(sort, order), order === 'asc' ? asc(pgApiKeysTable.id) : desc(pgApiKeysTable.id))
 				.limit(pageSize)
 				.offset(offset);
 			return { keys: rows.map(mapPgAdminListRow), total };

@@ -2,7 +2,7 @@
 // DATABASE_URL, Hyperdrive origin, queue, provider, or cloud service is used.
 import assert from 'node:assert/strict';
 import { createHash, createHmac, pbkdf2Sync, randomBytes, randomUUID } from 'node:crypto';
-import { readFile, readdir, writeFile } from 'node:fs/promises';
+import { readFile, writeFile } from 'node:fs/promises';
 import { dirname, join } from 'node:path';
 import test from 'node:test';
 import postgres from 'postgres';
@@ -23,7 +23,7 @@ import {
   buildFinancialConsumerDirectLoginGrant, FINANCIAL_CONSUMER_GRANT_ACTIVATION,
   FINANCIAL_CONSUMER_ROLE,
 } from './build-financial-consumer-direct-login-grant.ts';
-import { grantPostgresRuntime } from './grant-postgres-runtime.ts';
+import { grantPg73RuntimeFixture, listPg73Migrations } from './pg73-native-fixture.mjs';
 import { buildRequestParentDefaultAclActivation } from './build-request-parent-default-acl-activation.mjs';
 import { buildRequestParentProducerGrant } from './build-request-parent-producer-grant.mjs';
 import { buildImageFactJobProducerGrant } from './build-image-fact-job-producer-grant.mjs';
@@ -147,7 +147,7 @@ test('native PG18 HTTP Images claim, fact/outbox/job and dedicated financial com
       const migratorUrl = roleUrl(cluster, roles.migrator, passwords.migrator);
       await migrator.unsafe(`CREATE TABLE ${schema}.schema_migrations(
         version text PRIMARY KEY, applied_at timestamptz NOT NULL DEFAULT now())`);
-      const files = (await readdir(migrations)).filter(name => name.endsWith('.sql')).sort();
+      const files = await listPg73Migrations();
       assert.equal(files.length, 73);
       const corpus = [];
       for (const name of files) {
@@ -159,7 +159,7 @@ test('native PG18 HTTP Images claim, fact/outbox/job and dedicated financial com
         });
       }
       report.sourceSha256.formalMigrationCorpus = hash(corpus.join('\n'));
-      await grantPostgresRuntime({ DATABASE_URL: migratorUrl });
+      await grantPg73RuntimeFixture({ cluster, migrator, migratorUrl });
       await migrator.begin(async tx => {
         await tx.unsafe("SET LOCAL cinatoken.recovery_log_guard_activation = 'reviewed-v1'");
         await tx.unsafe(await readFile(guardSwitch, 'utf8')).simple();
@@ -171,7 +171,7 @@ test('native PG18 HTTP Images claim, fact/outbox/job and dedicated financial com
       await activateProposal(migrator, 'cinatoken.request_dispatch_replay_reservations_activation', replayBase);
       await activateProposal(migrator, 'cinatoken.request_dispatch_replay_parent_gate_activation', replayGate);
       await activateProposal(migrator, ...proposals[2]);
-      await grantPostgresRuntime({ DATABASE_URL: migratorUrl });
+      await grantPg73RuntimeFixture({ cluster, migrator, migratorUrl });
       await bundle(migrator, await buildRequestParentProducerGrant({ activation: 'reviewed-direct-login-v1' }));
       await bundle(migrator, await buildImageFactJobProducerGrant({ activation: 'reviewed-direct-login-v1' }));
       await grantFinancialFixture(cluster.admin, migrator, passwords.financial);

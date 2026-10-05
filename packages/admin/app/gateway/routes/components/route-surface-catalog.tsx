@@ -1,20 +1,26 @@
-'use client';
+"use client";
 
-import { useMemo } from 'react';
+import { useMemo } from "react";
 import {
 	ArrowDownIcon,
 	PencilSquareIcon,
 	PlusIcon,
-} from '@heroicons/react/24/outline';
-import { useTranslations } from 'next-intl';
-import type { GatewayModel, GatewayProvider } from '@/lib/types';
+} from "@heroicons/react/24/outline";
+import { useTranslations } from "next-intl";
+import type { GatewayModel, GatewayProvider } from "@/lib/types";
 import {
 	buildRouteSurfaceCatalog,
 	type RouteModelGroup,
 	type SurfaceCatalogGroup,
-} from '../route-utils';
-import type { RouteListRow, RouteProtocolGroupSection } from '../types';
-import { FlowConnectorAdd, RequestSurfaceNode, RouteGroupNode, UpstreamPoolPanel, openSectionStickyDialog } from './route-model-flow';
+} from "../route-utils";
+import type { RouteListRow, RouteProtocolGroupSection } from "../types";
+import {
+	FlowConnectorAdd,
+	RequestSurfaceNode,
+	RouteGroupNode,
+	UpstreamPoolPanel,
+	openSectionStickyDialog,
+} from "./route-model-flow";
 
 type Props = {
 	cards: RouteModelGroup[];
@@ -24,7 +30,10 @@ type Props = {
 	copiedModelId: string | null;
 	togglingId: string | null;
 	onCopyModelId: (modelId: string) => void;
-	onCreate: (modelId: string, preset?: { protocol?: string; operation?: string; group?: string }) => void;
+	onCreate: (
+		modelId: string,
+		preset?: { protocol?: string; operation?: string; group?: string }
+	) => void;
 	onEdit: (route: RouteListRow) => void;
 	onEditModel: (modelId: string) => void;
 	onToggleStatus: (route: RouteListRow) => void;
@@ -49,14 +58,19 @@ type Props = {
 		poolId: string | null,
 		enabled: boolean,
 		idleTtlSeconds: number,
-		targets: Array<{ id: string; providerName: string; priority: number; weight: number }>
+		targets: Array<{
+			id: string;
+			providerName: string;
+			priority: number;
+			weight: number;
+		}>
 	) => void;
 };
 
 function branchRailClass(index: number, count: number): string {
-	if (index === 0) return 'top-1/2 bottom-0';
-	if (index === count - 1) return 'top-0 bottom-1/2';
-	return 'inset-y-0';
+	if (index === 0) return "top-1/2 bottom-0";
+	if (index === count - 1) return "top-0 bottom-1/2";
+	return "inset-y-0";
 }
 
 function BranchConnectors({
@@ -72,7 +86,10 @@ function BranchConnectors({
 		<>
 			{count > 1 ? (
 				<span
-					className={`absolute left-0 hidden w-px xl:block ${colorClass} ${branchRailClass(index, count)}`}
+					className={`absolute left-0 hidden w-px xl:block ${colorClass} ${branchRailClass(
+						index,
+						count
+					)}`}
 					aria-hidden
 				/>
 			) : null}
@@ -91,7 +108,7 @@ function CatalogModelNode({
 	card: RouteModelGroup;
 	onEditModel: (modelId: string) => void;
 }) {
-	const tCard = useTranslations('routes.card');
+	const tCard = useTranslations("routes.card");
 
 	return (
 		<div className="w-full min-w-0 rounded-lg border border-slate-200 bg-white px-3 py-2.5 shadow-sm">
@@ -107,7 +124,7 @@ function CatalogModelNode({
 					type="button"
 					onClick={() => onEditModel(card.model_id)}
 					className="rounded p-0.5 text-gray-400 hover:bg-gray-100 hover:text-gray-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
-					title={tCard('editModel', { title: card.title })}
+					title={tCard("editModel", { title: card.title })}
 				>
 					<PencilSquareIcon className="h-3.5 w-3.5" />
 				</button>
@@ -116,11 +133,11 @@ function CatalogModelNode({
 				<span
 					className={`rounded-md px-2 py-0.5 text-[10px] font-semibold ring-1 ring-inset ${
 						card.activeCount > 0
-							? 'bg-emerald-50 text-emerald-700 ring-emerald-200'
-							: 'bg-red-50 text-red-700 ring-red-200'
+							? "bg-emerald-50 text-emerald-700 ring-emerald-200"
+							: "bg-red-50 text-red-700 ring-red-200"
 					}`}
 				>
-					{tCard('activeTotalRoutes', {
+					{tCard("activeTotalRoutes", {
 						active: card.activeCount,
 						total: card.groupRoutes.length,
 					})}
@@ -137,20 +154,20 @@ export function UnroutedModelsPanel({
 }: {
 	cards: RouteModelGroup[];
 	onEditModel: (modelId: string) => void;
-	onCreate: Props['onCreate'];
+	onCreate: Props["onCreate"];
 }) {
-	const t = useTranslations('routes.flow');
-	const tCard = useTranslations('routes.card');
+	const t = useTranslations("routes.flow");
+	const tCard = useTranslations("routes.card");
 	if (cards.length === 0) return null;
 
 	return (
 		<section
 			className="mt-3 rounded-xl border border-dashed border-amber-200/90 bg-amber-50/70 px-3 py-2"
-			title={t('unroutedHint')}
+			title={t("unroutedHint")}
 		>
 			<div className="flex flex-wrap items-center gap-1.5">
 				<span className="mr-1 inline-flex shrink-0 items-center gap-1 text-[11px] font-semibold text-amber-900">
-					{t('unroutedTitle')}
+					{t("unroutedTitle")}
 					<span className="rounded-full bg-amber-100 px-1.5 py-px text-[10px] font-semibold tabular-nums text-amber-800 ring-1 ring-inset ring-amber-200">
 						{cards.length}
 					</span>
@@ -164,7 +181,7 @@ export function UnroutedModelsPanel({
 							type="button"
 							onClick={() => onEditModel(card.model_id)}
 							className="max-w-[11rem] truncate py-0.5 font-medium hover:text-blue-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
-							title={tCard('editModel', { title: card.title })}
+							title={tCard("editModel", { title: card.title })}
 						>
 							{card.title}
 						</button>
@@ -172,8 +189,8 @@ export function UnroutedModelsPanel({
 							type="button"
 							onClick={() => onCreate(card.model_id)}
 							className="rounded-full p-0.5 text-amber-700 hover:bg-amber-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
-							title={t('addRoute')}
-							aria-label={`${t('addRoute')}: ${card.title}`}
+							title={t("addRoute")}
+							aria-label={`${t("addRoute")}: ${card.title}`}
 						>
 							<PlusIcon className="h-3.5 w-3.5" aria-hidden />
 						</button>
@@ -201,9 +218,9 @@ function CatalogUpstream({
 	providerMeta: Map<string, GatewayProvider>;
 	globalRouteStrategy: string | null;
 	togglingId: string | null;
-	onEdit: Props['onEdit'];
-	onToggleStatus: Props['onToggleStatus'];
-	onOpenStrategyDialog: Props['onOpenStrategyDialog'];
+	onEdit: Props["onEdit"];
+	onToggleStatus: Props["onToggleStatus"];
+	onOpenStrategyDialog: Props["onOpenStrategyDialog"];
 }) {
 	return (
 		<UpstreamPoolPanel
@@ -247,20 +264,24 @@ function GroupToUpstreamBranch({
 	branchCount: number;
 	togglingId: string | null;
 	copiedModelId: string | null;
-	onCopyModelId: Props['onCopyModelId'];
-	onCreate: Props['onCreate'];
-	onEdit: Props['onEdit'];
-	onToggleStatus: Props['onToggleStatus'];
-	onOpenStrategyDialog: Props['onOpenStrategyDialog'];
-	onOpenProviderStickyDialog: Props['onOpenProviderStickyDialog'];
+	onCopyModelId: Props["onCopyModelId"];
+	onCreate: Props["onCreate"];
+	onEdit: Props["onEdit"];
+	onToggleStatus: Props["onToggleStatus"];
+	onOpenStrategyDialog: Props["onOpenStrategyDialog"];
+	onOpenProviderStickyDialog: Props["onOpenProviderStickyDialog"];
 }) {
-	const t = useTranslations('routes.flow');
-	const isDefaultGroup = section.group === 'default';
-	const railColor = isDefaultGroup ? 'bg-sky-300' : 'bg-violet-300';
+	const t = useTranslations("routes.flow");
+	const isDefaultGroup = section.group === "default";
+	const railColor = isDefaultGroup ? "bg-sky-300" : "bg-violet-300";
 
 	return (
 		<div className="relative py-3 xl:pl-4">
-			<BranchConnectors index={branchIndex} count={branchCount} colorClass={railColor} />
+			<BranchConnectors
+				index={branchIndex}
+				count={branchCount}
+				colorClass={railColor}
+			/>
 			<div className="grid min-w-0 gap-y-3 xl:grid-cols-[minmax(140px,200px)_minmax(420px,1fr)] xl:items-center">
 				<div className="relative flex min-w-0 flex-col justify-center xl:pr-8">
 					<RouteGroupNode
@@ -272,12 +293,17 @@ function GroupToUpstreamBranch({
 							enabled: section.poolStickyEnabled,
 							idleTtlSeconds: section.poolStickyIdleTtlSeconds,
 							poolId: section.poolId,
-							onClick: () => openSectionStickyDialog(onOpenProviderStickyDialog, card, section),
+							onClick: () =>
+								openSectionStickyDialog(
+									onOpenProviderStickyDialog,
+									card,
+									section
+								),
 						}}
 					/>
 					<FlowConnectorAdd
 						railClass={railColor}
-						label={t('addProvider')}
+						label={t("addProvider")}
 						onClick={() =>
 							onCreate(card.model_id, {
 								protocol: section.protocol,
@@ -322,7 +348,7 @@ function ModelToGroupsBranch({
 	onOpenStrategyDialog,
 	onOpenProviderStickyDialog,
 }: {
-	model: SurfaceCatalogGroup['models'][number];
+	model: SurfaceCatalogGroup["models"][number];
 	modelIndex: number;
 	modelCount: number;
 	protocol: string;
@@ -332,34 +358,35 @@ function ModelToGroupsBranch({
 	globalRouteStrategy: string | null;
 	copiedModelId: string | null;
 	togglingId: string | null;
-	onCopyModelId: Props['onCopyModelId'];
-	onCreate: Props['onCreate'];
-	onEdit: Props['onEdit'];
-	onEditModel: Props['onEditModel'];
-	onToggleStatus: Props['onToggleStatus'];
-	onOpenStrategyDialog: Props['onOpenStrategyDialog'];
-	onOpenProviderStickyDialog: Props['onOpenProviderStickyDialog'];
+	onCopyModelId: Props["onCopyModelId"];
+	onCreate: Props["onCreate"];
+	onEdit: Props["onEdit"];
+	onEditModel: Props["onEditModel"];
+	onToggleStatus: Props["onToggleStatus"];
+	onOpenStrategyDialog: Props["onOpenStrategyDialog"];
+	onOpenProviderStickyDialog: Props["onOpenProviderStickyDialog"];
 }) {
-	const t = useTranslations('routes.flow');
+	const t = useTranslations("routes.flow");
 	const { card, sections } = model;
 
 	return (
 		<div className="relative py-3 xl:pl-4">
-			<BranchConnectors index={modelIndex} count={modelCount} colorClass="bg-blue-300" />
+			<BranchConnectors
+				index={modelIndex}
+				count={modelCount}
+				colorClass="bg-blue-300"
+			/>
 			<div className="xl:grid xl:grid-cols-[minmax(160px,220px)_minmax(0,1fr)]">
 				<div className="relative flex min-w-0 flex-col justify-center xl:pr-8">
-					<CatalogModelNode
-						card={card}
-						onEditModel={onEditModel}
-					/>
+					<CatalogModelNode card={card} onEditModel={onEditModel} />
 					<FlowConnectorAdd
 						railClass="bg-blue-300"
-						label={t('addRouteGroup')}
+						label={t("addRouteGroup")}
 						onClick={() =>
 							onCreate(card.model_id, {
 								protocol,
 								operation: requestOperation,
-								group: '',
+								group: "",
 							})
 						}
 					/>
@@ -412,13 +439,13 @@ function SurfaceCatalogSection({
 	globalRouteStrategy: string | null;
 	copiedModelId: string | null;
 	togglingId: string | null;
-	onCopyModelId: Props['onCopyModelId'];
-	onCreate: Props['onCreate'];
-	onEdit: Props['onEdit'];
-	onEditModel: Props['onEditModel'];
-	onToggleStatus: Props['onToggleStatus'];
-	onOpenStrategyDialog: Props['onOpenStrategyDialog'];
-	onOpenProviderStickyDialog: Props['onOpenProviderStickyDialog'];
+	onCopyModelId: Props["onCopyModelId"];
+	onCreate: Props["onCreate"];
+	onEdit: Props["onEdit"];
+	onEditModel: Props["onEditModel"];
+	onToggleStatus: Props["onToggleStatus"];
+	onOpenStrategyDialog: Props["onOpenStrategyDialog"];
+	onOpenProviderStickyDialog: Props["onOpenProviderStickyDialog"];
 }) {
 	return (
 		<article className="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm">

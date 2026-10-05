@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import { createHash, randomUUID } from 'node:crypto';
 import type { PostgresDatabaseClient } from '../../../packages/core/src/storage/database-client';
 import type { CredentialFreeRoutingProjectionV396 } from '../../../packages/proxy/src/services/postgres-complete-text-routing-projection-v396';
+import type { CredentialFreeStickyContextV398 } from '../../../packages/proxy/src/services/credential-free-route-attempts-v398';
 import { createPostgresCompleteTextStickyRoutingV398 } from '../../../packages/proxy/src/services/postgres-complete-text-sticky-routing-v398';
 import { startJournalCommitAckDropProxyV381 } from '../../../packages/core/src/test-support/postgres-journal-commit-ack-proxy-v381.mjs';
 
@@ -19,7 +20,7 @@ function fixture(p: Params) {
 		sessionControlled: true, successPolicy: 'stream_success' as const };
 	return { context, port: createPostgresCompleteTextStickyRoutingV398({ stickyConnectionString: p.stickyConnectionString, context }) };
 }
-const bindInput = (context: ReturnType<typeof fixture>['context'], target: string, token: string, expectedToken?: string) => ({
+const bindInput = (context: Pick<CredentialFreeStickyContextV398, 'routePoolId' | 'affinityHash'>, target: string, token: string, expectedToken?: string) => ({
 	routePoolId: context.routePoolId, affinityHash: context.affinityHash, routeTargetId: target, bindingToken: token,
 	poolEpoch: 0, expiresAt: '2099-01-01T00:00:00Z', nowIso: '2000-01-01T00:00:00Z', expectedToken });
 

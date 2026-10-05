@@ -21,3 +21,8 @@ type StringifyValues<EnvType extends Record<string, unknown>> = {
 declare namespace NodeJS {
 	interface ProcessEnv extends StringifyValues<Pick<Cloudflare.Env, "COMPLETE_TEXT_HOLDER_ENABLED" | "PROVIDER_KEY_ENCRYPTION_SECRET">> {}
 }
+
+// Scope this Worker-only binding contract to its module, including Wrangler's
+// NodeJS.ProcessEnv projection; it must not alter unrelated Node scripts.
+import type { Hyperdrive } from '@cloudflare/workers-types';
+export type { CompleteTextResponseHolderV394Env };

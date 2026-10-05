@@ -5,6 +5,8 @@ import {
 	timestamp,
 	datetime,
 	int,
+	smallint,
+	char,
 	tinyint,
 	decimal,
 	double,
@@ -907,8 +909,44 @@ export const systemConfigTable = mysqlTable("system_config", {
 	key: varchar("key", { length: COL.SYSCONFIG_KEY }).primaryKey(),
 	value: text("value").notNull(),
 	description: text("description"),
+	revision: varchar("revision", { length: 36 }).notNull().default("legacy"),
 	updatedAt: timestamp("updated_at", { fsp: 6, mode: "string" }).notNull(),
 });
+
+/** Metadata-only Tools history; intentionally has no parent foreign key. */
+export const configGroupAuditTable = mysqlTable("config_group_audit", {
+	id: char("id", { length: 36 }).primaryKey(),
+	family: varchar("family", { length: 24 }).notNull(),
+	provider: varchar("provider", { length: 16 }),
+	action: varchar("action", { length: 16 }).notNull(),
+	actorKind: varchar("actor_kind", { length: 16 }).notNull(),
+	actorId: varchar("actor_id", { length: 617 }).notNull(),
+	reason: varchar("reason", { length: 600 }).notNull(),
+	changedFieldsJson: text("changed_fields_json").notNull(),
+	activeBefore: varchar("active_before", { length: 16 }),
+	activeAfter: varchar("active_after", { length: 16 }),
+	credentialsJson: text("credentials_json").notNull(),
+	revisionBeforeJson: text("revision_before_json").notNull(),
+	revisionAfterJson: text("revision_after_json").notNull(),
+	source: varchar("source", { length: 16 }).notNull(),
+	createdAt: datetime("created_at", { fsp: 6, mode: "string" }).notNull(),
+}, (t) => [
+	index("idx_config_group_audit_family_created").on(t.family, sql`${t.createdAt} DESC`, sql`${t.id} DESC`),
+	check("config_group_audit_family_chk", sql`family IN ('web-search', 'web-fetch', 'web-deep-search', 'ai-detection')`),
+	check("config_group_audit_provider_chk", sql`provider IS NULL OR provider IN ('bocha', 'tavily', 'cleversee', 'tencent_wsa', 'firecrawl', 'jina', 'tencent_tms')`),
+	check("config_group_audit_active_before_chk", sql`active_before IS NULL OR active_before IN ('bocha', 'tavily', 'cleversee', 'tencent_wsa', 'firecrawl', 'jina', 'tencent_tms')`),
+	check("config_group_audit_active_after_chk", sql`active_after IS NULL OR active_after IN ('bocha', 'tavily', 'cleversee', 'tencent_wsa', 'firecrawl', 'jina', 'tencent_tms')`),
+	check("config_group_audit_action_chk", sql`action IN ('save', 'save_activate', 'activate', 'legacy_save', 'reveal')`),
+	check("config_group_audit_actor_kind_chk", sql`actor_kind IN ('console', 'admin_key')`),
+	check("config_group_audit_actor_bounds_chk", sql`char_length(actor_id) BETWEEN 1 AND CASE WHEN actor_kind = 'console' THEN 617 ELSE 600 END`),
+	check("config_group_audit_reason_bounds_chk", sql`char_length(reason) BETWEEN 1 AND 600`),
+	check("config_group_audit_source_chk", sql`source IN ('admin_api', 'legacy_admin')`),
+]);
+
+/** Seeded by migration; writers fail closed if the permanent row is absent. */
+export const systemConfigWriteMutexTable = mysqlTable("system_config_write_mutex", {
+	id: int("id").notNull().primaryKey(),
+}, () => [check("system_config_write_mutex_singleton_chk", sql`id = 1`)]);
 
 /** OpenRouter-compatible request presets with immutable designated versions. */
 export const requestPresetsTable = mysqlTable(
@@ -1295,7 +1333,7 @@ export const userAuditLogsTable = mysqlTable("user_audit_logs", {
 	actorId: varchar("actor_id", { length: COL.ID }),
 	reasonCode: varchar("reason_code", { length: 128 }),
 	reasonText: text("reason_text"),
-	createdAt: timestamp("created_at", { fsp: 6, mode: "string" }).notNull(),
+	createdAt: datetime("created_at", { fsp: 6, mode: "string" }).notNull(),
 });
 
 export const adminApiKeysTable = mysqlTable("admin_api_keys", {
@@ -1313,9 +1351,32 @@ export const adminApiKeysTable = mysqlTable("admin_api_keys", {
 	revokedAt: timestamp("revoked_at", { fsp: 6, mode: "string" }),
 });
 
+export const adminAccessKeyAuditTable = mysqlTable("admin_access_key_audit", {
+	id: char("id", { length: 36 }).primaryKey(),
+	keyId: varchar("key_id", { length: 128 }).notNull(),
+	action: varchar("action", { length: 16 }).notNull(),
+	changeMask: smallint("change_mask", { unsigned: true }).notNull(),
+	actorKind: varchar("actor_kind", { length: 16 }).notNull(),
+	actorId: varchar("actor_id", { length: 272 }).notNull(),
+	beforePermissionsJson: text("before_permissions_json"),
+	afterPermissionsJson: text("after_permissions_json"),
+	beforeStatus: varchar("before_status", { length: 16 }),
+	afterStatus: varchar("after_status", { length: 16 }),
+	createdAt: datetime("created_at", { fsp: 6, mode: "string" }).notNull(),
+});
+
+export const adminSharedKeyAuditTable = mysqlTable("admin_shared_key_audit", {
+	id: char("id", { length: 36 }).primaryKey(), keyId: varchar("key_id", { length: 255 }).notNull(), action: varchar("action", { length: 16 }).notNull(),
+	changeMask: smallint("change_mask", { unsigned: true }).notNull(), actorKind: varchar("actor_kind", { length: 16 }).notNull(), actorId: varchar("actor_id", { length: 617 }).notNull(),
+	source: varchar("source", { length: 16 }).notNull(), reason: varchar("reason", { length: 600 }).notNull(), beforeStatus: varchar("before_status", { length: 16 }).notNull(),
+	beforeSellerPriority: int("before_seller_priority").notNull(), beforeWeight: int("before_weight").notNull(), beforeValidated: smallint("before_validated").notNull(),
+	afterStatus: varchar("after_status", { length: 16 }), afterSellerPriority: int("after_seller_priority"), afterWeight: int("after_weight"), afterValidated: smallint("after_validated"),
+	beforeRevision: varchar("before_revision", { length: 71 }).notNull(), afterRevision: varchar("after_revision", { length: 71 }), createdAt: datetime("created_at", { fsp: 6, mode: "string" }).notNull(),
+}, (t) => [index("idx_admin_shared_key_audit_key_created").on(t.keyId, t.createdAt, t.id)]);
+
 export const adminSessionsTable = mysqlTable("admin_sessions", {
 	tokenHash: varchar("token_hash", { length: 64 }).primaryKey(),
-	username: varchar("username", { length: 255 }).notNull(),
+	username: varchar("username", { length: 264 }).notNull(),
 	createdAt: timestamp("created_at", { fsp: 6, mode: "string" }).notNull(),
 	expiresAt: timestamp("expires_at", { fsp: 6, mode: "string" }).notNull(),
 });
@@ -1471,6 +1532,29 @@ export const nftMintsTable = mysqlTable(
 		confirmedAt: timestamp("confirmed_at", { fsp: 6, mode: "string" }),
 	},
 	(t) => [uniqueIndex("uk_nft_mints_user_badge").on(t.userId, t.badgeTokenId)]
+);
+
+const signedChainTransaction = customType<{ data: string; driverData: string }>({
+	dataType: () => "longtext",
+});
+
+/** Migration 0075: signed-job barrier for rejection; MySQL chain execution remains unsupported. */
+export const chainJobTransactionsTable = mysqlTable(
+	"chain_job_transactions",
+	{
+		jobKind: varchar("job_kind", { length: 32 }).notNull(),
+		jobId: varchar("job_id", { length: 128 }).notNull(),
+		txHash: varchar("tx_hash", { length: 128 }).notNull(),
+		rawTransaction: signedChainTransaction("raw_transaction").notNull(),
+		chainId: int("chain_id").notNull(),
+		createdAt: timestamp("created_at", { fsp: 6, mode: "string" }).notNull(),
+		broadcastAt: timestamp("broadcast_at", { fsp: 6, mode: "string" }),
+	},
+	(t) => [
+		primaryKey({ columns: [t.jobKind, t.jobId] }),
+		uniqueIndex("uk_chain_job_transactions_hash").on(t.txHash),
+		index("idx_chain_job_transactions_created").on(t.createdAt, t.jobKind, t.jobId),
+	]
 );
 
 /** Batch metadata only; request and response bodies stay in private R2 objects. */
@@ -1629,6 +1713,8 @@ export const mysqlCoreSchema = {
 	generationFeedbackTable,
 	publicModelDailyStatsTable,
 	systemConfigTable,
+	configGroupAuditTable,
+	systemConfigWriteMutexTable,
 	requestPresetsTable,
 	requestPresetVersionsTable,
 	guardrailsTable,
@@ -1641,6 +1727,8 @@ export const mysqlCoreSchema = {
 	routeDataPolicyAuditTable,
 	userAuditLogsTable,
 	adminApiKeysTable,
+	adminAccessKeyAuditTable,
+	adminSharedKeyAuditTable,
 	adminSessionsTable,
 	portalSessionsTable,
 	sharedKeysTable,
@@ -1648,6 +1736,7 @@ export const mysqlCoreSchema = {
 	userEarningsTable,
 	withdrawalsTable,
 	nftMintsTable,
+	chainJobTransactionsTable,
 	batchesTable,
 	batchItemsTable,
 };

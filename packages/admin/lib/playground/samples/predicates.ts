@@ -1,22 +1,22 @@
 export type ClaudeThinkingProfile = {
-	mode: 'extended' | 'adaptive';
+	mode: "extended" | "adaptive";
 	includeEffort: boolean;
 };
 
-export type GeminiThinkingProfile = 'budget' | 'level';
+export type GeminiThinkingProfile = "budget" | "level";
 
 export type SamplePredicateId =
-	| 'deepseek'
-	| 'glm_reasoning_effort'
-	| 'thinking_compat'
-	| 'qwen'
-	| 'minimax'
-	| 'openai_no_reasoning_effort'
-	| 'openai_max_completion_tokens'
-	| 'claude_adaptive'
-	| 'claude_extended_effort'
-	| 'gemini_2_5'
-	| 'gemini_thinking_level';
+	| "deepseek"
+	| "glm_reasoning_effort"
+	| "thinking_compat"
+	| "qwen"
+	| "minimax"
+	| "openai_no_reasoning_effort"
+	| "openai_max_completion_tokens"
+	| "claude_adaptive"
+	| "claude_extended_effort"
+	| "gemini_2_5"
+	| "gemini_thinking_level";
 
 function hayHas(haystack: string, pattern: RegExp): boolean {
 	return pattern.test(haystack);
@@ -62,7 +62,12 @@ function isOpenAiReasoningModel(haystack: string): boolean {
 
 function openaiChatUsesReasoningEffort(haystack: string): boolean {
 	if (!haystack) return true;
-	if (isOpenAiReasoningModel(haystack) || isGrokModel(haystack) || isDeepseekModel(haystack)) return true;
+	if (
+		isOpenAiReasoningModel(haystack) ||
+		isGrokModel(haystack) ||
+		isDeepseekModel(haystack)
+	)
+		return true;
 	if (/gpt[-_.]?4o/.test(haystack)) return false;
 	if (/gpt[-_.]?4/.test(haystack) || /gpt[-_.]?3/.test(haystack)) return false;
 	return true;
@@ -74,61 +79,75 @@ function openaiChatUsesReasoningEffort(haystack: string): boolean {
  * 4.5 and earlier → extended only; 4.6 still accepts extended but adaptive is preferred;
  * 4.7+ reject `type: enabled` with 400. Opus 4.5 is the only extended-only model that also takes effort.
  */
-export function resolveClaudeThinkingProfile(haystack: string): ClaudeThinkingProfile {
+export function resolveClaudeThinkingProfile(
+	haystack: string
+): ClaudeThinkingProfile {
 	const hay = haystack.toLowerCase();
 	if (/claude[-_. ]?(fable|mythos)/.test(hay)) {
-		return { mode: 'adaptive', includeEffort: true };
+		return { mode: "adaptive", includeEffort: true };
 	}
 	if (/claude[-_. ]?3[-_.]7/.test(hay)) {
-		return { mode: 'extended', includeEffort: false };
+		return { mode: "extended", includeEffort: false };
 	}
 
-	const named = hay.match(/claude[-_. ]?(opus|sonnet|haiku)[-_. ](\d+)(?:[-_.](\d+))?/);
+	const named = hay.match(
+		/claude[-_. ]?(opus|sonnet|haiku)[-_. ](\d+)(?:[-_.](\d+))?/
+	);
 	if (named) {
 		const family = named[1];
 		const major = Number(named[2]);
 		const rawMinor = named[3] != null ? Number(named[3]) : 0;
 		const minor = rawMinor >= 100 ? 0 : rawMinor;
 		if (major >= 5 || (major === 4 && minor >= 6)) {
-			return { mode: 'adaptive', includeEffort: true };
+			return { mode: "adaptive", includeEffort: true };
 		}
 		return {
-			mode: 'extended',
-			includeEffort: family === 'opus' && major === 4 && minor === 5,
+			mode: "extended",
+			includeEffort: family === "opus" && major === 4 && minor === 5,
 		};
 	}
 
 	if (/4[-_.]5/.test(hay)) {
-		return { mode: 'extended', includeEffort: /opus/.test(hay) };
+		return { mode: "extended", includeEffort: /opus/.test(hay) };
 	}
 	if (/claude|anthropic/.test(hay)) {
-		return { mode: 'adaptive', includeEffort: true };
+		return { mode: "adaptive", includeEffort: true };
 	}
-	return { mode: 'extended', includeEffort: false };
+	return { mode: "extended", includeEffort: false };
 }
 
 /** Gemini 2.5 uses `thinkingBudget`; Gemini 3+ uses `thinkingLevel` and rejects the budget field. */
-export function resolveGeminiThinkingProfile(haystack: string): GeminiThinkingProfile {
+export function resolveGeminiThinkingProfile(
+	haystack: string
+): GeminiThinkingProfile {
 	const hay = haystack.toLowerCase();
-	if (/gemini[-_. ]?2[-_.]5/.test(hay)) return 'budget';
-	if (/gemini[-_. ]?[3-9]/.test(hay)) return 'level';
-	return 'budget';
+	if (/gemini[-_. ]?2[-_.]5/.test(hay)) return "budget";
+	if (/gemini[-_. ]?[3-9]/.test(hay)) return "level";
+	return "budget";
 }
 
-export const SAMPLE_PREDICATES: Record<SamplePredicateId, (haystack: string) => boolean> = {
+export const SAMPLE_PREDICATES: Record<
+	SamplePredicateId,
+	(haystack: string) => boolean
+> = {
 	deepseek: isDeepseekModel,
-	glm_reasoning_effort: (hay) => isGlmModel(hay) && isGlmReasoningEffortModel(hay),
+	glm_reasoning_effort: (hay) =>
+		isGlmModel(hay) && isGlmReasoningEffortModel(hay),
 	thinking_compat: (hay) =>
-		(isGlmModel(hay) && !isGlmReasoningEffortModel(hay)) || isKimiModel(hay) || isDoubaoModel(hay),
+		(isGlmModel(hay) && !isGlmReasoningEffortModel(hay)) ||
+		isKimiModel(hay) ||
+		isDoubaoModel(hay),
 	qwen: isQwenModel,
 	minimax: isMinimaxModel,
-	openai_no_reasoning_effort: (hay) => Boolean(hay) && !openaiChatUsesReasoningEffort(hay),
+	openai_no_reasoning_effort: (hay) =>
+		Boolean(hay) && !openaiChatUsesReasoningEffort(hay),
 	openai_max_completion_tokens: isOpenAiReasoningModel,
-	claude_adaptive: (hay) => resolveClaudeThinkingProfile(hay).mode === 'adaptive',
+	claude_adaptive: (hay) =>
+		resolveClaudeThinkingProfile(hay).mode === "adaptive",
 	claude_extended_effort: (hay) => {
 		const profile = resolveClaudeThinkingProfile(hay);
-		return profile.mode === 'extended' && profile.includeEffort;
+		return profile.mode === "extended" && profile.includeEffort;
 	},
 	gemini_2_5: (hay) => /gemini[-_. ]?2[-_.]5/.test(hay),
-	gemini_thinking_level: (hay) => resolveGeminiThinkingProfile(hay) === 'level',
+	gemini_thinking_level: (hay) => resolveGeminiThinkingProfile(hay) === "level",
 };

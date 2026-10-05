@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import { useMemo, useState } from 'react';
-import Link from 'next/link';
+import { useMemo, useState } from "react";
+import Link from "next/link";
 import {
 	ArrowDownIcon,
 	BeakerIcon,
@@ -11,15 +11,24 @@ import {
 	DocumentDuplicateIcon,
 	PlusIcon,
 	TrashIcon,
-} from '@heroicons/react/24/outline';
-import { useTranslations } from 'next-intl';
-import { isAudioSpeechModel, isAudioTranscriptionModel } from '@octafuse/core/db/model-modalities';
-import { ReadOnlyImagePricing } from '@/components/read-only-image-pricing';
-import { ReadOnlyPricingTiersTable } from '@/components/read-only-pricing-tiers-table';
-import { type CatalogAudioPricingDisplay } from '@/lib/audio-transcriptions';
-import type { CatalogImagePricingDisplay, CatalogPricingTierDisplayRow } from '@/lib/pricing-ui';
-import type { GatewayModel, GatewayProvider } from '@/lib/types';
-import { UPSTREAM_PROTOCOLS, type UpstreamProtocol } from '@/lib/upstream-protocol';
+} from "@heroicons/react/24/outline";
+import { useTranslations } from "next-intl";
+import {
+	isAudioSpeechModel,
+	isAudioTranscriptionModel,
+} from "@octafuse/core/db/model-modalities";
+import { ReadOnlyImagePricing } from "@/components/read-only-image-pricing";
+import { ReadOnlyPricingTiersTable } from "@/components/read-only-pricing-tiers-table";
+import { type CatalogAudioPricingDisplay } from "@/lib/audio-transcriptions";
+import type {
+	CatalogImagePricingDisplay,
+	CatalogPricingTierDisplayRow,
+} from "@/lib/pricing-ui";
+import type { GatewayModel, GatewayProvider } from "@/lib/types";
+import {
+	UPSTREAM_PROTOCOLS,
+	type UpstreamProtocol,
+} from "@/lib/upstream-protocol";
 import {
 	applyDashScopeAsrRoutePreset,
 	applyDashScopeTtsRoutePreset,
@@ -27,10 +36,10 @@ import {
 	formatRoutePriceOverridePreview,
 	requestOperationsForModel,
 	upstreamOperationsForProviderModel,
-} from '../route-utils';
-import type { RouteFormData, RouteListRow } from '../types';
-import { DailyScheduleEditor } from './daily-schedule-editor';
-import { RoutePricePanel } from './route-price-panel';
+} from "../route-utils";
+import type { RouteFormData, RouteListRow } from "../types";
+import { DailyScheduleEditor } from "./daily-schedule-editor";
+import { RoutePricePanel } from "./route-price-panel";
 
 type Props = {
 	open: boolean;
@@ -87,17 +96,23 @@ export function RouteModal(props: Props) {
 		onDuplicate,
 	} = props;
 
-	const t = useTranslations('routes.modal');
-	const tModels = useTranslations('models.modal');
-	const tCommon = useTranslations('common');
+	const t = useTranslations("routes.modal");
+	const tModels = useTranslations("models.modal");
+	const tCommon = useTranslations("common");
 	const adapterLabel = (adapter: string) =>
 		t.has(`adapterNames.${adapter}`) ? t(`adapterNames.${adapter}`) : adapter;
 	const hasCustomParams =
 		formData.custom_params_json.trim().length > 0 ||
 		formData.routing_metadata_json.trim().length > 0;
-	const customParamsSessionKey = `${open ? '1' : '0'}:${editingRoute?.id ?? ''}:${duplicateSourceRouteId ?? ''}`;
-	const [customParamsSession, setCustomParamsSession] = useState(customParamsSessionKey);
-	const [customParamsOpen, setCustomParamsOpen] = useState(() => open && hasCustomParams);
+	const customParamsSessionKey = `${open ? "1" : "0"}:${
+		editingRoute?.id ?? ""
+	}:${duplicateSourceRouteId ?? ""}`;
+	const [customParamsSession, setCustomParamsSession] = useState(
+		customParamsSessionKey
+	);
+	const [customParamsOpen, setCustomParamsOpen] = useState(
+		() => open && hasCustomParams
+	);
 	const [priceOverrideJsonOpen, setPriceOverrideJsonOpen] = useState(false);
 	const [priceOverrideJsonCopied, setPriceOverrideJsonCopied] = useState(false);
 	if (customParamsSession !== customParamsSessionKey) {
@@ -106,73 +121,88 @@ export function RouteModal(props: Props) {
 		setPriceOverrideJsonOpen(false);
 		setPriceOverrideJsonCopied(false);
 	}
-	const priceOverridePreview = useMemo(() => formatRoutePriceOverridePreview(formData), [formData]);
+	const priceOverridePreview = useMemo(
+		() => formatRoutePriceOverridePreview(formData),
+		[formData]
+	);
 
 	const lockOpenaiProtocol = selectedModelIsImage;
 	const requestProtocols = UPSTREAM_PROTOCOLS.filter(
-		(protocol) => requestOperationsForModel(selectedModel, protocol, formData.provider_model_name).length > 0,
+		(protocol) =>
+			requestOperationsForModel(
+				selectedModel,
+				protocol,
+				formData.provider_model_name
+			).length > 0
 	);
 	const requestOperations = requestOperationsForModel(
 		selectedModel,
 		formData.request_protocol,
-		formData.provider_model_name,
+		formData.provider_model_name
 	);
 	const upstreamOperations = upstreamOperationsForProviderModel(
 		selectedProvider,
 		selectedModel,
 		formData.upstream_protocol,
-		formData.provider_model_name,
+		formData.provider_model_name
 	);
 	const compatibleAdapters = compatibleAdaptersForRoute(formData);
 	const showCurrentAdapter =
-		Boolean(editingRoute) && !compatibleAdapters.includes(formData.adapter) && Boolean(formData.adapter);
+		Boolean(editingRoute) &&
+		!compatibleAdapters.includes(formData.adapter) &&
+		Boolean(formData.adapter);
 	const selectableProviders = providers.filter(
 		(provider) =>
-			(Boolean(editingRoute || duplicateSourceRouteId) && provider.id === formData.provider_id) ||
+			(Boolean(editingRoute || duplicateSourceRouteId) &&
+				provider.id === formData.provider_id) ||
 			UPSTREAM_PROTOCOLS.some(
 				(protocol) =>
 					upstreamOperationsForProviderModel(
 						provider,
 						selectedModel,
 						protocol,
-						formData.provider_model_name,
-					).length > 0,
-			),
+						formData.provider_model_name
+					).length > 0
+			)
 	);
 	const showCurrentUpstreamOperation =
 		Boolean(editingRoute) &&
 		!upstreamOperations.includes(formData.upstream_operation) &&
 		Boolean(formData.upstream_operation);
-	const selectedModelIsSpeech = selectedModel ? isAudioSpeechModel(selectedModel) : false;
-	const selectedModelIsTranscription = selectedModel ? isAudioTranscriptionModel(selectedModel) : false;
+	const selectedModelIsSpeech = selectedModel
+		? isAudioSpeechModel(selectedModel)
+		: false;
+	const selectedModelIsTranscription = selectedModel
+		? isAudioTranscriptionModel(selectedModel)
+		: false;
 	const dashScopeTtsOperations = selectedModelIsSpeech
 		? upstreamOperationsForProviderModel(
 				selectedProvider,
 				selectedModel,
-				'dashscope',
-				formData.provider_model_name,
+				"dashscope",
+				formData.provider_model_name
 		  )
 		: [];
 	const canUseDashScopeTtsPresets =
 		!selectedModelIsImage &&
 		selectedModelIsSpeech &&
 		selectedProvider != null &&
-		(dashScopeTtsOperations.includes('audio.speech') ||
-			dashScopeTtsOperations.includes('audio.speech.realtime.inference'));
+		(dashScopeTtsOperations.includes("audio.speech") ||
+			dashScopeTtsOperations.includes("audio.speech.realtime.inference"));
 	const dashScopeAsrOperations = selectedModelIsTranscription
 		? upstreamOperationsForProviderModel(
 				selectedProvider,
 				selectedModel,
-				'dashscope',
-				formData.provider_model_name,
+				"dashscope",
+				formData.provider_model_name
 		  )
 		: [];
 	const canUseDashScopeAsrPresets =
 		!selectedModelIsImage &&
 		selectedModelIsTranscription &&
 		selectedProvider != null &&
-		(dashScopeAsrOperations.includes('audio.transcriptions.multimodal') ||
-			dashScopeAsrOperations.includes('audio.transcriptions.async'));
+		(dashScopeAsrOperations.includes("audio.transcriptions.multimodal") ||
+			dashScopeAsrOperations.includes("audio.transcriptions.async"));
 
 	if (!open) return null;
 
@@ -193,11 +223,16 @@ export function RouteModal(props: Props) {
 			>
 				<div className="flex shrink-0 items-center justify-between border-b border-gray-200 px-5 py-4">
 					<div>
-						<h2 id="route-modal-title" className="text-lg font-semibold text-gray-900">
-							{editingRoute ? t('editTitle') : t('newTitle')}
+						<h2
+							id="route-modal-title"
+							className="text-lg font-semibold text-gray-900"
+						>
+							{editingRoute ? t("editTitle") : t("newTitle")}
 						</h2>
 						{!editingRoute && duplicateSourceRouteId && (
-							<p className="mt-1 text-xs text-gray-500">{t('prefilledFrom', { id: duplicateSourceRouteId })}</p>
+							<p className="mt-1 text-xs text-gray-500">
+								{t("prefilledFrom", { id: duplicateSourceRouteId })}
+							</p>
 						)}
 					</div>
 					<button
@@ -205,7 +240,7 @@ export function RouteModal(props: Props) {
 						onClick={onClose}
 						className="rounded-md p-1.5 text-gray-400 transition hover:bg-gray-100 hover:text-gray-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
 						disabled={isSaving || isDeleting}
-						aria-label={tCommon('close')}
+						aria-label={tCommon("close")}
 					>
 						<span className="block text-xl leading-none" aria-hidden>
 							×
@@ -225,54 +260,92 @@ export function RouteModal(props: Props) {
 							<section className="rounded-lg border border-blue-200 bg-blue-50/60 p-3.5">
 								<div className="mb-2">
 									<h3 className="text-xs font-semibold uppercase tracking-wide text-blue-900">
-										{t('audioPresetTitle')}
+										{t("audioPresetTitle")}
 									</h3>
-									<p className="mt-1 text-xs text-blue-800">{t('audioPresetHint')}</p>
+									<p className="mt-1 text-xs text-blue-800">
+										{t("audioPresetHint")}
+									</p>
 								</div>
 								<div className="flex flex-wrap gap-2">
-									{canUseDashScopeAsrPresets && dashScopeAsrOperations.includes('audio.transcriptions.multimodal') ? (
+									{canUseDashScopeAsrPresets &&
+									dashScopeAsrOperations.includes(
+										"audio.transcriptions.multimodal"
+									) ? (
 										<>
 											<button
 												type="button"
 												className="rounded-md border border-blue-300 bg-white px-3 py-2 text-sm font-medium text-blue-800 transition hover:bg-blue-100 focus:outline-none focus:ring-2 focus:ring-blue-500/30"
-												onClick={() => onFormChange(applyDashScopeAsrRoutePreset(formData, 'flash-convert'))}
+												onClick={() =>
+													onFormChange(
+														applyDashScopeAsrRoutePreset(
+															formData,
+															"flash-convert"
+														)
+													)
+												}
 											>
-												{t('audioPresetAsrFlashConvert')}
+												{t("audioPresetAsrFlashConvert")}
 											</button>
 											<button
 												type="button"
 												className="rounded-md border border-blue-300 bg-white px-3 py-2 text-sm font-medium text-blue-800 transition hover:bg-blue-100 focus:outline-none focus:ring-2 focus:ring-blue-500/30"
-												onClick={() => onFormChange(applyDashScopeAsrRoutePreset(formData, 'flash-passthrough'))}
+												onClick={() =>
+													onFormChange(
+														applyDashScopeAsrRoutePreset(
+															formData,
+															"flash-passthrough"
+														)
+													)
+												}
 											>
-												{t('audioPresetAsrFlashPassthrough')}
+												{t("audioPresetAsrFlashPassthrough")}
 											</button>
 										</>
 									) : null}
-									{canUseDashScopeAsrPresets && dashScopeAsrOperations.includes('audio.transcriptions.async') ? (
+									{canUseDashScopeAsrPresets &&
+									dashScopeAsrOperations.includes(
+										"audio.transcriptions.async"
+									) ? (
 										<button
 											type="button"
 											className="rounded-md border border-blue-300 bg-white px-3 py-2 text-sm font-medium text-blue-800 transition hover:bg-blue-100 focus:outline-none focus:ring-2 focus:ring-blue-500/30"
-											onClick={() => onFormChange(applyDashScopeAsrRoutePreset(formData, 'filetrans'))}
+											onClick={() =>
+												onFormChange(
+													applyDashScopeAsrRoutePreset(formData, "filetrans")
+												)
+											}
 										>
-											{t('audioPresetAsrFiletrans')}
+											{t("audioPresetAsrFiletrans")}
 										</button>
 									) : null}
-									{canUseDashScopeTtsPresets && dashScopeTtsOperations.includes('audio.speech') ? (
+									{canUseDashScopeTtsPresets &&
+									dashScopeTtsOperations.includes("audio.speech") ? (
 										<button
 											type="button"
 											className="rounded-md border border-blue-300 bg-white px-3 py-2 text-sm font-medium text-blue-800 transition hover:bg-blue-100 focus:outline-none focus:ring-2 focus:ring-blue-500/30"
-											onClick={() => onFormChange(applyDashScopeTtsRoutePreset(formData, 'nonrealtime'))}
+											onClick={() =>
+												onFormChange(
+													applyDashScopeTtsRoutePreset(formData, "nonrealtime")
+												)
+											}
 										>
-											{t('audioPresetNonRealtime')}
+											{t("audioPresetNonRealtime")}
 										</button>
 									) : null}
-									{canUseDashScopeTtsPresets && dashScopeTtsOperations.includes('audio.speech.realtime.inference') ? (
+									{canUseDashScopeTtsPresets &&
+									dashScopeTtsOperations.includes(
+										"audio.speech.realtime.inference"
+									) ? (
 										<button
 											type="button"
 											className="rounded-md border border-blue-300 bg-white px-3 py-2 text-sm font-medium text-blue-800 transition hover:bg-blue-100 focus:outline-none focus:ring-2 focus:ring-blue-500/30"
-											onClick={() => onFormChange(applyDashScopeTtsRoutePreset(formData, 'realtime'))}
+											onClick={() =>
+												onFormChange(
+													applyDashScopeTtsRoutePreset(formData, "realtime")
+												)
+											}
 										>
-											{t('audioPresetRealtime')}
+											{t("audioPresetRealtime")}
 										</button>
 									) : null}
 								</div>
@@ -280,59 +353,83 @@ export function RouteModal(props: Props) {
 						) : null}
 						<section>
 							<h3 className="mb-2.5 text-xs font-semibold uppercase tracking-wide text-gray-500">
-								{t('basicMapping')}
+								{t("basicMapping")}
 							</h3>
 							<div className="grid grid-cols-1 gap-3 lg:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] lg:items-stretch lg:gap-x-10">
 								<div className="flex h-full min-w-0 flex-col rounded-lg border border-blue-300 bg-blue-50 p-3 shadow-sm ring-1 ring-blue-100/80 border-l-4 border-l-blue-500">
 									<p className="mb-2.5 text-[10px] font-semibold uppercase tracking-wider text-blue-700">
-										{t('clientColumn')}
+										{t("clientColumn")}
 									</p>
 									<div className="space-y-3">
 										<div>
-											<label className="mb-1 block text-sm font-medium text-gray-700">{t('modelRequired')}</label>
+											<label className="mb-1 block text-sm font-medium text-gray-700">
+												{t("modelRequired")}
+											</label>
 											<select
 												value={formData.model_id}
 												onChange={(e) => {
 													const nextModelId = e.target.value;
-													const nextModel = models.find((m) => m.id === nextModelId);
-													const nextRequestProtocols = UPSTREAM_PROTOCOLS.filter(
-														(protocol) =>
-															requestOperationsForModel(nextModel, protocol, formData.provider_model_name).length > 0,
+													const nextModel = models.find(
+														(m) => m.id === nextModelId
 													);
-													const requestProtocol = nextRequestProtocols.includes(formData.request_protocol)
+													const nextRequestProtocols =
+														UPSTREAM_PROTOCOLS.filter(
+															(protocol) =>
+																requestOperationsForModel(
+																	nextModel,
+																	protocol,
+																	formData.provider_model_name
+																).length > 0
+														);
+													const requestProtocol = nextRequestProtocols.includes(
+														formData.request_protocol
+													)
 														? formData.request_protocol
-														: nextRequestProtocols[0] ?? formData.request_protocol;
-													const nextRequestOperations = requestOperationsForModel(
-														nextModel,
-														requestProtocol,
-														formData.provider_model_name,
-													);
-													const requestOperation = nextRequestOperations.includes(formData.request_operation)
-														? formData.request_operation
-														: nextRequestOperations[0] ?? formData.request_operation;
+														: nextRequestProtocols[0] ??
+														  formData.request_protocol;
+													const nextRequestOperations =
+														requestOperationsForModel(
+															nextModel,
+															requestProtocol,
+															formData.provider_model_name
+														);
+													const requestOperation =
+														nextRequestOperations.includes(
+															formData.request_operation
+														)
+															? formData.request_operation
+															: nextRequestOperations[0] ??
+															  formData.request_operation;
 													const nextUpstreamProtocols = selectedProvider
 														? UPSTREAM_PROTOCOLS.filter(
 																(protocol) =>
-																			upstreamOperationsForProviderModel(
-																				selectedProvider,
-																				nextModel,
-																				protocol,
-																				formData.provider_model_name,
-																			).length > 0,
-																  )
+																	upstreamOperationsForProviderModel(
+																		selectedProvider,
+																		nextModel,
+																		protocol,
+																		formData.provider_model_name
+																	).length > 0
+														  )
 														: [];
-													const upstreamProtocol = nextUpstreamProtocols.includes(formData.upstream_protocol)
-														? formData.upstream_protocol
-														: nextUpstreamProtocols[0] ?? requestProtocol;
-													const nextUpstreamOperations = upstreamOperationsForProviderModel(
-														selectedProvider,
-														nextModel,
-														upstreamProtocol,
-														formData.provider_model_name,
-													);
-													const upstreamOperation = nextUpstreamOperations.includes(formData.upstream_operation)
-														? formData.upstream_operation
-														: nextUpstreamOperations[0] ?? requestOperation;
+													const upstreamProtocol =
+														nextUpstreamProtocols.includes(
+															formData.upstream_protocol
+														)
+															? formData.upstream_protocol
+															: nextUpstreamProtocols[0] ?? requestProtocol;
+													const nextUpstreamOperations =
+														upstreamOperationsForProviderModel(
+															selectedProvider,
+															nextModel,
+															upstreamProtocol,
+															formData.provider_model_name
+														);
+													const upstreamOperation =
+														nextUpstreamOperations.includes(
+															formData.upstream_operation
+														)
+															? formData.upstream_operation
+															: nextUpstreamOperations[0] ?? requestOperation;
 													onFormChange({
 														...formData,
 														model_id: nextModelId,
@@ -345,7 +442,7 @@ export function RouteModal(props: Props) {
 												className="w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/30"
 												required
 											>
-												<option value="">{t('selectModel')}</option>
+												<option value="">{t("selectModel")}</option>
 												{models.map((m) => (
 													<option key={m.id} value={m.id}>
 														{m.display_name || m.id}
@@ -354,7 +451,9 @@ export function RouteModal(props: Props) {
 											</select>
 										</div>
 										<div>
-											<label className="mb-1 block text-sm font-medium text-gray-700">{t('modelId')}</label>
+											<label className="mb-1 block text-sm font-medium text-gray-700">
+												{t("modelId")}
+											</label>
 											<input
 												type="text"
 												value={formData.model_id}
@@ -363,16 +462,19 @@ export function RouteModal(props: Props) {
 											/>
 										</div>
 										<div>
-											<label className="mb-1 block text-sm font-medium text-gray-700">{t('requestProtocol')}</label>
+											<label className="mb-1 block text-sm font-medium text-gray-700">
+												{t("requestProtocol")}
+											</label>
 											<select
 												value={formData.request_protocol}
 												onChange={(e) => {
-													const requestProtocol = e.target.value as UpstreamProtocol;
+													const requestProtocol = e.target
+														.value as UpstreamProtocol;
 													const requestOperation =
 														requestOperationsForModel(
 															selectedModel,
 															requestProtocol,
-															formData.provider_model_name,
+															formData.provider_model_name
 														)[0] ?? formData.request_operation;
 													onFormChange({
 														...formData,
@@ -391,7 +493,9 @@ export function RouteModal(props: Props) {
 											</select>
 										</div>
 										<div>
-											<label className="mb-1 block text-sm font-medium text-gray-700">{t('requestOperation')}</label>
+											<label className="mb-1 block text-sm font-medium text-gray-700">
+												{t("requestOperation")}
+											</label>
 											<select
 												value={formData.request_operation}
 												onChange={(e) =>
@@ -404,13 +508,19 @@ export function RouteModal(props: Props) {
 											>
 												{requestOperations.map((operation) => (
 													<option key={operation} value={operation}>
-														{operation === 'models.generate' ? t('operationModelsGenerate') : operation}
+														{operation === "models.generate"
+															? t("operationModelsGenerate")
+															: operation}
 													</option>
 												))}
-												{formData.request_operation === '*' ? <option value="*">*</option> : null}
+												{formData.request_operation === "*" ? (
+													<option value="*">*</option>
+												) : null}
 											</select>
 											{selectedModelIsAudio ? (
-												<p className="mt-1 text-[11px] text-gray-500">{t('audioPublicOperationHint')}</p>
+												<p className="mt-1 text-[11px] text-gray-500">
+													{t("audioPublicOperationHint")}
+												</p>
 											) : null}
 										</div>
 									</div>
@@ -418,10 +528,13 @@ export function RouteModal(props: Props) {
 
 								<div
 									className={`flex min-w-0 flex-col items-stretch gap-2 lg:w-[16rem] ${
-										customParamsOpen ? 'h-full' : 'justify-center'
+										customParamsOpen ? "h-full" : "justify-center"
 									}`}
 								>
-									<div className="flex items-center justify-center py-1" aria-hidden>
+									<div
+										className="flex items-center justify-center py-1"
+										aria-hidden
+									>
 										<ArrowDownIcon className="h-8 w-8 text-blue-500 lg:hidden" />
 										<span className="hidden w-full items-center lg:flex">
 											<span className="h-[3px] min-w-0 flex-1 rounded-full bg-blue-400" />
@@ -429,25 +542,36 @@ export function RouteModal(props: Props) {
 										</span>
 									</div>
 									<p className="text-center text-[10px] font-semibold uppercase tracking-wider text-blue-600">
-										{t('routeColumn')}
+										{t("routeColumn")}
 									</p>
 									<div>
-										<label className="mb-1 block text-sm font-medium text-gray-700" title={t('routeGroupHint')}>
-											{t('routeGroup')}
+										<label
+											className="mb-1 block text-sm font-medium text-gray-700"
+											title={t("routeGroupHint")}
+										>
+											{t("routeGroup")}
 										</label>
 										<input
 											type="text"
 											value={formData.route_group}
-											onChange={(e) => onFormChange({ ...formData, route_group: e.target.value })}
+											onChange={(e) =>
+												onFormChange({
+													...formData,
+													route_group: e.target.value,
+												})
+											}
 											className="w-full rounded-md border border-gray-300 bg-white px-3 py-2 font-mono text-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/30"
-											placeholder={t('routeGroupPlaceholder')}
-											title={t('routeGroupHint')}
+											placeholder={t("routeGroupPlaceholder")}
+											title={t("routeGroupHint")}
 										/>
 									</div>
 									<div className="grid grid-cols-2 gap-2">
 										<div>
-											<label className="mb-1 block text-sm font-medium text-gray-700" title={t('priorityHint')}>
-												{t('priority')}
+											<label
+												className="mb-1 block text-sm font-medium text-gray-700"
+												title={t("priorityHint")}
+											>
+												{t("priority")}
 											</label>
 											<input
 												type="number"
@@ -458,13 +582,16 @@ export function RouteModal(props: Props) {
 														priority: parseInt(e.target.value, 10) || 0,
 													})
 												}
-												title={t('priorityHint')}
+												title={t("priorityHint")}
 												className="w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm tabular-nums focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/30"
 											/>
 										</div>
 										<div>
-											<label className="mb-1 block text-sm font-medium text-gray-700" title={t('weightHint')}>
-												{t('weight')}
+											<label
+												className="mb-1 block text-sm font-medium text-gray-700"
+												title={t("weightHint")}
+											>
+												{t("weight")}
 											</label>
 											<input
 												type="number"
@@ -473,25 +600,34 @@ export function RouteModal(props: Props) {
 												onChange={(e) =>
 													onFormChange({
 														...formData,
-														weight: Math.max(1, parseInt(e.target.value, 10) || 1),
+														weight: Math.max(
+															1,
+															parseInt(e.target.value, 10) || 1
+														),
 													})
 												}
-												title={t('weightHint')}
+												title={t("weightHint")}
 												className="w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm tabular-nums focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/30"
 											/>
 										</div>
 									</div>
 									<div>
-										<label className="mb-1 block text-sm font-medium text-gray-700">{t('adapter')}</label>
+										<label className="mb-1 block text-sm font-medium text-gray-700">
+											{t("adapter")}
+										</label>
 										<select
 											value={formData.adapter}
-											onChange={(e) => onFormChange({ ...formData, adapter: e.target.value })}
+											onChange={(e) =>
+												onFormChange({ ...formData, adapter: e.target.value })
+											}
 											disabled={compatibleAdapters.length <= 1}
 											title={formData.adapter}
 											className="w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/30 disabled:cursor-not-allowed disabled:bg-gray-100 disabled:text-gray-600"
 										>
 											{compatibleAdapters.length === 0 ? (
-												<option value={formData.adapter}>{t('noCompatibleAdapter')}</option>
+												<option value={formData.adapter}>
+													{t("noCompatibleAdapter")}
+												</option>
 											) : null}
 											{compatibleAdapters.map((adapter) => (
 												<option key={adapter} value={adapter} title={adapter}>
@@ -499,14 +635,27 @@ export function RouteModal(props: Props) {
 												</option>
 											))}
 											{showCurrentAdapter ? (
-												<option value={formData.adapter} title={formData.adapter}>
-													{adapterLabel(formData.adapter)} · {t('currentLegacyValue')}
+												<option
+													value={formData.adapter}
+													title={formData.adapter}
+												>
+													{adapterLabel(formData.adapter)}
+													{" · "}
+													{t("currentLegacyValue")}
 												</option>
 											) : null}
 										</select>
-										<p className="mt-1 text-[11px] text-gray-500">{t('adapterHint')}</p>
+										<p className="mt-1 text-[11px] text-gray-500">
+											{t("adapterHint")}
+										</p>
 									</div>
-									<div className={customParamsOpen ? 'flex min-h-0 flex-1 flex-col' : undefined}>
+									<div
+										className={
+											customParamsOpen
+												? "flex min-h-0 flex-1 flex-col"
+												: undefined
+										}
+									>
 										<button
 											type="button"
 											onClick={() => setCustomParamsOpen((prev) => !prev)}
@@ -515,16 +664,18 @@ export function RouteModal(props: Props) {
 											aria-expanded={customParamsOpen}
 											className={`flex w-full items-center justify-between gap-2 rounded-md border px-3 py-2 text-left text-sm font-medium focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-500/30 ${
 												customParamsOpen
-													? 'relative z-10 border-amber-400 bg-amber-50 text-amber-900'
-													: 'border-gray-300 bg-white text-gray-700 hover:bg-gray-50'
+													? "relative z-10 border-amber-400 bg-amber-50 text-amber-900"
+													: "border-gray-300 bg-white text-gray-700 hover:bg-gray-50"
 											}`}
 										>
-											<span>{t('customParams')}</span>
+											<span>{t("customParams")}</span>
 											<span className="flex shrink-0 items-center gap-1.5">
 												{hasCustomParams ? (
 													<span
 														className={`rounded px-1.5 py-0.5 text-[10px] font-semibold ${
-															customParamsOpen ? 'bg-amber-100 text-amber-800' : 'bg-gray-100 text-gray-600'
+															customParamsOpen
+																? "bg-amber-100 text-amber-800"
+																: "bg-gray-100 text-gray-600"
 														}`}
 													>
 														JSON
@@ -532,7 +683,9 @@ export function RouteModal(props: Props) {
 												) : null}
 												<ChevronDownIcon
 													className={`h-4 w-4 transition-transform ${
-														customParamsOpen ? 'text-amber-600' : '-rotate-90 text-gray-400'
+														customParamsOpen
+															? "text-amber-600"
+															: "-rotate-90 text-gray-400"
 													}`}
 													aria-hidden
 												/>
@@ -549,16 +702,20 @@ export function RouteModal(props: Props) {
 
 								<div className="flex h-full min-w-0 flex-col rounded-lg border border-violet-300 bg-violet-50 p-3 shadow-sm ring-1 ring-violet-100/80 border-l-4 border-l-violet-500">
 									<p className="mb-2.5 text-[10px] font-semibold uppercase tracking-wider text-violet-700">
-										{t('upstreamColumn')}
+										{t("upstreamColumn")}
 									</p>
 									<div className="space-y-3">
 										<div>
-											<label className="mb-1 block text-sm font-medium text-gray-700">{t('providerRequired')}</label>
+											<label className="mb-1 block text-sm font-medium text-gray-700">
+												{t("providerRequired")}
+											</label>
 											<select
 												value={formData.provider_id}
 												onChange={(e) => {
 													const nextId = e.target.value;
-													const nextProvider = providers.find((p) => p.id === nextId);
+													const nextProvider = providers.find(
+														(p) => p.id === nextId
+													);
 													const allowed =
 														nextProvider != null
 															? UPSTREAM_PROTOCOLS.filter(
@@ -567,23 +724,30 @@ export function RouteModal(props: Props) {
 																			nextProvider,
 																			selectedModel,
 																			proto,
-																			formData.provider_model_name,
-																		).length > 0,
+																			formData.provider_model_name
+																		).length > 0
 															  )
 															: [];
 													let nextProto = formData.upstream_protocol;
-													if (allowed.length > 0 && !allowed.includes(nextProto)) {
+													if (
+														allowed.length > 0 &&
+														!allowed.includes(nextProto)
+													) {
 														nextProto = allowed[0]!;
 													}
-													const supportedOperations = upstreamOperationsForProviderModel(
-														nextProvider,
-														selectedModel,
-														nextProto,
-														formData.provider_model_name,
-													);
-													const nextOperation = supportedOperations.includes(formData.upstream_operation)
+													const supportedOperations =
+														upstreamOperationsForProviderModel(
+															nextProvider,
+															selectedModel,
+															nextProto,
+															formData.provider_model_name
+														);
+													const nextOperation = supportedOperations.includes(
+														formData.upstream_operation
+													)
 														? formData.upstream_operation
-														: supportedOperations[0] ?? formData.upstream_operation;
+														: supportedOperations[0] ??
+														  formData.upstream_operation;
 													onFormChange({
 														...formData,
 														provider_id: nextId,
@@ -594,7 +758,7 @@ export function RouteModal(props: Props) {
 												className="w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/30"
 												required
 											>
-												<option value="">{t('selectProvider')}</option>
+												<option value="">{t("selectProvider")}</option>
 												{selectableProviders.map((p) => (
 													<option key={p.id} value={p.id}>
 														{p.name || p.id}
@@ -603,46 +767,59 @@ export function RouteModal(props: Props) {
 											</select>
 										</div>
 										<div>
-											<label className="mb-1 block text-sm font-medium text-gray-700">{t('providerModelName')}</label>
+											<label className="mb-1 block text-sm font-medium text-gray-700">
+												{t("providerModelName")}
+											</label>
 											<input
 												type="text"
 												value={formData.provider_model_name}
 												onChange={(e) => {
 													const providerModelName = e.target.value;
-													const nextRequestOperations = requestOperationsForModel(
-														selectedModel,
-														formData.request_protocol,
-														providerModelName,
-													);
-													const nextUpstreamOperations = upstreamOperationsForProviderModel(
-														selectedProvider,
-														selectedModel,
-														formData.upstream_protocol,
-														providerModelName,
-													);
+													const nextRequestOperations =
+														requestOperationsForModel(
+															selectedModel,
+															formData.request_protocol,
+															providerModelName
+														);
+													const nextUpstreamOperations =
+														upstreamOperationsForProviderModel(
+															selectedProvider,
+															selectedModel,
+															formData.upstream_protocol,
+															providerModelName
+														);
 													// 模型名决定 DashScope ASR 生命周期，输入后同步纠正 surface 与 target。
 													onFormChange({
 														...formData,
 														provider_model_name: providerModelName,
-														request_operation: nextRequestOperations.includes(formData.request_operation)
+														request_operation: nextRequestOperations.includes(
+															formData.request_operation
+														)
 															? formData.request_operation
-															: nextRequestOperations[0] ?? formData.request_operation,
-														upstream_operation: nextUpstreamOperations.includes(formData.upstream_operation)
+															: nextRequestOperations[0] ??
+															  formData.request_operation,
+														upstream_operation: nextUpstreamOperations.includes(
+															formData.upstream_operation
+														)
 															? formData.upstream_operation
-															: nextUpstreamOperations[0] ?? formData.upstream_operation,
+															: nextUpstreamOperations[0] ??
+															  formData.upstream_operation,
 													});
 												}}
 												className="w-full rounded-md border border-gray-300 bg-white px-3 py-2 font-mono text-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/30"
-												placeholder={t('providerModelPlaceholder')}
+												placeholder={t("providerModelPlaceholder")}
 												required
 											/>
 										</div>
 										<div>
-											<label className="mb-1 block text-sm font-medium text-gray-700">{t('upstreamProtocol')}</label>
+											<label className="mb-1 block text-sm font-medium text-gray-700">
+												{t("upstreamProtocol")}
+											</label>
 											<select
 												value={formData.upstream_protocol}
 												onChange={(e) => {
-													const upstreamProtocol = e.target.value as UpstreamProtocol;
+													const upstreamProtocol = e.target
+														.value as UpstreamProtocol;
 													onFormChange({
 														...formData,
 														upstream_protocol: upstreamProtocol,
@@ -651,13 +828,16 @@ export function RouteModal(props: Props) {
 																selectedProvider,
 																selectedModel,
 																upstreamProtocol,
-																formData.provider_model_name,
-															)[0] ??
-															formData.upstream_operation,
+																formData.provider_model_name
+															)[0] ?? formData.upstream_operation,
 													});
 												}}
 												disabled={!selectedProvider}
-												title={selectedProvider ? t('protocolHintConfigured') : t('protocolHintSelectProvider')}
+												title={
+													selectedProvider
+														? t("protocolHintConfigured")
+														: t("protocolHintSelectProvider")
+												}
 												className="w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/30 disabled:cursor-not-allowed disabled:bg-gray-100 disabled:text-gray-600"
 											>
 												{allowedProtocolsForProvider.map((p) => (
@@ -668,7 +848,9 @@ export function RouteModal(props: Props) {
 											</select>
 										</div>
 										<div>
-											<label className="mb-1 block text-sm font-medium text-gray-700">{t('upstreamOperation')}</label>
+											<label className="mb-1 block text-sm font-medium text-gray-700">
+												{t("upstreamOperation")}
+											</label>
 											<select
 												value={formData.upstream_operation}
 												onChange={(e) =>
@@ -677,22 +859,30 @@ export function RouteModal(props: Props) {
 														upstream_operation: e.target.value,
 													})
 												}
-												disabled={!selectedProvider || upstreamOperations.length === 0}
+												disabled={
+													!selectedProvider || upstreamOperations.length === 0
+												}
 												className="w-full rounded-md border border-gray-300 bg-white px-3 py-2 font-mono text-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/30 disabled:cursor-not-allowed disabled:bg-gray-100 disabled:text-gray-600"
 											>
 												{upstreamOperations.map((operation) => (
 													<option key={operation} value={operation}>
-														{operation === 'models.generate' ? t('operationModelsGenerate') : operation}
+														{operation === "models.generate"
+															? t("operationModelsGenerate")
+															: operation}
 													</option>
 												))}
 												{showCurrentUpstreamOperation ? (
 													<option value={formData.upstream_operation}>
-														{formData.upstream_operation} · {t('currentLegacyValue')}
+														{formData.upstream_operation}
+														{" · "}
+														{t("currentLegacyValue")}
 													</option>
 												) : null}
 											</select>
 											<p className="mt-1 text-[11px] text-gray-500">
-												{selectedProvider ? t('upstreamOperationHintConfigured') : t('protocolHintSelectProvider')}
+												{selectedProvider
+													? t("upstreamOperationHintConfigured")
+													: t("protocolHintSelectProvider")}
 											</p>
 										</div>
 									</div>
@@ -715,13 +905,17 @@ export function RouteModal(props: Props) {
 										className="rounded-lg border border-amber-300 bg-amber-50/70 p-3"
 									>
 										<div className="mb-2 flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1">
-											<h4 className="text-sm font-medium text-amber-900">{t('customParams')}</h4>
-											<p className="text-[11px] text-amber-800/80">{t('requestDefaultsHint')}</p>
+											<h4 className="text-sm font-medium text-amber-900">
+												{t("customParams")}
+											</h4>
+											<p className="text-[11px] text-amber-800/80">
+												{t("requestDefaultsHint")}
+											</p>
 										</div>
 										<div className="grid grid-cols-1 gap-3 lg:grid-cols-2">
 											<div>
 												<label className="mb-1 block text-xs font-medium text-amber-900">
-													{t('upstreamRequestDefaults')}
+													{t("upstreamRequestDefaults")}
 												</label>
 												<textarea
 													rows={5}
@@ -733,13 +927,13 @@ export function RouteModal(props: Props) {
 														})
 													}
 													className="min-h-[120px] w-full resize-y rounded-md border border-amber-200 bg-white px-3 py-2 font-mono text-xs leading-relaxed focus:border-amber-500 focus:outline-none focus:ring-2 focus:ring-amber-500/30"
-													placeholder={t('customParamsPlaceholder')}
+													placeholder={t("customParamsPlaceholder")}
 													spellCheck={false}
 												/>
 											</div>
 											<div>
 												<label className="mb-1 block text-xs font-medium text-amber-900">
-													{t('routingMetadata')}
+													{t("routingMetadata")}
 												</label>
 												<textarea
 													rows={5}
@@ -751,10 +945,12 @@ export function RouteModal(props: Props) {
 														})
 													}
 													className="min-h-[120px] w-full resize-y rounded-md border border-amber-200 bg-white px-3 py-2 font-mono text-xs leading-relaxed focus:border-amber-500 focus:outline-none focus:ring-2 focus:ring-amber-500/30"
-													placeholder={t('routingMetadataPlaceholder')}
+													placeholder={t("routingMetadataPlaceholder")}
 													spellCheck={false}
 												/>
-												<p className="mt-1 text-[11px] text-amber-800/80">{t('routingMetadataHint')}</p>
+												<p className="mt-1 text-[11px] text-amber-800/80">
+													{t("routingMetadataHint")}
+												</p>
 											</div>
 										</div>
 									</div>
@@ -766,116 +962,145 @@ export function RouteModal(props: Props) {
 							<div className="grid grid-cols-1 gap-3 lg:grid-cols-2 lg:items-stretch">
 								<div className="flex min-h-0 min-w-0 flex-col">
 									<h3 className="mb-1 text-xs font-semibold uppercase tracking-wide text-gray-500">
-										{t('standardCatalog')}
+										{t("standardCatalog")}
 									</h3>
 									<p className="mb-2.5 text-[11px] text-gray-500">
 										{selectedModelIsAudio
-											? t('standardCatalogHintAudio')
+											? t("standardCatalogHintAudio")
 											: selectedModelIsImage
-												? t('standardCatalogHintImage')
-												: t('standardCatalogHint')}
+											? t("standardCatalogHintImage")
+											: t("standardCatalogHint")}
 									</p>
 									<div className="flex min-h-0 flex-1 flex-col">
-								{selectedModelIsAudio ? (
-									catalogAudioPricingDisplay ? (
-										catalogAudioPricingDisplay.mode === 'token' ? (
-											<ul className="divide-y divide-gray-100 rounded-md border border-gray-200 text-sm tabular-nums">
-												<li className="flex items-baseline justify-between gap-3 px-3 py-2">
-													<span className="text-xs text-gray-500">{tModels('audioInputPricePerM')}</span>
-													<span className="font-medium text-gray-900">
-														{catalogAudioPricingDisplay.inputPrice}
-														<span className="ml-1 text-[10px] font-normal text-gray-400">
-															{catalogAudioPricingDisplay.unit}
-														</span>
-													</span>
-												</li>
-												<li className="flex items-baseline justify-between gap-3 px-3 py-2">
-													<span className="text-xs text-gray-500">{tModels('audioOutputPricePerM')}</span>
-													<span className="font-medium text-gray-900">
-														{catalogAudioPricingDisplay.outputPrice}
-														<span className="ml-1 text-[10px] font-normal text-gray-400">
-															{catalogAudioPricingDisplay.unit}
-														</span>
-													</span>
-												</li>
-											</ul>
-										) : catalogAudioPricingDisplay.mode === 'per_character' ? (
-											<ul className="divide-y divide-gray-100 rounded-md border border-gray-200 text-sm tabular-nums">
-												<li className="flex items-baseline justify-between gap-3 px-3 py-2">
-													<span className="text-xs text-gray-500">{t('audioPricePerCharacter')}</span>
-													<span className="font-medium text-gray-900">
-														{catalogAudioPricingDisplay.pricePerCharacter}
-														<span className="ml-1 text-[10px] font-normal text-gray-400">
-															{catalogAudioPricingDisplay.unit}
-														</span>
-													</span>
-												</li>
-												<li className="flex items-baseline justify-between gap-3 px-3 py-2">
-													<span className="text-xs text-gray-500">{t('audioMinimumCharacters')}</span>
-													<span className="font-medium text-gray-900">
-														{catalogAudioPricingDisplay.minimumCharacters}
-													</span>
-												</li>
-											</ul>
+										{selectedModelIsAudio ? (
+											catalogAudioPricingDisplay ? (
+												catalogAudioPricingDisplay.mode === "token" ? (
+													<ul className="divide-y divide-gray-100 rounded-md border border-gray-200 text-sm tabular-nums">
+														<li className="flex items-baseline justify-between gap-3 px-3 py-2">
+															<span className="text-xs text-gray-500">
+																{tModels("audioInputPricePerM")}
+															</span>
+															<span className="font-medium text-gray-900">
+																{catalogAudioPricingDisplay.inputPrice}
+																<span className="ml-1 text-[10px] font-normal text-gray-400">
+																	{catalogAudioPricingDisplay.unit}
+																</span>
+															</span>
+														</li>
+														<li className="flex items-baseline justify-between gap-3 px-3 py-2">
+															<span className="text-xs text-gray-500">
+																{tModels("audioOutputPricePerM")}
+															</span>
+															<span className="font-medium text-gray-900">
+																{catalogAudioPricingDisplay.outputPrice}
+																<span className="ml-1 text-[10px] font-normal text-gray-400">
+																	{catalogAudioPricingDisplay.unit}
+																</span>
+															</span>
+														</li>
+													</ul>
+												) : catalogAudioPricingDisplay.mode ===
+												  "per_character" ? (
+													<ul className="divide-y divide-gray-100 rounded-md border border-gray-200 text-sm tabular-nums">
+														<li className="flex items-baseline justify-between gap-3 px-3 py-2">
+															<span className="text-xs text-gray-500">
+																{t("audioPricePerCharacter")}
+															</span>
+															<span className="font-medium text-gray-900">
+																{catalogAudioPricingDisplay.pricePerCharacter}
+																<span className="ml-1 text-[10px] font-normal text-gray-400">
+																	{catalogAudioPricingDisplay.unit}
+																</span>
+															</span>
+														</li>
+														<li className="flex items-baseline justify-between gap-3 px-3 py-2">
+															<span className="text-xs text-gray-500">
+																{t("audioMinimumCharacters")}
+															</span>
+															<span className="font-medium text-gray-900">
+																{catalogAudioPricingDisplay.minimumCharacters}
+															</span>
+														</li>
+													</ul>
+												) : (
+													<ul className="divide-y divide-gray-100 rounded-md border border-gray-200 text-sm tabular-nums">
+														<li className="flex items-baseline justify-between gap-3 px-3 py-2">
+															<span className="text-xs text-gray-500">
+																{t("audioPricePerSecond")}
+															</span>
+															<span className="font-medium text-gray-900">
+																{catalogAudioPricingDisplay.pricePerSecond}
+																<span className="ml-1 text-[10px] font-normal text-gray-400">
+																	{catalogAudioPricingDisplay.unit}
+																</span>
+															</span>
+														</li>
+														<li className="flex items-baseline justify-between gap-3 px-3 py-2">
+															<span className="text-xs text-gray-500">
+																{t("audioMinimumSeconds")}
+															</span>
+															<span className="font-medium text-gray-900">
+																{catalogAudioPricingDisplay.minimumSeconds}
+															</span>
+														</li>
+													</ul>
+												)
+											) : (
+												<p className="text-sm text-gray-500">
+													{formData.model_id
+														? t("noCatalogAudioPricing")
+														: t("selectModelForTiers")}
+												</p>
+											)
+										) : selectedModelIsImage ? (
+											<ReadOnlyImagePricing
+												compact
+												tokenRatesLayout="grid"
+												display={catalogImagePricingDisplay}
+												emptyLabel={
+													formData.model_id
+														? t("noCatalogImagePricing")
+														: t("selectModelForTiers")
+												}
+												tokenRatesTitle={t("imageTokenRates")}
+											/>
 										) : (
-											<ul className="divide-y divide-gray-100 rounded-md border border-gray-200 text-sm tabular-nums">
-												<li className="flex items-baseline justify-between gap-3 px-3 py-2">
-													<span className="text-xs text-gray-500">{t('audioPricePerSecond')}</span>
-													<span className="font-medium text-gray-900">
-														{catalogAudioPricingDisplay.pricePerSecond}
-														<span className="ml-1 text-[10px] font-normal text-gray-400">
-															{catalogAudioPricingDisplay.unit}
-														</span>
-													</span>
-												</li>
-												<li className="flex items-baseline justify-between gap-3 px-3 py-2">
-													<span className="text-xs text-gray-500">{t('audioMinimumSeconds')}</span>
-													<span className="font-medium text-gray-900">{catalogAudioPricingDisplay.minimumSeconds}</span>
-												</li>
-											</ul>
-										)
-									) : (
-										<p className="text-sm text-gray-500">
-											{formData.model_id ? t('noCatalogAudioPricing') : t('selectModelForTiers')}
-										</p>
-									)
-								) : selectedModelIsImage ? (
-									<ReadOnlyImagePricing
-										compact
-										tokenRatesLayout="grid"
-										display={catalogImagePricingDisplay}
-										emptyLabel={formData.model_id ? t('noCatalogImagePricing') : t('selectModelForTiers')}
-										tokenRatesTitle={t('imageTokenRates')}
-									/>
-								) : (
-									<ReadOnlyPricingTiersTable
-										fillHeight
-										rows={catalogStandardTierRows}
-										emptyLabel={formData.model_id ? t('noCatalogPricing') : t('selectModelForTiers')}
-										tableTitle={t('readOnlyCatalogRates')}
-										billingCurrencyCode={billingCurrency}
-									/>
-								)}
+											<ReadOnlyPricingTiersTable
+												fillHeight
+												rows={catalogStandardTierRows}
+												emptyLabel={
+													formData.model_id
+														? t("noCatalogPricing")
+														: t("selectModelForTiers")
+												}
+												tableTitle={t("readOnlyCatalogRates")}
+												billingCurrencyCode={billingCurrency}
+											/>
+										)}
 									</div>
 								</div>
 
 								<div className="flex min-h-0 min-w-0 flex-col">
 									<div className="mb-1 flex items-center justify-between gap-2">
 										<h3 className="text-xs font-semibold uppercase tracking-wide text-gray-500">
-											{t('pricingSection')}
+											{t("pricingSection")}
 										</h3>
 										<button
 											type="button"
-											onClick={() => setPriceOverrideJsonOpen((openJson) => !openJson)}
+											onClick={() =>
+												setPriceOverrideJsonOpen((openJson) => !openJson)
+											}
 											aria-expanded={priceOverrideJsonOpen}
 											aria-controls="route-price-override-json"
 											title={
-												priceOverrideJsonOpen ? t('hidePriceOverrideJson') : t('viewPriceOverrideJson')
+												priceOverrideJsonOpen
+													? t("hidePriceOverrideJson")
+													: t("viewPriceOverrideJson")
 											}
 											className={`inline-flex shrink-0 items-center gap-1 rounded-md border px-1.5 py-0.5 text-[10px] font-semibold focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/30 ${
 												priceOverrideJsonOpen
-													? 'border-blue-300 bg-blue-50 text-blue-800'
-													: 'border-gray-300 bg-white text-gray-600 hover:bg-gray-50'
+													? "border-blue-300 bg-blue-50 text-blue-800"
+													: "border-gray-300 bg-white text-gray-600 hover:bg-gray-50"
 											}`}
 										>
 											<CodeBracketIcon className="h-3.5 w-3.5" aria-hidden />
@@ -883,7 +1108,7 @@ export function RouteModal(props: Props) {
 										</button>
 									</div>
 									<p className="mb-2.5 text-[11px] text-gray-500">
-										{t('billingTimezoneHint', { timezone: businessTimezone })}
+										{t("billingTimezoneHint", { timezone: businessTimezone })}
 									</p>
 									{priceOverrideJsonOpen ? (
 										<div
@@ -899,31 +1124,41 @@ export function RouteModal(props: Props) {
 														type="button"
 														onClick={() => {
 															if (!navigator.clipboard?.writeText) return;
-															void navigator.clipboard.writeText(priceOverridePreview.text).then(
-																() => {
-																	setPriceOverrideJsonCopied(true);
-																	window.setTimeout(() => setPriceOverrideJsonCopied(false), 1500);
-																},
-																() => {},
-															);
+															void navigator.clipboard
+																.writeText(priceOverridePreview.text)
+																.then(
+																	() => {
+																		setPriceOverrideJsonCopied(true);
+																		window.setTimeout(
+																			() => setPriceOverrideJsonCopied(false),
+																			1500
+																		);
+																	},
+																	() => {}
+																);
 														}}
 														className="text-[11px] font-medium text-blue-600 hover:text-blue-800"
 													>
-														{priceOverrideJsonCopied ? tCommon('copied') : tCommon('copy')}
+														{priceOverrideJsonCopied
+															? tCommon("copied")
+															: tCommon("copy")}
 													</button>
 												) : null}
 											</div>
 											<textarea
 												readOnly
-												rows={Math.min(16, 6 + formData.schedule_windows.length * 6)}
+												rows={Math.min(
+													16,
+													6 + formData.schedule_windows.length * 6
+												)}
 												value={priceOverridePreview.text}
 												className={`w-full resize-y rounded-md border bg-white px-2 py-1.5 font-mono text-[11px] leading-relaxed ${
 													priceOverridePreview.ok
-														? 'border-gray-200 text-gray-800'
-														: 'border-red-200 text-red-700'
+														? "border-gray-200 text-gray-800"
+														: "border-red-200 text-red-700"
 												}`}
 												spellCheck={false}
-												aria-label={t('viewPriceOverrideJson')}
+												aria-label={t("viewPriceOverrideJson")}
 											/>
 										</div>
 									) : null}
@@ -931,22 +1166,22 @@ export function RouteModal(props: Props) {
 										<div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
 											<RoutePricePanel
 												variant="charged"
-												title={t('chargedCost')}
-												subtitle={t('chargedCostHint')}
+												title={t("chargedCost")}
+												subtitle={t("chargedCostHint")}
 												headerEnd={
 													<div className="flex flex-col items-start gap-0.5">
 														<label
 															htmlFor="user-cost-charged-factor"
 															className="whitespace-nowrap text-[11px] font-medium text-gray-600"
 														>
-															{t('factor')}
+															{t("factor")}
 														</label>
 														<input
 															id="user-cost-charged-factor"
 															type="text"
 															inputMode="decimal"
 															value={formData.charged_factor}
-															title={t('chargedFactorTitle')}
+															title={t("chargedFactorTitle")}
 															onChange={(e) =>
 																onFormChange({
 																	...formData,
@@ -961,22 +1196,22 @@ export function RouteModal(props: Props) {
 											/>
 											<RoutePricePanel
 												variant="metered"
-												title={t('meteredCost')}
-												subtitle={t('meteredCostHint')}
+												title={t("meteredCost")}
+												subtitle={t("meteredCostHint")}
 												headerEnd={
 													<div className="flex flex-col items-start gap-0.5">
 														<label
 															htmlFor="gateway-route-metered-factor"
 															className="whitespace-nowrap text-[11px] font-medium text-gray-600"
 														>
-															{t('factor')}
+															{t("factor")}
 														</label>
 														<input
 															id="gateway-route-metered-factor"
 															type="text"
 															inputMode="decimal"
 															value={formData.metered_factor}
-															title={t('meteredFactorTitle')}
+															title={t("meteredFactorTitle")}
 															onChange={(e) =>
 																onFormChange({
 																	...formData,
@@ -992,8 +1227,8 @@ export function RouteModal(props: Props) {
 										</div>
 										<RoutePricePanel
 											variant="neutral"
-											title={t('dailySchedule')}
-											subtitle={t('pricingFormulaHint')}
+											title={t("dailySchedule")}
+											subtitle={t("pricingFormulaHint")}
 											headerEndBeside="subtitle"
 											headerEnd={
 												<button
@@ -1004,18 +1239,18 @@ export function RouteModal(props: Props) {
 															schedule_windows: [
 																...formData.schedule_windows,
 																{
-																	start: '00:00',
-																	end: '08:00',
-																	charged_factor: '1',
-																	metered_factor: '1',
+																	start: "00:00",
+																	end: "08:00",
+																	charged_factor: "1",
+																	metered_factor: "1",
 																	days: [],
 																},
 															],
 														})
 													}
 													className="inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-md border border-dashed border-gray-400 bg-white text-gray-600 shadow-sm transition hover:border-gray-500 hover:bg-gray-50 hover:text-gray-900 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/40"
-													aria-label={t('addScheduleWindow')}
-													title={t('addScheduleWindow')}
+													aria-label={t("addScheduleWindow")}
+													title={t("addScheduleWindow")}
 												>
 													<PlusIcon className="h-3.5 w-3.5" aria-hidden />
 												</button>
@@ -1023,26 +1258,28 @@ export function RouteModal(props: Props) {
 										>
 											<DailyScheduleEditor
 												windows={formData.schedule_windows}
-												onChange={(schedule_windows) => onFormChange({ ...formData, schedule_windows })}
-												emptyLabel={t('scheduleEmpty')}
-												startLabel={t('scheduleStart')}
-												endLabel={t('scheduleEnd')}
-												chargedFactorLabel={t('scheduleChargedFactor')}
-												meteredFactorLabel={t('scheduleMeteredFactor')}
-												removeLabel={tCommon('delete')}
+												onChange={(schedule_windows) =>
+													onFormChange({ ...formData, schedule_windows })
+												}
+												emptyLabel={t("scheduleEmpty")}
+												startLabel={t("scheduleStart")}
+												endLabel={t("scheduleEnd")}
+												chargedFactorLabel={t("scheduleChargedFactor")}
+												meteredFactorLabel={t("scheduleMeteredFactor")}
+												removeLabel={tCommon("delete")}
 												dayLabels={{
-													days: t('scheduleDays'),
-													everyday: t('scheduleEveryday'),
-													weekdays: t('scheduleWeekdays'),
-													weekend: t('scheduleWeekend'),
+													days: t("scheduleDays"),
+													everyday: t("scheduleEveryday"),
+													weekdays: t("scheduleWeekdays"),
+													weekend: t("scheduleWeekend"),
 													weekdayShort: [
-														t('weekdayMon'),
-														t('weekdayTue'),
-														t('weekdayWed'),
-														t('weekdayThu'),
-														t('weekdayFri'),
-														t('weekdaySat'),
-														t('weekdaySun'),
+														t("weekdayMon"),
+														t("weekdayTue"),
+														t("weekdayWed"),
+														t("weekdayThu"),
+														t("weekdayFri"),
+														t("weekdaySat"),
+														t("weekdaySun"),
 													],
 												}}
 											/>
@@ -1065,14 +1302,16 @@ export function RouteModal(props: Props) {
 									className="inline-flex items-center gap-1.5 rounded-md border border-red-200 bg-red-50 px-3 py-2 text-sm font-medium text-red-700 hover:bg-red-100 disabled:cursor-not-allowed disabled:opacity-50"
 								>
 									<TrashIcon className="h-4 w-4" aria-hidden />
-									{isDeleting ? tCommon('deleting') : t('deleteRoute')}
+									{isDeleting ? tCommon("deleting") : t("deleteRoute")}
 								</button>
 								<Link
-									href={`/admin/playground?routeId=${encodeURIComponent(editingRoute.id)}`}
+									href={`/admin/playground?routeId=${encodeURIComponent(
+										editingRoute.id
+									)}`}
 									className="inline-flex items-center gap-1.5 rounded-md border border-gray-300 bg-white px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
 								>
 									<BeakerIcon className="h-4 w-4" aria-hidden />
-									{t('testInPlayground')}
+									{t("testInPlayground")}
 								</Link>
 							</>
 						)}
@@ -1084,7 +1323,7 @@ export function RouteModal(props: Props) {
 							className="rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-50"
 							disabled={isSaving || isDeleting}
 						>
-							{tCommon('cancel')}
+							{tCommon("cancel")}
 						</button>
 						{editingRoute && (
 							<button
@@ -1094,7 +1333,7 @@ export function RouteModal(props: Props) {
 								className="inline-flex items-center gap-1.5 rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-50"
 							>
 								<DocumentDuplicateIcon className="h-4 w-4" aria-hidden />
-								{tCommon('duplicate')}
+								{tCommon("duplicate")}
 							</button>
 						)}
 						<button
@@ -1103,7 +1342,7 @@ export function RouteModal(props: Props) {
 							disabled={isSaving || isDeleting}
 							className="rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
 						>
-							{isSaving ? tCommon('savingDots') : tCommon('save')}
+							{isSaving ? tCommon("savingDots") : tCommon("save")}
 						</button>
 					</div>
 				</div>

@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { DatabaseSync, type SQLInputValue } from 'node:sqlite';
 import test from 'node:test';
-import { fileURLToPath } from 'node:url';
+import { fileURLToPath, URL } from 'node:url';
 import type { D1Database, D1PreparedStatement, D1Result } from '@cloudflare/workers-types';
 import { insertRequestUsageAndChargeTxD1 } from '../db/d1/critical-writes.impl';
 import { createD1GuardrailBudgetsRepository } from '../db/d1/guardrail-budgets.impl';
@@ -745,10 +745,9 @@ test('D1 Guardrail settlement rejects mismatched or missing reservation identiti
 			}),
 			/no matching reservation window/,
 		);
-		assert.equal(
-			Number(database.prepare(`SELECT COUNT(*) AS count FROM api_key_request_logs`).get().count),
-			0,
-		);
+		const requestLogCount = database.prepare(`SELECT COUNT(*) AS count FROM api_key_request_logs`).get();
+		assert.ok(requestLogCount);
+		assert.equal(Number(requestLogCount.count), 0);
 	} finally {
 		database.close();
 	}

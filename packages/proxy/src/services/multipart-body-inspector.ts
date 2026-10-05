@@ -113,7 +113,7 @@ export function createMultipartBodyInspector(
 		// No original payload enters native formData. A seven-byte discriminator
 		// detects THIS runtime's base64 transfer decoding and scalar BOM handling.
 		// Inspector-only callers still use an empty body.
-		const probe = new Blob([`--${boundary}\r\n`, header.subarray(0, headerLength), sink ? '\uFEFFQUJD' : '', `\r\n--${boundary}--\r\n`]);
+		const probe = new Blob([`--${boundary}\r\n`, Uint8Array.from(header.subarray(0, headerLength)), sink ? '\uFEFFQUJD' : '', `\r\n--${boundary}--\r\n`]);
 		let form: FormData;
 		try {
 			form = await new Response(probe, { headers: { 'Content-Type': `multipart/form-data; boundary="${boundary}"` } }).formData();

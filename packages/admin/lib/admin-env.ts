@@ -1,11 +1,11 @@
-import type { D1Database } from '@cloudflare/workers-types';
+import type { D1Database } from "@cloudflare/workers-types";
 import type {
 	ChainJobMessage,
 	GatewayRepositories,
 	HyperdriveBinding,
 	StorageContext,
-} from '@octafuse/core';
-import type { AdminPrincipal } from '@/lib/admin-principal';
+} from "@octafuse/core";
+import type { AdminPrincipal } from "@/lib/admin-principal";
 
 /** Admin Hono 应用：Cloudflare 绑定与请求级变量。 */
 export type AdminBindings = {
@@ -16,6 +16,17 @@ export type AdminBindings = {
 	CINAAUTH_ISSUER?: string;
 	CINAAUTH_ACCOUNT_ORIGIN?: string;
 	CINATOKEN_APP_ORIGIN?: string;
+	/** Exact `true` requires a revision for legacy generic writes to Web-managed config keys. */
+	CINATOKEN_ADMIN_CONFIG_REQUIRE_REVISION?: string;
+	/** Exact `true` requires client profile_revision on global Gateway Key PATCH/DELETE. */
+	CINATOKEN_ADMIN_KEYS_REQUIRE_REVISION?: string;
+	/** Exact `true` requires reviewed revisions and operator reasons for Shared Keys governance. */
+	CINATOKEN_ADMIN_SHARED_KEYS_REQUIRE_REVISION?: string;
+	/** Exact true requires a complete family read-set version for generic Tools writes. */
+	CINATOKEN_ADMIN_TOOLS_REQUIRE_VERSION?: string;
+	/** Exact true requires expected_route_policy for model policy PATCH after old writers are drained. */
+	CINATOKEN_ADMIN_MODELS_REQUIRE_ROUTE_POLICY_PRECONDITION?: string;
+	CINATOKEN_ADMIN_DATA_POLICIES_REQUIRE_PRECONDITION?: string;
 	CINATOKEN_OIDC_CLIENT_ID?: string;
 	CINATOKEN_REQUIRED_ROLES?: string;
 	CINATOKEN_OIDC_CLIENT_SECRET?: string;
@@ -34,9 +45,13 @@ export type AdminBindings = {
 	DEEPSEEK_API_KEY?: string;
 	CHAIN_JOBS?: Queue<ChainJobMessage>;
 	/** Workers rate-limiting binding（wrangler.base.jsonc ratelimits）。认证失败限速；未注入时跳过。 */
-	AUTH_RATE_LIMITER?: { limit(options: { key: string }): Promise<{ success: boolean }> };
+	AUTH_RATE_LIMITER?: {
+		limit(options: { key: string }): Promise<{ success: boolean }>;
+	};
 	/** 旧部署绑定名兼容；新部署统一使用 `AUTH_RATE_LIMITER`。 */
-	RATE_LIMITER?: { limit(options: { key: string }): Promise<{ success: boolean }> };
+	RATE_LIMITER?: {
+		limit(options: { key: string }): Promise<{ success: boolean }>;
+	};
 	/** Node / 自托管数据库使用 `DATABASE_URL`；Cloudflare Postgres 只使用 `HYPERDRIVE`。 */
 	DATABASE_URL?: string;
 	/** Node 下省略视为 `postgres`；Cloudflare 下省略保持 D1，显式 `postgres` 才切 Hyperdrive。 */

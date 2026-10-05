@@ -16,6 +16,7 @@ const paths = [
 	join(root, "packages/tool-engines/package.json"),
 	join(root, "packages/proxy/package.json"),
 	join(root, "packages/admin/package.json"),
+	join(root, "packages/web/package.json"),
 ];
 
 const versions = paths.map((p) => {

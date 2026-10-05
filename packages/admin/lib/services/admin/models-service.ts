@@ -1,8 +1,8 @@
 /**
  * 管理后台 `models` + `model_tags`：列表/详情（含路由计数）、创建、部分更新、级联删除、静态目录导入。
  */
-import type { GatewayRepositories } from '@octafuse/core';
-import { normalizeModelRoutePolicyInput } from '@octafuse/core/db/model-route-policy';
+import type { GatewayRepositories } from "@octafuse/core";
+import { normalizeModelRoutePolicyInput } from "@octafuse/core/db/model-route-policy";
 import {
 	coerceModelInputModalitiesInput,
 	coerceModelOutputModalitiesInput,
@@ -10,41 +10,52 @@ import {
 	isAudioModel,
 	isImageGenerationModel,
 	isRerankModel,
-} from '@octafuse/core/db/model-modalities';
+} from "@octafuse/core/db/model-modalities";
 import {
 	BILLING_CURRENCY_KEY,
+	normalizeBillingCurrencyCode,
 	tryParseGatewaySupportedBillingCurrencyInput,
 	type GatewaySupportedBillingCurrency,
-} from '@octafuse/core/lib/billing-currency';
-import { getGatewayCurrencySymbol } from '@/lib/format-gateway-currency';
-import { listStaticModelPresets, pickPresetPricingRawForBillingCurrency } from '@/lib/model-preset';
-import { badRequest, notFound } from './errors';
-import { coerceModelPricingProfileInput } from './pricing-input';
-import { normalizeModelVendorInput, parseTagsJson } from './shared';
+} from "@octafuse/core/lib/billing-currency";
+import { getGatewayCurrencySymbol } from "@/lib/format-gateway-currency";
+import {
+	listStaticModelPresets,
+	pickPresetPricingRawForBillingCurrency,
+} from "@/lib/model-preset";
+import { badRequest, notFound } from "./errors";
+import { ModelPolicyPreconditionError } from "./domain-contract";
+import { coerceModelPricingProfileInput } from "./pricing-input";
+import { normalizeModelVendorInput, parseTagsJson } from "./shared";
 import type {
 	AdminCreatedIdOutput,
 	AdminModelMutationInput,
 	AdminModelRow,
 	AdminModelsImportOutput,
 	AdminStaticModelPresetCatalogItem,
-} from './types';
+} from "./types";
 
-function applyModelMutationCoercion(rest: Record<string, unknown>): Record<string, unknown> {
+function applyModelMutationCoercion(
+	rest: Record<string, unknown>
+): Record<string, unknown> {
 	const out = { ...rest };
-	if ('input_modalities' in out && out.input_modalities !== undefined) {
-		out.input_modalities = coerceModelInputModalitiesInput(out.input_modalities);
+	if ("input_modalities" in out && out.input_modalities !== undefined) {
+		out.input_modalities = coerceModelInputModalitiesInput(
+			out.input_modalities
+		);
 	}
-	if ('output_modalities' in out && out.output_modalities !== undefined) {
-		out.output_modalities = coerceModelOutputModalitiesInput(out.output_modalities);
+	if ("output_modalities" in out && out.output_modalities !== undefined) {
+		out.output_modalities = coerceModelOutputModalitiesInput(
+			out.output_modalities
+		);
 	}
-	if ('released_at' in out && out.released_at !== undefined) {
+	if ("released_at" in out && out.released_at !== undefined) {
 		out.released_at = coerceModelReleasedAtInput(out.released_at);
 	}
 	return out;
 }
 
 function formatPriceForPreview(value: unknown): string | null {
-	if (typeof value !== 'number' || !Number.isFinite(value)) return null;
+	if (typeof value !== "number" || !Number.isFinite(value)) return null;
 	return Number.isInteger(value) ? String(value) : String(value);
 }
 
@@ -62,7 +73,7 @@ function buildTokenPricingPreview(
 
 	const sym = getGatewayCurrencySymbol(billing);
 	const unit = `${sym}/M`;
-	const money = (n: string | null) => (n == null ? '—' : `${sym}${n}`);
+	const money = (n: string | null) => (n == null ? "—" : `${sym}${n}`);
 
 	const lines: string[] = [];
 	let firstIn: string | null = null;
@@ -71,7 +82,7 @@ function buildTokenPricingPreview(
 	let firstImageOut: string | null = null;
 	for (let i = 0; i < tiers.length; i++) {
 		const tier = tiers[i];
-		if (!tier || typeof tier !== 'object' || Array.isArray(tier)) continue;
+		if (!tier || typeof tier !== "object" || Array.isArray(tier)) continue;
 		const tierObj = tier as Record<string, unknown>;
 		const inPrice = formatPriceForPreview(tierObj.input_price);
 		const outPrice = formatPriceForPreview(tierObj.output_price);
@@ -86,32 +97,34 @@ function buildTokenPricingPreview(
 		const imageInCache = formatPriceForPreview(tierObj.image_input_cache_price);
 		const upto = tierObj.upto;
 		const rangeLabel =
-			typeof upto === 'number' && Number.isFinite(upto) ? `<=${upto}` : 'all tokens';
+			typeof upto === "number" && Number.isFinite(upto)
+				? `<=${upto}`
+				: "all tokens";
 		const parts = [
-			`text-in ${inPrice ?? '—'}`,
-			`text-out ${outPrice ?? '—'}`,
-			`cache-read ${cacheReadPrice ?? '—'}`,
+			`text-in ${inPrice ?? "—"}`,
+			`text-out ${outPrice ?? "—"}`,
+			`cache-read ${cacheReadPrice ?? "—"}`,
 		];
 		if (cacheWritePrice != null) {
 			parts.push(`cache-write ${cacheWritePrice}`);
 		}
 		if (imageIn != null || imageOut != null) {
-			parts.push(`img-in ${imageIn ?? '—'}`);
+			parts.push(`img-in ${imageIn ?? "—"}`);
 			if (imageInCache != null) {
 				parts.push(`img-in-cache ${imageInCache}`);
 			}
-			parts.push(`img-out ${imageOut ?? '—'}`);
+			parts.push(`img-out ${imageOut ?? "—"}`);
 		}
-		lines.push(`Tier ${i + 1} (${rangeLabel}): ${parts.join(' · ')} (${unit})`);
+		lines.push(`Tier ${i + 1} (${rangeLabel}): ${parts.join(" · ")} (${unit})`);
 	}
 	if (lines.length === 0) return null;
 	const hasImageToken = firstImageOut != null || firstImageIn != null;
 	const label = hasImageToken
 		? `${money(firstIn)} / ${money(firstImageIn)} / ${money(firstImageOut)} /M`
 		: firstIn != null || firstOut != null
-			? `${money(firstIn)} / ${money(firstOut)} /M`
-			: `${tiers.length} tier(s)`;
-	return { label, detail: lines.join('\n') };
+		? `${money(firstIn)} / ${money(firstOut)} /M`
+		: `${tiers.length} tier(s)`;
+	return { label, detail: lines.join("\n") };
 }
 
 function buildPerImagePricingPreview(
@@ -121,11 +134,13 @@ function buildPerImagePricingPreview(
 	const mode = rawPricing.image_billing_mode;
 	const image = rawPricing.image;
 	const imageObj =
-		image && typeof image === 'object' && !Array.isArray(image)
+		image && typeof image === "object" && !Array.isArray(image)
 			? (image as Record<string, unknown>)
 			: null;
-	const defaultPrice = imageObj ? formatPriceForPreview(imageObj.default) : null;
-	if (mode !== 'per_image' && defaultPrice == null) {
+	const defaultPrice = imageObj
+		? formatPriceForPreview(imageObj.default)
+		: null;
+	if (mode !== "per_image" && defaultPrice == null) {
 		return null;
 	}
 	if (defaultPrice == null) {
@@ -146,11 +161,13 @@ function buildPerSecondAudioPricingPreview(
 	const mode = rawPricing.audio_billing_mode;
 	const audio = rawPricing.audio;
 	const audioObj =
-		audio && typeof audio === 'object' && !Array.isArray(audio)
+		audio && typeof audio === "object" && !Array.isArray(audio)
 			? (audio as Record<string, unknown>)
 			: null;
-	const pricePerSecond = audioObj ? formatPriceForPreview(audioObj.price_per_second) : null;
-	if (mode !== 'per_second' || pricePerSecond == null) {
+	const pricePerSecond = audioObj
+		? formatPriceForPreview(audioObj.price_per_second)
+		: null;
+	if (mode !== "per_second" || pricePerSecond == null) {
 		return null;
 	}
 	const sym = getGatewayCurrencySymbol(billing);
@@ -167,11 +184,14 @@ function buildPerCharacterAudioPricingPreview(
 ): CatalogPricingPreview | null {
 	const audio = rawPricing.audio;
 	const audioObj =
-		audio && typeof audio === 'object' && !Array.isArray(audio)
+		audio && typeof audio === "object" && !Array.isArray(audio)
 			? (audio as Record<string, unknown>)
 			: null;
-	const price = audioObj ? formatPriceForPreview(audioObj.price_per_character) : null;
-	if (rawPricing.audio_billing_mode !== 'per_character' || price == null) return null;
+	const price = audioObj
+		? formatPriceForPreview(audioObj.price_per_character)
+		: null;
+	if (rawPricing.audio_billing_mode !== "per_character" || price == null)
+		return null;
 	const sym = getGatewayCurrencySymbol(billing);
 	return {
 		label: `${sym}${price} ${sym}/char`,
@@ -182,10 +202,14 @@ function buildPerCharacterAudioPricingPreview(
 /** 按 `BILLING_CURRENCY` 选用的目录价分支：Audio / Image / LLM 档位摘要。 */
 function buildCatalogPricingPreview(
 	rawPricing: unknown,
-	_kind: 'llm' | 'image' | 'audio',
+	_kind: "llm" | "image" | "audio",
 	billing: GatewaySupportedBillingCurrency
 ): CatalogPricingPreview {
-	if (!rawPricing || typeof rawPricing !== 'object' || Array.isArray(rawPricing)) {
+	if (
+		!rawPricing ||
+		typeof rawPricing !== "object" ||
+		Array.isArray(rawPricing)
+	) {
 		return { label: null, detail: null };
 	}
 	const obj = rawPricing as Record<string, unknown>;
@@ -201,9 +225,23 @@ function buildCatalogPricingPreview(
 }
 
 /** 全部模型列表，`tags` 从 JSON 字符串解析为数组。 */
-export async function listModelsService(repos: GatewayRepositories): Promise<AdminModelRow[]> {
+export async function listModelsService(
+	repos: GatewayRepositories
+): Promise<AdminModelRow[]> {
 	const rows = await repos.models.listModelsWithRouteCounts();
-	return rows.map((m) => ({ ...m, tags: parseTagsJson(m.tags as string | null) })) as AdminModelRow[];
+	return rows.map((m) => ({
+		...m,
+		tags: parseTagsJson(m.tags as string | null),
+	})) as AdminModelRow[];
+}
+
+/** Current gateway interpretation of model prices, not the original currency of an individual historical row. */
+export async function currentModelBillingCurrencyService(
+	repos: GatewayRepositories
+): Promise<string> {
+	return normalizeBillingCurrencyCode(
+		await repos.systemConfig.getConfig(BILLING_CURRENCY_KEY)
+	);
 }
 
 /**
@@ -211,20 +249,35 @@ export async function listModelsService(repos: GatewayRepositories): Promise<Adm
  * LLM：`max_tokens` 缺省 8192；文生图（`output` 含 image）：`context_window` / `max_tokens` 可为 null。
  * @throws `badRequest` 缺 id
  */
-export async function createModelService(repos: GatewayRepositories, body: AdminModelMutationInput): Promise<AdminCreatedIdOutput> {
-	const id = String(body.id ?? '');
-	if (!id) throw badRequest('Model ID is required');
+export async function createModelService(
+	repos: GatewayRepositories,
+	body: AdminModelMutationInput
+): Promise<AdminCreatedIdOutput> {
+	const id = String(body.id ?? "");
+	if (!id) throw badRequest("Model ID is required");
+	if (id.trim() === "." || id.trim() === "..") {
+		throw badRequest("Model ID cannot be a URL dot segment");
+	}
 
 	const pricingProfile =
-		body.pricing_profile !== undefined ? coerceModelPricingProfileInput(body.pricing_profile) : null;
+		body.pricing_profile !== undefined
+			? coerceModelPricingProfileInput(body.pricing_profile)
+			: null;
 	if (!pricingProfile) {
-		throw badRequest('pricing_profile is required when creating a model');
+		throw badRequest("pricing_profile is required when creating a model");
 	}
 	const inputModalities =
-		body.input_modalities !== undefined ? coerceModelInputModalitiesInput(body.input_modalities) : null;
+		body.input_modalities !== undefined
+			? coerceModelInputModalitiesInput(body.input_modalities)
+			: null;
 	const outputModalities =
-		body.output_modalities !== undefined ? coerceModelOutputModalitiesInput(body.output_modalities) : null;
-	const releasedAt = body.released_at !== undefined ? coerceModelReleasedAtInput(body.released_at) : null;
+		body.output_modalities !== undefined
+			? coerceModelOutputModalitiesInput(body.output_modalities)
+			: null;
+	const releasedAt =
+		body.released_at !== undefined
+			? coerceModelReleasedAtInput(body.released_at)
+			: null;
 	const isImage = isImageGenerationModel({
 		output_modalities: outputModalities,
 		pricing_profile: pricingProfile,
@@ -240,7 +293,7 @@ export async function createModelService(repos: GatewayRepositories, body: Admin
 		? body.max_tokens == null
 			? null
 			: Number(body.max_tokens)
-		: (body.max_tokens ?? 8192);
+		: body.max_tokens ?? 8192;
 	const contextWindow = skipContextDefault
 		? body.context_window == null
 			? null
@@ -271,48 +324,119 @@ export async function createModelService(repos: GatewayRepositories, body: Admin
 }
 
 /** 模型详情 + 路由计数 + 解析后的 tags。 */
-export async function getModelService(repos: GatewayRepositories, id: string): Promise<AdminModelRow> {
+export async function getModelService(
+	repos: GatewayRepositories,
+	id: string
+): Promise<AdminModelRow> {
 	const model = await repos.models.getModelDetailWithRouteCounts(id);
-	if (!model) throw notFound('Model not found');
-	return { ...model, tags: parseTagsJson(model.tags as string | null) } as AdminModelRow;
+	if (!model) throw notFound("Model not found");
+	return {
+		...model,
+		tags: parseTagsJson(model.tags as string | null),
+	} as AdminModelRow;
 }
 
 /**
  * PATCH 模型列 + 可选全量替换 `tags`；vendor 会经 `normalizeModelVendorInput`。
  * @throws `notFound` 无此行或更新 0 行且提交了非 id 字段
  */
-export async function updateModelService(repos: GatewayRepositories, id: string, body: AdminModelMutationInput): Promise<void> {
-	const { tags, ...restRaw } = body;
+export async function updateModelService(
+	repos: GatewayRepositories,
+	id: string,
+	body: AdminModelMutationInput,
+	requirePolicyPrecondition = false
+): Promise<void> {
+	const { tags, expected_route_policy, ...restRaw } = body;
+	const hasExpected = Object.prototype.hasOwnProperty.call(
+		body,
+		"expected_route_policy"
+	);
+	if (
+		hasExpected &&
+		expected_route_policy !== null &&
+		(typeof expected_route_policy !== "string" ||
+			expected_route_policy.length > 65536)
+	)
+		throw new ModelPolicyPreconditionError(
+			400,
+			"invalid_model_route_policy_precondition",
+			"expected_route_policy must be the raw string or explicit null"
+		);
+	if (
+		requirePolicyPrecondition &&
+		body.route_policy !== undefined &&
+		!hasExpected
+	)
+		throw new ModelPolicyPreconditionError(
+			428,
+			"model_route_policy_precondition_required",
+			"A model route policy precondition is required"
+		);
 	const rest = { ...restRaw } as Record<string, unknown>;
-	if ('vendor' in rest && rest.vendor !== undefined) {
+	if ("vendor" in rest && rest.vendor !== undefined) {
 		rest.vendor = normalizeModelVendorInput(rest.vendor);
 	}
-	if ('pricing_profile' in rest && rest.pricing_profile !== undefined) {
+	if ("pricing_profile" in rest && rest.pricing_profile !== undefined) {
 		rest.pricing_profile = coerceModelPricingProfileInput(rest.pricing_profile);
 	}
-	if ('route_policy' in rest && rest.route_policy !== undefined) {
+	if ("route_policy" in rest && rest.route_policy !== undefined) {
 		try {
 			rest.route_policy = normalizeModelRoutePolicyInput(
 				rest.route_policy == null ? null : String(rest.route_policy)
 			);
 		} catch (err) {
-			throw badRequest(err instanceof Error ? err.message : 'Invalid route_policy');
+			throw badRequest(
+				err instanceof Error ? err.message : "Invalid route_policy"
+			);
 		}
 	}
 	const coerced = applyModelMutationCoercion(rest);
+	if (hasExpected) {
+		const matched = await repos.models.updateModelWithPolicyPrecondition(
+			id,
+			coerced,
+			expected_route_policy as string | null,
+			tags === undefined
+				? undefined
+				: Array.isArray(tags)
+				? tags.map((tag) => String(tag))
+				: []
+		);
+		if (!matched)
+			throw new ModelPolicyPreconditionError(
+				409,
+				"model_route_policy_conflict",
+				"Model route policy changed or the model is absent; reload and review"
+			);
+		return;
+	}
+	// A legacy no-op/tags-only PATCH must still identify an existing exact resource.
+	const existing = await repos.models.getModelDetailWithRouteCounts(id);
+	if (!existing || existing.id !== id) throw notFound("Model not found");
 	const changes = await repos.models.updateModelByPatch(id, coerced);
-	if (Object.keys(rest).some((k) => k !== 'id' && rest[k] !== undefined) && changes === 0) {
-		throw notFound('Model not found');
+	if (
+		Object.keys(rest).some((k) => k !== "id" && rest[k] !== undefined) &&
+		changes === 0
+	) {
+		throw notFound("Model not found");
 	}
 	if (tags !== undefined) {
-		await repos.models.replaceModelTags(id, Array.isArray(tags) ? tags.map((t) => String(t)) : []);
+		await repos.models.replaceModelTags(
+			id,
+			Array.isArray(tags) ? tags.map((t) => String(t)) : []
+		);
 	}
 }
 
 /** 级联删除模型及其路由、标签。 */
-export async function deleteModelService(repos: GatewayRepositories, id: string): Promise<void> {
+export async function deleteModelService(
+	repos: GatewayRepositories,
+	id: string
+): Promise<void> {
+	const existing = await repos.models.getModelDetailWithRouteCounts(id);
+	if (!existing || existing.id !== id) throw notFound("Model not found");
 	const changes = await repos.models.deleteModelCascade(id);
-	if (!changes) throw notFound('Model not found');
+	if (!changes) throw notFound("Model not found");
 }
 
 /**
@@ -320,34 +444,42 @@ export async function deleteModelService(repos: GatewayRepositories, id: string)
  * 价格预览按 `billing`（与导入写入同源的 USD/CNY 分支）；默认 USD 便于单测。
  */
 export function listStaticModelPresetCatalogForAdmin(
-	billing: GatewaySupportedBillingCurrency = 'USD'
+	billing: GatewaySupportedBillingCurrency = "USD"
 ): AdminStaticModelPresetCatalogItem[] {
 	return listStaticModelPresets()
 		.map((p) => {
-			const id = String(p.id ?? '').trim();
+			const id = String(p.id ?? "").trim();
 			const pricingRaw = pickPresetPricingRawForBillingCurrency(p, billing);
 			let tierCount = 0;
-			if (pricingRaw && typeof pricingRaw === 'object' && !Array.isArray(pricingRaw)) {
+			if (
+				pricingRaw &&
+				typeof pricingRaw === "object" &&
+				!Array.isArray(pricingRaw)
+			) {
 				const tiers = (pricingRaw as Record<string, unknown>).tiers;
 				if (Array.isArray(tiers)) {
 					tierCount = tiers.length;
 				}
 			}
 			const pricingProfileJson =
-				pricingRaw != null && typeof pricingRaw === 'object' ? JSON.stringify(pricingRaw) : null;
+				pricingRaw != null && typeof pricingRaw === "object"
+					? JSON.stringify(pricingRaw)
+					: null;
 			const kindFields = {
 				output_modalities: p.modalities?.output ?? null,
 				pricing_profile: pricingProfileJson,
 			};
-			const kind: AdminStaticModelPresetCatalogItem['kind'] = isImageGenerationModel(kindFields)
-				? 'image'
-				: isAudioModel(kindFields)
-					? 'audio'
-					: 'llm';
+			const kind: AdminStaticModelPresetCatalogItem["kind"] =
+				isImageGenerationModel(kindFields)
+					? "image"
+					: isAudioModel(kindFields)
+					? "audio"
+					: "llm";
 			const pricing = buildCatalogPricingPreview(pricingRaw, kind, billing);
 			return {
 				id,
-				display_name: (p.display_name != null ? String(p.display_name) : null) || null,
+				display_name:
+					(p.display_name != null ? String(p.display_name) : null) || null,
 				vendor: normalizeModelVendorInput(p.vendor),
 				kind,
 				context_window: p.context_window ?? null,
@@ -362,7 +494,20 @@ export function listStaticModelPresetCatalogForAdmin(
 		.filter((row) => row.id.length > 0);
 }
 
-/** 读取当前 `BILLING_CURRENCY` 后列出导入目录（价格预览与即将写入的分支一致）。 */
+/** 目录只含 USD/CNY 分支；其他有效币种必须拒绝，避免把 USD 数字按另一币种计费。 */
+function supportedStaticModelImportCurrency(
+	raw: string | null
+): GatewaySupportedBillingCurrency {
+	const current = normalizeBillingCurrencyCode(raw);
+	const supported = tryParseGatewaySupportedBillingCurrencyInput(current);
+	if (!supported) {
+		throw badRequest(
+			`Static model catalog does not support billing currency ${current}; use USD or CNY`
+		);
+	}
+	return supported;
+}
+
 export async function listStaticModelPresetCatalogForAdminService(
 	repos: GatewayRepositories
 ): Promise<{
@@ -370,8 +515,7 @@ export async function listStaticModelPresetCatalogForAdminService(
 	items: AdminStaticModelPresetCatalogItem[];
 }> {
 	const rawCurrency = await repos.systemConfig.getConfig(BILLING_CURRENCY_KEY);
-	const billing: GatewaySupportedBillingCurrency =
-		tryParseGatewaySupportedBillingCurrencyInput(rawCurrency ?? '') ?? 'USD';
+	const billing = supportedStaticModelImportCurrency(rawCurrency);
 	return {
 		billing_currency: billing,
 		items: listStaticModelPresetCatalogForAdmin(billing),
@@ -379,24 +523,29 @@ export async function listStaticModelPresetCatalogForAdminService(
 }
 
 /**
- * 从 `lib/model-presets/*.json`（经 `listStaticModelPresets` 合并）按 **指定 id** 导入模型：按当前 `BILLING_CURRENCY`（仅 USD/CNY 合法；否则按 USD 分支取价）写入 `pricing_profile`；
+ * 从 `lib/model-presets/*.json`（经 `listStaticModelPresets` 合并）按 **指定 id** 导入模型：按当前 `BILLING_CURRENCY` 的 USD/CNY 分支写入 `pricing_profile`；其他有效币种拒绝，未配置或无效值沿用网关默认 USD。
  * **已存在同 id 的不导入、不覆盖**（记入 `skipped_existing`）。未知 id 或校验失败记入 `failed`。
  */
 export async function importModelsFromStaticPresetsService(
 	repos: GatewayRepositories,
 	input: { ids: string[] }
 ): Promise<AdminModelsImportOutput> {
-	const uniqueIds = [...new Set((input.ids ?? []).map((x) => String(x).trim()).filter((x) => x.length > 0))];
+	const uniqueIds = [
+		...new Set(
+			(input.ids ?? []).map((x) => String(x).trim()).filter((x) => x.length > 0)
+		),
+	];
 	if (uniqueIds.length === 0) {
-		throw badRequest('ids must be a non-empty array of preset model ids');
+		throw badRequest("ids must be a non-empty array of preset model ids");
 	}
 
 	const rawCurrency = await repos.systemConfig.getConfig(BILLING_CURRENCY_KEY);
-	const billingUsed: GatewaySupportedBillingCurrency =
-		tryParseGatewaySupportedBillingCurrencyInput(rawCurrency ?? '') ?? 'USD';
+	const billingUsed = supportedStaticModelImportCurrency(rawCurrency);
 
 	const allPresets = listStaticModelPresets();
-	const presetById = new Map(allPresets.map((p) => [String(p.id ?? '').trim(), p]));
+	const presetById = new Map(
+		allPresets.map((p) => [String(p.id ?? "").trim(), p])
+	);
 
 	let created = 0;
 	const skipped_existing: string[] = [];
@@ -415,10 +564,15 @@ export async function importModelsFromStaticPresetsService(
 				continue;
 			}
 
-			const pricingRaw = pickPresetPricingRawForBillingCurrency(preset, billingUsed);
+			const pricingRaw = pickPresetPricingRawForBillingCurrency(
+				preset,
+				billingUsed
+			);
 			const pricingProfile = coerceModelPricingProfileInput(pricingRaw);
 			if (!pricingProfile) {
-				throw badRequest(`Static preset "${id}": missing or invalid pricing for ${billingUsed}`);
+				throw badRequest(
+					`Static preset "${id}": missing or invalid pricing for ${billingUsed}`
+				);
 			}
 
 			const presetIsImage = isImageGenerationModel({
@@ -431,9 +585,13 @@ export async function importModelsFromStaticPresetsService(
 				vendor: normalizeModelVendorInput(preset.vendor),
 				context_window: preset.context_window ?? null,
 				// Preserve null for image presets; LLM presets still default in createModelService
-				max_tokens: presetIsImage ? (preset.max_tokens ?? null) : (preset.max_tokens ?? 8192),
+				max_tokens: presetIsImage
+					? preset.max_tokens ?? null
+					: preset.max_tokens ?? 8192,
 				pricing_profile: pricingProfile,
-				tags: Array.isArray(preset.tags) ? preset.tags.map((t) => String(t)) : [],
+				tags: Array.isArray(preset.tags)
+					? preset.tags.map((t) => String(t))
+					: [],
 				input_modalities: preset.modalities?.input ?? null,
 				output_modalities: preset.modalities?.output ?? null,
 				released_at: preset.released ?? null,

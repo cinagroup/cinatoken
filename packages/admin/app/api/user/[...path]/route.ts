@@ -1,56 +1,76 @@
 /**
  * 用户门户 API：`/api/user/*` → 内部重写为 `/user/*` 后交给 Hono 用户子应用。
- * 仅接受 `user_session` Cookie 会话（与管理台完全隔离），无 Bearer 通道。
+ * 使用统一 Cookie 会话并兼容 `user_session`；以 Portal 身份鉴权，无 Bearer 通道。
  */
-import type { UserBindings } from '@/lib/user-env';
-import { getUserApp } from '@/lib/user-app';
-import { handleGatewayApiError } from '@/lib/api-error';
-import { resolveAdminRequestRuntime } from '@/lib/admin-request-runtime';
-import { authenticateUserRequest } from '@/lib/user-auth';
-import { rejectInvalidBrowserMutationOrigin } from '@/lib/browser-mutation';
-import { authenticateAdminRequest } from '@/lib/auth';
+import type { UserBindings } from "@/lib/user-env";
+import { getUserApp } from "@/lib/user-app";
+import { handleGatewayApiError } from "@/lib/api-error";
+import { resolveAdminRequestRuntime } from "@/lib/admin-request-runtime";
+import { authenticateUserRequest } from "@/lib/user-auth";
+import { rejectInvalidBrowserMutationOrigin } from "@/lib/browser-mutation";
+import { authenticateAdminRequest } from "@/lib/auth";
 import {
 	CinaAuthConsoleVerificationUnavailableError,
+	cinaAuthSubjectFromPrincipal,
 	verifyCinaAuthConsolePrincipal,
-} from '@/lib/cinaauth/principal';
-import { getAccountCapabilities } from '@/lib/unified-session';
-import { withGatewayReadRetry } from '@/lib/gateway-read-retry';
+} from "@/lib/cinaauth/principal";
+import { getAccountCapabilities } from "@/lib/unified-session";
+import { withGatewayReadRetry } from "@/lib/gateway-read-retry";
+import { rejectUserPrincipalPrecondition } from "@/lib/user-principal-precondition";
 
-export const dynamic = 'force-dynamic';
+export const dynamic = "force-dynamic";
 
 function rewriteToInternalUserPath(request: Request): Request {
 	const u = new URL(request.url);
-	const prefix = '/api/user';
+	const prefix = "/api/user";
 	if (!u.pathname.startsWith(prefix)) {
 		return request;
 	}
 	const rest = u.pathname.slice(prefix.length);
-	u.pathname = '/user' + (rest === '' ? '' : rest);
+	u.pathname = "/user" + (rest === "" ? "" : rest);
 	return new Request(u.toString(), request);
 }
 
-async function handle(request: Request): Promise<Response> {
+async function handleUnchecked(request: Request): Promise<Response> {
 	try {
 		const originRejection = rejectInvalidBrowserMutationOrigin(request);
 		if (originRejection) return originRejection;
 
-		const { bindings: runtimeBindings, storage, ctx } = await resolveAdminRequestRuntime(request);
+		const {
+			bindings: runtimeBindings,
+			storage,
+			ctx,
+		} = await resolveAdminRequestRuntime(request);
 		const { repositories } = storage;
 		let principal = await authenticateUserRequest(request, repositories);
 		if (!principal) {
-			return Response.json({ success: false, message: 'Unauthorized' }, { status: 401 });
+			return Response.json(
+				{ success: false, message: "Unauthorized" },
+				{ status: 401 }
+			);
 		}
-		if (new URL(request.url).pathname === '/api/user/me') {
-			const adminAuthentication = await authenticateAdminRequest(request, repositories);
+		const principalRejection = rejectUserPrincipalPrecondition(
+			request,
+			principal.userId
+		);
+		if (principalRejection) return principalRejection;
+		if (new URL(request.url).pathname === "/api/user/me") {
+			const adminAuthentication = await authenticateAdminRequest(
+				request,
+				repositories
+			);
 			let adminPrincipal: Awaited<
 				ReturnType<typeof verifyCinaAuthConsolePrincipal>
 			> = null;
-			if (adminAuthentication) {
+			if (
+				adminAuthentication &&
+				cinaAuthSubjectFromPrincipal(adminAuthentication) === principal.subject
+			) {
 				try {
 					adminPrincipal = await verifyCinaAuthConsolePrincipal(
 						request,
 						adminAuthentication,
-						runtimeBindings,
+						runtimeBindings
 					);
 				} catch (error) {
 					if (!(error instanceof CinaAuthConsoleVerificationUnavailableError)) {
@@ -60,7 +80,10 @@ async function handle(request: Request): Promise<Response> {
 					// A transient admin-role check must not log out an ordinary user.
 				}
 			}
-			if (adminPrincipal?.type === 'console') {
+			if (
+				adminPrincipal?.type === "console" &&
+				cinaAuthSubjectFromPrincipal(adminPrincipal) === principal.subject
+			) {
 				principal = {
 					...principal,
 					isAdmin: true,
@@ -81,8 +104,15 @@ async function handle(request: Request): Promise<Response> {
 		}
 		return await app.fetch(internalReq, appBindings);
 	} catch (error) {
-		return handleGatewayApiError({ route: 'user.catch-all', error });
+		return handleGatewayApiError({ route: "user.catch-all", error });
 	}
+}
+
+/** Also protects Origin, authentication and runtime failures before Hono. */
+async function handle(request: Request): Promise<Response> {
+	const response = await handleUnchecked(request);
+	response.headers.set("Cache-Control", "private, no-store");
+	return response;
 }
 
 export const GET = (request: Request) => withGatewayReadRetry(request, handle);

@@ -538,7 +538,7 @@ function validatedImageSse(
 		return {
 			response: new Response(
 				new Blob([
-					errorFrame('Image generation stream had no response body'),
+					new Uint8Array(errorFrame('Image generation stream had no response body')),
 					SSE_DONE_FRAME,
 				]).stream(),
 				{ status: 200, headers: { 'Content-Type': 'text/event-stream; charset=utf-8', 'Cache-Control': 'no-cache' } },
@@ -996,7 +996,7 @@ export async function dispatchOpenAiImageGenerations(
 		if (signal.aborted) throw new DOMException('Aborted', 'AbortError');
 		const response = await wait(() => {
 			dispatchStarted = true;
-			const init = { method: 'POST', headers, body: uploadBody!.body, signal, redirect: 'manual' as const, duplex: 'half' };
+				const init = { method: 'POST', headers, body: uploadBody!.body, signal, redirect: 'manual' as const, duplex: 'half' as const };
 			return (options.fetchImpl ?? fetch)(url, init);
 		}, (late) => { void late.body?.cancel('image_request_stopped').catch(() => undefined); });
 		upstreamStatus = response.status;
@@ -1238,7 +1238,7 @@ export async function dispatchOpenAiImageEdits(
 	const pagedUpload = edit.images.some(img => img.upload !== undefined);
 	const files = edit.images.map(img => ({
 		...imageEditUpstreamFileMetadata(img),
-		payload: img.upload ?? img.blob ?? new Blob(img.bytes ? [img.bytes] : [], { type: img.mimeType }),
+		payload: img.upload ?? img.blob ?? new Blob(img.bytes ? [Uint8Array.from(img.bytes)] : [], { type: img.mimeType }),
 	}));
 	for (const file of pagedUpload ? [] : files) {
 		// Legacy internal callers only. Public multipart uploads use request-owned
@@ -1287,7 +1287,7 @@ export async function dispatchOpenAiImageEdits(
 		if (signal.aborted) throw new DOMException('Aborted', 'AbortError');
 		const response = await wait(() => {
 			dispatchStarted = true;
-			const init = { method: 'POST', headers, body: uploadBody?.body ?? form, signal, redirect: 'manual' as const, duplex: 'half' };
+			const init = { method: 'POST', headers, body: uploadBody?.body ?? form, signal, redirect: 'manual' as const, duplex: 'half' as const };
 			return (options.fetchImpl ?? fetch)(url, init);
 		}, (late) => { void late.body?.cancel('image_request_stopped').catch(() => undefined); });
 		upstreamStatus = response.status;

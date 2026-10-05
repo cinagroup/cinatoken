@@ -5,6 +5,8 @@
  */
 
 import type { GatewayRepositories } from '../storage/repositories';
+import type { ConfigSnapshot } from '../db/system-config-group-types';
+import { TOOL_CONFIG_FAMILY_KEYS, toolConfigValuesFromSnapshots } from '../db/system-config-group';
 import { roundGatewayMoney } from './money-precision';
 import {
 	normalizeToolUnitPrices,
@@ -204,13 +206,17 @@ function pricesFromEntry(entry: WebSearchCatalogEntry | undefined): ToolUnitPric
 export async function resolveWebSearchConfig(
 	repos: GatewayRepositories
 ): Promise<ResolveWebSearchConfigResult> {
-	const [catalogRaw, activeRaw, legacyProviderRaw, legacyApiKeyRaw, legacyCostRaw] = await Promise.all([
-		repos.systemConfig.getConfig(WEB_SEARCH_CATALOG_KEY),
-		repos.systemConfig.getConfig(WEB_SEARCH_ACTIVE_KEY),
-		repos.systemConfig.getConfig(WEB_SEARCH_PROVIDER_KEY),
-		repos.systemConfig.getConfig(WEB_SEARCH_API_KEY_KEY),
-		repos.systemConfig.getConfig(WEB_SEARCH_COST_KEY),
-	]);
+	return resolveWebSearchConfigFromSnapshots(await repos.systemConfig.getConfigSnapshots(TOOL_CONFIG_FAMILY_KEYS['web-search']));
+}
+
+/** Pure resolution from the same statement snapshot; never reload individual keys. */
+export function resolveWebSearchConfigFromSnapshots(snapshots: readonly ConfigSnapshot[]): ResolveWebSearchConfigResult {
+	const values = toolConfigValuesFromSnapshots('web-search', snapshots);
+	const catalogRaw = values[WEB_SEARCH_CATALOG_KEY] ?? null;
+	const activeRaw = values[WEB_SEARCH_ACTIVE_KEY] ?? null;
+	const legacyProviderRaw = values[WEB_SEARCH_PROVIDER_KEY] ?? null;
+	const legacyApiKeyRaw = values[WEB_SEARCH_API_KEY_KEY] ?? null;
+	const legacyCostRaw = values[WEB_SEARCH_COST_KEY] ?? null;
 
 	const catalogPresent = catalogRaw != null && String(catalogRaw).trim().length > 0;
 	if (catalogPresent) {

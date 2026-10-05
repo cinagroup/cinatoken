@@ -2,7 +2,7 @@
 // Starts and removes only an owned loopback cluster; never uses DATABASE_URL.
 import assert from 'node:assert/strict';
 import { createHash, randomBytes, randomUUID } from 'node:crypto';
-import { readFile, readdir, writeFile } from 'node:fs/promises';
+import { readFile, writeFile } from 'node:fs/promises';
 import { dirname, join } from 'node:path';
 import { performance } from 'node:perf_hooks';
 import test from 'node:test';
@@ -11,7 +11,7 @@ import { startNativePostgres } from '../../../packages/core/src/test-support/pos
 import { createDispatchIntentRepositoryPostgres } from '../../../packages/core/src/storage/recovery/dispatch-intent-postgres.ts';
 import { createUsageSettlementFactsRepositoryPostgres } from '../../../packages/core/src/storage/recovery/usage-settlement-facts-postgres.ts';
 import { sample } from '../../../packages/core/src/storage/recovery/usage-settlement-test-support.mjs';
-import { grantPostgresRuntime } from './grant-postgres-runtime.ts';
+import { grantPg73RuntimeFixture, listPg73Migrations } from './pg73-native-fixture.mjs';
 
 const schema = 'cinatoken_gateway';
 const migrations = new URL('../../../packages/core/migrations-postgres/', import.meta.url);
@@ -127,7 +127,7 @@ test('native existing-layout producer upgrade locks preserve ordinary log traffi
       const migratorUrl = `postgres://cinatoken_gateway_migrator:${migratorPassword}@127.0.0.1:${cluster.port}/postgres`;
       await migrator.unsafe(`CREATE TABLE ${schema}.schema_migrations (
         version text PRIMARY KEY, applied_at timestamptz NOT NULL DEFAULT now())`);
-      const files = (await readdir(migrations)).filter(name => name.endsWith('.sql')).sort();
+      const files = await listPg73Migrations();
       assert.equal(files.length, 73);
       assert.equal(files.at(-1), '0073_recovery_api_key_workspace_lock.sql');
       const corpus = [];
@@ -140,7 +140,7 @@ test('native existing-layout producer upgrade locks preserve ordinary log traffi
         });
       }
       report.sourceSha256.formalMigrationCorpus = sha256(corpus.join('\n'));
-      await grantPostgresRuntime({ DATABASE_URL: migratorUrl });
+      await grantPg73RuntimeFixture({ cluster, migrator, migratorUrl });
       await migrator.unsafe(`INSERT INTO ${schema}.users(id,email,budget_max,budget_spent)
         VALUES ('user','native-upgrade@example.invalid',10,0);
         INSERT INTO ${schema}.workspaces(id,scope_type,personal_owner_user_id,name,slug,status)
@@ -156,7 +156,7 @@ test('native existing-layout producer upgrade locks preserve ordinary log traffi
         await tx.unsafe("SET LOCAL cinatoken.recovery_log_guard_activation = 'reviewed-v1'");
         await tx.unsafe(await readFile(guardSwitch, 'utf8')).simple();
       });
-      await grantPostgresRuntime({ DATABASE_URL: migratorUrl });
+      await grantPg73RuntimeFixture({ cluster, migrator, migratorUrl });
       await runtimeRead.unsafe("SET statement_timeout = '1200ms'");
       await runtimeWrite.unsafe("SET statement_timeout = '1200ms'");
       const [seed] = await admin.unsafe(`SELECT

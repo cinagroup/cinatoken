@@ -1,29 +1,29 @@
-'use client';
+"use client";
 
-import Link from 'next/link';
+import Link from "next/link";
 import {
 	ArrowsRightLeftIcon,
 	CpuChipIcon,
 	GlobeAltIcon,
 	CheckBadgeIcon,
-} from '@heroicons/react/24/outline';
-import { useTranslations } from 'next-intl';
+} from "@heroicons/react/24/outline";
+import { useTranslations } from "next-intl";
 
-type SetupStep = 'provider' | 'model' | 'route' | 'endpoint';
+type SetupStep = "provider" | "model" | "route" | "endpoint";
 
 const STEPS: Array<{
 	key: SetupStep;
 	href: string;
 	Icon: typeof GlobeAltIcon;
 }> = [
-	{ key: 'provider', href: '/admin/providers', Icon: GlobeAltIcon },
-	{ key: 'model', href: '/admin/models', Icon: CpuChipIcon },
-	{ key: 'route', href: '/admin/routes', Icon: ArrowsRightLeftIcon },
-	{ key: 'endpoint', href: '/admin/endpoints', Icon: CheckBadgeIcon },
+	{ key: "provider", href: "/admin/providers", Icon: GlobeAltIcon },
+	{ key: "model", href: "/admin/models", Icon: CpuChipIcon },
+	{ key: "route", href: "/admin/routes", Icon: ArrowsRightLeftIcon },
+	{ key: "endpoint", href: "/admin/endpoints", Icon: CheckBadgeIcon },
 ];
 
 export function GatewaySetupGuide({ activeStep }: { activeStep: SetupStep }) {
-	const t = useTranslations('gatewaySetup');
+	const t = useTranslations("gatewaySetup");
 
 	return (
 		<section
@@ -32,15 +32,18 @@ export function GatewaySetupGuide({ activeStep }: { activeStep: SetupStep }) {
 		>
 			<div className="flex flex-col gap-1 sm:flex-row sm:items-start sm:justify-between sm:gap-4">
 				<div>
-					<h2 id="gateway-setup-title" className="text-sm font-semibold text-gray-900">
-						{t('title')}
+					<h2
+						id="gateway-setup-title"
+						className="text-sm font-semibold text-gray-900"
+					>
+						{t("title")}
 					</h2>
 					<p className="mt-1 max-w-3xl text-xs leading-5 text-gray-600">
-						{t('description')}
+						{t("description")}
 					</p>
 				</div>
 				<span className="mt-1 shrink-0 rounded-full bg-cyan-50 px-2.5 py-1 text-[11px] font-semibold text-cyan-700">
-					{t('badge')}
+					{t("badge")}
 				</span>
 			</div>
 
@@ -51,23 +54,27 @@ export function GatewaySetupGuide({ activeStep }: { activeStep: SetupStep }) {
 						<li key={key}>
 							<Link
 								href={href}
-								aria-current={active ? 'step' : undefined}
+								aria-current={active ? "step" : undefined}
 								className={`group flex h-full items-start gap-3 rounded-lg border px-3 py-3 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500 ${
 									active
-										? 'border-cyan-300 bg-cyan-50 text-cyan-950'
-										: 'border-gray-200 bg-gray-50/70 text-gray-700 hover:border-cyan-200 hover:bg-cyan-50/60'
+										? "border-cyan-300 bg-cyan-50 text-cyan-950"
+										: "border-gray-200 bg-gray-50/70 text-gray-700 hover:border-cyan-200 hover:bg-cyan-50/60"
 								}`}
 							>
 								<span
 									className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-md ${
-										active ? 'bg-cyan-600 text-white' : 'bg-white text-gray-500 shadow-sm'
+										active
+											? "bg-cyan-600 text-white"
+											: "bg-white text-gray-500 shadow-sm"
 									}`}
 								>
 									<Icon className="h-4 w-4" aria-hidden />
 								</span>
 								<span className="min-w-0">
 									<span className="block text-xs font-semibold">
-										{t('stepLabel', { step: index + 1 })} · {t(`steps.${key}.title`)}
+										{t("stepLabel", { step: index + 1 })}
+										{" · "}
+										{t(`steps.${key}.title`)}
 									</span>
 									<span className="mt-0.5 block text-[11px] leading-4 text-gray-500">
 										{t(`steps.${key}.description`)}

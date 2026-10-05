@@ -100,11 +100,13 @@ function rowFromInsert(
 	};
 }
 
-function repositoryState(options: {
-	models?: string[];
-	routes?: ModelRouteJoinRow[];
-	provider?: ProviderRow | null;
-} = {}) {
+function repositoryState(
+	options: {
+		models?: string[];
+		routes?: ModelRouteJoinRow[];
+		provider?: ProviderRow | null;
+	} = {}
+) {
 	const models = new Set(
 		options.models ?? ["deepseek-v4-flash", "deepseek-v4-pro"]
 	);
@@ -151,8 +153,7 @@ function repositoryState(options: {
 					.filter(
 						(item) =>
 							(!filters?.modelId || item.model_id === filters.modelId) &&
-							(!filters?.providerId ||
-								item.provider_id === filters.providerId)
+							(!filters?.providerId || item.provider_id === filters.providerId)
 					)
 					.slice(
 						filters?.offset ?? 0,
@@ -243,7 +244,9 @@ describe("official DeepSeek endpoint bootstrap", () => {
 		assert.equal(state.links.length, 6);
 		assert.ok(state.endpoints.every((item) => item.status === "verified"));
 		assert.ok(
-			state.links.every((item) => /^[0-9a-f]{64}$/u.test(item.subject_fingerprint ?? ""))
+			state.links.every((item) =>
+				/^[0-9a-f]{64}$/u.test(item.subject_fingerprint ?? "")
+			)
 		);
 		assert.equal(
 			JSON.parse(

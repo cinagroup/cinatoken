@@ -1,12 +1,12 @@
-'use client';
+"use client";
 
-import { useCallback, useState } from 'react';
+import { useCallback, useState } from "react";
 import {
 	isAudioModel,
 	isImageGenerationModel,
 	isRerankModel,
 	parseModelModalitiesJson,
-} from '@octafuse/core/db/model-modalities';
+} from "@octafuse/core/db/model-modalities";
 import {
 	createDefaultAudioPricingDraft,
 	createDefaultAudioTokenPricingDraft,
@@ -22,11 +22,11 @@ import {
 	type ImagePerImageDraft,
 	type ImagePricingDraftState,
 	type PricingTierDraftRow,
-} from '@/lib/pricing-tiers-draft';
-import { normalizeModelVendorInput } from '@/lib/model-vendor';
-import { useBillingCurrency } from '@/lib/use-billing-currency';
-import { deleteModel, fetchModelDetail, saveModel } from './model-api';
-import { formatMetadataForEditor } from './model-utils';
+} from "@/lib/pricing-tiers-draft";
+import { normalizeModelVendorInput } from "@/lib/model-vendor";
+import { useBillingCurrency } from "@/lib/use-billing-currency";
+import { deleteModel, fetchModelDetail, saveModel } from "./model-api";
+import { formatMetadataForEditor } from "./model-utils";
 import {
 	EMPTY_AUDIO_MODEL_FORM,
 	EMPTY_IMAGE_MODEL_FORM,
@@ -35,23 +35,25 @@ import {
 	type ModelFormData,
 	type ModelFormKind,
 	type ModelListItem,
-} from './types';
+} from "./types";
 
 type Options = {
 	/** 保存 / 删除成功后回调（例如刷新 Routes / Models 列表） */
 	onChanged?: () => void | Promise<void>;
 };
 
-function createInitialImagePricingDraft(mode: ImageBillingModeDraft = 'token'): ImagePricingDraftState {
-	if (mode === 'per_image') {
+function createInitialImagePricingDraft(
+	mode: ImageBillingModeDraft = "token"
+): ImagePricingDraftState {
+	if (mode === "per_image") {
 		return {
-			mode: 'per_image',
+			mode: "per_image",
 			tiers: [],
 			perImage: createDefaultImagePerImageDraft(),
 		};
 	}
 	return {
-		mode: 'token',
+		mode: "token",
 		tiers: [createDefaultImageTokenTierRow()],
 		perImage: createDefaultImagePerImageDraft(),
 	};
@@ -66,30 +68,36 @@ export function useModelEditModal(options?: Options) {
 	const [showModal, setShowModal] = useState(false);
 	const [editingModel, setEditingModel] = useState<ModelListItem | null>(null);
 	const [formData, setFormData] = useState<ModelFormData>(EMPTY_MODEL_FORM);
-	const [formKind, setFormKind] = useState<ModelFormKind>('llm');
-	const [pricingTierRows, setPricingTierRows] = useState<PricingTierDraftRow[]>([]);
-	const [imageBillingMode, setImageBillingMode] = useState<ImageBillingModeDraft>('token');
-	const [imagePerImageDraft, setImagePerImageDraft] = useState<ImagePerImageDraft>(
-		createDefaultImagePerImageDraft()
+	const [formKind, setFormKind] = useState<ModelFormKind>("llm");
+	const [pricingTierRows, setPricingTierRows] = useState<PricingTierDraftRow[]>(
+		[]
 	);
-	const [audioPricingDraft, setAudioPricingDraft] = useState<AudioPricingDraftState>(
-		createDefaultAudioPricingDraft()
-	);
-	const [tagInput, setTagInput] = useState('');
-	const [saveError, setSaveError] = useState('');
+	const [imageBillingMode, setImageBillingMode] =
+		useState<ImageBillingModeDraft>("token");
+	const [imagePerImageDraft, setImagePerImageDraft] =
+		useState<ImagePerImageDraft>(createDefaultImagePerImageDraft());
+	const [audioPricingDraft, setAudioPricingDraft] =
+		useState<AudioPricingDraftState>(createDefaultAudioPricingDraft());
+	const [tagInput, setTagInput] = useState("");
+	const [saveError, setSaveError] = useState("");
 	const [isSaving, setIsSaving] = useState(false);
 	const [isDeleting, setIsDeleting] = useState(false);
 
-	const applyImagePricingDraft = useCallback((draft: ImagePricingDraftState) => {
-		setImageBillingMode(draft.mode);
-		setPricingTierRows(draft.tiers);
-		setImagePerImageDraft(draft.perImage);
-	}, []);
+	const applyImagePricingDraft = useCallback(
+		(draft: ImagePricingDraftState) => {
+			setImageBillingMode(draft.mode);
+			setPricingTierRows(draft.tiers);
+			setImagePerImageDraft(draft.perImage);
+		},
+		[]
+	);
 
 	const fillFormFromModel = useCallback(
 		(model: ModelListItem) => {
 			const listTags = Array.isArray(model.tags) ? model.tags : [];
-			const outputMods = parseModelModalitiesJson(model.output_modalities) ?? ['text'];
+			const outputMods = parseModelModalitiesJson(model.output_modalities) ?? [
+				"text",
+			];
 			const imageModel = isImageGenerationModel({
 				output_modalities: outputMods,
 				pricing_profile: model.pricing_profile,
@@ -100,29 +108,38 @@ export function useModelEditModal(options?: Options) {
 			});
 			const rerankModel = isRerankModel({ output_modalities: outputMods });
 			const kind: ModelFormKind = rerankModel
-				? 'rerank'
+				? "rerank"
 				: audioModel
-					? 'audio'
-					: imageModel
-						? 'image'
-						: 'llm';
+				? "audio"
+				: imageModel
+				? "image"
+				: "llm";
 			setFormKind(kind);
 			setFormData({
 				id: model.id,
-				display_name: model.display_name || '',
+				display_name: model.display_name || "",
 				vendor: normalizeModelVendorInput(model.vendor),
-				context_window: imageModel || audioModel ? '' : model.context_window?.toString() || '',
+				context_window:
+					imageModel || audioModel
+						? ""
+						: model.context_window?.toString() || "",
 				max_tokens:
-					imageModel || audioModel || rerankModel ? '' : model.max_tokens?.toString() || '4096',
-				input_modalities: parseModelModalitiesJson(model.input_modalities) ?? ['text'],
+					imageModel || audioModel || rerankModel
+						? ""
+						: model.max_tokens?.toString() || "4096",
+				input_modalities: parseModelModalitiesJson(model.input_modalities) ?? [
+					"text",
+				],
 				output_modalities: outputMods,
-				released_at: model.released_at ?? '',
+				released_at: model.released_at ?? "",
 				tags: listTags,
-				description: model.description ?? '',
+				description: model.description ?? "",
 				metadata: formatMetadataForEditor(model.metadata),
 			});
 			if (audioModel) {
-				setAudioPricingDraft(profileJsonToAudioDraftState(model.pricing_profile));
+				setAudioPricingDraft(
+					profileJsonToAudioDraftState(model.pricing_profile)
+				);
 				setPricingTierRows([]);
 			} else {
 				applyImagePricingDraft(profileJsonToDraftState(model.pricing_profile));
@@ -132,30 +149,33 @@ export function useModelEditModal(options?: Options) {
 	);
 
 	const handleCreate = useCallback(
-		(presetVendorKey?: string, kind: ModelFormKind = 'llm') => {
+		(presetVendorKey?: string, kind: ModelFormKind = "llm") => {
 			setEditingModel(null);
 			setFormKind(kind);
-			const vendor = presetVendorKey !== undefined ? presetVendorKey : EMPTY_MODEL_FORM.vendor;
-			if (kind === 'image') {
+			const vendor =
+				presetVendorKey !== undefined
+					? presetVendorKey
+					: EMPTY_MODEL_FORM.vendor;
+			if (kind === "image") {
 				setFormData({
 					...EMPTY_IMAGE_MODEL_FORM,
 					vendor,
 				});
-				applyImagePricingDraft(createInitialImagePricingDraft('token'));
-			} else if (kind === 'audio') {
+				applyImagePricingDraft(createInitialImagePricingDraft("token"));
+			} else if (kind === "audio") {
 				setFormData({
 					...EMPTY_AUDIO_MODEL_FORM,
 					vendor,
 				});
 				setAudioPricingDraft(createDefaultAudioPricingDraft());
 				setPricingTierRows([]);
-			} else if (kind === 'rerank') {
+			} else if (kind === "rerank") {
 				setFormData({
 					...EMPTY_RERANK_MODEL_FORM,
 					vendor,
 				});
 				setPricingTierRows([createDefaultNewModelTierRow()]);
-				setImageBillingMode('token');
+				setImageBillingMode("token");
 				setImagePerImageDraft(createDefaultImagePerImageDraft());
 			} else {
 				setFormData({
@@ -163,43 +183,48 @@ export function useModelEditModal(options?: Options) {
 					vendor,
 				});
 				setPricingTierRows([createDefaultNewModelTierRow()]);
-				setImageBillingMode('token');
+				setImageBillingMode("token");
 				setImagePerImageDraft(createDefaultImagePerImageDraft());
 			}
 			setShowModal(true);
-			setSaveError('');
+			setSaveError("");
 		},
 		[applyImagePricingDraft]
 	);
 
-	const handleImageBillingModeChange = useCallback((mode: ImageBillingModeDraft) => {
-		setImageBillingMode(mode);
-		if (mode === 'per_image') {
-			setPricingTierRows([]);
-			return;
-		}
-		setPricingTierRows((rows) =>
-			draftRowsHaveImageTokenPrices(rows) ? rows : [createDefaultImageTokenTierRow()]
-		);
-	}, []);
+	const handleImageBillingModeChange = useCallback(
+		(mode: ImageBillingModeDraft) => {
+			setImageBillingMode(mode);
+			if (mode === "per_image") {
+				setPricingTierRows([]);
+				return;
+			}
+			setPricingTierRows((rows) =>
+				draftRowsHaveImageTokenPrices(rows)
+					? rows
+					: [createDefaultImageTokenTierRow()]
+			);
+		},
+		[]
+	);
 
 	/** 切换 Kind：同步 modalities / token 字段，并在无对应单价时写入默认档。 */
 	const applyFormKind = useCallback((kind: ModelFormKind) => {
 		setFormKind(kind);
-		if (kind === 'image') {
+		if (kind === "image") {
 			setFormData((prev) => ({
 				...prev,
-				input_modalities: prev.input_modalities.includes('image')
+				input_modalities: prev.input_modalities.includes("image")
 					? prev.input_modalities
-					: [...prev.input_modalities, 'image'],
-				output_modalities: prev.output_modalities.includes('image')
+					: [...prev.input_modalities, "image"],
+				output_modalities: prev.output_modalities.includes("image")
 					? prev.output_modalities
-					: ['image'],
-				context_window: '',
-				max_tokens: '',
+					: ["image"],
+				context_window: "",
+				max_tokens: "",
 			}));
 			setImageBillingMode((mode) => {
-				if (mode === 'per_image') {
+				if (mode === "per_image") {
 					setPricingTierRows([]);
 				} else {
 					setPricingTierRows((rows) =>
@@ -212,34 +237,36 @@ export function useModelEditModal(options?: Options) {
 			});
 			return;
 		}
-		if (kind === 'audio') {
+		if (kind === "audio") {
 			setFormData((prev) => ({
 				...prev,
-				input_modalities: prev.input_modalities.includes('audio')
-					? prev.input_modalities.filter((m) => m !== 'image')
-					: ['audio'],
-				output_modalities: ['text'],
-				context_window: '',
-				max_tokens: '',
+				input_modalities: prev.input_modalities.includes("audio")
+					? prev.input_modalities.filter((m) => m !== "image")
+					: ["audio"],
+				output_modalities: ["text"],
+				context_window: "",
+				max_tokens: "",
 			}));
 			setAudioPricingDraft((prev) => {
-				if (prev.mode === 'token') {
+				if (prev.mode === "token") {
 					const hasTier = prev.tiers.some(
-						(r) => r.input_price.trim() !== '' || r.output_price.trim() !== ''
+						(r) => r.input_price.trim() !== "" || r.output_price.trim() !== ""
 					);
 					return hasTier ? prev : createDefaultAudioTokenPricingDraft();
 				}
-				return prev.price_per_second.trim() !== '' ? prev : createDefaultAudioPricingDraft();
+				return prev.price_per_second.trim() !== ""
+					? prev
+					: createDefaultAudioPricingDraft();
 			});
 			setPricingTierRows([]);
 			return;
 		}
-		if (kind === 'rerank') {
+		if (kind === "rerank") {
 			setFormData((prev) => ({
 				...prev,
-				input_modalities: ['text'],
-				output_modalities: ['rerank'],
-				max_tokens: '',
+				input_modalities: ["text"],
+				output_modalities: ["rerank"],
+				max_tokens: "",
 			}));
 			setPricingTierRows((rows) =>
 				rows.length === 0 || draftRowsLookLikeImageOnly(rows)
@@ -250,17 +277,17 @@ export function useModelEditModal(options?: Options) {
 		}
 		setFormData((prev) => {
 			const withoutSpecialOutput = prev.output_modalities.filter(
-				(m) => m !== 'image' && m !== 'rerank'
+				(m) => m !== "image" && m !== "rerank"
 			);
-			const input = prev.input_modalities.includes('text')
+			const input = prev.input_modalities.includes("text")
 				? prev.input_modalities
-				: ['text', ...prev.input_modalities.filter((m) => m !== 'audio')];
+				: ["text", ...prev.input_modalities.filter((m) => m !== "audio")];
 			return {
 				...prev,
-				input_modalities: input.length > 0 ? input : ['text'],
+				input_modalities: input.length > 0 ? input : ["text"],
 				output_modalities:
-					withoutSpecialOutput.length > 0 ? withoutSpecialOutput : ['text'],
-				max_tokens: prev.max_tokens.trim() !== '' ? prev.max_tokens : '8192',
+					withoutSpecialOutput.length > 0 ? withoutSpecialOutput : ["text"],
+				max_tokens: prev.max_tokens.trim() !== "" ? prev.max_tokens : "8192",
 			};
 		});
 		setPricingTierRows((rows) =>
@@ -278,10 +305,10 @@ export function useModelEditModal(options?: Options) {
 				const fullModel = await fetchModelDetail(model.id);
 				fillFormFromModel(fullModel);
 			} catch (error) {
-				console.error('Fetch model details error:', error);
+				console.error("Fetch model details error:", error);
 			}
 			setShowModal(true);
-			setSaveError('');
+			setSaveError("");
 		},
 		[fillFormFromModel]
 	);
@@ -289,15 +316,15 @@ export function useModelEditModal(options?: Options) {
 	/** Routes 等场景：仅有 model id 时拉取详情并打开弹窗。 */
 	const openEditById = useCallback(
 		async (modelId: string) => {
-			setSaveError('');
+			setSaveError("");
 			try {
 				const fullModel = await fetchModelDetail(modelId);
 				setEditingModel(fullModel);
 				fillFormFromModel(fullModel);
 				setShowModal(true);
 			} catch (error) {
-				console.error('Fetch model details error:', error);
-				alert('Failed to load model');
+				console.error("Fetch model details error:", error);
+				alert("Failed to load model");
 			}
 		},
 		[fillFormFromModel]
@@ -307,7 +334,7 @@ export function useModelEditModal(options?: Options) {
 		async (id: string) => {
 			if (
 				!confirm(
-					'Are you sure you want to delete this model? This will also delete all associated routes.'
+					"Are you sure you want to delete this model? This will also delete all associated routes."
 				)
 			) {
 				return;
@@ -321,11 +348,11 @@ export function useModelEditModal(options?: Options) {
 					setEditingModel(null);
 					await onChanged?.();
 				} else {
-					alert(result.message || 'Delete failed');
+					alert(result.message || "Delete failed");
 				}
 			} catch (error) {
-				console.error('Delete error:', error);
-				alert('Delete failed');
+				console.error("Delete error:", error);
+				alert("Delete failed");
 			} finally {
 				setIsDeleting(false);
 			}
@@ -337,26 +364,29 @@ export function useModelEditModal(options?: Options) {
 		const next = tagInput.trim();
 		if (next && !formData.tags.includes(next)) {
 			setFormData({ ...formData, tags: [...formData.tags, next] });
-			setTagInput('');
+			setTagInput("");
 		}
 	}, [formData, tagInput]);
 
 	const handleRemoveTag = useCallback((tag: string) => {
-		setFormData((prev) => ({ ...prev, tags: prev.tags.filter((x) => x !== tag) }));
+		setFormData((prev) => ({
+			...prev,
+			tags: prev.tags.filter((x) => x !== tag),
+		}));
 	}, []);
 
 	const toggleFormModality = useCallback(
-		(kind: 'input_modalities' | 'output_modalities', modality: string) => {
+		(kind: "input_modalities" | "output_modalities", modality: string) => {
 			setFormData((prev) => {
 				const current = prev[kind];
 				const next = current.includes(modality)
 					? current.filter((m) => m !== modality)
 					: [...current, modality];
 				const nextList = next.length > 0 ? next : [modality];
-				if (kind === 'output_modalities' && nextList.includes('image')) {
-					setFormKind('image');
+				if (kind === "output_modalities" && nextList.includes("image")) {
+					setFormKind("image");
 					setImageBillingMode((mode) => {
-						if (mode === 'per_image') {
+						if (mode === "per_image") {
 							setPricingTierRows([]);
 						} else {
 							setPricingTierRows((rows) =>
@@ -370,23 +400,26 @@ export function useModelEditModal(options?: Options) {
 					return {
 						...prev,
 						[kind]: nextList,
-						context_window: '',
-						max_tokens: '',
+						context_window: "",
+						max_tokens: "",
 					};
 				}
 				if (
-					kind === 'output_modalities' &&
-					!nextList.includes('image') &&
-					prev.output_modalities.includes('image')
+					kind === "output_modalities" &&
+					!nextList.includes("image") &&
+					prev.output_modalities.includes("image")
 				) {
-					setFormKind((fk) => (fk === 'image' ? 'llm' : fk));
+					setFormKind((fk) => (fk === "image" ? "llm" : fk));
 					setPricingTierRows((rows) =>
-						draftRowsLookLikeImageOnly(rows) ? [createDefaultNewModelTierRow()] : rows
+						draftRowsLookLikeImageOnly(rows)
+							? [createDefaultNewModelTierRow()]
+							: rows
 					);
 					return {
 						...prev,
 						[kind]: nextList,
-						max_tokens: prev.max_tokens.trim() !== '' ? prev.max_tokens : '8192',
+						max_tokens:
+							prev.max_tokens.trim() !== "" ? prev.max_tokens : "8192",
 					};
 				}
 				return { ...prev, [kind]: nextList };
@@ -396,22 +429,26 @@ export function useModelEditModal(options?: Options) {
 	);
 
 	const handleSave = useCallback(async () => {
-		setSaveError('');
+		setSaveError("");
 		setIsSaving(true);
 		try {
 			const isImage =
-				formKind === 'image' ||
-				isImageGenerationModel({ output_modalities: formData.output_modalities });
-			const isAudio = formKind === 'audio';
+				formKind === "image" ||
+				isImageGenerationModel({
+					output_modalities: formData.output_modalities,
+				});
+			const isAudio = formKind === "audio";
 			const imageDraft: ImagePricingDraftState | null =
 				isImage && !isAudio
 					? {
 							mode: imageBillingMode,
 							tiers: pricingTierRows,
 							perImage: imagePerImageDraft,
-						}
+					  }
 					: null;
-			const audioDraft: AudioPricingDraftState | null = isAudio ? audioPricingDraft : null;
+			const audioDraft: AudioPricingDraftState | null = isAudio
+				? audioPricingDraft
+				: null;
 			const result = await saveModel(
 				formData,
 				pricingTierRows,
@@ -426,14 +463,14 @@ export function useModelEditModal(options?: Options) {
 				setSaveError(result.message);
 			}
 		} catch (error) {
-			console.error('Save error:', error);
-			setSaveError('Save failed, please try again');
+			console.error("Save error:", error);
+			setSaveError("Save failed, please try again");
 		} finally {
 			setIsSaving(false);
 		}
 	}, [
 		audioPricingDraft,
-		editingModel?.id,
+		editingModel,
 		formData,
 		formKind,
 		imageBillingMode,

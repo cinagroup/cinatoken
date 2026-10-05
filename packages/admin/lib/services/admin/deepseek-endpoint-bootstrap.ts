@@ -71,7 +71,11 @@ export type AdminDeepSeekEndpointBootstrapInput = {
 export type AdminDeepSeekEndpointBootstrapModelResult = {
 	model_id: string;
 	endpoint_id: string | null;
-	status: "published" | "skipped_missing_model" | "skipped_no_routes" | "failed";
+	status:
+		| "published"
+		| "skipped_missing_model"
+		| "skipped_no_routes"
+		| "failed";
 	linked_routes: number;
 	message: string | null;
 };

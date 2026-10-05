@@ -6,17 +6,17 @@
  * - 不校验 CinaAuth 管理员角色，任何完成 OIDC 登录的用户都可进入；
  * - 门户身份映射到 `users` 行（`external_system='cinaauth'`、`external_user_id=<sub>`）。
  */
-import type { GatewayRepositories } from '@octafuse/core';
-import { hashSessionToken } from '@/lib/auth';
+import type { GatewayRepositories } from "@octafuse/core";
+import { hashSessionToken } from "@/lib/auth";
 import {
 	getAccountCapabilities,
 	getSessionCookieToken,
 	type AccountCapability,
-} from '@/lib/unified-session';
+} from "@/lib/unified-session";
 
-export const USER_SESSION_COOKIE = 'user_session';
+export const USER_SESSION_COOKIE = "user_session";
 export const PORTAL_SESSION_TTL_MS = 24 * 60 * 60 * 1000;
-export const PORTAL_EXTERNAL_SYSTEM = 'cinaauth';
+export const PORTAL_EXTERNAL_SYSTEM = "cinaauth";
 
 export type UserPrincipal = {
 	/** `users.id` */
@@ -29,8 +29,8 @@ export type UserPrincipal = {
 };
 
 type PortalAuthenticationRepositories = {
-	users: Pick<GatewayRepositories['users'], 'getByExternalPair' | 'createUser'>;
-	portalAccess: Pick<GatewayRepositories['portalAccess'], 'getValidSession'>;
+	users: Pick<GatewayRepositories["users"], "getByExternalPair" | "createUser">;
+	portalAccess: Pick<GatewayRepositories["portalAccess"], "getValidSession">;
 };
 
 export function getUserSessionToken(request: Request): string | null {
@@ -42,11 +42,17 @@ export function getUserSessionToken(request: Request): string | null {
  * 已存在的 internal 同名邮箱用户不受影响（命名空间隔离）。
  */
 export async function upsertPortalUser(
-	users: Pick<GatewayRepositories['users'], 'getByExternalPair' | 'createUser' | 'setUserEmailById'>,
+	users: Pick<
+		GatewayRepositories["users"],
+		"getByExternalPair" | "createUser" | "setUserEmailById"
+	>,
 	subject: string,
-	email: string,
+	email: string
 ): Promise<string> {
-	const existing = await users.getByExternalPair(PORTAL_EXTERNAL_SYSTEM, subject);
+	const existing = await users.getByExternalPair(
+		PORTAL_EXTERNAL_SYSTEM,
+		subject
+	);
 	if (existing) {
 		if (existing.email !== email) {
 			// 邮箱在 IdP 侧变更时跟随，保持计费/审计对账准确
@@ -58,7 +64,7 @@ export async function upsertPortalUser(
 	await users.createUser({
 		id,
 		email,
-		status: 'active',
+		status: "active",
 		externalSystem: PORTAL_EXTERNAL_SYSTEM,
 		externalUserId: subject,
 	});
@@ -67,15 +73,21 @@ export async function upsertPortalUser(
 
 export async function authenticateUserRequest(
 	request: Request,
-	repositories: PortalAuthenticationRepositories,
+	repositories: PortalAuthenticationRepositories
 ): Promise<UserPrincipal | null> {
 	const token = getUserSessionToken(request);
 	if (!token) return null;
 	const tokenHash = await hashSessionToken(token);
-	const session = await repositories.portalAccess.getValidSession(tokenHash, new Date().toISOString());
+	const session = await repositories.portalAccess.getValidSession(
+		tokenHash,
+		new Date().toISOString()
+	);
 	if (!session) return null;
-	const user = await repositories.users.getByExternalPair(PORTAL_EXTERNAL_SYSTEM, session.subject);
-	if (!user || user.status === 'disabled') return null;
+	const user = await repositories.users.getByExternalPair(
+		PORTAL_EXTERNAL_SYSTEM,
+		session.subject
+	);
+	if (!user || user.status === "disabled") return null;
 	return {
 		userId: user.id,
 		subject: session.subject,

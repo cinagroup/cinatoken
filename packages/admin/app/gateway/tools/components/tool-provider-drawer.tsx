@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 /**
  * Tools Provider 右侧抽屉：桌面侧滑、窄屏全屏；Escape / 遮罩关闭；基础焦点陷阱。
@@ -9,10 +9,10 @@ import {
 	useRef,
 	type ReactNode,
 	type KeyboardEvent as ReactKeyboardEvent,
-} from 'react';
-import { XMarkIcon } from '@heroicons/react/24/outline';
-import Link from 'next/link';
-import { useTranslations } from 'next-intl';
+} from "react";
+import { XMarkIcon } from "@heroicons/react/24/outline";
+import Link from "next/link";
+import { useTranslations } from "next-intl";
 
 type Props = {
 	open: boolean;
@@ -43,7 +43,7 @@ export function ToolProviderDrawer({
 	children,
 	footer,
 }: Props) {
-	const tCommon = useTranslations('common');
+	const tCommon = useTranslations("common");
 	const titleId = useId();
 	const panelRef = useRef<HTMLDivElement>(null);
 	const closeBtnRef = useRef<HTMLButtonElement>(null);
@@ -54,7 +54,9 @@ export function ToolProviderDrawer({
 			return;
 		}
 		previousFocusRef.current =
-			document.activeElement instanceof HTMLElement ? document.activeElement : null;
+			document.activeElement instanceof HTMLElement
+				? document.activeElement
+				: null;
 		const frame = requestAnimationFrame(() => {
 			closeBtnRef.current?.focus();
 		});
@@ -70,22 +72,22 @@ export function ToolProviderDrawer({
 			return;
 		}
 		const onKeyDown = (e: KeyboardEvent) => {
-			if (e.key === 'Escape' && !busy) {
+			if (e.key === "Escape" && !busy) {
 				e.preventDefault();
 				onClose();
 			}
 		};
-		window.addEventListener('keydown', onKeyDown);
-		return () => window.removeEventListener('keydown', onKeyDown);
+		window.addEventListener("keydown", onKeyDown);
+		return () => window.removeEventListener("keydown", onKeyDown);
 	}, [open, busy, onClose]);
 
 	const onPanelKeyDown = (e: ReactKeyboardEvent<HTMLDivElement>) => {
-		if (e.key !== 'Tab' || !panelRef.current) {
+		if (e.key !== "Tab" || !panelRef.current) {
 			return;
 		}
-		const nodes = Array.from(panelRef.current.querySelectorAll<HTMLElement>(FOCUSABLE)).filter(
-			(el) => !el.hasAttribute('disabled') && el.tabIndex !== -1
-		);
+		const nodes = Array.from(
+			panelRef.current.querySelectorAll<HTMLElement>(FOCUSABLE)
+		).filter((el) => !el.hasAttribute("disabled") && el.tabIndex !== -1);
 		if (nodes.length === 0) {
 			return;
 		}
@@ -125,7 +127,10 @@ export function ToolProviderDrawer({
 			>
 				<div className="flex shrink-0 items-start justify-between gap-3 border-b border-gray-200 px-4 py-3">
 					<div className="min-w-0 flex-1">
-						<h2 id={titleId} className="truncate text-base font-semibold text-gray-900">
+						<h2
+							id={titleId}
+							className="truncate text-base font-semibold text-gray-900"
+						>
 							{title}
 						</h2>
 						<div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1">
@@ -155,13 +160,17 @@ export function ToolProviderDrawer({
 						onClick={onClose}
 						disabled={busy}
 						className="rounded-md p-1.5 text-gray-400 transition hover:bg-gray-100 hover:text-gray-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 disabled:opacity-50"
-						aria-label={tCommon('close')}
+						aria-label={tCommon("close")}
 					>
 						<XMarkIcon className="h-5 w-5" aria-hidden />
 					</button>
 				</div>
-				<div className="min-h-0 flex-1 overflow-y-auto px-4 py-4">{children}</div>
-				<div className="shrink-0 border-t border-gray-200 bg-white px-4 py-3">{footer}</div>
+				<div className="min-h-0 flex-1 overflow-y-auto px-4 py-4">
+					{children}
+				</div>
+				<div className="shrink-0 border-t border-gray-200 bg-white px-4 py-3">
+					{footer}
+				</div>
 			</div>
 		</div>
 	);

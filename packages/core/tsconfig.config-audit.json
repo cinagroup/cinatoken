@@ -1,0 +1,14 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": { "noEmit": true, "incremental": false },
+  "files": [
+    "src/storage/gateway-repository-interfaces.ts",
+    "src/db/system-config-audit.ts",
+    "src/db/d1/system-config.impl.ts",
+    "src/db/mysql/system-config.impl.ts",
+    "src/db/postgres/system-config.impl.ts",
+    "src/db/system-config-audit.test.ts"
+  ],
+  "include": [],
+  "exclude": []
+}

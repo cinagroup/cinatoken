@@ -2,8 +2,8 @@
  * 共享密钥市场运行参数：默认值 + `system_config` 覆盖。
  * 全部为运营开关，改动不需要重新部署。
  */
-import type { GatewayRepositories } from '@octafuse/core';
-import { getSystemConfigValue } from '@octafuse/core';
+import type { GatewayRepositories } from "@octafuse/core";
+import { getSystemConfigValue } from "@octafuse/core";
 
 export type PortalMarketplaceConfig = {
 	/** 允许共享的渠道（逗号分隔；空 = 代码白名单全部）。 */
@@ -22,14 +22,18 @@ export type PortalMarketplaceConfig = {
 	/** 单日提现次数上限。 */
 	withdrawalDailyLimit: number;
 	/** NFT 位阶：贡献值阈值 → CinaBadge tokenId（105-108 贡献位阶，与 billing 消耗位阶 100-104 分段；ID 由合约递增分配，已由 cinachain 仓库的 setup-contributor-badges 创建）。 */
-	nftTiers: Array<{ badgeTokenId: number; tierName: string; threshold: number }>;
+	nftTiers: Array<{
+		badgeTokenId: number;
+		tierName: string;
+		threshold: number;
+	}>;
 };
 
-export const NFT_TIER_DEFAULTS: PortalMarketplaceConfig['nftTiers'] = [
-	{ badgeTokenId: 105, tierName: 'Bronze', threshold: 10 },
-	{ badgeTokenId: 106, tierName: 'Silver', threshold: 50 },
-	{ badgeTokenId: 107, tierName: 'Gold', threshold: 200 },
-	{ badgeTokenId: 108, tierName: 'Platinum', threshold: 1000 },
+export const NFT_TIER_DEFAULTS: PortalMarketplaceConfig["nftTiers"] = [
+	{ badgeTokenId: 105, tierName: "Bronze", threshold: 10 },
+	{ badgeTokenId: 106, tierName: "Silver", threshold: 50 },
+	{ badgeTokenId: 107, tierName: "Gold", threshold: 200 },
+	{ badgeTokenId: 108, tierName: "Platinum", threshold: 1000 },
 ];
 
 const parseNumber = (raw: string | null, fallback: number): number => {
@@ -38,24 +42,42 @@ const parseNumber = (raw: string | null, fallback: number): number => {
 	return Number.isFinite(value) && value >= 0 ? value : fallback;
 };
 
-const parseNftTiers = (raw: string | null): PortalMarketplaceConfig['nftTiers'] => {
+const parseNftTiers = (
+	raw: string | null
+): PortalMarketplaceConfig["nftTiers"] => {
 	if (!raw) return NFT_TIER_DEFAULTS;
 	try {
 		const parsed: unknown = JSON.parse(raw);
 		if (!Array.isArray(parsed)) return NFT_TIER_DEFAULTS;
 		const tiers = parsed
 			.map((item) => {
-				const candidate = item as { badgeTokenId?: unknown; tierName?: unknown; threshold?: unknown };
+				const candidate = item as {
+					badgeTokenId?: unknown;
+					tierName?: unknown;
+					threshold?: unknown;
+				};
 				if (
-					typeof candidate.badgeTokenId === 'number' &&
-					typeof candidate.tierName === 'string' &&
-					typeof candidate.threshold === 'number'
+					typeof candidate.badgeTokenId === "number" &&
+					typeof candidate.tierName === "string" &&
+					typeof candidate.threshold === "number"
 				) {
-					return { badgeTokenId: candidate.badgeTokenId, tierName: candidate.tierName, threshold: candidate.threshold };
+					return {
+						badgeTokenId: candidate.badgeTokenId,
+						tierName: candidate.tierName,
+						threshold: candidate.threshold,
+					};
 				}
 				return null;
 			})
-			.filter((item): item is { badgeTokenId: number; tierName: string; threshold: number } => item !== null);
+			.filter(
+				(
+					item
+				): item is {
+					badgeTokenId: number;
+					tierName: string;
+					threshold: number;
+				} => item !== null
+			);
 		return tiers.length > 0 ? tiers : NFT_TIER_DEFAULTS;
 	} catch {
 		return NFT_TIER_DEFAULTS;
@@ -76,20 +98,20 @@ export async function loadPortalMarketplaceConfig(
 		withdrawalDailyRaw,
 		nftTiersRaw,
 	] = await Promise.all([
-		getSystemConfigValue(repositories, 'SHARED_KEY_ENABLED_CHANNELS'),
-		getSystemConfigValue(repositories, 'SHARED_KEY_COMMISSION_RATE'),
-		getSystemConfigValue(repositories, 'SHARED_KEY_MAX_INPUT_PRICE'),
-		getSystemConfigValue(repositories, 'SHARED_KEY_MAX_OUTPUT_PRICE'),
-		getSystemConfigValue(repositories, 'WITHDRAWAL_MIN_AMOUNT'),
-		getSystemConfigValue(repositories, 'WITHDRAWAL_FEE'),
-		getSystemConfigValue(repositories, 'WITHDRAWAL_CINACREDIT_RATE'),
-		getSystemConfigValue(repositories, 'WITHDRAWAL_DAILY_LIMIT'),
-		getSystemConfigValue(repositories, 'NFT_TIER_THRESHOLDS'),
+		getSystemConfigValue(repositories, "SHARED_KEY_ENABLED_CHANNELS"),
+		getSystemConfigValue(repositories, "SHARED_KEY_COMMISSION_RATE"),
+		getSystemConfigValue(repositories, "SHARED_KEY_MAX_INPUT_PRICE"),
+		getSystemConfigValue(repositories, "SHARED_KEY_MAX_OUTPUT_PRICE"),
+		getSystemConfigValue(repositories, "WITHDRAWAL_MIN_AMOUNT"),
+		getSystemConfigValue(repositories, "WITHDRAWAL_FEE"),
+		getSystemConfigValue(repositories, "WITHDRAWAL_CINACREDIT_RATE"),
+		getSystemConfigValue(repositories, "WITHDRAWAL_DAILY_LIMIT"),
+		getSystemConfigValue(repositories, "NFT_TIER_THRESHOLDS"),
 	]);
 
 	return {
-		enabledChannels: (channelsRaw ?? '')
-			.split(',')
+		enabledChannels: (channelsRaw ?? "")
+			.split(",")
 			.map((item) => item.trim())
 			.filter(Boolean),
 		commissionRate: Math.min(0.9, parseNumber(commissionRaw, 0.1)),
@@ -98,7 +120,10 @@ export async function loadPortalMarketplaceConfig(
 		withdrawalMinAmount: parseNumber(withdrawalMinRaw, 10),
 		withdrawalFee: parseNumber(withdrawalFeeRaw, 0),
 		withdrawalTokenRate: parseNumber(withdrawalRateRaw, 1.0),
-		withdrawalDailyLimit: Math.max(1, Math.floor(parseNumber(withdrawalDailyRaw, 3))),
+		withdrawalDailyLimit: Math.max(
+			1,
+			Math.floor(parseNumber(withdrawalDailyRaw, 3))
+		),
 		nftTiers: parseNftTiers(nftTiersRaw),
 	};
 }

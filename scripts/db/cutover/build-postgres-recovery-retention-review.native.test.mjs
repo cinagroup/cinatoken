@@ -2,12 +2,13 @@
 // Historical case rows are synthetic: this test does not propose a DELETE path.
 import assert from 'node:assert/strict';
 import { createHash, randomBytes, randomUUID } from 'node:crypto';
-import { readFile, readdir, writeFile } from 'node:fs/promises';
+import { readFile, writeFile } from 'node:fs/promises';
 import { dirname, join } from 'node:path';
 import test from 'node:test';
 import postgres from 'postgres';
 import { startNativePostgres } from '../../../packages/core/src/test-support/postgres-native-cluster.mjs';
 import { buildPostgresRecoveryRetentionReview } from './build-postgres-recovery-retention-review.mjs';
+import { listPg73Migrations } from './pg73-native-fixture.mjs';
 
 const schema = 'cinatoken_gateway';
 const migrations = new URL('../../../packages/core/migrations-postgres/', import.meta.url);
@@ -73,7 +74,7 @@ test('native PG18 retention review blocks claim, unknown, incomplete, leased and
       const migrator = migratorClient(cluster, password); clients.push(migrator);
       await migrator.unsafe(`CREATE TABLE ${schema}.schema_migrations(
         version text PRIMARY KEY, applied_at timestamptz NOT NULL DEFAULT now())`);
-      const files = (await readdir(migrations)).filter(name => name.endsWith('.sql')).sort();
+      const files = await listPg73Migrations();
       assert.equal(files.length, 73);
       assert.equal(files.at(-1), '0073_recovery_api_key_workspace_lock.sql');
       const corpus = [];

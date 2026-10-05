@@ -57,8 +57,8 @@ test('parent-aware repository calls owner-only functions and gates grant on COMM
         CREATE TABLE ${g}.schema_migrations (
           version text PRIMARY KEY, applied_at timestamptz NOT NULL DEFAULT now())`);
       const files = readdirSync(migrations).filter(name => name.endsWith('.sql')).sort();
-      assert.equal(files.length, 73);
-      assert.equal(files.at(-1), '0073_recovery_api_key_workspace_lock.sql');
+      assert.equal(files.length, 81);
+      assert.equal(files.at(-1), '0081_tools_config_group_audit.sql');
       for (const name of files) {
         await pg.transaction(async tx => {
           await tx.exec(readFileSync(new URL(name, migrations), 'utf8'));

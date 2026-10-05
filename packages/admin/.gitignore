@@ -41,3 +41,5 @@ next-env.d.ts
 
 # Wrangler-generated Cloudflare env types (run `npm run cf-typegen` in this package)
 cloudflare-env.d.ts
+# Isolated Web Tools utility stylesheet generated before dev/build
+app/gateway/tools/tools-web-compat.generated.css

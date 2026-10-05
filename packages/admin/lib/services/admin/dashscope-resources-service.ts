@@ -40,7 +40,8 @@ export async function proxyDashScopeAudioResourceService(
 	if (!isJsonObject(body))
 		throw badRequest("Request body must be a JSON object");
 	const provider = await repos.providers.getProviderById(providerId);
-	if (!provider) throw notFound("Provider not found");
+	if (!provider || provider.id !== providerId)
+		throw notFound("Provider not found");
 	const apiKey = provider.api_key?.trim() ?? "";
 	if (!apiKey || isPendingProviderImportApiKey(apiKey)) {
 		throw badRequest("Provider API key is not configured");

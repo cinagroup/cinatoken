@@ -12,8 +12,8 @@ database.exec('PRAGMA foreign_keys = ON');
 const migrationFiles = readdirSync(migrationsDirectory).filter((name) => name.endsWith('.sql')).sort();
 assert.equal(
 	migrationFiles.at(-1),
-	'0068_batch_jobs.sql',
-	'D1 migration chain must end with the Batch metadata migration',
+	'0077_withdrawal_balance_update_guards.sql',
+	'D1 migration chain must end with guarded withdrawal settlement and refunds',
 );
 
 for (const file of migrationFiles) {
@@ -40,6 +40,12 @@ for (const file of migrationFiles) {
 	}
 	database.exec(sql);
 }
+const auditColumns = database.prepare('PRAGMA table_info(config_change_audit)').all().map((row) => row.name);
+assert.deepEqual(auditColumns, ['id', 'config_key', 'channel', 'action', 'actor_kind', 'actor_id', 'outcome', 'created_at']);
+const revisionColumn = database.prepare('PRAGMA table_info(system_config)').all()
+	.find((row) => row.name === 'revision');
+assert.equal(revisionColumn?.notnull, 1);
+assert.equal(revisionColumn?.dflt_value, "'legacy'");
 
 const workspaceBudgetUsageIndex = database.prepare(`SELECT sql FROM sqlite_master
 	WHERE type = 'index' AND name = 'idx_api_key_request_logs_workspace_budget_accounted'`).get();

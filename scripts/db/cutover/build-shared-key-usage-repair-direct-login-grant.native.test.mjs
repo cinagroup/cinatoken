@@ -1,7 +1,7 @@
 // Review-only PG18.6 fixture: owned loopback cluster, no ambient database URL.
 import assert from 'node:assert/strict';
 import { createHash, createHmac, pbkdf2Sync, randomBytes, randomUUID } from 'node:crypto';
-import { readFile, readdir, writeFile } from 'node:fs/promises';
+import { readFile, writeFile } from 'node:fs/promises';
 import { dirname, join } from 'node:path';
 import test from 'node:test';
 import postgres from 'postgres';
@@ -14,7 +14,7 @@ import {
   buildSharedKeyUsageRepairDirectLoginGrant, SHARED_KEY_USAGE_REPAIR_LOGIN_ACTIVATION,
   SHARED_KEY_USAGE_REPAIR_ROLE,
 } from './build-shared-key-usage-repair-direct-login-grant.ts';
-import { grantPostgresRuntime } from './grant-postgres-runtime.ts';
+import { grantPg73RuntimeFixture, listPg73Migrations } from './pg73-native-fixture.mjs';
 
 const schema = 'cinatoken_gateway';
 const migrations = new URL('../../../packages/core/migrations-postgres/', import.meta.url);
@@ -92,7 +92,7 @@ test('native PG18 repair-only direct LOGIN can repair a durable job and nothing 
       const migratorUrl = `postgres://cinatoken_gateway_migrator:${migratorPassword}@127.0.0.1:${cluster.port}/postgres`;
       await migrator.unsafe(`CREATE TABLE ${schema}.schema_migrations (
         version text PRIMARY KEY, applied_at timestamptz NOT NULL DEFAULT now())`);
-      const files = (await readdir(migrations)).filter(name => name.endsWith('.sql')).sort();
+      const files = await listPg73Migrations();
       assert.equal(files.length, 73);
       for (const name of files) {
         const body = await readFile(new URL(name, migrations), 'utf8');
@@ -101,12 +101,12 @@ test('native PG18 repair-only direct LOGIN can repair a durable job and nothing 
           await tx.unsafe(`INSERT INTO ${schema}.schema_migrations(version) VALUES ($1)`, [name]);
         });
       }
-      await grantPostgresRuntime({ DATABASE_URL: migratorUrl });
+      await grantPg73RuntimeFixture({ cluster, migrator, migratorUrl });
       await activate(migrator, 'cinatoken.shared_key_earnings_history_guard_activation', historyGuard);
       await activate(migrator, 'cinatoken.shared_key_usage_repair_activation', repairJobs);
       await activate(migrator, 'cinatoken.shared_key_usage_repair_failure_activation', failureIsolation, 'reviewed-v2');
       await activate(migrator, 'cinatoken.shared_key_usage_repair_claim_activation', durableClaim, 'reviewed-v3');
-      await grantPostgresRuntime({ DATABASE_URL: migratorUrl });
+      await grantPg73RuntimeFixture({ cluster, migrator, migratorUrl });
       stage('formal-migrations-and-review-only-proposals-installed');
 
       const request = { activation: SHARED_KEY_USAGE_REPAIR_LOGIN_ACTIVATION,
@@ -198,8 +198,8 @@ test('native PG18 repair-only direct LOGIN can repair a durable job and nothing 
       assert.deepEqual(acl, { tables: 0, columns: 0, sequences: 0, executable_functions: 2 });
       stage('public-column-drift-blocks-grant-then-exact-grant-succeeds');
 
-      await grantPostgresRuntime({ DATABASE_URL: migratorUrl });
-      await grantPostgresRuntime({ DATABASE_URL: migratorUrl });
+      await grantPg73RuntimeFixture({ cluster, migrator, migratorUrl });
+      await grantPg73RuntimeFixture({ cluster, migrator, migratorUrl });
       await denied(() => runtime.unsafe(`SELECT ${schema}.repair_one_shared_key_usage()`));
       await denied(() => runtime.unsafe(`SELECT * FROM ${schema}.attempt_one_shared_key_usage_repair()`));
       await denied(() => runtime.unsafe(`SELECT * FROM ${schema}.claim_one_shared_key_usage_repair()`));

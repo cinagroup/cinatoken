@@ -3,7 +3,7 @@
 // dispatch claim use a new owned PostgreSQL cluster and real COMMITs.
 import assert from 'node:assert/strict';
 import { createHash, randomBytes, randomUUID } from 'node:crypto';
-import { readFile, readdir, writeFile } from 'node:fs/promises';
+import { readFile, writeFile } from 'node:fs/promises';
 import { dirname, join } from 'node:path';
 import test from 'node:test';
 import postgres from 'postgres';
@@ -14,6 +14,7 @@ import { createRouteAwareBudgetAdmission, RequestBudgetAdmissionError } from '..
 import { GatewayErrorCode } from '../../../packages/proxy/src/services/gateway-error-codes.ts';
 import { proxyImageGenerations } from '../../../packages/proxy/src/services/proxy.ts';
 import { resetProviderCircuitStateForTests } from '../../../packages/proxy/src/services/provider-circuit-breaker.ts';
+import { listPg73Migrations } from './pg73-native-fixture.mjs';
 
 const schema = 'cinatoken_gateway';
 const parentTable = `${schema}.request_dispatch_requests`;
@@ -248,7 +249,7 @@ test('native parent claim and budget ticket gate the Images fetch boundary',
       clients.push(migrator);
       await migrator.unsafe(`CREATE TABLE ${schema}.schema_migrations (
         version text PRIMARY KEY, applied_at timestamptz NOT NULL DEFAULT now())`);
-      const files = (await readdir(migrations)).filter(name => name.endsWith('.sql')).sort();
+      const files = await listPg73Migrations();
       assert.equal(files.length, 73);
       assert.equal(files.at(-1), '0073_recovery_api_key_workspace_lock.sql');
       const corpus = [];

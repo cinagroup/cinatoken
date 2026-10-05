@@ -1,0 +1,289 @@
+# All eight public pages share a single disabled-by-default SSR entry.
+map "${CINATOKEN_WEB_PUBLIC_ENABLED}:$request_method:$request_uri" $web_public_ssr {
+    default 0;
+    "~^true:(GET|HEAD):/([?].*)?$" 1;
+    "~^true:(GET|HEAD):/(en|zh|ja|ko)(/[^?]*)?([?].*)?$" 1;
+    "~^true:(GET|HEAD):/(models(/[^?]*)?|providers/?|compare/?|chat/?|rankings/?|benchmarks/?|robots[.]txt|sitemap[.]xml)([?].*)?$" 1;
+    "~^true:(GET|HEAD):/[a-z]{2}(?:-[A-Za-z]{2})?/(models(/[^?]*)?|providers/?|compare/?|chat/?|rankings/?|benchmarks/?)([?].*)?$" 1;
+}
+
+# Included in nginx's http context. Only approved GET/HEAD pages use the shell.
+map "${CINATOKEN_WEB_ACCOUNT_ENABLED}:$request_method:$request_uri" $web_account_shell {
+    default 0;
+    "~^true:(GET|HEAD):/account/?([?].*)?$" 1;
+    "~^true:(GET|HEAD):/account/keys/?([?].*)?$" 1;
+    "~^true:(GET|HEAD):/account/byok/?([?].*)?$" 1;
+    "~^true:(GET|HEAD):/account/activity/?([?].*)?$" 1;
+    "~^true:(GET|HEAD):/account/earnings/?([?].*)?$" 1;
+    "~^true:(GET|HEAD):/account/nft/?([?].*)?$" 1;
+    "~^true:(GET|HEAD):/account/withdraw/?([?].*)?$" 1;
+    "~^true:(GET|HEAD):/account/presets/?([?].*)?$" 1;
+    "~^true:(GET|HEAD):/account/guardrails/?([?].*)?$" 1;
+    "~^true:(GET|HEAD):/account/settings/?([?].*)?$" 1;
+}
+
+map "${CINATOKEN_WEB_ADMIN_DASHBOARD_ENABLED}:$request_method:$request_uri" $web_admin_dashboard_shell {
+    default 0;
+    "~^true:(GET|HEAD):/admin/?([?].*)?$" 1;
+}
+
+map "${CINATOKEN_WEB_ADMIN_USERS_ENABLED}:$request_method:$request_uri" $web_admin_users_shell {
+    default 0;
+    "~^true:(GET|HEAD):/admin/users/?([?].*)?$" 1;
+}
+
+# Only UUIDs and simple canonical ext%3Asystem%2Fuser IDs are opted in.
+# Encoded payloads inside either ext component keep the Admin fallback.
+map "${CINATOKEN_WEB_ADMIN_USER_DETAIL_ENABLED}:$request_method:$request_uri" $web_admin_user_detail_shell {
+    default 0;
+    "~^true:(GET|HEAD):/admin/users/(?:[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[1-5][0-9A-Fa-f]{3}-[89AaBb][0-9A-Fa-f]{3}-[0-9A-Fa-f]{12}|ext%3A[A-Za-z0-9._~-]{1,600}%2F[A-Za-z0-9._~-]{1,600})/?([?].*)?$" 1;
+}
+
+map "${CINATOKEN_WEB_ADMIN_PROVIDERS_ENABLED}:$request_method:$request_uri" $web_admin_provider_shell {
+    default 0;
+    "~^true:(GET|HEAD):/admin/providers/?([?].*)?$" 1;
+}
+
+map "${CINATOKEN_WEB_ADMIN_MODELS_ENABLED}:$request_method:$request_uri" $web_admin_model_shell {
+    default 0;
+    "~^true:(GET|HEAD):/admin/models/?([?].*)?$" 1;
+}
+
+map "${CINATOKEN_WEB_ADMIN_ENDPOINTS_ENABLED}:$request_method:$request_uri" $web_admin_endpoint_shell {
+    default 0;
+    "~^true:(GET|HEAD):/admin/endpoints/?([?].*)?$" 1;
+}
+
+map "${CINATOKEN_WEB_ADMIN_ROUTES_ENABLED}:$request_method:$request_uri" $web_admin_route_shell {
+    default 0;
+    "~^true:(GET|HEAD):/admin/routes/?([?].*)?$" 1;
+}
+
+map "${CINATOKEN_WEB_ADMIN_DATA_POLICIES_ENABLED}:$request_method:$request_uri" $web_admin_data_policy_shell {
+    default 0;
+    "~^true:(GET|HEAD):/admin/data-policies/?([?].*)?$" 1;
+}
+
+map "${CINATOKEN_WEB_ADMIN_PRESETS_ENABLED}:$request_method:$request_uri" $web_admin_presets_shell {
+    default 0;
+    "~^true:(GET|HEAD):/admin/presets/?([?].*)?$" 1;
+}
+
+map "${CINATOKEN_WEB_ADMIN_GUARDRAILS_ENABLED}:$request_method:$request_uri" $web_admin_guardrails_shell {
+    default 0;
+    "~^true:(GET|HEAD):/admin/guardrails/?([?].*)?$" 1;
+}
+
+map "${CINATOKEN_WEB_ADMIN_RELIABILITY_ENABLED}:$request_method:$request_uri" $web_admin_reliability_shell {
+    default 0;
+    "~^true:(GET|HEAD):/admin/analytics/reliability/?([?].*)?$" 1;
+}
+
+map "${CINATOKEN_WEB_ADMIN_MODEL_ANALYTICS_ENABLED}:$request_method:$request_uri" $web_admin_model_analytics_shell {
+    default 0;
+    "~^true:(GET|HEAD):/admin/analytics/models/?([?].*)?$" 1;
+}
+
+map "${CINATOKEN_WEB_ADMIN_PROVIDER_ANALYTICS_ENABLED}:$request_method:$request_uri" $web_admin_provider_analytics_shell {
+    default 0;
+    "~^true:(GET|HEAD):/admin/analytics/providers/?([?].*)?$" 1;
+}
+
+map "${CINATOKEN_WEB_ADMIN_USER_ANALYTICS_ENABLED}:$request_method:$request_uri" $web_admin_user_analytics_shell {
+    default 0;
+    "~^true:(GET|HEAD):/admin/analytics/users/?([?].*)?$" 1;
+}
+
+map "${CINATOKEN_WEB_ADMIN_REQUEST_LOGS_ENABLED}:$request_method:$request_uri" $web_admin_request_logs_shell {
+    default 0;
+    "~^true:(GET|HEAD):/admin/request-logs/?([?].*)?$" 1;
+}
+
+map "${CINATOKEN_WEB_ADMIN_BUDGET_AUDIT_ENABLED}:$request_method:$request_uri" $web_admin_budget_audit_shell {
+    default 0;
+    "~^true:(GET|HEAD):/admin/audit-logs/?([?].*)?$" 1;
+}
+
+map "${CINATOKEN_WEB_ADMIN_TOOL_INVOCATIONS_ENABLED}:$request_method:$request_uri" $web_admin_tool_invocations_shell {
+    default 0;
+    "~^true:(GET|HEAD):/admin/tools/invocations/?([?].*)?$" 1;
+}
+
+map "${CINATOKEN_WEB_ADMIN_CONFIG_TIMEZONE_ENABLED}:$request_method:$request_uri" $web_admin_config_timezone_shell {
+    default 0;
+    "~^true:(GET|HEAD):/admin/config/timezone/?([?].*)?$" 1;
+}
+
+map "${CINATOKEN_WEB_ADMIN_CONFIG_ENABLED}:$request_method:$request_uri" $web_admin_config_shell {
+    default 0;
+    "~^true:(GET|HEAD):/admin/config/?([?].*)?$" 1;
+}
+
+map "${CINATOKEN_WEB_ADMIN_ACCESS_KEYS_ENABLED}:$request_method:$request_uri" $web_admin_access_keys_shell {
+    default 0;
+    "~^true:(GET|HEAD):/admin/admin-api-keys/?([?].*)?$" 1;
+}
+
+map "${CINATOKEN_WEB_ADMIN_KEYS_ENABLED}:$request_method:$request_uri" $web_admin_keys_shell {
+    default 0;
+    "~^true:(GET|HEAD):/admin/keys/?([?].*)?$" 1;
+}
+
+map "${CINATOKEN_WEB_ADMIN_SHARED_KEYS_ENABLED}:$request_method:$request_uri" $web_admin_shared_keys_shell {
+    default 0;
+    "~^true:(GET|HEAD):/admin/shared-keys/?([?].*)?$" 1;
+}
+
+map "${CINATOKEN_WEB_ADMIN_TOOLS_ENABLED}:$request_method:$request_uri" $web_admin_tools_shell {
+    default 0;
+    "~^true:(GET|HEAD):/admin/tools/?([?].*)?$" 1;
+}
+
+map "${CINATOKEN_WEB_ADMIN_PLAYGROUND_ENABLED}:$request_method:$request_uri" $web_admin_playground_shell {
+    default 0;
+    "~^true:(GET|HEAD):/admin/playground/?([?].*)?$" 1;
+}
+
+map "${CINATOKEN_WEB_ADMIN_SIMULATOR_ENABLED}:$request_method:$request_uri" $web_admin_simulator_shell {
+    default 0;
+    "~^true:(GET|HEAD):/admin/simulator/?([?].*)?$" 1;
+}
+
+map "${CINATOKEN_WEB_ADMIN_WITHDRAWALS_ENABLED}:$request_method:$request_uri" $web_admin_withdrawals_shell {
+    default 0;
+    "~^true:(GET|HEAD):/admin/withdrawals/?([?].*)?$" 1;
+}
+
+map "${CINATOKEN_WEB_ADMIN_NFT_MINTS_ENABLED}:$request_method:$request_uri" $web_admin_nft_mints_shell {
+    default 0;
+    "~^true:(GET|HEAD):/admin/nft-mints/?([?].*)?$" 1;
+}
+
+map $http_upgrade $web_connection_upgrade {
+    default upgrade;
+    '' '';
+}
+
+# Preserve the public scheme when TLS terminates at the ingress before nginx.
+# Direct HTTP development falls back to nginx's own scheme.
+map $http_x_forwarded_proto $web_public_proto {
+    default $scheme;
+    http http;
+    https https;
+}
+
+map $request_method $web_asset_read {
+    default 0;
+    GET 1;
+    HEAD 1;
+}
+
+# Keep this exact hash recognition in sync with scripts/asset-policy.mjs.
+# Errors and HTML never inherit the immutable cache policy.
+map "$status:$request_uri" $web_asset_cache_control {
+    default no-store;
+    "~*^(200|206|304):/web-assets/.*[.]html?([?].*)?$" no-store;
+    "~^(200|206|304):/web-assets/static/[A-Za-z0-9_./-]+[.][a-f0-9]{8,64}[.](?:js|css|woff2?|ttf|otf|png|jpe?g|svg|webp|avif|ico)(?:[.]LICENSE[.]txt)?([?].*)?$" "public, max-age=31536000, immutable";
+    "~^(200|206|304):/web-assets/sources/web[.][a-f0-9]{64}[.]tar[.]gz([?].*)?$" "public, max-age=31536000, immutable";
+    "~^(200|206|304):/web-assets/" no-cache;
+}
+
+server {
+    listen 8080;
+    server_name _;
+    root /usr/share/nginx/html;
+    resolver ${CINATOKEN_WEB_DNS_RESOLVER} valid=30s ipv6=off;
+    set $web_admin_origin "${CINATOKEN_ADMIN_UPSTREAM}";
+
+    # Public Chat already caps its body at 12 MiB; Admin enforces its own bounds.
+    client_max_body_size 12m;
+    error_page 418 = @web_index;
+    error_page 419 = @admin;
+    error_page 420 = @public_ssr;
+    set $public_ssr_upstream "${CINATOKEN_WEB_SSR_UPSTREAM}";
+
+    location ^~ /web-assets/ {
+        if ($web_asset_read = 0) { return 419; }
+        alias /usr/share/nginx/html/;
+        autoindex off;
+        add_header X-Content-Type-Options nosniff always;
+        add_header Cache-Control $web_asset_cache_control always;
+        # The asset namespace remains available when account rollout is off.
+        # Missing files use nginx's 404, never an index.html fallback.
+    }
+
+    location / {
+        if ($web_public_ssr = 1) { return 420; }
+        if ($web_account_shell = 1) { return 418; }
+        if ($web_admin_dashboard_shell = 1) { return 418; }
+        if ($web_admin_users_shell = 1) { return 418; }
+        if ($web_admin_user_detail_shell = 1) { return 418; }
+        if ($web_admin_provider_shell = 1) { return 418; }
+        if ($web_admin_model_shell = 1) { return 418; }
+        if ($web_admin_endpoint_shell = 1) { return 418; }
+        if ($web_admin_route_shell = 1) { return 418; }
+        if ($web_admin_data_policy_shell = 1) { return 418; }
+        if ($web_admin_presets_shell = 1) { return 418; }
+        if ($web_admin_guardrails_shell = 1) { return 418; }
+        if ($web_admin_reliability_shell = 1) { return 418; }
+        if ($web_admin_model_analytics_shell = 1) { return 418; }
+        if ($web_admin_provider_analytics_shell = 1) { return 418; }
+        if ($web_admin_user_analytics_shell = 1) { return 418; }
+        if ($web_admin_request_logs_shell = 1) { return 418; }
+        if ($web_admin_budget_audit_shell = 1) { return 418; }
+        if ($web_admin_tool_invocations_shell = 1) { return 418; }
+        if ($web_admin_config_timezone_shell = 1) { return 418; }
+        if ($web_admin_config_shell = 1) { return 418; }
+        if ($web_admin_access_keys_shell = 1) { return 418; }
+        if ($web_admin_keys_shell = 1) { return 418; }
+        if ($web_admin_shared_keys_shell = 1) { return 418; }
+        if ($web_admin_tools_shell = 1) { return 418; }
+        if ($web_admin_playground_shell = 1) { return 418; }
+        if ($web_admin_simulator_shell = 1) { return 418; }
+        if ($web_admin_withdrawals_shell = 1) { return 418; }
+        if ($web_admin_nft_mints_shell = 1) { return 418; }
+        include /etc/nginx/web-admin-proxy.conf;
+    }
+
+    location @public_ssr {
+        proxy_pass $public_ssr_upstream;
+        proxy_http_version 1.1;
+        proxy_set_header Host $http_host;
+        proxy_set_header Cookie "";
+        proxy_set_header Authorization "";
+        proxy_set_header X-CinaToken-Web-Manifest "${CINATOKEN_WEB_MANIFEST_SHA}";
+        proxy_buffering off;
+        proxy_cache off;
+        proxy_intercept_errors off;
+        proxy_hide_header Cache-Control;
+        add_header Cache-Control no-store always;
+        error_page 502 504 =503 @public_ssr_unavailable;
+        proxy_connect_timeout 5s;
+        proxy_read_timeout 30s;
+        proxy_send_timeout 30s;
+    }
+
+    location @public_ssr_unavailable {
+        default_type text/plain;
+        add_header Cache-Control no-store always;
+        add_header X-Robots-Tag "noindex, nofollow" always;
+        add_header Retry-After 30 always;
+        add_header X-Content-Type-Options nosniff always;
+        return 503 "Public pages are unavailable";
+    }
+
+    location @admin {
+        include /etc/nginx/web-admin-proxy.conf;
+    }
+
+    location @web_index {
+        try_files /index.html =503;
+        add_header Cache-Control no-store always;
+        add_header Cross-Origin-Opener-Policy same-origin always;
+        add_header Cross-Origin-Resource-Policy same-origin always;
+        add_header Referrer-Policy strict-origin-when-cross-origin always;
+        add_header X-Content-Type-Options nosniff always;
+        add_header X-Frame-Options DENY always;
+        add_header Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https:; media-src 'self' blob:; font-src 'self' data:; connect-src ${CINATOKEN_WEB_PROXY_CONNECT_SRC}; worker-src 'self' blob:; object-src 'none'; base-uri 'self'; frame-ancestors 'none'; frame-src 'none'; form-action 'self'" always;
+    }
+}

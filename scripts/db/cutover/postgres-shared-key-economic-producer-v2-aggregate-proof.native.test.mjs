@@ -1,7 +1,7 @@
 // Review-only PG18.6 fixture. Fresh owned loopback cluster and synthetic facts.
 import assert from 'node:assert/strict';
 import { createHash, randomBytes, randomUUID } from 'node:crypto';
-import { readFile, readdir, writeFile } from 'node:fs/promises';
+import { readFile, writeFile } from 'node:fs/promises';
 import { dirname, join } from 'node:path';
 import test from 'node:test';
 import postgres from 'postgres';
@@ -9,6 +9,7 @@ import { Hono } from 'hono';
 import { drizzle } from 'drizzle-orm/postgres-js';
 import { computeRouteDataPolicySubjectFingerprintFromRows } from '@octafuse/core';
 import { startNativePostgres } from '../../../packages/core/src/test-support/postgres-native-cluster.mjs';
+import { listPg73Migrations } from './pg73-native-fixture.mjs';
 import { pgCoreSchema } from '../../../packages/core/src/storage/drizzle/schema.pg.ts';
 import { createPostgresRepositories } from '../../../packages/core/src/storage/repositories-postgres.ts';
 import { insertRequestUsageAndChargeTxPg } from '../../../packages/core/src/db/postgres/critical-writes.impl.ts';
@@ -162,7 +163,7 @@ test('native PG18 v2 aggregate-proof activation successor preserves economic pro
       clients.push(migrator, runtime, buyer, quoteProducer);
       await migrator.unsafe(`CREATE TABLE ${gateway}.schema_migrations
         (version text PRIMARY KEY, applied_at timestamptz NOT NULL DEFAULT now())`);
-      const formal = (await readdir(migrations)).filter(name => name.endsWith('.sql')).sort();
+const formal = await listPg73Migrations();
       assert.equal(formal.length, 73);
       const corpus = [];
       for (const name of formal) {

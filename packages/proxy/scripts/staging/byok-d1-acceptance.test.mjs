@@ -1,19 +1,17 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import {DatabaseSync} from 'node:sqlite';
-import {readFileSync,readdirSync} from 'node:fs';
+import {readByokD1FrozenMigrations} from './byok-d1-frozen-migrations-fixture.mjs';
 import {resolve} from 'node:path';
 import {pathToFileURL} from 'node:url';
 const {BYOK_D1_CASES,byokD1Fixture,runByokD1Case,cleanupByokD1Case}=await import(process.env.BYOK_D1_ACCEPTANCE_MODULE
   ?pathToFileURL(resolve(process.env.BYOK_D1_ACCEPTANCE_MODULE)).href:new URL('./byok-d1-acceptance.ts',import.meta.url).href);
 
-// Complete production D1 migration chain, real SQLite constraints and atomic
-// transactions. This checks the acceptance oracle, not Cloudflare/workerd.
+// Frozen 0001–0068 D1 chain, real SQLite constraints and atomic transactions.
+// This checks the historical acceptance oracle, not newer schemas or workerd.
 function fixture(){
   const db=new DatabaseSync(':memory:');db.exec('PRAGMA foreign_keys=ON');
-  const directory=new URL('../../../core/migrations-d1/',import.meta.url);
-  const files=readdirSync(directory).filter(n=>n.endsWith('.sql')).sort();assert.equal(files.length,68);
-  for(const name of files)db.exec(readFileSync(new URL(name,directory),'utf8'));
+  for(const {sql} of readByokD1FrozenMigrations())db.exec(sql);
   const operations=[],calls=[];
   function run(sql,values,mode){
     calls.push({sql,values,mode});const stmt=db.prepare(sql),select=stmt.columns().length>0;

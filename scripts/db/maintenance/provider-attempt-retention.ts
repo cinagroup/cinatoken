@@ -7,10 +7,22 @@ import { pathToFileURL } from 'node:url';
 import {
 	resolveProviderAttemptRetentionConfig,
 	runProviderAttemptRetention,
+	type ProviderAttemptRetentionEnvironment,
 } from '../../../packages/proxy/src/services/provider-attempt-retention';
 
+type ProviderAttemptRetentionNodeEnvironment = ProviderAttemptRetentionEnvironment & {
+	DATABASE_DRIVER?: string;
+	DATABASE_URL?: string;
+};
+
 export async function runProviderAttemptRetentionOnce(
-	environment: NodeJS.ProcessEnv = process.env,
+	environment: ProviderAttemptRetentionNodeEnvironment = {
+		DATABASE_DRIVER: process.env.DATABASE_DRIVER,
+		DATABASE_URL: process.env.DATABASE_URL,
+		PROVIDER_ATTEMPT_RETENTION_DAYS: process.env.PROVIDER_ATTEMPT_RETENTION_DAYS,
+		PROVIDER_ATTEMPT_RETENTION_BATCH_SIZE: process.env.PROVIDER_ATTEMPT_RETENTION_BATCH_SIZE,
+		PROVIDER_ATTEMPT_RETENTION_MAX_BATCHES: process.env.PROVIDER_ATTEMPT_RETENTION_MAX_BATCHES,
+	},
 ): Promise<void> {
 	const database = resolveNodeDatabaseConfig(environment);
 	const storage = database.driver === 'mysql'

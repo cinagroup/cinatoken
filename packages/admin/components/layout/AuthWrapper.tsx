@@ -1,267 +1,349 @@
-'use client';
+"use client";
 
 /**
  * 根级鉴权壳：未登录时进入 CinaAuth；已登录则渲染 `Sidebar` + 子页面。
  * 本地会话依赖 `/api/auth/check`，管理权限由服务端向 CinaAuth 实时复核。
  */
-import { useState, useEffect, useCallback, useRef, ReactNode } from 'react';
-import Image from 'next/image';
-import { useTranslations } from 'next-intl';
-import { usePathname, useRouter } from 'next/navigation';
-import BrandExternalLinks from '@/components/layout/BrandExternalLinks';
-import LocaleSwitcher from '@/components/layout/LocaleSwitcher';
-import { BusinessTimezoneProvider } from '@/components/BusinessTimezoneProvider';
-import { ADMIN_SESSION_EXPIRED_EVENT_NAME } from '@/lib/admin-session-events';
-import { readJson } from '@/lib/api-json';
-import { isPublicProductPath } from '@/lib/public-routes';
-import Sidebar from './Sidebar';
-import ConsoleThemeToggle from '@/components/unified/ConsoleThemeToggle';
-import AdminMobileHeader from './AdminMobileHeader';
-import CinaAuthLoginButtons from '@/components/auth/CinaAuthLoginButtons';
-import CinaAuthAccessLink from '@/components/auth/CinaAuthAccessLink';
-import { subscribeCinaAuthSessionChanges } from '@/lib/cinaauth/session-events';
+import {
+	useState,
+	useEffect,
+	useCallback,
+	useRef,
+	useSyncExternalStore,
+	ReactNode,
+} from "react";
+import Image from "next/image";
+import { useTranslations } from "next-intl";
+import { usePathname, useRouter } from "next/navigation";
+import BrandExternalLinks from "@/components/layout/BrandExternalLinks";
+import LocaleSwitcher from "@/components/layout/LocaleSwitcher";
+import { BusinessTimezoneProvider } from "@/components/BusinessTimezoneProvider";
+import { ADMIN_SESSION_EXPIRED_EVENT_NAME } from "@/lib/admin-session-events";
+import { readJson } from "@/lib/api-json";
+import { isPublicProductPath } from "@/lib/public-routes";
+import Sidebar from "./Sidebar";
+import ConsoleThemeToggle from "@/components/unified/ConsoleThemeToggle";
+import AdminMobileHeader from "./AdminMobileHeader";
+import CinaAuthLoginButtons from "@/components/auth/CinaAuthLoginButtons";
+import CinaAuthAccessLink from "@/components/auth/CinaAuthAccessLink";
+import { subscribeCinaAuthSessionChanges } from "@/lib/cinaauth/session-events";
 
 interface Props {
-  children: ReactNode;
+	children: ReactNode;
 }
 
+const subscribeBrowserReady = () => () => {};
+const browserReadySnapshot = () => true;
+const serverReadySnapshot = () => false;
+
 export default function AuthWrapper({ children }: Props) {
-  const pathname = usePathname();
-  const router = useRouter();
-  // 门户分区使用统一会话，但不要求管理员能力。
-  const isPublicHome = isPublicProductPath(pathname);
-  const t = useTranslations('auth');
-  const tBrand = useTranslations('brand');
-  const tCommon = useTranslations('common');
-  const adminCallbackPath = pathname || '/dashboard';
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
-  const [loginErrorCode, setLoginErrorCode] = useState('');
-  const [isSessionCheckUnavailable, setIsSessionCheckUnavailable] = useState(false);
-  const authRequestEpoch = useRef(0);
+	const pathname = usePathname();
+	const ready = useSyncExternalStore(
+		subscribeBrowserReady,
+		browserReadySnapshot,
+		serverReadySnapshot
+	);
+	const tCommon = useTranslations("common");
+	// Public pages do not mount administrator checks or restore private shell state.
+	if (isPublicProductPath(pathname)) return <>{children}</>;
+	if (!ready)
+		return (
+			<div className="console-shell flex items-center justify-center h-screen bg-gray-50">
+				<div className="text-gray-600">{tCommon("loading")}</div>
+			</div>
+		);
+	return (
+		<PrivateAuthWrapper key={pathname} pathname={pathname}>
+			{children}
+		</PrivateAuthWrapper>
+	);
+}
 
-  const checkAuth = useCallback(async () => {
-	const epoch = ++authRequestEpoch.current;
-    if (isPublicHome) {
-      setIsLoading(false);
-      return;
-    }
+function PrivateAuthWrapper({
+	children,
+	pathname,
+}: Props & { pathname: string }) {
+	const router = useRouter();
+	const t = useTranslations("auth");
+	const tBrand = useTranslations("brand");
+	const tCommon = useTranslations("common");
+	const adminCallbackPath = pathname || "/dashboard";
+	const [isAuthenticated, setIsAuthenticated] = useState(false);
+	const [isLoading, setIsLoading] = useState(true);
+	const [loginErrorCode, setLoginErrorCode] = useState(
+		() => new URLSearchParams(window.location.search).get("auth_error") ?? ""
+	);
+	const [isSessionCheckUnavailable, setIsSessionCheckUnavailable] =
+		useState(false);
+	const authRequestEpoch = useRef(0);
+	const active = useRef(false);
+	const authController = useRef<AbortController | null>(null);
 
-    try {
-	  const isAdminPath =
-		pathname === '/dashboard' ||
-		pathname.startsWith('/admin') ||
-		pathname.startsWith('/gateway');
-	  const [response, accountResponse] = await Promise.all([
-		fetch('/api/auth/check', { cache: 'no-store', signal: AbortSignal.timeout(15_000) }),
-		isAdminPath
-			? fetch('/api/user/me', { cache: 'no-store', signal: AbortSignal.timeout(15_000) }).catch(() => null)
-			: Promise.resolve(null),
-	  ]);
-	  if (epoch !== authRequestEpoch.current) return;
-      if (!response.ok) {
-        throw new Error(`Admin auth check failed with ${response.status}`);
-      }
-	  setIsSessionCheckUnavailable(false);
-	  const data = await readJson<{
-		authenticated: boolean;
-		verification?: 'none' | 'verified' | 'degraded' | 'rejected';
-	  }>(response);
-	  if (epoch !== authRequestEpoch.current) return;
-	  if (!data || typeof data.authenticated !== 'boolean') {
-		throw new Error('Invalid auth status response');
-	  }
-	  if (data.authenticated) {
-		setIsAuthenticated(true);
-		return;
-	  }
-	  if (accountResponse?.ok) {
-		const account = await readJson<{
-			success: boolean;
-			data?: { isAdmin: boolean };
-		}>(accountResponse);
-		if (epoch !== authRequestEpoch.current) return;
-		if (account.data && !account.data.isAdmin) {
-			router.replace('/account');
-			return;
-		}
-	  }
-	  setIsAuthenticated(false);
-    } catch (error) {
-      console.error('Auth check error:', error);
-	  if (epoch === authRequestEpoch.current) setIsSessionCheckUnavailable(true);
-    } finally {
-	  if (epoch === authRequestEpoch.current) setIsLoading(false);
-    }
-  }, [isPublicHome, pathname, router]);
+	const checkAuth = useCallback(async () => {
+		if (!active.current) return false;
+		const epoch = ++authRequestEpoch.current;
+		authController.current?.abort();
+		const controller = new AbortController();
+		authController.current = controller;
+		const signal = AbortSignal.any([
+			controller.signal,
+			AbortSignal.timeout(15_000),
+		]);
+		const current = () =>
+			active.current &&
+			!controller.signal.aborted &&
+			epoch === authRequestEpoch.current;
 
-  useEffect(() => {
-    checkAuth();
-  }, [checkAuth]);
+		const isAdminPath =
+			pathname === "/dashboard" ||
+			pathname.startsWith("/admin") ||
+			pathname.startsWith("/gateway");
+		// Consume each body before applying the epoch/identity branches. Leaving a
+		// successful response unread keeps its timeout active after authentication.
+		return Promise.all([
+			fetch("/api/auth/check", { cache: "no-store", signal }).then(
+				async (response) => {
+					if (!response.ok) {
+						await response.arrayBuffer();
+						throw new Error(`Admin auth check failed with ${response.status}`);
+					}
+					return readJson<{
+						authenticated: boolean;
+						verification?: "none" | "verified" | "degraded" | "rejected";
+					}>(response);
+				}
+			),
+			isAdminPath
+				? fetch("/api/user/me", { cache: "no-store", signal })
+						.then(async (response) => {
+							if (!response.ok) {
+								await response.arrayBuffer();
+								return null;
+							}
+							return readJson<{
+								success: boolean;
+								data?: { isAdmin: boolean };
+							}>(response);
+						})
+						.catch(() => null)
+				: Promise.resolve(null),
+		])
+			.then(([data, account]) => {
+				if (!current()) return false;
+				setIsSessionCheckUnavailable(false);
+				if (!data || typeof data.authenticated !== "boolean") {
+					throw new Error("Invalid auth status response");
+				}
+				if (data.authenticated) {
+					setIsAuthenticated(true);
+					return true;
+				}
+				setIsAuthenticated(false);
+				if (account?.data && !account.data.isAdmin) {
+					router.replace("/account");
+					return true;
+				}
+				return true;
+			})
+			.catch((error) => {
+				if (!current()) return false;
+				console.error("Auth check error:", error);
+				setIsSessionCheckUnavailable(true);
+				return true;
+			})
+			.finally(() => {
+				if (current()) setIsLoading(false);
+			});
+	}, [pathname, router]);
 
 	useEffect(() => {
-		const authError = new URLSearchParams(window.location.search).get('auth_error');
-		if (authError) setLoginErrorCode(authError);
+		active.current = true;
+		void checkAuth();
+		return () => {
+			active.current = false;
+			authRequestEpoch.current += 1;
+			authController.current?.abort();
+		};
+	}, [checkAuth]);
+
+	useEffect(() => {
+		const onSessionExpired = () => {
+			// Protected requests remain fail-closed on the server. Do not destroy the
+			// local session on a single rejection, so transient CinaAuth failures can recover.
+			authRequestEpoch.current += 1;
+			authController.current?.abort();
+			setIsAuthenticated(false);
+			setIsSessionCheckUnavailable(false);
+			setIsLoading(false);
+		};
+		window.addEventListener(ADMIN_SESSION_EXPIRED_EVENT_NAME, onSessionExpired);
+		return () =>
+			window.removeEventListener(
+				ADMIN_SESSION_EXPIRED_EVENT_NAME,
+				onSessionExpired
+			);
 	}, []);
 
-  useEffect(() => {
-    const onSessionExpired = () => {
-      // Protected requests remain fail-closed on the server. Do not destroy the
-      // local session on a single rejection, so transient CinaAuth failures can recover.
-	  authRequestEpoch.current += 1;
-      setIsAuthenticated(false);
-      setIsSessionCheckUnavailable(false);
-      setIsLoading(false);
-    };
-    window.addEventListener(ADMIN_SESSION_EXPIRED_EVENT_NAME, onSessionExpired);
-    return () => window.removeEventListener(ADMIN_SESSION_EXPIRED_EVENT_NAME, onSessionExpired);
-  }, []);
+	useEffect(() => {
+		const onVisible = () => {
+			if (document.visibilityState === "visible") {
+				checkAuth();
+			}
+		};
+		document.addEventListener("visibilitychange", onVisible);
+		return () => document.removeEventListener("visibilitychange", onVisible);
+	}, [checkAuth]);
 
-  useEffect(() => {
-    const onVisible = () => {
-      if (document.visibilityState === 'visible') {
-        checkAuth();
-      }
-    };
-    document.addEventListener('visibilitychange', onVisible);
-    return () => document.removeEventListener('visibilitychange', onVisible);
-  }, [checkAuth]);
-
-  const onPopupAuthenticated = useCallback(async () => {
-	setLoginErrorCode('');
-	setIsSessionCheckUnavailable(false);
-	setIsLoading(true);
-	await checkAuth();
-	router.refresh();
-  }, [checkAuth, router]);
-
-  useEffect(() => subscribeCinaAuthSessionChanges((change) => {
-	authRequestEpoch.current += 1;
-	setIsAuthenticated(false);
-	setIsSessionCheckUnavailable(false);
-	setLoginErrorCode('');
-	if (change === 'logout') setIsLoading(false);
-	else {
+	const onPopupAuthenticated = useCallback(async () => {
+		if (!active.current) return;
+		setLoginErrorCode("");
+		setIsSessionCheckUnavailable(false);
 		setIsLoading(true);
-		void checkAuth();
-	}
-  }), [checkAuth]);
+		if (await checkAuth()) router.refresh();
+	}, [checkAuth, router]);
 
-  const onPopupError = useCallback((errorCode: string) => {
-	setLoginErrorCode(errorCode);
-  }, []);
-
-  if (isPublicHome) {
-    return <>{children}</>;
-  }
-
-  // Loading state - full screen
-  if (isLoading && !isAuthenticated) {
-    return (
-	  <div className="console-shell flex items-center justify-center h-screen bg-gray-50">
-        <div className="text-gray-600">{tCommon('loading')}</div>
-      </div>
-    );
-  }
-
-  // Not authenticated - show login page (no sidebar)
-  if (!isAuthenticated) {
-    return (
-	  <div className="console-shell flex items-center justify-center h-screen bg-gray-50 px-4">
-        <div className="w-full max-w-md rounded-lg bg-white p-8 shadow-md">
-          <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
-            <div className="flex min-w-0 items-center gap-3">
-              <Image
-                src="/brand/logo.png"
-                alt={tBrand('logoAlt')}
-                width={52}
-                height={52}
-                priority
-                className="h-[52px] w-[52px] shrink-0 rounded-lg"
-              />
-              <div className="min-w-0 flex-1">
-                <h1 className="text-xl font-bold leading-tight text-gray-800 sm:text-2xl">
-                  {tBrand('loginHeading')}
-                </h1>
-                <p className="mt-1 text-xs text-gray-500">{tBrand('operatorConsole')}</p>
-              </div>
-            </div>
-			<div className="flex self-end items-center gap-2 sm:self-auto">
-			  <ConsoleThemeToggle />
-              <LocaleSwitcher variant="login" />
-            </div>
-          </div>
-		  <p className="mb-5 text-sm leading-6 text-gray-600">{t('cinaAuthDescription')}</p>
-			{isSessionCheckUnavailable ? (
-			  <div className="mb-4 rounded-md border border-amber-200 bg-amber-50 p-3 text-sm text-amber-950">
-				<p className="font-medium">{t('sessionCheckUnavailable')}</p>
-				<p className="mt-1 text-xs leading-5 text-amber-800">{t('sessionCheckUnavailableHelp')}</p>
-				<button
-				  type="button"
-				  onClick={() => {
+	useEffect(
+		() =>
+			subscribeCinaAuthSessionChanges((change) => {
+				authRequestEpoch.current += 1;
+				authController.current?.abort();
+				setIsAuthenticated(false);
+				setIsSessionCheckUnavailable(false);
+				setLoginErrorCode("");
+				if (change === "logout") setIsLoading(false);
+				else {
 					setIsLoading(true);
 					void checkAuth();
-				  }}
-				  className="mt-2 rounded-md border border-amber-300 bg-white px-3 py-1.5 text-xs font-semibold text-amber-900 hover:bg-amber-100"
-				>
-				  {t('retrySessionCheck')}
-				</button>
-			  </div>
-			) : null}
-			{loginErrorCode === 'admin_forbidden' ? (
-			  <div className="mb-4 rounded-md border border-amber-200 bg-amber-50 p-3 text-sm text-amber-950">
-				<p className="font-medium">{t('adminForbidden')}</p>
-				<p className="mt-1 text-xs leading-5 text-amber-800">{t('adminForbiddenHelp')}</p>
-				<div className="mt-3 flex flex-col gap-2 sm:flex-row">
-				  <a
-					href="https://admin.cinaseek.ai"
-					target="_blank"
-					rel="noreferrer"
-					className="inline-flex items-center justify-center rounded-md border border-amber-300 bg-white px-3 py-2 text-xs font-semibold text-amber-900 hover:bg-amber-100"
-				  >
-					{t('manageCinaAuthRoles')}
-				  </a>
-				  <CinaAuthAccessLink
-					href="/account"
-					intent="portal"
-					className="inline-flex items-center justify-center rounded-md px-3 py-2 text-xs font-semibold text-amber-900 hover:bg-amber-100"
-				  >
-					{t('continueToUserCenter')}
-				  </CinaAuthAccessLink>
-				</div>
-			  </div>
-			) : loginErrorCode ? (
-			  <div className="mb-4 rounded-md border border-red-200 bg-red-50 p-3 text-sm text-red-600">
-				{t('loginError')}
-			  </div>
-			) : null}
-		  <CinaAuthLoginButtons
-			intent="admin"
-			callbackPath={adminCallbackPath}
-			onAuthenticated={onPopupAuthenticated}
-			onError={onPopupError}
-		  />
-		  <p className="mt-4 text-xs leading-5 text-gray-500">{t('roleRequirement')}</p>
-          <div className="mt-6 border-t border-gray-100 pt-4">
-            <BrandExternalLinks variant="login" />
-          </div>
-        </div>
-      </div>
-    );
-  }
+				}
+			}),
+		[checkAuth]
+	);
 
-  // Authenticated - show dashboard layout with sidebar
-  return (
-    <BusinessTimezoneProvider>
-	  <div className="console-shell flex min-h-dvh lg:h-dvh lg:overflow-hidden">
-        <Sidebar />
-		<div className="flex min-w-0 flex-1 flex-col">
-		  <AdminMobileHeader />
-		  <main id="main-content" className="min-h-0 flex-1 lg:overflow-y-auto" style={{ background: 'var(--console-bg)' }}>
-			{children}
-		  </main>
-		</div>
-      </div>
-    </BusinessTimezoneProvider>
-  );
+	const onPopupError = useCallback((errorCode: string) => {
+		if (active.current) setLoginErrorCode(errorCode);
+	}, []);
+
+	// Loading state - full screen
+	if (isLoading && !isAuthenticated) {
+		return (
+			<div className="console-shell flex items-center justify-center h-screen bg-gray-50">
+				<div className="text-gray-600">{tCommon("loading")}</div>
+			</div>
+		);
+	}
+
+	// Not authenticated - show login page (no sidebar)
+	if (!isAuthenticated) {
+		return (
+			<div className="console-shell flex items-center justify-center h-screen bg-gray-50 px-4">
+				<div className="w-full max-w-md rounded-lg bg-white p-8 shadow-md">
+					<div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+						<div className="flex min-w-0 items-center gap-3">
+							<Image
+								src="/brand/logo.png"
+								alt={tBrand("logoAlt")}
+								width={52}
+								height={52}
+								priority
+								className="h-[52px] w-[52px] shrink-0 rounded-lg"
+							/>
+							<div className="min-w-0 flex-1">
+								<h1 className="text-xl font-bold leading-tight text-gray-800 sm:text-2xl">
+									{tBrand("loginHeading")}
+								</h1>
+								<p className="mt-1 text-xs text-gray-500">
+									{tBrand("operatorConsole")}
+								</p>
+							</div>
+						</div>
+						<div className="flex self-end items-center gap-2 sm:self-auto">
+							<ConsoleThemeToggle />
+							<LocaleSwitcher variant="login" />
+						</div>
+					</div>
+					<p className="mb-5 text-sm leading-6 text-gray-600">
+						{t("cinaAuthDescription")}
+					</p>
+					{isSessionCheckUnavailable ? (
+						<div className="mb-4 rounded-md border border-amber-200 bg-amber-50 p-3 text-sm text-amber-950">
+							<p className="font-medium">{t("sessionCheckUnavailable")}</p>
+							<p className="mt-1 text-xs leading-5 text-amber-800">
+								{t("sessionCheckUnavailableHelp")}
+							</p>
+							<button
+								type="button"
+								onClick={() => {
+									setIsLoading(true);
+									void checkAuth();
+								}}
+								className="mt-2 rounded-md border border-amber-300 bg-white px-3 py-1.5 text-xs font-semibold text-amber-900 hover:bg-amber-100"
+							>
+								{t("retrySessionCheck")}
+							</button>
+						</div>
+					) : null}
+					{loginErrorCode === "admin_forbidden" ? (
+						<div className="mb-4 rounded-md border border-amber-200 bg-amber-50 p-3 text-sm text-amber-950">
+							<p className="font-medium">{t("adminForbidden")}</p>
+							<p className="mt-1 text-xs leading-5 text-amber-800">
+								{t("adminForbiddenHelp")}
+							</p>
+							<div className="mt-3 flex flex-col gap-2 sm:flex-row">
+								<a
+									href="https://admin.cinaseek.si"
+									target="_blank"
+									rel="noreferrer"
+									className="inline-flex items-center justify-center rounded-md border border-amber-300 bg-white px-3 py-2 text-xs font-semibold text-amber-900 hover:bg-amber-100"
+								>
+									{t("manageCinaAuthRoles")}
+								</a>
+								<CinaAuthAccessLink
+									href="/account"
+									intent="portal"
+									className="inline-flex items-center justify-center rounded-md px-3 py-2 text-xs font-semibold text-amber-900 hover:bg-amber-100"
+								>
+									{t("continueToUserCenter")}
+								</CinaAuthAccessLink>
+							</div>
+						</div>
+					) : loginErrorCode ? (
+						<div className="mb-4 rounded-md border border-red-200 bg-red-50 p-3 text-sm text-red-600">
+							{t("loginError")}
+						</div>
+					) : null}
+					<CinaAuthLoginButtons
+						intent="admin"
+						callbackPath={adminCallbackPath}
+						onAuthenticated={onPopupAuthenticated}
+						onError={onPopupError}
+					/>
+					<p className="mt-4 text-xs leading-5 text-gray-500">
+						{t("roleRequirement")}
+					</p>
+					<div className="mt-6 border-t border-gray-100 pt-4">
+						<BrandExternalLinks variant="login" />
+					</div>
+				</div>
+			</div>
+		);
+	}
+
+	// Authenticated - show dashboard layout with sidebar
+	return (
+		<BusinessTimezoneProvider>
+			<div className="console-shell flex min-h-dvh lg:h-dvh lg:overflow-hidden">
+				<Sidebar />
+				<div className="flex min-w-0 flex-1 flex-col">
+					<AdminMobileHeader />
+					<main
+						id="main-content"
+						className="min-h-0 flex-1 lg:overflow-y-auto"
+						style={{ background: "var(--console-bg)" }}
+					>
+						{children}
+					</main>
+				</div>
+			</div>
+		</BusinessTimezoneProvider>
+	);
 }

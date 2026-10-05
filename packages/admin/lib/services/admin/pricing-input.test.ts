@@ -1,13 +1,16 @@
-import assert from 'node:assert/strict';
-import { describe, it } from 'node:test';
-import { coerceModelPricingProfileInput, coerceRoutePriceOverrideInput } from './pricing-input';
+import assert from "node:assert/strict";
+import { describe, it } from "node:test";
+import {
+	coerceModelPricingProfileInput,
+	coerceRoutePriceOverrideInput,
+} from "./pricing-input";
 
-describe('coerceModelPricingProfileInput', () => {
-	it('rejects token mode with image.default', () => {
+describe("coerceModelPricingProfileInput", () => {
+	it("rejects token mode with image.default", () => {
 		assert.throws(
 			() =>
 				coerceModelPricingProfileInput({
-					image_billing_mode: 'token',
+					image_billing_mode: "token",
 					tiers: [
 						{
 							upto: null,
@@ -20,31 +23,31 @@ describe('coerceModelPricingProfileInput', () => {
 				}),
 			(error: unknown) =>
 				error instanceof Error &&
-				'status' in error &&
+				"status" in error &&
 				(error as { status: unknown }).status === 400 &&
 				error.message.includes('image_billing_mode "token"')
 		);
 	});
 
-	it('requires image.default for per_image mode', () => {
+	it("requires image.default for per_image mode", () => {
 		assert.throws(
 			() =>
 				coerceModelPricingProfileInput({
-					image_billing_mode: 'per_image',
+					image_billing_mode: "per_image",
 				}),
 			(error: unknown) =>
 				error instanceof Error &&
-				'status' in error &&
+				"status" in error &&
 				(error as { status: unknown }).status === 400 &&
-				error.message.includes('image.default')
+				error.message.includes("image.default")
 		);
 	});
 
-	it('rejects positive tier image_* under per_image mode', () => {
+	it("rejects positive tier image_* under per_image mode", () => {
 		assert.throws(
 			() =>
 				coerceModelPricingProfileInput({
-					image_billing_mode: 'per_image',
+					image_billing_mode: "per_image",
 					tiers: [
 						{
 							upto: null,
@@ -57,26 +60,26 @@ describe('coerceModelPricingProfileInput', () => {
 				}),
 			(error: unknown) =>
 				error instanceof Error &&
-				'status' in error &&
+				"status" in error &&
 				(error as { status: unknown }).status === 400 &&
-				error.message.includes('image_output_price')
+				error.message.includes("image_output_price")
 		);
 	});
 
-	it('accepts valid per_image profile and strips placeholder tiers', () => {
+	it("accepts valid per_image profile and strips placeholder tiers", () => {
 		const json = coerceModelPricingProfileInput({
-			image_billing_mode: 'per_image',
+			image_billing_mode: "per_image",
 			tiers: [{ upto: null, input_price: 0, output_price: 0 }],
-			image: { default: 0.22, uncertain_result_policy: 'requested' },
+			image: { default: 0.22, uncertain_result_policy: "requested" },
 		});
 		assert.ok(json);
 		const obj = JSON.parse(json!) as Record<string, unknown>;
-		assert.equal(obj.image_billing_mode, 'per_image');
+		assert.equal(obj.image_billing_mode, "per_image");
 		assert.equal(obj.tiers, undefined);
 		assert.deepEqual(obj.image, { default: 0.22 });
 	});
 
-	it('accepts legacy profile without image_billing_mode', () => {
+	it("accepts legacy profile without image_billing_mode", () => {
 		const json = coerceModelPricingProfileInput({
 			tiers: [{ upto: null, input_price: 2, output_price: 12 }],
 			image: { default: 0.05 },
@@ -85,27 +88,30 @@ describe('coerceModelPricingProfileInput', () => {
 	});
 });
 
-describe('coerceRoutePriceOverrideInput', () => {
-	it('normalizes complete non-negative numeric strings', () => {
+describe("coerceRoutePriceOverrideInput", () => {
+	it("normalizes complete non-negative numeric strings", () => {
 		assert.equal(
-			coerceRoutePriceOverrideInput({ charged_factor: '0.5', metered_factor: '1.25' }),
+			coerceRoutePriceOverrideInput({
+				charged_factor: "0.5",
+				metered_factor: "1.25",
+			}),
 			JSON.stringify({ charged_factor: 0.5, metered_factor: 1.25 })
 		);
 	});
 
-	it('rejects negative, malformed, and non-numeric factor values', () => {
-		for (const value of [-1, '0abc', '1foo', true]) {
+	it("rejects negative, malformed, and non-numeric factor values", () => {
+		for (const value of [-1, "0abc", "1foo", true]) {
 			assert.throws(
 				() => coerceRoutePriceOverrideInput({ charged_factor: value }),
 				(error: unknown) =>
 					error instanceof Error &&
-					'status' in error &&
+					"status" in error &&
 					(error as { status: unknown }).status === 400
 			);
 		}
 	});
 
-	it('keeps the intentional legacy-tier removal on write', () => {
+	it("keeps the intentional legacy-tier removal on write", () => {
 		assert.equal(
 			coerceRoutePriceOverrideInput({
 				charged: { tiers: [{ upto: null, input_price: 9, output_price: 9 }] },
@@ -116,83 +122,100 @@ describe('coerceRoutePriceOverrideInput', () => {
 		);
 	});
 
-	it('rejects 24:00 as a schedule start', () => {
+	it("rejects 24:00 as a schedule start", () => {
 		assert.throws(
 			() =>
 				coerceRoutePriceOverrideInput({
-					schedule: { charged: [{ start: '24:00', end: '00:00', factor: 1 }] },
+					schedule: { charged: [{ start: "24:00", end: "00:00", factor: 1 }] },
 				}),
 			(error: unknown) =>
 				error instanceof Error &&
-				'status' in error &&
+				"status" in error &&
 				(error as { status: unknown }).status === 400
 		);
 	});
 
-	it('keeps legacy schedule JSON without mode', () => {
+	it("keeps legacy schedule JSON without mode", () => {
 		assert.equal(
 			coerceRoutePriceOverrideInput({
 				charged_factor: 1,
-				schedule: { charged: [{ start: '09:00', end: '12:00', factor: 2 }] },
+				schedule: { charged: [{ start: "09:00", end: "12:00", factor: 2 }] },
 			}),
 			JSON.stringify({
 				charged_factor: 1,
-				schedule: { charged: [{ start: '09:00', end: '12:00', factor: 2 }] },
+				schedule: { charged: [{ start: "09:00", end: "12:00", factor: 2 }] },
 			})
 		);
 	});
 
-	it('round-trips schedule.mode override', () => {
+	it("round-trips schedule.mode override", () => {
 		assert.equal(
 			coerceRoutePriceOverrideInput({
 				charged_factor: 1,
 				metered_factor: 1,
 				schedule: {
-					mode: 'override',
-					charged: [{ start: '09:00', end: '12:00', factor: 2 }],
-					metered: [{ start: '09:00', end: '12:00', factor: 2 }],
+					mode: "override",
+					charged: [{ start: "09:00", end: "12:00", factor: 2 }],
+					metered: [{ start: "09:00", end: "12:00", factor: 2 }],
 				},
 			}),
 			JSON.stringify({
 				charged_factor: 1,
 				metered_factor: 1,
 				schedule: {
-					mode: 'override',
-					charged: [{ start: '09:00', end: '12:00', factor: 2 }],
-					metered: [{ start: '09:00', end: '12:00', factor: 2 }],
+					mode: "override",
+					charged: [{ start: "09:00", end: "12:00", factor: 2 }],
+					metered: [{ start: "09:00", end: "12:00", factor: 2 }],
 				},
 			})
 		);
 	});
 
-	it('round-trips schedule window days', () => {
+	it("round-trips schedule window days", () => {
 		assert.equal(
 			coerceRoutePriceOverrideInput({
 				charged_factor: 1,
 				schedule: {
-					mode: 'override',
-					charged: [{ start: '00:00', end: '24:00', factor: 1.2, days: [1, 2, 3, 4, 5] }],
+					mode: "override",
+					charged: [
+						{
+							start: "00:00",
+							end: "24:00",
+							factor: 1.2,
+							days: [1, 2, 3, 4, 5],
+						},
+					],
 				},
 			}),
 			JSON.stringify({
 				charged_factor: 1,
 				schedule: {
-					mode: 'override',
-					charged: [{ start: '00:00', end: '24:00', factor: 1.2, days: [1, 2, 3, 4, 5] }],
+					mode: "override",
+					charged: [
+						{
+							start: "00:00",
+							end: "24:00",
+							factor: 1.2,
+							days: [1, 2, 3, 4, 5],
+						},
+					],
 				},
 			})
 		);
 	});
 
-	it('rejects unknown schedule.mode', () => {
+	it("rejects unknown schedule.mode", () => {
 		assert.throws(
 			() =>
 				coerceRoutePriceOverrideInput({
-					schedule: { mode: 'divide', charged: [{ start: '09:00', end: '12:00', factor: 2 }] },
+					schedule: {
+						mode: "divide",
+						charged: [{ start: "09:00", end: "12:00", factor: 2 }],
+					},
 				}),
 			(error: unknown) =>
 				error instanceof Error &&
-				'status' in error &&
+				"status" in error &&
 				(error as { status: unknown }).status === 400
 		);
 	});

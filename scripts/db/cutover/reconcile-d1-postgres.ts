@@ -1,6 +1,18 @@
 import postgres from 'postgres';
 import { ETL_TABLE_ORDER } from '../lib/migration-tables';
 import {
+	CONFIG_CUTOVER_D1_MIGRATION,
+	CONFIG_CUTOVER_POSTGRES_MIGRATION,
+	CONFIG_CUTOVER_RECONCILE_BATCH_SIZE,
+	CONFIG_CUTOVER_RECONCILE_SPECS,
+	configCutoverCheckLabel,
+	CONFIG_CUTOVER_TARGET_COLUMN_QUERY,
+	configCutoverRowId,
+	configCutoverTargetColumns,
+	countConfigCutoverBatchMismatches,
+	missingConfigCutoverTargetTables,
+} from '../lib/config-cutover-reconcile';
+import {
 	type D1ExecutionConfig,
 	getTableColumns,
 	parseD1ExecutionConfig,
@@ -345,6 +357,20 @@ function inspectD1BudgetSpentPrecision(config: D1ExecutionConfig): D1BudgetSpent
 	return mode;
 }
 
+function assertConfigCutoverSourceReady(d1: D1ExecutionConfig): void {
+	const rows = runD1ExecuteJson(
+		`SELECT CAST(COUNT(*) AS TEXT) AS count FROM d1_migrations WHERE name = '${CONFIG_CUTOVER_D1_MIGRATION}'`,
+		d1,
+	);
+	if (rows[0]?.count !== '1') throw new Error(`D1 source is missing ${CONFIG_CUTOVER_D1_MIGRATION}`);
+	for (const spec of CONFIG_CUTOVER_RECONCILE_SPECS) {
+		const columns = new Set(getTableColumns(spec.table, d1));
+		if (spec.columns.some((column) => !columns.has(column))) {
+			throw new Error(`D1 source is missing Config cutover columns in ${spec.table}`);
+		}
+	}
+}
+
 interface BudgetSpentMismatch {
 	userId: string;
 	d1Micros: string;
@@ -411,6 +437,47 @@ async function reconcileUserBudgetSpentMicros(
 	return { mismatchCount, firstMismatch };
 }
 
+async function reconcileConfigCutoverRows(
+	d1: D1ExecutionConfig,
+	sql: postgres.Sql,
+): Promise<Array<{ label: string; mismatchCount: number }>> {
+	const results: Array<{ label: string; mismatchCount: number }> = [];
+	for (const spec of CONFIG_CUTOVER_RECONCILE_SPECS) {
+		const totalValue = runD1Scalar(
+			`SELECT CAST(COUNT(*) AS TEXT) AS value FROM ${quoteIdentifier(spec.table)}`,
+			d1,
+		);
+		const totalRows = Number(totalValue);
+		if (!Number.isSafeInteger(totalRows) || totalRows < 0) {
+			throw new Error(`invalid_config_cutover_count:${spec.table}`);
+		}
+		const columns = spec.columns.map(quoteIdentifier).join(', ');
+		const targetColumns = configCutoverTargetColumns(spec, quoteIdentifier);
+		let readRows = 0;
+		let mismatchCount = 0;
+		for (let offset = 0; offset < totalRows; offset += CONFIG_CUTOVER_RECONCILE_BATCH_SIZE) {
+			const sourceRows = runD1ExecuteJson(
+				`SELECT ${columns} FROM ${quoteIdentifier(spec.table)} ORDER BY ${quoteIdentifier(spec.identity)} ` +
+				`LIMIT ${CONFIG_CUTOVER_RECONCILE_BATCH_SIZE} OFFSET ${offset}`,
+				d1,
+			);
+			if (sourceRows.length === 0) throw new Error(`short_config_cutover_read:${spec.table}`);
+			readRows += sourceRows.length;
+			const ids = sourceRows.map((row) => configCutoverRowId(row, spec));
+			const placeholders = ids.map((_, index) => `$${index + 1}`).join(', ');
+			const targetRows = await sql.unsafe<Record<string, unknown>[]>(
+				`SELECT ${targetColumns} FROM ${qualifiedTable(spec.table)} ` +
+				`WHERE ${quoteIdentifier(spec.identity)} IN (${placeholders})`,
+				ids,
+			);
+			mismatchCount += countConfigCutoverBatchMismatches(spec, sourceRows, targetRows);
+		}
+		if (readRows !== totalRows) throw new Error(`short_config_cutover_read:${spec.table}`);
+		results.push({ label: configCutoverCheckLabel(spec), mismatchCount });
+	}
+	return results;
+}
+
 async function reportGuardrailLedgerDifferences(
 	config: ReconcileConfig,
 	sql: postgres.Sql,
@@ -446,7 +513,7 @@ async function reportGuardrailLedgerDifferences(
 
 async function assertTargetReady(sql: postgres.Sql): Promise<void> {
 	const [state] = await sql.unsafe<
-		{ current_schema: string | null; current: boolean; legacy_schema: boolean }[]
+		{ current_schema: string | null; current: boolean; config_current: boolean; legacy_schema: boolean }[]
 	>(`
 		SELECT
 			current_schema() AS current_schema,
@@ -454,12 +521,24 @@ async function assertTargetReady(sql: postgres.Sql): Promise<void> {
 			EXISTS (
 				SELECT 1 FROM ${qualifiedTable('schema_migrations')}
 				WHERE version = '${REQUIRED_MIGRATION}'
-			) AS current
+			) AS current,
+			EXISTS (
+				SELECT 1 FROM ${qualifiedTable('schema_migrations')}
+				WHERE version = '${CONFIG_CUTOVER_POSTGRES_MIGRATION}'
+			) AS config_current
 	`);
-	if (state?.current_schema !== TARGET_SCHEMA || !state.current || state.legacy_schema) {
+	if (state?.current_schema !== TARGET_SCHEMA || !state.current || !state.config_current || state.legacy_schema) {
 		throw new Error(
-			`PostgreSQL target is not ready: schema=${String(state?.current_schema)}, legacy=${String(state?.legacy_schema)}, required=${REQUIRED_MIGRATION}`
+			`PostgreSQL target is not ready: schema=${String(state?.current_schema)}, legacy=${String(state?.legacy_schema)}, required=${REQUIRED_MIGRATION},${CONFIG_CUTOVER_POSTGRES_MIGRATION}`
 		);
+	}
+	const targetColumns = await sql.unsafe<{ table_name: string; column_name: string }[]>(
+		CONFIG_CUTOVER_TARGET_COLUMN_QUERY,
+		[TARGET_SCHEMA],
+	);
+	const missingConfigTables = missingConfigCutoverTargetTables(targetColumns);
+	if (missingConfigTables.length > 0) {
+		throw new Error(`PostgreSQL target is missing Config cutover columns in ${missingConfigTables.join(', ')}`);
 	}
 }
 
@@ -474,6 +553,7 @@ async function main(): Promise<void> {
 
 	try {
 		await assertTargetReady(sql);
+		assertConfigCutoverSourceReady(config.d1);
 		const budgetSpentPrecisionMode = inspectD1BudgetSpentPrecision(config.d1);
 		console.log(
 			`[Reconcile] D1(${config.d1.source}:${config.d1.databaseName}) vs Postgres(${TARGET_SCHEMA}); source-frozen=${config.sourceFrozenConfirmed} (operator acknowledgement, not fencing); user-budget-spent=${budgetSpentPrecisionMode}`
@@ -500,6 +580,11 @@ async function main(): Promise<void> {
 				: `mismatches=${budgetSpent.mismatchCount}; first=${JSON.stringify(budgetSpent.firstMismatch)}`),
 		);
 		if (!budgetSpentMatched) failed += 1;
+		for (const result of await reconcileConfigCutoverRows(config.d1, sql)) {
+			const matched = result.mismatchCount === 0;
+			console.log(`[${matched ? 'OK ' : 'ERR'}] ${result.label} | mismatches=${result.mismatchCount}`);
+			if (!matched) failed += 1;
+		}
 		if (guardrailLedgerFailed) {
 			await reportGuardrailLedgerDifferences(config, sql);
 		}

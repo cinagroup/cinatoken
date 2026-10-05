@@ -68,9 +68,10 @@
 		]
 	},
 	"vars": {
-		"CINAAUTH_ISSUER": "https://auth.cinaseek.ai",
-		"CINAAUTH_ACCOUNT_ORIGIN": "https://accounts.cinaseek.ai",
+		"CINAAUTH_ISSUER": "https://auth.cinaseek.si",
+		"CINAAUTH_ACCOUNT_ORIGIN": "https://accounts.cinaseek.si",
 		"CINATOKEN_APP_ORIGIN": "https://cinatoken.com",
+		"CINATOKEN_ADMIN_CONFIG_REQUIRE_REVISION": "false",
 		"CINATOKEN_OIDC_CLIENT_ID": "cinatoken-admin",
 		"CINATOKEN_REQUIRED_ROLES": "super_admin,security_admin",
 		"ADMIN_COOKIE_SECURE": "true",

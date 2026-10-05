@@ -1,6 +1,12 @@
-import type { SimulatorGeminiAction, SimulatorProtocol } from '@/lib/simulator/endpoint';
-import type { AdminKeyListItem, AdminModelRow } from '@/lib/services/admin/types';
-import type { PlaygroundProtocol } from '@/lib/playground/merge-assistant-text';
+import type {
+	SimulatorGeminiAction,
+	SimulatorProtocol,
+} from "@/lib/simulator/endpoint";
+import type {
+	AdminKeyListItem,
+	AdminModelRow,
+} from "@/lib/services/admin/types";
+import type { PlaygroundProtocol } from "@/lib/playground/merge-assistant-text";
 
 export type RouteListRow = {
 	id: string;
@@ -27,7 +33,7 @@ export type ResponseMeta = {
 };
 
 export type WirePreview = {
-	method: 'GET' | 'POST' | 'WebSocket';
+	method: "GET" | "POST" | "WebSocket";
 	url: string;
 	headers: Record<string, string>;
 	bodyText: string;
@@ -35,21 +41,27 @@ export type WirePreview = {
 	isMultipart?: boolean;
 };
 
-export type { ImageOperation } from '@/lib/image-generations';
+export type { ImageOperation } from "@/lib/image-generations";
 
-export type ResponseTab = 'merged' | 'raw';
+export type ResponseTab = "merged" | "raw";
 
 export type SendBlockReason =
-	| 'proxyBaseUrl'
-	| 'model'
-	| 'tool'
-	| 'imageProtocol'
-	| 'audioProtocol'
-	| 'editImages'
-	| 'audioFile'
-	| 'route'
-	| 'keyLoading'
-	| 'key'
+	| "proxyBaseUrl"
+	| "model"
+	| "tool"
+	| "imageProtocol"
+	| "audioProtocol"
+	| "editImages"
+	| "audioFile"
+	| "route"
+	| "keyLoading"
+	| "key"
 	| null;
 
-export type { SimulatorProtocol, SimulatorGeminiAction, AdminKeyListItem, AdminModelRow, PlaygroundProtocol };
+export type {
+	SimulatorProtocol,
+	SimulatorGeminiAction,
+	AdminKeyListItem,
+	AdminModelRow,
+	PlaygroundProtocol,
+};

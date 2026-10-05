@@ -1,15 +1,15 @@
-'use client';
+"use client";
 
 /**
  * Tools → Web Search：各搜索引擎特点说明（点击弹出）。
  */
-import { useEffect } from 'react';
-import { useTranslations } from 'next-intl';
+import { useEffect } from "react";
+import { useTranslations } from "next-intl";
 import {
 	WEB_SEARCH_PROVIDER_DOCS_URL,
 	WEB_SEARCH_PROVIDERS,
 	type WebSearchProvider,
-} from '@/lib/web-search-options';
+} from "@/lib/web-search-options";
 
 type Props = {
 	open: boolean;
@@ -19,22 +19,26 @@ type Props = {
 
 const GUIDE_ORDER: readonly WebSearchProvider[] = WEB_SEARCH_PROVIDERS;
 
-export function WebSearchProviderGuideModal({ open, activeProvider, onClose }: Props) {
-	const t = useTranslations('tools.webSearch.providerGuide');
-	const tProviders = useTranslations('tools.webSearch.providers');
-	const tCommon = useTranslations('common');
+export function WebSearchProviderGuideModal({
+	open,
+	activeProvider,
+	onClose,
+}: Props) {
+	const t = useTranslations("tools.webSearch.providerGuide");
+	const tProviders = useTranslations("tools.webSearch.providers");
+	const tCommon = useTranslations("common");
 
 	useEffect(() => {
 		if (!open) {
 			return;
 		}
 		const onKeyDown = (e: KeyboardEvent) => {
-			if (e.key === 'Escape') {
+			if (e.key === "Escape") {
 				onClose();
 			}
 		};
-		window.addEventListener('keydown', onKeyDown);
-		return () => window.removeEventListener('keydown', onKeyDown);
+		window.addEventListener("keydown", onKeyDown);
+		return () => window.removeEventListener("keydown", onKeyDown);
 	}, [open, onClose]);
 
 	if (!open) {
@@ -56,16 +60,19 @@ export function WebSearchProviderGuideModal({ open, activeProvider, onClose }: P
 			>
 				<div className="flex shrink-0 items-center justify-between border-b border-gray-200 px-5 py-4">
 					<div>
-						<h2 id="web-search-provider-guide-title" className="text-base font-semibold text-gray-900">
-							{t('title')}
+						<h2
+							id="web-search-provider-guide-title"
+							className="text-base font-semibold text-gray-900"
+						>
+							{t("title")}
 						</h2>
-						<p className="mt-1 text-xs text-gray-500">{t('subtitle')}</p>
+						<p className="mt-1 text-xs text-gray-500">{t("subtitle")}</p>
 					</div>
 					<button
 						type="button"
 						onClick={onClose}
 						className="rounded-md p-1.5 text-gray-400 transition hover:bg-gray-100 hover:text-gray-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
-						aria-label={tCommon('close')}
+						aria-label={tCommon("close")}
 					>
 						<span className="block text-xl leading-none" aria-hidden>
 							×
@@ -75,7 +82,7 @@ export function WebSearchProviderGuideModal({ open, activeProvider, onClose }: P
 
 				<div className="min-h-0 flex-1 space-y-4 overflow-y-auto px-5 py-5">
 					<p className="rounded-lg border border-amber-100 bg-amber-50 px-3 py-2 text-xs leading-relaxed text-amber-900">
-						{t('disclaimer')}
+						{t("disclaimer")}
 					</p>
 
 					{GUIDE_ORDER.map((id) => {
@@ -85,11 +92,15 @@ export function WebSearchProviderGuideModal({ open, activeProvider, onClose }: P
 							<section
 								key={id}
 								className={`rounded-lg border px-4 py-3 ${
-									isActive ? 'border-blue-300 bg-blue-50/60' : 'border-gray-200 bg-white'
+									isActive
+										? "border-blue-300 bg-blue-50/60"
+										: "border-gray-200 bg-white"
 								}`}
 							>
 								<div className="flex flex-wrap items-center gap-2">
-									<h3 className="text-sm font-semibold text-gray-900">{tProviders(id)}</h3>
+									<h3 className="text-sm font-semibold text-gray-900">
+										{tProviders(id)}
+									</h3>
 									{badge ? (
 										<span className="rounded-full bg-emerald-100 px-2 py-0.5 text-[11px] font-medium text-emerald-800">
 											{badge}
@@ -97,18 +108,24 @@ export function WebSearchProviderGuideModal({ open, activeProvider, onClose }: P
 									) : null}
 									{isActive ? (
 										<span className="rounded-full bg-blue-100 px-2 py-0.5 text-[11px] font-medium text-blue-800">
-											{t('selected')}
+											{t("selected")}
 										</span>
 									) : null}
 								</div>
-								<p className="mt-2 text-sm leading-relaxed text-gray-700">{t(`items.${id}.summary`)}</p>
+								<p className="mt-2 text-sm leading-relaxed text-gray-700">
+									{t(`items.${id}.summary`)}
+								</p>
 								<dl className="mt-2 space-y-1.5 text-xs leading-relaxed text-gray-600">
 									<div>
-										<dt className="inline font-medium text-gray-800">{t('labels.sources')}：</dt>
+										<dt className="inline font-medium text-gray-800">
+											{t("labels.sources")}：
+										</dt>
 										<dd className="inline">{t(`items.${id}.sources`)}</dd>
 									</div>
 									<div>
-										<dt className="inline font-medium text-gray-800">{t('labels.bestFor')}：</dt>
+										<dt className="inline font-medium text-gray-800">
+											{t("labels.bestFor")}：
+										</dt>
 										<dd className="inline">{t(`items.${id}.bestFor`)}</dd>
 									</div>
 								</dl>
@@ -118,7 +135,7 @@ export function WebSearchProviderGuideModal({ open, activeProvider, onClose }: P
 									rel="noopener noreferrer"
 									className="mt-2 inline-block text-xs font-medium text-blue-600 hover:text-blue-800 hover:underline"
 								>
-									{t('docsLink')}
+									{t("docsLink")}
 								</a>
 							</section>
 						);
@@ -131,7 +148,7 @@ export function WebSearchProviderGuideModal({ open, activeProvider, onClose }: P
 						onClick={onClose}
 						className="rounded-md bg-gray-900 px-4 py-2 text-sm font-medium text-white hover:bg-gray-800"
 					>
-						{tCommon('close')}
+						{tCommon("close")}
 					</button>
 				</div>
 			</div>

@@ -1,13 +1,13 @@
-'use client';
+"use client";
 
-import { TrashIcon } from '@heroicons/react/24/outline';
+import { TrashIcon } from "@heroicons/react/24/outline";
 import {
 	ISO_WEEKDAYS,
 	ISO_WEEKDAYS_MON_FRI,
 	ISO_WEEKDAYS_SAT_SUN,
 	isEveryIsoWeekday,
-} from '@octafuse/core/db/pricing-schedule';
-import type { RouteScheduleFormSide, RouteScheduleFormWindow } from '../types';
+} from "@octafuse/core/db/pricing-schedule";
+import type { RouteScheduleFormSide, RouteScheduleFormWindow } from "../types";
 
 export type ScheduleDayLabels = {
 	days: string;
@@ -62,7 +62,10 @@ export function DailyScheduleEditor(props: Props) {
 		dayLabels,
 	} = props;
 
-	const updateRow = (index: number, patch: Partial<RouteScheduleFormWindow>) => {
+	const updateRow = (
+		index: number,
+		patch: Partial<RouteScheduleFormWindow>
+	) => {
 		onChange(windows.map((w, i) => (i === index ? { ...w, ...patch } : w)));
 	};
 
@@ -73,7 +76,9 @@ export function DailyScheduleEditor(props: Props) {
 			) : (
 				<ul className="space-y-2">
 					{windows.map((w, i) => {
-						const selected = isEveryIsoWeekday(w.days) ? [...ISO_WEEKDAYS] : w.days;
+						const selected = isEveryIsoWeekday(w.days)
+							? [...ISO_WEEKDAYS]
+							: w.days;
 						const everyday = isEveryIsoWeekday(w.days);
 						const weekdays = sameDays(w.days, ISO_WEEKDAYS_MON_FRI);
 						const weekend = sameDays(w.days, ISO_WEEKDAYS_SAT_SUN);
@@ -91,30 +96,34 @@ export function DailyScheduleEditor(props: Props) {
 										onClick={() => updateRow(i, { days: [] })}
 										className={`rounded px-1.5 py-0.5 text-[10px] font-medium ${
 											everyday
-												? 'bg-gray-800 text-white'
-												: 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+												? "bg-gray-800 text-white"
+												: "bg-gray-100 text-gray-600 hover:bg-gray-200"
 										}`}
 									>
 										{dayLabels.everyday}
 									</button>
 									<button
 										type="button"
-										onClick={() => updateRow(i, { days: [...ISO_WEEKDAYS_MON_FRI] })}
+										onClick={() =>
+											updateRow(i, { days: [...ISO_WEEKDAYS_MON_FRI] })
+										}
 										className={`rounded px-1.5 py-0.5 text-[10px] font-medium ${
 											weekdays
-												? 'bg-gray-800 text-white'
-												: 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+												? "bg-gray-800 text-white"
+												: "bg-gray-100 text-gray-600 hover:bg-gray-200"
 										}`}
 									>
 										{dayLabels.weekdays}
 									</button>
 									<button
 										type="button"
-										onClick={() => updateRow(i, { days: [...ISO_WEEKDAYS_SAT_SUN] })}
+										onClick={() =>
+											updateRow(i, { days: [...ISO_WEEKDAYS_SAT_SUN] })
+										}
 										className={`rounded px-1.5 py-0.5 text-[10px] font-medium ${
 											weekend
-												? 'bg-gray-800 text-white'
-												: 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+												? "bg-gray-800 text-white"
+												: "bg-gray-100 text-gray-600 hover:bg-gray-200"
 										}`}
 									>
 										{dayLabels.weekend}
@@ -126,12 +135,14 @@ export function DailyScheduleEditor(props: Props) {
 											<button
 												key={day}
 												type="button"
-												onClick={() => updateRow(i, { days: toggleDay(w.days, day) })}
+												onClick={() =>
+													updateRow(i, { days: toggleDay(w.days, day) })
+												}
 												aria-pressed={on}
 												className={`min-w-6 rounded px-1 py-0.5 text-[10px] font-medium tabular-nums ${
 													on
-														? 'bg-blue-600 text-white'
-														: 'bg-gray-100 text-gray-500 hover:bg-gray-200'
+														? "bg-blue-600 text-white"
+														: "bg-gray-100 text-gray-500 hover:bg-gray-200"
 												}`}
 											>
 												{dayLabels.weekdayShort[day - 1]}
@@ -175,7 +186,9 @@ export function DailyScheduleEditor(props: Props) {
 											inputMode="decimal"
 											placeholder="1"
 											value={w.charged_factor}
-											onChange={(e) => updateRow(i, { charged_factor: e.target.value })}
+											onChange={(e) =>
+												updateRow(i, { charged_factor: e.target.value })
+											}
 											className="w-full min-w-0 rounded border border-blue-200 bg-blue-50/40 px-1.5 py-1 font-mono text-xs tabular-nums"
 										/>
 									</div>
@@ -188,7 +201,9 @@ export function DailyScheduleEditor(props: Props) {
 											inputMode="decimal"
 											placeholder="1"
 											value={w.metered_factor}
-											onChange={(e) => updateRow(i, { metered_factor: e.target.value })}
+											onChange={(e) =>
+												updateRow(i, { metered_factor: e.target.value })
+											}
 											className="w-full min-w-0 rounded border border-emerald-200 bg-emerald-50/40 px-1.5 py-1 font-mono text-xs tabular-nums"
 										/>
 									</div>

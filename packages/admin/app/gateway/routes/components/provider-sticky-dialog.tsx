@@ -1,25 +1,25 @@
-'use client';
+"use client";
 
 import {
 	DEFAULT_STICKY_IDLE_TTL_SECONDS,
 	MAX_STICKY_IDLE_TTL_SECONDS,
 	MIN_STICKY_IDLE_TTL_SECONDS,
-} from '@octafuse/core/db/route-pool-sticky-types';
-import { useTranslations } from 'next-intl';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+} from "@octafuse/core/db/route-pool-sticky-types";
+import { useTranslations } from "next-intl";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
 	clearStickyBinding,
 	fetchStickyBindingsSummary,
 	lookupStickyBinding,
 	resetStickyBindings,
-} from '../route-api';
-import { useStickyRefreshControls } from '../sticky-summary-store';
+} from "../route-api";
+import { useStickyRefreshControls } from "../sticky-summary-store";
 import type {
 	ProviderStickyDialogState,
 	ProviderStickyFormState,
 	StickyBindingLookup,
 	StickyBindingsSummary,
-} from '../types';
+} from "../types";
 
 type Props = {
 	dialog: ProviderStickyDialogState;
@@ -33,13 +33,51 @@ type Props = {
 };
 
 function looksLikeEmail(value: string): boolean {
-	return value.includes('@');
+	return value.includes("@");
 }
 
 export function ProviderStickyDialog(props: Props) {
-	const { dialog, form, error, saving, onClose, onFormChange, onSave, onBindingsChanged } = props;
-	const t = useTranslations('routes.providerSticky');
-	const tCommon = useTranslations('common');
+	const [action, setAction] = useState<symbol | null>(null);
+	const startAction = useCallback(() => {
+		const token = Symbol("sticky-write");
+		setAction(token);
+		return () => setAction((current) => (current === token ? null : current));
+	}, []);
+	const { dialog } = props;
+	const scopeKey = JSON.stringify([
+		dialog.poolId,
+		dialog.modelId,
+		dialog.protocol,
+		dialog.group,
+		dialog.requestOperation,
+	]);
+	return (
+		<ProviderStickyDialogScope
+			key={scopeKey}
+			{...props}
+			actionBusy={action !== null}
+			startAction={startAction}
+		/>
+	);
+}
+
+function ProviderStickyDialogScope(
+	props: Props & { actionBusy: boolean; startAction: () => () => void }
+) {
+	const {
+		dialog,
+		form,
+		error,
+		saving,
+		onClose,
+		onFormChange,
+		onSave,
+		onBindingsChanged,
+		actionBusy,
+		startAction,
+	} = props;
+	const t = useTranslations("routes.providerSticky");
+	const tCommon = useTranslations("common");
 	const { invalidate } = useStickyRefreshControls();
 	const canSave = Boolean(dialog.poolId);
 	const ttlOutOfRange =
@@ -48,14 +86,13 @@ export function ProviderStickyDialog(props: Props) {
 		form.idleTtlSeconds > MAX_STICKY_IDLE_TTL_SECONDS;
 
 	const [summary, setSummary] = useState<StickyBindingsSummary | null>(null);
-	const [summaryLoading, setSummaryLoading] = useState(false);
-	const [summaryError, setSummaryError] = useState('');
-	const [userQuery, setUserQuery] = useState('');
+	const [summaryLoading, setSummaryLoading] = useState(Boolean(dialog.poolId));
+	const [summaryError, setSummaryError] = useState("");
+	const [userQuery, setUserQuery] = useState("");
 	const [lookupLoading, setLookupLoading] = useState(false);
-	const [lookupError, setLookupError] = useState('');
+	const [lookupError, setLookupError] = useState("");
 	const [lookup, setLookup] = useState<StickyBindingLookup | null>(null);
-	const [actionBusy, setActionBusy] = useState(false);
-	const [actionMessage, setActionMessage] = useState('');
+	const [actionMessage, setActionMessage] = useState("");
 	/** When sticky is off but leftovers exist, ops panels stay collapsed until expanded. */
 	const [opsExpanded, setOpsExpanded] = useState(false);
 
@@ -63,7 +100,8 @@ export function ProviderStickyDialog(props: Props) {
 		? summary.total_active + summary.stale_count
 		: 0;
 	const hasResidual = residualCount > 0;
-	const showFullOps = Boolean(dialog.poolId) && (form.enabled || (hasResidual && opsExpanded));
+	const showFullOps =
+		Boolean(dialog.poolId) && (form.enabled || (hasResidual && opsExpanded));
 	// Quiet fetch when off+empty; only surface a banner once leftovers (or an error) are known.
 	const showResidualBanner =
 		Boolean(dialog.poolId) &&
@@ -80,46 +118,119 @@ export function ProviderStickyDialog(props: Props) {
 		[dialog.targets]
 	);
 
+	const lifetime = useRef<AbortController | null>(null);
+	const summaryRequest = useRef<symbol | null>(null);
+	const lookupRequest = useRef<symbol | null>(null);
+	const translations = useRef(t);
+	useEffect(() => {
+		translations.current = t;
+	}, [t]);
 	const refreshSummary = useCallback(async () => {
-		if (!dialog.poolId) {
-			setSummary(null);
-			return;
-		}
+		const scope = lifetime.current;
+		if (!dialog.poolId || !scope || scope.signal.aborted) return;
+		const request = Symbol("summary");
+		summaryRequest.current = request;
 		setSummaryLoading(true);
-		setSummaryError('');
+		setSummaryError("");
 		try {
 			const result = await fetchStickyBindingsSummary(dialog.poolId);
+			if (
+				scope.signal.aborted ||
+				lifetime.current !== scope ||
+				summaryRequest.current !== request
+			)
+				return;
 			if (!result.success) {
 				setSummaryError(result.message);
 				setSummary(null);
 				return;
 			}
 			setSummary(result.data);
+		} catch (error) {
+			if (
+				!scope.signal.aborted &&
+				lifetime.current === scope &&
+				summaryRequest.current === request
+			)
+				setSummaryError(error instanceof Error ? error.message : String(error));
 		} finally {
-			setSummaryLoading(false);
+			if (
+				!scope.signal.aborted &&
+				lifetime.current === scope &&
+				summaryRequest.current === request
+			)
+				setSummaryLoading(false);
 		}
 	}, [dialog.poolId]);
 
 	useEffect(() => {
-		void refreshSummary();
-	}, [refreshSummary]);
+		const scope = new AbortController();
+		lifetime.current = scope;
+		const request = Symbol("summary");
+		summaryRequest.current = request;
+		if (dialog.poolId) {
+			void fetchStickyBindingsSummary(dialog.poolId)
+				.then((result) => {
+					if (
+						scope.signal.aborted ||
+						lifetime.current !== scope ||
+						summaryRequest.current !== request
+					)
+						return;
+					if (!result.success) {
+						setSummaryError(result.message);
+						setSummary(null);
+						return;
+					}
+					setSummary(result.data);
+				})
+				.catch((error) => {
+					if (
+						!scope.signal.aborted &&
+						lifetime.current === scope &&
+						summaryRequest.current === request
+					)
+						setSummaryError(
+							error instanceof Error ? error.message : String(error)
+						);
+				})
+				.finally(() => {
+					if (
+						!scope.signal.aborted &&
+						lifetime.current === scope &&
+						summaryRequest.current === request
+					)
+						setSummaryLoading(false);
+				});
+		}
+		return () => {
+			scope.abort();
+			if (lifetime.current === scope) lifetime.current = null;
+		};
+	}, [dialog.poolId]);
 
-	// Enabling sticky always shows ops; turning off collapses them again.
-	useEffect(() => {
+	// Keep one mounted editor across locale changes; reset only this derived expansion state.
+	const [previousEnabled, setPreviousEnabled] = useState(form.enabled);
+	if (previousEnabled !== form.enabled) {
+		setPreviousEnabled(form.enabled);
 		if (form.enabled) setOpsExpanded(false);
-	}, [form.enabled]);
+	}
 
 	const handleLookup = async () => {
+		const scope = lifetime.current;
+		if (!scope || scope.signal.aborted) return;
 		if (!dialog.poolId) return;
 		const q = userQuery.trim();
 		if (!q) {
-			setLookupError(t('lookupRequired'));
+			setLookupError(translations.current("lookupRequired"));
 			return;
 		}
+		const request = Symbol("lookup");
+		lookupRequest.current = request;
 		setLookupLoading(true);
-		setLookupError('');
+		setLookupError("");
 		setLookup(null);
-		setActionMessage('');
+		setActionMessage("");
 		try {
 			const result = await lookupStickyBinding({
 				poolId: dialog.poolId,
@@ -129,55 +240,102 @@ export function ProviderStickyDialog(props: Props) {
 				requestOperation: dialog.requestOperation,
 				...(looksLikeEmail(q) ? { email: q } : { userId: q }),
 			});
+			if (
+				scope.signal.aborted ||
+				lifetime.current !== scope ||
+				lookupRequest.current !== request
+			)
+				return;
 			if (!result.success) {
 				setLookupError(result.message);
 				return;
 			}
 			setLookup(result.data);
+		} catch (error) {
+			if (
+				!scope.signal.aborted &&
+				lifetime.current === scope &&
+				lookupRequest.current === request
+			)
+				setLookupError(error instanceof Error ? error.message : String(error));
 		} finally {
-			setLookupLoading(false);
+			if (
+				!scope.signal.aborted &&
+				lifetime.current === scope &&
+				lookupRequest.current === request
+			)
+				setLookupLoading(false);
 		}
 	};
 
 	const handleClearLookup = async () => {
+		const scope = lifetime.current;
+		if (!scope || scope.signal.aborted || actionBusy) return;
 		if (!dialog.poolId || !lookup?.affinity_hash) return;
-		if (!window.confirm(t('clearConfirm'))) return;
-		setActionBusy(true);
-		setActionMessage('');
+		if (!window.confirm(t("clearConfirm"))) return;
+		const finish = startAction();
+		setActionMessage("");
 		try {
-			const result = await clearStickyBinding(dialog.poolId, lookup.affinity_hash);
+			const result = await clearStickyBinding(
+				dialog.poolId,
+				lookup.affinity_hash
+			);
+			if (scope.signal.aborted || lifetime.current !== scope) return;
 			if (!result.success) {
 				setActionMessage(result.message);
 				return;
 			}
-			setActionMessage(result.cleared ? t('clearDone') : t('clearMiss'));
+			setActionMessage(
+				result.cleared
+					? translations.current("clearDone")
+					: translations.current("clearMiss")
+			);
 			setLookup((prev) => (prev ? { ...prev, binding: null } : prev));
 			await refreshSummary();
+			if (scope.signal.aborted || lifetime.current !== scope) return;
 			await invalidate(dialog.poolId);
-			onBindingsChanged?.();
+			if (!scope.signal.aborted && lifetime.current === scope)
+				onBindingsChanged?.();
+		} catch (error) {
+			if (!scope.signal.aborted && lifetime.current === scope)
+				setActionMessage(
+					error instanceof Error ? error.message : String(error)
+				);
 		} finally {
-			setActionBusy(false);
+			finish();
 		}
 	};
 
 	const handleResetPool = async () => {
+		const scope = lifetime.current;
+		if (!scope || scope.signal.aborted || actionBusy) return;
 		if (!dialog.poolId) return;
-		if (!window.confirm(t('resetConfirm'))) return;
-		setActionBusy(true);
-		setActionMessage('');
+		if (!window.confirm(t("resetConfirm"))) return;
+		const finish = startAction();
+		setActionMessage("");
 		try {
 			const result = await resetStickyBindings(dialog.poolId);
+			if (scope.signal.aborted || lifetime.current !== scope) return;
 			if (!result.success) {
 				setActionMessage(result.message);
 				return;
 			}
-			setActionMessage(t('resetDone', { epoch: result.sticky_epoch }));
+			setActionMessage(
+				translations.current("resetDone", { epoch: result.sticky_epoch })
+			);
 			setLookup((prev) => (prev ? { ...prev, binding: null } : prev));
 			await refreshSummary();
+			if (scope.signal.aborted || lifetime.current !== scope) return;
 			await invalidate(dialog.poolId);
-			onBindingsChanged?.();
+			if (!scope.signal.aborted && lifetime.current === scope)
+				onBindingsChanged?.();
+		} catch (error) {
+			if (!scope.signal.aborted && lifetime.current === scope)
+				setActionMessage(
+					error instanceof Error ? error.message : String(error)
+				);
 		} finally {
-			setActionBusy(false);
+			finish();
 		}
 	};
 
@@ -194,7 +352,8 @@ export function ProviderStickyDialog(props: Props) {
 				const meta = targetMeta.get(id);
 				const countRow = counts.get(id);
 				const weight = meta ? Math.max(1, meta.weight) : 0;
-				const weightShare = totalWeight > 0 && weight > 0 ? weight / totalWeight : 0;
+				const weightShare =
+					totalWeight > 0 && weight > 0 ? weight / totalWeight : 0;
 				return {
 					id,
 					providerName: meta?.providerName ?? id,
@@ -205,19 +364,23 @@ export function ProviderStickyDialog(props: Props) {
 					bindingShare: countRow?.share ?? 0,
 				};
 			})
-			.sort((a, b) => b.activeCount - a.activeCount || (b.priority ?? 0) - (a.priority ?? 0));
+			.sort(
+				(a, b) =>
+					b.activeCount - a.activeCount || (b.priority ?? 0) - (a.priority ?? 0)
+			);
 	}, [dialog.targets, summary, targetMeta, totalWeight]);
 
 	const lookupTargetLabel = lookup?.binding
 		? targetMeta.get(lookup.binding.route_target_id)?.providerName ??
-			lookup.binding.route_target_id
+		  lookup.binding.route_target_id
 		: null;
 
 	return (
 		<div
 			className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4"
 			onMouseDown={(event) => {
-				if (event.target === event.currentTarget && !saving && !actionBusy) onClose();
+				if (event.target === event.currentTarget && !saving && !actionBusy)
+					onClose();
 			}}
 		>
 			<div
@@ -232,11 +395,11 @@ export function ProviderStickyDialog(props: Props) {
 							id="provider-sticky-dialog-title"
 							className="text-base font-semibold text-gray-900"
 						>
-							{t('title')}
+							{t("title")}
 						</h2>
 						<p className="mt-1 text-xs text-gray-500">
-							{dialog.modelTitle} · {dialog.protocolLabel} ·{' '}
-							<span className="font-mono">{dialog.requestOperation}</span> ·{' '}
+							{dialog.modelTitle} · {dialog.protocolLabel} ·{" "}
+							<span className="font-mono">{dialog.requestOperation}</span> ·{" "}
 							<span className="font-mono">{dialog.group}</span>
 						</p>
 					</div>
@@ -245,7 +408,7 @@ export function ProviderStickyDialog(props: Props) {
 						onClick={onClose}
 						disabled={saving || actionBusy}
 						className="rounded-md p-1.5 text-gray-400 transition hover:bg-gray-100 hover:text-gray-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 disabled:cursor-not-allowed disabled:opacity-50"
-						aria-label={tCommon('close')}
+						aria-label={tCommon("close")}
 					>
 						<span className="block text-xl leading-none" aria-hidden>
 							×
@@ -262,7 +425,7 @@ export function ProviderStickyDialog(props: Props) {
 
 					{!dialog.poolId ? (
 						<div className="rounded-lg border border-amber-200 bg-amber-50 px-3 py-2.5 text-sm text-amber-800">
-							{t('requiresPool')}
+							{t("requiresPool")}
 						</div>
 					) : null}
 
@@ -277,9 +440,11 @@ export function ProviderStickyDialog(props: Props) {
 							className="mt-0.5 h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500 disabled:cursor-not-allowed"
 						/>
 						<span className="min-w-0">
-							<span className="block text-sm font-medium text-gray-900">{t('enable')}</span>
+							<span className="block text-sm font-medium text-gray-900">
+								{t("enable")}
+							</span>
 							<span className="mt-0.5 block text-xs leading-relaxed text-gray-500">
-								{t('scopeHint')}
+								{t("scopeHint")}
 							</span>
 						</span>
 					</label>
@@ -289,7 +454,7 @@ export function ProviderStickyDialog(props: Props) {
 							htmlFor="provider-sticky-idle-ttl"
 							className="mb-1 block text-sm font-medium text-gray-700"
 						>
-							{t('idleTtl')}
+							{t("idleTtl")}
 						</label>
 						<input
 							id="provider-sticky-idle-ttl"
@@ -311,7 +476,7 @@ export function ProviderStickyDialog(props: Props) {
 							className="w-full rounded-md border border-gray-300 px-3 py-2 font-mono text-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/30 disabled:cursor-not-allowed disabled:bg-gray-50"
 						/>
 						<p className="mt-1.5 text-[11px] leading-relaxed text-gray-500">
-							{t('idleTtlHint', {
+							{t("idleTtlHint", {
 								min: MIN_STICKY_IDLE_TTL_SECONDS,
 								max: MAX_STICKY_IDLE_TTL_SECONDS,
 								default: DEFAULT_STICKY_IDLE_TTL_SECONDS,
@@ -320,10 +485,18 @@ export function ProviderStickyDialog(props: Props) {
 					</div>
 
 					<div className="rounded-lg border border-emerald-200 bg-emerald-50/40 p-3.5">
-						<h3 className="text-sm font-semibold text-gray-900">{t('effectTitle')}</h3>
-						<p className="mt-2 text-xs leading-relaxed text-gray-700">{t('orderPreview')}</p>
-						<p className="mt-2 text-[11px] leading-relaxed text-amber-800">{t('tradeoff')}</p>
-						<p className="mt-2 text-[11px] leading-relaxed text-gray-500">{t('poolSharedHint')}</p>
+						<h3 className="text-sm font-semibold text-gray-900">
+							{t("effectTitle")}
+						</h3>
+						<p className="mt-2 text-xs leading-relaxed text-gray-700">
+							{t("orderPreview")}
+						</p>
+						<p className="mt-2 text-[11px] leading-relaxed text-amber-800">
+							{t("tradeoff")}
+						</p>
+						<p className="mt-2 text-[11px] leading-relaxed text-gray-500">
+							{t("poolSharedHint")}
+						</p>
 					</div>
 
 					{showResidualBanner ? (
@@ -332,9 +505,11 @@ export function ProviderStickyDialog(props: Props) {
 								<p className="text-xs text-red-600">{summaryError}</p>
 							) : (
 								<>
-									<p className="text-sm font-medium text-amber-900">{t('residualTitle')}</p>
+									<p className="text-sm font-medium text-amber-900">
+										{t("residualTitle")}
+									</p>
 									<p className="mt-1 text-[11px] leading-relaxed text-amber-800">
-										{t('residualHint', {
+										{t("residualHint", {
 											active: summary?.total_active ?? 0,
 											stale: summary?.stale_count ?? 0,
 										})}
@@ -346,7 +521,7 @@ export function ProviderStickyDialog(props: Props) {
 											disabled={actionBusy || saving}
 											className="rounded-md border border-amber-300 bg-white px-3 py-1.5 text-xs font-medium text-amber-900 hover:bg-amber-100 disabled:opacity-50"
 										>
-											{t('resetButton')}
+											{t("resetButton")}
 										</button>
 										<button
 											type="button"
@@ -354,7 +529,7 @@ export function ProviderStickyDialog(props: Props) {
 											disabled={actionBusy}
 											className="rounded-md border border-amber-200 bg-transparent px-3 py-1.5 text-xs font-medium text-amber-900 hover:bg-amber-100/70 disabled:opacity-50"
 										>
-											{opsExpanded ? t('hideOps') : t('showOps')}
+											{opsExpanded ? t("hideOps") : t("showOps")}
 										</button>
 									</div>
 								</>
@@ -367,7 +542,7 @@ export function ProviderStickyDialog(props: Props) {
 							<div className="rounded-lg border border-gray-200 p-3.5">
 								<div className="flex items-center justify-between gap-2">
 									<h3 className="text-sm font-semibold text-gray-900">
-										{t('distributionTitle')}
+										{t("distributionTitle")}
 									</h3>
 									<button
 										type="button"
@@ -375,18 +550,18 @@ export function ProviderStickyDialog(props: Props) {
 										disabled={summaryLoading || actionBusy}
 										className="rounded-md px-2 py-1 text-[11px] font-medium text-blue-600 hover:bg-blue-50 disabled:opacity-50"
 									>
-										{summaryLoading ? tCommon('loadingEllipsis') : t('refresh')}
+										{summaryLoading ? tCommon("loadingEllipsis") : t("refresh")}
 									</button>
 								</div>
 								<p className="mt-1 text-[11px] leading-relaxed text-gray-500">
-									{t('distributionHint')}
+									{t("distributionHint")}
 								</p>
 								{summaryError ? (
 									<p className="mt-2 text-xs text-red-600">{summaryError}</p>
 								) : null}
 								{summary ? (
 									<p className="mt-2 text-xs text-gray-600">
-										{t('distributionTotals', {
+										{t("distributionTotals", {
 											active: summary.total_active,
 											stale: summary.stale_count,
 										})}
@@ -394,7 +569,9 @@ export function ProviderStickyDialog(props: Props) {
 								) : null}
 								<div className="mt-3 space-y-2">
 									{distributionRows.length === 0 ? (
-										<p className="text-xs text-gray-500">{t('distributionEmpty')}</p>
+										<p className="text-xs text-gray-500">
+											{t("distributionEmpty")}
+										</p>
 									) : (
 										distributionRows.map((row) => (
 											<div
@@ -417,35 +594,39 @@ export function ProviderStickyDialog(props: Props) {
 												<div className="mt-1.5 grid grid-cols-2 gap-2">
 													<div>
 														<div className="mb-0.5 flex justify-between text-[10px] text-gray-500">
-															<span>{t('bindingShare')}</span>
+															<span>{t("bindingShare")}</span>
 															<span>{Math.round(row.bindingShare * 100)}%</span>
 														</div>
 														<div className="h-1.5 overflow-hidden rounded bg-gray-200">
 															<div
 																className="h-full rounded bg-emerald-500"
 																style={{
-																	width: `${Math.round(row.bindingShare * 100)}%`,
+																	width: `${Math.round(
+																		row.bindingShare * 100
+																	)}%`,
 																}}
 															/>
 														</div>
 													</div>
 													<div>
 														<div className="mb-0.5 flex justify-between gap-1 text-[10px] text-gray-500">
-															<span>{t('weightShare')}</span>
+															<span>{t("weightShare")}</span>
 															<span className="shrink-0 font-mono">
 																{row.weight > 0
-																	? t('weightShareValue', {
+																	? t("weightShareValue", {
 																			weight: row.weight,
 																			pct: Math.round(row.weightShare * 100),
-																		})
-																	: '—'}
+																	  })
+																	: "—"}
 															</span>
 														</div>
 														<div className="h-1.5 overflow-hidden rounded bg-gray-200">
 															<div
 																className="h-full rounded bg-slate-400"
 																style={{
-																	width: `${Math.round(row.weightShare * 100)}%`,
+																	width: `${Math.round(
+																		row.weightShare * 100
+																	)}%`,
 																}}
 															/>
 														</div>
@@ -458,20 +639,22 @@ export function ProviderStickyDialog(props: Props) {
 							</div>
 
 							<div className="rounded-lg border border-gray-200 p-3.5">
-								<h3 className="text-sm font-semibold text-gray-900">{t('lookupTitle')}</h3>
+								<h3 className="text-sm font-semibold text-gray-900">
+									{t("lookupTitle")}
+								</h3>
 								<p className="mt-1 text-[11px] leading-relaxed text-gray-500">
-									{t('lookupHint')}
+									{t("lookupHint")}
 								</p>
 								<div className="mt-3 flex gap-2">
 									<input
 										type="text"
 										value={userQuery}
 										onChange={(event) => setUserQuery(event.target.value)}
-										placeholder={t('lookupPlaceholder')}
+										placeholder={t("lookupPlaceholder")}
 										disabled={lookupLoading || actionBusy}
 										className="min-w-0 flex-1 rounded-md border border-gray-300 px-3 py-2 font-mono text-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/30 disabled:bg-gray-50"
 										onKeyDown={(event) => {
-											if (event.key === 'Enter') {
+											if (event.key === "Enter") {
 												event.preventDefault();
 												void handleLookup();
 											}
@@ -483,7 +666,7 @@ export function ProviderStickyDialog(props: Props) {
 										disabled={lookupLoading || actionBusy}
 										className="rounded-md bg-slate-800 px-3 py-2 text-sm font-medium text-white hover:bg-slate-700 disabled:opacity-50"
 									>
-										{lookupLoading ? tCommon('loadingEllipsis') : t('lookup')}
+										{lookupLoading ? tCommon("loadingEllipsis") : t("lookup")}
 									</button>
 								</div>
 								{lookupError ? (
@@ -492,24 +675,28 @@ export function ProviderStickyDialog(props: Props) {
 								{lookup ? (
 									<div className="mt-3 rounded-md border border-slate-200 bg-slate-50 px-3 py-2.5 text-xs text-slate-700">
 										<p>
-											<span className="font-medium">{t('lookupUser')}</span>{' '}
+											<span className="font-medium">{t("lookupUser")}</span>{" "}
 											<span className="font-mono">{lookup.user_id}</span>
 										</p>
 										{lookup.binding ? (
 											<>
 												<p className="mt-1">
-													<span className="font-medium">{t('lookupTarget')}</span>{' '}
+													<span className="font-medium">
+														{t("lookupTarget")}
+													</span>{" "}
 													{lookupTargetLabel}
 												</p>
 												<p className="mt-1">
-													{t('lookupTtl', {
+													{t("lookupTtl", {
 														seconds: lookup.binding.remaining_seconds,
 													})}
-													{' · '}
+													{" · "}
 													{lookup.binding.epoch_valid
-														? t('lookupEpochValid')
-														: t('lookupEpochInvalid')}
-													{lookup.binding.expired ? ` · ${t('lookupExpired')}` : ''}
+														? t("lookupEpochValid")
+														: t("lookupEpochInvalid")}
+													{lookup.binding.expired
+														? ` · ${t("lookupExpired")}`
+														: ""}
 												</p>
 												<button
 													type="button"
@@ -517,11 +704,11 @@ export function ProviderStickyDialog(props: Props) {
 													disabled={actionBusy}
 													className="mt-2 rounded-md border border-red-200 bg-white px-2.5 py-1.5 text-[11px] font-medium text-red-700 hover:bg-red-50 disabled:opacity-50"
 												>
-													{t('clearBinding')}
+													{t("clearBinding")}
 												</button>
 											</>
 										) : (
-											<p className="mt-1 text-slate-500">{t('lookupNone')}</p>
+											<p className="mt-1 text-slate-500">{t("lookupNone")}</p>
 										)}
 									</div>
 								) : null}
@@ -529,9 +716,11 @@ export function ProviderStickyDialog(props: Props) {
 
 							{form.enabled ? (
 								<div className="rounded-lg border border-amber-200 bg-amber-50/50 p-3.5">
-									<h3 className="text-sm font-semibold text-amber-900">{t('resetTitle')}</h3>
+									<h3 className="text-sm font-semibold text-amber-900">
+										{t("resetTitle")}
+									</h3>
 									<p className="mt-1 text-[11px] leading-relaxed text-amber-800">
-										{t('resetHint')}
+										{t("resetHint")}
 									</p>
 									<button
 										type="button"
@@ -539,7 +728,7 @@ export function ProviderStickyDialog(props: Props) {
 										disabled={actionBusy || saving}
 										className="mt-3 rounded-md border border-amber-300 bg-white px-3 py-1.5 text-xs font-medium text-amber-900 hover:bg-amber-100 disabled:opacity-50"
 									>
-										{t('resetButton')}
+										{t("resetButton")}
 									</button>
 								</div>
 							) : null}
@@ -558,7 +747,7 @@ export function ProviderStickyDialog(props: Props) {
 						disabled={saving || actionBusy}
 						className="rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-50"
 					>
-						{tCommon('cancel')}
+						{tCommon("cancel")}
 					</button>
 					<button
 						type="button"
@@ -566,7 +755,7 @@ export function ProviderStickyDialog(props: Props) {
 						disabled={saving || actionBusy || !canSave || ttlOutOfRange}
 						className="rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
 					>
-						{saving ? tCommon('savingDots') : tCommon('save')}
+						{saving ? tCommon("savingDots") : tCommon("save")}
 					</button>
 				</div>
 			</div>

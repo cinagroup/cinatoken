@@ -2,13 +2,13 @@
 // existing data directory; the proposal and activation remain review-only.
 import assert from 'node:assert/strict';
 import { createHash, randomBytes, randomUUID } from 'node:crypto';
-import { readFile, readdir, writeFile } from 'node:fs/promises';
+import { readFile, writeFile } from 'node:fs/promises';
 import { dirname, join } from 'node:path';
 import test from 'node:test';
 import postgres from 'postgres';
 import { startNativePostgres } from '../../../packages/core/src/test-support/postgres-native-cluster.mjs';
 import { buildRequestParentDefaultAclActivation } from './build-request-parent-default-acl-activation.mjs';
-import { grantPostgresRuntime } from './grant-postgres-runtime.ts';
+import { grantPg73RuntimeFixture, listPg73Migrations } from './pg73-native-fixture.mjs';
 
 const schema = 'cinatoken_gateway';
 const migrations = new URL('../../../packages/core/migrations-postgres/', import.meta.url);
@@ -133,7 +133,7 @@ test('native parent activation preserves runtime defaults and rolls back on pref
       const migratorUrl = `postgres://cinatoken_gateway_migrator:${password}@127.0.0.1:${cluster.port}/postgres`;
       await migrator.unsafe(`CREATE TABLE ${schema}.schema_migrations (
         version text PRIMARY KEY, applied_at timestamptz NOT NULL DEFAULT now())`);
-      const files = (await readdir(migrations)).filter(name => name.endsWith('.sql')).sort();
+      const files = await listPg73Migrations();
       assert.equal(files.length, 73);
       assert.equal(files.at(-1), '0073_recovery_api_key_workspace_lock.sql');
       const corpus = [];
@@ -154,7 +154,7 @@ test('native parent activation preserves runtime defaults and rolls back on pref
         await tx.unsafe("SET LOCAL cinatoken.request_dispatch_single_claim_activation = 'reviewed-v1'");
         await tx.unsafe(await readFile(oneClaimProposal, 'utf8')).simple();
       });
-      await grantPostgresRuntime({ DATABASE_URL: migratorUrl });
+      await grantPg73RuntimeFixture({ cluster, migrator, migratorUrl });
       const initialAcl = await defaultAcl(cluster.admin);
       assert.equal(initialAcl.filter(row => row.type === 'r' || row.type === 'f').length, 2);
       assert.match(initialAcl.find(row => row.type === 'r').acl, /cinatoken_gateway_runtime=r/);
@@ -233,7 +233,7 @@ test('native parent activation preserves runtime defaults and rolls back on pref
       stage('one-transaction-activation-restores-defaults-and-leaves-parent-closed',
         { parentAccess: await parentAccess(cluster.admin) });
 
-      await grantPostgresRuntime({ DATABASE_URL: migratorUrl });
+      await grantPg73RuntimeFixture({ cluster, migrator, migratorUrl });
       assert.deepEqual(await defaultAcl(cluster.admin), initialAcl);
       assert.deepEqual(await parentAccess(cluster.admin), expectedAccess);
       stage('runtime-grant-rerun-keeps-parent-closed-and-defaults-intact');

@@ -1,12 +1,12 @@
-import type { AdminPrincipal } from '@/lib/admin-principal';
+import type { AdminPrincipal } from "@/lib/admin-principal";
 import {
 	fetchCinaAuth,
 	getCinaAuthConfig,
 	getCinaAuthBridgeSecret,
 	hasRequiredCinaAuthRole,
-} from '@/lib/cinaauth/config';
+} from "@/lib/cinaauth/config";
 
-const SUBJECT_PREFIX = 'cinaauth:';
+const SUBJECT_PREFIX = "cinaauth:";
 
 type BridgeUser = {
 	id?: string;
@@ -22,14 +22,21 @@ type BridgeResponse = {
 export class CinaAuthConsoleVerificationUnavailableError extends Error {
 	constructor(message: string, options?: { cause?: unknown }) {
 		super(message, options);
-		this.name = 'CinaAuthConsoleVerificationUnavailableError';
+		this.name = "CinaAuthConsoleVerificationUnavailableError";
 	}
 }
 
-export const cinaAuthSessionUsername = (subject: string): string => `${SUBJECT_PREFIX}${subject}`;
+export const cinaAuthSessionUsername = (subject: string): string =>
+	`${SUBJECT_PREFIX}${subject}`;
 
-export const cinaAuthSubjectFromPrincipal = (principal: AdminPrincipal): string | null => {
-	if (principal.type !== 'console' || !principal.username.startsWith(SUBJECT_PREFIX)) return null;
+export const cinaAuthSubjectFromPrincipal = (
+	principal: AdminPrincipal
+): string | null => {
+	if (
+		principal.type !== "console" ||
+		!principal.username.startsWith(SUBJECT_PREFIX)
+	)
+		return null;
 	const subject = principal.username.slice(SUBJECT_PREFIX.length);
 	return subject || null;
 };
@@ -37,22 +44,25 @@ export const cinaAuthSubjectFromPrincipal = (principal: AdminPrincipal): string 
 export const verifyCinaAuthConsolePrincipal = async (
 	request: Request,
 	principal: AdminPrincipal,
-	env?: { CINAAUTH_AUTH_SERVICE?: Fetcher },
+	env?: { CINAAUTH_AUTH_SERVICE?: Fetcher }
 ): Promise<AdminPrincipal | null> => {
-	if (principal.type === 'api_key') return principal;
+	if (principal.type === "api_key") return principal;
 	const subject = cinaAuthSubjectFromPrincipal(principal);
 	if (!subject) return null;
 	const config = getCinaAuthConfig(request);
 	const bridgeSecret = getCinaAuthBridgeSecret(request);
-	const upstream = new Request(`${config.issuer}/api/auth/cinatoken-oidc/verify`, {
-		method: 'POST',
-		headers: {
-			'content-type': 'application/json',
-			'x-cinatoken-bridge-secret': bridgeSecret,
-		},
-		body: JSON.stringify({ subject }),
-		cache: 'no-store',
-	});
+	const upstream = new Request(
+		`${config.issuer}/api/auth/cinatoken-oidc/verify`,
+		{
+			method: "POST",
+			headers: {
+				"content-type": "application/json",
+				"x-cinatoken-bridge-secret": bridgeSecret,
+			},
+			body: JSON.stringify({ subject }),
+			cache: "no-store",
+		}
+	);
 
 	let response: Response;
 	try {
@@ -61,17 +71,21 @@ export const verifyCinaAuthConsolePrincipal = async (
 			: await fetchCinaAuth(upstream, request);
 	} catch (cause) {
 		throw new CinaAuthConsoleVerificationUnavailableError(
-			'CinaAuth console verification request failed',
-			{ cause },
+			"CinaAuth console verification request failed",
+			{ cause }
 		);
 	}
 
 	if (!response.ok) {
-		if (response.status >= 400 && response.status < 500 && response.status !== 429) {
+		if (
+			response.status >= 400 &&
+			response.status < 500 &&
+			response.status !== 429
+		) {
 			return null;
 		}
 		throw new CinaAuthConsoleVerificationUnavailableError(
-			`CinaAuth console verification returned ${response.status}`,
+			`CinaAuth console verification returned ${response.status}`
 		);
 	}
 
@@ -80,13 +94,13 @@ export const verifyCinaAuthConsolePrincipal = async (
 		body = (await response.json()) as BridgeResponse | null;
 	} catch (cause) {
 		throw new CinaAuthConsoleVerificationUnavailableError(
-			'CinaAuth console verification returned invalid JSON',
-			{ cause },
+			"CinaAuth console verification returned invalid JSON",
+			{ cause }
 		);
 	}
-	if (!body || typeof body !== 'object') {
+	if (!body || typeof body !== "object") {
 		throw new CinaAuthConsoleVerificationUnavailableError(
-			'CinaAuth console verification returned an invalid response',
+			"CinaAuth console verification returned an invalid response"
 		);
 	}
 	if (

@@ -35,9 +35,13 @@ function financialState(sqlite) {
 }
 
 test('D1 earning history guard rejects direct and cascading mutation while keeping ordinary deletion', () => {
-  const db = createSqliteD1();
+  // Preserve this proposal's negative control at the pre-formal-guard head.
+  const db = createSqliteD1({}, { applyMigrations: false });
   const { sqlite } = db;
   try {
+    for (const file of db.migrationFiles.filter(name => name <= '0072_admin_access_key_audit.sql')) {
+      sqlite.exec(readFileSync(new URL('../../../packages/core/migrations-d1/' + file, import.meta.url), 'utf8'));
+    }
     assert.ok(db.migrationFiles.length >= 68);
     assert.equal(sqlite.prepare('PRAGMA foreign_keys').get().foreign_keys, 1);
     seed(sqlite);

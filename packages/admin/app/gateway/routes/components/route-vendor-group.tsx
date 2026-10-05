@@ -1,12 +1,12 @@
-'use client';
+"use client";
 
-import { ModelVendorIcon } from '@/components/model-vendor-icon';
-import { getModelVendorLabel } from '@/lib/model-vendor';
-import { useTranslations } from 'next-intl';
-import type { GatewayModel, GatewayProvider } from '@/lib/types';
-import type { RouteFlowDensity, RouteListRow } from '../types';
-import type { RouteModelGroup } from '../route-utils';
-import { RouteModelFlow } from './route-model-flow';
+import { ModelVendorIcon } from "@/components/model-vendor-icon";
+import { getModelVendorLabel } from "@/lib/model-vendor";
+import { useTranslations } from "next-intl";
+import type { GatewayModel, GatewayProvider } from "@/lib/types";
+import type { RouteFlowDensity, RouteListRow } from "../types";
+import type { RouteModelGroup } from "../route-utils";
+import { RouteModelFlow } from "./route-model-flow";
 
 type Props = {
 	vendor: string;
@@ -20,7 +20,10 @@ type Props = {
 	copiedModelId: string | null;
 	togglingId: string | null;
 	onCopyModelId: (modelId: string) => void;
-	onCreate: (modelId: string, preset?: { protocol?: string; operation?: string; group?: string }) => void;
+	onCreate: (
+		modelId: string,
+		preset?: { protocol?: string; operation?: string; group?: string }
+	) => void;
 	onEdit: (route: RouteListRow) => void;
 	onEditModel: (modelId: string) => void;
 	onToggleStatus: (route: RouteListRow) => void;
@@ -45,7 +48,12 @@ type Props = {
 		poolId: string | null,
 		enabled: boolean,
 		idleTtlSeconds: number,
-		targets: Array<{ id: string; providerName: string; priority: number; weight: number }>
+		targets: Array<{
+			id: string;
+			providerName: string;
+			priority: number;
+			weight: number;
+		}>
 	) => void;
 };
 
@@ -70,15 +78,15 @@ export function RouteVendorGroup(props: Props) {
 		onOpenProviderStickyDialog,
 	} = props;
 
-	const t = useTranslations('routes.vendor');
+	const t = useTranslations("routes.vendor");
 
 	return (
 		<section className="min-w-0">
 			{showHeader ? (
 				<div
 					className={
-						(vendorGroupIdx > 0 ? 'border-t border-gray-200/80 pt-5 ' : '') +
-						'mb-3 flex items-center justify-between gap-3'
+						(vendorGroupIdx > 0 ? "border-t border-gray-200/80 pt-5 " : "") +
+						"mb-3 flex items-center justify-between gap-3"
 					}
 				>
 					<div className="flex min-w-0 items-center gap-2.5">
@@ -87,13 +95,13 @@ export function RouteVendorGroup(props: Props) {
 							<h3 className="truncate text-sm font-semibold text-gray-900">
 								{getModelVendorLabel(vendor)}
 							</h3>
-							<p className="text-xs text-gray-500">{t('label')}</p>
+							<p className="text-xs text-gray-500">{t("label")}</p>
 						</div>
 					</div>
 					<span className="shrink-0 rounded-full bg-gray-100 px-2.5 py-1 text-xs font-medium tabular-nums text-gray-600 ring-1 ring-inset ring-gray-200">
 						{cards.length === 1
-							? t('modelCount', { count: cards.length })
-							: t('modelCountPlural', { count: cards.length })}
+							? t("modelCount", { count: cards.length })
+							: t("modelCountPlural", { count: cards.length })}
 					</span>
 				</div>
 			) : null}

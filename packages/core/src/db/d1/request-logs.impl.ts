@@ -13,6 +13,7 @@ import {
 	REQUEST_TIMESERIES_SELECT_SQL,
 } from '../../lib/dashboard-request-stats';
 import type { RequestLogRow } from '../../types';
+import { adminRequestLogDetailSql } from '../admin-request-log-detail';
 import type { D1DatabaseClient } from '../../storage/database-client';
 import type { RequestLogsRepository } from '../../storage/gateway-repository-interfaces';
 import type { RequestLogsD1Statements } from './d1-repository-extras';
@@ -192,6 +193,10 @@ export function createD1RequestLogsRepository(db: D1DatabaseClient): RequestLogs
 				ownerId,
 			).run();
 			return Number(result.meta.changes ?? 0) === 1;
+		},
+
+		async getAdminRequestLogById(id): Promise<RequestLogRow | null> {
+			return raw.prepare(adminRequestLogDetailSql('d1')).bind(id).first<RequestLogRow>();
 		},
 
 		async getRequestLogByIdForOwner(options): Promise<GenerationRequestLogRow | null> {

@@ -2,7 +2,7 @@
 // GATEWAY_NATIVE_PG_BIN must point to local binaries; no ambient database URL is used.
 import assert from 'node:assert/strict';
 import { createHash, randomBytes, randomUUID } from 'node:crypto';
-import { readFile, readdir, writeFile } from 'node:fs/promises';
+import { readFile, writeFile } from 'node:fs/promises';
 import { dirname, join } from 'node:path';
 import test from 'node:test';
 import postgres from 'postgres';
@@ -16,7 +16,7 @@ import { createUsageSettlementRepositoryPostgres } from '../../../packages/core/
 import { createPostgresGuardrailBudgetsRepository } from '../../../packages/core/src/db/postgres/guardrail-budgets.impl.ts';
 import { sample } from '../../../packages/core/src/storage/recovery/usage-settlement-test-support.mjs';
 import { buildPostgresRecoveryRoleSql } from '../../../scripts/db/cutover/postgres-recovery-role-policy.ts';
-import { grantPostgresRuntime } from '../../../scripts/db/cutover/grant-postgres-runtime.ts';
+import { grantPg73RuntimeFixture, listPg73Migrations } from './pg73-native-fixture.mjs';
 
 const migrations = new URL('../../../packages/core/migrations-postgres/', import.meta.url);
 const guardSwitch = new URL('../../../scripts/db/cutover/postgres-recovery-legacy-log-guard.activate.sql', import.meta.url);
@@ -108,7 +108,7 @@ async function main() {
     const migratorUrl = `postgres://cinatoken_gateway_migrator:${migratorPassword}@127.0.0.1:${cluster.port}/postgres`;
     await migrator.unsafe(`CREATE TABLE cinatoken_gateway.schema_migrations (
       version text PRIMARY KEY, applied_at timestamptz NOT NULL DEFAULT now())`);
-    const files = (await readdir(migrations)).filter(name => name.endsWith('.sql')).sort();
+    const files = await listPg73Migrations();
     assert.equal(files.length, 73);
     for (const name of files) {
       const body = await readFile(new URL(name, migrations), 'utf8');
@@ -118,7 +118,7 @@ async function main() {
       });
     }
     stage('formal-migrations', 'PASS', { count: files.length });
-    await grantPostgresRuntime({ DATABASE_URL: migratorUrl });
+    await grantPg73RuntimeFixture({ cluster, migrator, migratorUrl });
     await migrator.unsafe(`INSERT INTO cinatoken_gateway.users(id,email,budget_max,budget_spent)
       VALUES ('user','native-financial@example.invalid',10,1),
         ('other','native-shadow@example.invalid',10,0);
@@ -135,7 +135,7 @@ async function main() {
       await tx.unsafe("SET LOCAL cinatoken.recovery_log_guard_activation = 'reviewed-v1'");
       await tx.unsafe(guard).simple();
     });
-    await grantPostgresRuntime({ DATABASE_URL: migratorUrl });
+    await grantPg73RuntimeFixture({ cluster, migrator, migratorUrl });
     await migrator.unsafe(plan.migratorSql).simple();
     stage('role-and-guard', 'PASS', { login: false, runtimeCompatible: plan.runtimeCompatible });
 

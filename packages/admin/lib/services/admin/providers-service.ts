@@ -1,41 +1,41 @@
 /** 管理后台 `providers` CRUD：单键 `api_key` + `status`，`endpoints` JSON 校验与持久化。 */
-import type { GatewayRepositories } from '@octafuse/core';
+import type { GatewayRepositories } from "@octafuse/core";
 import {
 	DEEPSEEK_API_KEY_ENV_NAME,
 	DEEPSEEK_OFFICIAL_PROVIDER_ID,
 	formatProviderApiKeyEnvironmentReference,
 	isSharedKeyChannelType,
-} from '@octafuse/core';
+} from "@octafuse/core";
 import {
 	serializeProviderEndpoints,
 	validateAndNormalizeProviderEndpoints,
 	type ProviderEndpointsMap,
-} from '@octafuse/core/provider-endpoints';
+} from "@octafuse/core/provider-endpoints";
 import {
 	isPendingProviderImportApiKey,
 	maskProviderApiKeyForAdmin,
 	PROVIDER_IMPORT_PENDING_API_KEY,
-} from '@octafuse/core/db/provider-key-utils';
+} from "@octafuse/core/db/provider-key-utils";
 import {
 	inferStaticProviderIconKey,
 	inferStaticProviderVendorKey,
 	listStaticProviderImportPresets,
-} from '@/lib/provider-import-preset';
-import { badRequest, conflict, notFound } from './errors';
+} from "@/lib/provider-import-preset";
+import { badRequest, conflict, notFound } from "./errors";
 import type {
 	AdminCreatedIdOutput,
 	AdminProviderMutationInput,
 	AdminProviderRow,
 	AdminProvidersImportOutput,
-} from './types';
+} from "./types";
 
 const PROVIDER_DATA_POLICY_SUBJECT_FIELDS = new Set([
-	'endpoints',
-	'api_key',
-	'shared_channel_type',
+	"endpoints",
+	"api_key",
+	"shared_channel_type",
 ]);
 
-const DEEPSEEK_MODELS_VALIDATION_URL = 'https://api.deepseek.com/models';
+const DEEPSEEK_MODELS_VALIDATION_URL = "https://api.deepseek.com/models";
 const PROVIDER_ENVIRONMENT_KEY_VALIDATION_TIMEOUT_MS = 10_000;
 
 /**
@@ -45,20 +45,22 @@ const PROVIDER_ENVIRONMENT_KEY_VALIDATION_TIMEOUT_MS = 10_000;
  */
 export async function validateDeepSeekEnvironmentApiKey(
 	apiKey: string | null | undefined,
-	fetchImpl: typeof fetch = fetch,
+	fetchImpl: typeof fetch = fetch
 ): Promise<boolean> {
-	const secret = apiKey?.trim() ?? '';
+	const secret = apiKey?.trim() ?? "";
 	if (!secret) return false;
 
 	try {
 		const response = await fetchImpl(DEEPSEEK_MODELS_VALIDATION_URL, {
-			method: 'GET',
+			method: "GET",
 			headers: {
-				Accept: 'application/json',
+				Accept: "application/json",
 				Authorization: `Bearer ${secret}`,
 			},
-			redirect: 'error',
-			signal: AbortSignal.timeout(PROVIDER_ENVIRONMENT_KEY_VALIDATION_TIMEOUT_MS),
+			redirect: "error",
+			signal: AbortSignal.timeout(
+				PROVIDER_ENVIRONMENT_KEY_VALIDATION_TIMEOUT_MS
+			),
 		});
 		const valid = response.status === 200;
 		if (response.body) {
@@ -70,7 +72,9 @@ export async function validateDeepSeekEnvironmentApiKey(
 	}
 }
 
-function resolveEndpointsFromMutation(body: AdminProviderMutationInput): string | null {
+function resolveEndpointsFromMutation(
+	body: AdminProviderMutationInput
+): string | null {
 	if (body.endpoints === undefined || body.endpoints === null) {
 		return null;
 	}
@@ -78,39 +82,47 @@ function resolveEndpointsFromMutation(body: AdminProviderMutationInput): string 
 	try {
 		map = validateAndNormalizeProviderEndpoints(body.endpoints);
 	} catch (e) {
-		throw badRequest(e instanceof Error ? e.message : 'Invalid endpoints');
+		throw badRequest(e instanceof Error ? e.message : "Invalid endpoints");
 	}
 	return serializeProviderEndpoints(map);
 }
 
-function normalizeProviderStatus(raw: unknown): 'active' | 'disabled' {
-	if (raw === 'disabled') return 'disabled';
-	if (raw === 'active' || raw === undefined || raw === null || raw === '') return 'active';
-	throw badRequest('status must be active or disabled');
+function normalizeProviderStatus(raw: unknown): "active" | "disabled" {
+	if (raw === "disabled") return "disabled";
+	if (raw === "active" || raw === undefined || raw === null || raw === "")
+		return "active";
+	throw badRequest("status must be active or disabled");
 }
 
 /** 共享渠道白名单校验：空 = 关闭共享注入。 */
 function normalizeSharedChannelType(raw: unknown): string | null {
-	if (raw === undefined || raw === null || raw === '') return null;
-	if (typeof raw !== 'string') throw badRequest('shared_channel_type must be a string');
+	if (raw === undefined || raw === null || raw === "") return null;
+	if (typeof raw !== "string")
+		throw badRequest("shared_channel_type must be a string");
 	const trimmed = raw.trim();
-	if (trimmed === '') return null;
+	if (trimmed === "") return null;
 	if (!isSharedKeyChannelType(trimmed)) {
-		throw badRequest('shared_channel_type must be one of: openai, anthropic, zhipu, deepseek');
+		throw badRequest(
+			"shared_channel_type must be one of: openai, anthropic, zhipu, deepseek"
+		);
 	}
 	return trimmed;
 }
 
 /** 列表/详情脱敏：明文 `api_key` → masked；附带 `has_pending_key` 与路由计数。 */
 function enrichProviderRow(provider: AdminProviderRow): AdminProviderRow {
-	const plaintext = typeof provider.api_key === 'string' ? provider.api_key : '';
+	const plaintext =
+		typeof provider.api_key === "string" ? provider.api_key : "";
 	const vendorKey = inferStaticProviderVendorKey(provider);
 	return {
 		...provider,
 		vendor_key: vendorKey,
-		icon_key: inferStaticProviderIconKey({ ...provider, vendor_key: vendorKey }),
+		icon_key: inferStaticProviderIconKey({
+			...provider,
+			vendor_key: vendorKey,
+		}),
 		api_key: maskProviderApiKeyForAdmin(plaintext),
-		status: provider.status === 'disabled' ? 'disabled' : 'active',
+		status: provider.status === "disabled" ? "disabled" : "active",
 		has_pending_key: isPendingProviderImportApiKey(plaintext),
 		routes_count: Number(provider.routes_count ?? 0),
 		active_routes_count: Number(provider.active_routes_count ?? 0),
@@ -118,8 +130,11 @@ function enrichProviderRow(provider: AdminProviderRow): AdminProviderRow {
 }
 
 /** 供应商列表（脱敏 api_key）。 */
-export async function listProvidersService(repos: GatewayRepositories): Promise<AdminProviderRow[]> {
-	const providers = (await repos.providers.listProviders()) as AdminProviderRow[];
+export async function listProvidersService(
+	repos: GatewayRepositories
+): Promise<AdminProviderRow[]> {
+	const providers =
+		(await repos.providers.listProviders()) as AdminProviderRow[];
 	return providers.map(enrichProviderRow);
 }
 
@@ -131,15 +146,20 @@ export async function createProviderService(
 	repos: GatewayRepositories,
 	body: AdminProviderMutationInput
 ): Promise<AdminCreatedIdOutput> {
-	const customId = String(body.id ?? '').trim();
-	const name = String(body.name ?? '');
-	const apiKey = String(body.api_key ?? '').trim();
-	const sharedChannelType = normalizeSharedChannelType(body.shared_channel_type);
+	const customId = String(body.id ?? "").trim();
+	if (customId === "." || customId === "..") {
+		throw badRequest("Provider ID cannot be a URL dot segment");
+	}
+	const name = String(body.name ?? "");
+	const apiKey = String(body.api_key ?? "").trim();
+	const sharedChannelType = normalizeSharedChannelType(
+		body.shared_channel_type
+	);
 	if (!name) {
-		throw badRequest('name is required');
+		throw badRequest("name is required");
 	}
 	if (!apiKey && !sharedChannelType) {
-		throw badRequest('api_key is required');
+		throw badRequest("api_key is required");
 	}
 
 	const endpointsJson = resolveEndpointsFromMutation(body);
@@ -147,7 +167,7 @@ export async function createProviderService(
 
 	const id = customId || crypto.randomUUID();
 	if (customId && (await repos.providers.providerIdExists(id))) {
-		throw conflict('Provider ID already exists');
+		throw conflict("Provider ID already exists");
 	}
 
 	await repos.providers.insertProvider({
@@ -164,9 +184,12 @@ export async function createProviderService(
 }
 
 /** 单条供应商（脱敏）；不存在抛 `notFound`。 */
-export async function getProviderService(repos: GatewayRepositories, id: string): Promise<AdminProviderRow> {
+export async function getProviderService(
+	repos: GatewayRepositories,
+	id: string
+): Promise<AdminProviderRow> {
 	const provider = await repos.providers.getProviderRowById(id);
-	if (!provider) throw notFound('Provider not found');
+	if (!provider) throw notFound("Provider not found");
 	return enrichProviderRow(provider as AdminProviderRow);
 }
 
@@ -176,9 +199,10 @@ export async function revealProviderApiKeyService(
 	providerId: string
 ): Promise<{ api_key: string }> {
 	const provider = await repos.providers.getProviderRowById(providerId);
-	if (!provider) throw notFound('Provider not found');
+	if (!provider || provider.id !== providerId)
+		throw notFound("Provider not found");
 	const row = await repos.providers.getProviderApiKeyPlaintext(providerId);
-	if (!row) throw notFound('Provider not found');
+	if (!row) throw notFound("Provider not found");
 	return { api_key: row.api_key };
 }
 
@@ -189,42 +213,44 @@ export async function updateProviderService(
 	repos: GatewayRepositories,
 	id: string,
 	body: AdminProviderMutationInput,
-	actorId: string,
+	actorId: string
 ): Promise<void> {
 	const existing = await repos.providers.getProviderRowById(id);
-	if (!existing) throw notFound('Provider not found');
+	if (!existing || existing.id !== id) throw notFound("Provider not found");
 
 	const patch: Record<string, unknown> = {};
 
 	if (body.name !== undefined) {
-		const name = String(body.name ?? '').trim();
-		if (!name) throw badRequest('name cannot be empty');
+		const name = String(body.name ?? "").trim();
+		if (!name) throw badRequest("name cannot be empty");
 		patch.name = name;
 	}
 	if (body.description !== undefined) {
 		patch.description = body.description;
 	}
-	if ('endpoints' in body) {
+	if ("endpoints" in body) {
 		patch.endpoints = resolveEndpointsFromMutation(body);
 	}
 	if (body.status !== undefined) {
 		patch.status = normalizeProviderStatus(body.status);
 	}
 	if (body.api_key !== undefined) {
-		const apiKey = String(body.api_key ?? '').trim();
+		const apiKey = String(body.api_key ?? "").trim();
 		if (apiKey) {
 			patch.api_key = apiKey;
 		}
 	}
 	if (body.shared_channel_type !== undefined) {
-		patch.shared_channel_type = normalizeSharedChannelType(body.shared_channel_type);
+		patch.shared_channel_type = normalizeSharedChannelType(
+			body.shared_channel_type
+		);
 	}
 
 	if (Object.keys(patch).length === 0) return;
 
 	const changes = await repos.providers.updateProviderByPatch(id, patch);
 	if (changes === 0) {
-		throw notFound('Provider not found');
+		throw notFound("Provider not found");
 	}
 	const changedSubjectFields = Object.keys(patch)
 		.filter((key) => PROVIDER_DATA_POLICY_SUBJECT_FIELDS.has(key))
@@ -234,7 +260,7 @@ export async function updateProviderService(
 			id: crypto.randomUUID(),
 			actorId,
 			nowIso: new Date().toISOString(),
-			reason: `provider_subject_changed:${changedSubjectFields.join(',')}`,
+			reason: `provider_subject_changed:${changedSubjectFields.join(",")}`,
 		});
 	}
 }
@@ -243,8 +269,15 @@ export async function updateProviderService(
  * 删除供应商；不存在抛 `notFound`。
  * `model_routes.provider_id` 无 ON DELETE CASCADE，若仍有路由引用则抛 `conflict`（避免 D1/PG 外键失败变 500）。
  */
-export async function deleteProviderService(repos: GatewayRepositories, id: string): Promise<void> {
-	const referencingRoutes = await repos.routes.listModelRoutesWithJoins({ providerId: id });
+export async function deleteProviderService(
+	repos: GatewayRepositories,
+	id: string
+): Promise<void> {
+	const existing = await repos.providers.getProviderRowById(id);
+	if (!existing || existing.id !== id) throw notFound("Provider not found");
+	const referencingRoutes = await repos.routes.listModelRoutesWithJoins({
+		providerId: id,
+	});
 	if (referencingRoutes.length > 0) {
 		throw conflict(
 			`Cannot delete provider: ${referencingRoutes.length} model route(s) still reference it. Delete or reassign those routes first.`
@@ -252,11 +285,14 @@ export async function deleteProviderService(repos: GatewayRepositories, id: stri
 	}
 
 	const changes = await repos.providers.deleteProviderById(id);
-	if (!changes) throw notFound('Provider not found');
+	if (!changes) throw notFound("Provider not found");
 }
 
 /** 在 `providers.name` UNIQUE 约束下为模板导入生成唯一显示名。 */
-function suggestUniqueProviderImportName(baseName: string, existingNameLower: Set<string>): string {
+function suggestUniqueProviderImportName(
+	baseName: string,
+	existingNameLower: Set<string>
+): string {
 	const trimmed = baseName.trim();
 	if (!existingNameLower.has(trimmed.toLowerCase())) {
 		return trimmed;
@@ -283,19 +319,27 @@ export async function importProvidersFromStaticPresetsService(
 		fetchImpl?: typeof fetch;
 	}
 ): Promise<AdminProvidersImportOutput> {
-	const uniqueIds = [...new Set((input.ids ?? []).map((x) => String(x).trim()).filter((x) => x.length > 0))];
+	const uniqueIds = [
+		...new Set(
+			(input.ids ?? []).map((x) => String(x).trim()).filter((x) => x.length > 0)
+		),
+	];
 	if (uniqueIds.length === 0) {
-		throw badRequest('ids must be a non-empty array of preset catalog keys');
+		throw badRequest("ids must be a non-empty array of preset catalog keys");
 	}
 
-	const presetByKey = new Map(listStaticProviderImportPresets().map((p) => [p.catalog_key, p]));
+	const presetByKey = new Map(
+		listStaticProviderImportPresets().map((p) => [p.catalog_key, p])
+	);
 
 	let created = 0;
 	const skippedExisting: string[] = [];
 	const failed: Array<{ id: string; message: string }> = [];
 
 	const existingProviders = await listProvidersService(repos);
-	const existingNameLower = new Set(existingProviders.map((p) => p.name.trim().toLowerCase()));
+	const existingNameLower = new Set(
+		existingProviders.map((p) => p.name.trim().toLowerCase())
+	);
 
 	for (const catalogKey of uniqueIds) {
 		const preset = presetByKey.get(catalogKey);
@@ -304,20 +348,26 @@ export async function importProvidersFromStaticPresetsService(
 				throw badRequest(`Unknown static preset catalog key: ${catalogKey}`);
 			}
 
-			const baseName = String(preset.name ?? '').trim();
+			const baseName = String(preset.name ?? "").trim();
 			if (!baseName) {
-				throw badRequest(`Static preset catalog key "${catalogKey}": missing name`);
+				throw badRequest(
+					`Static preset catalog key "${catalogKey}": missing name`
+				);
 			}
 			const managed = preset.managed_environment_key;
-			if (managed && (
-				managed.provider_id !== DEEPSEEK_OFFICIAL_PROVIDER_ID ||
-				managed.env_name !== DEEPSEEK_API_KEY_ENV_NAME
-			)) {
+			if (
+				managed &&
+				(managed.provider_id !== DEEPSEEK_OFFICIAL_PROVIDER_ID ||
+					managed.env_name !== DEEPSEEK_API_KEY_ENV_NAME)
+			) {
 				throw badRequest(
 					`Static preset catalog key "${catalogKey}": unsupported managed environment key`
 				);
 			}
-			if (managed && await repos.providers.providerIdExists(managed.provider_id)) {
+			if (
+				managed &&
+				(await repos.providers.providerIdExists(managed.provider_id))
+			) {
 				skippedExisting.push(catalogKey);
 				continue;
 			}
@@ -328,11 +378,11 @@ export async function importProvidersFromStaticPresetsService(
 				: PROVIDER_IMPORT_PENDING_API_KEY;
 			const managedKeyIsValid = managed
 				? await validateDeepSeekEnvironmentApiKey(
-					input.environmentApiKeys?.[managed.env_name],
-					input.fetchImpl,
-				)
+						input.environmentApiKeys?.[managed.env_name],
+						input.fetchImpl
+				  )
 				: true;
-			const status = managedKeyIsValid ? 'active' : 'disabled';
+			const status = managedKeyIsValid ? "active" : "disabled";
 
 			await createProviderService(repos, {
 				id: managed?.provider_id,

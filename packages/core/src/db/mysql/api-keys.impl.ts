@@ -25,9 +25,10 @@ import {
 } from "../../lib/key-hash";
 import type { MySqlDatabaseClient } from "../../storage/database-client";
 import type { ResultSetHeader, RowDataPacket } from "mysql2/promise";
-import type { ApiKeysRepository } from "../../storage/gateway-repository-interfaces";
+import type { AdminKeyMutationWithAudit, ApiKeysRepository } from "../../storage/gateway-repository-interfaces";
 import {
 	apiKeysTable as myApiKeysTable,
+	userAuditLogsTable as myUserAuditLogsTable,
 	organizationMembershipsTable as myOrganizationMembershipsTable,
 	organizationsTable as myOrganizationsTable,
 	usersTable as myUsersTable,
@@ -52,6 +53,8 @@ import type { AdminApiKeyListItem } from "../../storage/repository-dtos";
 import { parseMoney } from "../../storage/critical-write-paths-utils";
 import { fromMySqlDateTime, toMySqlDateTime } from "./mysql2-compat";
 import { normalizeGatewayKeyLimitReset } from "../../gateway-key-limits";
+import { assertAdminKeyMutation, matchesAdminKeyProfile, matchesAdminUserAuditSnapshot } from '../admin-key-mutation';
+import { toUserAuditLogDrizzleInsert } from '../user-audit-drizzle-insert';
 
 function apiKeyListOrderBy(
 	sort: ApiKeyListSortField,
@@ -941,6 +944,42 @@ export function createMySqlApiKeysRepository(
 			return true;
 		},
 
+		async applyAdminKeyMutationWithAudit(input: AdminKeyMutationWithAudit): Promise<'applied' | 'conflict' | 'not_found'> {
+			const mutation = assertAdminKeyMutation(input);
+			return drizzle.transaction(async (tx) => {
+				if (mutation.expectedUserSnapshot) {
+					const users = await tx.select().from(myUsersTable)
+						.where(eq(myUsersTable.id, mutation.expectedUserSnapshot.id)).limit(1).for('update');
+					if (!users[0]) return 'not_found' as const;
+					if (!matchesAdminUserAuditSnapshot(users[0], mutation.expectedUserSnapshot)) return 'conflict' as const;
+				}
+				const rows = await tx.select({
+					userId: myApiKeysTable.userId,
+					workspaceId: myApiKeysTable.workspaceId,
+					name: myApiKeysTable.name,
+					status: myApiKeysTable.status,
+					metadata: myApiKeysTable.metadata,
+				}).from(myApiKeysTable).where(eq(myApiKeysTable.id, mutation.id)).limit(1).for('update');
+				const row = rows[0];
+				if (!row) return 'not_found' as const;
+				if (!matchesAdminKeyProfile(row, mutation.expected)) return 'conflict' as const;
+				const patch: {
+					name?: string | null; status?: string; metadata?: string | null; updatedAt: string;
+				} = { updatedAt: new Date().toISOString() };
+				if (Object.prototype.hasOwnProperty.call(mutation.patch, 'name')) patch.name = mutation.patch.name ?? null;
+				if (Object.prototype.hasOwnProperty.call(mutation.patch, 'status')) patch.status = mutation.patch.status;
+				if (Object.prototype.hasOwnProperty.call(mutation.patch, 'metadata')) patch.metadata = mutation.patch.metadata ?? null;
+				await tx.update(myApiKeysTable).set(patch).where(eq(myApiKeysTable.id, mutation.id));
+				if (mutation.audit) {
+					const [inserted] = await tx.insert(myUserAuditLogsTable).values(
+						toUserAuditLogDrizzleInsert(mutation.audit, new Date().toISOString())
+					);
+					if (inserted.affectedRows !== 1) throw new Error('Admin Key audit was not inserted');
+				}
+				return 'applied' as const;
+			});
+		},
+
 		async getAllApiKeys(options?: {
 			email?: string;
 			userId?: string;
@@ -1016,7 +1055,7 @@ export function createMySqlApiKeysRepository(
 			const sort = options?.sort ?? DEFAULT_API_KEY_LIST_SORT;
 			const order = options?.order ?? DEFAULT_API_KEY_LIST_ORDER;
 			const rows = await listQ
-				.orderBy(apiKeyListOrderBy(sort, order))
+				.orderBy(apiKeyListOrderBy(sort, order), order === 'asc' ? asc(myApiKeysTable.id) : desc(myApiKeysTable.id))
 				.limit(pageSize)
 				.offset(offset);
 			return { keys: rows.map(mapMyAdminListRow), total };

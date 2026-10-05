@@ -1,19 +1,23 @@
-'use client';
+"use client";
 
-import { ClipboardDocumentIcon, PencilSquareIcon, PlusIcon } from '@heroicons/react/24/outline';
+import {
+	ClipboardDocumentIcon,
+	PencilSquareIcon,
+	PlusIcon,
+} from "@heroicons/react/24/outline";
 import {
 	isAudioModel,
 	isImageGenerationModel,
 	isRerankModel,
-} from '@octafuse/core/db/model-modalities';
-import { formatCompactTokens } from '@/lib/format-compact-tokens';
-import { useTranslations } from 'next-intl';
-import type { GatewayModel } from '@/lib/types';
-import { tagBadgeClass } from '../../models/model-utils';
-import type { RouteListRow } from '../types';
-import type { RouteModelGroup } from '../route-utils';
-import { parseModelTagsList } from '../route-utils';
-import { RouteProtocolSections } from './route-protocol-section';
+} from "@octafuse/core/db/model-modalities";
+import { formatCompactTokens } from "@/lib/format-compact-tokens";
+import { useTranslations } from "next-intl";
+import type { GatewayModel } from "@/lib/types";
+import { tagBadgeClass } from "../../models/model-utils";
+import type { RouteListRow } from "../types";
+import type { RouteModelGroup } from "../route-utils";
+import { parseModelTagsList } from "../route-utils";
+import { RouteProtocolSections } from "./route-protocol-section";
 
 type Props = {
 	card: RouteModelGroup;
@@ -47,8 +51,8 @@ export function RouteModelCard(props: Props) {
 		onToggleStatus,
 		onOpenStrategyDialog,
 	} = props;
-	const t = useTranslations('routes.card');
-	const tModelsCard = useTranslations('models.card');
+	const t = useTranslations("routes.card");
+	const tModelsCard = useTranslations("models.card");
 	const { model_id, title, groupRoutes, activeCount } = card;
 	const isImage = meta ? isImageGenerationModel(meta) : false;
 	const isAudio = meta ? isAudioModel(meta) : false;
@@ -56,19 +60,19 @@ export function RouteModelCard(props: Props) {
 	const contextStr = formatCompactTokens(meta?.context_window);
 	const maxStr = formatCompactTokens(meta?.max_tokens);
 	const modelStatsTitle = isRerank
-		? t('rerankModelHint')
+		? t("rerankModelHint")
 		: isAudio
-		? t('audioModelHint')
+		? t("audioModelHint")
 		: isImage
-			? t('imageModelHint')
-			: t('contextMaxOutput', { context: contextStr, max: maxStr });
+		? t("imageModelHint")
+		: t("contextMaxOutput", { context: contextStr, max: maxStr });
 	const modelStatsLine = isRerank
-		? t('rerankModelHint')
+		? t("rerankModelHint")
 		: isAudio
-		? t('audioModelHint')
+		? t("audioModelHint")
 		: isImage
-			? t('imageModelHint')
-			: t('contextLine', { context: contextStr, max: maxStr });
+		? t("imageModelHint")
+		: t("contextLine", { context: contextStr, max: maxStr });
 	const tags = parseModelTagsList(meta);
 	const tagShown = tags.slice(0, 6);
 	const tagExtra = tags.length - tagShown.length;
@@ -83,7 +87,7 @@ export function RouteModelCard(props: Props) {
 								type="button"
 								onClick={() => onEditModel(model_id)}
 								className="max-w-full truncate text-left text-gray-900 underline-offset-2 hover:text-blue-700 hover:underline focus:outline-none focus-visible:rounded focus-visible:ring-2 focus-visible:ring-blue-500"
-								title={t('editModelTitle', { title })}
+								title={t("editModelTitle", { title })}
 							>
 								{title}
 							</button>
@@ -92,8 +96,8 @@ export function RouteModelCard(props: Props) {
 							type="button"
 							onClick={() => onEditModel(model_id)}
 							className="shrink-0 rounded-md p-0.5 text-gray-400 hover:bg-blue-50 hover:text-blue-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-1"
-							title={t('editModel', { title })}
-							aria-label={t('editModelAria', { title })}
+							title={t("editModel", { title })}
+							aria-label={t("editModelAria", { title })}
 						>
 							<PencilSquareIcon className="h-4 w-4" />
 						</button>
@@ -102,26 +106,29 @@ export function RouteModelCard(props: Props) {
 							onClick={() => void onCopyModelId(model_id)}
 							className={`shrink-0 rounded-md p-0.5 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-1 ${
 								copiedModelId === model_id
-									? 'text-green-600 hover:bg-green-50 hover:text-green-700'
-									: 'text-gray-400 hover:bg-gray-100 hover:text-gray-700'
+									? "text-green-600 hover:bg-green-50 hover:text-green-700"
+									: "text-gray-400 hover:bg-gray-100 hover:text-gray-700"
 							}`}
 							title={
 								copiedModelId === model_id
-									? t('copiedModelId')
-									: t('copyModelId', { id: model_id })
+									? t("copiedModelId")
+									: t("copyModelId", { id: model_id })
 							}
-							aria-label={t('copyModelIdAria', { id: model_id })}
+							aria-label={t("copyModelIdAria", { id: model_id })}
 						>
 							<ClipboardDocumentIcon className="h-4 w-4" />
 						</button>
 					</div>
 					<div className="mt-0.5 flex min-w-0 items-center gap-1.5">
-						<p className="min-w-0 truncate text-[11px] text-gray-500" title={modelStatsTitle}>
+						<p
+							className="min-w-0 truncate text-[11px] text-gray-500"
+							title={modelStatsTitle}
+						>
 							{modelStatsLine}
 						</p>
 						{copiedModelId === model_id ? (
 							<span className="shrink-0 rounded bg-green-50 px-1.5 py-0.5 text-[10px] font-medium leading-4 text-green-700 ring-1 ring-inset ring-green-200">
-								{t('copied')}
+								{t("copied")}
 							</span>
 						) : null}
 					</div>
@@ -131,18 +138,24 @@ export function RouteModelCard(props: Props) {
 								{tagShown.map((tag) => (
 									<span
 										key={tag}
-										className={`rounded px-1.5 py-0.5 text-[10px] font-medium ${tagBadgeClass(tag)}`}
-										title={t('modelTagTitle', { tag })}
+										className={`rounded px-1.5 py-0.5 text-[10px] font-medium ${tagBadgeClass(
+											tag
+										)}`}
+										title={t("modelTagTitle", { tag })}
 									>
 										{tag}
 									</span>
 								))}
 								{tagExtra > 0 ? (
-									<span className="self-center text-[10px] text-gray-400">+{tagExtra}</span>
+									<span className="self-center text-[10px] text-gray-400">
+										+{tagExtra}
+									</span>
 								) : null}
 							</>
 						) : (
-							<span className="text-[10px] text-gray-400">{tModelsCard('noTags')}</span>
+							<span className="text-[10px] text-gray-400">
+								{tModelsCard("noTags")}
+							</span>
 						)}
 					</div>
 				</div>
@@ -151,18 +164,21 @@ export function RouteModelCard(props: Props) {
 						type="button"
 						onClick={() => onCreate(model_id)}
 						className="rounded-md p-1 text-blue-600 hover:bg-blue-50 hover:text-blue-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-1"
-						title={t('newRouteFor', { title })}
-						aria-label={t('newRouteFor', { title })}
+						title={t("newRouteFor", { title })}
+						aria-label={t("newRouteFor", { title })}
 					>
 						<PlusIcon className="h-5 w-5" />
 					</button>
 					<span
 						className={`inline-flex items-center rounded-md px-1.5 py-0.5 text-xs font-semibold tabular-nums ring-1 ring-inset ${
 							activeCount === 0
-								? 'bg-red-50 text-red-700 ring-red-200'
-								: 'bg-green-50 text-green-700 ring-green-200'
+								? "bg-red-50 text-red-700 ring-red-200"
+								: "bg-green-50 text-green-700 ring-green-200"
 						}`}
-						title={t('activeTotalRoutes', { active: activeCount, total: groupRoutes.length })}
+						title={t("activeTotalRoutes", {
+							active: activeCount,
+							total: groupRoutes.length,
+						})}
 					>
 						{activeCount}/{groupRoutes.length}
 					</span>
@@ -171,8 +187,8 @@ export function RouteModelCard(props: Props) {
 			{groupRoutes.length === 0 ? (
 				<div className="flex flex-1 items-center justify-center px-4 py-6 text-center">
 					<div>
-						<p className="text-sm text-gray-600">{t('noRoutesYet')}</p>
-						<p className="mt-1 text-xs text-gray-500">{t('clickToAdd')}</p>
+						<p className="text-sm text-gray-600">{t("noRoutesYet")}</p>
+						<p className="mt-1 text-xs text-gray-500">{t("clickToAdd")}</p>
 					</div>
 				</div>
 			) : (

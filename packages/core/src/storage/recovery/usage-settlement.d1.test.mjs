@@ -13,7 +13,8 @@ import { sample, setup, prepare, counts } from './usage-settlement-test-support.
 
 test('full migrated schema plus proposals has enforced foreign keys and stays outside automatic migrations', t => {
   const db = setup(t);
-  assert.equal(db.migrationFiles.length, 68);
+  assert.equal(db.migrationFiles.length, 77);
+  assert.equal(db.migrationFiles.at(-1), '0077_withdrawal_balance_update_guards.sql');
   assert.equal(db.sqlite.prepare('PRAGMA foreign_keys').get().foreign_keys, 1);
   assert.deepEqual(db.sqlite.prepare('PRAGMA foreign_key_check').all(), []);
   assert.equal(db.sqlite.prepare('PRAGMA quick_check').get().quick_check, 'ok');

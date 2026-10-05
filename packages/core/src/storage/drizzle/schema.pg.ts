@@ -921,11 +921,47 @@ export const systemConfigTable = gatewaySchema.table("system_config", {
 	key: text("key").primaryKey(),
 	value: text("value").notNull(),
 	description: text("description"),
+	revision: text("revision").notNull().default("legacy"),
 	updatedAt: timestamp("updated_at", {
 		withTimezone: true,
 		mode: "string",
 	}).notNull(),
 });
+
+/** Metadata-only Tools history; intentionally has no parent foreign key. */
+export const configGroupAuditTable = gatewaySchema.table("config_group_audit", {
+	id: text("id").primaryKey(),
+	family: text("family").notNull(),
+	provider: text("provider"),
+	action: text("action").notNull(),
+	actorKind: text("actor_kind").notNull(),
+	actorId: text("actor_id").notNull(),
+	reason: text("reason").notNull(),
+	changedFieldsJson: text("changed_fields_json").notNull(),
+	activeBefore: text("active_before"),
+	activeAfter: text("active_after"),
+	credentialsJson: text("credentials_json").notNull(),
+	revisionBeforeJson: text("revision_before_json").notNull(),
+	revisionAfterJson: text("revision_after_json").notNull(),
+	source: text("source").notNull(),
+	createdAt: timestamp("created_at", { withTimezone: true, mode: "string" }).notNull(),
+}, (t) => [
+	index("idx_config_group_audit_family_created").on(t.family, t.createdAt.desc(), t.id.desc()),
+	check("config_group_audit_family_chk", sql`family IN ('web-search', 'web-fetch', 'web-deep-search', 'ai-detection')`),
+	check("config_group_audit_provider_chk", sql`provider IS NULL OR provider IN ('bocha', 'tavily', 'cleversee', 'tencent_wsa', 'firecrawl', 'jina', 'tencent_tms')`),
+	check("config_group_audit_active_before_chk", sql`active_before IS NULL OR active_before IN ('bocha', 'tavily', 'cleversee', 'tencent_wsa', 'firecrawl', 'jina', 'tencent_tms')`),
+	check("config_group_audit_active_after_chk", sql`active_after IS NULL OR active_after IN ('bocha', 'tavily', 'cleversee', 'tencent_wsa', 'firecrawl', 'jina', 'tencent_tms')`),
+	check("config_group_audit_action_chk", sql`action IN ('save', 'save_activate', 'activate', 'legacy_save', 'reveal')`),
+	check("config_group_audit_actor_kind_chk", sql`actor_kind IN ('console', 'admin_key')`),
+	check("config_group_audit_actor_bounds_chk", sql`char_length(actor_id) BETWEEN 1 AND CASE WHEN actor_kind = 'console' THEN 617 ELSE 600 END`),
+	check("config_group_audit_reason_bounds_chk", sql`char_length(reason) BETWEEN 1 AND 600`),
+	check("config_group_audit_source_chk", sql`source IN ('admin_api', 'legacy_admin')`),
+]);
+
+/** Seeded by migration; writers fail closed if the permanent row is absent. */
+export const systemConfigWriteMutexTable = gatewaySchema.table("system_config_write_mutex", {
+	id: integer("id").notNull().primaryKey(),
+}, () => [check("system_config_write_mutex_singleton_chk", sql`id = 1`)]);
 
 /** OpenRouter-compatible request presets with immutable designated versions. */
 export const requestPresetsTable = gatewaySchema.table(
@@ -1410,6 +1446,29 @@ export const adminApiKeysTable = gatewaySchema.table("admin_api_keys", {
 	revokedAt: timestamp("revoked_at", { withTimezone: true, mode: "string" }),
 });
 
+export const adminAccessKeyAuditTable = gatewaySchema.table("admin_access_key_audit", {
+	id: text("id").primaryKey(),
+	keyId: text("key_id").notNull(),
+	action: text("action").notNull(),
+	changeMask: integer("change_mask").notNull(),
+	actorKind: text("actor_kind").notNull(),
+	actorId: text("actor_id").notNull(),
+	beforePermissionsJson: text("before_permissions_json"),
+	afterPermissionsJson: text("after_permissions_json"),
+	beforeStatus: text("before_status"),
+	afterStatus: text("after_status"),
+	createdAt: timestamp("created_at", { withTimezone: true, mode: "string" }).notNull(),
+});
+
+export const adminSharedKeyAuditTable = gatewaySchema.table("admin_shared_key_audit", {
+	id: text("id").primaryKey(), keyId: text("key_id").notNull(), action: text("action").notNull(),
+	changeMask: integer("change_mask").notNull(), actorKind: text("actor_kind").notNull(), actorId: text("actor_id").notNull(),
+	source: text("source").notNull(), reason: text("reason").notNull(), beforeStatus: text("before_status").notNull(),
+	beforeSellerPriority: integer("before_seller_priority").notNull(), beforeWeight: integer("before_weight").notNull(), beforeValidated: integer("before_validated").notNull(),
+	afterStatus: text("after_status"), afterSellerPriority: integer("after_seller_priority"), afterWeight: integer("after_weight"), afterValidated: integer("after_validated"),
+	beforeRevision: text("before_revision").notNull(), afterRevision: text("after_revision"), createdAt: timestamp("created_at", { withTimezone: true, mode: "string" }).notNull(),
+}, (t) => [index("idx_admin_shared_key_audit_key_created").on(t.keyId, t.createdAt, t.id)]);
+
 export const adminSessionsTable = gatewaySchema.table("admin_sessions", {
 	tokenHash: text("token_hash").primaryKey(),
 	username: text("username").notNull(),
@@ -1870,6 +1929,8 @@ export const pgCoreSchema = {
 	generationFeedbackTable,
 	publicModelDailyStatsTable,
 	systemConfigTable,
+	configGroupAuditTable,
+	systemConfigWriteMutexTable,
 	requestPresetsTable,
 	requestPresetVersionsTable,
 	guardrailsTable,
@@ -1882,6 +1943,8 @@ export const pgCoreSchema = {
 	routeDataPolicyAuditTable,
 	userAuditLogsTable,
 	adminApiKeysTable,
+	adminAccessKeyAuditTable,
+	adminSharedKeyAuditTable,
 	adminSessionsTable,
 	portalSessionsTable,
 	sharedKeysTable,

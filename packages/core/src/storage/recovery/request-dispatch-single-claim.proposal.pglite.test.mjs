@@ -43,7 +43,7 @@ test('review-only PostgreSQL index gates one durable request claim across attemp
         CREATE TABLE ${gateway}.schema_migrations (
           version text PRIMARY KEY, applied_at timestamptz NOT NULL DEFAULT now())`);
       const migrations = readdirSync(migrationDir).filter(name => name.endsWith('.sql')).sort();
-      assert.equal(migrations.at(-1), '0073_recovery_api_key_workspace_lock.sql');
+      assert.equal(migrations.at(-1), '0081_tools_config_group_audit.sql');
       for (const name of migrations) {
         await pg.transaction(async tx => {
           await tx.exec(readFileSync(new URL(name, migrationDir), 'utf8'));

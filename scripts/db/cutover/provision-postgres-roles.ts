@@ -18,7 +18,21 @@ function readBooleanEnv(value: string | undefined): boolean {
 	return value?.trim().toLowerCase() === 'true';
 }
 
-export async function provisionPostgresRoles(env: NodeJS.ProcessEnv = process.env): Promise<void> {
+type ProvisionPostgresRolesEnv = {
+	DATABASE_URL?: string;
+	CINATOKEN_GATEWAY_MIGRATOR_PASSWORD?: string;
+	CINATOKEN_GATEWAY_RUNTIME_PASSWORD?: string;
+	CINATOKEN_GATEWAY_ROTATE_PASSWORDS?: string;
+	CINATOKEN_GATEWAY_DRY_RUN?: string;
+};
+
+export async function provisionPostgresRoles(env: ProvisionPostgresRolesEnv = {
+	DATABASE_URL: process.env.DATABASE_URL,
+	CINATOKEN_GATEWAY_MIGRATOR_PASSWORD: process.env.CINATOKEN_GATEWAY_MIGRATOR_PASSWORD,
+	CINATOKEN_GATEWAY_RUNTIME_PASSWORD: process.env.CINATOKEN_GATEWAY_RUNTIME_PASSWORD,
+	CINATOKEN_GATEWAY_ROTATE_PASSWORDS: process.env.CINATOKEN_GATEWAY_ROTATE_PASSWORDS,
+	CINATOKEN_GATEWAY_DRY_RUN: process.env.CINATOKEN_GATEWAY_DRY_RUN,
+}): Promise<void> {
 	const connectionString = env.DATABASE_URL?.trim();
 	if (!connectionString) {
 		throw new Error('DATABASE_URL is required for the PostgreSQL administrator connection.');

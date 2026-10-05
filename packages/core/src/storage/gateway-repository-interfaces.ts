@@ -1,4 +1,5 @@
 import type { PreparationControl } from '../preparation-control';
+import type { ConfigSnapshot, ConfigGroupApplyInput, ConfigGroupApplyResult, ConfigGroupAuditRow, ConfigGroupAuditPageOptions, ToolConfigFamily } from '../db/system-config-group-types';
 import type {
 	GlobalUserAuditLogRow,
 	ModelRow,
@@ -79,6 +80,9 @@ import type {
 	AdminSessionRow,
 	InsertAdminApiKeyParams,
 } from "../db/admin-access-types";
+import type { AdminApiKeyAuditContext, AdminApiKeyAuditCursor, AdminApiKeyAuditRow } from '../db/admin-access-audit';
+import type { AdminSharedKeysRepository } from '../db/admin-shared-key-governance';
+import type { RejectRequestedWithdrawalResult } from '../db/portal-withdrawal-rejection-types';
 import type {
 	InsertNftMintParams,
 	InsertSharedKeyEarningParams,
@@ -88,6 +92,9 @@ import type {
 	PortalSessionRow,
 	SharedKeyEarningRow,
 	SharedKeyRow,
+	SharedKeyStateExpectation,
+	SharedKeyValidationResult,
+	SellerSharedKeyPatch,
 	UpdateSharedKeyPatch,
 	UserEarningsRow,
 	WithdrawalRow,
@@ -425,7 +432,9 @@ export interface GuardrailsRepository {
 		workspaceId: string,
 		scopeType: GuardrailScopeType,
 		scopeId: string,
-		createdByUserId?: string
+		createdByUserId?: string,
+		/** Require the binding to still point at the Guardrail selected by the caller. */
+		expectedGuardrailId?: string
 	): Promise<boolean>;
 	getSettledBudgetSpent(
 		workspaceId: string,
@@ -515,7 +524,7 @@ export interface AdminAccessRepository {
 	listApiKeys(): Promise<AdminApiKeyRow[]>;
 	getApiKeyById(id: string): Promise<AdminApiKeyRow | null>;
 	getActiveApiKeyBySecret(secretKey: string): Promise<AdminApiKeyRow | null>;
-	insertApiKey(params: InsertAdminApiKeyParams): Promise<void>;
+	insertApiKey(params: InsertAdminApiKeyParams, audit: AdminApiKeyAuditContext): Promise<void>;
 	updateApiKey(
 		id: string,
 		patch: {
@@ -525,10 +534,13 @@ export interface AdminAccessRepository {
 			secretKey?: string;
 			status?: "active" | "revoked";
 			revokedAt?: string | null;
-		}
+		},
+		audit: AdminApiKeyAuditContext,
 	): Promise<boolean>;
-	rotateApiKey(id: string, secretKey: string): Promise<boolean>;
-	revokeApiKey(id: string): Promise<boolean>;
+	rotateApiKey(id: string, secretKey: string, audit: AdminApiKeyAuditContext): Promise<boolean>;
+	revokeApiKey(id: string, audit: AdminApiKeyAuditContext): Promise<boolean>;
+	revealApiKeyWithAudit(id: string, audit: AdminApiKeyAuditContext): Promise<AdminApiKeyRow | null>;
+	listApiKeyAudit(id: string, options: { limit: number; before?: AdminApiKeyAuditCursor }): Promise<AdminApiKeyAuditRow[]>;
 	touchApiKey(id: string): Promise<void>;
 	insertSession(session: AdminSessionRow): Promise<void>;
 	getValidSession(
@@ -600,8 +612,64 @@ export interface UserAuditLogsRepository {
 		correlationId?: string;
 		startDate?: string;
 		endDate?: string;
+		endDateExclusive?: boolean;
 	}): Promise<{ logs: GlobalUserAuditLogRow[]; total: number }>;
+	/** Bounded descending keyset scan for a single CSV export; cursor values are opaque to callers. */
+	scanGlobalUserAuditLogsForExport(options: {
+		filters: GlobalUserAuditLogFilters;
+		limit: number;
+		after?: UserAuditLogCursor;
+		highWater?: UserAuditLogCursor;
+	}): Promise<UserAuditLogExportRow[]>;
 	getGlobalUserAuditLogFilterOptions(): Promise<{ reasonCodes: string[] }>;
+}
+
+export interface GlobalUserAuditLogFilters {
+	userId?: string;
+	apiKeyId?: string;
+	userEmail?: string;
+	eventTypes?: string[];
+	actorTypes?: string[];
+	actorId?: string;
+	actorKinds?: string[];
+	reasonCodes?: string[];
+	sources?: string[];
+	correlationId?: string;
+	startDate?: string;
+	endDate?: string;
+	/** Date-only end_date is represented as the next UTC midnight, exclusive. */
+	endDateExclusive?: boolean;
+}
+
+export interface UserAuditLogCursor { createdAt: string; id: string }
+/** Fixed CSV source columns only; raw change payload and changed-fields are never fetched. */
+export type UserAuditLogExportData = Pick<GlobalUserAuditLogRow,
+	'id' | 'created_at' | 'request_log_id' | 'correlation_id' | 'event_type' | 'source' |
+	'reason_code' | 'reason_text' | 'actor_type' | 'actor_id' | 'user_id' | 'user_email' |
+	'api_key_id' | 'before_user_snapshot' | 'after_user_snapshot'
+>;
+export interface UserAuditLogExportRow {
+	log: UserAuditLogExportData;
+	cursor: UserAuditLogCursor;
+	/** SQL suppressed one or more oversized source columns; caller must reject the entire export. */
+	oversized: boolean;
+}
+
+/** One Admin Key row change and its optional success audit, guarded by the observed Key profile. */
+export interface AdminKeyMutationWithAudit {
+	id: string;
+	expected: {
+		userId: string;
+		/** Optional for existing callers; global Admin profile conditions include workspace ownership. */
+		workspaceId?: string;
+		name: string | null;
+		status: string;
+		metadata: string | null;
+	};
+	patch: { name?: string | null; status?: string; metadata?: string | null };
+	/** Canonical users row used for the Key audit; checked under the same commit guard. */
+	expectedUserSnapshot: import('../db/user-audit-snapshot').UserAuditSnapshot | null;
+	audit: InsertUserAuditLogParams | null;
 }
 
 export interface ApiKeysRepository {
@@ -663,6 +731,10 @@ export interface ApiKeysRepository {
 		limit?: number
 	): Promise<{ scrubbed: number; remaining: number }>;
 	updateApiKeyName(id: string, name: string | null): Promise<boolean>;
+	/** Admin Key PATCH/DELETE: profile CAS, one row mutation and audit in one database transaction. */
+	applyAdminKeyMutationWithAudit?(
+		mutation: AdminKeyMutationWithAudit
+	): Promise<'applied' | 'conflict' | 'not_found'>;
 	getAllApiKeys(options?: {
 		email?: string;
 		userId?: string;
@@ -726,7 +798,7 @@ export interface UsersRepository {
 		externalUserId: string | null
 	): Promise<boolean>;
 	deleteUserHard(id: string): Promise<boolean>;
-	/** PostgreSQL admin deletion: write the success audit and delete atomically. */
+	/** Admin deletion: write the success audit and delete atomically on every supported backend; callers fail closed if unavailable. */
 	deleteUserHardWithAudit?(
 		id: string,
 		audit: InsertUserAuditLogParams
@@ -758,6 +830,14 @@ export interface ModelsRepository {
 		id: string,
 		rest: Record<string, unknown>
 	): Promise<number>;
+	/** Atomically match the raw nullable route_policy and apply columns and optional tags.
+	 * False means absent/stale; a matched no-op is true. No historical ABA detection. */
+	updateModelWithPolicyPrecondition(
+		id: string,
+		rest: Record<string, unknown>,
+		expectedRoutePolicy: string | null,
+		tags?: string[]
+	): Promise<boolean>;
 	deleteModelCascade(id: string): Promise<number>;
 }
 
@@ -941,6 +1021,14 @@ export type RequestLogsByKeyIdFilter = {
 
 export interface RequestLogsRepository {
 	/**
+	 * Resolve one global Admin request by its exact request ID. This is a read-only
+	 * projection without raw bodies, headers, JSON evidence, credential labels/
+	 * fingerprints, or error text (their required row fields are null, not loaded).
+	 * The Admin caller must enforce logs.read and whitelist the public DTO; this
+	 * method does not establish an ordinary user's owner/Workspace boundary.
+	 */
+	getAdminRequestLogById(id: string): Promise<RequestLogRow | null>;
+	/**
 	 * Execute an OpenRouter-shaped analytics query inside the authenticated
 	 * Management principal's account boundary. Storage must enforce that
 	 * boundary in SQL rather than relying on caller-supplied Workspace filters.
@@ -1068,10 +1156,31 @@ export interface RequestLogsRepository {
 }
 
 export interface SystemConfigRepository {
+	/** One statement snapshot, including absent rows, in canonical key order. Raw values are server-only. */
+	getConfigSnapshots(keys: readonly string[]): Promise<ConfigSnapshot[]>;
+	/** Complete family read-set CAS and metadata-only group audit; no automatic retry. */
+	applyConfigGroupIfRevisions(input: ConfigGroupApplyInput): Promise<ConfigGroupApplyResult>;
+	listConfigGroupAudit(family: ToolConfigFamily, options: ConfigGroupAuditPageOptions): Promise<ConfigGroupAuditRow[]>;
 	listSystemConfigRows(): Promise<SystemConfigRow[]>;
-	upsertSystemConfigValue(key: string, value: string): Promise<void>;
+	/** Admin write: config and metadata-only audit commit or roll back together. */
+	upsertSystemConfigValueWithAudit(input: SystemConfigAuditWrite): Promise<void>;
+	/** Conditional Admin write; a missing row has expectedRevision=null. Conflicts do not write or audit. */
+	upsertSystemConfigValueWithAuditIfRevision(
+		input: SystemConfigAuditWrite & { expectedRevision: string | null }
+	): Promise<{ committed: boolean; revision: string | null }>;
 	getConfig(key: string): Promise<string | null>;
+	/** Value and opaque per-key revision from one row read; both null when absent. */
+	getConfigSnapshot(key: string): Promise<{ value: string | null; revision: string | null }>;
 	getAllConfig(): Promise<Record<string, string>>;
+}
+
+export interface SystemConfigAuditWrite {
+	auditId: string;
+	key: string;
+	value: string;
+	actorKind: 'console' | 'admin_key';
+	actorId: string;
+	nowIso: string;
 }
 
 /** 用户门户会话（`user_session` Cookie）。 */
@@ -1086,7 +1195,7 @@ export interface PortalAccessRepository {
 }
 
 /** 卖家共享密钥（上架/调度/停用）。 */
-export interface SharedKeysRepository {
+export interface SharedKeysRepository extends AdminSharedKeysRepository {
 	insertSharedKey(params: InsertSharedKeyParams): Promise<void>;
 	getSharedKeyById(id: string): Promise<SharedKeyRow | null>;
 	listSharedKeysBySeller(sellerUserId: string): Promise<SharedKeyRow[]>;
@@ -1097,12 +1206,16 @@ export interface SharedKeysRepository {
 	/** 调度候选：指定渠道全部 active key，已按固定顺序排好（seller_priority DESC → weight DESC → id ASC）。 */
 	listActiveSharedKeysByChannel(channelType: string, control?: PreparationControl): Promise<SharedKeyRow[]>;
 	updateSharedKey(id: string, patch: UpdateSharedKeyPatch): Promise<boolean>;
+	/** Seller state/profile CAS; must not undo governance or activate an unverified key. */
+	updateSharedKeyForSeller(id: string, patch: SellerSharedKeyPatch, expected: SharedKeyStateExpectation): Promise<boolean>;
+	/** Only a confirmed validation may activate invalid/validating keys and write validatedAt. */
+	completeSharedKeyValidation(id: string, expected: SharedKeyStateExpectation, result: SharedKeyValidationResult, nowIso: string): Promise<boolean>;
 	/** Internal encryption migration/write path; never exposed to an HTTP route. */
 	replaceSharedKeySecret?(
 		id: string,
 		protectedSecret: string
 	): Promise<boolean>;
-	/** 上游 401/403 或校验失败：置 invalid 并记录原因。 */
+	/** Runtime upstream 401/403: invalidate only a currently active key, preserving governance/paused states. */
 	markSharedKeyFailure(
 		id: string,
 		reason: string,
@@ -1132,6 +1245,13 @@ export interface PortalLedgerRepository {
 		walletAddress: string | null,
 		verifiedAtIso: string | null
 	): Promise<void>;
+	/** Consume the challenge cutoff atomically; replay/stale challenges never change a wallet. */
+	updateWalletIfChallengeUnused(
+		userId: string,
+		walletAddress: string,
+		verifiedAtIso: string,
+		challengeCreatedAtIso: string,
+	): Promise<boolean>;
 	/** 幂等插入收益流水；重复 `request_log_id` 返回 false。 */
 	insertEarning(params: InsertSharedKeyEarningParams): Promise<boolean>;
 	/**
@@ -1198,6 +1318,17 @@ export interface PortalLedgerRepository {
 		reason: string,
 		nowIso: string
 	): Promise<void>;
+	/**
+	 * Atomically reject/refund only a requested, unclaimed withdrawal without a
+	 * transaction hash or durable chain outbox row. Processing/submitted jobs are
+	 * conflicts even if their transaction hash has not been projected yet.
+	 * Throws on a failed/uncertain financial write; never reports it as rejected.
+	 */
+	rejectRequestedWithdrawal(
+		id: string,
+		reason: string,
+		nowIso: string,
+	): Promise<RejectRequestedWithdrawalResult>;
 	updateWithdrawalStatus(
 		id: string,
 		patch: {

@@ -1,0 +1,21 @@
+{
+	"compilerOptions": {
+		"target": "ES2022",
+		"lib": ["ES2023", "DOM", "DOM.Iterable"],
+		"module": "ESNext",
+		"moduleResolution": "Bundler",
+		"types": ["node"],
+		"allowImportingTsExtensions": true,
+		"noEmit": true,
+		"skipLibCheck": true,
+		"strict": true,
+		"noUnusedLocals": true,
+		"noUnusedParameters": true,
+		"jsx": "react-jsx",
+		"resolveJsonModule": true,
+		"paths": {
+			"@/*": ["../src/*"]
+		}
+	},
+	"include": ["./*.ts", "../src/env.d.ts"]
+}

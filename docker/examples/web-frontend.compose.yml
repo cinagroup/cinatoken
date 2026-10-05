@@ -1,0 +1,24 @@
+# Merge with gateway.compose.yml. Both images MUST use the same WEB_RELEASE_PATH.
+# The manifest header prevents rendering against assets from another release.
+services:
+  gateway-web:
+    image: ${GATEWAY_WEB_IMAGE:?set an immutable Web entry image}
+    ports:
+      - "${GATEWAY_WEB_PORT:-18080}:8080"
+    environment:
+      CINATOKEN_ADMIN_UPSTREAM: http://gateway-admin:8789
+      CINATOKEN_WEB_PUBLIC_ENABLED: ${CINATOKEN_WEB_PUBLIC_ENABLED:-false}
+      CINATOKEN_WEB_SSR_UPSTREAM: http://gateway-web-ssr:8791
+      CINATOKEN_WEB_PROXY_ORIGINS: ${CINATOKEN_WEB_PROXY_ORIGINS:-}
+    depends_on:
+      - gateway-admin
+      - gateway-web-ssr
+  gateway-web-ssr:
+    image: ${GATEWAY_WEB_SSR_IMAGE:?set the SSR image from the same immutable release}
+    environment:
+      CINATOKEN_ADMIN_UPSTREAM: http://gateway-admin:8789
+      CINATOKEN_WEB_PUBLIC_ENABLED: ${CINATOKEN_WEB_PUBLIC_ENABLED:-false}
+      CINATOKEN_WEB_PUBLIC_ORIGIN: ${CINATOKEN_WEB_PUBLIC_ORIGIN:-}
+      CINATOKEN_WEB_PROXY_ORIGINS: ${CINATOKEN_WEB_PROXY_ORIGINS:-}
+    expose:
+      - "8791"

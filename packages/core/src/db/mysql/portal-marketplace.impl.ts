@@ -1,4 +1,6 @@
 import type { RowDataPacket, ResultSetHeader } from 'mysql2/promise';
+import { createMySqlSharedKeyAdminRepository } from '../admin-shared-key-repository';
+import { assertSellerSharedKeyPatch, assertSharedKeyValidation, SHARED_KEY_STATE_COLUMNS, sharedKeyMySqlInstant, sharedKeySellerAssignments, sharedKeyStateValues } from '../shared-key-state';
 import type { MySqlDatabaseClient } from '../../storage/database-client';
 import type {
 	PortalAccessRepository,
@@ -59,7 +61,7 @@ function mapSharedKey(row: SharedKeySqlRow): SharedKeyRow {
 		outputPrice: Number(row.output_price),
 		cacheReadPrice: row.cache_read_price === null ? null : Number(row.cache_read_price),
 		cacheWritePrice: row.cache_write_price === null ? null : Number(row.cache_write_price),
-		validatedAt: row.validated_at,
+		validatedAt: row.validated_at === null ? null : `${row.validated_at.replace(' ', 'T')}Z`,
 		lastUsedAt: row.last_used_at,
 		lastFailureAt: row.last_failure_at,
 		failureReason: row.failure_reason,
@@ -74,7 +76,7 @@ function mapSharedKey(row: SharedKeySqlRow): SharedKeyRow {
 
 const SHARED_KEY_COLUMNS = `id, seller_user_id, channel_type, api_key, key_fingerprint, label, status,
   seller_priority, weight, input_price, output_price, cache_read_price, cache_write_price,
-  validated_at, last_used_at, last_failure_at, failure_reason,
+  DATE_FORMAT(validated_at, '%Y-%m-%d %H:%i:%s.%f') AS validated_at, last_used_at, last_failure_at, failure_reason,
   served_input_tokens, served_output_tokens, earned_total, created_at, updated_at`;
 
 /** 固定排序：同 priority 层内 weight 从高到低；层间 seller_priority 优先。 */
@@ -126,6 +128,7 @@ export function createMySqlPortalAccessRepository(db: MySqlDatabaseClient): Port
 export function createMySqlSharedKeysRepository(db: MySqlDatabaseClient): SharedKeysRepository {
 	const pool = db.raw;
 	return {
+		...createMySqlSharedKeyAdminRepository(db),
 		async insertSharedKey(params: InsertSharedKeyParams) {
 			await pool.execute<ResultSetHeader>(
 				`INSERT INTO shared_keys
@@ -185,11 +188,40 @@ export function createMySqlSharedKeysRepository(db: MySqlDatabaseClient): Shared
 		async updateSharedKey(id, patch) {
 			const { sets, values } = buildSharedKeyPatch(patch);
 			if (sets.length === 0) return false;
+			if (patch.status === 'invalid' || patch.status === 'validating') sets.push('validated_at = NULL');
+			const statusGuard = patch.status === 'active' ? " AND status IN ('active','paused') AND validated_at IS NOT NULL"
+				: patch.status === 'paused' ? " AND status IN ('active','paused','disabled')" : '';
 			const [result] = await pool.execute<ResultSetHeader>(
-				`UPDATE shared_keys SET ${sets.join(', ')}, updated_at = CURRENT_TIMESTAMP(6) WHERE id = ?`,
+				`UPDATE shared_keys SET ${sets.join(', ')}, updated_at = CURRENT_TIMESTAMP(6) WHERE id = ?${statusGuard}`,
 				[...values, id]
 			);
 			return result.affectedRows > 0;
+		},
+		async updateSharedKeyForSeller(id, patch, expected) {
+			const { sets, values } = sharedKeySellerAssignments(assertSellerSharedKeyPatch(patch, expected));
+			if (sets.length === 0) return false;
+			const stateValues = sharedKeyStateValues(expected);
+			if (stateValues[4] !== null) stateValues[4] = sharedKeyMySqlInstant(expected.validatedAt!);
+			const condition = SHARED_KEY_STATE_COLUMNS.map(column => `${column} <=> ?`).join(' AND ');
+			const [result] = await pool.execute<ResultSetHeader>(
+				`UPDATE shared_keys SET ${sets.join(', ')}, updated_at = CURRENT_TIMESTAMP(6) WHERE id = ? AND ${condition}`,
+				[...values, id, ...stateValues],
+			);
+			return result.affectedRows === 1;
+		},
+		async completeSharedKeyValidation(id, expected, result, nowIso) {
+			assertSharedKeyValidation(expected, result, nowIso);
+			const stateValues = sharedKeyStateValues(expected);
+			if (stateValues[4] !== null) stateValues[4] = sharedKeyMySqlInstant(expected.validatedAt!);
+			const now = sharedKeyMySqlInstant(nowIso);
+			const condition = SHARED_KEY_STATE_COLUMNS.map(column => `${column} <=> ?`).join(' AND ');
+			const [written] = await pool.execute<ResultSetHeader>(
+				`UPDATE shared_keys SET status = ?, validated_at = ?, failure_reason = ?,
+				last_failure_at = CASE WHEN ? = 1 THEN last_failure_at ELSE ? END, updated_at = ? WHERE id = ? AND ${condition}`,
+				[result.valid ? 'active' : 'invalid', result.valid ? now : null, result.valid ? null : result.reason,
+					result.valid ? 1 : 0, now, now, id, ...stateValues],
+			);
+			return written.affectedRows === 1;
 		},
 		async replaceSharedKeySecret(id, protectedSecret) {
 			const [result] = await pool.execute<ResultSetHeader>(
@@ -200,8 +232,8 @@ export function createMySqlSharedKeysRepository(db: MySqlDatabaseClient): Shared
 		},
 		async markSharedKeyFailure(id, reason, nowIso) {
 			await pool.execute<ResultSetHeader>(
-				`UPDATE shared_keys SET status = 'invalid', failure_reason = ?, last_failure_at = ?, updated_at = ? WHERE id = ?`,
-				[reason, nowIso, nowIso, id]
+				`UPDATE shared_keys SET status = 'invalid', validated_at = NULL, failure_reason = ?, last_failure_at = ?, updated_at = ? WHERE id = ? AND status = 'active'`,
+				[reason, sharedKeyMySqlInstant(nowIso), sharedKeyMySqlInstant(nowIso), id]
 			);
 		},
 		async deleteSharedKey(id) {
@@ -396,6 +428,15 @@ export function createMySqlPortalLedgerRepository(db: MySqlDatabaseClient): Port
             wallet_verified_at = VALUES(wallet_verified_at), updated_at = CURRENT_TIMESTAMP(6)`,
 				[userId, walletAddress, verifiedAtIso]
 			);
+		},
+		async updateWalletIfChallengeUnused(userId, walletAddress, verifiedAtIso, challengeCreatedAtIso) {
+			const [result] = await pool.execute<ResultSetHeader>(
+				`UPDATE user_earnings SET wallet_address = ?, wallet_verified_at = ?,
+          updated_at = CURRENT_TIMESTAMP(6)
+          WHERE user_id = ? AND (wallet_verified_at IS NULL OR wallet_verified_at < ?)`,
+				[walletAddress, new Date(verifiedAtIso), userId, new Date(challengeCreatedAtIso)]
+			);
+			return result.affectedRows === 1;
 		},
 		async insertEarning(params: InsertSharedKeyEarningParams) {
 			try {
@@ -709,6 +750,51 @@ export function createMySqlPortalLedgerRepository(db: MySqlDatabaseClient): Port
 					[reason, nowIso, id],
 				);
 				await connection.commit();
+			} catch (error) {
+				await connection.rollback();
+				throw error;
+			} finally {
+				connection.release();
+			}
+		},
+		async rejectRequestedWithdrawal(id, reason, nowIso) {
+			const connection = await pool.getConnection();
+			try {
+				await connection.beginTransaction();
+				// Lock the same withdrawal row that the chain worker must claim.
+				const [rows] = await connection.execute<RowDataPacket[]>(
+					'SELECT id, user_id, amount, status, tx_hash FROM withdrawals WHERE id = ? FOR UPDATE', [id]);
+				const withdrawal = rows[0];
+				if (!withdrawal) {
+					await connection.rollback();
+					return { kind: 'not-found' };
+				}
+				if (withdrawal.id !== id || withdrawal.status !== 'requested' || withdrawal.tx_hash !== null) {
+					await connection.rollback();
+					return { kind: 'conflict' };
+				}
+				const [changed] = await connection.execute<ResultSetHeader>(
+					`UPDATE withdrawals SET status = 'failed', failure_reason = ?, updated_at = ?
+					 WHERE id = ? AND status = 'requested' AND tx_hash IS NULL AND amount > 0
+					 AND NOT EXISTS (SELECT 1 FROM chain_job_transactions
+						 WHERE job_kind = 'withdrawal' AND job_id = withdrawals.id)`, [reason, nowIso, id]);
+				if (changed.affectedRows === 0) {
+					await connection.rollback();
+					return { kind: 'conflict' };
+				}
+				if (changed.affectedRows !== 1) throw new Error('withdrawal_rejection_result_uncertain');
+				// The CAS and refund both require a positive stored DECIMAL amount.
+				// Preserve the database's DECIMAL string instead of rounding a caller
+				// amount through JavaScript. This transaction owns both state and money.
+				const canonicalAmount = withdrawal.amount;
+				const [refunded] = await connection.execute<ResultSetHeader>(
+					`UPDATE user_earnings SET locked_amount = locked_amount - ?,
+					 balance = balance + ?, updated_at = ?
+					 WHERE user_id = ? AND locked_amount >= ? AND ? > 0`,
+					[canonicalAmount, canonicalAmount, nowIso, withdrawal.user_id, canonicalAmount, canonicalAmount]);
+				if (refunded.affectedRows !== 1) throw new Error('insufficient_locked_balance');
+				await connection.commit();
+				return { kind: 'rejected', withdrawalId: id };
 			} catch (error) {
 				await connection.rollback();
 				throw error;

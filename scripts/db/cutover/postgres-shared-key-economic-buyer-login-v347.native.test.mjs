@@ -1,7 +1,7 @@
 // Review-only native proof: v2 event producer moves to a distinct buyer LOGIN.
 import assert from 'node:assert/strict';
 import { createHash, randomBytes, randomUUID } from 'node:crypto';
-import { readFile, readdir, writeFile } from 'node:fs/promises';
+import { readFile, writeFile } from 'node:fs/promises';
 import { dirname, join } from 'node:path';
 import test from 'node:test';
 import postgres from 'postgres';
@@ -10,7 +10,7 @@ import { startNativePostgres } from '../../../packages/core/src/test-support/pos
 import { pgCoreSchema } from '../../../packages/core/src/storage/drizzle/schema.pg.ts';
 import { insertRequestUsageAndChargeTxPg } from '../../../packages/core/src/db/postgres/critical-writes.impl.ts';
 import { chargeParams } from '../../../packages/core/src/test-support/postgres-financial-engine.mjs';
-import { grantPostgresRuntime } from './grant-postgres-runtime.ts';
+import { grantPg73RuntimeFixture, listPg73Migrations } from './pg73-native-fixture.mjs';
 
 const gateway = 'cinatoken_gateway';
 const quotes = 'cinatoken_economic_quotes';
@@ -140,7 +140,7 @@ test('dedicated buyer LOGIN runs the real v2 critical writer and ordinary runtim
       clients.push(migrator, runtime, buyer, quoteProducer);
       await migrator.unsafe(`CREATE TABLE ${gateway}.schema_migrations
         (version text PRIMARY KEY, applied_at timestamptz NOT NULL DEFAULT now())`);
-      const names = (await readdir(migrations)).filter(name => name.endsWith('.sql')).sort();
+      const names = await listPg73Migrations();
       assert.equal(names.length, 73);
       const corpus = [];
       for (const name of names) {
@@ -160,7 +160,7 @@ test('dedicated buyer LOGIN runs the real v2 critical writer and ordinary runtim
       report.sourceSha256.fixture = digest(await readFile(new URL(import.meta.url)));
       const migratorUrl = `postgres://cinatoken_gateway_migrator:${migratorPassword}`
         + `@127.0.0.1:${cluster.port}/postgres`;
-      await grantPostgresRuntime({ DATABASE_URL: migratorUrl });
+      await grantPg73RuntimeFixture({ cluster, migrator, migratorUrl });
       stage('formal-pg73-and-current-runtime-grant-installed');
 
       for (const [name, activation, value] of proposals) {
@@ -369,7 +369,7 @@ test('dedicated buyer LOGIN runs the real v2 critical writer and ordinary runtim
         logs: 0, events: 0, attempts: 0, receipt_spent: null });
       stage('runtime-forged-log-rolls-back-and-cannot-create-private-v2-event');
 
-      await grantPostgresRuntime({ DATABASE_URL: migratorUrl });
+      await grantPg73RuntimeFixture({ cluster, migrator, migratorUrl });
       const [rerun] = await migrator.unsafe(`SELECT
         pg_catalog.has_column_privilege('cinatoken_gateway_runtime',
           '${gateway}.users','budget_spent','UPDATE') AS runtime_spend_update,

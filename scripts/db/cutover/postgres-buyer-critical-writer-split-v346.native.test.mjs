@@ -2,7 +2,7 @@
 // The grant proposal is intentionally not a formal migration or rollout plan.
 import assert from 'node:assert/strict';
 import { createHash, randomBytes, randomUUID } from 'node:crypto';
-import { readFile, readdir, writeFile } from 'node:fs/promises';
+import { readFile, writeFile } from 'node:fs/promises';
 import { dirname, join } from 'node:path';
 import test from 'node:test';
 import postgres from 'postgres';
@@ -12,7 +12,7 @@ import { pgCoreSchema } from '../../../packages/core/src/storage/drizzle/schema.
 import { insertRequestUsageAndChargeTxPg } from '../../../packages/core/src/db/postgres/critical-writes.impl.ts';
 import { createPostgresSharedKeysRepository } from '../../../packages/core/src/db/postgres/portal-marketplace.impl.ts';
 import { chargeParams } from '../../../packages/core/src/test-support/postgres-financial-engine.mjs';
-import { grantPostgresRuntime } from './grant-postgres-runtime.ts';
+import { grantPg73RuntimeFixture, listPg73Migrations } from './pg73-native-fixture.mjs';
 
 const schema = 'cinatoken_gateway';
 const migrations = new URL('../../../packages/core/migrations-postgres/', import.meta.url);
@@ -87,7 +87,7 @@ test('PG73 critical writer uses a distinct buyer LOGIN after local financial rev
       clients.push(migrator, runtime, buyer);
       await migrator.unsafe(`CREATE TABLE ${schema}.schema_migrations
         (version text PRIMARY KEY, applied_at timestamptz NOT NULL DEFAULT now())`);
-      const names = (await readdir(migrations)).filter(name => name.endsWith('.sql')).sort();
+      const names = await listPg73Migrations();
       assert.equal(names.length, 73);
       assert.equal(names.at(-1), '0073_recovery_api_key_workspace_lock.sql');
       const corpus = [];
@@ -110,7 +110,7 @@ test('PG73 critical writer uses a distinct buyer LOGIN after local financial rev
 
       const migratorUrl = `postgres://cinatoken_gateway_migrator:${migratorPassword}`
         + `@127.0.0.1:${cluster.port}/postgres`;
-      await grantPostgresRuntime({ DATABASE_URL: migratorUrl });
+      await grantPg73RuntimeFixture({ cluster, migrator, migratorUrl });
       await migrator.unsafe(`INSERT INTO ${schema}.users
         (id,email,budget_max,budget_spent) VALUES
         ('buyer-split-seller','seller-split@example.invalid',10,0);
@@ -266,7 +266,7 @@ test('PG73 critical writer uses a distinct buyer LOGIN after local financial rev
         'cinatoken_gateway_buyer_settlement');
       stage('v2-producer-source-session-user-gate-is-incompatible-with-new-login');
 
-      await grantPostgresRuntime({ DATABASE_URL: migratorUrl });
+      await grantPg73RuntimeFixture({ cluster, migrator, migratorUrl });
       const [reopened] = await migrator.unsafe(`SELECT
         pg_catalog.has_column_privilege('cinatoken_gateway_runtime',
           '${schema}.users','budget_spent','UPDATE') AS spend_update,

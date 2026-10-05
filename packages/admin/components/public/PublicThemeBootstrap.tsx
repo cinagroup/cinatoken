@@ -18,5 +18,10 @@ const PUBLIC_THEME_BOOTSTRAP = `(() => {
 })();`;
 
 export default function PublicThemeBootstrap() {
-	return <script suppressHydrationWarning dangerouslySetInnerHTML={{ __html: PUBLIC_THEME_BOOTSTRAP }} />;
+	return (
+		<script
+			suppressHydrationWarning
+			dangerouslySetInnerHTML={{ __html: PUBLIC_THEME_BOOTSTRAP }}
+		/>
+	);
 }

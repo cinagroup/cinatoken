@@ -3,7 +3,11 @@
  * 并将推理类字段与正文分列，便于区分。
  */
 
-export type PlaygroundProtocol = "openai" | "anthropic" | "gemini" | "dashscope";
+export type PlaygroundProtocol =
+	| "openai"
+	| "anthropic"
+	| "gemini"
+	| "dashscope";
 
 export type PlaygroundResponseParseMode = "sse" | "json" | "ndjson" | "text";
 
@@ -254,7 +258,10 @@ function mergeGeminiSseParts(raw: string): MergedAssistantParts {
 	return acc;
 }
 
-function appendResponsesContentText(content: unknown, parts: MergedAssistantParts): void {
+function appendResponsesContentText(
+	content: unknown,
+	parts: MergedAssistantParts
+): void {
 	if (!Array.isArray(content)) {
 		return;
 	}
@@ -264,7 +271,9 @@ function appendResponsesContentText(content: unknown, parts: MergedAssistantPart
 		}
 		const item = part as { type?: unknown; text?: unknown };
 		if (
-			(item.type === "output_text" || item.type === "summary_text" || item.type === "text") &&
+			(item.type === "output_text" ||
+				item.type === "summary_text" ||
+				item.type === "text") &&
 			typeof item.text === "string"
 		) {
 			if (item.type === "summary_text") {
@@ -289,7 +298,11 @@ function extractOpenAiResponsesOutputParts(
 		if (!raw || typeof raw !== "object") {
 			continue;
 		}
-		const item = raw as { type?: unknown; content?: unknown; summary?: unknown };
+		const item = raw as {
+			type?: unknown;
+			content?: unknown;
+			summary?: unknown;
+		};
 		if (item.type === "reasoning") {
 			appendResponsesContentText(item.summary, parts);
 			continue;
@@ -393,23 +406,30 @@ function mergeDashScopeNdjsonParts(raw: string): MergedAssistantParts {
 		if (!value || typeof value !== "object" || Array.isArray(value)) continue;
 		const event = (value as { header?: { event?: unknown } }).header?.event;
 		if (event !== "result-generated") continue;
-		const output = (value as { payload?: { output?: unknown } }).payload?.output;
-		if (!output || typeof output !== "object" || Array.isArray(output)) continue;
+		const output = (value as { payload?: { output?: unknown } }).payload
+			?.output;
+		if (!output || typeof output !== "object" || Array.isArray(output))
+			continue;
 		const sentence = (output as { sentence?: unknown }).sentence;
-		if (!sentence || typeof sentence !== "object" || Array.isArray(sentence)) continue;
+		if (!sentence || typeof sentence !== "object" || Array.isArray(sentence))
+			continue;
 		const sentenceId = (sentence as { sentence_id?: unknown }).sentence_id;
-		if (typeof sentenceId !== "string" && typeof sentenceId !== "number") continue;
+		if (typeof sentenceId !== "string" && typeof sentenceId !== "number")
+			continue;
 		const outputText = (output as { text?: unknown }).text;
 		const sentenceText = (sentence as { text?: unknown }).text;
 		const text =
 			typeof outputText === "string"
 				? outputText
 				: typeof sentenceText === "string"
-					? sentenceText
-					: "";
+				? sentenceText
+				: "";
 		sentences.set(String(sentenceId), text);
 	}
-	return { reasoning: "", body: Array.from(sentences.values()).filter(Boolean).join("") };
+	return {
+		reasoning: "",
+		body: Array.from(sentences.values()).filter(Boolean).join(""),
+	};
 }
 
 /**

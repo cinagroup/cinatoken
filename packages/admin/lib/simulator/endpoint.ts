@@ -204,12 +204,14 @@ export function buildSimulatorRequest(
 				if (input.body.temperature != null) fieldParts.push("temperature");
 				if (input.body.file_url != null) fieldParts.push("file_url");
 				const fileUrl =
-					typeof input.body.file_url === "string" ? input.body.file_url.trim() : "";
+					typeof input.body.file_url === "string"
+						? input.body.file_url.trim()
+						: "";
 				const fileSummary = fileUrl
 					? `file_url: ${fileUrl}`
 					: !file
-						? "file: (none selected yet — required before Send)"
-						: [`file:`, ...fileLines.map((l) => `  - ${l}`)].join("\n");
+					? "file: (none selected yet — required before Send)"
+					: [`file:`, ...fileLines.map((l) => `  - ${l}`)].join("\n");
 				const path = resolveProxyPathForModelInvoke({
 					kind: "audio",
 					protocol: "openai",
@@ -328,7 +330,9 @@ export function buildSimulatorRequest(
 			};
 		}
 		case "dashscope": {
-			if (input.dashscopeRequestOperation === "audio.transcriptions.multimodal") {
+			if (
+				input.dashscopeRequestOperation === "audio.transcriptions.multimodal"
+			) {
 				const path = resolveProxyPathForModelInvoke({
 					kind: "audio",
 					protocol: "dashscope",

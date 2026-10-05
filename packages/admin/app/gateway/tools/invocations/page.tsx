@@ -1,181 +1,214 @@
-'use client';
+"use client";
 
 /**
  * Tools 调用查询：筛选 `provider_id=octafuse-tools`（或单工具 `model_id=tool:*`）的 request logs。
  */
-import Link from 'next/link';
-import { Fragment, useCallback, useEffect, useMemo, useState } from 'react';
-import { useTranslations } from 'next-intl';
-import { GatewayTimeRangePicker } from '@/components/GatewayTimeRangePicker';
-import { readApiJson } from '@/lib/api-json';
+import Link from "next/link";
+import { Fragment, useCallback, useEffect, useMemo, useState } from "react";
+import { useTranslations } from "next-intl";
+import { GatewayTimeRangePicker } from "@/components/GatewayTimeRangePicker";
+import { readApiJson } from "@/lib/api-json";
 import {
 	createRangeValue,
 	DEFAULT_GATEWAY_TIME_RANGE_PRESET,
 	detectRollingPreset,
 	type GatewayTimeRangeValue,
-} from '@/lib/analytics-range';
+} from "@/lib/analytics-range";
 import {
 	formatGatewayMoneyCompact,
 	formatGatewayMoneyCompactSigned,
 	getGatewayCurrencySymbol,
-} from '@/lib/format-gateway-currency';
+} from "@/lib/format-gateway-currency";
 import {
 	findGatewayToolById,
 	GATEWAY_TOOLS,
 	GATEWAY_TOOLS_PROVIDER_ID,
-} from '@/lib/gateway-tools';
+} from "@/lib/gateway-tools";
 import {
 	parseToolRequestSummary,
 	parseToolResponseSummary,
 	resolveToolEngineProvider,
-} from '@/lib/tool-invocation-detail';
-import type { GatewayRequestLog } from '@/lib/types';
-import { useBillingCurrency } from '@/lib/use-billing-currency';
-import { useGatewayDateTime } from '@/lib/use-gateway-datetime';
-import { useReplaceListPageQuery } from '@/lib/use-replace-list-query';
+} from "@/lib/tool-invocation-detail";
+import type { GatewayRequestLog } from "@/lib/types";
+import { useBillingCurrency } from "@/lib/use-billing-currency";
+import { useGatewayDateTime } from "@/lib/use-gateway-datetime";
+import {
+	useListPageBrowserReady,
+	useReplaceListPageQuery,
+} from "@/lib/use-replace-list-query";
+
+function initialInvocationFilters() {
+	const params = new URLSearchParams(window.location.search);
+	const start = params.get("start_date");
+	const end = params.get("end_date");
+	const hasStart = start != null && start !== "";
+	const hasEnd = end != null && end !== "";
+	const parsedPage = Number(params.get("page"));
+	return {
+		tool: findGatewayToolById(params.get("tool"))?.id ?? "",
+		status: params.get("status") ?? "",
+		page: Number.isFinite(parsedPage) && parsedPage >= 1 ? parsedPage : 1,
+		range:
+			hasStart || hasEnd
+				? ({
+						preset:
+							hasStart && hasEnd
+								? detectRollingPreset(start, end) ?? "custom"
+								: "custom",
+						start_date: hasStart ? start : "",
+						end_date: hasEnd ? end : "",
+				  } satisfies GatewayTimeRangeValue)
+				: createRangeValue(DEFAULT_GATEWAY_TIME_RANGE_PRESET),
+	};
+}
 
 export default function GatewayToolInvocationsPage() {
-	const t = useTranslations('tools');
-	const tCommon = useTranslations('common');
+	const ready = useListPageBrowserReady();
+	const tCommon = useTranslations("common");
+	return ready ? (
+		<GatewayToolInvocationsContent />
+	) : (
+		<div className="p-8 text-sm text-gray-500">{tCommon("loading")}</div>
+	);
+}
+
+function GatewayToolInvocationsContent() {
+	const t = useTranslations("tools");
+	const tCommon = useTranslations("common");
 	const { currency: billingCurrency } = useBillingCurrency();
 	const billingCurrencySym = getGatewayCurrencySymbol(billingCurrency);
 	const { formatDateTime } = useGatewayDateTime();
 
-	const [toolFilter, setToolFilter] = useState('');
-	const [filterStatus, setFilterStatus] = useState('');
-	const [rangeValue, setRangeValue] = useState<GatewayTimeRangeValue>(() => createRangeValue(DEFAULT_GATEWAY_TIME_RANGE_PRESET));
-	const [logs, setLogs] = useState<GatewayRequestLog[]>([]);
-	const [total, setTotal] = useState(0);
-	const [page, setPage] = useState(1);
-	const [isLoading, setIsLoading] = useState(true);
+	const [initial] = useState(initialInvocationFilters);
+	const [toolFilter, setToolFilter] = useState(initial.tool);
+	const [filterStatus, setFilterStatus] = useState(initial.status);
+	const [rangeValue, setRangeValue] = useState<GatewayTimeRangeValue>(
+		initial.range
+	);
+	const [page, setPage] = useState(initial.page);
 	const [detailLogId, setDetailLogId] = useState<string | null>(null);
 	/** Response 面板展示格式：可读列表 / 原始 JSON */
-	const [responseView, setResponseView] = useState<'list' | 'json'>('list');
+	const [responseView, setResponseView] = useState<"list" | "json">("list");
 	const pageSize = 50;
 
-	useEffect(() => {
-		const params = new URLSearchParams(window.location.search);
-		const tool = params.get('tool');
-		const status = params.get('status');
-		const startDate = params.get('start_date');
-		const endDate = params.get('end_date');
-		const pageParam = params.get('page');
-		const found = findGatewayToolById(tool);
-		if (found) setToolFilter(found.id);
-		if (status != null) setFilterStatus(status);
-		const hasStart = startDate != null && startDate !== '';
-		const hasEnd = endDate != null && endDate !== '';
-		if (hasStart || hasEnd) {
-			const s = hasStart ? startDate! : '';
-			const e = hasEnd ? endDate! : '';
-			setRangeValue({
-				preset: hasStart && hasEnd ? detectRollingPreset(s, e) ?? 'custom' : 'custom',
-				start_date: s,
-				end_date: e,
-			});
-		}
-		if (pageParam) {
-			const n = Number(pageParam);
-			if (Number.isFinite(n) && n >= 1) setPage(n);
-		}
-	}, []);
-
-	useReplaceListPageQuery(
-		() => {
-			const q = new URLSearchParams();
-			if (toolFilter) q.set('tool', toolFilter);
-			if (filterStatus) q.set('status', filterStatus);
-			if (rangeValue.start_date) q.set('start_date', rangeValue.start_date);
-			if (rangeValue.end_date) q.set('end_date', rangeValue.end_date);
-			if (page > 1) q.set('page', String(page));
-			return q;
-		},
-		[toolFilter, filterStatus, rangeValue.start_date, rangeValue.end_date, page]
-	);
+	useReplaceListPageQuery(() => {
+		const q = new URLSearchParams();
+		if (toolFilter) q.set("tool", toolFilter);
+		if (filterStatus) q.set("status", filterStatus);
+		if (rangeValue.start_date) q.set("start_date", rangeValue.start_date);
+		if (rangeValue.end_date) q.set("end_date", rangeValue.end_date);
+		if (page > 1) q.set("page", String(page));
+		return q;
+	}, [
+		toolFilter,
+		filterStatus,
+		rangeValue.start_date,
+		rangeValue.end_date,
+		page,
+	]);
 
 	const requestLogsHref = useMemo(() => {
 		const q = new URLSearchParams();
 		const tool = findGatewayToolById(toolFilter);
 		if (tool) {
-			q.set('model_id', tool.modelId);
+			q.set("model_id", tool.modelId);
 		} else {
-			q.set('provider_id', GATEWAY_TOOLS_PROVIDER_ID);
+			q.set("provider_id", GATEWAY_TOOLS_PROVIDER_ID);
 		}
-		if (filterStatus) q.set('status', filterStatus);
-		if (rangeValue.start_date) q.set('start_date', rangeValue.start_date);
-		if (rangeValue.end_date) q.set('end_date', rangeValue.end_date);
+		if (filterStatus) q.set("status", filterStatus);
+		if (rangeValue.start_date) q.set("start_date", rangeValue.start_date);
+		if (rangeValue.end_date) q.set("end_date", rangeValue.end_date);
 		return `/admin/request-logs?${q.toString()}`;
 	}, [toolFilter, filterStatus, rangeValue.start_date, rangeValue.end_date]);
 
-	const fetchLogs = useCallback(async () => {
-		setIsLoading(true);
-		try {
-			const params = new URLSearchParams();
-			params.set('page', String(page));
-			params.set('page_size', String(pageSize));
-			const tool = findGatewayToolById(toolFilter);
-			if (tool) {
-				params.set('model_id', tool.modelId);
-			} else {
-				params.set('provider_id', GATEWAY_TOOLS_PROVIDER_ID);
-			}
-			if (filterStatus) params.set('status', filterStatus);
-			if (rangeValue.start_date) params.set('start_date', rangeValue.start_date);
-			if (rangeValue.end_date) params.set('end_date', rangeValue.end_date);
-
-			const response = await fetch(`/api/admin/request-logs?${params.toString()}`);
-			const data = await readApiJson<GatewayRequestLog[]>(response);
-			if (!data.success) {
-				setLogs([]);
-				setTotal(0);
-				return;
-			}
-			setLogs(data.data || []);
-			setTotal(data.total || 0);
-		} catch (e) {
-			console.error('Fetch tool invocations:', e);
-			setLogs([]);
-			setTotal(0);
-		} finally {
-			setIsLoading(false);
-		}
-	}, [page, toolFilter, filterStatus, rangeValue.start_date, rangeValue.end_date]);
+	const params = new URLSearchParams({
+		page: String(page),
+		page_size: String(pageSize),
+	});
+	const selectedTool = findGatewayToolById(toolFilter);
+	if (selectedTool) params.set("model_id", selectedTool.modelId);
+	else params.set("provider_id", GATEWAY_TOOLS_PROVIDER_ID);
+	if (filterStatus) params.set("status", filterStatus);
+	if (rangeValue.start_date) params.set("start_date", rangeValue.start_date);
+	if (rangeValue.end_date) params.set("end_date", rangeValue.end_date);
+	const query = params.toString();
+	const [request, setRequest] = useState(() => ({ query }));
+	if (request.query !== query) setRequest({ query });
+	const [result, setResult] = useState<{
+		request: { query: string };
+		logs: GatewayRequestLog[];
+		total: number;
+	} | null>(null);
+	const logs = result?.logs ?? [];
+	const total = result?.total ?? 0;
+	const isLoading = result?.request !== request;
 
 	useEffect(() => {
-		void fetchLogs();
-	}, [fetchLogs]);
+		const controller = new AbortController();
+		void (async () => {
+			try {
+				const response = await fetch(
+					`/api/admin/request-logs?${request.query}`,
+					{
+						signal: controller.signal,
+					}
+				);
+				const data = await readApiJson<GatewayRequestLog[]>(response);
+				if (controller.signal.aborted) return;
+				setResult({
+					request,
+					logs: data.success ? data.data || [] : [],
+					total: data.success ? data.total || 0 : 0,
+				});
+			} catch (error) {
+				if (controller.signal.aborted) return;
+				console.error("Fetch tool invocations:", error);
+				setResult({ request, logs: [], total: 0 });
+			}
+		})();
+		return () => controller.abort();
+	}, [request]);
 
 	const totalPages = Math.max(1, Math.ceil(total / pageSize));
 
 	const toolLabel = (modelId: string | null | undefined) => {
 		const found = GATEWAY_TOOLS.find((x) => x.modelId === modelId);
 		if (found) return t(`catalog.${found.nameKey}`);
-		return modelId || '—';
+		return modelId || "—";
 	};
 
 	return (
 		<div className="p-8">
 			<div className="mb-6 flex flex-wrap items-start justify-between gap-4">
 				<div>
-					<h1 className="text-3xl font-bold text-gray-900">{t('invocations.title')}</h1>
-					<p className="mt-1 max-w-3xl text-sm text-gray-500">{t('invocations.subtitle')}</p>
+					<h1 className="text-3xl font-bold text-gray-900">
+						{t("invocations.title")}
+					</h1>
+					<p className="mt-1 max-w-3xl text-sm text-gray-500">
+						{t("invocations.subtitle")}
+					</p>
 				</div>
 				<div className="flex flex-wrap items-center gap-3">
-					<Link href="/admin/tools" className="text-sm font-medium text-blue-600 hover:underline">
-						{t('invocations.configureTools')}
+					<Link
+						href="/admin/tools"
+						className="text-sm font-medium text-blue-600 hover:underline"
+					>
+						{t("invocations.configureTools")}
 					</Link>
 					<Link
 						href={requestLogsHref}
 						className="rounded-md border border-gray-300 bg-white px-3 py-2 text-sm font-medium text-gray-800 shadow-sm hover:bg-gray-50"
 					>
-						{t('invocations.openInRequestLogs')}
+						{t("invocations.openInRequestLogs")}
 					</Link>
 				</div>
 			</div>
 
 			<div className="mb-4 flex flex-wrap items-end gap-3 rounded-lg border border-gray-200 bg-white p-4 shadow-sm">
 				<div>
-					<label className="mb-1 block text-xs font-medium text-gray-600">{t('invocations.toolFilter')}</label>
+					<label className="mb-1 block text-xs font-medium text-gray-600">
+						{t("invocations.toolFilter")}
+					</label>
 					<select
 						value={toolFilter}
 						onChange={(e) => {
@@ -184,7 +217,7 @@ export default function GatewayToolInvocationsPage() {
 						}}
 						className="min-w-[14rem] rounded-md border border-gray-300 bg-white px-3 py-2 text-sm shadow-sm"
 					>
-						<option value="">{t('invocations.allTools')}</option>
+						<option value="">{t("invocations.allTools")}</option>
 						{GATEWAY_TOOLS.map((tool) => (
 							<option key={tool.id} value={tool.id}>
 								{t(`catalog.${tool.nameKey}`)}
@@ -193,7 +226,9 @@ export default function GatewayToolInvocationsPage() {
 					</select>
 				</div>
 				<div>
-					<label className="mb-1 block text-xs font-medium text-gray-600">{t('invocations.status')}</label>
+					<label className="mb-1 block text-xs font-medium text-gray-600">
+						{t("invocations.status")}
+					</label>
 					<select
 						value={filterStatus}
 						onChange={(e) => {
@@ -202,7 +237,7 @@ export default function GatewayToolInvocationsPage() {
 						}}
 						className="min-w-[10rem] rounded-md border border-gray-300 bg-white px-3 py-2 text-sm shadow-sm"
 					>
-						<option value="">{tCommon('all')}</option>
+						<option value="">{tCommon("all")}</option>
 						<option value="success">success</option>
 						<option value="error">error</option>
 					</select>
@@ -219,48 +254,74 @@ export default function GatewayToolInvocationsPage() {
 			</div>
 
 			{isLoading ? (
-				<div className="py-12 text-center text-gray-600">{tCommon('loading')}</div>
+				<div className="py-12 text-center text-gray-600">
+					{tCommon("loading")}
+				</div>
 			) : logs.length === 0 ? (
 				<div className="rounded-lg border border-dashed border-gray-300 bg-white py-12 text-center text-sm text-gray-500">
-					{t('invocations.empty')}
+					{t("invocations.empty")}
 				</div>
 			) : (
 				<div className="overflow-hidden rounded-lg border border-gray-200 bg-white shadow-sm">
 					<table className="min-w-full divide-y divide-gray-200 text-sm">
 						<thead className="bg-gray-50">
 							<tr>
-								<th className="px-4 py-3 text-left font-medium text-gray-600">{t('invocations.columns.time')}</th>
-								<th className="px-4 py-3 text-left font-medium text-gray-600">{t('invocations.columns.tool')}</th>
-								<th className="px-4 py-3 text-left font-medium text-gray-600">{t('invocations.columns.provider')}</th>
-								<th className="px-4 py-3 text-left font-medium text-gray-600">{t('invocations.columns.query')}</th>
-								<th className="px-4 py-3 text-left font-medium text-gray-600">{t('invocations.columns.user')}</th>
-								<th className="px-4 py-3 text-left font-medium text-gray-600">{t('invocations.columns.status')}</th>
-								<th className="px-4 py-3 text-right font-medium text-gray-600">{t('invocations.columns.results')}</th>
-								<th
-									className="px-4 py-3 text-right font-medium text-gray-600"
-									title={t('invocations.titles.standard')}
-								>
-									{t('invocations.columns.standard', { currency: billingCurrencySym })}
+								<th className="px-4 py-3 text-left font-medium text-gray-600">
+									{t("invocations.columns.time")}
+								</th>
+								<th className="px-4 py-3 text-left font-medium text-gray-600">
+									{t("invocations.columns.tool")}
+								</th>
+								<th className="px-4 py-3 text-left font-medium text-gray-600">
+									{t("invocations.columns.provider")}
+								</th>
+								<th className="px-4 py-3 text-left font-medium text-gray-600">
+									{t("invocations.columns.query")}
+								</th>
+								<th className="px-4 py-3 text-left font-medium text-gray-600">
+									{t("invocations.columns.user")}
+								</th>
+								<th className="px-4 py-3 text-left font-medium text-gray-600">
+									{t("invocations.columns.status")}
+								</th>
+								<th className="px-4 py-3 text-right font-medium text-gray-600">
+									{t("invocations.columns.results")}
 								</th>
 								<th
 									className="px-4 py-3 text-right font-medium text-gray-600"
-									title={t('invocations.titles.charged')}
+									title={t("invocations.titles.standard")}
 								>
-									{t('invocations.columns.charged', { currency: billingCurrencySym })}
+									{t("invocations.columns.standard", {
+										currency: billingCurrencySym,
+									})}
 								</th>
 								<th
 									className="px-4 py-3 text-right font-medium text-gray-600"
-									title={t('invocations.titles.metered')}
+									title={t("invocations.titles.charged")}
 								>
-									{t('invocations.columns.metered', { currency: billingCurrencySym })}
+									{t("invocations.columns.charged", {
+										currency: billingCurrencySym,
+									})}
 								</th>
 								<th
 									className="px-4 py-3 text-right font-medium text-gray-600"
-									title={t('invocations.titles.profit')}
+									title={t("invocations.titles.metered")}
 								>
-									{t('invocations.columns.profit', { currency: billingCurrencySym })}
+									{t("invocations.columns.metered", {
+										currency: billingCurrencySym,
+									})}
 								</th>
-								<th className="px-4 py-3 text-right font-medium text-gray-600">{t('invocations.columns.latency')}</th>
+								<th
+									className="px-4 py-3 text-right font-medium text-gray-600"
+									title={t("invocations.titles.profit")}
+								>
+									{t("invocations.columns.profit", {
+										currency: billingCurrencySym,
+									})}
+								</th>
+								<th className="px-4 py-3 text-right font-medium text-gray-600">
+									{t("invocations.columns.latency")}
+								</th>
 							</tr>
 						</thead>
 						<tbody className="divide-y divide-gray-100">
@@ -273,20 +334,28 @@ export default function GatewayToolInvocationsPage() {
 								const meteredCost = Number(log.metered_cost ?? 0);
 								const profit = chargedCost - meteredCost;
 								const profitToneClass =
-									profit > 0 ? 'text-emerald-700' : profit < 0 ? 'text-red-600' : 'text-gray-600';
+									profit > 0
+										? "text-emerald-700"
+										: profit < 0
+										? "text-red-600"
+										: "text-gray-600";
 								const expanded = detailLogId === log.id;
 								return (
 									<Fragment key={log.id}>
 										<tr
 											className={`cursor-pointer hover:bg-gray-50 ${
-												expanded ? 'bg-slate-50' : profit < 0 ? 'bg-amber-50/50' : ''
+												expanded
+													? "bg-slate-50"
+													: profit < 0
+													? "bg-amber-50/50"
+													: ""
 											}`}
 											onClick={() => {
 												if (expanded) {
 													setDetailLogId(null);
 												} else {
 													setDetailLogId(log.id);
-													setResponseView('list');
+													setResponseView("list");
 												}
 											}}
 											aria-expanded={expanded}
@@ -294,109 +363,142 @@ export default function GatewayToolInvocationsPage() {
 											<td className="whitespace-nowrap px-4 py-3 text-gray-700">
 												{formatDateTime(log.created_at)}
 											</td>
-											<td className="px-4 py-3 font-mono text-xs text-gray-900">{toolLabel(log.model_id)}</td>
-											<td className="px-4 py-3 font-mono text-xs text-indigo-700" title={engine ?? undefined}>
-												{engine || '—'}
+											<td className="px-4 py-3 font-mono text-xs text-gray-900">
+												{toolLabel(log.model_id)}
 											</td>
-											<td className="max-w-[18rem] truncate px-4 py-3 text-gray-800" title={req.query ?? ''}>
-												{req.query || '—'}
+											<td
+												className="px-4 py-3 font-mono text-xs text-indigo-700"
+												title={engine ?? undefined}
+											>
+												{engine || "—"}
 											</td>
-											<td className="max-w-[12rem] truncate px-4 py-3 text-gray-700" title={log.user_email ?? ''}>
-												{log.user_email || '—'}
+											<td
+												className="max-w-[18rem] truncate px-4 py-3 text-gray-800"
+												title={req.query ?? ""}
+											>
+												{req.query || "—"}
+											</td>
+											<td
+												className="max-w-[12rem] truncate px-4 py-3 text-gray-700"
+												title={log.user_email ?? ""}
+											>
+												{log.user_email || "—"}
 											</td>
 											<td className="px-4 py-3">
 												<span
 													className={
-														log.status === 'success'
-															? 'text-green-700'
-															: log.status === 'error'
-																? 'text-red-700'
-																: 'text-gray-700'
+														log.status === "success"
+															? "text-green-700"
+															: log.status === "error"
+															? "text-red-700"
+															: "text-gray-700"
 													}
 												>
 													{log.status}
 												</span>
 											</td>
 											<td className="px-4 py-3 text-right font-mono text-xs text-gray-600">
-												{res.resultCount != null ? res.resultCount : '—'}
+												{res.resultCount != null ? res.resultCount : "—"}
 											</td>
 											<td
 												className="px-4 py-3 text-right font-mono text-xs tabular-nums text-gray-800"
-												title={t('invocations.titles.standard')}
+												title={t("invocations.titles.standard")}
 											>
-												{formatGatewayMoneyCompact(standardCost, billingCurrency)}
+												{formatGatewayMoneyCompact(
+													standardCost,
+													billingCurrency
+												)}
 											</td>
 											<td
 												className="px-4 py-3 text-right font-mono text-xs tabular-nums text-gray-900"
-												title={t('invocations.titles.charged')}
+												title={t("invocations.titles.charged")}
 											>
-												{formatGatewayMoneyCompact(chargedCost, billingCurrency)}
+												{formatGatewayMoneyCompact(
+													chargedCost,
+													billingCurrency
+												)}
 											</td>
 											<td
 												className="px-4 py-3 text-right font-mono text-xs tabular-nums text-gray-700"
-												title={t('invocations.titles.metered')}
+												title={t("invocations.titles.metered")}
 											>
-												{formatGatewayMoneyCompact(meteredCost, billingCurrency)}
+												{formatGatewayMoneyCompact(
+													meteredCost,
+													billingCurrency
+												)}
 											</td>
 											<td
 												className={`px-4 py-3 text-right font-mono text-xs font-medium tabular-nums ${profitToneClass}`}
-												title={t('invocations.titles.profit')}
+												title={t("invocations.titles.profit")}
 											>
-												{formatGatewayMoneyCompactSigned(profit, billingCurrency)}
+												{formatGatewayMoneyCompactSigned(
+													profit,
+													billingCurrency
+												)}
 											</td>
 											<td className="px-4 py-3 text-right font-mono text-xs text-gray-600">
-												{log.latency_ms != null ? `${log.latency_ms} ms` : '—'}
+												{log.latency_ms != null ? `${log.latency_ms} ms` : "—"}
 											</td>
 										</tr>
 										{expanded && (
 											<tr className="bg-slate-50">
-												<td colSpan={12} className="px-4 py-4" onClick={(e) => e.stopPropagation()}>
+												<td
+													colSpan={12}
+													className="px-4 py-4"
+													onClick={(e) => e.stopPropagation()}
+												>
 													<div className="grid items-stretch gap-4 lg:grid-cols-2">
 														<div className="flex min-h-[18rem] flex-col">
 															<h3 className="mb-2 shrink-0 text-xs font-semibold uppercase tracking-wide text-gray-500">
-																{t('invocations.detail.request')}
+																{t("invocations.detail.request")}
 															</h3>
 															<pre className="min-h-0 flex-1 overflow-auto rounded-md border border-gray-200 bg-white p-3 font-mono text-xs text-gray-800 whitespace-pre-wrap break-all">
 																{log.request_body
-																	? JSON.stringify(req.raw ?? log.request_body, null, 2)
-																	: '—'}
+																	? JSON.stringify(
+																			req.raw ?? log.request_body,
+																			null,
+																			2
+																	  )
+																	: "—"}
 															</pre>
 														</div>
 														<div className="flex min-h-[18rem] flex-col">
 															<div className="mb-2 flex shrink-0 items-center justify-between gap-2">
 																<h3 className="text-xs font-semibold uppercase tracking-wide text-gray-500">
-																	{t('invocations.detail.response')}
+																	{t("invocations.detail.response")}
 																</h3>
 																<div
 																	className="inline-flex rounded-md border border-gray-200 bg-white p-0.5 text-xs shadow-sm"
 																	role="tablist"
-																	aria-label={t('invocations.detail.responseFormat')}
+																	aria-label={t(
+																		"invocations.detail.responseFormat"
+																	)}
 																>
 																	<button
 																		type="button"
 																		role="tab"
-																		aria-selected={responseView === 'list'}
-																		onClick={() => setResponseView('list')}
+																		aria-selected={responseView === "list"}
+																		onClick={() => setResponseView("list")}
 																		className={`rounded px-2.5 py-1 font-medium ${
-																			responseView === 'list'
-																				? 'bg-gray-900 text-white'
-																				: 'text-gray-600 hover:bg-gray-50'
+																			responseView === "list"
+																				? "bg-gray-900 text-white"
+																				: "text-gray-600 hover:bg-gray-50"
 																		}`}
 																	>
-																		{t('invocations.detail.formatList')}
+																		{t("invocations.detail.formatList")}
 																	</button>
 																	<button
 																		type="button"
 																		role="tab"
-																		aria-selected={responseView === 'json'}
-																		onClick={() => setResponseView('json')}
+																		aria-selected={responseView === "json"}
+																		onClick={() => setResponseView("json")}
 																		className={`rounded px-2.5 py-1 font-medium ${
-																			responseView === 'json'
-																				? 'bg-gray-900 text-white'
-																				: 'text-gray-600 hover:bg-gray-50'
+																			responseView === "json"
+																				? "bg-gray-900 text-white"
+																				: "text-gray-600 hover:bg-gray-50"
 																		}`}
 																	>
-																		{t('invocations.detail.formatJson')}
+																		{t("invocations.detail.formatJson")}
 																	</button>
 																</div>
 															</div>
@@ -406,11 +508,14 @@ export default function GatewayToolInvocationsPage() {
 																		{log.error_message}
 																	</p>
 																) : null}
-																{responseView === 'list' ? (
+																{responseView === "list" ? (
 																	res.results.length > 0 ? (
 																		<ul className="min-h-0 flex-1 space-y-2 overflow-auto p-3">
 																			{res.results.map((item, idx) => (
-																				<li key={`${item.url ?? 'r'}-${idx}`} className="text-xs">
+																				<li
+																					key={`${item.url ?? "r"}-${idx}`}
+																					className="text-xs"
+																				>
 																					{item.url ? (
 																						<a
 																							href={item.url}
@@ -421,10 +526,14 @@ export default function GatewayToolInvocationsPage() {
 																							{item.title || item.url}
 																						</a>
 																					) : (
-																						<span className="font-medium text-gray-900">{item.title || '—'}</span>
+																						<span className="font-medium text-gray-900">
+																							{item.title || "—"}
+																						</span>
 																					)}
 																					{item.snippet ? (
-																						<p className="mt-0.5 line-clamp-2 text-gray-600">{item.snippet}</p>
+																						<p className="mt-0.5 line-clamp-2 text-gray-600">
+																							{item.snippet}
+																						</p>
 																					) : null}
 																				</li>
 																			))}
@@ -432,21 +541,31 @@ export default function GatewayToolInvocationsPage() {
 																	) : (
 																		<div className="flex min-h-0 flex-1 items-center justify-center px-3 py-6 text-xs text-gray-500">
 																			{log.raw_usage
-																				? t('invocations.detail.noListResults')
-																				: t('invocations.detail.noResponseStored')}
+																				? t("invocations.detail.noListResults")
+																				: t(
+																						"invocations.detail.noResponseStored"
+																				  )}
 																		</div>
 																	)
 																) : (
 																	<pre className="min-h-0 flex-1 overflow-auto p-3 font-mono text-xs text-gray-800 whitespace-pre-wrap break-all">
 																		{log.raw_usage
-																			? JSON.stringify(res.raw ?? log.raw_usage, null, 2)
-																			: t('invocations.detail.noResponseStored')}
+																			? JSON.stringify(
+																					res.raw ?? log.raw_usage,
+																					null,
+																					2
+																			  )
+																			: t(
+																					"invocations.detail.noResponseStored"
+																			  )}
 																	</pre>
 																)}
 															</div>
 														</div>
 													</div>
-													<p className="mt-3 text-xs text-gray-500">{t('invocations.detail.hint')}</p>
+													<p className="mt-3 text-xs text-gray-500">
+														{t("invocations.detail.hint")}
+													</p>
 												</td>
 											</tr>
 										)}
@@ -456,7 +575,9 @@ export default function GatewayToolInvocationsPage() {
 						</tbody>
 					</table>
 					<div className="flex items-center justify-between border-t border-gray-200 px-4 py-3 text-sm text-gray-600">
-						<span>{tCommon('pageOf', { page, totalPages })} · {total}</span>
+						<span>
+							{tCommon("pageOf", { page, totalPages })} · {total}
+						</span>
 						<div className="flex gap-2">
 							<button
 								type="button"
@@ -464,7 +585,7 @@ export default function GatewayToolInvocationsPage() {
 								onClick={() => setPage((p) => Math.max(1, p - 1))}
 								className="rounded-md border border-gray-300 px-3 py-1 disabled:opacity-40"
 							>
-								{tCommon('previous')}
+								{tCommon("previous")}
 							</button>
 							<button
 								type="button"
@@ -472,7 +593,7 @@ export default function GatewayToolInvocationsPage() {
 								onClick={() => setPage((p) => p + 1)}
 								className="rounded-md border border-gray-300 px-3 py-1 disabled:opacity-40"
 							>
-								{tCommon('next')}
+								{tCommon("next")}
 							</button>
 						</div>
 					</div>

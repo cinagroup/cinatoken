@@ -1,5 +1,6 @@
-import PresetManager from '@/components/presets/PresetManager';
+/* Copyright (C) 2023-2026 CinaGroup. SPDX-License-Identifier: AGPL-3.0-or-later */
+import LegacyPolicyWorkbenchShell from "@/components/policy-workbench/LegacyPolicyWorkbenchShell";
 
 export default function AdminPresetsPage() {
-	return <PresetManager mode="admin" />;
+	return <LegacyPolicyWorkbenchShell feature="presets" />;
 }

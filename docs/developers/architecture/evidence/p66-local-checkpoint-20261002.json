@@ -1,0 +1,1008 @@
+{
+  "at": "2026-10-02T08:26:28.727Z",
+  "stage": "P66/NEXT41 and NEXT13-B1 local slice accepted; full migration incomplete",
+  "actualAuditExit": 0,
+  "environment": {
+    "node": "v24.14.1",
+    "platform": "win32",
+    "browser": "Chrome154.0.8037.92",
+    "LinuxCI": false,
+    "nativeWorkerdAcceptedCases": 0
+  },
+  "release": {
+    "id": "local-p66-frontend-attribution-20261002080439",
+    "manifestSha256": "ae3929bb8f8d780d702dd8277fd5e838472be5c804bd93cdc69ac0a3b8ad0974",
+    "buildContract": {
+      "version": 1,
+      "buildId": "aa7d0b2c-a555-4a0d-af92-c327fe777e8b",
+      "sourceSha256": "21835c121ceae2837ff81345f34b8b527c9479b54e282ca875adb33a75d09ae8"
+    },
+    "assets": 457,
+    "current": 132,
+    "retained": 325,
+    "server": 35,
+    "previous": "local-p65-public-ssr-visible-20261002063100",
+    "currentReleaseId": null
+  },
+  "flags": [
+    [
+      "CINATOKEN_WEB_PUBLIC_ENABLED",
+      "false"
+    ],
+    [
+      "CINATOKEN_WEB_ACCOUNT_ENABLED",
+      "false"
+    ],
+    [
+      "CINATOKEN_WEB_ADMIN_DASHBOARD_ENABLED",
+      "false"
+    ],
+    [
+      "CINATOKEN_WEB_ADMIN_USERS_ENABLED",
+      "false"
+    ],
+    [
+      "CINATOKEN_WEB_ADMIN_USER_DETAIL_ENABLED",
+      "false"
+    ],
+    [
+      "CINATOKEN_WEB_ADMIN_PROVIDERS_ENABLED",
+      "false"
+    ],
+    [
+      "CINATOKEN_WEB_ADMIN_MODELS_ENABLED",
+      "false"
+    ],
+    [
+      "CINATOKEN_WEB_ADMIN_ENDPOINTS_ENABLED",
+      "false"
+    ],
+    [
+      "CINATOKEN_WEB_ADMIN_ROUTES_ENABLED",
+      "false"
+    ],
+    [
+      "CINATOKEN_WEB_ADMIN_DATA_POLICIES_ENABLED",
+      "false"
+    ],
+    [
+      "CINATOKEN_WEB_ADMIN_PRESETS_ENABLED",
+      "false"
+    ],
+    [
+      "CINATOKEN_WEB_ADMIN_GUARDRAILS_ENABLED",
+      "false"
+    ],
+    [
+      "CINATOKEN_WEB_ADMIN_RELIABILITY_ENABLED",
+      "false"
+    ],
+    [
+      "CINATOKEN_WEB_ADMIN_MODEL_ANALYTICS_ENABLED",
+      "false"
+    ],
+    [
+      "CINATOKEN_WEB_ADMIN_PROVIDER_ANALYTICS_ENABLED",
+      "false"
+    ],
+    [
+      "CINATOKEN_WEB_ADMIN_USER_ANALYTICS_ENABLED",
+      "false"
+    ],
+    [
+      "CINATOKEN_WEB_ADMIN_REQUEST_LOGS_ENABLED",
+      "false"
+    ],
+    [
+      "CINATOKEN_WEB_ADMIN_BUDGET_AUDIT_ENABLED",
+      "false"
+    ],
+    [
+      "CINATOKEN_WEB_ADMIN_TOOL_INVOCATIONS_ENABLED",
+      "false"
+    ],
+    [
+      "CINATOKEN_WEB_ADMIN_CONFIG_TIMEZONE_ENABLED",
+      "false"
+    ],
+    [
+      "CINATOKEN_WEB_ADMIN_CONFIG_ENABLED",
+      "false"
+    ],
+    [
+      "CINATOKEN_WEB_ADMIN_ACCESS_KEYS_ENABLED",
+      "false"
+    ],
+    [
+      "CINATOKEN_WEB_ADMIN_KEYS_ENABLED",
+      "false"
+    ],
+    [
+      "CINATOKEN_WEB_ADMIN_SHARED_KEYS_ENABLED",
+      "false"
+    ],
+    [
+      "CINATOKEN_WEB_ADMIN_TOOLS_ENABLED",
+      "false"
+    ],
+    [
+      "CINATOKEN_WEB_ADMIN_PLAYGROUND_ENABLED",
+      "false"
+    ],
+    [
+      "CINATOKEN_WEB_ADMIN_SIMULATOR_ENABLED",
+      "false"
+    ],
+    [
+      "CINATOKEN_WEB_ADMIN_WITHDRAWALS_ENABLED",
+      "false"
+    ],
+    [
+      "CINATOKEN_WEB_ADMIN_NFT_MINTS_ENABLED",
+      "false"
+    ]
+  ],
+  "commands": [
+    {
+      "name": "P66-types",
+      "cwd": "C:/cinagroup/cinatoken",
+      "command": "C:/Program Files/nodejs/node.exe",
+      "args": [
+        "C:/Program Files/nodejs/node_modules/npm/bin/npm-cli.js",
+        "run",
+        "typecheck:web"
+      ],
+      "exit": 0,
+      "signal": null,
+      "log": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-p66-next41-gbNUZD\\P66-types.log",
+      "sha256": "e8686b831448219f02dfec0083f1cdf5dcf47d85fdf301d2464408c48b20a989",
+      "bytes": 145,
+      "tail": "\n> cinatoken@2.8.0 typecheck:web\n> npm run typecheck -w @cinatoken/web\n\n\n> @cinatoken/web@2.8.0 typecheck\n> tsc -b && tsc -p edge/tsconfig.json\n\n",
+      "at": "2026-10-02T08:01:04.698Z"
+    },
+    {
+      "name": "P66-unit",
+      "cwd": "C:/cinagroup/cinatoken",
+      "command": "C:/Program Files/nodejs/node.exe",
+      "args": [
+        "C:/Program Files/nodejs/node_modules/npm/bin/npm-cli.js",
+        "run",
+        "test:web"
+      ],
+      "exit": 0,
+      "signal": null,
+      "log": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-p66-next41-gbNUZD\\P66-unit.log",
+      "sha256": "17e30e01cd74d7bcc6b6579ba6c768b6bd1e56d13818848b3cb788614eb0e59c",
+      "bytes": 140625,
+      "tail": "rovider requests never send wallet verification (1.9756ms)\n✔ budget requests use same-origin Cookie transport and workspace preconditions for every verb (99.0914ms)\n✔ member read access never implies budget management permission (17.5218ms)\n✔ configured daily weekly monthly and lifetime periods all use the backend UTC boundaries (5.152ms)\n✔ input precision matches backend rounding without inventing an extra decimal-place restriction (2.3038ms)\n✔ zero, sub-micro rounding to zero and unsafe budgets fail before issuing writes (2.1303ms)\n✔ stored maximum safe micro-unit values remain readable after main-unit conversion (0.2529ms)\n✔ empty budget contexts require server scope, currency and authority metadata (2.4171ms)\n✔ every row must belong to the returned workspace, with at most one budget per period (1.381ms)\n✔ budget periods reject malformed dates but preserve legitimate exhausted limits (2.8408ms)\n✔ a PUT acknowledgment must match interval, normalized amount and both scope identities (2.4021ms)\n✔ ordering violations remain authoritative server failures and are never retried (0.5237ms)\n✔ budget status errors remain distinct from a workspace conflict across all operations (3.6611ms)\n✔ HTTP 200 business failures and missing delete confirmation never imply a saved configuration (9.3126ms)\n✔ a cancelled budget write cannot report success after a late server response (0.6211ms)\nℹ tests 1401\nℹ suites 4\nℹ pass 1401\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 57890.0179\n",
+      "at": "2026-10-02T08:00:50.010Z"
+    },
+    {
+      "name": "P66-lint-workspace",
+      "cwd": "C:/cinagroup/cinatoken",
+      "command": "C:/Program Files/nodejs/node.exe",
+      "args": [
+        "C:/Program Files/nodejs/node_modules/npm/bin/npm-cli.js",
+        "run",
+        "lint",
+        "-w",
+        "@cinatoken/web"
+      ],
+      "exit": 0,
+      "signal": null,
+      "log": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-p66-next41-gbNUZD\\P66-lint-workspace.log",
+      "sha256": "f3ba516bde29fd499321f1375fc5d965e048b42a611a0adc77944b00de9b4099",
+      "bytes": 117,
+      "tail": "\n> @cinatoken/web@2.8.0 lint\n> eslint src/main.tsx src/legacy-root.tsx src/cinatoken rsbuild.config.ts edge scripts\n\n",
+      "at": "2026-10-02T08:01:35.595Z"
+    },
+    {
+      "name": "P66-format-workspace",
+      "cwd": "C:/cinagroup/cinatoken",
+      "command": "C:/Program Files/nodejs/node.exe",
+      "args": [
+        "C:/Program Files/nodejs/node_modules/npm/bin/npm-cli.js",
+        "run",
+        "format:check",
+        "-w",
+        "@cinatoken/web"
+      ],
+      "exit": 0,
+      "signal": null,
+      "log": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-p66-next41-gbNUZD\\P66-format-workspace.log",
+      "sha256": "2b0035c6efe61dde18467e93abfae487b1218cc9033b8e77a6e847442bf4b52c",
+      "bytes": 526,
+      "tail": "\n> @cinatoken/web@2.8.0 format:check\n> prettier --check src/main.tsx src/legacy-root.tsx src/env.d.ts src/cinatoken src/components/ui src/context/theme-provider.tsx src/styles src/lib/utils.ts src/lib/cookies.ts src/hooks/use-mobile.ts src/hooks/use-mobile.tsx index.html package.json rsbuild.config.ts tsconfig*.json eslint.config.js postcss.config.mjs .prettierrc components.json edge scripts ../../docker/web/*.mjs ../../.github/workflows/web-frontend.yml\n\nChecking formatting...\nAll matched files use Prettier code style!\n",
+      "at": "2026-10-02T08:01:33.942Z"
+    },
+    {
+      "name": "P66-build",
+      "cwd": "C:/cinagroup/cinatoken",
+      "command": "C:/Program Files/nodejs/node.exe",
+      "args": [
+        "C:/Program Files/nodejs/node_modules/npm/bin/npm-cli.js",
+        "run",
+        "build",
+        "--workspace",
+        "@cinatoken/web",
+        "--",
+        "--no-env",
+        "--env-mode",
+        "codex-p66-noenv"
+      ],
+      "exit": 0,
+      "signal": null,
+      "log": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-p66-next41-gbNUZD\\P66-build.log",
+      "sha256": "8cef1063fd382ecb9c7d6ac0640a82dedbf39287b36b086f57b335b67eccc8c9",
+      "bytes": 10914,
+      "tail": "36.7 kB\ndist\\static\\js\\async\\6u.79a8483cd5.js                                  238.4 kB    74.9 kB\ndist\\static\\js\\async\\k.1d7e437b49.js                                   348.1 kB    99.8 kB\ndist\\static\\js\\async\\4e3.aa30e0b40b.js                                 849.4 kB    263.4 kB\n\n                                                              Total:   4165.2 kB   1360.7 kB\n\nFile (worker)                  Size        Gzip   \ndist-server\\worker\\index.mjs   1205.0 kB   375.1 kB\n\nFile (node)                  Size        \ndist-server\\node\\4z.mjs      0.83 kB  \ndist-server\\node\\w.mjs       1.0 kB   \ndist-server\\node\\iq.mjs      1.7 kB   \ndist-server\\node\\t.mjs       1.9 kB   \ndist-server\\node\\f.mjs       3.3 kB   \ndist-server\\node\\e.mjs       3.6 kB   \ndist-server\\node\\r4.mjs      6.2 kB   \ndist-server\\node\\u.mjs       6.9 kB   \ndist-server\\node\\r.mjs       11.3 kB  \ndist-server\\node\\4h.mjs      15.9 kB  \ndist-server\\node\\d.mjs       16.3 kB  \ndist-server\\node\\y.mjs       18.8 kB  \ndist-server\\node\\i4.mjs      20.6 kB  \ndist-server\\node\\9.mjs       21.1 kB  \ndist-server\\node\\4.mjs       21.4 kB  \ndist-server\\node\\a.mjs       29.4 kB  \ndist-server\\node\\6.mjs       32.6 kB  \ndist-server\\node\\j.mjs       52.6 kB  \ndist-server\\node\\i.mjs       100.1 kB \ndist-server\\node\\3.mjs       106.9 kB \ndist-server\\node\\2.mjs       141.8 kB \ndist-server\\node\\5.mjs       636.6 kB \ndist-server\\node\\7.mjs       714.4 kB \ndist-server\\node\\index.mjs   1858.8 kB\n\n                    Total:   3824.1 kB\n\n",
+      "at": "2026-10-02T08:04:39.193Z"
+    },
+    {
+      "name": "P66-freeze",
+      "cwd": "C:/cinagroup/cinatoken",
+      "command": "C:/Program Files/nodejs/node.exe",
+      "args": [
+        "packages/web/scripts/package-release.mjs",
+        "--id",
+        "local-p66-frontend-attribution-20261002080439",
+        "--at",
+        "2026-10-02T08:04:39.193Z",
+        "--previous",
+        "local-p65-public-ssr-visible-20261002063100"
+      ],
+      "exit": 0,
+      "signal": null,
+      "log": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-p66-next41-gbNUZD\\P66-freeze.log",
+      "sha256": "fdfbc8bf01db2ccb2ff9c601f9cb66f7f6010da88ee157913507e4003f33523b",
+      "bytes": 158,
+      "tail": "{\"releaseId\":\"local-p66-frontend-attribution-20261002080439\",\"files\":457,\"manifestSha256\":\"ae3929bb8f8d780d702dd8277fd5e838472be5c804bd93cdc69ac0a3b8ad0974\"}\n",
+      "at": "2026-10-02T08:05:25.452Z"
+    },
+    {
+      "name": "P66-wrangler",
+      "cwd": "C:/cinagroup/cinatoken",
+      "command": "C:/Program Files/nodejs/node.exe",
+      "args": [
+        "packages/web/scripts/gen-web-wrangler.mjs",
+        "--release",
+        "local-p66-frontend-attribution-20261002080439"
+      ],
+      "exit": 0,
+      "signal": null,
+      "log": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-p66-next41-gbNUZD\\P66-wrangler.log",
+      "sha256": "2bcd85d2d557101bbbb46259af1daad97f004251bccc3f26fa870baaebf6cc7f",
+      "bytes": 68,
+      "tail": "Generated packages/web/wrangler.web.jsonc (no deployment performed)\n",
+      "at": "2026-10-02T08:05:26.140Z"
+    },
+    {
+      "name": "P66-real-node-http",
+      "cwd": "C:/cinagroup/cinatoken",
+      "command": "C:/Program Files/nodejs/node.exe",
+      "args": [
+        "--import",
+        "tsx",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-p66-next41-gbNUZD/P66-real-node-http.mjs",
+        "local-p66-frontend-attribution-20261002080439"
+      ],
+      "exit": 0,
+      "signal": null,
+      "log": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-p66-next41-gbNUZD\\P66-real-node-http.log",
+      "sha256": "72f5c6e686833caefcddc01a5d759013e16c05a590af5fb7f0500f0fe5d992e1",
+      "bytes": 164,
+      "tail": "{\"pass\":true,\"cases\":45,\"reads\":33,\"closed\":true,\"evidence\":\"C:\\\\Users\\\\cina\\\\AppData\\\\Local\\\\Temp\\\\cinatoken-p66-next41-gbNUZD\\\\P66-real-node-http-evidence.json\"}\n",
+      "at": "2026-10-02T08:06:37.805Z"
+    }
+  ],
+  "preservedCommandFailures": [
+    {
+      "name": "P66-lint",
+      "cwd": "C:/cinagroup/cinatoken",
+      "command": "C:/Program Files/nodejs/node.exe",
+      "args": [
+        "C:/Program Files/nodejs/node_modules/npm/bin/npm-cli.js",
+        "run",
+        "lint:web"
+      ],
+      "exit": 1,
+      "signal": null,
+      "log": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-p66-next41-gbNUZD\\P66-lint.log",
+      "sha256": "a93282f4c3a3a7baaf71c6325d5cab9aa8688294a2a331f0a52932ce6b619b36",
+      "bytes": 430,
+      "tail": "npm error Missing script: \"lint:web\"\nnpm error\nnpm error Did you mean this?\nnpm error   npm run test:web # run the \"test:web\" package script\nnpm error\nnpm error To see a list of scripts, run:\nnpm error   npm run\nnpm error Log files were not written due to an error writing to the directory: C:\\Users\\cina\\AppData\\Local\\npm-cache\\_logs\nnpm error You can rerun the command with `--loglevel=verbose` to see the logs in your terminal\n",
+      "at": "2026-10-02T07:59:51.430Z"
+    },
+    {
+      "name": "P66-format",
+      "cwd": "C:/cinagroup/cinatoken",
+      "command": "C:/Program Files/nodejs/node.exe",
+      "args": [
+        "C:/Program Files/nodejs/node_modules/npm/bin/npm-cli.js",
+        "run",
+        "format:check:web"
+      ],
+      "exit": 1,
+      "signal": null,
+      "log": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-p66-next41-gbNUZD\\P66-format.log",
+      "sha256": "4db1d840d682abd0f9ccb1c2cc0ab47f5754689e858070cdef9be56d4bbd6f09",
+      "bytes": 334,
+      "tail": "npm error Missing script: \"format:check:web\"\nnpm error\nnpm error To see a list of scripts, run:\nnpm error   npm run\nnpm error Log files were not written due to an error writing to the directory: C:\\Users\\cina\\AppData\\Local\\npm-cache\\_logs\nnpm error You can rerun the command with `--loglevel=verbose` to see the logs in your terminal\n",
+      "at": "2026-10-02T07:59:54.170Z"
+    },
+    {
+      "name": "NEXT13-B1-full-admin-lint",
+      "cwd": "C:/cinagroup/cinatoken",
+      "command": "C:/Program Files/nodejs/node.exe",
+      "args": [
+        "C:/Program Files/nodejs/node_modules/npm/bin/npm-cli.js",
+        "run",
+        "lint",
+        "-w",
+        "@octafuse/admin",
+        "--",
+        "--format",
+        "json",
+        "--output-file",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-p66-next41-gbNUZD/NEXT13-B1-eslint.json"
+      ],
+      "exit": 1,
+      "signal": null,
+      "log": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-p66-next41-gbNUZD\\NEXT13-B1-full-admin-lint.log",
+      "sha256": "b353e9981eb5b2eb0ddbfbe7b83684b9789a78202c95713f2f23e42082209ae8",
+      "bytes": 575,
+      "tail": "\n> @octafuse/admin@2.8.0 lint\n> eslint . --format json --output-file C:/Users/cina/AppData/Local/Temp/cinatoken-p66-next41-gbNUZD/NEXT13-B1-eslint.json\n\nnpm error Lifecycle script `lint` failed with error:\nnpm error code 1\nnpm error path C:\\cinagroup\\cinatoken\\packages\\admin\nnpm error workspace @octafuse/admin@2.8.0\nnpm error location C:\\cinagroup\\cinatoken\\packages\\admin\nnpm error command failed\nnpm error command C:\\WINDOWS\\system32\\cmd.exe /d /s /c eslint . --format json --output-file C:/Users/cina/AppData/Local/Temp/cinatoken-p66-next41-gbNUZD/NEXT13-B1-eslint.json\n",
+      "at": "2026-10-02T08:22:25.589Z"
+    }
+  ],
+  "proofs": [
+    {
+      "kind": "attribution",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-p66-frontend-attribution-6AuL2z/P66-attribution-owned-final-proof.json",
+      "sha256": "dae9df91a9df7edd4e709f194981fba872431a7f6c8e8baf28903573357e15ad"
+    },
+    {
+      "kind": "workerNode",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-p66-compiled-worker-node-qwHEix/sealed-proof.json",
+      "sha256": "44087b456933cb5e116fa14f45d92b4acf193ee91191459d9798d56f2959eb22"
+    },
+    {
+      "kind": "chrome",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-p66-public-browser-N9eG9v/P66-public-browser-final-audit.json",
+      "sha256": "8b121f786bc033dd177d1106fcb81d1a5467804b12feec6880dfaddceb6e3b2d"
+    },
+    {
+      "kind": "adminB1",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-next13-b1-active-XmF9rb/final-proof.json",
+      "sha256": "3606ba345ac28cdcb0603b78fcfd2035cdd75789ea975be446d27aa8c7f04edf"
+    },
+    {
+      "kind": "readonlyReview",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-p66-readonly-review-EbWYjV/readonly-review.json",
+      "sha256": "ef4321991df6c4d7c1d6e87b4b528fe438b313fb907abbb3fbf2be5d8a299d6a"
+    },
+    {
+      "kind": "nativeFailure",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-p65-native-workerd-5VqUQp/native-final-proof.json",
+      "sha256": "186e5ffffb9d08a589b2c13506f35ab2b78b4e63330b0f3f3c539fbcae53e1b1"
+    }
+  ],
+  "supplemental": [
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-p66-next41-gbNUZD/P66-frozen-inventory.json",
+      "sha256": "f74b6ba035f7a02e8962b2d7512210e48e660d064aaf0656ff8fbba4a4045c2d"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-p66-next41-gbNUZD/P66-real-node-http-evidence.json",
+      "sha256": "d5ab9e9f7c1702c05239d094efeaf72521ea2332a029a767222581f5baa0789f"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-p66-next41-gbNUZD/P66-source-boundary-comparison.json",
+      "sha256": "9fe5b9132f13c504e0b5e1a02d0479133a3a6650dbb4215d77622db6fe190f5d"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-p66-next41-gbNUZD/P66-notice-packaging-proof.json",
+      "sha256": "e1191382fcc7e210263cda43075761d76a881fa3a0399fc6c9001468e4816559"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-p66-next41-gbNUZD/NEXT13-B1-full-lint-proof.json",
+      "sha256": "b08ce00e3ac07e9ca7156685d55df41c474028d561d46db9f40b684552a8688d"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-p66-next41-gbNUZD/P66-wsl-readonly-result.json",
+      "sha256": "c0a9d7b137992e756d871fb926a306e2dc60f78fbbb6f5385b20c0398d76ded9"
+    }
+  ],
+  "sourceRecords": {
+    "webAttribution": [
+      {
+        "path": "packages/web/src/cinatoken/public/FrontendAttribution.tsx",
+        "bytes": 914,
+        "sha256": "c5df4b4ec68270e2b4ecd0ad2d3c90b41d6387a231db53efa4c4a6399092637e"
+      },
+      {
+        "path": "packages/web/src/cinatoken/public/frontend-attribution.test.ts",
+        "bytes": 641,
+        "sha256": "7728a9fbf5cbed699569f200a0335323b001e8459f1798822e372b1f1fd995bc"
+      },
+      {
+        "path": "packages/web/src/cinatoken/public/frontend-attribution.ts",
+        "bytes": 334,
+        "sha256": "68f514f5f7b56345fd963b8d0b5a638b9aa5c6c31ed782da287086f7e259c9cd"
+      },
+      {
+        "path": "packages/web/src/cinatoken/public/home/HomeFooter.tsx",
+        "bytes": 1237,
+        "sha256": "8fb3bba8de362de81dfab2e073c0cf21885d2d8b859c3ebfd8d9763d12a30b84"
+      },
+      {
+        "path": "packages/web/src/cinatoken/public/home/home-messages.ts",
+        "bytes": 15718,
+        "sha256": "787c99db2c1d5d8f71add6006d7fc621dc1fde132d9db569bc50652f90fa1cf8"
+      },
+      {
+        "path": "packages/web/src/cinatoken/public/public-pages-ssr.test.ts",
+        "bytes": 13587,
+        "sha256": "f4657ddd767dc3267b5b252bec50f4fecb88d6bac48555e0564c48c9bb55ecde"
+      },
+      {
+        "path": "packages/web/src/cinatoken/public/ssr/public-request-app.test.ts",
+        "bytes": 21048,
+        "sha256": "40991138c3087608810b38ecf90d59c8b6f671ec89bf634f4525b81c3724a474"
+      },
+      {
+        "path": "packages/web/src/cinatoken/public/ssr/public-shell.tsx",
+        "bytes": 6355,
+        "sha256": "646fc4ff4afe62c817332e0ec329250b24fbcf6285d2dffe2a50220430ec9b9e"
+      }
+    ],
+    "adminB1": [
+      {
+        "path": "packages/admin/app/gateway/keys/page.tsx",
+        "bytes": 46047,
+        "sha256": "0be2d1705733a46a448686ecab4b9e7d6e79ee42a0aeca2054e56947fadfa304"
+      },
+      {
+        "path": "packages/admin/app/gateway/users/[id]/page.tsx",
+        "bytes": 63796,
+        "sha256": "d1c8d3f75240162b1768f2544be52cd8ce495238331e9238569b908fdf6cc2a2"
+      },
+      {
+        "path": "packages/admin/app/gateway/users/page.tsx",
+        "bytes": 37651,
+        "sha256": "534153feb141fe1e407d5169af986224424b86fb38a7bafb9351aa9dbd2dc7bf"
+      },
+      {
+        "path": "packages/admin/components/GatewayTimeRangePicker.tsx",
+        "bytes": 5594,
+        "sha256": "70a9b5e7d91c4302841d471ee8b71726a69325739c2239eac4163054bc724248"
+      },
+      {
+        "path": "packages/admin/worker.ts",
+        "bytes": 1216,
+        "sha256": "09de68b0e09a963c66373fcdd30155d0562ae98395df237034601d58e59d458f"
+      }
+    ]
+  },
+  "verifiedScopes": {
+    "fullWebUnit": "1401/1401",
+    "attributionOwned": "96/96",
+    "nodeHTTP": "45/45",
+    "workerCompiledInNode": "77/77",
+    "chromeJS": "32/32",
+    "chromeNoJS": "36/36",
+    "adminChromeSourceComponents": "19/19",
+    "adminRelatedUnit": "26/26",
+    "adminRetainedContractAST": "22/22",
+    "adminFullLint": {
+      "exit": 1,
+      "errors": 58,
+      "warnings": 5,
+      "beforeErrors": 67,
+      "beforeWarnings": 9
+    }
+  },
+  "rootViewedImages": [
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-p66-public-browser-N9eG9v/nojs-run-Ut0Z4q/zh-home-footer.png",
+      "sha256": "2bca3b61a6ce592c286be7014795da79e718f17024cb30210364efbbf3e5a3a5",
+      "rootActuallyViewed": true
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-p66-public-browser-N9eG9v/nojs-run-Ut0Z4q/ja-models-footer.png",
+      "sha256": "b5ad71801da01c6641e2ed54cc55fd9b08914a59c1f1673c55ebc8ab088f2f1f",
+      "rootActuallyViewed": true
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-p66-public-browser-N9eG9v/run-local-p66-frontend-attribution-20261002080439-t1368j/compiled-ko-home-footer.png",
+      "sha256": "3be378c3ef044c83945a9db113030ed6c4bf9b0768822398d39f1f70dbffe91b",
+      "rootActuallyViewed": true
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-p66-public-browser-N9eG9v/run-local-p66-frontend-attribution-20261002080439-t1368j/compiled-ja-chat-footer.png",
+      "sha256": "b5ad71801da01c6641e2ed54cc55fd9b08914a59c1f1673c55ebc8ab088f2f1f",
+      "rootActuallyViewed": true
+    }
+  ],
+  "checklist": {
+    "main": [
+      {
+        "id": "SRC-01",
+        "checked": false
+      },
+      {
+        "id": "SRC-02",
+        "checked": false
+      },
+      {
+        "id": "SRC-03",
+        "checked": false
+      },
+      {
+        "id": "P0-01",
+        "checked": false
+      },
+      {
+        "id": "P0-02",
+        "checked": false
+      },
+      {
+        "id": "P0-03",
+        "checked": false
+      },
+      {
+        "id": "P0-04",
+        "checked": false
+      },
+      {
+        "id": "P0-05",
+        "checked": false
+      },
+      {
+        "id": "P0-06",
+        "checked": false
+      },
+      {
+        "id": "P1-01",
+        "checked": false
+      },
+      {
+        "id": "P1-02",
+        "checked": false
+      },
+      {
+        "id": "P1-03",
+        "checked": false
+      },
+      {
+        "id": "P1-04",
+        "checked": false
+      },
+      {
+        "id": "P1-05",
+        "checked": false
+      },
+      {
+        "id": "P1-06",
+        "checked": false
+      },
+      {
+        "id": "P1-07",
+        "checked": false
+      },
+      {
+        "id": "P1-08",
+        "checked": false
+      },
+      {
+        "id": "P1-09",
+        "checked": false
+      },
+      {
+        "id": "P2-01",
+        "checked": false
+      },
+      {
+        "id": "P2-02",
+        "checked": false
+      },
+      {
+        "id": "P2-03",
+        "checked": false
+      },
+      {
+        "id": "P2-04",
+        "checked": false
+      },
+      {
+        "id": "P2-05",
+        "checked": false
+      },
+      {
+        "id": "P2-06",
+        "checked": false
+      },
+      {
+        "id": "P2-07",
+        "checked": false
+      },
+      {
+        "id": "P2-08",
+        "checked": false
+      },
+      {
+        "id": "P2-09",
+        "checked": false
+      },
+      {
+        "id": "P2-10",
+        "checked": false
+      },
+      {
+        "id": "P2-11",
+        "checked": false
+      },
+      {
+        "id": "P2-12",
+        "checked": false
+      },
+      {
+        "id": "P2-13",
+        "checked": false
+      },
+      {
+        "id": "P3-01",
+        "checked": false
+      },
+      {
+        "id": "P3-02",
+        "checked": false
+      },
+      {
+        "id": "P3-03",
+        "checked": false
+      },
+      {
+        "id": "P3-04",
+        "checked": false
+      },
+      {
+        "id": "P3-05",
+        "checked": false
+      },
+      {
+        "id": "P3-06",
+        "checked": false
+      },
+      {
+        "id": "P3-07",
+        "checked": false
+      },
+      {
+        "id": "P3-08",
+        "checked": false
+      },
+      {
+        "id": "P3-09",
+        "checked": false
+      },
+      {
+        "id": "P3-10",
+        "checked": false
+      },
+      {
+        "id": "P3-11",
+        "checked": false
+      },
+      {
+        "id": "P4-01",
+        "checked": false
+      },
+      {
+        "id": "P4-02",
+        "checked": false
+      },
+      {
+        "id": "P4-03",
+        "checked": false
+      },
+      {
+        "id": "P4-04",
+        "checked": false
+      },
+      {
+        "id": "P4-05",
+        "checked": false
+      },
+      {
+        "id": "P4-06",
+        "checked": false
+      },
+      {
+        "id": "P4-07",
+        "checked": false
+      },
+      {
+        "id": "P4-08",
+        "checked": false
+      },
+      {
+        "id": "P4-09",
+        "checked": false
+      },
+      {
+        "id": "P5-01",
+        "checked": false
+      },
+      {
+        "id": "P5-02",
+        "checked": false
+      },
+      {
+        "id": "P5-03",
+        "checked": false
+      },
+      {
+        "id": "P5-04",
+        "checked": false
+      },
+      {
+        "id": "P5-05",
+        "checked": false
+      },
+      {
+        "id": "P5-06",
+        "checked": false
+      },
+      {
+        "id": "P5-07",
+        "checked": false
+      },
+      {
+        "id": "P5-08",
+        "checked": false
+      },
+      {
+        "id": "P5-09",
+        "checked": false
+      },
+      {
+        "id": "P5-10",
+        "checked": false
+      },
+      {
+        "id": "P5-11",
+        "checked": false
+      },
+      {
+        "id": "P5-12",
+        "checked": false
+      },
+      {
+        "id": "P6-01",
+        "checked": false
+      },
+      {
+        "id": "P6-02",
+        "checked": false
+      },
+      {
+        "id": "P6-03",
+        "checked": false
+      },
+      {
+        "id": "P6-04",
+        "checked": false
+      },
+      {
+        "id": "P6-05",
+        "checked": false
+      },
+      {
+        "id": "P6-06",
+        "checked": false
+      },
+      {
+        "id": "P6-07",
+        "checked": false
+      },
+      {
+        "id": "P6-08",
+        "checked": false
+      },
+      {
+        "id": "P6-09",
+        "checked": false
+      },
+      {
+        "id": "P6-10",
+        "checked": false
+      },
+      {
+        "id": "P6-11",
+        "checked": true
+      },
+      {
+        "id": "P6-12",
+        "checked": false
+      },
+      {
+        "id": "P6-13",
+        "checked": false
+      },
+      {
+        "id": "P7-01",
+        "checked": false
+      },
+      {
+        "id": "P7-02",
+        "checked": false
+      },
+      {
+        "id": "P7-03",
+        "checked": false
+      },
+      {
+        "id": "P7-04",
+        "checked": false
+      },
+      {
+        "id": "P7-05",
+        "checked": false
+      },
+      {
+        "id": "P7-06",
+        "checked": false
+      },
+      {
+        "id": "P7-07",
+        "checked": false
+      },
+      {
+        "id": "P7-08",
+        "checked": false
+      },
+      {
+        "id": "P7-09",
+        "checked": false
+      },
+      {
+        "id": "P7-10",
+        "checked": false
+      },
+      {
+        "id": "P7-11",
+        "checked": false
+      },
+      {
+        "id": "P7-12",
+        "checked": false
+      },
+      {
+        "id": "P8-01",
+        "checked": false
+      },
+      {
+        "id": "P8-02",
+        "checked": false
+      },
+      {
+        "id": "P8-03",
+        "checked": false
+      },
+      {
+        "id": "P8-04",
+        "checked": false
+      },
+      {
+        "id": "P8-05",
+        "checked": false
+      },
+      {
+        "id": "P8-06",
+        "checked": false
+      },
+      {
+        "id": "P8-07",
+        "checked": false
+      },
+      {
+        "id": "P8-08",
+        "checked": false
+      },
+      {
+        "id": "P8-09",
+        "checked": false
+      },
+      {
+        "id": "P8-10",
+        "checked": false
+      },
+      {
+        "id": "P8-11",
+        "checked": false
+      },
+      {
+        "id": "P8-12",
+        "checked": false
+      },
+      {
+        "id": "P8-13",
+        "checked": false
+      },
+      {
+        "id": "P8-14",
+        "checked": false
+      }
+    ],
+    "matrix": [
+      "PUB-01",
+      "PUB-02",
+      "PUB-03",
+      "PUB-04",
+      "PUB-05",
+      "PUB-06",
+      "PUB-07",
+      "PUB-08",
+      "AUTH-01",
+      "AUTH-02",
+      "AUTH-03",
+      "AUTH-04",
+      "ACC-01",
+      "ACC-02",
+      "ACC-03",
+      "ACC-04",
+      "ACC-05",
+      "ACC-06",
+      "ACC-07",
+      "ACC-08",
+      "ACC-09",
+      "ACC-10",
+      "ACC-11",
+      "ACC-12",
+      "ACC-13",
+      "ACC-14",
+      "ACC-15",
+      "ADM-01",
+      "ADM-02",
+      "ADM-03",
+      "ADM-04",
+      "ADM-05",
+      "ADM-06",
+      "ADM-07",
+      "ADM-08",
+      "ADM-09",
+      "ADM-10",
+      "ADM-11",
+      "ADM-12",
+      "ADM-13",
+      "ADM-14",
+      "ADM-15",
+      "ADM-16",
+      "ADM-17",
+      "ADM-18",
+      "ADM-19",
+      "ADM-20",
+      "ADM-21",
+      "ADM-22",
+      "ADM-23",
+      "ADM-24",
+      "ADM-25",
+      "ADM-26",
+      "ADM-27"
+    ],
+    "authLocalCompleted": 7,
+    "globalSSRPending": 6
+  },
+  "limits": [
+    "No deployment; 29 flags remain false",
+    "Browser SSR/assets fulfilled in Playwright memory against exact frozen bytes; synthetic anonymous catalog only",
+    "NoJS four deliberate404 resource console events expected; Admin one controlled rejected fetch console expected; no unexpected errors",
+    "P65 historical Auth76 and React cleanup10/API1 scopes preserved; source unchanged comparison does not claim fresh P66 Auth execution",
+    "Native workerd product/minimal Hello0xc0000005 remains failure; WSL E_ACCESSDENIED; no Linux Node22/CF/Docker acceptance",
+    "Upstream import date/fullSHA/ownership/corresponding source publication unresolved; local tree is only local baseline",
+    "No fresh fullAdmin Next/Worker production build for B1; source component behavior/typecheck and related contracts only",
+    "Original goal and full102/matrix54/G0-G8 remain incomplete"
+  ],
+  "postMdValidationExpectedPath": "C:/Users/cina/AppData/Local/Temp/cinatoken-p66-next41-gbNUZD/P66-final-md-validation.json"
+}

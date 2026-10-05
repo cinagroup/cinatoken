@@ -19,6 +19,16 @@ import type {
 } from "../request-timing";
 import { buildRouteRequestBody } from "../route-default-params";
 import { extractUpstreamRequestId } from "./upstream-request-id";
+import type { WebSocket as WorkersWebSocket, MessageEvent as WorkersMessageEvent, CloseEvent as WorkersCloseEvent } from '@cloudflare/workers-types';
+
+type WorkersWebSocketPair = { 0: WorkersWebSocket; 1: WorkersWebSocket };
+
+function attachedWorkerSocket(response: Response): WorkersWebSocket | null {
+	if (!('webSocket' in response)) return null;
+	const socket = response.webSocket;
+	return socket !== null && typeof socket === 'object' && 'accept' in socket && typeof socket.accept === 'function'
+		? socket as WorkersWebSocket : null;
+}
 
 export const DASHSCOPE_REALTIME_OPERATIONS = [
 	"audio.transcriptions.realtime.inference",
@@ -690,7 +700,7 @@ export function outboundWebSocketFetchUrl(endpoint: string): URL {
 	return url;
 }
 
-function closeSocket(socket: WebSocket, code = 1000, reason = ""): void {
+function closeSocket(socket: WorkersWebSocket, code = 1000, reason = ""): void {
 	if (socket.readyState === WebSocket.CLOSED) return;
 	const safe = realtimeCloseParameters(code, reason);
 	try { socket.close(safe.code, safe.reason); } catch {
@@ -700,15 +710,16 @@ function closeSocket(socket: WebSocket, code = 1000, reason = ""): void {
 }
 
 function discardUpgrade(response: Response): void {
-	if (response.webSocket) {
-		try { response.webSocket.accept({ allowHalfOpen: true }); } catch { /* May already be accepted. */ }
-		closeSocket(response.webSocket, 1000, "Realtime connection stopped");
+	const socket = attachedWorkerSocket(response);
+	if (socket) {
+		try { socket.accept({ allowHalfOpen: true }); } catch { /* May already be accepted. */ }
+		closeSocket(socket, 1000, "Realtime connection stopped");
 	}
 	void response.body?.cancel("realtime_connection_stopped").catch(() => undefined);
 }
 
 function bridgeSockets(params: {
-	server: WebSocket; upstream: WebSocket; route: RouteResult; operation: DashScopeRealtimeOperation;
+	server: WorkersWebSocket; upstream: WorkersWebSocket; route: RouteResult; operation: DashScopeRealtimeOperation;
 	timing?: RequestTimingCollector | null; sessionLimits?: DashScopeRealtimeSessionLimits; requestSignal?: AbortSignal;
 }): Promise<UsageFromStream> {
 	const { server, upstream, route, operation, timing, sessionLimits, requestSignal } = params;
@@ -743,7 +754,7 @@ function bridgeSockets(params: {
 			resolve(enforceDashScopeRealtimeUsageCeiling(operation, sessionLimits,
 				applyDashScopeRealtimeMeasuredUsage(operation, limiter, collector.toUsage({ clientClosedFirst, transportError }))));
 		};
-		const onClientMessage = (event: MessageEvent) => {
+		const onClientMessage = (event: WorkersMessageEvent) => {
 			if (settled) return;
 			try {
 				const data = typeof event.data === "string" ? rewriteDashScopeRealtimeClientMessage(route, operation, event.data) : event.data;
@@ -753,7 +764,7 @@ function bridgeSockets(params: {
 				upstream.send(data);
 			} catch { finish("Gateway upstream send failed", 1011, "Gateway upstream send failed"); }
 		};
-		const onUpstreamMessage = (event: MessageEvent) => {
+		const onUpstreamMessage = (event: WorkersMessageEvent) => {
 			if (settled) return;
 			try {
 				const decision = outputLimiter.inspect(event.data);
@@ -762,11 +773,11 @@ function bridgeSockets(params: {
 				server.send(event.data);
 			} catch { finish("Gateway client send failed", 1011, "Gateway client send failed"); }
 		};
-		const onClientClose = (event: CloseEvent) => {
+		const onClientClose = (event: WorkersCloseEvent) => {
 			if (settled) return;
 			clientClosedFirst = true; finish(null, event.code, event.reason);
 		};
-		const onUpstreamClose = (event: CloseEvent) => finish(
+		const onUpstreamClose = (event: WorkersCloseEvent) => finish(
 			event.code === 1000 ? null : `Upstream WebSocket closed with code ${event.code}`, event.code, event.reason);
 		const onClientError = () => { clientClosedFirst = true; finish("Client WebSocket transport error", 1011, "Client WebSocket error"); };
 		const onUpstreamError = () => finish("Upstream WebSocket transport error", 1011, "Upstream WebSocket error");
@@ -804,7 +815,8 @@ export async function dispatchDashScopeRealtime(
 			options,
 		);
 	}
-	if (typeof WebSocketPair === "undefined") {
+	const Pair = (globalThis as typeof globalThis & { WebSocketPair?: new () => WorkersWebSocketPair }).WebSocketPair;
+	if (!Pair) {
 		return {
 			response: new Response(
 				JSON.stringify({
@@ -825,7 +837,7 @@ export async function dispatchDashScopeRealtime(
 		connectDeadlineAtMs: Math.min(options.connectDeadlineAtMs ?? Infinity, options.sessionLimits?.connectDeadlineAtMs ?? Infinity),
 	});
 	let upstreamResponse: Response | undefined;
-	let server: WebSocket | undefined;
+	let server: WorkersWebSocket | undefined;
 	try {
 		connection.throwIfStopped();
 		const endpoint = resolveUpstreamEndpoint("dashscope", realtimeCapability(operation), route.providerEndpoints, { providerId: route.providerId });
@@ -845,16 +857,18 @@ export async function dispatchDashScopeRealtime(
 		}, discardUpgrade);
 		timing?.markAttemptHeaders(attempt, upstreamResponse.status);
 		const upstreamRequestId = extractUpstreamRequestId(upstreamResponse.headers);
-		if (upstreamResponse.status !== 101 || !upstreamResponse.webSocket) {
+		const upstreamSocket = attachedWorkerSocket(upstreamResponse);
+		if (upstreamResponse.status !== 101 || !upstreamSocket) {
 			discardUpgrade(upstreamResponse);
 			return realtimeRejectedResponse(upstreamResponse.status, upstreamResponse.headers, upstreamRequestId);
 		}
 		connection.throwIfStopped();
-		const pair = new WebSocketPair();
+		const pair = new Pair();
 		server = pair[1];
-		const response = new Response(null, { status: 101, webSocket: pair[0], headers: responseHeaders });
+		const responseInit = { status: 101, webSocket: pair[0], headers: responseHeaders };
+		const response = new Response(null, responseInit);
 		const usagePromise = bridgeSockets({
-			server, upstream: upstreamResponse.webSocket, route, operation, timing,
+			server, upstream: upstreamSocket, route, operation, timing,
 			sessionLimits: options.sessionLimits, requestSignal,
 		});
 		return { response, usagePromise, upstreamRequestId };

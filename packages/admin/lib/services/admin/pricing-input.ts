@@ -5,11 +5,13 @@ import {
 	parsePricingProfile,
 	type ImagePricingConfig,
 	type ParsedPricingProfile,
-} from '@octafuse/core/db/pricing-profile';
-import { coerceRoutePricingScheduleInput } from '@octafuse/core/db/pricing-schedule';
-import { badRequest } from './errors';
+} from "@octafuse/core/db/pricing-profile";
+import { coerceRoutePricingScheduleInput } from "@octafuse/core/db/pricing-schedule";
+import { badRequest } from "./errors";
 
-function serializeImagePricingConfig(image: ImagePricingConfig): Record<string, unknown> {
+function serializeImagePricingConfig(
+	image: ImagePricingConfig
+): Record<string, unknown> {
 	const out: Record<string, unknown> = { default: image.default };
 	if (image.by_quality) {
 		out.by_quality = image.by_quality;
@@ -33,7 +35,10 @@ function serializeImagePricingConfig(image: ImagePricingConfig): Record<string, 
 		}
 		out.input = input;
 	}
-	if (image.uncertain_result_policy && image.uncertain_result_policy !== 'requested') {
+	if (
+		image.uncertain_result_policy &&
+		image.uncertain_result_policy !== "requested"
+	) {
 		out.uncertain_result_policy = image.uncertain_result_policy;
 	}
 	return out;
@@ -42,14 +47,16 @@ function serializeImagePricingConfig(image: ImagePricingConfig): Record<string, 
 /** per_image 权威形状：无 `tiers`（历史占位零档写入时剥离）。 */
 function canonicalizePerImageProfile(profile: ParsedPricingProfile): string {
 	return JSON.stringify({
-		image_billing_mode: 'per_image',
+		image_billing_mode: "per_image",
 		image: serializeImagePricingConfig(profile.image!),
 	});
 }
 
-function assertImageBillingProfileConstraints(profile: ParsedPricingProfile): void {
+function assertImageBillingProfileConstraints(
+	profile: ParsedPricingProfile
+): void {
 	const mode = profile.image_billing_mode;
-	if (mode === 'token') {
+	if (mode === "token") {
 		const imgDefault = profile.image?.default;
 		if (imgDefault != null && Number.isFinite(imgDefault) && imgDefault >= 0) {
 			throw badRequest(
@@ -57,7 +64,7 @@ function assertImageBillingProfileConstraints(profile: ParsedPricingProfile): vo
 			);
 		}
 	}
-	if (mode === 'per_image') {
+	if (mode === "per_image") {
 		const d = profile.image?.default;
 		if (d == null || !Number.isFinite(d) || d < 0) {
 			throw badRequest(
@@ -67,13 +74,15 @@ function assertImageBillingProfileConstraints(profile: ParsedPricingProfile): vo
 		for (let i = 0; i < profile.tiers.length; i++) {
 			const tier = profile.tiers[i]!;
 			for (const [field, val] of [
-				['image_input_price', tier.image_input_price],
-				['image_input_cache_price', tier.image_input_cache_price],
-				['image_output_price', tier.image_output_price],
+				["image_input_price", tier.image_input_price],
+				["image_input_cache_price", tier.image_input_cache_price],
+				["image_output_price", tier.image_output_price],
 			] as const) {
 				if (val != null && val > 0) {
 					throw badRequest(
-						`pricing_profile: image_billing_mode "per_image" cannot have positive tier ${field} (tier ${i + 1}: ${val}); use image.default / image.input instead`
+						`pricing_profile: image_billing_mode "per_image" cannot have positive tier ${field} (tier ${
+							i + 1
+						}: ${val}); use image.default / image.input instead`
 					);
 				}
 			}
@@ -89,7 +98,7 @@ function validatePricingProfileJson(json: string): string {
 		);
 	}
 	assertImageBillingProfileConstraints(profile);
-	if (profile.image_billing_mode === 'per_image') {
+	if (profile.image_billing_mode === "per_image") {
 		return canonicalizePerImageProfile(profile);
 	}
 	return json;
@@ -103,32 +112,34 @@ export function coerceModelPricingProfileInput(raw: unknown): string | null {
 	if (raw === undefined || raw === null) {
 		return null;
 	}
-	if (typeof raw === 'string') {
+	if (typeof raw === "string") {
 		const t = raw.trim();
-		if (t === '') {
+		if (t === "") {
 			return null;
 		}
 		return validatePricingProfileJson(t);
 	}
-	if (typeof raw === 'object' && !Array.isArray(raw)) {
+	if (typeof raw === "object" && !Array.isArray(raw)) {
 		const t = JSON.stringify(raw);
 		return validatePricingProfileJson(t);
 	}
-	throw badRequest('pricing_profile must be a JSON string, object, null, or omitted');
+	throw badRequest(
+		"pricing_profile must be a JSON string, object, null, or omitted"
+	);
 }
 
 function normalizeOptionalNonNegativeFactor(
 	obj: Record<string, unknown>,
-	key: 'charged_factor' | 'metered_factor' | 'provider_factor'
+	key: "charged_factor" | "metered_factor" | "provider_factor"
 ): void {
 	const v = obj[key];
 	if (v === undefined || v === null) {
 		delete obj[key];
 		return;
 	}
-	if (typeof v === 'string') {
+	if (typeof v === "string") {
 		const text = v.trim();
-		if (text === '') {
+		if (text === "") {
 			delete obj[key];
 			return;
 		}
@@ -138,7 +149,7 @@ function normalizeOptionalNonNegativeFactor(
 			return;
 		}
 	}
-	if (typeof v === 'number' && Number.isFinite(v) && v >= 0) {
+	if (typeof v === "number" && Number.isFinite(v) && v >= 0) {
 		obj[key] = v;
 		return;
 	}
@@ -156,39 +167,46 @@ export function coerceRoutePriceOverrideInput(raw: unknown): string | null {
 		return null;
 	}
 	let obj: Record<string, unknown>;
-	if (typeof raw === 'string') {
+	if (typeof raw === "string") {
 		const t = raw.trim();
-		if (t === '') {
+		if (t === "") {
 			return null;
 		}
 		try {
 			obj = JSON.parse(t) as Record<string, unknown>;
 		} catch {
-			throw badRequest('price_override must be valid JSON');
+			throw badRequest("price_override must be valid JSON");
 		}
-	} else if (typeof raw === 'object' && !Array.isArray(raw)) {
+	} else if (typeof raw === "object" && !Array.isArray(raw)) {
 		obj = { ...(raw as Record<string, unknown>) };
 	} else {
-		throw badRequest('price_override must be a JSON object or JSON string');
+		throw badRequest("price_override must be a JSON object or JSON string");
 	}
-	if (!obj || typeof obj !== 'object' || Array.isArray(obj)) {
-		throw badRequest('price_override root must be a JSON object');
+	if (!obj || typeof obj !== "object" || Array.isArray(obj)) {
+		throw badRequest("price_override root must be a JSON object");
 	}
 
-	if (Object.prototype.hasOwnProperty.call(obj, 'user')) {
-		throw badRequest('price_override: unsupported key "user"; use "charged_factor"');
+	if (Object.prototype.hasOwnProperty.call(obj, "user")) {
+		throw badRequest(
+			'price_override: unsupported key "user"; use "charged_factor"'
+		);
 	}
 
 	// Nested tiers are deprecated and ignored at billing time — strip on write.
 	delete obj.metered;
 	delete obj.charged;
-	for (const k of ['input_price', 'output_price', 'cache_read_price', 'cache_write_price'] as const) {
+	for (const k of [
+		"input_price",
+		"output_price",
+		"cache_read_price",
+		"cache_write_price",
+	] as const) {
 		delete obj[k];
 	}
 
-	normalizeOptionalNonNegativeFactor(obj, 'provider_factor');
-	normalizeOptionalNonNegativeFactor(obj, 'charged_factor');
-	normalizeOptionalNonNegativeFactor(obj, 'metered_factor');
+	normalizeOptionalNonNegativeFactor(obj, "provider_factor");
+	normalizeOptionalNonNegativeFactor(obj, "charged_factor");
+	normalizeOptionalNonNegativeFactor(obj, "metered_factor");
 
 	if (obj.schedule !== undefined) {
 		const coerced = coerceRoutePricingScheduleInput(obj.schedule);
@@ -218,7 +236,9 @@ export function coerceRoutePriceOverrideInput(raw: unknown): string | null {
  * (defaulting missing values to 1 when persisting is caller's choice; here we accept omit = 1).
  * @throws `badRequest`
  */
-export function assertRoutePriceOverrideFactors(normalizedJson: string | null): void {
+export function assertRoutePriceOverrideFactors(
+	normalizedJson: string | null
+): void {
 	if (!normalizedJson?.trim()) {
 		// Empty override means all factors default to 1 at runtime — allowed.
 		return;
@@ -227,14 +247,14 @@ export function assertRoutePriceOverrideFactors(normalizedJson: string | null): 
 	try {
 		obj = JSON.parse(normalizedJson) as Record<string, unknown>;
 	} catch {
-		throw badRequest('price_override must be valid JSON');
+		throw badRequest("price_override must be valid JSON");
 	}
-	for (const key of ['charged_factor', 'metered_factor'] as const) {
+	for (const key of ["charged_factor", "metered_factor"] as const) {
 		const v = obj[key];
 		if (v === undefined || v === null) {
 			continue;
 		}
-		if (typeof v !== 'number' || !Number.isFinite(v) || v < 0) {
+		if (typeof v !== "number" || !Number.isFinite(v) || v < 0) {
 			throw badRequest(`price_override.${key} must be a number ≥ 0`);
 		}
 	}
@@ -249,6 +269,8 @@ export function assertRoutePriceOverrideFactors(normalizedJson: string | null): 
 /**
  * @deprecated Use `assertRoutePriceOverrideFactors`. Nested metered/charged tiers are no longer required.
  */
-export function assertRoutePriceOverrideHasMeteredAndCharged(normalizedJson: string | null): void {
+export function assertRoutePriceOverrideHasMeteredAndCharged(
+	normalizedJson: string | null
+): void {
 	assertRoutePriceOverrideFactors(normalizedJson);
 }

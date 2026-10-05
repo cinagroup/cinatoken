@@ -2,6 +2,14 @@
 
 2026-09-21：[ADR-0001](../../developers/architecture/decisions/ADR-0001-production-financial-authority.md) 已批准 PostgreSQL 为本次共享平台生产预算 / 资金唯一权威。该选择仅用于设计与本地实现，**不授权执行本手册命令或证明迁移已完成**。实施前仍须核对当前迁移目录、源 / 目标实际状态及新增恢复能力；下文历史迁移尾版本不能直接当作当前发布版本。
 
+> P18 增量提示：下文 `0068`/`0073` 链尾是历史 C03 专项合同，不能作为当前 Config 放量或真实切库的放行条件。部署新的 Admin Config 条件写入前，源 D1 须包含 `0069_config_change_audit.sql` 和 `0070_system_config_revision.sql`，目标 PostgreSQL 须包含 `0074_config_change_audit.sql` 和 `0075_system_config_revision.sql`，并完成运行角色权限、配置审计历史及 `system_config.value/revision` 的全量复制/无回显对账和回滚演练。当前对账代码会在受控进程内比较值，但只报告不匹配数。本文既有演练记录不证明这些增量已验收；实际执行前须以当前链尾重审预检、ETL、对账与 Worker 探针。
+
+> NEXT-27 增量提示：预算审计全局导出的排序索引又追加了 D1 `0071_user_audit_export_order_index.sql`、PostgreSQL `0076_user_audit_export_order_index.sql`（MySQL 链为 `0067_user_audit_export_order_index.sql`）。下文旧 C03 版本号仍是历史最低合同，不代表当前完整链尾；启用导出前应先完成目标数据库的索引迁移并用真实数据核对查询计划。索引不保证任意稀疏筛选的扫描量，也不能代替单查询超时。
+
+> NEXT-32 增量提示：当前 Shared Keys 治理链尾为 D1 `0074_admin_shared_key_audit.sql`、PostgreSQL `0079_admin_shared_key_audit.sql`（MySQL `0070_admin_shared_key_audit.sql`）。CLI 与 Worker 的共用 ETL 预检要求新链尾及审计列，复制、清空和行数对账包含 `admin_shared_key_audit`；受控进程逐项核对全部 19 个治理审计列，保留六位微秒和删除后历史，仅报告差异数，不回显原因/配置内容。该表没有父记录 FK，不能随 Shared Key 丢弃；旧 C03 的版本号与演练不证明本批已验收。
+
+> 放量顺序：先在隔离真实库验收正式历史保护和新审计迁移、运行时权限、全量 ETL/对账及回滚，再部署全部新 Admin 并排空旧 writer、升级所有治理客户端。PostgreSQL runtime 对两种密钥审计仅允许 `SELECT,INSERT`；更新、删除、截断、列级写/引用与可转授权限均应被当前 Hyperdrive 探针拒绝。探针要求 79 项正式 PG 迁移及新链尾。最后启用 `CINATOKEN_ADMIN_SHARED_KEYS_REQUIRE_REVISION`，再开启 `CINATOKEN_WEB_ADMIN_SHARED_KEYS_ENABLED`。回退应用时保留已提交审计和历史约束，不降级为无审计写入；ETL 仍是另行受控的 migrator 特权操作，运行时拒删不证明其特权清空安全。当前只有源码/离线合同证据，未执行真实迁移或切流。
+
 本文定义 CinaToken 将业务数据从 Cloudflare D1 迁入 PostgreSQL 的生产边界和操作顺序。目标 PostgreSQL 可以与 CinaAuth 共用同一数据库实例，但 CinaToken 只拥有 **`cinatoken_gateway` Schema**；不得读写 CinaAuth 的身份、会话或迁移表。
 
 > 当前仓库切换合同：源 D1 迁移链尾为 `0068_batch_jobs.sql`，目标 PostgreSQL 迁移链尾为 `0073_recovery_api_key_workspace_lock.sql`。D1 的 `0041_user_budget_spent_micros.sql` 是专用精度升级，目标仍以精确 `NUMERIC(18,6)` 保存 `budget_spent`；两后端到 Batch 为止的版本号相差一。PostgreSQL `0068`–`0073` 为后续函数与恢复能力的独立迁移，不能按尾版本号推断跨后端等价性。`0069`–`0073` 只准备恢复 Schema：普通 runtime 无权访问新增五张表或执行恢复 Key helper，既有请求日志 INSERT guard 尚未启用，C03 恢复仍关闭。最终备份、源写入冻结、ETL（包含 `generation_feedback`、provider-attempt 可用率事实、公开模型总 Token 聚合、Generation service tier、私有 BYOK、Batch 元数据与请求项账本、三档共享容量策略及 route-selective Key 限额结算、Guardrail 分配来源、Workspace Default 与 Account Default Guardrail）、零差异对账和灰度仍是独立的生产放行门。

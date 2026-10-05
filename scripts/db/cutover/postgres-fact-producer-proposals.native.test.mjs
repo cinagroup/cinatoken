@@ -2,7 +2,7 @@
 // Starts and removes only an owned loopback cluster; no ambient DATABASE_URL is used.
 import assert from 'node:assert/strict';
 import { createHash, randomBytes, randomUUID } from 'node:crypto';
-import { readFile, readdir, writeFile } from 'node:fs/promises';
+import { readFile, writeFile } from 'node:fs/promises';
 import { dirname, join } from 'node:path';
 import test from 'node:test';
 import postgres from 'postgres';
@@ -12,7 +12,7 @@ import { startNativePostgres } from '../../../packages/core/src/test-support/pos
 import { createDispatchIntentRepositoryPostgres } from '../../../packages/core/src/storage/recovery/dispatch-intent-postgres.ts';
 import { createUsageSettlementFactsRepositoryPostgres } from '../../../packages/core/src/storage/recovery/usage-settlement-facts-postgres.ts';
 import { sample } from '../../../packages/core/src/storage/recovery/usage-settlement-test-support.mjs';
-import { grantPostgresRuntime } from './grant-postgres-runtime.ts';
+import { grantPg73RuntimeFixture, listPg73Migrations } from './pg73-native-fixture.mjs';
 
 const schema = 'cinatoken_gateway';
 const producerRole = 'cinatoken_gateway_fact_producer';
@@ -111,7 +111,7 @@ async function main() {
     const migratorUrl = `postgres://cinatoken_gateway_migrator:${password}@127.0.0.1:${cluster.port}/postgres`;
     await migrator.unsafe(`CREATE TABLE ${schema}.schema_migrations (
       version text PRIMARY KEY, applied_at timestamptz NOT NULL DEFAULT now())`);
-    const files = (await readdir(migrations)).filter(name => name.endsWith('.sql')).sort();
+    const files = await listPg73Migrations();
     assert.equal(files.length, 73);
     for (const name of files) {
       const body = await readFile(new URL(name, migrations), 'utf8');
@@ -121,7 +121,7 @@ async function main() {
       });
     }
     stage('formal-migrations', { count: files.length });
-    await grantPostgresRuntime({ DATABASE_URL: migratorUrl });
+    await grantPg73RuntimeFixture({ cluster, migrator, migratorUrl });
     await migrator.unsafe(`INSERT INTO ${schema}.users(id,email,budget_max,budget_spent)
       VALUES ('user','native-producer@example.invalid',10,1);
       INSERT INTO ${schema}.workspaces(id,scope_type,personal_owner_user_id,name,slug,status)
@@ -141,7 +141,7 @@ async function main() {
       await tx.unsafe("SET LOCAL cinatoken.settlement_outbox_definer_activation = 'reviewed-v1'");
       await tx.unsafe(await readFile(outboxProposal, 'utf8')).simple();
     });
-    await grantPostgresRuntime({ DATABASE_URL: migratorUrl });
+    await grantPg73RuntimeFixture({ cluster, migrator, migratorUrl });
     stage('optional-proposals-applied', { formalChainUntouched: true });
 
     await migrator.unsafe(`GRANT USAGE ON SCHEMA ${schema} TO ${producerRole};

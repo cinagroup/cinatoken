@@ -11,7 +11,7 @@ import { createPostgresStorageContext } from '../../../packages/core/src/storage
 import { startNativePostgres } from '../../../packages/core/src/test-support/postgres-native-cluster.mjs';
 import { resolveRoutesForSurface, resolveRouteResultsFromRows } from '../../../packages/proxy/src/services/model-router.ts';
 import { buildModelFallbackPlan } from '../../../packages/proxy/src/services/model-fallback-plan.ts';
-import { grantPostgresRuntime } from './grant-postgres-runtime.ts';
+import { grantPg73RuntimeFixture, listPg73Migrations } from './pg73-native-fixture.mjs';
 
 const root = new URL('../../../', import.meta.url);
 const fixtureUrl = new URL(import.meta.url);
@@ -130,7 +130,7 @@ test('v393 genuine quote/planner manifest includes a valid route excluded by the
       await migrator.unsafe(`CREATE TABLE ${g}.schema_migrations
         (version text PRIMARY KEY,applied_at timestamptz NOT NULL DEFAULT now())`);
       const migrations = new URL('packages/core/migrations-postgres/', root);
-      const names = (await readdir(migrations)).filter(name => name.endsWith('.sql')).sort();
+      const names = await listPg73Migrations();
       assert.equal(names.length, 73);
       const corpus = [];
       for (const name of names) {
@@ -143,7 +143,7 @@ test('v393 genuine quote/planner manifest includes a valid route excluded by the
       }
       report.formalMigrations = { files: names.length, sha256: sha(corpus.join('\n')) };
       const migratorUrl = `postgres://cinatoken_gateway_migrator:${passwords.migrator}@127.0.0.1:${cluster.port}/postgres`;
-      await grantPostgresRuntime({ DATABASE_URL: migratorUrl });
+      await grantPg73RuntimeFixture({ cluster, migrator, migratorUrl });
       for (const [name, flag] of overlays) {
         const sql = await readFile(new URL(`packages/core/migrations-proposals/postgres/${name}`, root), 'utf8');
         await migrator.begin(async tx => {

@@ -26,6 +26,7 @@ type MigratorProbe = {
 
 type RuntimeProbe = {
 	user_name: string;
+	runtime_is_direct_login: boolean;
 	current_search_path: string;
 	models_count: string;
 	providers_count: string;
@@ -73,6 +74,23 @@ type RuntimeProbe = {
 	batch_items_insert: boolean;
 	batch_items_update: boolean;
 	batch_items_delete: boolean;
+	config_change_audit_insert: boolean;
+	config_change_audit_insert_grant_option: boolean;
+	config_change_audit_select: boolean;
+	config_change_audit_update: boolean;
+	config_change_audit_delete: boolean;
+	config_change_audit_truncate: boolean;
+	config_change_audit_references: boolean;
+	config_change_audit_trigger: boolean;
+	config_change_audit_maintain: boolean;
+	config_change_audit_column_select: boolean;
+	config_change_audit_column_update: boolean;
+	config_change_audit_column_references: boolean;
+	config_change_audit_column_insert_grant_option: boolean;
+	admin_access_key_audit_access: Record<string, boolean>;
+	admin_shared_key_audit_access: Record<string, boolean>;
+	config_group_audit_access: Record<string, boolean>;
+	system_config_write_mutex_access: Record<string, boolean>;
 	recovery_tables_inaccessible: boolean;
 	recovery_helper_execute: boolean;
 	provider_attempt_retention_execute: boolean;
@@ -89,13 +107,75 @@ function migratorContractPassed(row: MigratorProbe | undefined): boolean {
 		!row.can_create_role &&
 		row.schema_usage &&
 		row.schema_create &&
-		row.migration_count === '73' &&
-		row.latest_migration === '0073_recovery_api_key_workspace_lock.sql' &&
+		row.migration_count === '81' &&
+		row.latest_migration === '0081_tools_config_group_audit.sql' &&
 		row.latest_migration_applied;
+}
+
+type ConfigAuditAccess = Pick<RuntimeProbe,
+	| 'config_change_audit_insert'
+	| 'config_change_audit_insert_grant_option'
+	| 'config_change_audit_select'
+	| 'config_change_audit_update'
+	| 'config_change_audit_delete'
+	| 'config_change_audit_truncate'
+	| 'config_change_audit_references'
+	| 'config_change_audit_trigger'
+	| 'config_change_audit_maintain'
+	| 'config_change_audit_column_select'
+	| 'config_change_audit_column_update'
+	| 'config_change_audit_column_references'
+	| 'config_change_audit_column_insert_grant_option'
+>;
+
+export function configAuditAccessPassed(row: ConfigAuditAccess | undefined): boolean {
+	return row?.config_change_audit_insert === true &&
+		row.config_change_audit_insert_grant_option === false &&
+		row.config_change_audit_select === false &&
+		row.config_change_audit_update === false &&
+		row.config_change_audit_delete === false &&
+		row.config_change_audit_truncate === false &&
+		row.config_change_audit_references === false &&
+		row.config_change_audit_trigger === false &&
+		row.config_change_audit_maintain === false &&
+		row.config_change_audit_column_select === false &&
+		row.config_change_audit_column_update === false &&
+		row.config_change_audit_column_references === false &&
+		row.config_change_audit_column_insert_grant_option === false;
+}
+
+export function adminKeyAuditAccessPassed(access: Record<string, boolean> | undefined): boolean {
+	return access?.select === true && access.insert === true && [
+		'update', 'delete', 'truncate', 'references', 'trigger', 'maintain', 'select_grant_option',
+		'insert_grant_option', 'column_update', 'column_references', 'column_select_grant_option', 'column_insert_grant_option',
+	].every((privilege) => access[privilege] === false);
+}
+
+type AdminAuditAccess = Pick<RuntimeProbe, 'admin_access_key_audit_access' | 'admin_shared_key_audit_access' | 'config_group_audit_access'>;
+
+/** Every history is mandatory; an old probe cannot authorize the new schema. */
+export function adminAuditAccessPassed(row: AdminAuditAccess | undefined): boolean {
+	return adminKeyAuditAccessPassed(row?.admin_access_key_audit_access) &&
+		adminKeyAuditAccessPassed(row?.admin_shared_key_audit_access) &&
+		adminKeyAuditAccessPassed(row?.config_group_audit_access);
+}
+
+/** SELECT FOR UPDATE needs an update privilege; only the immutable id column is granted. */
+export function configWriteMutexAccessPassed(access: Record<string, boolean> | undefined): boolean {
+	return access?.select === true && access.update_id === true && access.singleton === true && [
+		'insert', 'update', 'delete', 'truncate', 'references', 'trigger', 'maintain',
+		'select_grant_option', 'column_select_grant_option', 'column_insert',
+		'column_references', 'column_update_other', 'column_update_grant_option',
+	].every((privilege) => access[privilege] === false);
+}
+
+export function runtimeRoleAccessPassed(row: { runtime_is_direct_login?: boolean } | undefined): boolean {
+	return row?.runtime_is_direct_login === true;
 }
 
 function runtimeContractPassed(row: RuntimeProbe | undefined): boolean {
 	return row?.user_name === GATEWAY_RUNTIME_ROLE &&
+		runtimeRoleAccessPassed(row) &&
 		row.current_search_path === `${GATEWAY_SCHEMA}, public` &&
 		/^\d+$/.test(row.models_count) &&
 		/^\d+$/.test(row.providers_count) &&
@@ -143,6 +223,9 @@ function runtimeContractPassed(row: RuntimeProbe | undefined): boolean {
 		row.batch_items_insert &&
 		row.batch_items_update &&
 		!row.batch_items_delete &&
+		configAuditAccessPassed(row) &&
+		adminAuditAccessPassed(row) &&
+		configWriteMutexAccessPassed(row.system_config_write_mutex_access) &&
 		row.recovery_tables_inaccessible &&
 		!row.recovery_helper_execute &&
 		row.provider_attempt_retention_execute &&
@@ -203,7 +286,7 @@ export default {
 						(SELECT MAX(version) FROM cinatoken_gateway.schema_migrations) AS latest_migration,
 						EXISTS (
 							SELECT 1 FROM cinatoken_gateway.schema_migrations
-							WHERE version = '0073_recovery_api_key_workspace_lock.sql'
+							WHERE version = '0081_tools_config_group_audit.sql'
 						) AS latest_migration_applied
 				`;
 			const migratorPassed = migratorContractPassed(migratorRow);
@@ -218,6 +301,13 @@ export default {
 			}
 			const [runtimeRow] = await runtime<RuntimeProbe[]>`
 					SELECT current_user AS user_name,
+                        (EXISTS (SELECT 1 FROM pg_catalog.pg_roles AS runtime
+                          WHERE runtime.rolname = current_user AND runtime.rolcanlogin
+                            AND NOT runtime.rolsuper AND NOT runtime.rolcreatedb AND NOT runtime.rolcreaterole
+                            AND NOT runtime.rolreplication AND NOT runtime.rolbypassrls)
+                         AND NOT EXISTS (SELECT 1 FROM pg_catalog.pg_auth_members AS memberships
+                           JOIN pg_catalog.pg_roles AS runtime ON runtime.oid = memberships.member
+                           WHERE runtime.rolname = current_user)) AS runtime_is_direct_login,
 						current_setting('search_path') AS current_search_path,
 						(SELECT COUNT(*)::TEXT FROM models) AS models_count,
 						(SELECT COUNT(*)::TEXT FROM providers) AS providers_count,
@@ -320,6 +410,117 @@ export default {
 						has_table_privilege(
 							current_user, 'cinatoken_gateway.batch_items', 'DELETE'
 						) AS batch_items_delete,
+						has_table_privilege(
+							current_user, 'cinatoken_gateway.config_change_audit', 'INSERT'
+						) AS config_change_audit_insert,
+						has_table_privilege(
+							current_user, 'cinatoken_gateway.config_change_audit', 'INSERT WITH GRANT OPTION'
+						) AS config_change_audit_insert_grant_option,
+						has_table_privilege(
+							current_user, 'cinatoken_gateway.config_change_audit', 'SELECT'
+						) AS config_change_audit_select,
+						has_table_privilege(
+							current_user, 'cinatoken_gateway.config_change_audit', 'UPDATE'
+						) AS config_change_audit_update,
+						has_table_privilege(
+							current_user, 'cinatoken_gateway.config_change_audit', 'DELETE'
+						) AS config_change_audit_delete,
+						has_table_privilege(
+							current_user, 'cinatoken_gateway.config_change_audit', 'TRUNCATE'
+						) AS config_change_audit_truncate,
+						has_table_privilege(
+							current_user, 'cinatoken_gateway.config_change_audit', 'REFERENCES'
+						) AS config_change_audit_references,
+						has_table_privilege(
+							current_user, 'cinatoken_gateway.config_change_audit', 'TRIGGER'
+						) AS config_change_audit_trigger,
+						-- MAINTAIN was added in PostgreSQL 17; the local Compose image is 16.
+						CASE WHEN current_setting('server_version_num')::INTEGER >= 170000 THEN
+							has_table_privilege(
+								current_user, 'cinatoken_gateway.config_change_audit', 'MAINTAIN'
+							)
+						ELSE FALSE END AS config_change_audit_maintain,
+						has_any_column_privilege(
+							current_user, 'cinatoken_gateway.config_change_audit', 'SELECT'
+						) AS config_change_audit_column_select,
+						has_any_column_privilege(
+							current_user, 'cinatoken_gateway.config_change_audit', 'UPDATE'
+						) AS config_change_audit_column_update,
+						has_any_column_privilege(
+							current_user, 'cinatoken_gateway.config_change_audit', 'REFERENCES'
+						) AS config_change_audit_column_references,
+						has_any_column_privilege(
+							current_user, 'cinatoken_gateway.config_change_audit', 'INSERT WITH GRANT OPTION'
+						) AS config_change_audit_column_insert_grant_option,
+						json_build_object(
+							'select', has_table_privilege(current_user, 'cinatoken_gateway.admin_access_key_audit', 'SELECT'),
+							'insert', has_table_privilege(current_user, 'cinatoken_gateway.admin_access_key_audit', 'INSERT'),
+							'update', has_table_privilege(current_user, 'cinatoken_gateway.admin_access_key_audit', 'UPDATE'),
+							'delete', has_table_privilege(current_user, 'cinatoken_gateway.admin_access_key_audit', 'DELETE'),
+							'truncate', has_table_privilege(current_user, 'cinatoken_gateway.admin_access_key_audit', 'TRUNCATE'),
+							'references', has_table_privilege(current_user, 'cinatoken_gateway.admin_access_key_audit', 'REFERENCES'),
+							'trigger', has_table_privilege(current_user, 'cinatoken_gateway.admin_access_key_audit', 'TRIGGER'),
+							'maintain', CASE WHEN current_setting('server_version_num')::int >= 170000
+								THEN has_table_privilege(current_user, 'cinatoken_gateway.admin_access_key_audit', 'MAINTAIN') ELSE FALSE END,
+							'select_grant_option', has_table_privilege(current_user, 'cinatoken_gateway.admin_access_key_audit', 'SELECT WITH GRANT OPTION'),
+							'insert_grant_option', has_table_privilege(current_user, 'cinatoken_gateway.admin_access_key_audit', 'INSERT WITH GRANT OPTION'),
+							'column_update', has_any_column_privilege(current_user, 'cinatoken_gateway.admin_access_key_audit', 'UPDATE'),
+							'column_references', has_any_column_privilege(current_user, 'cinatoken_gateway.admin_access_key_audit', 'REFERENCES'),
+							'column_select_grant_option', has_any_column_privilege(current_user, 'cinatoken_gateway.admin_access_key_audit', 'SELECT WITH GRANT OPTION'),
+							'column_insert_grant_option', has_any_column_privilege(current_user, 'cinatoken_gateway.admin_access_key_audit', 'INSERT WITH GRANT OPTION')
+						) AS admin_access_key_audit_access,
+						jsonb_build_object(
+							'select', has_table_privilege(current_user, 'cinatoken_gateway.admin_shared_key_audit', 'SELECT'),
+							'insert', has_table_privilege(current_user, 'cinatoken_gateway.admin_shared_key_audit', 'INSERT'),
+							'update', has_table_privilege(current_user, 'cinatoken_gateway.admin_shared_key_audit', 'UPDATE'),
+							'delete', has_table_privilege(current_user, 'cinatoken_gateway.admin_shared_key_audit', 'DELETE'),
+							'truncate', has_table_privilege(current_user, 'cinatoken_gateway.admin_shared_key_audit', 'TRUNCATE'),
+							'references', has_table_privilege(current_user, 'cinatoken_gateway.admin_shared_key_audit', 'REFERENCES'),
+							'trigger', has_table_privilege(current_user, 'cinatoken_gateway.admin_shared_key_audit', 'TRIGGER'),
+							'maintain', CASE WHEN current_setting('server_version_num')::integer >= 170000
+								THEN has_table_privilege(current_user, 'cinatoken_gateway.admin_shared_key_audit', 'MAINTAIN') ELSE FALSE END,
+							'select_grant_option', has_table_privilege(current_user, 'cinatoken_gateway.admin_shared_key_audit', 'SELECT WITH GRANT OPTION'),
+							'insert_grant_option', has_table_privilege(current_user, 'cinatoken_gateway.admin_shared_key_audit', 'INSERT WITH GRANT OPTION'),
+							'column_update', has_any_column_privilege(current_user, 'cinatoken_gateway.admin_shared_key_audit', 'UPDATE'),
+							'column_references', has_any_column_privilege(current_user, 'cinatoken_gateway.admin_shared_key_audit', 'REFERENCES'),
+							'column_select_grant_option', has_any_column_privilege(current_user, 'cinatoken_gateway.admin_shared_key_audit', 'SELECT WITH GRANT OPTION'),
+							'column_insert_grant_option', has_any_column_privilege(current_user, 'cinatoken_gateway.admin_shared_key_audit', 'INSERT WITH GRANT OPTION')
+						) AS admin_shared_key_audit_access,
+						jsonb_build_object(
+							'select', has_table_privilege(current_user, 'cinatoken_gateway.config_group_audit', 'SELECT'),
+							'insert', has_table_privilege(current_user, 'cinatoken_gateway.config_group_audit', 'INSERT'),
+							'update', has_table_privilege(current_user, 'cinatoken_gateway.config_group_audit', 'UPDATE'),
+							'delete', has_table_privilege(current_user, 'cinatoken_gateway.config_group_audit', 'DELETE'),
+							'truncate', has_table_privilege(current_user, 'cinatoken_gateway.config_group_audit', 'TRUNCATE'),
+							'references', has_table_privilege(current_user, 'cinatoken_gateway.config_group_audit', 'REFERENCES'),
+							'trigger', has_table_privilege(current_user, 'cinatoken_gateway.config_group_audit', 'TRIGGER'),
+							'maintain', CASE WHEN current_setting('server_version_num')::integer >= 170000
+								THEN has_table_privilege(current_user, 'cinatoken_gateway.config_group_audit', 'MAINTAIN') ELSE FALSE END,
+							'select_grant_option', has_table_privilege(current_user, 'cinatoken_gateway.config_group_audit', 'SELECT WITH GRANT OPTION'),
+							'insert_grant_option', has_table_privilege(current_user, 'cinatoken_gateway.config_group_audit', 'INSERT WITH GRANT OPTION'),
+							'column_update', has_any_column_privilege(current_user, 'cinatoken_gateway.config_group_audit', 'UPDATE'),
+							'column_references', has_any_column_privilege(current_user, 'cinatoken_gateway.config_group_audit', 'REFERENCES'),
+							'column_select_grant_option', has_any_column_privilege(current_user, 'cinatoken_gateway.config_group_audit', 'SELECT WITH GRANT OPTION'),
+							'column_insert_grant_option', has_any_column_privilege(current_user, 'cinatoken_gateway.config_group_audit', 'INSERT WITH GRANT OPTION')
+						) AS config_group_audit_access,
+						jsonb_build_object(
+							'select', has_table_privilege(current_user, 'cinatoken_gateway.system_config_write_mutex', 'SELECT'),
+							'update_id', has_column_privilege(current_user, 'cinatoken_gateway.system_config_write_mutex', 'id', 'UPDATE'),
+							'singleton', (SELECT count(*) = 1 AND bool_and(id = 1) FROM cinatoken_gateway.system_config_write_mutex),
+							'insert', has_table_privilege(current_user, 'cinatoken_gateway.system_config_write_mutex', 'INSERT'),
+							'update', has_table_privilege(current_user, 'cinatoken_gateway.system_config_write_mutex', 'UPDATE'),
+							'delete', has_table_privilege(current_user, 'cinatoken_gateway.system_config_write_mutex', 'DELETE'),
+							'truncate', has_table_privilege(current_user, 'cinatoken_gateway.system_config_write_mutex', 'TRUNCATE'),
+							'references', has_table_privilege(current_user, 'cinatoken_gateway.system_config_write_mutex', 'REFERENCES'),
+							'trigger', has_table_privilege(current_user, 'cinatoken_gateway.system_config_write_mutex', 'TRIGGER'),
+							'maintain', CASE WHEN current_setting('server_version_num')::integer >= 170000 THEN has_table_privilege(current_user, 'cinatoken_gateway.system_config_write_mutex', 'MAINTAIN') ELSE FALSE END,
+							'select_grant_option', has_table_privilege(current_user, 'cinatoken_gateway.system_config_write_mutex', 'SELECT WITH GRANT OPTION'),
+							'column_select_grant_option', has_any_column_privilege(current_user, 'cinatoken_gateway.system_config_write_mutex', 'SELECT WITH GRANT OPTION'),
+							'column_insert', has_any_column_privilege(current_user, 'cinatoken_gateway.system_config_write_mutex', 'INSERT'),
+							'column_references', has_any_column_privilege(current_user, 'cinatoken_gateway.system_config_write_mutex', 'REFERENCES'),
+							'column_update_other', EXISTS (SELECT 1 FROM pg_catalog.pg_attribute a WHERE a.attrelid = 'cinatoken_gateway.system_config_write_mutex'::regclass AND a.attnum > 0 AND NOT a.attisdropped AND a.attname <> 'id' AND has_column_privilege(current_user, a.attrelid, a.attnum, 'UPDATE')),
+							'column_update_grant_option', has_any_column_privilege(current_user, 'cinatoken_gateway.system_config_write_mutex', 'UPDATE WITH GRANT OPTION')
+						) AS system_config_write_mutex_access,
 						(SELECT count(*) = 5 AND bool_and(NOT (
 							has_table_privilege(current_user, relation.oid, 'SELECT') OR
 							has_table_privilege(current_user, relation.oid, 'INSERT') OR

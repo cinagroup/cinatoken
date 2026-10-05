@@ -43,13 +43,8 @@
 			}
 		},
 		"modalities": {
-			"input": [
-				"text",
-				"image"
-			],
-			"output": [
-				"image"
-			]
+			"input": ["text", "image"],
+			"output": ["image"]
 		},
 		"released": "2026-04-01"
 	}

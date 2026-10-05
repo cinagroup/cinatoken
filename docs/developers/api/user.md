@@ -40,6 +40,23 @@ Content-Type: application/json
 
 用户中心的桌面侧栏与移动端顶部已经提供同一套切换器。Gateway Key、Activity、Preset、Guardrail、私有 BYOK 与共享预算已具备 Workspace 边界；Routing 个性化仍未完成。Workspace 创建、归档、成员管理与完整 CinaAuth 组织角色映射也尚未开放。
 
+### 浏览器请求的预期 Workspace
+
+Cookie 偏好由同一浏览器的标签页共享。调用 `/api/user/*` 时，可使用 `X-CinaToken-Workspace` 携带 `encodeURIComponent(workspaceId)`，声明本次操作预期的 Workspace，例如 `X-CinaToken-Workspace: personal%3Auser-1`。服务端在认证和 Workspace 授权解析之后、资源操作之前比较该值；此头既不切换 Workspace，也不证明成员身份。
+
+非法编码、空值、控制字符、重复值或超长 ID 返回 HTTP 400，`code: "invalid_workspace_precondition"`；与当前服务端 Workspace 不一致返回 HTTP 409，`code: "workspace_mismatch"`，且不执行资源读写。客户端应先重新读取会话与 Workspace，再让用户重试，不能自动重放创建或其他写操作。未携带此头的旧客户端保持兼容；退出接口不依赖 Workspace 前置条件。此机制拒绝请求中的 Cookie 与界面预期错位，不是服务端保存偏好的全局原子 CAS。
+
+### 浏览器请求的预期用户
+
+同一组织 Workspace 可以由不同用户共同访问，只有 Workspace 前置条件不足以识别跨标签页登录切换。已确定账户身份的 Web 请求对 /api/user/* 携带 X-CinaToken-Expected-User-Id，其值为 encodeURIComponent(userId)；需要 Workspace 前置条件的请求同时携带原 Workspace 头。服务端先认证取得可信 principal，再比较预期用户，随后才解析 Workspace 权限和执行领域操作。这个头不选择身份，也不证明成员资格。
+
+预期用户值必须使用规范 URI 编码，解码后非空、不含首尾空白、C0/C1/DEL 控制字符，且不超过 600 个 UTF-16 code units。畸形编码、非规范编码、原始逗号、重复值或超长值返回 HTTP 400，code 为 invalid_user_precondition；与已认证用户不一致返回 HTTP 409，code 为 user_mismatch。错误响应均为 private, no-store，不回显两个用户 ID；未认证请求先返回 401。
+
+客户端收到 user_mismatch 时清除旧用户上下文及敏感表单，重新读取会话和权限，让用户自行重试；不能自动重放写操作。启动与刷新先取得 /api/user/me 确认的用户，再用该用户的前置条件读取 /api/user/workspaces，避免拼接两个用户的会话与权限。
+
+未携带此头的旧客户端保持既有授权行为。直接调用 /api/user/auth/logout 时仍核对预期用户，但不依赖 Workspace；统一 /api/auth/logout 保持撤销浏览器实际携带会话的既有语义，不通过此头选择退出对象。
+
+发布顺序要求先升级所有承接用户 API 的 Admin 实例，再开放新版 Web 入口，防止旧实例忽略该前置条件。本次本地实现与受控验证不代表生产开放；入口开关、真实身份联调及原生数据库等验收仍按迁移 checklist 的门槛执行。
 ### Workspace Gateway Key（Phase 3 首个切片）
 
 `/account/keys` 可在当前 Workspace 内创建、列出和撤销当前登录成员本人创建的 Gateway Key：
@@ -51,6 +68,14 @@ DELETE /api/user/gateway-keys/{id}
 ```
 
 完整 `sk-` 密钥只在创建成功响应中返回一次，页面只保存在内存中；列表仅返回掩码。所有查询和撤销同时约束当前服务端 Workspace 与创建者，不能通过 Key ID 跨 Workspace 操作。旧 Key 在迁移时确定性归入创建者的个人 Default Workspace；新用户与个人 Default Workspace 在同一数据库事务中创建。Workspace 归档，或所属组织进入 suspended/deleted 状态后，该 Workspace 下的 Key 在数据面鉴权时立即 fail closed。
+
+列表保持 `data` 数组，并增加顶层 `workspaceId` 和 `billingCurrency`。`workspaceId` 标识本次查询实际采用的服务端工作区，空列表也可核验作用域；`billingCurrency` 来自系统记账币种，预算金额按该币种解释，不能固定显示美元。
+
+```json
+{"success":true,"workspaceId":"personal:user-1","billingCurrency":"CNY","data":[]}
+```
+
+创建接受可选 `name`、非负金额 `limit`、`limit_reset`（`null` 为 lifetime，或 `daily` / `weekly` / `monthly`）及未来的规范 UTC `expires_at`。创建成功的 `data` 返回 `key`、`key_id`、`workspace_id`。Web 的列表、创建和撤销均携带预期 Workspace；创建密钥全文不进入查询或 mutation 缓存，也不进入浏览器持久存储。
 
 组织管理员跨成员管理 Key 尚未开放：CinaAuth 组织角色目前仍作为不透明值处理，在正式定义 role/permission 映射前不会猜测角色字符串。管理员全局 Key 管理也尚未提供 Workspace 选择器。
 
@@ -79,11 +104,64 @@ DELETE /api/user/byok/{id}
 
 Management Key 完整明文只在门户创建响应中返回一次，数据库只保存 SHA-256 hash 与安全预览。可设置未来的 UTC 过期时间，也可随时吊销；每次认证都会复验状态、过期时间和所属个人/组织生命周期。创建和吊销与 `user_audit_logs` 审计记录在同一数据库事务中，审计载荷不包含明文凭据。
 
-个人账户只有所有者可以签发；组织账户只有当前 Workspace 的本地 `admin` 角色可以签发。该授权不会从未知 CinaAuth 角色字符串推断。Management API 对 Gateway Key 的列表、单条读取、改名、启停和删除都在服务端按账户与 Workspace 约束；存在用量历史或 `reserved` / `dispatched` 请求时拒绝硬删除，调用方应禁用 Key，以保留 Workspace 历史消费归属。
+个人账户只有所有者可以签发；组织账户要求 `CINAAUTH_ORGANIZATION_ADMIN_ROLES` 映射出的权威 CinaAuth 管理角色及有效 Workspace 访问权，仅本地 Workspace `admin` 角色不足以授权。部署映射由服务端检查，浏览器不能猜测角色字符串。Management API 对 Gateway Key 的列表、单条读取、改名、启停和删除都在服务端按账户与 Workspace 约束；存在用量历史或 `reserved` / `dispatched` 请求时拒绝硬删除，调用方应禁用 Key，以保留 Workspace 历史消费归属。
+
+浏览器门户通过 `GET /api/user/management-keys?include_revoked=true`、`POST /api/user/management-keys` 和 `DELETE /api/user/management-keys/{id}` 管理凭据。列表只返回安全标签与账户归属；创建响应为 `{success:true,data:<安全记录>,key:<一次性全文>}`（HTTP 201）。这些凭据属于个人账户或组织，而非单个 Workspace；Web 使用预期 Workspace 前置条件避免跨标签选择错位，并按返回账户归属再次核对。
 
 当前返回真实的总计、日、周、月 `charged_cost` 用量，并将 `is_byok=true` 请求的 Endpoint 目录标准价单独聚合到 `byok_usage*`；后者是分析估算，不是 CinaToken 扣费。Gateway Key 可在门户或 Management API 创建时设置严格的未来 UTC `expires_at`，三库持久化且每次数据面鉴权复验；过期 Key 保留在列表供审计，但不能继续推理。门户和 Management API 也可配置非负 `limit` 及 lifetime/daily/weekly/monthly `limit_reset`；统一账本在推理准入时原子预留、在完成时按实际费用结算、失败时释放，三库事务都会复验 Key 配置版本，避免并发超支或旧配置穿透。`limit_remaining` 从该权威账本计算，不会用当前开关倒算历史请求。私有 BYOK 当前采用过渡期零网关费策略，保留目录价分析且默认不计入任何预算；当 `include_byok_in_limit=true` 时，仅当前 Gateway Key 限额按 verified Endpoint 目录标准价进行 route-selective 预留与结算，Workspace、普通用户和普通 Guardrail 预算仍排除成功的私有 BYOK。开关变更仅影响之后准入的请求；用量未知时 Key 保守保留预留上界；BYOK 失败并回退共享或平台容量前，系统会原子补齐普通收费预算。完整接口见 [Management API](management.md)。
 
 ---
+
+### 共享上游密钥（Shared Keys）
+
+这些 Cookie 门户接口要求 `shared_keys.manage`，资源归属为当前会话的 `principal.userId`。组织工作区不会改变卖家归属；`X-CinaToken-Workspace` 只检测共享 Cookie 的上下文错位，不授予卖家权限。所有响应均为 `private, no-store`。
+
+| 方法与路径 | 契约 |
+| --- | --- |
+| `GET /api/user/shared-keys` | `{ success, data, sellerUserId, earningsCurrency }`。空列表仍包含卖家身份；列表仅提供 `apiKeyMasked` 和尾号指纹，历史失败原因中的当前凭据被脱敏。 |
+| `GET /api/user/shared-keys/channels` | `data` 包含允许渠道、价格上限、佣金率及规范化的 `billingCurrency`。 |
+| `POST /api/user/shared-keys` | 上架并验证；保留现有创建响应的一次性输入密钥回显。Web 验证其与输入一致后移除全文，不放入列表或变更缓存。 |
+| `PATCH /api/user/shared-keys/:id` | 更新标签、价格、权重或暂停/恢复；不通过此接口替换已有凭据或渠道。 |
+| `POST /api/user/shared-keys/:id/revalidate` | 重新验证；失败与网络不可用保持不同状态，网络错误不会记录原始凭据。 |
+| `DELETE /api/user/shared-keys/:id` | 有计入收益的历史时返回 `409 / shared_key_earning_history_immutable`；其他 409 不等于该历史约束。 |
+
+报价采用渠道响应的 `billingCurrency`；累计收益采用 `earningsCurrency`（当前写入账本为 USD）。不能将配置币种重贴到历史收益上，也不能在浏览器中自行换汇；非 USD 报价的实际结算一致性仍需单独验收。
+
+### 卖家收益账本（Earnings）
+
+`GET /api/user/earnings/summary` 与 `GET /api/user/earnings?page=1&pageSize=20` 要求 `earnings.read`。管理员或组织角色不能替代该能力；后端按当前用户读取账本，所有响应为 `private, no-store`。
+
+两个响应均携带 `sellerUserId`、`workspaceId`、`earningsCurrency: "USD"`、`amountUnit: "major"`，保留已有 `data`。主单位已经由存储微单位转换，前端不能再次除以一百万。流水每行的原始 `currency` 独立保留。
+
+- 汇总额外提供 `availability`；`data: null` 为 `unavailable`，不应显示为零余额。
+- 流水额外提供 `total`、`page`、`pageSize`，记录含请求/共享密钥关联、输入/输出/缓存 tokens、总额、费用和净额。当前记录没有逐请求 pending/failed 支付状态。
+- `workspaceId` 表示请求会话上下文，不表示收益归属改为组织或工作区。
+
+### 贡献徽章（NFT）
+
+`GET /api/user/nft/tiers`、`GET /api/user/nft/mints`、`POST /api/user/nft/mint` 要求 `nft.read`；响应携带 `sellerUserId`、`workspaceId`、`contributionCurrency: "USD"`、`amountUnit: "major"`、`availability`，并使用 `private, no-store`。
+
+- 等级响应保留贡献额、最高等级、阈值、进度、资格和已有铸造记录，并明确 `chainConfigured`、`walletBound`。账本不可用与链未配置是不同状态。
+- 申请只提交数值 `badgeTokenId`。用户、钱包和资格由服务器解析，不接受浏览器传入的归属选择器。
+- 申请成功不等于链上确认；需读取 `pending / processing / submitted / confirmed / failed` 状态。相同用户与等级已有记录（包括 failed）时遵循现有唯一性约束，不能盲目重复申请。
+- 写请求失败后重新读取记录，特别是队列提交失败但已产生 pending 行的情况；不得自动重放铸造操作。
+
+### 钱包签名与提现（Wallet / Withdrawals）
+
+钱包的 `GET /api/user/wallet`、`POST /api/user/wallet/challenge` 和 `POST /api/user/wallet/verify` 要求 `wallet.manage`。响应携带 `userId` 与 `workspaceId`，使用 `private, no-store`；`availability` 表示当前签名配置是否可用，不等于是否已有绑定。工作区仅是会话前置条件，钱包属于当前用户。
+
+- challenge 提交 `{ "walletAddress": "0x…" }`，返回精确的 EIP-4361 消息、密封挑战、公开 origin、链 ID 和五分钟有效期。浏览器先校验用户、origin、地址、链与消息，再请求 EOA 钱包 `personal_sign`。
+- verify 提交 `{ "challengeToken": "…", "signature": "0x…" }`；服务端重新验证会话、origin、链、期限和签名，并原子消费挑战，重放返回 409。直接提交钱包地址的旧绑定方式不再可用。
+- 钱包账户或链发生变化、用户取消或切换会话时，浏览器终止流程，不提交迟到的签名。挑战和签名不进入持久存储、查询/变更缓存或错误消息。
+- 已绑定但 `verifiedAt: null` 的旧钱包保留当前提现资格；界面说明缺少验证记录并提供验证入口。
+
+提现的 `GET /api/user/withdrawals?page=1&pageSize=20`、`POST /api/user/withdrawals/quote` 与 `POST /api/user/withdrawals` 要求 `withdrawals.manage`，同样为本人数据和 `private, no-store`。
+
+- 响应包含 `userId`、`workspaceId`、`withdrawalCurrency: "USD"`、`amountUnit: "major"`、`tokenSymbol: "CINA-C"`、`tokenAmountUnit: "major"`，以及实际 policy、余额、锁定、钱包、队列、链、每日剩余次数和当前在途订单。列表额外包含 `total/page/pageSize`；历史订单保留其记录币种。
+- quote 提交 `{ "amount": 12.345678 }`，只计算，不创建订单、不锁款、不派发任务。返回费用、净额、按净额转换的 Token 数量及 64 位十六进制报价 fingerprint。
+- 现代客户端审核报价后提交 `{ "amount": 12.345678, "expectedQuote": "…" }`。服务端重新计算上下文，报价变化时在锁款前返回 409 / `withdrawal_quote_changed`；客户端重新读取并要求审核，不自动重放。旧客户端仅提交 amount 仍兼容。
+- 创建成功只证明订单已创建和派发已确认，不证明链上到账。订单状态为 `requested / processing / submitted / confirmed / failed`；没有额外的用户取消或重试接口。
+- 锁款后队列派发未确认返回 503 / `withdrawal_dispatch_unconfirmed`，已创建订单保留。客户端读取历史和当前订单确认状态，不自动重发创建请求。
 
 ## 用户中心 Activity 与预算总览
 
@@ -1595,13 +1673,19 @@ POST /api/v1/presets/{slug}/responses
 
 也接受 `/v1/presets/...`。三个 POST 是配置捕获接口：只保存并返回 Preset，不执行推理、不访问上游，也不会产生模型费用。新 slug 创建 Preset；调用自己在当前 Workspace 已有的 slug 会创建并指定一个新版本。slug 仅在 Workspace 内唯一；私有 Preset 只有所有者可见，active public Preset 可由同 Workspace 的其他已认证用户读取和显式引用。跨 Workspace、无权限或不存在统一按 `gateway.preset_not_found` 处理，避免枚举私有资源。配置管理不消耗推理预算，但 Gateway Key 必须有效。
 
-门户 `/account/presets` 使用 CinaAuth 会话管理自己的 Preset；对应控制面 API 是 `/api/user/presets`（列表/创建版本）、`/:id/versions`、`/:id/designate` 与 `PATCH /:id`。管理员在 `/admin/presets` 通过 `/api/admin/presets` 治理全局可见性、状态与指定版本。
+门户 `/account/presets` 使用 CinaAuth 会话管理自己的 Preset；对应控制面 API 是 `/api/user/presets`（列表/创建版本）、`/:id/versions`、`/:id/designate`、`PATCH /:id` 与 `DELETE /:id`。要求 `account.read`，所有响应为 `private, no-store`。列表明确返回 `workspaceId` 和 `ownerUserId`，历史明确返回 Workspace、Preset 和 owner；空列表也必须验证归属。
+
+POST 保存配置时会自动指定新版本。PATCH 只修改元信息、可见性或状态，不创建配置版本；DELETE 归档，不硬删除历史。相同当前工作区、本人拥有且 active 的 slug 可继续保存新版本；其他所有者的 slug 不可覆盖，archived 记录需先恢复。Web 在提交前校验配置和提示词边界，保留合法高级配置，屏蔽秘密及请求瞬态字段；错误、日志与变更缓存不保留私密配置正文。管理员在 `/admin/presets` 通过 `/api/admin/presets` 治理全局可见性、状态与指定版本。
 
 ## Guardrails 与零数据保留
 
 门户 `/account/guardrails` 可创建不可变版本的 Guardrail，并绑定当前 CinaAuth 用户或其 Gateway API Key。每个个人/组织账户有一条 `Account Default`，作为账户策略上限自动继承到全部 Workspace；每个 Workspace 另有一条自动创建、无需绑定即覆盖全部流量的 `Workspace <workspace-id> Default`。两类默认策略可更新内容与指定历史版本，但不能改名、归档、删除或再次绑定。Account Default 只接受模型/Provider 限制、ZDR 与 `data_collection="deny"`，不接受预算或内容过滤。控制面入口是 `/api/user/guardrails`；普通用户只能修改自己拥有的资源，组织成员可读取本账户默认上限，管理员下发的绑定不能被普通用户覆盖、解绑、改版或归档。
 
 `GET /api/user/guardrails/effective` 会使用当前 Workspace 和 CinaAuth 用户计算只读的有效策略；可选 `api_key_id` 只接受该用户在当前 Workspace 内的 active Key。响应列出实际参与合并的 Account Default、Workspace Default、用户和 Key 策略版本，给出 allowlist 交集、ignore 并集、最严格内置检测、预算层、ZDR/禁止收集要求，以及通过模型/Provider 身份策略的 active Route 候选摘要。服务端随后按当前 Route + Provider 凭据重新证明隐私与 verified Endpoint subject，并执行运行时规划器中与请求无关的静态门禁：供应商状态/凭据/协议、唯一端点绑定、operation capability、output capacity、当前业务时区的实际计费价格，以及有界的近 5 分钟 latency/throughput 样本。响应会明确列出排除原因、未知容量、缺失样本和采样截断。它不会把预览误报为最终可分发承诺：供应商偏好、必需参数、最高价格、请求 token 数及 process/isolate-local circuit state 仍在每次真实请求中复验。响应为 `private, no-store`，不返回正则原文、Provider 凭据、内部 route/endpoint ID、上游私有模型名或任何 subject fingerprint。
+
+控制面要求 `account.read`，并在每个请求重新核对当前 Workspace、账户与资源归属。列表提供 `workspaceId/userId/accountScopeKey/budgetCurrency` 及每行 `canEdit/canArchive/canAssign/canRestore/adminManaged`，界面按这些权威字段区分本人规则、默认规则和管理员托管资源。相同账户跨 Workspace 的 Account Default 可只读呈现，不因此获得修改权限。
+
+只读取本人 Gateway Key 候选时另需 `gateway_keys.manage`；缺少该能力不应阻断用户级规则编辑。有效策略使用文本规划器的定价口径，其 `pricingCurrency` 与规则预算的 `budgetCurrency` 分别展示。精确的 HTTP 409、`success: false`、`code: "guardrail_effective_conflict"` 是可验证的冲突诊断；界面仍可执行已授权的编辑、版本指定或解绑以修正冲突。其他失败或身份/上下文错误保持写入保护。
 
 配置支持：
 

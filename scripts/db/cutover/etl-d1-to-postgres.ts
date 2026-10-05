@@ -8,6 +8,13 @@ import {
 	type EtlTableName,
 } from '../lib/migration-tables';
 import {
+	CONFIG_CUTOVER_D1_MIGRATION,
+	CONFIG_CUTOVER_POSTGRES_MIGRATION,
+	CONFIG_CUTOVER_RECONCILE_SPECS,
+	CONFIG_CUTOVER_TARGET_COLUMN_QUERY,
+	missingConfigCutoverTargetTables,
+} from '../lib/config-cutover-reconcile';
+import {
 	type D1ExecutionConfig,
 	getTableColumns,
 	parseD1ExecutionConfig,
@@ -298,6 +305,20 @@ function inspectD1BudgetSpentPrecision(config: EtlConfig): D1BudgetSpentPrecisio
 	return mode;
 }
 
+function assertConfigCutoverSourceReady(d1: D1ExecutionConfig): void {
+	const rows = runD1ExecuteJson(
+		`SELECT CAST(COUNT(*) AS TEXT) AS count FROM d1_migrations WHERE name = '${CONFIG_CUTOVER_D1_MIGRATION}'`,
+		d1,
+	);
+	if (rows[0]?.count !== '1') throw new Error(`D1 source is missing ${CONFIG_CUTOVER_D1_MIGRATION}`);
+	for (const spec of CONFIG_CUTOVER_RECONCILE_SPECS) {
+		const columns = new Set(getTableColumns(spec.table, d1));
+		if (spec.columns.some((column) => !columns.has(column))) {
+			throw new Error(`D1 source is missing Config cutover columns in ${spec.table}`);
+		}
+	}
+}
+
 async function migrateTable(
 	sql: QuerySql,
 	tableName: EtlTableName,
@@ -377,6 +398,13 @@ async function assertTargetReady(sql: postgres.Sql): Promise<void> {
 	if (!migration?.present) {
 		throw new Error(`Target is not current: missing migration ${REQUIRED_MIGRATION}`);
 	}
+	const [configMigration] = await sql.unsafe<{ present: boolean }[]>(
+		`SELECT EXISTS (SELECT 1 FROM ${qualifiedTable('schema_migrations')} WHERE version = $1) AS present`,
+		[CONFIG_CUTOVER_POSTGRES_MIGRATION]
+	);
+	if (!configMigration?.present) {
+		throw new Error(`Target is not current: missing migration ${CONFIG_CUTOVER_POSTGRES_MIGRATION}`);
+	}
 
 	const missingTables: string[] = [];
 	for (const tableName of [...ETL_TABLE_ORDER, ...ETL_EXCLUDED_SESSION_TABLES]) {
@@ -391,6 +419,14 @@ async function assertTargetReady(sql: postgres.Sql): Promise<void> {
 	if (missingTables.length > 0) {
 		throw new Error(`Target schema is incomplete; missing table(s): ${missingTables.join(', ')}`);
 	}
+	const targetColumns = await sql.unsafe<{ table_name: string; column_name: string }[]>(
+		CONFIG_CUTOVER_TARGET_COLUMN_QUERY,
+		[TARGET_SCHEMA],
+	);
+	const missingConfigTables = missingConfigCutoverTargetTables(targetColumns);
+	if (missingConfigTables.length > 0) {
+		throw new Error(`Target schema is missing Config cutover columns in ${missingConfigTables.join(', ')}`);
+	}
 }
 
 async function main(): Promise<void> {
@@ -402,6 +438,7 @@ async function main(): Promise<void> {
 
 	try {
 		await assertTargetReady(sql);
+		assertConfigCutoverSourceReady(config.d1);
 		const budgetSpentPrecisionMode = inspectD1BudgetSpentPrecision(config);
 		const activeGuardrailReservations = parseCount(runD1ExecuteJson(
 			`SELECT COUNT(*) AS count FROM guardrail_budget_reservations

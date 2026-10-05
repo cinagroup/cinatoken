@@ -1,8 +1,8 @@
-import { getCloudflareContext } from '@opennextjs/cloudflare';
-import type { StorageContext } from '@octafuse/core';
-import type { AdminBindings } from '@/lib/admin-env';
-import { getCloudflareEnv } from '@/lib/cloudflare';
-import { resolveAdminStorageContext } from '@/lib/storage-context';
+import { getCloudflareContext } from "@opennextjs/cloudflare";
+import type { StorageContext } from "@octafuse/core";
+import type { AdminBindings } from "@/lib/admin-env";
+import { getCloudflareEnv } from "@/lib/cloudflare";
+import { resolveAdminStorageContext } from "@/lib/storage-context";
 
 interface RequestWithCloudflare extends Request {
 	ctx?: { cloudflare?: { env?: CloudflareEnv } };
@@ -27,15 +27,17 @@ export async function resolveAdminRequestRuntime(request?: Request): Promise<{
 	}
 
 	const requestEnv = request as RequestWithCloudflare | undefined;
-	const cloudflareRuntime = hasCloudflareContext || Boolean(
-		env?.DB ||
-			env?.HYPERDRIVE ||
-			env?.ASSETS ||
-			requestEnv?.ctx?.cloudflare?.env ||
-			requestEnv?.env?.DB ||
-			requestEnv?.env?.HYPERDRIVE ||
-			requestEnv?.env?.ASSETS
-	);
+	const cloudflareRuntime =
+		hasCloudflareContext ||
+		Boolean(
+			env?.DB ||
+				env?.HYPERDRIVE ||
+				env?.ASSETS ||
+				requestEnv?.ctx?.cloudflare?.env ||
+				requestEnv?.env?.DB ||
+				requestEnv?.env?.HYPERDRIVE ||
+				requestEnv?.env?.ASSETS
+		);
 
 	const bindings: AdminBindings = {
 		DB: env?.DB,
@@ -45,6 +47,44 @@ export async function resolveAdminRequestRuntime(request?: Request): Promise<{
 		CINAAUTH_ISSUER: env?.CINAAUTH_ISSUER,
 		CINAAUTH_ACCOUNT_ORIGIN: env?.CINAAUTH_ACCOUNT_ORIGIN,
 		CINATOKEN_APP_ORIGIN: env?.CINATOKEN_APP_ORIGIN,
+		CINATOKEN_ADMIN_CONFIG_REQUIRE_REVISION: cloudflareRuntime
+			? (
+					env as
+						| { CINATOKEN_ADMIN_CONFIG_REQUIRE_REVISION?: string }
+						| undefined
+			  )?.CINATOKEN_ADMIN_CONFIG_REQUIRE_REVISION
+			: process.env.CINATOKEN_ADMIN_CONFIG_REQUIRE_REVISION,
+		CINATOKEN_ADMIN_KEYS_REQUIRE_REVISION: cloudflareRuntime
+			? (env as { CINATOKEN_ADMIN_KEYS_REQUIRE_REVISION?: string } | undefined)
+					?.CINATOKEN_ADMIN_KEYS_REQUIRE_REVISION
+			: process.env.CINATOKEN_ADMIN_KEYS_REQUIRE_REVISION,
+		CINATOKEN_ADMIN_SHARED_KEYS_REQUIRE_REVISION: cloudflareRuntime
+			? (
+					env as
+						| { CINATOKEN_ADMIN_SHARED_KEYS_REQUIRE_REVISION?: string }
+						| undefined
+			  )?.CINATOKEN_ADMIN_SHARED_KEYS_REQUIRE_REVISION
+			: process.env.CINATOKEN_ADMIN_SHARED_KEYS_REQUIRE_REVISION,
+		CINATOKEN_ADMIN_MODELS_REQUIRE_ROUTE_POLICY_PRECONDITION: cloudflareRuntime
+			? (
+					env as
+						| {
+								CINATOKEN_ADMIN_MODELS_REQUIRE_ROUTE_POLICY_PRECONDITION?: string;
+						  }
+						| undefined
+			  )?.CINATOKEN_ADMIN_MODELS_REQUIRE_ROUTE_POLICY_PRECONDITION
+			: process.env.CINATOKEN_ADMIN_MODELS_REQUIRE_ROUTE_POLICY_PRECONDITION,
+		CINATOKEN_ADMIN_DATA_POLICIES_REQUIRE_PRECONDITION: cloudflareRuntime
+			? (
+					env as
+						| { CINATOKEN_ADMIN_DATA_POLICIES_REQUIRE_PRECONDITION?: string }
+						| undefined
+			  )?.CINATOKEN_ADMIN_DATA_POLICIES_REQUIRE_PRECONDITION
+			: process.env.CINATOKEN_ADMIN_DATA_POLICIES_REQUIRE_PRECONDITION,
+		CINATOKEN_ADMIN_TOOLS_REQUIRE_VERSION: cloudflareRuntime
+			? (env as { CINATOKEN_ADMIN_TOOLS_REQUIRE_VERSION?: string } | undefined)
+					?.CINATOKEN_ADMIN_TOOLS_REQUIRE_VERSION
+			: process.env.CINATOKEN_ADMIN_TOOLS_REQUIRE_VERSION,
 		CINATOKEN_OIDC_CLIENT_ID: env?.CINATOKEN_OIDC_CLIENT_ID,
 		CINATOKEN_REQUIRED_ROLES: env?.CINATOKEN_REQUIRED_ROLES,
 		CINATOKEN_OIDC_CLIENT_SECRET: env?.CINATOKEN_OIDC_CLIENT_SECRET,
@@ -53,18 +93,26 @@ export async function resolveAdminRequestRuntime(request?: Request): Promise<{
 		CINATOKEN_IDENTITY_EVENTS_SECRET: env?.CINATOKEN_IDENTITY_EVENTS_SECRET,
 		CINAAUTH_ORGANIZATION_ADMIN_ROLES: env?.CINAAUTH_ORGANIZATION_ADMIN_ROLES,
 		SHARED_KEY_ENCRYPTION_SECRET:
-			env?.SHARED_KEY_ENCRYPTION_SECRET ?? process.env.SHARED_KEY_ENCRYPTION_SECRET,
+			env?.SHARED_KEY_ENCRYPTION_SECRET ??
+			process.env.SHARED_KEY_ENCRYPTION_SECRET,
 		SHARED_KEY_CREDITED_USAGE_READER: cloudflareRuntime
-			? (env as { SHARED_KEY_CREDITED_USAGE_READER?: string } | undefined)?.SHARED_KEY_CREDITED_USAGE_READER
+			? (env as { SHARED_KEY_CREDITED_USAGE_READER?: string } | undefined)
+					?.SHARED_KEY_CREDITED_USAGE_READER
 			: process.env.SHARED_KEY_CREDITED_USAGE_READER,
 		SIGNED_SELLER_STATS_READER: cloudflareRuntime
-			? (env as { SIGNED_SELLER_STATS_READER?: string } | undefined)?.SIGNED_SELLER_STATS_READER
+			? (env as { SIGNED_SELLER_STATS_READER?: string } | undefined)
+					?.SIGNED_SELLER_STATS_READER
 			: process.env.SIGNED_SELLER_STATS_READER,
 		STATS_CLAIM_ISSUER: cloudflareRuntime
-			? (env as { STATS_CLAIM_ISSUER?: Fetcher } | undefined)?.STATS_CLAIM_ISSUER
+			? (env as { STATS_CLAIM_ISSUER?: Fetcher } | undefined)
+					?.STATS_CLAIM_ISSUER
 			: undefined,
 		STATS_READER_HYPERDRIVE: cloudflareRuntime
-			? (env as { STATS_READER_HYPERDRIVE?: { connectionString: string } } | undefined)?.STATS_READER_HYPERDRIVE
+			? (
+					env as
+						| { STATS_READER_HYPERDRIVE?: { connectionString: string } }
+						| undefined
+			  )?.STATS_READER_HYPERDRIVE
 			: undefined,
 		DEEPSEEK_API_KEY: env?.DEEPSEEK_API_KEY ?? process.env.DEEPSEEK_API_KEY,
 		CHAIN_JOBS: env?.CHAIN_JOBS,
@@ -74,6 +122,9 @@ export async function resolveAdminRequestRuntime(request?: Request): Promise<{
 			? (env as { DATABASE_DRIVER?: string } | undefined)?.DATABASE_DRIVER
 			: process.env.DATABASE_DRIVER,
 	};
-	const storage = await resolveAdminStorageContext(bindings, cloudflareRuntime ? 'cloudflare' : 'node');
+	const storage = await resolveAdminStorageContext(
+		bindings,
+		cloudflareRuntime ? "cloudflare" : "node"
+	);
 	return { bindings, storage, ctx };
 }

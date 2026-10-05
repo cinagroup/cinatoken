@@ -10,20 +10,23 @@ export type MetadataSummary = {
 	full: string;
 };
 
-export function summarizeMetadata(raw: string | null | undefined): MetadataSummary {
-	if (raw == null || raw === '') {
-		return { ok: true, empty: true, summary: '', full: '' };
+export function summarizeMetadata(
+	raw: string | null | undefined
+): MetadataSummary {
+	if (raw == null || raw === "") {
+		return { ok: true, empty: true, summary: "", full: "" };
 	}
 	try {
 		const parsed = JSON.parse(raw);
 		const full = JSON.stringify(parsed, null, 2);
-		if (parsed && typeof parsed === 'object' && !Array.isArray(parsed)) {
+		if (parsed && typeof parsed === "object" && !Array.isArray(parsed)) {
 			const entries = Object.entries(parsed as Record<string, unknown>);
 			if (entries.length === 0) {
-				return { ok: true, empty: false, summary: '{}', full };
+				return { ok: true, empty: false, summary: "{}", full };
 			}
 			const [firstKey, firstVal] = entries[0];
-			const valueText = typeof firstVal === 'string' ? firstVal : JSON.stringify(firstVal);
+			const valueText =
+				typeof firstVal === "string" ? firstVal : JSON.stringify(firstVal);
 			const head = `${firstKey}: ${valueText}`;
 			const rest = entries.length - 1;
 			return {

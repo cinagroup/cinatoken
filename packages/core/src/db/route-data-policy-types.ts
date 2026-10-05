@@ -1,4 +1,27 @@
+import type { ModelRouteRow, ProviderRow } from '../types';
+
 export type RouteDataPolicyStatus = 'verified' | 'expired' | 'unknown';
+
+/** Only server-resolved rows may enter this read-set. Credential bytes never leave the server. */
+export type RouteDataPolicyWritePrecondition = {
+	currentSubjectFingerprint: string;
+	subjectReadSet: {
+		route: Pick<
+			ModelRouteRow,
+			'id' | 'provider_id' | 'provider_model_name' | 'upstream_protocol' | 'upstream_operation' | 'adapter' | 'custom_params'
+		>;
+		provider: Pick<ProviderRow, 'id' | 'endpoints' | 'api_key' | 'shared_channel_type'>;
+	};
+	/** Explicit null means the policy did not exist. This is current-value CAS, not a historical revision. */
+	priorPolicy: RouteDataPolicyRow | null;
+};
+
+export class RouteDataPolicyWriteConflictError extends Error {
+	readonly code = 'route_data_policy_write_conflict';
+	constructor() {
+		super('Route data policy or its trust subject changed');
+	}
+}
 
 export type RouteDataPolicyRow = {
 	route_target_id: string;
@@ -50,6 +73,8 @@ export type UpsertRouteDataPolicyParams = {
 	status: RouteDataPolicyStatus;
 	actorId: string;
 	nowIso: string;
+	/** Missing only for compatible legacy writers. Every provided read-set is checked atomically. */
+	precondition?: RouteDataPolicyWritePrecondition;
 };
 
 export type InvalidateRouteDataPoliciesParams = {

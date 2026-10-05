@@ -1,10 +1,10 @@
-'use client';
+"use client";
 
-import { FilterNavButton, FilterNavSection } from '../../components/filter-nav';
-import type { GatewayProvider } from '@/lib/types';
-import { useTranslations } from 'next-intl';
-import type { ComponentProps } from 'react';
-import type { RouteKindFilter } from '../types';
+import { FilterNavButton, FilterNavSection } from "../../components/filter-nav";
+import type { GatewayProvider } from "@/lib/types";
+import { useTranslations } from "next-intl";
+import type { ComponentProps } from "react";
+import type { RouteKindFilter } from "../types";
 
 type Props = {
 	visibleModelCount: number;
@@ -16,7 +16,13 @@ type Props = {
 	filterVendor: string;
 	filterProviderId: string;
 	statusCounts: { all: number; active: number; inactive: number };
-	kindCounts: { all: number; llm: number; image: number; audio: number; rerank: number };
+	kindCounts: {
+		all: number;
+		llm: number;
+		image: number;
+		audio: number;
+		rerank: number;
+	};
 	routesCount: number;
 	routeGroupFilterOptions: string[];
 	routeGroupCounts: Map<string, number>;
@@ -31,11 +37,15 @@ type Props = {
 	onClearAllFilters: () => void;
 };
 
-function HorizontalSection(props: Omit<ComponentProps<typeof FilterNavSection>, 'orientation'>) {
+function HorizontalSection(
+	props: Omit<ComponentProps<typeof FilterNavSection>, "orientation">
+) {
 	return <FilterNavSection orientation="horizontal" {...props} />;
 }
 
-function HorizontalButton(props: Omit<ComponentProps<typeof FilterNavButton>, 'orientation'>) {
+function HorizontalButton(
+	props: Omit<ComponentProps<typeof FilterNavButton>, "orientation">
+) {
 	return <FilterNavButton orientation="horizontal" {...props} />;
 }
 
@@ -65,18 +75,21 @@ export function RouteFilterSidebar(props: Props) {
 		onClearAllFilters,
 	} = props;
 
-	const t = useTranslations('filter');
-	const tCommon = useTranslations('common');
+	const t = useTranslations("filter");
+	const tCommon = useTranslations("common");
 
 	return (
-		<section className="mb-5 sm:mb-6" aria-label={t('title')}>
+		<section className="mb-5 sm:mb-6" aria-label={t("title")}>
 			<div className="mb-3 flex flex-wrap items-end justify-between gap-x-3 gap-y-1">
 				<div className="min-w-0">
-					<h2 className="text-sm font-semibold text-gray-900">{t('title')}</h2>
+					<h2 className="text-sm font-semibold text-gray-900">{t("title")}</h2>
 					<p className="mt-0.5 text-xs text-gray-500">
-						{t('narrowModelsRoutes')}
+						{t("narrowModelsRoutes")}
 						<span className="text-gray-300"> · </span>
-						{t('modelsAndRoutes', { models: visibleModelCount, routes: visibleRouteCount })}
+						{t("modelsAndRoutes", {
+							models: visibleModelCount,
+							routes: visibleRouteCount,
+						})}
 					</p>
 				</div>
 				{hasActiveFilters ? (
@@ -85,72 +98,75 @@ export function RouteFilterSidebar(props: Props) {
 						onClick={onClearAllFilters}
 						className="shrink-0 rounded text-xs font-medium text-blue-600 hover:text-blue-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-1"
 					>
-						{t('clear')}
+						{t("clear")}
 					</button>
 				) : null}
 			</div>
 
 			<div className="flex flex-col items-stretch gap-y-2">
-				<HorizontalSection title={t('status')} ariaLabel={t('statusAria')}>
+				<HorizontalSection title={t("status")} ariaLabel={t("statusAria")}>
 					<HorizontalButton
-						label={t('all')}
+						label={t("all")}
 						count={statusCounts.all}
 						isActive={!filterStatus}
-						onClick={() => onFilterStatusChange('')}
+						onClick={() => onFilterStatusChange("")}
 					/>
 					<HorizontalButton
-						label={tCommon('active')}
+						label={tCommon("active")}
 						count={statusCounts.active}
-						isActive={filterStatus === 'active'}
-						onClick={() => onFilterStatusChange('active')}
+						isActive={filterStatus === "active"}
+						onClick={() => onFilterStatusChange("active")}
 					/>
 					<HorizontalButton
-						label={tCommon('inactive')}
+						label={tCommon("inactive")}
 						count={statusCounts.inactive}
-						isActive={filterStatus === 'inactive'}
-						onClick={() => onFilterStatusChange('inactive')}
+						isActive={filterStatus === "inactive"}
+						onClick={() => onFilterStatusChange("inactive")}
 					/>
 				</HorizontalSection>
 
-				<HorizontalSection title={t('kind')} ariaLabel={t('kindAria')}>
+				<HorizontalSection title={t("kind")} ariaLabel={t("kindAria")}>
 					<HorizontalButton
-						label={t('all')}
+						label={t("all")}
 						count={kindCounts.all}
-						isActive={filterKind === 'all'}
-						onClick={() => onFilterKindChange('all')}
+						isActive={filterKind === "all"}
+						onClick={() => onFilterKindChange("all")}
 					/>
 					<HorizontalButton
-						label={t('kindLlm')}
+						label={t("kindLlm")}
 						count={kindCounts.llm}
-						isActive={filterKind === 'llm'}
-						onClick={() => onFilterKindChange('llm')}
+						isActive={filterKind === "llm"}
+						onClick={() => onFilterKindChange("llm")}
 					/>
 					<HorizontalButton
-						label={t('kindImage')}
+						label={t("kindImage")}
 						count={kindCounts.image}
-						isActive={filterKind === 'image'}
-						onClick={() => onFilterKindChange('image')}
+						isActive={filterKind === "image"}
+						onClick={() => onFilterKindChange("image")}
 					/>
 					<HorizontalButton
-						label={t('kindAudio')}
+						label={t("kindAudio")}
 						count={kindCounts.audio}
-						isActive={filterKind === 'audio'}
-						onClick={() => onFilterKindChange('audio')}
+						isActive={filterKind === "audio"}
+						onClick={() => onFilterKindChange("audio")}
 					/>
 					<HorizontalButton
-						label={t('kindRerank')}
+						label={t("kindRerank")}
 						count={kindCounts.rerank}
-						isActive={filterKind === 'rerank'}
-						onClick={() => onFilterKindChange('rerank')}
+						isActive={filterKind === "rerank"}
+						onClick={() => onFilterKindChange("rerank")}
 					/>
 				</HorizontalSection>
 
-				<HorizontalSection title={t('routeGroup')} ariaLabel={t('routeGroupAria')}>
+				<HorizontalSection
+					title={t("routeGroup")}
+					ariaLabel={t("routeGroupAria")}
+				>
 					<HorizontalButton
-						label={t('all')}
+						label={t("all")}
 						count={routesCount}
 						isActive={!filterRouteGroup}
-						onClick={() => onFilterRouteGroupChange('')}
+						onClick={() => onFilterRouteGroupChange("")}
 					/>
 					{routeGroupFilterOptions.map((g) => (
 						<HorizontalButton
@@ -163,12 +179,12 @@ export function RouteFilterSidebar(props: Props) {
 					))}
 				</HorizontalSection>
 
-				<HorizontalSection title={t('vendor')} ariaLabel={t('vendorAria')}>
+				<HorizontalSection title={t("vendor")} ariaLabel={t("vendorAria")}>
 					<HorizontalButton
-						label={t('all')}
+						label={t("all")}
 						count={routesCount}
 						isActive={!filterVendor}
-						onClick={() => onFilterVendorChange('')}
+						onClick={() => onFilterVendorChange("")}
 					/>
 					{vendorFilterOptions.map(({ key, label, count }) => (
 						<HorizontalButton
@@ -181,12 +197,12 @@ export function RouteFilterSidebar(props: Props) {
 					))}
 				</HorizontalSection>
 
-				<HorizontalSection title={t('provider')} ariaLabel={t('providerAria')}>
+				<HorizontalSection title={t("provider")} ariaLabel={t("providerAria")}>
 					<HorizontalButton
-						label={t('all')}
+						label={t("all")}
 						count={routesCount}
 						isActive={!filterProviderId}
-						onClick={() => onFilterProviderIdChange('')}
+						onClick={() => onFilterProviderIdChange("")}
 					/>
 					{providers.map((p) => (
 						<HorizontalButton

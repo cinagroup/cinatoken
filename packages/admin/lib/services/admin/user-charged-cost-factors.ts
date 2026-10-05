@@ -1,12 +1,12 @@
 /**
  * Admin 写入 `users.charged_cost_factors`：形状校验 + 目录模型 ID 存在性。
  */
-import type { GatewayRepositories } from '@octafuse/core';
+import type { GatewayRepositories } from "@octafuse/core";
 import {
 	normalizeUserChargedCostFactorsInput,
 	type UserChargedCostFactors,
-} from '@octafuse/core';
-import { badRequest } from './errors';
+} from "@octafuse/core";
+import { badRequest } from "./errors";
 
 export async function resolveAdminChargedCostFactorsInput(
 	repos: GatewayRepositories,
@@ -33,6 +33,8 @@ export async function assertKnownChargedCostFactorModels(
 		if (!model) unknown.push(id);
 	}
 	if (unknown.length > 0) {
-		throw badRequest(`unknown model id(s) in charged_cost_factors: ${unknown.join(', ')}`);
+		throw badRequest(
+			`unknown model id(s) in charged_cost_factors: ${unknown.join(", ")}`
+		);
 	}
 }

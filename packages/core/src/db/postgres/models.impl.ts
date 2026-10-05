@@ -6,6 +6,7 @@ import type { PostgresDatabaseClient } from '../../storage/database-client';
 import type { ModelsRepository } from '../../storage/gateway-repository-interfaces';
 import type { ModelWithRouteCountsRow } from '../../storage/repository-dtos';
 import { modelsTable as pgModelsTable } from '../../storage/drizzle/schema.pg';
+import { assertModelPolicyExpected, modelPolicyPatch, modelPolicyTags, modelPolicyWriteMatched } from '../model-policy-conditional-write';
 
 function snakeToCamel(key: string): string {
 	return key.replace(/_([a-z])/g, (_, c: string) => c.toUpperCase());
@@ -101,6 +102,23 @@ export function createPostgresModelsRepository(db: PostgresDatabaseClient): Mode
 				.where(eq(pgModelsTable.id, id))
 				.returning({ id: pgModelsTable.id });
 			return updated.length;
+		},
+
+		async updateModelWithPolicyPrecondition(id, rest, expectedRoutePolicy, tags): Promise<boolean> {
+			assertModelPolicyExpected(expectedRoutePolicy);
+			const patch = modelPolicyPatch(rest);
+			return pg.begin(async (tx) => {
+				const values = patch.map(([, value]) => value);
+				const set = patch.length ? patch.map(([key], index) => `${key} = $${index + 1}`).join(', ') : 'id = id';
+				const rows = await tx.unsafe(`UPDATE cinatoken_gateway.models SET ${set} WHERE id COLLATE "C" = $${values.length + 1} COLLATE "C" AND route_policy COLLATE "C" IS NOT DISTINCT FROM $${values.length + 2} COLLATE "C" RETURNING id`, [...values, id, expectedRoutePolicy] as never[]);
+				if (!modelPolicyWriteMatched(rows, id)) return false;
+				const cleanTags = modelPolicyTags(tags);
+				if (cleanTags !== undefined) {
+					await tx`DELETE FROM cinatoken_gateway.model_tags WHERE model_id COLLATE "C" = ${id} COLLATE "C"`;
+					for (const tag of cleanTags) await tx`INSERT INTO cinatoken_gateway.model_tags (model_id, tag) VALUES (${id}, ${tag})`;
+				}
+				return true;
+			});
 		},
 
 		async deleteModelCascade(id: string): Promise<number> {

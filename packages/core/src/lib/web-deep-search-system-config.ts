@@ -6,6 +6,8 @@
  */
 
 import type { GatewayRepositories } from '../storage/repositories';
+import type { ConfigSnapshot } from '../db/system-config-group-types';
+import { TOOL_CONFIG_FAMILY_KEYS, toolConfigValuesFromSnapshots } from '../db/system-config-group';
 import { roundGatewayMoney } from './money-precision';
 import {
 	normalizeToolUnitPrices,
@@ -196,10 +198,14 @@ function pricesFromEntry(entry: WebDeepSearchCatalogEntry | undefined): ToolUnit
 export async function resolveWebDeepSearchConfig(
 	repos: GatewayRepositories
 ): Promise<ResolveWebDeepSearchConfigResult> {
-	const [catalogRaw, activeRaw] = await Promise.all([
-		repos.systemConfig.getConfig(WEB_DEEP_SEARCH_CATALOG_KEY),
-		repos.systemConfig.getConfig(WEB_DEEP_SEARCH_ACTIVE_KEY),
-	]);
+	return resolveWebDeepSearchConfigFromSnapshots(await repos.systemConfig.getConfigSnapshots(TOOL_CONFIG_FAMILY_KEYS['web-deep-search']));
+}
+
+/** Pure resolution from the same statement snapshot; never reload individual keys. */
+export function resolveWebDeepSearchConfigFromSnapshots(snapshots: readonly ConfigSnapshot[]): ResolveWebDeepSearchConfigResult {
+	const values = toolConfigValuesFromSnapshots('web-deep-search', snapshots);
+	const catalogRaw = values[WEB_DEEP_SEARCH_CATALOG_KEY] ?? null;
+	const activeRaw = values[WEB_DEEP_SEARCH_ACTIVE_KEY] ?? null;
 
 	const catalogPresent = catalogRaw != null && String(catalogRaw).trim().length > 0;
 	if (!catalogPresent) {

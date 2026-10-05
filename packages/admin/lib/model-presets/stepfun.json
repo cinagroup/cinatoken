@@ -35,14 +35,8 @@
 			}
 		},
 		"modalities": {
-			"input": [
-				"text",
-				"image",
-				"video"
-			],
-			"output": [
-				"text"
-			]
+			"input": ["text", "image", "video"],
+			"output": ["text"]
 		},
 		"released": "2026-05-29"
 	}

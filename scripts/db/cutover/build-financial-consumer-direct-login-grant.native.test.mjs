@@ -1,7 +1,7 @@
 // Explicit owned, loopback PG18 fixture. It never reads an ambient database URL.
 import assert from 'node:assert/strict';
 import { createHash, createHmac, pbkdf2Sync, randomBytes, randomUUID } from 'node:crypto';
-import { readFile, readdir, writeFile } from 'node:fs/promises';
+import { readFile, writeFile } from 'node:fs/promises';
 import { dirname, join } from 'node:path';
 import test from 'node:test';
 import postgres from 'postgres';
@@ -14,7 +14,7 @@ import {
   FINANCIAL_CONSUMER_ROLE,
 } from './build-financial-consumer-direct-login-grant.ts';
 import { buildRequestParentDefaultAclActivation } from './build-request-parent-default-acl-activation.mjs';
-import { grantPostgresRuntime } from './grant-postgres-runtime.ts';
+import { grantPg73RuntimeFixture, listPg73Migrations } from './pg73-native-fixture.mjs';
 
 const schema = 'cinatoken_gateway';
 const migrations = new URL('../../../packages/core/migrations-postgres/', import.meta.url);
@@ -93,7 +93,7 @@ test('native PG18 review-only financial LOGIN grant enforces SCRAM, exact ACL an
       const migratorUrl = `postgres://cinatoken_gateway_migrator:${migratorPassword}@127.0.0.1:${cluster.port}/postgres`;
       await migrator.unsafe(`CREATE TABLE ${schema}.schema_migrations (
         version text PRIMARY KEY, applied_at timestamptz NOT NULL DEFAULT now())`);
-      const files = (await readdir(migrations)).filter(name => name.endsWith('.sql')).sort();
+      const files = await listPg73Migrations();
       assert.equal(files.length, 73);
       for (const name of files) {
         const body = await readFile(new URL(name, migrations), 'utf8');
@@ -102,12 +102,12 @@ test('native PG18 review-only financial LOGIN grant enforces SCRAM, exact ACL an
           await tx.unsafe(`INSERT INTO ${schema}.schema_migrations(version) VALUES ($1)`, [name]);
         });
       }
-      await grantPostgresRuntime({ DATABASE_URL: migratorUrl });
+      await grantPg73RuntimeFixture({ cluster, migrator, migratorUrl });
       await migrator.begin(async tx => {
         await tx.unsafe("SET LOCAL cinatoken.recovery_log_guard_activation='reviewed-v1'");
         await tx.unsafe(await readFile(guardSwitch, 'utf8')).simple();
       });
-      await grantPostgresRuntime({ DATABASE_URL: migratorUrl });
+      await grantPg73RuntimeFixture({ cluster, migrator, migratorUrl });
       stages.push('73-formal-migrations-guard-and-runtime-acl');
 
       for (const [index, [setting, url]] of replayProposals.entries()) {
@@ -120,7 +120,7 @@ test('native PG18 review-only financial LOGIN grant enforces SCRAM, exact ACL an
           await tx.unsafe(body).simple();
         });
       }
-      await grantPostgresRuntime({ DATABASE_URL: migratorUrl });
+      await grantPg73RuntimeFixture({ cluster, migrator, migratorUrl });
       stages.push('parent-replay-expand-empty-backfill-gate-and-runtime-acl');
 
       const request = {

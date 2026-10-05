@@ -1,7 +1,7 @@
 /**
  * 管理后台 `model_routes` CRUD：校验上游协议与 provider 是否配置对应 base URL，并规范化 JSON 参数字段。
  */
-import type { GatewayRepositories, UpstreamProtocol } from '@octafuse/core';
+import type { GatewayRepositories, UpstreamProtocol } from "@octafuse/core";
 import {
 	canonicalizeRequestOperation,
 	isDashScopeRealtimeAsrModelOperationCompatible,
@@ -10,30 +10,39 @@ import {
 	normalizeRouteOperation,
 	normalizeRouteRoutingMetadataInput,
 	PASSTHROUGH_ROUTE_ADAPTER,
-} from '@octafuse/core';
-import { isImageGenerationModel } from '@octafuse/core/db/model-modalities';
-import { normalizeUpstreamProtocol } from '@octafuse/core/upstream-protocol';
-import { isRouteStrategyName } from '@octafuse/core/db/model-route-policy';
-import { normalizeRoutePoolTierStrategiesInput } from '@octafuse/core/db/route-pool-tier-strategies';
-import { buildAffinityKey, hashAffinityKey } from '@octafuse/core/db/route-affinity-key';
-import { normalizeStickyRoutingInput } from '@octafuse/core/db/route-pool-sticky-types';
-import { badRequest, notFound } from './errors';
-import { coerceRoutePriceOverrideInput, assertRoutePriceOverrideFactors } from './pricing-input';
-import { normalizeJsonObjectField, providerSupportsUpstreamProtocol } from './shared';
-import { listAdminUsers, resolveAdminUserId } from './users-service';
+} from "@octafuse/core";
+import { isImageGenerationModel } from "@octafuse/core/db/model-modalities";
+import { normalizeUpstreamProtocol } from "@octafuse/core/upstream-protocol";
+import { isRouteStrategyName } from "@octafuse/core/db/model-route-policy";
+import { normalizeRoutePoolTierStrategiesInput } from "@octafuse/core/db/route-pool-tier-strategies";
+import {
+	buildAffinityKey,
+	hashAffinityKey,
+} from "@octafuse/core/db/route-affinity-key";
+import { normalizeStickyRoutingInput } from "@octafuse/core/db/route-pool-sticky-types";
+import { badRequest, notFound } from "./errors";
+import {
+	coerceRoutePriceOverrideInput,
+	assertRoutePriceOverrideFactors,
+} from "./pricing-input";
+import {
+	normalizeJsonObjectField,
+	providerSupportsUpstreamProtocol,
+} from "./shared";
+import { listAdminUsers, resolveAdminUserId } from "./users-service";
 import type {
 	AdminCreatedIdOutput,
 	AdminModelRouteMutationInput,
 	AdminModelRouteRow,
-} from './types';
+} from "./types";
 
 const ROUTE_DATA_POLICY_SUBJECT_FIELDS = new Set([
-	'provider_id',
-	'provider_model_name',
-	'custom_params',
-	'upstream_protocol',
-	'upstream_operation',
-	'adapter',
+	"provider_id",
+	"provider_model_name",
+	"custom_params",
+	"upstream_protocol",
+	"upstream_operation",
+	"adapter",
 ]);
 
 /** Image-generation catalog models may only use OpenAI Images–compatible routes. */
@@ -49,10 +58,10 @@ async function assertImageModelOpenaiProtocol(
 			output_modalities: model.output_modalities as string | null | undefined,
 			pricing_profile: model.pricing_profile as string | null | undefined,
 		}) &&
-		proto !== 'openai'
+		proto !== "openai"
 	) {
 		throw badRequest(
-			'Image-generation models require upstream_protocol=openai (Gateway Images API only uses OpenAI routes).'
+			"Image-generation models require upstream_protocol=openai (Gateway Images API only uses OpenAI routes)."
 		);
 	}
 }
@@ -79,11 +88,14 @@ function assertDashScopeRealtimeAsrTopology(input: {
 	providerModelName: string;
 }): void {
 	if (
-		input.upstreamProtocol === 'dashscope' &&
-		!isDashScopeRealtimeAsrModelOperationCompatible(input.providerModelName, input.upstreamOperation)
+		input.upstreamProtocol === "dashscope" &&
+		!isDashScopeRealtimeAsrModelOperationCompatible(
+			input.providerModelName,
+			input.upstreamOperation
+		)
 	) {
 		throw badRequest(
-			`DashScope ASR model "${input.providerModelName}" is not compatible with upstream_operation "${input.upstreamOperation}"`,
+			`DashScope ASR model "${input.providerModelName}" is not compatible with upstream_operation "${input.upstreamOperation}"`
 		);
 	}
 }
@@ -109,45 +121,62 @@ export async function createModelRouteService(
 	repos: GatewayRepositories,
 	body: AdminModelRouteMutationInput
 ): Promise<AdminCreatedIdOutput> {
-	const modelId = String(body.model_id ?? '');
-	const providerId = String(body.provider_id ?? '');
-	const providerModelName = String(body.provider_model_name ?? '');
+	const modelId = String(body.model_id ?? "");
+	const providerId = String(body.provider_id ?? "");
+	const providerModelName = String(body.provider_model_name ?? "");
 	if (!modelId || !providerId || !providerModelName) {
-		throw badRequest('model_id, provider_id, and provider_model_name are required');
+		throw badRequest(
+			"model_id, provider_id, and provider_model_name are required"
+		);
 	}
 
-	const customParamsNorm = normalizeJsonObjectField(body.custom_params, 'custom_params');
+	const customParamsNorm = normalizeJsonObjectField(
+		body.custom_params,
+		"custom_params"
+	);
 	if (!customParamsNorm.ok) throw badRequest(customParamsNorm.message);
 	let routingMetadata: string | null;
 	try {
 		routingMetadata = normalizeRouteRoutingMetadataInput(body.routing_metadata);
 	} catch (error) {
-		throw badRequest(error instanceof Error ? error.message : 'Invalid routing_metadata');
+		throw badRequest(
+			error instanceof Error ? error.message : "Invalid routing_metadata"
+		);
 	}
 
 	let proto: UpstreamProtocol;
 	try {
-		proto = normalizeUpstreamProtocol(String(body.upstream_protocol ?? 'openai'));
+		proto = normalizeUpstreamProtocol(
+			String(body.upstream_protocol ?? "openai")
+		);
 	} catch (e) {
-		throw badRequest(e instanceof Error ? e.message : 'Invalid upstream_protocol');
+		throw badRequest(
+			e instanceof Error ? e.message : "Invalid upstream_protocol"
+		);
 	}
 
 	const provider = await repos.providers.getProviderProtocolBases(providerId);
-	if (!provider) throw badRequest('Provider not found');
+	if (!provider) throw badRequest("Provider not found");
 	if (!providerSupportsUpstreamProtocol(proto, provider)) {
-		throw badRequest(`Provider has no base URL for upstream protocol "${proto}".`);
+		throw badRequest(
+			`Provider has no base URL for upstream protocol "${proto}".`
+		);
 	}
 	await assertImageModelOpenaiProtocol(repos, modelId, proto);
 
 	const routeGroup =
-		typeof body.route_group === 'string' && body.route_group.trim() !== '' ? body.route_group.trim() : 'default';
+		typeof body.route_group === "string" && body.route_group.trim() !== ""
+			? body.route_group.trim()
+			: "default";
 	let requestProtocol: UpstreamProtocol;
 	try {
 		requestProtocol = normalizeUpstreamProtocol(
-			String(body.request_protocol ?? body.upstream_protocol ?? 'openai')
+			String(body.request_protocol ?? body.upstream_protocol ?? "openai")
 		);
 	} catch (e) {
-		throw badRequest(e instanceof Error ? e.message : 'Invalid request_protocol');
+		throw badRequest(
+			e instanceof Error ? e.message : "Invalid request_protocol"
+		);
 	}
 	const requestOperation = canonicalizeRequestOperation(
 		requestProtocol,
@@ -172,7 +201,9 @@ export async function createModelRouteService(
 		upstreamOperation,
 		providerModelName,
 	});
-	const adapter = String(body.adapter ?? PASSTHROUGH_ROUTE_ADAPTER).trim() || PASSTHROUGH_ROUTE_ADAPTER;
+	const adapter =
+		String(body.adapter ?? PASSTHROUGH_ROUTE_ADAPTER).trim() ||
+		PASSTHROUGH_ROUTE_ADAPTER;
 	assertRouteAdapterTopology({
 		adapter,
 		requestProtocol,
@@ -196,11 +227,11 @@ export async function createModelRouteService(
 
 	const weightRaw = body.weight;
 	const weight =
-		weightRaw === undefined || weightRaw === null || weightRaw === ''
+		weightRaw === undefined || weightRaw === null || weightRaw === ""
 			? 1
 			: Number(weightRaw);
 	if (!Number.isFinite(weight) || weight < 1) {
-		throw badRequest('weight must be a number >= 1');
+		throw badRequest("weight must be a number >= 1");
 	}
 
 	await repos.routes.insertModelRoute({
@@ -210,7 +241,7 @@ export async function createModelRouteService(
 		providerModelName,
 		priority: Number(body.priority ?? 0),
 		weight: Math.floor(weight),
-		status: String(body.status ?? 'active'),
+		status: String(body.status ?? "active"),
 		routeGroup,
 		priceOverride,
 		customParams: customParamsNorm.value,
@@ -225,9 +256,12 @@ export async function createModelRouteService(
 }
 
 /** 单条路由详情；不存在抛 `notFound`。 */
-export async function getModelRouteService(repos: GatewayRepositories, id: string): Promise<AdminModelRouteRow> {
+export async function getModelRouteService(
+	repos: GatewayRepositories,
+	id: string
+): Promise<AdminModelRouteRow> {
 	const route = await repos.routes.getModelRouteRowById(id);
-	if (!route) throw notFound('Route not found');
+	if (!route) throw notFound("Route not found");
 	return route as AdminModelRouteRow;
 }
 
@@ -239,33 +273,40 @@ export async function updateModelRouteService(
 	repos: GatewayRepositories,
 	id: string,
 	body: AdminModelRouteMutationInput,
-	actorId: string,
+	actorId: string
 ): Promise<void> {
 	const patch = { ...body };
 	delete patch.id;
 	delete patch.request_protocol;
 	delete patch.request_operation;
 	if (patch.custom_params !== undefined) {
-		const normalized = normalizeJsonObjectField(patch.custom_params, 'custom_params');
+		const normalized = normalizeJsonObjectField(
+			patch.custom_params,
+			"custom_params"
+		);
 		if (!normalized.ok) throw badRequest(normalized.message);
 		patch.custom_params = normalized.value;
 	}
 	if (patch.routing_metadata !== undefined) {
 		try {
-			patch.routing_metadata = normalizeRouteRoutingMetadataInput(patch.routing_metadata);
+			patch.routing_metadata = normalizeRouteRoutingMetadataInput(
+				patch.routing_metadata
+			);
 		} catch (error) {
-			throw badRequest(error instanceof Error ? error.message : 'Invalid routing_metadata');
+			throw badRequest(
+				error instanceof Error ? error.message : "Invalid routing_metadata"
+			);
 		}
 	}
 	if (patch.route_group !== undefined) {
 		const g = String(patch.route_group).trim();
-		if (g === '') throw badRequest('route_group cannot be empty');
+		if (g === "") throw badRequest("route_group cannot be empty");
 		patch.route_group = g;
 	}
 	if (patch.weight !== undefined) {
 		const weight = Number(patch.weight);
 		if (!Number.isFinite(weight) || weight < 1) {
-			throw badRequest('weight must be a number >= 1');
+			throw badRequest("weight must be a number >= 1");
 		}
 		patch.weight = Math.floor(weight);
 	}
@@ -276,28 +317,44 @@ export async function updateModelRouteService(
 	}
 	if (patch.upstream_protocol !== undefined) {
 		try {
-			patch.upstream_protocol = normalizeUpstreamProtocol(String(patch.upstream_protocol));
+			patch.upstream_protocol = normalizeUpstreamProtocol(
+				String(patch.upstream_protocol)
+			);
 		} catch (e) {
-			throw badRequest(e instanceof Error ? e.message : 'Invalid upstream_protocol');
+			throw badRequest(
+				e instanceof Error ? e.message : "Invalid upstream_protocol"
+			);
 		}
 	}
 	const existing = await repos.routes.getModelRouteRowById(id);
-	if (!existing) throw notFound('Route not found');
+	if (!existing || existing.id !== id) throw notFound("Route not found");
 	const effectiveModelId =
-		patch.model_id !== undefined ? String(patch.model_id) : String(existing.model_id);
+		patch.model_id !== undefined
+			? String(patch.model_id)
+			: String(existing.model_id);
 	const effectiveProto = normalizeUpstreamProtocol(
-		String(patch.upstream_protocol !== undefined ? patch.upstream_protocol : existing.upstream_protocol)
+		String(
+			patch.upstream_protocol !== undefined
+				? patch.upstream_protocol
+				: existing.upstream_protocol
+		)
 	);
 	const effectiveProviderId =
-		patch.provider_id !== undefined ? String(patch.provider_id) : String(existing.provider_id);
+		patch.provider_id !== undefined
+			? String(patch.provider_id)
+			: String(existing.provider_id);
 	const effectiveProviderModelName =
 		patch.provider_model_name !== undefined
 			? String(patch.provider_model_name)
 			: String(existing.provider_model_name);
-	const provider = await repos.providers.getProviderProtocolBases(effectiveProviderId);
-	if (!provider) throw badRequest('Provider not found');
+	const provider = await repos.providers.getProviderProtocolBases(
+		effectiveProviderId
+	);
+	if (!provider) throw badRequest("Provider not found");
 	if (!providerSupportsUpstreamProtocol(effectiveProto, provider)) {
-		throw badRequest(`Provider has no base URL for upstream protocol "${effectiveProto}".`);
+		throw badRequest(
+			`Provider has no base URL for upstream protocol "${effectiveProto}".`
+		);
 	}
 	await assertImageModelOpenaiProtocol(repos, effectiveModelId, effectiveProto);
 
@@ -305,7 +362,8 @@ export async function updateModelRouteService(
 	const requestOperationRaw = body.request_operation;
 	const routeGroupChanging = patch.route_group !== undefined;
 	const oldPoolId =
-		existing.route_pool_id != null && String(existing.route_pool_id).trim() !== ''
+		existing.route_pool_id != null &&
+		String(existing.route_pool_id).trim() !== ""
 			? String(existing.route_pool_id)
 			: null;
 	const updatesTopology =
@@ -317,11 +375,15 @@ export async function updateModelRouteService(
 		routeGroupChanging;
 	const effectiveUpstreamOperation = canonicalizeRequestOperation(
 		effectiveProto,
-		normalizeRouteOperation(body.upstream_operation ?? existing.upstream_operation),
+		normalizeRouteOperation(
+			body.upstream_operation ?? existing.upstream_operation
+		)
 	);
-	if (!isRequestOperationForProtocol(effectiveProto, effectiveUpstreamOperation)) {
+	if (
+		!isRequestOperationForProtocol(effectiveProto, effectiveUpstreamOperation)
+	) {
 		throw badRequest(
-			`upstream_operation "${effectiveUpstreamOperation}" is not valid for upstream_protocol "${effectiveProto}"`,
+			`upstream_operation "${effectiveUpstreamOperation}" is not valid for upstream_protocol "${effectiveProto}"`
 		);
 	}
 	assertDashScopeRealtimeAsrTopology({
@@ -332,13 +394,17 @@ export async function updateModelRouteService(
 	if (updatesTopology) {
 		// request surface 存在独立表中；拓扑变更要求调用方提交完整 surface，避免从 target 行猜测。
 		if (requestProtocolRaw === undefined || requestOperationRaw === undefined) {
-			throw badRequest('Topology updates require request_protocol and request_operation');
+			throw badRequest(
+				"Topology updates require request_protocol and request_operation"
+			);
 		}
 		let requestProtocol: UpstreamProtocol;
 		try {
 			requestProtocol = normalizeUpstreamProtocol(String(requestProtocolRaw));
 		} catch (e) {
-			throw badRequest(e instanceof Error ? e.message : 'Invalid request_protocol');
+			throw badRequest(
+				e instanceof Error ? e.message : "Invalid request_protocol"
+			);
 		}
 		const requestOperation = canonicalizeRequestOperation(
 			requestProtocol,
@@ -363,7 +429,7 @@ export async function updateModelRouteService(
 		const effectiveGroup =
 			patch.route_group !== undefined
 				? String(patch.route_group)
-				: String(existing.route_group ?? 'default');
+				: String(existing.route_group ?? "default");
 		const topology = await repos.routes.ensureModelSurfacePool({
 			poolId: crypto.randomUUID(),
 			surfaceId: crypto.randomUUID(),
@@ -381,21 +447,25 @@ export async function updateModelRouteService(
 	const hasPatch = Object.values(patch).some((v) => v !== undefined);
 	if (!hasPatch) return;
 	const changes = await repos.routes.updateModelRouteByPatch(id, patch);
-	if (!changes) throw notFound('Route not found');
+	if (!changes) throw notFound("Route not found");
 	const changedSubjectFields = Object.keys(patch)
-		.filter((key) => patch[key as keyof typeof patch] !== undefined && ROUTE_DATA_POLICY_SUBJECT_FIELDS.has(key))
+		.filter(
+			(key) =>
+				patch[key as keyof typeof patch] !== undefined &&
+				ROUTE_DATA_POLICY_SUBJECT_FIELDS.has(key)
+		)
 		.sort();
 	if (changedSubjectFields.length > 0) {
 		await repos.routeDataPolicies.invalidateForRouteTarget(id, {
 			id: crypto.randomUUID(),
 			actorId,
 			nowIso: new Date().toISOString(),
-			reason: `route_subject_changed:${changedSubjectFields.join(',')}`,
+			reason: `route_subject_changed:${changedSubjectFields.join(",")}`,
 		});
 	}
 
 	const newPoolId =
-		patch.route_pool_id != null && String(patch.route_pool_id).trim() !== ''
+		patch.route_pool_id != null && String(patch.route_pool_id).trim() !== ""
 			? String(patch.route_pool_id)
 			: null;
 	if (oldPoolId && newPoolId && oldPoolId !== newPoolId) {
@@ -404,15 +474,19 @@ export async function updateModelRouteService(
 }
 
 /** 删除路由；不存在抛 `notFound`。空 Pool / Surface 一并 GC。 */
-export async function deleteModelRouteService(repos: GatewayRepositories, id: string): Promise<void> {
+export async function deleteModelRouteService(
+	repos: GatewayRepositories,
+	id: string
+): Promise<void> {
 	const existing = await repos.routes.getModelRouteRowById(id);
-	if (!existing) throw notFound('Route not found');
+	if (!existing || existing.id !== id) throw notFound("Route not found");
 	const poolId =
-		existing.route_pool_id != null && String(existing.route_pool_id).trim() !== ''
+		existing.route_pool_id != null &&
+		String(existing.route_pool_id).trim() !== ""
 			? String(existing.route_pool_id)
 			: null;
 	const changes = await repos.routes.deleteModelRouteById(id);
-	if (!changes) throw notFound('Route not found');
+	if (!changes) throw notFound("Route not found");
 	if (poolId) {
 		await repos.routes.deleteRoutePoolIfEmpty(poolId);
 	}
@@ -428,7 +502,11 @@ export async function deleteModelRouteService(repos: GatewayRepositories, id: st
 export async function updateRoutePoolPolicyService(
 	repos: GatewayRepositories,
 	poolId: string,
-	body: { strategy?: unknown; tier_strategies?: unknown; sticky_routing?: unknown }
+	body: {
+		strategy?: unknown;
+		tier_strategies?: unknown;
+		sticky_routing?: unknown;
+	}
 ): Promise<void> {
 	const patch: {
 		strategy?: string | null;
@@ -438,7 +516,8 @@ export async function updateRoutePoolPolicyService(
 	} = {};
 
 	if (body.strategy !== undefined) {
-		const raw = body.strategy == null ? '' : String(body.strategy).trim().toLowerCase();
+		const raw =
+			body.strategy == null ? "" : String(body.strategy).trim().toLowerCase();
 		if (raw && !isRouteStrategyName(raw)) {
 			throw badRequest(`Invalid route pool strategy "${raw}"`);
 		}
@@ -449,20 +528,28 @@ export async function updateRoutePoolPolicyService(
 		try {
 			if (
 				body.tier_strategies == null ||
-				(typeof body.tier_strategies === 'string' && body.tier_strategies.trim() === '')
+				(typeof body.tier_strategies === "string" &&
+					body.tier_strategies.trim() === "")
 			) {
 				patch.tierStrategies = null;
-			} else if (typeof body.tier_strategies === 'string') {
-				patch.tierStrategies = normalizeRoutePoolTierStrategiesInput(body.tier_strategies);
-			} else if (typeof body.tier_strategies === 'object' && !Array.isArray(body.tier_strategies)) {
+			} else if (typeof body.tier_strategies === "string") {
+				patch.tierStrategies = normalizeRoutePoolTierStrategiesInput(
+					body.tier_strategies
+				);
+			} else if (
+				typeof body.tier_strategies === "object" &&
+				!Array.isArray(body.tier_strategies)
+			) {
 				patch.tierStrategies = normalizeRoutePoolTierStrategiesInput(
 					body.tier_strategies as Record<string, unknown>
 				);
 			} else {
-				throw new Error('tier_strategies must be a JSON object');
+				throw new Error("tier_strategies must be a JSON object");
 			}
 		} catch (err) {
-			throw badRequest(err instanceof Error ? err.message : 'Invalid tier_strategies');
+			throw badRequest(
+				err instanceof Error ? err.message : "Invalid tier_strategies"
+			);
 		}
 	}
 
@@ -472,7 +559,9 @@ export async function updateRoutePoolPolicyService(
 			patch.stickyEnabled = sticky.enabled;
 			patch.stickyIdleTtlSeconds = sticky.idle_ttl_seconds;
 		} catch (err) {
-			throw badRequest(err instanceof Error ? err.message : 'Invalid sticky_routing');
+			throw badRequest(
+				err instanceof Error ? err.message : "Invalid sticky_routing"
+			);
 		}
 	}
 
@@ -481,11 +570,13 @@ export async function updateRoutePoolPolicyService(
 		patch.tierStrategies === undefined &&
 		patch.stickyEnabled === undefined
 	) {
-		throw badRequest('Provide strategy, tier_strategies, and/or sticky_routing');
+		throw badRequest(
+			"Provide strategy, tier_strategies, and/or sticky_routing"
+		);
 	}
 
 	const changes = await repos.routes.updateRoutePoolPolicy(poolId, patch);
-	if (!changes) throw notFound('Route pool not found');
+	if (!changes) throw notFound("Route pool not found");
 }
 
 /** @deprecated Use `updateRoutePoolPolicyService` */
@@ -494,7 +585,9 @@ export async function updateRoutePoolStrategyService(
 	poolId: string,
 	strategyInput: unknown
 ): Promise<void> {
-	await updateRoutePoolPolicyService(repos, poolId, { strategy: strategyInput });
+	await updateRoutePoolPolicyService(repos, poolId, {
+		strategy: strategyInput,
+	});
 }
 
 export type StickyBindingsSummary = {
@@ -514,7 +607,7 @@ export async function getStickyBindingsSummaryService(
 	poolId: string
 ): Promise<StickyBindingsSummary> {
 	const id = poolId.trim();
-	if (!id) throw badRequest('poolId is required');
+	if (!id) throw badRequest("poolId is required");
 	const nowIso = new Date().toISOString();
 	const [counts, stale_count] = await Promise.all([
 		repos.routePoolSticky.listBindingTargetCounts(id, nowIso),
@@ -564,20 +657,20 @@ export async function lookupStickyBindingService(
 	}
 ): Promise<StickyBindingLookupResult> {
 	const id = poolId.trim();
-	if (!id) throw badRequest('poolId is required');
+	if (!id) throw badRequest("poolId is required");
 
-	const modelId = query.model_id?.trim() || '';
-	const routeGroup = query.route_group?.trim() || 'default';
-	const protocolRaw = query.protocol?.trim() || '';
-	const requestOperationRaw = query.request_operation?.trim() || '*';
-	if (!modelId) throw badRequest('model_id is required');
-	if (!protocolRaw) throw badRequest('protocol is required');
+	const modelId = query.model_id?.trim() || "";
+	const routeGroup = query.route_group?.trim() || "default";
+	const protocolRaw = query.protocol?.trim() || "";
+	const requestOperationRaw = query.request_operation?.trim() || "*";
+	if (!modelId) throw badRequest("model_id is required");
+	if (!protocolRaw) throw badRequest("protocol is required");
 
 	let requestProtocol: UpstreamProtocol;
 	try {
 		requestProtocol = normalizeUpstreamProtocol(protocolRaw);
 	} catch (e) {
-		throw badRequest(e instanceof Error ? e.message : 'Invalid protocol');
+		throw badRequest(e instanceof Error ? e.message : "Invalid protocol");
 	}
 	const requestOperation = canonicalizeRequestOperation(
 		requestProtocol,
@@ -590,28 +683,37 @@ export async function lookupStickyBindingService(
 		requestProtocol,
 		requestOperation,
 	});
-	if (!surface) throw notFound('Model surface not found for the given context');
+	if (!surface) throw notFound("Model surface not found for the given context");
 	if (String(surface.route_pool_id) !== id) {
-		throw badRequest('Surface does not belong to this route pool');
+		throw badRequest("Surface does not belong to this route pool");
 	}
 
-	let userId = query.user_id?.trim() || '';
-	const email = query.email?.trim() || '';
+	let userId = query.user_id?.trim() || "";
+	const email = query.email?.trim() || "";
 	if (!userId && email) {
-		const listed = await listAdminUsers(repos, { email, page: 1, page_size: 5 });
+		const listed = await listAdminUsers(repos, {
+			email,
+			page: 1,
+			page_size: 5,
+		});
 		const exact = listed.data.filter(
-			(u) => String(u.email ?? '').toLowerCase() === email.toLowerCase()
+			(u) => String(u.email ?? "").toLowerCase() === email.toLowerCase()
 		);
-		if (exact.length === 0) throw notFound('User not found for email');
+		if (exact.length === 0) throw notFound("User not found for email");
 		if (exact.length > 1) {
-			throw badRequest('Multiple users match this email; pass user_id instead');
+			throw badRequest("Multiple users match this email; pass user_id instead");
 		}
 		userId = exact[0].id;
 	}
-	if (!userId) throw badRequest('user_id or email is required');
+	if (!userId) throw badRequest("user_id or email is required");
 	userId = await resolveAdminUserId(repos, userId);
 
-	const affinity_key = buildAffinityKey(userId, modelId, routeGroup, requestProtocol);
+	const affinity_key = buildAffinityKey(
+		userId,
+		modelId,
+		routeGroup,
+		requestProtocol
+	);
 	const affinity_hash = await hashAffinityKey(affinity_key);
 	const row = await repos.routePoolSticky.getBinding(id, affinity_hash);
 	if (!row) {
@@ -650,8 +752,9 @@ export async function forceClearStickyBindingService(
 ): Promise<{ cleared: boolean }> {
 	const id = poolId.trim();
 	const hash = affinityHash.trim().toLowerCase();
-	if (!id) throw badRequest('poolId is required');
-	if (!/^[0-9a-f]{64}$/.test(hash)) throw badRequest('affinityHash must be a 64-char hex SHA-256');
+	if (!id) throw badRequest("poolId is required");
+	if (!/^[0-9a-f]{64}$/.test(hash))
+		throw badRequest("affinityHash must be a 64-char hex SHA-256");
 	const cleared = await repos.routePoolSticky.forceClearBinding({
 		routePoolId: id,
 		affinityHash: hash,
@@ -665,8 +768,8 @@ export async function resetStickyBindingsService(
 	poolId: string
 ): Promise<{ sticky_epoch: number }> {
 	const id = poolId.trim();
-	if (!id) throw badRequest('poolId is required');
+	if (!id) throw badRequest("poolId is required");
 	const sticky_epoch = await repos.routes.bumpRoutePoolStickyEpoch(id);
-	if (sticky_epoch == null) throw notFound('Route pool not found');
+	if (sticky_epoch == null) throw notFound("Route pool not found");
 	return { sticky_epoch };
 }

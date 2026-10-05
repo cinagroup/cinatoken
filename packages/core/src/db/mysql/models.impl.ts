@@ -8,6 +8,7 @@ import type { ModelWithRouteCountsRow } from '../../storage/repository-dtos';
 import { modelsTable as myModelsTable } from '../../storage/drizzle/schema.mysql';
 import { MODEL_PATCH_COLS } from '../patch-allowlists';
 import { asMySqlPool } from './mysql2-compat';
+import { assertModelPolicyExpected, modelPolicyPatch, modelPolicyTags } from '../model-policy-conditional-write';
 
 const MODEL_LIST_WITH_ROUTE_COUNTS_SQL = `SELECT m.id, m.display_name, m.vendor, m.context_window, m.max_tokens,
 		m.pricing_profile,
@@ -102,6 +103,37 @@ export function createMySqlModelsRepository(db: MySqlDatabaseClient): ModelsRepo
 			if (patch.length === 0) return 0;
 			const [result] = await pool.execute<ResultSetHeader>(`UPDATE models SET ${patch.join(', ')} WHERE id = ?`, [...bindValues, id]);
 			return result.affectedRows;
+		},
+
+		async updateModelWithPolicyPrecondition(id, rest, expectedRoutePolicy, tags): Promise<boolean> {
+			assertModelPolicyExpected(expectedRoutePolicy);
+			const patch = modelPolicyPatch(rest);
+			const conn = await pool.getConnection();
+			try {
+				await conn.beginTransaction();
+				const [rows] = await conn.execute<Array<{ id: string; route_policy: string | null }>>('SELECT id, route_policy FROM models WHERE BINARY id = BINARY ? FOR UPDATE', [id]);
+				if (!Array.isArray(rows) || rows.length > 1) throw new Error('Invalid conditional model read acknowledgement');
+				if (!rows.length || rows[0].id !== id || rows[0].route_policy !== expectedRoutePolicy) {
+					await conn.rollback();
+					return false;
+				}
+				const set = patch.length ? patch.map(([key]) => `${key} = ?`).join(', ') : 'id = id';
+				const [result] = await conn.execute<ResultSetHeader>(`UPDATE models SET ${set} WHERE BINARY id = BINARY ? AND BINARY route_policy <=> BINARY ?`, [...patch.map(([, value]) => value), id, expectedRoutePolicy]);
+				// mysql2 may report changed rather than matched rows for a no-op. The locked
+				// exact read above proves the match; invalid/unknown receipts never succeed.
+				if (!Number.isInteger(result.affectedRows) || result.affectedRows < 0 || result.affectedRows > 1)
+					throw new Error('Invalid conditional model write acknowledgement');
+				const cleanTags = modelPolicyTags(tags);
+				if (cleanTags !== undefined) {
+					await conn.execute('DELETE FROM model_tags WHERE BINARY model_id = BINARY ?', [id]);
+					for (const tag of cleanTags) await conn.execute('INSERT INTO model_tags (model_id, tag) VALUES (?, ?)', [id, tag]);
+				}
+				await conn.commit();
+				return true;
+			} catch (error) {
+				await conn.rollback();
+				throw error;
+			} finally { conn.release(); }
 		},
 
 		async deleteModelCascade(id: string): Promise<number> {

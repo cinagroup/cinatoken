@@ -9,17 +9,20 @@ export {
 	instantToZonedDatetimeLocalInput,
 	zonedDatetimeLocalInputToInstant,
 	toSqlUtcDateTime,
-} from '@octafuse/core/lib/business-timezone';
+} from "@octafuse/core/lib/business-timezone";
 
 /** 供 UI 标注的简短时区标签（如 `Asia/Shanghai (UTC+8)`）。 */
-export function formatBusinessTimezoneLabel(timeZone: string, locale = 'en-US'): string {
-	if (!timeZone || timeZone === 'UTC') return 'UTC';
+export function formatBusinessTimezoneLabel(
+	timeZone: string,
+	locale = "en-US"
+): string {
+	if (!timeZone || timeZone === "UTC") return "UTC";
 	try {
 		const parts = new Intl.DateTimeFormat(locale, {
 			timeZone,
-			timeZoneName: 'shortOffset',
+			timeZoneName: "shortOffset",
 		}).formatToParts(new Date());
-		const offset = parts.find((part) => part.type === 'timeZoneName')?.value;
+		const offset = parts.find((part) => part.type === "timeZoneName")?.value;
 		return offset && offset !== timeZone ? `${timeZone} (${offset})` : timeZone;
 	} catch {
 		return timeZone;

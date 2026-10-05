@@ -19,35 +19,35 @@
  *
  * 合并顺序：与下方 import 列表一致（尚未录入价目的厂商保留 `[]` 占位文件；image 文件紧挨同 vendor 的 LLM 之后）。
  */
-import aliyunPresets from './model-presets/aliyun.json';
-import aliyunImagePresets from './model-presets/aliyun-image.json';
-import anthropicPresets from './model-presets/anthropic.json';
-import baichuanPresets from './model-presets/baichuan.json';
-import baiduPresets from './model-presets/baidu.json';
-import bytedancePresets from './model-presets/bytedance.json';
-import bytedanceImagePresets from './model-presets/bytedance-image.json';
-import coherePresets from './model-presets/cohere.json';
-import deepseekPresets from './model-presets/deepseek.json';
-import googlePresets from './model-presets/google.json';
-import googleImagePresets from './model-presets/google-image.json';
-import meituanPresets from './model-presets/meituan.json';
-import metaPresets from './model-presets/meta.json';
-import minimaxPresets from './model-presets/minimax.json';
-import mistralPresets from './model-presets/mistral.json';
-import moonshotPresets from './model-presets/moonshot.json';
-import openaiPresets from './model-presets/openai.json';
-import openaiImagePresets from './model-presets/openai-image.json';
-import openaiAudioPresets from './model-presets/openai-audio.json';
-import perplexityPresets from './model-presets/perplexity.json';
-import stabilityPresets from './model-presets/stability.json';
-import stepfunPresets from './model-presets/stepfun.json';
-import tencentPresets from './model-presets/tencent.json';
-import xaiPresets from './model-presets/xai.json';
-import xaiImagePresets from './model-presets/xai-image.json';
-import xiaomiPresets from './model-presets/xiaomi.json';
-import zhipuPresets from './model-presets/zhipu.json';
-import zhipuImagePresets from './model-presets/zhipu-image.json';
-import type { GatewaySupportedBillingCurrency } from '@octafuse/core/lib/billing-currency';
+import aliyunPresets from "./model-presets/aliyun.json";
+import aliyunImagePresets from "./model-presets/aliyun-image.json";
+import anthropicPresets from "./model-presets/anthropic.json";
+import baichuanPresets from "./model-presets/baichuan.json";
+import baiduPresets from "./model-presets/baidu.json";
+import bytedancePresets from "./model-presets/bytedance.json";
+import bytedanceImagePresets from "./model-presets/bytedance-image.json";
+import coherePresets from "./model-presets/cohere.json";
+import deepseekPresets from "./model-presets/deepseek.json";
+import googlePresets from "./model-presets/google.json";
+import googleImagePresets from "./model-presets/google-image.json";
+import meituanPresets from "./model-presets/meituan.json";
+import metaPresets from "./model-presets/meta.json";
+import minimaxPresets from "./model-presets/minimax.json";
+import mistralPresets from "./model-presets/mistral.json";
+import moonshotPresets from "./model-presets/moonshot.json";
+import openaiPresets from "./model-presets/openai.json";
+import openaiImagePresets from "./model-presets/openai-image.json";
+import openaiAudioPresets from "./model-presets/openai-audio.json";
+import perplexityPresets from "./model-presets/perplexity.json";
+import stabilityPresets from "./model-presets/stability.json";
+import stepfunPresets from "./model-presets/stepfun.json";
+import tencentPresets from "./model-presets/tencent.json";
+import xaiPresets from "./model-presets/xai.json";
+import xaiImagePresets from "./model-presets/xai-image.json";
+import xiaomiPresets from "./model-presets/xiaomi.json";
+import zhipuPresets from "./model-presets/zhipu.json";
+import zhipuImagePresets from "./model-presets/zhipu-image.json";
+import type { GatewaySupportedBillingCurrency } from "@octafuse/core/lib/billing-currency";
 
 export type StaticModelPresetModalities = {
 	input: string[];
@@ -118,5 +118,5 @@ export function pickPresetPricingRawForBillingCurrency(
 	preset: StaticModelPresetRow,
 	billing: GatewaySupportedBillingCurrency
 ): unknown {
-	return billing === 'CNY' ? preset.pricing.cny : preset.pricing.usd;
+	return billing === "CNY" ? preset.pricing.cny : preset.pricing.usd;
 }

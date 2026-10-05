@@ -6,9 +6,9 @@
 
 /** 成功率：优秀绿 / 良好黄 / 其余红。 */
 export function successRateClassName(rate: number): string {
-	if (rate >= 95) return 'text-green-700';
-	if (rate >= 80) return 'text-yellow-600';
-	return 'text-red-600';
+	if (rate >= 95) return "text-green-700";
+	if (rate >= 80) return "text-yellow-600";
+	return "text-red-600";
 }
 
 /**
@@ -24,10 +24,10 @@ export function successRateClassName(rate: number): string {
  * | 很低 | <20% | 红 |
  */
 export function cacheHitRateClassName(rate: number): string {
-	if (rate <= 0) return 'text-gray-500';
-	if (rate >= 90) return 'text-green-700';
-	if (rate >= 70) return 'text-yellow-600';
-	if (rate >= 40) return 'text-amber-600';
-	if (rate >= 20) return 'text-orange-600';
-	return 'text-red-600';
+	if (rate <= 0) return "text-gray-500";
+	if (rate >= 90) return "text-green-700";
+	if (rate >= 70) return "text-yellow-600";
+	if (rate >= 40) return "text-amber-600";
+	if (rate >= 20) return "text-orange-600";
+	return "text-red-600";
 }

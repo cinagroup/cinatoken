@@ -1,4 +1,6 @@
 import { and, asc, desc, eq, gt, lte, sql } from 'drizzle-orm';
+import { createPostgresSharedKeyAdminRepository } from '../admin-shared-key-repository';
+import { assertSellerSharedKeyPatch, assertSharedKeyValidation, SHARED_KEY_STATE_COLUMNS, sharedKeySellerAssignments, sharedKeyStateValues } from '../shared-key-state';
 import type { PostgresDatabaseClient } from '../../storage/database-client';
 import type {
 	PortalAccessRepository,
@@ -137,6 +139,7 @@ export function createPostgresPortalAccessRepository(db: PostgresDatabaseClient)
 export function createPostgresSharedKeysRepository(db: PostgresDatabaseClient): SharedKeysRepository {
 	const drizzle = db.drizzle;
 	return {
+		...createPostgresSharedKeyAdminRepository(db),
 		async insertSharedKey(params: InsertSharedKeyParams) {
 			await drizzle.insert(sharedKeysTable).values({
 				id: params.id,
@@ -200,9 +203,35 @@ export function createPostgresSharedKeysRepository(db: PostgresDatabaseClient): 
 			if (patch.cacheReadPrice !== undefined) set.cacheReadPrice = patch.cacheReadPrice == null ? null : String(patch.cacheReadPrice);
 			if (patch.cacheWritePrice !== undefined) set.cacheWritePrice = patch.cacheWritePrice == null ? null : String(patch.cacheWritePrice);
 			if (patch.failureReason !== undefined) set.failureReason = patch.failureReason;
+			if (patch.status === 'invalid' || patch.status === 'validating') set.validatedAt = null;
+			const statusGuard = patch.status === 'active' ? sql`${sharedKeysTable.status} IN ('active','paused') AND ${sharedKeysTable.validatedAt} IS NOT NULL`
+				: patch.status === 'paused' ? sql`${sharedKeysTable.status} IN ('active','paused','disabled')` : undefined;
 			const rows = await drizzle.update(sharedKeysTable).set(set)
-				.where(eq(sharedKeysTable.id, id)).returning({ id: sharedKeysTable.id });
+				.where(and(eq(sharedKeysTable.id, id), statusGuard)).returning({ id: sharedKeysTable.id });
 			return rows.length > 0;
+		},
+		async updateSharedKeyForSeller(id, patch, expected) {
+			const { sets, values } = sharedKeySellerAssignments(assertSellerSharedKeyPatch(patch, expected));
+			if (sets.length === 0) return false;
+			const allValues = [...values, new Date().toISOString(), id, ...sharedKeyStateValues(expected)];
+			let parameter = 0;
+			const condition = SHARED_KEY_STATE_COLUMNS.map(column => `${column} IS NOT DISTINCT FROM ?`).join(' AND ');
+			const query = `UPDATE cinatoken_gateway.shared_keys SET ${sets.join(', ')}, updated_at = ? WHERE id = ? AND ${condition} RETURNING id`
+				.replaceAll('?', () => `$${++parameter}`);
+			const rows = await db.raw.unsafe<{ id: string }[]>(query, allValues);
+			return rows.length === 1;
+		},
+		async completeSharedKeyValidation(id, expected, result, nowIso) {
+			assertSharedKeyValidation(expected, result, nowIso);
+			const condition = SHARED_KEY_STATE_COLUMNS.map(column => `${column} IS NOT DISTINCT FROM ?`).join(' AND ');
+			let parameter = 0;
+			const query = `UPDATE cinatoken_gateway.shared_keys SET status = ?, validated_at = ?, failure_reason = ?,
+				last_failure_at = CASE WHEN ? = 1 THEN last_failure_at ELSE ? END, updated_at = ? WHERE id = ? AND ${condition} RETURNING id`
+				.replaceAll('?', () => `$${++parameter}`);
+			const rows = await db.raw.unsafe<{ id: string }[]>(query, [result.valid ? 'active' : 'invalid',
+				result.valid ? nowIso : null, result.valid ? null : result.reason, result.valid ? 1 : 0,
+				nowIso, nowIso, id, ...sharedKeyStateValues(expected)]);
+			return rows.length === 1;
 		},
 		async replaceSharedKeySecret(id, protectedSecret) {
 			const rows = await drizzle.update(sharedKeysTable)
@@ -212,8 +241,8 @@ export function createPostgresSharedKeysRepository(db: PostgresDatabaseClient): 
 		},
 		async markSharedKeyFailure(id, reason, nowIso) {
 			await drizzle.update(sharedKeysTable)
-				.set({ status: 'invalid', failureReason: reason, lastFailureAt: nowIso, updatedAt: nowIso })
-				.where(eq(sharedKeysTable.id, id));
+				.set({ status: 'invalid', validatedAt: null, failureReason: reason, lastFailureAt: nowIso, updatedAt: nowIso })
+				.where(and(eq(sharedKeysTable.id, id), eq(sharedKeysTable.status, 'active')));
 		},
 		async deleteSharedKey(id) {
 			const rows = await drizzle.delete(sharedKeysTable).where(eq(sharedKeysTable.id, id))
@@ -301,6 +330,13 @@ export function createPostgresPortalLedgerRepository(db: PostgresDatabaseClient)
 					target: userEarningsTable.userId,
 					set: { walletAddress, walletVerifiedAt: verifiedAtIso, updatedAt: nowIso },
 				});
+		},
+		async updateWalletIfChallengeUnused(userId, walletAddress, verifiedAtIso, challengeCreatedAtIso) {
+			const rows = await db.raw.unsafe<{ user_id: string }[]>(`UPDATE cinatoken_gateway.user_earnings
+        SET wallet_address = $1, wallet_verified_at = $2::timestamptz, updated_at = $2::timestamptz
+        WHERE user_id = $3 AND (wallet_verified_at IS NULL OR wallet_verified_at < $4::timestamptz)
+        RETURNING user_id`, [walletAddress, verifiedAtIso, userId, challengeCreatedAtIso]);
+			return rows.length === 1;
 		},
 		insertEarning,
 		async recordEarningAndCredit(params: InsertSharedKeyEarningParams) {
@@ -444,6 +480,21 @@ export function createPostgresPortalLedgerRepository(db: PostgresDatabaseClient)
 				WHERE id = ${id} AND user_id = ${userId}
 				  AND status IN ('requested', 'processing', 'submitted')
 			`;
+		},
+		async rejectRequestedWithdrawal(id, reason, nowIso) {
+			// PostgreSQL rechecks status after a competing row writer commits.
+			// The refund trigger participates in this atomic UPDATE.
+			const rows = await db.raw.unsafe<{ id: string }[]>(`UPDATE cinatoken_gateway.withdrawals
+				SET status = 'failed', failure_reason = $1, updated_at = $2::timestamptz
+				WHERE id = $3 AND status = 'requested' AND tx_hash IS NULL
+				AND NOT EXISTS (SELECT 1 FROM cinatoken_gateway.chain_job_transactions
+					WHERE job_kind = 'withdrawal' AND job_id = withdrawals.id)
+				RETURNING id`, [reason, nowIso, id]);
+			if (rows.length === 1 && rows[0]?.id === id) return { kind: 'rejected', withdrawalId: id };
+			if (rows.length !== 0) throw new Error('withdrawal_rejection_result_uncertain');
+			const existing = await db.raw.unsafe<{ id: string }[]>(
+				'SELECT id FROM cinatoken_gateway.withdrawals WHERE id = $1', [id]);
+			return existing.length > 0 ? { kind: 'conflict' } : { kind: 'not-found' };
 		},
 		async updateWithdrawalStatus(id, patch) {
 			const set: Record<string, unknown> = { updatedAt: patch.nowIso };

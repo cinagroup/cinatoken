@@ -1,6 +1,39 @@
 import type { GatewayRepositories } from '../storage/repositories';
 
 export const DEFAULT_BUSINESS_TIMEZONE = 'UTC';
+export const MAX_BUSINESS_TIMEZONE_LENGTH = 128;
+
+export type BusinessTimezoneSource = 'configured' | 'legacy' | 'missing' | 'invalid';
+
+/** New writes require an IANA region/Etc identifier or explicit UTC. */
+export function parseBusinessTimezoneInput(value: unknown): string | null {
+	if (typeof value !== 'string' || value.length === 0 || value.length > MAX_BUSINESS_TIMEZONE_LENGTH) return null;
+	if (/[\u0000-\u001f\u007f-\u009f]/u.test(value)) return null;
+	const candidate = value.trim();
+	if (candidate !== 'UTC' && !/^[A-Za-z_]+(?:\/[A-Za-z0-9_+-]+)+$/u.test(candidate)) return null;
+	return candidate && isValidIanaTimeZone(candidate) ? candidate : null;
+}
+
+function parseLegacyBusinessTimezone(value: string | null): string | null {
+	const candidate = value?.trim();
+	return candidate && isValidIanaTimeZone(candidate) ? candidate : null;
+}
+
+/** Keep legacy missing/invalid values readable without reporting them as configured UTC. */
+export function resolveBusinessTimezoneConfiguration(raw: string | null): {
+	businessTimezone: string;
+	source: BusinessTimezoneSource;
+} {
+	// Existing stored Intl-compatible aliases and offsets retain their effective
+	// business-day semantics; new writes use the stricter IANA parser above.
+	const parsed = parseLegacyBusinessTimezone(raw);
+	if (parsed) return {
+		businessTimezone: parsed,
+		source: parseBusinessTimezoneInput(raw) ? 'configured' : 'legacy',
+	};
+	if (raw === null || /^ *$/u.test(raw)) return { businessTimezone: DEFAULT_BUSINESS_TIMEZONE, source: 'missing' };
+	return { businessTimezone: DEFAULT_BUSINESS_TIMEZONE, source: 'invalid' };
+}
 
 const DAY_MS = 24 * 60 * 60 * 1000;
 
@@ -138,9 +171,7 @@ export function zonedInputToUtcApi(localStr: string, timeZone: string): string {
  */
 export async function getBusinessTimezone(repos: GatewayRepositories): Promise<string> {
 	const raw = await repos.systemConfig.getConfig('BUSINESS_TIMEZONE');
-	const candidate = raw?.trim();
-	if (!candidate) return DEFAULT_BUSINESS_TIMEZONE;
-	return isValidIanaTimeZone(candidate) ? candidate : DEFAULT_BUSINESS_TIMEZONE;
+	return resolveBusinessTimezoneConfiguration(raw).businessTimezone;
 }
 
 /**

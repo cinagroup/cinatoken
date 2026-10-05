@@ -1,19 +1,19 @@
 import assert from 'node:assert/strict';
 import {DatabaseSync} from 'node:sqlite';
-import {readFileSync,readdirSync} from 'node:fs';
+import {readFileSync} from 'node:fs';
 import {createHash} from 'node:crypto';
+import {readByokD1FrozenMigrations} from './byok-d1-frozen-migrations-fixture.mjs';
 import {BYOK_D1_CASES} from './byok-d1-acceptance.ts';
 import {BYOK_D1_CONTROL_KEY,BYOK_D1_ORIGIN,handleByokD1OneShot} from './byok-d1-one-shot.ts';
 
-/** Test-only: 68 migrations + the already-installed staging recovery proposals
+/** Test-only: the frozen 0001–0068 migrations + installed staging recovery proposals
  * + Wrangler's bookkeeping table. Exact local schema digest, NOT cloud proof.
  * Hooks can model acknowledgement loss or concurrent writes; no external I/O.
  */
 export function byokCleanupFixture(){
+  const migrations=readByokD1FrozenMigrations(),files=migrations.map(migration=>migration.name);
   const db=new DatabaseSync(':memory:');db.exec('PRAGMA foreign_keys=ON');
-  const directory=new URL('../../../core/migrations-d1/',import.meta.url);
-  const files=readdirSync(directory).filter(n=>n.endsWith('.sql')).sort();assert.equal(files.length,68);
-  for(const name of files)db.exec(readFileSync(new URL(name,directory),'utf8'));
+  for(const {sql} of migrations)db.exec(sql);
   db.exec('CREATE TABLE d1_migrations (id INTEGER PRIMARY KEY, name TEXT NOT NULL, applied_at TEXT DEFAULT CURRENT_TIMESTAMP)');
   for(const [i,name] of files.entries())db.prepare('INSERT INTO d1_migrations(id,name) VALUES(?,?)').run(i+1,name);
   for(const name of ['request-dispatch-intents','request-usage-settlements','request-usage-recovery-jobs'])

@@ -1,4 +1,5 @@
 import postgres from 'postgres';
+import type { Hyperdrive } from '@cloudflare/workers-types';
 import type { PostgresDatabaseClient } from '@octafuse/core';
 
 const LOGINS = new Set([

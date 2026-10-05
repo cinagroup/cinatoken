@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import {DatabaseSync} from 'node:sqlite';
-import {readFileSync,readdirSync} from 'node:fs';
+import {readByokD1FrozenMigrations} from './byok-d1-frozen-migrations-fixture.mjs';
 import {createHash} from 'node:crypto';
 import {resolve} from 'node:path';
 import {pathToFileURL} from 'node:url';
@@ -14,13 +14,11 @@ const runId='c02-byok-a1b2c3d4e5f6',bearer='a1'.repeat(32);
 const hash=value=>createHash('sha256').update(value).digest('hex');
 const defer=()=>{let resolve;const promise=new Promise(r=>{resolve=r;});return {promise,resolve};};
 
-// Independent full-migration fixture. SQLite metadata is synthetic (zero read /
-// write billing counters); these are protocol tests, not native D1 evidence.
+// Frozen 0001–0068 migration fixture. SQLite metadata is synthetic (zero read /
+// write billing counters); these are historical protocol tests, not native D1 evidence.
 function fixture(){
   const db=new DatabaseSync(':memory:');db.exec('PRAGMA foreign_keys=ON');
-  const dir=new URL('../../../core/migrations-d1/',import.meta.url);
-  const files=readdirSync(dir).filter(n=>n.endsWith('.sql')).sort();assert.equal(files.length,68);
-  for(const name of files)db.exec(readFileSync(new URL(name,dir),'utf8'));
+  for(const {sql} of readByokD1FrozenMigrations())db.exec(sql);
   const calls=[],batches=[],hooks={};
   const sync=(sql,values)=>{calls.push({sql,values});const s=db.prepare(sql),select=s.columns().length>0;
     const results=select?s.all(...values):[],changes=select?0:Number(s.run(...values).changes);

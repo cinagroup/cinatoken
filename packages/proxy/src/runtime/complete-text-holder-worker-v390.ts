@@ -1,4 +1,5 @@
-/// <reference path="./complete-text-holder-v390-env.d.ts" />
+import type { ExecutionContext } from '@cloudflare/workers-types';
+import type { CompleteTextHolderV390Env } from './complete-text-holder-v390-env';
 import type { ChatTextHolderRequestV363 } from '../services/chat-text-holder-request-v363';
 import { createPostgresPrivateCompleteTextReadPortsV366 } from '../services/postgres-private-complete-text-reader-v366';
 import { grantPostgresCompleteTextAttemptV362 } from '../services/postgres-complete-text-attempt-grant-v362';
@@ -304,4 +305,4 @@ export function createCompleteTextHolderWorkerV390(options: CompleteTextHolderWo
 	});
 }
 
-export default createCompleteTextHolderWorkerV390() satisfies ExportedHandler<CompleteTextHolderV390Env>;
+export default createCompleteTextHolderWorkerV390();

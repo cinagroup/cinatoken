@@ -1,5 +1,5 @@
 /**
- * 管理后台业务层可预期的 HTTP 错误（400/404/409），由路由 `handleAdminRouteError` 映射为 JSON。
+ * 管理后台业务层可预期的 HTTP 错误（如 400/404/409、导出上限 413/504），由路由 `handleAdminRouteError` 映射为 JSON。
  */
 export class AdminServiceError extends Error {
 	/** HTTP 状态码，如 400 / 404 / 409 */
@@ -8,7 +8,7 @@ export class AdminServiceError extends Error {
 	/** @param status HTTP 状态码 @param message 返回给客户端的英文 message（与现有 API 一致） */
 	constructor(status: number, message: string) {
 		super(message);
-		this.name = 'AdminServiceError';
+		this.name = "AdminServiceError";
 		this.status = status;
 	}
 }
@@ -29,6 +29,8 @@ export function conflict(message: string): AdminServiceError {
 }
 
 /** 路由层判断是否为已映射的 `AdminServiceError`。 */
-export function isAdminServiceError(error: unknown): error is AdminServiceError {
+export function isAdminServiceError(
+	error: unknown
+): error is AdminServiceError {
 	return error instanceof AdminServiceError;
 }

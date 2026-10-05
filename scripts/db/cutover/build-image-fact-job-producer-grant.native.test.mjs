@@ -2,7 +2,7 @@
 // NOLOGIN SET ROLE is a superuser-only test of effective ACL, not a production origin.
 import assert from 'node:assert/strict';
 import { createHash, randomBytes, randomUUID } from 'node:crypto';
-import { readFile, readdir, writeFile } from 'node:fs/promises';
+import { readFile, writeFile } from 'node:fs/promises';
 import { dirname, join } from 'node:path';
 import test from 'node:test';
 import postgres from 'postgres';
@@ -13,7 +13,7 @@ import { createUsageRecoveryJobsPostgres } from '../../../packages/core/src/stor
 import { sample } from '../../../packages/core/src/storage/recovery/usage-settlement-test-support.mjs';
 import { buildRequestParentDefaultAclActivation } from './build-request-parent-default-acl-activation.mjs';
 import { buildImageFactJobProducerGrant } from './build-image-fact-job-producer-grant.mjs';
-import { grantPostgresRuntime } from './grant-postgres-runtime.ts';
+import { grantPg73RuntimeFixture, listPg73Migrations } from './pg73-native-fixture.mjs';
 
 const schema = 'cinatoken_gateway';
 const producerRole = 'cinatoken_gateway_fact_producer';
@@ -144,7 +144,7 @@ test('native pinned Images fact/outbox/job producer column grant',
     const migratorUrl = `postgres://cinatoken_gateway_migrator:${password}@127.0.0.1:${cluster.port}/postgres`;
     await migrator.unsafe(`CREATE TABLE ${schema}.schema_migrations(
       version text PRIMARY KEY, applied_at timestamptz NOT NULL DEFAULT now())`);
-    const files = (await readdir(migrationDir)).filter(name => name.endsWith('.sql')).sort();
+    const files = await listPg73Migrations();
     assert.equal(files.length, 73);
     const corpus = [];
     for (const name of files) {
@@ -163,14 +163,14 @@ test('native pinned Images fact/outbox/job producer column grant',
         await tx.unsafe(await readFile(url, 'utf8')).simple();
       });
     }
-    await grantPostgresRuntime({ DATABASE_URL: migratorUrl });
+    await grantPg73RuntimeFixture({ cluster, migrator, migratorUrl });
     await runBundle(migrator, await buildRequestParentDefaultAclActivation({ activation: 'reviewed-v1' }));
     const [outboxSetting, outboxUrl] = proposals[2];
     await migrator.begin(async tx => {
       await tx.unsafe(`SET LOCAL ${outboxSetting} = 'reviewed-v1'`);
       await tx.unsafe(await readFile(outboxUrl, 'utf8')).simple();
     });
-    await grantPostgresRuntime({ DATABASE_URL: migratorUrl });
+    await grantPg73RuntimeFixture({ cluster, migrator, migratorUrl });
     await migrator.unsafe(`GRANT USAGE ON SCHEMA ${schema}
       TO cinatoken_gateway_dispatch_producer`);
     stage('optional-parent-and-outbox-definers-installed');
@@ -466,7 +466,7 @@ test('native direct LOGIN fact producer authenticates independently and writes o
     const migratorUrl = `postgres://cinatoken_gateway_migrator:${migratorPassword}@127.0.0.1:${cluster.port}/postgres`;
     await migrator.unsafe(`CREATE TABLE ${schema}.schema_migrations(
       version text PRIMARY KEY, applied_at timestamptz NOT NULL DEFAULT now())`);
-    const files = (await readdir(migrationDir)).filter(name => name.endsWith('.sql')).sort();
+    const files = await listPg73Migrations();
     assert.equal(files.length, 73);
     for (const name of files) {
       const body = await readFile(new URL(name, migrationDir), 'utf8');
@@ -481,7 +481,7 @@ test('native direct LOGIN fact producer authenticates independently and writes o
         await tx.unsafe(await readFile(url, 'utf8')).simple();
       });
     }
-    await grantPostgresRuntime({ DATABASE_URL: migratorUrl });
+    await grantPg73RuntimeFixture({ cluster, migrator, migratorUrl });
     await runBundle(migrator,
       await buildRequestParentDefaultAclActivation({ activation: 'reviewed-v1' }));
     const [outboxSetting, outboxUrl] = proposals[2];
@@ -489,7 +489,7 @@ test('native direct LOGIN fact producer authenticates independently and writes o
       await tx.unsafe(`SET LOCAL ${outboxSetting} = 'reviewed-v1'`);
       await tx.unsafe(await readFile(outboxUrl, 'utf8')).simple();
     });
-    await grantPostgresRuntime({ DATABASE_URL: migratorUrl });
+    await grantPg73RuntimeFixture({ cluster, migrator, migratorUrl });
     await migrator.unsafe(`GRANT USAGE ON SCHEMA ${schema}
       TO cinatoken_gateway_dispatch_producer`);
     stage('pinned-migrations-parent-and-outbox-installed', { count: files.length });

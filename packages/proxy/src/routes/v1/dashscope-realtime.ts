@@ -551,7 +551,7 @@ dashScopeRealtimeRoutes.get('/', async (c) => {
 	const nodeUpgrade =
 		c.env.NODE_REALTIME_DISPATCH != null &&
 		proxyResult.response.headers.get('x-octafuse-realtime-upgrade') === '1';
-	if (!nodeUpgrade && (proxyResult.response.status !== 101 || !proxyResult.response.webSocket)) {
+	if (!nodeUpgrade && (proxyResult.response.status !== 101 || !('webSocket' in proxyResult.response) || !proxyResult.response.webSocket)) {
 		recordRealtimeUsage({
 			c,
 			repos,

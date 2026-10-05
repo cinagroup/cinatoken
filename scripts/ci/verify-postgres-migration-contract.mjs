@@ -16,15 +16,56 @@ assert.deepEqual(
 	'PostgreSQL and D1 migrations through 0040 must remain aligned',
 );
 assert.deepEqual(
-	d1Migrations.slice(40),
+	d1Migrations.slice(40, -9),
 	['0041_user_budget_spent_micros.sql', '0042_workspaces.sql', '0043_gateway_keys_workspace.sql', '0044_workspace_presets_guardrails.sql', '0045_route_routing_metadata.sql', '0046_route_data_policy_subject_fingerprint.sql', '0047_model_endpoints.sql', '0048_model_endpoint_route_subject_fingerprint.sql', '0049_model_endpoint_audio_capabilities.sql', '0050_model_endpoint_evidence_ledger.sql', '0051_management_api_keys.sql', '0052_gateway_key_expiry.sql', '0053_gateway_key_limits.sql', '0054_workspace_budgets.sql', '0055_generation_metadata_snapshots.sql', '0056_request_session_id.sql', '0057_generation_feedback.sql', '0058_guardrail_assignment_management_source.sql', '0059_workspace_default_guardrails.sql', '0060_account_default_guardrails.sql', '0061_provider_attempt_availability.sql', '0062_public_model_total_tokens.sql', '0063_generation_service_tier.sql', '0064_private_byok.sql', '0065_byok_always_use_for_provider.sql', '0066_guardrail_budget_settlement_basis.sql', '0067_workspace_budget_usage_index.sql', '0068_batch_jobs.sql'],
 	'D1 must retain its dedicated precision migration before Workspace and Gateway Key scope migrations',
 );
 assert.deepEqual(
-	postgresMigrations.slice(40),
+	postgresMigrations.slice(40, -8),
 	['0041_workspaces.sql', '0042_gateway_keys_workspace.sql', '0043_workspace_presets_guardrails.sql', '0044_route_routing_metadata.sql', '0045_route_data_policy_subject_fingerprint.sql', '0046_model_endpoints.sql', '0047_model_endpoint_route_subject_fingerprint.sql', '0048_model_endpoint_audio_capabilities.sql', '0049_model_endpoint_evidence_ledger.sql', '0050_management_api_keys.sql', '0051_gateway_key_expiry.sql', '0052_gateway_key_limits.sql', '0053_workspace_budgets.sql', '0054_generation_metadata_snapshots.sql', '0055_request_session_id.sql', '0056_generation_feedback.sql', '0057_guardrail_assignment_management_source.sql', '0058_workspace_default_guardrails.sql', '0059_account_default_guardrails.sql', '0060_provider_attempt_availability.sql', '0061_public_model_total_tokens.sql', '0062_generation_service_tier.sql', '0063_private_byok.sql', '0064_byok_always_use_for_provider.sql', '0065_guardrail_budget_settlement_basis.sql', '0066_workspace_budget_usage_index.sql', '0067_batch_jobs.sql', '0068_function_schema_resolution.sql', '0069_recovery_dispatch_intents.sql', '0070_recovery_settlement_facts.sql', '0071_recovery_jobs.sql', '0072_recovery_commit_receipts.sql', '0073_recovery_api_key_workspace_lock.sql'],
 	'PostgreSQL must retain the baseline sequence and append recovery schema migrations in order',
 );
+assert.deepEqual(d1Migrations.slice(-9), ['0069_config_change_audit.sql', '0070_system_config_revision.sql', '0071_user_audit_export_order_index.sql', '0072_admin_access_key_audit.sql', '0073_shared_key_earnings_history_guard.sql', '0074_admin_shared_key_audit.sql', '0075_admin_shared_key_actor_bounds.sql', '0076_tools_config_group_audit.sql', '0077_withdrawal_balance_update_guards.sql']);
+assert.deepEqual(postgresMigrations.slice(-8), ['0074_config_change_audit.sql', '0075_system_config_revision.sql', '0076_user_audit_export_order_index.sql', '0077_admin_access_key_audit.sql', '0078_shared_key_earnings_history_guard.sql', '0079_admin_shared_key_audit.sql', '0080_admin_shared_key_actor_bounds.sql', '0081_tools_config_group_audit.sql']);
+const sharedActorBounds = read('packages/core/migrations-postgres/0080_admin_shared_key_actor_bounds.sql');
+assert.match(sharedActorBounds, /^SET LOCAL lock_timeout = '2s';$/mu);
+assert.match(sharedActorBounds, /ALTER TABLE cinatoken_gateway\.admin_shared_key_audit\s+DROP CONSTRAINT admin_shared_key_audit_actor_id_check,/u);
+assert.match(sharedActorBounds, /actor_kind = 'console' AND length\(actor_id\) BETWEEN 1 AND 617/u);
+assert.match(sharedActorBounds, /actor_kind = 'api_key' AND length\(actor_id\) BETWEEN 1 AND 600/u);
+assert.doesNotMatch(sharedActorBounds, /\b(?:UPDATE|DELETE|INSERT|TRUNCATE|GRANT|REVOKE)\b/u);
+for (const [driver, filename] of [['d1', '0074_admin_shared_key_audit.sql'], ['postgres', '0079_admin_shared_key_audit.sql']]) {
+	const sharedAudit = read(`packages/core/migrations-${driver}/${filename}`);
+	assert.match(sharedAudit, /CREATE TABLE (?:cinatoken_gateway\.)?admin_shared_key_audit/u);
+	assert.match(sharedAudit, /\(key_id, created_at DESC, id DESC\)/u);
+	assert.match(sharedAudit, /\(seller_priority DESC, weight DESC, id ASC\)/u);
+	for (const column of ['id', 'key_id', 'action', 'change_mask', 'actor_kind', 'actor_id', 'source', 'reason',
+		'before_status', 'before_seller_priority', 'before_weight', 'before_validated',
+		'after_status', 'after_seller_priority', 'after_weight', 'after_validated', 'before_revision', 'after_revision', 'created_at']) {
+		assert.match(sharedAudit, new RegExp(`\\b${column}\\b`, 'u'));
+	}
+	assert.doesNotMatch(sharedAudit, /\b(?:api_key|api_key_ciphertext)\b(?=\s+(?:TEXT|VARCHAR|CHAR|BLOB))/u);
+	assert.doesNotMatch(sharedAudit, /\b(?:key_fingerprint|input_price|output_price|cache_read_price|cache_write_price|failure_reason|FOREIGN KEY|REFERENCES)\b/u);
+}
+for (const [driver, filename] of [['d1', '0072_admin_access_key_audit.sql'], ['postgres', '0077_admin_access_key_audit.sql']]) {
+	const accessAudit = read(`packages/core/migrations-${driver}/${filename}`);
+	assert.match(accessAudit, /CREATE TABLE (?:cinatoken_gateway\.)?admin_access_key_audit/u);
+	assert.match(accessAudit, /\(key_id, created_at DESC, id DESC\)/u);
+	assert.doesNotMatch(accessAudit, /\b(?:secret_key|secret_key_hash|key_prefix|request_body|name|description)\b/u);
+}
+assert.match(
+	read('packages/core/migrations-d1/0071_user_audit_export_order_index.sql'),
+	/ON user_audit_logs\(strftime\('%Y-%m-%dT%H:%M:%fZ', created_at\) DESC, id DESC\)/u,
+);
+assert.match(
+	read('packages/core/migrations-postgres/0076_user_audit_export_order_index.sql'),
+	/ON cinatoken_gateway\.user_audit_logs\(created_at DESC, id DESC\)/u,
+);
+const configAudit = read('packages/core/migrations-postgres/0074_config_change_audit.sql');
+assert.match(configAudit, /CREATE TABLE cinatoken_gateway\.config_change_audit/u);
+for (const column of ['config_key', 'channel', 'action', 'actor_kind', 'actor_id', 'outcome', 'created_at']) {
+	assert.match(configAudit, new RegExp(`\\b${column}\\b`, 'u'));
+}
+assert.doesNotMatch(configAudit, /\b(?:config_value|webhook_url|value_hash|value_fingerprint|request_body)\b/u);
 
 for (const file of postgresMigrations) {
 	const sql = read(`packages/core/migrations-postgres/${file}`);
@@ -357,9 +398,13 @@ assert.deepEqual(actualTables, [
 	'user_budget_reservations',
 	'public_model_daily_stats',
 	'system_config',
+	'config_change_audit',
+	'config_group_audit',
 	'user_audit_logs',
 	'admin_api_keys',
+	'admin_access_key_audit',
 	'shared_keys',
+	'admin_shared_key_audit',
 	'user_earnings',
 	'shared_key_earnings',
 	'withdrawals',
@@ -814,8 +859,9 @@ const runtimeGrants = read('scripts/db/cutover/grant-postgres-runtime.ts');
 const runtimeGrantSql = runtimeGrants.match(/tx\.unsafe\(`([\s\S]*?)`\)/u)?.[1];
 assert.ok(runtimeGrantSql, 'Unable to parse runtime grant SQL');
 assert.doesNotMatch(runtimeGrantSql, /^\s*\/\//mu, 'Runtime grant SQL must use SQL comments, not JavaScript comments');
-assert.match(runtimeGrants, /0073_recovery_api_key_workspace_lock\.sql/u);
-assert.match(runtimeGrants, /migration=0073/u);
+assert.match(runtimeGrants, /0074_config_change_audit\.sql/u);
+assert.match(runtimeGrants, /migration=0074/u);
+assert.match(runtimeGrantSql, /REVOKE SELECT, UPDATE, DELETE ON TABLE \$\{GATEWAY_SCHEMA\}\.config_change_audit FROM \$\{GATEWAY_RUNTIME_ROLE\}/u);
 const recoveryAclBlock = runtimeGrantSql.match(/REVOKE ALL ON TABLE\s+([^;]+)\s+FROM \$\{GATEWAY_RUNTIME_ROLE\};/gu)
 	?.find(block => block.includes('request_dispatch_intents'));
 assert.ok(recoveryAclBlock, 'Runtime grant step must revoke the new recovery tables');
@@ -926,8 +972,32 @@ for (const batchAccessContract of [
 ]) {
 	assert.match(hyperdriveAccessProbe, new RegExp(batchAccessContract, 'u'));
 }
-assert.match(hyperdriveAccessProbe, /migration_count === '73'/u);
-assert.match(hyperdriveAccessProbe, /0073_recovery_api_key_workspace_lock\.sql/u);
+assert.match(hyperdriveAccessProbe, /migration_count === '81'/u);
+assert.match(hyperdriveAccessProbe, /0081_tools_config_group_audit\.sql/u);
+assert.match(hyperdriveAccessProbe, /adminAuditAccessPassed\(row\)/u);
+assert.match(hyperdriveAccessProbe, /admin_shared_key_audit_access/u);
+assert.match(runtimeGrants, /REVOKE ALL ON TABLE \$\{GATEWAY_SCHEMA\}\.admin_shared_key_audit FROM PUBLIC/u);
+assert.match(runtimeGrants, /REVOKE ALL ON TABLE \$\{GATEWAY_SCHEMA\}\.admin_shared_key_audit FROM \$\{GATEWAY_RUNTIME_ROLE\}/u);
+assert.match(runtimeGrants, /GRANT SELECT, INSERT ON TABLE \$\{GATEWAY_SCHEMA\}\.admin_shared_key_audit TO \$\{GATEWAY_RUNTIME_ROLE\}/u);
+assert.match(hyperdriveAccessProbe, /configAuditAccessPassed\(row\)/u);
+for (const [privilege, checker] of [
+	['INSERT', 'has_table_privilege'],
+	['INSERT WITH GRANT OPTION', 'has_table_privilege'],
+	['SELECT', 'has_table_privilege'],
+	['UPDATE', 'has_table_privilege'],
+	['DELETE', 'has_table_privilege'],
+	['TRUNCATE', 'has_table_privilege'],
+	['REFERENCES', 'has_table_privilege'],
+	['TRIGGER', 'has_table_privilege'],
+	['MAINTAIN', 'has_table_privilege'],
+	['SELECT', 'has_any_column_privilege'],
+	['UPDATE', 'has_any_column_privilege'],
+	['REFERENCES', 'has_any_column_privilege'],
+	['INSERT WITH GRANT OPTION', 'has_any_column_privilege'],
+]) {
+	assert.match(hyperdriveAccessProbe, new RegExp(`${checker}\\(\\s*current_user, 'cinatoken_gateway\\.config_change_audit', '${privilege}'`, 'u'));
+}
+assert.match(hyperdriveAccessProbe, /current_setting\('server_version_num'\)::INTEGER >= 170000/u);
 assert.match(hyperdriveAccessProbe, /recovery_tables_inaccessible/u);
 assert.match(hyperdriveAccessProbe, /recovery_helper_execute/u);
 
@@ -948,3 +1018,26 @@ assert.match(proxyPackage.scripts['pretest:unit'], /test:management-keys/u);
 assert.match(proxyPackage.scripts['test:management-keys'], /management-keys\.test\.ts/u);
 
 console.log('PostgreSQL cinatoken_gateway migration contract: PASS');
+
+
+for (const [driver, filename] of [['d1', '0076_tools_config_group_audit.sql'], ['postgres', '0081_tools_config_group_audit.sql']]) {
+ const group = read('packages/core/migrations-' + driver + '/' + filename);
+ assert.match(group, /CREATE TABLE (?:cinatoken_gateway\.)?config_group_audit/u);
+ for (const column of ['id', 'family', 'provider', 'action', 'actor_kind', 'actor_id', 'reason', 'changed_fields_json', 'active_before', 'active_after', 'credentials_json', 'revision_before_json', 'revision_after_json', 'source', 'created_at']) assert.match(group, new RegExp('\\b' + column + '\\b', 'u'));
+ assert.match(group, /family, created_at DESC, id DESC/u);
+ assert.doesNotMatch(group, /\b(?:FOREIGN KEY|REFERENCES|config_value|value_hash|request_body|secret_key_hash)\b/u);
+ for (const column of ['changed_fields_json', 'credentials_json', 'revision_before_json', 'revision_after_json']) assert.match(group, new RegExp('\\b' + column + '\\s+TEXT\\s+NOT NULL', 'u'));
+ if (driver === 'postgres') {
+  assert.match(group, /SET LOCAL lock_timeout = '2s'/u);
+  assert.match(group, /CREATE TABLE cinatoken_gateway\.system_config_write_mutex/u);
+  assert.match(group, /INSERT INTO cinatoken_gateway\.system_config_write_mutex \(id\) VALUES \(1\)/u);
+ } else assert.doesNotMatch(group, /CREATE TABLE system_config_write_mutex/u);
+}
+assert.match(hyperdriveAccessProbe, /config_group_audit_access/u);
+assert.match(hyperdriveAccessProbe, /configWriteMutexAccessPassed\(row\.system_config_write_mutex_access\)/u);
+assert.match(hyperdriveAccessProbe, /column_update_other/u);
+assert.match(hyperdriveAccessProbe, /has_column_privilege\(current_user, 'cinatoken_gateway\.system_config_write_mutex', 'id', 'UPDATE'\)/u);
+assert.match(runtimeGrants, /GRANT SELECT, INSERT ON TABLE \$\{GATEWAY_SCHEMA\}\.config_group_audit TO \$\{GATEWAY_RUNTIME_ROLE\}/u);
+assert.match(runtimeGrants, /GRANT SELECT, UPDATE \(id\) ON TABLE \$\{GATEWAY_SCHEMA\}\.system_config_write_mutex TO \$\{GATEWAY_RUNTIME_ROLE\}/u);
+assert.match(migrationTables, /ETL_TARGET_ONLY_TABLES = \["system_config_write_mutex"\]/u);
+assert.doesNotMatch(orderBlock, /system_config_write_mutex/u);

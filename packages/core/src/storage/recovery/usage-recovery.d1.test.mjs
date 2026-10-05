@@ -35,8 +35,9 @@ async function claimOne(db) {
 const deferred = () => { let resolve; const promise = new Promise(r => { resolve = r; }); return { promise, resolve }; };
 function account(db) { return db.sqlite.prepare("SELECT budget_spent_micros,budget_reserved_micros FROM users WHERE id='recovery-user'").get(); }
 
-test('68 formal migrations plus local proposals preserve constraints and atomic snapshot enqueue', async t => {
-  const db = fixture(t); assert.equal(db.migrationFiles.length, 68);
+test('77 formal migrations plus local proposals preserve constraints and atomic snapshot enqueue', async t => {
+  const db = fixture(t); assert.equal(db.migrationFiles.length, 77);
+  assert.equal(db.migrationFiles.at(-1), '0077_withdrawal_balance_update_guards.sql');
   const v = sample(); await prepare(db, v);
   db.sqlite.exec("CREATE TRIGGER reject_test_job BEFORE INSERT ON request_usage_recovery_jobs BEGIN SELECT RAISE(ABORT,'test'); END");
   await assert.rejects(db.repo.persist(v));

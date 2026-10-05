@@ -5,10 +5,10 @@ import { eq } from 'drizzle-orm';
 import { database, gatewayTables, identifier, tableQueries } from '../../test-support/postgres-schema-contract.mjs';
 
 test('inventory includes every exported PostgreSQL table, not only pgCoreSchema entries', () => {
-  assert.equal(gatewayTables.length, 46);
+  assert.equal(gatewayTables.length, 50);
   const names = gatewayTables.map(([, table]) => getTableConfig(table).name);
-  assert.equal(new Set(names).size, 46);
-  for (const name of ['workspace_budgets', 'provider_attempt_availability', 'route_pool_sticky_bindings']) {
+  assert.equal(new Set(names).size, 50);
+  for (const name of ['workspace_budgets', 'provider_attempt_availability', 'route_pool_sticky_bindings', 'admin_access_key_audit', 'admin_shared_key_audit', 'config_group_audit', 'system_config_write_mutex']) {
     assert.ok(names.includes(name));
   }
 });
@@ -22,8 +22,8 @@ for (const [name, table] of gatewayTables) {
       assert.ok(queries[kind].sql.includes(qualified), `${kind} must qualify the table`);
       assert.doesNotMatch(queries[kind].sql, /\bSET\s+search_path\b/i);
     }
-    assert.deepEqual(queries.update.params, ['updated', 'gateway']);
-    assert.deepEqual(queries.delete.params, ['updated']);
+    assert.deepEqual(queries.update.params, [queries.values.updated, queries.values.gateway]);
+    assert.deepEqual(queries.delete.params, [queries.values.updated]);
     for (const key of queries.config.foreignKeys) {
       assert.equal(getTableConfig(key.reference().foreignTable).schema, 'cinatoken_gateway');
     }

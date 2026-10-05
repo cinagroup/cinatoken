@@ -35,12 +35,8 @@
 			}
 		},
 		"modalities": {
-			"input": [
-				"text"
-			],
-			"output": [
-				"text"
-			]
+			"input": ["text"],
+			"output": ["text"]
 		},
 		"released": "2026-02-11"
 	},
@@ -80,13 +76,8 @@
 			}
 		},
 		"modalities": {
-			"input": [
-				"text",
-				"image"
-			],
-			"output": [
-				"text"
-			]
+			"input": ["text", "image"],
+			"output": ["text"]
 		},
 		"released": "2026-03-15"
 	},
@@ -126,12 +117,8 @@
 			}
 		},
 		"modalities": {
-			"input": [
-				"text"
-			],
-			"output": [
-				"text"
-			]
+			"input": ["text"],
+			"output": ["text"]
 		},
 		"released": "2026-03-27"
 	},
@@ -171,12 +158,8 @@
 			}
 		},
 		"modalities": {
-			"input": [
-				"text"
-			],
-			"output": [
-				"text"
-			]
+			"input": ["text"],
+			"output": ["text"]
 		},
 		"released": "2026-06-13"
 	},
@@ -191,9 +174,7 @@
 		"vendor": "zhipu",
 		"context_window": 1000000,
 		"max_tokens": 128000,
-		"tags": [
-			"New"
-		],
+		"tags": ["New"],
 		"pricing": {
 			"usd": {
 				"tiers": [
@@ -219,12 +200,8 @@
 			}
 		},
 		"modalities": {
-			"input": [
-				"text"
-			],
-			"output": [
-				"text"
-			]
+			"input": ["text"],
+			"output": ["text"]
 		},
 		"released": "2026-08-14"
 	}

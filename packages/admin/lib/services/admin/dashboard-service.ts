@@ -1,60 +1,34 @@
 /**
  * 管理后台聚合服务：仪表盘 KPI、全局请求日志列表、`system_config` 读写，以及模型/供应商/用户/可靠性分析 API 的数据装配。
  */
-import type { GatewayRepositories } from '@octafuse/core';
-import { BILLING_CURRENCY_KEY, tryParseGatewaySupportedBillingCurrencyInput } from '@octafuse/core/lib/billing-currency';
+import type { GatewayRepositories, RequestLogRow } from "@octafuse/core";
+import type { AdminPrincipal } from "@/lib/admin-principal";
 import {
-	parseWebSearchActiveInput,
-	parseWebSearchCatalogInput,
-	serializeWebSearchCatalog,
-	WEB_SEARCH_ACTIVE_KEY,
-	WEB_SEARCH_API_KEY_KEY,
-	WEB_SEARCH_CATALOG_KEY,
-	WEB_SEARCH_COST_KEY,
-	WEB_SEARCH_PROVIDER_KEY,
-	WEB_SEARCH_PROVIDERS,
-} from '@octafuse/core/lib/web-search-system-config';
-import {
-	parseWebFetchActiveInput,
-	parseWebFetchCatalogInput,
-	serializeWebFetchCatalog,
-	WEB_FETCH_ACTIVE_KEY,
-	WEB_FETCH_API_KEY_KEY,
-	WEB_FETCH_CATALOG_KEY,
-	WEB_FETCH_COST_KEY,
-	WEB_FETCH_PROVIDER_KEY,
-	WEB_FETCH_PROVIDERS,
-} from '@octafuse/core/lib/web-fetch-system-config';
-import {
-	parseWebDeepSearchActiveInput,
-	parseWebDeepSearchCatalogInput,
-	serializeWebDeepSearchCatalog,
-	WEB_DEEP_SEARCH_ACTIVE_KEY,
-	WEB_DEEP_SEARCH_CATALOG_KEY,
-	WEB_DEEP_SEARCH_PROVIDERS,
-} from '@octafuse/core/lib/web-deep-search-system-config';
-import {
-	AI_DETECTION_ACTIVE_KEY,
-	AI_DETECTION_CATALOG_KEY,
-	AI_DETECTION_IMPLEMENTED_PROVIDERS,
-	AI_DETECTION_PROVIDER_REQUIRED_CREDENTIALS,
-	AI_DETECTION_PROVIDERS,
-	entryHasRequiredCredentials,
-	isAiDetectionImplementedProvider,
-	parseAiDetectionActiveInput,
-	parseAiDetectionCatalogInput,
-	serializeAiDetectionCatalog,
-} from '@octafuse/core/lib/ai-detection-system-config';
+	BILLING_CURRENCY_KEY,
+	tryParseGatewaySupportedBillingCurrencyInput,
+} from "@octafuse/core/lib/billing-currency";
 import {
 	DEFAULT_ROUTE_STRATEGY,
 	isRouteStrategyName,
 	ROUTE_STRATEGY_NAMES,
-} from '@octafuse/core/db/model-route-policy';
-import { ROUTE_STRATEGY_KEY } from '@octafuse/core/lib/route-strategy-system-config';
-import { badRequest } from './errors';
-import { clampAnalyticsRange, rangeToDates, resolveStatsDateRange } from './shared';
-import { getBusinessDayWindow, getBusinessTimezone } from '@octafuse/core/lib/business-timezone';
-import { normalizeUpstreamProtocol } from '@octafuse/core/upstream-protocol';
+} from "@octafuse/core/db/model-route-policy";
+import { ROUTE_STRATEGY_KEY } from "@octafuse/core/lib/route-strategy-system-config";
+import { badRequest } from "./errors";
+import {
+	toolConfigGenericFamily,
+	updateGenericToolConfig,
+} from "./tool-config-service";
+import {
+	clampAnalyticsRange,
+	rangeToDates,
+	resolveStatsDateRange,
+} from "./shared";
+import {
+	getBusinessDayWindow,
+	getBusinessTimezone,
+	parseBusinessTimezoneInput,
+} from "@octafuse/core/lib/business-timezone";
+import { normalizeUpstreamProtocol } from "@octafuse/core/upstream-protocol";
 import type {
 	AdminConfigRow,
 	AdminConfigUpdateInput,
@@ -66,10 +40,12 @@ import type {
 	AdminReliabilityModelProviderRow,
 	AdminReliabilityProviderRow,
 	AdminRequestLogsOutput,
+	AdminAnalyticsRecentLog,
 	AdminStatsOutput,
 	AdminUserAnalyticsRow,
 	AdminGlobalBudgetAuditLogsOutput,
-} from './types';
+} from "./types";
+import type { BudgetAuditLogQuery } from "./budget-audit-log-query";
 
 function mapAnalyticsTtftFields(r: {
 	avg_first_reasoning_token_ms?: unknown;
@@ -80,10 +56,18 @@ function mapAnalyticsTtftFields(r: {
 	content_ttft_rate?: unknown;
 }) {
 	return {
-		avg_first_reasoning_token_ms: r.avg_first_reasoning_token_ms != null ? Number(r.avg_first_reasoning_token_ms) : null,
-		avg_first_token_ms: r.avg_first_token_ms != null ? Number(r.avg_first_token_ms) : null,
-		avg_effective_ttft_ms: r.avg_effective_ttft_ms != null ? Number(r.avg_effective_ttft_ms) : null,
-		avg_reasoning_phase_ms: r.avg_reasoning_phase_ms != null ? Number(r.avg_reasoning_phase_ms) : null,
+		avg_first_reasoning_token_ms:
+			r.avg_first_reasoning_token_ms != null
+				? Number(r.avg_first_reasoning_token_ms)
+				: null,
+		avg_first_token_ms:
+			r.avg_first_token_ms != null ? Number(r.avg_first_token_ms) : null,
+		avg_effective_ttft_ms:
+			r.avg_effective_ttft_ms != null ? Number(r.avg_effective_ttft_ms) : null,
+		avg_reasoning_phase_ms:
+			r.avg_reasoning_phase_ms != null
+				? Number(r.avg_reasoning_phase_ms)
+				: null,
 		reasoning_ttft_rate: Number(r.reasoning_ttft_rate ?? 0),
 		content_ttft_rate: Number(r.content_ttft_rate ?? 0),
 	};
@@ -93,7 +77,10 @@ function mapAnalyticsTtftFields(r: {
  * Prompt cache 命中率（%）。
  * 网关语义：`input_tokens = regular + cache_read + cache_write`，故分母用 `input_tokens`。
  */
-function computeCacheHitRate(inputTokens: number, cacheReadTokens: number): number {
+function computeCacheHitRate(
+	inputTokens: number,
+	cacheReadTokens: number
+): number {
 	return inputTokens > 0 ? (cacheReadTokens / inputTokens) * 100 : 0;
 }
 
@@ -107,6 +94,7 @@ export async function listAdminGlobalRequestLogsService(
 		page?: number | string;
 		page_size?: number | string;
 		api_key_id?: string;
+		user_id?: string;
 		user_email?: string;
 		model_id?: string;
 		provider_id?: string;
@@ -118,19 +106,30 @@ export async function listAdminGlobalRequestLogsService(
 	}
 ): Promise<AdminRequestLogsOutput> {
 	let protocol: string | undefined;
-	if (input.protocol != null && input.protocol.trim() !== '') {
+	if (input.protocol != null && input.protocol.trim() !== "") {
 		try {
 			protocol = normalizeUpstreamProtocol(input.protocol);
 		} catch (e) {
-			throw badRequest(e instanceof Error ? e.message : 'Invalid protocol');
+			throw badRequest(e instanceof Error ? e.message : "Invalid protocol");
 		}
 	}
-	const page = Math.max(1, Number.parseInt(String(input.page ?? '1'), 10));
-	const pageSize = Math.min(100, Math.max(1, Number.parseInt(String(input.page_size ?? '20'), 10)));
+	const page = Math.max(1, Number.parseInt(String(input.page ?? "1"), 10));
+	const pageSize = Math.min(
+		100,
+		Math.max(1, Number.parseInt(String(input.page_size ?? "20"), 10))
+	);
+	const userId = input.user_id?.trim();
+	if (
+		input.user_id &&
+		(!userId || userId.length > 600 || /\p{Cc}/u.test(userId))
+	) {
+		throw badRequest("Invalid user ID");
+	}
 	const result = await repos.requestLogs.getRequestLogs({
 		page,
 		pageSize,
 		apiKeyId: input.api_key_id,
+		userId,
 		userEmail: input.user_email,
 		modelId: input.model_id,
 		providerId: input.provider_id,
@@ -143,68 +142,35 @@ export async function listAdminGlobalRequestLogsService(
 	return { ...result, page, page_size: pageSize };
 }
 
-/** 多值过滤参数：可重复出现，也可在单个值里用逗号分隔；去空去重。 */
-function parseMultiValueFilter(input: string | string[] | undefined): string[] | undefined {
-	const values = (Array.isArray(input) ? input : input ? [input] : [])
-		.flatMap((value) => value.split(','))
-		.map((value) => value.trim())
-		.filter((value, index, all) => value !== '' && all.indexOf(value) === index);
-	return values.length > 0 ? values : undefined;
-}
-
 /**
  * 全局 `user_audit_logs` 分页（可选 api_key_id、user_email、event_type、actor_type、actor_id、actor_kind、时间窗）。
  */
 export async function listAdminGlobalBudgetAuditLogsService(
 	repos: GatewayRepositories,
-	input: {
-		page?: number | string;
-		page_size?: number | string;
-		user_id?: string;
-		api_key_id?: string;
-		user_email?: string;
-		event_type?: string | string[];
-		actor_type?: string | string[];
-		actor_id?: string;
-		actor_kind?: string | string[];
-		reason_code?: string | string[];
-		source?: string | string[];
-		correlation_id?: string;
-		start_date?: string;
-		end_date?: string;
-	}
+	query: BudgetAuditLogQuery
 ): Promise<AdminGlobalBudgetAuditLogsOutput> {
-	const page = Math.max(1, Number.parseInt(String(input.page ?? '1'), 10));
-	const pageSize = Math.min(100, Math.max(1, Number.parseInt(String(input.page_size ?? '20'), 10)));
 	const result = await repos.userAuditLogs.getGlobalUserAuditLogs({
-		page,
-		pageSize,
-		userId: input.user_id,
-		apiKeyId: input.api_key_id,
-		userEmail: input.user_email,
-		eventTypes: parseMultiValueFilter(input.event_type),
-		actorTypes: parseMultiValueFilter(input.actor_type),
-		actorId: input.actor_id?.trim() || undefined,
-		actorKinds: parseMultiValueFilter(input.actor_kind),
-		reasonCodes: parseMultiValueFilter(input.reason_code),
-		sources: parseMultiValueFilter(input.source),
-		correlationId: input.correlation_id,
-		startDate: input.start_date,
-		endDate: input.end_date,
+		...query.filters,
+		page: query.page,
+		pageSize: query.pageSize,
 	});
-	return { ...result, page, page_size: pageSize };
+	return { ...result, page: query.page, page_size: query.pageSize };
 }
 
-export async function listAdminGlobalBudgetAuditLogFilterOptionsService(repos: GatewayRepositories) {
+export async function listAdminGlobalBudgetAuditLogFilterOptionsService(
+	repos: GatewayRepositories
+) {
 	return repos.userAuditLogs.getGlobalUserAuditLogFilterOptions();
 }
 
 /** 配置列表；空 value 转为 `''` 便于前端表单展示。 */
-export async function listAdminSystemConfigService(repos: GatewayRepositories): Promise<AdminConfigRow[]> {
+export async function listAdminSystemConfigService(
+	repos: GatewayRepositories
+): Promise<AdminConfigRow[]> {
 	const rows = await repos.systemConfig.listSystemConfigRows();
 	return rows.map((r) => ({
 		key: r.key,
-		value: r.value ?? '',
+		value: r.value ?? "",
 		description: r.description ?? null,
 	}));
 }
@@ -213,22 +179,56 @@ export async function listAdminSystemConfigService(repos: GatewayRepositories): 
  * 更新或插入一条 `system_config`；校验失败抛 `badRequest`。
  * @param body.value `null`/`undefined` 会写成空字符串
  */
-export async function updateAdminSystemConfigService(repos: GatewayRepositories, body: AdminConfigUpdateInput) {
-	if (typeof body.key !== 'string' || body.key.trim() === '') {
-		throw badRequest('key is required');
+export function updateAdminSystemConfigService(
+	repos: GatewayRepositories,
+	body: AdminConfigUpdateInput,
+	principal: AdminPrincipal
+): Promise<void>;
+export function updateAdminSystemConfigService(
+	repos: GatewayRepositories,
+	body: AdminConfigUpdateInput,
+	principal: AdminPrincipal,
+	expectedRevision: string | null
+): Promise<{ committed: boolean; revision: string | null }>;
+export function updateAdminSystemConfigService(
+	repos: GatewayRepositories,
+	body: AdminConfigUpdateInput,
+	principal: AdminPrincipal,
+	expectedRevision: string | null | undefined,
+	options: { requireToolsVersion: boolean }
+): Promise<{ committed: boolean; revision: string | null }>;
+export async function updateAdminSystemConfigService(
+	repos: GatewayRepositories,
+	body: AdminConfigUpdateInput,
+	principal: AdminPrincipal,
+	expectedRevision?: string | null,
+	options?: { requireToolsVersion: boolean }
+): Promise<void | { committed: boolean; revision: string | null }> {
+	if (typeof body.key !== "string" || body.key.trim() === "") {
+		throw badRequest("key is required");
 	}
-	if (body.value !== undefined && body.value !== null && typeof body.value !== 'string') {
-		throw badRequest('value must be string');
+	if (
+		body.value !== undefined &&
+		body.value !== null &&
+		typeof body.value !== "string"
+	) {
+		throw badRequest("value must be string");
 	}
 	const key = body.key.trim();
-	if (key === 'MASTER_KEY') {
-		throw badRequest('MASTER_KEY is removed; use Integration Keys');
+	if (key === "MASTER_KEY") {
+		throw badRequest("MASTER_KEY is removed; use Integration Keys");
 	}
-	let value = body.value == null ? '' : String(body.value);
+	let value = body.value == null ? "" : String(body.value);
+	if (key === "BUSINESS_TIMEZONE") {
+		const parsed = parseBusinessTimezoneInput(value);
+		if (!parsed)
+			throw badRequest("BUSINESS_TIMEZONE must be a valid IANA timezone");
+		value = parsed;
+	}
 	if (key === BILLING_CURRENCY_KEY) {
 		const parsed = tryParseGatewaySupportedBillingCurrencyInput(value);
 		if (!parsed) {
-			throw badRequest('BILLING_CURRENCY must be USD or CNY');
+			throw badRequest("BILLING_CURRENCY must be USD or CNY");
 		}
 		value = parsed;
 	}
@@ -236,181 +236,66 @@ export async function updateAdminSystemConfigService(repos: GatewayRepositories,
 		const normalized = value.trim().toLowerCase();
 		if (!isRouteStrategyName(normalized)) {
 			throw badRequest(
-				`ROUTE_STRATEGY must be one of: ${ROUTE_STRATEGY_NAMES.join(', ')} (default ${DEFAULT_ROUTE_STRATEGY})`
+				`ROUTE_STRATEGY must be one of: ${ROUTE_STRATEGY_NAMES.join(
+					", "
+				)} (default ${DEFAULT_ROUTE_STRATEGY})`
 			);
 		}
 		value = normalized;
 	}
 	const legacyToolKeys = new Set([
-		WEB_SEARCH_PROVIDER_KEY,
-		WEB_SEARCH_API_KEY_KEY,
-		WEB_SEARCH_COST_KEY,
-		WEB_FETCH_PROVIDER_KEY,
-		WEB_FETCH_API_KEY_KEY,
-		WEB_FETCH_COST_KEY,
+		"WEB_SEARCH_PROVIDER",
+		"WEB_SEARCH_API_KEY",
+		"WEB_SEARCH_COST",
+		"WEB_FETCH_PROVIDER",
+		"WEB_FETCH_API_KEY",
+		"WEB_FETCH_COST",
 	]);
 	if (legacyToolKeys.has(key)) {
 		throw badRequest(
 			`${key} is deprecated; use Tools → Configuration (WEB_*_ACTIVE / WEB_*_CATALOG) instead`
 		);
 	}
-
-	if (key === WEB_SEARCH_CATALOG_KEY) {
-		const catalog = parseWebSearchCatalogInput(value);
-		if (catalog == null) {
-			throw badRequest(
-				`WEB_SEARCH_CATALOG must be a JSON object with whitelist providers (${WEB_SEARCH_PROVIDERS.join(', ')}) and { apiKey: string, metered/standard/charged ≥ 0 (or legacy cost) }`
-			);
-		}
-		const activeRaw = await repos.systemConfig.getConfig(WEB_SEARCH_ACTIVE_KEY);
-		const active = parseWebSearchActiveInput(activeRaw);
-		if (active) {
-			const entryKey = catalog[active]?.apiKey?.trim() ?? '';
-			if (!entryKey) {
-				throw badRequest(
-					`Cannot save WEB_SEARCH_CATALOG: active provider "${active}" would have no API key; change WEB_SEARCH_ACTIVE first`
-				);
+	if (toolConfigGenericFamily(key)) {
+		const result = await updateGenericToolConfig(
+			repos,
+			principal,
+			{ ...body, key, value },
+			{
+				requireVersion: options?.requireToolsVersion,
+				expectedRevision,
 			}
-		}
-		value = serializeWebSearchCatalog(catalog);
-	}
-	if (key === WEB_SEARCH_ACTIVE_KEY) {
-		const active = parseWebSearchActiveInput(value);
-		if (!active) {
-			throw badRequest(`WEB_SEARCH_ACTIVE must be one of: ${WEB_SEARCH_PROVIDERS.join(', ')}`);
-		}
-		const catalogRaw = await repos.systemConfig.getConfig(WEB_SEARCH_CATALOG_KEY);
-		const catalog = parseWebSearchCatalogInput(catalogRaw);
-		if (catalog == null) {
-			throw badRequest('WEB_SEARCH_CATALOG must be configured before setting WEB_SEARCH_ACTIVE');
-		}
-		const entryKey = catalog[active]?.apiKey?.trim() ?? '';
-		if (!entryKey) {
-			throw badRequest(`Cannot activate web-search provider "${active}" without an API key`);
-		}
-		value = active;
+		);
+		return expectedRevision !== undefined || options ? result : undefined;
 	}
 
-	if (key === WEB_FETCH_CATALOG_KEY) {
-		const catalog = parseWebFetchCatalogInput(value);
-		if (catalog == null) {
-			throw badRequest(
-				`WEB_FETCH_CATALOG must be a JSON object with whitelist providers (${WEB_FETCH_PROVIDERS.join(', ')}) and { apiKey: string, metered/standard/charged ≥ 0 (or legacy cost) }`
-			);
-		}
-		const activeRaw = await repos.systemConfig.getConfig(WEB_FETCH_ACTIVE_KEY);
-		const active = parseWebFetchActiveInput(activeRaw);
-		if (active) {
-			const entryKey = catalog[active]?.apiKey?.trim() ?? '';
-			if (!entryKey) {
-				throw badRequest(
-					`Cannot save WEB_FETCH_CATALOG: active provider "${active}" would have no API key; change WEB_FETCH_ACTIVE first`
-				);
-			}
-		}
-		value = serializeWebFetchCatalog(catalog);
+	const write = {
+		auditId: crypto.randomUUID(),
+		key,
+		value,
+		actorKind: principal.type === "console" ? "console" : "admin_key",
+		actorId: principal.id,
+		nowIso: new Date().toISOString(),
+	} as const;
+	if (expectedRevision !== undefined) {
+		return repos.systemConfig.upsertSystemConfigValueWithAuditIfRevision({
+			...write,
+			expectedRevision,
+		});
 	}
-	if (key === WEB_FETCH_ACTIVE_KEY) {
-		const active = parseWebFetchActiveInput(value);
-		if (!active) {
-			throw badRequest(`WEB_FETCH_ACTIVE must be one of: ${WEB_FETCH_PROVIDERS.join(', ')}`);
-		}
-		const catalogRaw = await repos.systemConfig.getConfig(WEB_FETCH_CATALOG_KEY);
-		const catalog = parseWebFetchCatalogInput(catalogRaw);
-		if (catalog == null) {
-			throw badRequest('WEB_FETCH_CATALOG must be configured before setting WEB_FETCH_ACTIVE');
-		}
-		const entryKey = catalog[active]?.apiKey?.trim() ?? '';
-		if (!entryKey) {
-			throw badRequest(`Cannot activate web-fetch provider "${active}" without an API key`);
-		}
-		value = active;
-	}
+	await repos.systemConfig.upsertSystemConfigValueWithAudit(write);
+}
 
-	if (key === WEB_DEEP_SEARCH_CATALOG_KEY) {
-		const catalog = parseWebDeepSearchCatalogInput(value);
-		if (catalog == null) {
-			throw badRequest(
-				`WEB_DEEP_SEARCH_CATALOG must be a JSON object with whitelist providers (${WEB_DEEP_SEARCH_PROVIDERS.join(', ')}) and { apiKey: string, metered/standard/charged ≥ 0 (or legacy cost) }`
-			);
-		}
-		const activeRaw = await repos.systemConfig.getConfig(WEB_DEEP_SEARCH_ACTIVE_KEY);
-		const active = parseWebDeepSearchActiveInput(activeRaw);
-		if (active) {
-			const entryKey = catalog[active]?.apiKey?.trim() ?? '';
-			if (!entryKey) {
-				throw badRequest(
-					`Cannot save WEB_DEEP_SEARCH_CATALOG: active provider "${active}" would have no API key; change WEB_DEEP_SEARCH_ACTIVE first`
-				);
-			}
-		}
-		value = serializeWebDeepSearchCatalog(catalog);
-	}
-	if (key === WEB_DEEP_SEARCH_ACTIVE_KEY) {
-		const active = parseWebDeepSearchActiveInput(value);
-		if (!active) {
-			throw badRequest(`WEB_DEEP_SEARCH_ACTIVE must be one of: ${WEB_DEEP_SEARCH_PROVIDERS.join(', ')}`);
-		}
-		const catalogRaw = await repos.systemConfig.getConfig(WEB_DEEP_SEARCH_CATALOG_KEY);
-		const catalog = parseWebDeepSearchCatalogInput(catalogRaw);
-		if (catalog == null) {
-			throw badRequest('WEB_DEEP_SEARCH_CATALOG must be configured before setting WEB_DEEP_SEARCH_ACTIVE');
-		}
-		const entryKey = catalog[active]?.apiKey?.trim() ?? '';
-		if (!entryKey) {
-			throw badRequest(`Cannot activate web-deep-search provider "${active}" without an API key`);
-		}
-		value = active;
-	}
-
-	if (key === AI_DETECTION_CATALOG_KEY) {
-		const catalog = parseAiDetectionCatalogInput(value);
-		if (catalog == null) {
-			throw badRequest(
-				`AI_DETECTION_CATALOG must be a JSON object with whitelist providers (${AI_DETECTION_PROVIDERS.join(', ')}) and credential union + metered/standard/charged ≥ 0 (or legacy cost; optional billingUnitChars)`
-			);
-		}
-		const activeRaw = await repos.systemConfig.getConfig(AI_DETECTION_ACTIVE_KEY);
-		const active = parseAiDetectionActiveInput(activeRaw);
-		if (active) {
-			if (!isAiDetectionImplementedProvider(active)) {
-				throw badRequest(
-					`Cannot save AI_DETECTION_CATALOG: active provider "${active}" is not implemented; change AI_DETECTION_ACTIVE first`
-				);
-			}
-			if (
-				!entryHasRequiredCredentials(catalog[active], AI_DETECTION_PROVIDER_REQUIRED_CREDENTIALS[active])
-			) {
-				throw badRequest(
-					`Cannot save AI_DETECTION_CATALOG: active provider "${active}" would miss required credentials; change AI_DETECTION_ACTIVE first`
-				);
-			}
-		}
-		value = serializeAiDetectionCatalog(catalog);
-	}
-	if (key === AI_DETECTION_ACTIVE_KEY) {
-		const active = parseAiDetectionActiveInput(value);
-		if (!active) {
-			throw badRequest(`AI_DETECTION_ACTIVE must be one of: ${AI_DETECTION_PROVIDERS.join(', ')}`);
-		}
-		if (!isAiDetectionImplementedProvider(active)) {
-			throw badRequest(
-				`AI_DETECTION_ACTIVE provider "${active}" is not implemented yet (allowed: ${AI_DETECTION_IMPLEMENTED_PROVIDERS.join(', ')})`
-			);
-		}
-		const catalogRaw = await repos.systemConfig.getConfig(AI_DETECTION_CATALOG_KEY);
-		const catalog = parseAiDetectionCatalogInput(catalogRaw);
-		if (catalog == null) {
-			throw badRequest('AI_DETECTION_CATALOG must be configured before setting AI_DETECTION_ACTIVE');
-		}
-		if (
-			!entryHasRequiredCredentials(catalog[active], AI_DETECTION_PROVIDER_REQUIRED_CREDENTIALS[active])
-		) {
-			throw badRequest(`Cannot activate ai-detection provider "${active}" without required credentials`);
-		}
-		value = active;
-	}
-	await repos.systemConfig.upsertSystemConfigValue(key, value);
+/** The analytics permission exposes only an occurrence summary, never a log detail. */
+function analyticsRecentLog(row: RequestLogRow): AdminAnalyticsRecentLog {
+	return {
+		id: row.id,
+		model_id: row.model_id ?? null,
+		provider_id: row.provider_id ?? null,
+		provider_name: row.provider_name ?? null,
+		status: row.status,
+		created_at: row.created_at,
+	};
 }
 
 /**
@@ -428,10 +313,8 @@ export async function getAdminStatsService(
 		endDate: input?.endDate,
 	});
 	const businessTimeZone = await getBusinessTimezone(repos);
-	const { startUtcSql: dayStart, endExclusiveUtcSql: dayEndExclusive } = getBusinessDayWindow(
-		new Date(),
-		businessTimeZone
-	);
+	const { startUtcSql: dayStart, endExclusiveUtcSql: dayEndExclusive } =
+		getBusinessDayWindow(new Date(), businessTimeZone);
 
 	const [
 		keysCount,
@@ -448,7 +331,11 @@ export async function getAdminStatsService(
 	] = await Promise.all([
 		repos.apiKeys.getApiKeysCount(),
 		repos.users.getUsersCount(),
-		repos.requestLogs.getRequestStatsByRange({ startDate: dayStart, endDate: dayEndExclusive, endExclusive: true }),
+		repos.requestLogs.getRequestStatsByRange({
+			startDate: dayStart,
+			endDate: dayEndExclusive,
+			endExclusive: true,
+		}),
 		repos.requestLogs.getRecentLogs(5),
 		repos.requestLogs.getRecentErrors(5),
 		repos.requestLogs.getRequestStatsByRange({ startDate, endDate }),
@@ -456,7 +343,11 @@ export async function getAdminStatsService(
 		repos.requestLogs.getThroughputLastMinute(),
 		repos.analytics.queryModelAnalytics({ start: startDate, end: endDate }),
 		repos.analytics.queryUserAnalytics({ start: startDate, end: endDate }),
-		repos.requestLogs.queryRequestTimeseries({ startDate, endDate, granularity }),
+		repos.requestLogs.queryRequestTimeseries({
+			startDate,
+			endDate,
+			granularity,
+		}),
 	]);
 
 	const modelDistributionMap = new Map<
@@ -473,7 +364,7 @@ export async function getAdminStatsService(
 		}
 	>();
 	for (const row of modelRows) {
-		const modelId = String(row.model_id ?? 'unknown');
+		const modelId = String(row.model_id ?? "unknown");
 		const existing = modelDistributionMap.get(modelId) ?? {
 			model_id: modelId,
 			request_count: 0,
@@ -487,7 +378,8 @@ export async function getAdminStatsService(
 		existing.request_count += Number(row.request_count);
 		existing.input_tokens += Number(row.input_tokens);
 		existing.output_tokens += Number(row.output_tokens);
-		existing.total_tokens += Number(row.input_tokens) + Number(row.output_tokens);
+		existing.total_tokens +=
+			Number(row.input_tokens) + Number(row.output_tokens);
 		existing.charged_cost += Number(row.charged_cost);
 		existing.metered_cost += Number(row.metered_cost);
 		existing.standard_cost += Number(row.standard_cost);
@@ -521,16 +413,25 @@ export async function getAdminStatsService(
 		todayRequestsCount,
 		todayCost: todayStats.chargedCost,
 		todayTokens: todayStats.totalTokens,
-		errorRate: todayRequestsCount > 0 ? (todayStats.errorCount / todayRequestsCount) * 100 : 0,
+		errorRate:
+			todayRequestsCount > 0
+				? (todayStats.errorCount / todayRequestsCount) * 100
+				: 0,
 	};
 	const kpi = {
 		totalRequests: kpiStats.totalRequests,
-		successRate: kpiStats.totalRequests > 0 ? (kpiStats.successCount / kpiStats.totalRequests) * 100 : 0,
+		successRate:
+			kpiStats.totalRequests > 0
+				? (kpiStats.successCount / kpiStats.totalRequests) * 100
+				: 0,
 		totalCost: kpiStats.chargedCost,
 		meteredCost: kpiStats.meteredCost,
 		standardCost: kpiStats.standardCost,
 		activeUsers,
-		errorRate: kpiStats.totalRequests > 0 ? (kpiStats.errorCount / kpiStats.totalRequests) * 100 : 0,
+		errorRate:
+			kpiStats.totalRequests > 0
+				? (kpiStats.errorCount / kpiStats.totalRequests) * 100
+				: 0,
 		inputTokens: kpiStats.inputTokens,
 		outputTokens: kpiStats.outputTokens,
 		cacheReadTokens: kpiStats.cacheReadTokens,
@@ -559,8 +460,8 @@ export async function getAdminStatsService(
 			cache_hit_rate: computeCacheHitRate(row.inputTokens, row.cacheReadTokens),
 		})),
 		granularity,
-		recentLogs,
-		recentErrors,
+		recentLogs: recentLogs.map(analyticsRecentLog),
+		recentErrors: recentErrors.map(analyticsRecentLog),
 	};
 }
 
@@ -570,16 +471,25 @@ export async function getAdminStatsService(
  */
 export async function getModelAnalyticsService(
 	repos: GatewayRepositories,
-	input: { start_date?: string; end_date?: string; tag?: string; provider_id?: string; user_email?: string }
+	input: {
+		start_date?: string;
+		end_date?: string;
+		tag?: string;
+		provider_id?: string;
+		user_email?: string;
+	}
 ): Promise<AdminModelAnalyticsOutput> {
-	const { start, end } = clampAnalyticsRange(input.start_date ?? undefined, input.end_date ?? undefined);
+	const { start, end } = clampAnalyticsRange(
+		input.start_date ?? undefined,
+		input.end_date ?? undefined
+	);
 	const tagRaw = input.tag;
-	const hasTag = tagRaw != null && tagRaw.trim() !== '';
-	const tagValue = hasTag ? tagRaw.trim() : '';
+	const hasTag = tagRaw != null && tagRaw.trim() !== "";
+	const tagValue = hasTag ? tagRaw.trim() : "";
 	const providerIdRaw = input.provider_id;
-	const hasProviderId = providerIdRaw != null && providerIdRaw.trim() !== '';
+	const hasProviderId = providerIdRaw != null && providerIdRaw.trim() !== "";
 	const userEmailRaw = input.user_email;
-	const hasUserEmail = userEmailRaw != null && userEmailRaw.trim() !== '';
+	const hasUserEmail = userEmailRaw != null && userEmailRaw.trim() !== "";
 	const rows = await repos.analytics.queryModelAnalytics({
 		start,
 		end,
@@ -596,7 +506,7 @@ export async function getModelAnalyticsService(
 		const cacheWriteTokens = Number(r.cache_write_tokens ?? 0);
 		return {
 			model_id: r.model_id,
-			route_group: r.route_group ?? 'default',
+			route_group: r.route_group ?? "default",
 			request_count: reqCount,
 			charged_cost: chargedCost,
 			metered_cost: Number(r.metered_cost),
@@ -609,10 +519,15 @@ export async function getModelAnalyticsService(
 			success_count: successCount,
 			error_count: Number(r.error_count),
 			success_rate: reqCount > 0 ? (successCount / reqCount) * 100 : 0,
-			avg_latency_ms: r.avg_latency_ms != null ? Number(r.avg_latency_ms) : null,
+			avg_latency_ms:
+				r.avg_latency_ms != null ? Number(r.avg_latency_ms) : null,
 			...mapAnalyticsTtftFields(r),
-			avg_upstream_response_ms: r.avg_upstream_response_ms != null ? Number(r.avg_upstream_response_ms) : null,
-			tokens_per_second: r.tokens_per_second != null ? Number(r.tokens_per_second) : null,
+			avg_upstream_response_ms:
+				r.avg_upstream_response_ms != null
+					? Number(r.avg_upstream_response_ms)
+					: null,
+			tokens_per_second:
+				r.tokens_per_second != null ? Number(r.tokens_per_second) : null,
 			failover_rate: Number(r.failover_rate ?? 0),
 			avg_attempts: r.avg_attempts != null ? Number(r.avg_attempts) : null,
 			avg_charged_per_request: reqCount > 0 ? chargedCost / reqCount : 0,
@@ -628,16 +543,25 @@ export async function getModelAnalyticsService(
  */
 export async function getProviderAnalyticsService(
 	repos: GatewayRepositories,
-	input: { start_date?: string; end_date?: string; tag?: string; model_id?: string; route_group?: string }
+	input: {
+		start_date?: string;
+		end_date?: string;
+		tag?: string;
+		model_id?: string;
+		route_group?: string;
+	}
 ): Promise<AdminProviderAnalyticsOutput> {
-	const { start, end } = clampAnalyticsRange(input.start_date ?? undefined, input.end_date ?? undefined);
+	const { start, end } = clampAnalyticsRange(
+		input.start_date ?? undefined,
+		input.end_date ?? undefined
+	);
 	const tagRaw = input.tag;
-	const hasTag = tagRaw != null && tagRaw.trim() !== '';
-	const tagValue = hasTag ? tagRaw.trim() : '';
+	const hasTag = tagRaw != null && tagRaw.trim() !== "";
+	const tagValue = hasTag ? tagRaw.trim() : "";
 	const modelIdRaw = input.model_id;
-	const hasModelId = modelIdRaw != null && modelIdRaw.trim() !== '';
+	const hasModelId = modelIdRaw != null && modelIdRaw.trim() !== "";
 	const routeGroupRaw = input.route_group;
-	const hasRouteGroup = routeGroupRaw != null && routeGroupRaw.trim() !== '';
+	const hasRouteGroup = routeGroupRaw != null && routeGroupRaw.trim() !== "";
 	const rows = await repos.analytics.queryProviderAnalytics({
 		start,
 		end,
@@ -655,7 +579,10 @@ export async function getProviderAnalyticsService(
 		const nameRaw = r.provider_name;
 		return {
 			provider_id: r.provider_id,
-			provider_name: nameRaw != null && String(nameRaw).trim() !== '' ? String(nameRaw) : null,
+			provider_name:
+				nameRaw != null && String(nameRaw).trim() !== ""
+					? String(nameRaw)
+					: null,
 			request_count: reqCount,
 			charged_cost: chargedCost,
 			metered_cost: Number(r.metered_cost),
@@ -669,10 +596,15 @@ export async function getProviderAnalyticsService(
 			success_count: successCount,
 			error_count: Number(r.error_count),
 			success_rate: reqCount > 0 ? (successCount / reqCount) * 100 : 0,
-			avg_latency_ms: r.avg_latency_ms != null ? Number(r.avg_latency_ms) : null,
+			avg_latency_ms:
+				r.avg_latency_ms != null ? Number(r.avg_latency_ms) : null,
 			...mapAnalyticsTtftFields(r),
-			avg_upstream_response_ms: r.avg_upstream_response_ms != null ? Number(r.avg_upstream_response_ms) : null,
-			tokens_per_second: r.tokens_per_second != null ? Number(r.tokens_per_second) : null,
+			avg_upstream_response_ms:
+				r.avg_upstream_response_ms != null
+					? Number(r.avg_upstream_response_ms)
+					: null,
+			tokens_per_second:
+				r.tokens_per_second != null ? Number(r.tokens_per_second) : null,
 			failover_rate: Number(r.failover_rate ?? 0),
 			avg_attempts: r.avg_attempts != null ? Number(r.avg_attempts) : null,
 			avg_charged_per_request: reqCount > 0 ? chargedCost / reqCount : 0,
@@ -689,8 +621,15 @@ export async function getUserAnalyticsService(
 	repos: GatewayRepositories,
 	input: { start_date?: string; end_date?: string; email?: string }
 ): Promise<AdminUserAnalyticsRow[]> {
-	const { start, end } = clampAnalyticsRange(input.start_date ?? undefined, input.end_date ?? undefined);
-	const rows = await repos.analytics.queryUserAnalytics({ start, end, email: input.email });
+	const { start, end } = clampAnalyticsRange(
+		input.start_date ?? undefined,
+		input.end_date ?? undefined
+	);
+	const rows = await repos.analytics.queryUserAnalytics({
+		start,
+		end,
+		email: input.email,
+	});
 	return rows.map((r) => {
 		const reqCount = Number(r.request_count);
 		const successCount = Number(r.success_count);
@@ -708,7 +647,10 @@ export async function getUserAnalyticsService(
 			last_active_at: r.last_active_at,
 			budget_max: budgetMax,
 			budget_spent: budgetSpent,
-			budget_usage_rate: budgetMax != null && budgetMax > 0 ? (budgetSpent / budgetMax) * 100 : null,
+			budget_usage_rate:
+				budgetMax != null && budgetMax > 0
+					? (budgetSpent / budgetMax) * 100
+					: null,
 			success_rate: reqCount > 0 ? (successCount / reqCount) * 100 : 0,
 			error_count: Number(r.error_count),
 		};
@@ -722,7 +664,10 @@ export async function getReliabilityAnalyticsService(
 	repos: GatewayRepositories,
 	input: { start_date?: string; end_date?: string }
 ): Promise<AdminReliabilityAnalyticsOutput> {
-	const { start, end } = clampAnalyticsRange(input.start_date ?? undefined, input.end_date ?? undefined);
+	const { start, end } = clampAnalyticsRange(
+		input.start_date ?? undefined,
+		input.end_date ?? undefined
+	);
 	const [providers, modelProviders, recentErrors] = await Promise.all([
 		repos.analytics.queryProviderReliability({ start, end }),
 		repos.analytics.queryModelProviderReliability({ start, end }),
@@ -737,9 +682,14 @@ export async function getReliabilityAnalyticsService(
 			request_count: requestCount,
 			success_count: Number(r.success_count),
 			error_count: Number(r.error_count),
-			success_rate: requestCount > 0 ? (Number(r.success_count) / requestCount) * 100 : 0,
-			avg_latency_ms: r.avg_latency_ms != null ? Number(r.avg_latency_ms) : null,
-			avg_upstream_response_ms: r.avg_upstream_response_ms != null ? Number(r.avg_upstream_response_ms) : null,
+			success_rate:
+				requestCount > 0 ? (Number(r.success_count) / requestCount) * 100 : 0,
+			avg_latency_ms:
+				r.avg_latency_ms != null ? Number(r.avg_latency_ms) : null,
+			avg_upstream_response_ms:
+				r.avg_upstream_response_ms != null
+					? Number(r.avg_upstream_response_ms)
+					: null,
 			failover_rate: Number(r.failover_rate ?? 0),
 			avg_attempts: r.avg_attempts != null ? Number(r.avg_attempts) : null,
 			charged_cost: Number(r.charged_cost),
@@ -754,9 +704,14 @@ export async function getReliabilityAnalyticsService(
 			provider_id: r.provider_id,
 			provider_name: r.provider_name ?? null,
 			request_count: requestCount,
-			success_rate: requestCount > 0 ? (Number(r.success_count) / requestCount) * 100 : 0,
-			avg_latency_ms: r.avg_latency_ms != null ? Number(r.avg_latency_ms) : null,
-			avg_upstream_response_ms: r.avg_upstream_response_ms != null ? Number(r.avg_upstream_response_ms) : null,
+			success_rate:
+				requestCount > 0 ? (Number(r.success_count) / requestCount) * 100 : 0,
+			avg_latency_ms:
+				r.avg_latency_ms != null ? Number(r.avg_latency_ms) : null,
+			avg_upstream_response_ms:
+				r.avg_upstream_response_ms != null
+					? Number(r.avg_upstream_response_ms)
+					: null,
 			failover_rate: Number(r.failover_rate ?? 0),
 			avg_attempts: r.avg_attempts != null ? Number(r.avg_attempts) : null,
 			charged_cost: Number(r.charged_cost),
@@ -768,6 +723,6 @@ export async function getReliabilityAnalyticsService(
 	return {
 		providers: providerRows,
 		modelProviders: modelProviderRows,
-		recentErrors,
+		recentErrors: recentErrors.map(analyticsRecentLog),
 	};
 }

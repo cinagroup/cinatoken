@@ -1,0 +1,17 @@
+# Internal Node SSR sidecar. Build from the same immutable release as Dockerfile.web.
+ARG NODE_IMAGE=node:22-alpine3.22@sha256:b77017c37f430e4466ff497058948a2f16e8b59779600d53711eeb7b999b0f4e
+FROM ${NODE_IMAGE} AS runner
+WORKDIR /app
+COPY packages/web/scripts/package-release.mjs packages/web/scripts/asset-policy.mjs packages/web/scripts/build-contract.mjs packages/web/scripts/build-inputs.mjs packages/web/scripts/source-archive.mjs packages/web/scripts/source-delivery.mjs packages/web/scripts/historical-source.mjs packages/web/scripts/public-origin-policy.mjs ./packages/web/scripts/
+COPY docker/web/public-server.mjs ./docker/web/
+ARG WEB_RELEASE_PATH=.release/web/__required_explicit_id__
+COPY ${WEB_RELEASE_PATH}/ ./.release/web/input/
+RUN node packages/web/scripts/package-release.mjs --verify-artifact input
+RUN test -f .release/web/input/server/node/index.mjs && test -f .release/web/input/server/worker/index.mjs
+ENV CINATOKEN_WEB_PUBLIC_ENABLED=false
+ENV CINATOKEN_WEB_PUBLIC_ORIGIN=""
+ENV CINATOKEN_ADMIN_UPSTREAM=http://gateway-admin:8789
+ENV CINATOKEN_WEB_SSR_PORT=8791
+USER node
+EXPOSE 8791
+CMD ["node", "docker/web/public-server.mjs"]

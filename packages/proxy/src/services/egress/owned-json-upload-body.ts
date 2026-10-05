@@ -1,5 +1,6 @@
 import { createJsonUploadBody } from './json-upload-body';
 import { observeResourceCleanup, type ResourceCompletion, type ResourceCompletionOutcome } from '../resource-completion';
+import type { WorkerdLengthAwareSource } from './workerd-length-aware-source';
 
 /** Snapshot before admission; encoding completion alone is not consumer EOF. */
 export function createOwnedJsonUploadBody(value: Record<string, unknown>, signal: AbortSignal) {
@@ -23,7 +24,7 @@ function ownEncoder(raw: ReturnType<typeof createJsonUploadBody>, signal: AbortS
 		reader?.releaseLock(); reader = undefined;
 		resolveResource(outcome);
 	};
-	const body = new ReadableStream<Uint8Array>({
+	const streamSource = {
 		// workerd's declared source length, not a manually forced HTTP header.
 		expectedLength: raw.contentLength,
 		start(source) { controller = source; },
@@ -47,7 +48,8 @@ function ownEncoder(raw: ReturnType<typeof createJsonUploadBody>, signal: AbortS
 			finish(completion);
 			return completion.then(() => undefined);
 		},
-	}, { highWaterMark: 0 });
+	} satisfies WorkerdLengthAwareSource;
+	const body = new ReadableStream<Uint8Array>(streamSource, { highWaterMark: 0 });
 	function stop() {
 		if (closed) return;
 		const untouched = !pulled && !body.locked;

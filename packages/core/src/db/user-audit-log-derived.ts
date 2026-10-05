@@ -5,8 +5,10 @@ import { roundGatewayMoney } from '../lib/money-precision';
 import type { UserAuditLogRow } from '../types';
 import type { UserAuditSnapshot } from './user-audit-snapshot';
 
+type ParsedUserAuditSnapshot = { snapshot: UserAuditSnapshot; hasBudgetMax: boolean };
+
 /** 宽松解析快照 JSON（历史行或回填行可能字段不全）。 */
-export function parseUserAuditSnapshotFromJson(raw: string | null | undefined): UserAuditSnapshot | null {
+function parseUserAuditSnapshotWithPresence(raw: string | null | undefined): ParsedUserAuditSnapshot | null {
 	if (raw == null || String(raw).trim() === '') return null;
 	try {
 		const o = JSON.parse(String(raw)) as Record<string, unknown>;
@@ -42,24 +44,31 @@ export function parseUserAuditSnapshotFromJson(raw: string | null | undefined): 
 		const external_user_id =
 			o.external_user_id === undefined || o.external_user_id === null ? null : String(o.external_user_id);
 		return {
-			id,
-			email,
-			budget_max,
-			budget_base,
-			budget_spent,
-			budget_period,
-			budget_reset_at,
-			budget_epoch,
-			budget_reserved_micros,
-			status,
-			metadata,
-			charged_cost_factors,
-			external_system,
-			external_user_id,
+			hasBudgetMax: Object.hasOwn(o, 'budget_max'),
+			snapshot: {
+				id,
+				email,
+				budget_max,
+				budget_base,
+				budget_spent,
+				budget_period,
+				budget_reset_at,
+				budget_epoch,
+				budget_reserved_micros,
+				status,
+				metadata,
+				charged_cost_factors,
+				external_system,
+				external_user_id,
+			},
 		};
 	} catch {
 		return null;
 	}
+}
+
+export function parseUserAuditSnapshotFromJson(raw: string | null | undefined): UserAuditSnapshot | null {
+	return parseUserAuditSnapshotWithPresence(raw)?.snapshot ?? null;
 }
 
 export type DerivedUserAuditBudgetFields = Pick<
@@ -74,18 +83,23 @@ export type DerivedUserAuditBudgetFields = Pick<
 >;
 
 /**
- * 由前后快照推导 spent / budget_max；任一侧缺失时用另一侧补齐（同快照 key_created 等场景 delta=0）。
+ * 由前后快照推导 spent / budget_max；整侧快照缺失时沿用另一侧。
+ * budget_max 字段缺失时才跨侧回退，显式 null 保留无限额语义。
  */
 export function deriveUserAuditBudgetFromSnapshots(
 	beforeSnapshot: string | null | undefined,
 	afterSnapshot: string | null | undefined
 ): DerivedUserAuditBudgetFields {
-	const before = parseUserAuditSnapshotFromJson(beforeSnapshot);
-	const after = parseUserAuditSnapshotFromJson(afterSnapshot);
+	const beforeParsed = parseUserAuditSnapshotWithPresence(beforeSnapshot);
+	const afterParsed = parseUserAuditSnapshotWithPresence(afterSnapshot);
+	const before = beforeParsed?.snapshot;
+	const after = afterParsed?.snapshot;
 	const beforeSpent = roundGatewayMoney(before?.budget_spent ?? after?.budget_spent ?? 0);
 	const afterSpent = roundGatewayMoney(after?.budget_spent ?? before?.budget_spent ?? 0);
-	const beforeMax = (before?.budget_max ?? after?.budget_max) ?? null;
-	const afterMax = (after?.budget_max ?? before?.budget_max) ?? null;
+	const beforeMaxValue = beforeParsed?.hasBudgetMax ? beforeParsed.snapshot.budget_max : undefined;
+	const afterMaxValue = afterParsed?.hasBudgetMax ? afterParsed.snapshot.budget_max : undefined;
+	const beforeMax = beforeMaxValue === undefined ? afterMaxValue ?? null : beforeMaxValue;
+	const afterMax = afterMaxValue === undefined ? beforeMaxValue ?? null : afterMaxValue;
 	const beforeBase = roundGatewayMoney(before?.budget_base ?? after?.budget_base ?? 0);
 	const afterBase = roundGatewayMoney(after?.budget_base ?? before?.budget_base ?? 0);
 	return {

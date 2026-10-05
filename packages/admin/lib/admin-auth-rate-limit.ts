@@ -1,4 +1,4 @@
-import type { AdminBindings } from '@/lib/admin-env';
+import type { AdminBindings } from "@/lib/admin-env";
 
 const RETRY_AFTER_SECONDS = 60;
 
@@ -10,25 +10,25 @@ const RETRY_AFTER_SECONDS = 60;
  */
 export async function rejectRateLimitedAdminAuth(
 	request: Request,
-	bindings: AdminBindings,
+	bindings: AdminBindings
 ): Promise<Response | null> {
 	const limiter = bindings.AUTH_RATE_LIMITER ?? bindings.RATE_LIMITER;
 	if (!limiter) return null;
 
 	try {
 		const { success } = await limiter.limit({
-			key: request.headers.get('CF-Connecting-IP') ?? 'unknown',
+			key: request.headers.get("CF-Connecting-IP") ?? "unknown",
 		});
 		if (success) return null;
 		return Response.json(
-			{ success: false, message: 'Too many failed authentication attempts' },
+			{ success: false, message: "Too many failed authentication attempts" },
 			{
 				status: 429,
 				headers: {
-					'Retry-After': String(RETRY_AFTER_SECONDS),
-					'Cache-Control': 'no-store',
+					"Retry-After": String(RETRY_AFTER_SECONDS),
+					"Cache-Control": "no-store",
 				},
-			},
+			}
 		);
 	} catch {
 		return null;

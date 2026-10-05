@@ -45,7 +45,10 @@ describe("buildSimulatorRequest openai", () => {
 			apiKey: "sk-test",
 		});
 		assert.equal(result.url, "https://gateway.example.com/v1/responses");
-		const parsed = JSON.parse(result.bodyText) as { model: string; store: boolean };
+		const parsed = JSON.parse(result.bodyText) as {
+			model: string;
+			store: boolean;
+		};
 		assert.equal(parsed.model, "gpt-4.1");
 		assert.equal(parsed.store, false);
 	});
@@ -170,7 +173,10 @@ describe("buildSimulatorRequest openai", () => {
 			audioOperation: "transcriptions",
 			audioFile: null,
 		});
-		assert.match(result.multipartSummary ?? "", /file_url: https:\/\/audio.example\/sample.wav/);
+		assert.match(
+			result.multipartSummary ?? "",
+			/file_url: https:\/\/audio.example\/sample.wav/
+		);
 	});
 
 	it("builds DashScope multimodal HTTP transcriptions", () => {

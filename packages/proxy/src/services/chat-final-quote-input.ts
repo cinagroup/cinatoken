@@ -83,8 +83,10 @@ function planBinding(plan: ResolvedPlan): string {
 	})));
 }
 
-async function sha256Hex(data: BufferSource): Promise<string> {
-	const bytes = await crypto.subtle.digest('SHA-256', data);
+async function sha256Hex(data: ArrayBuffer | Uint8Array): Promise<string> {
+	const owned = data instanceof ArrayBuffer ? data : new ArrayBuffer(data.byteLength);
+	if (data instanceof Uint8Array) new Uint8Array(owned).set(data);
+	const bytes = await crypto.subtle.digest('SHA-256', owned);
 	return [...new Uint8Array(bytes)].map(value => value.toString(16).padStart(2, '0')).join('');
 }
 

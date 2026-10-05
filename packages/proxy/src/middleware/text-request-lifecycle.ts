@@ -108,7 +108,7 @@ export const textRequestLifecycle: MiddlewareHandler<Env> = async (c, next) => {
 			// Node needs duplex for streamed uploads; Workers accepts the extra field.
 			// Preserve the ORIGINAL client signal: dispatch owns its own timer/body
 			// after this preparation middleware disposes at response handoff.
-			const init = { body: upload.body, duplex: 'half' };
+			const init = { body: upload.body, duplex: 'half' as const };
 			c.req.raw = new Request(c.req.raw, init);
 			deadline.throwIfStopped();
 			const declaredLength = c.req.header('content-length');

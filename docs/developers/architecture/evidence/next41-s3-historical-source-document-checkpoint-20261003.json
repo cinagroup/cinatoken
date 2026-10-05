@@ -1,0 +1,2636 @@
+{
+  "schema": 1,
+  "at": "2026-10-03T07:08:21.345Z",
+  "actualExit": 0,
+  "status": "Completed S3 implementation results and final sole main checklist independently sealed; ongoing implementation goal remains paused.",
+  "main": {
+    "path": "C:/cinagroup/cinatoken/docs/developers/architecture/web-frontend-migration.md",
+    "bytes": 656430,
+    "sha256": "3343752b01e33fc25a7afc2294fe01e6c4ece6b8af1ea303658cb97af3a2142d"
+  },
+  "checkpoint": {
+    "path": "C:/cinagroup/cinatoken/docs/developers/architecture/evidence/next41-s3-historical-source-checkpoint-20261003.json",
+    "bytes": 8838113,
+    "sha256": "de6ba1373bdb9335478659e6b9c2f4ab10900b92e34b00cdf05995a628a8381d"
+  },
+  "rootFinalDocumentSeal": {
+    "artifact": {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-next41-historical-source-aGuwPJ/S3-root-final-checklist-seal.json",
+      "bytes": 54910,
+      "sha256": "6efb4bf11b0e5d2ebf4057aa1bbd5902d454f17e35def98908e41aba4172ade3"
+    },
+    "data": {
+      "schema": 1,
+      "at": "2026-10-03T07:04:53.226Z",
+      "actualExit": 0,
+      "main": {
+        "path": "C:/cinagroup/cinatoken/docs/developers/architecture/web-frontend-migration.md",
+        "bytes": 656430,
+        "sha256": "3343752b01e33fc25a7afc2294fe01e6c4ece6b8af1ea303658cb97af3a2142d"
+      },
+      "checkpoint": {
+        "path": "C:/cinagroup/cinatoken/docs/developers/architecture/evidence/next41-s3-historical-source-checkpoint-20261003.json",
+        "bytes": 8838113,
+        "sha256": "de6ba1373bdb9335478659e6b9c2f4ab10900b92e34b00cdf05995a628a8381d"
+      },
+      "finalChecklistEdit": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-next41-historical-source-aGuwPJ/S3-final-main-md-edit.json",
+        "bytes": 33285,
+        "sha256": "f23a85cd63001ae4e09cf21f781b4b4c724ada73b039f1c53656f08f28564961"
+      },
+      "pauseStateEdit": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-next41-historical-source-aGuwPJ/S3-final-main-md-pause-state-edit.json",
+        "bytes": 2268,
+        "sha256": "557e9849823a1ba0201a860f5ee15ec76249ad373b5fd8bf5907f616f2c15893"
+      },
+      "goalStatus": "paused",
+      "goalStateSource": "Read-only get_goal returned paused; no resume/change invoked.",
+      "checklistShape": {
+        "main": [
+          {
+            "id": "SRC-01",
+            "checked": false
+          },
+          {
+            "id": "SRC-02",
+            "checked": false
+          },
+          {
+            "id": "SRC-03",
+            "checked": false
+          },
+          {
+            "id": "P0-01",
+            "checked": false
+          },
+          {
+            "id": "P0-02",
+            "checked": false
+          },
+          {
+            "id": "P0-03",
+            "checked": false
+          },
+          {
+            "id": "P0-04",
+            "checked": false
+          },
+          {
+            "id": "P0-05",
+            "checked": false
+          },
+          {
+            "id": "P0-06",
+            "checked": false
+          },
+          {
+            "id": "P1-01",
+            "checked": false
+          },
+          {
+            "id": "P1-02",
+            "checked": false
+          },
+          {
+            "id": "P1-03",
+            "checked": false
+          },
+          {
+            "id": "P1-04",
+            "checked": false
+          },
+          {
+            "id": "P1-05",
+            "checked": false
+          },
+          {
+            "id": "P1-06",
+            "checked": false
+          },
+          {
+            "id": "P1-07",
+            "checked": false
+          },
+          {
+            "id": "P1-08",
+            "checked": false
+          },
+          {
+            "id": "P1-09",
+            "checked": false
+          },
+          {
+            "id": "P2-01",
+            "checked": false
+          },
+          {
+            "id": "P2-02",
+            "checked": false
+          },
+          {
+            "id": "P2-03",
+            "checked": false
+          },
+          {
+            "id": "P2-04",
+            "checked": false
+          },
+          {
+            "id": "P2-05",
+            "checked": false
+          },
+          {
+            "id": "P2-06",
+            "checked": false
+          },
+          {
+            "id": "P2-07",
+            "checked": false
+          },
+          {
+            "id": "P2-08",
+            "checked": false
+          },
+          {
+            "id": "P2-09",
+            "checked": false
+          },
+          {
+            "id": "P2-10",
+            "checked": false
+          },
+          {
+            "id": "P2-11",
+            "checked": false
+          },
+          {
+            "id": "P2-12",
+            "checked": false
+          },
+          {
+            "id": "P2-13",
+            "checked": false
+          },
+          {
+            "id": "P3-01",
+            "checked": false
+          },
+          {
+            "id": "P3-02",
+            "checked": false
+          },
+          {
+            "id": "P3-03",
+            "checked": false
+          },
+          {
+            "id": "P3-04",
+            "checked": false
+          },
+          {
+            "id": "P3-05",
+            "checked": false
+          },
+          {
+            "id": "P3-06",
+            "checked": false
+          },
+          {
+            "id": "P3-07",
+            "checked": false
+          },
+          {
+            "id": "P3-08",
+            "checked": false
+          },
+          {
+            "id": "P3-09",
+            "checked": false
+          },
+          {
+            "id": "P3-10",
+            "checked": false
+          },
+          {
+            "id": "P3-11",
+            "checked": false
+          },
+          {
+            "id": "P4-01",
+            "checked": false
+          },
+          {
+            "id": "P4-02",
+            "checked": false
+          },
+          {
+            "id": "P4-03",
+            "checked": false
+          },
+          {
+            "id": "P4-04",
+            "checked": false
+          },
+          {
+            "id": "P4-05",
+            "checked": false
+          },
+          {
+            "id": "P4-06",
+            "checked": false
+          },
+          {
+            "id": "P4-07",
+            "checked": false
+          },
+          {
+            "id": "P4-08",
+            "checked": false
+          },
+          {
+            "id": "P4-09",
+            "checked": false
+          },
+          {
+            "id": "P5-01",
+            "checked": false
+          },
+          {
+            "id": "P5-02",
+            "checked": false
+          },
+          {
+            "id": "P5-03",
+            "checked": false
+          },
+          {
+            "id": "P5-04",
+            "checked": false
+          },
+          {
+            "id": "P5-05",
+            "checked": false
+          },
+          {
+            "id": "P5-06",
+            "checked": false
+          },
+          {
+            "id": "P5-07",
+            "checked": false
+          },
+          {
+            "id": "P5-08",
+            "checked": false
+          },
+          {
+            "id": "P5-09",
+            "checked": false
+          },
+          {
+            "id": "P5-10",
+            "checked": false
+          },
+          {
+            "id": "P5-11",
+            "checked": false
+          },
+          {
+            "id": "P5-12",
+            "checked": false
+          },
+          {
+            "id": "P6-01",
+            "checked": false
+          },
+          {
+            "id": "P6-02",
+            "checked": false
+          },
+          {
+            "id": "P6-03",
+            "checked": false
+          },
+          {
+            "id": "P6-04",
+            "checked": false
+          },
+          {
+            "id": "P6-05",
+            "checked": false
+          },
+          {
+            "id": "P6-06",
+            "checked": false
+          },
+          {
+            "id": "P6-07",
+            "checked": false
+          },
+          {
+            "id": "P6-08",
+            "checked": false
+          },
+          {
+            "id": "P6-09",
+            "checked": false
+          },
+          {
+            "id": "P6-10",
+            "checked": false
+          },
+          {
+            "id": "P6-11",
+            "checked": true
+          },
+          {
+            "id": "P6-12",
+            "checked": false
+          },
+          {
+            "id": "P6-13",
+            "checked": false
+          },
+          {
+            "id": "P7-01",
+            "checked": false
+          },
+          {
+            "id": "P7-02",
+            "checked": false
+          },
+          {
+            "id": "P7-03",
+            "checked": false
+          },
+          {
+            "id": "P7-04",
+            "checked": false
+          },
+          {
+            "id": "P7-05",
+            "checked": false
+          },
+          {
+            "id": "P7-06",
+            "checked": false
+          },
+          {
+            "id": "P7-07",
+            "checked": false
+          },
+          {
+            "id": "P7-08",
+            "checked": false
+          },
+          {
+            "id": "P7-09",
+            "checked": false
+          },
+          {
+            "id": "P7-10",
+            "checked": false
+          },
+          {
+            "id": "P7-11",
+            "checked": false
+          },
+          {
+            "id": "P7-12",
+            "checked": false
+          },
+          {
+            "id": "P8-01",
+            "checked": false
+          },
+          {
+            "id": "P8-02",
+            "checked": false
+          },
+          {
+            "id": "P8-03",
+            "checked": false
+          },
+          {
+            "id": "P8-04",
+            "checked": false
+          },
+          {
+            "id": "P8-05",
+            "checked": false
+          },
+          {
+            "id": "P8-06",
+            "checked": false
+          },
+          {
+            "id": "P8-07",
+            "checked": false
+          },
+          {
+            "id": "P8-08",
+            "checked": false
+          },
+          {
+            "id": "P8-09",
+            "checked": false
+          },
+          {
+            "id": "P8-10",
+            "checked": false
+          },
+          {
+            "id": "P8-11",
+            "checked": false
+          },
+          {
+            "id": "P8-12",
+            "checked": false
+          },
+          {
+            "id": "P8-13",
+            "checked": false
+          },
+          {
+            "id": "P8-14",
+            "checked": false
+          }
+        ],
+        "matrix": [
+          "PUB-01",
+          "PUB-02",
+          "PUB-03",
+          "PUB-04",
+          "PUB-05",
+          "PUB-06",
+          "PUB-07",
+          "PUB-08",
+          "AUTH-01",
+          "AUTH-02",
+          "AUTH-03",
+          "AUTH-04",
+          "ACC-01",
+          "ACC-02",
+          "ACC-03",
+          "ACC-04",
+          "ACC-05",
+          "ACC-06",
+          "ACC-07",
+          "ACC-08",
+          "ACC-09",
+          "ACC-10",
+          "ACC-11",
+          "ACC-12",
+          "ACC-13",
+          "ACC-14",
+          "ACC-15",
+          "ADM-01",
+          "ADM-02",
+          "ADM-03",
+          "ADM-04",
+          "ADM-05",
+          "ADM-06",
+          "ADM-07",
+          "ADM-08",
+          "ADM-09",
+          "ADM-10",
+          "ADM-11",
+          "ADM-12",
+          "ADM-13",
+          "ADM-14",
+          "ADM-15",
+          "ADM-16",
+          "ADM-17",
+          "ADM-18",
+          "ADM-19",
+          "ADM-20",
+          "ADM-21",
+          "ADM-22",
+          "ADM-23",
+          "ADM-24",
+          "ADM-25",
+          "ADM-26",
+          "ADM-27"
+        ],
+        "gates": [
+          "G0",
+          "G1",
+          "G2",
+          "G3",
+          "G4",
+          "G5",
+          "G6",
+          "G7",
+          "G8"
+        ],
+        "evidence": [
+          "E00",
+          "E01",
+          "E02",
+          "E03",
+          "E04",
+          "E05",
+          "E06",
+          "E07",
+          "E08"
+        ],
+        "fences": 6,
+        "auth": 7,
+        "ssr": 6
+      },
+      "preservedShape": true,
+      "absoluteLinks": [
+        "C:/Users/cina/.codex/visualizations/2026/09/27/01a0e1a3-6901-7863-b5ff-da3da31c58e0/account-qa-results.json",
+        "C:/Users/cina/.codex/visualizations/2026/09/27/01a0e1a3-6901-7863-b5ff-da3da31c58e0/account-keys-desktop.png",
+        "C:/Users/cina/.codex/visualizations/2026/09/27/01a0e1a3-6901-7863-b5ff-da3da31c58e0/account-keys-mobile.png",
+        "C:/Users/cina/.codex/visualizations/2026/09/27/01a0e1a3-6901-7863-b5ff-da3da31c58e0/origin-transport-qa-results.json",
+        "C:/Users/cina/.codex/visualizations/2026/09/27/01a0e1a3-6901-7863-b5ff-da3da31c58e0/shared-key-qa.results.json",
+        "C:/Users/cina/.codex/visualizations/2026/09/27/01a0e1a3-6901-7863-b5ff-da3da31c58e0/earnings-qa.results.json",
+        "C:/Users/cina/.codex/visualizations/2026/09/27/01a0e1a3-6901-7863-b5ff-da3da31c58e0/nft-qa-business-9e825e89fc-results.json",
+        "C:/Users/cina/.codex/visualizations/2026/09/27/01a0e1a3-6901-7863-b5ff-da3da31c58e0/nft-qa-final-visual-results.json",
+        "C:/Users/cina/.codex/visualizations/2026/09/27/01a0e1a3-6901-7863-b5ff-da3da31c58e0/account-candidate-runs.json",
+        "C:/Users/cina/.codex/visualizations/2026/09/27/01a0e1a3-6901-7863-b5ff-da3da31c58e0/providers-qa.results.json",
+        "C:/Users/cina/.codex/visualizations/2026/09/27/01a0e1a3-6901-7863-b5ff-da3da31c58e0/console-entry-qa-results.json",
+        "C:/Users/cina/.codex/visualizations/2026/09/27/01a0e1a3-6901-7863-b5ff-da3da31c58e0/public-chat-qa.results.json",
+        "C:/cinagroup/cinatoken/packages/core/migrations-d1/0075_admin_shared_key_actor_bounds.sql",
+        "C:/cinagroup/cinatoken/packages/core/migrations-mysql/0071_admin_shared_key_actor_bounds.sql",
+        "C:/cinagroup/cinatoken/packages/core/migrations-postgres/0080_admin_shared_key_actor_bounds.sql",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next32-actor-bounds-implementation-20260930/core-actor-bounds-freeze.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next32-admin-actor-bounds-20260930/validation-results.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-admin-shared-keys-qa-20260930/source-audit-actor-protocol-07/source-sha256.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next32-actor-integration-20260930/integration-sources.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next32-actor-bounds-implementation-20260930/postgres-current80-offline-evidence.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-admin-shared-keys-qa-20260930/local-p48-shared-key-actor-bounds-20260930094645/root-final-freeze.json",
+        "C:/cinagroup/cinatoken/packages/core/migrations-mysql/0072_admin_session_username_oidc_capacity.sql",
+        "C:/cinagroup/cinatoken/packages/core/src/db/admin-session-username-oidc.contract.test.ts",
+        "C:/cinagroup/cinatoken/packages/admin/lib/cinaauth/session-subject-boundary.test.ts",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-admin-session-oidc-capacity-20260930/core-session-oidc-freeze.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next32-admin-oidc-subject-20260930/admin-session-subject-freeze.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next34-oidc-session-capacity-20260930/root-session-oidc-integration.json",
+        "C:/cinagroup/cinatoken/packages/core/src/db/admin-access-audit.ts",
+        "C:/cinagroup/cinatoken/packages/core/migrations-mysql/0068_admin_access_key_audit.sql",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-admin-session-oidc-capacity-20260930/console-actor-capacity-followup.md",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-admin-session-oidc-capacity-20260930/actor-capacity-probe.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next37-focus-20261001/P54-details-focus-final-index.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next37-focus-20261001/P54-browser-final-root-postcheck.json",
+        "C:/cinagroup/cinatoken/packages/admin/app/gateway/providers/provider-utils.ts",
+        "C:/cinagroup/cinatoken/packages/web/src/cinatoken/admin/providers/provider-form.ts",
+        "C:/cinagroup/cinatoken/packages/web/src/cinatoken/admin/providers/ProviderImportDialog.tsx",
+        "C:/cinagroup/cinatoken/packages/admin/app/gateway/models/components/model-import-modal.tsx",
+        "C:/cinagroup/cinatoken/packages/web/src/cinatoken/admin/models/ModelImportDialog.tsx",
+        "C:/cinagroup/cinatoken/packages/web/src/cinatoken/admin/model-search.ts",
+        "C:/cinagroup/cinatoken/packages/admin/lib/services/admin/model-endpoints-service.ts",
+        "C:/cinagroup/cinatoken/packages/web/src/cinatoken/admin/endpoints/endpoint-write-recovery.ts",
+        "C:/cinagroup/cinatoken/packages/web/src/cinatoken/admin/routes/AdminRoutes.tsx",
+        "C:/cinagroup/cinatoken/packages/admin/app/gateway/routes/components/route-model-flow.tsx",
+        "C:/cinagroup/cinatoken/packages/admin/app/gateway/routes/components/failover-rules-dialog.tsx",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next37-focus-20261001/NEXT38-domain-gap-inventory.json",
+        "C:/cinagroup/cinatoken/packages/admin/lib/services/admin/expected-console-subject.ts",
+        "C:/cinagroup/cinatoken/packages/admin/lib/admin-app.ts",
+        "C:/cinagroup/cinatoken/packages/admin/lib/services/admin/models-service.ts",
+        "C:/cinagroup/cinatoken/packages/admin/app/gateway/routes/components/route-modal.tsx",
+        "C:/cinagroup/cinatoken/packages/web/src/cinatoken/admin/routes/RouteEditorDialog.tsx",
+        "C:/cinagroup/cinatoken/packages/admin/app/gateway/routes/sticky-summary-store.tsx",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next38-routing-20261001/NEXT38-root-source-checkpoint-01.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next38-routing-20261001/Admin-Core-domain-contracts-final3-dot-cache-evidence.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next38-routing-20261001/NEXT38-root-p56-check-summary.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next38-routing-20261001/p56-foundation-qa/P56-foundation-functional-summary-2026-10-01T09-47-15-399Z.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next38-routing-20261001/P56-routes-browser-diagnostic-summary.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next38-routing-20261001/P58-root-independent-accepted-evidence-review.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next38-routing-20261001/P58-root-twelve-actually-viewed-images.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next38-routing-20261001/P58-root-source-assets-before-final-owned-stop.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next38-routing-20261001/P58-root-source-assets-after-final-owned-stop.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next38-routing-20261001/P58-owned-services-final-browser-closed.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next38-routing-20261001/P58-root-routes-network-classification-correction.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-core-type-final-20261001T202038181/CORE-typecheck-fix-proof.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-core-config-validation-20261001T202831105/CORE-config-proof.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next39-governance-20261001/NEXT39-core-route-data-policy-final4-evidence.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next39-core-policy-review-20261001T213240106/NEXT39-core-admin-independent-review.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next39-policy-20261001/P59-root-final-build-and-freeze.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next39-policy-20261001/P59-root-actual-service-readiness.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next39-policy-20261001/P59-root-source-assets-after-service-readiness.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next39-policy-browser-qa/P59-policy-unique204-final-evidence.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next39-policy-20261001/P59-root-pg204-independent-browser-review.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next39-data-policy-browser-qa/P59-label-prefix-triage-root.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next39-policy-20261001/root-dpl-browser-critical-prefix-fixed.result.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next39-governance-20261001/NEXT39-policy-ack-and-native-fixture-final-evidence.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next39-governance-20261001/NEXT39-master-independent-structure-review-20261001T143114754Z.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next39-data-policy-browser-qa/P59-structural-selector-triage-root.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next39-data-policy-browser-qa/P59-observed-network-quiet-triage-root.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next39-policy-20261001/P59-root-after-dpl-first-full-groups.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next39-policy-20261001/P59-root-dpl136-independent-browser-review.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next39-dpl136-verifier/P59-dpl-unique136-2026-10-01T15-17-05-142Z-3d8b2013-6180-495e-8e68-b88d71568568/P59-dpl-unique136-final-evidence.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next39-dpl136-verifier/P59-dpl-unique136-2026-10-01T15-15-58-328Z-e35f61eb-3fc4-4708-8d50-d7bf064d7fb0/verification-failed.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next39-policy-20261001/P59-root-three-policy-local-final-checkpoint.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next39-policy-20261001/P59-root-owned-services-closed.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next39-policy-20261001/P59-root-after-browser-and-service-close.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next39-governance-20261001/PUBLIC-SSR-next-slice-readonly-inventory-20261001T144649586Z.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next39-policy-20261001/P59-next40-preimplementation-current-check.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next40-public-foundation-yRDB0z/foundation-stable-source-manifest-invalid-locale-fixed.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next40-public-catalog-currency-2026-10-02T03-21-38-864Z/NEXT40-public-catalog-final-proof.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next40-sdk-body-fix-0vyp0p/NEXT40-sdk-body-final-proof.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next40-public-ssr-20261002/P60-local-checkpoint-before-browser.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next40-public-ssr-20261002/P60-real-node-http-evidence.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-p60-compiled-worker-node-final-ugI1rG/proof.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next40-pages-2026-10-02T032257805Z/p60-production-qa/p60-browser-evidence.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next40-public-ssr-20261002/NEXT40-root-P61-official-server-unit.result.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-p61-official-router-foundation-UPb6Xv/stable-source-manifest.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next40-public-ssr-20261002/NEXT40-root-P61-web-unit-corrected.result.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-p61-official-router-browser-utf8-AeDgLk/browser-proof.json",
+        "C:/cinagroup/cinatoken/.release/web/local-p61-public-ssr-20261002050800/manifest.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next40-public-ssr-20261002/P61-real-node-http-evidence.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next40-public-ssr-20261002/P61-local-checkpoint-before-browser.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-p61-compiled-worker-node-binary-fixed-WfhAHf/proof.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next40-pages-2026-10-02T032257805Z/run-local-p61-public-ssr-20261002050800-DGdoIk/compiled-browser-final-proof.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next40-p61-protocol-review-6bcc46f43e2d4c04901d4a7aa903297e/reader-cancellation-proof.json",
+        "C:/cinagroup/cinatoken/packages/web/src/cinatoken/public-server/document-stream.ts",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next40-p62-composer-fix-review-7fae8da2dd8c4577ad1cb48355c3301f/NEXT40-p62-composer-fix-review-proof.json",
+        "C:/cinagroup/cinatoken/.release/web/local-p60-public-ssr-20261002042500/manifest.json",
+        "C:/cinagroup/cinatoken/.release/web/local-p62-public-ssr-cleanup-20261002052200/manifest.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next40-public-ssr-20261002/NEXT40-root-P62-web-unit.result.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next40-public-ssr-20261002/P62-real-node-http-evidence.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-p62-compiled-worker-node-iLA86x/proof.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next40-public-ssr-20261002/P62-local-checkpoint-before-browser.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next40-pages-2026-10-02T032257805Z/run-local-p62-public-ssr-cleanup-20261002052200-tvsg6d/compiled-browser-final-proof.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next40-public-ssr-20261002/P62-local-final-checkpoint.json",
+        "C:/cinagroup/cinatoken/packages/web/src/cinatoken/public/ssr/index.ts",
+        "C:/cinagroup/cinatoken/packages/web/src/cinatoken/public-server/public-response.tsx",
+        "C:/cinagroup/cinatoken/packages/web/rsbuild.config.ts",
+        "C:/cinagroup/cinatoken/packages/web/scripts/build-contract.mjs",
+        "C:/cinagroup/cinatoken/packages/web/scripts/package-release.mjs",
+        "C:/cinagroup/cinatoken/docker/web/public-server.mjs",
+        "C:/cinagroup/cinatoken/docker/examples/web-frontend.compose.yml",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-p63-auth-popup-foundation-9g7BZd/stable-source-manifest.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-p63-public-auth-20261002/P63-root-controller-runtime-race-fixed.result.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next40-p63-admin-auth-route-65ecefa15fda4e41b2c842ac4fe433e9/NEXT40-p63-admin-auth-final-proof.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-p63-public-auth-20261002/P63-frozen-candidate.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-p63-public-auth-20261002/P63-Web-unit-final.result.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-p63-public-auth-20261002/P63-real-node-http-evidence.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-p63-auth-atomic-81365b8e37184dd0b7a9c6c9d1cdfcbf/stable-source-manifest.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next40-p63-popup-browser-12eaf4c4533744b7a034128ff2c9cd26/run-f9YV2h/proof.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-p63-public-auth-20261002/P64-frozen-candidate.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-p63-public-auth-20261002/P64-Web-unit-final.result.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-p63-public-auth-20261002/P64-error-dismiss-focus-first.result.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-p63-public-auth-20261002/P64-error-dismiss-and-native-wrapper-regression.result.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next40-p63-popup-browser-12eaf4c4533744b7a034128ff2c9cd26/run-9naZVX/proof.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next40-legacy-auth-6MyPcD/run-local-p64-public-auth-cleanup-20261002061900-wPrgY1/legacy-browser-final-proof.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-p64-nojs-react-diagnostic-b65f88caa6b448a2b36d2db30637c61c/nested-proof.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-p63-public-auth-20261002/P65-frozen-candidate.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-p63-public-auth-20261002/P65-nojs-inline-regression-first.result.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-p63-public-auth-20261002/P65-nojs-inline-and-useid-final.result.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-p63-public-auth-20261002/P65-Web-unit.result.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-p63-public-auth-20261002/P65-real-node-http-evidence.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-p65-compiled-worker-node-0e50b20292e6421fa86f17b21afd18b3/final-inventory-proof.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next40-p63-pages-QFSUJV/run-local-p65-public-ssr-visible-20261002063100-DKeBTU/compiled-browser-final-proof.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next40-p63-popup-browser-12eaf4c4533744b7a034128ff2c9cd26/run-BDXQuC/proof.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next40-p63-popup-browser-12eaf4c4533744b7a034128ff2c9cd26/nojs-run-xMJ6uC/proof.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next40-legacy-auth-6MyPcD/run-local-p65-public-ssr-visible-20261002063100-HedsiZ/legacy-browser-final-proof.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next40-p63-popup-browser-12eaf4c4533744b7a034128ff2c9cd26/run-ve8m1U/proof.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next40-p65-auth-transport-chrome-78935ec85ce4481e9cef37f4d523c65e/NEXT40-p65-auth-transport-chrome-final-proof.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next40-p63-popup-browser-12eaf4c4533744b7a034128ff2c9cd26/NEXT40-p65-public-auth-browser-final-audit.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next40-p65-auth-real-coop-bf1fccf126ae4b3e8c022eca2760c5fa/NEXT40-p65-real-coop-chrome-final-proof.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-p65-real-react-cleanup-e9262dee442645e5a46a6019984ba75a/p65-real-react-cleanup-proof.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-p63-public-auth-20261002/P65-readonly-closeout-inventory.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-p63-public-auth-20261002/P65-local-final-checkpoint.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-web-source-provenance-BFq6Uu/source-provenance-audit.md",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-web-source-provenance-BFq6Uu/current-source-inventory.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-web-source-provenance-BFq6Uu/p65-visible-attribution-diagnostic.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-p66-frontend-attribution-6AuL2z/P66-attribution-owned-final-proof.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-web-source-provenance-BFq6Uu/p65-notice-packaging-proof.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next13-admin-lint-baseline-RCMWNZ/baseline-proof.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-p65-native-workerd-5VqUQp/native-final-proof.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-p66-next41-gbNUZD/P66-progress-checkpoint.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-p66-compiled-worker-node-qwHEix/sealed-proof.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-p66-next41-gbNUZD/P66-wsl-readonly-result.json",
+        "C:/cinagroup/cinatoken/docs/developers/architecture/evidence/p66-local-checkpoint-20261002.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-p66-public-browser-N9eG9v/P66-public-browser-final-audit.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next13-b1-active-XmF9rb/final-proof.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-p66-next41-gbNUZD/NEXT13-B1-full-lint-proof.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-p66-readonly-review-EbWYjV/readonly-review.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-p66-next41-gbNUZD/P66-source-boundary-comparison.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-p66-next41-gbNUZD/P66-notice-packaging-proof.json",
+        "C:/cinagroup/cinatoken/scripts/web/source-provenance.mjs",
+        "C:/cinagroup/cinatoken/scripts/web/source-provenance.test.mjs",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-web-provenance-proof-B9Fbqz/implementation-proof.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next13-b2-next41-nDMVDV/B2-root-full-lint-proof.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next13-b2a-active-Dd0yVp/final-proof.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next13-b2b-Dlpr9L/browser-run-DFUQz8/proof.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next13-b2b-Dlpr9L/final-proof.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next41-admin-source-review-1Obeo8/B2-independent-source-review.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next13-b2-next41-nDMVDV/NEXT41-root-independent-web-source-proof.json",
+        "C:/cinagroup/cinatoken/docs/developers/architecture/evidence/next13-b2-source-provenance-checkpoint-20261002.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next13-b3c-PkxSXn/browser-run-8QBamA/proof.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next13-b3-bepb8C/B3-root-full-lint-proof-v2.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next13-b3-bepb8C/B3-root-chat-ssr-preservation-proof.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next13-b3-bepb8C/B3-root-source-review-proof-v2.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next13-b3-peer-doTPsh/peer-proof.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next13-b3c-peer-review-CgvnSS/peer-review.json",
+        "C:/cinagroup/cinatoken/docs/developers/architecture/evidence/next13-b3-sensitive-lifecycle-checkpoint-20261002.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next13-b3a-sensitive-LlEw4r/final-proof.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next13-b3b-5ulFbL/final-proof.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next13-b3c-PkxSXn/final-proof.json",
+        "C:/cinagroup/cinatoken/docs/developers/architecture/evidence/next13-b0-legacy-lifecycle-checkpoint-20261003.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next13-b0-IQttKL/B0-root-final-v4-contract-checks-proof.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next13-b0-IQttKL/B0-next-build-v4-sealed-proof.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next13-b0-routes-policy-1R4SWN/compiled-next-smoke-dHQMwF/proof.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next13-b0-IQttKL/B0-root-post-runtime-artifact-proof.json",
+        "C:/cinagroup/cinatoken/docs/developers/architecture/evidence/next13-f1-full-format-checkpoint-20261003.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next13-format-R5JC0x/before-format-19.result.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next13-format-R5JC0x/F1-format-19.result.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next13-format-R5JC0x/formatter-effective-config.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next13-format-R5JC0x/root-format-semantic-proof-v3.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next13-format-b0-SqAZfB/metadata-scope-clarification-v2.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next13-format-b3nine-BnrstL/root-verifier-scope-audit.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next13-format-b3nine-BnrstL/root-verifier-v3-counterexample-audit.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next13-format-R5JC0x/F1-full-admin-unit.result.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next13-format-R5JC0x/F1-historical-b0-archive-proof.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next13-format-R5JC0x/F1-historical-path-relocation.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next13-format-R5JC0x/F1-next-build-sealed-proof.json",
+        "C:/cinagroup/cinatoken/docs/developers/architecture/evidence/next41-s1-build-input-contract-checkpoint-20261003.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next41-input-contract-4aVY8u/S1-historical-f1-path-relocation.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next41-input-contract-4aVY8u/S1-shared-source-drift-release-proof.json",
+        "C:/cinagroup/cinatoken/.release/web/local-p67-build-input-contract-20261003041802/manifest.json",
+        "C:/cinagroup/cinatoken/docs/developers/architecture/evidence/next41-s2-source-delivery-checkpoint-20261003.json",
+        "C:/cinagroup/cinatoken/packages/web/scripts/source-archive.mjs",
+        "C:/cinagroup/cinatoken/packages/web/scripts/source-delivery.mjs",
+        "C:/cinagroup/cinatoken/packages/web/src/cinatoken/public/FrontendAttribution.tsx",
+        "C:/cinagroup/cinatoken/.release/web/local-p68-source-delivery-20261003052607/manifest.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next41-p68-independent-sF7Eq4/p68-final-proof.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next41-p68-source-browser-580bd0ef/final-p68-proof.json",
+        "C:/cinagroup/cinatoken/packages/web/scripts/historical-source.mjs",
+        "C:/cinagroup/cinatoken/packages/web/scripts/historical-source.test.mjs",
+        "C:/cinagroup/cinatoken/docs/developers/architecture/evidence/next41-s3-historical-source-checkpoint-20261003.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next41-s3-p67-catalog-20261003T0611Z/p67-historical-archive-proof-v1.json",
+        "C:/cinagroup/cinatoken/.release/web/local-p69-historical-source-20261003063826/manifest.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next41-s3-runtime-review-CrxYyF/p69-source-browser/final-p69-proof.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next41-s3-p67-catalog-20261003T0611Z/p69-independent-delta-proof-v1.json"
+      ],
+      "missingLinks": [],
+      "source6": [
+        {
+          "path": "C:\\cinagroup\\cinatoken\\packages\\web\\scripts\\package-release.mjs",
+          "bytes": 22461,
+          "sha256": "003de63f28c16421f8763cccdf6d549b19979f3eee93d3d90e4f3c74693af0c1"
+        },
+        {
+          "path": "C:\\cinagroup\\cinatoken\\packages\\web\\scripts\\historical-source.mjs",
+          "bytes": 8815,
+          "sha256": "226cf449bc36a4c3fc326aea085dc05b12ab1a6f6dbfe5a3f7a1a28d09580292"
+        },
+        {
+          "path": "C:\\cinagroup\\cinatoken\\packages\\web\\scripts\\historical-source.test.mjs",
+          "bytes": 21029,
+          "sha256": "deaebf06ff97accb87d6e17970c0373551372266059270f6df2377aa356feed0"
+        },
+        {
+          "path": "C:\\cinagroup\\cinatoken\\Dockerfile.web",
+          "bytes": 3046,
+          "sha256": "d6ef36c9fd5d3912e46ec37b5879f7a0d4769860779e11c064cf0544db7170f2"
+        },
+        {
+          "path": "C:\\cinagroup\\cinatoken\\Dockerfile.web-ssr",
+          "bytes": 1154,
+          "sha256": "7d2dc09a6540e1a3438c0a48d8df28dc84d139cbc577e638d532684a8786425a"
+        },
+        {
+          "path": "C:\\cinagroup\\cinatoken\\docker\\web\\config.test.mjs",
+          "bytes": 50139,
+          "sha256": "31dbd98d501243e728fbffef235eeb35ab8fa662ca95cc11873521b02d103157"
+        }
+      ],
+      "protected11": [
+        {
+          "path": "C:\\cinagroup\\cinatoken\\packages\\web\\scripts\\package-release.test.mjs",
+          "bytes": 30292,
+          "sha256": "da75cd96229c723feacf393b4ba5f0b73e11fc636e3ec51ffb162660d402d0b8"
+        },
+        {
+          "path": "C:\\cinagroup\\cinatoken\\packages\\web\\scripts\\source-delivery.mjs",
+          "bytes": 8163,
+          "sha256": "ebb9dd48998eafe2007fc6d5d550aa5d419514741cb5b41d23b0f229340bf5b1"
+        },
+        {
+          "path": "C:\\cinagroup\\cinatoken\\packages\\web\\src\\cinatoken\\public\\FrontendAttribution.tsx",
+          "bytes": 1109,
+          "sha256": "4c4d5a0d9e26320ed13627536212305577e93bafbd89663aa763e678e294acb9"
+        },
+        {
+          "path": "C:\\cinagroup\\cinatoken\\packages\\web\\src\\cinatoken\\public\\frontend-attribution.ts",
+          "bytes": 412,
+          "sha256": "2a8ffef623bb70a60c9f2c4623b2ea88a1575fadd06849012d81172415a03c2f"
+        },
+        {
+          "path": "C:\\cinagroup\\cinatoken\\packages\\web\\src\\cinatoken\\public\\home\\home-messages.ts",
+          "bytes": 15888,
+          "sha256": "10d69daea4fa0143676ecb0ad6d2c1e20f4c26e6d4513483d8dc4a0967241a03"
+        },
+        {
+          "path": "C:\\cinagroup\\cinatoken\\packages\\web\\src\\cinatoken\\public\\ssr\\public-request-app.test.ts",
+          "bytes": 21319,
+          "sha256": "818d18f0a1eea3ac646c3ddc46ff2176c2b5a5a6befd05a4b47ae6b358525d22"
+        },
+        {
+          "path": "C:\\cinagroup\\cinatoken\\packages\\web\\scripts\\source-archive.mjs",
+          "bytes": 18947,
+          "sha256": "2daea6d6cad594b21245f828f621495d772e15430187a24d75d13f92819d7091"
+        },
+        {
+          "path": "C:\\cinagroup\\cinatoken\\packages\\web\\scripts\\source-archive.test.mjs",
+          "bytes": 26682,
+          "sha256": "9a1d7c154b26ca99e55ae64c8ee408935ab1eabfb273918110a673a58a635317"
+        },
+        {
+          "path": "C:\\cinagroup\\cinatoken\\packages\\web\\scripts\\asset-policy.mjs",
+          "bytes": 1077,
+          "sha256": "ea1c4cce1ab82587c34e074267f3dbbf0892664ac40dc8ebe797b5c15b596625"
+        },
+        {
+          "path": "C:\\cinagroup\\cinatoken\\packages\\web\\scripts\\asset-policy.d.mts",
+          "bytes": 439,
+          "sha256": "1c1a844cb35b8d00d7342fd07cfa99cd8000043cf12fe18984ceb6281109bac7"
+        },
+        {
+          "path": "C:\\cinagroup\\cinatoken\\docker\\web\\nginx.conf.template",
+          "bytes": 12095,
+          "sha256": "f1fbc0934b340cc8cdabe4f9cd2a3e36539bea2a55b201935b7b2dcbec310c18"
+        }
+      ],
+      "protected35": [
+        {
+          "path": "packages/admin/app/gateway/models/use-models-page-state.ts",
+          "bytes": 30711,
+          "sha256": "2ed1a184ee2637ed8f50098048d642c2240a6096d1450ca040e63d4017f2953a"
+        },
+        {
+          "path": "packages/admin/app/gateway/providers/use-providers-page-state.ts",
+          "bytes": 17224,
+          "sha256": "c0ec8f193870d580f48050ea8daa11e3ccdec3ee8099f37da42cfd96f95747a8"
+        },
+        {
+          "path": "packages/admin/app/gateway/playground/use-playground-page-state.ts",
+          "bytes": 31022,
+          "sha256": "0cd0c9b620aca30706b7f72bc49f8e3ea23495409cdb89735b5529915ddaf6c5"
+        },
+        {
+          "path": "packages/admin/app/gateway/simulator/use-simulator-page-state.ts",
+          "bytes": 53692,
+          "sha256": "7757bcff3f88256c98357b00e937bcfc2207ee926a13478109be63befbb42895"
+        },
+        {
+          "path": "packages/admin/app/gateway/routes/use-routes-page-state.ts",
+          "bytes": 27865,
+          "sha256": "823c51f9b997e391d30553f7af4c47a182c1a0ac4090625a33aa7ac97de89129"
+        },
+        {
+          "path": "packages/admin/app/gateway/routes/components/provider-sticky-dialog.tsx",
+          "bytes": 24656,
+          "sha256": "b257f89e2e8daa034fb5ed239f40e385aa8938302156a941173ba51efbf96fa2"
+        },
+        {
+          "path": "packages/admin/components/data-policies/DataPolicyManager.tsx",
+          "bytes": 15435,
+          "sha256": "93e8aa1462dc4760fc4f8dd3971905616ce2213f0788c22ce8e3a2461da76681"
+        },
+        {
+          "path": "packages/admin/components/portal/ByokCredentialManager.tsx",
+          "bytes": 35792,
+          "sha256": "b2a9adddf75ee0c426729ac6e3a78d6ec6832dce0ec420244ab7acb550323a59"
+        },
+        {
+          "path": "packages/admin/components/portal/GatewayKeyManager.tsx",
+          "bytes": 14551,
+          "sha256": "7acbd1347771d3839c81d1efc057f6ffe7f7f5cf3a29131f68a4909b36a488fa"
+        },
+        {
+          "path": "packages/admin/components/portal/ManagementKeyManager.tsx",
+          "bytes": 11855,
+          "sha256": "05584891f41e7eb04027146a5ebdf36478d4e1002d587e1721ba6043561e7ada"
+        },
+        {
+          "path": "packages/admin/components/guardrails/EffectiveGuardrailPreview.tsx",
+          "bytes": 21420,
+          "sha256": "76b4f50f0f579d9a37a89cc0a5276e96428c2e929030c5120dbfe6afdfa3fa06"
+        },
+        {
+          "path": "packages/admin/components/guardrails/GuardrailManager.tsx",
+          "bytes": 27181,
+          "sha256": "6dd041e7cb6df228c3900c481b3f2e33816b8543b4279f8d3c9ce9b97b5bd692"
+        },
+        {
+          "path": "packages/admin/components/presets/PresetManager.tsx",
+          "bytes": 18719,
+          "sha256": "86e7eaf7dd6ffffa7834f53c2216023900c2a594084ef10222b9e1760dc43f13"
+        },
+        {
+          "path": "packages/admin/components/layout/AuthWrapper.tsx",
+          "bytes": 11157,
+          "sha256": "4b717edd991fbf5e79636945e94b78f97cde2d405daff764e13b69bea5203a76"
+        },
+        {
+          "path": "packages/admin/components/chat/PublicChatPage.tsx",
+          "bytes": 23638,
+          "sha256": "b5d1990df20ecbefe8f8f6431bef7d366e176aab8237e83517d489c25c253877"
+        },
+        {
+          "path": "packages/admin/components/portal/WorkspaceBudgetManager.tsx",
+          "bytes": 12093,
+          "sha256": "731a18e2fcab19b301fd78ceb7b1fb6efcb387223a50d82bcf884b56614ca7c8"
+        },
+        {
+          "path": "packages/admin/app/gateway/config/page.tsx",
+          "bytes": 19856,
+          "sha256": "1827efa317fd49a4d148cfded74285332b8bfdadfdbc40a17587f17a7ddc141b"
+        },
+        {
+          "path": "packages/admin/app/gateway/request-logs/page.tsx",
+          "bytes": 58000,
+          "sha256": "88bb1d23e897882047be727f18971ad0cb3b65b27d3096136e72e4309e8a2559"
+        },
+        {
+          "path": "packages/admin/app/gateway/tools/invocations/page.tsx",
+          "bytes": 21050,
+          "sha256": "14c632e22ecc5cb06872174be802237ec7b582be6edacbcc694b201be8a988b5"
+        },
+        {
+          "path": "packages/admin/app/account/activity/page.tsx",
+          "bytes": 21354,
+          "sha256": "7a890085f2bdf26930b58bf05e495d9014bf54b12e499e95de55590ed4b65dd5"
+        },
+        {
+          "path": "packages/admin/app/dashboard/page.tsx",
+          "bytes": 13844,
+          "sha256": "820e2473e4f2deb586f991743d52982a36142488cfcc0c246a22c8b4c1dd0d38"
+        },
+        {
+          "path": "packages/admin/app/gateway/analytics/reliability/page.tsx",
+          "bytes": 14609,
+          "sha256": "c1788da78b9b981b6eb24eddc60e52a73f52ebf57d3fb8ca3f39971181978b99"
+        },
+        {
+          "path": "packages/admin/app/gateway/audit-logs/page.tsx",
+          "bytes": 57377,
+          "sha256": "b0ff410751bef5dded5f93a9c05efed10933795587a6bc2280d1556c26b25848"
+        },
+        {
+          "path": "packages/admin/lib/use-replace-list-query.ts",
+          "bytes": 1600,
+          "sha256": "a93727efb3bcb47b4a3a5708ee4d10c00643c3525e6b56bfcce83fbbba5501bb"
+        },
+        {
+          "path": "scripts/web/source-provenance.mjs",
+          "bytes": 17347,
+          "sha256": "a437b96a383a2021bf5137ddf54ea1891ab0b6f0c6a7389d3f2304ec88a77126"
+        },
+        {
+          "path": "scripts/web/source-provenance.test.mjs",
+          "bytes": 14303,
+          "sha256": "5b036a8023ff16cf815a7b270ab04d145e32169475d2a51c8890b126b548f63e"
+        },
+        {
+          "path": "packages/web/src/cinatoken/public/frontend-attribution.test.ts",
+          "bytes": 641,
+          "sha256": "7728a9fbf5cbed699569f200a0335323b001e8459f1798822e372b1f1fd995bc"
+        },
+        {
+          "path": "packages/web/src/cinatoken/public/home/HomeFooter.tsx",
+          "bytes": 1237,
+          "sha256": "8fb3bba8de362de81dfab2e073c0cf21885d2d8b859c3ebfd8d9763d12a30b84"
+        },
+        {
+          "path": "packages/web/src/cinatoken/public/public-pages-ssr.test.ts",
+          "bytes": 13587,
+          "sha256": "f4657ddd767dc3267b5b252bec50f4fecb88d6bac48555e0564c48c9bb55ecde"
+        },
+        {
+          "path": "packages/web/src/cinatoken/public/ssr/public-shell.tsx",
+          "bytes": 6355,
+          "sha256": "646fc4ff4afe62c817332e0ec329250b24fbcf6285d2dffe2a50220430ec9b9e"
+        },
+        {
+          "path": "packages/admin/app/gateway/keys/page.tsx",
+          "bytes": 46047,
+          "sha256": "0be2d1705733a46a448686ecab4b9e7d6e79ee42a0aeca2054e56947fadfa304"
+        },
+        {
+          "path": "packages/admin/app/gateway/users/[id]/page.tsx",
+          "bytes": 63796,
+          "sha256": "d1c8d3f75240162b1768f2544be52cd8ce495238331e9238569b908fdf6cc2a2"
+        },
+        {
+          "path": "packages/admin/app/gateway/users/page.tsx",
+          "bytes": 37651,
+          "sha256": "534153feb141fe1e407d5169af986224424b86fb38a7bafb9351aa9dbd2dc7bf"
+        },
+        {
+          "path": "packages/admin/components/GatewayTimeRangePicker.tsx",
+          "bytes": 5594,
+          "sha256": "70a9b5e7d91c4302841d471ee8b71726a69325739c2239eac4163054bc724248"
+        },
+        {
+          "path": "packages/admin/worker.ts",
+          "bytes": 1216,
+          "sha256": "09de68b0e09a963c66373fcdd30155d0562ae98395df237034601d58e59d458f"
+        }
+      ],
+      "configs": [
+        {
+          "path": "C:/cinagroup/cinatoken/packages/web/wrangler.web.jsonc",
+          "bytes": 2414,
+          "sha256": "ad8812aa4f5658794e0a11a2bb7673e81e95ee3b05c5c887a2a9e9114458a7de",
+          "disabledFlags": 29,
+          "publicOrigin": "",
+          "main": "../../.release/web/local-p66-frontend-attribution-20261002080439/server/worker/index.mjs"
+        },
+        {
+          "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-next41-historical-source-aGuwPJ/source-free-runtime/packages/web/wrangler.web.jsonc",
+          "bytes": 2408,
+          "sha256": "630549bf2833f46a8b91fc425fbf82af9b4b9d768e8c408ec8f36362ede43eb4",
+          "disabledFlags": 29,
+          "publicOrigin": "",
+          "main": "../../.release/web/local-p69-historical-source-20261003063826/server/worker/index.mjs"
+        }
+      ],
+      "editorconfig": {
+        "path": "C:/cinagroup/cinatoken/.editorconfig",
+        "bytes": 238,
+        "sha256": "6ef94f576de7760df6c86e60052620a8fd59208075696732cf691379d5d67459"
+      },
+      "oldManifestPins": [
+        {
+          "path": "C:\\cinagroup\\cinatoken\\.release\\web\\local-p66-frontend-attribution-20261002080439\\manifest.json",
+          "bytes": 118839,
+          "sha256": "ae3929bb8f8d780d702dd8277fd5e838472be5c804bd93cdc69ac0a3b8ad0974"
+        },
+        {
+          "path": "C:\\cinagroup\\cinatoken\\.release\\web\\local-p67-build-input-contract-20261003041802\\manifest.json",
+          "bytes": 119084,
+          "sha256": "0161f1885a466238dad87fce4c60a00ca4109ac84713996dbba244326fb167ed"
+        },
+        {
+          "path": "C:\\cinagroup\\cinatoken\\.release\\web\\local-p68-source-delivery-20261003052607\\manifest.json",
+          "bytes": 188735,
+          "sha256": "81c52583bbf5fd4e38b7b3299ec27635b2daa15548acc11e7b385f6cd6a127fc"
+        }
+      ],
+      "assemblerObserver": {
+        "files": 2286,
+        "bytes": 18144768,
+        "sourceSha256": "95d44e9747bf924718ec9d0a87acdf844056c62bd3a2020aa21cb96cd4311d94",
+        "policySha256": "c36a8b224da31f0e68326744e80f0a0ee0812722c0f2e50cbd90ece640e53f1f"
+      },
+      "compiledContract": {
+        "version": 2,
+        "buildId": "78fb1b23-83fd-4af0-aa58-b0520269ab9b",
+        "sourceSha256": "549be9bc2fae52e049cefd8cf21b52e594aff5ae01c009d93b5d31a01b4fba18"
+      },
+      "assemblerNotCompiledBuild": true,
+      "commands": [
+        {
+          "label": "P69-root-verify",
+          "result": {
+            "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-next41-historical-source-aGuwPJ\\P69-root-verify.result.json",
+            "bytes": 846,
+            "sha256": "10fe9ae90617745ebb5fca1c288abe87741adb3d029723c61741c9970a645853"
+          },
+          "rawLog": {
+            "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-next41-historical-source-aGuwPJ/P69-root-verify.log",
+            "bytes": 155,
+            "sha256": "c9c039c7bb96988c935aa90a12000e9d45f53562a5e48f289d3a21ac6fddadd8"
+          },
+          "actualCode": 0
+        },
+        {
+          "label": "P69-runtime-gen",
+          "result": {
+            "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-next41-historical-source-aGuwPJ\\P69-runtime-gen.result.json",
+            "bytes": 919,
+            "sha256": "1fa517b00e30de0c325aeee5840df8f61e5b25a7b0ef25815ff2045e6b673dd0"
+          },
+          "rawLog": {
+            "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-next41-historical-source-aGuwPJ/P69-runtime-gen.log",
+            "bytes": 68,
+            "sha256": "2bcd85d2d557101bbbb46259af1daad97f004251bccc3f26fa870baaebf6cc7f"
+          },
+          "actualCode": 0
+        },
+        {
+          "label": "P69-runtime-verify",
+          "result": {
+            "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-next41-historical-source-aGuwPJ\\P69-runtime-verify.result.json",
+            "bytes": 924,
+            "sha256": "6788e7b24b43dd74f9ecf2ef68d268f164feb17a8aa4092754b528a835e0305b"
+          },
+          "rawLog": {
+            "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-next41-historical-source-aGuwPJ/P69-runtime-verify.log",
+            "bytes": 155,
+            "sha256": "c9c039c7bb96988c935aa90a12000e9d45f53562a5e48f289d3a21ac6fddadd8"
+          },
+          "actualCode": 0
+        },
+        {
+          "label": "P69-source-http",
+          "result": {
+            "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-next41-historical-source-aGuwPJ\\P69-source-http.result.json",
+            "bytes": 833,
+            "sha256": "41789af2243fd1c5c8bb2ed89905278f6cf2dcb1780f6389e8bc71e8900b7c36"
+          },
+          "rawLog": {
+            "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-next41-historical-source-aGuwPJ/P69-source-http.log",
+            "bytes": 39,
+            "sha256": "0348d8a14fdc5e92e34cf1a40bc3f9471b90fbbc2d4be7d1ef36da23ec18abbe"
+          },
+          "actualCode": 0
+        },
+        {
+          "label": "S3-final-git-state",
+          "result": {
+            "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-next41-historical-source-aGuwPJ\\S3-final-git-state.result.json",
+            "bytes": 911,
+            "sha256": "2e34783a868668dc332bd3f05432d030e778da85dd54bc08114b8b3fe6d237b1"
+          },
+          "rawLog": {
+            "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-next41-historical-source-aGuwPJ/S3-final-git-state.log",
+            "bytes": 21460,
+            "sha256": "87106383d4836ca03bcf3e1b73f24797e7ea995fc237289753ee90ade9baa72b"
+          },
+          "actualCode": 0
+        },
+        {
+          "label": "S3-release-package",
+          "result": {
+            "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-next41-historical-source-aGuwPJ\\S3-release-package.result.json",
+            "bytes": 1176,
+            "sha256": "f2a30bb9381f5e2459080b8f3a093cc6088156c60b6be29baa4cf20063bee9ee"
+          },
+          "rawLog": {
+            "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-next41-historical-source-aGuwPJ/S3-release-package.log",
+            "bytes": 155,
+            "sha256": "c9c039c7bb96988c935aa90a12000e9d45f53562a5e48f289d3a21ac6fddadd8"
+          },
+          "actualCode": 0
+        },
+        {
+          "label": "S3-root-format-check",
+          "result": {
+            "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-next41-historical-source-aGuwPJ\\S3-root-format-check.result.json",
+            "bytes": 850,
+            "sha256": "4dcc317a235dcd1707741f7fab187b2af8e5f7d748bb7a6dfd119c5fff3f2bbd"
+          },
+          "rawLog": {
+            "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-next41-historical-source-aGuwPJ/S3-root-format-check.log",
+            "bytes": 66,
+            "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20"
+          },
+          "actualCode": 0
+        },
+        {
+          "label": "S3-root-format-write",
+          "result": {
+            "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-next41-historical-source-aGuwPJ\\S3-root-format-write.result.json",
+            "bytes": 850,
+            "sha256": "aaf9633782368523ba4a685e2fecbef221cbead7e8445cc4681cbbcaea5f1bef"
+          },
+          "rawLog": {
+            "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-next41-historical-source-aGuwPJ/S3-root-format-write.log",
+            "bytes": 34,
+            "sha256": "a9995ac487b33297a81bbbfcd9c3f9c87f58993e24f2ae51e4dd62221cd7b3dc"
+          },
+          "actualCode": 0
+        },
+        {
+          "label": "S3-root-lint",
+          "result": {
+            "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-next41-historical-source-aGuwPJ\\S3-root-lint.result.json",
+            "bytes": 813,
+            "sha256": "35e83451f4159e5ed0dd8df10e9289ffa4816214b8ea61f35ebd7ca8376f6d20"
+          },
+          "rawLog": {
+            "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-next41-historical-source-aGuwPJ/S3-root-lint.log",
+            "bytes": 0,
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          "actualCode": 0
+        },
+        {
+          "label": "S3-root-syntax",
+          "result": {
+            "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-next41-historical-source-aGuwPJ\\S3-root-syntax.result.json",
+            "bytes": 791,
+            "sha256": "9810fdc20eb31e8fbf76528b7960aaa2d5fd79800992726ceaab8bb7e58172c8"
+          },
+          "rawLog": {
+            "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-next41-historical-source-aGuwPJ/S3-root-syntax.log",
+            "bytes": 0,
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          "actualCode": 0
+        },
+        {
+          "label": "S3-web-format-full",
+          "result": {
+            "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-next41-historical-source-aGuwPJ\\S3-web-format-full.result.json",
+            "bytes": 864,
+            "sha256": "5cc1c4afd151bf2428006453bbf4a08563527f6c5efbd8a7f4642b8470c20ee6"
+          },
+          "rawLog": {
+            "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-next41-historical-source-aGuwPJ/S3-web-format-full.log",
+            "bytes": 526,
+            "sha256": "2b0035c6efe61dde18467e93abfae487b1218cc9033b8e77a6e847442bf4b52c"
+          },
+          "actualCode": 0
+        },
+        {
+          "label": "S3-web-lint-full",
+          "result": {
+            "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-next41-historical-source-aGuwPJ\\S3-web-lint-full.result.json",
+            "bytes": 852,
+            "sha256": "6bc36d4e797369184a300b4bbd454eaeeffb531783d931b54c842ef94d19b7a6"
+          },
+          "rawLog": {
+            "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-next41-historical-source-aGuwPJ/S3-web-lint-full.log",
+            "bytes": 117,
+            "sha256": "f3ba516bde29fd499321f1375fc5d965e048b42a611a0adc77944b00de9b4099"
+          },
+          "actualCode": 0
+        },
+        {
+          "label": "S3-web-unit-full",
+          "result": {
+            "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-next41-historical-source-aGuwPJ\\S3-web-unit-full.result.json",
+            "bytes": 827,
+            "sha256": "1cb6344dfbf4a7f4244fa810ebf50cf9b4d44b529c1f1cec81fd37e395d813b8"
+          },
+          "rawLog": {
+            "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-next41-historical-source-aGuwPJ/S3-web-unit-full.log",
+            "bytes": 154984,
+            "sha256": "9b16915c69caf95e3568aeaa7fd5378a58bc1e475147ae434d808cb2c5c9507c"
+          },
+          "actualCode": 0
+        }
+      ],
+      "carriedImmutablePayloadSeal": {
+        "artifact": {
+          "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-next41-historical-source-aGuwPJ/S3-post-runtime-seal.json",
+          "bytes": 317503,
+          "sha256": "023e2ef1419911f7c0a7df4eedbc95e34fd8feb163534179f2b7df946aeaea00"
+        },
+        "rootCandidateFiles": 501,
+        "runtimeCopyFiles": 511,
+        "scope": "Raw candidate and runtime bytes last verified in immutable post-runtime seal. This post-document seal does not repeat product tests/build/browser or full payload verification."
+      },
+      "fullGoalComplete": false,
+      "noDeployment": true,
+      "noImplementationAfterPauseRead": true,
+      "scope": "Final main MD/hash/ordered checklist shape/link existence and read-only source/config/input/command metadata seal only; completed S3 results preserved, sustained implementation remains paused."
+    }
+  },
+  "finalChecklistEdit": {
+    "artifact": {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-next41-historical-source-aGuwPJ/S3-final-main-md-edit.json",
+      "bytes": 33285,
+      "sha256": "f23a85cd63001ae4e09cf21f781b4b4c724ada73b039f1c53656f08f28564961"
+    },
+    "data": {
+      "at": "2026-10-03T06:56:42.430Z",
+      "actualExit": 0,
+      "main": {
+        "path": "C:/cinagroup/cinatoken/docs/developers/architecture/web-frontend-migration.md",
+        "bytes": 656343,
+        "sha256": "455290ccb925ee342a8beaac483bd58e7d36596a02af9cd01e85e1528c236d31"
+      },
+      "shape": {
+        "main": [
+          {
+            "id": "SRC-01",
+            "checked": false
+          },
+          {
+            "id": "SRC-02",
+            "checked": false
+          },
+          {
+            "id": "SRC-03",
+            "checked": false
+          },
+          {
+            "id": "P0-01",
+            "checked": false
+          },
+          {
+            "id": "P0-02",
+            "checked": false
+          },
+          {
+            "id": "P0-03",
+            "checked": false
+          },
+          {
+            "id": "P0-04",
+            "checked": false
+          },
+          {
+            "id": "P0-05",
+            "checked": false
+          },
+          {
+            "id": "P0-06",
+            "checked": false
+          },
+          {
+            "id": "P1-01",
+            "checked": false
+          },
+          {
+            "id": "P1-02",
+            "checked": false
+          },
+          {
+            "id": "P1-03",
+            "checked": false
+          },
+          {
+            "id": "P1-04",
+            "checked": false
+          },
+          {
+            "id": "P1-05",
+            "checked": false
+          },
+          {
+            "id": "P1-06",
+            "checked": false
+          },
+          {
+            "id": "P1-07",
+            "checked": false
+          },
+          {
+            "id": "P1-08",
+            "checked": false
+          },
+          {
+            "id": "P1-09",
+            "checked": false
+          },
+          {
+            "id": "P2-01",
+            "checked": false
+          },
+          {
+            "id": "P2-02",
+            "checked": false
+          },
+          {
+            "id": "P2-03",
+            "checked": false
+          },
+          {
+            "id": "P2-04",
+            "checked": false
+          },
+          {
+            "id": "P2-05",
+            "checked": false
+          },
+          {
+            "id": "P2-06",
+            "checked": false
+          },
+          {
+            "id": "P2-07",
+            "checked": false
+          },
+          {
+            "id": "P2-08",
+            "checked": false
+          },
+          {
+            "id": "P2-09",
+            "checked": false
+          },
+          {
+            "id": "P2-10",
+            "checked": false
+          },
+          {
+            "id": "P2-11",
+            "checked": false
+          },
+          {
+            "id": "P2-12",
+            "checked": false
+          },
+          {
+            "id": "P2-13",
+            "checked": false
+          },
+          {
+            "id": "P3-01",
+            "checked": false
+          },
+          {
+            "id": "P3-02",
+            "checked": false
+          },
+          {
+            "id": "P3-03",
+            "checked": false
+          },
+          {
+            "id": "P3-04",
+            "checked": false
+          },
+          {
+            "id": "P3-05",
+            "checked": false
+          },
+          {
+            "id": "P3-06",
+            "checked": false
+          },
+          {
+            "id": "P3-07",
+            "checked": false
+          },
+          {
+            "id": "P3-08",
+            "checked": false
+          },
+          {
+            "id": "P3-09",
+            "checked": false
+          },
+          {
+            "id": "P3-10",
+            "checked": false
+          },
+          {
+            "id": "P3-11",
+            "checked": false
+          },
+          {
+            "id": "P4-01",
+            "checked": false
+          },
+          {
+            "id": "P4-02",
+            "checked": false
+          },
+          {
+            "id": "P4-03",
+            "checked": false
+          },
+          {
+            "id": "P4-04",
+            "checked": false
+          },
+          {
+            "id": "P4-05",
+            "checked": false
+          },
+          {
+            "id": "P4-06",
+            "checked": false
+          },
+          {
+            "id": "P4-07",
+            "checked": false
+          },
+          {
+            "id": "P4-08",
+            "checked": false
+          },
+          {
+            "id": "P4-09",
+            "checked": false
+          },
+          {
+            "id": "P5-01",
+            "checked": false
+          },
+          {
+            "id": "P5-02",
+            "checked": false
+          },
+          {
+            "id": "P5-03",
+            "checked": false
+          },
+          {
+            "id": "P5-04",
+            "checked": false
+          },
+          {
+            "id": "P5-05",
+            "checked": false
+          },
+          {
+            "id": "P5-06",
+            "checked": false
+          },
+          {
+            "id": "P5-07",
+            "checked": false
+          },
+          {
+            "id": "P5-08",
+            "checked": false
+          },
+          {
+            "id": "P5-09",
+            "checked": false
+          },
+          {
+            "id": "P5-10",
+            "checked": false
+          },
+          {
+            "id": "P5-11",
+            "checked": false
+          },
+          {
+            "id": "P5-12",
+            "checked": false
+          },
+          {
+            "id": "P6-01",
+            "checked": false
+          },
+          {
+            "id": "P6-02",
+            "checked": false
+          },
+          {
+            "id": "P6-03",
+            "checked": false
+          },
+          {
+            "id": "P6-04",
+            "checked": false
+          },
+          {
+            "id": "P6-05",
+            "checked": false
+          },
+          {
+            "id": "P6-06",
+            "checked": false
+          },
+          {
+            "id": "P6-07",
+            "checked": false
+          },
+          {
+            "id": "P6-08",
+            "checked": false
+          },
+          {
+            "id": "P6-09",
+            "checked": false
+          },
+          {
+            "id": "P6-10",
+            "checked": false
+          },
+          {
+            "id": "P6-11",
+            "checked": true
+          },
+          {
+            "id": "P6-12",
+            "checked": false
+          },
+          {
+            "id": "P6-13",
+            "checked": false
+          },
+          {
+            "id": "P7-01",
+            "checked": false
+          },
+          {
+            "id": "P7-02",
+            "checked": false
+          },
+          {
+            "id": "P7-03",
+            "checked": false
+          },
+          {
+            "id": "P7-04",
+            "checked": false
+          },
+          {
+            "id": "P7-05",
+            "checked": false
+          },
+          {
+            "id": "P7-06",
+            "checked": false
+          },
+          {
+            "id": "P7-07",
+            "checked": false
+          },
+          {
+            "id": "P7-08",
+            "checked": false
+          },
+          {
+            "id": "P7-09",
+            "checked": false
+          },
+          {
+            "id": "P7-10",
+            "checked": false
+          },
+          {
+            "id": "P7-11",
+            "checked": false
+          },
+          {
+            "id": "P7-12",
+            "checked": false
+          },
+          {
+            "id": "P8-01",
+            "checked": false
+          },
+          {
+            "id": "P8-02",
+            "checked": false
+          },
+          {
+            "id": "P8-03",
+            "checked": false
+          },
+          {
+            "id": "P8-04",
+            "checked": false
+          },
+          {
+            "id": "P8-05",
+            "checked": false
+          },
+          {
+            "id": "P8-06",
+            "checked": false
+          },
+          {
+            "id": "P8-07",
+            "checked": false
+          },
+          {
+            "id": "P8-08",
+            "checked": false
+          },
+          {
+            "id": "P8-09",
+            "checked": false
+          },
+          {
+            "id": "P8-10",
+            "checked": false
+          },
+          {
+            "id": "P8-11",
+            "checked": false
+          },
+          {
+            "id": "P8-12",
+            "checked": false
+          },
+          {
+            "id": "P8-13",
+            "checked": false
+          },
+          {
+            "id": "P8-14",
+            "checked": false
+          }
+        ],
+        "matrix": [
+          "PUB-01",
+          "PUB-02",
+          "PUB-03",
+          "PUB-04",
+          "PUB-05",
+          "PUB-06",
+          "PUB-07",
+          "PUB-08",
+          "AUTH-01",
+          "AUTH-02",
+          "AUTH-03",
+          "AUTH-04",
+          "ACC-01",
+          "ACC-02",
+          "ACC-03",
+          "ACC-04",
+          "ACC-05",
+          "ACC-06",
+          "ACC-07",
+          "ACC-08",
+          "ACC-09",
+          "ACC-10",
+          "ACC-11",
+          "ACC-12",
+          "ACC-13",
+          "ACC-14",
+          "ACC-15",
+          "ADM-01",
+          "ADM-02",
+          "ADM-03",
+          "ADM-04",
+          "ADM-05",
+          "ADM-06",
+          "ADM-07",
+          "ADM-08",
+          "ADM-09",
+          "ADM-10",
+          "ADM-11",
+          "ADM-12",
+          "ADM-13",
+          "ADM-14",
+          "ADM-15",
+          "ADM-16",
+          "ADM-17",
+          "ADM-18",
+          "ADM-19",
+          "ADM-20",
+          "ADM-21",
+          "ADM-22",
+          "ADM-23",
+          "ADM-24",
+          "ADM-25",
+          "ADM-26",
+          "ADM-27"
+        ],
+        "gates": [
+          "G0",
+          "G1",
+          "G2",
+          "G3",
+          "G4",
+          "G5",
+          "G6",
+          "G7",
+          "G8"
+        ],
+        "evidence": [
+          "E00",
+          "E01",
+          "E02",
+          "E03",
+          "E04",
+          "E05",
+          "E06",
+          "E07",
+          "E08"
+        ],
+        "fences": 6,
+        "auth": 7,
+        "ssr": 6
+      },
+      "absoluteLinks": [
+        "C:/Users/cina/.codex/visualizations/2026/09/27/01a0e1a3-6901-7863-b5ff-da3da31c58e0/account-qa-results.json",
+        "C:/Users/cina/.codex/visualizations/2026/09/27/01a0e1a3-6901-7863-b5ff-da3da31c58e0/account-keys-desktop.png",
+        "C:/Users/cina/.codex/visualizations/2026/09/27/01a0e1a3-6901-7863-b5ff-da3da31c58e0/account-keys-mobile.png",
+        "C:/Users/cina/.codex/visualizations/2026/09/27/01a0e1a3-6901-7863-b5ff-da3da31c58e0/origin-transport-qa-results.json",
+        "C:/Users/cina/.codex/visualizations/2026/09/27/01a0e1a3-6901-7863-b5ff-da3da31c58e0/shared-key-qa.results.json",
+        "C:/Users/cina/.codex/visualizations/2026/09/27/01a0e1a3-6901-7863-b5ff-da3da31c58e0/earnings-qa.results.json",
+        "C:/Users/cina/.codex/visualizations/2026/09/27/01a0e1a3-6901-7863-b5ff-da3da31c58e0/nft-qa-business-9e825e89fc-results.json",
+        "C:/Users/cina/.codex/visualizations/2026/09/27/01a0e1a3-6901-7863-b5ff-da3da31c58e0/nft-qa-final-visual-results.json",
+        "C:/Users/cina/.codex/visualizations/2026/09/27/01a0e1a3-6901-7863-b5ff-da3da31c58e0/account-candidate-runs.json",
+        "C:/Users/cina/.codex/visualizations/2026/09/27/01a0e1a3-6901-7863-b5ff-da3da31c58e0/providers-qa.results.json",
+        "C:/Users/cina/.codex/visualizations/2026/09/27/01a0e1a3-6901-7863-b5ff-da3da31c58e0/console-entry-qa-results.json",
+        "C:/Users/cina/.codex/visualizations/2026/09/27/01a0e1a3-6901-7863-b5ff-da3da31c58e0/public-chat-qa.results.json",
+        "C:/cinagroup/cinatoken/packages/core/migrations-d1/0075_admin_shared_key_actor_bounds.sql",
+        "C:/cinagroup/cinatoken/packages/core/migrations-mysql/0071_admin_shared_key_actor_bounds.sql",
+        "C:/cinagroup/cinatoken/packages/core/migrations-postgres/0080_admin_shared_key_actor_bounds.sql",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next32-actor-bounds-implementation-20260930/core-actor-bounds-freeze.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next32-admin-actor-bounds-20260930/validation-results.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-admin-shared-keys-qa-20260930/source-audit-actor-protocol-07/source-sha256.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next32-actor-integration-20260930/integration-sources.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next32-actor-bounds-implementation-20260930/postgres-current80-offline-evidence.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-admin-shared-keys-qa-20260930/local-p48-shared-key-actor-bounds-20260930094645/root-final-freeze.json",
+        "C:/cinagroup/cinatoken/packages/core/migrations-mysql/0072_admin_session_username_oidc_capacity.sql",
+        "C:/cinagroup/cinatoken/packages/core/src/db/admin-session-username-oidc.contract.test.ts",
+        "C:/cinagroup/cinatoken/packages/admin/lib/cinaauth/session-subject-boundary.test.ts",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-admin-session-oidc-capacity-20260930/core-session-oidc-freeze.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next32-admin-oidc-subject-20260930/admin-session-subject-freeze.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next34-oidc-session-capacity-20260930/root-session-oidc-integration.json",
+        "C:/cinagroup/cinatoken/packages/core/src/db/admin-access-audit.ts",
+        "C:/cinagroup/cinatoken/packages/core/migrations-mysql/0068_admin_access_key_audit.sql",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-admin-session-oidc-capacity-20260930/console-actor-capacity-followup.md",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-admin-session-oidc-capacity-20260930/actor-capacity-probe.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next37-focus-20261001/P54-details-focus-final-index.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next37-focus-20261001/P54-browser-final-root-postcheck.json",
+        "C:/cinagroup/cinatoken/packages/admin/app/gateway/providers/provider-utils.ts",
+        "C:/cinagroup/cinatoken/packages/web/src/cinatoken/admin/providers/provider-form.ts",
+        "C:/cinagroup/cinatoken/packages/web/src/cinatoken/admin/providers/ProviderImportDialog.tsx",
+        "C:/cinagroup/cinatoken/packages/admin/app/gateway/models/components/model-import-modal.tsx",
+        "C:/cinagroup/cinatoken/packages/web/src/cinatoken/admin/models/ModelImportDialog.tsx",
+        "C:/cinagroup/cinatoken/packages/web/src/cinatoken/admin/model-search.ts",
+        "C:/cinagroup/cinatoken/packages/admin/lib/services/admin/model-endpoints-service.ts",
+        "C:/cinagroup/cinatoken/packages/web/src/cinatoken/admin/endpoints/endpoint-write-recovery.ts",
+        "C:/cinagroup/cinatoken/packages/web/src/cinatoken/admin/routes/AdminRoutes.tsx",
+        "C:/cinagroup/cinatoken/packages/admin/app/gateway/routes/components/route-model-flow.tsx",
+        "C:/cinagroup/cinatoken/packages/admin/app/gateway/routes/components/failover-rules-dialog.tsx",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next37-focus-20261001/NEXT38-domain-gap-inventory.json",
+        "C:/cinagroup/cinatoken/packages/admin/lib/services/admin/expected-console-subject.ts",
+        "C:/cinagroup/cinatoken/packages/admin/lib/admin-app.ts",
+        "C:/cinagroup/cinatoken/packages/admin/lib/services/admin/models-service.ts",
+        "C:/cinagroup/cinatoken/packages/admin/app/gateway/routes/components/route-modal.tsx",
+        "C:/cinagroup/cinatoken/packages/web/src/cinatoken/admin/routes/RouteEditorDialog.tsx",
+        "C:/cinagroup/cinatoken/packages/admin/app/gateway/routes/sticky-summary-store.tsx",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next38-routing-20261001/NEXT38-root-source-checkpoint-01.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next38-routing-20261001/Admin-Core-domain-contracts-final3-dot-cache-evidence.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next38-routing-20261001/NEXT38-root-p56-check-summary.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next38-routing-20261001/p56-foundation-qa/P56-foundation-functional-summary-2026-10-01T09-47-15-399Z.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next38-routing-20261001/P56-routes-browser-diagnostic-summary.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next38-routing-20261001/P58-root-independent-accepted-evidence-review.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next38-routing-20261001/P58-root-twelve-actually-viewed-images.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next38-routing-20261001/P58-root-source-assets-before-final-owned-stop.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next38-routing-20261001/P58-root-source-assets-after-final-owned-stop.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next38-routing-20261001/P58-owned-services-final-browser-closed.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next38-routing-20261001/P58-root-routes-network-classification-correction.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-core-type-final-20261001T202038181/CORE-typecheck-fix-proof.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-core-config-validation-20261001T202831105/CORE-config-proof.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next39-governance-20261001/NEXT39-core-route-data-policy-final4-evidence.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next39-core-policy-review-20261001T213240106/NEXT39-core-admin-independent-review.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next39-policy-20261001/P59-root-final-build-and-freeze.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next39-policy-20261001/P59-root-actual-service-readiness.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next39-policy-20261001/P59-root-source-assets-after-service-readiness.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next39-policy-browser-qa/P59-policy-unique204-final-evidence.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next39-policy-20261001/P59-root-pg204-independent-browser-review.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next39-data-policy-browser-qa/P59-label-prefix-triage-root.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next39-policy-20261001/root-dpl-browser-critical-prefix-fixed.result.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next39-governance-20261001/NEXT39-policy-ack-and-native-fixture-final-evidence.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next39-governance-20261001/NEXT39-master-independent-structure-review-20261001T143114754Z.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next39-data-policy-browser-qa/P59-structural-selector-triage-root.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next39-data-policy-browser-qa/P59-observed-network-quiet-triage-root.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next39-policy-20261001/P59-root-after-dpl-first-full-groups.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next39-policy-20261001/P59-root-dpl136-independent-browser-review.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next39-dpl136-verifier/P59-dpl-unique136-2026-10-01T15-17-05-142Z-3d8b2013-6180-495e-8e68-b88d71568568/P59-dpl-unique136-final-evidence.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next39-dpl136-verifier/P59-dpl-unique136-2026-10-01T15-15-58-328Z-e35f61eb-3fc4-4708-8d50-d7bf064d7fb0/verification-failed.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next39-policy-20261001/P59-root-three-policy-local-final-checkpoint.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next39-policy-20261001/P59-root-owned-services-closed.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next39-policy-20261001/P59-root-after-browser-and-service-close.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next39-governance-20261001/PUBLIC-SSR-next-slice-readonly-inventory-20261001T144649586Z.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next39-policy-20261001/P59-next40-preimplementation-current-check.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next40-public-foundation-yRDB0z/foundation-stable-source-manifest-invalid-locale-fixed.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next40-public-catalog-currency-2026-10-02T03-21-38-864Z/NEXT40-public-catalog-final-proof.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next40-sdk-body-fix-0vyp0p/NEXT40-sdk-body-final-proof.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next40-public-ssr-20261002/P60-local-checkpoint-before-browser.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next40-public-ssr-20261002/P60-real-node-http-evidence.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-p60-compiled-worker-node-final-ugI1rG/proof.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next40-pages-2026-10-02T032257805Z/p60-production-qa/p60-browser-evidence.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next40-public-ssr-20261002/NEXT40-root-P61-official-server-unit.result.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-p61-official-router-foundation-UPb6Xv/stable-source-manifest.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next40-public-ssr-20261002/NEXT40-root-P61-web-unit-corrected.result.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-p61-official-router-browser-utf8-AeDgLk/browser-proof.json",
+        "C:/cinagroup/cinatoken/.release/web/local-p61-public-ssr-20261002050800/manifest.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next40-public-ssr-20261002/P61-real-node-http-evidence.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next40-public-ssr-20261002/P61-local-checkpoint-before-browser.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-p61-compiled-worker-node-binary-fixed-WfhAHf/proof.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next40-pages-2026-10-02T032257805Z/run-local-p61-public-ssr-20261002050800-DGdoIk/compiled-browser-final-proof.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next40-p61-protocol-review-6bcc46f43e2d4c04901d4a7aa903297e/reader-cancellation-proof.json",
+        "C:/cinagroup/cinatoken/packages/web/src/cinatoken/public-server/document-stream.ts",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next40-p62-composer-fix-review-7fae8da2dd8c4577ad1cb48355c3301f/NEXT40-p62-composer-fix-review-proof.json",
+        "C:/cinagroup/cinatoken/.release/web/local-p60-public-ssr-20261002042500/manifest.json",
+        "C:/cinagroup/cinatoken/.release/web/local-p62-public-ssr-cleanup-20261002052200/manifest.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next40-public-ssr-20261002/NEXT40-root-P62-web-unit.result.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next40-public-ssr-20261002/P62-real-node-http-evidence.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-p62-compiled-worker-node-iLA86x/proof.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next40-public-ssr-20261002/P62-local-checkpoint-before-browser.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next40-pages-2026-10-02T032257805Z/run-local-p62-public-ssr-cleanup-20261002052200-tvsg6d/compiled-browser-final-proof.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next40-public-ssr-20261002/P62-local-final-checkpoint.json",
+        "C:/cinagroup/cinatoken/packages/web/src/cinatoken/public/ssr/index.ts",
+        "C:/cinagroup/cinatoken/packages/web/src/cinatoken/public-server/public-response.tsx",
+        "C:/cinagroup/cinatoken/packages/web/rsbuild.config.ts",
+        "C:/cinagroup/cinatoken/packages/web/scripts/build-contract.mjs",
+        "C:/cinagroup/cinatoken/packages/web/scripts/package-release.mjs",
+        "C:/cinagroup/cinatoken/docker/web/public-server.mjs",
+        "C:/cinagroup/cinatoken/docker/examples/web-frontend.compose.yml",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-p63-auth-popup-foundation-9g7BZd/stable-source-manifest.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-p63-public-auth-20261002/P63-root-controller-runtime-race-fixed.result.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next40-p63-admin-auth-route-65ecefa15fda4e41b2c842ac4fe433e9/NEXT40-p63-admin-auth-final-proof.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-p63-public-auth-20261002/P63-frozen-candidate.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-p63-public-auth-20261002/P63-Web-unit-final.result.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-p63-public-auth-20261002/P63-real-node-http-evidence.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-p63-auth-atomic-81365b8e37184dd0b7a9c6c9d1cdfcbf/stable-source-manifest.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next40-p63-popup-browser-12eaf4c4533744b7a034128ff2c9cd26/run-f9YV2h/proof.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-p63-public-auth-20261002/P64-frozen-candidate.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-p63-public-auth-20261002/P64-Web-unit-final.result.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-p63-public-auth-20261002/P64-error-dismiss-focus-first.result.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-p63-public-auth-20261002/P64-error-dismiss-and-native-wrapper-regression.result.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next40-p63-popup-browser-12eaf4c4533744b7a034128ff2c9cd26/run-9naZVX/proof.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next40-legacy-auth-6MyPcD/run-local-p64-public-auth-cleanup-20261002061900-wPrgY1/legacy-browser-final-proof.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-p64-nojs-react-diagnostic-b65f88caa6b448a2b36d2db30637c61c/nested-proof.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-p63-public-auth-20261002/P65-frozen-candidate.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-p63-public-auth-20261002/P65-nojs-inline-regression-first.result.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-p63-public-auth-20261002/P65-nojs-inline-and-useid-final.result.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-p63-public-auth-20261002/P65-Web-unit.result.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-p63-public-auth-20261002/P65-real-node-http-evidence.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-p65-compiled-worker-node-0e50b20292e6421fa86f17b21afd18b3/final-inventory-proof.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next40-p63-pages-QFSUJV/run-local-p65-public-ssr-visible-20261002063100-DKeBTU/compiled-browser-final-proof.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next40-p63-popup-browser-12eaf4c4533744b7a034128ff2c9cd26/run-BDXQuC/proof.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next40-p63-popup-browser-12eaf4c4533744b7a034128ff2c9cd26/nojs-run-xMJ6uC/proof.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next40-legacy-auth-6MyPcD/run-local-p65-public-ssr-visible-20261002063100-HedsiZ/legacy-browser-final-proof.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next40-p63-popup-browser-12eaf4c4533744b7a034128ff2c9cd26/run-ve8m1U/proof.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next40-p65-auth-transport-chrome-78935ec85ce4481e9cef37f4d523c65e/NEXT40-p65-auth-transport-chrome-final-proof.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next40-p63-popup-browser-12eaf4c4533744b7a034128ff2c9cd26/NEXT40-p65-public-auth-browser-final-audit.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next40-p65-auth-real-coop-bf1fccf126ae4b3e8c022eca2760c5fa/NEXT40-p65-real-coop-chrome-final-proof.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-p65-real-react-cleanup-e9262dee442645e5a46a6019984ba75a/p65-real-react-cleanup-proof.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-p63-public-auth-20261002/P65-readonly-closeout-inventory.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-p63-public-auth-20261002/P65-local-final-checkpoint.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-web-source-provenance-BFq6Uu/source-provenance-audit.md",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-web-source-provenance-BFq6Uu/current-source-inventory.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-web-source-provenance-BFq6Uu/p65-visible-attribution-diagnostic.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-p66-frontend-attribution-6AuL2z/P66-attribution-owned-final-proof.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-web-source-provenance-BFq6Uu/p65-notice-packaging-proof.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next13-admin-lint-baseline-RCMWNZ/baseline-proof.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-p65-native-workerd-5VqUQp/native-final-proof.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-p66-next41-gbNUZD/P66-progress-checkpoint.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-p66-compiled-worker-node-qwHEix/sealed-proof.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-p66-next41-gbNUZD/P66-wsl-readonly-result.json",
+        "C:/cinagroup/cinatoken/docs/developers/architecture/evidence/p66-local-checkpoint-20261002.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-p66-public-browser-N9eG9v/P66-public-browser-final-audit.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next13-b1-active-XmF9rb/final-proof.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-p66-next41-gbNUZD/NEXT13-B1-full-lint-proof.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-p66-readonly-review-EbWYjV/readonly-review.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-p66-next41-gbNUZD/P66-source-boundary-comparison.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-p66-next41-gbNUZD/P66-notice-packaging-proof.json",
+        "C:/cinagroup/cinatoken/scripts/web/source-provenance.mjs",
+        "C:/cinagroup/cinatoken/scripts/web/source-provenance.test.mjs",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-web-provenance-proof-B9Fbqz/implementation-proof.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next13-b2-next41-nDMVDV/B2-root-full-lint-proof.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next13-b2a-active-Dd0yVp/final-proof.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next13-b2b-Dlpr9L/browser-run-DFUQz8/proof.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next13-b2b-Dlpr9L/final-proof.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next41-admin-source-review-1Obeo8/B2-independent-source-review.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next13-b2-next41-nDMVDV/NEXT41-root-independent-web-source-proof.json",
+        "C:/cinagroup/cinatoken/docs/developers/architecture/evidence/next13-b2-source-provenance-checkpoint-20261002.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next13-b3c-PkxSXn/browser-run-8QBamA/proof.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next13-b3-bepb8C/B3-root-full-lint-proof-v2.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next13-b3-bepb8C/B3-root-chat-ssr-preservation-proof.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next13-b3-bepb8C/B3-root-source-review-proof-v2.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next13-b3-peer-doTPsh/peer-proof.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next13-b3c-peer-review-CgvnSS/peer-review.json",
+        "C:/cinagroup/cinatoken/docs/developers/architecture/evidence/next13-b3-sensitive-lifecycle-checkpoint-20261002.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next13-b3a-sensitive-LlEw4r/final-proof.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next13-b3b-5ulFbL/final-proof.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next13-b3c-PkxSXn/final-proof.json",
+        "C:/cinagroup/cinatoken/docs/developers/architecture/evidence/next13-b0-legacy-lifecycle-checkpoint-20261003.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next13-b0-IQttKL/B0-root-final-v4-contract-checks-proof.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next13-b0-IQttKL/B0-next-build-v4-sealed-proof.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next13-b0-routes-policy-1R4SWN/compiled-next-smoke-dHQMwF/proof.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next13-b0-IQttKL/B0-root-post-runtime-artifact-proof.json",
+        "C:/cinagroup/cinatoken/docs/developers/architecture/evidence/next13-f1-full-format-checkpoint-20261003.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next13-format-R5JC0x/before-format-19.result.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next13-format-R5JC0x/F1-format-19.result.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next13-format-R5JC0x/formatter-effective-config.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next13-format-R5JC0x/root-format-semantic-proof-v3.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next13-format-b0-SqAZfB/metadata-scope-clarification-v2.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next13-format-b3nine-BnrstL/root-verifier-scope-audit.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next13-format-b3nine-BnrstL/root-verifier-v3-counterexample-audit.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next13-format-R5JC0x/F1-full-admin-unit.result.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next13-format-R5JC0x/F1-historical-b0-archive-proof.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next13-format-R5JC0x/F1-historical-path-relocation.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next13-format-R5JC0x/F1-next-build-sealed-proof.json",
+        "C:/cinagroup/cinatoken/docs/developers/architecture/evidence/next41-s1-build-input-contract-checkpoint-20261003.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next41-input-contract-4aVY8u/S1-historical-f1-path-relocation.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next41-input-contract-4aVY8u/S1-shared-source-drift-release-proof.json",
+        "C:/cinagroup/cinatoken/.release/web/local-p67-build-input-contract-20261003041802/manifest.json",
+        "C:/cinagroup/cinatoken/docs/developers/architecture/evidence/next41-s2-source-delivery-checkpoint-20261003.json",
+        "C:/cinagroup/cinatoken/packages/web/scripts/source-archive.mjs",
+        "C:/cinagroup/cinatoken/packages/web/scripts/source-delivery.mjs",
+        "C:/cinagroup/cinatoken/packages/web/src/cinatoken/public/FrontendAttribution.tsx",
+        "C:/cinagroup/cinatoken/.release/web/local-p68-source-delivery-20261003052607/manifest.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next41-p68-independent-sF7Eq4/p68-final-proof.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next41-p68-source-browser-580bd0ef/final-p68-proof.json",
+        "C:/cinagroup/cinatoken/packages/web/scripts/historical-source.mjs",
+        "C:/cinagroup/cinatoken/packages/web/scripts/historical-source.test.mjs",
+        "C:/cinagroup/cinatoken/docs/developers/architecture/evidence/next41-s3-historical-source-checkpoint-20261003.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next41-s3-p67-catalog-20261003T0611Z/p67-historical-archive-proof-v1.json",
+        "C:/cinagroup/cinatoken/.release/web/local-p69-historical-source-20261003063826/manifest.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next41-s3-runtime-review-CrxYyF/p69-source-browser/final-p69-proof.json",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next41-s3-p67-catalog-20261003T0611Z/p69-independent-delta-proof-v1.json"
+      ],
+      "missing": [],
+      "fullGoalComplete": false,
+      "noDeployment": true
+    }
+  },
+  "solePauseStateEdit": {
+    "artifact": {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-next41-historical-source-aGuwPJ/S3-final-main-md-pause-state-edit.json",
+      "bytes": 2268,
+      "sha256": "557e9849823a1ba0201a860f5ee15ec76249ad373b5fd8bf5907f616f2c15893"
+    },
+    "data": {
+      "at": "2026-10-03T07:03:12.010Z",
+      "actualExit": 0,
+      "before": {
+        "path": "C:/cinagroup/cinatoken/docs/developers/architecture/web-frontend-migration.md",
+        "bytes": 656343,
+        "sha256": "455290ccb925ee342a8beaac483bd58e7d36596a02af9cd01e85e1528c236d31"
+      },
+      "after": {
+        "path": "C:/cinagroup/cinatoken/docs/developers/architecture/web-frontend-migration.md",
+        "bytes": 656430,
+        "sha256": "3343752b01e33fc25a7afc2294fe01e6c4ece6b8af1ea303658cb97af3a2142d"
+      },
+      "originalProgressLine": "当前推进：NEXT-41 S3历史源码导入与P67回填已完成本地验收（5.61）。新P69复用P68已封compiled/currentarchive，新增原P67对应源码4201812 B；121项原current hashed资产获得版本映射，其中仅2项修复原unknown，余326仍unresolved/coverage=false。完整Web1561/1561、full lint/defaultformat0，实际源码HTTP16与Chrome四语JS/真正NoJS8context/16下载通过。当前assembler输入2286/source95d44e…与原compiled输入source549be9…分列，无新三目标build或平台主张；102/54/G/E保持，29入口false、无部署，完整目标继续。",
+      "updatedProgressLine": "当前推进：NEXT-41 S3历史源码导入与P67回填已完成本地验收（5.61）。新P69复用P68已封compiled/currentarchive，新增原P67对应源码4201812 B；121项原current hashed资产获得版本映射，其中仅2项修复原unknown，余326仍unresolved/coverage=false。完整Web1561/1561、full lint/defaultformat0，实际源码HTTP16与Chrome四语JS/真正NoJS8context/16下载通过。当前assembler输入2286/source95d44e…与原compiled输入source549be9…分列，无新三目标build或平台主张；102/54/G/E保持，29入口false、无部署，完整目标尚未完成；持续实施目标当前暂停，本批仅完成已实施内容的文档收尾。",
+      "reason": "Read-only get_goal returned status paused. No resume or implementation; this sole documentation wording delta records current goal state while finalizing already completed S3 evidence.",
+      "goalStateRead": {
+        "threadId": "01a0e1a3-6901-7863-b5ff-da3da31c58e0",
+        "status": "paused",
+        "objective": "继续实施"
+      },
+      "noImplementationAfterPauseRead": true,
+      "noDeployment": true,
+      "fullGoalComplete": false
+    }
+  },
+  "independentDocumentReview": {
+    "artifact": {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-next41-s3-p67-catalog-20261003T0611Z/final-s3-doc-check-proof-v1.json",
+      "bytes": 22881,
+      "sha256": "e5ebb97e8c2aad29ed8262b18fd744bbbb12081afeaaed62781751f55b8007cd"
+    },
+    "data": {
+      "schemaVersion": 1,
+      "at": "2026-10-03T07:06:17.791Z",
+      "scope": "Lightweight final S3 MD/checkpoint consistency and sole pause-state documentation closure; no ongoing implementation or raw268/288 evidence re-audit.",
+      "checks": [
+        {
+          "label": "Stable readonly input Final paused main MD",
+          "actual": "pass",
+          "observed": {
+            "path": "C:/cinagroup/cinatoken/docs/developers/architecture/web-frontend-migration.md",
+            "bytes": 656430,
+            "sha256": "3343752b01e33fc25a7afc2294fe01e6c4ece6b8af1ea303658cb97af3a2142d"
+          }
+        },
+        {
+          "label": "Exact bytes/SHA Final paused main MD",
+          "actual": "pass",
+          "observed": {
+            "path": "C:/cinagroup/cinatoken/docs/developers/architecture/web-frontend-migration.md",
+            "bytes": 656430,
+            "sha256": "3343752b01e33fc25a7afc2294fe01e6c4ece6b8af1ea303658cb97af3a2142d"
+          }
+        },
+        {
+          "label": "Stable readonly input Final unchanged S3 checkpoint",
+          "actual": "pass",
+          "observed": {
+            "path": "C:/cinagroup/cinatoken/docs/developers/architecture/evidence/next41-s3-historical-source-checkpoint-20261003.json",
+            "bytes": 8838113,
+            "sha256": "de6ba1373bdb9335478659e6b9c2f4ab10900b92e34b00cdf05995a628a8381d"
+          }
+        },
+        {
+          "label": "Exact bytes/SHA Final unchanged S3 checkpoint",
+          "actual": "pass",
+          "observed": {
+            "path": "C:/cinagroup/cinatoken/docs/developers/architecture/evidence/next41-s3-historical-source-checkpoint-20261003.json",
+            "bytes": 8838113,
+            "sha256": "de6ba1373bdb9335478659e6b9c2f4ab10900b92e34b00cdf05995a628a8381d"
+          }
+        },
+        {
+          "label": "Stable readonly input Root sole pause-state edit",
+          "actual": "pass",
+          "observed": {
+            "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-next41-historical-source-aGuwPJ/S3-final-main-md-pause-state-edit.json",
+            "bytes": 2268,
+            "sha256": "557e9849823a1ba0201a860f5ee15ec76249ad373b5fd8bf5907f616f2c15893"
+          }
+        },
+        {
+          "label": "Exact bytes/SHA Root sole pause-state edit",
+          "actual": "pass",
+          "observed": {
+            "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-next41-historical-source-aGuwPJ/S3-final-main-md-pause-state-edit.json",
+            "bytes": 2268,
+            "sha256": "557e9849823a1ba0201a860f5ee15ec76249ad373b5fd8bf5907f616f2c15893"
+          }
+        },
+        {
+          "label": "102/54 unique main/matrix",
+          "actual": "pass",
+          "observed": {
+            "main": 102,
+            "matrix": 54,
+            "mainUnique": 102,
+            "matrixUnique": 54
+          }
+        },
+        {
+          "label": "Exact G0-G8 and E00-E08 /6 fences",
+          "actual": "pass",
+          "observed": {
+            "gates": [
+              "G0",
+              "G1",
+              "G2",
+              "G3",
+              "G4",
+              "G5",
+              "G6",
+              "G7",
+              "G8"
+            ],
+            "evidence": [
+              "E00",
+              "E01",
+              "E02",
+              "E03",
+              "E04",
+              "E05",
+              "E06",
+              "E07",
+              "E08"
+            ],
+            "fences": 6
+          }
+        },
+        {
+          "label": "Only P6-11 checked /AUTH7 checked /SSR6 pending",
+          "actual": "pass",
+          "observed": {
+            "mainChecked": [
+              "P6-11"
+            ],
+            "authChecked": 7,
+            "ssrPending": 6
+          }
+        },
+        {
+          "label": "All11 requested current scope lines present",
+          "actual": "pass",
+          "observed": [
+            "current",
+            "P1",
+            "P6",
+            "P7",
+            "NEXT41",
+            "SRC02",
+            "E00",
+            "E01",
+            "E06",
+            "E07",
+            "latestChangelog"
+          ]
+        },
+        {
+          "label": "5.61 section exists /batch local, full gate pending",
+          "actual": "pass",
+          "observed": {
+            "startLine": 1963,
+            "bytes": 8060,
+            "sha256": "c060c1f1bd31c55934e8ba6c39e0df5e817d3b78403751330513e7288e29f35c",
+            "heading": "### 5.61 NEXT-41 S3历史对应源码补齐（2026-10-03，本地批次完成，完整门槛待验）"
+          }
+        },
+        {
+          "label": "Current goal explicitly paused, only completed-document closure",
+          "actual": "pass",
+          "observed": "当前推进：NEXT-41 S3历史源码导入与P67回填已完成本地验收（5.61）。新P69复用P68已封compiled/currentarchive，新增原P67对应源码4201812 B；121项原current hashed资产获得版本映射，其中仅2项修复原unknown，余326仍unresolved/coverage=false。完整Web1561/1561、full lint/defaultformat0，实际源码HTTP16与Chrome四语JS/真正NoJS8context/16下载通过。当前assembler输入2286/source95d44e…与原compiled输入source549be9…分列，无新三目标build或平台主张；102/54/G/E保持，29入口false、无部署，完整目标尚未完成；持续实施目标当前暂停，本批仅完成已实施内容的文档收尾。"
+        },
+        {
+          "label": "Sole progress-line reverse restores original455290 MD exact bytes/hash",
+          "actual": "pass",
+          "observed": {
+            "bytes": 656343,
+            "sha256": "455290ccb925ee342a8beaac483bd58e7d36596a02af9cd01e85e1528c236d31"
+          }
+        },
+        {
+          "label": "Checkpoint actual0/fullgoal unfinished/no deployment",
+          "actual": "pass",
+          "observed": {
+            "actualExit": 0,
+            "fullGoalComplete": false,
+            "noDeployment": true
+          }
+        },
+        {
+          "label": "Checkpoint shape metadata and29 false match",
+          "actual": "pass",
+          "observed": {
+            "mainTasks": 102,
+            "matrix": 54,
+            "gates": 9,
+            "evidenceRows": 9,
+            "fences": 6,
+            "authSsrChecked": 7,
+            "globalSsrPending": 6,
+            "onlyMainTaskChecked": "P6-11",
+            "disabledFlags": 29,
+            "sourceFiles": 6,
+            "unchangedOtherS2Sources": 11,
+            "unchangedLegacyProtectedSources": 35
+          }
+        },
+        {
+          "label": "121 mappings only2 newly solved /326 unknown /coveragefalse",
+          "actual": "pass",
+          "observed": {
+            "candidateMappings": 121,
+            "unknown": 326,
+            "coverageComplete": false,
+            "independentMappingSummary": {
+              "originallyUnresolved": 328,
+              "admittedOriginalP67Current": 121,
+              "sourceSplit": {
+                "current": 119,
+                "retained": 2
+              },
+              "newlyCleared": [
+                "static/js/async/qi.8fe8a372c7.js",
+                "static/js/index.e821ced9b8.js"
+              ],
+              "remainingInheritedUnresolved": 326,
+              "coverageComplete": false
+            }
+          }
+        },
+        {
+          "label": "Observer95d differs from original compiled549 /not fresh build",
+          "actual": "pass",
+          "observed": {
+            "observerFiles": 2286,
+            "observerSHA": "95d44e9747bf924718ec9d0a87acdf844056c62bd3a2020aa21cb96cd4311d94",
+            "reusedContract": {
+              "version": 2,
+              "buildId": "78fb1b23-83fd-4af0-aa58-b0520269ab9b",
+              "sourceSha256": "549be9bc2fae52e049cefd8cf21b52e594aff5ae01c009d93b5d31a01b4fba18"
+            },
+            "noFreshWebBuild": true
+          }
+        },
+        {
+          "label": "P68 currentReleaseId is explicit local reuse input /not production pointer",
+          "actual": "pass",
+          "observed": {
+            "current": "local-p68-source-delivery-20261003052607",
+            "previous": "local-p68-source-delivery-20261003052607",
+            "meaning": "Local rollback/reuse source P68 only; not an observed published production pointer"
+          }
+        },
+        {
+          "label": "1561 full suite includes30historical/60config, no addition",
+          "actual": "pass",
+          "observed": {
+            "unit": {
+              "tests": 1561,
+              "pass": 1561,
+              "fail": 0,
+              "skipped": 0
+            },
+            "scope": "Full Web1561 and full Web lint/default formatter on final six-source freeze. Historical targeted30 and config60 are included; no new TS/TSX/declaration changes, typecheck/three-target build/Admin/Next/Core business-suite claim. Actual P69 rollback reuses original P68 compiled/current archive and source contract; observer95d44e is current assembler input fingerprint only."
+          }
+        },
+        {
+          "label": "Full lint/format actual scope /no new TS types or three-target build",
+          "actual": "pass",
+          "observed": "Full Web1561 and full Web lint/default formatter on final six-source freeze. Historical targeted30 and config60 are included; no new TS/TSX/declaration changes, typecheck/three-target build/Admin/Next/Core business-suite claim. Actual P69 rollback reuses original P68 compiled/current archive and source contract; observer95d44e is current assembler input fingerprint only."
+        },
+        {
+          "label": "Node24/HTTP16/Chrome8 fixture vs native/cloud/live scope explicit",
+          "actual": "pass",
+          "observed": {
+            "checkpointLimits": [
+              "326 inherited assets remain unresolved; sourceDelivery.coverageComplete=false",
+              "Original P67 source raw2281 and currentArchive raw2284 are distinct and bound to their original v2 UUID/source hashes",
+              "External original manifest SHA pin is explicit caller expectation; unsigned selfSHA is not a signature/upstream ownership proof",
+              "P69 currentReleaseId=P68 is local reuse selector, not an observed production pointer; realRoot wrangler stays P66/29false",
+              "Node24 Windows + compiled Worker in Node/owned HTTP and Chrome hybrid SSR fixtures are not native LinuxNode22/CI/Cloudflare/workerd/Docker/Nginx or real services",
+              "New P67 archive121 asset bindings include119 already-current candidate assets and only2 repaired old missing mappings, not121 repaired unknowns",
+              "No newer full build or old broad browser/source proof counted as a new execution"
+            ],
+            "E06": "| E06 | G6 公开页面与SEO | P69四语×JS/trueNoJS8context（全390px）、16原生下载/两归档、8原生JSON点击与原bytes一致，16图实际目视/index无overflow；共享footer及compiled沿P68原产物复用（5.61） | 本轮新下载验收是compiled SSR/普通静态夹具+实际owned同源archiveHTTP，非真实Auth/目录/聊天/平台；P68旧HTTP45/Chrome64只证其原范围，不计新业务执行，G6待验。 |",
+            "E07": "| E07 | G7 双平台部署 | P69 schema3/501文件/两版本source archive，原P68 currentcompiled与archive exact；实际Root/runtime校验0、Node compiled Worker源码HTTP16（含两包GET/HEAD/304/206）及10helper无展开源码CLI0/29false（5.61） | previous/currentReleaseId=P68只是本地复用输入，Root真实配置未切换；CF/workerd/Docker/Nginx、LinuxNode22/CI、真实身份/DB/链/灰度/线上指针/回滚未验，未部署，完整G7未完成。 |"
+          }
+        },
+        {
+          "label": "External pin/unsigned selfSHA not provenance or signature",
+          "actual": "pass",
+          "observed": "| E00 | G0、SRC、页面/API/权限基线 | S3原P67 raw2281/18034906 B source93353edb…/UUID153fc208…归档4201812 B/0ef5c3aa…，与原三target/外部pin及2283 tar成员匹配；P69新增121合法原current映射，仅2原缺口被补（5.61） | 326 inherited仍unresolved/coveragefalse，v1完整输入不可伪补；上游ref/导入日期/逐文件归属、许可及正式渠道待验。外部预期SHA与unsigned selfSHA都不证明上游来源或签名，G0/SRC未完成。 |"
+        },
+        {
+          "label": "Final changelog keeps2/326/no newbuild/types/platform/fullgoal unfinished",
+          "actual": "pass",
+          "observed": "| 2026-10-03 | 完成NEXT-41 S3历史源码显式导入及P67回填本地验收，更新唯一MD | SRC/P0-06/P1-08/P6/P7、NEXT-41、E00/E01/E06/E07、5.61 | 六源STOP、全Web1561/full lint/defaultformat0；P69复用P68 compiled/原archive，新增P67真实4201812 B包及121合法映射，仅2旧unknown修复、326继续。实际源码HTTP16/Chrome8/下载16、原TTL和外部pin/独立差量288通过，旧失败/范围保留，无新build/types/业务suite/平台主张；102/54/G/E/29false保持、无部署、完整目标继续。 |"
+        },
+        {
+          "label": "MD current checkpoint exact SHA/bytes citation",
+          "actual": "pass",
+          "observed": {
+            "checkpointBytes": 8838113,
+            "checkpointSHA": "de6ba1373bdb9335478659e6b9c2f4ab10900b92e34b00cdf05995a628a8381d"
+          }
+        },
+        {
+          "label": "Source freeze six STOP remains recorded",
+          "actual": "pass",
+          "observed": {
+            "actualExit": 0,
+            "allSixOwnersStopped": true,
+            "records": 6
+          }
+        }
+      ],
+      "reads": [
+        {
+          "path": "C:/cinagroup/cinatoken/docs/developers/architecture/web-frontend-migration.md",
+          "bytes": 656430,
+          "sha256": "3343752b01e33fc25a7afc2294fe01e6c4ece6b8af1ea303658cb97af3a2142d",
+          "purpose": "Final paused main MD"
+        },
+        {
+          "path": "C:/cinagroup/cinatoken/docs/developers/architecture/evidence/next41-s3-historical-source-checkpoint-20261003.json",
+          "bytes": 8838113,
+          "sha256": "de6ba1373bdb9335478659e6b9c2f4ab10900b92e34b00cdf05995a628a8381d",
+          "purpose": "Final unchanged S3 checkpoint"
+        },
+        {
+          "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-next41-historical-source-aGuwPJ/S3-final-main-md-pause-state-edit.json",
+          "bytes": 2268,
+          "sha256": "557e9849823a1ba0201a860f5ee15ec76249ad373b5fd8bf5907f616f2c15893",
+          "purpose": "Root sole pause-state edit"
+        }
+      ],
+      "inputs": {
+        "main": {
+          "path": "C:/cinagroup/cinatoken/docs/developers/architecture/web-frontend-migration.md",
+          "bytes": 656430,
+          "sha256": "3343752b01e33fc25a7afc2294fe01e6c4ece6b8af1ea303658cb97af3a2142d"
+        },
+        "checkpoint": {
+          "path": "C:/cinagroup/cinatoken/docs/developers/architecture/evidence/next41-s3-historical-source-checkpoint-20261003.json",
+          "bytes": 8838113,
+          "sha256": "de6ba1373bdb9335478659e6b9c2f4ab10900b92e34b00cdf05995a628a8381d"
+        },
+        "pauseEdit": {
+          "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-next41-historical-source-aGuwPJ/S3-final-main-md-pause-state-edit.json",
+          "bytes": 2268,
+          "sha256": "557e9849823a1ba0201a860f5ee15ec76249ad373b5fd8bf5907f616f2c15893"
+        }
+      },
+      "findings": {
+        "blockingContradictions": [],
+        "sourceSTOP": true,
+        "implementationGoalPaused": true,
+        "onlyDocumentClosure": true
+      },
+      "limits": [
+        "Repository/product/MD/checkpoint/old evidence remained STOP; writes are only new own Temp proof/script/log and final MD snapshot.",
+        "No tests/builds/typecheck/browser/services/npm install/native-platform/cloud/deployment or ongoing goal implementation executed.",
+        "This reads final MD/checkpoint metadata and selected current scope text, not a rerun of the1561 unit tests, targeted30/config60 or prior268/288 readonly assertions.",
+        "Goal paused is the current Root-reported get_goal state, reflected by the sole corrected current-progress line; checkpoint describes the completed batch before this final status wording correction."
+      ],
+      "finalMainSnapshot": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-next41-s3-p67-catalog-20261003T0611Z/final-s3-observed-paused-main-md.md",
+        "bytes": 656430,
+        "sha256": "3343752b01e33fc25a7afc2294fe01e6c4ece6b8af1ea303658cb97af3a2142d"
+      },
+      "shape": {
+        "main": 102,
+        "mainUnique": 102,
+        "matrix": 54,
+        "matrixUnique": 54,
+        "gates": [
+          "G0",
+          "G1",
+          "G2",
+          "G3",
+          "G4",
+          "G5",
+          "G6",
+          "G7",
+          "G8"
+        ],
+        "evidence": [
+          "E00",
+          "E01",
+          "E02",
+          "E03",
+          "E04",
+          "E05",
+          "E06",
+          "E07",
+          "E08"
+        ],
+        "fences": 6,
+        "mainChecked": [
+          "P6-11"
+        ],
+        "authChecked": 7,
+        "authTotal": 7,
+        "ssrPending": 6,
+        "ssrTotal": 6
+      },
+      "selectedCurrentLines": {
+        "current": {
+          "lineNumber": 29,
+          "text": "当前推进：NEXT-41 S3历史源码导入与P67回填已完成本地验收（5.61）。新P69复用P68已封compiled/currentarchive，新增原P67对应源码4201812 B；121项原current hashed资产获得版本映射，其中仅2项修复原unknown，余326仍unresolved/coverage=false。完整Web1561/1561、full lint/defaultformat0，实际源码HTTP16与Chrome四语JS/真正NoJS8context/16下载通过。当前assembler输入2286/source95d44e…与原compiled输入source549be9…分列，无新三目标build或平台主张；102/54/G/E保持，29入口false、无部署，完整目标尚未完成；持续实施目标当前暂停，本批仅完成已实施内容的文档收尾。"
+        },
+        "P1": {
+          "lineNumber": 60,
+          "text": "| P1 工程基础 | S1/S2/S3输入及源码交付机制本地通过，整体验收待办 | S3完整Web1561/1561/full lint/defaultformat0，六互斥源与新P69 package/verify/无展开源码runtime gen0；P67原2281 raw对应归档与P68原2284 archive分版本绑定，current assembler observer2286独立记录（5.61） | 完整Admin formatter、历史326源码覆盖、Node22/LinuxCI、原生平台与Core全范围待验，G1未完成；本批无TS变化，无新typecheck/三目标build/Admin/Next/Core业务执行主张。 |"
+        },
+        "P6": {
+          "lineNumber": 65,
+          "text": "| P6 公开页与 SEO | 公开SSR/署名及源码下载专项本地通过，整域待验 | P69新增历史源码下载：四语JS4/真正NoJS4共8context、16 native下载/8 JSON实际点击及390px索引无overflow通过（5.61）；P68八组SSR/署名HTTP45/Chrome64历史见5.60，P69 compiled与其原字节相同 | 本批只新验源码下载，SSR/目录为受控compiled夹具，不把旧64/业务/Auth结果累加为P69新执行；真实Auth/目录/完整聊天/来源发布及G6继续，保留Next fallback。 |"
+        },
+        "P7": {
+          "lineNumber": 66,
+          "text": "| P7 双平台部署 | 待验收 | P69 schema3：464assets（135current/329retained）+35server=499普通+2私有manifest=501；previous/currentReleaseId=P68仅本地reuse输入选择，Root真实wrangler仍P66/29false；Node源码HTTP16、无展开源码CLI及两归档下载本地通过（5.61） | 不据本地currentReleaseId推断线上指针；Node24/Chrome夹具不代替LinuxNode22/CI、Cloudflare/workerd、Docker/Nginx或发布回滚；未部署/开启入口。 |"
+        },
+        "NEXT41": {
+          "lineNumber": 146,
+          "text": "| NEXT-41 | P0-06、SRC-01/02/03、P1-08、P6、P7 | S1/S2/S3当前与P67历史对应源码本地通过，完整来源/发布待验 | P67原2281/18034906 B归档4201812 B及external原manifestSHA/三target v2/原TTL绑定，新P69复用P68 compiled；121原current hashed映射=119已current+2新补，326 inherited保持unknown。全Web1561/full lintformat0、源码HTTP16/Chrome8/下载16，scope及失败见5.61；上游ref/日期/归属、旧版本完整源码与原生平台仍缺，SRC/G0/G1不勾选。 |"
+        },
+        "SRC02": {
+          "lineNumber": 237,
+          "text": "- [ ] SRC-02：保留 NOTICE.frontend 指定的可见署名 Frontend design and development by New API contributors.、原项目链接及修改说明；核对第三方许可、绑定构建的可下载对应源码、保留资产与源码版本映射及正式发布渠道。S2当前源码/S3原P67归档与已证子集本地通过，326继承旧资产及正式发布仍待验（5.60–5.61）。"
+        },
+        "E00": {
+          "lineNumber": 494,
+          "text": "| E00 | G0、SRC、页面/API/权限基线 | S3原P67 raw2281/18034906 B source93353edb…/UUID153fc208…归档4201812 B/0ef5c3aa…，与原三target/外部pin及2283 tar成员匹配；P69新增121合法原current映射，仅2原缺口被补（5.61） | 326 inherited仍unresolved/coveragefalse，v1完整输入不可伪补；上游ref/导入日期/逐文件归属、许可及正式渠道待验。外部预期SHA与unsigned selfSHA都不证明上游来源或签名，G0/SRC未完成。 |"
+        },
+        "E01": {
+          "lineNumber": 495,
+          "text": "| E01 | G1 工程接入 | 六最终STOP源上完整Web1561/1561/0skip、full Web lint/defaultformat0；historical30/config60含在1561内。P69实际package/verify/runtimegen0，2286 assembler observer与P68 reused compiled source549be9…分列（5.61） | TS/TSX/声明未改，本批没有新typecheck/三目标build或Admin/Next/Core业务suite；全Admin格式/历史源码/原生平台/LinuxCI/Core全范围待验，G1未完成；外部Docker tests旧lint2E与默认outside-base警告保留。 |"
+        },
+        "E06": {
+          "lineNumber": 500,
+          "text": "| E06 | G6 公开页面与SEO | P69四语×JS/trueNoJS8context（全390px）、16原生下载/两归档、8原生JSON点击与原bytes一致，16图实际目视/index无overflow；共享footer及compiled沿P68原产物复用（5.61） | 本轮新下载验收是compiled SSR/普通静态夹具+实际owned同源archiveHTTP，非真实Auth/目录/聊天/平台；P68旧HTTP45/Chrome64只证其原范围，不计新业务执行，G6待验。 |"
+        },
+        "E07": {
+          "lineNumber": 501,
+          "text": "| E07 | G7 双平台部署 | P69 schema3/501文件/两版本source archive，原P68 currentcompiled与archive exact；实际Root/runtime校验0、Node compiled Worker源码HTTP16（含两包GET/HEAD/304/206）及10helper无展开源码CLI0/29false（5.61） | previous/currentReleaseId=P68只是本地复用输入，Root真实配置未切换；CF/workerd/Docker/Nginx、LinuxNode22/CI、真实身份/DB/链/灰度/线上指针/回滚未验，未部署，完整G7未完成。 |"
+        },
+        "latestChangelog": {
+          "lineNumber": 2146,
+          "text": "| 2026-10-03 | 完成NEXT-41 S3历史源码显式导入及P67回填本地验收，更新唯一MD | SRC/P0-06/P1-08/P6/P7、NEXT-41、E00/E01/E06/E07、5.61 | 六源STOP、全Web1561/full lint/defaultformat0；P69复用P68 compiled/原archive，新增P67真实4201812 B包及121合法映射，仅2旧unknown修复、326继续。实际源码HTTP16/Chrome8/下载16、原TTL和外部pin/独立差量288通过，旧失败/范围保留，无新build/types/业务suite/平台主张；102/54/G/E/29false保持、无部署、完整目标继续。 |"
+        }
+      },
+      "section561": {
+        "startLine": 1963,
+        "bytes": 8060,
+        "sha256": "c060c1f1bd31c55934e8ba6c39e0df5e817d3b78403751330513e7288e29f35c",
+        "heading": "### 5.61 NEXT-41 S3历史对应源码补齐（2026-10-03，本地批次完成，完整门槛待验）"
+      },
+      "goalStatus": {
+        "current": "paused",
+        "authority": "Root actual get_goal observation and sole final MD status edit",
+        "onlyClosingAlreadyImplementedDocuments": true,
+        "noGoalResumeOrImplementation": true
+      },
+      "countsNotAdded": {
+        "fullWeb": 1561,
+        "historical30Included": true,
+        "config60Included": true,
+        "priorReadonly268or288NotRerun": true,
+        "businessExecutionsByReviewer": 0
+      },
+      "completedAt": "2026-10-03T07:06:17.839Z",
+      "actualExit": 0,
+      "status": "passed",
+      "checkSummary": {
+        "total": 25,
+        "pass": 25,
+        "fail": 0,
+        "readonlyMetadataAssertions": true,
+        "addedBusinessTests": 0
+      },
+      "fatal": null
+    }
+  },
+  "independentActualCommand": {
+    "artifact": {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-next41-s3-p67-catalog-20261003T0611Z/final-s3-doc-check-v1.result.json",
+      "bytes": 1002,
+      "sha256": "ded6d6d458865118f082c1610411dddfdd7c62b01101368af411a5d561ea7382"
+    },
+    "data": {
+      "at": "2026-10-03T07:06:17.742Z",
+      "name": "final-s3-doc-check-v1",
+      "cwd": "C:/cinagroup/cinatoken",
+      "command": "C:\\Program Files\\nodejs\\node.exe",
+      "args": [
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next41-s3-p67-catalog-20261003T0611Z/final-s3-doc-check.mjs"
+      ],
+      "actualExit": 0,
+      "signal": null,
+      "error": null,
+      "log": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-next41-s3-p67-catalog-20261003T0611Z/final-s3-doc-check-v1.log",
+        "bytes": 362,
+        "sha256": "85b9b6edad1bfc36c452be1a8f72cdb175ccad0dc8f0eb9679ab838c01aec92c"
+      },
+      "stdout": "{\"proof\":{\"path\":\"C:/Users/cina/AppData/Local/Temp/cinatoken-next41-s3-p67-catalog-20261003T0611Z/final-s3-doc-check-proof-v1.json\",\"bytes\":22881,\"sha256\":\"e5ebb97e8c2aad29ed8262b18fd744bbbb12081afeaaed62781751f55b8007cd\"},\"actualExit\":0,\"checks\":{\"total\":25,\"pass\":25,\"fail\":0,\"readonlyMetadataAssertions\":true,\"addedBusinessTests\":0},\"fatal\":null,\"failed\":[]}\n",
+      "stderr": ""
+    }
+  },
+  "independentActualExit": 0,
+  "independentRawLog": {
+    "artifact": {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-next41-s3-p67-catalog-20261003T0611Z/final-s3-doc-check-v1.log",
+      "bytes": 362,
+      "sha256": "85b9b6edad1bfc36c452be1a8f72cdb175ccad0dc8f0eb9679ab838c01aec92c"
+    },
+    "raw": "{\"proof\":{\"path\":\"C:/Users/cina/AppData/Local/Temp/cinatoken-next41-s3-p67-catalog-20261003T0611Z/final-s3-doc-check-proof-v1.json\",\"bytes\":22881,\"sha256\":\"e5ebb97e8c2aad29ed8262b18fd744bbbb12081afeaaed62781751f55b8007cd\"},\"actualExit\":0,\"checks\":{\"total\":25,\"pass\":25,\"fail\":0,\"readonlyMetadataAssertions\":true,\"addedBusinessTests\":0},\"fatal\":null,\"failed\":[]}\n"
+  },
+  "independentRawStreams": [
+    {
+      "kind": "stdout",
+      "artifact": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-next41-s3-p67-catalog-20261003T0611Z/final-s3-doc-check-v1.stdout",
+        "bytes": 362,
+        "sha256": "85b9b6edad1bfc36c452be1a8f72cdb175ccad0dc8f0eb9679ab838c01aec92c"
+      },
+      "raw": "{\"proof\":{\"path\":\"C:/Users/cina/AppData/Local/Temp/cinatoken-next41-s3-p67-catalog-20261003T0611Z/final-s3-doc-check-proof-v1.json\",\"bytes\":22881,\"sha256\":\"e5ebb97e8c2aad29ed8262b18fd744bbbb12081afeaaed62781751f55b8007cd\"},\"actualExit\":0,\"checks\":{\"total\":25,\"pass\":25,\"fail\":0,\"readonlyMetadataAssertions\":true,\"addedBusinessTests\":0},\"fatal\":null,\"failed\":[]}\n"
+    },
+    {
+      "kind": "stderr",
+      "artifact": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-next41-s3-p67-catalog-20261003T0611Z/final-s3-doc-check-v1.stderr",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "raw": ""
+    }
+  ],
+  "independentReadOnlyScript": {
+    "artifact": {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-next41-s3-p67-catalog-20261003T0611Z/final-s3-doc-check.mjs",
+      "bytes": 14012,
+      "sha256": "169475a662f394feafa5d4ab2a3b41524422a0b2b6db8b006a3551fb8a8b0050"
+    },
+    "raw": "import fs from 'node:fs'\nimport crypto from 'node:crypto'\nconst root = 'C:/cinagroup/cinatoken'\nconst out = 'C:/Users/cina/AppData/Local/Temp/cinatoken-next41-s3-p67-catalog-20261003T0611Z'\nconst expectedMD = { bytes: 656430, sha256: '3343752b01e33fc25a7afc2294fe01e6c4ece6b8af1ea303658cb97af3a2142d' }\nconst expectedCP = { bytes: 8838113, sha256: 'de6ba1373bdb9335478659e6b9c2f4ab10900b92e34b00cdf05995a628a8381d' }\nconst SHA = bytes => crypto.createHash('sha256').update(bytes).digest('hex')\nconst checks = [], reads = []\nfunction check(label, pass, observed) { checks.push({ label, actual: pass ? 'pass' : 'fail', observed }) }\nfunction raw(file, purpose, expected) {\n  const first = fs.statSync(file), bytes = fs.readFileSync(file), last = fs.statSync(file)\n  const metadata = { path: file, bytes: bytes.length, sha256: SHA(bytes) }\n  reads.push({ ...metadata, purpose })\n  check('Stable readonly input ' + purpose, first.ino === last.ino && first.size === last.size && first.mtimeMs === last.mtimeMs && first.ctimeMs === last.ctimeMs && bytes.length === first.size, metadata)\n  if (expected) check('Exact bytes/SHA ' + purpose, metadata.bytes === expected.bytes && metadata.sha256 === expected.sha256, metadata)\n  return { bytes, metadata }\n}\nconst equal = (a, b) => JSON.stringify(a) === JSON.stringify(b)\nconst report = { schemaVersion: 1, at: new Date().toISOString(), scope: 'Lightweight final S3 MD/checkpoint consistency and sole pause-state documentation closure; no ongoing implementation or raw268/288 evidence re-audit.', checks, reads, inputs: {}, findings: {}, limits: [\n  'Repository/product/MD/checkpoint/old evidence remained STOP; writes are only new own Temp proof/script/log and final MD snapshot.',\n  'No tests/builds/typecheck/browser/services/npm install/native-platform/cloud/deployment or ongoing goal implementation executed.',\n  'This reads final MD/checkpoint metadata and selected current scope text, not a rerun of the1561 unit tests, targeted30/config60 or prior268/288 readonly assertions.',\n  'Goal paused is the current Root-reported get_goal state, reflected by the sole corrected current-progress line; checkpoint describes the completed batch before this final status wording correction.',\n] }\nlet fatal = null\ntry {\n  const main = raw(root + '/docs/developers/architecture/web-frontend-migration.md', 'Final paused main MD', expectedMD)\n  const checkpoint = raw(root + '/docs/developers/architecture/evidence/next41-s3-historical-source-checkpoint-20261003.json', 'Final unchanged S3 checkpoint', expectedCP)\n  const pauseEdit = raw('C:/Users/cina/AppData/Local/Temp/cinatoken-next41-historical-source-aGuwPJ/S3-final-main-md-pause-state-edit.json', 'Root sole pause-state edit', { bytes: 2268, sha256: '557e9849823a1ba0201a860f5ee15ec76249ad373b5fd8bf5907f616f2c15893' })\n  const text = main.bytes.toString('utf8'), cp = JSON.parse(checkpoint.bytes.toString('utf8')), lines = text.split(/\\r?\\n/)\n  report.inputs = { main: main.metadata, checkpoint: checkpoint.metadata, pauseEdit: pauseEdit.metadata }\n  const snapshot = out + '/final-s3-observed-paused-main-md.md'\n  fs.writeFileSync(snapshot, main.bytes, { flag: 'wx' })\n  report.finalMainSnapshot = { path: snapshot, bytes: main.bytes.length, sha256: SHA(main.bytes) }\n  const mainTasks = [...text.matchAll(/^- \\[([ x])\\] ((?:P[0-8]-\\d{2}|SRC-\\d{2}))[:：]/gm)].map(match => ({ id: match[2], checked: match[1] === 'x' }))\n  const matrixText = text.slice(text.search(/^## 3\\./m), text.search(/^## 4\\./m))\n  const matrix = [...matrixText.matchAll(/^\\| ((?:PUB|AUTH|ACC|ADM)-\\d{2}) \\|/gm)].map(match => match[1])\n  const gates = [...text.matchAll(/^验收门槛 (G[0-8])[:：]/gm)].map(match => match[1])\n  const evidence = [...text.matchAll(/^\\| (E0[0-8]) \\|/gm)].map(match => match[1])\n  const auth = [...text.matchAll(/^- \\[([ x])\\] AUTH-SSR-[A-G][:：]/gm)].map(match => match[1] === 'x')\n  const ssr = [...text.matchAll(/^- \\[([ x])\\] SSR-[A-F][:：]/gm)].map(match => match[1] === 'x')\n  const fences = [...text.matchAll(/^```/gm)].length\n  const shape = { main: mainTasks.length, mainUnique: new Set(mainTasks.map(task => task.id)).size, matrix: matrix.length, matrixUnique: new Set(matrix).size, gates, evidence, fences, mainChecked: mainTasks.filter(task => task.checked).map(task => task.id), authChecked: auth.filter(Boolean).length, authTotal: auth.length, ssrPending: ssr.filter(value => !value).length, ssrTotal: ssr.length }\n  report.shape = shape\n  check('102/54 unique main/matrix', shape.main === 102 && shape.mainUnique === 102 && shape.matrix === 54 && shape.matrixUnique === 54, { main: shape.main, matrix: shape.matrix, mainUnique: shape.mainUnique, matrixUnique: shape.matrixUnique })\n  check('Exact G0-G8 and E00-E08 /6 fences', equal(gates, Array.from({ length: 9 }, (_, index) => 'G' + index)) && equal(evidence, Array.from({ length: 9 }, (_, index) => 'E0' + index)) && fences === 6, { gates, evidence, fences })\n  check('Only P6-11 checked /AUTH7 checked /SSR6 pending', equal(shape.mainChecked, ['P6-11']) && shape.authChecked === 7 && shape.authTotal === 7 && shape.ssrPending === 6 && shape.ssrTotal === 6, { mainChecked: shape.mainChecked, authChecked: shape.authChecked, ssrPending: shape.ssrPending })\n  const current = lines.find(line => line.startsWith('当前推进：'))\n  const selected = {\n    current,\n    P1: lines.find(line => line.startsWith('| P1 工程基础 |')),\n    P6: lines.find(line => line.startsWith('| P6 公开页与 SEO |')),\n    P7: lines.find(line => line.startsWith('| P7 双平台部署 |')),\n    NEXT41: lines.find(line => line.startsWith('| NEXT-41 |')),\n    SRC02: lines.find(line => line.startsWith('- [ ] SRC-02：')),\n    E00: lines.find(line => line.startsWith('| E00 |')),\n    E01: lines.find(line => line.startsWith('| E01 |')),\n    E06: lines.find(line => line.startsWith('| E06 |')),\n    E07: lines.find(line => line.startsWith('| E07 |')),\n    latestChangelog: lines.filter(line => line.startsWith('| 2026-10-03 |')).at(-1),\n  }\n  report.selectedCurrentLines = Object.fromEntries(Object.entries(selected).map(([key, value]) => [key, { lineNumber: lines.indexOf(value) + 1, text: value }]))\n  check('All11 requested current scope lines present', Object.values(selected).every(value => typeof value === 'string' && value.length > 0), Object.keys(selected))\n  const sectionStart = text.indexOf('### 5.61 '), sectionEnd = text.indexOf('\\n## 6.', sectionStart)\n  const section = text.slice(sectionStart, sectionEnd)\n  report.section561 = { startLine: lines.findIndex(line => line.startsWith('### 5.61 ')) + 1, bytes: Buffer.byteLength(section), sha256: SHA(Buffer.from(section)), heading: section.split(/\\r?\\n/)[0] }\n  check('5.61 section exists /batch local, full gate pending', sectionStart >= 0 && sectionEnd > sectionStart && /本地批次完成，完整门槛待验/.test(section), report.section561)\n  const paused = '完整目标尚未完成；持续实施目标当前暂停，本批仅完成已实施内容的文档收尾。'\n  check('Current goal explicitly paused, only completed-document closure', current.endsWith(paused), current)\n  const restored = text.replace(current, current.replace(paused, '完整目标继续。'))\n  check('Sole progress-line reverse restores original455290 MD exact bytes/hash', Buffer.byteLength(restored) === 656343 && SHA(Buffer.from(restored)) === '455290ccb925ee342a8beaac483bd58e7d36596a02af9cd01e85e1528c236d31', { bytes: Buffer.byteLength(restored), sha256: SHA(Buffer.from(restored)) })\n  const candidate = cp.candidate.data, observer = cp.currentAssemblerObserver.data, mapping = cp.ownerProofs.independentCandidate.data.mappingSummary\n  const sourceState = cp.sourceFreeze.data\n  check('Checkpoint actual0/fullgoal unfinished/no deployment', cp.actualExit === 0 && cp.fullGoalComplete === false && cp.noDeployment === true, { actualExit: cp.actualExit, fullGoalComplete: cp.fullGoalComplete, noDeployment: cp.noDeployment })\n  check('Checkpoint shape metadata and29 false match', cp.scopeInvariants.mainTasks === 102 && cp.scopeInvariants.matrix === 54 && cp.scopeInvariants.gates === 9 && cp.scopeInvariants.evidenceRows === 9 && cp.scopeInvariants.fences === 6 && cp.scopeInvariants.authSsrChecked === 7 && cp.scopeInvariants.globalSsrPending === 6 && cp.scopeInvariants.onlyMainTaskChecked === 'P6-11' && cp.scopeInvariants.disabledFlags === 29 && /29入口false/.test(current), cp.scopeInvariants)\n  check('121 mappings only2 newly solved /326 unknown /coveragefalse', candidate.mappingsToHistory === 121 && candidate.unresolved === 326 && candidate.sourceCoverageComplete === false && mapping.originallyUnresolved === 328 && mapping.newlyCleared.length === 2 && mapping.sourceSplit.current === 119 && mapping.sourceSplit.retained === 2 && /仅2项修复原unknown，余326仍unresolved/.test(current) && /119已current\\+2新补/.test(selected.NEXT41), { candidateMappings: candidate.mappingsToHistory, unknown: candidate.unresolved, coverageComplete: candidate.sourceCoverageComplete, independentMappingSummary: mapping })\n  check('Observer95d differs from original compiled549 /not fresh build', observer.files.length === 2286 && observer.sourceSha256 === '95d44e9747bf924718ec9d0a87acdf844056c62bd3a2020aa21cb96cd4311d94' && candidate.buildContract.sourceSha256 === '549be9bc2fae52e049cefd8cf21b52e594aff5ae01c009d93b5d31a01b4fba18' && candidate.noFreshWebBuildClaim === true && /不能当作P69编译sourceSHA/.test(section), { observerFiles: observer.files.length, observerSHA: observer.sourceSha256, reusedContract: candidate.buildContract, noFreshWebBuild: candidate.noFreshWebBuildClaim })\n  check('P68 currentReleaseId is explicit local reuse input /not production pointer', candidate.currentReleaseId === 'local-p68-source-delivery-20261003052607' && candidate.previousReleaseId === candidate.currentReleaseId && /not an observed published production pointer/.test(candidate.currentReleaseMeaning) && /仅指本地复用输入选择，不能推断线上发布指针/.test(section) && /不据本地currentReleaseId推断线上指针/.test(selected.P7), { current: candidate.currentReleaseId, previous: candidate.previousReleaseId, meaning: candidate.currentReleaseMeaning })\n  check('1561 full suite includes30historical/60config, no addition', equal(cp.unitSummary, { tests: 1561, pass: 1561, fail: 0, skipped: 0 }) && /Historical targeted30 and config60 are included/.test(cp.checksScope) && /新历史合同30\\/30与配置60\\/60已包含其中，不叠加/.test(section) && /historical30\\/config60含在1561内/.test(selected.E01), { unit: cp.unitSummary, scope: cp.checksScope })\n  check('Full lint/format actual scope /no new TS types or three-target build', /full Web lint\\/default formatter/.test(cp.checksScope) && /no new TS\\/TSX\\/declaration changes, typecheck\\/three-target build\\/Admin\\/Next\\/Core business-suite claim/.test(cp.checksScope) && /本批无TS\\/TSX\\/声明变更，未执行新typecheck/.test(section) && /没有新三目标build/.test(section) && /full Web lint\\/default Web Prettier3\\.9\\.9格式actual0/.test(section), cp.checksScope)\n  check('Node24/HTTP16/Chrome8 fixture vs native/cloud/live scope explicit', cp.limits.some(limit => /Node24 Windows.*not native/.test(limit)) && /16\\/16/.test(section) && /8\\/8context/.test(section) && /SSR\\/普通静态为compiled夹具，归档为实际同源HTTP/.test(section) && /不证明真实API\\/身份\\/DB\\/链或原生平台/.test(section) && /Cloudflare\\/workerd、Docker\\/Nginx/.test(selected.P7), { checkpointLimits: cp.limits, E06: selected.E06, E07: selected.E07 })\n  check('External pin/unsigned selfSHA not provenance or signature', cp.limits.some(limit => /unsigned selfSHA is not a signature/.test(limit)) && /外部预期SHA与unsigned selfSHA都不证明上游来源或签名/.test(selected.E00) && /326 inherited仍unresolved/.test(selected.E00), selected.E00)\n  check('Final changelog keeps2/326/no newbuild/types/platform/fullgoal unfinished', /仅2旧unknown修复、326继续/.test(selected.latestChangelog) && /无新build\\/types\\/业务suite\\/平台主张/.test(selected.latestChangelog) && /无部署/.test(selected.latestChangelog), selected.latestChangelog)\n  check('MD current checkpoint exact SHA/bytes citation', section.includes(expectedCP.sha256) && section.includes('8838113 B'), { checkpointBytes: expectedCP.bytes, checkpointSHA: expectedCP.sha256 })\n  check('Source freeze six STOP remains recorded', sourceState.actualExit === 0 && sourceState.allSixOwnersStopped === true && sourceState.records.length === 6, { actualExit: sourceState.actualExit, allSixOwnersStopped: sourceState.allSixOwnersStopped, records: sourceState.records.length })\n  report.goalStatus = { current: 'paused', authority: 'Root actual get_goal observation and sole final MD status edit', onlyClosingAlreadyImplementedDocuments: true, noGoalResumeOrImplementation: true }\n  report.countsNotAdded = { fullWeb: 1561, historical30Included: true, config60Included: true, priorReadonly268or288NotRerun: true, businessExecutionsByReviewer: 0 }\n} catch (error) { fatal = { message: String(error), stack: error.stack } }\nconst failed = checks.filter(item => item.actual === 'fail')\nreport.completedAt = new Date().toISOString()\nreport.actualExit = fatal || failed.length ? 1 : 0\nreport.status = report.actualExit ? 'failed' : 'passed'\nreport.checkSummary = { total: checks.length, pass: checks.length - failed.length, fail: failed.length, readonlyMetadataAssertions: true, addedBusinessTests: 0 }\nreport.fatal = fatal\nreport.findings = { blockingContradictions: failed, sourceSTOP: true, implementationGoalPaused: true, onlyDocumentClosure: true }\nconst proof = out + '/final-s3-doc-check-proof-v1.json', bytes = Buffer.from(JSON.stringify(report, null, 2) + '\\n')\nfs.writeFileSync(proof, bytes, { flag: 'wx' })\nconsole.log(JSON.stringify({ proof: { path: proof, bytes: bytes.length, sha256: SHA(bytes) }, actualExit: report.actualExit, checks: report.checkSummary, fatal, failed }))\nprocess.exitCode = report.actualExit\n"
+  },
+  "afterReviewSource6": [
+    {
+      "path": "C:\\cinagroup\\cinatoken\\packages\\web\\scripts\\package-release.mjs",
+      "bytes": 22461,
+      "sha256": "003de63f28c16421f8763cccdf6d549b19979f3eee93d3d90e4f3c74693af0c1"
+    },
+    {
+      "path": "C:\\cinagroup\\cinatoken\\packages\\web\\scripts\\historical-source.mjs",
+      "bytes": 8815,
+      "sha256": "226cf449bc36a4c3fc326aea085dc05b12ab1a6f6dbfe5a3f7a1a28d09580292"
+    },
+    {
+      "path": "C:\\cinagroup\\cinatoken\\packages\\web\\scripts\\historical-source.test.mjs",
+      "bytes": 21029,
+      "sha256": "deaebf06ff97accb87d6e17970c0373551372266059270f6df2377aa356feed0"
+    },
+    {
+      "path": "C:\\cinagroup\\cinatoken\\Dockerfile.web",
+      "bytes": 3046,
+      "sha256": "d6ef36c9fd5d3912e46ec37b5879f7a0d4769860779e11c064cf0544db7170f2"
+    },
+    {
+      "path": "C:\\cinagroup\\cinatoken\\Dockerfile.web-ssr",
+      "bytes": 1154,
+      "sha256": "7d2dc09a6540e1a3438c0a48d8df28dc84d139cbc577e638d532684a8786425a"
+    },
+    {
+      "path": "C:\\cinagroup\\cinatoken\\docker\\web\\config.test.mjs",
+      "bytes": 50139,
+      "sha256": "31dbd98d501243e728fbffef235eeb35ab8fa662ca95cc11873521b02d103157"
+    }
+  ],
+  "afterReviewConfigs": [
+    {
+      "path": "C:/cinagroup/cinatoken/packages/web/wrangler.web.jsonc",
+      "bytes": 2414,
+      "sha256": "ad8812aa4f5658794e0a11a2bb7673e81e95ee3b05c5c887a2a9e9114458a7de"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-next41-historical-source-aGuwPJ/source-free-runtime/packages/web/wrangler.web.jsonc",
+      "bytes": 2408,
+      "sha256": "630549bf2833f46a8b91fc425fbf82af9b4b9d768e8c408ec8f36362ede43eb4"
+    }
+  ],
+  "goalStatus": "paused",
+  "noGoalResumeOrImplementationAfterPauseRead": true,
+  "fullGoalComplete": false,
+  "noDeployment": true,
+  "scope": "Final document/hash/ordered checklist state/link and independent read-only metadata review only. Product Web1561, historical30/config60 included, sourceHTTP16 and Chrome8 contexts/16 downloads remain in immutable S3 implementation checkpoint. Independent25 metadata assertions are not product/business tests. No new typecheck/build/browser/platform execution.",
+  "limits": [
+    "326 inherited retained assets still unresolved; current coverageComplete=false",
+    "P67 contributes121 proven original current hashed mappings but only2 newly resolve earlier unknown entries",
+    "Assembler observer source95d44e is separate from original P68 compiled v2 contract source549be9; P68 currentReleaseId denotes explicit local reuse input, not a production release pointer",
+    "Native Linux Node22/CI/Cloudflare/workerd/Docker/Nginx and real identity/catalog/database/chain/release acceptance remain pending",
+    "Upstream immutable reference/import date/source ownership remain unverified; unsigned selfSHA is integrity metadata, not a signature or trust anchor",
+    "29 entry flags false and public origin empty; actual root Wrangler still points to original P66; no deployment"
+  ]
+}

@@ -2,7 +2,7 @@
 // cluster; GATEWAY_NATIVE_PG_BIN must point to local PostgreSQL 17+ binaries.
 import assert from 'node:assert/strict';
 import { createHash, randomBytes, randomUUID } from 'node:crypto';
-import { readFile, readdir, writeFile } from 'node:fs/promises';
+import { readFile, writeFile } from 'node:fs/promises';
 import { dirname, join } from 'node:path';
 import { setTimeout as delay } from 'node:timers/promises';
 import test from 'node:test';
@@ -12,7 +12,7 @@ import { createDispatchIntentRepositoryPostgres } from '../../../packages/core/s
 import { encodeUsageSettlement } from '../../../packages/core/src/storage/recovery/usage-settlement-codec.ts';
 import { sample } from '../../../packages/core/src/storage/recovery/usage-settlement-test-support.mjs';
 import { buildPostgresRecoveryRoleSql } from './postgres-recovery-role-policy.ts';
-import { grantPostgresRuntime } from './grant-postgres-runtime.ts';
+import { grantPg73RuntimeFixture, listPg73Migrations } from './pg73-native-fixture.mjs';
 
 const migrations = new URL('../../../packages/core/migrations-postgres/', import.meta.url);
 const guardSwitch = new URL('./postgres-recovery-legacy-log-guard.activate.sql', import.meta.url);
@@ -121,7 +121,7 @@ test('native recovery role, paired guard and ordinary log writer are isolated', 
   const migratorUrl = `postgres://cinatoken_gateway_migrator:${migratorPassword}@127.0.0.1:${cluster.port}/postgres`;
   await migrator.unsafe(`CREATE TABLE ${gateway}.schema_migrations (
     version text PRIMARY KEY, applied_at timestamptz NOT NULL DEFAULT now())`);
-  const files = (await readdir(migrations)).filter(name => name.endsWith('.sql')).sort();
+  const files = await listPg73Migrations();
   assert.equal(files.at(-1), '0073_recovery_api_key_workspace_lock.sql');
   for (const name of files) {
     const body = await readFile(new URL(name, migrations), 'utf8');
@@ -161,7 +161,7 @@ test('native recovery role, paired guard and ordinary log writer are isolated', 
   }
   assert.equal(files.length, 73);
   checked('73 formal migrations applied as migrator');
-  await grantPostgresRuntime({ DATABASE_URL: migratorUrl });
+  await grantPg73RuntimeFixture({ cluster, migrator, migratorUrl });
   await migrator.unsafe(`INSERT INTO ${gateway}.users(id,email,budget_max,budget_spent)
     VALUES ('user','native-recovery@example.invalid',10,0);
     INSERT INTO ${gateway}.workspaces(id,scope_type,personal_owner_user_id,name,slug,status)
@@ -223,7 +223,7 @@ test('native recovery role, paired guard and ordinary log writer are isolated', 
     await tx.unsafe("SET LOCAL cinatoken.recovery_log_guard_activation = 'reviewed-v1'");
     await tx.unsafe(guardSql).simple();
   });
-  await grantPostgresRuntime({ DATABASE_URL: migratorUrl });
+  await grantPg73RuntimeFixture({ cluster, migrator, migratorUrl });
   const noDirectGuard = await admin.unsafe(`SELECT
     pg_catalog.has_function_privilege('cinatoken_gateway_runtime',
       '${gateway}.guard_fact_owned_usage_log()', 'EXECUTE') AS ordinary_log_guard,

@@ -75,6 +75,14 @@ import migration0070 from '../../../packages/core/migrations-postgres/0070_recov
 import migration0071 from '../../../packages/core/migrations-postgres/0071_recovery_jobs.sql';
 import migration0072 from '../../../packages/core/migrations-postgres/0072_recovery_commit_receipts.sql';
 import migration0073 from '../../../packages/core/migrations-postgres/0073_recovery_api_key_workspace_lock.sql';
+import migration0074 from '../../../packages/core/migrations-postgres/0074_config_change_audit.sql';
+import migration0075 from '../../../packages/core/migrations-postgres/0075_system_config_revision.sql';
+import migration0076 from '../../../packages/core/migrations-postgres/0076_user_audit_export_order_index.sql';
+import migration0077 from '../../../packages/core/migrations-postgres/0077_admin_access_key_audit.sql';
+import migration0078 from '../../../packages/core/migrations-postgres/0078_shared_key_earnings_history_guard.sql';
+import migration0079 from '../../../packages/core/migrations-postgres/0079_admin_shared_key_audit.sql';
+import migration0080 from '../../../packages/core/migrations-postgres/0080_admin_shared_key_actor_bounds.sql';
+import migration0081 from '../../../packages/core/migrations-postgres/0081_tools_config_group_audit.sql';
 
 interface MigrationEnv {
 	MIGRATOR_HYPERDRIVE: { readonly connectionString: string };
@@ -156,6 +164,14 @@ const MIGRATIONS = [
 	['0071_recovery_jobs.sql', migration0071],
 	['0072_recovery_commit_receipts.sql', migration0072],
 	['0073_recovery_api_key_workspace_lock.sql', migration0073],
+	['0074_config_change_audit.sql', migration0074],
+	['0075_system_config_revision.sql', migration0075],
+	['0076_user_audit_export_order_index.sql', migration0076],
+	['0077_admin_access_key_audit.sql', migration0077],
+	['0078_shared_key_earnings_history_guard.sql', migration0078],
+	['0079_admin_shared_key_audit.sql', migration0079],
+	['0080_admin_shared_key_actor_bounds.sql', migration0080],
+	['0081_tools_config_group_audit.sql', migration0081],
 ] as const;
 
 export default {

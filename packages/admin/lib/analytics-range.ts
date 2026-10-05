@@ -1,81 +1,101 @@
 /**
  * Analytics 页共用：时间窗 UTC 字符串、成本汇总、表格排序。
  */
-import type { AnalyticsRowCosts } from '@/lib/types';
+import type { AnalyticsRowCosts } from "@/lib/types";
 import {
 	toSqlUtcDateTime,
 	utcApiToZonedInput,
 	zonedInputToUtcApi,
-} from '@/lib/business-timezone-client';
+} from "@/lib/business-timezone-client";
 
 /** 滚动快捷窗（Admin UI：1h / 1d / 7d / 14d / 30d；`90d` 仅 API 兼容）。 */
-export type GatewayRollingPreset = '1h' | '1d' | '7d' | '14d' | '30d' | '90d';
+export type GatewayRollingPreset = "1h" | "1d" | "7d" | "14d" | "30d" | "90d";
 
 /** 日历快捷窗（按业务时区：今天 / 本周周一起 / 本月）。 */
-export type GatewayCalendarPreset = 'today' | 'this_week' | 'this_month';
+export type GatewayCalendarPreset = "today" | "this_week" | "this_month";
 
 /** 快捷时间窗（Admin UI 默认按钮 + custom）。 */
-export type GatewayTimeRangePreset = GatewayRollingPreset | GatewayCalendarPreset | 'custom';
+export type GatewayTimeRangePreset =
+	| GatewayRollingPreset
+	| GatewayCalendarPreset
+	| "custom";
 
 /** @deprecated 使用 `GatewayTimeRangePreset`；保留 `24h` 别名以兼容旧代码。 */
-export type AnalyticsRangePreset = GatewayTimeRangePreset | '24h';
+export type AnalyticsRangePreset = GatewayTimeRangePreset | "24h";
 
-const ROLLING_PRESET_ORDER: Array<Exclude<GatewayRollingPreset, '90d'>> = ['1h', '1d', '7d', '14d', '30d'];
-const CALENDAR_PRESET_ORDER: GatewayCalendarPreset[] = ['today', 'this_week', 'this_month'];
+const ROLLING_PRESET_ORDER: Array<Exclude<GatewayRollingPreset, "90d">> = [
+	"1h",
+	"1d",
+	"7d",
+	"14d",
+	"30d",
+];
+const CALENDAR_PRESET_ORDER: GatewayCalendarPreset[] = [
+	"today",
+	"this_week",
+	"this_month",
+];
 
 export const GATEWAY_TIME_RANGE_PRESETS = ROLLING_PRESET_ORDER;
 export const GATEWAY_CALENDAR_PRESETS = CALENDAR_PRESET_ORDER;
 
 /** Admin 各页时间范围选择器默认快捷项。 */
-export const DEFAULT_GATEWAY_TIME_RANGE_PRESET: GatewayCalendarPreset = 'today';
+export const DEFAULT_GATEWAY_TIME_RANGE_PRESET: GatewayCalendarPreset = "today";
 
-export function isRollingPreset(preset: string): preset is GatewayRollingPreset | '24h' {
+export function isRollingPreset(
+	preset: string
+): preset is GatewayRollingPreset | "24h" {
 	return (
-		preset === '1h' ||
-		preset === '1d' ||
-		preset === '24h' ||
-		preset === '7d' ||
-		preset === '14d' ||
-		preset === '30d' ||
-		preset === '90d'
+		preset === "1h" ||
+		preset === "1d" ||
+		preset === "24h" ||
+		preset === "7d" ||
+		preset === "14d" ||
+		preset === "30d" ||
+		preset === "90d"
 	);
 }
 
-export function isCalendarPreset(preset: string): preset is GatewayCalendarPreset {
-	return preset === 'today' || preset === 'this_week' || preset === 'this_month';
+export function isCalendarPreset(
+	preset: string
+): preset is GatewayCalendarPreset {
+	return (
+		preset === "today" || preset === "this_week" || preset === "this_month"
+	);
 }
 
-export function rangeToParams(
-	range: GatewayRollingPreset | '24h'
-): { start_date: string; end_date: string } {
+export function rangeToParams(range: GatewayRollingPreset | "24h"): {
+	start_date: string;
+	end_date: string;
+} {
 	const end = new Date();
 	const start = new Date(end.getTime());
 	switch (range) {
-		case '1h':
+		case "1h":
 			start.setTime(end.getTime() - 60 * 60 * 1000);
 			break;
-		case '1d':
-		case '24h':
+		case "1d":
+		case "24h":
 			start.setTime(end.getTime() - 24 * 60 * 60 * 1000);
 			break;
-		case '7d':
+		case "7d":
 			start.setDate(start.getDate() - 7);
 			break;
-		case '14d':
+		case "14d":
 			start.setDate(start.getDate() - 14);
 			break;
-		case '30d':
+		case "30d":
 			start.setDate(start.getDate() - 30);
 			break;
-		case '90d':
+		case "90d":
 			start.setDate(start.getDate() - 90);
 			break;
 		default:
 			start.setTime(end.getTime() - 24 * 60 * 60 * 1000);
 	}
 	return {
-		start_date: start.toISOString().slice(0, 19).replace('T', ' '),
-		end_date: end.toISOString().slice(0, 19).replace('T', ' '),
+		start_date: start.toISOString().slice(0, 19).replace("T", " "),
+		end_date: end.toISOString().slice(0, 19).replace("T", " "),
 	};
 }
 
@@ -91,22 +111,24 @@ export function calendarRangeToParams(
 	const zonedNow = utcApiToZonedInput(end_date, timeZone);
 	const dateKey = zonedNow.slice(0, 10);
 	if (!/^\d{4}-\d{2}-\d{2}$/.test(dateKey)) {
-		return rangeToParams('1d');
+		return rangeToParams("1d");
 	}
 
 	let startKey = dateKey;
-	if (range === 'this_month') {
+	if (range === "this_month") {
 		startKey = `${dateKey.slice(0, 7)}-01`;
-	} else if (range === 'this_week') {
-		const [y, m, d] = dateKey.split('-').map(Number);
+	} else if (range === "this_week") {
+		const [y, m, d] = dateKey.split("-").map(Number);
 		const dow = new Date(Date.UTC(y, m - 1, d)).getUTCDay(); // 0=Sun … 6=Sat
 		const daysSinceMonday = (dow + 6) % 7;
 		const monday = new Date(Date.UTC(y, m - 1, d - daysSinceMonday));
-		startKey = `${monday.getUTCFullYear()}-${String(monday.getUTCMonth() + 1).padStart(2, '0')}-${String(monday.getUTCDate()).padStart(2, '0')}`;
+		startKey = `${monday.getUTCFullYear()}-${String(
+			monday.getUTCMonth() + 1
+		).padStart(2, "0")}-${String(monday.getUTCDate()).padStart(2, "0")}`;
 	}
 
 	const start_date = zonedInputToUtcApi(`${startKey}T00:00`, timeZone);
-	if (!start_date) return rangeToParams('1d');
+	if (!start_date) return rangeToParams("1d");
 	return { start_date, end_date };
 }
 
@@ -117,20 +139,28 @@ export function detectRollingPreset(
 	start_date: string,
 	end_date: string,
 	toleranceMs = 120_000
-): Exclude<GatewayRollingPreset, '90d'> | null {
+): Exclude<GatewayRollingPreset, "90d"> | null {
 	if (!start_date?.trim() || !end_date?.trim()) return null;
-	const startMs = Date.parse(start_date.includes('T') ? start_date : `${start_date.replace(' ', 'T')}Z`);
-	const endMs = Date.parse(end_date.includes('T') ? end_date : `${end_date.replace(' ', 'T')}Z`);
+	const startMs = Date.parse(
+		start_date.includes("T") ? start_date : `${start_date.replace(" ", "T")}Z`
+	);
+	const endMs = Date.parse(
+		end_date.includes("T") ? end_date : `${end_date.replace(" ", "T")}Z`
+	);
 	if (Number.isNaN(startMs) || Number.isNaN(endMs)) return null;
 	const now = Date.now();
 	if (Math.abs(now - endMs) > toleranceMs) return null;
 	const dur = endMs - startMs;
 	for (const p of ROLLING_PRESET_ORDER) {
 		const { start_date: s, end_date: e } = rangeToParams(p);
-		const sm = Date.parse(s.replace(' ', 'T') + 'Z');
-		const em = Date.parse(e.replace(' ', 'T') + 'Z');
+		const sm = Date.parse(s.replace(" ", "T") + "Z");
+		const em = Date.parse(e.replace(" ", "T") + "Z");
 		const expectedDur = em - sm;
-		if (!Number.isNaN(sm) && !Number.isNaN(em) && Math.abs(expectedDur - dur) < toleranceMs) {
+		if (
+			!Number.isNaN(sm) &&
+			!Number.isNaN(em) &&
+			Math.abs(expectedDur - dur) < toleranceMs
+		) {
 			return p;
 		}
 	}
@@ -144,8 +174,8 @@ export type GatewayTimeRangeValue = {
 };
 
 export function createRangeValue(
-	preset: Exclude<GatewayTimeRangePreset, 'custom'>,
-	timeZone = 'UTC'
+	preset: Exclude<GatewayTimeRangePreset, "custom">,
+	timeZone = "UTC"
 ): GatewayTimeRangeValue {
 	if (isCalendarPreset(preset)) {
 		return { preset, ...calendarRangeToParams(preset, timeZone) };
@@ -157,11 +187,11 @@ export function createRangeValue(
 /** KPI 副标题等：预设用翻译标签，自定义区间展示业务时区起止。 */
 export function formatGatewayRangeSummary(
 	value: GatewayTimeRangeValue,
-	presetLabel: (preset: Exclude<GatewayTimeRangePreset, 'custom'>) => string,
+	presetLabel: (preset: Exclude<GatewayTimeRangePreset, "custom">) => string,
 	customLabel: string,
 	timeZone?: string
 ): string {
-	if (value.preset !== 'custom') {
+	if (value.preset !== "custom") {
 		return presetLabel(value.preset);
 	}
 	const start = value.start_date?.trim();
@@ -180,23 +210,30 @@ export function formatGatewayRangeSummary(
 /** @deprecated 使用 `utcApiToZonedInput(api, businessTimeZone)`。 */
 export function apiUtcToDatetimeLocal(api: string, timeZone?: string): string {
 	if (timeZone) return utcApiToZonedInput(api, timeZone);
-	const d = new Date(api.includes('T') ? api : `${api.replace(' ', 'T')}Z`);
-	if (isNaN(d.getTime())) return '';
-	const pad = (n: number) => String(n).padStart(2, '0');
-	return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+	const d = new Date(api.includes("T") ? api : `${api.replace(" ", "T")}Z`);
+	if (isNaN(d.getTime())) return "";
+	const pad = (n: number) => String(n).padStart(2, "0");
+	return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(
+		d.getHours()
+	)}:${pad(d.getMinutes())}`;
 }
 
 /** @deprecated 使用 `zonedInputToUtcApi(localStr, businessTimeZone)`。 */
-export function datetimeLocalToApiUtc(localStr: string, timeZone?: string): string {
+export function datetimeLocalToApiUtc(
+	localStr: string,
+	timeZone?: string
+): string {
 	if (timeZone) return zonedInputToUtcApi(localStr, timeZone);
 	const d = new Date(localStr);
-	if (isNaN(d.getTime())) return '';
-	return d.toISOString().slice(0, 19).replace('T', ' ');
+	if (isNaN(d.getTime())) return "";
+	return d.toISOString().slice(0, 19).replace("T", " ");
 }
 
 /** API 串 `YYYY-MM-DD HH:MM:SS`（UTC）→ 毫秒；勿用 `new Date(无 Z 的串)`（会被当成本地时间）。 */
 function apiUtcStringToMs(sqlUtc: string): number {
-	return Date.parse(sqlUtc.includes('T') ? sqlUtc : `${sqlUtc.replace(' ', 'T')}Z`);
+	return Date.parse(
+		sqlUtc.includes("T") ? sqlUtc : `${sqlUtc.replace(" ", "T")}Z`
+	);
 }
 
 /**
@@ -222,7 +259,7 @@ export function computeAnalyticsDateRange(
 	customEndLocal: string,
 	timeZone?: string
 ): { start_date: string; end_date: string } | null {
-	if (range === 'custom') {
+	if (range === "custom") {
 		const s = timeZone
 			? zonedInputToUtcApi(customStartLocal, timeZone)
 			: datetimeLocalToApiUtc(customStartLocal);
@@ -233,9 +270,9 @@ export function computeAnalyticsDateRange(
 		return normalizeCustomApiRange(s, e);
 	}
 	if (isCalendarPreset(range)) {
-		return calendarRangeToParams(range, timeZone ?? 'UTC');
+		return calendarRangeToParams(range, timeZone ?? "UTC");
 	}
-	if (range === '24h') return rangeToParams('24h');
+	if (range === "24h") return rangeToParams("24h");
 	return rangeToParams(range as GatewayRollingPreset);
 }
 
@@ -255,24 +292,31 @@ export function sumAnalyticsCosts(rows: ReadonlyArray<AnalyticsRowCosts>): {
 	return { standard, charged, metered };
 }
 
-type SortDir = 'asc' | 'desc';
+type SortDir = "asc" | "desc";
 
 /** 分析表通用排序：`standard_cost` 按数值含缺省；其余数字 / 字符串 / null 与原先逻辑一致。 */
-export function compareAnalyticsTableRows(a: object, b: object, sortKey: string, sortDir: SortDir): number {
+export function compareAnalyticsTableRows(
+	a: object,
+	b: object,
+	sortKey: string,
+	sortDir: SortDir
+): number {
 	if (!sortKey) return 0;
-	if (sortKey === 'standard_cost') {
+	if (sortKey === "standard_cost") {
 		const na = Number((a as AnalyticsRowCosts).standard_cost ?? 0);
 		const nb = Number((b as AnalyticsRowCosts).standard_cost ?? 0);
-		return sortDir === 'asc' ? na - nb : nb - na;
+		return sortDir === "asc" ? na - nb : nb - na;
 	}
 	const ra = a as Record<string, unknown>;
 	const rb = b as Record<string, unknown>;
 	const va = ra[sortKey];
 	const vb = rb[sortKey];
-	if (typeof va === 'number' && typeof vb === 'number') return sortDir === 'asc' ? va - vb : vb - va;
-	if (typeof va === 'string' && typeof vb === 'string') return sortDir === 'asc' ? va.localeCompare(vb) : vb.localeCompare(va);
+	if (typeof va === "number" && typeof vb === "number")
+		return sortDir === "asc" ? va - vb : vb - va;
+	if (typeof va === "string" && typeof vb === "string")
+		return sortDir === "asc" ? va.localeCompare(vb) : vb.localeCompare(va);
 	if (va == null && vb == null) return 0;
-	if (va == null) return sortDir === 'asc' ? -1 : 1;
-	if (vb == null) return sortDir === 'asc' ? 1 : -1;
+	if (va == null) return sortDir === "asc" ? -1 : 1;
+	if (vb == null) return sortDir === "asc" ? 1 : -1;
 	return 0;
 }

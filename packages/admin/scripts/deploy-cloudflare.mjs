@@ -12,7 +12,7 @@ const env = isWindows
 
 if (isWindows) {
 	console.log(
-		"[admin deploy] Windows: uploading the built OpenNext Worker directly; incremental R2 cache is not enabled.",
+		"[admin deploy] Windows: uploading the built OpenNext Worker directly; incremental R2 cache is not enabled."
 	);
 }
 

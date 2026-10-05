@@ -10,6 +10,7 @@ import {
 	mapUserTokenTimeseriesRows,
 } from '../../lib/dashboard-request-stats';
 import type { RequestLogRow } from '../../types';
+import { adminRequestLogDetailSql } from '../admin-request-log-detail';
 import type { PostgresDatabaseClient } from '../../storage/database-client';
 import type { RequestLogsRepository } from '../../storage/gateway-repository-interfaces';
 import { sqlitePlaceholdersToPg } from '../shared/sql-placeholders';
@@ -90,6 +91,11 @@ export function createPostgresRequestLogsRepository(db: PostgresDatabaseClient):
 				],
 			);
 			return rows.length === 1;
+		},
+
+		async getAdminRequestLogById(id): Promise<RequestLogRow | null> {
+			const rows = await pg.unsafe<RequestLogRow[]>(adminRequestLogDetailSql('postgres'), [id]);
+			return rows[0] ?? null;
 		},
 
 		async getRequestLogByIdForOwner(options): Promise<GenerationRequestLogRow | null> {

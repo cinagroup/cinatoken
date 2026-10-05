@@ -1,31 +1,36 @@
-import type { NextRequest } from 'next/server';
-import { NextResponse } from 'next/server';
-import { linkOrganizationMembershipsToUser } from '@octafuse/core';
-import { generateSessionToken, hashSessionToken } from '@/lib/auth';
+import type { NextRequest } from "next/server";
+import { NextResponse } from "next/server";
+import { linkOrganizationMembershipsToUser } from "@octafuse/core";
+import { generateSessionToken, hashSessionToken } from "@/lib/auth";
 import {
 	fetchCinaAuth,
 	getCinaAuthConfig,
 	getCinaAuthSecrets,
 	hasRequiredCinaAuthRole,
-} from '@/lib/cinaauth/config';
+} from "@/lib/cinaauth/config";
 import {
 	discoverCinaAuthAuthorizationServer,
 	exchangeCinaAuthAuthorizationCode,
 	getCinaAuthOidcFailureDetails,
-} from '@/lib/cinaauth/oidc-client';
-import { cinaAuthSessionUsername } from '@/lib/cinaauth/principal';
+} from "@/lib/cinaauth/oidc-client";
+import { cinaAuthSessionUsername } from "@/lib/cinaauth/principal";
 import {
 	readCinaAuthCallbackTransaction,
 	selectCinaAuthTransactionCookieName,
 	type CinatokenOidcTransaction,
-} from '@/lib/cinaauth/transaction';
-import { createCinaAuthPopupCompletionResponse } from '@/lib/cinaauth/popup-response';
-import { resolveAdminRequestRuntime } from '@/lib/admin-request-runtime';
-import { logAdminAuthEvent } from '@/lib/security-log';
-import { PORTAL_SESSION_TTL_MS, USER_SESSION_COOKIE, upsertPortalUser } from '@/lib/user-auth';
-import { CINATOKEN_SESSION_COOKIE } from '@/lib/unified-session';
+} from "@/lib/cinaauth/transaction";
+import { createCinaAuthPopupCompletionResponse } from "@/lib/cinaauth/popup-response";
+import { resolveAdminRequestRuntime } from "@/lib/admin-request-runtime";
+import { logAdminAuthEvent } from "@/lib/security-log";
+import {
+	PORTAL_SESSION_TTL_MS,
+	USER_SESSION_COOKIE,
+	upsertPortalUser,
+} from "@/lib/user-auth";
+import { CINATOKEN_SESSION_COOKIE } from "@/lib/unified-session";
+import { getPublicRequestUrl } from "@/lib/public-request-url";
 
-export const dynamic = 'force-dynamic';
+export const dynamic = "force-dynamic";
 
 type BridgeResponse = {
 	ok?: boolean;
@@ -38,18 +43,23 @@ type UserInfoResponse = {
 };
 
 const clearTransactionCookie = (
-	request: NextRequest, response: NextResponse, transaction?: CinatokenOidcTransaction,
+	request: NextRequest,
+	response: NextResponse,
+	transaction?: CinatokenOidcTransaction
 ): void => {
 	// Only a verified, state-matched transaction may clear its own cookie. An
 	// unrelated callback must not cancel another tab (including a legacy flow).
 	if (!transaction) return;
-	const name = selectCinaAuthTransactionCookieName(request.cookies, transaction.state);
+	const name = selectCinaAuthTransactionCookieName(
+		request.cookies,
+		transaction.state
+	);
 	if (!name) return;
-	response.cookies.set(name, '', {
+	response.cookies.set(name, "", {
 		httpOnly: true,
 		secure: true,
-		sameSite: 'lax',
-		path: '/',
+		sameSite: "lax",
+		path: "/",
 		maxAge: 0,
 	});
 };
@@ -57,13 +67,13 @@ const clearTransactionCookie = (
 const fail = (
 	request: NextRequest,
 	error: string,
-	fallbackPath = '/',
-	transaction?: CinatokenOidcTransaction,
+	fallbackPath = "/",
+	transaction?: CinatokenOidcTransaction
 ): NextResponse => {
 	if (transaction?.popupRequestId) {
 		const response = createCinaAuthPopupCompletionResponse({
 			requestId: transaction.popupRequestId,
-			appOrigin: new URL(request.url).origin,
+			appOrigin: getPublicRequestUrl(request).origin,
 			callbackPath: transaction.callbackPath,
 			ok: false,
 			error,
@@ -71,17 +81,17 @@ const fail = (
 		clearTransactionCookie(request, response, transaction);
 		return response;
 	}
-	const url = new URL(fallbackPath, request.url);
-	url.searchParams.set('auth_error', error);
+	const url = new URL(fallbackPath, getPublicRequestUrl(request));
+	url.searchParams.set("auth_error", error);
 	const response = NextResponse.redirect(url, 302);
 	clearTransactionCookie(request, response, transaction);
-	response.headers.set('Cache-Control', 'no-store');
+	response.headers.set("Cache-Control", "no-store");
 	return response;
 };
 
 const complete = (
 	transaction: CinatokenOidcTransaction,
-	appOrigin: string,
+	appOrigin: string
 ): NextResponse =>
 	transaction.popupRequestId
 		? createCinaAuthPopupCompletionResponse({
@@ -89,7 +99,7 @@ const complete = (
 				appOrigin,
 				callbackPath: transaction.callbackPath,
 				ok: true,
-			})
+		  })
 		: NextResponse.redirect(new URL(transaction.callbackPath, appOrigin), 302);
 
 /**
@@ -100,18 +110,26 @@ async function completePortalLogin(
 	request: NextRequest,
 	accessToken: string,
 	subject: string,
-	transaction: CinatokenOidcTransaction,
+	transaction: CinatokenOidcTransaction
 ): Promise<NextResponse> {
 	const config = getCinaAuthConfig(request);
-	const userinfoRequest = new Request(`${config.issuer}/api/auth/oauth2/userinfo`, {
-		method: 'GET',
-		headers: { authorization: `Bearer ${accessToken}`, origin: config.appOrigin },
-		cache: 'no-store',
-	});
+	const userinfoRequest = new Request(
+		`${config.issuer}/api/auth/oauth2/userinfo`,
+		{
+			method: "GET",
+			headers: {
+				authorization: `Bearer ${accessToken}`,
+				origin: config.appOrigin,
+			},
+			cache: "no-store",
+		}
+	);
 	const userinfoResponse = await fetchCinaAuth(userinfoRequest, request);
-	const userinfo = (await userinfoResponse.json().catch(() => null)) as UserInfoResponse | null;
+	const userinfo = (await userinfoResponse
+		.json()
+		.catch(() => null)) as UserInfoResponse | null;
 	if (!userinfoResponse.ok || userinfo?.sub !== subject) {
-		return fail(request, 'portal_userinfo_failed', '/account', transaction);
+		return fail(request, "portal_userinfo_failed", "/account", transaction);
 	}
 	const email = userinfo.email?.trim() || `${subject}@cinaauth.invalid`;
 
@@ -138,13 +156,13 @@ async function completePortalLogin(
 	response.cookies.set(CINATOKEN_SESSION_COOKIE, sessionToken, {
 		httpOnly: true,
 		secure: true,
-		sameSite: 'lax',
-		path: '/',
+		sameSite: "lax",
+		path: "/",
 		expires: expiresAt,
 	});
 	response.cookies.delete(USER_SESSION_COOKIE);
-	response.cookies.delete('admin_session');
-	response.headers.set('Cache-Control', 'no-store');
+	response.cookies.delete("admin_session");
+	response.headers.set("Cache-Control", "no-store");
 	return response;
 }
 
@@ -156,58 +174,63 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
 		const secrets = getCinaAuthSecrets(request);
 		transaction = await readCinaAuthCallbackTransaction(
 			request.cookies,
-			request.nextUrl.searchParams.get('state'),
-			secrets.transactionSecret,
+			request.nextUrl.searchParams.get("state"),
+			secrets.transactionSecret
 		);
-		if (!transaction) return fail(request, 'invalid_transaction');
+		if (!transaction) return fail(request, "invalid_transaction");
 
-		const authorizationServer = await discoverCinaAuthAuthorizationServer(config, request);
+		const authorizationServer = await discoverCinaAuthAuthorizationServer(
+			config,
+			request
+		);
 		const tokens = await exchangeCinaAuthAuthorizationCode({
 			server: authorizationServer,
 			config,
-			callbackUrl: new URL(request.url),
+			callbackUrl: getPublicRequestUrl(request),
 			transaction,
 			clientSecret: secrets.clientSecret,
 			sourceRequest: request,
 		});
 
-		if (transaction.intent === 'portal') {
+		if (transaction.intent === "portal") {
 			return await completePortalLogin(
 				request,
 				tokens.accessToken,
 				tokens.subject,
-				transaction,
+				transaction
 			);
 		}
 
 		const bridgeRequest = new Request(
 			`${config.issuer}/api/auth/cinatoken-oidc/session`,
 			{
-				method: 'POST',
+				method: "POST",
 				headers: {
 					authorization: `Bearer ${tokens.accessToken}`,
 					origin: config.appOrigin,
-					'x-cinatoken-bridge-secret': secrets.bridgeSecret,
+					"x-cinatoken-bridge-secret": secrets.bridgeSecret,
 				},
-				cache: 'no-store',
-			},
+				cache: "no-store",
+			}
 		);
 		const bridge = await fetchCinaAuth(bridgeRequest, request);
-		const body = (await bridge.json().catch(() => null)) as BridgeResponse | null;
+		const body = (await bridge
+			.json()
+			.catch(() => null)) as BridgeResponse | null;
 		if (
 			!bridge.ok ||
 			body?.ok !== true ||
 			body.user?.id !== tokens.subject ||
 			!hasRequiredCinaAuthRole(body.user.role, config.requiredRoles)
 		) {
-			logAdminAuthEvent('admin.auth.login_failed', request, {
+			logAdminAuthEvent("admin.auth.login_failed", request, {
 				username: cinaAuthSessionUsername(tokens.subject),
 			});
 			return fail(
 				request,
-				'admin_forbidden',
+				"admin_forbidden",
 				transaction.callbackPath,
-				transaction,
+				transaction
 			);
 		}
 
@@ -216,21 +239,24 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
 		const expiresAt = new Date(now.getTime() + 8 * 60 * 60 * 1000);
 		const username = cinaAuthSessionUsername(tokens.subject);
 		const { storage } = await resolveAdminRequestRuntime(request);
-		const email = body.user.email?.trim() || `${tokens.subject}@cinaauth.invalid`;
+		const email =
+			body.user.email?.trim() || `${tokens.subject}@cinaauth.invalid`;
 		const userId = await upsertPortalUser(
 			storage.repositories.users,
 			tokens.subject,
-			email,
+			email
 		);
 		await linkOrganizationMembershipsToUser(
 			storage.repositories.client,
 			tokens.subject,
-			userId,
+			userId
 		);
 		await storage.repositories.portalLedger.ensureUserEarnings(userId);
 		await Promise.all([
 			storage.repositories.adminAccess.deleteExpiredSessions(now.toISOString()),
-			storage.repositories.portalAccess.deleteExpiredSessions(now.toISOString()),
+			storage.repositories.portalAccess.deleteExpiredSessions(
+				now.toISOString()
+			),
 		]);
 		const tokenHash = await hashSessionToken(sessionToken);
 		await storage.repositories.adminAccess.insertSession({
@@ -252,28 +278,28 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
 		response.cookies.set(CINATOKEN_SESSION_COOKIE, sessionToken, {
 			httpOnly: true,
 			secure: true,
-			sameSite: 'lax',
-			path: '/',
+			sameSite: "lax",
+			path: "/",
 			expires: expiresAt,
 		});
 		response.cookies.delete(USER_SESSION_COOKIE);
-		response.cookies.delete('admin_session');
-		response.headers.set('Cache-Control', 'no-store');
-		logAdminAuthEvent('admin.auth.login', request, { username });
+		response.cookies.delete("admin_session");
+		response.headers.set("Cache-Control", "no-store");
+		logAdminAuthEvent("admin.auth.login", request, { username });
 		return response;
 	} catch (error) {
 		console.error(
 			JSON.stringify({
-				level: 'error',
-				message: 'cinatoken.oidc_callback_failed',
+				level: "error",
+				message: "cinatoken.oidc_callback_failed",
 				...getCinaAuthOidcFailureDetails(error),
-			}),
+			})
 		);
 		return fail(
 			request,
-			'oidc_failed',
-			transaction?.callbackPath ?? '/',
-			transaction ?? undefined,
+			"oidc_failed",
+			transaction?.callbackPath ?? "/",
+			transaction ?? undefined
 		);
 	}
 }

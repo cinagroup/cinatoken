@@ -2,7 +2,7 @@
 // The historical v348 fixture, SQL proposals, test-only grants and denial assertions stay frozen.
 import assert from 'node:assert/strict';
 import { createHash, randomBytes, randomUUID } from 'node:crypto';
-import { readFile, readdir, writeFile } from 'node:fs/promises';
+import { readFile, writeFile } from 'node:fs/promises';
 import { dirname, join } from 'node:path';
 import test from 'node:test';
 import postgres from 'postgres';
@@ -18,7 +18,7 @@ import { EMPTY_USAGE } from '../../../packages/proxy/src/services/proxy.ts';
 import { handleChatCompletion } from '../../../packages/proxy/src/routes/v1/chat.ts';
 import { createPostgresSharedKeyEconomicProducer } from '../../../packages/proxy/src/services/shared-key-quote-attempt.ts';
 import { drainNodeBackgroundWork } from '../../../packages/proxy/src/runtime/schedule-background-work.ts';
-import { grantPostgresRuntime } from './grant-postgres-runtime.ts';
+import { grantPg73RuntimeFixture, listPg73Migrations } from './pg73-native-fixture.mjs';
 
 const gateway = 'cinatoken_gateway';
 const quotes = 'cinatoken_economic_quotes';
@@ -164,7 +164,7 @@ test('post-reservation Guardrail denial closes only a proven pre-send released b
       clients.push(migrator, runtime, buyer, quoteProducer);
       await migrator.unsafe(`CREATE TABLE ${gateway}.schema_migrations
         (version text PRIMARY KEY, applied_at timestamptz NOT NULL DEFAULT now())`);
-      const names = (await readdir(migrations)).filter(name => name.endsWith('.sql')).sort();
+      const names = await listPg73Migrations();
       assert.equal(names.length, 73);
       const corpus = [];
       for (const name of names) {
@@ -187,7 +187,7 @@ test('post-reservation Guardrail denial closes only a proven pre-send released b
       assert.equal(report.sourceSha256.historicalFixture, historicalFixtureSha256);
       const migratorUrl = `postgres://cinatoken_gateway_migrator:${migratorPassword}`
         + `@127.0.0.1:${cluster.port}/postgres`;
-      await grantPostgresRuntime({ DATABASE_URL: migratorUrl });
+      await grantPg73RuntimeFixture({ cluster, migrator, migratorUrl });
       stage('formal-pg73-and-current-runtime-grant-installed');
 
       for (const [name, activation, value] of proposals) {
@@ -830,7 +830,7 @@ test('post-reservation Guardrail denial closes only a proven pre-send released b
         logs: 0, events: 0, attempts: 0, receipt_spent: null });
       stage('runtime-forged-log-rolls-back-and-cannot-create-private-v2-event');
 
-      await grantPostgresRuntime({ DATABASE_URL: migratorUrl });
+      await grantPg73RuntimeFixture({ cluster, migrator, migratorUrl });
       const [rerun] = await migrator.unsafe(`SELECT
         pg_catalog.has_column_privilege('cinatoken_gateway_runtime',
           '${gateway}.users','budget_spent','UPDATE') AS runtime_spend_update,

@@ -1087,7 +1087,7 @@ export async function dispatchOpenAiAudioSpeech(
 		const streamedUpload = request.inputReferences
 			? buildStreamingOpenAiSpeechBody(upstreamBody, request.inputReferences) : null;
 		if (streamedUpload) trackResourceCompletion(streamedUpload.resourceCompletion);
-		const serializedBody: BodyInit = streamedUpload?.body ?? JSON.stringify(upstreamBody);
+		const serializedBody = streamedUpload?.body ?? JSON.stringify(upstreamBody);
 		const meta: SpeechDispatchMeta = {};
 		const lifecycle = createAudioRequestLifecycle(requestSignal, AUDIO_SPEECH_TIMEOUT_MS, { ...options, trackResourceCompletion });
 		let streamOwnsLifecycle = false;

@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { DatabaseSync, type SQLInputValue } from 'node:sqlite';
 import test from 'node:test';
+import { URL } from 'node:url';
 import type { D1Database, D1PreparedStatement, D1Result } from '@cloudflare/workers-types';
 import type { D1DatabaseClient } from './database-client';
 import {
@@ -25,7 +26,19 @@ class SqliteD1Statement {
 
 	run(): D1Result {
 		const result = this.database.prepare(this.sql).run(...this.values);
-		return { success: true, results: [], meta: { changes: Number(result.changes) } } as D1Result;
+		return {
+			success: true,
+			results: [],
+			meta: {
+				changes: Number(result.changes),
+				duration: 0,
+				size_after: 0,
+				rows_read: 0,
+				rows_written: Number(result.changes),
+				last_row_id: Number(result.lastInsertRowid),
+				changed_db: Number(result.changes) !== 0,
+			},
+		};
 	}
 
 	all<T>(): D1Result<T> {

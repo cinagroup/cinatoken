@@ -1,23 +1,23 @@
 /**
  * 与网关 `BILLING_CURRENCY` 对齐的金额展示：窄货币符号 + 固定小数位（避免 JPY 等 Intl 小数位差异）。
  */
-import { GATEWAY_MONEY_DECIMAL_PLACES } from '@/lib/gateway-money';
+import { GATEWAY_MONEY_DECIMAL_PLACES } from "@/lib/gateway-money";
 
 function normCode(currencyCode: string): string {
-	const t = (currencyCode || 'USD').trim().toUpperCase();
-	return /^[A-Z]{3}$/.test(t) ? t : 'USD';
+	const t = (currencyCode || "USD").trim().toUpperCase();
+	return /^[A-Z]{3}$/.test(t) ? t : "USD";
 }
 
 /** 常见 ISO 4217 窄符号；其余用 Intl，失败则回退字母码。 */
 const BILLING_SYMBOL_OVERRIDE: Readonly<Record<string, string>> = {
-	USD: '$',
-	CNY: '¥',
-	EUR: '€',
-	GBP: '£',
-	JPY: '¥',
-	KRW: '₩',
-	HKD: 'HK$',
-	TWD: 'NT$',
+	USD: "$",
+	CNY: "¥",
+	EUR: "€",
+	GBP: "£",
+	JPY: "¥",
+	KRW: "₩",
+	HKD: "HK$",
+	TWD: "NT$",
 };
 
 export function getGatewayCurrencySymbol(currencyCode: string): string {
@@ -27,12 +27,12 @@ export function getGatewayCurrencySymbol(currencyCode: string): string {
 		return o;
 	}
 	try {
-		const parts = new Intl.NumberFormat('en-US', {
-			style: 'currency',
+		const parts = new Intl.NumberFormat("en-US", {
+			style: "currency",
 			currency: c,
-			currencyDisplay: 'narrowSymbol',
+			currencyDisplay: "narrowSymbol",
 		}).formatToParts(1);
-		const cur = parts.find((p) => p.type === 'currency');
+		const cur = parts.find((p) => p.type === "currency");
 		if (cur?.value) {
 			return cur.value;
 		}
@@ -51,7 +51,7 @@ function joinSymbolAmount(sym: string, fixed: string): string {
 }
 
 function coerceMoneyAmount(value: number | string | null | undefined): number {
-	const n = typeof value === 'number' ? value : Number(value);
+	const n = typeof value === "number" ? value : Number(value);
 	return Number.isFinite(n) ? n : 0;
 }
 
@@ -85,10 +85,10 @@ export function formatGatewayMoneyCodeSigned(
 
 /** 去掉小数尾随零（列表等紧凑展示；内部仍按 maxDecimals 四舍五入）。 */
 function trimGatewayDecimalZeros(fixed: string): string {
-	if (!fixed.includes('.')) {
+	if (!fixed.includes(".")) {
 		return fixed;
 	}
-	return fixed.replace(/(\.\d*?[1-9])0+$/, '$1').replace(/\.0+$/, '');
+	return fixed.replace(/(\.\d*?[1-9])0+$/, "$1").replace(/\.0+$/, "");
 }
 
 /**
@@ -100,7 +100,9 @@ export function formatGatewayMoneyCompact(
 	maxDecimals: number = GATEWAY_MONEY_DECIMAL_PLACES
 ): string {
 	const sym = getGatewayCurrencySymbol(currencyCode);
-	const fixed = trimGatewayDecimalZeros(coerceMoneyAmount(amount).toFixed(maxDecimals));
+	const fixed = trimGatewayDecimalZeros(
+		coerceMoneyAmount(amount).toFixed(maxDecimals)
+	);
 	return joinSymbolAmount(sym, fixed);
 }
 
@@ -112,7 +114,9 @@ export function formatGatewayMoneyCompactSigned(
 ): string {
 	const sym = getGatewayCurrencySymbol(currencyCode);
 	const normalized = coerceMoneyAmount(amount);
-	const fixed = trimGatewayDecimalZeros(Math.abs(normalized).toFixed(maxDecimals));
+	const fixed = trimGatewayDecimalZeros(
+		Math.abs(normalized).toFixed(maxDecimals)
+	);
 	const body = joinSymbolAmount(sym, fixed);
 	if (normalized > 0) {
 		return `+${body}`;

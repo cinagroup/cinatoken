@@ -1,20 +1,26 @@
-'use client';
+"use client";
 
 /**
  * GitHub / docs links for admin chrome (sidebar + login).
  */
-import { BookOpenIcon } from '@heroicons/react/24/outline';
-import { useTranslations } from 'next-intl';
-import type { SimpleIcon } from 'simple-icons';
-import { siGithub } from 'simple-icons';
+import { BookOpenIcon } from "@heroicons/react/24/outline";
+import { useTranslations } from "next-intl";
+import type { SimpleIcon } from "simple-icons";
+import { siGithub } from "simple-icons";
 import {
 	CINATOKEN_GITHUB_DOCS_INDEX,
 	CINATOKEN_GITHUB_REPO_WEB,
-} from '@/lib/brand';
+} from "@/lib/brand";
 
 /** GitHub mark: use currentColor so it follows link text on dark sidebar (brand hex is near-black). */
-function GithubGlyph({ icon, className }: { icon: SimpleIcon; className?: string }) {
-	const tBrand = useTranslations('brand');
+function GithubGlyph({
+	icon,
+	className,
+}: {
+	icon: SimpleIcon;
+	className?: string;
+}) {
+	const tBrand = useTranslations("brand");
 	return (
 		<svg
 			role="img"
@@ -23,21 +29,23 @@ function GithubGlyph({ icon, className }: { icon: SimpleIcon; className?: string
 			className={className}
 			aria-hidden
 		>
-			<title>{tBrand('github')}</title>
+			<title>{tBrand("github")}</title>
 			<path fill="currentColor" d={icon.path} />
 		</svg>
 	);
 }
 
-type Variant = 'sidebar' | 'login';
+type Variant = "sidebar" | "login";
 
 const linkClass: Record<Variant, string> = {
-	sidebar: 'inline-flex items-center gap-1.5 text-xs text-gray-400 hover:text-white transition-colors',
-	login: 'inline-flex items-center gap-1.5 text-xs text-gray-500 hover:text-gray-800 transition-colors',
+	sidebar:
+		"inline-flex items-center gap-1.5 text-xs text-gray-400 hover:text-white transition-colors",
+	login:
+		"inline-flex items-center gap-1.5 text-xs text-gray-500 hover:text-gray-800 transition-colors",
 };
 
 export default function BrandExternalLinks({ variant }: { variant: Variant }) {
-	const tBrand = useTranslations('brand');
+	const tBrand = useTranslations("brand");
 	const cls = linkClass[variant];
 	return (
 		<div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2">
@@ -48,7 +56,7 @@ export default function BrandExternalLinks({ variant }: { variant: Variant }) {
 				className={cls}
 			>
 				<GithubGlyph icon={siGithub} className="h-3.5 w-3.5 shrink-0" />
-				{tBrand('github')}
+				{tBrand("github")}
 			</a>
 			<a
 				href={CINATOKEN_GITHUB_DOCS_INDEX}
@@ -57,7 +65,7 @@ export default function BrandExternalLinks({ variant }: { variant: Variant }) {
 				className={cls}
 			>
 				<BookOpenIcon className="h-3.5 w-3.5 shrink-0" aria-hidden />
-				{tBrand('docs')}
+				{tBrand("docs")}
 			</a>
 		</div>
 	);

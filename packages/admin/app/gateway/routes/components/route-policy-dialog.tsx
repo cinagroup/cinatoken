@@ -1,13 +1,13 @@
-'use client';
+"use client";
 
-import { ROUTE_STRATEGY_NAMES } from '@octafuse/core/db/model-route-policy';
-import { useTranslations } from 'next-intl';
+import { ROUTE_STRATEGY_NAMES } from "@octafuse/core/db/model-route-policy";
+import { useTranslations } from "next-intl";
 import {
 	CAPABILITIES_BY_PROTOCOL,
 	isPromptCacheSensitiveCapability,
-} from '../route-utils';
-import type { RoutePolicyDialogState, RoutePolicyFormState } from '../types';
-import { RouteStrategyPicker } from './route-strategy-picker';
+} from "../route-utils";
+import type { RoutePolicyDialogState, RoutePolicyFormState } from "../types";
+import { RouteStrategyPicker } from "./route-strategy-picker";
 
 type Props = {
 	dialog: RoutePolicyDialogState;
@@ -19,28 +19,31 @@ type Props = {
 	onSave: () => void;
 };
 
-const STRATEGY_OPTIONS = ['', ...ROUTE_STRATEGY_NAMES] as const;
+const STRATEGY_OPTIONS = ["", ...ROUTE_STRATEGY_NAMES] as const;
 
 export function RoutePolicyDialog(props: Props) {
 	const { dialog, form, error, saving, onClose, onFormChange, onSave } = props;
-	const t = useTranslations('routes.strategy');
-	const tCommon = useTranslations('common');
+	const t = useTranslations("routes.strategy");
+	const tCommon = useTranslations("common");
 	const isTierMode = dialog.priority !== undefined;
-	const capabilities = dialog.poolId || isTierMode ? [] : CAPABILITIES_BY_PROTOCOL[dialog.protocol] ?? [];
+	const capabilities =
+		dialog.poolId || isTierMode
+			? []
+			: CAPABILITIES_BY_PROTOCOL[dialog.protocol] ?? [];
 	const tierInheritStrategy = form.protocolStrategy || dialog.inheritedStrategy;
 
 	const strategyLabel = (value: string) => {
 		if (!value) {
-			const inherited =
-				isTierMode
-					? tierInheritStrategy
-					: dialog.inheritedStrategy;
-			return `${t('inherit')} → ${inherited}`;
+			const inherited = isTierMode
+				? tierInheritStrategy
+				: dialog.inheritedStrategy;
+			return `${t("inherit")} → ${inherited}`;
 		}
-		if (value === 'hash_affinity') return t('display.hash_affinity');
-		if (value === 'weighted_random') return t('display.weighted_random');
-		if (value === 'weight_priority') return t('display.weight_priority');
-		if (value === 'weighted_round_robin') return t('display.weighted_round_robin');
+		if (value === "hash_affinity") return t("display.hash_affinity");
+		if (value === "weighted_random") return t("display.weighted_random");
+		if (value === "weight_priority") return t("display.weight_priority");
+		if (value === "weighted_round_robin")
+			return t("display.weighted_round_robin");
 		return value;
 	};
 
@@ -59,16 +62,24 @@ export function RoutePolicyDialog(props: Props) {
 			>
 				<div className="flex shrink-0 items-center justify-between border-b border-gray-200 px-6 py-4">
 					<div>
-						<h2 id="route-policy-dialog-title" className="text-base font-semibold text-gray-900">
-							{isTierMode ? t('tierLevel') : t('title')}
+						<h2
+							id="route-policy-dialog-title"
+							className="text-base font-semibold text-gray-900"
+						>
+							{isTierMode ? t("tierLevel") : t("title")}
 						</h2>
 						<p className="mt-1 text-xs text-gray-500">
-							{dialog.modelTitle} · {dialog.protocolLabel} ·{' '}
-							<span className="font-mono">{dialog.requestOperation ?? dialog.group}</span>
+							{dialog.modelTitle} · {dialog.protocolLabel} ·{" "}
+							<span className="font-mono">
+								{dialog.requestOperation ?? dialog.group}
+							</span>
 							{isTierMode ? (
 								<>
-									{' '}
-									· <span className="font-semibold text-gray-700">P{dialog.priority}</span>
+									{" "}
+									{"· "}
+									<span className="font-semibold text-gray-700">
+										P{dialog.priority}
+									</span>
 								</>
 							) : null}
 						</p>
@@ -78,7 +89,7 @@ export function RoutePolicyDialog(props: Props) {
 						onClick={onClose}
 						disabled={saving}
 						className="rounded-md p-1.5 text-gray-400 transition hover:bg-gray-100 hover:text-gray-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 disabled:cursor-not-allowed disabled:opacity-50"
-						aria-label={tCommon('close')}
+						aria-label={tCommon("close")}
 					>
 						<span className="block text-xl leading-none" aria-hidden>
 							×
@@ -93,16 +104,16 @@ export function RoutePolicyDialog(props: Props) {
 					)}
 					{!dialog.poolId && isTierMode ? (
 						<div className="rounded-lg border border-amber-200 bg-amber-50 px-3 py-2.5 text-sm text-amber-800">
-							{t('tierRequiresPool')}
+							{t("tierRequiresPool")}
 						</div>
 					) : null}
 					{capabilities.length > 0 ? (
 						<div>
 							<div className="mb-2 text-sm font-medium text-gray-700">
-								{t('capabilityLevel')}
+								{t("capabilityLevel")}
 							</div>
 							<p className="mb-3 text-xs leading-relaxed text-gray-500">
-								{t('capabilityHint')}
+								{t("capabilityHint")}
 							</p>
 							<div className="space-y-3">
 								{capabilities.map((cap) => (
@@ -111,7 +122,7 @@ export function RoutePolicyDialog(props: Props) {
 											{cap}
 										</label>
 										<select
-											value={form.capabilityStrategies[cap] ?? ''}
+											value={form.capabilityStrategies[cap] ?? ""}
 											onChange={(e) =>
 												onFormChange({
 													...form,
@@ -124,15 +135,15 @@ export function RoutePolicyDialog(props: Props) {
 											className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/30"
 										>
 											{STRATEGY_OPTIONS.map((opt) => (
-												<option key={opt || 'inherit'} value={opt}>
+												<option key={opt || "inherit"} value={opt}>
 													{strategyLabel(opt)}
 												</option>
 											))}
 										</select>
 										<p className="mt-1 text-[11px] leading-relaxed text-gray-500">
 											{isPromptCacheSensitiveCapability(cap)
-												? t('hintCache')
-												: t('hintNoCache')}
+												? t("hintCache")
+												: t("hintNoCache")}
 										</p>
 									</div>
 								))}
@@ -143,11 +154,15 @@ export function RoutePolicyDialog(props: Props) {
 					{isTierMode ? (
 						<div>
 							<div className="mb-1">
-								<p className="mt-0.5 text-xs text-gray-500">{t('tierLevelHint')}</p>
+								<p className="mt-0.5 text-xs text-gray-500">
+									{t("tierLevelHint")}
+								</p>
 							</div>
 							<RouteStrategyPicker
 								value={form.tierStrategy}
-								onChange={(next) => onFormChange({ ...form, tierStrategy: next })}
+								onChange={(next) =>
+									onFormChange({ ...form, tierStrategy: next })
+								}
 								allowInherit
 								inheritedStrategy={tierInheritStrategy}
 								disabled={saving || !dialog.poolId}
@@ -157,12 +172,16 @@ export function RoutePolicyDialog(props: Props) {
 					) : (
 						<div>
 							<div className="mb-1">
-								<h3 className="text-sm font-semibold text-gray-900">{t('guideTitle')}</h3>
-								<p className="mt-0.5 text-xs text-gray-500">{t('guideHint')}</p>
+								<h3 className="text-sm font-semibold text-gray-900">
+									{t("guideTitle")}
+								</h3>
+								<p className="mt-0.5 text-xs text-gray-500">{t("guideHint")}</p>
 							</div>
 							<RouteStrategyPicker
 								value={form.protocolStrategy}
-								onChange={(next) => onFormChange({ ...form, protocolStrategy: next })}
+								onChange={(next) =>
+									onFormChange({ ...form, protocolStrategy: next })
+								}
 								allowInherit
 								inheritedStrategy={dialog.inheritedStrategy}
 								disabled={saving}
@@ -174,9 +193,11 @@ export function RoutePolicyDialog(props: Props) {
 						role="note"
 						className="rounded-lg border border-sky-200 bg-sky-50/70 px-4 py-3"
 					>
-						<p className="text-sm font-semibold text-sky-900">{t('cacheHitGuideTitle')}</p>
+						<p className="text-sm font-semibold text-sky-900">
+							{t("cacheHitGuideTitle")}
+						</p>
 						<p className="mt-1 text-xs leading-relaxed text-sky-800">
-							{t('cacheHitGuideBody')}
+							{t("cacheHitGuideBody")}
 						</p>
 					</div>
 				</div>
@@ -187,7 +208,7 @@ export function RoutePolicyDialog(props: Props) {
 						disabled={saving}
 						className="rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-50"
 					>
-						{tCommon('cancel')}
+						{tCommon("cancel")}
 					</button>
 					<button
 						type="button"
@@ -195,7 +216,7 @@ export function RoutePolicyDialog(props: Props) {
 						disabled={saving || (isTierMode && !dialog.poolId)}
 						className="rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
 					>
-						{saving ? tCommon('savingDots') : tCommon('save')}
+						{saving ? tCommon("savingDots") : tCommon("save")}
 					</button>
 				</div>
 			</div>

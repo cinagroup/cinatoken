@@ -13,6 +13,7 @@ import {
 	REQUEST_TIMESERIES_SELECT_SQL,
 } from '../../lib/dashboard-request-stats';
 import type { RequestLogRow } from '../../types';
+import { adminRequestLogDetailSql } from '../admin-request-log-detail';
 import type { MySqlDatabaseClient } from '../../storage/database-client';
 import type { RequestLogsRepository } from '../../storage/gateway-repository-interfaces';
 import { asMySqlPool, fromMySqlDateTime, toMySqlDateTime } from './mysql2-compat';
@@ -106,6 +107,14 @@ export function createMySqlRequestLogsRepository(db: MySqlDatabaseClient): Reque
 				],
 			);
 			return result.affectedRows === 1;
+		},
+
+		async getAdminRequestLogById(id): Promise<RequestLogRow | null> {
+			const [rows] = await pool.query<Array<Omit<RequestLogRow, 'created_at'> & { created_at: string | Date }>>(
+				adminRequestLogDetailSql('mysql'), [id],
+			);
+			const row = rows[0];
+			return row ? { ...row, created_at: fromMySqlDateTime(row.created_at) } : null;
 		},
 
 		async getRequestLogByIdForOwner(options): Promise<GenerationRequestLogRow | null> {

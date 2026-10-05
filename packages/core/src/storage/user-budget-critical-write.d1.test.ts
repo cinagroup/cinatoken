@@ -11,7 +11,7 @@ import {
 } from '../db/d1/critical-writes.impl';
 import type { InsertRequestLogParams } from '../db/request-logs-types';
 import type { GuardrailBudgetIntent } from '../db/guardrail-budget-types';
-import { applyBudgetTransition } from '../services/budget-transition-service';
+import { applyBudgetTransition, previewBudgetTransition, BudgetTransitionStalePreviewError } from '../services/budget-transition-service';
 import type { D1DatabaseClient } from './database-client';
 import { createD1Repositories } from './repositories-d1';
 
@@ -769,6 +769,53 @@ test('D1 admin non-reset transition persists a due lazy reset before preserving 
 			budget_epoch: 1,
 			budget_reserved_micros: 0,
 		});
+	} finally {
+		database.close();
+	}
+});
+
+test('D1 budget preview is read-only and stale confirmation cannot write an audit', async () => {
+	const database = setupDatabase();
+	try {
+		insertUser(database);
+		database.prepare("UPDATE users SET budget_reset_at = '2000-01-01T00:00:00.000Z' WHERE id = ?").run('user-1');
+		const repos = createD1Repositories(createD1Client(database));
+		const input = { target_budget_base: 2, budget_period: 'monthly' as const, reset_spent: true };
+		const preview = await previewBudgetTransition(repos, 'user-1', input);
+		assert.ok(preview);
+		assert.equal(preview.before.budget_epoch, 1);
+		assert.equal(Number(database.prepare('SELECT COUNT(*) AS count FROM user_audit_logs').get()?.count), 0);
+		assert.equal(Number(database.prepare('SELECT budget_epoch FROM users WHERE id = ?').get('user-1')?.budget_epoch), 0);
+		database.prepare("UPDATE users SET budget_spent = 0.25, budget_reset_at = '2030-01-01T00:00:00.000Z' WHERE id = ?").run('user-1');
+		await assert.rejects(
+			applyBudgetTransition(repos, 'user-1', { ...input, expected_before: preview.before }),
+			BudgetTransitionStalePreviewError,
+		);
+		assert.equal(Number(database.prepare('SELECT COUNT(*) AS count FROM user_audit_logs').get()?.count), 0);
+		assert.equal(Number(database.prepare('SELECT budget_spent FROM users WHERE id = ?').get('user-1')?.budget_spent), 0.25);
+	} finally {
+		database.close();
+	}
+});
+
+test('D1 stale transition rejects before a newly due lazy reset can write', async () => {
+	const database = setupDatabase();
+	try {
+		insertUser(database);
+		database.prepare("UPDATE users SET budget_reset_at = '2030-01-01T00:00:00.000Z' WHERE id = ?").run('user-1');
+		const repos = createD1Repositories(createD1Client(database));
+		const input = { target_budget_base: 2, budget_period: 'monthly' as const };
+		const preview = await previewBudgetTransition(repos, 'user-1', input);
+		assert.ok(preview);
+		assert.equal(preview.before.budget_epoch, 0);
+		database.prepare("UPDATE users SET budget_reset_at = '2000-01-01T00:00:00.000Z' WHERE id = ?").run('user-1');
+		await assert.rejects(
+			applyBudgetTransition(repos, 'user-1', { ...input, expected_before: preview.before }),
+			BudgetTransitionStalePreviewError,
+		);
+		assert.equal(Number(database.prepare('SELECT COUNT(*) AS count FROM user_audit_logs').get()?.count), 0);
+		assert.equal(Number(database.prepare('SELECT budget_epoch FROM users WHERE id = ?').get('user-1')?.budget_epoch), 0);
+		assert.equal(String(database.prepare('SELECT budget_reset_at FROM users WHERE id = ?').get('user-1')?.budget_reset_at), '2000-01-01T00:00:00.000Z');
 	} finally {
 		database.close();
 	}

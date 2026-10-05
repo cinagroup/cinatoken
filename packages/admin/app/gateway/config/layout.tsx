@@ -1,4 +1,7 @@
-import { AdminPassthroughLayout, adminNavMetadata } from '@/lib/admin-page-metadata';
+import {
+	AdminPassthroughLayout,
+	adminNavMetadata,
+} from "@/lib/admin-page-metadata";
 
-export const generateMetadata = () => adminNavMetadata('config');
+export const generateMetadata = () => adminNavMetadata("config");
 export default AdminPassthroughLayout;

@@ -42,3 +42,12 @@ cloudflare-worker/deploy-octarouter.sh
 
 # Local pnpm content-addressable cache
 .pnpm-store/
+
+# Local cache used when installing the Web workspace
+.tmp/npm-web-cache/
+
+# Local verification snapshots and generated Web server bundles
+.tmp/
+Temp/
+packages/web/.tmp/
+packages/web/dist-server/

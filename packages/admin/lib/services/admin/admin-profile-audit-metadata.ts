@@ -1,10 +1,10 @@
 /**
  * 管理端用户/密钥资料 PATCH 审计：metadata 前后对比（与 `users-service` / `keys-service` 共用）。
  */
-import type { JsonObject } from './types';
+import type { JsonObject } from "./types";
 
 function parseMetadataSnapshot(raw: string | null | undefined): unknown {
-	if (raw == null || raw === '') return null;
+	if (raw == null || raw === "") return null;
 	try {
 		return JSON.parse(raw) as unknown;
 	} catch {
@@ -13,7 +13,7 @@ function parseMetadataSnapshot(raw: string | null | undefined): unknown {
 }
 
 function isPlainObject(value: unknown): value is JsonObject {
-	return Boolean(value && typeof value === 'object' && !Array.isArray(value));
+	return Boolean(value && typeof value === "object" && !Array.isArray(value));
 }
 
 function metadataValueEqual(a: unknown, b: unknown): boolean {
@@ -26,7 +26,7 @@ function metadataValueEqual(a: unknown, b: unknown): boolean {
 export function buildMetadataAuditChange(
 	beforeRaw: string | null | undefined,
 	afterRaw: string | null | undefined,
-	operation: 'merge' | 'replace' | 'update',
+	operation: "merge" | "replace" | "update",
 	touchedKeys?: string[]
 ): JsonObject {
 	const before = parseMetadataSnapshot(beforeRaw);
@@ -43,5 +43,7 @@ export function buildMetadataAuditChange(
 		if (metadataValueEqual(before[key], after[key])) continue;
 		changes[key] = { from: before[key] ?? null, to: after[key] ?? null };
 	}
-	return Object.keys(changes).length > 0 ? { operation, changes } : { operation, from: before, to: after };
+	return Object.keys(changes).length > 0
+		? { operation, changes }
+		: { operation, from: before, to: after };
 }

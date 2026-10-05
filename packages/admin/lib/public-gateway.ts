@@ -1,22 +1,28 @@
-import { getCloudflareEnv } from '@/lib/cloudflare';
+import { getCloudflareEnv } from "@/lib/cloudflare";
 
-const DEFAULT_PUBLIC_API_ORIGIN = 'https://api.cinatoken.com';
+const DEFAULT_PUBLIC_API_ORIGIN = "https://api.cinatoken.com";
 
 type NextFetchInit = RequestInit & {
 	next?: { revalidate?: number };
 };
 
-type GatewayFetcher = Pick<Fetcher, 'fetch'>;
+type GatewayFetcher = Pick<Fetcher, "fetch">;
 
 type GatewayRuntime = {
 	request?: Request;
 	env?: { CINATOKEN_PROXY_SERVICE?: GatewayFetcher };
 };
 
-export function resolvePublicApiOrigin(raw = process.env.CINATOKEN_PUBLIC_API_ORIGIN): string {
+export function resolvePublicApiOrigin(
+	raw = process.env.CINATOKEN_PUBLIC_API_ORIGIN
+): string {
 	try {
 		const url = new URL(raw?.trim() || DEFAULT_PUBLIC_API_ORIGIN);
-		if (!['http:', 'https:'].includes(url.protocol) || url.username || url.password) {
+		if (
+			!["http:", "https:"].includes(url.protocol) ||
+			url.username ||
+			url.password
+		) {
 			return DEFAULT_PUBLIC_API_ORIGIN;
 		}
 		return url.origin;
@@ -26,8 +32,8 @@ export function resolvePublicApiOrigin(raw = process.env.CINATOKEN_PUBLIC_API_OR
 }
 
 function resolveGatewayUrl(path: string, origin: string): URL {
-	if (!path.startsWith('/') || path.startsWith('//')) {
-		throw new TypeError('Gateway path must be an absolute-path reference');
+	if (!path.startsWith("/") || path.startsWith("//")) {
+		throw new TypeError("Gateway path must be an absolute-path reference");
 	}
 	return new URL(path, `${origin}/`);
 }
@@ -39,12 +45,13 @@ function resolveGatewayUrl(path: string, origin: string): URL {
 export async function fetchPublicGateway(
 	path: string,
 	init: NextFetchInit = {},
-	runtime: GatewayRuntime = {},
+	runtime: GatewayRuntime = {}
 ): Promise<Response> {
 	const origin = resolvePublicApiOrigin();
 	const url = resolveGatewayUrl(path, origin);
-	const service = runtime.env?.CINATOKEN_PROXY_SERVICE
-		?? getCloudflareEnv(runtime.request)?.CINATOKEN_PROXY_SERVICE;
+	const service =
+		runtime.env?.CINATOKEN_PROXY_SERVICE ??
+		getCloudflareEnv(runtime.request)?.CINATOKEN_PROXY_SERVICE;
 
 	if (!service) return fetch(url, init);
 

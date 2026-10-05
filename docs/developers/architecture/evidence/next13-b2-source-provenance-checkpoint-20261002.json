@@ -1,0 +1,1519 @@
+{
+  "schemaVersion": 1,
+  "at": "2026-10-02T09:21:40.151Z",
+  "stage": "NEXT-13 B2 local source/behavior/type/unit and NEXT-41 provenance CLI",
+  "actualAuditExit": 0,
+  "fullGoalComplete": false,
+  "environment": {
+    "node": "v24.14.1",
+    "platform": "win32",
+    "b2bVersions": {
+      "react": "19.3.0",
+      "react-dom": "19.3.0",
+      "next-intl": "4.13.1",
+      "next": "16.2.3",
+      "prettier": "2.8.8",
+      "eslint": "9.39.4"
+    }
+  },
+  "sourceRecords": [
+    {
+      "path": "packages/admin/app/account/activity/page.tsx",
+      "bytes": 21354,
+      "sha256": "7a890085f2bdf26930b58bf05e495d9014bf54b12e499e95de55590ed4b65dd5"
+    },
+    {
+      "path": "packages/admin/app/dashboard/page.tsx",
+      "bytes": 13844,
+      "sha256": "820e2473e4f2deb586f991743d52982a36142488cfcc0c246a22c8b4c1dd0d38"
+    },
+    {
+      "path": "packages/admin/app/gateway/analytics/reliability/page.tsx",
+      "bytes": 14609,
+      "sha256": "c1788da78b9b981b6eb24eddc60e52a73f52ebf57d3fb8ca3f39971181978b99"
+    },
+    {
+      "path": "packages/admin/app/gateway/audit-logs/page.tsx",
+      "bytes": 57377,
+      "sha256": "b0ff410751bef5dded5f93a9c05efed10933795587a6bc2280d1556c26b25848"
+    },
+    {
+      "path": "packages/admin/app/gateway/config/page.tsx",
+      "bytes": 21264,
+      "sha256": "ae1f42e11a388682b36103c2564e9d0d8c8c0ca545f2d3565d0de661d7058f4e"
+    },
+    {
+      "path": "packages/admin/app/gateway/request-logs/page.tsx",
+      "bytes": 62343,
+      "sha256": "11cda0b1fff6f37dd611d15fd63240e1b7b7f738444c453c25a3156a73cb4963"
+    },
+    {
+      "path": "packages/admin/app/gateway/tools/invocations/page.tsx",
+      "bytes": 19747,
+      "sha256": "5be8391713491ce42d1d805b5b2305b264d75fd2867f0d6eb70db8495c3b4249"
+    },
+    {
+      "path": "packages/admin/lib/use-replace-list-query.ts",
+      "bytes": 1600,
+      "sha256": "a93727efb3bcb47b4a3a5708ee4d10c00643c3525e6b56bfcce83fbbba5501bb"
+    },
+    {
+      "path": "scripts/web/source-provenance.mjs",
+      "bytes": 17347,
+      "sha256": "a437b96a383a2021bf5137ddf54ea1891ab0b6f0c6a7389d3f2304ec88a77126"
+    },
+    {
+      "path": "scripts/web/source-provenance.test.mjs",
+      "bytes": 14303,
+      "sha256": "5b036a8023ff16cf815a7b270ab04d145e32169475d2a51c8890b126b548f63e"
+    }
+  ],
+  "sourceScope": "Exactly eight modified Admin files and two new root CLI/test files; source hashes match frozen owners after unified checks; Web P66 remains unchanged",
+  "commands": [
+    {
+      "name": "NEXT41-root-tests",
+      "cwd": "C:/cinagroup/cinatoken",
+      "command": "C:/Program Files/nodejs/node.exe",
+      "args": [
+        "--test",
+        "scripts/web/source-provenance.test.mjs"
+      ],
+      "exit": 0,
+      "signal": null,
+      "log": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-next13-b2-next41-nDMVDV\\NEXT41-root-tests.log",
+      "sha256": "12af3e1cfcb9f42d813778f3f9b5c36003f082f00639da1ad215a318714d3636",
+      "bytes": 1079,
+      "tail": "Provenance safety fixtures retained: C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-provenance-tests-1ZUKap\n✔ NUL tree parsing preserves Chinese, spaces, tabs/newlines and rejects ambiguous paths (2.9447ms)\n✔ Git batch parser obeys declared raw byte size, newline bytes and SHA1 identity (1.0812ms)\n✔ stable TSV uses JSON path strings and UTF-8 byte sorting; duplicate inventories fail (1.6013ms)\n✔ conservative exclusions cover env, secrets, keys, credentials, dependencies and build paths (0.9709ms)\n✔ local toy Git tree comparison is byte accurate, deduplicates blobs and leaves upstream unresolved (1089.173ms)\n✔ output cannot overwrite existing directories or enter source, and absent/non-tree baselines create no output (1374.491ms)\n✔ source junctions/symlinks are excluded and aliased source/output ancestors are rejected (1372.6856ms)\n✔ CLI requires explicit arguments, prints usage and fails safely without exposing Git stderr (261.6941ms)\nℹ tests 8\nℹ suites 0\nℹ pass 8\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 4207.2783\n",
+      "at": "2026-10-02T08:57:10.808Z",
+      "resultArtifact": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-next13-b2-next41-nDMVDV/NEXT41-root-tests.result.json",
+        "bytes": 1582,
+        "sha256": "d3ea2d74586a0db1bba7544a7441f5855a4b6898ed4ef1f678ee1d53c3da4b4b"
+      }
+    },
+    {
+      "name": "NEXT41-root-actual",
+      "cwd": "C:/cinagroup/cinatoken",
+      "command": "C:/Program Files/nodejs/node.exe",
+      "args": [
+        "scripts/web/source-provenance.mjs",
+        "--repo-root",
+        "C:/cinagroup/cinatoken",
+        "--output-dir",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next13-b2-next41-nDMVDV/root-source-inventory",
+        "--baseline-tree",
+        "c4c6c4bcde6c0b67c21b6ae6132cb3dda8da2b13"
+      ],
+      "exit": 0,
+      "signal": null,
+      "log": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-next13-b2-next41-nDMVDV\\NEXT41-root-actual.log",
+      "sha256": "117bc99ebeeca278ba931e3d32946224a027e150c7005ac4bd19e4b0097fdc1e",
+      "bytes": 906,
+      "tail": "{\n  \"schemaVersion\": 1,\n  \"observedAt\": \"2026-10-02T08:57:07.840Z\",\n  \"toolSha256\": \"a437b96a383a2021bf5137ddf54ea1891ab0b6f0c6a7389d3f2304ec88a77126\",\n  \"policySha256\": \"9286049c7373318c84beddeb996faf2c63e921771ffa37e40aa3317e71ccf0dd\",\n  \"current\": 1797,\n  \"baseline\": 945,\n  \"comparison\": {\n    \"same\": 856,\n    \"changed\": 89,\n    \"new\": 852,\n    \"deleted\": 0\n  },\n  \"upstreamStatus\": \"unresolved\",\n  \"sourceRequirementComplete\": false,\n  \"files\": [\n    {\n      \"path\": \"inventory.json\",\n      \"bytes\": 918517,\n      \"sha256\": \"27094c4466cc6c46291f20c2f2e500e431c309cc81cb06caeec1012734b72c99\"\n    },\n    {\n      \"path\": \"current.tsv\",\n      \"bytes\": 238683,\n      \"sha256\": \"9118e4c940790a959be6eb14cdbd1275ca65435f46a1a0e05e93d176f29df147\"\n    },\n    {\n      \"path\": \"baseline.tsv\",\n      \"bytes\": 123082,\n      \"sha256\": \"17164c9ddca65b3dfd2f49880ec5c520cfa4fe8ade502638a8d13eb0b8ad5980\"\n    }\n  ]\n}\n",
+      "at": "2026-10-02T08:57:13.339Z",
+      "resultArtifact": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-next13-b2-next41-nDMVDV/NEXT41-root-actual.result.json",
+        "bytes": 1703,
+        "sha256": "3a58a7abad7b61ba345dfcec9506419256c9b8f31aef801fcb1cb4360d7c1905"
+      }
+    },
+    {
+      "name": "NEXT41-root-independent-proof-v3",
+      "cwd": "C:/cinagroup/cinatoken",
+      "command": "C:/Program Files/nodejs/node.exe",
+      "args": [
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next13-b2-next41-nDMVDV/verify-web-and-provenance.mjs"
+      ],
+      "exit": 0,
+      "signal": null,
+      "log": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-next13-b2-next41-nDMVDV\\NEXT41-root-independent-proof-v3.log",
+      "sha256": "4370c65d4bd37b7313fe2b82758b021eea6720ddf4688df9007104d6eb446c2e",
+      "bytes": 361,
+      "tail": "{\"exit\":0,\"proof\":{\"path\":\"C:/Users/cina/AppData/Local/Temp/cinatoken-next13-b2-next41-nDMVDV/NEXT41-root-independent-web-source-proof.json\",\"bytes\":8034,\"sha256\":\"fd8dbd10b2753e80c6a6ab46cc4380a42d746339ee335aa88533e88d23762ddf\"},\"current\":1797,\"baseline\":945,\"combinedFiles\":492,\"webSource\":\"21835c121ceae2837ff81345f34b8b527c9479b54e282ca875adb33a75d09ae8\"}\n",
+      "at": "2026-10-02T09:05:30.599Z",
+      "resultArtifact": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-next13-b2-next41-nDMVDV/NEXT41-root-independent-proof-v3.result.json",
+        "bytes": 939,
+        "sha256": "713259c0f4a951e175acc02e5ffb27f42be25242e8e08bcc0c89d1ecfc17193f"
+      }
+    },
+    {
+      "name": "B2-full-admin-unit",
+      "cwd": "C:/cinagroup/cinatoken",
+      "command": "C:/Program Files/nodejs/node.exe",
+      "args": [
+        "C:/Program Files/nodejs/node_modules/npm/bin/npm-cli.js",
+        "run",
+        "test:unit",
+        "-w",
+        "@octafuse/admin"
+      ],
+      "exit": 0,
+      "signal": null,
+      "log": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-next13-b2-next41-nDMVDV\\B2-full-admin-unit.log",
+      "sha256": "5c5662d3401f70ebfbc7ac8dfc70d352d27db3b98b08ba2016118cd374cd0859",
+      "bytes": 233009,
+      "tail": "2ms)\n✔ summarizeChargedCostFactors (25.3077ms)\n✔ prefers the unified cookie while accepting a legacy cookie during rollout (24.1732ms)\n✔ ordinary accounts do not receive the admin console capability (0.8228ms)\n✔ unrelated malformed cookies do not log out a valid browser session (0.6414ms)\n✔ logout gathers distinct unified and legacy credentials, ignoring unrelated cookies (0.4735ms)\n✔ verified administrators receive account and admin capabilities (0.1939ms)\n✔ legacy clients with no precondition remain compatible (36.543ms)\n✔ matching encoded workspace allows requests after server authorization (1.7511ms)\n✔ a stale precondition blocks reads and writes even when that workspace is also authorized (6.1481ms)\n✔ malformed, duplicated, oversized and control-bearing preconditions never reach route operations (2.8894ms)\n✔ the precondition cannot authenticate or establish membership (0.4334ms)\n✔ workspace preference loss does not prevent browser session logout (0.4326ms)\n✔ opaque Unicode workspace ids round-trip without becoming membership authority (0.2666ms)\n✔ creates a verifiable SIWE challenge bound to the user and exact origin (86.6738ms)\n✔ rejects tampered and expired wallet challenges (3.1714ms)\n✔ Workspace preference cookie round-trips opaque ids without becoming authorization (20.2057ms)\n✔ Workspace preference cookie is bounded and supports local HTTP development (0.8156ms)\nℹ tests 963\nℹ suites 86\nℹ pass 963\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 33718.1896\n",
+      "at": "2026-10-02T09:09:53.327Z",
+      "resultArtifact": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-next13-b2-next41-nDMVDV/B2-full-admin-unit.result.json",
+        "bytes": 2124,
+        "sha256": "ea28c83ac8835336d36c209fe1f156e3daf99947e5a883cb00503eee41675aad"
+      }
+    },
+    {
+      "name": "B2-full-admin-types",
+      "cwd": "C:/cinagroup/cinatoken",
+      "command": "C:/Program Files/nodejs/node.exe",
+      "args": [
+        "--max-old-space-size=8192",
+        "node_modules/typescript/bin/tsc",
+        "-p",
+        "packages/admin/tsconfig.json",
+        "--noEmit",
+        "--tsBuildInfoFile",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next13-b2-next41-nDMVDV/admin-types.tsbuildinfo"
+      ],
+      "exit": 0,
+      "signal": null,
+      "log": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-next13-b2-next41-nDMVDV\\B2-full-admin-types.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "tail": "",
+      "at": "2026-10-02T09:11:30.749Z",
+      "resultArtifact": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-next13-b2-next41-nDMVDV/B2-full-admin-types.result.json",
+        "bytes": 678,
+        "sha256": "73b3037580469f2ecc266636301f4ec73dd5173065f2e16587ade94176fb264e"
+      }
+    },
+    {
+      "name": "B2-full-admin-lint",
+      "cwd": "C:/cinagroup/cinatoken",
+      "command": "C:/Program Files/nodejs/node.exe",
+      "args": [
+        "C:/Program Files/nodejs/node_modules/npm/bin/npm-cli.js",
+        "run",
+        "lint",
+        "-w",
+        "@octafuse/admin",
+        "--",
+        "--format",
+        "json",
+        "--output-file",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next13-b2-next41-nDMVDV/B2-eslint.json"
+      ],
+      "exit": 1,
+      "signal": null,
+      "log": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-next13-b2-next41-nDMVDV\\B2-full-admin-lint.log",
+      "sha256": "57c4ea4100ffd32f266a236f05e1bb91b87f4fffeb58e4ddef939cfada54f393",
+      "bytes": 573,
+      "tail": "\n> @octafuse/admin@2.8.0 lint\n> eslint . --format json --output-file C:/Users/cina/AppData/Local/Temp/cinatoken-next13-b2-next41-nDMVDV/B2-eslint.json\n\nnpm error Lifecycle script `lint` failed with error:\nnpm error code 1\nnpm error path C:\\cinagroup\\cinatoken\\packages\\admin\nnpm error workspace @octafuse/admin@2.8.0\nnpm error location C:\\cinagroup\\cinatoken\\packages\\admin\nnpm error command failed\nnpm error command C:\\WINDOWS\\system32\\cmd.exe /d /s /c eslint . --format json --output-file C:/Users/cina/AppData/Local/Temp/cinatoken-next13-b2-next41-nDMVDV/B2-eslint.json\n",
+      "at": "2026-10-02T09:11:02.357Z",
+      "resultArtifact": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-next13-b2-next41-nDMVDV/B2-full-admin-lint.result.json",
+        "bytes": 1283,
+        "sha256": "1b28db93b2a9d91b0a9eca681ce97ca53646abef489c0453c0830dbc5f14f682"
+      }
+    }
+  ],
+  "preservedRootVerificationFailures": [
+    {
+      "name": "NEXT41-root-independent-proof",
+      "cwd": "C:/cinagroup/cinatoken",
+      "command": "C:/Program Files/nodejs/node.exe",
+      "args": [
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next13-b2-next41-nDMVDV/verify-web-and-provenance.mjs"
+      ],
+      "exit": 1,
+      "signal": null,
+      "log": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-next13-b2-next41-nDMVDV\\NEXT41-root-independent-proof.log",
+      "sha256": "4485dac4b5e9f6d3d0a34b19bc109523005eb951da098543084fee7c903afbb7",
+      "bytes": 795,
+      "tail": "node:internal/modules/run_main:107\r\n    triggerUncaughtException(\r\n    ^\r\n\r\nAssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:\r\n\r\n  assert.ok(current.current.inventory.some(x=>x.path==='packages/web/src/cinatoken/admin/keys/api-key-secret-reader.test.ts'))\r\n\r\n    at file:///C:/Users/cina/AppData/Local/Temp/cinatoken-next13-b2-next41-nDMVDV/verify-web-and-provenance.mjs:27:8\r\n    at ModuleJob.run (node:internal/modules/esm/module_job:430:25)\r\n    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:661:26)\r\n    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5) {\r\n  generatedMessage: true,\r\n  code: 'ERR_ASSERTION',\r\n  actual: false,\r\n  expected: true,\r\n  operator: '==',\r\n  diff: 'simple'\r\n}\r\n\r\nNode.js v24.14.1\r\n",
+      "at": "2026-10-02T09:04:03.431Z",
+      "resultArtifact": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-next13-b2-next41-nDMVDV/NEXT41-root-independent-proof.result.json",
+        "bytes": 1384,
+        "sha256": "6496054a1ba99e340eda74f11da45787620394df1dce7230086a6c15232ea3d6"
+      }
+    },
+    {
+      "name": "NEXT41-root-independent-proof-v2",
+      "cwd": "C:/cinagroup/cinatoken",
+      "command": "C:/Program Files/nodejs/node.exe",
+      "args": [
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-next13-b2-next41-nDMVDV/verify-web-and-provenance.mjs"
+      ],
+      "exit": 1,
+      "signal": null,
+      "log": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-next13-b2-next41-nDMVDV\\NEXT41-root-independent-proof-v2.log",
+      "sha256": "f0ead08bc292a28786a05b6f43e83ea3972a0811cea078e8e788c69b3df2e9bf",
+      "bytes": 925,
+      "tail": "node:fs:1569\r\n  const result = binding.readdir(\r\n                         ^\r\n\r\nError: ENOENT: no such file or directory, scandir 'C:\\cinagroup\\cinatoken\\.release\\web\\.release\\web\\local-p66-frontend-attribution-20261002080439'\r\n    at readdirSync (node:fs:1569:26)\r\n    at verifyRelease (file:///C:/cinagroup/cinatoken/packages/web/scripts/package-release.mjs:113:16)\r\n    at file:///C:/Users/cina/AppData/Local/Temp/cinatoken-next13-b2-next41-nDMVDV/verify-web-and-provenance.mjs:33:15\r\n    at ModuleJob.run (node:internal/modules/esm/module_job:430:25)\r\n    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:661:26)\r\n    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5) {\r\n  errno: -4058,\r\n  code: 'ENOENT',\r\n  syscall: 'scandir',\r\n  path: 'C:\\\\cinagroup\\\\cinatoken\\\\.release\\\\web\\\\.release\\\\web\\\\local-p66-frontend-attribution-20261002080439'\r\n}\r\n\r\nNode.js v24.14.1\r\n",
+      "at": "2026-10-02T09:05:07.496Z",
+      "resultArtifact": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-next13-b2-next41-nDMVDV/NEXT41-root-independent-proof-v2.result.json",
+        "bytes": 1535,
+        "sha256": "df219f42b2a872c78523fb2e07bfcc9076524e3bf7f1de0b99b97d29f7f734d5"
+      }
+    }
+  ],
+  "additionalRootPreparationFailure": {
+    "toolChunk": "f63dd3",
+    "error": "Source STOP checker used b.owned/b.sources/b.records instead of actual b.files; failed before recording. Corrected independent checkpoint was recorded while unit runs, before types/lint. All source owners had already issued STOP; product source unchanged."
+  },
+  "checkedAgentCommands": [
+    {
+      "owner": "b2a",
+      "name": "B2a-existing-unit",
+      "exitCode": 0,
+      "log": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-next13-b2a-active-Dd0yVp\\B2a-existing-unit.log",
+        "bytes": 5829,
+        "sha256": "6b387cd65ceb5f8970930c896cdfa4ce254abc91b585a0fdae63b87d9763bd9d"
+      }
+    },
+    {
+      "owner": "b2a",
+      "name": "B2a-format-write-v2",
+      "exitCode": 0,
+      "log": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-next13-b2a-active-Dd0yVp\\B2a-format-write-v2.log",
+        "bytes": 199,
+        "sha256": "288b76f9b4955b43ae252433e6f308f9f70c480207ee2405f31ae184ee4bbaad"
+      }
+    },
+    {
+      "owner": "b2a",
+      "name": "B2a-format-write",
+      "exitCode": 0,
+      "log": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-next13-b2a-active-Dd0yVp\\B2a-format-write.log",
+        "bytes": 151,
+        "sha256": "df81eb9381f573e1d6ccba392cb922475af3b3cbf380eb3d7cc458279a829bdb"
+      }
+    },
+    {
+      "owner": "b2a",
+      "name": "B2a-owned-format",
+      "exitCode": 0,
+      "log": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-next13-b2a-active-Dd0yVp\\B2a-owned-format.log",
+        "bytes": 67,
+        "sha256": "6d83a3564f7f607a548332e41eaafbcd07cb5356c80db107b0460bd253c93ea0"
+      }
+    },
+    {
+      "owner": "b2a",
+      "name": "B2a-owned-lint",
+      "exitCode": 0,
+      "log": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-next13-b2a-active-Dd0yVp\\B2a-owned-lint.log",
+        "bytes": 1,
+        "sha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b"
+      }
+    },
+    {
+      "owner": "b2a",
+      "name": "B2a-react-browser-v2",
+      "exitCode": 1,
+      "log": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-next13-b2a-active-Dd0yVp\\B2a-react-browser-v2.log",
+        "bytes": 868,
+        "sha256": "ef989968225d4e97e250e75347d5685777216ac55b60a8406b93e1f51751878d"
+      }
+    },
+    {
+      "owner": "b2a",
+      "name": "B2a-react-browser-v3",
+      "exitCode": 1,
+      "log": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-next13-b2a-active-Dd0yVp\\B2a-react-browser-v3.log",
+        "bytes": 1175,
+        "sha256": "66850df00d8f7153c5b99a7c06fb8200560bec4d873c0162b25dee527072d815"
+      }
+    },
+    {
+      "owner": "b2a",
+      "name": "B2a-react-browser-v4",
+      "exitCode": 1,
+      "log": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-next13-b2a-active-Dd0yVp\\B2a-react-browser-v4.log",
+        "bytes": 1488,
+        "sha256": "19af709fd5635861664a4d30b37ec5e9e894ea69e02c92c8bd7db52663ffe7b6"
+      }
+    },
+    {
+      "owner": "b2a",
+      "name": "B2a-react-browser-v5",
+      "exitCode": 1,
+      "log": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-next13-b2a-active-Dd0yVp\\B2a-react-browser-v5.log",
+        "bytes": 1488,
+        "sha256": "ce181b25588d35a00a2160f54307ce7ca2aadb718442362671b120b414af4bcb"
+      }
+    },
+    {
+      "owner": "b2a",
+      "name": "B2a-react-browser-v6",
+      "exitCode": 1,
+      "log": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-next13-b2a-active-Dd0yVp\\B2a-react-browser-v6.log",
+        "bytes": 1238,
+        "sha256": "94f784b24139563c473f77d87d7f77831734172b7dcd429b88fb4c4186dfcd2b"
+      }
+    },
+    {
+      "owner": "b2a",
+      "name": "B2a-react-browser-v7",
+      "exitCode": 1,
+      "log": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-next13-b2a-active-Dd0yVp\\B2a-react-browser-v7.log",
+        "bytes": 1689,
+        "sha256": "db9947d35dd272759d2ba2aa428b1dc6c6e28078fb695ac5473d8a0d6adb627f"
+      }
+    },
+    {
+      "owner": "b2a",
+      "name": "B2a-react-browser-v8",
+      "exitCode": 0,
+      "log": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-next13-b2a-active-Dd0yVp\\B2a-react-browser-v8.log",
+        "bytes": 1497,
+        "sha256": "7ad97be50f0483969d13ec0f1f9fc81e967e1f5b2e5b248ed86f590339198b7e"
+      }
+    },
+    {
+      "owner": "b2a",
+      "name": "B2a-react-browser",
+      "exitCode": 1,
+      "log": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-next13-b2a-active-Dd0yVp\\B2a-react-browser.log",
+        "bytes": 770,
+        "sha256": "8ea21ca8c56b160648184f591d9c77f7c03d8c6acc26269c05242ee01da2d140"
+      }
+    },
+    {
+      "owner": "b2a",
+      "name": "B2a-react-bundle-v2",
+      "exitCode": 0,
+      "log": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-next13-b2a-active-Dd0yVp\\B2a-react-bundle-v2.log",
+        "bytes": 204,
+        "sha256": "931182cecf887c93cddcf6946125dc5a1f5fbfd00a65099cbb8b297e84e688fd"
+      }
+    },
+    {
+      "owner": "b2a",
+      "name": "B2a-react-bundle",
+      "exitCode": 0,
+      "log": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-next13-b2a-active-Dd0yVp\\B2a-react-bundle.log",
+        "bytes": 204,
+        "sha256": "feb72a8ceedb7e949a1439e4db45cb78b73f7b4ec687a978a62e2355c8848d6d"
+      }
+    },
+    {
+      "owner": "b2b",
+      "name": "B2b-owned-lint-final",
+      "exitCode": 0,
+      "log": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-next13-b2b-Dlpr9L\\B2b-owned-lint-final.log",
+        "bytes": 1,
+        "sha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b"
+      }
+    },
+    {
+      "owner": "b2b",
+      "name": "B2b-owned-related-unit-v2",
+      "exitCode": 0,
+      "log": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-next13-b2b-Dlpr9L\\B2b-owned-related-unit-v2.log",
+        "bytes": 2618,
+        "sha256": "b77a4fa37028b71db2039371e596a6d2dd7e919d205eb20792b95867aed9de52"
+      }
+    },
+    {
+      "owner": "b2b",
+      "name": "B2b-real-react-bundle-v4",
+      "exitCode": 0,
+      "log": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-next13-b2b-Dlpr9L\\B2b-real-react-bundle-v4.log",
+        "bytes": 1138,
+        "sha256": "850639a7fde7b16b640a989a42bacbd1ddd26dbd0810db9b38e04683cc47e0ae"
+      }
+    },
+    {
+      "owner": "b2b",
+      "name": "B2b-real-react-behavior-v3",
+      "exitCode": 0,
+      "log": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-next13-b2b-Dlpr9L\\B2b-real-react-behavior-v3.log",
+        "bytes": 4094,
+        "sha256": "9ce087f2cbbcbee7af4d590c611f220979da3eec9499f990f2c01a534306fccf"
+      }
+    },
+    {
+      "owner": "b2b",
+      "name": "B2b-narrow-format",
+      "exitCode": 0,
+      "log": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-next13-b2b-Dlpr9L\\B2b-narrow-format.log",
+        "bytes": 1332,
+        "sha256": "6f661ab3db291ad8061005a6962205f52b19fd912e1682e5cfff6b9348c2ffe4"
+      }
+    },
+    {
+      "owner": "b2b",
+      "name": "B2b-owned-full-format-check-before",
+      "exitCode": 1,
+      "log": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-next13-b2b-Dlpr9L\\B2b-owned-full-format-check-before.log",
+        "bytes": 618,
+        "sha256": "c472db83b4f1b5a6937a3efe421671c20a764b7dc53c2935b11ebff5d1521805"
+      }
+    },
+    {
+      "owner": "b2b",
+      "name": "B2b-owned-full-format-check-final",
+      "exitCode": 1,
+      "log": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-next13-b2b-Dlpr9L\\B2b-owned-full-format-check-final.log",
+        "bytes": 213,
+        "sha256": "3807ce8d4a262684601698032429bc61661ff738b7e6d7072150464b74ab0643"
+      }
+    }
+  ],
+  "proofs": [
+    {
+      "name": "b2a",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-next13-b2a-active-Dd0yVp/final-proof.json",
+      "bytes": 36124,
+      "sha256": "a3eddcb671c1da8d28b5feb8e63e9fa3260f6f2de447685faffad96b2b183c91"
+    },
+    {
+      "name": "b2b",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-next13-b2b-Dlpr9L/final-proof.json",
+      "bytes": 74028,
+      "sha256": "016842c8b2196467e89bfc8ea560da314e267a9d8d72f594afbdb8ea754725ff"
+    },
+    {
+      "name": "provenance",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-web-provenance-proof-B9Fbqz/implementation-proof.json",
+      "bytes": 8651,
+      "sha256": "da2577d89f3b1f7633dd41ec530efd931b6e8acd5ad647bbb05dc4cb14b78f2a"
+    },
+    {
+      "name": "review",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-next41-admin-source-review-1Obeo8/B2-independent-source-review.json",
+      "bytes": 31554,
+      "sha256": "0adf5e51fe54c0e11e059ddfc02239fe4f67039480144626ee4748a64e80f261"
+    },
+    {
+      "name": "fullLint",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-next13-b2-next41-nDMVDV/B2-root-full-lint-proof.json",
+      "bytes": 2497,
+      "sha256": "f173fe0c62228ece8bdfdfc81569775c343128d59ac359ecb1c0d1ceb8f93ed9"
+    },
+    {
+      "name": "webBoundary",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-next13-b2-next41-nDMVDV/NEXT41-root-independent-web-source-proof.json",
+      "bytes": 8034,
+      "sha256": "fd8dbd10b2753e80c6a6ab46cc4380a42d746339ee335aa88533e88d23762ddf"
+    },
+    {
+      "name": "sourceStop",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-next13-b2-next41-nDMVDV/B2-source-unified-checkpoint.json",
+      "bytes": 1776,
+      "sha256": "a1979a43cfeb7ef3fb60713aff46036f299dd983c5959cb2186566b202eae391"
+    }
+  ],
+  "admin": {
+    "unit": {
+      "preEndpoints": 5,
+      "preResilience": 30,
+      "main": 963,
+      "fail": 0,
+      "coreNodeIndexPrebuild": true
+    },
+    "types": {
+      "exit": 0,
+      "heapGiB": 8,
+      "buildInfoLocation": "Temp"
+    },
+    "lint": {
+      "at": "2026-10-02T09:12:25.380Z",
+      "actualAuditExit": 0,
+      "lintCommandExit": 1,
+      "before": {
+        "files": 572,
+        "errors": 58,
+        "warnings": 5,
+        "fatal": 0,
+        "diagnosticFiles": 24
+      },
+      "after": {
+        "files": 572,
+        "errors": 45,
+        "warnings": 2,
+        "fatal": 0,
+        "diagnosticFiles": 16
+      },
+      "owned": [
+        {
+          "path": "packages/admin/app/account/activity/page.tsx",
+          "before": {
+            "errors": 2,
+            "warnings": 0
+          },
+          "after": {
+            "errors": 0,
+            "warnings": 0
+          }
+        },
+        {
+          "path": "packages/admin/app/dashboard/page.tsx",
+          "before": {
+            "errors": 1,
+            "warnings": 0
+          },
+          "after": {
+            "errors": 0,
+            "warnings": 0
+          }
+        },
+        {
+          "path": "packages/admin/app/gateway/analytics/reliability/page.tsx",
+          "before": {
+            "errors": 1,
+            "warnings": 1
+          },
+          "after": {
+            "errors": 0,
+            "warnings": 0
+          }
+        },
+        {
+          "path": "packages/admin/app/gateway/audit-logs/page.tsx",
+          "before": {
+            "errors": 2,
+            "warnings": 0
+          },
+          "after": {
+            "errors": 0,
+            "warnings": 0
+          }
+        },
+        {
+          "path": "packages/admin/app/gateway/config/page.tsx",
+          "before": {
+            "errors": 3,
+            "warnings": 0
+          },
+          "after": {
+            "errors": 0,
+            "warnings": 0
+          }
+        },
+        {
+          "path": "packages/admin/app/gateway/request-logs/page.tsx",
+          "before": {
+            "errors": 2,
+            "warnings": 0
+          },
+          "after": {
+            "errors": 0,
+            "warnings": 0
+          }
+        },
+        {
+          "path": "packages/admin/app/gateway/tools/invocations/page.tsx",
+          "before": {
+            "errors": 2,
+            "warnings": 0
+          },
+          "after": {
+            "errors": 0,
+            "warnings": 0
+          }
+        },
+        {
+          "path": "packages/admin/lib/use-replace-list-query.ts",
+          "before": {
+            "errors": 0,
+            "warnings": 2
+          },
+          "after": {
+            "errors": 0,
+            "warnings": 0
+          }
+        }
+      ],
+      "allOtherMessagesUnchanged": true,
+      "sourceStopMatches": true,
+      "eslintJson": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-next13-b2-next41-nDMVDV/B2-eslint.json",
+        "bytes": 540827,
+        "sha256": "276c8909e43785fe9bcc0e953e003548015220f5b720b46207735b6827276f9a"
+      },
+      "scope": "Actual full Admin ESLint JSON, target eight files zero and all non-owned message arrays exactly unchanged. Package lint remains failing."
+    },
+    "format": {
+      "b2aFullCheckExit": 0,
+      "b2bBeforeFullExit": 1,
+      "b2bBeforeFailures": 4,
+      "b2bAfterFullExit": 1,
+      "b2bAfterFailures": 3,
+      "b2bHookPass": true,
+      "modifiedRegionFormat": true,
+      "fullAdminFormatPass": false
+    },
+    "sourceBehavior": {
+      "b2a": {
+        "browser": {
+          "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-next13-b2a-active-Dd0yVp/browser-run-EX37zK/proof.json",
+          "bytes": 5581,
+          "sha256": "48821be07658f6c9c93010a24f8edda5254bddb4cd52c1454f0d23355f5ef297"
+        },
+        "cases": [
+          {
+            "name": "activity-initial-no-store-current-workspace",
+            "status": "passed"
+          },
+          {
+            "name": "activity-filters-page-reset-and-export-contract",
+            "status": "passed"
+          },
+          {
+            "name": "activity-generation-dialog-current-scope",
+            "status": "passed"
+          },
+          {
+            "name": "activity-switch-hides-private-data-and-aborts-detail",
+            "status": "passed"
+          },
+          {
+            "name": "activity-workspace-key-resets-only-owned-filters",
+            "status": "passed"
+          },
+          {
+            "name": "activity-rejects-wrong-workspace-response",
+            "status": "passed"
+          },
+          {
+            "name": "activity-aborts-and-ignores-late-old-success",
+            "status": "passed"
+          },
+          {
+            "name": "activity-locale-keeps-draft-focus-and-does-not-loop",
+            "status": "passed"
+          },
+          {
+            "name": "activity-unmount-aborts-latest-read",
+            "status": "passed"
+          },
+          {
+            "name": "dashboard-failure-visible-and-retry-current-request",
+            "status": "passed"
+          },
+          {
+            "name": "dashboard-refresh-clears-old-totals",
+            "status": "passed"
+          },
+          {
+            "name": "dashboard-range-identity-abort-and-late-isolation",
+            "status": "passed"
+          },
+          {
+            "name": "reliability-true-effect-loading-and-current-result",
+            "status": "passed"
+          },
+          {
+            "name": "reliability-new-range-aborts-and-late-error-does-not-settle",
+            "status": "passed"
+          },
+          {
+            "name": "reliability-failure-retains-existing-data-and-locale-does-not-reload",
+            "status": "passed"
+          },
+          {
+            "name": "reliability-unmount-cancels-current",
+            "status": "passed"
+          },
+          {
+            "name": "audit-server-snapshot-hydrates-deep-link-on-first-read",
+            "status": "passed"
+          },
+          {
+            "name": "audit-url-reason-selection-survives-filter-options",
+            "status": "passed"
+          },
+          {
+            "name": "audit-filter-change-resets-page-url-keeps-focus",
+            "status": "passed"
+          },
+          {
+            "name": "audit-rapid-filters-abort-old-and-ignore-late-success",
+            "status": "passed"
+          },
+          {
+            "name": "audit-detail-and-locale-preserve-user-capability",
+            "status": "passed"
+          },
+          {
+            "name": "audit-failed-payload-retains-existing-result",
+            "status": "passed"
+          },
+          {
+            "name": "audit-clear-filters-preserves-default-and-unbounded-dates",
+            "status": "passed"
+          },
+          {
+            "name": "audit-unmount-aborts-latest-list",
+            "status": "passed"
+          }
+        ],
+        "passed": 24,
+        "expectedConsoleErrors": 1,
+        "unexpectedConsoleErrors": 0,
+        "browserClosed": true
+      },
+      "b2b": {
+        "browser": {
+          "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-next13-b2b-Dlpr9L/browser-run-DFUQz8/proof.json",
+          "bytes": 55321,
+          "sha256": "1d5213c7584582cd4772e858e2d0f0376d0fbc2713d7f65dbfb8b4aeb5c9e776"
+        },
+        "cases": [
+          {
+            "mode": "production",
+            "name": "hook-strict-initial-encoded-deep-link-no-replace",
+            "status": "passed"
+          },
+          {
+            "mode": "production",
+            "name": "hook-same-value-context-callback-router-identity-no-replace",
+            "status": "passed"
+          },
+          {
+            "mode": "production",
+            "name": "hook-extra-dependency-in-query-and-encoded-order",
+            "status": "passed"
+          },
+          {
+            "mode": "production",
+            "name": "hook-path-change-and-empty-query-contract",
+            "status": "passed"
+          },
+          {
+            "mode": "production",
+            "name": "logs-node-ssr-hydrate-all-deep-filters-first-request",
+            "status": "passed",
+            "detail": {
+              "firstRequest": "/api/admin/request-logs?page=2&page_size=50&status=error&model_id=model%2Fone&provider_id=provider%2Fone&user_id=user%2Bone&user_email=deep%2Bemail%40example.test&api_key_id=key%2Fone&start_date=2026-10-01+00%3A00%3A00&end_date=2026-10-01+01%3A00%3A00&route_group=custom%2Fone&protocol=openai",
+              "actualInitialReads": 1
+            }
+          },
+          {
+            "mode": "production",
+            "name": "logs-paging-filter-reset-url-encode-and-focus",
+            "status": "passed"
+          },
+          {
+            "mode": "production",
+            "name": "logs-locale-same-value-keeps-input-focus-and-request",
+            "status": "passed"
+          },
+          {
+            "mode": "production",
+            "name": "logs-details-preserved-after-locale-render",
+            "status": "passed"
+          },
+          {
+            "mode": "production",
+            "name": "logs-abort-then-ignore-late-success",
+            "status": "passed"
+          },
+          {
+            "mode": "production",
+            "name": "logs-a-b-a-request-identity-and-late-error",
+            "status": "passed"
+          },
+          {
+            "mode": "production",
+            "name": "logs-current-api-failure-preserves-existing-rows",
+            "status": "passed"
+          },
+          {
+            "mode": "production",
+            "name": "logs-current-network-failure-preserves-existing-rows",
+            "status": "passed"
+          },
+          {
+            "mode": "production",
+            "name": "logs-unmount-aborts-list-and-all-three-catalogs",
+            "status": "passed"
+          },
+          {
+            "mode": "production",
+            "name": "logs-default-range-and-single-ended-contract",
+            "status": "passed"
+          },
+          {
+            "mode": "production",
+            "name": "invocations-node-ssr-hydrate-known-tool-single-ended-fractional-page",
+            "status": "passed"
+          },
+          {
+            "mode": "production",
+            "name": "invocations-pagination-filter-reset-focus-and-link",
+            "status": "passed"
+          },
+          {
+            "mode": "production",
+            "name": "invocations-detail-json-view-and-locale-no-refetch",
+            "status": "passed"
+          },
+          {
+            "mode": "production",
+            "name": "invocations-cancel-ignores-late-success-and-error",
+            "status": "passed"
+          },
+          {
+            "mode": "production",
+            "name": "invocations-current-failure-clears-rows-original-contract",
+            "status": "passed"
+          },
+          {
+            "mode": "production",
+            "name": "invocations-invalid-tool-default-page-range-and-unmount",
+            "status": "passed"
+          },
+          {
+            "mode": "production",
+            "name": "config-node-ssr-hydrate-load-normalizers-and-strict-read-cancel",
+            "status": "passed",
+            "detail": {
+              "actualReads": 1
+            }
+          },
+          {
+            "mode": "production",
+            "name": "config-drafts-metadata-focused-locale-and-no-refetch",
+            "status": "passed"
+          },
+          {
+            "mode": "production",
+            "name": "config-webhook-hide-retains-draft",
+            "status": "passed"
+          },
+          {
+            "mode": "production",
+            "name": "config-currency-write-lock-and-existing-unconditional-payload",
+            "status": "passed"
+          },
+          {
+            "mode": "production",
+            "name": "config-timezone-invalid-no-write-valid-normalized-payload",
+            "status": "passed"
+          },
+          {
+            "mode": "production",
+            "name": "config-parallel-webhook-writes-lock-and-error-feedback",
+            "status": "passed"
+          },
+          {
+            "mode": "production",
+            "name": "config-success-timer-cleanup-and-pending-read-unmount",
+            "status": "passed"
+          },
+          {
+            "mode": "production",
+            "name": "all-hydration-recoverable-errors-empty",
+            "status": "passed"
+          },
+          {
+            "mode": "development",
+            "name": "hook-strict-initial-encoded-deep-link-no-replace",
+            "status": "passed"
+          },
+          {
+            "mode": "development",
+            "name": "hook-same-value-context-callback-router-identity-no-replace",
+            "status": "passed"
+          },
+          {
+            "mode": "development",
+            "name": "hook-extra-dependency-in-query-and-encoded-order",
+            "status": "passed"
+          },
+          {
+            "mode": "development",
+            "name": "hook-path-change-and-empty-query-contract",
+            "status": "passed"
+          },
+          {
+            "mode": "development",
+            "name": "logs-node-ssr-hydrate-all-deep-filters-first-request",
+            "status": "passed",
+            "detail": {
+              "firstRequest": "/api/admin/request-logs?page=2&page_size=50&status=error&model_id=model%2Fone&provider_id=provider%2Fone&user_id=user%2Bone&user_email=deep%2Bemail%40example.test&api_key_id=key%2Fone&start_date=2026-10-01+00%3A00%3A00&end_date=2026-10-01+01%3A00%3A00&route_group=custom%2Fone&protocol=openai",
+              "actualInitialReads": 2
+            }
+          },
+          {
+            "mode": "development",
+            "name": "logs-paging-filter-reset-url-encode-and-focus",
+            "status": "passed"
+          },
+          {
+            "mode": "development",
+            "name": "logs-locale-same-value-keeps-input-focus-and-request",
+            "status": "passed"
+          },
+          {
+            "mode": "development",
+            "name": "logs-details-preserved-after-locale-render",
+            "status": "passed"
+          },
+          {
+            "mode": "development",
+            "name": "logs-abort-then-ignore-late-success",
+            "status": "passed"
+          },
+          {
+            "mode": "development",
+            "name": "logs-a-b-a-request-identity-and-late-error",
+            "status": "passed"
+          },
+          {
+            "mode": "development",
+            "name": "logs-current-api-failure-preserves-existing-rows",
+            "status": "passed"
+          },
+          {
+            "mode": "development",
+            "name": "logs-current-network-failure-preserves-existing-rows",
+            "status": "passed"
+          },
+          {
+            "mode": "development",
+            "name": "logs-unmount-aborts-list-and-all-three-catalogs",
+            "status": "passed"
+          },
+          {
+            "mode": "development",
+            "name": "logs-default-range-and-single-ended-contract",
+            "status": "passed"
+          },
+          {
+            "mode": "development",
+            "name": "invocations-node-ssr-hydrate-known-tool-single-ended-fractional-page",
+            "status": "passed"
+          },
+          {
+            "mode": "development",
+            "name": "invocations-pagination-filter-reset-focus-and-link",
+            "status": "passed"
+          },
+          {
+            "mode": "development",
+            "name": "invocations-detail-json-view-and-locale-no-refetch",
+            "status": "passed"
+          },
+          {
+            "mode": "development",
+            "name": "invocations-cancel-ignores-late-success-and-error",
+            "status": "passed"
+          },
+          {
+            "mode": "development",
+            "name": "invocations-current-failure-clears-rows-original-contract",
+            "status": "passed"
+          },
+          {
+            "mode": "development",
+            "name": "invocations-invalid-tool-default-page-range-and-unmount",
+            "status": "passed"
+          },
+          {
+            "mode": "development",
+            "name": "config-node-ssr-hydrate-load-normalizers-and-strict-read-cancel",
+            "status": "passed",
+            "detail": {
+              "actualReads": 2
+            }
+          },
+          {
+            "mode": "development",
+            "name": "config-drafts-metadata-focused-locale-and-no-refetch",
+            "status": "passed"
+          },
+          {
+            "mode": "development",
+            "name": "config-webhook-hide-retains-draft",
+            "status": "passed"
+          },
+          {
+            "mode": "development",
+            "name": "config-currency-write-lock-and-existing-unconditional-payload",
+            "status": "passed"
+          },
+          {
+            "mode": "development",
+            "name": "config-timezone-invalid-no-write-valid-normalized-payload",
+            "status": "passed"
+          },
+          {
+            "mode": "development",
+            "name": "config-parallel-webhook-writes-lock-and-error-feedback",
+            "status": "passed"
+          },
+          {
+            "mode": "development",
+            "name": "config-success-timer-cleanup-and-pending-read-unmount",
+            "status": "passed"
+          },
+          {
+            "mode": "development",
+            "name": "all-hydration-recoverable-errors-empty",
+            "status": "passed"
+          }
+        ],
+        "production": 28,
+        "developmentStrict": 28,
+        "passed": 56,
+        "ssrHtml": 14,
+        "ssrFiles": [
+          {
+            "mode": "production",
+            "options": {
+              "view": "hook",
+              "locale": "en",
+              "path": "/gateway/models",
+              "params": [
+                [
+                  "vendor",
+                  "provider/a+b"
+                ],
+                [
+                  "kind",
+                  "llm"
+                ]
+              ]
+            },
+            "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-next13-b2b-Dlpr9L/browser-run-DFUQz8/production-0-hook-en.html",
+            "bytes": 40,
+            "sha256": "6c5d37076b7a3792110529384b47614a83df1a093fef9f7ecb9d685be6599f28"
+          },
+          {
+            "mode": "production",
+            "options": {
+              "view": "logs",
+              "locale": "en",
+              "path": "/gateway/request-logs"
+            },
+            "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-next13-b2b-Dlpr9L/browser-run-DFUQz8/production-1-logs-en.html",
+            "bytes": 55,
+            "sha256": "ea826692fc7ebb8d156e88f32076f92a84e544aaa63ce98303e160ee6a3e7d7c"
+          },
+          {
+            "mode": "production",
+            "options": {
+              "view": "logs",
+              "locale": "ko",
+              "path": "/gateway/request-logs"
+            },
+            "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-next13-b2b-Dlpr9L/browser-run-DFUQz8/production-2-logs-ko.html",
+            "bytes": 64,
+            "sha256": "e6491354eff6c6b407a3d12dfb1bdc6e069a9c5296e9c1c5ee5f5fb242a9d94c"
+          },
+          {
+            "mode": "production",
+            "options": {
+              "view": "logs",
+              "locale": "en",
+              "path": "/gateway/request-logs"
+            },
+            "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-next13-b2b-Dlpr9L/browser-run-DFUQz8/production-3-logs-en.html",
+            "bytes": 55,
+            "sha256": "ea826692fc7ebb8d156e88f32076f92a84e544aaa63ce98303e160ee6a3e7d7c"
+          },
+          {
+            "mode": "production",
+            "options": {
+              "view": "invocations",
+              "locale": "en",
+              "path": "/gateway/tools/invocations"
+            },
+            "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-next13-b2b-Dlpr9L/browser-run-DFUQz8/production-4-invocations-en.html",
+            "bytes": 55,
+            "sha256": "ea826692fc7ebb8d156e88f32076f92a84e544aaa63ce98303e160ee6a3e7d7c"
+          },
+          {
+            "mode": "production",
+            "options": {
+              "view": "invocations",
+              "locale": "zh",
+              "path": "/gateway/tools/invocations"
+            },
+            "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-next13-b2b-Dlpr9L/browser-run-DFUQz8/production-5-invocations-zh.html",
+            "bytes": 57,
+            "sha256": "a4d8534a5e92313227bb9bed41715afac1a6f24636358548413258f7f5e17433"
+          },
+          {
+            "mode": "production",
+            "options": {
+              "view": "config",
+              "locale": "en",
+              "path": "/gateway/config"
+            },
+            "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-next13-b2b-Dlpr9L/browser-run-DFUQz8/production-6-config-en.html",
+            "bytes": 102,
+            "sha256": "4cd852b6b893b56e3250e2dec5a25b5e2abb59a3a2d1772e5f59a54ea9f9a326"
+          },
+          {
+            "mode": "development",
+            "options": {
+              "view": "hook",
+              "locale": "en",
+              "path": "/gateway/models",
+              "params": [
+                [
+                  "vendor",
+                  "provider/a+b"
+                ],
+                [
+                  "kind",
+                  "llm"
+                ]
+              ]
+            },
+            "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-next13-b2b-Dlpr9L/browser-run-DFUQz8/development-7-hook-en.html",
+            "bytes": 40,
+            "sha256": "6c5d37076b7a3792110529384b47614a83df1a093fef9f7ecb9d685be6599f28"
+          },
+          {
+            "mode": "development",
+            "options": {
+              "view": "logs",
+              "locale": "en",
+              "path": "/gateway/request-logs"
+            },
+            "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-next13-b2b-Dlpr9L/browser-run-DFUQz8/development-8-logs-en.html",
+            "bytes": 55,
+            "sha256": "ea826692fc7ebb8d156e88f32076f92a84e544aaa63ce98303e160ee6a3e7d7c"
+          },
+          {
+            "mode": "development",
+            "options": {
+              "view": "logs",
+              "locale": "ko",
+              "path": "/gateway/request-logs"
+            },
+            "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-next13-b2b-Dlpr9L/browser-run-DFUQz8/development-9-logs-ko.html",
+            "bytes": 64,
+            "sha256": "e6491354eff6c6b407a3d12dfb1bdc6e069a9c5296e9c1c5ee5f5fb242a9d94c"
+          },
+          {
+            "mode": "development",
+            "options": {
+              "view": "logs",
+              "locale": "en",
+              "path": "/gateway/request-logs"
+            },
+            "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-next13-b2b-Dlpr9L/browser-run-DFUQz8/development-10-logs-en.html",
+            "bytes": 55,
+            "sha256": "ea826692fc7ebb8d156e88f32076f92a84e544aaa63ce98303e160ee6a3e7d7c"
+          },
+          {
+            "mode": "development",
+            "options": {
+              "view": "invocations",
+              "locale": "en",
+              "path": "/gateway/tools/invocations"
+            },
+            "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-next13-b2b-Dlpr9L/browser-run-DFUQz8/development-11-invocations-en.html",
+            "bytes": 55,
+            "sha256": "ea826692fc7ebb8d156e88f32076f92a84e544aaa63ce98303e160ee6a3e7d7c"
+          },
+          {
+            "mode": "development",
+            "options": {
+              "view": "invocations",
+              "locale": "zh",
+              "path": "/gateway/tools/invocations"
+            },
+            "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-next13-b2b-Dlpr9L/browser-run-DFUQz8/development-12-invocations-zh.html",
+            "bytes": 57,
+            "sha256": "a4d8534a5e92313227bb9bed41715afac1a6f24636358548413258f7f5e17433"
+          },
+          {
+            "mode": "development",
+            "options": {
+              "view": "config",
+              "locale": "en",
+              "path": "/gateway/config"
+            },
+            "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-next13-b2b-Dlpr9L/browser-run-DFUQz8/development-13-config-en.html",
+            "bytes": 102,
+            "sha256": "4cd852b6b893b56e3250e2dec5a25b5e2abb59a3a2d1772e5f59a54ea9f9a326"
+          }
+        ],
+        "expectedConsoleErrors": 2,
+        "unexpectedConsoleErrors": 0,
+        "browserClosed": true
+      }
+    },
+    "noNewCompleteNextBuild": true
+  },
+  "provenance": {
+    "policySha256": "9286049c7373318c84beddeb996faf2c63e921771ffa37e40aa3317e71ccf0dd",
+    "toolSha256": "a437b96a383a2021bf5137ddf54ea1891ab0b6f0c6a7389d3f2304ec88a77126",
+    "metadata": {
+      "head": "de5b720c2e45f02ba62c29c45791f01e2569a782",
+      "trackedWeb": [],
+      "baselineTree": "c4c6c4bcde6c0b67c21b6ae6132cb3dda8da2b13",
+      "baselineKind": "local-git-tree",
+      "upstreamRepository": null,
+      "upstreamRef": null,
+      "upstreamCommit": null,
+      "importDate": null,
+      "upstreamStatus": "unresolved",
+      "copyrightOwnership": "not-inferred",
+      "sourceRequirementComplete": false
+    },
+    "current": 1797,
+    "baseline": 945,
+    "comparison": {
+      "same": 856,
+      "changed": 89,
+      "new": 852,
+      "deleted": 0
+    },
+    "recordedCurrentFilesIndividuallyRehashedAfterUnifiedChecks": 1797,
+    "currentTsv": {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-next13-b2-next41-nDMVDV/root-source-inventory/current.tsv",
+      "bytes": 238683,
+      "sha256": "9118e4c940790a959be6eb14cdbd1275ca65435f46a1a0e05e93d176f29df147"
+    },
+    "baselineTsv": {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-next13-b2-next41-nDMVDV/root-source-inventory/baseline.tsv",
+      "bytes": 123082,
+      "sha256": "17164c9ddca65b3dfd2f49880ec5c520cfa4fe8ade502638a8d13eb0b8ad5980"
+    },
+    "inventory": {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-next13-b2-next41-nDMVDV/root-source-inventory/inventory.json",
+      "bytes": 918517,
+      "sha256": "27094c4466cc6c46291f20c2f2e500e431c309cc81cb06caeec1012734b72c99"
+    },
+    "sourceContractTests": 8,
+    "independentActualCliExit": 0,
+    "scopeDifference": "1797 = historical pre-footer 1795 + 3 attribution source files - excluded .npmrc; baseline 945 = prior 946 - excluded .npmrc; old aggregates not comparable under revised policy."
+  },
+  "release": {
+    "id": "local-p66-frontend-attribution-20261002080439",
+    "manifestSha256": "ae3929bb8f8d780d702dd8277fd5e838472be5c804bd93cdc69ac0a3b8ad0974",
+    "buildContract": {
+      "version": 1,
+      "buildId": "aa7d0b2c-a555-4a0d-af92-c327fe777e8b",
+      "sourceSha256": "21835c121ceae2837ff81345f34b8b527c9479b54e282ca875adb33a75d09ae8"
+    },
+    "webSource": "21835c121ceae2837ff81345f34b8b527c9479b54e282ca875adb33a75d09ae8",
+    "assets": 457,
+    "serverFiles": 35,
+    "combinedFiles": 492,
+    "previousReleaseId": "local-p65-public-ssr-visible-20261002063100",
+    "currentReleaseId": null,
+    "flags": [
+      [
+        "CINATOKEN_WEB_PUBLIC_ENABLED",
+        "false"
+      ],
+      [
+        "CINATOKEN_WEB_ACCOUNT_ENABLED",
+        "false"
+      ],
+      [
+        "CINATOKEN_WEB_ADMIN_DASHBOARD_ENABLED",
+        "false"
+      ],
+      [
+        "CINATOKEN_WEB_ADMIN_USERS_ENABLED",
+        "false"
+      ],
+      [
+        "CINATOKEN_WEB_ADMIN_USER_DETAIL_ENABLED",
+        "false"
+      ],
+      [
+        "CINATOKEN_WEB_ADMIN_PROVIDERS_ENABLED",
+        "false"
+      ],
+      [
+        "CINATOKEN_WEB_ADMIN_MODELS_ENABLED",
+        "false"
+      ],
+      [
+        "CINATOKEN_WEB_ADMIN_ENDPOINTS_ENABLED",
+        "false"
+      ],
+      [
+        "CINATOKEN_WEB_ADMIN_ROUTES_ENABLED",
+        "false"
+      ],
+      [
+        "CINATOKEN_WEB_ADMIN_DATA_POLICIES_ENABLED",
+        "false"
+      ],
+      [
+        "CINATOKEN_WEB_ADMIN_PRESETS_ENABLED",
+        "false"
+      ],
+      [
+        "CINATOKEN_WEB_ADMIN_GUARDRAILS_ENABLED",
+        "false"
+      ],
+      [
+        "CINATOKEN_WEB_ADMIN_RELIABILITY_ENABLED",
+        "false"
+      ],
+      [
+        "CINATOKEN_WEB_ADMIN_MODEL_ANALYTICS_ENABLED",
+        "false"
+      ],
+      [
+        "CINATOKEN_WEB_ADMIN_PROVIDER_ANALYTICS_ENABLED",
+        "false"
+      ],
+      [
+        "CINATOKEN_WEB_ADMIN_USER_ANALYTICS_ENABLED",
+        "false"
+      ],
+      [
+        "CINATOKEN_WEB_ADMIN_REQUEST_LOGS_ENABLED",
+        "false"
+      ],
+      [
+        "CINATOKEN_WEB_ADMIN_BUDGET_AUDIT_ENABLED",
+        "false"
+      ],
+      [
+        "CINATOKEN_WEB_ADMIN_TOOL_INVOCATIONS_ENABLED",
+        "false"
+      ],
+      [
+        "CINATOKEN_WEB_ADMIN_CONFIG_TIMEZONE_ENABLED",
+        "false"
+      ],
+      [
+        "CINATOKEN_WEB_ADMIN_CONFIG_ENABLED",
+        "false"
+      ],
+      [
+        "CINATOKEN_WEB_ADMIN_ACCESS_KEYS_ENABLED",
+        "false"
+      ],
+      [
+        "CINATOKEN_WEB_ADMIN_KEYS_ENABLED",
+        "false"
+      ],
+      [
+        "CINATOKEN_WEB_ADMIN_SHARED_KEYS_ENABLED",
+        "false"
+      ],
+      [
+        "CINATOKEN_WEB_ADMIN_TOOLS_ENABLED",
+        "false"
+      ],
+      [
+        "CINATOKEN_WEB_ADMIN_PLAYGROUND_ENABLED",
+        "false"
+      ],
+      [
+        "CINATOKEN_WEB_ADMIN_SIMULATOR_ENABLED",
+        "false"
+      ],
+      [
+        "CINATOKEN_WEB_ADMIN_WITHDRAWALS_ENABLED",
+        "false"
+      ],
+      [
+        "CINATOKEN_WEB_ADMIN_NFT_MINTS_ENABLED",
+        "false"
+      ]
+    ],
+    "publicOrigin": "",
+    "noDeployment": true
+  },
+  "rootViewedImages": [
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-next13-b2a-active-Dd0yVp/browser-run-EX37zK/activity-workspace.png",
+      "bytes": 45467,
+      "sha256": "3d477e1189cd810e2c781ec86b228e60af3741a503ca99ff48ee8766cc8029ff",
+      "scope": "Root viewed text/control state only; no product CSS"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-next13-b2a-active-Dd0yVp/browser-run-EX37zK/audit-cleared.png",
+      "bytes": 55215,
+      "sha256": "a5e4f3626627acebb43ffe1a583d513f104f9e482f427ebca2cfdc17a3bd6eb4",
+      "scope": "Root viewed text/control state only; no product CSS"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-next13-b2b-Dlpr9L/browser-run-DFUQz8/production-final.png",
+      "bytes": 5864,
+      "sha256": "684407c83e2bc942c8d531e1df7fc509dee93150215bfe3dca2da7dfcd98b977",
+      "scope": "Root viewed blank state after unmount; no UI/visual acceptance"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-next13-b2b-Dlpr9L/browser-run-DFUQz8/development-final.png",
+      "bytes": 5864,
+      "sha256": "684407c83e2bc942c8d531e1df7fc509dee93150215bfe3dca2da7dfcd98b977",
+      "scope": "Root viewed blank state after unmount; no UI/visual acceptance"
+    }
+  ],
+  "remaining": {
+    "b0": {
+      "files": 7,
+      "errors": 28,
+      "warnings": 2,
+      "staticCandidateOnly": true,
+      "modelsCombinedFilterEdit": "Existing source candidate; no runtime reproduction or arbitrary-query preservation claim"
+    },
+    "b3": {
+      "files": 9,
+      "errors": 17,
+      "warnings": 0,
+      "readOnlyInventory": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-next13-b2-next41-nDMVDV/B3-sensitive-source-readonly-index.json",
+        "bytes": 22789,
+        "sha256": "cad4c8981e34218995cc61944b137aee9545db4cca10e2f46a9f914542ea6915"
+      },
+      "requiresImmediateSecretScopeCleanupAndCancellation": true
+    },
+    "sourceRequirementsComplete": false,
+    "realIdentityDatabaseChainPlatformReleaseComplete": false
+  },
+  "checklist": {
+    "path": "C:/cinagroup/cinatoken/docs/developers/architecture/web-frontend-migration.md",
+    "expectedMain": 102,
+    "expectedMatrix": 54,
+    "onlyMainChecked": "P6-11",
+    "expectedGates": 9,
+    "expectedEvidence": 9,
+    "authLocalComplete": 7,
+    "globalSSRPending": 6,
+    "postMdValidationPath": "C:/Users/cina/AppData/Local/Temp/cinatoken-next13-b2-next41-nDMVDV/B2-final-md-validation.json"
+  },
+  "limits": [
+    "Local source component QA uses real React/Chrome with controlled Next navigation/API seams and no product CSS. It is not full Next application, production layout or responsive visual acceptance.",
+    "B2b56 comprises the same28 meaningful cases across production and dev Strict modes.",
+    "Actual14 SSR snapshots are loading/hook source snapshots before client hydration, not public SSR body acceptance.",
+    "Prior P66 Web tests/build/browser proofs remain scoped to P66 and were not rerun for this Admin-only batch.",
+    "No native workerd/WSL/Docker, database, IdP, upstream inference, chain, deployed release or full migration completion proved.",
+    "Local tree and byte inventory do not establish original import identity, copyright ownership or published corresponding source.",
+    "File read checks are not an atomic snapshot or hostile concurrent ancestor rename protection.",
+    "Existing formatter failures, full lint failure and all original QA/preparation failure records remain visible."
+  ]
+}

@@ -35,14 +35,8 @@
 			}
 		},
 		"modalities": {
-			"input": [
-				"text",
-				"image",
-				"video"
-			],
-			"output": [
-				"text"
-			]
+			"input": ["text", "image", "video"],
+			"output": ["text"]
 		},
 		"released": "2026-08-01"
 	},
@@ -82,14 +76,8 @@
 			}
 		},
 		"modalities": {
-			"input": [
-				"text",
-				"image",
-				"video"
-			],
-			"output": [
-				"text"
-			]
+			"input": ["text", "image", "video"],
+			"output": ["text"]
 		},
 		"released": "2026-07-19"
 	},
@@ -143,15 +131,8 @@
 			}
 		},
 		"modalities": {
-			"input": [
-				"text",
-				"image",
-				"video",
-				"file"
-			],
-			"output": [
-				"text"
-			]
+			"input": ["text", "image", "video", "file"],
+			"output": ["text"]
 		},
 		"released": "2026-06-02"
 	},
@@ -191,12 +172,8 @@
 			}
 		},
 		"modalities": {
-			"input": [
-				"text"
-			],
-			"output": [
-				"text"
-			]
+			"input": ["text"],
+			"output": ["text"]
 		},
 		"released": "2026-05-20"
 	},
@@ -264,14 +241,8 @@
 			}
 		},
 		"modalities": {
-			"input": [
-				"text",
-				"image",
-				"video"
-			],
-			"output": [
-				"text"
-			]
+			"input": ["text", "image", "video"],
+			"output": ["text"]
 		},
 		"released": "2026-07-15"
 	},
@@ -325,15 +296,8 @@
 			}
 		},
 		"modalities": {
-			"input": [
-				"text",
-				"image",
-				"video",
-				"file"
-			],
-			"output": [
-				"text"
-			]
+			"input": ["text", "image", "video", "file"],
+			"output": ["text"]
 		},
 		"released": "2026-04-02"
 	},
@@ -387,12 +351,8 @@
 			}
 		},
 		"modalities": {
-			"input": [
-				"text"
-			],
-			"output": [
-				"text"
-			]
+			"input": ["text"],
+			"output": ["text"]
 		},
 		"released": "2026-04-20"
 	},
@@ -446,15 +406,8 @@
 			}
 		},
 		"modalities": {
-			"input": [
-				"text",
-				"image",
-				"video",
-				"file"
-			],
-			"output": [
-				"text"
-			]
+			"input": ["text", "image", "video", "file"],
+			"output": ["text"]
 		},
 		"released": "2026-04-16"
 	},
@@ -508,15 +461,8 @@
 			}
 		},
 		"modalities": {
-			"input": [
-				"text",
-				"image",
-				"video",
-				"file"
-			],
-			"output": [
-				"text"
-			]
+			"input": ["text", "image", "video", "file"],
+			"output": ["text"]
 		},
 		"released": "2026-02-16"
 	},
@@ -556,15 +502,8 @@
 			}
 		},
 		"modalities": {
-			"input": [
-				"text",
-				"image",
-				"video",
-				"file"
-			],
-			"output": [
-				"text"
-			]
+			"input": ["text", "image", "video", "file"],
+			"output": ["text"]
 		},
 		"released": "2026-02-16"
 	},
@@ -632,14 +571,8 @@
 			}
 		},
 		"modalities": {
-			"input": [
-				"text",
-				"image",
-				"video"
-			],
-			"output": [
-				"text"
-			]
+			"input": ["text", "image", "video"],
+			"output": ["text"]
 		},
 		"released": "2025-12-19"
 	},
@@ -679,16 +612,8 @@
 			}
 		},
 		"modalities": {
-			"input": [
-				"text",
-				"image",
-				"audio",
-				"video"
-			],
-			"output": [
-				"text",
-				"audio"
-			]
+			"input": ["text", "image", "audio", "video"],
+			"output": ["text", "audio"]
 		},
 		"released": "2026-03-15"
 	},
@@ -728,16 +653,8 @@
 			}
 		},
 		"modalities": {
-			"input": [
-				"text",
-				"image",
-				"audio",
-				"video"
-			],
-			"output": [
-				"text",
-				"audio"
-			]
+			"input": ["text", "image", "audio", "video"],
+			"output": ["text", "audio"]
 		},
 		"released": "2026-03-15"
 	},

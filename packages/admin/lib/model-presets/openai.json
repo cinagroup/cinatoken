@@ -35,13 +35,8 @@
 			}
 		},
 		"modalities": {
-			"input": [
-				"text",
-				"image"
-			],
-			"output": [
-				"text"
-			]
+			"input": ["text", "image"],
+			"output": ["text"]
 		},
 		"released": "2025-12-11"
 	},
@@ -95,13 +90,8 @@
 			}
 		},
 		"modalities": {
-			"input": [
-				"text",
-				"image"
-			],
-			"output": [
-				"text"
-			]
+			"input": ["text", "image"],
+			"output": ["text"]
 		},
 		"released": "2026-03-05"
 	},
@@ -141,13 +131,8 @@
 			}
 		},
 		"modalities": {
-			"input": [
-				"text",
-				"image"
-			],
-			"output": [
-				"text"
-			]
+			"input": ["text", "image"],
+			"output": ["text"]
 		},
 		"released": "2026-03-17"
 	},
@@ -187,13 +172,8 @@
 			}
 		},
 		"modalities": {
-			"input": [
-				"text",
-				"image"
-			],
-			"output": [
-				"text"
-			]
+			"input": ["text", "image"],
+			"output": ["text"]
 		},
 		"released": "2026-03-17"
 	},
@@ -247,13 +227,8 @@
 			}
 		},
 		"modalities": {
-			"input": [
-				"text",
-				"image"
-			],
-			"output": [
-				"text"
-			]
+			"input": ["text", "image"],
+			"output": ["text"]
 		},
 		"released": "2026-04-23"
 	},
@@ -307,13 +282,8 @@
 			}
 		},
 		"modalities": {
-			"input": [
-				"text",
-				"image"
-			],
-			"output": [
-				"text"
-			]
+			"input": ["text", "image"],
+			"output": ["text"]
 		},
 		"released": "2026-07-09"
 	},
@@ -367,13 +337,8 @@
 			}
 		},
 		"modalities": {
-			"input": [
-				"text",
-				"image"
-			],
-			"output": [
-				"text"
-			]
+			"input": ["text", "image"],
+			"output": ["text"]
 		},
 		"released": "2026-07-09"
 	},
@@ -427,13 +392,8 @@
 			}
 		},
 		"modalities": {
-			"input": [
-				"text",
-				"image"
-			],
-			"output": [
-				"text"
-			]
+			"input": ["text", "image"],
+			"output": ["text"]
 		},
 		"released": "2026-07-09"
 	},
@@ -487,13 +447,8 @@
 			}
 		},
 		"modalities": {
-			"input": [
-				"text",
-				"image"
-			],
-			"output": [
-				"text"
-			]
+			"input": ["text", "image"],
+			"output": ["text"]
 		},
 		"released": "2026-07-09"
 	}

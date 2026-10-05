@@ -60,10 +60,10 @@ export function buildD1ApiKeyListOrderByClause(sort: ApiKeyListSortField, order:
 	const dir = order === 'asc' ? 'ASC' : 'DESC';
 	if (sort === 'budget_reset_at') {
 		const nulls = order === 'asc' ? 'NULLS LAST' : 'NULLS FIRST';
-		return `ORDER BY u.budget_reset_at ${dir} ${nulls}`;
+		return `ORDER BY u.budget_reset_at ${dir} ${nulls}, k.id ${dir}`;
 	}
 	if (sort === 'budget_spent') {
-		return `ORDER BY u.budget_spent ${dir}`;
+		return `ORDER BY u.budget_spent ${dir}, k.id ${dir}`;
 	}
-	return `ORDER BY k.created_at ${dir}`;
+	return `ORDER BY k.created_at ${dir}, k.id ${dir}`;
 }

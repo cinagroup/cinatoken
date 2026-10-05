@@ -35,16 +35,8 @@
 			}
 		},
 		"modalities": {
-			"input": [
-				"text",
-				"image",
-				"audio",
-				"video",
-				"file"
-			],
-			"output": [
-				"text"
-			]
+			"input": ["text", "image", "audio", "video", "file"],
+			"output": ["text"]
 		},
 		"released": "2026-03-18"
 	},
@@ -98,16 +90,8 @@
 			}
 		},
 		"modalities": {
-			"input": [
-				"text",
-				"image",
-				"audio",
-				"video",
-				"file"
-			],
-			"output": [
-				"text"
-			]
+			"input": ["text", "image", "audio", "video", "file"],
+			"output": ["text"]
 		},
 		"released": "2026-03-18"
 	},
@@ -147,16 +131,8 @@
 			}
 		},
 		"modalities": {
-			"input": [
-				"text",
-				"image",
-				"audio",
-				"video",
-				"file"
-			],
-			"output": [
-				"text"
-			]
+			"input": ["text", "image", "audio", "video", "file"],
+			"output": ["text"]
 		},
 		"released": "2026-04-27"
 	},
@@ -196,16 +172,8 @@
 			}
 		},
 		"modalities": {
-			"input": [
-				"text",
-				"image",
-				"audio",
-				"video",
-				"file"
-			],
-			"output": [
-				"text"
-			]
+			"input": ["text", "image", "audio", "video", "file"],
+			"output": ["text"]
 		},
 		"released": "2026-04-22"
 	}

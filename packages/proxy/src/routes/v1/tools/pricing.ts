@@ -10,12 +10,14 @@ import {
 	DEFAULT_WEB_FETCH_COST,
 	DEFAULT_WEB_SEARCH_COST,
 	normalizeBillingCurrencyCode,
-	resolveAiDetectionConfig,
-	resolveWebDeepSearchConfig,
-	resolveWebFetchConfig,
-	resolveWebSearchConfig,
+	resolveAiDetectionConfigFromSnapshots,
+	resolveWebDeepSearchConfigFromSnapshots,
+	resolveWebFetchConfigFromSnapshots,
+	resolveWebSearchConfigFromSnapshots,
+	TOOL_CONFIG_FAMILY_KEYS,
 	roundGatewayMoney,
 } from '@octafuse/core';
+import type { SystemConfigRepository } from '@octafuse/core';
 import { Hono } from 'hono';
 import type { Env } from '../../../app';
 import { requireApiKey } from '../../../middleware/auth';
@@ -55,16 +57,16 @@ function tripleOrDefault(config: {
 	};
 }
 
-toolsPricingRoutes.get('/', async (c) => {
-	const repos = c.get('repositories');
+const TOOLS_PRICING_KEYS = [...new Set(Object.values(TOOL_CONFIG_FAMILY_KEYS).flat())].sort();
 
-	const [billingRaw, webSearch, webFetch, webDeepSearch, aiDetection] = await Promise.all([
-		repos.systemConfig.getConfig(BILLING_CURRENCY_KEY),
-		resolveWebSearchConfig(repos),
-		resolveWebFetchConfig(repos),
-		resolveWebDeepSearchConfig(repos),
-		resolveAiDetectionConfig(repos),
-	]);
+/** Currency and every family price must describe the same database snapshot. */
+export async function readToolsPricing(systemConfig: Pick<SystemConfigRepository, 'getConfigSnapshots'>) {
+	const snapshots = await systemConfig.getConfigSnapshots(TOOLS_PRICING_KEYS);
+	const billingRaw = snapshots.find((row) => row.key === BILLING_CURRENCY_KEY)?.value;
+	const webSearch = resolveWebSearchConfigFromSnapshots(snapshots);
+	const webFetch = resolveWebFetchConfigFromSnapshots(snapshots);
+	const webDeepSearch = resolveWebDeepSearchConfigFromSnapshots(snapshots);
+	const aiDetection = resolveAiDetectionConfigFromSnapshots(snapshots);
 
 	const searchPrices = tripleOrDefault(webSearch.ok ? webSearch.config : null, DEFAULT_WEB_SEARCH_COST);
 	const fetchPrices = tripleOrDefault(webFetch.ok ? webFetch.config : null, DEFAULT_WEB_FETCH_COST);
@@ -97,10 +99,9 @@ toolsPricingRoutes.get('/', async (c) => {
 		},
 	];
 
-	return c.json({
-		data: {
-			billing_currency: normalizeBillingCurrencyCode(billingRaw),
-			tools,
-		},
-	});
+	return { billing_currency: normalizeBillingCurrencyCode(billingRaw), tools };
+}
+
+toolsPricingRoutes.get('/', async (c) => {
+	return c.json({ data: await readToolsPricing(c.get('repositories').systemConfig) });
 });

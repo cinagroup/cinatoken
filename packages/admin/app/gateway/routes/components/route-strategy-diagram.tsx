@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import { useEffect, useState, type ReactNode } from 'react';
-import type { RouteStrategyDiagramKind } from '../route-strategy-meta';
+import { useEffect, useState, type ReactNode } from "react";
+import type { RouteStrategyDiagramKind } from "../route-strategy-meta";
 
 type Props = {
 	kind: RouteStrategyDiagramKind;
@@ -15,12 +15,12 @@ type Props = {
 function usePrefersReducedMotion(): boolean {
 	const [reduced, setReduced] = useState(false);
 	useEffect(() => {
-		if (typeof window === 'undefined' || !window.matchMedia) return;
-		const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
+		if (typeof window === "undefined" || !window.matchMedia) return;
+		const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
 		const sync = () => setReduced(mq.matches);
 		sync();
-		mq.addEventListener('change', sync);
-		return () => mq.removeEventListener('change', sync);
+		mq.addEventListener("change", sync);
+		return () => mq.removeEventListener("change", sync);
 	}, []);
 	return reduced;
 }
@@ -29,10 +29,7 @@ const VIEW_W = 220;
 const VIEW_H = 112;
 const TARGET_X = 158;
 
-function SvgShell(props: {
-	ariaLabel: string;
-	children: ReactNode;
-}) {
+function SvgShell(props: { ariaLabel: string; children: ReactNode }) {
 	return (
 		<svg
 			viewBox={`0 0 ${VIEW_W} ${VIEW_H}`}
@@ -62,8 +59,8 @@ function TargetBox(props: {
 				rx={4}
 				className={
 					picked
-						? 'fill-emerald-50 stroke-emerald-500'
-						: 'fill-slate-50 stroke-slate-300'
+						? "fill-emerald-50 stroke-emerald-500"
+						: "fill-slate-50 stroke-slate-300"
 				}
 				strokeWidth={1.3}
 			/>
@@ -72,7 +69,11 @@ function TargetBox(props: {
 				y={y + 4}
 				textAnchor="middle"
 				className="fill-slate-700"
-				style={{ fontSize: 10, fontFamily: 'ui-monospace, monospace', fontWeight: 600 }}
+				style={{
+					fontSize: 10,
+					fontFamily: "ui-monospace, monospace",
+					fontWeight: 600,
+				}}
 			>
 				{label}
 			</text>
@@ -81,7 +82,7 @@ function TargetBox(props: {
 					x={TARGET_X + 40}
 					y={y + 3.5}
 					className="fill-slate-500"
-					style={{ fontSize: 9, fontFamily: 'ui-monospace, monospace' }}
+					style={{ fontSize: 9, fontFamily: "ui-monospace, monospace" }}
 				>
 					{hint}
 				</text>
@@ -103,15 +104,23 @@ function RequestNode(props: {
 				cx={x}
 				cy={y}
 				r={10}
-				className={accent ? 'fill-indigo-50 stroke-indigo-400' : 'fill-slate-50 stroke-slate-400'}
+				className={
+					accent
+						? "fill-indigo-50 stroke-indigo-400"
+						: "fill-slate-50 stroke-slate-400"
+				}
 				strokeWidth={1.4}
 			/>
 			<text
 				x={x}
 				y={y + 3.5}
 				textAnchor="middle"
-				className={accent ? 'fill-indigo-700' : 'fill-slate-600'}
-				style={{ fontSize: 8.5, fontFamily: 'ui-monospace, monospace', fontWeight: 600 }}
+				className={accent ? "fill-indigo-700" : "fill-slate-600"}
+				style={{
+					fontSize: 8.5,
+					fontFamily: "ui-monospace, monospace",
+					fontWeight: 600,
+				}}
 			>
 				{label}
 			</text>
@@ -125,7 +134,7 @@ function AnimatedDot(props: {
 	delayMs?: number;
 	dur?: string;
 }) {
-	const { path, active, delayMs = 0, dur = '2s' } = props;
+	const { path, active, delayMs = 0, dur = "2s" } = props;
 	if (!active) return null;
 	return (
 		<circle r={2.6} className="fill-indigo-500">
@@ -154,7 +163,13 @@ function AnimatedDot(props: {
  * Affinity: different sticky keys (users) pin to different targets.
  * Shows "same key stays sticky" — not a global fixed primary.
  */
-function AffinityDiagram({ active, caption }: { active?: boolean; caption?: string }) {
+function AffinityDiagram({
+	active,
+	caption,
+}: {
+	active?: boolean;
+	caption?: string;
+}) {
 	const pathU1 = `M 34,34 C 88,34 120,34 ${TARGET_X - 2},34`;
 	const pathU2 = `M 34,78 C 88,78 120,78 ${TARGET_X - 2},78`;
 	return (
@@ -164,7 +179,10 @@ function AffinityDiagram({ active, caption }: { active?: boolean; caption?: stri
 					x={8}
 					y={14}
 					className="fill-slate-400"
-					style={{ fontSize: 8.5, fontFamily: 'ui-sans-serif, system-ui, sans-serif' }}
+					style={{
+						fontSize: 8.5,
+						fontFamily: "ui-sans-serif, system-ui, sans-serif",
+					}}
 				>
 					{caption}
 				</text>
@@ -213,7 +231,13 @@ function AffinityDiagram({ active, caption }: { active?: boolean; caption?: stri
 /**
  * Strict: every request uses the same weight-descending attempt order.
  */
-function StrictDiagram({ active, caption }: { active?: boolean; caption?: string }) {
+function StrictDiagram({
+	active,
+	caption,
+}: {
+	active?: boolean;
+	caption?: string;
+}) {
 	const path1 = `M 40,56 C 90,56 120,28 ${TARGET_X - 2},28`;
 	const path2 = `M 40,56 C 90,56 120,56 ${TARGET_X - 2},56`;
 	const path3 = `M 40,56 C 90,56 120,84 ${TARGET_X - 2},84`;
@@ -224,12 +248,21 @@ function StrictDiagram({ active, caption }: { active?: boolean; caption?: string
 					x={8}
 					y={14}
 					className="fill-slate-400"
-					style={{ fontSize: 8.5, fontFamily: 'ui-sans-serif, system-ui, sans-serif' }}
+					style={{
+						fontSize: 8.5,
+						fontFamily: "ui-sans-serif, system-ui, sans-serif",
+					}}
 				>
 					{caption}
 				</text>
 			) : null}
-			<path d={path1} fill="none" strokeWidth={2.2} className="stroke-indigo-500" opacity={0.9} />
+			<path
+				d={path1}
+				fill="none"
+				strokeWidth={2.2}
+				className="stroke-indigo-500"
+				opacity={0.9}
+			/>
 			<path
 				d={path2}
 				fill="none"
@@ -259,7 +292,14 @@ function StrictDiagram({ active, caption }: { active?: boolean; caption?: string
 				className="stroke-slate-400"
 			/>
 			<defs>
-				<marker id="strict-arrow" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto">
+				<marker
+					id="strict-arrow"
+					markerWidth="6"
+					markerHeight="6"
+					refX="3"
+					refY="3"
+					orient="auto"
+				>
 					<path d="M0,0 L6,3 L0,6 Z" className="fill-slate-400" />
 				</marker>
 			</defs>
@@ -272,11 +312,32 @@ function StrictDiagram({ active, caption }: { active?: boolean; caption?: string
 	);
 }
 
-function WeightedRandomDiagram({ active, caption }: { active?: boolean; caption?: string }) {
+function WeightedRandomDiagram({
+	active,
+	caption,
+}: {
+	active?: boolean;
+	caption?: string;
+}) {
 	const paths = [
-		{ d: `M 40,56 C 90,56 120,28 ${TARGET_X - 2},28`, w: 2.6, pct: '60%', delay: 0 },
-		{ d: `M 40,56 C 90,56 120,56 ${TARGET_X - 2},56`, w: 1.8, pct: '30%', delay: 500 },
-		{ d: `M 40,56 C 90,56 120,84 ${TARGET_X - 2},84`, w: 1.1, pct: '10%', delay: 1000 },
+		{
+			d: `M 40,56 C 90,56 120,28 ${TARGET_X - 2},28`,
+			w: 2.6,
+			pct: "60%",
+			delay: 0,
+		},
+		{
+			d: `M 40,56 C 90,56 120,56 ${TARGET_X - 2},56`,
+			w: 1.8,
+			pct: "30%",
+			delay: 500,
+		},
+		{
+			d: `M 40,56 C 90,56 120,84 ${TARGET_X - 2},84`,
+			w: 1.1,
+			pct: "10%",
+			delay: 1000,
+		},
 	];
 	return (
 		<SvgShell ariaLabel="Weighted random: pick by weight">
@@ -285,7 +346,10 @@ function WeightedRandomDiagram({ active, caption }: { active?: boolean; caption?
 					x={8}
 					y={14}
 					className="fill-slate-400"
-					style={{ fontSize: 8.5, fontFamily: 'ui-sans-serif, system-ui, sans-serif' }}
+					style={{
+						fontSize: 8.5,
+						fontFamily: "ui-sans-serif, system-ui, sans-serif",
+					}}
 				>
 					{caption}
 				</text>
@@ -301,7 +365,12 @@ function WeightedRandomDiagram({ active, caption }: { active?: boolean; caption?
 				/>
 			))}
 			{paths.map((p) => (
-				<AnimatedDot key={`dot-${p.pct}`} path={p.d} active={active} delayMs={p.delay} />
+				<AnimatedDot
+					key={`dot-${p.pct}`}
+					path={p.d}
+					active={active}
+					delayMs={p.delay}
+				/>
 			))}
 			<RequestNode x={28} y={56} label="req" accent />
 			<TargetBox y={28} label="T1" hint="60%" picked />
@@ -311,7 +380,13 @@ function WeightedRandomDiagram({ active, caption }: { active?: boolean; caption?
 	);
 }
 
-function RoundRobinDiagram({ active, caption }: { active?: boolean; caption?: string }) {
+function RoundRobinDiagram({
+	active,
+	caption,
+}: {
+	active?: boolean;
+	caption?: string;
+}) {
 	const paths = [
 		{ d: `M 40,56 C 90,56 120,28 ${TARGET_X - 2},28`, delay: 0 },
 		{ d: `M 40,56 C 90,56 120,56 ${TARGET_X - 2},56`, delay: 600 },
@@ -324,7 +399,10 @@ function RoundRobinDiagram({ active, caption }: { active?: boolean; caption?: st
 					x={8}
 					y={14}
 					className="fill-slate-400"
-					style={{ fontSize: 8.5, fontFamily: 'ui-sans-serif, system-ui, sans-serif' }}
+					style={{
+						fontSize: 8.5,
+						fontFamily: "ui-sans-serif, system-ui, sans-serif",
+					}}
 				>
 					{caption}
 				</text>
@@ -341,21 +419,31 @@ function RoundRobinDiagram({ active, caption }: { active?: boolean; caption?: st
 			))}
 			{/* Cycle hint between targets */}
 			<path
-				d={`M ${TARGET_X + 17},37 C ${TARGET_X + 48},37 ${TARGET_X + 48},56 ${TARGET_X + 37},56`}
+				d={`M ${TARGET_X + 17},37 C ${TARGET_X + 48},37 ${TARGET_X + 48},56 ${
+					TARGET_X + 37
+				},56`}
 				fill="none"
 				strokeWidth={1.2}
 				className="stroke-emerald-500"
 				opacity={0.8}
 			/>
 			<path
-				d={`M ${TARGET_X + 17},65 C ${TARGET_X + 48},65 ${TARGET_X + 48},84 ${TARGET_X + 37},84`}
+				d={`M ${TARGET_X + 17},65 C ${TARGET_X + 48},65 ${TARGET_X + 48},84 ${
+					TARGET_X + 37
+				},84`}
 				fill="none"
 				strokeWidth={1.2}
 				className="stroke-emerald-500"
 				opacity={0.8}
 			/>
 			{paths.map((p, i) => (
-				<AnimatedDot key={i} path={p.d} active={active} delayMs={p.delay} dur="2.4s" />
+				<AnimatedDot
+					key={i}
+					path={p.d}
+					active={active}
+					delayMs={p.delay}
+					dur="2.4s"
+				/>
 			))}
 			<RequestNode x={28} y={56} label="req" accent />
 			<TargetBox y={28} label="T1" hint="↻" picked />
@@ -369,18 +457,24 @@ export function RouteStrategyDiagram(props: Props) {
 	const { kind, active, className, caption } = props;
 	const reducedMotion = usePrefersReducedMotion();
 	const animate = Boolean(active) && !reducedMotion;
-	const wrap = className ?? 'text-slate-700';
+	const wrap = className ?? "text-slate-700";
 
 	return (
 		<div
 			className={`overflow-hidden rounded-md bg-slate-50/80 ring-1 ring-inset ring-slate-200/80 ${wrap}`}
 		>
-			{kind === 'hash_affinity' ? <AffinityDiagram active={animate} caption={caption} /> : null}
-			{kind === 'weight_priority' ? <StrictDiagram active={animate} caption={caption} /> : null}
-			{kind === 'weighted_random' ? (
+			{kind === "hash_affinity" ? (
+				<AffinityDiagram active={animate} caption={caption} />
+			) : null}
+			{kind === "weight_priority" ? (
+				<StrictDiagram active={animate} caption={caption} />
+			) : null}
+			{kind === "weighted_random" ? (
 				<WeightedRandomDiagram active={animate} caption={caption} />
 			) : null}
-			{kind === 'weighted_round_robin' ? <RoundRobinDiagram active={animate} caption={caption} /> : null}
+			{kind === "weighted_round_robin" ? (
+				<RoundRobinDiagram active={animate} caption={caption} />
+			) : null}
 		</div>
 	);
 }

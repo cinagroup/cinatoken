@@ -35,14 +35,8 @@
 			}
 		},
 		"modalities": {
-			"input": [
-				"text",
-				"image",
-				"video"
-			],
-			"output": [
-				"text"
-			]
+			"input": ["text", "image", "video"],
+			"output": ["text"]
 		},
 		"released": "2026-01-27"
 	},
@@ -82,14 +76,8 @@
 			}
 		},
 		"modalities": {
-			"input": [
-				"text",
-				"image",
-				"video"
-			],
-			"output": [
-				"text"
-			]
+			"input": ["text", "image", "video"],
+			"output": ["text"]
 		},
 		"released": "2026-04-20"
 	},
@@ -129,14 +117,8 @@
 			}
 		},
 		"modalities": {
-			"input": [
-				"text",
-				"image",
-				"video"
-			],
-			"output": [
-				"text"
-			]
+			"input": ["text", "image", "video"],
+			"output": ["text"]
 		},
 		"released": "2026-06-12"
 	},
@@ -176,14 +158,8 @@
 			}
 		},
 		"modalities": {
-			"input": [
-				"text",
-				"image",
-				"video"
-			],
-			"output": [
-				"text"
-			]
+			"input": ["text", "image", "video"],
+			"output": ["text"]
 		},
 		"released": "2026-07-16"
 	}

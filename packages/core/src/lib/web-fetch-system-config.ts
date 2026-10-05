@@ -5,6 +5,8 @@
  */
 
 import type { GatewayRepositories } from '../storage/repositories';
+import type { ConfigSnapshot } from '../db/system-config-group-types';
+import { TOOL_CONFIG_FAMILY_KEYS, toolConfigValuesFromSnapshots } from '../db/system-config-group';
 import { roundGatewayMoney } from './money-precision';
 import {
 	normalizeToolUnitPrices,
@@ -203,13 +205,17 @@ function pricesFromEntry(entry: WebFetchCatalogEntry | undefined): ToolUnitPrice
 export async function resolveWebFetchConfig(
 	repos: GatewayRepositories
 ): Promise<ResolveWebFetchConfigResult> {
-	const [catalogRaw, activeRaw, legacyProviderRaw, legacyApiKeyRaw, legacyCostRaw] = await Promise.all([
-		repos.systemConfig.getConfig(WEB_FETCH_CATALOG_KEY),
-		repos.systemConfig.getConfig(WEB_FETCH_ACTIVE_KEY),
-		repos.systemConfig.getConfig(WEB_FETCH_PROVIDER_KEY),
-		repos.systemConfig.getConfig(WEB_FETCH_API_KEY_KEY),
-		repos.systemConfig.getConfig(WEB_FETCH_COST_KEY),
-	]);
+	return resolveWebFetchConfigFromSnapshots(await repos.systemConfig.getConfigSnapshots(TOOL_CONFIG_FAMILY_KEYS['web-fetch']));
+}
+
+/** Pure resolution from the same statement snapshot; never reload individual keys. */
+export function resolveWebFetchConfigFromSnapshots(snapshots: readonly ConfigSnapshot[]): ResolveWebFetchConfigResult {
+	const values = toolConfigValuesFromSnapshots('web-fetch', snapshots);
+	const catalogRaw = values[WEB_FETCH_CATALOG_KEY] ?? null;
+	const activeRaw = values[WEB_FETCH_ACTIVE_KEY] ?? null;
+	const legacyProviderRaw = values[WEB_FETCH_PROVIDER_KEY] ?? null;
+	const legacyApiKeyRaw = values[WEB_FETCH_API_KEY_KEY] ?? null;
+	const legacyCostRaw = values[WEB_FETCH_COST_KEY] ?? null;
 
 	const catalogPresent = catalogRaw != null && String(catalogRaw).trim().length > 0;
 	if (catalogPresent) {

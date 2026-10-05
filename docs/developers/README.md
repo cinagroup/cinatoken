@@ -15,6 +15,7 @@
 | 启动本地 D1、Node + Postgres 或 Node + MySQL 开发环境 | [local-development.md](./local-development.md) |
 | 理解运行时、数据库和请求生命周期 | [architecture/](./architecture/)；2.0 路由模型见 [route-topology.md](./architecture/route-topology.md) |
 | 理解公开模型目录、账户中心与管理控制台的产品层边界 | [public-product-layer.md](./architecture/public-product-layer.md) |
+| 推进 `packages/web` 前端迁移，持续更新阶段状态、页面/API/权限矩阵、P0–P8 checklist 与实施证据 | [Web 前端迁移主清单](./architecture/web-frontend-migration.md) |
 | 查计费、审计、时间、Provider 参数、路由策略、文生图 / 语音转写等行为语义 | [reference/](./reference/)（含 [route-strategies.md](./reference/route-strategies.md)、[image-models.md](./reference/image-models.md)）；Audio 见 [api/user.md「语音转写」](./api/user.md#语音转写audio-transcriptions) |
 
 ## 代码边界
@@ -23,6 +24,7 @@
 |----|------|
 | `packages/proxy` | 用户推理入口，提供 `/v1/*`、`/v1beta/*`、`/catalog/*`、`/health`。 |
 | `packages/admin` | 管理 UI 与 `/api/admin/*`。Proxy 不提供管理接口。 |
+| `packages/web` | Rsbuild 独立浏览器入口，按迁移清单逐路由接管；认证、API、BFF 与迁移期公开 SSR 仍由 Admin 提供。 |
 | `packages/tool-engines` | Tools 上游引擎客户端（web-search / web-fetch / web-deep-search / ai-detection）；**source-only**，供 Proxy 与 Admin Playground 共用。 |
 | `packages/core` | D1 / Postgres / MySQL 仓储、迁移 CLI、共享类型与领域逻辑。 |
 

@@ -8,6 +8,18 @@ import {
 	TABLE_CONFLICT_KEYS,
 	type EtlTableName,
 } from '../lib/migration-tables';
+import {
+	CONFIG_CUTOVER_D1_MIGRATION,
+	CONFIG_CUTOVER_POSTGRES_MIGRATION,
+	CONFIG_CUTOVER_RECONCILE_BATCH_SIZE,
+	CONFIG_CUTOVER_RECONCILE_SPECS,
+	configCutoverCheckLabel,
+	CONFIG_CUTOVER_TARGET_COLUMN_QUERY,
+	configCutoverRowId,
+	configCutoverTargetColumns,
+	countConfigCutoverBatchMismatches,
+	missingConfigCutoverTargetTables,
+} from '../lib/config-cutover-reconcile';
 import { isDiagnosticRequestAuthorized } from './diagnostic-auth';
 import {
 	buildD1GuardrailLedgerAuditSql,
@@ -127,6 +139,19 @@ async function inspectD1BudgetSpentPrecision(db: D1Database): Promise<D1BudgetSp
 	return mode;
 }
 
+async function assertConfigCutoverSourceReady(db: D1Database): Promise<void> {
+	const migration = await db.prepare(
+		'SELECT CAST(COUNT(*) AS TEXT) AS count FROM d1_migrations WHERE name = ?',
+	).bind(CONFIG_CUTOVER_D1_MIGRATION).first<{ count: string }>();
+	if (migration?.count !== '1') throw new Error(`missing_d1_migration:${CONFIG_CUTOVER_D1_MIGRATION}`);
+	for (const spec of CONFIG_CUTOVER_RECONCILE_SPECS) {
+		const columns = new Set((await getD1Columns(db, spec.table)).map((column) => column.name));
+		if (spec.columns.some((column) => !columns.has(column))) {
+			throw new Error(`missing_d1_config_cutover_columns:${spec.table}`);
+		}
+	}
+}
+
 function d1SelectList(tableName: EtlTableName, columns: D1ColumnInfo[]): string {
 	return columns.map((column) => {
 		const identifier = quoteIdentifier(column.name);
@@ -144,6 +169,7 @@ async function assertTargetReady(sql: postgres.Sql): Promise<void> {
 		schema_owner: string | null;
 		schema_usage: boolean;
 		current: boolean;
+		config_current: boolean;
 		legacy_schema: boolean;
 	}>>(`
 		SELECT current_user AS user_name,
@@ -157,6 +183,10 @@ async function assertTargetReady(sql: postgres.Sql): Promise<void> {
 				SELECT 1 FROM ${qualifiedTable('schema_migrations')}
 				WHERE version = '${REQUIRED_MIGRATION}'
 			) AS current,
+			EXISTS (
+				SELECT 1 FROM ${qualifiedTable('schema_migrations')}
+				WHERE version = '${CONFIG_CUTOVER_POSTGRES_MIGRATION}'
+			) AS config_current,
 			to_regnamespace('octafuse_gateway') IS NOT NULL AS legacy_schema
 	`);
 	if (
@@ -164,11 +194,20 @@ async function assertTargetReady(sql: postgres.Sql): Promise<void> {
 		state.schema_owner !== GATEWAY_MIGRATOR_ROLE ||
 		!state.schema_usage ||
 		!state.current ||
+		!state.config_current ||
 		state.legacy_schema
 	) {
 		throw new Error(
-			`unsafe_postgres_target:user=${String(state?.user_name)};schema=${String(state?.current_schema)};owner=${String(state?.schema_owner)};usage=${String(state?.schema_usage)};current=${String(state?.current)};legacy=${String(state?.legacy_schema)}`,
+				`unsafe_postgres_target:user=${String(state?.user_name)};schema=${String(state?.current_schema)};owner=${String(state?.schema_owner)};usage=${String(state?.schema_usage)};current=${String(state?.current)};config_current=${String(state?.config_current)};legacy=${String(state?.legacy_schema)}`,
 		);
+	}
+	const targetColumns = await sql.unsafe<Array<{ table_name: string; column_name: string }>>(
+		CONFIG_CUTOVER_TARGET_COLUMN_QUERY,
+		[GATEWAY_SCHEMA],
+	);
+	const missingConfigTables = missingConfigCutoverTargetTables(targetColumns);
+	if (missingConfigTables.length > 0) {
+		throw new Error(`missing_postgres_config_cutover_columns:${missingConfigTables.join(',')}`);
 	}
 }
 
@@ -228,6 +267,7 @@ async function runEtl(env: EtlWorkerEnv): Promise<{
 	});
 	try {
 		await assertTargetReady(sql);
+		await assertConfigCutoverSourceReady(env.SOURCE_DB);
 		const budgetSpentPrecisionMode = await inspectD1BudgetSpentPrecision(env.SOURCE_DB);
 		console.log('cinatoken.d1_postgres_budget_spent_precision', {
 			operation: 'etl',
@@ -509,6 +549,45 @@ async function reconcileUserBudgetSpentMicros(
 	return { mismatchCount, firstMismatch };
 }
 
+async function reconcileConfigCutoverRows(
+	db: D1Database,
+	sql: postgres.Sql,
+): Promise<Array<{ label: string; mismatchCount: number }>> {
+	const results: Array<{ label: string; mismatchCount: number }> = [];
+	for (const spec of CONFIG_CUTOVER_RECONCILE_SPECS) {
+		const count = await db.prepare(`SELECT CAST(COUNT(*) AS TEXT) AS count FROM ${quoteIdentifier(spec.table)}`)
+			.first<{ count: string }>();
+		const totalRows = Number(count?.count ?? -1);
+		if (!Number.isSafeInteger(totalRows) || totalRows < 0) {
+			throw new Error(`invalid_config_cutover_count:${spec.table}`);
+		}
+		const columns = spec.columns.map(quoteIdentifier).join(', ');
+		const targetColumns = configCutoverTargetColumns(spec, quoteIdentifier);
+		let readRows = 0;
+		let mismatchCount = 0;
+		for (let offset = 0; offset < totalRows; offset += CONFIG_CUTOVER_RECONCILE_BATCH_SIZE) {
+			const result = await db.prepare(
+				`SELECT ${columns} FROM ${quoteIdentifier(spec.table)} ORDER BY ${quoteIdentifier(spec.identity)} ` +
+				`LIMIT ? OFFSET ?`,
+			).bind(CONFIG_CUTOVER_RECONCILE_BATCH_SIZE, offset).all<Record<string, unknown>>();
+			const sourceRows = result.results ?? [];
+			if (sourceRows.length === 0) throw new Error(`short_config_cutover_read:${spec.table}`);
+			readRows += sourceRows.length;
+			const ids = sourceRows.map((row) => configCutoverRowId(row, spec));
+			const placeholders = ids.map((_, index) => `$${index + 1}`).join(', ');
+			const targetRows = await sql.unsafe<Record<string, unknown>[]>(
+				`SELECT ${targetColumns} FROM ${qualifiedTable(spec.table)} ` +
+				`WHERE ${quoteIdentifier(spec.identity)} IN (${placeholders})`,
+				ids,
+			);
+			mismatchCount += countConfigCutoverBatchMismatches(spec, sourceRows, targetRows);
+		}
+		if (readRows !== totalRows) throw new Error(`short_config_cutover_read:${spec.table}`);
+		results.push({ label: configCutoverCheckLabel(spec), mismatchCount });
+	}
+	return results;
+}
+
 async function collectGuardrailLedgerDifferences(
 	env: EtlWorkerEnv,
 	sql: postgres.Sql,
@@ -551,6 +630,7 @@ async function runReconcile(env: EtlWorkerEnv): Promise<{
 	});
 	try {
 		await assertTargetReady(sql);
+		await assertConfigCutoverSourceReady(env.SOURCE_DB);
 		const budgetSpentPrecisionMode = await inspectD1BudgetSpentPrecision(env.SOURCE_DB);
 		console.log('cinatoken.d1_postgres_budget_spent_precision', {
 			operation: 'reconcile',
@@ -590,6 +670,16 @@ async function runReconcile(env: EtlWorkerEnv): Promise<{
 				pg_value: budgetSpent.firstMismatch?.pgMicros ?? '<unavailable>',
 			});
 		}
+		const configChecks = await reconcileConfigCutoverRows(env.SOURCE_DB, sql);
+		for (const result of configChecks) {
+			if (result.mismatchCount === 0) continue;
+			failed.push(result.label);
+			mismatches.push({
+				label: result.label,
+				d1_value: `mismatches=${result.mismatchCount}`,
+				pg_value: 'expected=0',
+			});
+		}
 		const ledgerDifferences = failed.some((label) => label.startsWith(GUARDRAIL_LEDGER_CHECK_PREFIX))
 			? await collectGuardrailLedgerDifferences(env, sql)
 			: undefined;
@@ -600,7 +690,7 @@ async function runReconcile(env: EtlWorkerEnv): Promise<{
 			});
 		}
 		return {
-			total: checks.length + 1,
+			total: checks.length + 1 + configChecks.length,
 			failed,
 			mismatches,
 			budgetSpentPrecisionMode,

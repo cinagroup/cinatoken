@@ -1,10 +1,10 @@
-import { catalogInputPriceSortKey } from '@/lib/pricing-ui';
-import { formatCompactTokens } from '@/lib/format-compact-tokens';
-import { normalizeModelVendorInput } from '@/lib/model-vendor';
+import { catalogInputPriceSortKey } from "@/lib/pricing-ui";
+import { formatCompactTokens } from "@/lib/format-compact-tokens";
+import { normalizeModelVendorInput } from "@/lib/model-vendor";
 import {
 	PUBLIC_CATALOG_TOP_PROVIDER_METADATA_KEY,
 	parsePublicCatalogTopProviderSelection,
-} from '@octafuse/core/public-model-catalog';
+} from "@octafuse/core/public-model-catalog";
 import {
 	parsePricingProfile,
 	profileHasAudioPerCharacterPricing,
@@ -12,22 +12,24 @@ import {
 	profileHasAudioTokenPricing,
 	profileHasImagePerImagePricing,
 	type PricingTierPrices,
-} from '@octafuse/core/db/pricing-profile';
-import type { MetadataSummary, ModelListItem, PresetCatalogRow } from './types';
-import { ALL_VENDORS_KEY } from './types';
+} from "@octafuse/core/db/pricing-profile";
+import type { MetadataSummary, ModelListItem, PresetCatalogRow } from "./types";
+import { ALL_VENDORS_KEY } from "./types";
 
 export function parseVendorFilterParam(value: string | null): string {
-	if (value == null || value.trim() === '') return ALL_VENDORS_KEY;
+	if (value == null || value.trim() === "") return ALL_VENDORS_KEY;
 	if (value.trim().toLowerCase() === ALL_VENDORS_KEY) return ALL_VENDORS_KEY;
 	return normalizeModelVendorInput(value);
 }
 
 /** Pretty-print in the editor when stored value is a JSON object. */
-export function formatMetadataForEditor(metadata: string | null | undefined): string {
-	if (metadata == null || metadata.trim() === '') return '';
+export function formatMetadataForEditor(
+	metadata: string | null | undefined
+): string {
+	if (metadata == null || metadata.trim() === "") return "";
 	try {
 		const p = JSON.parse(metadata.trim()) as unknown;
-		if (p != null && typeof p === 'object' && !Array.isArray(p)) {
+		if (p != null && typeof p === "object" && !Array.isArray(p)) {
 			return JSON.stringify(p, null, 2);
 		}
 		return metadata.trim();
@@ -41,48 +43,55 @@ export function parseMetadataForSave(
 	raw: string
 ): { ok: true; value: string | null } | { ok: false; error: string } {
 	const t = raw.trim();
-	if (t === '') return { ok: true, value: null };
+	if (t === "") return { ok: true, value: null };
 	try {
 		const parsed = JSON.parse(t) as unknown;
-		if (parsed === null || typeof parsed !== 'object' || Array.isArray(parsed)) {
-			return {
-				ok: false,
-				error: 'Metadata must be a JSON object ({ ... }), not an array or primitive',
-			};
-		}
 		if (
-			parsePublicCatalogTopProviderSelection(
-				parsed as Record<string, unknown>
-			).status === 'invalid'
+			parsed === null ||
+			typeof parsed !== "object" ||
+			Array.isArray(parsed)
 		) {
 			return {
 				ok: false,
-				error: 'Public catalog top provider requires an exact endpoint tag and boolean moderation value',
+				error:
+					"Metadata must be a JSON object ({ ... }), not an array or primitive",
+			};
+		}
+		if (
+			parsePublicCatalogTopProviderSelection(parsed as Record<string, unknown>)
+				.status === "invalid"
+		) {
+			return {
+				ok: false,
+				error:
+					"Public catalog top provider requires an exact endpoint tag and boolean moderation value",
 			};
 		}
 		return { ok: true, value: JSON.stringify(parsed) };
 	} catch {
-		return { ok: false, error: 'Metadata must be valid JSON' };
+		return { ok: false, error: "Metadata must be valid JSON" };
 	}
 }
 
 export type PublicCatalogTopProviderEditorState =
-	| { status: 'metadata-invalid' }
+	| { status: "metadata-invalid" }
 	| {
-		status: 'ready';
-		enabled: boolean;
-		selectorValid: boolean;
-		endpointTag: string;
-		isModerated: boolean;
-	};
+			status: "ready";
+			enabled: boolean;
+			selectorValid: boolean;
+			endpointTag: string;
+			isModerated: boolean;
+	  };
 
 function metadataObject(raw: string): Record<string, unknown> | null {
 	const trimmed = raw.trim();
-	if (trimmed === '') return {};
+	if (trimmed === "") return {};
 	try {
 		const parsed: unknown = JSON.parse(trimmed);
-		return parsed !== null && typeof parsed === 'object' && !Array.isArray(parsed)
-			? parsed as Record<string, unknown>
+		return parsed !== null &&
+			typeof parsed === "object" &&
+			!Array.isArray(parsed)
+			? (parsed as Record<string, unknown>)
 			: null;
 	} catch {
 		return null;
@@ -93,20 +102,20 @@ export function publicCatalogTopProviderEditorState(
 	raw: string
 ): PublicCatalogTopProviderEditorState {
 	const metadata = metadataObject(raw);
-	if (!metadata) return { status: 'metadata-invalid' };
+	if (!metadata) return { status: "metadata-invalid" };
 	const selection = parsePublicCatalogTopProviderSelection(metadata);
-	if (selection.status === 'absent') {
+	if (selection.status === "absent") {
 		return {
-			status: 'ready',
+			status: "ready",
 			enabled: false,
 			selectorValid: true,
-			endpointTag: '',
+			endpointTag: "",
 			isModerated: false,
 		};
 	}
-	if (selection.status === 'valid') {
+	if (selection.status === "valid") {
 		return {
-			status: 'ready',
+			status: "ready",
 			enabled: true,
 			selectorValid: true,
 			endpointTag: selection.selector.endpointTag,
@@ -114,14 +123,16 @@ export function publicCatalogTopProviderEditorState(
 		};
 	}
 	const value = metadata[PUBLIC_CATALOG_TOP_PROVIDER_METADATA_KEY];
-	const record = value !== null && typeof value === 'object' && !Array.isArray(value)
-		? value as Record<string, unknown>
-		: null;
+	const record =
+		value !== null && typeof value === "object" && !Array.isArray(value)
+			? (value as Record<string, unknown>)
+			: null;
 	return {
-		status: 'ready',
+		status: "ready",
 		enabled: true,
 		selectorValid: false,
-		endpointTag: typeof record?.endpoint_tag === 'string' ? record.endpoint_tag : '',
+		endpointTag:
+			typeof record?.endpoint_tag === "string" ? record.endpoint_tag : "",
 		isModerated: record?.is_moderated === true,
 	};
 }
@@ -143,49 +154,59 @@ export function updatePublicCatalogTopProviderMetadata(
 	}
 	return {
 		ok: true,
-		value: Object.keys(next).length > 0 ? JSON.stringify(next, null, 2) : '',
+		value: Object.keys(next).length > 0 ? JSON.stringify(next, null, 2) : "",
 	};
 }
 
-export function buildMetadataSummary(metadata: string | null | undefined): MetadataSummary {
-	if (metadata == null || metadata.trim() === '') {
-		return { kind: 'empty' };
+export function buildMetadataSummary(
+	metadata: string | null | undefined
+): MetadataSummary {
+	if (metadata == null || metadata.trim() === "") {
+		return { kind: "empty" };
 	}
 	const trimmed = metadata.trim();
 	try {
 		const parsed = JSON.parse(trimmed) as unknown;
-		if (parsed != null && typeof parsed === 'object' && !Array.isArray(parsed)) {
+		if (
+			parsed != null &&
+			typeof parsed === "object" &&
+			!Array.isArray(parsed)
+		) {
 			const keys = Object.keys(parsed as Record<string, unknown>);
 			return {
-				kind: 'object',
+				kind: "object",
 				keyCount: keys.length,
 				keyPreview: keys.slice(0, 3),
 				formatted: JSON.stringify(parsed, null, 2),
 			};
 		}
-		return { kind: 'raw', formatted: trimmed, label: 'Raw metadata' };
+		return { kind: "raw", formatted: trimmed, label: "Raw metadata" };
 	} catch {
-		return { kind: 'raw', formatted: trimmed, label: 'Raw metadata' };
+		return { kind: "raw", formatted: trimmed, label: "Raw metadata" };
 	}
 }
 
-export function getMetadataButtonLabel(summary: Exclude<MetadataSummary, { kind: 'empty' }>): string {
-	if (summary.kind === 'raw') return summary.label;
-	if (summary.keyCount === 0) return '0 keys';
-	const preview = summary.keyPreview.join(', ');
+export function getMetadataButtonLabel(
+	summary: Exclude<MetadataSummary, { kind: "empty" }>
+): string {
+	if (summary.kind === "raw") return summary.label;
+	if (summary.keyCount === 0) return "0 keys";
+	const preview = summary.keyPreview.join(", ");
 	const extra = summary.keyCount - summary.keyPreview.length;
 	if (extra > 0) {
 		return `${summary.keyCount} keys: ${preview}, +${extra}`;
 	}
-	return `${summary.keyCount} key${summary.keyCount !== 1 ? 's' : ''}: ${preview}`;
+	return `${summary.keyCount} key${
+		summary.keyCount !== 1 ? "s" : ""
+	}: ${preview}`;
 }
 
 export function tagBadgeClass(tag: string): string {
-	if (tag === 'free') return 'bg-green-100 text-green-800';
-	if (tag === 'lite') return 'bg-cyan-100 text-cyan-800';
-	if (tag === 'pro') return 'bg-blue-100 text-blue-800';
-	if (tag === 'max') return 'bg-purple-100 text-purple-800';
-	return 'bg-gray-100 text-gray-700';
+	if (tag === "free") return "bg-green-100 text-green-800";
+	if (tag === "lite") return "bg-cyan-100 text-cyan-800";
+	if (tag === "pro") return "bg-blue-100 text-blue-800";
+	if (tag === "max") return "bg-purple-100 text-purple-800";
+	return "bg-gray-100 text-gray-700";
 }
 
 function getTierConditionLabel(
@@ -194,11 +215,14 @@ function getTierConditionLabel(
 	upto: number | null
 ): string {
 	if (tierIdx === 0 && upto != null) return `≤${formatCompactTokens(upto)}`;
-	if (upto == null && previousUpto != null) return `>${formatCompactTokens(previousUpto)}`;
+	if (upto == null && previousUpto != null)
+		return `>${formatCompactTokens(previousUpto)}`;
 	if (upto != null && previousUpto != null) {
-		return `>${formatCompactTokens(previousUpto)}–≤${formatCompactTokens(upto)}`;
+		return `>${formatCompactTokens(previousUpto)}–≤${formatCompactTokens(
+			upto
+		)}`;
 	}
-	return 'All';
+	return "All";
 }
 
 export type PricingMetricLine = {
@@ -211,7 +235,7 @@ export type PricingMetricColumn = {
 	/** 悬停完整说明（表头缩写用） */
 	headerTitle?: string;
 	/** 单价单位：token 按百万；图片按张 */
-	unitKind?: 'per_m' | 'per_image' | 'per_second' | 'per_character';
+	unitKind?: "per_m" | "per_image" | "per_second" | "per_character";
 	lines: PricingMetricLine[];
 };
 
@@ -236,12 +260,16 @@ function hasImageTokenTiers(tiers: PricingTierPrices[]): boolean {
 	);
 }
 
-export function buildPricingMetricColumns(pricingProfile: string | null | undefined): PricingMetricColumn[] {
+export function buildPricingMetricColumns(
+	pricingProfile: string | null | undefined
+): PricingMetricColumn[] {
 	const profile = parsePricingProfile(pricingProfile ?? undefined);
 	if (!profile) return [];
 
 	const columns: PricingMetricColumn[] = [];
-	const buildMetricLines = (pickPrice: (tier: PricingTierPrices) => number | null): PricingMetricLine[] =>
+	const buildMetricLines = (
+		pickPrice: (tier: PricingTierPrices) => number | null
+	): PricingMetricLine[] =>
 		profile.tiers.map((tier, tierIdx) => {
 			const previous = tierIdx === 0 ? null : profile.tiers[tierIdx - 1]!.upto;
 			return {
@@ -252,20 +280,20 @@ export function buildPricingMetricColumns(pricingProfile: string | null | undefi
 
 	if (profileHasAudioPerSecondPricing(profile) && profile.audio) {
 		columns.push({
-			title: 'Audio',
-			headerTitle: 'Audio transcription (per second)',
-			unitKind: 'per_second',
-			lines: [{ condition: 'All', price: profile.audio.price_per_second }],
+			title: "Audio",
+			headerTitle: "Audio transcription (per second)",
+			unitKind: "per_second",
+			lines: [{ condition: "All", price: profile.audio.price_per_second }],
 		});
 		return columns;
 	}
 
 	if (profileHasAudioPerCharacterPricing(profile) && profile.audio) {
 		columns.push({
-			title: 'Audio',
-			headerTitle: 'Speech synthesis (per character)',
-			unitKind: 'per_character',
-			lines: [{ condition: 'All', price: profile.audio.price_per_character }],
+			title: "Audio",
+			headerTitle: "Speech synthesis (per character)",
+			unitKind: "per_character",
+			lines: [{ condition: "All", price: profile.audio.price_per_character }],
 		});
 		return columns;
 	}
@@ -273,15 +301,15 @@ export function buildPricingMetricColumns(pricingProfile: string | null | undefi
 	if (profileHasAudioTokenPricing(profile) && profile.tiers.length > 0) {
 		columns.push(
 			{
-				title: 'Input',
-				headerTitle: 'Audio input (per 1M tokens)',
-				unitKind: 'per_m',
+				title: "Input",
+				headerTitle: "Audio input (per 1M tokens)",
+				unitKind: "per_m",
 				lines: buildMetricLines((tier) => tier.input_price),
 			},
 			{
-				title: 'Output',
-				headerTitle: 'Audio output (per 1M tokens)',
-				unitKind: 'per_m',
+				title: "Output",
+				headerTitle: "Audio output (per 1M tokens)",
+				unitKind: "per_m",
 				lines: buildMetricLines((tier) => tier.output_price),
 			}
 		);
@@ -290,18 +318,18 @@ export function buildPricingMetricColumns(pricingProfile: string | null | undefi
 
 	if (profileHasImagePerImagePricing(profile) && profile.image) {
 		columns.push({
-			title: 'Output',
-			headerTitle: 'Output (per image)',
-			unitKind: 'per_image',
-			lines: [{ condition: 'All', price: profile.image.default }],
+			title: "Output",
+			headerTitle: "Output (per image)",
+			unitKind: "per_image",
+			lines: [{ condition: "All", price: profile.image.default }],
 		});
 		const inputDefault = profile.image.input?.default;
 		if (inputDefault != null && inputDefault > 0) {
 			columns.push({
-				title: 'Input Ref',
-				headerTitle: 'Reference input (per image)',
-				unitKind: 'per_image',
-				lines: [{ condition: 'All', price: inputDefault }],
+				title: "Input Ref",
+				headerTitle: "Reference input (per image)",
+				unitKind: "per_image",
+				lines: [{ condition: "All", price: inputDefault }],
 			});
 		}
 		return columns;
@@ -310,68 +338,69 @@ export function buildPricingMetricColumns(pricingProfile: string | null | undefi
 	if (hasImageTokenTiers(profile.tiers)) {
 		columns.push(
 			{
-				title: 'Text Input',
-				headerTitle: 'Text input (per 1M tokens)',
-				unitKind: 'per_m',
+				title: "Text Input",
+				headerTitle: "Text input (per 1M tokens)",
+				unitKind: "per_m",
 				lines: buildMetricLines((tier) => tier.input_price),
 			},
 			{
-				title: 'Cached Text',
-				headerTitle: 'Cached text input (per 1M tokens)',
-				unitKind: 'per_m',
+				title: "Cached Text",
+				headerTitle: "Cached text input (per 1M tokens)",
+				unitKind: "per_m",
 				lines: buildMetricLines((tier) => tier.cache_read_price ?? null),
 			},
 			{
-				title: 'Image Input',
-				headerTitle: 'Image input (per 1M tokens)',
-				unitKind: 'per_m',
+				title: "Image Input",
+				headerTitle: "Image input (per 1M tokens)",
+				unitKind: "per_m",
 				lines: buildMetricLines((tier) => tier.image_input_price ?? null),
 			},
 			{
-				title: 'Cached Image Input',
-				headerTitle: 'Cached image input (per 1M tokens)',
-				unitKind: 'per_m',
+				title: "Cached Image Input",
+				headerTitle: "Cached image input (per 1M tokens)",
+				unitKind: "per_m",
 				lines: buildMetricLines((tier) => tier.image_input_cache_price ?? null),
 			},
 			{
-				title: 'Image Output',
-				headerTitle: 'Image output (per 1M tokens)',
-				unitKind: 'per_m',
+				title: "Image Output",
+				headerTitle: "Image output (per 1M tokens)",
+				unitKind: "per_m",
 				lines: buildMetricLines((tier) => tier.image_output_price ?? null),
 			}
 		);
 		return columns;
 	}
 
-	const showTokenColumns = profile.tiers.length > 0 && hasNonZeroTokenTiers(profile.tiers);
+	const showTokenColumns =
+		profile.tiers.length > 0 && hasNonZeroTokenTiers(profile.tiers);
 
 	if (showTokenColumns) {
 		columns.push(
 			{
-				title: 'Input Price',
-				headerTitle: 'Input price (per 1M tokens)',
-				unitKind: 'per_m',
+				title: "Input Price",
+				headerTitle: "Input price (per 1M tokens)",
+				unitKind: "per_m",
 				lines: buildMetricLines((tier) => tier.input_price),
 			},
 			{
-				title: 'Output Price',
-				headerTitle: 'Output price (per 1M tokens)',
-				unitKind: 'per_m',
+				title: "Output Price",
+				headerTitle: "Output price (per 1M tokens)",
+				unitKind: "per_m",
 				lines: buildMetricLines((tier) => tier.output_price),
 			},
 			{
-				title: 'Cache Read',
-				headerTitle: 'Cache read (per 1M tokens)',
-				unitKind: 'per_m',
+				title: "Cache Read",
+				headerTitle: "Cache read (per 1M tokens)",
+				unitKind: "per_m",
 				lines: buildMetricLines((tier) => tier.cache_read_price ?? null),
 			}
 		);
 
 		if (profile.tiers.some((tier) => tier.cache_write_price != null)) {
 			columns.push({
-				title: 'Cache Write',
-				headerTitle: 'Cache write (per 1M tokens)',
-				unitKind: 'per_m',
+				title: "Cache Write",
+				headerTitle: "Cache write (per 1M tokens)",
+				unitKind: "per_m",
 				lines: buildMetricLines((tier) => tier.cache_write_price ?? null),
 			});
 		}
@@ -380,7 +409,9 @@ export function buildPricingMetricColumns(pricingProfile: string | null | undefi
 	return columns;
 }
 
-export function groupModelsByVendor(models: ModelListItem[]): [string, ModelListItem[]][] {
+export function groupModelsByVendor(
+	models: ModelListItem[]
+): [string, ModelListItem[]][] {
 	const g = new Map<string, ModelListItem[]>();
 	for (const m of models) {
 		const key = normalizeModelVendorInput(m.vendor);
@@ -393,26 +424,32 @@ export function groupModelsByVendor(models: ModelListItem[]): [string, ModelList
 			const pa = catalogInputPriceSortKey(a);
 			const pb = catalogInputPriceSortKey(b);
 			if (pb !== pa) return pb - pa;
-			return (a.display_name || a.id).localeCompare(b.display_name || b.id, undefined, {
-				sensitivity: 'base',
-			});
+			return (a.display_name || a.id).localeCompare(
+				b.display_name || b.id,
+				undefined,
+				{
+					sensitivity: "base",
+				}
+			);
 		});
 	}
 	return [...g.entries()].sort(([a], [b]) => {
-		if (a === 'other') return 1;
-		if (b === 'other') return -1;
-		return a.localeCompare(b, undefined, { sensitivity: 'base' });
+		if (a === "other") return 1;
+		if (b === "other") return -1;
+		return a.localeCompare(b, undefined, { sensitivity: "base" });
 	});
 }
 
-export function sortImportCatalogRows(rows: PresetCatalogRow[]): PresetCatalogRow[] {
+export function sortImportCatalogRows(
+	rows: PresetCatalogRow[]
+): PresetCatalogRow[] {
 	return [...rows].sort((a, b) => {
 		const va = normalizeModelVendorInput(a.vendor);
 		const vb = normalizeModelVendorInput(b.vendor);
 		if (va !== vb) {
-			return va.localeCompare(vb, undefined, { sensitivity: 'base' });
+			return va.localeCompare(vb, undefined, { sensitivity: "base" });
 		}
-		return a.id.localeCompare(b.id, undefined, { sensitivity: 'base' });
+		return a.id.localeCompare(b.id, undefined, { sensitivity: "base" });
 	});
 }
 

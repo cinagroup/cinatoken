@@ -21,12 +21,15 @@ export const identifier = value => '"' + value.replaceAll('"', '""') + '"';
 export function tableQueries(table) {
   const config = getTableConfig(table);
   const [property, column] = Object.entries(getTableColumns(table))[0];
+  const values = column.dataType === 'number'
+    ? { inserted: 1, gateway: 2, updated: 3, shadow: 4 }
+    : { inserted: 'inserted', gateway: 'gateway', updated: 'updated', shadow: 'shadow' };
   return {
-    config, property, column,
+    config, property, column, values,
     select: database.select({ value: column }).from(table).toSQL(),
-    insert: database.insert(table).values({ [property]: 'inserted' }).returning({ value: column }).toSQL(),
-    update: database.update(table).set({ [property]: 'updated' }).where(eq(column, 'gateway')).returning({ value: column }).toSQL(),
-    delete: database.delete(table).where(eq(column, 'updated')).returning({ value: column }).toSQL(),
+    insert: database.insert(table).values({ [property]: values.inserted }).returning({ value: column }).toSQL(),
+    update: database.update(table).set({ [property]: values.updated }).where(eq(column, values.gateway)).returning({ value: column }).toSQL(),
+    delete: database.delete(table).where(eq(column, values.updated)).returning({ value: column }).toSQL(),
     embedded: database.select({ count: sql`count(*)` }).from(table).toSQL(),
   };
 }

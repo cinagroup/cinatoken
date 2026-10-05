@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import { useCallback, useRef, useState } from 'react';
-import { requestCinaAuthLogout } from '@/lib/cinaauth/logout';
-import { notifyCinaAuthSessionChanged } from '@/lib/cinaauth/session-events';
+import { useCallback, useRef, useState } from "react";
+import { requestCinaAuthLogout } from "@/lib/cinaauth/logout";
+import { notifyCinaAuthSessionChanged } from "@/lib/cinaauth/session-events";
 
 export function useCinaAuthLogout() {
 	const pending = useRef(false);
@@ -20,7 +20,7 @@ export function useCinaAuthLogout() {
 			setLogoutFailed(true);
 			return false;
 		}
-		notifyCinaAuthSessionChanged('logout');
+		notifyCinaAuthSessionChanged("logout");
 		return true;
 	}, []);
 	return { logout, isLoggingOut, logoutFailed };

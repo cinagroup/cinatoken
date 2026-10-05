@@ -8,6 +8,8 @@
  */
 
 import type { GatewayRepositories } from '../storage/repositories';
+import type { ConfigSnapshot } from '../db/system-config-group-types';
+import { TOOL_CONFIG_FAMILY_KEYS, toolConfigValuesFromSnapshots } from '../db/system-config-group';
 import {
 	normalizeToolUnitPrices,
 	parseToolMoneyField,
@@ -358,10 +360,14 @@ export function resolveAiDetectionConfigForProvider(
 export async function resolveAiDetectionConfig(
 	repos: GatewayRepositories
 ): Promise<ResolveAiDetectionConfigResult> {
-	const [catalogRaw, activeRaw] = await Promise.all([
-		repos.systemConfig.getConfig(AI_DETECTION_CATALOG_KEY),
-		repos.systemConfig.getConfig(AI_DETECTION_ACTIVE_KEY),
-	]);
+	return resolveAiDetectionConfigFromSnapshots(await repos.systemConfig.getConfigSnapshots(TOOL_CONFIG_FAMILY_KEYS['ai-detection']));
+}
+
+/** Pure resolution from the same statement snapshot; never reload individual keys. */
+export function resolveAiDetectionConfigFromSnapshots(snapshots: readonly ConfigSnapshot[]): ResolveAiDetectionConfigResult {
+	const values = toolConfigValuesFromSnapshots('ai-detection', snapshots);
+	const catalogRaw = values[AI_DETECTION_CATALOG_KEY] ?? null;
+	const activeRaw = values[AI_DETECTION_ACTIVE_KEY] ?? null;
 
 	const catalogPresent = catalogRaw != null && String(catalogRaw).trim().length > 0;
 	if (!catalogPresent) {

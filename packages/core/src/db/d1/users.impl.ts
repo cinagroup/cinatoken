@@ -7,6 +7,8 @@ import { userBudgetAmount, userBudgetUnits } from '../user-budget-reservation-ty
 import type { D1DatabaseClient } from '../../storage/database-client';
 import type { UsersRepository } from '../../storage/gateway-repository-interfaces';
 import type { InsertUserParams, UserMaxBudgetFilter } from '../users-types';
+import type { InsertUserAuditLogParams } from '../user-audit-logs-types';
+import { assertAndFinalizeUserAuditInsert } from '../user-audit-catalog';
 import { defaultWorkspaceId } from '../../workspaces';
 import {
 	buildD1UserListOrderByClause,
@@ -62,6 +64,10 @@ function mapUserRow(r: UserSqlRow): UserRow {
 		updated_at: r.updated_at,
 	};
 }
+
+const hardDeleteEligibility = `NOT EXISTS (SELECT 1 FROM guardrails guardrail
+	WHERE guardrail.owner_user_id = users.id
+		AND (guardrail.is_workspace_default = 1 OR guardrail.is_account_default = 1))`;
 
 export function createD1UsersRepository(db: D1DatabaseClient): UsersRepository {
 	const raw = db.raw;
@@ -286,12 +292,37 @@ export function createD1UsersRepository(db: D1DatabaseClient): UsersRepository {
 		},
 
 		async deleteUserHard(id: string): Promise<boolean> {
-			const result = await raw.prepare(`DELETE FROM users WHERE id = ?
-				AND NOT EXISTS (SELECT 1 FROM guardrails guardrail
-					WHERE guardrail.owner_user_id = users.id
-						AND (guardrail.is_workspace_default = 1 OR guardrail.is_account_default = 1))`)
+			const result = await raw.prepare(`DELETE FROM users WHERE id = ? AND ${hardDeleteEligibility}`)
 				.bind(id).run();
 			return (result.meta.changes ?? 0) > 0;
+		},
+
+		async deleteUserHardWithAudit(id: string, audit: InsertUserAuditLogParams): Promise<'deleted' | 'not_deleted'> {
+			if (audit.userId !== id || audit.eventType !== 'user_deleted') {
+				throw new TypeError('User deletion audit must identify the deleted user');
+			}
+			const p = assertAndFinalizeUserAuditInsert(audit);
+			// D1 batch is one transaction. The conditional insert and DELETE use the
+			// same eligibility predicate, so a guarded/missing user leaves no audit.
+			// A DELETE constraint error rolls both statements back.
+			const auditStatement = raw.prepare(`INSERT INTO user_audit_logs (
+				id, user_id, api_key_id, event_type, actor_type, request_log_id,
+				change_payload, before_user_snapshot, after_user_snapshot, changed_fields,
+				correlation_id, source, actor_id, reason_code, reason_text
+			) SELECT ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? FROM users
+			WHERE users.id = ? AND ${hardDeleteEligibility}`).bind(
+				p.id, p.userId, p.apiKeyId ?? null, p.eventType, p.actorType,
+				p.requestLogId ?? null, p.changePayload ?? null,
+				p.beforeUserSnapshot ?? null, p.afterUserSnapshot ?? null,
+				p.changedFields ?? null, p.correlationId ?? null, p.source ?? null,
+				p.actorId ?? null, p.reasonCode ?? null, p.reasonText ?? null, id,
+			);
+			const deleteStatement = raw.prepare(`DELETE FROM users WHERE id = ? AND ${hardDeleteEligibility}`).bind(id);
+			const [auditResult, deleteResult] = await raw.batch([auditStatement, deleteStatement]);
+			const audited = auditResult?.meta.changes ?? 0;
+			const deleted = deleteResult?.meta.changes ?? 0;
+			if (audited !== deleted || deleted > 1) throw new Error('D1 user deletion audit mismatch');
+			return deleted === 1 ? 'deleted' : 'not_deleted';
 		},
 
 		async getUsersCount() {

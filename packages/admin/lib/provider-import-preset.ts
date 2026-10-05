@@ -14,9 +14,9 @@
  * 普通模板导入后不含 API Key，须在 Edit Provider 中手动添加。显式标记的
  * 托管环境凭据模板只落 `env:NAME` 引用，密钥仍由 Worker Secret 提供。
  */
-import rawPresets from './provider-import-presets.json';
-import { getModelVendorLabel, normalizeModelVendorInput } from './model-vendor';
-import type { AdminProviderImportCatalogItem } from '@/lib/services/admin/types';
+import rawPresets from "./provider-import-presets.json";
+import { getModelVendorLabel, normalizeModelVendorInput } from "./model-vendor";
+import type { AdminProviderImportCatalogItem } from "@/lib/services/admin/types";
 import {
 	listConfiguredCapabilities,
 	parseProviderEndpoints,
@@ -24,7 +24,7 @@ import {
 	type ProviderEndpointCapability,
 	type ProviderEndpointsMap,
 	type ProviderEndpointsSource,
-} from '@octafuse/core/provider-endpoints';
+} from "@octafuse/core/provider-endpoints";
 
 export type StaticProviderImportPresetRow = {
 	name: string;
@@ -66,9 +66,10 @@ export type StaticProviderImportPresetRow = {
 };
 
 /** 运行时 catalog 行键（JSON 数组下标字符串）；与入库 provider id 无关。 */
-export type StaticProviderImportPresetWithKey = StaticProviderImportPresetRow & {
-	catalog_key: string;
-};
+export type StaticProviderImportPresetWithKey =
+	StaticProviderImportPresetRow & {
+		catalog_key: string;
+	};
 
 /** Import 弹窗 / catalog 摘要用的 OpenAI 端点一行展示。 */
 export type ProviderImportOpenAiSummary = {
@@ -86,15 +87,21 @@ type ProviderCatalogIdentity = {
 	iconKey: string;
 };
 
-function providerEndpointSignature(endpoints: ProviderEndpointsSource['endpoints']): string {
+function providerEndpointSignature(
+	endpoints: ProviderEndpointsSource["endpoints"]
+): string {
 	try {
-		return serializeProviderEndpoints(parseProviderEndpoints({ endpoints })) ?? '';
+		return (
+			serializeProviderEndpoints(parseProviderEndpoints({ endpoints })) ?? ""
+		);
 	} catch {
-		return '';
+		return "";
 	}
 }
 
-function identityForPreset(row: StaticProviderImportPresetRow): ProviderCatalogIdentity {
+function identityForPreset(
+	row: StaticProviderImportPresetRow
+): ProviderCatalogIdentity {
 	const vendorKey = normalizeModelVendorInput(row.vendor_key);
 	return {
 		vendorKey,
@@ -103,18 +110,26 @@ function identityForPreset(row: StaticProviderImportPresetRow): ProviderCatalogI
 }
 
 const STATIC_IDENTITY_BY_NAME = new Map(
-	STATIC_ROWS.map((row) => [row.name.trim().toLowerCase(), identityForPreset(row)])
+	STATIC_ROWS.map((row) => [
+		row.name.trim().toLowerCase(),
+		identityForPreset(row),
+	])
 );
 const STATIC_IDENTITY_BY_ENDPOINTS = new Map(
-	STATIC_ROWS.map((row) => [providerEndpointSignature(row.endpoints), identityForPreset(row)]).filter(
-		(entry): entry is [string, ProviderCatalogIdentity] => Boolean(entry[0])
+	STATIC_ROWS.map((row) => [
+		providerEndpointSignature(row.endpoints),
+		identityForPreset(row),
+	]).filter((entry): entry is [string, ProviderCatalogIdentity] =>
+		Boolean(entry[0])
 	)
 );
 
-function normalizedImportedProviderName(name: string | null | undefined): string {
-	return String(name ?? '')
+function normalizedImportedProviderName(
+	name: string | null | undefined
+): string {
+	return String(name ?? "")
 		.trim()
-		.replace(/\s+\(\d+\)$/, '')
+		.replace(/\s+\(\d+\)$/, "")
 		.toLowerCase();
 }
 
@@ -123,96 +138,107 @@ function hostnameMatches(hostname: string, domain: string): boolean {
 }
 
 function endpointIdentity(url: URL): ProviderCatalogIdentity | null {
-	const hostname = url.hostname.toLowerCase().replace(/\.$/, '');
-	const identity = (vendorKey: string, iconKey = vendorKey): ProviderCatalogIdentity => ({
+	const hostname = url.hostname.toLowerCase().replace(/\.$/, "");
+	const identity = (
+		vendorKey: string,
+		iconKey = vendorKey
+	): ProviderCatalogIdentity => ({
 		vendorKey,
 		iconKey,
 	});
 
 	// Product-specific hosts must be checked before their parent cloud/vendor domains.
-	if (hostnameMatches(hostname, 'maas.aliyuncs.com')) return identity('aliyun', 'qwen');
+	if (hostnameMatches(hostname, "maas.aliyuncs.com"))
+		return identity("aliyun", "qwen");
 	if (
-		hostnameMatches(hostname, 'dashscope.aliyuncs.com') ||
-		hostnameMatches(hostname, 'dashscope-intl.aliyuncs.com')
+		hostnameMatches(hostname, "dashscope.aliyuncs.com") ||
+		hostnameMatches(hostname, "dashscope-intl.aliyuncs.com")
 	) {
-		return identity('aliyun', 'bailian');
+		return identity("aliyun", "bailian");
 	}
 	if (
-		hostnameMatches(hostname, 'hunyuan.cloud.tencent.com') ||
-		hostnameMatches(hostname, 'lkeap.cloud.tencent.com')
+		hostnameMatches(hostname, "hunyuan.cloud.tencent.com") ||
+		hostnameMatches(hostname, "lkeap.cloud.tencent.com")
 	) {
-		return identity('tencent', 'hunyuan');
+		return identity("tencent", "hunyuan");
 	}
-	if (hostnameMatches(hostname, 'api.z.ai')) return identity('zhipu', 'zai');
-	if (hostnameMatches(hostname, 'longcat.chat')) return identity('meituan', 'longcat');
-	if (hostnameMatches(hostname, 'api.kimi.com')) return identity('moonshot', 'kimi');
-	if (hostnameMatches(hostname, 'aiplatform.googleapis.com')) return identity('google', 'vertexai');
-	if (hostnameMatches(hostname, 'xiaomimimo.com')) return identity('xiaomi', 'xiaomimimo');
+	if (hostnameMatches(hostname, "api.z.ai")) return identity("zhipu", "zai");
+	if (hostnameMatches(hostname, "longcat.chat"))
+		return identity("meituan", "longcat");
+	if (hostnameMatches(hostname, "api.kimi.com"))
+		return identity("moonshot", "kimi");
+	if (hostnameMatches(hostname, "aiplatform.googleapis.com"))
+		return identity("google", "vertexai");
+	if (hostnameMatches(hostname, "xiaomimimo.com"))
+		return identity("xiaomi", "xiaomimimo");
 
-	const domainRules: ReadonlyArray<readonly [string, ProviderCatalogIdentity]> = [
-		['deepseek.com', identity('deepseek')],
-		['volces.com', identity('volcengine')],
-		['bytepluses.com', identity('volcengine')],
-		['qianfan.baidubce.com', identity('baidu')],
-		['bigmodel.cn', identity('zhipu')],
-		['moonshot.cn', identity('moonshot')],
-		['minimaxi.com', identity('minimax')],
-		['openai.com', identity('openai')],
-		['anthropic.com', identity('anthropic')],
-		['generativelanguage.googleapis.com', identity('google')],
-		['mistral.ai', identity('mistral')],
-		['groq.com', identity('groq')],
-		['cerebras.ai', identity('cerebras')],
-		['sambanova.ai', identity('sambanova')],
-		['scnet.cn', identity('scnet')],
-		['x.ai', identity('xai')],
-		['together.xyz', identity('together')],
-		['fireworks.ai', identity('fireworks')],
-		['deepinfra.com', identity('deepinfra')],
-		['novita.ai', identity('novita')],
-		['huggingface.co', identity('huggingface')],
-		['commandcode.ai', identity('commandcode')],
-		['ai-gateway.vercel.sh', identity('vercel')],
-		['meta.ai', identity('meta')],
-		['perplexity.ai', identity('perplexity')],
-		['cohere.ai', identity('cohere')],
-		['api.nvidia.com', identity('nvidia')],
-		['openai.azure.com', identity('azure')],
-		['services.ai.azure.com', identity('azure')],
-		['models.inference.ai.azure.com', identity('azure')],
-		['stepfun.com', identity('stepfun')],
-		['baichuan-ai.com', identity('baichuan')],
-		['qnaigc.com', identity('qiniu')],
-		['openai.qiniu.com', identity('qiniu')],
-		['modelink.ai', identity('qiniu')],
-		['opencode.ai', identity('opencode')],
-		['zenmux.ai', identity('zenmux')],
-		['openrouter.ai', identity('openrouter')],
-		['siliconflow.cn', identity('siliconflow')],
-	];
+	const domainRules: ReadonlyArray<readonly [string, ProviderCatalogIdentity]> =
+		[
+			["deepseek.com", identity("deepseek")],
+			["volces.com", identity("volcengine")],
+			["bytepluses.com", identity("volcengine")],
+			["qianfan.baidubce.com", identity("baidu")],
+			["bigmodel.cn", identity("zhipu")],
+			["moonshot.cn", identity("moonshot")],
+			["minimaxi.com", identity("minimax")],
+			["openai.com", identity("openai")],
+			["anthropic.com", identity("anthropic")],
+			["generativelanguage.googleapis.com", identity("google")],
+			["mistral.ai", identity("mistral")],
+			["groq.com", identity("groq")],
+			["cerebras.ai", identity("cerebras")],
+			["sambanova.ai", identity("sambanova")],
+			["scnet.cn", identity("scnet")],
+			["x.ai", identity("xai")],
+			["together.xyz", identity("together")],
+			["fireworks.ai", identity("fireworks")],
+			["deepinfra.com", identity("deepinfra")],
+			["novita.ai", identity("novita")],
+			["huggingface.co", identity("huggingface")],
+			["commandcode.ai", identity("commandcode")],
+			["ai-gateway.vercel.sh", identity("vercel")],
+			["meta.ai", identity("meta")],
+			["perplexity.ai", identity("perplexity")],
+			["cohere.ai", identity("cohere")],
+			["api.nvidia.com", identity("nvidia")],
+			["openai.azure.com", identity("azure")],
+			["services.ai.azure.com", identity("azure")],
+			["models.inference.ai.azure.com", identity("azure")],
+			["stepfun.com", identity("stepfun")],
+			["baichuan-ai.com", identity("baichuan")],
+			["qnaigc.com", identity("qiniu")],
+			["openai.qiniu.com", identity("qiniu")],
+			["modelink.ai", identity("qiniu")],
+			["opencode.ai", identity("opencode")],
+			["zenmux.ai", identity("zenmux")],
+			["openrouter.ai", identity("openrouter")],
+			["siliconflow.cn", identity("siliconflow")],
+		];
 	for (const [domain, matchedIdentity] of domainRules) {
 		if (hostnameMatches(hostname, domain)) return matchedIdentity;
 	}
 
 	const isLocalOllama =
-		(hostname === '127.0.0.1' || hostname === 'localhost' || hostname === '[::1]') &&
-		url.port === '11434';
-	return isLocalOllama ? identity('ollama') : null;
+		(hostname === "127.0.0.1" ||
+			hostname === "localhost" ||
+			hostname === "[::1]") &&
+		url.port === "11434";
+	return isLocalOllama ? identity("ollama") : null;
 }
 
 type EndpointIdentityResult =
-	| { status: 'matched'; identity: ProviderCatalogIdentity }
-	| { status: 'conflict' }
-	| { status: 'none' };
+	| { status: "matched"; identity: ProviderCatalogIdentity }
+	| { status: "conflict" }
+	| { status: "none" };
 
 function identityFromEndpointHosts(
-	endpoints: ProviderEndpointsSource['endpoints']
+	endpoints: ProviderEndpointsSource["endpoints"]
 ): EndpointIdentityResult {
 	let map: ProviderEndpointsMap;
 	try {
 		map = parseProviderEndpoints({ endpoints });
 	} catch {
-		return { status: 'none' };
+		return { status: "none" };
 	}
 
 	const matches: ProviderCatalogIdentity[] = [];
@@ -229,14 +255,14 @@ function identityFromEndpointHosts(
 		}
 	}
 
-	if (matches.length === 0) return { status: 'none' };
+	if (matches.length === 0) return { status: "none" };
 	const vendorKeys = new Set(matches.map((match) => match.vendorKey));
-	if (vendorKeys.size !== 1) return { status: 'conflict' };
+	if (vendorKeys.size !== 1) return { status: "conflict" };
 
 	const vendorKey = matches[0].vendorKey;
 	const iconKeys = new Set(matches.map((match) => match.iconKey));
 	return {
-		status: 'matched',
+		status: "matched",
 		identity: {
 			vendorKey,
 			// Multiple products from one parent vendor are safe at vendor level, but not at product level.
@@ -249,67 +275,82 @@ function nameIncludesAny(name: string, keywords: readonly string[]): boolean {
 	return keywords.some((keyword) => name.includes(keyword));
 }
 
-function identityFromNameHint(normalizedName: string): ProviderCatalogIdentity | null {
-	const identity = (vendorKey: string, iconKey = vendorKey): ProviderCatalogIdentity => ({
+function identityFromNameHint(
+	normalizedName: string
+): ProviderCatalogIdentity | null {
+	const identity = (
+		vendorKey: string,
+		iconKey = vendorKey
+	): ProviderCatalogIdentity => ({
 		vendorKey,
 		iconKey,
 	});
 
 	// Product names precede parent-company names so the more useful product icon wins.
-	const productRules: ReadonlyArray<readonly [readonly string[], ProviderCatalogIdentity]> = [
-		[['百炼', 'bailian', 'dashscope'], identity('aliyun', 'bailian')],
-		[['千问', '通义', 'qwen'], identity('aliyun', 'qwen')],
-		[['混元', 'hunyuan', 'tokenhub'], identity('tencent', 'hunyuan')],
-		[['vertex'], identity('google', 'vertexai')],
-		[['z.ai'], identity('zhipu', 'zai')],
-		[['longcat', '龙猫'], identity('meituan', 'longcat')],
-		[['kimi'], identity('moonshot', 'kimi')],
-		[['mimo'], identity('xiaomi', 'xiaomimimo')],
+	const productRules: ReadonlyArray<
+		readonly [readonly string[], ProviderCatalogIdentity]
+	> = [
+		[["百炼", "bailian", "dashscope"], identity("aliyun", "bailian")],
+		[["千问", "通义", "qwen"], identity("aliyun", "qwen")],
+		[["混元", "hunyuan", "tokenhub"], identity("tencent", "hunyuan")],
+		[["vertex"], identity("google", "vertexai")],
+		[["z.ai"], identity("zhipu", "zai")],
+		[["longcat", "龙猫"], identity("meituan", "longcat")],
+		[["kimi"], identity("moonshot", "kimi")],
+		[["mimo"], identity("xiaomi", "xiaomimimo")],
 	];
 	for (const [keywords, matchedIdentity] of productRules) {
 		if (nameIncludesAny(normalizedName, keywords)) return matchedIdentity;
 	}
 
-	const vendorRules: ReadonlyArray<readonly [readonly string[], ProviderCatalogIdentity]> = [
-		[['azure openai', 'azure', '微软云'], identity('azure')],
-		[['deepseek', '深度求索'], identity('deepseek')],
-		[['volcengine', '火山方舟', '火山引擎', 'byteplus'], identity('volcengine')],
-		[['alibaba', 'aliyun', '阿里云'], identity('aliyun')],
-		[['tencent', '腾讯云'], identity('tencent')],
-		[['qianfan', '千帆', '百度'], identity('baidu')],
-		[['zhipu', '智谱'], identity('zhipu')],
-		[['meituan', '美团'], identity('meituan')],
-		[['moonshot', '月之暗面'], identity('moonshot')],
-		[['minimax'], identity('minimax')],
-		[['openai'], identity('openai')],
-		[['anthropic', 'claude'], identity('anthropic')],
-		[['gemini', 'google', '谷歌'], identity('google')],
-		[['mistral'], identity('mistral')],
-		[['groq'], identity('groq')],
-		[['cerebras'], identity('cerebras')],
-		[['sambanova', 'samba nova'], identity('sambanova')],
-		[['scnet', '超算互联网', '超算'], identity('scnet')],
-		[['x.ai', 'xai', 'grok'], identity('xai')],
-		[['together'], identity('together')],
-		[['fireworks'], identity('fireworks')],
-		[['deepinfra', 'deep infra'], identity('deepinfra')],
-		[['novita'], identity('novita')],
-		[['huggingface', 'hugging face'], identity('huggingface')],
-		[['commandcode', 'command code'], identity('commandcode')],
-		[['vercel'], identity('vercel')],
-		[['meta', 'muse spark'], identity('meta')],
-		[['perplexity'], identity('perplexity')],
-		[['cohere'], identity('cohere')],
-		[['nvidia', '英伟达', 'nim'], identity('nvidia')],
-		[['stepfun', '阶跃'], identity('stepfun')],
-		[['baichuan', '百川'], identity('baichuan')],
-		[['xiaomi', '小米'], identity('xiaomi')],
-		[['qiniu', '七牛', 'qnaigc'], identity('qiniu')],
-		[['opencode', 'open code zen', 'opencode zen', 'opencode go'], identity('opencode')],
-		[['zenmux'], identity('zenmux')],
-		[['openrouter'], identity('openrouter')],
-		[['siliconflow', '硅基流动'], identity('siliconflow')],
-		[['ollama'], identity('ollama')],
+	const vendorRules: ReadonlyArray<
+		readonly [readonly string[], ProviderCatalogIdentity]
+	> = [
+		[["azure openai", "azure", "微软云"], identity("azure")],
+		[["deepseek", "深度求索"], identity("deepseek")],
+		[
+			["volcengine", "火山方舟", "火山引擎", "byteplus"],
+			identity("volcengine"),
+		],
+		[["alibaba", "aliyun", "阿里云"], identity("aliyun")],
+		[["tencent", "腾讯云"], identity("tencent")],
+		[["qianfan", "千帆", "百度"], identity("baidu")],
+		[["zhipu", "智谱"], identity("zhipu")],
+		[["meituan", "美团"], identity("meituan")],
+		[["moonshot", "月之暗面"], identity("moonshot")],
+		[["minimax"], identity("minimax")],
+		[["openai"], identity("openai")],
+		[["anthropic", "claude"], identity("anthropic")],
+		[["gemini", "google", "谷歌"], identity("google")],
+		[["mistral"], identity("mistral")],
+		[["groq"], identity("groq")],
+		[["cerebras"], identity("cerebras")],
+		[["sambanova", "samba nova"], identity("sambanova")],
+		[["scnet", "超算互联网", "超算"], identity("scnet")],
+		[["x.ai", "xai", "grok"], identity("xai")],
+		[["together"], identity("together")],
+		[["fireworks"], identity("fireworks")],
+		[["deepinfra", "deep infra"], identity("deepinfra")],
+		[["novita"], identity("novita")],
+		[["huggingface", "hugging face"], identity("huggingface")],
+		[["commandcode", "command code"], identity("commandcode")],
+		[["vercel"], identity("vercel")],
+		[["meta", "muse spark"], identity("meta")],
+		[["perplexity"], identity("perplexity")],
+		[["cohere"], identity("cohere")],
+		[["nvidia", "英伟达", "nim"], identity("nvidia")],
+		[["stepfun", "阶跃"], identity("stepfun")],
+		[["baichuan", "百川"], identity("baichuan")],
+		[["xiaomi", "小米"], identity("xiaomi")],
+		[["qiniu", "七牛", "qnaigc"], identity("qiniu")],
+		[
+			["opencode", "open code zen", "opencode zen", "opencode go"],
+			identity("opencode"),
+		],
+		[["zenmux"], identity("zenmux")],
+		[["openrouter"], identity("openrouter")],
+		[["siliconflow", "硅基流动"], identity("siliconflow")],
+		[["ollama"], identity("ollama")],
 	];
 	for (const [keywords, matchedIdentity] of vendorRules) {
 		if (nameIncludesAny(normalizedName, keywords)) return matchedIdentity;
@@ -319,19 +360,20 @@ function identityFromNameHint(normalizedName: string): ProviderCatalogIdentity |
 
 function inferStaticProviderIdentity(provider: {
 	name?: string | null;
-	endpoints?: ProviderEndpointsSource['endpoints'];
+	endpoints?: ProviderEndpointsSource["endpoints"];
 }): ProviderCatalogIdentity | null {
 	const normalizedName = normalizedImportedProviderName(provider.name);
 	const exactName = STATIC_IDENTITY_BY_NAME.get(normalizedName);
 	if (exactName) return exactName;
 
 	const signature = providerEndpointSignature(provider.endpoints);
-	const exactEndpoints = signature && STATIC_IDENTITY_BY_ENDPOINTS.get(signature);
+	const exactEndpoints =
+		signature && STATIC_IDENTITY_BY_ENDPOINTS.get(signature);
 	if (exactEndpoints) return exactEndpoints;
 
 	const endpointResult = identityFromEndpointHosts(provider.endpoints);
-	if (endpointResult.status === 'matched') return endpointResult.identity;
-	if (endpointResult.status === 'conflict') return null;
+	if (endpointResult.status === "matched") return endpointResult.identity;
+	if (endpointResult.status === "conflict") return null;
 
 	return identityFromNameHint(normalizedName);
 }
@@ -342,9 +384,9 @@ function inferStaticProviderIdentity(provider: {
  */
 export function inferStaticProviderVendorKey(provider: {
 	name?: string | null;
-	endpoints?: ProviderEndpointsSource['endpoints'];
+	endpoints?: ProviderEndpointsSource["endpoints"];
 }): string {
-	return inferStaticProviderIdentity(provider)?.vendorKey ?? 'other';
+	return inferStaticProviderIdentity(provider)?.vendorKey ?? "other";
 }
 
 /**
@@ -353,18 +395,23 @@ export function inferStaticProviderVendorKey(provider: {
  */
 export function inferStaticProviderIconKey(provider: {
 	name?: string | null;
-	endpoints?: ProviderEndpointsSource['endpoints'];
+	endpoints?: ProviderEndpointsSource["endpoints"];
 	vendor_key?: string | null;
 }): string {
-	return inferStaticProviderIdentity(provider)?.iconKey ?? normalizeModelVendorInput(provider.vendor_key);
+	return (
+		inferStaticProviderIdentity(provider)?.iconKey ??
+		normalizeModelVendorInput(provider.vendor_key)
+	);
 }
 
-function protocolsForPreset(p: StaticProviderImportPresetRow): AdminProviderImportCatalogItem['protocols'] {
+function protocolsForPreset(
+	p: StaticProviderImportPresetRow
+): AdminProviderImportCatalogItem["protocols"] {
 	const map = parseProviderEndpoints({ endpoints: p.endpoints });
-	const out: AdminProviderImportCatalogItem['protocols'] = [];
-	if (map.openai) out.push('openai');
-	if (map.anthropic) out.push('anthropic');
-	if (map.gemini) out.push('gemini');
+	const out: AdminProviderImportCatalogItem["protocols"] = [];
+	if (map.openai) out.push("openai");
+	if (map.anthropic) out.push("anthropic");
+	if (map.gemini) out.push("gemini");
 	return out;
 }
 
@@ -378,21 +425,23 @@ export function summarizeOpenAiImportEndpoints(
 		cfg.base ||
 		cfg.endpoints?.chat ||
 		Object.values(cfg.endpoints ?? {})[0] ||
-		'';
+		"";
 	if (!url) return null;
 	return {
 		url,
 		hasBase: Boolean(cfg.base),
-		capabilities: listConfiguredCapabilities(map, 'openai'),
+		capabilities: listConfiguredCapabilities(map, "openai"),
 	};
 }
 
 /** 全部静态模板行（含 catalog 键与 endpoints）。 */
 export function listStaticProviderImportPresets(): StaticProviderImportPresetWithKey[] {
-	return STATIC_ROWS.filter((r) => String(r.name ?? '').trim().length > 0).map((row, index) => ({
-		...row,
-		catalog_key: String(index),
-	}));
+	return STATIC_ROWS.filter((r) => String(r.name ?? "").trim().length > 0).map(
+		(row, index) => ({
+			...row,
+			catalog_key: String(index),
+		})
+	);
 }
 
 /** 供 `GET /admin/providers/import/catalog`：摘要不含密钥。 */
@@ -402,13 +451,16 @@ export function listStaticProviderImportCatalogForAdmin(): AdminProviderImportCa
 		const map = parseProviderEndpoints({ endpoints: p.endpoints });
 		return {
 			id: p.catalog_key,
-			name: String(p.name ?? '').trim(),
+			name: String(p.name ?? "").trim(),
 			vendor_key: vendorCanon,
 			icon_key: p.icon_key?.trim() || vendorCanon,
 			vendor_label: getModelVendorLabel(vendorCanon),
 			protocols: protocolsForPreset(p),
 			endpoints: serializeProviderEndpoints(map),
-			description: p.description != null && String(p.description).trim() ? String(p.description).trim() : null,
+			description:
+				p.description != null && String(p.description).trim()
+					? String(p.description).trim()
+					: null,
 		};
 	});
 }

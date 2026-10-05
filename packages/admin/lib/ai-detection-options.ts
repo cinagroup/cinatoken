@@ -14,7 +14,7 @@ import {
 	isAiDetectionImplementedProvider,
 	type AiDetectionCredentialField,
 	type AiDetectionProvider,
-} from '@octafuse/core/lib/ai-detection-system-config';
+} from "@octafuse/core/lib/ai-detection-system-config";
 
 export {
 	AI_DETECTION_ACTIVE_KEY,
@@ -38,11 +38,15 @@ export type AiDetectionProviderOption = {
 };
 
 /** 各引擎官网 / 申请入口（非 i18n） */
-export const AI_DETECTION_PROVIDER_DOCS_URL: Record<AiDetectionProvider, string> = {
-	tencent_tms: 'https://cloud.tencent.com/document/product/1124',
+export const AI_DETECTION_PROVIDER_DOCS_URL: Record<
+	AiDetectionProvider,
+	string
+> = {
+	tencent_tms: "https://cloud.tencent.com/document/product/1124",
 };
 
-type AiDetectionProviderLabelKey = `aiDetection.providers.${AiDetectionProvider}`;
+type AiDetectionProviderLabelKey =
+	`aiDetection.providers.${AiDetectionProvider}`;
 
 /** 展示名；value 必须落在 `AI_DETECTION_PROVIDERS`。 */
 export function getAiDetectionProviderOptions(
@@ -60,7 +64,7 @@ export function getAiDetectionCredentialFields(
 	provider: AiDetectionProvider
 ): readonly AiDetectionCredentialField[] {
 	if (!isAiDetectionImplementedProvider(provider)) {
-		return ['apiKey'];
+		return ["apiKey"];
 	}
 	return AI_DETECTION_PROVIDER_REQUIRED_CREDENTIALS[provider];
 }

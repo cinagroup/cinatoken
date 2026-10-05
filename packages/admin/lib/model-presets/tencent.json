@@ -35,12 +35,8 @@
 			}
 		},
 		"modalities": {
-			"input": [
-				"text"
-			],
-			"output": [
-				"text"
-			]
+			"input": ["text"],
+			"output": ["text"]
 		},
 		"released": "2026-07-06"
 	},
@@ -94,12 +90,8 @@
 			}
 		},
 		"modalities": {
-			"input": [
-				"text"
-			],
-			"output": [
-				"text"
-			]
+			"input": ["text"],
+			"output": ["text"]
 		},
 		"released": "2026-04-23"
 	}

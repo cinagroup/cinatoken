@@ -1,15 +1,15 @@
 /**
  * Gateway Admin 后台会话与外部 Admin API Key 的安全工具。
  */
-import type { GatewayRepositories } from '@octafuse/core';
-import type { AdminPrincipal } from '@/lib/admin-principal';
-import { parseAdminPermissions } from '@/lib/admin-principal';
-import { getSessionCookieToken } from '@/lib/unified-session';
+import type { GatewayRepositories } from "@octafuse/core";
+import type { AdminPrincipal } from "@/lib/admin-principal";
+import { parseAdminPermissions } from "@/lib/admin-principal";
+import { getSessionCookieToken } from "@/lib/unified-session";
 
 type AdminAuthenticationRepositories = {
 	adminAccess: Pick<
-		GatewayRepositories['adminAccess'],
-		'getActiveApiKeyBySecret' | 'touchApiKey' | 'getValidSession'
+		GatewayRepositories["adminAccess"],
+		"getActiveApiKeyBySecret" | "touchApiKey" | "getValidSession"
 	>;
 };
 
@@ -27,7 +27,11 @@ function errorCauseMessages(error: unknown): string[] {
 	const messages: string[] = [];
 	const seen = new Set<unknown>();
 	let current: unknown = error;
-	for (let depth = 0; depth < 4 && current != null && !seen.has(current); depth += 1) {
+	for (
+		let depth = 0;
+		depth < 4 && current != null && !seen.has(current);
+		depth += 1
+	) {
 		seen.add(current);
 		if (current instanceof Error) {
 			messages.push(`${current.name}: ${current.message}`);
@@ -41,24 +45,26 @@ function errorCauseMessages(error: unknown): string[] {
 }
 
 function isTransientAdminSessionReadError(error: unknown): boolean {
-	const details = errorCauseMessages(error).join('\n');
-	return TRANSIENT_ADMIN_SESSION_ERROR_PATTERNS.some((pattern) => pattern.test(details));
+	const details = errorCauseMessages(error).join("\n");
+	return TRANSIENT_ADMIN_SESSION_ERROR_PATTERNS.some((pattern) =>
+		pattern.test(details)
+	);
 }
 
 function redactDatabaseErrorParams(message: string): string {
-	return message.replace(/(\bparams:\s*)[^\r\n]*/giu, '$1[redacted]');
+	return message.replace(/(\bparams:\s*)[^\r\n]*/giu, "$1[redacted]");
 }
 
 async function getValidAdminSessionWithRetry(
 	repositories: AdminAuthenticationRepositories,
 	tokenHash: string,
-	nowIso: string,
+	nowIso: string
 ) {
 	try {
 		return await repositories.adminAccess.getValidSession(tokenHash, nowIso);
 	} catch (error) {
 		if (!isTransientAdminSessionReadError(error)) throw error;
-		console.warn('Transient admin session read failed; retrying once', {
+		console.warn("Transient admin session read failed; retrying once", {
 			error: errorCauseMessages(error).map(redactDatabaseErrorParams),
 		});
 		await new Promise<void>((resolve) => setTimeout(resolve, 25));
@@ -68,13 +74,17 @@ async function getValidAdminSessionWithRetry(
 
 /** 生成 32 字节十六进制会话标识。 */
 export function generateSessionToken(): string {
-  const array = new Uint8Array(32);
-  crypto.getRandomValues(array);
-  return Array.from(array, byte => byte.toString(16).padStart(2, '0')).join('');
+	const array = new Uint8Array(32);
+	crypto.getRandomValues(array);
+	return Array.from(array, (byte) => byte.toString(16).padStart(2, "0")).join(
+		""
+	);
 }
 
 function bytesToHex(bytes: Uint8Array): string {
-	return Array.from(bytes, (byte) => byte.toString(16).padStart(2, '0')).join('');
+	return Array.from(bytes, (byte) => byte.toString(16).padStart(2, "0")).join(
+		""
+	);
 }
 
 export function generateAdminApiKey(): string {
@@ -84,16 +94,22 @@ export function generateAdminApiKey(): string {
 }
 
 export async function hashSessionToken(token: string): Promise<string> {
-	const digest = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(token));
+	const digest = await crypto.subtle.digest(
+		"SHA-256",
+		new TextEncoder().encode(token)
+	);
 	return bytesToHex(new Uint8Array(digest));
 }
 
 /** Hash both values to a fixed length, then compare every byte without early exit. */
-export async function timingSafeEqualSecret(left: string, right: string): Promise<boolean> {
+export async function timingSafeEqualSecret(
+	left: string,
+	right: string
+): Promise<boolean> {
 	const encoder = new TextEncoder();
 	const [leftHash, rightHash] = await Promise.all([
-		crypto.subtle.digest('SHA-256', encoder.encode(left)),
-		crypto.subtle.digest('SHA-256', encoder.encode(right)),
+		crypto.subtle.digest("SHA-256", encoder.encode(left)),
+		crypto.subtle.digest("SHA-256", encoder.encode(right)),
 	]);
 	const leftBytes = new Uint8Array(leftHash);
 	const rightBytes = new Uint8Array(rightHash);
@@ -105,23 +121,23 @@ export async function timingSafeEqualSecret(left: string, right: string): Promis
 }
 
 export function getSessionToken(request: Request): string | null {
-	return getSessionCookieToken(request, 'admin_session');
+	return getSessionCookieToken(request, "admin_session");
 }
 
 export async function authenticateAdminRequest(
 	request: Request,
 	repositories: AdminAuthenticationRepositories
 ): Promise<AdminPrincipal | null> {
-	const authorization = request.headers.get('authorization');
+	const authorization = request.headers.get("authorization");
 	if (authorization) {
-		if (!authorization.startsWith('Bearer ')) return null;
+		if (!authorization.startsWith("Bearer ")) return null;
 		const secret = authorization.slice(7).trim();
 		if (!secret) return null;
 		const row = await repositories.adminAccess.getActiveApiKeyBySecret(secret);
 		if (!row) return null;
 		await repositories.adminAccess.touchApiKey(row.id);
 		return {
-			type: 'api_key',
+			type: "api_key",
 			id: `admin_key:${row.id}`,
 			keyId: row.id,
 			permissions: parseAdminPermissions(row.permissionsJson),
@@ -134,10 +150,14 @@ export async function authenticateAdminRequest(
 	const session = await getValidAdminSessionWithRetry(
 		repositories,
 		tokenHash,
-		new Date().toISOString(),
+		new Date().toISOString()
 	);
 	if (!session) return null;
-	return { type: 'console', id: `console:${session.username}`, username: session.username };
+	return {
+		type: "console",
+		id: `console:${session.username}`,
+		username: session.username,
+	};
 }
 
 /**
@@ -147,11 +167,13 @@ export async function authenticateAdminRequest(
  */
 export function resolveCookieSecure(request?: Request): boolean {
 	const requestEnv = request as (Request & { env?: CloudflareEnv }) | undefined;
-	const raw = (requestEnv?.env?.ADMIN_COOKIE_SECURE ?? process.env.ADMIN_COOKIE_SECURE)
+	const raw = (
+		requestEnv?.env?.ADMIN_COOKIE_SECURE ?? process.env.ADMIN_COOKIE_SECURE
+	)
 		?.trim()
 		.toLowerCase();
-  if (raw === '1' || raw === 'true' || raw === 'yes' || raw === 'on') {
-    return true;
-  }
-  return false;
+	if (raw === "1" || raw === "true" || raw === "yes" || raw === "on") {
+		return true;
+	}
+	return false;
 }

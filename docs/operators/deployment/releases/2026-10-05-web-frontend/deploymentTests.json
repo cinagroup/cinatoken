@@ -1,0 +1,15 @@
+{
+  "at": "2026-10-05T07:44:28.919Z",
+  "finishedAt": "2026-10-05T07:46:01.582Z",
+  "executable": "C:/Program Files/nodejs/node.exe",
+  "args": [
+    "C:/Program Files/nodejs/node_modules/npm/bin/npm-cli.js",
+    "run",
+    "test:deploy"
+  ],
+  "cwd": "C:/cinagroup/cinatoken",
+  "actualExit": 0,
+  "signal": null,
+  "stdout": "C:/Users/cina/AppData/Local/Temp/cinatoken-cf-release-20261005-39903936e58044ec93eb658f30471c3e/deployment-tests-after-frozen-fixture-fix.stdout.log",
+  "stderr": "C:/Users/cina/AppData/Local/Temp/cinatoken-cf-release-20261005-39903936e58044ec93eb658f30471c3e/deployment-tests-after-frozen-fixture-fix.stderr.log"
+}

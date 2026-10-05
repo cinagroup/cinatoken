@@ -1,133 +1,129 @@
-import assert from 'node:assert/strict';
-import { describe, it } from 'node:test';
-import type { ParsedPricingProfile } from '@octafuse/core/db/pricing-profile';
-import { listStaticModelPresets } from '@/lib/model-preset';
-import { listStaticModelPresetCatalogForAdmin } from './models-service';
+import assert from "node:assert/strict";
+import { describe, it } from "node:test";
+import type { ParsedPricingProfile } from "@octafuse/core/db/pricing-profile";
+import { listStaticModelPresets } from "@/lib/model-preset";
+import { listStaticModelPresetCatalogForAdmin } from "./models-service";
 
 const EXPECTED_IMAGE_IDS = [
-	'doubao-seedream-5-0',
-	'doubao-seedream-5-0-pro',
-	'gemini-3.1-flash-image',
-	'gemini-3-pro-image-preview',
-	'glm-image',
-	'gpt-image-2',
-	'grok-imagine-image-2.0',
-	'grok-imagine-image-quality',
-	'qwen-image-3.0',
-	'qwen-image-3.0-pro',
-	'wan2.7-image',
-	'wan2.7-image-pro',
+	"doubao-seedream-5-0",
+	"doubao-seedream-5-0-pro",
+	"gemini-3.1-flash-image",
+	"gemini-3-pro-image-preview",
+	"glm-image",
+	"gpt-image-2",
+	"grok-imagine-image-2.0",
+	"grok-imagine-image-quality",
+	"qwen-image-3.0",
+	"qwen-image-3.0-pro",
+	"wan2.7-image",
+	"wan2.7-image-pro",
 ].sort();
 
 /** Preset JSON pricing shape used by catalog price locks (may omit `tiers`). */
 type PresetPricingJson = Partial<ParsedPricingProfile> & {
-	tiers?: ParsedPricingProfile['tiers'];
+	tiers?: ParsedPricingProfile["tiers"];
 };
 
 const asPricing = (raw: unknown): PresetPricingJson => raw as PresetPricingJson;
 
-describe('static image model presets (*-image.json)', () => {
-	it('every image-output preset has output modalities including image', () => {
+describe("static image model presets (*-image.json)", () => {
+	it("every image-output preset has output modalities including image", () => {
 		const imageRows = listStaticModelPresets().filter((r) =>
-			(r.modalities?.output ?? []).includes('image')
+			(r.modalities?.output ?? []).includes("image")
 		);
-		assert.deepEqual(
-			imageRows.map((r) => r.id).sort(),
-			EXPECTED_IMAGE_IDS
-		);
+		assert.deepEqual(imageRows.map((r) => r.id).sort(), EXPECTED_IMAGE_IDS);
 		for (const row of imageRows) {
 			assert.ok(row.vendor, `vendor required for ${row.id}`);
-			assert.equal((row.modalities?.output ?? []).includes('text'), false);
+			assert.equal((row.modalities?.output ?? []).includes("text"), false);
 		}
 	});
 
-	it('Admin import catalog marks image kind for the same ids', () => {
-		const imageCatalog = listStaticModelPresetCatalogForAdmin().filter((r) => r.kind === 'image');
-		assert.deepEqual(
-			imageCatalog.map((r) => r.id).sort(),
-			EXPECTED_IMAGE_IDS
+	it("Admin import catalog marks image kind for the same ids", () => {
+		const imageCatalog = listStaticModelPresetCatalogForAdmin().filter(
+			(r) => r.kind === "image"
 		);
+		assert.deepEqual(imageCatalog.map((r) => r.id).sort(), EXPECTED_IMAGE_IDS);
 	});
 
-	it('locks official catalog unit prices (per_image + token)', () => {
+	it("locks official catalog unit prices (per_image + token)", () => {
 		const byId = new Map(listStaticModelPresets().map((r) => [r.id, r]));
 
-		const seedream = byId.get('doubao-seedream-5-0')!;
+		const seedream = byId.get("doubao-seedream-5-0")!;
 		const seedreamCny = asPricing(seedream.pricing.cny);
 		const seedreamUsd = asPricing(seedream.pricing.usd);
-		assert.equal(seedreamCny.image_billing_mode, 'per_image');
+		assert.equal(seedreamCny.image_billing_mode, "per_image");
 		assert.equal(seedreamCny.tiers, undefined);
 		assert.equal(seedreamCny.image?.default, 0.22);
 		assert.equal(seedreamUsd.image?.default, 0.035);
-		assert.equal(seedreamCny.image?.by_quality_size?.['flat:4k'], undefined);
+		assert.equal(seedreamCny.image?.by_quality_size?.["flat:4k"], undefined);
 
-		const seedreamPro = byId.get('doubao-seedream-5-0-pro')!;
+		const seedreamPro = byId.get("doubao-seedream-5-0-pro")!;
 		const seedreamProCny = asPricing(seedreamPro.pricing.cny);
 		const seedreamProUsd = asPricing(seedreamPro.pricing.usd);
 		assert.equal(seedreamProCny.image?.default, 0.3);
-		assert.equal(seedreamProCny.image?.by_size?.['3k'], 0.6);
+		assert.equal(seedreamProCny.image?.by_size?.["3k"], 0.6);
 		assert.equal(seedreamProCny.image?.input?.default, 0.02);
 		assert.equal(seedreamProUsd.image?.default, 0.045);
-		assert.equal(seedreamProUsd.image?.by_size?.['3k'], 0.09);
+		assert.equal(seedreamProUsd.image?.by_size?.["3k"], 0.09);
 		assert.equal(seedreamProUsd.image?.input?.default, 0.003);
 
-		const glm = byId.get('glm-image')!;
+		const glm = byId.get("glm-image")!;
 		assert.equal(asPricing(glm.pricing.cny).image?.default, 0.1);
 		assert.equal(asPricing(glm.pricing.usd).image?.default, 0.014);
 
-		const qwenPro = byId.get('qwen-image-3.0-pro')!;
+		const qwenPro = byId.get("qwen-image-3.0-pro")!;
 		const qwenProCny = asPricing(qwenPro.pricing.cny);
 		const qwenProUsd = asPricing(qwenPro.pricing.usd);
-		assert.equal(qwenProCny.image_billing_mode, 'per_image');
+		assert.equal(qwenProCny.image_billing_mode, "per_image");
 		assert.equal(qwenProCny.image?.default, 0.25);
-		assert.equal(qwenProCny.image?.by_size?.['2k'], 0.5);
+		assert.equal(qwenProCny.image?.by_size?.["2k"], 0.5);
 		assert.equal(qwenProCny.image?.input?.default, 0.02);
 		assert.equal(qwenProUsd.image?.default, 0.036);
-		assert.equal(qwenProUsd.image?.by_size?.['2k'], 0.071);
+		assert.equal(qwenProUsd.image?.by_size?.["2k"], 0.071);
 
-		const qwen = byId.get('qwen-image-3.0')!;
+		const qwen = byId.get("qwen-image-3.0")!;
 		assert.equal(asPricing(qwen.pricing.cny).image?.default, 0.18);
 		assert.equal(asPricing(qwen.pricing.usd).image?.default, 0.026);
 		assert.equal(asPricing(qwen.pricing.cny).image?.input?.default, 0.02);
 
-		const wanPro = byId.get('wan2.7-image-pro')!;
+		const wanPro = byId.get("wan2.7-image-pro")!;
 		assert.equal(asPricing(wanPro.pricing.cny).image?.default, 0.5);
 		assert.equal(asPricing(wanPro.pricing.usd).image?.default, 0.071);
 		assert.equal(asPricing(wanPro.pricing.cny).image?.input, undefined);
 
-		const wan = byId.get('wan2.7-image')!;
+		const wan = byId.get("wan2.7-image")!;
 		assert.equal(asPricing(wan.pricing.cny).image?.default, 0.2);
 		assert.equal(asPricing(wan.pricing.usd).image?.default, 0.029);
 
-		const grok2 = byId.get('grok-imagine-image-2.0')!;
+		const grok2 = byId.get("grok-imagine-image-2.0")!;
 		const grok2Usd = asPricing(grok2.pricing.usd);
-		assert.equal(grok2Usd.image_billing_mode, 'per_image');
+		assert.equal(grok2Usd.image_billing_mode, "per_image");
 		assert.equal(grok2Usd.image?.default, 0.04);
 		assert.equal(asPricing(grok2.pricing.cny).image?.default, 0.28);
 
-		const grok = byId.get('grok-imagine-image-quality')!;
+		const grok = byId.get("grok-imagine-image-quality")!;
 		const grokUsd = asPricing(grok.pricing.usd);
 		assert.equal(grokUsd.image?.default, 0.05);
-		assert.equal(grokUsd.image?.by_size?.['2k'], 0.07);
+		assert.equal(grokUsd.image?.by_size?.["2k"], 0.07);
 		assert.equal(grokUsd.image?.input?.default, 0.01);
 
-		const gpt = byId.get('gpt-image-2')!;
+		const gpt = byId.get("gpt-image-2")!;
 		const gptUsd = asPricing(gpt.pricing.usd);
 		const gptTier = gptUsd.tiers?.[0];
 		assert.ok(gptTier);
-		assert.equal(gptUsd.image_billing_mode, 'token');
+		assert.equal(gptUsd.image_billing_mode, "token");
 		assert.equal(gptTier.input_price, 5);
 		assert.equal(gptTier.image_input_price, 8);
 		assert.equal(gptTier.image_output_price, 30);
 
-		const flash = byId.get('gemini-3.1-flash-image')!;
+		const flash = byId.get("gemini-3.1-flash-image")!;
 		const flashTier = asPricing(flash.pricing.usd).tiers?.[0];
 		assert.ok(flashTier);
 		assert.equal(flashTier.input_price, 0.5);
 		assert.equal(flashTier.output_price, 3);
 		assert.equal(flashTier.image_output_price, 60);
 
-		const pro = byId.get('gemini-3-pro-image-preview')!;
+		const pro = byId.get("gemini-3-pro-image-preview")!;
 		const proTier = asPricing(pro.pricing.usd).tiers?.[0];
 		assert.ok(proTier);
 		assert.equal(proTier.input_price, 2);
@@ -135,4 +131,3 @@ describe('static image model presets (*-image.json)', () => {
 		assert.equal(proTier.image_output_price, 120);
 	});
 });
-

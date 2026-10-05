@@ -1,7 +1,7 @@
 // Owned PostgreSQL 18.6 proof for v372's opt-in application writer.
 import assert from 'node:assert/strict';
 import { createHash, randomBytes, randomUUID } from 'node:crypto';
-import { readFile, readdir, writeFile } from 'node:fs/promises';
+import { readFile, writeFile } from 'node:fs/promises';
 import test from 'node:test';
 import postgres from 'postgres';
 import { drizzle } from 'drizzle-orm/postgres-js';
@@ -9,7 +9,7 @@ import { pgCoreSchema } from '../../../packages/core/src/storage/drizzle/schema.
 import { insertRequestUsageAndChargeTxPg } from '../../../packages/core/src/db/postgres/critical-writes.impl.ts';
 import { chargeParams } from '../../../packages/core/src/test-support/postgres-financial-engine.mjs';
 import { startNativePostgres } from '../../../packages/core/src/test-support/postgres-native-cluster.mjs';
-import { grantPostgresRuntime } from './grant-postgres-runtime.ts';
+import { grantPg73RuntimeFixture, listPg73Migrations } from './pg73-native-fixture.mjs';
 import { activatePostgresBuyerSplitV348 } from './activate-postgres-buyer-split-v348.ts';
 import { grantPostgresBuyerSplitV348 } from './grant-postgres-buyer-split-v348.ts';
 import { activatePostgresBuyerGuardrailSplitV349 } from './activate-postgres-buyer-guardrail-split-v349.ts';
@@ -117,7 +117,7 @@ test('v372 opt-in application writer composes v371 and v2 economic event',
         admission, sharedProducer);
       await migrator.unsafe(`CREATE TABLE ${g}.schema_migrations
         (version text PRIMARY KEY,applied_at timestamptz NOT NULL DEFAULT now())`);
-      const names = (await readdir(migrations)).filter(x => x.endsWith('.sql')).sort();
+      const names = await listPg73Migrations();
       assert.equal(names.length, 73);
       const corpus = [];
       for (const name of names) {
@@ -136,7 +136,7 @@ test('v372 opt-in application writer composes v371 and v2 economic event',
 
       const migratorUrl = `postgres://cinatoken_gateway_migrator:${passwords.migrator}`
         + `@127.0.0.1:${cluster.port}/postgres`;
-      await grantPostgresRuntime({ DATABASE_URL: migratorUrl });
+      await grantPg73RuntimeFixture({ cluster, migrator, migratorUrl });
       const economicProposals = [
         ['shared-key-quote-versions.sql', 'shared_key_quote_versions_activation'],
         ['shared-key-dispatch-quote-attempts.sql', 'shared_quote_attempt_activation'],
@@ -236,7 +236,7 @@ test('v372 opt-in application writer composes v371 and v2 economic event',
         'missing','bypass')`), '42501');
       stage('default-off-and-successor-ACL-revoke-raw-old-bypass', { acl });
 
-      await grantPostgresRuntime({ DATABASE_URL: migratorUrl });
+      await grantPg73RuntimeFixture({ cluster, migrator, migratorUrl });
       const [rerunAcl] = await migrator.unsafe(`SELECT
         pg_catalog.has_function_privilege('cinatoken_gateway_runtime',
           '${g}.settle_legacy_buyer_windowed_v371(text,text)',

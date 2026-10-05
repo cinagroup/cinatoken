@@ -1,13 +1,13 @@
 // Owned PostgreSQL 18.6 proof of Guardrail terminal lifecycle functions under a direct LOGIN.
 import assert from 'node:assert/strict';
 import { createHash, randomBytes, randomUUID } from 'node:crypto';
-import { readFile, readdir, writeFile } from 'node:fs/promises';
+import { readFile, writeFile } from 'node:fs/promises';
 import { dirname, join } from 'node:path';
 import test from 'node:test';
 import postgres from 'postgres';
 import { startNativePostgres } from '../../../packages/core/src/test-support/postgres-native-cluster.mjs';
 import { openPostgresGuardrailBudgetLifecycleOwnerV353 } from '../../../packages/proxy/src/services/postgres-guardrail-budget-lifecycle-v353.ts';
-import { grantPostgresRuntime } from './grant-postgres-runtime.ts';
+import { grantPg73RuntimeFixture, listPg73Migrations } from './pg73-native-fixture.mjs';
 import { grantPostgresBuyerSplitV348 } from './grant-postgres-buyer-split-v348.ts';
 import { activatePostgresBuyerSplitV348 } from './activate-postgres-buyer-split-v348.ts';
 import { activatePostgresBuyerGuardrailSplitV349 } from './activate-postgres-buyer-guardrail-split-v349.ts';
@@ -90,7 +90,7 @@ test('Guardrail lifecycle LOGIN conservatively terminates multi-intent holds wit
       clients.push(migrator, runtime, buyer, admission);
       await migrator.unsafe(`CREATE TABLE ${gateway}.schema_migrations
         (version text PRIMARY KEY, applied_at timestamptz NOT NULL DEFAULT now())`);
-      const migrationNames = (await readdir(migrations)).filter(name => name.endsWith('.sql')).sort();
+      const migrationNames = await listPg73Migrations();
       assert.equal(migrationNames.length, 73);
       const corpus = [];
       for (const name of migrationNames) {
@@ -108,7 +108,7 @@ test('Guardrail lifecycle LOGIN conservatively terminates multi-intent holds wit
         + `@127.0.0.1:${cluster.port}/postgres`;
       const admissionUrl = `postgres://cinatoken_gateway_budget_admission:${passwords.budget_admission}`
         + `@127.0.0.1:${cluster.port}/postgres`;
-      await grantPostgresRuntime({ DATABASE_URL: migratorUrl });
+      await grantPg73RuntimeFixture({ cluster, migrator, migratorUrl });
       for (const [name, setting, value] of prerequisites) {
         const body = await readFile(new URL(name, proposals), 'utf8');
         report.sourceSha256[name] = hash(body);

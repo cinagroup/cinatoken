@@ -127,7 +127,11 @@ describe("simulator-utils", () => {
 				status: "active",
 				route_group: "default",
 				surfaces: JSON.stringify([
-					{ request_protocol: "openai", request_operation: "chat", status: "active" },
+					{
+						request_protocol: "openai",
+						request_operation: "chat",
+						status: "active",
+					},
 				]),
 			},
 			{
@@ -138,7 +142,11 @@ describe("simulator-utils", () => {
 				status: "active",
 				route_group: "vip",
 				surfaces: JSON.stringify([
-					{ request_protocol: "gemini", request_operation: "models.generate", status: "active" },
+					{
+						request_protocol: "gemini",
+						request_operation: "models.generate",
+						status: "active",
+					},
 				]),
 			},
 			{
@@ -149,7 +157,11 @@ describe("simulator-utils", () => {
 				status: "active",
 				route_group: "default",
 				surfaces: JSON.stringify([
-					{ request_protocol: "anthropic", request_operation: "messages", status: "disabled" },
+					{
+						request_protocol: "anthropic",
+						request_operation: "messages",
+						status: "disabled",
+					},
 				]),
 			},
 		];
@@ -223,7 +235,12 @@ describe("simulator-utils", () => {
 			},
 		];
 		assert.deepEqual(
-			listDashScopeRealtimeOperations(routes, "m1", "default", "transcriptions"),
+			listDashScopeRealtimeOperations(
+				routes,
+				"m1",
+				"default",
+				"transcriptions"
+			),
 			[
 				"audio.transcriptions.realtime.inference",
 				"audio.transcriptions.realtime.session",
@@ -252,9 +269,15 @@ describe("simulator-utils", () => {
 				]),
 			},
 		];
-		assert.deepEqual(listDashScopeAudioClientOperations(routes, "m1", "default", "transcriptions"), [
-			"audio.transcriptions.multimodal",
-		]);
+		assert.deepEqual(
+			listDashScopeAudioClientOperations(
+				routes,
+				"m1",
+				"default",
+				"transcriptions"
+			),
+			["audio.transcriptions.multimodal"]
+		);
 	});
 
 	it("redactAuthHeader masks sk keys", () => {
@@ -423,10 +446,7 @@ describe("simulator-utils", () => {
 			),
 			false
 		);
-		assert.equal(
-			JSON.parse(AUDIO_SPEECH_BODY_TEMPLATE).response_format,
-			"wav"
-		);
+		assert.equal(JSON.parse(AUDIO_SPEECH_BODY_TEMPLATE).response_format, "wav");
 		const sessionTemplate = JSON.parse(
 			bodyTemplateForSelection(
 				"dashscope",
@@ -498,7 +518,9 @@ describe("simulator-utils", () => {
 			JSON.stringify({ header: { event: "task-started" }, payload: {} }),
 			JSON.stringify({
 				header: { event: "result-generated" },
-				payload: { output: { sentence: { sentence_id: 1, text: "123" }, text: "123" } },
+				payload: {
+					output: { sentence: { sentence_id: 1, text: "123" }, text: "123" },
+				},
 			}),
 			JSON.stringify({
 				header: { event: "result-generated" },
@@ -509,14 +531,17 @@ describe("simulator-utils", () => {
 					},
 				},
 			}),
-			JSON.stringify({ header: { event: "task-finished" }, payload: { output: {} } }),
+			JSON.stringify({
+				header: { event: "task-finished" },
+				payload: { output: {} },
+			}),
 		].join("\n");
 
 		assert.equal(inferPlaygroundParseMode("application/x-ndjson"), "ndjson");
-		assert.deepEqual(
-			mergeAssistantTextParts(raw, "dashscope", "ndjson"),
-			{ reasoning: "", body: "123四五。" }
-		);
+		assert.deepEqual(mergeAssistantTextParts(raw, "dashscope", "ndjson"), {
+			reasoning: "",
+			body: "123四五。",
+		});
 	});
 
 	it("tryParseUsageSummary displays DashScope audio duration", () => {

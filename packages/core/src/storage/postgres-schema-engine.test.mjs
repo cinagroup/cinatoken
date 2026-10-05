@@ -26,16 +26,16 @@ test('PostgreSQL engine: all ORM tables ignore hostile or empty search paths', a
         await pg.exec(`CREATE TABLE ${schemaName}.${target} (${columns}); CREATE TABLE public.${target} (${columns})`);
         for (const searchPath of ['public', 'pg_catalog']) {
           await pg.exec(`TRUNCATE ${schemaName}.${target}, public.${target};
-            INSERT INTO ${schemaName}.${target} (${column}) VALUES ('gateway');
-            INSERT INTO public.${target} (${column}) VALUES ('shadow');
+            INSERT INTO ${schemaName}.${target} (${column}) VALUES (${typeof q.values.gateway === 'number' ? q.values.gateway : "'gateway'"});
+            INSERT INTO public.${target} (${column}) VALUES (${typeof q.values.shadow === 'number' ? q.values.shadow : "'shadow'"});
             SET search_path TO ${searchPath}`);
           // Executing generated SQL directly bypasses Drizzle's result-key mapper.
-          assert.deepEqual((await pg.query(q.select.sql, q.select.params)).rows, [{ [q.column.name]: 'gateway' }]);
-          assert.deepEqual((await pg.query(q.update.sql, q.update.params)).rows, [{ [q.column.name]: 'updated' }]);
-          assert.deepEqual((await pg.query(q.insert.sql, q.insert.params)).rows, [{ [q.column.name]: 'inserted' }]);
-          assert.deepEqual((await pg.query(q.delete.sql, q.delete.params)).rows, [{ [q.column.name]: 'updated' }]);
-          assert.deepEqual((await pg.query(`SELECT ${column} AS value FROM public.${target}`)).rows, [{ value: 'shadow' }]);
-          assert.deepEqual((await pg.query(`SELECT ${column} AS value FROM ${schemaName}.${target}`)).rows, [{ value: 'inserted' }]);
+          assert.deepEqual((await pg.query(q.select.sql, q.select.params)).rows, [{ [q.column.name]: q.values.gateway }]);
+          assert.deepEqual((await pg.query(q.update.sql, q.update.params)).rows, [{ [q.column.name]: q.values.updated }]);
+          assert.deepEqual((await pg.query(q.insert.sql, q.insert.params)).rows, [{ [q.column.name]: q.values.inserted }]);
+          assert.deepEqual((await pg.query(q.delete.sql, q.delete.params)).rows, [{ [q.column.name]: q.values.updated }]);
+          assert.deepEqual((await pg.query(`SELECT ${column} AS value FROM public.${target}`)).rows, [{ value: q.values.shadow }]);
+          assert.deepEqual((await pg.query(`SELECT ${column} AS value FROM ${schemaName}.${target}`)).rows, [{ value: q.values.inserted }]);
         }
       });
     }

@@ -26,10 +26,15 @@ import type {
 import { handleAdminRouteError } from "./error-response";
 import { DEEPSEEK_API_KEY_ENV_NAME } from "@octafuse/core";
 import { normalizeApiTimeFields } from "@octafuse/core/lib/time-format";
+import {
+	adminDomainContract,
+	domainAcknowledgement,
+} from "@/lib/services/admin/domain-contract";
 
 export const adminProvidersRoutes = new Hono<AdminEnv>();
 
 adminProvidersRoutes.use("*", requireAdminPrincipal);
+adminProvidersRoutes.use("*", adminDomainContract);
 
 /** 全量列表。 */
 adminProvidersRoutes.get("/", async (c) => {
@@ -59,6 +64,7 @@ adminProvidersRoutes.post("/", async (c) => {
 			normalizeApiTimeFields({
 				success: true,
 				message: "Provider created successfully",
+				acknowledgement: domainAcknowledgement("providers", "create", data.id),
 				data,
 			})
 		);
@@ -112,6 +118,7 @@ adminProvidersRoutes.post("/import", async (c) => {
 			normalizeApiTimeFields({
 				success: true,
 				message: `Import finished (${parts.join(", ")}).`,
+				acknowledgement: domainAcknowledgement("providers", "import"),
 				data,
 			})
 		);
@@ -150,12 +157,24 @@ adminProvidersRoutes.post("/:id/dashscope/:resource", async (c) => {
 	}
 	try {
 		const repos = c.get("repositories");
-		return await proxyDashScopeAudioResourceService(
+		const upstream = await proxyDashScopeAudioResourceService(
 			repos,
 			providerId,
 			resource as DashScopeAudioResource,
 			body
 		);
+		// Preserve the official native JSON/body. Only successful HTTP responses carry
+		// transport identity; vendor payload errors still require the vendor contract.
+		const response = new Response(upstream.body, upstream);
+		response.headers.set("Cache-Control", "private, no-store");
+		if (upstream.ok)
+			response.headers.set(
+				"X-CinaToken-Acknowledgement",
+				JSON.stringify(
+					domainAcknowledgement("providers", "resource", providerId, resource)
+				)
+			);
+		return response;
 	} catch (error) {
 		return handleAdminRouteError(
 			c,
@@ -188,8 +207,12 @@ adminProvidersRoutes.patch("/:id", async (c) => {
 	}
 	try {
 		const repos = c.get("repositories");
-		await updateProviderService(repos, id, body, c.get('principal').id);
-		return c.json({ success: true, message: "Provider updated successfully" });
+		await updateProviderService(repos, id, body, c.get("principal").id);
+		return c.json({
+			success: true,
+			message: "Provider updated successfully",
+			acknowledgement: domainAcknowledgement("providers", "update", id),
+		});
 	} catch (error) {
 		return handleAdminRouteError(c, error, "Failed to update provider");
 	}
@@ -201,7 +224,11 @@ adminProvidersRoutes.delete("/:id", async (c) => {
 	try {
 		const repos = c.get("repositories");
 		await deleteProviderService(repos, id);
-		return c.json({ success: true, message: "Provider deleted successfully" });
+		return c.json({
+			success: true,
+			message: "Provider deleted successfully",
+			acknowledgement: domainAcknowledgement("providers", "delete", id),
+		});
 	} catch (error) {
 		return handleAdminRouteError(c, error, "Failed to delete provider");
 	}

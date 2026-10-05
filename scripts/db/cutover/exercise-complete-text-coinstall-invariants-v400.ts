@@ -1,7 +1,6 @@
 import assert from 'node:assert/strict';
 import { createHash, randomUUID } from 'node:crypto';
 import type { PostgresDatabaseClient } from '../../../packages/core/src/storage/database-client';
-// @ts-expect-error The owned native JavaScript proxy fixture has no declaration file.
 import { startJournalCommitAckDropProxyV381 } from '../../../packages/core/src/test-support/postgres-journal-commit-ack-proxy-v381.mjs';
 import { createFinalChatQuoteSnapshot } from '../../../packages/proxy/src/services/chat-final-quote-input';
 import { parseOpenAiModelFallbacks } from '../../../packages/proxy/src/services/model-fallbacks';

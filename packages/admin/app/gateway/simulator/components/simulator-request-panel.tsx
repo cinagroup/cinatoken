@@ -10,7 +10,10 @@ import {
 	type ImageOperation,
 } from "@/lib/image-generations";
 import type { OpenaiLlmOperation } from "@/lib/invoke-kind";
-import type { SimulatorGeminiAction, SimulatorProtocol } from "@/lib/simulator/endpoint";
+import type {
+	SimulatorGeminiAction,
+	SimulatorProtocol,
+} from "@/lib/simulator/endpoint";
 import {
 	codeBlockClass,
 	inputClass,
@@ -166,7 +169,9 @@ export function SimulatorRequestPanel({
 			{hideProtocolControls ? (
 				<p className="text-xs text-gray-500">{t("toolProtocolHidden")}</p>
 			) : !hasSelectedModel ? null : supportedProtocols.length === 0 ? (
-				<p className="text-xs text-amber-800/90">{t("supportedSurfacesEmpty")}</p>
+				<p className="text-xs text-amber-800/90">
+					{t("supportedSurfacesEmpty")}
+				</p>
 			) : (
 				<div className="flex flex-wrap items-center gap-2">
 					<div
@@ -251,12 +256,16 @@ export function SimulatorRequestPanel({
 			{showAudioTranscriptions ? (
 				<div className="space-y-2">
 					<p className="text-xs text-gray-500">
-						{showAudioRealtimeMicrophone ? t("audioRealtimeDashScopeHint") : t("audioTranscriptionsHint")}
+						{showAudioRealtimeMicrophone
+							? t("audioRealtimeDashScopeHint")
+							: t("audioTranscriptionsHint")}
 					</p>
 					{showAudioRealtimeMicrophone ? (
 						<fieldset className="flex flex-wrap items-center gap-4 rounded-md border border-gray-200 px-3 py-2 text-sm">
 							<legend className="sr-only">{t("audioInputMode")}</legend>
-							<span className="font-medium text-gray-600">{t("audioInputMode")}</span>
+							<span className="font-medium text-gray-600">
+								{t("audioInputMode")}
+							</span>
 							<label className="inline-flex cursor-pointer items-center gap-2">
 								<input
 									type="radio"
@@ -279,7 +288,7 @@ export function SimulatorRequestPanel({
 								/>
 								{t("audioInputMicrophone")}
 							</label>
-					</fieldset>
+						</fieldset>
 					) : null}
 					{!showAudioRealtimeMicrophone || audioInputMode === "file" ? (
 						<div>
@@ -321,7 +330,9 @@ export function SimulatorRequestPanel({
 			) : null}
 			{showAudioSpeech ? (
 				<p className="text-xs text-gray-500">
-					{showAudioRealtime ? t("audioRealtimeSpeechHint") : t("audioSpeechHint")}
+					{showAudioRealtime
+						? t("audioRealtimeSpeechHint")
+						: t("audioSpeechHint")}
 				</p>
 			) : null}
 			{showImageOperation ? (
@@ -333,7 +344,10 @@ export function SimulatorRequestPanel({
 								{t("imageOperation")}
 							</span>
 							{supportedImageOps.map((op) => (
-								<label key={op} className="inline-flex items-center gap-2 cursor-pointer">
+								<label
+									key={op}
+									className="inline-flex items-center gap-2 cursor-pointer"
+								>
 									<input
 										type="radio"
 										name="simulatorImageOperation"
@@ -411,7 +425,9 @@ export function SimulatorRequestPanel({
 					{wireOpen ? null : (
 						<RequestTargetUrl
 							label={t("requestTargetUrl")}
-							method={showAudioRealtime ? "WebSocket" : displayWire?.method ?? "POST"}
+							method={
+								showAudioRealtime ? "WebSocket" : displayWire?.method ?? "POST"
+							}
 							url={displayWire?.url}
 							emptyHint={t("requestTargetUrlEmpty")}
 						/>
@@ -446,7 +462,9 @@ export function SimulatorRequestPanel({
 				{wireOpen ? (
 					<div className="flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden rounded-md border border-gray-200 bg-slate-50/80 xl:max-w-[50%]">
 						<div className="flex shrink-0 items-center justify-between gap-2 border-b border-gray-200 px-3 py-2">
-							<h3 className="text-xs font-semibold text-gray-800">{t("wirePreview")}</h3>
+							<h3 className="text-xs font-semibold text-gray-800">
+								{t("wirePreview")}
+							</h3>
 							<button
 								type="button"
 								onClick={() => onWireOpenChange(false)}

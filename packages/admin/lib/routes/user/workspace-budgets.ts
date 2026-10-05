@@ -7,10 +7,14 @@ import {
 	workspaceBudgetAmount,
 	workspaceBudgetUsageAmount,
 	type WorkspaceBudgetUsageRow,
-} from '@octafuse/core';
-import { Hono, type Context } from 'hono';
-import type { UserEnv } from '@/lib/user-env';
-import { hasAuthoritativeOrganizationAdminRole } from '@/lib/cinaauth/organization-admin-roles';
+} from "@octafuse/core";
+import {
+	BILLING_CURRENCY_KEY,
+	normalizeBillingCurrencyCode,
+} from "@octafuse/core/lib/billing-currency";
+import { Hono, type Context } from "hono";
+import type { UserEnv } from "@/lib/user-env";
+import { hasAuthoritativeOrganizationAdminRole } from "@/lib/cinaauth/organization-admin-roles";
 
 export const userWorkspaceBudgetsRoutes = new Hono<UserEnv>();
 
@@ -31,79 +35,140 @@ function response(row: WorkspaceBudgetUsageRow) {
 }
 
 function canManage(c: Context<UserEnv>): boolean {
-	const workspace = c.get('workspaceContext').currentWorkspace;
-	return workspace.role === 'owner'
-		|| workspace.role === 'admin'
-		|| hasAuthoritativeOrganizationAdminRole(
+	const workspace = c.get("workspaceContext").currentWorkspace;
+	return (
+		workspace.role === "owner" ||
+		workspace.role === "admin" ||
+		hasAuthoritativeOrganizationAdminRole(
 			workspace,
-			c.env?.CINAAUTH_ORGANIZATION_ADMIN_ROLES,
-		);
+			c.env?.CINAAUTH_ORGANIZATION_ADMIN_ROLES
+		)
+	);
 }
 
-userWorkspaceBudgetsRoutes.get('/', async (c) => {
-	const workspaceId = c.get('workspaceContext').currentWorkspace.id;
-	const rows = await listWorkspaceBudgetUsage(c.get('repositories').client, workspaceId);
-	c.header('Cache-Control', 'private, no-store');
-	return c.json({ success: true, data: rows.map(response) });
+userWorkspaceBudgetsRoutes.get("/", async (c) => {
+	const workspaceId = c.get("workspaceContext").currentWorkspace.id;
+	const [rows, billingCurrencyRaw] = await Promise.all([
+		listWorkspaceBudgetUsage(c.get("repositories").client, workspaceId),
+		c.get("repositories").systemConfig.getConfig(BILLING_CURRENCY_KEY),
+	]);
+	c.header("Cache-Control", "private, no-store");
+	return c.json({
+		success: true,
+		data: rows.map(response),
+		workspaceId,
+		billingCurrency: normalizeBillingCurrencyCode(billingCurrencyRaw),
+		canManage: canManage(c),
+	});
 });
 
-userWorkspaceBudgetsRoutes.put('/:interval', async (c) => {
+userWorkspaceBudgetsRoutes.put("/:interval", async (c) => {
 	if (!canManage(c)) {
-		return c.json({ success: false, message: 'Workspace administrator access is required' }, 403);
+		return c.json(
+			{ success: false, message: "Workspace administrator access is required" },
+			403
+		);
 	}
 	let interval;
 	try {
-		interval = normalizeWorkspaceBudgetInterval(c.req.param('interval'));
+		interval = normalizeWorkspaceBudgetInterval(c.req.param("interval"));
 	} catch (error) {
-		return c.json({ success: false, message: error instanceof Error ? error.message : 'Invalid interval' }, 400);
+		return c.json(
+			{
+				success: false,
+				message: error instanceof Error ? error.message : "Invalid interval",
+			},
+			400
+		);
 	}
 	const body = await c.req.json<unknown>().catch(() => null);
-	if (!body || typeof body !== 'object' || Array.isArray(body)) {
-		return c.json({ success: false, message: 'Invalid JSON body' }, 400);
+	if (!body || typeof body !== "object" || Array.isArray(body)) {
+		return c.json({ success: false, message: "Invalid JSON body" }, 400);
 	}
 	const fields = Object.keys(body);
-	if (fields.length !== 1 || fields[0] !== 'limit_usd') {
-		return c.json({ success: false, message: 'limit_usd is the only supported field' }, 400);
+	if (fields.length !== 1 || fields[0] !== "limit_usd") {
+		return c.json(
+			{ success: false, message: "limit_usd is the only supported field" },
+			400
+		);
 	}
 	let limitMicros: number;
 	try {
-		limitMicros = normalizeWorkspaceBudgetLimitMicros((body as Record<string, unknown>).limit_usd);
+		limitMicros = normalizeWorkspaceBudgetLimitMicros(
+			(body as Record<string, unknown>).limit_usd
+		);
 	} catch (error) {
-		return c.json({ success: false, message: error instanceof Error ? error.message : 'Invalid budget limit' }, 400);
+		return c.json(
+			{
+				success: false,
+				message:
+					error instanceof Error ? error.message : "Invalid budget limit",
+			},
+			400
+		);
 	}
 	try {
-		const workspaceId = c.get('workspaceContext').currentWorkspace.id;
-		const row = await upsertWorkspaceBudget(c.get('repositories').client, {
+		const workspaceId = c.get("workspaceContext").currentWorkspace.id;
+		const billingCurrency = normalizeBillingCurrencyCode(
+			await c.get("repositories").systemConfig.getConfig(BILLING_CURRENCY_KEY)
+		);
+		const row = await upsertWorkspaceBudget(c.get("repositories").client, {
 			workspaceId,
 			interval,
 			limitMicros,
 		});
-		if (!row) return c.json({ success: false, message: 'Workspace not found' }, 404);
-		const usage = (await listWorkspaceBudgetUsage(c.get('repositories').client, workspaceId))
-			.find((candidate) => candidate.id === row.id);
-		if (!usage) throw new Error('Workspace budget usage snapshot is unavailable after update');
-		c.header('Cache-Control', 'private, no-store');
-		return c.json({ success: true, data: response(usage) });
+		if (!row)
+			return c.json({ success: false, message: "Workspace not found" }, 404);
+		const usage = (
+			await listWorkspaceBudgetUsage(c.get("repositories").client, workspaceId)
+		).find((candidate) => candidate.id === row.id);
+		if (!usage)
+			throw new Error(
+				"Workspace budget usage snapshot is unavailable after update"
+			);
+		c.header("Cache-Control", "private, no-store");
+		return c.json({
+			success: true,
+			data: response(usage),
+			workspaceId,
+			billingCurrency,
+		});
 	} catch (error) {
-		if (error instanceof TypeError) return c.json({ success: false, message: error.message }, 400);
+		if (error instanceof TypeError)
+			return c.json({ success: false, message: error.message }, 400);
 		throw error;
 	}
 });
 
-userWorkspaceBudgetsRoutes.delete('/:interval', async (c) => {
+userWorkspaceBudgetsRoutes.delete("/:interval", async (c) => {
 	if (!canManage(c)) {
-		return c.json({ success: false, message: 'Workspace administrator access is required' }, 403);
+		return c.json(
+			{ success: false, message: "Workspace administrator access is required" },
+			403
+		);
 	}
 	let interval;
 	try {
-		interval = normalizeWorkspaceBudgetInterval(c.req.param('interval'));
+		interval = normalizeWorkspaceBudgetInterval(c.req.param("interval"));
 	} catch (error) {
-		return c.json({ success: false, message: error instanceof Error ? error.message : 'Invalid interval' }, 400);
+		return c.json(
+			{
+				success: false,
+				message: error instanceof Error ? error.message : "Invalid interval",
+			},
+			400
+		);
 	}
-	const workspaceId = c.get('workspaceContext').currentWorkspace.id;
-	if (!(await deleteWorkspaceBudget(c.get('repositories').client, workspaceId, interval))) {
-		return c.json({ success: false, message: 'Workspace not found' }, 404);
+	const workspaceId = c.get("workspaceContext").currentWorkspace.id;
+	if (
+		!(await deleteWorkspaceBudget(
+			c.get("repositories").client,
+			workspaceId,
+			interval
+		))
+	) {
+		return c.json({ success: false, message: "Workspace not found" }, 404);
 	}
-	c.header('Cache-Control', 'private, no-store');
+	c.header("Cache-Control", "private, no-store");
 	return c.json({ success: true, deleted: true });
 });

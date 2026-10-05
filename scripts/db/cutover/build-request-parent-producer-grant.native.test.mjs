@@ -2,14 +2,14 @@
 // No production producer identity or automatic migration is activated.
 import assert from 'node:assert/strict';
 import { createHash, randomBytes, randomUUID } from 'node:crypto';
-import { readFile, readdir, writeFile } from 'node:fs/promises';
+import { readFile, writeFile } from 'node:fs/promises';
 import { dirname, join } from 'node:path';
 import test from 'node:test';
 import postgres from 'postgres';
 import { startNativePostgres } from '../../../packages/core/src/test-support/postgres-native-cluster.mjs';
 import { buildRequestParentDefaultAclActivation } from './build-request-parent-default-acl-activation.mjs';
 import { buildRequestParentProducerGrant } from './build-request-parent-producer-grant.mjs';
-import { grantPostgresRuntime } from './grant-postgres-runtime.ts';
+import { grantPg73RuntimeFixture, listPg73Migrations } from './pg73-native-fixture.mjs';
 
 const schema = 'cinatoken_gateway';
 const producerRole = 'cinatoken_gateway_dispatch_producer';
@@ -173,7 +173,7 @@ test('native parent producer grant permits only pinned definer calls and rejects
       const migratorUrl = `postgres://cinatoken_gateway_migrator:${password}@127.0.0.1:${cluster.port}/postgres`;
       await migrator.unsafe(`CREATE TABLE ${schema}.schema_migrations (
         version text PRIMARY KEY, applied_at timestamptz NOT NULL DEFAULT now())`);
-      const files = (await readdir(migrations)).filter(name => name.endsWith('.sql')).sort();
+      const files = await listPg73Migrations();
       assert.equal(files.length, 73);
       assert.equal(files.at(-1), '0073_recovery_api_key_workspace_lock.sql');
       const corpus = [];
@@ -192,7 +192,7 @@ test('native parent producer grant permits only pinned definer calls and rejects
           await tx.unsafe(await readFile(url, 'utf8')).simple();
         });
       }
-      await grantPostgresRuntime({ DATABASE_URL: migratorUrl });
+      await grantPg73RuntimeFixture({ cluster, migrator, migratorUrl });
       await runBundle(migrator,
         await buildRequestParentDefaultAclActivation({ activation: 'reviewed-v1' }));
       stage('parent-installed-with-runtime-default-acl', { formalMigrations: files.length });
@@ -392,7 +392,7 @@ test('native parent producer grant permits only pinned definer calls and rejects
       stage('dispatch-prepares-claims-and-classifies-only-through-definers', { state });
 
       await runBundle(migrator, grant);
-      await grantPostgresRuntime({ DATABASE_URL: migratorUrl });
+      await grantPg73RuntimeFixture({ cluster, migrator, migratorUrl });
       assert.deepEqual(await privileges(cluster.admin), expected);
       stage('producer-grant-idempotent-and-runtime-rerun-keeps-role-separation');
 
@@ -501,7 +501,7 @@ test('native direct LOGIN dispatch producer uses its own password identity and c
     const migratorUrl = `postgres://cinatoken_gateway_migrator:${migratorPassword}@127.0.0.1:${cluster.port}/postgres`;
     await migrator.unsafe(`CREATE TABLE ${schema}.schema_migrations (
       version text PRIMARY KEY, applied_at timestamptz NOT NULL DEFAULT now())`);
-    const files = (await readdir(migrations)).filter(name => name.endsWith('.sql')).sort();
+    const files = await listPg73Migrations();
     assert.equal(files.length, 73);
     for (const name of files) {
       const body = await readFile(new URL(name, migrations), 'utf8');
@@ -516,7 +516,7 @@ test('native direct LOGIN dispatch producer uses its own password identity and c
         await tx.unsafe(await readFile(url, 'utf8')).simple();
       });
     }
-    await grantPostgresRuntime({ DATABASE_URL: migratorUrl });
+    await grantPg73RuntimeFixture({ cluster, migrator, migratorUrl });
     await runBundle(migrator,
       await buildRequestParentDefaultAclActivation({ activation: 'reviewed-v1' }));
     stage('pinned-migrations-and-parent-installed', { count: files.length });

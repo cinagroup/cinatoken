@@ -1,4 +1,4 @@
-import type { StorageContext } from '@octafuse/core/storage/context';
+import type { StorageContext } from "@octafuse/core/storage/context";
 import {
 	assertSharedKeyEncryptionSecret,
 	createEncryptedByokKeysRepository,
@@ -6,49 +6,68 @@ import {
 	createEncryptedProvidersRepository,
 	createEnvironmentProviderKeysRepository,
 	DEEPSEEK_OFFICIAL_ENVIRONMENT_SECRET_POLICY,
-} from '@octafuse/core';
-import { createWorkerStorageContext } from '@octafuse/core/storage/context';
+} from "@octafuse/core";
+import { createWorkerStorageContext } from "@octafuse/core/storage/context";
 import {
 	resolveNodeDatabaseConfig,
 	resolveWorkerDatabaseConfig,
-} from '@octafuse/core/storage/runtime-database-config';
-import type { AdminBindings } from '@/lib/admin-env';
+} from "@octafuse/core/storage/runtime-database-config";
+import type { AdminBindings } from "@/lib/admin-env";
 
 let nodeStoragePromise: Promise<StorageContext> | null = null;
-type RuntimeMode = 'auto' | 'cloudflare' | 'node';
+type RuntimeMode = "auto" | "cloudflare" | "node";
 
 /** Node：`DATABASE_URL` 与 `DATABASE_DRIVER` 与 bindings 合并（与 proxy 一致）。 */
 function getNodeDatabaseEnv(bindings?: AdminBindings): {
 	DATABASE_DRIVER?: string;
 	DATABASE_URL?: string;
 } {
-	const dbUrl = bindings?.DATABASE_URL?.trim() || process.env.DATABASE_URL?.trim() || undefined;
-	const driver = bindings?.DATABASE_DRIVER?.trim() || process.env.DATABASE_DRIVER?.trim() || undefined;
+	const dbUrl =
+		bindings?.DATABASE_URL?.trim() ||
+		process.env.DATABASE_URL?.trim() ||
+		undefined;
+	const driver =
+		bindings?.DATABASE_DRIVER?.trim() ||
+		process.env.DATABASE_DRIVER?.trim() ||
+		undefined;
 	return {
 		DATABASE_URL: dbUrl,
 		DATABASE_DRIVER: driver,
 	};
 }
 
-function protectSharedKeys(storage: StorageContext, bindings?: AdminBindings): StorageContext {
+function protectSharedKeys(
+	storage: StorageContext,
+	bindings?: AdminBindings
+): StorageContext {
 	const secret = assertSharedKeyEncryptionSecret(
-		bindings?.SHARED_KEY_ENCRYPTION_SECRET ?? process.env.SHARED_KEY_ENCRYPTION_SECRET,
+		bindings?.SHARED_KEY_ENCRYPTION_SECRET ??
+			process.env.SHARED_KEY_ENCRYPTION_SECRET
 	);
 	return {
 		...storage,
 		repositories: {
 			...storage.repositories,
-			byokKeys: createEncryptedByokKeysRepository(storage.repositories.byokKeys, secret),
-			sharedKeys: createEncryptedSharedKeysRepository(storage.repositories.sharedKeys, secret),
+			byokKeys: createEncryptedByokKeysRepository(
+				storage.repositories.byokKeys,
+				secret
+			),
+			sharedKeys: createEncryptedSharedKeysRepository(
+				storage.repositories.sharedKeys,
+				secret
+			),
 			providers: createEnvironmentProviderKeysRepository(
-				createEncryptedProvidersRepository(storage.repositories.providers, secret),
+				createEncryptedProvidersRepository(
+					storage.repositories.providers,
+					secret
+				),
 				{
 					policies: [DEEPSEEK_OFFICIAL_ENVIRONMENT_SECRET_POLICY],
 					secrets: {
 						DEEPSEEK_API_KEY:
 							bindings?.DEEPSEEK_API_KEY ?? process.env.DEEPSEEK_API_KEY,
 					},
-				},
+				}
 			),
 		},
 	};
@@ -56,15 +75,16 @@ function protectSharedKeys(storage: StorageContext, bindings?: AdminBindings): S
 
 export async function resolveAdminStorageContext(
 	bindings?: AdminBindings,
-	mode: RuntimeMode = 'auto'
+	mode: RuntimeMode = "auto"
 ): Promise<StorageContext> {
 	if (bindings?.STORAGE_CONTEXT) {
 		return bindings.STORAGE_CONTEXT;
 	}
 
 	const isCloudflareMode =
-		mode === 'cloudflare' ||
-		(mode === 'auto' && Boolean(bindings?.DB || bindings?.HYPERDRIVE || bindings?.ASSETS));
+		mode === "cloudflare" ||
+		(mode === "auto" &&
+			Boolean(bindings?.DB || bindings?.HYPERDRIVE || bindings?.ASSETS));
 	if (isCloudflareMode) {
 		const cfg = resolveWorkerDatabaseConfig({
 			DB: bindings?.DB,
@@ -78,9 +98,9 @@ export async function resolveAdminStorageContext(
 	const nodeCfg = resolveNodeDatabaseConfig(nodeEnv);
 
 	if (nodeStoragePromise === null) {
-		const nodeContext = await import('@octafuse/core/storage/context');
+		const nodeContext = await import("@octafuse/core/storage/context");
 		const p =
-			nodeCfg.driver === 'mysql'
+			nodeCfg.driver === "mysql"
 				? nodeContext.createMySqlStorageContext(nodeCfg.connectionString)
 				: nodeContext.createPostgresStorageContext(nodeCfg.connectionString);
 		nodeStoragePromise = p.catch((err) => {

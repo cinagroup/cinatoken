@@ -13,7 +13,16 @@ const PROVISION_LOCK_KEYS = [746923551, 746923553, 746923557, 746923558];
 const LOCAL_ROLE_CONNECTION_LIMIT = 2;
 const DRY_RUN_ROLLBACK = new Error('cinatoken_gateway_producer_login_dry_run_rollback');
 
-type ProducerEnvironment = NodeJS.ProcessEnv;
+type ProducerEnvironment = {
+  /** Deliberately ignored; the review-only provisioner never falls back to this URL. */
+  DATABASE_URL?: string;
+  CINATOKEN_GATEWAY_PRODUCER_ACTIVATION?: string;
+  CINATOKEN_GATEWAY_PRODUCER_ADMIN_URL?: string;
+  CINATOKEN_GATEWAY_DISPATCH_PRODUCER_PASSWORD?: string;
+  CINATOKEN_GATEWAY_FACT_PRODUCER_PASSWORD?: string;
+  CINATOKEN_GATEWAY_PRODUCER_ROTATE_PASSWORDS?: string;
+  CINATOKEN_GATEWAY_PRODUCER_DRY_RUN?: string;
+};
 
 function booleanFlag(name: string, value: string | undefined): boolean {
   if (value === undefined || value.trim().toLowerCase() === 'false') return false;
@@ -54,7 +63,14 @@ export interface ProducerLoginProvisionResult {
  * DATABASE_URL and never activates merely because credentials are present.
  */
 export async function provisionPostgresProducerLogins(
-  env: ProducerEnvironment = process.env,
+  env: ProducerEnvironment = {
+    CINATOKEN_GATEWAY_PRODUCER_ACTIVATION: process.env.CINATOKEN_GATEWAY_PRODUCER_ACTIVATION,
+    CINATOKEN_GATEWAY_PRODUCER_ADMIN_URL: process.env.CINATOKEN_GATEWAY_PRODUCER_ADMIN_URL,
+    CINATOKEN_GATEWAY_DISPATCH_PRODUCER_PASSWORD: process.env.CINATOKEN_GATEWAY_DISPATCH_PRODUCER_PASSWORD,
+    CINATOKEN_GATEWAY_FACT_PRODUCER_PASSWORD: process.env.CINATOKEN_GATEWAY_FACT_PRODUCER_PASSWORD,
+    CINATOKEN_GATEWAY_PRODUCER_ROTATE_PASSWORDS: process.env.CINATOKEN_GATEWAY_PRODUCER_ROTATE_PASSWORDS,
+    CINATOKEN_GATEWAY_PRODUCER_DRY_RUN: process.env.CINATOKEN_GATEWAY_PRODUCER_DRY_RUN,
+  },
 ): Promise<ProducerLoginProvisionResult> {
   if (env.CINATOKEN_GATEWAY_PRODUCER_ACTIVATION !== PRODUCER_LOGIN_ACTIVATION) {
     throw new Error(`Explicit ${PRODUCER_LOGIN_ACTIVATION} producer login activation is required.`);

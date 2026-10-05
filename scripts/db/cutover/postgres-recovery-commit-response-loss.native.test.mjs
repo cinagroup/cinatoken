@@ -2,7 +2,7 @@
 // loopback wire proxy are used. GATEWAY_NATIVE_PG_BIN is mandatory.
 import assert from 'node:assert/strict';
 import { createHash, randomBytes, randomUUID } from 'node:crypto';
-import { readFile, readdir, writeFile } from 'node:fs/promises';
+import { readFile, writeFile } from 'node:fs/promises';
 import { createConnection, createServer } from 'node:net';
 import { dirname, join } from 'node:path';
 import test from 'node:test';
@@ -16,7 +16,7 @@ import { createUsageRecoveryJobsPostgres } from '../../../packages/core/src/stor
 import { createUsageSettlementRepositoryPostgres } from '../../../packages/core/src/storage/recovery/usage-settlement-postgres.ts';
 import { sample } from '../../../packages/core/src/storage/recovery/usage-settlement-test-support.mjs';
 import { buildPostgresRecoveryRoleSql } from './postgres-recovery-role-policy.ts';
-import { grantPostgresRuntime } from './grant-postgres-runtime.ts';
+import { grantPg73RuntimeFixture, listPg73Migrations } from './pg73-native-fixture.mjs';
 
 const schema = 'cinatoken_gateway';
 const migrations = new URL('../../../packages/core/migrations-postgres/', import.meta.url);
@@ -188,7 +188,7 @@ async function main() {
     const migratorUrl = `postgres://cinatoken_gateway_migrator:${password}@127.0.0.1:${cluster.port}/postgres`;
     await migrator.unsafe(`CREATE TABLE ${schema}.schema_migrations (
       version text PRIMARY KEY, applied_at timestamptz NOT NULL DEFAULT now())`);
-    const files = (await readdir(migrations)).filter(name => name.endsWith('.sql')).sort();
+    const files = await listPg73Migrations();
     assert.equal(files.length, 73);
     for (const name of files) {
       const body = await readFile(new URL(name, migrations), 'utf8');
@@ -198,7 +198,7 @@ async function main() {
       });
     }
     stage('formal-migrations', { count: files.length });
-    await grantPostgresRuntime({ DATABASE_URL: migratorUrl });
+    await grantPg73RuntimeFixture({ cluster, migrator, migratorUrl });
     await migrator.unsafe(`INSERT INTO ${schema}.users(id,email,budget_max,budget_spent)
       VALUES ('user','native-response-loss@example.invalid',10,1);
       INSERT INTO ${schema}.workspaces(id,scope_type,personal_owner_user_id,name,slug,status)
@@ -213,7 +213,7 @@ async function main() {
       await tx.unsafe("SET LOCAL cinatoken.recovery_log_guard_activation = 'reviewed-v1'");
       await tx.unsafe(guard).simple();
     });
-    await grantPostgresRuntime({ DATABASE_URL: migratorUrl });
+    await grantPg73RuntimeFixture({ cluster, migrator, migratorUrl });
     await migrator.unsafe(plan.migratorSql).simple();
     stage('role-and-guard', { login: false, runtimeCompatible: plan.runtimeCompatible });
 

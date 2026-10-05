@@ -29,9 +29,11 @@ async function hmacSha256(
 ): Promise<ArrayBuffer> {
 	const keyBytes =
 		typeof key === 'string' ? new TextEncoder().encode(key) : key instanceof Uint8Array ? key : new Uint8Array(key);
+	// Give WebCrypto an owned ArrayBuffer across both DOM and Node type projects.
+	const ownedKeyBytes = Uint8Array.from(keyBytes);
 	const cryptoKey = await crypto.subtle.importKey(
 		'raw',
-		keyBytes as BufferSource,
+		ownedKeyBytes,
 		{ name: 'HMAC', hash: 'SHA-256' },
 		false,
 		['sign']

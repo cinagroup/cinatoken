@@ -1,8 +1,16 @@
-'use client';
+"use client";
 
-import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from 'react';
-import { DEFAULT_BUSINESS_TIMEZONE } from '@/lib/business-timezone-client';
-import { readApiJson } from '@/lib/api-json';
+import {
+	createContext,
+	useCallback,
+	useContext,
+	useEffect,
+	useMemo,
+	useState,
+	type ReactNode,
+} from "react";
+import { DEFAULT_BUSINESS_TIMEZONE } from "@/lib/business-timezone-client";
+import { readApiJson } from "@/lib/api-json";
 
 type BusinessTimezoneContextValue = {
 	businessTimezone: string;
@@ -16,33 +24,54 @@ const BusinessTimezoneContext = createContext<BusinessTimezoneContextValue>({
 	refresh: async () => {},
 });
 
-export function BusinessTimezoneProvider({ children }: { children: ReactNode }) {
-	const [businessTimezone, setBusinessTimezone] = useState(DEFAULT_BUSINESS_TIMEZONE);
+async function readBusinessTimezone(): Promise<string | undefined> {
+	const response = await fetch("/api/admin/business-timezone");
+	const data = await readApiJson<{ business_timezone?: string }>(response);
+	return data.data?.business_timezone?.trim();
+}
+
+export function BusinessTimezoneProvider({
+	children,
+}: {
+	children: ReactNode;
+}) {
+	const [businessTimezone, setBusinessTimezone] = useState(
+		DEFAULT_BUSINESS_TIMEZONE
+	);
 	const [isLoading, setIsLoading] = useState(true);
 
 	const refresh = useCallback(async () => {
 		try {
-			const response = await fetch('/api/admin/business-timezone');
-			const data = await readApiJson<{ business_timezone?: string }>(response);
-			const tz = data.data?.business_timezone?.trim();
+			const tz = await readBusinessTimezone();
 			if (tz) setBusinessTimezone(tz);
 		} catch (error) {
-			console.error('Failed to load business timezone:', error);
+			console.error("Failed to load business timezone:", error);
 		} finally {
 			setIsLoading(false);
 		}
 	}, []);
 
 	useEffect(() => {
-		void refresh();
-	}, [refresh]);
+		void readBusinessTimezone()
+			.then((tz) => {
+				if (tz) setBusinessTimezone(tz);
+			})
+			.catch((error) =>
+				console.error("Failed to load business timezone:", error)
+			)
+			.finally(() => setIsLoading(false));
+	}, []);
 
 	const value = useMemo(
 		() => ({ businessTimezone, isLoading, refresh }),
 		[businessTimezone, isLoading, refresh]
 	);
 
-	return <BusinessTimezoneContext.Provider value={value}>{children}</BusinessTimezoneContext.Provider>;
+	return (
+		<BusinessTimezoneContext.Provider value={value}>
+			{children}
+		</BusinessTimezoneContext.Provider>
+	);
 }
 
 export function useBusinessTimezone(): string {

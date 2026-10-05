@@ -1,8 +1,8 @@
-import { cookies } from 'next/headers';
-import { getRequestConfig } from 'next-intl/server';
-import { LOCALE_COOKIE, resolveLocale } from '@/lib/locale';
+import { cookies } from "next/headers";
+import { getRequestConfig } from "next-intl/server";
+import { LOCALE_COOKIE, resolveLocale } from "@/lib/locale";
 
-export { defaultLocale, locales, type Locale } from '@/lib/locale';
+export { defaultLocale, locales, type Locale } from "@/lib/locale";
 
 export default getRequestConfig(async () => {
 	const store = await cookies();
@@ -11,7 +11,7 @@ export default getRequestConfig(async () => {
 	return {
 		locale,
 		messages: (await import(`@/messages/${locale}.json`)).default,
-		timeZone: 'UTC',
+		timeZone: "UTC",
 		now: new Date(),
 	};
 });

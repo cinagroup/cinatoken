@@ -122,14 +122,40 @@ export function createD1GuardrailsRepository(db: D1DatabaseClient): GuardrailsRe
 			if (!assignable) throw new Error('Default Guardrails cannot be assigned');
 			const provenance = resolveGuardrailAssignmentProvenance(params);
 			const protection = params.preserveAdminManaged ? ' WHERE guardrail_assignments.created_by_user_id IS NOT NULL' : '';
-			await raw.prepare(`INSERT INTO guardrail_assignments (id, workspace_id, guardrail_id, scope_type, scope_id, created_by_user_id, management_source, assigned_by_user_id, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) ON CONFLICT(workspace_id, scope_type, scope_id) DO UPDATE SET guardrail_id = excluded.guardrail_id, created_by_user_id = excluded.created_by_user_id, management_source = excluded.management_source, assigned_by_user_id = excluded.assigned_by_user_id, created_at = excluded.created_at${protection}`).bind(params.id, params.workspaceId, params.guardrailId, params.scopeType, params.scopeId, params.createdByUserId, provenance.managementSource, provenance.assignedByUserId, params.nowIso).run();
+			const targetProtection = params.preserveAdminManaged
+				? ` AND NOT EXISTS (SELECT 1 FROM guardrail_assignments managed
+					WHERE managed.guardrail_id = guardrails.id AND managed.created_by_user_id IS NULL)`
+				: '';
+			const scopeProtection = params.scopeType === 'api_key'
+				? ` AND EXISTS (SELECT 1 FROM api_keys key_scope
+					WHERE key_scope.id = ? AND key_scope.workspace_id = ? AND key_scope.status = 'active')`
+				: '';
+			const result = await raw.prepare(`INSERT INTO guardrail_assignments (id, workspace_id, guardrail_id, scope_type, scope_id, created_by_user_id, management_source, assigned_by_user_id, created_at)
+				SELECT ?, ?, ?, ?, ?, ?, ?, ?, ? FROM guardrails
+				WHERE id = ? AND workspace_id = ? AND status = 'active' AND is_workspace_default = 0 AND is_account_default = 0${targetProtection}${scopeProtection}
+				ON CONFLICT(workspace_id, scope_type, scope_id) DO UPDATE SET guardrail_id = excluded.guardrail_id, created_by_user_id = excluded.created_by_user_id, management_source = excluded.management_source, assigned_by_user_id = excluded.assigned_by_user_id, created_at = excluded.created_at${protection}`).bind(params.id, params.workspaceId, params.guardrailId, params.scopeType, params.scopeId, params.createdByUserId, provenance.managementSource, provenance.assignedByUserId, params.nowIso, params.guardrailId, params.workspaceId, ...(params.scopeType === 'api_key' ? [params.scopeId, params.workspaceId] : [])).run();
 			const row = await raw.prepare(`SELECT a.id, a.workspace_id, a.guardrail_id, a.scope_type, a.scope_id, a.created_by_user_id, a.management_source, a.assigned_by_user_id, a.created_at, g.name AS guardrail_name FROM guardrail_assignments a JOIN guardrails g ON g.id = a.guardrail_id WHERE a.workspace_id = ? AND a.scope_type = ? AND a.scope_id = ?`).bind(params.workspaceId, params.scopeType, params.scopeId).first<GuardrailAssignmentRow>();
+			if ((result.meta.changes ?? 0) === 0 && params.scopeType === 'api_key') {
+				const activeKey = await raw.prepare(`SELECT id FROM api_keys WHERE id = ? AND workspace_id = ? AND status = 'active'`)
+					.bind(params.scopeId, params.workspaceId).first<{ id: string }>();
+				if (!activeKey) throw new Error('guardrail_assignment_scope_not_assignable');
+			}
+			if ((result.meta.changes ?? 0) === 0 && (!params.preserveAdminManaged || !row || row.created_by_user_id !== null)) {
+				throw new Error('guardrail_assignment_target_not_assignable');
+			}
+			if (!params.preserveAdminManaged && row?.guardrail_id !== params.guardrailId) {
+				throw new Error('guardrail_assignment_target_not_assignable');
+			}
 			if (!row) throw new Error('guardrail assignment did not return a row'); return row;
 		},
-		async deleteAssignment(workspaceId, scopeType, scopeId, createdByUserId) {
+		async deleteAssignment(workspaceId, scopeType, scopeId, createdByUserId, expectedGuardrailId) {
 			const ownerClause = createdByUserId === undefined ? '' : ' AND created_by_user_id = ?';
-			const statement = raw.prepare(`DELETE FROM guardrail_assignments WHERE workspace_id = ? AND scope_type = ? AND scope_id = ?${ownerClause}`);
-			const result = await (createdByUserId === undefined ? statement.bind(workspaceId, scopeType, scopeId) : statement.bind(workspaceId, scopeType, scopeId, createdByUserId)).run(); return (result.meta.changes ?? 0) > 0;
+			const targetClause = expectedGuardrailId === undefined ? '' : ' AND guardrail_id = ?';
+			const statement = raw.prepare(`DELETE FROM guardrail_assignments WHERE workspace_id = ? AND scope_type = ? AND scope_id = ?${ownerClause}${targetClause}`);
+			const values = [workspaceId, scopeType, scopeId];
+			if (createdByUserId !== undefined) values.push(createdByUserId);
+			if (expectedGuardrailId !== undefined) values.push(expectedGuardrailId);
+			const result = await statement.bind(...values).run(); return (result.meta.changes ?? 0) > 0;
 		},
 		async getSettledBudgetSpent(workspaceId, scopeType, scopeId, sinceIso) {
 			const column = scopeType === 'user' ? 'user_id' : 'api_key_id';

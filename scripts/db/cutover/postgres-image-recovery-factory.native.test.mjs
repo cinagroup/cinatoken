@@ -2,7 +2,7 @@
 // never uses an ambient database URL or changes production role grants.
 import assert from 'node:assert/strict';
 import { createHash, randomBytes, randomUUID } from 'node:crypto';
-import { readFile, readdir, writeFile } from 'node:fs/promises';
+import { readFile, writeFile } from 'node:fs/promises';
 import { dirname, join } from 'node:path';
 import test from 'node:test';
 import postgres from 'postgres';
@@ -17,7 +17,7 @@ import { createPostgresImageUsageRecoveryFactory } from '../../../packages/proxy
 import { buildRequestParentDefaultAclActivation } from './build-request-parent-default-acl-activation.mjs';
 import { buildRequestParentProducerGrant } from './build-request-parent-producer-grant.mjs';
 import { buildImageFactJobProducerGrant } from './build-image-fact-job-producer-grant.mjs';
-import { grantPostgresRuntime } from './grant-postgres-runtime.ts';
+import { grantPg73RuntimeFixture, listPg73Migrations } from './pg73-native-fixture.mjs';
 
 const schema = 'cinatoken_gateway';
 const dispatchRole = 'cinatoken_gateway_dispatch_producer';
@@ -136,7 +136,7 @@ test('native PostgreSQL Images recovery factory claim, fact, outbox and job',
       const migratorUrl = `postgres://cinatoken_gateway_migrator:${passwords.migrator}@127.0.0.1:${cluster.port}/postgres`;
       await migrator.unsafe(`CREATE TABLE ${schema}.schema_migrations(
         version text PRIMARY KEY, applied_at timestamptz NOT NULL DEFAULT now())`);
-      const files = (await readdir(migrationDir)).filter(name => name.endsWith('.sql')).sort();
+      const files = await listPg73Migrations();
       assert.equal(files.length, 73);
       const corpus = [];
       for (const name of files) {
@@ -155,7 +155,7 @@ test('native PostgreSQL Images recovery factory claim, fact, outbox and job',
           await tx.unsafe(await readFile(url, 'utf8')).simple();
         });
       }
-      await grantPostgresRuntime({ DATABASE_URL: migratorUrl });
+      await grantPg73RuntimeFixture({ cluster, migrator, migratorUrl });
       await bundle(migrator, await buildRequestParentDefaultAclActivation({ activation: 'reviewed-v1' }));
       // The pinned default-ACL bundle above already installs the parent proposal.
       for (const [setting, url] of proposals.slice(3)) {
@@ -164,7 +164,7 @@ test('native PostgreSQL Images recovery factory claim, fact, outbox and job',
           await tx.unsafe(await readFile(url, 'utf8')).simple();
         });
       }
-      await grantPostgresRuntime({ DATABASE_URL: migratorUrl });
+      await grantPg73RuntimeFixture({ cluster, migrator, migratorUrl });
       await bundle(migrator, await buildRequestParentProducerGrant({ activation: 'reviewed-direct-login-v1' }));
       stage('reviewed-parent-and-outbox-definers-with-function-only-parent-grant');
       await migrator.unsafe(`INSERT INTO ${schema}.users(id,email,budget_max,budget_spent)

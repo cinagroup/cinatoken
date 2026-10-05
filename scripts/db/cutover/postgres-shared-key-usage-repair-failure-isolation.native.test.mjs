@@ -1,11 +1,12 @@
 // Review-only PG18.6 fixture. Own loopback cluster, no ambient URL or cloud.
 import assert from 'node:assert/strict';
 import { createHash, randomBytes, randomUUID } from 'node:crypto';
-import { readFile, readdir, writeFile } from 'node:fs/promises';
+import { readFile, writeFile } from 'node:fs/promises';
 import { dirname, join } from 'node:path';
 import test from 'node:test';
 import postgres from 'postgres';
 import { startNativePostgres } from '../../../packages/core/src/test-support/postgres-native-cluster.mjs';
+import { listPg73Migrations } from './pg73-native-fixture.mjs';
 
 const schema = 'cinatoken_gateway';
 const migrations = new URL('../../../packages/core/migrations-postgres/', import.meta.url);
@@ -73,7 +74,7 @@ test('native PG18 isolates poison repair keys with bounded retry and manual dead
       clients.push(sql, holder);
       await sql.unsafe(`CREATE TABLE ${schema}.schema_migrations
         (version text PRIMARY KEY, applied_at timestamptz NOT NULL DEFAULT now())`);
-      const files = (await readdir(migrations)).filter(name => name.endsWith('.sql')).sort();
+const files = await listPg73Migrations();
       assert.equal(files.length, 73);
       for (const name of files) {
         const body = await readFile(new URL(name, migrations), 'utf8');

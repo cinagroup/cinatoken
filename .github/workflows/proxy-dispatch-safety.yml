@@ -9,9 +9,14 @@ on:
       - 'packages/tool-engines/**'
       - 'scripts/deploy/**'
       - 'scripts/db/cutover/**'
+      - 'scripts/db/lib/**'
+      - 'scripts/ci/verify-d1-portal-ledger.mjs'
+      - 'scripts/ci/verify-mysql-migration-contract.mjs'
+      - 'scripts/ci/verify-postgres-migration-contract.mjs'
       - 'package.json'
       - 'package-lock.json'
       - 'tsconfig.base.json'
+      - 'tsconfig.json'
       - '.nvmrc'
       - '.github/workflows/proxy-dispatch-safety.yml'
   push:
@@ -23,9 +28,14 @@ on:
       - 'packages/tool-engines/**'
       - 'scripts/deploy/**'
       - 'scripts/db/cutover/**'
+      - 'scripts/db/lib/**'
+      - 'scripts/ci/verify-d1-portal-ledger.mjs'
+      - 'scripts/ci/verify-mysql-migration-contract.mjs'
+      - 'scripts/ci/verify-postgres-migration-contract.mjs'
       - 'package.json'
       - 'package-lock.json'
       - 'tsconfig.base.json'
+      - 'tsconfig.json'
       - '.nvmrc'
       - '.github/workflows/proxy-dispatch-safety.yml'
   workflow_dispatch:
@@ -38,6 +48,23 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  config-cutover-contracts:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+          cache: npm
+      - run: npm ci --ignore-scripts
+      - run: npm run build:node-index -w @octafuse/core
+      - run: npx tsc -p tsconfig.json --noEmit --pretty false
+      - run: npx tsx --test scripts/db/lib/config-cutover-reconcile.test.ts scripts/db/cutover/preflight-d1-source.test.ts
+      - run: npm run test:d1-portal-ledger
+      - run: npm run test:mysql-migration
+      - run: npm run test:postgres-migration
+
   admin-playground-safety:
     runs-on: ubuntu-latest
     timeout-minutes: 15

@@ -5,18 +5,19 @@ import {
 	providerSupportsUpstreamProtocol as coreProviderSupportsUpstreamProtocol,
 	resolveEffectiveBaseUrl as coreResolveEffectiveBaseUrl,
 	type ProviderEndpointsSource,
-} from '@octafuse/core/provider-endpoints';
+} from "@octafuse/core/provider-endpoints";
 import {
 	normalizeUpstreamProtocol as normalizeCoreUpstreamProtocol,
 	UPSTREAM_PROTOCOLS as CORE_UPSTREAM_PROTOCOLS,
 	type UpstreamProtocol as CoreUpstreamProtocol,
-} from '@octafuse/core/upstream-protocol';
-import type { GatewayProvider } from './types';
+} from "@octafuse/core/upstream-protocol";
+import type { GatewayProvider } from "./types";
 
 /** 管理端直接复用 Core 协议类型，避免新增协议后两处白名单分叉。 */
 export type UpstreamProtocol = CoreUpstreamProtocol;
 
-export const UPSTREAM_PROTOCOLS: readonly UpstreamProtocol[] = CORE_UPSTREAM_PROTOCOLS;
+export const UPSTREAM_PROTOCOLS: readonly UpstreamProtocol[] =
+	CORE_UPSTREAM_PROTOCOLS;
 
 /** 字符串是否为受支持的上游协议。 */
 export function isUpstreamProtocol(s: string): s is UpstreamProtocol {
@@ -28,7 +29,9 @@ export function normalizeUpstreamProtocol(raw: string): UpstreamProtocol {
 	return normalizeCoreUpstreamProtocol(raw);
 }
 
-function asEndpointsSource(provider: GatewayProvider | ProviderEndpointsSource): ProviderEndpointsSource {
+function asEndpointsSource(
+	provider: GatewayProvider | ProviderEndpointsSource
+): ProviderEndpointsSource {
 	return {
 		endpoints: provider.endpoints ?? null,
 	};
@@ -43,7 +46,11 @@ export function resolveEffectiveBaseUrl(
 	provider: GatewayProvider | ProviderEndpointsSource,
 	providerId?: string
 ): string {
-	return coreResolveEffectiveBaseUrl(protocol, asEndpointsSource(provider), providerId);
+	return coreResolveEffectiveBaseUrl(
+		protocol,
+		asEndpointsSource(provider),
+		providerId
+	);
 }
 
 /** 该供应商是否已为指定协议配置 base 或任一 capability endpoint。 */
@@ -51,5 +58,8 @@ export function providerSupportsUpstreamProtocol(
 	protocol: UpstreamProtocol,
 	provider: GatewayProvider | ProviderEndpointsSource
 ): boolean {
-	return coreProviderSupportsUpstreamProtocol(protocol, asEndpointsSource(provider));
+	return coreProviderSupportsUpstreamProtocol(
+		protocol,
+		asEndpointsSource(provider)
+	);
 }

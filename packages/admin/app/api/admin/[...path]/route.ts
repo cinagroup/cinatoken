@@ -3,49 +3,63 @@
  * - 浏览器：持久化 Session Cookie → console principal。
  * - 外部：具名 Bearer Admin API Key → api_key principal。
  */
-import { authenticateAdminRequest } from '@/lib/auth';
-import type { AdminBindings } from '@/lib/admin-env';
-import { getAdminApp } from '@/lib/admin-app';
-import { handleGatewayApiError } from '@/lib/api-error';
-import { resolveAdminRequestRuntime } from '@/lib/admin-request-runtime';
-import { verifyCinaAuthConsolePrincipal } from '@/lib/cinaauth/principal';
-import { getBearerKeyPrefix, logAdminAuthEvent } from '@/lib/security-log';
-import { rejectInvalidAdminMutationOrigin } from '@/lib/browser-mutation';
-import { rejectRateLimitedAdminAuth } from '@/lib/admin-auth-rate-limit';
-import { withGatewayReadRetry } from '@/lib/gateway-read-retry';
+import { authenticateAdminRequest } from "@/lib/auth";
+import type { AdminBindings } from "@/lib/admin-env";
+import { getAdminApp } from "@/lib/admin-app";
+import { handleGatewayApiError } from "@/lib/api-error";
+import { resolveAdminRequestRuntime } from "@/lib/admin-request-runtime";
+import { verifyCinaAuthConsolePrincipal } from "@/lib/cinaauth/principal";
+import { logUnauthorizedAdminRequest } from "@/lib/security-log";
+import { rejectInvalidAdminMutationOrigin } from "@/lib/browser-mutation";
+import { rejectRateLimitedAdminAuth } from "@/lib/admin-auth-rate-limit";
+import { withGatewayReadRetry } from "@/lib/gateway-read-retry";
+import { protectAdminConfigResponse } from "@/lib/admin-config-cache";
 
-export const dynamic = 'force-dynamic';
+export const dynamic = "force-dynamic";
 
 function rewriteToInternalAdminPath(request: Request): Request {
 	const u = new URL(request.url);
-	const prefix = '/api/admin';
+	const prefix = "/api/admin";
 	if (!u.pathname.startsWith(prefix)) {
 		return request;
 	}
 	const rest = u.pathname.slice(prefix.length);
-	u.pathname = '/admin' + (rest === '' ? '' : rest);
+	u.pathname = "/admin" + (rest === "" ? "" : rest);
 	return new Request(u.toString(), request);
 }
 
-async function handle(request: Request): Promise<Response> {
+async function handleUnchecked(request: Request): Promise<Response> {
 	try {
-		const { bindings: runtimeBindings, storage, ctx } = await resolveAdminRequestRuntime(request);
+		const {
+			bindings: runtimeBindings,
+			storage,
+			ctx,
+		} = await resolveAdminRequestRuntime(request);
 		const { repositories } = storage;
 		const authenticated = await authenticateAdminRequest(request, repositories);
 		const principal = authenticated
-			? await verifyCinaAuthConsolePrincipal(request, authenticated, runtimeBindings)
+			? await verifyCinaAuthConsolePrincipal(
+					request,
+					authenticated,
+					runtimeBindings
+			  )
 			: null;
 		if (!principal) {
-			const rateLimited = await rejectRateLimitedAdminAuth(request, runtimeBindings);
+			const rateLimited = await rejectRateLimitedAdminAuth(
+				request,
+				runtimeBindings
+			);
 			if (rateLimited) return rateLimited;
-			logAdminAuthEvent('admin.auth.unauthorized', request, {
-				keyPrefix: getBearerKeyPrefix(request),
-				method: request.method,
-				path: new URL(request.url).pathname,
-			});
-			return Response.json({ success: false, message: 'Unauthorized' }, { status: 401 });
+			logUnauthorizedAdminRequest(request);
+			return Response.json(
+				{ success: false, message: "Unauthorized" },
+				{ status: 401 }
+			);
 		}
-		const originRejection = rejectInvalidAdminMutationOrigin(request, principal.type);
+		const originRejection = rejectInvalidAdminMutationOrigin(
+			request,
+			principal.type
+		);
 		if (originRejection) return originRejection;
 
 		const internalReq = rewriteToInternalAdminPath(request);
@@ -60,8 +74,13 @@ async function handle(request: Request): Promise<Response> {
 		}
 		return await app.fetch(internalReq, appBindings);
 	} catch (error) {
-		return handleGatewayApiError({ route: 'admin.catch-all', error });
+		return handleGatewayApiError({ route: "admin.catch-all", error });
 	}
+}
+
+/** Cache policy also covers authentication, Origin, and storage failures before Hono. */
+async function handle(request: Request): Promise<Response> {
+	return protectAdminConfigResponse(request, await handleUnchecked(request));
 }
 
 export const GET = (request: Request) => withGatewayReadRetry(request, handle);

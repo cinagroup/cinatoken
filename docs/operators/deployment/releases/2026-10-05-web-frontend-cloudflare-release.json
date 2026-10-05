@@ -1,0 +1,120 @@
+{
+  "schema": "cinatoken.cloudflare.web-frontend-release.v1",
+  "updatedAt": "2026-10-05T08:08:49.862Z",
+  "status": "preflight-pass-awaiting-postmigration-check",
+  "userAuthorizedActions": [
+    "commit",
+    "push",
+    "deploy to Cloudflare"
+  ],
+  "branch": "main",
+  "baseCommit": "de5b720c2e45f02ba62c29c45791f01e2569a782",
+  "target": {
+    "workers": [
+      {
+        "name": "cinatoken-admin",
+        "url": "https://cinatoken.com",
+        "beforeVersion": "433a4fb9-3499-4108-a18c-f5da5abe2b2d"
+      },
+      {
+        "name": "cinatoken-proxy",
+        "url": "https://api.cinatoken.com",
+        "beforeVersion": "09f2d633-c4bc-4b0e-b939-4e680280762f"
+      }
+    ],
+    "databaseDriver": "postgres",
+    "runtimeHyperdrive": "e703c04c8505431d9e22ce6f8b371251",
+    "migratorHyperdrive": "e723a48fdfd448549df42d435704082c",
+    "scopeReason": "Pending public catalog currency/JSON and pricing snapshot changes require the Proxy backend and Admin console to use the same release commit",
+    "chainWorkerDeployed": false,
+    "independentWebPublicCutover": false,
+    "webEntryFlagsEnabled": 0
+  },
+  "credentials": {
+    "existingGitHubAuthVerified": true,
+    "existingCloudflareAuthVerified": true,
+    "remoteRequiredSecretNamesPresent": {
+      "admin": 6,
+      "proxy": 2
+    },
+    "secretValuesRecorded": false
+  },
+  "checks": {
+    "packageVersions": {
+      "actualExit": 0
+    },
+    "gitDiffCheck": {
+      "actualExit": 0,
+      "crAtEol": true
+    },
+    "deploymentTestsFirst": {
+      "actualExit": 1,
+      "diagnostic": "Historical BYOK fixture expected 68 D1 migrations while current formal directory contains 77",
+      "retained": true
+    },
+    "deploymentTestsAfterFix": {
+      "actualExit": 0,
+      "passed": 1836,
+      "failed": 0,
+      "skipped": 0,
+      "fix": "Historical BYOK fixture pins the original 68 formal D1 migrations; current 77 migrations remain unchanged"
+    },
+    "auditPrivilegesFix": {
+      "actualExit": 0,
+      "passed": 101,
+      "coreTypecheckExit": 0,
+      "realRolePermissionCounterexampleConfirmed": true,
+      "implementation": "INSERT RETURNING 1 AS inserted with strict one-row acknowledgement; config_change_audit remains INSERT-only"
+    }
+  },
+  "commit": null,
+  "push": null,
+  "postgresPreflight": {
+    "actualExit": 0,
+    "before": 67,
+    "applied": 14,
+    "skipped": 67,
+    "total": 81,
+    "runtimeGrantsApplied": true,
+    "temporaryMigrationWorkerDeleted": true,
+    "temporaryMigrationWorkerAbsenceConfirmed": true,
+    "migrationPostRequests": 1,
+    "postMigrationReadonlyProbe": null
+  },
+  "cloudflareBuildAndDeploy": null,
+  "productionSmoke": null,
+  "wholeMigrationComplete": false,
+  "gateStatesUnchanged": true,
+  "evidence": {
+    "pgMigration": {
+      "path": "docs/operators/deployment/releases/2026-10-05-web-frontend/pgMigration.json",
+      "bytes": 4983,
+      "sha256": "064f95cf9b3c3407be2120358194fe001a958830d27e2793db93cdb515e7e46f"
+    },
+    "pgCatalogBefore": {
+      "path": "docs/operators/deployment/releases/2026-10-05-web-frontend/pgCatalogBefore.json",
+      "bytes": 22936,
+      "sha256": "632bed9ef7c79042ce66d4a0cde7c63fc5cf1b11e1d827b34f26c06629556673"
+    },
+    "auditPrivilegesFix": {
+      "path": "docs/operators/deployment/releases/2026-10-05-web-frontend/auditPrivilegesFix.json",
+      "bytes": 4617,
+      "sha256": "532711c5bdbef87c8a2d90df9c89faff14f20b7a66535b498a109e88f6e449dc"
+    },
+    "deploymentTests": {
+      "path": "docs/operators/deployment/releases/2026-10-05-web-frontend/deploymentTests.json",
+      "bytes": 644,
+      "sha256": "0e38857ade316f6d3bc5debb3fe86e7ce2a819e8d40f9f3705cc8ed1087764bd"
+    },
+    "knownSecretScan": {
+      "path": "docs/operators/deployment/releases/2026-10-05-web-frontend/knownSecretScan.json",
+      "bytes": 533,
+      "sha256": "6585f7aa55ff3b17224a2008b52bf791cf0c42dcea31316f6597d681a67e5d47"
+    },
+    "formalEvidenceSecretScan": {
+      "path": "docs/operators/deployment/releases/2026-10-05-web-frontend/formalEvidenceSecretScan.json",
+      "bytes": 8654,
+      "sha256": "ec739cacea31de6963cc0bead9c2e5920002e9eca1ba401346e9d66e80575b89"
+    }
+  }
+}

@@ -1,10 +1,10 @@
-'use client';
+"use client";
 
-import { useId, useState } from 'react';
-import { useTranslations } from 'next-intl';
-import type { RouteStrategyName } from '@octafuse/core';
-import { ROUTE_STRATEGY_META_LIST } from '../route-strategy-meta';
-import { RouteStrategyDiagram } from './route-strategy-diagram';
+import { useId, useState } from "react";
+import { useTranslations } from "next-intl";
+import type { RouteStrategyName } from "@octafuse/core";
+import { ROUTE_STRATEGY_META_LIST } from "../route-strategy-meta";
+import { RouteStrategyDiagram } from "./route-strategy-diagram";
 
 export type RouteStrategyPickerProps = {
 	/** Currently selected strategy id, or '' for inherit. */
@@ -21,7 +21,9 @@ export type RouteStrategyPickerProps = {
 	dense?: boolean;
 };
 
-function strategyTitleKey(id: RouteStrategyName): `display.${RouteStrategyName}` {
+function strategyTitleKey(
+	id: RouteStrategyName
+): `display.${RouteStrategyName}` {
 	return `display.${id}`;
 }
 
@@ -35,7 +37,7 @@ export function RouteStrategyPicker(props: RouteStrategyPickerProps) {
 		className,
 		dense = false,
 	} = props;
-	const t = useTranslations('routes.strategy');
+	const t = useTranslations("routes.strategy");
 	const groupId = useId();
 	const [hovered, setHovered] = useState<string | null>(null);
 
@@ -46,7 +48,7 @@ export function RouteStrategyPicker(props: RouteStrategyPickerProps) {
 		if (disabled) return;
 		// With inherit enabled, clicking the active override again clears back to inherit.
 		if (allowInherit && value && next === value) {
-			onChange('');
+			onChange("");
 			return;
 		}
 		onChange(next);
@@ -60,7 +62,7 @@ export function RouteStrategyPicker(props: RouteStrategyPickerProps) {
 				className="grid gap-3 sm:grid-cols-2"
 			>
 				<span id={`${groupId}-label`} className="sr-only">
-					{t('guideTitle')}
+					{t("guideTitle")}
 				</span>
 				{ROUTE_STRATEGY_META_LIST.map((meta) => {
 					const selected = effective === meta.id;
@@ -74,13 +76,15 @@ export function RouteStrategyPicker(props: RouteStrategyPickerProps) {
 							disabled={disabled}
 							onClick={() => selectStrategy(meta.id)}
 							onMouseEnter={() => setHovered(meta.id)}
-							onMouseLeave={() => setHovered((cur) => (cur === meta.id ? null : cur))}
+							onMouseLeave={() =>
+								setHovered((cur) => (cur === meta.id ? null : cur))
+							}
 							onFocus={() => setHovered(meta.id)}
 							onBlur={() => setHovered((cur) => (cur === meta.id ? null : cur))}
 							className={`flex h-full flex-col items-stretch justify-start rounded-lg border p-3.5 text-left transition focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 disabled:cursor-not-allowed disabled:opacity-50 ${
 								selected
-									? 'border-indigo-300 bg-indigo-50/70 ring-1 ring-inset ring-indigo-200'
-									: 'border-gray-200 bg-white hover:border-indigo-200 hover:bg-slate-50'
+									? "border-indigo-300 bg-indigo-50/70 ring-1 ring-inset ring-indigo-200"
+									: "border-gray-200 bg-white hover:border-indigo-200 hover:bg-slate-50"
 							}`}
 						>
 							<div>
@@ -100,17 +104,25 @@ export function RouteStrategyPicker(props: RouteStrategyPickerProps) {
 								/>
 							</div>
 
-							<p className={`mt-2 leading-relaxed text-gray-600 ${dense ? 'text-[11px]' : 'text-xs'}`}>
+							<p
+								className={`mt-2 leading-relaxed text-gray-600 ${
+									dense ? "text-[11px]" : "text-xs"
+								}`}
+							>
 								{t(`description.${meta.id}.summary`)}
 							</p>
 							<p className="mt-1 text-[11px] leading-relaxed text-gray-500">
-								<span className="font-medium text-gray-600">{t('bestFor')}</span>
-								{t('labelSeparator')}
+								<span className="font-medium text-gray-600">
+									{t("bestFor")}
+								</span>
+								{t("labelSeparator")}
 								{t(`description.${meta.id}.bestFor`)}
 							</p>
 							<p className="mt-0.5 text-[11px] leading-relaxed text-gray-500">
-								<span className="font-medium text-gray-600">{t('tradeoff')}</span>
-								{t('labelSeparator')}
+								<span className="font-medium text-gray-600">
+									{t("tradeoff")}
+								</span>
+								{t("labelSeparator")}
 								{t(`description.${meta.id}.tradeoff`)}
 							</p>
 						</button>

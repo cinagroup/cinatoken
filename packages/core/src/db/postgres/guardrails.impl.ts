@@ -134,16 +134,36 @@ export function createPostgresGuardrailsRepository(db: PostgresDatabaseClient): 
 					[params.guardrailId, params.workspaceId],
 				);
 				if (!locked[0]) throw new Error('Default Guardrails cannot be assigned');
+				// A fresh statement after the parent lock observes archival and, for
+				// user writes, a concurrent administrator takeover.
+				const managedProtection = params.preserveAdminManaged
+					? ` AND NOT EXISTS (SELECT 1 FROM guardrail_assignments managed
+						WHERE managed.guardrail_id = guardrails.id AND managed.created_by_user_id IS NULL)`
+					: '';
+				const eligible = await tx.unsafe<Array<{ id: string }>>(`SELECT id FROM guardrails
+					WHERE id = $1 AND workspace_id = $2 AND status = 'active'${managedProtection}`,
+					[params.guardrailId, params.workspaceId]);
+				if (!eligible[0]) throw new Error('guardrail_assignment_target_not_assignable');
+				if (params.scopeType === 'api_key') {
+					const activeKey = await tx.unsafe<Array<{ id: string }>>(`SELECT id FROM api_keys
+						WHERE id = $1 AND workspace_id = $2 AND status = 'active' FOR UPDATE`,
+						[params.scopeId, params.workspaceId]);
+					if (!activeKey[0]) throw new Error('guardrail_assignment_scope_not_assignable');
+				}
 				const rows = await tx.unsafe<GuardrailAssignmentRow[]>(`INSERT INTO guardrail_assignments (id, workspace_id, guardrail_id, scope_type, scope_id, created_by_user_id, management_source, assigned_by_user_id, created_at) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) ON CONFLICT (workspace_id, scope_type, scope_id) DO UPDATE SET guardrail_id = EXCLUDED.guardrail_id, created_by_user_id = EXCLUDED.created_by_user_id, management_source = EXCLUDED.management_source, assigned_by_user_id = EXCLUDED.assigned_by_user_id, created_at = EXCLUDED.created_at${protection} RETURNING id, workspace_id, guardrail_id, scope_type, scope_id, created_by_user_id, management_source, assigned_by_user_id, created_at`, [params.id, params.workspaceId, params.guardrailId, params.scopeType, params.scopeId, params.createdByUserId, provenance.managementSource, provenance.assignedByUserId, params.nowIso]);
 				assignment = rows[0] ?? (await tx.unsafe<GuardrailAssignmentRow[]>(`SELECT id, workspace_id, guardrail_id, scope_type, scope_id, created_by_user_id, management_source, assigned_by_user_id, created_at FROM guardrail_assignments WHERE workspace_id = $1 AND scope_type = $2 AND scope_id = $3`, [params.workspaceId, params.scopeType, params.scopeId]))[0] ?? null;
+				if (!params.preserveAdminManaged && assignment?.guardrail_id !== params.guardrailId)
+					throw new Error('guardrail_assignment_target_not_assignable');
 			});
 			if (!assignment) throw new Error('guardrail assignment did not return a row');
 			return assignment;
 		},
-		async deleteAssignment(workspaceId, scopeType, scopeId, createdByUserId) {
+		async deleteAssignment(workspaceId, scopeType, scopeId, createdByUserId, expectedGuardrailId) {
 			const values = createdByUserId === undefined ? [workspaceId, scopeType, scopeId] : [workspaceId, scopeType, scopeId, createdByUserId];
 			const ownerClause = createdByUserId === undefined ? '' : ' AND created_by_user_id = $4';
-			return Boolean((await query<{ id: string }>(`DELETE FROM guardrail_assignments WHERE workspace_id = $1 AND scope_type = $2 AND scope_id = $3${ownerClause} RETURNING id`, values))[0]);
+			const targetClause = expectedGuardrailId === undefined ? '' : ` AND guardrail_id = $${values.length + 1}`;
+			if (expectedGuardrailId !== undefined) values.push(expectedGuardrailId);
+			return Boolean((await query<{ id: string }>(`DELETE FROM guardrail_assignments WHERE workspace_id = $1 AND scope_type = $2 AND scope_id = $3${ownerClause}${targetClause} RETURNING id`, values))[0]);
 		},
 		async getSettledBudgetSpent(workspaceId, scopeType, scopeId, sinceIso) {
 			const column = scopeType === 'user' ? 'user_id' : 'api_key_id'; const row = (await query<{ spent: string | number }>(`SELECT COALESCE(SUM(l.charged_cost), 0) AS spent FROM api_key_request_logs l WHERE l.${column} = $1 AND l.created_at >= $2 AND EXISTS (SELECT 1 FROM api_keys k WHERE k.id = l.api_key_id AND k.workspace_id = $3)`, [scopeId, sinceIso, workspaceId]))[0]; return Number(row?.spent ?? 0);

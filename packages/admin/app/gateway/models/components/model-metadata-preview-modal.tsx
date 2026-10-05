@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import { useTranslations } from 'next-intl';
-import type { MetadataPreviewState } from '../types';
+import { useTranslations } from "next-intl";
+import type { MetadataPreviewState } from "../types";
 
 type Props = {
 	preview: MetadataPreviewState;
@@ -10,8 +10,8 @@ type Props = {
 
 export function ModelMetadataPreviewModal(props: Props) {
 	const { preview, onClose } = props;
-	const t = useTranslations('models.metadata');
-	const tCommon = useTranslations('common');
+	const t = useTranslations("models.metadata");
+	const tCommon = useTranslations("common");
 	const displayName = preview.model.display_name || preview.model.id;
 
 	return (
@@ -28,13 +28,22 @@ export function ModelMetadataPreviewModal(props: Props) {
 			>
 				<div className="flex shrink-0 items-start justify-between gap-4 border-b px-6 py-4">
 					<div className="min-w-0">
-						<h2 id="metadata-preview-title" className="text-lg font-bold text-gray-900">
-							{t('title')}
+						<h2
+							id="metadata-preview-title"
+							className="text-lg font-bold text-gray-900"
+						>
+							{t("title")}
 						</h2>
-						<p className="mt-1 truncate text-sm text-gray-700" title={displayName}>
+						<p
+							className="mt-1 truncate text-sm text-gray-700"
+							title={displayName}
+						>
 							{displayName}
 						</p>
-						<p className="truncate font-mono text-xs text-gray-500" title={preview.model.id}>
+						<p
+							className="truncate font-mono text-xs text-gray-500"
+							title={preview.model.id}
+						>
 							{preview.model.id}
 						</p>
 					</div>
@@ -42,7 +51,7 @@ export function ModelMetadataPreviewModal(props: Props) {
 						type="button"
 						onClick={onClose}
 						className="shrink-0 text-gray-400 hover:text-gray-600"
-						aria-label={tCommon('close')}
+						aria-label={tCommon("close")}
 					>
 						×
 					</button>
@@ -58,7 +67,7 @@ export function ModelMetadataPreviewModal(props: Props) {
 						onClick={onClose}
 						className="rounded-md border border-gray-300 px-4 py-2 text-sm text-gray-700 hover:bg-white"
 					>
-						{tCommon('close')}
+						{tCommon("close")}
 					</button>
 				</div>
 			</div>

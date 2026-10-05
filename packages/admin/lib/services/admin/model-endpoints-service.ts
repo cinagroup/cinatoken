@@ -658,7 +658,10 @@ async function prepareVerifiedRouteSubjects(
 	if (provider.shared_channel_type?.trim()) {
 		throw badRequest("verified endpoints cannot use shared-channel providers");
 	}
-	if (!provider.api_key?.trim() || isPendingProviderImportApiKey(provider.api_key)) {
+	if (
+		!provider.api_key?.trim() ||
+		isPendingProviderImportApiKey(provider.api_key)
+	) {
 		throw badRequest("verified endpoints require a provider credential");
 	}
 
@@ -913,7 +916,8 @@ export async function updateModelEndpointService(
 	const endpointId = requiredId(id, "endpoint id", ENDPOINT_ID_MAX_LENGTH);
 	assertMutationKeys(input);
 	const existing = await repos.modelEndpoints.getById(endpointId);
-	if (!existing) throw notFound("Endpoint not found");
+	if (!existing || existing.id !== endpointId)
+		throw notFound("Endpoint not found");
 	if (Object.keys(input).length === 0) {
 		const current = safeAdminRow(existing, []);
 		return {
@@ -1023,6 +1027,9 @@ export async function deleteModelEndpointService(
 	id: string
 ): Promise<void> {
 	const endpointId = requiredId(id, "endpoint id", ENDPOINT_ID_MAX_LENGTH);
+	const existing = await repos.modelEndpoints.getById(endpointId);
+	if (!existing || existing.id !== endpointId)
+		throw notFound("Endpoint not found");
 	const changes = await repos.modelEndpoints.delete(endpointId);
 	if (!changes) throw notFound("Endpoint not found");
 }
@@ -1039,8 +1046,9 @@ export async function linkModelEndpointRouteService(
 		repos.modelEndpoints.getById(endpointId),
 		repos.routes.getModelRouteRowById(routeTargetId),
 	]);
-	if (!endpoint) throw notFound("Endpoint not found");
-	if (!route) throw notFound("Route not found");
+	if (!endpoint || endpoint.id !== endpointId)
+		throw notFound("Endpoint not found");
+	if (!route || route.id !== routeTargetId) throw notFound("Route not found");
 	if (
 		route.model_id !== endpoint.model_id ||
 		route.provider_id !== endpoint.provider_id
@@ -1083,6 +1091,9 @@ export async function unlinkModelEndpointRouteService(
 ): Promise<void> {
 	const endpointId = requiredId(id, "endpoint id", ENDPOINT_ID_MAX_LENGTH);
 	const routeTargetId = requiredId(routeTargetIdInput, "route_target_id");
+	const endpoint = await repos.modelEndpoints.getById(endpointId);
+	if (!endpoint || endpoint.id !== endpointId)
+		throw notFound("Endpoint not found");
 	const changes = await repos.modelEndpoints.unlinkRoute({
 		endpointId,
 		routeTargetId,

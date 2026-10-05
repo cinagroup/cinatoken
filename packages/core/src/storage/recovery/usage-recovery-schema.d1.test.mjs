@@ -17,16 +17,19 @@ async function queued(db){const value=sample(0.25);await prepare(db,value);await
 
 test('reviewed sources reconstruct 24 exact objects including ALTERed receipt and 7 autoindexes',async t=>{
   const check=verifyRecoverySchemaArtifact();assert.equal(check.objects,24);assert.equal(check.definitionBytes,10072);
+  assert.equal(check.formalMigrations,77);assert.equal(readRecoveryMigrationSources().base.at(-1).name,'0077_withdrawal_balance_update_guards.sql');
   const db=fixture(t),before=db.sqlite.prepare('SELECT total_changes() AS n').get().n;let calls=0;
   db.hooks.beforeStatement=sql=>{assert.ok(schemaSQL(sql));calls++;};await assertUsageRecoverySchemaD1(db.binding);
   assert.equal(calls,1);assert.equal(db.sqlite.prepare('SELECT total_changes() AS n').get().n,before);
   assert.equal(artifact.objects.filter(row=>row.sha256===null).length,7);
   assert.ok(Object.isFrozen(artifact)&&Object.isFrozen(artifact.objects)&&artifact.objects.every(Object.isFrozen));
 });
-for(const mode of ['base-content','base-order','base-name','base-missing','proposal-content','proposal-order','proposal-name','proposal-extra'])test('source artifact rejects drift before SQLite execution: '+mode,()=>{
+for(const mode of ['base-content','base-order','base-name','base-missing','base-head-content','base-head-name','base-extra','proposal-content','proposal-order','proposal-name','proposal-extra'])test('source artifact rejects drift before SQLite execution: '+mode,()=>{
   const input=readRecoveryMigrationSources();
   if(mode==='base-content')input.base[0].sql='invalid unreviewed SQL';
   if(mode==='base-order')input.base.reverse();if(mode==='base-name')input.base[0].name='other.sql';if(mode==='base-missing')input.base.pop();
+  if(mode==='base-head-content')input.base.at(-1).sql+='\nSELECT 1;';if(mode==='base-head-name')input.base.at(-1).name='0076_unreviewed.sql';
+  if(mode==='base-extra')input.base.push({name:'0077_unreviewed.sql',sql:'SELECT 1'});
   if(mode==='proposal-content')input.proposals[2].sql= input.proposals[2].sql.replace('lease_expires_at>unixepoch', 'lease_expires_at>=unixepoch');
   if(mode==='proposal-order')input.proposals.reverse();if(mode==='proposal-name')input.proposals[0].name='other.sql';
   if(mode==='proposal-extra')input.proposals.push({name:'extra.sql',sql:'SELECT 1'});

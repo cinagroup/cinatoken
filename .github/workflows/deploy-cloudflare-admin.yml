@@ -27,10 +27,10 @@ jobs:
       HYPERDRIVE_ID: e703c04c8505431d9e22ce6f8b371251
       CINACHAIN_CHAIN_ID: "84532"
     steps:
-      - name: Checkout main
+      - name: Checkout requested commit
         uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
         with:
-          ref: main
+          ref: ${{ github.sha }}
 
       - name: Setup Node.js
         uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
@@ -47,7 +47,9 @@ jobs:
           test -n "$CLOUDFLARE_ACCOUNT_ID"
           test -n "$CLOUDFLARE_API_TOKEN"
           npx wrangler secret list --name cinatoken-admin --format json > "$RUNNER_TEMP/cinatoken-admin-secret-names.json"
-          node -e 'const fs=require("node:fs"); const rows=JSON.parse(fs.readFileSync(process.argv[1],"utf8")); const names=new Set(rows.map((row)=>row.name)); const required=["CINATOKEN_OIDC_CLIENT_SECRET","CINATOKEN_OIDC_BRIDGE_SECRET","CINATOKEN_OIDC_TRANSACTION_SECRET","SHARED_KEY_ENCRYPTION_SECRET"]; const missing=required.filter((name)=>!names.has(name)); if(missing.length){console.error(`Missing remote Admin secret names: ${missing.join(", ")}`); process.exit(1)}' "$RUNNER_TEMP/cinatoken-admin-secret-names.json"
+          npx wrangler secret list --name cinatoken-proxy --format json > "$RUNNER_TEMP/cinatoken-proxy-secret-names.json"
+          node -e 'const fs=require("node:fs"); const rows=JSON.parse(fs.readFileSync(process.argv[1],"utf8")); const names=new Set(rows.map((row)=>row.name)); const required=["CINATOKEN_OIDC_CLIENT_SECRET","CINATOKEN_OIDC_BRIDGE_SECRET","CINATOKEN_OIDC_TRANSACTION_SECRET","CINATOKEN_IDENTITY_EVENTS_SECRET","SHARED_KEY_ENCRYPTION_SECRET","DEEPSEEK_API_KEY"]; const missing=required.filter((name)=>!names.has(name)); if(missing.length){console.error(`Missing remote Admin secret names: ${missing.join(", ")}`); process.exit(1)}' "$RUNNER_TEMP/cinatoken-admin-secret-names.json"
+          node -e 'const fs=require("node:fs"); const rows=JSON.parse(fs.readFileSync(process.argv[1],"utf8")); const names=new Set(rows.map((row)=>row.name)); const missing=["SHARED_KEY_ENCRYPTION_SECRET","DEEPSEEK_API_KEY"].filter((name)=>!names.has(name)); if(missing.length){console.error(`Missing remote Proxy secret names: ${missing.join(", ")}`); process.exit(1)}' "$RUNNER_TEMP/cinatoken-proxy-secret-names.json"
 
       - name: Create ephemeral local secret placeholders
         run: |
@@ -58,7 +60,9 @@ jobs:
             "CINATOKEN_OIDC_CLIENT_SECRET",
             "CINATOKEN_OIDC_BRIDGE_SECRET",
             "CINATOKEN_OIDC_TRANSACTION_SECRET",
+            "CINATOKEN_IDENTITY_EVENTS_SECRET",
             "SHARED_KEY_ENCRYPTION_SECRET",
+            "DEEPSEEK_API_KEY",
           ]
           for (const name of names) {
             const value = randomBytes(48).toString("base64url")
@@ -73,6 +77,23 @@ jobs:
           npm run gen:wrangler -- --remote
           npm run build:cf -w @octafuse/admin
 
+      - name: Validate production backend and console contracts
+        run: |
+          npm run typecheck -w @octafuse/core
+          npm run test:unit -w @octafuse/core
+          npm run typecheck -w @octafuse/proxy
+          npm run test:unit -w @octafuse/proxy
+          npm run lint -w @octafuse/admin
+          npm run test:unit -w @octafuse/admin
+
+      - name: Validate Proxy Worker bundle
+        working-directory: packages/proxy
+        run: npx wrangler deploy --config wrangler.jsonc --dry-run --outdir "$RUNNER_TEMP/cinatoken-proxy-bundle"
+
+      - name: Deploy public catalog and gateway backend
+        working-directory: packages/proxy
+        run: npx wrangler deploy --config wrangler.jsonc --keep-vars --tag "$GITHUB_SHA" --message "Web frontend backend release"
+
       - name: Deploy unified console
         working-directory: packages/admin
-        run: npx wrangler deploy --config wrangler.jsonc
+        run: npx wrangler deploy --config wrangler.jsonc --keep-vars --tag "$GITHUB_SHA" --message "Web frontend migration release"

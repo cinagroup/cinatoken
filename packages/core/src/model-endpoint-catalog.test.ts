@@ -145,11 +145,10 @@ describe("endpoint catalog metadata", () => {
 			},
 		});
 		assert.equal(isAudioEndpointReady(audio), true);
-		assert.equal(
-			audio.pricing_by_operation["audio.transcriptions.multimodal"]
-				?.meter.price,
-			"0.0001"
-		);
+		const transcriptionMeter = audio.pricing_by_operation["audio.transcriptions.multimodal"]?.meter;
+		assert.ok(transcriptionMeter);
+		assert.equal(transcriptionMeter.kind, "duration");
+		assert.equal(transcriptionMeter.price, "0.0001");
 		assert.equal(
 			audio.pricing_by_operation["audio.transcriptions.multimodal"]
 				?.request,

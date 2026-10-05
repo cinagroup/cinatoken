@@ -23,6 +23,7 @@ test('PostgreSQL JSONB batch boundary successor works with plain and Drizzle cli
     try {
       const pg = cluster.admin;
       await pg.unsafe(`
+        CREATE SCHEMA cinatoken_gateway;
         CREATE TABLE route_pools (id text PRIMARY KEY, status text);
         CREATE TABLE model_routes (
           id text PRIMARY KEY, model_id text, provider_id text,
@@ -47,7 +48,7 @@ test('PostgreSQL JSONB batch boundary successor works with plain and Drizzle cli
           endpoint_id text, route_target_id text, subject_fingerprint text,
           created_at timestamptz
         );
-        CREATE TABLE route_data_policies (
+        CREATE TABLE cinatoken_gateway.route_data_policies (
           route_target_id text, subject_fingerprint text,
           retention_days integer, training_allowed boolean,
           zdr_supported boolean, evidence_url text, verified_by text,
@@ -67,7 +68,7 @@ test('PostgreSQL JSONB batch boundary successor works with plain and Drizzle cli
         INSERT INTO model_endpoint_routes(endpoint_id,route_target_id,
           subject_fingerprint,created_at)
           VALUES ('endpoint-a','route-a','fingerprint-a',now());
-        INSERT INTO route_data_policies(route_target_id,subject_fingerprint,
+        INSERT INTO cinatoken_gateway.route_data_policies(route_target_id,subject_fingerprint,
           status,verified_at,expires_at,updated_at)
           VALUES ('route-a','fingerprint-a','verified',now(),now()+interval '1 day',now());
       `).simple();
@@ -85,7 +86,7 @@ test('PostgreSQL JSONB batch boundary successor works with plain and Drizzle cli
         VALUES($1,'model-a','provider-a','provider-a','weird','standard','verified',now(),now())`, [exoticEndpoint]);
       await pg.unsafe(`INSERT INTO model_endpoint_routes(endpoint_id,route_target_id,subject_fingerprint,created_at)
         VALUES($1,$2,'fingerprint-weird',now())`, [exoticEndpoint, exoticRoute]);
-      await pg.unsafe(`INSERT INTO route_data_policies(route_target_id,subject_fingerprint,status,verified_at,expires_at,updated_at)
+      await pg.unsafe(`INSERT INTO cinatoken_gateway.route_data_policies(route_target_id,subject_fingerprint,status,verified_at,expires_at,updated_at)
         VALUES($1,'fingerprint-weird','verified',now(),now()+interval '1 day',now())`, [exoticRoute]);
 
       const oldDrizzle = cluster.client('jsonb-predecessor-drizzle', { prepare: false }); drizzle(oldDrizzle);

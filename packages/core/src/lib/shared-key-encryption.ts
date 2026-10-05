@@ -1,6 +1,7 @@
 import type { SharedKeyRow, InsertSharedKeyParams } from '../db/shared-keys-types';
 import type { SharedKeysRepository } from '../storage/gateway-repository-interfaces';
 import { preparationRead, preparationMutation, type PreparationControl } from '../preparation-control';
+import { assertAdminSharedKeyMutation, sharedKeyAdminAuditReason, type AdminSharedKeyDelete, type AdminSharedKeyUpdate } from '../db/admin-shared-key-governance';
 
 const ENVELOPE_PREFIX_V1 = 'enc:v1:';
 const ENVELOPE_PREFIX_V2 = 'enc:v2:';
@@ -185,9 +186,31 @@ export function createEncryptedSharedKeysRepository(
 
 	const revealMany = async (rows: SharedKeyRow[]): Promise<SharedKeyRow[]> =>
 		Promise.all(rows.map((row) => reveal(row) as Promise<SharedKeyRow>));
+	const safeGovernanceInput = async <T extends AdminSharedKeyDelete | AdminSharedKeyUpdate>(input: T): Promise<T> => {
+		const owned = { ...input, expected: { ...input.expected }, audit: { ...input.audit }, ...('patch' in input ? { patch: { ...input.patch } } : {}) };
+		assertAdminSharedKeyMutation(owned);
+		// Do not call reveal: governance must not mutate encryption storage or fail
+		// solely because the credential envelope is damaged.
+		const stored = await repository.getAdminSharedKeyById(owned.id);
+		if (!stored) return owned;
+		let reason: string;
+		try {
+			const plaintext = await decryptSharedKeySecret(stored.apiKey, secret, sharedKeyContext(stored));
+			reason = sharedKeyAdminAuditReason(owned.audit.reason, stored, [plaintext]);
+		} catch {
+			reason = 'Credential material unavailable; operator reason redacted';
+		}
+		return { ...owned, audit: { ...owned.audit, reason } };
+	};
 
 	return {
 		...repository,
+		async updateSharedKeyAdminWithAudit(input) {
+			return repository.updateSharedKeyAdminWithAudit(await safeGovernanceInput(input));
+		},
+		async deleteSharedKeyAdminWithAudit(input) {
+			return repository.deleteSharedKeyAdminWithAudit(await safeGovernanceInput(input));
+		},
 		async insertSharedKey(params: InsertSharedKeyParams) {
 			await repository.insertSharedKey({
 				...params,

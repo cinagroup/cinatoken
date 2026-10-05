@@ -35,12 +35,8 @@
 			}
 		},
 		"modalities": {
-			"input": [
-				"text"
-			],
-			"output": [
-				"text"
-			]
+			"input": ["text"],
+			"output": ["text"]
 		},
 		"released": "2026-02-12"
 	},
@@ -80,12 +76,8 @@
 			}
 		},
 		"modalities": {
-			"input": [
-				"text"
-			],
-			"output": [
-				"text"
-			]
+			"input": ["text"],
+			"output": ["text"]
 		},
 		"released": "2026-03-18"
 	},
@@ -139,14 +131,8 @@
 			}
 		},
 		"modalities": {
-			"input": [
-				"text",
-				"image",
-				"video"
-			],
-			"output": [
-				"text"
-			]
+			"input": ["text", "image", "video"],
+			"output": ["text"]
 		},
 		"released": "2026-06-01"
 	}

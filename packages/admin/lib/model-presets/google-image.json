@@ -10,9 +10,7 @@
 		"vendor": "google",
 		"context_window": null,
 		"max_tokens": null,
-		"tags": [
-			"New"
-		],
+		"tags": ["New"],
 		"pricing": {
 			"usd": {
 				"image_billing_mode": "token",
@@ -46,13 +44,8 @@
 			}
 		},
 		"modalities": {
-			"input": [
-				"text",
-				"image"
-			],
-			"output": [
-				"image"
-			]
+			"input": ["text", "image"],
+			"output": ["image"]
 		},
 		"released": "2026-02-01"
 	},
@@ -67,9 +60,7 @@
 		"vendor": "google",
 		"context_window": null,
 		"max_tokens": null,
-		"tags": [
-			"New"
-		],
+		"tags": ["New"],
 		"pricing": {
 			"usd": {
 				"image_billing_mode": "token",
@@ -103,13 +94,8 @@
 			}
 		},
 		"modalities": {
-			"input": [
-				"text",
-				"image"
-			],
-			"output": [
-				"image"
-			]
+			"input": ["text", "image"],
+			"output": ["image"]
 		},
 		"released": "2025-11-01"
 	}

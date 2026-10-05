@@ -43,10 +43,10 @@ function repositories(read: () => UserRow | null): GatewayRepositories {
 
 test('exact plan PATCH submits full CAS inputs and the audit in one critical write', async () => {
 	let current = user();
-	let captured: Parameters<UserPlanPatchServiceDependencies['applyTransition']>[1] | null = null;
+	const transitions: Array<Parameters<UserPlanPatchServiceDependencies['applyTransition']>[1]> = [];
 	const dependencies: UserPlanPatchServiceDependencies = {
 		applyTransition: async (_storage, params) => {
-			captured = params;
+			transitions.push(params);
 			current = {
 				...current,
 				budget_max: params.budgetMax,
@@ -76,6 +76,8 @@ test('exact plan PATCH submits full CAS inputs and the audit in one critical wri
 	);
 
 	assert.equal(result?.audited, true);
+	assert.equal(transitions.length, 1);
+	const captured = transitions[0];
 	assert.ok(captured);
 	assert.equal(captured.expectedBudgetMax, 10);
 	assert.equal(captured.expectedBudgetBase, 10);

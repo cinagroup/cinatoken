@@ -7,7 +7,9 @@ import {
 
 const GRANT_LOCK_KEY = 746923553;
 
-export async function grantPostgresRuntime(env: NodeJS.ProcessEnv = process.env): Promise<void> {
+export async function grantPostgresRuntime(
+	env: { DATABASE_URL?: string } = { DATABASE_URL: process.env.DATABASE_URL },
+): Promise<void> {
 	const connectionString = env.DATABASE_URL?.trim();
 	if (!connectionString) {
 		throw new Error('DATABASE_URL is required and must authenticate as the gateway migrator role.');
@@ -31,11 +33,11 @@ export async function grantPostgresRuntime(env: NodeJS.ProcessEnv = process.env)
 		const [migration] = await sql<Array<{ applied: boolean }>>`
 			SELECT EXISTS (
 				SELECT 1 FROM cinatoken_gateway.schema_migrations
-				WHERE version = '0073_recovery_api_key_workspace_lock.sql'
+				WHERE version = '0074_config_change_audit.sql'
 			) AS applied
 		`;
 		if (!migration?.applied) {
-			throw new Error('PostgreSQL migrations are incomplete; 0073_recovery_api_key_workspace_lock.sql is required (migration=0073).');
+			throw new Error('PostgreSQL migrations are incomplete; 0074_config_change_audit.sql is required (migration=0074).');
 		}
 
 		await sql.begin(async (tx) => {
@@ -71,11 +73,74 @@ export async function grantPostgresRuntime(env: NodeJS.ProcessEnv = process.env)
 				throw new Error('Buyer settlement split is active; use the v348 split grant reconciler.');
 			}
 			await tx.unsafe(`
+				-- Privilege checks under current_user do not detect a non-inheriting
+				-- membership that the authenticated runtime can reach with SET ROLE.
+				-- Reject role drift before any grant mutation; never revoke operator
+				-- membership or silently rewrite the authenticated role here.
+				DO $runtime_direct_role$
+				BEGIN
+					IF NOT EXISTS (SELECT 1 FROM pg_catalog.pg_roles
+						WHERE rolname = '${GATEWAY_RUNTIME_ROLE}' AND rolcanlogin
+						AND NOT rolsuper AND NOT rolcreatedb AND NOT rolcreaterole
+						AND NOT rolreplication AND NOT rolbypassrls)
+						OR EXISTS (SELECT 1 FROM pg_catalog.pg_auth_members AS memberships
+							JOIN pg_catalog.pg_roles AS runtime ON runtime.oid = memberships.member
+							WHERE runtime.rolname = '${GATEWAY_RUNTIME_ROLE}') THEN
+						RAISE EXCEPTION 'Runtime must be a restricted direct LOGIN without role memberships';
+					END IF;
+				END
+				$runtime_direct_role$;
 				REVOKE ALL ON SCHEMA ${GATEWAY_SCHEMA} FROM PUBLIC;
 				GRANT USAGE ON SCHEMA ${GATEWAY_SCHEMA} TO ${GATEWAY_RUNTIME_ROLE};
 				GRANT SELECT, INSERT, UPDATE, DELETE
 					ON ALL TABLES IN SCHEMA ${GATEWAY_SCHEMA} TO ${GATEWAY_RUNTIME_ROLE};
 				REVOKE ALL ON TABLE ${GATEWAY_SCHEMA}.schema_migrations FROM ${GATEWAY_RUNTIME_ROLE};
+				-- Admin config changes require INSERT but the runtime must not read,
+				-- alter, or erase committed audit history.
+				REVOKE SELECT, UPDATE, DELETE ON TABLE ${GATEWAY_SCHEMA}.config_change_audit FROM ${GATEWAY_RUNTIME_ROLE};
+				-- Expand-only 0077 can be deployed before new Admin. Keep this
+				-- reconciler compatible with historical 0074 fixtures, while giving
+				-- the new metadata reader SELECT/INSERT and no history mutation.
+				DO $runtime_admin_key_audit_privilege$
+				BEGIN
+					IF pg_catalog.to_regclass('${GATEWAY_SCHEMA}.admin_access_key_audit') IS NOT NULL THEN
+						EXECUTE 'REVOKE ALL ON TABLE ${GATEWAY_SCHEMA}.admin_access_key_audit FROM PUBLIC';
+						EXECUTE 'REVOKE ALL ON TABLE ${GATEWAY_SCHEMA}.admin_access_key_audit FROM ${GATEWAY_RUNTIME_ROLE}';
+						EXECUTE 'GRANT SELECT, INSERT ON TABLE ${GATEWAY_SCHEMA}.admin_access_key_audit TO ${GATEWAY_RUNTIME_ROLE}';
+					END IF;
+				END
+				$runtime_admin_key_audit_privilege$;
+				-- Expand-only 0079 retains older migration fixtures. New Admin
+				-- needs safe audit reads and atomic INSERT, never history mutation.
+				DO $runtime_admin_shared_key_audit_privilege$
+				BEGIN
+					IF pg_catalog.to_regclass('${GATEWAY_SCHEMA}.admin_shared_key_audit') IS NOT NULL THEN
+						EXECUTE 'REVOKE ALL ON TABLE ${GATEWAY_SCHEMA}.admin_shared_key_audit FROM PUBLIC';
+						EXECUTE 'REVOKE ALL ON TABLE ${GATEWAY_SCHEMA}.admin_shared_key_audit FROM ${GATEWAY_RUNTIME_ROLE}';
+						EXECUTE 'GRANT SELECT, INSERT ON TABLE ${GATEWAY_SCHEMA}.admin_shared_key_audit TO ${GATEWAY_RUNTIME_ROLE}';
+					END IF;
+				END
+				$runtime_admin_shared_key_audit_privilege$;
+				-- 0081 coordinates absent configuration dependencies through a seeded
+				-- row lock. Runtime may lock id, but cannot add/delete mutex rows or
+				-- mutate history. Both relations must exist together.
+				DO $runtime_tools_config_privilege$
+				BEGIN
+					IF pg_catalog.to_regclass('${GATEWAY_SCHEMA}.config_group_audit') IS NOT NULL
+						OR pg_catalog.to_regclass('${GATEWAY_SCHEMA}.system_config_write_mutex') IS NOT NULL THEN
+						IF pg_catalog.to_regclass('${GATEWAY_SCHEMA}.config_group_audit') IS NULL
+							OR pg_catalog.to_regclass('${GATEWAY_SCHEMA}.system_config_write_mutex') IS NULL THEN
+							RAISE EXCEPTION 'Tools configuration migration is incomplete';
+						END IF;
+						EXECUTE 'REVOKE ALL ON TABLE ${GATEWAY_SCHEMA}.config_group_audit FROM PUBLIC';
+						EXECUTE 'REVOKE ALL ON TABLE ${GATEWAY_SCHEMA}.config_group_audit FROM ${GATEWAY_RUNTIME_ROLE}';
+						EXECUTE 'GRANT SELECT, INSERT ON TABLE ${GATEWAY_SCHEMA}.config_group_audit TO ${GATEWAY_RUNTIME_ROLE}';
+						EXECUTE 'REVOKE ALL ON TABLE ${GATEWAY_SCHEMA}.system_config_write_mutex FROM PUBLIC';
+						EXECUTE 'REVOKE ALL ON TABLE ${GATEWAY_SCHEMA}.system_config_write_mutex FROM ${GATEWAY_RUNTIME_ROLE}';
+						EXECUTE 'GRANT SELECT, UPDATE (id) ON TABLE ${GATEWAY_SCHEMA}.system_config_write_mutex TO ${GATEWAY_RUNTIME_ROLE}';
+					END IF;
+				END
+				$runtime_tools_config_privilege$;
 
 				-- Recovery schema is present for a controlled cutover, but the ordinary
 				-- runtime cannot create/claim facts or receipts while C03 is disabled.
@@ -389,7 +454,7 @@ export async function grantPostgresRuntime(env: NodeJS.ProcessEnv = process.env)
 		});
 
 		console.log(
-			`Runtime grants applied: schema=${GATEWAY_SCHEMA} role=${GATEWAY_RUNTIME_ROLE} migration=0073`,
+			`Runtime grants applied: schema=${GATEWAY_SCHEMA} role=${GATEWAY_RUNTIME_ROLE} migration=0074`,
 		);
 	} finally {
 		await sql.end({ timeout: 5 });

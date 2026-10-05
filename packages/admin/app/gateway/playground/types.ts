@@ -1,14 +1,14 @@
-import type { PlaygroundProtocol } from '@/lib/playground/merge-assistant-text';
-import type { ImageOperation, ImagePreviewItem } from '@/lib/image-generations';
-import type { AdminModelRow } from '@/lib/services/admin/types';
-import type { GatewayProvider } from '@/lib/types';
-import type { ModelFormKind } from '../models/types';
+import type { PlaygroundProtocol } from "@/lib/playground/merge-assistant-text";
+import type { ImageOperation, ImagePreviewItem } from "@/lib/image-generations";
+import type { AdminModelRow } from "@/lib/services/admin/types";
+import type { GatewayProvider } from "@/lib/types";
+import type { ModelFormKind } from "../models/types";
 
-export type PlaygroundMode = 'routes' | 'tools';
+export type PlaygroundMode = "routes" | "tools";
 
-export type ResponseTab = 'merged' | 'raw';
+export type ResponseTab = "merged" | "raw";
 
-export type GeminiAction = 'generateContent' | 'streamGenerateContent';
+export type GeminiAction = "generateContent" | "streamGenerateContent";
 
 export type RouteListRow = {
 	id: string;

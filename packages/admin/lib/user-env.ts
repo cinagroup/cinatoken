@@ -1,12 +1,12 @@
-import type { D1Database } from '@cloudflare/workers-types';
+import type { D1Database } from "@cloudflare/workers-types";
 import type {
 	ChainJobMessage,
 	GatewayRepositories,
 	HyperdriveBinding,
 	StorageContext,
 	WorkspaceContextProjection,
-} from '@octafuse/core';
-import type { UserPrincipal } from '@/lib/user-auth';
+} from "@octafuse/core";
+import type { UserPrincipal } from "@/lib/user-auth";
 
 /** 用户门户 Hono 应用：Cloudflare 绑定与请求级变量。 */
 export type UserBindings = {

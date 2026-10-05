@@ -511,6 +511,7 @@ export async function getKeyInfo(repos: GatewayRepositories, id: string) {
 		budget_reserved_micros,
 		status: row.status,
 		metadata,
+		metadata_raw: row.metadata,
 		created_at: row.created_at,
 		updated_at: row.updated_at,
 	};

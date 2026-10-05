@@ -5,12 +5,12 @@
 // database, provider, Queue, Worker, Hyperdrive or financial charge.
 import assert from 'node:assert/strict';
 import { createHash, randomBytes, randomUUID } from 'node:crypto';
-import { readFile, readdir, writeFile } from 'node:fs/promises';
+import { readFile, writeFile } from 'node:fs/promises';
 import { dirname, join } from 'node:path';
 import test from 'node:test';
 import postgres from 'postgres';
 import { startNativePostgres } from '../../../packages/core/src/test-support/postgres-native-cluster.mjs';
-import { grantPostgresRuntime } from './grant-postgres-runtime.ts';
+import { grantPg73RuntimeFixture, listPg73Migrations } from './pg73-native-fixture.mjs';
 import { buildPostgresReplayReservationBackfill } from './build-postgres-replay-reservation-backfill.mjs';
 import { buildPostgresReplayRetentionCandidates } from './build-postgres-replay-retention-candidates.mjs';
 
@@ -116,7 +116,7 @@ test('native PG18 replay reservation, bounded backfill, parent gate and retentio
       clients.push(migrator, holder, contender);
       await migrator.unsafe(`CREATE TABLE ${schema}.schema_migrations (
         version text PRIMARY KEY, applied_at timestamptz NOT NULL DEFAULT now())`);
-      const files = (await readdir(migrations)).filter(name => name.endsWith('.sql')).sort();
+      const files = await listPg73Migrations();
       assert.equal(files.length, 73);
       assert.equal(files.at(-1), '0073_recovery_api_key_workspace_lock.sql');
       const corpus = [];
@@ -150,7 +150,7 @@ test('native PG18 replay reservation, bounded backfill, parent gate and retentio
           VALUES ('replay-key','replay-native-key','replay-user','replay-space');`).simple();
       for (const [setting, url] of proposals) await activate(migrator, setting, url);
       stage('formal-schema-and-parent-installed', { migrations: files.length });
-      await grantPostgresRuntime({ DATABASE_URL: migratorUrl });
+      await grantPg73RuntimeFixture({ cluster, migrator, migratorUrl });
       stage('ordinary-runtime-default-acl-installed-before-replay-expand');
 
       const producerPassword = randomBytes(24).toString('hex');
@@ -321,7 +321,7 @@ test('native PG18 replay reservation, bounded backfill, parent gate and retentio
           AND tgname='request_dispatch_requests_replay_reserve'`))[0].n, 0);
       await activate(migrator, 'cinatoken.request_dispatch_replay_parent_gate_activation', gateUrl);
       stage('gate-lock-timeout-atomic-rollback-then-activation');
-      await grantPostgresRuntime({ DATABASE_URL: migratorUrl });
+      await grantPg73RuntimeFixture({ cluster, migrator, migratorUrl });
       const [acl] = await migrator.unsafe(`SELECT
         pg_catalog.has_table_privilege('cinatoken_gateway_runtime',
           '${schema}.request_dispatch_replay_tombstones',

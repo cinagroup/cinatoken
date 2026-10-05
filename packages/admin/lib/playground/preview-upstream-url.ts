@@ -69,11 +69,16 @@ export function previewPlaygroundUpstreamUrl(input: {
 
 	try {
 		switch (protocol) {
-		case "openai": {
+			case "openai": {
 				if (input.isRerankModel) {
-					return resolveUpstreamEndpoint(protocol, 'rerank', providerEndpoints, {
-						providerId: provider.id,
-					});
+					return resolveUpstreamEndpoint(
+						protocol,
+						"rerank",
+						providerEndpoints,
+						{
+							providerId: provider.id,
+						}
+					);
 				}
 				const kind = modelKindFromFlags(
 					Boolean(input.isAudioModel),
@@ -86,9 +91,10 @@ export function previewPlaygroundUpstreamUrl(input: {
 						kind === "audio" && input.upstreamOperation === "audio.speech"
 							? "speech"
 							: kind === "audio"
-								? "transcriptions"
-								: undefined,
-					llmOperation: input.upstreamOperation === "responses" ? "responses" : "chat",
+							? "transcriptions"
+							: undefined,
+					llmOperation:
+						input.upstreamOperation === "responses" ? "responses" : "chat",
 				});
 				return resolveUpstreamEndpoint(
 					protocol,
@@ -115,7 +121,7 @@ export function previewPlaygroundUpstreamUrl(input: {
 						: "generateContent";
 				const resolvedUrl = resolveUpstreamEndpoint(
 					protocol,
-					'models.generate',
+					"models.generate",
 					providerEndpoints,
 					{
 						model: input.providerModelName || "model",
@@ -137,8 +143,8 @@ export function previewPlaygroundUpstreamUrl(input: {
 				const operation = rawOperation.endsWith(".realtime.inference")
 					? "audio.realtime.inference"
 					: rawOperation.endsWith(".realtime.session")
-						? "audio.realtime.session"
-						: rawOperation;
+					? "audio.realtime.session"
+					: rawOperation;
 				if (
 					!(DASHSCOPE_ENDPOINT_CAPABILITIES as readonly string[]).includes(
 						operation

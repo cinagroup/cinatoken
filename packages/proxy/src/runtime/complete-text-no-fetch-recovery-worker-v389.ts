@@ -1,4 +1,5 @@
-/// <reference path="./complete-text-no-fetch-recovery-v389-env.d.ts" />
+import type { ExportedHandler, ScheduledController } from '@cloudflare/workers-types';
+import type { CompleteTextNoFetchRecoveryV389Env } from './complete-text-no-fetch-recovery-v389-env';
 import { runPostgresCompleteTextNoFetchRecoveryV389 } from '../services/postgres-complete-text-no-fetch-recovery-v389';
 import { createHyperdriveDedicatedRoleTransportV390 } from '../services/hyperdrive-dedicated-role-transport-v390';
 

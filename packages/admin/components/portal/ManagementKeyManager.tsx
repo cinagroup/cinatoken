@@ -1,6 +1,13 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState, useTransition } from "react";
+import {
+	useCallback,
+	useEffect,
+	useMemo,
+	useRef,
+	useState,
+	useTransition,
+} from "react";
 import { useTranslations } from "next-intl";
 import { usePortalWorkspace } from "@/components/portal/PortalWorkspaceContext";
 import { readPortalJson } from "@/lib/portal-fetch";
@@ -19,78 +26,146 @@ type ManagementKeyRow = {
 export default function ManagementKeyManager() {
 	const t = useTranslations("portal.managementKeys");
 	const { context, isSwitching } = usePortalWorkspace();
+	const [isMutating, startMutation] = useTransition();
+	const workspaceId = context?.currentWorkspace.id ?? "";
+	const role = context?.currentWorkspace.role ?? "member";
+	if (!workspaceId || isSwitching)
+		return (
+			<div className="console-muted py-8 text-center text-sm">
+				{t("loading")}
+			</div>
+		);
+	return (
+		<WorkspaceManagementKeys
+			key={JSON.stringify([workspaceId, role])}
+			isMutating={isMutating}
+			startMutation={startMutation}
+		/>
+	);
+}
+
+function WorkspaceManagementKeys({
+	isMutating,
+	startMutation,
+}: {
+	isMutating: boolean;
+	startMutation: ReturnType<typeof useTransition>[1];
+}) {
+	const t = useTranslations("portal.managementKeys");
+	const { context, isSwitching } = usePortalWorkspace();
 	const workspaceId = context?.currentWorkspace.id ?? "";
 	const workspaceName = context?.currentWorkspace.name ?? "";
 	const role = context?.currentWorkspace.role ?? "member";
 	const canManage = role === "owner" || role === "admin";
-	const activeWorkspaceIdRef = useRef(workspaceId);
-	activeWorkspaceIdRef.current = workspaceId;
+	const scopeRef = useRef<AbortController | null>(null);
+	const activeReadRef = useRef<AbortController | null>(null);
+	const copyRequestRef = useRef<AbortController | null>(null);
+	useEffect(() => {
+		const scope = new AbortController();
+		scopeRef.current = scope;
+		const reads = activeReadRef;
+		const copies = copyRequestRef;
+		return () => {
+			scope.abort();
+			reads.current?.abort();
+			copies.current?.abort();
+		};
+	}, []);
 	const [rows, setRows] = useState<ManagementKeyRow[]>([]);
 	const [name, setName] = useState("");
 	const [expiresAt, setExpiresAt] = useState("");
 	const [secret, setSecret] = useState("");
 	const [copied, setCopied] = useState(false);
-	const [isLoading, setIsLoading] = useState(true);
+	const request = useMemo(
+		() => ({ workspaceId, canManage, failureMessage: t("loadFailed") }),
+		[canManage, t, workspaceId]
+	);
+	const [settledRequest, setSettledRequest] = useState<typeof request | null>(
+		null
+	);
+	const [isRefreshing, setIsRefreshing] = useState(false);
+	const isLoading = canManage && (settledRequest !== request || isRefreshing);
 	const [error, setError] = useState("");
-	const [isMutating, startMutation] = useTransition();
 
 	const load = useCallback(
-		async (signal?: AbortSignal) => {
-			if (!workspaceId || !canManage) {
-				setRows([]);
-				setIsLoading(false);
-				return;
-			}
-			setIsLoading(true);
+		async (signal: AbortSignal) => {
+			if (!workspaceId || !canManage) return null;
 			try {
 				const response = await fetch("/api/user/management-keys", {
 					cache: "no-store",
 					signal,
 				});
 				const result = await readPortalJson<ManagementKeyRow[]>(response);
-				if (signal?.aborted) return;
+				if (signal.aborted) return null;
 				if (!response.ok || !result?.success) {
-					setRows([]);
-					setError(result?.message ?? t("loadFailed"));
-					return;
+					return { rows: [], error: result?.message ?? request.failureMessage };
 				}
-				setRows(result.data ?? []);
-				setError("");
+				return { rows: result.data ?? [], error: "" };
 			} catch (cause) {
 				if (
-					signal?.aborted ||
+					signal.aborted ||
 					(cause instanceof DOMException && cause.name === "AbortError")
 				) {
-					return;
+					return null;
 				}
-				setRows([]);
-				setError(t("loadFailed"));
-			} finally {
-				if (!signal?.aborted) setIsLoading(false);
+				return { rows: [], error: request.failureMessage };
 			}
 		},
-		[canManage, t, workspaceId]
+		[canManage, request, workspaceId]
+	);
+	const applyLoad = useCallback(
+		(outcome: Awaited<ReturnType<typeof load>>, signal: AbortSignal) => {
+			if (!outcome || signal.aborted) return;
+			setRows(outcome.rows);
+			setError(outcome.error);
+			setSettledRequest(request);
+			setIsRefreshing(false);
+		},
+		[request]
 	);
 
 	useEffect(() => {
 		const controller = new AbortController();
-		setSecret("");
-		setCopied(false);
-		setError("");
-		void load(controller.signal);
-		return () => controller.abort();
-	}, [load]);
+		activeReadRef.current = controller;
+		void load(controller.signal).then((outcome) =>
+			applyLoad(outcome, controller.signal)
+		);
+		const reads = activeReadRef;
+		return () => {
+			controller.abort();
+			reads.current?.abort();
+		};
+	}, [applyLoad, load]);
+
+	const refresh = async () => {
+		if (!scopeRef.current || scopeRef.current.signal.aborted) return;
+		activeReadRef.current?.abort();
+		const controller = new AbortController();
+		activeReadRef.current = controller;
+		setIsRefreshing(true);
+		applyLoad(await load(controller.signal), controller.signal);
+	};
 
 	const create = (event: React.FormEvent<HTMLFormElement>) => {
 		event.preventDefault();
 		const normalizedName = name.trim();
-		if (!workspaceId || !canManage || !normalizedName || isMutating) return;
+		const scope = scopeRef.current;
+		if (
+			!workspaceId ||
+			!canManage ||
+			isSwitching ||
+			!normalizedName ||
+			isMutating ||
+			!scope ||
+			scope.signal.aborted
+		)
+			return;
+		copyRequestRef.current?.abort();
 		setError("");
 		setSecret("");
 		setCopied(false);
 		startMutation(async () => {
 			try {
-				const requestedWorkspaceId = workspaceId;
 				const response = await fetch("/api/user/management-keys", {
 					method: "POST",
 					headers: { "content-type": "application/json" },
@@ -100,24 +175,31 @@ export default function ManagementKeyManager() {
 					}),
 				});
 				const result = await readPortalJson<ManagementKeyRow>(response);
+				if (scope.signal.aborted) return;
 				const returnedSecret = result?.key ?? "";
 				if (!response.ok || !result?.success || !returnedSecret) {
 					setError(result?.message ?? t("createFailed"));
 					return;
 				}
-				if (requestedWorkspaceId !== activeWorkspaceIdRef.current) return;
 				setSecret(returnedSecret);
 				setName("");
 				setExpiresAt("");
-				await load();
+				await refresh();
 			} catch {
+				if (scope.signal.aborted) return;
 				setError(t("createFailed"));
 			}
 		});
 	};
 
 	const revoke = (row: ManagementKeyRow) => {
+		const scope = scopeRef.current;
 		if (
+			!workspaceId ||
+			!canManage ||
+			isSwitching ||
+			!scope ||
+			scope.signal.aborted ||
 			isMutating ||
 			!window.confirm(t("confirmRevoke", { name: row.name || row.label }))
 		) {
@@ -130,26 +212,35 @@ export default function ManagementKeyManager() {
 					`/api/user/management-keys/${encodeURIComponent(row.id)}`,
 					{ method: "DELETE" }
 				);
+				if (scope.signal.aborted) return;
 				if (!response.ok) {
 					const result = await readPortalJson<never>(response);
+					if (scope.signal.aborted) return;
 					setError(result?.message ?? t("revokeFailed"));
 					return;
 				}
+				copyRequestRef.current?.abort();
 				setSecret("");
 				setCopied(false);
-				await load();
+				await refresh();
 			} catch {
+				if (scope.signal.aborted) return;
 				setError(t("revokeFailed"));
 			}
 		});
 	};
 
 	const copySecret = async () => {
+		const scope = scopeRef.current;
+		if (!secret || !scope || scope.signal.aborted) return;
+		copyRequestRef.current?.abort();
+		const copy = new AbortController();
+		copyRequestRef.current = copy;
 		try {
 			await navigator.clipboard.writeText(secret);
-			setCopied(true);
+			if (!scope.signal.aborted && !copy.signal.aborted) setCopied(true);
 		} catch {
-			setCopied(false);
+			if (!scope.signal.aborted && !copy.signal.aborted) setCopied(false);
 		}
 	};
 

@@ -11,9 +11,61 @@ const mysqlMigrations = readdirSync(join(root, 'packages/core/migrations-mysql')
 	.sort();
 assert.equal(
 	mysqlMigrations.at(-1),
-	'0064_batch_jobs.sql',
-	'MySQL migration chain must end with the Batch metadata migration',
+	'0075_chain_job_transactions.sql',
+	'MySQL migration chain must end with the durable transaction outbox required for safe administrative rejection',
 );
+const chainOutbox = read('packages/core/migrations-mysql/0075_chain_job_transactions.sql');
+assert.match(chainOutbox, /CREATE TABLE chain_job_transactions/u);
+assert.match(chainOutbox, /job_kind VARCHAR\(32\) NOT NULL/u);
+assert.match(chainOutbox, /job_id VARCHAR\(128\) NOT NULL/u);
+assert.match(chainOutbox, /tx_hash VARCHAR\(128\) CHARACTER SET ascii COLLATE ascii_bin NOT NULL/u);
+assert.match(chainOutbox, /raw_transaction LONGTEXT NOT NULL/u);
+assert.match(chainOutbox, /PRIMARY KEY \(job_kind, job_id\)/u);
+assert.match(chainOutbox, /UNIQUE KEY uk_chain_job_transactions_hash \(tx_hash\)/u);
+assert.match(chainOutbox, /idx_chain_job_transactions_created \(created_at, job_kind, job_id\)/u);
+assert.match(chainOutbox, /ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin/u);
+assert.doesNotMatch(chainOutbox.replace(/--[^\r\n]*/gu, ''), /\b(?:UPDATE|DELETE|INSERT|DROP|ALTER)\b/u);
+const sessionUsernameCapacity = read('packages/core/migrations-mysql/0072_admin_session_username_oidc_capacity.sql');
+const sessionUsernameSql = sessionUsernameCapacity.replace(/--[^\r\n]*/gu, '').replace(/\s+/gu, ' ').trim();
+assert.equal(sessionUsernameSql, 'ALTER TABLE admin_sessions MODIFY COLUMN username VARCHAR(264) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL;', '0072 must only widen the session username and preserve its original column attributes');
+const accessActorCapacity = read('packages/core/migrations-mysql/0073_admin_access_key_actor_oidc_capacity.sql');
+const accessActorSql = accessActorCapacity.replace(/--[^\r\n]*/gu, '').replace(/\s+/gu, ' ').trim();
+assert.equal(accessActorSql, 'ALTER TABLE admin_access_key_audit MODIFY COLUMN actor_id VARCHAR(272) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL;', '0073 must only widen the audit actor and preserve its original column attributes');
+assert.match(
+	read('packages/core/migrations-mysql/0067_user_audit_export_order_index.sql'),
+	/ON user_audit_logs\(created_at DESC, id DESC\)/u,
+);
+const configAudit = read('packages/core/migrations-mysql/0065_config_change_audit.sql');
+const accessAudit = read('packages/core/migrations-mysql/0068_admin_access_key_audit.sql');
+const sharedAudit = read('packages/core/migrations-mysql/0070_admin_shared_key_audit.sql');
+const sharedActorBounds = read('packages/core/migrations-mysql/0071_admin_shared_key_actor_bounds.sql');
+assert.match(sharedActorBounds, /ALTER TABLE admin_shared_key_audit\s+DROP CHECK admin_shared_key_audit_actor_chk,\s+MODIFY COLUMN actor_id VARCHAR\(617\) NOT NULL,/u);
+assert.match(sharedActorBounds, /actor_kind = 'console' AND CHAR_LENGTH\(actor_id\) BETWEEN 1 AND 617/u);
+assert.match(sharedActorBounds, /actor_kind = 'api_key' AND CHAR_LENGTH\(actor_id\) BETWEEN 1 AND 600/u);
+assert.doesNotMatch(sharedActorBounds, /\b(?:UPDATE|DELETE|INSERT|TRUNCATE|GRANT|REVOKE)\b/u);
+assert.match(sharedAudit, /CREATE TABLE admin_shared_key_audit/u);
+assert.match(sharedAudit, /ENGINE=InnoDB/u);
+assert.match(sharedAudit, /\(key_id, created_at DESC, id DESC\)/u);
+assert.match(sharedAudit, /\(seller_priority DESC, weight DESC, id ASC\)/u);
+for (const column of ['id', 'key_id', 'action', 'change_mask', 'actor_kind', 'actor_id', 'source', 'reason',
+	'before_status', 'before_seller_priority', 'before_weight', 'before_validated',
+	'after_status', 'after_seller_priority', 'after_weight', 'after_validated', 'before_revision', 'after_revision', 'created_at']) {
+	assert.match(sharedAudit, new RegExp(`\\b${column}\\b`, 'u'));
+}
+assert.doesNotMatch(sharedAudit, /\b(?:api_key|api_key_ciphertext)\b(?=\s+(?:TEXT|VARCHAR|CHAR|BLOB))/u);
+assert.doesNotMatch(sharedAudit, /\b(?:key_fingerprint|input_price|output_price|cache_read_price|cache_write_price|failure_reason|FOREIGN KEY|REFERENCES)\b/u);
+assert.match(accessAudit, /CREATE TABLE admin_access_key_audit/u);
+assert.match(accessAudit, /ENGINE=InnoDB/u);
+assert.match(accessAudit, /\(key_id, created_at DESC, id DESC\)/u);
+assert.doesNotMatch(accessAudit, /\b(?:secret_key|secret_key_hash|key_prefix|request_body|name|description)\b/u);
+assert.match(configAudit, /CREATE TABLE config_change_audit/u);
+for (const column of ['config_key', 'channel', 'action', 'actor_kind', 'actor_id', 'outcome', 'created_at']) {
+	assert.match(configAudit, new RegExp(`\\b${column}\\b`, 'u'));
+}
+assert.doesNotMatch(configAudit, /\b(?:config_value|webhook_url|value_hash|value_fingerprint|request_body)\b/u);
+const configRevision = read('packages/core/migrations-mysql/0066_system_config_revision.sql');
+assert.match(configRevision, /ALTER TABLE system_config ADD COLUMN revision VARCHAR\(36\)/u);
+assert.match(configRevision, /COLLATE ascii_bin NOT NULL DEFAULT 'legacy'/u);
 
 const budget = read('packages/core/migrations-mysql/0035_guardrail_budget_reservations.sql');
 for (const contract of [
@@ -556,3 +608,15 @@ for (const contract of [
 assert.doesNotMatch(batchJobs, /\b(?:request_body|response_body)\b/u);
 
 console.log('MySQL Guardrail/user/Workspace budget, identity, routing, endpoint-first, session, feedback, default Guardrail, provider-attempt availability, public model total-token, Generation response-metadata, private BYOK, shared-capacity policy, route-selective settlement, Workspace usage-index, and Batch metadata contract: PASS');
+
+const toolsGroup = read('packages/core/migrations-mysql/0074_tools_config_group_audit.sql');
+assert.match(toolsGroup, /CREATE TABLE config_group_audit/u);
+assert.match(toolsGroup, /CREATE TABLE system_config_write_mutex/u);
+assert.match(toolsGroup, /INSERT INTO system_config_write_mutex \(id\) VALUES \(1\)/u);
+assert.match(toolsGroup, /CHECK \(id = 1\)/u);
+assert.match(toolsGroup, /actor_id VARCHAR\(617\)/u);
+assert.match(toolsGroup, /reason VARCHAR\(600\)/u);
+assert.match(toolsGroup, /created_at DATETIME\(6\)/u);
+assert.match(toolsGroup, /family, created_at DESC, id DESC/u);
+assert.doesNotMatch(toolsGroup, /\b(?:FOREIGN KEY|REFERENCES|config_value|value_hash|request_body|secret_key_hash)\b/u);
+for (const column of ['changed_fields_json', 'credentials_json', 'revision_before_json', 'revision_after_json']) assert.match(toolsGroup, new RegExp('\\b' + column + '\\s+TEXT\\s+NOT NULL', 'u'));

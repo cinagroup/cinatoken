@@ -75,7 +75,7 @@ export async function exerciseCredentialFreeChatIngressNativeV401(p: Params) {
   holderBinding: { async fetch(request) {
    envelopes.push(await request.clone().json() as Record<string, unknown>);
    return p.createHolderWorker(holderPath).fetch(request, p.holderEnv, {
-    waitUntil(task) { holderTasks.push(task); },
+    waitUntil(task: Promise<unknown>) { holderTasks.push(task); },
    });
   } },
  };

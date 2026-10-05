@@ -2,11 +2,12 @@
 // egress; neither its age nor its presence proves a send or billable usage.
 import assert from 'node:assert/strict';
 import { createHash, randomBytes, randomUUID } from 'node:crypto';
-import { readFile, readdir, writeFile } from 'node:fs/promises';
+import { readFile, writeFile } from 'node:fs/promises';
 import { dirname, join } from 'node:path';
 import test from 'node:test';
 import postgres from 'postgres';
 import { startNativePostgres } from '../../../packages/core/src/test-support/postgres-native-cluster.mjs';
+import { listPg73Migrations } from './pg73-native-fixture.mjs';
 import { claimPostgresSharedKeyQuoteAttempt,
   createSharedKeyQuoteAttemptCapture } from '../../../packages/proxy/src/services/shared-key-quote-attempt.ts';
 import { failoverDispatch } from '../../../packages/proxy/src/services/failover-dispatch.ts';
@@ -93,7 +94,7 @@ test('native PG18 quote claims survive pre-send errors and post-send loss withou
       clients.push(migrator, producer, producer2);
       await migrator.unsafe(`CREATE TABLE ${gateway}.schema_migrations (
         version text PRIMARY KEY, applied_at timestamptz NOT NULL DEFAULT now())`);
-      const files = (await readdir(migrations)).filter(name => name.endsWith('.sql')).sort();
+const files = await listPg73Migrations();
       assert.equal(files.length, 73);
       const corpus = [];
       for (const name of files) {

@@ -22,10 +22,12 @@ export async function readPortalJson<T>(
 }
 
 /** Financial/overview screens must distinguish unavailable data from real zero. */
-export async function readRequiredPortalData<T>(response: Response): Promise<T> {
+export async function readRequiredPortalData<T>(
+	response: Response
+): Promise<T> {
 	const result = await readPortalJson<T>(response);
 	if (!response.ok || result?.success !== true || result.data == null) {
-		throw new Error('Portal data unavailable');
+		throw new Error("Portal data unavailable");
 	}
 	return result.data;
 }

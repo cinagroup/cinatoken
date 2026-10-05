@@ -26,10 +26,10 @@ function resolveAccount(c: Context<UserEnv>): ManagementApiKeyAccount {
 		};
 	}
 	if (
-		!workspace.organizationId
-		|| !hasAuthoritativeOrganizationAdminRole(
+		!workspace.organizationId ||
+		!hasAuthoritativeOrganizationAdminRole(
 			workspace,
-			c.env?.CINAAUTH_ORGANIZATION_ADMIN_ROLES,
+			c.env?.CINAAUTH_ORGANIZATION_ADMIN_ROLES
 		)
 	) {
 		throw new Error("organization administrator access is required");

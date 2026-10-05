@@ -327,7 +327,7 @@ function allProvidersBusyResponse(retryAfterMs: number | null): Response {
 
 /** HTTP 2xx 与 Cloudflare WebSocket 101 都表示 driver 已成功建立上游请求。 */
 export function isSuccessfulDispatchResponse(response: Response): boolean {
-	return response.ok || (response.status === 101 && response.webSocket != null);
+	return response.ok || (response.status === 101 && 'webSocket' in response && response.webSocket != null);
 }
 
 /**
@@ -1254,7 +1254,7 @@ async function failoverDispatchWithinDeadline(
 		}
 
 		if (classification.failureKind) {
-			// 共享 key 鉴权失败：永久移出池（DB 置 invalid），仅复合键短熔断
+			// Invalidate only a still-active key; the repository atomically preserves an Admin disable or seller pause.
 			const sharedKeyId = parseSharedKeyId(route.providerKeyId);
 			if (sharedKeyId && classification.alertOnKeySwitch) {
 				const failureReason = `upstream auth rejected (HTTP ${response.status})`;

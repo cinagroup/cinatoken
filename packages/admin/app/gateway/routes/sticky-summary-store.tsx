@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import {
 	createContext,
@@ -9,10 +9,10 @@ import {
 	useRef,
 	useState,
 	type ReactNode,
-} from 'react';
-import { fetchStickyBindingsSummary } from './route-api';
-import type { StickyRefreshIntervalMs } from './sticky-refresh-preference';
-import type { StickyBindingsSummary } from './types';
+} from "react";
+import { fetchStickyBindingsSummary } from "./route-api";
+import type { StickyRefreshIntervalMs } from "./sticky-refresh-preference";
+import type { StickyBindingsSummary } from "./types";
 
 const BATCH_SIZE = 6;
 
@@ -27,9 +27,15 @@ type StickySummaryStoreValue = {
 	invalidate: (poolId: string) => Promise<void>;
 };
 
-const StickySummaryContext = createContext<StickySummaryStoreValue | null>(null);
+const StickySummaryContext = createContext<StickySummaryStoreValue | null>(
+	null
+);
 
-async function runInBatches<T>(items: T[], batchSize: number, fn: (item: T) => Promise<void>) {
+async function runInBatches<T>(
+	items: T[],
+	batchSize: number,
+	fn: (item: T) => Promise<void>
+) {
 	for (let i = 0; i < items.length; i += batchSize) {
 		const batch = items.slice(i, i + batchSize);
 		await Promise.all(batch.map((item) => fn(item)));
@@ -41,7 +47,9 @@ export function StickySummaryProvider(props: {
 	intervalMs: StickyRefreshIntervalMs;
 }) {
 	const { children, intervalMs } = props;
-	const [summaries, setSummaries] = useState<Map<string, StickyBindingsSummary>>(() => new Map());
+	const [summaries, setSummaries] = useState<
+		Map<string, StickyBindingsSummary>
+	>(() => new Map());
 	const [isRefreshing, setIsRefreshing] = useState(false);
 	const [lastUpdatedAt, setLastUpdatedAt] = useState<number | null>(null);
 	const [registeredCount, setRegisteredCount] = useState(0);
@@ -148,10 +156,14 @@ export function StickySummaryProvider(props: {
 	}, []);
 
 	useEffect(() => {
-		if (intervalMs === 'off') return;
+		if (intervalMs === "off") return;
 
 		const tick = () => {
-			if (typeof document !== 'undefined' && document.visibilityState === 'hidden') return;
+			if (
+				typeof document !== "undefined" &&
+				document.visibilityState === "hidden"
+			)
+				return;
 			if (refCountsRef.current.size === 0) return;
 			void refreshAll();
 		};
@@ -159,15 +171,18 @@ export function StickySummaryProvider(props: {
 		const timerId = window.setInterval(tick, intervalMs);
 
 		const onVisibility = () => {
-			if (document.visibilityState === 'visible' && refCountsRef.current.size > 0) {
+			if (
+				document.visibilityState === "visible" &&
+				refCountsRef.current.size > 0
+			) {
 				void refreshAll();
 			}
 		};
-		document.addEventListener('visibilitychange', onVisibility);
+		document.addEventListener("visibilitychange", onVisibility);
 
 		return () => {
 			window.clearInterval(timerId);
-			document.removeEventListener('visibilitychange', onVisibility);
+			document.removeEventListener("visibilitychange", onVisibility);
 		};
 	}, [intervalMs, refreshAll]);
 
@@ -195,20 +210,24 @@ export function StickySummaryProvider(props: {
 	);
 
 	return (
-		<StickySummaryContext.Provider value={value}>{children}</StickySummaryContext.Provider>
+		<StickySummaryContext.Provider value={value}>
+			{children}
+		</StickySummaryContext.Provider>
 	);
 }
 
 function useStickySummaryStore(): StickySummaryStoreValue {
 	const ctx = useContext(StickySummaryContext);
 	if (!ctx) {
-		throw new Error('useStickySummary* hooks require StickySummaryProvider');
+		throw new Error("useStickySummary* hooks require StickySummaryProvider");
 	}
 	return ctx;
 }
 
 /** Register `poolId` while mounted; returns latest summary for that pool (or null). */
-export function useStickySummary(poolId: string | null | undefined): StickyBindingsSummary | null {
+export function useStickySummary(
+	poolId: string | null | undefined
+): StickyBindingsSummary | null {
 	const { summaries, register, unregister } = useStickySummaryStore();
 	const id = poolId?.trim() || null;
 
@@ -223,7 +242,18 @@ export function useStickySummary(poolId: string | null | undefined): StickyBindi
 }
 
 export function useStickyRefreshControls() {
-	const { refreshAll, isRefreshing, lastUpdatedAt, registeredCount, invalidate } =
-		useStickySummaryStore();
-	return { refreshAll, isRefreshing, lastUpdatedAt, registeredCount, invalidate };
+	const {
+		refreshAll,
+		isRefreshing,
+		lastUpdatedAt,
+		registeredCount,
+		invalidate,
+	} = useStickySummaryStore();
+	return {
+		refreshAll,
+		isRefreshing,
+		lastUpdatedAt,
+		registeredCount,
+		invalidate,
+	};
 }

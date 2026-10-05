@@ -8,34 +8,63 @@
  */
 
 export type AdminAuthEvent =
-	| 'admin.auth.login'
-	| 'admin.auth.login_failed'
-	| 'admin.auth.logout'
-	| 'admin.auth.unauthorized';
+	| "admin.auth.login"
+	| "admin.auth.login_failed"
+	| "admin.auth.logout"
+	| "admin.auth.unauthorized";
 
 function firstForwardedFor(value: string): string | null {
-	const first = value.split(',')[0]?.trim();
+	const first = value.split(",")[0]?.trim();
 	return first || null;
 }
 
 export function getClientIp(request: Request | undefined): string | null {
 	if (!request) return null;
-	const cfIp = request.headers.get('cf-connecting-ip');
+	const cfIp = request.headers.get("cf-connecting-ip");
 	if (cfIp) return cfIp;
-	const forwarded = request.headers.get('x-forwarded-for');
+	const forwarded = request.headers.get("x-forwarded-for");
 	return forwarded ? firstForwardedFor(forwarded) : null;
 }
 
 export function getUserAgent(request: Request | undefined): string | null {
-	return request?.headers.get('user-agent') ?? null;
+	return request?.headers.get("user-agent") ?? null;
 }
 
 /** 与 `access-keys` 创建密钥时的 `secretKey.slice(0, 12)` 保持一致。 */
-export function getBearerKeyPrefix(request: Request | undefined): string | null {
-	const authorization = request?.headers.get('authorization');
-	if (!authorization?.startsWith('Bearer ')) return null;
+export function getBearerKeyPrefix(
+	request: Request | undefined
+): string | null {
+	const authorization = request?.headers.get("authorization");
+	if (!authorization?.startsWith("Bearer ")) return null;
 	const secret = authorization.slice(7).trim();
 	return secret ? secret.slice(0, 12) : null;
+}
+
+/** Failed authentication happens before verify-secret can reject a secret-shaped ID. */
+function unauthorizedLogPath(request: Request): string {
+	const pathname = new URL(request.url).pathname;
+	let candidate = pathname;
+	for (let pass = 0; pass < 4; pass++) {
+		if (/^\/api\/admin\/keys\/[^/]+\/verify-secret\/?$/u.test(candidate))
+			return "/api/admin/keys/:id/verify-secret";
+		try {
+			const decoded = decodeURIComponent(candidate);
+			if (decoded === candidate) break;
+			candidate = decoded;
+		} catch {
+			break;
+		}
+	}
+	return pathname;
+}
+
+/** The BFF's unauthenticated branch logs no Key ID, query or request body for binding checks. */
+export function logUnauthorizedAdminRequest(request: Request): void {
+	logAdminAuthEvent("admin.auth.unauthorized", request, {
+		keyPrefix: getBearerKeyPrefix(request),
+		method: request.method,
+		path: unauthorizedLogPath(request),
+	});
 }
 
 export function logAdminAuthEvent(
@@ -60,7 +89,10 @@ export function logAdminAuthEvent(
 	if (details.path != null) payload.path = details.path;
 
 	const line = JSON.stringify(payload);
-	if (event === 'admin.auth.login_failed' || event === 'admin.auth.unauthorized') {
+	if (
+		event === "admin.auth.login_failed" ||
+		event === "admin.auth.unauthorized"
+	) {
 		console.warn(line);
 		return;
 	}

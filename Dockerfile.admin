@@ -17,12 +17,14 @@ COPY packages/core/package.json packages/core/
 COPY packages/tool-engines/package.json packages/tool-engines/
 COPY packages/proxy/package.json packages/proxy/
 COPY packages/admin/package.json packages/admin/
+COPY packages/web/package.json packages/web/
 
 RUN --mount=type=cache,target=/root/.npm \
 	npm ci --ignore-scripts \
 	--workspace=@octafuse/core \
 	--workspace=@octafuse/tool-engines \
-	--workspace=@octafuse/admin
+	--workspace=@octafuse/admin \
+	--workspace=@cinatoken/web
 
 # esbuild 依赖 postinstall 拉取当前平台二进制；--ignore-scripts 会跳过。
 # 树内可能有多份 esbuild（如 @octafuse/core 与 @opennextjs/aws 嵌套版本）；勿用 `npm rebuild esbuild`（会对多版本做错误校验）。
@@ -45,9 +47,14 @@ RUN set -eux; \
 COPY packages/core ./packages/core
 COPY packages/tool-engines ./packages/tool-engines
 COPY packages/admin ./packages/admin
+COPY packages/web ./packages/web
 
 ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1
+
+# Next compiles its CSP headers at build time; runtime ENV cannot replace them.
+ARG CINATOKEN_WEB_PROXY_ORIGINS=""
+ENV CINATOKEN_WEB_PROXY_ORIGINS=${CINATOKEN_WEB_PROXY_ORIGINS}
 
 RUN npm run build -w @octafuse/core && npm run build:docker -w @octafuse/admin
 

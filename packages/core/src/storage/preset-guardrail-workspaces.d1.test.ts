@@ -188,7 +188,9 @@ test('D1 Presets, Guardrails, assignments, and budget windows are isolated by Wo
 			id: 'cross-workspace-key-assignment', workspaceId: 'personal:user-workspace-1',
 			guardrailId: 'guardrail-workspace-1', scopeType: 'api_key', scopeId: 'key-workspace-2',
 			createdByUserId: 'user-workspace-1', nowIso,
-		}), /workspace mismatch/u);
+		}), /^Error: guardrail_assignment_scope_not_assignable$/u);
+		assert.equal((database.prepare(`SELECT COUNT(*) AS count FROM guardrail_assignments
+			WHERE id = 'cross-workspace-key-assignment'`).get() as { count: number }).count, 0);
 
 		const intent = (workspaceId: string, assignmentId: string): GuardrailBudgetIntent => ({
 			workspaceId, assignmentId, guardrailId: `guardrail-${assignmentId}`, guardrailVersion: 1,

@@ -7,9 +7,9 @@ import {
 	type ProviderEndpointCapability,
 	type ProviderEndpointsMap,
 	type ProtocolEndpointsConfig,
-} from '@octafuse/core/provider-endpoints';
-import { GEMINI_GENERATE_OPERATION } from '@octafuse/core/route-topology';
-import type { UpstreamProtocol } from '@octafuse/core/upstream-protocol';
+} from "@octafuse/core/provider-endpoints";
+import { GEMINI_GENERATE_OPERATION } from "@octafuse/core/route-topology";
+import type { UpstreamProtocol } from "@octafuse/core/upstream-protocol";
 import type {
 	GeminiLegacyPerActionEndpoints,
 	ProtocolEndpointForm,
@@ -27,13 +27,19 @@ export function capabilityDisplayBadges(
 ): ProviderCapabilityBadge[] {
 	const badges: ProviderCapabilityBadge[] = [];
 	const set = new Set(capabilities);
-	if (set.has('chat')) badges.push('chat');
-	if (set.has('responses')) badges.push('responses');
-	if (set.has('images.generations') || set.has('images.edits')) badges.push('images');
-	if (capabilities.some((capability) => capability.startsWith('audio.'))) badges.push('audio');
-	if (set.has('messages')) badges.push('messages');
-	if (set.has(GEMINI_GENERATE_OPERATION) || set.has('generateContent') || set.has('streamGenerateContent')) {
-		badges.push('modelsGenerate');
+	if (set.has("chat")) badges.push("chat");
+	if (set.has("responses")) badges.push("responses");
+	if (set.has("images.generations") || set.has("images.edits"))
+		badges.push("images");
+	if (capabilities.some((capability) => capability.startsWith("audio.")))
+		badges.push("audio");
+	if (set.has("messages")) badges.push("messages");
+	if (
+		set.has(GEMINI_GENERATE_OPERATION) ||
+		set.has("generateContent") ||
+		set.has("streamGenerateContent")
+	) {
+		badges.push("modelsGenerate");
 	}
 	return badges;
 }
@@ -53,36 +59,42 @@ export function tryCollapseGeminiLegacyEndpoints(
 		if (!url.endsWith(suffix)) return null;
 		return `${url.slice(0, -suffix.length)}:{action}`;
 	};
-	const t1 = asTemplate(gen, 'generateContent');
-	const t2 = asTemplate(stream, 'streamGenerateContent');
+	const t1 = asTemplate(gen, "generateContent");
+	const t2 = asTemplate(stream, "streamGenerateContent");
 	if (t1 && t2 && t1 === t2) return t1;
 	return null;
 }
 
-function protocolFormFromConfig(cfg: ProtocolEndpointsConfig | undefined): ProtocolEndpointForm {
-	const form: ProtocolEndpointForm = { ...EMPTY_PROTOCOL_FORM, legacyPerAction: null };
+function protocolFormFromConfig(
+	cfg: ProtocolEndpointsConfig | undefined
+): ProtocolEndpointForm {
+	const form: ProtocolEndpointForm = {
+		...EMPTY_PROTOCOL_FORM,
+		legacyPerAction: null,
+	};
 	if (!cfg) return form;
 	form.base = cfg.base ?? "";
-	form.auth = cfg.auth ?? 'auto';
+	form.auth = cfg.auth ?? "auto";
 	const eps = cfg.endpoints ?? {};
-	form.chat = eps.chat ?? '';
-	form.responses = eps.responses ?? '';
-	form.images_generations = eps['images.generations'] ?? '';
-	form.images_edits = eps['images.edits'] ?? '';
-	form.audio_transcriptions = eps['audio.transcriptions'] ?? '';
-	form.audio_transcriptions_multimodal = eps['audio.transcriptions.multimodal'] ?? '';
-	form.audio_transcriptions_tasks = eps['audio.transcriptions.tasks'] ?? '';
-	form.audio_speech = eps['audio.speech'] ?? '';
-	form.audio_speech_multimodal = eps['audio.speech.multimodal'] ?? '';
-	form.audio_realtime_inference = eps['audio.realtime.inference'] ?? '';
-	form.audio_realtime_session = eps['audio.realtime.session'] ?? '';
-	form.audio_hotwords = eps['audio.hotwords'] ?? '';
-	form.audio_voices = eps['audio.voices'] ?? '';
-	form.messages = eps.messages ?? '';
+	form.chat = eps.chat ?? "";
+	form.responses = eps.responses ?? "";
+	form.images_generations = eps["images.generations"] ?? "";
+	form.images_edits = eps["images.edits"] ?? "";
+	form.audio_transcriptions = eps["audio.transcriptions"] ?? "";
+	form.audio_transcriptions_multimodal =
+		eps["audio.transcriptions.multimodal"] ?? "";
+	form.audio_transcriptions_tasks = eps["audio.transcriptions.tasks"] ?? "";
+	form.audio_speech = eps["audio.speech"] ?? "";
+	form.audio_speech_multimodal = eps["audio.speech.multimodal"] ?? "";
+	form.audio_realtime_inference = eps["audio.realtime.inference"] ?? "";
+	form.audio_realtime_session = eps["audio.realtime.session"] ?? "";
+	form.audio_hotwords = eps["audio.hotwords"] ?? "";
+	form.audio_voices = eps["audio.voices"] ?? "";
+	form.messages = eps.messages ?? "";
 
-	const family = eps[GEMINI_GENERATE_OPERATION]?.trim() ?? '';
-	const legacyGen = eps.generateContent?.trim() ?? '';
-	const legacyStream = eps.streamGenerateContent?.trim() ?? '';
+	const family = eps[GEMINI_GENERATE_OPERATION]?.trim() ?? "";
+	const legacyGen = eps.generateContent?.trim() ?? "";
+	const legacyStream = eps.streamGenerateContent?.trim() ?? "";
 	if (family) {
 		form.modelsGenerate = family;
 		return form;
@@ -191,7 +203,10 @@ function configFromProtocolForm(
 	const cfg: ProtocolEndpointsConfig = {};
 	if (base) cfg.base = base;
 	if (Object.keys(endpoints).length > 0) cfg.endpoints = endpoints;
-	if (protocol === 'gemini' && (form.auth === 'query-key' || form.auth === 'bearer')) {
+	if (
+		protocol === "gemini" &&
+		(form.auth === "query-key" || form.auth === "bearer")
+	) {
 		cfg.auth = form.auth;
 	}
 	return cfg;
@@ -234,26 +249,28 @@ export function getProviderProtocolSummaries(
 		const endpoints = capabilities.flatMap((capability) => {
 			try {
 				const resolved = resolveUpstreamEndpoint(key, capability, map, {
-					model: '{model}',
-					action: key === 'gemini' ? 'generateContent' : undefined,
+					model: "{model}",
+					action: key === "gemini" ? "generateContent" : undefined,
 					// 异步任务 URL 必须保留任务占位符，供应商卡片才能展示完整端点。
-					taskId: key === 'dashscope' ? '{task_id}' : undefined,
+					taskId: key === "dashscope" ? "{task_id}" : undefined,
 					providerId: provider.id,
 				})
-					.replace(/%7Bmodel%7D/gi, '{model}')
-					.replace(/%7Btask_id%7D/gi, '{task_id}')
-					.replace(/:generateContent$/i, ':{action}');
+					.replace(/%7Bmodel%7D/gi, "{model}")
+					.replace(/%7Btask_id%7D/gi, "{task_id}")
+					.replace(/:generateContent$/i, ":{action}");
 				const override =
 					Boolean(config.endpoints?.[capability]) ||
-					(key === 'gemini' &&
+					(key === "gemini" &&
 						(Boolean(config.endpoints?.[GEMINI_GENERATE_OPERATION]) ||
 							Boolean(config.endpoints?.generateContent) ||
 							Boolean(config.endpoints?.streamGenerateContent)));
-				return [{
-					capability,
+				return [
+					{
+						capability,
 						url: resolved,
-						source: override ? 'override' as const : 'base' as const,
-					}];
+						source: override ? ("override" as const) : ("base" as const),
+					},
+				];
 			} catch {
 				return [];
 			}
@@ -278,30 +295,41 @@ export function getProviderProtocolSummaries(
 }
 
 export function providerHasApiKey(provider: GatewayProvider): boolean {
-	const masked = provider.api_key?.trim() || '';
-	return Boolean(masked) && masked !== '(empty)' && !provider.has_pending_key;
+	const masked = provider.api_key?.trim() || "";
+	return Boolean(masked) && masked !== "(empty)" && !provider.has_pending_key;
 }
 
-export function getProviderKeyStatus(provider: GatewayProvider): ProviderKeyStatusKind {
-	if (provider.has_pending_key) return 'pending';
-	if (provider.status === 'disabled') return 'disabled';
-	if (!providerHasApiKey(provider)) return 'no_key';
-	return 'key_set';
+export function getProviderKeyStatus(
+	provider: GatewayProvider
+): ProviderKeyStatusKind {
+	if (provider.has_pending_key) return "pending";
+	if (provider.status === "disabled") return "disabled";
+	if (!providerHasApiKey(provider)) return "no_key";
+	return "key_set";
 }
 
-export function providerMatchesSearch(provider: GatewayProvider, query: string): boolean {
+export function providerMatchesSearch(
+	provider: GatewayProvider,
+	query: string
+): boolean {
 	const normalized = query.trim().toLowerCase();
 	if (!normalized) return true;
 	const endpointSearch = getProviderProtocolSummaries(provider)
 		.flatMap((protocol) => [
 			protocol.label,
-			protocol.baseUrl ?? '',
+			protocol.baseUrl ?? "",
 			...protocol.capabilities,
 			...protocol.endpoints.map((endpoint) => endpoint.url),
 		])
-		.join(' ');
-	return [provider.name, provider.id, provider.description ?? '', provider.status ?? '', endpointSearch]
-		.join(' ')
+		.join(" ");
+	return [
+		provider.name,
+		provider.id,
+		provider.description ?? "",
+		provider.status ?? "",
+		endpointSearch,
+	]
+		.join(" ")
 		.toLowerCase()
 		.includes(normalized);
 }
@@ -310,14 +338,16 @@ export function providerMatchesListFilter(
 	provider: GatewayProvider,
 	filter: ProviderListFilter
 ): boolean {
-	if (filter === 'all') return true;
-	if (filter === 'active') return provider.status !== 'disabled';
-	if (filter === 'disabled') return provider.status === 'disabled';
-	if (filter === 'pending') return Boolean(provider.has_pending_key);
-	if (filter === 'no_key') {
+	if (filter === "all") return true;
+	if (filter === "active") return provider.status !== "disabled";
+	if (filter === "disabled") return provider.status === "disabled";
+	if (filter === "pending") return Boolean(provider.has_pending_key);
+	if (filter === "no_key") {
 		return !providerHasApiKey(provider) && !provider.has_pending_key;
 	}
-	return getProviderProtocolSummaries(provider).some((protocol) => protocol.key === filter);
+	return getProviderProtocolSummaries(provider).some(
+		(protocol) => protocol.key === filter
+	);
 }
 
 export function suggestDuplicateProviderId(
@@ -348,7 +378,7 @@ export function protocolFormHasOverrides(
 			form.audio_speech.trim()
 		);
 	}
-	if (protocol === 'anthropic') return !!form.messages.trim();
+	if (protocol === "anthropic") return !!form.messages.trim();
 	if (protocol === "gemini") {
 		return !!(
 			form.modelsGenerate.trim() ||

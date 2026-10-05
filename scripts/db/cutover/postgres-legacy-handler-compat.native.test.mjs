@@ -2,7 +2,7 @@
 // compatibility across the review-only replay parent switch. No ambient DB URL.
 import assert from 'node:assert/strict';
 import { createHash, randomBytes, randomUUID } from 'node:crypto';
-import { readFile, readdir, writeFile } from 'node:fs/promises';
+import { readFile, writeFile } from 'node:fs/promises';
 import { dirname, join } from 'node:path';
 import test from 'node:test';
 import { drizzle } from 'drizzle-orm/postgres-js';
@@ -13,7 +13,7 @@ import { insertRequestUsageAndChargeTxPg } from '../../../packages/core/src/db/p
 import { createPostgresRequestLogsRepository } from '../../../packages/core/src/db/postgres/request-logs.impl.ts';
 import { buildPostgresReplayReservationBackfill } from './build-postgres-replay-reservation-backfill.mjs';
 import { buildRequestLegacyParentDefaultAclActivation } from './build-request-legacy-parent-default-acl-activation.mjs';
-import { grantPostgresRuntime } from './grant-postgres-runtime.ts';
+import { grantPg73RuntimeFixture, listPg73Migrations } from './pg73-native-fixture.mjs';
 
 const schema = 'cinatoken_gateway';
 const migrations = new URL('../../../packages/core/migrations-postgres/', import.meta.url);
@@ -77,7 +77,7 @@ test('ordinary writer and legacy readers survive replay parent switch',
       clients.push(migrator, runtime);
       await migrator.unsafe(`CREATE TABLE ${schema}.schema_migrations (
         version text PRIMARY KEY, applied_at timestamptz NOT NULL DEFAULT now())`);
-      const files = (await readdir(migrations)).filter(name => name.endsWith('.sql')).sort();
+      const files = await listPg73Migrations();
       assert.equal(files.length, 73);
       assert.equal(files.at(-1), '0073_recovery_api_key_workspace_lock.sql');
       const corpus = [];
@@ -99,7 +99,7 @@ test('ordinary writer and legacy readers survive replay parent switch',
         ['parentActivation', new URL('./build-request-legacy-parent-default-acl-activation.mjs', import.meta.url)],
       ]) report.sourceSha256[key] = sha(await readFile(url));
       const migratorUrl = `postgres://cinatoken_gateway_migrator:${migratorPassword}@127.0.0.1:${cluster.port}/postgres`;
-      await grantPostgresRuntime({ DATABASE_URL: migratorUrl });
+      await grantPg73RuntimeFixture({ cluster, migrator, migratorUrl });
       await migrator.unsafe(`INSERT INTO ${schema}.users(id,email,budget_max,budget_spent)
         VALUES ('user','legacy-compat@example.invalid',10,0);
         INSERT INTO ${schema}.workspaces(id,scope_type,personal_owner_user_id,name,slug,status)
@@ -146,7 +146,7 @@ test('ordinary writer and legacy readers survive replay parent switch',
       const bundle = await buildRequestLegacyParentDefaultAclActivation({ activation: 'reviewed-v1' });
       report.sourceSha256.activationBundle = sha(bundle.sql);
       await migrator.begin(tx => tx.unsafe(bundle.bodySql).simple());
-      await grantPostgresRuntime({ DATABASE_URL: migratorUrl });
+      await grantPg73RuntimeFixture({ cluster, migrator, migratorUrl });
       const [oldReservation] = await migrator.unsafe(`SELECT first_source FROM ${schema}.request_dispatch_replay_tombstones
         WHERE request_id=$1`, [id]);
       assert.equal(oldReservation.first_source, 'legacy_log');

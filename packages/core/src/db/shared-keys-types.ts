@@ -92,6 +92,28 @@ export interface UpdateSharedKeyPatch {
 	failureReason?: string | null;
 }
 
+/** State/profile observed before a seller or validation action, excluding mutable usage projections. */
+export type SharedKeyStateExpectation = Pick<SharedKeyRow,
+	'sellerUserId' | 'channelType' | 'keyFingerprint' | 'status' | 'validatedAt' |
+	'label' | 'sellerPriority' | 'weight' | 'inputPrice' | 'outputPrice' | 'cacheReadPrice' | 'cacheWritePrice'>;
+
+export type SellerSharedKeyPatch = Omit<UpdateSharedKeyPatch, 'sellerPriority' | 'failureReason' | 'status'> & {
+	status?: 'active' | 'paused';
+};
+
+export type SharedKeyValidationResult = Readonly<{ valid: boolean; reason: string | null }>;
+
+/** Never use updatedAt here: usage accounting and encryption migration also update that column. */
+export function sharedKeyStateExpectation(row: SharedKeyRow): SharedKeyStateExpectation {
+	return {
+		sellerUserId: row.sellerUserId, channelType: row.channelType, keyFingerprint: row.keyFingerprint,
+		status: row.status, validatedAt: row.validatedAt, label: row.label,
+		sellerPriority: row.sellerPriority, weight: row.weight,
+		inputPrice: row.inputPrice, outputPrice: row.outputPrice,
+		cacheReadPrice: row.cacheReadPrice, cacheWritePrice: row.cacheWritePrice,
+	};
+}
+
 export interface SharedKeyEarningRow {
 	id: string;
 	/** 幂等键：`api_key_request_logs.id`。 */

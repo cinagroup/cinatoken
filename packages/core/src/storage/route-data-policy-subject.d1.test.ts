@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { DatabaseSync, type SQLInputValue } from 'node:sqlite';
 import test from 'node:test';
+import { URL } from 'node:url';
 import type { D1Database, D1PreparedStatement, D1Result } from '@cloudflare/workers-types';
 import { createD1RouteDataPoliciesRepository } from '../db/d1/route-data-policies.impl';
 import type { D1DatabaseClient } from './database-client';
@@ -16,8 +17,9 @@ class SqliteD1Statement {
 		return new SqliteD1Statement(this.database, this.sql, values) as unknown as D1PreparedStatement;
 	}
 	run(): D1Result {
-		const result = this.database.prepare(this.sql).run(...this.values);
-		return { success: true, results: [], meta: { changes: Number(result.changes) } } as unknown as D1Result;
+		const results = this.database.prepare(this.sql).all(...this.values);
+		const changes = this.database.prepare('SELECT changes() AS changes').get() as { changes: number };
+		return { success: true, results, meta: { changes: Number(changes.changes) } } as unknown as D1Result;
 	}
 	first<T>(): T | null {
 		return (this.database.prepare(this.sql).get(...this.values) ?? null) as T | null;
@@ -85,37 +87,58 @@ test('D1 migration invalidates legacy assertions and repository records subject 
 				'2026-08-01T00:00:00.000Z', '2099-01-01T00:00:00.000Z', 'verified', '2026-08-01T00:00:00.000Z'
 			);
 		`);
-		database.exec(readFileSync(
-			new URL('../../migrations-d1/0046_route_data_policy_subject_fingerprint.sql', import.meta.url),
-			'utf8',
-		));
-		const migrated = database.prepare(`SELECT status, subject_fingerprint, invalidation_reason FROM route_data_policies WHERE route_target_id = 'route-1'`).get() as Record<string, unknown>;
-		assert.deepEqual({ ...migrated }, {
-			status: 'unknown', subject_fingerprint: null,
-			invalidation_reason: 'subject_fingerprint_backfill_required',
-		});
+		database.exec(readFileSync(new URL('../../migrations-d1/0046_route_data_policy_subject_fingerprint.sql', import.meta.url), 'utf8'));
+		const migrated = database
+			.prepare(`SELECT status, subject_fingerprint, invalidation_reason FROM route_data_policies WHERE route_target_id = 'route-1'`)
+			.get() as Record<string, unknown>;
+		assert.deepEqual(
+			{ ...migrated },
+			{
+				status: 'unknown',
+				subject_fingerprint: null,
+				invalidation_reason: 'subject_fingerprint_backfill_required',
+			},
+		);
 
 		const repository = createD1RouteDataPoliciesRepository(createClient(database));
 		const assertion = {
-			retentionDays: 0, trainingAllowed: false, zdrSupported: true,
-			evidenceUrl: 'https://provider.example/privacy', verifiedBy: 'admin',
-			verifiedAt: '2026-08-30T00:00:00.000Z', expiresAt: '2099-01-01T00:00:00.000Z',
-			status: 'verified' as const, actorId: 'admin', nowIso: '2026-08-30T00:00:00.000Z',
+			retentionDays: 0,
+			trainingAllowed: false,
+			zdrSupported: true,
+			evidenceUrl: 'https://provider.example/privacy',
+			verifiedBy: 'admin',
+			verifiedAt: '2026-08-30T00:00:00.000Z',
+			expiresAt: '2099-01-01T00:00:00.000Z',
+			status: 'verified' as const,
+			actorId: 'admin',
+			nowIso: '2026-08-30T00:00:00.000Z',
 		};
 		await repository.upsertWithAudit({ id: 'verify-1', routeTargetId: 'route-1', subjectFingerprint: FINGERPRINT_A, ...assertion });
 		await repository.upsertWithAudit({ id: 'verify-2', routeTargetId: 'route-2', subjectFingerprint: FINGERPRINT_B, ...assertion });
 		assert.equal((await repository.getByRouteTargetId('route-1'))?.subject_fingerprint, FINGERPRINT_A);
 
-		assert.equal(await repository.invalidateForRouteTarget('route-1', {
-			id: 'invalidate-route', actorId: 'admin', nowIso: '2026-08-30T01:00:00.000Z', reason: 'route_subject_changed:custom_params',
-		}), 1);
+		assert.equal(
+			await repository.invalidateForRouteTarget('route-1', {
+				id: 'invalidate-route',
+				actorId: 'admin',
+				nowIso: '2026-08-30T01:00:00.000Z',
+				reason: 'route_subject_changed:custom_params',
+			}),
+			1,
+		);
 		assert.equal((await repository.getByRouteTargetId('route-1'))?.status, 'unknown');
 		assert.equal((await repository.getByRouteTargetId('route-1'))?.invalidation_reason, 'route_subject_changed:custom_params');
 
 		await repository.upsertWithAudit({ id: 'verify-3', routeTargetId: 'route-1', subjectFingerprint: FINGERPRINT_A, ...assertion });
-		assert.equal(await repository.invalidateForProvider('provider-1', {
-			id: 'invalidate-provider', actorId: 'admin', nowIso: '2026-08-30T02:00:00.000Z', reason: 'provider_subject_changed:endpoints',
-		}), 2);
+		assert.equal(
+			await repository.invalidateForProvider('provider-1', {
+				id: 'invalidate-provider',
+				actorId: 'admin',
+				nowIso: '2026-08-30T02:00:00.000Z',
+				reason: 'provider_subject_changed:endpoints',
+			}),
+			2,
+		);
 		assert.equal((await repository.getByRouteTargetId('route-1'))?.status, 'unknown');
 		assert.equal((await repository.getByRouteTargetId('route-2'))?.status, 'unknown');
 		const providerAudit = (await repository.listAudit('route-2')).find((row) => row.actor_id === 'admin');

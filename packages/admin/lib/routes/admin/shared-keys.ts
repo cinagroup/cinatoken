@@ -1,100 +1,127 @@
-/**
- * 管理路由：`/admin/shared-keys` — 用户共享密钥池治理。
- * 列表脱敏；可调 seller_priority/weight、停用、删除。
- */
-import { Hono } from 'hono';
-import { maskProviderApiKeyForAdmin } from '@octafuse/core';
-import type { AdminEnv } from '@/lib/admin-env';
-import { requireAdminPrincipal } from '@/lib/middleware/admin-auth';
-import { handleAdminRouteError } from './error-response';
-import { isSharedKeyEarningHistoryDeleteError } from '../shared-key-history-error';
-import { projectCurrentSellerCreditedUsage } from '@/lib/shared-key-credited-usage-reader';
+/** Safe bounded Shared Keys reads and atomic audited governance. */
+import { Hono } from "hono";
+import type { Context } from "hono";
+import type { AdminEnv } from "@/lib/admin-env";
+import { requireAdminPrincipal } from "@/lib/middleware/admin-auth";
+import { SharedKeyAdminError } from "@/lib/services/admin/shared-key-admin-contract";
+import {
+	EXPECTED_CONSOLE_SUBJECT_HEADER,
+	ExpectedConsoleSubjectError,
+} from "@/lib/services/admin/expected-console-subject";
+import {
+	getAdminSharedKeyAudit,
+	getAdminSharedKeyDetail,
+	listAdminSharedKeys,
+	mutateAdminSharedKey,
+} from "@/lib/services/admin/shared-keys-service";
+import { handleAdminRouteError } from "./error-response";
 
 export const adminSharedKeysRoutes = new Hono<AdminEnv>();
+adminSharedKeysRoutes.use("*", async (c, next) => {
+	await next();
+	c.header("Cache-Control", "private, no-store");
+});
+adminSharedKeysRoutes.use("*", requireAdminPrincipal);
 
-adminSharedKeysRoutes.use('*', requireAdminPrincipal);
-
-adminSharedKeysRoutes.get('/', async (c) => {
+function failure(c: Context, error: unknown, message: string) {
+	if (
+		error instanceof SharedKeyAdminError ||
+		error instanceof ExpectedConsoleSubjectError
+	)
+		return c.json(
+			{ success: false, code: error.code, message: error.message },
+			error.status
+		);
+	return handleAdminRouteError(c, error, message);
+}
+adminSharedKeysRoutes.get("/", async (c) => {
 	try {
-		const repos = c.get('repositories');
-		const status = c.req.query('status') || undefined;
-		const channelType = c.req.query('channelType') || undefined;
-		const listed = await repos.sharedKeys.listAllSharedKeys({ status, channelType });
-		const rows = c.env?.SHARED_KEY_CREDITED_USAGE_READER === 'reviewed-v1'
-			? await projectCurrentSellerCreditedUsage(repos, listed)
-			: listed;
-		const sellerCache = new Map<string, string>();
-		const data = [];
-		for (const row of rows) {
-			if (!sellerCache.has(row.sellerUserId)) {
-				const seller = await repos.users.getById(row.sellerUserId);
-				sellerCache.set(row.sellerUserId, seller?.email ?? row.sellerUserId);
-			}
-			const { apiKey, ...rest } = row;
-			void apiKey;
-			data.push({
-				...rest,
-				apiKeyMasked: maskProviderApiKeyForAdmin(row.apiKey),
-				sellerEmail: sellerCache.get(row.sellerUserId) ?? row.sellerUserId,
-			});
-		}
-		return c.json({ success: true, data, total: data.length });
+		const result = await listAdminSharedKeys(
+			c.get("repositories"),
+			c.get("principal"),
+			c.env ?? {},
+			c.req.url,
+			true
+		);
+		const { items, total, hasMore, ...context } = result;
+		return c.json({
+			success: true,
+			data: items,
+			total,
+			truncated: hasMore,
+			...context,
+		});
 	} catch (error) {
-		return handleAdminRouteError(c, error, 'Failed to list shared keys');
+		return failure(c, error, "Failed to list shared keys");
 	}
 });
-
-adminSharedKeysRoutes.patch('/:id', async (c) => {
-	const body = (await c.req.json().catch(() => null)) as
-		| { sellerPriority?: unknown; weight?: unknown; status?: unknown }
-		| null;
-	if (!body) return c.json({ success: false, message: 'Invalid JSON body' }, 400);
-	const patch: Record<string, unknown> = {};
-	if (body.sellerPriority !== undefined) {
-		const num = Number(body.sellerPriority);
-		if (!Number.isInteger(num)) return c.json({ success: false, message: 'sellerPriority must be an integer' }, 400);
-		patch.sellerPriority = num;
-	}
-	if (body.weight !== undefined) {
-		const num = Number(body.weight);
-		if (!Number.isInteger(num) || num < 1 || num > 100) {
-			return c.json({ success: false, message: 'weight must be 1-100' }, 400);
-		}
-		patch.weight = num;
-	}
-	if (body.status !== undefined) {
-		if (typeof body.status !== 'string' || !['active', 'paused', 'disabled'].includes(body.status)) {
-			return c.json({ success: false, message: 'status must be active|paused|disabled' }, 400);
-		}
-		patch.status = body.status;
-	}
-	if (Object.keys(patch).length === 0) {
-		return c.json({ success: false, message: 'Nothing to update' }, 400);
-	}
+adminSharedKeysRoutes.get("/overview", async (c) => {
 	try {
-		const repos = c.get('repositories');
-		const updated = await repos.sharedKeys.updateSharedKey(c.req.param('id'), patch);
-		if (!updated) return c.json({ success: false, message: 'Not found' }, 404);
-		return c.json({ success: true, message: 'Shared key updated' });
+		return c.json({
+			success: true,
+			data: await listAdminSharedKeys(
+				c.get("repositories"),
+				c.get("principal"),
+				c.env ?? {},
+				c.req.url
+			),
+		});
 	} catch (error) {
-		return handleAdminRouteError(c, error, 'Failed to update shared key');
+		return failure(c, error, "Failed to list shared keys");
 	}
 });
-
-adminSharedKeysRoutes.delete('/:id', async (c) => {
+adminSharedKeysRoutes.get("/:id/detail", async (c) => {
 	try {
-		const repos = c.get('repositories');
-		const deleted = await repos.sharedKeys.deleteSharedKey(c.req.param('id'));
-		if (!deleted) return c.json({ success: false, message: 'Not found' }, 404);
-		return c.json({ success: true, message: 'Shared key deleted' });
+		return c.json({
+			success: true,
+			data: await getAdminSharedKeyDetail(
+				c.get("repositories"),
+				c.get("principal"),
+				c.env ?? {},
+				c.req.param("id"),
+				c.req.url
+			),
+		});
 	} catch (error) {
-		if (isSharedKeyEarningHistoryDeleteError(error)) {
+		return failure(c, error, "Failed to read shared key");
+	}
+});
+adminSharedKeysRoutes.get("/:id/audit", async (c) => {
+	try {
+		return c.json({
+			success: true,
+			data: await getAdminSharedKeyAudit(
+				c.get("repositories"),
+				c.get("principal"),
+				c.req.param("id"),
+				c.req.url
+			),
+		});
+	} catch (error) {
+		return failure(c, error, "Failed to read shared key audit");
+	}
+});
+for (const method of ["patch", "delete"] as const) {
+	adminSharedKeysRoutes[method]("/:id", async (c) => {
+		try {
+			const data = await mutateAdminSharedKey(
+				c.get("repositories"),
+				c.get("principal"),
+				c.env ?? {},
+				c.req.param("id"),
+				c.req.url,
+				await c.req.text(),
+				method === "patch" ? "update" : "delete",
+				c.req.header(EXPECTED_CONSOLE_SUBJECT_HEADER) ?? null
+			);
 			return c.json({
-				success: false,
-				code: 'shared_key_earning_history_immutable',
-				message: 'Shared key has credited earnings and cannot be deleted',
-			}, 409);
+				success: true,
+				data,
+				message:
+					method === "patch" ? "Shared key updated" : "Shared key deleted",
+			});
+		} catch (error) {
+			return failure(c, error, "Failed to govern shared key");
 		}
-		return handleAdminRouteError(c, error, 'Failed to delete shared key');
-	}
-});
+	});
+}

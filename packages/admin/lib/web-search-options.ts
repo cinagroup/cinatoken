@@ -11,7 +11,7 @@ import {
 	WEB_SEARCH_PROVIDER_KEY,
 	WEB_SEARCH_PROVIDERS,
 	type WebSearchProvider,
-} from '@octafuse/core/lib/web-search-system-config';
+} from "@octafuse/core/lib/web-search-system-config";
 
 export {
 	DEFAULT_WEB_SEARCH_COST,
@@ -25,14 +25,17 @@ export {
 	type WebSearchProvider,
 };
 
-export type WebSearchProviderOption = { value: WebSearchProvider; label: string };
+export type WebSearchProviderOption = {
+	value: WebSearchProvider;
+	label: string;
+};
 
 /** 各引擎官网 / 申请 API Key 入口（非 i18n） */
 export const WEB_SEARCH_PROVIDER_DOCS_URL: Record<WebSearchProvider, string> = {
-	bocha: 'https://open.bochaai.com/',
-	tavily: 'https://app.tavily.com/',
-	cleversee: 'https://help.aliyun.com/zh/product/3037946.html',
-	tencent_wsa: 'https://cloud.tencent.com/product/wsa',
+	bocha: "https://open.bochaai.com/",
+	tavily: "https://app.tavily.com/",
+	cleversee: "https://help.aliyun.com/zh/product/3037946.html",
+	tencent_wsa: "https://cloud.tencent.com/product/wsa",
 };
 
 type WebSearchProviderLabelKey = `webSearch.providers.${WebSearchProvider}`;

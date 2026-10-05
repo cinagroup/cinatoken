@@ -1,14 +1,15 @@
 /**
  * 全站根布局：系统无衬线字体栈（避免 next/font/google 构建时拉取 Google Fonts，离线/受限网络下可正常 build）。
  */
-import './globals.css';
-import type { Metadata } from 'next';
-import { NextIntlClientProvider } from 'next-intl';
-import { getLocale, getMessages, getTranslations } from 'next-intl/server';
-import AuthWrapper from '@/components/layout/AuthWrapper';
-import DocumentTitle from '@/components/layout/DocumentTitle';
-import { ConsoleThemeProvider } from '@/components/unified/ConsoleThemeProvider';
-import CinaAuthPopupProvider from '@/components/auth/CinaAuthPopupProvider';
+import "./globals.css";
+import type { Metadata } from "next";
+import { NextIntlClientProvider } from "next-intl";
+import { getLocale, getMessages, getTranslations } from "next-intl/server";
+import AuthWrapper from "@/components/layout/AuthWrapper";
+import DocumentTitle from "@/components/layout/DocumentTitle";
+import { ConsoleThemeProvider } from "@/components/unified/ConsoleThemeProvider";
+import CinaAuthPopupProvider from "@/components/auth/CinaAuthPopupProvider";
+import { publicSiteOrigin } from "@/app/public-seo";
 
 const CONSOLE_THEME_BOOTSTRAP = `(() => {
 	let stored = null;
@@ -27,19 +28,21 @@ const CONSOLE_THEME_BOOTSTRAP = `(() => {
 })();`;
 
 export async function generateMetadata(): Promise<Metadata> {
-	const t = await getTranslations('metadata');
-	const appTitle = t('title');
+	const t = await getTranslations("metadata");
+	const appTitle = t("title");
+	const siteOrigin = publicSiteOrigin();
 	return {
+		...(siteOrigin ? { metadataBase: new URL(siteOrigin) } : {}),
 		title: {
 			default: appTitle,
 			template: `%s · ${appTitle}`,
 		},
-		description: t('description'),
+		description: t("description"),
 		icons: {
-			icon: [{ url: '/favicon.ico', type: 'image/x-icon' }],
-			shortcut: '/favicon.ico',
+			icon: [{ url: "/favicon.ico", type: "image/x-icon" }],
+			shortcut: "/favicon.ico",
 		},
-		robots: 'noindex, nofollow',
+		robots: "noindex, nofollow",
 	};
 }
 

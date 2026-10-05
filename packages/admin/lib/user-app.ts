@@ -30,6 +30,8 @@ import { userManagementKeysRoutes } from "@/lib/routes/user/management-keys";
 import { userWorkspaceBudgetsRoutes } from "@/lib/routes/user/workspace-budgets";
 import { userByokRoutes } from "@/lib/routes/user/byok";
 import type { AccountCapability } from "@/lib/unified-session";
+import { userWorkspacePrecondition } from "@/lib/user-workspace-precondition";
+import { userPrincipalPrecondition } from "@/lib/user-principal-precondition";
 import {
 	clearWorkspaceCookieHeader,
 	readPreferredWorkspaceId,
@@ -67,9 +69,24 @@ export function createPortalMeResponse(
 
 export function createUserApp(): Hono<UserEnv> {
 	const app = new Hono<UserEnv>();
-	app.onError((error, c) => error instanceof HTTPException
-		? error.getResponse()
-		: handleGatewayApiError({ route: c.req.path, error }));
+	app.onError((error, c) =>
+		error instanceof HTTPException
+			? error.getResponse()
+			: handleGatewayApiError({ route: c.req.path, error })
+	);
+
+	// Marketplace data stays private before auth, body limits and workspace setup.
+	for (const path of [
+		"/user/shared-keys",
+		"/user/shared-keys/*",
+		"/user/earnings",
+		"/user/earnings/*",
+	]) {
+		app.use(path, async (c, next) => {
+			await next();
+			c.header("Cache-Control", "private, no-store");
+		});
+	}
 
 	app.use("*", logger());
 	app.use("*", bodyLimit({ maxSize: 2 * 1024 * 1024 }));
@@ -79,8 +96,16 @@ export function createUserApp(): Hono<UserEnv> {
 		c.set("repositories", repositories);
 		const principal = c.env.USER_PRINCIPAL;
 		if (!principal)
-			return c.json({ success: false, message: "Unauthorized" }, 401);
+			return c.json({ success: false, message: "Unauthorized" }, 401, {
+				"Cache-Control": "private, no-store",
+			});
 		c.set("principal", principal);
+		await next();
+	});
+	app.use("*", userPrincipalPrecondition);
+	app.use("*", async (c, next) => {
+		const principal = c.get("principal");
+		const repositories = c.get("repositories");
 		if (c.req.path !== "/user/auth/logout") {
 			c.set(
 				"workspaceContext",
@@ -93,6 +118,7 @@ export function createUserApp(): Hono<UserEnv> {
 		}
 		await next();
 	});
+	app.use("*", userWorkspacePrecondition);
 
 	app.get("/user/me", async (c) => {
 		const principal = c.get("principal");

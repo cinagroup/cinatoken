@@ -1,25 +1,49 @@
-'use client';
+"use client";
 
-import type { DependencyList } from 'react';
-import { useEffect, useRef } from 'react';
-import { usePathname, useRouter } from 'next/navigation';
+import type { DependencyList } from "react";
+import { useEffect, useRef, useSyncExternalStore } from "react";
+import { usePathname, useRouter } from "next/navigation";
+
+const subscribeBrowserReady = () => () => {};
+const browserReadySnapshot = () => true;
+const serverReadySnapshot = () => false;
+
+/** URL-backed form state is initialized once after the server hydration snapshot. */
+export function useListPageBrowserReady() {
+	return useSyncExternalStore(
+		subscribeBrowserReady,
+		browserReadySnapshot,
+		serverReadySnapshot
+	);
+}
 
 /**
  * 列表页筛选变更时把当前条件写回 URL（`router.replace`，无滚动）。
- * 首次运行跳过，避免覆盖同轮挂载里「从 URL 读入 state」的 effect。
+ * 首次提交只记录查询值；相同值及 Strict Mode effect 重放均不覆盖深链。
  */
-export function useReplaceListPageQuery(buildParams: () => URLSearchParams, deps: DependencyList) {
-  const router = useRouter();
-  const pathname = usePathname();
-  const skipWrite = useRef(true);
+export function useReplaceListPageQuery(
+	buildParams: () => URLSearchParams,
+	_deps: DependencyList
+) {
+	const router = useRouter();
+	const pathname = usePathname();
+	const previousQuery = useRef<{ pathname: string; query: string } | null>(
+		null
+	);
+	// Existing callers retain their signature; the serialized query is the complete
+	// value dependency, so callback identity and unrelated renders cannot rewrite it.
+	const query = buildParams().toString();
 
-  useEffect(() => {
-    if (skipWrite.current) {
-      skipWrite.current = false;
-      return;
-    }
-    const params = buildParams();
-    const qs = params.toString();
-    router.replace(qs ? `${pathname}?${qs}` : pathname, { scroll: false });
-  }, [pathname, router, ...deps]);
+	useEffect(() => {
+		const previous = previousQuery.current;
+		if (previous == null) {
+			previousQuery.current = { pathname, query };
+			return;
+		}
+		if (previous.pathname === pathname && previous.query === query) return;
+		previousQuery.current = { pathname, query };
+		router.replace(query ? `${pathname}?${query}` : pathname, {
+			scroll: false,
+		});
+	}, [pathname, router, query]);
 }

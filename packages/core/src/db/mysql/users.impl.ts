@@ -9,10 +9,13 @@ import type { UsersRepository } from '../../storage/gateway-repository-interface
 import {
 	guardrailsTable as myGuardrailsTable,
 	guardrailVersionsTable as myGuardrailVersionsTable,
+	userAuditLogsTable as myUserAuditLogsTable,
 	usersTable as myUsersTable,
 	workspacesTable as myWorkspacesTable,
 } from '../../storage/drizzle/schema.mysql';
 import type { InsertUserParams, UserMaxBudgetFilter } from '../users-types';
+import type { InsertUserAuditLogParams } from '../user-audit-logs-types';
+import { toUserAuditLogDrizzleInsert } from '../user-audit-drizzle-insert';
 import { defaultWorkspaceId } from '../../workspaces';
 import {
 	DEFAULT_USER_LIST_ORDER,
@@ -21,6 +24,8 @@ import {
 	type UserListSortOrder,
 } from '../users-list-sort';
 import { parseMoney } from '../../storage/critical-write-paths-utils';
+
+class UserDeleteDidNotMatchError extends Error {}
 
 function userListOrderByClauses(sort: UserListSortField, order: UserListSortOrder) {
 	const isAsc = order === 'asc';
@@ -352,6 +357,39 @@ export function createMySqlUsersRepository(db: MySqlDatabaseClient): UsersReposi
 						AND (guardrail.is_workspace_default = TRUE OR guardrail.is_account_default = TRUE)
 				)`, [id]);
 			return 'affectedRows' in result && Number(result.affectedRows) > 0;
+		},
+
+		async deleteUserHardWithAudit(
+			id: string,
+			audit: InsertUserAuditLogParams
+		): Promise<'deleted' | 'not_deleted'> {
+			if (audit.userId !== id || audit.eventType !== 'user_deleted') {
+				throw new TypeError('User deletion audit must identify the deleted user');
+			}
+			try {
+				return await drizzle.transaction(async (tx) => {
+					const existing = await tx.select({ id: myUsersTable.id })
+						.from(myUsersTable).where(eq(myUsersTable.id, id)).for('update');
+					if (existing.length === 0) return 'not_deleted' as const;
+					await tx.insert(myUserAuditLogsTable).values(
+						toUserAuditLogDrizzleInsert(audit, new Date().toISOString())
+					);
+					const [deleted] = await tx.execute(sql`DELETE FROM users
+						WHERE id = ${id} AND NOT EXISTS (
+							SELECT 1 FROM guardrails guardrail
+							WHERE guardrail.owner_user_id = users.id
+								AND (guardrail.is_workspace_default = TRUE OR guardrail.is_account_default = TRUE)
+						)`);
+					if (typeof deleted !== 'object' || deleted === null ||
+						!('affectedRows' in deleted) || Number(deleted.affectedRows) !== 1) {
+						throw new UserDeleteDidNotMatchError();
+					}
+					return 'deleted' as const;
+				});
+			} catch (error) {
+				if (error instanceof UserDeleteDidNotMatchError) return 'not_deleted';
+				throw error;
+			}
 		},
 
 		async getUsersCount() {

@@ -22,11 +22,21 @@ export function getSessionCookieToken(
 	request: Request,
 	fallbackCookieName: string
 ): string | null {
-	const values = readSessionCookies(request, [CINATOKEN_SESSION_COOKIE, fallbackCookieName]);
-	return values.get(CINATOKEN_SESSION_COOKIE) ?? values.get(fallbackCookieName) ?? null;
+	const values = readSessionCookies(request, [
+		CINATOKEN_SESSION_COOKIE,
+		fallbackCookieName,
+	]);
+	return (
+		values.get(CINATOKEN_SESSION_COOKIE) ??
+		values.get(fallbackCookieName) ??
+		null
+	);
 }
 
-function readSessionCookies(request: Request, names: readonly string[]): Map<string, string> {
+function readSessionCookies(
+	request: Request,
+	names: readonly string[]
+): Map<string, string> {
 	const values = new Map<string, string>();
 	const cookieHeader = request.headers.get("cookie");
 	if (!cookieHeader) return values;
@@ -46,7 +56,11 @@ function readSessionCookies(request: Request, names: readonly string[]): Map<str
 
 /** Logout revokes every session credential carried by this browser, including rollout cookies. */
 export function getAllBrowserSessionTokens(request: Request): string[] {
-	const values = readSessionCookies(request, [CINATOKEN_SESSION_COOKIE, 'admin_session', 'user_session']);
+	const values = readSessionCookies(request, [
+		CINATOKEN_SESSION_COOKIE,
+		"admin_session",
+		"user_session",
+	]);
 	return [...new Set([...values.values()].filter(Boolean))];
 }
 

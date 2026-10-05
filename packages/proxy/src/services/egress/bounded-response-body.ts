@@ -53,7 +53,7 @@ export async function consumeResponseTextWithinLimit(
 	try {
 		while (true) {
 			signal?.throwIfAborted();
-			const { done, value } = await new Promise<ReadableStreamReadResult<Uint8Array>>((resolve, reject) => {
+			const { done, value } = await new Promise<Awaited<ReturnType<typeof reader.read>>>((resolve, reject) => {
 				rejectPendingRead = reject;
 				void reader.read().then(resolve, reject);
 			});

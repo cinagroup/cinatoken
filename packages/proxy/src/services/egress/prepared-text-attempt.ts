@@ -70,7 +70,7 @@ export function createPreparedTextAttempt(params: {
 	routeIdentity: TextRouteIdentity;
 	url: string;
 	method: 'POST';
-	headers: HeadersInit;
+	headers: NonNullable<RequestInit['headers']>;
 	outboundBodySha256: string;
 	outboundBodyBytes: number;
 	outboundBodyCanonicalSha256?: string;

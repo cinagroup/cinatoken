@@ -3,4 +3,5 @@ export type SystemConfigRow = {
 	key: string;
 	value: string | null;
 	description: string | null;
+	revision: string;
 };

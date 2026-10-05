@@ -1,6 +1,6 @@
-'use client';
+"use client";
 
-import { useTranslations } from 'next-intl';
+import { useTranslations } from "next-intl";
 
 type Props = {
 	open: boolean;
@@ -8,20 +8,20 @@ type Props = {
 };
 
 export function FailoverRulesDialog({ open, onClose }: Props) {
-	const t = useTranslations('routes.failover');
-	const tCommon = useTranslations('common');
+	const t = useTranslations("routes.failover");
+	const tCommon = useTranslations("common");
 
 	if (!open) return null;
 
 	const rules = [
-		t('order'),
-		t('sameLayer'),
-		t('crossLayer'),
-		t('attemptLimit'),
-		t('circuitCooldown'),
-		t('allBusy'),
-		t('memoryNote'),
-		t('imagesAbort'),
+		t("order"),
+		t("sameLayer"),
+		t("crossLayer"),
+		t("attemptLimit"),
+		t("circuitCooldown"),
+		t("allBusy"),
+		t("memoryNote"),
+		t("imagesAbort"),
 	] as const;
 
 	return (
@@ -39,16 +39,19 @@ export function FailoverRulesDialog({ open, onClose }: Props) {
 			>
 				<div className="flex shrink-0 items-center justify-between border-b border-gray-200 px-5 py-3.5">
 					<div>
-						<h2 id="failover-rules-dialog-title" className="text-base font-semibold text-gray-900">
-							{t('title')}
+						<h2
+							id="failover-rules-dialog-title"
+							className="text-base font-semibold text-gray-900"
+						>
+							{t("title")}
 						</h2>
-						<p className="mt-1 text-xs text-amber-700">{t('readonlyHint')}</p>
+						<p className="mt-1 text-xs text-amber-700">{t("readonlyHint")}</p>
 					</div>
 					<button
 						type="button"
 						onClick={onClose}
 						className="rounded-md p-1.5 text-gray-400 transition hover:bg-gray-100 hover:text-gray-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
-						aria-label={tCommon('close')}
+						aria-label={tCommon("close")}
 					>
 						<span className="block text-xl leading-none" aria-hidden>
 							×
@@ -68,7 +71,7 @@ export function FailoverRulesDialog({ open, onClose }: Props) {
 						onClick={onClose}
 						className="rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-blue-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
 					>
-						{tCommon('close')}
+						{tCommon("close")}
 					</button>
 				</div>
 			</div>

@@ -10,9 +10,7 @@
 		"vendor": "meituan",
 		"context_window": 1000000,
 		"max_tokens": 128000,
-		"tags": [
-			"New"
-		],
+		"tags": ["New"],
 		"pricing": {
 			"usd": {
 				"tiers": [
@@ -38,12 +36,8 @@
 			}
 		},
 		"modalities": {
-			"input": [
-				"text"
-			],
-			"output": [
-				"text"
-			]
+			"input": ["text"],
+			"output": ["text"]
 		},
 		"released": "2026-06-30"
 	}
