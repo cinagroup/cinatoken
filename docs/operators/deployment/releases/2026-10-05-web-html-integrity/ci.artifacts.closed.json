@@ -1,0 +1,24 @@
+{
+  "command": [
+    "gh",
+    "api",
+    "/repos/cinagroup/cinatoken/actions/runs/37305448322/artifacts?per_page=100"
+  ],
+  "startedAt": "2026-10-05T11:55:12.589Z",
+  "completedAt": "2026-10-05T11:55:14.381Z",
+  "actual": 0,
+  "signal": null,
+  "error": null,
+  "rawRefs": [
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-3847955-ci-watch-a645738271094ef4b026be2c760f5b63\\artifacts.stdout.log",
+      "bytes": 712,
+      "sha256": "4114ebad6b79b6da30f46f57a454f53878b746d3dce6a63f0d238fa2d5110e82"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-3847955-ci-watch-a645738271094ef4b026be2c760f5b63\\artifacts.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ]
+}

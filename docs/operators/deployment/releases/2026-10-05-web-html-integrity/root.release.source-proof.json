@@ -1,0 +1,22 @@
+{
+  "at": "2026-10-05T11:56:05.398Z",
+  "actualExit": 0,
+  "sourceCommit": "3847955ccdb4c670f0f9aa099ef976889357e6b2",
+  "manifestSha256": "338596810a2c13c8f3d06c05b0582a69ff99d2cf3d8a8206223cd3bc8662dce3",
+  "buildContract": {
+    "version": 2,
+    "buildId": "45b4df66-0907-457d-952a-e73c93bd87af",
+    "sourceSha256": "b8ef2ef6dac2489390d93e1a2a6676166adf6c61f1a5d65d653ba8262f48eae0"
+  },
+  "selectedWorkingTreeInputFiles": 2290,
+  "selectedCommittedInputFiles": 2289,
+  "workingTreeOnlyPaths": [
+    "packages/web/src/features/usage-logs/data/schema.ts"
+  ],
+  "selectedGitBlobBytes": 18187583,
+  "committedSourceSha256": "b8ef2ef6dac2489390d93e1a2a6676166adf6c61f1a5d65d653ba8262f48eae0",
+  "windowsWorkingTreeSourceSha256": "2f11f42287b80af80afd61fbacf9cbcea0196cf97cbf0d07dee13835cdb7dd54",
+  "provenance": "Exact committed Git input blobs match the Linux artifact fingerprint; local ignored reference files and Windows EOL are neither rewritten nor represented as CI inputs",
+  "assetFiles": 135,
+  "serverFiles": 35
+}

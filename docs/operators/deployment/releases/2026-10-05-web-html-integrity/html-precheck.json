@@ -1,0 +1,237 @@
+{
+  "schema": "cinatoken-production-html-no-transform-real-precheck-v1",
+  "label": "production-3847955-precheck-v1-053c9a1f",
+  "startedAt": "2026-10-05T12:02:26.288Z",
+  "actualExit": 0,
+  "node": "v24.14.1",
+  "scriptRaw": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-independent-web-no-transform-77396559a4834498a71bef4db3b8e340\\production-html-no-transform-precheck-v1.mjs",
+    "bytes": 12348,
+    "sha256": "62c8fc0a923e361120c0709993ff3b53eb7296ea652c6df3b30aee3e10ec36a8"
+  },
+  "requests": [
+    {
+      "route": "/en",
+      "kind": "public",
+      "method": "GET",
+      "url": "https://cinatoken.com/en",
+      "startedAt": "2026-10-05T12:02:26.293Z",
+      "status": 200,
+      "finalURL": "https://cinatoken.com/en",
+      "headers": {
+        "cache-control": "no-store, no-transform",
+        "content-security-policy": "default-src 'self'; script-src 'self' 'nonce-3e3e6694e71a4a11973fdebf9094b1da'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https:; media-src 'self' blob:; font-src 'self' data:; connect-src 'self' wss: https://api.cinatoken.com wss://api.cinatoken.com; worker-src 'self' blob:; object-src 'none'; base-uri 'self'; frame-ancestors 'none'; frame-src 'none'; form-action 'self'",
+        "content-type": "text/html; charset=utf-8",
+        "cross-origin-opener-policy": "same-origin",
+        "cross-origin-resource-policy": "same-origin",
+        "referrer-policy": "strict-origin-when-cross-origin",
+        "x-content-type-options": "nosniff",
+        "x-frame-options": "DENY"
+      },
+      "bodyRaw": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-independent-web-no-transform-77396559a4834498a71bef4db3b8e340\\production-3847955-precheck-v1-053c9a1f-en-response.html",
+        "bytes": 23177,
+        "sha256": "81857c5f5c478de3f0f37a6542e8ebd5cea984422e41a738ee42378ec6738bd2"
+      },
+      "checks": {
+        "cacheTokens": [
+          "no-store",
+          "no-transform"
+        ],
+        "unchangedCSPExceptPublicNonce": true,
+        "markerHits": [],
+        "scriptCount": 4,
+        "scriptSources": [
+          "/web-assets/static/js/index.89887bd39e.js"
+        ],
+        "publicScriptNonceMatches": true
+      },
+      "finishedAt": "2026-10-05T12:02:28.193Z",
+      "passed": true
+    },
+    {
+      "route": "/en/models",
+      "kind": "public",
+      "method": "GET",
+      "url": "https://cinatoken.com/en/models",
+      "startedAt": "2026-10-05T12:02:28.194Z",
+      "status": 200,
+      "finalURL": "https://cinatoken.com/en/models",
+      "headers": {
+        "cache-control": "no-store, no-transform",
+        "content-security-policy": "default-src 'self'; script-src 'self' 'nonce-823901b6d55f4aafbe88eceb62cc0e17'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https:; media-src 'self' blob:; font-src 'self' data:; connect-src 'self' wss: https://api.cinatoken.com wss://api.cinatoken.com; worker-src 'self' blob:; object-src 'none'; base-uri 'self'; frame-ancestors 'none'; frame-src 'none'; form-action 'self'",
+        "content-type": "text/html; charset=utf-8",
+        "cross-origin-opener-policy": "same-origin",
+        "cross-origin-resource-policy": "same-origin",
+        "referrer-policy": "strict-origin-when-cross-origin",
+        "x-content-type-options": "nosniff",
+        "x-frame-options": "DENY"
+      },
+      "bodyRaw": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-independent-web-no-transform-77396559a4834498a71bef4db3b8e340\\production-3847955-precheck-v1-053c9a1f-en-models-response.html",
+        "bytes": 14812,
+        "sha256": "c9dec4bb06b386f8d227f40fa3a99eb6c5c5d332e75e5ad1563024ccbaeb64d8"
+      },
+      "checks": {
+        "cacheTokens": [
+          "no-store",
+          "no-transform"
+        ],
+        "unchangedCSPExceptPublicNonce": true,
+        "markerHits": [],
+        "scriptCount": 4,
+        "scriptSources": [
+          "/web-assets/static/js/index.89887bd39e.js"
+        ],
+        "publicScriptNonceMatches": true
+      },
+      "finishedAt": "2026-10-05T12:02:31.856Z",
+      "passed": true
+    },
+    {
+      "route": "/account",
+      "kind": "private",
+      "method": "GET",
+      "url": "https://cinatoken.com/account",
+      "startedAt": "2026-10-05T12:02:31.857Z",
+      "status": 200,
+      "finalURL": "https://cinatoken.com/account",
+      "headers": {
+        "cache-control": "no-store, no-transform",
+        "content-security-policy": "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https:; media-src 'self' blob:; font-src 'self' data:; connect-src 'self' wss: https://api.cinatoken.com wss://api.cinatoken.com; worker-src 'self' blob:; object-src 'none'; base-uri 'self'; frame-ancestors 'none'; frame-src 'none'; form-action 'self'",
+        "content-type": "text/html",
+        "cross-origin-opener-policy": "same-origin",
+        "cross-origin-resource-policy": "same-origin",
+        "referrer-policy": "strict-origin-when-cross-origin",
+        "x-content-type-options": "nosniff",
+        "x-frame-options": "DENY"
+      },
+      "bodyRaw": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-independent-web-no-transform-77396559a4834498a71bef4db3b8e340\\production-3847955-precheck-v1-053c9a1f-account-response.html",
+        "bytes": 742,
+        "sha256": "7002ea2c8c01d5d0288b53eaa97c2ae789a07a0fe84eab646194343e913f5101"
+      },
+      "checks": {
+        "cacheTokens": [
+          "no-store",
+          "no-transform"
+        ],
+        "unchangedCSPExceptPublicNonce": true,
+        "markerHits": [],
+        "scriptCount": 1,
+        "scriptSources": [
+          "/web-assets/static/js/index.89887bd39e.js"
+        ],
+        "publicScriptNonceMatches": null
+      },
+      "finishedAt": "2026-10-05T12:02:32.297Z",
+      "passed": true
+    },
+    {
+      "route": "/admin",
+      "kind": "private",
+      "method": "GET",
+      "url": "https://cinatoken.com/admin",
+      "startedAt": "2026-10-05T12:02:32.297Z",
+      "status": 200,
+      "finalURL": "https://cinatoken.com/admin",
+      "headers": {
+        "cache-control": "no-store, no-transform",
+        "content-security-policy": "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https:; media-src 'self' blob:; font-src 'self' data:; connect-src 'self' wss: https://api.cinatoken.com wss://api.cinatoken.com; worker-src 'self' blob:; object-src 'none'; base-uri 'self'; frame-ancestors 'none'; frame-src 'none'; form-action 'self'",
+        "content-type": "text/html",
+        "cross-origin-opener-policy": "same-origin",
+        "cross-origin-resource-policy": "same-origin",
+        "referrer-policy": "strict-origin-when-cross-origin",
+        "x-content-type-options": "nosniff",
+        "x-frame-options": "DENY"
+      },
+      "bodyRaw": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-independent-web-no-transform-77396559a4834498a71bef4db3b8e340\\production-3847955-precheck-v1-053c9a1f-admin-response.html",
+        "bytes": 742,
+        "sha256": "7002ea2c8c01d5d0288b53eaa97c2ae789a07a0fe84eab646194343e913f5101"
+      },
+      "checks": {
+        "cacheTokens": [
+          "no-store",
+          "no-transform"
+        ],
+        "unchangedCSPExceptPublicNonce": true,
+        "markerHits": [],
+        "scriptCount": 1,
+        "scriptSources": [
+          "/web-assets/static/js/index.89887bd39e.js"
+        ],
+        "publicScriptNonceMatches": null
+      },
+      "finishedAt": "2026-10-05T12:02:32.767Z",
+      "passed": true
+    }
+  ],
+  "methods": [
+    "GET"
+  ],
+  "sourceWrites": 0,
+  "gitWrites": 0,
+  "deployments": 0,
+  "routeWrites": 0,
+  "databaseWrites": 0,
+  "businessWrites": 0,
+  "browserRuns": 0,
+  "realLogin": false,
+  "claimLimit": "Four actual HTML responses; strict unchanged v2 browser remains a separate mandatory gate.",
+  "browserInputs": [
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-independent-web-browser-696cc8df85ea423aa0d2545df155d197\\execute-web-browser-observe-v2.mjs",
+      "bytes": 3432,
+      "sha256": "ffd074ec8b52d5ce7c9dbd8a9dace29ec29130b661e0290e72f1f2d2d0424ed8"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-independent-web-browser-696cc8df85ea423aa0d2545df155d197\\production-web-browser-observe-v2.mjs",
+      "bytes": 15695,
+      "sha256": "415d123bbc71cfdb5d8ed02bf91f01d9021031358667cd7aaf2f0fd6edcd55be"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-independent-web-browser-696cc8df85ea423aa0d2545df155d197\\web-route-matrix.mjs",
+      "bytes": 1770,
+      "sha256": "c8a3211d07979c037022f689aa442bd95de9b7c11843fb52b9ae9fa93ac01e61"
+    }
+  ],
+  "config": {
+    "gitSHA": "3847955ccdb4c670f0f9aa099ef976889357e6b2",
+    "workerVersionId": "dbe1800e-cd09-4f47-ba5e-b2a256898ae4",
+    "phase": "cutover",
+    "targetOrigin": "https://cinatoken.com",
+    "canonicalOrigin": "https://cinatoken.com",
+    "operatorVerifiedLiveVersion": true,
+    "all29FlagsEnabled": true,
+    "liveProof": {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-web-html-integrity-20261005-463533d1f4514516803e726a963bfb90/deployed.live-proof.json",
+      "bytes": 6014,
+      "sha256": "f6beda579fce8c555121e1311c29a36435217cb74ad850f711e61b210eb77999"
+    }
+  },
+  "configRaw": {
+    "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-web-html-integrity-20261005-463533d1f4514516803e726a963bfb90/production.browser-config.json",
+    "bytes": 565,
+    "sha256": "0d9b9d7ea1c4d2b2146f64f4b6239535b56e95519807af7951c9f600011804c8"
+  },
+  "finishedAt": "2026-10-05T12:02:32.768Z",
+  "liveProofRawStillSame": true,
+  "browserInputsAfter": [
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-independent-web-browser-696cc8df85ea423aa0d2545df155d197\\execute-web-browser-observe-v2.mjs",
+      "bytes": 3432,
+      "sha256": "ffd074ec8b52d5ce7c9dbd8a9dace29ec29130b661e0290e72f1f2d2d0424ed8"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-independent-web-browser-696cc8df85ea423aa0d2545df155d197\\production-web-browser-observe-v2.mjs",
+      "bytes": 15695,
+      "sha256": "415d123bbc71cfdb5d8ed02bf91f01d9021031358667cd7aaf2f0fd6edcd55be"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-independent-web-browser-696cc8df85ea423aa0d2545df155d197\\web-route-matrix.mjs",
+      "bytes": 1770,
+      "sha256": "c8a3211d07979c037022f689aa442bd95de9b7c11843fb52b9ae9fa93ac01e61"
+    }
+  ]
+}

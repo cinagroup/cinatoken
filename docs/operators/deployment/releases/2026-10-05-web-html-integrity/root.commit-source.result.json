@@ -1,0 +1,15 @@
+{
+  "at": "2026-10-05T11:49:18.498Z",
+  "finishedAt": "2026-10-05T11:49:18.636Z",
+  "executable": "C:/Program Files/Git/cmd/git.exe",
+  "args": [
+    "commit",
+    "-m",
+    "fix(web): prevent edge transformation of owned HTML"
+  ],
+  "cwd": "C:/cinagroup/cinatoken",
+  "actualExit": 0,
+  "signal": null,
+  "stdout": "C:/Users/cina/AppData/Local/Temp/cinatoken-web-html-integrity-20261005-463533d1f4514516803e726a963bfb90/commit-source.stdout.log",
+  "stderr": "C:/Users/cina/AppData/Local/Temp/cinatoken-web-html-integrity-20261005-463533d1f4514516803e726a963bfb90/commit-source.stderr.log"
+}

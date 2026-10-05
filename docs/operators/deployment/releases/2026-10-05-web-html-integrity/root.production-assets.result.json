@@ -1,0 +1,16 @@
+{
+  "at": "2026-10-05T12:01:20.735Z",
+  "finishedAt": "2026-10-05T12:01:54.716Z",
+  "executable": "C:/Program Files/nodejs/node.exe",
+  "args": [
+    "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-html-integrity-20261005-463533d1f4514516803e726a963bfb90\\verify-assets.mjs",
+    "https://cinatoken.com",
+    "3847955ccdb4c670f0f9aa099ef976889357e6b2",
+    "production"
+  ],
+  "cwd": "C:/cinagroup/cinatoken",
+  "actualExit": 1,
+  "signal": null,
+  "stdout": "C:/Users/cina/AppData/Local/Temp/cinatoken-web-html-integrity-20261005-463533d1f4514516803e726a963bfb90/production-assets.stdout.log",
+  "stderr": "C:/Users/cina/AppData/Local/Temp/cinatoken-web-html-integrity-20261005-463533d1f4514516803e726a963bfb90/production-assets.stderr.log"
+}

@@ -30,3 +30,4 @@ docs/operators/deployment/releases/2026-09-27-f4601a47-linux-worker-machine-repo
 docs/operators/deployment/releases/2026-09-27-f4601a47-v364-cancellation-unproven.md -text
 docs/operators/deployment/releases/2026-09-27-f4601a47-v364-http-cancel-failed.txt -text
 docs/operators/deployment/releases/2026-09-27-f4601a47-remote-ci-report.json -text
+docs/operators/deployment/releases/2026-10-05-web-html-integrity/** -text

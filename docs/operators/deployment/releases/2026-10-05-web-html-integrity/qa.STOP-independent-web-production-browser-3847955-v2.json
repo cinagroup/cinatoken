@@ -1,0 +1,47 @@
+{
+  "schema": "cinatoken-independent-web-production-browser-STOP-v2",
+  "at": "2026-10-05T12:08:11.808Z",
+  "status": "STOP",
+  "actualExit": 0,
+  "sourceSHA": "3847955ccdb4c670f0f9aa099ef976889357e6b2",
+  "webVersionId": "dbe1800e-cd09-4f47-ba5e-b2a256898ae4",
+  "browserClosed": true,
+  "contextClosed": true,
+  "processExit": 0,
+  "noFurtherRuntimeAuthorizedByThisReceipt": true,
+  "final": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-independent-web-browser-696cc8df85ea423aa0d2545df155d197\\FINAL-independent-web-production-browser-3847955-v2.json",
+    "bytes": 16312,
+    "sha256": "6b78cebaa9b709c08e932d9e8db04a9efc5c27f5010c1f48ab20e7a95e25f88c"
+  },
+  "browserResult": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-independent-web-browser-696cc8df85ea423aa0d2545df155d197\\cutover-3847955-v2-07c0e12a.json",
+    "bytes": 145742,
+    "sha256": "9b1529f158958d33ba9c25c0987cd8c563f7c1db204c4878a871e19b11bc36c2"
+  },
+  "execution": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-independent-web-browser-696cc8df85ea423aa0d2545df155d197\\cutover-3847955-v2-07c0e12a-execution-closed.json",
+    "bytes": 4970,
+    "sha256": "d610c4ef6e3727344862ab9818c5210bbcfd489a71be7d9f6569668505ec9c00"
+  },
+  "companionFinal": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-independent-web-no-transform-77396559a4834498a71bef4db3b8e340\\FINAL-production-html-no-transform-3847955-v1.json",
+    "bytes": 9862,
+    "sha256": "5a31a0227b962ace4c78f4cf410f2b94575e9802b9c343cbafe5e55c46f96243"
+  },
+  "companionStop": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-independent-web-no-transform-77396559a4834498a71bef4db3b8e340\\STOP-production-html-no-transform-3847955-v1.json",
+    "bytes": 1465,
+    "sha256": "ba2c39f18e59922ae56c0d3dbaf645dfd7a58836b1b6e9291347e1cbbfc8dead"
+  },
+  "scope": {
+    "sourceWrites": 0,
+    "gitWrites": 0,
+    "deployments": 0,
+    "routeWrites": 0,
+    "databaseWrites": 0,
+    "businessWrites": 0,
+    "installedDependencies": 0,
+    "productionRouteChangedByThisAgent": false
+  }
+}

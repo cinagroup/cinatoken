@@ -1,0 +1,62 @@
+{
+  "schema": "cinatoken-html-precheck-execution-closed-v1",
+  "label": "production-3847955-precheck-v1-053c9a1f",
+  "startedAt": "2026-10-05T12:02:26.230Z",
+  "inputScripts": [
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-independent-web-no-transform-77396559a4834498a71bef4db3b8e340\\execute-html-precheck-v1.mjs",
+      "bytes": 3560,
+      "sha256": "a1ad28b8189e8facf4aa9f5109a5edc4c43ba4e201ed079f53ffaeafd93d5783"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-independent-web-no-transform-77396559a4834498a71bef4db3b8e340\\production-html-no-transform-precheck-v1.mjs",
+      "bytes": 12348,
+      "sha256": "62c8fc0a923e361120c0709993ff3b53eb7296ea652c6df3b30aee3e10ec36a8"
+    }
+  ],
+  "configRaw": {
+    "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-web-html-integrity-20261005-463533d1f4514516803e726a963bfb90/production.browser-config.json",
+    "bytes": 565,
+    "sha256": "0d9b9d7ea1c4d2b2146f64f4b6239535b56e95519807af7951c9f600011804c8"
+  },
+  "gitSHA": "3847955ccdb4c670f0f9aa099ef976889357e6b2",
+  "webVersionId": "dbe1800e-cd09-4f47-ba5e-b2a256898ae4",
+  "phase": "cutover",
+  "commandArguments": [
+    "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-independent-web-no-transform-77396559a4834498a71bef4db3b8e340\\production-html-no-transform-precheck-v1.mjs",
+    "--execute",
+    "production-3847955-precheck-v1-053c9a1f",
+    "C:/Users/cina/AppData/Local/Temp/cinatoken-web-html-integrity-20261005-463533d1f4514516803e726a963bfb90/production.browser-config.json"
+  ],
+  "processExecutable": "C:\\Program Files\\nodejs\\node.exe",
+  "sourceWrites": 0,
+  "gitWrites": 0,
+  "deployments": 0,
+  "databaseWrites": 0,
+  "browserRuns": 0,
+  "timedOut": false,
+  "exit": {
+    "code": 0,
+    "signal": null
+  },
+  "actualExit": 0,
+  "finishedAt": "2026-10-05T12:02:32.786Z",
+  "stdout": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-independent-web-no-transform-77396559a4834498a71bef4db3b8e340\\production-3847955-precheck-v1-053c9a1f-stdout.log",
+    "bytes": 1798,
+    "sha256": "b5a76c4f43fed984f18f75f1ce88e8764469e86a7bc00b7b4fd8d3238ac246e1"
+  },
+  "stderr": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-independent-web-no-transform-77396559a4834498a71bef4db3b8e340\\production-3847955-precheck-v1-053c9a1f-stderr.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "precheckResult": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-independent-web-no-transform-77396559a4834498a71bef4db3b8e340\\production-3847955-precheck-v1-053c9a1f-html-precheck-closed.json",
+    "bytes": 10591,
+    "sha256": "6673e9e53aada8250a5fad0afe04d2483a31567fffd0c9bab4ff8ec5acc482da"
+  },
+  "precheckActualExit": 0,
+  "requestsPassed": 4,
+  "liveProofRawStillSame": true
+}

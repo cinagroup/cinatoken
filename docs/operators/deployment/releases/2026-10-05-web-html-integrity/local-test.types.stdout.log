@@ -1,0 +1,8 @@
+
+> cinatoken@2.8.0 typecheck:web
+> npm run typecheck -w @cinatoken/web
+
+
+> @cinatoken/web@2.8.0 typecheck
+> tsc -b && tsc -p edge/tsconfig.json
+

@@ -1,0 +1,16 @@
+{
+  "at": "2026-10-05T12:10:01.529Z",
+  "actualExit": 0,
+  "sourceCommit": "3847955ccdb4c670f0f9aa099ef976889357e6b2",
+  "origin": "https://cinatoken.com",
+  "files": 135,
+  "matched": 135,
+  "fullAttemptActualExit": 1,
+  "fullAttemptTimeouts": 1,
+  "fullAttemptMatched": 134,
+  "targetedRetryActualExit": 0,
+  "targetedRetryMatched": 1,
+  "provenance": "134 exact hashes from original 135-file probe plus one exact archive hash from targeted retry; initial timeout retained.",
+  "originalPath": "C:/Users/cina/AppData/Local/Temp/cinatoken-web-html-integrity-20261005-463533d1f4514516803e726a963bfb90/production.assets-proof.json",
+  "retryPath": "C:/Users/cina/AppData/Local/Temp/cinatoken-web-html-integrity-20261005-463533d1f4514516803e726a963bfb90/production.asset-retry-proof.json"
+}

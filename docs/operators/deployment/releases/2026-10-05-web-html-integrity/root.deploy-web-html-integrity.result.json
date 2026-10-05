@@ -1,0 +1,20 @@
+{
+  "at": "2026-10-05T11:58:13.256Z",
+  "finishedAt": "2026-10-05T11:58:54.774Z",
+  "executable": "C:/Program Files/nodejs/node.exe",
+  "args": [
+    "C:\\cinagroup\\cinatoken\\node_modules\\wrangler\\bin\\wrangler.js",
+    "deploy",
+    "--config",
+    "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-html-integrity-20261005-463533d1f4514516803e726a963bfb90\\production.wrangler.json",
+    "--tag",
+    "3847955ccdb4c670f0f9aa099ef976889357e6b2",
+    "--message",
+    "Preserve owned HTML CSP without edge transformation"
+  ],
+  "cwd": "C:/cinagroup/cinatoken",
+  "actualExit": 0,
+  "signal": null,
+  "stdout": "C:/Users/cina/AppData/Local/Temp/cinatoken-web-html-integrity-20261005-463533d1f4514516803e726a963bfb90/deploy-web-html-integrity.stdout.log",
+  "stderr": "C:/Users/cina/AppData/Local/Temp/cinatoken-web-html-integrity-20261005-463533d1f4514516803e726a963bfb90/deploy-web-html-integrity.stderr.log"
+}

@@ -1,0 +1,13 @@
+{
+  "at": "2026-10-05T12:05:24.639Z",
+  "finishedAt": "2026-10-05T12:05:26.981Z",
+  "executable": "C:/Program Files/nodejs/node.exe",
+  "args": [
+    "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-html-integrity-20261005-463533d1f4514516803e726a963bfb90\\verify-analytics-rule-unchanged.mjs"
+  ],
+  "cwd": "C:/cinagroup/cinatoken",
+  "actualExit": 0,
+  "signal": null,
+  "stdout": "C:/Users/cina/AppData/Local/Temp/cinatoken-web-html-integrity-20261005-463533d1f4514516803e726a963bfb90/analytics-rule-readback.stdout.log",
+  "stderr": "C:/Users/cina/AppData/Local/Temp/cinatoken-web-html-integrity-20261005-463533d1f4514516803e726a963bfb90/analytics-rule-readback.stderr.log"
+}

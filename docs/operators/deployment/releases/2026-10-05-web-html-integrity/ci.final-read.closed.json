@@ -1,0 +1,29 @@
+{
+  "command": [
+    "gh",
+    "run",
+    "view",
+    "37305448322",
+    "--repo",
+    "cinagroup/cinatoken",
+    "--json",
+    "headSha,name,number,status,conclusion,url,jobs,createdAt,updatedAt"
+  ],
+  "startedAt": "2026-10-05T11:55:09.067Z",
+  "completedAt": "2026-10-05T11:55:12.585Z",
+  "actual": 0,
+  "signal": null,
+  "error": null,
+  "rawRefs": [
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-3847955-ci-watch-a645738271094ef4b026be2c760f5b63\\final-read.stdout.log",
+      "bytes": 7200,
+      "sha256": "b828856cd35cee25dc0022bed39c1a17c5338eb8245cbe8a97cf0a9a3cf05783"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-3847955-ci-watch-a645738271094ef4b026be2c760f5b63\\final-read.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ]
+}

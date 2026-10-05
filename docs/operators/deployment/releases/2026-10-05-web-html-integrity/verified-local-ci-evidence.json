@@ -1,0 +1,343 @@
+{
+  "status": "STOP-selected-local-test-and-CI-evidence-closed",
+  "at": "2026-10-05T12:06:16.846Z",
+  "actual": 0,
+  "validation": {
+    "allSelectedRefsExist": true,
+    "allRecordedBytesAndSha256Match": true,
+    "finalInputPinsMatch": true,
+    "originalCommandActualsPreserved": true,
+    "closedRecords": 9,
+    "closedVerified": true,
+    "referenceOccurrencesValidated": 50
+  },
+  "entries": [
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-3847955-ci-watch-a645738271094ef4b026be2c760f5b63\\artifacts.closed.json",
+      "bytes": 796,
+      "sha256": "2906a5685c48450be148795494cb6c601b802f919d75ce1d542d3a9c27ef9e72",
+      "basename": "artifacts.closed.json",
+      "type": "ci"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-3847955-ci-watch-a645738271094ef4b026be2c760f5b63\\artifacts.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "basename": "artifacts.stderr.log",
+      "type": "ci"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-3847955-ci-watch-a645738271094ef4b026be2c760f5b63\\artifacts.stdout.log",
+      "bytes": 712,
+      "sha256": "4114ebad6b79b6da30f46f57a454f53878b746d3dce6a63f0d238fa2d5110e82",
+      "basename": "artifacts.stdout.log",
+      "type": "ci"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-3847955-ci-watch-a645738271094ef4b026be2c760f5b63\\final-read.closed.json",
+      "bytes": 877,
+      "sha256": "66c07517d7f7cbe06c01c635a526ad14591d31ddd8dc91a058ae0b34ddd6d29c",
+      "basename": "final-read.closed.json",
+      "type": "ci"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-3847955-ci-watch-a645738271094ef4b026be2c760f5b63\\final-read.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "basename": "final-read.stderr.log",
+      "type": "ci"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-3847955-ci-watch-a645738271094ef4b026be2c760f5b63\\final-read.stdout.log",
+      "bytes": 7200,
+      "sha256": "b828856cd35cee25dc0022bed39c1a17c5338eb8245cbe8a97cf0a9a3cf05783",
+      "basename": "final-read.stdout.log",
+      "type": "ci"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-3847955-ci-watch-a645738271094ef4b026be2c760f5b63\\FINAL-web-3847955-CI-STOP-v2.json",
+      "bytes": 10932,
+      "sha256": "468e345da8d3deb8994c7498132c419d44b9c4912e3ecb82c30f0a5efde53509",
+      "basename": "FINAL-web-3847955-CI-STOP-v2.json",
+      "type": "ci"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-3847955-ci-watch-a645738271094ef4b026be2c760f5b63\\initial.closed.json",
+      "bytes": 871,
+      "sha256": "780704c1f70cbf2aafe370f3cf8f9de82183210dbd30ef82770be1944567bbf4",
+      "basename": "initial.closed.json",
+      "type": "ci"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-3847955-ci-watch-a645738271094ef4b026be2c760f5b63\\initial.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "basename": "initial.stderr.log",
+      "type": "ci"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-3847955-ci-watch-a645738271094ef4b026be2c760f5b63\\initial.stdout.log",
+      "bytes": 6781,
+      "sha256": "3f792760ae120b8c909141d8d9aadbabf1e1eb1479e64c2ce46109c901b1fa4c",
+      "basename": "initial.stdout.log",
+      "type": "ci"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-3847955-ci-watch-a645738271094ef4b026be2c760f5b63\\watch.closed.json",
+      "bytes": 830,
+      "sha256": "2225ed7e210e1326ce770f85c978d7e4989bcfdd485c200f4462b23318d68e23",
+      "basename": "watch.closed.json",
+      "type": "ci"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-3847955-ci-watch-a645738271094ef4b026be2c760f5b63\\watch.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "basename": "watch.stderr.log",
+      "type": "ci"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-3847955-ci-watch-a645738271094ef4b026be2c760f5b63\\watch.stdout.log",
+      "bytes": 13864,
+      "sha256": "09487e11607254ae38cb2961f4a492291974a3626c770543761416ba7adcc5e0",
+      "basename": "watch.stdout.log",
+      "type": "ci"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-html-no-transform-review-3c9cb048b11244b8bcc59ffc1b7efe43\\baseline.closed.json",
+      "bytes": 1202,
+      "sha256": "846f0b60718f75edacebe2cb0f592d69b84304c3154069b3364805d48e2bc1eb",
+      "basename": "baseline.closed.json",
+      "type": "local-test"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-html-no-transform-review-3c9cb048b11244b8bcc59ffc1b7efe43\\baseline.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "basename": "baseline.stderr.log",
+      "type": "local-test"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-html-no-transform-review-3c9cb048b11244b8bcc59ffc1b7efe43\\baseline.stdout.log",
+      "bytes": 1756,
+      "sha256": "7789335ec8d7eab48c76a4ffb7dd2d8e4233692b12ddb87bc6d7bb07a0a023a8",
+      "basename": "baseline.stdout.log",
+      "type": "local-test"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-html-no-transform-review-3c9cb048b11244b8bcc59ffc1b7efe43\\FINAL-web-html-no-transform-STOP-v1.json",
+      "bytes": 12154,
+      "sha256": "b2c757b8bf8b6252d453dc969a94ad3c2c8beecf64cf5970227693d1f300b28f",
+      "basename": "FINAL-web-html-no-transform-STOP-v1.json",
+      "type": "local-test"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-html-no-transform-review-3c9cb048b11244b8bcc59ffc1b7efe43\\fixed.closed.json",
+      "bytes": 1136,
+      "sha256": "c9ad7a1bd266d51d38cf7599275a49e61c17d31ac1122a625f6d9373ac2fa468",
+      "basename": "fixed.closed.json",
+      "type": "local-test"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-html-no-transform-review-3c9cb048b11244b8bcc59ffc1b7efe43\\fixed.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "basename": "fixed.stderr.log",
+      "type": "local-test"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-html-no-transform-review-3c9cb048b11244b8bcc59ffc1b7efe43\\fixed.stdout.log",
+      "bytes": 4312,
+      "sha256": "f04d93fad92cf6179ee13bbf0b969af6a98eaa817046cdcf35a6a47781d9dd28",
+      "basename": "fixed.stdout.log",
+      "type": "local-test"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-html-no-transform-review-3c9cb048b11244b8bcc59ffc1b7efe43\\format.closed.json",
+      "bytes": 1178,
+      "sha256": "d9c3a06b6c600ea6f9818d2ba1808d4f4e73ac8e24c11f2c66392f5b706f56e3",
+      "basename": "format.closed.json",
+      "type": "local-test"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-html-no-transform-review-3c9cb048b11244b8bcc59ffc1b7efe43\\format.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "basename": "format.stderr.log",
+      "type": "local-test"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-html-no-transform-review-3c9cb048b11244b8bcc59ffc1b7efe43\\format.stdout.log",
+      "bytes": 66,
+      "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20",
+      "basename": "format.stdout.log",
+      "type": "local-test"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-html-no-transform-review-3c9cb048b11244b8bcc59ffc1b7efe43\\lint.closed.json",
+      "bytes": 1153,
+      "sha256": "3dae5b7ea94329d6ff01ef36dc9af2939d30c8734dd0fddb568eb626232e81af",
+      "basename": "lint.closed.json",
+      "type": "local-test"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-html-no-transform-review-3c9cb048b11244b8bcc59ffc1b7efe43\\lint.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "basename": "lint.stderr.log",
+      "type": "local-test"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-html-no-transform-review-3c9cb048b11244b8bcc59ffc1b7efe43\\lint.stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "basename": "lint.stdout.log",
+      "type": "local-test"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-html-no-transform-review-3c9cb048b11244b8bcc59ffc1b7efe43\\owned-diff-check.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "basename": "owned-diff-check.stderr.log",
+      "type": "local-test"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-html-no-transform-review-3c9cb048b11244b8bcc59ffc1b7efe43\\owned-diff-check.stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "basename": "owned-diff-check.stdout.log",
+      "type": "local-test"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-html-no-transform-review-3c9cb048b11244b8bcc59ffc1b7efe43\\owned.patch",
+      "bytes": 14760,
+      "sha256": "472d7d3d077d484b933fbb89f153c9c0f318f52e9bdb27f9d8075bd784af657f",
+      "basename": "owned.patch",
+      "type": "local-test"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-html-no-transform-review-3c9cb048b11244b8bcc59ffc1b7efe43\\types.closed.json",
+      "bytes": 1162,
+      "sha256": "1696d62b32e87b05de011921d3a7f902252861e606e52b1aa31a984590284647",
+      "basename": "types.closed.json",
+      "type": "local-test"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-html-no-transform-review-3c9cb048b11244b8bcc59ffc1b7efe43\\types.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "basename": "types.stderr.log",
+      "type": "local-test"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-html-no-transform-review-3c9cb048b11244b8bcc59ffc1b7efe43\\types.stdout.log",
+      "bytes": 145,
+      "sha256": "e8686b831448219f02dfec0083f1cdf5dcf47d85fdf301d2464408c48b20a989",
+      "basename": "types.stdout.log",
+      "type": "local-test"
+    }
+  ],
+  "closed": [
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-html-no-transform-review-3c9cb048b11244b8bcc59ffc1b7efe43\\baseline.closed.json",
+      "actual": 1,
+      "expectedActual": 1,
+      "closed": true
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-html-no-transform-review-3c9cb048b11244b8bcc59ffc1b7efe43\\fixed.closed.json",
+      "actual": 0,
+      "expectedActual": 0,
+      "closed": true
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-html-no-transform-review-3c9cb048b11244b8bcc59ffc1b7efe43\\types.closed.json",
+      "actual": 0,
+      "expectedActual": 0,
+      "closed": true
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-html-no-transform-review-3c9cb048b11244b8bcc59ffc1b7efe43\\lint.closed.json",
+      "actual": 0,
+      "expectedActual": 0,
+      "closed": true
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-html-no-transform-review-3c9cb048b11244b8bcc59ffc1b7efe43\\format.closed.json",
+      "actual": 0,
+      "expectedActual": 0,
+      "closed": true
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-3847955-ci-watch-a645738271094ef4b026be2c760f5b63\\initial.closed.json",
+      "actual": 0,
+      "expectedActual": 0,
+      "closed": true
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-3847955-ci-watch-a645738271094ef4b026be2c760f5b63\\watch.closed.json",
+      "actual": 0,
+      "expectedActual": 0,
+      "closed": true
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-3847955-ci-watch-a645738271094ef4b026be2c760f5b63\\final-read.closed.json",
+      "actual": 0,
+      "expectedActual": 0,
+      "closed": true
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-3847955-ci-watch-a645738271094ef4b026be2c760f5b63\\artifacts.closed.json",
+      "actual": 0,
+      "expectedActual": 0,
+      "closed": true
+    }
+  ],
+  "observations": [
+    {
+      "type": "local-test",
+      "actual": 1,
+      "stage": "baseline",
+      "retainedIn": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-html-no-transform-review-3c9cb048b11244b8bcc59ffc1b7efe43\\FINAL-web-html-no-transform-STOP-v1.json",
+      "reason": "Old HTML runtime returned no-store rather than no-store, no-transform; both baseline assertions failed. This original failure remains in baseline.closed.json and baseline.stdout.log."
+    },
+    {
+      "type": "local-test",
+      "actual": 1,
+      "stage": "first-format-path-attempt",
+      "retainedIn": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-html-no-transform-review-3c9cb048b11244b8bcc59ffc1b7efe43\\FINAL-web-html-no-transform-STOP-v1.json",
+      "provenance": "Original tool output, with narrative retained in FINAL setupObservation; no separate raw log was created.",
+      "reason": "Absent root node_modules/prettier/bin/prettier.cjs caused MODULE_NOT_FOUND. Existing packages/web/node_modules/prettier was then used; final format.closed.json actual0. No installation or dependency mutation."
+    },
+    {
+      "type": "ci",
+      "actual": 1,
+      "stage": "first-sandbox-gh-read",
+      "provenance": "Original recorded tool output; this note is a transcription, not a new command execution or standalone raw closed record.",
+      "command": [
+        "gh",
+        "run",
+        "view",
+        "37305448322",
+        "--repo",
+        "cinagroup/cinatoken",
+        "--json",
+        "headSha,status,conclusion,name,url,jobs"
+      ],
+      "reason": "Restricted sandbox network socket was denied before the run could be read. Authorized read-only network escalation subsequently succeeded; all four retained CI closed records and watcher are actual0."
+    }
+  ],
+  "exclusions": [
+    "Real repository source files and historical source pin metadata are not selected raw artifacts.",
+    "No images, binary build artifacts or helper scripts are selected."
+  ],
+  "boundaries": {
+    "testsRerun": false,
+    "CIOrBrowserRerun": false,
+    "repositoryWrites": false,
+    "gitWrites": false,
+    "deploymentWrites": false,
+    "databaseWrites": false,
+    "onlyOwnTempManifestWritten": true
+  }
+}

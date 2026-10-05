@@ -1,0 +1,14 @@
+{
+  "at": "2026-10-05T12:01:21.493Z",
+  "finishedAt": "2026-10-05T12:01:32.439Z",
+  "executable": "C:/Program Files/nodejs/node.exe",
+  "args": [
+    "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-html-integrity-20261005-463533d1f4514516803e726a963bfb90\\auth-forwarding-probe.mjs",
+    "production"
+  ],
+  "cwd": "C:/cinagroup/cinatoken",
+  "actualExit": 0,
+  "signal": null,
+  "stdout": "C:/Users/cina/AppData/Local/Temp/cinatoken-web-html-integrity-20261005-463533d1f4514516803e726a963bfb90/production-auth.stdout.log",
+  "stderr": "C:/Users/cina/AppData/Local/Temp/cinatoken-web-html-integrity-20261005-463533d1f4514516803e726a963bfb90/production-auth.stderr.log"
+}

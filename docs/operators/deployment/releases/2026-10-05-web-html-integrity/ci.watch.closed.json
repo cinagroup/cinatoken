@@ -1,0 +1,30 @@
+{
+  "command": [
+    "gh",
+    "run",
+    "watch",
+    "37305448322",
+    "--repo",
+    "cinagroup/cinatoken",
+    "--exit-status",
+    "--interval",
+    "30"
+  ],
+  "startedAt": "2026-10-05T11:52:09.476Z",
+  "completedAt": "2026-10-05T11:55:09.064Z",
+  "actual": 0,
+  "signal": null,
+  "error": null,
+  "rawRefs": [
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-3847955-ci-watch-a645738271094ef4b026be2c760f5b63\\watch.stdout.log",
+      "bytes": 13864,
+      "sha256": "09487e11607254ae38cb2961f4a492291974a3626c770543761416ba7adcc5e0"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-3847955-ci-watch-a645738271094ef4b026be2c760f5b63\\watch.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ]
+}

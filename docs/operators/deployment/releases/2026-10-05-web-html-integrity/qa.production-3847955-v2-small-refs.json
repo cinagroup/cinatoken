@@ -1,0 +1,143 @@
+{
+  "schema": "cinatoken-production-web-QA-small-refs-v2",
+  "sourceSHA": "3847955ccdb4c670f0f9aa099ef976889357e6b2",
+  "webVersionId": "dbe1800e-cd09-4f47-ba5e-b2a256898ae4",
+  "phase": "cutover",
+  "actualExits": {
+    "HTML": 0,
+    "browser": 0,
+    "seal": 0
+  },
+  "final": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-independent-web-browser-696cc8df85ea423aa0d2545df155d197\\FINAL-independent-web-production-browser-3847955-v2.json",
+    "bytes": 16312,
+    "sha256": "6b78cebaa9b709c08e932d9e8db04a9efc5c27f5010c1f48ab20e7a95e25f88c"
+  },
+  "stop": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-independent-web-browser-696cc8df85ea423aa0d2545df155d197\\STOP-independent-web-production-browser-3847955-v2.json",
+    "bytes": 2101,
+    "sha256": "da5f28bce6b12cf7149309bc406e3123fb67b491a3c704e3bc235c13039531e0"
+  },
+  "browserResult": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-independent-web-browser-696cc8df85ea423aa0d2545df155d197\\cutover-3847955-v2-07c0e12a.json",
+    "bytes": 145742,
+    "sha256": "9b1529f158958d33ba9c25c0987cd8c563f7c1db204c4878a871e19b11bc36c2"
+  },
+  "execution": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-independent-web-browser-696cc8df85ea423aa0d2545df155d197\\cutover-3847955-v2-07c0e12a-execution-closed.json",
+    "bytes": 4970,
+    "sha256": "d610c4ef6e3727344862ab9818c5210bbcfd489a71be7d9f6569668505ec9c00"
+  },
+  "companionFinal": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-independent-web-no-transform-77396559a4834498a71bef4db3b8e340\\FINAL-production-html-no-transform-3847955-v1.json",
+    "bytes": 9862,
+    "sha256": "5a31a0227b962ace4c78f4cf410f2b94575e9802b9c343cbafe5e55c46f96243"
+  },
+  "companionStop": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-independent-web-no-transform-77396559a4834498a71bef4db3b8e340\\STOP-production-html-no-transform-3847955-v1.json",
+    "bytes": 1465,
+    "sha256": "ba2c39f18e59922ae56c0d3dbaf645dfd7a58836b1b6e9291347e1cbbfc8dead"
+  },
+  "companionResult": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-independent-web-no-transform-77396559a4834498a71bef4db3b8e340\\production-3847955-precheck-v1-053c9a1f-html-precheck-closed.json",
+    "bytes": 10591,
+    "sha256": "6673e9e53aada8250a5fad0afe04d2483a31567fffd0c9bab4ff8ec5acc482da"
+  },
+  "companionExecution": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-independent-web-no-transform-77396559a4834498a71bef4db3b8e340\\production-3847955-precheck-v1-053c9a1f-execution-closed.json",
+    "bytes": 2849,
+    "sha256": "3e8c8bd43bd73e1f84acd827a264153ee9a96ff3303b1616d360d7e810d78ab6"
+  },
+  "screenshots": [
+    {
+      "name": "public-1",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-independent-web-browser-696cc8df85ea423aa0d2545df155d197\\cutover-3847955-v2-07c0e12a-public-1.png",
+      "bytes": 54114,
+      "sha256": "3c3002c14200c075db9cb4077fc6926e1543c1dbc907150ee4981237dd71fbe6"
+    },
+    {
+      "name": "public-2",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-independent-web-browser-696cc8df85ea423aa0d2545df155d197\\cutover-3847955-v2-07c0e12a-public-2.png",
+      "bytes": 43244,
+      "sha256": "5fb6d929409d6c4eb21441f7f98a937612d2c0cf85761b56a29922fd86ca7dc2"
+    },
+    {
+      "name": "account-9",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-independent-web-browser-696cc8df85ea423aa0d2545df155d197\\cutover-3847955-v2-07c0e12a-account-9.png",
+      "bytes": 23753,
+      "sha256": "a99bb9d22fd16eaebd41e31ccceef6363f27760a9d6c0d6e3e6be1c6f5c4b8fb"
+    },
+    {
+      "name": "admin-19",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-independent-web-browser-696cc8df85ea423aa0d2545df155d197\\cutover-3847955-v2-07c0e12a-admin-19.png",
+      "bytes": 25449,
+      "sha256": "3903b8a1ace00a01f66aa85758c1fdd71fd081e2d3b8b76c1967475ed3cf94f2"
+    },
+    {
+      "name": "desktop-dark",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-independent-web-browser-696cc8df85ea423aa0d2545df155d197\\cutover-3847955-v2-07c0e12a-desktop-dark.png",
+      "bytes": 55028,
+      "sha256": "0ec81d2dfcfcd8b5b473ce3dc99cdc4691e4221032efe8d179803149719665f3"
+    },
+    {
+      "name": "mobile-zh-dark",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-independent-web-browser-696cc8df85ea423aa0d2545df155d197\\cutover-3847955-v2-07c0e12a-mobile-zh-dark.png",
+      "bytes": 32357,
+      "sha256": "99d1b467918686bc194528cedcaea3af125bba176eda06fd803b050ab12c7ea6"
+    }
+  ],
+  "counts": {
+    "publicKinds": 8,
+    "accountPages": 10,
+    "adminPages": 27,
+    "totalPages": 45,
+    "pageErrors": 0,
+    "warnings": 0,
+    "requestFailures": 0,
+    "unknownHTTP": 0,
+    "unknownConsole": 0,
+    "rawHTTPErrorResponses": 38,
+    "rawConsoleErrors": 38,
+    "exactExplainedUserMe401": 37,
+    "exactExplainedMissingModel404": 1,
+    "refusedMutations": 0
+  },
+  "themeLocaleMobile": [
+    {
+      "step": "desktop-dark-selected",
+      "url": "https://cinatoken.com/en",
+      "lang": "en",
+      "className": "dark",
+      "dark": true,
+      "hydrationFailure": false,
+      "themeCookie": "cinatoken-theme=dark",
+      "localeCookie": null,
+      "width": 1440,
+      "documentWidth": 1440
+    },
+    {
+      "step": "language-zh-navigated",
+      "url": "https://cinatoken.com/zh",
+      "lang": "zh",
+      "className": "dark",
+      "dark": true,
+      "hydrationFailure": false,
+      "themeCookie": "cinatoken-theme=dark",
+      "localeCookie": "NEXT_LOCALE=zh",
+      "width": 1440,
+      "documentWidth": 1440
+    },
+    {
+      "step": "mobile-zh-dark-reload",
+      "url": "https://cinatoken.com/zh",
+      "lang": "zh",
+      "className": "dark",
+      "dark": true,
+      "hydrationFailure": false,
+      "themeCookie": "cinatoken-theme=dark",
+      "localeCookie": "NEXT_LOCALE=zh",
+      "width": 390,
+      "documentWidth": 390
+    }
+  ]
+}

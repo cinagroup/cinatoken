@@ -1,0 +1,35 @@
+{
+  "schema": "cinatoken-production-html-integrity-companion-STOP-v1",
+  "at": "2026-10-05T12:08:11.792Z",
+  "status": "STOP",
+  "actualExit": 0,
+  "sourceSHA": "3847955ccdb4c670f0f9aa099ef976889357e6b2",
+  "webVersionId": "dbe1800e-cd09-4f47-ba5e-b2a256898ae4",
+  "processClosed": true,
+  "final": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-independent-web-no-transform-77396559a4834498a71bef4db3b8e340\\FINAL-production-html-no-transform-3847955-v1.json",
+    "bytes": 9862,
+    "sha256": "5a31a0227b962ace4c78f4cf410f2b94575e9802b9c343cbafe5e55c46f96243"
+  },
+  "execution": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-independent-web-no-transform-77396559a4834498a71bef4db3b8e340\\production-3847955-precheck-v1-053c9a1f-execution-closed.json",
+    "bytes": 2849,
+    "sha256": "3e8c8bd43bd73e1f84acd827a264153ee9a96ff3303b1616d360d7e810d78ab6"
+  },
+  "precheckResult": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-independent-web-no-transform-77396559a4834498a71bef4db3b8e340\\production-3847955-precheck-v1-053c9a1f-html-precheck-closed.json",
+    "bytes": 10591,
+    "sha256": "6673e9e53aada8250a5fad0afe04d2483a31567fffd0c9bab4ff8ec5acc482da"
+  },
+  "scope": {
+    "realGET": 4,
+    "browserRuns": 0,
+    "sourceWrites": 0,
+    "gitWrites": 0,
+    "deployments": 0,
+    "routeWrites": 0,
+    "databaseWrites": 0,
+    "businessWrites": 0
+  },
+  "oldPreparationAndFailureReceiptsUnmodified": true
+}

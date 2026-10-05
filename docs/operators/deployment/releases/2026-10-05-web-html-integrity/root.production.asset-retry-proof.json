@@ -1,0 +1,22 @@
+{
+  "at": "2026-10-05T12:03:09.364Z",
+  "actualExit": 0,
+  "sourceCommit": "3847955ccdb4c670f0f9aa099ef976889357e6b2",
+  "origin": "https://cinatoken.com",
+  "priorFullActualExit": 1,
+  "priorMatched": 134,
+  "timeoutMs": 60000,
+  "files": [
+    {
+      "path": "sources/web.5cad53dd30324d851e481e583a31b23c59c35ad0327769bbc2549fcfdfa480cd.tar.gz",
+      "status": 200,
+      "bytes": 4239144,
+      "sha256": "5cad53dd30324d851e481e583a31b23c59c35ad0327769bbc2549fcfdfa480cd",
+      "expectedBytes": 4239144,
+      "expectedSha256": "5cad53dd30324d851e481e583a31b23c59c35ad0327769bbc2549fcfdfa480cd",
+      "matched": true,
+      "cacheControl": "public, max-age=31536000, immutable"
+    }
+  ],
+  "finishedAt": "2026-10-05T12:03:16.358Z"
+}

@@ -1,0 +1,40 @@
+{
+  "startedAt": "2026-10-05T11:39:39.697Z",
+  "completedAt": "2026-10-05T11:39:56.597Z",
+  "command": [
+    "C:\\Program Files\\nodejs\\node.exe",
+    "--import",
+    "tsx",
+    "--test",
+    "--test-name-pattern",
+    "Web (private|public) HTML",
+    "edge/worker.test.ts"
+  ],
+  "actual": 1,
+  "signal": null,
+  "error": null,
+  "source": [
+    {
+      "path": "edge/worker.ts",
+      "bytes": 11339,
+      "sha256": "c42e1c1437f75963422e5cccd20effb8e3420a178a1e36d711400b1cef70080e"
+    },
+    {
+      "path": "edge/worker.test.ts",
+      "bytes": 42282,
+      "sha256": "99eff1a44e133e2230d3380016ab4a426ab30b9d8892d30fa4b2870aba714e21"
+    }
+  ],
+  "rawRefs": [
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-html-no-transform-review-3c9cb048b11244b8bcc59ffc1b7efe43\\baseline.stdout.log",
+      "bytes": 1756,
+      "sha256": "7789335ec8d7eab48c76a4ffb7dd2d8e4233692b12ddb87bc6d7bb07a0a023a8"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-html-no-transform-review-3c9cb048b11244b8bcc59ffc1b7efe43\\baseline.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ]
+}

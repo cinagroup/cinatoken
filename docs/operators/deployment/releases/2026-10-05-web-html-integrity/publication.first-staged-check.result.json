@@ -1,0 +1,14 @@
+{
+  "at": "2026-10-05T12:17:21.082Z",
+  "finishedAt": "2026-10-05T12:17:22.420Z",
+  "executable": "C:/Program Files/nodejs/node.exe",
+  "args": [
+    "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-html-integrity-20261005-463533d1f4514516803e726a963bfb90\\verify-release-git.mjs",
+    "staged"
+  ],
+  "cwd": "C:/cinagroup/cinatoken",
+  "actualExit": 1,
+  "signal": null,
+  "stdout": "C:/Users/cina/AppData/Local/Temp/cinatoken-web-html-integrity-20261005-463533d1f4514516803e726a963bfb90/verify-staged-release.stdout.log",
+  "stderr": "C:/Users/cina/AppData/Local/Temp/cinatoken-web-html-integrity-20261005-463533d1f4514516803e726a963bfb90/verify-staged-release.stderr.log"
+}

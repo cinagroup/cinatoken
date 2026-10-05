@@ -1,0 +1,23 @@
+{
+  "schema": "cinatoken-independent-web-production-browser-failure-stop-v2",
+  "at": "2026-10-05T11:17:03.464Z",
+  "status": "STOP_FAILED_RUNTIME_PRESERVED",
+  "final": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-independent-web-browser-696cc8df85ea423aa0d2545df155d197\\FINAL-independent-web-production-browser-failure-v2.json",
+    "bytes": 15848,
+    "sha256": "ce028bda226f7a78a666713dfef02720d2dedb3d398a8da0a989270361329b1b"
+  },
+  "actualRuntimeExit": 1,
+  "browserClosed": true,
+  "contextClosed": true,
+  "processTerminal": 1,
+  "sourceWrites": 0,
+  "gitWrites": 0,
+  "deployments": 0,
+  "routeWrites": 0,
+  "databaseWrites": 0,
+  "businessWrites": 0,
+  "newBrowserAuthorization": false,
+  "nextAction": "Wait for Root configuration remediation/fresh live proof and explicit next production browser run",
+  "evidenceReferenceCount": 28
+}

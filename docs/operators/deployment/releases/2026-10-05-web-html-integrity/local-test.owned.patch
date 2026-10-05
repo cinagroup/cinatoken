@@ -1,0 +1,418 @@
+diff --git a/packages/web/edge/worker.test.ts b/packages/web/edge/worker.test.ts
+index e2c43040..fe30959e 100644
+--- a/packages/web/edge/worker.test.ts
++++ b/packages/web/edge/worker.test.ts
+@@ -1,5 +1,6 @@
+ import assert from 'node:assert/strict'
+ import test from 'node:test'
++import { publicCatalogHttpFixture } from '../src/cinatoken/public-server/public-http.fixture'
+ import { routeWebRequest, type WebEntryEnv } from './worker.ts'
+ 
+ const accountPaths = [
+@@ -45,6 +46,205 @@ function fixture(enabled = 'true') {
+ 	return { env, assets, admin, backendResponse }
+ }
+ 
++function publicFixture() {
++	const f = fixture()
++	f.env.CINATOKEN_WEB_PUBLIC_ENABLED = 'true'
++	f.env.CINATOKEN_WEB_PUBLIC_ORIGIN = 'https://canonical.example'
++	f.env.ASSETS.fetch = async (request) => {
++		f.assets.push(request)
++		return new Response(
++			'<html><link rel="stylesheet" href="/web-assets/static/css/index.123.css"><script defer src="/web-assets/static/js/index.123.js"></script><div id="root"></div></html>',
++			{ headers: { 'content-type': 'text/html' } }
++		)
++	}
++	f.env.CINATOKEN_ADMIN_SERVICE.fetch = async (request) => {
++		f.admin.push(request)
++		return Response.json(publicCatalogHttpFixture(request.url), {
++			headers: { 'set-cookie': 'upstream_private=fixture; HttpOnly' },
++		})
++	}
++	return f
++}
++
++test('Web private HTML keeps no-store and its CSP while prohibiting transformations', async () => {
++	const f = fixture()
++	f.env.CINATOKEN_WEB_ADMIN_DASHBOARD_ENABLED = 'true'
++	f.env.ASSETS.fetch = async () =>
++		new Response('<html>private shell</html>', {
++			headers: {
++				'content-type': 'Text/HTML; charset=utf-8',
++				'cache-control': 'public, max-age=31536000',
++			},
++		})
++	for (const path of ['/account', '/admin']) {
++		for (const method of ['GET', 'HEAD']) {
++			const response = await routeWebRequest(
++				new Request(`https://gateway.example.com${path}`, { method }),
++				f.env
++			)
++			assert.equal(
++				response.headers.get('cache-control'),
++				'no-store, no-transform'
++			)
++			assert.equal(
++				response.headers.get('content-security-policy'),
++				[
++					"default-src 'self'",
++					"script-src 'self' 'unsafe-inline'",
++					"style-src 'self' 'unsafe-inline'",
++					"img-src 'self' data: blob: https:",
++					"media-src 'self' blob:",
++					"font-src 'self' data:",
++					"connect-src 'self' wss:",
++					"worker-src 'self' blob:",
++					"object-src 'none'",
++					"base-uri 'self'",
++					"frame-ancestors 'none'",
++					"frame-src 'none'",
++					"form-action 'self'",
++				].join('; ')
++			)
++			assert.equal(response.headers.get('x-frame-options'), 'DENY')
++			assert.equal(
++				await response.text(),
++				method === 'HEAD' ? '' : '<html>private shell</html>'
++			)
++		}
++	}
++	assert.equal(f.admin.length, 0)
++})
++
++test('Web public HTML preserves nonce, anonymous catalog and HEAD contracts without caching', async () => {
++	const f = publicFixture()
++	const nonces = new Set<string>()
++	for (const method of ['GET', 'HEAD']) {
++		const response = await routeWebRequest(
++			new Request('https://gateway.example.com/en/models', {
++				method,
++				headers: {
++					cookie: 'admin_session=private-marker',
++					authorization: 'Bearer secret-marker',
++				},
++			}),
++			f.env
++		)
++		assert.equal(response.status, 200)
++		assert.equal(
++			response.headers.get('cache-control'),
++			'no-store, no-transform'
++		)
++		assert.equal(response.headers.get('set-cookie'), null)
++		assert.equal(response.bodyUsed, false)
++		const csp = response.headers.get('content-security-policy') ?? ''
++		const nonce = /'nonce-([^']+)'/.exec(csp)?.[1]
++		assert.ok(nonce)
++		nonces.add(nonce)
++		assert.ok(csp.includes("default-src 'self'"))
++		assert.ok(csp.includes("object-src 'none'"))
++		assert.equal(csp.includes("script-src 'self' 'unsafe-inline'"), false)
++		const html = await response.text()
++		if (method === 'HEAD') {
++			assert.equal(response.body, null)
++			assert.equal(html, '')
++		} else {
++			assert.match(html, /HTTP authority model/)
++			const scripts = [...html.matchAll(/<script\b([^>]*)>/g)]
++			assert.ok(scripts.length >= 4)
++			for (const script of scripts)
++				assert.ok(script[1].includes(`nonce="${nonce}"`))
++			assert.doesNotMatch(html, /private-marker|secret-marker|upstream_private/)
++		}
++	}
++	assert.equal(nonces.size, 2)
++	assert.equal(f.admin.length, 2)
++	for (const read of f.admin) {
++		assert.equal(read.method, 'GET')
++		assert.equal(read.credentials, 'omit')
++		assert.equal(read.redirect, 'manual')
++		assert.deepEqual([...read.headers], [['accept', 'application/json']])
++	}
++})
++
++test('Web redirects, robots, XML and plain failures retain their existing cache policy', async () => {
++	const f = publicFixture()
++	for (const method of ['GET', 'HEAD']) {
++		for (const [path, status, contentType] of [
++			['/', 308, null],
++			['/robots.txt', 200, 'text/plain; charset=utf-8'],
++			['/sitemap.xml', 200, 'application/xml; charset=utf-8'],
++		] as const) {
++			const response = await routeWebRequest(
++				new Request(`https://gateway.example.com${path}`, { method }),
++				f.env
++			)
++			assert.equal(response.status, status)
++			assert.equal(response.headers.get('content-type'), contentType)
++			assert.equal(response.headers.get('cache-control'), 'no-store')
++			if (method === 'HEAD') assert.equal(response.body, null)
++			else await response.text()
++		}
++	}
++	f.env.ASSETS.fetch = async () => new Response('missing', { status: 404 })
++	const unavailable = await routeWebRequest(
++		new Request('https://gateway.example.com/en/models'),
++		f.env
++	)
++	assert.equal(unavailable.status, 503)
++	assert.equal(
++		unavailable.headers.get('content-type'),
++		'text/plain; charset=utf-8'
++	)
++	assert.equal(unavailable.headers.get('cache-control'), 'no-store')
++	assert.equal(unavailable.headers.get('retry-after'), '30')
++})
++
++test('HTML policy leaves backend HTML, API, OAuth and asset responses unchanged', async () => {
++	const f = fixture()
++	f.env.CINATOKEN_WEB_PUBLIC_ENABLED = 'true'
++	for (const [path, contentType] of [
++		['/dashboard', 'text/html; charset=utf-8'],
++		['/api/user/me', 'application/json'],
++		['/api/auth/cinaauth/callback', 'text/html'],
++	] as const) {
++		const headers = new Headers({
++			'content-type': contentType,
++			'cache-control': 'private, no-store',
++			'content-security-policy': "script-src 'nonce-upstream-only'",
++		})
++		headers.append('set-cookie', 'session=fixture; HttpOnly; Secure')
++		headers.append('set-cookie', 'oidc=; Max-Age=0')
++		const upstream = new Response('untouched upstream', { headers })
++		f.env.CINATOKEN_ADMIN_SERVICE.fetch = async (request) => {
++			f.admin.push(request)
++			return upstream
++		}
++		const request = new Request(`https://gateway.example.com${path}`)
++		const response = await routeWebRequest(request, f.env)
++		assert.equal(response, upstream)
++		assert.equal(f.admin.at(-1), request)
++		assert.equal(response.bodyUsed, false)
++		assert.equal(response.headers.get('cache-control'), 'private, no-store')
++		assert.deepEqual([...response.headers], [...headers])
++		assert.equal(response.headers.getSetCookie().length, 2)
++	}
++	for (const [path, status, cacheControl] of [
++		[
++			'/web-assets/static/js/app.12345678.js',
++			200,
++			'public, max-age=31536000, immutable',
++		],
++		['/web-assets/index.html', 200, 'no-store'],
++		['/web-assets/missing.js', 404, 'no-store'],
++	] as const) {
++		const response = await routeWebRequest(
++			new Request(`https://gateway.example.com${path}`),
++			f.env
++		)
++		assert.equal(response.status, status)
++		assert.equal(response.headers.get('cache-control'), cacheControl)
++	}
++})
++
+ test('configured Proxy origins apply to every shell for later SPA diagnostics navigation', async () => {
+ 	const f = fixture()
+ 	f.env.CINATOKEN_WEB_ADMIN_SIMULATOR_ENABLED = 'true'
+@@ -112,7 +312,10 @@ test('Dashboard rollout captures only exact GET/HEAD /admin paths and is indepen
+ 				f.env
+ 			)
+ 			assert.equal(response.status, 200)
+-			assert.equal(response.headers.get('cache-control'), 'no-store')
++			assert.equal(
++				response.headers.get('cache-control'),
++				'no-store, no-transform'
++			)
+ 			assert.equal(
+ 				await response.text(),
+ 				method === 'HEAD' ? '' : '<html>account shell</html>'
+@@ -159,7 +362,10 @@ test('Users rollout captures only exact GET/HEAD list paths and stays independen
+ 				f.env
+ 			)
+ 			assert.equal(response.status, 200)
+-			assert.equal(response.headers.get('cache-control'), 'no-store')
++			assert.equal(
++				response.headers.get('cache-control'),
++				'no-store, no-transform'
++			)
+ 			assert.equal(
+ 				await response.text(),
+ 				method === 'HEAD' ? '' : '<html>account shell</html>'
+@@ -210,7 +416,10 @@ test('User Detail rollout captures only UUID and simple canonical ext GET/HEAD p
+ 				f.env
+ 			)
+ 			assert.equal(response.status, 200, `${method} ${path}`)
+-			assert.equal(response.headers.get('cache-control'), 'no-store')
++			assert.equal(
++				response.headers.get('cache-control'),
++				'no-store, no-transform'
++			)
+ 			assert.equal(
+ 				await response.text(),
+ 				method === 'HEAD' ? '' : '<html>account shell</html>'
+@@ -272,7 +481,10 @@ test('Providers rollout is independent and only captures its exact GET/HEAD path
+ 				f.env
+ 			)
+ 			assert.equal(response.status, 200)
+-			assert.equal(response.headers.get('cache-control'), 'no-store')
++			assert.equal(
++				response.headers.get('cache-control'),
++				'no-store, no-transform'
++			)
+ 			assert.equal(
+ 				await response.text(),
+ 				method === 'HEAD' ? '' : '<html>account shell</html>'
+@@ -321,7 +533,10 @@ test('all twenty approved account paths serve the Web shell', async () => {
+ 			f.env
+ 		)
+ 		assert.equal(await response.text(), '<html>account shell</html>')
+-		assert.equal(response.headers.get('cache-control'), 'no-store')
++		assert.equal(
++			response.headers.get('cache-control'),
++			'no-store, no-transform'
++		)
+ 		assert.equal(
+ 			response.headers.get('cross-origin-opener-policy'),
+ 			'same-origin'
+@@ -345,7 +560,10 @@ test('Models rollout only serves its exact GET/HEAD page, with other routes pres
+ 				f.env
+ 			)
+ 			assert.equal(response.status, 200)
+-			assert.equal(response.headers.get('cache-control'), 'no-store')
++			assert.equal(
++				response.headers.get('cache-control'),
++				'no-store, no-transform'
++			)
+ 			assert.equal(
+ 				await response.text(),
+ 				method === 'HEAD' ? '' : '<html>account shell</html>'
+@@ -394,7 +612,10 @@ test('Endpoints rollout only serves its exact GET/HEAD page, with other routes p
+ 				f.env
+ 			)
+ 			assert.equal(response.status, 200)
+-			assert.equal(response.headers.get('cache-control'), 'no-store')
++			assert.equal(
++				response.headers.get('cache-control'),
++				'no-store, no-transform'
++			)
+ 			assert.equal(
+ 				await response.text(),
+ 				method === 'HEAD' ? '' : '<html>account shell</html>'
+@@ -443,7 +664,10 @@ test('Routes rollout only captures its exact GET/HEAD page and is independently
+ 				f.env
+ 			)
+ 			assert.equal(response.status, 200)
+-			assert.equal(response.headers.get('cache-control'), 'no-store')
++			assert.equal(
++				response.headers.get('cache-control'),
++				'no-store, no-transform'
++			)
+ 			assert.equal(
+ 				await response.text(),
+ 				method === 'HEAD' ? '' : '<html>account shell</html>'
+@@ -493,7 +717,10 @@ test('Data Policies rollout only captures its exact GET/HEAD page and is indepen
+ 				f.env
+ 			)
+ 			assert.equal(response.status, 200)
+-			assert.equal(response.headers.get('cache-control'), 'no-store')
++			assert.equal(
++				response.headers.get('cache-control'),
++				'no-store, no-transform'
++			)
+ 			assert.equal(
+ 				await response.text(),
+ 				method === 'HEAD' ? '' : '<html>account shell</html>'
+@@ -545,7 +772,10 @@ test('Presets rollout only captures its exact GET/HEAD page and is independently
+ 				f.env
+ 			)
+ 			assert.equal(response.status, 200)
+-			assert.equal(response.headers.get('cache-control'), 'no-store')
++			assert.equal(
++				response.headers.get('cache-control'),
++				'no-store, no-transform'
++			)
+ 			assert.equal(
+ 				await response.text(),
+ 				method === 'HEAD' ? '' : '<html>account shell</html>'
+@@ -908,7 +1138,10 @@ for (const rollout of [
+ 					f.env
+ 				)
+ 				assert.equal(response.status, 200)
+-				assert.equal(response.headers.get('cache-control'), 'no-store')
++				assert.equal(
++					response.headers.get('cache-control'),
++					'no-store, no-transform'
++				)
+ 				assert.equal(
+ 					await response.text(),
+ 					method === 'HEAD' ? '' : '<html>account shell</html>'
+diff --git a/packages/web/edge/worker.ts b/packages/web/edge/worker.ts
+index fb9ff518..7a34d5de 100644
+--- a/packages/web/edge/worker.ts
++++ b/packages/web/edge/worker.ts
+@@ -130,6 +130,20 @@ function assetRequest(request: Request, pathname: string): Request {
+ 	return new Request(url, request)
+ }
+ 
++function htmlWithoutTransform(response: Response): Response {
++	const contentType = response.headers.get('content-type') ?? ''
++	if (contentType.split(';', 1)[0].trim().toLowerCase() !== 'text/html')
++		return response
++	const headers = new Headers(response.headers)
++	// Preserve no-store/private and CSP while preventing edge HTML injection.
++	headers.append('cache-control', 'no-transform')
++	return new Response(response.body, {
++		status: response.status,
++		statusText: response.statusText,
++		headers,
++	})
++}
++
+ async function accountShell(
+ 	request: Request,
+ 	env: WebEntryEnv
+@@ -154,10 +168,12 @@ async function accountShell(
+ 	for (const [name, value] of Object.entries(securityHeaders)) {
+ 		headers.set(name, value)
+ 	}
+-	return new Response(request.method === 'HEAD' ? null : response.body, {
+-		status: response.status,
+-		headers,
+-	})
++	return htmlWithoutTransform(
++		new Response(request.method === 'HEAD' ? null : response.body, {
++			status: response.status,
++			headers,
++		})
++	)
+ }
+ 
+ export async function routeWebRequest(
+@@ -188,15 +204,17 @@ export async function routeWebRequest(
+ 		if (publicHttpRoute(url)) {
+ 			const { renderPublicResponse, anonymousCatalogFetch } =
+ 				await import('../src/cinatoken/public-server/public-response')
+-			return renderPublicResponse(request, {
+-				publicOrigin: env.CINATOKEN_WEB_PUBLIC_ORIGIN,
+-				proxyOrigins: env.CINATOKEN_WEB_PROXY_ORIGINS,
+-				anonymousFetch: anonymousCatalogFetch(
+-					request.url,
+-					env.CINATOKEN_ADMIN_SERVICE
+-				),
+-				readBrowserShell: (shellRequest) => env.ASSETS.fetch(shellRequest),
+-			})
++			return htmlWithoutTransform(
++				await renderPublicResponse(request, {
++					publicOrigin: env.CINATOKEN_WEB_PUBLIC_ORIGIN,
++					proxyOrigins: env.CINATOKEN_WEB_PROXY_ORIGINS,
++					anonymousFetch: anonymousCatalogFetch(
++						request.url,
++						env.CINATOKEN_ADMIN_SERVICE
++					),
++					readBrowserShell: (shellRequest) => env.ASSETS.fetch(shellRequest),
++				})
++			)
+ 		}
+ 	}
+ 

@@ -1,0 +1,306 @@
+{
+  "status": "STOP-source-complete-local-contracts-pass-production-transform-check-pending",
+  "at": "2026-10-05T11:43:40.123Z",
+  "baseCommit": "90cc749174a1d8d24af258cb66f7d9c70993f127",
+  "owned": [
+    {
+      "repoPath": "packages/web/edge/worker.ts",
+      "path": "C:\\cinagroup\\cinatoken\\packages\\web\\edge\\worker.ts",
+      "bytes": 11920,
+      "sha256": "7a458078b8fcd81bbfbefb41dbf10b8b4a9ccd8f74c620fc734fd4d65e029d43"
+    },
+    {
+      "repoPath": "packages/web/edge/worker.test.ts",
+      "path": "C:\\cinagroup\\cinatoken\\packages\\web\\edge\\worker.test.ts",
+      "bytes": 42623,
+      "sha256": "4512252adc758064bddd17b441607ad17e8096ad2ff4c22ec03d09bd9cd731b4"
+    }
+  ],
+  "change": "Only independent Web HTML responses append no-transform, retaining no-store and existing security headers, status and body stream. Admin fallback/API/OIDC and assets are not wrapped.",
+  "checks": {
+    "baseline": {
+      "startedAt": "2026-10-05T11:39:39.697Z",
+      "completedAt": "2026-10-05T11:39:56.597Z",
+      "command": [
+        "C:\\Program Files\\nodejs\\node.exe",
+        "--import",
+        "tsx",
+        "--test",
+        "--test-name-pattern",
+        "Web (private|public) HTML",
+        "edge/worker.test.ts"
+      ],
+      "actual": 1,
+      "signal": null,
+      "error": null,
+      "source": [
+        {
+          "path": "edge/worker.ts",
+          "bytes": 11339,
+          "sha256": "c42e1c1437f75963422e5cccd20effb8e3420a178a1e36d711400b1cef70080e"
+        },
+        {
+          "path": "edge/worker.test.ts",
+          "bytes": 42282,
+          "sha256": "99eff1a44e133e2230d3380016ab4a426ab30b9d8892d30fa4b2870aba714e21"
+        }
+      ],
+      "rawRefs": [
+        {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-html-no-transform-review-3c9cb048b11244b8bcc59ffc1b7efe43\\baseline.stdout.log",
+          "bytes": 1756,
+          "sha256": "7789335ec8d7eab48c76a4ffb7dd2d8e4233692b12ddb87bc6d7bb07a0a023a8"
+        },
+        {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-html-no-transform-review-3c9cb048b11244b8bcc59ffc1b7efe43\\baseline.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ],
+      "closedRef": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-html-no-transform-review-3c9cb048b11244b8bcc59ffc1b7efe43\\baseline.closed.json",
+        "bytes": 1202,
+        "sha256": "846f0b60718f75edacebe2cb0f592d69b84304c3154069b3364805d48e2bc1eb"
+      }
+    },
+    "fixed": {
+      "startedAt": "2026-10-05T11:41:54.656Z",
+      "completedAt": "2026-10-05T11:41:56.788Z",
+      "command": [
+        "C:\\Program Files\\nodejs\\node.exe",
+        "--import",
+        "tsx",
+        "--test",
+        "edge/worker.test.ts"
+      ],
+      "actual": 0,
+      "signal": null,
+      "error": null,
+      "source": [
+        {
+          "path": "edge/worker.ts",
+          "bytes": 11920,
+          "sha256": "7a458078b8fcd81bbfbefb41dbf10b8b4a9ccd8f74c620fc734fd4d65e029d43"
+        },
+        {
+          "path": "edge/worker.test.ts",
+          "bytes": 42623,
+          "sha256": "4512252adc758064bddd17b441607ad17e8096ad2ff4c22ec03d09bd9cd731b4"
+        }
+      ],
+      "rawRefs": [
+        {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-html-no-transform-review-3c9cb048b11244b8bcc59ffc1b7efe43\\fixed.stdout.log",
+          "bytes": 4312,
+          "sha256": "f04d93fad92cf6179ee13bbf0b969af6a98eaa817046cdcf35a6a47781d9dd28"
+        },
+        {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-html-no-transform-review-3c9cb048b11244b8bcc59ffc1b7efe43\\fixed.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ],
+      "closedRef": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-html-no-transform-review-3c9cb048b11244b8bcc59ffc1b7efe43\\fixed.closed.json",
+        "bytes": 1136,
+        "sha256": "c9ad7a1bd266d51d38cf7599275a49e61c17d31ac1122a625f6d9373ac2fa468"
+      }
+    },
+    "types": {
+      "startedAt": "2026-10-05T11:41:55.667Z",
+      "completedAt": "2026-10-05T11:42:28.100Z",
+      "command": [
+        "C:\\Program Files\\nodejs\\node.exe",
+        "C:/Program Files/nodejs/node_modules/npm/bin/npm-cli.js",
+        "run",
+        "typecheck:web"
+      ],
+      "actual": 0,
+      "signal": null,
+      "error": null,
+      "source": [
+        {
+          "path": "edge/worker.ts",
+          "bytes": 11920,
+          "sha256": "7a458078b8fcd81bbfbefb41dbf10b8b4a9ccd8f74c620fc734fd4d65e029d43"
+        },
+        {
+          "path": "edge/worker.test.ts",
+          "bytes": 42623,
+          "sha256": "4512252adc758064bddd17b441607ad17e8096ad2ff4c22ec03d09bd9cd731b4"
+        }
+      ],
+      "rawRefs": [
+        {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-html-no-transform-review-3c9cb048b11244b8bcc59ffc1b7efe43\\types.stdout.log",
+          "bytes": 145,
+          "sha256": "e8686b831448219f02dfec0083f1cdf5dcf47d85fdf301d2464408c48b20a989"
+        },
+        {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-html-no-transform-review-3c9cb048b11244b8bcc59ffc1b7efe43\\types.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ],
+      "closedRef": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-html-no-transform-review-3c9cb048b11244b8bcc59ffc1b7efe43\\types.closed.json",
+        "bytes": 1162,
+        "sha256": "1696d62b32e87b05de011921d3a7f902252861e606e52b1aa31a984590284647"
+      }
+    },
+    "lint": {
+      "startedAt": "2026-10-05T11:41:56.774Z",
+      "completedAt": "2026-10-05T11:42:19.485Z",
+      "command": [
+        "C:\\Program Files\\nodejs\\node.exe",
+        "node_modules/eslint/bin/eslint.js",
+        "edge/worker.ts",
+        "edge/worker.test.ts"
+      ],
+      "actual": 0,
+      "signal": null,
+      "error": null,
+      "source": [
+        {
+          "path": "edge/worker.ts",
+          "bytes": 11920,
+          "sha256": "7a458078b8fcd81bbfbefb41dbf10b8b4a9ccd8f74c620fc734fd4d65e029d43"
+        },
+        {
+          "path": "edge/worker.test.ts",
+          "bytes": 42623,
+          "sha256": "4512252adc758064bddd17b441607ad17e8096ad2ff4c22ec03d09bd9cd731b4"
+        }
+      ],
+      "rawRefs": [
+        {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-html-no-transform-review-3c9cb048b11244b8bcc59ffc1b7efe43\\lint.stdout.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-html-no-transform-review-3c9cb048b11244b8bcc59ffc1b7efe43\\lint.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ],
+      "closedRef": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-html-no-transform-review-3c9cb048b11244b8bcc59ffc1b7efe43\\lint.closed.json",
+        "bytes": 1153,
+        "sha256": "3dae5b7ea94329d6ff01ef36dc9af2939d30c8734dd0fddb568eb626232e81af"
+      }
+    },
+    "format": {
+      "startedAt": "2026-10-05T11:41:57.855Z",
+      "completedAt": "2026-10-05T11:41:59.810Z",
+      "command": [
+        "C:\\Program Files\\nodejs\\node.exe",
+        "node_modules/prettier/bin/prettier.cjs",
+        "--check",
+        "edge/worker.ts",
+        "edge/worker.test.ts"
+      ],
+      "actual": 0,
+      "signal": null,
+      "error": null,
+      "source": [
+        {
+          "path": "edge/worker.ts",
+          "bytes": 11920,
+          "sha256": "7a458078b8fcd81bbfbefb41dbf10b8b4a9ccd8f74c620fc734fd4d65e029d43"
+        },
+        {
+          "path": "edge/worker.test.ts",
+          "bytes": 42623,
+          "sha256": "4512252adc758064bddd17b441607ad17e8096ad2ff4c22ec03d09bd9cd731b4"
+        }
+      ],
+      "rawRefs": [
+        {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-html-no-transform-review-3c9cb048b11244b8bcc59ffc1b7efe43\\format.stdout.log",
+          "bytes": 66,
+          "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20"
+        },
+        {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-html-no-transform-review-3c9cb048b11244b8bcc59ffc1b7efe43\\format.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ],
+      "closedRef": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-html-no-transform-review-3c9cb048b11244b8bcc59ffc1b7efe43\\format.closed.json",
+        "bytes": 1178,
+        "sha256": "d9c3a06b6c600ea6f9818d2ba1808d4f4e73ac8e24c11f2c66392f5b706f56e3"
+      }
+    }
+  },
+  "tests": {
+    "baseline": {
+      "actual": 1,
+      "cases": 2,
+      "failed": 2,
+      "reason": "Expected no-store, no-transform but old runtime returned no-store on public and private HTML."
+    },
+    "fixed": {
+      "actual": 0,
+      "tests": 42,
+      "passed": 42,
+      "failed": 0,
+      "cancelled": 0,
+      "skipped": 0,
+      "addedCases": 4
+    }
+  },
+  "diff": {
+    "actual": 0,
+    "ref": {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-html-no-transform-review-3c9cb048b11244b8bcc59ffc1b7efe43\\owned.patch",
+      "bytes": 14760,
+      "sha256": "472d7d3d077d484b933fbb89f153c9c0f318f52e9bdb27f9d8075bd784af657f"
+    }
+  },
+  "diffCheck": {
+    "actual": 0,
+    "rawRefs": [
+      {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-html-no-transform-review-3c9cb048b11244b8bcc59ffc1b7efe43\\owned-diff-check.stdout.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-html-no-transform-review-3c9cb048b11244b8bcc59ffc1b7efe43\\owned-diff-check.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    ]
+  },
+  "setupObservation": "First formatting invocation referenced absent root node_modules/prettier path (actual1); corrected to existing packages/web/node_modules/prettier and final owned format check actual0. No install or dependency change.",
+  "officialSources": [
+    {
+      "url": "https://developers.cloudflare.com/web-analytics/faq/",
+      "claim": "An untransformed response prevents automatic Web Analytics beacon injection; documentation illustrates public,no-transform but does not state public is required."
+    },
+    {
+      "url": "https://developers.cloudflare.com/cache/concepts/cache-control/",
+      "claim": "no-transform is independent of intermediary caching; no-store forbids both client and intermediary storage. This implementation adds no public directive."
+    },
+    {
+      "url": "https://developers.cloudflare.com/rules/configuration-rules/response-body-inspection/",
+      "claim": "no-transform prevents body changes by supported features; it does not disable read-only inspection."
+    }
+  ],
+  "boundaries": {
+    "sourceWritesLimitedToOwned": true,
+    "gitWrites": false,
+    "deploymentWrites": false,
+    "databaseWrites": false,
+    "CSPRelaxed": false,
+    "cacheMadePublic": false
+  },
+  "validationLimits": [
+    "These are local Node24 contracts; no Cloudflare execution or actual edge injection suppression is claimed.",
+    "Root must independently review these files, build/freeze a fresh same-SHA Linux artifact and verify live HTML headers, absent automatic beacon injection and strict browser QA after deployment.",
+    "no-transform can also disable HTML edge compression and JavaScript Detections; assets retain existing policies and response inspection is not disabled.",
+    "The prior production strict actual1/69 telemetry anomalies remain historical evidence until a new live run proves resolution."
+  ]
+}
