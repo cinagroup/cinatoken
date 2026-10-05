@@ -273,6 +273,9 @@ test("provider credential echoes are redacted and failure keeps unknown upstream
 
 test("tool absolute deadline bounds a stalled engine transport without retrying", async () => {
 	const timer = globalThis.setTimeout;
+	// A real stalled transport retains an active handle. This synthetic fetch is
+	// only a pending Promise, while the request owner correctly unrefs its timer.
+	const transportKeepAlive = timer(() => {}, 1000);
 	const now = Date.now;
 	let elapsed = 0;
 	let requests = 0;
@@ -299,6 +302,7 @@ test("tool absolute deadline bounds a stalled engine transport without retrying"
 		);
 		assert.equal(requests, 1);
 	} finally {
+		clearTimeout(transportKeepAlive);
 		globalThis.setTimeout = timer;
 		Date.now = now;
 	}

@@ -26,7 +26,7 @@
 
 文档范围：按“将 checklist 整理成一个 md 文件，推进实施随时更新”的要求维护本文。完整清单为 **102 项主任务（99 项 P0–P8 任务、3 项来源任务）**，配套 G0–G8 验收门槛、页面/API/权限矩阵及批次记录；实施使用原任务 ID 持续更新，不另建主清单。
 
-当前发布（2026-10-05）：用户已授权提交、推送与Cloudflare部署；实际PostgreSQL0068–0081及运行grant已应用成功，正在复核迁移后权限。发布范围为现有Admin与配套Proxy、固定同一SHA的Linux Node22构建；独立Web入口与整体G0–G8状态保留。
+当前发布（2026-10-05）：源码66ef5a6已提交推送；生产PostgreSQL81项ledger、审计/mutex/recovery权限及19项结构检查通过且诊断资源清理完成。已修复并行CI的Docker参数、旧触发器及role/cancel/deadline测试夹具；本地Playground92与holder3均通过，准备推送修复并以新固定SHA重跑Linux检查及Cloudflare部署。独立Web入口及G0–G8状态保留。
 
 当前推进：目标 active，继续完整迁移。NEXT-13 J6 完整剩余497个Admin TS/TSX格式修复本地验收完成（5.69）：3320236→3379236 B，Root完整有界AST与独立Babel/TypeScript497/497通过；11文件18直接JSX父节点中的21原文本节点逐个转换为单字符串表达式，保留children类型/数量/顺序/值，1128评论/7427属性runtime值保持。完整Admin格式651通过/0告警/parse0，七CLI与审计0；fresh Admin types/lint、主unit1008＋相关5/30、Web1582均0。新Next I8iEBXkv6HbVKv644OYUc 的4045输入/2827产物实际构建与冻结0；旧新各8真实产品React流程＋10HTTP场景通过，6采样截图对原字节同，范围是受控SQLite/身份夹具与实际冻结Next，不证明全应用/真实身份/原生平台。临时before备份335和Mirror ordinary产物1983缺失已从独立/冻结副本按原hash恢复；修复前失败和原因未明的链接观察保留，不能声称产物从未漂移。Web2289/source4aaa…与P71 Root633不变。102主任务/54矩阵/G0–G8/E00–E08/211checkbox状态完整保持，主任务仅P6-11勾选；326来源、真实身份/原生三库/链、Node22 LinuxCI/双平台/发布回滚及旧页退役继续待验，RootP66/29string false/public origin空、未部署。
 
@@ -2191,15 +2191,17 @@ Root first source-writer schema错误发生于任何源写前，修正为proof�
 
 用户请求“提交推送部署到cloudflare”，授权将当前已实施源码、正式迁移和文档提交推送至既有main并发布Cloudflare。发布 cinatoken-admin（https://cinatoken.com）及配套 cinatoken-proxy（https://api.cinatoken.com）；Proxy包含本轮公共目录币种/JSON和价格快照实现，需要与Admin使用同一提交。Chain未改源码、不部署；独立Web的29入口仍关闭。
 
-既有GitHub Actions `deploy-cloudflare-admin.yml` 使用Linux Node22，checkout固定dispatch SHA；检查Admin 6个及Proxy 2个远端Secret名称，构建Core/Admin与Proxy bundle，运行Core/Proxy/Admin检查，按Proxy→Admin发布、以提交SHA标记版本，并保留线上自定义vars与Secret。临时目录已排除；正式历史证据保留。
+既有GitHub Actions `deploy-cloudflare-admin.yml` 使用Linux Node22，checkout固定dispatch SHA；检查Admin 6个及Proxy 2个远端Secret名称，构建Core/Admin与Proxy bundle，运行Core/Proxy/Admin检查，按Proxy→Admin发布、以提交SHA标记版本，并保留未显式声明的线上自定义vars与Secret；config明确声明的同名vars按生成配置更新。临时目录已排除；正式历史证据保留。
 
 生产前置：GitHub及Cloudflare认证通过；原HEAD/origin为de5b720c2e45f02ba62c29c45791f01e2569a782。Admin旧版本433a4fb9-3499-4108-a18c-f5da5abe2b2d，Proxy旧版本09f2d633-c4bc-4b0e-b939-4e680280762f。DATABASE_DRIVER=postgres，runtime Hyperdrive e703c04c8505431d9e22ce6f8b371251、migrator e723a48fdfd448549df42d435704082c。
 
-实际只读目录预检确认正式0001–0067 ledger、受限runtime角色、旧函数/FK及不存在冲突proposal/marker。固定迁移器仅发一次POST，HTTP200：applied14、skipped67、total81、runtime_grants_applied=true；对应0068–0081。临时Worker已删除并以settings404确认。正在以独立只读探针复核迁移后的审计/mutex/recovery权限；未改变数据库driver、D1/MySQL、Chain或Queue。
+实际只读目录预检确认正式0001–0067 ledger、受限runtime角色、旧函数/FK及不存在冲突proposal/marker。固定迁移器仅发一次POST，HTTP200：applied14、skipped67、total81、runtime_grants_applied=true；对应0068–0081。临时Worker已删除并以settings404确认。独立只读探针已验证迁移后审计/mutex/recovery权限，并以19项catalog检查确认完整81名称、revision/函数search_path/外键/触发器/PUBLIC拒绝权限；未改变数据库driver、D1/MySQL、Chain或Queue。
 
 首次test:deploy退出1（历史BYOK夹具68与当前77库存冲突）；固定原68迁移夹具后完整1836/1836通过、无失败或跳过。config_change_audit的INSERT-only权限反例已实际复现；两处INSERT改用严格 RETURNING 1 AS inserted，权限/审计回归101/101及Core类型检查通过，未放宽数据库grant。此前J6证据保持原范围，不替代本轮Linux生产构建。
 
-提交SHA、Linux构建、实际PostgreSQL迁移、Cloudflare版本及线上冒烟持续写入 [本轮发布证据](../../operators/deployment/releases/2026-10-05-web-frontend-cloudflare-release.json)。当前尚未完成推送或生产版本切换；整体任务与G0–G8勾选状态保持原状。
+CI夹具修复已完成：Web Docker补齐两个--env；Docker PG精确核对全部7个trigger名/表/enabled状态，额外/缺失/disabled同样拒绝。PG73桥接仅对自有loopback fixture临时LOGIN并finally恢复，生产grant及正式SQL未改；synthetic holder以waitUntil保留取消观察并新增延迟KV负/正例；deadline仅测试补ref transport handle。完整Playground92/92、holder3/3、Proxy staging类型及helper语法通过；真实native PG/HTTP取消待同SHA Linux CI。
+
+提交SHA、Linux构建、实际PostgreSQL迁移、Cloudflare版本及线上冒烟持续写入 [本轮发布证据](../../operators/deployment/releases/2026-10-05-web-frontend-cloudflare-release.json)。源码66ef5a698c0bb16aa1f2c490c79b6a06bdb5b33b已正常推送。Linux Run37282521598构建成功，在正式发布前取消（Proxy/Admin deploy均skipped），用于补齐目录复核并修正同SHA并行CI的Docker env参数、旧trigger库存及安全测试夹具。自动Release创建PR被仓库Actions权限拒绝，记录为独立运维限制；不修改该权限。整体任务与G0–G8勾选状态保持原状。
 
 ## 6. 更新记录
 
@@ -2389,3 +2391,5 @@ Root first source-writer schema错误发生于任何源写前，修正为proof�
 2026-10-05：NEXT-13 J6 完整剩余497TS/TSX本地闭合（5.69）；Root/独立完整有界AST497、1128评论/7427属性与21原JSXText单child保持，完整格式651pass/0warning/七CLI及审计0。fresh Admin types/lint、unit1008＋5/30、Web1582、新Next I8i…4045/2827实际构建与冻结0；旧新各8实际React＋10HTTP、6采样PNG对同字节。全部初始拒绝、两个QA失败、Temp备份335/产物1983缺失和精确恢复保留，原因未知，无Root源码/依赖恢复或部署。Web/P71/29false与完整102/54/G/E/211状态保持，G1/完整迁移仍未完成，目标active。
 
 - 2026-10-05：按用户明确授权启动Cloudflare生产控制台发布（5.70）；记录生产Postgres/Hyperdrive、6个Secret名称及旧版本，使用固定提交的Linux Node22构建部署；临时目录排除、历史BYOK夹具库存失败及后续回归保留，完整任务与G0–G8状态不提前完成。
+
+- 2026-10-05：发布5.70更新：66ef5a6提交推送完成，实际81项PG与19项结构/权限复核通过并清理临时Worker；Core1343/Admin1043全unit通过，首轮LinuxCloudflare构建通过且发布步骤skipped，正在处理并行CI夹具失败后恢复部署。

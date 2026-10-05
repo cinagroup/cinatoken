@@ -92,15 +92,23 @@ jobs:
               RAISE EXCEPTION 'ledger or chain outbox table is missing';
             END IF;
             IF (
-              SELECT COUNT(*)
+              SELECT array_agg(c.relname || '.' || t.tgname || ':' || t.tgenabled ORDER BY c.relname, t.tgname)
               FROM pg_trigger t
               JOIN pg_class c ON c.oid = t.tgrelid
               JOIN pg_namespace n ON n.oid = c.relnamespace
               WHERE n.nspname = 'cinatoken_gateway'
                 AND c.relname IN ('shared_key_earnings', 'withdrawals')
                 AND NOT t.tgisinternal
-            ) <> 5 THEN
-              RAISE EXCEPTION 'expected five portal ledger triggers';
+            ) IS DISTINCT FROM ARRAY[
+              'shared_key_earnings.shared_key_earnings_credit_after_insert:O',
+              'shared_key_earnings.shared_key_earnings_history_immutable:O',
+              'shared_key_earnings.shared_key_earnings_history_no_truncate:O',
+              'withdrawals.withdrawals_confirm_after_status_update:O',
+              'withdrawals.withdrawals_lock_after_insert:O',
+              'withdrawals.withdrawals_refund_after_status_update:O',
+              'withdrawals.withdrawals_validate_lock_before_insert:O'
+            ]::text[] THEN
+              RAISE EXCEPTION 'expected all seven enabled portal ledger and history guard triggers';
             END IF;
           END
           $verify$;

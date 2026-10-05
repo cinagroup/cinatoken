@@ -1,0 +1,487 @@
+{
+  "version": 1,
+  "closed": true,
+  "sourceWritesStopped": true,
+  "stoppedAt": "2026-10-05T08:39:14.217Z",
+  "nodeVersion": "v24.14.1",
+  "sources": [
+    {
+      "path": "C:\\cinagroup\\cinatoken\\scripts\\db\\cutover\\pg73-native-fixture.mjs",
+      "before": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-release-real-ci-fixes-93d660289b2f427392eee8c1d5ec1840\\scripts__db__cutover__pg73-native-fixture.mjs.before",
+      "bytes": 5080,
+      "sha256": "fe9af582ee01e7d111492bc731234c7b61262b8c427abc34cb819a6d38994d07",
+      "afterBytes": 6849,
+      "afterSha256": "124ddd43c2594d0daaac66a4e7158e5df90b00a6d73f03cbcac9e8f853a7346f"
+    },
+    {
+      "path": "C:\\cinagroup\\cinatoken\\packages\\proxy\\scripts\\staging\\chat-holder-private-v364.ts",
+      "before": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-release-real-ci-fixes-93d660289b2f427392eee8c1d5ec1840\\packages__proxy__scripts__staging__chat-holder-private-v364.ts.before",
+      "bytes": 5073,
+      "sha256": "5d32924d095aed7591e1b2ee8667d52bc374fc15e61ad68dae5ff749afd861c1",
+      "afterBytes": 5367,
+      "afterSha256": "44070fcbb7058b915329a150634eaa649c1b3601724495a1620e94ce2d54d1bf"
+    },
+    {
+      "path": "C:\\cinagroup\\cinatoken\\packages\\proxy\\scripts\\staging\\chat-holder-binding-v364.node.test.mjs",
+      "before": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-release-real-ci-fixes-93d660289b2f427392eee8c1d5ec1840\\packages__proxy__scripts__staging__chat-holder-binding-v364.node.test.mjs.before",
+      "bytes": 4470,
+      "sha256": "51c845fcca4edb2bdd371bee90f0a6e7efce7ac98e310a18e60206513b2148b7",
+      "afterBytes": 5908,
+      "afterSha256": "bf02a63395f450b889a784dc58bc537b6cb2f4a3004de07e1833c3e747c27fcc"
+    },
+    {
+      "path": "C:\\cinagroup\\cinatoken\\packages\\admin\\lib\\services\\admin\\playground-tools-lifecycle.test.ts",
+      "before": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-release-real-ci-fixes-93d660289b2f427392eee8c1d5ec1840\\packages__admin__lib__services__admin__playground-tools-lifecycle.test.ts.before",
+      "bytes": 8518,
+      "sha256": "81351494bc06bb2b9841b14eda6778bbca1871e227764eda432d35035fb10f56",
+      "afterBytes": 8764,
+      "afterSha256": "cacef87e50f88bd0498a3526959af464b308428daa0cf1531a34ea82e7179294"
+    }
+  ],
+  "tests": [
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-release-real-ci-fixes-93d660289b2f427392eee8c1d5ec1840\\baseline-admin-file.actual.json",
+      "bytes": 1439,
+      "sha256": "467ef52bb0dce13e2af509d2ef9a08fffeed7b1bdef196d7799d4579954aa85c",
+      "result": {
+        "closed": true,
+        "label": "baseline-admin-file",
+        "startedAt": "2026-10-05T08:33:24.562Z",
+        "finishedAt": "2026-10-05T08:33:26.137Z",
+        "command": [
+          "C:\\Program Files\\nodejs\\node.exe",
+          "--import",
+          "tsx",
+          "--test",
+          "packages/admin/lib/services/admin/playground-tools-lifecycle.test.ts"
+        ],
+        "nodeVersion": "v24.14.1",
+        "productionCredentialsPassed": false,
+        "envNativeAttempt": null,
+        "actualExit": 1,
+        "signal": null,
+        "summaries": [
+          {
+            "tests": 1,
+            "suites": 0,
+            "pass": 0,
+            "fail": 1,
+            "cancelled": 0,
+            "skipped": 0,
+            "todo": 0
+          }
+        ],
+        "artifacts": [
+          {
+            "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-release-real-ci-fixes-93d660289b2f427392eee8c1d5ec1840\\baseline-admin-file.stdout.log",
+            "bytes": 1844,
+            "sha256": "dda38224d6c11f7ec78ec80f097ae501bcbf4d183fcff2ef202a46cada196a4a"
+          },
+          {
+            "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-release-real-ci-fixes-93d660289b2f427392eee8c1d5ec1840\\baseline-admin-file.stderr.log",
+            "bytes": 0,
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          {
+            "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-release-real-ci-fixes-93d660289b2f427392eee8c1d5ec1840\\baseline-admin-file.log",
+            "bytes": 1844,
+            "sha256": "dda38224d6c11f7ec78ec80f097ae501bcbf4d183fcff2ef202a46cada196a4a"
+          }
+        ]
+      }
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-release-real-ci-fixes-93d660289b2f427392eee8c1d5ec1840\\baseline-admin-file-v2.actual.json",
+      "bytes": 1533,
+      "sha256": "3798aa98beb592591d7285b6c831d52ac7c991b9dacd07a18b3af4f3f5802d58",
+      "result": {
+        "closed": true,
+        "label": "baseline-admin-file-v2",
+        "startedAt": "2026-10-05T08:36:31.411Z",
+        "finishedAt": "2026-10-05T08:36:34.340Z",
+        "command": [
+          "C:\\Program Files\\nodejs\\node.exe",
+          "--import",
+          "tsx",
+          "--test",
+          "C:/Users/cina/AppData/Local/Temp/cinatoken-release-real-ci-fixes-93d660289b2f427392eee8c1d5ec1840/baseline-admin-with-absolute-local-imports.test.ts"
+        ],
+        "nodeVersion": "v24.14.1",
+        "productionCredentialsPassed": false,
+        "envNativeAttempt": null,
+        "actualExit": 0,
+        "signal": null,
+        "summaries": [
+          {
+            "tests": 16,
+            "suites": 0,
+            "pass": 16,
+            "fail": 0,
+            "cancelled": 0,
+            "skipped": 0,
+            "todo": 0
+          }
+        ],
+        "artifacts": [
+          {
+            "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-release-real-ci-fixes-93d660289b2f427392eee8c1d5ec1840\\baseline-admin-file-v2.stdout.log",
+            "bytes": 1854,
+            "sha256": "d899cea2309aaf613e349c7f6f44ebe904f9db2cbff2ff3f9a6169a9ba93bd8b"
+          },
+          {
+            "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-release-real-ci-fixes-93d660289b2f427392eee8c1d5ec1840\\baseline-admin-file-v2.stderr.log",
+            "bytes": 0,
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          {
+            "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-release-real-ci-fixes-93d660289b2f427392eee8c1d5ec1840\\baseline-admin-file-v2.log",
+            "bytes": 1854,
+            "sha256": "d899cea2309aaf613e349c7f6f44ebe904f9db2cbff2ff3f9a6169a9ba93bd8b"
+          }
+        ]
+      }
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-release-real-ci-fixes-93d660289b2f427392eee8c1d5ec1840\\baseline-holder-lifetime.actual.json",
+      "bytes": 1460,
+      "sha256": "1efdd36a90fc52595f28e742e3ae96874d6cef322f0e7ae75730af65806217de",
+      "result": {
+        "closed": true,
+        "label": "baseline-holder-lifetime",
+        "startedAt": "2026-10-05T08:33:25.544Z",
+        "finishedAt": "2026-10-05T08:33:26.067Z",
+        "command": [
+          "C:\\Program Files\\nodejs\\node.exe",
+          "--import",
+          "tsx",
+          "--test",
+          "packages/proxy/scripts/staging/chat-holder-binding-v364.node.test.mjs"
+        ],
+        "nodeVersion": "v24.14.1",
+        "productionCredentialsPassed": false,
+        "envNativeAttempt": null,
+        "actualExit": 1,
+        "signal": null,
+        "summaries": [
+          {
+            "tests": 3,
+            "suites": 0,
+            "pass": 2,
+            "fail": 1,
+            "cancelled": 0,
+            "skipped": 0,
+            "todo": 0
+          }
+        ],
+        "artifacts": [
+          {
+            "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-release-real-ci-fixes-93d660289b2f427392eee8c1d5ec1840\\baseline-holder-lifetime.stdout.log",
+            "bytes": 1222,
+            "sha256": "c69a52f860ad4161d9b92744af61db801709f7f22cce49c23f73163abcd7240e"
+          },
+          {
+            "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-release-real-ci-fixes-93d660289b2f427392eee8c1d5ec1840\\baseline-holder-lifetime.stderr.log",
+            "bytes": 0,
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          {
+            "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-release-real-ci-fixes-93d660289b2f427392eee8c1d5ec1840\\baseline-holder-lifetime.log",
+            "bytes": 1222,
+            "sha256": "c69a52f860ad4161d9b92744af61db801709f7f22cce49c23f73163abcd7240e"
+          }
+        ]
+      }
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-release-real-ci-fixes-93d660289b2f427392eee8c1d5ec1840\\fixed-admin-file-v2.actual.json",
+      "bytes": 1441,
+      "sha256": "16ea69d469afdc6856957cf939db520761c291581f08bf96aaaa10f941a17b0f",
+      "result": {
+        "closed": true,
+        "label": "fixed-admin-file-v2",
+        "startedAt": "2026-10-05T08:36:32.886Z",
+        "finishedAt": "2026-10-05T08:36:35.615Z",
+        "command": [
+          "C:\\Program Files\\nodejs\\node.exe",
+          "--import",
+          "tsx",
+          "--test",
+          "packages/admin/lib/services/admin/playground-tools-lifecycle.test.ts"
+        ],
+        "nodeVersion": "v24.14.1",
+        "productionCredentialsPassed": false,
+        "envNativeAttempt": null,
+        "actualExit": 0,
+        "signal": null,
+        "summaries": [
+          {
+            "tests": 16,
+            "suites": 0,
+            "pass": 16,
+            "fail": 0,
+            "cancelled": 0,
+            "skipped": 0,
+            "todo": 0
+          }
+        ],
+        "artifacts": [
+          {
+            "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-release-real-ci-fixes-93d660289b2f427392eee8c1d5ec1840\\fixed-admin-file-v2.stdout.log",
+            "bytes": 1851,
+            "sha256": "12aeddae52b36345583035cfd87c8ab52bb51867d286ec31b6aad475a9ebca8f"
+          },
+          {
+            "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-release-real-ci-fixes-93d660289b2f427392eee8c1d5ec1840\\fixed-admin-file-v2.stderr.log",
+            "bytes": 0,
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          {
+            "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-release-real-ci-fixes-93d660289b2f427392eee8c1d5ec1840\\fixed-admin-file-v2.log",
+            "bytes": 1851,
+            "sha256": "12aeddae52b36345583035cfd87c8ab52bb51867d286ec31b6aad475a9ebca8f"
+          }
+        ]
+      }
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-release-real-ci-fixes-93d660289b2f427392eee8c1d5ec1840\\fixed-holder-lifetime.actual.json",
+      "bytes": 1446,
+      "sha256": "b32a23f3e40ab33ec5538a4a044bbb62ab96a70f882903f3a2563427d24319b7",
+      "result": {
+        "closed": true,
+        "label": "fixed-holder-lifetime",
+        "startedAt": "2026-10-05T08:36:34.361Z",
+        "finishedAt": "2026-10-05T08:36:34.991Z",
+        "command": [
+          "C:\\Program Files\\nodejs\\node.exe",
+          "--import",
+          "tsx",
+          "--test",
+          "packages/proxy/scripts/staging/chat-holder-binding-v364.node.test.mjs"
+        ],
+        "nodeVersion": "v24.14.1",
+        "productionCredentialsPassed": false,
+        "envNativeAttempt": null,
+        "actualExit": 0,
+        "signal": null,
+        "summaries": [
+          {
+            "tests": 3,
+            "suites": 0,
+            "pass": 3,
+            "fail": 0,
+            "cancelled": 0,
+            "skipped": 0,
+            "todo": 0
+          }
+        ],
+        "artifacts": [
+          {
+            "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-release-real-ci-fixes-93d660289b2f427392eee8c1d5ec1840\\fixed-holder-lifetime.stdout.log",
+            "bytes": 487,
+            "sha256": "2d156f7af4834434020862f31ec65ebce1c27844195618fac2aba76346e4bd4b"
+          },
+          {
+            "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-release-real-ci-fixes-93d660289b2f427392eee8c1d5ec1840\\fixed-holder-lifetime.stderr.log",
+            "bytes": 0,
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          {
+            "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-release-real-ci-fixes-93d660289b2f427392eee8c1d5ec1840\\fixed-holder-lifetime.log",
+            "bytes": 487,
+            "sha256": "2d156f7af4834434020862f31ec65ebce1c27844195618fac2aba76346e4bd4b"
+          }
+        ]
+      }
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-release-real-ci-fixes-93d660289b2f427392eee8c1d5ec1840\\admin-playground.actual.json",
+      "bytes": 1453,
+      "sha256": "99505ce8bd85de04c88d3a1899d18114562352f488556372891e44951f39229e",
+      "result": {
+        "closed": true,
+        "label": "admin-playground",
+        "startedAt": "2026-10-05T08:37:04.909Z",
+        "finishedAt": "2026-10-05T08:37:16.930Z",
+        "command": [
+          "C:\\Program Files\\nodejs\\node.exe",
+          "C:/Program Files/nodejs/node_modules/npm/bin/npm-cli.js",
+          "run",
+          "test:playground",
+          "--workspace",
+          "@octafuse/admin"
+        ],
+        "nodeVersion": "v24.14.1",
+        "productionCredentialsPassed": false,
+        "envNativeAttempt": null,
+        "actualExit": 0,
+        "signal": null,
+        "summaries": [
+          {
+            "tests": 92,
+            "suites": 5,
+            "pass": 92,
+            "fail": 0,
+            "cancelled": 0,
+            "skipped": 0,
+            "todo": 0
+          }
+        ],
+        "artifacts": [
+          {
+            "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-release-real-ci-fixes-93d660289b2f427392eee8c1d5ec1840\\admin-playground.stdout.log",
+            "bytes": 12952,
+            "sha256": "68dd92f3893441916f2dc94f39343824e76c733dafd6429c025c8f08c931e48f"
+          },
+          {
+            "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-release-real-ci-fixes-93d660289b2f427392eee8c1d5ec1840\\admin-playground.stderr.log",
+            "bytes": 0,
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          {
+            "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-release-real-ci-fixes-93d660289b2f427392eee8c1d5ec1840\\admin-playground.log",
+            "bytes": 12952,
+            "sha256": "68dd92f3893441916f2dc94f39343824e76c733dafd6429c025c8f08c931e48f"
+          }
+        ]
+      }
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-release-real-ci-fixes-93d660289b2f427392eee8c1d5ec1840\\proxy-staging-types.actual.json",
+      "bytes": 1322,
+      "sha256": "4ce406b89a93f78e2fd8915e2ca7ec851c6a576a2f63366590c9397d755f10c2",
+      "result": {
+        "closed": true,
+        "label": "proxy-staging-types",
+        "startedAt": "2026-10-05T08:37:06.350Z",
+        "finishedAt": "2026-10-05T08:37:30.069Z",
+        "command": [
+          "C:\\Program Files\\nodejs\\node.exe",
+          "C:/Program Files/nodejs/node_modules/npm/bin/npm-cli.js",
+          "run",
+          "typecheck:images:staging",
+          "--workspace",
+          "@octafuse/proxy"
+        ],
+        "nodeVersion": "v24.14.1",
+        "productionCredentialsPassed": false,
+        "envNativeAttempt": null,
+        "actualExit": 0,
+        "signal": null,
+        "summaries": [],
+        "artifacts": [
+          {
+            "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-release-real-ci-fixes-93d660289b2f427392eee8c1d5ec1840\\proxy-staging-types.stdout.log",
+            "bytes": 99,
+            "sha256": "b860b1f42eb4b734c7a493fe7ceda9445a70f065af9f106b2c245578b35154d0"
+          },
+          {
+            "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-release-real-ci-fixes-93d660289b2f427392eee8c1d5ec1840\\proxy-staging-types.stderr.log",
+            "bytes": 0,
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          {
+            "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-release-real-ci-fixes-93d660289b2f427392eee8c1d5ec1840\\proxy-staging-types.log",
+            "bytes": 99,
+            "sha256": "b860b1f42eb4b734c7a493fe7ceda9445a70f065af9f106b2c245578b35154d0"
+          }
+        ]
+      }
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-release-real-ci-fixes-93d660289b2f427392eee8c1d5ec1840\\pg73-syntax.actual.json",
+      "bytes": 1205,
+      "sha256": "6300ae025750e587c6c5f5f3ff30dffa270ecbbc703895563135ca156db6ab63",
+      "result": {
+        "closed": true,
+        "label": "pg73-syntax",
+        "startedAt": "2026-10-05T08:36:35.645Z",
+        "finishedAt": "2026-10-05T08:36:35.721Z",
+        "command": [
+          "C:\\Program Files\\nodejs\\node.exe",
+          "--check",
+          "scripts/db/cutover/pg73-native-fixture.mjs"
+        ],
+        "nodeVersion": "v24.14.1",
+        "productionCredentialsPassed": false,
+        "envNativeAttempt": null,
+        "actualExit": 0,
+        "signal": null,
+        "summaries": [],
+        "artifacts": [
+          {
+            "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-release-real-ci-fixes-93d660289b2f427392eee8c1d5ec1840\\pg73-syntax.stdout.log",
+            "bytes": 0,
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          {
+            "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-release-real-ci-fixes-93d660289b2f427392eee8c1d5ec1840\\pg73-syntax.stderr.log",
+            "bytes": 0,
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          {
+            "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-release-real-ci-fixes-93d660289b2f427392eee8c1d5ec1840\\pg73-syntax.log",
+            "bytes": 0,
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          }
+        ]
+      }
+    }
+  ],
+  "gitWhitespaceCheck": {
+    "command": "git -c core.whitespace=cr-at-eol diff --check -- scripts/db/cutover/pg73-native-fixture.mjs packages/proxy/scripts/staging/chat-holder-private-v364.ts packages/proxy/scripts/staging/chat-holder-binding-v364.node.test.mjs packages/admin/lib/services/admin/playground-tools-lifecycle.test.ts",
+    "actualExit": 0,
+    "outputBytes": 0,
+    "toolChunk": "14d1ff"
+  },
+  "evidence": [
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-cloudflare-run37282521598-monitor-b1ab8c8a5894484d8bdb55a61e3dbfc3\\005-view.actual.json",
+      "bytes": 5976,
+      "sha256": "cef0497d64ccc191b93cf66ccd492718ae220fca99e629ecd5167586781708fa"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-cloudflare-run37282521598-monitor-b1ab8c8a5894484d8bdb55a61e3dbfc3\\OTHER-4-failed-workflow-log-downloads-closed-v1.json",
+      "bytes": 9405,
+      "sha256": "c7b121347b8a98f735b27ccad44922734c5ef8ea1e42294835d5f4fe54fc0139"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-cloudflare-run37282521598-monitor-b1ab8c8a5894484d8bdb55a61e3dbfc3\\other-37282463137-log-failed.stdout.log",
+      "bytes": 24172,
+      "sha256": "b140f15218285260c86dd05456f5428e92ecd6dec9cb70b8778788dd89aa4d61"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-cloudflare-run37282521598-monitor-b1ab8c8a5894484d8bdb55a61e3dbfc3\\other-37282462988-log-failed.stdout.log",
+      "bytes": 126720,
+      "sha256": "f7c7445f281fefb8705f43d022081bab34f52057bca8077bb634b93a583d4bc3"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-cloudflare-run37282521598-monitor-b1ab8c8a5894484d8bdb55a61e3dbfc3\\other-37282463012-log-failed.stdout.log",
+      "bytes": 5677,
+      "sha256": "c9b2889123f84d30ec216e8b293da1438e084ab2ca6abf153cab8db4572580e4"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-cloudflare-run37282521598-monitor-b1ab8c8a5894484d8bdb55a61e3dbfc3\\other-37282463065-log-failed.stdout.log",
+      "bytes": 101309,
+      "sha256": "ec67ef1d9a3277adf008492a697fd352c521b1f9eef84f84a5de2a2cc8552486"
+    }
+  ],
+  "rootCauses": {
+    "nativeFixture": "Historical PG73 creates runtime NOLOGIN; current real reconciler requires restricted direct LOGIN. Owned loopback helper now checks safe attributes and no memberships, temporarily enables LOGIN, calls unchanged real reconciler, and restores original role attributes in finally.",
+    "holderCancellation": "CI observed null instead of observed. Fixture cancel KV promise was not registered in ExecutionContext.waitUntil; the cancellation observation now retains request lifetime. New delayed-KV in-process assertion failed against old implementation and passed after fix. Real HTTP/workerd propagation still needs same-commit Linux verification.",
+    "adminDeadline": "CI cancelled one test because a pending synthetic fetch has no ref handle and production deadline is correctly unref. Only test transport keepalive added; 504 deadline and single fetch assertions retained. The old isolated Node24 file passed locally, so Linux failure remains the negative evidence; first local invocation failed alias resolution and was retained."
+  },
+  "limitations": {
+    "nativePostgres": {
+      "executed": false,
+      "reason": "No native PostgreSQL binary is available in this Windows environment; full native GitHub Actions on the same commit is required."
+    },
+    "nativeWorkerdCancellation": {
+      "executed": false,
+      "reason": "Existing Windows access violation is documented; same-commit Linux Miniflare test with strict observed, no release, and no duplicate binding assertions remains required."
+    },
+    "noProductionGrantOrFormalSqlChange": true,
+    "noGitOrDeployMutation": true,
+    "releaseActionsPlatformFailure": "GitHub Actions cannot create/approve PR; prior Changesets job did push its release branch. This repository setting is separate from Cloudflare runtime."
+  }
+}

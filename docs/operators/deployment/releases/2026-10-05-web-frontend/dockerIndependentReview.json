@@ -1,0 +1,55 @@
+{
+  "schema": "cinatoken-readonly-docker-twofile-fix-peer-review-v2",
+  "at": "2026-10-05T08:35:49.438Z",
+  "result": "PASS",
+  "sourceFiles": [
+    {
+      "path": "C:/cinagroup/cinatoken/docker/web/smoke.mjs",
+      "bytes": 5131,
+      "sha256": "0e31fd63609b1b2b21b5f244e8804a8da94463a1d10d4ccbae175051c794cea6"
+    },
+    {
+      "path": "C:/cinagroup/cinatoken/.github/workflows/docker-compose-smoke.yml",
+      "bytes": 9987,
+      "sha256": "4c29b7e6b410bfd0c54fae089a6669b75880b0828fbe53820c53f01ffaca2cc6"
+    }
+  ],
+  "scope": "Two added docker --env flags; exact seven complete noninternal names/table/enabled O guard",
+  "dockerArgv": {
+    "allEnvironmentAssignmentsPrefixed": true,
+    "environmentCount": 29,
+    "correctImageLast": true
+  },
+  "expectedTriggers": [
+    "shared_key_earnings.shared_key_earnings_credit_after_insert:O",
+    "shared_key_earnings.shared_key_earnings_history_immutable:O",
+    "shared_key_earnings.shared_key_earnings_history_no_truncate:O",
+    "withdrawals.withdrawals_confirm_after_status_update:O",
+    "withdrawals.withdrawals_lock_after_insert:O",
+    "withdrawals.withdrawals_refund_after_status_update:O",
+    "withdrawals.withdrawals_validate_lock_before_insert:O"
+  ],
+  "formalMigrationBindingsEqual": true,
+  "controls": {
+    "baselineSeven": true,
+    "missingOneRejected": true,
+    "wrongTableRejected": true,
+    "extraORejected": true,
+    "extraARejected": true,
+    "extraRRejected": true,
+    "extraDRejected": true,
+    "expectedDisabledRejected": true,
+    "expectedAlwaysRejected": true
+  },
+  "guardHasNoEnabledWhereFilter": true,
+  "realDockerOrDatabaseExecuted": false,
+  "sourceWrites": 0,
+  "gitWrites": 0,
+  "initialLocalDiagnosticFailure": {
+    "actualExit": 1,
+    "kind": "Wrong formal CREATE TRIGGER source picked by reviewer",
+    "observation": "0031 alters existing ledger functions; original five triggers CREATE is in0029. Current corrected read0029+0078 produces exactseven.",
+    "productFailure": false,
+    "sourceWrites": 0
+  }
+}

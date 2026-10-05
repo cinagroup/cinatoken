@@ -1,7 +1,7 @@
 {
   "schema": "cinatoken.cloudflare.web-frontend-release.v1",
-  "updatedAt": "2026-10-05T08:08:49.862Z",
-  "status": "preflight-pass-awaiting-postmigration-check",
+  "updatedAt": "2026-10-05T08:40:32.619Z",
+  "status": "ci-fixtures-fixed-awaiting-linux-rerun",
   "userAuthorizedActions": [
     "commit",
     "push",
@@ -65,10 +65,31 @@
       "coreTypecheckExit": 0,
       "realRolePermissionCounterexampleConfirmed": true,
       "implementation": "INSERT RETURNING 1 AS inserted with strict one-row acknowledgement; config_change_audit remains INSERT-only"
+    },
+    "localConsumers": {
+      "actualExit": 0,
+      "coreBuild": true,
+      "coreUnitPassed": 1343,
+      "adminUnitPassed": 1043,
+      "fail": 0,
+      "skip": 0,
+      "cancel": 0
+    },
+    "committedEvidenceByteVerification": {
+      "actualExit": 0,
+      "checked": 35,
+      "mismatches": 0
     }
   },
-  "commit": null,
-  "push": null,
+  "commit": {
+    "sha": "66ef5a698c0bb16aa1f2c490c79b6a06bdb5b33b",
+    "actualExit": 0
+  },
+  "push": {
+    "branch": "main",
+    "actualExit": 0,
+    "force": false
+  },
   "postgresPreflight": {
     "actualExit": 0,
     "before": 67,
@@ -79,9 +100,33 @@
     "temporaryMigrationWorkerDeleted": true,
     "temporaryMigrationWorkerAbsenceConfirmed": true,
     "migrationPostRequests": 1,
-    "postMigrationReadonlyProbe": null
+    "postMigrationReadonlyProbe": {
+      "actualExit": 0,
+      "migratorHTTP": 200,
+      "runtimeHTTP": 200,
+      "exactFormal81": true,
+      "catalogHTTP": 200,
+      "catalogChecksPassed": 19,
+      "temporaryWorkersDeleted": true,
+      "cleanupAbsenceConfirmed": true
+    }
   },
-  "cloudflareBuildAndDeploy": null,
+  "cloudflareBuildAndDeploy": {
+    "attempts": [
+      {
+        "runId": 37282521598,
+        "url": "https://github.com/cinagroup/cinatoken/actions/runs/37282521598",
+        "sha": "66ef5a698c0bb16aa1f2c490c79b6a06bdb5b33b",
+        "conclusion": "cancelled",
+        "requestedBy": "Root pending final catalog verification and Linux CI failure review",
+        "linuxNode22Build": "success",
+        "proxyBundle": "skipped",
+        "proxyDeploy": "skipped",
+        "adminDeploy": "skipped"
+      }
+    ],
+    "complete": false
+  },
   "productionSmoke": null,
   "wholeMigrationComplete": false,
   "gateStatesUnchanged": true,
@@ -115,6 +160,110 @@
       "path": "docs/operators/deployment/releases/2026-10-05-web-frontend/formalEvidenceSecretScan.json",
       "bytes": 8654,
       "sha256": "ec739cacea31de6963cc0bead9c2e5920002e9eca1ba401346e9d66e80575b89"
+    },
+    "localConsumers": {
+      "path": "docs/operators/deployment/releases/2026-10-05-web-frontend/localConsumers.json",
+      "bytes": 9694,
+      "sha256": "9f599edd5498c912757fd16226390754aadc39506734b1cf90a245bb9e366e24"
+    },
+    "pgAccessAfter": {
+      "path": "docs/operators/deployment/releases/2026-10-05-web-frontend/pgAccessAfter.json",
+      "bytes": 13900,
+      "sha256": "add2cc303be32478f1f01b0d5fb265a3923ab8f6f28ca477702199742ce7bf29"
+    },
+    "pgCatalogAfter": {
+      "path": "docs/operators/deployment/releases/2026-10-05-web-frontend/pgCatalogAfter.json",
+      "bytes": 32715,
+      "sha256": "e51f7d77618f6857fd212543324b9fb4c03e727c222a000894cb7d37c28c6cb4"
+    },
+    "pgCatalogParameterFailure": {
+      "path": "docs/operators/deployment/releases/2026-10-05-web-frontend/pgCatalogParameterFailure.json",
+      "bytes": 5640,
+      "sha256": "8aac9f71d07aec220f549701188325bb1fd92f349648862d59d31a772f7e4125"
+    },
+    "proxyBindingBaseline": {
+      "path": "docs/operators/deployment/releases/2026-10-05-web-frontend/proxyBindingBaseline.json",
+      "bytes": 1364,
+      "sha256": "a6e1cdf93114fd748545c5afa0bb8a548fd22a558d593e714c48f8983522c084"
+    },
+    "committedEvidenceByteVerification": {
+      "path": "docs/operators/deployment/releases/2026-10-05-web-frontend/committedEvidenceByteVerification.json",
+      "bytes": 151,
+      "sha256": "078591bbfbefb3521d0034add8e21c15bb04ab03222c94078f283121111936f6"
+    },
+    "temporaryProbeApprovalRejection": {
+      "path": "docs/operators/deployment/releases/2026-10-05-web-frontend/temporaryProbeApprovalRejection.json",
+      "bytes": 1671,
+      "sha256": "122f6b3c758f73f559c2bfeb25f4aeb6459ca95da0ec1034ee0bd92f094744fb"
+    },
+    "ciFixtureFixes": {
+      "path": "docs/operators/deployment/releases/2026-10-05-web-frontend/ciFixtureFixes.json",
+      "bytes": 21965,
+      "sha256": "384996159e82bc4c00cd8684111d83c87f4ad1a7306b9d1bec2e7aaca0d935e2"
+    },
+    "catalogIndependentReview": {
+      "path": "docs/operators/deployment/releases/2026-10-05-web-frontend/catalogIndependentReview.json",
+      "bytes": 2022,
+      "sha256": "9637450f0d424895bef8df160f8a96e9bd2bb96d6219719f103f26fdc46afa85"
+    },
+    "dockerIndependentReview": {
+      "path": "docs/operators/deployment/releases/2026-10-05-web-frontend/dockerIndependentReview.json",
+      "bytes": 2021,
+      "sha256": "38e4b5703afd6ab102e156116e6143f7ab32bb883c7a9ea28c6d309278feb4e2"
+    }
+  },
+  "temporaryProbeApproval": {
+    "firstAttemptRejectedBeforeProcess": true,
+    "reviewedAgainAfterSourceAndPriorApprovedMigrationChecks": true,
+    "approvedAndCompleted": true,
+    "noWorkaroundUsed": true
+  },
+  "otherCI": {
+    "webFrontend": {
+      "runId": 37282463137,
+      "conclusion": "failure",
+      "rootCause": "Docker smoke argv missing --env before two rollout flags",
+      "fix": "Added the two --env options; Linux rerun pending"
+    },
+    "dockerSmoke": {
+      "runId": 37282463065,
+      "conclusion": "failure",
+      "rootCause": "Fixture expected 5 ledger triggers before 0078 added 2 history guards",
+      "fix": "Assert exact seven names, tables and enabled mode; Linux rerun pending"
+    },
+    "proxySafety": {
+      "runId": 37282462988,
+      "conclusion": "failure",
+      "review": "Historical PG73 role fixture, cancellation fixture lifetime and deadline test event-loop lifetime under review",
+      "fix": {
+        "productionRuntimeSourceChanged": false,
+        "productionGrantChanged": false,
+        "formalSqlChanged": false,
+        "pg73": "Owned loopback fixture validates restricted role, temporarily enables LOGIN for real grant reconciliation, and restores original role attributes in finally",
+        "cancellation": "Synthetic holder retains asynchronous cancellation observation with ExecutionContext.waitUntil; regression preserves single dispatch and no release",
+        "deadline": "Test keeps a ref transport handle while production timeout remains unref; 504 and single request assertions unchanged",
+        "localPlayground": {
+          "actualExit": 0,
+          "passed": 92,
+          "failed": 0,
+          "skipped": 0,
+          "cancelled": 0
+        },
+        "localHolder": {
+          "actualExit": 0,
+          "passed": 3,
+          "negativeBaselineActualExit": 1
+        },
+        "proxyStagingTypecheckExit": 0,
+        "nativePostgresAndHTTPCancellation": "Await same-commit Linux CI"
+      }
+    },
+    "automaticReleasePR": {
+      "runId": 37282463012,
+      "conclusion": "failure",
+      "rootCause": "GitHub Actions repository permission prevents creating release PR",
+      "cloudflareDeploymentDependency": false,
+      "repositoryPermissionsChanged": false
     }
   }
 }

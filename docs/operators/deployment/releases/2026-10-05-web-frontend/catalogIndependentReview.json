@@ -1,0 +1,45 @@
+{
+  "schema": "cinatoken-independent-actual-postmigration-catalog-interpretation-v1",
+  "at": "2026-10-05T08:31:53.502Z",
+  "result": "PASS",
+  "scope": "Readonly actual formal81 catalog and structural ACL postchecks; execution owner Root",
+  "rawResult": {
+    "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-release-cf-postcatalog-json-array-jLQtmW/closed-result.json",
+    "bytes": 32715,
+    "sha256": "e51f7d77618f6857fd212543324b9fb4c03e727c222a000894cb7d37c28c6cb4"
+  },
+  "all19PredicatesTrue": true,
+  "independentAssertions": [
+    "exact full81 names",
+    "TEXT revision NOT NULL legacy",
+    "exact3 FK names/sourcecols/targetcols/RESTRICT",
+    "exact2 trigger names/O/types27+34/complete binding definitions",
+    "10 exact function trusted search_path",
+    "history invoker owner",
+    "10 PUBLIC table+column ACL closed",
+    "recovery exact(text,text) definer owner+trustedpath and runtime/PUBLIC EXECfalse",
+    "id1 singleton",
+    "DELETE+404 closed"
+  ],
+  "accessInterpretation": {
+    "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-release-cf-postcheck-access-6keR1x/independent-postmigration-access-interpretation-v1.json",
+    "bytes": 1992,
+    "sha256": "ef3f1b9ad5878eb2dfac030611049fc961156f68720734c30e40bc39bbbe3492"
+  },
+  "original22P02FailurePreserved": {
+    "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-release-cf-postmigration-operational-b3WpJp/closed-result.json",
+    "bytes": 5640,
+    "sha256": "8aac9f71d07aec220f549701188325bb1fd92f349648862d59d31a772f7e4125"
+  },
+  "originalFailureCleanupClosed": true,
+  "diagnosticFixProof": {
+    "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-release-cf-postcatalog-json-array-jLQtmW/parameter-fix-preflight-proof-v1.json",
+    "bytes": 2036,
+    "sha256": "6209f2845ccc2f1a25a5af59c8838449a66ea5b5309a557a6fa5e9e8e97e4be8"
+  },
+  "rootSourceWrites": 0,
+  "SQLRequestsByReviewer": 0,
+  "probeUploadsByReviewer": 0,
+  "currentConfigValuesRead": false,
+  "noClaimOfValueSnapshotComparisonOrRealAuthentication": true
+}

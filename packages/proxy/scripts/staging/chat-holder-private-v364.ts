@@ -62,7 +62,7 @@ async function validEnvelope(input: unknown): Promise<boolean> {
 	return digest === SYNTHETIC_QUOTE_V364.finalBodySha256;
 }
 
-function syntheticStream(env: ChatHolderPrivateV364Env, attemptNonce: string): Response {
+function syntheticStream(env: ChatHolderPrivateV364Env, attemptNonce: string, ctx?: Pick<ExecutionContext, 'waitUntil'>): Response {
 	let phase = 0;
 	const stream = new ReadableStream<Uint8Array>({
 		start(controller) {
@@ -82,14 +82,18 @@ function syntheticStream(env: ChatHolderPrivateV364Env, attemptNonce: string): R
 			controller.error(new Error('synthetic stream release timed out'));
 		},
 		async cancel() {
-			await env.OBSERVATIONS.put(`cancel:${attemptNonce}`, 'observed');
+			const observation = env.OBSERVATIONS.put(`cancel:${attemptNonce}`, 'observed');
+			// The client has disconnected; retain this asynchronous test observation
+			// in the holder request lifetime instead of losing it with the response.
+			ctx?.waitUntil(observation);
+			await observation;
 		},
 	}, { highWaterMark: 0 });
 	return new Response(stream, { status: 200, headers: { 'Content-Type': 'text/event-stream', 'Cache-Control': 'no-store' } });
 }
 
 export default {
-	async fetch(request: Request, env: ChatHolderPrivateV364Env): Promise<Response> {
+	async fetch(request: Request, env: ChatHolderPrivateV364Env, ctx?: ExecutionContext): Promise<Response> {
 		const url = new URL(request.url);
 		if (url.origin !== URL_ORIGIN || url.pathname !== URL_PATH || url.search || request.method !== 'POST') return reject(404);
 		if (request.headers.get('Content-Type') !== 'application/json') return reject(415);
@@ -105,6 +109,6 @@ export default {
 		if (!SYNTHETIC_CREDENTIAL_V364.startsWith('synthetic-private-')
 			|| new URL(SYNTHETIC_PROVIDER_URL_V364).hostname !== 'synthetic-private-provider.invalid') return reject(503);
 		await env.OBSERVATIONS.put(`accepted:${envelope.attemptNonce as string}`, 'one');
-		return syntheticStream(env, envelope.attemptNonce as string);
+		return syntheticStream(env, envelope.attemptNonce as string, ctx);
 	},
 } satisfies ExportedHandler<ChatHolderPrivateV364Env>;

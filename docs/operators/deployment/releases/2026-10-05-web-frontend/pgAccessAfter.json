@@ -1,0 +1,413 @@
+{
+  "schema": "cinatoken-cloudflare-release-readonly-pg-probe-closed-v2",
+  "startedAt": "2026-10-05T08:20:49.406Z",
+  "workerName": "cinatoken-release-postcheck-20261005-e1e34d4e",
+  "accountId": "7ea8e46d8210bad342fa7595f7935fea",
+  "workerArtifact": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-release-cf-probe-20261005-retry-R4xTF8\\probe-worker.mjs",
+    "bytes": 110513,
+    "sha256": "aee2bf1686a866b607f647dbe0eb83e3ae95dc8edba75c1047c34f2959820616"
+  },
+  "existingProbeSource": "scripts/db/cutover/hyperdrive-access-probe-worker.ts",
+  "secretValuesPrinted": false,
+  "secretPersisted": false,
+  "previousFailedResult": "C:/Users/cina/AppData/Local/Temp/cinatoken-release-cf-probe-20261005-retry-R4xTF8/closed-result.json",
+  "SQLWrites": false,
+  "SQLMigrations": false,
+  "SQLGrants": false,
+  "rootSourceWrites": false,
+  "existingWorkerWrites": false,
+  "calls": [
+    {
+      "kind": "readonly_proxy_live_bindings",
+      "method": "GET",
+      "apiPath": "/workers/scripts/cinatoken-proxy/settings",
+      "http": 200,
+      "success": true,
+      "errors": [],
+      "at": "2026-10-05T08:20:51.580Z"
+    },
+    {
+      "kind": "unique_worker_absence_precheck",
+      "method": "GET",
+      "apiPath": "/workers/scripts/cinatoken-release-postcheck-20261005-e1e34d4e/settings",
+      "http": 404,
+      "success": false,
+      "errors": [
+        {
+          "code": 10007
+        }
+      ],
+      "at": "2026-10-05T08:20:52.805Z"
+    },
+    {
+      "kind": "account_workers_subdomain",
+      "method": "GET",
+      "apiPath": "/workers/subdomain",
+      "http": 200,
+      "success": true,
+      "errors": [],
+      "at": "2026-10-05T08:20:53.999Z"
+    },
+    {
+      "kind": "upload_unique_readonly_probe",
+      "method": "PUT",
+      "apiPath": "/workers/scripts/cinatoken-release-postcheck-20261005-e1e34d4e",
+      "http": 200,
+      "success": true,
+      "errors": [],
+      "at": "2026-10-05T08:20:57.153Z"
+    },
+    {
+      "kind": "enable_temporary_workers_dev",
+      "method": "POST",
+      "apiPath": "/workers/scripts/cinatoken-release-postcheck-20261005-e1e34d4e/subdomain",
+      "http": 200,
+      "success": true,
+      "errors": [],
+      "at": "2026-10-05T08:20:58.483Z"
+    },
+    {
+      "kind": "read_temporary_workers_dev_state",
+      "method": "GET",
+      "apiPath": "/workers/scripts/cinatoken-release-postcheck-20261005-e1e34d4e/subdomain",
+      "http": 200,
+      "success": true,
+      "errors": [],
+      "at": "2026-10-05T08:20:59.787Z"
+    },
+    {
+      "kind": "readonly_probe_deployment_version",
+      "method": "GET",
+      "apiPath": "/workers/scripts/cinatoken-release-postcheck-20261005-e1e34d4e/deployments",
+      "http": 200,
+      "success": true,
+      "errors": [],
+      "at": "2026-10-05T08:21:01.178Z"
+    },
+    {
+      "kind": "delete_unique_readonly_probe",
+      "method": "DELETE",
+      "apiPath": "/workers/scripts/cinatoken-release-postcheck-20261005-e1e34d4e",
+      "http": 200,
+      "success": true,
+      "errors": [],
+      "at": "2026-10-05T08:21:16.385Z"
+    },
+    {
+      "kind": "verify_unique_readonly_probe_absent",
+      "method": "GET",
+      "apiPath": "/workers/scripts/cinatoken-release-postcheck-20261005-e1e34d4e/settings",
+      "http": 404,
+      "success": false,
+      "errors": [
+        {
+          "code": 10007
+        }
+      ],
+      "at": "2026-10-05T08:21:17.753Z"
+    }
+  ],
+  "probes": [
+    {
+      "path": "/probe/migrator",
+      "attempts": [
+        {
+          "attempt": 1,
+          "http": 404,
+          "contentType": "text/html; charset=UTF-8",
+          "json": null,
+          "rawBodyBytes": 19984,
+          "rawBodySha256": "2000e6b28a1517ba1268e1649cd3163326ef839492edfdba31e8959830580976",
+          "at": "2026-10-05T08:21:02.444Z"
+        },
+        {
+          "attempt": 2,
+          "http": 200,
+          "contentType": "application/json",
+          "json": {
+            "ok": true,
+            "migrator": {
+              "contract_passed": true,
+              "user_name": "cinatoken_gateway_migrator",
+              "schema_owner": "cinatoken_gateway_migrator",
+              "can_create_database_object": false,
+              "can_create_role": false,
+              "schema_usage": true,
+              "schema_create": true,
+              "migration_count": "81",
+              "latest_migration": "0081_tools_config_group_audit.sql",
+              "latest_migration_applied": true
+            }
+          },
+          "rawBodyBytes": 342,
+          "rawBodySha256": "ac4f227ef09f90a5eecb00a06c730b5ee8371bf16854d540f8741b1d6eaa36da",
+          "at": "2026-10-05T08:21:13.667Z"
+        }
+      ]
+    },
+    {
+      "path": "/probe",
+      "attempts": [
+        {
+          "attempt": 1,
+          "http": 200,
+          "contentType": "application/json",
+          "json": {
+            "ok": true,
+            "migrator": {
+              "contract_passed": true,
+              "user_name": "cinatoken_gateway_migrator",
+              "schema_owner": "cinatoken_gateway_migrator",
+              "can_create_database_object": false,
+              "can_create_role": false,
+              "schema_usage": true,
+              "schema_create": true,
+              "migration_count": "81",
+              "latest_migration": "0081_tools_config_group_audit.sql",
+              "latest_migration_applied": true
+            },
+            "runtime": {
+              "contract_passed": true,
+              "user_name": "cinatoken_gateway_runtime",
+              "runtime_is_direct_login": true,
+              "current_search_path": "cinatoken_gateway, public",
+              "models_count": "3",
+              "providers_count": "2",
+              "routes_count": "9",
+              "active_routes_count": "9",
+              "users_count": "3",
+              "user_budget_reservations_exists": true,
+              "workspaces_exists": true,
+              "management_api_keys_exists": true,
+              "byok_keys_exists": true,
+              "generation_feedback_exists": true,
+              "provider_attempt_availability_exists": true,
+              "batches_exists": true,
+              "batch_items_exists": true,
+              "can_create_database_object": false,
+              "can_create_role": false,
+              "schema_usage": true,
+              "schema_create": false,
+              "users_select": true,
+              "users_insert": true,
+              "users_update": true,
+              "users_delete": true,
+              "users_truncate": false,
+              "management_api_keys_select": true,
+              "management_api_keys_insert": true,
+              "management_api_keys_update": true,
+              "management_api_keys_delete": true,
+              "byok_keys_select": true,
+              "byok_keys_insert": true,
+              "byok_keys_update": true,
+              "byok_keys_delete": true,
+              "generation_feedback_select": true,
+              "generation_feedback_insert": true,
+              "generation_feedback_update": false,
+              "generation_feedback_delete": false,
+              "provider_attempt_availability_select": true,
+              "provider_attempt_availability_insert": true,
+              "provider_attempt_availability_update": false,
+              "provider_attempt_availability_delete": false,
+              "batches_select": true,
+              "batches_insert": true,
+              "batches_update": true,
+              "batches_delete": false,
+              "batch_items_select": true,
+              "batch_items_insert": true,
+              "batch_items_update": true,
+              "batch_items_delete": false,
+              "config_change_audit_insert": true,
+              "config_change_audit_insert_grant_option": false,
+              "config_change_audit_select": false,
+              "config_change_audit_update": false,
+              "config_change_audit_delete": false,
+              "config_change_audit_truncate": false,
+              "config_change_audit_references": false,
+              "config_change_audit_trigger": false,
+              "config_change_audit_maintain": false,
+              "config_change_audit_column_select": false,
+              "config_change_audit_column_update": false,
+              "config_change_audit_column_references": false,
+              "config_change_audit_column_insert_grant_option": false,
+              "admin_access_key_audit_access": {
+                "select": true,
+                "insert": true,
+                "update": false,
+                "delete": false,
+                "truncate": false,
+                "references": false,
+                "trigger": false,
+                "maintain": false,
+                "select_grant_option": false,
+                "insert_grant_option": false,
+                "column_update": false,
+                "column_references": false,
+                "column_select_grant_option": false,
+                "column_insert_grant_option": false
+              },
+              "admin_shared_key_audit_access": {
+                "delete": false,
+                "insert": true,
+                "select": true,
+                "update": false,
+                "trigger": false,
+                "maintain": false,
+                "truncate": false,
+                "references": false,
+                "column_update": false,
+                "column_references": false,
+                "insert_grant_option": false,
+                "select_grant_option": false,
+                "column_insert_grant_option": false,
+                "column_select_grant_option": false
+              },
+              "config_group_audit_access": {
+                "delete": false,
+                "insert": true,
+                "select": true,
+                "update": false,
+                "trigger": false,
+                "maintain": false,
+                "truncate": false,
+                "references": false,
+                "column_update": false,
+                "column_references": false,
+                "insert_grant_option": false,
+                "select_grant_option": false,
+                "column_insert_grant_option": false,
+                "column_select_grant_option": false
+              },
+              "system_config_write_mutex_access": {
+                "delete": false,
+                "insert": false,
+                "select": true,
+                "update": false,
+                "trigger": false,
+                "maintain": false,
+                "truncate": false,
+                "singleton": true,
+                "update_id": true,
+                "references": false,
+                "column_insert": false,
+                "column_references": false,
+                "column_update_other": false,
+                "select_grant_option": false,
+                "column_select_grant_option": false,
+                "column_update_grant_option": false
+              },
+              "recovery_tables_inaccessible": true,
+              "recovery_helper_execute": false,
+              "provider_attempt_retention_execute": true,
+              "user_budget_reservations_delete": false,
+              "migrations_select": false,
+              "migrations_insert": false,
+              "ledger_trigger_execute": true
+            }
+          },
+          "rawBodyBytes": 3923,
+          "rawBodySha256": "f62377ba141d0cb3ffc84563962e393b9e07ce538eb8daabdda8928d7e3562cd",
+          "at": "2026-10-05T08:21:14.167Z"
+        }
+      ]
+    }
+  ],
+  "cleanup": {
+    "deleteSucceeded": true,
+    "absentConfirmed": true
+  },
+  "actualExit": 0,
+  "proxyBindingMetadata": [
+    {
+      "name": "ANALYTICS_RATE_LIMITER",
+      "type": "ratelimit"
+    },
+    {
+      "name": "AUTH_RATE_LIMITER",
+      "type": "ratelimit"
+    },
+    {
+      "name": "BATCH_API_ENABLED",
+      "type": "plain_text"
+    },
+    {
+      "name": "DATABASE_DRIVER",
+      "type": "plain_text"
+    },
+    {
+      "name": "DB",
+      "type": "d1",
+      "id": "f7588b56-e761-49fc-b944-4cd7d121fc21"
+    },
+    {
+      "name": "DEEPSEEK_API_KEY",
+      "type": "secret_text"
+    },
+    {
+      "name": "HYPERDRIVE",
+      "type": "hyperdrive",
+      "id": "e703c04c8505431d9e22ce6f8b371251"
+    },
+    {
+      "name": "PROVIDER_ATTEMPT_RETENTION_BATCH_SIZE",
+      "type": "plain_text"
+    },
+    {
+      "name": "PROVIDER_ATTEMPT_RETENTION_DAYS",
+      "type": "plain_text"
+    },
+    {
+      "name": "PROVIDER_ATTEMPT_RETENTION_MAX_BATCHES",
+      "type": "plain_text"
+    },
+    {
+      "name": "PUBLIC_STATS_RATE_LIMITER",
+      "type": "ratelimit"
+    },
+    {
+      "name": "REQUEST_BODY_LOGGING",
+      "type": "plain_text"
+    },
+    {
+      "name": "SHARED_KEY_ENCRYPTION_SECRET",
+      "type": "secret_text"
+    }
+  ],
+  "workerURL": "https://cinatoken-release-postcheck-20261005-e1e34d4e.cinagroup.workers.dev",
+  "uploadedVersion": {
+    "id": "cinatoken-release-postcheck-20261005-e1e34d4e",
+    "etag": "300e708c20bbf58a1e8ec0e31eaa03e00785415e3f036a8004b92dd068e7cbcf",
+    "deployment_id": "b8bf9f566d5c4c4488106209587f0318",
+    "created_on": "2026-10-05T08:20:56.302232Z",
+    "modified_on": "2026-10-05T08:20:56.302232Z"
+  },
+  "workersDevEnableResult": {
+    "enabled": true,
+    "previews_enabled": false
+  },
+  "workersDevReadResult": {
+    "enabled": true,
+    "previews_enabled": false
+  },
+  "deployment": {
+    "id": "76598fd6-56d1-48ad-a2ea-cdeea190f1e8",
+    "source": "api",
+    "strategy": "percentage",
+    "author_email": "qq198210@gmail.com",
+    "annotations": {
+      "workers/message": "Automatic deployment on upload.",
+      "workers/triggered_by": "upload"
+    },
+    "versions": [
+      {
+        "version_id": "b8bf9f56-6d5c-4c44-8810-6209587f0318",
+        "percentage": 100
+      }
+    ],
+    "created_on": "2026-10-05T08:20:56.302232Z"
+  },
+  "platformReady": true,
+  "result": "READONLY_PG_PROBE_PASS",
+  "finishedAt": "2026-10-05T08:21:17.753Z"
+}

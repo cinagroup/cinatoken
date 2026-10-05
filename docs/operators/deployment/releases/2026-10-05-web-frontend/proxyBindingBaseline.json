@@ -1,0 +1,65 @@
+{
+  "schema": "cinatoken-proxy-deploy-readonly-current-binding-baseline-v1",
+  "at": "2026-10-05T08:18:47.281Z",
+  "http": 200,
+  "success": true,
+  "errors": [],
+  "bindings": [
+    {
+      "name": "ANALYTICS_RATE_LIMITER",
+      "type": "ratelimit"
+    },
+    {
+      "name": "AUTH_RATE_LIMITER",
+      "type": "ratelimit"
+    },
+    {
+      "name": "BATCH_API_ENABLED",
+      "type": "plain_text"
+    },
+    {
+      "name": "DATABASE_DRIVER",
+      "type": "plain_text"
+    },
+    {
+      "name": "DB",
+      "type": "d1",
+      "id": "f7588b56-e761-49fc-b944-4cd7d121fc21"
+    },
+    {
+      "name": "DEEPSEEK_API_KEY",
+      "type": "secret_text"
+    },
+    {
+      "name": "HYPERDRIVE",
+      "type": "hyperdrive",
+      "id": "e703c04c8505431d9e22ce6f8b371251"
+    },
+    {
+      "name": "PROVIDER_ATTEMPT_RETENTION_BATCH_SIZE",
+      "type": "plain_text"
+    },
+    {
+      "name": "PROVIDER_ATTEMPT_RETENTION_DAYS",
+      "type": "plain_text"
+    },
+    {
+      "name": "PROVIDER_ATTEMPT_RETENTION_MAX_BATCHES",
+      "type": "plain_text"
+    },
+    {
+      "name": "PUBLIC_STATS_RATE_LIMITER",
+      "type": "ratelimit"
+    },
+    {
+      "name": "REQUEST_BODY_LOGGING",
+      "type": "plain_text"
+    },
+    {
+      "name": "SHARED_KEY_ENCRYPTION_SECRET",
+      "type": "secret_text"
+    }
+  ],
+  "remoteWrites": false,
+  "secretValuesPrinted": false
+}

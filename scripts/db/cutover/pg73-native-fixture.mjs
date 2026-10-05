@@ -58,9 +58,36 @@ export async function grantPg73RuntimeFixture({ cluster, migrator, migratorUrl }
     && target.pathname === '/postgres',
   'PG73 grant fixture requires an owned loopback migrator URL');
   await pg73State(migrator);
+  assert.equal(typeof cluster.admin?.unsafe, 'function',
+    'PG73 grant fixture requires its owned cluster administrator');
+  const runtimeState = async () => {
+    const [role] = await cluster.admin.unsafe(`SELECT rolcanlogin AS can_login,
+      rolsuper AS is_superuser, rolcreatedb AS can_create_database,
+      rolcreaterole AS can_create_role, rolreplication AS can_replicate,
+      rolbypassrls AS can_bypass_rls, rolinherit AS inherits,
+      EXISTS (SELECT 1 FROM pg_catalog.pg_auth_members
+        WHERE member=runtime.oid) AS has_memberships
+      FROM pg_catalog.pg_roles AS runtime
+      WHERE rolname='cinatoken_gateway_runtime'`);
+    return role;
+  };
+  const originalRuntime = await runtimeState();
+  assert.ok(originalRuntime && !originalRuntime.is_superuser
+    && !originalRuntime.can_create_database && !originalRuntime.can_create_role
+    && !originalRuntime.can_replicate && !originalRuntime.can_bypass_rls
+    && !originalRuntime.has_memberships,
+  'PG73 fixture runtime must be restricted and have no role memberships');
   const body = await readFile(new URL(auditMigration, migrations), 'utf8');
   let installed = false;
+  let temporaryLogin = false;
   try {
+    // Historical proposal fixtures use a NOLOGIN runtime for SET ROLE. The
+    // production reconciler now verifies a direct LOGIN; adapt only this owned
+    // loopback role, without a password or memberships, and restore it below.
+    if (!originalRuntime.can_login) {
+      await cluster.admin.unsafe('ALTER ROLE cinatoken_gateway_runtime LOGIN');
+      temporaryLogin = true;
+    }
     await migrator.begin(async tx => {
       await tx.unsafe(body).simple();
       await tx.unsafe(`INSERT INTO cinatoken_gateway.schema_migrations(version)
@@ -83,13 +110,21 @@ export async function grantPg73RuntimeFixture({ cluster, migrator, migratorUrl }
       can_update: false, can_delete: false },
       'Temporary 0074 audit ACL differs');
   } finally {
-    if (installed) {
-      await migrator.begin(async tx => {
-        await tx.unsafe('DROP TABLE cinatoken_gateway.config_change_audit');
-        await tx.unsafe(`DELETE FROM cinatoken_gateway.schema_migrations
-          WHERE version=$1`, [auditMigration]);
-      });
-      await pg73State(migrator);
+    try {
+      if (installed) {
+        await migrator.begin(async tx => {
+          await tx.unsafe('DROP TABLE cinatoken_gateway.config_change_audit');
+          await tx.unsafe(`DELETE FROM cinatoken_gateway.schema_migrations
+            WHERE version=$1`, [auditMigration]);
+        });
+        await pg73State(migrator);
+      }
+    } finally {
+      if (temporaryLogin) {
+        await cluster.admin.unsafe('ALTER ROLE cinatoken_gateway_runtime NOLOGIN');
+      }
+      assert.deepEqual(await runtimeState(), originalRuntime,
+        'PG73 fixture must restore the original runtime role attributes');
     }
   }
 }

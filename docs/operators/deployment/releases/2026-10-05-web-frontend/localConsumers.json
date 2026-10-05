@@ -1,0 +1,334 @@
+{
+  "version": 1,
+  "closed": true,
+  "started": "2026-10-05T08:12:33.391Z",
+  "finished": "2026-10-05T08:17:13.826Z",
+  "root": "C:/cinagroup/cinatoken",
+  "nodeVersion": "v24.14.1",
+  "pgliteModule": "C:/cinagroup/cinatoken/.tmp/next32-pglite/node_modules/@electric-sql/pglite/dist/index.js",
+  "pgliteVersion": "0.5.8",
+  "productionCredentialsPassed": false,
+  "npmLifecycleScriptsEnabled": true,
+  "corePrebuildCleanupResolvedTarget": "C:\\cinagroup\\cinatoken\\packages\\core\\dist",
+  "sourceBefore": {
+    "packages/core/src/db/postgres/system-config.impl.ts": "7e3458b771c5a998b2eb8caf68ff753ea99af385448b063ba6b9801ce930c1ad",
+    "packages/core/src/db/system-config-audit.test.ts": "f0290ac0b4a4a0b3b5757fefaee0d7db34febf7f37f875eed5c475b171057f47",
+    "packages/core/src/db/system-config-audit-privileges.pglite.test.mjs": "5239ac3b372865e58002f4a534105835d185f3d9dec96b9101e54a5186fbe9d9",
+    "packages/core/package.json": "eef3793fdc1098c901c18a0e97160d4204fb765a786c3445bc558ce7efc49e1e"
+  },
+  "sourceAfter": {
+    "packages/core/src/db/postgres/system-config.impl.ts": "7e3458b771c5a998b2eb8caf68ff753ea99af385448b063ba6b9801ce930c1ad",
+    "packages/core/src/db/system-config-audit.test.ts": "f0290ac0b4a4a0b3b5757fefaee0d7db34febf7f37f875eed5c475b171057f47",
+    "packages/core/src/db/system-config-audit-privileges.pglite.test.mjs": "5239ac3b372865e58002f4a534105835d185f3d9dec96b9101e54a5186fbe9d9",
+    "packages/core/package.json": "eef3793fdc1098c901c18a0e97160d4204fb765a786c3445bc558ce7efc49e1e"
+  },
+  "sourceUnchanged": true,
+  "steps": [
+    {
+      "label": "core-build",
+      "script": "build",
+      "workspace": "@octafuse/core",
+      "command": [
+        "C:\\Program Files\\nodejs\\node.exe",
+        "C:/Program Files/nodejs/node_modules/npm/bin/npm-cli.js",
+        "run",
+        "build",
+        "--workspace",
+        "@octafuse/core"
+      ],
+      "started": "2026-10-05T08:12:33.391Z",
+      "finished": "2026-10-05T08:12:37.988Z",
+      "actualExit": 0,
+      "signal": null,
+      "summaries": [],
+      "logs": [
+        {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-release-final-consumers-7bcbb3b35c2f4d48abd08fccad57ba68\\core-build.log",
+          "bytes": 444,
+          "sha256": "cc3cbc5a563c4e1ec66a2958226a5800070f659549644e5f7aebb5709e68b91f"
+        },
+        {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-release-final-consumers-7bcbb3b35c2f4d48abd08fccad57ba68\\core-build.stdout.log",
+          "bytes": 444,
+          "sha256": "cc3cbc5a563c4e1ec66a2958226a5800070f659549644e5f7aebb5709e68b91f"
+        },
+        {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-release-final-consumers-7bcbb3b35c2f4d48abd08fccad57ba68\\core-build.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ]
+    },
+    {
+      "label": "core-unit-complete",
+      "script": "test:unit",
+      "workspace": "@octafuse/core",
+      "command": [
+        "C:\\Program Files\\nodejs\\node.exe",
+        "C:/Program Files/nodejs/node_modules/npm/bin/npm-cli.js",
+        "run",
+        "test:unit",
+        "--workspace",
+        "@octafuse/core"
+      ],
+      "started": "2026-10-05T08:12:37.994Z",
+      "finished": "2026-10-05T08:15:31.369Z",
+      "actualExit": 0,
+      "signal": null,
+      "summaries": [
+        {
+          "tests": 35,
+          "suites": 0,
+          "pass": 35,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0
+        },
+        {
+          "tests": 12,
+          "suites": 0,
+          "pass": 12,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0
+        },
+        {
+          "tests": 7,
+          "suites": 2,
+          "pass": 7,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0
+        },
+        {
+          "tests": 40,
+          "suites": 3,
+          "pass": 40,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0
+        },
+        {
+          "tests": 71,
+          "suites": 1,
+          "pass": 71,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0
+        },
+        {
+          "tests": 14,
+          "suites": 0,
+          "pass": 14,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0
+        },
+        {
+          "tests": 7,
+          "suites": 0,
+          "pass": 7,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0
+        },
+        {
+          "tests": 4,
+          "suites": 0,
+          "pass": 4,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0
+        },
+        {
+          "tests": 28,
+          "suites": 0,
+          "pass": 28,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0
+        },
+        {
+          "tests": 19,
+          "suites": 0,
+          "pass": 19,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0
+        },
+        {
+          "tests": 37,
+          "suites": 0,
+          "pass": 37,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0
+        },
+        {
+          "tests": 32,
+          "suites": 0,
+          "pass": 32,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0
+        },
+        {
+          "tests": 50,
+          "suites": 0,
+          "pass": 50,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0
+        },
+        {
+          "tests": 972,
+          "suites": 79,
+          "pass": 972,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0
+        },
+        {
+          "tests": 4,
+          "suites": 0,
+          "pass": 4,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0
+        },
+        {
+          "tests": 2,
+          "suites": 0,
+          "pass": 2,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0
+        },
+        {
+          "tests": 5,
+          "suites": 0,
+          "pass": 5,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0
+        },
+        {
+          "tests": 2,
+          "suites": 0,
+          "pass": 2,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0
+        },
+        {
+          "tests": 2,
+          "suites": 0,
+          "pass": 2,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0
+        }
+      ],
+      "logs": [
+        {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-release-final-consumers-7bcbb3b35c2f4d48abd08fccad57ba68\\core-unit-complete.log",
+          "bytes": 141922,
+          "sha256": "de10fef5fc139ec8e821f55aae0c589156ca6ab5a3585a5ee800407c4d0bdaf2"
+        },
+        {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-release-final-consumers-7bcbb3b35c2f4d48abd08fccad57ba68\\core-unit-complete.stdout.log",
+          "bytes": 141922,
+          "sha256": "de10fef5fc139ec8e821f55aae0c589156ca6ab5a3585a5ee800407c4d0bdaf2"
+        },
+        {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-release-final-consumers-7bcbb3b35c2f4d48abd08fccad57ba68\\core-unit-complete.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ]
+    },
+    {
+      "label": "admin-unit-complete",
+      "script": "test:unit",
+      "workspace": "@octafuse/admin",
+      "command": [
+        "C:\\Program Files\\nodejs\\node.exe",
+        "C:/Program Files/nodejs/node_modules/npm/bin/npm-cli.js",
+        "run",
+        "test:unit",
+        "--workspace",
+        "@octafuse/admin"
+      ],
+      "started": "2026-10-05T08:15:31.375Z",
+      "finished": "2026-10-05T08:17:13.819Z",
+      "actualExit": 0,
+      "signal": null,
+      "summaries": [
+        {
+          "tests": 5,
+          "suites": 1,
+          "pass": 5,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0
+        },
+        {
+          "tests": 30,
+          "suites": 0,
+          "pass": 30,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0
+        },
+        {
+          "tests": 1008,
+          "suites": 86,
+          "pass": 1008,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0
+        }
+      ],
+      "logs": [
+        {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-release-final-consumers-7bcbb3b35c2f4d48abd08fccad57ba68\\admin-unit-complete.log",
+          "bytes": 244807,
+          "sha256": "1113ef90ec83e37ba81ea15c3f2bb84679e80955b64edbb6947425625d0361a6"
+        },
+        {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-release-final-consumers-7bcbb3b35c2f4d48abd08fccad57ba68\\admin-unit-complete.stdout.log",
+          "bytes": 244807,
+          "sha256": "1113ef90ec83e37ba81ea15c3f2bb84679e80955b64edbb6947425625d0361a6"
+        },
+        {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-release-final-consumers-7bcbb3b35c2f4d48abd08fccad57ba68\\admin-unit-complete.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ]
+    }
+  ],
+  "overallPassed": true
+}

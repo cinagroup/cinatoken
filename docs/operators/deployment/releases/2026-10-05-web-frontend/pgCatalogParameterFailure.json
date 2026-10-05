@@ -1,0 +1,175 @@
+{
+  "schema": "cinatoken-cloudflare-release-readonly-pg-probe-closed-v2",
+  "startedAt": "2026-10-05T08:24:59.069Z",
+  "workerName": "cinatoken-release-postcatalog-20261005-0b24c13e",
+  "accountId": "7ea8e46d8210bad342fa7595f7935fea",
+  "workerArtifact": {
+    "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-release-cf-postmigration-operational-b3WpJp/probe-worker.mjs",
+    "bytes": 204340,
+    "sha256": "280f5f4cef350f97404acf06bb29850e4388185eeea86a522eb06c4ca4dfe573"
+  },
+  "existingProbeSource": "scripts/db/cutover/hyperdrive-access-probe-worker.ts",
+  "secretValuesPrinted": false,
+  "secretPersisted": false,
+  "previousFailedResult": "C:/Users/cina/AppData/Local/Temp/cinatoken-release-cf-probe-20261005-retry-R4xTF8/closed-result.json",
+  "SQLWrites": false,
+  "SQLMigrations": false,
+  "SQLGrants": false,
+  "rootSourceWrites": false,
+  "existingWorkerWrites": false,
+  "calls": [
+    {
+      "kind": "unique_worker_absence_precheck",
+      "method": "GET",
+      "apiPath": "/workers/scripts/cinatoken-release-postcatalog-20261005-0b24c13e/settings",
+      "http": 404,
+      "success": false,
+      "errors": [
+        {
+          "code": 10007
+        }
+      ],
+      "at": "2026-10-05T08:25:01.175Z"
+    },
+    {
+      "kind": "account_workers_subdomain",
+      "method": "GET",
+      "apiPath": "/workers/subdomain",
+      "http": 200,
+      "success": true,
+      "errors": [],
+      "at": "2026-10-05T08:25:02.429Z"
+    },
+    {
+      "kind": "upload_unique_readonly_probe",
+      "method": "PUT",
+      "apiPath": "/workers/scripts/cinatoken-release-postcatalog-20261005-0b24c13e",
+      "http": 200,
+      "success": true,
+      "errors": [],
+      "at": "2026-10-05T08:25:06.200Z"
+    },
+    {
+      "kind": "enable_temporary_workers_dev",
+      "method": "POST",
+      "apiPath": "/workers/scripts/cinatoken-release-postcatalog-20261005-0b24c13e/subdomain",
+      "http": 200,
+      "success": true,
+      "errors": [],
+      "at": "2026-10-05T08:25:07.540Z"
+    },
+    {
+      "kind": "read_temporary_workers_dev_state",
+      "method": "GET",
+      "apiPath": "/workers/scripts/cinatoken-release-postcatalog-20261005-0b24c13e/subdomain",
+      "http": 200,
+      "success": true,
+      "errors": [],
+      "at": "2026-10-05T08:25:08.762Z"
+    },
+    {
+      "kind": "readonly_probe_deployment_version",
+      "method": "GET",
+      "apiPath": "/workers/scripts/cinatoken-release-postcatalog-20261005-0b24c13e/deployments",
+      "http": 200,
+      "success": true,
+      "errors": [],
+      "at": "2026-10-05T08:25:10.468Z"
+    },
+    {
+      "kind": "delete_unique_readonly_probe",
+      "method": "DELETE",
+      "apiPath": "/workers/scripts/cinatoken-release-postcatalog-20261005-0b24c13e",
+      "http": 200,
+      "success": true,
+      "errors": [],
+      "at": "2026-10-05T08:25:25.029Z"
+    },
+    {
+      "kind": "verify_unique_readonly_probe_absent",
+      "method": "GET",
+      "apiPath": "/workers/scripts/cinatoken-release-postcatalog-20261005-0b24c13e/settings",
+      "http": 404,
+      "success": false,
+      "errors": [
+        {
+          "code": 10007
+        }
+      ],
+      "at": "2026-10-05T08:25:26.197Z"
+    }
+  ],
+  "probes": [
+    {
+      "path": "/catalog",
+      "attempts": [
+        {
+          "attempt": 1,
+          "http": 404,
+          "contentType": "text/html; charset=UTF-8",
+          "json": null,
+          "rawBodyBytes": 19984,
+          "rawBodySha256": "2000e6b28a1517ba1268e1649cd3163326ef839492edfdba31e8959830580976",
+          "at": "2026-10-05T08:25:11.799Z"
+        },
+        {
+          "attempt": 2,
+          "http": 502,
+          "contentType": "application/json",
+          "json": {
+            "ok": false,
+            "error": "readonly_catalog_probe_failed",
+            "errorCode": "22P02",
+            "errorMessage": "malformed array literal: \"config_change_audit,admin_access_key_audit,admin_shared_key_audit,config_group_audit,system_config_write_mutex,request_dispatch_intents,request_usage_settlements,request_usage_settlement_outbox,request_usage_recovery_jobs,request_",
+            "SQLWrites": false,
+            "businessRowsRead": false
+          },
+          "rawBodyBytes": 390,
+          "rawBodySha256": "96924e77913bc7dcaa92f8f143f4524ca8ccddfab85464b61b2d619d02d08929",
+          "at": "2026-10-05T08:25:22.989Z"
+        }
+      ]
+    }
+  ],
+  "cleanup": {
+    "deleteSucceeded": true,
+    "absentConfirmed": true
+  },
+  "actualExit": 1,
+  "workerURL": "https://cinatoken-release-postcatalog-20261005-0b24c13e.cinagroup.workers.dev",
+  "uploadedVersion": {
+    "id": "cinatoken-release-postcatalog-20261005-0b24c13e",
+    "etag": "03580cb8683794939740b154fb1734d63067fdcab78b61dbf402020ef3a807a4",
+    "deployment_id": "5fad87db8384405a8235b8945867f0e1",
+    "created_on": "2026-10-05T08:25:05.225341Z",
+    "modified_on": "2026-10-05T08:25:05.225341Z"
+  },
+  "workersDevEnableResult": {
+    "enabled": true,
+    "previews_enabled": false
+  },
+  "workersDevReadResult": {
+    "enabled": true,
+    "previews_enabled": false
+  },
+  "deployment": {
+    "id": "a3fafb15-d998-44b9-9c5b-639aa37d81ea",
+    "source": "api",
+    "strategy": "percentage",
+    "author_email": "qq198210@gmail.com",
+    "annotations": {
+      "workers/message": "Automatic deployment on upload.",
+      "workers/triggered_by": "upload"
+    },
+    "versions": [
+      {
+        "version_id": "5fad87db-8384-405a-8235-b8945867f0e1",
+        "percentage": 100
+      }
+    ],
+    "created_on": "2026-10-05T08:25:05.225341Z"
+  },
+  "platformReady": true,
+  "result": "READONLY_PG_PROBE_CONTRACT_NOT_PASSED",
+  "finishedAt": "2026-10-05T08:25:26.198Z"
+}

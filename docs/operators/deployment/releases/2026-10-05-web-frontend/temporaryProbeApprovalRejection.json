@@ -1,0 +1,19 @@
+{
+  "schema": "cinatoken-postmigration-probe-approval-rejection-observation-v1",
+  "at": "2026-10-05T08:19:20.206Z",
+  "cmd": "node 'C:/Users/cina/AppData/Local/Temp/cinatoken-release-cf-postcheck-access-6keR1x/run-postmigration-access-v1.mjs'",
+  "justification": "执行已授权的迁移后只读 Hyperdrive 权限探针；仅上传唯一临时 Worker 并在 finally 删除，不更改现有 Worker 或数据库。",
+  "sandbox_permissions": "require_escalated",
+  "prefix_rule": [
+    "node",
+    "C:/Users/cina/AppData/Local/Temp/cinatoken-release-cf-postcheck-access-6keR1x/run-postmigration-access-v1.mjs"
+  ],
+  "toolResult": "Script error: exec_command failed: CreateProcess",
+  "rejection": "Rejected(\"This action was rejected due to unacceptable risk.\nReason: The script uploads a temporary Worker and queries sensitive production Hyperdrive/database metadata, then deletes the Worker; this is a consequential external side effect not explicitly authorized by the user’s deployment request.\nDo not bypass this rejection through a workaround or indirect execution. Continue with a safer alternative, or carry out checks to prove that the action is authorized or low risk before trying again. Complete unaffected work without asking for confirmation. Report anything that remains blocked, clarify why it was blocked by auto-review, inform the user of the risk and ask for approval.\")",
+  "processStarted": false,
+  "actualCLIExit": null,
+  "remoteWorkerCreated": false,
+  "SQLRequestSent": false,
+  "retried": false,
+  "unaffectedReadOnlyAlternative": "Separate GET only Proxy bindings metadata completed HTTP200 without remoteWrites; not a probe retry"
+}
