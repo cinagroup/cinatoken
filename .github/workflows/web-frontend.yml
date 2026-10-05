@@ -102,6 +102,11 @@ jobs:
           docker run --rm cinatoken-web:check --check
           docker build --file Dockerfile.web-ssr --build-arg WEB_RELEASE_PATH=.release/web/${{ github.sha }} --tag cinatoken-web-ssr:check .
           node docker/web/smoke.mjs "${{ github.sha }}"
+      - name: Validate isolated Docker public SSR runtime
+        timeout-minutes: 5
+        run: |
+          npx prettier --check docker/web/fixtures/catalog-server.mjs
+          node docker/web/ssr-smoke.mjs "${{ github.sha }}"
       - uses: actions/upload-artifact@v4
         with:
           name: cinatoken-web
