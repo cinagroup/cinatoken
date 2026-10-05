@@ -138,7 +138,8 @@ export function anonymousCatalogFetch(
 			new Request(url, {
 				method: 'GET',
 				credentials: 'omit',
-				redirect: 'error',
+				// Worker Requests support manual redirects; the catalog SDK rejects 3xx.
+				redirect: 'manual',
 				headers: { accept: 'application/json' },
 				signal: init?.signal,
 			})

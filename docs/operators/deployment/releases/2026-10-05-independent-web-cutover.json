@@ -1,0 +1,114 @@
+{
+  "status": "preparing-independent-web-cutover",
+  "at": "2026-10-05T10:35:04.112Z",
+  "userAuthorization": "切流到独立web",
+  "baselineArtifactCommit": "5055c5bf0dbcc749cadf1d31461d838c86e38a4f",
+  "baselineArtifactManifestSha256": "348a9b43b7631f1fc70b0d96f66058ad5955bf0e1e69d5fb51eb5f37cfc137ea",
+  "baselineCi": {
+    "run": 37294574618,
+    "conclusion": "success",
+    "url": "https://github.com/cinagroup/cinatoken/actions/runs/37294574618"
+  },
+  "baselineReadinessPassed": false,
+  "baselineObservedFailure": [
+    "public models/provider SSR 503",
+    "sitemap 503"
+  ],
+  "productionRouteChanged": false,
+  "route": {
+    "id": "5738534653ef46f48a44e3f3b22e5d8e",
+    "pattern": "cinatoken.com/*",
+    "script": "cinatoken-admin",
+    "request_limit_fail_open": false
+  },
+  "proxyRoute": {
+    "id": "242dce09c515462e833d69bd0738bdfc",
+    "pattern": "api.cinatoken.com/*",
+    "script": "cinatoken-proxy",
+    "request_limit_fail_open": false
+  },
+  "rollbackAdmin": {
+    "id": "e4f33725-d427-4efb-ac8b-b9e7db7a456b",
+    "created_on": "2026-10-05T09:55:10.939389Z",
+    "versions": [
+      {
+        "id": "a5ce22c4-edae-42e9-8c2b-7b0df63e5b66",
+        "number": 55,
+        "percentage": 100,
+        "annotations": {
+          "workers/message": "Web frontend migration release",
+          "workers/tag": "34c742d161edbf2c16c7578221578d0b805d35c0",
+          "workers/triggered_by": "version_upload"
+        }
+      }
+    ]
+  },
+  "proxyBefore": {
+    "id": "3f08168a-4866-415f-8a35-d446e94af76a",
+    "created_on": "2026-10-05T09:54:55.216721Z",
+    "versions": [
+      {
+        "id": "6e235009-78db-443e-9387-6ec9d963d9d1",
+        "number": 38,
+        "percentage": 100,
+        "annotations": {
+          "workers/message": "Web frontend backend release",
+          "workers/tag": "34c742d161edbf2c16c7578221578d0b805d35c0",
+          "workers/triggered_by": "version_upload"
+        }
+      }
+    ]
+  },
+  "intendedWebFlags": {
+    "total": 29,
+    "enabled": 29,
+    "purpose": "HTML routing only; API/OIDC/backend authority retained"
+  },
+  "actualWebBaselineFlagsEnabled": 1,
+  "fixedSsrSource": {
+    "files": [
+      "packages/web/src/cinatoken/public-server/public-response.tsx",
+      "packages/web/src/cinatoken/public-server/public-response.test.ts"
+    ],
+    "targetedTests": 146,
+    "typecheckPassed": true
+  },
+  "independentGateTests": {
+    "adminRouteConfig": 21,
+    "switchRoute": 6
+  },
+  "evidence": {
+    "baselineHTTP": {
+      "path": "docs/operators/deployment/releases/2026-10-05-independent-web/baselineHTTP.json",
+      "bytes": 3913,
+      "sha256": "9604bac7ce6a8bff5a13a6c5d017cb68281b1453c812ddeda1277fe181d11688"
+    },
+    "ssrFix": {
+      "path": "docs/operators/deployment/releases/2026-10-05-independent-web/ssrFix.json",
+      "bytes": 6558,
+      "sha256": "7570139ac1e592034f22657b9a0341205eb9dd124230f60f86da7fa2f3d7b7d3"
+    },
+    "routeGuardTests": {
+      "path": "docs/operators/deployment/releases/2026-10-05-independent-web/routeGuardTests.json",
+      "bytes": 609,
+      "sha256": "73cb43d19b8253a34ea28d8b882399fb05c0b1289f5982ce5ba0b555c1ab4272"
+    },
+    "adminRouteConfigTests": {
+      "path": "docs/operators/deployment/releases/2026-10-05-independent-web/adminRouteConfigTests.json",
+      "bytes": 615,
+      "sha256": "896da462a0672893090db324d9292801c09a5dca59e6ffaaa458114593cc0bf0"
+    }
+  },
+  "remaining": [
+    "fresh fixed same-commit Linux artifact",
+    "real Cloudflare fixed SSR and asset/private entry validation",
+    "route activation and readback",
+    "production browser/API smoke"
+  ],
+  "unverified": [
+    "real authenticated business flows",
+    "financial/chain writes"
+  ],
+  "wholeMigrationComplete": false,
+  "secretValuesRecorded": false
+}

@@ -10,6 +10,7 @@ scripts/db/cutover/** -text
 docs/developers/architecture/implementation-evidence/** -text
 docs/developers/architecture/evidence/** -text
 docs/operators/deployment/releases/2026-10-05-web-frontend/** -text
+docs/operators/deployment/releases/2026-10-05-independent-web/** -text
 docs/operators/deployment/releases/2026-09-27-text-workerd-manual-redirect-local-tests.txt -text
 docs/operators/deployment/releases/2026-09-27-request-dispatch-manual-fixture-first-local-failed.txt -text
 docs/operators/deployment/releases/2026-09-27-request-dispatch-manual-fixture-local-tests.txt -text

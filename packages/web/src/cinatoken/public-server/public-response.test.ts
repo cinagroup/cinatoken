@@ -39,6 +39,97 @@ function fixture(read?: (request: Request) => Promise<Response>) {
 	return { options, reads, failures }
 }
 
+test('Worker catalog transport uses manual redirects and reconstructs an anonymous GET', async () => {
+	const reads: Request[] = []
+	const controller = new AbortController()
+	const request = anonymousCatalogFetch('https://untrusted-host.example', {
+		async fetch(value) {
+			reads.push(value)
+			return Response.json(publicCatalogHttpFixture(value.url))
+		},
+	})
+	await request(
+		new Request('https://untrusted-host.example/api/public/catalog/models', {
+			method: 'POST',
+			headers: {
+				cookie: 'admin_session=private-marker',
+				authorization: 'Bearer secret-marker',
+				'X-CinaToken-Workspace': 'private-workspace',
+			},
+			body: 'private-body',
+		}),
+		{
+			method: 'POST',
+			credentials: 'include',
+			redirect: 'follow',
+			headers: { authorization: 'Bearer init-secret' },
+			signal: controller.signal,
+		}
+	)
+	assert.equal(reads.length, 1)
+	const read = reads[0]!
+	assert.equal(read.method, 'GET')
+	assert.equal(read.credentials, 'omit')
+	assert.equal(read.redirect, 'manual')
+	assert.deepEqual([...read.headers], [['accept', 'application/json']])
+	assert.equal(read.body, null)
+	assert.equal(read.signal.aborted, false)
+	controller.abort()
+	assert.equal(read.signal.aborted, true)
+	for (const url of [
+		'https://other.example/api/public/catalog/models',
+		'/api/user/me',
+		'/api/public/catalog/models/private',
+	]) {
+		await assert.rejects(request(url), /Only anonymous public catalog/)
+	}
+	assert.equal(reads.length, 1)
+})
+
+for (const status of [301, 302, 303, 307, 308]) {
+	test(`catalog redirect ${status} is rejected without private headers or body reaching public SSR`, async () => {
+		for (const path of [
+			'/en/models',
+			'/en/providers',
+			'/en/rankings',
+			'/en/models/Vendor/http-fixture',
+		]) {
+			for (const method of ['GET', 'HEAD']) {
+				const f = fixture(async () =>
+					Response.json(
+						{ private: 'redirect-private-body' },
+						{
+							status,
+							headers: {
+								location: 'https://other.example/private',
+								'set-cookie': 'private-cookie=secret',
+							},
+						}
+					)
+				)
+				const response = await renderPublicResponse(
+					new Request('https://untrusted-host.example' + path, {
+						method,
+					}),
+					f.options
+				)
+				assert.equal(response.status, 503)
+				assert.equal(response.headers.get('cache-control'), 'no-store')
+				assert.equal(response.headers.get('x-robots-tag'), 'noindex, nofollow')
+				assert.equal(response.headers.get('retry-after'), '30')
+				assert.equal(response.headers.get('location'), null)
+				assert.equal(response.headers.get('set-cookie'), null)
+				const html = await response.text()
+				assert.equal(html.includes('redirect-private-body'), false)
+				assert.equal(html.includes('other.example'), false)
+				assert.equal(html.includes('private-cookie'), false)
+				if (method === 'HEAD') assert.equal(html, '')
+				assert.equal(f.reads.length, 1)
+			}
+		}
+	})
+}
+
 for (const locale of PUBLIC_HTTP_LOCALES) {
 	for (const path of [
 		'',
@@ -139,7 +230,7 @@ for (const locale of PUBLIC_HTTP_LOCALES) {
 				assert.equal(read.headers.get('cookie'), null)
 				assert.equal(read.headers.get('authorization'), null)
 				assert.equal(read.credentials, 'omit')
-				assert.equal(read.redirect, 'error')
+				assert.equal(read.redirect, 'manual')
 				assert.ok(read.url.includes('/api/public/catalog/'))
 			}
 			if (path.startsWith('/models/Vendor')) {

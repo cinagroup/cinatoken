@@ -18,12 +18,9 @@
 	],
 
 	"workers_dev": false,
-	"routes": [
-		{
-			"pattern": "cinatoken.com/*",
-			"zone_name": "cinatoken.com"
-		}
-	],
+	// 独立 Web 接管公开入口；Admin 保留 Service Binding、认证与 API。
+	// 回滚由现有 Zone Route 切换目标，后端部署不再默认认领主域名。
+	"routes": [],
 	"assets": {
 		"directory": ".open-next/assets",
 		"binding": "ASSETS"

@@ -77,7 +77,7 @@ test('generated Wrangler configs preserve HTTPS values and Workers Routes', () =
 		admin.services.find((service) => service.binding === 'CINATOKEN_PROXY_SERVICE'),
 		{ binding: 'CINATOKEN_PROXY_SERVICE', service: 'cinatoken-proxy' },
 	);
-	assert.deepEqual(admin.routes, [{ pattern: 'cinatoken.com/*', zone_name: 'cinatoken.com' }]);
+	assert.equal(admin.routes, undefined, 'Admin deployments must not reclaim the independent Web entry');
 	assert.deepEqual(proxy.routes, [{ pattern: 'api.cinatoken.com/*', zone_name: 'cinatoken.com' }]);
 	assert.deepEqual(proxy.triggers, { crons: ['17 * * * *'] });
 	assert.equal(proxy.vars.PROVIDER_ATTEMPT_RETENTION_DAYS, '7');

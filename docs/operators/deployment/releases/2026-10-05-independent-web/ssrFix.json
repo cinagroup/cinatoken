@@ -1,0 +1,146 @@
+{
+  "status": "STOP",
+  "sourceWritesStopped": true,
+  "head": "5055c5bf0dbcc749cadf1d31461d838c86e38a4f",
+  "ownedFiles": [
+    {
+      "path": "packages/web/src/cinatoken/public-server/public-response.tsx",
+      "bytes": 11176,
+      "sha256": "81e7420b3f3cb5e1bea9fd8ad583b477643f15c788ab46aba21c6121fd37cabc",
+      "headBytes": 11097,
+      "headSha256": "ab48c75fbe89d06809f5282d5354361eb91bebbeb0c2c96bdb83d95b2031c404"
+    },
+    {
+      "path": "packages/web/src/cinatoken/public-server/public-response.test.ts",
+      "bytes": 13749,
+      "sha256": "e88ffbaf7a38d21c5be01fad177d9c41434e14bac5315d9c82ffbfc3f07b1cb2",
+      "headBytes": 10876,
+      "headSha256": "523d87cb3009456c145db56fcbc85061e387c9893b3d8e8977ed34ce2f045c55"
+    }
+  ],
+  "commands": {
+    "diff-check": {
+      "command": [
+        "git",
+        "-c",
+        "core.whitespace=cr-at-eol",
+        "diff",
+        "--check",
+        "--",
+        "packages/web/src/cinatoken/public-server/public-response.tsx",
+        "packages/web/src/cinatoken/public-server/public-response.test.ts"
+      ],
+      "actual": 0,
+      "signal": null,
+      "stdout": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-independent-web-ssr-review-20ef195e85904977a3cd38a82fe8784c\\diff-check.stdout.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stderr": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-independent-web-ssr-review-20ef195e85904977a3cd38a82fe8784c\\diff-check.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    "owned-patch": {
+      "command": [
+        "git",
+        "diff",
+        "--binary",
+        "--",
+        "packages/web/src/cinatoken/public-server/public-response.tsx",
+        "packages/web/src/cinatoken/public-server/public-response.test.ts"
+      ],
+      "actual": 0,
+      "signal": null,
+      "stdout": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-independent-web-ssr-review-20ef195e85904977a3cd38a82fe8784c\\owned-patch.stdout.log",
+        "bytes": 4538,
+        "sha256": "436af6a3cf065d4343d594ffcb798326eaf84e38992e65bb28bb876dd4ffc232"
+      },
+      "stderr": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-independent-web-ssr-review-20ef195e85904977a3cd38a82fe8784c\\owned-patch.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    "head": {
+      "command": [
+        "git",
+        "rev-parse",
+        "HEAD"
+      ],
+      "actual": 0,
+      "signal": null,
+      "stdout": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-independent-web-ssr-review-20ef195e85904977a3cd38a82fe8784c\\head.stdout.log",
+        "bytes": 41,
+        "sha256": "b0fe8e434fa3b56a515324ed42e235c65329879b099fa03335f29100bdf8c3ce"
+      },
+      "stderr": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-independent-web-ssr-review-20ef195e85904977a3cd38a82fe8784c\\head.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    }
+  },
+  "checks": {
+    "baseline": {
+      "label": "baseline-public-response-with-new-manual-contract",
+      "startedAt": "2026-10-05T10:25:01.0167589Z",
+      "closedAt": "2026-10-05T10:25:14.1463823Z",
+      "actual": 1,
+      "stdout": "C:/Users/cina/AppData/Local/Temp/cinatoken-independent-web-ssr-review-20ef195e85904977a3cd38a82fe8784c/baseline-public-response.stdout.log",
+      "stdoutSha256": "868461e0ae9448b78639013f957a6da7ca2dfa2fa2cb4f208168227a2ea08b8f",
+      "stderr": "C:/Users/cina/AppData/Local/Temp/cinatoken-independent-web-ssr-review-20ef195e85904977a3cd38a82fe8784c/baseline-public-response.stderr.log",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "tests": 43,
+      "pass": 42,
+      "fail": 1,
+      "firstFailure": "Worker catalog transport manual assertion: 'error' !== 'manual'"
+    },
+    "fixed": {
+      "label": "fixed-target-contracts",
+      "startedAt": "2026-10-05T10:25:51.8188418Z",
+      "closedAt": "2026-10-05T10:25:55.5500549Z",
+      "actual": 0,
+      "stdout": "C:/Users/cina/AppData/Local/Temp/cinatoken-independent-web-ssr-review-20ef195e85904977a3cd38a82fe8784c/fixed-target-contracts.stdout.log",
+      "stdoutSha256": "bbac84c5c4c4ef869022f27305dd2ea0eac70e986f7d45d284f1af76b1c2e0ea",
+      "stderr": "C:/Users/cina/AppData/Local/Temp/cinatoken-independent-web-ssr-review-20ef195e85904977a3cd38a82fe8784c/fixed-target-contracts.stderr.log",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "tests": 146,
+      "pass": 146,
+      "fail": 0,
+      "cancelled": 0,
+      "skipped": 0,
+      "selectedFiles": [
+        "public-server/public-response.test.ts",
+        "public-server/http-policy.test.ts",
+        "public/catalog-api.test.ts",
+        "edge/worker.test.ts",
+        "scripts/gen-web-wrangler.test.mjs"
+      ]
+    },
+    "typecheck": {
+      "label": "typecheck-web",
+      "startedAt": "2026-10-05T10:26:18.2030949Z",
+      "closedAt": "2026-10-05T10:26:53.9593746Z",
+      "actual": 0,
+      "stdout": "C:/Users/cina/AppData/Local/Temp/cinatoken-independent-web-ssr-review-20ef195e85904977a3cd38a82fe8784c/typecheck-web.stdout.log",
+      "stdoutSha256": "a7e5a40ac0d8d4e9d1dee07fbf8bb7f85b940fd3b0d063f99e46671cd9d7b7c2",
+      "stderr": "C:/Users/cina/AppData/Local/Temp/cinatoken-independent-web-ssr-review-20ef195e85904977a3cd38a82fe8784c/typecheck-web.stderr.log",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "format": {
+      "actual": 0,
+      "command": "npm exec -- prettier --check src/cinatoken/public-server/public-response.tsx src/cinatoken/public-server/public-response.test.ts",
+      "retainedToolOutput": "chunk25c377: All matched files use Prettier code style!"
+    }
+  },
+  "review": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-independent-web-ssr-review-20ef195e85904977a3cd38a82fe8784c\\readonly-web-cutover-review-v1.json",
+    "sha256": "1ad59993ca0bb89ab6fa4177be77f19c891cd0713be44a2862bff98bab91ff27"
+  },
+  "limitations": "No Web deploy, domain route/config write, browser production smoke, or DB write by this subagent. Local Node tests are not CF native proof. Full Linux fresh fixed artifact still required by Root."
+}
