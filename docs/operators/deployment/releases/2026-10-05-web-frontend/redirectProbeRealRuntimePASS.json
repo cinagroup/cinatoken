@@ -1,0 +1,183 @@
+{
+  "at": "2026-10-05T09:34:10.733Z",
+  "workerName": "cinatoken-release-redirect-8c3f4a5b",
+  "readOnlyDownstream": true,
+  "businessWrites": false,
+  "existingWorkersChanged": false,
+  "secretValuesRecorded": false,
+  "sourceSHA": "9f9e04e7f2eb4a9cdf65f195a9be22385c9ad5979e0c406621a1b8f8340aa2e3",
+  "calls": [
+    {
+      "label": "confirm_unique_target_absent",
+      "method": "GET",
+      "http": 404,
+      "success": false,
+      "errors": [
+        {
+          "code": 10007,
+          "message": "This Worker does not exist on your account."
+        }
+      ]
+    },
+    {
+      "label": "read_account_subdomain",
+      "method": "GET",
+      "http": 200,
+      "success": true,
+      "errors": []
+    },
+    {
+      "label": "upload_owned_readonly_probe",
+      "method": "PUT",
+      "http": 200,
+      "success": true,
+      "errors": []
+    },
+    {
+      "label": "enable_owned_temp_subdomain",
+      "method": "POST",
+      "http": 200,
+      "success": true,
+      "errors": []
+    },
+    {
+      "label": "delete_owned_probe",
+      "method": "DELETE",
+      "http": 200,
+      "success": true,
+      "errors": []
+    },
+    {
+      "label": "verify_owned_probe_absent",
+      "method": "GET",
+      "http": 404,
+      "success": false,
+      "errors": [
+        {
+          "code": 10007,
+          "message": "This Worker does not exist on your account."
+        }
+      ]
+    }
+  ],
+  "readiness": [
+    {
+      "http": 404,
+      "bytes": 0
+    }
+  ],
+  "cleanup": {
+    "deleted": true,
+    "absent": true
+  },
+  "actualExit": 0,
+  "authenticatedReadiness": [
+    {
+      "http": 200,
+      "bytes": 2233,
+      "contentType": "application/json"
+    }
+  ],
+  "http": 200,
+  "probe": {
+    "schema": "cinatoken-owned-readonly-request-redirect-probe-v1",
+    "at": "2026-10-05T09:34:19.882Z",
+    "results": [
+      {
+        "redirect": "error",
+        "path": "/catalog/models",
+        "stage": "request-constructor",
+        "constructorCompleted": false,
+        "serviceFetchStarted": false,
+        "error": {
+          "name": "TypeError",
+          "message": "Invalid redirect value, must be one of \"follow\" or \"manual\" (\"error\" won't be implemented since it does not make sense at the edge; use \"manual\" and check the response status code)."
+        }
+      },
+      {
+        "redirect": "error",
+        "path": "/catalog/providers",
+        "stage": "request-constructor",
+        "constructorCompleted": false,
+        "serviceFetchStarted": false,
+        "error": {
+          "name": "TypeError",
+          "message": "Invalid redirect value, must be one of \"follow\" or \"manual\" (\"error\" won't be implemented since it does not make sense at the edge; use \"manual\" and check the response status code)."
+        }
+      },
+      {
+        "redirect": "error",
+        "path": "/catalog/stats/models?range=7d",
+        "stage": "request-constructor",
+        "constructorCompleted": false,
+        "serviceFetchStarted": false,
+        "error": {
+          "name": "TypeError",
+          "message": "Invalid redirect value, must be one of \"follow\" or \"manual\" (\"error\" won't be implemented since it does not make sense at the edge; use \"manual\" and check the response status code)."
+        }
+      },
+      {
+        "redirect": "manual",
+        "path": "/catalog/models",
+        "stage": "complete",
+        "constructorCompleted": true,
+        "serviceFetchStarted": true,
+        "outgoingRedirect": "manual",
+        "outgoingHeaders": [
+          [
+            "accept",
+            "application/json"
+          ]
+        ],
+        "http": 200,
+        "contentType": "application/json",
+        "object": "list",
+        "rows": 0,
+        "billingCurrency": "USD",
+        "generatedAt": "2026-10-05T09:34:19.675Z"
+      },
+      {
+        "redirect": "manual",
+        "path": "/catalog/providers",
+        "stage": "complete",
+        "constructorCompleted": true,
+        "serviceFetchStarted": true,
+        "outgoingRedirect": "manual",
+        "outgoingHeaders": [
+          [
+            "accept",
+            "application/json"
+          ]
+        ],
+        "http": 200,
+        "contentType": "application/json",
+        "object": "list",
+        "rows": 0,
+        "billingCurrency": "USD",
+        "generatedAt": "2026-10-05T09:34:19.758Z"
+      },
+      {
+        "redirect": "manual",
+        "path": "/catalog/stats/models?range=7d",
+        "stage": "complete",
+        "constructorCompleted": true,
+        "serviceFetchStarted": true,
+        "outgoingRedirect": "manual",
+        "outgoingHeaders": [
+          [
+            "accept",
+            "application/json"
+          ]
+        ],
+        "http": 200,
+        "contentType": "application/json",
+        "object": "list",
+        "rows": 0,
+        "billingCurrency": null,
+        "generatedAt": "2026-10-05T09:34:19.835Z"
+      }
+    ]
+  },
+  "result": "REAL_CLOUDFLARE_ERROR_REDIRECT_REJECTED_MANUAL_CATALOG_SUCCEEDED",
+  "finishedAt": "2026-10-05T09:34:22.811Z"
+}

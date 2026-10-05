@@ -108,7 +108,7 @@ test("real anonymous client round trip through BFF strips credentials and intern
 	const bff = createPublicCatalogBff(async (path, init, runtime) => {
 		assert.equal(path, "/catalog/models?route_groups=default");
 		assert.equal(init?.credentials, "omit");
-		assert.equal(init?.redirect, "error");
+		assert.equal(init?.redirect, "manual");
 		assert.deepEqual(
 			[...new Headers(init?.headers)],
 			[["accept", "application/json"]]
@@ -649,6 +649,85 @@ test("all actual Next route handlers use the Proxy service binding with exact an
 			"/catalog/stats/models?range=7d",
 		]
 	);
-	for (const sent of captured)
+	for (const sent of captured) {
+		assert.equal(sent.redirect, "manual");
 		assert.deepEqual([...sent.headers], [["accept", "application/json"]]);
+	}
+});
+
+test("Cloudflare-compatible manual redirects keep the catalog boundary anonymous and fail closed", async () => {
+	for (const status of [301, 302, 303, 307, 308]) {
+		const captured: Request[] = [];
+		const service: Pick<Fetcher, "fetch"> = {
+			fetch: async (input: RequestInfo | URL, init?: RequestInit) => {
+				const sent = new Request(input, init);
+				captured.push(sent);
+				assert.equal(sent.redirect, "manual");
+				return new Response("private redirect target", {
+					status,
+					headers: {
+						Location: "https://private.example/catalog",
+						"Set-Cookie": "private=secret",
+					},
+				});
+			},
+		};
+		const incoming = Object.assign(
+			new Request("https://portal.example/api/public/catalog/models", {
+				headers: {
+					Cookie: "must-not-forward",
+					Authorization: "Bearer must-not-forward",
+					"X-CinaToken-Workspace": "must-not-forward",
+				},
+			}),
+			{ env: { CINATOKEN_PROXY_SERVICE: service } }
+		);
+		const response = await getModels(incoming);
+		assert.equal(captured.length, 1);
+		assert.equal(captured[0]!.redirect, "manual");
+		assert.equal(captured[0]!.url, "https://api.cinatoken.com/catalog/models");
+		assert.deepEqual(
+			[...captured[0]!.headers],
+			[["accept", "application/json"]]
+		);
+		assert.equal(response.status, 502);
+		assert.equal(response.headers.get("cache-control"), "no-store");
+		assert.equal(response.headers.get("location"), null);
+		assert.equal(response.headers.get("set-cookie"), null);
+		assert.equal((await response.text()).includes("private"), false);
+	}
+});
+
+test("production empty catalog envelopes pass through real bound Next model and provider handlers", async () => {
+	const published = {
+		object: "list",
+		data: [],
+		billing_currency: "USD",
+		generated_at: "2026-10-05T09:25:49.582Z",
+	};
+	const captured: Request[] = [];
+	const service: Pick<Fetcher, "fetch"> = {
+		fetch: async (input: RequestInfo | URL, init?: RequestInit) => {
+			const sent = new Request(input, init);
+			captured.push(sent);
+			assert.equal(sent.redirect, "manual");
+			return Response.json(published);
+		},
+	};
+	for (const [path, handler] of [
+		["models", getModels],
+		["providers", getProviders],
+	] as const) {
+		const incoming = Object.assign(
+			new Request(`https://portal.example/api/public/catalog/${path}`),
+			{ env: { CINATOKEN_PROXY_SERVICE: service } }
+		);
+		const response = await handler(incoming);
+		assert.equal(response.status, 200);
+		assert.deepEqual(await response.json(), published);
+	}
+	assert.deepEqual(
+		captured.map((sent) => new URL(sent.url).pathname),
+		["/catalog/models", "/catalog/providers"]
+	);
 });

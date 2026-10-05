@@ -1,0 +1,129 @@
+{
+  "schema": "cinatoken-production-final39b-runtime-smoke-execution-v1",
+  "label": "after-39b76f42-1791192339462",
+  "at": "2026-10-05T09:26:04.346Z",
+  "deployedGitSHA": "39b76f42bdd6e21d43ad190d2e3530c338a2a59d",
+  "expectedWorkerVersions": {
+    "cinatoken-proxy": "90c6bd33-6660-4a5c-a65b-cacc6efe7ef0",
+    "cinatoken-admin": "2e2ad187-81ae-4c2e-9c3e-d95177e012ff"
+  },
+  "live": {
+    "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-cf-release-20261005-39903936e58044ec93eb658f30471c3e/cloudflare-live-39b76f42bdd6.json",
+    "bytes": 6879,
+    "sha256": "47bd32ab44bdef59f1e3535e4ebb3bd255ac1977740228fd5f4673c6526bbc99"
+  },
+  "results": [
+    {
+      "startedAt": "2026-10-05T09:25:39.466Z",
+      "finishedAt": "2026-10-05T09:25:51.002Z",
+      "node": "v24.14.1",
+      "kind": "http",
+      "deployedGitSHA": "39b76f42bdd6e21d43ad190d2e3530c338a2a59d",
+      "expectedWorkerVersions": {
+        "cinatoken-proxy": "90c6bd33-6660-4a5c-a65b-cacc6efe7ef0",
+        "cinatoken-admin": "2e2ad187-81ae-4c2e-9c3e-d95177e012ff"
+      },
+      "live": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-cf-release-20261005-39903936e58044ec93eb658f30471c3e/cloudflare-live-39b76f42bdd6.json",
+        "bytes": 6879,
+        "sha256": "47bd32ab44bdef59f1e3535e4ebb3bd255ac1977740228fd5f4673c6526bbc99"
+      },
+      "script": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-release-production-smoke-LhAI9h\\production-http-after.mjs",
+        "bytes": 4477,
+        "sha256": "08673ff81cbb021160515d773b89673f88274833ca2e647682249bfa2975e99b"
+      },
+      "argv": [
+        "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-release-production-smoke-LhAI9h\\production-http-after.mjs",
+        "after-39b76f42-1791192339462-http",
+        "39b76f42bdd6e21d43ad190d2e3530c338a2a59d"
+      ],
+      "actualExit": 1,
+      "signal": null,
+      "timedOut": false,
+      "spawnError": null,
+      "closedJSONExists": true,
+      "closedJSON": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-release-production-smoke-LhAI9h\\after-39b76f42-1791192339462-http-closed-result.json",
+        "bytes": 8890,
+        "sha256": "f9cc81707c62c261aac98637ebde6c85af1240f352f069795e55f899cdbf8107"
+      },
+      "reportStatus": {
+        "actualExit": 1,
+        "result": "FAILED",
+        "failure": {
+          "name": "AssertionError",
+          "message": "https://cinatoken.com/api/public/catalog/models\n\n502 !== 200\n",
+          "causeCode": null
+        }
+      },
+      "rawLog": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-release-production-smoke-LhAI9h\\after-39b76f42-1791192339462-http.stdout-stderr.log",
+        "bytes": 1461,
+        "sha256": "7eab11eb08023d7eef904f46e34043e4cf84226557b6cba637639dcfed3723bf"
+      },
+      "browserClosedByScriptUnlessProcessKilled": false,
+      "sourceWrites": 0,
+      "businessWrites": 0,
+      "receipt": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-release-production-smoke-LhAI9h\\after-39b76f42-1791192339462-http-execution-receipt.json",
+        "bytes": 2058,
+        "sha256": "9cf273c65c4de2e5d6cbc94d43923c6c962c8f17277c953b5af9239d47076546"
+      }
+    },
+    {
+      "startedAt": "2026-10-05T09:25:39.474Z",
+      "finishedAt": "2026-10-05T09:26:04.341Z",
+      "node": "v24.14.1",
+      "kind": "browser",
+      "deployedGitSHA": "39b76f42bdd6e21d43ad190d2e3530c338a2a59d",
+      "expectedWorkerVersions": {
+        "cinatoken-proxy": "90c6bd33-6660-4a5c-a65b-cacc6efe7ef0",
+        "cinatoken-admin": "2e2ad187-81ae-4c2e-9c3e-d95177e012ff"
+      },
+      "live": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-cf-release-20261005-39903936e58044ec93eb658f30471c3e/cloudflare-live-39b76f42bdd6.json",
+        "bytes": 6879,
+        "sha256": "47bd32ab44bdef59f1e3535e4ebb3bd255ac1977740228fd5f4673c6526bbc99"
+      },
+      "script": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-release-production-smoke-LhAI9h\\production-browser-after.mjs",
+        "bytes": 4310,
+        "sha256": "91324781108df4015e56455b7ccc16be10dca740457a9bebd0c42fe3f0b0c707"
+      },
+      "argv": [
+        "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-release-production-smoke-LhAI9h\\production-browser-after.mjs",
+        "after-39b76f42-1791192339462-browser"
+      ],
+      "actualExit": 1,
+      "signal": null,
+      "timedOut": false,
+      "spawnError": null,
+      "closedJSONExists": true,
+      "closedJSON": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-release-production-smoke-LhAI9h\\after-39b76f42-1791192339462-browser.json",
+        "bytes": 12184,
+        "sha256": "db580016ad1dd1110c7d54cdef4c8925a8bfaa2b3bca437a470742db85603826"
+      },
+      "reportStatus": {
+        "actualExit": 1,
+        "result": null,
+        "failure": "Expected values to be strictly equal:\n\n'light' !== 'dark'\n"
+      },
+      "rawLog": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-release-production-smoke-LhAI9h\\after-39b76f42-1791192339462-browser.stdout-stderr.log",
+        "bytes": 10240,
+        "sha256": "5d48b2988884d8cb70e420177180aeb748965200fd7c251177374a13d532ddc1"
+      },
+      "browserClosedByScriptUnlessProcessKilled": true,
+      "sourceWrites": 0,
+      "businessWrites": 0,
+      "receipt": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-release-production-smoke-LhAI9h\\after-39b76f42-1791192339462-browser-execution-receipt.json",
+        "bytes": 1926,
+        "sha256": "1e91a44b430dff0d3a56c81a76f255b11b4d3064f8b19b1159d19375ddfe5053"
+      }
+    }
+  ],
+  "actualExit": 1
+}

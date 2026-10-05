@@ -34,10 +34,14 @@ function resolveTheme(preference: ThemePreference): "light" | "dark" {
 		: "light";
 }
 
-function applyTheme(preference: ThemePreference) {
+function updateDocumentTheme(preference: ThemePreference) {
 	const root = document.documentElement;
 	root.dataset.homeThemePreference = preference;
 	root.dataset.homeTheme = resolveTheme(preference);
+}
+
+function applyTheme(preference: ThemePreference) {
+	updateDocumentTheme(preference);
 
 	try {
 		window.localStorage.setItem(STORAGE_KEY, preference);
@@ -99,11 +103,15 @@ export default function HomeThemeSwitcher() {
 	const optionRefs = useRef<Array<HTMLButtonElement | null>>([]);
 
 	useEffect(() => {
-		applyTheme(preference);
-		if (preference !== "system") return;
+		// Hydration first uses the server snapshot. Read the current preference
+		// instead of persisting that default over the user's stored choice.
+		const currentPreference = getThemePreferenceSnapshot();
+		updateDocumentTheme(currentPreference);
+		if (currentPreference !== "system") return;
 
 		const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
-		const handleSystemThemeChange = () => applyTheme("system");
+		const handleSystemThemeChange = () =>
+			updateDocumentTheme(getThemePreferenceSnapshot());
 		mediaQuery.addEventListener("change", handleSystemThemeChange);
 		return () =>
 			mediaQuery.removeEventListener("change", handleSystemThemeChange);

@@ -1,0 +1,253 @@
+{
+  "schema": "cinatoken-production-postdeploy-readonly-http-smoke-v1",
+  "at": "2026-10-05T09:25:39.523Z",
+  "label": "after-39b76f42-1791192339462-http",
+  "deploymentSHAReportedByRoot": "39b76f42bdd6e21d43ad190d2e3530c338a2a59d",
+  "method": "GET",
+  "existingWorkerWrites": false,
+  "businessWrites": false,
+  "realAuthentication": false,
+  "calls": [
+    {
+      "url": "https://cinatoken.com/",
+      "expected": 200,
+      "kind": "html",
+      "http": 200,
+      "contentType": "text/html; charset=utf-8",
+      "cacheControl": "private, no-cache, no-store, max-age=0, must-revalidate",
+      "location": null,
+      "bodyBytes": 221242,
+      "bodySHA": "81af0c2ad5af09a8db1ee3437c9f5277b01600e074d52ce18bcdd2bd1907d41f",
+      "at": "2026-10-05T09:25:42.270Z",
+      "title": "cinatoken · AI capability gateway",
+      "notBlank": true,
+      "hasHTML": true
+    },
+    {
+      "url": "https://cinatoken.com/models",
+      "expected": 200,
+      "kind": "html",
+      "http": 200,
+      "contentType": "text/html; charset=utf-8",
+      "cacheControl": "private, no-cache, no-store, max-age=0, must-revalidate",
+      "location": null,
+      "bodyBytes": 185492,
+      "bodySHA": "09d33a2370f756e79ac433f865eb3e54f8bceb7ac96b8d3d987d0d584daf4978",
+      "at": "2026-10-05T09:25:43.024Z",
+      "title": "Models",
+      "notBlank": true,
+      "hasHTML": true
+    },
+    {
+      "url": "https://cinatoken.com/providers",
+      "expected": 200,
+      "kind": "html",
+      "http": 200,
+      "contentType": "text/html; charset=utf-8",
+      "cacheControl": "private, no-cache, no-store, max-age=0, must-revalidate",
+      "location": null,
+      "bodyBytes": 179079,
+      "bodySHA": "60c154f3d49a4ecc1367b4a48a730f000197bb7d05ff7b0ce3c6300adc01fe93",
+      "at": "2026-10-05T09:25:43.571Z",
+      "title": "Providers",
+      "notBlank": true,
+      "hasHTML": true
+    },
+    {
+      "url": "https://cinatoken.com/rankings",
+      "expected": 200,
+      "kind": "html",
+      "http": 200,
+      "contentType": "text/html; charset=utf-8",
+      "cacheControl": "private, no-cache, no-store, max-age=0, must-revalidate",
+      "location": null,
+      "bodyBytes": 177884,
+      "bodySHA": "9dec8b261ba5cd67b9a3755df70210d95ef908cba5d5875ab49bd331ab216e1d",
+      "at": "2026-10-05T09:25:44.078Z",
+      "title": "Model rankings",
+      "notBlank": true,
+      "hasHTML": true
+    },
+    {
+      "url": "https://cinatoken.com/benchmarks",
+      "expected": 200,
+      "kind": "html",
+      "http": 200,
+      "contentType": "text/html; charset=utf-8",
+      "cacheControl": "private, no-cache, no-store, max-age=0, must-revalidate",
+      "location": null,
+      "bodyBytes": 177882,
+      "bodySHA": "c30b79017b2ebb34654293ba5fe93f077e811a84a629c041100fb938eba3e3ad",
+      "at": "2026-10-05T09:25:44.580Z",
+      "title": "Gateway benchmarks",
+      "notBlank": true,
+      "hasHTML": true
+    },
+    {
+      "url": "https://cinatoken.com/chat",
+      "expected": 200,
+      "kind": "html",
+      "http": 200,
+      "contentType": "text/html; charset=utf-8",
+      "cacheControl": "private, no-cache, no-store, max-age=0, must-revalidate",
+      "location": null,
+      "bodyBytes": 179090,
+      "bodySHA": "e9a4b0b992208ec8643bf7593298d9454be332b0bb3c11c14b127828273eaca9",
+      "at": "2026-10-05T09:25:45.080Z",
+      "title": "Chat",
+      "notBlank": true,
+      "hasHTML": true
+    },
+    {
+      "url": "https://cinatoken.com/dashboard",
+      "expected": 200,
+      "kind": "html",
+      "http": 200,
+      "contentType": "text/html; charset=utf-8",
+      "cacheControl": "private, no-cache, no-store, max-age=0, must-revalidate",
+      "location": null,
+      "bodyBytes": 169181,
+      "bodySHA": "0909c0a4b32ba1abc53df63f0f98b2ed531f0a3cbb29f0b6d7f1fc364b8c0025",
+      "at": "2026-10-05T09:25:45.580Z",
+      "title": "Dashboard · cinatoken Gateway · Admin",
+      "notBlank": true,
+      "hasHTML": true
+    },
+    {
+      "url": "https://cinatoken.com/account",
+      "expected": 200,
+      "kind": "html",
+      "http": 200,
+      "contentType": "text/html; charset=utf-8",
+      "cacheControl": "private, no-cache, no-store, max-age=0, must-revalidate",
+      "location": null,
+      "bodyBytes": 169143,
+      "bodySHA": "814db65bde5b71dfedbe10b86816c4907dfcc415d8a1bde0f6a2188efac57c49",
+      "at": "2026-10-05T09:25:46.016Z",
+      "title": "cinatoken · Account Center",
+      "notBlank": true,
+      "hasHTML": true
+    },
+    {
+      "url": "https://cinatoken.com/api/public/catalog/models",
+      "expected": 200,
+      "kind": "json",
+      "http": 502,
+      "contentType": "application/json",
+      "cacheControl": "no-store",
+      "location": null,
+      "bodyBytes": 98,
+      "bodySHA": "f2ee98b2672f96a69558686bebb548d48d2cf2c2b656937bd949c9e9eab9b6f7",
+      "at": "2026-10-05T09:25:46.413Z",
+      "json": {
+        "error": {
+          "code": "catalog_unavailable",
+          "message": "Public catalog request could not be completed"
+        }
+      },
+      "rawBodyPath": "C:/Users/cina/AppData/Local/Temp/cinatoken-release-production-smoke-LhAI9h/after-39b76f42-1791192339462-http-body-09.json"
+    },
+    {
+      "url": "https://cinatoken.com/api/public/catalog/providers",
+      "expected": 200,
+      "kind": "json",
+      "http": 502,
+      "contentType": "application/json",
+      "cacheControl": "no-store",
+      "location": null,
+      "bodyBytes": 98,
+      "bodySHA": "f2ee98b2672f96a69558686bebb548d48d2cf2c2b656937bd949c9e9eab9b6f7",
+      "at": "2026-10-05T09:25:48.208Z",
+      "json": {
+        "error": {
+          "code": "catalog_unavailable",
+          "message": "Public catalog request could not be completed"
+        }
+      },
+      "rawBodyPath": "C:/Users/cina/AppData/Local/Temp/cinatoken-release-production-smoke-LhAI9h/after-39b76f42-1791192339462-http-body-10.json"
+    },
+    {
+      "url": "https://cinatoken.com/api/public/catalog/stats/models?range=7d",
+      "expected": 200,
+      "kind": "json",
+      "http": 502,
+      "contentType": "application/json",
+      "cacheControl": "no-store",
+      "location": null,
+      "bodyBytes": 98,
+      "bodySHA": "f2ee98b2672f96a69558686bebb548d48d2cf2c2b656937bd949c9e9eab9b6f7",
+      "at": "2026-10-05T09:25:48.563Z",
+      "json": {
+        "error": {
+          "code": "catalog_unavailable",
+          "message": "Public catalog request could not be completed"
+        }
+      },
+      "rawBodyPath": "C:/Users/cina/AppData/Local/Temp/cinatoken-release-production-smoke-LhAI9h/after-39b76f42-1791192339462-http-body-11.json"
+    },
+    {
+      "url": "https://api.cinatoken.com/catalog/models",
+      "expected": 200,
+      "kind": "json",
+      "http": 200,
+      "contentType": "application/json",
+      "cacheControl": "public, max-age=60, stale-while-revalidate=300",
+      "location": null,
+      "bodyBytes": 94,
+      "bodySHA": "cc83d106deeed85722378fb64bdd8f65a7a3c2dea1ac6b1917606ffc3ce20efd",
+      "at": "2026-10-05T09:25:49.986Z",
+      "json": {
+        "object": "list",
+        "data": [],
+        "billing_currency": "USD",
+        "generated_at": "2026-10-05T09:25:49.582Z"
+      },
+      "rawBodyPath": "C:/Users/cina/AppData/Local/Temp/cinatoken-release-production-smoke-LhAI9h/after-39b76f42-1791192339462-http-body-12.json"
+    },
+    {
+      "url": "https://api.cinatoken.com/catalog/providers",
+      "expected": 200,
+      "kind": "json",
+      "http": 200,
+      "contentType": "application/json",
+      "cacheControl": "public, max-age=60, stale-while-revalidate=300",
+      "location": null,
+      "bodyBytes": 94,
+      "bodySHA": "770caa2feed49f920e4a4c6e3058d860f1529cb5827a11d0d0b4d09681561b46",
+      "at": "2026-10-05T09:25:50.397Z",
+      "json": {
+        "object": "list",
+        "data": [],
+        "billing_currency": "USD",
+        "generated_at": "2026-10-05T09:25:50.041Z"
+      },
+      "rawBodyPath": "C:/Users/cina/AppData/Local/Temp/cinatoken-release-production-smoke-LhAI9h/after-39b76f42-1791192339462-http-body-13.json"
+    },
+    {
+      "url": "https://cinatoken.com/api/admin/models",
+      "expected": 401,
+      "kind": "unauthorized",
+      "http": 401,
+      "contentType": "application/json",
+      "cacheControl": "no-store",
+      "location": null,
+      "bodyBytes": 42,
+      "bodySHA": "b5d7b287cee71597b5df9c723d516d12805d54104463b10040042a68c59b157d",
+      "at": "2026-10-05T09:25:50.978Z",
+      "json": {
+        "success": false,
+        "message": "Unauthorized"
+      },
+      "rawBodyPath": "C:/Users/cina/AppData/Local/Temp/cinatoken-release-production-smoke-LhAI9h/after-39b76f42-1791192339462-http-body-14.json"
+    }
+  ],
+  "assertions": [],
+  "actualExit": 1,
+  "result": "FAILED",
+  "error": {
+    "name": "AssertionError",
+    "message": "https://cinatoken.com/api/public/catalog/models\n\n502 !== 200\n",
+    "causeCode": null
+  },
+  "finishedAt": "2026-10-05T09:25:50.980Z"
+}

@@ -1,0 +1,260 @@
+{
+  "at": "2026-10-05T09:23:26.649Z",
+  "expectedCommit": "39b76f42bdd6e21d43ad190d2e3530c338a2a59d",
+  "readOnly": true,
+  "secretValuesRecorded": false,
+  "workers": [
+    {
+      "name": "cinatoken-proxy",
+      "bindings": [
+        {
+          "name": "ANALYTICS_RATE_LIMITER",
+          "type": "ratelimit"
+        },
+        {
+          "name": "AUTH_RATE_LIMITER",
+          "type": "ratelimit"
+        },
+        {
+          "name": "BATCH_API_ENABLED",
+          "type": "plain_text"
+        },
+        {
+          "name": "DATABASE_DRIVER",
+          "type": "plain_text",
+          "value": "postgres"
+        },
+        {
+          "name": "DB",
+          "type": "d1",
+          "id": "f7588b56-e761-49fc-b944-4cd7d121fc21"
+        },
+        {
+          "name": "DEEPSEEK_API_KEY",
+          "type": "secret_text"
+        },
+        {
+          "name": "HYPERDRIVE",
+          "type": "hyperdrive",
+          "id": "e703c04c8505431d9e22ce6f8b371251"
+        },
+        {
+          "name": "PROVIDER_ATTEMPT_RETENTION_BATCH_SIZE",
+          "type": "plain_text"
+        },
+        {
+          "name": "PROVIDER_ATTEMPT_RETENTION_DAYS",
+          "type": "plain_text"
+        },
+        {
+          "name": "PROVIDER_ATTEMPT_RETENTION_MAX_BATCHES",
+          "type": "plain_text"
+        },
+        {
+          "name": "PUBLIC_STATS_RATE_LIMITER",
+          "type": "ratelimit"
+        },
+        {
+          "name": "REQUEST_BODY_LOGGING",
+          "type": "plain_text"
+        },
+        {
+          "name": "SHARED_KEY_ENCRYPTION_SECRET",
+          "type": "secret_text"
+        }
+      ],
+      "requiredSecretNamesPresent": 2,
+      "webEntryFlags": {
+        "count": 0,
+        "enabled": 0
+      },
+      "deployment": {
+        "id": "863d144e-42fc-4bb8-99e4-faeafa8a691b",
+        "created_on": "2026-10-05T09:22:13.821671Z",
+        "strategy": "percentage",
+        "source": "wrangler",
+        "annotations": {
+          "workers/message": "Web frontend backend release",
+          "workers/triggered_by": "deployment"
+        },
+        "versions": [
+          {
+            "version_id": "90c6bd33-6660-4a5c-a65b-cacc6efe7ef0",
+            "percentage": 100
+          }
+        ]
+      },
+      "version": {
+        "id": "90c6bd33-6660-4a5c-a65b-cacc6efe7ef0",
+        "number": 37,
+        "metadata": {
+          "created_on": "2026-10-05T09:22:12.743856Z",
+          "source": "wrangler"
+        },
+        "annotations": {
+          "workers/message": "Web frontend backend release",
+          "workers/tag": "39b76f42bdd6e21d43ad190d2e3530c338a2a59d",
+          "workers/triggered_by": "version_upload"
+        }
+      },
+      "commitTag": "39b76f42bdd6e21d43ad190d2e3530c338a2a59d"
+    },
+    {
+      "name": "cinatoken-admin",
+      "bindings": [
+        {
+          "name": "ADMIN_COOKIE_SECURE",
+          "type": "plain_text"
+        },
+        {
+          "name": "ASSETS",
+          "type": "assets"
+        },
+        {
+          "name": "AUTH_RATE_LIMITER",
+          "type": "ratelimit"
+        },
+        {
+          "name": "CHAIN_JOBS",
+          "type": "queue"
+        },
+        {
+          "name": "CINAAUTH_ACCOUNT_ORIGIN",
+          "type": "plain_text"
+        },
+        {
+          "name": "CINAAUTH_AUTH_SERVICE",
+          "type": "service"
+        },
+        {
+          "name": "CINAAUTH_ISSUER",
+          "type": "plain_text"
+        },
+        {
+          "name": "CINACHAIN_CHAIN_ID",
+          "type": "plain_text"
+        },
+        {
+          "name": "CINATOKEN_ADMIN_CONFIG_REQUIRE_REVISION",
+          "type": "plain_text"
+        },
+        {
+          "name": "CINATOKEN_ADMIN_DATA_POLICIES_REQUIRE_PRECONDITION",
+          "type": "plain_text"
+        },
+        {
+          "name": "CINATOKEN_ADMIN_KEYS_REQUIRE_REVISION",
+          "type": "plain_text"
+        },
+        {
+          "name": "CINATOKEN_ADMIN_MODELS_REQUIRE_ROUTE_POLICY_PRECONDITION",
+          "type": "plain_text"
+        },
+        {
+          "name": "CINATOKEN_ADMIN_SHARED_KEYS_REQUIRE_REVISION",
+          "type": "plain_text"
+        },
+        {
+          "name": "CINATOKEN_ADMIN_TOOLS_REQUIRE_VERSION",
+          "type": "plain_text"
+        },
+        {
+          "name": "CINATOKEN_APP_ORIGIN",
+          "type": "plain_text"
+        },
+        {
+          "name": "CINATOKEN_IDENTITY_EVENTS_SECRET",
+          "type": "secret_text"
+        },
+        {
+          "name": "CINATOKEN_OIDC_BRIDGE_SECRET",
+          "type": "secret_text"
+        },
+        {
+          "name": "CINATOKEN_OIDC_CLIENT_ID",
+          "type": "plain_text"
+        },
+        {
+          "name": "CINATOKEN_OIDC_CLIENT_SECRET",
+          "type": "secret_text"
+        },
+        {
+          "name": "CINATOKEN_OIDC_TRANSACTION_SECRET",
+          "type": "secret_text"
+        },
+        {
+          "name": "CINATOKEN_PROXY_SERVICE",
+          "type": "service"
+        },
+        {
+          "name": "CINATOKEN_REQUIRED_ROLES",
+          "type": "plain_text"
+        },
+        {
+          "name": "DATABASE_DRIVER",
+          "type": "plain_text",
+          "value": "postgres"
+        },
+        {
+          "name": "DB",
+          "type": "d1",
+          "id": "f7588b56-e761-49fc-b944-4cd7d121fc21"
+        },
+        {
+          "name": "DEEPSEEK_API_KEY",
+          "type": "secret_text"
+        },
+        {
+          "name": "HYPERDRIVE",
+          "type": "hyperdrive",
+          "id": "e703c04c8505431d9e22ce6f8b371251"
+        },
+        {
+          "name": "NEXT_PRIVATE_MINIMAL_MODE",
+          "type": "plain_text"
+        },
+        {
+          "name": "SHARED_KEY_ENCRYPTION_SECRET",
+          "type": "secret_text"
+        }
+      ],
+      "requiredSecretNamesPresent": 6,
+      "webEntryFlags": {
+        "count": 0,
+        "enabled": 0
+      },
+      "deployment": {
+        "id": "29af2097-e7f4-4c86-a854-30e018869d35",
+        "created_on": "2026-10-05T09:22:27.523307Z",
+        "strategy": "percentage",
+        "source": "wrangler",
+        "annotations": {
+          "workers/message": "Web frontend migration release",
+          "workers/triggered_by": "deployment"
+        },
+        "versions": [
+          {
+            "version_id": "2e2ad187-81ae-4c2e-9c3e-d95177e012ff",
+            "percentage": 100
+          }
+        ]
+      },
+      "version": {
+        "id": "2e2ad187-81ae-4c2e-9c3e-d95177e012ff",
+        "number": 54,
+        "metadata": {
+          "created_on": "2026-10-05T09:22:24.560223Z",
+          "source": "wrangler"
+        },
+        "annotations": {
+          "workers/message": "Web frontend migration release",
+          "workers/tag": "39b76f42bdd6e21d43ad190d2e3530c338a2a59d",
+          "workers/triggered_by": "version_upload"
+        }
+      },
+      "commitTag": "39b76f42bdd6e21d43ad190d2e3530c338a2a59d"
+    }
+  ],
+  "actualExit": 0,
+  "finishedAt": "2026-10-05T09:23:33.090Z"
+}

@@ -458,7 +458,8 @@ export function createPublicCatalogBff(
 					method: "GET",
 					headers: { accept: "application/json" },
 					credentials: "omit",
-					redirect: "error",
+					// Workerd supports manual redirects; non-200 responses still fail closed below.
+					redirect: "manual",
 					cache: "no-store",
 					signal,
 				},

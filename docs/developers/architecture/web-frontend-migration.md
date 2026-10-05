@@ -26,7 +26,7 @@
 
 文档范围：按“将 checklist 整理成一个 md 文件，推进实施随时更新”的要求维护本文。完整清单为 **102 项主任务（99 项 P0–P8 任务、3 项来源任务）**，配套 G0–G8 验收门槛、页面/API/权限矩阵及批次记录；实施使用原任务 ID 持续更新，不另建主清单。
 
-当前发布（2026-10-05）：66ef5a6、b68f0f5及0e24a47已提交推送；生产PostgreSQL81项ledger、权限与19项结构检查通过，临时诊断资源清理完成。Linux Web与Docker冒烟通过；PG73冻结builder适配本地6/6，HTTP取消客户端候选仍待Linux真实验证。两次Cloudflare尝试均在部署前取消，尚未更新生产Worker；继续按active Admin/Proxy构建、类型、单元及线上检查发布。独立Web入口、实验holder与G0–G8状态保留。
+当前发布（2026-10-05）：39b76f42首次部署成功但真实冒烟发现BFF502及主题刷新持久化问题，未标验收完成。最小修复已冻结：BFF46/46、Admin1045/1045及类型通过，主题真实SSR hydration4/4通过；真实CF同兼容probe验证manual三个目录200并已清理。准备提交新固定SHA、重新发布并执行完整线上复验；PostgreSQL81项与独立Web/G0–G8状态保留。
 
 当前推进：目标 active，继续完整迁移。NEXT-13 J6 完整剩余497个Admin TS/TSX格式修复本地验收完成（5.69）：3320236→3379236 B，Root完整有界AST与独立Babel/TypeScript497/497通过；11文件18直接JSX父节点中的21原文本节点逐个转换为单字符串表达式，保留children类型/数量/顺序/值，1128评论/7427属性runtime值保持。完整Admin格式651通过/0告警/parse0，七CLI与审计0；fresh Admin types/lint、主unit1008＋相关5/30、Web1582均0。新Next I8iEBXkv6HbVKv644OYUc 的4045输入/2827产物实际构建与冻结0；旧新各8真实产品React流程＋10HTTP场景通过，6采样截图对原字节同，范围是受控SQLite/身份夹具与实际冻结Next，不证明全应用/真实身份/原生平台。临时before备份335和Mirror ordinary产物1983缺失已从独立/冻结副本按原hash恢复；修复前失败和原因未明的链接观察保留，不能声称产物从未漂移。Web2289/source4aaa…与P71 Root633不变。102主任务/54矩阵/G0–G8/E00–E08/211checkbox状态完整保持，主任务仅P6-11勾选；326来源、真实身份/原生三库/链、Node22 LinuxCI/双平台/发布回滚及旧页退役继续待验，RootP66/29string false/public origin空、未部署。
 
@@ -2187,7 +2187,7 @@ Root first source-writer schema错误发生于任何源写前，修正为proof�
 
 完整102主任务、54矩阵、G0–G8/E00–E08和211checkbox与J5逐项保持，48选中/163未选，主任务仍仅P6-11选中。Root P66、29入口string false、CINATOKEN_WEB_PUBLIC_ORIGIN空；P71633/54285133 B原字节不变，无部署/真实服务/Git写。完整格式债已清，下一步继续来源326、真实身份/原生三库/链账本、Core全范围、Node22 LinuxCI及原生双平台/灰度回滚和旧UI退役；目标active，此本地批次通过不等于完整迁移完成。
 
-### 5.70 Cloudflare生产控制台发布（2026-10-05，进行中）
+### 5.70 Cloudflare生产控制台发布（2026-10-05，已部署，线上问题修复中）
 
 用户请求“提交推送部署到cloudflare”，授权将当前已实施源码、正式迁移和文档提交推送至既有main并发布Cloudflare。发布 cinatoken-admin（https://cinatoken.com）及配套 cinatoken-proxy（https://api.cinatoken.com）；Proxy包含本轮公共目录币种/JSON和价格快照实现，需要与Admin使用同一提交。Chain未改源码、不部署；独立Web的29入口仍关闭。
 
@@ -2396,3 +2396,9 @@ CI夹具修复已完成：Web Docker补齐两个--env；Docker PG精确核对全
 
 
 2026-10-05发布续记：Docker真实Linux通过（37286409120）；显式Admin公开vars与生产无差异。PG73测试使用自有Temp字节精确冻结副本，生产builder/正式SQL/grant未改；HTTP取消候选显式关闭TCP，严格取消观察与单绑定/no-release断言未降低，Windows原生startup跳过不能视为通过。该未启用holder路径继续记录未通过状态，不作为现有Admin/Proxy目录价格发布依赖。
+
+
+2026-10-05真实发布诊断：39b76f42/Run37288251610全部发布步骤成功且两Worker实际100%；真实8页HTML200、Proxy公开目录200、匿名Admin401符合预期，但Admin BFF三资源502，深色主题经中文切换/mobile reload变light，不能以构建通过替代线上验收。真实CF同兼容配置临时只读probe重现redirect:error ctor TypeError（未发service），manual三个catalog200；探针finally删除/settings404。首次probe因边缘传播HTML404失败且已清理，未视为PASS。BFF仅改manual且继续拒绝3xx；Home仅分离hydration DOM同步与用户偏好持久化，待固定新SHA发布复验。
+
+
+2026-10-05线上修复冻结：仅BFF实现/回归与HomeThemeSwitcher三源码文件。BFF用manual不跟随跳转，5种3xx仍502且无Location/Set-Cookie或凭据转发，生产空列表USD envelope合法；定向46/46、完整Admin1045/1045与6GiB类型检查通过（首次2GiB OOM134保留）。Home hydration只同步DOM，用户选择才写localStorage/Cookie，实际组件SSR→hydrate四案例通过，旧源3fail/1pass与真实dark→system写栈保留。等待新SHA Linux部署及真实dark→中文→mobile刷新/API14复验，未以本地结果替代线上验收。

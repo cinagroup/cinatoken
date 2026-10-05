@@ -1,7 +1,7 @@
 {
   "schema": "cinatoken.cloudflare.web-frontend-release.v1",
-  "updatedAt": "2026-10-05T09:09:05.438Z",
-  "status": "final-fixtures-ready-for-production-deployment",
+  "updatedAt": "2026-10-05T09:43:56.419Z",
+  "status": "active-production-fixes-verified-awaiting-redeployment",
   "userAuthorizedActions": [
     "commit",
     "push",
@@ -14,12 +14,20 @@
       {
         "name": "cinatoken-admin",
         "url": "https://cinatoken.com",
-        "beforeVersion": "433a4fb9-3499-4108-a18c-f5da5abe2b2d"
+        "beforeVersion": "433a4fb9-3499-4108-a18c-f5da5abe2b2d",
+        "afterVersion": "2e2ad187-81ae-4c2e-9c3e-d95177e012ff",
+        "deploymentId": "29af2097-e7f4-4c86-a854-30e018869d35",
+        "trafficPercentage": 100,
+        "commitTag": "39b76f42bdd6e21d43ad190d2e3530c338a2a59d"
       },
       {
         "name": "cinatoken-proxy",
         "url": "https://api.cinatoken.com",
-        "beforeVersion": "09f2d633-c4bc-4b0e-b939-4e680280762f"
+        "beforeVersion": "09f2d633-c4bc-4b0e-b939-4e680280762f",
+        "afterVersion": "90c6bd33-6660-4a5c-a65b-cacc6efe7ef0",
+        "deploymentId": "863d144e-42fc-4bb8-99e4-faeafa8a691b",
+        "trafficPercentage": 100,
+        "commitTag": "39b76f42bdd6e21d43ad190d2e3530c338a2a59d"
       }
     ],
     "databaseDriver": "postgres",
@@ -84,10 +92,32 @@
       "actualExit": 0,
       "mismatches": 0,
       "secretValuesRecorded": false
+    },
+    "realCloudflareRedirectDiagnostic": {
+      "actualExit": 0,
+      "errorModeConstructorRejected": 3,
+      "manualCatalogHTTP200": 3,
+      "sameAdminCompatibility": true,
+      "temporaryWorkerDeleted": true,
+      "temporaryWorkerAbsenceConfirmed": true
+    },
+    "activeProductionFixes": {
+      "sourceHashes": {
+        "packages/admin/lib/public-catalog-bff.ts": "9e6e7759091d05ffa304837bd32d3b86151aad79e759b0e647df98ed9b931d63",
+        "packages/admin/lib/public-catalog-bff.test.ts": "3d0387bbee5d04eb778402a43513f80d3a53584ce177670d0bf749faac30e001",
+        "packages/admin/components/home/HomeThemeSwitcher.tsx": "c06d67ff4ab133ebf1eae0bfe82997cbce5c44757221c9f7666ac0485ec96262"
+      },
+      "bffTestsPassed": 46,
+      "adminTestsPassed": 1045,
+      "adminTypecheckExit": 0,
+      "themeActualComponentSSRHydrationPassed": 4,
+      "realCloudflareManualGETPassed": 3,
+      "priorFailureEvidencePreserved": true,
+      "nextFixedSHAProductionRetestRequired": true
     }
   },
   "commit": {
-    "sha": "66ef5a698c0bb16aa1f2c490c79b6a06bdb5b33b",
+    "sha": "39b76f42bdd6e21d43ad190d2e3530c338a2a59d",
     "actualExit": 0
   },
   "push": {
@@ -137,11 +167,35 @@
         "requestedBy": "Root pending Docker SQL cast and frozen PG73 fixture corrections",
         "proxyDeploy": "skipped",
         "adminDeploy": "skipped"
+      },
+      {
+        "runId": 37288251610,
+        "url": "https://github.com/cinagroup/cinatoken/actions/runs/37288251610",
+        "sha": "39b76f42bdd6e21d43ad190d2e3530c338a2a59d",
+        "conclusion": "success",
+        "linuxNode22Build": "success",
+        "productionContracts": "success",
+        "proxyBundle": "success",
+        "proxyDeploy": "success",
+        "adminDeploy": "success",
+        "postDeploymentSmoke": "failure"
       }
     ],
-    "complete": false
+    "complete": true
   },
-  "productionSmoke": null,
+  "productionSmoke": {
+    "actualExit": 1,
+    "candidate": "39b76f42bdd6e21d43ad190d2e3530c338a2a59d",
+    "htmlPassed": 8,
+    "proxyCatalogPassed": 2,
+    "bffCatalogFailed": 3,
+    "anonymousAdminRejected": true,
+    "themeChangedToDark": true,
+    "localeChangedToChinese": true,
+    "themeRefreshFailed": true,
+    "fixes": "Cloudflare Request redirect mode and HomeThemeSwitcher hydration persistence",
+    "retestRequired": true
+  },
   "wholeMigrationComplete": false,
   "gateStatesUnchanged": true,
   "evidence": {
@@ -239,6 +293,56 @@
       "path": "docs/operators/deployment/releases/2026-10-05-web-frontend/declaredAdminVars.json",
       "bytes": 1383,
       "sha256": "356b5b018d9725059b8ac72aa9d80bc9190bff3cdee2d4500170eab42a8b15ab"
+    },
+    "cloudflareFirstSuccessfulRun": {
+      "path": "docs/operators/deployment/releases/2026-10-05-web-frontend/cloudflareFirstSuccessfulRun.json",
+      "bytes": 2781,
+      "sha256": "6bf7200dc90a66348ffe4162c020b40e017f4d0cd03dba652f0457818a262b39"
+    },
+    "cloudflareFirstLive": {
+      "path": "docs/operators/deployment/releases/2026-10-05-web-frontend/cloudflareFirstLive.json",
+      "bytes": 6879,
+      "sha256": "47bd32ab44bdef59f1e3535e4ebb3bd255ac1977740228fd5f4673c6526bbc99"
+    },
+    "productionHTTPFailure": {
+      "path": "docs/operators/deployment/releases/2026-10-05-web-frontend/productionHTTPFailure.json",
+      "bytes": 8890,
+      "sha256": "f9cc81707c62c261aac98637ebde6c85af1240f352f069795e55f899cdbf8107"
+    },
+    "productionBrowserFailure": {
+      "path": "docs/operators/deployment/releases/2026-10-05-web-frontend/productionBrowserFailure.json",
+      "bytes": 12184,
+      "sha256": "db580016ad1dd1110c7d54cdef4c8925a8bfaa2b3bca437a470742db85603826"
+    },
+    "productionFirstSmokeExecution": {
+      "path": "docs/operators/deployment/releases/2026-10-05-web-frontend/productionFirstSmokeExecution.json",
+      "bytes": 5659,
+      "sha256": "62cd7c179460e2b4ac68a06ad488ebd9876ccf76021db5d5850ec469337aa9f5"
+    },
+    "firstSuccessfulDeploymentOtherCI": {
+      "path": "docs/operators/deployment/releases/2026-10-05-web-frontend/firstSuccessfulDeploymentOtherCI.json",
+      "bytes": 100763,
+      "sha256": "400ac93babb9dc1480bd441c33198ca12a7f62fa3cc9c542363f48ecc216d905"
+    },
+    "redirectProbePropagationFailure": {
+      "path": "docs/operators/deployment/releases/2026-10-05-web-frontend/redirectProbePropagationFailure.json",
+      "bytes": 1787,
+      "sha256": "9bb5b71ab066fd786772558a503939cd87a59cca7c26db4a7f9204a8f05688b3"
+    },
+    "redirectProbeRealRuntimePASS": {
+      "path": "docs/operators/deployment/releases/2026-10-05-web-frontend/redirectProbeRealRuntimePASS.json",
+      "bytes": 5017,
+      "sha256": "273abe40cbc15713f42c771d8656fd750cbb3e1a86a66aef6be0786f6ccd6a92"
+    },
+    "activeCatalogFix": {
+      "path": "docs/operators/deployment/releases/2026-10-05-web-frontend/activeCatalogFix.json",
+      "bytes": 29299,
+      "sha256": "ea01e6409c65ab2f2cf1d25942c2c661fcc29c69abca090d03b232937f4393f9"
+    },
+    "activeThemeFix": {
+      "path": "docs/operators/deployment/releases/2026-10-05-web-frontend/activeThemeFix.json",
+      "bytes": 21192,
+      "sha256": "7b8fa5592c64df7f678dac8e3a20298c2b5e0bd09996757478a42aeeeb95eb09"
     }
   },
   "temporaryProbeApproval": {
@@ -336,6 +440,31 @@
       "rootCause": "GitHub Actions repository permission prevents creating release PR",
       "cloudflareDeploymentDependency": false,
       "repositoryPermissionsChanged": false
+    },
+    "firstSuccessfulDeployment": {
+      "sha": "39b76f42bdd6e21d43ad190d2e3530c338a2a59d",
+      "pushWorkflowCounts": {
+        "total": 19,
+        "completedSuccess": 17,
+        "completedFailure": 2,
+        "other": 0
+      },
+      "allGreen": false,
+      "failedRuns": [
+        {
+          "runId": "37288247496",
+          "url": "https://github.com/cinagroup/cinatoken/actions/runs/37288247496",
+          "name": "Proxy dispatch safety",
+          "conclusion": "failure"
+        },
+        {
+          "runId": "37288247354",
+          "url": "https://github.com/cinagroup/cinatoken/actions/runs/37288247354",
+          "name": "Release",
+          "conclusion": "failure"
+        }
+      ],
+      "proof": "docs/operators/deployment/releases/2026-10-05-web-frontend/firstSuccessfulDeploymentOtherCI.json"
     }
   },
   "commits": [
@@ -350,6 +479,11 @@
     {
       "sha": "0e24a4798c4d25c82e7a44dec3802042ff4ff43c",
       "pushed": true
+    },
+    {
+      "sha": "39b76f42bdd6e21d43ad190d2e3530c338a2a59d",
+      "pushed": true
     }
-  ]
+  ],
+  "runtimeCommit": "39b76f42bdd6e21d43ad190d2e3530c338a2a59d"
 }

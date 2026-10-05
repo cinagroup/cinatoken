@@ -1,0 +1,413 @@
+{
+  "schema": "active-home-theme-hydration-one-source-fix-final-v1",
+  "at": "2026-10-05T09:42:20.636Z",
+  "status": "LOCAL_ACTUAL_COMPONENT_QA_PASS_AWAIT_NEW_DEPLOY",
+  "root": "C:/cinagroup/cinatoken",
+  "records": [
+    {
+      "relative": "packages/admin/components/home/HomeThemeSwitcher.tsx",
+      "original": {
+        "path": "C:\\cinagroup\\cinatoken\\packages\\admin\\components\\home\\HomeThemeSwitcher.tsx",
+        "bytes": 6675,
+        "sha256": "2193bbeaf0e03f94f9c6f41d94b78aa304d0de5d783732102926fff9c7f2f7b4"
+      },
+      "snapshot": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-active-theme-hydration-272484ecbfc64410a9542d998622ca06\\before\\packages\\admin\\components\\home\\HomeThemeSwitcher.tsx",
+        "bytes": 6675,
+        "sha256": "2193bbeaf0e03f94f9c6f41d94b78aa304d0de5d783732102926fff9c7f2f7b4"
+      },
+      "after": {
+        "path": "C:\\cinagroup\\cinatoken\\packages\\admin\\components\\home\\HomeThemeSwitcher.tsx",
+        "bytes": 7031,
+        "sha256": "c06d67ff4ab133ebf1eae0bfe82997cbce5c44757221c9f7666ac0485ec96262"
+      }
+    },
+    {
+      "relative": "packages/admin/components/unified/ConsoleThemeProvider.tsx",
+      "original": {
+        "path": "C:\\cinagroup\\cinatoken\\packages\\admin\\components\\unified\\ConsoleThemeProvider.tsx",
+        "bytes": 2349,
+        "sha256": "3a17db4b068e4603892d04ec4cb4001765039f6b1b17af9c6ac62b100f9df50a"
+      },
+      "snapshot": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-active-theme-hydration-272484ecbfc64410a9542d998622ca06\\before\\packages\\admin\\components\\unified\\ConsoleThemeProvider.tsx",
+        "bytes": 2349,
+        "sha256": "3a17db4b068e4603892d04ec4cb4001765039f6b1b17af9c6ac62b100f9df50a"
+      },
+      "after": {
+        "path": "C:\\cinagroup\\cinatoken\\packages\\admin\\components\\unified\\ConsoleThemeProvider.tsx",
+        "bytes": 2349,
+        "sha256": "3a17db4b068e4603892d04ec4cb4001765039f6b1b17af9c6ac62b100f9df50a"
+      }
+    },
+    {
+      "relative": "packages/admin/components/public/PublicThemeBootstrap.tsx",
+      "original": {
+        "path": "C:\\cinagroup\\cinatoken\\packages\\admin\\components\\public\\PublicThemeBootstrap.tsx",
+        "bytes": 923,
+        "sha256": "731074a445d68e8acd08b585a45be165949ae6a2be37a98c0a3893faa2a6017a"
+      },
+      "snapshot": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-active-theme-hydration-272484ecbfc64410a9542d998622ca06\\before\\packages\\admin\\components\\public\\PublicThemeBootstrap.tsx",
+        "bytes": 923,
+        "sha256": "731074a445d68e8acd08b585a45be165949ae6a2be37a98c0a3893faa2a6017a"
+      },
+      "after": {
+        "path": "C:\\cinagroup\\cinatoken\\packages\\admin\\components\\public\\PublicThemeBootstrap.tsx",
+        "bytes": 923,
+        "sha256": "731074a445d68e8acd08b585a45be165949ae6a2be37a98c0a3893faa2a6017a"
+      }
+    },
+    {
+      "relative": "packages/admin/app/layout.tsx",
+      "original": {
+        "path": "C:\\cinagroup\\cinatoken\\packages\\admin\\app\\layout.tsx",
+        "bytes": 2645,
+        "sha256": "6ccf16edd74e1f04de146d101fb2aa0b46f9611e5a7af63156a206964a061c49"
+      },
+      "snapshot": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-active-theme-hydration-272484ecbfc64410a9542d998622ca06\\before\\packages\\admin\\app\\layout.tsx",
+        "bytes": 2645,
+        "sha256": "6ccf16edd74e1f04de146d101fb2aa0b46f9611e5a7af63156a206964a061c49"
+      },
+      "after": {
+        "path": "C:\\cinagroup\\cinatoken\\packages\\admin\\app\\layout.tsx",
+        "bytes": 2645,
+        "sha256": "6ccf16edd74e1f04de146d101fb2aa0b46f9611e5a7af63156a206964a061c49"
+      }
+    }
+  ],
+  "sourceChanges": 1,
+  "selected": {
+    "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-active-theme-hydration-272484ecbfc64410a9542d998622ca06/selected-fixed-HomeThemeSwitcher.tsx",
+    "bytes": 7031,
+    "sha256": "c06d67ff4ab133ebf1eae0bfe82997cbce5c44757221c9f7666ac0485ec96262"
+  },
+  "diff": {
+    "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-active-theme-hydration-272484ecbfc64410a9542d998622ca06/selected-onefile-home-theme.diff",
+    "bytes": 1703,
+    "sha256": "e1badcfc968f7a2d552a41b2ef1d8c2fee3b7f73ca70772bb6b22f23c6ecc427"
+  },
+  "rootCause": {
+    "actualProductionDeployedSHA": "39b76f42bdd6e21d43ad190d2e3530c338a2a59d",
+    "confirmedStorageTransition": "dark -> system from Home hydration effect, after document-start dark and bootstrap reading dark",
+    "isWaitTooEarly": false,
+    "productionObservation": {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-active-theme-hydration-272484ecbfc64410a9542d998622ca06/production-theme-diagnostic-v1-closed.json",
+      "bytes": 15931,
+      "sha256": "3f02337153f0ef4a4445c1283418a9a0dc028c38eacca4f9203e86b467c8f3d4"
+    },
+    "beforeMobileScreenshot": {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-active-theme-hydration-272484ecbfc64410a9542d998622ca06/production-theme-diagnostic-v1-mobile.png",
+      "bytes": 108019,
+      "sha256": "d4a1b30b5d91a87adbdb95e2aa840077390d91e569dff48ae80f58075b725bbe"
+    },
+    "traceEvidenceIncludesExactStorageWriteStacks": true
+  },
+  "change": "DOM synchronization reads the current snapshot and never persists it. Only user selections write storage/cookie and notify the external store; system media changes synchronize DOM only.",
+  "tests": {
+    "sameSSRHydrationHarness": {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-active-theme-hydration-272484ecbfc64410a9542d998622ca06/actual-theme-component-hydration-regression-v2.mjs",
+      "bytes": 11097,
+      "sha256": "4014841432bf3acdc972dbefbf566b548a7459943de8cbd65db516c4ebc590e5"
+    },
+    "original": {
+      "actualExit": 1,
+      "pass": 1,
+      "fail": 3,
+      "closed": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-active-theme-hydration-272484ecbfc64410a9542d998622ca06/actual-theme-component-hydration-baseline-v2-closed.json",
+        "bytes": 14378,
+        "sha256": "c090262f787fa4a01b9bb088926d94ac78ef2bbcdc4153402501048c95c060fa"
+      }
+    },
+    "fixed": {
+      "actualExit": 0,
+      "pass": 4,
+      "fail": 0,
+      "closed": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-active-theme-hydration-272484ecbfc64410a9542d998622ca06/actual-theme-component-hydration-fixed-v2-closed.json",
+        "bytes": 13675,
+        "sha256": "a1cc136e3a17390ba50e7a7c0db8a0ecd2afbe99694223096f71720e130be724"
+      },
+      "checks": [
+        {
+          "name": "dark-storage-hydrates-and-mobile-reloads",
+          "pass": true,
+          "checks": 11,
+          "pageErrors": [],
+          "networkErrors": []
+        },
+        {
+          "name": "dark-cookie-fallback-when-storage-unavailable",
+          "pass": true,
+          "checks": 8,
+          "pageErrors": [],
+          "networkErrors": []
+        },
+        {
+          "name": "light-explicit-overrides-dark-system",
+          "pass": true,
+          "checks": 9,
+          "pageErrors": [],
+          "networkErrors": []
+        },
+        {
+          "name": "system-follows-OS-and-explicit-choice",
+          "pass": true,
+          "checks": 14,
+          "pageErrors": [],
+          "networkErrors": []
+        }
+      ]
+    },
+    "actualReactAndNextIntlComponents": true,
+    "ReactVersion": "19.3.0",
+    "ChromiumVersion": "147.0.7727.15",
+    "fullNextRuntime": false,
+    "localePostNotReplayedInLocalComponentHarness": true,
+    "productionSameDarkZhMobileFlowRequiredAfterNextDeployment": true,
+    "ownedEslintAndDiffCheck": {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-active-theme-hydration-272484ecbfc64410a9542d998622ca06/owned-lint-and-diffcheck-tool-observation-v1.json",
+      "bytes": 811,
+      "sha256": "b8fca40d63290cd05cd1a1602be01ee885986fcc10634d4151e78dae4462ae55"
+    }
+  },
+  "skills": {
+    "reactBestPractices": "C:/Users/cina/.codex/plugins/cache/openai-curated-remote/build-web-apps/0.1.2/skills/react-best-practices/SKILL.md",
+    "frontendTestingDebugging": "C:/Users/cina/.codex/plugins/cache/openai-curated-remote/build-web-apps/0.1.2/skills/frontend-testing-debugging/SKILL.md",
+    "browserPlugin": "absent",
+    "fallback": "Browser plugin not available; existing bundled Playwright"
+  },
+  "preservedFailures": {
+    "originalProductionHTTPAndBrowser": "C:/Users/cina/AppData/Local/Temp/cinatoken-release-production-smoke-LhAI9h/after-39b76f42-1791192339462-aggregate-execution-closed.json",
+    "initialLocalBuildAccessDenied": {
+      "actualExit": 1,
+      "log": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-active-theme-hydration-272484ecbfc64410a9542d998622ca06/actual-theme-component-hydration-baseline-v1.log",
+        "bytes": 2141,
+        "sha256": "27ca1f764dc7ed1a9f0c546e0ada6e0cf8d4d3a9be6a7ba7315bd36326b3ecca"
+      },
+      "result": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-active-theme-hydration-272484ecbfc64410a9542d998622ca06/actual-theme-component-hydration-baseline-v1.result.json",
+        "bytes": 142,
+        "sha256": "0d8202fb80a08e1d0936022e512831e5f30301ab63f360990b8a8d79f2ab3e55"
+      },
+      "componentsOrBrowserExecuted": false
+    },
+    "originalSSRHydrationRejected": true,
+    "orchestrationOnlyAgentLimit": "Independent read-only peer spawn failed: agent thread limit reached; no child agent or code action",
+    "readonlySearchMissingConsoleSessionProvider": {
+      "exit": 1,
+      "reason": "nonexistent exploratory path; no source action"
+    }
+  },
+  "boundaries": {
+    "consoleProviderWrites": 0,
+    "bootstrapLayoutWrites": 0,
+    "catalogWrites": 0,
+    "docsWrites": 0,
+    "gitWrites": 0,
+    "deploys": 0,
+    "installs": 0,
+    "businessWrites": 0,
+    "realAuthentication": false
+  },
+  "rawEvidence": [
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-active-theme-hydration-272484ecbfc64410a9542d998622ca06\\actual-theme-component-hydration-baseline-v1\\client-entry.tsx",
+      "bytes": 973,
+      "sha256": "84c0be6744f28f70b2fc5474374edc9cfab0e7334af0536d8cd8151e281682c3"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-active-theme-hydration-272484ecbfc64410a9542d998622ca06\\actual-theme-component-hydration-baseline-v1\\server-entry.tsx",
+      "bytes": 915,
+      "sha256": "e4a64d577b2c9ddb26daa39b5090fc44a33d5dfcd8eb1ce2dca0062a5ba9bf78"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-active-theme-hydration-272484ecbfc64410a9542d998622ca06\\actual-theme-component-hydration-baseline-v1.log",
+      "bytes": 2141,
+      "sha256": "27ca1f764dc7ed1a9f0c546e0ada6e0cf8d4d3a9be6a7ba7315bd36326b3ecca"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-active-theme-hydration-272484ecbfc64410a9542d998622ca06\\actual-theme-component-hydration-baseline-v1.result.json",
+      "bytes": 142,
+      "sha256": "0d8202fb80a08e1d0936022e512831e5f30301ab63f360990b8a8d79f2ab3e55"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-active-theme-hydration-272484ecbfc64410a9542d998622ca06\\actual-theme-component-hydration-baseline-v2\\client-entry.tsx",
+      "bytes": 973,
+      "sha256": "84c0be6744f28f70b2fc5474374edc9cfab0e7334af0536d8cd8151e281682c3"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-active-theme-hydration-272484ecbfc64410a9542d998622ca06\\actual-theme-component-hydration-baseline-v2\\client.js",
+      "bytes": 804296,
+      "sha256": "e706f22f8f6ea52891dd77df675f15cd8f127a9ef72326a970b388bccf7d5add"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-active-theme-hydration-272484ecbfc64410a9542d998622ca06\\actual-theme-component-hydration-baseline-v2\\dark-mobile.png",
+      "bytes": 4582,
+      "sha256": "249cadb20b6204ec8a66c4092f10944ff3f5838c0ea62f8408bebee31a44f6fc"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-active-theme-hydration-272484ecbfc64410a9542d998622ca06\\actual-theme-component-hydration-baseline-v2\\page.html",
+      "bytes": 2294,
+      "sha256": "dd6d3da5fbdea0cce5b1c7d93ccc96e7e064ca9dd441a26851c739016df86e13"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-active-theme-hydration-272484ecbfc64410a9542d998622ca06\\actual-theme-component-hydration-baseline-v2\\server-entry.tsx",
+      "bytes": 915,
+      "sha256": "e4a64d577b2c9ddb26daa39b5090fc44a33d5dfcd8eb1ce2dca0062a5ba9bf78"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-active-theme-hydration-272484ecbfc64410a9542d998622ca06\\actual-theme-component-hydration-baseline-v2\\server.cjs",
+      "bytes": 694593,
+      "sha256": "92b4940b839db805a8f619430f85569a7ef104b72a243b9024dfe273834c552d"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-active-theme-hydration-272484ecbfc64410a9542d998622ca06\\actual-theme-component-hydration-baseline-v2-closed.json",
+      "bytes": 14378,
+      "sha256": "c090262f787fa4a01b9bb088926d94ac78ef2bbcdc4153402501048c95c060fa"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-active-theme-hydration-272484ecbfc64410a9542d998622ca06\\actual-theme-component-hydration-baseline-v2.log",
+      "bytes": 1668,
+      "sha256": "2631ba684dfb3c967d9c9eff0b8d7fc11cb28090863a9791181e5ec6a0dd01c1"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-active-theme-hydration-272484ecbfc64410a9542d998622ca06\\actual-theme-component-hydration-baseline-v2.result.json",
+      "bytes": 142,
+      "sha256": "a8ee979bdfb333271dc16f7daf0a9329cd3f123ed0e068bf2cbc22809132943b"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-active-theme-hydration-272484ecbfc64410a9542d998622ca06\\actual-theme-component-hydration-fixed-v2\\client-entry.tsx",
+      "bytes": 890,
+      "sha256": "d15ee86d81a419b5fbdbb402d363db62cd30143d78682afcf2bdcccdd87c8328"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-active-theme-hydration-272484ecbfc64410a9542d998622ca06\\actual-theme-component-hydration-fixed-v2\\client.js",
+      "bytes": 804272,
+      "sha256": "7c238de33db157766f6f7ab8902cd08454619a38885b8c43793aedbdedea2f9d"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-active-theme-hydration-272484ecbfc64410a9542d998622ca06\\actual-theme-component-hydration-fixed-v2\\dark-mobile.png",
+      "bytes": 4582,
+      "sha256": "249cadb20b6204ec8a66c4092f10944ff3f5838c0ea62f8408bebee31a44f6fc"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-active-theme-hydration-272484ecbfc64410a9542d998622ca06\\actual-theme-component-hydration-fixed-v2\\page.html",
+      "bytes": 2294,
+      "sha256": "dd6d3da5fbdea0cce5b1c7d93ccc96e7e064ca9dd441a26851c739016df86e13"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-active-theme-hydration-272484ecbfc64410a9542d998622ca06\\actual-theme-component-hydration-fixed-v2\\server-entry.tsx",
+      "bytes": 832,
+      "sha256": "7fea2ab1d2678f8adba0bf0075ec02a13f8d3e2d05612a3f17e38ea7e9a8d948"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-active-theme-hydration-272484ecbfc64410a9542d998622ca06\\actual-theme-component-hydration-fixed-v2\\server.cjs",
+      "bytes": 694561,
+      "sha256": "a6bdfbbc7b0e9e0d63b70a602156e65d41c35ac853ec2e423a615ace8eb641b2"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-active-theme-hydration-272484ecbfc64410a9542d998622ca06\\actual-theme-component-hydration-fixed-v2-closed.json",
+      "bytes": 13675,
+      "sha256": "a1cc136e3a17390ba50e7a7c0db8a0ecd2afbe99694223096f71720e130be724"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-active-theme-hydration-272484ecbfc64410a9542d998622ca06\\actual-theme-component-hydration-fixed-v2.log",
+      "bytes": 615,
+      "sha256": "01daf59517e6a230b2cb776f39b747bf85b95f28dc1b5a6a986d64e95cd97dac"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-active-theme-hydration-272484ecbfc64410a9542d998622ca06\\actual-theme-component-hydration-fixed-v2.result.json",
+      "bytes": 139,
+      "sha256": "247447051c2d6e7f2e48cc775f83d9a70712629ef230179930cd461c5c01de52"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-active-theme-hydration-272484ecbfc64410a9542d998622ca06\\actual-theme-component-hydration-regression-v1.mjs",
+      "bytes": 11097,
+      "sha256": "0e67f8c6f47f951e64bc5a59bc7c9a030e45213ddd5033735ec1c83e5744115e"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-active-theme-hydration-272484ecbfc64410a9542d998622ca06\\actual-theme-component-hydration-regression-v2.mjs",
+      "bytes": 11097,
+      "sha256": "4014841432bf3acdc972dbefbf566b548a7459943de8cbd65db516c4ebc590e5"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-active-theme-hydration-272484ecbfc64410a9542d998622ca06\\before\\packages\\admin\\app\\layout.tsx",
+      "bytes": 2645,
+      "sha256": "6ccf16edd74e1f04de146d101fb2aa0b46f9611e5a7af63156a206964a061c49"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-active-theme-hydration-272484ecbfc64410a9542d998622ca06\\before\\packages\\admin\\components\\home\\HomeThemeSwitcher.tsx",
+      "bytes": 6675,
+      "sha256": "2193bbeaf0e03f94f9c6f41d94b78aa304d0de5d783732102926fff9c7f2f7b4"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-active-theme-hydration-272484ecbfc64410a9542d998622ca06\\before\\packages\\admin\\components\\public\\PublicThemeBootstrap.tsx",
+      "bytes": 923,
+      "sha256": "731074a445d68e8acd08b585a45be165949ae6a2be37a98c0a3893faa2a6017a"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-active-theme-hydration-272484ecbfc64410a9542d998622ca06\\before\\packages\\admin\\components\\unified\\ConsoleThemeProvider.tsx",
+      "bytes": 2349,
+      "sha256": "3a17db4b068e4603892d04ec4cb4001765039f6b1b17af9c6ac62b100f9df50a"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-active-theme-hydration-272484ecbfc64410a9542d998622ca06\\owned-lint-and-diffcheck-tool-observation-v1.json",
+      "bytes": 811,
+      "sha256": "b8fca40d63290cd05cd1a1602be01ee885986fcc10634d4151e78dae4462ae55"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-active-theme-hydration-272484ecbfc64410a9542d998622ca06\\owned-lint-tool-raw-output.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-active-theme-hydration-272484ecbfc64410a9542d998622ca06\\production-theme-diagnostic-v1-closed.json",
+      "bytes": 15931,
+      "sha256": "3f02337153f0ef4a4445c1283418a9a0dc028c38eacca4f9203e86b467c8f3d4"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-active-theme-hydration-272484ecbfc64410a9542d998622ca06\\production-theme-diagnostic-v1-mobile.png",
+      "bytes": 108019,
+      "sha256": "d4a1b30b5d91a87adbdb95e2aa840077390d91e569dff48ae80f58075b725bbe"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-active-theme-hydration-272484ecbfc64410a9542d998622ca06\\production-theme-diagnostic-v1.log",
+      "bytes": 2924,
+      "sha256": "050c2dfe5199a019fe5fed9a65508a3075608d9c1ec014d3dea0186624bfd7c0"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-active-theme-hydration-272484ecbfc64410a9542d998622ca06\\production-theme-diagnostic-v1.mjs",
+      "bytes": 5738,
+      "sha256": "6a4941a11400b7597763e88c0d804214c5575ac4eecd575d54b9ec9024ef905b"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-active-theme-hydration-272484ecbfc64410a9542d998622ca06\\production-theme-diagnostic-v1.result.json",
+      "bytes": 185,
+      "sha256": "2439c41601f607c2a904663d2583b07019d1186a88d6bfc7328bdacf3fc2ebb4"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-active-theme-hydration-272484ecbfc64410a9542d998622ca06\\seal-active-home-theme-fix-v1.mjs",
+      "bytes": 6832,
+      "sha256": "620d0192cc4b02f88124d52cf772d2485e3f55bea2f903e8d677a1b22583e497"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-active-theme-hydration-272484ecbfc64410a9542d998622ca06\\selected-fixed-HomeThemeSwitcher.tsx",
+      "bytes": 7031,
+      "sha256": "c06d67ff4ab133ebf1eae0bfe82997cbce5c44757221c9f7666ac0485ec96262"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-active-theme-hydration-272484ecbfc64410a9542d998622ca06\\selected-onefile-home-theme.diff",
+      "bytes": 1703,
+      "sha256": "e1badcfc968f7a2d552a41b2ef1d8c2fee3b7f73ca70772bb6b22f23c6ecc427"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-active-theme-hydration-272484ecbfc64410a9542d998622ca06\\theme-source-before-bindings-v1.json",
+      "bytes": 2626,
+      "sha256": "5cd11ce8883616f313e77906ffaa117b9280372185cd0a94fe14db14a2112a21"
+    }
+  ]
+}

@@ -1,0 +1,807 @@
+{
+  "schema": "cinatoken-public-catalog-cloudflare-redirect-fix-stop-v1",
+  "closed": true,
+  "stop": true,
+  "finishedAt": "2026-10-05T09:42:08.197Z",
+  "baseHead": "39b76f42bdd6e21d43ad190d2e3530c338a2a59d",
+  "ownedFiles": [
+    {
+      "relativePath": "packages/admin/lib/public-catalog-bff.ts",
+      "path": "C:\\cinagroup\\cinatoken\\packages\\admin\\lib\\public-catalog-bff.ts",
+      "bytes": 16595,
+      "sha256": "9e6e7759091d05ffa304837bd32d3b86151aad79e759b0e647df98ed9b931d63",
+      "expectedStopSha256": "9e6e7759091d05ffa304837bd32d3b86151aad79e759b0e647df98ed9b931d63"
+    },
+    {
+      "relativePath": "packages/admin/lib/public-catalog-bff.test.ts",
+      "path": "C:\\cinagroup\\cinatoken\\packages\\admin\\lib\\public-catalog-bff.test.ts",
+      "bytes": 21331,
+      "sha256": "3d0387bbee5d04eb778402a43513f80d3a53584ce177670d0bf749faac30e001",
+      "expectedStopSha256": "3d0387bbee5d04eb778402a43513f80d3a53584ce177670d0bf749faac30e001"
+    }
+  ],
+  "sourceMutationScope": "Only public-catalog-bff.ts and its necessary existing test file. No gateway/backend binding changes, themes, docs, Git mutations or deployments by this agent.",
+  "rootCause": "Workerd rejects RequestInit redirect:error before bound Proxy fetch. Node Request accepted it, so existing Node tests did not reproduce the edge runtime failure. Production upstream models/providers were already valid 200 empty envelopes.",
+  "exactChange": "BFF sends redirect:manual, preserving no redirect following, anonymous accept-only headers, all fixed path/query validation, existing non-200/3xx rejection, response size/schema validation, deadline/cancellation, and safe no-store failures.",
+  "noValidationOrSecrecyBoundaryRelaxed": true,
+  "officialPrimaryReference": "https://github.com/cloudflare/workerd/blob/main/src/workerd/api/http.h",
+  "productionFailureEvidence": {
+    "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-release-production-smoke-LhAI9h/after-39b76f42-1791192339462-http-closed-result.json",
+    "bytes": 8890,
+    "sha256": "f9cc81707c62c261aac98637ebde6c85af1240f352f069795e55f899cdbf8107"
+  },
+  "realCloudflareProbe": {
+    "proof": {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-cf-release-20261005-39903936e58044ec93eb658f30471c3e/real-cloudflare-redirect-probe-v2.json",
+      "bytes": 5017,
+      "sha256": "273abe40cbc15713f42c771d8656fd750cbb3e1a86a66aef6be0786f6ccd6a92"
+    },
+    "suggestedSource": {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-release-public-catalog-redirect-fix-75436d19a3524fa08f16a8191a62f521\\cloudflare-request-redirect-probe.mjs",
+      "bytes": 2530,
+      "sha256": "ceb72f413f74afa553b4caa3044c1dccde91db78027743f716b5ff612f75f669"
+    },
+    "executedSourceSHAReportedByRoot": "9f9e04e7f2eb4a9cdf65f195a9be22385c9ad5979e0c406621a1b8f8340aa2e3",
+    "suggestedBytesNotClaimedAsExecutedSource": true,
+    "sourceProvenanceLimit": "Root used its owned authenticated readiness successor; the execution proof sourceSHA differs from the original suggested file, which is preserved separately. Actual six observed stage/results and cleanup are verified from the v2 proof.",
+    "actualExit": 0,
+    "baselineCtorFailures": [
+      {
+        "redirect": "error",
+        "path": "/catalog/models",
+        "stage": "request-constructor",
+        "constructorCompleted": false,
+        "serviceFetchStarted": false,
+        "error": {
+          "name": "TypeError",
+          "message": "Invalid redirect value, must be one of \"follow\" or \"manual\" (\"error\" won't be implemented since it does not make sense at the edge; use \"manual\" and check the response status code)."
+        }
+      },
+      {
+        "redirect": "error",
+        "path": "/catalog/providers",
+        "stage": "request-constructor",
+        "constructorCompleted": false,
+        "serviceFetchStarted": false,
+        "error": {
+          "name": "TypeError",
+          "message": "Invalid redirect value, must be one of \"follow\" or \"manual\" (\"error\" won't be implemented since it does not make sense at the edge; use \"manual\" and check the response status code)."
+        }
+      },
+      {
+        "redirect": "error",
+        "path": "/catalog/stats/models?range=7d",
+        "stage": "request-constructor",
+        "constructorCompleted": false,
+        "serviceFetchStarted": false,
+        "error": {
+          "name": "TypeError",
+          "message": "Invalid redirect value, must be one of \"follow\" or \"manual\" (\"error\" won't be implemented since it does not make sense at the edge; use \"manual\" and check the response status code)."
+        }
+      }
+    ],
+    "fixedCompleteCalls": [
+      {
+        "redirect": "manual",
+        "path": "/catalog/models",
+        "stage": "complete",
+        "constructorCompleted": true,
+        "serviceFetchStarted": true,
+        "outgoingRedirect": "manual",
+        "outgoingHeaders": [
+          [
+            "accept",
+            "application/json"
+          ]
+        ],
+        "http": 200,
+        "contentType": "application/json",
+        "object": "list",
+        "rows": 0,
+        "billingCurrency": "USD",
+        "generatedAt": "2026-10-05T09:34:19.675Z"
+      },
+      {
+        "redirect": "manual",
+        "path": "/catalog/providers",
+        "stage": "complete",
+        "constructorCompleted": true,
+        "serviceFetchStarted": true,
+        "outgoingRedirect": "manual",
+        "outgoingHeaders": [
+          [
+            "accept",
+            "application/json"
+          ]
+        ],
+        "http": 200,
+        "contentType": "application/json",
+        "object": "list",
+        "rows": 0,
+        "billingCurrency": "USD",
+        "generatedAt": "2026-10-05T09:34:19.758Z"
+      },
+      {
+        "redirect": "manual",
+        "path": "/catalog/stats/models?range=7d",
+        "stage": "complete",
+        "constructorCompleted": true,
+        "serviceFetchStarted": true,
+        "outgoingRedirect": "manual",
+        "outgoingHeaders": [
+          [
+            "accept",
+            "application/json"
+          ]
+        ],
+        "http": 200,
+        "contentType": "application/json",
+        "object": "list",
+        "rows": 0,
+        "billingCurrency": null,
+        "generatedAt": "2026-10-05T09:34:19.835Z"
+      }
+    ],
+    "cleanup": {
+      "deleted": true,
+      "absent": true
+    },
+    "executedBy": "/root",
+    "sameRuntimeDateAndFlags": {
+      "compatibilityDate": "2026-08-24",
+      "compatibilityFlags": [
+        "nodejs_compat",
+        "enable_request_signal"
+      ]
+    },
+    "noWindowsMiniflarePassClaim": true
+  },
+  "regressions": {
+    "finalBaseline": {
+      "actualExit": 1,
+      "totals": {
+        "tests": 46,
+        "pass": 42,
+        "fail": 4,
+        "cancelled": 0,
+        "skipped": 0
+      }
+    },
+    "finalFixedBoundary": {
+      "actualExit": 0,
+      "totals": {
+        "tests": 46,
+        "pass": 46,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      }
+    },
+    "fullAdminConsumer": {
+      "actualExit": 0,
+      "groups": [
+        {
+          "tests": 5,
+          "pass": 5,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0
+        },
+        {
+          "tests": 30,
+          "pass": 30,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0
+        },
+        {
+          "tests": 1010,
+          "pass": 1010,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0
+        }
+      ],
+      "totals": {
+        "tests": 1045,
+        "pass": 1045,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      },
+      "normalPretestHooksEnabled": true
+    },
+    "firstTypecheck": {
+      "actualExit": 134,
+      "cause": "Node default approximately 2GiB heap exhausted; no TypeScript diagnostic was produced; original stderr retained."
+    },
+    "retryTypecheck": {
+      "actualExit": 0,
+      "nodeHeapMiB": 6144
+    }
+  },
+  "finalChecks": {
+    "patch": {
+      "closed": true,
+      "label": "final-public-catalog-patch",
+      "startedAt": "2026-10-05T09:42:06.136Z",
+      "finishedAt": "2026-10-05T09:42:06.241Z",
+      "command": [
+        "C:/Program Files/Git/cmd/git.exe",
+        "diff",
+        "--binary",
+        "39b76f42bdd6e21d43ad190d2e3530c338a2a59d",
+        "--",
+        "packages/admin/lib/public-catalog-bff.ts",
+        "packages/admin/lib/public-catalog-bff.test.ts"
+      ],
+      "actualExit": 0,
+      "signal": null,
+      "error": null,
+      "artifacts": [
+        {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-release-public-catalog-redirect-fix-75436d19a3524fa08f16a8191a62f521\\final-public-catalog-patch.stdout.log",
+          "bytes": 4272,
+          "sha256": "1176ff4a5d50d1521730f49004da0be1cbdd128867cd91787dfaf76399aa9f76"
+        },
+        {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-release-public-catalog-redirect-fix-75436d19a3524fa08f16a8191a62f521\\final-public-catalog-patch.stderr.log",
+          "bytes": 80,
+          "sha256": "4637b2478cea95e221ecbde1b46874fb0f18d282e08504cf0d1074595c4348d1"
+        }
+      ],
+      "receipt": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-release-public-catalog-redirect-fix-75436d19a3524fa08f16a8191a62f521\\final-public-catalog-patch.actual.json",
+        "bytes": 1050,
+        "sha256": "8f090dd31b8b192eb05f335dd052031c9b90e057591d520774d692517192245a"
+      }
+    },
+    "whitespace": {
+      "closed": true,
+      "label": "final-owned-whitespace",
+      "startedAt": "2026-10-05T09:42:06.245Z",
+      "finishedAt": "2026-10-05T09:42:06.337Z",
+      "command": [
+        "C:/Program Files/Git/cmd/git.exe",
+        "-c",
+        "core.whitespace=cr-at-eol",
+        "diff",
+        "--check",
+        "39b76f42bdd6e21d43ad190d2e3530c338a2a59d",
+        "--",
+        "packages/admin/lib/public-catalog-bff.ts",
+        "packages/admin/lib/public-catalog-bff.test.ts"
+      ],
+      "actualExit": 0,
+      "signal": null,
+      "error": null,
+      "artifacts": [
+        {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-release-public-catalog-redirect-fix-75436d19a3524fa08f16a8191a62f521\\final-owned-whitespace.stdout.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-release-public-catalog-redirect-fix-75436d19a3524fa08f16a8191a62f521\\final-owned-whitespace.stderr.log",
+          "bytes": 80,
+          "sha256": "4637b2478cea95e221ecbde1b46874fb0f18d282e08504cf0d1074595c4348d1"
+        }
+      ],
+      "receipt": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-release-public-catalog-redirect-fix-75436d19a3524fa08f16a8191a62f521\\final-owned-whitespace.actual.json",
+        "bytes": 1077,
+        "sha256": "d5650f5886fe7b91c138784c246bc78254362be0ee3cde2e811dde5355906bf1"
+      }
+    },
+    "formatting": {
+      "closed": true,
+      "label": "final-owned-formatting",
+      "startedAt": "2026-10-05T09:42:06.340Z",
+      "finishedAt": "2026-10-05T09:42:08.194Z",
+      "command": [
+        "C:\\Program Files\\nodejs\\node.exe",
+        "C:\\cinagroup\\cinatoken\\node_modules\\prettier\\bin-prettier.js",
+        "--check",
+        "packages/admin/lib/public-catalog-bff.ts",
+        "packages/admin/lib/public-catalog-bff.test.ts"
+      ],
+      "actualExit": 0,
+      "signal": null,
+      "error": null,
+      "artifacts": [
+        {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-release-public-catalog-redirect-fix-75436d19a3524fa08f16a8191a62f521\\final-owned-formatting.stdout.log",
+          "bytes": 66,
+          "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20"
+        },
+        {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-release-public-catalog-redirect-fix-75436d19a3524fa08f16a8191a62f521\\final-owned-formatting.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ],
+      "receipt": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-release-public-catalog-redirect-fix-75436d19a3524fa08f16a8191a62f521\\final-owned-formatting.actual.json",
+        "bytes": 1040,
+        "sha256": "b718291804713e14cd19e31d86a1b837cf9ef84c6e36cf0f9c87af67c559a956"
+      }
+    }
+  },
+  "receipts": [
+    {
+      "closed": true,
+      "startedAt": "2026-10-05T09:32:50.139Z",
+      "finishedAt": "2026-10-05T09:32:53.339Z",
+      "label": "baseline-redirect-error",
+      "mode": "targeted",
+      "command": [
+        "C:\\Program Files\\nodejs\\node.exe",
+        "C:/cinagroup/cinatoken/node_modules/tsx/dist/cli.mjs",
+        "--test",
+        "lib/public-catalog-bff.test.ts",
+        "lib/public-gateway.test.ts",
+        "lib/public-chat.test.ts",
+        "lib/public-catalog.test.ts",
+        "lib/public-routes.test.ts"
+      ],
+      "cwd": "C:/cinagroup/cinatoken/packages/admin",
+      "cleanAllowlistedEnv": true,
+      "productionCredentialsPassed": false,
+      "actualExit": 1,
+      "signal": null,
+      "totals": [],
+      "artifacts": [
+        {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-release-public-catalog-redirect-fix-75436d19a3524fa08f16a8191a62f521\\baseline-redirect-error.stdout.log",
+          "bytes": 6740,
+          "sha256": "f24a1dc749edab9dd1a4a2917e2cddea1221c816d5b9a97397dc88966bef12f4"
+        },
+        {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-release-public-catalog-redirect-fix-75436d19a3524fa08f16a8191a62f521\\baseline-redirect-error.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ],
+      "receipt": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-release-public-catalog-redirect-fix-75436d19a3524fa08f16a8191a62f521\\baseline-redirect-error.actual.json",
+        "bytes": 1242,
+        "sha256": "b32715d1528ac8ff226703497c75a91dda36caa16988b9ef7677d413103eb873"
+      },
+      "parsedGroups": [
+        {
+          "tests": 46,
+          "pass": 43,
+          "fail": 3,
+          "cancelled": 0,
+          "skipped": 0
+        }
+      ],
+      "parsedTotals": {
+        "tests": 46,
+        "pass": 43,
+        "fail": 3,
+        "cancelled": 0,
+        "skipped": 0
+      }
+    },
+    {
+      "closed": true,
+      "startedAt": "2026-10-05T09:33:37.532Z",
+      "finishedAt": "2026-10-05T09:33:40.290Z",
+      "label": "baseline-redirect-error-independent-assertions",
+      "mode": "targeted",
+      "command": [
+        "C:\\Program Files\\nodejs\\node.exe",
+        "C:/cinagroup/cinatoken/node_modules/tsx/dist/cli.mjs",
+        "--test",
+        "--test-reporter=tap",
+        "lib/public-catalog-bff.test.ts",
+        "lib/public-gateway.test.ts",
+        "lib/public-chat.test.ts",
+        "lib/public-catalog.test.ts",
+        "lib/public-routes.test.ts"
+      ],
+      "cwd": "C:/cinagroup/cinatoken/packages/admin",
+      "cleanAllowlistedEnv": true,
+      "productionCredentialsPassed": false,
+      "actualExit": 1,
+      "signal": null,
+      "totals": [
+        "# tests 46",
+        "# suites 6",
+        "# pass 43",
+        "# fail 3",
+        "# cancelled 0",
+        "# skipped 0",
+        "# todo 0",
+        "# duration_ms 2499.8572"
+      ],
+      "artifacts": [
+        {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-release-public-catalog-redirect-fix-75436d19a3524fa08f16a8191a62f521\\baseline-redirect-error-independent-assertions.stdout.log",
+          "bytes": 13199,
+          "sha256": "1a6aaec5867899a4f1b0af64bc8e41d585bbd3b01a6beb9bf14a88d53bf330c5"
+        },
+        {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-release-public-catalog-redirect-fix-75436d19a3524fa08f16a8191a62f521\\baseline-redirect-error-independent-assertions.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ],
+      "receipt": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-release-public-catalog-redirect-fix-75436d19a3524fa08f16a8191a62f521\\baseline-redirect-error-independent-assertions.actual.json",
+        "bytes": 1497,
+        "sha256": "0ffa1d2044c9f78c42c47267ef84e1aaf0e033b015931538c14f00ad8e89d42c"
+      },
+      "parsedGroups": [
+        {
+          "tests": 46,
+          "pass": 43,
+          "fail": 3,
+          "cancelled": 0,
+          "skipped": 0
+        }
+      ],
+      "parsedTotals": {
+        "tests": 46,
+        "pass": 43,
+        "fail": 3,
+        "cancelled": 0,
+        "skipped": 0
+      }
+    },
+    {
+      "closed": true,
+      "startedAt": "2026-10-05T09:33:59.991Z",
+      "finishedAt": "2026-10-05T09:34:02.733Z",
+      "label": "baseline-redirect-error-final-regressions",
+      "mode": "targeted",
+      "command": [
+        "C:\\Program Files\\nodejs\\node.exe",
+        "C:/cinagroup/cinatoken/node_modules/tsx/dist/cli.mjs",
+        "--test",
+        "--test-reporter=tap",
+        "lib/public-catalog-bff.test.ts",
+        "lib/public-gateway.test.ts",
+        "lib/public-chat.test.ts",
+        "lib/public-catalog.test.ts",
+        "lib/public-routes.test.ts"
+      ],
+      "cwd": "C:/cinagroup/cinatoken/packages/admin",
+      "cleanAllowlistedEnv": true,
+      "productionCredentialsPassed": false,
+      "actualExit": 1,
+      "signal": null,
+      "totals": [
+        "# tests 46",
+        "# suites 6",
+        "# pass 42",
+        "# fail 4",
+        "# cancelled 0",
+        "# skipped 0",
+        "# todo 0",
+        "# duration_ms 2498.8449"
+      ],
+      "artifacts": [
+        {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-release-public-catalog-redirect-fix-75436d19a3524fa08f16a8191a62f521\\baseline-redirect-error-final-regressions.stdout.log",
+          "bytes": 13793,
+          "sha256": "e97fe118e183555535ed99c6fe3218dc7279113fdd1c66272bd03c445f8cc7df"
+        },
+        {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-release-public-catalog-redirect-fix-75436d19a3524fa08f16a8191a62f521\\baseline-redirect-error-final-regressions.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ],
+      "receipt": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-release-public-catalog-redirect-fix-75436d19a3524fa08f16a8191a62f521\\baseline-redirect-error-final-regressions.actual.json",
+        "bytes": 1482,
+        "sha256": "a28cb1693487e5dd1d58d106a19e4383990ff7bb45f0c7d037be382fc69b2de5"
+      },
+      "parsedGroups": [
+        {
+          "tests": 46,
+          "pass": 42,
+          "fail": 4,
+          "cancelled": 0,
+          "skipped": 0
+        }
+      ],
+      "parsedTotals": {
+        "tests": 46,
+        "pass": 42,
+        "fail": 4,
+        "cancelled": 0,
+        "skipped": 0
+      }
+    },
+    {
+      "closed": true,
+      "startedAt": "2026-10-05T09:34:29.390Z",
+      "finishedAt": "2026-10-05T09:34:32.523Z",
+      "label": "fixed-public-boundaries",
+      "mode": "targeted",
+      "command": [
+        "C:\\Program Files\\nodejs\\node.exe",
+        "C:/cinagroup/cinatoken/node_modules/tsx/dist/cli.mjs",
+        "--test",
+        "--test-reporter=tap",
+        "lib/public-catalog-bff.test.ts",
+        "lib/public-gateway.test.ts",
+        "lib/public-chat.test.ts",
+        "lib/public-catalog.test.ts",
+        "lib/public-routes.test.ts"
+      ],
+      "cwd": "C:/cinagroup/cinatoken/packages/admin",
+      "cleanAllowlistedEnv": true,
+      "productionCredentialsPassed": false,
+      "actualExit": 0,
+      "signal": null,
+      "totals": [
+        "# tests 46",
+        "# suites 6",
+        "# pass 46",
+        "# fail 0",
+        "# cancelled 0",
+        "# skipped 0",
+        "# todo 0",
+        "# duration_ms 2882.7841"
+      ],
+      "artifacts": [
+        {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-release-public-catalog-redirect-fix-75436d19a3524fa08f16a8191a62f521\\fixed-public-boundaries.stdout.log",
+          "bytes": 11477,
+          "sha256": "2baafbc1a3191c6f15e5a8a29e30c28fcb09e390b800ad1968e71aeb175ea045"
+        },
+        {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-release-public-catalog-redirect-fix-75436d19a3524fa08f16a8191a62f521\\fixed-public-boundaries.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ],
+      "receipt": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-release-public-catalog-redirect-fix-75436d19a3524fa08f16a8191a62f521\\fixed-public-boundaries.actual.json",
+        "bytes": 1428,
+        "sha256": "6ecc8e0e6f18500f4de7f4d96b34bf592d18101d30d60e3b533e5a19857789bd"
+      },
+      "parsedGroups": [
+        {
+          "tests": 46,
+          "pass": 46,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0
+        }
+      ],
+      "parsedTotals": {
+        "tests": 46,
+        "pass": 46,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      }
+    },
+    {
+      "closed": true,
+      "startedAt": "2026-10-05T09:37:33.969Z",
+      "finishedAt": "2026-10-05T09:37:38.866Z",
+      "label": "fixed-formatted-public-boundaries",
+      "mode": "targeted",
+      "command": [
+        "C:\\Program Files\\nodejs\\node.exe",
+        "C:/cinagroup/cinatoken/node_modules/tsx/dist/cli.mjs",
+        "--test",
+        "--test-reporter=tap",
+        "lib/public-catalog-bff.test.ts",
+        "lib/public-gateway.test.ts",
+        "lib/public-chat.test.ts",
+        "lib/public-catalog.test.ts",
+        "lib/public-routes.test.ts"
+      ],
+      "cwd": "C:/cinagroup/cinatoken/packages/admin",
+      "cleanAllowlistedEnv": true,
+      "productionCredentialsPassed": false,
+      "actualExit": 0,
+      "signal": null,
+      "totals": [
+        "# tests 46",
+        "# suites 6",
+        "# pass 46",
+        "# fail 0",
+        "# cancelled 0",
+        "# skipped 0",
+        "# todo 0",
+        "# duration_ms 4290.4945"
+      ],
+      "artifacts": [
+        {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-release-public-catalog-redirect-fix-75436d19a3524fa08f16a8191a62f521\\fixed-formatted-public-boundaries.stdout.log",
+          "bytes": 11467,
+          "sha256": "a9f03ba57fd455e1545e04ab6cc4303ab8da06a752a09c551b75a9451d12140f"
+        },
+        {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-release-public-catalog-redirect-fix-75436d19a3524fa08f16a8191a62f521\\fixed-formatted-public-boundaries.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ],
+      "receipt": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-release-public-catalog-redirect-fix-75436d19a3524fa08f16a8191a62f521\\fixed-formatted-public-boundaries.actual.json",
+        "bytes": 1458,
+        "sha256": "fa32bd898e2738968e6a2bd2124d59ee303239b57508066bc79d1815fab4862a"
+      },
+      "parsedGroups": [
+        {
+          "tests": 46,
+          "pass": 46,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0
+        }
+      ],
+      "parsedTotals": {
+        "tests": 46,
+        "pass": 46,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      }
+    },
+    {
+      "closed": true,
+      "startedAt": "2026-10-05T09:34:30.527Z",
+      "finishedAt": "2026-10-05T09:35:39.859Z",
+      "label": "admin-typecheck",
+      "mode": "typecheck",
+      "command": [
+        "C:\\Program Files\\nodejs\\node.exe",
+        "C:/cinagroup/cinatoken/node_modules/typescript/bin/tsc",
+        "--noEmit"
+      ],
+      "cwd": "C:/cinagroup/cinatoken/packages/admin",
+      "cleanAllowlistedEnv": true,
+      "productionCredentialsPassed": false,
+      "actualExit": 134,
+      "signal": null,
+      "totals": [],
+      "artifacts": [
+        {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-release-public-catalog-redirect-fix-75436d19a3524fa08f16a8191a62f521\\admin-typecheck.stdout.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-release-public-catalog-redirect-fix-75436d19a3524fa08f16a8191a62f521\\admin-typecheck.stderr.log",
+          "bytes": 1390,
+          "sha256": "c36203be009b8978b4e0f560287e7132f251cdd5f0ac5ce89c1ad0a4976f4fd7"
+        }
+      ],
+      "receipt": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-release-public-catalog-redirect-fix-75436d19a3524fa08f16a8191a62f521\\admin-typecheck.actual.json",
+        "bytes": 1055,
+        "sha256": "fae3f8d79dd7b76389b6f444dc296b2f05d0e5096f1e7a608dcf288464a827a5"
+      },
+      "parsedGroups": [],
+      "parsedTotals": {
+        "tests": 0,
+        "pass": 0,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      }
+    },
+    {
+      "closed": true,
+      "startedAt": "2026-10-05T09:37:01.751Z",
+      "finishedAt": "2026-10-05T09:38:54.063Z",
+      "label": "admin-typecheck-large-heap",
+      "mode": "typecheck",
+      "command": [
+        "C:\\Program Files\\nodejs\\node.exe",
+        "--max-old-space-size=6144",
+        "C:/cinagroup/cinatoken/node_modules/typescript/bin/tsc",
+        "--noEmit"
+      ],
+      "cwd": "C:/cinagroup/cinatoken/packages/admin",
+      "cleanAllowlistedEnv": true,
+      "productionCredentialsPassed": false,
+      "actualExit": 0,
+      "signal": null,
+      "totals": [],
+      "artifacts": [
+        {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-release-public-catalog-redirect-fix-75436d19a3524fa08f16a8191a62f521\\admin-typecheck-large-heap.stdout.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-release-public-catalog-redirect-fix-75436d19a3524fa08f16a8191a62f521\\admin-typecheck-large-heap.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ],
+      "receipt": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-release-public-catalog-redirect-fix-75436d19a3524fa08f16a8191a62f521\\admin-typecheck-large-heap.actual.json",
+        "bytes": 1116,
+        "sha256": "a10a3c1368ad475122fc580a28293adfe5e65db10876444e8016ebef09f25139"
+      },
+      "parsedGroups": [],
+      "parsedTotals": {
+        "tests": 0,
+        "pass": 0,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      }
+    },
+    {
+      "closed": true,
+      "startedAt": "2026-10-05T09:35:42.215Z",
+      "finishedAt": "2026-10-05T09:36:39.263Z",
+      "label": "admin-unit",
+      "mode": "unit",
+      "command": [
+        "C:\\Program Files\\nodejs\\node.exe",
+        "C:/Program Files/nodejs/node_modules/npm/bin/npm-cli.js",
+        "run",
+        "test:unit"
+      ],
+      "cwd": "C:/cinagroup/cinatoken/packages/admin",
+      "cleanAllowlistedEnv": true,
+      "productionCredentialsPassed": false,
+      "actualExit": 0,
+      "signal": null,
+      "totals": [],
+      "artifacts": [
+        {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-release-public-catalog-redirect-fix-75436d19a3524fa08f16a8191a62f521\\admin-unit.stdout.log",
+          "bytes": 244981,
+          "sha256": "3f5da4450870e72c794d27338e8671fd4e10d8df45c75ded6cb59e0dee6d5556"
+        },
+        {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-release-public-catalog-redirect-fix-75436d19a3524fa08f16a8191a62f521\\admin-unit.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ],
+      "receipt": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-release-public-catalog-redirect-fix-75436d19a3524fa08f16a8191a62f521\\admin-unit.actual.json",
+        "bytes": 1048,
+        "sha256": "d6b1ad5ddf1bf0bf7a3b6e3f98c413c16ac6210a9530b3e884f565bdf7c6d57b"
+      },
+      "parsedGroups": [
+        {
+          "tests": 5,
+          "pass": 5,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0
+        },
+        {
+          "tests": 30,
+          "pass": 30,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0
+        },
+        {
+          "tests": 1010,
+          "pass": 1010,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0
+        }
+      ],
+      "parsedTotals": {
+        "tests": 1045,
+        "pass": 1045,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      }
+    }
+  ],
+  "deploymentOutcomeNotClaimedHere": true,
+  "remainingReleaseValidation": "Root commits fixed source on next immutable SHA, runs required Linux/Cloudflare gates, then repeats real production BFF/Proxy HTTP smoke. This proof confirms runtime cause and local fix, not deployment of this new code."
+}
