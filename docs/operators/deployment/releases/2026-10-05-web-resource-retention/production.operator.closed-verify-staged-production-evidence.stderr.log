@@ -1,0 +1,51 @@
+fatal: path 'docs/operators/deployment/releases/2026-10-05-web-resource-retention/production.operator.commit-retention.stderr.log' exists on disk, but not in the index
+node:internal/errors:985
+  const err = new Error(message);
+              ^
+
+Error: Command failed: C:/Program Files/Git/cmd/git.exe show :docs/operators/deployment/releases/2026-10-05-web-resource-retention/production.operator.commit-retention.stderr.log
+fatal: path 'docs/operators/deployment/releases/2026-10-05-web-resource-retention/production.operator.commit-retention.stderr.log' exists on disk, but not in the index
+
+    at genericNodeError (node:internal/errors:985:15)
+    at wrappedFn (node:internal/errors:539:14)
+    at checkExecSyncError (node:child_process:925:11)
+    at Object.execFileSync (node:child_process:961:15)
+    at file:///C:/Users/cina/AppData/Local/Temp/cinatoken-web-retention-40bda77a453343d89d5fe50706d58326/verify-staged-production-evidence.mjs:7:101
+    at ModuleJob.run (node:internal/modules/esm/module_job:430:25)
+    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:661:26)
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5) {
+  status: 128,
+  signal: null,
+  output: [
+    null,
+    Buffer(0) [Uint8Array] [],
+    Buffer(168) [Uint8Array] [
+      102,  97, 116,  97, 108,  58,  32, 112,  97, 116, 104,  32,
+       39, 100, 111,  99, 115,  47, 111, 112, 101, 114,  97, 116,
+      111, 114, 115,  47, 100, 101, 112, 108, 111, 121, 109, 101,
+      110, 116,  47, 114, 101, 108, 101,  97, 115, 101, 115,  47,
+       50,  48,  50,  54,  45,  49,  48,  45,  48,  53,  45, 119,
+      101,  98,  45, 114, 101, 115, 111, 117, 114,  99, 101,  45,
+      114, 101, 116, 101, 110, 116, 105, 111, 110,  47, 112, 114,
+      111, 100, 117,  99, 116, 105, 111, 110,  46, 111, 112, 101,
+      114,  97, 116, 111,
+      ... 68 more items
+    ]
+  ],
+  pid: 14324,
+  stdout: Buffer(0) [Uint8Array] [],
+  stderr: Buffer(168) [Uint8Array] [
+    102,  97, 116,  97, 108,  58,  32, 112,  97, 116, 104,  32,
+     39, 100, 111,  99, 115,  47, 111, 112, 101, 114,  97, 116,
+    111, 114, 115,  47, 100, 101, 112, 108, 111, 121, 109, 101,
+    110, 116,  47, 114, 101, 108, 101,  97, 115, 101, 115,  47,
+     50,  48,  50,  54,  45,  49,  48,  45,  48,  53,  45, 119,
+    101,  98,  45, 114, 101, 115, 111, 117, 114,  99, 101,  45,
+    114, 101, 116, 101, 110, 116, 105, 111, 110,  47, 112, 114,
+    111, 100, 117,  99, 116, 105, 111, 110,  46, 111, 112, 101,
+    114,  97, 116, 111,
+    ... 68 more items
+  ]
+}
+
+Node.js v24.14.1

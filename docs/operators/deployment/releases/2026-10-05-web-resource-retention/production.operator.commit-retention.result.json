@@ -1,0 +1,15 @@
+{
+  "at": "2026-10-05T12:53:00.613Z",
+  "finishedAt": "2026-10-05T12:53:00.809Z",
+  "executable": "C:/Program Files/Git/cmd/git.exe",
+  "args": [
+    "commit",
+    "-m",
+    "fix(web): retain published source downloads across releases"
+  ],
+  "cwd": "C:/cinagroup/cinatoken",
+  "actualExit": 0,
+  "signal": null,
+  "stdout": "C:/Users/cina/AppData/Local/Temp/cinatoken-web-retention-40bda77a453343d89d5fe50706d58326/commit-retention.stdout.log",
+  "stderr": "C:/Users/cina/AppData/Local/Temp/cinatoken-web-retention-40bda77a453343d89d5fe50706d58326/commit-retention.stderr.log"
+}

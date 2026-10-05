@@ -1,0 +1,269 @@
+docs/operators/deployment/releases/2026-10-05-web-resource-retention/local.baseline.stdout.txt:19: trailing whitespace.
++  
+docs/operators/deployment/releases/2026-10-05-web-resource-retention/local.baseline.stdout.txt:21: trailing whitespace.
++  
+docs/operators/deployment/releases/2026-10-05-web-resource-retention/local.baseline.stdout.txt:39: trailing whitespace.
++  
+docs/operators/deployment/releases/2026-10-05-web-resource-retention/local.baseline.stdout.txt:42: trailing whitespace.
++  
+docs/operators/deployment/releases/2026-10-05-web-resource-retention/local.baseline.stdout.txt:62: trailing whitespace.
++  
+docs/operators/deployment/releases/2026-10-05-web-resource-retention/local.baseline.stdout.txt:79: trailing whitespace.
++  
+docs/operators/deployment/releases/2026-10-05-web-resource-retention/local.baseline.stdout.txt:98: trailing whitespace.
++  
+docs/operators/deployment/releases/2026-10-05-web-resource-retention/local.baseline.stdout.txt:100: trailing whitespace.
++  
+docs/operators/deployment/releases/2026-10-05-web-resource-retention/local.format-write.stderr.txt:1: trailing whitespace.
++node:internal/modules/cjs/loader:1459
+docs/operators/deployment/releases/2026-10-05-web-resource-retention/local.format-write.stderr.txt:2: trailing whitespace.
++  throw err;
+docs/operators/deployment/releases/2026-10-05-web-resource-retention/local.format-write.stderr.txt:3: trailing whitespace.
++  ^
+docs/operators/deployment/releases/2026-10-05-web-resource-retention/local.format-write.stderr.txt:4: trailing whitespace.
++
+docs/operators/deployment/releases/2026-10-05-web-resource-retention/local.format-write.stderr.txt:5: trailing whitespace.
++Error: Cannot find module 'C:\cinagroup\cinatoken\node_modules\prettier\bin\prettier.cjs'
+docs/operators/deployment/releases/2026-10-05-web-resource-retention/local.format-write.stderr.txt:6: trailing whitespace.
++    at Module._resolveFilename (node:internal/modules/cjs/loader:1456:15)
+docs/operators/deployment/releases/2026-10-05-web-resource-retention/local.format-write.stderr.txt:7: trailing whitespace.
++    at defaultResolveImpl (node:internal/modules/cjs/loader:1066:19)
+docs/operators/deployment/releases/2026-10-05-web-resource-retention/local.format-write.stderr.txt:8: trailing whitespace.
++    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1071:22)
+docs/operators/deployment/releases/2026-10-05-web-resource-retention/local.format-write.stderr.txt:9: trailing whitespace.
++    at Module._load (node:internal/modules/cjs/loader:1242:25)
+docs/operators/deployment/releases/2026-10-05-web-resource-retention/local.format-write.stderr.txt:10: trailing whitespace.
++    at wrapModuleLoad (node:internal/modules/cjs/loader:255:19)
+docs/operators/deployment/releases/2026-10-05-web-resource-retention/local.format-write.stderr.txt:11: trailing whitespace.
++    at Module.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:154:5)
+docs/operators/deployment/releases/2026-10-05-web-resource-retention/local.format-write.stderr.txt:12: trailing whitespace.
++    at node:internal/main/run_main_module:33:47 {
+docs/operators/deployment/releases/2026-10-05-web-resource-retention/local.format-write.stderr.txt:13: trailing whitespace.
++  code: 'MODULE_NOT_FOUND',
+docs/operators/deployment/releases/2026-10-05-web-resource-retention/local.format-write.stderr.txt:14: trailing whitespace.
++  requireStack: []
+docs/operators/deployment/releases/2026-10-05-web-resource-retention/local.format-write.stderr.txt:15: trailing whitespace.
++}
+docs/operators/deployment/releases/2026-10-05-web-resource-retention/local.format-write.stderr.txt:16: trailing whitespace.
++
+docs/operators/deployment/releases/2026-10-05-web-resource-retention/local.format-write.stderr.txt:17: trailing whitespace.
++Node.js v24.14.1
+docs/operators/deployment/releases/2026-10-05-web-resource-retention/local.full-web-lint.stdout.txt:4: new blank line at EOF.
+docs/operators/deployment/releases/2026-10-05-web-resource-retention/local.full-web-types.stdout.txt:8: new blank line at EOF.
+docs/operators/deployment/releases/2026-10-05-web-resource-retention/local.owned-diff.stdout.txt:6: space before tab in indent.
++ 				add(archivePath, item.assets, 'retained', item.descriptor.lastCurrentAt)
+docs/operators/deployment/releases/2026-10-05-web-resource-retention/local.owned-diff.stdout.txt:7: space before tab in indent.
++ 			descriptors.set(archivePath, { ...item.descriptor, source: 'retained' })
+docs/operators/deployment/releases/2026-10-05-web-resource-retention/local.owned-diff.stdout.txt:8: space before tab in indent.
++ 		}
+docs/operators/deployment/releases/2026-10-05-web-resource-retention/local.owned-diff.stdout.txt:15: space before tab in indent.
++ 		const assetSources = [...plan.values()]
+docs/operators/deployment/releases/2026-10-05-web-resource-retention/local.owned-diff.stdout.txt:16: space before tab in indent.
++ 			.filter((file) => isHashedAsset(file.path))
+docs/operators/deployment/releases/2026-10-05-web-resource-retention/local.owned-diff.stdout.txt:17: space before tab in indent.
++ 			.sort((a, b) => (a.path < b.path ? -1 : a.path > b.path ? 1 : 0))
+docs/operators/deployment/releases/2026-10-05-web-resource-retention/local.owned-diff.stdout.txt:27: trailing whitespace.
++ 
+docs/operators/deployment/releases/2026-10-05-web-resource-retention/local.owned-diff.stdout.txt:31: space before tab in indent.
++ 	assert.equal(verifyRelease(root, 'legacy').manifest.schemaVersion, 2)
+docs/operators/deployment/releases/2026-10-05-web-resource-retention/local.owned-diff.stdout.txt:33: trailing whitespace.
++ 
+docs/operators/deployment/releases/2026-10-05-web-resource-retention/local.owned-diff.stdout.txt:245: space before tab in indent.
++ 	const root = fixture(t)
+docs/operators/deployment/releases/2026-10-05-web-resource-retention/local.owned-diff.stdout.txt:246: space before tab in indent.
++ 	resetBuild(root, 'source-a', OLD)
+docs/operators/deployment/releases/2026-10-05-web-resource-retention/local.owned-diff.stdout.txt:252: space before tab in indent.
++ 			!isSourceArchiveAsset(archive.path) ||
+docs/operators/deployment/releases/2026-10-05-web-resource-retention/local.owned-diff.stdout.txt:253: space before tab in indent.
++ 			archives.has(archive.path) ||
+docs/operators/deployment/releases/2026-10-05-web-resource-retention/local.owned-diff.stdout.txt:254: space before tab in indent.
++ 			!file ||
+docs/operators/deployment/releases/2026-10-05-web-resource-retention/local.owned-diff.stdout.txt:257: space before tab in indent.
++ 			!equal(
+docs/operators/deployment/releases/2026-10-05-web-resource-retention/local.owned-diff.stdout.txt:258: space before tab in indent.
++ 				[archive.bytes, archive.sha256, archive.source, archive.lastCurrentAt],
+docs/operators/deployment/releases/2026-10-05-web-resource-retention/local.owned-diff.stdout.txt:259: space before tab in indent.
++ 				[file.bytes, file.sha256, file.source, file.lastCurrentAt]
+docs/operators/deployment/releases/2026-10-05-web-resource-retention/local.owned-diff.stdout.txt:261: space before tab in indent.
++ 	if (buildContract?.version === 2 && delivery.currentArchive === null)
+docs/operators/deployment/releases/2026-10-05-web-resource-retention/local.owned-diff.stdout.txt:262: space before tab in indent.
++ 		throw new Error('Version 2 build requires corresponding source')
+docs/operators/deployment/releases/2026-10-05-web-resource-retention/local.owned-diff.stdout.txt:263: space before tab in indent.
++ 	const paths = []
+docs/operators/deployment/releases/2026-10-05-web-resource-retention/local.owned-diff.stdout.txt:270: space before tab in indent.
++ 	for (const mapping of delivery.assetSources) {
+docs/operators/deployment/releases/2026-10-05-web-resource-retention/local.owned-diff.stdout.txt:271: space before tab in indent.
++ 		const file = assetFiles.get(mapping.path)
+docs/operators/deployment/releases/2026-10-05-web-resource-retention/local.owned-diff.stdout.txt:272: space before tab in indent.
++ 		if (
+docs/operators/deployment/releases/2026-10-05-web-resource-retention/local.owned-diff.stdout.txt:274: space before tab in indent.
++ 		for (const archive of mapping.archives) {
+docs/operators/deployment/releases/2026-10-05-web-resource-retention/local.owned-diff.stdout.txt:275: space before tab in indent.
++ 			if (!archives.has(archive))
+docs/operators/deployment/releases/2026-10-05-web-resource-retention/local.owned-diff.stdout.txt:276: space before tab in indent.
++ 				throw new Error('Missing mapped source archive')
+docs/operators/deployment/releases/2026-10-05-web-resource-retention/local.owned-diff.stdout.txt:278: space before tab in indent.
++ 		}
+docs/operators/deployment/releases/2026-10-05-web-resource-retention/local.owned-diff.stdout.txt:279: space before tab in indent.
++ 		if (mapping.archives.length === 0 && !mapping.unresolved)
+docs/operators/deployment/releases/2026-10-05-web-resource-retention/local.owned-diff.stdout.txt:280: space before tab in indent.
++ 			throw new Error('Unavailable source must be marked unresolved')
+docs/operators/deployment/releases/2026-10-05-web-resource-retention/local.owned-diff.stdout.txt:282: space before tab in indent.
++ 			paths,
+docs/operators/deployment/releases/2026-10-05-web-resource-retention/local.owned-diff.stdout.txt:283: space before tab in indent.
++ 			files.filter((file) => isHashedAsset(file.path)).map((file) => file.path)
+docs/operators/deployment/releases/2026-10-05-web-resource-retention/local.owned-diff.stdout.txt:284: space before tab in indent.
++ 		) ||
+docs/operators/deployment/releases/2026-10-05-web-resource-retention/local.owned-diff.stdout.txt:286: space before tab in indent.
++ 		delivery.coverageComplete !==
+docs/operators/deployment/releases/2026-10-05-web-resource-retention/local.owned-diff.stdout.txt:287: space before tab in indent.
++ 			(Boolean(delivery.currentArchive) &&
+docs/operators/deployment/releases/2026-10-05-web-resource-retention/local.owned-diff.stdout.txt:288: space before tab in indent.
++ 				delivery.assetSources.every(
+docs/operators/deployment/releases/2026-10-05-web-resource-retention/operator.compose-production-release.mjs:40: trailing whitespace.
++console.log(JSON.stringify({actualExit:0,releaseId:activationId,manifestSha256:activation.manifestSha256,assetFiles:activation.manifest.files.length,serverFiles:activation.manifest.serverFiles.length,archives:activation.manifest.sourceDelivery.archives.map(a=>({path:a.path,source:a.source,lastCurrentAt:a.lastCurrentAt})),retainedChecks:checks.length}));
+docs/operators/deployment/releases/2026-10-05-web-resource-retention/operator.probe-source-archives.mjs:29: trailing whitespace.
++console.log(JSON.stringify(record));process.exitCode=record.actualExit;
+docs/operators/deployment/releases/2026-10-05-web-resource-retention/operator.run-command.mjs:18: trailing whitespace.
++
+docs/operators/deployment/releases/2026-10-05-web-resource-retention/operator.run-command.mjs:18: new blank line at EOF.
+docs/operators/deployment/releases/2026-10-05-web-resource-retention/operator.scope-before-ci-corrected.stderr.log:1: trailing whitespace.
++node:internal/modules/run_main:107
+docs/operators/deployment/releases/2026-10-05-web-resource-retention/operator.scope-before-ci-corrected.stderr.log:2: trailing whitespace.
++    triggerUncaughtException(
+docs/operators/deployment/releases/2026-10-05-web-resource-retention/operator.scope-before-ci-corrected.stderr.log:3: trailing whitespace.
++    ^
+docs/operators/deployment/releases/2026-10-05-web-resource-retention/operator.scope-before-ci-corrected.stderr.log:4: trailing whitespace.
++
+docs/operators/deployment/releases/2026-10-05-web-resource-retention/operator.scope-before-ci-corrected.stderr.log:5: trailing whitespace.
++AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+docs/operators/deployment/releases/2026-10-05-web-resource-retention/operator.scope-before-ci-corrected.stderr.log:6: trailing whitespace.
++
+docs/operators/deployment/releases/2026-10-05-web-resource-retention/operator.scope-before-ci-corrected.stderr.log:7: trailing whitespace.
++99 !== 102
+docs/operators/deployment/releases/2026-10-05-web-resource-retention/operator.scope-before-ci-corrected.stderr.log:8: trailing whitespace.
++
+docs/operators/deployment/releases/2026-10-05-web-resource-retention/operator.scope-before-ci-corrected.stderr.log:9: trailing whitespace.
++    at file:///C:/Users/cina/AppData/Local/Temp/cinatoken-web-retention-40bda77a453343d89d5fe50706d58326/verify-checklist-scope.mjs:6:82
+docs/operators/deployment/releases/2026-10-05-web-resource-retention/operator.scope-before-ci-corrected.stderr.log:10: trailing whitespace.
++    at ModuleJob.run (node:internal/modules/esm/module_job:430:25)
+docs/operators/deployment/releases/2026-10-05-web-resource-retention/operator.scope-before-ci-corrected.stderr.log:11: trailing whitespace.
++    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:661:26)
+docs/operators/deployment/releases/2026-10-05-web-resource-retention/operator.scope-before-ci-corrected.stderr.log:12: trailing whitespace.
++    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5) {
+docs/operators/deployment/releases/2026-10-05-web-resource-retention/operator.scope-before-ci-corrected.stderr.log:13: trailing whitespace.
++  generatedMessage: true,
+docs/operators/deployment/releases/2026-10-05-web-resource-retention/operator.scope-before-ci-corrected.stderr.log:14: trailing whitespace.
++  code: 'ERR_ASSERTION',
+docs/operators/deployment/releases/2026-10-05-web-resource-retention/operator.scope-before-ci-corrected.stderr.log:15: trailing whitespace.
++  actual: 99,
+docs/operators/deployment/releases/2026-10-05-web-resource-retention/operator.scope-before-ci-corrected.stderr.log:16: trailing whitespace.
++  expected: 102,
+docs/operators/deployment/releases/2026-10-05-web-resource-retention/operator.scope-before-ci-corrected.stderr.log:17: trailing whitespace.
++  operator: 'strictEqual',
+docs/operators/deployment/releases/2026-10-05-web-resource-retention/operator.scope-before-ci-corrected.stderr.log:18: trailing whitespace.
++  diff: 'simple'
+docs/operators/deployment/releases/2026-10-05-web-resource-retention/operator.scope-before-ci-corrected.stderr.log:19: trailing whitespace.
++}
+docs/operators/deployment/releases/2026-10-05-web-resource-retention/operator.scope-before-ci-corrected.stderr.log:20: trailing whitespace.
++
+docs/operators/deployment/releases/2026-10-05-web-resource-retention/operator.scope-before-ci-corrected.stderr.log:21: trailing whitespace.
++Node.js v24.14.1
+docs/operators/deployment/releases/2026-10-05-web-resource-retention/operator.scope-before-ci-final.stderr.log:1: trailing whitespace.
++node:internal/modules/run_main:107
+docs/operators/deployment/releases/2026-10-05-web-resource-retention/operator.scope-before-ci-final.stderr.log:2: trailing whitespace.
++    triggerUncaughtException(
+docs/operators/deployment/releases/2026-10-05-web-resource-retention/operator.scope-before-ci-final.stderr.log:3: trailing whitespace.
++    ^
+docs/operators/deployment/releases/2026-10-05-web-resource-retention/operator.scope-before-ci-final.stderr.log:4: trailing whitespace.
++
+docs/operators/deployment/releases/2026-10-05-web-resource-retention/operator.scope-before-ci-final.stderr.log:5: trailing whitespace.
++AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+docs/operators/deployment/releases/2026-10-05-web-resource-retention/operator.scope-before-ci-final.stderr.log:6: trailing whitespace.
++
+docs/operators/deployment/releases/2026-10-05-web-resource-retention/operator.scope-before-ci-final.stderr.log:7: trailing whitespace.
++99 !== 102
+docs/operators/deployment/releases/2026-10-05-web-resource-retention/operator.scope-before-ci-final.stderr.log:8: trailing whitespace.
++
+docs/operators/deployment/releases/2026-10-05-web-resource-retention/operator.scope-before-ci-final.stderr.log:9: trailing whitespace.
++    at file:///C:/Users/cina/AppData/Local/Temp/cinatoken-web-retention-40bda77a453343d89d5fe50706d58326/verify-checklist-scope.mjs:6:83
+docs/operators/deployment/releases/2026-10-05-web-resource-retention/operator.scope-before-ci-final.stderr.log:10: trailing whitespace.
++    at ModuleJob.run (node:internal/modules/esm/module_job:430:25)
+docs/operators/deployment/releases/2026-10-05-web-resource-retention/operator.scope-before-ci-final.stderr.log:11: trailing whitespace.
++    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:661:26)
+docs/operators/deployment/releases/2026-10-05-web-resource-retention/operator.scope-before-ci-final.stderr.log:12: trailing whitespace.
++    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5) {
+docs/operators/deployment/releases/2026-10-05-web-resource-retention/operator.scope-before-ci-final.stderr.log:13: trailing whitespace.
++  generatedMessage: true,
+docs/operators/deployment/releases/2026-10-05-web-resource-retention/operator.scope-before-ci-final.stderr.log:14: trailing whitespace.
++  code: 'ERR_ASSERTION',
+docs/operators/deployment/releases/2026-10-05-web-resource-retention/operator.scope-before-ci-final.stderr.log:15: trailing whitespace.
++  actual: 99,
+docs/operators/deployment/releases/2026-10-05-web-resource-retention/operator.scope-before-ci-final.stderr.log:16: trailing whitespace.
++  expected: 102,
+docs/operators/deployment/releases/2026-10-05-web-resource-retention/operator.scope-before-ci-final.stderr.log:17: trailing whitespace.
++  operator: 'strictEqual',
+docs/operators/deployment/releases/2026-10-05-web-resource-retention/operator.scope-before-ci-final.stderr.log:18: trailing whitespace.
++  diff: 'simple'
+docs/operators/deployment/releases/2026-10-05-web-resource-retention/operator.scope-before-ci-final.stderr.log:19: trailing whitespace.
++}
+docs/operators/deployment/releases/2026-10-05-web-resource-retention/operator.scope-before-ci-final.stderr.log:20: trailing whitespace.
++
+docs/operators/deployment/releases/2026-10-05-web-resource-retention/operator.scope-before-ci-final.stderr.log:21: trailing whitespace.
++Node.js v24.14.1
+docs/operators/deployment/releases/2026-10-05-web-resource-retention/operator.scope-before-ci.stderr.log:1: trailing whitespace.
++node:internal/modules/run_main:107
+docs/operators/deployment/releases/2026-10-05-web-resource-retention/operator.scope-before-ci.stderr.log:2: trailing whitespace.
++    triggerUncaughtException(
+docs/operators/deployment/releases/2026-10-05-web-resource-retention/operator.scope-before-ci.stderr.log:3: trailing whitespace.
++    ^
+docs/operators/deployment/releases/2026-10-05-web-resource-retention/operator.scope-before-ci.stderr.log:4: trailing whitespace.
++
+docs/operators/deployment/releases/2026-10-05-web-resource-retention/operator.scope-before-ci.stderr.log:5: trailing whitespace.
++AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+docs/operators/deployment/releases/2026-10-05-web-resource-retention/operator.scope-before-ci.stderr.log:6: trailing whitespace.
++
+docs/operators/deployment/releases/2026-10-05-web-resource-retention/operator.scope-before-ci.stderr.log:7: trailing whitespace.
++0 !== 102
+docs/operators/deployment/releases/2026-10-05-web-resource-retention/operator.scope-before-ci.stderr.log:8: trailing whitespace.
++
+docs/operators/deployment/releases/2026-10-05-web-resource-retention/operator.scope-before-ci.stderr.log:9: trailing whitespace.
++    at file:///C:/Users/cina/AppData/Local/Temp/cinatoken-web-retention-40bda77a453343d89d5fe50706d58326/verify-checklist-scope.mjs:6:82
+docs/operators/deployment/releases/2026-10-05-web-resource-retention/operator.scope-before-ci.stderr.log:10: trailing whitespace.
++    at ModuleJob.run (node:internal/modules/esm/module_job:430:25)
+docs/operators/deployment/releases/2026-10-05-web-resource-retention/operator.scope-before-ci.stderr.log:11: trailing whitespace.
++    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:661:26)
+docs/operators/deployment/releases/2026-10-05-web-resource-retention/operator.scope-before-ci.stderr.log:12: trailing whitespace.
++    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5) {
+docs/operators/deployment/releases/2026-10-05-web-resource-retention/operator.scope-before-ci.stderr.log:13: trailing whitespace.
++  generatedMessage: true,
+docs/operators/deployment/releases/2026-10-05-web-resource-retention/operator.scope-before-ci.stderr.log:14: trailing whitespace.
++  code: 'ERR_ASSERTION',
+docs/operators/deployment/releases/2026-10-05-web-resource-retention/operator.scope-before-ci.stderr.log:15: trailing whitespace.
++  actual: 0,
+docs/operators/deployment/releases/2026-10-05-web-resource-retention/operator.scope-before-ci.stderr.log:16: trailing whitespace.
++  expected: 102,
+docs/operators/deployment/releases/2026-10-05-web-resource-retention/operator.scope-before-ci.stderr.log:17: trailing whitespace.
++  operator: 'strictEqual',
+docs/operators/deployment/releases/2026-10-05-web-resource-retention/operator.scope-before-ci.stderr.log:18: trailing whitespace.
++  diff: 'simple'
+docs/operators/deployment/releases/2026-10-05-web-resource-retention/operator.scope-before-ci.stderr.log:19: trailing whitespace.
++}
+docs/operators/deployment/releases/2026-10-05-web-resource-retention/operator.scope-before-ci.stderr.log:20: trailing whitespace.
++
+docs/operators/deployment/releases/2026-10-05-web-resource-retention/operator.scope-before-ci.stderr.log:21: trailing whitespace.
++Node.js v24.14.1
+docs/operators/deployment/releases/2026-10-05-web-resource-retention/operator.seal-local-evidence.mjs:15: trailing whitespace.
++console.log(JSON.stringify({rawFiles:raw.length,bytes:raw.reduce((s,r)=>s+r.bytes,0),reportPath:'docs/operators/deployment/releases/2026-10-05-web-resource-retention-local.json'}));
+docs/operators/deployment/releases/2026-10-05-web-resource-retention/operator.verify-assets.mjs:27: trailing whitespace.
++
+docs/operators/deployment/releases/2026-10-05-web-resource-retention/operator.verify-assets.mjs:27: new blank line at EOF.
+docs/operators/deployment/releases/2026-10-05-web-resource-retention/operator.verify-checklist-scope.mjs:10: trailing whitespace.
++console.log(JSON.stringify({actualExit:0,allCheckboxLines:checkboxes(after).length,taskCheckboxes:211,mainTasks:main.length,matrixRows:matrix.length,gates,evidence,statesAndTaskTextUnchanged:true}));
+docs/operators/deployment/releases/2026-10-05-web-resource-retention/operator.verify-checklist-scope.mjs:11: trailing whitespace.
++
+docs/operators/deployment/releases/2026-10-05-web-resource-retention/operator.verify-checklist-scope.mjs:12: trailing whitespace.
++
+docs/operators/deployment/releases/2026-10-05-web-resource-retention/operator.verify-checklist-scope.mjs:13: trailing whitespace.
++
+docs/operators/deployment/releases/2026-10-05-web-resource-retention/operator.verify-checklist-scope.mjs:11: new blank line at EOF.

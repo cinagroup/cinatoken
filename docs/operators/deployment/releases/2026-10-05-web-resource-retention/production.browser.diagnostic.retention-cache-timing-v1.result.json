@@ -1,0 +1,17 @@
+{
+  "startedAt": "2026-10-05T13:31:51.542Z",
+  "completedAt": "2026-10-05T13:32:49.506Z",
+  "program": "node",
+  "arguments": [
+    "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-ci-inventory-d7b57ac3c0804fc0a7fbddb860e5bc8e\\cache-timing-diagnostic.mjs",
+    "retention-cache-timing-v1",
+    "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-retention-40bda77a453343d89d5fe50706d58326\\retention-c13.browser-config.json"
+  ],
+  "actualExitCode": 0,
+  "signal": null,
+  "spawnError": null,
+  "stdoutPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-ci-inventory-d7b57ac3c0804fc0a7fbddb860e5bc8e\\retention-cache-timing-v1.stdout.txt",
+  "stderrPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-ci-inventory-d7b57ac3c0804fc0a7fbddb860e5bc8e\\retention-cache-timing-v1.stderr.txt",
+  "stdoutBytes": 1237,
+  "stderrBytes": 0
+}

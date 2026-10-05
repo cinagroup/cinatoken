@@ -1,0 +1,19 @@
+{
+  "at": "2026-10-05T14:14:40.103Z",
+  "finishedAt": "2026-10-05T14:14:40.279Z",
+  "executable": "C:/Program Files/Git/cmd/git.exe",
+  "args": [
+    "add",
+    "-f",
+    "--",
+    "docs/developers/architecture/web-frontend-migration.md",
+    "docs/operators/deployment/cloudflare-web.md",
+    "docs/operators/deployment/releases/2026-10-05-web-resource-retention-production.json",
+    "docs/operators/deployment/releases/2026-10-05-web-resource-retention"
+  ],
+  "cwd": "C:/cinagroup/cinatoken",
+  "actualExit": 0,
+  "signal": null,
+  "stdout": "C:/Users/cina/AppData/Local/Temp/cinatoken-web-retention-40bda77a453343d89d5fe50706d58326/force-stage-production-evidence.stdout.log",
+  "stderr": "C:/Users/cina/AppData/Local/Temp/cinatoken-web-retention-40bda77a453343d89d5fe50706d58326/force-stage-production-evidence.stderr.log"
+}

@@ -1,0 +1,26 @@
+{"progress":"page-checked","route":"/en","kind":"public","http":200,"pagesChecked":1}
+{"progress":"page-checked","route":"/en/models","kind":"public","http":200,"pagesChecked":2}
+{"progress":"page-checked","route":"/en/providers","kind":"public","http":200,"pagesChecked":3}
+{"progress":"page-checked","route":"/en/compare","kind":"public","http":200,"pagesChecked":4}
+{"progress":"page-checked","route":"/en/chat","kind":"public","http":200,"pagesChecked":5}
+{"progress":"page-checked","route":"/en/rankings","kind":"public","http":200,"pagesChecked":6}
+{"progress":"page-checked","route":"/en/benchmarks","kind":"public","http":200,"pagesChecked":7}
+{"progress":"page-checked","route":"/en/models/cinatoken-smoke-missing/no-such-model","kind":"missing-model","http":404,"pagesChecked":8}
+{"progress":"page-checked","route":"/account","kind":"account","http":200,"pagesChecked":9}
+{"progress":"page-checked","route":"/account/keys","kind":"account","http":200,"pagesChecked":10}
+{"progress":"page-checked","route":"/account/byok","kind":"account","http":200,"pagesChecked":11}
+{"progress":"page-checked","route":"/account/activity","kind":"account","http":200,"pagesChecked":12}
+{"progress":"page-checked","route":"/account/earnings","kind":"account","http":200,"pagesChecked":13}
+{"progress":"page-checked","route":"/account/nft","kind":"account","http":200,"pagesChecked":14}
+{"progress":"page-checked","route":"/account/withdraw","kind":"account","http":200,"pagesChecked":15}
+{"progress":"page-checked","route":"/account/presets","kind":"account","http":200,"pagesChecked":16}
+{"progress":"page-checked","route":"/account/guardrails","kind":"account","http":200,"pagesChecked":17}
+{"progress":"page-checked","route":"/account/settings","kind":"account","http":200,"pagesChecked":18}
+{"progress":"page-checked","route":"/admin","kind":"admin","http":200,"pagesChecked":19}
+{"progress":"page-checked","route":"/admin/users","kind":"admin","http":200,"pagesChecked":20}
+{"progress":"page-checked","route":"/admin/users/00000000-0000-4000-8000-000000000000","kind":"admin","http":200,"pagesChecked":21}
+{"progress":"page-checked","route":"/admin/providers","kind":"admin","http":200,"pagesChecked":22}
+{"progress":"page-checked","route":"/admin/models","kind":"admin","http":200,"pagesChecked":23}
+{"progress":"page-checked","route":"/admin/endpoints","kind":"admin","http":200,"pagesChecked":24}
+{"progress":"page-checked","route":"/admin/routes","kind":"admin","http":200,"pagesChecked":25}
+{"actualExit":1,"outcome":"FAILED","failure":{"name":"Error","message":"page.goto: Target page, context or browser has been closed\nCall log:\n\u001b[2m  - navigating to \"https://cinatoken.com/admin/data-policies\", waiting until \"networkidle\"\u001b[22m\n","stack":"page.goto: Target page, context or browser has been closed\nCall log:\n\u001b[2m  - navigating to \"https://cinatoken.com/admin/data-policies\", waiting until \"networkidle\"\u001b[22m\n\n    at checkPage (C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-independent-web-browser-696cc8df85ea423aa0d2545df155d197\\production-web-browser-observe-v2.mjs:70:31)\n    at C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-independent-web-browser-696cc8df85ea423aa0d2545df155d197\\production-web-browser-observe-v2.mjs:151:56"},"evidence":{"path":"C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-independent-web-browser-696cc8df85ea423aa0d2545df155d197\\retention-c13a64b9-v2.json","bytes":81183,"sha256":"8b07f5439bb92498498b47a89a1a92e5703779e32e40c03b26e977d51afb8de2"},"pages":25,"screenshots":[{"name":"public-1","path":"C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-independent-web-browser-696cc8df85ea423aa0d2545df155d197\\retention-c13a64b9-v2-public-1.png","bytes":54114,"sha256":"3c3002c14200c075db9cb4077fc6926e1543c1dbc907150ee4981237dd71fbe6"},{"name":"public-2","path":"C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-independent-web-browser-696cc8df85ea423aa0d2545df155d197\\retention-c13a64b9-v2-public-2.png","bytes":43225,"sha256":"f49bd3265c40e99f24e224d752a9c49f79b9702bd52a9fdfa51b0a51ebe49207"},{"name":"account-9","path":"C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-independent-web-browser-696cc8df85ea423aa0d2545df155d197\\retention-c13a64b9-v2-account-9.png","bytes":23753,"sha256":"a99bb9d22fd16eaebd41e31ccceef6363f27760a9d6c0d6e3e6be1c6f5c4b8fb"},{"name":"admin-19","path":"C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-independent-web-browser-696cc8df85ea423aa0d2545df155d197\\retention-c13a64b9-v2-admin-19.png","bytes":25449,"sha256":"3903b8a1ace00a01f66aa85758c1fdd71fd081e2d3b8b76c1967475ed3cf94f2"}],"pageErrors":[],"unknownHTTPErrors":[],"unexplainedConsoleErrors":[],"expectedAnonymous401":17,"contextClosed":true,"browserClosed":true}

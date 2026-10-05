@@ -1,0 +1,16 @@
+{
+  "at": "2026-10-05T13:00:33.941Z",
+  "finishedAt": "2026-10-05T13:00:34.008Z",
+  "executable": "C:/Program Files/Git/cmd/git.exe",
+  "args": [
+    "diff",
+    "HEAD~1",
+    "HEAD",
+    "--check"
+  ],
+  "cwd": "C:/cinagroup/cinatoken",
+  "actualExit": 2,
+  "signal": null,
+  "stdout": "C:/Users/cina/AppData/Local/Temp/cinatoken-web-retention-40bda77a453343d89d5fe50706d58326/committed-diff-check-raw.stdout.log",
+  "stderr": "C:/Users/cina/AppData/Local/Temp/cinatoken-web-retention-40bda77a453343d89d5fe50706d58326/committed-diff-check-raw.stderr.log"
+}

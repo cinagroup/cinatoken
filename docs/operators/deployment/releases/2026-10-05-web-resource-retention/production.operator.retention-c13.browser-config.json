@@ -1,0 +1,14 @@
+{
+  "gitSHA": "c13a64b9c3b2c90adcf736910ea408868d7854f1",
+  "workerVersionId": "2a0a2777-d3b1-47f0-a0a7-88e701b4d2d9",
+  "phase": "cutover",
+  "targetOrigin": "https://cinatoken.com",
+  "canonicalOrigin": "https://cinatoken.com",
+  "operatorVerifiedLiveVersion": true,
+  "all29FlagsEnabled": true,
+  "liveProof": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-retention-40bda77a453343d89d5fe50706d58326/deployed.live-proof.json",
+    "bytes": 6014,
+    "sha256": "07a3a340bf77dbbf4b38f0fad029d6aa6efa6aa7f485dda7f65d139a2bb45ceb"
+  }
+}

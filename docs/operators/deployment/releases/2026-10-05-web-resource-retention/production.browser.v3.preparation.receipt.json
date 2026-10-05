@@ -1,0 +1,54 @@
+{
+  "schema": "prepared-not-executed-browser-v3",
+  "at": "2026-10-05T13:45:05.547Z",
+  "destination": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-independent-web-browser-v3-56686244d1194d108aad8107f6374be2",
+  "originalV2": [
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-independent-web-browser-696cc8df85ea423aa0d2545df155d197\\production-web-browser-observe-v2.mjs",
+      "bytes": 15695,
+      "sha256": "415d123bbc71cfdb5d8ed02bf91f01d9021031358667cd7aaf2f0fd6edcd55be"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-independent-web-browser-696cc8df85ea423aa0d2545df155d197\\execute-web-browser-observe-v2.mjs",
+      "bytes": 3432,
+      "sha256": "ffd074ec8b52d5ce7c9dbd8a9dace29ec29130b661e0290e72f1f2d2d0424ed8"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-independent-web-browser-696cc8df85ea423aa0d2545df155d197\\web-route-matrix.mjs",
+      "bytes": 1770,
+      "sha256": "c8a3211d07979c037022f689aa442bd95de9b7c11843fb52b9ae9fa93ac01e61"
+    }
+  ],
+  "artifacts": [
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-independent-web-browser-v3-56686244d1194d108aad8107f6374be2\\production-web-browser-observe-v3.mjs",
+      "bytes": 24157,
+      "sha256": "23852591d1290c946d1d1b8236719517e9d3d20efadeb1358b970b94c16687da"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-independent-web-browser-v3-56686244d1194d108aad8107f6374be2\\execute-web-browser-observe-v3.mjs",
+      "bytes": 4053,
+      "sha256": "8c010cbef62d77cad2e40ad7a08c60cc5c331ede0b2dbd7263d3f453ad0f5e7a"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-independent-web-browser-v3-56686244d1194d108aad8107f6374be2\\web-route-matrix.mjs",
+      "bytes": 1770,
+      "sha256": "c8a3211d07979c037022f689aa442bd95de9b7c11843fb52b9ae9fa93ac01e61"
+    }
+  ],
+  "networkExecutions": 0,
+  "sourceWrites": 0,
+  "deployments": 0,
+  "changes": [
+    "Four independent anonymous contexts run 8/10/14/13 direct routes concurrently; public shard also performs the original three interactions.",
+    "Original rendering/navigation/metadata/security/runtime assertions and 390/420 second budgets remain.",
+    "Adds exact 45 route set, explicit 37 exact anonymous 401/one exact 404, individual context closure, per-shard console matching and always-run final classification.",
+    "Retains default serviceWorkers; absence is asserted and unexpected serviceWorker triggers strict failure and browser shutdown.",
+    "No CDP cache restoration or new console exemptions. Routing keeps HTTP cache disabled."
+  ],
+  "generator": {
+    "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-ci-inventory-d7b57ac3c0804fc0a7fbddb860e5bc8e/prepare-browser-v3.mjs",
+    "bytes": 20861,
+    "sha256": "aa410a60bd13ce8a3d71f6f796e076e3a7e2a532e9ed648396a8d299def16b52"
+  }
+}

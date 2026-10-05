@@ -1,0 +1,530 @@
+{
+  "schema": "cinatoken-peer-reviewed-browser-v3-plan",
+  "reviewedAt": "2026-10-05T13:57:08.654Z",
+  "reviewer": "/root/remaining_gate_inventory",
+  "conclusion": "APPROVED_FOR_EXACT_HASH_ANONYMOUS_QA_EXECUTION",
+  "blockingFindings": [],
+  "productionStrictQA": "UNPROVEN_UNTIL_NEW_V3_CLOSED_RESULT",
+  "inputs": [
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-independent-web-browser-v3-56686244d1194d108aad8107f6374be2\\production-web-browser-observe-v3.mjs",
+      "bytes": 25585,
+      "sha256": "5fe013bb9c8cd533aa144b4c3820b11008359370dfef44b1b4a4f922781ffa34"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-independent-web-browser-v3-56686244d1194d108aad8107f6374be2\\execute-web-browser-observe-v3.mjs",
+      "bytes": 4436,
+      "sha256": "f43341b099a5c8bcba8e3dfd625b3e1a24de7467ad03370b25a14a08a5d736e4"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-independent-web-browser-v3-56686244d1194d108aad8107f6374be2\\web-route-matrix.mjs",
+      "bytes": 1770,
+      "sha256": "c8a3211d07979c037022f689aa442bd95de9b7c11843fb52b9ae9fa93ac01e61"
+    }
+  ],
+  "finalPreparation": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-independent-web-browser-v3-56686244d1194d108aad8107f6374be2\\final-preparation.receipt.json",
+    "bytes": 6564,
+    "sha256": "9ba68db5d5e6ae00add21b6a3f115d581e0817d9ecaab21b4ac36acba78d204a"
+  },
+  "configRaw": {
+    "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-web-retention-40bda77a453343d89d5fe50706d58326/retention-c13.browser-config.json",
+    "bytes": 557,
+    "sha256": "18b4f42e1c98cfc746eb65ab738e31b8a438ae62bb899e726d4b96bae166185b"
+  },
+  "liveProofRaw": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-retention-40bda77a453343d89d5fe50706d58326/deployed.live-proof.json",
+    "bytes": 6014,
+    "sha256": "07a3a340bf77dbbf4b38f0fad029d6aa6efa6aa7f485dda7f65d139a2bb45ceb"
+  },
+  "expectedGitSHA": "c13a64b9c3b2c90adcf736910ea408868d7854f1",
+  "expectedWorkerVersionId": "2a0a2777-d3b1-47f0-a0a7-88e701b4d2d9",
+  "originalV2StillExact": [
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-independent-web-browser-696cc8df85ea423aa0d2545df155d197\\production-web-browser-observe-v2.mjs",
+      "bytes": 15695,
+      "sha256": "415d123bbc71cfdb5d8ed02bf91f01d9021031358667cd7aaf2f0fd6edcd55be"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-independent-web-browser-696cc8df85ea423aa0d2545df155d197\\execute-web-browser-observe-v2.mjs",
+      "bytes": 3432,
+      "sha256": "ffd074ec8b52d5ce7c9dbd8a9dace29ec29130b661e0290e72f1f2d2d0424ed8"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-independent-web-browser-696cc8df85ea423aa0d2545df155d197\\web-route-matrix.mjs",
+      "bytes": 1770,
+      "sha256": "c8a3211d07979c037022f689aa442bd95de9b7c11843fb52b9ae9fa93ac01e61"
+    }
+  ],
+  "v2FailuresRemainFailed": [
+    {
+      "raw": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-independent-web-browser-696cc8df85ea423aa0d2545df155d197\\retention-c13a64b9-v2.json",
+        "bytes": 81183,
+        "sha256": "8b07f5439bb92498498b47a89a1a92e5703779e32e40c03b26e977d51afb8de2"
+      },
+      "actualExit": 1,
+      "timedOut": true,
+      "pages": 25,
+      "interactions": 0
+    },
+    {
+      "raw": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-independent-web-browser-696cc8df85ea423aa0d2545df155d197\\retention-c13a64b9-v2-retry.json",
+        "bytes": 81011,
+        "sha256": "e61e4c6c574167722d611b496031bfe5edac8b9c74343469e2a37974d7996e9a"
+      },
+      "actualExit": 1,
+      "timedOut": true,
+      "pages": 23,
+      "interactions": 0
+    }
+  ],
+  "assertionAudit": {
+    "method": "Manual line-by-line control-flow review plus TypeScript AST printer canonical assertion-call multiset comparison. Each original call is matched once; literal string values are preserved.",
+    "originalAssertCalls": 51,
+    "v3AssertCalls": 85,
+    "missingOriginalAssertions": [],
+    "matchedAssertions": [
+      {
+        "v2Line": 13,
+        "v3Line": 13,
+        "method": "match",
+        "canonicalSHA256": "f0d7a3e1cdffc39b5b55a43c9cf6c60197b3e697505245fb5b9b5a20f71ae4a3"
+      },
+      {
+        "v2Line": 16,
+        "v3Line": 16,
+        "method": "ok",
+        "canonicalSHA256": "06e173a2f922c5b6c847efd4da2236b2d2d0e72d9dd86558864890536e220773"
+      },
+      {
+        "v2Line": 17,
+        "v3Line": 17,
+        "method": "match",
+        "canonicalSHA256": "b4a879f12b0f98f45de1352299532a74a6dae742b2b4e9d560796f377cd64471"
+      },
+      {
+        "v2Line": 18,
+        "v3Line": 18,
+        "method": "match",
+        "canonicalSHA256": "ef95fedc8d596ff54dfd9ab698b07edad2bac41786c15e187f4ff6fdb2b3112e"
+      },
+      {
+        "v2Line": 19,
+        "v3Line": 19,
+        "method": "ok",
+        "canonicalSHA256": "740c8da10cbed93647a8d27d65aa1fb5a0bf2a6672f0eeedcfc2edf56b7f5e6b"
+      },
+      {
+        "v2Line": 21,
+        "v3Line": 21,
+        "method": "equal",
+        "canonicalSHA256": "44025cae49bde176c7e09fa8ce372e59bf580fac67fae94abea812d8e7decad1"
+      },
+      {
+        "v2Line": 22,
+        "v3Line": 22,
+        "method": "equal",
+        "canonicalSHA256": "d0d4bb749f1721406a064addd2ba98857cc1dc4d3973c453bf90e1991ddad7b2"
+      },
+      {
+        "v2Line": 23,
+        "v3Line": 23,
+        "method": "equal",
+        "canonicalSHA256": "27f4ab062e0b5ec889c6fdc088b2d7438a9e7a3b439c681431ad7c2b3fb9895d"
+      },
+      {
+        "v2Line": 24,
+        "v3Line": 24,
+        "method": "equal",
+        "canonicalSHA256": "8e362e76bb0383d6b3742ec779a75d2d0eb16ce9d509f5f2a328fe19a0826189"
+      },
+      {
+        "v2Line": 25,
+        "v3Line": 25,
+        "method": "equal",
+        "canonicalSHA256": "9f7f775f44e660b4b06499629e83dcf6e327715c4048d2758a43d8412d6bf1dc"
+      },
+      {
+        "v2Line": 26,
+        "v3Line": 26,
+        "method": "equal",
+        "canonicalSHA256": "c02ae4cfe20eb395d88e255f0b22f148ddf16bbf5271f90d6b8201e10aca3a4f"
+      },
+      {
+        "v2Line": 27,
+        "v3Line": 27,
+        "method": "equal",
+        "canonicalSHA256": "5d7486d0367e537b183360f86a6b6f3272c36029b3e46a9920a7eb8d9e55a3f7"
+      },
+      {
+        "v2Line": 28,
+        "v3Line": 28,
+        "method": "equal",
+        "canonicalSHA256": "f9dbe5bfe781edf8313c9fdd9f21ccab207896a6bc7f2b5a1745140c4380e0b0"
+      },
+      {
+        "v2Line": 29,
+        "v3Line": 29,
+        "method": "equal",
+        "canonicalSHA256": "2b65177a36d1600f4f5238323e3f5c879a6ef0f6292a669a9beedc463313d694"
+      },
+      {
+        "v2Line": 31,
+        "v3Line": 31,
+        "method": "ok",
+        "canonicalSHA256": "5a9df274f08e4c1540ccaeca05eb08ada9b24e9a55041a6534197efdab7ba624"
+      },
+      {
+        "v2Line": 32,
+        "v3Line": 32,
+        "method": "match",
+        "canonicalSHA256": "2cbf5cbb083dd5e9fe4a0a2d18f3874bb9cbaafe178203d5c51a9aa2baa0804b"
+      },
+      {
+        "v2Line": 33,
+        "v3Line": 33,
+        "method": "deepEqual",
+        "canonicalSHA256": "12999ca54fb220f9d808fc05c1e5af0884a6a65c73c8e8707cbb75d39ee2b797"
+      },
+      {
+        "v2Line": 50,
+        "v3Line": 52,
+        "method": "equal",
+        "canonicalSHA256": "ed2790984943969d08642004f00a7082880fb9624be8d54c40ef36977ac898bf"
+      },
+      {
+        "v2Line": 54,
+        "v3Line": 84,
+        "method": "equal",
+        "canonicalSHA256": "c48e039114068e082ad7d81f73a129172ad44b4a9b68ef43d0ea4af1df865157"
+      },
+      {
+        "v2Line": 71,
+        "v3Line": 103,
+        "method": "equal",
+        "canonicalSHA256": "d1128e72e5bd2b17b23d85ea7b186554e33a851e9bbe23f7b8900ab1b15c5116"
+      },
+      {
+        "v2Line": 78,
+        "v3Line": 110,
+        "method": "equal",
+        "canonicalSHA256": "d6defca4b85b3ad611ffb49e8684ef146e1b53a3ffd70422d9ee1224f4a0c243"
+      },
+      {
+        "v2Line": 92,
+        "v3Line": 124,
+        "method": "equal",
+        "canonicalSHA256": "55929c0e5ce6a8932c8bd65b52ad099cf53e462d1314a77f4cb2a57baec204f7"
+      },
+      {
+        "v2Line": 93,
+        "v3Line": 125,
+        "method": "ok",
+        "canonicalSHA256": "2996075a0cc889a5a0bfdc6f4c16ced79a115ea780186532a57f71321389129c"
+      },
+      {
+        "v2Line": 94,
+        "v3Line": 126,
+        "method": "ok",
+        "canonicalSHA256": "1c36d1b868708985cbb7bc33be2e8de0c255df9f0d88ba834b7ce5ce1b3276c0"
+      },
+      {
+        "v2Line": 95,
+        "v3Line": 127,
+        "method": "equal",
+        "canonicalSHA256": "a2cb169858eeb053e70f9af63a19bb41c04f022b547d78a79bfe7e818be2f8d2"
+      },
+      {
+        "v2Line": 96,
+        "v3Line": 128,
+        "method": "equal",
+        "canonicalSHA256": "45c8d3d7086a40f35a53c1076c9f421cf03754e38c3601d93ff168d74368a6a6"
+      },
+      {
+        "v2Line": 98,
+        "v3Line": 130,
+        "method": "equal",
+        "canonicalSHA256": "abee091b50c9f7c014d6174ba08c1483b82164bf8f55fd521a2811bb09f13c06"
+      },
+      {
+        "v2Line": 98,
+        "v3Line": 130,
+        "method": "equal",
+        "canonicalSHA256": "4158cf6c6c61be6a72e924d6d9e10d6af23d5fb132c0e61cfd64836f16d622fe"
+      },
+      {
+        "v2Line": 99,
+        "v3Line": 131,
+        "method": "equal",
+        "canonicalSHA256": "5f9658046990dec4350906c1d7e02883f68e6e5b6d5a15a67834dbd6fb087bdd"
+      },
+      {
+        "v2Line": 99,
+        "v3Line": 131,
+        "method": "equal",
+        "canonicalSHA256": "4d4f9d5e4661d21ad97bcda7366f5414345d6016017f81b42a5f0708479979f8"
+      },
+      {
+        "v2Line": 100,
+        "v3Line": 132,
+        "method": "equal",
+        "canonicalSHA256": "1adce8aee252162c11e3fe08c1a89a7bd23a8eb328cf9ac3136bfaad2aba6093"
+      },
+      {
+        "v2Line": 102,
+        "v3Line": 134,
+        "method": "deepEqual",
+        "canonicalSHA256": "f78322b103545389bce7d7fc04af807e0c5355f97bd2e7f7dbd7fcb21b2abae9"
+      },
+      {
+        "v2Line": 103,
+        "v3Line": 135,
+        "method": "equal",
+        "canonicalSHA256": "1aab57ef34aadcf78c01e0abcf4c13a37ad4b758cb0445ff204d99d967519ab3"
+      },
+      {
+        "v2Line": 104,
+        "v3Line": 136,
+        "method": "equal",
+        "canonicalSHA256": "07063b145132b05e7050f8055af6ad8cb6d25ae984ef358ae73b8491aa84f131"
+      },
+      {
+        "v2Line": 105,
+        "v3Line": 137,
+        "method": "deepEqual",
+        "canonicalSHA256": "094bd7150ad6caae03a30e81337f330c79d86eae2fb293cf440d767bb62a3391"
+      },
+      {
+        "v2Line": 105,
+        "v3Line": 137,
+        "method": "equal",
+        "canonicalSHA256": "5a5a25bec37f594a72fd7e59e90c8d0a9f3002f3c80c7af7f4ae6e0456067246"
+      },
+      {
+        "v2Line": 105,
+        "v3Line": 137,
+        "method": "equal",
+        "canonicalSHA256": "cfbe6ca572efa34947849d451441a1fbe74c00af08d5c35726e38c6fa074771a"
+      },
+      {
+        "v2Line": 107,
+        "v3Line": 139,
+        "method": "equal",
+        "canonicalSHA256": "1f5c8bc4acfdeacafcd2b7b052d5904f9729d426c183f9d90ac4208b38cf6dfb"
+      },
+      {
+        "v2Line": 108,
+        "v3Line": 140,
+        "method": "equal",
+        "canonicalSHA256": "6aebae055c612f7923ef5e32cddbc27e57554a38d25be3d2f4b8eae401dba5c1"
+      },
+      {
+        "v2Line": 163,
+        "v3Line": 158,
+        "method": "equal",
+        "canonicalSHA256": "bc880b1ffd0a31ef93dcf0d4f4e9d4427e5bb01e0d17466666a32ab68b651a9c"
+      },
+      {
+        "v2Line": 168,
+        "v3Line": 163,
+        "method": "equal",
+        "canonicalSHA256": "14b9518da7868fc37acfcef5e1188286a1886d151ac465428585a64d084fe7fe"
+      },
+      {
+        "v2Line": 169,
+        "v3Line": 164,
+        "method": "equal",
+        "canonicalSHA256": "9e4855f8de29d70cffcf6c58b6025f4c63a38c8ec0da2b00d1fd9fdcead0d401"
+      },
+      {
+        "v2Line": 170,
+        "v3Line": 165,
+        "method": "ok",
+        "canonicalSHA256": "de50da56d5e3a3a6163abeeaee1183805eebab1520d6af9502d3953b317d44b5"
+      },
+      {
+        "v2Line": 178,
+        "v3Line": 285,
+        "method": "equal",
+        "canonicalSHA256": "b476ec34ee00bb7f3d2c6792610c46186d71ae5e80df2fb7fb523985553e3d33"
+      },
+      {
+        "v2Line": 179,
+        "v3Line": 307,
+        "method": "equal",
+        "canonicalSHA256": "5e71484ba3acccfafdb05b3df331d2c9b9ebb086075df63df018287fa034c1ea"
+      },
+      {
+        "v2Line": 180,
+        "v3Line": 308,
+        "method": "equal",
+        "canonicalSHA256": "83d40789958db49febcb953ed7210be9300e9cece8c76b82d6e0601eeb614db7"
+      },
+      {
+        "v2Line": 181,
+        "v3Line": 309,
+        "method": "equal",
+        "canonicalSHA256": "38c13b1135b537c1f5b68e0345eb8752982d8cb685730b5367c7d694c104e211"
+      },
+      {
+        "v2Line": 182,
+        "v3Line": 310,
+        "method": "equal",
+        "canonicalSHA256": "b1dcb09bb43ee147525428f07769987925c12bcd661c2d46e51b66494ee3e167"
+      },
+      {
+        "v2Line": 183,
+        "v3Line": 311,
+        "method": "equal",
+        "canonicalSHA256": "52d882bf89a4c44c0afa8ef8ff0b18e87df6f04cac73d20e3a9102eb75213ff3"
+      },
+      {
+        "v2Line": 184,
+        "v3Line": 312,
+        "method": "equal",
+        "canonicalSHA256": "1789c795089b9b1f278f586bcbe4260ea9492b134bd3fd8d7fade27284d59ac1"
+      },
+      {
+        "v2Line": 196,
+        "v3Line": 273,
+        "method": "deepEqual",
+        "canonicalSHA256": "220bb35e7e104233740ec300ec0b8e1cd45f8dfbb7082b50baa804a0e4872878"
+      }
+    ]
+  },
+  "syntaxChecks": [
+    {
+      "input": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-independent-web-browser-v3-56686244d1194d108aad8107f6374be2\\production-web-browser-observe-v3.mjs",
+        "bytes": 25585,
+        "sha256": "5fe013bb9c8cd533aa144b4c3820b11008359370dfef44b1b4a4f922781ffa34"
+      },
+      "command": [
+        "C:\\Program Files\\nodejs\\node.exe",
+        "--check",
+        "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-independent-web-browser-v3-56686244d1194d108aad8107f6374be2\\production-web-browser-observe-v3.mjs"
+      ],
+      "startedAt": "2026-10-05T13:57:08.504Z",
+      "finishedAt": "2026-10-05T13:57:08.581Z",
+      "actualExit": 0,
+      "signal": null,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "input": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-independent-web-browser-v3-56686244d1194d108aad8107f6374be2\\execute-web-browser-observe-v3.mjs",
+        "bytes": 4436,
+        "sha256": "f43341b099a5c8bcba8e3dfd625b3e1a24de7467ad03370b25a14a08a5d736e4"
+      },
+      "command": [
+        "C:\\Program Files\\nodejs\\node.exe",
+        "--check",
+        "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-independent-web-browser-v3-56686244d1194d108aad8107f6374be2\\execute-web-browser-observe-v3.mjs"
+      ],
+      "startedAt": "2026-10-05T13:57:08.581Z",
+      "finishedAt": "2026-10-05T13:57:08.648Z",
+      "actualExit": 0,
+      "signal": null,
+      "stdout": "",
+      "stderr": ""
+    }
+  ],
+  "retainedChecks": [
+    "Original public config, HTTPS/canonical origin, live-proof raw binding, 29 flags and matrix size assertions remain.",
+    "Original document status/pathname/title/nonblank/overlay/hydration, public SSR bootstrap version/status/path/search/locale and canonical/OG/robots assertions remain.",
+    "Original exact anonymous account/admin sign-in screens, absent workspace picker and absent privileged navigation assertions remain.",
+    "Original navigation/networkidle 45000ms and screen locator 20000ms waits remain. Same executable, headless Chromium, 1440x1000 viewport, en-US locale and light scheme are used.",
+    "Original theme dark class/cookie, zh navigation and select state, 390x844 refresh, zh/dark persistence, no hydration failure and horizontal overflow assertions and screenshots remain on the public shard same page.",
+    "Original zero refused mutations, request failures, runtime page errors, unknown HTTP errors, unexplained console errors and warnings assertions remain. Precise same-origin GET user/me 401 Unauthorized and reserved missing-model HTML 404 rules have no new exemptions.",
+    "One shared 390000ms browser deadline after the same launch covers preparation and all group work/pending drain. One 420000ms outer process deadline remains; timedOut cannot pass.",
+    "Four independent fresh anonymous contexts run public8/account10/admin14/admin13. Helpers, page objects, pending body promises and event state are per-group; no shared mutable global page.",
+    "All four groups must fulfill. Forty-five unique direct routes and exact route/kind/http tuples match the original matrix, and each group checks its exact route set.",
+    "Exactly 37 private pages and 37 precise anonymous 401 responses are required. Each private route matches exactly one response by same shard and originating-page origin/path; exactly one reserved missing-model 404 is required.",
+    "Response observers capture shard and pageURL before awaiting body. Observer failures are recorded and fail validation. Four groups and their pending observations converge.",
+    "All four context.close calls and browser.close are awaited. Every context.isClosed() and browser isConnected()==false must pass. Final pending observations drain after closure; console classification/aggregation runs on success and failure.",
+    "Outer executor awaits child close, captures actual process exit, validates strict browser result/all closures and rechecks observer/executor/matrix/config bytes. Fresh wx files preserve historical failures.",
+    "All sealed v2 sources are raw-bound before browser creation and after closure. Final v3 observer/config inputs and executor inputs are rechecked; no fixture responses or CDP cache restoration are introduced."
+  ],
+  "guardAssessment": {
+    "scope": "Only frozen c13 anonymous direct navigations and public theme/locale/mobile interactions; no login or tool/business operation is invoked.",
+    "httpGuard": "Each empty-cookie context registers all-URL GET/HEAD-only routing before page creation. Other methods are recorded and aborted; any attempt fails. No route fulfill, HAR, cookies/identity fixture or local response is introduced.",
+    "serviceWorkers": "Default setting remains. Initial/final workers must be empty and event count zero; unexpected serviceworker records guardFailure and closes browser, and any event fails validation.",
+    "directReadSourceEvidence": [
+      {
+        "command": "rg -n serviceWorker|service-worker|navigator.serviceWorker packages/web/src/main.tsx packages/web/src/cinatoken packages/web/edge",
+        "cwd": "C:/cinagroup/cinatoken",
+        "actualExit": 1,
+        "stdout": "",
+        "stderr": "",
+        "meaning": "No matches in the active source scope."
+      },
+      {
+        "command": "git diff --quiet c13a64b9c3b2c90adcf736910ea408868d7854f1 -- packages/web/src/main.tsx packages/web/src/cinatoken packages/web/edge",
+        "actualExit": 0,
+        "stdout": "warning: unable to access C:/Users/cina/.config/git/ignore: Permission denied",
+        "meaning": "Active source scope unchanged from current runtime commit; warning did not prevent successful comparison."
+      }
+    ],
+    "transportBoundary": "context.route alone is not a universal Service Worker or WebSocket write firewall. Approval uses current source having no active SW registration and hard zero-worker/event checks for this anonymous scope. Sole WebSocket constructor occurs inside explicit openDashScopeRealtimeClient behind ConsoleGate/AdminLayout, outside these operations. No general transport guarantee is claimed.",
+    "primaryLocalEvidence": [
+      {
+        "path": "C:/Users/cina/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright-core/types/types.d.ts",
+        "lines": [
+          10157,
+          10184,
+          10231
+        ],
+        "meaning": "Context.isClosed support, Service Worker interception limitation, routing disables HTTP cache."
+      },
+      {
+        "path": "C:/Users/cina/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright-core/lib/coreBundle.js",
+        "lines": [
+          35895,
+          35899
+        ],
+        "meaning": "Protocol interception explicitly sets cacheDisabled enabled."
+      },
+      {
+        "path": "C:/cinagroup/cinatoken/packages/web/src/cinatoken/admin/ConsoleGate.tsx",
+        "lines": [
+          26
+        ],
+        "meaning": "Only verified console renders privileged children."
+      },
+      {
+        "path": "C:/cinagroup/cinatoken/packages/web/src/cinatoken/admin/AdminLayout.tsx",
+        "lines": [
+          122,
+          141
+        ],
+        "meaning": "Admin content wrapped by ConsoleGate."
+      },
+      {
+        "path": "C:/cinagroup/cinatoken/packages/web/src/cinatoken/admin/playground/browser-domain/dashscope-realtime-client.ts",
+        "lines": [
+          353,
+          381
+        ],
+        "meaning": "Explicit tool function creates WebSocket, not anonymous navigation initialization."
+      }
+    ]
+  },
+  "limits": [
+    "Parallel scheduling may help elapsed time but does not prove cache restoration, product performance improvement or completion within390s. New real closed v3 evidence is required.",
+    "Current c13 strict production QA remains unproven. This review and independent137-resource delivery proof cannot mark browser QA passed.",
+    "Real identities, roles, financial/chain writes, nonempty catalog/chat, native/Docker platforms and actual rollback remain outside this anonymous QA scope."
+  ],
+  "auditToolCorrection": {
+    "firstSealAttemptActualExit": 1,
+    "reason": "Nested spawnSync rg EPERM before report write; no file produced.",
+    "resolution": "Used direct exec_command read-only rg (exit1/no matches) and git diff (exit0), then sealed exact same hashes. No escalation, network or product change."
+  },
+  "networkRequests": 0,
+  "browserExecutions": 0,
+  "repositorySourceWrites": 0,
+  "deployments": 0,
+  "onlyNewFile": "peer-reviewed-v3.json"
+}

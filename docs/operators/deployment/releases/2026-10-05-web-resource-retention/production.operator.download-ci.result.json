@@ -1,0 +1,19 @@
+{
+  "at": "2026-10-05T12:58:41.777Z",
+  "finishedAt": "2026-10-05T13:00:16.335Z",
+  "executable": "C:/Program Files/GitHub CLI/gh.exe",
+  "args": [
+    "run",
+    "download",
+    "37312669228",
+    "--name",
+    "cinatoken-web",
+    "--dir",
+    "C:/cinagroup/cinatoken/.release/web/c13a64b9c3b2c90adcf736910ea408868d7854f1"
+  ],
+  "cwd": "C:/cinagroup/cinatoken",
+  "actualExit": 0,
+  "signal": null,
+  "stdout": "C:/Users/cina/AppData/Local/Temp/cinatoken-web-retention-40bda77a453343d89d5fe50706d58326/download-ci.stdout.log",
+  "stderr": "C:/Users/cina/AppData/Local/Temp/cinatoken-web-retention-40bda77a453343d89d5fe50706d58326/download-ci.stderr.log"
+}

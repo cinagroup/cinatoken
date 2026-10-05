@@ -1,0 +1,137 @@
+{
+  "schema": 1,
+  "at": "2026-10-05T12:52:00.814Z",
+  "scope": "Independent read-only review of resource-retention patch and unexecuted composition design",
+  "findings": [],
+  "reviewConclusion": "No blocking source finding identified in inspected patch; composition design consistent with frozen new CI plus verified production and previous artifacts. Acceptance still depends on actual CI and composed/live verification.",
+  "sources": [
+    {
+      "file": "packages/web/scripts/package-release.mjs",
+      "bytes": 22915,
+      "sha256": "223e702a12f570d83feb076ca9a6561e7b535f1afbe17ff33cf1c6ee54f1085c"
+    },
+    {
+      "file": "packages/web/scripts/source-delivery.mjs",
+      "bytes": 8313,
+      "sha256": "33aa58ed3aa45772846fcb9e18e5b672529f0aef7d2dd19e5ef45a43626fc60d"
+    },
+    {
+      "file": "packages/web/scripts/package-release.test.mjs",
+      "bytes": 37691,
+      "sha256": "8bee16fe7391b084da72e9d46d1bbec3d335e4f358aa70c76a5c9cb88b397a7e"
+    },
+    {
+      "file": "packages/web/scripts/historical-source.mjs",
+      "bytes": 8815,
+      "sha256": "226cf449bc36a4c3fc326aea085dc05b12ab1a6f6dbfe5a3f7a1a28d09580292"
+    },
+    {
+      "file": "packages/web/scripts/asset-policy.mjs",
+      "bytes": 1077,
+      "sha256": "ea1c4cce1ab82587c34e074267f3dbbf0892664ac40dc8ebe797b5c15b596625"
+    },
+    {
+      "file": "packages/web/scripts/source-archive.mjs",
+      "bytes": 18947,
+      "sha256": "2daea6d6cad594b21245f828f621495d772e15430187a24d75d13f92819d7091"
+    }
+  ],
+  "compositionHelper": {
+    "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-web-retention-40bda77a453343d89d5fe50706d58326/compose-production-release.mjs",
+    "bytes": 4603,
+    "sha256": "46c28e34ca54c7e58ad8144e34b07c178adaef934aa3def4ec17613d6f216558",
+    "executedByReviewer": false,
+    "newCiShaAvailableToReviewer": false
+  },
+  "patchChecks": {
+    "retentionOnlyEligibleVerifiedArchives": true,
+    "unmappedArchiveLastCurrentAtPreserved": true,
+    "assetSourcesAlgorithmUnchanged": true,
+    "unknownHistoricalCoverageNotResolvedByRetention": true,
+    "extraCurrentArchiveGuardAdded": true,
+    "verifyReleaseFileInventoryDigestServerContractAndNamespaceUnchanged": true,
+    "ttlChecksAndBudgetsPreserved": {
+      "retentionDays": "1-90",
+      "singleCompressedAssetBytes": 20971520,
+      "totalAssetAndServerBytes": 268435456,
+      "combinedRawSourceBytes": 536870912
+    },
+    "historicalAdmissionUnchanged": {
+      "externalManifestPin": true,
+      "threeTargetV2Contract": true,
+      "sourceArchiveVerifiedAgainstOriginal": true,
+      "originalCurrentHashedAssetsOnly": true,
+      "sameCandidateBytesAndNonzeroMatchRequired": true
+    }
+  },
+  "testReview": [
+    {
+      "name": "same-browser releases retain each previous source archive without inventing asset mappings",
+      "covers": [
+        "byte-identical browser asset with distinct archives",
+        "retained original descriptor/age/raw bytes",
+        "current mapping only new current archive",
+        "verified artifact rollback ignores changed working source"
+      ]
+    },
+    {
+      "name": "source archives remain downloadable through their exact cutoff without renewing their age",
+      "covers": [
+        "exact cutoff eligible",
+        "plus 1ms expiration",
+        "descriptor and asset removal",
+        "age does not renew across packaging"
+      ]
+    },
+    {
+      "name": "a previous source archive with no hashed assets is retained independently of coverage",
+      "covers": [
+        "source download independent of hash mapping",
+        "original compressed bytes",
+        "retained archive promoted to extra current rejected"
+      ]
+    },
+    {
+      "name": "independently retained source archives do not resolve an unknown legacy asset",
+      "covers": [
+        "legacy unknown mapping remains empty/unresolved",
+        "coverageComplete remains false despite known unreferenced retained archives"
+      ]
+    }
+  ],
+  "compositionDesignChecks": {
+    "inputsVerifyReleaseBeforeAndAfter": true,
+    "bridge": {
+      "currentRelease": "3847955ccdb4c670f0f9aa099ef976889357e6b2",
+      "previous": "bdc1bfcf15d93a9b2769d3f52352bfa39eab8928"
+    },
+    "activation": {
+      "currentRelease": "new CI frozen artifact SHA",
+      "previous": "verified bridge"
+    },
+    "currentReleaseBranchesAvoidRootDistAndDistServerContent": true,
+    "sourceArchiveNotRebuiltFromUnbuiltRootInputs": true,
+    "currentBuildContractExactlyNewCi": true,
+    "serverInventoryExactlyNewCi": true,
+    "currentNonSourceAssetBytesAndDigestEqualNewCi": true,
+    "eligiblePublishedResourcePresenceAndDigestAsserted": true,
+    "inputManifestAndAllInventoryReverifiedAfterComposition": true,
+    "allThreeCurrentSourceArchivesMustBePresent": true,
+    "coverageEqualsNewCiBase": true
+  },
+  "validation": {
+    "scopedGitDiffCheckActualExit": 0,
+    "stdout": "",
+    "stderr": "",
+    "testsRunByReviewer": false,
+    "buildRunByReviewer": false,
+    "compositionRunByReviewer": false,
+    "workflowTriggered": false,
+    "gitMutated": false,
+    "deployPerformed": false
+  },
+  "limits": [
+    "Static patch and design review only; no actual new CI artifact was available or composed in this review.",
+    "No production endpoint, authenticated flow, full original migration gate, or production rollback acceptance claimed."
+  ]
+}

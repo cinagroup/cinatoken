@@ -1,0 +1,153 @@
+{
+  "schema": "cinatoken-independent-web-browser-execution-v3",
+  "label": "retention-c13a64b9-v3",
+  "startedAt": "2026-10-05T13:58:00.825Z",
+  "processExecutable": "C:\\Program Files\\nodejs\\node.exe",
+  "inputScripts": [
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-independent-web-browser-v3-56686244d1194d108aad8107f6374be2\\execute-web-browser-observe-v3.mjs",
+      "bytes": 4436,
+      "sha256": "f43341b099a5c8bcba8e3dfd625b3e1a24de7467ad03370b25a14a08a5d736e4"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-independent-web-browser-v3-56686244d1194d108aad8107f6374be2\\production-web-browser-observe-v3.mjs",
+      "bytes": 25585,
+      "sha256": "5fe013bb9c8cd533aa144b4c3820b11008359370dfef44b1b4a4f922781ffa34"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-independent-web-browser-v3-56686244d1194d108aad8107f6374be2\\web-route-matrix.mjs",
+      "bytes": 1770,
+      "sha256": "c8a3211d07979c037022f689aa442bd95de9b7c11843fb52b9ae9fa93ac01e61"
+    }
+  ],
+  "configRaw": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-retention-40bda77a453343d89d5fe50706d58326\\retention-c13.browser-config.json",
+    "bytes": 557,
+    "sha256": "18b4f42e1c98cfc746eb65ab738e31b8a438ae62bb899e726d4b96bae166185b"
+  },
+  "expectedGitSHA": "c13a64b9c3b2c90adcf736910ea408868d7854f1",
+  "expectedWorkerVersionId": "2a0a2777-d3b1-47f0-a0a7-88e701b4d2d9",
+  "phase": "cutover",
+  "targetOrigin": "https://cinatoken.com",
+  "commandArguments": [
+    "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-independent-web-browser-v3-56686244d1194d108aad8107f6374be2\\production-web-browser-observe-v3.mjs",
+    "retention-c13a64b9-v3",
+    "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-retention-40bda77a453343d89d5fe50706d58326\\retention-c13.browser-config.json"
+  ],
+  "sourceWrites": 0,
+  "deployments": 0,
+  "databaseWrites": 0,
+  "timedOut": false,
+  "scheduling": "Four anonymous contexts in parallel; HTTP route cache remains disabled; separate v3 result",
+  "deadlineMs": 420000,
+  "exit": {
+    "code": 1,
+    "signal": null
+  },
+  "actualExit": 1,
+  "finishedAt": "2026-10-05T14:02:19.946Z",
+  "stdout": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-independent-web-browser-v3-56686244d1194d108aad8107f6374be2\\retention-c13a64b9-v3-stdout.log",
+    "bytes": 8462,
+    "sha256": "8e5331e67d0227594d86590beebf897f11ea6df9a0a16ce3307be1d6a515ea0f"
+  },
+  "stderr": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-independent-web-browser-v3-56686244d1194d108aad8107f6374be2\\retention-c13a64b9-v3-stderr.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "browserResult": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-independent-web-browser-v3-56686244d1194d108aad8107f6374be2\\retention-c13a64b9-v3.json",
+    "bytes": 258217,
+    "sha256": "3c0e86227908a771ae8463bd7de714664f444e8f6a474c98ad7eb77c93febb2f"
+  },
+  "browserActualExit": 1,
+  "outcome": "FAILED",
+  "browserClosed": true,
+  "contextClosed": true,
+  "screenshots": [
+    {
+      "name": "admin-a-1",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-independent-web-browser-v3-56686244d1194d108aad8107f6374be2\\retention-c13a64b9-v3-admin-a-1.png",
+      "bytes": 25449,
+      "sha256": "3903b8a1ace00a01f66aa85758c1fdd71fd081e2d3b8b76c1967475ed3cf94f2"
+    },
+    {
+      "name": "public-1",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-independent-web-browser-v3-56686244d1194d108aad8107f6374be2\\retention-c13a64b9-v3-public-1.png",
+      "bytes": 54114,
+      "sha256": "3c3002c14200c075db9cb4077fc6926e1543c1dbc907150ee4981237dd71fbe6"
+    },
+    {
+      "name": "account-1",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-independent-web-browser-v3-56686244d1194d108aad8107f6374be2\\retention-c13a64b9-v3-account-1.png",
+      "bytes": 23753,
+      "sha256": "a99bb9d22fd16eaebd41e31ccceef6363f27760a9d6c0d6e3e6be1c6f5c4b8fb"
+    },
+    {
+      "name": "admin-b-1",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-independent-web-browser-v3-56686244d1194d108aad8107f6374be2\\retention-c13a64b9-v3-admin-b-1.png",
+      "bytes": 25449,
+      "sha256": "3903b8a1ace00a01f66aa85758c1fdd71fd081e2d3b8b76c1967475ed3cf94f2"
+    },
+    {
+      "name": "public-2",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-independent-web-browser-v3-56686244d1194d108aad8107f6374be2\\retention-c13a64b9-v3-public-2.png",
+      "bytes": 43315,
+      "sha256": "36f44da96422631f4d7bbb68395840ae4c3e2784d4375cbedc6c62be1094bcdf"
+    },
+    {
+      "name": "desktop-dark",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-independent-web-browser-v3-56686244d1194d108aad8107f6374be2\\retention-c13a64b9-v3-desktop-dark.png",
+      "bytes": 55028,
+      "sha256": "0ec81d2dfcfcd8b5b473ce3dc99cdc4691e4221032efe8d179803149719665f3"
+    },
+    {
+      "name": "admin-b-failure",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-independent-web-browser-v3-56686244d1194d108aad8107f6374be2\\retention-c13a64b9-v3-admin-b-failure.png",
+      "bytes": 25449,
+      "sha256": "3903b8a1ace00a01f66aa85758c1fdd71fd081e2d3b8b76c1967475ed3cf94f2"
+    },
+    {
+      "name": "mobile-zh-dark",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-independent-web-browser-v3-56686244d1194d108aad8107f6374be2\\retention-c13a64b9-v3-mobile-zh-dark.png",
+      "bytes": 32357,
+      "sha256": "99d1b467918686bc194528cedcaea3af125bba176eda06fd803b050ab12c7ea6"
+    },
+    {
+      "name": "account-failure",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-independent-web-browser-v3-56686244d1194d108aad8107f6374be2\\retention-c13a64b9-v3-account-failure.png",
+      "bytes": 23753,
+      "sha256": "a99bb9d22fd16eaebd41e31ccceef6363f27760a9d6c0d6e3e6be1c6f5c4b8fb"
+    }
+  ],
+  "shards": [
+    {
+      "name": "public",
+      "status": "fulfilled",
+      "pages": 8,
+      "contextClosed": true
+    },
+    {
+      "name": "account",
+      "status": "rejected",
+      "pages": 6,
+      "contextClosed": true
+    },
+    {
+      "name": "admin-a",
+      "status": "fulfilled",
+      "pages": 14,
+      "contextClosed": true
+    },
+    {
+      "name": "admin-b",
+      "status": "rejected",
+      "pages": 3,
+      "contextClosed": true
+    }
+  ],
+  "pages": 31,
+  "consoleClassificationExecuted": true,
+  "inputRawStillSame": true
+}

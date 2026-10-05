@@ -1,0 +1,117 @@
+{
+  "schema": "final-preparation-not-executed-browser-v3",
+  "at": "2026-10-05T13:50:11.325Z",
+  "destination": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-independent-web-browser-v3-56686244d1194d108aad8107f6374be2",
+  "initialPreReviewReceipt": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-independent-web-browser-v3-56686244d1194d108aad8107f6374be2\\preparation.receipt.json",
+    "bytes": 2901,
+    "sha256": "01e3afc44d162dbe1edd23be97ed79db90136f9f9d32f248d4c5a0cde06e15f5"
+  },
+  "initialDrafts": [
+    {
+      "name": "initial-observer.review-draft.mjs",
+      "reconstruction": "Exact initial review draft reconstructed by reversing the review patch; verified against the original immutable preparation receipt.",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-independent-web-browser-v3-56686244d1194d108aad8107f6374be2\\initial-observer.review-draft.mjs",
+      "bytes": 24157,
+      "sha256": "23852591d1290c946d1d1b8236719517e9d3d20efadeb1358b970b94c16687da"
+    },
+    {
+      "name": "initial-executor.review-draft.mjs",
+      "reconstruction": "Exact initial review draft reconstructed by reversing the review patch; verified against the original immutable preparation receipt.",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-independent-web-browser-v3-56686244d1194d108aad8107f6374be2\\initial-executor.review-draft.mjs",
+      "bytes": 4053,
+      "sha256": "8c010cbef62d77cad2e40ad7a08c60cc5c331ede0b2dbd7263d3f453ad0f5e7a"
+    }
+  ],
+  "originalV2StillExact": [
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-independent-web-browser-696cc8df85ea423aa0d2545df155d197\\production-web-browser-observe-v2.mjs",
+      "bytes": 15695,
+      "sha256": "415d123bbc71cfdb5d8ed02bf91f01d9021031358667cd7aaf2f0fd6edcd55be"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-independent-web-browser-696cc8df85ea423aa0d2545df155d197\\execute-web-browser-observe-v2.mjs",
+      "bytes": 3432,
+      "sha256": "ffd074ec8b52d5ce7c9dbd8a9dace29ec29130b661e0290e72f1f2d2d0424ed8"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-independent-web-browser-696cc8df85ea423aa0d2545df155d197\\web-route-matrix.mjs",
+      "bytes": 1770,
+      "sha256": "c8a3211d07979c037022f689aa442bd95de9b7c11843fb52b9ae9fa93ac01e61"
+    }
+  ],
+  "finalArtifacts": [
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-independent-web-browser-v3-56686244d1194d108aad8107f6374be2\\production-web-browser-observe-v3.mjs",
+      "bytes": 25585,
+      "sha256": "5fe013bb9c8cd533aa144b4c3820b11008359370dfef44b1b4a4f922781ffa34"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-independent-web-browser-v3-56686244d1194d108aad8107f6374be2\\execute-web-browser-observe-v3.mjs",
+      "bytes": 4436,
+      "sha256": "f43341b099a5c8bcba8e3dfd625b3e1a24de7467ad03370b25a14a08a5d736e4"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-independent-web-browser-v3-56686244d1194d108aad8107f6374be2\\web-route-matrix.mjs",
+      "bytes": 1770,
+      "sha256": "c8a3211d07979c037022f689aa442bd95de9b7c11843fb52b9ae9fa93ac01e61"
+    }
+  ],
+  "syntaxChecks": [
+    {
+      "result": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-ci-inventory-d7b57ac3c0804fc0a7fbddb860e5bc8e\\browser-v3-syntax-final-observer.result.json",
+        "bytes": 738,
+        "sha256": "5cbad4572162883b63ac20668eb619feff71b607dfc73c46c4430591ee0d785f"
+      },
+      "stdout": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-ci-inventory-d7b57ac3c0804fc0a7fbddb860e5bc8e\\browser-v3-syntax-final-observer.stdout.txt",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stderr": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-ci-inventory-d7b57ac3c0804fc0a7fbddb860e5bc8e\\browser-v3-syntax-final-observer.stderr.txt",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "actualExitCode": 0,
+      "signal": null
+    },
+    {
+      "result": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-ci-inventory-d7b57ac3c0804fc0a7fbddb860e5bc8e\\browser-v3-syntax-final-executor.result.json",
+        "bytes": 735,
+        "sha256": "e579f5586d5335a99fb46a11740144fdc4e41dd8fbe2f70fb067016db6c0f17b"
+      },
+      "stdout": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-ci-inventory-d7b57ac3c0804fc0a7fbddb860e5bc8e\\browser-v3-syntax-final-executor.stdout.txt",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stderr": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-ci-inventory-d7b57ac3c0804fc0a7fbddb860e5bc8e\\browser-v3-syntax-final-executor.stderr.txt",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "actualExitCode": 0,
+      "signal": null
+    }
+  ],
+  "networkExecutions": 0,
+  "repositorySourceWrites": 0,
+  "deployments": 0,
+  "awaitingIndependentReview": true,
+  "reviewChanges": [
+    "Adds exact route/kind/status tuple comparison against original matrix.",
+    "Correlates exactly one precise anonymous 401 to each of 37 private routes, by same shard plus originating page origin/path; total remains exactly 37.",
+    "After all four groups converge, closes each context and browser, drains remaining observers, then always classifies and aggregates all shards, including failure attempts.",
+    "Pins all three original v2 sources before browser creation and after closure; executor additionally verifies its own input/config byte hashes after process close."
+  ],
+  "retainedConditions": [
+    "Four independent anonymous contexts run 8/10/14/13 direct routes concurrently; public shard also performs the original three interactions.",
+    "Original rendering/navigation/metadata/security/runtime assertions and 390/420 second budgets remain.",
+    "Adds exact 45 route set, explicit 37 exact anonymous 401/one exact 404, individual context closure, per-shard console matching and always-run final classification.",
+    "Retains default serviceWorkers; absence is asserted and unexpected serviceWorker triggers strict failure and browser shutdown.",
+    "No CDP cache restoration or new console exemptions. Routing keeps HTTP cache disabled."
+  ]
+}

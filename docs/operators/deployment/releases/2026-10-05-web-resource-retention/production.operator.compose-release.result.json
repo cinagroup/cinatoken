@@ -1,0 +1,15 @@
+{
+  "at": "2026-10-05T13:01:28.368Z",
+  "finishedAt": "2026-10-05T13:01:41.662Z",
+  "executable": "C:/Program Files/nodejs/node.exe",
+  "args": [
+    "C:/Users/cina/AppData/Local/Temp/cinatoken-web-retention-40bda77a453343d89d5fe50706d58326/compose-production-release.mjs",
+    "c13a64b9c3b2c90adcf736910ea408868d7854f1",
+    "composed"
+  ],
+  "cwd": "C:/cinagroup/cinatoken",
+  "actualExit": 0,
+  "signal": null,
+  "stdout": "C:/Users/cina/AppData/Local/Temp/cinatoken-web-retention-40bda77a453343d89d5fe50706d58326/compose-release.stdout.log",
+  "stderr": "C:/Users/cina/AppData/Local/Temp/cinatoken-web-retention-40bda77a453343d89d5fe50706d58326/compose-release.stderr.log"
+}

@@ -1,0 +1,41 @@
+{
+  "at": "2026-10-05T13:02:45.011Z",
+  "actualExit": 0,
+  "readOnly": true,
+  "secretValuesRecorded": false,
+  "routes": [
+    {
+      "id": "5738534653ef46f48a44e3f3b22e5d8e",
+      "pattern": "cinatoken.com/*",
+      "script": "cinatoken-web",
+      "request_limit_fail_open": false
+    },
+    {
+      "id": "2712df1859d340ffb6d68a7e53eb1853",
+      "pattern": "cinatoken.com/web-assets/*",
+      "script": "cinatoken-web",
+      "request_limit_fail_open": false
+    },
+    {
+      "id": "242dce09c515462e833d69bd0738bdfc",
+      "pattern": "api.cinatoken.com/*",
+      "script": "cinatoken-proxy",
+      "request_limit_fail_open": false
+    }
+  ],
+  "deployment": {
+    "id": "272ccc45-d161-468f-b589-498046e1759c",
+    "versions": [
+      {
+        "version_id": "dbe1800e-cd09-4f47-ba5e-b2a256898ae4",
+        "percentage": 100
+      }
+    ],
+    "commitTag": "3847955ccdb4c670f0f9aa099ef976889357e6b2"
+  },
+  "access": {
+    "enabled": false,
+    "previews_enabled": false
+  },
+  "finishedAt": "2026-10-05T13:02:52.311Z"
+}

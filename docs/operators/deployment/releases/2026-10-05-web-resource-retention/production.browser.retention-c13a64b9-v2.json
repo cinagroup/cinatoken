@@ -1,0 +1,1349 @@
+{
+  "schema": "cinatoken-independent-web-real-browser-v2",
+  "startedAt": "2026-10-05T13:08:04.521Z",
+  "label": "retention-c13a64b9-v2",
+  "config": {
+    "gitSHA": "c13a64b9c3b2c90adcf736910ea408868d7854f1",
+    "workerVersionId": "2a0a2777-d3b1-47f0-a0a7-88e701b4d2d9",
+    "phase": "cutover",
+    "targetOrigin": "https://cinatoken.com",
+    "canonicalOrigin": "https://cinatoken.com",
+    "operatorVerifiedLiveVersion": true,
+    "all29FlagsEnabled": true,
+    "liveProof": {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-retention-40bda77a453343d89d5fe50706d58326/deployed.live-proof.json",
+      "bytes": 6014,
+      "sha256": "07a3a340bf77dbbf4b38f0fad029d6aa6efa6aa7f485dda7f65d139a2bb45ceb"
+    }
+  },
+  "configRaw": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-retention-40bda77a453343d89d5fe50706d58326\\retention-c13.browser-config.json",
+    "bytes": 557,
+    "sha256": "18b4f42e1c98cfc746eb65ab738e31b8a438ae62bb899e726d4b96bae166185b"
+  },
+  "inputScripts": [
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-independent-web-browser-696cc8df85ea423aa0d2545df155d197\\production-web-browser-observe-v2.mjs",
+      "bytes": 15695,
+      "sha256": "415d123bbc71cfdb5d8ed02bf91f01d9021031358667cd7aaf2f0fd6edcd55be"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-independent-web-browser-696cc8df85ea423aa0d2545df155d197\\web-route-matrix.mjs",
+      "bytes": 1770,
+      "sha256": "c8a3211d07979c037022f689aa442bd95de9b7c11843fb52b9ae9fa93ac01e61"
+    }
+  ],
+  "scope": "Real independent Web public SSR/hydration and 37 anonymous private route gates; desktop/theme/locale/mobile",
+  "browserPlugin": "absent",
+  "fallbackReason": "Browser plugin not available; existing bundled Playwright and cached Chromium",
+  "realLogin": false,
+  "financialWrites": false,
+  "businessWrites": false,
+  "previewOriginLimit": null,
+  "pages": [
+    {
+      "route": "/en",
+      "kind": "public",
+      "http": 200,
+      "finalURL": "https://cinatoken.com/en",
+      "title": "CinaToken — Unified AI gateway",
+      "state": {
+        "url": "https://cinatoken.com/en",
+        "lang": "en",
+        "className": "light",
+        "dark": false,
+        "hydrationFailure": false,
+        "themeCookie": null,
+        "localeCookie": null,
+        "width": 1440,
+        "documentWidth": 1440
+      },
+      "bootstrap": {
+        "version": 1,
+        "status": 200,
+        "pathname": "/en",
+        "search": "",
+        "locale": "en"
+      },
+      "metadata": {
+        "canonical": [
+          "https://cinatoken.com/en"
+        ],
+        "ogURL": "https://cinatoken.com/en",
+        "robots": "index, follow"
+      },
+      "nonblank": true,
+      "mainText": "CINATOKEN GATEWAY\n\nBring your AI resources together.\n\nOne gateway for models, tools and your own providers. Manage access, budgets and usage from your workspace.\n\nOpen your account\nBrowse models\nOpen console\nView docs\nModel catalog\nModel providers\nCompare models\nModel rankings\nGateway benchmarks\nChat\nFeatures\nArchitecture\nDeployment\nChat\nResponses\nImages\nTools\n\nPOST https://api.cinatoken.com/v1/chat/completions\n\nREQUEST\n{\n  \"model\": \"your-model\",\n  \"messages\": [\n    {\n      \"role\": \"user\",\n      \"content\": \"Say hello.\"\n    }\n  ]\n}\nRESPONSE\n{\n  \"object\": \"chat.completion\",\n  \"choices\": [\n    {\n      \"message\": {\n        \"content\": \"...\"\n      }\n    }\n  ]\n}\n\nIllustrative examples only. No request is sent.\n\nConnect your resources\nBring model providers and agent tools into a shared gateway with a consistent API.\nControl access and budgets\nKeep keys, workspace permissions and usage budgets connected to your account.\nUnderstand your usage\nFollow real requests, routing decisions and accounting records from one place.\nAn AI capability gateway built for builders\n\nFlexible access, intelligent routing, controlled cost, and end-to-end observability.\n\n/v1/chat/completions\n/v1/responses\n/v1/images/*\n/v1/audio/*\n/v1/tools/*\nUnified protocols\n\nUse one Gateway Base URL for model inference, media capabilities, and agent tools.\n\nChat · Responses · Images · Audio · Tools\n\nIntelligent routing\n\nSend each request surface into a route pool and fail over safely across upstream targets.\n\nPriority · Weight · Failover · Sticky routing\n\nBudgets and keys\n\nIssue separate keys to real consumers and control cost with periodic budgets and actual usage.\n\nUsers · API keys · Periodic budgets · Three ledgers\n\nLogs and analytics\n\nRecord request paths and budget events, then inspect usage, cost, and quality f",
+      "body": "Skip to content\nC\nCinaToken\nModels\nAccount\nLanguage\nEnglish\n简体中文\n日本語\n한국어\nAppearance\nSystem\nLight\nDark\nSign in with CinaAuth\n\nCINATOKEN GATEWAY\n\nBring your AI resources together.\n\nOne gateway for models, tools and your own providers. Manage access, budgets and usage from your workspace.\n\nOpen your account\nBrowse models\nOpen console\nView docs\nModel catalog\nModel providers\nCompare models\nModel rankings\nGateway benchmarks\nChat\nFeatures\nArchitecture\nDeployment\nChat\nResponses\nImages\nTools\n\nPOST https://api.cinatoken.com/v1/chat/completions\n\nREQUEST\n{\n  \"model\": \"your-model\",\n  \"messages\": [\n    {\n      \"role\": \"user\",\n      \"content\": \"Say hello.\"\n    }\n  ]\n}\nRESPONSE\n{\n  \"object\": \"chat.completion\",\n  \"choices\": [\n    {\n      \"message\": {\n        \"content\": \"...\"\n      }\n    }\n  ]\n}\n\nIllustrative examples only. No request is sent.\n\nConnect your resources\nBring model providers and agent tools into a shared gateway with a consistent API.\nControl access and budgets\nKeep keys, workspace permissions and usage budgets connected to your account.\nUnderstand your usage\nFollow real requests, routing decisions and accounting records from one place.\nAn AI capability gateway built for builders\n\nFlexible access, intelligent routing, controlled cost, and end-to-end observability.\n\n/v1/chat/completions\n/v1/responses\n/v1/images/*\n/v1/audio/*\n/v1/tools/*\nUnified protocols\n\nUse one Gateway Base URL for model inference, media capabilities, and agent tools.\n\nChat · Responses · Images · Audio · Tools\n\nIntelligent routing\n\nSend each request surface into a route pool and fail over safely across upstream targets.\n\nPriority · Weight · Failover · Sticky routing\n\nBudgets and keys\n\nIssue separate keys to real consumers and control cost with periodic budgets and actual usage.\n\nUsers · API keys · Periodic budgets · Three ledgers\n\nLogs and analytics\n\nRecord request paths and budget events, then inspect usage, cost, and quality from multiple dimensions.\n\nRequest logs · Audit logs · Model/provider/user analytics\n\nFrom provider to reliable traffic in four steps\n1\nConnect providers\n\nConfigure upstream endpoints and credentials\n\n2\nPublish models and routes\n\nDefine protocol surfaces, route pools, and failover\n\n3\nIssue user keys\n\nAssign API keys and budgets by user, project, or customer\n\n4\nObserve every call\n\nContinuously improve with logs, audits, and analytics\n\nRun on your infrastructure\nCloudflare Workers + D1\n\nDeploy the proxy and admin console on Cloudflare with Workers and D1.\n\nView deployment docs\nDocker + Postgres / MySQL\n\nSelf-host with Postgres or MySQL and keep control of the data plane and runtime.\n\nView deployment docs\nReady to unify your AI capabilities?\n\nStart with one endpoint, then add models, media capabilities, and agent tools as you grow.\n\nOpen console\nView deployment docs\n\nCinaToken\n\nAI capability gateway and operations control plane\n\nGitHub\nDocs\n\n© 2026 CinaGroup\n\nFrontend design and development by New API contributors. Original project Frontend source",
+      "frameworkOverlay": false,
+      "screenshot": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-independent-web-browser-696cc8df85ea423aa0d2545df155d197\\retention-c13a64b9-v2-public-1.png",
+        "bytes": 54114,
+        "sha256": "3c3002c14200c075db9cb4077fc6926e1543c1dbc907150ee4981237dd71fbe6"
+      }
+    },
+    {
+      "route": "/en/models",
+      "kind": "public",
+      "http": 200,
+      "finalURL": "https://cinatoken.com/en/models",
+      "title": "Model catalog — CinaToken",
+      "state": {
+        "url": "https://cinatoken.com/en/models",
+        "lang": "en",
+        "className": "light",
+        "dark": false,
+        "hydrationFailure": false,
+        "themeCookie": null,
+        "localeCookie": null,
+        "width": 1440,
+        "documentWidth": 1440
+      },
+      "bootstrap": {
+        "version": 1,
+        "status": 200,
+        "pathname": "/en/models",
+        "search": "",
+        "locale": "en"
+      },
+      "metadata": {
+        "canonical": [
+          "https://cinatoken.com/en/models"
+        ],
+        "ogURL": "https://cinatoken.com/en/models",
+        "robots": "index, follow"
+      },
+      "nonblank": true,
+      "mainText": "Model catalog\nModel providers\nCompare models\nModel rankings\nGateway benchmarks\nModel catalog\n\nExplore models published on the gateway, with verified protocols and catalog prices.\n\nRefresh\nFilters\nClear filters\nProvider\nInput\nOutput\nProtocols\nSearch\nContext window\nAny context size\nAt least 128k tokens\nAt least 1M tokens\nSort by\nNewest\nContext size\nPrice within each unit\nName\nCards\nCards\nTable\n\n0 results\n\nGenerated 2026-10-05T13:08:33.085Z\n\nNo published models are available.\n\nPage 1 of 1\nPrevious\nNext\n\nPrices are in USD. Token rates are per million tokens; route pricing may change the final charge.",
+      "body": "Skip to content\nC\nCinaToken\nModels\nAccount\nLanguage\nEnglish\n简体中文\n日本語\n한국어\nAppearance\nSystem\nLight\nDark\nSign in with CinaAuth\nModel catalog\nModel providers\nCompare models\nModel rankings\nGateway benchmarks\nModel catalog\n\nExplore models published on the gateway, with verified protocols and catalog prices.\n\nRefresh\nFilters\nClear filters\nProvider\nInput\nOutput\nProtocols\nSearch\nContext window\nAny context size\nAt least 128k tokens\nAt least 1M tokens\nSort by\nNewest\nContext size\nPrice within each unit\nName\nCards\nCards\nTable\n\n0 results\n\nGenerated 2026-10-05T13:08:33.085Z\n\nNo published models are available.\n\nPage 1 of 1\nPrevious\nNext\n\nPrices are in USD. Token rates are per million tokens; route pricing may change the final charge.\n\nCinaToken · Your AI resource gateway\nFrontend design and development by New API contributors. New API Frontend source",
+      "frameworkOverlay": false,
+      "screenshot": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-independent-web-browser-696cc8df85ea423aa0d2545df155d197\\retention-c13a64b9-v2-public-2.png",
+        "bytes": 43225,
+        "sha256": "f49bd3265c40e99f24e224d752a9c49f79b9702bd52a9fdfa51b0a51ebe49207"
+      }
+    },
+    {
+      "route": "/en/providers",
+      "kind": "public",
+      "http": 200,
+      "finalURL": "https://cinatoken.com/en/providers",
+      "title": "Model providers — CinaToken",
+      "state": {
+        "url": "https://cinatoken.com/en/providers",
+        "lang": "en",
+        "className": "light",
+        "dark": false,
+        "hydrationFailure": false,
+        "themeCookie": null,
+        "localeCookie": null,
+        "width": 1440,
+        "documentWidth": 1440
+      },
+      "bootstrap": {
+        "version": 1,
+        "status": 200,
+        "pathname": "/en/providers",
+        "search": "",
+        "locale": "en"
+      },
+      "metadata": {
+        "canonical": [
+          "https://cinatoken.com/en/providers"
+        ],
+        "ogURL": "https://cinatoken.com/en/providers",
+        "robots": "index, follow"
+      },
+      "nonblank": true,
+      "mainText": "Model catalog\nModel providers\nCompare models\nModel rankings\nGateway benchmarks\nModel providers\n\nCapability summaries grouped by model author. These are not upstream connection records.\n\nRefresh\nFilters\nClear filters\nProtocols\nInput\nOutput\nSearch\nSort by\nModel count\nNewest\nName\n\n0 results\n\nGenerated 2026-10-05T13:09:01.092Z\n\nNo published models are available.\n\nPage 1 of 1\nPrevious\nNext",
+      "body": "Skip to content\nC\nCinaToken\nModels\nAccount\nLanguage\nEnglish\n简体中文\n日本語\n한국어\nAppearance\nSystem\nLight\nDark\nSign in with CinaAuth\nModel catalog\nModel providers\nCompare models\nModel rankings\nGateway benchmarks\nModel providers\n\nCapability summaries grouped by model author. These are not upstream connection records.\n\nRefresh\nFilters\nClear filters\nProtocols\nInput\nOutput\nSearch\nSort by\nModel count\nNewest\nName\n\n0 results\n\nGenerated 2026-10-05T13:09:01.092Z\n\nNo published models are available.\n\nPage 1 of 1\nPrevious\nNext\nCinaToken · Your AI resource gateway\nFrontend design and development by New API contributors. New API Frontend source",
+      "frameworkOverlay": false
+    },
+    {
+      "route": "/en/compare",
+      "kind": "public",
+      "http": 200,
+      "finalURL": "https://cinatoken.com/en/compare",
+      "title": "Compare models — CinaToken",
+      "state": {
+        "url": "https://cinatoken.com/en/compare",
+        "lang": "en",
+        "className": "light",
+        "dark": false,
+        "hydrationFailure": false,
+        "themeCookie": null,
+        "localeCookie": null,
+        "width": 1440,
+        "documentWidth": 1440
+      },
+      "bootstrap": {
+        "version": 1,
+        "status": 200,
+        "pathname": "/en/compare",
+        "search": "",
+        "locale": "en"
+      },
+      "metadata": {
+        "canonical": [
+          "https://cinatoken.com/en/compare"
+        ],
+        "ogURL": "https://cinatoken.com/en/compare",
+        "robots": "index, follow"
+      },
+      "nonblank": true,
+      "mainText": "Model catalog\nModel providers\nCompare models\nModel rankings\nGateway benchmarks\nCompare models\n\nCompare up to four published models using the same catalog snapshot.\n\nRefresh\nSearch\nSelect a model\nSelect a model\nAdd model\n\nSelect up to four models.\n\nNo published models are available.\n\nZDR availability applies to eligible routes, not every request. Provider location is not a data-residency guarantee.\n\nGenerated 2026-10-05T13:09:24.704Z",
+      "body": "Skip to content\nC\nCinaToken\nModels\nAccount\nLanguage\nEnglish\n简体中文\n日本語\n한국어\nAppearance\nSystem\nLight\nDark\nSign in with CinaAuth\nModel catalog\nModel providers\nCompare models\nModel rankings\nGateway benchmarks\nCompare models\n\nCompare up to four published models using the same catalog snapshot.\n\nRefresh\nSearch\nSelect a model\nSelect a model\nAdd model\n\nSelect up to four models.\n\nNo published models are available.\n\nZDR availability applies to eligible routes, not every request. Provider location is not a data-residency guarantee.\n\nGenerated 2026-10-05T13:09:24.704Z\n\nCinaToken · Your AI resource gateway\nFrontend design and development by New API contributors. New API Frontend source",
+      "frameworkOverlay": false
+    },
+    {
+      "route": "/en/chat",
+      "kind": "public",
+      "http": 200,
+      "finalURL": "https://cinatoken.com/en/chat",
+      "title": "Chat — CinaToken",
+      "state": {
+        "url": "https://cinatoken.com/en/chat",
+        "lang": "en",
+        "className": "light",
+        "dark": false,
+        "hydrationFailure": false,
+        "themeCookie": null,
+        "localeCookie": null,
+        "width": 1440,
+        "documentWidth": 1440
+      },
+      "bootstrap": {
+        "version": 1,
+        "status": 200,
+        "pathname": "/en/chat",
+        "search": "",
+        "locale": "en"
+      },
+      "metadata": {
+        "canonical": [
+          "https://cinatoken.com/en/chat"
+        ],
+        "ogURL": "https://cinatoken.com/en/chat",
+        "robots": "noindex, nofollow"
+      },
+      "nonblank": true,
+      "mainText": "Chat\nNew chat\n\nTest a published model through the OpenAI-compatible gateway.\n\nModel\nModel\nAPI key\n\nKept only in this page memory and forwarded by cinatoken to its API. It is never stored by this interface.\n\nCreate or manage keys\nSave this conversation locally\nOptional. Saves the text transcript and model in this browser only. API keys and image data are never saved.\nClear conversation\nStart a conversation\n\nChoose a model, enter your API key, and send a message. Responses stream from the live gateway.\n\nNo OpenAI-compatible text model is currently published.\n\nChat message\nAttach images\nSend message\n\nModel output can be inaccurate. Review important information.",
+      "body": "Skip to content\nC\nCinaToken\nModels\nAccount\nLanguage\nEnglish\n简体中文\n日本語\n한국어\nAppearance\nSystem\nLight\nDark\nSign in with CinaAuth\nChat\nNew chat\n\nTest a published model through the OpenAI-compatible gateway.\n\nModel\nModel\nAPI key\n\nKept only in this page memory and forwarded by cinatoken to its API. It is never stored by this interface.\n\nCreate or manage keys\nSave this conversation locally\nOptional. Saves the text transcript and model in this browser only. API keys and image data are never saved.\nClear conversation\nStart a conversation\n\nChoose a model, enter your API key, and send a message. Responses stream from the live gateway.\n\nNo OpenAI-compatible text model is currently published.\n\nChat message\nAttach images\nSend message\n\nModel output can be inaccurate. Review important information.\n\nCinaToken · Your AI resource gateway\nFrontend design and development by New API contributors. New API Frontend source",
+      "frameworkOverlay": false
+    },
+    {
+      "route": "/en/rankings",
+      "kind": "public",
+      "http": 200,
+      "finalURL": "https://cinatoken.com/en/rankings",
+      "title": "Model rankings — CinaToken",
+      "state": {
+        "url": "https://cinatoken.com/en/rankings",
+        "lang": "en",
+        "className": "light",
+        "dark": false,
+        "hydrationFailure": false,
+        "themeCookie": null,
+        "localeCookie": null,
+        "width": 1440,
+        "documentWidth": 1440
+      },
+      "bootstrap": {
+        "version": 1,
+        "status": 200,
+        "pathname": "/en/rankings",
+        "search": "",
+        "locale": "en"
+      },
+      "metadata": {
+        "canonical": [
+          "https://cinatoken.com/en/rankings"
+        ],
+        "ogURL": "https://cinatoken.com/en/rankings",
+        "robots": "index, follow"
+      },
+      "nonblank": true,
+      "mainText": "Model catalog\nModel providers\nCompare models\nModel rankings\nGateway benchmarks\nModel rankings\n\nPopularity and reliability observed from privacy-qualified gateway requests.\n\nRefresh\nSearch\nTime range\n7 days\n30 days\n90 days\nSort by\nRequests\nSuccess rate\nAverage latency\nClear filters\n\nOnly models with at least 20 requests in this UTC window are shown.\n\nUTC window: 2026-09-29T00:00:00.000Z – 2026-10-05T13:09:49.402Z\n\nAggregate request metrics include gateway and upstream behavior. Missing latency remains unknown.\n\nNo models meet the public sample threshold for this window.\n\nPage 1 of 1\nPrevious\nNext\n\nGenerated 2026-10-05T13:09:49.402Z",
+      "body": "Skip to content\nC\nCinaToken\nModels\nAccount\nLanguage\nEnglish\n简体中文\n日本語\n한국어\nAppearance\nSystem\nLight\nDark\nSign in with CinaAuth\nModel catalog\nModel providers\nCompare models\nModel rankings\nGateway benchmarks\nModel rankings\n\nPopularity and reliability observed from privacy-qualified gateway requests.\n\nRefresh\nSearch\nTime range\n7 days\n30 days\n90 days\nSort by\nRequests\nSuccess rate\nAverage latency\nClear filters\n\nOnly models with at least 20 requests in this UTC window are shown.\n\nUTC window: 2026-09-29T00:00:00.000Z – 2026-10-05T13:09:49.402Z\n\nAggregate request metrics include gateway and upstream behavior. Missing latency remains unknown.\n\nNo models meet the public sample threshold for this window.\n\nPage 1 of 1\nPrevious\nNext\n\nGenerated 2026-10-05T13:09:49.402Z\n\nCinaToken · Your AI resource gateway\nFrontend design and development by New API contributors. New API Frontend source",
+      "frameworkOverlay": false
+    },
+    {
+      "route": "/en/benchmarks",
+      "kind": "public",
+      "http": 200,
+      "finalURL": "https://cinatoken.com/en/benchmarks",
+      "title": "Gateway benchmarks — CinaToken",
+      "state": {
+        "url": "https://cinatoken.com/en/benchmarks",
+        "lang": "en",
+        "className": "light",
+        "dark": false,
+        "hydrationFailure": false,
+        "themeCookie": null,
+        "localeCookie": null,
+        "width": 1440,
+        "documentWidth": 1440
+      },
+      "bootstrap": {
+        "version": 1,
+        "status": 200,
+        "pathname": "/en/benchmarks",
+        "search": "",
+        "locale": "en"
+      },
+      "metadata": {
+        "canonical": [
+          "https://cinatoken.com/en/benchmarks"
+        ],
+        "ogURL": "https://cinatoken.com/en/benchmarks",
+        "robots": "index, follow"
+      },
+      "nonblank": true,
+      "mainText": "Model catalog\nModel providers\nCompare models\nModel rankings\nGateway benchmarks\nGateway benchmarks\n\nObserved gateway request performance. These metrics do not measure model reasoning ability.\n\nRefresh\nSearch\nTime range\n7 days\n30 days\n90 days\nSort by\nRequests\nSuccess rate\nAverage latency\nClear filters\n\nOnly models with at least 20 requests in this UTC window are shown.\n\nUTC window: 2026-09-29T00:00:00.000Z – 2026-10-05T13:10:05.191Z\n\nAggregate request metrics include gateway and upstream behavior. Missing latency remains unknown.\n\nNo models meet the public sample threshold for this window.\n\nPage 1 of 1\nPrevious\nNext\n\nGenerated 2026-10-05T13:10:05.191Z",
+      "body": "Skip to content\nC\nCinaToken\nModels\nAccount\nLanguage\nEnglish\n简体中文\n日本語\n한국어\nAppearance\nSystem\nLight\nDark\nSign in with CinaAuth\nModel catalog\nModel providers\nCompare models\nModel rankings\nGateway benchmarks\nGateway benchmarks\n\nObserved gateway request performance. These metrics do not measure model reasoning ability.\n\nRefresh\nSearch\nTime range\n7 days\n30 days\n90 days\nSort by\nRequests\nSuccess rate\nAverage latency\nClear filters\n\nOnly models with at least 20 requests in this UTC window are shown.\n\nUTC window: 2026-09-29T00:00:00.000Z – 2026-10-05T13:10:05.191Z\n\nAggregate request metrics include gateway and upstream behavior. Missing latency remains unknown.\n\nNo models meet the public sample threshold for this window.\n\nPage 1 of 1\nPrevious\nNext\n\nGenerated 2026-10-05T13:10:05.191Z\n\nCinaToken · Your AI resource gateway\nFrontend design and development by New API contributors. New API Frontend source",
+      "frameworkOverlay": false
+    },
+    {
+      "route": "/en/models/cinatoken-smoke-missing/no-such-model",
+      "kind": "missing-model",
+      "http": 404,
+      "finalURL": "https://cinatoken.com/en/models/cinatoken-smoke-missing/no-such-model",
+      "title": "This model is not currently published.",
+      "state": {
+        "url": "https://cinatoken.com/en/models/cinatoken-smoke-missing/no-such-model",
+        "lang": "en",
+        "className": "light",
+        "dark": false,
+        "hydrationFailure": false,
+        "themeCookie": null,
+        "localeCookie": null,
+        "width": 1440,
+        "documentWidth": 1440
+      },
+      "bootstrap": {
+        "version": 1,
+        "status": 404,
+        "pathname": "/en/models/cinatoken-smoke-missing/no-such-model",
+        "search": "",
+        "locale": "en"
+      },
+      "metadata": {
+        "canonical": [],
+        "ogURL": null,
+        "robots": "noindex, nofollow"
+      },
+      "nonblank": true,
+      "mainText": "Model catalog\nModel providers\nCompare models\nModel rankings\nGateway benchmarks\nModel catalog\n\nExplore models published on the gateway, with verified protocols and catalog prices.\n\nRefresh\nThis model is not currently published.\nRetry",
+      "body": "Skip to content\nC\nCinaToken\nModels\nAccount\nLanguage\nEnglish\n简体中文\n日本語\n한국어\nAppearance\nSystem\nLight\nDark\nSign in with CinaAuth\nModel catalog\nModel providers\nCompare models\nModel rankings\nGateway benchmarks\nModel catalog\n\nExplore models published on the gateway, with verified protocols and catalog prices.\n\nRefresh\nThis model is not currently published.\nRetry\nCinaToken · Your AI resource gateway\nFrontend design and development by New API contributors. New API Frontend source",
+      "frameworkOverlay": false
+    },
+    {
+      "route": "/account",
+      "kind": "account",
+      "http": 200,
+      "finalURL": "https://cinatoken.com/account",
+      "title": "CinaToken",
+      "state": {
+        "url": "https://cinatoken.com/account",
+        "lang": "en",
+        "className": "light",
+        "dark": false,
+        "hydrationFailure": false,
+        "themeCookie": null,
+        "localeCookie": null,
+        "width": 1440,
+        "documentWidth": 1440
+      },
+      "bootstrap": null,
+      "metadata": null,
+      "nonblank": true,
+      "mainText": "Your account, one secure sign-in\n\nSign in with CinaAuth to manage your workspace and API keys.\n\nSign in with CinaAuth\nCreate an account",
+      "body": "Skip to content\nC\nCinaToken\nModels\nAccount\nLanguage\nEnglish\n简体中文\n日本語\n한국어\nAppearance\nSystem\nLight\nDark\nSign in with CinaAuth\nYour account, one secure sign-in\n\nSign in with CinaAuth to manage your workspace and API keys.\n\nSign in with CinaAuth\nCreate an account\nCinaToken · Your AI resource gateway\nFrontend design and development by New API contributors. New API",
+      "frameworkOverlay": false,
+      "screenshot": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-independent-web-browser-696cc8df85ea423aa0d2545df155d197\\retention-c13a64b9-v2-account-9.png",
+        "bytes": 23753,
+        "sha256": "a99bb9d22fd16eaebd41e31ccceef6363f27760a9d6c0d6e3e6be1c6f5c4b8fb"
+      }
+    },
+    {
+      "route": "/account/keys",
+      "kind": "account",
+      "http": 200,
+      "finalURL": "https://cinatoken.com/account/keys",
+      "title": "CinaToken",
+      "state": {
+        "url": "https://cinatoken.com/account/keys",
+        "lang": "en",
+        "className": "light",
+        "dark": false,
+        "hydrationFailure": false,
+        "themeCookie": null,
+        "localeCookie": null,
+        "width": 1440,
+        "documentWidth": 1440
+      },
+      "bootstrap": null,
+      "metadata": null,
+      "nonblank": true,
+      "mainText": "Your account, one secure sign-in\n\nSign in with CinaAuth to manage your workspace and API keys.\n\nSign in with CinaAuth\nCreate an account",
+      "body": "Skip to content\nC\nCinaToken\nModels\nAccount\nLanguage\nEnglish\n简体中文\n日本語\n한국어\nAppearance\nSystem\nLight\nDark\nSign in with CinaAuth\nYour account, one secure sign-in\n\nSign in with CinaAuth to manage your workspace and API keys.\n\nSign in with CinaAuth\nCreate an account\nCinaToken · Your AI resource gateway\nFrontend design and development by New API contributors. New API",
+      "frameworkOverlay": false
+    },
+    {
+      "route": "/account/byok",
+      "kind": "account",
+      "http": 200,
+      "finalURL": "https://cinatoken.com/account/byok",
+      "title": "CinaToken",
+      "state": {
+        "url": "https://cinatoken.com/account/byok",
+        "lang": "en",
+        "className": "light",
+        "dark": false,
+        "hydrationFailure": false,
+        "themeCookie": null,
+        "localeCookie": null,
+        "width": 1440,
+        "documentWidth": 1440
+      },
+      "bootstrap": null,
+      "metadata": null,
+      "nonblank": true,
+      "mainText": "Your account, one secure sign-in\n\nSign in with CinaAuth to manage your workspace and API keys.\n\nSign in with CinaAuth\nCreate an account",
+      "body": "Skip to content\nC\nCinaToken\nModels\nAccount\nLanguage\nEnglish\n简体中文\n日本語\n한국어\nAppearance\nSystem\nLight\nDark\nSign in with CinaAuth\nYour account, one secure sign-in\n\nSign in with CinaAuth to manage your workspace and API keys.\n\nSign in with CinaAuth\nCreate an account\nCinaToken · Your AI resource gateway\nFrontend design and development by New API contributors. New API",
+      "frameworkOverlay": false
+    },
+    {
+      "route": "/account/activity",
+      "kind": "account",
+      "http": 200,
+      "finalURL": "https://cinatoken.com/account/activity",
+      "title": "CinaToken",
+      "state": {
+        "url": "https://cinatoken.com/account/activity",
+        "lang": "en",
+        "className": "light",
+        "dark": false,
+        "hydrationFailure": false,
+        "themeCookie": null,
+        "localeCookie": null,
+        "width": 1440,
+        "documentWidth": 1440
+      },
+      "bootstrap": null,
+      "metadata": null,
+      "nonblank": true,
+      "mainText": "Your account, one secure sign-in\n\nSign in with CinaAuth to manage your workspace and API keys.\n\nSign in with CinaAuth\nCreate an account",
+      "body": "Skip to content\nC\nCinaToken\nModels\nAccount\nLanguage\nEnglish\n简体中文\n日本語\n한국어\nAppearance\nSystem\nLight\nDark\nSign in with CinaAuth\nYour account, one secure sign-in\n\nSign in with CinaAuth to manage your workspace and API keys.\n\nSign in with CinaAuth\nCreate an account\nCinaToken · Your AI resource gateway\nFrontend design and development by New API contributors. New API",
+      "frameworkOverlay": false
+    },
+    {
+      "route": "/account/earnings",
+      "kind": "account",
+      "http": 200,
+      "finalURL": "https://cinatoken.com/account/earnings",
+      "title": "CinaToken",
+      "state": {
+        "url": "https://cinatoken.com/account/earnings",
+        "lang": "en",
+        "className": "light",
+        "dark": false,
+        "hydrationFailure": false,
+        "themeCookie": null,
+        "localeCookie": null,
+        "width": 1440,
+        "documentWidth": 1440
+      },
+      "bootstrap": null,
+      "metadata": null,
+      "nonblank": true,
+      "mainText": "Your account, one secure sign-in\n\nSign in with CinaAuth to manage your workspace and API keys.\n\nSign in with CinaAuth\nCreate an account",
+      "body": "Skip to content\nC\nCinaToken\nModels\nAccount\nLanguage\nEnglish\n简体中文\n日本語\n한국어\nAppearance\nSystem\nLight\nDark\nSign in with CinaAuth\nYour account, one secure sign-in\n\nSign in with CinaAuth to manage your workspace and API keys.\n\nSign in with CinaAuth\nCreate an account\nCinaToken · Your AI resource gateway\nFrontend design and development by New API contributors. New API",
+      "frameworkOverlay": false
+    },
+    {
+      "route": "/account/nft",
+      "kind": "account",
+      "http": 200,
+      "finalURL": "https://cinatoken.com/account/nft",
+      "title": "CinaToken",
+      "state": {
+        "url": "https://cinatoken.com/account/nft",
+        "lang": "en",
+        "className": "light",
+        "dark": false,
+        "hydrationFailure": false,
+        "themeCookie": null,
+        "localeCookie": null,
+        "width": 1440,
+        "documentWidth": 1440
+      },
+      "bootstrap": null,
+      "metadata": null,
+      "nonblank": true,
+      "mainText": "Your account, one secure sign-in\n\nSign in with CinaAuth to manage your workspace and API keys.\n\nSign in with CinaAuth\nCreate an account",
+      "body": "Skip to content\nC\nCinaToken\nModels\nAccount\nLanguage\nEnglish\n简体中文\n日本語\n한국어\nAppearance\nSystem\nLight\nDark\nSign in with CinaAuth\nYour account, one secure sign-in\n\nSign in with CinaAuth to manage your workspace and API keys.\n\nSign in with CinaAuth\nCreate an account\nCinaToken · Your AI resource gateway\nFrontend design and development by New API contributors. New API",
+      "frameworkOverlay": false
+    },
+    {
+      "route": "/account/withdraw",
+      "kind": "account",
+      "http": 200,
+      "finalURL": "https://cinatoken.com/account/withdraw",
+      "title": "CinaToken",
+      "state": {
+        "url": "https://cinatoken.com/account/withdraw",
+        "lang": "en",
+        "className": "light",
+        "dark": false,
+        "hydrationFailure": false,
+        "themeCookie": null,
+        "localeCookie": null,
+        "width": 1440,
+        "documentWidth": 1440
+      },
+      "bootstrap": null,
+      "metadata": null,
+      "nonblank": true,
+      "mainText": "Your account, one secure sign-in\n\nSign in with CinaAuth to manage your workspace and API keys.\n\nSign in with CinaAuth\nCreate an account",
+      "body": "Skip to content\nC\nCinaToken\nModels\nAccount\nLanguage\nEnglish\n简体中文\n日本語\n한국어\nAppearance\nSystem\nLight\nDark\nSign in with CinaAuth\nYour account, one secure sign-in\n\nSign in with CinaAuth to manage your workspace and API keys.\n\nSign in with CinaAuth\nCreate an account\nCinaToken · Your AI resource gateway\nFrontend design and development by New API contributors. New API",
+      "frameworkOverlay": false
+    },
+    {
+      "route": "/account/presets",
+      "kind": "account",
+      "http": 200,
+      "finalURL": "https://cinatoken.com/account/presets",
+      "title": "CinaToken",
+      "state": {
+        "url": "https://cinatoken.com/account/presets",
+        "lang": "en",
+        "className": "light",
+        "dark": false,
+        "hydrationFailure": false,
+        "themeCookie": null,
+        "localeCookie": null,
+        "width": 1440,
+        "documentWidth": 1440
+      },
+      "bootstrap": null,
+      "metadata": null,
+      "nonblank": true,
+      "mainText": "Your account, one secure sign-in\n\nSign in with CinaAuth to manage your workspace and API keys.\n\nSign in with CinaAuth\nCreate an account",
+      "body": "Skip to content\nC\nCinaToken\nModels\nAccount\nLanguage\nEnglish\n简体中文\n日本語\n한국어\nAppearance\nSystem\nLight\nDark\nSign in with CinaAuth\nYour account, one secure sign-in\n\nSign in with CinaAuth to manage your workspace and API keys.\n\nSign in with CinaAuth\nCreate an account\nCinaToken · Your AI resource gateway\nFrontend design and development by New API contributors. New API",
+      "frameworkOverlay": false
+    },
+    {
+      "route": "/account/guardrails",
+      "kind": "account",
+      "http": 200,
+      "finalURL": "https://cinatoken.com/account/guardrails",
+      "title": "CinaToken",
+      "state": {
+        "url": "https://cinatoken.com/account/guardrails",
+        "lang": "en",
+        "className": "light",
+        "dark": false,
+        "hydrationFailure": false,
+        "themeCookie": null,
+        "localeCookie": null,
+        "width": 1440,
+        "documentWidth": 1440
+      },
+      "bootstrap": null,
+      "metadata": null,
+      "nonblank": true,
+      "mainText": "Your account, one secure sign-in\n\nSign in with CinaAuth to manage your workspace and API keys.\n\nSign in with CinaAuth\nCreate an account",
+      "body": "Skip to content\nC\nCinaToken\nModels\nAccount\nLanguage\nEnglish\n简体中文\n日本語\n한국어\nAppearance\nSystem\nLight\nDark\nSign in with CinaAuth\nYour account, one secure sign-in\n\nSign in with CinaAuth to manage your workspace and API keys.\n\nSign in with CinaAuth\nCreate an account\nCinaToken · Your AI resource gateway\nFrontend design and development by New API contributors. New API",
+      "frameworkOverlay": false
+    },
+    {
+      "route": "/account/settings",
+      "kind": "account",
+      "http": 200,
+      "finalURL": "https://cinatoken.com/account/settings",
+      "title": "CinaToken",
+      "state": {
+        "url": "https://cinatoken.com/account/settings",
+        "lang": "en",
+        "className": "light",
+        "dark": false,
+        "hydrationFailure": false,
+        "themeCookie": null,
+        "localeCookie": null,
+        "width": 1440,
+        "documentWidth": 1440
+      },
+      "bootstrap": null,
+      "metadata": null,
+      "nonblank": true,
+      "mainText": "Your account, one secure sign-in\n\nSign in with CinaAuth to manage your workspace and API keys.\n\nSign in with CinaAuth\nCreate an account",
+      "body": "Skip to content\nC\nCinaToken\nModels\nAccount\nLanguage\nEnglish\n简体中文\n日本語\n한국어\nAppearance\nSystem\nLight\nDark\nSign in with CinaAuth\nYour account, one secure sign-in\n\nSign in with CinaAuth to manage your workspace and API keys.\n\nSign in with CinaAuth\nCreate an account\nCinaToken · Your AI resource gateway\nFrontend design and development by New API contributors. New API",
+      "frameworkOverlay": false
+    },
+    {
+      "route": "/admin",
+      "kind": "admin",
+      "http": 200,
+      "finalURL": "https://cinatoken.com/admin",
+      "title": "CinaToken",
+      "state": {
+        "url": "https://cinatoken.com/admin",
+        "lang": "en",
+        "className": "light",
+        "dark": false,
+        "hydrationFailure": false,
+        "themeCookie": null,
+        "localeCookie": null,
+        "width": 1440,
+        "documentWidth": 1440
+      },
+      "bootstrap": null,
+      "metadata": null,
+      "nonblank": true,
+      "mainText": "Sign in to the console\n\nUse your CinaAuth account with console access to manage the gateway.\n\nSign in with CinaAuth\nOpen your account",
+      "body": "Skip to content\nC\nCinaToken\nModels\nAccount\nLanguage\nEnglish\n简体中文\n日本語\n한국어\nAppearance\nSystem\nLight\nDark\nSign in with CinaAuth\nSign in to the console\n\nUse your CinaAuth account with console access to manage the gateway.\n\nSign in with CinaAuth\nOpen your account\nCinaToken · Your AI resource gateway\nFrontend design and development by New API contributors. New API",
+      "frameworkOverlay": false,
+      "screenshot": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-independent-web-browser-696cc8df85ea423aa0d2545df155d197\\retention-c13a64b9-v2-admin-19.png",
+        "bytes": 25449,
+        "sha256": "3903b8a1ace00a01f66aa85758c1fdd71fd081e2d3b8b76c1967475ed3cf94f2"
+      }
+    },
+    {
+      "route": "/admin/users",
+      "kind": "admin",
+      "http": 200,
+      "finalURL": "https://cinatoken.com/admin/users?page=1&email=&external_system=&external_user_id=&status=all&max_budget=all&sort=created_at&order=desc",
+      "title": "CinaToken",
+      "state": {
+        "url": "https://cinatoken.com/admin/users?page=1&email=&external_system=&external_user_id=&status=all&max_budget=all&sort=created_at&order=desc",
+        "lang": "en",
+        "className": "light",
+        "dark": false,
+        "hydrationFailure": false,
+        "themeCookie": null,
+        "localeCookie": null,
+        "width": 1440,
+        "documentWidth": 1440
+      },
+      "bootstrap": null,
+      "metadata": null,
+      "nonblank": true,
+      "mainText": "Sign in to the console\n\nUse your CinaAuth account with console access to manage the gateway.\n\nSign in with CinaAuth\nOpen your account",
+      "body": "Skip to content\nC\nCinaToken\nModels\nAccount\nLanguage\nEnglish\n简体中文\n日本語\n한국어\nAppearance\nSystem\nLight\nDark\nSign in with CinaAuth\nSign in to the console\n\nUse your CinaAuth account with console access to manage the gateway.\n\nSign in with CinaAuth\nOpen your account\nCinaToken · Your AI resource gateway\nFrontend design and development by New API contributors. New API",
+      "frameworkOverlay": false
+    },
+    {
+      "route": "/admin/users/00000000-0000-4000-8000-000000000000",
+      "kind": "admin",
+      "http": 200,
+      "finalURL": "https://cinatoken.com/admin/users/00000000-0000-4000-8000-000000000000",
+      "title": "CinaToken",
+      "state": {
+        "url": "https://cinatoken.com/admin/users/00000000-0000-4000-8000-000000000000",
+        "lang": "en",
+        "className": "light",
+        "dark": false,
+        "hydrationFailure": false,
+        "themeCookie": null,
+        "localeCookie": null,
+        "width": 1440,
+        "documentWidth": 1440
+      },
+      "bootstrap": null,
+      "metadata": null,
+      "nonblank": true,
+      "mainText": "Sign in to the console\n\nUse your CinaAuth account with console access to manage the gateway.\n\nSign in with CinaAuth\nOpen your account",
+      "body": "Skip to content\nC\nCinaToken\nModels\nAccount\nLanguage\nEnglish\n简体中文\n日本語\n한국어\nAppearance\nSystem\nLight\nDark\nSign in with CinaAuth\nSign in to the console\n\nUse your CinaAuth account with console access to manage the gateway.\n\nSign in with CinaAuth\nOpen your account\nCinaToken · Your AI resource gateway\nFrontend design and development by New API contributors. New API",
+      "frameworkOverlay": false
+    },
+    {
+      "route": "/admin/providers",
+      "kind": "admin",
+      "http": 200,
+      "finalURL": "https://cinatoken.com/admin/providers?q=&filter=all",
+      "title": "CinaToken",
+      "state": {
+        "url": "https://cinatoken.com/admin/providers?q=&filter=all",
+        "lang": "en",
+        "className": "light",
+        "dark": false,
+        "hydrationFailure": false,
+        "themeCookie": null,
+        "localeCookie": null,
+        "width": 1440,
+        "documentWidth": 1440
+      },
+      "bootstrap": null,
+      "metadata": null,
+      "nonblank": true,
+      "mainText": "Sign in to the console\n\nUse your CinaAuth account with console access to manage the gateway.\n\nSign in with CinaAuth\nOpen your account",
+      "body": "Skip to content\nC\nCinaToken\nModels\nAccount\nLanguage\nEnglish\n简体中文\n日本語\n한국어\nAppearance\nSystem\nLight\nDark\nSign in with CinaAuth\nSign in to the console\n\nUse your CinaAuth account with console access to manage the gateway.\n\nSign in with CinaAuth\nOpen your account\nCinaToken · Your AI resource gateway\nFrontend design and development by New API contributors. New API",
+      "frameworkOverlay": false
+    },
+    {
+      "route": "/admin/models",
+      "kind": "admin",
+      "http": 200,
+      "finalURL": "https://cinatoken.com/admin/models?q=&vendor=all&kind=all&availability=all",
+      "title": "CinaToken",
+      "state": {
+        "url": "https://cinatoken.com/admin/models?q=&vendor=all&kind=all&availability=all",
+        "lang": "en",
+        "className": "light",
+        "dark": false,
+        "hydrationFailure": false,
+        "themeCookie": null,
+        "localeCookie": null,
+        "width": 1440,
+        "documentWidth": 1440
+      },
+      "bootstrap": null,
+      "metadata": null,
+      "nonblank": true,
+      "mainText": "Sign in to the console\n\nUse your CinaAuth account with console access to manage the gateway.\n\nSign in with CinaAuth\nOpen your account",
+      "body": "Skip to content\nC\nCinaToken\nModels\nAccount\nLanguage\nEnglish\n简体中文\n日本語\n한국어\nAppearance\nSystem\nLight\nDark\nSign in with CinaAuth\nSign in to the console\n\nUse your CinaAuth account with console access to manage the gateway.\n\nSign in with CinaAuth\nOpen your account\nCinaToken · Your AI resource gateway\nFrontend design and development by New API contributors. New API",
+      "frameworkOverlay": false
+    },
+    {
+      "route": "/admin/endpoints",
+      "kind": "admin",
+      "http": 200,
+      "finalURL": "https://cinatoken.com/admin/endpoints?q=&model=&provider=&status=all",
+      "title": "CinaToken",
+      "state": {
+        "url": "https://cinatoken.com/admin/endpoints?q=&model=&provider=&status=all",
+        "lang": "en",
+        "className": "light",
+        "dark": false,
+        "hydrationFailure": false,
+        "themeCookie": null,
+        "localeCookie": null,
+        "width": 1440,
+        "documentWidth": 1440
+      },
+      "bootstrap": null,
+      "metadata": null,
+      "nonblank": true,
+      "mainText": "Sign in to the console\n\nUse your CinaAuth account with console access to manage the gateway.\n\nSign in with CinaAuth\nOpen your account",
+      "body": "Skip to content\nC\nCinaToken\nModels\nAccount\nLanguage\nEnglish\n简体中文\n日本語\n한국어\nAppearance\nSystem\nLight\nDark\nSign in with CinaAuth\nSign in to the console\n\nUse your CinaAuth account with console access to manage the gateway.\n\nSign in with CinaAuth\nOpen your account\nCinaToken · Your AI resource gateway\nFrontend design and development by New API contributors. New API",
+      "frameworkOverlay": false
+    },
+    {
+      "route": "/admin/routes",
+      "kind": "admin",
+      "http": 200,
+      "finalURL": "https://cinatoken.com/admin/routes?q=&model=&provider_id=&status=all&route_group=&kind=all&vendor=&workspace=byModel&view=topology",
+      "title": "CinaToken",
+      "state": {
+        "url": "https://cinatoken.com/admin/routes?q=&model=&provider_id=&status=all&route_group=&kind=all&vendor=&workspace=byModel&view=topology",
+        "lang": "en",
+        "className": "light",
+        "dark": false,
+        "hydrationFailure": false,
+        "themeCookie": null,
+        "localeCookie": null,
+        "width": 1440,
+        "documentWidth": 1440
+      },
+      "bootstrap": null,
+      "metadata": null,
+      "nonblank": true,
+      "mainText": "Sign in to the console\n\nUse your CinaAuth account with console access to manage the gateway.\n\nSign in with CinaAuth\nOpen your account",
+      "body": "Skip to content\nC\nCinaToken\nModels\nAccount\nLanguage\nEnglish\n简体中文\n日本語\n한국어\nAppearance\nSystem\nLight\nDark\nSign in with CinaAuth\nSign in to the console\n\nUse your CinaAuth account with console access to manage the gateway.\n\nSign in with CinaAuth\nOpen your account\nCinaToken · Your AI resource gateway\nFrontend design and development by New API contributors. New API",
+      "frameworkOverlay": false
+    }
+  ],
+  "pageErrors": [],
+  "consoleErrors": [
+    {
+      "text": "Failed to load resource: the server responded with a status of 404 ()",
+      "location": {
+        "url": "https://cinatoken.com/en/models/cinatoken-smoke-missing/no-such-model",
+        "line": 0,
+        "column": 0,
+        "lineNumber": 0,
+        "columnNumber": 0
+      },
+      "pageURL": "https://cinatoken.com/en/models/cinatoken-smoke-missing/no-such-model"
+    },
+    {
+      "text": "Failed to load resource: the server responded with a status of 401 ()",
+      "location": {
+        "url": "https://cinatoken.com/api/user/me",
+        "line": 0,
+        "column": 0,
+        "lineNumber": 0,
+        "columnNumber": 0
+      },
+      "pageURL": "https://cinatoken.com/account"
+    },
+    {
+      "text": "Failed to load resource: the server responded with a status of 401 ()",
+      "location": {
+        "url": "https://cinatoken.com/api/user/me",
+        "line": 0,
+        "column": 0,
+        "lineNumber": 0,
+        "columnNumber": 0
+      },
+      "pageURL": "https://cinatoken.com/account/keys"
+    },
+    {
+      "text": "Failed to load resource: the server responded with a status of 401 ()",
+      "location": {
+        "url": "https://cinatoken.com/api/user/me",
+        "line": 0,
+        "column": 0,
+        "lineNumber": 0,
+        "columnNumber": 0
+      },
+      "pageURL": "https://cinatoken.com/account/byok"
+    },
+    {
+      "text": "Failed to load resource: the server responded with a status of 401 ()",
+      "location": {
+        "url": "https://cinatoken.com/api/user/me",
+        "line": 0,
+        "column": 0,
+        "lineNumber": 0,
+        "columnNumber": 0
+      },
+      "pageURL": "https://cinatoken.com/account/activity"
+    },
+    {
+      "text": "Failed to load resource: the server responded with a status of 401 ()",
+      "location": {
+        "url": "https://cinatoken.com/api/user/me",
+        "line": 0,
+        "column": 0,
+        "lineNumber": 0,
+        "columnNumber": 0
+      },
+      "pageURL": "https://cinatoken.com/account/earnings"
+    },
+    {
+      "text": "Failed to load resource: the server responded with a status of 401 ()",
+      "location": {
+        "url": "https://cinatoken.com/api/user/me",
+        "line": 0,
+        "column": 0,
+        "lineNumber": 0,
+        "columnNumber": 0
+      },
+      "pageURL": "https://cinatoken.com/account/nft"
+    },
+    {
+      "text": "Failed to load resource: the server responded with a status of 401 ()",
+      "location": {
+        "url": "https://cinatoken.com/api/user/me",
+        "line": 0,
+        "column": 0,
+        "lineNumber": 0,
+        "columnNumber": 0
+      },
+      "pageURL": "https://cinatoken.com/account/withdraw"
+    },
+    {
+      "text": "Failed to load resource: the server responded with a status of 401 ()",
+      "location": {
+        "url": "https://cinatoken.com/api/user/me",
+        "line": 0,
+        "column": 0,
+        "lineNumber": 0,
+        "columnNumber": 0
+      },
+      "pageURL": "https://cinatoken.com/account/presets"
+    },
+    {
+      "text": "Failed to load resource: the server responded with a status of 401 ()",
+      "location": {
+        "url": "https://cinatoken.com/api/user/me",
+        "line": 0,
+        "column": 0,
+        "lineNumber": 0,
+        "columnNumber": 0
+      },
+      "pageURL": "https://cinatoken.com/account/guardrails"
+    },
+    {
+      "text": "Failed to load resource: the server responded with a status of 401 ()",
+      "location": {
+        "url": "https://cinatoken.com/api/user/me",
+        "line": 0,
+        "column": 0,
+        "lineNumber": 0,
+        "columnNumber": 0
+      },
+      "pageURL": "https://cinatoken.com/account/settings"
+    },
+    {
+      "text": "Failed to load resource: the server responded with a status of 401 ()",
+      "location": {
+        "url": "https://cinatoken.com/api/user/me",
+        "line": 0,
+        "column": 0,
+        "lineNumber": 0,
+        "columnNumber": 0
+      },
+      "pageURL": "https://cinatoken.com/admin"
+    },
+    {
+      "text": "Failed to load resource: the server responded with a status of 401 ()",
+      "location": {
+        "url": "https://cinatoken.com/api/user/me",
+        "line": 0,
+        "column": 0,
+        "lineNumber": 0,
+        "columnNumber": 0
+      },
+      "pageURL": "https://cinatoken.com/admin/users?page=1&email=&external_system=&external_user_id=&status=all&max_budget=all&sort=created_at&order=desc"
+    },
+    {
+      "text": "Failed to load resource: the server responded with a status of 401 ()",
+      "location": {
+        "url": "https://cinatoken.com/api/user/me",
+        "line": 0,
+        "column": 0,
+        "lineNumber": 0,
+        "columnNumber": 0
+      },
+      "pageURL": "https://cinatoken.com/admin/users/00000000-0000-4000-8000-000000000000"
+    },
+    {
+      "text": "Failed to load resource: the server responded with a status of 401 ()",
+      "location": {
+        "url": "https://cinatoken.com/api/user/me",
+        "line": 0,
+        "column": 0,
+        "lineNumber": 0,
+        "columnNumber": 0
+      },
+      "pageURL": "https://cinatoken.com/admin/providers?q=&filter=all"
+    },
+    {
+      "text": "Failed to load resource: the server responded with a status of 401 ()",
+      "location": {
+        "url": "https://cinatoken.com/api/user/me",
+        "line": 0,
+        "column": 0,
+        "lineNumber": 0,
+        "columnNumber": 0
+      },
+      "pageURL": "https://cinatoken.com/admin/models?q=&vendor=all&kind=all&availability=all"
+    },
+    {
+      "text": "Failed to load resource: the server responded with a status of 401 ()",
+      "location": {
+        "url": "https://cinatoken.com/api/user/me",
+        "line": 0,
+        "column": 0,
+        "lineNumber": 0,
+        "columnNumber": 0
+      },
+      "pageURL": "https://cinatoken.com/admin/endpoints?q=&model=&provider=&status=all"
+    },
+    {
+      "text": "Failed to load resource: the server responded with a status of 401 ()",
+      "location": {
+        "url": "https://cinatoken.com/api/user/me",
+        "line": 0,
+        "column": 0,
+        "lineNumber": 0,
+        "columnNumber": 0
+      },
+      "pageURL": "https://cinatoken.com/admin/routes?q=&model=&provider_id=&status=all&route_group=&kind=all&vendor=&workspace=byModel&view=topology"
+    }
+  ],
+  "warnings": [],
+  "httpErrors": [
+    {
+      "url": "https://cinatoken.com/en/models/cinatoken-smoke-missing/no-such-model",
+      "method": "GET",
+      "status": 404,
+      "body": "<!DOCTYPE html><html lang=\"en\"><head><meta charSet=\"utf-8\"/><meta name=\"viewport\" content=\"width=device-width, initial-scale=1\"/><title>This model is not currently published.</title><meta name=\"description\" content=\"This model is not currently published.\"/><meta name=\"robots\" content=\"noindex, nofollow\"/><meta property=\"og:type\" content=\"website\"/><meta property=\"og:site_name\" content=\"CinaToken\"/><meta property=\"og:title\" content=\"This model is not currently published.\"/><meta property=\"og:description\" content=\"This model is not currently published.\"/><meta name=\"twitter:card\" content=\"summary\"/><meta name=\"twitter:title\" content=\"This model is not currently published.\"/><meta name=\"twitter:description\" content=\"This model is not currently published.\"/><link rel=\"icon\" type=\"image/png\" href=\"/web-assets/logo.png\"/><link rel=\"stylesheet\" href=\"/web-assets/static/css/index.46bbf8297a.css\"/></head><body><div id=\"root\"><div class=\"min-h-svh\"><a href=\"#main-content\" class=\"bg-primary text-primary-foreground sr-only rounded-md px-4 py-2 focus:not-sr-only focus:fixed focus:z-50\">Skip to content</a><header class=\"bg-background/95 border-b\"><div class=\"mx-auto flex max-w-7xl flex-wrap items-center gap-4 px-4 py-4 sm:px-6\"><a href=\"/en\" class=\"flex items-center gap-2 font-semibold tracking-tight\"><span class=\"bg-primary text-primary-foreground flex size-8 items-center justify-center rounded-lg\">C</span>CinaToken</a><nav aria-label=\"Primary navigation\" class=\"flex items-center gap-4 text-sm\"><a href=\"/en/models\" class=\"text-muted-foreground hover:text-foreground\">Models</a><a href=\"/account\" class=\"text-muted-foreground hover:text-foreground\">Account</a></nav><div class=\"ml-auto flex flex-wrap items-center gap-2\"><label class=\"text-sm\"><span class=\"sr-only\">Language</span><select class=\"bg-background h-8 max-w-28 rounded-lg border px-2 text-sm\"><option value=\"en\" selected=\"\">English</option><option value=\"zh\">简体中文</option><option value=\"ja\">日本語</option><option value=\"ko\">한국어</option></select></label><label class=\"text-sm\"><span class=\"sr-only\">Appearance</span><select class=\"bg-background h-8 rounded-lg border px-2 text-sm\"><option value=\"system\" selected=\"\">System</option><option value=\"light\">Light</option><option value=\"dark\">Dark</option></select></label><a href=\"/api/auth/cinaauth/login?intent=portal&amp;callbackURL=%2Faccount\" class=\"bg-primary text-primary-foreground rounded-lg px-3 py-2 text-sm\">Sign in with CinaAuth</a></div></div></header><main id=\"main-content\" class=\"mx-auto min-h-[70vh] max-w-7xl px-4 py-8 sm:px-6\"><!--$--><section class=\"mx-auto w-full max-w-7xl space-y-7 px-4 py-8 sm:px-6\"><header class=\"space-y-4\"><nav aria-label=\"Public discovery\" class=\"text-muted-foreground flex flex-wrap gap-x-5 gap-y-2 text-sm\"><a href=\"/en/models\" class=\"hover:text-foreground focus-visible:outline-ring rounded-sm underline-offset-4 hover:underline\">Model catalog</a><a href=\"/en/providers\" class=\"hover:text-foreground focus-visible:outline-ring rounded-sm underline-offset-4 hover:underline\">Model providers</a><a href=\"/en/compare\" class=\"hover:text-foreground focus-visible:outline-ring rounded-sm underline-offset-4 hover:underline\">Compare models</a><a href=\"/en/rankings\" class=\"hover:text-foreground focus-visible:outline-ring rounded-sm underline-offset-4 hover:underline\">Model rankings</a><a href=\"/en/benchmarks\" class=\"hover:text-foreground focus-visible:outline-ring rounded-sm underline-offset-4 hover:underline\">Gateway benchmarks</a></nav><div class=\"flex flex-wrap items-start justify-between gap-4\"><div class=\"max-w-3xl min-w-0\"><h1 class=\"text-3xl font-semibold tracking-tight sm:text-4xl\">Model catalog</h1><p class=\"text-muted-foreground mt-3 text-sm leading-6\">Explore models published on the gateway, with verified protocols and catalog prices.</p></div><button type=\"button\" tabindex=\"0\" data-slot=\"button\" class=\"group/button inline-flex shrink-0 items-center justify-center rounded-lg border bg-clip-padding text-sm font-medium whitespace-nowrap transition-all outline-none select-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 active:not-aria-[haspopup]:translate-y-px disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 [&amp;_svg:not([class*=&#x27;size-&#x27;])]:size-4 border-border bg-background hover:bg-muted hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground dark:border-input dark:bg-input/30 dark:hover:bg-input/50 h-8 gap-1.5 px-2.5 has-data-[icon=inline-end]:pr-2 has-data-[icon=inline-start]:pl-2\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-refresh-cw\" aria-hidden=\"true\"><path d=\"M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8\"></path><path d=\"M21 3v5h-5\"></path><path d=\"M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16\"></path><path d=\"M8 16H3v5\"></path></svg>Refresh</button></div></header><div data-slot=\"alert\" role=\"alert\" class=\"group/alert relative grid w-full gap-0.5 rounded-lg border px-2.5 py-2 text-left text-sm has-data-[slot=alert-action]:relative has-data-[slot=alert-action]:pr-18 has-[&gt;svg]:grid-cols-[auto_1fr] has-[&gt;svg]:gap-x-2 *:[svg]:row-span-2 *:[svg]:translate-y-0.5 *:[svg:not([class*=&#x27;size-&#x27;])]:size-4 bg-card text-destructive *:data-[slot=alert-description]:text-destructive/90 *:[svg]:text-current\"><div data-slot=\"alert-description\" class=\"text-muted-foreground [&amp;_a]:hover:text-foreground text-sm text-balance md:text-pretty [&amp;_a]:underline [&amp;_a]:underline-offset-3 [&amp;_p:not(:last-child)]:mb-4 flex flex-wrap items-center justify-between gap-3\"><span>This model is not currently published.</span><button type=\"button\" tabindex=\"0\" data-slot=\"button\" class=\"group/button inline-flex shrink-0 items-center justify-center rounded-lg border bg-clip-padding text-sm font-medium whitespace-nowrap transition-all outline-none select-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 active:not-aria-[haspopup]:translate-y-px disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 [&amp;_svg:not([class*=&#x27;size-&#x27;])]:size-4 border-border bg-background hover:bg-muted hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground dark:border-input dark:bg-input/30 dark:hover:bg-input/50 h-8 gap-1.5 px-2.5 has-data-[icon=inline-end]:pr-2 has-data-[icon=inline-start]:pl-2\">Retry</button></div></div></section><!--/$--></main><footer class=\"text-muted-foreground border-t px-4 py-5 text-center text-xs leading-6\"><span>CinaToken · <!-- -->Your AI resource gateway</span><br/><span lang=\"en\">Frontend design and development by New API contributors.</span> <a href=\"https://github.com/QuantumNous/new-api\" target=\"_blank\" rel=\"noopener noreferrer\" class=\"underline underline-offset-2\">New API</a> <a href=\"/web-assets/sources/index.html\" class=\"underline underline-offset-2\">Frontend source</a></footer></div></div><script id=\"cinatoken-public-bootstrap\" type=\"application/json\" nonce=\"e6ab8e9b3466483482b2e21c0dded1e2\">{\"version\":1,\"locale\":\"en\",\"pathname\":\"/en/models/cinatoken-smoke-missing/no-such-model\",\"search\":\"\",\"status\":404,\"records\":[{\"kind\":\"model\",\"vendor\":\"cinatoken-smoke-missing\",\"slug\":\"no-such-model\",\"result\":{\"status\":\"error\",\"error\":{\"code\":\"http\",\"status\":404,\"retryAfter\":null},\"observedAt\":1791205815128}}]}</script><script nonce=\"e6ab8e9b3466483482b2e21c0dded1e2\" data-tsr-stream-part=\"\">(self.$R=self.$R||{})[\"tsr\"]=[];self.$_TSR={h(){this.hydrated=!0,this.c()},e(){this.streamEnded=!0,this.c()},c(){this.hydrated&&this.streamEnded&&(delete self.$_TSR,delete self.$R.tsr)},p(e){this.initialized?e():this.buffer.push(e)},buffer:[]};"
+    },
+    {
+      "url": "https://cinatoken.com/api/user/me",
+      "method": "GET",
+      "status": 401,
+      "body": {
+        "success": false,
+        "message": "Unauthorized"
+      }
+    },
+    {
+      "url": "https://cinatoken.com/api/user/me",
+      "method": "GET",
+      "status": 401,
+      "body": {
+        "success": false,
+        "message": "Unauthorized"
+      }
+    },
+    {
+      "url": "https://cinatoken.com/api/user/me",
+      "method": "GET",
+      "status": 401,
+      "body": {
+        "success": false,
+        "message": "Unauthorized"
+      }
+    },
+    {
+      "url": "https://cinatoken.com/api/user/me",
+      "method": "GET",
+      "status": 401,
+      "body": {
+        "success": false,
+        "message": "Unauthorized"
+      }
+    },
+    {
+      "url": "https://cinatoken.com/api/user/me",
+      "method": "GET",
+      "status": 401,
+      "body": {
+        "success": false,
+        "message": "Unauthorized"
+      }
+    },
+    {
+      "url": "https://cinatoken.com/api/user/me",
+      "method": "GET",
+      "status": 401,
+      "body": {
+        "success": false,
+        "message": "Unauthorized"
+      }
+    },
+    {
+      "url": "https://cinatoken.com/api/user/me",
+      "method": "GET",
+      "status": 401,
+      "body": {
+        "success": false,
+        "message": "Unauthorized"
+      }
+    },
+    {
+      "url": "https://cinatoken.com/api/user/me",
+      "method": "GET",
+      "status": 401,
+      "body": {
+        "success": false,
+        "message": "Unauthorized"
+      }
+    },
+    {
+      "url": "https://cinatoken.com/api/user/me",
+      "method": "GET",
+      "status": 401,
+      "body": {
+        "success": false,
+        "message": "Unauthorized"
+      }
+    },
+    {
+      "url": "https://cinatoken.com/api/user/me",
+      "method": "GET",
+      "status": 401,
+      "body": {
+        "success": false,
+        "message": "Unauthorized"
+      }
+    },
+    {
+      "url": "https://cinatoken.com/api/user/me",
+      "method": "GET",
+      "status": 401,
+      "body": {
+        "success": false,
+        "message": "Unauthorized"
+      }
+    },
+    {
+      "url": "https://cinatoken.com/api/user/me",
+      "method": "GET",
+      "status": 401,
+      "body": {
+        "success": false,
+        "message": "Unauthorized"
+      }
+    },
+    {
+      "url": "https://cinatoken.com/api/user/me",
+      "method": "GET",
+      "status": 401,
+      "body": {
+        "success": false,
+        "message": "Unauthorized"
+      }
+    },
+    {
+      "url": "https://cinatoken.com/api/user/me",
+      "method": "GET",
+      "status": 401,
+      "body": {
+        "success": false,
+        "message": "Unauthorized"
+      }
+    },
+    {
+      "url": "https://cinatoken.com/api/user/me",
+      "method": "GET",
+      "status": 401,
+      "body": {
+        "success": false,
+        "message": "Unauthorized"
+      }
+    },
+    {
+      "url": "https://cinatoken.com/api/user/me",
+      "method": "GET",
+      "status": 401,
+      "body": {
+        "success": false,
+        "message": "Unauthorized"
+      }
+    },
+    {
+      "url": "https://cinatoken.com/api/user/me",
+      "method": "GET",
+      "status": 401,
+      "body": {
+        "success": false,
+        "message": "Unauthorized"
+      }
+    }
+  ],
+  "requestFailures": [],
+  "expectedAnonymous401": [
+    {
+      "url": "https://cinatoken.com/api/user/me",
+      "method": "GET",
+      "status": 401,
+      "body": {
+        "success": false,
+        "message": "Unauthorized"
+      },
+      "reason": "Only exact same-origin anonymous user/me body is expected; SessionGate/ConsoleGate display sign-in and grant no workspace/console."
+    },
+    {
+      "url": "https://cinatoken.com/api/user/me",
+      "method": "GET",
+      "status": 401,
+      "body": {
+        "success": false,
+        "message": "Unauthorized"
+      },
+      "reason": "Only exact same-origin anonymous user/me body is expected; SessionGate/ConsoleGate display sign-in and grant no workspace/console."
+    },
+    {
+      "url": "https://cinatoken.com/api/user/me",
+      "method": "GET",
+      "status": 401,
+      "body": {
+        "success": false,
+        "message": "Unauthorized"
+      },
+      "reason": "Only exact same-origin anonymous user/me body is expected; SessionGate/ConsoleGate display sign-in and grant no workspace/console."
+    },
+    {
+      "url": "https://cinatoken.com/api/user/me",
+      "method": "GET",
+      "status": 401,
+      "body": {
+        "success": false,
+        "message": "Unauthorized"
+      },
+      "reason": "Only exact same-origin anonymous user/me body is expected; SessionGate/ConsoleGate display sign-in and grant no workspace/console."
+    },
+    {
+      "url": "https://cinatoken.com/api/user/me",
+      "method": "GET",
+      "status": 401,
+      "body": {
+        "success": false,
+        "message": "Unauthorized"
+      },
+      "reason": "Only exact same-origin anonymous user/me body is expected; SessionGate/ConsoleGate display sign-in and grant no workspace/console."
+    },
+    {
+      "url": "https://cinatoken.com/api/user/me",
+      "method": "GET",
+      "status": 401,
+      "body": {
+        "success": false,
+        "message": "Unauthorized"
+      },
+      "reason": "Only exact same-origin anonymous user/me body is expected; SessionGate/ConsoleGate display sign-in and grant no workspace/console."
+    },
+    {
+      "url": "https://cinatoken.com/api/user/me",
+      "method": "GET",
+      "status": 401,
+      "body": {
+        "success": false,
+        "message": "Unauthorized"
+      },
+      "reason": "Only exact same-origin anonymous user/me body is expected; SessionGate/ConsoleGate display sign-in and grant no workspace/console."
+    },
+    {
+      "url": "https://cinatoken.com/api/user/me",
+      "method": "GET",
+      "status": 401,
+      "body": {
+        "success": false,
+        "message": "Unauthorized"
+      },
+      "reason": "Only exact same-origin anonymous user/me body is expected; SessionGate/ConsoleGate display sign-in and grant no workspace/console."
+    },
+    {
+      "url": "https://cinatoken.com/api/user/me",
+      "method": "GET",
+      "status": 401,
+      "body": {
+        "success": false,
+        "message": "Unauthorized"
+      },
+      "reason": "Only exact same-origin anonymous user/me body is expected; SessionGate/ConsoleGate display sign-in and grant no workspace/console."
+    },
+    {
+      "url": "https://cinatoken.com/api/user/me",
+      "method": "GET",
+      "status": 401,
+      "body": {
+        "success": false,
+        "message": "Unauthorized"
+      },
+      "reason": "Only exact same-origin anonymous user/me body is expected; SessionGate/ConsoleGate display sign-in and grant no workspace/console."
+    },
+    {
+      "url": "https://cinatoken.com/api/user/me",
+      "method": "GET",
+      "status": 401,
+      "body": {
+        "success": false,
+        "message": "Unauthorized"
+      },
+      "reason": "Only exact same-origin anonymous user/me body is expected; SessionGate/ConsoleGate display sign-in and grant no workspace/console."
+    },
+    {
+      "url": "https://cinatoken.com/api/user/me",
+      "method": "GET",
+      "status": 401,
+      "body": {
+        "success": false,
+        "message": "Unauthorized"
+      },
+      "reason": "Only exact same-origin anonymous user/me body is expected; SessionGate/ConsoleGate display sign-in and grant no workspace/console."
+    },
+    {
+      "url": "https://cinatoken.com/api/user/me",
+      "method": "GET",
+      "status": 401,
+      "body": {
+        "success": false,
+        "message": "Unauthorized"
+      },
+      "reason": "Only exact same-origin anonymous user/me body is expected; SessionGate/ConsoleGate display sign-in and grant no workspace/console."
+    },
+    {
+      "url": "https://cinatoken.com/api/user/me",
+      "method": "GET",
+      "status": 401,
+      "body": {
+        "success": false,
+        "message": "Unauthorized"
+      },
+      "reason": "Only exact same-origin anonymous user/me body is expected; SessionGate/ConsoleGate display sign-in and grant no workspace/console."
+    },
+    {
+      "url": "https://cinatoken.com/api/user/me",
+      "method": "GET",
+      "status": 401,
+      "body": {
+        "success": false,
+        "message": "Unauthorized"
+      },
+      "reason": "Only exact same-origin anonymous user/me body is expected; SessionGate/ConsoleGate display sign-in and grant no workspace/console."
+    },
+    {
+      "url": "https://cinatoken.com/api/user/me",
+      "method": "GET",
+      "status": 401,
+      "body": {
+        "success": false,
+        "message": "Unauthorized"
+      },
+      "reason": "Only exact same-origin anonymous user/me body is expected; SessionGate/ConsoleGate display sign-in and grant no workspace/console."
+    },
+    {
+      "url": "https://cinatoken.com/api/user/me",
+      "method": "GET",
+      "status": 401,
+      "body": {
+        "success": false,
+        "message": "Unauthorized"
+      },
+      "reason": "Only exact same-origin anonymous user/me body is expected; SessionGate/ConsoleGate display sign-in and grant no workspace/console."
+    }
+  ],
+  "expectedMissingModel404": [
+    {
+      "url": "https://cinatoken.com/en/models/cinatoken-smoke-missing/no-such-model",
+      "method": "GET",
+      "status": 404,
+      "body": "<!DOCTYPE html><html lang=\"en\"><head><meta charSet=\"utf-8\"/><meta name=\"viewport\" content=\"width=device-width, initial-scale=1\"/><title>This model is not currently published.</title><meta name=\"description\" content=\"This model is not currently published.\"/><meta name=\"robots\" content=\"noindex, nofollow\"/><meta property=\"og:type\" content=\"website\"/><meta property=\"og:site_name\" content=\"CinaToken\"/><meta property=\"og:title\" content=\"This model is not currently published.\"/><meta property=\"og:description\" content=\"This model is not currently published.\"/><meta name=\"twitter:card\" content=\"summary\"/><meta name=\"twitter:title\" content=\"This model is not currently published.\"/><meta name=\"twitter:description\" content=\"This model is not currently published.\"/><link rel=\"icon\" type=\"image/png\" href=\"/web-assets/logo.png\"/><link rel=\"stylesheet\" href=\"/web-assets/static/css/index.46bbf8297a.css\"/></head><body><div id=\"root\"><div class=\"min-h-svh\"><a href=\"#main-content\" class=\"bg-primary text-primary-foreground sr-only rounded-md px-4 py-2 focus:not-sr-only focus:fixed focus:z-50\">Skip to content</a><header class=\"bg-background/95 border-b\"><div class=\"mx-auto flex max-w-7xl flex-wrap items-center gap-4 px-4 py-4 sm:px-6\"><a href=\"/en\" class=\"flex items-center gap-2 font-semibold tracking-tight\"><span class=\"bg-primary text-primary-foreground flex size-8 items-center justify-center rounded-lg\">C</span>CinaToken</a><nav aria-label=\"Primary navigation\" class=\"flex items-center gap-4 text-sm\"><a href=\"/en/models\" class=\"text-muted-foreground hover:text-foreground\">Models</a><a href=\"/account\" class=\"text-muted-foreground hover:text-foreground\">Account</a></nav><div class=\"ml-auto flex flex-wrap items-center gap-2\"><label class=\"text-sm\"><span class=\"sr-only\">Language</span><select class=\"bg-background h-8 max-w-28 rounded-lg border px-2 text-sm\"><option value=\"en\" selected=\"\">English</option><option value=\"zh\">简体中文</option><option value=\"ja\">日本語</option><option value=\"ko\">한국어</option></select></label><label class=\"text-sm\"><span class=\"sr-only\">Appearance</span><select class=\"bg-background h-8 rounded-lg border px-2 text-sm\"><option value=\"system\" selected=\"\">System</option><option value=\"light\">Light</option><option value=\"dark\">Dark</option></select></label><a href=\"/api/auth/cinaauth/login?intent=portal&amp;callbackURL=%2Faccount\" class=\"bg-primary text-primary-foreground rounded-lg px-3 py-2 text-sm\">Sign in with CinaAuth</a></div></div></header><main id=\"main-content\" class=\"mx-auto min-h-[70vh] max-w-7xl px-4 py-8 sm:px-6\"><!--$--><section class=\"mx-auto w-full max-w-7xl space-y-7 px-4 py-8 sm:px-6\"><header class=\"space-y-4\"><nav aria-label=\"Public discovery\" class=\"text-muted-foreground flex flex-wrap gap-x-5 gap-y-2 text-sm\"><a href=\"/en/models\" class=\"hover:text-foreground focus-visible:outline-ring rounded-sm underline-offset-4 hover:underline\">Model catalog</a><a href=\"/en/providers\" class=\"hover:text-foreground focus-visible:outline-ring rounded-sm underline-offset-4 hover:underline\">Model providers</a><a href=\"/en/compare\" class=\"hover:text-foreground focus-visible:outline-ring rounded-sm underline-offset-4 hover:underline\">Compare models</a><a href=\"/en/rankings\" class=\"hover:text-foreground focus-visible:outline-ring rounded-sm underline-offset-4 hover:underline\">Model rankings</a><a href=\"/en/benchmarks\" class=\"hover:text-foreground focus-visible:outline-ring rounded-sm underline-offset-4 hover:underline\">Gateway benchmarks</a></nav><div class=\"flex flex-wrap items-start justify-between gap-4\"><div class=\"max-w-3xl min-w-0\"><h1 class=\"text-3xl font-semibold tracking-tight sm:text-4xl\">Model catalog</h1><p class=\"text-muted-foreground mt-3 text-sm leading-6\">Explore models published on the gateway, with verified protocols and catalog prices.</p></div><button type=\"button\" tabindex=\"0\" data-slot=\"button\" class=\"group/button inline-flex shrink-0 items-center justify-center rounded-lg border bg-clip-padding text-sm font-medium whitespace-nowrap transition-all outline-none select-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 active:not-aria-[haspopup]:translate-y-px disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 [&amp;_svg:not([class*=&#x27;size-&#x27;])]:size-4 border-border bg-background hover:bg-muted hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground dark:border-input dark:bg-input/30 dark:hover:bg-input/50 h-8 gap-1.5 px-2.5 has-data-[icon=inline-end]:pr-2 has-data-[icon=inline-start]:pl-2\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-refresh-cw\" aria-hidden=\"true\"><path d=\"M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8\"></path><path d=\"M21 3v5h-5\"></path><path d=\"M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16\"></path><path d=\"M8 16H3v5\"></path></svg>Refresh</button></div></header><div data-slot=\"alert\" role=\"alert\" class=\"group/alert relative grid w-full gap-0.5 rounded-lg border px-2.5 py-2 text-left text-sm has-data-[slot=alert-action]:relative has-data-[slot=alert-action]:pr-18 has-[&gt;svg]:grid-cols-[auto_1fr] has-[&gt;svg]:gap-x-2 *:[svg]:row-span-2 *:[svg]:translate-y-0.5 *:[svg:not([class*=&#x27;size-&#x27;])]:size-4 bg-card text-destructive *:data-[slot=alert-description]:text-destructive/90 *:[svg]:text-current\"><div data-slot=\"alert-description\" class=\"text-muted-foreground [&amp;_a]:hover:text-foreground text-sm text-balance md:text-pretty [&amp;_a]:underline [&amp;_a]:underline-offset-3 [&amp;_p:not(:last-child)]:mb-4 flex flex-wrap items-center justify-between gap-3\"><span>This model is not currently published.</span><button type=\"button\" tabindex=\"0\" data-slot=\"button\" class=\"group/button inline-flex shrink-0 items-center justify-center rounded-lg border bg-clip-padding text-sm font-medium whitespace-nowrap transition-all outline-none select-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 active:not-aria-[haspopup]:translate-y-px disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 [&amp;_svg:not([class*=&#x27;size-&#x27;])]:size-4 border-border bg-background hover:bg-muted hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground dark:border-input dark:bg-input/30 dark:hover:bg-input/50 h-8 gap-1.5 px-2.5 has-data-[icon=inline-end]:pr-2 has-data-[icon=inline-start]:pl-2\">Retry</button></div></div></section><!--/$--></main><footer class=\"text-muted-foreground border-t px-4 py-5 text-center text-xs leading-6\"><span>CinaToken · <!-- -->Your AI resource gateway</span><br/><span lang=\"en\">Frontend design and development by New API contributors.</span> <a href=\"https://github.com/QuantumNous/new-api\" target=\"_blank\" rel=\"noopener noreferrer\" class=\"underline underline-offset-2\">New API</a> <a href=\"/web-assets/sources/index.html\" class=\"underline underline-offset-2\">Frontend source</a></footer></div></div><script id=\"cinatoken-public-bootstrap\" type=\"application/json\" nonce=\"e6ab8e9b3466483482b2e21c0dded1e2\">{\"version\":1,\"locale\":\"en\",\"pathname\":\"/en/models/cinatoken-smoke-missing/no-such-model\",\"search\":\"\",\"status\":404,\"records\":[{\"kind\":\"model\",\"vendor\":\"cinatoken-smoke-missing\",\"slug\":\"no-such-model\",\"result\":{\"status\":\"error\",\"error\":{\"code\":\"http\",\"status\":404,\"retryAfter\":null},\"observedAt\":1791205815128}}]}</script><script nonce=\"e6ab8e9b3466483482b2e21c0dded1e2\" data-tsr-stream-part=\"\">(self.$R=self.$R||{})[\"tsr\"]=[];self.$_TSR={h(){this.hydrated=!0,this.c()},e(){this.streamEnded=!0,this.c()},c(){this.hydrated&&this.streamEnded&&(delete self.$_TSR,delete self.$R.tsr)},p(e){this.initialized?e():this.buffer.push(e)},buffer:[]};",
+      "reason": "The reserved nonexistent model renders real localized public 404; no nonempty production catalog claim."
+    }
+  ],
+  "unknownHTTPErrors": [],
+  "explainedConsoleErrors": [],
+  "unexplainedConsoleErrors": [],
+  "refusedMutations": [],
+  "screenshots": [
+    {
+      "name": "public-1",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-independent-web-browser-696cc8df85ea423aa0d2545df155d197\\retention-c13a64b9-v2-public-1.png",
+      "bytes": 54114,
+      "sha256": "3c3002c14200c075db9cb4077fc6926e1543c1dbc907150ee4981237dd71fbe6"
+    },
+    {
+      "name": "public-2",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-independent-web-browser-696cc8df85ea423aa0d2545df155d197\\retention-c13a64b9-v2-public-2.png",
+      "bytes": 43225,
+      "sha256": "f49bd3265c40e99f24e224d752a9c49f79b9702bd52a9fdfa51b0a51ebe49207"
+    },
+    {
+      "name": "account-9",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-independent-web-browser-696cc8df85ea423aa0d2545df155d197\\retention-c13a64b9-v2-account-9.png",
+      "bytes": 23753,
+      "sha256": "a99bb9d22fd16eaebd41e31ccceef6363f27760a9d6c0d6e3e6be1c6f5c4b8fb"
+    },
+    {
+      "name": "admin-19",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-independent-web-browser-696cc8df85ea423aa0d2545df155d197\\retention-c13a64b9-v2-admin-19.png",
+      "bytes": 25449,
+      "sha256": "3903b8a1ace00a01f66aa85758c1fdd71fd081e2d3b8b76c1967475ed3cf94f2"
+    }
+  ],
+  "interactions": [],
+  "browserVersion": "147.0.7727.15",
+  "initialCookies": [],
+  "timedOut": true,
+  "actualExit": 1,
+  "outcome": "FAILED",
+  "failure": {
+    "name": "Error",
+    "message": "page.goto: Target page, context or browser has been closed\nCall log:\n\u001b[2m  - navigating to \"https://cinatoken.com/admin/data-policies\", waiting until \"networkidle\"\u001b[22m\n",
+    "stack": "page.goto: Target page, context or browser has been closed\nCall log:\n\u001b[2m  - navigating to \"https://cinatoken.com/admin/data-policies\", waiting until \"networkidle\"\u001b[22m\n\n    at checkPage (C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-independent-web-browser-696cc8df85ea423aa0d2545df155d197\\production-web-browser-observe-v2.mjs:70:31)\n    at C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-independent-web-browser-696cc8df85ea423aa0d2545df155d197\\production-web-browser-observe-v2.mjs:151:56"
+  },
+  "contextClosed": true,
+  "browserClosed": true,
+  "finishedAt": "2026-10-05T13:14:32.733Z",
+  "liveProofRawStillSame": true
+}

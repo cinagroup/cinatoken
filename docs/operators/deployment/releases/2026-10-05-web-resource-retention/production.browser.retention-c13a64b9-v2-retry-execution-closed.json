@@ -1,0 +1,92 @@
+{
+  "schema": "cinatoken-independent-web-browser-execution-v2",
+  "label": "retention-c13a64b9-v2-retry",
+  "startedAt": "2026-10-05T13:17:21.316Z",
+  "processExecutable": "C:\\Program Files\\nodejs\\node.exe",
+  "inputScripts": [
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-independent-web-browser-696cc8df85ea423aa0d2545df155d197\\execute-web-browser-observe-v2.mjs",
+      "bytes": 3432,
+      "sha256": "ffd074ec8b52d5ce7c9dbd8a9dace29ec29130b661e0290e72f1f2d2d0424ed8"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-independent-web-browser-696cc8df85ea423aa0d2545df155d197\\production-web-browser-observe-v2.mjs",
+      "bytes": 15695,
+      "sha256": "415d123bbc71cfdb5d8ed02bf91f01d9021031358667cd7aaf2f0fd6edcd55be"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-independent-web-browser-696cc8df85ea423aa0d2545df155d197\\web-route-matrix.mjs",
+      "bytes": 1770,
+      "sha256": "c8a3211d07979c037022f689aa442bd95de9b7c11843fb52b9ae9fa93ac01e61"
+    }
+  ],
+  "configRaw": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-retention-40bda77a453343d89d5fe50706d58326\\retention-c13.browser-config.json",
+    "bytes": 557,
+    "sha256": "18b4f42e1c98cfc746eb65ab738e31b8a438ae62bb899e726d4b96bae166185b"
+  },
+  "expectedGitSHA": "c13a64b9c3b2c90adcf736910ea408868d7854f1",
+  "expectedWorkerVersionId": "2a0a2777-d3b1-47f0-a0a7-88e701b4d2d9",
+  "phase": "cutover",
+  "targetOrigin": "https://cinatoken.com",
+  "commandArguments": [
+    "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-independent-web-browser-696cc8df85ea423aa0d2545df155d197\\production-web-browser-observe-v2.mjs",
+    "retention-c13a64b9-v2-retry",
+    "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-retention-40bda77a453343d89d5fe50706d58326\\retention-c13.browser-config.json"
+  ],
+  "sourceWrites": 0,
+  "deployments": 0,
+  "databaseWrites": 0,
+  "timedOut": false,
+  "exit": {
+    "code": 1,
+    "signal": null
+  },
+  "actualExit": 1,
+  "finishedAt": "2026-10-05T13:23:51.132Z",
+  "stdout": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-independent-web-browser-696cc8df85ea423aa0d2545df155d197\\retention-c13a64b9-v2-retry-stdout.log",
+    "bytes": 4568,
+    "sha256": "7df0d121f2a43ba4ba57a2237bd23f4be656e85779e2172340ffbd4c93bcced0"
+  },
+  "stderr": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-independent-web-browser-696cc8df85ea423aa0d2545df155d197\\retention-c13a64b9-v2-retry-stderr.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "browserResult": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-independent-web-browser-696cc8df85ea423aa0d2545df155d197\\retention-c13a64b9-v2-retry.json",
+    "bytes": 81011,
+    "sha256": "e61e4c6c574167722d611b496031bfe5edac8b9c74343469e2a37974d7996e9a"
+  },
+  "browserActualExit": 1,
+  "outcome": "FAILED",
+  "browserClosed": true,
+  "contextClosed": false,
+  "screenshots": [
+    {
+      "name": "public-1",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-independent-web-browser-696cc8df85ea423aa0d2545df155d197\\retention-c13a64b9-v2-retry-public-1.png",
+      "bytes": 54114,
+      "sha256": "3c3002c14200c075db9cb4077fc6926e1543c1dbc907150ee4981237dd71fbe6"
+    },
+    {
+      "name": "public-2",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-independent-web-browser-696cc8df85ea423aa0d2545df155d197\\retention-c13a64b9-v2-retry-public-2.png",
+      "bytes": 43302,
+      "sha256": "9e8e86096b7d27caef3c12176563fc446806a20ec348893cb92c1e98e2ee2368"
+    },
+    {
+      "name": "account-9",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-independent-web-browser-696cc8df85ea423aa0d2545df155d197\\retention-c13a64b9-v2-retry-account-9.png",
+      "bytes": 23753,
+      "sha256": "a99bb9d22fd16eaebd41e31ccceef6363f27760a9d6c0d6e3e6be1c6f5c4b8fb"
+    },
+    {
+      "name": "admin-19",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-independent-web-browser-696cc8df85ea423aa0d2545df155d197\\retention-c13a64b9-v2-retry-admin-19.png",
+      "bytes": 25449,
+      "sha256": "3903b8a1ace00a01f66aa85758c1fdd71fd081e2d3b8b76c1967475ed3cf94f2"
+    }
+  ]
+}

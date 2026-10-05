@@ -1,0 +1,18 @@
+{
+  "at": "2026-10-05T13:10:44.332Z",
+  "actualExit": 0,
+  "releaseId": "web-c13a64b9c3b2-20261005-retained",
+  "retryOf": {
+    "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-web-retention-40bda77a453343d89d5fe50706d58326/source-archives-after.proof.json",
+    "sha256": "bbf80ec71d8e484fb0679c267bca53799bd041629109a477ac9e3c45bce0e7f0"
+  },
+  "method": "GET",
+  "path": "sources/web.5cad53dd30324d851e481e583a31b23c59c35ad0327769bbc2549fcfdfa480cd.tar.gz",
+  "expectedBytes": 4239144,
+  "expectedSha256": "5cad53dd30324d851e481e583a31b23c59c35ad0327769bbc2549fcfdfa480cd",
+  "status": 200,
+  "bytes": 4239144,
+  "sha256": "5cad53dd30324d851e481e583a31b23c59c35ad0327769bbc2549fcfdfa480cd",
+  "cacheControl": "public, max-age=31536000, immutable",
+  "finishedAt": "2026-10-05T13:11:08.962Z"
+}

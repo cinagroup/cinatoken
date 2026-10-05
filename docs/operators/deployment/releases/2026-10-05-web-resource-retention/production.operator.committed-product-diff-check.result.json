@@ -1,0 +1,21 @@
+{
+  "at": "2026-10-05T13:00:34.749Z",
+  "finishedAt": "2026-10-05T13:00:34.813Z",
+  "executable": "C:/Program Files/Git/cmd/git.exe",
+  "args": [
+    "diff",
+    "HEAD~1",
+    "HEAD",
+    "--check",
+    "--",
+    ".gitattributes",
+    "packages/web/scripts",
+    "docs/developers/architecture/web-frontend-migration.md",
+    "docs/operators/deployment/cloudflare-web.md"
+  ],
+  "cwd": "C:/cinagroup/cinatoken",
+  "actualExit": 0,
+  "signal": null,
+  "stdout": "C:/Users/cina/AppData/Local/Temp/cinatoken-web-retention-40bda77a453343d89d5fe50706d58326/committed-product-diff-check.stdout.log",
+  "stderr": "C:/Users/cina/AppData/Local/Temp/cinatoken-web-retention-40bda77a453343d89d5fe50706d58326/committed-product-diff-check.stderr.log"
+}

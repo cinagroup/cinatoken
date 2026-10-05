@@ -1,0 +1,86 @@
+{
+  "at": "2026-10-05T13:07:53.440Z",
+  "origin": "https://cinatoken.com",
+  "requests": [
+    {
+      "kind": "auth-check",
+      "status": 200,
+      "cacheControl": "no-store",
+      "location": null,
+      "cookieAttributes": [],
+      "body": {
+        "authenticated": false,
+        "verification": "none"
+      }
+    },
+    {
+      "kind": "portal-login",
+      "status": 302,
+      "cacheControl": "no-store",
+      "location": {
+        "origin": "https://auth.cinaseek.si",
+        "pathname": "/api/auth/oauth2/authorize",
+        "parameterNames": [
+          "client_id",
+          "code_challenge",
+          "code_challenge_method",
+          "nonce",
+          "redirect_uri",
+          "resource",
+          "response_type",
+          "scope",
+          "state"
+        ],
+        "redirectUri": "https://cinatoken.com/api/auth/cinaauth/callback",
+        "authError": null
+      },
+      "cookieAttributes": [
+        {
+          "httpOnly": true,
+          "secure": true,
+          "sameSite": "lax",
+          "path": "/",
+          "maxAge": "600"
+        }
+      ],
+      "body": null
+    },
+    {
+      "kind": "admin-login",
+      "status": 302,
+      "cacheControl": "no-store",
+      "location": {
+        "origin": "https://auth.cinaseek.si",
+        "pathname": "/api/auth/oauth2/authorize",
+        "parameterNames": [
+          "client_id",
+          "code_challenge",
+          "code_challenge_method",
+          "nonce",
+          "redirect_uri",
+          "resource",
+          "response_type",
+          "scope",
+          "state"
+        ],
+        "redirectUri": "https://cinatoken.com/api/auth/cinaauth/callback",
+        "authError": null
+      },
+      "cookieAttributes": [
+        {
+          "httpOnly": true,
+          "secure": true,
+          "sameSite": "lax",
+          "path": "/",
+          "maxAge": "600"
+        }
+      ],
+      "body": null
+    }
+  ],
+  "actualExit": 0,
+  "cookieValuesRecorded": false,
+  "oauthStateOrNonceRecorded": false,
+  "realLoginCompleted": false,
+  "finishedAt": "2026-10-05T13:08:05.409Z"
+}

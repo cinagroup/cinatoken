@@ -1,0 +1,17 @@
+{
+  "startedAt": "2026-10-05T12:57:22.683Z",
+  "finishedAt": "2026-10-05T12:57:28.116Z",
+  "executable": "C:/Program Files/GitHub CLI/gh.exe",
+  "args": [
+    "run",
+    "view",
+    "37312669228",
+    "--json",
+    "databaseId,headSha,status,conclusion,jobs,url,createdAt,updatedAt"
+  ],
+  "actualExitCode": 0,
+  "signal": null,
+  "error": null,
+  "stdoutPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-source-retention-review-1b6039fbc4534bb38847c3a946778cc5\\ci-c13a64b9\\query-001.stdout.json",
+  "stderrPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-source-retention-review-1b6039fbc4534bb38847c3a946778cc5\\ci-c13a64b9\\query-001.stderr.txt"
+}

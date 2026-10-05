@@ -1,0 +1,13 @@
+{
+  "at": "2026-10-05T14:14:42.775Z",
+  "finishedAt": "2026-10-05T14:14:53.670Z",
+  "executable": "C:/Program Files/nodejs/node.exe",
+  "args": [
+    "C:/Users/cina/AppData/Local/Temp/cinatoken-web-retention-40bda77a453343d89d5fe50706d58326/verify-staged-production-evidence.mjs"
+  ],
+  "cwd": "C:/cinagroup/cinatoken",
+  "actualExit": 0,
+  "signal": null,
+  "stdout": "C:/Users/cina/AppData/Local/Temp/cinatoken-web-retention-40bda77a453343d89d5fe50706d58326/verify-staged-production-evidence-retry.stdout.log",
+  "stderr": "C:/Users/cina/AppData/Local/Temp/cinatoken-web-retention-40bda77a453343d89d5fe50706d58326/verify-staged-production-evidence-retry.stderr.log"
+}

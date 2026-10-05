@@ -1,0 +1,17 @@
+{
+  "startedAt": "2026-10-05T13:27:56.732Z",
+  "completedAt": "2026-10-05T13:27:56.867Z",
+  "program": "node",
+  "arguments": [
+    "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-ci-inventory-d7b57ac3c0804fc0a7fbddb860e5bc8e\\seal-browser-qa.mjs",
+    "retention-c13a64b9-v2-retry",
+    "negative-retention-browser-retry-timeout"
+  ],
+  "actualExitCode": 0,
+  "signal": null,
+  "spawnError": null,
+  "stdoutPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-ci-inventory-d7b57ac3c0804fc0a7fbddb860e5bc8e\\retention-browser-retry-failure-seal.stdout.txt",
+  "stderrPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-ci-inventory-d7b57ac3c0804fc0a7fbddb860e5bc8e\\retention-browser-retry-failure-seal.stderr.txt",
+  "stdoutBytes": 1721,
+  "stderrBytes": 0
+}

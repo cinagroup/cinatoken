@@ -1,0 +1,38 @@
+{
+  "report": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-ci-inventory-d7b57ac3c0804fc0a7fbddb860e5bc8e\\negative-retention-browser-retry-timeout.json",
+    "bytes": 6796,
+    "sha256": "d10af65407ae6b9120a2d34ded583425b1ca959b9b64d880bd8a1c8d6109194c"
+  },
+  "strictPassed": false,
+  "completedRoutes": 23,
+  "counts": {
+    "pageErrors": 0,
+    "warnings": 0,
+    "rawConsoleErrors": 17,
+    "rawHTTPErrors": 17,
+    "expectedAnonymous401": 16,
+    "expectedMissingModel404": 1,
+    "unknownHTTP": 0,
+    "requestFailures": 0,
+    "cancelledRequestFailures": 0,
+    "refusedMutations": 0,
+    "rawExplainedConsoleErrors": 0,
+    "rawUnexplainedConsoleErrors": 0,
+    "diagnosticConsoleExactExpectedMatches": 17,
+    "diagnosticUnmatchedConsole": 0
+  },
+  "browserTimedOut": true,
+  "executorTimedOut": false,
+  "browserClosed": true,
+  "contextClosed": false,
+  "processClosed": {
+    "code": 1,
+    "signal": null
+  },
+  "failure": {
+    "name": "Error",
+    "message": "page.goto: Target page, context or browser has been closed\nCall log:\n\u001b[2m  - navigating to \"https://cinatoken.com/admin/endpoints\", waiting until \"networkidle\"\u001b[22m\n",
+    "stack": "page.goto: Target page, context or browser has been closed\nCall log:\n\u001b[2m  - navigating to \"https://cinatoken.com/admin/endpoints\", waiting until \"networkidle\"\u001b[22m\n\n    at checkPage (C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-independent-web-browser-696cc8df85ea423aa0d2545df155d197\\production-web-browser-observe-v2.mjs:70:31)\n    at C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-independent-web-browser-696cc8df85ea423aa0d2545df155d197\\production-web-browser-observe-v2.mjs:151:56"
+  }
+}

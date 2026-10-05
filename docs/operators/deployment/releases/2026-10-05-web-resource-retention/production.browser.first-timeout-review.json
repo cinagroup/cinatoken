@@ -1,0 +1,148 @@
+{
+  "schema": 1,
+  "at": "2026-10-05T13:16:46.191Z",
+  "actualExit": 1,
+  "strictPassed": false,
+  "phase": "cutover",
+  "gitSHA": "c13a64b9c3b2c90adcf736910ea408868d7854f1",
+  "workerVersionId": "2a0a2777-d3b1-47f0-a0a7-88e701b4d2d9",
+  "targetOrigin": "https://cinatoken.com",
+  "startedAt": "2026-10-05T13:08:04.521Z",
+  "finishedAt": "2026-10-05T13:14:32.733Z",
+  "browserVersion": "147.0.7727.15",
+  "browserPlugin": "absent",
+  "fallbackReason": "Browser plugin not available; existing bundled Playwright and cached Chromium",
+  "scope": "Real independent Web public SSR/hydration and 37 anonymous private route gates; desktop/theme/locale/mobile",
+  "expectedRoutes": 45,
+  "completedRoutes": 25,
+  "kindCounts": {
+    "public": 7,
+    "missing-model": 1,
+    "account": 10,
+    "admin": 7
+  },
+  "lastCompletedRoute": "/admin/routes",
+  "unknownDocumentStatus": 0,
+  "renderChecks": {
+    "nonblank": true,
+    "frameworkOverlayAbsent": true,
+    "hydrationFailureAbsent": true
+  },
+  "counts": {
+    "pageErrors": 0,
+    "warnings": 0,
+    "rawConsoleErrors": 18,
+    "rawHTTPErrors": 18,
+    "expectedAnonymous401": 17,
+    "expectedMissingModel404": 1,
+    "unknownHTTP": 0,
+    "requestFailures": 0,
+    "cancelledRequestFailures": 0,
+    "refusedMutations": 0,
+    "rawExplainedConsoleErrors": 0,
+    "rawUnexplainedConsoleErrors": 0,
+    "diagnosticConsoleExactExpectedMatches": 18,
+    "diagnosticUnmatchedConsole": 0
+  },
+  "interactions": [],
+  "browserTimedOut": true,
+  "executorTimedOut": false,
+  "browserClosed": true,
+  "contextClosed": true,
+  "processClosed": {
+    "code": 1,
+    "signal": null
+  },
+  "liveProofRawStillSame": true,
+  "failure": {
+    "name": "Error",
+    "message": "page.goto: Target page, context or browser has been closed\nCall log:\n\u001b[2m  - navigating to \"https://cinatoken.com/admin/data-policies\", waiting until \"networkidle\"\u001b[22m\n",
+    "stack": "page.goto: Target page, context or browser has been closed\nCall log:\n\u001b[2m  - navigating to \"https://cinatoken.com/admin/data-policies\", waiting until \"networkidle\"\u001b[22m\n\n    at checkPage (C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-independent-web-browser-696cc8df85ea423aa0d2545df155d197\\production-web-browser-observe-v2.mjs:70:31)\n    at C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-independent-web-browser-696cc8df85ea423aa0d2545df155d197\\production-web-browser-observe-v2.mjs:151:56"
+  },
+  "inputScripts": [
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-independent-web-browser-696cc8df85ea423aa0d2545df155d197\\production-web-browser-observe-v2.mjs",
+      "bytes": 15695,
+      "sha256": "415d123bbc71cfdb5d8ed02bf91f01d9021031358667cd7aaf2f0fd6edcd55be"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-independent-web-browser-696cc8df85ea423aa0d2545df155d197\\execute-web-browser-observe-v2.mjs",
+      "bytes": 3432,
+      "sha256": "ffd074ec8b52d5ce7c9dbd8a9dace29ec29130b661e0290e72f1f2d2d0424ed8"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-independent-web-browser-696cc8df85ea423aa0d2545df155d197\\web-route-matrix.mjs",
+      "bytes": 1770,
+      "sha256": "c8a3211d07979c037022f689aa442bd95de9b7c11843fb52b9ae9fa93ac01e61"
+    }
+  ],
+  "config": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-retention-40bda77a453343d89d5fe50706d58326\\retention-c13.browser-config.json",
+    "bytes": 557,
+    "sha256": "18b4f42e1c98cfc746eb65ab738e31b8a438ae62bb899e726d4b96bae166185b"
+  },
+  "liveProof": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-retention-40bda77a453343d89d5fe50706d58326/deployed.live-proof.json",
+    "bytes": 6014,
+    "sha256": "07a3a340bf77dbbf4b38f0fad029d6aa6efa6aa7f485dda7f65d139a2bb45ceb"
+  },
+  "files": [
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-independent-web-browser-696cc8df85ea423aa0d2545df155d197\\retention-c13a64b9-v2.json",
+      "bytes": 81183,
+      "sha256": "8b07f5439bb92498498b47a89a1a92e5703779e32e40c03b26e977d51afb8de2"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-independent-web-browser-696cc8df85ea423aa0d2545df155d197\\retention-c13a64b9-v2-execution-closed.json",
+      "bytes": 4216,
+      "sha256": "04a7c4c58cfacc5a6abdba5a9ea1197a826cef2863079fd0aded2eaf7aaaf2eb"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-independent-web-browser-696cc8df85ea423aa0d2545df155d197\\retention-c13a64b9-v2-stdout.log",
+      "bytes": 4740,
+      "sha256": "28dc308af754c8814a91382fd310dbfd8f5d9eef67406940520eec18db53920c"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-independent-web-browser-696cc8df85ea423aa0d2545df155d197\\retention-c13a64b9-v2-stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "screenshots": [
+    {
+      "name": "public-1",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-independent-web-browser-696cc8df85ea423aa0d2545df155d197\\retention-c13a64b9-v2-public-1.png",
+      "bytes": 54114,
+      "sha256": "3c3002c14200c075db9cb4077fc6926e1543c1dbc907150ee4981237dd71fbe6"
+    },
+    {
+      "name": "public-2",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-independent-web-browser-696cc8df85ea423aa0d2545df155d197\\retention-c13a64b9-v2-public-2.png",
+      "bytes": 43225,
+      "sha256": "f49bd3265c40e99f24e224d752a9c49f79b9702bd52a9fdfa51b0a51ebe49207"
+    },
+    {
+      "name": "account-9",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-independent-web-browser-696cc8df85ea423aa0d2545df155d197\\retention-c13a64b9-v2-account-9.png",
+      "bytes": 23753,
+      "sha256": "a99bb9d22fd16eaebd41e31ccceef6363f27760a9d6c0d6e3e6be1c6f5c4b8fb"
+    },
+    {
+      "name": "admin-19",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-independent-web-browser-696cc8df85ea423aa0d2545df155d197\\retention-c13a64b9-v2-admin-19.png",
+      "bytes": 25449,
+      "sha256": "3903b8a1ace00a01f66aa85758c1fdd71fd081e2d3b8b76c1967475ed3cf94f2"
+    }
+  ],
+  "visualInspection": "Reviewer independently viewed all currently captured PNGs; last inspection recorded by review completion message",
+  "unperformed": {
+    "realLogin": true,
+    "financialOrDBWrites": true,
+    "SSEUserCancellation": true,
+    "fullMigrationGateAcceptance": true
+  },
+  "limits": [
+    "Cancelled request count is only observed requestfailed events during validation; no business SSE cancel flow was executed.",
+    "For incomplete attempts raw console classification may not run; independent exact-response matching is diagnostic and does not change strict actualExit."
+  ]
+}

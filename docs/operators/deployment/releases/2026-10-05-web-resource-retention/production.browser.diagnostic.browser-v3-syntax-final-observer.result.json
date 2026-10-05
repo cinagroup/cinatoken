@@ -1,0 +1,16 @@
+{
+  "startedAt": "2026-10-05T13:48:03.132Z",
+  "completedAt": "2026-10-05T13:48:03.250Z",
+  "program": "node",
+  "arguments": [
+    "--check",
+    "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-independent-web-browser-v3-56686244d1194d108aad8107f6374be2\\production-web-browser-observe-v3.mjs"
+  ],
+  "actualExitCode": 0,
+  "signal": null,
+  "spawnError": null,
+  "stdoutPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-ci-inventory-d7b57ac3c0804fc0a7fbddb860e5bc8e\\browser-v3-syntax-final-observer.stdout.txt",
+  "stderrPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-ci-inventory-d7b57ac3c0804fc0a7fbddb860e5bc8e\\browser-v3-syntax-final-observer.stderr.txt",
+  "stdoutBytes": 0,
+  "stderrBytes": 0
+}
