@@ -1,0 +1,58 @@
+{
+  "at": "2026-10-05T09:07:36.552Z",
+  "http": 200,
+  "readOnly": true,
+  "secretValuesRecorded": false,
+  "records": [
+    {
+      "name": "CINAAUTH_ISSUER",
+      "declaredValue": "https://auth.cinaseek.si",
+      "before": "https://auth.cinaseek.si",
+      "match": true
+    },
+    {
+      "name": "CINAAUTH_ACCOUNT_ORIGIN",
+      "declaredValue": "https://accounts.cinaseek.si",
+      "before": "https://accounts.cinaseek.si",
+      "match": true
+    },
+    {
+      "name": "CINATOKEN_APP_ORIGIN",
+      "declaredValue": "https://cinatoken.com",
+      "before": "https://cinatoken.com",
+      "match": true
+    },
+    {
+      "name": "CINATOKEN_ADMIN_CONFIG_REQUIRE_REVISION",
+      "declaredValue": "false",
+      "before": null,
+      "match": true
+    },
+    {
+      "name": "CINATOKEN_OIDC_CLIENT_ID",
+      "declaredValue": "cinatoken-admin",
+      "before": "cinatoken-admin",
+      "match": true
+    },
+    {
+      "name": "CINATOKEN_REQUIRED_ROLES",
+      "declaredValue": "super_admin,security_admin",
+      "before": "super_admin,security_admin",
+      "match": true
+    },
+    {
+      "name": "ADMIN_COOKIE_SECURE",
+      "declaredValue": "true",
+      "before": "true",
+      "match": true
+    },
+    {
+      "name": "NEXT_PRIVATE_MINIMAL_MODE",
+      "declaredValue": "1",
+      "before": "1",
+      "match": true
+    }
+  ],
+  "mismatches": [],
+  "actualExit": 0
+}

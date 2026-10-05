@@ -26,7 +26,7 @@
 
 文档范围：按“将 checklist 整理成一个 md 文件，推进实施随时更新”的要求维护本文。完整清单为 **102 项主任务（99 项 P0–P8 任务、3 项来源任务）**，配套 G0–G8 验收门槛、页面/API/权限矩阵及批次记录；实施使用原任务 ID 持续更新，不另建主清单。
 
-当前发布（2026-10-05）：源码66ef5a6已提交推送；生产PostgreSQL81项ledger、审计/mutex/recovery权限及19项结构检查通过且诊断资源清理完成。已修复并行CI的Docker参数、旧触发器及role/cancel/deadline测试夹具；本地Playground92与holder3均通过，准备推送修复并以新固定SHA重跑Linux检查及Cloudflare部署。独立Web入口及G0–G8状态保留。
+当前发布（2026-10-05）：66ef5a6、b68f0f5及0e24a47已提交推送；生产PostgreSQL81项ledger、权限与19项结构检查通过，临时诊断资源清理完成。Linux Web与Docker冒烟通过；PG73冻结builder适配本地6/6，HTTP取消客户端候选仍待Linux真实验证。两次Cloudflare尝试均在部署前取消，尚未更新生产Worker；继续按active Admin/Proxy构建、类型、单元及线上检查发布。独立Web入口、实验holder与G0–G8状态保留。
 
 当前推进：目标 active，继续完整迁移。NEXT-13 J6 完整剩余497个Admin TS/TSX格式修复本地验收完成（5.69）：3320236→3379236 B，Root完整有界AST与独立Babel/TypeScript497/497通过；11文件18直接JSX父节点中的21原文本节点逐个转换为单字符串表达式，保留children类型/数量/顺序/值，1128评论/7427属性runtime值保持。完整Admin格式651通过/0告警/parse0，七CLI与审计0；fresh Admin types/lint、主unit1008＋相关5/30、Web1582均0。新Next I8iEBXkv6HbVKv644OYUc 的4045输入/2827产物实际构建与冻结0；旧新各8真实产品React流程＋10HTTP场景通过，6采样截图对原字节同，范围是受控SQLite/身份夹具与实际冻结Next，不证明全应用/真实身份/原生平台。临时before备份335和Mirror ordinary产物1983缺失已从独立/冻结副本按原hash恢复；修复前失败和原因未明的链接观察保留，不能声称产物从未漂移。Web2289/source4aaa…与P71 Root633不变。102主任务/54矩阵/G0–G8/E00–E08/211checkbox状态完整保持，主任务仅P6-11勾选；326来源、真实身份/原生三库/链、Node22 LinuxCI/双平台/发布回滚及旧页退役继续待验，RootP66/29string false/public origin空、未部署。
 
@@ -2393,3 +2393,6 @@ CI夹具修复已完成：Web Docker补齐两个--env；Docker PG精确核对全
 - 2026-10-05：按用户明确授权启动Cloudflare生产控制台发布（5.70）；记录生产Postgres/Hyperdrive、6个Secret名称及旧版本，使用固定提交的Linux Node22构建部署；临时目录排除、历史BYOK夹具库存失败及后续回归保留，完整任务与G0–G8状态不提前完成。
 
 - 2026-10-05：发布5.70更新：66ef5a6提交推送完成，实际81项PG与19项结构/权限复核通过并清理临时Worker；Core1343/Admin1043全unit通过，首轮LinuxCloudflare构建通过且发布步骤skipped，正在处理并行CI夹具失败后恢复部署。
+
+
+2026-10-05发布续记：Docker真实Linux通过（37286409120）；显式Admin公开vars与生产无差异。PG73测试使用自有Temp字节精确冻结副本，生产builder/正式SQL/grant未改；HTTP取消候选显式关闭TCP，严格取消观察与单绑定/no-release断言未降低，Windows原生startup跳过不能视为通过。该未启用holder路径继续记录未通过状态，不作为现有Admin/Proxy目录价格发布依赖。

@@ -1,7 +1,7 @@
 {
   "schema": "cinatoken.cloudflare.web-frontend-release.v1",
-  "updatedAt": "2026-10-05T08:40:32.619Z",
-  "status": "ci-fixtures-fixed-awaiting-linux-rerun",
+  "updatedAt": "2026-10-05T09:09:05.438Z",
+  "status": "final-fixtures-ready-for-production-deployment",
   "userAuthorizedActions": [
     "commit",
     "push",
@@ -79,6 +79,11 @@
       "actualExit": 0,
       "checked": 35,
       "mismatches": 0
+    },
+    "declaredAdminPublicVars": {
+      "actualExit": 0,
+      "mismatches": 0,
+      "secretValuesRecorded": false
     }
   },
   "commit": {
@@ -121,6 +126,15 @@
         "requestedBy": "Root pending final catalog verification and Linux CI failure review",
         "linuxNode22Build": "success",
         "proxyBundle": "skipped",
+        "proxyDeploy": "skipped",
+        "adminDeploy": "skipped"
+      },
+      {
+        "runId": 37285277889,
+        "url": "https://github.com/cinagroup/cinatoken/actions/runs/37285277889",
+        "sha": "b68f0f565b7d98aedbe4ea9df59876fba30b4674",
+        "conclusion": "cancelled",
+        "requestedBy": "Root pending Docker SQL cast and frozen PG73 fixture corrections",
         "proxyDeploy": "skipped",
         "adminDeploy": "skipped"
       }
@@ -210,6 +224,21 @@
       "path": "docs/operators/deployment/releases/2026-10-05-web-frontend/dockerIndependentReview.json",
       "bytes": 2021,
       "sha256": "38e4b5703afd6ab102e156116e6143f7ab32bb883c7a9ea28c6d309278feb4e2"
+    },
+    "pg73BuilderFixture": {
+      "path": "docs/operators/deployment/releases/2026-10-05-web-frontend/pg73BuilderFixture.json",
+      "bytes": 41771,
+      "sha256": "0866cad3b50a4fbd534e08c7eacc63dfc774b8c26f626c452fa53255fd75a2ca"
+    },
+    "httpCancelCandidate": {
+      "path": "docs/operators/deployment/releases/2026-10-05-web-frontend/httpCancelCandidate.json",
+      "bytes": 15290,
+      "sha256": "d9dc4c6c78fc2dd0b114387dae857bab66e9c905e66e771fbea63444ca47c2cc"
+    },
+    "declaredAdminVars": {
+      "path": "docs/operators/deployment/releases/2026-10-05-web-frontend/declaredAdminVars.json",
+      "bytes": 1383,
+      "sha256": "356b5b018d9725059b8ac72aa9d80bc9190bff3cdee2d4500170eab42a8b15ab"
     }
   },
   "temporaryProbeApproval": {
@@ -223,13 +252,24 @@
       "runId": 37282463137,
       "conclusion": "failure",
       "rootCause": "Docker smoke argv missing --env before two rollout flags",
-      "fix": "Added the two --env options; Linux rerun pending"
+      "fix": "Added the two --env options; Linux rerun pending",
+      "rerun": {
+        "runId": 37285216534,
+        "sha": "b68f0f565b7d98aedbe4ea9df59876fba30b4674",
+        "conclusion": "success"
+      }
     },
     "dockerSmoke": {
       "runId": 37282463065,
       "conclusion": "failure",
       "rootCause": "Fixture expected 5 ledger triggers before 0078 added 2 history guards",
-      "fix": "Assert exact seven names, tables and enabled mode; Linux rerun pending"
+      "fix": "Assert exact seven names, tables and enabled mode; Linux rerun pending",
+      "rerun": {
+        "runId": 37286409120,
+        "sha": "0e24a4798c4d25c82e7a44dec3802042ff4ff43c",
+        "conclusion": "success",
+        "fix": "Cast t.tgenabled::text while preserving exact seven trigger checks"
+      }
     },
     "proxySafety": {
       "runId": 37282462988,
@@ -256,6 +296,38 @@
         },
         "proxyStagingTypecheckExit": 0,
         "nativePostgresAndHTTPCancellation": "Await same-commit Linux CI"
+      },
+      "rerun": {
+        "runId": 37285216598,
+        "sha": "b68f0f565b7d98aedbe4ea9df59876fba30b4674",
+        "conclusion": "failure",
+        "adminPlayground": "success",
+        "remaining": "Frozen PG73 legacy proposal fixture and inactive synthetic holder HTTP cancellation"
+      },
+      "finalFixture": {
+        "pg73BuilderContracts": {
+          "actualExit": 0,
+          "passed": 6,
+          "productionBuilderChanged": false,
+          "formalSqlChanged": false,
+          "nativeLinux": "pending"
+        },
+        "httpClient": {
+          "realTcpControlPassed": true,
+          "inProcessPassed": 3,
+          "nativeWindowsPassed": 2,
+          "nativeWindowsStartupSkipped": 3,
+          "strictHttpCancellationPassed": false,
+          "linux": "pending",
+          "assertionsWeakened": false,
+          "productionGatewayChanged": false
+        },
+        "activeProductionDependency": false,
+        "upstreamEvidence": {
+          "issue": "https://github.com/cloudflare/workerd/issues/6832",
+          "pullRequest": "https://github.com/cloudflare/workerd/pull/6833",
+          "interpretation": "Possible runtime relationship only; not proven for locked version"
+        }
       }
     },
     "automaticReleasePR": {
@@ -265,5 +337,19 @@
       "cloudflareDeploymentDependency": false,
       "repositoryPermissionsChanged": false
     }
-  }
+  },
+  "commits": [
+    {
+      "sha": "66ef5a698c0bb16aa1f2c490c79b6a06bdb5b33b",
+      "pushed": true
+    },
+    {
+      "sha": "b68f0f565b7d98aedbe4ea9df59876fba30b4674",
+      "pushed": true
+    },
+    {
+      "sha": "0e24a4798c4d25c82e7a44dec3802042ff4ff43c",
+      "pushed": true
+    }
+  ]
 }

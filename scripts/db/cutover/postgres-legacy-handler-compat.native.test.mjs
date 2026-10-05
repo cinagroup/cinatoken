@@ -12,7 +12,7 @@ import { pgCoreSchema } from '../../../packages/core/src/storage/drizzle/schema.
 import { insertRequestUsageAndChargeTxPg } from '../../../packages/core/src/db/postgres/critical-writes.impl.ts';
 import { createPostgresRequestLogsRepository } from '../../../packages/core/src/db/postgres/request-logs.impl.ts';
 import { buildPostgresReplayReservationBackfill } from './build-postgres-replay-reservation-backfill.mjs';
-import { buildRequestLegacyParentDefaultAclActivation } from './build-request-legacy-parent-default-acl-activation.mjs';
+import { createPg73LegacyParentBuilderFixture } from './pg73-legacy-parent-builder-fixture.mjs';
 import { grantPg73RuntimeFixture, listPg73Migrations } from './pg73-native-fixture.mjs';
 
 const schema = 'cinatoken_gateway';
@@ -63,6 +63,7 @@ test('ordinary writer and legacy readers survive replay parent switch',
       ], sourceSha256: {}, stages: [] };
     const stage = (name, detail = {}) => report.stages.push({ name, result: 'PASS', ...detail });
     const clients = [];
+    let builderFixture = null;
     try {
       assert.match(cluster.binaryVersion, /PostgreSQL\) 18\.6/);
       const migratorPassword = randomBytes(24).toString('hex');
@@ -143,7 +144,9 @@ test('ordinary writer and legacy readers survive replay parent switch',
       const [page] = await migrator.begin(tx => tx.unsafe(backfill.batchSql));
       assert.deepEqual({ scanned: page.scanned, reserved: page.reserved, next: page.next_request_id },
         { scanned: 1, reserved: 1, next: id });
-      const bundle = await buildRequestLegacyParentDefaultAclActivation({ activation: 'reviewed-v1' });
+      builderFixture = await createPg73LegacyParentBuilderFixture();
+      report.pg73BuilderManifest = builderFixture.manifest;
+      const bundle = await builderFixture.build({ activation: 'reviewed-v1' });
       report.sourceSha256.activationBundle = sha(bundle.sql);
       await migrator.begin(tx => tx.unsafe(bundle.bodySql).simple());
       await grantPg73RuntimeFixture({ cluster, migrator, migratorUrl });
@@ -205,7 +208,10 @@ test('ordinary writer and legacy readers survive replay parent switch',
       await Promise.allSettled(clients.map(client => client.end({ timeout: 1 })));
       try { report.cleanupDetails = await cluster.cleanup(); report.cleanup = 'PASS'; }
       catch (error) { report.cleanup = 'FAIL'; report.cleanupError = errorSummary(error); }
+      try { await builderFixture?.cleanup(); report.pg73BuilderCleanup = 'PASS'; }
+      catch (error) { report.pg73BuilderCleanup = 'FAIL'; report.pg73BuilderCleanupError = errorSummary(error); }
       await writeFile(reportFile, JSON.stringify(report, null, 2) + '\n');
+      assert.equal(report.pg73BuilderCleanup, 'PASS', `owned builder fixture cleanup failed; report=${reportFile}`);
       assert.equal(report.cleanup, 'PASS', `owned fixture cleanup failed; report=${reportFile}`);
     }
   });

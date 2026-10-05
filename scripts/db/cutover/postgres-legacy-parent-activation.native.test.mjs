@@ -10,7 +10,7 @@ import postgres from 'postgres';
 import { startNativePostgres } from '../../../packages/core/src/test-support/postgres-native-cluster.mjs';
 import { buildPostgresReplayReservationBackfill } from './build-postgres-replay-reservation-backfill.mjs';
 import { buildRequestLegacyParentActivation } from './build-request-legacy-parent-activation.mjs';
-import { buildRequestLegacyParentDefaultAclActivation } from './build-request-legacy-parent-default-acl-activation.mjs';
+import { createPg73LegacyParentBuilderFixture } from './pg73-legacy-parent-builder-fixture.mjs';
 import { grantPg73RuntimeFixture, listPg73Migrations } from './pg73-native-fixture.mjs';
 
 const schema = 'cinatoken_gateway';
@@ -58,6 +58,7 @@ test('legacy-aware parent activation reserves old IDs and admits only trusted ne
       ], sourceSha256: {}, stages: [] };
     const stage = (name, details = {}) => report.stages.push({ name, result: 'PASS', ...details });
     const clients = [];
+    let builderFixture = null;
     try {
       assert.match(cluster.binaryVersion, /PostgreSQL\) 18\.6/);
       const [server] = await cluster.admin.unsafe(`SELECT current_setting('server_version_num')::integer AS version,
@@ -146,7 +147,9 @@ test('legacy-aware parent activation reserves old IDs and admits only trusted ne
         await tx.unsafe(body).simple();
       });
       await grantPg73RuntimeFixture({ cluster, migrator, migratorUrl });
-      const bundle = await buildRequestLegacyParentDefaultAclActivation({ activation: 'reviewed-v1' });
+      builderFixture = await createPg73LegacyParentBuilderFixture();
+      report.pg73BuilderManifest = builderFixture.manifest;
+      const bundle = await builderFixture.build({ activation: 'reviewed-v1' });
       report.sourceSha256.generatedActivationBundle = digest(bundle.sql);
       assert.equal(bundle.formalCorpusSha256, report.sourceSha256.formalMigrationCorpus);
       assert.equal(bundle.reservationSourceSha256, report.sourceSha256.reservation);
@@ -454,7 +457,10 @@ test('legacy-aware parent activation reserves old IDs and admits only trusted ne
       await Promise.allSettled(clients.map(sql => sql.end({ timeout: 1 })));
       try { report.cleanupDetails = await cluster.cleanup(); report.cleanup = 'PASS'; }
       catch (error) { report.cleanup = 'FAIL'; report.cleanupError = errorSummary(error); }
+      try { await builderFixture?.cleanup(); report.pg73BuilderCleanup = 'PASS'; }
+      catch (error) { report.pg73BuilderCleanup = 'FAIL'; report.pg73BuilderCleanupError = errorSummary(error); }
       await writeFile(reportFile, JSON.stringify(report, null, 2) + '\n');
+      assert.equal(report.pg73BuilderCleanup, 'PASS', `owned builder fixture cleanup failed; report=${reportFile}`);
       assert.equal(report.cleanup, 'PASS', `owned fixture cleanup failed; report=${reportFile}`);
     }
   });

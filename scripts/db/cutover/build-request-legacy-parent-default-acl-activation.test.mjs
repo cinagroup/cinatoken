@@ -1,10 +1,28 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
+import { readFile, stat, writeFile } from 'node:fs/promises';
+import { join } from 'node:path';
 import { buildRequestLegacyParentDefaultAclActivation } from './build-request-legacy-parent-default-acl-activation.mjs';
+import { createPg73LegacyParentBuilderFixture } from './pg73-legacy-parent-builder-fixture.mjs';
 
-test('legacy parent ACL bundle pins the parent and keeps gate inside one transaction', async () => {
+test('current formal filesystem keeps the production PG73 builder closed', async () => {
   await assert.rejects(buildRequestLegacyParentDefaultAclActivation(), /Explicit reviewed-v1/);
-  const bundle = await buildRequestLegacyParentDefaultAclActivation({ activation: 'reviewed-v1' });
+  await assert.rejects(buildRequestLegacyParentDefaultAclActivation({ activation: 'reviewed-v1' }),
+    /Formal PostgreSQL migration version set changed/);
+});
+
+test('legacy parent ACL bundle pins the parent and keeps gate inside one transaction', async t => {
+  const fixture = await createPg73LegacyParentBuilderFixture();
+  t.after(() => fixture.cleanup());
+  await assert.rejects(fixture.build(), /Explicit reviewed-v1/);
+  const bundle = await fixture.build({ activation: 'reviewed-v1' });
+  assert.equal(fixture.manifest.filter(file => file.kind === 'migration').length, 73);
+  assert.equal(fixture.manifest.filter(file => file.kind === 'builder').length, 3);
+  assert.equal(fixture.manifest.filter(file => file.kind === 'proposal').length, 3);
+  for (const file of fixture.manifest) {
+    assert.deepEqual(await readFile(file.target), await readFile(file.source),
+      'The frozen builder graph and corpus must retain every source byte');
+  }
   assert.match(bundle.originalParentSha256, /^[0-9a-f]{64}$/);
   assert.equal(bundle.gateSha256,
     '1079eb858811c70dd850b95be68f64e5c7b8361926e8c3f0a9e80621f6125b10');
@@ -44,4 +62,26 @@ test('legacy parent ACL bundle pins the parent and keeps gate inside one transac
   assert.ok(bundle.bodySql.indexOf('CREATE TABLE cinatoken_gateway.request_dispatch_requests')
     < bundle.bodySql.indexOf('CREATE TRIGGER request_dispatch_requests_replay_reserve'));
   assert.doesNotMatch(bundle.bodySql, /Existing dispatch intents need separately reviewed request backfill/);
+});
+
+test('copied PG73 builder still rejects migration byte and version drift', async t => {
+  const fixture = await createPg73LegacyParentBuilderFixture();
+  t.after(() => fixture.cleanup());
+  const migration = fixture.manifest.find(file => file.kind === 'migration');
+  const bytes = await readFile(migration.target);
+  await writeFile(migration.target, Buffer.concat([bytes, Buffer.from('\n')]));
+  await assert.rejects(fixture.build({ activation: 'reviewed-v1' }),
+    /Formal PostgreSQL migration corpus changed/);
+  await writeFile(migration.target, bytes);
+  await writeFile(join(fixture.root, 'packages/core/migrations-postgres/9999_unreviewed.sql'), '');
+  await assert.rejects(fixture.build({ activation: 'reviewed-v1' }),
+    /Formal PostgreSQL migration version set changed/);
+});
+
+test('owned builder fixture cleanup removes only its exact Temp directory', async () => {
+  const fixture = await createPg73LegacyParentBuilderFixture();
+  await fixture.cleanup();
+  await assert.rejects(stat(fixture.root), error => error.code === 'ENOENT');
+  await assert.rejects(fixture.build({ activation: 'reviewed-v1' }), /already been cleaned up/);
+  await fixture.cleanup();
 });

@@ -8,6 +8,7 @@ import assert from 'node:assert/strict';
 import { createHash, randomUUID } from 'node:crypto';
 import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
+import { createServer, request as httpRequest } from 'node:http';
 import test from 'node:test';
 import { build } from 'esbuild';
 import { Miniflare, convertV4MiniflareOptions } from 'miniflare';
@@ -47,6 +48,52 @@ async function workerScript(main) {
   const built = await build({ entryPoints: [entry], bundle: true, format: 'esm', platform: 'browser', target: 'es2022', write: false });
   assert.equal(built.outputFiles.length, 1);
   return built.outputFiles[0].text;
+}
+
+// A dedicated socket makes the transport cancellation explicit. In particular,
+// this does not depend on cancelling Miniflare's wrapped Undici response body.
+function postStreamingHttp(url, body, contentType = 'application/json') {
+  return new Promise((resolve, reject) => {
+    const request = httpRequest(url, {
+      method: 'POST', agent: false,
+      headers: { 'Content-Type': contentType, 'Content-Length': Buffer.byteLength(body) },
+    });
+    request.on('error', reject);
+    request.setTimeout(10000, () => request.destroy(new Error('fixture HTTP socket timed out')));
+    request.once('response', response => {
+      response.on('error', reject);
+      const chunks = [];
+      let size = 0;
+      const onData = chunk => {
+        chunks.push(chunk);
+        size += chunk.byteLength;
+        if (size > 128) {
+          request.destroy(); response.destroy();
+          reject(new Error('fixture first SSE frame exceeded its bound'));
+          return;
+        }
+        const firstChunk = Buffer.concat(chunks);
+        if (!firstChunk.includes('\n\n')) return;
+        response.pause();
+        response.removeListener('data', onData);
+        resolve({
+          status: response.statusCode, headers: response.headers, firstChunk,
+          async cancel() {
+            if (!response.closed) {
+              const closed = new Promise(resolveClosed => response.once('close', resolveClosed));
+              request.destroy(); response.destroy();
+              await closed;
+            }
+            return { requestDestroyed: request.destroyed, responseDestroyed: response.destroyed,
+              responseComplete: response.complete };
+          },
+        });
+      };
+      response.on('data', onData);
+      response.once('end', () => reject(new Error('fixture response ended before its first SSE frame')));
+    });
+    request.end(body);
+  });
 }
 
 async function fixture(t) {
@@ -109,9 +156,7 @@ async function fixture(t) {
   async function postHttp(body, contentType = 'application/json') {
     const fixtureRuntimeUrl = await mf.ready;
     assert.equal(fixtureRuntimeUrl.hostname, '127.0.0.1');
-    return mf.dispatchFetch('https://gateway.fixture.invalid/fixture/complete-text', {
-      method: 'POST', headers: { 'Content-Type': contentType }, body,
-    });
+    return postStreamingHttp(new URL('/fixture/complete-text', fixtureRuntimeUrl), body, contentType);
   }
   return { post, postHttp, observations: OBSERVATIONS };
 }
@@ -129,6 +174,37 @@ test('v364 configs keep the synthetic holder private and bind only the named hol
   assert.deepEqual(gatewayConfig.triggers, { crons: [] });
   assert.deepEqual(privateConfig.triggers, { crons: [] });
   assert.equal(createHash('sha256').update(SYNTHETIC_PUBLIC_BODY_V364).digest('hex'), SYNTHETIC_QUOTE_V364.finalBodySha256);
+});
+
+test('HTTP fixture cancellation closes its dedicated TCP response before completion', { timeout: 10000 }, async t => {
+  let requestCount = 0;
+  let requestBody = '';
+  let peerClosed;
+  const closed = new Promise(resolve => { peerClosed = resolve; });
+  const server = createServer((request, response) => {
+    requestCount++;
+    request.setEncoding('utf8');
+    request.on('data', chunk => { requestBody += chunk; });
+    request.on('end', () => {
+      response.writeHead(200, { 'Content-Type': 'text/event-stream' });
+      response.write(': holder-ready\n\n');
+    });
+    response.once('close', peerClosed);
+  });
+  await new Promise(resolve => server.listen(0, '127.0.0.1', resolve));
+  t.after(() => new Promise(resolve => server.close(resolve)));
+  const body = JSON.stringify(envelope());
+  const response = await postStreamingHttp(new URL(`http://127.0.0.1:${server.address().port}/fixture/complete-text`), body);
+  t.after(() => response.cancel());
+  assert.equal(response.status, 200);
+  assert.equal(response.headers['content-type'], 'text/event-stream');
+  assert.equal(response.firstChunk.toString(), ': holder-ready\n\n');
+  assert.deepEqual(await response.cancel(), {
+    requestDestroyed: true, responseDestroyed: true, responseComplete: false,
+  });
+  await closed;
+  assert.equal(requestCount, 1);
+  assert.equal(requestBody, body);
 });
 
 test('private Worker rejects oversized, foreign, and malformed six-field requests without disclosing holder data', { timeout: 30000 }, async t => {
@@ -186,11 +262,14 @@ test('response-body cancellation is observed inside the private holder', { timeo
   if (!f) return;
   const e = envelope();
   const response = await f.postHttp(JSON.stringify(e));
+  t.after(() => response.cancel());
   assert.equal(response.status, 200);
+  assert.equal(response.headers['content-type'], 'text/event-stream');
   assert.equal(await f.observations.get(`accepted:${e.attemptNonce}`), 'one');
-  const reader = response.body.getReader();
-  assert.equal(new TextDecoder().decode((await reader.read()).value), ': holder-ready\n\n');
-  await reader.cancel('fixture-client-cancel');
+  assert.equal(response.firstChunk.toString(), ': holder-ready\n\n');
+  assert.deepEqual(await response.cancel(), {
+    requestDestroyed: true, responseDestroyed: true, responseComplete: false,
+  });
   let observed = null;
   for (let n = 0; n < 100 && observed === null; n++) {
     observed = await f.observations.get(`cancel:${e.attemptNonce}`);
@@ -198,4 +277,5 @@ test('response-body cancellation is observed inside the private holder', { timeo
   }
   assert.equal(observed, 'observed');
   assert.equal(await f.observations.get(`release:${e.attemptNonce}`), null);
+  assert.equal(await f.observations.get(`accepted:${e.attemptNonce}`), 'one');
 });

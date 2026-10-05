@@ -1,0 +1,347 @@
+{
+  "schema": "v364-HTTP-cancel-client-only-final-v1",
+  "at": "2026-10-05T09:05:43.511Z",
+  "status": "CLIENT-CANDIDATE-READY-NATIVE-LINUX-PENDING",
+  "root": "C:/cinagroup/cinatoken",
+  "versions": {
+    "miniflare": "5.20260828.0-alpha",
+    "workerd": "1.20260828.1",
+    "tsx": "4.21.0",
+    "esbuild": "0.27.3"
+  },
+  "node": "v24.14.1",
+  "platform": "win32",
+  "owned": [
+    {
+      "relative": "packages/proxy/scripts/staging/chat-holder-binding-v364-http-cancel-successor.test.mjs",
+      "before": {
+        "path": "C:\\cinagroup\\cinatoken\\packages\\proxy\\scripts\\staging\\chat-holder-binding-v364-http-cancel-successor.test.mjs",
+        "bytes": 9918,
+        "sha256": "0820bbd5e673d3951130866f11d13e72fbcaa73bd0683f7d19ca8de7ab6df4b1"
+      },
+      "after": {
+        "path": "C:\\cinagroup\\cinatoken\\packages\\proxy\\scripts\\staging\\chat-holder-binding-v364-http-cancel-successor.test.mjs",
+        "bytes": 13354,
+        "sha256": "d23d1c710b539b6c64655fbb1fa4e4de85b228bab19c757bc0e4de48528972e5"
+      },
+      "beforeSnapshot": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-http-cancel-fixture-xX6w3a\\before\\chat-holder-binding-v364-http-cancel-successor.test.mjs",
+        "bytes": 9918,
+        "sha256": "0820bbd5e673d3951130866f11d13e72fbcaa73bd0683f7d19ca8de7ab6df4b1"
+      }
+    },
+    {
+      "relative": "packages/proxy/scripts/staging/chat-holder-gateway-v364.ts",
+      "before": {
+        "path": "C:\\cinagroup\\cinatoken\\packages\\proxy\\scripts\\staging\\chat-holder-gateway-v364.ts",
+        "bytes": 1534,
+        "sha256": "8c85b01ba54daa9b7302c726d20693d08ccb3395350ea6a333817eed46441eaf"
+      },
+      "after": {
+        "path": "C:\\cinagroup\\cinatoken\\packages\\proxy\\scripts\\staging\\chat-holder-gateway-v364.ts",
+        "bytes": 1534,
+        "sha256": "8c85b01ba54daa9b7302c726d20693d08ccb3395350ea6a333817eed46441eaf"
+      },
+      "beforeSnapshot": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-http-cancel-fixture-xX6w3a\\before\\chat-holder-gateway-v364.ts",
+        "bytes": 1534,
+        "sha256": "8c85b01ba54daa9b7302c726d20693d08ccb3395350ea6a333817eed46441eaf"
+      }
+    },
+    {
+      "relative": "packages/proxy/scripts/staging/chat-holder-private-v364.ts",
+      "before": {
+        "path": "C:\\cinagroup\\cinatoken\\packages\\proxy\\scripts\\staging\\chat-holder-private-v364.ts",
+        "bytes": 5367,
+        "sha256": "44070fcbb7058b915329a150634eaa649c1b3601724495a1620e94ce2d54d1bf"
+      },
+      "after": {
+        "path": "C:\\cinagroup\\cinatoken\\packages\\proxy\\scripts\\staging\\chat-holder-private-v364.ts",
+        "bytes": 5367,
+        "sha256": "44070fcbb7058b915329a150634eaa649c1b3601724495a1620e94ce2d54d1bf"
+      },
+      "beforeSnapshot": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-http-cancel-fixture-xX6w3a\\before\\chat-holder-private-v364.ts",
+        "bytes": 5367,
+        "sha256": "44070fcbb7058b915329a150634eaa649c1b3601724495a1620e94ce2d54d1bf"
+      }
+    }
+  ],
+  "sourceChanges": 1,
+  "privateAndGatewayRawUnchanged": true,
+  "selectedCandidateSnapshot": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-http-cancel-fixture-xX6w3a\\selected-candidate-http-fixture.mjs",
+    "bytes": 13354,
+    "sha256": "d23d1c710b539b6c64655fbb1fa4e4de85b228bab19c757bc0e4de48528972e5"
+  },
+  "checks": [
+    {
+      "executable": "C:\\Program Files\\nodejs\\node.exe",
+      "argv": [
+        "--check",
+        "C:\\cinagroup\\cinatoken\\packages\\proxy\\scripts\\staging\\chat-holder-binding-v364-http-cancel-successor.test.mjs"
+      ],
+      "cwd": "C:/cinagroup/cinatoken",
+      "actualExit": 0,
+      "signal": null,
+      "spawnError": null,
+      "log": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-http-cancel-fixture-xX6w3a\\final-owned-syntax.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "result": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-http-cancel-fixture-xX6w3a\\final-owned-syntax.result.json",
+        "bytes": 540,
+        "sha256": "d9d3a67ba434382b9ae0cef4c77507e71b8fa0162d22efcd93f6b10de3a5095e"
+      }
+    },
+    {
+      "executable": "git",
+      "argv": [
+        "diff",
+        "--check",
+        "--",
+        "packages/proxy/scripts/staging/chat-holder-binding-v364-http-cancel-successor.test.mjs"
+      ],
+      "cwd": "C:/cinagroup/cinatoken",
+      "actualExit": 0,
+      "signal": null,
+      "spawnError": null,
+      "log": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-http-cancel-fixture-xX6w3a\\final-owned-diff-check.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "result": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-http-cancel-fixture-xX6w3a\\final-owned-diff-check.result.json",
+        "bytes": 504,
+        "sha256": "602de54d93acf839455ec2fedda12a432ae17223fc60f9e02b9fcc28cba4c5a8"
+      }
+    },
+    {
+      "executable": "git",
+      "argv": [
+        "diff",
+        "--",
+        "packages/proxy/scripts/staging/chat-holder-binding-v364-http-cancel-successor.test.mjs"
+      ],
+      "cwd": "C:/cinagroup/cinatoken",
+      "actualExit": 0,
+      "signal": null,
+      "spawnError": null,
+      "log": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-http-cancel-fixture-xX6w3a\\final-owned-diff.log",
+        "bytes": 6715,
+        "sha256": "d975efbddab277127b97ebe6b20e5e1e0c75399c17501d48c0e8c58bb5ac31d8"
+      },
+      "result": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-http-cancel-fixture-xX6w3a\\final-owned-diff.result.json",
+        "bytes": 486,
+        "sha256": "4a376a4221898ec58a390c6fe883f92b3fb110ec40c9baa20f487afe678177d2"
+      }
+    }
+  ],
+  "tests": {
+    "originalNativeCancellation": {
+      "actualExit": 0,
+      "pass": 0,
+      "skip": 1,
+      "workerExecuted": false,
+      "reason": "Windows workerd 0xc0000005 startup",
+      "log": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-http-cancel-fixture-xX6w3a\\baseline-native-cancel.log",
+        "bytes": 2531,
+        "sha256": "5d9251f7d65e56c959e2ba1b00f2d02141aaec9b3898f2190fa8ab8582c7d217"
+      }
+    },
+    "candidateFullNative": {
+      "actualExit": 0,
+      "pass": 2,
+      "skip": 3,
+      "nativeCancellationPassed": false,
+      "reason": "Windows workerd startup failure before Worker execution",
+      "log": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-http-cancel-fixture-xX6w3a\\candidate-native-full.log",
+        "bytes": 3141,
+        "sha256": "7493eb7073a1eaa570a63c8f604b7d678f0251638db0acb0c9a9adba7393c05e"
+      }
+    },
+    "existingInProcessHolder": {
+      "actualExit": 0,
+      "pass": 3,
+      "skip": 0,
+      "fail": 0,
+      "log": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-http-cancel-fixture-xX6w3a\\candidate-existing-inprocess-holder.log",
+        "bytes": 486,
+        "sha256": "b020bbd2eba136a3caf5069f211992d8886d94007abfad65ddeecea4b616ac27"
+      }
+    },
+    "actualTCPClientComparison": {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-http-cancel-fixture-xX6w3a\\actual-TCP-client-cancellation-comparison-v1.json",
+      "bytes": 885,
+      "sha256": "3f87246db13c9601eab6e8ea817a2753b81552c92d3cd35a96cb3b22e9198098"
+    }
+  },
+  "strictContract": {
+    "privateCancellationObservedAssertionPreserved": true,
+    "oneBindingPreserved": true,
+    "noReleaseAssertionPreserved": true,
+    "acceptedOneRecheckedAfterCancel": true,
+    "newSkipBranches": 0,
+    "bodyPayloadUnchanged": true,
+    "oneActualNodeHTTPPostAndPeerCloseControlPassed": true
+  },
+  "interpretation": {
+    "actualLinuxBaselineFailurePreserved": {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-release-b68f0f5-ci-monitor-60457a7e2284450693feea902eebff58/007-proxy-safety-log-failed.stdout.log",
+      "bytes": 24656,
+      "sha256": "81a8446768c2d6e4ad4ba8430602b2556fd472b78b199f19705651d7a733a052"
+    },
+    "readerCancelDoesNotAbortTCPHypothesisDisprovedForLocalNode24Control": true,
+    "previousMiniflareDispatchFetchUsesUndiciTCP": true,
+    "pendingPrivatePullStaticFact": "async pull awaits release KV and timer loop up to 300 iterations; current cancel retains its KV put via waitUntil",
+    "pendingPullIsRootCauseConfirmed": false,
+    "rootCause": "unresolved; native runtime bridge teardown remains possible",
+    "startPumpChangePerformed": false,
+    "productionSourceChanged": false,
+    "productionRuntimeOrDeploymentVerified": false,
+    "requiredNextEvidence": "same committed SHA Linux native strict fixture without Windows skips"
+  },
+  "upstreamContext": [
+    {
+      "url": "https://github.com/cloudflare/workerd/issues/6832",
+      "claim": "Official report of source.cancel missing during TCP disconnect with async JS ReadableStream; report tested through July 2026, not proof for pinned August runtime"
+    },
+    {
+      "url": "https://github.com/cloudflare/workerd/pull/6833",
+      "claim": "Open proposed pump cancellation-lifetime fix; not treated as installed runtime behavior"
+    }
+  ],
+  "boundaries": {
+    "gitWrites": 0,
+    "deployments": 0,
+    "remoteRequests": 0,
+    "dependencyInstalls": 0,
+    "privateGatewaySourceWrites": 0,
+    "formalSQLWrites": 0
+  },
+  "rawEvidence": [
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-http-cancel-fixture-xX6w3a\\actual-TCP-client-cancellation-comparison-v1.json",
+      "bytes": 885,
+      "sha256": "3f87246db13c9601eab6e8ea817a2753b81552c92d3cd35a96cb3b22e9198098"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-http-cancel-fixture-xX6w3a\\baseline-native-cancel.log",
+      "bytes": 2531,
+      "sha256": "5d9251f7d65e56c959e2ba1b00f2d02141aaec9b3898f2190fa8ab8582c7d217"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-http-cancel-fixture-xX6w3a\\baseline-native-cancel.result.json",
+      "bytes": 721,
+      "sha256": "a41afb0c2dfe32388c5b506eff73af717b49fd23eb48bfc2988930eba800e2d3"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-http-cancel-fixture-xX6w3a\\before\\chat-holder-binding-v364-http-cancel-successor.test.mjs",
+      "bytes": 9918,
+      "sha256": "0820bbd5e673d3951130866f11d13e72fbcaa73bd0683f7d19ca8de7ab6df4b1"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-http-cancel-fixture-xX6w3a\\before\\chat-holder-gateway-v364.ts",
+      "bytes": 1534,
+      "sha256": "8c85b01ba54daa9b7302c726d20693d08ccb3395350ea6a333817eed46441eaf"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-http-cancel-fixture-xX6w3a\\before\\chat-holder-private-v364.ts",
+      "bytes": 5367,
+      "sha256": "44070fcbb7058b915329a150634eaa649c1b3601724495a1620e94ce2d54d1bf"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-http-cancel-fixture-xX6w3a\\before-raw-bindings-v1.json",
+      "bytes": 2307,
+      "sha256": "01825e92b6fac53aee11ff8612e3deeb2790345f86935042aeecef0294f0c8d8"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-http-cancel-fixture-xX6w3a\\candidate-existing-inprocess-holder.log",
+      "bytes": 486,
+      "sha256": "b020bbd2eba136a3caf5069f211992d8886d94007abfad65ddeecea4b616ac27"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-http-cancel-fixture-xX6w3a\\candidate-existing-inprocess-holder.result.json",
+      "bytes": 630,
+      "sha256": "54c10779ca6c327f78f71002e7861d19c369274458363d6da8baa5066b90993f"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-http-cancel-fixture-xX6w3a\\candidate-native-full.log",
+      "bytes": 3141,
+      "sha256": "7493eb7073a1eaa570a63c8f604b7d678f0251638db0acb0c9a9adba7393c05e"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-http-cancel-fixture-xX6w3a\\candidate-native-full.result.json",
+      "bytes": 666,
+      "sha256": "079fe374913a2caaf9e336f33a7320ef0a5102f0b823485bb8e6eec2e21b28ea"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-http-cancel-fixture-xX6w3a\\compare-real-tcp-clients-v1.mjs",
+      "bytes": 2056,
+      "sha256": "01bb58d32f0f051aa475aa656bee8784dc24096383234b1b37602410f53facdc"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-http-cancel-fixture-xX6w3a\\final-owned-diff-check.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-http-cancel-fixture-xX6w3a\\final-owned-diff-check.result.json",
+      "bytes": 504,
+      "sha256": "602de54d93acf839455ec2fedda12a432ae17223fc60f9e02b9fcc28cba4c5a8"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-http-cancel-fixture-xX6w3a\\final-owned-diff.log",
+      "bytes": 6715,
+      "sha256": "d975efbddab277127b97ebe6b20e5e1e0c75399c17501d48c0e8c58bb5ac31d8"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-http-cancel-fixture-xX6w3a\\final-owned-diff.result.json",
+      "bytes": 486,
+      "sha256": "4a376a4221898ec58a390c6fe883f92b3fb110ec40c9baa20f487afe678177d2"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-http-cancel-fixture-xX6w3a\\final-owned-syntax.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-http-cancel-fixture-xX6w3a\\final-owned-syntax.result.json",
+      "bytes": 540,
+      "sha256": "d9d3a67ba434382b9ae0cef4c77507e71b8fa0162d22efcd93f6b10de3a5095e"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-http-cancel-fixture-xX6w3a\\native-client-exact-copy.mjs",
+      "bytes": 1792,
+      "sha256": "86b9bafc806a691c3d6ad29b227bc3461b655172f33f998f241e0cc65c4b6c4a"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-http-cancel-fixture-xX6w3a\\run-existing-inprocess-regression-v1.mjs",
+      "bytes": 1372,
+      "sha256": "73228101aa92571f8495c24a5450613c357f10e52be7f8af70080bdcd15dd8c5"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-http-cancel-fixture-xX6w3a\\run-local-native-fixture.mjs",
+      "bytes": 1521,
+      "sha256": "9019c1052240f808dac6af19ae49e91d3db3ba37aa4c64919b53bec986b8b9e1"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-http-cancel-fixture-xX6w3a\\seal-client-candidate-v1.mjs",
+      "bytes": 7453,
+      "sha256": "0295292aec06ca392cea1cad182e3880188970d904a0a75b6dd137d582afb1bc"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-http-cancel-fixture-xX6w3a\\selected-candidate-http-fixture.mjs",
+      "bytes": 13354,
+      "sha256": "d23d1c710b539b6c64655fbb1fa4e4de85b228bab19c757bc0e4de48528972e5"
+    }
+  ]
+}
