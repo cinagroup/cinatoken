@@ -160,7 +160,7 @@ test('native PostgreSQL replay backfill scale, bounded lock and resume',
 
       for (const [setting, url] of proposals) await activate(sql, setting, url);
       const migratorUrl = `postgres://cinatoken_gateway_migrator:${password}@127.0.0.1:${cluster.port}/postgres?sslmode=disable`;
-      await grantPg73RuntimeFixture({ cluster, migrator, migratorUrl });
+      await grantPg73RuntimeFixture({ cluster, migrator: sql, migratorUrl });
       stage('review-only-parent-and-runtime-default-acl-installed');
 
       await holder.unsafe('BEGIN');
