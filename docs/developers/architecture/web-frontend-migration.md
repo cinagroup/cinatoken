@@ -28,7 +28,7 @@
 
 当前发布（2026-10-05）：`cinatoken.com/*` 已切到独立 `cinatoken-web`，源码 bdc1bfcf、version ecba2f94-90a3-4e32-af20-9fd9d3718811、100%流量、29页面开关启用；资源专用Route保留，Workers.dev/Preview已关闭。Linux Web CI37297885577同SHA成功，冻结产物/2289 Git输入精确核对；实际Cloudflare预览浏览器45/45、生产45项页面功能与移动交互通过；生产严格浏览器验收因69条自动分析记录实际退出1，修配置API403未完成。生产GET23/HEAD6、认证转发3、135资源逐字节匹配、深色→中文→390px刷新均通过。Admin/Proxy保持34c742d1版本，API/OIDC与数据库职责不变。真实登录/资金/链及完整G0–G8、退役未提前完成，详见5.71。
 
-当前推进：生产独立Web前门已切流并完成功能检查，分析注入冲突及严格浏览器复验仍待，完整迁移继续按未完成门槛推进。账户/管理页本轮证明匿名权限拦截和实际资源加载；真实CinaAuth授权、账户/Console业务、资金/链、非空目录推理、326来源、原生平台、实际回滚演练与旧页退役继续待验。102主任务/54矩阵/G0–G8/E00–E08/211任务checkbox原状态保持，主任务仅P6-11勾选。J6格式、临时产物缺失/精确恢复和其本地验证作为5.69历史保留；当前版本与部署证据以5.70–5.71为准。
+当前推进：5.72正在实现Web自身HTML的no-transform保护以解决5.71生产分析注入/CSP冲突；生产当前仍是bdc1bfcf/ecba，旧strictactual1与配置403未覆盖。完整迁移继续，真实CinaAuth业务/资金/链/非空目录推理、326来源、原生平台、实际回滚演练与旧页退役均保留。102主任务/54矩阵/G0–G8/E00–E08/211任务checkbox原状态保持，仅P6-11主任务已勾选。
 
 上一批状态：NEXT-41四语公开署名修复与NEXT-13 B1五个活跃文件修复完成本地验收（5.54）。新P66 Web1401/1401、完整Web/Edge types及Web lint/format、三目标build/freeze/gen0；同一492产物真实Node HTTP45、Node compiled Worker77、Chrome JS32/真正NoJS36通过，68HTML实际footer英文原文/lang=en/译文/链接均通过。Admin源组件Chrome19/相关unit26/保留合同AST22、完整types与目标lint/format0；全量lint实际67E9W→58E5W，仍未全量通过。本地来源946文件tree/修复前1795观察已补，不能当上游导入ref/日期。P65原24/32缺英文、修前测试40失败与其他历史失败完整保留；workerd产品/最小例0xc0000005、WSL E_ACCESSDENIED，0原生case获验。29入口false、未部署；下一步NEXT-13 B2/B3按真实行为清理及来源/真实身份/三库/目录/链/LinuxCI/双平台/发布回滚，完整102主任务/54矩阵/G0–G8/E00–E08未提前完成。
 
@@ -2215,6 +2215,12 @@ QA v1曾误读不存在的bootstrap.origin导致退出1，产品/en为200且非�
 
 [发布记录](../../operators/deployment/releases/2026-10-05-independent-web-cutover.json)保存原/现版本、Route实际写入读回、CI/产物与原始JSON字节/SHA；[操作手册](../../operators/deployment/cloudflare-web.md)保存固定路由守卫与原Admin回滚命令，Web资源/冻结版本至少保留至2026-10-19。此次未执行生产回滚演练，不回滚数据库。真实CinaAuth业务、资金/链/非空目录推理、双平台完整验收、326来源及旧页退役继续待验；102主任务/54矩阵/G0–G8/E00–E08/211任务checkbox不因匿名前门切流而提前勾选。
 
+### 5.72 Web HTML 代理改写保护（2026-10-05，实施中）
+
+继续完整实施，先解决5.71生产实际发现的Cloudflare分析注入/CSP冲突。生产前门仍是bdc1bfcf/ecba版本；原strict浏览器actual1、69遥测噪声和配置API403保留。方案只对独立Web自身公开SSR与私有SPA HTML补充Cache-Control no-transform，保留no-store/private及CSP/nonce；不修改Admin/API/兼容回退Response或静态资源策略，不通过放宽脚本域或记录遥测豁免制造通过。no-transform也会禁止HTML边缘压缩/JS Detections注入，影响仅限所选HTML，正式部署前后分别检查功能与头部。
+
+仅worker.ts与worker.test.ts实现上述保护，新增4个回归；修前公开/私有HTML两项均实际失败，修后Worker 42/42、typecheck:web、修改域lint/format及diff check全部退出0。Root独立复核响应流、GET/HEAD、CSP/nonce和匿名目录边界，Admin/API/OIDC保持原Request/Response身份；robots/XML/plain503和静态资产保持原策略。同SHA Linux CI/冻结产物、原版本回退保护、正式Workers.dev/Preview关闭配置和生产严格浏览器复验仍待本批实际执行。真实身份/资金/链、双平台、来源与完整G0–G8保持原范围。依据[Cloudflare响应缓存文档](https://developers.cloudflare.com/cache/concepts/cache-control/)与[Web Analytics FAQ](https://developers.cloudflare.com/web-analytics/faq/)，本地测试不能代替实际zone注入行为验证。
+
 ## 6. 更新记录
 
 | 日期 | 更新内容 | 对应范围 | 验证与下一步 |
@@ -2419,3 +2425,5 @@ QA v1曾误读不存在的bootstrap.origin导致退出1，产品/en为200且非�
 2026-10-05发布最终验收：源码34c742d161edbf2c16c7578221578d0b805d35c0，Cloudflare Run37292049973 Linux构建、Core/Proxy/Admin契约、Proxy bundle及两部署全部成功；cinatoken-proxy=6e235009-78db-443e-9387-6ec9d963d9d1（100%）；cinatoken-admin=a5ce22c4-edae-42e9-8c2b-7b0df63e5b66（100%）。实际14个匿名GET结果符合预期、BFF与Proxy公开ID/货币一致；Playwright Chromium 147.0.7727.15 在1440×1000与390×844核对身份/非空/无overlay，无pageerror或未解释console错误，匿名/api/user/me401按精确URL+响应解释并保留raw。深色选择→中文Cookie→mobile刷新存储及显示都保持dark/zh，无横向溢出。真实登录/资金写入及独立Web切换仍未验收，未来holder/recovery与自动PR CI问题继续保留。原Web CI旧redirect:error测试断言失败已test-only修正，回调外核查manual/匿名头，边界6/6、目录17/17及Proxy类型通过；原34的失败收据不改写。211checkbox保持；后续仅提交测试预期和最终文档/证据，产品源码不变，不重复迁移或部署。
 
 2026-10-05：完成独立Web生产前门切流（5.71）。同bdc1bfcf Linux CI/冻结产物与Git输入核验通过；Web100%/29开关、主Route与资源Route读回、预览严格45/45、生产45页面功能/交互及GET23/HEAD6/认证转发3/135资源通过；生产严格QA因69遥测记录actual1，分析规则修复API403仍待，Workers.dev/Preview已关，Admin/Proxy/数据库保持。原503和QA字段错误负面证据保留；真实身份/资金/链/完整双平台/生产回滚演练/旧页退役仍待，完整任务与G/E状态不提前完成。
+
+2026-10-05：启动Web HTML代理改写保护（5.72），修复生产分析注入/CSP冲突；Worker自身HTML补no-transform方案正在实现，保留缓存禁止/CSP/API原样边界，旧strictactual1、403和原版本保留，新候选/同SHA CI及生产复验待执行，完整门槛不提前完成。

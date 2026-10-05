@@ -130,6 +130,20 @@ function assetRequest(request: Request, pathname: string): Request {
 	return new Request(url, request)
 }
 
+function htmlWithoutTransform(response: Response): Response {
+	const contentType = response.headers.get('content-type') ?? ''
+	if (contentType.split(';', 1)[0].trim().toLowerCase() !== 'text/html')
+		return response
+	const headers = new Headers(response.headers)
+	// Preserve no-store/private and CSP while preventing edge HTML injection.
+	headers.append('cache-control', 'no-transform')
+	return new Response(response.body, {
+		status: response.status,
+		statusText: response.statusText,
+		headers,
+	})
+}
+
 async function accountShell(
 	request: Request,
 	env: WebEntryEnv
@@ -154,10 +168,12 @@ async function accountShell(
 	for (const [name, value] of Object.entries(securityHeaders)) {
 		headers.set(name, value)
 	}
-	return new Response(request.method === 'HEAD' ? null : response.body, {
-		status: response.status,
-		headers,
-	})
+	return htmlWithoutTransform(
+		new Response(request.method === 'HEAD' ? null : response.body, {
+			status: response.status,
+			headers,
+		})
+	)
 }
 
 export async function routeWebRequest(
@@ -188,15 +204,17 @@ export async function routeWebRequest(
 		if (publicHttpRoute(url)) {
 			const { renderPublicResponse, anonymousCatalogFetch } =
 				await import('../src/cinatoken/public-server/public-response')
-			return renderPublicResponse(request, {
-				publicOrigin: env.CINATOKEN_WEB_PUBLIC_ORIGIN,
-				proxyOrigins: env.CINATOKEN_WEB_PROXY_ORIGINS,
-				anonymousFetch: anonymousCatalogFetch(
-					request.url,
-					env.CINATOKEN_ADMIN_SERVICE
-				),
-				readBrowserShell: (shellRequest) => env.ASSETS.fetch(shellRequest),
-			})
+			return htmlWithoutTransform(
+				await renderPublicResponse(request, {
+					publicOrigin: env.CINATOKEN_WEB_PUBLIC_ORIGIN,
+					proxyOrigins: env.CINATOKEN_WEB_PROXY_ORIGINS,
+					anonymousFetch: anonymousCatalogFetch(
+						request.url,
+						env.CINATOKEN_ADMIN_SERVICE
+					),
+					readBrowserShell: (shellRequest) => env.ASSETS.fetch(shellRequest),
+				})
+			)
 		}
 	}
 
