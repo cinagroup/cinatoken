@@ -1,7 +1,7 @@
 {
   "schema": "cinatoken.cloudflare.web-frontend-release.v1",
-  "updatedAt": "2026-10-05T09:43:56.419Z",
-  "status": "active-production-fixes-verified-awaiting-redeployment",
+  "updatedAt": "2026-10-05T10:01:37.909Z",
+  "status": "deployed-and-public-smoke-passed",
   "userAuthorizedActions": [
     "commit",
     "push",
@@ -15,19 +15,19 @@
         "name": "cinatoken-admin",
         "url": "https://cinatoken.com",
         "beforeVersion": "433a4fb9-3499-4108-a18c-f5da5abe2b2d",
-        "afterVersion": "2e2ad187-81ae-4c2e-9c3e-d95177e012ff",
-        "deploymentId": "29af2097-e7f4-4c86-a854-30e018869d35",
+        "afterVersion": "a5ce22c4-edae-42e9-8c2b-7b0df63e5b66",
+        "deploymentId": "e4f33725-d427-4efb-ac8b-b9e7db7a456b",
         "trafficPercentage": 100,
-        "commitTag": "39b76f42bdd6e21d43ad190d2e3530c338a2a59d"
+        "commitTag": "34c742d161edbf2c16c7578221578d0b805d35c0"
       },
       {
         "name": "cinatoken-proxy",
         "url": "https://api.cinatoken.com",
         "beforeVersion": "09f2d633-c4bc-4b0e-b939-4e680280762f",
-        "afterVersion": "90c6bd33-6660-4a5c-a65b-cacc6efe7ef0",
-        "deploymentId": "863d144e-42fc-4bb8-99e4-faeafa8a691b",
+        "afterVersion": "6e235009-78db-443e-9387-6ec9d963d9d1",
+        "deploymentId": "3f08168a-4866-415f-8a35-d446e94af76a",
         "trafficPercentage": 100,
-        "commitTag": "39b76f42bdd6e21d43ad190d2e3530c338a2a59d"
+        "commitTag": "34c742d161edbf2c16c7578221578d0b805d35c0"
       }
     ],
     "databaseDriver": "postgres",
@@ -114,10 +114,22 @@
       "realCloudflareManualGETPassed": 3,
       "priorFailureEvidencePreserved": true,
       "nextFixedSHAProductionRetestRequired": true
+    },
+    "catalogBoundaryTestOnlyFollowup": {
+      "path": "packages/proxy/src/routes/catalog-public-boundary.test.ts",
+      "sha256": "7df0e7a11c74f56b42da9a48c6c024cd1ca58183601ee12dc43bde2d3d390e6c",
+      "boundaryPassed": 6,
+      "catalogPassed": 17,
+      "proxyTypecheckExit": 0,
+      "baselineFailed": 5,
+      "baselinePassed": 1,
+      "productionRuntimeChanged": false,
+      "originalLinuxFailurePreserved": true,
+      "nextPushCITrackedSeparately": true
     }
   },
   "commit": {
-    "sha": "39b76f42bdd6e21d43ad190d2e3530c338a2a59d",
+    "sha": "34c742d161edbf2c16c7578221578d0b805d35c0",
     "actualExit": 0
   },
   "push": {
@@ -179,22 +191,117 @@
         "proxyDeploy": "success",
         "adminDeploy": "success",
         "postDeploymentSmoke": "failure"
+      },
+      {
+        "runId": 37292049973,
+        "url": "https://github.com/cinagroup/cinatoken/actions/runs/37292049973",
+        "sha": "34c742d161edbf2c16c7578221578d0b805d35c0",
+        "conclusion": "success",
+        "linuxNode22Build": "success",
+        "productionContracts": "success",
+        "proxyBundle": "success",
+        "proxyDeploy": "success",
+        "adminDeploy": "success",
+        "postDeploymentSmoke": "success"
       }
     ],
     "complete": true
   },
   "productionSmoke": {
-    "actualExit": 1,
-    "candidate": "39b76f42bdd6e21d43ad190d2e3530c338a2a59d",
-    "htmlPassed": 8,
-    "proxyCatalogPassed": 2,
-    "bffCatalogFailed": 3,
-    "anonymousAdminRejected": true,
-    "themeChangedToDark": true,
-    "localeChangedToChinese": true,
-    "themeRefreshFailed": true,
-    "fixes": "Cloudflare Request redirect mode and HomeThemeSwitcher hydration persistence",
-    "retestRequired": true
+    "actualExit": 0,
+    "deploymentSHA": "34c742d161edbf2c16c7578221578d0b805d35c0",
+    "http": {
+      "passed": 14,
+      "failed": 0,
+      "anonymous": true,
+      "businessWrites": false
+    },
+    "browser": {
+      "version": "147.0.7727.15",
+      "runner": "existing bundled Playwright",
+      "browserPlugin": "absent",
+      "desktop": {
+        "width": 1440,
+        "height": 1000
+      },
+      "mobile": {
+        "width": 390,
+        "height": 844
+      },
+      "pages": [
+        {
+          "route": "/",
+          "http": 200,
+          "title": "cinatoken · AI capability gateway",
+          "nonblank": true,
+          "frameworkOverlay": false
+        },
+        {
+          "route": "/models",
+          "http": 200,
+          "title": "Models",
+          "nonblank": true,
+          "frameworkOverlay": false
+        },
+        {
+          "route": "/dashboard",
+          "http": 200,
+          "title": "Dashboard · cinatoken Gateway · Admin",
+          "nonblank": true,
+          "frameworkOverlay": false
+        }
+      ],
+      "pageErrors": [],
+      "rawConsoleErrors": [
+        {
+          "text": "Failed to load resource: the server responded with a status of 401 ()",
+          "location": {
+            "url": "https://cinatoken.com/api/user/me",
+            "line": 0,
+            "column": 0,
+            "lineNumber": 0,
+            "columnNumber": 0
+          }
+        }
+      ],
+      "explainedConsoleErrors": [
+        {
+          "text": "Failed to load resource: the server responded with a status of 401 ()",
+          "location": {
+            "url": "https://cinatoken.com/api/user/me",
+            "line": 0,
+            "column": 0,
+            "lineNumber": 0,
+            "columnNumber": 0
+          },
+          "responseURL": "https://cinatoken.com/api/user/me",
+          "reason": "Expected anonymous user identity response, confirmed exact URL/status/body"
+        }
+      ],
+      "unexplainedConsoleErrors": [],
+      "expectedAnonymous401": [
+        {
+          "at": "2026-10-05T09:57:26.220Z",
+          "url": "https://cinatoken.com/api/user/me",
+          "method": "GET",
+          "status": 401,
+          "body": {
+            "success": false,
+            "message": "Unauthorized"
+          },
+          "explanation": "Anonymous dashboard performs optional user identity lookup; AuthWrapper consumes this non-OK response and continues to login UI."
+        }
+      ],
+      "unknownHTTPErrors": [],
+      "consoleWarnings": [],
+      "darkTheme": "dark",
+      "storedTheme": "dark",
+      "locale": "zh",
+      "localeHttp": 200,
+      "horizontalOverflow": false
+    },
+    "realAuthenticationTested": false,
+    "financialWriteTested": false
   },
   "wholeMigrationComplete": false,
   "gateStatesUnchanged": true,
@@ -343,6 +450,51 @@
       "path": "docs/operators/deployment/releases/2026-10-05-web-frontend/activeThemeFix.json",
       "bytes": 21192,
       "sha256": "7b8fa5592c64df7f678dac8e3a20298c2b5e0bd09996757478a42aeeeb95eb09"
+    },
+    "cloudflareFinalRun": {
+      "path": "docs/operators/deployment/releases/2026-10-05-web-frontend/cloudflareFinalRun.json",
+      "bytes": 2781,
+      "sha256": "1e4b9ff5a152270914302f95d6927b4ce162147c710463fe47b8fb7463460b6e"
+    },
+    "cloudflareLiveAfter": {
+      "path": "docs/operators/deployment/releases/2026-10-05-web-frontend/cloudflareLiveAfter.json",
+      "bytes": 6879,
+      "sha256": "5db69559b902c07b22dffd26e47cfdc0aab71ee12e1358e5d72df2eb37b0594c"
+    },
+    "productionHTTPAfter": {
+      "path": "docs/operators/deployment/releases/2026-10-05-web-frontend/productionHTTPAfter.json",
+      "bytes": 9261,
+      "sha256": "013a01d9e4ae48f9582d86985395cfe63457d6a76667c43c62f1853334acec68"
+    },
+    "productionBrowserAfter": {
+      "path": "docs/operators/deployment/releases/2026-10-05-web-frontend/productionBrowserAfter.json",
+      "bytes": 11959,
+      "sha256": "e85314b8d19a602a34477b3ba2ba7c5e1894c482f9d2b6ca290f37bb10441ece"
+    },
+    "productionSmokeExecution": {
+      "path": "docs/operators/deployment/releases/2026-10-05-web-frontend/productionSmokeExecution.json",
+      "bytes": 5674,
+      "sha256": "3df09def730da165ecf62226f0c6b55c3fbe92792e408887f5b938690c5471de"
+    },
+    "finalOtherCI": {
+      "path": "docs/operators/deployment/releases/2026-10-05-web-frontend/finalOtherCI.json",
+      "bytes": 29057,
+      "sha256": "88b11feec47e5054c76c4ebb3dc3a1f026704092b007765e28ae120da1821b31"
+    },
+    "catalogBoundaryTestOnlyFix": {
+      "path": "docs/operators/deployment/releases/2026-10-05-web-frontend/catalogBoundaryTestOnlyFix.json",
+      "bytes": 14402,
+      "sha256": "3ccdc5dd2934123bd2ed761273a3a7d10360c2758123dddccfea86c5095a08c9"
+    },
+    "committedEvidenceV6": {
+      "path": "docs/operators/deployment/releases/2026-10-05-web-frontend/committedEvidenceV6.json",
+      "bytes": 151,
+      "sha256": "7eec7584a161711d0e5abfa01e69c11a42c5173f30b822d2043af46a1e29854f"
+    },
+    "finalKnownSecretScan": {
+      "path": "docs/operators/deployment/releases/2026-10-05-web-frontend/finalKnownSecretScan.json",
+      "bytes": 527,
+      "sha256": "185a0f670a4e29748de6c5e8bf082ee565d4e0b4c07d03538baf7f35f0eb806f"
     }
   },
   "temporaryProbeApproval": {
@@ -465,6 +617,54 @@
         }
       ],
       "proof": "docs/operators/deployment/releases/2026-10-05-web-frontend/firstSuccessfulDeploymentOtherCI.json"
+    },
+    "final": {
+      "sha": "34c742d161edbf2c16c7578221578d0b805d35c0",
+      "pushWorkflowCounts": {
+        "total": 5,
+        "success": 2,
+        "failure": 3,
+        "other": 0
+      },
+      "allGreen": false,
+      "runs": [
+        {
+          "runId": "37292047213",
+          "url": "https://github.com/cinagroup/cinatoken/actions/runs/37292047213",
+          "name": "Release",
+          "status": "completed",
+          "conclusion": "failure"
+        },
+        {
+          "runId": "37292047209",
+          "url": "https://github.com/cinagroup/cinatoken/actions/runs/37292047209",
+          "name": "Web frontend",
+          "status": "completed",
+          "conclusion": "failure"
+        },
+        {
+          "runId": "37292047148",
+          "url": "https://github.com/cinagroup/cinatoken/actions/runs/37292047148",
+          "name": "Proxy dispatch safety",
+          "status": "completed",
+          "conclusion": "failure"
+        },
+        {
+          "runId": "37292047230",
+          "url": "https://github.com/cinagroup/cinatoken/actions/runs/37292047230",
+          "name": "Docker Compose Smoke (node-pg)",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "runId": "37292047165",
+          "url": "https://github.com/cinagroup/cinatoken/actions/runs/37292047165",
+          "name": "Verify package versions",
+          "status": "completed",
+          "conclusion": "success"
+        }
+      ],
+      "proof": "docs/operators/deployment/releases/2026-10-05-web-frontend/finalOtherCI.json"
     }
   },
   "commits": [
@@ -483,7 +683,12 @@
     {
       "sha": "39b76f42bdd6e21d43ad190d2e3530c338a2a59d",
       "pushed": true
+    },
+    {
+      "sha": "34c742d161edbf2c16c7578221578d0b805d35c0",
+      "pushed": true
     }
   ],
-  "runtimeCommit": "39b76f42bdd6e21d43ad190d2e3530c338a2a59d"
+  "runtimeCommit": "34c742d161edbf2c16c7578221578d0b805d35c0",
+  "postDeploymentChanges": "Test expectation plus documents/evidence only; deployed product source unchanged"
 }

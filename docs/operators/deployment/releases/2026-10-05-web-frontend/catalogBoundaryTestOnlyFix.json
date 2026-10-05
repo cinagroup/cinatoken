@@ -1,0 +1,355 @@
+{
+  "schema": "cinatoken-catalog-boundary-stale-test-fix-stop-v1",
+  "closed": true,
+  "stop": true,
+  "at": "2026-10-05T09:58:35.772Z",
+  "baseHead": "34c742d161edbf2c16c7578221578d0b805d35c0",
+  "source": {
+    "relativePath": "packages/proxy/src/routes/catalog-public-boundary.test.ts",
+    "path": "C:\\cinagroup\\cinatoken\\packages\\proxy\\src\\routes\\catalog-public-boundary.test.ts",
+    "bytes": 5624,
+    "sha256": "7df0e7a11c74f56b42da9a48c6c024cd1ca58183601ee12dc43bde2d3d390e6c"
+  },
+  "before": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-release-catalog-boundary-test-fix-c889a8ee0b4047b4aede2fe72ecdaae0\\before-catalog-public-boundary.test.ts",
+    "bytes": 5298,
+    "sha256": "6a8391a0fdc82e5689f06d36d597c41e29dac57950304a75f87a25e650dd1e91"
+  },
+  "rootCause": "The in-process test callback asserted old redirect:error. Current correct BFF manual mode made that assertion throw; BFF safely mapped it to 502 instead of allowing the injected Hono fault to return its expected anonymous 503.",
+  "change": "Test-only capture of actual sent Requests; check manual, GET, credentials omit, cache no-store and exact accept-only headers outside the sanitizing BFF callback. Keep five fault/recovery mappings, HEAD/no-store/retry60/private-error rejection and malformed currency strict checks.",
+  "originalCiFailure": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-release-34c742d-ci-review-4e8ea6a26aae49aca1edf0555e9aa4b8\\008-log-failed-37292047209.stdout.log",
+    "bytes": 58332,
+    "sha256": "41e67ba1fbeb71a114f44e8198eee3bdec62e997a203518f7a09e73348b14948"
+  },
+  "checks": [
+    {
+      "closed": true,
+      "startedAt": "2026-10-05T09:54:32.511Z",
+      "finishedAt": "2026-10-05T09:54:37.683Z",
+      "label": "baseline-stale-redirect",
+      "mode": "boundary",
+      "command": [
+        "C:\\Program Files\\nodejs\\node.exe",
+        "C:/cinagroup/cinatoken/node_modules/tsx/dist/cli.mjs",
+        "--tsconfig",
+        "packages/admin/tsconfig.json",
+        "--test",
+        "--test-reporter=tap",
+        "packages/proxy/src/routes/catalog-public-boundary.test.ts"
+      ],
+      "cleanAllowlistedEnv": true,
+      "productionCredentialsPassed": false,
+      "actualExit": 1,
+      "signal": null,
+      "totals": [
+        "# tests 6",
+        "# suites 0",
+        "# pass 1",
+        "# fail 5",
+        "# cancelled 0",
+        "# skipped 0",
+        "# todo 0",
+        "# duration_ms 4681.7511"
+      ],
+      "artifacts": [
+        {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-release-catalog-boundary-test-fix-c889a8ee0b4047b4aede2fe72ecdaae0\\baseline-stale-redirect.stdout.log",
+          "bytes": 4682,
+          "sha256": "9c21d551301f4d264d1d62bc3abed7a2b64ea496b1ba5049c4d69ba0c5429ef9"
+        },
+        {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-release-catalog-boundary-test-fix-c889a8ee0b4047b4aede2fe72ecdaae0\\baseline-stale-redirect.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ],
+      "receipt": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-release-catalog-boundary-test-fix-c889a8ee0b4047b4aede2fe72ecdaae0\\baseline-stale-redirect.actual.json",
+        "bytes": 1320,
+        "sha256": "2843900c9e53705a5676c23e98d8a71977d55f4a208fd1679e89e5f70827c6cf"
+      }
+    },
+    {
+      "closed": true,
+      "startedAt": "2026-10-05T09:55:11.660Z",
+      "finishedAt": "2026-10-05T09:55:17.082Z",
+      "label": "fixed-five-faults-and-malformed-currency",
+      "mode": "boundary",
+      "command": [
+        "C:\\Program Files\\nodejs\\node.exe",
+        "C:/cinagroup/cinatoken/node_modules/tsx/dist/cli.mjs",
+        "--tsconfig",
+        "packages/admin/tsconfig.json",
+        "--test",
+        "--test-reporter=tap",
+        "packages/proxy/src/routes/catalog-public-boundary.test.ts"
+      ],
+      "cleanAllowlistedEnv": true,
+      "productionCredentialsPassed": false,
+      "actualExit": 0,
+      "signal": null,
+      "totals": [
+        "# tests 6",
+        "# suites 0",
+        "# pass 6",
+        "# fail 0",
+        "# cancelled 0",
+        "# skipped 0",
+        "# todo 0",
+        "# duration_ms 5193.6781"
+      ],
+      "artifacts": [
+        {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-release-catalog-boundary-test-fix-c889a8ee0b4047b4aede2fe72ecdaae0\\fixed-five-faults-and-malformed-currency.stdout.log",
+          "bytes": 2369,
+          "sha256": "4ed102fac517b79eb4cecb50445a0f4595b64e6b1129ef8af46994900cc05f75"
+        },
+        {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-release-catalog-boundary-test-fix-c889a8ee0b4047b4aede2fe72ecdaae0\\fixed-five-faults-and-malformed-currency.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ],
+      "receipt": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-release-catalog-boundary-test-fix-c889a8ee0b4047b4aede2fe72ecdaae0\\fixed-five-faults-and-malformed-currency.actual.json",
+        "bytes": 1371,
+        "sha256": "c3fd0a68ab51838130dffd6dc01c1b0d59d84fed4152a30384e7ece5ea21f77c"
+      }
+    },
+    {
+      "closed": true,
+      "startedAt": "2026-10-05T09:55:12.807Z",
+      "finishedAt": "2026-10-05T09:55:17.807Z",
+      "label": "workflow-catalog-routes",
+      "mode": "catalog",
+      "command": [
+        "C:\\Program Files\\nodejs\\node.exe",
+        "--import",
+        "tsx",
+        "--test",
+        "--test-reporter=tap",
+        "packages/proxy/src/routes/catalog.test.ts"
+      ],
+      "cleanAllowlistedEnv": true,
+      "productionCredentialsPassed": false,
+      "actualExit": 0,
+      "signal": null,
+      "totals": [
+        "# tests 17",
+        "# suites 1",
+        "# pass 17",
+        "# fail 0",
+        "# cancelled 0",
+        "# skipped 0",
+        "# todo 0",
+        "# duration_ms 4902.2703"
+      ],
+      "artifacts": [
+        {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-release-catalog-boundary-test-fix-c889a8ee0b4047b4aede2fe72ecdaae0\\workflow-catalog-routes.stdout.log",
+          "bytes": 9382,
+          "sha256": "38228031c9b4e386691abb34f229ab1ae425373a30d7c2f78da14a3d45a247ec"
+        },
+        {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-release-catalog-boundary-test-fix-c889a8ee0b4047b4aede2fe72ecdaae0\\workflow-catalog-routes.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ],
+      "receipt": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-release-catalog-boundary-test-fix-c889a8ee0b4047b4aede2fe72ecdaae0\\workflow-catalog-routes.actual.json",
+        "bytes": 1218,
+        "sha256": "5036507fd7fa08a1be07675772576b4ff8b69e1c6fdd45806179a9f9f63dcab3"
+      }
+    },
+    {
+      "closed": true,
+      "startedAt": "2026-10-05T09:55:14.132Z",
+      "finishedAt": "2026-10-05T09:55:36.535Z",
+      "label": "workflow-proxy-typecheck",
+      "mode": "typecheck",
+      "command": [
+        "C:\\Program Files\\nodejs\\node.exe",
+        "C:/Program Files/nodejs/node_modules/npm/bin/npm-cli.js",
+        "run",
+        "typecheck",
+        "-w",
+        "@octafuse/proxy"
+      ],
+      "cleanAllowlistedEnv": true,
+      "productionCredentialsPassed": false,
+      "actualExit": 0,
+      "signal": null,
+      "totals": [],
+      "artifacts": [
+        {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-release-catalog-boundary-test-fix-c889a8ee0b4047b4aede2fe72ecdaae0\\workflow-proxy-typecheck.stdout.log",
+          "bytes": 68,
+          "sha256": "2c43c45aaada23ef3058082609763fa3d6152209cc0134e888e4541fa9970c9c"
+        },
+        {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-release-catalog-boundary-test-fix-c889a8ee0b4047b4aede2fe72ecdaae0\\workflow-proxy-typecheck.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ],
+      "receipt": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-release-catalog-boundary-test-fix-c889a8ee0b4047b4aede2fe72ecdaae0\\workflow-proxy-typecheck.actual.json",
+        "bytes": 1070,
+        "sha256": "04a8e1b6bb718b7d43a04774d9616ea6080053411147f3fb939d3a4bcb6ff4c1"
+      }
+    }
+  ],
+  "expectedBaseline": {
+    "actualExit": 1,
+    "tests": 6,
+    "pass": 1,
+    "fail": 5,
+    "skipped": 0,
+    "cancelled": 0
+  },
+  "fixed": {
+    "actualExit": 0,
+    "tests": 6,
+    "pass": 6,
+    "fail": 0,
+    "skipped": 0,
+    "cancelled": 0
+  },
+  "workflowSelectedCatalog": {
+    "actualExit": 0,
+    "tests": 17,
+    "pass": 17
+  },
+  "proxyTypecheckActualExit": 0,
+  "patch": {
+    "closed": true,
+    "label": "final-test-only-patch",
+    "command": [
+      "C:/Program Files/Git/cmd/git.exe",
+      "diff",
+      "--binary",
+      "34c742d161edbf2c16c7578221578d0b805d35c0",
+      "--",
+      "packages/proxy/src/routes/catalog-public-boundary.test.ts"
+    ],
+    "actualExit": 0,
+    "artifacts": [
+      {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-release-catalog-boundary-test-fix-c889a8ee0b4047b4aede2fe72ecdaae0\\final-test-only-patch.stdout.log",
+        "bytes": 2264,
+        "sha256": "53de18784f58e7da1d5dcfd3a8c6bd63b43dc2624f5475a5f7ebe7c56f484af4"
+      },
+      {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-release-catalog-boundary-test-fix-c889a8ee0b4047b4aede2fe72ecdaae0\\final-test-only-patch.stderr.log",
+        "bytes": 80,
+        "sha256": "4637b2478cea95e221ecbde1b46874fb0f18d282e08504cf0d1074595c4348d1"
+      }
+    ],
+    "receipt": {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-release-catalog-boundary-test-fix-c889a8ee0b4047b4aede2fe72ecdaae0\\final-test-only-patch.actual.json",
+      "bytes": 873,
+      "sha256": "38da92527b68cc0ea24d84399729b0c21c2760b357aba5c4914bdd87a0eeeaf9"
+    }
+  },
+  "whitespace": {
+    "closed": true,
+    "label": "final-test-only-whitespace",
+    "command": [
+      "C:/Program Files/Git/cmd/git.exe",
+      "-c",
+      "core.whitespace=cr-at-eol",
+      "diff",
+      "--check",
+      "34c742d161edbf2c16c7578221578d0b805d35c0",
+      "--",
+      "packages/proxy/src/routes/catalog-public-boundary.test.ts"
+    ],
+    "actualExit": 0,
+    "artifacts": [
+      {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-release-catalog-boundary-test-fix-c889a8ee0b4047b4aede2fe72ecdaae0\\final-test-only-whitespace.stdout.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-release-catalog-boundary-test-fix-c889a8ee0b4047b4aede2fe72ecdaae0\\final-test-only-whitespace.stderr.log",
+        "bytes": 80,
+        "sha256": "4637b2478cea95e221ecbde1b46874fb0f18d282e08504cf0d1074595c4348d1"
+      }
+    ],
+    "receipt": {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-release-catalog-boundary-test-fix-c889a8ee0b4047b4aede2fe72ecdaae0\\final-test-only-whitespace.actual.json",
+      "bytes": 927,
+      "sha256": "a8542080a9e4fe767206007d459295ccc51cb464cc20ec1a30507715117c1cab"
+    }
+  },
+  "original": {
+    "closed": true,
+    "label": "original-committed-boundary-test",
+    "command": [
+      "C:/Program Files/Git/cmd/git.exe",
+      "show",
+      "34c742d161edbf2c16c7578221578d0b805d35c0:packages/proxy/src/routes/catalog-public-boundary.test.ts"
+    ],
+    "actualExit": 0,
+    "artifacts": [
+      {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-release-catalog-boundary-test-fix-c889a8ee0b4047b4aede2fe72ecdaae0\\original-committed-boundary-test.stdout.log",
+        "bytes": 5298,
+        "sha256": "6a8391a0fdc82e5689f06d36d597c41e29dac57950304a75f87a25e650dd1e91"
+      },
+      {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-release-catalog-boundary-test-fix-c889a8ee0b4047b4aede2fe72ecdaae0\\original-committed-boundary-test.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    ],
+    "receipt": {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-release-catalog-boundary-test-fix-c889a8ee0b4047b4aede2fe72ecdaae0\\original-committed-boundary-test.actual.json",
+      "bytes": 872,
+      "sha256": "0eb9ec22f6e596bd05cf42ad5d6843ff232471c6f30b101dbc977e5f5a459246"
+    }
+  },
+  "productionRuntimeUnchanged": {
+    "closed": true,
+    "label": "final-production-runtime-unchanged",
+    "command": [
+      "C:/Program Files/Git/cmd/git.exe",
+      "diff",
+      "--exit-code",
+      "34c742d161edbf2c16c7578221578d0b805d35c0",
+      "--",
+      "packages/admin/lib/public-catalog-bff.ts",
+      "packages/admin/lib/public-gateway.ts",
+      "packages/proxy/src/routes/catalog.ts",
+      "scripts/db/cutover/grant-postgres-runtime.ts",
+      "packages/core/migrations-postgres",
+      "packages/core/migrations-proposals/postgres"
+    ],
+    "actualExit": 0,
+    "artifacts": [
+      {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-release-catalog-boundary-test-fix-c889a8ee0b4047b4aede2fe72ecdaae0\\final-production-runtime-unchanged.stdout.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-release-catalog-boundary-test-fix-c889a8ee0b4047b4aede2fe72ecdaae0\\final-production-runtime-unchanged.stderr.log",
+        "bytes": 80,
+        "sha256": "4637b2478cea95e221ecbde1b46874fb0f18d282e08504cf0d1074595c4348d1"
+      }
+    ],
+    "receipt": {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-release-catalog-boundary-test-fix-c889a8ee0b4047b4aede2fe72ecdaae0\\final-production-runtime-unchanged.actual.json",
+      "bytes": 1127,
+      "sha256": "93bd304d8d603d213fcd479a9110f3d514f8332c03b5ec39a8a1b6f0a4fb3aa9"
+    }
+  },
+  "noProductRuntimeDocsGitOrDeploymentMutation": true,
+  "localNodeVersion": "v24.14.1",
+  "linuxCiForOriginal34RemainsFailure": true,
+  "fixedTestNotClaimedInOriginal34Commit": true,
+  "releaseOwnerWillCommitTestWithClosureDocs": true
+}

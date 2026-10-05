@@ -1,0 +1,650 @@
+{
+  "schema": "cinatoken-34c742d-same-sha-ci-review-stop-v1",
+  "closed": true,
+  "stop": true,
+  "at": "2026-10-05T09:58:35.868Z",
+  "head": "34c742d161edbf2c16c7578221578d0b805d35c0",
+  "overallCiAllGreen": false,
+  "triggeredPushWorkflows": {
+    "total": 5,
+    "success": 2,
+    "failure": 3,
+    "other": 0
+  },
+  "prior19WorkflowCountNotReused": true,
+  "scopeLimit": "Only five push runs were actually observed for this SHA; the previous SHA had 19. No result is inferred for untriggered workflows. Cloudflare37292049973 final completion/live proof is tracked separately by Root.",
+  "runs": [
+    {
+      "runId": "37292047213",
+      "name": "Release",
+      "url": "https://github.com/cinagroup/cinatoken/actions/runs/37292047213",
+      "headVerified": true,
+      "status": "completed",
+      "conclusion": "failure",
+      "receipt": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-release-34c742d-ci-review-4e8ea6a26aae49aca1edf0555e9aa4b8\\002-view-37292047213.actual.json",
+        "bytes": 4525,
+        "sha256": "244abb27e98ee3dc7b33586029ac4e36b3e11b495b0babd15d15a08fe2a9bd3c"
+      },
+      "raw": [
+        {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-release-34c742d-ci-review-4e8ea6a26aae49aca1edf0555e9aa4b8\\002-view-37292047213.stdout.log",
+          "bytes": 2163,
+          "sha256": "566725b7352d07b03171a295a2a44a28e46ccb244a7b8d174c9832d2cfb001e1"
+        },
+        {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-release-34c742d-ci-review-4e8ea6a26aae49aca1edf0555e9aa4b8\\002-view-37292047213.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ],
+      "jobs": [
+        {
+          "jobId": 111704481394,
+          "name": "Changesets",
+          "status": "completed",
+          "conclusion": "failure",
+          "relevantSteps": [
+            {
+              "name": "Create Version PR or push tags",
+              "status": "completed",
+              "conclusion": "failure"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "runId": "37292047209",
+      "name": "Web frontend",
+      "url": "https://github.com/cinagroup/cinatoken/actions/runs/37292047209",
+      "headVerified": true,
+      "status": "completed",
+      "conclusion": "failure",
+      "receipt": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-release-34c742d-ci-review-4e8ea6a26aae49aca1edf0555e9aa4b8\\009-view-37292047209.actual.json",
+        "bytes": 12430,
+        "sha256": "69079e3058acc06654beb739516809332c9bde7960b5cf4c5233be22a74941e4"
+      },
+      "raw": [
+        {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-release-34c742d-ci-review-4e8ea6a26aae49aca1edf0555e9aa4b8\\009-view-37292047209.stdout.log",
+          "bytes": 7209,
+          "sha256": "e6706ececb7887401f91ae85e1b9aaebd2ea9772060e4c0a87ab84095305171e"
+        },
+        {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-release-34c742d-ci-review-4e8ea6a26aae49aca1edf0555e9aa4b8\\009-view-37292047209.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ],
+      "jobs": [
+        {
+          "jobId": 111704481667,
+          "name": "web",
+          "status": "completed",
+          "conclusion": "success",
+          "relevantSteps": []
+        },
+        {
+          "jobId": 111704481731,
+          "name": "Admin contracts and public SSR build",
+          "status": "completed",
+          "conclusion": "failure",
+          "relevantSteps": [
+            {
+              "name": "Validate authority currency failures and anonymous catalog boundary",
+              "status": "completed",
+              "conclusion": "failure"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "runId": "37292047148",
+      "name": "Proxy dispatch safety",
+      "url": "https://github.com/cinagroup/cinatoken/actions/runs/37292047148",
+      "headVerified": true,
+      "status": "completed",
+      "conclusion": "failure",
+      "receipt": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-release-34c742d-ci-review-4e8ea6a26aae49aca1edf0555e9aa4b8\\011-view-37292047148.actual.json",
+        "bytes": 73678,
+        "sha256": "06942c115674ea2a5494fa1f007e2aaa115ad52315d755170e707d741c1a2b54"
+      },
+      "raw": [
+        {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-release-34c742d-ci-review-4e8ea6a26aae49aca1edf0555e9aa4b8\\011-view-37292047148.stdout.log",
+          "bytes": 49488,
+          "sha256": "1e921e8616c65e98a1dbf394e94fe16559eb4c594b2846090f4d01cd0f969198"
+        },
+        {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-release-34c742d-ci-review-4e8ea6a26aae49aca1edf0555e9aa4b8\\011-view-37292047148.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ],
+      "jobs": [
+        {
+          "jobId": 111704480968,
+          "name": "native-financial-consumer",
+          "status": "completed",
+          "conclusion": "failure",
+          "relevantSteps": [
+            {
+              "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+              "status": "completed",
+              "conclusion": "failure"
+            }
+          ]
+        },
+        {
+          "jobId": 111704481133,
+          "name": "config-cutover-contracts",
+          "status": "completed",
+          "conclusion": "success",
+          "relevantSteps": []
+        },
+        {
+          "jobId": 111704481211,
+          "name": "admin-playground-safety",
+          "status": "completed",
+          "conclusion": "success",
+          "relevantSteps": [
+            {
+              "name": "Run npm run test:playground -w @octafuse/admin",
+              "status": "completed",
+              "conclusion": "success"
+            }
+          ]
+        },
+        {
+          "jobId": 111704481283,
+          "name": "dispatch-safety",
+          "status": "completed",
+          "conclusion": "failure",
+          "relevantSteps": [
+            {
+              "name": "Run npm run test:dispatch-safety -w @octafuse/proxy",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Run npm run test:unit -w @octafuse/tool-engines",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Run node --import tsx --test scripts/staging/chat-holder-binding-v364.node.test.mjs scripts/staging/chat-holder-binding-v364-http-cancel-successor.test.mjs",
+              "status": "completed",
+              "conclusion": "failure"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "runId": "37292047230",
+      "name": "Docker Compose Smoke (node-pg)",
+      "url": "https://github.com/cinagroup/cinatoken/actions/runs/37292047230",
+      "headVerified": true,
+      "status": "completed",
+      "conclusion": "success",
+      "receipt": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-release-34c742d-ci-review-4e8ea6a26aae49aca1edf0555e9aa4b8\\012-view-37292047230.actual.json",
+        "bytes": 5320,
+        "sha256": "4fe40f375d3c393bc367f0d572be5c4b0a204cf28827fdf5683b6c742c118df5"
+      },
+      "raw": [
+        {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-release-34c742d-ci-review-4e8ea6a26aae49aca1edf0555e9aa4b8\\012-view-37292047230.stdout.log",
+          "bytes": 2640,
+          "sha256": "2a762710b13bb0647736691b432d1801ef111861f4e876b347a6ba316f5c5b64"
+        },
+        {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-release-34c742d-ci-review-4e8ea6a26aae49aca1edf0555e9aa4b8\\012-view-37292047230.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ],
+      "jobs": [
+        {
+          "jobId": 111704481230,
+          "name": "smoke-node-pg",
+          "status": "completed",
+          "conclusion": "success",
+          "relevantSteps": []
+        }
+      ]
+    },
+    {
+      "runId": "37292047165",
+      "name": "Verify package versions",
+      "url": "https://github.com/cinagroup/cinatoken/actions/runs/37292047165",
+      "headVerified": true,
+      "status": "completed",
+      "conclusion": "success",
+      "receipt": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-release-34c742d-ci-review-4e8ea6a26aae49aca1edf0555e9aa4b8\\013-view-37292047165.actual.json",
+        "bytes": 3737,
+        "sha256": "349debc647f799f6595eb467af1ffbc54db2e990e7ca88e099c253401100b843"
+      },
+      "raw": [
+        {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-release-34c742d-ci-review-4e8ea6a26aae49aca1edf0555e9aa4b8\\013-view-37292047165.stdout.log",
+          "bytes": 1693,
+          "sha256": "3de9869d12b8995fa0fff593e150ce53d3e18191cacb2abd851302983506f98a"
+        },
+        {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-release-34c742d-ci-review-4e8ea6a26aae49aca1edf0555e9aa4b8\\013-view-37292047165.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ],
+      "jobs": [
+        {
+          "jobId": 111704480904,
+          "name": "verify",
+          "status": "completed",
+          "conclusion": "success",
+          "relevantSteps": []
+        }
+      ]
+    }
+  ],
+  "committedBff": {
+    "proof": {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-release-34c742d-ci-review-4e8ea6a26aae49aca1edf0555e9aa4b8\\FINAL-committed-bff-blobs-closed-v1.json",
+      "bytes": 4362,
+      "sha256": "efee15a3f698c393b2e68939bb29bd9bd632b7c8d623a36ec29ff4dcfb43b9ba"
+    },
+    "accepted": true,
+    "files": [
+      {
+        "relativePath": "packages/admin/lib/public-catalog-bff.ts",
+        "actualExit": 0,
+        "bytes": 16595,
+        "sha256": "9e6e7759091d05ffa304837bd32d3b86151aad79e759b0e647df98ed9b931d63",
+        "stopSha256": "9e6e7759091d05ffa304837bd32d3b86151aad79e759b0e647df98ed9b931d63",
+        "matchesStop": true
+      },
+      {
+        "relativePath": "packages/admin/lib/public-catalog-bff.test.ts",
+        "actualExit": 0,
+        "bytes": 21331,
+        "sha256": "3d0387bbee5d04eb778402a43513f80d3a53584ce177670d0bf749faac30e001",
+        "stopSha256": "3d0387bbee5d04eb778402a43513f80d3a53584ce177670d0bf749faac30e001",
+        "matchesStop": true
+      }
+    ],
+    "protectedBuilderGrantSqlDiffActual": 0
+  },
+  "committedTheme": {
+    "proof": {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-release-34c742d-ci-review-4e8ea6a26aae49aca1edf0555e9aa4b8\\FINAL-committed-theme-blobs-closed-v1.json",
+      "bytes": 6897,
+      "sha256": "90feb8b4e4f3163fcd2d80053c40dff941e426114fa5c54a6049d54714b8ba9a"
+    },
+    "accepted": true,
+    "files": [
+      {
+        "relativePath": "packages/admin/components/home/HomeThemeSwitcher.tsx",
+        "actualExit": 0,
+        "bytes": 7031,
+        "sha256": "c06d67ff4ab133ebf1eae0bfe82997cbce5c44757221c9f7666ac0485ec96262",
+        "stopSha256": "c06d67ff4ab133ebf1eae0bfe82997cbce5c44757221c9f7666ac0485ec96262",
+        "matchesStop": true
+      },
+      {
+        "relativePath": "packages/admin/components/unified/ConsoleThemeProvider.tsx",
+        "actualExit": 0,
+        "bytes": 2349,
+        "sha256": "3a17db4b068e4603892d04ec4cb4001765039f6b1b17af9c6ac62b100f9df50a",
+        "stopSha256": "3a17db4b068e4603892d04ec4cb4001765039f6b1b17af9c6ac62b100f9df50a",
+        "matchesStop": true
+      },
+      {
+        "relativePath": "packages/admin/components/public/PublicThemeBootstrap.tsx",
+        "actualExit": 0,
+        "bytes": 923,
+        "sha256": "731074a445d68e8acd08b585a45be165949ae6a2be37a98c0a3893faa2a6017a",
+        "stopSha256": "731074a445d68e8acd08b585a45be165949ae6a2be37a98c0a3893faa2a6017a",
+        "matchesStop": true
+      },
+      {
+        "relativePath": "packages/admin/app/layout.tsx",
+        "actualExit": 0,
+        "bytes": 2645,
+        "sha256": "6ccf16edd74e1f04de146d101fb2aa0b46f9611e5a7af63156a206964a061c49",
+        "stopSha256": "6ccf16edd74e1f04de146d101fb2aa0b46f9611e5a7af63156a206964a061c49",
+        "matchesStop": true
+      }
+    ]
+  },
+  "failures": [
+    {
+      "runId": 37292047209,
+      "gate": "Web active catalog boundary test contract",
+      "firstFailure": "502 !== 503",
+      "source": "packages/proxy/src/routes/catalog-public-boundary.test.ts:47 old redirect:error assertion thrown inside sanitizing BFF callback; status check line74",
+      "classification": "Stale test-only string/capture placement, not established production runtime defect. Actual Web job succeeded; Admin contract step failed and subsequent publicSSR build skipped.",
+      "raw": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-release-34c742d-ci-review-4e8ea6a26aae49aca1edf0555e9aa4b8\\008-log-failed-37292047209.stdout.log",
+        "bytes": 58332,
+        "sha256": "41e67ba1fbeb71a114f44e8198eee3bdec62e997a203518f7a09e73348b14948"
+      },
+      "authorizedLocalFollowup": {
+        "proof": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-release-catalog-boundary-test-fix-c889a8ee0b4047b4aede2fe72ecdaae0\\FINAL-catalog-boundary-test-only-STOP-v1.json",
+          "bytes": 14402,
+          "sha256": "3ccdc5dd2934123bd2ed761273a3a7d10360c2758123dddccfea86c5095a08c9"
+        },
+        "sourceSha256": "7df0e7a11c74f56b42da9a48c6c024cd1ca58183601ee12dc43bde2d3d390e6c",
+        "boundary6of6Actual": 0,
+        "workflowCatalog17of17Actual": 0,
+        "proxyTypecheckActual": 0,
+        "originalSameShaCiConclusionRemainsFailure": true
+      }
+    },
+    {
+      "runId": 37292047148,
+      "gate": "Frozen future PG73 recovery proposal setup",
+      "firstFailure": "ReferenceError: migrator is not defined",
+      "source": "scripts/db/cutover/postgres-replay-scale-lock.native.test.mjs:163",
+      "classification": "Owned historical 73-migration loopback fixture references undeclared migrator; production81 builder/grant/SQL unchanged. Earlier native direct LOGIN/image producer/legacy-handler compatibility passed; remaining tests after fail-fast unexecuted.",
+      "raw": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-release-34c742d-ci-review-4e8ea6a26aae49aca1edf0555e9aa4b8\\006-api-native-job111704480968.stdout.log",
+        "bytes": 45958,
+        "sha256": "8508d7473d0d1c470847d408b146f15b97d9dd819c595ec8bd4b4737b00c4551"
+      }
+    },
+    {
+      "runId": 37292047148,
+      "gate": "Inactive private TextHolder v364 synthetic HTTP cancellation fixture",
+      "firstFailure": "null !== 'observed'",
+      "source": "packages/proxy/scripts/staging/chat-holder-binding-v364-http-cancel-successor.test.mjs:278",
+      "totals": {
+        "tests": 8,
+        "pass": 7,
+        "fail": 1,
+        "skipped": 0,
+        "cancelled": 0
+      },
+      "classification": "Future closed TextHolder path; strict cancellation contract remains failing. Current actual dispatch-safety/tool-engines/Playground steps success; do not mark entire Proxy workflow green.",
+      "raw": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-release-34c742d-ci-review-4e8ea6a26aae49aca1edf0555e9aa4b8\\010-log-failed-37292047148.stdout.log",
+        "bytes": 25370,
+        "sha256": "6549731dc2a8aab5f1de5132694a1062bf9cd6c42453cf06745cba59da1dc27a"
+      }
+    },
+    {
+      "runId": 37292047213,
+      "gate": "GitHub automated Changesets PR permission",
+      "firstFailure": "GitHub Actions is not permitted to create or approve pull requests.",
+      "observedActionSideEffect": "Existing Changesets workflow pushed changeset-release/main from 9a2faafb to aa6f88de before PR creation failure; reviewing agent performed no Git/remote mutation.",
+      "raw": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-release-34c742d-ci-review-4e8ea6a26aae49aca1edf0555e9aa4b8\\003-log-failed-37292047213.stdout.log",
+        "bytes": 5665,
+        "sha256": "8be3ffb1f0e273a816c70d086fd8ad1a584fa5d1f93694e96b0cb6cbabefa985"
+      }
+    }
+  ],
+  "rawReceipts": [
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-release-34c742d-ci-review-4e8ea6a26aae49aca1edf0555e9aa4b8\\001-list.actual.json",
+      "bytes": 3107,
+      "sha256": "fa001500dc6cf8ad0db5baa6f169ee40ca0a7bb4a2887360bdf489e3272053ea",
+      "actualExit": 0,
+      "headVerified": true,
+      "raw": [
+        {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-release-34c742d-ci-review-4e8ea6a26aae49aca1edf0555e9aa4b8\\001-list.stdout.log",
+          "bytes": 1554,
+          "sha256": "8bb4ed35838ac4cebc56f3710ce4fc5af20d52d40e3d39a5501116db628d93a9"
+        },
+        {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-release-34c742d-ci-review-4e8ea6a26aae49aca1edf0555e9aa4b8\\001-list.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ]
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-release-34c742d-ci-review-4e8ea6a26aae49aca1edf0555e9aa4b8\\002-view-37292047213.actual.json",
+      "bytes": 4525,
+      "sha256": "244abb27e98ee3dc7b33586029ac4e36b3e11b495b0babd15d15a08fe2a9bd3c",
+      "actualExit": 0,
+      "headVerified": true,
+      "raw": [
+        {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-release-34c742d-ci-review-4e8ea6a26aae49aca1edf0555e9aa4b8\\002-view-37292047213.stdout.log",
+          "bytes": 2163,
+          "sha256": "566725b7352d07b03171a295a2a44a28e46ccb244a7b8d174c9832d2cfb001e1"
+        },
+        {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-release-34c742d-ci-review-4e8ea6a26aae49aca1edf0555e9aa4b8\\002-view-37292047213.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ]
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-release-34c742d-ci-review-4e8ea6a26aae49aca1edf0555e9aa4b8\\003-log-failed-37292047213.actual.json",
+      "bytes": 1083,
+      "sha256": "d0a660bf9b0b2c4e60584f0a8751f23cc8db5473f10ce2185dea5a4cdf318269",
+      "actualExit": 0,
+      "headVerified": null,
+      "raw": [
+        {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-release-34c742d-ci-review-4e8ea6a26aae49aca1edf0555e9aa4b8\\003-log-failed-37292047213.stdout.log",
+          "bytes": 5665,
+          "sha256": "8be3ffb1f0e273a816c70d086fd8ad1a584fa5d1f93694e96b0cb6cbabefa985"
+        },
+        {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-release-34c742d-ci-review-4e8ea6a26aae49aca1edf0555e9aa4b8\\003-log-failed-37292047213.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ]
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-release-34c742d-ci-review-4e8ea6a26aae49aca1edf0555e9aa4b8\\004-list.actual.json",
+      "bytes": 3107,
+      "sha256": "572906b6622bdb57fb086f6ab4bc7bede9b3b34b292152116ccab61a3df3fa5d",
+      "actualExit": 0,
+      "headVerified": true,
+      "raw": [
+        {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-release-34c742d-ci-review-4e8ea6a26aae49aca1edf0555e9aa4b8\\004-list.stdout.log",
+          "bytes": 1554,
+          "sha256": "8bb4ed35838ac4cebc56f3710ce4fc5af20d52d40e3d39a5501116db628d93a9"
+        },
+        {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-release-34c742d-ci-review-4e8ea6a26aae49aca1edf0555e9aa4b8\\004-list.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ]
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-release-34c742d-ci-review-4e8ea6a26aae49aca1edf0555e9aa4b8\\005-view-37292047148.actual.json",
+      "bytes": 72882,
+      "sha256": "40ea1eafa1cf2605d04643166b00606abb0062ece6a6fbf21434f9767cbb04a4",
+      "actualExit": 0,
+      "headVerified": true,
+      "raw": [
+        {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-release-34c742d-ci-review-4e8ea6a26aae49aca1edf0555e9aa4b8\\005-view-37292047148.stdout.log",
+          "bytes": 48798,
+          "sha256": "96d8b5897ff75f829996ef4e3ae570cb17978d232e542e2c24890e0ef7c38239"
+        },
+        {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-release-34c742d-ci-review-4e8ea6a26aae49aca1edf0555e9aa4b8\\005-view-37292047148.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ]
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-release-34c742d-ci-review-4e8ea6a26aae49aca1edf0555e9aa4b8\\006-api-native-job111704480968.actual.json",
+      "bytes": 1116,
+      "sha256": "e4e70e459a743d139a32324d1e65bcf1da5d60489f6dd091bfacb09dabd7f7fc",
+      "actualExit": 0,
+      "headVerified": null,
+      "raw": [
+        {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-release-34c742d-ci-review-4e8ea6a26aae49aca1edf0555e9aa4b8\\006-api-native-job111704480968.stdout.log",
+          "bytes": 45958,
+          "sha256": "8508d7473d0d1c470847d408b146f15b97d9dd819c595ec8bd4b4737b00c4551"
+        },
+        {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-release-34c742d-ci-review-4e8ea6a26aae49aca1edf0555e9aa4b8\\006-api-native-job111704480968.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ]
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-release-34c742d-ci-review-4e8ea6a26aae49aca1edf0555e9aa4b8\\007-list.actual.json",
+      "bytes": 3122,
+      "sha256": "5c96dc1c2e7e54f0a5b168e8e631394eee8971c35a14596fbfd804f9e771e45c",
+      "actualExit": 0,
+      "headVerified": true,
+      "raw": [
+        {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-release-34c742d-ci-review-4e8ea6a26aae49aca1edf0555e9aa4b8\\007-list.stdout.log",
+          "bytes": 1569,
+          "sha256": "a72e8609346eba367bc781b9e464f83521e96383e66923d8a279a968b81146df"
+        },
+        {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-release-34c742d-ci-review-4e8ea6a26aae49aca1edf0555e9aa4b8\\007-list.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ]
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-release-34c742d-ci-review-4e8ea6a26aae49aca1edf0555e9aa4b8\\008-log-failed-37292047209.actual.json",
+      "bytes": 1084,
+      "sha256": "911e09c562437f3ccbd0b754d09d05ee089a58e225c92c313455144c141e356d",
+      "actualExit": 0,
+      "headVerified": null,
+      "raw": [
+        {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-release-34c742d-ci-review-4e8ea6a26aae49aca1edf0555e9aa4b8\\008-log-failed-37292047209.stdout.log",
+          "bytes": 58332,
+          "sha256": "41e67ba1fbeb71a114f44e8198eee3bdec62e997a203518f7a09e73348b14948"
+        },
+        {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-release-34c742d-ci-review-4e8ea6a26aae49aca1edf0555e9aa4b8\\008-log-failed-37292047209.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ]
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-release-34c742d-ci-review-4e8ea6a26aae49aca1edf0555e9aa4b8\\009-view-37292047209.actual.json",
+      "bytes": 12430,
+      "sha256": "69079e3058acc06654beb739516809332c9bde7960b5cf4c5233be22a74941e4",
+      "actualExit": 0,
+      "headVerified": true,
+      "raw": [
+        {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-release-34c742d-ci-review-4e8ea6a26aae49aca1edf0555e9aa4b8\\009-view-37292047209.stdout.log",
+          "bytes": 7209,
+          "sha256": "e6706ececb7887401f91ae85e1b9aaebd2ea9772060e4c0a87ab84095305171e"
+        },
+        {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-release-34c742d-ci-review-4e8ea6a26aae49aca1edf0555e9aa4b8\\009-view-37292047209.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ]
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-release-34c742d-ci-review-4e8ea6a26aae49aca1edf0555e9aa4b8\\010-log-failed-37292047148.actual.json",
+      "bytes": 1084,
+      "sha256": "947aed460e14f6c94e63483c96ff5ba15f3df27a79d7250df6a6340ecbf3e970",
+      "actualExit": 0,
+      "headVerified": null,
+      "raw": [
+        {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-release-34c742d-ci-review-4e8ea6a26aae49aca1edf0555e9aa4b8\\010-log-failed-37292047148.stdout.log",
+          "bytes": 25370,
+          "sha256": "6549731dc2a8aab5f1de5132694a1062bf9cd6c42453cf06745cba59da1dc27a"
+        },
+        {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-release-34c742d-ci-review-4e8ea6a26aae49aca1edf0555e9aa4b8\\010-log-failed-37292047148.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ]
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-release-34c742d-ci-review-4e8ea6a26aae49aca1edf0555e9aa4b8\\011-view-37292047148.actual.json",
+      "bytes": 73678,
+      "sha256": "06942c115674ea2a5494fa1f007e2aaa115ad52315d755170e707d741c1a2b54",
+      "actualExit": 0,
+      "headVerified": true,
+      "raw": [
+        {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-release-34c742d-ci-review-4e8ea6a26aae49aca1edf0555e9aa4b8\\011-view-37292047148.stdout.log",
+          "bytes": 49488,
+          "sha256": "1e921e8616c65e98a1dbf394e94fe16559eb4c594b2846090f4d01cd0f969198"
+        },
+        {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-release-34c742d-ci-review-4e8ea6a26aae49aca1edf0555e9aa4b8\\011-view-37292047148.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ]
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-release-34c742d-ci-review-4e8ea6a26aae49aca1edf0555e9aa4b8\\012-view-37292047230.actual.json",
+      "bytes": 5320,
+      "sha256": "4fe40f375d3c393bc367f0d572be5c4b0a204cf28827fdf5683b6c742c118df5",
+      "actualExit": 0,
+      "headVerified": true,
+      "raw": [
+        {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-release-34c742d-ci-review-4e8ea6a26aae49aca1edf0555e9aa4b8\\012-view-37292047230.stdout.log",
+          "bytes": 2640,
+          "sha256": "2a762710b13bb0647736691b432d1801ef111861f4e876b347a6ba316f5c5b64"
+        },
+        {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-release-34c742d-ci-review-4e8ea6a26aae49aca1edf0555e9aa4b8\\012-view-37292047230.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ]
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-release-34c742d-ci-review-4e8ea6a26aae49aca1edf0555e9aa4b8\\013-view-37292047165.actual.json",
+      "bytes": 3737,
+      "sha256": "349debc647f799f6595eb467af1ffbc54db2e990e7ca88e099c253401100b843",
+      "actualExit": 0,
+      "headVerified": true,
+      "raw": [
+        {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-release-34c742d-ci-review-4e8ea6a26aae49aca1edf0555e9aa4b8\\013-view-37292047165.stdout.log",
+          "bytes": 1693,
+          "sha256": "3de9869d12b8995fa0fff593e150ce53d3e18191cacb2abd851302983506f98a"
+        },
+        {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-release-34c742d-ci-review-4e8ea6a26aae49aca1edf0555e9aa4b8\\013-view-37292047165.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ]
+    }
+  ],
+  "noRuntimeDocsGitDeploymentMutationByReview": true,
+  "explicitlyAuthorizedTestOnlyFollowup": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-release-catalog-boundary-test-fix-c889a8ee0b4047b4aede2fe72ecdaae0\\FINAL-catalog-boundary-test-only-STOP-v1.json",
+    "bytes": 14402,
+    "sha256": "3ccdc5dd2934123bd2ed761273a3a7d10360c2758123dddccfea86c5095a08c9"
+  },
+  "cloudflareRunId": 37292049973,
+  "cloudflareFinalOutcomeNotClaimedHere": true
+}

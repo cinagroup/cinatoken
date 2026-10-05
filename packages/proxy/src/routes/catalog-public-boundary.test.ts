@@ -18,6 +18,7 @@ for (const resource of ['models', 'model', 'providers', 'stats', 'legacy-stats']
 	test(`actual catalog ${resource} faults remain anonymous 503/no-store through BFF and HEAD`, async () => {
 		let failed = true;
 		let requests = 0;
+		const captured: Request[] = [];
 		const repositories = {
 			modelRouting: { listModelsWithActiveRoutes: async () => [] },
 			routeDataPolicies: { getByRouteTargetIds: async () => [] },
@@ -42,13 +43,8 @@ for (const resource of ['models', 'model', 'providers', 'stats', 'legacy-stats']
 		app.route('/catalog', createCatalogRoutes(createInMemoryPublicStatsRuntimeGuard()));
 		const bff = createPublicCatalogBff(async (path, init) => {
 			requests += 1;
-			assert.equal(init?.credentials, 'omit');
-			assert.equal(init?.cache, 'no-store');
-			assert.equal(init?.redirect, 'error');
 			const sent = new Request(`https://synthetic-proxy.example${path}`, init);
-			assert.equal(sent.headers.get('cookie'), null);
-			assert.equal(sent.headers.get('authorization'), null);
-			assert.equal(sent.headers.get('x-cinatoken-workspace'), null);
+			captured.push(sent);
 			return app.request(sent);
 		});
 		const request = (method: string) =>
@@ -95,6 +91,18 @@ for (const resource of ['models', 'model', 'providers', 'stats', 'legacy-stats']
 			else assert.equal(body.status, 'ready');
 		}
 		assert.equal(requests, 3);
+		assert.equal(captured.length, 3);
+		// Keep capture assertions outside the BFF callback, which sanitizes thrown errors.
+		for (const sent of captured) {
+			assert.equal(sent.method, 'GET');
+			assert.equal(sent.credentials, 'omit');
+			assert.equal(sent.cache, 'no-store');
+			assert.equal(sent.redirect, 'manual');
+			assert.equal(sent.headers.get('cookie'), null);
+			assert.equal(sent.headers.get('authorization'), null);
+			assert.equal(sent.headers.get('x-cinatoken-workspace'), null);
+			assert.deepEqual([...sent.headers], [['accept', 'application/json']]);
+		}
 	});
 }
 

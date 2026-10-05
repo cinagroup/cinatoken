@@ -26,7 +26,7 @@
 
 文档范围：按“将 checklist 整理成一个 md 文件，推进实施随时更新”的要求维护本文。完整清单为 **102 项主任务（99 项 P0–P8 任务、3 项来源任务）**，配套 G0–G8 验收门槛、页面/API/权限矩阵及批次记录；实施使用原任务 ID 持续更新，不另建主清单。
 
-当前发布（2026-10-05）：39b76f42首次部署成功但真实冒烟发现BFF502及主题刷新持久化问题，未标验收完成。最小修复已冻结：BFF46/46、Admin1045/1045及类型通过，主题真实SSR hydration4/4通过；真实CF同兼容probe验证manual三个目录200并已清理。准备提交新固定SHA、重新发布并执行完整线上复验；PostgreSQL81项与独立Web/G0–G8状态保留。
+当前发布（2026-10-05）：修复源码34c742d1已提交推送，Cloudflare Run37292049973全部发布步骤成功，两个Worker均同SHA且100%流量。BFF502与主题hydration持久化问题已修复，实际线上14项HTTP、桌面/移动、深色主题及中文切换/刷新通过；生产PostgreSQL81项ledger与19项结构检查已通过。独立Web公开入口、实验holder及G0–G8未标完成；并行CI未通过项如实保留。
 
 当前推进：目标 active，继续完整迁移。NEXT-13 J6 完整剩余497个Admin TS/TSX格式修复本地验收完成（5.69）：3320236→3379236 B，Root完整有界AST与独立Babel/TypeScript497/497通过；11文件18直接JSX父节点中的21原文本节点逐个转换为单字符串表达式，保留children类型/数量/顺序/值，1128评论/7427属性runtime值保持。完整Admin格式651通过/0告警/parse0，七CLI与审计0；fresh Admin types/lint、主unit1008＋相关5/30、Web1582均0。新Next I8iEBXkv6HbVKv644OYUc 的4045输入/2827产物实际构建与冻结0；旧新各8真实产品React流程＋10HTTP场景通过，6采样截图对原字节同，范围是受控SQLite/身份夹具与实际冻结Next，不证明全应用/真实身份/原生平台。临时before备份335和Mirror ordinary产物1983缺失已从独立/冻结副本按原hash恢复；修复前失败和原因未明的链接观察保留，不能声称产物从未漂移。Web2289/source4aaa…与P71 Root633不变。102主任务/54矩阵/G0–G8/E00–E08/211checkbox状态完整保持，主任务仅P6-11勾选；326来源、真实身份/原生三库/链、Node22 LinuxCI/双平台/发布回滚及旧页退役继续待验，RootP66/29string false/public origin空、未部署。
 
@@ -2187,7 +2187,7 @@ Root first source-writer schema错误发生于任何源写前，修正为proof�
 
 完整102主任务、54矩阵、G0–G8/E00–E08和211checkbox与J5逐项保持，48选中/163未选，主任务仍仅P6-11选中。Root P66、29入口string false、CINATOKEN_WEB_PUBLIC_ORIGIN空；P71633/54285133 B原字节不变，无部署/真实服务/Git写。完整格式债已清，下一步继续来源326、真实身份/原生三库/链账本、Core全范围、Node22 LinuxCI及原生双平台/灰度回滚和旧UI退役；目标active，此本地批次通过不等于完整迁移完成。
 
-### 5.70 Cloudflare生产控制台发布（2026-10-05，已部署，线上问题修复中）
+### 5.70 Cloudflare生产控制台发布（2026-10-05，已部署并通过公开冒烟）
 
 用户请求“提交推送部署到cloudflare”，授权将当前已实施源码、正式迁移和文档提交推送至既有main并发布Cloudflare。发布 cinatoken-admin（https://cinatoken.com）及配套 cinatoken-proxy（https://api.cinatoken.com）；Proxy包含本轮公共目录币种/JSON和价格快照实现，需要与Admin使用同一提交。Chain未改源码、不部署；独立Web的29入口仍关闭。
 
@@ -2199,9 +2199,9 @@ Root first source-writer schema错误发生于任何源写前，修正为proof�
 
 首次test:deploy退出1（历史BYOK夹具68与当前77库存冲突）；固定原68迁移夹具后完整1836/1836通过、无失败或跳过。config_change_audit的INSERT-only权限反例已实际复现；两处INSERT改用严格 RETURNING 1 AS inserted，权限/审计回归101/101及Core类型检查通过，未放宽数据库grant。此前J6证据保持原范围，不替代本轮Linux生产构建。
 
-CI夹具修复已完成：Web Docker补齐两个--env；Docker PG精确核对全部7个trigger名/表/enabled状态，额外/缺失/disabled同样拒绝。PG73桥接仅对自有loopback fixture临时LOGIN并finally恢复，生产grant及正式SQL未改；synthetic holder以waitUntil保留取消观察并新增延迟KV负/正例；deadline仅测试补ref transport handle。完整Playground92/92、holder3/3、Proxy staging类型及helper语法通过；真实native PG/HTTP取消待同SHA Linux CI。
+CI夹具修复已完成：Web Docker补齐两个--env；Docker PG精确核对全部7个trigger名/表/enabled状态，额外/缺失/disabled同样拒绝。PG73桥接仅对自有loopback fixture临时LOGIN并finally恢复，生产grant及正式SQL未改；synthetic holder以waitUntil保留取消观察并新增延迟KV负/正例；deadline仅测试补ref transport handle。此前本地Playground92/92、holder3/3、Proxy staging类型及helper语法通过。39b76f42的实际Linux Web/Docker成功，PG73 legacy-handler通过；replay-scale proposal夹具未声明migrator及隔离v364 holder的严格HTTP取消仍失败，未视为修复或放行该未来路径。最终修复提交的实际CI与未通过项见发布JSON，现有Admin/Proxy发布契约和公开线上复验均成功。
 
-提交SHA、Linux构建、实际PostgreSQL迁移、Cloudflare版本及线上冒烟持续写入 [本轮发布证据](../../operators/deployment/releases/2026-10-05-web-frontend-cloudflare-release.json)。源码66ef5a698c0bb16aa1f2c490c79b6a06bdb5b33b已正常推送。Linux Run37282521598构建成功，在正式发布前取消（Proxy/Admin deploy均skipped），用于补齐目录复核并修正同SHA并行CI的Docker env参数、旧trigger库存及安全测试夹具。自动Release创建PR被仓库Actions权限拒绝，记录为独立运维限制；不修改该权限。整体任务与G0–G8勾选状态保持原状。
+提交SHA、Linux构建、实际PostgreSQL迁移、Cloudflare版本及线上冒烟持续写入 [本轮发布证据](../../operators/deployment/releases/2026-10-05-web-frontend-cloudflare-release.json)。最新生产源码34c742d161edbf2c16c7578221578d0b805d35c0已正常推送，Run37292049973全部发布步骤成功，两Worker均100%流量。此前Run37282521598与37285277889均在Worker部署前取消（Proxy/Admin deploy均skipped）；39b76f42/Run37288251610部署成功后实际冒烟揭示BFF/主题问题，原始失败收据保留，现已最小修复并重新发布通过线上复验。自动Release创建PR被仓库Actions权限拒绝，记录为独立运维限制；不修改该权限。整体任务与G0–G8勾选状态保持原状。
 
 ## 6. 更新记录
 
@@ -2402,3 +2402,6 @@ CI夹具修复已完成：Web Docker补齐两个--env；Docker PG精确核对全
 
 
 2026-10-05线上修复冻结：仅BFF实现/回归与HomeThemeSwitcher三源码文件。BFF用manual不跟随跳转，5种3xx仍502且无Location/Set-Cookie或凭据转发，生产空列表USD envelope合法；定向46/46、完整Admin1045/1045与6GiB类型检查通过（首次2GiB OOM134保留）。Home hydration只同步DOM，用户选择才写localStorage/Cookie，实际组件SSR→hydrate四案例通过，旧源3fail/1pass与真实dark→system写栈保留。等待新SHA Linux部署及真实dark→中文→mobile刷新/API14复验，未以本地结果替代线上验收。
+
+
+2026-10-05发布最终验收：源码34c742d161edbf2c16c7578221578d0b805d35c0，Cloudflare Run37292049973 Linux构建、Core/Proxy/Admin契约、Proxy bundle及两部署全部成功；cinatoken-proxy=6e235009-78db-443e-9387-6ec9d963d9d1（100%）；cinatoken-admin=a5ce22c4-edae-42e9-8c2b-7b0df63e5b66（100%）。实际14个匿名GET结果符合预期、BFF与Proxy公开ID/货币一致；Playwright Chromium 147.0.7727.15 在1440×1000与390×844核对身份/非空/无overlay，无pageerror或未解释console错误，匿名/api/user/me401按精确URL+响应解释并保留raw。深色选择→中文Cookie→mobile刷新存储及显示都保持dark/zh，无横向溢出。真实登录/资金写入及独立Web切换仍未验收，未来holder/recovery与自动PR CI问题继续保留。原Web CI旧redirect:error测试断言失败已test-only修正，回调外核查manual/匿名头，边界6/6、目录17/17及Proxy类型通过；原34的失败收据不改写。211checkbox保持；后续仅提交测试预期和最终文档/证据，产品源码不变，不重复迁移或部署。
