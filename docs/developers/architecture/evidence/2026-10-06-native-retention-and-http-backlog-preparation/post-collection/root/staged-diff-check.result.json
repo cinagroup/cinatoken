@@ -1,0 +1,27 @@
+{
+  "at": "2026-10-06T07:11:25.753Z",
+  "finishedAt": "2026-10-06T07:11:25.880Z",
+  "executable": "C:/Program Files/Git/cmd/git.exe",
+  "args": [
+    "-c",
+    "core.longpaths=true",
+    "-c",
+    "core.whitespace=cr-at-eol",
+    "diff",
+    "--cached",
+    "--check"
+  ],
+  "cwd": "C:/cinagroup/cinatoken",
+  "actualExit": 2,
+  "signal": null,
+  "stdout": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-followup-da56f69292e44387886a9cc8ffa36638\\staged-diff-check.stdout.log",
+    "bytes": 1004,
+    "sha256": "94b52f9999136a93f3a204cbf20a96b0c80aec9a9d55cc9807f1cfed01af3aa0"
+  },
+  "stderr": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-followup-da56f69292e44387886a9cc8ffa36638\\staged-diff-check.stderr.log",
+    "bytes": 80,
+    "sha256": "4637b2478cea95e221ecbde1b46874fb0f18d282e08504cf0d1074595c4348d1"
+  }
+}

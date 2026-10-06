@@ -1,0 +1,12 @@
+{
+  "schema":"cinatoken-queued-write-v2-actual-tool-observations-v1",
+  "authority":"Actual terminal fields transcribed from returned tool outputs; complete child stdout/stderr authority remains each closed receipt. No rerun created this record.",
+  "records":[
+    {"label":"prepare-v2","chunk_id":"a3402c","exit_code":1,"wall_time_seconds":0.295566,"receipt":"prepare-v2.result.json","closed":true},
+    {"label":"prepare-v2b","chunk_id":"157e1e","exit_code":0,"wall_time_seconds":0.5282097,"receipt":"prepare-v2b.result.json","closed":true}
+  ],
+  "nodeSyntaxAuthority":"node-check.result.json actual synchronous spawnSync0, module not evaluated",
+  "runtimeExecuted":false,
+  "repositoryWrite":false,
+  "gatePassDerived":false
+}

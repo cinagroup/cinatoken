@@ -1,0 +1,29 @@
+{
+  "at": "2026-10-06T06:53:16.448Z",
+  "finishedAt": "2026-10-06T06:53:16.492Z",
+  "executable": "C:/Program Files/Git/cmd/git.exe",
+  "args": [
+    "-c",
+    "core.longpaths=true",
+    "check-attr",
+    "text",
+    "eol",
+    "--",
+    "scripts/diagnostics/v364-direct-socket/run-direct-socket.mjs",
+    "scripts/diagnostics/v364-direct-socket/README.md",
+    "scripts/diagnostics/v364-direct-socket/sealed-package.json"
+  ],
+  "cwd": "C:/cinagroup/cinatoken",
+  "actualExit": 0,
+  "signal": null,
+  "stdout": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-followup-da56f69292e44387886a9cc8ffa36638\\package-byte-attributes.stdout.log",
+    "bytes": 401,
+    "sha256": "633ec9ecdfac138fbf423d692e3d39cb94b0d20b4ef2f98559aefbf3a52fa116"
+  },
+  "stderr": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-followup-da56f69292e44387886a9cc8ffa36638\\package-byte-attributes.stderr.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+}

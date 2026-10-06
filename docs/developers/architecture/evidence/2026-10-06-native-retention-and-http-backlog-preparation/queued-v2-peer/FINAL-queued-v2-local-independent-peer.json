@@ -1,0 +1,113 @@
+{
+  "schema": "v364-queued-v2-local-delta-independent-peer-v1",
+  "at": "2026-10-06T07:04:36.057Z",
+  "scope": "Local source/AST/timestamp and V2 seal delta only; no prior38-file gate or archive/control/runtime rerun.",
+  "issues": [],
+  "N1Resolved": true,
+  "candidate": {
+    "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-write-v2-8e7e441d5c7547dc93ae0c2c76898bf8/run-direct-socket.candidate-v2.mjs",
+    "bytes": 52009,
+    "sha256": "8fbaaed9523ecb227bd0e47ce8092d7432c08f8b67fd8650569d69d711ef48a8"
+  },
+  "v1Reference": {
+    "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-write-candidate-125e5fd5336c42b18c0bb59dda8f4942/run-direct-socket.candidate.mjs",
+    "bytes": 51387,
+    "sha256": "e6cfdb5d6e3d8ab04b4bc97d278132b4439930a92465bcf72081ccc173dbb04e"
+  },
+  "helperUnchanged": {
+    "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-write-candidate-125e5fd5336c42b18c0bb59dda8f4942/queued-write-source.mjs",
+    "bytes": 3557,
+    "sha256": "93417db1e3b0edbb3dd06b504bddee18ba6fbb1bbf31141cd20ce119dea7fb5d"
+  },
+  "ownerFinal": {
+    "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-write-v2-8e7e441d5c7547dc93ae0c2c76898bf8/FINAL-queued-write-v2-timestamp-candidate.json",
+    "bytes": 8302,
+    "sha256": "99970859003202c91496461a704b876488e09e185156b5326139a3a08f324e7a"
+  },
+  "ownerSTOPWRITE": {
+    "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-write-v2-8e7e441d5c7547dc93ae0c2c76898bf8/STOPWRITE.json",
+    "bytes": 6603,
+    "sha256": "c9cec3d5b517f24750ca7da455e451952490ae921ff67431a8cb765b686fa968"
+  },
+  "reverseEntireV1BytesExact": true,
+  "onlyThreeExtraFunctionASTChanged": true,
+  "allOtherTopLevelASTExact": true,
+  "allOriginal13FunctionsBytesAndASTExact": true,
+  "originalFunctions": [
+    "bundle",
+    "nativeReaderBundle",
+    "observedBareBundle",
+    "bounded",
+    "createFixture",
+    "readyFixture",
+    "disposeFixture",
+    "httpClient",
+    "observedGet",
+    "cancellationCase",
+    "nativeReaderCalibration",
+    "strictBaseline",
+    "verifyNativeCalibrationObservations"
+  ],
+  "oldHttpClientAndStrictNotChanged": true,
+  "timestampMeasurement": {
+    "knownAndUnknownSamplesEndTimeRecorded": true,
+    "actualApiInvokeTimeStatementAdjacentToResetAndDestroy": true,
+    "postApiReturnTimeRecorded": true,
+    "ageActualInvokeMinusPriorSampleEndNonnegativeAndBelow100": true,
+    "bothSampleEndTimesNotAfterActualInvoke": true,
+    "clocksSameHostPerformanceNow": true,
+    "wirePacketRSTTimeProven": false,
+    "cppPendingWriteProven": false
+  },
+  "v2Package": "C:/Users/cina/AppData/Local/Temp/cinatoken-web-followup-da56f69292e44387886a9cc8ffa36638/package-candidate-v2-lf",
+  "packagePins": [
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-web-followup-da56f69292e44387886a9cc8ffa36638/package-candidate-v2-lf/run-direct-socket.mjs",
+      "bytes": 52009,
+      "sha256": "8fbaaed9523ecb227bd0e47ce8092d7432c08f8b67fd8650569d69d711ef48a8"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-web-followup-da56f69292e44387886a9cc8ffa36638/package-candidate-v2-lf/queued-write-source.mjs",
+      "bytes": 3557,
+      "sha256": "93417db1e3b0edbb3dd06b504bddee18ba6fbb1bbf31141cd20ce119dea7fb5d"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-web-followup-da56f69292e44387886a9cc8ffa36638/package-candidate-v2-lf/README.md",
+      "bytes": 6774,
+      "sha256": "97bbd1c8bf42a1aa761fe526fc50a4057c65e790c8fbe659fcc3cd97d938c357"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-web-followup-da56f69292e44387886a9cc8ffa36638/package-candidate-v2-lf/sealed-package.json",
+      "bytes": 1190,
+      "sha256": "69cfacc9b02d66531a0624cdf980fb39a4f998745949970c2962b4691bfc17a5"
+    }
+  ],
+  "onlySealRunnerEntryChanged": true,
+  "allFourFilesLF": true,
+  "retainedOriginalPreparationFailure": {
+    "receipt": {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-write-v2-8e7e441d5c7547dc93ae0c2c76898bf8/prepare-v2.result.json",
+      "bytes": 1085,
+      "sha256": "f9e7445796ac638e28f89fbb3304a192d597546470838f5d5242b5e7e41c235e"
+    },
+    "actualExit": 1,
+    "notUpgradedToZero": true
+  },
+  "priorReviewUnchanged": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-source-peer-60rqza",
+  "sourceOnly": true,
+  "moduleEvaluated": false,
+  "prepareOnlyExecuted": false,
+  "workerdOrMiniflareExecuted": false,
+  "PGAppNativeCIProductionExecuted": false,
+  "repositoryWrites": 0,
+  "gitBlobAdmissionStillPendingRoot": true,
+  "gatePassDerived": false,
+  "causeProven": false,
+  "fullG7": false,
+  "fullG8": false,
+  "limitations": [
+    "The code measures completed sampling to the Node RST API invocation; packet transmission time and a C++ write branch are not proven.",
+    "No runtime pressure, cancellation, teardown or historical root cause is demonstrated by this static delta review.",
+    "Staged Git blob byte equivalence must still be checked by Root before execution."
+  ]
+}

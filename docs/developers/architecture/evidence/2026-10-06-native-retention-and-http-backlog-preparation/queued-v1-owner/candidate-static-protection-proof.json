@@ -1,0 +1,153 @@
+{
+  "schema": "cinatoken-v364-queued-write-candidate-static-protection-v1",
+  "at": "2026-10-06T06:51:11.575Z",
+  "actualStaticVerificationExit": 0,
+  "onlyTempPrepared": true,
+  "runtimeExecuted": false,
+  "gitInvoked": false,
+  "repositoryWrite": false,
+  "gatePassDerived": false,
+  "before": {
+    "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-write-candidate-125e5fd5336c42b18c0bb59dda8f4942/run-direct-socket.before.mjs",
+    "bytes": 34907,
+    "sha256": "621cb7384b32a25af7c37d411cd12c2d51bf47c241d9d1f24c1c3ee3989723f3"
+  },
+  "candidate": {
+    "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-write-candidate-125e5fd5336c42b18c0bb59dda8f4942/run-direct-socket.candidate.mjs",
+    "bytes": 51387,
+    "sha256": "e6cfdb5d6e3d8ab04b4bc97d278132b4439930a92465bcf72081ccc173dbb04e"
+  },
+  "newHelper": {
+    "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-write-candidate-125e5fd5336c42b18c0bb59dda8f4942/queued-write-source.mjs",
+    "bytes": 3557,
+    "sha256": "93417db1e3b0edbb3dd06b504bddee18ba6fbb1bbf31141cd20ce119dea7fb5d"
+  },
+  "extension": {
+    "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-write-candidate-125e5fd5336c42b18c0bb59dda8f4942/queued-pressure-extension.snippet.mjs",
+    "bytes": 4010,
+    "sha256": "28de2baa4bb75641c6c5c7658aabfedc67231bf16e62c5755477b68c2fb148b2"
+  },
+  "originalTargetUnchanged": true,
+  "protectedOriginalFunctions": [
+    "bundle",
+    "nativeReaderBundle",
+    "observedBareBundle",
+    "bounded",
+    "createFixture",
+    "readyFixture",
+    "disposeFixture",
+    "httpClient",
+    "observedGet",
+    "cancellationCase",
+    "nativeReaderCalibration",
+    "strictBaseline",
+    "verifyNativeCalibrationObservations"
+  ],
+  "allOriginalFunctionASTAndBytesExact": true,
+  "originalAssertCount": 77,
+  "allOriginalAssertCanonicalASTMultiplicityRetained": true,
+  "originalFourArmScheduleASTAndBytesExact": true,
+  "originalVersionsASTExact": true,
+  "originalOverallStrictActualExitFormulaASTExact": true,
+  "originalReportPropertiesASTExact": true,
+  "originalFiveResultsArrayNotExpanded": true,
+  "originalNodeCalibrationAndStrictBaselineFunctionsExact": true,
+  "oneExtraArmNotBaselineEligible": true,
+  "originalCancelPollAndTailPreservedInExtraArm": true,
+  "noSignalListenerCancelOrKVWrites": true,
+  "cleanupHookSynchronousNoKVOrNewLifetimeTask": true,
+  "newSourceCancelOriginalCoreASTExact": true,
+  "sourceDoesNotCloseBeforeRST": true,
+  "controlledPayloadAllocationBytes": 8388608,
+  "chunkCount": 128,
+  "chunkBytes": 65536,
+  "totalProcessOrKernelMemoryLimitClaimed": false,
+  "pressureSource": "owned kernelTCP tx_queue observation, not C++ pump trace",
+  "cppPendingWriteProven": false,
+  "pressureRuntimeValidation": "not executed, unknown",
+  "editIndex": {
+    "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-write-candidate-125e5fd5336c42b18c0bb59dda8f4942/candidate-edit-index.json",
+    "bytes": 23584,
+    "sha256": "c61a15ac8a68511fb66d25fbcb6d6ed61f2d81ba7585e0fe1711521a1a21b847"
+  },
+  "syntax": [
+    {
+      "schema": "cinatoken-candidate-node-syntax-closed-v1",
+      "closed": true,
+      "startedAt": "2026-10-06T06:51:11.355Z",
+      "endedAt": "2026-10-06T06:51:11.431Z",
+      "program": "C:\\Program Files\\nodejs\\node.exe",
+      "args": [
+        "--check",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-write-candidate-125e5fd5336c42b18c0bb59dda8f4942/run-direct-socket.candidate.mjs"
+      ],
+      "actualExit": 0,
+      "signal": null,
+      "error": null,
+      "stdout": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-write-candidate-125e5fd5336c42b18c0bb59dda8f4942/node-check-run-direct-socket-candidate-mjs.stdout.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stderr": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-write-candidate-125e5fd5336c42b18c0bb59dda8f4942/node-check-run-direct-socket-candidate-mjs.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "moduleEvaluated": false,
+      "appOrRuntimeExecuted": false
+    },
+    {
+      "schema": "cinatoken-candidate-node-syntax-closed-v1",
+      "closed": true,
+      "startedAt": "2026-10-06T06:51:11.432Z",
+      "endedAt": "2026-10-06T06:51:11.504Z",
+      "program": "C:\\Program Files\\nodejs\\node.exe",
+      "args": [
+        "--check",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-write-candidate-125e5fd5336c42b18c0bb59dda8f4942/queued-write-source.mjs"
+      ],
+      "actualExit": 0,
+      "signal": null,
+      "error": null,
+      "stdout": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-write-candidate-125e5fd5336c42b18c0bb59dda8f4942/node-check-queued-write-source-mjs.stdout.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stderr": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-write-candidate-125e5fd5336c42b18c0bb59dda8f4942/node-check-queued-write-source-mjs.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "moduleEvaluated": false,
+      "appOrRuntimeExecuted": false
+    },
+    {
+      "schema": "cinatoken-candidate-node-syntax-closed-v1",
+      "closed": true,
+      "startedAt": "2026-10-06T06:51:11.505Z",
+      "endedAt": "2026-10-06T06:51:11.573Z",
+      "program": "C:\\Program Files\\nodejs\\node.exe",
+      "args": [
+        "--check",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-write-candidate-125e5fd5336c42b18c0bb59dda8f4942/queued-pressure-extension.snippet.mjs"
+      ],
+      "actualExit": 0,
+      "signal": null,
+      "error": null,
+      "stdout": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-write-candidate-125e5fd5336c42b18c0bb59dda8f4942/node-check-queued-pressure-extension-snippet-mjs.stdout.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stderr": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-write-candidate-125e5fd5336c42b18c0bb59dda8f4942/node-check-queued-pressure-extension-snippet-mjs.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "moduleEvaluated": false,
+      "appOrRuntimeExecuted": false
+    }
+  ]
+}

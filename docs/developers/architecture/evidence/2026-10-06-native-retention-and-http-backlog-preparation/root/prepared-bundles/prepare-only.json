@@ -1,0 +1,190 @@
+{
+  "schema": "v364-direct-socket-prepare-v1",
+  "actualExit": 0,
+  "runtimeExecuted": false,
+  "versions": {
+    "workerd": "1.20260828.1",
+    "miniflare": "5.20260828.0-alpha",
+    "wrangler": "4.127.1"
+  },
+  "runtimeCompatibilityDate": "2026-09-04",
+  "frozenConfigDate": "2026-09-25",
+  "sourceUnchanged": true,
+  "reviewBaseHEAD": "702c4d71379acb697024ef846725871582bff94f",
+  "checkoutSHA": "6e2d65b35d4d60b3b14dac2ecbf9fbaa8ca363fa",
+  "priorRun": {
+    "runId": "37402302570",
+    "checkoutSHA": "67f8b3df2f2b6e8159806767ecce1efa1904d27a",
+    "actualExit": 1,
+    "actualProcessExit": 1,
+    "runnerOutcomeCode": 1,
+    "originalStrictActualExit": 1,
+    "outerUnforcedGroupClose": true,
+    "gracefulWorkerdExitProven": false,
+    "causeProven": false,
+    "unchangedHistoricalFailure": true
+  },
+  "inputsBefore": [
+    {
+      "path": "packages/proxy/scripts/staging/chat-holder-binding-v364-http-cancel-successor.test.mjs",
+      "bytes": 13354,
+      "sha256": "d23d1c710b539b6c64655fbb1fa4e4de85b228bab19c757bc0e4de48528972e5"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/chat-holder-binding-v364.node.test.mjs",
+      "bytes": 5908,
+      "sha256": "bf02a63395f450b889a784dc58bc537b6cb2f4a3004de07e1833c3e747c27fcc"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/chat-holder-gateway-v364.ts",
+      "bytes": 1534,
+      "sha256": "8c85b01ba54daa9b7302c726d20693d08ccb3395350ea6a333817eed46441eaf"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/chat-holder-private-v364.ts",
+      "bytes": 5367,
+      "sha256": "44070fcbb7058b915329a150634eaa649c1b3601724495a1620e94ce2d54d1bf"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/chat-holder-synthetic-v364.ts",
+      "bytes": 1019,
+      "sha256": "d89c6964454d9368a0257b6a585c8d5d707c91d09e55f5f2ea7c3545e5f0a16d"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/wrangler.chat-holder-gateway-v364.jsonc",
+      "bytes": 598,
+      "sha256": "e1a0354ff5bf7915c6c125f3003683a56b708d8bdd6006cce6b33c4ff8a6bb77"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/wrangler.chat-holder-private-v364.jsonc",
+      "bytes": 568,
+      "sha256": "6b897d8aa7b01087b75d4b74968d4004e2b6ddb87650bad1203c7693160b2047"
+    },
+    {
+      "path": "package-lock.json",
+      "bytes": 830546,
+      "sha256": "f9c65b6e373a231d52d6eda634bb5f947dda3174734cd70e2b811e09fff0b6f0"
+    },
+    {
+      "path": ".nvmrc",
+      "bytes": 3,
+      "sha256": "f14b4987904bcb5814e4459a057ed4d20f58a633152288a761214dcd28780b56"
+    },
+    {
+      "path": "scripts/diagnostics/v364-owned-linux/gateway-observer.mjs",
+      "bytes": 1244,
+      "sha256": "3ec2e49a72697f61bd1867bcde369a7c508cdbf669cd86d7e0eebdfc41dcfe00"
+    },
+    {
+      "path": "scripts/diagnostics/v364-owned-linux/holder-observer.mjs",
+      "bytes": 2461,
+      "sha256": "740727cae646ae757fa50ef7bb6c02a9f9cb4b1b3aa64b0de539c88bbbe09a25"
+    },
+    {
+      "path": "scripts/diagnostics/v364-owned-linux-boundary/bare-async-source.mjs",
+      "bytes": 1864,
+      "sha256": "86b67412be0b8ef8434edfd0f44c8c6e5d306ce3f76ed3deed8305cca2771bfd"
+    },
+    {
+      "path": "scripts/diagnostics/v364-owned-linux-boundary/proc-census.mjs",
+      "bytes": 1443,
+      "sha256": "bd6d4ebe4fea6ac1c11b6a67b4f44fcb23595e79a2fdcf10360101888026b8a0"
+    },
+    {
+      "path": "scripts/diagnostics/v364-owned-linux-boundary/run-boundary.mjs",
+      "bytes": 28489,
+      "sha256": "9341885b2890b8270b2b9732cd46c169bb41c4a3a4f6d4eef5f662ee3cda7cda"
+    },
+    {
+      "path": "scripts/diagnostics/v364-owned-linux-boundary/execute-owned-linux.py",
+      "bytes": 16016,
+      "sha256": "18c13e59a48eb27bc840aa1f9bb21aa5da73b7f73ad927dbaf5da24d0b0bbca2"
+    },
+    {
+      "path": "scripts/diagnostics/v364-owned-linux-boundary/source-inputs.json",
+      "bytes": 6588,
+      "sha256": "7b7b322398fe389f2ae1426746c65f6fe9ee0bc9ea1f91dfc3febfb8aeadfa3d"
+    },
+    {
+      "path": "scripts/diagnostics/v364-owned-linux-boundary/sealed-package.json",
+      "bytes": 1396,
+      "sha256": "b99ede67c0e949fc6aee728f450d564d60c9eed14b60e542e3282e9a8d163af9"
+    },
+    {
+      "path": ".github/workflows/v364-owned-linux-boundary.yml",
+      "bytes": 1575,
+      "sha256": "08977f1966eb42e67aebdb9986b66cb9f05a618f6a12964a8a2daffc64ce4712"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-native-g7-boundary-progress/root-progress/boundary-artifact/_temp/v364-boundary-once-37402302570-1/closed-result.json",
+      "bytes": 22206,
+      "sha256": "f76dc98765d470f26434bb611bfceb098806b8b8987a0ec8d2088a684ff61a8d"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-native-g7-boundary-progress/root-progress/boundary-artifact/_temp/v364-boundary-once-37402302570-1/executor.closed.json",
+      "bytes": 5901,
+      "sha256": "9b505b71486eb69fa34203fd4e1c7d173a1aa12de2b0aa55d32552c5dba47113"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-native-g7-boundary-progress/root-progress/boundary-artifact/_temp/v364-boundary-once-37402302570-1/events.json.gz",
+      "bytes": 43245,
+      "sha256": "0d8d89c1a9e7b70bd09a2e0298f73631bbcfad4f8d273cf2f88548f7b050cbe7"
+    }
+  ],
+  "installedBefore": [
+    {
+      "path": "node_modules/miniflare/dist/src/index.js",
+      "bytes": 4843426,
+      "sha256": "58ca83056cf67838add064edcbfd1d654ed204527b8eb01307ba208d7e59fa20"
+    },
+    {
+      "path": "node_modules/miniflare/dist/src/index.d.ts",
+      "bytes": 485080,
+      "sha256": "7e0c4b6c1cdf6b4207e4c8651e04a453b759a1cdc4a3cd5691da016050e9193a"
+    },
+    {
+      "path": "node_modules/miniflare/dist/src/workers/core/entry.worker.js",
+      "bytes": 184933,
+      "sha256": "e2434da3c39be4758dd323045dbc0b79bb2c0b2a5ba2ed02c6b271b1b676410d"
+    }
+  ],
+  "bundleHashes": [
+    {
+      "name": "gateway",
+      "bytes": 1474,
+      "sha256": "ee2b63670af2ed15320204f46ce1130b0b71b3bfbc5d901b160069c595388bd4"
+    },
+    {
+      "name": "holder",
+      "bytes": 5595,
+      "sha256": "05100170dca4896eb11b723e65df7cf437f886797c0e2d255bb238c16e55089c"
+    },
+    {
+      "name": "observedGateway",
+      "bytes": 2690,
+      "sha256": "edafc7ec0e604c51d58ffde272a83c04404d816effa734b1cff1d64b6f84b1f6"
+    },
+    {
+      "name": "observedHolder",
+      "bytes": 7979,
+      "sha256": "573d54572570e06fb83328191156fd2c6ec7fd3551369d802b3d1a3d2646eee1"
+    },
+    {
+      "name": "bare",
+      "bytes": 4247,
+      "sha256": "6527152590a0f65287e06be83dd06b37bfef3f5af660b9ea41a0a584e0edc7c6"
+    },
+    {
+      "name": "nativeReader",
+      "bytes": 10653,
+      "sha256": "e729a8d7329a24de23135e1ada6e05ebfb56c2dd063810313a81aa312623268f"
+    },
+    {
+      "name": "queuedWrite",
+      "bytes": 5775,
+      "sha256": "a7b2fe93ac5ca3e0cdfcee1a1ddd2f0e71c3de7b2991188e8affba78b7e6914a"
+    }
+  ],
+  "productionRequests": 0,
+  "ciInvocations": 0
+}

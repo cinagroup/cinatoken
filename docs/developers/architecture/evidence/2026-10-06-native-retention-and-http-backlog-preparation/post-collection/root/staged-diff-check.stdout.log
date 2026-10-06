@@ -1,0 +1,6 @@
+docs/developers/architecture/evidence/2026-10-06-native-retention-and-http-backlog-preparation/ci-6e2/proxy-watch-1.stdout.log:943: new blank line at EOF.
+docs/developers/architecture/evidence/2026-10-06-native-retention-and-http-backlog-preparation/retention-owner/baseline-git.stdout.log:768: new blank line at EOF.
+docs/developers/architecture/evidence/2026-10-06-native-retention-and-http-backlog-preparation/retention-owner/original-failure-group-derived-byte-excerpt.txt:17: trailing whitespace.
++native-financial-consumer	Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \	2026-10-06T06:53:21.0899930Z     
+docs/developers/architecture/evidence/2026-10-06-native-retention-and-http-backlog-preparation/retention-owner/original-failure-group-derived-byte-excerpt.txt:19: trailing whitespace.
++native-financial-consumer	Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \	2026-10-06T06:53:21.0900381Z     

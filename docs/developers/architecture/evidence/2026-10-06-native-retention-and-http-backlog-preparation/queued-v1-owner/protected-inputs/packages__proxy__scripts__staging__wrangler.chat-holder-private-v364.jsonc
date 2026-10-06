@@ -1,0 +1,14 @@
+{
+  "$schema": "../../../../node_modules/wrangler/config-schema.json",
+  "name": "cinatoken-staging-chat-holder-private-fixture-v364",
+  "main": "chat-holder-private-v364.ts",
+  "compatibility_date": "2026-09-25",
+  "compatibility_flags": ["nodejs_compat", "enable_request_signal"],
+  "workers_dev": false,
+  "preview_urls": false,
+  "routes": [],
+  "triggers": { "crons": [] },
+  "kv_namespaces": [{ "binding": "OBSERVATIONS", "id": "00000000-0000-0000-0000-000000000000" }],
+  "observability": { "enabled": true, "head_sampling_rate": 1 },
+  "send_metrics": false
+}

@@ -1,0 +1,20 @@
+{
+  "schema": "readonly-peer-setup-tool-observation-v1",
+  "scope": "Historical local index inspection only. This is a conversation tool receipt observation, not an original spawned-child closed receipt or external stdout/stderr reconstruction.",
+  "actualChildExitProven": false,
+  "syntheticExternalStreams": false,
+  "applicationOrNativeExecution": false,
+  "repositoryWrites": false,
+  "firstInspection": {
+    "toolChunkId": "b8602c",
+    "toolReturnedExitCode": 1,
+    "wallTimeSeconds": 0.4639131,
+    "commandForm": "Literal PowerShell here-string piped to Node stdin; metadata inspection only",
+    "nodeVersionObserved": "v24.14.1",
+    "error": "TypeError: Cannot read properties of undefined (reading 'endsWith') at [stdin]:1:865",
+    "reason": "The new collection index uses sourceRelative/storedRelative rather than the older relative field. Inspection failed before audit or FINAL generation; it created only the exclusive Temp and copied capture helper.",
+    "originalFailureRetained": true,
+    "successDerivedFromFailure": false
+  },
+  "correction": "Read the actual index keys and use only the new declared dialect in the separately captured bounded audit; no original source, log, seal, collection or checklist was changed."
+}

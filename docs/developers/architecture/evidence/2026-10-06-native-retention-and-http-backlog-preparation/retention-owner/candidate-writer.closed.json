@@ -1,0 +1,23 @@
+{
+  "schema": "retention-static-candidate-writer-actual-child-close.v1",
+  "executable": "C:/Program Files/nodejs/node.exe",
+  "argv": [
+    "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-retention-v346-time-text-candidate-1a110046edafc3b0b4778a3a\\prepare-seven-time-input-candidate.mjs",
+    "C:/Users/cina/AppData/Local/Temp/cinatoken-retention-v346-time-text-candidate-1a110046edafc3b0b4778a3a"
+  ],
+  "startedAt": "2026-10-06T07:01:30.374Z",
+  "closedAt": "2026-10-06T07:01:30.752Z",
+  "actualExit": 0,
+  "signal": null,
+  "spawnError": null,
+  "stdout": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-retention-v346-time-text-candidate-1a110046edafc3b0b4778a3a\\candidate-writer.stdout.log",
+    "bytes": 1371,
+    "sha256": "4293afea2910d205cb6e76a738468cae428f13775ce66cc501793c897199ee7f"
+  },
+  "stderr": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-retention-v346-time-text-candidate-1a110046edafc3b0b4778a3a\\candidate-writer.stderr.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+}

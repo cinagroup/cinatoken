@@ -1,0 +1,24 @@
+{
+  "schema": "v2-static-source-coordinate-data-v1",
+  "at": "2026-10-06T07:06:16.772Z",
+  "coordinates": [
+    {
+      "source": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-write-candidate-125e5fd5336c42b18c0bb59dda8f4942/run-direct-socket.candidate.mjs",
+      "bytes": 51387,
+      "utf16CodeUnits": 51387,
+      "sha256": "e6cfdb5d6e3d8ab04b4bc97d278132b4439930a92465bcf72081ccc173dbb04e",
+      "asciiOnly": true,
+      "acornCharacterAndUtf8ByteOffsetsIdentical": true
+    },
+    {
+      "source": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-write-v2-8e7e441d5c7547dc93ae0c2c76898bf8/run-direct-socket.candidate-v2.mjs",
+      "bytes": 52009,
+      "utf16CodeUnits": 52009,
+      "sha256": "8fbaaed9523ecb227bd0e47ce8092d7432c08f8b67fd8650569d69d711ef48a8",
+      "asciiOnly": true,
+      "acornCharacterAndUtf8ByteOffsetsIdentical": true
+    }
+  ],
+  "readOperationOnly": true,
+  "actualChildExitProven": false
+}

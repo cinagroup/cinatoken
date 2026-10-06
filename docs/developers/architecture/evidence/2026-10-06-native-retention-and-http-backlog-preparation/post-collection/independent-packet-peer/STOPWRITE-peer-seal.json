@@ -1,0 +1,175 @@
+{
+  "schema": "retention-backlog-final-independent-peer-stopwrite-v1",
+  "at": "2026-10-06T07:19:50.048Z",
+  "sourceRoot": "C:/Users/cina/AppData/Local/Temp/cinatoken-retention-backlog-final-peer-41NQHf",
+  "filesBeforeSelf": 15,
+  "totalBytesBeforeSelf": 238803,
+  "entries": [
+    {
+      "file": "FINAL-retention-backlog-packet-independent-peer.json",
+      "bytes": 176599,
+      "sha256": "8629c532c042e2dcb53b8fe772eab136997e92b7c7ca5c01ddbe6178697f9da3"
+    },
+    {
+      "file": "audit-retention-packet-v2.mjs",
+      "bytes": 18332,
+      "sha256": "4fddb1dcdbd40dfdf10655d32326db177644ced9f719de571387e74ac19a6445"
+    },
+    {
+      "file": "audit-retention-packet-v3.mjs",
+      "bytes": 18776,
+      "sha256": "0f3c53398c1ad5e6efcdc2239cce82ce3283ebc1521414de23a5d4427b741bdc"
+    },
+    {
+      "file": "audit-retention-packet.mjs",
+      "bytes": 18044,
+      "sha256": "4a5328bb0aeb989e00ac4fe750620bf5cf554bfbb0ae3e232cf9c54a18706cfe"
+    },
+    {
+      "file": "capture-readonly.mjs",
+      "bytes": 1405,
+      "sha256": "73f8ec0159b113f5339119649fe0ccfd402740897076ddf439d9f91009bb4b67"
+    },
+    {
+      "file": "final-retention-packet-audit-v2.closed.json",
+      "bytes": 930,
+      "sha256": "f0a5c6d4e20942d5763c605de991341d57b262d0aedf31ae5cb65bb1140c0da4"
+    },
+    {
+      "file": "final-retention-packet-audit-v2.stderr.log",
+      "bytes": 691,
+      "sha256": "a73311d14993b81ebb7205d55f3ee073b00ced523310ef83fef8183fb81d90fc"
+    },
+    {
+      "file": "final-retention-packet-audit-v2.stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "final-retention-packet-audit-v3.closed.json",
+      "bytes": 930,
+      "sha256": "bc2ed7452343132f16db35b341263c78c374979a098dd8e97d594cc8b5ab2c2a"
+    },
+    {
+      "file": "final-retention-packet-audit-v3.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "final-retention-packet-audit-v3.stdout.log",
+      "bytes": 307,
+      "sha256": "aa13ce42bd998bbad4fc9e0c1cf4c7795e289db5be8c3d709cfd3327e6728f75"
+    },
+    {
+      "file": "final-retention-packet-audit.closed.json",
+      "bytes": 921,
+      "sha256": "1c8157274e5dc28312d23b7b085d8e82b2bf8eec957d647659612912618d984d"
+    },
+    {
+      "file": "final-retention-packet-audit.stderr.log",
+      "bytes": 619,
+      "sha256": "3cbe1306060caac089172e3d3b041256e6e101f13b1f4c32b26bc8e986ec382d"
+    },
+    {
+      "file": "final-retention-packet-audit.stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "read-setup-observation.json",
+      "bytes": 1249,
+      "sha256": "d58b2fcea92ad6a003c13a1e176e9d0d6b5a27654ae0c8656f5acbb25afd67d7"
+    }
+  ],
+  "actualClosedAudits": [
+    {
+      "file": "final-retention-packet-audit.closed.json",
+      "bytes": 921,
+      "sha256": "1c8157274e5dc28312d23b7b085d8e82b2bf8eec957d647659612912618d984d",
+      "actualExit": 1,
+      "at": "2026-10-06T07:17:17.001Z",
+      "finishedAt": "2026-10-06T07:17:17.335Z",
+      "executable": "C:\\Program Files\\nodejs\\node.exe",
+      "args": [
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-retention-backlog-final-peer-41NQHf/audit-retention-packet.mjs"
+      ],
+      "outputs": [
+        {
+          "file": "final-retention-packet-audit.stdout.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "file": "final-retention-packet-audit.stderr.log",
+          "bytes": 619,
+          "sha256": "3cbe1306060caac089172e3d3b041256e6e101f13b1f4c32b26bc8e986ec382d"
+        }
+      ]
+    },
+    {
+      "file": "final-retention-packet-audit-v2.closed.json",
+      "bytes": 930,
+      "sha256": "f0a5c6d4e20942d5763c605de991341d57b262d0aedf31ae5cb65bb1140c0da4",
+      "actualExit": 1,
+      "at": "2026-10-06T07:18:12.968Z",
+      "finishedAt": "2026-10-06T07:18:13.327Z",
+      "executable": "C:\\Program Files\\nodejs\\node.exe",
+      "args": [
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-retention-backlog-final-peer-41NQHf/audit-retention-packet-v2.mjs"
+      ],
+      "outputs": [
+        {
+          "file": "final-retention-packet-audit-v2.stdout.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "file": "final-retention-packet-audit-v2.stderr.log",
+          "bytes": 691,
+          "sha256": "a73311d14993b81ebb7205d55f3ee073b00ced523310ef83fef8183fb81d90fc"
+        }
+      ]
+    },
+    {
+      "file": "final-retention-packet-audit-v3.closed.json",
+      "bytes": 930,
+      "sha256": "bc2ed7452343132f16db35b341263c78c374979a098dd8e97d594cc8b5ab2c2a",
+      "actualExit": 0,
+      "at": "2026-10-06T07:19:17.434Z",
+      "finishedAt": "2026-10-06T07:19:17.809Z",
+      "executable": "C:\\Program Files\\nodejs\\node.exe",
+      "args": [
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-retention-backlog-final-peer-41NQHf/audit-retention-packet-v3.mjs"
+      ],
+      "outputs": [
+        {
+          "file": "final-retention-packet-audit-v3.stdout.log",
+          "bytes": 307,
+          "sha256": "aa13ce42bd998bbad4fc9e0c1cf4c7795e289db5be8c3d709cfd3327e6728f75"
+        },
+        {
+          "file": "final-retention-packet-audit-v3.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ]
+    }
+  ],
+  "final": {
+    "file": "FINAL-retention-backlog-packet-independent-peer.json",
+    "bytes": 176599,
+    "sha256": "8629c532c042e2dcb53b8fe772eab136997e92b7c7ca5c01ddbe6178697f9da3"
+  },
+  "toolObservedInitialInspectionFailureRetained": "read-setup-observation.json; it has no invented original child authority or external raw streams",
+  "sourceOnly": true,
+  "moduleEvaluated": false,
+  "repositoryWrites": 0,
+  "newProductionRequests": 0,
+  "newNativeOrCiOrWorkerdExecutions": 0,
+  "fullG7": false,
+  "fullG8": false,
+  "causeProven": false,
+  "originalFailuresRetained": true,
+  "STOPWRITE": true,
+  "selfExcludedOnly": "This index; all 15 existing owned files included, including both actual failed readers and raw streams."
+}

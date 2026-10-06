@@ -1,0 +1,22 @@
+{
+  "at": "2026-10-06T07:09:57.118Z",
+  "finishedAt": "2026-10-06T07:09:57.810Z",
+  "executable": "C:/Program Files/nodejs/node.exe",
+  "args": [
+    "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-followup-da56f69292e44387886a9cc8ffa36638\\collect-fresh-evidence.mjs",
+    "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-followup-da56f69292e44387886a9cc8ffa36638\\evidence-config.json"
+  ],
+  "cwd": "C:/cinagroup/cinatoken",
+  "actualExit": 0,
+  "signal": null,
+  "stdout": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-followup-da56f69292e44387886a9cc8ffa36638\\collect-fresh-evidence.stdout.log",
+    "bytes": 318,
+    "sha256": "19ce406a0690254a032a81e745fecc23aea9ad897a9404bbf08c975d8ddbd401"
+  },
+  "stderr": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-followup-da56f69292e44387886a9cc8ffa36638\\collect-fresh-evidence.stderr.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+}

@@ -1,0 +1,20 @@
+import fs from 'node:fs';
+import path from 'node:path';
+import assert from 'node:assert/strict';
+import {createHash} from 'node:crypto';
+import {fileURLToPath} from 'node:url';
+const here=path.dirname(fileURLToPath(import.meta.url));
+const from=path.join(here,'package-candidate-lf'),to=path.join(here,'package-candidate-v2-lf');
+const owner='C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-write-v2-8e7e441d5c7547dc93ae0c2c76898bf8';
+const sha=b=>createHash('sha256').update(b).digest('hex');
+const runner=fs.readFileSync(path.join(owner,'run-direct-socket.candidate-v2.mjs'));
+assert.equal(sha(runner),'8fbaaed9523ecb227bd0e47ce8092d7432c08f8b67fd8650569d69d711ef48a8');
+fs.mkdirSync(to);
+for(const name of ['queued-write-source.mjs','README.md'])fs.copyFileSync(path.join(from,name),path.join(to,name),fs.constants.COPYFILE_EXCL);
+fs.writeFileSync(path.join(to,'run-direct-socket.mjs'),runner,{flag:'wx'});
+const seal=JSON.parse(fs.readFileSync(path.join(from,'sealed-package.json')));
+const item=seal.files.find(v=>v.path==='run-direct-socket.mjs');item.bytes=runner.length;item.sha256=sha(runner);
+fs.writeFileSync(path.join(to,'sealed-package.json'),JSON.stringify(seal,null,'\t')+'\n',{flag:'wx'});
+const files=fs.readdirSync(to).map(name=>{const bytes=fs.readFileSync(path.join(to,name));assert.equal(bytes.includes(13),false);return{name,bytes:bytes.length,sha256:sha(bytes)};});
+for(const entry of seal.files.filter(v=>fs.existsSync(path.join(to,v.path)))){const b=fs.readFileSync(path.join(to,entry.path));assert.equal(b.length,entry.bytes);assert.equal(sha(b),entry.sha256);}
+console.log(JSON.stringify({preparedOnly:true,repoWrites:0,runtimeExecuted:false,output:to,files,onlyRunnerPinChangedFromLF:true}));

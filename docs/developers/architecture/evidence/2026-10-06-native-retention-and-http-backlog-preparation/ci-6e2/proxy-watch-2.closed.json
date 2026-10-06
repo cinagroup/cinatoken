@@ -1,0 +1,32 @@
+{
+  "at": "2026-10-06T06:47:45.064Z",
+  "finishedAt": "2026-10-06T06:53:33.869Z",
+  "program": "C:/Program Files/GitHub CLI/gh.exe",
+  "args": [
+    "run",
+    "watch",
+    "37424911830",
+    "--repo",
+    "cinagroup/cinatoken",
+    "--interval",
+    "45",
+    "--exit-status"
+  ],
+  "cwd": "C:/cinagroup/cinatoken",
+  "actualExit": 1,
+  "signal": null,
+  "spawnError": null,
+  "stdout": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-6e2-ci-terminal-observer-dbbc0b1231e543eb99e18eb9bbe45370\\proxy-watch-2.stdout.log",
+    "bytes": 172279,
+    "sha256": "da5b5b6e1d061155e5aa6d8f61912ae2cac8ef212eaf24279acfcdc1088fe232"
+  },
+  "stderr": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-6e2-ci-terminal-observer-dbbc0b1231e543eb99e18eb9bbe45370\\proxy-watch-2.stderr.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "collectionOnly": true,
+  "ciActions": 0,
+  "watchExitIsNotTerminalMetadata": true
+}

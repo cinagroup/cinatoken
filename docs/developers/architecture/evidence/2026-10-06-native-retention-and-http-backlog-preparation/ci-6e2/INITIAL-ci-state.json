@@ -1,0 +1,375 @@
+{
+  "schema": "cinatoken-6e2-original-ci-initial-v1",
+  "at": "2026-10-06T06:42:05.913Z",
+  "sourceSha": "6e2d65b35d4d60b3b14dac2ecbf9fbaa8ca363fa",
+  "runs": [
+    {
+      "slug": "web",
+      "runId": 37424911790,
+      "name": "Web frontend",
+      "headSha": "6e2d65b35d4d60b3b14dac2ecbf9fbaa8ca363fa",
+      "status": "in_progress",
+      "conclusion": "",
+      "url": "https://github.com/cinagroup/cinatoken/actions/runs/37424911790",
+      "receipt": {
+        "at": "2026-10-06T06:42:02.539Z",
+        "finishedAt": "2026-10-06T06:42:05.698Z",
+        "executable": "C:/Program Files/GitHub CLI/gh.exe",
+        "args": [
+          "run",
+          "view",
+          "37424911790",
+          "--repo",
+          "cinagroup/cinatoken",
+          "--json",
+          "databaseId,name,headSha,status,conclusion,url,jobs,createdAt,updatedAt"
+        ],
+        "cwd": "C:/cinagroup/cinatoken",
+        "actualExit": 0,
+        "signal": null,
+        "spawnError": null,
+        "stdout": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-6e2-ci-terminal-observer-dbbc0b1231e543eb99e18eb9bbe45370\\web-initial.stdout.log",
+          "bytes": 6978,
+          "sha256": "838c94815994bb9a7bc924eb7dbbb65d1cf1a6dbdee1675b44bf7995df5d9878"
+        },
+        "stderr": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-6e2-ci-terminal-observer-dbbc0b1231e543eb99e18eb9bbe45370\\web-initial.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      "jobs": [
+        {
+          "jobId": 112142274954,
+          "name": "web",
+          "status": "in_progress",
+          "conclusion": "",
+          "lastCompletedStep": {
+            "completedAt": "2026-10-06T06:41:37Z",
+            "conclusion": "success",
+            "name": "Run bash -n docker/web/entrypoint.sh",
+            "number": 9,
+            "startedAt": "2026-10-06T06:41:37Z",
+            "status": "completed"
+          },
+          "currentStep": {
+            "completedAt": "0001-01-01T00:00:00Z",
+            "conclusion": "",
+            "name": "Run npm run build:web",
+            "number": 10,
+            "startedAt": "2026-10-06T06:41:37Z",
+            "status": "in_progress"
+          }
+        },
+        {
+          "jobId": 112142275279,
+          "name": "Admin contracts and public SSR build",
+          "status": "in_progress",
+          "conclusion": "",
+          "lastCompletedStep": {
+            "completedAt": "2026-10-06T06:41:37Z",
+            "conclusion": "success",
+            "name": "Run npm run typecheck -w @octafuse/admin",
+            "number": 14,
+            "startedAt": "2026-10-06T06:40:57Z",
+            "status": "completed"
+          },
+          "currentStep": {
+            "completedAt": "0001-01-01T00:00:00Z",
+            "conclusion": "",
+            "name": "Validate auth, workspace, keys, account and public BFF contracts",
+            "number": 15,
+            "startedAt": "2026-10-06T06:41:37Z",
+            "status": "in_progress"
+          }
+        }
+      ]
+    },
+    {
+      "slug": "compose",
+      "runId": 37424911789,
+      "name": "Docker Compose Smoke (node-pg)",
+      "headSha": "6e2d65b35d4d60b3b14dac2ecbf9fbaa8ca363fa",
+      "status": "in_progress",
+      "conclusion": "",
+      "url": "https://github.com/cinagroup/cinatoken/actions/runs/37424911789",
+      "receipt": {
+        "at": "2026-10-06T06:42:02.548Z",
+        "finishedAt": "2026-10-06T06:42:05.631Z",
+        "executable": "C:/Program Files/GitHub CLI/gh.exe",
+        "args": [
+          "run",
+          "view",
+          "37424911789",
+          "--repo",
+          "cinagroup/cinatoken",
+          "--json",
+          "databaseId,name,headSha,status,conclusion,url,jobs,createdAt,updatedAt"
+        ],
+        "cwd": "C:/cinagroup/cinatoken",
+        "actualExit": 0,
+        "signal": null,
+        "spawnError": null,
+        "stdout": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-6e2-ci-terminal-observer-dbbc0b1231e543eb99e18eb9bbe45370\\compose-initial.stdout.log",
+          "bytes": 2424,
+          "sha256": "9cdcc5440049b54de4b8674fa599f11b3e5c8027db488324aad5748217ca1aca"
+        },
+        "stderr": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-6e2-ci-terminal-observer-dbbc0b1231e543eb99e18eb9bbe45370\\compose-initial.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      "jobs": [
+        {
+          "jobId": 112142275297,
+          "name": "smoke-node-pg",
+          "status": "in_progress",
+          "conclusion": "",
+          "lastCompletedStep": {
+            "completedAt": "2026-10-06T06:39:53Z",
+            "conclusion": "success",
+            "name": "Verify legacy schema rename and migration idempotency",
+            "number": 5,
+            "startedAt": "2026-10-06T06:39:31Z",
+            "status": "completed"
+          },
+          "currentStep": {
+            "completedAt": "0001-01-01T00:00:00Z",
+            "conclusion": "",
+            "name": "Build and start proxy + admin",
+            "number": 6,
+            "startedAt": "2026-10-06T06:39:53Z",
+            "status": "in_progress"
+          }
+        }
+      ]
+    },
+    {
+      "slug": "proxy",
+      "runId": 37424911830,
+      "name": "Proxy dispatch safety",
+      "headSha": "6e2d65b35d4d60b3b14dac2ecbf9fbaa8ca363fa",
+      "status": "in_progress",
+      "conclusion": "",
+      "url": "https://github.com/cinagroup/cinatoken/actions/runs/37424911830",
+      "receipt": {
+        "at": "2026-10-06T06:42:02.553Z",
+        "finishedAt": "2026-10-06T06:42:05.860Z",
+        "executable": "C:/Program Files/GitHub CLI/gh.exe",
+        "args": [
+          "run",
+          "view",
+          "37424911830",
+          "--repo",
+          "cinagroup/cinatoken",
+          "--json",
+          "databaseId,name,headSha,status,conclusion,url,jobs,createdAt,updatedAt"
+        ],
+        "cwd": "C:/cinagroup/cinatoken",
+        "actualExit": 0,
+        "signal": null,
+        "spawnError": null,
+        "stdout": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-6e2-ci-terminal-observer-dbbc0b1231e543eb99e18eb9bbe45370\\proxy-initial.stdout.log",
+          "bytes": 47911,
+          "sha256": "cd2d39f083458185bd27afbea5409d2a11f5745cd776fd2b6683d7ffa8f2bebb"
+        },
+        "stderr": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-6e2-ci-terminal-observer-dbbc0b1231e543eb99e18eb9bbe45370\\proxy-initial.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      "jobs": [
+        {
+          "jobId": 112142275908,
+          "name": "dispatch-safety",
+          "status": "in_progress",
+          "conclusion": "",
+          "lastCompletedStep": {
+            "completedAt": "2026-10-06T06:40:38Z",
+            "conclusion": "success",
+            "name": "Run npm run typecheck:dispatch-safety -w @octafuse/proxy",
+            "number": 8,
+            "startedAt": "2026-10-06T06:40:22Z",
+            "status": "completed"
+          },
+          "currentStep": {
+            "completedAt": "0001-01-01T00:00:00Z",
+            "conclusion": "",
+            "name": "Run npm run test:dispatch-safety -w @octafuse/proxy",
+            "number": 9,
+            "startedAt": "2026-10-06T06:40:38Z",
+            "status": "in_progress"
+          }
+        },
+        {
+          "jobId": 112142276103,
+          "name": "admin-playground-safety",
+          "status": "completed",
+          "conclusion": "success",
+          "lastCompletedStep": {
+            "completedAt": "2026-10-06T06:40:57Z",
+            "conclusion": "success",
+            "name": "Complete job",
+            "number": 25,
+            "startedAt": "2026-10-06T06:40:57Z",
+            "status": "completed"
+          },
+          "currentStep": null
+        },
+        {
+          "jobId": 112142276113,
+          "name": "config-cutover-contracts",
+          "status": "completed",
+          "conclusion": "success",
+          "lastCompletedStep": {
+            "completedAt": "2026-10-06T06:40:27Z",
+            "conclusion": "success",
+            "name": "Complete job",
+            "number": 21,
+            "startedAt": "2026-10-06T06:40:27Z",
+            "status": "completed"
+          },
+          "currentStep": null
+        },
+        {
+          "jobId": 112142276121,
+          "name": "native-financial-consumer",
+          "status": "in_progress",
+          "conclusion": "",
+          "lastCompletedStep": {
+            "completedAt": "2026-10-06T06:42:01Z",
+            "conclusion": "success",
+            "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+            "number": 34,
+            "startedAt": "2026-10-06T06:41:59Z",
+            "status": "completed"
+          },
+          "currentStep": {
+            "completedAt": "0001-01-01T00:00:00Z",
+            "conclusion": "",
+            "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+            "number": 35,
+            "startedAt": "2026-10-06T06:42:01Z",
+            "status": "in_progress"
+          }
+        }
+      ]
+    },
+    {
+      "slug": "verify",
+      "runId": 37424911695,
+      "name": "Verify package versions",
+      "headSha": "6e2d65b35d4d60b3b14dac2ecbf9fbaa8ca363fa",
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/cinagroup/cinatoken/actions/runs/37424911695",
+      "receipt": {
+        "at": "2026-10-06T06:42:02.559Z",
+        "finishedAt": "2026-10-06T06:42:05.830Z",
+        "executable": "C:/Program Files/GitHub CLI/gh.exe",
+        "args": [
+          "run",
+          "view",
+          "37424911695",
+          "--repo",
+          "cinagroup/cinatoken",
+          "--json",
+          "databaseId,name,headSha,status,conclusion,url,jobs,createdAt,updatedAt"
+        ],
+        "cwd": "C:/cinagroup/cinatoken",
+        "actualExit": 0,
+        "signal": null,
+        "spawnError": null,
+        "stdout": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-6e2-ci-terminal-observer-dbbc0b1231e543eb99e18eb9bbe45370\\verify-initial.stdout.log",
+          "bytes": 1698,
+          "sha256": "0f363f64bdbd68e0cdaaed5cc7c7c804f804a5ec448ff9d7d3e5e11a70547fd2"
+        },
+        "stderr": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-6e2-ci-terminal-observer-dbbc0b1231e543eb99e18eb9bbe45370\\verify-initial.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      "jobs": [
+        {
+          "jobId": 112142274233,
+          "name": "verify",
+          "status": "completed",
+          "conclusion": "success",
+          "lastCompletedStep": {
+            "completedAt": "2026-10-06T06:39:07Z",
+            "conclusion": "success",
+            "name": "Complete job",
+            "number": 9,
+            "startedAt": "2026-10-06T06:39:06Z",
+            "status": "completed"
+          },
+          "currentStep": null
+        }
+      ]
+    },
+    {
+      "slug": "release",
+      "runId": 37424911770,
+      "name": "Release",
+      "headSha": "6e2d65b35d4d60b3b14dac2ecbf9fbaa8ca363fa",
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/cinagroup/cinatoken/actions/runs/37424911770",
+      "receipt": {
+        "at": "2026-10-06T06:42:02.565Z",
+        "finishedAt": "2026-10-06T06:42:05.544Z",
+        "executable": "C:/Program Files/GitHub CLI/gh.exe",
+        "args": [
+          "run",
+          "view",
+          "37424911770",
+          "--repo",
+          "cinagroup/cinatoken",
+          "--json",
+          "databaseId,name,headSha,status,conclusion,url,jobs,createdAt,updatedAt"
+        ],
+        "cwd": "C:/cinagroup/cinatoken",
+        "actualExit": 0,
+        "signal": null,
+        "spawnError": null,
+        "stdout": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-6e2-ci-terminal-observer-dbbc0b1231e543eb99e18eb9bbe45370\\release-initial.stdout.log",
+          "bytes": 2168,
+          "sha256": "979b5cf0d4f502e3c2712748c79ba3e414bb987938fe3d3de580cf72fd5dba61"
+        },
+        "stderr": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-6e2-ci-terminal-observer-dbbc0b1231e543eb99e18eb9bbe45370\\release-initial.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      "jobs": [
+        {
+          "jobId": 112142275459,
+          "name": "Changesets",
+          "status": "completed",
+          "conclusion": "success",
+          "lastCompletedStep": {
+            "completedAt": "2026-10-06T06:40:11Z",
+            "conclusion": "success",
+            "name": "Complete job",
+            "number": 15,
+            "startedAt": "2026-10-06T06:40:11Z",
+            "status": "completed"
+          },
+          "currentStep": null
+        }
+      ]
+    }
+  ],
+  "ciActions": 0,
+  "repositoryWrites": 0,
+  "nativeExecutedLocally": false
+}

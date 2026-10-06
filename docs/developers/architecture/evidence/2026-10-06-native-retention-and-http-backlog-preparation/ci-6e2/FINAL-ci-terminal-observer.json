@@ -1,0 +1,4222 @@
+{
+  "schema": "cinatoken-6e2-original-ci-terminal-observer-v1",
+  "at": "2026-10-06T06:54:28.895Z",
+  "sourceSha": "6e2d65b35d4d60b3b14dac2ecbf9fbaa8ca363fa",
+  "collectionOnly": true,
+  "rootCauseConfirmed": false,
+  "nativeExecutedLocally": false,
+  "repositoryWrites": 0,
+  "ciActions": 0,
+  "derivedCiLogFiles": 0,
+  "truthBoundary": "Only exact-source original GitHub run/job/step metadata and complete original logs are observed. Collector/download exit 0 verifies collection, not CI or production. Prior d537 results are not applied to this source. Quote root cause remains unconfirmed.",
+  "runs": [
+    {
+      "slug": "proxy",
+      "runId": 37424911830,
+      "name": "Proxy dispatch safety",
+      "headSha": "6e2d65b35d4d60b3b14dac2ecbf9fbaa8ca363fa",
+      "url": "https://github.com/cinagroup/cinatoken/actions/runs/37424911830",
+      "status": "completed",
+      "conclusion": "failure",
+      "jobs": [
+        {
+          "jobId": 112142275908,
+          "name": "dispatch-safety",
+          "status": "completed",
+          "conclusion": "failure",
+          "failedSteps": [
+            {
+              "number": 27,
+              "status": "completed",
+              "conclusion": "failure",
+              "startedAt": "2026-10-06T06:42:56Z",
+              "completedAt": "2026-10-06T06:42:59Z",
+              "name": "Run node --import tsx --test scripts/staging/chat-holder-binding-v364.node.test.mjs scripts/staging/chat-holder-binding-v364-http-cancel-successor.test.mjs"
+            }
+          ]
+        },
+        {
+          "jobId": 112142276103,
+          "name": "admin-playground-safety",
+          "status": "completed",
+          "conclusion": "success",
+          "failedSteps": []
+        },
+        {
+          "jobId": 112142276113,
+          "name": "config-cutover-contracts",
+          "status": "completed",
+          "conclusion": "success",
+          "failedSteps": []
+        },
+        {
+          "jobId": 112142276121,
+          "name": "native-financial-consumer",
+          "status": "completed",
+          "conclusion": "failure",
+          "failedSteps": [
+            {
+              "number": 90,
+              "status": "completed",
+              "conclusion": "failure",
+              "startedAt": "2026-10-06T06:53:16Z",
+              "completedAt": "2026-10-06T06:53:21Z",
+              "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\"
+            }
+          ]
+        }
+      ],
+      "metadata": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-6e2-ci-terminal-observer-dbbc0b1231e543eb99e18eb9bbe45370\\proxy-terminal.stdout.log",
+        "bytes": 49493,
+        "sha256": "c33b4103ff2182fd30b001802017f12195c593a3141dff93ff60c25cae57cc71"
+      }
+    },
+    {
+      "slug": "web",
+      "runId": 37424911790,
+      "name": "Web frontend",
+      "headSha": "6e2d65b35d4d60b3b14dac2ecbf9fbaa8ca363fa",
+      "url": "https://github.com/cinagroup/cinatoken/actions/runs/37424911790",
+      "status": "completed",
+      "conclusion": "success",
+      "jobs": [
+        {
+          "jobId": 112142274954,
+          "name": "web",
+          "status": "completed",
+          "conclusion": "success",
+          "failedSteps": []
+        },
+        {
+          "jobId": 112142275279,
+          "name": "Admin contracts and public SSR build",
+          "status": "completed",
+          "conclusion": "success",
+          "failedSteps": []
+        }
+      ],
+      "metadata": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-6e2-ci-terminal-observer-dbbc0b1231e543eb99e18eb9bbe45370\\web-terminal.stdout.log",
+        "bytes": 7397,
+        "sha256": "6c7db150eff5409c5f0e47c450d06c2b97cb5003b8ac89fc4ce4fed3669bfc5a"
+      }
+    },
+    {
+      "slug": "compose",
+      "runId": 37424911789,
+      "name": "Docker Compose Smoke (node-pg)",
+      "headSha": "6e2d65b35d4d60b3b14dac2ecbf9fbaa8ca363fa",
+      "url": "https://github.com/cinagroup/cinatoken/actions/runs/37424911789",
+      "status": "completed",
+      "conclusion": "success",
+      "jobs": [
+        {
+          "jobId": 112142275297,
+          "name": "smoke-node-pg",
+          "status": "completed",
+          "conclusion": "success",
+          "failedSteps": []
+        }
+      ],
+      "metadata": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-6e2-ci-terminal-observer-dbbc0b1231e543eb99e18eb9bbe45370\\compose-terminal.stdout.log",
+        "bytes": 2645,
+        "sha256": "de4e21aee48c6056d52626ef860b50ad7e5cfdb246d8371f14c0c6034413ca91"
+      }
+    },
+    {
+      "slug": "verify",
+      "runId": 37424911695,
+      "name": "Verify package versions",
+      "headSha": "6e2d65b35d4d60b3b14dac2ecbf9fbaa8ca363fa",
+      "url": "https://github.com/cinagroup/cinatoken/actions/runs/37424911695",
+      "status": "completed",
+      "conclusion": "success",
+      "jobs": [
+        {
+          "jobId": 112142274233,
+          "name": "verify",
+          "status": "completed",
+          "conclusion": "success",
+          "failedSteps": []
+        }
+      ],
+      "metadata": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-6e2-ci-terminal-observer-dbbc0b1231e543eb99e18eb9bbe45370\\verify-initial.stdout.log",
+        "bytes": 1698,
+        "sha256": "0f363f64bdbd68e0cdaaed5cc7c7c804f804a5ec448ff9d7d3e5e11a70547fd2"
+      }
+    },
+    {
+      "slug": "release",
+      "runId": 37424911770,
+      "name": "Release",
+      "headSha": "6e2d65b35d4d60b3b14dac2ecbf9fbaa8ca363fa",
+      "url": "https://github.com/cinagroup/cinatoken/actions/runs/37424911770",
+      "status": "completed",
+      "conclusion": "success",
+      "jobs": [
+        {
+          "jobId": 112142275459,
+          "name": "Changesets",
+          "status": "completed",
+          "conclusion": "success",
+          "failedSteps": []
+        }
+      ],
+      "metadata": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-6e2-ci-terminal-observer-dbbc0b1231e543eb99e18eb9bbe45370\\release-initial.stdout.log",
+        "bytes": 2168,
+        "sha256": "979b5cf0d4f502e3c2712748c79ba3e414bb987938fe3d3de580cf72fd5dba61"
+      }
+    }
+  ],
+  "logs": {
+    "native": {
+      "at": "2026-10-06T06:54:02.201Z",
+      "finishedAt": "2026-10-06T06:54:11.669Z",
+      "executable": "C:/Program Files/GitHub CLI/gh.exe",
+      "args": [
+        "run",
+        "view",
+        "37424911830",
+        "--repo",
+        "cinagroup/cinatoken",
+        "--job",
+        "112142276121",
+        "--log"
+      ],
+      "cwd": "C:/cinagroup/cinatoken",
+      "actualExit": 0,
+      "signal": null,
+      "spawnError": null,
+      "stdout": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-6e2-ci-terminal-observer-dbbc0b1231e543eb99e18eb9bbe45370\\native-terminal.stdout.log",
+        "bytes": 537587,
+        "sha256": "339c0ac8f83d71356a22f9f6d90988dc88db358d3206aea2025c78eca8fb7334"
+      },
+      "stderr": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-6e2-ci-terminal-observer-dbbc0b1231e543eb99e18eb9bbe45370\\native-terminal.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    "dispatch": {
+      "at": "2026-10-06T06:54:11.670Z",
+      "finishedAt": "2026-10-06T06:54:14.847Z",
+      "executable": "C:/Program Files/GitHub CLI/gh.exe",
+      "args": [
+        "run",
+        "view",
+        "37424911830",
+        "--repo",
+        "cinagroup/cinatoken",
+        "--job",
+        "112142275908",
+        "--log"
+      ],
+      "cwd": "C:/cinagroup/cinatoken",
+      "actualExit": 0,
+      "signal": null,
+      "spawnError": null,
+      "stdout": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-6e2-ci-terminal-observer-dbbc0b1231e543eb99e18eb9bbe45370\\dispatch-terminal.stdout.log",
+        "bytes": 5161564,
+        "sha256": "03104a72d0feba1bbf242015c16c4aeeca6cd4edab9132f290700e5cadf3149b"
+      },
+      "stderr": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-6e2-ci-terminal-observer-dbbc0b1231e543eb99e18eb9bbe45370\\dispatch-terminal.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    }
+  },
+  "watch": {
+    "at": "2026-10-06T06:47:45.064Z",
+    "finishedAt": "2026-10-06T06:53:33.869Z",
+    "program": "C:/Program Files/GitHub CLI/gh.exe",
+    "args": [
+      "run",
+      "watch",
+      "37424911830",
+      "--repo",
+      "cinagroup/cinatoken",
+      "--interval",
+      "45",
+      "--exit-status"
+    ],
+    "cwd": "C:/cinagroup/cinatoken",
+    "actualExit": 1,
+    "signal": null,
+    "spawnError": null,
+    "stdout": {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-6e2-ci-terminal-observer-dbbc0b1231e543eb99e18eb9bbe45370\\proxy-watch-2.stdout.log",
+      "bytes": 172279,
+      "sha256": "da5b5b6e1d061155e5aa6d8f61912ae2cac8ef212eaf24279acfcdc1088fe232"
+    },
+    "stderr": {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-6e2-ci-terminal-observer-dbbc0b1231e543eb99e18eb9bbe45370\\proxy-watch-2.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "collectionOnly": true,
+    "ciActions": 0,
+    "watchExitIsNotTerminalMetadata": true
+  },
+  "workflow": {
+    "raw": {
+      "bytes": 45895,
+      "sha256": "8e883e7f21f77f8367d361f6bd3d060e16c241c28641b3eac85af6835841f152"
+    },
+    "mapPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-6e2-ci-terminal-observer-dbbc0b1231e543eb99e18eb9bbe45370\\original-workflow-map.json",
+    "yamlActualOffset": 2
+  },
+  "native": {
+    "jobId": 112142276121,
+    "status": "completed",
+    "conclusion": "failure",
+    "firstFailure": {
+      "actual": {
+        "number": 90,
+        "status": "completed",
+        "conclusion": "failure",
+        "startedAt": "2026-10-06T06:53:16Z",
+        "completedAt": "2026-10-06T06:53:21Z",
+        "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\"
+      },
+      "fixture": {
+        "yamlStep": 88,
+        "workflowLine": 540,
+        "fixture": "scripts/db/cutover/postgres-shared-key-buyer-receipt-retention-v346.native.test.mjs",
+        "step": 90,
+        "actual": {
+          "number": 90,
+          "status": "completed",
+          "conclusion": "failure",
+          "startedAt": "2026-10-06T06:53:16Z",
+          "completedAt": "2026-10-06T06:53:21Z"
+        },
+        "tap": {
+          "range": {
+            "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-6e2-ci-terminal-observer-dbbc0b1231e543eb99e18eb9bbe45370\\native-terminal.stdout.log",
+            "startByte": 528111,
+            "endByte": 537587
+          },
+          "counters": {
+            "tests": {
+              "value": 1,
+              "byteOffset": 534553
+            },
+            "suites": {
+              "value": 0,
+              "byteOffset": 534716
+            },
+            "pass": {
+              "value": 0,
+              "byteOffset": 534880
+            },
+            "fail": {
+              "value": 1,
+              "byteOffset": 535042
+            },
+            "cancelled": {
+              "value": 0,
+              "byteOffset": 535204
+            },
+            "skipped": {
+              "value": 0,
+              "byteOffset": 535371
+            },
+            "todo": {
+              "value": 0,
+              "byteOffset": 535536
+            }
+          },
+          "exitCodes": [
+            {
+              "value": 1,
+              "byteOffset": 535886
+            }
+          ],
+          "failedSubtests": [
+            {
+              "number": 1,
+              "name": "native PG18 buyer receipt retention starts only after committed-row observation",
+              "byteOffset": 530149
+            }
+          ],
+          "subtests": [
+            {
+              "name": "native PG18 buyer receipt retention starts only after committed-row observation",
+              "byteOffset": 529905
+            }
+          ],
+          "fields": {
+            "failureType": {
+              "value": "'testCodeFailure'",
+              "byteOffset": 531028
+            },
+            "error": {
+              "value": "|-",
+              "byteOffset": 531214
+            },
+            "code": {
+              "value": "'ERR_ASSERTION'",
+              "byteOffset": 532062
+            },
+            "name": {
+              "value": "'AssertionError'",
+              "byteOffset": 532239
+            },
+            "expected": {
+              "value": "true",
+              "byteOffset": 532417
+            },
+            "actual": {
+              "value": "false",
+              "byteOffset": 532587
+            }
+          },
+          "locations": [
+            {
+              "source": "scripts/db/cutover/postgres-shared-key-buyer-receipt-retention-v346.native.test.mjs:43:1",
+              "byteOffset": 530938
+            },
+            {
+              "source": "file:///__w/cinatoken/cinatoken/scripts/db/cutover/postgres-shared-key-buyer-receipt-retention-v346.native.test.mjs:235:14",
+              "byteOffset": 533282
+            }
+          ]
+        }
+      }
+    },
+    "bootstrap7": {
+      "yamlStep": 5,
+      "workflowLine": 224,
+      "fixture": "scripts/db/cutover/postgres-financial-consumer-login.native.test.mjs",
+      "step": 7,
+      "actual": {
+        "number": 7,
+        "status": "completed",
+        "conclusion": "success",
+        "startedAt": "2026-10-06T06:40:13Z",
+        "completedAt": "2026-10-06T06:40:18Z"
+      },
+      "tap": {
+        "range": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-6e2-ci-terminal-observer-dbbc0b1231e543eb99e18eb9bbe45370\\native-terminal.stdout.log",
+          "startByte": 26075,
+          "endByte": 48701
+        },
+        "counters": {
+          "tests": {
+            "value": 1,
+            "byteOffset": 47460
+          },
+          "suites": {
+            "value": 0,
+            "byteOffset": 47633
+          },
+          "pass": {
+            "value": 1,
+            "byteOffset": 47807
+          },
+          "fail": {
+            "value": 0,
+            "byteOffset": 47979
+          },
+          "cancelled": {
+            "value": 0,
+            "byteOffset": 48151
+          },
+          "skipped": {
+            "value": 0,
+            "byteOffset": 48328
+          },
+          "todo": {
+            "value": 0,
+            "byteOffset": 48503
+          }
+        },
+        "exitCodes": [],
+        "failedSubtests": [],
+        "subtests": [
+          {
+            "name": "native PG18 financial consumer direct LOGIN and least-privilege fixture",
+            "byteOffset": 46099
+          }
+        ],
+        "fields": {
+          "failureType": null,
+          "error": null,
+          "code": null,
+          "name": null,
+          "expected": null,
+          "actual": null
+        },
+        "locations": []
+      }
+    },
+    "quote24": {
+      "yamlStep": 22,
+      "workflowLine": 337,
+      "fixture": "scripts/db/cutover/postgres-shared-key-quote-versions.native.test.mjs",
+      "step": 24,
+      "actual": {
+        "number": 24,
+        "status": "completed",
+        "conclusion": "success",
+        "startedAt": "2026-10-06T06:41:31Z",
+        "completedAt": "2026-10-06T06:41:36Z"
+      },
+      "tap": {
+        "range": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-6e2-ci-terminal-observer-dbbc0b1231e543eb99e18eb9bbe45370\\native-terminal.stdout.log",
+          "startByte": 135470,
+          "endByte": 140248
+        },
+        "counters": {
+          "tests": {
+            "value": 1,
+            "byteOffset": 139077
+          },
+          "suites": {
+            "value": 0,
+            "byteOffset": 139240
+          },
+          "pass": {
+            "value": 1,
+            "byteOffset": 139404
+          },
+          "fail": {
+            "value": 0,
+            "byteOffset": 139566
+          },
+          "cancelled": {
+            "value": 0,
+            "byteOffset": 139728
+          },
+          "skipped": {
+            "value": 0,
+            "byteOffset": 139895
+          },
+          "todo": {
+            "value": 0,
+            "byteOffset": 140060
+          }
+        },
+        "exitCodes": [],
+        "failedSubtests": [],
+        "subtests": [
+          {
+            "name": "native PG18 immutable shared-key quote supersession preserves history and serializes operators",
+            "byteOffset": 137739
+          }
+        ],
+        "fields": {
+          "failureType": null,
+          "error": null,
+          "code": null,
+          "name": null,
+          "expected": null,
+          "actual": null
+        },
+        "locations": []
+      }
+    },
+    "financial8to113": {
+      "count": 106,
+      "actualCounts": {
+        "success": 82,
+        "failure": 1,
+        "skipped": 23
+      },
+      "entries": [
+        {
+          "step": 8,
+          "fixture": "scripts/db/cutover/build-financial-consumer-direct-login-grant-lifecycle.native.test.mjs",
+          "yamlStep": 6,
+          "workflowLine": 289,
+          "number": 8,
+          "status": "completed",
+          "conclusion": "success",
+          "startedAt": "2026-10-06T06:40:18Z",
+          "completedAt": "2026-10-06T06:40:22Z",
+          "tests": 1,
+          "pass": 1,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0,
+          "range": {
+            "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-6e2-ci-terminal-observer-dbbc0b1231e543eb99e18eb9bbe45370\\native-terminal.stdout.log",
+            "startByte": 48701,
+            "endByte": 54002
+          }
+        },
+        {
+          "step": 9,
+          "fixture": "scripts/db/cutover/build-image-fact-job-producer-grant.native.test.mjs",
+          "yamlStep": 7,
+          "workflowLine": 292,
+          "number": 9,
+          "status": "completed",
+          "conclusion": "success",
+          "startedAt": "2026-10-06T06:40:22Z",
+          "completedAt": "2026-10-06T06:40:26Z",
+          "tests": 3,
+          "pass": 3,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0,
+          "range": {
+            "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-6e2-ci-terminal-observer-dbbc0b1231e543eb99e18eb9bbe45370\\native-terminal.stdout.log",
+            "startByte": 54002,
+            "endByte": 62333
+          }
+        },
+        {
+          "step": 10,
+          "fixture": "scripts/db/cutover/postgres-image-http-financial-jsonb-boundary.native.test.mjs",
+          "yamlStep": 8,
+          "workflowLine": 295,
+          "number": 10,
+          "status": "completed",
+          "conclusion": "success",
+          "startedAt": "2026-10-06T06:40:26Z",
+          "completedAt": "2026-10-06T06:40:31Z",
+          "tests": 1,
+          "pass": 1,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0,
+          "range": {
+            "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-6e2-ci-terminal-observer-dbbc0b1231e543eb99e18eb9bbe45370\\native-terminal.stdout.log",
+            "startByte": 62333,
+            "endByte": 69384
+          }
+        },
+        {
+          "step": 11,
+          "fixture": "scripts/db/cutover/postgres-image-edits-http-financial.native.test.mjs",
+          "yamlStep": 9,
+          "workflowLine": 298,
+          "number": 11,
+          "status": "completed",
+          "conclusion": "success",
+          "startedAt": "2026-10-06T06:40:31Z",
+          "completedAt": "2026-10-06T06:40:34Z",
+          "tests": 1,
+          "pass": 1,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0,
+          "range": {
+            "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-6e2-ci-terminal-observer-dbbc0b1231e543eb99e18eb9bbe45370\\native-terminal.stdout.log",
+            "startByte": 69384,
+            "endByte": 76360
+          }
+        },
+        {
+          "step": 12,
+          "fixture": "scripts/db/cutover/postgres-recovery-server-deadline.native.test.mjs",
+          "yamlStep": 10,
+          "workflowLine": 301,
+          "number": 12,
+          "status": "completed",
+          "conclusion": "success",
+          "startedAt": "2026-10-06T06:40:34Z",
+          "completedAt": "2026-10-06T06:40:38Z",
+          "tests": 1,
+          "pass": 1,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0,
+          "range": {
+            "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-6e2-ci-terminal-observer-dbbc0b1231e543eb99e18eb9bbe45370\\native-terminal.stdout.log",
+            "startByte": 76360,
+            "endByte": 86282
+          }
+        },
+        {
+          "step": 13,
+          "fixture": "scripts/db/cutover/postgres-legacy-handler-compat.native.test.mjs",
+          "yamlStep": 11,
+          "workflowLine": 304,
+          "number": 13,
+          "status": "completed",
+          "conclusion": "success",
+          "startedAt": "2026-10-06T06:40:38Z",
+          "completedAt": "2026-10-06T06:40:40Z",
+          "tests": 1,
+          "pass": 1,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0,
+          "range": {
+            "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-6e2-ci-terminal-observer-dbbc0b1231e543eb99e18eb9bbe45370\\native-terminal.stdout.log",
+            "startByte": 86282,
+            "endByte": 90668
+          }
+        },
+        {
+          "step": 14,
+          "fixture": "scripts/db/cutover/postgres-replay-scale-lock.native.test.mjs",
+          "yamlStep": 12,
+          "workflowLine": 307,
+          "number": 14,
+          "status": "completed",
+          "conclusion": "success",
+          "startedAt": "2026-10-06T06:40:40Z",
+          "completedAt": "2026-10-06T06:40:48Z",
+          "tests": 1,
+          "pass": 1,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0,
+          "range": {
+            "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-6e2-ci-terminal-observer-dbbc0b1231e543eb99e18eb9bbe45370\\native-terminal.stdout.log",
+            "startByte": 90668,
+            "endByte": 94801
+          }
+        },
+        {
+          "step": 15,
+          "fixture": "scripts/db/cutover/postgres-shared-key-earnings-history.native.test.mjs",
+          "yamlStep": 13,
+          "workflowLine": 310,
+          "number": 15,
+          "status": "completed",
+          "conclusion": "success",
+          "startedAt": "2026-10-06T06:40:48Z",
+          "completedAt": "2026-10-06T06:40:52Z",
+          "tests": 1,
+          "pass": 1,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0,
+          "range": {
+            "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-6e2-ci-terminal-observer-dbbc0b1231e543eb99e18eb9bbe45370\\native-terminal.stdout.log",
+            "startByte": 94801,
+            "endByte": 99063
+          }
+        },
+        {
+          "step": 16,
+          "fixture": "scripts/db/cutover/postgres-shared-key-earnings-projection-index.native.test.mjs",
+          "yamlStep": 14,
+          "workflowLine": 313,
+          "number": 16,
+          "status": "completed",
+          "conclusion": "success",
+          "startedAt": "2026-10-06T06:40:52Z",
+          "completedAt": "2026-10-06T06:40:57Z",
+          "tests": 1,
+          "pass": 1,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0,
+          "range": {
+            "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-6e2-ci-terminal-observer-dbbc0b1231e543eb99e18eb9bbe45370\\native-terminal.stdout.log",
+            "startByte": 99063,
+            "endByte": 103348
+          }
+        },
+        {
+          "step": 17,
+          "fixture": "scripts/db/cutover/postgres-shared-key-usage-repair-jobs.native.test.mjs",
+          "yamlStep": 15,
+          "workflowLine": 316,
+          "number": 17,
+          "status": "completed",
+          "conclusion": "success",
+          "startedAt": "2026-10-06T06:40:57Z",
+          "completedAt": "2026-10-06T06:40:59Z",
+          "tests": 1,
+          "pass": 1,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0,
+          "range": {
+            "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-6e2-ci-terminal-observer-dbbc0b1231e543eb99e18eb9bbe45370\\native-terminal.stdout.log",
+            "startByte": 103348,
+            "endByte": 107831
+          }
+        },
+        {
+          "step": 18,
+          "fixture": "scripts/db/cutover/postgres-shared-usage-repair-backfill.native.test.mjs",
+          "yamlStep": 16,
+          "workflowLine": 319,
+          "number": 18,
+          "status": "completed",
+          "conclusion": "success",
+          "startedAt": "2026-10-06T06:40:59Z",
+          "completedAt": "2026-10-06T06:41:01Z",
+          "tests": 1,
+          "pass": 1,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0,
+          "range": {
+            "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-6e2-ci-terminal-observer-dbbc0b1231e543eb99e18eb9bbe45370\\native-terminal.stdout.log",
+            "startByte": 107831,
+            "endByte": 112114
+          }
+        },
+        {
+          "step": 19,
+          "fixture": "scripts/db/cutover/postgres-shared-usage-repair-durable-cursor.native.test.mjs",
+          "yamlStep": 17,
+          "workflowLine": 322,
+          "number": 19,
+          "status": "completed",
+          "conclusion": "success",
+          "startedAt": "2026-10-06T06:41:01Z",
+          "completedAt": "2026-10-06T06:41:05Z",
+          "tests": 1,
+          "pass": 1,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0,
+          "range": {
+            "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-6e2-ci-terminal-observer-dbbc0b1231e543eb99e18eb9bbe45370\\native-terminal.stdout.log",
+            "startByte": 112114,
+            "endByte": 116407
+          }
+        },
+        {
+          "step": 20,
+          "fixture": "scripts/db/cutover/postgres-shared-key-usage-repair-runtime-grant.native.test.mjs",
+          "yamlStep": 18,
+          "workflowLine": 325,
+          "number": 20,
+          "status": "completed",
+          "conclusion": "success",
+          "startedAt": "2026-10-06T06:41:05Z",
+          "completedAt": "2026-10-06T06:41:07Z",
+          "tests": 1,
+          "pass": 1,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0,
+          "range": {
+            "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-6e2-ci-terminal-observer-dbbc0b1231e543eb99e18eb9bbe45370\\native-terminal.stdout.log",
+            "startByte": 116407,
+            "endByte": 121597
+          }
+        },
+        {
+          "step": 21,
+          "fixture": "scripts/db/cutover/build-shared-key-usage-repair-direct-login-grant.native.test.mjs",
+          "yamlStep": 19,
+          "workflowLine": 328,
+          "number": 21,
+          "status": "completed",
+          "conclusion": "success",
+          "startedAt": "2026-10-06T06:41:07Z",
+          "completedAt": "2026-10-06T06:41:24Z",
+          "tests": 1,
+          "pass": 1,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0,
+          "range": {
+            "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-6e2-ci-terminal-observer-dbbc0b1231e543eb99e18eb9bbe45370\\native-terminal.stdout.log",
+            "startByte": 121597,
+            "endByte": 126882
+          }
+        },
+        {
+          "step": 22,
+          "fixture": "scripts/db/cutover/postgres-shared-key-usage-repair-failure-isolation.native.test.mjs",
+          "yamlStep": 20,
+          "workflowLine": 331,
+          "number": 22,
+          "status": "completed",
+          "conclusion": "success",
+          "startedAt": "2026-10-06T06:41:24Z",
+          "completedAt": "2026-10-06T06:41:28Z",
+          "tests": 1,
+          "pass": 1,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0,
+          "range": {
+            "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-6e2-ci-terminal-observer-dbbc0b1231e543eb99e18eb9bbe45370\\native-terminal.stdout.log",
+            "startByte": 126882,
+            "endByte": 131182
+          }
+        },
+        {
+          "step": 23,
+          "fixture": "scripts/db/cutover/postgres-shared-key-usage-repair-durable-claim.native.test.mjs",
+          "yamlStep": 21,
+          "workflowLine": 334,
+          "number": 23,
+          "status": "completed",
+          "conclusion": "success",
+          "startedAt": "2026-10-06T06:41:28Z",
+          "completedAt": "2026-10-06T06:41:31Z",
+          "tests": 1,
+          "pass": 1,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0,
+          "range": {
+            "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-6e2-ci-terminal-observer-dbbc0b1231e543eb99e18eb9bbe45370\\native-terminal.stdout.log",
+            "startByte": 131182,
+            "endByte": 135470
+          }
+        },
+        {
+          "step": 24,
+          "fixture": "scripts/db/cutover/postgres-shared-key-quote-versions.native.test.mjs",
+          "yamlStep": 22,
+          "workflowLine": 337,
+          "number": 24,
+          "status": "completed",
+          "conclusion": "success",
+          "startedAt": "2026-10-06T06:41:31Z",
+          "completedAt": "2026-10-06T06:41:36Z",
+          "tests": 1,
+          "pass": 1,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0,
+          "range": {
+            "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-6e2-ci-terminal-observer-dbbc0b1231e543eb99e18eb9bbe45370\\native-terminal.stdout.log",
+            "startByte": 135470,
+            "endByte": 140248
+          }
+        },
+        {
+          "step": 25,
+          "fixture": "scripts/db/cutover/postgres-shared-key-dispatch-quote-attempts.native.test.mjs",
+          "yamlStep": 23,
+          "workflowLine": 340,
+          "number": 25,
+          "status": "completed",
+          "conclusion": "success",
+          "startedAt": "2026-10-06T06:41:36Z",
+          "completedAt": "2026-10-06T06:41:39Z",
+          "tests": 1,
+          "pass": 1,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0,
+          "range": {
+            "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-6e2-ci-terminal-observer-dbbc0b1231e543eb99e18eb9bbe45370\\native-terminal.stdout.log",
+            "startByte": 140248,
+            "endByte": 144548
+          }
+        },
+        {
+          "step": 26,
+          "fixture": "scripts/db/cutover/postgres-shared-key-orphan-claim-v347.native.test.mjs",
+          "yamlStep": 24,
+          "workflowLine": 343,
+          "number": 26,
+          "status": "completed",
+          "conclusion": "success",
+          "startedAt": "2026-10-06T06:41:39Z",
+          "completedAt": "2026-10-06T06:41:42Z",
+          "tests": 1,
+          "pass": 1,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0,
+          "range": {
+            "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-6e2-ci-terminal-observer-dbbc0b1231e543eb99e18eb9bbe45370\\native-terminal.stdout.log",
+            "startByte": 144548,
+            "endByte": 150005
+          }
+        },
+        {
+          "step": 27,
+          "fixture": "scripts/db/cutover/postgres-shared-key-orphan-review-v348.native.test.mjs",
+          "yamlStep": 25,
+          "workflowLine": 346,
+          "number": 27,
+          "status": "completed",
+          "conclusion": "success",
+          "startedAt": "2026-10-06T06:41:42Z",
+          "completedAt": "2026-10-06T06:41:44Z",
+          "tests": 1,
+          "pass": 1,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0,
+          "range": {
+            "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-6e2-ci-terminal-observer-dbbc0b1231e543eb99e18eb9bbe45370\\native-terminal.stdout.log",
+            "startByte": 150005,
+            "endByte": 154261
+          }
+        },
+        {
+          "step": 28,
+          "fixture": "scripts/db/cutover/postgres-shared-key-economic-outbox.native.test.mjs",
+          "yamlStep": 26,
+          "workflowLine": 349,
+          "number": 28,
+          "status": "completed",
+          "conclusion": "success",
+          "startedAt": "2026-10-06T06:41:44Z",
+          "completedAt": "2026-10-06T06:41:46Z",
+          "tests": 1,
+          "pass": 1,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0,
+          "range": {
+            "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-6e2-ci-terminal-observer-dbbc0b1231e543eb99e18eb9bbe45370\\native-terminal.stdout.log",
+            "startByte": 154261,
+            "endByte": 158533
+          }
+        },
+        {
+          "step": 29,
+          "fixture": "scripts/db/cutover/postgres-shared-key-selected-event-gate-v351.native.test.mjs",
+          "yamlStep": 27,
+          "workflowLine": 352,
+          "number": 29,
+          "status": "completed",
+          "conclusion": "success",
+          "startedAt": "2026-10-06T06:41:46Z",
+          "completedAt": "2026-10-06T06:41:48Z",
+          "tests": 1,
+          "pass": 1,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0,
+          "range": {
+            "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-6e2-ci-terminal-observer-dbbc0b1231e543eb99e18eb9bbe45370\\native-terminal.stdout.log",
+            "startByte": 158533,
+            "endByte": 162759
+          }
+        },
+        {
+          "step": 30,
+          "fixture": "scripts/db/cutover/postgres-shared-key-selected-event-buyer-v351.native.test.mjs",
+          "yamlStep": 28,
+          "workflowLine": 355,
+          "number": 30,
+          "status": "completed",
+          "conclusion": "success",
+          "startedAt": "2026-10-06T06:41:48Z",
+          "completedAt": "2026-10-06T06:41:51Z",
+          "tests": 1,
+          "pass": 1,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0,
+          "range": {
+            "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-6e2-ci-terminal-observer-dbbc0b1231e543eb99e18eb9bbe45370\\native-terminal.stdout.log",
+            "startByte": 162759,
+            "endByte": 174459
+          }
+        },
+        {
+          "step": 31,
+          "fixture": "scripts/db/cutover/postgres-shared-key-economic-outbox-producer.native.test.mjs",
+          "yamlStep": 29,
+          "workflowLine": 358,
+          "number": 31,
+          "status": "completed",
+          "conclusion": "success",
+          "startedAt": "2026-10-06T06:41:51Z",
+          "completedAt": "2026-10-06T06:41:54Z",
+          "tests": 1,
+          "pass": 1,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0,
+          "range": {
+            "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-6e2-ci-terminal-observer-dbbc0b1231e543eb99e18eb9bbe45370\\native-terminal.stdout.log",
+            "startByte": 174459,
+            "endByte": 178707
+          }
+        },
+        {
+          "step": 32,
+          "fixture": "scripts/db/cutover/postgres-shared-key-snapshot-earning-consumer.native.test.mjs",
+          "yamlStep": 30,
+          "workflowLine": 361,
+          "number": 32,
+          "status": "completed",
+          "conclusion": "success",
+          "startedAt": "2026-10-06T06:41:54Z",
+          "completedAt": "2026-10-06T06:41:56Z",
+          "tests": 1,
+          "pass": 1,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0,
+          "range": {
+            "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-6e2-ci-terminal-observer-dbbc0b1231e543eb99e18eb9bbe45370\\native-terminal.stdout.log",
+            "startByte": 178707,
+            "endByte": 183025
+          }
+        },
+        {
+          "step": 33,
+          "fixture": "scripts/db/cutover/postgres-shared-earning-consumer-runner.native.test.mjs",
+          "yamlStep": 31,
+          "workflowLine": 364,
+          "number": 33,
+          "status": "completed",
+          "conclusion": "success",
+          "startedAt": "2026-10-06T06:41:56Z",
+          "completedAt": "2026-10-06T06:41:59Z",
+          "tests": 1,
+          "pass": 1,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0,
+          "range": {
+            "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-6e2-ci-terminal-observer-dbbc0b1231e543eb99e18eb9bbe45370\\native-terminal.stdout.log",
+            "startByte": 183025,
+            "endByte": 187317
+          }
+        },
+        {
+          "step": 34,
+          "fixture": "scripts/db/cutover/postgres-shared-key-buyer-debit-v2.native.test.mjs",
+          "yamlStep": 32,
+          "workflowLine": 367,
+          "number": 34,
+          "status": "completed",
+          "conclusion": "success",
+          "startedAt": "2026-10-06T06:41:59Z",
+          "completedAt": "2026-10-06T06:42:01Z",
+          "tests": 1,
+          "pass": 1,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0,
+          "range": {
+            "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-6e2-ci-terminal-observer-dbbc0b1231e543eb99e18eb9bbe45370\\native-terminal.stdout.log",
+            "startByte": 187317,
+            "endByte": 191559
+          }
+        },
+        {
+          "step": 35,
+          "fixture": "scripts/db/cutover/postgres-shared-key-economic-producer-v2-aggregate-proof.native.test.mjs",
+          "yamlStep": 33,
+          "workflowLine": 370,
+          "number": 35,
+          "status": "completed",
+          "conclusion": "success",
+          "startedAt": "2026-10-06T06:42:01Z",
+          "completedAt": "2026-10-06T06:42:06Z",
+          "tests": 1,
+          "pass": 1,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0,
+          "range": {
+            "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-6e2-ci-terminal-observer-dbbc0b1231e543eb99e18eb9bbe45370\\native-terminal.stdout.log",
+            "startByte": 191559,
+            "endByte": 200159
+          }
+        },
+        {
+          "step": 36,
+          "fixture": "scripts/db/cutover/postgres-budget-admission-login-v350.native.test.mjs",
+          "yamlStep": 34,
+          "workflowLine": 373,
+          "number": 36,
+          "status": "completed",
+          "conclusion": "success",
+          "startedAt": "2026-10-06T06:42:06Z",
+          "completedAt": "2026-10-06T06:42:08Z",
+          "tests": 1,
+          "pass": 1,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0,
+          "range": {
+            "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-6e2-ci-terminal-observer-dbbc0b1231e543eb99e18eb9bbe45370\\native-terminal.stdout.log",
+            "startByte": 200159,
+            "endByte": 204855
+          }
+        },
+        {
+          "step": 37,
+          "fixture": "scripts/db/cutover/postgres-ordinary-budget-recovery-v354.native.test.mjs",
+          "yamlStep": 35,
+          "workflowLine": 376,
+          "number": 37,
+          "status": "completed",
+          "conclusion": "success",
+          "startedAt": "2026-10-06T06:42:08Z",
+          "completedAt": "2026-10-06T06:42:10Z",
+          "tests": 1,
+          "pass": 1,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0,
+          "range": {
+            "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-6e2-ci-terminal-observer-dbbc0b1231e543eb99e18eb9bbe45370\\native-terminal.stdout.log",
+            "startByte": 204855,
+            "endByte": 209556
+          }
+        },
+        {
+          "step": 38,
+          "fixture": "scripts/db/cutover/postgres-guardrail-budget-admission-login-v351.native.test.mjs",
+          "yamlStep": 36,
+          "workflowLine": 379,
+          "number": 38,
+          "status": "completed",
+          "conclusion": "success",
+          "startedAt": "2026-10-06T06:42:10Z",
+          "completedAt": "2026-10-06T06:42:16Z",
+          "tests": 1,
+          "pass": 1,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0,
+          "range": {
+            "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-6e2-ci-terminal-observer-dbbc0b1231e543eb99e18eb9bbe45370\\native-terminal.stdout.log",
+            "startByte": 209556,
+            "endByte": 214901
+          }
+        },
+        {
+          "step": 39,
+          "fixture": "scripts/db/cutover/postgres-guardrail-budget-lifecycle-v353.native.test.mjs",
+          "yamlStep": 37,
+          "workflowLine": 382,
+          "number": 39,
+          "status": "completed",
+          "conclusion": "success",
+          "startedAt": "2026-10-06T06:42:16Z",
+          "completedAt": "2026-10-06T06:42:19Z",
+          "tests": 1,
+          "pass": 1,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0,
+          "range": {
+            "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-6e2-ci-terminal-observer-dbbc0b1231e543eb99e18eb9bbe45370\\native-terminal.stdout.log",
+            "startByte": 214901,
+            "endByte": 220270
+          }
+        },
+        {
+          "step": 40,
+          "fixture": "scripts/db/cutover/postgres-guardrail-budget-dispatched-extension-v355.native.test.mjs",
+          "yamlStep": 38,
+          "workflowLine": 385,
+          "number": 40,
+          "status": "completed",
+          "conclusion": "success",
+          "startedAt": "2026-10-06T06:42:19Z",
+          "completedAt": "2026-10-06T06:42:24Z",
+          "tests": 1,
+          "pass": 1,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0,
+          "range": {
+            "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-6e2-ci-terminal-observer-dbbc0b1231e543eb99e18eb9bbe45370\\native-terminal.stdout.log",
+            "startByte": 220270,
+            "endByte": 225660
+          }
+        },
+        {
+          "step": 41,
+          "fixture": "scripts/db/cutover/postgres-authenticated-request-capability-login-v356.native.test.mjs",
+          "yamlStep": 39,
+          "workflowLine": 388,
+          "number": 41,
+          "status": "completed",
+          "conclusion": "success",
+          "startedAt": "2026-10-06T06:42:24Z",
+          "completedAt": "2026-10-06T06:42:29Z",
+          "tests": 1,
+          "pass": 1,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0,
+          "range": {
+            "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-6e2-ci-terminal-observer-dbbc0b1231e543eb99e18eb9bbe45370\\native-terminal.stdout.log",
+            "startByte": 225660,
+            "endByte": 230208
+          }
+        },
+        {
+          "step": 42,
+          "fixture": "scripts/db/cutover/postgres-authenticated-text-route-ceiling-v357.native.test.mjs",
+          "yamlStep": 40,
+          "workflowLine": 391,
+          "number": 42,
+          "status": "completed",
+          "conclusion": "success",
+          "startedAt": "2026-10-06T06:42:29Z",
+          "completedAt": "2026-10-06T06:42:31Z",
+          "tests": 1,
+          "pass": 1,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0,
+          "range": {
+            "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-6e2-ci-terminal-observer-dbbc0b1231e543eb99e18eb9bbe45370\\native-terminal.stdout.log",
+            "startByte": 230208,
+            "endByte": 234747
+          }
+        },
+        {
+          "step": 43,
+          "fixture": "scripts/db/cutover/postgres-authenticated-text-route-source-fence-v359.native.test.mjs",
+          "yamlStep": 41,
+          "workflowLine": 394,
+          "number": 43,
+          "status": "completed",
+          "conclusion": "success",
+          "startedAt": "2026-10-06T06:42:31Z",
+          "completedAt": "2026-10-06T06:42:33Z",
+          "tests": 1,
+          "pass": 1,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0,
+          "range": {
+            "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-6e2-ci-terminal-observer-dbbc0b1231e543eb99e18eb9bbe45370\\native-terminal.stdout.log",
+            "startByte": 234747,
+            "endByte": 239267
+          }
+        },
+        {
+          "step": 44,
+          "fixture": "scripts/db/cutover/postgres-authenticated-complete-text-quote-v360.native.test.mjs",
+          "yamlStep": 42,
+          "workflowLine": 397,
+          "number": 44,
+          "status": "completed",
+          "conclusion": "success",
+          "startedAt": "2026-10-06T06:42:33Z",
+          "completedAt": "2026-10-06T06:42:34Z",
+          "tests": 1,
+          "pass": 1,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0,
+          "range": {
+            "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-6e2-ci-terminal-observer-dbbc0b1231e543eb99e18eb9bbe45370\\native-terminal.stdout.log",
+            "startByte": 239267,
+            "endByte": 243780
+          }
+        },
+        {
+          "step": 45,
+          "fixture": "scripts/db/cutover/postgres-complete-text-quote-budget-admission-v361.native.test.mjs",
+          "yamlStep": 43,
+          "workflowLine": 400,
+          "number": 45,
+          "status": "completed",
+          "conclusion": "success",
+          "startedAt": "2026-10-06T06:42:34Z",
+          "completedAt": "2026-10-06T06:42:36Z",
+          "tests": 1,
+          "pass": 1,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0,
+          "range": {
+            "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-6e2-ci-terminal-observer-dbbc0b1231e543eb99e18eb9bbe45370\\native-terminal.stdout.log",
+            "startByte": 243780,
+            "endByte": 249105
+          }
+        },
+        {
+          "step": 46,
+          "fixture": "scripts/db/cutover/postgres-complete-text-attempt-grant-v362.native.test.mjs",
+          "yamlStep": 44,
+          "workflowLine": 403,
+          "number": 46,
+          "status": "completed",
+          "conclusion": "success",
+          "startedAt": "2026-10-06T06:42:36Z",
+          "completedAt": "2026-10-06T06:42:39Z",
+          "tests": 1,
+          "pass": 1,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0,
+          "range": {
+            "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-6e2-ci-terminal-observer-dbbc0b1231e543eb99e18eb9bbe45370\\native-terminal.stdout.log",
+            "startByte": 249105,
+            "endByte": 254407
+          }
+        },
+        {
+          "step": 47,
+          "fixture": "scripts/db/cutover/postgres-complete-text-secretless-plan-v365.native.test.mjs",
+          "yamlStep": 45,
+          "workflowLine": 406,
+          "number": 47,
+          "status": "completed",
+          "conclusion": "success",
+          "startedAt": "2026-10-06T06:42:39Z",
+          "completedAt": "2026-10-06T06:42:40Z",
+          "tests": 1,
+          "pass": 1,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0,
+          "range": {
+            "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-6e2-ci-terminal-observer-dbbc0b1231e543eb99e18eb9bbe45370\\native-terminal.stdout.log",
+            "startByte": 254407,
+            "endByte": 258874
+          }
+        },
+        {
+          "step": 48,
+          "fixture": "scripts/db/cutover/postgres-complete-text-send-start-v365.native.test.mjs",
+          "yamlStep": 46,
+          "workflowLine": 409,
+          "number": 48,
+          "status": "completed",
+          "conclusion": "success",
+          "startedAt": "2026-10-06T06:42:40Z",
+          "completedAt": "2026-10-06T06:43:13Z",
+          "tests": 1,
+          "pass": 1,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0,
+          "range": {
+            "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-6e2-ci-terminal-observer-dbbc0b1231e543eb99e18eb9bbe45370\\native-terminal.stdout.log",
+            "startByte": 258874,
+            "endByte": 264178
+          }
+        },
+        {
+          "step": 49,
+          "fixture": "scripts/db/cutover/postgres-complete-text-private-route-reader-v366.native.test.mjs",
+          "yamlStep": 47,
+          "workflowLine": 412,
+          "number": 49,
+          "status": "completed",
+          "conclusion": "success",
+          "startedAt": "2026-10-06T06:43:13Z",
+          "completedAt": "2026-10-06T06:43:16Z",
+          "tests": 1,
+          "pass": 1,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0,
+          "range": {
+            "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-6e2-ci-terminal-observer-dbbc0b1231e543eb99e18eb9bbe45370\\native-terminal.stdout.log",
+            "startByte": 264178,
+            "endByte": 268694
+          }
+        },
+        {
+          "step": 50,
+          "fixture": "scripts/db/cutover/postgres-complete-text-read-grant-bridge-v367.native.test.mjs",
+          "yamlStep": 48,
+          "workflowLine": 415,
+          "number": 50,
+          "status": "completed",
+          "conclusion": "success",
+          "startedAt": "2026-10-06T06:43:16Z",
+          "completedAt": "2026-10-06T06:43:20Z",
+          "tests": 1,
+          "pass": 1,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0,
+          "range": {
+            "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-6e2-ci-terminal-observer-dbbc0b1231e543eb99e18eb9bbe45370\\native-terminal.stdout.log",
+            "startByte": 268694,
+            "endByte": 274024
+          }
+        },
+        {
+          "step": 51,
+          "fixture": "scripts/db/cutover/postgres-complete-text-result-facts-v366.native.test.mjs",
+          "yamlStep": 49,
+          "workflowLine": 418,
+          "number": 51,
+          "status": "completed",
+          "conclusion": "success",
+          "startedAt": "2026-10-06T06:43:20Z",
+          "completedAt": "2026-10-06T06:43:22Z",
+          "tests": 1,
+          "pass": 1,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0,
+          "range": {
+            "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-6e2-ci-terminal-observer-dbbc0b1231e543eb99e18eb9bbe45370\\native-terminal.stdout.log",
+            "startByte": 274024,
+            "endByte": 279320
+          }
+        },
+        {
+          "step": 52,
+          "fixture": "scripts/db/cutover/postgres-complete-text-result-client-digest-v367.native.test.mjs",
+          "yamlStep": 50,
+          "workflowLine": 421,
+          "number": 52,
+          "status": "completed",
+          "conclusion": "success",
+          "startedAt": "2026-10-06T06:43:22Z",
+          "completedAt": "2026-10-06T06:43:23Z",
+          "tests": 1,
+          "pass": 1,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0,
+          "range": {
+            "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-6e2-ci-terminal-observer-dbbc0b1231e543eb99e18eb9bbe45370\\native-terminal.stdout.log",
+            "startByte": 279320,
+            "endByte": 283232
+          }
+        },
+        {
+          "step": 53,
+          "fixture": "scripts/db/cutover/postgres-complete-text-legacy-reaper-fence-v366.native.test.mjs",
+          "yamlStep": 51,
+          "workflowLine": 424,
+          "number": 53,
+          "status": "completed",
+          "conclusion": "success",
+          "startedAt": "2026-10-06T06:43:23Z",
+          "completedAt": "2026-10-06T06:43:26Z",
+          "tests": 1,
+          "pass": 1,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0,
+          "range": {
+            "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-6e2-ci-terminal-observer-dbbc0b1231e543eb99e18eb9bbe45370\\native-terminal.stdout.log",
+            "startByte": 283232,
+            "endByte": 288557
+          }
+        },
+        {
+          "step": 54,
+          "fixture": "scripts/db/cutover/postgres-complete-text-all-hold-renewal-v367.native.test.mjs",
+          "yamlStep": 52,
+          "workflowLine": 427,
+          "number": 54,
+          "status": "completed",
+          "conclusion": "success",
+          "startedAt": "2026-10-06T06:43:26Z",
+          "completedAt": "2026-10-06T06:43:31Z",
+          "tests": 1,
+          "pass": 1,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0,
+          "range": {
+            "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-6e2-ci-terminal-observer-dbbc0b1231e543eb99e18eb9bbe45370\\native-terminal.stdout.log",
+            "startByte": 288557,
+            "endByte": 293879
+          }
+        },
+        {
+          "step": 55,
+          "fixture": "scripts/db/cutover/postgres-complete-text-buyer-counter-cutover-v367.native.test.mjs",
+          "yamlStep": 53,
+          "workflowLine": 430,
+          "number": 55,
+          "status": "completed",
+          "conclusion": "success",
+          "startedAt": "2026-10-06T06:43:31Z",
+          "completedAt": "2026-10-06T06:43:33Z",
+          "tests": 1,
+          "pass": 1,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0,
+          "range": {
+            "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-6e2-ci-terminal-observer-dbbc0b1231e543eb99e18eb9bbe45370\\native-terminal.stdout.log",
+            "startByte": 293879,
+            "endByte": 299436
+          }
+        },
+        {
+          "step": 56,
+          "fixture": "scripts/db/cutover/postgres-complete-text-legacy-buyer-held-v368.native.test.mjs",
+          "yamlStep": 54,
+          "workflowLine": 433,
+          "number": 56,
+          "status": "completed",
+          "conclusion": "success",
+          "startedAt": "2026-10-06T06:43:33Z",
+          "completedAt": "2026-10-06T06:43:36Z",
+          "tests": 1,
+          "pass": 1,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0,
+          "range": {
+            "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-6e2-ci-terminal-observer-dbbc0b1231e543eb99e18eb9bbe45370\\native-terminal.stdout.log",
+            "startByte": 299436,
+            "endByte": 304971
+          }
+        },
+        {
+          "step": 57,
+          "fixture": "scripts/db/cutover/postgres-buyer-held-opt-in-gap-v370.native.test.mjs",
+          "yamlStep": 55,
+          "workflowLine": 436,
+          "number": 57,
+          "status": "completed",
+          "conclusion": "success",
+          "startedAt": "2026-10-06T06:43:36Z",
+          "completedAt": "2026-10-06T06:43:38Z",
+          "tests": 1,
+          "pass": 1,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0,
+          "range": {
+            "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-6e2-ci-terminal-observer-dbbc0b1231e543eb99e18eb9bbe45370\\native-terminal.stdout.log",
+            "startByte": 304971,
+            "endByte": 308894
+          }
+        },
+        {
+          "step": 58,
+          "fixture": "scripts/db/cutover/postgres-legacy-buyer-window-accountant-v371.native.test.mjs",
+          "yamlStep": 56,
+          "workflowLine": 439,
+          "number": 58,
+          "status": "completed",
+          "conclusion": "success",
+          "startedAt": "2026-10-06T06:43:38Z",
+          "completedAt": "2026-10-06T06:43:41Z",
+          "tests": 1,
+          "pass": 1,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0,
+          "range": {
+            "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-6e2-ci-terminal-observer-dbbc0b1231e543eb99e18eb9bbe45370\\native-terminal.stdout.log",
+            "startByte": 308894,
+            "endByte": 313138
+          }
+        },
+        {
+          "step": 59,
+          "fixture": "scripts/db/cutover/postgres-legacy-buyer-windowed-app-v372.native.test.mjs",
+          "yamlStep": 57,
+          "workflowLine": 442,
+          "number": 59,
+          "status": "completed",
+          "conclusion": "success",
+          "startedAt": "2026-10-06T06:43:41Z",
+          "completedAt": "2026-10-06T06:43:46Z",
+          "tests": 1,
+          "pass": 1,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0,
+          "range": {
+            "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-6e2-ci-terminal-observer-dbbc0b1231e543eb99e18eb9bbe45370\\native-terminal.stdout.log",
+            "startByte": 313138,
+            "endByte": 318691
+          }
+        },
+        {
+          "step": 60,
+          "fixture": "scripts/db/cutover/postgres-legacy-buyer-windowed-app-privileges-v374.native.test.mjs",
+          "yamlStep": 58,
+          "workflowLine": 445,
+          "number": 60,
+          "status": "completed",
+          "conclusion": "success",
+          "startedAt": "2026-10-06T06:43:46Z",
+          "completedAt": "2026-10-06T06:43:51Z",
+          "tests": 1,
+          "pass": 1,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0,
+          "range": {
+            "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-6e2-ci-terminal-observer-dbbc0b1231e543eb99e18eb9bbe45370\\native-terminal.stdout.log",
+            "startByte": 318691,
+            "endByte": 324032
+          }
+        },
+        {
+          "step": 61,
+          "fixture": "scripts/db/cutover/postgres-legacy-buyer-windowed-app-privileges-renewal-v376.native.test.mjs",
+          "yamlStep": 59,
+          "workflowLine": 448,
+          "number": 61,
+          "status": "completed",
+          "conclusion": "success",
+          "startedAt": "2026-10-06T06:43:51Z",
+          "completedAt": "2026-10-06T06:43:56Z",
+          "tests": 1,
+          "pass": 1,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0,
+          "range": {
+            "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-6e2-ci-terminal-observer-dbbc0b1231e543eb99e18eb9bbe45370\\native-terminal.stdout.log",
+            "startByte": 324032,
+            "endByte": 329390
+          }
+        },
+        {
+          "step": 62,
+          "fixture": "scripts/db/cutover/postgres-legacy-buyer-terminal-reader-v375.native.test.mjs",
+          "yamlStep": 60,
+          "workflowLine": 451,
+          "number": 62,
+          "status": "completed",
+          "conclusion": "success",
+          "startedAt": "2026-10-06T06:43:56Z",
+          "completedAt": "2026-10-06T06:44:01Z",
+          "tests": 1,
+          "pass": 1,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0,
+          "range": {
+            "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-6e2-ci-terminal-observer-dbbc0b1231e543eb99e18eb9bbe45370\\native-terminal.stdout.log",
+            "startByte": 329390,
+            "endByte": 334954
+          }
+        },
+        {
+          "step": 63,
+          "fixture": "scripts/db/cutover/postgres-legacy-buyer-commit-ack-v376.native.test.mjs",
+          "yamlStep": 61,
+          "workflowLine": 454,
+          "number": 63,
+          "status": "completed",
+          "conclusion": "success",
+          "startedAt": "2026-10-06T06:44:01Z",
+          "completedAt": "2026-10-06T06:44:06Z",
+          "tests": 1,
+          "pass": 1,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0,
+          "range": {
+            "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-6e2-ci-terminal-observer-dbbc0b1231e543eb99e18eb9bbe45370\\native-terminal.stdout.log",
+            "startByte": 334954,
+            "endByte": 340497
+          }
+        },
+        {
+          "step": 64,
+          "fixture": "scripts/db/cutover/postgres-legacy-buyer-delayed-commit-v377.native.test.mjs",
+          "yamlStep": 62,
+          "workflowLine": 457,
+          "number": 64,
+          "status": "completed",
+          "conclusion": "success",
+          "startedAt": "2026-10-06T06:44:06Z",
+          "completedAt": "2026-10-06T06:44:12Z",
+          "tests": 1,
+          "pass": 1,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0,
+          "range": {
+            "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-6e2-ci-terminal-observer-dbbc0b1231e543eb99e18eb9bbe45370\\native-terminal.stdout.log",
+            "startByte": 340497,
+            "endByte": 346066
+          }
+        },
+        {
+          "step": 65,
+          "fixture": "scripts/db/cutover/postgres-legacy-buyer-commit-journal-v378.native.test.mjs",
+          "yamlStep": 63,
+          "workflowLine": 460,
+          "number": 65,
+          "status": "completed",
+          "conclusion": "success",
+          "startedAt": "2026-10-06T06:44:12Z",
+          "completedAt": "2026-10-06T06:44:14Z",
+          "tests": 1,
+          "pass": 1,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0,
+          "range": {
+            "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-6e2-ci-terminal-observer-dbbc0b1231e543eb99e18eb9bbe45370\\native-terminal.stdout.log",
+            "startByte": 346066,
+            "endByte": 350297
+          }
+        },
+        {
+          "step": 66,
+          "fixture": "scripts/db/cutover/postgres-complete-text-admission-buyer-v379.native.test.mjs",
+          "yamlStep": 64,
+          "workflowLine": 463,
+          "number": 66,
+          "status": "completed",
+          "conclusion": "success",
+          "startedAt": "2026-10-06T06:44:14Z",
+          "completedAt": "2026-10-06T06:44:17Z",
+          "tests": 1,
+          "pass": 1,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0,
+          "range": {
+            "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-6e2-ci-terminal-observer-dbbc0b1231e543eb99e18eb9bbe45370\\native-terminal.stdout.log",
+            "startByte": 350297,
+            "endByte": 355628
+          }
+        },
+        {
+          "step": 67,
+          "fixture": "packages/core/src/test-support/postgres-journal-commit-ack-proxy-v381.native.test.mjs",
+          "yamlStep": 65,
+          "workflowLine": 466,
+          "number": 67,
+          "status": "completed",
+          "conclusion": "success",
+          "startedAt": "2026-10-06T06:44:17Z",
+          "completedAt": "2026-10-06T06:44:20Z",
+          "tests": 1,
+          "pass": 1,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0,
+          "range": {
+            "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-6e2-ci-terminal-observer-dbbc0b1231e543eb99e18eb9bbe45370\\native-terminal.stdout.log",
+            "startByte": 355628,
+            "endByte": 359535
+          }
+        },
+        {
+          "step": 68,
+          "fixture": "scripts/db/cutover/postgres-legacy-buyer-journal-integration-v381.native.test.mjs",
+          "yamlStep": 66,
+          "workflowLine": 469,
+          "number": 68,
+          "status": "completed",
+          "conclusion": "success",
+          "startedAt": "2026-10-06T06:44:20Z",
+          "completedAt": "2026-10-06T06:44:28Z",
+          "tests": 1,
+          "pass": 1,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0,
+          "range": {
+            "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-6e2-ci-terminal-observer-dbbc0b1231e543eb99e18eb9bbe45370\\native-terminal.stdout.log",
+            "startByte": 359535,
+            "endByte": 365141
+          }
+        },
+        {
+          "step": 69,
+          "fixture": "scripts/db/cutover/postgres-complete-text-no-fetch-close-blocker-v382.native.test.mjs",
+          "yamlStep": 67,
+          "workflowLine": 472,
+          "number": 69,
+          "status": "completed",
+          "conclusion": "success",
+          "startedAt": "2026-10-06T06:44:28Z",
+          "completedAt": "2026-10-06T06:44:36Z",
+          "tests": 1,
+          "pass": 1,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0,
+          "range": {
+            "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-6e2-ci-terminal-observer-dbbc0b1231e543eb99e18eb9bbe45370\\native-terminal.stdout.log",
+            "startByte": 365141,
+            "endByte": 370479
+          }
+        },
+        {
+          "step": 70,
+          "fixture": "scripts/db/cutover/postgres-legacy-buyer-request-projection-v383.native.test.mjs",
+          "yamlStep": 68,
+          "workflowLine": 475,
+          "number": 70,
+          "status": "completed",
+          "conclusion": "success",
+          "startedAt": "2026-10-06T06:44:36Z",
+          "completedAt": "2026-10-06T06:44:45Z",
+          "tests": 1,
+          "pass": 1,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0,
+          "range": {
+            "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-6e2-ci-terminal-observer-dbbc0b1231e543eb99e18eb9bbe45370\\native-terminal.stdout.log",
+            "startByte": 370479,
+            "endByte": 376064
+          }
+        },
+        {
+          "step": 71,
+          "fixture": "scripts/db/cutover/postgres-complete-text-observed-holder-v384.native.test.mjs",
+          "yamlStep": 69,
+          "workflowLine": 478,
+          "number": 71,
+          "status": "completed",
+          "conclusion": "success",
+          "startedAt": "2026-10-06T06:44:45Z",
+          "completedAt": "2026-10-06T06:44:51Z",
+          "tests": 1,
+          "pass": 1,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0,
+          "range": {
+            "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-6e2-ci-terminal-observer-dbbc0b1231e543eb99e18eb9bbe45370\\native-terminal.stdout.log",
+            "startByte": 376064,
+            "endByte": 381385
+          }
+        },
+        {
+          "step": 72,
+          "fixture": "scripts/db/cutover/postgres-complete-text-platform-close-fence-v386.native.test.mjs",
+          "yamlStep": 70,
+          "workflowLine": 481,
+          "number": 72,
+          "status": "completed",
+          "conclusion": "success",
+          "startedAt": "2026-10-06T06:44:51Z",
+          "completedAt": "2026-10-06T06:45:06Z",
+          "tests": 1,
+          "pass": 1,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0,
+          "range": {
+            "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-6e2-ci-terminal-observer-dbbc0b1231e543eb99e18eb9bbe45370\\native-terminal.stdout.log",
+            "startByte": 381385,
+            "endByte": 386737
+          }
+        },
+        {
+          "step": 73,
+          "fixture": "scripts/db/cutover/postgres-complete-chat-holder-dispatch-v387.native.test.mjs",
+          "yamlStep": 71,
+          "workflowLine": 484,
+          "number": 73,
+          "status": "completed",
+          "conclusion": "success",
+          "startedAt": "2026-10-06T06:45:06Z",
+          "completedAt": "2026-10-06T06:45:11Z",
+          "tests": 1,
+          "pass": 1,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0,
+          "range": {
+            "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-6e2-ci-terminal-observer-dbbc0b1231e543eb99e18eb9bbe45370\\native-terminal.stdout.log",
+            "startByte": 386737,
+            "endByte": 392074
+          }
+        },
+        {
+          "step": 74,
+          "fixture": "scripts/db/cutover/postgres-complete-text-no-fetch-platform-close-v388.native.test.mjs",
+          "yamlStep": 72,
+          "workflowLine": 487,
+          "number": 74,
+          "status": "completed",
+          "conclusion": "success",
+          "startedAt": "2026-10-06T06:45:11Z",
+          "completedAt": "2026-10-06T06:45:25Z",
+          "tests": 1,
+          "pass": 1,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0,
+          "range": {
+            "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-6e2-ci-terminal-observer-dbbc0b1231e543eb99e18eb9bbe45370\\native-terminal.stdout.log",
+            "startByte": 392074,
+            "endByte": 397451
+          }
+        },
+        {
+          "step": 75,
+          "fixture": "scripts/db/cutover/postgres-complete-text-no-fetch-recovery-v389.native.test.mjs",
+          "yamlStep": 73,
+          "workflowLine": 490,
+          "number": 75,
+          "status": "completed",
+          "conclusion": "success",
+          "startedAt": "2026-10-06T06:45:25Z",
+          "completedAt": "2026-10-06T06:45:52Z",
+          "tests": 1,
+          "pass": 1,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0,
+          "range": {
+            "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-6e2-ci-terminal-observer-dbbc0b1231e543eb99e18eb9bbe45370\\native-terminal.stdout.log",
+            "startByte": 397451,
+            "endByte": 402834
+          }
+        },
+        {
+          "step": 76,
+          "fixture": "scripts/db/cutover/postgres-complete-text-holder-worker-v390.native.test.mjs",
+          "yamlStep": 74,
+          "workflowLine": 493,
+          "number": 76,
+          "status": "completed",
+          "conclusion": "success",
+          "startedAt": "2026-10-06T06:45:52Z",
+          "completedAt": "2026-10-06T06:46:03Z",
+          "tests": 1,
+          "pass": 1,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0,
+          "range": {
+            "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-6e2-ci-terminal-observer-dbbc0b1231e543eb99e18eb9bbe45370\\native-terminal.stdout.log",
+            "startByte": 402834,
+            "endByte": 408187
+          }
+        },
+        {
+          "step": 77,
+          "fixture": "scripts/db/cutover/postgres-complete-text-secretless-plan-v391.native.test.mjs",
+          "yamlStep": 75,
+          "workflowLine": 496,
+          "number": 77,
+          "status": "completed",
+          "conclusion": "success",
+          "startedAt": "2026-10-06T06:46:03Z",
+          "completedAt": "2026-10-06T06:46:08Z",
+          "tests": 1,
+          "pass": 1,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0,
+          "range": {
+            "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-6e2-ci-terminal-observer-dbbc0b1231e543eb99e18eb9bbe45370\\native-terminal.stdout.log",
+            "startByte": 408187,
+            "endByte": 413528
+          }
+        },
+        {
+          "step": 78,
+          "fixture": "scripts/db/cutover/postgres-complete-text-response-observation-v392.native.test.mjs",
+          "yamlStep": 76,
+          "workflowLine": 499,
+          "number": 78,
+          "status": "completed",
+          "conclusion": "success",
+          "startedAt": "2026-10-06T06:46:08Z",
+          "completedAt": "2026-10-06T06:46:16Z",
+          "tests": 1,
+          "pass": 1,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0,
+          "range": {
+            "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-6e2-ci-terminal-observer-dbbc0b1231e543eb99e18eb9bbe45370\\native-terminal.stdout.log",
+            "startByte": 413528,
+            "endByte": 418910
+          }
+        },
+        {
+          "step": 79,
+          "fixture": "scripts/db/cutover/postgres-complete-text-manifest-selection-v393.native.test.mjs",
+          "yamlStep": 77,
+          "workflowLine": 502,
+          "number": 79,
+          "status": "completed",
+          "conclusion": "success",
+          "startedAt": "2026-10-06T06:46:16Z",
+          "completedAt": "2026-10-06T06:46:19Z",
+          "tests": 1,
+          "pass": 1,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0,
+          "range": {
+            "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-6e2-ci-terminal-observer-dbbc0b1231e543eb99e18eb9bbe45370\\native-terminal.stdout.log",
+            "startByte": 418910,
+            "endByte": 423705
+          }
+        },
+        {
+          "step": 80,
+          "fixture": "scripts/db/cutover/postgres-personal-key-auth-period-v395.native.test.mjs",
+          "yamlStep": 78,
+          "workflowLine": 506,
+          "number": 80,
+          "status": "completed",
+          "conclusion": "success",
+          "startedAt": "2026-10-06T06:46:19Z",
+          "completedAt": "2026-10-06T06:46:24Z",
+          "tests": 1,
+          "pass": 1,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0,
+          "range": {
+            "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-6e2-ci-terminal-observer-dbbc0b1231e543eb99e18eb9bbe45370\\native-terminal.stdout.log",
+            "startByte": 423705,
+            "endByte": 429051
+          }
+        },
+        {
+          "step": 81,
+          "fixture": "scripts/db/cutover/postgres-complete-text-routing-projection-v396.native.test.mjs",
+          "yamlStep": 79,
+          "workflowLine": 509,
+          "number": 81,
+          "status": "completed",
+          "conclusion": "success",
+          "startedAt": "2026-10-06T06:46:24Z",
+          "completedAt": "2026-10-06T06:47:38Z",
+          "tests": 1,
+          "pass": 1,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0,
+          "range": {
+            "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-6e2-ci-terminal-observer-dbbc0b1231e543eb99e18eb9bbe45370\\native-terminal.stdout.log",
+            "startByte": 429051,
+            "endByte": 434683
+          }
+        },
+        {
+          "step": 82,
+          "fixture": "scripts/db/cutover/postgres-complete-text-response-no-fetch-coinstall-v397.native.test.mjs",
+          "yamlStep": 80,
+          "workflowLine": 513,
+          "number": 82,
+          "status": "completed",
+          "conclusion": "success",
+          "startedAt": "2026-10-06T06:47:38Z",
+          "completedAt": "2026-10-06T06:47:50Z",
+          "tests": 1,
+          "pass": 1,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0,
+          "range": {
+            "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-6e2-ci-terminal-observer-dbbc0b1231e543eb99e18eb9bbe45370\\native-terminal.stdout.log",
+            "startByte": 434683,
+            "endByte": 440090
+          }
+        },
+        {
+          "step": 83,
+          "fixture": "scripts/db/cutover/postgres-complete-text-auth-routing-recovery-coinstall-v400.native.test.mjs",
+          "yamlStep": 81,
+          "workflowLine": 516,
+          "number": 83,
+          "status": "completed",
+          "conclusion": "success",
+          "startedAt": "2026-10-06T06:47:50Z",
+          "completedAt": "2026-10-06T06:49:18Z",
+          "tests": 1,
+          "pass": 1,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0,
+          "range": {
+            "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-6e2-ci-terminal-observer-dbbc0b1231e543eb99e18eb9bbe45370\\native-terminal.stdout.log",
+            "startByte": 440090,
+            "endByte": 455216
+          }
+        },
+        {
+          "step": 84,
+          "fixture": "scripts/db/cutover/postgres-exclusive-credential-free-chat-ingress-v401.native.test.mjs",
+          "yamlStep": 82,
+          "workflowLine": 520,
+          "number": 84,
+          "status": "completed",
+          "conclusion": "success",
+          "startedAt": "2026-10-06T06:49:18Z",
+          "completedAt": "2026-10-06T06:50:45Z",
+          "tests": 1,
+          "pass": 1,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0,
+          "range": {
+            "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-6e2-ci-terminal-observer-dbbc0b1231e543eb99e18eb9bbe45370\\native-terminal.stdout.log",
+            "startByte": 455216,
+            "endByte": 479226
+          }
+        },
+        {
+          "step": 85,
+          "fixture": "scripts/db/cutover/postgres-complete-text-platform-event-delivery-v402.native.test.mjs",
+          "yamlStep": 83,
+          "workflowLine": 524,
+          "number": 85,
+          "status": "completed",
+          "conclusion": "success",
+          "startedAt": "2026-10-06T06:50:45Z",
+          "completedAt": "2026-10-06T06:52:50Z",
+          "tests": 1,
+          "pass": 1,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0,
+          "range": {
+            "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-6e2-ci-terminal-observer-dbbc0b1231e543eb99e18eb9bbe45370\\native-terminal.stdout.log",
+            "startByte": 479226,
+            "endByte": 508896
+          }
+        },
+        {
+          "step": 86,
+          "fixture": "scripts/db/cutover/postgres-complete-text-no-fetch-fence-v370.native.test.mjs",
+          "yamlStep": 84,
+          "workflowLine": 528,
+          "number": 86,
+          "status": "completed",
+          "conclusion": "success",
+          "startedAt": "2026-10-06T06:52:50Z",
+          "completedAt": "2026-10-06T06:53:10Z",
+          "tests": 1,
+          "pass": 1,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0,
+          "range": {
+            "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-6e2-ci-terminal-observer-dbbc0b1231e543eb99e18eb9bbe45370\\native-terminal.stdout.log",
+            "startByte": 508896,
+            "endByte": 514224
+          }
+        },
+        {
+          "step": 87,
+          "fixture": "packages/core/src/storage/postgres-jsonb-batch-native.test.mjs",
+          "yamlStep": 85,
+          "workflowLine": 531,
+          "number": 87,
+          "status": "completed",
+          "conclusion": "success",
+          "startedAt": "2026-10-06T06:53:10Z",
+          "completedAt": "2026-10-06T06:53:12Z",
+          "tests": 1,
+          "pass": 1,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0,
+          "range": {
+            "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-6e2-ci-terminal-observer-dbbc0b1231e543eb99e18eb9bbe45370\\native-terminal.stdout.log",
+            "startByte": 514224,
+            "endByte": 518475
+          }
+        },
+        {
+          "step": 88,
+          "fixture": "scripts/db/cutover/postgres-guardrail-admission-adapter-v352.native.test.mjs",
+          "yamlStep": 86,
+          "workflowLine": 534,
+          "number": 88,
+          "status": "completed",
+          "conclusion": "success",
+          "startedAt": "2026-10-06T06:53:12Z",
+          "completedAt": "2026-10-06T06:53:14Z",
+          "tests": 1,
+          "pass": 1,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0,
+          "range": {
+            "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-6e2-ci-terminal-observer-dbbc0b1231e543eb99e18eb9bbe45370\\native-terminal.stdout.log",
+            "startByte": 518475,
+            "endByte": 523851
+          }
+        },
+        {
+          "step": 89,
+          "fixture": "scripts/db/cutover/postgres-shared-key-buyer-budget-receipt-v2.native.test.mjs",
+          "yamlStep": 87,
+          "workflowLine": 537,
+          "number": 89,
+          "status": "completed",
+          "conclusion": "success",
+          "startedAt": "2026-10-06T06:53:14Z",
+          "completedAt": "2026-10-06T06:53:16Z",
+          "tests": 1,
+          "pass": 1,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0,
+          "range": {
+            "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-6e2-ci-terminal-observer-dbbc0b1231e543eb99e18eb9bbe45370\\native-terminal.stdout.log",
+            "startByte": 523851,
+            "endByte": 528111
+          }
+        },
+        {
+          "step": 90,
+          "fixture": "scripts/db/cutover/postgres-shared-key-buyer-receipt-retention-v346.native.test.mjs",
+          "yamlStep": 88,
+          "workflowLine": 540,
+          "number": 90,
+          "status": "completed",
+          "conclusion": "failure",
+          "startedAt": "2026-10-06T06:53:16Z",
+          "completedAt": "2026-10-06T06:53:21Z",
+          "tests": 1,
+          "pass": 0,
+          "fail": 1,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0,
+          "range": {
+            "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-6e2-ci-terminal-observer-dbbc0b1231e543eb99e18eb9bbe45370\\native-terminal.stdout.log",
+            "startByte": 528111,
+            "endByte": 537587
+          }
+        },
+        {
+          "step": 91,
+          "fixture": "scripts/db/cutover/postgres-runtime-privilege-transition-v345.native.test.mjs",
+          "yamlStep": 89,
+          "workflowLine": 543,
+          "number": 91,
+          "status": "completed",
+          "conclusion": "skipped",
+          "startedAt": "2026-10-06T06:53:21Z",
+          "completedAt": "2026-10-06T06:53:21Z",
+          "tests": null,
+          "pass": null,
+          "fail": null,
+          "cancelled": null,
+          "skipped": null,
+          "todo": null,
+          "range": null
+        },
+        {
+          "step": 92,
+          "fixture": "scripts/db/cutover/postgres-buyer-critical-writer-split-v346.native.test.mjs",
+          "yamlStep": 90,
+          "workflowLine": 546,
+          "number": 92,
+          "status": "completed",
+          "conclusion": "skipped",
+          "startedAt": "2026-10-06T06:53:21Z",
+          "completedAt": "2026-10-06T06:53:21Z",
+          "tests": null,
+          "pass": null,
+          "fail": null,
+          "cancelled": null,
+          "skipped": null,
+          "todo": null,
+          "range": null
+        },
+        {
+          "step": 93,
+          "fixture": "scripts/db/cutover/postgres-shared-key-economic-buyer-login-v347.native.test.mjs",
+          "yamlStep": 91,
+          "workflowLine": 549,
+          "number": 93,
+          "status": "completed",
+          "conclusion": "skipped",
+          "startedAt": "2026-10-06T06:53:21Z",
+          "completedAt": "2026-10-06T06:53:21Z",
+          "tests": null,
+          "pass": null,
+          "fail": null,
+          "cancelled": null,
+          "skipped": null,
+          "todo": null,
+          "range": null
+        },
+        {
+          "step": 94,
+          "fixture": "scripts/db/cutover/postgres-shared-key-guardrail-post-reservation-denial-v348-runtime-buyer-client-successor.native.test.mjs",
+          "yamlStep": 92,
+          "workflowLine": 552,
+          "number": 94,
+          "status": "completed",
+          "conclusion": "skipped",
+          "startedAt": "2026-10-06T06:53:21Z",
+          "completedAt": "2026-10-06T06:53:21Z",
+          "tests": null,
+          "pass": null,
+          "fail": null,
+          "cancelled": null,
+          "skipped": null,
+          "todo": null,
+          "range": null
+        },
+        {
+          "step": 95,
+          "fixture": "scripts/db/cutover/postgres-buyer-split-grant-rerun-v348.native.test.mjs",
+          "yamlStep": 93,
+          "workflowLine": 555,
+          "number": 95,
+          "status": "completed",
+          "conclusion": "skipped",
+          "startedAt": "2026-10-06T06:53:21Z",
+          "completedAt": "2026-10-06T06:53:21Z",
+          "tests": null,
+          "pass": null,
+          "fail": null,
+          "cancelled": null,
+          "skipped": null,
+          "todo": null,
+          "range": null
+        },
+        {
+          "step": 96,
+          "fixture": "scripts/db/cutover/postgres-buyer-split-guardrail-v349.native.test.mjs",
+          "yamlStep": 94,
+          "workflowLine": 558,
+          "number": 96,
+          "status": "completed",
+          "conclusion": "skipped",
+          "startedAt": "2026-10-06T06:53:21Z",
+          "completedAt": "2026-10-06T06:53:21Z",
+          "tests": null,
+          "pass": null,
+          "fail": null,
+          "cancelled": null,
+          "skipped": null,
+          "todo": null,
+          "range": null
+        },
+        {
+          "step": 97,
+          "fixture": "scripts/db/cutover/postgres-shared-key-stats-auth-boundary-v346.native.test.mjs",
+          "yamlStep": 95,
+          "workflowLine": 561,
+          "number": 97,
+          "status": "completed",
+          "conclusion": "skipped",
+          "startedAt": "2026-10-06T06:53:21Z",
+          "completedAt": "2026-10-06T06:53:21Z",
+          "tests": null,
+          "pass": null,
+          "fail": null,
+          "cancelled": null,
+          "skipped": null,
+          "todo": null,
+          "range": null
+        },
+        {
+          "step": 98,
+          "fixture": "scripts/db/cutover/postgres-shared-key-stats-signed-claim-v348.native.test.mjs",
+          "yamlStep": 96,
+          "workflowLine": 564,
+          "number": 98,
+          "status": "completed",
+          "conclusion": "skipped",
+          "startedAt": "2026-10-06T06:53:21Z",
+          "completedAt": "2026-10-06T06:53:21Z",
+          "tests": null,
+          "pass": null,
+          "fail": null,
+          "cancelled": null,
+          "skipped": null,
+          "todo": null,
+          "range": null
+        },
+        {
+          "step": 99,
+          "fixture": "scripts/db/cutover/postgres-shared-key-stats-claim-reader-v349-cjs-loader-successor.native.test.mjs",
+          "yamlStep": 97,
+          "workflowLine": 567,
+          "number": 99,
+          "status": "completed",
+          "conclusion": "skipped",
+          "startedAt": "2026-10-06T06:53:21Z",
+          "completedAt": "2026-10-06T06:53:21Z",
+          "tests": null,
+          "pass": null,
+          "fail": null,
+          "cancelled": null,
+          "skipped": null,
+          "todo": null,
+          "range": null
+        },
+        {
+          "step": 100,
+          "fixture": "scripts/db/cutover/postgres-shared-key-snapshot-earning-consumer-v2.native.test.mjs",
+          "yamlStep": 98,
+          "workflowLine": 570,
+          "number": 100,
+          "status": "completed",
+          "conclusion": "skipped",
+          "startedAt": "2026-10-06T06:53:21Z",
+          "completedAt": "2026-10-06T06:53:21Z",
+          "tests": null,
+          "pass": null,
+          "fail": null,
+          "cancelled": null,
+          "skipped": null,
+          "todo": null,
+          "range": null
+        },
+        {
+          "step": 101,
+          "fixture": "scripts/db/cutover/postgres-shared-key-economic-delivery.native.test.mjs",
+          "yamlStep": 99,
+          "workflowLine": 573,
+          "number": 101,
+          "status": "completed",
+          "conclusion": "skipped",
+          "startedAt": "2026-10-06T06:53:21Z",
+          "completedAt": "2026-10-06T06:53:21Z",
+          "tests": null,
+          "pass": null,
+          "fail": null,
+          "cancelled": null,
+          "skipped": null,
+          "todo": null,
+          "range": null
+        },
+        {
+          "step": 102,
+          "fixture": "scripts/db/cutover/postgres-shared-earning-scanner-v350.native.test.mjs",
+          "yamlStep": 100,
+          "workflowLine": 576,
+          "number": 102,
+          "status": "completed",
+          "conclusion": "skipped",
+          "startedAt": "2026-10-06T06:53:21Z",
+          "completedAt": "2026-10-06T06:53:21Z",
+          "tests": null,
+          "pass": null,
+          "fail": null,
+          "cancelled": null,
+          "skipped": null,
+          "todo": null,
+          "range": null
+        },
+        {
+          "step": 103,
+          "fixture": "scripts/db/cutover/postgres-shared-earning-backlog-v353.native.test.mjs",
+          "yamlStep": 101,
+          "workflowLine": 579,
+          "number": 103,
+          "status": "completed",
+          "conclusion": "skipped",
+          "startedAt": "2026-10-06T06:53:21Z",
+          "completedAt": "2026-10-06T06:53:21Z",
+          "tests": null,
+          "pass": null,
+          "fail": null,
+          "cancelled": null,
+          "skipped": null,
+          "todo": null,
+          "range": null
+        },
+        {
+          "step": 104,
+          "fixture": "scripts/db/cutover/postgres-shared-key-credited-usage-gap.native.test.mjs",
+          "yamlStep": 102,
+          "workflowLine": 582,
+          "number": 104,
+          "status": "completed",
+          "conclusion": "skipped",
+          "startedAt": "2026-10-06T06:53:21Z",
+          "completedAt": "2026-10-06T06:53:21Z",
+          "tests": null,
+          "pass": null,
+          "fail": null,
+          "cancelled": null,
+          "skipped": null,
+          "todo": null,
+          "range": null
+        },
+        {
+          "step": 105,
+          "fixture": "scripts/db/cutover/postgres-shared-key-credited-usage-store.native.test.mjs",
+          "yamlStep": 103,
+          "workflowLine": 585,
+          "number": 105,
+          "status": "completed",
+          "conclusion": "skipped",
+          "startedAt": "2026-10-06T06:53:21Z",
+          "completedAt": "2026-10-06T06:53:21Z",
+          "tests": null,
+          "pass": null,
+          "fail": null,
+          "cancelled": null,
+          "skipped": null,
+          "todo": null,
+          "range": null
+        },
+        {
+          "step": 106,
+          "fixture": "scripts/db/cutover/postgres-shared-key-credited-usage-reader.native.test.mjs",
+          "yamlStep": 104,
+          "workflowLine": 588,
+          "number": 106,
+          "status": "completed",
+          "conclusion": "skipped",
+          "startedAt": "2026-10-06T06:53:21Z",
+          "completedAt": "2026-10-06T06:53:21Z",
+          "tests": null,
+          "pass": null,
+          "fail": null,
+          "cancelled": null,
+          "skipped": null,
+          "todo": null,
+          "range": null
+        },
+        {
+          "step": 107,
+          "fixture": "scripts/db/cutover/postgres-recovery-old-database-upgrade.native.test.mjs",
+          "yamlStep": 105,
+          "workflowLine": 591,
+          "number": 107,
+          "status": "completed",
+          "conclusion": "skipped",
+          "startedAt": "2026-10-06T06:53:21Z",
+          "completedAt": "2026-10-06T06:53:21Z",
+          "tests": null,
+          "pass": null,
+          "fail": null,
+          "cancelled": null,
+          "skipped": null,
+          "todo": null,
+          "range": null
+        },
+        {
+          "step": 108,
+          "fixture": "scripts/db/cutover/build-request-legacy-parent-census.native.test.mjs",
+          "yamlStep": 106,
+          "workflowLine": 594,
+          "number": 108,
+          "status": "completed",
+          "conclusion": "skipped",
+          "startedAt": "2026-10-06T06:53:21Z",
+          "completedAt": "2026-10-06T06:53:21Z",
+          "tests": null,
+          "pass": null,
+          "fail": null,
+          "cancelled": null,
+          "skipped": null,
+          "todo": null,
+          "range": null
+        },
+        {
+          "step": 109,
+          "fixture": "scripts/db/cutover/postgres-replay-reservations-backend-lifecycle-successor.native.test.mjs",
+          "yamlStep": 107,
+          "workflowLine": 597,
+          "number": 109,
+          "status": "completed",
+          "conclusion": "skipped",
+          "startedAt": "2026-10-06T06:53:21Z",
+          "completedAt": "2026-10-06T06:53:21Z",
+          "tests": null,
+          "pass": null,
+          "fail": null,
+          "cancelled": null,
+          "skipped": null,
+          "todo": null,
+          "range": null
+        },
+        {
+          "step": 110,
+          "fixture": "scripts/db/cutover/postgres-legacy-parent-activation.native.test.mjs",
+          "yamlStep": 108,
+          "workflowLine": 600,
+          "number": 110,
+          "status": "completed",
+          "conclusion": "skipped",
+          "startedAt": "2026-10-06T06:53:21Z",
+          "completedAt": "2026-10-06T06:53:21Z",
+          "tests": null,
+          "pass": null,
+          "fail": null,
+          "cancelled": null,
+          "skipped": null,
+          "todo": null,
+          "range": null
+        },
+        {
+          "step": 111,
+          "fixture": "scripts/db/cutover/build-postgres-recovery-retention-review.native.test.mjs",
+          "yamlStep": 109,
+          "workflowLine": 603,
+          "number": 111,
+          "status": "completed",
+          "conclusion": "skipped",
+          "startedAt": "2026-10-06T06:53:21Z",
+          "completedAt": "2026-10-06T06:53:21Z",
+          "tests": null,
+          "pass": null,
+          "fail": null,
+          "cancelled": null,
+          "skipped": null,
+          "todo": null,
+          "range": null
+        },
+        {
+          "step": 112,
+          "fixture": "packages/core/src/storage/management-workspaces.postgres-native.test.mjs",
+          "yamlStep": 110,
+          "workflowLine": 606,
+          "number": 112,
+          "status": "completed",
+          "conclusion": "skipped",
+          "startedAt": "2026-10-06T06:53:21Z",
+          "completedAt": "2026-10-06T06:53:21Z",
+          "tests": null,
+          "pass": null,
+          "fail": null,
+          "cancelled": null,
+          "skipped": null,
+          "todo": null,
+          "range": null
+        },
+        {
+          "step": 113,
+          "fixture": "scripts/db/cutover/postgres-user-delete-audit.native.test.mjs",
+          "yamlStep": 111,
+          "workflowLine": 609,
+          "number": 113,
+          "status": "completed",
+          "conclusion": "skipped",
+          "startedAt": "2026-10-06T06:53:21Z",
+          "completedAt": "2026-10-06T06:53:21Z",
+          "tests": null,
+          "pass": null,
+          "fail": null,
+          "cancelled": null,
+          "skipped": null,
+          "todo": null,
+          "range": null
+        }
+      ]
+    },
+    "chain55to113": {
+      "count": 59,
+      "actualCounts": {
+        "success": 35,
+        "failure": 1,
+        "skipped": 23
+      },
+      "steps": [
+        {
+          "step": 55,
+          "conclusion": "success",
+          "tests": 1,
+          "pass": 1,
+          "fail": 0,
+          "skipped": 0
+        },
+        {
+          "step": 56,
+          "conclusion": "success",
+          "tests": 1,
+          "pass": 1,
+          "fail": 0,
+          "skipped": 0
+        },
+        {
+          "step": 57,
+          "conclusion": "success",
+          "tests": 1,
+          "pass": 1,
+          "fail": 0,
+          "skipped": 0
+        },
+        {
+          "step": 58,
+          "conclusion": "success",
+          "tests": 1,
+          "pass": 1,
+          "fail": 0,
+          "skipped": 0
+        },
+        {
+          "step": 59,
+          "conclusion": "success",
+          "tests": 1,
+          "pass": 1,
+          "fail": 0,
+          "skipped": 0
+        },
+        {
+          "step": 60,
+          "conclusion": "success",
+          "tests": 1,
+          "pass": 1,
+          "fail": 0,
+          "skipped": 0
+        },
+        {
+          "step": 61,
+          "conclusion": "success",
+          "tests": 1,
+          "pass": 1,
+          "fail": 0,
+          "skipped": 0
+        },
+        {
+          "step": 62,
+          "conclusion": "success",
+          "tests": 1,
+          "pass": 1,
+          "fail": 0,
+          "skipped": 0
+        },
+        {
+          "step": 63,
+          "conclusion": "success",
+          "tests": 1,
+          "pass": 1,
+          "fail": 0,
+          "skipped": 0
+        },
+        {
+          "step": 64,
+          "conclusion": "success",
+          "tests": 1,
+          "pass": 1,
+          "fail": 0,
+          "skipped": 0
+        },
+        {
+          "step": 65,
+          "conclusion": "success",
+          "tests": 1,
+          "pass": 1,
+          "fail": 0,
+          "skipped": 0
+        },
+        {
+          "step": 66,
+          "conclusion": "success",
+          "tests": 1,
+          "pass": 1,
+          "fail": 0,
+          "skipped": 0
+        },
+        {
+          "step": 67,
+          "conclusion": "success",
+          "tests": 1,
+          "pass": 1,
+          "fail": 0,
+          "skipped": 0
+        },
+        {
+          "step": 68,
+          "conclusion": "success",
+          "tests": 1,
+          "pass": 1,
+          "fail": 0,
+          "skipped": 0
+        },
+        {
+          "step": 69,
+          "conclusion": "success",
+          "tests": 1,
+          "pass": 1,
+          "fail": 0,
+          "skipped": 0
+        },
+        {
+          "step": 70,
+          "conclusion": "success",
+          "tests": 1,
+          "pass": 1,
+          "fail": 0,
+          "skipped": 0
+        },
+        {
+          "step": 71,
+          "conclusion": "success",
+          "tests": 1,
+          "pass": 1,
+          "fail": 0,
+          "skipped": 0
+        },
+        {
+          "step": 72,
+          "conclusion": "success",
+          "tests": 1,
+          "pass": 1,
+          "fail": 0,
+          "skipped": 0
+        },
+        {
+          "step": 73,
+          "conclusion": "success",
+          "tests": 1,
+          "pass": 1,
+          "fail": 0,
+          "skipped": 0
+        },
+        {
+          "step": 74,
+          "conclusion": "success",
+          "tests": 1,
+          "pass": 1,
+          "fail": 0,
+          "skipped": 0
+        },
+        {
+          "step": 75,
+          "conclusion": "success",
+          "tests": 1,
+          "pass": 1,
+          "fail": 0,
+          "skipped": 0
+        },
+        {
+          "step": 76,
+          "conclusion": "success",
+          "tests": 1,
+          "pass": 1,
+          "fail": 0,
+          "skipped": 0
+        },
+        {
+          "step": 77,
+          "conclusion": "success",
+          "tests": 1,
+          "pass": 1,
+          "fail": 0,
+          "skipped": 0
+        },
+        {
+          "step": 78,
+          "conclusion": "success",
+          "tests": 1,
+          "pass": 1,
+          "fail": 0,
+          "skipped": 0
+        },
+        {
+          "step": 79,
+          "conclusion": "success",
+          "tests": 1,
+          "pass": 1,
+          "fail": 0,
+          "skipped": 0
+        },
+        {
+          "step": 80,
+          "conclusion": "success",
+          "tests": 1,
+          "pass": 1,
+          "fail": 0,
+          "skipped": 0
+        },
+        {
+          "step": 81,
+          "conclusion": "success",
+          "tests": 1,
+          "pass": 1,
+          "fail": 0,
+          "skipped": 0
+        },
+        {
+          "step": 82,
+          "conclusion": "success",
+          "tests": 1,
+          "pass": 1,
+          "fail": 0,
+          "skipped": 0
+        },
+        {
+          "step": 83,
+          "conclusion": "success",
+          "tests": 1,
+          "pass": 1,
+          "fail": 0,
+          "skipped": 0
+        },
+        {
+          "step": 84,
+          "conclusion": "success",
+          "tests": 1,
+          "pass": 1,
+          "fail": 0,
+          "skipped": 0
+        },
+        {
+          "step": 85,
+          "conclusion": "success",
+          "tests": 1,
+          "pass": 1,
+          "fail": 0,
+          "skipped": 0
+        },
+        {
+          "step": 86,
+          "conclusion": "success",
+          "tests": 1,
+          "pass": 1,
+          "fail": 0,
+          "skipped": 0
+        },
+        {
+          "step": 87,
+          "conclusion": "success",
+          "tests": 1,
+          "pass": 1,
+          "fail": 0,
+          "skipped": 0
+        },
+        {
+          "step": 88,
+          "conclusion": "success",
+          "tests": 1,
+          "pass": 1,
+          "fail": 0,
+          "skipped": 0
+        },
+        {
+          "step": 89,
+          "conclusion": "success",
+          "tests": 1,
+          "pass": 1,
+          "fail": 0,
+          "skipped": 0
+        },
+        {
+          "step": 90,
+          "conclusion": "failure",
+          "tests": 1,
+          "pass": 0,
+          "fail": 1,
+          "skipped": 0
+        },
+        {
+          "step": 91,
+          "conclusion": "skipped",
+          "tests": null,
+          "pass": null,
+          "fail": null,
+          "skipped": null
+        },
+        {
+          "step": 92,
+          "conclusion": "skipped",
+          "tests": null,
+          "pass": null,
+          "fail": null,
+          "skipped": null
+        },
+        {
+          "step": 93,
+          "conclusion": "skipped",
+          "tests": null,
+          "pass": null,
+          "fail": null,
+          "skipped": null
+        },
+        {
+          "step": 94,
+          "conclusion": "skipped",
+          "tests": null,
+          "pass": null,
+          "fail": null,
+          "skipped": null
+        },
+        {
+          "step": 95,
+          "conclusion": "skipped",
+          "tests": null,
+          "pass": null,
+          "fail": null,
+          "skipped": null
+        },
+        {
+          "step": 96,
+          "conclusion": "skipped",
+          "tests": null,
+          "pass": null,
+          "fail": null,
+          "skipped": null
+        },
+        {
+          "step": 97,
+          "conclusion": "skipped",
+          "tests": null,
+          "pass": null,
+          "fail": null,
+          "skipped": null
+        },
+        {
+          "step": 98,
+          "conclusion": "skipped",
+          "tests": null,
+          "pass": null,
+          "fail": null,
+          "skipped": null
+        },
+        {
+          "step": 99,
+          "conclusion": "skipped",
+          "tests": null,
+          "pass": null,
+          "fail": null,
+          "skipped": null
+        },
+        {
+          "step": 100,
+          "conclusion": "skipped",
+          "tests": null,
+          "pass": null,
+          "fail": null,
+          "skipped": null
+        },
+        {
+          "step": 101,
+          "conclusion": "skipped",
+          "tests": null,
+          "pass": null,
+          "fail": null,
+          "skipped": null
+        },
+        {
+          "step": 102,
+          "conclusion": "skipped",
+          "tests": null,
+          "pass": null,
+          "fail": null,
+          "skipped": null
+        },
+        {
+          "step": 103,
+          "conclusion": "skipped",
+          "tests": null,
+          "pass": null,
+          "fail": null,
+          "skipped": null
+        },
+        {
+          "step": 104,
+          "conclusion": "skipped",
+          "tests": null,
+          "pass": null,
+          "fail": null,
+          "skipped": null
+        },
+        {
+          "step": 105,
+          "conclusion": "skipped",
+          "tests": null,
+          "pass": null,
+          "fail": null,
+          "skipped": null
+        },
+        {
+          "step": 106,
+          "conclusion": "skipped",
+          "tests": null,
+          "pass": null,
+          "fail": null,
+          "skipped": null
+        },
+        {
+          "step": 107,
+          "conclusion": "skipped",
+          "tests": null,
+          "pass": null,
+          "fail": null,
+          "skipped": null
+        },
+        {
+          "step": 108,
+          "conclusion": "skipped",
+          "tests": null,
+          "pass": null,
+          "fail": null,
+          "skipped": null
+        },
+        {
+          "step": 109,
+          "conclusion": "skipped",
+          "tests": null,
+          "pass": null,
+          "fail": null,
+          "skipped": null
+        },
+        {
+          "step": 110,
+          "conclusion": "skipped",
+          "tests": null,
+          "pass": null,
+          "fail": null,
+          "skipped": null
+        },
+        {
+          "step": 111,
+          "conclusion": "skipped",
+          "tests": null,
+          "pass": null,
+          "fail": null,
+          "skipped": null
+        },
+        {
+          "step": 112,
+          "conclusion": "skipped",
+          "tests": null,
+          "pass": null,
+          "fail": null,
+          "skipped": null
+        },
+        {
+          "step": 113,
+          "conclusion": "skipped",
+          "tests": null,
+          "pass": null,
+          "fail": null,
+          "skipped": null
+        }
+      ]
+    },
+    "target26": {
+      "count": 26,
+      "actualCounts": {
+        "success": 20,
+        "skipped": 6
+      },
+      "steps": [
+        {
+          "step": 60,
+          "conclusion": "success",
+          "tests": 1,
+          "pass": 1,
+          "fail": 0,
+          "skipped": 0
+        },
+        {
+          "step": 61,
+          "conclusion": "success",
+          "tests": 1,
+          "pass": 1,
+          "fail": 0,
+          "skipped": 0
+        },
+        {
+          "step": 66,
+          "conclusion": "success",
+          "tests": 1,
+          "pass": 1,
+          "fail": 0,
+          "skipped": 0
+        },
+        {
+          "step": 69,
+          "conclusion": "success",
+          "tests": 1,
+          "pass": 1,
+          "fail": 0,
+          "skipped": 0
+        },
+        {
+          "step": 71,
+          "conclusion": "success",
+          "tests": 1,
+          "pass": 1,
+          "fail": 0,
+          "skipped": 0
+        },
+        {
+          "step": 72,
+          "conclusion": "success",
+          "tests": 1,
+          "pass": 1,
+          "fail": 0,
+          "skipped": 0
+        },
+        {
+          "step": 73,
+          "conclusion": "success",
+          "tests": 1,
+          "pass": 1,
+          "fail": 0,
+          "skipped": 0
+        },
+        {
+          "step": 74,
+          "conclusion": "success",
+          "tests": 1,
+          "pass": 1,
+          "fail": 0,
+          "skipped": 0
+        },
+        {
+          "step": 75,
+          "conclusion": "success",
+          "tests": 1,
+          "pass": 1,
+          "fail": 0,
+          "skipped": 0
+        },
+        {
+          "step": 76,
+          "conclusion": "success",
+          "tests": 1,
+          "pass": 1,
+          "fail": 0,
+          "skipped": 0
+        },
+        {
+          "step": 77,
+          "conclusion": "success",
+          "tests": 1,
+          "pass": 1,
+          "fail": 0,
+          "skipped": 0
+        },
+        {
+          "step": 78,
+          "conclusion": "success",
+          "tests": 1,
+          "pass": 1,
+          "fail": 0,
+          "skipped": 0
+        },
+        {
+          "step": 80,
+          "conclusion": "success",
+          "tests": 1,
+          "pass": 1,
+          "fail": 0,
+          "skipped": 0
+        },
+        {
+          "step": 81,
+          "conclusion": "success",
+          "tests": 1,
+          "pass": 1,
+          "fail": 0,
+          "skipped": 0
+        },
+        {
+          "step": 82,
+          "conclusion": "success",
+          "tests": 1,
+          "pass": 1,
+          "fail": 0,
+          "skipped": 0
+        },
+        {
+          "step": 83,
+          "conclusion": "success",
+          "tests": 1,
+          "pass": 1,
+          "fail": 0,
+          "skipped": 0
+        },
+        {
+          "step": 84,
+          "conclusion": "success",
+          "tests": 1,
+          "pass": 1,
+          "fail": 0,
+          "skipped": 0
+        },
+        {
+          "step": 85,
+          "conclusion": "success",
+          "tests": 1,
+          "pass": 1,
+          "fail": 0,
+          "skipped": 0
+        },
+        {
+          "step": 86,
+          "conclusion": "success",
+          "tests": 1,
+          "pass": 1,
+          "fail": 0,
+          "skipped": 0
+        },
+        {
+          "step": 88,
+          "conclusion": "success",
+          "tests": 1,
+          "pass": 1,
+          "fail": 0,
+          "skipped": 0
+        },
+        {
+          "step": 95,
+          "conclusion": "skipped",
+          "tests": null,
+          "pass": null,
+          "fail": null,
+          "skipped": null
+        },
+        {
+          "step": 96,
+          "conclusion": "skipped",
+          "tests": null,
+          "pass": null,
+          "fail": null,
+          "skipped": null
+        },
+        {
+          "step": 97,
+          "conclusion": "skipped",
+          "tests": null,
+          "pass": null,
+          "fail": null,
+          "skipped": null
+        },
+        {
+          "step": 98,
+          "conclusion": "skipped",
+          "tests": null,
+          "pass": null,
+          "fail": null,
+          "skipped": null
+        },
+        {
+          "step": 99,
+          "conclusion": "skipped",
+          "tests": null,
+          "pass": null,
+          "fail": null,
+          "skipped": null
+        },
+        {
+          "step": 106,
+          "conclusion": "skipped",
+          "tests": null,
+          "pass": null,
+          "fail": null,
+          "skipped": null
+        }
+      ]
+    },
+    "remaining6": {
+      "count": 6,
+      "actualCounts": {
+        "skipped": 6
+      },
+      "steps": [
+        {
+          "step": 95,
+          "conclusion": "skipped",
+          "tests": null,
+          "pass": null,
+          "fail": null,
+          "skipped": null
+        },
+        {
+          "step": 96,
+          "conclusion": "skipped",
+          "tests": null,
+          "pass": null,
+          "fail": null,
+          "skipped": null
+        },
+        {
+          "step": 97,
+          "conclusion": "skipped",
+          "tests": null,
+          "pass": null,
+          "fail": null,
+          "skipped": null
+        },
+        {
+          "step": 98,
+          "conclusion": "skipped",
+          "tests": null,
+          "pass": null,
+          "fail": null,
+          "skipped": null
+        },
+        {
+          "step": 99,
+          "conclusion": "skipped",
+          "tests": null,
+          "pass": null,
+          "fail": null,
+          "skipped": null
+        },
+        {
+          "step": 106,
+          "conclusion": "skipped",
+          "tests": null,
+          "pass": null,
+          "fail": null,
+          "skipped": null
+        }
+      ]
+    },
+    "frozen94": {
+      "yamlStep": 92,
+      "workflowLine": 552,
+      "fixture": "scripts/db/cutover/postgres-shared-key-guardrail-post-reservation-denial-v348-runtime-buyer-client-successor.native.test.mjs",
+      "step": 94,
+      "actual": {
+        "number": 94,
+        "status": "completed",
+        "conclusion": "skipped",
+        "startedAt": "2026-10-06T06:53:21Z",
+        "completedAt": "2026-10-06T06:53:21Z"
+      },
+      "tap": null
+    },
+    "frozen109": {
+      "yamlStep": 107,
+      "workflowLine": 597,
+      "fixture": "scripts/db/cutover/postgres-replay-reservations-backend-lifecycle-successor.native.test.mjs",
+      "step": 109,
+      "actual": {
+        "number": 109,
+        "status": "completed",
+        "conclusion": "skipped",
+        "startedAt": "2026-10-06T06:53:21Z",
+        "completedAt": "2026-10-06T06:53:21Z"
+      },
+      "tap": null
+    },
+    "tail110to113": [
+      {
+        "yamlStep": 108,
+        "workflowLine": 600,
+        "fixture": "scripts/db/cutover/postgres-legacy-parent-activation.native.test.mjs",
+        "step": 110,
+        "actual": {
+          "number": 110,
+          "status": "completed",
+          "conclusion": "skipped",
+          "startedAt": "2026-10-06T06:53:21Z",
+          "completedAt": "2026-10-06T06:53:21Z"
+        },
+        "tap": null
+      },
+      {
+        "yamlStep": 109,
+        "workflowLine": 603,
+        "fixture": "scripts/db/cutover/build-postgres-recovery-retention-review.native.test.mjs",
+        "step": 111,
+        "actual": {
+          "number": 111,
+          "status": "completed",
+          "conclusion": "skipped",
+          "startedAt": "2026-10-06T06:53:21Z",
+          "completedAt": "2026-10-06T06:53:21Z"
+        },
+        "tap": null
+      },
+      {
+        "yamlStep": 110,
+        "workflowLine": 606,
+        "fixture": "packages/core/src/storage/management-workspaces.postgres-native.test.mjs",
+        "step": 112,
+        "actual": {
+          "number": 112,
+          "status": "completed",
+          "conclusion": "skipped",
+          "startedAt": "2026-10-06T06:53:21Z",
+          "completedAt": "2026-10-06T06:53:21Z"
+        },
+        "tap": null
+      },
+      {
+        "yamlStep": 111,
+        "workflowLine": 609,
+        "fixture": "scripts/db/cutover/postgres-user-delete-audit.native.test.mjs",
+        "step": 113,
+        "actual": {
+          "number": 113,
+          "status": "completed",
+          "conclusion": "skipped",
+          "startedAt": "2026-10-06T06:53:21Z",
+          "completedAt": "2026-10-06T06:53:21Z"
+        },
+        "tap": null
+      }
+    ]
+  },
+  "dispatch": {
+    "jobId": 112142275908,
+    "status": "completed",
+    "conclusion": "failure",
+    "firstFailure": {
+      "actual": {
+        "number": 27,
+        "status": "completed",
+        "conclusion": "failure",
+        "startedAt": "2026-10-06T06:42:56Z",
+        "completedAt": "2026-10-06T06:42:59Z",
+        "name": "Run node --import tsx --test scripts/staging/chat-holder-binding-v364.node.test.mjs scripts/staging/chat-holder-binding-v364-http-cancel-successor.test.mjs"
+      },
+      "tap": {
+        "range": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-6e2-ci-terminal-observer-dbbc0b1231e543eb99e18eb9bbe45370\\dispatch-terminal.stdout.log",
+          "startByte": 5139595,
+          "endByte": 5161564
+        },
+        "counters": {
+          "tests": {
+            "value": 8,
+            "byteOffset": 5157011
+          },
+          "suites": {
+            "value": 0,
+            "byteOffset": 5157222
+          },
+          "pass": {
+            "value": 7,
+            "byteOffset": 5157434
+          },
+          "fail": {
+            "value": 1,
+            "byteOffset": 5157644
+          },
+          "cancelled": {
+            "value": 0,
+            "byteOffset": 5157854
+          },
+          "skipped": {
+            "value": 0,
+            "byteOffset": 5158069
+          },
+          "todo": {
+            "value": 0,
+            "byteOffset": 5158282
+          }
+        },
+        "exitCodes": [
+          {
+            "value": 1,
+            "byteOffset": 5158728
+          }
+        ],
+        "failedSubtests": [
+          {
+            "number": 5,
+            "name": "response-body cancellation is observed inside the private holder",
+            "byteOffset": 5147280
+          }
+        ],
+        "subtests": [
+          {
+            "name": "v364 configs keep the synthetic holder private and bind only the named holder",
+            "byteOffset": 5141190
+          },
+          {
+            "name": "HTTP fixture cancellation closes its dedicated TCP response before completion",
+            "byteOffset": 5142621
+          },
+          {
+            "name": "private Worker rejects oversized, foreign, and malformed six-field requests without disclosing holder data",
+            "byteOffset": 5144053
+          },
+          {
+            "name": "one holder Response streams through the Service Binding before its final chunk is released",
+            "byteOffset": 5145544
+          },
+          {
+            "name": "response-body cancellation is observed inside the private holder",
+            "byteOffset": 5147003
+          },
+          {
+            "name": "v364 in-process contract: private holder bounds and validates six fields; gateway forwards no auth or provider data",
+            "byteOffset": 5152324
+          },
+          {
+            "name": "v364 in-process contract: one Response yields a first chunk before holder release and cancellation reaches source",
+            "byteOffset": 5153832
+          },
+          {
+            "name": "v364 in-process cancellation retains the asynchronous holder observation in its request lifetime",
+            "byteOffset": 5155336
+          }
+        ],
+        "fields": {
+          "failureType": {
+            "value": "'testCodeFailure'",
+            "byteOffset": 5148353
+          },
+          "error": {
+            "value": "|-",
+            "byteOffset": 5148587
+          },
+          "code": {
+            "value": "'ERR_ASSERTION'",
+            "byteOffset": 5149680
+          },
+          "name": {
+            "value": "'AssertionError'",
+            "byteOffset": 5149905
+          },
+          "expected": {
+            "value": "'observed'",
+            "byteOffset": 5150131
+          },
+          "actual": {
+            "value": "~",
+            "byteOffset": 5150355
+          }
+        },
+        "locations": [
+          {
+            "source": "scripts/staging/chat-holder-binding-v364-http-cancel-successor.test.mjs:260:1",
+            "byteOffset": 5148274
+          },
+          {
+            "source": "file:///home/runner/work/cinatoken/cinatoken/packages/proxy/scripts/staging/chat-holder-binding-v364-http-cancel-successor.test.mjs:278:10",
+            "byteOffset": 5151238
+          }
+        ]
+      }
+    }
+  },
+  "realClosedInputs": [
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-6e2-ci-terminal-observer-dbbc0b1231e543eb99e18eb9bbe45370\\analyze-tool-syntax.closed.json",
+      "bytes": 901,
+      "sha256": "5f53f9fc9232c25843d26d8995e6097de89b12119142a8dc2576d30d94d58b46",
+      "actualExit": 0,
+      "signal": null,
+      "spawnError": null,
+      "error": null,
+      "stdout": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-6e2-ci-terminal-observer-dbbc0b1231e543eb99e18eb9bbe45370\\analyze-tool-syntax.stdout.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stderr": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-6e2-ci-terminal-observer-dbbc0b1231e543eb99e18eb9bbe45370\\analyze-tool-syntax.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-6e2-ci-terminal-observer-dbbc0b1231e543eb99e18eb9bbe45370\\collect-terminal.closed.json",
+      "bytes": 883,
+      "sha256": "1b53bed707fe348fe6d3268e58d725d06295b3ea2dd703660d622782d26f9b0d",
+      "actualExit": 0,
+      "signal": null,
+      "spawnError": null,
+      "error": null,
+      "stdout": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-6e2-ci-terminal-observer-dbbc0b1231e543eb99e18eb9bbe45370\\collect-terminal.stdout.log",
+        "bytes": 4015,
+        "sha256": "c9703532aca1e12163a1cda70c66ce7fe1d516a777f00d7aeec7ec46ea33df74"
+      },
+      "stderr": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-6e2-ci-terminal-observer-dbbc0b1231e543eb99e18eb9bbe45370\\collect-terminal.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-6e2-ci-terminal-observer-dbbc0b1231e543eb99e18eb9bbe45370\\collect-tool-syntax.closed.json",
+      "bytes": 901,
+      "sha256": "7d9e60c00be32f4fc9732d4d9df7bf3119fe306a18d372836cab669df198b834",
+      "actualExit": 0,
+      "signal": null,
+      "spawnError": null,
+      "error": null,
+      "stdout": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-6e2-ci-terminal-observer-dbbc0b1231e543eb99e18eb9bbe45370\\collect-tool-syntax.stdout.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stderr": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-6e2-ci-terminal-observer-dbbc0b1231e543eb99e18eb9bbe45370\\collect-tool-syntax.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-6e2-ci-terminal-observer-dbbc0b1231e543eb99e18eb9bbe45370\\commit-runs.closed.json",
+      "bytes": 1022,
+      "sha256": "d998e0fc796b9b95c66b39c8034fff6acb5a402ffd8f88e3eb0113050b95fb4a",
+      "actualExit": 0,
+      "signal": null,
+      "spawnError": null,
+      "error": null,
+      "stdout": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-6e2-ci-terminal-observer-dbbc0b1231e543eb99e18eb9bbe45370\\commit-runs.stdout.log",
+        "bytes": 1500,
+        "sha256": "1a8737c67d3ca1d1d4f1945c9e8843feed446eec3484ca0838976a220c4a40ec"
+      },
+      "stderr": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-6e2-ci-terminal-observer-dbbc0b1231e543eb99e18eb9bbe45370\\commit-runs.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-6e2-ci-terminal-observer-dbbc0b1231e543eb99e18eb9bbe45370\\compose-initial.closed.json",
+      "bytes": 957,
+      "sha256": "bc7d57e3d0169bf1521b9c7e8f46facbb58a48670aae4a4af8e9c1b25373355b",
+      "actualExit": 0,
+      "signal": null,
+      "spawnError": null,
+      "error": null,
+      "stdout": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-6e2-ci-terminal-observer-dbbc0b1231e543eb99e18eb9bbe45370\\compose-initial.stdout.log",
+        "bytes": 2424,
+        "sha256": "9cdcc5440049b54de4b8674fa599f11b3e5c8027db488324aad5748217ca1aca"
+      },
+      "stderr": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-6e2-ci-terminal-observer-dbbc0b1231e543eb99e18eb9bbe45370\\compose-initial.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-6e2-ci-terminal-observer-dbbc0b1231e543eb99e18eb9bbe45370\\compose-terminal.closed.json",
+      "bytes": 959,
+      "sha256": "11653d1f18eb27ab0a51b1aa7a71f9e7969e5c0d40a6fce9b8b95453acb1d552",
+      "actualExit": 0,
+      "signal": null,
+      "spawnError": null,
+      "error": null,
+      "stdout": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-6e2-ci-terminal-observer-dbbc0b1231e543eb99e18eb9bbe45370\\compose-terminal.stdout.log",
+        "bytes": 2645,
+        "sha256": "de4e21aee48c6056d52626ef860b50ad7e5cfdb246d8371f14c0c6034413ca91"
+      },
+      "stderr": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-6e2-ci-terminal-observer-dbbc0b1231e543eb99e18eb9bbe45370\\compose-terminal.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-6e2-ci-terminal-observer-dbbc0b1231e543eb99e18eb9bbe45370\\dispatch-terminal.closed.json",
+      "bytes": 918,
+      "sha256": "1fe8f50f3dbdca4e1b272ee71f19f9804bc7fb8f1578cab7e3643600a5cca3d6",
+      "actualExit": 0,
+      "signal": null,
+      "spawnError": null,
+      "error": null,
+      "stdout": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-6e2-ci-terminal-observer-dbbc0b1231e543eb99e18eb9bbe45370\\dispatch-terminal.stdout.log",
+        "bytes": 5161564,
+        "sha256": "03104a72d0feba1bbf242015c16c4aeeca6cd4edab9132f290700e5cadf3149b"
+      },
+      "stderr": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-6e2-ci-terminal-observer-dbbc0b1231e543eb99e18eb9bbe45370\\dispatch-terminal.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-6e2-ci-terminal-observer-dbbc0b1231e543eb99e18eb9bbe45370\\native-terminal.closed.json",
+      "bytes": 913,
+      "sha256": "4aff7f9b77c8d3895851fe77dc5fa50d6a5d815036e51b228bffb6e7b2266d1d",
+      "actualExit": 0,
+      "signal": null,
+      "spawnError": null,
+      "error": null,
+      "stdout": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-6e2-ci-terminal-observer-dbbc0b1231e543eb99e18eb9bbe45370\\native-terminal.stdout.log",
+        "bytes": 537587,
+        "sha256": "339c0ac8f83d71356a22f9f6d90988dc88db358d3206aea2025c78eca8fb7334"
+      },
+      "stderr": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-6e2-ci-terminal-observer-dbbc0b1231e543eb99e18eb9bbe45370\\native-terminal.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-6e2-ci-terminal-observer-dbbc0b1231e543eb99e18eb9bbe45370\\observe-initial.closed.json",
+      "bytes": 880,
+      "sha256": "6db03f573c838e65ab35da458887329bc381b97b7018ec068aad2a816c5b1181",
+      "actualExit": 0,
+      "signal": null,
+      "spawnError": null,
+      "error": null,
+      "stdout": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-6e2-ci-terminal-observer-dbbc0b1231e543eb99e18eb9bbe45370\\observe-initial.stdout.log",
+        "bytes": 4176,
+        "sha256": "3800d6784a2a3472f8f6e58088e0ab015c1f4a4b24f0e131cc21a3006ac8469d"
+      },
+      "stderr": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-6e2-ci-terminal-observer-dbbc0b1231e543eb99e18eb9bbe45370\\observe-initial.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-6e2-ci-terminal-observer-dbbc0b1231e543eb99e18eb9bbe45370\\observe-progress.closed.json",
+      "bytes": 883,
+      "sha256": "63e23a0d71ee9d563ab93ab8f4260387037085b35e8529d18f95d9933c8a643d",
+      "actualExit": 0,
+      "signal": null,
+      "spawnError": null,
+      "error": null,
+      "stdout": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-6e2-ci-terminal-observer-dbbc0b1231e543eb99e18eb9bbe45370\\observe-progress.stdout.log",
+        "bytes": 2362,
+        "sha256": "942401cc4eb348c4cf0528885b4de4a7e876e0889545466850738a330b85db85"
+      },
+      "stderr": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-6e2-ci-terminal-observer-dbbc0b1231e543eb99e18eb9bbe45370\\observe-progress.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-6e2-ci-terminal-observer-dbbc0b1231e543eb99e18eb9bbe45370\\original-proxy-workflow.closed.json",
+      "bytes": 872,
+      "sha256": "dfdff867f766e433595ac70f42f653883d987a6d36c3999971cc710ef176722e",
+      "actualExit": 0,
+      "signal": null,
+      "spawnError": null,
+      "error": null,
+      "stdout": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-6e2-ci-terminal-observer-dbbc0b1231e543eb99e18eb9bbe45370\\original-proxy-workflow.stdout.log",
+        "bytes": 45895,
+        "sha256": "8e883e7f21f77f8367d361f6bd3d060e16c241c28641b3eac85af6835841f152"
+      },
+      "stderr": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-6e2-ci-terminal-observer-dbbc0b1231e543eb99e18eb9bbe45370\\original-proxy-workflow.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-6e2-ci-terminal-observer-dbbc0b1231e543eb99e18eb9bbe45370\\prepare-map.closed.json",
+      "bytes": 867,
+      "sha256": "ccf64b17605d064e5bb0ab54af8e5d19234a86802bff9cd0cb247e3153dd60db",
+      "actualExit": 0,
+      "signal": null,
+      "spawnError": null,
+      "error": null,
+      "stdout": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-6e2-ci-terminal-observer-dbbc0b1231e543eb99e18eb9bbe45370\\prepare-map.stdout.log",
+        "bytes": 163,
+        "sha256": "e41c2241079f75f138b75796e81385392c20b513d19e9ea869a2e2fc5dba5f3a"
+      },
+      "stderr": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-6e2-ci-terminal-observer-dbbc0b1231e543eb99e18eb9bbe45370\\prepare-map.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-6e2-ci-terminal-observer-dbbc0b1231e543eb99e18eb9bbe45370\\prepare-watch-recovery.closed.json",
+      "bytes": 900,
+      "sha256": "ed83d3c07b20d05a09558a02a81233ce9e359ba1d1fdec7ec4eee42867be0340",
+      "actualExit": 0,
+      "signal": null,
+      "spawnError": null,
+      "error": null,
+      "stdout": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-6e2-ci-terminal-observer-dbbc0b1231e543eb99e18eb9bbe45370\\prepare-watch-recovery.stdout.log",
+        "bytes": 121,
+        "sha256": "efed5facf8748f953814fde2b25f8ff7c51ea8ac3eaf07fb4f82a794bf0d4d5f"
+      },
+      "stderr": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-6e2-ci-terminal-observer-dbbc0b1231e543eb99e18eb9bbe45370\\prepare-watch-recovery.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-6e2-ci-terminal-observer-dbbc0b1231e543eb99e18eb9bbe45370\\proxy-initial.closed.json",
+      "bytes": 954,
+      "sha256": "2842948b90d333c19f2eb22bbe3d04b4f433680c6a8c5ffcf6748b1686353311",
+      "actualExit": 0,
+      "signal": null,
+      "spawnError": null,
+      "error": null,
+      "stdout": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-6e2-ci-terminal-observer-dbbc0b1231e543eb99e18eb9bbe45370\\proxy-initial.stdout.log",
+        "bytes": 47911,
+        "sha256": "cd2d39f083458185bd27afbea5409d2a11f5745cd776fd2b6683d7ffa8f2bebb"
+      },
+      "stderr": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-6e2-ci-terminal-observer-dbbc0b1231e543eb99e18eb9bbe45370\\proxy-initial.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-6e2-ci-terminal-observer-dbbc0b1231e543eb99e18eb9bbe45370\\proxy-progress-1.closed.json",
+      "bytes": 960,
+      "sha256": "5dd51446255f66788af5f3dd4d927b35e3bfd1a3dd4f0abf200dc2fcdb9dbc21",
+      "actualExit": 0,
+      "signal": null,
+      "spawnError": null,
+      "error": null,
+      "stdout": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-6e2-ci-terminal-observer-dbbc0b1231e543eb99e18eb9bbe45370\\proxy-progress-1.stdout.log",
+        "bytes": 49028,
+        "sha256": "9384fb3e49c4d35d3a1bbf3e491d2b3d57eb5a3f45d5e63dffde907bb887cb48"
+      },
+      "stderr": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-6e2-ci-terminal-observer-dbbc0b1231e543eb99e18eb9bbe45370\\proxy-progress-1.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-6e2-ci-terminal-observer-dbbc0b1231e543eb99e18eb9bbe45370\\proxy-terminal.closed.json",
+      "bytes": 956,
+      "sha256": "dc3bac47d7c03d9a88aafdda81429ecf1a7a7fc5c27db9c1219f5706464b68a9",
+      "actualExit": 0,
+      "signal": null,
+      "spawnError": null,
+      "error": null,
+      "stdout": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-6e2-ci-terminal-observer-dbbc0b1231e543eb99e18eb9bbe45370\\proxy-terminal.stdout.log",
+        "bytes": 49493,
+        "sha256": "c33b4103ff2182fd30b001802017f12195c593a3141dff93ff60c25cae57cc71"
+      },
+      "stderr": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-6e2-ci-terminal-observer-dbbc0b1231e543eb99e18eb9bbe45370\\proxy-terminal.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-6e2-ci-terminal-observer-dbbc0b1231e543eb99e18eb9bbe45370\\proxy-watch-1.closed.json",
+      "bytes": 997,
+      "sha256": "2b10806cef298ac706060b8917669b96b7eb091c7d7966e75af0201ad71664e0",
+      "actualExit": 1,
+      "signal": null,
+      "spawnError": null,
+      "error": null,
+      "stdout": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-6e2-ci-terminal-observer-dbbc0b1231e543eb99e18eb9bbe45370\\proxy-watch-1.stdout.log",
+        "bytes": 83293,
+        "sha256": "f3672eb9b05146649f67c680bdf31fa43129a145f69d324fa4d7e3ced22eb877"
+      },
+      "stderr": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-6e2-ci-terminal-observer-dbbc0b1231e543eb99e18eb9bbe45370\\proxy-watch-1.stderr.log",
+        "bytes": 159,
+        "sha256": "3278c7da17138e972ab998fb4e2789949637ef32b70d3181f07498f6822f433a"
+      }
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-6e2-ci-terminal-observer-dbbc0b1231e543eb99e18eb9bbe45370\\proxy-watch-2.closed.json",
+      "bytes": 996,
+      "sha256": "098a67aa7fae4df99dd97660242782b469e29cd687cbab078940d676115221d8",
+      "actualExit": 1,
+      "signal": null,
+      "spawnError": null,
+      "error": null,
+      "stdout": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-6e2-ci-terminal-observer-dbbc0b1231e543eb99e18eb9bbe45370\\proxy-watch-2.stdout.log",
+        "bytes": 172279,
+        "sha256": "da5b5b6e1d061155e5aa6d8f61912ae2cac8ef212eaf24279acfcdc1088fe232"
+      },
+      "stderr": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-6e2-ci-terminal-observer-dbbc0b1231e543eb99e18eb9bbe45370\\proxy-watch-2.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-6e2-ci-terminal-observer-dbbc0b1231e543eb99e18eb9bbe45370\\release-initial.closed.json",
+      "bytes": 957,
+      "sha256": "a5a2bb16b7dd03870909913d191b486410bf3351887cec0785fb7022c2cd5a33",
+      "actualExit": 0,
+      "signal": null,
+      "spawnError": null,
+      "error": null,
+      "stdout": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-6e2-ci-terminal-observer-dbbc0b1231e543eb99e18eb9bbe45370\\release-initial.stdout.log",
+        "bytes": 2168,
+        "sha256": "979b5cf0d4f502e3c2712748c79ba3e414bb987938fe3d3de580cf72fd5dba61"
+      },
+      "stderr": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-6e2-ci-terminal-observer-dbbc0b1231e543eb99e18eb9bbe45370\\release-initial.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-6e2-ci-terminal-observer-dbbc0b1231e543eb99e18eb9bbe45370\\verify-initial.closed.json",
+      "bytes": 955,
+      "sha256": "374cde499a7b25b4e43e27566a51576809520ff99f0372fc6ca600bf2a5e44d8",
+      "actualExit": 0,
+      "signal": null,
+      "spawnError": null,
+      "error": null,
+      "stdout": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-6e2-ci-terminal-observer-dbbc0b1231e543eb99e18eb9bbe45370\\verify-initial.stdout.log",
+        "bytes": 1698,
+        "sha256": "0f363f64bdbd68e0cdaaed5cc7c7c804f804a5ec448ff9d7d3e5e11a70547fd2"
+      },
+      "stderr": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-6e2-ci-terminal-observer-dbbc0b1231e543eb99e18eb9bbe45370\\verify-initial.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-6e2-ci-terminal-observer-dbbc0b1231e543eb99e18eb9bbe45370\\web-initial.closed.json",
+      "bytes": 949,
+      "sha256": "f50f3f9124779d3cda1f6027b9dcb6f701c0797ce7832abbf5f0372a37dd4bbc",
+      "actualExit": 0,
+      "signal": null,
+      "spawnError": null,
+      "error": null,
+      "stdout": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-6e2-ci-terminal-observer-dbbc0b1231e543eb99e18eb9bbe45370\\web-initial.stdout.log",
+        "bytes": 6978,
+        "sha256": "838c94815994bb9a7bc924eb7dbbb65d1cf1a6dbdee1675b44bf7995df5d9878"
+      },
+      "stderr": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-6e2-ci-terminal-observer-dbbc0b1231e543eb99e18eb9bbe45370\\web-initial.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-6e2-ci-terminal-observer-dbbc0b1231e543eb99e18eb9bbe45370\\web-terminal.closed.json",
+      "bytes": 951,
+      "sha256": "10295b2118e04db9a2b83cc1aed1b7ac75a350ae923a88aefb91d7dd23fe5518",
+      "actualExit": 0,
+      "signal": null,
+      "spawnError": null,
+      "error": null,
+      "stdout": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-6e2-ci-terminal-observer-dbbc0b1231e543eb99e18eb9bbe45370\\web-terminal.stdout.log",
+        "bytes": 7397,
+        "sha256": "6c7db150eff5409c5f0e47c450d06c2b97cb5003b8ac89fc4ce4fed3669bfc5a"
+      },
+      "stderr": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-6e2-ci-terminal-observer-dbbc0b1231e543eb99e18eb9bbe45370\\web-terminal.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    }
+  ],
+  "retainedNonzeroOrNull": [
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-6e2-ci-terminal-observer-dbbc0b1231e543eb99e18eb9bbe45370\\proxy-watch-1.closed.json",
+      "bytes": 997,
+      "sha256": "2b10806cef298ac706060b8917669b96b7eb091c7d7966e75af0201ad71664e0",
+      "actualExit": 1,
+      "signal": null,
+      "spawnError": null,
+      "error": null,
+      "stdout": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-6e2-ci-terminal-observer-dbbc0b1231e543eb99e18eb9bbe45370\\proxy-watch-1.stdout.log",
+        "bytes": 83293,
+        "sha256": "f3672eb9b05146649f67c680bdf31fa43129a145f69d324fa4d7e3ced22eb877"
+      },
+      "stderr": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-6e2-ci-terminal-observer-dbbc0b1231e543eb99e18eb9bbe45370\\proxy-watch-1.stderr.log",
+        "bytes": 159,
+        "sha256": "3278c7da17138e972ab998fb4e2789949637ef32b70d3181f07498f6822f433a"
+      }
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-6e2-ci-terminal-observer-dbbc0b1231e543eb99e18eb9bbe45370\\proxy-watch-2.closed.json",
+      "bytes": 996,
+      "sha256": "098a67aa7fae4df99dd97660242782b469e29cd687cbab078940d676115221d8",
+      "actualExit": 1,
+      "signal": null,
+      "spawnError": null,
+      "error": null,
+      "stdout": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-6e2-ci-terminal-observer-dbbc0b1231e543eb99e18eb9bbe45370\\proxy-watch-2.stdout.log",
+        "bytes": 172279,
+        "sha256": "da5b5b6e1d061155e5aa6d8f61912ae2cac8ef212eaf24279acfcdc1088fe232"
+      },
+      "stderr": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-6e2-ci-terminal-observer-dbbc0b1231e543eb99e18eb9bbe45370\\proxy-watch-2.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    }
+  ],
+  "completeLogOrder": [
+    "native",
+    "dispatch"
+  ],
+  "completeLogAttemptsPerJob": 1,
+  "byteOffsets": "Every range/TAP token points into the complete original UTF-8 stdout buffer. No derived log slice or raw log is created.",
+  "stopWriteAfterSeal": true
+}

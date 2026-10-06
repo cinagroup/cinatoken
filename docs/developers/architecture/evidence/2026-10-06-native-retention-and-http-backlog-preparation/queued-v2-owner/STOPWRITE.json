@@ -1,0 +1,137 @@
+{
+  "schema": "cinatoken-queued-v2-timestamp-temp-frozen-index-v1",
+  "at": "2026-10-06T07:01:35.219Z",
+  "root": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-write-v2-8e7e441d5c7547dc93ae0c2c76898bf8",
+  "stopWrite": true,
+  "indexOnly": true,
+  "actualCommandExitNotPredicted": true,
+  "fileCountExcludingSelf": 17,
+  "files": [
+    {
+      "relative": "actual-preparation-tool-receipts.json",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-write-v2-8e7e441d5c7547dc93ae0c2c76898bf8/actual-preparation-tool-receipts.json",
+      "bytes": 733,
+      "sha256": "8f7563d0d3d2d706fb1858cf5c2544baa24a226a001107b90a91a2f58c9779e0"
+    },
+    {
+      "relative": "FINAL-queued-write-v2-timestamp-candidate.json",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-write-v2-8e7e441d5c7547dc93ae0c2c76898bf8/FINAL-queued-write-v2-timestamp-candidate.json",
+      "bytes": 8302,
+      "sha256": "99970859003202c91496461a704b876488e09e185156b5326139a3a08f324e7a"
+    },
+    {
+      "relative": "freeze-v2-root.mjs",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-write-v2-8e7e441d5c7547dc93ae0c2c76898bf8/freeze-v2-root.mjs",
+      "bytes": 3143,
+      "sha256": "784ac41d04a79e54b71a80eb7be223e1c58a2267ece16636d2278aa98e2ea69e"
+    },
+    {
+      "relative": "node-check.result.json",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-write-v2-8e7e441d5c7547dc93ae0c2c76898bf8/node-check.result.json",
+      "bytes": 994,
+      "sha256": "47a2624f1f2c7afe3df2212ef46dae7259ef5614028dbb5ebe580b5e46a1af0a"
+    },
+    {
+      "relative": "node-check.stderr.log",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-write-v2-8e7e441d5c7547dc93ae0c2c76898bf8/node-check.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "relative": "node-check.stdout.log",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-write-v2-8e7e441d5c7547dc93ae0c2c76898bf8/node-check.stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "relative": "prepare-v2.mjs",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-write-v2-8e7e441d5c7547dc93ae0c2c76898bf8/prepare-v2.mjs",
+      "bytes": 9816,
+      "sha256": "6fa7369241efa6712bb0a8ba0134783ef178a1c8a8c63c425898a7612d3ff886"
+    },
+    {
+      "relative": "prepare-v2.result.json",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-write-v2-8e7e441d5c7547dc93ae0c2c76898bf8/prepare-v2.result.json",
+      "bytes": 1085,
+      "sha256": "f9e7445796ac638e28f89fbb3304a192d597546470838f5d5242b5e7e41c235e"
+    },
+    {
+      "relative": "prepare-v2.stderr.log",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-write-v2-8e7e441d5c7547dc93ae0c2c76898bf8/prepare-v2.stderr.log",
+      "bytes": 891,
+      "sha256": "0f5c4557cfe52ce108a0dcbdcef83754e21a7cbbe5befb7a2ff43755d9eb29a2"
+    },
+    {
+      "relative": "prepare-v2.stdout.log",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-write-v2-8e7e441d5c7547dc93ae0c2c76898bf8/prepare-v2.stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "relative": "prepare-v2b.mjs",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-write-v2-8e7e441d5c7547dc93ae0c2c76898bf8/prepare-v2b.mjs",
+      "bytes": 10209,
+      "sha256": "6bc213b5f5597ee6d5764228f82341096ab330fad43d32f00680f4ba1f128b86"
+    },
+    {
+      "relative": "prepare-v2b.result.json",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-write-v2-8e7e441d5c7547dc93ae0c2c76898bf8/prepare-v2b.result.json",
+      "bytes": 1088,
+      "sha256": "ed13d3440956969a5bf2114e19114efeee8377718ab439cbaa573e7f5017545d"
+    },
+    {
+      "relative": "prepare-v2b.stderr.log",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-write-v2-8e7e441d5c7547dc93ae0c2c76898bf8/prepare-v2b.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "relative": "prepare-v2b.stdout.log",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-write-v2-8e7e441d5c7547dc93ae0c2c76898bf8/prepare-v2b.stdout.log",
+      "bytes": 683,
+      "sha256": "7d8ff20cbbe2f7b6bd31e436e51ce04ab47dbc573f378c9f4238c2cecf258859"
+    },
+    {
+      "relative": "run-direct-socket.candidate-v2.mjs",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-write-v2-8e7e441d5c7547dc93ae0c2c76898bf8/run-direct-socket.candidate-v2.mjs",
+      "bytes": 52009,
+      "sha256": "8fbaaed9523ecb227bd0e47ce8092d7432c08f8b67fd8650569d69d711ef48a8"
+    },
+    {
+      "relative": "run-owned-command-v2b.mjs",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-write-v2-8e7e441d5c7547dc93ae0c2c76898bf8/run-owned-command-v2b.mjs",
+      "bytes": 1849,
+      "sha256": "30f03ad1a606cf5f49d38dfae659705fa02ea10fa3c1f2a304d8fad696ae1b8e"
+    },
+    {
+      "relative": "run-owned-command.mjs",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-write-v2-8e7e441d5c7547dc93ae0c2c76898bf8/run-owned-command.mjs",
+      "bytes": 1845,
+      "sha256": "f25acb21a8e8a5007cf86d0b63a6246f7832da0b74146c17d3988371fd38cd1b"
+    }
+  ],
+  "final": {
+    "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-write-v2-8e7e441d5c7547dc93ae0c2c76898bf8/FINAL-queued-write-v2-timestamp-candidate.json",
+    "bytes": 8302,
+    "sha256": "99970859003202c91496461a704b876488e09e185156b5326139a3a08f324e7a"
+  },
+  "candidate": {
+    "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-write-v2-8e7e441d5c7547dc93ae0c2c76898bf8/run-direct-socket.candidate-v2.mjs",
+    "bytes": 52009,
+    "sha256": "8fbaaed9523ecb227bd0e47ce8092d7432c08f8b67fd8650569d69d711ef48a8"
+  },
+  "helperUnchangedReference": {
+    "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-write-candidate-125e5fd5336c42b18c0bb59dda8f4942/queued-write-source.mjs",
+    "bytes": 3557,
+    "sha256": "93417db1e3b0edbb3dd06b504bddee18ba6fbb1bbf31141cd20ce119dea7fb5d"
+  },
+  "closedReceipts": 3,
+  "rawStreams": 6,
+  "retainedPreparationFailures": 1,
+  "runtimeExecuted": false,
+  "repoWrite": false,
+  "v1RootCopiedOrChanged": false,
+  "original13FunctionsUnchanged": true,
+  "gatePassDerived": false,
+  "selfExcludedReason": "Self-referential index; descriptor printed after wx write"
+}

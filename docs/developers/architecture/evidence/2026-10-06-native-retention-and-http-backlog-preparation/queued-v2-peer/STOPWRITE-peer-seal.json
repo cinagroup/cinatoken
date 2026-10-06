@@ -1,0 +1,60 @@
+{
+  "schema": "queued-v2-local-independent-peer-stopwrite-v1",
+  "at": "2026-10-06T07:06:16.781Z",
+  "sourceRoot": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-v2-local-peer-ktrh58",
+  "filesBeforeSelf": 8,
+  "totalBytesBeforeSelf": 69097,
+  "entries": [
+    {
+      "file": "FINAL-queued-v2-local-independent-peer.json",
+      "bytes": 5025,
+      "sha256": "9ef3f78bd8ed48c361598437faa093676f488d7d95d5ab2fe351e5d67b7e34a6"
+    },
+    {
+      "file": "audit-v2-delta.mjs",
+      "bytes": 8232,
+      "sha256": "6f181a9010189dbe1318bdad96e8c6164c25f79270c998e4dcbda437e4bbf6fb"
+    },
+    {
+      "file": "capture-readonly.mjs",
+      "bytes": 1405,
+      "sha256": "73f8ec0159b113f5339119649fe0ccfd402740897076ddf439d9f91009bb4b67"
+    },
+    {
+      "file": "reviewed-v2-source.snapshot.mjs",
+      "bytes": 52009,
+      "sha256": "8fbaaed9523ecb227bd0e47ce8092d7432c08f8b67fd8650569d69d711ef48a8"
+    },
+    {
+      "file": "source-coordinate-check.json",
+      "bytes": 944,
+      "sha256": "d38884b927731426ecdbfb7e8507cdefa34cd8fb21f19bbc128326ce00750017"
+    },
+    {
+      "file": "v2-local-review.closed.json",
+      "bytes": 884,
+      "sha256": "2f45947e14949df4f56875838eb2fa278f0827eade96446082e6c26dca5fcc62"
+    },
+    {
+      "file": "v2-local-review.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "v2-local-review.stdout.log",
+      "bytes": 598,
+      "sha256": "ea03c7fa236a0e385473dc7c22b38f19ce8f56eedbe868c822b1a8443f3bd22f"
+    }
+  ],
+  "selfExcludedOnly": true,
+  "STOPWRITE": true,
+  "noFurtherWrites": true,
+  "sourceOnly": true,
+  "moduleEvaluated": false,
+  "runtimeExecuted": false,
+  "repositoryWrites": 0,
+  "productionRequests": 0,
+  "N1Resolved": true,
+  "gatePassDerived": false,
+  "causeProven": false
+}

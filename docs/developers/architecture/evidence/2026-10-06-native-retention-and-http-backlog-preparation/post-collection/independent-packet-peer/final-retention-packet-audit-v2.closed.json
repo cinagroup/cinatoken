@@ -1,0 +1,26 @@
+{
+  "schema": "quote-packet-peer-exact-node-closed-v1",
+  "at": "2026-10-06T07:18:12.968Z",
+  "finishedAt": "2026-10-06T07:18:13.327Z",
+  "executable": "C:\\Program Files\\nodejs\\node.exe",
+  "args": [
+    "C:/Users/cina/AppData/Local/Temp/cinatoken-retention-backlog-final-peer-41NQHf/audit-retention-packet-v2.mjs"
+  ],
+  "cwd": "C:/cinagroup/cinatoken",
+  "actualExit": 1,
+  "signal": null,
+  "spawnError": null,
+  "outputs": [
+    {
+      "file": "final-retention-packet-audit-v2.stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "final-retention-packet-audit-v2.stderr.log",
+      "bytes": 691,
+      "sha256": "a73311d14993b81ebb7205d55f3ee073b00ced523310ef83fef8183fb81d90fc"
+    }
+  ],
+  "scope": "Original exact Node child return for bounded read-only evidence audit only; not native/application/PG/CI or production execution"
+}

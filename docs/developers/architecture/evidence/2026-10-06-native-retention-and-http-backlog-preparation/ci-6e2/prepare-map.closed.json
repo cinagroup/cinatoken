@@ -1,0 +1,22 @@
+{
+  "at": "2026-10-06T06:43:49.268Z",
+  "finishedAt": "2026-10-06T06:43:49.356Z",
+  "executable": "node",
+  "args": [
+    "C:/Users/cina/AppData/Local/Temp/cinatoken-6e2-ci-terminal-observer-dbbc0b1231e543eb99e18eb9bbe45370/prepare-map.mjs"
+  ],
+  "cwd": "C:/cinagroup/cinatoken",
+  "actualExit": 0,
+  "signal": null,
+  "spawnError": null,
+  "stdout": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-6e2-ci-terminal-observer-dbbc0b1231e543eb99e18eb9bbe45370\\prepare-map.stdout.log",
+    "bytes": 163,
+    "sha256": "e41c2241079f75f138b75796e81385392c20b513d19e9ea869a2e2fc5dba5f3a"
+  },
+  "stderr": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-6e2-ci-terminal-observer-dbbc0b1231e543eb99e18eb9bbe45370\\prepare-map.stderr.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+}

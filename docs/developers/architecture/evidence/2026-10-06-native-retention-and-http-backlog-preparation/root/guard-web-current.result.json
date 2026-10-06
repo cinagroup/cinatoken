@@ -1,0 +1,24 @@
+{
+  "at": "2026-10-06T06:52:15.673Z",
+  "finishedAt": "2026-10-06T06:52:21.710Z",
+  "executable": "C:/Program Files/nodejs/node.exe",
+  "args": [
+    "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-followup-da56f69292e44387886a9cc8ffa36638\\guard-live-cutover.mjs",
+    "guard-web-current",
+    "2a0a2777-d3b1-47f0-a0a7-88e701b4d2d9",
+    "c13a64b9c3b2c90adcf736910ea408868d7854f1"
+  ],
+  "cwd": "C:/cinagroup/cinatoken",
+  "actualExit": 0,
+  "signal": null,
+  "stdout": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-followup-da56f69292e44387886a9cc8ffa36638\\guard-web-current.stdout.log",
+    "bytes": 793,
+    "sha256": "375a0efad39632793ed07002fe58aa260cc6dc32a661a34b8c7c56c64708a412"
+  },
+  "stderr": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-followup-da56f69292e44387886a9cc8ffa36638\\guard-web-current.stderr.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+}

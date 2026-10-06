@@ -1,0 +1,28 @@
+{
+  "schema": "retention-readonly-baseline-git-child-close.v1",
+  "executable": "C:/Program Files/Git/cmd/git.exe",
+  "argv": [
+    "cat-file",
+    "--batch"
+  ],
+  "startedAt": "2026-10-06T07:01:30.461Z",
+  "closedAt": "2026-10-06T07:01:30.539Z",
+  "actualExit": 0,
+  "signal": null,
+  "spawnError": null,
+  "stdin": {
+    "text": "6e2d65b35d4d60b3b14dac2ecbf9fbaa8ca363fa:scripts/db/cutover/postgres-shared-key-buyer-receipt-retention-v346.native.test.mjs\nd537f83b6389a4e5bbd7f92325f74d77e6bdfc9a:scripts/db/cutover/postgres-shared-key-buyer-receipt-retention-v346.native.test.mjs\n",
+    "bytes": 250,
+    "sha256": "a3c778acbb8c34c9a2be9761803ce2c7af408db1353c7804322567296589f38a"
+  },
+  "stdout": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-retention-v346-time-text-candidate-1a110046edafc3b0b4778a3a\\baseline-git.stdout.log",
+    "bytes": 41414,
+    "sha256": "6902dba831f5ae779b0d4b65f30417ec0088bba697458bd60c869a6cbb10bd2c"
+  },
+  "stderr": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-retention-v346-time-text-candidate-1a110046edafc3b0b4778a3a\\baseline-git.stderr.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+}

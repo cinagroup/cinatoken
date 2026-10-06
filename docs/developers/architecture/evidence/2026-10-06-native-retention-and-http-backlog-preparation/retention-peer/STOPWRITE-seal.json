@@ -1,0 +1,135 @@
+{
+  "schema": "retention-independent-review-after-close-stopwrite-v1",
+  "at": "2026-10-06T07:07:14.850Z",
+  "root": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-retention-seven-casts-independent-review-efe3bd65f96244679d75b90f992fc733",
+  "preparedOnly": true,
+  "rootCauseConfirmed": false,
+  "actualClosedAudit": {
+    "at": "2026-10-06T07:07:14.473Z",
+    "finishedAt": "2026-10-06T07:07:14.822Z",
+    "executable": "C:\\Program Files\\nodejs\\node.exe",
+    "args": [
+      "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-retention-seven-casts-independent-review-efe3bd65f96244679d75b90f992fc733\\independent-review-v2.mjs",
+      "audit"
+    ],
+    "cwd": "C:/cinagroup/cinatoken",
+    "actualExit": 0,
+    "signal": null,
+    "spawnError": null,
+    "stdout": {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-retention-seven-casts-independent-review-efe3bd65f96244679d75b90f992fc733\\independent-audit-v2.stdout.log",
+      "bytes": 318,
+      "sha256": "8046ff806621eea8e7a518cf5f3f398ded35d0ea5895aa33e9b2c23dcd7e42bd"
+    },
+    "stderr": {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-retention-seven-casts-independent-review-efe3bd65f96244679d75b90f992fc733\\independent-audit-v2.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  },
+  "sourceCollectionAndSecondReadExact": true,
+  "files": 14,
+  "entries": [
+    {
+      "name": "FINAL-independent-retention-review.json",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-retention-seven-casts-independent-review-efe3bd65f96244679d75b90f992fc733\\FINAL-independent-retention-review.json",
+      "bytes": 18335,
+      "sha256": "c2ce271f4113d0f83131bcf303ec002bb431a8ec352d224700bc8b4e5c233699",
+      "mtimeMs": 1791270434798.7488
+    },
+    {
+      "name": "candidate-review.native.test.mjs",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-retention-seven-casts-independent-review-efe3bd65f96244679d75b90f992fc733\\candidate-review.native.test.mjs",
+      "bytes": 20768,
+      "sha256": "12c37aa3f7151ccab6b39b98fe720661a95695351806c0c802454d8b22c560e6",
+      "mtimeMs": 1791270090730.677
+    },
+    {
+      "name": "independent-audit-v2.closed.json",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-retention-seven-casts-independent-review-efe3bd65f96244679d75b90f992fc733\\independent-audit-v2.closed.json",
+      "bytes": 994,
+      "sha256": "48af814633ec8a2c58bf52b90827e79ce975cd6297ab3607750e1608da981bd8",
+      "mtimeMs": 1791270434824.0999
+    },
+    {
+      "name": "independent-audit-v2.stderr.log",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-retention-seven-casts-independent-review-efe3bd65f96244679d75b90f992fc733\\independent-audit-v2.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "mtimeMs": 1791270434822.468
+    },
+    {
+      "name": "independent-audit-v2.stdout.log",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-retention-seven-casts-independent-review-efe3bd65f96244679d75b90f992fc733\\independent-audit-v2.stdout.log",
+      "bytes": 318,
+      "sha256": "8046ff806621eea8e7a518cf5f3f398ded35d0ea5895aa33e9b2c23dcd7e42bd",
+      "mtimeMs": 1791270434822.468
+    },
+    {
+      "name": "independent-audit.closed.json",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-retention-seven-casts-independent-review-efe3bd65f96244679d75b90f992fc733\\independent-audit.closed.json",
+      "bytes": 985,
+      "sha256": "d13730546ed3bbe3a4455d931816144b88ec378990e182267dab2fb82bbc8963",
+      "mtimeMs": 1791270376867.6624
+    },
+    {
+      "name": "independent-audit.stderr.log",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-retention-seven-casts-independent-review-efe3bd65f96244679d75b90f992fc733\\independent-audit.stderr.log",
+      "bytes": 477,
+      "sha256": "89c028280c59df234fde72565ba3ae3dccbca1a07c63987ac00bd36a99eed35d",
+      "mtimeMs": 1791270376867.6624
+    },
+    {
+      "name": "independent-audit.stdout.log",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-retention-seven-casts-independent-review-efe3bd65f96244679d75b90f992fc733\\independent-audit.stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "mtimeMs": 1791270376867.6624
+    },
+    {
+      "name": "independent-review-v2.mjs",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-retention-seven-casts-independent-review-efe3bd65f96244679d75b90f992fc733\\independent-review-v2.mjs",
+      "bytes": 14593,
+      "sha256": "e7dcc57785ad951ae1ef067f7898e162f467b95203f6257df582edaed6c526ec",
+      "mtimeMs": 1791270434403.3633
+    },
+    {
+      "name": "independent-review.mjs",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-retention-seven-casts-independent-review-efe3bd65f96244679d75b90f992fc733\\independent-review.mjs",
+      "bytes": 14586,
+      "sha256": "63a5a9dfa1aefd828018b8bd191dc6a3abd726dabc488260888db4a7b4d6ff4f",
+      "mtimeMs": 1791270375135.3013
+    },
+    {
+      "name": "node-check.closed.json",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-retention-seven-casts-independent-review-efe3bd65f96244679d75b90f992fc733\\node-check.closed.json",
+      "bytes": 981,
+      "sha256": "ffd8f9707cbd25183bdf33d28f61017afaee04323351ac7dbdc7fd17cf3570fa",
+      "mtimeMs": 1791270434786.2957
+    },
+    {
+      "name": "node-check.stderr.log",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-retention-seven-casts-independent-review-efe3bd65f96244679d75b90f992fc733\\node-check.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "mtimeMs": 1791270434786.2957
+    },
+    {
+      "name": "node-check.stdout.log",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-retention-seven-casts-independent-review-efe3bd65f96244679d75b90f992fc733\\node-check.stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "mtimeMs": 1791270434786.2957
+    },
+    {
+      "name": "source-before.snapshot.txt",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-retention-seven-casts-independent-review-efe3bd65f96244679d75b90f992fc733\\source-before.snapshot.txt",
+      "bytes": 20654,
+      "sha256": "c9093cb5c5f167f8e7604b9b91c4d937c8b638a8b0cd1f2dbcdeb88a140dc984",
+      "mtimeMs": 1791270090575.3313
+    }
+  ],
+  "selfExcluded": "STOPWRITE-seal.json",
+  "afterClose": true,
+  "STOPWRITE": true
+}

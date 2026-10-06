@@ -1,0 +1,22 @@
+{
+  "at": "2026-10-06T06:55:45.985Z",
+  "finishedAt": "2026-10-06T06:55:46.142Z",
+  "executable": "C:\\Program Files\\nodejs\\node.exe",
+  "args": [
+    "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-6e2-ci-terminal-observer-dbbc0b1231e543eb99e18eb9bbe45370\\close-audit.mjs"
+  ],
+  "cwd": "C:/cinagroup/cinatoken",
+  "actualExit": 0,
+  "signal": null,
+  "spawnError": null,
+  "stdout": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-6e2-ci-terminal-observer-dbbc0b1231e543eb99e18eb9bbe45370\\close-audit.stdout.log",
+    "bytes": 1391,
+    "sha256": "76e278b2e580d5dcbea4c05d33397f208d379767c468158d729ed3a8a09ccc35"
+  },
+  "stderr": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-6e2-ci-terminal-observer-dbbc0b1231e543eb99e18eb9bbe45370\\close-audit.stderr.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+}

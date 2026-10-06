@@ -1,0 +1,26 @@
+{
+  "at": "2026-10-06T07:08:18.188Z",
+  "finishedAt": "2026-10-06T07:08:22.882Z",
+  "executable": "C:/Program Files/nodejs/node.exe",
+  "args": [
+    "scripts/diagnostics/v364-direct-socket/run-direct-socket.mjs",
+    "--repo",
+    "C:/cinagroup/cinatoken",
+    "--out",
+    "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-followup-da56f69292e44387886a9cc8ffa36638\\prepared-bundles",
+    "--prepare-only"
+  ],
+  "cwd": "C:/cinagroup/cinatoken",
+  "actualExit": 0,
+  "signal": null,
+  "stdout": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-followup-da56f69292e44387886a9cc8ffa36638\\prepare-diagnostic-bundles.stdout.log",
+    "bytes": 165,
+    "sha256": "086506801ec53b4586e1ae37b31c2230600e934b914808552e61827040417cf6"
+  },
+  "stderr": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-followup-da56f69292e44387886a9cc8ffa36638\\prepare-diagnostic-bundles.stderr.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+}

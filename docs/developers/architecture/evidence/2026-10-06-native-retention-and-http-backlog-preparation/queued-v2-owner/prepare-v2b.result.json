@@ -1,0 +1,29 @@
+{
+  "schema": "cinatoken-queued-write-v2-preparation-command-closed-v1",
+  "closed": true,
+  "beganAt": "2026-10-06T07:00:31.537Z",
+  "endedAt": "2026-10-06T07:00:31.808Z",
+  "program": "C:\\Program Files\\nodejs\\node.exe",
+  "args": [
+    "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-write-v2-8e7e441d5c7547dc93ae0c2c76898bf8/prepare-v2b.mjs"
+  ],
+  "actualExit": 0,
+  "signal": null,
+  "timedOut": false,
+  "spawnError": null,
+  "stdout": {
+    "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-write-v2-8e7e441d5c7547dc93ae0c2c76898bf8/prepare-v2b.stdout.log",
+    "bytes": 683,
+    "sha256": "7d8ff20cbbe2f7b6bd31e436e51ce04ab47dbc573f378c9f4238c2cecf258859"
+  },
+  "stderr": {
+    "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-write-v2-8e7e441d5c7547dc93ae0c2c76898bf8/prepare-v2b.stderr.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "onlyTempPreparation": true,
+  "appOrRuntimeExecuted": false,
+  "repoWrite": false,
+  "gitOrCIExecuted": false,
+  "gatePassDerived": false
+}

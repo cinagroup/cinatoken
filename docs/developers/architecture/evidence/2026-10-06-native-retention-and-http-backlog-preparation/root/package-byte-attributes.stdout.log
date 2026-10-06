@@ -1,0 +1,6 @@
+scripts/diagnostics/v364-direct-socket/run-direct-socket.mjs: text: auto
+scripts/diagnostics/v364-direct-socket/run-direct-socket.mjs: eol: lf
+scripts/diagnostics/v364-direct-socket/README.md: text: auto
+scripts/diagnostics/v364-direct-socket/README.md: eol: lf
+scripts/diagnostics/v364-direct-socket/sealed-package.json: text: auto
+scripts/diagnostics/v364-direct-socket/sealed-package.json: eol: lf

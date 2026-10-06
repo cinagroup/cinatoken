@@ -1,0 +1,81 @@
+{
+  "schema": "queued-write-source-independent-peer-stopwrite-v1",
+  "sealedAt": "2026-10-06T06:59:23.644Z",
+  "sourceRoot": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-source-peer-60rqza",
+  "filesBeforeSelf": 12,
+  "totalBytesBeforeSelf": 141987,
+  "entries": [
+    {
+      "file": "FINAL-queued-write-source-independent-peer.json",
+      "bytes": 12062,
+      "sha256": "db179ae8534079970af00032ed8a0fcf09f18d3abf4ccff95e57dbed28bdd52d"
+    },
+    {
+      "file": "audit-source-and-package.mjs",
+      "bytes": 10743,
+      "sha256": "3b047e59a68d6a1903b711869fe1f27adfb78cf72a6ceb38fcb57736116f9576"
+    },
+    {
+      "file": "candidate-edit-index.json.snapshot",
+      "bytes": 23584,
+      "sha256": "c61a15ac8a68511fb66d25fbcb6d6ed61f2d81ba7585e0fe1711521a1a21b847"
+    },
+    {
+      "file": "capture-readonly.mjs",
+      "bytes": 1405,
+      "sha256": "73f8ec0159b113f5339119649fe0ccfd402740897076ddf439d9f91009bb4b67"
+    },
+    {
+      "file": "queued-write-source.mjs.snapshot",
+      "bytes": 3557,
+      "sha256": "93417db1e3b0edbb3dd06b504bddee18ba6fbb1bbf31141cd20ce119dea7fb5d"
+    },
+    {
+      "file": "read-inputs.json",
+      "bytes": 1444,
+      "sha256": "6d0cc15f87d5adfd1c3b7f2f44a1ea70f084a657139030e4ce67d0da8615684a"
+    },
+    {
+      "file": "run-direct-socket.candidate.mjs.snapshot",
+      "bytes": 51387,
+      "sha256": "e6cfdb5d6e3d8ab04b4bc97d278132b4439930a92465bcf72081ccc173dbb04e"
+    },
+    {
+      "file": "run-direct-socket.original.snapshot.mjs",
+      "bytes": 34907,
+      "sha256": "621cb7384b32a25af7c37d411cd12c2d51bf47c241d9d1f24c1c3ee3989723f3"
+    },
+    {
+      "file": "seal-peer.mjs",
+      "bytes": 1565,
+      "sha256": "15d18865d2afb33b3162cf02197b472beb3a147151a05e46ad948796f004dddd"
+    },
+    {
+      "file": "source-package-review.closed.json",
+      "bytes": 904,
+      "sha256": "508aaf2e92ab2252e947f3bfb4ae505251ad4486af493983251dbb1e8c031077"
+    },
+    {
+      "file": "source-package-review.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "source-package-review.stdout.log",
+      "bytes": 429,
+      "sha256": "fd82d45eea8bd672fef0e3cc6634b3cbfb00eefe1175f40217bdf9447759742b"
+    }
+  ],
+  "selfExcludedOnly": true,
+  "STOPWRITE": true,
+  "noFurtherWrites": true,
+  "sourceOnly": true,
+  "moduleEvaluated": false,
+  "repositoryWrites": 0,
+  "runtimeExecution": false,
+  "CIExecution": false,
+  "productionRequests": 0,
+  "gatePassDerived": false,
+  "causeProven": false,
+  "nonblockingN1Retained": true
+}

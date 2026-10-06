@@ -1,0 +1,21 @@
+{
+  "at": "2026-10-06T07:03:02.641Z",
+  "finishedAt": "2026-10-06T07:03:02.718Z",
+  "executable": "C:/Program Files/nodejs/node.exe",
+  "args": [
+    "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-followup-da56f69292e44387886a9cc8ffa36638\\integrate-v2-package.mjs"
+  ],
+  "cwd": "C:/cinagroup/cinatoken",
+  "actualExit": 0,
+  "signal": null,
+  "stdout": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-followup-da56f69292e44387886a9cc8ffa36638\\integrate-v2-package.stdout.log",
+    "bytes": 713,
+    "sha256": "582366810e00af5ee29d5c55d231b3b9d46d05a99ece90419a3b2d3b86af2d20"
+  },
+  "stderr": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-followup-da56f69292e44387886a9cc8ffa36638\\integrate-v2-package.stderr.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+}

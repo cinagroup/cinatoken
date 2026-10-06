@@ -1,0 +1,9 @@
+{
+  "authority": "functions.exec tool result",
+  "phase": "pre-evaluation tool JavaScript parsing",
+  "toolMessage": "SyntaxError: Unexpected identifier 'nconst'",
+  "actualChildExit": null,
+  "scriptBodyExecuted": false,
+  "repositoryWrites": 0,
+  "notNativeFailure": true
+}

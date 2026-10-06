@@ -1,0 +1,23 @@
+{
+  "at": "2026-10-06T07:06:16.758Z",
+  "finishedAt": "2026-10-06T07:06:16.866Z",
+  "executable": "C:\\Program Files\\nodejs\\node.exe",
+  "args": [
+    "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-retention-seven-casts-independent-review-efe3bd65f96244679d75b90f992fc733\\independent-review.mjs",
+    "audit"
+  ],
+  "cwd": "C:/cinagroup/cinatoken",
+  "actualExit": 1,
+  "signal": null,
+  "spawnError": null,
+  "stdout": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-retention-seven-casts-independent-review-efe3bd65f96244679d75b90f992fc733\\independent-audit.stdout.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "stderr": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-retention-seven-casts-independent-review-efe3bd65f96244679d75b90f992fc733\\independent-audit.stderr.log",
+    "bytes": 477,
+    "sha256": "89c028280c59df234fde72565ba3ae3dccbca1a07c63987ac00bd36a99eed35d"
+  }
+}

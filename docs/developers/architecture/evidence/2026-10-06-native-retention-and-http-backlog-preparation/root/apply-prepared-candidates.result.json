@@ -1,0 +1,21 @@
+{
+  "at": "2026-10-06T07:08:03.745Z",
+  "finishedAt": "2026-10-06T07:08:03.880Z",
+  "executable": "C:/Program Files/nodejs/node.exe",
+  "args": [
+    "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-followup-da56f69292e44387886a9cc8ffa36638\\apply-prepared-candidates.mjs"
+  ],
+  "cwd": "C:/cinagroup/cinatoken",
+  "actualExit": 0,
+  "signal": null,
+  "stdout": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-followup-da56f69292e44387886a9cc8ffa36638\\apply-prepared-candidates.stdout.log",
+    "bytes": 933,
+    "sha256": "8700bf389150e76f053e6c2b6150a9733dbd263261c107f5aec1db6b4463e771"
+  },
+  "stderr": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-followup-da56f69292e44387886a9cc8ffa36638\\apply-prepared-candidates.stderr.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+}

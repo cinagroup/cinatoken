@@ -1,0 +1,770 @@
+{
+  "schema": "cinatoken-retention-v346-seven-time-input-static-candidate.v1",
+  "at": "2026-10-06T07:01:30.730Z",
+  "preparedOnly": true,
+  "scope": "scripts/db/cutover/postgres-shared-key-buyer-receipt-retention-v346.native.test.mjs",
+  "currentHead": "6e2d65b35d4d60b3b14dac2ecbf9fbaa8ca363fa",
+  "priorPassingHead": "d537f83b6389a4e5bbd7f92325f74d77e6bdfc9a",
+  "baselineSource": {
+    "snapshot": {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-retention-v346-time-text-candidate-1a110046edafc3b0b4778a3a\\source-original-6e2.snapshot.txt",
+      "bytes": 20654,
+      "sha256": "c9093cb5c5f167f8e7604b9b91c4d937c8b638a8b0cd1f2dbcdeb88a140dc984"
+    },
+    "gitBlob": "47b50617fcc785a982efc79c71834267adbe7a20",
+    "both6e2AndD537GitSourceBytesExact": true,
+    "readonlyGitClose": {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-retention-v346-time-text-candidate-1a110046edafc3b0b4778a3a/baseline-git.closed.json",
+      "bytes": 1227,
+      "sha256": "4edbac4f4e2265a0b4df05df693a07091fe70a8296c22417888c6642ca2d3c41"
+    }
+  },
+  "candidate": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-retention-v346-time-text-candidate-1a110046edafc3b0b4778a3a\\candidate-retention-time-text.native.test.mjs",
+    "bytes": 20768,
+    "sha256": "12c37aa3f7151ccab6b39b98fe720661a95695351806c0c802454d8b22c560e6"
+  },
+  "changes": [
+    {
+      "line": 164,
+      "before": "`$${i + 1}`",
+      "after": "name === 'prune_buyer_budget_receipts' && i === 0 ? '$1::text::timestamptz' : `$${i + 1}`",
+      "kind": "pruneFirstDynamicPlaceholder"
+    },
+    {
+      "line": 231,
+      "before": "$1::timestamptz",
+      "after": "$1::text::timestamptz",
+      "kind": "explicitTimestampParameter"
+    },
+    {
+      "line": 240,
+      "before": "$1::timestamptz",
+      "after": "$1::text::timestamptz",
+      "kind": "explicitTimestampParameter"
+    },
+    {
+      "line": 288,
+      "before": "$1::timestamptz",
+      "after": "$1::text::timestamptz",
+      "kind": "explicitTimestampParameter"
+    },
+    {
+      "line": 291,
+      "before": "$1::timestamptz",
+      "after": "$1::text::timestamptz",
+      "kind": "explicitTimestampParameter"
+    },
+    {
+      "line": 301,
+      "before": "$1::timestamptz",
+      "after": "$1::text::timestamptz",
+      "kind": "explicitTimestampParameter"
+    },
+    {
+      "line": 352,
+      "before": "$2::timestamptz",
+      "after": "$2::text::timestamptz",
+      "kind": "explicitTimestampParameter"
+    }
+  ],
+  "changeCount": 7,
+  "explicitParameterCasts": 6,
+  "dynamicPruneFirstCast": 1,
+  "reverseFullBytesExact": true,
+  "reversedEntireASTExact": true,
+  "assertions": {
+    "count": 36,
+    "directRawExact": 34,
+    "allOriginalReversedSourceAndASTExact": true,
+    "changedAssertionSourcesOnlyAuthorizedTimestampSQLCast": [
+      239,
+      299
+    ],
+    "records": [
+      {
+        "line": 35,
+        "method": "rejects",
+        "originalPin": {
+          "bytes": 234,
+          "sha256": "05514cde409832b4b6f105906ddb4d138e1e1f52829646931358b69e2851260c"
+        },
+        "directRawExact": true,
+        "reversedSourceAndASTExact": true
+      },
+      {
+        "line": 37,
+        "method": "equal",
+        "originalPin": {
+          "bytes": 46,
+          "sha256": "4164a332444944dc2c33ea4d08e919b7cf031e7c815a03aeacf3c1af076bcb70"
+        },
+        "directRawExact": true,
+        "reversedSourceAndASTExact": true
+      },
+      {
+        "line": 38,
+        "method": "equal",
+        "originalPin": {
+          "bytes": 63,
+          "sha256": "65ea0ffd2b93d90c44f4c9f6c3b0beb354d63204546539d95de57471debe5158"
+        },
+        "directRawExact": true,
+        "reversedSourceAndASTExact": true
+      },
+      {
+        "line": 60,
+        "method": "match",
+        "originalPin": {
+          "bytes": 58,
+          "sha256": "67cf60d3a3318d7ca981ee1cc5cf7e2308c719f09a0f7eb04a2d0bca6f4e62ef"
+        },
+        "directRawExact": true,
+        "reversedSourceAndASTExact": true
+      },
+      {
+        "line": 85,
+        "method": "equal",
+        "originalPin": {
+          "bytes": 31,
+          "sha256": "d405ab114c12dacc92ad46e64a2e613db10552c6e784f291d097af4d57d366f0"
+        },
+        "directRawExact": true,
+        "reversedSourceAndASTExact": true
+      },
+      {
+        "line": 131,
+        "method": "equal",
+        "originalPin": {
+          "bytes": 262,
+          "sha256": "1bb6a97cbb9ce30c68260eaa9eda2ecf717b66d4f936e7541c68caacdc3a03b6"
+        },
+        "directRawExact": true,
+        "reversedSourceAndASTExact": true
+      },
+      {
+        "line": 150,
+        "method": "equal",
+        "originalPin": {
+          "bytes": 268,
+          "sha256": "e8d36fd1b617d6ba56caff633e92015bef3bdde6f790cacb0c700b974c1a0c7a"
+        },
+        "directRawExact": true,
+        "reversedSourceAndASTExact": true
+      },
+      {
+        "line": 156,
+        "method": "rejects",
+        "originalPin": {
+          "bytes": 48,
+          "sha256": "ad90df456575b9689ef53cb98ec9497938c2b2523399a4555a66eb4ef62cb34b"
+        },
+        "directRawExact": true,
+        "reversedSourceAndASTExact": true
+      },
+      {
+        "line": 191,
+        "method": "equal",
+        "originalPin": {
+          "bytes": 130,
+          "sha256": "6cc7c0d3b9916f281ec60ae5c91af52325b5781bee5d490e8703e501f0ed8a77"
+        },
+        "directRawExact": true,
+        "reversedSourceAndASTExact": true
+      },
+      {
+        "line": 199,
+        "method": "equal",
+        "originalPin": {
+          "bytes": 131,
+          "sha256": "79374fbfe51d82f693be84e11e66263952084dfcd751cbaf866f3f967d3b507b"
+        },
+        "directRawExact": true,
+        "reversedSourceAndASTExact": true
+      },
+      {
+        "line": 206,
+        "method": "equal",
+        "originalPin": {
+          "bytes": 130,
+          "sha256": "6cc7c0d3b9916f281ec60ae5c91af52325b5781bee5d490e8703e501f0ed8a77"
+        },
+        "directRawExact": true,
+        "reversedSourceAndASTExact": true
+      },
+      {
+        "line": 225,
+        "method": "equal",
+        "originalPin": {
+          "bytes": 43,
+          "sha256": "cd1ae0847e157c3d09595d2be6723b00f68db15205dec3f1cd1dfa71b7309540"
+        },
+        "directRawExact": true,
+        "reversedSourceAndASTExact": true
+      },
+      {
+        "line": 235,
+        "method": "equal",
+        "originalPin": {
+          "bytes": 43,
+          "sha256": "76b4fb0f11b9d2ae06cae842c5dbcafdb85f5e1d6f764dd3b4e2b6144b5ecb8f"
+        },
+        "directRawExact": true,
+        "reversedSourceAndASTExact": true
+      },
+      {
+        "line": 236,
+        "method": "equal",
+        "originalPin": {
+          "bytes": 40,
+          "sha256": "e2b20c1793d5593feb01411141d0423c62841b3b39bf847483bbc96b780cdc13"
+        },
+        "directRawExact": true,
+        "reversedSourceAndASTExact": true
+      },
+      {
+        "line": 237,
+        "method": "equal",
+        "originalPin": {
+          "bytes": 61,
+          "sha256": "de8d9e732fc0603a3e6b621ca6d4bbfb4375a9bf48a6889db8177ea04ab4dea1"
+        },
+        "directRawExact": true,
+        "reversedSourceAndASTExact": true
+      },
+      {
+        "line": 238,
+        "method": "equal",
+        "originalPin": {
+          "bytes": 43,
+          "sha256": "c6791673adb6caa0dbb3c5289a322c7dd6fdc94fa90a28f570bd905cfd145b82"
+        },
+        "directRawExact": true,
+        "reversedSourceAndASTExact": true
+      },
+      {
+        "line": 239,
+        "method": "equal",
+        "originalPin": {
+          "bytes": 303,
+          "sha256": "243439d33c5e4cb5c122330495b55d8a67dd6845b62528c5ece557af8fa17db0"
+        },
+        "directRawExact": false,
+        "reversedSourceAndASTExact": true
+      },
+      {
+        "line": 244,
+        "method": "equal",
+        "originalPin": {
+          "bytes": 61,
+          "sha256": "de8d9e732fc0603a3e6b621ca6d4bbfb4375a9bf48a6889db8177ea04ab4dea1"
+        },
+        "directRawExact": true,
+        "reversedSourceAndASTExact": true
+      },
+      {
+        "line": 251,
+        "method": "equal",
+        "originalPin": {
+          "bytes": 40,
+          "sha256": "f899d8d3f4823b6b409832edfe3f0ae3843e44b5ed4a3ece20f7780523386d81"
+        },
+        "directRawExact": true,
+        "reversedSourceAndASTExact": true
+      },
+      {
+        "line": 252,
+        "method": "equal",
+        "originalPin": {
+          "bytes": 40,
+          "sha256": "f899d8d3f4823b6b409832edfe3f0ae3843e44b5ed4a3ece20f7780523386d81"
+        },
+        "directRawExact": true,
+        "reversedSourceAndASTExact": true
+      },
+      {
+        "line": 253,
+        "method": "equal",
+        "originalPin": {
+          "bytes": 40,
+          "sha256": "86d0d195cd244db37f7a9b4da2dc6c7d886f7d65db715eda1db4ec61f363ec65"
+        },
+        "directRawExact": true,
+        "reversedSourceAndASTExact": true
+      },
+      {
+        "line": 255,
+        "method": "equal",
+        "originalPin": {
+          "bytes": 43,
+          "sha256": "8b7388a6b5071d19d59edd8844532ce8e2adfbe19772eb38f9a4b51a1720beb6"
+        },
+        "directRawExact": true,
+        "reversedSourceAndASTExact": true
+      },
+      {
+        "line": 256,
+        "method": "equal",
+        "originalPin": {
+          "bytes": 43,
+          "sha256": "8b7388a6b5071d19d59edd8844532ce8e2adfbe19772eb38f9a4b51a1720beb6"
+        },
+        "directRawExact": true,
+        "reversedSourceAndASTExact": true
+      },
+      {
+        "line": 257,
+        "method": "equal",
+        "originalPin": {
+          "bytes": 43,
+          "sha256": "8b7388a6b5071d19d59edd8844532ce8e2adfbe19772eb38f9a4b51a1720beb6"
+        },
+        "directRawExact": true,
+        "reversedSourceAndASTExact": true
+      },
+      {
+        "line": 258,
+        "method": "equal",
+        "originalPin": {
+          "bytes": 43,
+          "sha256": "4db8d9ef9dc51fd8033ceaa8e64bd0c5542c3198298868c78eaf58d37c01fa95"
+        },
+        "directRawExact": true,
+        "reversedSourceAndASTExact": true
+      },
+      {
+        "line": 265,
+        "method": "equal",
+        "originalPin": {
+          "bytes": 43,
+          "sha256": "223d6ae28fbda76ed52e0771f15517eba7eedbbf364f67b45f5663a918c1aa14"
+        },
+        "directRawExact": true,
+        "reversedSourceAndASTExact": true
+      },
+      {
+        "line": 297,
+        "method": "equal",
+        "originalPin": {
+          "bytes": 47,
+          "sha256": "ad0c97ca40002979895dce3a0f058d5a4412b13029bd0a9d8bb81de34623573d"
+        },
+        "directRawExact": true,
+        "reversedSourceAndASTExact": true
+      },
+      {
+        "line": 298,
+        "method": "equal",
+        "originalPin": {
+          "bytes": 47,
+          "sha256": "2c71c18564d52128bed50a585f5c2a176343f1c6a05b77dbc41d4b0c2776aa0f"
+        },
+        "directRawExact": true,
+        "reversedSourceAndASTExact": true
+      },
+      {
+        "line": 299,
+        "method": "equal",
+        "originalPin": {
+          "bytes": 200,
+          "sha256": "10ae5e8f2b1db75b8dceb9ce551a2d422f6b3c766fbd05931b04aab890bcaf2c"
+        },
+        "directRawExact": false,
+        "reversedSourceAndASTExact": true
+      },
+      {
+        "line": 306,
+        "method": "equal",
+        "originalPin": {
+          "bytes": 47,
+          "sha256": "ad0c97ca40002979895dce3a0f058d5a4412b13029bd0a9d8bb81de34623573d"
+        },
+        "directRawExact": true,
+        "reversedSourceAndASTExact": true
+      },
+      {
+        "line": 325,
+        "method": "ok",
+        "originalPin": {
+          "bytes": 46,
+          "sha256": "82840166c38969631535b013a5a1bbfdccff651b80245f51c9eaf7839839f54d"
+        },
+        "directRawExact": true,
+        "reversedSourceAndASTExact": true
+      },
+      {
+        "line": 326,
+        "method": "equal",
+        "originalPin": {
+          "bytes": 43,
+          "sha256": "cd1ae0847e157c3d09595d2be6723b00f68db15205dec3f1cd1dfa71b7309540"
+        },
+        "directRawExact": true,
+        "reversedSourceAndASTExact": true
+      },
+      {
+        "line": 331,
+        "method": "equal",
+        "originalPin": {
+          "bytes": 43,
+          "sha256": "c6791673adb6caa0dbb3c5289a322c7dd6fdc94fa90a28f570bd905cfd145b82"
+        },
+        "directRawExact": true,
+        "reversedSourceAndASTExact": true
+      },
+      {
+        "line": 360,
+        "method": "match",
+        "originalPin": {
+          "bytes": 75,
+          "sha256": "ee4b2a5da420e10e9a935a9ba04beafeec0ac82315dd0f9758d76d264ee6ceb8"
+        },
+        "directRawExact": true,
+        "reversedSourceAndASTExact": true
+      },
+      {
+        "line": 361,
+        "method": "match",
+        "originalPin": {
+          "bytes": 78,
+          "sha256": "1c3005f99474a7b4ca97e0ef4c54452bcefd169e8710932e593147cfa4eeaddc"
+        },
+        "directRawExact": true,
+        "reversedSourceAndASTExact": true
+      },
+      {
+        "line": 381,
+        "method": "equal",
+        "originalPin": {
+          "bytes": 36,
+          "sha256": "2227360b0a8122bed8949bdb39ae17bfbd5f3a7b50981046b86a96ed92078e2e"
+        },
+        "directRawExact": true,
+        "reversedSourceAndASTExact": true
+      }
+    ]
+  },
+  "original10msDelayAndCommentPreserved": [
+    {
+      "line": 266,
+      "text": "      // postgres-js binds timestamptz parameters at millisecond precision."
+    },
+    {
+      "line": 267,
+      "text": "      await new Promise(resolve => setTimeout(resolve, 10));"
+    }
+  ],
+  "onlyPruneFirstPlaceholderConditional": true,
+  "observeIntegerAndPruneLimitPlaceholdersUnchanged": true,
+  "allOtherSourceGuardsSqlRolesGrantsLocksTimeoutCleanupByteExactAfterAuthorizedReverse": true,
+  "necessaryInputPins": [
+    {
+      "path": "node_modules/postgres/package.json",
+      "bytes": 1814,
+      "sha256": "944d492614959389a5739ef2893bc1830fb773ff042159d9b331d43b2f6792e9"
+    },
+    {
+      "path": "node_modules/postgres/src/types.js",
+      "bytes": 10935,
+      "sha256": "1883bd4536eab1c94b9e708d325b13708b0f18ec80020e3a825f34a72f603b81"
+    },
+    {
+      "path": "node_modules/postgres/src/connection.js",
+      "bytes": 28690,
+      "sha256": "ee3a218d9aa6a6f2887c1a19da50009335fe84c11a5431d5cab72d6bc528632f"
+    },
+    {
+      "path": "package-lock.json",
+      "bytes": 830546,
+      "sha256": "f9c65b6e373a231d52d6eda634bb5f947dda3174734cd70e2b811e09fff0b6f0"
+    },
+    {
+      "path": "packages/core/src/test-support/postgres-native-cluster.mjs",
+      "bytes": 6300,
+      "sha256": "6b5923be8d3bdcd061033eed1af2f67f3b87fa2fca1f2cf0a0b2eb0eb2cb8d2a"
+    },
+    {
+      "path": "scripts/db/cutover/pg73-native-fixture.mjs",
+      "bytes": 6849,
+      "sha256": "124ddd43c2594d0daaac66a4e7158e5df90b00a6d73f03cbcac9e8f853a7346f"
+    },
+    {
+      "path": "packages/core/migrations-proposals/postgres/shared-key-buyer-budget-receipt-retention-v346.sql",
+      "bytes": 11375,
+      "sha256": "f1f745cff5724ee048c7d7272fa57546b61b6d3a4ed1711e1a97b1db80fa4767"
+    },
+    {
+      "path": "packages/core/migrations-proposals/postgres/shared-key-buyer-budget-receipt-maintenance.sql",
+      "bytes": 9522,
+      "sha256": "107f4109e905e346fbd8c2b88c47f3b8068237d854e2033a4dbd2e45eb0c4f67"
+    },
+    {
+      "path": "packages/core/migrations-proposals/postgres/shared-key-buyer-budget-receipt-v2.sql",
+      "bytes": 31614,
+      "sha256": "56ebaecd1425206df81c9dc7981c34e5e246047f188355f5d14103e2dee3270c"
+    }
+  ],
+  "driverMechanism": {
+    "lockedVersion": "3.4.9",
+    "timestampOID1184Serializer": "x => (x instanceof Date ? x : new Date(x)).toISOString()",
+    "textOID25Serializer": "x => '' + x",
+    "serverDescriptionFeedsParameterTypes": true,
+    "actualSerializerControlNotRerun": true,
+    "serverOIDInFailureNotObserved": true,
+    "actualTimeValuesInFailureNotObserved": true,
+    "staticCandidatePreservesOriginalSQLTextPrecision": true
+  },
+  "timeBoundary": {
+    "firstSeenDefaultAndObservationUsePGClock": [
+      {
+        "file": "shared-key-buyer-budget-receipt-maintenance.sql",
+        "line": 51,
+        "text": "        AND a.attname='first_seen_at' AND NOT a.attisdropped)"
+      },
+      {
+        "file": "shared-key-buyer-budget-receipt-maintenance.sql",
+        "line": 81,
+        "text": "  ADD COLUMN first_seen_at timestamptz;"
+      },
+      {
+        "file": "shared-key-buyer-budget-receipt-maintenance.sql",
+        "line": 83,
+        "text": "  ALTER COLUMN first_seen_at SET DEFAULT pg_catalog.clock_timestamp();"
+      },
+      {
+        "file": "shared-key-buyer-budget-receipt-maintenance.sql",
+        "line": 104,
+        "text": "      WHERE first_seen_at IS NULL"
+      },
+      {
+        "file": "shared-key-buyer-budget-receipt-maintenance.sql",
+        "line": 108,
+        "text": "      SET first_seen_at=pg_catalog.clock_timestamp()"
+      },
+      {
+        "file": "shared-key-buyer-budget-receipt-maintenance.sql",
+        "line": 130,
+        "text": "    OR p_before IS NULL OR p_before>pg_catalog.clock_timestamp()"
+      },
+      {
+        "file": "shared-key-buyer-budget-receipt-maintenance.sql",
+        "line": 139,
+        "text": "      WHERE first_seen_at<p_before AND xact_id<safe_xmin"
+      },
+      {
+        "file": "shared-key-buyer-budget-receipt-maintenance.sql",
+        "line": 140,
+        "text": "      ORDER BY first_seen_at,xact_id,user_id"
+      },
+      {
+        "file": "shared-key-buyer-budget-receipt-maintenance.sql",
+        "line": 165,
+        "text": "        AND a.attname='first_seen_at' AND a.atttypid='timestamptz'::pg_catalog.regtype"
+      },
+      {
+        "file": "shared-key-buyer-budget-receipt-maintenance.sql",
+        "line": 167,
+        "text": "        AND pg_catalog.pg_get_expr(d.adbin,d.adrelid)='clock_timestamp()')"
+      },
+      {
+        "file": "shared-key-buyer-budget-receipt-retention-v346.sql",
+        "line": 46,
+        "text": "      WHERE a.attrelid=receipt_oid AND a.attname='first_seen_at'"
+      },
+      {
+        "file": "shared-key-buyer-budget-receipt-retention-v346.sql",
+        "line": 49,
+        "text": "        AND pg_catalog.pg_get_expr(d.adbin,d.adrelid)='clock_timestamp()')"
+      },
+      {
+        "file": "shared-key-buyer-budget-receipt-retention-v346.sql",
+        "line": 51,
+        "text": "      WHERE a.attrelid=receipt_oid AND a.attname='finalized_observed_at'"
+      },
+      {
+        "file": "shared-key-buyer-budget-receipt-retention-v346.sql",
+        "line": 77,
+        "text": "  ADD COLUMN finalized_observed_at timestamptz;"
+      },
+      {
+        "file": "shared-key-buyer-budget-receipt-retention-v346.sql",
+        "line": 80,
+        "text": "  p_limit integer)"
+      },
+      {
+        "file": "shared-key-buyer-budget-receipt-retention-v346.sql",
+        "line": 92,
+        "text": "    OR p_limit IS NULL OR p_limit NOT BETWEEN 1 AND 1000"
+      },
+      {
+        "file": "shared-key-buyer-budget-receipt-retention-v346.sql",
+        "line": 101,
+        "text": "      WHERE finalized_observed_at IS NULL AND xact_id<safe_xmin"
+      },
+      {
+        "file": "shared-key-buyer-budget-receipt-retention-v346.sql",
+        "line": 102,
+        "text": "      ORDER BY xact_id,user_id FOR UPDATE SKIP LOCKED LIMIT p_limit"
+      },
+      {
+        "file": "shared-key-buyer-budget-receipt-retention-v346.sql",
+        "line": 105,
+        "text": "      SET finalized_observed_at=pg_catalog.clock_timestamp()"
+      },
+      {
+        "file": "shared-key-buyer-budget-receipt-retention-v346.sql",
+        "line": 108,
+        "text": "        AND r.finalized_observed_at IS NULL"
+      },
+      {
+        "file": "shared-key-buyer-budget-receipt-retention-v346.sql",
+        "line": 118,
+        "text": "  p_before timestamptz,p_limit integer)"
+      },
+      {
+        "file": "shared-key-buyer-budget-receipt-retention-v346.sql",
+        "line": 130,
+        "text": "    OR p_before IS NULL OR p_before>pg_catalog.clock_timestamp()"
+      },
+      {
+        "file": "shared-key-buyer-budget-receipt-retention-v346.sql",
+        "line": 131,
+        "text": "    OR p_limit IS NULL OR p_limit NOT BETWEEN 1 AND 1000"
+      },
+      {
+        "file": "shared-key-buyer-budget-receipt-retention-v346.sql",
+        "line": 140,
+        "text": "      WHERE finalized_observed_at<p_before AND xact_id<safe_xmin"
+      },
+      {
+        "file": "shared-key-buyer-budget-receipt-retention-v346.sql",
+        "line": 141,
+        "text": "      ORDER BY finalized_observed_at,xact_id,user_id"
+      },
+      {
+        "file": "shared-key-buyer-budget-receipt-retention-v346.sql",
+        "line": 142,
+        "text": "      FOR UPDATE SKIP LOCKED LIMIT p_limit"
+      },
+      {
+        "file": "shared-key-buyer-budget-receipt-retention-v346.sql",
+        "line": 147,
+        "text": "        AND r.finalized_observed_at<p_before"
+      },
+      {
+        "file": "shared-key-buyer-budget-receipt-retention-v346.sql",
+        "line": 171,
+        "text": "            'CREATE INDEX shared_key_buyer_budget_receipts_unobserved_v346 ON cinatoken_economic_outbox.shared_key_buyer_budget_tx_receipts USING btree (xact_id, user_id) WHERE (finalized_observed_at IS NULL)')"
+      },
+      {
+        "file": "shared-key-buyer-budget-receipt-retention-v346.sql",
+        "line": 174,
+        "text": "            'CREATE INDEX shared_key_buyer_budget_receipts_retention_due_v346 ON cinatoken_economic_outbox.shared_key_buyer_budget_tx_receipts USING btree (finalized_observed_at, xact_id, user_id) WHERE (finalized_observed_at IS NOT NULL)'));"
+      },
+      {
+        "file": "shared-key-buyer-budget-receipt-retention-v346.sql",
+        "line": 190,
+        "text": "        AND a.attname='finalized_observed_at'"
+      }
+    ],
+    "cutoffSourceLine223": "clock_timestamp()::text",
+    "failingComparatorLine231": "first_seen_at < $1::timestamptz",
+    "failingAssertionLine235": "assert.equal(firstSeen.before_cutoff, true)",
+    "hypothesis": "A cutoff string later than first_seen_at can serialize through OID1184 to an earlier millisecond boundary, so an exact PG first_seen_at can compare >= the rounded-down cutoff. This explains a possible false strict-less result without changing SQL or retention policy, but actual values were not captured.",
+    "otherPointsSamePrecisionRisk": true,
+    "TimeZoneExplicitlySetInFixtureOrNativeCluster": false,
+    "nativeClusterFiltersPGEnv": true,
+    "actualSessionTimeZoneNotCaptured": true,
+    "defaultTimeZoneNotAssumed": true,
+    "noTimezoneRootCauseEvidence": true
+  },
+  "originalFailure": {
+    "sourceSHA": "6e2d65b35d4d60b3b14dac2ecbf9fbaa8ca363fa",
+    "nativeJobID": 112142276121,
+    "step90Failure": true,
+    "NodeExit1Preserved": true,
+    "TAP": {
+      "tests": 1,
+      "pass": 0,
+      "fail": 1,
+      "skip": 0
+    },
+    "location": "scripts/db/cutover/postgres-shared-key-buyer-receipt-retention-v346.native.test.mjs:235:14",
+    "expected": true,
+    "actual": false,
+    "after91to113Skipped": 23,
+    "fullRaw": {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-6e2-ci-terminal-observer-dbbc0b1231e543eb99e18eb9bbe45370/native-terminal.stdout.log",
+      "bytes": 537587,
+      "sha256": "339c0ac8f83d71356a22f9f6d90988dc88db358d3206aea2025c78eca8fb7334"
+    },
+    "rawProvenance": [
+      {
+        "closedReceipt": {
+          "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-6e2-ci-terminal-observer-dbbc0b1231e543eb99e18eb9bbe45370/native-terminal.closed.json",
+          "bytes": 913,
+          "sha256": "4aff7f9b77c8d3895851fe77dc5fa50d6a5d815036e51b228bffb6e7b2266d1d"
+        },
+        "collectorActual0": true,
+        "originalNativeStepExitNotZero": true,
+        "stdout": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-6e2-ci-terminal-observer-dbbc0b1231e543eb99e18eb9bbe45370\\native-terminal.stdout.log",
+          "bytes": 537587,
+          "sha256": "339c0ac8f83d71356a22f9f6d90988dc88db358d3206aea2025c78eca8fb7334"
+        },
+        "stderr": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-6e2-ci-terminal-observer-dbbc0b1231e543eb99e18eb9bbe45370\\native-terminal.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      {
+        "closedReceipt": {
+          "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-6e2-ci-terminal-observer-dbbc0b1231e543eb99e18eb9bbe45370/proxy-terminal.closed.json",
+          "bytes": 956,
+          "sha256": "dc3bac47d7c03d9a88aafdda81429ecf1a7a7fc5c27db9c1219f5706464b68a9"
+        },
+        "collectorActual0": true,
+        "originalNativeStepExitNotZero": true,
+        "stdout": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-6e2-ci-terminal-observer-dbbc0b1231e543eb99e18eb9bbe45370\\proxy-terminal.stdout.log",
+          "bytes": 49493,
+          "sha256": "c33b4103ff2182fd30b001802017f12195c593a3141dff93ff60c25cae57cc71"
+        },
+        "stderr": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-6e2-ci-terminal-observer-dbbc0b1231e543eb99e18eb9bbe45370\\proxy-terminal.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      }
+    ],
+    "derivedFailureExcerpt": {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-retention-v346-time-text-candidate-1a110046edafc3b0b4778a3a\\original-failure-group-derived-byte-excerpt.txt",
+      "bytes": 9476,
+      "sha256": "ed008d1ebf1fcb7c3341eed24aa6f6f834e33fa02c327e66033bfc348d8d6038",
+      "sourceByteStart": 528111,
+      "sourceByteEndExclusive": 537587,
+      "exactRawByteFragment": true,
+      "notOriginalProcessStdoutFile": true,
+      "notNewNativeProcess": true
+    },
+    "liveCauseConfirmed": false,
+    "priorD537PassDoesNotProveThisRunPass": true
+  },
+  "actions": {
+    "repositoryWrites": 0,
+    "GitWrites": 0,
+    "MDWrites": 0,
+    "PGWorkerdOrNativeRuns": 0,
+    "appRuns": 0,
+    "controlRuns": 0,
+    "CIRequests": 0,
+    "networkRequests": 0,
+    "fixtureImportedOrExecuted": false,
+    "newNativePass": false,
+    "productionSQLChanged": false,
+    "sleepAdded": false,
+    "oldFrozenRootsWritten": false
+  },
+  "STOPWRITEAfterCloseAndSeal": true
+}

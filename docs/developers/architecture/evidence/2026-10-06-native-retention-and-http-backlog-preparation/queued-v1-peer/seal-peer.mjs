@@ -1,0 +1,10 @@
+import fs from 'node:fs';
+import path from 'node:path';
+import assert from 'node:assert/strict';
+import {createHash} from 'node:crypto';
+const root='C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-source-peer-60rqza',sha=b=>createHash('sha256').update(b).digest('hex');
+const close=JSON.parse(fs.readFileSync(path.join(root,'source-package-review.closed.json')));assert.equal(close.actualExit,0);assert.equal(close.signal,null);assert.equal(close.spawnError,null);
+const entries=fs.readdirSync(root).sort().map(file=>{const p=path.join(root,file),s=fs.lstatSync(p);assert(s.isFile()&&!s.isSymbolicLink());const b=fs.readFileSync(p);return {file,bytes:b.length,sha256:sha(b)}});
+const seal={schema:'queued-write-source-independent-peer-stopwrite-v1',sealedAt:new Date().toISOString(),sourceRoot:root,filesBeforeSelf:entries.length,totalBytesBeforeSelf:entries.reduce((n,e)=>n+e.bytes,0),entries,selfExcludedOnly:true,STOPWRITE:true,noFurtherWrites:true,sourceOnly:true,moduleEvaluated:false,repositoryWrites:0,runtimeExecution:false,CIExecution:false,productionRequests:0,gatePassDerived:false,causeProven:false,nonblockingN1Retained:true};
+const p=path.join(root,'STOPWRITE-peer-seal.json');fs.writeFileSync(p,JSON.stringify(seal,null,2)+'\n',{flag:'wx'});
+const b=fs.readFileSync(p),f=fs.readFileSync(path.join(root,'FINAL-queued-write-source-independent-peer.json'));console.log(JSON.stringify({root,filesIncludingSelf:entries.length+1,FINAL:{bytes:f.length,sha256:sha(f)},seal:{bytes:b.length,sha256:sha(b)},STOPWRITE:true,originalN1NotRewritten:true}));

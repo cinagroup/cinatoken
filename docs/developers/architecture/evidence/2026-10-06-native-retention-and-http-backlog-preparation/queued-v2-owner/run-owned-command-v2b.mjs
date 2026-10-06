@@ -1,0 +1,20 @@
+import fs from 'node:fs';
+import crypto from 'node:crypto';
+import { spawn } from 'node:child_process';
+const root = 'C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-write-v2-8e7e441d5c7547dc93ae0c2c76898bf8';
+const out = `${root}/prepare-v2b.stdout.log`, err = `${root}/prepare-v2b.stderr.log`, file = `${root}/prepare-v2b.result.json`;
+for (const path of [out, err, file]) if (fs.existsSync(path)) throw new Error('Refusing overwrite');
+const stdout = fs.openSync(out, 'wx'), stderr = fs.openSync(err, 'wx');
+const beganAt = new Date().toISOString();
+let timedOut = false, spawnError = null;
+const args = [`${root}/prepare-v2b.mjs`];
+const child = spawn(process.execPath, args, { windowsHide: true, cwd: root, stdio: ['ignore', stdout, stderr] });
+const timer = setTimeout(() => { timedOut = true; child.kill('SIGKILL'); }, 60000);
+child.once('error', error => { spawnError = { name: error.name, code: error.code ?? null }; });
+child.once('close', (actualExit, signal) => {
+  clearTimeout(timer); fs.closeSync(stdout); fs.closeSync(stderr);
+  const desc = path => { const b = fs.readFileSync(path); return { path, bytes: b.length, sha256: crypto.createHash('sha256').update(b).digest('hex') }; };
+  fs.writeFileSync(file, `${JSON.stringify({ schema: 'cinatoken-queued-write-v2-preparation-command-closed-v1', closed: true, beganAt, endedAt: new Date().toISOString(), program: process.execPath, args, actualExit, signal, timedOut, spawnError, stdout: desc(out), stderr: desc(err), onlyTempPreparation: true, appOrRuntimeExecuted: false, repoWrite: false, gitOrCIExecuted: false, gatePassDerived: false }, null, 2)}\n`, { flag: 'wx' });
+  console.log(JSON.stringify({ receipt: file, closed: true, actualExit, signal, timedOut }));
+  process.exitCode = Number.isInteger(actualExit) && !signal && !timedOut && !spawnError ? actualExit : 1;
+});

@@ -1,0 +1,13 @@
+{
+  "schema": "cinatoken-queued-write-temp-candidate-tool-observations-v1",
+  "authority": "Actual tool terminal fields transcribed without rerun; nested syntax receipts hold actual spawnSync return and complete raw stdout/stderr hashes.",
+  "records": [
+    {"label":"build-candidate","chunk_id":"945ca5","exit_code":0,"wall_time_seconds":0.3201239,"receipt":"build-candidate.result.json","closed":true},
+    {"label":"verify-candidate","chunk_id":"5844b3","exit_code":0,"wall_time_seconds":0.6309744,"receipt":"verify-candidate.result.json","closed":true},
+    {"label":"seal-candidate","chunk_id":"348d63","exit_code":0,"wall_time_seconds":0.2882366,"receipt":"seal-candidate.result.json","closed":true}
+  ],
+  "sourceOrAppRuntimeExecuted": false,
+  "gitOrCIExecuted": false,
+  "gatePassDerived": false,
+  "originalRuntimeFailuresUpgraded": false
+}

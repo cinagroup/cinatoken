@@ -1,0 +1,26 @@
+{
+  "schema": "cinatoken-candidate-node-syntax-closed-v1",
+  "closed": true,
+  "startedAt": "2026-10-06T06:51:11.505Z",
+  "endedAt": "2026-10-06T06:51:11.573Z",
+  "program": "C:\\Program Files\\nodejs\\node.exe",
+  "args": [
+    "--check",
+    "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-write-candidate-125e5fd5336c42b18c0bb59dda8f4942/queued-pressure-extension.snippet.mjs"
+  ],
+  "actualExit": 0,
+  "signal": null,
+  "error": null,
+  "stdout": {
+    "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-write-candidate-125e5fd5336c42b18c0bb59dda8f4942/node-check-queued-pressure-extension-snippet-mjs.stdout.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "stderr": {
+    "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-write-candidate-125e5fd5336c42b18c0bb59dda8f4942/node-check-queued-pressure-extension-snippet-mjs.stderr.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "moduleEvaluated": false,
+  "appOrRuntimeExecuted": false
+}

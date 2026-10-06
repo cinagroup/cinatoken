@@ -1,0 +1,36 @@
+{
+  "at": "2026-10-06T07:12:23.415Z",
+  "finishedAt": "2026-10-06T07:12:23.487Z",
+  "executable": "C:/Program Files/Git/cmd/git.exe",
+  "args": [
+    "-c",
+    "core.longpaths=true",
+    "-c",
+    "core.whitespace=cr-at-eol",
+    "diff",
+    "--cached",
+    "--check",
+    "--",
+    "scripts/db/cutover/postgres-shared-key-buyer-receipt-retention-v346.native.test.mjs",
+    "scripts/diagnostics/v364-direct-socket/run-direct-socket.mjs",
+    "scripts/diagnostics/v364-direct-socket/queued-write-source.mjs",
+    "scripts/diagnostics/v364-direct-socket/README.md",
+    "scripts/diagnostics/v364-direct-socket/sealed-package.json",
+    "docs/developers/architecture/web-frontend-migration.md",
+    "docs/developers/architecture/evidence/2026-10-06-native-retention-and-http-backlog-preparation/collection.json",
+    "docs/developers/architecture/evidence/2026-10-06-native-retention-and-http-backlog-preparation/README.md"
+  ],
+  "cwd": "C:/cinagroup/cinatoken",
+  "actualExit": 0,
+  "signal": null,
+  "stdout": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-followup-da56f69292e44387886a9cc8ffa36638\\owned-staged-diff-check.stdout.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "stderr": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-followup-da56f69292e44387886a9cc8ffa36638\\owned-staged-diff-check.stderr.log",
+    "bytes": 80,
+    "sha256": "4637b2478cea95e221ecbde1b46874fb0f18d282e08504cf0d1074595c4348d1"
+  }
+}

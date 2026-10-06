@@ -1,0 +1,579 @@
+{
+  "schema": "retention-seven-time-casts-independent-review-v1",
+  "at": "2026-10-06T07:07:14.796Z",
+  "preparedOnly": true,
+  "reviewPassed": true,
+  "scope": "scripts/db/cutover/postgres-shared-key-buyer-receipt-retention-v346.native.test.mjs",
+  "sourceHead": "6e2d65b35d4d60b3b14dac2ecbf9fbaa8ca363fa",
+  "candidate": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-retention-seven-casts-independent-review-efe3bd65f96244679d75b90f992fc733\\candidate-review.native.test.mjs",
+    "bytes": 20768,
+    "sha256": "12c37aa3f7151ccab6b39b98fe720661a95695351806c0c802454d8b22c560e6"
+  },
+  "before": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-retention-seven-casts-independent-review-efe3bd65f96244679d75b90f992fc733\\source-before.snapshot.txt",
+    "blob": "47b50617fcc785a982efc79c71834267adbe7a20",
+    "bytes": 20654,
+    "sha256": "c9093cb5c5f167f8e7604b9b91c4d937c8b638a8b0cd1f2dbcdeb88a140dc984"
+  },
+  "ownerInputs": {
+    "root": "C:/Users/cina/AppData/Local/Temp/cinatoken-retention-v346-time-text-candidate-1a110046edafc3b0b4778a3a",
+    "final": {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-retention-v346-time-text-candidate-1a110046edafc3b0b4778a3a\\FINAL-retention-seven-time-input-candidate.json",
+      "bytes": 26187,
+      "sha256": "b9007222d13aa49b2e77ed4c4ea4a79f6a0a3b458d86955542a4c50cc267aaf9"
+    },
+    "gitReceipt": {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-retention-v346-time-text-candidate-1a110046edafc3b0b4778a3a\\baseline-git.closed.json",
+      "bytes": 1227,
+      "sha256": "4edbac4f4e2265a0b4df05df693a07091fe70a8296c22417888c6642ca2d3c41"
+    },
+    "originalGitActualExit": 0,
+    "gitStdout": {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-retention-v346-time-text-candidate-1a110046edafc3b0b4778a3a\\baseline-git.stdout.log",
+      "bytes": 41414,
+      "sha256": "6902dba831f5ae779b0d4b65f30417ec0088bba697458bd60c869a6cbb10bd2c"
+    },
+    "stdin": {
+      "text": "6e2d65b35d4d60b3b14dac2ecbf9fbaa8ca363fa:scripts/db/cutover/postgres-shared-key-buyer-receipt-retention-v346.native.test.mjs\nd537f83b6389a4e5bbd7f92325f74d77e6bdfc9a:scripts/db/cutover/postgres-shared-key-buyer-receipt-retention-v346.native.test.mjs\n",
+      "bytes": 250,
+      "sha256": "a3c778acbb8c34c9a2be9761803ce2c7af408db1353c7804322567296589f38a"
+    },
+    "decodedRecords": [
+      {
+        "blob": "47b50617fcc785a982efc79c71834267adbe7a20",
+        "type": "blob",
+        "bytes": 20654,
+        "sha256": "c9093cb5c5f167f8e7604b9b91c4d937c8b638a8b0cd1f2dbcdeb88a140dc984"
+      },
+      {
+        "blob": "47b50617fcc785a982efc79c71834267adbe7a20",
+        "type": "blob",
+        "bytes": 20654,
+        "sha256": "c9093cb5c5f167f8e7604b9b91c4d937c8b638a8b0cd1f2dbcdeb88a140dc984"
+      }
+    ]
+  },
+  "onlyChanges": {
+    "count": 7,
+    "lines": [
+      164,
+      231,
+      240,
+      288,
+      291,
+      301,
+      352
+    ],
+    "explicitTimestampParameters": 6,
+    "explicitLines": [
+      231,
+      240,
+      288,
+      291,
+      301,
+      352
+    ],
+    "dynamicPruneFirstPlaceholder": 1,
+    "integerObserveAndPruneLimitUnchanged": true,
+    "allOtherNamesArgsAndExpressionsUnchanged": true
+  },
+  "fullBytesAfterSevenChangeReverseExact": true,
+  "entireASTAfterReverseExact": true,
+  "entireASTAfterStructuralNormalizationExact": true,
+  "assertions": {
+    "count": 36,
+    "directRawExact": 34,
+    "changedNestedSQLOnly": [
+      {
+        "statementLine": 239,
+        "method": "equal"
+      },
+      {
+        "statementLine": 299,
+        "method": "equal"
+      }
+    ],
+    "allSourceAndASTAfterReverseExact": true,
+    "originalPins": [
+      {
+        "line": 35,
+        "method": "rejects",
+        "directRawExact": true,
+        "reverseExact": true,
+        "original": {
+          "bytes": 234,
+          "sha256": "05514cde409832b4b6f105906ddb4d138e1e1f52829646931358b69e2851260c"
+        }
+      },
+      {
+        "line": 37,
+        "method": "equal",
+        "directRawExact": true,
+        "reverseExact": true,
+        "original": {
+          "bytes": 46,
+          "sha256": "4164a332444944dc2c33ea4d08e919b7cf031e7c815a03aeacf3c1af076bcb70"
+        }
+      },
+      {
+        "line": 38,
+        "method": "equal",
+        "directRawExact": true,
+        "reverseExact": true,
+        "original": {
+          "bytes": 63,
+          "sha256": "65ea0ffd2b93d90c44f4c9f6c3b0beb354d63204546539d95de57471debe5158"
+        }
+      },
+      {
+        "line": 60,
+        "method": "match",
+        "directRawExact": true,
+        "reverseExact": true,
+        "original": {
+          "bytes": 58,
+          "sha256": "67cf60d3a3318d7ca981ee1cc5cf7e2308c719f09a0f7eb04a2d0bca6f4e62ef"
+        }
+      },
+      {
+        "line": 85,
+        "method": "equal",
+        "directRawExact": true,
+        "reverseExact": true,
+        "original": {
+          "bytes": 31,
+          "sha256": "d405ab114c12dacc92ad46e64a2e613db10552c6e784f291d097af4d57d366f0"
+        }
+      },
+      {
+        "line": 131,
+        "method": "equal",
+        "directRawExact": true,
+        "reverseExact": true,
+        "original": {
+          "bytes": 262,
+          "sha256": "1bb6a97cbb9ce30c68260eaa9eda2ecf717b66d4f936e7541c68caacdc3a03b6"
+        }
+      },
+      {
+        "line": 150,
+        "method": "equal",
+        "directRawExact": true,
+        "reverseExact": true,
+        "original": {
+          "bytes": 268,
+          "sha256": "e8d36fd1b617d6ba56caff633e92015bef3bdde6f790cacb0c700b974c1a0c7a"
+        }
+      },
+      {
+        "line": 156,
+        "method": "rejects",
+        "directRawExact": true,
+        "reverseExact": true,
+        "original": {
+          "bytes": 48,
+          "sha256": "ad90df456575b9689ef53cb98ec9497938c2b2523399a4555a66eb4ef62cb34b"
+        }
+      },
+      {
+        "line": 191,
+        "method": "equal",
+        "directRawExact": true,
+        "reverseExact": true,
+        "original": {
+          "bytes": 130,
+          "sha256": "6cc7c0d3b9916f281ec60ae5c91af52325b5781bee5d490e8703e501f0ed8a77"
+        }
+      },
+      {
+        "line": 199,
+        "method": "equal",
+        "directRawExact": true,
+        "reverseExact": true,
+        "original": {
+          "bytes": 131,
+          "sha256": "79374fbfe51d82f693be84e11e66263952084dfcd751cbaf866f3f967d3b507b"
+        }
+      },
+      {
+        "line": 206,
+        "method": "equal",
+        "directRawExact": true,
+        "reverseExact": true,
+        "original": {
+          "bytes": 130,
+          "sha256": "6cc7c0d3b9916f281ec60ae5c91af52325b5781bee5d490e8703e501f0ed8a77"
+        }
+      },
+      {
+        "line": 225,
+        "method": "equal",
+        "directRawExact": true,
+        "reverseExact": true,
+        "original": {
+          "bytes": 43,
+          "sha256": "cd1ae0847e157c3d09595d2be6723b00f68db15205dec3f1cd1dfa71b7309540"
+        }
+      },
+      {
+        "line": 235,
+        "method": "equal",
+        "directRawExact": true,
+        "reverseExact": true,
+        "original": {
+          "bytes": 43,
+          "sha256": "76b4fb0f11b9d2ae06cae842c5dbcafdb85f5e1d6f764dd3b4e2b6144b5ecb8f"
+        }
+      },
+      {
+        "line": 236,
+        "method": "equal",
+        "directRawExact": true,
+        "reverseExact": true,
+        "original": {
+          "bytes": 40,
+          "sha256": "e2b20c1793d5593feb01411141d0423c62841b3b39bf847483bbc96b780cdc13"
+        }
+      },
+      {
+        "line": 237,
+        "method": "equal",
+        "directRawExact": true,
+        "reverseExact": true,
+        "original": {
+          "bytes": 61,
+          "sha256": "de8d9e732fc0603a3e6b621ca6d4bbfb4375a9bf48a6889db8177ea04ab4dea1"
+        }
+      },
+      {
+        "line": 238,
+        "method": "equal",
+        "directRawExact": true,
+        "reverseExact": true,
+        "original": {
+          "bytes": 43,
+          "sha256": "c6791673adb6caa0dbb3c5289a322c7dd6fdc94fa90a28f570bd905cfd145b82"
+        }
+      },
+      {
+        "line": 239,
+        "method": "equal",
+        "directRawExact": false,
+        "reverseExact": true,
+        "original": {
+          "bytes": 303,
+          "sha256": "243439d33c5e4cb5c122330495b55d8a67dd6845b62528c5ece557af8fa17db0"
+        }
+      },
+      {
+        "line": 244,
+        "method": "equal",
+        "directRawExact": true,
+        "reverseExact": true,
+        "original": {
+          "bytes": 61,
+          "sha256": "de8d9e732fc0603a3e6b621ca6d4bbfb4375a9bf48a6889db8177ea04ab4dea1"
+        }
+      },
+      {
+        "line": 251,
+        "method": "equal",
+        "directRawExact": true,
+        "reverseExact": true,
+        "original": {
+          "bytes": 40,
+          "sha256": "f899d8d3f4823b6b409832edfe3f0ae3843e44b5ed4a3ece20f7780523386d81"
+        }
+      },
+      {
+        "line": 252,
+        "method": "equal",
+        "directRawExact": true,
+        "reverseExact": true,
+        "original": {
+          "bytes": 40,
+          "sha256": "f899d8d3f4823b6b409832edfe3f0ae3843e44b5ed4a3ece20f7780523386d81"
+        }
+      },
+      {
+        "line": 253,
+        "method": "equal",
+        "directRawExact": true,
+        "reverseExact": true,
+        "original": {
+          "bytes": 40,
+          "sha256": "86d0d195cd244db37f7a9b4da2dc6c7d886f7d65db715eda1db4ec61f363ec65"
+        }
+      },
+      {
+        "line": 255,
+        "method": "equal",
+        "directRawExact": true,
+        "reverseExact": true,
+        "original": {
+          "bytes": 43,
+          "sha256": "8b7388a6b5071d19d59edd8844532ce8e2adfbe19772eb38f9a4b51a1720beb6"
+        }
+      },
+      {
+        "line": 256,
+        "method": "equal",
+        "directRawExact": true,
+        "reverseExact": true,
+        "original": {
+          "bytes": 43,
+          "sha256": "8b7388a6b5071d19d59edd8844532ce8e2adfbe19772eb38f9a4b51a1720beb6"
+        }
+      },
+      {
+        "line": 257,
+        "method": "equal",
+        "directRawExact": true,
+        "reverseExact": true,
+        "original": {
+          "bytes": 43,
+          "sha256": "8b7388a6b5071d19d59edd8844532ce8e2adfbe19772eb38f9a4b51a1720beb6"
+        }
+      },
+      {
+        "line": 258,
+        "method": "equal",
+        "directRawExact": true,
+        "reverseExact": true,
+        "original": {
+          "bytes": 43,
+          "sha256": "4db8d9ef9dc51fd8033ceaa8e64bd0c5542c3198298868c78eaf58d37c01fa95"
+        }
+      },
+      {
+        "line": 265,
+        "method": "equal",
+        "directRawExact": true,
+        "reverseExact": true,
+        "original": {
+          "bytes": 43,
+          "sha256": "223d6ae28fbda76ed52e0771f15517eba7eedbbf364f67b45f5663a918c1aa14"
+        }
+      },
+      {
+        "line": 297,
+        "method": "equal",
+        "directRawExact": true,
+        "reverseExact": true,
+        "original": {
+          "bytes": 47,
+          "sha256": "ad0c97ca40002979895dce3a0f058d5a4412b13029bd0a9d8bb81de34623573d"
+        }
+      },
+      {
+        "line": 298,
+        "method": "equal",
+        "directRawExact": true,
+        "reverseExact": true,
+        "original": {
+          "bytes": 47,
+          "sha256": "2c71c18564d52128bed50a585f5c2a176343f1c6a05b77dbc41d4b0c2776aa0f"
+        }
+      },
+      {
+        "line": 299,
+        "method": "equal",
+        "directRawExact": false,
+        "reverseExact": true,
+        "original": {
+          "bytes": 200,
+          "sha256": "10ae5e8f2b1db75b8dceb9ce551a2d422f6b3c766fbd05931b04aab890bcaf2c"
+        }
+      },
+      {
+        "line": 306,
+        "method": "equal",
+        "directRawExact": true,
+        "reverseExact": true,
+        "original": {
+          "bytes": 47,
+          "sha256": "ad0c97ca40002979895dce3a0f058d5a4412b13029bd0a9d8bb81de34623573d"
+        }
+      },
+      {
+        "line": 325,
+        "method": "ok",
+        "directRawExact": true,
+        "reverseExact": true,
+        "original": {
+          "bytes": 46,
+          "sha256": "82840166c38969631535b013a5a1bbfdccff651b80245f51c9eaf7839839f54d"
+        }
+      },
+      {
+        "line": 326,
+        "method": "equal",
+        "directRawExact": true,
+        "reverseExact": true,
+        "original": {
+          "bytes": 43,
+          "sha256": "cd1ae0847e157c3d09595d2be6723b00f68db15205dec3f1cd1dfa71b7309540"
+        }
+      },
+      {
+        "line": 331,
+        "method": "equal",
+        "directRawExact": true,
+        "reverseExact": true,
+        "original": {
+          "bytes": 43,
+          "sha256": "c6791673adb6caa0dbb3c5289a322c7dd6fdc94fa90a28f570bd905cfd145b82"
+        }
+      },
+      {
+        "line": 360,
+        "method": "match",
+        "directRawExact": true,
+        "reverseExact": true,
+        "original": {
+          "bytes": 75,
+          "sha256": "ee4b2a5da420e10e9a935a9ba04beafeec0ac82315dd0f9758d76d264ee6ceb8"
+        }
+      },
+      {
+        "line": 361,
+        "method": "match",
+        "directRawExact": true,
+        "reverseExact": true,
+        "original": {
+          "bytes": 78,
+          "sha256": "1c3005f99474a7b4ca97e0ef4c54452bcefd169e8710932e593147cfa4eeaddc"
+        }
+      },
+      {
+        "line": 381,
+        "method": "equal",
+        "directRawExact": true,
+        "reverseExact": true,
+        "original": {
+          "bytes": 36,
+          "sha256": "2227360b0a8122bed8949bdb39ae17bfbd5f3a7b50981046b86a96ed92078e2e"
+        }
+      }
+    ]
+  },
+  "protected": {
+    "old10msDelayAndCommentExact": true,
+    "allSQLGuardsRoleClientsLocksPermissionsTimeoutCleanupAndImportsUnchangedAfterSevenAuthorizedReversals": true,
+    "necessaryInputs": [
+      {
+        "path": "C:\\cinagroup\\cinatoken\\node_modules\\postgres\\package.json",
+        "bytes": 1814,
+        "sha256": "944d492614959389a5739ef2893bc1830fb773ff042159d9b331d43b2f6792e9"
+      },
+      {
+        "path": "C:\\cinagroup\\cinatoken\\node_modules\\postgres\\src\\types.js",
+        "bytes": 10935,
+        "sha256": "1883bd4536eab1c94b9e708d325b13708b0f18ec80020e3a825f34a72f603b81"
+      },
+      {
+        "path": "C:\\cinagroup\\cinatoken\\node_modules\\postgres\\src\\connection.js",
+        "bytes": 28690,
+        "sha256": "ee3a218d9aa6a6f2887c1a19da50009335fe84c11a5431d5cab72d6bc528632f"
+      },
+      {
+        "path": "C:\\cinagroup\\cinatoken\\package-lock.json",
+        "bytes": 830546,
+        "sha256": "f9c65b6e373a231d52d6eda634bb5f947dda3174734cd70e2b811e09fff0b6f0"
+      },
+      {
+        "path": "C:\\cinagroup\\cinatoken\\packages\\core\\src\\test-support\\postgres-native-cluster.mjs",
+        "bytes": 6300,
+        "sha256": "6b5923be8d3bdcd061033eed1af2f67f3b87fa2fca1f2cf0a0b2eb0eb2cb8d2a"
+      },
+      {
+        "path": "C:\\cinagroup\\cinatoken\\scripts\\db\\cutover\\pg73-native-fixture.mjs",
+        "bytes": 6849,
+        "sha256": "124ddd43c2594d0daaac66a4e7158e5df90b00a6d73f03cbcac9e8f853a7346f"
+      },
+      {
+        "path": "C:\\cinagroup\\cinatoken\\packages\\core\\migrations-proposals\\postgres\\shared-key-buyer-budget-receipt-retention-v346.sql",
+        "bytes": 11375,
+        "sha256": "f1f745cff5724ee048c7d7272fa57546b61b6d3a4ed1711e1a97b1db80fa4767"
+      },
+      {
+        "path": "C:\\cinagroup\\cinatoken\\packages\\core\\migrations-proposals\\postgres\\shared-key-buyer-budget-receipt-maintenance.sql",
+        "bytes": 9522,
+        "sha256": "107f4109e905e346fbd8c2b88c47f3b8068237d854e2033a4dbd2e45eb0c4f67"
+      },
+      {
+        "path": "C:\\cinagroup\\cinatoken\\packages\\core\\migrations-proposals\\postgres\\shared-key-buyer-budget-receipt-v2.sql",
+        "bytes": 31614,
+        "sha256": "56ebaecd1425206df81c9dc7981c34e5e246047f188355f5d14103e2dee3270c"
+      }
+    ],
+    "necessaryInputsSecondReadExact": true,
+    "parser": {
+      "path": "C:\\cinagroup\\cinatoken\\node_modules\\acorn\\dist\\acorn.mjs",
+      "bytes": 230975,
+      "sha256": "efb0124a960b34d53f9928c4926bfcfd300bb6a3d7ab64ee949b3a8bed1c7e5f"
+    }
+  },
+  "nodeCheck": {
+    "at": "2026-10-06T07:07:14.695Z",
+    "finishedAt": "2026-10-06T07:07:14.786Z",
+    "executable": "C:\\Program Files\\nodejs\\node.exe",
+    "args": [
+      "--check",
+      "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-retention-seven-casts-independent-review-efe3bd65f96244679d75b90f992fc733\\candidate-review.native.test.mjs"
+    ],
+    "cwd": "C:/cinagroup/cinatoken",
+    "actualExit": 0,
+    "signal": null,
+    "spawnError": null,
+    "stdout": {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-retention-seven-casts-independent-review-efe3bd65f96244679d75b90f992fc733\\node-check.stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "stderr": {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-retention-seven-casts-independent-review-efe3bd65f96244679d75b90f992fc733\\node-check.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  },
+  "driverMechanism": {
+    "lockedVersion": "3.4.9",
+    "timestampSerializerSourceVerified": true,
+    "textSerializerSourceVerified": true,
+    "staticOnly": true,
+    "serializeControlRun": false,
+    "actualFailureServerOIDCaptured": false,
+    "actualFailureTimeValuesCaptured": false
+  },
+  "originalFailureBoundary": {
+    "runId": 37424911830,
+    "nativeJobId": 112142276121,
+    "firstFailureStep": 90,
+    "location": "scripts/db/cutover/postgres-shared-key-buyer-receipt-retention-v346.native.test.mjs:235:14",
+    "expected": true,
+    "actual": false,
+    "originalNodeExit": 1,
+    "originalTAP": {
+      "tests": 1,
+      "pass": 0,
+      "fail": 1
+    },
+    "followingSteps91to113Skipped": 23,
+    "legacyParent110And111to113NotExecuted": true,
+    "priorD537PassNotApplied": true
+  },
+  "rootCauseConfirmed": false,
+  "newNativePass": false,
+  "actions": {
+    "repositoryWrites": 0,
+    "oldFrozenRootsWrites": 0,
+    "gitCommands": 0,
+    "networkRequests": 0,
+    "CIRequests": 0,
+    "PGWorkerdOrApplicationRuns": 0,
+    "fixtureImportedOrExecuted": false
+  },
+  "truthBoundary": "Static preparation review and node --check only. The proposed text parameter casts preserve timestamp text before PostgreSQL casts it. Actual failure parameter OIDs and timestamp values were not observed; live root cause and native runtime success remain unconfirmed."
+}

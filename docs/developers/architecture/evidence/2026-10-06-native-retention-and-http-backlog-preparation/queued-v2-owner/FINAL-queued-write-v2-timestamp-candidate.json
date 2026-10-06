@@ -1,0 +1,165 @@
+{
+  "schema": "cinatoken-v364-queued-write-v2-timestamp-candidate-final-v1",
+  "beganAt": "2026-10-06T07:00:31.602Z",
+  "endedAt": "2026-10-06T07:00:31.788Z",
+  "actualLocalPreparationVerification": 0,
+  "result": "TEMP_CANDIDATE_PREPARED_NO_RUNTIME_OR_GATE_PASS",
+  "candidate": {
+    "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-write-v2-8e7e441d5c7547dc93ae0c2c76898bf8/run-direct-socket.candidate-v2.mjs",
+    "bytes": 52009,
+    "sha256": "8fbaaed9523ecb227bd0e47ce8092d7432c08f8b67fd8650569d69d711ef48a8"
+  },
+  "unchangedHelperReference": {
+    "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-write-candidate-125e5fd5336c42b18c0bb59dda8f4942/queued-write-source.mjs",
+    "bytes": 3557,
+    "sha256": "93417db1e3b0edbb3dd06b504bddee18ba6fbb1bbf31141cd20ce119dea7fb5d"
+  },
+  "v1CandidateReference": {
+    "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-write-candidate-125e5fd5336c42b18c0bb59dda8f4942/run-direct-socket.candidate.mjs",
+    "bytes": 51387,
+    "sha256": "e6cfdb5d6e3d8ab04b4bc97d278132b4439930a92465bcf72081ccc173dbb04e"
+  },
+  "v1FinalReference": {
+    "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-write-candidate-125e5fd5336c42b18c0bb59dda8f4942/FINAL-queued-write-candidate-preparation.json",
+    "bytes": 17518,
+    "sha256": "67b18553ee2d391a3b4b8a2536f574a0c1c9d67eb1eba755776e1e1b771d8a0d"
+  },
+  "v1StopWriteReference": {
+    "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-write-candidate-125e5fd5336c42b18c0bb59dda8f4942/STOPWRITE.json",
+    "bytes": 14291,
+    "sha256": "db8403d20e848497d66eb779a9322685d03fbe9cc1e581cdc74bffeb6c6f0c19"
+  },
+  "unchangedRepositorySourceReference": {
+    "path": "C:/cinagroup/cinatoken/scripts/diagnostics/v364-direct-socket/run-direct-socket.mjs",
+    "bytes": 34907,
+    "sha256": "621cb7384b32a25af7c37d411cd12c2d51bf47c241d9d1f24c1c3ee3989723f3",
+    "exactOldSourceReference": {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-write-candidate-125e5fd5336c42b18c0bb59dda8f4942/run-direct-socket.before.mjs",
+      "bytes": 34907,
+      "sha256": "621cb7384b32a25af7c37d411cd12c2d51bf47c241d9d1f24c1c3ee3989723f3"
+    }
+  },
+  "deltas": [
+    {
+      "old": "return { at, known: true, pid: owner.pid,",
+      "next": "return { at, sampleEndedAt: performance.now(), known: true, pid: owner.pid,",
+      "reason": "Known sample records sampling/validation completion time"
+    },
+    {
+      "old": "return { at, known: false, error: errorSafe(error),",
+      "next": "return { at, sampleEndedAt: performance.now(), known: false, error: errorSafe(error),",
+      "reason": "Unknown sample retains completion time too"
+    },
+    {
+      "old": "pressureBeforeReset: null,\n",
+      "next": "pressureBeforeReset: null,\n\t\t\t\t\tresetInvokeAt: null,\n",
+      "reason": "New queued client keeps explicit actual RST invocation timestamp"
+    },
+    {
+      "old": "\t\t\t\t\t\t\t\tevent(caseId, \"queued-immediate-pre-rst-backlog\", this.pressureBeforeReset);\n\t\t\t\t\t\t\t\tsocket.resetAndDestroy();",
+      "next": "\t\t\t\t\t\t\t\tevent(caseId, \"queued-immediate-pre-rst-backlog\", this.pressureBeforeReset);\n\t\t\t\t\t\t\t\tthis.resetInvokeAt = performance.now();\n\t\t\t\t\t\t\t\tsocket.resetAndDestroy();\n\t\t\t\t\t\t\t\tevent(caseId, \"queued-rst-api-return\", { resetInvokeAt: this.resetInvokeAt, resetReturnedAt: performance.now() });",
+      "reason": "Only queued function RST timestamp immediately precedes actual API; independent post-call event"
+    },
+    {
+      "old": "result.immediatePreRST = client.pressureBeforeReset;\n",
+      "next": "result.immediatePreRST = client.pressureBeforeReset;\n\t\tresult.resetInvokeAt = client.resetInvokeAt;\n",
+      "reason": "Record actual invocation timestamp in queued result"
+    },
+    {
+      "old": "client.pressureBeforeReset.at - prior.at < 100",
+      "next": "Number.isFinite(result.resetInvokeAt) && Number.isFinite(prior.sampleEndedAt) && Number.isFinite(client.pressureBeforeReset.sampleEndedAt) && prior.sampleEndedAt <= result.resetInvokeAt && client.pressureBeforeReset.sampleEndedAt <= result.resetInvokeAt && result.resetInvokeAt - prior.sampleEndedAt >= 0 && result.resetInvokeAt - prior.sampleEndedAt < 100",
+      "reason": "Age derives from actual RST invoke minus completed sample, nonnegative and under100ms"
+    }
+  ],
+  "onlyChangedExtraFunctions": [
+    "queuedSendBacklog",
+    "queuedWriteHttpClient",
+    "queuedWritePressureCase"
+  ],
+  "reverseEntireV1BytesExact": true,
+  "allOtherV1TopLevelASTExact": true,
+  "allOriginal13FunctionsASTAndBytesExact": true,
+  "originalBaselineFourArmsAndReaderCalibrationNotChanged": true,
+  "helperNotCopiedOrChanged": true,
+  "timestampSemantics": {
+    "at": "sampling attempt start retained",
+    "sampleEndedAt": "known or unknown sampling attempt completed before return",
+    "resetInvokeAt": "performance.now immediately before socket.resetAndDestroy in only queued client",
+    "resetReturnedAt": "independent queued-rst-api-return event records API return",
+    "admission": "actual resetInvokeAt - prior.sampleEndedAt must be nonnegative and below100ms; both prior and immediate sampleEndedAt must not exceed actual resetInvokeAt",
+    "originalPIDStartInodeFDQueueCriteriaUnchanged": true,
+    "originalHttpClientUnchanged": true
+  },
+  "limits": {
+    "kernelBacklogOnly": true,
+    "cppPendingWriteProven": false,
+    "pumpBranchConclusion": "unknown",
+    "sourceCancelFromSignalNotIntroduced": true,
+    "sourceCancelObservationNotFaked": true,
+    "originalFlagsDatesWindowsAssertionsAndWaitUntilNotChanged": true,
+    "overallOriginalFailureNotWashed": true,
+    "runtimeExecuted": false,
+    "originalPrepareOnlyRunnerExecuted": false,
+    "repositoryWrite": false,
+    "gitOrCIInvoked": false,
+    "sourceFetch": false,
+    "pgOrAppOrProductionExecution": false,
+    "oldV1And59And27RootsChanged": false,
+    "fullGoalComplete": false,
+    "gatePassDerived": false
+  },
+  "localCheck": {
+    "nodeSyntax": {
+      "schema": "cinatoken-queued-v2-node-syntax-closed-v1",
+      "closed": true,
+      "startedAt": "2026-10-06T07:00:31.710Z",
+      "endedAt": "2026-10-06T07:00:31.786Z",
+      "program": "C:\\Program Files\\nodejs\\node.exe",
+      "args": [
+        "--check",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-write-v2-8e7e441d5c7547dc93ae0c2c76898bf8/run-direct-socket.candidate-v2.mjs"
+      ],
+      "actualExit": 0,
+      "signal": null,
+      "error": null,
+      "stdout": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-write-v2-8e7e441d5c7547dc93ae0c2c76898bf8/node-check.stdout.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stderr": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-write-v2-8e7e441d5c7547dc93ae0c2c76898bf8/node-check.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "moduleEvaluated": false,
+      "runtimeExecuted": false
+    },
+    "ASTAndReverseTextOnly": true,
+    "originalFunctions": [
+      "bundle",
+      "nativeReaderBundle",
+      "observedBareBundle",
+      "bounded",
+      "createFixture",
+      "readyFixture",
+      "disposeFixture",
+      "httpClient",
+      "observedGet",
+      "cancellationCase",
+      "nativeReaderCalibration",
+      "strictBaseline",
+      "verifyNativeCalibrationObservations"
+    ]
+  },
+  "integration": "Use this V2 runner candidate with the unchanged helper pinned above only after peer/Root approval and a proper new package input seal; existing immutable V1 is historical preparation evidence, not a new runtime run.",
+  "retainedLocalPreparationFailure": {
+    "receipt": {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-write-v2-8e7e441d5c7547dc93ae0c2c76898bf8/prepare-v2.result.json",
+      "bytes": 1085,
+      "sha256": "f9e7445796ac638e28f89fbb3304a192d597546470838f5d5242b5e7e41c235e"
+    },
+    "actualExit": 1,
+    "reason": "Original broad text guard matched both original and queued client RST blocks and refused before writing any candidate. Corrected generator is a separate file and anchors the queued-only event."
+  }
+}

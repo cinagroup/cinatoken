@@ -1,0 +1,943 @@
+Refreshing run status every 45 seconds. Press Ctrl+C to quit.
+
+* main Proxy dispatch safety · 37424911830
+Triggered via push about 3 minutes ago
+
+JOBS
+* dispatch-safety (ID 112142275908)
+  ✓ Set up job
+  ✓ Run actions/checkout@v4
+  ✓ Run actions/setup-node@v4
+  ✓ Run npm ci
+  ✓ Run npm run typecheck -w @octafuse/proxy
+  ✓ Run npm run typecheck -w @octafuse/tool-engines
+  ✓ Run npm run typecheck:shared-key-summary -w @octafuse/core
+  ✓ Run npm run typecheck:dispatch-safety -w @octafuse/proxy
+  ✓ Run npm run test:dispatch-safety -w @octafuse/proxy
+  ✓ Run node --import tsx --test packages/proxy/scripts/staging/text-dispatch-workerd-wire-worker-conditions-successor.test.mjs
+  ✓ Preserve native Worker transport evidence
+  ✓ Run node --import tsx --test packages/proxy/scripts/staging/text-dispatch-relay-reset-v376.test.mjs
+  ✓ Run node --import tsx --test packages/proxy/scripts/staging/text-dispatch-response-reset-v377.test.mjs
+  ✓ Run node --import tsx --test packages/proxy/scripts/staging/text-dispatch-post-headers-v385.test.mjs
+  ✓ Run node --import tsx --test packages/core/src/storage/shared-key-economic-unsupported-backends.test.mjs
+  ✓ Run npm run test:unit -w @octafuse/tool-engines
+  ✓ Run node --import tsx --test src/services/egress/openai-embeddings-driver.test.ts src/services/egress/openai-rerank-driver.test.ts
+  ✓ Run node --import tsx --test src/services/shared-key-earnings.test.ts
+  ✓ Run node --import tsx --test src/services/shared-key-quote-attempt.test.ts
+  ✓ Run node --import tsx --test src/services/shared-key-economic-usage-handoff.test.ts
+  ✓ Run node --import tsx --test src/services/postgres-ordinary-budget-admission.test.ts src/services/request-budget-admission.test.ts
+  ✓ Run node --import tsx --test src/services/postgres-ordinary-budget-recovery.test.ts
+  ✓ Run node --import tsx --test src/services/postgres-ordinary-budget-request-owner.test.ts
+  ✓ Run node --import tsx --test src/services/authenticated-chat-budget-proof.test.ts
+  * Run node --import tsx --test src/services/chat-budget-owner-lifecycle.test.ts src/services/postgres-chat-budget-request-owner.test.ts
+  * Run npm run test:complete-chat-quote -w @octafuse/proxy
+  * Run node --import tsx --test scripts/staging/chat-holder-binding-v364.node.test.mjs scripts/staging/chat-holder-binding-v364-http-cancel-successor.test.mjs
+  * Run node --import tsx --test src/services/complete-chat-holder-dispatch-v385.test.ts
+  * Run node --import tsx --test src/services/postgres-complete-text-no-fetch-close-v388.test.ts
+  * Run node --import tsx --test src/services/postgres-complete-text-no-fetch-recovery-v389.test.ts src/services/hyperdrive-dedicated-role-transport-v390.test.ts src/runtime/complete-text-no-fetch-recovery-worker-v389.test.ts src/runtime/complete-text-holder-worker-v390.test.mjs
+  * Run node --import tsx --test src/services/postgres-complete-text-secretless-plan-v391.test.mjs src/services/complete-text-response-observation-v392.test.ts src/services/postgres-complete-text-response-observation-v392.test.ts src/runtime/complete-text-response-holder-worker-v394.test.mjs
+  * Run node --import tsx --test src/services/postgres-personal-key-auth-v395.test.mjs src/services/postgres-complete-text-routing-projection-v396.test.ts src/services/credential-free-route-attempts-v398.test.ts src/services/postgres-complete-text-sticky-routing-v398.test.mjs src/services/route-strategies/route-strategies.test.ts src/services/provider-sticky-routing.test.ts src/services/provider-routing-preferences.test.ts
+  * Run node --import tsx --test src/services/complete-chat-credential-free-dispatch-v400.test.ts
+  * Run node --import tsx --test src/services/credential-free-chat-preparation-v401.test.ts src/app-credential-free-chat-ingress-v401.test.ts
+  * Run node --test scripts/db/cutover/build-complete-text-auth-routing-recovery-coinstall-v400.test.mjs
+  * Run npm install --prefix .wrangler/v402-pglite-unit --no-save --no-package-lock @electric-sql/pglite@0.5.8
+  * Run node --test scripts/db/cutover/build-complete-text-platform-event-delivery-v402.test.mjs scripts/db/cutover/postgres-complete-text-platform-event-delivery-v402.test.mjs scripts/db/cutover/complete-text-platform-event-delivery-runner-v402.test.mjs
+  * Run node --import tsx --test src/storage/model-endpoints.sql-repositories.test.ts
+  * Run node --import tsx --test --test-name-pattern="opt-in authenticated Chat budget proof" src/routes/v1/request-dispatch-limit.test.ts
+  * Run node --import tsx --test --test-name-pattern="PostgreSQL Chat owner|stopped Chat request|dispatcher sends once after a PostgreSQL owner grant" src/routes/v1/request-dispatch-limit.test.ts
+  * Run node --import tsx --test src/services/postgres-guardrail-budget-admission.test.ts
+  * Run node --import tsx --test src/services/postgres-guardrail-budget-lifecycle-v353.test.ts
+  * Run node --import tsx --test src/services/postgres-guardrail-budget-extension-v355.test.ts
+  * Run node --import tsx --test src/services/postgres-guardrail-budget-request-port-v356.test.ts
+  * Run node --import tsx --test src/runtime/postgres-shared-earning-consumer.test.mjs
+  * Run node --import tsx --test src/runtime/postgres-shared-earning-delivery.test.mjs
+  * Run node --import tsx --test src/runtime/postgres-shared-earning-scanner.test.mjs
+  * Run npm run test:postgres-recovery-composition -w @octafuse/proxy
+  * Run npm run test:postgres-recovery-queue-owner -w @octafuse/proxy
+  * Run node --test scripts/deploy/gen-wrangler.test.mjs
+  * Run node --test scripts/deploy/gen-shared-earning-scanner-wrangler.test.mjs
+  * Run node --import tsx --test scripts/db/cutover/build-financial-consumer-direct-login-grant.test.ts
+  * Run node --import tsx --test scripts/db/cutover/build-shared-key-usage-repair-direct-login-grant.test.ts
+  * Run node --test scripts/db/cutover/openrouter-generation-cost-candidate-v372.test.mjs
+  * Run node --test scripts/db/cutover/build-postgres-shared-usage-repair-backfill.test.mjs
+  * Run node --test scripts/db/cutover/build-postgres-shared-usage-repair-durable-cursor.test.mjs
+  * Run node --test scripts/db/cutover/build-postgres-recovery-retention-review.test.mjs
+  * Run node --import tsx --test scripts/db/cutover/d1-shared-key-earnings-history.test.mjs
+  * Run node --import tsx --test scripts/db/cutover/d1-shared-key-earnings-projection-index.test.mjs
+  * Run node --import tsx --test packages/core/src/db/d1/portal-marketplace-rebuild.test.ts
+  * Run node --test scripts/db/cutover/build-request-legacy-parent-census.test.mjs scripts/db/cutover/build-request-legacy-parent-activation.test.mjs scripts/db/cutover/build-request-legacy-parent-default-acl-activation.test.mjs
+  * Run node --test packages/proxy/scripts/test-postgres-image-owner-workerd.test.mjs
+  * Run npm run typecheck:images:staging -w @octafuse/proxy
+  * Run npm run test:images:staging -w @octafuse/proxy
+  * Run npm run test:oauth:workerd -w @octafuse/proxy
+  * Post Run actions/setup-node@v4
+  * Post Run actions/checkout@v4
+✓ admin-playground-safety in 2m1s (ID 112142276103)
+  ✓ Set up job
+  ✓ Run actions/checkout@v4
+  ✓ Run actions/setup-node@v4
+  ✓ Run npm ci
+  ✓ Run npm run build:node-index -w @octafuse/core
+  ✓ Run npm run typecheck -w @octafuse/admin
+  ✓ Run node --import tsx --test lib/services/admin/users-service.test.ts
+  ✓ Run node --import tsx --test lib/routes/admin/earnings.test.ts
+  ✓ Run node --import tsx --test lib/routes/shared-key-history-error.test.ts
+  ✓ Run node --import tsx --test lib/shared-key-credited-usage-reader.test.ts
+  ✓ Run node --import tsx --test lib/shared-key-signed-stats-reader.test.ts
+  ✓ Run npm run test:playground -w @octafuse/admin
+  ✓ Post Run actions/setup-node@v4
+  ✓ Post Run actions/checkout@v4
+  ✓ Complete job
+✓ config-cutover-contracts in 1m31s (ID 112142276113)
+  ✓ Set up job
+  ✓ Run actions/checkout@v4
+  ✓ Run actions/setup-node@v4
+  ✓ Run npm ci --ignore-scripts
+  ✓ Run npm run build:node-index -w @octafuse/core
+  ✓ Run npx tsc -p tsconfig.json --noEmit --pretty false
+  ✓ Run npx tsx --test scripts/db/lib/config-cutover-reconcile.test.ts scripts/db/cutover/preflight-d1-source.test.ts
+  ✓ Run npm run test:d1-portal-ledger
+  ✓ Run npm run test:mysql-migration
+  ✓ Run npm run test:postgres-migration
+  ✓ Post Run actions/setup-node@v4
+  ✓ Post Run actions/checkout@v4
+  ✓ Complete job
+* native-financial-consumer (ID 112142276121)
+  ✓ Set up job
+  ✓ Initialize containers
+  ✓ Run actions/checkout@v4
+  ✓ Run actions/setup-node@v4
+  ✓ Run npm ci
+  ✓ Run npm run build:node-index -w @octafuse/core
+  ✓ Run install -d -o postgres -g postgres -m 0755 .wrangler/staging .wrangler/staging/pg-native-dispatch-tests
+  ✓ Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  ✓ Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  ✓ Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  ✓ Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  ✓ Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  ✓ Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  ✓ Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  ✓ Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  ✓ Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  ✓ Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  ✓ Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  ✓ Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  ✓ Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  ✓ Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  ✓ Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  ✓ Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  ✓ Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  ✓ Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  ✓ Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  ✓ Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  ✓ Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  ✓ Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  ✓ Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  ✓ Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  ✓ Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  ✓ Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  ✓ Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  ✓ Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  ✓ Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  ✓ Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  ✓ Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  ✓ Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  ✓ Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  ✓ Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  ✓ Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  ✓ Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  ✓ Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  ✓ Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  ✓ Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  * Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  * Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  * Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  * Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  * Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  * Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  * Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  * Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  * Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  * Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  * Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  * Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  * Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  * Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  * Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  * Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  * Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  * Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  * Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  * Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  * Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  * Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  * Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  * Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  * Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  * Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  * Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  * Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  * Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  * Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  * Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  * Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  * Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  * Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  * Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  * Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  * Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  * Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  * Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  * Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  * Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  * Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  * Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  * Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  * Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  * Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  * Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  * Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  * Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  * Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  * Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  * Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  * Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  * Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  * Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  * Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  * Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  * Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  * Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  * Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  * Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  * Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  * Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  * Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  * Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  * Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  * Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  * Post Run actions/setup-node@v4
+  * Post Run actions/checkout@v4
+  * Stop containers
+
+ANNOTATIONS
+! Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/checkout@v4, actions/setup-node@v4. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/
+admin-playground-safety: .github#2
+
+- "The ubuntu-latest label will migrate to Ubuntu 26 beginning October 19, 2026. For more information, see https://github.com/actions/runner-images/issues/14748"
+admin-playground-safety: .github#1
+
+! Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/checkout@v4, actions/setup-node@v4. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/
+config-cutover-contracts: .github#2
+
+- "The ubuntu-latest label will migrate to Ubuntu 26 beginning October 19, 2026. For more information, see https://github.com/actions/runner-images/issues/14748"
+config-cutover-contracts: .github#1
+
+Refreshing run status every 45 seconds. Press Ctrl+C to quit.
+
+* main Proxy dispatch safety · 37424911830
+Triggered via push about 4 minutes ago
+
+JOBS
+X dispatch-safety in 4m4s (ID 112142275908)
+  ✓ Set up job
+  ✓ Run actions/checkout@v4
+  ✓ Run actions/setup-node@v4
+  ✓ Run npm ci
+  ✓ Run npm run typecheck -w @octafuse/proxy
+  ✓ Run npm run typecheck -w @octafuse/tool-engines
+  ✓ Run npm run typecheck:shared-key-summary -w @octafuse/core
+  ✓ Run npm run typecheck:dispatch-safety -w @octafuse/proxy
+  ✓ Run npm run test:dispatch-safety -w @octafuse/proxy
+  ✓ Run node --import tsx --test packages/proxy/scripts/staging/text-dispatch-workerd-wire-worker-conditions-successor.test.mjs
+  ✓ Preserve native Worker transport evidence
+  ✓ Run node --import tsx --test packages/proxy/scripts/staging/text-dispatch-relay-reset-v376.test.mjs
+  ✓ Run node --import tsx --test packages/proxy/scripts/staging/text-dispatch-response-reset-v377.test.mjs
+  ✓ Run node --import tsx --test packages/proxy/scripts/staging/text-dispatch-post-headers-v385.test.mjs
+  ✓ Run node --import tsx --test packages/core/src/storage/shared-key-economic-unsupported-backends.test.mjs
+  ✓ Run npm run test:unit -w @octafuse/tool-engines
+  ✓ Run node --import tsx --test src/services/egress/openai-embeddings-driver.test.ts src/services/egress/openai-rerank-driver.test.ts
+  ✓ Run node --import tsx --test src/services/shared-key-earnings.test.ts
+  ✓ Run node --import tsx --test src/services/shared-key-quote-attempt.test.ts
+  ✓ Run node --import tsx --test src/services/shared-key-economic-usage-handoff.test.ts
+  ✓ Run node --import tsx --test src/services/postgres-ordinary-budget-admission.test.ts src/services/request-budget-admission.test.ts
+  ✓ Run node --import tsx --test src/services/postgres-ordinary-budget-recovery.test.ts
+  ✓ Run node --import tsx --test src/services/postgres-ordinary-budget-request-owner.test.ts
+  ✓ Run node --import tsx --test src/services/authenticated-chat-budget-proof.test.ts
+  ✓ Run node --import tsx --test src/services/chat-budget-owner-lifecycle.test.ts src/services/postgres-chat-budget-request-owner.test.ts
+  ✓ Run npm run test:complete-chat-quote -w @octafuse/proxy
+  X Run node --import tsx --test scripts/staging/chat-holder-binding-v364.node.test.mjs scripts/staging/chat-holder-binding-v364-http-cancel-successor.test.mjs
+  - Run node --import tsx --test src/services/complete-chat-holder-dispatch-v385.test.ts
+  - Run node --import tsx --test src/services/postgres-complete-text-no-fetch-close-v388.test.ts
+  - Run node --import tsx --test src/services/postgres-complete-text-no-fetch-recovery-v389.test.ts src/services/hyperdrive-dedicated-role-transport-v390.test.ts src/runtime/complete-text-no-fetch-recovery-worker-v389.test.ts src/runtime/complete-text-holder-worker-v390.test.mjs
+  - Run node --import tsx --test src/services/postgres-complete-text-secretless-plan-v391.test.mjs src/services/complete-text-response-observation-v392.test.ts src/services/postgres-complete-text-response-observation-v392.test.ts src/runtime/complete-text-response-holder-worker-v394.test.mjs
+  - Run node --import tsx --test src/services/postgres-personal-key-auth-v395.test.mjs src/services/postgres-complete-text-routing-projection-v396.test.ts src/services/credential-free-route-attempts-v398.test.ts src/services/postgres-complete-text-sticky-routing-v398.test.mjs src/services/route-strategies/route-strategies.test.ts src/services/provider-sticky-routing.test.ts src/services/provider-routing-preferences.test.ts
+  - Run node --import tsx --test src/services/complete-chat-credential-free-dispatch-v400.test.ts
+  - Run node --import tsx --test src/services/credential-free-chat-preparation-v401.test.ts src/app-credential-free-chat-ingress-v401.test.ts
+  - Run node --test scripts/db/cutover/build-complete-text-auth-routing-recovery-coinstall-v400.test.mjs
+  - Run npm install --prefix .wrangler/v402-pglite-unit --no-save --no-package-lock @electric-sql/pglite@0.5.8
+  - Run node --test scripts/db/cutover/build-complete-text-platform-event-delivery-v402.test.mjs scripts/db/cutover/postgres-complete-text-platform-event-delivery-v402.test.mjs scripts/db/cutover/complete-text-platform-event-delivery-runner-v402.test.mjs
+  - Run node --import tsx --test src/storage/model-endpoints.sql-repositories.test.ts
+  - Run node --import tsx --test --test-name-pattern="opt-in authenticated Chat budget proof" src/routes/v1/request-dispatch-limit.test.ts
+  - Run node --import tsx --test --test-name-pattern="PostgreSQL Chat owner|stopped Chat request|dispatcher sends once after a PostgreSQL owner grant" src/routes/v1/request-dispatch-limit.test.ts
+  - Run node --import tsx --test src/services/postgres-guardrail-budget-admission.test.ts
+  - Run node --import tsx --test src/services/postgres-guardrail-budget-lifecycle-v353.test.ts
+  - Run node --import tsx --test src/services/postgres-guardrail-budget-extension-v355.test.ts
+  - Run node --import tsx --test src/services/postgres-guardrail-budget-request-port-v356.test.ts
+  - Run node --import tsx --test src/runtime/postgres-shared-earning-consumer.test.mjs
+  - Run node --import tsx --test src/runtime/postgres-shared-earning-delivery.test.mjs
+  - Run node --import tsx --test src/runtime/postgres-shared-earning-scanner.test.mjs
+  - Run npm run test:postgres-recovery-composition -w @octafuse/proxy
+  - Run npm run test:postgres-recovery-queue-owner -w @octafuse/proxy
+  - Run node --test scripts/deploy/gen-wrangler.test.mjs
+  - Run node --test scripts/deploy/gen-shared-earning-scanner-wrangler.test.mjs
+  - Run node --import tsx --test scripts/db/cutover/build-financial-consumer-direct-login-grant.test.ts
+  - Run node --import tsx --test scripts/db/cutover/build-shared-key-usage-repair-direct-login-grant.test.ts
+  - Run node --test scripts/db/cutover/openrouter-generation-cost-candidate-v372.test.mjs
+  - Run node --test scripts/db/cutover/build-postgres-shared-usage-repair-backfill.test.mjs
+  - Run node --test scripts/db/cutover/build-postgres-shared-usage-repair-durable-cursor.test.mjs
+  - Run node --test scripts/db/cutover/build-postgres-recovery-retention-review.test.mjs
+  - Run node --import tsx --test scripts/db/cutover/d1-shared-key-earnings-history.test.mjs
+  - Run node --import tsx --test scripts/db/cutover/d1-shared-key-earnings-projection-index.test.mjs
+  - Run node --import tsx --test packages/core/src/db/d1/portal-marketplace-rebuild.test.ts
+  - Run node --test scripts/db/cutover/build-request-legacy-parent-census.test.mjs scripts/db/cutover/build-request-legacy-parent-activation.test.mjs scripts/db/cutover/build-request-legacy-parent-default-acl-activation.test.mjs
+  - Run node --test packages/proxy/scripts/test-postgres-image-owner-workerd.test.mjs
+  - Run npm run typecheck:images:staging -w @octafuse/proxy
+  - Run npm run test:images:staging -w @octafuse/proxy
+  - Run npm run test:oauth:workerd -w @octafuse/proxy
+  - Post Run actions/setup-node@v4
+  ✓ Post Run actions/checkout@v4
+  ✓ Complete job
+✓ admin-playground-safety in 2m1s (ID 112142276103)
+  ✓ Set up job
+  ✓ Run actions/checkout@v4
+  ✓ Run actions/setup-node@v4
+  ✓ Run npm ci
+  ✓ Run npm run build:node-index -w @octafuse/core
+  ✓ Run npm run typecheck -w @octafuse/admin
+  ✓ Run node --import tsx --test lib/services/admin/users-service.test.ts
+  ✓ Run node --import tsx --test lib/routes/admin/earnings.test.ts
+  ✓ Run node --import tsx --test lib/routes/shared-key-history-error.test.ts
+  ✓ Run node --import tsx --test lib/shared-key-credited-usage-reader.test.ts
+  ✓ Run node --import tsx --test lib/shared-key-signed-stats-reader.test.ts
+  ✓ Run npm run test:playground -w @octafuse/admin
+  ✓ Post Run actions/setup-node@v4
+  ✓ Post Run actions/checkout@v4
+  ✓ Complete job
+✓ config-cutover-contracts in 1m31s (ID 112142276113)
+  ✓ Set up job
+  ✓ Run actions/checkout@v4
+  ✓ Run actions/setup-node@v4
+  ✓ Run npm ci --ignore-scripts
+  ✓ Run npm run build:node-index -w @octafuse/core
+  ✓ Run npx tsc -p tsconfig.json --noEmit --pretty false
+  ✓ Run npx tsx --test scripts/db/lib/config-cutover-reconcile.test.ts scripts/db/cutover/preflight-d1-source.test.ts
+  ✓ Run npm run test:d1-portal-ledger
+  ✓ Run npm run test:mysql-migration
+  ✓ Run npm run test:postgres-migration
+  ✓ Post Run actions/setup-node@v4
+  ✓ Post Run actions/checkout@v4
+  ✓ Complete job
+* native-financial-consumer (ID 112142276121)
+  ✓ Set up job
+  ✓ Initialize containers
+  ✓ Run actions/checkout@v4
+  ✓ Run actions/setup-node@v4
+  ✓ Run npm ci
+  ✓ Run npm run build:node-index -w @octafuse/core
+  ✓ Run install -d -o postgres -g postgres -m 0755 .wrangler/staging .wrangler/staging/pg-native-dispatch-tests
+  ✓ Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  ✓ Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  ✓ Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  ✓ Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  ✓ Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  ✓ Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  ✓ Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  ✓ Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  ✓ Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  ✓ Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  ✓ Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  ✓ Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  ✓ Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  ✓ Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  ✓ Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  ✓ Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  ✓ Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  ✓ Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  ✓ Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  ✓ Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  ✓ Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  ✓ Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  ✓ Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  ✓ Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  ✓ Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  ✓ Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  ✓ Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  ✓ Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  ✓ Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  ✓ Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  ✓ Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  ✓ Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  ✓ Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  ✓ Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  ✓ Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  ✓ Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  ✓ Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  ✓ Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  ✓ Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  ✓ Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  ✓ Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  ✓ Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  ✓ Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  ✓ Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  ✓ Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  ✓ Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  ✓ Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  * Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  * Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  * Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  * Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  * Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  * Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  * Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  * Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  * Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  * Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  * Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  * Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  * Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  * Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  * Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  * Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  * Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  * Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  * Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  * Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  * Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  * Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  * Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  * Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  * Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  * Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  * Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  * Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  * Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  * Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  * Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  * Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  * Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  * Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  * Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  * Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  * Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  * Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  * Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  * Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  * Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  * Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  * Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  * Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  * Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  * Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  * Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  * Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  * Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  * Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  * Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  * Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  * Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  * Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  * Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  * Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  * Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  * Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  * Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  * Post Run actions/setup-node@v4
+  * Post Run actions/checkout@v4
+  * Stop containers
+
+ANNOTATIONS
+! Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/checkout@v4, actions/setup-node@v4. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/
+admin-playground-safety: .github#2
+
+- "The ubuntu-latest label will migrate to Ubuntu 26 beginning October 19, 2026. For more information, see https://github.com/actions/runner-images/issues/14748"
+admin-playground-safety: .github#1
+
+! Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/checkout@v4, actions/setup-node@v4. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/
+config-cutover-contracts: .github#2
+
+- "The ubuntu-latest label will migrate to Ubuntu 26 beginning October 19, 2026. For more information, see https://github.com/actions/runner-images/issues/14748"
+config-cutover-contracts: .github#1
+
+Refreshing run status every 45 seconds. Press Ctrl+C to quit.
+
+* main Proxy dispatch safety · 37424911830
+Triggered via push about 5 minutes ago
+
+JOBS
+X dispatch-safety in 4m4s (ID 112142275908)
+  ✓ Set up job
+  ✓ Run actions/checkout@v4
+  ✓ Run actions/setup-node@v4
+  ✓ Run npm ci
+  ✓ Run npm run typecheck -w @octafuse/proxy
+  ✓ Run npm run typecheck -w @octafuse/tool-engines
+  ✓ Run npm run typecheck:shared-key-summary -w @octafuse/core
+  ✓ Run npm run typecheck:dispatch-safety -w @octafuse/proxy
+  ✓ Run npm run test:dispatch-safety -w @octafuse/proxy
+  ✓ Run node --import tsx --test packages/proxy/scripts/staging/text-dispatch-workerd-wire-worker-conditions-successor.test.mjs
+  ✓ Preserve native Worker transport evidence
+  ✓ Run node --import tsx --test packages/proxy/scripts/staging/text-dispatch-relay-reset-v376.test.mjs
+  ✓ Run node --import tsx --test packages/proxy/scripts/staging/text-dispatch-response-reset-v377.test.mjs
+  ✓ Run node --import tsx --test packages/proxy/scripts/staging/text-dispatch-post-headers-v385.test.mjs
+  ✓ Run node --import tsx --test packages/core/src/storage/shared-key-economic-unsupported-backends.test.mjs
+  ✓ Run npm run test:unit -w @octafuse/tool-engines
+  ✓ Run node --import tsx --test src/services/egress/openai-embeddings-driver.test.ts src/services/egress/openai-rerank-driver.test.ts
+  ✓ Run node --import tsx --test src/services/shared-key-earnings.test.ts
+  ✓ Run node --import tsx --test src/services/shared-key-quote-attempt.test.ts
+  ✓ Run node --import tsx --test src/services/shared-key-economic-usage-handoff.test.ts
+  ✓ Run node --import tsx --test src/services/postgres-ordinary-budget-admission.test.ts src/services/request-budget-admission.test.ts
+  ✓ Run node --import tsx --test src/services/postgres-ordinary-budget-recovery.test.ts
+  ✓ Run node --import tsx --test src/services/postgres-ordinary-budget-request-owner.test.ts
+  ✓ Run node --import tsx --test src/services/authenticated-chat-budget-proof.test.ts
+  ✓ Run node --import tsx --test src/services/chat-budget-owner-lifecycle.test.ts src/services/postgres-chat-budget-request-owner.test.ts
+  ✓ Run npm run test:complete-chat-quote -w @octafuse/proxy
+  X Run node --import tsx --test scripts/staging/chat-holder-binding-v364.node.test.mjs scripts/staging/chat-holder-binding-v364-http-cancel-successor.test.mjs
+  - Run node --import tsx --test src/services/complete-chat-holder-dispatch-v385.test.ts
+  - Run node --import tsx --test src/services/postgres-complete-text-no-fetch-close-v388.test.ts
+  - Run node --import tsx --test src/services/postgres-complete-text-no-fetch-recovery-v389.test.ts src/services/hyperdrive-dedicated-role-transport-v390.test.ts src/runtime/complete-text-no-fetch-recovery-worker-v389.test.ts src/runtime/complete-text-holder-worker-v390.test.mjs
+  - Run node --import tsx --test src/services/postgres-complete-text-secretless-plan-v391.test.mjs src/services/complete-text-response-observation-v392.test.ts src/services/postgres-complete-text-response-observation-v392.test.ts src/runtime/complete-text-response-holder-worker-v394.test.mjs
+  - Run node --import tsx --test src/services/postgres-personal-key-auth-v395.test.mjs src/services/postgres-complete-text-routing-projection-v396.test.ts src/services/credential-free-route-attempts-v398.test.ts src/services/postgres-complete-text-sticky-routing-v398.test.mjs src/services/route-strategies/route-strategies.test.ts src/services/provider-sticky-routing.test.ts src/services/provider-routing-preferences.test.ts
+  - Run node --import tsx --test src/services/complete-chat-credential-free-dispatch-v400.test.ts
+  - Run node --import tsx --test src/services/credential-free-chat-preparation-v401.test.ts src/app-credential-free-chat-ingress-v401.test.ts
+  - Run node --test scripts/db/cutover/build-complete-text-auth-routing-recovery-coinstall-v400.test.mjs
+  - Run npm install --prefix .wrangler/v402-pglite-unit --no-save --no-package-lock @electric-sql/pglite@0.5.8
+  - Run node --test scripts/db/cutover/build-complete-text-platform-event-delivery-v402.test.mjs scripts/db/cutover/postgres-complete-text-platform-event-delivery-v402.test.mjs scripts/db/cutover/complete-text-platform-event-delivery-runner-v402.test.mjs
+  - Run node --import tsx --test src/storage/model-endpoints.sql-repositories.test.ts
+  - Run node --import tsx --test --test-name-pattern="opt-in authenticated Chat budget proof" src/routes/v1/request-dispatch-limit.test.ts
+  - Run node --import tsx --test --test-name-pattern="PostgreSQL Chat owner|stopped Chat request|dispatcher sends once after a PostgreSQL owner grant" src/routes/v1/request-dispatch-limit.test.ts
+  - Run node --import tsx --test src/services/postgres-guardrail-budget-admission.test.ts
+  - Run node --import tsx --test src/services/postgres-guardrail-budget-lifecycle-v353.test.ts
+  - Run node --import tsx --test src/services/postgres-guardrail-budget-extension-v355.test.ts
+  - Run node --import tsx --test src/services/postgres-guardrail-budget-request-port-v356.test.ts
+  - Run node --import tsx --test src/runtime/postgres-shared-earning-consumer.test.mjs
+  - Run node --import tsx --test src/runtime/postgres-shared-earning-delivery.test.mjs
+  - Run node --import tsx --test src/runtime/postgres-shared-earning-scanner.test.mjs
+  - Run npm run test:postgres-recovery-composition -w @octafuse/proxy
+  - Run npm run test:postgres-recovery-queue-owner -w @octafuse/proxy
+  - Run node --test scripts/deploy/gen-wrangler.test.mjs
+  - Run node --test scripts/deploy/gen-shared-earning-scanner-wrangler.test.mjs
+  - Run node --import tsx --test scripts/db/cutover/build-financial-consumer-direct-login-grant.test.ts
+  - Run node --import tsx --test scripts/db/cutover/build-shared-key-usage-repair-direct-login-grant.test.ts
+  - Run node --test scripts/db/cutover/openrouter-generation-cost-candidate-v372.test.mjs
+  - Run node --test scripts/db/cutover/build-postgres-shared-usage-repair-backfill.test.mjs
+  - Run node --test scripts/db/cutover/build-postgres-shared-usage-repair-durable-cursor.test.mjs
+  - Run node --test scripts/db/cutover/build-postgres-recovery-retention-review.test.mjs
+  - Run node --import tsx --test scripts/db/cutover/d1-shared-key-earnings-history.test.mjs
+  - Run node --import tsx --test scripts/db/cutover/d1-shared-key-earnings-projection-index.test.mjs
+  - Run node --import tsx --test packages/core/src/db/d1/portal-marketplace-rebuild.test.ts
+  - Run node --test scripts/db/cutover/build-request-legacy-parent-census.test.mjs scripts/db/cutover/build-request-legacy-parent-activation.test.mjs scripts/db/cutover/build-request-legacy-parent-default-acl-activation.test.mjs
+  - Run node --test packages/proxy/scripts/test-postgres-image-owner-workerd.test.mjs
+  - Run npm run typecheck:images:staging -w @octafuse/proxy
+  - Run npm run test:images:staging -w @octafuse/proxy
+  - Run npm run test:oauth:workerd -w @octafuse/proxy
+  - Post Run actions/setup-node@v4
+  ✓ Post Run actions/checkout@v4
+  ✓ Complete job
+✓ admin-playground-safety in 2m1s (ID 112142276103)
+  ✓ Set up job
+  ✓ Run actions/checkout@v4
+  ✓ Run actions/setup-node@v4
+  ✓ Run npm ci
+  ✓ Run npm run build:node-index -w @octafuse/core
+  ✓ Run npm run typecheck -w @octafuse/admin
+  ✓ Run node --import tsx --test lib/services/admin/users-service.test.ts
+  ✓ Run node --import tsx --test lib/routes/admin/earnings.test.ts
+  ✓ Run node --import tsx --test lib/routes/shared-key-history-error.test.ts
+  ✓ Run node --import tsx --test lib/shared-key-credited-usage-reader.test.ts
+  ✓ Run node --import tsx --test lib/shared-key-signed-stats-reader.test.ts
+  ✓ Run npm run test:playground -w @octafuse/admin
+  ✓ Post Run actions/setup-node@v4
+  ✓ Post Run actions/checkout@v4
+  ✓ Complete job
+✓ config-cutover-contracts in 1m31s (ID 112142276113)
+  ✓ Set up job
+  ✓ Run actions/checkout@v4
+  ✓ Run actions/setup-node@v4
+  ✓ Run npm ci --ignore-scripts
+  ✓ Run npm run build:node-index -w @octafuse/core
+  ✓ Run npx tsc -p tsconfig.json --noEmit --pretty false
+  ✓ Run npx tsx --test scripts/db/lib/config-cutover-reconcile.test.ts scripts/db/cutover/preflight-d1-source.test.ts
+  ✓ Run npm run test:d1-portal-ledger
+  ✓ Run npm run test:mysql-migration
+  ✓ Run npm run test:postgres-migration
+  ✓ Post Run actions/setup-node@v4
+  ✓ Post Run actions/checkout@v4
+  ✓ Complete job
+* native-financial-consumer (ID 112142276121)
+  ✓ Set up job
+  ✓ Initialize containers
+  ✓ Run actions/checkout@v4
+  ✓ Run actions/setup-node@v4
+  ✓ Run npm ci
+  ✓ Run npm run build:node-index -w @octafuse/core
+  ✓ Run install -d -o postgres -g postgres -m 0755 .wrangler/staging .wrangler/staging/pg-native-dispatch-tests
+  ✓ Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  ✓ Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  ✓ Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  ✓ Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  ✓ Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  ✓ Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  ✓ Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  ✓ Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  ✓ Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  ✓ Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  ✓ Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  ✓ Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  ✓ Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  ✓ Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  ✓ Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  ✓ Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  ✓ Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  ✓ Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  ✓ Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  ✓ Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  ✓ Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  ✓ Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  ✓ Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  ✓ Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  ✓ Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  ✓ Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  ✓ Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  ✓ Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  ✓ Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  ✓ Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  ✓ Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  ✓ Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  ✓ Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  ✓ Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  ✓ Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  ✓ Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  ✓ Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  ✓ Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  ✓ Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  ✓ Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  ✓ Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  ✓ Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  ✓ Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  ✓ Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  ✓ Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  ✓ Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  ✓ Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  ✓ Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  ✓ Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  ✓ Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  ✓ Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  ✓ Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  ✓ Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  ✓ Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  ✓ Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  ✓ Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  ✓ Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  ✓ Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  ✓ Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  ✓ Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  * Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  * Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  * Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  * Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  * Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  * Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  * Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  * Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  * Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  * Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  * Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  * Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  * Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  * Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  * Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  * Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  * Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  * Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  * Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  * Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  * Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  * Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  * Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  * Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  * Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  * Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  * Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  * Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  * Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  * Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  * Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  * Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  * Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  * Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  * Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  * Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  * Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  * Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  * Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  * Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  * Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  * Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  * Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  * Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  * Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  * Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  * Post Run actions/setup-node@v4
+  * Post Run actions/checkout@v4
+  * Stop containers
+
+ANNOTATIONS
+! Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/checkout@v4, actions/setup-node@v4. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/
+admin-playground-safety: .github#2
+
+- "The ubuntu-latest label will migrate to Ubuntu 26 beginning October 19, 2026. For more information, see https://github.com/actions/runner-images/issues/14748"
+admin-playground-safety: .github#1
+
+! Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/checkout@v4, actions/setup-node@v4. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/
+config-cutover-contracts: .github#2
+
+- "The ubuntu-latest label will migrate to Ubuntu 26 beginning October 19, 2026. For more information, see https://github.com/actions/runner-images/issues/14748"
+config-cutover-contracts: .github#1
+
+Refreshing run status every 45 seconds. Press Ctrl+C to quit.
+
+* main Proxy dispatch safety · 37424911830
+Triggered via push about 6 minutes ago
+
+JOBS
+X dispatch-safety in 4m4s (ID 112142275908)
+  ✓ Set up job
+  ✓ Run actions/checkout@v4
+  ✓ Run actions/setup-node@v4
+  ✓ Run npm ci
+  ✓ Run npm run typecheck -w @octafuse/proxy
+  ✓ Run npm run typecheck -w @octafuse/tool-engines
+  ✓ Run npm run typecheck:shared-key-summary -w @octafuse/core
+  ✓ Run npm run typecheck:dispatch-safety -w @octafuse/proxy
+  ✓ Run npm run test:dispatch-safety -w @octafuse/proxy
+  ✓ Run node --import tsx --test packages/proxy/scripts/staging/text-dispatch-workerd-wire-worker-conditions-successor.test.mjs
+  ✓ Preserve native Worker transport evidence
+  ✓ Run node --import tsx --test packages/proxy/scripts/staging/text-dispatch-relay-reset-v376.test.mjs
+  ✓ Run node --import tsx --test packages/proxy/scripts/staging/text-dispatch-response-reset-v377.test.mjs
+  ✓ Run node --import tsx --test packages/proxy/scripts/staging/text-dispatch-post-headers-v385.test.mjs
+  ✓ Run node --import tsx --test packages/core/src/storage/shared-key-economic-unsupported-backends.test.mjs
+  ✓ Run npm run test:unit -w @octafuse/tool-engines
+  ✓ Run node --import tsx --test src/services/egress/openai-embeddings-driver.test.ts src/services/egress/openai-rerank-driver.test.ts
+  ✓ Run node --import tsx --test src/services/shared-key-earnings.test.ts
+  ✓ Run node --import tsx --test src/services/shared-key-quote-attempt.test.ts
+  ✓ Run node --import tsx --test src/services/shared-key-economic-usage-handoff.test.ts
+  ✓ Run node --import tsx --test src/services/postgres-ordinary-budget-admission.test.ts src/services/request-budget-admission.test.ts
+  ✓ Run node --import tsx --test src/services/postgres-ordinary-budget-recovery.test.ts
+  ✓ Run node --import tsx --test src/services/postgres-ordinary-budget-request-owner.test.ts
+  ✓ Run node --import tsx --test src/services/authenticated-chat-budget-proof.test.ts
+  ✓ Run node --import tsx --test src/services/chat-budget-owner-lifecycle.test.ts src/services/postgres-chat-budget-request-owner.test.ts
+  ✓ Run npm run test:complete-chat-quote -w @octafuse/proxy
+  X Run node --import tsx --test scripts/staging/chat-holder-binding-v364.node.test.mjs scripts/staging/chat-holder-binding-v364-http-cancel-successor.test.mjs
+  - Run node --import tsx --test src/services/complete-chat-holder-dispatch-v385.test.ts
+  - Run node --import tsx --test src/services/postgres-complete-text-no-fetch-close-v388.test.ts
+  - Run node --import tsx --test src/services/postgres-complete-text-no-fetch-recovery-v389.test.ts src/services/hyperdrive-dedicated-role-transport-v390.test.ts src/runtime/complete-text-no-fetch-recovery-worker-v389.test.ts src/runtime/complete-text-holder-worker-v390.test.mjs
+  - Run node --import tsx --test src/services/postgres-complete-text-secretless-plan-v391.test.mjs src/services/complete-text-response-observation-v392.test.ts src/services/postgres-complete-text-response-observation-v392.test.ts src/runtime/complete-text-response-holder-worker-v394.test.mjs
+  - Run node --import tsx --test src/services/postgres-personal-key-auth-v395.test.mjs src/services/postgres-complete-text-routing-projection-v396.test.ts src/services/credential-free-route-attempts-v398.test.ts src/services/postgres-complete-text-sticky-routing-v398.test.mjs src/services/route-strategies/route-strategies.test.ts src/services/provider-sticky-routing.test.ts src/services/provider-routing-preferences.test.ts
+  - Run node --import tsx --test src/services/complete-chat-credential-free-dispatch-v400.test.ts
+  - Run node --import tsx --test src/services/credential-free-chat-preparation-v401.test.ts src/app-credential-free-chat-ingress-v401.test.ts
+  - Run node --test scripts/db/cutover/build-complete-text-auth-routing-recovery-coinstall-v400.test.mjs
+  - Run npm install --prefix .wrangler/v402-pglite-unit --no-save --no-package-lock @electric-sql/pglite@0.5.8
+  - Run node --test scripts/db/cutover/build-complete-text-platform-event-delivery-v402.test.mjs scripts/db/cutover/postgres-complete-text-platform-event-delivery-v402.test.mjs scripts/db/cutover/complete-text-platform-event-delivery-runner-v402.test.mjs
+  - Run node --import tsx --test src/storage/model-endpoints.sql-repositories.test.ts
+  - Run node --import tsx --test --test-name-pattern="opt-in authenticated Chat budget proof" src/routes/v1/request-dispatch-limit.test.ts
+  - Run node --import tsx --test --test-name-pattern="PostgreSQL Chat owner|stopped Chat request|dispatcher sends once after a PostgreSQL owner grant" src/routes/v1/request-dispatch-limit.test.ts
+  - Run node --import tsx --test src/services/postgres-guardrail-budget-admission.test.ts
+  - Run node --import tsx --test src/services/postgres-guardrail-budget-lifecycle-v353.test.ts
+  - Run node --import tsx --test src/services/postgres-guardrail-budget-extension-v355.test.ts
+  - Run node --import tsx --test src/services/postgres-guardrail-budget-request-port-v356.test.ts
+  - Run node --import tsx --test src/runtime/postgres-shared-earning-consumer.test.mjs
+  - Run node --import tsx --test src/runtime/postgres-shared-earning-delivery.test.mjs
+  - Run node --import tsx --test src/runtime/postgres-shared-earning-scanner.test.mjs
+  - Run npm run test:postgres-recovery-composition -w @octafuse/proxy
+  - Run npm run test:postgres-recovery-queue-owner -w @octafuse/proxy
+  - Run node --test scripts/deploy/gen-wrangler.test.mjs
+  - Run node --test scripts/deploy/gen-shared-earning-scanner-wrangler.test.mjs
+  - Run node --import tsx --test scripts/db/cutover/build-financial-consumer-direct-login-grant.test.ts
+  - Run node --import tsx --test scripts/db/cutover/build-shared-key-usage-repair-direct-login-grant.test.ts
+  - Run node --test scripts/db/cutover/openrouter-generation-cost-candidate-v372.test.mjs
+  - Run node --test scripts/db/cutover/build-postgres-shared-usage-repair-backfill.test.mjs
+  - Run node --test scripts/db/cutover/build-postgres-shared-usage-repair-durable-cursor.test.mjs
+  - Run node --test scripts/db/cutover/build-postgres-recovery-retention-review.test.mjs
+  - Run node --import tsx --test scripts/db/cutover/d1-shared-key-earnings-history.test.mjs
+  - Run node --import tsx --test scripts/db/cutover/d1-shared-key-earnings-projection-index.test.mjs
+  - Run node --import tsx --test packages/core/src/db/d1/portal-marketplace-rebuild.test.ts
+  - Run node --test scripts/db/cutover/build-request-legacy-parent-census.test.mjs scripts/db/cutover/build-request-legacy-parent-activation.test.mjs scripts/db/cutover/build-request-legacy-parent-default-acl-activation.test.mjs
+  - Run node --test packages/proxy/scripts/test-postgres-image-owner-workerd.test.mjs
+  - Run npm run typecheck:images:staging -w @octafuse/proxy
+  - Run npm run test:images:staging -w @octafuse/proxy
+  - Run npm run test:oauth:workerd -w @octafuse/proxy
+  - Post Run actions/setup-node@v4
+  ✓ Post Run actions/checkout@v4
+  ✓ Complete job
+✓ admin-playground-safety in 2m1s (ID 112142276103)
+  ✓ Set up job
+  ✓ Run actions/checkout@v4
+  ✓ Run actions/setup-node@v4
+  ✓ Run npm ci
+  ✓ Run npm run build:node-index -w @octafuse/core
+  ✓ Run npm run typecheck -w @octafuse/admin
+  ✓ Run node --import tsx --test lib/services/admin/users-service.test.ts
+  ✓ Run node --import tsx --test lib/routes/admin/earnings.test.ts
+  ✓ Run node --import tsx --test lib/routes/shared-key-history-error.test.ts
+  ✓ Run node --import tsx --test lib/shared-key-credited-usage-reader.test.ts
+  ✓ Run node --import tsx --test lib/shared-key-signed-stats-reader.test.ts
+  ✓ Run npm run test:playground -w @octafuse/admin
+  ✓ Post Run actions/setup-node@v4
+  ✓ Post Run actions/checkout@v4
+  ✓ Complete job
+✓ config-cutover-contracts in 1m31s (ID 112142276113)
+  ✓ Set up job
+  ✓ Run actions/checkout@v4
+  ✓ Run actions/setup-node@v4
+  ✓ Run npm ci --ignore-scripts
+  ✓ Run npm run build:node-index -w @octafuse/core
+  ✓ Run npx tsc -p tsconfig.json --noEmit --pretty false
+  ✓ Run npx tsx --test scripts/db/lib/config-cutover-reconcile.test.ts scripts/db/cutover/preflight-d1-source.test.ts
+  ✓ Run npm run test:d1-portal-ledger
+  ✓ Run npm run test:mysql-migration
+  ✓ Run npm run test:postgres-migration
+  ✓ Post Run actions/setup-node@v4
+  ✓ Post Run actions/checkout@v4
+  ✓ Complete job
+* native-financial-consumer (ID 112142276121)
+  ✓ Set up job
+  ✓ Initialize containers
+  ✓ Run actions/checkout@v4
+  ✓ Run actions/setup-node@v4
+  ✓ Run npm ci
+  ✓ Run npm run build:node-index -w @octafuse/core
+  ✓ Run install -d -o postgres -g postgres -m 0755 .wrangler/staging .wrangler/staging/pg-native-dispatch-tests
+  ✓ Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  ✓ Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  ✓ Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  ✓ Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  ✓ Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  ✓ Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  ✓ Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  ✓ Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  ✓ Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  ✓ Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  ✓ Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  ✓ Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  ✓ Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  ✓ Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  ✓ Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  ✓ Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  ✓ Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  ✓ Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  ✓ Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  ✓ Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  ✓ Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  ✓ Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  ✓ Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  ✓ Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  ✓ Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  ✓ Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  ✓ Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  ✓ Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  ✓ Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  ✓ Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  ✓ Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  ✓ Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  ✓ Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  ✓ Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  ✓ Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  ✓ Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  ✓ Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  ✓ Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  ✓ Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  ✓ Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  ✓ Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  ✓ Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  ✓ Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  ✓ Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  ✓ Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  ✓ Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  ✓ Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  ✓ Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  ✓ Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  ✓ Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  ✓ Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  ✓ Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  ✓ Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  ✓ Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  ✓ Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  ✓ Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  ✓ Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  ✓ Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  ✓ Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  ✓ Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  ✓ Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  ✓ Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  ✓ Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  ✓ Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  ✓ Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  * Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  * Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  * Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  * Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  * Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  * Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  * Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  * Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  * Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  * Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  * Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  * Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  * Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  * Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  * Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  * Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  * Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  * Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  * Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  * Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  * Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  * Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  * Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  * Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  * Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  * Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  * Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  * Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  * Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  * Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  * Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  * Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  * Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  * Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  * Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  * Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  * Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  * Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  * Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  * Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  * Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+  * Post Run actions/setup-node@v4
+  * Post Run actions/checkout@v4
+  * Stop containers
+
+ANNOTATIONS
+! Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/checkout@v4, actions/setup-node@v4. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/
+admin-playground-safety: .github#2
+
+- "The ubuntu-latest label will migrate to Ubuntu 26 beginning October 19, 2026. For more information, see https://github.com/actions/runner-images/issues/14748"
+admin-playground-safety: .github#1
+
+! Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/checkout@v4, actions/setup-node@v4. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/
+config-cutover-contracts: .github#2
+
+- "The ubuntu-latest label will migrate to Ubuntu 26 beginning October 19, 2026. For more information, see https://github.com/actions/runner-images/issues/14748"
+config-cutover-contracts: .github#1
+

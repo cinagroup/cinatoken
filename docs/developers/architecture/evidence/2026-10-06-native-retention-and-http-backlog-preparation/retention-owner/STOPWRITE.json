@@ -1,0 +1,96 @@
+{
+  "schema": "retention-seven-time-input-candidate-frozen-index.v1",
+  "at": "2026-10-06T07:01:30.762Z",
+  "root": "C:/Users/cina/AppData/Local/Temp/cinatoken-retention-v346-time-text-candidate-1a110046edafc3b0b4778a3a",
+  "entries": [
+    {
+      "relative": "FINAL-retention-seven-time-input-candidate.json",
+      "bytes": 26187,
+      "sha256": "b9007222d13aa49b2e77ed4c4ea4a79f6a0a3b458d86955542a4c50cc267aaf9"
+    },
+    {
+      "relative": "baseline-git.closed.json",
+      "bytes": 1227,
+      "sha256": "4edbac4f4e2265a0b4df05df693a07091fe70a8296c22417888c6642ca2d3c41"
+    },
+    {
+      "relative": "baseline-git.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "relative": "baseline-git.stdout.log",
+      "bytes": 41414,
+      "sha256": "6902dba831f5ae779b0d4b65f30417ec0088bba697458bd60c869a6cbb10bd2c"
+    },
+    {
+      "relative": "candidate-retention-time-text.native.test.mjs",
+      "bytes": 20768,
+      "sha256": "12c37aa3f7151ccab6b39b98fe720661a95695351806c0c802454d8b22c560e6"
+    },
+    {
+      "relative": "candidate-writer.closed.json",
+      "bytes": 1093,
+      "sha256": "6b761b65edd368219b697294acc84b01899c3ca19e55958c4196ce208c7d1c28"
+    },
+    {
+      "relative": "candidate-writer.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "relative": "candidate-writer.stdout.log",
+      "bytes": 1371,
+      "sha256": "4293afea2910d205cb6e76a738468cae428f13775ce66cc501793c897199ee7f"
+    },
+    {
+      "relative": "original-failure-group-derived-byte-excerpt.txt",
+      "bytes": 9476,
+      "sha256": "ed008d1ebf1fcb7c3341eed24aa6f6f834e33fa02c327e66033bfc348d8d6038"
+    },
+    {
+      "relative": "prepare-seven-time-input-candidate.mjs",
+      "bytes": 13207,
+      "sha256": "dcf041fa563431524ba77ce2ce0d5abd186afa76faa6e46152cfcd8c3fd09ac1"
+    },
+    {
+      "relative": "run-candidate-close-and-seal.mjs",
+      "bytes": 2074,
+      "sha256": "0762f1d39451848bda46c210004aaf8fb99f7aede583c22a20d96a681c570e6b"
+    },
+    {
+      "relative": "source-original-6e2.snapshot.txt",
+      "bytes": 20654,
+      "sha256": "c9093cb5c5f167f8e7604b9b91c4d937c8b638a8b0cd1f2dbcdeb88a140dc984"
+    }
+  ],
+  "selfExcluded": "STOPWRITE.json",
+  "trueWriterClose": {
+    "schema": "retention-static-candidate-writer-actual-child-close.v1",
+    "executable": "C:/Program Files/nodejs/node.exe",
+    "argv": [
+      "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-retention-v346-time-text-candidate-1a110046edafc3b0b4778a3a\\prepare-seven-time-input-candidate.mjs",
+      "C:/Users/cina/AppData/Local/Temp/cinatoken-retention-v346-time-text-candidate-1a110046edafc3b0b4778a3a"
+    ],
+    "startedAt": "2026-10-06T07:01:30.374Z",
+    "closedAt": "2026-10-06T07:01:30.752Z",
+    "actualExit": 0,
+    "signal": null,
+    "spawnError": null,
+    "stdout": {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-retention-v346-time-text-candidate-1a110046edafc3b0b4778a3a\\candidate-writer.stdout.log",
+      "bytes": 1371,
+      "sha256": "4293afea2910d205cb6e76a738468cae428f13775ce66cc501793c897199ee7f"
+    },
+    "stderr": {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-retention-v346-time-text-candidate-1a110046edafc3b0b4778a3a\\candidate-writer.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  },
+  "preparedOnly": true,
+  "sourceWrites": 0,
+  "nativePass": false,
+  "liveCauseConfirmed": false,
+  "STOPWRITE": true
+}

@@ -1,0 +1,26 @@
+{
+  "schema": "cinatoken-queued-v2-node-syntax-closed-v1",
+  "closed": true,
+  "startedAt": "2026-10-06T07:00:31.710Z",
+  "endedAt": "2026-10-06T07:00:31.786Z",
+  "program": "C:\\Program Files\\nodejs\\node.exe",
+  "args": [
+    "--check",
+    "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-write-v2-8e7e441d5c7547dc93ae0c2c76898bf8/run-direct-socket.candidate-v2.mjs"
+  ],
+  "actualExit": 0,
+  "signal": null,
+  "error": null,
+  "stdout": {
+    "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-write-v2-8e7e441d5c7547dc93ae0c2c76898bf8/node-check.stdout.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "stderr": {
+    "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-write-v2-8e7e441d5c7547dc93ae0c2c76898bf8/node-check.stderr.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "moduleEvaluated": false,
+  "runtimeExecuted": false
+}

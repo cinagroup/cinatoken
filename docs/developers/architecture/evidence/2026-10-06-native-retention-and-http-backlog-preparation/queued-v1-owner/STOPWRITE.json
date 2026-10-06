@@ -1,0 +1,255 @@
+{
+  "schema": "cinatoken-queued-write-temp-candidate-frozen-index-v1",
+  "at": "2026-10-06T06:53:34.820Z",
+  "root": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-write-candidate-125e5fd5336c42b18c0bb59dda8f4942",
+  "stopWrite": true,
+  "indexOnly": true,
+  "actualCommandExitNotPredicted": true,
+  "fileCountExcludingSelf": 37,
+  "files": [
+    {
+      "relative": "actual-preparation-tool-receipts.json",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-write-candidate-125e5fd5336c42b18c0bb59dda8f4942/actual-preparation-tool-receipts.json",
+      "bytes": 852,
+      "sha256": "204dab9765ffafaf308a4ae9b844d376ee30129daad419666dcc32efe9f89805"
+    },
+    {
+      "relative": "build-candidate.mjs",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-write-candidate-125e5fd5336c42b18c0bb59dda8f4942/build-candidate.mjs",
+      "bytes": 9905,
+      "sha256": "5e6ff162cebe7fa148b761a9f9286da13fdc9052b1d2b93ec4a69feb1185c2ed"
+    },
+    {
+      "relative": "build-candidate.result.json",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-write-candidate-125e5fd5336c42b18c0bb59dda8f4942/build-candidate.result.json",
+      "bytes": 1172,
+      "sha256": "184debae1ddfe9fc97a8dae0160f83b957edc550d8df11c895096588508c7b08"
+    },
+    {
+      "relative": "build-candidate.stderr.log",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-write-candidate-125e5fd5336c42b18c0bb59dda8f4942/build-candidate.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "relative": "build-candidate.stdout.log",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-write-candidate-125e5fd5336c42b18c0bb59dda8f4942/build-candidate.stdout.log",
+      "bytes": 208,
+      "sha256": "eac5bb28a26b5daf83ceba2ac1d6e22910149e65ec4c2b77213dcf7115f51ea6"
+    },
+    {
+      "relative": "candidate-edit-index.json",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-write-candidate-125e5fd5336c42b18c0bb59dda8f4942/candidate-edit-index.json",
+      "bytes": 23584,
+      "sha256": "c61a15ac8a68511fb66d25fbcb6d6ed61f2d81ba7585e0fe1711521a1a21b847"
+    },
+    {
+      "relative": "candidate-static-protection-proof.json",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-write-candidate-125e5fd5336c42b18c0bb59dda8f4942/candidate-static-protection-proof.json",
+      "bytes": 6617,
+      "sha256": "8eec61ae396b1c20af101c8e5001dcbb1cdf33c0f5095294c7836e522f78c572"
+    },
+    {
+      "relative": "FINAL-queued-write-candidate-preparation.json",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-write-candidate-125e5fd5336c42b18c0bb59dda8f4942/FINAL-queued-write-candidate-preparation.json",
+      "bytes": 17518,
+      "sha256": "67b18553ee2d391a3b4b8a2536f574a0c1c9d67eb1eba755776e1e1b771d8a0d"
+    },
+    {
+      "relative": "freeze-candidate-root.mjs",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-write-candidate-125e5fd5336c42b18c0bb59dda8f4942/freeze-candidate-root.mjs",
+      "bytes": 3407,
+      "sha256": "d43e3df9e5eba44a6eb516be71e180124c7a36d3b05e4c346e3589071fb5bda4"
+    },
+    {
+      "relative": "node-check-queued-pressure-extension-snippet-mjs.result.json",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-write-candidate-125e5fd5336c42b18c0bb59dda8f4942/node-check-queued-pressure-extension-snippet-mjs.result.json",
+      "bytes": 1099,
+      "sha256": "4a3e5b218c949025c7213826dc85d31e57c69cee57518a50a32b64e409353a5b"
+    },
+    {
+      "relative": "node-check-queued-pressure-extension-snippet-mjs.stderr.log",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-write-candidate-125e5fd5336c42b18c0bb59dda8f4942/node-check-queued-pressure-extension-snippet-mjs.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "relative": "node-check-queued-pressure-extension-snippet-mjs.stdout.log",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-write-candidate-125e5fd5336c42b18c0bb59dda8f4942/node-check-queued-pressure-extension-snippet-mjs.stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "relative": "node-check-queued-write-source-mjs.result.json",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-write-candidate-125e5fd5336c42b18c0bb59dda8f4942/node-check-queued-write-source-mjs.result.json",
+      "bytes": 1057,
+      "sha256": "6ff9f5ea10ee5b50b666294be03ec45a4048f6ebb31be9fc5b683014a5dd34d3"
+    },
+    {
+      "relative": "node-check-queued-write-source-mjs.stderr.log",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-write-candidate-125e5fd5336c42b18c0bb59dda8f4942/node-check-queued-write-source-mjs.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "relative": "node-check-queued-write-source-mjs.stdout.log",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-write-candidate-125e5fd5336c42b18c0bb59dda8f4942/node-check-queued-write-source-mjs.stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "relative": "node-check-run-direct-socket-candidate-mjs.result.json",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-write-candidate-125e5fd5336c42b18c0bb59dda8f4942/node-check-run-direct-socket-candidate-mjs.result.json",
+      "bytes": 1081,
+      "sha256": "031dec4997d1207c25663c6f3471e9c8638c9a72a92ae5cb4440b1dc0ce3aef9"
+    },
+    {
+      "relative": "node-check-run-direct-socket-candidate-mjs.stderr.log",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-write-candidate-125e5fd5336c42b18c0bb59dda8f4942/node-check-run-direct-socket-candidate-mjs.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "relative": "node-check-run-direct-socket-candidate-mjs.stdout.log",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-write-candidate-125e5fd5336c42b18c0bb59dda8f4942/node-check-run-direct-socket-candidate-mjs.stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "relative": "protected-inputs/packages__proxy__scripts__staging__wrangler.chat-holder-gateway-v364.jsonc",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-write-candidate-125e5fd5336c42b18c0bb59dda8f4942/protected-inputs/packages__proxy__scripts__staging__wrangler.chat-holder-gateway-v364.jsonc",
+      "bytes": 598,
+      "sha256": "e1a0354ff5bf7915c6c125f3003683a56b708d8bdd6006cce6b33c4ff8a6bb77"
+    },
+    {
+      "relative": "protected-inputs/packages__proxy__scripts__staging__wrangler.chat-holder-private-v364.jsonc",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-write-candidate-125e5fd5336c42b18c0bb59dda8f4942/protected-inputs/packages__proxy__scripts__staging__wrangler.chat-holder-private-v364.jsonc",
+      "bytes": 568,
+      "sha256": "6b897d8aa7b01087b75d4b74968d4004e2b6ddb87650bad1203c7693160b2047"
+    },
+    {
+      "relative": "protected-inputs/scripts__diagnostics__v364-direct-socket__native-reader-calibration.mjs",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-write-candidate-125e5fd5336c42b18c0bb59dda8f4942/protected-inputs/scripts__diagnostics__v364-direct-socket__native-reader-calibration.mjs",
+      "bytes": 2546,
+      "sha256": "e838769c950b49056ffc4e6580e41d8ec15a245db6efff6829c170642fb8ee8f"
+    },
+    {
+      "relative": "protected-inputs/scripts__diagnostics__v364-owned-linux__holder-observer.mjs",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-write-candidate-125e5fd5336c42b18c0bb59dda8f4942/protected-inputs/scripts__diagnostics__v364-owned-linux__holder-observer.mjs",
+      "bytes": 2461,
+      "sha256": "740727cae646ae757fa50ef7bb6c02a9f9cb4b1b3aa64b0de539c88bbbe09a25"
+    },
+    {
+      "relative": "protected-inputs/scripts__diagnostics__v364-owned-linux-boundary__bare-async-source.mjs",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-write-candidate-125e5fd5336c42b18c0bb59dda8f4942/protected-inputs/scripts__diagnostics__v364-owned-linux-boundary__bare-async-source.mjs",
+      "bytes": 1864,
+      "sha256": "86b67412be0b8ef8434edfd0f44c8c6e5d306ce3f76ed3deed8305cca2771bfd"
+    },
+    {
+      "relative": "protected-inputs/scripts__diagnostics__v364-owned-linux-boundary__proc-census.mjs",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-write-candidate-125e5fd5336c42b18c0bb59dda8f4942/protected-inputs/scripts__diagnostics__v364-owned-linux-boundary__proc-census.mjs",
+      "bytes": 1443,
+      "sha256": "bd6d4ebe4fea6ac1c11b6a67b4f44fcb23595e79a2fdcf10360101888026b8a0"
+    },
+    {
+      "relative": "queued-pressure-extension.snippet.mjs",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-write-candidate-125e5fd5336c42b18c0bb59dda8f4942/queued-pressure-extension.snippet.mjs",
+      "bytes": 4010,
+      "sha256": "28de2baa4bb75641c6c5c7658aabfedc67231bf16e62c5755477b68c2fb148b2"
+    },
+    {
+      "relative": "queued-write-source.mjs",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-write-candidate-125e5fd5336c42b18c0bb59dda8f4942/queued-write-source.mjs",
+      "bytes": 3557,
+      "sha256": "93417db1e3b0edbb3dd06b504bddee18ba6fbb1bbf31141cd20ce119dea7fb5d"
+    },
+    {
+      "relative": "run-direct-socket.before.mjs",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-write-candidate-125e5fd5336c42b18c0bb59dda8f4942/run-direct-socket.before.mjs",
+      "bytes": 34907,
+      "sha256": "621cb7384b32a25af7c37d411cd12c2d51bf47c241d9d1f24c1c3ee3989723f3"
+    },
+    {
+      "relative": "run-direct-socket.candidate.mjs",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-write-candidate-125e5fd5336c42b18c0bb59dda8f4942/run-direct-socket.candidate.mjs",
+      "bytes": 51387,
+      "sha256": "e6cfdb5d6e3d8ab04b4bc97d278132b4439930a92465bcf72081ccc173dbb04e"
+    },
+    {
+      "relative": "run-owned-prepare-command.mjs",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-write-candidate-125e5fd5336c42b18c0bb59dda8f4942/run-owned-prepare-command.mjs",
+      "bytes": 2253,
+      "sha256": "458c9f04b4a09261b0d681d00fa209379a7261f8009bc7dd107e7c960f81ca1a"
+    },
+    {
+      "relative": "seal-candidate.mjs",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-write-candidate-125e5fd5336c42b18c0bb59dda8f4942/seal-candidate.mjs",
+      "bytes": 8898,
+      "sha256": "88eb5af80de0f4be51278f52deb50e3e98b8fcc3475f0aadf9616ddef39c164d"
+    },
+    {
+      "relative": "seal-candidate.result.json",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-write-candidate-125e5fd5336c42b18c0bb59dda8f4942/seal-candidate.result.json",
+      "bytes": 1169,
+      "sha256": "44695f2a53182db7df3158d4f1d7248bef27377d7f760688ab5a33d57af9f611"
+    },
+    {
+      "relative": "seal-candidate.stderr.log",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-write-candidate-125e5fd5336c42b18c0bb59dda8f4942/seal-candidate.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "relative": "seal-candidate.stdout.log",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-write-candidate-125e5fd5336c42b18c0bb59dda8f4942/seal-candidate.stdout.log",
+      "bytes": 360,
+      "sha256": "25bdd77852c375658326cb8821c9e144b7bbd13fa5ca979feb371854d67ab9c8"
+    },
+    {
+      "relative": "verify-candidate.mjs",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-write-candidate-125e5fd5336c42b18c0bb59dda8f4942/verify-candidate.mjs",
+      "bytes": 10904,
+      "sha256": "fa003966a92b64761917b4d964bc3171a3176348294f8b07d68e84a320b2ffeb"
+    },
+    {
+      "relative": "verify-candidate.result.json",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-write-candidate-125e5fd5336c42b18c0bb59dda8f4942/verify-candidate.result.json",
+      "bytes": 1175,
+      "sha256": "864c7fa7a8ac4c11eb4423a8f1adba371166c4aa0859e6d032b2b8db1efd4192"
+    },
+    {
+      "relative": "verify-candidate.stderr.log",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-write-candidate-125e5fd5336c42b18c0bb59dda8f4942/verify-candidate.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "relative": "verify-candidate.stdout.log",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-write-candidate-125e5fd5336c42b18c0bb59dda8f4942/verify-candidate.stdout.log",
+      "bytes": 241,
+      "sha256": "57213024593fac09e4bb845cefef6cc174bc030a8eced88dfb12e7664bc135a9"
+    }
+  ],
+  "final": {
+    "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-write-candidate-125e5fd5336c42b18c0bb59dda8f4942/FINAL-queued-write-candidate-preparation.json",
+    "bytes": 17518,
+    "sha256": "67b18553ee2d391a3b4b8a2536f574a0c1c9d67eb1eba755776e1e1b771d8a0d"
+  },
+  "candidate": {
+    "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-write-candidate-125e5fd5336c42b18c0bb59dda8f4942/run-direct-socket.candidate.mjs",
+    "bytes": 51387,
+    "sha256": "e6cfdb5d6e3d8ab04b4bc97d278132b4439930a92465bcf72081ccc173dbb04e"
+  },
+  "helper": {
+    "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-write-candidate-125e5fd5336c42b18c0bb59dda8f4942/queued-write-source.mjs",
+    "bytes": 3557,
+    "sha256": "93417db1e3b0edbb3dd06b504bddee18ba6fbb1bbf31141cd20ce119dea7fb5d"
+  },
+  "closedPreparationAndSyntaxReceipts": 6,
+  "completeRawStreams": 12,
+  "runtimeExecuted": false,
+  "repositoryChanged": false,
+  "cppPendingWriteProven": false,
+  "gatePassDerived": false,
+  "selfExcludedReason": "Self-referential index; own descriptor printed only after wx write"
+}

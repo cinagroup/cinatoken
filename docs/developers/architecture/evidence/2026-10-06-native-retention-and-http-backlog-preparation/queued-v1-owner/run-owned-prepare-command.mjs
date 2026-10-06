@@ -1,0 +1,22 @@
+import fs from 'node:fs';
+import path from 'node:path';
+import crypto from 'node:crypto';
+import { spawn } from 'node:child_process';
+const root = 'C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-write-candidate-125e5fd5336c42b18c0bb59dda8f4942';
+const [label, script] = process.argv.slice(2);
+if (!/^[a-z0-9-]+$/.test(label ?? '') || path.dirname(path.resolve(script ?? '')) !== path.resolve(root) || !['build-candidate.mjs', 'verify-candidate.mjs', 'seal-candidate.mjs'].includes(path.basename(script))) throw new Error('Only explicit source preparation scripts');
+const out = `${root}/${label}.stdout.log`, err = `${root}/${label}.stderr.log`, receipt = `${root}/${label}.result.json`;
+for (const file of [out, err, receipt]) if (fs.existsSync(file)) throw new Error('Refusing overwrite');
+const outFD = fs.openSync(out, 'wx'), errFD = fs.openSync(err, 'wx');
+const beganAt = new Date().toISOString();
+let timedOut = false, spawnError = null;
+const child = spawn(process.execPath, [script], { cwd: root, windowsHide: true, stdio: ['ignore', outFD, errFD] });
+const timer = setTimeout(() => { timedOut = true; child.kill('SIGKILL'); }, 60000);
+child.once('error', error => { spawnError = { name: error.name, code: error.code ?? null }; });
+child.once('close', (actualExit, signal) => {
+  clearTimeout(timer); fs.closeSync(outFD); fs.closeSync(errFD);
+  const descriptor = file => { const b = fs.readFileSync(file); return { path: file, bytes: b.length, sha256: crypto.createHash('sha256').update(b).digest('hex') }; };
+  fs.writeFileSync(receipt, `${JSON.stringify({ schema: 'cinatoken-queued-write-temp-preparation-command-closed-v1', closed: true, beganAt, endedAt: new Date().toISOString(), program: process.execPath, args: [script], actualExit, signal, timedOut, spawnError, stdout: descriptor(out), stderr: descriptor(err), preparesOnly: true, repositoryWrite: false, productModuleEvaluated: false, runtimeExecuted: false, gitInvoked: false, ciInvocation: false, gatePassDerived: false }, null, 2)}\n`, { flag: 'wx' });
+  console.log(JSON.stringify({ receipt, closed: true, actualExit, signal, timedOut, preparesOnly: true }));
+  process.exitCode = Number.isInteger(actualExit) && !signal && !timedOut && !spawnError ? actualExit : 1;
+});
