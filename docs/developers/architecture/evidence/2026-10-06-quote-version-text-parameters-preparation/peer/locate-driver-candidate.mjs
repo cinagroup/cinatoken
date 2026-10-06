@@ -1,0 +1,3 @@
+import fs from 'node:fs';import path from 'node:path';
+const temp='C:/Users/cina/AppData/Local/Temp',root='C:/cinagroup/cinatoken';
+console.log(JSON.stringify({candidateDirectories:fs.readdirSync(temp,{withFileTypes:true}).filter(d=>d.isDirectory()&&d.name.includes('gn9DdD')).map(d=>path.join(temp,d.name)),driverPackage:JSON.parse(fs.readFileSync(root+'/node_modules/postgres/package.json','utf8')),driverTypeSource:fs.readFileSync(root+'/node_modules/postgres/src/types.js','utf8')},null,2));

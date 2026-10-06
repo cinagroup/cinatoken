@@ -1,0 +1,19 @@
+{
+  "at": "2026-10-06T05:45:38.987Z",
+  "finishedAt": "2026-10-06T05:45:38.989Z",
+  "operation": "readFile",
+  "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-quote-version-next-readonly-gn9DdD/FINAL-quote-version-499-readonly-diagnosis.json",
+  "actualExit": 0,
+  "signal": null,
+  "error": null,
+  "stdout": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-quote-version-three-casts-879c829257b645e4ada53e37362201bd\\frozen-diagnosis.stdout.log",
+    "bytes": 26643,
+    "sha256": "92f7916e867d6e8c807b0c5dc50ca04321fb5d1c9d0248be477e735fd1706975"
+  },
+  "stderr": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-quote-version-three-casts-879c829257b645e4ada53e37362201bd\\frozen-diagnosis.stderr.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+}

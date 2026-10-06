@@ -1,0 +1,196 @@
+{
+  "schema": "cinatoken-readonly-quote-next-diagnosis-stopwrite-v1",
+  "at": "2026-10-06T05:13:44.513Z",
+  "stopWrite": true,
+  "allPreexistingRegularFiles": 30,
+  "totalFinalRootFiles": 31,
+  "entries": [
+    {
+      "relative": "actual-producer-tool-receipts.json",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-quote-version-next-readonly-gn9DdD/actual-producer-tool-receipts.json",
+      "bytes": 1568,
+      "sha256": "f1c0abe399d233813260a0f4108786cd788faf55252a609d056d006c67985cf7"
+    },
+    {
+      "relative": "FINAL-quote-version-499-readonly-diagnosis.json",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-quote-version-next-readonly-gn9DdD/FINAL-quote-version-499-readonly-diagnosis.json",
+      "bytes": 26643,
+      "sha256": "92f7916e867d6e8c807b0c5dc50ca04321fb5d1c9d0248be477e735fd1706975"
+    },
+    {
+      "relative": "inspect-proposal-and-active-scope.mjs",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-quote-version-next-readonly-gn9DdD/inspect-proposal-and-active-scope.mjs",
+      "bytes": 3397,
+      "sha256": "7985304b1122e0685ec6ab7d8176bca399661b75e89a1b206fa5e4833854845b"
+    },
+    {
+      "relative": "inspect-static-quote-chain.mjs",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-quote-version-next-readonly-gn9DdD/inspect-static-quote-chain.mjs",
+      "bytes": 10285,
+      "sha256": "f2208909963d82cdfa6c635ff233e87b23b04be412e0fdd01f10f91b6c31e4b8"
+    },
+    {
+      "relative": "pre-wrapper-observed-tool-returns.json",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-quote-version-next-readonly-gn9DdD/pre-wrapper-observed-tool-returns.json",
+      "bytes": 1925,
+      "sha256": "d5452b10e52bf823969be3bc78e6b400d40c776621ba78092449b56d4ba842c5"
+    },
+    {
+      "relative": "proposal-and-active-scope-audit.json",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-quote-version-next-readonly-gn9DdD/proposal-and-active-scope-audit.json",
+      "bytes": 63775,
+      "sha256": "dcefeee930b665c69f1251bcbc29ad51a5f9f5a62b9fe410979af05ffe43a030"
+    },
+    {
+      "relative": "proposal-scope.result.json",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-quote-version-next-readonly-gn9DdD/proposal-scope.result.json",
+      "bytes": 1109,
+      "sha256": "bfb634e6e8e6c20bbca0ca0163b84a243a73964abee80e8f5e9375a565a306bc"
+    },
+    {
+      "relative": "proposal-scope.stderr.log",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-quote-version-next-readonly-gn9DdD/proposal-scope.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "relative": "proposal-scope.stdout.log",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-quote-version-next-readonly-gn9DdD/proposal-scope.stdout.log",
+      "bytes": 138,
+      "sha256": "c86b76ea94501b0a6b0360c54792315b3c842ae73acfc19a29622172e8f49a6d"
+    },
+    {
+      "relative": "run-command.mjs",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-quote-version-next-readonly-gn9DdD/run-command.mjs",
+      "bytes": 2527,
+      "sha256": "ad6d8db6c1a0e624175a61b37cf545afee23208d35d7d6824b6995f996bfcf4a"
+    },
+    {
+      "relative": "seal-readonly-diagnosis.mjs",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-quote-version-next-readonly-gn9DdD/seal-readonly-diagnosis.mjs",
+      "bytes": 11853,
+      "sha256": "d356f0609a6826a028ec116c3dea2f202f7064879aa867e267d74c7e3aecb293"
+    },
+    {
+      "relative": "seal-readonly-diagnosis.result.json",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-quote-version-next-readonly-gn9DdD/seal-readonly-diagnosis.result.json",
+      "bytes": 1117,
+      "sha256": "99553315acc0e7da67d155be3a04dfe4497f2f837ce62f30fde7f976b757318a"
+    },
+    {
+      "relative": "seal-readonly-diagnosis.stderr.log",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-quote-version-next-readonly-gn9DdD/seal-readonly-diagnosis.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "relative": "seal-readonly-diagnosis.stdout.log",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-quote-version-next-readonly-gn9DdD/seal-readonly-diagnosis.stdout.log",
+      "bytes": 391,
+      "sha256": "9f9a44e87c2e716418001c12d0903a89ea022beaec79b4065c45cabe82d347e9"
+    },
+    {
+      "relative": "source-snapshots/01-postgres-shared-key-quote-versions.native.test.mjs.snapshot",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-quote-version-next-readonly-gn9DdD/source-snapshots/01-postgres-shared-key-quote-versions.native.test.mjs.snapshot",
+      "bytes": 34823,
+      "sha256": "16ef4b701728c9de46ea932851354d7cee2aa9d80c6ab543ceae6f4526380c83"
+    },
+    {
+      "relative": "source-snapshots/02-shared-key-quote-versions.sql.snapshot",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-quote-version-next-readonly-gn9DdD/source-snapshots/02-shared-key-quote-versions.sql.snapshot",
+      "bytes": 28629,
+      "sha256": "1249a7ff07f95b48c7b45a41833c96c9a028e4bfe3a47e44e9dc6b72c3c77246"
+    },
+    {
+      "relative": "source-snapshots/03-pg73-native-fixture.mjs.snapshot",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-quote-version-next-readonly-gn9DdD/source-snapshots/03-pg73-native-fixture.mjs.snapshot",
+      "bytes": 6849,
+      "sha256": "124ddd43c2594d0daaac66a4e7158e5df90b00a6d73f03cbcac9e8f853a7346f"
+    },
+    {
+      "relative": "source-snapshots/04-postgres-native-cluster.mjs.snapshot",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-quote-version-next-readonly-gn9DdD/source-snapshots/04-postgres-native-cluster.mjs.snapshot",
+      "bytes": 6300,
+      "sha256": "6b5923be8d3bdcd061033eed1af2f67f3b87fa2fca1f2cf0a0b2eb0eb2cb8d2a"
+    },
+    {
+      "relative": "source-snapshots/05-proxy-dispatch-safety.yml.snapshot",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-quote-version-next-readonly-gn9DdD/source-snapshots/05-proxy-dispatch-safety.yml.snapshot",
+      "bytes": 45895,
+      "sha256": "8e883e7f21f77f8367d361f6bd3d060e16c241c28641b3eac85af6835841f152"
+    },
+    {
+      "relative": "source-snapshots/06-package-lock.json.snapshot",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-quote-version-next-readonly-gn9DdD/source-snapshots/06-package-lock.json.snapshot",
+      "bytes": 830546,
+      "sha256": "f9c65b6e373a231d52d6eda634bb5f947dda3174734cd70e2b811e09fff0b6f0"
+    },
+    {
+      "relative": "source-snapshots/07-.nvmrc.snapshot",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-quote-version-next-readonly-gn9DdD/source-snapshots/07-.nvmrc.snapshot",
+      "bytes": 3,
+      "sha256": "f14b4987904bcb5814e4459a057ed4d20f58a633152288a761214dcd28780b56"
+    },
+    {
+      "relative": "source-snapshots/08-package.json.snapshot",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-quote-version-next-readonly-gn9DdD/source-snapshots/08-package.json.snapshot",
+      "bytes": 1814,
+      "sha256": "944d492614959389a5739ef2893bc1830fb773ff042159d9b331d43b2f6792e9"
+    },
+    {
+      "relative": "source-snapshots/09-index.js.snapshot",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-quote-version-next-readonly-gn9DdD/source-snapshots/09-index.js.snapshot",
+      "bytes": 15428,
+      "sha256": "4e21f5733e70d79cffc10d10d4ef01031de4a9ac862210e43f8870029fd103ed"
+    },
+    {
+      "relative": "source-snapshots/10-types.js.snapshot",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-quote-version-next-readonly-gn9DdD/source-snapshots/10-types.js.snapshot",
+      "bytes": 10935,
+      "sha256": "1883bd4536eab1c94b9e708d325b13708b0f18ec80020e3a825f34a72f603b81"
+    },
+    {
+      "relative": "source-snapshots/11-connection.js.snapshot",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-quote-version-next-readonly-gn9DdD/source-snapshots/11-connection.js.snapshot",
+      "bytes": 28690,
+      "sha256": "ee3a218d9aa6a6f2887c1a19da50009335fe84c11a5431d5cab72d6bc528632f"
+    },
+    {
+      "relative": "static-source-chain-audit.json",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-quote-version-next-readonly-gn9DdD/static-source-chain-audit.json",
+      "bytes": 16022,
+      "sha256": "abf7c8ae77f4b770423bf610688c9feb0338334c15afb57847dfb49fdbf619cf"
+    },
+    {
+      "relative": "static-source-chain.result.json",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-quote-version-next-readonly-gn9DdD/static-source-chain.result.json",
+      "bytes": 1112,
+      "sha256": "4bab98cbec3a420f9062947f75b69c9610104eb220bb60df5fa180ba97047e4b"
+    },
+    {
+      "relative": "static-source-chain.stderr.log",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-quote-version-next-readonly-gn9DdD/static-source-chain.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "relative": "static-source-chain.stdout.log",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-quote-version-next-readonly-gn9DdD/static-source-chain.stdout.log",
+      "bytes": 476,
+      "sha256": "98668f416b2c18ba7ccd94551f18d20bd5efccdf484ba3dc804da88bd0a698c9"
+    },
+    {
+      "relative": "three-original-query-AST-and-candidate-plan.json",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-quote-version-next-readonly-gn9DdD/three-original-query-AST-and-candidate-plan.json",
+      "bytes": 176267,
+      "sha256": "7005563726c28c606337f4805b8041bd5abf7585d4ecb040b7818cce36c8bae4"
+    }
+  ],
+  "selfHashExcludedOnly": true,
+  "actualOldRuntimeExit": 1,
+  "candidateConfirmed": false,
+  "candidateImplemented": false,
+  "testsRerun": 0,
+  "repoWrites": 0,
+  "gatePassDerived": false
+}

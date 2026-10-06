@@ -1,0 +1,25 @@
+{
+  "schema": "independent-native-quote-timecast-readonly-child-receipt-v1",
+  "name": "locate-driver-candidate",
+  "executable": "C:/Program Files/nodejs/node.exe",
+  "argv": [
+    "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-quote-timecast-independent-peer-3dc5347c2a4646ac8cc4bcc085aa9dc5/locate-driver-candidate.mjs"
+  ],
+  "cwd": "C:/cinagroup/cinatoken",
+  "startedAt": "2026-10-06T05:44:07.401Z",
+  "closedAt": "2026-10-06T05:44:07.524Z",
+  "actualExit": 0,
+  "signal": null,
+  "spawnError": null,
+  "closed": true,
+  "stdout": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-quote-timecast-independent-peer-3dc5347c2a4646ac8cc4bcc085aa9dc5\\locate-driver-candidate.stdout.log",
+    "bytes": 13452,
+    "sha256": "c04ee4ddf2c17be9501d95bf366f4872b52be0e3ade5f8a096ff56e7ecb53ab7"
+  },
+  "stderr": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-quote-timecast-independent-peer-3dc5347c2a4646ac8cc4bcc085aa9dc5\\locate-driver-candidate.stderr.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+}

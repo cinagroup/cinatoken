@@ -1,0 +1,32 @@
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
++ actual - expected
+
+  {
+    bytes: 28690,
++   sha256: 'ee3a218d9aa6a6f2887c1a19da50009335fe84c11a5431d5cab72d6bc528632f'
+-   sha256: 'ee3a218d9aa6a6f2887c1a19da50009335fe84c11a543ceae6f4526380c83'
+  }
+
+    at file:///C:/Users/cina/AppData/Local/Temp/cinatoken-native-quote-timecast-independent-peer-3dc5347c2a4646ac8cc4bcc085aa9dc5/audit-owner-current-source-v2.mjs:18:1179
+    at ModuleJob.run (node:internal/modules/esm/module_job:430:25)
+    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:661:26)
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5) {
+  generatedMessage: true,
+  code: 'ERR_ASSERTION',
+  actual: {
+    bytes: 28690,
+    sha256: 'ee3a218d9aa6a6f2887c1a19da50009335fe84c11a5431d5cab72d6bc528632f'
+  },
+  expected: {
+    bytes: 28690,
+    sha256: 'ee3a218d9aa6a6f2887c1a19da50009335fe84c11a543ceae6f4526380c83'
+  },
+  operator: 'deepStrictEqual',
+  diff: 'simple'
+}
+
+Node.js v24.14.1

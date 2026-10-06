@@ -1,0 +1,524 @@
+{
+  "threeSourcesExact": [
+    {
+      "head": "4a9b4fb984035bb62ec5930cce01f8da605f476f",
+      "target": "scripts/db/cutover/postgres-shared-key-quote-versions.native.test.mjs",
+      "gitBlob": "da61172ea25d53bc31cdc10f2999defce06d6559",
+      "snapshot": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-quote-timecast-independent-peer-3dc5347c2a4646ac8cc4bcc085aa9dc5\\source-baseline-4a9b4fb.snapshot.txt",
+      "bytes": 34823,
+      "sha256": "16ef4b701728c9de46ea932851354d7cee2aa9d80c6ab543ceae6f4526380c83"
+    },
+    {
+      "head": "ee122dd4273e2db892daa724bc6417a9b02b280c",
+      "target": "scripts/db/cutover/postgres-shared-key-quote-versions.native.test.mjs",
+      "gitBlob": "da61172ea25d53bc31cdc10f2999defce06d6559",
+      "snapshot": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-quote-timecast-independent-peer-3dc5347c2a4646ac8cc4bcc085aa9dc5\\source-baseline-ee122dd.snapshot.txt",
+      "bytes": 34823,
+      "sha256": "16ef4b701728c9de46ea932851354d7cee2aa9d80c6ab543ceae6f4526380c83"
+    },
+    {
+      "head": "dcc6ab52f21a18c5d1c02d8a4a4a390f039e61fc",
+      "target": "scripts/db/cutover/postgres-shared-key-quote-versions.native.test.mjs",
+      "gitBlob": "da61172ea25d53bc31cdc10f2999defce06d6559",
+      "snapshot": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-quote-timecast-independent-peer-3dc5347c2a4646ac8cc4bcc085aa9dc5\\source-baseline-dcc6ab5.snapshot.txt",
+      "bytes": 34823,
+      "sha256": "16ef4b701728c9de46ea932851354d7cee2aa9d80c6ab543ceae6f4526380c83"
+    }
+  ],
+  "driver": {
+    "packageVersion": "3.4.9",
+    "files": [
+      {
+        "file": "C:/cinagroup/cinatoken/node_modules/postgres/package.json",
+        "bytes": 1814,
+        "sha256": "944d492614959389a5739ef2893bc1830fb773ff042159d9b331d43b2f6792e9"
+      },
+      {
+        "file": "C:/cinagroup/cinatoken/node_modules/postgres/src/types.js",
+        "bytes": 10935,
+        "sha256": "1883bd4536eab1c94b9e708d325b13708b0f18ec80020e3a825f34a72f603b81"
+      },
+      {
+        "file": "C:/cinagroup/cinatoken/node_modules/postgres/src/connection.js",
+        "bytes": 28690,
+        "sha256": "ee3a218d9aa6a6f2887c1a19da50009335fe84c11a5431d5cab72d6bc528632f"
+      },
+      {
+        "file": "C:/cinagroup/cinatoken/package-lock.json",
+        "bytes": 830546,
+        "sha256": "f9c65b6e373a231d52d6eda634bb5f947dda3174734cd70e2b811e09fff0b6f0"
+      }
+    ],
+    "types": [
+      {
+        "line": 4,
+        "text": "export const types = {"
+      },
+      {
+        "line": 5,
+        "text": "  string: {"
+      },
+      {
+        "line": 6,
+        "text": "    to: 25,"
+      },
+      {
+        "line": 7,
+        "text": "    from: null,             // defaults to string"
+      },
+      {
+        "line": 8,
+        "text": "    serialize: x => '' + x"
+      },
+      {
+        "line": 9,
+        "text": "  },"
+      },
+      {
+        "line": 26,
+        "text": "    parse: x => x === 't'"
+      },
+      {
+        "line": 27,
+        "text": "  },"
+      },
+      {
+        "line": 28,
+        "text": "  date: {"
+      },
+      {
+        "line": 29,
+        "text": "    to: 1184,"
+      },
+      {
+        "line": 30,
+        "text": "    from: [1082, 1114, 1184],"
+      },
+      {
+        "line": 31,
+        "text": "    serialize: x => (x instanceof Date ? x : new Date(x)).toISOString(),"
+      },
+      {
+        "line": 32,
+        "text": "    parse: x => new Date(x)"
+      },
+      {
+        "line": 33,
+        "text": "  },"
+      },
+      {
+        "line": 34,
+        "text": "  bytea: {"
+      }
+    ],
+    "connection": [
+      {
+        "line": 199,
+        "text": ""
+      },
+      {
+        "line": 200,
+        "text": "  function describe(q) {"
+      },
+      {
+        "line": 201,
+        "text": "    return Buffer.concat(["
+      },
+      {
+        "line": 202,
+        "text": "      Parse(q.statement.string, q.parameters, q.statement.types, q.statement.name),"
+      },
+      {
+        "line": 203,
+        "text": "      Describe('S', q.statement.name)"
+      },
+      {
+        "line": 204,
+        "text": "    ])"
+      },
+      {
+        "line": 205,
+        "text": "  }"
+      },
+      {
+        "line": 206,
+        "text": ""
+      },
+      {
+        "line": 207,
+        "text": "  function prepared(q) {"
+      },
+      {
+        "line": 208,
+        "text": "    return Buffer.concat(["
+      },
+      {
+        "line": 209,
+        "text": "      Bind(q.parameters, q.statement.types, q.statement.name, q.cursorName),"
+      },
+      {
+        "line": 210,
+        "text": "      q.cursorFn"
+      },
+      {
+        "line": 211,
+        "text": "        ? Execute('', q.cursorRows)"
+      },
+      {
+        "line": 212,
+        "text": "        : ExecuteUnnamed"
+      },
+      {
+        "line": 215,
+        "text": ""
+      },
+      {
+        "line": 216,
+        "text": "  function unnamed(q) {"
+      },
+      {
+        "line": 217,
+        "text": "    return Buffer.concat(["
+      },
+      {
+        "line": 218,
+        "text": "      Parse(q.statement.string, q.parameters, q.statement.types),"
+      },
+      {
+        "line": 219,
+        "text": "      DescribeUnnamed,"
+      },
+      {
+        "line": 220,
+        "text": "      prepared(q)"
+      },
+      {
+        "line": 221,
+        "text": "    ])"
+      },
+      {
+        "line": 405,
+        "text": "      query: { value: query.string, enumerable: options.debug },"
+      },
+      {
+        "line": 406,
+        "text": "      parameters: { value: query.parameters, enumerable: options.debug },"
+      },
+      {
+        "line": 407,
+        "text": "      args: { value: query.args, enumerable: options.debug },"
+      },
+      {
+        "line": 408,
+        "text": "      types: { value: query.statement && query.statement.types, enumerable: options.debug }"
+      },
+      {
+        "line": 409,
+        "text": "    })"
+      },
+      {
+        "line": 410,
+        "text": "    query.reject(err)"
+      },
+      {
+        "line": 411,
+        "text": "  }"
+      },
+      {
+        "line": 468,
+        "text": "      x === 67 ? CommandComplete :           // C"
+      },
+      {
+        "line": 469,
+        "text": "      x === 50 ? BindComplete :              // 2"
+      },
+      {
+        "line": 470,
+        "text": "      x === 49 ? ParseComplete :             // 1"
+      },
+      {
+        "line": 471,
+        "text": "      x === 116 ? ParameterDescription :     // t"
+      },
+      {
+        "line": 472,
+        "text": "      x === 84 ? RowDescription :            // T"
+      },
+      {
+        "line": 473,
+        "text": "      x === 82 ? Authentication :            // R"
+      },
+      {
+        "line": 474,
+        "text": "      x === 110 ? NoData :                   // n"
+      },
+      {
+        "line": 623,
+        "text": "    result.columns = query.statement.columns"
+      },
+      {
+        "line": 624,
+        "text": "  }"
+      },
+      {
+        "line": 625,
+        "text": ""
+      },
+      {
+        "line": 626,
+        "text": "  function ParameterDescription(x) {"
+      },
+      {
+        "line": 627,
+        "text": "    const length = x.readUInt16BE(5)"
+      },
+      {
+        "line": 628,
+        "text": ""
+      },
+      {
+        "line": 629,
+        "text": "    for (let i = 0; i < length; ++i)"
+      },
+      {
+        "line": 630,
+        "text": "      !query.statement.types[i] && (query.statement.types[i] = x.readUInt32BE(7 + i * 4))"
+      },
+      {
+        "line": 631,
+        "text": ""
+      },
+      {
+        "line": 632,
+        "text": "    query.prepare && (statements[query.signature] = query.statement)"
+      },
+      {
+        "line": 633,
+        "text": "    query.describeFirst && !query.onlyDescribe && (write(prepared(query)), query.describeFirst = false)"
+      },
+      {
+        "line": 779,
+        "text": "  }"
+      },
+      {
+        "line": 780,
+        "text": ""
+      },
+      {
+        "line": 781,
+        "text": "  function addArrayType(oid, typarray) {"
+      },
+      {
+        "line": 782,
+        "text": "    if (!!options.parsers[typarray] && !!options.serializers[typarray]) return"
+      },
+      {
+        "line": 783,
+        "text": "    const parser = options.parsers[oid]"
+      },
+      {
+        "line": 784,
+        "text": "    options.shared.typeArrayMap[oid] = typarray"
+      },
+      {
+        "line": 785,
+        "text": "    options.parsers[typarray] = (xs) => arrayParser(xs, parser, typarray)"
+      },
+      {
+        "line": 786,
+        "text": "    options.parsers[typarray].array = true"
+      },
+      {
+        "line": 787,
+        "text": "    options.serializers[typarray] = (xs) => arraySerializer(xs, options.serializers[oid], options, typarray)"
+      },
+      {
+        "line": 788,
+        "text": "  }"
+      },
+      {
+        "line": 789,
+        "text": ""
+      },
+      {
+        "line": 790,
+        "text": "  function tryNext(x, xs) {"
+      },
+      {
+        "line": 957,
+        "text": ""
+      },
+      {
+        "line": 958,
+        "text": "      type = types[i]"
+      },
+      {
+        "line": 959,
+        "text": "      parameters[i] = x = type in options.serializers"
+      },
+      {
+        "line": 960,
+        "text": "        ? options.serializers[type](x)"
+      },
+      {
+        "line": 961,
+        "text": "        : '' + x"
+      },
+      {
+        "line": 962,
+        "text": ""
+      },
+      {
+        "line": 963,
+        "text": "      prev = b.i"
+      }
+    ]
+  },
+  "candidateEntries": [
+    {
+      "name": "actual-producer-tool-receipts.json",
+      "file": true,
+      "directory": false,
+      "bytes": 1568,
+      "sha256": "f1c0abe399d233813260a0f4108786cd788faf55252a609d056d006c67985cf7"
+    },
+    {
+      "name": "FINAL-quote-version-499-readonly-diagnosis.json",
+      "file": true,
+      "directory": false,
+      "bytes": 26643,
+      "sha256": "92f7916e867d6e8c807b0c5dc50ca04321fb5d1c9d0248be477e735fd1706975"
+    },
+    {
+      "name": "inspect-proposal-and-active-scope.mjs",
+      "file": true,
+      "directory": false,
+      "bytes": 3397,
+      "sha256": "7985304b1122e0685ec6ab7d8176bca399661b75e89a1b206fa5e4833854845b"
+    },
+    {
+      "name": "inspect-static-quote-chain.mjs",
+      "file": true,
+      "directory": false,
+      "bytes": 10285,
+      "sha256": "f2208909963d82cdfa6c635ff233e87b23b04be412e0fdd01f10f91b6c31e4b8"
+    },
+    {
+      "name": "pre-wrapper-observed-tool-returns.json",
+      "file": true,
+      "directory": false,
+      "bytes": 1925,
+      "sha256": "d5452b10e52bf823969be3bc78e6b400d40c776621ba78092449b56d4ba842c5"
+    },
+    {
+      "name": "proposal-and-active-scope-audit.json",
+      "file": true,
+      "directory": false,
+      "bytes": 63775,
+      "sha256": "dcefeee930b665c69f1251bcbc29ad51a5f9f5a62b9fe410979af05ffe43a030"
+    },
+    {
+      "name": "proposal-scope.result.json",
+      "file": true,
+      "directory": false,
+      "bytes": 1109,
+      "sha256": "bfb634e6e8e6c20bbca0ca0163b84a243a73964abee80e8f5e9375a565a306bc"
+    },
+    {
+      "name": "proposal-scope.stderr.log",
+      "file": true,
+      "directory": false,
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "proposal-scope.stdout.log",
+      "file": true,
+      "directory": false,
+      "bytes": 138,
+      "sha256": "c86b76ea94501b0a6b0360c54792315b3c842ae73acfc19a29622172e8f49a6d"
+    },
+    {
+      "name": "run-command.mjs",
+      "file": true,
+      "directory": false,
+      "bytes": 2527,
+      "sha256": "ad6d8db6c1a0e624175a61b37cf545afee23208d35d7d6824b6995f996bfcf4a"
+    },
+    {
+      "name": "seal-readonly-diagnosis.mjs",
+      "file": true,
+      "directory": false,
+      "bytes": 11853,
+      "sha256": "d356f0609a6826a028ec116c3dea2f202f7064879aa867e267d74c7e3aecb293"
+    },
+    {
+      "name": "seal-readonly-diagnosis.result.json",
+      "file": true,
+      "directory": false,
+      "bytes": 1117,
+      "sha256": "99553315acc0e7da67d155be3a04dfe4497f2f837ce62f30fde7f976b757318a"
+    },
+    {
+      "name": "seal-readonly-diagnosis.stderr.log",
+      "file": true,
+      "directory": false,
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "seal-readonly-diagnosis.stdout.log",
+      "file": true,
+      "directory": false,
+      "bytes": 391,
+      "sha256": "9f9a44e87c2e716418001c12d0903a89ea022beaec79b4065c45cabe82d347e9"
+    },
+    {
+      "name": "source-snapshots",
+      "file": false,
+      "directory": true
+    },
+    {
+      "name": "static-source-chain-audit.json",
+      "file": true,
+      "directory": false,
+      "bytes": 16022,
+      "sha256": "abf7c8ae77f4b770423bf610688c9feb0338334c15afb57847dfb49fdbf619cf"
+    },
+    {
+      "name": "static-source-chain.result.json",
+      "file": true,
+      "directory": false,
+      "bytes": 1112,
+      "sha256": "4bab98cbec3a420f9062947f75b69c9610104eb220bb60df5fa180ba97047e4b"
+    },
+    {
+      "name": "static-source-chain.stderr.log",
+      "file": true,
+      "directory": false,
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "static-source-chain.stdout.log",
+      "file": true,
+      "directory": false,
+      "bytes": 476,
+      "sha256": "98668f416b2c18ba7ccd94551f18d20bd5efccdf484ba3dc804da88bd0a698c9"
+    },
+    {
+      "name": "STOPWRITE-root-file-index.json",
+      "file": true,
+      "directory": false,
+      "bytes": 9751,
+      "sha256": "c08d63e94cbda73978ce601dc4576489386173187ff05b916b052007f437b87c"
+    },
+    {
+      "name": "three-original-query-AST-and-candidate-plan.json",
+      "file": true,
+      "directory": false,
+      "bytes": 176267,
+      "sha256": "7005563726c28c606337f4805b8041bd5abf7585d4ecb040b7818cce36c8bae4"
+    }
+  ]
+}

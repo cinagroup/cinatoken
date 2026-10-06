@@ -467,10 +467,10 @@ test('native PG18 immutable shared-key quote supersession preserves history and 
       assert.equal(Number(capturedAttemptQuote.transition_seq), 5);
       assert.equal(capturedAttemptQuote.quote_version_id, 'quote-a-b1');
       const [observedAt] = await competing.unsafe(`SELECT pg_catalog.clock_timestamp()::text AS at`);
-      assert.equal((await competing.unsafe(`SELECT $1::text::timestamptz >= $2::text::timestamptz AS after_insert`,
+      assert.equal((await competing.unsafe(`SELECT $1::timestamptz >= $2::timestamptz AS after_insert`,
         [observedAt.at, pendingEffectiveAt]))[0].after_insert, true);
       const [pendingTimeBeforeCommit] = await competing.unsafe(`SELECT quote_version_id
-        FROM ${quotes}.resolve_shared_key_quote_at_time('quote-key-a',$1::text::timestamptz)`,
+        FROM ${quotes}.resolve_shared_key_quote_at_time('quote-key-a',$1)`,
       [observedAt.at]);
       assert.equal(pendingTimeBeforeCommit.quote_version_id, 'quote-a-b1');
       let secondSettled = false;
@@ -494,7 +494,7 @@ test('native PG18 immutable shared-key quote supersession preserves history and 
       assert.equal(capturedFact.seller_user_id, 'quote-seller-b');
       assert.equal(capturedFact.input_price_per_million, '5.750000');
       const [pendingTimeAfterCommit] = await competing.unsafe(`SELECT quote_version_id
-        FROM ${quotes}.resolve_shared_key_quote_at_time('quote-key-a',$1::text::timestamptz)`,
+        FROM ${quotes}.resolve_shared_key_quote_at_time('quote-key-a',$1)`,
       [observedAt.at]);
       assert.equal(pendingTimeAfterCommit.quote_version_id, 'quote-a-b2');
       stage('uncommitted-new-event-keeps-old-dispatch-reference-and-stale-operator-loses');

@@ -1,0 +1,120 @@
+{
+  "at": "2026-10-06T05:49:13.395Z",
+  "actualExit": 0,
+  "baseCommit": "4a9b4fb984035bb62ec5930cce01f8da605f476f",
+  "target": "scripts/db/cutover/postgres-shared-key-quote-versions.native.test.mjs",
+  "before": {
+    "bytes": 34823,
+    "sha256": "16ef4b701728c9de46ea932851354d7cee2aa9d80c6ab543ceae6f4526380c83"
+  },
+  "after": {
+    "bytes": 34873,
+    "sha256": "c72cc41a679c64a1fb7edd733fe450e3cea8a9bdc9408b8cb152fb0a9135187f"
+  },
+  "onlyFourCastInsertions": true,
+  "wholeReverseBytesExact": true,
+  "completeReversedAstExact": true,
+  "originalAssertionCount": 65,
+  "directRawAssertionSourceExact": 64,
+  "all65AssertionSourceAndAstExactAfterOnlyAuthorizedCastReverse": true,
+  "authorizedNestedAssertionSqlOnlyChange": [
+    {
+      "index": 49,
+      "originalLine": 470,
+      "before": "assert.equal((await competing.unsafe(`SELECT $1::timestamptz >= $2::timestamptz AS after_insert`,\n        [observedAt.at, pendingEffectiveAt]))[0].after_insert, true)",
+      "after": "assert.equal((await competing.unsafe(`SELECT $1::text::timestamptz >= $2::text::timestamptz AS after_insert`,\n        [observedAt.at, pendingEffectiveAt]))[0].after_insert, true)"
+    }
+  ],
+  "changedThreeSqlQueries": [
+    {
+      "index": 61,
+      "originalLine": 470,
+      "before": "competing.unsafe(`SELECT $1::timestamptz >= $2::timestamptz AS after_insert`,\n        [observedAt.at, pendingEffectiveAt])",
+      "after": "competing.unsafe(`SELECT $1::text::timestamptz >= $2::text::timestamptz AS after_insert`,\n        [observedAt.at, pendingEffectiveAt])"
+    },
+    {
+      "index": 62,
+      "originalLine": 472,
+      "before": "competing.unsafe(`SELECT quote_version_id\n        FROM ${quotes}.resolve_shared_key_quote_at_time('quote-key-a',$1)`,\n      [observedAt.at])",
+      "after": "competing.unsafe(`SELECT quote_version_id\n        FROM ${quotes}.resolve_shared_key_quote_at_time('quote-key-a',$1::text::timestamptz)`,\n      [observedAt.at])"
+    },
+    {
+      "index": 64,
+      "originalLine": 496,
+      "before": "competing.unsafe(`SELECT quote_version_id\n        FROM ${quotes}.resolve_shared_key_quote_at_time('quote-key-a',$1)`,\n      [observedAt.at])",
+      "after": "competing.unsafe(`SELECT quote_version_id\n        FROM ${quotes}.resolve_shared_key_quote_at_time('quote-key-a',$1::text::timestamptz)`,\n      [observedAt.at])"
+    }
+  ],
+  "otherSqlQueriesSourceAndAstExact": true,
+  "sqlCount": 77,
+  "templateCount": 77,
+  "transactionsGrantsLoaderImportsCleanupConditionsWaitsOptionsExact": true,
+  "fullOriginalAstSha256": "076ad1ce9d538a0585d27437655e122ab5622fd6337eafdde2aa5590b4623485",
+  "originalAll65AssertSourceAstSha256": "ed1fbbf8c31fda669f989d68951d916f363c42983ff2f0332f285f32ab5f1ca9",
+  "originalOptions": [
+    "{ timeout: 240_000, skip: !process.env.GATEWAY_NATIVE_PG_BIN }"
+  ],
+  "originalWaits": [
+    "releaseLedger()",
+    "delay(12)",
+    "releaseOwner()",
+    "delay(100)",
+    "releaseFirst()",
+    "delay(100)",
+    "releaseRevoke()",
+    "releaseRevoke()"
+  ],
+  "protectedInputs": [
+    {
+      "path": "package-lock.json",
+      "bytes": 830546,
+      "sha256": "f9c65b6e373a231d52d6eda634bb5f947dda3174734cd70e2b811e09fff0b6f0",
+      "currentBytesExact": true
+    },
+    {
+      "path": "node_modules/postgres/package.json",
+      "bytes": 1814,
+      "sha256": "944d492614959389a5739ef2893bc1830fb773ff042159d9b331d43b2f6792e9",
+      "currentBytesExact": true
+    },
+    {
+      "path": "node_modules/postgres/src/types.js",
+      "bytes": 10935,
+      "sha256": "1883bd4536eab1c94b9e708d325b13708b0f18ec80020e3a825f34a72f603b81",
+      "currentBytesExact": true
+    },
+    {
+      "path": "node_modules/postgres/src/errors.js",
+      "bytes": 1155,
+      "sha256": "85cfbed9a5ab0db41ab8e97b806c881af29807dfe99bc656fdf1a18c1c13b6c6",
+      "currentBytesExact": true
+    },
+    {
+      "path": "packages/core/src/test-support/postgres-native-cluster.mjs",
+      "bytes": 6300,
+      "sha256": "6b5923be8d3bdcd061033eed1af2f67f3b87fa2fca1f2cf0a0b2eb0eb2cb8d2a",
+      "currentBytesExact": true
+    },
+    {
+      "path": "scripts/db/cutover/pg73-native-fixture.mjs",
+      "bytes": 6849,
+      "sha256": "124ddd43c2594d0daaac66a4e7158e5df90b00a6d73f03cbcac9e8f853a7346f",
+      "currentBytesExact": true
+    },
+    {
+      "path": "packages/core/migrations-proposals/postgres/shared-key-quote-versions.sql",
+      "bytes": 28629,
+      "sha256": "1249a7ff07f95b48c7b45a41833c96c9a028e4bfe3a47e44e9dc6b72c3c77246",
+      "currentBytesExact": true
+    },
+    {
+      "path": "scripts/db/cutover/grant-postgres-runtime.ts",
+      "bytes": 25946,
+      "sha256": "3f95f18f557696d8a36b93f7fe0d0d35a391e8ac9cf953376a234a6b629ea242",
+      "currentBytesExact": true
+    }
+  ],
+  "driverOfflineBoundary": "The separate one-run3.4.9 serializer control is purely offline and does not confirm actual PG root cause or native success.",
+  "repositoryWritesByAudit": 0,
+  "nativeExecuted": false
+}

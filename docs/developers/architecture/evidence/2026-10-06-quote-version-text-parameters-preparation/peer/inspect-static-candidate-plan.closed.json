@@ -1,0 +1,25 @@
+{
+  "schema": "independent-native-quote-timecast-readonly-child-receipt-v1",
+  "name": "inspect-static-candidate-plan",
+  "executable": "C:/Program Files/nodejs/node.exe",
+  "argv": [
+    "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-quote-timecast-independent-peer-3dc5347c2a4646ac8cc4bcc085aa9dc5/inspect-static-candidate-plan.mjs"
+  ],
+  "cwd": "C:/cinagroup/cinatoken",
+  "startedAt": "2026-10-06T05:46:10.537Z",
+  "closedAt": "2026-10-06T05:46:10.632Z",
+  "actualExit": 0,
+  "signal": null,
+  "spawnError": null,
+  "closed": true,
+  "stdout": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-quote-timecast-independent-peer-3dc5347c2a4646ac8cc4bcc085aa9dc5\\inspect-static-candidate-plan.stdout.log",
+    "bytes": 16549,
+    "sha256": "d21403d489f39bb95f3eb40e0130e00821e6594425e92d1838ce2b4b3ab4fd33"
+  },
+  "stderr": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-quote-timecast-independent-peer-3dc5347c2a4646ac8cc4bcc085aa9dc5\\inspect-static-candidate-plan.stderr.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+}

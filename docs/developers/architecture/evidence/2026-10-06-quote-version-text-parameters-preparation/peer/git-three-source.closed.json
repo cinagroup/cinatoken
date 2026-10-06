@@ -1,0 +1,31 @@
+{
+  "schema": "independent-native-quote-timecast-readonly-child-receipt-v1",
+  "name": "git-three-source",
+  "executable": "C:/Program Files/Git/cmd/git.exe",
+  "argv": [
+    "cat-file",
+    "--batch"
+  ],
+  "cwd": "C:/cinagroup/cinatoken",
+  "startedAt": "2026-10-06T05:45:12.738Z",
+  "closedAt": "2026-10-06T05:45:12.807Z",
+  "actualExit": 0,
+  "signal": null,
+  "spawnError": null,
+  "closed": true,
+  "stdin": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-quote-timecast-independent-peer-3dc5347c2a4646ac8cc4bcc085aa9dc5\\git-three-source.stdin.log",
+    "bytes": 333,
+    "sha256": "8ba5ba5fc14049fbf7f5faacadf5e6ed7a2784f747bee129cb125acca1c90de5"
+  },
+  "stdout": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-quote-timecast-independent-peer-3dc5347c2a4646ac8cc4bcc085aa9dc5\\git-three-source.stdout.log",
+    "bytes": 104628,
+    "sha256": "f4a5b9d1ca6ede325b94b3835e22c37004a762af8afab61bd82e24c85c7d4b0f"
+  },
+  "stderr": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-quote-timecast-independent-peer-3dc5347c2a4646ac8cc4bcc085aa9dc5\\git-three-source.stderr.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+}

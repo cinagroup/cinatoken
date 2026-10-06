@@ -1,0 +1,69 @@
+{
+  "candidateDirectories": [
+    "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-quote-version-next-readonly-gn9DdD"
+  ],
+  "driverPackage": {
+    "name": "postgres",
+    "version": "3.4.9",
+    "description": "Fastest full featured PostgreSQL client for Node.js",
+    "type": "module",
+    "module": "src/index.js",
+    "main": "cjs/src/index.js",
+    "exports": {
+      "types": "./types/index.d.ts",
+      "bun": "./src/index.js",
+      "workerd": "./cf/src/index.js",
+      "import": "./src/index.js",
+      "default": "./cjs/src/index.js"
+    },
+    "types": "types/index.d.ts",
+    "typings": "types/index.d.ts",
+    "engines": {
+      "node": ">=12"
+    },
+    "scripts": {
+      "build": "npm run build:cjs && npm run build:deno && npm run build:cf",
+      "build:cjs": "node transpile.cjs",
+      "build:deno": "node transpile.deno.js",
+      "build:cf": "node transpile.cf.js",
+      "test": "npm run test:esm && npm run test:cjs && npm run test:deno",
+      "test:esm": "node tests/index.js",
+      "test:cjs": "npm run build:cjs && cd cjs/tests && node index.js && cd ../../",
+      "test:deno": "npm run build:deno && cd deno/tests && deno run --no-lock --allow-all --unsafely-ignore-certificate-errors index.js && cd ../../",
+      "lint": "eslint src && eslint tests",
+      "prepare": "npm run build",
+      "prepublishOnly": "npm run lint"
+    },
+    "files": [
+      "/cf/src",
+      "/cf/polyfills.js",
+      "/cjs/src",
+      "/cjs/package.json",
+      "/src",
+      "/types"
+    ],
+    "author": "Rasmus Porsager <rasmus@porsager.com> (https://www.porsager.com)",
+    "funding": {
+      "type": "individual",
+      "url": "https://github.com/sponsors/porsager"
+    },
+    "license": "Unlicense",
+    "repository": "porsager/postgres",
+    "homepage": "https://github.com/porsager/postgres",
+    "bugs": "https://github.com/porsager/postgres/issues",
+    "keywords": [
+      "driver",
+      "postgresql",
+      "postgres.js",
+      "postgres",
+      "postrges",
+      "postgre",
+      "client",
+      "sql",
+      "db",
+      "pg",
+      "database"
+    ]
+  },
+  "driverTypeSource": "import { Query } from './query.js'\nimport { Errors } from './errors.js'\n\nexport const types = {\n  string: {\n    to: 25,\n    from: null,             // defaults to string\n    serialize: x => '' + x\n  },\n  number: {\n    to: 0,\n    from: [21, 23, 26, 700, 701],\n    serialize: x => '' + x,\n    parse: x => +x\n  },\n  json: {\n    to: 114,\n    from: [114, 3802],\n    serialize: x => JSON.stringify(x),\n    parse: x => JSON.parse(x)\n  },\n  boolean: {\n    to: 16,\n    from: 16,\n    serialize: x => x === true ? 't' : 'f',\n    parse: x => x === 't'\n  },\n  date: {\n    to: 1184,\n    from: [1082, 1114, 1184],\n    serialize: x => (x instanceof Date ? x : new Date(x)).toISOString(),\n    parse: x => new Date(x)\n  },\n  bytea: {\n    to: 17,\n    from: 17,\n    serialize: x => '\\\\x' + Buffer.from(x).toString('hex'),\n    parse: x => Buffer.from(x.slice(2), 'hex')\n  }\n}\n\nclass NotTagged { then() { notTagged() } catch() { notTagged() } finally() { notTagged() }}\n\nexport class Identifier extends NotTagged {\n  constructor(value) {\n    super()\n    this.value = escapeIdentifier(value)\n  }\n}\n\nexport class Parameter extends NotTagged {\n  constructor(value, type, array) {\n    super()\n    this.value = value\n    this.type = type\n    this.array = array\n  }\n}\n\nexport class Builder extends NotTagged {\n  constructor(first, rest) {\n    super()\n    this.first = first\n    this.rest = rest\n  }\n\n  build(before, parameters, types, options) {\n    const keyword = builders.map(([x, fn]) => ({ fn, i: before.search(x) })).sort((a, b) => a.i - b.i).pop()\n    return keyword.i === -1\n      ? escapeIdentifiers(this.first, options)\n      : keyword.fn(this.first, this.rest, parameters, types, options)\n  }\n}\n\nexport function handleValue(x, parameters, types, options) {\n  let value = x instanceof Parameter ? x.value : x\n  if (value === undefined) {\n    x instanceof Parameter\n      ? x.value = options.transform.undefined\n      : value = x = options.transform.undefined\n\n    if (value === undefined)\n      throw Errors.generic('UNDEFINED_VALUE', 'Undefined values are not allowed')\n  }\n\n  return '$' + (types.push(\n    x instanceof Parameter\n      ? (parameters.push(x.value), x.array\n        ? x.array[x.type || inferType(x.value)] || x.type || firstIsString(x.value)\n        : x.type\n      )\n      : (parameters.push(x), inferType(x))\n  ))\n}\n\nconst defaultHandlers = typeHandlers(types)\n\nexport function stringify(q, string, value, parameters, types, options) { // eslint-disable-line\n  for (let i = 1; i < q.strings.length; i++) {\n    string += (stringifyValue(string, value, parameters, types, options)) + q.strings[i]\n    value = q.args[i]\n  }\n\n  return string\n}\n\nfunction stringifyValue(string, value, parameters, types, o) {\n  return (\n    value instanceof Builder ? value.build(string, parameters, types, o) :\n    value instanceof Query ? fragment(value, parameters, types, o) :\n    value instanceof Identifier ? value.value :\n    value && value[0] instanceof Query ? value.reduce((acc, x) => acc + ' ' + fragment(x, parameters, types, o), '') :\n    handleValue(value, parameters, types, o)\n  )\n}\n\nfunction fragment(q, parameters, types, options) {\n  q.fragment = true\n  return stringify(q, q.strings[0], q.args[0], parameters, types, options)\n}\n\nfunction valuesBuilder(first, parameters, types, columns, options) {\n  return first.map(row =>\n    '(' + columns.map(column =>\n      stringifyValue('values', row[column], parameters, types, options)\n    ).join(',') + ')'\n  ).join(',')\n}\n\nfunction values(first, rest, parameters, types, options) {\n  const multi = Array.isArray(first[0])\n  const columns = rest.length ? rest.flat() : Object.keys(multi ? first[0] : first)\n  return valuesBuilder(multi ? first : [first], parameters, types, columns, options)\n}\n\nfunction select(first, rest, parameters, types, options) {\n  typeof first === 'string' && (first = [first].concat(rest))\n  if (Array.isArray(first))\n    return escapeIdentifiers(first, options)\n\n  let value\n  const columns = rest.length ? rest.flat() : Object.keys(first)\n  return columns.map(x => {\n    value = first[x]\n    return (\n      value instanceof Query ? fragment(value, parameters, types, options) :\n      value instanceof Identifier ? value.value :\n      handleValue(value, parameters, types, options)\n    ) + ' as ' + escapeIdentifier(options.transform.column.to ? options.transform.column.to(x) : x)\n  }).join(',')\n}\n\nconst builders = Object.entries({\n  values,\n  in: (...xs) => {\n    const x = values(...xs)\n    return x === '()' ? '(null)' : x\n  },\n  select,\n  as: select,\n  returning: select,\n  '\\\\(': select,\n\n  update(first, rest, parameters, types, options) {\n    return (rest.length ? rest.flat() : Object.keys(first)).map(x =>\n      escapeIdentifier(options.transform.column.to ? options.transform.column.to(x) : x) +\n      '=' + stringifyValue('values', first[x], parameters, types, options)\n    )\n  },\n\n  insert(first, rest, parameters, types, options) {\n    const columns = rest.length ? rest.flat() : Object.keys(Array.isArray(first) ? first[0] : first)\n    return '(' + escapeIdentifiers(columns, options) + ')values' +\n    valuesBuilder(Array.isArray(first) ? first : [first], parameters, types, columns, options)\n  }\n}).map(([x, fn]) => ([new RegExp('((?:^|[\\\\s(])' + x + '(?:$|[\\\\s(]))(?![\\\\s\\\\S]*\\\\1)', 'i'), fn]))\n\nfunction notTagged() {\n  throw Errors.generic('NOT_TAGGED_CALL', 'Query not called as a tagged template literal')\n}\n\nexport const serializers = defaultHandlers.serializers\nexport const parsers = defaultHandlers.parsers\n\nexport const END = {}\n\nfunction firstIsString(x) {\n  if (Array.isArray(x))\n    return firstIsString(x[0])\n  return typeof x === 'string' ? 1009 : 0\n}\n\nexport const mergeUserTypes = function(types) {\n  const user = typeHandlers(types || {})\n  return {\n    serializers: Object.assign({}, serializers, user.serializers),\n    parsers: Object.assign({}, parsers, user.parsers)\n  }\n}\n\nfunction typeHandlers(types) {\n  return Object.keys(types).reduce((acc, k) => {\n    types[k].from && [].concat(types[k].from).forEach(x => acc.parsers[x] = types[k].parse)\n    if (types[k].serialize) {\n      acc.serializers[types[k].to] = types[k].serialize\n      types[k].from && [].concat(types[k].from).forEach(x => acc.serializers[x] = types[k].serialize)\n    }\n    return acc\n  }, { parsers: {}, serializers: {} })\n}\n\nfunction escapeIdentifiers(xs, { transform: { column } }) {\n  return xs.map(x => escapeIdentifier(column.to ? column.to(x) : x)).join(',')\n}\n\nexport const escapeIdentifier = function escape(str) {\n  return '\"' + str.replace(/\"/g, '\"\"').replace(/\\./g, '\".\"') + '\"'\n}\n\nexport const inferType = function inferType(x) {\n  return (\n    x instanceof Parameter ? x.type :\n    x instanceof Date ? 1184 :\n    x instanceof Uint8Array ? 17 :\n    (x === true || x === false) ? 16 :\n    typeof x === 'bigint' ? 20 :\n    Array.isArray(x) ? inferType(x[0]) :\n    0\n  )\n}\n\nconst escapeBackslash = /\\\\/g\nconst escapeQuote = /\"/g\n\nfunction arrayEscape(x) {\n  return x\n    .replace(escapeBackslash, '\\\\\\\\')\n    .replace(escapeQuote, '\\\\\"')\n}\n\nexport const arraySerializer = function arraySerializer(xs, serializer, options, typarray) {\n  if (Array.isArray(xs) === false)\n    return xs\n\n  if (!xs.length)\n    return '{}'\n\n  const first = xs[0]\n  // Only _box (1020) has the ';' delimiter for arrays, all other types use the ',' delimiter\n  const delimiter = typarray === 1020 ? ';' : ','\n\n  if (Array.isArray(first) && !first.type)\n    return '{' + xs.map(x => arraySerializer(x, serializer, options, typarray)).join(delimiter) + '}'\n\n  return '{' + xs.map(x => {\n    if (x === undefined) {\n      x = options.transform.undefined\n      if (x === undefined)\n        throw Errors.generic('UNDEFINED_VALUE', 'Undefined values are not allowed')\n    }\n\n    return x === null\n      ? 'null'\n      : '\"' + arrayEscape(serializer ? serializer(x.type ? x.value : x) : '' + x) + '\"'\n  }).join(delimiter) + '}'\n}\n\nconst arrayParserState = {\n  i: 0,\n  char: null,\n  str: '',\n  quoted: false,\n  last: 0\n}\n\nexport const arrayParser = function arrayParser(x, parser, typarray) {\n  arrayParserState.i = arrayParserState.last = 0\n  return arrayParserLoop(arrayParserState, x, parser, typarray)\n}\n\nfunction arrayParserLoop(s, x, parser, typarray) {\n  const xs = []\n  // Only _box (1020) has the ';' delimiter for arrays, all other types use the ',' delimiter\n  const delimiter = typarray === 1020 ? ';' : ','\n  for (; s.i < x.length; s.i++) {\n    s.char = x[s.i]\n    if (s.quoted) {\n      if (s.char === '\\\\') {\n        s.str += x[++s.i]\n      } else if (s.char === '\"') {\n        xs.push(parser ? parser(s.str) : s.str)\n        s.str = ''\n        s.quoted = x[s.i + 1] === '\"'\n        s.last = s.i + 2\n      } else {\n        s.str += s.char\n      }\n    } else if (s.char === '\"') {\n      s.quoted = true\n    } else if (s.char === '{') {\n      s.last = ++s.i\n      xs.push(arrayParserLoop(s, x, parser, typarray))\n    } else if (s.char === '}') {\n      s.quoted = false\n      s.last < s.i && xs.push(parser ? parser(x.slice(s.last, s.i)) : x.slice(s.last, s.i))\n      s.last = s.i + 1\n      break\n    } else if (s.char === delimiter && s.p !== '}' && s.p !== '\"') {\n      xs.push(parser ? parser(x.slice(s.last, s.i)) : x.slice(s.last, s.i))\n      s.last = s.i + 1\n    }\n    s.p = s.char\n  }\n  s.last < s.i && xs.push(parser ? parser(x.slice(s.last, s.i + 1)) : x.slice(s.last, s.i + 1))\n  return xs\n}\n\nexport const toCamel = x => {\n  let str = x[0]\n  for (let i = 1; i < x.length; i++)\n    str += x[i] === '_' ? x[++i].toUpperCase() : x[i]\n  return str\n}\n\nexport const toPascal = x => {\n  let str = x[0].toUpperCase()\n  for (let i = 1; i < x.length; i++)\n    str += x[i] === '_' ? x[++i].toUpperCase() : x[i]\n  return str\n}\n\nexport const toKebab = x => x.replace(/_/g, '-')\n\nexport const fromCamel = x => x.replace(/([A-Z])/g, '_$1').toLowerCase()\nexport const fromPascal = x => (x.slice(0, 1) + x.slice(1).replace(/([A-Z])/g, '_$1')).toLowerCase()\nexport const fromKebab = x => x.replace(/-/g, '_')\n\nfunction createJsonTransform(fn) {\n  return function jsonTransform(x, column) {\n    return typeof x === 'object' && x !== null && (column.type === 114 || column.type === 3802)\n      ? Array.isArray(x)\n        ? x.map(x => jsonTransform(x, column))\n        : Object.entries(x).reduce((acc, [k, v]) => Object.assign(acc, { [fn(k)]: jsonTransform(v, column) }), {})\n      : x\n  }\n}\n\ntoCamel.column = { from: toCamel }\ntoCamel.value = { from: createJsonTransform(toCamel) }\nfromCamel.column = { to: fromCamel }\n\nexport const camel = { ...toCamel }\ncamel.column.to = fromCamel\n\ntoPascal.column = { from: toPascal }\ntoPascal.value = { from: createJsonTransform(toPascal) }\nfromPascal.column = { to: fromPascal }\n\nexport const pascal = { ...toPascal }\npascal.column.to = fromPascal\n\ntoKebab.column = { from: toKebab }\ntoKebab.value = { from: createJsonTransform(toKebab) }\nfromKebab.column = { to: fromKebab }\n\nexport const kebab = { ...toKebab }\nkebab.column.to = fromKebab\n"
+}

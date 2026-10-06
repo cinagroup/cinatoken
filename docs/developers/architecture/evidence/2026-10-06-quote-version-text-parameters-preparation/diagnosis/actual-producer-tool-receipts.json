@@ -1,0 +1,14 @@
+{
+  "schema": "cinatoken-original-tool-return-copies-readonly-quote-diagnosis-v1",
+  "source": "Actual exec_command tool return fields copied after the three owned read/seal commands closed; no database or test run",
+  "operations": [
+    { "name": "static-source-chain", "chunk_id": "da7c75", "wall_time_seconds": 1.2538319, "exit_code": 0, "original_token_count": 54, "output": "{\"receipt\":\"C:\\\\Users\\\\cina\\\\AppData\\\\Local\\\\Temp\\\\cinatoken-quote-version-next-readonly-gn9DdD\\\\static-source-chain.result.json\",\"closed\":true,\"actualExit\":0,\"signal\":null,\"timedOut\":false,\"collectionOnly\":true}\n" },
+    { "name": "proposal-scope", "chunk_id": "bd2591", "wall_time_seconds": 0.8169756, "exit_code": 0, "original_token_count": 52, "output": "{\"receipt\":\"C:\\\\Users\\\\cina\\\\AppData\\\\Local\\\\Temp\\\\cinatoken-quote-version-next-readonly-gn9DdD\\\\proposal-scope.result.json\",\"closed\":true,\"actualExit\":0,\"signal\":null,\"timedOut\":false,\"collectionOnly\":true}\n" },
+    { "name": "seal-readonly-diagnosis", "chunk_id": "770123", "wall_time_seconds": 0.4273697, "exit_code": 0, "original_token_count": 55, "output": "{\"receipt\":\"C:\\\\Users\\\\cina\\\\AppData\\\\Local\\\\Temp\\\\cinatoken-quote-version-next-readonly-gn9DdD\\\\seal-readonly-diagnosis.result.json\",\"closed\":true,\"actualExit\":0,\"signal\":null,\"timedOut\":false,\"collectionOnly\":true}\n" }
+  ],
+  "actualOldNativeRuntimeExit": 1,
+  "candidateCauseConfirmed": false,
+  "candidateImplemented": false,
+  "testsRerun": 0,
+  "gatePassDerived": false
+}

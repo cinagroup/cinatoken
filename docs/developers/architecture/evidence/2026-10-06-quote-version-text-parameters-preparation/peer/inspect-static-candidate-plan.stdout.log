@@ -1,0 +1,510 @@
+FINAL-quote-version-499-readonly-diagnosis.json {
+  "bytes": 26643,
+  "sha256": "92f7916e867d6e8c807b0c5dc50ca04321fb5d1c9d0248be477e735fd1706975",
+  "shape": {
+    "schema": "cinatoken-next-quote-version-499-readonly-candidate-diagnosis-v1",
+    "at": "2026-10-06T05:13:05.025Z",
+    "closed": true,
+    "actualReaderSealExit": 0,
+    "outputRoot": "C:/Users/cina/AppData/Local/Temp/cinatoken-quote-version-next-readonly-gn9DdD",
+    "readAtHead": "ee122dd4273e2db892daa724bc6417a9b02b280c",
+    "targetFailedSourceSHA": "ee122dd4273e2db892daa724bc6417a9b02b280c",
+    "historicalPassingSourceSHA": "dcc6ab52f21a18c5d1c02d8a4a4a390f039e61fc",
+    "observedFailure": {
+      "keys": [
+        "originalProxyRun",
+        "originalNativeJob",
+        "actualRuntimeExit",
+        "stage",
+        "line",
+        "column",
+        "actual",
+        "expected",
+        "originalTAP",
+        "authority",
+        "lowerNativeStepsNotReached",
+        "oldDcc6PassedSameFixture"
+      ],
+      "first": [
+        "originalProxyRun",
+        37416105484
+      ]
+    },
+    "pinnedFixture": {
+      "keys": [
+        "relative",
+        "original",
+        "snapshot",
+        "byteExact",
+        "sourceMtimeMs"
+      ],
+      "first": [
+        "relative",
+        "scripts/db/cutover/postgres-shared-key-quote-versions.native.test.mjs"
+      ]
+    },
+    "fixtureGitBlobBothHeads": "da61172ea25d53bc31cdc10f2999defce06d6559",
+    "pinnedProposal": {
+      "keys": [
+        "relative",
+        "original",
+        "snapshot",
+        "byteExact",
+        "sourceMtimeMs"
+      ],
+      "first": [
+        "relative",
+        "packages/core/migrations-proposals/postgres/shared-key-quote-versions.sql"
+      ]
+    },
+    "proposalGitBlobBothHeads": "3f4dfb64abf22e020aeff142d9564db1724337ed",
+    "sources": {
+      "count": 11,
+      "first": {
+        "relative": "scripts/db/cutover/postgres-shared-key-quote-versions.native.test.mjs",
+        "original": {
+          "path": "C:/cinagroup/cinatoken/scripts/db/cutover/postgres-shared-key-quote-versions.native.test.mjs",
+          "bytes": 34823,
+          "sha256": "16ef4b701728c9de46ea932851354d7cee2aa9d80c6ab543ceae6f4526380c83"
+        },
+        "snapshot": {
+          "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-quote-version-next-readonly-gn9DdD/source-snapshots/01-postgres-shared-key-quote-versions.native.test.mjs.snapshot",
+          "bytes": 34823,
+          "sha256": "16ef4b701728c9de46ea932851354d7cee2aa9d80c6ab543ceae6f4526380c83"
+        },
+        "byteExact": true,
+        "sourceMtimeMs": 1791245936124.9995
+      }
+    },
+    "sourceAfterExact": true,
+    "sourceAudit": {
+      "keys": [
+        "path",
+        "bytes",
+        "sha256"
+      ],
+      "first": [
+        "path",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-quote-version-next-readonly-gn9DdD/static-source-chain-audit.json"
+      ]
+    },
+    "scopeAudit": {
+      "keys": [
+        "path",
+        "bytes",
+        "sha256"
+      ],
+      "first": [
+        "path",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-quote-version-next-readonly-gn9DdD/proposal-and-active-scope-audit.json"
+      ]
+    },
+    "exactOriginalThreeQueryBytesAndAST": {
+      "keys": [
+        "path",
+        "bytes",
+        "sha256"
+      ],
+      "first": [
+        "path",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-quote-version-next-readonly-gn9DdD/three-original-query-AST-and-candidate-plan.json"
+      ]
+    },
+    "originalFixtureAssertionsRecorded": 65,
+    "installedDriver": {
+      "keys": [
+        "version",
+        "importEntry",
+        "lockVersion",
+        "lockIntegrity"
+      ],
+      "first": [
+        "version",
+        "3.4.9"
+      ]
+    },
+    "establishedStaticFacts": {
+      "count": 11,
+      "first": {
+        "repositoryRelative": "scripts/db/cutover/postgres-shared-key-quote-versions.native.test.mjs",
+        "lines": [
+          22,
+          26,
+          105,
+          119
+        ],
+        "fact": "Both migrator and competing clients are independent max1 direct migrator LOGIN connections; prepare:false/fetch_types:false. Runtime/proxy roles are separate. No ambient database URL is used."
+      }
+    },
+    "supportedCandidate": {
+      "keys": [
+        "title",
+        "confirmedForThisRuntimeFailure",
+        "mechanism",
+        "sufficientCondition",
+        "illustrativeNotExecuted",
+        "missingEvidence",
+        "alternativesNotRuntimeExcluded"
+      ],
+      "first": [
+        "title",
+        "Timestamp cutoff parameter precision loss at Postgres.js inferred timestamptz binding"
+      ]
+    },
+    "minimumFutureCandidatePlan": {
+      "keys": [
+        "status",
+        "scope",
+        "threeQueriesOnly",
+        "action",
+        "preserved",
+        "nextRealValidation"
+      ],
+      "first": [
+        "status",
+        "plan only; no repository source written and no runtime verification performed"
+      ]
+    },
+    "scopeLimits": {
+      "count": 4,
+      "first": "Only local source snapshots, Acorn AST parsing, existing frozen peer report/raw reads, and read-only local Git/search commands were performed."
+    },
+    "closedReaderCommands": {
+      "count": 2,
+      "first": {
+        "receipt": {
+          "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-quote-version-next-readonly-gn9DdD/static-source-chain.result.json",
+          "bytes": 1112,
+          "sha256": "4bab98cbec3a420f9062947f75b69c9610104eb220bb60df5fa180ba97047e4b"
+        },
+        "stdout": {
+          "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-quote-version-next-readonly-gn9DdD/static-source-chain.stdout.log",
+          "bytes": 476,
+          "sha256": "98668f416b2c18ba7ccd94551f18d20bd5efccdf484ba3dc804da88bd0a698c9"
+        },
+        "stderr": {
+          "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-quote-version-next-readonly-gn9DdD/static-source-chain.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "actualReadExit": 0
+      }
+    },
+    "preWrapperReadNegatives": {
+      "keys": [
+        "path",
+        "bytes",
+        "sha256"
+      ],
+      "first": [
+        "path",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-quote-version-next-readonly-gn9DdD/pre-wrapper-observed-tool-returns.json"
+      ]
+    },
+    "producerSources": {
+      "count": 4,
+      "first": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-quote-version-next-readonly-gn9DdD/run-command.mjs",
+        "bytes": 2527,
+        "sha256": "ad6d8db6c1a0e624175a61b37cf545afee23208d35d7d6824b6995f996bfcf4a"
+      }
+    },
+    "candidateCauseConfirmed": false,
+    "candidateImplemented": false,
+    "testsRerun": 0,
+    "nativePGStarted": 0,
+    "applicationRuns": 0,
+    "ciRequests": 0,
+    "productionRequests": 0,
+    "repoWrites": 0,
+    "gitMutations": 0,
+    "originalRuntimeFailureUpgraded": false,
+    "goalCompleteDerived": false,
+    "gatePassDerived": false,
+    "finalWriterReceipt": "seal-readonly-diagnosis.result.json is produced only when the writer actually closes; its sibling stdout/stderr close this reader seal, not the old native run."
+  }
+}
+three-original-query-AST-and-candidate-plan.json {
+  "bytes": 176267,
+  "sha256": "7005563726c28c606337f4805b8041bd5abf7585d4ecb040b7818cce36c8bae4",
+  "shape": {
+    "schema": "cinatoken-quote-timestamp-original-query-static-selection-v1",
+    "originalFixture": {
+      "keys": [
+        "relative",
+        "original",
+        "snapshot",
+        "byteExact",
+        "sourceMtimeMs"
+      ],
+      "first": [
+        "relative",
+        "scripts/db/cutover/postgres-shared-key-quote-versions.native.test.mjs"
+      ]
+    },
+    "queries": {
+      "count": 3,
+      "first": {
+        "location": {
+          "start": {
+            "line": 470,
+            "column": 26
+          },
+          "end": {
+            "line": 471,
+            "column": 44
+          }
+        },
+        "originalCallSourceExact": "competing.unsafe(`SELECT $1::timestamptz >= $2::timestamptz AS after_insert`,\n        [observedAt.at, pendingEffectiveAt])",
+        "originalCallUTF8Bytes": 122,
+        "originalCallSHA256": "dfd7cf5b21f651b34cd5ac541f3fa5af76f64baae55ea520d2ed427b030c6576",
+        "originalQueryAST": {
+          "type": "TemplateLiteral",
+          "expressions": [],
+          "quasis": [
+            {
+              "type": "TemplateElement",
+              "value": {
+                "raw": "SELECT $1::timestamptz >= $2::timestamptz AS after_insert",
+                "cooked": "SELECT $1::timestamptz >= $2::timestamptz AS after_insert"
+              },
+              "tail": true
+            }
+          ]
+        },
+        "originalParameterArrayAST": {
+          "type": "ArrayExpression",
+          "elements": [
+            {
+              "type": "MemberExpression",
+              "object": {
+                "type": "Identifier",
+                "name": "observedAt"
+              },
+              "property": {
+                "type": "Identifier",
+                "name": "at"
+              },
+              "computed": false,
+              "optional": false
+            },
+            {
+              "type": "Identifier",
+              "name": "pendingEffectiveAt"
+            }
+          ]
+        },
+        "originalCallAST": {
+          "type": "CallExpression",
+          "callee": {
+            "type": "MemberExpression",
+            "object": {
+              "type": "Identifier",
+              "name": "competing"
+            },
+            "property": {
+              "type": "Identifier",
+              "name": "unsafe"
+            },
+            "computed": false,
+            "optional": false
+          },
+          "arguments": [
+            {
+              "type": "TemplateLiteral",
+              "expressions": [],
+              "quasis": [
+                {
+                  "type": "TemplateElement",
+                  "value": {
+                    "raw": "SELECT $1::timestamptz >= $2::timestamptz AS after_insert",
+                    "cooked": "SELECT $1::timestamptz >= $2::timestamptz AS after_insert"
+                  },
+                  "tail": true
+                }
+              ]
+            },
+            {
+              "type": "ArrayExpression",
+              "elements": [
+                {
+                  "type": "MemberExpression",
+                  "object": {
+                    "type": "Identifier",
+                    "name": "observedAt"
+                  },
+                  "property": {
+                    "type": "Identifier",
+                    "name": "at"
+                  },
+                  "computed": false,
+                  "optional": false
+                },
+                {
+                  "type": "Identifier",
+                  "name": "pendingEffectiveAt"
+                }
+              ]
+            }
+          ],
+          "optional": false
+        },
+        "candidateCallSourcePlanOnly": "competing.unsafe(`SELECT $1::text::timestamptz >= $2::text::timestamptz AS after_insert`,\n        [observedAt.at, pendingEffectiveAt])",
+        "candidateNotWrittenOrExecuted": true
+      }
+    },
+    "originalAssertions": {
+      "count": 65,
+      "first": {
+        "line": 74,
+        "method": "rejects",
+        "source": "assert.rejects(work, error => {\n    assert.equal(error?.code, code);\n    if (constraint) assert.equal(error?.constraint_name, constraint);\n    return true;\n  })",
+        "AST": {
+          "type": "CallExpression",
+          "callee": {
+            "type": "MemberExpression",
+            "object": {
+              "type": "Identifier",
+              "name": "assert"
+            },
+            "property": {
+              "type": "Identifier",
+              "name": "rejects"
+            },
+            "computed": false,
+            "optional": false
+          },
+          "arguments": [
+            {
+              "type": "Identifier",
+              "name": "work"
+            },
+            {
+              "type": "ArrowFunctionExpression",
+              "id": null,
+              "expression": false,
+              "generator": false,
+              "async": false,
+              "params": [
+                {
+                  "type": "Identifier",
+                  "name": "error"
+                }
+              ],
+              "body": {
+                "type": "BlockStatement",
+                "body": [
+                  {
+                    "type": "ExpressionStatement",
+                    "expression": {
+                      "type": "CallExpression",
+                      "callee": {
+                        "type": "MemberExpression",
+                        "object": {
+                          "type": "Identifier",
+                          "name": "assert"
+                        },
+                        "property": {
+                          "type": "Identifier",
+                          "name": "equal"
+                        },
+                        "computed": false,
+                        "optional": false
+                      },
+                      "arguments": [
+                        {
+                          "type": "ChainExpression",
+                          "expression": {
+                            "type": "MemberExpression",
+                            "object": {
+                              "type": "Identifier",
+                              "name": "error"
+                            },
+                            "property": {
+                              "type": "Identifier",
+                              "name": "code"
+                            },
+                            "computed": false,
+                            "optional": true
+                          }
+                        },
+                        {
+                          "type": "Identifier",
+                          "name": "code"
+                        }
+                      ],
+                      "optional": false
+                    }
+                  },
+                  {
+                    "type": "IfStatement",
+                    "test": {
+                      "type": "Identifier",
+                      "name": "constraint"
+                    },
+                    "consequent": {
+                      "type": "ExpressionStatement",
+                      "expression": {
+                        "type": "CallExpression",
+                        "callee": {
+                          "type": "MemberExpression",
+                          "object": {
+                            "type": "Identifier",
+                            "name": "assert"
+                          },
+                          "property": {
+                            "type": "Identifier",
+                            "name": "equal"
+                          },
+                          "computed": false,
+                          "optional": false
+                        },
+                        "arguments": [
+                          {
+                            "type": "ChainExpression",
+                            "expression": {
+                              "type": "MemberExpression",
+                              "object": {
+                                "type": "Identifier",
+                                "name": "error"
+                              },
+                              "property": {
+                                "type": "Identifier",
+                                "name": "constraint_name"
+                              },
+                              "computed": false,
+                              "optional": true
+                            }
+                          },
+                          {
+                            "type": "Identifier",
+                            "name": "constraint"
+                          }
+                        ],
+                        "optional": false
+                      }
+                    },
+                    "alternate": null
+                  },
+                  {
+                    "type": "ReturnStatement",
+                    "argument": {
+                      "type": "Literal",
+                      "value": true,
+                      "raw": "true"
+                    }
+                  }
+                ]
+              }
+            }
+          ],
+          "optional": false
+        }
+      }
+    },
+    "parserOnly": true,
+    "fixtureImportedOrExecuted": false,
+    "databaseExecuted": false,
+    "candidateWritten": false
+  }
+}

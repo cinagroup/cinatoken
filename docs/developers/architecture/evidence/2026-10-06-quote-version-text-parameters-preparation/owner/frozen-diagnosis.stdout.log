@@ -1,0 +1,570 @@
+{
+  "schema": "cinatoken-next-quote-version-499-readonly-candidate-diagnosis-v1",
+  "at": "2026-10-06T05:13:05.025Z",
+  "closed": true,
+  "actualReaderSealExit": 0,
+  "outputRoot": "C:/Users/cina/AppData/Local/Temp/cinatoken-quote-version-next-readonly-gn9DdD",
+  "readAtHead": "ee122dd4273e2db892daa724bc6417a9b02b280c",
+  "targetFailedSourceSHA": "ee122dd4273e2db892daa724bc6417a9b02b280c",
+  "historicalPassingSourceSHA": "dcc6ab52f21a18c5d1c02d8a4a4a390f039e61fc",
+  "observedFailure": {
+    "originalProxyRun": 37416105484,
+    "originalNativeJob": 112114951257,
+    "actualRuntimeExit": 1,
+    "stage": 24,
+    "line": 499,
+    "column": 14,
+    "actual": "quote-a-b1",
+    "expected": "quote-a-b2",
+    "originalTAP": {
+      "tests": 1,
+      "pass": 0,
+      "fail": 1,
+      "cancelled": 0,
+      "skipped": 0,
+      "todo": 0
+    },
+    "authority": {
+      "peerReport": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-ee122-native-tail-independent-peer-76364c609e694985bf7d74bf5b2c4ae9/FINAL-ee122-native-tail-terminal-independent-peer.json",
+        "bytes": 526801,
+        "sha256": "1cb4680d0effb04b1784dd945738c5d3608c06c9c2423dd82784a9441aee2ebe"
+      },
+      "originalRaw": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-ee122-native-tail-independent-peer-76364c609e694985bf7d74bf5b2c4ae9/native-group-v2-step-24.raw.log",
+        "bytes": 9988,
+        "sha256": "b3d9b0f5d283017c009f950e568bb977a8007b41acb0ee63d8685dffeefd2348"
+      },
+      "sourceHead": "ee122dd4273e2db892daa724bc6417a9b02b280c",
+      "originalJob": 112114951257,
+      "actual": "quote-a-b1",
+      "expected": "quote-a-b2",
+      "failureLine": 499,
+      "rawContainsTimestampValueTokens": [
+        {
+          "token": "pendingEffectiveAt",
+          "present": false
+        },
+        {
+          "token": "observedAt",
+          "present": false
+        },
+        {
+          "token": "pending.effective_at",
+          "present": false
+        },
+        {
+          "token": "effective_at:",
+          "present": false
+        }
+      ],
+      "limitation": "The supplied frozen report and original step24 job raw do not print the pending/observed database timestamps. A serialization mechanism is statically supported; its activation in this failed run remains unconfirmed."
+    },
+    "lowerNativeStepsNotReached": "Original ee122 financial fixture steps25–113 were skipped after step24. Prepared changed targets55–113 were not runtime validated.",
+    "oldDcc6PassedSameFixture": "Historical outcome supplied by parent; current inspection independently verifies ee122/dcc6 fixture and proposal bytes, not a new replay of either outcome."
+  },
+  "pinnedFixture": {
+    "relative": "scripts/db/cutover/postgres-shared-key-quote-versions.native.test.mjs",
+    "original": {
+      "path": "C:/cinagroup/cinatoken/scripts/db/cutover/postgres-shared-key-quote-versions.native.test.mjs",
+      "bytes": 34823,
+      "sha256": "16ef4b701728c9de46ea932851354d7cee2aa9d80c6ab543ceae6f4526380c83"
+    },
+    "snapshot": {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-quote-version-next-readonly-gn9DdD/source-snapshots/01-postgres-shared-key-quote-versions.native.test.mjs.snapshot",
+      "bytes": 34823,
+      "sha256": "16ef4b701728c9de46ea932851354d7cee2aa9d80c6ab543ceae6f4526380c83"
+    },
+    "byteExact": true,
+    "sourceMtimeMs": 1791245936124.9995
+  },
+  "fixtureGitBlobBothHeads": "da61172ea25d53bc31cdc10f2999defce06d6559",
+  "pinnedProposal": {
+    "relative": "packages/core/migrations-proposals/postgres/shared-key-quote-versions.sql",
+    "original": {
+      "path": "C:/cinagroup/cinatoken/packages/core/migrations-proposals/postgres/shared-key-quote-versions.sql",
+      "bytes": 28629,
+      "sha256": "1249a7ff07f95b48c7b45a41833c96c9a028e4bfe3a47e44e9dc6b72c3c77246"
+    },
+    "snapshot": {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-quote-version-next-readonly-gn9DdD/source-snapshots/02-shared-key-quote-versions.sql.snapshot",
+      "bytes": 28629,
+      "sha256": "1249a7ff07f95b48c7b45a41833c96c9a028e4bfe3a47e44e9dc6b72c3c77246"
+    },
+    "byteExact": true,
+    "sourceMtimeMs": 1790252749530.9297
+  },
+  "proposalGitBlobBothHeads": "3f4dfb64abf22e020aeff142d9564db1724337ed",
+  "sources": [
+    {
+      "relative": "scripts/db/cutover/postgres-shared-key-quote-versions.native.test.mjs",
+      "original": {
+        "path": "C:/cinagroup/cinatoken/scripts/db/cutover/postgres-shared-key-quote-versions.native.test.mjs",
+        "bytes": 34823,
+        "sha256": "16ef4b701728c9de46ea932851354d7cee2aa9d80c6ab543ceae6f4526380c83"
+      },
+      "snapshot": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-quote-version-next-readonly-gn9DdD/source-snapshots/01-postgres-shared-key-quote-versions.native.test.mjs.snapshot",
+        "bytes": 34823,
+        "sha256": "16ef4b701728c9de46ea932851354d7cee2aa9d80c6ab543ceae6f4526380c83"
+      },
+      "byteExact": true,
+      "sourceMtimeMs": 1791245936124.9995
+    },
+    {
+      "relative": "packages/core/migrations-proposals/postgres/shared-key-quote-versions.sql",
+      "original": {
+        "path": "C:/cinagroup/cinatoken/packages/core/migrations-proposals/postgres/shared-key-quote-versions.sql",
+        "bytes": 28629,
+        "sha256": "1249a7ff07f95b48c7b45a41833c96c9a028e4bfe3a47e44e9dc6b72c3c77246"
+      },
+      "snapshot": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-quote-version-next-readonly-gn9DdD/source-snapshots/02-shared-key-quote-versions.sql.snapshot",
+        "bytes": 28629,
+        "sha256": "1249a7ff07f95b48c7b45a41833c96c9a028e4bfe3a47e44e9dc6b72c3c77246"
+      },
+      "byteExact": true,
+      "sourceMtimeMs": 1790252749530.9297
+    },
+    {
+      "relative": "scripts/db/cutover/pg73-native-fixture.mjs",
+      "original": {
+        "path": "C:/cinagroup/cinatoken/scripts/db/cutover/pg73-native-fixture.mjs",
+        "bytes": 6849,
+        "sha256": "124ddd43c2594d0daaac66a4e7158e5df90b00a6d73f03cbcac9e8f853a7346f"
+      },
+      "snapshot": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-quote-version-next-readonly-gn9DdD/source-snapshots/03-pg73-native-fixture.mjs.snapshot",
+        "bytes": 6849,
+        "sha256": "124ddd43c2594d0daaac66a4e7158e5df90b00a6d73f03cbcac9e8f853a7346f"
+      },
+      "byteExact": true,
+      "sourceMtimeMs": 1791189290591.186
+    },
+    {
+      "relative": "packages/core/src/test-support/postgres-native-cluster.mjs",
+      "original": {
+        "path": "C:/cinagroup/cinatoken/packages/core/src/test-support/postgres-native-cluster.mjs",
+        "bytes": 6300,
+        "sha256": "6b5923be8d3bdcd061033eed1af2f67f3b87fa2fca1f2cf0a0b2eb0eb2cb8d2a"
+      },
+      "snapshot": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-quote-version-next-readonly-gn9DdD/source-snapshots/04-postgres-native-cluster.mjs.snapshot",
+        "bytes": 6300,
+        "sha256": "6b5923be8d3bdcd061033eed1af2f67f3b87fa2fca1f2cf0a0b2eb0eb2cb8d2a"
+      },
+      "byteExact": true,
+      "sourceMtimeMs": 1790205566958.4766
+    },
+    {
+      "relative": ".github/workflows/proxy-dispatch-safety.yml",
+      "original": {
+        "path": "C:/cinagroup/cinatoken/.github/workflows/proxy-dispatch-safety.yml",
+        "bytes": 45895,
+        "sha256": "8e883e7f21f77f8367d361f6bd3d060e16c241c28641b3eac85af6835841f152"
+      },
+      "snapshot": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-quote-version-next-readonly-gn9DdD/source-snapshots/05-proxy-dispatch-safety.yml.snapshot",
+        "bytes": 45895,
+        "sha256": "8e883e7f21f77f8367d361f6bd3d060e16c241c28641b3eac85af6835841f152"
+      },
+      "byteExact": true,
+      "sourceMtimeMs": 1791246152769.041
+    },
+    {
+      "relative": "package-lock.json",
+      "original": {
+        "path": "C:/cinagroup/cinatoken/package-lock.json",
+        "bytes": 830546,
+        "sha256": "f9c65b6e373a231d52d6eda634bb5f947dda3174734cd70e2b811e09fff0b6f0"
+      },
+      "snapshot": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-quote-version-next-readonly-gn9DdD/source-snapshots/06-package-lock.json.snapshot",
+        "bytes": 830546,
+        "sha256": "f9c65b6e373a231d52d6eda634bb5f947dda3174734cd70e2b811e09fff0b6f0"
+      },
+      "byteExact": true,
+      "sourceMtimeMs": 1791187144563.6536
+    },
+    {
+      "relative": ".nvmrc",
+      "original": {
+        "path": "C:/cinagroup/cinatoken/.nvmrc",
+        "bytes": 3,
+        "sha256": "f14b4987904bcb5814e4459a057ed4d20f58a633152288a761214dcd28780b56"
+      },
+      "snapshot": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-quote-version-next-readonly-gn9DdD/source-snapshots/07-.nvmrc.snapshot",
+        "bytes": 3,
+        "sha256": "f14b4987904bcb5814e4459a057ed4d20f58a633152288a761214dcd28780b56"
+      },
+      "byteExact": true,
+      "sourceMtimeMs": 1787191880490.2295
+    },
+    {
+      "relative": "node_modules/postgres/package.json",
+      "original": {
+        "path": "C:/cinagroup/cinatoken/node_modules/postgres/package.json",
+        "bytes": 1814,
+        "sha256": "944d492614959389a5739ef2893bc1830fb773ff042159d9b331d43b2f6792e9"
+      },
+      "snapshot": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-quote-version-next-readonly-gn9DdD/source-snapshots/08-package.json.snapshot",
+        "bytes": 1814,
+        "sha256": "944d492614959389a5739ef2893bc1830fb773ff042159d9b331d43b2f6792e9"
+      },
+      "byteExact": true,
+      "sourceMtimeMs": 1787197736514.2544
+    },
+    {
+      "relative": "node_modules/postgres/src/index.js",
+      "original": {
+        "path": "C:/cinagroup/cinatoken/node_modules/postgres/src/index.js",
+        "bytes": 15428,
+        "sha256": "4e21f5733e70d79cffc10d10d4ef01031de4a9ac862210e43f8870029fd103ed"
+      },
+      "snapshot": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-quote-version-next-readonly-gn9DdD/source-snapshots/09-index.js.snapshot",
+        "bytes": 15428,
+        "sha256": "4e21f5733e70d79cffc10d10d4ef01031de4a9ac862210e43f8870029fd103ed"
+      },
+      "byteExact": true,
+      "sourceMtimeMs": 1787197734728.528
+    },
+    {
+      "relative": "node_modules/postgres/src/types.js",
+      "original": {
+        "path": "C:/cinagroup/cinatoken/node_modules/postgres/src/types.js",
+        "bytes": 10935,
+        "sha256": "1883bd4536eab1c94b9e708d325b13708b0f18ec80020e3a825f34a72f603b81"
+      },
+      "snapshot": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-quote-version-next-readonly-gn9DdD/source-snapshots/10-types.js.snapshot",
+        "bytes": 10935,
+        "sha256": "1883bd4536eab1c94b9e708d325b13708b0f18ec80020e3a825f34a72f603b81"
+      },
+      "byteExact": true,
+      "sourceMtimeMs": 1787197736415.6262
+    },
+    {
+      "relative": "node_modules/postgres/src/connection.js",
+      "original": {
+        "path": "C:/cinagroup/cinatoken/node_modules/postgres/src/connection.js",
+        "bytes": 28690,
+        "sha256": "ee3a218d9aa6a6f2887c1a19da50009335fe84c11a5431d5cab72d6bc528632f"
+      },
+      "snapshot": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-quote-version-next-readonly-gn9DdD/source-snapshots/11-connection.js.snapshot",
+        "bytes": 28690,
+        "sha256": "ee3a218d9aa6a6f2887c1a19da50009335fe84c11a5431d5cab72d6bc528632f"
+      },
+      "byteExact": true,
+      "sourceMtimeMs": 1787197733336.3147
+    }
+  ],
+  "sourceAfterExact": true,
+  "sourceAudit": {
+    "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-quote-version-next-readonly-gn9DdD/static-source-chain-audit.json",
+    "bytes": 16022,
+    "sha256": "abf7c8ae77f4b770423bf610688c9feb0338334c15afb57847dfb49fdbf619cf"
+  },
+  "scopeAudit": {
+    "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-quote-version-next-readonly-gn9DdD/proposal-and-active-scope-audit.json",
+    "bytes": 63775,
+    "sha256": "dcefeee930b665c69f1251bcbc29ad51a5f9f5a62b9fe410979af05ffe43a030"
+  },
+  "exactOriginalThreeQueryBytesAndAST": {
+    "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-quote-version-next-readonly-gn9DdD/three-original-query-AST-and-candidate-plan.json",
+    "bytes": 176267,
+    "sha256": "7005563726c28c606337f4805b8041bd5abf7585d4ecb040b7818cce36c8bae4"
+  },
+  "originalFixtureAssertionsRecorded": 65,
+  "installedDriver": {
+    "version": "3.4.9",
+    "importEntry": "./src/index.js",
+    "lockVersion": "3.4.9",
+    "lockIntegrity": "sha512-GD3qdB0x1z9xgFI6cdRD6xu2Sp2WCOEoe3mtnyB5Ee0XrrL5Pe+e4CCnJrRMnL1zYtRDZmQQVbvOttLnKDLnaw=="
+  },
+  "establishedStaticFacts": [
+    {
+      "repositoryRelative": "scripts/db/cutover/postgres-shared-key-quote-versions.native.test.mjs",
+      "lines": [
+        22,
+        26,
+        105,
+        119
+      ],
+      "fact": "Both migrator and competing clients are independent max1 direct migrator LOGIN connections; prepare:false/fetch_types:false. Runtime/proxy roles are separate. No ambient database URL is used."
+    },
+    {
+      "repositoryRelative": "scripts/db/cutover/postgres-shared-key-quote-versions.native.test.mjs",
+      "lines": [
+        122,
+        135,
+        240
+      ],
+      "fact": "The owned PG18.6 fixture applies73 formal migrations and activates the source proposal SQL, whose test/proposal/corpus SHA values are prepared for its report."
+    },
+    {
+      "repositoryRelative": "packages/core/migrations-proposals/postgres/shared-key-quote-versions.sql",
+      "lines": [
+        1,
+        6,
+        170,
+        183,
+        274,
+        284
+      ],
+      "fact": "Quote contract is an explicitly review-only proposal in a separate economic schema. Insert/transition enforce direct migrator LOGIN and READ COMMITTED; it is not an active production quote producer."
+    },
+    {
+      "repositoryRelative": "packages/core/migrations-proposals/postgres/shared-key-quote-versions.sql",
+      "lines": [
+        199,
+        201,
+        296,
+        326
+      ],
+      "fact": "Quote recorded_at and transition effective_at are database clock_timestamp, not fixture-supplied dates. Same-key parent locking, exact predecessor check, unique sequence and strictly advancing database time serialize transitions."
+    },
+    {
+      "repositoryRelative": "packages/core/migrations-proposals/postgres/shared-key-quote-versions.sql",
+      "lines": [
+        395,
+        443
+      ],
+      "fact": "Sequence resolver orders unique transition_seq DESC; time resolver filters effective_at <= cutoff, then takes greatest sequence. After-commit retrospective audit must receive the correct cutoff; dispatch retains exact transition/version ID."
+    },
+    {
+      "repositoryRelative": "scripts/db/cutover/postgres-shared-key-quote-versions.native.test.mjs",
+      "lines": [
+        451,
+        475
+      ],
+      "fact": "Pending event6 is inserted in firstTx, its effective_at is returned as text; competing captures committed event5, reads clock_timestamp as text, compares supplied times, and precommit lookup expects b1."
+    },
+    {
+      "repositoryRelative": "scripts/db/cutover/postgres-shared-key-quote-versions.native.test.mjs",
+      "lines": [
+        476,
+        499
+      ],
+      "fact": "The racing second operator waits100ms then loses with stale predecessor after firstTx commits. Sequence6=b2 and retained attempt/fact=b1 assertions precede the failing time-after-commit=b2 assertion."
+    },
+    {
+      "repositoryRelative": "node_modules/postgres/src/index.js",
+      "lines": [
+        119,
+        124
+      ],
+      "fact": "unsafe queries with parameter arrays use extended protocol even when prepare:false. No SQL/data code was executed in this investigation."
+    },
+    {
+      "repositoryRelative": "node_modules/postgres/src/types.js",
+      "lines": [
+        75,
+        93,
+        220,
+        228
+      ],
+      "fact": "Plain timestamp text inputs infer unknown type0. Explicit text binding instead can use string OID25."
+    },
+    {
+      "repositoryRelative": "node_modules/postgres/src/connection.js",
+      "lines": [
+        189,
+        200,
+        224,
+        241,
+        626,
+        633,
+        948,
+        964
+      ],
+      "fact": "Parameterized unprepared queries still Describe; ParameterDescription fills inferred OIDs before Bind. Bind selects options.serializers[type]. fetch_types:false does not remove default serializers."
+    },
+    {
+      "repositoryRelative": "node_modules/postgres/src/types.js",
+      "lines": [
+        5,
+        9,
+        28,
+        33,
+        193,
+        208
+      ],
+      "fact": "Default timestamptz OID1184 serializer converts even a string through new Date(x).toISOString(), losing submillisecond text precision. Default text OID25 serializer preserves the text string."
+    }
+  ],
+  "supportedCandidate": {
+    "title": "Timestamp cutoff parameter precision loss at Postgres.js inferred timestamptz binding",
+    "confirmedForThisRuntimeFailure": false,
+    "mechanism": "The fixture retrieves exact SQL timestamp text, but the server can infer timestamptz1184 for both direct casts and the time resolver argument. The installed default serializer then changes that text to a millisecond JavaScript Date ISO value. The comparison at470 serializes BOTH pending and observed inputs this way and can pass even when the later cutoff has lost the microseconds needed to include committed event6.",
+    "sufficientCondition": "If genuine pending effective_at and later observedAt share a millisecond, with pending effective_at strictly after the start of that millisecond, truncating observedAt to its millisecond makes cutoff < event6 effective_at. Resolver correctly returns event5/b1 after event6 committed. This is consistent with sequence6=b2 already having passed and the observed failure at499.",
+    "illustrativeNotExecuted": {
+      "pending": "2030-01-01 00:00:00.123456+00",
+      "observed": "2030-01-01 00:00:00.123789+00",
+      "bothJSDateISO": "2030-01-01T00:00:00.123Z",
+      "genuineObservedAfterPending": true,
+      "truncatedCutoffBeforePending": true,
+      "actualRuntimeValues": false
+    },
+    "missingEvidence": [
+      "The actual pendingEffectiveAt and observedAt texts from the failed run were not printed in step24 raw.",
+      "The actual PG ParameterDescription/Bind payload and the failed database transition rows were not retained in the supplied frozen raw.",
+      "No DB/driver code was executed here; a source-backed mechanism is not a confirmed runtime cause."
+    ],
+    "alternativesNotRuntimeExcluded": [
+      "Actual wall-clock regression or other unexpected runtime/driver state cannot be conclusively excluded without timestamps and bound payload.",
+      "A changed fixture/proposal source between dcc6 andee122 is excluded for these two exact files by Git blobs and byte comparisons; this does not exclude every possible environment difference."
+    ]
+  },
+  "minimumFutureCandidatePlan": {
+    "status": "plan only; no repository source written and no runtime verification performed",
+    "scope": "scripts/db/cutover/postgres-shared-key-quote-versions.native.test.mjs",
+    "threeQueriesOnly": [
+      {
+        "location": {
+          "start": {
+            "line": 470,
+            "column": 26
+          },
+          "end": {
+            "line": 471,
+            "column": 44
+          }
+        },
+        "originalCallSHA256": "dfd7cf5b21f651b34cd5ac541f3fa5af76f64baae55ea520d2ed427b030c6576",
+        "originalCallSourceExact": "competing.unsafe(`SELECT $1::timestamptz >= $2::timestamptz AS after_insert`,\n        [observedAt.at, pendingEffectiveAt])",
+        "proposedCallSource": "competing.unsafe(`SELECT $1::text::timestamptz >= $2::text::timestamptz AS after_insert`,\n        [observedAt.at, pendingEffectiveAt])"
+      },
+      {
+        "location": {
+          "start": {
+            "line": 472,
+            "column": 46
+          },
+          "end": {
+            "line": 474,
+            "column": 22
+          }
+        },
+        "originalCallSHA256": "8f7c1a051e76603a1ee2a3b7a8281f8a54126c490e2476f28633473d7fe61cd2",
+        "originalCallSourceExact": "competing.unsafe(`SELECT quote_version_id\n        FROM ${quotes}.resolve_shared_key_quote_at_time('quote-key-a',$1)`,\n      [observedAt.at])",
+        "proposedCallSource": "competing.unsafe(`SELECT quote_version_id\n        FROM ${quotes}.resolve_shared_key_quote_at_time('quote-key-a',$1::text::timestamptz)`,\n      [observedAt.at])"
+      },
+      {
+        "location": {
+          "start": {
+            "line": 496,
+            "column": 45
+          },
+          "end": {
+            "line": 498,
+            "column": 22
+          }
+        },
+        "originalCallSHA256": "8f7c1a051e76603a1ee2a3b7a8281f8a54126c490e2476f28633473d7fe61cd2",
+        "originalCallSourceExact": "competing.unsafe(`SELECT quote_version_id\n        FROM ${quotes}.resolve_shared_key_quote_at_time('quote-key-a',$1)`,\n      [observedAt.at])",
+        "proposedCallSource": "competing.unsafe(`SELECT quote_version_id\n        FROM ${quotes}.resolve_shared_key_quote_at_time('quote-key-a',$1::text::timestamptz)`,\n      [observedAt.at])"
+      }
+    ],
+    "action": "At470 cast each input parameter through ::text before ::timestamptz. At472/496 cast the resolver cutoff parameter through ::text::timestamptz. This makes PostgreSQL Describe infer text25 at the wire boundary and leaves all timestamp comparisons/filtering at full SQL precision.",
+    "preserved": [
+      "Original b2 assertion499 and all65 original assert call ASTs",
+      "Original100ms contention delay/240000ms fixture timeout/cluster budgets",
+      "Original transaction/commit/rollback and statement order",
+      "Original SQL resolver definitions/sequence sorting/time predicate/activation/source pins",
+      "Original roles/ACL/schema/production dependencies and product code"
+    ],
+    "nextRealValidation": [
+      "After separate authorization/source commit, run the original complete native PG18.6 quote fixture at its exact new SHA. No skipped fixture counts or prior dcc6 success substitute for that result.",
+      "If permitted as a separate controlled diagnostic, capture nonsecret exact database pending/observed timestamp text and original-vs-text-bound cutoff to discriminate serialization truncation from clock/snapshot causes. Use fixed submillisecond values in a read-only SQL parameter roundtrip; do not insert waits to make the existing assertion pass.",
+      "Retain original ee122 actual1/raw and new result independently. A new passing result would validate the candidate; it would not prove historical failed values that were never recorded."
+    ]
+  },
+  "scopeLimits": [
+    "Only local source snapshots, Acorn AST parsing, existing frozen peer report/raw reads, and read-only local Git/search commands were performed.",
+    "Active Core/Proxy exact selector-name scoped search had no matches; not an exhaustive absence proof for every quote behavior.",
+    "Production Web remains outside this task. No real identity, deployment, native runtime, database, test or CI execution was attempted.",
+    "This diagnosis belongs to the next batch and must not be retroactively added to the previous frozen archive as runtime evidence."
+  ],
+  "closedReaderCommands": [
+    {
+      "receipt": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-quote-version-next-readonly-gn9DdD/static-source-chain.result.json",
+        "bytes": 1112,
+        "sha256": "4bab98cbec3a420f9062947f75b69c9610104eb220bb60df5fa180ba97047e4b"
+      },
+      "stdout": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-quote-version-next-readonly-gn9DdD/static-source-chain.stdout.log",
+        "bytes": 476,
+        "sha256": "98668f416b2c18ba7ccd94551f18d20bd5efccdf484ba3dc804da88bd0a698c9"
+      },
+      "stderr": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-quote-version-next-readonly-gn9DdD/static-source-chain.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "actualReadExit": 0
+    },
+    {
+      "receipt": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-quote-version-next-readonly-gn9DdD/proposal-scope.result.json",
+        "bytes": 1109,
+        "sha256": "bfb634e6e8e6c20bbca0ca0163b84a243a73964abee80e8f5e9375a565a306bc"
+      },
+      "stdout": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-quote-version-next-readonly-gn9DdD/proposal-scope.stdout.log",
+        "bytes": 138,
+        "sha256": "c86b76ea94501b0a6b0360c54792315b3c842ae73acfc19a29622172e8f49a6d"
+      },
+      "stderr": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-quote-version-next-readonly-gn9DdD/proposal-scope.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "actualReadExit": 0
+    }
+  ],
+  "preWrapperReadNegatives": {
+    "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-quote-version-next-readonly-gn9DdD/pre-wrapper-observed-tool-returns.json",
+    "bytes": 1925,
+    "sha256": "d5452b10e52bf823969be3bc78e6b400d40c776621ba78092449b56d4ba842c5"
+  },
+  "producerSources": [
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-quote-version-next-readonly-gn9DdD/run-command.mjs",
+      "bytes": 2527,
+      "sha256": "ad6d8db6c1a0e624175a61b37cf545afee23208d35d7d6824b6995f996bfcf4a"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-quote-version-next-readonly-gn9DdD/inspect-static-quote-chain.mjs",
+      "bytes": 10285,
+      "sha256": "f2208909963d82cdfa6c635ff233e87b23b04be412e0fdd01f10f91b6c31e4b8"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-quote-version-next-readonly-gn9DdD/inspect-proposal-and-active-scope.mjs",
+      "bytes": 3397,
+      "sha256": "7985304b1122e0685ec6ab7d8176bca399661b75e89a1b206fa5e4833854845b"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-quote-version-next-readonly-gn9DdD/seal-readonly-diagnosis.mjs",
+      "bytes": 11853,
+      "sha256": "d356f0609a6826a028ec116c3dea2f202f7064879aa867e267d74c7e3aecb293"
+    }
+  ],
+  "candidateCauseConfirmed": false,
+  "candidateImplemented": false,
+  "testsRerun": 0,
+  "nativePGStarted": 0,
+  "applicationRuns": 0,
+  "ciRequests": 0,
+  "productionRequests": 0,
+  "repoWrites": 0,
+  "gitMutations": 0,
+  "originalRuntimeFailureUpgraded": false,
+  "goalCompleteDerived": false,
+  "gatePassDerived": false,
+  "finalWriterReceipt": "seal-readonly-diagnosis.result.json is produced only when the writer actually closes; its sibling stdout/stderr close this reader seal, not the old native run."
+}

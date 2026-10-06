@@ -1,0 +1,22 @@
+{
+  "at": "2026-10-06T05:45:39.848Z",
+  "finishedAt": "2026-10-06T05:45:39.850Z",
+  "operation": "readFile",
+  "path": "C:\\cinagroup\\cinatoken\\scripts\\db\\cutover\\AGENTS.md",
+  "actualExit": null,
+  "signal": null,
+  "error": {
+    "code": "ENOENT",
+    "message": "ENOENT: no such file or directory, open 'C:\\cinagroup\\cinatoken\\scripts\\db\\cutover\\AGENTS.md'"
+  },
+  "stdout": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-quote-version-three-casts-879c829257b645e4ada53e37362201bd\\instructions-5.stdout.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "stderr": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-quote-version-three-casts-879c829257b645e4ada53e37362201bd\\instructions-5.stderr.log",
+    "bytes": 130,
+    "sha256": "4b16f6463e4ccd19af14170d19a90806f6c018a5b12c438c8b72452a9bbedc80"
+  }
+}

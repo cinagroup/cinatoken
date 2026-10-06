@@ -1,0 +1,19 @@
+{
+  "at": "2026-10-06T05:45:39.794Z",
+  "finishedAt": "2026-10-06T05:45:39.797Z",
+  "operation": "readFile",
+  "path": "C:\\cinagroup\\cinatoken\\packages\\core\\migrations-proposals\\postgres\\shared-key-quote-versions.sql",
+  "actualExit": 0,
+  "signal": null,
+  "error": null,
+  "stdout": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-quote-version-three-casts-879c829257b645e4ada53e37362201bd\\protected-6.stdout.log",
+    "bytes": 28629,
+    "sha256": "1249a7ff07f95b48c7b45a41833c96c9a028e4bfe3a47e44e9dc6b72c3c77246"
+  },
+  "stderr": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-quote-version-three-casts-879c829257b645e4ada53e37362201bd\\protected-6.stderr.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+}

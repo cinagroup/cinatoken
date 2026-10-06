@@ -1,0 +1,116 @@
+{
+  "actualExit": 0,
+  "at": "2026-10-06T05:49:14.175Z",
+  "results": [
+    {
+      "label": "syntax",
+      "receipt": {
+        "at": "2026-10-06T05:49:14.077Z",
+        "finishedAt": "2026-10-06T05:49:14.160Z",
+        "executable": "C:\\Program Files\\nodejs\\node.exe",
+        "args": [
+          "--check",
+          "scripts/db/cutover/postgres-shared-key-quote-versions.native.test.mjs"
+        ],
+        "cwd": "C:/cinagroup/cinatoken",
+        "actualExit": 0,
+        "signal": null,
+        "spawnError": null,
+        "stdout": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-quote-version-three-casts-879c829257b645e4ada53e37362201bd\\syntax.stdout.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stderr": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-quote-version-three-casts-879c829257b645e4ada53e37362201bd\\syntax.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      }
+    },
+    {
+      "label": "diff-check",
+      "receipt": {
+        "at": "2026-10-06T05:49:14.087Z",
+        "finishedAt": "2026-10-06T05:49:14.155Z",
+        "executable": "git",
+        "args": [
+          "diff",
+          "--check",
+          "--",
+          "scripts/db/cutover/postgres-shared-key-quote-versions.native.test.mjs"
+        ],
+        "cwd": "C:/cinagroup/cinatoken",
+        "actualExit": 0,
+        "signal": null,
+        "spawnError": null,
+        "stdout": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-quote-version-three-casts-879c829257b645e4ada53e37362201bd\\diff-check.stdout.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stderr": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-quote-version-three-casts-879c829257b645e4ada53e37362201bd\\diff-check.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      }
+    },
+    {
+      "label": "final-source-patch",
+      "receipt": {
+        "at": "2026-10-06T05:49:14.094Z",
+        "finishedAt": "2026-10-06T05:49:14.163Z",
+        "executable": "git",
+        "args": [
+          "diff",
+          "--",
+          "scripts/db/cutover/postgres-shared-key-quote-versions.native.test.mjs"
+        ],
+        "cwd": "C:/cinagroup/cinatoken",
+        "actualExit": 0,
+        "signal": null,
+        "spawnError": null,
+        "stdout": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-quote-version-three-casts-879c829257b645e4ada53e37362201bd\\final-source-patch.stdout.log",
+          "bytes": 2072,
+          "sha256": "e7b80d406d9fd6b8de83af787583253d7489e2e203f941ce9fb9fc2354f9dde9"
+        },
+        "stderr": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-quote-version-three-casts-879c829257b645e4ada53e37362201bd\\final-source-patch.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      }
+    },
+    {
+      "label": "target-status",
+      "receipt": {
+        "at": "2026-10-06T05:49:14.100Z",
+        "finishedAt": "2026-10-06T05:49:14.174Z",
+        "executable": "git",
+        "args": [
+          "status",
+          "--short",
+          "--",
+          "scripts/db/cutover/postgres-shared-key-quote-versions.native.test.mjs"
+        ],
+        "cwd": "C:/cinagroup/cinatoken",
+        "actualExit": 0,
+        "signal": null,
+        "spawnError": null,
+        "stdout": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-quote-version-three-casts-879c829257b645e4ada53e37362201bd\\target-status.stdout.log",
+          "bytes": 73,
+          "sha256": "e7ecb07886c7cff20dad0cf2a895b8f7c3b703fb46a16395acac65b8edeb6712"
+        },
+        "stderr": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-quote-version-three-casts-879c829257b645e4ada53e37362201bd\\target-status.stderr.log",
+          "bytes": 160,
+          "sha256": "6e1eceb7157a6dd83e27b00cc96938a50132ed7fadf81d3f0954f8257e1ba406"
+        }
+      }
+    }
+  ],
+  "nativeExecuted": false
+}

@@ -1,0 +1,15 @@
+{
+  "schema": "cinatoken-peer-seal-filesystem-attempt-error-observation.v1",
+  "observedAt": "2026-10-06T05:57:45.8353350Z",
+  "sourceToolChunkId": "a45550",
+  "shellToolExitCode": 0,
+  "filesystemOperationPassed": false,
+  "realChildReceiptCreated": false,
+  "badSealPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-quote-timecast-independent-peer-3dc5347c2a4646ac8cc4bcc085aa9dc5\\STOPWRITE-native-quote-timecast-peer-seal.json",
+  "badSealBytes": 6,
+  "badSealSHA256": "abdfbffecbe18ed94df9829819e596ee285b52a94aa108514452a9121721c789",
+  "badSealJSONWasNull": true,
+  "error": "PowerShell used literal true rather than $true in an ordered hashtable; non-terminating command lookup error caused a null seal object. Original null JSON seal is retained and is not authoritative.",
+  "authoritativeSeal": "STOPWRITE-native-quote-timecast-peer-seal-v2.json",
+  "originalErrorOutputText": "The term 'true' is not recognized as a name of a cmdlet, function, script file, or executable program."
+}

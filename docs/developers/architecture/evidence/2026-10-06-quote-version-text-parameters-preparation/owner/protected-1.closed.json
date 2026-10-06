@@ -1,0 +1,19 @@
+{
+  "at": "2026-10-06T05:45:39.773Z",
+  "finishedAt": "2026-10-06T05:45:39.774Z",
+  "operation": "readFile",
+  "path": "C:\\cinagroup\\cinatoken\\node_modules\\postgres\\package.json",
+  "actualExit": 0,
+  "signal": null,
+  "error": null,
+  "stdout": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-quote-version-three-casts-879c829257b645e4ada53e37362201bd\\protected-1.stdout.log",
+    "bytes": 1814,
+    "sha256": "944d492614959389a5739ef2893bc1830fb773ff042159d9b331d43b2f6792e9"
+  },
+  "stderr": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-quote-version-three-casts-879c829257b645e4ada53e37362201bd\\protected-1.stderr.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+}

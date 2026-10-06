@@ -1,0 +1,3 @@
+import fs from 'node:fs';import crypto from 'node:crypto';import assert from 'node:assert/strict';
+const root='C:/Users/cina/AppData/Local/Temp/cinatoken-quote-version-next-readonly-gn9DdD';const brief=v=>Array.isArray(v)?{count:v.length,first:v[0]}:v&&typeof v==='object'?{keys:Object.keys(v),first:Object.entries(v)[0]}:v;
+for(const f of ['FINAL-quote-version-499-readonly-diagnosis.json','three-original-query-AST-and-candidate-plan.json']){const b=fs.readFileSync(root+'/'+f),r=JSON.parse(b);console.log(f,JSON.stringify({bytes:b.length,sha256:crypto.createHash('sha256').update(b).digest('hex'),shape:Object.fromEntries(Object.entries(r).map(([k,v])=>[k,brief(v)]))},null,2));}

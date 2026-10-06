@@ -1,0 +1,19 @@
+{
+  "at": "2026-10-06T05:45:39.765Z",
+  "finishedAt": "2026-10-06T05:45:39.770Z",
+  "operation": "readFile",
+  "path": "C:\\cinagroup\\cinatoken\\package-lock.json",
+  "actualExit": 0,
+  "signal": null,
+  "error": null,
+  "stdout": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-quote-version-three-casts-879c829257b645e4ada53e37362201bd\\protected-0.stdout.log",
+    "bytes": 830546,
+    "sha256": "f9c65b6e373a231d52d6eda634bb5f947dda3174734cd70e2b811e09fff0b6f0"
+  },
+  "stderr": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-quote-version-three-casts-879c829257b645e4ada53e37362201bd\\protected-0.stderr.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+}

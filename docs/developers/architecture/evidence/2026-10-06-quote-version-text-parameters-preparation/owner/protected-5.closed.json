@@ -1,0 +1,19 @@
+{
+  "at": "2026-10-06T05:45:39.789Z",
+  "finishedAt": "2026-10-06T05:45:39.793Z",
+  "operation": "readFile",
+  "path": "C:\\cinagroup\\cinatoken\\scripts\\db\\cutover\\pg73-native-fixture.mjs",
+  "actualExit": 0,
+  "signal": null,
+  "error": null,
+  "stdout": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-quote-version-three-casts-879c829257b645e4ada53e37362201bd\\protected-5.stdout.log",
+    "bytes": 6849,
+    "sha256": "124ddd43c2594d0daaac66a4e7158e5df90b00a6d73f03cbcac9e8f853a7346f"
+  },
+  "stderr": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-quote-version-three-casts-879c829257b645e4ada53e37362201bd\\protected-5.stderr.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+}

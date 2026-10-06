@@ -1,0 +1,23 @@
+{
+  "at": "2026-10-06T05:45:38.780Z",
+  "finishedAt": "2026-10-06T05:45:38.849Z",
+  "executable": "git",
+  "args": [
+    "rev-parse",
+    "HEAD"
+  ],
+  "cwd": "C:/cinagroup/cinatoken",
+  "actualExit": 0,
+  "signal": null,
+  "spawnError": null,
+  "stdout": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-quote-version-three-casts-879c829257b645e4ada53e37362201bd\\head.stdout.log",
+    "bytes": 41,
+    "sha256": "c32bcda1ddb1125dbcd8090201a189822c65bd7e121a3cfa4ccf92f57d9ee55c"
+  },
+  "stderr": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-quote-version-three-casts-879c829257b645e4ada53e37362201bd\\head.stderr.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+}

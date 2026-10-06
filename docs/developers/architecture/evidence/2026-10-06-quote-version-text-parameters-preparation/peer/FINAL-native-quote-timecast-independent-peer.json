@@ -1,0 +1,1504 @@
+{
+  "schema": "cinatoken-native-quote-timecast-independent-peer-final.v1",
+  "finishedAt": "2026-10-06T05:56:40.433Z",
+  "supportedForCommit": true,
+  "blockingFindings": [],
+  "staticPreparationOnly": true,
+  "reviewedTarget": "scripts/db/cutover/postgres-shared-key-quote-versions.native.test.mjs",
+  "baseCommit": "4a9b4fb984035bb62ec5930cce01f8da605f476f",
+  "threeOriginalCommitSources": {
+    "commits": [
+      "4a9b4fb984035bb62ec5930cce01f8da605f476f",
+      "ee122dd4273e2db892daa724bc6417a9b02b280c",
+      "dcc6ab52f21a18c5d1c02d8a4a4a390f039e61fc"
+    ],
+    "pin": {
+      "bytes": 34823,
+      "sha256": "16ef4b701728c9de46ea932851354d7cee2aa9d80c6ab543ceae6f4526380c83"
+    },
+    "originalGitBlob": "da61172ea25d53bc31cdc10f2999defce06d6559",
+    "allThreeGitSourcesExact": true,
+    "trueOriginalGitClose": {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-quote-timecast-independent-peer-3dc5347c2a4646ac8cc4bcc085aa9dc5/git-three-source.closed.json",
+      "bytes": 1252,
+      "sha256": "017f1b12bd85d633575e6f2f58eabe6bd03030540cc7f511741c8363c8fdceae"
+    },
+    "preownerAudit": {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-quote-timecast-independent-peer-3dc5347c2a4646ac8cc4bcc085aa9dc5/preowner-static-baseline.json",
+      "bytes": 15962,
+      "sha256": "2725566152238896371b1d2681898b9f1cd88f5e8cda6026a9bf315246d6c373"
+    }
+  },
+  "owner": {
+    "final": {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-quote-version-three-casts-879c829257b645e4ada53e37362201bd/FINAL-quote-version-three-casts-preparation.json",
+      "bytes": 7151,
+      "sha256": "40ef17ddcd4a5e51f64151d6830e89a31335addad35ec87242027209805bf2aa"
+    },
+    "seal": {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-quote-version-three-casts-879c829257b645e4ada53e37362201bd/PREPARATION-SEAL.json",
+      "bytes": 18000,
+      "sha256": "81c4b0b8d00c147bdd5c27b374529764d2359a0c3fd441bfac951c35c3a23e50"
+    },
+    "listedFiles109AllHashesExactBeforeV2Error": true,
+    "entireOwnerCollection110FilesExactBeforeV2Error": true
+  },
+  "source": {
+    "before": {
+      "bytes": 34823,
+      "sha256": "16ef4b701728c9de46ea932851354d7cee2aa9d80c6ab543ceae6f4526380c83"
+    },
+    "after": {
+      "bytes": 34873,
+      "sha256": "c72cc41a679c64a1fb7edd733fe450e3cea8a9bdc9408b8cb152fb0a9135187f"
+    },
+    "independentAfterSnapshot": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-quote-timecast-independent-peer-3dc5347c2a4646ac8cc4bcc085aa9dc5/source-reviewed-after.snapshot.txt",
+    "addedBytes": 50,
+    "originalGitBlob": "da61172ea25d53bc31cdc10f2999defce06d6559"
+  },
+  "singleCompletedSourceAudit": {
+    "reader": {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-quote-timecast-independent-peer-3dc5347c2a4646ac8cc4bcc085aa9dc5/audit-owner-current-source-v2.mjs",
+      "bytes": 16304,
+      "sha256": "2fa62041d8df0ac7bd993e9dddc19a0d41e8839258093ac1dd476eba7ccdcd12"
+    },
+    "trueClose": {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-quote-timecast-independent-peer-3dc5347c2a4646ac8cc4bcc085aa9dc5/audit-owner-current-source-v2.closed.json",
+      "bytes": 1267,
+      "sha256": "79220bdb9ba9410a393414ac9da8fe4bfe8f9292912c49013fd49fe64aa2808c"
+    },
+    "actualExit": 1,
+    "fullSourceAuditWasExecutedBeforeError": true,
+    "errorBoundary": {
+      "line": 18,
+      "column": 1179,
+      "operation": "Last connection.js reference-pin assertion",
+      "error": "Independent auditor pasted an incorrectly truncated expected SHA; actual source remained the original correct SHA.",
+      "actualSHA256": "ee3a218d9aa6a6f2887c1a19da50009335fe84c11a5431d5cab72d6bc528632f",
+      "incorrectExpectedSHA256": "ee3a218d9aa6a6f2887c1a19da50009335fe84c11a543ceae6f4526380c83"
+    },
+    "completedAssertionsBeforeFailure": {
+      "threeQueriesFourParameterCastsOnly": true,
+      "threeCurrentCallFragmentsEqualIndependentConstructionAndOriginalGnPlan": true,
+      "entireCurrentSourceEqualThreeExactReplacements": true,
+      "entireReversedSourceBytesExactOriginalGit": true,
+      "entireReversedNormalizedASTExactOriginalGit": true,
+      "parameterArraysCalleesTemplateExpressionsExact": true,
+      "all65OriginalAssertionsReverseSourceASTExact": true,
+      "directRawAssertions64Exact": true,
+      "onlyNestedComparisonSQLAssertion470AuthorizedChange": true,
+      "originalB2ExpectedAt499Preserved": true,
+      "allOtherTemplateLiteralsExact": true,
+      "onlyThreeTemplatesChanged": true,
+      "delays100Timeout240000LocksSqlOrderGrantsRolesSkipImportsCleanupPinAllOtherSourceExact": true,
+      "eightNecessaryProtectedInputPinsExact": true,
+      "fiveTrackedProtectedInputsGit4aExact": true,
+      "all109OwnerFileHashesExact": true,
+      "ownerSet110WithSelfSealExact": true,
+      "producerAll30RawClosureRecordsChecked": true,
+      "producerRawSHABytesExact": true,
+      "producer14ActualChildrenZero": true,
+      "producer16FSOperations10Success6ENOENTNull": true,
+      "producerSerializerProofCheckedButNotRerun": true
+    },
+    "notReexecutedInContinuation": true,
+    "notUpgradedToWholeReaderZero": true
+  },
+  "authorizedQueryChanges": [
+    {
+      "originalCallLine": 470,
+      "sqlParameterLines": [
+        470,
+        470
+      ],
+      "castCount": 2,
+      "originalCallSource": "competing.unsafe(`SELECT $1::timestamptz >= $2::timestamptz AS after_insert`,\n        [observedAt.at, pendingEffectiveAt])",
+      "preparedCallSource": "competing.unsafe(`SELECT $1::text::timestamptz >= $2::text::timestamptz AS after_insert`,\n        [observedAt.at, pendingEffectiveAt])",
+      "originalCallPin": {
+        "bytes": 122,
+        "sha256": "dfd7cf5b21f651b34cd5ac541f3fa5af76f64baae55ea520d2ed427b030c6576"
+      }
+    },
+    {
+      "originalCallLine": 472,
+      "sqlParameterLines": [
+        473
+      ],
+      "castCount": 1,
+      "originalCallSource": "competing.unsafe(`SELECT quote_version_id\n        FROM ${quotes}.resolve_shared_key_quote_at_time('quote-key-a',$1)`,\n      [observedAt.at])",
+      "preparedCallSource": "competing.unsafe(`SELECT quote_version_id\n        FROM ${quotes}.resolve_shared_key_quote_at_time('quote-key-a',$1::text::timestamptz)`,\n      [observedAt.at])",
+      "originalCallPin": {
+        "bytes": 140,
+        "sha256": "8f7c1a051e76603a1ee2a3b7a8281f8a54126c490e2476f28633473d7fe61cd2"
+      }
+    },
+    {
+      "originalCallLine": 496,
+      "sqlParameterLines": [
+        497
+      ],
+      "castCount": 1,
+      "originalCallSource": "competing.unsafe(`SELECT quote_version_id\n        FROM ${quotes}.resolve_shared_key_quote_at_time('quote-key-a',$1)`,\n      [observedAt.at])",
+      "preparedCallSource": "competing.unsafe(`SELECT quote_version_id\n        FROM ${quotes}.resolve_shared_key_quote_at_time('quote-key-a',$1::text::timestamptz)`,\n      [observedAt.at])",
+      "originalCallPin": {
+        "bytes": 140,
+        "sha256": "8f7c1a051e76603a1ee2a3b7a8281f8a54126c490e2476f28633473d7fe61cd2"
+      }
+    }
+  ],
+  "originalAssertionSelection": {
+    "count": 65,
+    "sourceAndASTPinsAlreadyVerifiedAgainstPlan": true,
+    "originalSourcePins": [
+      {
+        "line": 74,
+        "method": "rejects",
+        "bytes": 160,
+        "sha256": "5de32a13bfa6f2b9e343dd2347561527c1a4d07a2e3f75116ab72463cbe53d23"
+      },
+      {
+        "line": 75,
+        "method": "equal",
+        "bytes": 31,
+        "sha256": "f08706a7eab6aab1f1fdcdf81352cfcc593cff74b8ca895ce3d25842d6d8381a"
+      },
+      {
+        "line": 76,
+        "method": "equal",
+        "bytes": 48,
+        "sha256": "df5fd6df25c4f7681e15801ada7f42cfcb8e97d1e04af39760c55d36d8fc2ce5"
+      },
+      {
+        "line": 104,
+        "method": "match",
+        "bytes": 57,
+        "sha256": "0d8ff706ddc4a2dcddb74cac1b9aedd36267baee8c811b2519171b8fcd8b7a55"
+      },
+      {
+        "line": 123,
+        "method": "equal",
+        "bytes": 30,
+        "sha256": "03920999be2a48f6bb0e0b4666074b3984332b7f530b7e4e50a06dea7d94b7e5"
+      },
+      {
+        "line": 164,
+        "method": "rejects",
+        "bytes": 113,
+        "sha256": "304a3ea7d0ac1aeed83236dcb6a7ec5613395989d4b34049c917ed7bc5263ec2"
+      },
+      {
+        "line": 166,
+        "method": "rejects",
+        "bytes": 388,
+        "sha256": "fd2b5be4ac210aef45eb33a7e414c534954b3d68cfb893bd8f863067c7ffcf9b"
+      },
+      {
+        "line": 173,
+        "method": "rejects",
+        "bytes": 688,
+        "sha256": "25aedce522ec8a51c3efbdde71a72212c5cf7e8fd4cd11acd04a26fa53b64fb7"
+      },
+      {
+        "line": 180,
+        "method": "deepEqual",
+        "bytes": 51,
+        "sha256": "8d7c9ace87690cef4348bce1d3b24f8c558cdfe3f88ceb96c4519678389f6666"
+      },
+      {
+        "line": 184,
+        "method": "equal",
+        "bytes": 164,
+        "sha256": "9fd02fbe8dcf0ee7f05f144f1f164753c4c8bdf390d1b5385e83e56392f7ac46"
+      },
+      {
+        "line": 187,
+        "method": "equal",
+        "bytes": 103,
+        "sha256": "8b219e407c98350b378d28364f90d2d3d2291ebfd37560000b5787af52e8d3f3"
+      },
+      {
+        "line": 188,
+        "method": "rejects",
+        "bytes": 359,
+        "sha256": "35fbfbe1be7674d10467e421f7e54f27ea438d89393cbba7aee7d7d58b6a132a"
+      },
+      {
+        "line": 197,
+        "method": "rejects",
+        "bytes": 106,
+        "sha256": "f2ecc5dc20993f8216918f133ff133113b56e2d10766794a28432becd3a3175d"
+      },
+      {
+        "line": 201,
+        "method": "rejects",
+        "bytes": 106,
+        "sha256": "f2ecc5dc20993f8216918f133ff133113b56e2d10766794a28432becd3a3175d"
+      },
+      {
+        "line": 207,
+        "method": "rejects",
+        "bytes": 108,
+        "sha256": "ce7bb77fff0d97184772328e6b1f631f81eb8fad4a423b8521298c1850f8a416"
+      },
+      {
+        "line": 214,
+        "method": "rejects",
+        "bytes": 434,
+        "sha256": "78618e52f07d83a41f4635150136a40c75208f16c7710ae165f0e9cefa39d35f"
+      },
+      {
+        "line": 220,
+        "method": "equal",
+        "bytes": 103,
+        "sha256": "8b219e407c98350b378d28364f90d2d3d2291ebfd37560000b5787af52e8d3f3"
+      },
+      {
+        "line": 223,
+        "method": "rejects",
+        "bytes": 313,
+        "sha256": "fd81a98bae0fe1975936f10ba3ce30a90f4c5994729ffa491763703fbce8025c"
+      },
+      {
+        "line": 234,
+        "method": "notEqual",
+        "bytes": 38,
+        "sha256": "87c79d7668d5ba2730254d6f466b99c7ffafe05a019ea61787114f8eb031f796"
+      },
+      {
+        "line": 235,
+        "method": "rejects",
+        "bytes": 123,
+        "sha256": "d1d1fd9d9d94ef55e37e6ed4f9df2f42a2886492df9a3cc5a27675ff3bf975ba"
+      },
+      {
+        "line": 237,
+        "method": "equal",
+        "bytes": 103,
+        "sha256": "8b219e407c98350b378d28364f90d2d3d2291ebfd37560000b5787af52e8d3f3"
+      },
+      {
+        "line": 241,
+        "method": "rejects",
+        "bytes": 106,
+        "sha256": "f2ecc5dc20993f8216918f133ff133113b56e2d10766794a28432becd3a3175d"
+      },
+      {
+        "line": 254,
+        "method": "rejects",
+        "bytes": 136,
+        "sha256": "9bace8820ee37a76c472bb80a653ee6d25b4b23ff58de6397f5e24c6cb663838"
+      },
+      {
+        "line": 257,
+        "method": "equal",
+        "bytes": 88,
+        "sha256": "6ffb54f3b5df0450779ab6b87e1b3ce77b8c776d3c85cfeed7388ce5291ce16c"
+      },
+      {
+        "line": 298,
+        "method": "equal",
+        "bytes": 41,
+        "sha256": "b8f70939379cd7783e7573b5973b5a31d109bee8257e6c4a4fa0830d385a4bc7"
+      },
+      {
+        "line": 320,
+        "method": "equal",
+        "bytes": 83,
+        "sha256": "0816d882d36adce2b660bd480f65e63f4dd46249a8957a0486b8d64485ab9250"
+      },
+      {
+        "line": 321,
+        "method": "equal",
+        "bytes": 86,
+        "sha256": "97620b0966d6a19f4e7a22b55fda4f0cdb5e668cb940ebb6d94e6dc1a170bdfc"
+      },
+      {
+        "line": 332,
+        "method": "equal",
+        "bytes": 55,
+        "sha256": "bd68c3dd28ef832a8679f8e8440ed3e1b0be2991c1d11beadd7203bdcd8e48f5"
+      },
+      {
+        "line": 333,
+        "method": "equal",
+        "bytes": 55,
+        "sha256": "d1ac50604692ae17e6d5f54448f48671ba9e9388e606767799fdf9343dd5688d"
+      },
+      {
+        "line": 334,
+        "method": "equal",
+        "bytes": 94,
+        "sha256": "7d409767d2de91b46f163d6a3597d807b1c700116c1b053d90c08dee4b400f7d"
+      },
+      {
+        "line": 335,
+        "method": "equal",
+        "bytes": 94,
+        "sha256": "18e77d754b4d40f0fbe53981e88c26afce0fd3c117578044a2d0ca1c4c74d595"
+      },
+      {
+        "line": 346,
+        "method": "equal",
+        "bytes": 47,
+        "sha256": "b51c827a9fef013a4acf1cc7160f44c6da9b2ac9eb8ffc43eba5f323d41ca391"
+      },
+      {
+        "line": 347,
+        "method": "equal",
+        "bytes": 44,
+        "sha256": "acbc12233faf98c9c405a5a6295d9d1ac1b4c567e4a8b8c22251fcb57c43063d"
+      },
+      {
+        "line": 348,
+        "method": "equal",
+        "bytes": 51,
+        "sha256": "ce165266732659be6d8e259420f3553b6d35af783208c0c90aa92ba0fb6f3905"
+      },
+      {
+        "line": 349,
+        "method": "equal",
+        "bytes": 83,
+        "sha256": "afe9050da6fd1ff9143eed38daac8d50bc2110041ce25367a4d5242c0472180d"
+      },
+      {
+        "line": 356,
+        "method": "equal",
+        "bytes": 83,
+        "sha256": "2ca124549e6368fd316900a3a7dfb7bf4d9528cc026c6318790fa229513f3afb"
+      },
+      {
+        "line": 362,
+        "method": "equal",
+        "bytes": 157,
+        "sha256": "a0d3a91b7d1ce8f8c7ae5cbdf0957b0180cd76e02187a72d13d88a41ce081d12"
+      },
+      {
+        "line": 382,
+        "method": "equal",
+        "bytes": 160,
+        "sha256": "c78624a2133fbdb487691559dcf8925dd8c6cdf9e268442283c241d1a574c235"
+      },
+      {
+        "line": 384,
+        "method": "equal",
+        "bytes": 214,
+        "sha256": "a0bcd85c40ac033b0b3e5052bf74705d42f2abe28f79f43a14322594506847fc"
+      },
+      {
+        "line": 391,
+        "method": "equal",
+        "bytes": 86,
+        "sha256": "935b57cbf64bcbd089794ed3a6a71ec5e441ac479e57fb5ac406c583fe53b774"
+      },
+      {
+        "line": 392,
+        "method": "equal",
+        "bytes": 86,
+        "sha256": "1e1f4c61d71478de892b8d469163ad307a9ac0f342cf8a90b2c73de2a7af579f"
+      },
+      {
+        "line": 393,
+        "method": "equal",
+        "bytes": 94,
+        "sha256": "6ee110466874b4777f0283efc10bc097a8c9aee274f6ab2ee3413d74b4939107"
+      },
+      {
+        "line": 394,
+        "method": "equal",
+        "bytes": 95,
+        "sha256": "e337791db36d1782e17c54444b47beb321b4a632fa3aa0fac75d9b7313db1274"
+      },
+      {
+        "line": 395,
+        "method": "equal",
+        "bytes": 157,
+        "sha256": "6aece96c5783bea1d004980078acf3aa9a50b2d7b7ba2ac4d415ac710a115e17"
+      },
+      {
+        "line": 399,
+        "method": "deepEqual",
+        "bytes": 119,
+        "sha256": "23ad1f0b01c92f5c177f065eb6d65efe944c1d58abbd3bb45199fa528de3f4e3"
+      },
+      {
+        "line": 443,
+        "method": "equal",
+        "bytes": 141,
+        "sha256": "1238481a600bfb863f275d3cd46cbef3dae7594c01988d01a68842f9345c9226"
+      },
+      {
+        "line": 466,
+        "method": "equal",
+        "bytes": 61,
+        "sha256": "3e0f8a55eebc08833a797f72778143d5de649b01ad7d2cec40e923a625ac3324"
+      },
+      {
+        "line": 467,
+        "method": "equal",
+        "bytes": 60,
+        "sha256": "66ca0db36947ce86c09191c0d0bd9250e81eed586865c21e2ab18ce6bf4c08f9"
+      },
+      {
+        "line": 468,
+        "method": "equal",
+        "bytes": 65,
+        "sha256": "a54763a20713d40d479201898745974526fb573bf6d33b1acafdb9568c2fa117"
+      },
+      {
+        "line": 470,
+        "method": "equal",
+        "bytes": 166,
+        "sha256": "842d747d6b96e7367988f66c3cdd22a3c307eb133afae363097b84c077cb7099"
+      },
+      {
+        "line": 475,
+        "method": "equal",
+        "bytes": 68,
+        "sha256": "f3c0bd990805fcb69019cbcef81ccc16c3a24a6674d371a387dab3ae80aca073"
+      },
+      {
+        "line": 483,
+        "method": "equal",
+        "bytes": 93,
+        "sha256": "100d68686705886ce4a8f9e2da2b50dd4a3d80e3223aa5c466cbfdba4ef65916"
+      },
+      {
+        "line": 487,
+        "method": "equal",
+        "bytes": 84,
+        "sha256": "378eb70701225982f88be424897ab72cb421f91b78432eff95b87f0186611042"
+      },
+      {
+        "line": 488,
+        "method": "equal",
+        "bytes": 160,
+        "sha256": "edc37781aee424478a6b3738b3da5a2b5aa6835441d8cd364b41161202274091"
+      },
+      {
+        "line": 493,
+        "method": "equal",
+        "bytes": 51,
+        "sha256": "20e87554654b45021c260a6a3ec948019e56900bc953bd6e0fc6b5dd49c87176"
+      },
+      {
+        "line": 494,
+        "method": "equal",
+        "bytes": 59,
+        "sha256": "04d3579ca0c84d159cf307a00dc6512020feecddced14c7c6eaf3f2328f852ed"
+      },
+      {
+        "line": 495,
+        "method": "equal",
+        "bytes": 62,
+        "sha256": "2e29281504e45ef9ae32d88631f50750dcfe17f251ecf484153ee43a992bc4e4"
+      },
+      {
+        "line": 499,
+        "method": "equal",
+        "bytes": 67,
+        "sha256": "cbfecd3fca6f5334f1869f53e13629c388ea285291ce78b035c532139f8d6c04"
+      },
+      {
+        "line": 505,
+        "method": "equal",
+        "bytes": 180,
+        "sha256": "2bb3fa7034773dc85f6f94e8255ea6847743e6cf01f216b1800d487641f30399"
+      },
+      {
+        "line": 521,
+        "method": "equal",
+        "bytes": 214,
+        "sha256": "68dbbf9981feb5d1f3950f5df74504d8abb5c2dc5b8ef88c62ede091a34d45ac"
+      },
+      {
+        "line": 530,
+        "method": "equal",
+        "bytes": 86,
+        "sha256": "6329e2dcbc8ac46d8915c5e54ff03e931bcea63557e8e19d2bc290051bdfd7b8"
+      },
+      {
+        "line": 538,
+        "method": "equal",
+        "bytes": 83,
+        "sha256": "218b1eec5e24e0b4d307e4f79cfd806e091e24ecaaebcc1e8cceb38d146d2d48"
+      },
+      {
+        "line": 539,
+        "method": "equal",
+        "bytes": 79,
+        "sha256": "e3364495a3f979780e46d54df4dc361f77d2d0e777dde8865d1bc114912c18c0"
+      },
+      {
+        "line": 540,
+        "method": "equal",
+        "bytes": 76,
+        "sha256": "c5c6543cb57215b47da6f53b0638ce9431273da2abe0edaffb71183634d1be23"
+      },
+      {
+        "line": 577,
+        "method": "deepEqual",
+        "bytes": 181,
+        "sha256": "d4d9be88a7588b681ffa9b4d0f48eaec4d99ace5792bf49fb2a5d3e578ba971e"
+      }
+    ]
+  },
+  "protectedInputs": [
+    {
+      "path": "package-lock.json",
+      "bytes": 830546,
+      "sha256": "f9c65b6e373a231d52d6eda634bb5f947dda3174734cd70e2b811e09fff0b6f0"
+    },
+    {
+      "path": "node_modules/postgres/package.json",
+      "bytes": 1814,
+      "sha256": "944d492614959389a5739ef2893bc1830fb773ff042159d9b331d43b2f6792e9"
+    },
+    {
+      "path": "node_modules/postgres/src/types.js",
+      "bytes": 10935,
+      "sha256": "1883bd4536eab1c94b9e708d325b13708b0f18ec80020e3a825f34a72f603b81"
+    },
+    {
+      "path": "node_modules/postgres/src/errors.js",
+      "bytes": 1155,
+      "sha256": "85cfbed9a5ab0db41ab8e97b806c881af29807dfe99bc656fdf1a18c1c13b6c6"
+    },
+    {
+      "path": "packages/core/src/test-support/postgres-native-cluster.mjs",
+      "bytes": 6300,
+      "sha256": "6b5923be8d3bdcd061033eed1af2f67f3b87fa2fca1f2cf0a0b2eb0eb2cb8d2a"
+    },
+    {
+      "path": "scripts/db/cutover/pg73-native-fixture.mjs",
+      "bytes": 6849,
+      "sha256": "124ddd43c2594d0daaac66a4e7158e5df90b00a6d73f03cbcac9e8f853a7346f"
+    },
+    {
+      "path": "packages/core/migrations-proposals/postgres/shared-key-quote-versions.sql",
+      "bytes": 28629,
+      "sha256": "1249a7ff07f95b48c7b45a41833c96c9a028e4bfe3a47e44e9dc6b72c3c77246"
+    },
+    {
+      "path": "scripts/db/cutover/grant-postgres-runtime.ts",
+      "bytes": 25946,
+      "sha256": "3f95f18f557696d8a36b93f7fe0d0d35a391e8ac9cf953376a234a6b629ea242"
+    }
+  ],
+  "actualFiveProtectedGitClose": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-quote-timecast-independent-peer-3dc5347c2a4646ac8cc4bcc085aa9dc5/git-five-protected-inputs.closed.json",
+    "bytes": 1517,
+    "sha256": "1f02bb0aa2d3ebb74cdbff524417e7ee88014b81b044812ffc7248b180c60f37"
+  },
+  "producerProvenance": {
+    "mixedClosedRecords30": true,
+    "mixedActual0": 24,
+    "mixedActualNull": 6,
+    "trueChildren": {
+      "count": 14,
+      "actualZero": 14
+    },
+    "filesystemOperations": {
+      "count": 16,
+      "actualZero": 10,
+      "actualNullENOENT": 6,
+      "noChildCreated": true
+    },
+    "not24ProcessZeros": true,
+    "records": [
+      {
+        "file": "audit-casts.closed.json",
+        "type": "childClose",
+        "actualExit": 0,
+        "errorCode": null,
+        "startedAt": "2026-10-06T05:49:12.957Z",
+        "closedAt": "2026-10-06T05:49:13.418Z",
+        "receiptPin": {
+          "bytes": 898,
+          "sha256": "a373a40c0cf5edcb5da5093435740906882cf14b9b91d2cc9180b8fa848af10f"
+        },
+        "stdout": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-quote-version-three-casts-879c829257b645e4ada53e37362201bd\\audit-casts.stdout.log",
+          "bytes": 256,
+          "sha256": "1d93a1a7958fb844e2ee058a9d0f1f811985f819cb98eb1614a8896ebd217d73"
+        },
+        "stderr": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-quote-version-three-casts-879c829257b645e4ada53e37362201bd\\audit-casts.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "executable": "C:/Program Files/nodejs/node.exe",
+        "argv": [
+          "C:/Users/cina/AppData/Local/Temp/cinatoken-quote-version-three-casts-879c829257b645e4ada53e37362201bd/audit-casts.mjs"
+        ],
+        "sourcePath": null
+      },
+      {
+        "file": "audit-original-git.closed.json",
+        "type": "childClose",
+        "actualExit": 0,
+        "errorCode": null,
+        "startedAt": "2026-10-06T05:49:13.034Z",
+        "closedAt": "2026-10-06T05:49:13.094Z",
+        "receiptPin": {
+          "bytes": 890,
+          "sha256": "8f8d46af27aff76cb23c601dcd47a69ecb5f32f5492600c33ea3656732be89f2"
+        },
+        "stdout": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-quote-version-three-casts-879c829257b645e4ada53e37362201bd\\audit-original-git.stdout.log",
+          "bytes": 34823,
+          "sha256": "16ef4b701728c9de46ea932851354d7cee2aa9d80c6ab543ceae6f4526380c83"
+        },
+        "stderr": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-quote-version-three-casts-879c829257b645e4ada53e37362201bd\\audit-original-git.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "executable": "git",
+        "argv": [
+          "show",
+          "4a9b4fb984035bb62ec5930cce01f8da605f476f:scripts/db/cutover/postgres-shared-key-quote-versions.native.test.mjs"
+        ],
+        "sourcePath": null
+      },
+      {
+        "file": "collect-inputs.closed.json",
+        "type": "childClose",
+        "actualExit": 0,
+        "errorCode": null,
+        "startedAt": "2026-10-06T05:45:38.687Z",
+        "closedAt": "2026-10-06T05:45:39.877Z",
+        "receiptPin": {
+          "bytes": 907,
+          "sha256": "8fc087c066f9274b1819d763f97bec431cdce279ef548a11641b242e833e092b"
+        },
+        "stdout": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-quote-version-three-casts-879c829257b645e4ada53e37362201bd\\collect-inputs.stdout.log",
+          "bytes": 594,
+          "sha256": "9be3333f76c9ac3e1e021c2cc8b9d0dff58e16380f921e2f966470fbe87941e0"
+        },
+        "stderr": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-quote-version-three-casts-879c829257b645e4ada53e37362201bd\\collect-inputs.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "executable": "C:/Program Files/nodejs/node.exe",
+        "argv": [
+          "C:/Users/cina/AppData/Local/Temp/cinatoken-quote-version-three-casts-879c829257b645e4ada53e37362201bd/collect-inputs.mjs"
+        ],
+        "sourcePath": null
+      },
+      {
+        "file": "current-source.closed.json",
+        "type": "filesystemReadOperation",
+        "actualExit": 0,
+        "errorCode": null,
+        "startedAt": "2026-10-06T05:45:38.920Z",
+        "closedAt": "2026-10-06T05:45:38.923Z",
+        "receiptPin": {
+          "bytes": 812,
+          "sha256": "988f604c6bad962c60658350020059f6d7f5dfd91b997c84e82a2e39c6fd07c2"
+        },
+        "stdout": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-quote-version-three-casts-879c829257b645e4ada53e37362201bd\\current-source.stdout.log",
+          "bytes": 34823,
+          "sha256": "16ef4b701728c9de46ea932851354d7cee2aa9d80c6ab543ceae6f4526380c83"
+        },
+        "stderr": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-quote-version-three-casts-879c829257b645e4ada53e37362201bd\\current-source.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "executable": null,
+        "argv": null,
+        "sourcePath": "C:\\cinagroup\\cinatoken\\scripts\\db\\cutover\\postgres-shared-key-quote-versions.native.test.mjs"
+      },
+      {
+        "file": "diff-check.closed.json",
+        "type": "childClose",
+        "actualExit": 0,
+        "errorCode": null,
+        "startedAt": "2026-10-06T05:49:14.087Z",
+        "closedAt": "2026-10-06T05:49:14.155Z",
+        "receiptPin": {
+          "bytes": 854,
+          "sha256": "bf76947567cef525fe054f873bc2f9f36d14d6f3412d661cf479576d4e0e849c"
+        },
+        "stdout": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-quote-version-three-casts-879c829257b645e4ada53e37362201bd\\diff-check.stdout.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stderr": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-quote-version-three-casts-879c829257b645e4ada53e37362201bd\\diff-check.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "executable": "git",
+        "argv": [
+          "diff",
+          "--check",
+          "--",
+          "scripts/db/cutover/postgres-shared-key-quote-versions.native.test.mjs"
+        ],
+        "sourcePath": null
+      },
+      {
+        "file": "final-source-patch.closed.json",
+        "type": "childClose",
+        "actualExit": 0,
+        "errorCode": null,
+        "startedAt": "2026-10-06T05:49:14.094Z",
+        "closedAt": "2026-10-06T05:49:14.163Z",
+        "receiptPin": {
+          "bytes": 858,
+          "sha256": "5592016ddaf5662a5c208ef80f73085dc22a73995dac4047ea109ad82d468877"
+        },
+        "stdout": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-quote-version-three-casts-879c829257b645e4ada53e37362201bd\\final-source-patch.stdout.log",
+          "bytes": 2072,
+          "sha256": "e7b80d406d9fd6b8de83af787583253d7489e2e203f941ce9fb9fc2354f9dde9"
+        },
+        "stderr": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-quote-version-three-casts-879c829257b645e4ada53e37362201bd\\final-source-patch.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "executable": "git",
+        "argv": [
+          "diff",
+          "--",
+          "scripts/db/cutover/postgres-shared-key-quote-versions.native.test.mjs"
+        ],
+        "sourcePath": null
+      },
+      {
+        "file": "finalize.closed.json",
+        "type": "childClose",
+        "actualExit": 0,
+        "errorCode": null,
+        "startedAt": "2026-10-06T05:51:13.139Z",
+        "closedAt": "2026-10-06T05:51:13.306Z",
+        "receiptPin": {
+          "bytes": 899,
+          "sha256": "db47acea6dcba82876c8430515b58c9ee6c08732c74a487bedfda201cc063172"
+        },
+        "stdout": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-quote-version-three-casts-879c829257b645e4ada53e37362201bd\\finalize.stdout.log",
+          "bytes": 638,
+          "sha256": "eeae05f6e91990cf3c0fddaa7f48bb0e1df2adef54aa56faf99f9ef9e8857293"
+        },
+        "stderr": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-quote-version-three-casts-879c829257b645e4ada53e37362201bd\\finalize.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "executable": "C:\\Program Files\\nodejs\\node.exe",
+        "argv": [
+          "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-quote-version-three-casts-879c829257b645e4ada53e37362201bd\\finalize.mjs"
+        ],
+        "sourcePath": null
+      },
+      {
+        "file": "frozen-diagnosis.closed.json",
+        "type": "filesystemReadOperation",
+        "actualExit": 0,
+        "errorCode": null,
+        "startedAt": "2026-10-06T05:45:38.987Z",
+        "closedAt": "2026-10-06T05:45:38.989Z",
+        "receiptPin": {
+          "bytes": 843,
+          "sha256": "be6fab59dfcd4cbf1a8e4e9770e294e707d6adf1f7431304b6b0feeee47e1a44"
+        },
+        "stdout": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-quote-version-three-casts-879c829257b645e4ada53e37362201bd\\frozen-diagnosis.stdout.log",
+          "bytes": 26643,
+          "sha256": "92f7916e867d6e8c807b0c5dc50ca04321fb5d1c9d0248be477e735fd1706975"
+        },
+        "stderr": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-quote-version-three-casts-879c829257b645e4ada53e37362201bd\\frozen-diagnosis.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "executable": null,
+        "argv": null,
+        "sourcePath": "C:/Users/cina/AppData/Local/Temp/cinatoken-quote-version-next-readonly-gn9DdD/FINAL-quote-version-499-readonly-diagnosis.json"
+      },
+      {
+        "file": "head.closed.json",
+        "type": "childClose",
+        "actualExit": 0,
+        "errorCode": null,
+        "startedAt": "2026-10-06T05:45:38.780Z",
+        "closedAt": "2026-10-06T05:45:38.849Z",
+        "receiptPin": {
+          "bytes": 758,
+          "sha256": "b38887c039981a5892ba56594a8fca065de15c57780a80f35686aafaaee6b3dc"
+        },
+        "stdout": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-quote-version-three-casts-879c829257b645e4ada53e37362201bd\\head.stdout.log",
+          "bytes": 41,
+          "sha256": "c32bcda1ddb1125dbcd8090201a189822c65bd7e121a3cfa4ccf92f57d9ee55c"
+        },
+        "stderr": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-quote-version-three-casts-879c829257b645e4ada53e37362201bd\\head.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "executable": "git",
+        "argv": [
+          "rev-parse",
+          "HEAD"
+        ],
+        "sourcePath": null
+      },
+      {
+        "file": "instructions-0.closed.json",
+        "type": "filesystemReadOperation",
+        "actualExit": null,
+        "errorCode": "ENOENT",
+        "startedAt": "2026-10-06T05:45:39.815Z",
+        "closedAt": "2026-10-06T05:45:39.817Z",
+        "receiptPin": {
+          "bytes": 822,
+          "sha256": "42afc5a5f4e5c4e32719ce16533b0497ae10707440f9a22e3b6e84eb24d25240"
+        },
+        "stdout": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-quote-version-three-casts-879c829257b645e4ada53e37362201bd\\instructions-0.stdout.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stderr": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-quote-version-three-casts-879c829257b645e4ada53e37362201bd\\instructions-0.stderr.log",
+          "bytes": 86,
+          "sha256": "5d278edcbb935d0b2c7558bc14dc82df294270fe3a304d97a13161a395679815"
+        },
+        "executable": null,
+        "argv": null,
+        "sourcePath": "C:/AGENTS.md"
+      },
+      {
+        "file": "instructions-1.closed.json",
+        "type": "filesystemReadOperation",
+        "actualExit": null,
+        "errorCode": "ENOENT",
+        "startedAt": "2026-10-06T05:45:39.819Z",
+        "closedAt": "2026-10-06T05:45:39.821Z",
+        "receiptPin": {
+          "bytes": 843,
+          "sha256": "575386a169df2b93bf20170a9c75979973dfb7052b116777f6f90a12888ea1ef"
+        },
+        "stdout": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-quote-version-three-casts-879c829257b645e4ada53e37362201bd\\instructions-1.stdout.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stderr": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-quote-version-three-casts-879c829257b645e4ada53e37362201bd\\instructions-1.stderr.log",
+          "bytes": 97,
+          "sha256": "71df25981e917974a8fa726b3be5dadc647aec6c826f9886ee62621c98e27a96"
+        },
+        "executable": null,
+        "argv": null,
+        "sourcePath": "C:/cinagroup/AGENTS.md"
+      },
+      {
+        "file": "instructions-2.closed.json",
+        "type": "filesystemReadOperation",
+        "actualExit": null,
+        "errorCode": "ENOENT",
+        "startedAt": "2026-10-06T05:45:39.823Z",
+        "closedAt": "2026-10-06T05:45:39.824Z",
+        "receiptPin": {
+          "bytes": 868,
+          "sha256": "3aa6cfc07c713f15a8d6e9a722ad040706904eb8b5c167feba5e420e2559414d"
+        },
+        "stdout": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-quote-version-three-casts-879c829257b645e4ada53e37362201bd\\instructions-2.stdout.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stderr": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-quote-version-three-casts-879c829257b645e4ada53e37362201bd\\instructions-2.stderr.log",
+          "bytes": 108,
+          "sha256": "eca4570bec17a203a76a012a6ddfa0d87894ba69b91bfd528ce2150aa69b814a"
+        },
+        "executable": null,
+        "argv": null,
+        "sourcePath": "C:\\cinagroup\\cinatoken\\AGENTS.md"
+      },
+      {
+        "file": "instructions-3.closed.json",
+        "type": "filesystemReadOperation",
+        "actualExit": null,
+        "errorCode": "ENOENT",
+        "startedAt": "2026-10-06T05:45:39.841Z",
+        "closedAt": "2026-10-06T05:45:39.844Z",
+        "receiptPin": {
+          "bytes": 886,
+          "sha256": "67211ab67c8b25603886cddf9125378f57fc57cae03fc33cfc0a66dd89610805"
+        },
+        "stdout": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-quote-version-three-casts-879c829257b645e4ada53e37362201bd\\instructions-3.stdout.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stderr": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-quote-version-three-casts-879c829257b645e4ada53e37362201bd\\instructions-3.stderr.log",
+          "bytes": 117,
+          "sha256": "6c361dd56e9edf01f92850e038ebd776738b1cc9cae2303cda2d93e02e47838c"
+        },
+        "executable": null,
+        "argv": null,
+        "sourcePath": "C:\\cinagroup\\cinatoken\\scripts\\AGENTS.md"
+      },
+      {
+        "file": "instructions-4.closed.json",
+        "type": "filesystemReadOperation",
+        "actualExit": null,
+        "errorCode": "ENOENT",
+        "startedAt": "2026-10-06T05:45:39.845Z",
+        "closedAt": "2026-10-06T05:45:39.846Z",
+        "receiptPin": {
+          "bytes": 894,
+          "sha256": "b84febeba0c6bbdda12b25d70de2db1e1ea1c78aaf3ce571b282731ab519dd61"
+        },
+        "stdout": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-quote-version-three-casts-879c829257b645e4ada53e37362201bd\\instructions-4.stdout.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stderr": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-quote-version-three-casts-879c829257b645e4ada53e37362201bd\\instructions-4.stderr.log",
+          "bytes": 121,
+          "sha256": "eaac7de347436bd48496fb35caaf6f38bee6fd66044d0e872cd9b853702202e6"
+        },
+        "executable": null,
+        "argv": null,
+        "sourcePath": "C:\\cinagroup\\cinatoken\\scripts\\db\\AGENTS.md"
+      },
+      {
+        "file": "instructions-5.closed.json",
+        "type": "filesystemReadOperation",
+        "actualExit": null,
+        "errorCode": "ENOENT",
+        "startedAt": "2026-10-06T05:45:39.848Z",
+        "closedAt": "2026-10-06T05:45:39.850Z",
+        "receiptPin": {
+          "bytes": 912,
+          "sha256": "13f795fed39fef9fb7b99b4e7a894da8a437794344d2f4b3a5f56190d87c9171"
+        },
+        "stdout": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-quote-version-three-casts-879c829257b645e4ada53e37362201bd\\instructions-5.stdout.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stderr": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-quote-version-three-casts-879c829257b645e4ada53e37362201bd\\instructions-5.stderr.log",
+          "bytes": 130,
+          "sha256": "4b16f6463e4ccd19af14170d19a90806f6c018a5b12c438c8b72452a9bbedc80"
+        },
+        "executable": null,
+        "argv": null,
+        "sourcePath": "C:\\cinagroup\\cinatoken\\scripts\\db\\cutover\\AGENTS.md"
+      },
+      {
+        "file": "offline-serialize.closed.json",
+        "type": "childClose",
+        "actualExit": 0,
+        "errorCode": null,
+        "startedAt": "2026-10-06T05:47:28.495Z",
+        "closedAt": "2026-10-06T05:47:28.603Z",
+        "receiptPin": {
+          "bytes": 917,
+          "sha256": "8e11bf2c0d52ba4d9aea88ea110ca077c8948f5813f63d6b56c5b8854229f532"
+        },
+        "stdout": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-quote-version-three-casts-879c829257b645e4ada53e37362201bd\\offline-serialize.stdout.log",
+          "bytes": 1365,
+          "sha256": "2f3f60654e98bc016eb2f757e135da6c8ee0a92bc2ba49782449bf3ff2177480"
+        },
+        "stderr": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-quote-version-three-casts-879c829257b645e4ada53e37362201bd\\offline-serialize.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "executable": "C:/Program Files/nodejs/node.exe",
+        "argv": [
+          "C:/Users/cina/AppData/Local/Temp/cinatoken-quote-version-three-casts-879c829257b645e4ada53e37362201bd/offline-serialize.mjs"
+        ],
+        "sourcePath": null
+      },
+      {
+        "file": "original-blob.closed.json",
+        "type": "childClose",
+        "actualExit": 0,
+        "errorCode": null,
+        "startedAt": "2026-10-06T05:45:38.924Z",
+        "closedAt": "2026-10-06T05:45:38.986Z",
+        "receiptPin": {
+          "bytes": 882,
+          "sha256": "65a7ffc3cc3957f8478ca63370866e140436b19310645f338eb199fae8cd0fd2"
+        },
+        "stdout": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-quote-version-three-casts-879c829257b645e4ada53e37362201bd\\original-blob.stdout.log",
+          "bytes": 41,
+          "sha256": "30a359b04ced574cc909144a9d0d726cdea94ba3fbd3abb6ad87714568cd32dc"
+        },
+        "stderr": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-quote-version-three-casts-879c829257b645e4ada53e37362201bd\\original-blob.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "executable": "git",
+        "argv": [
+          "rev-parse",
+          "4a9b4fb984035bb62ec5930cce01f8da605f476f:scripts/db/cutover/postgres-shared-key-quote-versions.native.test.mjs"
+        ],
+        "sourcePath": null
+      },
+      {
+        "file": "original-source.closed.json",
+        "type": "childClose",
+        "actualExit": 0,
+        "errorCode": null,
+        "startedAt": "2026-10-06T05:45:38.853Z",
+        "closedAt": "2026-10-06T05:45:38.918Z",
+        "receiptPin": {
+          "bytes": 884,
+          "sha256": "fb6f9d5172cdacf6ac9ed8a4f066c5d631c86b055b8e01a89e3059c2f287c363"
+        },
+        "stdout": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-quote-version-three-casts-879c829257b645e4ada53e37362201bd\\original-source.stdout.log",
+          "bytes": 34823,
+          "sha256": "16ef4b701728c9de46ea932851354d7cee2aa9d80c6ab543ceae6f4526380c83"
+        },
+        "stderr": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-quote-version-three-casts-879c829257b645e4ada53e37362201bd\\original-source.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "executable": "git",
+        "argv": [
+          "show",
+          "4a9b4fb984035bb62ec5930cce01f8da605f476f:scripts/db/cutover/postgres-shared-key-quote-versions.native.test.mjs"
+        ],
+        "sourcePath": null
+      },
+      {
+        "file": "prepare-casts.closed.json",
+        "type": "childClose",
+        "actualExit": 0,
+        "errorCode": null,
+        "startedAt": "2026-10-06T05:47:26.397Z",
+        "closedAt": "2026-10-06T05:47:26.721Z",
+        "receiptPin": {
+          "bytes": 904,
+          "sha256": "730a6c47d8bb9d0eb2a3aad518eded9c618b682707476023d515e42b3be28738"
+        },
+        "stdout": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-quote-version-three-casts-879c829257b645e4ada53e37362201bd\\prepare-casts.stdout.log",
+          "bytes": 181,
+          "sha256": "41b498429ce6ade19ee03afbfdac1e1667dac9e2bfaa484a0eb161056a8caa4c"
+        },
+        "stderr": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-quote-version-three-casts-879c829257b645e4ada53e37362201bd\\prepare-casts.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "executable": "C:/Program Files/nodejs/node.exe",
+        "argv": [
+          "C:/Users/cina/AppData/Local/Temp/cinatoken-quote-version-three-casts-879c829257b645e4ada53e37362201bd/prepare-casts.mjs"
+        ],
+        "sourcePath": null
+      },
+      {
+        "file": "protected-0.closed.json",
+        "type": "filesystemReadOperation",
+        "actualExit": 0,
+        "errorCode": null,
+        "startedAt": "2026-10-06T05:45:39.765Z",
+        "closedAt": "2026-10-06T05:45:39.770Z",
+        "receiptPin": {
+          "bytes": 752,
+          "sha256": "7f0dba72d10b7239dc74c763a01f15e9bf2778d41cbe6c0f54e6a64e7058a3cf"
+        },
+        "stdout": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-quote-version-three-casts-879c829257b645e4ada53e37362201bd\\protected-0.stdout.log",
+          "bytes": 830546,
+          "sha256": "f9c65b6e373a231d52d6eda634bb5f947dda3174734cd70e2b811e09fff0b6f0"
+        },
+        "stderr": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-quote-version-three-casts-879c829257b645e4ada53e37362201bd\\protected-0.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "executable": null,
+        "argv": null,
+        "sourcePath": "C:\\cinagroup\\cinatoken\\package-lock.json"
+      },
+      {
+        "file": "protected-1.closed.json",
+        "type": "filesystemReadOperation",
+        "actualExit": 0,
+        "errorCode": null,
+        "startedAt": "2026-10-06T05:45:39.773Z",
+        "closedAt": "2026-10-06T05:45:39.774Z",
+        "receiptPin": {
+          "bytes": 769,
+          "sha256": "809e05247528fbf06a6003b2ac5aec16ca9679b8d65cb9feb2616549272a0fe5"
+        },
+        "stdout": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-quote-version-three-casts-879c829257b645e4ada53e37362201bd\\protected-1.stdout.log",
+          "bytes": 1814,
+          "sha256": "944d492614959389a5739ef2893bc1830fb773ff042159d9b331d43b2f6792e9"
+        },
+        "stderr": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-quote-version-three-casts-879c829257b645e4ada53e37362201bd\\protected-1.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "executable": null,
+        "argv": null,
+        "sourcePath": "C:\\cinagroup\\cinatoken\\node_modules\\postgres\\package.json"
+      },
+      {
+        "file": "protected-2.closed.json",
+        "type": "filesystemReadOperation",
+        "actualExit": 0,
+        "errorCode": null,
+        "startedAt": "2026-10-06T05:45:39.775Z",
+        "closedAt": "2026-10-06T05:45:39.777Z",
+        "receiptPin": {
+          "bytes": 771,
+          "sha256": "99e6a891f4be4de3a34c6defdf75ed93c5f37f550338c926f17da8f5df81acd3"
+        },
+        "stdout": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-quote-version-three-casts-879c829257b645e4ada53e37362201bd\\protected-2.stdout.log",
+          "bytes": 10935,
+          "sha256": "1883bd4536eab1c94b9e708d325b13708b0f18ec80020e3a825f34a72f603b81"
+        },
+        "stderr": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-quote-version-three-casts-879c829257b645e4ada53e37362201bd\\protected-2.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "executable": null,
+        "argv": null,
+        "sourcePath": "C:\\cinagroup\\cinatoken\\node_modules\\postgres\\src\\types.js"
+      },
+      {
+        "file": "protected-3.closed.json",
+        "type": "filesystemReadOperation",
+        "actualExit": 0,
+        "errorCode": null,
+        "startedAt": "2026-10-06T05:45:39.779Z",
+        "closedAt": "2026-10-06T05:45:39.783Z",
+        "receiptPin": {
+          "bytes": 771,
+          "sha256": "0a6754ac4e06cc584945159fa76c97849de8fb3c1c0e1a2c7f3e3f1bfa467364"
+        },
+        "stdout": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-quote-version-three-casts-879c829257b645e4ada53e37362201bd\\protected-3.stdout.log",
+          "bytes": 1155,
+          "sha256": "85cfbed9a5ab0db41ab8e97b806c881af29807dfe99bc656fdf1a18c1c13b6c6"
+        },
+        "stderr": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-quote-version-three-casts-879c829257b645e4ada53e37362201bd\\protected-3.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "executable": null,
+        "argv": null,
+        "sourcePath": "C:\\cinagroup\\cinatoken\\node_modules\\postgres\\src\\errors.js"
+      },
+      {
+        "file": "protected-4.closed.json",
+        "type": "filesystemReadOperation",
+        "actualExit": 0,
+        "errorCode": null,
+        "startedAt": "2026-10-06T05:45:39.784Z",
+        "closedAt": "2026-10-06T05:45:39.788Z",
+        "receiptPin": {
+          "bytes": 795,
+          "sha256": "fe6863290aa2633c10e4770842e3fc6ef973eee06e823a90142c43550cf8a04e"
+        },
+        "stdout": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-quote-version-three-casts-879c829257b645e4ada53e37362201bd\\protected-4.stdout.log",
+          "bytes": 6300,
+          "sha256": "6b5923be8d3bdcd061033eed1af2f67f3b87fa2fca1f2cf0a0b2eb0eb2cb8d2a"
+        },
+        "stderr": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-quote-version-three-casts-879c829257b645e4ada53e37362201bd\\protected-4.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "executable": null,
+        "argv": null,
+        "sourcePath": "C:\\cinagroup\\cinatoken\\packages\\core\\src\\test-support\\postgres-native-cluster.mjs"
+      },
+      {
+        "file": "protected-5.closed.json",
+        "type": "filesystemReadOperation",
+        "actualExit": 0,
+        "errorCode": null,
+        "startedAt": "2026-10-06T05:45:39.789Z",
+        "closedAt": "2026-10-06T05:45:39.793Z",
+        "receiptPin": {
+          "bytes": 778,
+          "sha256": "cbfdf8d630bb25ae97d14f2a967d1465a57fffe34345682f8eec01668e9466ec"
+        },
+        "stdout": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-quote-version-three-casts-879c829257b645e4ada53e37362201bd\\protected-5.stdout.log",
+          "bytes": 6849,
+          "sha256": "124ddd43c2594d0daaac66a4e7158e5df90b00a6d73f03cbcac9e8f853a7346f"
+        },
+        "stderr": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-quote-version-three-casts-879c829257b645e4ada53e37362201bd\\protected-5.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "executable": null,
+        "argv": null,
+        "sourcePath": "C:\\cinagroup\\cinatoken\\scripts\\db\\cutover\\pg73-native-fixture.mjs"
+      },
+      {
+        "file": "protected-6.closed.json",
+        "type": "filesystemReadOperation",
+        "actualExit": 0,
+        "errorCode": null,
+        "startedAt": "2026-10-06T05:45:39.794Z",
+        "closedAt": "2026-10-06T05:45:39.797Z",
+        "receiptPin": {
+          "bytes": 811,
+          "sha256": "1d26209624c36c41d0bd6edd8d34ff4f7000a03f66485de82e9a1830b0e9de38"
+        },
+        "stdout": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-quote-version-three-casts-879c829257b645e4ada53e37362201bd\\protected-6.stdout.log",
+          "bytes": 28629,
+          "sha256": "1249a7ff07f95b48c7b45a41833c96c9a028e4bfe3a47e44e9dc6b72c3c77246"
+        },
+        "stderr": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-quote-version-three-casts-879c829257b645e4ada53e37362201bd\\protected-6.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "executable": null,
+        "argv": null,
+        "sourcePath": "C:\\cinagroup\\cinatoken\\packages\\core\\migrations-proposals\\postgres\\shared-key-quote-versions.sql"
+      },
+      {
+        "file": "protected-7.closed.json",
+        "type": "filesystemReadOperation",
+        "actualExit": 0,
+        "errorCode": null,
+        "startedAt": "2026-10-06T05:45:39.798Z",
+        "closedAt": "2026-10-06T05:45:39.802Z",
+        "receiptPin": {
+          "bytes": 781,
+          "sha256": "70e427c7adb03be256b90fce175bc2654cce1aa4b55a9d163bdaeaafa567d92d"
+        },
+        "stdout": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-quote-version-three-casts-879c829257b645e4ada53e37362201bd\\protected-7.stdout.log",
+          "bytes": 25946,
+          "sha256": "3f95f18f557696d8a36b93f7fe0d0d35a391e8ac9cf953376a234a6b629ea242"
+        },
+        "stderr": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-quote-version-three-casts-879c829257b645e4ada53e37362201bd\\protected-7.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "executable": null,
+        "argv": null,
+        "sourcePath": "C:\\cinagroup\\cinatoken\\scripts\\db\\cutover\\grant-postgres-runtime.ts"
+      },
+      {
+        "file": "syntax.closed.json",
+        "type": "childClose",
+        "actualExit": 0,
+        "errorCode": null,
+        "startedAt": "2026-10-06T05:49:14.077Z",
+        "closedAt": "2026-10-06T05:49:14.160Z",
+        "receiptPin": {
+          "bytes": 856,
+          "sha256": "6050c2cfaff200e4f05d27d70c85a1f022754e9bc5ec6cb5c0ad9a2e18e0c058"
+        },
+        "stdout": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-quote-version-three-casts-879c829257b645e4ada53e37362201bd\\syntax.stdout.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stderr": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-quote-version-three-casts-879c829257b645e4ada53e37362201bd\\syntax.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "executable": "C:\\Program Files\\nodejs\\node.exe",
+        "argv": [
+          "--check",
+          "scripts/db/cutover/postgres-shared-key-quote-versions.native.test.mjs"
+        ],
+        "sourcePath": null
+      },
+      {
+        "file": "target-status.closed.json",
+        "type": "childClose",
+        "actualExit": 0,
+        "errorCode": null,
+        "startedAt": "2026-10-06T05:49:14.100Z",
+        "closedAt": "2026-10-06T05:49:14.174Z",
+        "receiptPin": {
+          "bytes": 865,
+          "sha256": "26d4d122ccae688dd16e4a7d09833dedecb6f575bae4e78fe26d1725c22bcbe9"
+        },
+        "stdout": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-quote-version-three-casts-879c829257b645e4ada53e37362201bd\\target-status.stdout.log",
+          "bytes": 73,
+          "sha256": "e7ecb07886c7cff20dad0cf2a895b8f7c3b703fb46a16395acac65b8edeb6712"
+        },
+        "stderr": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-quote-version-three-casts-879c829257b645e4ada53e37362201bd\\target-status.stderr.log",
+          "bytes": 160,
+          "sha256": "6e1eceb7157a6dd83e27b00cc96938a50132ed7fadf81d3f0954f8257e1ba406"
+        },
+        "executable": "git",
+        "argv": [
+          "status",
+          "--short",
+          "--",
+          "scripts/db/cutover/postgres-shared-key-quote-versions.native.test.mjs"
+        ],
+        "sourcePath": null
+      },
+      {
+        "file": "verify-casts.closed.json",
+        "type": "childClose",
+        "actualExit": 0,
+        "errorCode": null,
+        "startedAt": "2026-10-06T05:49:14.003Z",
+        "closedAt": "2026-10-06T05:49:14.189Z",
+        "receiptPin": {
+          "bytes": 900,
+          "sha256": "6ef672c3effcfc4dce494a15010419ef44ce55cf264463fbe55d874fd56ca686"
+        },
+        "stdout": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-quote-version-three-casts-879c829257b645e4ada53e37362201bd\\verify-casts.stdout.log",
+          "bytes": 84,
+          "sha256": "055bc3c212cdbade147705aac6f7cbb92635131378698e0dbd0bb2567c9f0d20"
+        },
+        "stderr": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-quote-version-three-casts-879c829257b645e4ada53e37362201bd\\verify-casts.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "executable": "C:/Program Files/nodejs/node.exe",
+        "argv": [
+          "C:/Users/cina/AppData/Local/Temp/cinatoken-quote-version-three-casts-879c829257b645e4ada53e37362201bd/verify-casts.mjs"
+        ],
+        "sourcePath": null
+      }
+    ]
+  },
+  "driver": {
+    "actualInstalledVersion": "3.4.9",
+    "connectionCorrectPin": {
+      "bytes": 28690,
+      "sha256": "ee3a218d9aa6a6f2887c1a19da50009335fe84c11a5431d5cab72d6bc528632f"
+    },
+    "previousIndependentCorrectPinInPreowner": true,
+    "realDriver1184DateSerializerMillisecondMechanismStatic": true,
+    "realDriver25TextSerializerRetainsOriginalTextMechanismStatic": true,
+    "originalOwnerOfflineProof": {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-quote-version-three-casts-879c829257b645e4ada53e37362201bd/offline-serialize-proof.json",
+      "bytes": 1562,
+      "sha256": "b1132592e17510bad406828ab7617490ffd7cc58ed02ce5bad96de6ce8b6d85e"
+    },
+    "originalOwnerControlClosedReceipt": {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-quote-version-three-casts-879c829257b645e4ada53e37362201bd/offline-serialize.closed.json",
+      "bytes": 917,
+      "sha256": "8e11bf2c0d52ba4d9aea88ea110ca077c8948f5813f63d6b56c5b8854229f532"
+    },
+    "originalOwnerOfflineControlActual0": true,
+    "controlNotRerun": true,
+    "originalFailureServerParameterOIDsObserved": false,
+    "originalFailureActualTimestampMicrosecondsObserved": false,
+    "rootCauseConfirmed": false
+  },
+  "preservedOwnFailures": [
+    {
+      "receipt": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-quote-timecast-independent-peer-3dc5347c2a4646ac8cc4bcc085aa9dc5/audit-static-candidate-plan.closed.json",
+        "bytes": 1258,
+        "sha256": "2254d72035d38f371b4e71079aff6cdc441a28a54bb8b018042dc08f525d6907"
+      },
+      "actualExit": 1,
+      "stdout": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-quote-timecast-independent-peer-3dc5347c2a4646ac8cc4bcc085aa9dc5\\audit-static-candidate-plan.stdout.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stderr": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-quote-timecast-independent-peer-3dc5347c2a4646ac8cc4bcc085aa9dc5\\audit-static-candidate-plan.stderr.log",
+        "bytes": 724,
+        "sha256": "f11f33d0226acec586b550101f2614f267c2487081f4427520fdcd0daf17ff90"
+      },
+      "reason": "Preliminary reader incorrectly assumed existing explicit timestamptz casts in both resolver calls."
+    },
+    {
+      "receipt": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-quote-timecast-independent-peer-3dc5347c2a4646ac8cc4bcc085aa9dc5/audit-owner-current-source-v2.closed.json",
+        "bytes": 1267,
+        "sha256": "79220bdb9ba9410a393414ac9da8fe4bfe8f9292912c49013fd49fe64aa2808c"
+      },
+      "actualExit": 1,
+      "stdout": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-quote-timecast-independent-peer-3dc5347c2a4646ac8cc4bcc085aa9dc5\\audit-owner-current-source-v2.stdout.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stderr": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-quote-timecast-independent-peer-3dc5347c2a4646ac8cc4bcc085aa9dc5\\audit-owner-current-source-v2.stderr.log",
+        "bytes": 1140,
+        "sha256": "a43465d91b05bc80f2e61cf0c2717f2ca2af46a36aa8d979497c0206d699b748"
+      },
+      "reason": "Final connection reference expected SHA was copied incorrectly after all source, AST, assertion, protected-input and producer raw audits completed."
+    }
+  ],
+  "continuationScope": {
+    "correctDriverConnectionPinAndPendingTruthBoundaryOnly": true,
+    "noSourceAuditRepeated": true,
+    "originalFailuresRetained": true,
+    "expectedTrueClosedReceipt": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-quote-timecast-independent-peer-3dc5347c2a4646ac8cc4bcc085aa9dc5/complete-static-review-and-finalize-v2.closed.json"
+  },
+  "truthBoundary": {
+    "originalEE122NativeStep24FailurePreserved": true,
+    "originalStrict8Tests7Pass1FailPreserved": true,
+    "preparedOnly": true,
+    "newNativePGLinuxRun": false,
+    "newNativePass": false,
+    "originalFailureRootCauseConfirmed": false,
+    "fullG7": false,
+    "G8": false,
+    "gatePass": false,
+    "repoWrites": 0,
+    "gitWrites": 0,
+    "mdWrites": 0,
+    "postgresRuns": 0,
+    "appRuns": 0,
+    "controlRuns": 0,
+    "ciRuns": 0,
+    "networkRequests": 0,
+    "fixtureImportedOrExecuted": false,
+    "oldFrozenRootsWritten": false,
+    "productionChanged": false
+  },
+  "stopWriteAfterFinalSeal": true,
+  "additionalFinalizerFailure": {
+    "receipt": {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-quote-timecast-independent-peer-3dc5347c2a4646ac8cc4bcc085aa9dc5/complete-static-review-and-finalize.closed.json",
+      "bytes": 1290,
+      "sha256": "febc8740705582b3041be89e7642f06a3679c85c46c00621aa564a083a769ec8"
+    },
+    "actualExit": 1,
+    "reason": "Continuation auditor used an incorrect hard-coded line index for an already-verified receipt assertion. No source/driver recheck occurred in that failed continuation."
+  }
+}

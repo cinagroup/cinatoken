@@ -1,0 +1,19 @@
+{
+  "at": "2026-10-06T05:45:39.784Z",
+  "finishedAt": "2026-10-06T05:45:39.788Z",
+  "operation": "readFile",
+  "path": "C:\\cinagroup\\cinatoken\\packages\\core\\src\\test-support\\postgres-native-cluster.mjs",
+  "actualExit": 0,
+  "signal": null,
+  "error": null,
+  "stdout": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-quote-version-three-casts-879c829257b645e4ada53e37362201bd\\protected-4.stdout.log",
+    "bytes": 6300,
+    "sha256": "6b5923be8d3bdcd061033eed1af2f67f3b87fa2fca1f2cf0a0b2eb0eb2cb8d2a"
+  },
+  "stderr": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-quote-version-three-casts-879c829257b645e4ada53e37362201bd\\protected-4.stderr.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+}

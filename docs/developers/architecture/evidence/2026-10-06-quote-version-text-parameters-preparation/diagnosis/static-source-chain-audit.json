@@ -1,0 +1,414 @@
+{
+  "schema": "cinatoken-next-quote-version-timestamp-static-read-audit-v1",
+  "beganAt": "2026-10-06T05:09:49.547Z",
+  "endedAt": "2026-10-06T05:09:50.479Z",
+  "closed": true,
+  "actualReadExit": 0,
+  "inspectedAtHead": "ee122dd4273e2db892daa724bc6417a9b02b280c",
+  "targetSourceHead": "ee122dd4273e2db892daa724bc6417a9b02b280c",
+  "historicalSourceHead": "dcc6ab52f21a18c5d1c02d8a4a4a390f039e61fc",
+  "fixtureGitBlobBothHeads": "da61172ea25d53bc31cdc10f2999defce06d6559",
+  "sources": [
+    {
+      "relative": "scripts/db/cutover/postgres-shared-key-quote-versions.native.test.mjs",
+      "original": {
+        "path": "C:/cinagroup/cinatoken/scripts/db/cutover/postgres-shared-key-quote-versions.native.test.mjs",
+        "bytes": 34823,
+        "sha256": "16ef4b701728c9de46ea932851354d7cee2aa9d80c6ab543ceae6f4526380c83"
+      },
+      "snapshot": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-quote-version-next-readonly-gn9DdD/source-snapshots/01-postgres-shared-key-quote-versions.native.test.mjs.snapshot",
+        "bytes": 34823,
+        "sha256": "16ef4b701728c9de46ea932851354d7cee2aa9d80c6ab543ceae6f4526380c83"
+      },
+      "byteExact": true,
+      "sourceMtimeMs": 1791245936124.9995
+    },
+    {
+      "relative": "packages/core/migrations-proposals/postgres/shared-key-quote-versions.sql",
+      "original": {
+        "path": "C:/cinagroup/cinatoken/packages/core/migrations-proposals/postgres/shared-key-quote-versions.sql",
+        "bytes": 28629,
+        "sha256": "1249a7ff07f95b48c7b45a41833c96c9a028e4bfe3a47e44e9dc6b72c3c77246"
+      },
+      "snapshot": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-quote-version-next-readonly-gn9DdD/source-snapshots/02-shared-key-quote-versions.sql.snapshot",
+        "bytes": 28629,
+        "sha256": "1249a7ff07f95b48c7b45a41833c96c9a028e4bfe3a47e44e9dc6b72c3c77246"
+      },
+      "byteExact": true,
+      "sourceMtimeMs": 1790252749530.9297
+    },
+    {
+      "relative": "scripts/db/cutover/pg73-native-fixture.mjs",
+      "original": {
+        "path": "C:/cinagroup/cinatoken/scripts/db/cutover/pg73-native-fixture.mjs",
+        "bytes": 6849,
+        "sha256": "124ddd43c2594d0daaac66a4e7158e5df90b00a6d73f03cbcac9e8f853a7346f"
+      },
+      "snapshot": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-quote-version-next-readonly-gn9DdD/source-snapshots/03-pg73-native-fixture.mjs.snapshot",
+        "bytes": 6849,
+        "sha256": "124ddd43c2594d0daaac66a4e7158e5df90b00a6d73f03cbcac9e8f853a7346f"
+      },
+      "byteExact": true,
+      "sourceMtimeMs": 1791189290591.186
+    },
+    {
+      "relative": "packages/core/src/test-support/postgres-native-cluster.mjs",
+      "original": {
+        "path": "C:/cinagroup/cinatoken/packages/core/src/test-support/postgres-native-cluster.mjs",
+        "bytes": 6300,
+        "sha256": "6b5923be8d3bdcd061033eed1af2f67f3b87fa2fca1f2cf0a0b2eb0eb2cb8d2a"
+      },
+      "snapshot": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-quote-version-next-readonly-gn9DdD/source-snapshots/04-postgres-native-cluster.mjs.snapshot",
+        "bytes": 6300,
+        "sha256": "6b5923be8d3bdcd061033eed1af2f67f3b87fa2fca1f2cf0a0b2eb0eb2cb8d2a"
+      },
+      "byteExact": true,
+      "sourceMtimeMs": 1790205566958.4766
+    },
+    {
+      "relative": ".github/workflows/proxy-dispatch-safety.yml",
+      "original": {
+        "path": "C:/cinagroup/cinatoken/.github/workflows/proxy-dispatch-safety.yml",
+        "bytes": 45895,
+        "sha256": "8e883e7f21f77f8367d361f6bd3d060e16c241c28641b3eac85af6835841f152"
+      },
+      "snapshot": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-quote-version-next-readonly-gn9DdD/source-snapshots/05-proxy-dispatch-safety.yml.snapshot",
+        "bytes": 45895,
+        "sha256": "8e883e7f21f77f8367d361f6bd3d060e16c241c28641b3eac85af6835841f152"
+      },
+      "byteExact": true,
+      "sourceMtimeMs": 1791246152769.041
+    },
+    {
+      "relative": "package-lock.json",
+      "original": {
+        "path": "C:/cinagroup/cinatoken/package-lock.json",
+        "bytes": 830546,
+        "sha256": "f9c65b6e373a231d52d6eda634bb5f947dda3174734cd70e2b811e09fff0b6f0"
+      },
+      "snapshot": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-quote-version-next-readonly-gn9DdD/source-snapshots/06-package-lock.json.snapshot",
+        "bytes": 830546,
+        "sha256": "f9c65b6e373a231d52d6eda634bb5f947dda3174734cd70e2b811e09fff0b6f0"
+      },
+      "byteExact": true,
+      "sourceMtimeMs": 1791187144563.6536
+    },
+    {
+      "relative": ".nvmrc",
+      "original": {
+        "path": "C:/cinagroup/cinatoken/.nvmrc",
+        "bytes": 3,
+        "sha256": "f14b4987904bcb5814e4459a057ed4d20f58a633152288a761214dcd28780b56"
+      },
+      "snapshot": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-quote-version-next-readonly-gn9DdD/source-snapshots/07-.nvmrc.snapshot",
+        "bytes": 3,
+        "sha256": "f14b4987904bcb5814e4459a057ed4d20f58a633152288a761214dcd28780b56"
+      },
+      "byteExact": true,
+      "sourceMtimeMs": 1787191880490.2295
+    },
+    {
+      "relative": "node_modules/postgres/package.json",
+      "original": {
+        "path": "C:/cinagroup/cinatoken/node_modules/postgres/package.json",
+        "bytes": 1814,
+        "sha256": "944d492614959389a5739ef2893bc1830fb773ff042159d9b331d43b2f6792e9"
+      },
+      "snapshot": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-quote-version-next-readonly-gn9DdD/source-snapshots/08-package.json.snapshot",
+        "bytes": 1814,
+        "sha256": "944d492614959389a5739ef2893bc1830fb773ff042159d9b331d43b2f6792e9"
+      },
+      "byteExact": true,
+      "sourceMtimeMs": 1787197736514.2544
+    },
+    {
+      "relative": "node_modules/postgres/src/index.js",
+      "original": {
+        "path": "C:/cinagroup/cinatoken/node_modules/postgres/src/index.js",
+        "bytes": 15428,
+        "sha256": "4e21f5733e70d79cffc10d10d4ef01031de4a9ac862210e43f8870029fd103ed"
+      },
+      "snapshot": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-quote-version-next-readonly-gn9DdD/source-snapshots/09-index.js.snapshot",
+        "bytes": 15428,
+        "sha256": "4e21f5733e70d79cffc10d10d4ef01031de4a9ac862210e43f8870029fd103ed"
+      },
+      "byteExact": true,
+      "sourceMtimeMs": 1787197734728.528
+    },
+    {
+      "relative": "node_modules/postgres/src/types.js",
+      "original": {
+        "path": "C:/cinagroup/cinatoken/node_modules/postgres/src/types.js",
+        "bytes": 10935,
+        "sha256": "1883bd4536eab1c94b9e708d325b13708b0f18ec80020e3a825f34a72f603b81"
+      },
+      "snapshot": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-quote-version-next-readonly-gn9DdD/source-snapshots/10-types.js.snapshot",
+        "bytes": 10935,
+        "sha256": "1883bd4536eab1c94b9e708d325b13708b0f18ec80020e3a825f34a72f603b81"
+      },
+      "byteExact": true,
+      "sourceMtimeMs": 1787197736415.6262
+    },
+    {
+      "relative": "node_modules/postgres/src/connection.js",
+      "original": {
+        "path": "C:/cinagroup/cinatoken/node_modules/postgres/src/connection.js",
+        "bytes": 28690,
+        "sha256": "ee3a218d9aa6a6f2887c1a19da50009335fe84c11a5431d5cab72d6bc528632f"
+      },
+      "snapshot": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-quote-version-next-readonly-gn9DdD/source-snapshots/11-connection.js.snapshot",
+        "bytes": 28690,
+        "sha256": "ee3a218d9aa6a6f2887c1a19da50009335fe84c11a5431d5cab72d6bc528632f"
+      },
+      "byteExact": true,
+      "sourceMtimeMs": 1787197733336.3147
+    }
+  ],
+  "sourceAfter": [
+    {
+      "relative": "scripts/db/cutover/postgres-shared-key-quote-versions.native.test.mjs",
+      "path": "C:/cinagroup/cinatoken/scripts/db/cutover/postgres-shared-key-quote-versions.native.test.mjs",
+      "bytes": 34823,
+      "sha256": "16ef4b701728c9de46ea932851354d7cee2aa9d80c6ab543ceae6f4526380c83",
+      "unchanged": true
+    },
+    {
+      "relative": "packages/core/migrations-proposals/postgres/shared-key-quote-versions.sql",
+      "path": "C:/cinagroup/cinatoken/packages/core/migrations-proposals/postgres/shared-key-quote-versions.sql",
+      "bytes": 28629,
+      "sha256": "1249a7ff07f95b48c7b45a41833c96c9a028e4bfe3a47e44e9dc6b72c3c77246",
+      "unchanged": true
+    },
+    {
+      "relative": "scripts/db/cutover/pg73-native-fixture.mjs",
+      "path": "C:/cinagroup/cinatoken/scripts/db/cutover/pg73-native-fixture.mjs",
+      "bytes": 6849,
+      "sha256": "124ddd43c2594d0daaac66a4e7158e5df90b00a6d73f03cbcac9e8f853a7346f",
+      "unchanged": true
+    },
+    {
+      "relative": "packages/core/src/test-support/postgres-native-cluster.mjs",
+      "path": "C:/cinagroup/cinatoken/packages/core/src/test-support/postgres-native-cluster.mjs",
+      "bytes": 6300,
+      "sha256": "6b5923be8d3bdcd061033eed1af2f67f3b87fa2fca1f2cf0a0b2eb0eb2cb8d2a",
+      "unchanged": true
+    },
+    {
+      "relative": ".github/workflows/proxy-dispatch-safety.yml",
+      "path": "C:/cinagroup/cinatoken/.github/workflows/proxy-dispatch-safety.yml",
+      "bytes": 45895,
+      "sha256": "8e883e7f21f77f8367d361f6bd3d060e16c241c28641b3eac85af6835841f152",
+      "unchanged": true
+    },
+    {
+      "relative": "package-lock.json",
+      "path": "C:/cinagroup/cinatoken/package-lock.json",
+      "bytes": 830546,
+      "sha256": "f9c65b6e373a231d52d6eda634bb5f947dda3174734cd70e2b811e09fff0b6f0",
+      "unchanged": true
+    },
+    {
+      "relative": ".nvmrc",
+      "path": "C:/cinagroup/cinatoken/.nvmrc",
+      "bytes": 3,
+      "sha256": "f14b4987904bcb5814e4459a057ed4d20f58a633152288a761214dcd28780b56",
+      "unchanged": true
+    },
+    {
+      "relative": "node_modules/postgres/package.json",
+      "path": "C:/cinagroup/cinatoken/node_modules/postgres/package.json",
+      "bytes": 1814,
+      "sha256": "944d492614959389a5739ef2893bc1830fb773ff042159d9b331d43b2f6792e9",
+      "unchanged": true
+    },
+    {
+      "relative": "node_modules/postgres/src/index.js",
+      "path": "C:/cinagroup/cinatoken/node_modules/postgres/src/index.js",
+      "bytes": 15428,
+      "sha256": "4e21f5733e70d79cffc10d10d4ef01031de4a9ac862210e43f8870029fd103ed",
+      "unchanged": true
+    },
+    {
+      "relative": "node_modules/postgres/src/types.js",
+      "path": "C:/cinagroup/cinatoken/node_modules/postgres/src/types.js",
+      "bytes": 10935,
+      "sha256": "1883bd4536eab1c94b9e708d325b13708b0f18ec80020e3a825f34a72f603b81",
+      "unchanged": true
+    },
+    {
+      "relative": "node_modules/postgres/src/connection.js",
+      "path": "C:/cinagroup/cinatoken/node_modules/postgres/src/connection.js",
+      "bytes": 28690,
+      "sha256": "ee3a218d9aa6a6f2887c1a19da50009335fe84c11a5431d5cab72d6bc528632f",
+      "unchanged": true
+    }
+  ],
+  "gitReads": [
+    {
+      "args": [
+        "rev-parse",
+        "HEAD"
+      ],
+      "startedAt": "2026-10-06T05:09:49.797Z",
+      "endedAt": "2026-10-06T05:09:49.846Z",
+      "actualExit": 0,
+      "signal": null,
+      "stdout": {
+        "bytes": 41,
+        "sha256": "91e1d9a5c42943a16326cd67abe5367bd7c2c5c0e84e16563316aa704d545cef"
+      },
+      "stderr": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "readOnly": true
+    },
+    {
+      "args": [
+        "rev-parse",
+        "ee122dd4273e2db892daa724bc6417a9b02b280c:scripts/db/cutover/postgres-shared-key-quote-versions.native.test.mjs"
+      ],
+      "startedAt": "2026-10-06T05:09:49.847Z",
+      "endedAt": "2026-10-06T05:09:49.898Z",
+      "actualExit": 0,
+      "signal": null,
+      "stdout": {
+        "bytes": 41,
+        "sha256": "30a359b04ced574cc909144a9d0d726cdea94ba3fbd3abb6ad87714568cd32dc"
+      },
+      "stderr": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "readOnly": true
+    },
+    {
+      "args": [
+        "show",
+        "ee122dd4273e2db892daa724bc6417a9b02b280c:scripts/db/cutover/postgres-shared-key-quote-versions.native.test.mjs"
+      ],
+      "startedAt": "2026-10-06T05:09:49.899Z",
+      "endedAt": "2026-10-06T05:09:49.949Z",
+      "actualExit": 0,
+      "signal": null,
+      "stdout": {
+        "bytes": 34823,
+        "sha256": "16ef4b701728c9de46ea932851354d7cee2aa9d80c6ab543ceae6f4526380c83"
+      },
+      "stderr": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "readOnly": true
+    },
+    {
+      "args": [
+        "rev-parse",
+        "dcc6ab52f21a18c5d1c02d8a4a4a390f039e61fc:scripts/db/cutover/postgres-shared-key-quote-versions.native.test.mjs"
+      ],
+      "startedAt": "2026-10-06T05:09:49.950Z",
+      "endedAt": "2026-10-06T05:09:50.000Z",
+      "actualExit": 0,
+      "signal": null,
+      "stdout": {
+        "bytes": 41,
+        "sha256": "30a359b04ced574cc909144a9d0d726cdea94ba3fbd3abb6ad87714568cd32dc"
+      },
+      "stderr": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "readOnly": true
+    },
+    {
+      "args": [
+        "show",
+        "dcc6ab52f21a18c5d1c02d8a4a4a390f039e61fc:scripts/db/cutover/postgres-shared-key-quote-versions.native.test.mjs"
+      ],
+      "startedAt": "2026-10-06T05:09:50.000Z",
+      "endedAt": "2026-10-06T05:09:50.053Z",
+      "actualExit": 0,
+      "signal": null,
+      "stdout": {
+        "bytes": 34823,
+        "sha256": "16ef4b701728c9de46ea932851354d7cee2aa9d80c6ab543ceae6f4526380c83"
+      },
+      "stderr": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "readOnly": true
+    }
+  ],
+  "originalQueryAST": {
+    "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-quote-version-next-readonly-gn9DdD/three-original-query-AST-and-candidate-plan.json",
+    "bytes": 176267,
+    "sha256": "7005563726c28c606337f4805b8041bd5abf7585d4ecb040b7818cce36c8bae4"
+  },
+  "originalAssertionCount": 65,
+  "installedDriver": {
+    "version": "3.4.9",
+    "importEntry": "./src/index.js",
+    "lockVersion": "3.4.9",
+    "lockIntegrity": "sha512-GD3qdB0x1z9xgFI6cdRD6xu2Sp2WCOEoe3mtnyB5Ee0XrrL5Pe+e4CCnJrRMnL1zYtRDZmQQVbvOttLnKDLnaw=="
+  },
+  "runtimeFailureAuthority": {
+    "peerReport": {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-ee122-native-tail-independent-peer-76364c609e694985bf7d74bf5b2c4ae9/FINAL-ee122-native-tail-terminal-independent-peer.json",
+      "bytes": 526801,
+      "sha256": "1cb4680d0effb04b1784dd945738c5d3608c06c9c2423dd82784a9441aee2ebe"
+    },
+    "originalRaw": {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-ee122-native-tail-independent-peer-76364c609e694985bf7d74bf5b2c4ae9/native-group-v2-step-24.raw.log",
+      "bytes": 9988,
+      "sha256": "b3d9b0f5d283017c009f950e568bb977a8007b41acb0ee63d8685dffeefd2348"
+    },
+    "sourceHead": "ee122dd4273e2db892daa724bc6417a9b02b280c",
+    "originalJob": 112114951257,
+    "actual": "quote-a-b1",
+    "expected": "quote-a-b2",
+    "failureLine": 499,
+    "rawContainsTimestampValueTokens": [
+      {
+        "token": "pendingEffectiveAt",
+        "present": false
+      },
+      {
+        "token": "observedAt",
+        "present": false
+      },
+      {
+        "token": "pending.effective_at",
+        "present": false
+      },
+      {
+        "token": "effective_at:",
+        "present": false
+      }
+    ],
+    "limitation": "The supplied frozen report and original step24 job raw do not print the pending/observed database timestamps. A serialization mechanism is statically supported; its activation in this failed run remains unconfirmed."
+  },
+  "originalRuntimeFailureUnchanged": true,
+  "candidateSourceWritten": false,
+  "repoWrites": 0,
+  "gitMutations": 0,
+  "fixtureImported": false,
+  "driverImported": false,
+  "databaseRuns": 0,
+  "testsRerun": 0,
+  "ciReadsOrDispatches": 0,
+  "productionRequests": 0,
+  "readOnlyDiagnosis": true,
+  "gatePassDerived": false
+}

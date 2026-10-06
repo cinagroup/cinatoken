@@ -1,0 +1,29 @@
+{
+  "schema": "independent-native-quote-timecast-nested-git-close-v1",
+  "executable": "C:/Program Files/Git/cmd/git.exe",
+  "argv": [
+    "cat-file",
+    "--batch"
+  ],
+  "cwd": "C:/cinagroup/cinatoken",
+  "stdin": {
+    "text": "4a9b4fb984035bb62ec5930cce01f8da605f476f:package-lock.json\n4a9b4fb984035bb62ec5930cce01f8da605f476f:packages/core/src/test-support/postgres-native-cluster.mjs\n4a9b4fb984035bb62ec5930cce01f8da605f476f:scripts/db/cutover/pg73-native-fixture.mjs\n4a9b4fb984035bb62ec5930cce01f8da605f476f:packages/core/migrations-proposals/postgres/shared-key-quote-versions.sql\n4a9b4fb984035bb62ec5930cce01f8da605f476f:scripts/db/cutover/grant-postgres-runtime.ts\n",
+    "bytes": 444,
+    "sha256": "0466d039e073f6033225ed8ad046bb03cc16dbb8b9115876d833d9cb994e28d4"
+  },
+  "startedAt": "2026-10-06T05:54:51.224Z",
+  "closedAt": "2026-10-06T05:54:51.287Z",
+  "actualExit": 0,
+  "signal": null,
+  "spawnError": null,
+  "stdout": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-quote-timecast-independent-peer-3dc5347c2a4646ac8cc4bcc085aa9dc5\\git-five-protected-inputs.stdout.log",
+    "bytes": 898534,
+    "sha256": "bd1e3b2f4b06a3240b05d6449040ce16836b72abc46f7d0836b6b0e70123d58c"
+  },
+  "stderr": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-quote-timecast-independent-peer-3dc5347c2a4646ac8cc4bcc085aa9dc5\\git-five-protected-inputs.stderr.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+}

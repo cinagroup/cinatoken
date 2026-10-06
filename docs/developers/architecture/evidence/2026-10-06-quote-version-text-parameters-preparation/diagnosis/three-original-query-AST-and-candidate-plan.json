@@ -1,0 +1,5623 @@
+{
+  "schema": "cinatoken-quote-timestamp-original-query-static-selection-v1",
+  "originalFixture": {
+    "relative": "scripts/db/cutover/postgres-shared-key-quote-versions.native.test.mjs",
+    "original": {
+      "path": "C:/cinagroup/cinatoken/scripts/db/cutover/postgres-shared-key-quote-versions.native.test.mjs",
+      "bytes": 34823,
+      "sha256": "16ef4b701728c9de46ea932851354d7cee2aa9d80c6ab543ceae6f4526380c83"
+    },
+    "snapshot": {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-quote-version-next-readonly-gn9DdD/source-snapshots/01-postgres-shared-key-quote-versions.native.test.mjs.snapshot",
+      "bytes": 34823,
+      "sha256": "16ef4b701728c9de46ea932851354d7cee2aa9d80c6ab543ceae6f4526380c83"
+    },
+    "byteExact": true,
+    "sourceMtimeMs": 1791245936124.9995
+  },
+  "queries": [
+    {
+      "location": {
+        "start": {
+          "line": 470,
+          "column": 26
+        },
+        "end": {
+          "line": 471,
+          "column": 44
+        }
+      },
+      "originalCallSourceExact": "competing.unsafe(`SELECT $1::timestamptz >= $2::timestamptz AS after_insert`,\n        [observedAt.at, pendingEffectiveAt])",
+      "originalCallUTF8Bytes": 122,
+      "originalCallSHA256": "dfd7cf5b21f651b34cd5ac541f3fa5af76f64baae55ea520d2ed427b030c6576",
+      "originalQueryAST": {
+        "type": "TemplateLiteral",
+        "expressions": [],
+        "quasis": [
+          {
+            "type": "TemplateElement",
+            "value": {
+              "raw": "SELECT $1::timestamptz >= $2::timestamptz AS after_insert",
+              "cooked": "SELECT $1::timestamptz >= $2::timestamptz AS after_insert"
+            },
+            "tail": true
+          }
+        ]
+      },
+      "originalParameterArrayAST": {
+        "type": "ArrayExpression",
+        "elements": [
+          {
+            "type": "MemberExpression",
+            "object": {
+              "type": "Identifier",
+              "name": "observedAt"
+            },
+            "property": {
+              "type": "Identifier",
+              "name": "at"
+            },
+            "computed": false,
+            "optional": false
+          },
+          {
+            "type": "Identifier",
+            "name": "pendingEffectiveAt"
+          }
+        ]
+      },
+      "originalCallAST": {
+        "type": "CallExpression",
+        "callee": {
+          "type": "MemberExpression",
+          "object": {
+            "type": "Identifier",
+            "name": "competing"
+          },
+          "property": {
+            "type": "Identifier",
+            "name": "unsafe"
+          },
+          "computed": false,
+          "optional": false
+        },
+        "arguments": [
+          {
+            "type": "TemplateLiteral",
+            "expressions": [],
+            "quasis": [
+              {
+                "type": "TemplateElement",
+                "value": {
+                  "raw": "SELECT $1::timestamptz >= $2::timestamptz AS after_insert",
+                  "cooked": "SELECT $1::timestamptz >= $2::timestamptz AS after_insert"
+                },
+                "tail": true
+              }
+            ]
+          },
+          {
+            "type": "ArrayExpression",
+            "elements": [
+              {
+                "type": "MemberExpression",
+                "object": {
+                  "type": "Identifier",
+                  "name": "observedAt"
+                },
+                "property": {
+                  "type": "Identifier",
+                  "name": "at"
+                },
+                "computed": false,
+                "optional": false
+              },
+              {
+                "type": "Identifier",
+                "name": "pendingEffectiveAt"
+              }
+            ]
+          }
+        ],
+        "optional": false
+      },
+      "candidateCallSourcePlanOnly": "competing.unsafe(`SELECT $1::text::timestamptz >= $2::text::timestamptz AS after_insert`,\n        [observedAt.at, pendingEffectiveAt])",
+      "candidateNotWrittenOrExecuted": true
+    },
+    {
+      "location": {
+        "start": {
+          "line": 472,
+          "column": 46
+        },
+        "end": {
+          "line": 474,
+          "column": 22
+        }
+      },
+      "originalCallSourceExact": "competing.unsafe(`SELECT quote_version_id\n        FROM ${quotes}.resolve_shared_key_quote_at_time('quote-key-a',$1)`,\n      [observedAt.at])",
+      "originalCallUTF8Bytes": 140,
+      "originalCallSHA256": "8f7c1a051e76603a1ee2a3b7a8281f8a54126c490e2476f28633473d7fe61cd2",
+      "originalQueryAST": {
+        "type": "TemplateLiteral",
+        "expressions": [
+          {
+            "type": "Identifier",
+            "name": "quotes"
+          }
+        ],
+        "quasis": [
+          {
+            "type": "TemplateElement",
+            "value": {
+              "raw": "SELECT quote_version_id\n        FROM ",
+              "cooked": "SELECT quote_version_id\n        FROM "
+            },
+            "tail": false
+          },
+          {
+            "type": "TemplateElement",
+            "value": {
+              "raw": ".resolve_shared_key_quote_at_time('quote-key-a',$1)",
+              "cooked": ".resolve_shared_key_quote_at_time('quote-key-a',$1)"
+            },
+            "tail": true
+          }
+        ]
+      },
+      "originalParameterArrayAST": {
+        "type": "ArrayExpression",
+        "elements": [
+          {
+            "type": "MemberExpression",
+            "object": {
+              "type": "Identifier",
+              "name": "observedAt"
+            },
+            "property": {
+              "type": "Identifier",
+              "name": "at"
+            },
+            "computed": false,
+            "optional": false
+          }
+        ]
+      },
+      "originalCallAST": {
+        "type": "CallExpression",
+        "callee": {
+          "type": "MemberExpression",
+          "object": {
+            "type": "Identifier",
+            "name": "competing"
+          },
+          "property": {
+            "type": "Identifier",
+            "name": "unsafe"
+          },
+          "computed": false,
+          "optional": false
+        },
+        "arguments": [
+          {
+            "type": "TemplateLiteral",
+            "expressions": [
+              {
+                "type": "Identifier",
+                "name": "quotes"
+              }
+            ],
+            "quasis": [
+              {
+                "type": "TemplateElement",
+                "value": {
+                  "raw": "SELECT quote_version_id\n        FROM ",
+                  "cooked": "SELECT quote_version_id\n        FROM "
+                },
+                "tail": false
+              },
+              {
+                "type": "TemplateElement",
+                "value": {
+                  "raw": ".resolve_shared_key_quote_at_time('quote-key-a',$1)",
+                  "cooked": ".resolve_shared_key_quote_at_time('quote-key-a',$1)"
+                },
+                "tail": true
+              }
+            ]
+          },
+          {
+            "type": "ArrayExpression",
+            "elements": [
+              {
+                "type": "MemberExpression",
+                "object": {
+                  "type": "Identifier",
+                  "name": "observedAt"
+                },
+                "property": {
+                  "type": "Identifier",
+                  "name": "at"
+                },
+                "computed": false,
+                "optional": false
+              }
+            ]
+          }
+        ],
+        "optional": false
+      },
+      "candidateCallSourcePlanOnly": "competing.unsafe(`SELECT quote_version_id\n        FROM ${quotes}.resolve_shared_key_quote_at_time('quote-key-a',$1::text::timestamptz)`,\n      [observedAt.at])",
+      "candidateNotWrittenOrExecuted": true
+    },
+    {
+      "location": {
+        "start": {
+          "line": 496,
+          "column": 45
+        },
+        "end": {
+          "line": 498,
+          "column": 22
+        }
+      },
+      "originalCallSourceExact": "competing.unsafe(`SELECT quote_version_id\n        FROM ${quotes}.resolve_shared_key_quote_at_time('quote-key-a',$1)`,\n      [observedAt.at])",
+      "originalCallUTF8Bytes": 140,
+      "originalCallSHA256": "8f7c1a051e76603a1ee2a3b7a8281f8a54126c490e2476f28633473d7fe61cd2",
+      "originalQueryAST": {
+        "type": "TemplateLiteral",
+        "expressions": [
+          {
+            "type": "Identifier",
+            "name": "quotes"
+          }
+        ],
+        "quasis": [
+          {
+            "type": "TemplateElement",
+            "value": {
+              "raw": "SELECT quote_version_id\n        FROM ",
+              "cooked": "SELECT quote_version_id\n        FROM "
+            },
+            "tail": false
+          },
+          {
+            "type": "TemplateElement",
+            "value": {
+              "raw": ".resolve_shared_key_quote_at_time('quote-key-a',$1)",
+              "cooked": ".resolve_shared_key_quote_at_time('quote-key-a',$1)"
+            },
+            "tail": true
+          }
+        ]
+      },
+      "originalParameterArrayAST": {
+        "type": "ArrayExpression",
+        "elements": [
+          {
+            "type": "MemberExpression",
+            "object": {
+              "type": "Identifier",
+              "name": "observedAt"
+            },
+            "property": {
+              "type": "Identifier",
+              "name": "at"
+            },
+            "computed": false,
+            "optional": false
+          }
+        ]
+      },
+      "originalCallAST": {
+        "type": "CallExpression",
+        "callee": {
+          "type": "MemberExpression",
+          "object": {
+            "type": "Identifier",
+            "name": "competing"
+          },
+          "property": {
+            "type": "Identifier",
+            "name": "unsafe"
+          },
+          "computed": false,
+          "optional": false
+        },
+        "arguments": [
+          {
+            "type": "TemplateLiteral",
+            "expressions": [
+              {
+                "type": "Identifier",
+                "name": "quotes"
+              }
+            ],
+            "quasis": [
+              {
+                "type": "TemplateElement",
+                "value": {
+                  "raw": "SELECT quote_version_id\n        FROM ",
+                  "cooked": "SELECT quote_version_id\n        FROM "
+                },
+                "tail": false
+              },
+              {
+                "type": "TemplateElement",
+                "value": {
+                  "raw": ".resolve_shared_key_quote_at_time('quote-key-a',$1)",
+                  "cooked": ".resolve_shared_key_quote_at_time('quote-key-a',$1)"
+                },
+                "tail": true
+              }
+            ]
+          },
+          {
+            "type": "ArrayExpression",
+            "elements": [
+              {
+                "type": "MemberExpression",
+                "object": {
+                  "type": "Identifier",
+                  "name": "observedAt"
+                },
+                "property": {
+                  "type": "Identifier",
+                  "name": "at"
+                },
+                "computed": false,
+                "optional": false
+              }
+            ]
+          }
+        ],
+        "optional": false
+      },
+      "candidateCallSourcePlanOnly": "competing.unsafe(`SELECT quote_version_id\n        FROM ${quotes}.resolve_shared_key_quote_at_time('quote-key-a',$1::text::timestamptz)`,\n      [observedAt.at])",
+      "candidateNotWrittenOrExecuted": true
+    }
+  ],
+  "originalAssertions": [
+    {
+      "line": 74,
+      "method": "rejects",
+      "source": "assert.rejects(work, error => {\n    assert.equal(error?.code, code);\n    if (constraint) assert.equal(error?.constraint_name, constraint);\n    return true;\n  })",
+      "AST": {
+        "type": "CallExpression",
+        "callee": {
+          "type": "MemberExpression",
+          "object": {
+            "type": "Identifier",
+            "name": "assert"
+          },
+          "property": {
+            "type": "Identifier",
+            "name": "rejects"
+          },
+          "computed": false,
+          "optional": false
+        },
+        "arguments": [
+          {
+            "type": "Identifier",
+            "name": "work"
+          },
+          {
+            "type": "ArrowFunctionExpression",
+            "id": null,
+            "expression": false,
+            "generator": false,
+            "async": false,
+            "params": [
+              {
+                "type": "Identifier",
+                "name": "error"
+              }
+            ],
+            "body": {
+              "type": "BlockStatement",
+              "body": [
+                {
+                  "type": "ExpressionStatement",
+                  "expression": {
+                    "type": "CallExpression",
+                    "callee": {
+                      "type": "MemberExpression",
+                      "object": {
+                        "type": "Identifier",
+                        "name": "assert"
+                      },
+                      "property": {
+                        "type": "Identifier",
+                        "name": "equal"
+                      },
+                      "computed": false,
+                      "optional": false
+                    },
+                    "arguments": [
+                      {
+                        "type": "ChainExpression",
+                        "expression": {
+                          "type": "MemberExpression",
+                          "object": {
+                            "type": "Identifier",
+                            "name": "error"
+                          },
+                          "property": {
+                            "type": "Identifier",
+                            "name": "code"
+                          },
+                          "computed": false,
+                          "optional": true
+                        }
+                      },
+                      {
+                        "type": "Identifier",
+                        "name": "code"
+                      }
+                    ],
+                    "optional": false
+                  }
+                },
+                {
+                  "type": "IfStatement",
+                  "test": {
+                    "type": "Identifier",
+                    "name": "constraint"
+                  },
+                  "consequent": {
+                    "type": "ExpressionStatement",
+                    "expression": {
+                      "type": "CallExpression",
+                      "callee": {
+                        "type": "MemberExpression",
+                        "object": {
+                          "type": "Identifier",
+                          "name": "assert"
+                        },
+                        "property": {
+                          "type": "Identifier",
+                          "name": "equal"
+                        },
+                        "computed": false,
+                        "optional": false
+                      },
+                      "arguments": [
+                        {
+                          "type": "ChainExpression",
+                          "expression": {
+                            "type": "MemberExpression",
+                            "object": {
+                              "type": "Identifier",
+                              "name": "error"
+                            },
+                            "property": {
+                              "type": "Identifier",
+                              "name": "constraint_name"
+                            },
+                            "computed": false,
+                            "optional": true
+                          }
+                        },
+                        {
+                          "type": "Identifier",
+                          "name": "constraint"
+                        }
+                      ],
+                      "optional": false
+                    }
+                  },
+                  "alternate": null
+                },
+                {
+                  "type": "ReturnStatement",
+                  "argument": {
+                    "type": "Literal",
+                    "value": true,
+                    "raw": "true"
+                  }
+                }
+              ]
+            }
+          }
+        ],
+        "optional": false
+      }
+    },
+    {
+      "line": 75,
+      "method": "equal",
+      "source": "assert.equal(error?.code, code)",
+      "AST": {
+        "type": "CallExpression",
+        "callee": {
+          "type": "MemberExpression",
+          "object": {
+            "type": "Identifier",
+            "name": "assert"
+          },
+          "property": {
+            "type": "Identifier",
+            "name": "equal"
+          },
+          "computed": false,
+          "optional": false
+        },
+        "arguments": [
+          {
+            "type": "ChainExpression",
+            "expression": {
+              "type": "MemberExpression",
+              "object": {
+                "type": "Identifier",
+                "name": "error"
+              },
+              "property": {
+                "type": "Identifier",
+                "name": "code"
+              },
+              "computed": false,
+              "optional": true
+            }
+          },
+          {
+            "type": "Identifier",
+            "name": "code"
+          }
+        ],
+        "optional": false
+      }
+    },
+    {
+      "line": 76,
+      "method": "equal",
+      "source": "assert.equal(error?.constraint_name, constraint)",
+      "AST": {
+        "type": "CallExpression",
+        "callee": {
+          "type": "MemberExpression",
+          "object": {
+            "type": "Identifier",
+            "name": "assert"
+          },
+          "property": {
+            "type": "Identifier",
+            "name": "equal"
+          },
+          "computed": false,
+          "optional": false
+        },
+        "arguments": [
+          {
+            "type": "ChainExpression",
+            "expression": {
+              "type": "MemberExpression",
+              "object": {
+                "type": "Identifier",
+                "name": "error"
+              },
+              "property": {
+                "type": "Identifier",
+                "name": "constraint_name"
+              },
+              "computed": false,
+              "optional": true
+            }
+          },
+          {
+            "type": "Identifier",
+            "name": "constraint"
+          }
+        ],
+        "optional": false
+      }
+    },
+    {
+      "line": 104,
+      "method": "match",
+      "source": "assert.match(cluster.binaryVersion, /PostgreSQL\\) 18\\.6/)",
+      "AST": {
+        "type": "CallExpression",
+        "callee": {
+          "type": "MemberExpression",
+          "object": {
+            "type": "Identifier",
+            "name": "assert"
+          },
+          "property": {
+            "type": "Identifier",
+            "name": "match"
+          },
+          "computed": false,
+          "optional": false
+        },
+        "arguments": [
+          {
+            "type": "MemberExpression",
+            "object": {
+              "type": "Identifier",
+              "name": "cluster"
+            },
+            "property": {
+              "type": "Identifier",
+              "name": "binaryVersion"
+            },
+            "computed": false,
+            "optional": false
+          },
+          {
+            "type": "Literal",
+            "value": {},
+            "raw": "/PostgreSQL\\) 18\\.6/",
+            "regex": {
+              "pattern": "PostgreSQL\\) 18\\.6",
+              "flags": ""
+            }
+          }
+        ],
+        "optional": false
+      }
+    },
+    {
+      "line": 123,
+      "method": "equal",
+      "source": "assert.equal(files.length, 73)",
+      "AST": {
+        "type": "CallExpression",
+        "callee": {
+          "type": "MemberExpression",
+          "object": {
+            "type": "Identifier",
+            "name": "assert"
+          },
+          "property": {
+            "type": "Identifier",
+            "name": "equal"
+          },
+          "computed": false,
+          "optional": false
+        },
+        "arguments": [
+          {
+            "type": "MemberExpression",
+            "object": {
+              "type": "Identifier",
+              "name": "files"
+            },
+            "property": {
+              "type": "Identifier",
+              "name": "length"
+            },
+            "computed": false,
+            "optional": false
+          },
+          {
+            "type": "Literal",
+            "value": 73,
+            "raw": "73"
+          }
+        ],
+        "optional": false
+      }
+    },
+    {
+      "line": 164,
+      "method": "rejects",
+      "source": "assert.rejects(activate(migrator, body, false),\n        /Shared-key quote activation or source contract differs/)",
+      "AST": {
+        "type": "CallExpression",
+        "callee": {
+          "type": "MemberExpression",
+          "object": {
+            "type": "Identifier",
+            "name": "assert"
+          },
+          "property": {
+            "type": "Identifier",
+            "name": "rejects"
+          },
+          "computed": false,
+          "optional": false
+        },
+        "arguments": [
+          {
+            "type": "CallExpression",
+            "callee": {
+              "type": "Identifier",
+              "name": "activate"
+            },
+            "arguments": [
+              {
+                "type": "Identifier",
+                "name": "migrator"
+              },
+              {
+                "type": "Identifier",
+                "name": "body"
+              },
+              {
+                "type": "Literal",
+                "value": false,
+                "raw": "false"
+              }
+            ],
+            "optional": false
+          },
+          {
+            "type": "Literal",
+            "value": {},
+            "raw": "/Shared-key quote activation or source contract differs/",
+            "regex": {
+              "pattern": "Shared-key quote activation or source contract differs",
+              "flags": ""
+            }
+          }
+        ],
+        "optional": false
+      }
+    },
+    {
+      "line": 166,
+      "method": "rejects",
+      "source": "assert.rejects(migrator.begin(async tx => {\n        await tx.unsafe(`DELETE FROM ${gateway}.schema_migrations\n          WHERE version='0073_recovery_api_key_workspace_lock.sql'`);\n        await tx.unsafe(\"SET LOCAL cinatoken.shared_key_quote_versions_activation = 'reviewed-v2'\");\n        await tx.unsafe(body).simple();\n      }), /Shared-key quote activation or source contract differs/)",
+      "AST": {
+        "type": "CallExpression",
+        "callee": {
+          "type": "MemberExpression",
+          "object": {
+            "type": "Identifier",
+            "name": "assert"
+          },
+          "property": {
+            "type": "Identifier",
+            "name": "rejects"
+          },
+          "computed": false,
+          "optional": false
+        },
+        "arguments": [
+          {
+            "type": "CallExpression",
+            "callee": {
+              "type": "MemberExpression",
+              "object": {
+                "type": "Identifier",
+                "name": "migrator"
+              },
+              "property": {
+                "type": "Identifier",
+                "name": "begin"
+              },
+              "computed": false,
+              "optional": false
+            },
+            "arguments": [
+              {
+                "type": "ArrowFunctionExpression",
+                "id": null,
+                "expression": false,
+                "generator": false,
+                "async": true,
+                "params": [
+                  {
+                    "type": "Identifier",
+                    "name": "tx"
+                  }
+                ],
+                "body": {
+                  "type": "BlockStatement",
+                  "body": [
+                    {
+                      "type": "ExpressionStatement",
+                      "expression": {
+                        "type": "AwaitExpression",
+                        "argument": {
+                          "type": "CallExpression",
+                          "callee": {
+                            "type": "MemberExpression",
+                            "object": {
+                              "type": "Identifier",
+                              "name": "tx"
+                            },
+                            "property": {
+                              "type": "Identifier",
+                              "name": "unsafe"
+                            },
+                            "computed": false,
+                            "optional": false
+                          },
+                          "arguments": [
+                            {
+                              "type": "TemplateLiteral",
+                              "expressions": [
+                                {
+                                  "type": "Identifier",
+                                  "name": "gateway"
+                                }
+                              ],
+                              "quasis": [
+                                {
+                                  "type": "TemplateElement",
+                                  "value": {
+                                    "raw": "DELETE FROM ",
+                                    "cooked": "DELETE FROM "
+                                  },
+                                  "tail": false
+                                },
+                                {
+                                  "type": "TemplateElement",
+                                  "value": {
+                                    "raw": ".schema_migrations\n          WHERE version='0073_recovery_api_key_workspace_lock.sql'",
+                                    "cooked": ".schema_migrations\n          WHERE version='0073_recovery_api_key_workspace_lock.sql'"
+                                  },
+                                  "tail": true
+                                }
+                              ]
+                            }
+                          ],
+                          "optional": false
+                        }
+                      }
+                    },
+                    {
+                      "type": "ExpressionStatement",
+                      "expression": {
+                        "type": "AwaitExpression",
+                        "argument": {
+                          "type": "CallExpression",
+                          "callee": {
+                            "type": "MemberExpression",
+                            "object": {
+                              "type": "Identifier",
+                              "name": "tx"
+                            },
+                            "property": {
+                              "type": "Identifier",
+                              "name": "unsafe"
+                            },
+                            "computed": false,
+                            "optional": false
+                          },
+                          "arguments": [
+                            {
+                              "type": "Literal",
+                              "value": "SET LOCAL cinatoken.shared_key_quote_versions_activation = 'reviewed-v2'",
+                              "raw": "\"SET LOCAL cinatoken.shared_key_quote_versions_activation = 'reviewed-v2'\""
+                            }
+                          ],
+                          "optional": false
+                        }
+                      }
+                    },
+                    {
+                      "type": "ExpressionStatement",
+                      "expression": {
+                        "type": "AwaitExpression",
+                        "argument": {
+                          "type": "CallExpression",
+                          "callee": {
+                            "type": "MemberExpression",
+                            "object": {
+                              "type": "CallExpression",
+                              "callee": {
+                                "type": "MemberExpression",
+                                "object": {
+                                  "type": "Identifier",
+                                  "name": "tx"
+                                },
+                                "property": {
+                                  "type": "Identifier",
+                                  "name": "unsafe"
+                                },
+                                "computed": false,
+                                "optional": false
+                              },
+                              "arguments": [
+                                {
+                                  "type": "Identifier",
+                                  "name": "body"
+                                }
+                              ],
+                              "optional": false
+                            },
+                            "property": {
+                              "type": "Identifier",
+                              "name": "simple"
+                            },
+                            "computed": false,
+                            "optional": false
+                          },
+                          "arguments": [],
+                          "optional": false
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            ],
+            "optional": false
+          },
+          {
+            "type": "Literal",
+            "value": {},
+            "raw": "/Shared-key quote activation or source contract differs/",
+            "regex": {
+              "pattern": "Shared-key quote activation or source contract differs",
+              "flags": ""
+            }
+          }
+        ],
+        "optional": false
+      }
+    },
+    {
+      "line": 173,
+      "method": "rejects",
+      "source": "assert.rejects(migrator.begin(async tx => {\n        await tx.unsafe(`UPDATE ${gateway}.schema_migrations\n          SET version='0042_forged_middle_version.sql'\n          WHERE version='0042_gateway_keys_workspace.sql'`);\n        const [ledger] = await tx.unsafe(`SELECT count(*)::int AS n,\n          bool_or(version='0073_recovery_api_key_workspace_lock.sql') AS has_last\n          FROM ${gateway}.schema_migrations`);\n        assert.deepEqual(ledger, { n: 73, has_last: true });\n        await tx.unsafe(\"SET LOCAL cinatoken.shared_key_quote_versions_activation = 'reviewed-v2'\");\n        await tx.unsafe(body).simple();\n      }), /Shared-key quote activation or source contract differs/)",
+      "AST": {
+        "type": "CallExpression",
+        "callee": {
+          "type": "MemberExpression",
+          "object": {
+            "type": "Identifier",
+            "name": "assert"
+          },
+          "property": {
+            "type": "Identifier",
+            "name": "rejects"
+          },
+          "computed": false,
+          "optional": false
+        },
+        "arguments": [
+          {
+            "type": "CallExpression",
+            "callee": {
+              "type": "MemberExpression",
+              "object": {
+                "type": "Identifier",
+                "name": "migrator"
+              },
+              "property": {
+                "type": "Identifier",
+                "name": "begin"
+              },
+              "computed": false,
+              "optional": false
+            },
+            "arguments": [
+              {
+                "type": "ArrowFunctionExpression",
+                "id": null,
+                "expression": false,
+                "generator": false,
+                "async": true,
+                "params": [
+                  {
+                    "type": "Identifier",
+                    "name": "tx"
+                  }
+                ],
+                "body": {
+                  "type": "BlockStatement",
+                  "body": [
+                    {
+                      "type": "ExpressionStatement",
+                      "expression": {
+                        "type": "AwaitExpression",
+                        "argument": {
+                          "type": "CallExpression",
+                          "callee": {
+                            "type": "MemberExpression",
+                            "object": {
+                              "type": "Identifier",
+                              "name": "tx"
+                            },
+                            "property": {
+                              "type": "Identifier",
+                              "name": "unsafe"
+                            },
+                            "computed": false,
+                            "optional": false
+                          },
+                          "arguments": [
+                            {
+                              "type": "TemplateLiteral",
+                              "expressions": [
+                                {
+                                  "type": "Identifier",
+                                  "name": "gateway"
+                                }
+                              ],
+                              "quasis": [
+                                {
+                                  "type": "TemplateElement",
+                                  "value": {
+                                    "raw": "UPDATE ",
+                                    "cooked": "UPDATE "
+                                  },
+                                  "tail": false
+                                },
+                                {
+                                  "type": "TemplateElement",
+                                  "value": {
+                                    "raw": ".schema_migrations\n          SET version='0042_forged_middle_version.sql'\n          WHERE version='0042_gateway_keys_workspace.sql'",
+                                    "cooked": ".schema_migrations\n          SET version='0042_forged_middle_version.sql'\n          WHERE version='0042_gateway_keys_workspace.sql'"
+                                  },
+                                  "tail": true
+                                }
+                              ]
+                            }
+                          ],
+                          "optional": false
+                        }
+                      }
+                    },
+                    {
+                      "type": "VariableDeclaration",
+                      "declarations": [
+                        {
+                          "type": "VariableDeclarator",
+                          "id": {
+                            "type": "ArrayPattern",
+                            "elements": [
+                              {
+                                "type": "Identifier",
+                                "name": "ledger"
+                              }
+                            ]
+                          },
+                          "init": {
+                            "type": "AwaitExpression",
+                            "argument": {
+                              "type": "CallExpression",
+                              "callee": {
+                                "type": "MemberExpression",
+                                "object": {
+                                  "type": "Identifier",
+                                  "name": "tx"
+                                },
+                                "property": {
+                                  "type": "Identifier",
+                                  "name": "unsafe"
+                                },
+                                "computed": false,
+                                "optional": false
+                              },
+                              "arguments": [
+                                {
+                                  "type": "TemplateLiteral",
+                                  "expressions": [
+                                    {
+                                      "type": "Identifier",
+                                      "name": "gateway"
+                                    }
+                                  ],
+                                  "quasis": [
+                                    {
+                                      "type": "TemplateElement",
+                                      "value": {
+                                        "raw": "SELECT count(*)::int AS n,\n          bool_or(version='0073_recovery_api_key_workspace_lock.sql') AS has_last\n          FROM ",
+                                        "cooked": "SELECT count(*)::int AS n,\n          bool_or(version='0073_recovery_api_key_workspace_lock.sql') AS has_last\n          FROM "
+                                      },
+                                      "tail": false
+                                    },
+                                    {
+                                      "type": "TemplateElement",
+                                      "value": {
+                                        "raw": ".schema_migrations",
+                                        "cooked": ".schema_migrations"
+                                      },
+                                      "tail": true
+                                    }
+                                  ]
+                                }
+                              ],
+                              "optional": false
+                            }
+                          }
+                        }
+                      ],
+                      "kind": "const"
+                    },
+                    {
+                      "type": "ExpressionStatement",
+                      "expression": {
+                        "type": "CallExpression",
+                        "callee": {
+                          "type": "MemberExpression",
+                          "object": {
+                            "type": "Identifier",
+                            "name": "assert"
+                          },
+                          "property": {
+                            "type": "Identifier",
+                            "name": "deepEqual"
+                          },
+                          "computed": false,
+                          "optional": false
+                        },
+                        "arguments": [
+                          {
+                            "type": "Identifier",
+                            "name": "ledger"
+                          },
+                          {
+                            "type": "ObjectExpression",
+                            "properties": [
+                              {
+                                "type": "Property",
+                                "method": false,
+                                "shorthand": false,
+                                "computed": false,
+                                "key": {
+                                  "type": "Identifier",
+                                  "name": "n"
+                                },
+                                "value": {
+                                  "type": "Literal",
+                                  "value": 73,
+                                  "raw": "73"
+                                },
+                                "kind": "init"
+                              },
+                              {
+                                "type": "Property",
+                                "method": false,
+                                "shorthand": false,
+                                "computed": false,
+                                "key": {
+                                  "type": "Identifier",
+                                  "name": "has_last"
+                                },
+                                "value": {
+                                  "type": "Literal",
+                                  "value": true,
+                                  "raw": "true"
+                                },
+                                "kind": "init"
+                              }
+                            ]
+                          }
+                        ],
+                        "optional": false
+                      }
+                    },
+                    {
+                      "type": "ExpressionStatement",
+                      "expression": {
+                        "type": "AwaitExpression",
+                        "argument": {
+                          "type": "CallExpression",
+                          "callee": {
+                            "type": "MemberExpression",
+                            "object": {
+                              "type": "Identifier",
+                              "name": "tx"
+                            },
+                            "property": {
+                              "type": "Identifier",
+                              "name": "unsafe"
+                            },
+                            "computed": false,
+                            "optional": false
+                          },
+                          "arguments": [
+                            {
+                              "type": "Literal",
+                              "value": "SET LOCAL cinatoken.shared_key_quote_versions_activation = 'reviewed-v2'",
+                              "raw": "\"SET LOCAL cinatoken.shared_key_quote_versions_activation = 'reviewed-v2'\""
+                            }
+                          ],
+                          "optional": false
+                        }
+                      }
+                    },
+                    {
+                      "type": "ExpressionStatement",
+                      "expression": {
+                        "type": "AwaitExpression",
+                        "argument": {
+                          "type": "CallExpression",
+                          "callee": {
+                            "type": "MemberExpression",
+                            "object": {
+                              "type": "CallExpression",
+                              "callee": {
+                                "type": "MemberExpression",
+                                "object": {
+                                  "type": "Identifier",
+                                  "name": "tx"
+                                },
+                                "property": {
+                                  "type": "Identifier",
+                                  "name": "unsafe"
+                                },
+                                "computed": false,
+                                "optional": false
+                              },
+                              "arguments": [
+                                {
+                                  "type": "Identifier",
+                                  "name": "body"
+                                }
+                              ],
+                              "optional": false
+                            },
+                            "property": {
+                              "type": "Identifier",
+                              "name": "simple"
+                            },
+                            "computed": false,
+                            "optional": false
+                          },
+                          "arguments": [],
+                          "optional": false
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            ],
+            "optional": false
+          },
+          {
+            "type": "Literal",
+            "value": {},
+            "raw": "/Shared-key quote activation or source contract differs/",
+            "regex": {
+              "pattern": "Shared-key quote activation or source contract differs",
+              "flags": ""
+            }
+          }
+        ],
+        "optional": false
+      }
+    },
+    {
+      "line": 180,
+      "method": "deepEqual",
+      "source": "assert.deepEqual(ledger, { n: 73, has_last: true })",
+      "AST": {
+        "type": "CallExpression",
+        "callee": {
+          "type": "MemberExpression",
+          "object": {
+            "type": "Identifier",
+            "name": "assert"
+          },
+          "property": {
+            "type": "Identifier",
+            "name": "deepEqual"
+          },
+          "computed": false,
+          "optional": false
+        },
+        "arguments": [
+          {
+            "type": "Identifier",
+            "name": "ledger"
+          },
+          {
+            "type": "ObjectExpression",
+            "properties": [
+              {
+                "type": "Property",
+                "method": false,
+                "shorthand": false,
+                "computed": false,
+                "key": {
+                  "type": "Identifier",
+                  "name": "n"
+                },
+                "value": {
+                  "type": "Literal",
+                  "value": 73,
+                  "raw": "73"
+                },
+                "kind": "init"
+              },
+              {
+                "type": "Property",
+                "method": false,
+                "shorthand": false,
+                "computed": false,
+                "key": {
+                  "type": "Identifier",
+                  "name": "has_last"
+                },
+                "value": {
+                  "type": "Literal",
+                  "value": true,
+                  "raw": "true"
+                },
+                "kind": "init"
+              }
+            ]
+          }
+        ],
+        "optional": false
+      }
+    },
+    {
+      "line": 184,
+      "method": "equal",
+      "source": "assert.equal((await migrator.unsafe(`SELECT count(*)::int AS n FROM ${gateway}.schema_migrations\n        WHERE version='0042_gateway_keys_workspace.sql'`))[0].n, 1)",
+      "AST": {
+        "type": "CallExpression",
+        "callee": {
+          "type": "MemberExpression",
+          "object": {
+            "type": "Identifier",
+            "name": "assert"
+          },
+          "property": {
+            "type": "Identifier",
+            "name": "equal"
+          },
+          "computed": false,
+          "optional": false
+        },
+        "arguments": [
+          {
+            "type": "MemberExpression",
+            "object": {
+              "type": "MemberExpression",
+              "object": {
+                "type": "AwaitExpression",
+                "argument": {
+                  "type": "CallExpression",
+                  "callee": {
+                    "type": "MemberExpression",
+                    "object": {
+                      "type": "Identifier",
+                      "name": "migrator"
+                    },
+                    "property": {
+                      "type": "Identifier",
+                      "name": "unsafe"
+                    },
+                    "computed": false,
+                    "optional": false
+                  },
+                  "arguments": [
+                    {
+                      "type": "TemplateLiteral",
+                      "expressions": [
+                        {
+                          "type": "Identifier",
+                          "name": "gateway"
+                        }
+                      ],
+                      "quasis": [
+                        {
+                          "type": "TemplateElement",
+                          "value": {
+                            "raw": "SELECT count(*)::int AS n FROM ",
+                            "cooked": "SELECT count(*)::int AS n FROM "
+                          },
+                          "tail": false
+                        },
+                        {
+                          "type": "TemplateElement",
+                          "value": {
+                            "raw": ".schema_migrations\n        WHERE version='0042_gateway_keys_workspace.sql'",
+                            "cooked": ".schema_migrations\n        WHERE version='0042_gateway_keys_workspace.sql'"
+                          },
+                          "tail": true
+                        }
+                      ]
+                    }
+                  ],
+                  "optional": false
+                }
+              },
+              "property": {
+                "type": "Literal",
+                "value": 0,
+                "raw": "0"
+              },
+              "computed": true,
+              "optional": false
+            },
+            "property": {
+              "type": "Identifier",
+              "name": "n"
+            },
+            "computed": false,
+            "optional": false
+          },
+          {
+            "type": "Literal",
+            "value": 1,
+            "raw": "1"
+          }
+        ],
+        "optional": false
+      }
+    },
+    {
+      "line": 187,
+      "method": "equal",
+      "source": "assert.equal((await migrator.unsafe(`SELECT pg_catalog.to_regnamespace('${quotes}') AS n`))[0].n, null)",
+      "AST": {
+        "type": "CallExpression",
+        "callee": {
+          "type": "MemberExpression",
+          "object": {
+            "type": "Identifier",
+            "name": "assert"
+          },
+          "property": {
+            "type": "Identifier",
+            "name": "equal"
+          },
+          "computed": false,
+          "optional": false
+        },
+        "arguments": [
+          {
+            "type": "MemberExpression",
+            "object": {
+              "type": "MemberExpression",
+              "object": {
+                "type": "AwaitExpression",
+                "argument": {
+                  "type": "CallExpression",
+                  "callee": {
+                    "type": "MemberExpression",
+                    "object": {
+                      "type": "Identifier",
+                      "name": "migrator"
+                    },
+                    "property": {
+                      "type": "Identifier",
+                      "name": "unsafe"
+                    },
+                    "computed": false,
+                    "optional": false
+                  },
+                  "arguments": [
+                    {
+                      "type": "TemplateLiteral",
+                      "expressions": [
+                        {
+                          "type": "Identifier",
+                          "name": "quotes"
+                        }
+                      ],
+                      "quasis": [
+                        {
+                          "type": "TemplateElement",
+                          "value": {
+                            "raw": "SELECT pg_catalog.to_regnamespace('",
+                            "cooked": "SELECT pg_catalog.to_regnamespace('"
+                          },
+                          "tail": false
+                        },
+                        {
+                          "type": "TemplateElement",
+                          "value": {
+                            "raw": "') AS n",
+                            "cooked": "') AS n"
+                          },
+                          "tail": true
+                        }
+                      ]
+                    }
+                  ],
+                  "optional": false
+                }
+              },
+              "property": {
+                "type": "Literal",
+                "value": 0,
+                "raw": "0"
+              },
+              "computed": true,
+              "optional": false
+            },
+            "property": {
+              "type": "Identifier",
+              "name": "n"
+            },
+            "computed": false,
+            "optional": false
+          },
+          {
+            "type": "Literal",
+            "value": null,
+            "raw": "null"
+          }
+        ],
+        "optional": false
+      }
+    },
+    {
+      "line": 188,
+      "method": "rejects",
+      "source": "assert.rejects(migrator.begin(async tx => {\n        await tx.unsafe(`ALTER TABLE ${gateway}.shared_keys ALTER COLUMN input_price TYPE numeric(18,5)`);\n        await tx.unsafe(\"SET LOCAL cinatoken.shared_key_quote_versions_activation = 'reviewed-v2'\");\n        await tx.unsafe(body).simple();\n      }), /Shared-key quote activation or source contract differs/)",
+      "AST": {
+        "type": "CallExpression",
+        "callee": {
+          "type": "MemberExpression",
+          "object": {
+            "type": "Identifier",
+            "name": "assert"
+          },
+          "property": {
+            "type": "Identifier",
+            "name": "rejects"
+          },
+          "computed": false,
+          "optional": false
+        },
+        "arguments": [
+          {
+            "type": "CallExpression",
+            "callee": {
+              "type": "MemberExpression",
+              "object": {
+                "type": "Identifier",
+                "name": "migrator"
+              },
+              "property": {
+                "type": "Identifier",
+                "name": "begin"
+              },
+              "computed": false,
+              "optional": false
+            },
+            "arguments": [
+              {
+                "type": "ArrowFunctionExpression",
+                "id": null,
+                "expression": false,
+                "generator": false,
+                "async": true,
+                "params": [
+                  {
+                    "type": "Identifier",
+                    "name": "tx"
+                  }
+                ],
+                "body": {
+                  "type": "BlockStatement",
+                  "body": [
+                    {
+                      "type": "ExpressionStatement",
+                      "expression": {
+                        "type": "AwaitExpression",
+                        "argument": {
+                          "type": "CallExpression",
+                          "callee": {
+                            "type": "MemberExpression",
+                            "object": {
+                              "type": "Identifier",
+                              "name": "tx"
+                            },
+                            "property": {
+                              "type": "Identifier",
+                              "name": "unsafe"
+                            },
+                            "computed": false,
+                            "optional": false
+                          },
+                          "arguments": [
+                            {
+                              "type": "TemplateLiteral",
+                              "expressions": [
+                                {
+                                  "type": "Identifier",
+                                  "name": "gateway"
+                                }
+                              ],
+                              "quasis": [
+                                {
+                                  "type": "TemplateElement",
+                                  "value": {
+                                    "raw": "ALTER TABLE ",
+                                    "cooked": "ALTER TABLE "
+                                  },
+                                  "tail": false
+                                },
+                                {
+                                  "type": "TemplateElement",
+                                  "value": {
+                                    "raw": ".shared_keys ALTER COLUMN input_price TYPE numeric(18,5)",
+                                    "cooked": ".shared_keys ALTER COLUMN input_price TYPE numeric(18,5)"
+                                  },
+                                  "tail": true
+                                }
+                              ]
+                            }
+                          ],
+                          "optional": false
+                        }
+                      }
+                    },
+                    {
+                      "type": "ExpressionStatement",
+                      "expression": {
+                        "type": "AwaitExpression",
+                        "argument": {
+                          "type": "CallExpression",
+                          "callee": {
+                            "type": "MemberExpression",
+                            "object": {
+                              "type": "Identifier",
+                              "name": "tx"
+                            },
+                            "property": {
+                              "type": "Identifier",
+                              "name": "unsafe"
+                            },
+                            "computed": false,
+                            "optional": false
+                          },
+                          "arguments": [
+                            {
+                              "type": "Literal",
+                              "value": "SET LOCAL cinatoken.shared_key_quote_versions_activation = 'reviewed-v2'",
+                              "raw": "\"SET LOCAL cinatoken.shared_key_quote_versions_activation = 'reviewed-v2'\""
+                            }
+                          ],
+                          "optional": false
+                        }
+                      }
+                    },
+                    {
+                      "type": "ExpressionStatement",
+                      "expression": {
+                        "type": "AwaitExpression",
+                        "argument": {
+                          "type": "CallExpression",
+                          "callee": {
+                            "type": "MemberExpression",
+                            "object": {
+                              "type": "CallExpression",
+                              "callee": {
+                                "type": "MemberExpression",
+                                "object": {
+                                  "type": "Identifier",
+                                  "name": "tx"
+                                },
+                                "property": {
+                                  "type": "Identifier",
+                                  "name": "unsafe"
+                                },
+                                "computed": false,
+                                "optional": false
+                              },
+                              "arguments": [
+                                {
+                                  "type": "Identifier",
+                                  "name": "body"
+                                }
+                              ],
+                              "optional": false
+                            },
+                            "property": {
+                              "type": "Identifier",
+                              "name": "simple"
+                            },
+                            "computed": false,
+                            "optional": false
+                          },
+                          "arguments": [],
+                          "optional": false
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            ],
+            "optional": false
+          },
+          {
+            "type": "Literal",
+            "value": {},
+            "raw": "/Shared-key quote activation or source contract differs/",
+            "regex": {
+              "pattern": "Shared-key quote activation or source contract differs",
+              "flags": ""
+            }
+          }
+        ],
+        "optional": false
+      }
+    },
+    {
+      "line": 197,
+      "method": "rejects",
+      "source": "assert.rejects(activate(migrator, body),\n        /Shared-key quote activation or source contract differs/)",
+      "AST": {
+        "type": "CallExpression",
+        "callee": {
+          "type": "MemberExpression",
+          "object": {
+            "type": "Identifier",
+            "name": "assert"
+          },
+          "property": {
+            "type": "Identifier",
+            "name": "rejects"
+          },
+          "computed": false,
+          "optional": false
+        },
+        "arguments": [
+          {
+            "type": "CallExpression",
+            "callee": {
+              "type": "Identifier",
+              "name": "activate"
+            },
+            "arguments": [
+              {
+                "type": "Identifier",
+                "name": "migrator"
+              },
+              {
+                "type": "Identifier",
+                "name": "body"
+              }
+            ],
+            "optional": false
+          },
+          {
+            "type": "Literal",
+            "value": {},
+            "raw": "/Shared-key quote activation or source contract differs/",
+            "regex": {
+              "pattern": "Shared-key quote activation or source contract differs",
+              "flags": ""
+            }
+          }
+        ],
+        "optional": false
+      }
+    },
+    {
+      "line": 201,
+      "method": "rejects",
+      "source": "assert.rejects(activate(migrator, body),\n        /Shared-key quote activation or source contract differs/)",
+      "AST": {
+        "type": "CallExpression",
+        "callee": {
+          "type": "MemberExpression",
+          "object": {
+            "type": "Identifier",
+            "name": "assert"
+          },
+          "property": {
+            "type": "Identifier",
+            "name": "rejects"
+          },
+          "computed": false,
+          "optional": false
+        },
+        "arguments": [
+          {
+            "type": "CallExpression",
+            "callee": {
+              "type": "Identifier",
+              "name": "activate"
+            },
+            "arguments": [
+              {
+                "type": "Identifier",
+                "name": "migrator"
+              },
+              {
+                "type": "Identifier",
+                "name": "body"
+              }
+            ],
+            "optional": false
+          },
+          {
+            "type": "Literal",
+            "value": {},
+            "raw": "/Shared-key quote activation or source contract differs/",
+            "regex": {
+              "pattern": "Shared-key quote activation or source contract differs",
+              "flags": ""
+            }
+          }
+        ],
+        "optional": false
+      }
+    },
+    {
+      "line": 207,
+      "method": "rejects",
+      "source": "assert.rejects(activate(migrator, body),\n          /Shared-key quote activation or source contract differs/)",
+      "AST": {
+        "type": "CallExpression",
+        "callee": {
+          "type": "MemberExpression",
+          "object": {
+            "type": "Identifier",
+            "name": "assert"
+          },
+          "property": {
+            "type": "Identifier",
+            "name": "rejects"
+          },
+          "computed": false,
+          "optional": false
+        },
+        "arguments": [
+          {
+            "type": "CallExpression",
+            "callee": {
+              "type": "Identifier",
+              "name": "activate"
+            },
+            "arguments": [
+              {
+                "type": "Identifier",
+                "name": "migrator"
+              },
+              {
+                "type": "Identifier",
+                "name": "body"
+              }
+            ],
+            "optional": false
+          },
+          {
+            "type": "Literal",
+            "value": {},
+            "raw": "/Shared-key quote activation or source contract differs/",
+            "regex": {
+              "pattern": "Shared-key quote activation or source contract differs",
+              "flags": ""
+            }
+          }
+        ],
+        "optional": false
+      }
+    },
+    {
+      "line": 214,
+      "method": "rejects",
+      "source": "assert.rejects(migrator.begin(async tx => {\n        await tx.unsafe(`CREATE SCHEMA ${quotes} AUTHORIZATION cinatoken_gateway_migrator`);\n        await tx.unsafe(`GRANT USAGE ON SCHEMA ${quotes} TO cinatoken_gateway_runtime`);\n        await tx.unsafe(\"SET LOCAL cinatoken.shared_key_quote_versions_activation = 'reviewed-v2'\");\n        await tx.unsafe(body).simple();\n      }), /Shared-key quote activation or source contract differs/)",
+      "AST": {
+        "type": "CallExpression",
+        "callee": {
+          "type": "MemberExpression",
+          "object": {
+            "type": "Identifier",
+            "name": "assert"
+          },
+          "property": {
+            "type": "Identifier",
+            "name": "rejects"
+          },
+          "computed": false,
+          "optional": false
+        },
+        "arguments": [
+          {
+            "type": "CallExpression",
+            "callee": {
+              "type": "MemberExpression",
+              "object": {
+                "type": "Identifier",
+                "name": "migrator"
+              },
+              "property": {
+                "type": "Identifier",
+                "name": "begin"
+              },
+              "computed": false,
+              "optional": false
+            },
+            "arguments": [
+              {
+                "type": "ArrowFunctionExpression",
+                "id": null,
+                "expression": false,
+                "generator": false,
+                "async": true,
+                "params": [
+                  {
+                    "type": "Identifier",
+                    "name": "tx"
+                  }
+                ],
+                "body": {
+                  "type": "BlockStatement",
+                  "body": [
+                    {
+                      "type": "ExpressionStatement",
+                      "expression": {
+                        "type": "AwaitExpression",
+                        "argument": {
+                          "type": "CallExpression",
+                          "callee": {
+                            "type": "MemberExpression",
+                            "object": {
+                              "type": "Identifier",
+                              "name": "tx"
+                            },
+                            "property": {
+                              "type": "Identifier",
+                              "name": "unsafe"
+                            },
+                            "computed": false,
+                            "optional": false
+                          },
+                          "arguments": [
+                            {
+                              "type": "TemplateLiteral",
+                              "expressions": [
+                                {
+                                  "type": "Identifier",
+                                  "name": "quotes"
+                                }
+                              ],
+                              "quasis": [
+                                {
+                                  "type": "TemplateElement",
+                                  "value": {
+                                    "raw": "CREATE SCHEMA ",
+                                    "cooked": "CREATE SCHEMA "
+                                  },
+                                  "tail": false
+                                },
+                                {
+                                  "type": "TemplateElement",
+                                  "value": {
+                                    "raw": " AUTHORIZATION cinatoken_gateway_migrator",
+                                    "cooked": " AUTHORIZATION cinatoken_gateway_migrator"
+                                  },
+                                  "tail": true
+                                }
+                              ]
+                            }
+                          ],
+                          "optional": false
+                        }
+                      }
+                    },
+                    {
+                      "type": "ExpressionStatement",
+                      "expression": {
+                        "type": "AwaitExpression",
+                        "argument": {
+                          "type": "CallExpression",
+                          "callee": {
+                            "type": "MemberExpression",
+                            "object": {
+                              "type": "Identifier",
+                              "name": "tx"
+                            },
+                            "property": {
+                              "type": "Identifier",
+                              "name": "unsafe"
+                            },
+                            "computed": false,
+                            "optional": false
+                          },
+                          "arguments": [
+                            {
+                              "type": "TemplateLiteral",
+                              "expressions": [
+                                {
+                                  "type": "Identifier",
+                                  "name": "quotes"
+                                }
+                              ],
+                              "quasis": [
+                                {
+                                  "type": "TemplateElement",
+                                  "value": {
+                                    "raw": "GRANT USAGE ON SCHEMA ",
+                                    "cooked": "GRANT USAGE ON SCHEMA "
+                                  },
+                                  "tail": false
+                                },
+                                {
+                                  "type": "TemplateElement",
+                                  "value": {
+                                    "raw": " TO cinatoken_gateway_runtime",
+                                    "cooked": " TO cinatoken_gateway_runtime"
+                                  },
+                                  "tail": true
+                                }
+                              ]
+                            }
+                          ],
+                          "optional": false
+                        }
+                      }
+                    },
+                    {
+                      "type": "ExpressionStatement",
+                      "expression": {
+                        "type": "AwaitExpression",
+                        "argument": {
+                          "type": "CallExpression",
+                          "callee": {
+                            "type": "MemberExpression",
+                            "object": {
+                              "type": "Identifier",
+                              "name": "tx"
+                            },
+                            "property": {
+                              "type": "Identifier",
+                              "name": "unsafe"
+                            },
+                            "computed": false,
+                            "optional": false
+                          },
+                          "arguments": [
+                            {
+                              "type": "Literal",
+                              "value": "SET LOCAL cinatoken.shared_key_quote_versions_activation = 'reviewed-v2'",
+                              "raw": "\"SET LOCAL cinatoken.shared_key_quote_versions_activation = 'reviewed-v2'\""
+                            }
+                          ],
+                          "optional": false
+                        }
+                      }
+                    },
+                    {
+                      "type": "ExpressionStatement",
+                      "expression": {
+                        "type": "AwaitExpression",
+                        "argument": {
+                          "type": "CallExpression",
+                          "callee": {
+                            "type": "MemberExpression",
+                            "object": {
+                              "type": "CallExpression",
+                              "callee": {
+                                "type": "MemberExpression",
+                                "object": {
+                                  "type": "Identifier",
+                                  "name": "tx"
+                                },
+                                "property": {
+                                  "type": "Identifier",
+                                  "name": "unsafe"
+                                },
+                                "computed": false,
+                                "optional": false
+                              },
+                              "arguments": [
+                                {
+                                  "type": "Identifier",
+                                  "name": "body"
+                                }
+                              ],
+                              "optional": false
+                            },
+                            "property": {
+                              "type": "Identifier",
+                              "name": "simple"
+                            },
+                            "computed": false,
+                            "optional": false
+                          },
+                          "arguments": [],
+                          "optional": false
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            ],
+            "optional": false
+          },
+          {
+            "type": "Literal",
+            "value": {},
+            "raw": "/Shared-key quote activation or source contract differs/",
+            "regex": {
+              "pattern": "Shared-key quote activation or source contract differs",
+              "flags": ""
+            }
+          }
+        ],
+        "optional": false
+      }
+    },
+    {
+      "line": 220,
+      "method": "equal",
+      "source": "assert.equal((await migrator.unsafe(`SELECT pg_catalog.to_regnamespace('${quotes}') AS n`))[0].n, null)",
+      "AST": {
+        "type": "CallExpression",
+        "callee": {
+          "type": "MemberExpression",
+          "object": {
+            "type": "Identifier",
+            "name": "assert"
+          },
+          "property": {
+            "type": "Identifier",
+            "name": "equal"
+          },
+          "computed": false,
+          "optional": false
+        },
+        "arguments": [
+          {
+            "type": "MemberExpression",
+            "object": {
+              "type": "MemberExpression",
+              "object": {
+                "type": "AwaitExpression",
+                "argument": {
+                  "type": "CallExpression",
+                  "callee": {
+                    "type": "MemberExpression",
+                    "object": {
+                      "type": "Identifier",
+                      "name": "migrator"
+                    },
+                    "property": {
+                      "type": "Identifier",
+                      "name": "unsafe"
+                    },
+                    "computed": false,
+                    "optional": false
+                  },
+                  "arguments": [
+                    {
+                      "type": "TemplateLiteral",
+                      "expressions": [
+                        {
+                          "type": "Identifier",
+                          "name": "quotes"
+                        }
+                      ],
+                      "quasis": [
+                        {
+                          "type": "TemplateElement",
+                          "value": {
+                            "raw": "SELECT pg_catalog.to_regnamespace('",
+                            "cooked": "SELECT pg_catalog.to_regnamespace('"
+                          },
+                          "tail": false
+                        },
+                        {
+                          "type": "TemplateElement",
+                          "value": {
+                            "raw": "') AS n",
+                            "cooked": "') AS n"
+                          },
+                          "tail": true
+                        }
+                      ]
+                    }
+                  ],
+                  "optional": false
+                }
+              },
+              "property": {
+                "type": "Literal",
+                "value": 0,
+                "raw": "0"
+              },
+              "computed": true,
+              "optional": false
+            },
+            "property": {
+              "type": "Identifier",
+              "name": "n"
+            },
+            "computed": false,
+            "optional": false
+          },
+          {
+            "type": "Literal",
+            "value": null,
+            "raw": "null"
+          }
+        ],
+        "optional": false
+      }
+    },
+    {
+      "line": 223,
+      "method": "rejects",
+      "source": "assert.rejects(proxy.begin(async tx => {\n        await tx.unsafe('SET ROLE cinatoken_gateway_migrator');\n        await tx.unsafe(\"SET LOCAL cinatoken.shared_key_quote_versions_activation = 'reviewed-v2'\");\n        await tx.unsafe(body).simple();\n      }), /Shared-key quote activation or source contract differs/)",
+      "AST": {
+        "type": "CallExpression",
+        "callee": {
+          "type": "MemberExpression",
+          "object": {
+            "type": "Identifier",
+            "name": "assert"
+          },
+          "property": {
+            "type": "Identifier",
+            "name": "rejects"
+          },
+          "computed": false,
+          "optional": false
+        },
+        "arguments": [
+          {
+            "type": "CallExpression",
+            "callee": {
+              "type": "MemberExpression",
+              "object": {
+                "type": "Identifier",
+                "name": "proxy"
+              },
+              "property": {
+                "type": "Identifier",
+                "name": "begin"
+              },
+              "computed": false,
+              "optional": false
+            },
+            "arguments": [
+              {
+                "type": "ArrowFunctionExpression",
+                "id": null,
+                "expression": false,
+                "generator": false,
+                "async": true,
+                "params": [
+                  {
+                    "type": "Identifier",
+                    "name": "tx"
+                  }
+                ],
+                "body": {
+                  "type": "BlockStatement",
+                  "body": [
+                    {
+                      "type": "ExpressionStatement",
+                      "expression": {
+                        "type": "AwaitExpression",
+                        "argument": {
+                          "type": "CallExpression",
+                          "callee": {
+                            "type": "MemberExpression",
+                            "object": {
+                              "type": "Identifier",
+                              "name": "tx"
+                            },
+                            "property": {
+                              "type": "Identifier",
+                              "name": "unsafe"
+                            },
+                            "computed": false,
+                            "optional": false
+                          },
+                          "arguments": [
+                            {
+                              "type": "Literal",
+                              "value": "SET ROLE cinatoken_gateway_migrator",
+                              "raw": "'SET ROLE cinatoken_gateway_migrator'"
+                            }
+                          ],
+                          "optional": false
+                        }
+                      }
+                    },
+                    {
+                      "type": "ExpressionStatement",
+                      "expression": {
+                        "type": "AwaitExpression",
+                        "argument": {
+                          "type": "CallExpression",
+                          "callee": {
+                            "type": "MemberExpression",
+                            "object": {
+                              "type": "Identifier",
+                              "name": "tx"
+                            },
+                            "property": {
+                              "type": "Identifier",
+                              "name": "unsafe"
+                            },
+                            "computed": false,
+                            "optional": false
+                          },
+                          "arguments": [
+                            {
+                              "type": "Literal",
+                              "value": "SET LOCAL cinatoken.shared_key_quote_versions_activation = 'reviewed-v2'",
+                              "raw": "\"SET LOCAL cinatoken.shared_key_quote_versions_activation = 'reviewed-v2'\""
+                            }
+                          ],
+                          "optional": false
+                        }
+                      }
+                    },
+                    {
+                      "type": "ExpressionStatement",
+                      "expression": {
+                        "type": "AwaitExpression",
+                        "argument": {
+                          "type": "CallExpression",
+                          "callee": {
+                            "type": "MemberExpression",
+                            "object": {
+                              "type": "CallExpression",
+                              "callee": {
+                                "type": "MemberExpression",
+                                "object": {
+                                  "type": "Identifier",
+                                  "name": "tx"
+                                },
+                                "property": {
+                                  "type": "Identifier",
+                                  "name": "unsafe"
+                                },
+                                "computed": false,
+                                "optional": false
+                              },
+                              "arguments": [
+                                {
+                                  "type": "Identifier",
+                                  "name": "body"
+                                }
+                              ],
+                              "optional": false
+                            },
+                            "property": {
+                              "type": "Identifier",
+                              "name": "simple"
+                            },
+                            "computed": false,
+                            "optional": false
+                          },
+                          "arguments": [],
+                          "optional": false
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            ],
+            "optional": false
+          },
+          {
+            "type": "Literal",
+            "value": {},
+            "raw": "/Shared-key quote activation or source contract differs/",
+            "regex": {
+              "pattern": "Shared-key quote activation or source contract differs",
+              "flags": ""
+            }
+          }
+        ],
+        "optional": false
+      }
+    },
+    {
+      "line": 234,
+      "method": "notEqual",
+      "source": "assert.notEqual(aclPoisonedBody, body)",
+      "AST": {
+        "type": "CallExpression",
+        "callee": {
+          "type": "MemberExpression",
+          "object": {
+            "type": "Identifier",
+            "name": "assert"
+          },
+          "property": {
+            "type": "Identifier",
+            "name": "notEqual"
+          },
+          "computed": false,
+          "optional": false
+        },
+        "arguments": [
+          {
+            "type": "Identifier",
+            "name": "aclPoisonedBody"
+          },
+          {
+            "type": "Identifier",
+            "name": "body"
+          }
+        ],
+        "optional": false
+      }
+    },
+    {
+      "line": 235,
+      "method": "rejects",
+      "source": "assert.rejects(activate(migrator, aclPoisonedBody),\n        /Shared-key quote runtime ACL is wider than reviewed contract/)",
+      "AST": {
+        "type": "CallExpression",
+        "callee": {
+          "type": "MemberExpression",
+          "object": {
+            "type": "Identifier",
+            "name": "assert"
+          },
+          "property": {
+            "type": "Identifier",
+            "name": "rejects"
+          },
+          "computed": false,
+          "optional": false
+        },
+        "arguments": [
+          {
+            "type": "CallExpression",
+            "callee": {
+              "type": "Identifier",
+              "name": "activate"
+            },
+            "arguments": [
+              {
+                "type": "Identifier",
+                "name": "migrator"
+              },
+              {
+                "type": "Identifier",
+                "name": "aclPoisonedBody"
+              }
+            ],
+            "optional": false
+          },
+          {
+            "type": "Literal",
+            "value": {},
+            "raw": "/Shared-key quote runtime ACL is wider than reviewed contract/",
+            "regex": {
+              "pattern": "Shared-key quote runtime ACL is wider than reviewed contract",
+              "flags": ""
+            }
+          }
+        ],
+        "optional": false
+      }
+    },
+    {
+      "line": 237,
+      "method": "equal",
+      "source": "assert.equal((await migrator.unsafe(`SELECT pg_catalog.to_regnamespace('${quotes}') AS n`))[0].n, null)",
+      "AST": {
+        "type": "CallExpression",
+        "callee": {
+          "type": "MemberExpression",
+          "object": {
+            "type": "Identifier",
+            "name": "assert"
+          },
+          "property": {
+            "type": "Identifier",
+            "name": "equal"
+          },
+          "computed": false,
+          "optional": false
+        },
+        "arguments": [
+          {
+            "type": "MemberExpression",
+            "object": {
+              "type": "MemberExpression",
+              "object": {
+                "type": "AwaitExpression",
+                "argument": {
+                  "type": "CallExpression",
+                  "callee": {
+                    "type": "MemberExpression",
+                    "object": {
+                      "type": "Identifier",
+                      "name": "migrator"
+                    },
+                    "property": {
+                      "type": "Identifier",
+                      "name": "unsafe"
+                    },
+                    "computed": false,
+                    "optional": false
+                  },
+                  "arguments": [
+                    {
+                      "type": "TemplateLiteral",
+                      "expressions": [
+                        {
+                          "type": "Identifier",
+                          "name": "quotes"
+                        }
+                      ],
+                      "quasis": [
+                        {
+                          "type": "TemplateElement",
+                          "value": {
+                            "raw": "SELECT pg_catalog.to_regnamespace('",
+                            "cooked": "SELECT pg_catalog.to_regnamespace('"
+                          },
+                          "tail": false
+                        },
+                        {
+                          "type": "TemplateElement",
+                          "value": {
+                            "raw": "') AS n",
+                            "cooked": "') AS n"
+                          },
+                          "tail": true
+                        }
+                      ]
+                    }
+                  ],
+                  "optional": false
+                }
+              },
+              "property": {
+                "type": "Literal",
+                "value": 0,
+                "raw": "0"
+              },
+              "computed": true,
+              "optional": false
+            },
+            "property": {
+              "type": "Identifier",
+              "name": "n"
+            },
+            "computed": false,
+            "optional": false
+          },
+          {
+            "type": "Literal",
+            "value": null,
+            "raw": "null"
+          }
+        ],
+        "optional": false
+      }
+    },
+    {
+      "line": 241,
+      "method": "rejects",
+      "source": "assert.rejects(activate(migrator, body),\n        /Shared-key quote activation or source contract differs/)",
+      "AST": {
+        "type": "CallExpression",
+        "callee": {
+          "type": "MemberExpression",
+          "object": {
+            "type": "Identifier",
+            "name": "assert"
+          },
+          "property": {
+            "type": "Identifier",
+            "name": "rejects"
+          },
+          "computed": false,
+          "optional": false
+        },
+        "arguments": [
+          {
+            "type": "CallExpression",
+            "callee": {
+              "type": "Identifier",
+              "name": "activate"
+            },
+            "arguments": [
+              {
+                "type": "Identifier",
+                "name": "migrator"
+              },
+              {
+                "type": "Identifier",
+                "name": "body"
+              }
+            ],
+            "optional": false
+          },
+          {
+            "type": "Literal",
+            "value": {},
+            "raw": "/Shared-key quote activation or source contract differs/",
+            "regex": {
+              "pattern": "Shared-key quote activation or source contract differs",
+              "flags": ""
+            }
+          }
+        ],
+        "optional": false
+      }
+    },
+    {
+      "line": 254,
+      "method": "rejects",
+      "source": "assert.rejects(insertQuote(migrator, quote(`missing-${column}`), [column]),\n          error => ['23502', '23514'].includes(error?.code))",
+      "AST": {
+        "type": "CallExpression",
+        "callee": {
+          "type": "MemberExpression",
+          "object": {
+            "type": "Identifier",
+            "name": "assert"
+          },
+          "property": {
+            "type": "Identifier",
+            "name": "rejects"
+          },
+          "computed": false,
+          "optional": false
+        },
+        "arguments": [
+          {
+            "type": "CallExpression",
+            "callee": {
+              "type": "Identifier",
+              "name": "insertQuote"
+            },
+            "arguments": [
+              {
+                "type": "Identifier",
+                "name": "migrator"
+              },
+              {
+                "type": "CallExpression",
+                "callee": {
+                  "type": "Identifier",
+                  "name": "quote"
+                },
+                "arguments": [
+                  {
+                    "type": "TemplateLiteral",
+                    "expressions": [
+                      {
+                        "type": "Identifier",
+                        "name": "column"
+                      }
+                    ],
+                    "quasis": [
+                      {
+                        "type": "TemplateElement",
+                        "value": {
+                          "raw": "missing-",
+                          "cooked": "missing-"
+                        },
+                        "tail": false
+                      },
+                      {
+                        "type": "TemplateElement",
+                        "value": {
+                          "raw": "",
+                          "cooked": ""
+                        },
+                        "tail": true
+                      }
+                    ]
+                  }
+                ],
+                "optional": false
+              },
+              {
+                "type": "ArrayExpression",
+                "elements": [
+                  {
+                    "type": "Identifier",
+                    "name": "column"
+                  }
+                ]
+              }
+            ],
+            "optional": false
+          },
+          {
+            "type": "ArrowFunctionExpression",
+            "id": null,
+            "expression": true,
+            "generator": false,
+            "async": false,
+            "params": [
+              {
+                "type": "Identifier",
+                "name": "error"
+              }
+            ],
+            "body": {
+              "type": "CallExpression",
+              "callee": {
+                "type": "MemberExpression",
+                "object": {
+                  "type": "ArrayExpression",
+                  "elements": [
+                    {
+                      "type": "Literal",
+                      "value": "23502",
+                      "raw": "'23502'"
+                    },
+                    {
+                      "type": "Literal",
+                      "value": "23514",
+                      "raw": "'23514'"
+                    }
+                  ]
+                },
+                "property": {
+                  "type": "Identifier",
+                  "name": "includes"
+                },
+                "computed": false,
+                "optional": false
+              },
+              "arguments": [
+                {
+                  "type": "ChainExpression",
+                  "expression": {
+                    "type": "MemberExpression",
+                    "object": {
+                      "type": "Identifier",
+                      "name": "error"
+                    },
+                    "property": {
+                      "type": "Identifier",
+                      "name": "code"
+                    },
+                    "computed": false,
+                    "optional": true
+                  }
+                }
+              ],
+              "optional": false
+            }
+          }
+        ],
+        "optional": false
+      }
+    },
+    {
+      "line": 257,
+      "method": "equal",
+      "source": "assert.equal((await migrator.unsafe(`SELECT count(*)::int AS n FROM ${table}`))[0].n, 0)",
+      "AST": {
+        "type": "CallExpression",
+        "callee": {
+          "type": "MemberExpression",
+          "object": {
+            "type": "Identifier",
+            "name": "assert"
+          },
+          "property": {
+            "type": "Identifier",
+            "name": "equal"
+          },
+          "computed": false,
+          "optional": false
+        },
+        "arguments": [
+          {
+            "type": "MemberExpression",
+            "object": {
+              "type": "MemberExpression",
+              "object": {
+                "type": "AwaitExpression",
+                "argument": {
+                  "type": "CallExpression",
+                  "callee": {
+                    "type": "MemberExpression",
+                    "object": {
+                      "type": "Identifier",
+                      "name": "migrator"
+                    },
+                    "property": {
+                      "type": "Identifier",
+                      "name": "unsafe"
+                    },
+                    "computed": false,
+                    "optional": false
+                  },
+                  "arguments": [
+                    {
+                      "type": "TemplateLiteral",
+                      "expressions": [
+                        {
+                          "type": "Identifier",
+                          "name": "table"
+                        }
+                      ],
+                      "quasis": [
+                        {
+                          "type": "TemplateElement",
+                          "value": {
+                            "raw": "SELECT count(*)::int AS n FROM ",
+                            "cooked": "SELECT count(*)::int AS n FROM "
+                          },
+                          "tail": false
+                        },
+                        {
+                          "type": "TemplateElement",
+                          "value": {
+                            "raw": "",
+                            "cooked": ""
+                          },
+                          "tail": true
+                        }
+                      ]
+                    }
+                  ],
+                  "optional": false
+                }
+              },
+              "property": {
+                "type": "Literal",
+                "value": 0,
+                "raw": "0"
+              },
+              "computed": true,
+              "optional": false
+            },
+            "property": {
+              "type": "Identifier",
+              "name": "n"
+            },
+            "computed": false,
+            "optional": false
+          },
+          {
+            "type": "Literal",
+            "value": 0,
+            "raw": "0"
+          }
+        ],
+        "optional": false
+      }
+    },
+    {
+      "line": 298,
+      "method": "equal",
+      "source": "assert.equal(recorded.server_clock, true)",
+      "AST": {
+        "type": "CallExpression",
+        "callee": {
+          "type": "MemberExpression",
+          "object": {
+            "type": "Identifier",
+            "name": "assert"
+          },
+          "property": {
+            "type": "Identifier",
+            "name": "equal"
+          },
+          "computed": false,
+          "optional": false
+        },
+        "arguments": [
+          {
+            "type": "MemberExpression",
+            "object": {
+              "type": "Identifier",
+              "name": "recorded"
+            },
+            "property": {
+              "type": "Identifier",
+              "name": "server_clock"
+            },
+            "computed": false,
+            "optional": false
+          },
+          {
+            "type": "Literal",
+            "value": true,
+            "raw": "true"
+          }
+        ],
+        "optional": false
+      }
+    },
+    {
+      "line": 320,
+      "method": "equal",
+      "source": "assert.equal((await atSequence('quote-key-a', 1))[0].quote_version_id, 'quote-a-1')",
+      "AST": {
+        "type": "CallExpression",
+        "callee": {
+          "type": "MemberExpression",
+          "object": {
+            "type": "Identifier",
+            "name": "assert"
+          },
+          "property": {
+            "type": "Identifier",
+            "name": "equal"
+          },
+          "computed": false,
+          "optional": false
+        },
+        "arguments": [
+          {
+            "type": "MemberExpression",
+            "object": {
+              "type": "MemberExpression",
+              "object": {
+                "type": "AwaitExpression",
+                "argument": {
+                  "type": "CallExpression",
+                  "callee": {
+                    "type": "Identifier",
+                    "name": "atSequence"
+                  },
+                  "arguments": [
+                    {
+                      "type": "Literal",
+                      "value": "quote-key-a",
+                      "raw": "'quote-key-a'"
+                    },
+                    {
+                      "type": "Literal",
+                      "value": 1,
+                      "raw": "1"
+                    }
+                  ],
+                  "optional": false
+                }
+              },
+              "property": {
+                "type": "Literal",
+                "value": 0,
+                "raw": "0"
+              },
+              "computed": true,
+              "optional": false
+            },
+            "property": {
+              "type": "Identifier",
+              "name": "quote_version_id"
+            },
+            "computed": false,
+            "optional": false
+          },
+          {
+            "type": "Literal",
+            "value": "quote-a-1",
+            "raw": "'quote-a-1'"
+          }
+        ],
+        "optional": false
+      }
+    },
+    {
+      "line": 321,
+      "method": "equal",
+      "source": "assert.equal((await atSequence('quote-key-a', 1))[0].seller_user_id, 'quote-seller-a')",
+      "AST": {
+        "type": "CallExpression",
+        "callee": {
+          "type": "MemberExpression",
+          "object": {
+            "type": "Identifier",
+            "name": "assert"
+          },
+          "property": {
+            "type": "Identifier",
+            "name": "equal"
+          },
+          "computed": false,
+          "optional": false
+        },
+        "arguments": [
+          {
+            "type": "MemberExpression",
+            "object": {
+              "type": "MemberExpression",
+              "object": {
+                "type": "AwaitExpression",
+                "argument": {
+                  "type": "CallExpression",
+                  "callee": {
+                    "type": "Identifier",
+                    "name": "atSequence"
+                  },
+                  "arguments": [
+                    {
+                      "type": "Literal",
+                      "value": "quote-key-a",
+                      "raw": "'quote-key-a'"
+                    },
+                    {
+                      "type": "Literal",
+                      "value": 1,
+                      "raw": "1"
+                    }
+                  ],
+                  "optional": false
+                }
+              },
+              "property": {
+                "type": "Literal",
+                "value": 0,
+                "raw": "0"
+              },
+              "computed": true,
+              "optional": false
+            },
+            "property": {
+              "type": "Identifier",
+              "name": "seller_user_id"
+            },
+            "computed": false,
+            "optional": false
+          },
+          {
+            "type": "Literal",
+            "value": "quote-seller-a",
+            "raw": "'quote-seller-a'"
+          }
+        ],
+        "optional": false
+      }
+    },
+    {
+      "line": 332,
+      "method": "equal",
+      "source": "assert.equal(atOne.input_price_per_million, '1.250000')",
+      "AST": {
+        "type": "CallExpression",
+        "callee": {
+          "type": "MemberExpression",
+          "object": {
+            "type": "Identifier",
+            "name": "assert"
+          },
+          "property": {
+            "type": "Identifier",
+            "name": "equal"
+          },
+          "computed": false,
+          "optional": false
+        },
+        "arguments": [
+          {
+            "type": "MemberExpression",
+            "object": {
+              "type": "Identifier",
+              "name": "atOne"
+            },
+            "property": {
+              "type": "Identifier",
+              "name": "input_price_per_million"
+            },
+            "computed": false,
+            "optional": false
+          },
+          {
+            "type": "Literal",
+            "value": "1.250000",
+            "raw": "'1.250000'"
+          }
+        ],
+        "optional": false
+      }
+    },
+    {
+      "line": 333,
+      "method": "equal",
+      "source": "assert.equal(atTwo.input_price_per_million, '3.250000')",
+      "AST": {
+        "type": "CallExpression",
+        "callee": {
+          "type": "MemberExpression",
+          "object": {
+            "type": "Identifier",
+            "name": "assert"
+          },
+          "property": {
+            "type": "Identifier",
+            "name": "equal"
+          },
+          "computed": false,
+          "optional": false
+        },
+        "arguments": [
+          {
+            "type": "MemberExpression",
+            "object": {
+              "type": "Identifier",
+              "name": "atTwo"
+            },
+            "property": {
+              "type": "Identifier",
+              "name": "input_price_per_million"
+            },
+            "computed": false,
+            "optional": false
+          },
+          {
+            "type": "Literal",
+            "value": "3.250000",
+            "raw": "'3.250000'"
+          }
+        ],
+        "optional": false
+      }
+    },
+    {
+      "line": 334,
+      "method": "equal",
+      "source": "assert.equal((await atEventTime('quote-key-a', 'event-a-1'))[0].quote_version_id, 'quote-a-1')",
+      "AST": {
+        "type": "CallExpression",
+        "callee": {
+          "type": "MemberExpression",
+          "object": {
+            "type": "Identifier",
+            "name": "assert"
+          },
+          "property": {
+            "type": "Identifier",
+            "name": "equal"
+          },
+          "computed": false,
+          "optional": false
+        },
+        "arguments": [
+          {
+            "type": "MemberExpression",
+            "object": {
+              "type": "MemberExpression",
+              "object": {
+                "type": "AwaitExpression",
+                "argument": {
+                  "type": "CallExpression",
+                  "callee": {
+                    "type": "Identifier",
+                    "name": "atEventTime"
+                  },
+                  "arguments": [
+                    {
+                      "type": "Literal",
+                      "value": "quote-key-a",
+                      "raw": "'quote-key-a'"
+                    },
+                    {
+                      "type": "Literal",
+                      "value": "event-a-1",
+                      "raw": "'event-a-1'"
+                    }
+                  ],
+                  "optional": false
+                }
+              },
+              "property": {
+                "type": "Literal",
+                "value": 0,
+                "raw": "0"
+              },
+              "computed": true,
+              "optional": false
+            },
+            "property": {
+              "type": "Identifier",
+              "name": "quote_version_id"
+            },
+            "computed": false,
+            "optional": false
+          },
+          {
+            "type": "Literal",
+            "value": "quote-a-1",
+            "raw": "'quote-a-1'"
+          }
+        ],
+        "optional": false
+      }
+    },
+    {
+      "line": 335,
+      "method": "equal",
+      "source": "assert.equal((await atEventTime('quote-key-a', 'event-a-2'))[0].quote_version_id, 'quote-a-2')",
+      "AST": {
+        "type": "CallExpression",
+        "callee": {
+          "type": "MemberExpression",
+          "object": {
+            "type": "Identifier",
+            "name": "assert"
+          },
+          "property": {
+            "type": "Identifier",
+            "name": "equal"
+          },
+          "computed": false,
+          "optional": false
+        },
+        "arguments": [
+          {
+            "type": "MemberExpression",
+            "object": {
+              "type": "MemberExpression",
+              "object": {
+                "type": "AwaitExpression",
+                "argument": {
+                  "type": "CallExpression",
+                  "callee": {
+                    "type": "Identifier",
+                    "name": "atEventTime"
+                  },
+                  "arguments": [
+                    {
+                      "type": "Literal",
+                      "value": "quote-key-a",
+                      "raw": "'quote-key-a'"
+                    },
+                    {
+                      "type": "Literal",
+                      "value": "event-a-2",
+                      "raw": "'event-a-2'"
+                    }
+                  ],
+                  "optional": false
+                }
+              },
+              "property": {
+                "type": "Literal",
+                "value": 0,
+                "raw": "0"
+              },
+              "computed": true,
+              "optional": false
+            },
+            "property": {
+              "type": "Identifier",
+              "name": "quote_version_id"
+            },
+            "computed": false,
+            "optional": false
+          },
+          {
+            "type": "Literal",
+            "value": "quote-a-2",
+            "raw": "'quote-a-2'"
+          }
+        ],
+        "optional": false
+      }
+    },
+    {
+      "line": 346,
+      "method": "equal",
+      "source": "assert.equal(revoked.transition_kind, 'revoke')",
+      "AST": {
+        "type": "CallExpression",
+        "callee": {
+          "type": "MemberExpression",
+          "object": {
+            "type": "Identifier",
+            "name": "assert"
+          },
+          "property": {
+            "type": "Identifier",
+            "name": "equal"
+          },
+          "computed": false,
+          "optional": false
+        },
+        "arguments": [
+          {
+            "type": "MemberExpression",
+            "object": {
+              "type": "Identifier",
+              "name": "revoked"
+            },
+            "property": {
+              "type": "Identifier",
+              "name": "transition_kind"
+            },
+            "computed": false,
+            "optional": false
+          },
+          {
+            "type": "Literal",
+            "value": "revoke",
+            "raw": "'revoke'"
+          }
+        ],
+        "optional": false
+      }
+    },
+    {
+      "line": 347,
+      "method": "equal",
+      "source": "assert.equal(revoked.quote_version_id, null)",
+      "AST": {
+        "type": "CallExpression",
+        "callee": {
+          "type": "MemberExpression",
+          "object": {
+            "type": "Identifier",
+            "name": "assert"
+          },
+          "property": {
+            "type": "Identifier",
+            "name": "equal"
+          },
+          "computed": false,
+          "optional": false
+        },
+        "arguments": [
+          {
+            "type": "MemberExpression",
+            "object": {
+              "type": "Identifier",
+              "name": "revoked"
+            },
+            "property": {
+              "type": "Identifier",
+              "name": "quote_version_id"
+            },
+            "computed": false,
+            "optional": false
+          },
+          {
+            "type": "Literal",
+            "value": null,
+            "raw": "null"
+          }
+        ],
+        "optional": false
+      }
+    },
+    {
+      "line": 348,
+      "method": "equal",
+      "source": "assert.equal(revoked.input_price_per_million, null)",
+      "AST": {
+        "type": "CallExpression",
+        "callee": {
+          "type": "MemberExpression",
+          "object": {
+            "type": "Identifier",
+            "name": "assert"
+          },
+          "property": {
+            "type": "Identifier",
+            "name": "equal"
+          },
+          "computed": false,
+          "optional": false
+        },
+        "arguments": [
+          {
+            "type": "MemberExpression",
+            "object": {
+              "type": "Identifier",
+              "name": "revoked"
+            },
+            "property": {
+              "type": "Identifier",
+              "name": "input_price_per_million"
+            },
+            "computed": false,
+            "optional": false
+          },
+          {
+            "type": "Literal",
+            "value": null,
+            "raw": "null"
+          }
+        ],
+        "optional": false
+      }
+    },
+    {
+      "line": 349,
+      "method": "equal",
+      "source": "assert.equal((await atSequence('quote-key-a', 2))[0].quote_version_id, 'quote-a-2')",
+      "AST": {
+        "type": "CallExpression",
+        "callee": {
+          "type": "MemberExpression",
+          "object": {
+            "type": "Identifier",
+            "name": "assert"
+          },
+          "property": {
+            "type": "Identifier",
+            "name": "equal"
+          },
+          "computed": false,
+          "optional": false
+        },
+        "arguments": [
+          {
+            "type": "MemberExpression",
+            "object": {
+              "type": "MemberExpression",
+              "object": {
+                "type": "AwaitExpression",
+                "argument": {
+                  "type": "CallExpression",
+                  "callee": {
+                    "type": "Identifier",
+                    "name": "atSequence"
+                  },
+                  "arguments": [
+                    {
+                      "type": "Literal",
+                      "value": "quote-key-a",
+                      "raw": "'quote-key-a'"
+                    },
+                    {
+                      "type": "Literal",
+                      "value": 2,
+                      "raw": "2"
+                    }
+                  ],
+                  "optional": false
+                }
+              },
+              "property": {
+                "type": "Literal",
+                "value": 0,
+                "raw": "0"
+              },
+              "computed": true,
+              "optional": false
+            },
+            "property": {
+              "type": "Identifier",
+              "name": "quote_version_id"
+            },
+            "computed": false,
+            "optional": false
+          },
+          {
+            "type": "Literal",
+            "value": "quote-a-2",
+            "raw": "'quote-a-2'"
+          }
+        ],
+        "optional": false
+      }
+    },
+    {
+      "line": 356,
+      "method": "equal",
+      "source": "assert.equal((await atSequence('quote-key-a', 4))[0].quote_version_id, 'quote-a-3')",
+      "AST": {
+        "type": "CallExpression",
+        "callee": {
+          "type": "MemberExpression",
+          "object": {
+            "type": "Identifier",
+            "name": "assert"
+          },
+          "property": {
+            "type": "Identifier",
+            "name": "equal"
+          },
+          "computed": false,
+          "optional": false
+        },
+        "arguments": [
+          {
+            "type": "MemberExpression",
+            "object": {
+              "type": "MemberExpression",
+              "object": {
+                "type": "AwaitExpression",
+                "argument": {
+                  "type": "CallExpression",
+                  "callee": {
+                    "type": "Identifier",
+                    "name": "atSequence"
+                  },
+                  "arguments": [
+                    {
+                      "type": "Literal",
+                      "value": "quote-key-a",
+                      "raw": "'quote-key-a'"
+                    },
+                    {
+                      "type": "Literal",
+                      "value": 4,
+                      "raw": "4"
+                    }
+                  ],
+                  "optional": false
+                }
+              },
+              "property": {
+                "type": "Literal",
+                "value": 0,
+                "raw": "0"
+              },
+              "computed": true,
+              "optional": false
+            },
+            "property": {
+              "type": "Identifier",
+              "name": "quote_version_id"
+            },
+            "computed": false,
+            "optional": false
+          },
+          {
+            "type": "Literal",
+            "value": "quote-a-3",
+            "raw": "'quote-a-3'"
+          }
+        ],
+        "optional": false
+      }
+    },
+    {
+      "line": 362,
+      "method": "equal",
+      "source": "assert.equal((await migrator.unsafe(`SELECT seller_user_id FROM ${gateway}.shared_keys\n        WHERE id='quote-key-a'`))[0].seller_user_id, 'quote-seller-a')",
+      "AST": {
+        "type": "CallExpression",
+        "callee": {
+          "type": "MemberExpression",
+          "object": {
+            "type": "Identifier",
+            "name": "assert"
+          },
+          "property": {
+            "type": "Identifier",
+            "name": "equal"
+          },
+          "computed": false,
+          "optional": false
+        },
+        "arguments": [
+          {
+            "type": "MemberExpression",
+            "object": {
+              "type": "MemberExpression",
+              "object": {
+                "type": "AwaitExpression",
+                "argument": {
+                  "type": "CallExpression",
+                  "callee": {
+                    "type": "MemberExpression",
+                    "object": {
+                      "type": "Identifier",
+                      "name": "migrator"
+                    },
+                    "property": {
+                      "type": "Identifier",
+                      "name": "unsafe"
+                    },
+                    "computed": false,
+                    "optional": false
+                  },
+                  "arguments": [
+                    {
+                      "type": "TemplateLiteral",
+                      "expressions": [
+                        {
+                          "type": "Identifier",
+                          "name": "gateway"
+                        }
+                      ],
+                      "quasis": [
+                        {
+                          "type": "TemplateElement",
+                          "value": {
+                            "raw": "SELECT seller_user_id FROM ",
+                            "cooked": "SELECT seller_user_id FROM "
+                          },
+                          "tail": false
+                        },
+                        {
+                          "type": "TemplateElement",
+                          "value": {
+                            "raw": ".shared_keys\n        WHERE id='quote-key-a'",
+                            "cooked": ".shared_keys\n        WHERE id='quote-key-a'"
+                          },
+                          "tail": true
+                        }
+                      ]
+                    }
+                  ],
+                  "optional": false
+                }
+              },
+              "property": {
+                "type": "Literal",
+                "value": 0,
+                "raw": "0"
+              },
+              "computed": true,
+              "optional": false
+            },
+            "property": {
+              "type": "Identifier",
+              "name": "seller_user_id"
+            },
+            "computed": false,
+            "optional": false
+          },
+          {
+            "type": "Literal",
+            "value": "quote-seller-a",
+            "raw": "'quote-seller-a'"
+          }
+        ],
+        "optional": false
+      }
+    },
+    {
+      "line": 382,
+      "method": "equal",
+      "source": "assert.equal((await competing.unsafe(`SELECT seller_user_id FROM ${gateway}.shared_keys\n          WHERE id='quote-key-a'`))[0].seller_user_id, 'quote-seller-a')",
+      "AST": {
+        "type": "CallExpression",
+        "callee": {
+          "type": "MemberExpression",
+          "object": {
+            "type": "Identifier",
+            "name": "assert"
+          },
+          "property": {
+            "type": "Identifier",
+            "name": "equal"
+          },
+          "computed": false,
+          "optional": false
+        },
+        "arguments": [
+          {
+            "type": "MemberExpression",
+            "object": {
+              "type": "MemberExpression",
+              "object": {
+                "type": "AwaitExpression",
+                "argument": {
+                  "type": "CallExpression",
+                  "callee": {
+                    "type": "MemberExpression",
+                    "object": {
+                      "type": "Identifier",
+                      "name": "competing"
+                    },
+                    "property": {
+                      "type": "Identifier",
+                      "name": "unsafe"
+                    },
+                    "computed": false,
+                    "optional": false
+                  },
+                  "arguments": [
+                    {
+                      "type": "TemplateLiteral",
+                      "expressions": [
+                        {
+                          "type": "Identifier",
+                          "name": "gateway"
+                        }
+                      ],
+                      "quasis": [
+                        {
+                          "type": "TemplateElement",
+                          "value": {
+                            "raw": "SELECT seller_user_id FROM ",
+                            "cooked": "SELECT seller_user_id FROM "
+                          },
+                          "tail": false
+                        },
+                        {
+                          "type": "TemplateElement",
+                          "value": {
+                            "raw": ".shared_keys\n          WHERE id='quote-key-a'",
+                            "cooked": ".shared_keys\n          WHERE id='quote-key-a'"
+                          },
+                          "tail": true
+                        }
+                      ]
+                    }
+                  ],
+                  "optional": false
+                }
+              },
+              "property": {
+                "type": "Literal",
+                "value": 0,
+                "raw": "0"
+              },
+              "computed": true,
+              "optional": false
+            },
+            "property": {
+              "type": "Identifier",
+              "name": "seller_user_id"
+            },
+            "computed": false,
+            "optional": false
+          },
+          {
+            "type": "Literal",
+            "value": "quote-seller-a",
+            "raw": "'quote-seller-a'"
+          }
+        ],
+        "optional": false
+      }
+    },
+    {
+      "line": 384,
+      "method": "equal",
+      "source": "assert.equal((await competing.unsafe(`SELECT quote_version_id FROM ${transitionTable}\n          WHERE shared_key_id='quote-key-a' ORDER BY transition_seq DESC LIMIT 1`))[0]\n          .quote_version_id, 'quote-a-3')",
+      "AST": {
+        "type": "CallExpression",
+        "callee": {
+          "type": "MemberExpression",
+          "object": {
+            "type": "Identifier",
+            "name": "assert"
+          },
+          "property": {
+            "type": "Identifier",
+            "name": "equal"
+          },
+          "computed": false,
+          "optional": false
+        },
+        "arguments": [
+          {
+            "type": "MemberExpression",
+            "object": {
+              "type": "MemberExpression",
+              "object": {
+                "type": "AwaitExpression",
+                "argument": {
+                  "type": "CallExpression",
+                  "callee": {
+                    "type": "MemberExpression",
+                    "object": {
+                      "type": "Identifier",
+                      "name": "competing"
+                    },
+                    "property": {
+                      "type": "Identifier",
+                      "name": "unsafe"
+                    },
+                    "computed": false,
+                    "optional": false
+                  },
+                  "arguments": [
+                    {
+                      "type": "TemplateLiteral",
+                      "expressions": [
+                        {
+                          "type": "Identifier",
+                          "name": "transitionTable"
+                        }
+                      ],
+                      "quasis": [
+                        {
+                          "type": "TemplateElement",
+                          "value": {
+                            "raw": "SELECT quote_version_id FROM ",
+                            "cooked": "SELECT quote_version_id FROM "
+                          },
+                          "tail": false
+                        },
+                        {
+                          "type": "TemplateElement",
+                          "value": {
+                            "raw": "\n          WHERE shared_key_id='quote-key-a' ORDER BY transition_seq DESC LIMIT 1",
+                            "cooked": "\n          WHERE shared_key_id='quote-key-a' ORDER BY transition_seq DESC LIMIT 1"
+                          },
+                          "tail": true
+                        }
+                      ]
+                    }
+                  ],
+                  "optional": false
+                }
+              },
+              "property": {
+                "type": "Literal",
+                "value": 0,
+                "raw": "0"
+              },
+              "computed": true,
+              "optional": false
+            },
+            "property": {
+              "type": "Identifier",
+              "name": "quote_version_id"
+            },
+            "computed": false,
+            "optional": false
+          },
+          {
+            "type": "Literal",
+            "value": "quote-a-3",
+            "raw": "'quote-a-3'"
+          }
+        ],
+        "optional": false
+      }
+    },
+    {
+      "line": 391,
+      "method": "equal",
+      "source": "assert.equal((await atSequence('quote-key-a', 4))[0].seller_user_id, 'quote-seller-a')",
+      "AST": {
+        "type": "CallExpression",
+        "callee": {
+          "type": "MemberExpression",
+          "object": {
+            "type": "Identifier",
+            "name": "assert"
+          },
+          "property": {
+            "type": "Identifier",
+            "name": "equal"
+          },
+          "computed": false,
+          "optional": false
+        },
+        "arguments": [
+          {
+            "type": "MemberExpression",
+            "object": {
+              "type": "MemberExpression",
+              "object": {
+                "type": "AwaitExpression",
+                "argument": {
+                  "type": "CallExpression",
+                  "callee": {
+                    "type": "Identifier",
+                    "name": "atSequence"
+                  },
+                  "arguments": [
+                    {
+                      "type": "Literal",
+                      "value": "quote-key-a",
+                      "raw": "'quote-key-a'"
+                    },
+                    {
+                      "type": "Literal",
+                      "value": 4,
+                      "raw": "4"
+                    }
+                  ],
+                  "optional": false
+                }
+              },
+              "property": {
+                "type": "Literal",
+                "value": 0,
+                "raw": "0"
+              },
+              "computed": true,
+              "optional": false
+            },
+            "property": {
+              "type": "Identifier",
+              "name": "seller_user_id"
+            },
+            "computed": false,
+            "optional": false
+          },
+          {
+            "type": "Literal",
+            "value": "quote-seller-a",
+            "raw": "'quote-seller-a'"
+          }
+        ],
+        "optional": false
+      }
+    },
+    {
+      "line": 392,
+      "method": "equal",
+      "source": "assert.equal((await atSequence('quote-key-a', 5))[0].seller_user_id, 'quote-seller-b')",
+      "AST": {
+        "type": "CallExpression",
+        "callee": {
+          "type": "MemberExpression",
+          "object": {
+            "type": "Identifier",
+            "name": "assert"
+          },
+          "property": {
+            "type": "Identifier",
+            "name": "equal"
+          },
+          "computed": false,
+          "optional": false
+        },
+        "arguments": [
+          {
+            "type": "MemberExpression",
+            "object": {
+              "type": "MemberExpression",
+              "object": {
+                "type": "AwaitExpression",
+                "argument": {
+                  "type": "CallExpression",
+                  "callee": {
+                    "type": "Identifier",
+                    "name": "atSequence"
+                  },
+                  "arguments": [
+                    {
+                      "type": "Literal",
+                      "value": "quote-key-a",
+                      "raw": "'quote-key-a'"
+                    },
+                    {
+                      "type": "Literal",
+                      "value": 5,
+                      "raw": "5"
+                    }
+                  ],
+                  "optional": false
+                }
+              },
+              "property": {
+                "type": "Literal",
+                "value": 0,
+                "raw": "0"
+              },
+              "computed": true,
+              "optional": false
+            },
+            "property": {
+              "type": "Identifier",
+              "name": "seller_user_id"
+            },
+            "computed": false,
+            "optional": false
+          },
+          {
+            "type": "Literal",
+            "value": "quote-seller-b",
+            "raw": "'quote-seller-b'"
+          }
+        ],
+        "optional": false
+      }
+    },
+    {
+      "line": 393,
+      "method": "equal",
+      "source": "assert.equal((await atEventTime('quote-key-a', 'event-a-4'))[0].quote_version_id, 'quote-a-3')",
+      "AST": {
+        "type": "CallExpression",
+        "callee": {
+          "type": "MemberExpression",
+          "object": {
+            "type": "Identifier",
+            "name": "assert"
+          },
+          "property": {
+            "type": "Identifier",
+            "name": "equal"
+          },
+          "computed": false,
+          "optional": false
+        },
+        "arguments": [
+          {
+            "type": "MemberExpression",
+            "object": {
+              "type": "MemberExpression",
+              "object": {
+                "type": "AwaitExpression",
+                "argument": {
+                  "type": "CallExpression",
+                  "callee": {
+                    "type": "Identifier",
+                    "name": "atEventTime"
+                  },
+                  "arguments": [
+                    {
+                      "type": "Literal",
+                      "value": "quote-key-a",
+                      "raw": "'quote-key-a'"
+                    },
+                    {
+                      "type": "Literal",
+                      "value": "event-a-4",
+                      "raw": "'event-a-4'"
+                    }
+                  ],
+                  "optional": false
+                }
+              },
+              "property": {
+                "type": "Literal",
+                "value": 0,
+                "raw": "0"
+              },
+              "computed": true,
+              "optional": false
+            },
+            "property": {
+              "type": "Identifier",
+              "name": "quote_version_id"
+            },
+            "computed": false,
+            "optional": false
+          },
+          {
+            "type": "Literal",
+            "value": "quote-a-3",
+            "raw": "'quote-a-3'"
+          }
+        ],
+        "optional": false
+      }
+    },
+    {
+      "line": 394,
+      "method": "equal",
+      "source": "assert.equal((await atEventTime('quote-key-a', 'event-a-5'))[0].quote_version_id, 'quote-a-b1')",
+      "AST": {
+        "type": "CallExpression",
+        "callee": {
+          "type": "MemberExpression",
+          "object": {
+            "type": "Identifier",
+            "name": "assert"
+          },
+          "property": {
+            "type": "Identifier",
+            "name": "equal"
+          },
+          "computed": false,
+          "optional": false
+        },
+        "arguments": [
+          {
+            "type": "MemberExpression",
+            "object": {
+              "type": "MemberExpression",
+              "object": {
+                "type": "AwaitExpression",
+                "argument": {
+                  "type": "CallExpression",
+                  "callee": {
+                    "type": "Identifier",
+                    "name": "atEventTime"
+                  },
+                  "arguments": [
+                    {
+                      "type": "Literal",
+                      "value": "quote-key-a",
+                      "raw": "'quote-key-a'"
+                    },
+                    {
+                      "type": "Literal",
+                      "value": "event-a-5",
+                      "raw": "'event-a-5'"
+                    }
+                  ],
+                  "optional": false
+                }
+              },
+              "property": {
+                "type": "Literal",
+                "value": 0,
+                "raw": "0"
+              },
+              "computed": true,
+              "optional": false
+            },
+            "property": {
+              "type": "Identifier",
+              "name": "quote_version_id"
+            },
+            "computed": false,
+            "optional": false
+          },
+          {
+            "type": "Literal",
+            "value": "quote-a-b1",
+            "raw": "'quote-a-b1'"
+          }
+        ],
+        "optional": false
+      }
+    },
+    {
+      "line": 395,
+      "method": "equal",
+      "source": "assert.equal((await migrator.unsafe(`SELECT seller_user_id FROM ${gateway}.shared_keys\n        WHERE id='quote-key-a'`))[0].seller_user_id, 'quote-seller-b')",
+      "AST": {
+        "type": "CallExpression",
+        "callee": {
+          "type": "MemberExpression",
+          "object": {
+            "type": "Identifier",
+            "name": "assert"
+          },
+          "property": {
+            "type": "Identifier",
+            "name": "equal"
+          },
+          "computed": false,
+          "optional": false
+        },
+        "arguments": [
+          {
+            "type": "MemberExpression",
+            "object": {
+              "type": "MemberExpression",
+              "object": {
+                "type": "AwaitExpression",
+                "argument": {
+                  "type": "CallExpression",
+                  "callee": {
+                    "type": "MemberExpression",
+                    "object": {
+                      "type": "Identifier",
+                      "name": "migrator"
+                    },
+                    "property": {
+                      "type": "Identifier",
+                      "name": "unsafe"
+                    },
+                    "computed": false,
+                    "optional": false
+                  },
+                  "arguments": [
+                    {
+                      "type": "TemplateLiteral",
+                      "expressions": [
+                        {
+                          "type": "Identifier",
+                          "name": "gateway"
+                        }
+                      ],
+                      "quasis": [
+                        {
+                          "type": "TemplateElement",
+                          "value": {
+                            "raw": "SELECT seller_user_id FROM ",
+                            "cooked": "SELECT seller_user_id FROM "
+                          },
+                          "tail": false
+                        },
+                        {
+                          "type": "TemplateElement",
+                          "value": {
+                            "raw": ".shared_keys\n        WHERE id='quote-key-a'",
+                            "cooked": ".shared_keys\n        WHERE id='quote-key-a'"
+                          },
+                          "tail": true
+                        }
+                      ]
+                    }
+                  ],
+                  "optional": false
+                }
+              },
+              "property": {
+                "type": "Literal",
+                "value": 0,
+                "raw": "0"
+              },
+              "computed": true,
+              "optional": false
+            },
+            "property": {
+              "type": "Identifier",
+              "name": "seller_user_id"
+            },
+            "computed": false,
+            "optional": false
+          },
+          {
+            "type": "Literal",
+            "value": "quote-seller-b",
+            "raw": "'quote-seller-b'"
+          }
+        ],
+        "optional": false
+      }
+    },
+    {
+      "line": 399,
+      "method": "deepEqual",
+      "source": "assert.deepEqual(transferredClaim, {\n        quote_version_id: 'quote-a-b1', seller_user_id: 'quote-seller-b',\n      })",
+      "AST": {
+        "type": "CallExpression",
+        "callee": {
+          "type": "MemberExpression",
+          "object": {
+            "type": "Identifier",
+            "name": "assert"
+          },
+          "property": {
+            "type": "Identifier",
+            "name": "deepEqual"
+          },
+          "computed": false,
+          "optional": false
+        },
+        "arguments": [
+          {
+            "type": "Identifier",
+            "name": "transferredClaim"
+          },
+          {
+            "type": "ObjectExpression",
+            "properties": [
+              {
+                "type": "Property",
+                "method": false,
+                "shorthand": false,
+                "computed": false,
+                "key": {
+                  "type": "Identifier",
+                  "name": "quote_version_id"
+                },
+                "value": {
+                  "type": "Literal",
+                  "value": "quote-a-b1",
+                  "raw": "'quote-a-b1'"
+                },
+                "kind": "init"
+              },
+              {
+                "type": "Property",
+                "method": false,
+                "shorthand": false,
+                "computed": false,
+                "key": {
+                  "type": "Identifier",
+                  "name": "seller_user_id"
+                },
+                "value": {
+                  "type": "Literal",
+                  "value": "quote-seller-b",
+                  "raw": "'quote-seller-b'"
+                },
+                "kind": "init"
+              }
+            ]
+          }
+        ],
+        "optional": false
+      }
+    },
+    {
+      "line": 443,
+      "method": "equal",
+      "source": "assert.equal((await migrator.unsafe(`SELECT count(*)::int AS n FROM ${transitionTable}\n        WHERE transition_id LIKE 'multi-%'`))[0].n, 0)",
+      "AST": {
+        "type": "CallExpression",
+        "callee": {
+          "type": "MemberExpression",
+          "object": {
+            "type": "Identifier",
+            "name": "assert"
+          },
+          "property": {
+            "type": "Identifier",
+            "name": "equal"
+          },
+          "computed": false,
+          "optional": false
+        },
+        "arguments": [
+          {
+            "type": "MemberExpression",
+            "object": {
+              "type": "MemberExpression",
+              "object": {
+                "type": "AwaitExpression",
+                "argument": {
+                  "type": "CallExpression",
+                  "callee": {
+                    "type": "MemberExpression",
+                    "object": {
+                      "type": "Identifier",
+                      "name": "migrator"
+                    },
+                    "property": {
+                      "type": "Identifier",
+                      "name": "unsafe"
+                    },
+                    "computed": false,
+                    "optional": false
+                  },
+                  "arguments": [
+                    {
+                      "type": "TemplateLiteral",
+                      "expressions": [
+                        {
+                          "type": "Identifier",
+                          "name": "transitionTable"
+                        }
+                      ],
+                      "quasis": [
+                        {
+                          "type": "TemplateElement",
+                          "value": {
+                            "raw": "SELECT count(*)::int AS n FROM ",
+                            "cooked": "SELECT count(*)::int AS n FROM "
+                          },
+                          "tail": false
+                        },
+                        {
+                          "type": "TemplateElement",
+                          "value": {
+                            "raw": "\n        WHERE transition_id LIKE 'multi-%'",
+                            "cooked": "\n        WHERE transition_id LIKE 'multi-%'"
+                          },
+                          "tail": true
+                        }
+                      ]
+                    }
+                  ],
+                  "optional": false
+                }
+              },
+              "property": {
+                "type": "Literal",
+                "value": 0,
+                "raw": "0"
+              },
+              "computed": true,
+              "optional": false
+            },
+            "property": {
+              "type": "Identifier",
+              "name": "n"
+            },
+            "computed": false,
+            "optional": false
+          },
+          {
+            "type": "Literal",
+            "value": 0,
+            "raw": "0"
+          }
+        ],
+        "optional": false
+      }
+    },
+    {
+      "line": 466,
+      "method": "equal",
+      "source": "assert.equal(capturedAttemptQuote.transition_id, 'event-a-5')",
+      "AST": {
+        "type": "CallExpression",
+        "callee": {
+          "type": "MemberExpression",
+          "object": {
+            "type": "Identifier",
+            "name": "assert"
+          },
+          "property": {
+            "type": "Identifier",
+            "name": "equal"
+          },
+          "computed": false,
+          "optional": false
+        },
+        "arguments": [
+          {
+            "type": "MemberExpression",
+            "object": {
+              "type": "Identifier",
+              "name": "capturedAttemptQuote"
+            },
+            "property": {
+              "type": "Identifier",
+              "name": "transition_id"
+            },
+            "computed": false,
+            "optional": false
+          },
+          {
+            "type": "Literal",
+            "value": "event-a-5",
+            "raw": "'event-a-5'"
+          }
+        ],
+        "optional": false
+      }
+    },
+    {
+      "line": 467,
+      "method": "equal",
+      "source": "assert.equal(Number(capturedAttemptQuote.transition_seq), 5)",
+      "AST": {
+        "type": "CallExpression",
+        "callee": {
+          "type": "MemberExpression",
+          "object": {
+            "type": "Identifier",
+            "name": "assert"
+          },
+          "property": {
+            "type": "Identifier",
+            "name": "equal"
+          },
+          "computed": false,
+          "optional": false
+        },
+        "arguments": [
+          {
+            "type": "CallExpression",
+            "callee": {
+              "type": "Identifier",
+              "name": "Number"
+            },
+            "arguments": [
+              {
+                "type": "MemberExpression",
+                "object": {
+                  "type": "Identifier",
+                  "name": "capturedAttemptQuote"
+                },
+                "property": {
+                  "type": "Identifier",
+                  "name": "transition_seq"
+                },
+                "computed": false,
+                "optional": false
+              }
+            ],
+            "optional": false
+          },
+          {
+            "type": "Literal",
+            "value": 5,
+            "raw": "5"
+          }
+        ],
+        "optional": false
+      }
+    },
+    {
+      "line": 468,
+      "method": "equal",
+      "source": "assert.equal(capturedAttemptQuote.quote_version_id, 'quote-a-b1')",
+      "AST": {
+        "type": "CallExpression",
+        "callee": {
+          "type": "MemberExpression",
+          "object": {
+            "type": "Identifier",
+            "name": "assert"
+          },
+          "property": {
+            "type": "Identifier",
+            "name": "equal"
+          },
+          "computed": false,
+          "optional": false
+        },
+        "arguments": [
+          {
+            "type": "MemberExpression",
+            "object": {
+              "type": "Identifier",
+              "name": "capturedAttemptQuote"
+            },
+            "property": {
+              "type": "Identifier",
+              "name": "quote_version_id"
+            },
+            "computed": false,
+            "optional": false
+          },
+          {
+            "type": "Literal",
+            "value": "quote-a-b1",
+            "raw": "'quote-a-b1'"
+          }
+        ],
+        "optional": false
+      }
+    },
+    {
+      "line": 470,
+      "method": "equal",
+      "source": "assert.equal((await competing.unsafe(`SELECT $1::timestamptz >= $2::timestamptz AS after_insert`,\n        [observedAt.at, pendingEffectiveAt]))[0].after_insert, true)",
+      "AST": {
+        "type": "CallExpression",
+        "callee": {
+          "type": "MemberExpression",
+          "object": {
+            "type": "Identifier",
+            "name": "assert"
+          },
+          "property": {
+            "type": "Identifier",
+            "name": "equal"
+          },
+          "computed": false,
+          "optional": false
+        },
+        "arguments": [
+          {
+            "type": "MemberExpression",
+            "object": {
+              "type": "MemberExpression",
+              "object": {
+                "type": "AwaitExpression",
+                "argument": {
+                  "type": "CallExpression",
+                  "callee": {
+                    "type": "MemberExpression",
+                    "object": {
+                      "type": "Identifier",
+                      "name": "competing"
+                    },
+                    "property": {
+                      "type": "Identifier",
+                      "name": "unsafe"
+                    },
+                    "computed": false,
+                    "optional": false
+                  },
+                  "arguments": [
+                    {
+                      "type": "TemplateLiteral",
+                      "expressions": [],
+                      "quasis": [
+                        {
+                          "type": "TemplateElement",
+                          "value": {
+                            "raw": "SELECT $1::timestamptz >= $2::timestamptz AS after_insert",
+                            "cooked": "SELECT $1::timestamptz >= $2::timestamptz AS after_insert"
+                          },
+                          "tail": true
+                        }
+                      ]
+                    },
+                    {
+                      "type": "ArrayExpression",
+                      "elements": [
+                        {
+                          "type": "MemberExpression",
+                          "object": {
+                            "type": "Identifier",
+                            "name": "observedAt"
+                          },
+                          "property": {
+                            "type": "Identifier",
+                            "name": "at"
+                          },
+                          "computed": false,
+                          "optional": false
+                        },
+                        {
+                          "type": "Identifier",
+                          "name": "pendingEffectiveAt"
+                        }
+                      ]
+                    }
+                  ],
+                  "optional": false
+                }
+              },
+              "property": {
+                "type": "Literal",
+                "value": 0,
+                "raw": "0"
+              },
+              "computed": true,
+              "optional": false
+            },
+            "property": {
+              "type": "Identifier",
+              "name": "after_insert"
+            },
+            "computed": false,
+            "optional": false
+          },
+          {
+            "type": "Literal",
+            "value": true,
+            "raw": "true"
+          }
+        ],
+        "optional": false
+      }
+    },
+    {
+      "line": 475,
+      "method": "equal",
+      "source": "assert.equal(pendingTimeBeforeCommit.quote_version_id, 'quote-a-b1')",
+      "AST": {
+        "type": "CallExpression",
+        "callee": {
+          "type": "MemberExpression",
+          "object": {
+            "type": "Identifier",
+            "name": "assert"
+          },
+          "property": {
+            "type": "Identifier",
+            "name": "equal"
+          },
+          "computed": false,
+          "optional": false
+        },
+        "arguments": [
+          {
+            "type": "MemberExpression",
+            "object": {
+              "type": "Identifier",
+              "name": "pendingTimeBeforeCommit"
+            },
+            "property": {
+              "type": "Identifier",
+              "name": "quote_version_id"
+            },
+            "computed": false,
+            "optional": false
+          },
+          {
+            "type": "Literal",
+            "value": "quote-a-b1",
+            "raw": "'quote-a-b1'"
+          }
+        ],
+        "optional": false
+      }
+    },
+    {
+      "line": 483,
+      "method": "equal",
+      "source": "assert.equal(secondSettled, false, 'same-key transition must wait for the first transaction')",
+      "AST": {
+        "type": "CallExpression",
+        "callee": {
+          "type": "MemberExpression",
+          "object": {
+            "type": "Identifier",
+            "name": "assert"
+          },
+          "property": {
+            "type": "Identifier",
+            "name": "equal"
+          },
+          "computed": false,
+          "optional": false
+        },
+        "arguments": [
+          {
+            "type": "Identifier",
+            "name": "secondSettled"
+          },
+          {
+            "type": "Literal",
+            "value": false,
+            "raw": "false"
+          },
+          {
+            "type": "Literal",
+            "value": "same-key transition must wait for the first transaction",
+            "raw": "'same-key transition must wait for the first transaction'"
+          }
+        ],
+        "optional": false
+      }
+    },
+    {
+      "line": 487,
+      "method": "equal",
+      "source": "assert.equal((await atSequence('quote-key-a', 6))[0].quote_version_id, 'quote-a-b2')",
+      "AST": {
+        "type": "CallExpression",
+        "callee": {
+          "type": "MemberExpression",
+          "object": {
+            "type": "Identifier",
+            "name": "assert"
+          },
+          "property": {
+            "type": "Identifier",
+            "name": "equal"
+          },
+          "computed": false,
+          "optional": false
+        },
+        "arguments": [
+          {
+            "type": "MemberExpression",
+            "object": {
+              "type": "MemberExpression",
+              "object": {
+                "type": "AwaitExpression",
+                "argument": {
+                  "type": "CallExpression",
+                  "callee": {
+                    "type": "Identifier",
+                    "name": "atSequence"
+                  },
+                  "arguments": [
+                    {
+                      "type": "Literal",
+                      "value": "quote-key-a",
+                      "raw": "'quote-key-a'"
+                    },
+                    {
+                      "type": "Literal",
+                      "value": 6,
+                      "raw": "6"
+                    }
+                  ],
+                  "optional": false
+                }
+              },
+              "property": {
+                "type": "Literal",
+                "value": 0,
+                "raw": "0"
+              },
+              "computed": true,
+              "optional": false
+            },
+            "property": {
+              "type": "Identifier",
+              "name": "quote_version_id"
+            },
+            "computed": false,
+            "optional": false
+          },
+          {
+            "type": "Literal",
+            "value": "quote-a-b2",
+            "raw": "'quote-a-b2'"
+          }
+        ],
+        "optional": false
+      }
+    },
+    {
+      "line": 488,
+      "method": "equal",
+      "source": "assert.equal((await atSequence('quote-key-a', Number(capturedAttemptQuote.transition_seq)))[0]\n        .quote_version_id, capturedAttemptQuote.quote_version_id)",
+      "AST": {
+        "type": "CallExpression",
+        "callee": {
+          "type": "MemberExpression",
+          "object": {
+            "type": "Identifier",
+            "name": "assert"
+          },
+          "property": {
+            "type": "Identifier",
+            "name": "equal"
+          },
+          "computed": false,
+          "optional": false
+        },
+        "arguments": [
+          {
+            "type": "MemberExpression",
+            "object": {
+              "type": "MemberExpression",
+              "object": {
+                "type": "AwaitExpression",
+                "argument": {
+                  "type": "CallExpression",
+                  "callee": {
+                    "type": "Identifier",
+                    "name": "atSequence"
+                  },
+                  "arguments": [
+                    {
+                      "type": "Literal",
+                      "value": "quote-key-a",
+                      "raw": "'quote-key-a'"
+                    },
+                    {
+                      "type": "CallExpression",
+                      "callee": {
+                        "type": "Identifier",
+                        "name": "Number"
+                      },
+                      "arguments": [
+                        {
+                          "type": "MemberExpression",
+                          "object": {
+                            "type": "Identifier",
+                            "name": "capturedAttemptQuote"
+                          },
+                          "property": {
+                            "type": "Identifier",
+                            "name": "transition_seq"
+                          },
+                          "computed": false,
+                          "optional": false
+                        }
+                      ],
+                      "optional": false
+                    }
+                  ],
+                  "optional": false
+                }
+              },
+              "property": {
+                "type": "Literal",
+                "value": 0,
+                "raw": "0"
+              },
+              "computed": true,
+              "optional": false
+            },
+            "property": {
+              "type": "Identifier",
+              "name": "quote_version_id"
+            },
+            "computed": false,
+            "optional": false
+          },
+          {
+            "type": "MemberExpression",
+            "object": {
+              "type": "Identifier",
+              "name": "capturedAttemptQuote"
+            },
+            "property": {
+              "type": "Identifier",
+              "name": "quote_version_id"
+            },
+            "computed": false,
+            "optional": false
+          }
+        ],
+        "optional": false
+      }
+    },
+    {
+      "line": 493,
+      "method": "equal",
+      "source": "assert.equal(capturedFact.version_id, 'quote-a-b1')",
+      "AST": {
+        "type": "CallExpression",
+        "callee": {
+          "type": "MemberExpression",
+          "object": {
+            "type": "Identifier",
+            "name": "assert"
+          },
+          "property": {
+            "type": "Identifier",
+            "name": "equal"
+          },
+          "computed": false,
+          "optional": false
+        },
+        "arguments": [
+          {
+            "type": "MemberExpression",
+            "object": {
+              "type": "Identifier",
+              "name": "capturedFact"
+            },
+            "property": {
+              "type": "Identifier",
+              "name": "version_id"
+            },
+            "computed": false,
+            "optional": false
+          },
+          {
+            "type": "Literal",
+            "value": "quote-a-b1",
+            "raw": "'quote-a-b1'"
+          }
+        ],
+        "optional": false
+      }
+    },
+    {
+      "line": 494,
+      "method": "equal",
+      "source": "assert.equal(capturedFact.seller_user_id, 'quote-seller-b')",
+      "AST": {
+        "type": "CallExpression",
+        "callee": {
+          "type": "MemberExpression",
+          "object": {
+            "type": "Identifier",
+            "name": "assert"
+          },
+          "property": {
+            "type": "Identifier",
+            "name": "equal"
+          },
+          "computed": false,
+          "optional": false
+        },
+        "arguments": [
+          {
+            "type": "MemberExpression",
+            "object": {
+              "type": "Identifier",
+              "name": "capturedFact"
+            },
+            "property": {
+              "type": "Identifier",
+              "name": "seller_user_id"
+            },
+            "computed": false,
+            "optional": false
+          },
+          {
+            "type": "Literal",
+            "value": "quote-seller-b",
+            "raw": "'quote-seller-b'"
+          }
+        ],
+        "optional": false
+      }
+    },
+    {
+      "line": 495,
+      "method": "equal",
+      "source": "assert.equal(capturedFact.input_price_per_million, '5.750000')",
+      "AST": {
+        "type": "CallExpression",
+        "callee": {
+          "type": "MemberExpression",
+          "object": {
+            "type": "Identifier",
+            "name": "assert"
+          },
+          "property": {
+            "type": "Identifier",
+            "name": "equal"
+          },
+          "computed": false,
+          "optional": false
+        },
+        "arguments": [
+          {
+            "type": "MemberExpression",
+            "object": {
+              "type": "Identifier",
+              "name": "capturedFact"
+            },
+            "property": {
+              "type": "Identifier",
+              "name": "input_price_per_million"
+            },
+            "computed": false,
+            "optional": false
+          },
+          {
+            "type": "Literal",
+            "value": "5.750000",
+            "raw": "'5.750000'"
+          }
+        ],
+        "optional": false
+      }
+    },
+    {
+      "line": 499,
+      "method": "equal",
+      "source": "assert.equal(pendingTimeAfterCommit.quote_version_id, 'quote-a-b2')",
+      "AST": {
+        "type": "CallExpression",
+        "callee": {
+          "type": "MemberExpression",
+          "object": {
+            "type": "Identifier",
+            "name": "assert"
+          },
+          "property": {
+            "type": "Identifier",
+            "name": "equal"
+          },
+          "computed": false,
+          "optional": false
+        },
+        "arguments": [
+          {
+            "type": "MemberExpression",
+            "object": {
+              "type": "Identifier",
+              "name": "pendingTimeAfterCommit"
+            },
+            "property": {
+              "type": "Identifier",
+              "name": "quote_version_id"
+            },
+            "computed": false,
+            "optional": false
+          },
+          {
+            "type": "Literal",
+            "value": "quote-a-b2",
+            "raw": "'quote-a-b2'"
+          }
+        ],
+        "optional": false
+      }
+    },
+    {
+      "line": 505,
+      "method": "equal",
+      "source": "assert.equal((await migrator.unsafe(`SELECT quote_version_id FROM\n        ${quotes}.claim_shared_key_quote_for_dispatch('quote-key-b')`))[0]\n        .quote_version_id, 'quote-b-1')",
+      "AST": {
+        "type": "CallExpression",
+        "callee": {
+          "type": "MemberExpression",
+          "object": {
+            "type": "Identifier",
+            "name": "assert"
+          },
+          "property": {
+            "type": "Identifier",
+            "name": "equal"
+          },
+          "computed": false,
+          "optional": false
+        },
+        "arguments": [
+          {
+            "type": "MemberExpression",
+            "object": {
+              "type": "MemberExpression",
+              "object": {
+                "type": "AwaitExpression",
+                "argument": {
+                  "type": "CallExpression",
+                  "callee": {
+                    "type": "MemberExpression",
+                    "object": {
+                      "type": "Identifier",
+                      "name": "migrator"
+                    },
+                    "property": {
+                      "type": "Identifier",
+                      "name": "unsafe"
+                    },
+                    "computed": false,
+                    "optional": false
+                  },
+                  "arguments": [
+                    {
+                      "type": "TemplateLiteral",
+                      "expressions": [
+                        {
+                          "type": "Identifier",
+                          "name": "quotes"
+                        }
+                      ],
+                      "quasis": [
+                        {
+                          "type": "TemplateElement",
+                          "value": {
+                            "raw": "SELECT quote_version_id FROM\n        ",
+                            "cooked": "SELECT quote_version_id FROM\n        "
+                          },
+                          "tail": false
+                        },
+                        {
+                          "type": "TemplateElement",
+                          "value": {
+                            "raw": ".claim_shared_key_quote_for_dispatch('quote-key-b')",
+                            "cooked": ".claim_shared_key_quote_for_dispatch('quote-key-b')"
+                          },
+                          "tail": true
+                        }
+                      ]
+                    }
+                  ],
+                  "optional": false
+                }
+              },
+              "property": {
+                "type": "Literal",
+                "value": 0,
+                "raw": "0"
+              },
+              "computed": true,
+              "optional": false
+            },
+            "property": {
+              "type": "Identifier",
+              "name": "quote_version_id"
+            },
+            "computed": false,
+            "optional": false
+          },
+          {
+            "type": "Literal",
+            "value": "quote-b-1",
+            "raw": "'quote-b-1'"
+          }
+        ],
+        "optional": false
+      }
+    },
+    {
+      "line": 521,
+      "method": "equal",
+      "source": "assert.equal((await competing.unsafe(`SELECT quote_version_id FROM ${transitionTable}\n          WHERE shared_key_id='quote-key-b' ORDER BY transition_seq DESC LIMIT 1`))[0]\n          .quote_version_id, 'quote-b-1')",
+      "AST": {
+        "type": "CallExpression",
+        "callee": {
+          "type": "MemberExpression",
+          "object": {
+            "type": "Identifier",
+            "name": "assert"
+          },
+          "property": {
+            "type": "Identifier",
+            "name": "equal"
+          },
+          "computed": false,
+          "optional": false
+        },
+        "arguments": [
+          {
+            "type": "MemberExpression",
+            "object": {
+              "type": "MemberExpression",
+              "object": {
+                "type": "AwaitExpression",
+                "argument": {
+                  "type": "CallExpression",
+                  "callee": {
+                    "type": "MemberExpression",
+                    "object": {
+                      "type": "Identifier",
+                      "name": "competing"
+                    },
+                    "property": {
+                      "type": "Identifier",
+                      "name": "unsafe"
+                    },
+                    "computed": false,
+                    "optional": false
+                  },
+                  "arguments": [
+                    {
+                      "type": "TemplateLiteral",
+                      "expressions": [
+                        {
+                          "type": "Identifier",
+                          "name": "transitionTable"
+                        }
+                      ],
+                      "quasis": [
+                        {
+                          "type": "TemplateElement",
+                          "value": {
+                            "raw": "SELECT quote_version_id FROM ",
+                            "cooked": "SELECT quote_version_id FROM "
+                          },
+                          "tail": false
+                        },
+                        {
+                          "type": "TemplateElement",
+                          "value": {
+                            "raw": "\n          WHERE shared_key_id='quote-key-b' ORDER BY transition_seq DESC LIMIT 1",
+                            "cooked": "\n          WHERE shared_key_id='quote-key-b' ORDER BY transition_seq DESC LIMIT 1"
+                          },
+                          "tail": true
+                        }
+                      ]
+                    }
+                  ],
+                  "optional": false
+                }
+              },
+              "property": {
+                "type": "Literal",
+                "value": 0,
+                "raw": "0"
+              },
+              "computed": true,
+              "optional": false
+            },
+            "property": {
+              "type": "Identifier",
+              "name": "quote_version_id"
+            },
+            "computed": false,
+            "optional": false
+          },
+          {
+            "type": "Literal",
+            "value": "quote-b-1",
+            "raw": "'quote-b-1'"
+          }
+        ],
+        "optional": false
+      }
+    },
+    {
+      "line": 530,
+      "method": "equal",
+      "source": "assert.equal(claimSettled, false, 'billable claim must wait for in-flight revocation')",
+      "AST": {
+        "type": "CallExpression",
+        "callee": {
+          "type": "MemberExpression",
+          "object": {
+            "type": "Identifier",
+            "name": "assert"
+          },
+          "property": {
+            "type": "Identifier",
+            "name": "equal"
+          },
+          "computed": false,
+          "optional": false
+        },
+        "arguments": [
+          {
+            "type": "Identifier",
+            "name": "claimSettled"
+          },
+          {
+            "type": "Literal",
+            "value": false,
+            "raw": "false"
+          },
+          {
+            "type": "Literal",
+            "value": "billable claim must wait for in-flight revocation",
+            "raw": "'billable claim must wait for in-flight revocation'"
+          }
+        ],
+        "optional": false
+      }
+    },
+    {
+      "line": 538,
+      "method": "equal",
+      "source": "assert.equal((await atSequence('quote-key-b', 1))[0].quote_version_id, 'quote-b-1')",
+      "AST": {
+        "type": "CallExpression",
+        "callee": {
+          "type": "MemberExpression",
+          "object": {
+            "type": "Identifier",
+            "name": "assert"
+          },
+          "property": {
+            "type": "Identifier",
+            "name": "equal"
+          },
+          "computed": false,
+          "optional": false
+        },
+        "arguments": [
+          {
+            "type": "MemberExpression",
+            "object": {
+              "type": "MemberExpression",
+              "object": {
+                "type": "AwaitExpression",
+                "argument": {
+                  "type": "CallExpression",
+                  "callee": {
+                    "type": "Identifier",
+                    "name": "atSequence"
+                  },
+                  "arguments": [
+                    {
+                      "type": "Literal",
+                      "value": "quote-key-b",
+                      "raw": "'quote-key-b'"
+                    },
+                    {
+                      "type": "Literal",
+                      "value": 1,
+                      "raw": "1"
+                    }
+                  ],
+                  "optional": false
+                }
+              },
+              "property": {
+                "type": "Literal",
+                "value": 0,
+                "raw": "0"
+              },
+              "computed": true,
+              "optional": false
+            },
+            "property": {
+              "type": "Identifier",
+              "name": "quote_version_id"
+            },
+            "computed": false,
+            "optional": false
+          },
+          {
+            "type": "Literal",
+            "value": "quote-b-1",
+            "raw": "'quote-b-1'"
+          }
+        ],
+        "optional": false
+      }
+    },
+    {
+      "line": 539,
+      "method": "equal",
+      "source": "assert.equal((await atSequence('quote-key-b', 2))[0].transition_kind, 'revoke')",
+      "AST": {
+        "type": "CallExpression",
+        "callee": {
+          "type": "MemberExpression",
+          "object": {
+            "type": "Identifier",
+            "name": "assert"
+          },
+          "property": {
+            "type": "Identifier",
+            "name": "equal"
+          },
+          "computed": false,
+          "optional": false
+        },
+        "arguments": [
+          {
+            "type": "MemberExpression",
+            "object": {
+              "type": "MemberExpression",
+              "object": {
+                "type": "AwaitExpression",
+                "argument": {
+                  "type": "CallExpression",
+                  "callee": {
+                    "type": "Identifier",
+                    "name": "atSequence"
+                  },
+                  "arguments": [
+                    {
+                      "type": "Literal",
+                      "value": "quote-key-b",
+                      "raw": "'quote-key-b'"
+                    },
+                    {
+                      "type": "Literal",
+                      "value": 2,
+                      "raw": "2"
+                    }
+                  ],
+                  "optional": false
+                }
+              },
+              "property": {
+                "type": "Literal",
+                "value": 0,
+                "raw": "0"
+              },
+              "computed": true,
+              "optional": false
+            },
+            "property": {
+              "type": "Identifier",
+              "name": "transition_kind"
+            },
+            "computed": false,
+            "optional": false
+          },
+          {
+            "type": "Literal",
+            "value": "revoke",
+            "raw": "'revoke'"
+          }
+        ],
+        "optional": false
+      }
+    },
+    {
+      "line": 540,
+      "method": "equal",
+      "source": "assert.equal((await atSequence('quote-key-b', 2))[0].quote_version_id, null)",
+      "AST": {
+        "type": "CallExpression",
+        "callee": {
+          "type": "MemberExpression",
+          "object": {
+            "type": "Identifier",
+            "name": "assert"
+          },
+          "property": {
+            "type": "Identifier",
+            "name": "equal"
+          },
+          "computed": false,
+          "optional": false
+        },
+        "arguments": [
+          {
+            "type": "MemberExpression",
+            "object": {
+              "type": "MemberExpression",
+              "object": {
+                "type": "AwaitExpression",
+                "argument": {
+                  "type": "CallExpression",
+                  "callee": {
+                    "type": "Identifier",
+                    "name": "atSequence"
+                  },
+                  "arguments": [
+                    {
+                      "type": "Literal",
+                      "value": "quote-key-b",
+                      "raw": "'quote-key-b'"
+                    },
+                    {
+                      "type": "Literal",
+                      "value": 2,
+                      "raw": "2"
+                    }
+                  ],
+                  "optional": false
+                }
+              },
+              "property": {
+                "type": "Literal",
+                "value": 0,
+                "raw": "0"
+              },
+              "computed": true,
+              "optional": false
+            },
+            "property": {
+              "type": "Identifier",
+              "name": "quote_version_id"
+            },
+            "computed": false,
+            "optional": false
+          },
+          {
+            "type": "Literal",
+            "value": null,
+            "raw": "null"
+          }
+        ],
+        "optional": false
+      }
+    },
+    {
+      "line": 577,
+      "method": "deepEqual",
+      "source": "assert.deepEqual(acl, { schema_usage: false, fact_select: false,\n        transition_select: false, transition_insert: false,\n        resolver_execute: false, claim_execute: false })",
+      "AST": {
+        "type": "CallExpression",
+        "callee": {
+          "type": "MemberExpression",
+          "object": {
+            "type": "Identifier",
+            "name": "assert"
+          },
+          "property": {
+            "type": "Identifier",
+            "name": "deepEqual"
+          },
+          "computed": false,
+          "optional": false
+        },
+        "arguments": [
+          {
+            "type": "Identifier",
+            "name": "acl"
+          },
+          {
+            "type": "ObjectExpression",
+            "properties": [
+              {
+                "type": "Property",
+                "method": false,
+                "shorthand": false,
+                "computed": false,
+                "key": {
+                  "type": "Identifier",
+                  "name": "schema_usage"
+                },
+                "value": {
+                  "type": "Literal",
+                  "value": false,
+                  "raw": "false"
+                },
+                "kind": "init"
+              },
+              {
+                "type": "Property",
+                "method": false,
+                "shorthand": false,
+                "computed": false,
+                "key": {
+                  "type": "Identifier",
+                  "name": "fact_select"
+                },
+                "value": {
+                  "type": "Literal",
+                  "value": false,
+                  "raw": "false"
+                },
+                "kind": "init"
+              },
+              {
+                "type": "Property",
+                "method": false,
+                "shorthand": false,
+                "computed": false,
+                "key": {
+                  "type": "Identifier",
+                  "name": "transition_select"
+                },
+                "value": {
+                  "type": "Literal",
+                  "value": false,
+                  "raw": "false"
+                },
+                "kind": "init"
+              },
+              {
+                "type": "Property",
+                "method": false,
+                "shorthand": false,
+                "computed": false,
+                "key": {
+                  "type": "Identifier",
+                  "name": "transition_insert"
+                },
+                "value": {
+                  "type": "Literal",
+                  "value": false,
+                  "raw": "false"
+                },
+                "kind": "init"
+              },
+              {
+                "type": "Property",
+                "method": false,
+                "shorthand": false,
+                "computed": false,
+                "key": {
+                  "type": "Identifier",
+                  "name": "resolver_execute"
+                },
+                "value": {
+                  "type": "Literal",
+                  "value": false,
+                  "raw": "false"
+                },
+                "kind": "init"
+              },
+              {
+                "type": "Property",
+                "method": false,
+                "shorthand": false,
+                "computed": false,
+                "key": {
+                  "type": "Identifier",
+                  "name": "claim_execute"
+                },
+                "value": {
+                  "type": "Literal",
+                  "value": false,
+                  "raw": "false"
+                },
+                "kind": "init"
+              }
+            ]
+          }
+        ],
+        "optional": false
+      }
+    }
+  ],
+  "parserOnly": true,
+  "fixtureImportedOrExecuted": false,
+  "databaseExecuted": false,
+  "candidateWritten": false
+}

@@ -1,0 +1,19 @@
+{
+  "at": "2026-10-06T05:45:38.920Z",
+  "finishedAt": "2026-10-06T05:45:38.923Z",
+  "operation": "readFile",
+  "path": "C:\\cinagroup\\cinatoken\\scripts\\db\\cutover\\postgres-shared-key-quote-versions.native.test.mjs",
+  "actualExit": 0,
+  "signal": null,
+  "error": null,
+  "stdout": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-quote-version-three-casts-879c829257b645e4ada53e37362201bd\\current-source.stdout.log",
+    "bytes": 34823,
+    "sha256": "16ef4b701728c9de46ea932851354d7cee2aa9d80c6ab543ceae6f4526380c83"
+  },
+  "stderr": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-quote-version-three-casts-879c829257b645e4ada53e37362201bd\\current-source.stderr.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+}

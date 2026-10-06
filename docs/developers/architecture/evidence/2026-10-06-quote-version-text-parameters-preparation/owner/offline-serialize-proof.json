@@ -1,0 +1,39 @@
+{
+  "at": "2026-10-06T05:47:28.589Z",
+  "actualExit": 0,
+  "driverVersion": "3.4.9",
+  "lock": {
+    "version": "3.4.9",
+    "lockVersion": "3.4.9",
+    "integrity": "sha512-GD3qdB0x1z9xgFI6cdRD6xu2Sp2WCOEoe3mtnyB5Ee0XrrL5Pe+e4CCnJrRMnL1zYtRDZmQQVbvOttLnKDLnaw=="
+  },
+  "installedTypeSource": {
+    "path": "node_modules/postgres/src/types.js",
+    "bytes": 10935,
+    "sha256": "1883bd4536eab1c94b9e708d325b13708b0f18ec80020e3a825f34a72f603b81"
+  },
+  "realFunctionSources": {
+    "timestamp1184": "x => (x instanceof Date ? x : new Date(x)).toISOString()",
+    "text25": "x => '' + x"
+  },
+  "cases": [
+    {
+      "label": "microsecond-text",
+      "input": "2026-10-06 05:45:00.123456+00",
+      "timestampSerialize1184": "2026-10-06T05:45:00.123Z",
+      "textSerialize25": "2026-10-06 05:45:00.123456+00"
+    },
+    {
+      "label": "millisecond-control",
+      "input": "2026-10-06 05:45:00.123+00",
+      "timestampSerialize1184": "2026-10-06T05:45:00.123Z",
+      "textSerialize25": "2026-10-06 05:45:00.123+00"
+    }
+  ],
+  "observedMechanism": "The actual installed3.4.9 timestamp serializer normalizes both inputs through JavaScript Date to millisecond ISO text; its text serializer preserves the controlled original input strings.",
+  "boundary": "This directly exercises real driver serializer functions offline. It does not establish the server-inferred parameter OID, actual PG timing/root cause, or native fixture pass.",
+  "databaseExecuted": false,
+  "postgresClientCreated": false,
+  "nativeExecuted": false,
+  "rootCauseConfirmed": false
+}

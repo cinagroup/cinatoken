@@ -1,0 +1,15 @@
+{
+  "schema": "cinatoken-readonly-investigation-pre-wrapper-observed-tool-returns-v1",
+  "interpretation": "These are original observed tool return fields from exploratory reads before the owned capture wrapper existed. They are not native child stdout/stderr manifests. Truncated successful search outputs are not claimed to be full raw bytes; the later source snapshots and captured static reader commands provide the complete selected input bytes.",
+  "negativeOrNoMatchReturnsPreserved": [
+    { "chunk_id": "b0c101", "wall_time_seconds": 0.2912865, "exit_code": 1, "original_token_count": 0, "output": "", "kind": "Expected no matches for quote symbol names under active core src" },
+    { "chunk_id": "a7ab87", "wall_time_seconds": 0.1168298, "exit_code": 1, "original_token_count": 95, "output": "rg: .github/workflows/proxy-backend.yml: The system cannot find the file specified. (os error 2)\npackages/core/src/test-support/postgres-native-cluster.mjs:17:  const configuredBin = process.env.GATEWAY_NATIVE_PG_BIN;\npackages/core/src/test-support/postgres-native-cluster.mjs:18:  assert.ok(configuredBin, 'Explicit GATEWAY_NATIVE_PG_BIN is required; no DATABASE_URL fallback');\n", "kind": "Exploratory read used a nonexistent workflow filename; later corrected to existing proxy-dispatch-safety.yml. Original read failure is preserved, no product/test outcome inferred." }
+  ],
+  "truncatedSuccessfulSearchReturns": [
+    { "chunk_id": "0364ed", "exit_code": 0, "original_token_count": 6590, "outputTruncated": true },
+    { "chunk_id": "c00950", "exit_code": 0, "original_token_count": 4786, "outputTruncated": true },
+    { "chunk_id": "387f12", "exit_code": 0, "original_token_count": 795574, "outputTruncated": true, "kind": "Broad search included large proposal baseline literals; no full raw claim or subsequent broad archive scan." }
+  ],
+  "applicationOrDatabaseOrCIRun": false,
+  "gatePassDerived": false
+}

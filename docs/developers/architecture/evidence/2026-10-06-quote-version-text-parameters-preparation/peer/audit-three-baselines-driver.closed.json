@@ -1,0 +1,26 @@
+{
+  "schema": "independent-native-quote-timecast-readonly-child-receipt-v1",
+  "name": "audit-three-baselines-driver",
+  "executable": "C:/Program Files/nodejs/node.exe",
+  "argv": [
+    "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-quote-timecast-independent-peer-3dc5347c2a4646ac8cc4bcc085aa9dc5/audit-three-baselines-driver.mjs",
+    "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-quote-timecast-independent-peer-3dc5347c2a4646ac8cc4bcc085aa9dc5"
+  ],
+  "cwd": "C:/cinagroup/cinatoken",
+  "startedAt": "2026-10-06T05:45:12.656Z",
+  "closedAt": "2026-10-06T05:45:12.901Z",
+  "actualExit": 0,
+  "signal": null,
+  "spawnError": null,
+  "closed": true,
+  "stdout": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-quote-timecast-independent-peer-3dc5347c2a4646ac8cc4bcc085aa9dc5\\audit-three-baselines-driver.stdout.log",
+    "bytes": 13919,
+    "sha256": "105cd88e34812facf365f9c443b7d35d5b98f89ea5a12e582da803e2cb583462"
+  },
+  "stderr": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-quote-timecast-independent-peer-3dc5347c2a4646ac8cc4bcc085aa9dc5\\audit-three-baselines-driver.stderr.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+}

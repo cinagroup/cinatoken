@@ -1,0 +1,22 @@
+{
+  "at": "2026-10-06T05:45:38.687Z",
+  "finishedAt": "2026-10-06T05:45:39.877Z",
+  "executable": "C:/Program Files/nodejs/node.exe",
+  "args": [
+    "C:/Users/cina/AppData/Local/Temp/cinatoken-quote-version-three-casts-879c829257b645e4ada53e37362201bd/collect-inputs.mjs"
+  ],
+  "cwd": "C:/cinagroup/cinatoken",
+  "actualExit": 0,
+  "signal": null,
+  "spawnError": null,
+  "stdout": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-quote-version-three-casts-879c829257b645e4ada53e37362201bd\\collect-inputs.stdout.log",
+    "bytes": 594,
+    "sha256": "9be3333f76c9ac3e1e021c2cc8b9d0dff58e16380f921e2f966470fbe87941e0"
+  },
+  "stderr": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-quote-version-three-casts-879c829257b645e4ada53e37362201bd\\collect-inputs.stderr.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+}

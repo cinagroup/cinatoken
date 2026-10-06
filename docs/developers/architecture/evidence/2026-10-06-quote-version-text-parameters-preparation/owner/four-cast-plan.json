@@ -1,0 +1,68 @@
+{
+  "actualExit": 0,
+  "baseCommit": "4a9b4fb984035bb62ec5930cce01f8da605f476f",
+  "target": "scripts/db/cutover/postgres-shared-key-quote-versions.native.test.mjs",
+  "before": {
+    "bytes": 34823,
+    "sha256": "16ef4b701728c9de46ea932851354d7cee2aa9d80c6ab543ceae6f4526380c83"
+  },
+  "after": {
+    "bytes": 34873,
+    "sha256": "c72cc41a679c64a1fb7edd733fe450e3cea8a9bdc9408b8cb152fb0a9135187f"
+  },
+  "queries": [
+    {
+      "start": 26916,
+      "end": 26975,
+      "source": "`SELECT $1::timestamptz >= $2::timestamptz AS after_insert`",
+      "call": "competing.unsafe(`SELECT $1::timestamptz >= $2::timestamptz AS after_insert`,\n        [observedAt.at, pendingEffectiveAt])"
+    },
+    {
+      "start": 27110,
+      "end": 27209,
+      "source": "`SELECT quote_version_id\n        FROM ${quotes}.resolve_shared_key_quote_at_time('quote-key-a',$1)`",
+      "call": "competing.unsafe(`SELECT quote_version_id\n        FROM ${quotes}.resolve_shared_key_quote_at_time('quote-key-a',$1)`,\n      [observedAt.at])"
+    },
+    {
+      "start": 28589,
+      "end": 28688,
+      "source": "`SELECT quote_version_id\n        FROM ${quotes}.resolve_shared_key_quote_at_time('quote-key-a',$1)`",
+      "call": "competing.unsafe(`SELECT quote_version_id\n        FROM ${quotes}.resolve_shared_key_quote_at_time('quote-key-a',$1)`,\n      [observedAt.at])"
+    }
+  ],
+  "edits": [
+    {
+      "queryIndex": 0,
+      "offset": 26926,
+      "insertion": "::text",
+      "parameter": "$1",
+      "originalLine": 470
+    },
+    {
+      "queryIndex": 0,
+      "offset": 26945,
+      "insertion": "::text",
+      "parameter": "$2",
+      "originalLine": 470
+    },
+    {
+      "queryIndex": 1,
+      "offset": 27207,
+      "insertion": "::text::timestamptz",
+      "parameter": "$1",
+      "originalLine": 473
+    },
+    {
+      "queryIndex": 2,
+      "offset": 28686,
+      "insertion": "::text::timestamptz",
+      "parameter": "$1",
+      "originalLine": 497
+    }
+  ],
+  "onlyInsertions": true,
+  "noNewlinesInserted": true,
+  "repositoryWritePaths": [
+    "scripts/db/cutover/postgres-shared-key-quote-versions.native.test.mjs"
+  ]
+}

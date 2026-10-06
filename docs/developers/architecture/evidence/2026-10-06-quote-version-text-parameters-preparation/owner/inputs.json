@@ -1,0 +1,263 @@
+{
+  "at": "2026-10-06T05:45:39.852Z",
+  "actualExit": 0,
+  "baseCommit": "4a9b4fb984035bb62ec5930cce01f8da605f476f",
+  "head": "4a9b4fb984035bb62ec5930cce01f8da605f476f",
+  "target": "scripts/db/cutover/postgres-shared-key-quote-versions.native.test.mjs",
+  "originalBlob": "da61172ea25d53bc31cdc10f2999defce06d6559",
+  "before": {
+    "bytes": 34823,
+    "sha256": "16ef4b701728c9de46ea932851354d7cee2aa9d80c6ab543ceae6f4526380c83"
+  },
+  "diagnosis": {
+    "at": "2026-10-06T05:45:38.987Z",
+    "finishedAt": "2026-10-06T05:45:38.989Z",
+    "operation": "readFile",
+    "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-quote-version-next-readonly-gn9DdD/FINAL-quote-version-499-readonly-diagnosis.json",
+    "actualExit": 0,
+    "signal": null,
+    "error": null,
+    "stdout": {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-quote-version-three-casts-879c829257b645e4ada53e37362201bd\\frozen-diagnosis.stdout.log",
+      "bytes": 26643,
+      "sha256": "92f7916e867d6e8c807b0c5dc50ca04321fb5d1c9d0248be477e735fd1706975"
+    },
+    "stderr": {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-quote-version-three-casts-879c829257b645e4ada53e37362201bd\\frozen-diagnosis.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  },
+  "imports": [
+    {
+      "module": "node:assert/strict",
+      "source": "import assert from 'node:assert/strict';"
+    },
+    {
+      "module": "node:crypto",
+      "source": "import { createHash, randomBytes, randomUUID } from 'node:crypto';"
+    },
+    {
+      "module": "node:fs/promises",
+      "source": "import { readFile, writeFile } from 'node:fs/promises';"
+    },
+    {
+      "module": "node:path",
+      "source": "import { dirname, join } from 'node:path';"
+    },
+    {
+      "module": "node:timers/promises",
+      "source": "import { setTimeout as delay } from 'node:timers/promises';"
+    },
+    {
+      "module": "node:test",
+      "source": "import test from 'node:test';"
+    },
+    {
+      "module": "postgres",
+      "source": "import postgres from 'postgres';"
+    },
+    {
+      "module": "../../../packages/core/src/test-support/postgres-native-cluster.mjs",
+      "source": "import { startNativePostgres } from '../../../packages/core/src/test-support/postgres-native-cluster.mjs';"
+    },
+    {
+      "module": "./pg73-native-fixture.mjs",
+      "source": "import { grantPg73RuntimeFixture, listPg73Migrations } from './pg73-native-fixture.mjs';"
+    }
+  ],
+  "urls": [
+    {
+      "value": "../../../packages/core/migrations-postgres/",
+      "source": "new URL('../../../packages/core/migrations-postgres/', import.meta.url)"
+    },
+    {
+      "value": "../../../packages/core/migrations-proposals/postgres/shared-key-quote-versions.sql",
+      "source": "new URL('../../../packages/core/migrations-proposals/postgres/shared-key-quote-versions.sql', import.meta.url)"
+    }
+  ],
+  "protection": [
+    {
+      "path": "package-lock.json",
+      "bytes": 830546,
+      "sha256": "f9c65b6e373a231d52d6eda634bb5f947dda3174734cd70e2b811e09fff0b6f0"
+    },
+    {
+      "path": "node_modules/postgres/package.json",
+      "bytes": 1814,
+      "sha256": "944d492614959389a5739ef2893bc1830fb773ff042159d9b331d43b2f6792e9"
+    },
+    {
+      "path": "node_modules/postgres/src/types.js",
+      "bytes": 10935,
+      "sha256": "1883bd4536eab1c94b9e708d325b13708b0f18ec80020e3a825f34a72f603b81"
+    },
+    {
+      "path": "node_modules/postgres/src/errors.js",
+      "bytes": 1155,
+      "sha256": "85cfbed9a5ab0db41ab8e97b806c881af29807dfe99bc656fdf1a18c1c13b6c6"
+    },
+    {
+      "path": "packages/core/src/test-support/postgres-native-cluster.mjs",
+      "bytes": 6300,
+      "sha256": "6b5923be8d3bdcd061033eed1af2f67f3b87fa2fca1f2cf0a0b2eb0eb2cb8d2a"
+    },
+    {
+      "path": "scripts/db/cutover/pg73-native-fixture.mjs",
+      "bytes": 6849,
+      "sha256": "124ddd43c2594d0daaac66a4e7158e5df90b00a6d73f03cbcac9e8f853a7346f"
+    },
+    {
+      "path": "packages/core/migrations-proposals/postgres/shared-key-quote-versions.sql",
+      "bytes": 28629,
+      "sha256": "1249a7ff07f95b48c7b45a41833c96c9a028e4bfe3a47e44e9dc6b72c3c77246"
+    },
+    {
+      "path": "scripts/db/cutover/grant-postgres-runtime.ts",
+      "bytes": 25946,
+      "sha256": "3f95f18f557696d8a36b93f7fe0d0d35a391e8ac9cf953376a234a6b629ea242"
+    }
+  ],
+  "driver": {
+    "version": "3.4.9",
+    "lockVersion": "3.4.9",
+    "integrity": "sha512-GD3qdB0x1z9xgFI6cdRD6xu2Sp2WCOEoe3mtnyB5Ee0XrrL5Pe+e4CCnJrRMnL1zYtRDZmQQVbvOttLnKDLnaw=="
+  },
+  "typescriptVersion": "5.9.3",
+  "instructions": [
+    {
+      "at": "2026-10-06T05:45:39.815Z",
+      "finishedAt": "2026-10-06T05:45:39.817Z",
+      "operation": "readFile",
+      "path": "C:/AGENTS.md",
+      "actualExit": null,
+      "signal": null,
+      "error": {
+        "code": "ENOENT",
+        "message": "ENOENT: no such file or directory, open 'C:\\AGENTS.md'"
+      },
+      "stdout": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-quote-version-three-casts-879c829257b645e4ada53e37362201bd\\instructions-0.stdout.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stderr": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-quote-version-three-casts-879c829257b645e4ada53e37362201bd\\instructions-0.stderr.log",
+        "bytes": 86,
+        "sha256": "5d278edcbb935d0b2c7558bc14dc82df294270fe3a304d97a13161a395679815"
+      }
+    },
+    {
+      "at": "2026-10-06T05:45:39.819Z",
+      "finishedAt": "2026-10-06T05:45:39.821Z",
+      "operation": "readFile",
+      "path": "C:/cinagroup/AGENTS.md",
+      "actualExit": null,
+      "signal": null,
+      "error": {
+        "code": "ENOENT",
+        "message": "ENOENT: no such file or directory, open 'C:\\cinagroup\\AGENTS.md'"
+      },
+      "stdout": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-quote-version-three-casts-879c829257b645e4ada53e37362201bd\\instructions-1.stdout.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stderr": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-quote-version-three-casts-879c829257b645e4ada53e37362201bd\\instructions-1.stderr.log",
+        "bytes": 97,
+        "sha256": "71df25981e917974a8fa726b3be5dadc647aec6c826f9886ee62621c98e27a96"
+      }
+    },
+    {
+      "at": "2026-10-06T05:45:39.823Z",
+      "finishedAt": "2026-10-06T05:45:39.824Z",
+      "operation": "readFile",
+      "path": "C:\\cinagroup\\cinatoken\\AGENTS.md",
+      "actualExit": null,
+      "signal": null,
+      "error": {
+        "code": "ENOENT",
+        "message": "ENOENT: no such file or directory, open 'C:\\cinagroup\\cinatoken\\AGENTS.md'"
+      },
+      "stdout": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-quote-version-three-casts-879c829257b645e4ada53e37362201bd\\instructions-2.stdout.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stderr": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-quote-version-three-casts-879c829257b645e4ada53e37362201bd\\instructions-2.stderr.log",
+        "bytes": 108,
+        "sha256": "eca4570bec17a203a76a012a6ddfa0d87894ba69b91bfd528ce2150aa69b814a"
+      }
+    },
+    {
+      "at": "2026-10-06T05:45:39.841Z",
+      "finishedAt": "2026-10-06T05:45:39.844Z",
+      "operation": "readFile",
+      "path": "C:\\cinagroup\\cinatoken\\scripts\\AGENTS.md",
+      "actualExit": null,
+      "signal": null,
+      "error": {
+        "code": "ENOENT",
+        "message": "ENOENT: no such file or directory, open 'C:\\cinagroup\\cinatoken\\scripts\\AGENTS.md'"
+      },
+      "stdout": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-quote-version-three-casts-879c829257b645e4ada53e37362201bd\\instructions-3.stdout.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stderr": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-quote-version-three-casts-879c829257b645e4ada53e37362201bd\\instructions-3.stderr.log",
+        "bytes": 117,
+        "sha256": "6c361dd56e9edf01f92850e038ebd776738b1cc9cae2303cda2d93e02e47838c"
+      }
+    },
+    {
+      "at": "2026-10-06T05:45:39.845Z",
+      "finishedAt": "2026-10-06T05:45:39.846Z",
+      "operation": "readFile",
+      "path": "C:\\cinagroup\\cinatoken\\scripts\\db\\AGENTS.md",
+      "actualExit": null,
+      "signal": null,
+      "error": {
+        "code": "ENOENT",
+        "message": "ENOENT: no such file or directory, open 'C:\\cinagroup\\cinatoken\\scripts\\db\\AGENTS.md'"
+      },
+      "stdout": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-quote-version-three-casts-879c829257b645e4ada53e37362201bd\\instructions-4.stdout.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stderr": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-quote-version-three-casts-879c829257b645e4ada53e37362201bd\\instructions-4.stderr.log",
+        "bytes": 121,
+        "sha256": "eaac7de347436bd48496fb35caaf6f38bee6fd66044d0e872cd9b853702202e6"
+      }
+    },
+    {
+      "at": "2026-10-06T05:45:39.848Z",
+      "finishedAt": "2026-10-06T05:45:39.850Z",
+      "operation": "readFile",
+      "path": "C:\\cinagroup\\cinatoken\\scripts\\db\\cutover\\AGENTS.md",
+      "actualExit": null,
+      "signal": null,
+      "error": {
+        "code": "ENOENT",
+        "message": "ENOENT: no such file or directory, open 'C:\\cinagroup\\cinatoken\\scripts\\db\\cutover\\AGENTS.md'"
+      },
+      "stdout": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-quote-version-three-casts-879c829257b645e4ada53e37362201bd\\instructions-5.stdout.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stderr": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-quote-version-three-casts-879c829257b645e4ada53e37362201bd\\instructions-5.stderr.log",
+        "bytes": 130,
+        "sha256": "4b16f6463e4ccd19af14170d19a90806f6c018a5b12c438c8b72452a9bbedc80"
+      }
+    }
+  ],
+  "repositoryWrites": 0,
+  "nativeExecuted": false
+}

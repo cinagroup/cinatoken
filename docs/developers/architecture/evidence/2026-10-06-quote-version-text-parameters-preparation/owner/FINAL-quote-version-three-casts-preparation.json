@@ -1,0 +1,171 @@
+{
+  "schema": "cinatoken-quote-version-three-query-four-cast-preparation.final.v1",
+  "frozenAt": "2026-10-06T05:51:13.284Z",
+  "baseCommit": "4a9b4fb984035bb62ec5930cce01f8da605f476f",
+  "repositoryWritePaths": [
+    "scripts/db/cutover/postgres-shared-key-quote-versions.native.test.mjs"
+  ],
+  "originalGitBlob": "da61172ea25d53bc31cdc10f2999defce06d6559",
+  "before": {
+    "bytes": 34823,
+    "sha256": "16ef4b701728c9de46ea932851354d7cee2aa9d80c6ab543ceae6f4526380c83"
+  },
+  "after": {
+    "bytes": 34873,
+    "sha256": "c72cc41a679c64a1fb7edd733fe450e3cea8a9bdc9408b8cb152fb0a9135187f"
+  },
+  "changes": {
+    "queries": 3,
+    "parameterCasts": 4,
+    "originalParameterLines": [
+      470,
+      470,
+      473,
+      497
+    ],
+    "comparisonQuery": "$1/$2::timestamptz -> $1/$2::text::timestamptz",
+    "timeResolvers": "Each of the two existing quote-key-a resolver $1 parameters receives ::text::timestamptz.",
+    "otherRepositoryFilesWritten": 0
+  },
+  "sourceSnapshots": {
+    "before": {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-quote-version-three-casts-879c829257b645e4ada53e37362201bd\\source.before.mjs",
+      "bytes": 34823,
+      "sha256": "16ef4b701728c9de46ea932851354d7cee2aa9d80c6ab543ceae6f4526380c83"
+    },
+    "after": {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-quote-version-three-casts-879c829257b645e4ada53e37362201bd\\source.after.mjs",
+      "bytes": 34873,
+      "sha256": "c72cc41a679c64a1fb7edd733fe450e3cea8a9bdc9408b8cb152fb0a9135187f"
+    }
+  },
+  "independentAudit": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-quote-version-three-casts-879c829257b645e4ada53e37362201bd\\independent-cast-audit.json",
+    "bytes": 4951,
+    "sha256": "1704ca3311205fafc7dbb65c482889ffaaa7e6064d9ff7a85fbc3d5b1cea1009"
+  },
+  "original65AssertSourceAndAstAfterOnlyAuthorizedCastReverseExact": true,
+  "directRawAssertionsExact": 64,
+  "authorizedNestedAssertionChange": "One assert.equal contains the comparison SQL; only its two parameter cast literals change. All65 assertion calls/expectations and the entire original source/AST are exact after reversing only the four authorized casts.",
+  "originalB2ExpectationPreserved": true,
+  "otherSqlAndOrderExact": true,
+  "originalWaitsAndOptions": {
+    "waits": [
+      "releaseLedger()",
+      "delay(12)",
+      "releaseOwner()",
+      "delay(100)",
+      "releaseFirst()",
+      "delay(100)",
+      "releaseRevoke()",
+      "releaseRevoke()"
+    ],
+    "options": [
+      "{ timeout: 240_000, skip: !process.env.GATEWAY_NATIVE_PG_BIN }"
+    ]
+  },
+  "productionProposalPinsLoaderGrantsImportsRolesCleanupUnchanged": true,
+  "necessaryProtectedInputs": [
+    {
+      "path": "package-lock.json",
+      "bytes": 830546,
+      "sha256": "f9c65b6e373a231d52d6eda634bb5f947dda3174734cd70e2b811e09fff0b6f0"
+    },
+    {
+      "path": "node_modules/postgres/package.json",
+      "bytes": 1814,
+      "sha256": "944d492614959389a5739ef2893bc1830fb773ff042159d9b331d43b2f6792e9"
+    },
+    {
+      "path": "node_modules/postgres/src/types.js",
+      "bytes": 10935,
+      "sha256": "1883bd4536eab1c94b9e708d325b13708b0f18ec80020e3a825f34a72f603b81"
+    },
+    {
+      "path": "node_modules/postgres/src/errors.js",
+      "bytes": 1155,
+      "sha256": "85cfbed9a5ab0db41ab8e97b806c881af29807dfe99bc656fdf1a18c1c13b6c6"
+    },
+    {
+      "path": "packages/core/src/test-support/postgres-native-cluster.mjs",
+      "bytes": 6300,
+      "sha256": "6b5923be8d3bdcd061033eed1af2f67f3b87fa2fca1f2cf0a0b2eb0eb2cb8d2a"
+    },
+    {
+      "path": "scripts/db/cutover/pg73-native-fixture.mjs",
+      "bytes": 6849,
+      "sha256": "124ddd43c2594d0daaac66a4e7158e5df90b00a6d73f03cbcac9e8f853a7346f"
+    },
+    {
+      "path": "packages/core/migrations-proposals/postgres/shared-key-quote-versions.sql",
+      "bytes": 28629,
+      "sha256": "1249a7ff07f95b48c7b45a41833c96c9a028e4bfe3a47e44e9dc6b72c3c77246"
+    },
+    {
+      "path": "scripts/db/cutover/grant-postgres-runtime.ts",
+      "bytes": 25946,
+      "sha256": "3f95f18f557696d8a36b93f7fe0d0d35a391e8ac9cf953376a234a6b629ea242"
+    }
+  ],
+  "originalFrozenDiagnosis": {
+    "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-quote-version-next-readonly-gn9DdD/FINAL-quote-version-499-readonly-diagnosis.json",
+    "bytes": 26643,
+    "sha256": "92f7916e867d6e8c807b0c5dc50ca04321fb5d1c9d0248be477e735fd1706975"
+  },
+  "staticChecks": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-quote-version-three-casts-879c829257b645e4ada53e37362201bd\\static-checks.json",
+    "bytes": 4338,
+    "sha256": "2176984fe1222560bcc437c58750528f69ea4b7330163ba583e16e1b68aa6bb2"
+  },
+  "syntaxActualExit": 0,
+  "diffCheckActualExit": 0,
+  "oneOfflineDriverControl": {
+    "proof": {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-quote-version-three-casts-879c829257b645e4ada53e37362201bd\\offline-serialize-proof.json",
+      "bytes": 1562,
+      "sha256": "b1132592e17510bad406828ab7617490ffd7cc58ed02ce5bad96de6ce8b6d85e"
+    },
+    "closedReceipt": {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-quote-version-three-casts-879c829257b645e4ada53e37362201bd\\offline-serialize.closed.json",
+      "bytes": 917,
+      "sha256": "8e11bf2c0d52ba4d9aea88ea110ca077c8948f5813f63d6b56c5b8854229f532"
+    },
+    "actualExit": 0,
+    "driverVersion": "3.4.9",
+    "realInstalledSerializeFunctions": true,
+    "postgresClientCreated": false,
+    "observation": "1184 timestamp serializer normalizes both synthetic6-digit and3-digit inputs to .123Z;25 text serializer preserves the controlled strings.",
+    "boundary": "Pure real-driver mechanism control only; does not establish actual server parameter OIDs, PG root cause or native pass."
+  },
+  "commandManifest": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-quote-version-three-casts-879c829257b645e4ada53e37362201bd\\command-manifest.json",
+    "bytes": 35843,
+    "sha256": "4a169d91b3ab8cc2cda13e674c9d66460165092f8fc23cc027d38f1cece7b323"
+  },
+  "receiptBoundary": {
+    "alreadyClosed": 29,
+    "actualZero": 23,
+    "actualNonzero": 0,
+    "actualNull": 6,
+    "expectedAbsentInstructionReads": 6,
+    "finalWriterExpectedClosedReceipt": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-quote-version-three-casts-879c829257b645e4ada53e37362201bd\\finalize.closed.json"
+  },
+  "ownerFileList": "The after-close seal lists every owned ordinary artifact, including raw stdout/stderr, true closed receipts, tool sources and FINAL; seal itself is externally pinned.",
+  "truthBoundary": {
+    "preparedOnly": true,
+    "nativeExecuted": false,
+    "postgresExecuted": false,
+    "ciRerun": false,
+    "applicationRerun": false,
+    "rootCauseConfirmed": false,
+    "gatePassDerived": false,
+    "gitMutations": 0,
+    "markdownWrites": 0,
+    "deploymentActions": 0,
+    "oldFrozenRootsWritten": false,
+    "derivedCiSliceLogsCreated": false,
+    "historyArchivesOrAllOldMetadataCopied": false,
+    "necessaryReadScope": "Only the target, pinned diagnosis and8 necessary direct driver/helper/proposal inputs.",
+    "ownerStopWritesAfterClosedSeal": true
+  }
+}

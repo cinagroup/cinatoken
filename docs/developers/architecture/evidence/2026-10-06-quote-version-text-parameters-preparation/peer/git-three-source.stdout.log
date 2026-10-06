@@ -1,0 +1,1806 @@
+da61172ea25d53bc31cdc10f2999defce06d6559 blob 34823
+// Review-only PG18.6 fixture: owned loopback cluster, synthetic users/keys and
+// quotes only. No ambient database URL, real seller, cloud or deployment.
+import assert from 'node:assert/strict';
+import { createHash, randomBytes, randomUUID } from 'node:crypto';
+import { readFile, writeFile } from 'node:fs/promises';
+import { dirname, join } from 'node:path';
+import { setTimeout as delay } from 'node:timers/promises';
+import test from 'node:test';
+import postgres from 'postgres';
+import { startNativePostgres } from '../../../packages/core/src/test-support/postgres-native-cluster.mjs';
+import { grantPg73RuntimeFixture, listPg73Migrations } from './pg73-native-fixture.mjs';
+
+const gateway = 'cinatoken_gateway';
+const quotes = 'cinatoken_economic_quotes';
+const table = `${quotes}.shared_key_quote_versions`;
+const migrations = new URL('../../../packages/core/migrations-postgres/', import.meta.url);
+const proposal = new URL('../../../packages/core/migrations-proposals/postgres/shared-key-quote-versions.sql', import.meta.url);
+const sha = value => createHash('sha256').update(value).digest('hex');
+const errorInfo = error => ({ code: error?.code ?? null, constraint: error?.constraint_name ?? null,
+  message: String(error?.message ?? error).slice(0, 300) });
+
+function client(cluster, username, password, label) {
+  return postgres({ host: '127.0.0.1', port: cluster.port, database: 'postgres',
+    username, password, ssl: false, max: 1, prepare: false, fetch_types: false,
+    connect_timeout: 3, idle_timeout: 0, max_lifetime: 0, backoff: false,
+    onnotice() {}, connection: { application_name: `cinatoken-quote-v338-${label}` } });
+}
+
+function quote(versionId, overrides = {}) {
+  return {
+    version_id: versionId,
+    shared_key_id: 'quote-key-a',
+    seller_user_id: 'quote-seller-a',
+    input_price_per_million: '1.250000',
+    output_price_per_million: '2.500000',
+    cache_read_price_per_million: '0.100000',
+    cache_write_price_per_million: '0.200000',
+    commission_rate: '0.100000',
+    currency: 'USD',
+    price_unit: 'per_million_tokens',
+    billing_mode: 'shared_seller_key',
+    entitlement_version: 'synthetic-entitlement-v1',
+    ...overrides,
+  };
+}
+
+function transition(transitionId, predecessor, versionId, overrides = {}) {
+  return {
+    transition_id: transitionId,
+    shared_key_id: 'quote-key-a',
+    supersedes_transition_id: predecessor,
+    transition_kind: versionId === null ? 'revoke' : 'activate',
+    quote_version_id: versionId,
+    seller_user_id: 'quote-seller-a',
+    ...overrides,
+  };
+}
+
+async function insertTransition(sql, row) {
+  const columns = Object.keys(row);
+  return sql.unsafe(`INSERT INTO ${quotes}.shared_key_quote_transitions
+    (${columns.join(', ')}) VALUES (${columns.map((_, i) => `$${i + 1}`).join(', ')})`,
+  Object.values(row));
+}
+
+async function insertQuote(sql, row, omitted = []) {
+  // Every identifier comes from the fixed quote() literal above, never input.
+  const columns = Object.keys(row).filter(name => !omitted.includes(name));
+  const params = columns.map(name => row[name]);
+  return sql.unsafe(`INSERT INTO ${table} (${columns.join(', ')}) VALUES (${columns.map((_, i) => `$${i + 1}`).join(', ')})`, params);
+}
+
+async function rejectCode(work, code, constraint) {
+  await assert.rejects(work, error => {
+    assert.equal(error?.code, code);
+    if (constraint) assert.equal(error?.constraint_name, constraint);
+    return true;
+  });
+}
+
+async function activate(sql, body, enabled = true) {
+  await sql.begin(async tx => {
+    if (enabled) await tx.unsafe("SET LOCAL cinatoken.shared_key_quote_versions_activation = 'reviewed-v2'");
+    await tx.unsafe(body).simple();
+  });
+}
+
+test('native PG18 immutable shared-key quote supersession preserves history and serializes operators',
+  { timeout: 240_000, skip: !process.env.GATEWAY_NATIVE_PG_BIN }, async () => {
+    const cluster = await startNativePostgres();
+    const reportPath = join(dirname(cluster.owned), `report-shared-key-quote-v338-${randomUUID()}.json`);
+    const report = { status: 'RUNNING', cleanup: 'PENDING', binaryVersion: cluster.binaryVersion,
+      scope: 'private PG18.6, 73 formal migrations, review-only quote transition proposal',
+      stages: [], limitations: [
+        'No active quote producer, dispatch attachment, typed outbox, earnings consumer or deployment.',
+        'The quote fields missing from existing shared_keys must come from a future trusted authority; fixture values are synthetic.',
+        'Time as-of is retrospective after commit; dispatch must capture the exact transition and quote version, not infer them from a later timestamp.',
+        'D1, MySQL, real Workers and production concurrency are not proven by this local PostgreSQL fixture.',
+      ], sourceSha256: {} };
+    const stage = (name, detail = {}) => report.stages.push({ name, result: 'PASS', ...detail });
+    const clients = [];
+    let failure;
+    try {
+      assert.match(cluster.binaryVersion, /PostgreSQL\) 18\.6/);
+      const migratorPassword = randomBytes(24).toString('hex');
+      const runtimePassword = randomBytes(24).toString('hex');
+      const proxyPassword = randomBytes(24).toString('hex');
+      await cluster.admin.unsafe(`CREATE ROLE cinatoken_gateway_migrator LOGIN PASSWORD '${migratorPassword}';
+        CREATE ROLE cinatoken_gateway_runtime LOGIN PASSWORD '${runtimePassword}';
+        CREATE ROLE quote_proxy LOGIN PASSWORD '${proxyPassword}';
+        GRANT cinatoken_gateway_migrator TO quote_proxy;
+        CREATE SCHEMA ${gateway} AUTHORIZATION cinatoken_gateway_migrator;
+        REVOKE CREATE ON SCHEMA public FROM PUBLIC;
+        GRANT CONNECT ON DATABASE postgres TO cinatoken_gateway_migrator, cinatoken_gateway_runtime, quote_proxy;`).simple();
+      const migrator = client(cluster, 'cinatoken_gateway_migrator', migratorPassword, 'migrator');
+      const competing = client(cluster, 'cinatoken_gateway_migrator', migratorPassword, 'competing');
+      const runtime = client(cluster, 'cinatoken_gateway_runtime', runtimePassword, 'runtime');
+      const proxy = client(cluster, 'quote_proxy', proxyPassword, 'proxy');
+      clients.push(migrator, competing, runtime, proxy);
+      await migrator.unsafe(`CREATE TABLE ${gateway}.schema_migrations (
+        version text PRIMARY KEY, applied_at timestamptz NOT NULL DEFAULT now())`);
+      const files = await listPg73Migrations();
+      assert.equal(files.length, 73);
+      const corpus = [];
+      for (const name of files) {
+        const body = await readFile(new URL(name, migrations), 'utf8');
+        corpus.push(`${name}\n${body}`);
+        await migrator.begin(async tx => {
+          await tx.unsafe(body).simple();
+          await tx.unsafe(`INSERT INTO ${gateway}.schema_migrations(version) VALUES ($1)`, [name]);
+        });
+      }
+      const body = await readFile(proposal, 'utf8');
+      report.sourceSha256 = { proposal: sha(body), nativeTest: sha(await readFile(new URL(import.meta.url))),
+        formalMigrationCorpus: sha(corpus.join('\n')) };
+      stage('formal-schema-installed', { migrations: files.length });
+
+      let ledgerReady;
+      let releaseLedger;
+      const ledgerEntered = new Promise(resolve => { ledgerReady = resolve; });
+      const ledgerHold = new Promise(resolve => { releaseLedger = resolve; });
+      const ledgerTx = competing.begin(async tx => {
+        await tx.unsafe(`UPDATE ${gateway}.schema_migrations SET applied_at=applied_at
+          WHERE version='0073_recovery_api_key_workspace_lock.sql'`);
+        ledgerReady();
+        await ledgerHold;
+      });
+      await ledgerEntered;
+      try {
+        await rejectCode(activate(migrator, body), '55P03');
+      } finally {
+        releaseLedger();
+        await ledgerTx;
+      }
+      stage('formal-ledger-dml-lock-blocks-activation-with-two-second-timeout');
+
+      await migrator.unsafe(`INSERT INTO ${gateway}.users(id,email) VALUES
+          ('quote-seller-a','seller-a@example.invalid'),
+          ('quote-seller-b','seller-b@example.invalid');
+        INSERT INTO ${gateway}.shared_keys
+          (id,seller_user_id,channel_type,api_key,key_fingerprint)
+          VALUES ('quote-key-a','quote-seller-a','openai','synthetic-a','fingerprint-a'),
+            ('quote-key-b','quote-seller-b','openai','synthetic-b','fingerprint-b');`).simple();
+      await assert.rejects(activate(migrator, body, false),
+        /Shared-key quote activation or source contract differs/);
+      await assert.rejects(migrator.begin(async tx => {
+        await tx.unsafe(`DELETE FROM ${gateway}.schema_migrations
+          WHERE version='0073_recovery_api_key_workspace_lock.sql'`);
+        await tx.unsafe("SET LOCAL cinatoken.shared_key_quote_versions_activation = 'reviewed-v2'");
+        await tx.unsafe(body).simple();
+      }), /Shared-key quote activation or source contract differs/);
+      stage('missing-final-formal-migration-rejected-with-rollback');
+      await assert.rejects(migrator.begin(async tx => {
+        await tx.unsafe(`UPDATE ${gateway}.schema_migrations
+          SET version='0042_forged_middle_version.sql'
+          WHERE version='0042_gateway_keys_workspace.sql'`);
+        const [ledger] = await tx.unsafe(`SELECT count(*)::int AS n,
+          bool_or(version='0073_recovery_api_key_workspace_lock.sql') AS has_last
+          FROM ${gateway}.schema_migrations`);
+        assert.deepEqual(ledger, { n: 73, has_last: true });
+        await tx.unsafe("SET LOCAL cinatoken.shared_key_quote_versions_activation = 'reviewed-v2'");
+        await tx.unsafe(body).simple();
+      }), /Shared-key quote activation or source contract differs/);
+      assert.equal((await migrator.unsafe(`SELECT count(*)::int AS n FROM ${gateway}.schema_migrations
+        WHERE version='0042_gateway_keys_workspace.sql'`))[0].n, 1);
+      stage('forged-middle-migration-rejected-at-same-count-and-terminal-version');
+      assert.equal((await migrator.unsafe(`SELECT pg_catalog.to_regnamespace('${quotes}') AS n`))[0].n, null);
+      await assert.rejects(migrator.begin(async tx => {
+        await tx.unsafe(`ALTER TABLE ${gateway}.shared_keys ALTER COLUMN input_price TYPE numeric(18,5)`);
+        await tx.unsafe("SET LOCAL cinatoken.shared_key_quote_versions_activation = 'reviewed-v2'");
+        await tx.unsafe(body).simple();
+      }), /Shared-key quote activation or source contract differs/);
+      stage('formal-seller-price-precision-drift-rejected-with-rollback');
+      await rejectCode(activate(migrator, body), '42501');
+      await cluster.admin.unsafe('GRANT CREATE ON DATABASE postgres TO cinatoken_gateway_migrator');
+      await cluster.admin.unsafe('ALTER ROLE cinatoken_gateway_migrator NOLOGIN');
+      await assert.rejects(activate(migrator, body),
+        /Shared-key quote activation or source contract differs/);
+      await cluster.admin.unsafe('ALTER ROLE cinatoken_gateway_migrator LOGIN');
+      await cluster.admin.unsafe('ALTER ROLE cinatoken_gateway_runtime SUPERUSER');
+      await assert.rejects(activate(migrator, body),
+        /Shared-key quote activation or source contract differs/);
+      await cluster.admin.unsafe('ALTER ROLE cinatoken_gateway_runtime NOSUPERUSER');
+      stage('direct-migrator-login-and-non-superuser-runtime-required');
+      for (const inheritedRole of ['cinatoken_gateway_migrator','pg_read_all_data','pg_write_all_data']) {
+        await cluster.admin.unsafe(`GRANT ${inheritedRole} TO cinatoken_gateway_runtime`);
+        await assert.rejects(activate(migrator, body),
+          /Shared-key quote activation or source contract differs/);
+        await cluster.admin.unsafe(`REVOKE ${inheritedRole} FROM cinatoken_gateway_runtime`);
+      }
+      stage('runtime-role-inheritance-rejected', {
+        roles: ['cinatoken_gateway_migrator','pg_read_all_data','pg_write_all_data'],
+      });
+      await assert.rejects(migrator.begin(async tx => {
+        await tx.unsafe(`CREATE SCHEMA ${quotes} AUTHORIZATION cinatoken_gateway_migrator`);
+        await tx.unsafe(`GRANT USAGE ON SCHEMA ${quotes} TO cinatoken_gateway_runtime`);
+        await tx.unsafe("SET LOCAL cinatoken.shared_key_quote_versions_activation = 'reviewed-v2'");
+        await tx.unsafe(body).simple();
+      }), /Shared-key quote activation or source contract differs/);
+      assert.equal((await migrator.unsafe(`SELECT pg_catalog.to_regnamespace('${quotes}') AS n`))[0].n, null);
+      stage('activation-and-preexisting-wide-schema-rejected-with-rollback');
+
+      await assert.rejects(proxy.begin(async tx => {
+        await tx.unsafe('SET ROLE cinatoken_gateway_migrator');
+        await tx.unsafe("SET LOCAL cinatoken.shared_key_quote_versions_activation = 'reviewed-v2'");
+        await tx.unsafe(body).simple();
+      }), /Shared-key quote activation or source contract differs/);
+      stage('schema-create-requires-database-privilege-and-set-role-cannot-activate');
+
+      const aclPoisonedBody = body.replace('DO $postflight$', `
+        GRANT USAGE ON SCHEMA ${quotes} TO cinatoken_gateway_runtime;
+        GRANT SELECT ON ${table} TO cinatoken_gateway_runtime;
+        DO $postflight$`);
+      assert.notEqual(aclPoisonedBody, body);
+      await assert.rejects(activate(migrator, aclPoisonedBody),
+        /Shared-key quote runtime ACL is wider than reviewed contract/);
+      assert.equal((await migrator.unsafe(`SELECT pg_catalog.to_regnamespace('${quotes}') AS n`))[0].n, null);
+      stage('postflight-effective-runtime-acl-rejected-with-rollback');
+
+      await activate(migrator, body);
+      await assert.rejects(activate(migrator, body),
+        /Shared-key quote activation or source contract differs/);
+      const transitionTable = `${quotes}.shared_key_quote_transitions`;
+      const atSequence = async (key, sequence) =>
+        migrator.unsafe(`SELECT * FROM ${quotes}.resolve_shared_key_quote_at_sequence($1,$2)`,
+          [key, sequence]);
+      const atEventTime = async (key, eventId) => migrator.unsafe(`SELECT r.* FROM
+        ${transitionTable} AS e CROSS JOIN LATERAL
+        ${quotes}.resolve_shared_key_quote_at_time($1,e.effective_at) AS r
+        WHERE e.transition_id=$2`, [key, eventId]);
+
+      const required = Object.keys(quote('missing'));
+      for (const column of required) {
+        await assert.rejects(insertQuote(migrator, quote(`missing-${column}`), [column]),
+          error => ['23502', '23514'].includes(error?.code));
+      }
+      assert.equal((await migrator.unsafe(`SELECT count(*)::int AS n FROM ${table}`))[0].n, 0);
+      stage('immutable-quote-facts-require-all-typed-fields', { columns: required });
+
+      await rejectCode(migrator.unsafe(`SELECT * FROM
+        ${quotes}.claim_shared_key_quote_for_dispatch('quote-key-a')`),
+      '23514', 'shared_key_quote_unavailable');
+      const quoteMultiA = quote('quote-multi-a');
+      const quoteMultiB = quote('quote-multi-b');
+      const quoteColumns = Object.keys(quoteMultiA);
+      const quotePlaceholders = offset =>
+        `(${quoteColumns.map((_, i) => `$${offset + i + 1}`).join(', ')})`;
+      await rejectCode(migrator.unsafe(`INSERT INTO ${table} (${quoteColumns.join(', ')})
+        VALUES ${quotePlaceholders(0)}, ${quotePlaceholders(quoteColumns.length)}`,
+      [...Object.values(quoteMultiA), ...Object.values(quoteMultiB)]),
+      '23514', 'shared_key_quote_one_row');
+      stage('no-active-quote-claim-and-multi-row-fact-insert-rejected');
+
+      for (const [row, code] of [
+        [quote('blank-version', { version_id: ' ' }), '23514'],
+        [quote('blank-entitlement', { entitlement_version: ' ' }), '23514'],
+        [quote('negative-price', { input_price_per_million: '-0.000001' }), '23514'],
+        [quote('negative-cache-price', { cache_write_price_per_million: '-0.000001' }), '23514'],
+        [quote('invalid-commission', { commission_rate: '0.900001' }), '23514'],
+        [quote('invalid-currency', { currency: 'EUR' }), '23514'],
+        [quote('invalid-unit', { price_unit: 'per_token' }), '23514'],
+        [quote('invalid-billing', { billing_mode: 'buyer_key' }), '23514'],
+      ]) await rejectCode(insertQuote(migrator, row), code);
+      for (const field of [
+        'input_price_per_million', 'output_price_per_million',
+        'cache_read_price_per_million', 'cache_write_price_per_million',
+      ]) await rejectCode(insertQuote(migrator,
+        quote(`nan-${field}`, { [field]: 'NaN' })), '23514', 'shared_key_quote_prices_valid');
+      await rejectCode(insertQuote(migrator,
+        quote('wrong-owner', { seller_user_id: 'quote-seller-b' })),
+      '23514', 'shared_key_quote_owner');
+      stage('negative-price-nan-commission-enumeration-and-seller-rejected');
+
+      await insertQuote(migrator, { ...quote('quote-a-1'), recorded_at: '2000-01-01T00:00:00Z' });
+      const [recorded] = await migrator.unsafe(`SELECT recorded_at > '2020-01-01'::timestamptz
+        AND recorded_at <= pg_catalog.clock_timestamp() AS server_clock
+        FROM ${table} WHERE version_id='quote-a-1'`);
+      assert.equal(recorded.server_clock, true);
+      await rejectCode(insertQuote(migrator, quote('quote-a-1')), '23505',
+        'shared_key_quote_versions_pkey');
+      await rejectCode(proxy.begin(async tx => {
+        await tx.unsafe('SET ROLE cinatoken_gateway_migrator');
+        await insertQuote(tx, quote('proxy-forbidden'));
+      }), '23514', 'shared_key_quote_insert_protocol');
+      stage('database-recorded-time-version-uniqueness-and-direct-login-quote-insert');
+
+      await rejectCode(insertTransition(migrator,
+        transition('revoke-before-activation', null, null)),
+      '23514', 'shared_key_quote_revoke_inactive');
+      await rejectCode(insertTransition(migrator,
+        transition('backdated', null, 'quote-a-1', { effective_at: '2020-01-01T00:00:00Z' })),
+      '23514', 'shared_key_quote_server_time');
+      await rejectCode(insertTransition(migrator,
+        transition('forged-sequence', null, 'quote-a-1', { transition_seq: 99 })),
+      '23514', 'shared_key_quote_server_time');
+      await rejectCode(insertTransition(migrator,
+        transition('bad-kind', null, 'quote-a-1', { transition_kind: 'other' })),
+      '23514', 'shared_key_quote_transition_kind_valid');
+      await insertTransition(migrator, transition('event-a-1', null, 'quote-a-1'));
+      assert.equal((await atSequence('quote-key-a', 1))[0].quote_version_id, 'quote-a-1');
+      assert.equal((await atSequence('quote-key-a', 1))[0].seller_user_id, 'quote-seller-a');
+      stage('genesis-activation-and-server-assigned-monotone-sequence');
+
+      await delay(12);
+      await insertQuote(migrator, quote('quote-a-2', {
+        input_price_per_million: '3.250000', output_price_per_million: '4.500000',
+      }));
+      await insertTransition(migrator,
+        transition('event-a-2', 'event-a-1', 'quote-a-2'));
+      const [atOne] = await atSequence('quote-key-a', 1);
+      const [atTwo] = await atSequence('quote-key-a', 2);
+      assert.equal(atOne.input_price_per_million, '1.250000');
+      assert.equal(atTwo.input_price_per_million, '3.250000');
+      assert.equal((await atEventTime('quote-key-a', 'event-a-1'))[0].quote_version_id, 'quote-a-1');
+      assert.equal((await atEventTime('quote-key-a', 'event-a-2'))[0].quote_version_id, 'quote-a-2');
+      await rejectCode(insertTransition(migrator,
+        transition('stale-transition', 'event-a-1', 'quote-a-1')),
+      '23514', 'shared_key_quote_stale_predecessor');
+      await rejectCode(insertTransition(migrator,
+        transition('replay-quote', 'event-a-2', 'quote-a-1')),
+      '23505', 'shared_key_quote_transitions_quote_version_id_key');
+      stage('unplanned-repricing-preserves-historical-price-and-stale-head-rejected');
+
+      await insertTransition(migrator, transition('event-a-3', 'event-a-2', null));
+      const [revoked] = await atSequence('quote-key-a', 3);
+      assert.equal(revoked.transition_kind, 'revoke');
+      assert.equal(revoked.quote_version_id, null);
+      assert.equal(revoked.input_price_per_million, null);
+      assert.equal((await atSequence('quote-key-a', 2))[0].quote_version_id, 'quote-a-2');
+      await rejectCode(insertTransition(migrator,
+        transition('duplicate-revoke', 'event-a-3', null)),
+      '23514', 'shared_key_quote_revoke_inactive');
+      await insertQuote(migrator, quote('quote-a-3'));
+      await insertTransition(migrator,
+        transition('event-a-4', 'event-a-3', 'quote-a-3'));
+      assert.equal((await atSequence('quote-key-a', 4))[0].quote_version_id, 'quote-a-3');
+      stage('revocation-and-reactivation-retain-prior-price-history');
+
+      await rejectCode(migrator.unsafe(`UPDATE ${gateway}.shared_keys
+        SET seller_user_id='quote-seller-b' WHERE id='quote-key-a'`),
+      '23514', 'shared_key_quote_owner_transfer');
+      assert.equal((await migrator.unsafe(`SELECT seller_user_id FROM ${gateway}.shared_keys
+        WHERE id='quote-key-a'`))[0].seller_user_id, 'quote-seller-a');
+      let ownerReady;
+      let releaseOwner;
+      const ownerEntered = new Promise(resolve => { ownerReady = resolve; });
+      const ownerHold = new Promise(resolve => { releaseOwner = resolve; });
+      const ownerTx = migrator.begin(async tx => {
+        await tx.unsafe(`UPDATE ${gateway}.shared_keys SET seller_user_id='quote-seller-b'
+          WHERE id='quote-key-a'`);
+        await insertQuote(tx, quote('quote-a-b1', {
+          seller_user_id: 'quote-seller-b', input_price_per_million: '5.750000',
+        }));
+        await insertTransition(tx, transition('event-a-5', 'event-a-4', 'quote-a-b1', {
+          seller_user_id: 'quote-seller-b',
+        }));
+        ownerReady();
+        await ownerHold;
+      });
+      await ownerEntered;
+      try {
+        assert.equal((await competing.unsafe(`SELECT seller_user_id FROM ${gateway}.shared_keys
+          WHERE id='quote-key-a'`))[0].seller_user_id, 'quote-seller-a');
+        assert.equal((await competing.unsafe(`SELECT quote_version_id FROM ${transitionTable}
+          WHERE shared_key_id='quote-key-a' ORDER BY transition_seq DESC LIMIT 1`))[0]
+          .quote_version_id, 'quote-a-3');
+      } finally {
+        releaseOwner();
+      }
+      await ownerTx;
+      assert.equal((await atSequence('quote-key-a', 4))[0].seller_user_id, 'quote-seller-a');
+      assert.equal((await atSequence('quote-key-a', 5))[0].seller_user_id, 'quote-seller-b');
+      assert.equal((await atEventTime('quote-key-a', 'event-a-4'))[0].quote_version_id, 'quote-a-3');
+      assert.equal((await atEventTime('quote-key-a', 'event-a-5'))[0].quote_version_id, 'quote-a-b1');
+      assert.equal((await migrator.unsafe(`SELECT seller_user_id FROM ${gateway}.shared_keys
+        WHERE id='quote-key-a'`))[0].seller_user_id, 'quote-seller-b');
+      const [transferredClaim] = await migrator.unsafe(`SELECT quote_version_id, seller_user_id
+        FROM ${quotes}.claim_shared_key_quote_for_dispatch('quote-key-a')`);
+      assert.deepEqual(transferredClaim, {
+        quote_version_id: 'quote-a-b1', seller_user_id: 'quote-seller-b',
+      });
+      stage('two-session-owner-transfer-commit-preserves-old-owner-and-new-full-quote');
+
+      await insertQuote(migrator, quote('quote-b-1', {
+        shared_key_id: 'quote-key-b', seller_user_id: 'quote-seller-b',
+      }));
+      await rejectCode(insertTransition(migrator,
+        transition('wrong-version-key', 'event-a-5', 'quote-b-1', {
+          seller_user_id: 'quote-seller-b',
+        })), '23514', 'shared_key_quote_transition_version');
+      await rejectCode(proxy.begin(async tx => {
+        await tx.unsafe('SET ROLE cinatoken_gateway_migrator');
+        await insertTransition(tx, transition('proxy-transition', 'event-a-5', 'quote-b-1', {
+          seller_user_id: 'quote-seller-b',
+        }));
+      }), '23514', 'shared_key_quote_transition_protocol');
+      await rejectCode(proxy.begin(async tx => {
+        await tx.unsafe('SET ROLE cinatoken_gateway_migrator');
+        await tx.unsafe(`SELECT * FROM ${quotes}.claim_shared_key_quote_for_dispatch('quote-key-a')`);
+      }), '23514', 'shared_key_quote_claim_protocol');
+      await rejectCode(migrator.begin(async tx => {
+        await tx.unsafe('SET TRANSACTION ISOLATION LEVEL REPEATABLE READ');
+        await insertTransition(tx, transition('repeatable-read', 'event-a-5', 'quote-b-1', {
+          seller_user_id: 'quote-seller-b',
+        }));
+      }), '23514', 'shared_key_quote_transition_protocol');
+      stage('cross-key-quote-set-role-and-repeatable-read-transition-rejected');
+
+      await insertQuote(migrator, quote('quote-a-b2', { seller_user_id: 'quote-seller-b' }));
+      await insertQuote(migrator, quote('quote-a-b3', { seller_user_id: 'quote-seller-b' }));
+      const multiA = transition('multi-a', 'event-a-5', 'quote-a-b2', {
+        seller_user_id: 'quote-seller-b',
+      });
+      const multiB = transition('multi-b', null, 'quote-b-1', {
+        shared_key_id: 'quote-key-b', seller_user_id: 'quote-seller-b',
+      });
+      const columns = Object.keys(multiA);
+      const placeholders = offset => `(${columns.map((_, i) => `$${offset + i + 1}`).join(', ')})`;
+      await rejectCode(migrator.unsafe(`INSERT INTO ${transitionTable} (${columns.join(', ')})
+        VALUES ${placeholders(0)}, ${placeholders(columns.length)}`,
+      [...Object.values(multiA), ...Object.values(multiB)]),
+      '23514', 'shared_key_quote_transition_one_row');
+      assert.equal((await migrator.unsafe(`SELECT count(*)::int AS n FROM ${transitionTable}
+        WHERE transition_id LIKE 'multi-%'`))[0].n, 0);
+      stage('multi-row-transition-rejected-atomically');
+
+      let firstReady;
+      let releaseFirst;
+      const entered = new Promise(resolve => { firstReady = resolve; });
+      const hold = new Promise(resolve => { releaseFirst = resolve; });
+      const firstTx = migrator.begin(async tx => {
+        await insertTransition(tx, transition('event-a-6', 'event-a-5', 'quote-a-b2', {
+          seller_user_id: 'quote-seller-b',
+        }));
+        const [pending] = await tx.unsafe(`SELECT effective_at::text AS effective_at
+          FROM ${transitionTable} WHERE transition_id='event-a-6'`);
+        firstReady(pending.effective_at);
+        await hold;
+      });
+      const pendingEffectiveAt = await entered;
+      // This is a synthetic dispatch read: it captures the visible committed
+      // transition and immutable quote ID before the new event commits.
+      const [capturedAttemptQuote] = await competing.unsafe(`SELECT transition_id,
+        transition_seq, quote_version_id FROM ${transitionTable}
+        WHERE shared_key_id='quote-key-a' ORDER BY transition_seq DESC LIMIT 1`);
+      assert.equal(capturedAttemptQuote.transition_id, 'event-a-5');
+      assert.equal(Number(capturedAttemptQuote.transition_seq), 5);
+      assert.equal(capturedAttemptQuote.quote_version_id, 'quote-a-b1');
+      const [observedAt] = await competing.unsafe(`SELECT pg_catalog.clock_timestamp()::text AS at`);
+      assert.equal((await competing.unsafe(`SELECT $1::timestamptz >= $2::timestamptz AS after_insert`,
+        [observedAt.at, pendingEffectiveAt]))[0].after_insert, true);
+      const [pendingTimeBeforeCommit] = await competing.unsafe(`SELECT quote_version_id
+        FROM ${quotes}.resolve_shared_key_quote_at_time('quote-key-a',$1)`,
+      [observedAt.at]);
+      assert.equal(pendingTimeBeforeCommit.quote_version_id, 'quote-a-b1');
+      let secondSettled = false;
+      const secondTx = competing.begin(async tx => insertTransition(tx,
+        transition('event-a-7-race', 'event-a-5', 'quote-a-b3', {
+          seller_user_id: 'quote-seller-b',
+        }))).finally(() => { secondSettled = true; });
+      void secondTx.catch(() => {});
+      await delay(100);
+      assert.equal(secondSettled, false, 'same-key transition must wait for the first transaction');
+      releaseFirst();
+      await firstTx;
+      await rejectCode(secondTx, '23514', 'shared_key_quote_stale_predecessor');
+      assert.equal((await atSequence('quote-key-a', 6))[0].quote_version_id, 'quote-a-b2');
+      assert.equal((await atSequence('quote-key-a', Number(capturedAttemptQuote.transition_seq)))[0]
+        .quote_version_id, capturedAttemptQuote.quote_version_id);
+      const [capturedFact] = await competing.unsafe(`SELECT version_id, seller_user_id,
+        input_price_per_million FROM ${table} WHERE version_id=$1`,
+      [capturedAttemptQuote.quote_version_id]);
+      assert.equal(capturedFact.version_id, 'quote-a-b1');
+      assert.equal(capturedFact.seller_user_id, 'quote-seller-b');
+      assert.equal(capturedFact.input_price_per_million, '5.750000');
+      const [pendingTimeAfterCommit] = await competing.unsafe(`SELECT quote_version_id
+        FROM ${quotes}.resolve_shared_key_quote_at_time('quote-key-a',$1)`,
+      [observedAt.at]);
+      assert.equal(pendingTimeAfterCommit.quote_version_id, 'quote-a-b2');
+      stage('uncommitted-new-event-keeps-old-dispatch-reference-and-stale-operator-loses');
+
+      await insertTransition(migrator, transition('event-b-1', null, 'quote-b-1', {
+        shared_key_id: 'quote-key-b', seller_user_id: 'quote-seller-b',
+      }));
+      assert.equal((await migrator.unsafe(`SELECT quote_version_id FROM
+        ${quotes}.claim_shared_key_quote_for_dispatch('quote-key-b')`))[0]
+        .quote_version_id, 'quote-b-1');
+      let revokeReady;
+      let releaseRevoke;
+      const revokeEntered = new Promise(resolve => { revokeReady = resolve; });
+      const revokeHold = new Promise(resolve => { releaseRevoke = resolve; });
+      const revokeTx = migrator.begin(async tx => {
+        await insertTransition(tx, transition('event-b-2', 'event-b-1', null, {
+          shared_key_id: 'quote-key-b', seller_user_id: 'quote-seller-b',
+        }));
+        revokeReady();
+        await revokeHold;
+      });
+      await revokeEntered;
+      try {
+        assert.equal((await competing.unsafe(`SELECT quote_version_id FROM ${transitionTable}
+          WHERE shared_key_id='quote-key-b' ORDER BY transition_seq DESC LIMIT 1`))[0]
+          .quote_version_id, 'quote-b-1');
+        let claimSettled = false;
+        const waitingClaim = competing.begin(async tx => tx.unsafe(`SELECT quote_version_id
+          FROM ${quotes}.claim_shared_key_quote_for_dispatch('quote-key-b')`))
+          .finally(() => { claimSettled = true; });
+        void waitingClaim.catch(() => {});
+        await delay(100);
+        assert.equal(claimSettled, false, 'billable claim must wait for in-flight revocation');
+        releaseRevoke();
+        await revokeTx;
+        await rejectCode(waitingClaim, '23514', 'shared_key_quote_unavailable');
+      } finally {
+        releaseRevoke();
+      }
+      await revokeTx;
+      assert.equal((await atSequence('quote-key-b', 1))[0].quote_version_id, 'quote-b-1');
+      assert.equal((await atSequence('quote-key-b', 2))[0].transition_kind, 'revoke');
+      assert.equal((await atSequence('quote-key-b', 2))[0].quote_version_id, null);
+      await rejectCode(migrator.unsafe(`SELECT * FROM
+        ${quotes}.claim_shared_key_quote_for_dispatch('quote-key-b')`),
+      '23514', 'shared_key_quote_unavailable');
+      stage('two-session-revocation-blocks-new-billable-claim-after-commit');
+
+      for (const command of [
+        `UPDATE ${table} SET commission_rate=0.2 WHERE version_id='quote-a-1'`,
+        `UPDATE ${table} SET commission_rate=0.2 WHERE false`,
+        `DELETE FROM ${table} WHERE version_id='quote-a-1'`,
+        `DELETE FROM ${table} WHERE false`,
+        `UPDATE ${transitionTable} SET transition_kind='revoke' WHERE transition_id='event-a-1'`,
+        `UPDATE ${transitionTable} SET transition_kind='revoke' WHERE false`,
+        `DELETE FROM ${transitionTable} WHERE transition_id='event-a-1'`,
+        `DELETE FROM ${transitionTable} WHERE false`,
+        `TRUNCATE ${transitionTable}`,
+      ]) await rejectCode(migrator.unsafe(command), '23514', 'shared_key_quote_versions_append_only');
+      // PostgreSQL rejects non-CASCADE truncation of the referenced facts
+      // before firing its trigger; CASCADE reaches both append-only guards.
+      await rejectCode(migrator.unsafe(`TRUNCATE ${table}`), '0A000');
+      await rejectCode(migrator.unsafe(`TRUNCATE ${table} CASCADE`),
+        '23514', 'shared_key_quote_versions_append_only');
+      await rejectCode(migrator.unsafe(`DELETE FROM ${gateway}.shared_keys WHERE id='quote-key-a'`), '23001');
+      stage('fact-transition-mutation-empty-mutation-truncate-and-parent-delete-refused');
+
+      const url = `postgres://cinatoken_gateway_migrator:${migratorPassword}@127.0.0.1:${cluster.port}/postgres`;
+      await grantPg73RuntimeFixture({ cluster, migrator, migratorUrl: url });
+      await grantPg73RuntimeFixture({ cluster, migrator, migratorUrl: url });
+      const [acl] = await migrator.unsafe(`SELECT
+        pg_catalog.has_schema_privilege('cinatoken_gateway_runtime','${quotes}','USAGE') AS schema_usage,
+        pg_catalog.has_table_privilege('cinatoken_gateway_runtime','${table}','SELECT') AS fact_select,
+        pg_catalog.has_table_privilege('cinatoken_gateway_runtime','${transitionTable}','SELECT') AS transition_select,
+        pg_catalog.has_table_privilege('cinatoken_gateway_runtime','${transitionTable}','INSERT') AS transition_insert,
+        pg_catalog.has_function_privilege('cinatoken_gateway_runtime',
+          '${quotes}.resolve_shared_key_quote_at_sequence(text,bigint)','EXECUTE') AS resolver_execute,
+        pg_catalog.has_function_privilege('cinatoken_gateway_runtime',
+          '${quotes}.claim_shared_key_quote_for_dispatch(text)','EXECUTE') AS claim_execute`);
+      assert.deepEqual(acl, { schema_usage: false, fact_select: false,
+        transition_select: false, transition_insert: false,
+        resolver_execute: false, claim_execute: false });
+      await rejectCode(runtime.unsafe(`SELECT * FROM ${table} LIMIT 1`), '42501');
+      await rejectCode(runtime.unsafe(`SELECT * FROM ${transitionTable} LIMIT 1`), '42501');
+      await rejectCode(runtime.unsafe(`SELECT * FROM ${quotes}.resolve_shared_key_quote_at_sequence(
+        'quote-key-a',1)`), '42501');
+      await rejectCode(insertTransition(runtime,
+        transition('runtime-forbidden', 'event-a-6', null)), '42501');
+      stage('ordinary-runtime-denied-after-two-broad-grant-reruns', { acl });
+      report.status = 'PASS';
+
+    } catch (error) {
+      failure = error;
+      report.status = 'FAIL'; report.error = errorInfo(error);
+    } finally {
+      await Promise.allSettled(clients.map(sql => sql.end({ timeout: 1 })));
+      try { await cluster.cleanup(); report.cleanup = 'PASS'; }
+      catch (error) { report.cleanup = 'FAIL'; report.cleanupError = errorInfo(error); failure ??= error; }
+      await writeFile(reportPath, JSON.stringify(report, null, 2) + '\n', { flag: 'wx' });
+      console.log('Native shared-key quote report: ' + reportPath);
+    }
+    if (failure) throw failure;
+  });
+
+da61172ea25d53bc31cdc10f2999defce06d6559 blob 34823
+// Review-only PG18.6 fixture: owned loopback cluster, synthetic users/keys and
+// quotes only. No ambient database URL, real seller, cloud or deployment.
+import assert from 'node:assert/strict';
+import { createHash, randomBytes, randomUUID } from 'node:crypto';
+import { readFile, writeFile } from 'node:fs/promises';
+import { dirname, join } from 'node:path';
+import { setTimeout as delay } from 'node:timers/promises';
+import test from 'node:test';
+import postgres from 'postgres';
+import { startNativePostgres } from '../../../packages/core/src/test-support/postgres-native-cluster.mjs';
+import { grantPg73RuntimeFixture, listPg73Migrations } from './pg73-native-fixture.mjs';
+
+const gateway = 'cinatoken_gateway';
+const quotes = 'cinatoken_economic_quotes';
+const table = `${quotes}.shared_key_quote_versions`;
+const migrations = new URL('../../../packages/core/migrations-postgres/', import.meta.url);
+const proposal = new URL('../../../packages/core/migrations-proposals/postgres/shared-key-quote-versions.sql', import.meta.url);
+const sha = value => createHash('sha256').update(value).digest('hex');
+const errorInfo = error => ({ code: error?.code ?? null, constraint: error?.constraint_name ?? null,
+  message: String(error?.message ?? error).slice(0, 300) });
+
+function client(cluster, username, password, label) {
+  return postgres({ host: '127.0.0.1', port: cluster.port, database: 'postgres',
+    username, password, ssl: false, max: 1, prepare: false, fetch_types: false,
+    connect_timeout: 3, idle_timeout: 0, max_lifetime: 0, backoff: false,
+    onnotice() {}, connection: { application_name: `cinatoken-quote-v338-${label}` } });
+}
+
+function quote(versionId, overrides = {}) {
+  return {
+    version_id: versionId,
+    shared_key_id: 'quote-key-a',
+    seller_user_id: 'quote-seller-a',
+    input_price_per_million: '1.250000',
+    output_price_per_million: '2.500000',
+    cache_read_price_per_million: '0.100000',
+    cache_write_price_per_million: '0.200000',
+    commission_rate: '0.100000',
+    currency: 'USD',
+    price_unit: 'per_million_tokens',
+    billing_mode: 'shared_seller_key',
+    entitlement_version: 'synthetic-entitlement-v1',
+    ...overrides,
+  };
+}
+
+function transition(transitionId, predecessor, versionId, overrides = {}) {
+  return {
+    transition_id: transitionId,
+    shared_key_id: 'quote-key-a',
+    supersedes_transition_id: predecessor,
+    transition_kind: versionId === null ? 'revoke' : 'activate',
+    quote_version_id: versionId,
+    seller_user_id: 'quote-seller-a',
+    ...overrides,
+  };
+}
+
+async function insertTransition(sql, row) {
+  const columns = Object.keys(row);
+  return sql.unsafe(`INSERT INTO ${quotes}.shared_key_quote_transitions
+    (${columns.join(', ')}) VALUES (${columns.map((_, i) => `$${i + 1}`).join(', ')})`,
+  Object.values(row));
+}
+
+async function insertQuote(sql, row, omitted = []) {
+  // Every identifier comes from the fixed quote() literal above, never input.
+  const columns = Object.keys(row).filter(name => !omitted.includes(name));
+  const params = columns.map(name => row[name]);
+  return sql.unsafe(`INSERT INTO ${table} (${columns.join(', ')}) VALUES (${columns.map((_, i) => `$${i + 1}`).join(', ')})`, params);
+}
+
+async function rejectCode(work, code, constraint) {
+  await assert.rejects(work, error => {
+    assert.equal(error?.code, code);
+    if (constraint) assert.equal(error?.constraint_name, constraint);
+    return true;
+  });
+}
+
+async function activate(sql, body, enabled = true) {
+  await sql.begin(async tx => {
+    if (enabled) await tx.unsafe("SET LOCAL cinatoken.shared_key_quote_versions_activation = 'reviewed-v2'");
+    await tx.unsafe(body).simple();
+  });
+}
+
+test('native PG18 immutable shared-key quote supersession preserves history and serializes operators',
+  { timeout: 240_000, skip: !process.env.GATEWAY_NATIVE_PG_BIN }, async () => {
+    const cluster = await startNativePostgres();
+    const reportPath = join(dirname(cluster.owned), `report-shared-key-quote-v338-${randomUUID()}.json`);
+    const report = { status: 'RUNNING', cleanup: 'PENDING', binaryVersion: cluster.binaryVersion,
+      scope: 'private PG18.6, 73 formal migrations, review-only quote transition proposal',
+      stages: [], limitations: [
+        'No active quote producer, dispatch attachment, typed outbox, earnings consumer or deployment.',
+        'The quote fields missing from existing shared_keys must come from a future trusted authority; fixture values are synthetic.',
+        'Time as-of is retrospective after commit; dispatch must capture the exact transition and quote version, not infer them from a later timestamp.',
+        'D1, MySQL, real Workers and production concurrency are not proven by this local PostgreSQL fixture.',
+      ], sourceSha256: {} };
+    const stage = (name, detail = {}) => report.stages.push({ name, result: 'PASS', ...detail });
+    const clients = [];
+    let failure;
+    try {
+      assert.match(cluster.binaryVersion, /PostgreSQL\) 18\.6/);
+      const migratorPassword = randomBytes(24).toString('hex');
+      const runtimePassword = randomBytes(24).toString('hex');
+      const proxyPassword = randomBytes(24).toString('hex');
+      await cluster.admin.unsafe(`CREATE ROLE cinatoken_gateway_migrator LOGIN PASSWORD '${migratorPassword}';
+        CREATE ROLE cinatoken_gateway_runtime LOGIN PASSWORD '${runtimePassword}';
+        CREATE ROLE quote_proxy LOGIN PASSWORD '${proxyPassword}';
+        GRANT cinatoken_gateway_migrator TO quote_proxy;
+        CREATE SCHEMA ${gateway} AUTHORIZATION cinatoken_gateway_migrator;
+        REVOKE CREATE ON SCHEMA public FROM PUBLIC;
+        GRANT CONNECT ON DATABASE postgres TO cinatoken_gateway_migrator, cinatoken_gateway_runtime, quote_proxy;`).simple();
+      const migrator = client(cluster, 'cinatoken_gateway_migrator', migratorPassword, 'migrator');
+      const competing = client(cluster, 'cinatoken_gateway_migrator', migratorPassword, 'competing');
+      const runtime = client(cluster, 'cinatoken_gateway_runtime', runtimePassword, 'runtime');
+      const proxy = client(cluster, 'quote_proxy', proxyPassword, 'proxy');
+      clients.push(migrator, competing, runtime, proxy);
+      await migrator.unsafe(`CREATE TABLE ${gateway}.schema_migrations (
+        version text PRIMARY KEY, applied_at timestamptz NOT NULL DEFAULT now())`);
+      const files = await listPg73Migrations();
+      assert.equal(files.length, 73);
+      const corpus = [];
+      for (const name of files) {
+        const body = await readFile(new URL(name, migrations), 'utf8');
+        corpus.push(`${name}\n${body}`);
+        await migrator.begin(async tx => {
+          await tx.unsafe(body).simple();
+          await tx.unsafe(`INSERT INTO ${gateway}.schema_migrations(version) VALUES ($1)`, [name]);
+        });
+      }
+      const body = await readFile(proposal, 'utf8');
+      report.sourceSha256 = { proposal: sha(body), nativeTest: sha(await readFile(new URL(import.meta.url))),
+        formalMigrationCorpus: sha(corpus.join('\n')) };
+      stage('formal-schema-installed', { migrations: files.length });
+
+      let ledgerReady;
+      let releaseLedger;
+      const ledgerEntered = new Promise(resolve => { ledgerReady = resolve; });
+      const ledgerHold = new Promise(resolve => { releaseLedger = resolve; });
+      const ledgerTx = competing.begin(async tx => {
+        await tx.unsafe(`UPDATE ${gateway}.schema_migrations SET applied_at=applied_at
+          WHERE version='0073_recovery_api_key_workspace_lock.sql'`);
+        ledgerReady();
+        await ledgerHold;
+      });
+      await ledgerEntered;
+      try {
+        await rejectCode(activate(migrator, body), '55P03');
+      } finally {
+        releaseLedger();
+        await ledgerTx;
+      }
+      stage('formal-ledger-dml-lock-blocks-activation-with-two-second-timeout');
+
+      await migrator.unsafe(`INSERT INTO ${gateway}.users(id,email) VALUES
+          ('quote-seller-a','seller-a@example.invalid'),
+          ('quote-seller-b','seller-b@example.invalid');
+        INSERT INTO ${gateway}.shared_keys
+          (id,seller_user_id,channel_type,api_key,key_fingerprint)
+          VALUES ('quote-key-a','quote-seller-a','openai','synthetic-a','fingerprint-a'),
+            ('quote-key-b','quote-seller-b','openai','synthetic-b','fingerprint-b');`).simple();
+      await assert.rejects(activate(migrator, body, false),
+        /Shared-key quote activation or source contract differs/);
+      await assert.rejects(migrator.begin(async tx => {
+        await tx.unsafe(`DELETE FROM ${gateway}.schema_migrations
+          WHERE version='0073_recovery_api_key_workspace_lock.sql'`);
+        await tx.unsafe("SET LOCAL cinatoken.shared_key_quote_versions_activation = 'reviewed-v2'");
+        await tx.unsafe(body).simple();
+      }), /Shared-key quote activation or source contract differs/);
+      stage('missing-final-formal-migration-rejected-with-rollback');
+      await assert.rejects(migrator.begin(async tx => {
+        await tx.unsafe(`UPDATE ${gateway}.schema_migrations
+          SET version='0042_forged_middle_version.sql'
+          WHERE version='0042_gateway_keys_workspace.sql'`);
+        const [ledger] = await tx.unsafe(`SELECT count(*)::int AS n,
+          bool_or(version='0073_recovery_api_key_workspace_lock.sql') AS has_last
+          FROM ${gateway}.schema_migrations`);
+        assert.deepEqual(ledger, { n: 73, has_last: true });
+        await tx.unsafe("SET LOCAL cinatoken.shared_key_quote_versions_activation = 'reviewed-v2'");
+        await tx.unsafe(body).simple();
+      }), /Shared-key quote activation or source contract differs/);
+      assert.equal((await migrator.unsafe(`SELECT count(*)::int AS n FROM ${gateway}.schema_migrations
+        WHERE version='0042_gateway_keys_workspace.sql'`))[0].n, 1);
+      stage('forged-middle-migration-rejected-at-same-count-and-terminal-version');
+      assert.equal((await migrator.unsafe(`SELECT pg_catalog.to_regnamespace('${quotes}') AS n`))[0].n, null);
+      await assert.rejects(migrator.begin(async tx => {
+        await tx.unsafe(`ALTER TABLE ${gateway}.shared_keys ALTER COLUMN input_price TYPE numeric(18,5)`);
+        await tx.unsafe("SET LOCAL cinatoken.shared_key_quote_versions_activation = 'reviewed-v2'");
+        await tx.unsafe(body).simple();
+      }), /Shared-key quote activation or source contract differs/);
+      stage('formal-seller-price-precision-drift-rejected-with-rollback');
+      await rejectCode(activate(migrator, body), '42501');
+      await cluster.admin.unsafe('GRANT CREATE ON DATABASE postgres TO cinatoken_gateway_migrator');
+      await cluster.admin.unsafe('ALTER ROLE cinatoken_gateway_migrator NOLOGIN');
+      await assert.rejects(activate(migrator, body),
+        /Shared-key quote activation or source contract differs/);
+      await cluster.admin.unsafe('ALTER ROLE cinatoken_gateway_migrator LOGIN');
+      await cluster.admin.unsafe('ALTER ROLE cinatoken_gateway_runtime SUPERUSER');
+      await assert.rejects(activate(migrator, body),
+        /Shared-key quote activation or source contract differs/);
+      await cluster.admin.unsafe('ALTER ROLE cinatoken_gateway_runtime NOSUPERUSER');
+      stage('direct-migrator-login-and-non-superuser-runtime-required');
+      for (const inheritedRole of ['cinatoken_gateway_migrator','pg_read_all_data','pg_write_all_data']) {
+        await cluster.admin.unsafe(`GRANT ${inheritedRole} TO cinatoken_gateway_runtime`);
+        await assert.rejects(activate(migrator, body),
+          /Shared-key quote activation or source contract differs/);
+        await cluster.admin.unsafe(`REVOKE ${inheritedRole} FROM cinatoken_gateway_runtime`);
+      }
+      stage('runtime-role-inheritance-rejected', {
+        roles: ['cinatoken_gateway_migrator','pg_read_all_data','pg_write_all_data'],
+      });
+      await assert.rejects(migrator.begin(async tx => {
+        await tx.unsafe(`CREATE SCHEMA ${quotes} AUTHORIZATION cinatoken_gateway_migrator`);
+        await tx.unsafe(`GRANT USAGE ON SCHEMA ${quotes} TO cinatoken_gateway_runtime`);
+        await tx.unsafe("SET LOCAL cinatoken.shared_key_quote_versions_activation = 'reviewed-v2'");
+        await tx.unsafe(body).simple();
+      }), /Shared-key quote activation or source contract differs/);
+      assert.equal((await migrator.unsafe(`SELECT pg_catalog.to_regnamespace('${quotes}') AS n`))[0].n, null);
+      stage('activation-and-preexisting-wide-schema-rejected-with-rollback');
+
+      await assert.rejects(proxy.begin(async tx => {
+        await tx.unsafe('SET ROLE cinatoken_gateway_migrator');
+        await tx.unsafe("SET LOCAL cinatoken.shared_key_quote_versions_activation = 'reviewed-v2'");
+        await tx.unsafe(body).simple();
+      }), /Shared-key quote activation or source contract differs/);
+      stage('schema-create-requires-database-privilege-and-set-role-cannot-activate');
+
+      const aclPoisonedBody = body.replace('DO $postflight$', `
+        GRANT USAGE ON SCHEMA ${quotes} TO cinatoken_gateway_runtime;
+        GRANT SELECT ON ${table} TO cinatoken_gateway_runtime;
+        DO $postflight$`);
+      assert.notEqual(aclPoisonedBody, body);
+      await assert.rejects(activate(migrator, aclPoisonedBody),
+        /Shared-key quote runtime ACL is wider than reviewed contract/);
+      assert.equal((await migrator.unsafe(`SELECT pg_catalog.to_regnamespace('${quotes}') AS n`))[0].n, null);
+      stage('postflight-effective-runtime-acl-rejected-with-rollback');
+
+      await activate(migrator, body);
+      await assert.rejects(activate(migrator, body),
+        /Shared-key quote activation or source contract differs/);
+      const transitionTable = `${quotes}.shared_key_quote_transitions`;
+      const atSequence = async (key, sequence) =>
+        migrator.unsafe(`SELECT * FROM ${quotes}.resolve_shared_key_quote_at_sequence($1,$2)`,
+          [key, sequence]);
+      const atEventTime = async (key, eventId) => migrator.unsafe(`SELECT r.* FROM
+        ${transitionTable} AS e CROSS JOIN LATERAL
+        ${quotes}.resolve_shared_key_quote_at_time($1,e.effective_at) AS r
+        WHERE e.transition_id=$2`, [key, eventId]);
+
+      const required = Object.keys(quote('missing'));
+      for (const column of required) {
+        await assert.rejects(insertQuote(migrator, quote(`missing-${column}`), [column]),
+          error => ['23502', '23514'].includes(error?.code));
+      }
+      assert.equal((await migrator.unsafe(`SELECT count(*)::int AS n FROM ${table}`))[0].n, 0);
+      stage('immutable-quote-facts-require-all-typed-fields', { columns: required });
+
+      await rejectCode(migrator.unsafe(`SELECT * FROM
+        ${quotes}.claim_shared_key_quote_for_dispatch('quote-key-a')`),
+      '23514', 'shared_key_quote_unavailable');
+      const quoteMultiA = quote('quote-multi-a');
+      const quoteMultiB = quote('quote-multi-b');
+      const quoteColumns = Object.keys(quoteMultiA);
+      const quotePlaceholders = offset =>
+        `(${quoteColumns.map((_, i) => `$${offset + i + 1}`).join(', ')})`;
+      await rejectCode(migrator.unsafe(`INSERT INTO ${table} (${quoteColumns.join(', ')})
+        VALUES ${quotePlaceholders(0)}, ${quotePlaceholders(quoteColumns.length)}`,
+      [...Object.values(quoteMultiA), ...Object.values(quoteMultiB)]),
+      '23514', 'shared_key_quote_one_row');
+      stage('no-active-quote-claim-and-multi-row-fact-insert-rejected');
+
+      for (const [row, code] of [
+        [quote('blank-version', { version_id: ' ' }), '23514'],
+        [quote('blank-entitlement', { entitlement_version: ' ' }), '23514'],
+        [quote('negative-price', { input_price_per_million: '-0.000001' }), '23514'],
+        [quote('negative-cache-price', { cache_write_price_per_million: '-0.000001' }), '23514'],
+        [quote('invalid-commission', { commission_rate: '0.900001' }), '23514'],
+        [quote('invalid-currency', { currency: 'EUR' }), '23514'],
+        [quote('invalid-unit', { price_unit: 'per_token' }), '23514'],
+        [quote('invalid-billing', { billing_mode: 'buyer_key' }), '23514'],
+      ]) await rejectCode(insertQuote(migrator, row), code);
+      for (const field of [
+        'input_price_per_million', 'output_price_per_million',
+        'cache_read_price_per_million', 'cache_write_price_per_million',
+      ]) await rejectCode(insertQuote(migrator,
+        quote(`nan-${field}`, { [field]: 'NaN' })), '23514', 'shared_key_quote_prices_valid');
+      await rejectCode(insertQuote(migrator,
+        quote('wrong-owner', { seller_user_id: 'quote-seller-b' })),
+      '23514', 'shared_key_quote_owner');
+      stage('negative-price-nan-commission-enumeration-and-seller-rejected');
+
+      await insertQuote(migrator, { ...quote('quote-a-1'), recorded_at: '2000-01-01T00:00:00Z' });
+      const [recorded] = await migrator.unsafe(`SELECT recorded_at > '2020-01-01'::timestamptz
+        AND recorded_at <= pg_catalog.clock_timestamp() AS server_clock
+        FROM ${table} WHERE version_id='quote-a-1'`);
+      assert.equal(recorded.server_clock, true);
+      await rejectCode(insertQuote(migrator, quote('quote-a-1')), '23505',
+        'shared_key_quote_versions_pkey');
+      await rejectCode(proxy.begin(async tx => {
+        await tx.unsafe('SET ROLE cinatoken_gateway_migrator');
+        await insertQuote(tx, quote('proxy-forbidden'));
+      }), '23514', 'shared_key_quote_insert_protocol');
+      stage('database-recorded-time-version-uniqueness-and-direct-login-quote-insert');
+
+      await rejectCode(insertTransition(migrator,
+        transition('revoke-before-activation', null, null)),
+      '23514', 'shared_key_quote_revoke_inactive');
+      await rejectCode(insertTransition(migrator,
+        transition('backdated', null, 'quote-a-1', { effective_at: '2020-01-01T00:00:00Z' })),
+      '23514', 'shared_key_quote_server_time');
+      await rejectCode(insertTransition(migrator,
+        transition('forged-sequence', null, 'quote-a-1', { transition_seq: 99 })),
+      '23514', 'shared_key_quote_server_time');
+      await rejectCode(insertTransition(migrator,
+        transition('bad-kind', null, 'quote-a-1', { transition_kind: 'other' })),
+      '23514', 'shared_key_quote_transition_kind_valid');
+      await insertTransition(migrator, transition('event-a-1', null, 'quote-a-1'));
+      assert.equal((await atSequence('quote-key-a', 1))[0].quote_version_id, 'quote-a-1');
+      assert.equal((await atSequence('quote-key-a', 1))[0].seller_user_id, 'quote-seller-a');
+      stage('genesis-activation-and-server-assigned-monotone-sequence');
+
+      await delay(12);
+      await insertQuote(migrator, quote('quote-a-2', {
+        input_price_per_million: '3.250000', output_price_per_million: '4.500000',
+      }));
+      await insertTransition(migrator,
+        transition('event-a-2', 'event-a-1', 'quote-a-2'));
+      const [atOne] = await atSequence('quote-key-a', 1);
+      const [atTwo] = await atSequence('quote-key-a', 2);
+      assert.equal(atOne.input_price_per_million, '1.250000');
+      assert.equal(atTwo.input_price_per_million, '3.250000');
+      assert.equal((await atEventTime('quote-key-a', 'event-a-1'))[0].quote_version_id, 'quote-a-1');
+      assert.equal((await atEventTime('quote-key-a', 'event-a-2'))[0].quote_version_id, 'quote-a-2');
+      await rejectCode(insertTransition(migrator,
+        transition('stale-transition', 'event-a-1', 'quote-a-1')),
+      '23514', 'shared_key_quote_stale_predecessor');
+      await rejectCode(insertTransition(migrator,
+        transition('replay-quote', 'event-a-2', 'quote-a-1')),
+      '23505', 'shared_key_quote_transitions_quote_version_id_key');
+      stage('unplanned-repricing-preserves-historical-price-and-stale-head-rejected');
+
+      await insertTransition(migrator, transition('event-a-3', 'event-a-2', null));
+      const [revoked] = await atSequence('quote-key-a', 3);
+      assert.equal(revoked.transition_kind, 'revoke');
+      assert.equal(revoked.quote_version_id, null);
+      assert.equal(revoked.input_price_per_million, null);
+      assert.equal((await atSequence('quote-key-a', 2))[0].quote_version_id, 'quote-a-2');
+      await rejectCode(insertTransition(migrator,
+        transition('duplicate-revoke', 'event-a-3', null)),
+      '23514', 'shared_key_quote_revoke_inactive');
+      await insertQuote(migrator, quote('quote-a-3'));
+      await insertTransition(migrator,
+        transition('event-a-4', 'event-a-3', 'quote-a-3'));
+      assert.equal((await atSequence('quote-key-a', 4))[0].quote_version_id, 'quote-a-3');
+      stage('revocation-and-reactivation-retain-prior-price-history');
+
+      await rejectCode(migrator.unsafe(`UPDATE ${gateway}.shared_keys
+        SET seller_user_id='quote-seller-b' WHERE id='quote-key-a'`),
+      '23514', 'shared_key_quote_owner_transfer');
+      assert.equal((await migrator.unsafe(`SELECT seller_user_id FROM ${gateway}.shared_keys
+        WHERE id='quote-key-a'`))[0].seller_user_id, 'quote-seller-a');
+      let ownerReady;
+      let releaseOwner;
+      const ownerEntered = new Promise(resolve => { ownerReady = resolve; });
+      const ownerHold = new Promise(resolve => { releaseOwner = resolve; });
+      const ownerTx = migrator.begin(async tx => {
+        await tx.unsafe(`UPDATE ${gateway}.shared_keys SET seller_user_id='quote-seller-b'
+          WHERE id='quote-key-a'`);
+        await insertQuote(tx, quote('quote-a-b1', {
+          seller_user_id: 'quote-seller-b', input_price_per_million: '5.750000',
+        }));
+        await insertTransition(tx, transition('event-a-5', 'event-a-4', 'quote-a-b1', {
+          seller_user_id: 'quote-seller-b',
+        }));
+        ownerReady();
+        await ownerHold;
+      });
+      await ownerEntered;
+      try {
+        assert.equal((await competing.unsafe(`SELECT seller_user_id FROM ${gateway}.shared_keys
+          WHERE id='quote-key-a'`))[0].seller_user_id, 'quote-seller-a');
+        assert.equal((await competing.unsafe(`SELECT quote_version_id FROM ${transitionTable}
+          WHERE shared_key_id='quote-key-a' ORDER BY transition_seq DESC LIMIT 1`))[0]
+          .quote_version_id, 'quote-a-3');
+      } finally {
+        releaseOwner();
+      }
+      await ownerTx;
+      assert.equal((await atSequence('quote-key-a', 4))[0].seller_user_id, 'quote-seller-a');
+      assert.equal((await atSequence('quote-key-a', 5))[0].seller_user_id, 'quote-seller-b');
+      assert.equal((await atEventTime('quote-key-a', 'event-a-4'))[0].quote_version_id, 'quote-a-3');
+      assert.equal((await atEventTime('quote-key-a', 'event-a-5'))[0].quote_version_id, 'quote-a-b1');
+      assert.equal((await migrator.unsafe(`SELECT seller_user_id FROM ${gateway}.shared_keys
+        WHERE id='quote-key-a'`))[0].seller_user_id, 'quote-seller-b');
+      const [transferredClaim] = await migrator.unsafe(`SELECT quote_version_id, seller_user_id
+        FROM ${quotes}.claim_shared_key_quote_for_dispatch('quote-key-a')`);
+      assert.deepEqual(transferredClaim, {
+        quote_version_id: 'quote-a-b1', seller_user_id: 'quote-seller-b',
+      });
+      stage('two-session-owner-transfer-commit-preserves-old-owner-and-new-full-quote');
+
+      await insertQuote(migrator, quote('quote-b-1', {
+        shared_key_id: 'quote-key-b', seller_user_id: 'quote-seller-b',
+      }));
+      await rejectCode(insertTransition(migrator,
+        transition('wrong-version-key', 'event-a-5', 'quote-b-1', {
+          seller_user_id: 'quote-seller-b',
+        })), '23514', 'shared_key_quote_transition_version');
+      await rejectCode(proxy.begin(async tx => {
+        await tx.unsafe('SET ROLE cinatoken_gateway_migrator');
+        await insertTransition(tx, transition('proxy-transition', 'event-a-5', 'quote-b-1', {
+          seller_user_id: 'quote-seller-b',
+        }));
+      }), '23514', 'shared_key_quote_transition_protocol');
+      await rejectCode(proxy.begin(async tx => {
+        await tx.unsafe('SET ROLE cinatoken_gateway_migrator');
+        await tx.unsafe(`SELECT * FROM ${quotes}.claim_shared_key_quote_for_dispatch('quote-key-a')`);
+      }), '23514', 'shared_key_quote_claim_protocol');
+      await rejectCode(migrator.begin(async tx => {
+        await tx.unsafe('SET TRANSACTION ISOLATION LEVEL REPEATABLE READ');
+        await insertTransition(tx, transition('repeatable-read', 'event-a-5', 'quote-b-1', {
+          seller_user_id: 'quote-seller-b',
+        }));
+      }), '23514', 'shared_key_quote_transition_protocol');
+      stage('cross-key-quote-set-role-and-repeatable-read-transition-rejected');
+
+      await insertQuote(migrator, quote('quote-a-b2', { seller_user_id: 'quote-seller-b' }));
+      await insertQuote(migrator, quote('quote-a-b3', { seller_user_id: 'quote-seller-b' }));
+      const multiA = transition('multi-a', 'event-a-5', 'quote-a-b2', {
+        seller_user_id: 'quote-seller-b',
+      });
+      const multiB = transition('multi-b', null, 'quote-b-1', {
+        shared_key_id: 'quote-key-b', seller_user_id: 'quote-seller-b',
+      });
+      const columns = Object.keys(multiA);
+      const placeholders = offset => `(${columns.map((_, i) => `$${offset + i + 1}`).join(', ')})`;
+      await rejectCode(migrator.unsafe(`INSERT INTO ${transitionTable} (${columns.join(', ')})
+        VALUES ${placeholders(0)}, ${placeholders(columns.length)}`,
+      [...Object.values(multiA), ...Object.values(multiB)]),
+      '23514', 'shared_key_quote_transition_one_row');
+      assert.equal((await migrator.unsafe(`SELECT count(*)::int AS n FROM ${transitionTable}
+        WHERE transition_id LIKE 'multi-%'`))[0].n, 0);
+      stage('multi-row-transition-rejected-atomically');
+
+      let firstReady;
+      let releaseFirst;
+      const entered = new Promise(resolve => { firstReady = resolve; });
+      const hold = new Promise(resolve => { releaseFirst = resolve; });
+      const firstTx = migrator.begin(async tx => {
+        await insertTransition(tx, transition('event-a-6', 'event-a-5', 'quote-a-b2', {
+          seller_user_id: 'quote-seller-b',
+        }));
+        const [pending] = await tx.unsafe(`SELECT effective_at::text AS effective_at
+          FROM ${transitionTable} WHERE transition_id='event-a-6'`);
+        firstReady(pending.effective_at);
+        await hold;
+      });
+      const pendingEffectiveAt = await entered;
+      // This is a synthetic dispatch read: it captures the visible committed
+      // transition and immutable quote ID before the new event commits.
+      const [capturedAttemptQuote] = await competing.unsafe(`SELECT transition_id,
+        transition_seq, quote_version_id FROM ${transitionTable}
+        WHERE shared_key_id='quote-key-a' ORDER BY transition_seq DESC LIMIT 1`);
+      assert.equal(capturedAttemptQuote.transition_id, 'event-a-5');
+      assert.equal(Number(capturedAttemptQuote.transition_seq), 5);
+      assert.equal(capturedAttemptQuote.quote_version_id, 'quote-a-b1');
+      const [observedAt] = await competing.unsafe(`SELECT pg_catalog.clock_timestamp()::text AS at`);
+      assert.equal((await competing.unsafe(`SELECT $1::timestamptz >= $2::timestamptz AS after_insert`,
+        [observedAt.at, pendingEffectiveAt]))[0].after_insert, true);
+      const [pendingTimeBeforeCommit] = await competing.unsafe(`SELECT quote_version_id
+        FROM ${quotes}.resolve_shared_key_quote_at_time('quote-key-a',$1)`,
+      [observedAt.at]);
+      assert.equal(pendingTimeBeforeCommit.quote_version_id, 'quote-a-b1');
+      let secondSettled = false;
+      const secondTx = competing.begin(async tx => insertTransition(tx,
+        transition('event-a-7-race', 'event-a-5', 'quote-a-b3', {
+          seller_user_id: 'quote-seller-b',
+        }))).finally(() => { secondSettled = true; });
+      void secondTx.catch(() => {});
+      await delay(100);
+      assert.equal(secondSettled, false, 'same-key transition must wait for the first transaction');
+      releaseFirst();
+      await firstTx;
+      await rejectCode(secondTx, '23514', 'shared_key_quote_stale_predecessor');
+      assert.equal((await atSequence('quote-key-a', 6))[0].quote_version_id, 'quote-a-b2');
+      assert.equal((await atSequence('quote-key-a', Number(capturedAttemptQuote.transition_seq)))[0]
+        .quote_version_id, capturedAttemptQuote.quote_version_id);
+      const [capturedFact] = await competing.unsafe(`SELECT version_id, seller_user_id,
+        input_price_per_million FROM ${table} WHERE version_id=$1`,
+      [capturedAttemptQuote.quote_version_id]);
+      assert.equal(capturedFact.version_id, 'quote-a-b1');
+      assert.equal(capturedFact.seller_user_id, 'quote-seller-b');
+      assert.equal(capturedFact.input_price_per_million, '5.750000');
+      const [pendingTimeAfterCommit] = await competing.unsafe(`SELECT quote_version_id
+        FROM ${quotes}.resolve_shared_key_quote_at_time('quote-key-a',$1)`,
+      [observedAt.at]);
+      assert.equal(pendingTimeAfterCommit.quote_version_id, 'quote-a-b2');
+      stage('uncommitted-new-event-keeps-old-dispatch-reference-and-stale-operator-loses');
+
+      await insertTransition(migrator, transition('event-b-1', null, 'quote-b-1', {
+        shared_key_id: 'quote-key-b', seller_user_id: 'quote-seller-b',
+      }));
+      assert.equal((await migrator.unsafe(`SELECT quote_version_id FROM
+        ${quotes}.claim_shared_key_quote_for_dispatch('quote-key-b')`))[0]
+        .quote_version_id, 'quote-b-1');
+      let revokeReady;
+      let releaseRevoke;
+      const revokeEntered = new Promise(resolve => { revokeReady = resolve; });
+      const revokeHold = new Promise(resolve => { releaseRevoke = resolve; });
+      const revokeTx = migrator.begin(async tx => {
+        await insertTransition(tx, transition('event-b-2', 'event-b-1', null, {
+          shared_key_id: 'quote-key-b', seller_user_id: 'quote-seller-b',
+        }));
+        revokeReady();
+        await revokeHold;
+      });
+      await revokeEntered;
+      try {
+        assert.equal((await competing.unsafe(`SELECT quote_version_id FROM ${transitionTable}
+          WHERE shared_key_id='quote-key-b' ORDER BY transition_seq DESC LIMIT 1`))[0]
+          .quote_version_id, 'quote-b-1');
+        let claimSettled = false;
+        const waitingClaim = competing.begin(async tx => tx.unsafe(`SELECT quote_version_id
+          FROM ${quotes}.claim_shared_key_quote_for_dispatch('quote-key-b')`))
+          .finally(() => { claimSettled = true; });
+        void waitingClaim.catch(() => {});
+        await delay(100);
+        assert.equal(claimSettled, false, 'billable claim must wait for in-flight revocation');
+        releaseRevoke();
+        await revokeTx;
+        await rejectCode(waitingClaim, '23514', 'shared_key_quote_unavailable');
+      } finally {
+        releaseRevoke();
+      }
+      await revokeTx;
+      assert.equal((await atSequence('quote-key-b', 1))[0].quote_version_id, 'quote-b-1');
+      assert.equal((await atSequence('quote-key-b', 2))[0].transition_kind, 'revoke');
+      assert.equal((await atSequence('quote-key-b', 2))[0].quote_version_id, null);
+      await rejectCode(migrator.unsafe(`SELECT * FROM
+        ${quotes}.claim_shared_key_quote_for_dispatch('quote-key-b')`),
+      '23514', 'shared_key_quote_unavailable');
+      stage('two-session-revocation-blocks-new-billable-claim-after-commit');
+
+      for (const command of [
+        `UPDATE ${table} SET commission_rate=0.2 WHERE version_id='quote-a-1'`,
+        `UPDATE ${table} SET commission_rate=0.2 WHERE false`,
+        `DELETE FROM ${table} WHERE version_id='quote-a-1'`,
+        `DELETE FROM ${table} WHERE false`,
+        `UPDATE ${transitionTable} SET transition_kind='revoke' WHERE transition_id='event-a-1'`,
+        `UPDATE ${transitionTable} SET transition_kind='revoke' WHERE false`,
+        `DELETE FROM ${transitionTable} WHERE transition_id='event-a-1'`,
+        `DELETE FROM ${transitionTable} WHERE false`,
+        `TRUNCATE ${transitionTable}`,
+      ]) await rejectCode(migrator.unsafe(command), '23514', 'shared_key_quote_versions_append_only');
+      // PostgreSQL rejects non-CASCADE truncation of the referenced facts
+      // before firing its trigger; CASCADE reaches both append-only guards.
+      await rejectCode(migrator.unsafe(`TRUNCATE ${table}`), '0A000');
+      await rejectCode(migrator.unsafe(`TRUNCATE ${table} CASCADE`),
+        '23514', 'shared_key_quote_versions_append_only');
+      await rejectCode(migrator.unsafe(`DELETE FROM ${gateway}.shared_keys WHERE id='quote-key-a'`), '23001');
+      stage('fact-transition-mutation-empty-mutation-truncate-and-parent-delete-refused');
+
+      const url = `postgres://cinatoken_gateway_migrator:${migratorPassword}@127.0.0.1:${cluster.port}/postgres`;
+      await grantPg73RuntimeFixture({ cluster, migrator, migratorUrl: url });
+      await grantPg73RuntimeFixture({ cluster, migrator, migratorUrl: url });
+      const [acl] = await migrator.unsafe(`SELECT
+        pg_catalog.has_schema_privilege('cinatoken_gateway_runtime','${quotes}','USAGE') AS schema_usage,
+        pg_catalog.has_table_privilege('cinatoken_gateway_runtime','${table}','SELECT') AS fact_select,
+        pg_catalog.has_table_privilege('cinatoken_gateway_runtime','${transitionTable}','SELECT') AS transition_select,
+        pg_catalog.has_table_privilege('cinatoken_gateway_runtime','${transitionTable}','INSERT') AS transition_insert,
+        pg_catalog.has_function_privilege('cinatoken_gateway_runtime',
+          '${quotes}.resolve_shared_key_quote_at_sequence(text,bigint)','EXECUTE') AS resolver_execute,
+        pg_catalog.has_function_privilege('cinatoken_gateway_runtime',
+          '${quotes}.claim_shared_key_quote_for_dispatch(text)','EXECUTE') AS claim_execute`);
+      assert.deepEqual(acl, { schema_usage: false, fact_select: false,
+        transition_select: false, transition_insert: false,
+        resolver_execute: false, claim_execute: false });
+      await rejectCode(runtime.unsafe(`SELECT * FROM ${table} LIMIT 1`), '42501');
+      await rejectCode(runtime.unsafe(`SELECT * FROM ${transitionTable} LIMIT 1`), '42501');
+      await rejectCode(runtime.unsafe(`SELECT * FROM ${quotes}.resolve_shared_key_quote_at_sequence(
+        'quote-key-a',1)`), '42501');
+      await rejectCode(insertTransition(runtime,
+        transition('runtime-forbidden', 'event-a-6', null)), '42501');
+      stage('ordinary-runtime-denied-after-two-broad-grant-reruns', { acl });
+      report.status = 'PASS';
+
+    } catch (error) {
+      failure = error;
+      report.status = 'FAIL'; report.error = errorInfo(error);
+    } finally {
+      await Promise.allSettled(clients.map(sql => sql.end({ timeout: 1 })));
+      try { await cluster.cleanup(); report.cleanup = 'PASS'; }
+      catch (error) { report.cleanup = 'FAIL'; report.cleanupError = errorInfo(error); failure ??= error; }
+      await writeFile(reportPath, JSON.stringify(report, null, 2) + '\n', { flag: 'wx' });
+      console.log('Native shared-key quote report: ' + reportPath);
+    }
+    if (failure) throw failure;
+  });
+
+da61172ea25d53bc31cdc10f2999defce06d6559 blob 34823
+// Review-only PG18.6 fixture: owned loopback cluster, synthetic users/keys and
+// quotes only. No ambient database URL, real seller, cloud or deployment.
+import assert from 'node:assert/strict';
+import { createHash, randomBytes, randomUUID } from 'node:crypto';
+import { readFile, writeFile } from 'node:fs/promises';
+import { dirname, join } from 'node:path';
+import { setTimeout as delay } from 'node:timers/promises';
+import test from 'node:test';
+import postgres from 'postgres';
+import { startNativePostgres } from '../../../packages/core/src/test-support/postgres-native-cluster.mjs';
+import { grantPg73RuntimeFixture, listPg73Migrations } from './pg73-native-fixture.mjs';
+
+const gateway = 'cinatoken_gateway';
+const quotes = 'cinatoken_economic_quotes';
+const table = `${quotes}.shared_key_quote_versions`;
+const migrations = new URL('../../../packages/core/migrations-postgres/', import.meta.url);
+const proposal = new URL('../../../packages/core/migrations-proposals/postgres/shared-key-quote-versions.sql', import.meta.url);
+const sha = value => createHash('sha256').update(value).digest('hex');
+const errorInfo = error => ({ code: error?.code ?? null, constraint: error?.constraint_name ?? null,
+  message: String(error?.message ?? error).slice(0, 300) });
+
+function client(cluster, username, password, label) {
+  return postgres({ host: '127.0.0.1', port: cluster.port, database: 'postgres',
+    username, password, ssl: false, max: 1, prepare: false, fetch_types: false,
+    connect_timeout: 3, idle_timeout: 0, max_lifetime: 0, backoff: false,
+    onnotice() {}, connection: { application_name: `cinatoken-quote-v338-${label}` } });
+}
+
+function quote(versionId, overrides = {}) {
+  return {
+    version_id: versionId,
+    shared_key_id: 'quote-key-a',
+    seller_user_id: 'quote-seller-a',
+    input_price_per_million: '1.250000',
+    output_price_per_million: '2.500000',
+    cache_read_price_per_million: '0.100000',
+    cache_write_price_per_million: '0.200000',
+    commission_rate: '0.100000',
+    currency: 'USD',
+    price_unit: 'per_million_tokens',
+    billing_mode: 'shared_seller_key',
+    entitlement_version: 'synthetic-entitlement-v1',
+    ...overrides,
+  };
+}
+
+function transition(transitionId, predecessor, versionId, overrides = {}) {
+  return {
+    transition_id: transitionId,
+    shared_key_id: 'quote-key-a',
+    supersedes_transition_id: predecessor,
+    transition_kind: versionId === null ? 'revoke' : 'activate',
+    quote_version_id: versionId,
+    seller_user_id: 'quote-seller-a',
+    ...overrides,
+  };
+}
+
+async function insertTransition(sql, row) {
+  const columns = Object.keys(row);
+  return sql.unsafe(`INSERT INTO ${quotes}.shared_key_quote_transitions
+    (${columns.join(', ')}) VALUES (${columns.map((_, i) => `$${i + 1}`).join(', ')})`,
+  Object.values(row));
+}
+
+async function insertQuote(sql, row, omitted = []) {
+  // Every identifier comes from the fixed quote() literal above, never input.
+  const columns = Object.keys(row).filter(name => !omitted.includes(name));
+  const params = columns.map(name => row[name]);
+  return sql.unsafe(`INSERT INTO ${table} (${columns.join(', ')}) VALUES (${columns.map((_, i) => `$${i + 1}`).join(', ')})`, params);
+}
+
+async function rejectCode(work, code, constraint) {
+  await assert.rejects(work, error => {
+    assert.equal(error?.code, code);
+    if (constraint) assert.equal(error?.constraint_name, constraint);
+    return true;
+  });
+}
+
+async function activate(sql, body, enabled = true) {
+  await sql.begin(async tx => {
+    if (enabled) await tx.unsafe("SET LOCAL cinatoken.shared_key_quote_versions_activation = 'reviewed-v2'");
+    await tx.unsafe(body).simple();
+  });
+}
+
+test('native PG18 immutable shared-key quote supersession preserves history and serializes operators',
+  { timeout: 240_000, skip: !process.env.GATEWAY_NATIVE_PG_BIN }, async () => {
+    const cluster = await startNativePostgres();
+    const reportPath = join(dirname(cluster.owned), `report-shared-key-quote-v338-${randomUUID()}.json`);
+    const report = { status: 'RUNNING', cleanup: 'PENDING', binaryVersion: cluster.binaryVersion,
+      scope: 'private PG18.6, 73 formal migrations, review-only quote transition proposal',
+      stages: [], limitations: [
+        'No active quote producer, dispatch attachment, typed outbox, earnings consumer or deployment.',
+        'The quote fields missing from existing shared_keys must come from a future trusted authority; fixture values are synthetic.',
+        'Time as-of is retrospective after commit; dispatch must capture the exact transition and quote version, not infer them from a later timestamp.',
+        'D1, MySQL, real Workers and production concurrency are not proven by this local PostgreSQL fixture.',
+      ], sourceSha256: {} };
+    const stage = (name, detail = {}) => report.stages.push({ name, result: 'PASS', ...detail });
+    const clients = [];
+    let failure;
+    try {
+      assert.match(cluster.binaryVersion, /PostgreSQL\) 18\.6/);
+      const migratorPassword = randomBytes(24).toString('hex');
+      const runtimePassword = randomBytes(24).toString('hex');
+      const proxyPassword = randomBytes(24).toString('hex');
+      await cluster.admin.unsafe(`CREATE ROLE cinatoken_gateway_migrator LOGIN PASSWORD '${migratorPassword}';
+        CREATE ROLE cinatoken_gateway_runtime LOGIN PASSWORD '${runtimePassword}';
+        CREATE ROLE quote_proxy LOGIN PASSWORD '${proxyPassword}';
+        GRANT cinatoken_gateway_migrator TO quote_proxy;
+        CREATE SCHEMA ${gateway} AUTHORIZATION cinatoken_gateway_migrator;
+        REVOKE CREATE ON SCHEMA public FROM PUBLIC;
+        GRANT CONNECT ON DATABASE postgres TO cinatoken_gateway_migrator, cinatoken_gateway_runtime, quote_proxy;`).simple();
+      const migrator = client(cluster, 'cinatoken_gateway_migrator', migratorPassword, 'migrator');
+      const competing = client(cluster, 'cinatoken_gateway_migrator', migratorPassword, 'competing');
+      const runtime = client(cluster, 'cinatoken_gateway_runtime', runtimePassword, 'runtime');
+      const proxy = client(cluster, 'quote_proxy', proxyPassword, 'proxy');
+      clients.push(migrator, competing, runtime, proxy);
+      await migrator.unsafe(`CREATE TABLE ${gateway}.schema_migrations (
+        version text PRIMARY KEY, applied_at timestamptz NOT NULL DEFAULT now())`);
+      const files = await listPg73Migrations();
+      assert.equal(files.length, 73);
+      const corpus = [];
+      for (const name of files) {
+        const body = await readFile(new URL(name, migrations), 'utf8');
+        corpus.push(`${name}\n${body}`);
+        await migrator.begin(async tx => {
+          await tx.unsafe(body).simple();
+          await tx.unsafe(`INSERT INTO ${gateway}.schema_migrations(version) VALUES ($1)`, [name]);
+        });
+      }
+      const body = await readFile(proposal, 'utf8');
+      report.sourceSha256 = { proposal: sha(body), nativeTest: sha(await readFile(new URL(import.meta.url))),
+        formalMigrationCorpus: sha(corpus.join('\n')) };
+      stage('formal-schema-installed', { migrations: files.length });
+
+      let ledgerReady;
+      let releaseLedger;
+      const ledgerEntered = new Promise(resolve => { ledgerReady = resolve; });
+      const ledgerHold = new Promise(resolve => { releaseLedger = resolve; });
+      const ledgerTx = competing.begin(async tx => {
+        await tx.unsafe(`UPDATE ${gateway}.schema_migrations SET applied_at=applied_at
+          WHERE version='0073_recovery_api_key_workspace_lock.sql'`);
+        ledgerReady();
+        await ledgerHold;
+      });
+      await ledgerEntered;
+      try {
+        await rejectCode(activate(migrator, body), '55P03');
+      } finally {
+        releaseLedger();
+        await ledgerTx;
+      }
+      stage('formal-ledger-dml-lock-blocks-activation-with-two-second-timeout');
+
+      await migrator.unsafe(`INSERT INTO ${gateway}.users(id,email) VALUES
+          ('quote-seller-a','seller-a@example.invalid'),
+          ('quote-seller-b','seller-b@example.invalid');
+        INSERT INTO ${gateway}.shared_keys
+          (id,seller_user_id,channel_type,api_key,key_fingerprint)
+          VALUES ('quote-key-a','quote-seller-a','openai','synthetic-a','fingerprint-a'),
+            ('quote-key-b','quote-seller-b','openai','synthetic-b','fingerprint-b');`).simple();
+      await assert.rejects(activate(migrator, body, false),
+        /Shared-key quote activation or source contract differs/);
+      await assert.rejects(migrator.begin(async tx => {
+        await tx.unsafe(`DELETE FROM ${gateway}.schema_migrations
+          WHERE version='0073_recovery_api_key_workspace_lock.sql'`);
+        await tx.unsafe("SET LOCAL cinatoken.shared_key_quote_versions_activation = 'reviewed-v2'");
+        await tx.unsafe(body).simple();
+      }), /Shared-key quote activation or source contract differs/);
+      stage('missing-final-formal-migration-rejected-with-rollback');
+      await assert.rejects(migrator.begin(async tx => {
+        await tx.unsafe(`UPDATE ${gateway}.schema_migrations
+          SET version='0042_forged_middle_version.sql'
+          WHERE version='0042_gateway_keys_workspace.sql'`);
+        const [ledger] = await tx.unsafe(`SELECT count(*)::int AS n,
+          bool_or(version='0073_recovery_api_key_workspace_lock.sql') AS has_last
+          FROM ${gateway}.schema_migrations`);
+        assert.deepEqual(ledger, { n: 73, has_last: true });
+        await tx.unsafe("SET LOCAL cinatoken.shared_key_quote_versions_activation = 'reviewed-v2'");
+        await tx.unsafe(body).simple();
+      }), /Shared-key quote activation or source contract differs/);
+      assert.equal((await migrator.unsafe(`SELECT count(*)::int AS n FROM ${gateway}.schema_migrations
+        WHERE version='0042_gateway_keys_workspace.sql'`))[0].n, 1);
+      stage('forged-middle-migration-rejected-at-same-count-and-terminal-version');
+      assert.equal((await migrator.unsafe(`SELECT pg_catalog.to_regnamespace('${quotes}') AS n`))[0].n, null);
+      await assert.rejects(migrator.begin(async tx => {
+        await tx.unsafe(`ALTER TABLE ${gateway}.shared_keys ALTER COLUMN input_price TYPE numeric(18,5)`);
+        await tx.unsafe("SET LOCAL cinatoken.shared_key_quote_versions_activation = 'reviewed-v2'");
+        await tx.unsafe(body).simple();
+      }), /Shared-key quote activation or source contract differs/);
+      stage('formal-seller-price-precision-drift-rejected-with-rollback');
+      await rejectCode(activate(migrator, body), '42501');
+      await cluster.admin.unsafe('GRANT CREATE ON DATABASE postgres TO cinatoken_gateway_migrator');
+      await cluster.admin.unsafe('ALTER ROLE cinatoken_gateway_migrator NOLOGIN');
+      await assert.rejects(activate(migrator, body),
+        /Shared-key quote activation or source contract differs/);
+      await cluster.admin.unsafe('ALTER ROLE cinatoken_gateway_migrator LOGIN');
+      await cluster.admin.unsafe('ALTER ROLE cinatoken_gateway_runtime SUPERUSER');
+      await assert.rejects(activate(migrator, body),
+        /Shared-key quote activation or source contract differs/);
+      await cluster.admin.unsafe('ALTER ROLE cinatoken_gateway_runtime NOSUPERUSER');
+      stage('direct-migrator-login-and-non-superuser-runtime-required');
+      for (const inheritedRole of ['cinatoken_gateway_migrator','pg_read_all_data','pg_write_all_data']) {
+        await cluster.admin.unsafe(`GRANT ${inheritedRole} TO cinatoken_gateway_runtime`);
+        await assert.rejects(activate(migrator, body),
+          /Shared-key quote activation or source contract differs/);
+        await cluster.admin.unsafe(`REVOKE ${inheritedRole} FROM cinatoken_gateway_runtime`);
+      }
+      stage('runtime-role-inheritance-rejected', {
+        roles: ['cinatoken_gateway_migrator','pg_read_all_data','pg_write_all_data'],
+      });
+      await assert.rejects(migrator.begin(async tx => {
+        await tx.unsafe(`CREATE SCHEMA ${quotes} AUTHORIZATION cinatoken_gateway_migrator`);
+        await tx.unsafe(`GRANT USAGE ON SCHEMA ${quotes} TO cinatoken_gateway_runtime`);
+        await tx.unsafe("SET LOCAL cinatoken.shared_key_quote_versions_activation = 'reviewed-v2'");
+        await tx.unsafe(body).simple();
+      }), /Shared-key quote activation or source contract differs/);
+      assert.equal((await migrator.unsafe(`SELECT pg_catalog.to_regnamespace('${quotes}') AS n`))[0].n, null);
+      stage('activation-and-preexisting-wide-schema-rejected-with-rollback');
+
+      await assert.rejects(proxy.begin(async tx => {
+        await tx.unsafe('SET ROLE cinatoken_gateway_migrator');
+        await tx.unsafe("SET LOCAL cinatoken.shared_key_quote_versions_activation = 'reviewed-v2'");
+        await tx.unsafe(body).simple();
+      }), /Shared-key quote activation or source contract differs/);
+      stage('schema-create-requires-database-privilege-and-set-role-cannot-activate');
+
+      const aclPoisonedBody = body.replace('DO $postflight$', `
+        GRANT USAGE ON SCHEMA ${quotes} TO cinatoken_gateway_runtime;
+        GRANT SELECT ON ${table} TO cinatoken_gateway_runtime;
+        DO $postflight$`);
+      assert.notEqual(aclPoisonedBody, body);
+      await assert.rejects(activate(migrator, aclPoisonedBody),
+        /Shared-key quote runtime ACL is wider than reviewed contract/);
+      assert.equal((await migrator.unsafe(`SELECT pg_catalog.to_regnamespace('${quotes}') AS n`))[0].n, null);
+      stage('postflight-effective-runtime-acl-rejected-with-rollback');
+
+      await activate(migrator, body);
+      await assert.rejects(activate(migrator, body),
+        /Shared-key quote activation or source contract differs/);
+      const transitionTable = `${quotes}.shared_key_quote_transitions`;
+      const atSequence = async (key, sequence) =>
+        migrator.unsafe(`SELECT * FROM ${quotes}.resolve_shared_key_quote_at_sequence($1,$2)`,
+          [key, sequence]);
+      const atEventTime = async (key, eventId) => migrator.unsafe(`SELECT r.* FROM
+        ${transitionTable} AS e CROSS JOIN LATERAL
+        ${quotes}.resolve_shared_key_quote_at_time($1,e.effective_at) AS r
+        WHERE e.transition_id=$2`, [key, eventId]);
+
+      const required = Object.keys(quote('missing'));
+      for (const column of required) {
+        await assert.rejects(insertQuote(migrator, quote(`missing-${column}`), [column]),
+          error => ['23502', '23514'].includes(error?.code));
+      }
+      assert.equal((await migrator.unsafe(`SELECT count(*)::int AS n FROM ${table}`))[0].n, 0);
+      stage('immutable-quote-facts-require-all-typed-fields', { columns: required });
+
+      await rejectCode(migrator.unsafe(`SELECT * FROM
+        ${quotes}.claim_shared_key_quote_for_dispatch('quote-key-a')`),
+      '23514', 'shared_key_quote_unavailable');
+      const quoteMultiA = quote('quote-multi-a');
+      const quoteMultiB = quote('quote-multi-b');
+      const quoteColumns = Object.keys(quoteMultiA);
+      const quotePlaceholders = offset =>
+        `(${quoteColumns.map((_, i) => `$${offset + i + 1}`).join(', ')})`;
+      await rejectCode(migrator.unsafe(`INSERT INTO ${table} (${quoteColumns.join(', ')})
+        VALUES ${quotePlaceholders(0)}, ${quotePlaceholders(quoteColumns.length)}`,
+      [...Object.values(quoteMultiA), ...Object.values(quoteMultiB)]),
+      '23514', 'shared_key_quote_one_row');
+      stage('no-active-quote-claim-and-multi-row-fact-insert-rejected');
+
+      for (const [row, code] of [
+        [quote('blank-version', { version_id: ' ' }), '23514'],
+        [quote('blank-entitlement', { entitlement_version: ' ' }), '23514'],
+        [quote('negative-price', { input_price_per_million: '-0.000001' }), '23514'],
+        [quote('negative-cache-price', { cache_write_price_per_million: '-0.000001' }), '23514'],
+        [quote('invalid-commission', { commission_rate: '0.900001' }), '23514'],
+        [quote('invalid-currency', { currency: 'EUR' }), '23514'],
+        [quote('invalid-unit', { price_unit: 'per_token' }), '23514'],
+        [quote('invalid-billing', { billing_mode: 'buyer_key' }), '23514'],
+      ]) await rejectCode(insertQuote(migrator, row), code);
+      for (const field of [
+        'input_price_per_million', 'output_price_per_million',
+        'cache_read_price_per_million', 'cache_write_price_per_million',
+      ]) await rejectCode(insertQuote(migrator,
+        quote(`nan-${field}`, { [field]: 'NaN' })), '23514', 'shared_key_quote_prices_valid');
+      await rejectCode(insertQuote(migrator,
+        quote('wrong-owner', { seller_user_id: 'quote-seller-b' })),
+      '23514', 'shared_key_quote_owner');
+      stage('negative-price-nan-commission-enumeration-and-seller-rejected');
+
+      await insertQuote(migrator, { ...quote('quote-a-1'), recorded_at: '2000-01-01T00:00:00Z' });
+      const [recorded] = await migrator.unsafe(`SELECT recorded_at > '2020-01-01'::timestamptz
+        AND recorded_at <= pg_catalog.clock_timestamp() AS server_clock
+        FROM ${table} WHERE version_id='quote-a-1'`);
+      assert.equal(recorded.server_clock, true);
+      await rejectCode(insertQuote(migrator, quote('quote-a-1')), '23505',
+        'shared_key_quote_versions_pkey');
+      await rejectCode(proxy.begin(async tx => {
+        await tx.unsafe('SET ROLE cinatoken_gateway_migrator');
+        await insertQuote(tx, quote('proxy-forbidden'));
+      }), '23514', 'shared_key_quote_insert_protocol');
+      stage('database-recorded-time-version-uniqueness-and-direct-login-quote-insert');
+
+      await rejectCode(insertTransition(migrator,
+        transition('revoke-before-activation', null, null)),
+      '23514', 'shared_key_quote_revoke_inactive');
+      await rejectCode(insertTransition(migrator,
+        transition('backdated', null, 'quote-a-1', { effective_at: '2020-01-01T00:00:00Z' })),
+      '23514', 'shared_key_quote_server_time');
+      await rejectCode(insertTransition(migrator,
+        transition('forged-sequence', null, 'quote-a-1', { transition_seq: 99 })),
+      '23514', 'shared_key_quote_server_time');
+      await rejectCode(insertTransition(migrator,
+        transition('bad-kind', null, 'quote-a-1', { transition_kind: 'other' })),
+      '23514', 'shared_key_quote_transition_kind_valid');
+      await insertTransition(migrator, transition('event-a-1', null, 'quote-a-1'));
+      assert.equal((await atSequence('quote-key-a', 1))[0].quote_version_id, 'quote-a-1');
+      assert.equal((await atSequence('quote-key-a', 1))[0].seller_user_id, 'quote-seller-a');
+      stage('genesis-activation-and-server-assigned-monotone-sequence');
+
+      await delay(12);
+      await insertQuote(migrator, quote('quote-a-2', {
+        input_price_per_million: '3.250000', output_price_per_million: '4.500000',
+      }));
+      await insertTransition(migrator,
+        transition('event-a-2', 'event-a-1', 'quote-a-2'));
+      const [atOne] = await atSequence('quote-key-a', 1);
+      const [atTwo] = await atSequence('quote-key-a', 2);
+      assert.equal(atOne.input_price_per_million, '1.250000');
+      assert.equal(atTwo.input_price_per_million, '3.250000');
+      assert.equal((await atEventTime('quote-key-a', 'event-a-1'))[0].quote_version_id, 'quote-a-1');
+      assert.equal((await atEventTime('quote-key-a', 'event-a-2'))[0].quote_version_id, 'quote-a-2');
+      await rejectCode(insertTransition(migrator,
+        transition('stale-transition', 'event-a-1', 'quote-a-1')),
+      '23514', 'shared_key_quote_stale_predecessor');
+      await rejectCode(insertTransition(migrator,
+        transition('replay-quote', 'event-a-2', 'quote-a-1')),
+      '23505', 'shared_key_quote_transitions_quote_version_id_key');
+      stage('unplanned-repricing-preserves-historical-price-and-stale-head-rejected');
+
+      await insertTransition(migrator, transition('event-a-3', 'event-a-2', null));
+      const [revoked] = await atSequence('quote-key-a', 3);
+      assert.equal(revoked.transition_kind, 'revoke');
+      assert.equal(revoked.quote_version_id, null);
+      assert.equal(revoked.input_price_per_million, null);
+      assert.equal((await atSequence('quote-key-a', 2))[0].quote_version_id, 'quote-a-2');
+      await rejectCode(insertTransition(migrator,
+        transition('duplicate-revoke', 'event-a-3', null)),
+      '23514', 'shared_key_quote_revoke_inactive');
+      await insertQuote(migrator, quote('quote-a-3'));
+      await insertTransition(migrator,
+        transition('event-a-4', 'event-a-3', 'quote-a-3'));
+      assert.equal((await atSequence('quote-key-a', 4))[0].quote_version_id, 'quote-a-3');
+      stage('revocation-and-reactivation-retain-prior-price-history');
+
+      await rejectCode(migrator.unsafe(`UPDATE ${gateway}.shared_keys
+        SET seller_user_id='quote-seller-b' WHERE id='quote-key-a'`),
+      '23514', 'shared_key_quote_owner_transfer');
+      assert.equal((await migrator.unsafe(`SELECT seller_user_id FROM ${gateway}.shared_keys
+        WHERE id='quote-key-a'`))[0].seller_user_id, 'quote-seller-a');
+      let ownerReady;
+      let releaseOwner;
+      const ownerEntered = new Promise(resolve => { ownerReady = resolve; });
+      const ownerHold = new Promise(resolve => { releaseOwner = resolve; });
+      const ownerTx = migrator.begin(async tx => {
+        await tx.unsafe(`UPDATE ${gateway}.shared_keys SET seller_user_id='quote-seller-b'
+          WHERE id='quote-key-a'`);
+        await insertQuote(tx, quote('quote-a-b1', {
+          seller_user_id: 'quote-seller-b', input_price_per_million: '5.750000',
+        }));
+        await insertTransition(tx, transition('event-a-5', 'event-a-4', 'quote-a-b1', {
+          seller_user_id: 'quote-seller-b',
+        }));
+        ownerReady();
+        await ownerHold;
+      });
+      await ownerEntered;
+      try {
+        assert.equal((await competing.unsafe(`SELECT seller_user_id FROM ${gateway}.shared_keys
+          WHERE id='quote-key-a'`))[0].seller_user_id, 'quote-seller-a');
+        assert.equal((await competing.unsafe(`SELECT quote_version_id FROM ${transitionTable}
+          WHERE shared_key_id='quote-key-a' ORDER BY transition_seq DESC LIMIT 1`))[0]
+          .quote_version_id, 'quote-a-3');
+      } finally {
+        releaseOwner();
+      }
+      await ownerTx;
+      assert.equal((await atSequence('quote-key-a', 4))[0].seller_user_id, 'quote-seller-a');
+      assert.equal((await atSequence('quote-key-a', 5))[0].seller_user_id, 'quote-seller-b');
+      assert.equal((await atEventTime('quote-key-a', 'event-a-4'))[0].quote_version_id, 'quote-a-3');
+      assert.equal((await atEventTime('quote-key-a', 'event-a-5'))[0].quote_version_id, 'quote-a-b1');
+      assert.equal((await migrator.unsafe(`SELECT seller_user_id FROM ${gateway}.shared_keys
+        WHERE id='quote-key-a'`))[0].seller_user_id, 'quote-seller-b');
+      const [transferredClaim] = await migrator.unsafe(`SELECT quote_version_id, seller_user_id
+        FROM ${quotes}.claim_shared_key_quote_for_dispatch('quote-key-a')`);
+      assert.deepEqual(transferredClaim, {
+        quote_version_id: 'quote-a-b1', seller_user_id: 'quote-seller-b',
+      });
+      stage('two-session-owner-transfer-commit-preserves-old-owner-and-new-full-quote');
+
+      await insertQuote(migrator, quote('quote-b-1', {
+        shared_key_id: 'quote-key-b', seller_user_id: 'quote-seller-b',
+      }));
+      await rejectCode(insertTransition(migrator,
+        transition('wrong-version-key', 'event-a-5', 'quote-b-1', {
+          seller_user_id: 'quote-seller-b',
+        })), '23514', 'shared_key_quote_transition_version');
+      await rejectCode(proxy.begin(async tx => {
+        await tx.unsafe('SET ROLE cinatoken_gateway_migrator');
+        await insertTransition(tx, transition('proxy-transition', 'event-a-5', 'quote-b-1', {
+          seller_user_id: 'quote-seller-b',
+        }));
+      }), '23514', 'shared_key_quote_transition_protocol');
+      await rejectCode(proxy.begin(async tx => {
+        await tx.unsafe('SET ROLE cinatoken_gateway_migrator');
+        await tx.unsafe(`SELECT * FROM ${quotes}.claim_shared_key_quote_for_dispatch('quote-key-a')`);
+      }), '23514', 'shared_key_quote_claim_protocol');
+      await rejectCode(migrator.begin(async tx => {
+        await tx.unsafe('SET TRANSACTION ISOLATION LEVEL REPEATABLE READ');
+        await insertTransition(tx, transition('repeatable-read', 'event-a-5', 'quote-b-1', {
+          seller_user_id: 'quote-seller-b',
+        }));
+      }), '23514', 'shared_key_quote_transition_protocol');
+      stage('cross-key-quote-set-role-and-repeatable-read-transition-rejected');
+
+      await insertQuote(migrator, quote('quote-a-b2', { seller_user_id: 'quote-seller-b' }));
+      await insertQuote(migrator, quote('quote-a-b3', { seller_user_id: 'quote-seller-b' }));
+      const multiA = transition('multi-a', 'event-a-5', 'quote-a-b2', {
+        seller_user_id: 'quote-seller-b',
+      });
+      const multiB = transition('multi-b', null, 'quote-b-1', {
+        shared_key_id: 'quote-key-b', seller_user_id: 'quote-seller-b',
+      });
+      const columns = Object.keys(multiA);
+      const placeholders = offset => `(${columns.map((_, i) => `$${offset + i + 1}`).join(', ')})`;
+      await rejectCode(migrator.unsafe(`INSERT INTO ${transitionTable} (${columns.join(', ')})
+        VALUES ${placeholders(0)}, ${placeholders(columns.length)}`,
+      [...Object.values(multiA), ...Object.values(multiB)]),
+      '23514', 'shared_key_quote_transition_one_row');
+      assert.equal((await migrator.unsafe(`SELECT count(*)::int AS n FROM ${transitionTable}
+        WHERE transition_id LIKE 'multi-%'`))[0].n, 0);
+      stage('multi-row-transition-rejected-atomically');
+
+      let firstReady;
+      let releaseFirst;
+      const entered = new Promise(resolve => { firstReady = resolve; });
+      const hold = new Promise(resolve => { releaseFirst = resolve; });
+      const firstTx = migrator.begin(async tx => {
+        await insertTransition(tx, transition('event-a-6', 'event-a-5', 'quote-a-b2', {
+          seller_user_id: 'quote-seller-b',
+        }));
+        const [pending] = await tx.unsafe(`SELECT effective_at::text AS effective_at
+          FROM ${transitionTable} WHERE transition_id='event-a-6'`);
+        firstReady(pending.effective_at);
+        await hold;
+      });
+      const pendingEffectiveAt = await entered;
+      // This is a synthetic dispatch read: it captures the visible committed
+      // transition and immutable quote ID before the new event commits.
+      const [capturedAttemptQuote] = await competing.unsafe(`SELECT transition_id,
+        transition_seq, quote_version_id FROM ${transitionTable}
+        WHERE shared_key_id='quote-key-a' ORDER BY transition_seq DESC LIMIT 1`);
+      assert.equal(capturedAttemptQuote.transition_id, 'event-a-5');
+      assert.equal(Number(capturedAttemptQuote.transition_seq), 5);
+      assert.equal(capturedAttemptQuote.quote_version_id, 'quote-a-b1');
+      const [observedAt] = await competing.unsafe(`SELECT pg_catalog.clock_timestamp()::text AS at`);
+      assert.equal((await competing.unsafe(`SELECT $1::timestamptz >= $2::timestamptz AS after_insert`,
+        [observedAt.at, pendingEffectiveAt]))[0].after_insert, true);
+      const [pendingTimeBeforeCommit] = await competing.unsafe(`SELECT quote_version_id
+        FROM ${quotes}.resolve_shared_key_quote_at_time('quote-key-a',$1)`,
+      [observedAt.at]);
+      assert.equal(pendingTimeBeforeCommit.quote_version_id, 'quote-a-b1');
+      let secondSettled = false;
+      const secondTx = competing.begin(async tx => insertTransition(tx,
+        transition('event-a-7-race', 'event-a-5', 'quote-a-b3', {
+          seller_user_id: 'quote-seller-b',
+        }))).finally(() => { secondSettled = true; });
+      void secondTx.catch(() => {});
+      await delay(100);
+      assert.equal(secondSettled, false, 'same-key transition must wait for the first transaction');
+      releaseFirst();
+      await firstTx;
+      await rejectCode(secondTx, '23514', 'shared_key_quote_stale_predecessor');
+      assert.equal((await atSequence('quote-key-a', 6))[0].quote_version_id, 'quote-a-b2');
+      assert.equal((await atSequence('quote-key-a', Number(capturedAttemptQuote.transition_seq)))[0]
+        .quote_version_id, capturedAttemptQuote.quote_version_id);
+      const [capturedFact] = await competing.unsafe(`SELECT version_id, seller_user_id,
+        input_price_per_million FROM ${table} WHERE version_id=$1`,
+      [capturedAttemptQuote.quote_version_id]);
+      assert.equal(capturedFact.version_id, 'quote-a-b1');
+      assert.equal(capturedFact.seller_user_id, 'quote-seller-b');
+      assert.equal(capturedFact.input_price_per_million, '5.750000');
+      const [pendingTimeAfterCommit] = await competing.unsafe(`SELECT quote_version_id
+        FROM ${quotes}.resolve_shared_key_quote_at_time('quote-key-a',$1)`,
+      [observedAt.at]);
+      assert.equal(pendingTimeAfterCommit.quote_version_id, 'quote-a-b2');
+      stage('uncommitted-new-event-keeps-old-dispatch-reference-and-stale-operator-loses');
+
+      await insertTransition(migrator, transition('event-b-1', null, 'quote-b-1', {
+        shared_key_id: 'quote-key-b', seller_user_id: 'quote-seller-b',
+      }));
+      assert.equal((await migrator.unsafe(`SELECT quote_version_id FROM
+        ${quotes}.claim_shared_key_quote_for_dispatch('quote-key-b')`))[0]
+        .quote_version_id, 'quote-b-1');
+      let revokeReady;
+      let releaseRevoke;
+      const revokeEntered = new Promise(resolve => { revokeReady = resolve; });
+      const revokeHold = new Promise(resolve => { releaseRevoke = resolve; });
+      const revokeTx = migrator.begin(async tx => {
+        await insertTransition(tx, transition('event-b-2', 'event-b-1', null, {
+          shared_key_id: 'quote-key-b', seller_user_id: 'quote-seller-b',
+        }));
+        revokeReady();
+        await revokeHold;
+      });
+      await revokeEntered;
+      try {
+        assert.equal((await competing.unsafe(`SELECT quote_version_id FROM ${transitionTable}
+          WHERE shared_key_id='quote-key-b' ORDER BY transition_seq DESC LIMIT 1`))[0]
+          .quote_version_id, 'quote-b-1');
+        let claimSettled = false;
+        const waitingClaim = competing.begin(async tx => tx.unsafe(`SELECT quote_version_id
+          FROM ${quotes}.claim_shared_key_quote_for_dispatch('quote-key-b')`))
+          .finally(() => { claimSettled = true; });
+        void waitingClaim.catch(() => {});
+        await delay(100);
+        assert.equal(claimSettled, false, 'billable claim must wait for in-flight revocation');
+        releaseRevoke();
+        await revokeTx;
+        await rejectCode(waitingClaim, '23514', 'shared_key_quote_unavailable');
+      } finally {
+        releaseRevoke();
+      }
+      await revokeTx;
+      assert.equal((await atSequence('quote-key-b', 1))[0].quote_version_id, 'quote-b-1');
+      assert.equal((await atSequence('quote-key-b', 2))[0].transition_kind, 'revoke');
+      assert.equal((await atSequence('quote-key-b', 2))[0].quote_version_id, null);
+      await rejectCode(migrator.unsafe(`SELECT * FROM
+        ${quotes}.claim_shared_key_quote_for_dispatch('quote-key-b')`),
+      '23514', 'shared_key_quote_unavailable');
+      stage('two-session-revocation-blocks-new-billable-claim-after-commit');
+
+      for (const command of [
+        `UPDATE ${table} SET commission_rate=0.2 WHERE version_id='quote-a-1'`,
+        `UPDATE ${table} SET commission_rate=0.2 WHERE false`,
+        `DELETE FROM ${table} WHERE version_id='quote-a-1'`,
+        `DELETE FROM ${table} WHERE false`,
+        `UPDATE ${transitionTable} SET transition_kind='revoke' WHERE transition_id='event-a-1'`,
+        `UPDATE ${transitionTable} SET transition_kind='revoke' WHERE false`,
+        `DELETE FROM ${transitionTable} WHERE transition_id='event-a-1'`,
+        `DELETE FROM ${transitionTable} WHERE false`,
+        `TRUNCATE ${transitionTable}`,
+      ]) await rejectCode(migrator.unsafe(command), '23514', 'shared_key_quote_versions_append_only');
+      // PostgreSQL rejects non-CASCADE truncation of the referenced facts
+      // before firing its trigger; CASCADE reaches both append-only guards.
+      await rejectCode(migrator.unsafe(`TRUNCATE ${table}`), '0A000');
+      await rejectCode(migrator.unsafe(`TRUNCATE ${table} CASCADE`),
+        '23514', 'shared_key_quote_versions_append_only');
+      await rejectCode(migrator.unsafe(`DELETE FROM ${gateway}.shared_keys WHERE id='quote-key-a'`), '23001');
+      stage('fact-transition-mutation-empty-mutation-truncate-and-parent-delete-refused');
+
+      const url = `postgres://cinatoken_gateway_migrator:${migratorPassword}@127.0.0.1:${cluster.port}/postgres`;
+      await grantPg73RuntimeFixture({ cluster, migrator, migratorUrl: url });
+      await grantPg73RuntimeFixture({ cluster, migrator, migratorUrl: url });
+      const [acl] = await migrator.unsafe(`SELECT
+        pg_catalog.has_schema_privilege('cinatoken_gateway_runtime','${quotes}','USAGE') AS schema_usage,
+        pg_catalog.has_table_privilege('cinatoken_gateway_runtime','${table}','SELECT') AS fact_select,
+        pg_catalog.has_table_privilege('cinatoken_gateway_runtime','${transitionTable}','SELECT') AS transition_select,
+        pg_catalog.has_table_privilege('cinatoken_gateway_runtime','${transitionTable}','INSERT') AS transition_insert,
+        pg_catalog.has_function_privilege('cinatoken_gateway_runtime',
+          '${quotes}.resolve_shared_key_quote_at_sequence(text,bigint)','EXECUTE') AS resolver_execute,
+        pg_catalog.has_function_privilege('cinatoken_gateway_runtime',
+          '${quotes}.claim_shared_key_quote_for_dispatch(text)','EXECUTE') AS claim_execute`);
+      assert.deepEqual(acl, { schema_usage: false, fact_select: false,
+        transition_select: false, transition_insert: false,
+        resolver_execute: false, claim_execute: false });
+      await rejectCode(runtime.unsafe(`SELECT * FROM ${table} LIMIT 1`), '42501');
+      await rejectCode(runtime.unsafe(`SELECT * FROM ${transitionTable} LIMIT 1`), '42501');
+      await rejectCode(runtime.unsafe(`SELECT * FROM ${quotes}.resolve_shared_key_quote_at_sequence(
+        'quote-key-a',1)`), '42501');
+      await rejectCode(insertTransition(runtime,
+        transition('runtime-forbidden', 'event-a-6', null)), '42501');
+      stage('ordinary-runtime-denied-after-two-broad-grant-reruns', { acl });
+      report.status = 'PASS';
+
+    } catch (error) {
+      failure = error;
+      report.status = 'FAIL'; report.error = errorInfo(error);
+    } finally {
+      await Promise.allSettled(clients.map(sql => sql.end({ timeout: 1 })));
+      try { await cluster.cleanup(); report.cleanup = 'PASS'; }
+      catch (error) { report.cleanup = 'FAIL'; report.cleanupError = errorInfo(error); failure ??= error; }
+      await writeFile(reportPath, JSON.stringify(report, null, 2) + '\n', { flag: 'wx' });
+      console.log('Native shared-key quote report: ' + reportPath);
+    }
+    if (failure) throw failure;
+  });
+

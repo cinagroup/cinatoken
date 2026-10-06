@@ -1,0 +1,19 @@
+{
+  "at": "2026-10-06T05:45:39.798Z",
+  "finishedAt": "2026-10-06T05:45:39.802Z",
+  "operation": "readFile",
+  "path": "C:\\cinagroup\\cinatoken\\scripts\\db\\cutover\\grant-postgres-runtime.ts",
+  "actualExit": 0,
+  "signal": null,
+  "error": null,
+  "stdout": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-quote-version-three-casts-879c829257b645e4ada53e37362201bd\\protected-7.stdout.log",
+    "bytes": 25946,
+    "sha256": "3f95f18f557696d8a36b93f7fe0d0d35a391e8ac9cf953376a234a6b629ea242"
+  },
+  "stderr": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-quote-version-three-casts-879c829257b645e4ada53e37362201bd\\protected-7.stderr.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+}
