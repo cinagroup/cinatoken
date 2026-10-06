@@ -1,0 +1,514 @@
+{
+  "at": "2026-10-06T10:47:00.890Z",
+  "readOnly": true,
+  "repositoryWrites": false,
+  "gitWrites": false,
+  "logWhitespaceChanged": false,
+  "baseline": "2e40b9212b246152594ea60a774c85a9a0a4ad93",
+  "indexReceipt": {
+    "path": "docs/developers/architecture/evidence/2026-10-06-web-build-environment-and-product-sse/linux-2e-and-observer-fix/index.json",
+    "gitBlob": "0f79385f34096ed0bc7aab3d1f9fe52b87387c9c",
+    "bytes": 15115,
+    "sha256": "63f7303840abc0eacbf176eee15dd07f278d2b5bb757bb888d554d50bca12c0d"
+  },
+  "payloadCount": 42,
+  "payloadChecks": [
+    {
+      "path": "docs/developers/architecture/evidence/2026-10-06-web-build-environment-and-product-sse/linux-2e-and-observer-fix/push-peer-followup.stdout.log",
+      "gitBlob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "matchesIndex": true,
+      "workingBytesEqual": true,
+      "originalBytesEqual": true
+    },
+    {
+      "path": "docs/developers/architecture/evidence/2026-10-06-web-build-environment-and-product-sse/linux-2e-and-observer-fix/push-peer-followup.stderr.log",
+      "gitBlob": "b003c48342637f484394af5d7df3efaef6e37b7a",
+      "bytes": 78,
+      "sha256": "365ad66e20ea200cd09fb5bdc4aa77ea4faacc578bd485eac009bdfd2070d778",
+      "matchesIndex": true,
+      "workingBytesEqual": true,
+      "originalBytesEqual": true
+    },
+    {
+      "path": "docs/developers/architecture/evidence/2026-10-06-web-build-environment-and-product-sse/linux-2e-and-observer-fix/push-peer-followup.result.json",
+      "gitBlob": "cdc7e732a8961f68a233d05153da5b39f8c1de9a",
+      "bytes": 817,
+      "sha256": "4cba55aaac29e6e5a8cc1c336bf53ff721ffeec3bb477f1dece1d887e9829902",
+      "matchesIndex": true,
+      "workingBytesEqual": true,
+      "originalBytesEqual": true
+    },
+    {
+      "path": "docs/developers/architecture/evidence/2026-10-06-web-build-environment-and-product-sse/linux-2e-and-observer-fix/web-2e-terminal-watch.stdout.log",
+      "gitBlob": "7b3a91de59737087ccc6253bb588833cc32cb324",
+      "bytes": 14925,
+      "sha256": "cfaaf3f63887b63689266fa0b2ccf10a1b9df87385b4cc530e8532032eb1f02a",
+      "matchesIndex": true,
+      "workingBytesEqual": true,
+      "originalBytesEqual": true
+    },
+    {
+      "path": "docs/developers/architecture/evidence/2026-10-06-web-build-environment-and-product-sse/linux-2e-and-observer-fix/web-2e-terminal-watch.stderr.log",
+      "gitBlob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "matchesIndex": true,
+      "workingBytesEqual": true,
+      "originalBytesEqual": true
+    },
+    {
+      "path": "docs/developers/architecture/evidence/2026-10-06-web-build-environment-and-product-sse/linux-2e-and-observer-fix/web-2e-terminal-watch.result.json",
+      "gitBlob": "efc07cb2f70231853ab7ab223707c956fd84bbae",
+      "bytes": 845,
+      "sha256": "4921002b6ddb601f51cd91b262745910cd7f92ad391c53770921fd5bea19420c",
+      "matchesIndex": true,
+      "workingBytesEqual": true,
+      "originalBytesEqual": true
+    },
+    {
+      "path": "docs/developers/architecture/evidence/2026-10-06-web-build-environment-and-product-sse/linux-2e-and-observer-fix/web-2e-metadata.stdout.log",
+      "gitBlob": "9ae72be486f67bec118274d8703f2b447394006d",
+      "bytes": 7327,
+      "sha256": "92d4d10a236bcb6efb5578e383513b5a72b6da67ce94acee48dee8aeb1dca3e0",
+      "matchesIndex": true,
+      "workingBytesEqual": true,
+      "originalBytesEqual": true
+    },
+    {
+      "path": "docs/developers/architecture/evidence/2026-10-06-web-build-environment-and-product-sse/linux-2e-and-observer-fix/web-2e-metadata.stderr.log",
+      "gitBlob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "matchesIndex": true,
+      "workingBytesEqual": true,
+      "originalBytesEqual": true
+    },
+    {
+      "path": "docs/developers/architecture/evidence/2026-10-06-web-build-environment-and-product-sse/linux-2e-and-observer-fix/web-2e-metadata.result.json",
+      "gitBlob": "e9b6bbad3405fc729aa3ff170c24cecd32334563",
+      "bytes": 854,
+      "sha256": "2bafe475662bce7619eb912befd5b4673b79b0b27c6f1f475c58e57b5ce1f036",
+      "matchesIndex": true,
+      "workingBytesEqual": true,
+      "originalBytesEqual": true
+    },
+    {
+      "path": "docs/developers/architecture/evidence/2026-10-06-web-build-environment-and-product-sse/linux-2e-and-observer-fix/web-2e-full-log.stdout.log.gz",
+      "gitBlob": "676961ab243f5f9694708824909772ca98e44a62",
+      "bytes": 236218,
+      "sha256": "8f7f69f8a617596a293dec108962f03ce866814f30256f373d411fc01f3688d4",
+      "matchesIndex": true,
+      "workingBytesEqual": true,
+      "decoded": {
+        "bytes": 2197829,
+        "sha256": "9305eae04c6b622db92c436a533225a7c90bf9155b1ac7fe3acd870229537509",
+        "matchesIndex": true,
+        "originalBytesEqual": true
+      }
+    },
+    {
+      "path": "docs/developers/architecture/evidence/2026-10-06-web-build-environment-and-product-sse/linux-2e-and-observer-fix/web-2e-full-log.stderr.log",
+      "gitBlob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "matchesIndex": true,
+      "workingBytesEqual": true,
+      "originalBytesEqual": true
+    },
+    {
+      "path": "docs/developers/architecture/evidence/2026-10-06-web-build-environment-and-product-sse/linux-2e-and-observer-fix/web-2e-full-log.result.json",
+      "gitBlob": "2b3d41353bdec241f4180c1ff43eb65168871701",
+      "bytes": 798,
+      "sha256": "bf920401365915ce0f935a168f0729c9ded9b8263d537c6f24716b2b6acac01e",
+      "matchesIndex": true,
+      "workingBytesEqual": true,
+      "originalBytesEqual": true
+    },
+    {
+      "path": "docs/developers/architecture/evidence/2026-10-06-web-build-environment-and-product-sse/linux-2e-and-observer-fix/web-2e-download.stdout.log",
+      "gitBlob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "matchesIndex": true,
+      "workingBytesEqual": true,
+      "originalBytesEqual": true
+    },
+    {
+      "path": "docs/developers/architecture/evidence/2026-10-06-web-build-environment-and-product-sse/linux-2e-and-observer-fix/web-2e-download.stderr.log",
+      "gitBlob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "matchesIndex": true,
+      "workingBytesEqual": true,
+      "originalBytesEqual": true
+    },
+    {
+      "path": "docs/developers/architecture/evidence/2026-10-06-web-build-environment-and-product-sse/linux-2e-and-observer-fix/web-2e-download.result.json",
+      "gitBlob": "ad3e4d1cb387b6b6de27a6c45fc58e283e5e007e",
+      "bytes": 915,
+      "sha256": "6e18ef4c6a2dfe7461b4c9fbdd29caabd42e89b3fb0d519688d5cf12c1262970",
+      "matchesIndex": true,
+      "workingBytesEqual": true,
+      "originalBytesEqual": true
+    },
+    {
+      "path": "docs/developers/architecture/evidence/2026-10-06-web-build-environment-and-product-sse/linux-2e-and-observer-fix/release-2e-verify.stdout.log",
+      "gitBlob": "a417db8c1e2b45983576c2b3367a018f8523341b",
+      "bytes": 153,
+      "sha256": "95a6b6b70962756f4419a29de94f7534096cedb62fa122cee2250085c3914954",
+      "matchesIndex": true,
+      "workingBytesEqual": true,
+      "originalBytesEqual": true
+    },
+    {
+      "path": "docs/developers/architecture/evidence/2026-10-06-web-build-environment-and-product-sse/linux-2e-and-observer-fix/release-2e-verify.stderr.log",
+      "gitBlob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "matchesIndex": true,
+      "workingBytesEqual": true,
+      "originalBytesEqual": true
+    },
+    {
+      "path": "docs/developers/architecture/evidence/2026-10-06-web-build-environment-and-product-sse/linux-2e-and-observer-fix/release-2e-verify.result.json",
+      "gitBlob": "becdf0b2413992471255d7cb019280811e82db0f",
+      "bytes": 853,
+      "sha256": "2edcbd8eb941cc2b9df7028baab6f62311f025d230b76e54fa5162b2db41927d",
+      "matchesIndex": true,
+      "workingBytesEqual": true,
+      "originalBytesEqual": true
+    },
+    {
+      "path": "docs/developers/architecture/evidence/2026-10-06-web-build-environment-and-product-sse/linux-2e-and-observer-fix/product-2e-terminal-watch.stdout.log",
+      "gitBlob": "f999dcee4b2276ed518614ec42aca338fbc24a27",
+      "bytes": 2198,
+      "sha256": "94caf2bbeb900541ed9c39476df9b1bff90191068d0dd17a74a093a6e99c5965",
+      "matchesIndex": true,
+      "workingBytesEqual": true,
+      "originalBytesEqual": true
+    },
+    {
+      "path": "docs/developers/architecture/evidence/2026-10-06-web-build-environment-and-product-sse/linux-2e-and-observer-fix/product-2e-terminal-watch.stderr.log",
+      "gitBlob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "matchesIndex": true,
+      "workingBytesEqual": true,
+      "originalBytesEqual": true
+    },
+    {
+      "path": "docs/developers/architecture/evidence/2026-10-06-web-build-environment-and-product-sse/linux-2e-and-observer-fix/product-2e-terminal-watch.result.json",
+      "gitBlob": "1e3f0d21812aa5bc568b06fc8e95983af4add3ee",
+      "bytes": 852,
+      "sha256": "78227c225a92358b81ca7753ad45e92f0e11b47c5d462bfbcf070727e5fb8e79",
+      "matchesIndex": true,
+      "workingBytesEqual": true,
+      "originalBytesEqual": true
+    },
+    {
+      "path": "docs/developers/architecture/evidence/2026-10-06-web-build-environment-and-product-sse/linux-2e-and-observer-fix/product-2e-metadata.stdout.log",
+      "gitBlob": "5a24b760fe226144116d42edd5c6075f3867c99d",
+      "bytes": 2173,
+      "sha256": "d085226171314b888603bb821369be9d3b667912757ea5edd3a624006d2274c6",
+      "matchesIndex": true,
+      "workingBytesEqual": true,
+      "originalBytesEqual": true
+    },
+    {
+      "path": "docs/developers/architecture/evidence/2026-10-06-web-build-environment-and-product-sse/linux-2e-and-observer-fix/product-2e-metadata.stderr.log",
+      "gitBlob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "matchesIndex": true,
+      "workingBytesEqual": true,
+      "originalBytesEqual": true
+    },
+    {
+      "path": "docs/developers/architecture/evidence/2026-10-06-web-build-environment-and-product-sse/linux-2e-and-observer-fix/product-2e-metadata.result.json",
+      "gitBlob": "f8e21a00f96d4e7780bafded774b5003d61adcf0",
+      "bytes": 851,
+      "sha256": "71faaa90b8913d3e2bff39e5acfd363215bacd72ae04987f5b33ef5af8c3a3f0",
+      "matchesIndex": true,
+      "workingBytesEqual": true,
+      "originalBytesEqual": true
+    },
+    {
+      "path": "docs/developers/architecture/evidence/2026-10-06-web-build-environment-and-product-sse/linux-2e-and-observer-fix/product-2e-full-log.stdout.log",
+      "gitBlob": "55fd0cdc52c1bc10156377555ed5d026c533d313",
+      "bytes": 35393,
+      "sha256": "a3de09e9b50e8914affc7bc42ded5a39949bc448b446a2b196a97d4a39817414",
+      "matchesIndex": true,
+      "workingBytesEqual": true,
+      "originalBytesEqual": true
+    },
+    {
+      "path": "docs/developers/architecture/evidence/2026-10-06-web-build-environment-and-product-sse/linux-2e-and-observer-fix/product-2e-full-log.stderr.log",
+      "gitBlob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "matchesIndex": true,
+      "workingBytesEqual": true,
+      "originalBytesEqual": true
+    },
+    {
+      "path": "docs/developers/architecture/evidence/2026-10-06-web-build-environment-and-product-sse/linux-2e-and-observer-fix/product-2e-full-log.result.json",
+      "gitBlob": "ebbebc638c6d62cee5f2a4cc5e78248b99c7594f",
+      "bytes": 804,
+      "sha256": "5cbbeca8351a1f80c9e7e9749d80d3207c53388a9c9577700cf51bd340b57863",
+      "matchesIndex": true,
+      "workingBytesEqual": true,
+      "originalBytesEqual": true
+    },
+    {
+      "path": "docs/developers/architecture/evidence/2026-10-06-web-build-environment-and-product-sse/linux-2e-and-observer-fix/product-2e-download.stdout.log",
+      "gitBlob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "matchesIndex": true,
+      "workingBytesEqual": true,
+      "originalBytesEqual": true
+    },
+    {
+      "path": "docs/developers/architecture/evidence/2026-10-06-web-build-environment-and-product-sse/linux-2e-and-observer-fix/product-2e-download.stderr.log",
+      "gitBlob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "matchesIndex": true,
+      "workingBytesEqual": true,
+      "originalBytesEqual": true
+    },
+    {
+      "path": "docs/developers/architecture/evidence/2026-10-06-web-build-environment-and-product-sse/linux-2e-and-observer-fix/product-2e-download.result.json",
+      "gitBlob": "91bc97dc5282ec5d92ea0526cc009230ff7afa7f",
+      "bytes": 969,
+      "sha256": "7f8f059e1510a7a2474fb8d44f1ce43fe77639999dd7f1fb20d166cf83cd9173",
+      "matchesIndex": true,
+      "workingBytesEqual": true,
+      "originalBytesEqual": true
+    },
+    {
+      "path": "docs/developers/architecture/evidence/2026-10-06-web-build-environment-and-product-sse/linux-2e-and-observer-fix/fixture-manual-observe-prepare.stdout.log",
+      "gitBlob": "007da536e0a4d5c7beb6344b3c5795da7f06d12a",
+      "bytes": 295,
+      "sha256": "58e5a2a109d516b5f9faf6d5c936442ff02ab44f55945eaaa7b284464c990c26",
+      "matchesIndex": true,
+      "workingBytesEqual": true,
+      "originalBytesEqual": true
+    },
+    {
+      "path": "docs/developers/architecture/evidence/2026-10-06-web-build-environment-and-product-sse/linux-2e-and-observer-fix/fixture-manual-observe-prepare.stderr.log",
+      "gitBlob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "matchesIndex": true,
+      "workingBytesEqual": true,
+      "originalBytesEqual": true
+    },
+    {
+      "path": "docs/developers/architecture/evidence/2026-10-06-web-build-environment-and-product-sse/linux-2e-and-observer-fix/fixture-manual-observe-prepare.result.json",
+      "gitBlob": "dc50b85fe2315e1c148d94824af5af4d9c083804",
+      "bytes": 1060,
+      "sha256": "1852ede62e2041a9fe41d7a4cfc369a6e2aa8c7aada3033ef53a4187b2195e01",
+      "matchesIndex": true,
+      "workingBytesEqual": true,
+      "originalBytesEqual": true
+    },
+    {
+      "path": "docs/developers/architecture/evidence/2026-10-06-web-build-environment-and-product-sse/linux-2e-and-observer-fix/product-artifact/product-sse-cancel-37450342919-1/executor.json",
+      "gitBlob": "0ceebdffb39ec8d515146c562ac23a4a645d590f",
+      "bytes": 941,
+      "sha256": "bd0f0243dbf8eb4db662ad1b7091a2fbcc0271be54ab93497b07ffce4fb6e037",
+      "matchesIndex": true,
+      "workingBytesEqual": true,
+      "originalBytesEqual": true
+    },
+    {
+      "path": "docs/developers/architecture/evidence/2026-10-06-web-build-environment-and-product-sse/linux-2e-and-observer-fix/product-artifact/product-sse-cancel-37450342919-1/fixture/bundle-metafile.json",
+      "gitBlob": "16f000ba36c880fd579fb98df20f502f9ebbf6d6",
+      "bytes": 458089,
+      "sha256": "4f97dcc1ae3658fa42fa49cfe4424432186a05e4bdbf52b670035cb17f98bd85",
+      "matchesIndex": true,
+      "workingBytesEqual": true,
+      "originalBytesEqual": true
+    },
+    {
+      "path": "docs/developers/architecture/evidence/2026-10-06-web-build-environment-and-product-sse/linux-2e-and-observer-fix/product-artifact/product-sse-cancel-37450342919-1/fixture/events.ndjson",
+      "gitBlob": "23328d0a9ec0c66c97c75dc60d809271710f6d76",
+      "bytes": 5224,
+      "sha256": "b2223bd180016a4bcf4de542400d0b88dbda295326d35b7a2a61c4016fa0cb9b",
+      "matchesIndex": true,
+      "workingBytesEqual": true,
+      "originalBytesEqual": true
+    },
+    {
+      "path": "docs/developers/architecture/evidence/2026-10-06-web-build-environment-and-product-sse/linux-2e-and-observer-fix/product-artifact/product-sse-cancel-37450342919-1/fixture/report.json",
+      "gitBlob": "c8fc41a09908cfa77809c15287c037e8370e24a3",
+      "bytes": 125344,
+      "sha256": "881fb940e6c33ea476c7622dc5661a135935f6ce00a55c0cddc53df10160a568",
+      "matchesIndex": true,
+      "workingBytesEqual": true,
+      "originalBytesEqual": true
+    },
+    {
+      "path": "docs/developers/architecture/evidence/2026-10-06-web-build-environment-and-product-sse/linux-2e-and-observer-fix/product-artifact/product-sse-cancel-37450342919-1/fixture/worker-bundle.mjs",
+      "gitBlob": "d66b84aa0e325f35bcb8840c301af9486c590e2d",
+      "bytes": 120238,
+      "sha256": "19b3b308d120dd2ff2d103115aeb297a26378ffb4a46b589f32d659cbbc5d4cf",
+      "matchesIndex": true,
+      "workingBytesEqual": true,
+      "originalBytesEqual": true
+    },
+    {
+      "path": "docs/developers/architecture/evidence/2026-10-06-web-build-environment-and-product-sse/linux-2e-and-observer-fix/product-artifact/product-sse-cancel-37450342919-1/fixture/worker-source.mjs",
+      "gitBlob": "bf5b1a4125ec970820924e36b0b1d597d0dc4f7f",
+      "bytes": 4467,
+      "sha256": "3871e61f2dd5a8dcabf9fd60287b81e328e6edc6be76d5d9ec564b02506ebde3",
+      "matchesIndex": true,
+      "workingBytesEqual": true,
+      "originalBytesEqual": true
+    },
+    {
+      "path": "docs/developers/architecture/evidence/2026-10-06-web-build-environment-and-product-sse/linux-2e-and-observer-fix/product-artifact/product-sse-cancel-37450342919-1/stderr.log",
+      "gitBlob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "matchesIndex": true,
+      "workingBytesEqual": true,
+      "originalBytesEqual": true
+    },
+    {
+      "path": "docs/developers/architecture/evidence/2026-10-06-web-build-environment-and-product-sse/linux-2e-and-observer-fix/product-artifact/product-sse-cancel-37450342919-1/stdout.log",
+      "gitBlob": "6644269a9bd8c27ea91f1f26dbe9d1d31667eeb7",
+      "bytes": 221,
+      "sha256": "0eb78df588bc618192fd1591cdaa379a88906ec0c10dfc8910ae702623cb8adf",
+      "matchesIndex": true,
+      "workingBytesEqual": true,
+      "originalBytesEqual": true
+    },
+    {
+      "path": "docs/developers/architecture/evidence/2026-10-06-web-build-environment-and-product-sse/linux-2e-and-observer-fix/product-artifact/product-sse-web-dependencies-37450342919-1.log",
+      "gitBlob": "3051f5254558f3d979d15a234c1bc875c1ecd775",
+      "bytes": 106723,
+      "sha256": "6029520c78a28d9faf4f1c3e33f2052e43abb66382d78fa5670de045ea271241",
+      "matchesIndex": true,
+      "workingBytesEqual": true,
+      "originalBytesEqual": true
+    }
+  ],
+  "mdReceipt": {
+    "path": "docs/developers/architecture/web-frontend-migration.md",
+    "gitBlob": "73757a5fe2e5757b87942a39e071b927964b5851",
+    "bytes": 844294,
+    "sha256": "c0d12104a72f43c2234ba48c00c60f4dc508ae2564c9261904f08c02f9f550d6"
+  },
+  "checklist": {
+    "oldCounts": {
+      "total": 211,
+      "done": 54,
+      "pending": 157
+    },
+    "newCounts": {
+      "total": 211,
+      "done": 55,
+      "pending": 156
+    },
+    "oldMainCounts": {
+      "total": 102,
+      "done": 7,
+      "pending": 95
+    },
+    "newMainCounts": {
+      "total": 102,
+      "done": 8,
+      "pending": 94
+    },
+    "allTaskLabelsAndOrderEqual": true,
+    "stateChanges": [
+      {
+        "label": "P1-02：核对 Node、React、TypeScript、依赖覆盖与 peer 依赖；干净安装可复现，既有包不受冲突影响。",
+        "from": " ",
+        "to": "x"
+      }
+    ],
+    "matrix": {
+      "oldRows": 54,
+      "newRows": 54,
+      "rowsBytesEquivalent": true
+    },
+    "gates": {
+      "oldCount": 9,
+      "newCount": 9,
+      "rowsUnchanged": true
+    },
+    "acceptance": {
+      "oldCount": 9,
+      "newCount": 9,
+      "rowsUnchanged": true
+    },
+    "phases": {
+      "oldCount": 9,
+      "newCount": 9,
+      "rowsUnchanged": true
+    }
+  },
+  "gitReadReceipts": [
+    {
+      "args": [
+        "ls-files",
+        "--stage",
+        "-z",
+        "--",
+        "docs/developers/architecture/evidence/2026-10-06-web-build-environment-and-product-sse/linux-2e-and-observer-fix",
+        "docs/developers/architecture/web-frontend-migration.md"
+      ],
+      "actualExit": 0,
+      "stdoutBytes": 8797,
+      "stdoutSha256": "5ed3ed8021dde393010b7bd34648c086968832c4f683705cfba27fe713e9ed74",
+      "stderrBytes": 0
+    },
+    {
+      "args": [
+        "cat-file",
+        "blob",
+        "0f79385f34096ed0bc7aab3d1f9fe52b87387c9c"
+      ],
+      "actualExit": 0,
+      "stdoutBytes": 15115,
+      "stdoutSha256": "63f7303840abc0eacbf176eee15dd07f278d2b5bb757bb888d554d50bca12c0d",
+      "stderrBytes": 0
+    },
+    {
+      "args": [
+        "cat-file",
+        "--batch"
+      ],
+      "actualExit": 0,
+      "stdoutBytes": 1976111,
+      "stdoutSha256": "8398f3afbda87d827e3fde68730a9e035b1bd051f108b2a27048581c4c9458b3",
+      "stderrBytes": 0
+    },
+    {
+      "args": [
+        "show",
+        "2e40b9212b246152594ea60a774c85a9a0a4ad93:docs/developers/architecture/web-frontend-migration.md"
+      ],
+      "actualExit": 0,
+      "stdoutBytes": 842064,
+      "stdoutSha256": "0123502116a045ef438fa4104b8af130e2c397549364785d3620a80c3ec68c14",
+      "stderrBytes": 0
+    }
+  ],
+  "checks": {
+    "indexWorkingBytesEqual": true,
+    "all42PayloadExact": true,
+    "checkboxLabelsUnchanged": true,
+    "onlyP1_02Completed": true,
+    "main102Preserved": true,
+    "matrix54Preserved": true,
+    "gates9Preserved": true,
+    "acceptance9Preserved": true,
+    "phase9Preserved": true
+  }
+}

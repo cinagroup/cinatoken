@@ -1,0 +1,25 @@
+{
+  "at": "2026-10-06T10:51:05.978Z",
+  "finishedAt": "2026-10-06T10:51:11.356Z",
+  "executable": "C:/Program Files/GitHub CLI/gh.exe",
+  "args": [
+    "run",
+    "download",
+    "37452189276",
+    "--dir",
+    "C:/Users/cina/AppData/Local/Temp/cinatoken-web-foundation-5b11fb36c4074c9da1317f28ef4c7111/product-c9-artifact"
+  ],
+  "cwd": "C:/cinagroup/cinatoken",
+  "actualExit": 0,
+  "signal": null,
+  "stdout": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-foundation-5b11fb36c4074c9da1317f28ef4c7111\\product-c9-download.stdout.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "stderr": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-foundation-5b11fb36c4074c9da1317f28ef4c7111\\product-c9-download.stderr.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+}

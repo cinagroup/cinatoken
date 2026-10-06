@@ -1,0 +1,117 @@
+{
+  "schema": "cinatoken-web-2e-functional-browser-smoke-v1",
+  "at": "2026-10-06T10:50:22.628Z",
+  "label": "web-2e-functional-browser",
+  "deployedGitSHA": "2e40b9212b246152594ea60a774c85a9a0a4ad93",
+  "url": "https://cinatoken.com",
+  "browserPlugin": "absent",
+  "fallback": "Browser plugin not available; existing bundled Playwright",
+  "flow": "Public home/models/dashboard -> desktop dark -> zh locale cookie -> mobile reload with dark retained",
+  "realAuthentication": false,
+  "businessWrites": false,
+  "scope": "New bounded functional probe; original strict networkidle/telemetry baseline not changed or declared passed",
+  "pageErrors": [],
+  "consoleErrors": [
+    {
+      "text": "Failed to load resource: the server responded with a status of 401 ()",
+      "location": {
+        "url": "https://cinatoken.com/api/user/me",
+        "line": 0,
+        "column": 0,
+        "lineNumber": 0,
+        "columnNumber": 0
+      }
+    }
+  ],
+  "warnings": [],
+  "httpErrors": [
+    {
+      "at": "2026-10-06T10:50:31.662Z",
+      "url": "https://cinatoken.com/api/user/me",
+      "method": "GET",
+      "status": 401,
+      "body": {
+        "success": false,
+        "message": "Unauthorized"
+      }
+    }
+  ],
+  "expectedAnonymous401": [
+    {
+      "at": "2026-10-06T10:50:31.662Z",
+      "url": "https://cinatoken.com/api/user/me",
+      "method": "GET",
+      "status": 401,
+      "body": {
+        "success": false,
+        "message": "Unauthorized"
+      },
+      "explanation": "Anonymous dashboard performs optional user identity lookup; AuthWrapper consumes this non-OK response and continues to login UI."
+    }
+  ],
+  "unknownHTTPErrors": [],
+  "explainedConsoleErrors": [],
+  "unexplainedConsoleErrors": [],
+  "pages": [
+    {
+      "route": "/",
+      "http": 200,
+      "finalURL": "https://cinatoken.com/en",
+      "title": "CinaToken — Unified AI gateway",
+      "nonblank": true,
+      "frameworkOverlay": false,
+      "screenshot": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-web-foundation-5b11fb36c4074c9da1317f28ef4c7111/web-2e-functional-browser-.png",
+        "bytes": 54114,
+        "sha256": "3c3002c14200c075db9cb4077fc6926e1543c1dbc907150ee4981237dd71fbe6"
+      },
+      "body": "Skip to content\nC\nCinaToken\nModels\nAccount\nLanguage\nEnglish\n简体中文\n日本語\n한국어\nAppearance\nSystem\nLight\nDark\nSign in with CinaAuth\n\nCINATOKEN GATEWAY\n\nBring your AI resources together.\n\nOne gateway for models, tools and your own providers. Manage access, budgets and usage from your workspace.\n\nOpen your account\nBrowse models\nOpen console\nView docs\nModel catalog\nModel providers\nCompare models\nModel rankings\nGateway benchmarks\nChat\nFeatures\nArchitecture\nDeployment\nChat\nResponses\nImages\nTools\n\nPOST https://api.cinatoken.com/v1/chat/completions\n\nREQUEST\n{\n  \"model\": \"your-model\",\n  \"messages\": [\n    {\n      \"role\": \"user\",\n      \"content\": \"Say hello.\"\n    }\n  ]\n}\nRESPONSE\n{\n  \"object\": \"chat.completion\",\n  \"choices\": [\n    {\n      \"message\": {\n        \"content\": \"...\"\n      }\n    }\n  ]\n}\n\nIllustrative examples only. No request is sent.\n\nConnect your resources\nBring model providers and agent tools into a shared gateway with a consistent API.\nControl access and budgets\nKeep keys, workspace permissions and usage budgets connected to your account.\nUnderstand your usage\nFollow real requests, routing decisions and accounting records from one place.\nAn AI capability gateway built for builders\n\nFlexible access, intelligent routing, controlled cost, and end-to-end observability.\n\n/v1/chat/completions\n/v1/responses\n/v1/images/*\n/v1/audio/*\n/v1/tools/*\nUnified protocols\n\nUse one Gateway Base URL for model inference, media capabilities, and agent tools.\n\nChat · Responses · Images · Audio · Tools\n\nIntelligent routing\n\nSend each request surface into a route pool and fail over safely across upstream targets.\n\nPriority · Weight · Failover · Sticky routing\n\nBudgets and keys\n\nIssue separate keys to real consumers and control cost with periodic budgets and actual usage.\n\nUsers · API keys · Periodic budgets · Three ledgers\n\nLogs and analytics\n\nRecord request paths and budget events, then inspect usage, cost, and quality from multiple dimensions.\n\nRequest logs · Audit logs · Model/provider/user analytics\n\nFrom provider to reliable traffic in four steps\n1\nConnect providers\n\nConfigure upstream endpoints and credentials\n\n2\nPublish models and routes\n\nDefine protocol surfaces, route pools, and failover\n\n3\nIssue user keys\n\nAssign API keys and budgets by user, project, or customer\n\n4\nObserve every call\n\nContinuously improve with logs, audits, and analytics\n\nRun on your infrastructure\nCloudflare Workers + D1\n\nDeploy the proxy and admin console on Cloudflare with Workers and D1.\n\nView deployment docs\nDocker + Postgres / MySQL\n\nSelf-host with Postgres or MySQL and keep control of the data plane and runtime.\n\nView deployment docs\nReady to unify your AI capabilities?\n\nStart with one endpoint, then add models, media capabilities, and agent tools as you grow.\n\nOpen console\nView deployment docs\n\nCinaToken\n\nAI capability gateway and operations control plane\n\nGitHub\nDocs\n\n© 2026 CinaGroup\n\nFrontend design and development by New API contributors. Original project Frontend source"
+    },
+    {
+      "route": "/models",
+      "http": 200,
+      "finalURL": "https://cinatoken.com/en/models",
+      "title": "Model catalog — CinaToken",
+      "nonblank": true,
+      "frameworkOverlay": false,
+      "screenshot": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-web-foundation-5b11fb36c4074c9da1317f28ef4c7111/web-2e-functional-browser-models.png",
+        "bytes": 43193,
+        "sha256": "d4fbc01f4609b85b0f9973e4e98d7e7f961676a4f3d513ab6e860e044f248726"
+      },
+      "body": "Skip to content\nC\nCinaToken\nModels\nAccount\nLanguage\nEnglish\n简体中文\n日本語\n한국어\nAppearance\nSystem\nLight\nDark\nSign in with CinaAuth\nModel catalog\nModel providers\nCompare models\nModel rankings\nGateway benchmarks\nModel catalog\n\nExplore models published on the gateway, with verified protocols and catalog prices.\n\nRefresh\nFilters\nClear filters\nProvider\nInput\nOutput\nProtocols\nSearch\nContext window\nAny context size\nAt least 128k tokens\nAt least 1M tokens\nSort by\nNewest\nContext size\nPrice within each unit\nName\nCards\nCards\nTable\n\n0 results\n\nGenerated 2026-10-06T10:50:28.629Z\n\nNo published models are available.\n\nPage 1 of 1\nPrevious\nNext\n\nPrices are in USD. Token rates are per million tokens; route pricing may change the final charge.\n\nCinaToken · Your AI resource gateway\nFrontend design and development by New API contributors. New API Frontend source"
+    },
+    {
+      "route": "/dashboard",
+      "http": 200,
+      "finalURL": "https://cinatoken.com/dashboard",
+      "title": "Dashboard · cinatoken Gateway · Admin",
+      "nonblank": true,
+      "frameworkOverlay": false,
+      "screenshot": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-web-foundation-5b11fb36c4074c9da1317f28ef4c7111/web-2e-functional-browser-dashboard.png",
+        "bytes": 30364,
+        "sha256": "b59a9baf9b3bb1690477ed7fb06b241be358429b0914fd955f247135d5553839"
+      },
+      "body": "cinatoken Gateway\n\nOperator console\n\n🇺🇸\nEN\n\nSign in to the cinatoken operator console with your unified CinaAuth account.\n\nContinue with CinaAuth\nCreate a CinaAuth account\n\nOnly super_admin or security_admin roles can access the console. New standard accounts receive no admin access.\n\nGitHub\nDocs"
+    }
+  ],
+  "themeSnapshots": [
+    {
+      "step": "home-before-selection",
+      "stored": null,
+      "locale": "en",
+      "cookie": ""
+    }
+  ],
+  "browserVersion": "154.0.8037.95",
+  "initialCookies": [],
+  "actualExit": 1,
+  "outcome": "FAILED",
+  "failure": {
+    "name": "TimeoutError",
+    "message": "locator.click: Timeout 30000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByRole('button', { name: 'Color mode: System', exact: true })\u001b[22m\n"
+  },
+  "browserClosed": true,
+  "finishedAt": "2026-10-06T10:51:03.491Z"
+}

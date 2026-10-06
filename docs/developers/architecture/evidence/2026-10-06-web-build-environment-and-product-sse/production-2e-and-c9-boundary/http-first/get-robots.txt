@@ -1,0 +1,12 @@
+User-agent: *
+Disallow: /api/
+Disallow: /account
+Disallow: /admin
+Disallow: /gateway
+Disallow: /dashboard
+Disallow: /chat
+Disallow: /en/chat
+Disallow: /zh/chat
+Disallow: /ja/chat
+Disallow: /ko/chat
+Sitemap: https://cinatoken.com/sitemap.xml

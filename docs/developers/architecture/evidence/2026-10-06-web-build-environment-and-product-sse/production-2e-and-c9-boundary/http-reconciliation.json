@@ -1,0 +1,394 @@
+{
+  "version": 1,
+  "at": "2026-10-06T10:54:19.091Z",
+  "readOnly": true,
+  "productionWrites": false,
+  "repositoryWrites": false,
+  "secretValuesRecorded": false,
+  "manifestSha256": "f6dd28c8b3cc25f96e6bba33d39a82bad30ad51b59b48a9db6abdd0b18f0ff91",
+  "releaseId": "web-2e40b9212b24-20261006-retained",
+  "sourceCommit": "2e40b9212b246152594ea60a774c85a9a0a4ad93",
+  "productionVersionProvidedByParent": "a898c3fd-3df4-4e1d-bd97-da19936b3bfe",
+  "observations": {
+    "all138AssetsHttp200ExactBytesShaCacheNosniff": true,
+    "assetsObserved": 138,
+    "matchedAssetContentAndCache": 138,
+    "all4SourceArchivesHttp200ExactBytesShaCacheNosniff": true,
+    "sourceArchiveResults": [
+      {
+        "path": "/web-assets/sources/web.0cf38aa7a814fb6c5333187afe977a3236a82fceaa3f68126552e6627a0963fb.tar.gz",
+        "status": 200,
+        "bytes": 4240549,
+        "sha256": "0cf38aa7a814fb6c5333187afe977a3236a82fceaa3f68126552e6627a0963fb",
+        "contentType": "application/gzip",
+        "cacheControl": "public, max-age=31536000, immutable",
+        "source": "retained",
+        "lastCurrentAt": "2026-10-06T10:46:24.022Z"
+      },
+      {
+        "path": "/web-assets/sources/web.5cad53dd30324d851e481e583a31b23c59c35ad0327769bbc2549fcfdfa480cd.tar.gz",
+        "status": 200,
+        "bytes": 4239144,
+        "sha256": "5cad53dd30324d851e481e583a31b23c59c35ad0327769bbc2549fcfdfa480cd",
+        "contentType": "application/gzip",
+        "cacheControl": "public, max-age=31536000, immutable",
+        "source": "retained",
+        "lastCurrentAt": "2026-10-05T13:01:30.491Z"
+      },
+      {
+        "path": "/web-assets/sources/web.8ef7f4b53718e7a13166d024c7976a4079426f66f76edccccd21134fad318d62.tar.gz",
+        "status": 200,
+        "bytes": 4249828,
+        "sha256": "8ef7f4b53718e7a13166d024c7976a4079426f66f76edccccd21134fad318d62",
+        "contentType": "application/gzip",
+        "cacheControl": "public, max-age=31536000, immutable",
+        "source": "current",
+        "lastCurrentAt": "2026-10-06T10:46:31.324Z"
+      },
+      {
+        "path": "/web-assets/sources/web.a4fb45ab08bf639f695134f2c693d5292f3126944d67db96e08596640930e910.tar.gz",
+        "status": 200,
+        "bytes": 4237024,
+        "sha256": "a4fb45ab08bf639f695134f2c693d5292f3126944d67db96e08596640930e910",
+        "contentType": "application/gzip",
+        "cacheControl": "public, max-age=31536000, immutable",
+        "source": "retained",
+        "lastCurrentAt": "2026-10-05T10:38:26.000Z"
+      }
+    ],
+    "allHeadersHeadContracts": true,
+    "robotsAndSitemap": [
+      {
+        "id": "get-robots",
+        "status": 200,
+        "bytes": 241,
+        "sha256": "9f00076f8abe0ab0f5c2458bb2b142995b123cbccfe3444fde4cdff6ecd8dd97",
+        "passed": true,
+        "observations": {
+          "required": true
+        }
+      },
+      {
+        "id": "get-sitemap",
+        "status": 200,
+        "bytes": 11502,
+        "sha256": "673b5eb36885bed1e4adda51bb391c3571aaf201b7d62cd163bdcb92a3104f65",
+        "passed": true,
+        "observations": {
+          "isXml": true,
+          "hasUrlset": true,
+          "locCount": 24,
+          "allLocsTrusted": true,
+          "includesEn": true,
+          "includesZh": true,
+          "includesJa": true,
+          "includesKo": true,
+          "noPrivateLocs": true,
+          "hasAlternates": true
+        }
+      }
+    ],
+    "bareRedirects": [
+      {
+        "id": "get-home-bare",
+        "status": 308,
+        "location": "/en",
+        "passed": true
+      },
+      {
+        "id": "get-models-bare",
+        "status": 308,
+        "location": "/en/models",
+        "passed": true
+      }
+    ],
+    "noticeMimeObservation": [
+      {
+        "path": "/web-assets/LICENSE",
+        "status": 200,
+        "contentType": null,
+        "exactBody": true,
+        "cache": "no-cache",
+        "nosniff": "nosniff"
+      },
+      {
+        "path": "/web-assets/NOTICE.frontend",
+        "status": 200,
+        "contentType": null,
+        "exactBody": true,
+        "cache": "no-cache",
+        "nosniff": "nosniff"
+      }
+    ],
+    "networkFailuresFirst": 0,
+    "timeoutsFirst": 0,
+    "networkFailuresSecond": 0,
+    "timeoutsSecond": 0,
+    "maxConcurrentFirst": 4,
+    "maxConcurrentSecond": 4
+  },
+  "executionHistory": {
+    "first": {
+      "startedAt": "2026-10-06T10:51:28.296Z",
+      "finishedAt": "2026-10-06T10:51:53.023Z",
+      "total": 150,
+      "passed": 146,
+      "failed": 4,
+      "actualExitCode": 1,
+      "terminalClosed": true,
+      "signal": null,
+      "summaryUnmodified": true,
+      "failures": [
+        {
+          "id": "asset-001",
+          "path": "/web-assets/LICENSE",
+          "status": 200,
+          "issues": [
+            "content-type missing"
+          ]
+        },
+        {
+          "id": "asset-002",
+          "path": "/web-assets/NOTICE.frontend",
+          "status": 200,
+          "issues": [
+            "content-type missing"
+          ]
+        },
+        {
+          "id": "get-home-en",
+          "path": "/en",
+          "status": 200,
+          "issues": [
+            "html content contract"
+          ],
+          "htmlObservations": {
+            "hasDoctype": true,
+            "langEn": true,
+            "hasRoot": true,
+            "hasPublicBootstrap": true,
+            "hasAttribution": true,
+            "hasCinaToken": true,
+            "bodyEmpty": false
+          }
+        },
+        {
+          "id": "get-models-en",
+          "path": "/en/models",
+          "status": 200,
+          "issues": [
+            "html content contract"
+          ],
+          "htmlObservations": {
+            "hasDoctype": true,
+            "langEn": true,
+            "hasRoot": true,
+            "hasPublicBootstrap": true,
+            "hasAttribution": true,
+            "hasCinaToken": true,
+            "bodyEmpty": false
+          }
+        }
+      ]
+    },
+    "second": {
+      "startedAt": "2026-10-06T10:53:17.069Z",
+      "finishedAt": "2026-10-06T10:53:20.293Z",
+      "total": 4,
+      "passed": 4,
+      "failed": 0,
+      "actualExitCode": 0,
+      "terminalClosed": true,
+      "signal": null,
+      "requestSelection": {
+        "onlyOriginal4HarnessErrors": true,
+        "priorSuccessfulAssetRequestsNotRepeated": 136,
+        "ids": [
+          "asset-001",
+          "asset-002",
+          "get-home-en",
+          "get-models-en"
+        ]
+      },
+      "results": [
+        {
+          "id": "asset-001",
+          "path": "/web-assets/LICENSE",
+          "status": 200,
+          "bytes": 34523,
+          "sha256": "0d96a4ff68ad6d4b6f1f30f713b18d5184912ba8dd389f86aa7710db079abcb0",
+          "cache": "no-cache",
+          "contentType": null,
+          "passed": true
+        },
+        {
+          "id": "asset-002",
+          "path": "/web-assets/NOTICE.frontend",
+          "status": 200,
+          "bytes": 1290,
+          "sha256": "191f9af183f6e5bb099e56f5e7f5ebbe3f24656d6762d0e70facc579cc51e2b3",
+          "cache": "no-cache",
+          "contentType": null,
+          "passed": true
+        },
+        {
+          "id": "get-home-en",
+          "path": "/en",
+          "status": 200,
+          "bytes": 23177,
+          "sha256": "a2369782cd25a0fe5b9f1ab81f4801c01449333c40fe78f07b5124b86a933eee",
+          "cache": "no-store, no-transform",
+          "contentType": "text/html; charset=utf-8",
+          "passed": true,
+          "htmlObservations": {
+            "hasDoctype": true,
+            "langEn": true,
+            "hasRoot": true,
+            "hasPublicBootstrap": true,
+            "hasAttribution": true,
+            "hasCinaToken": true,
+            "bodyEmpty": false
+          }
+        },
+        {
+          "id": "get-models-en",
+          "path": "/en/models",
+          "status": 200,
+          "bytes": 14812,
+          "sha256": "94fd32b432ef884c688271037cc59d1c6d6e0c88c51833b6677a805e701907c5",
+          "cache": "no-store, no-transform",
+          "contentType": "text/html; charset=utf-8",
+          "passed": true,
+          "htmlObservations": {
+            "hasDoctype": true,
+            "langEn": true,
+            "hasRoot": true,
+            "hasPublicBootstrap": true,
+            "hasAttribution": true,
+            "hasCinaToken": true,
+            "bodyEmpty": false
+          }
+        }
+      ]
+    }
+  },
+  "interpretation": {
+    "firstFailedRunNotReclassified": true,
+    "firstFailureCauses": "Extra universal Content-Type requirement wrongly failed two nonstandard-extension notice assets; Object.values.some second argument was positional index, so false bodyEmpty incorrectly failed two valid HTML responses.",
+    "temporaryVerifierChangedOnly": true,
+    "secondScope": "Exactly4 originally misclassified requests;136 remaining assets not repeated.",
+    "combinedActualExitClaim": null,
+    "limits": "This proves anonymous production HTTP content/cache contracts at observed times. No complete browser QA, authentication/workspace/key operations, financial behavior, rollback rehearsal, or fullG7 claim."
+  },
+  "originalReceipts": {
+    "first": [
+      {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-2e-live-http-2c2c3a7767694117827be46bc2eab5c0\\FINAL-live-http-assets-report.json",
+        "bytes": 220066,
+        "sha256": "56f6e02416d5942daf0b98afda9bf59e3e4baab6476404ddd64a67e0093994b9"
+      },
+      {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-2e-live-http-2c2c3a7767694117827be46bc2eab5c0\\get-home-en.html",
+        "bytes": 23177,
+        "sha256": "ade68c164b7b518021336b9971551557e111ab935094dedf3dad8b1cc232a34a"
+      },
+      {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-2e-live-http-2c2c3a7767694117827be46bc2eab5c0\\get-models-en.html",
+        "bytes": 14812,
+        "sha256": "bb755823820860aef27f1d05ffc8bfe76df87cf3e225c7ce9dd71bd23421ea54"
+      },
+      {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-2e-live-http-2c2c3a7767694117827be46bc2eab5c0\\get-robots.txt",
+        "bytes": 241,
+        "sha256": "9f00076f8abe0ab0f5c2458bb2b142995b123cbccfe3444fde4cdff6ecd8dd97"
+      },
+      {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-2e-live-http-2c2c3a7767694117827be46bc2eab5c0\\get-sitemap.xml",
+        "bytes": 11502,
+        "sha256": "673b5eb36885bed1e4adda51bb391c3571aaf201b7d62cd163bdcb92a3104f65"
+      },
+      {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-2e-live-http-2c2c3a7767694117827be46bc2eab5c0\\http-events.ndjson",
+        "bytes": 158791,
+        "sha256": "647136ffb67e19c38cf1b1285327648409ce495e4f18acd7f345c728b668bd6a"
+      },
+      {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-2e-live-http-2c2c3a7767694117827be46bc2eab5c0\\live-http.result.json",
+        "bytes": 414,
+        "sha256": "b1d9a96ed1cdf189ed3be5312e220426fa74649b29d9152cee86ebb990c9e331"
+      },
+      {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-2e-live-http-2c2c3a7767694117827be46bc2eab5c0\\live-http.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-2e-live-http-2c2c3a7767694117827be46bc2eab5c0\\live-http.stdout.log",
+        "bytes": 2439,
+        "sha256": "1c598ece8e3e64230c81a9c1e88c34bf3f961c0a19b037a1a1325f420caf9ddb"
+      },
+      {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-2e-live-http-2c2c3a7767694117827be46bc2eab5c0\\run-live-http.mjs",
+        "bytes": 1405,
+        "sha256": "01e8750a1f690a865d63fdd258b275907d160e5d239623db874798ac2b380aba"
+      },
+      {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-2e-live-http-2c2c3a7767694117827be46bc2eab5c0\\verify-live-http.mjs",
+        "bytes": 10287,
+        "sha256": "c82424ace9512da6f255781182d001161296d98751328306feb00ef85c905498"
+      }
+    ],
+    "second": [
+      {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-2e-live-http-v2-2caf0613c1e74e6a970035716904f0af\\FINAL-live-http-assets-report.json",
+        "bytes": 8485,
+        "sha256": "8bb7b75c79d968bdc38b779550be2e32af92113d5004ab35d5af83d66f00f3cc"
+      },
+      {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-2e-live-http-v2-2caf0613c1e74e6a970035716904f0af\\get-home-en.html",
+        "bytes": 23177,
+        "sha256": "a2369782cd25a0fe5b9f1ab81f4801c01449333c40fe78f07b5124b86a933eee"
+      },
+      {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-2e-live-http-v2-2caf0613c1e74e6a970035716904f0af\\get-models-en.html",
+        "bytes": 14812,
+        "sha256": "94fd32b432ef884c688271037cc59d1c6d6e0c88c51833b6677a805e701907c5"
+      },
+      {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-2e-live-http-v2-2caf0613c1e74e6a970035716904f0af\\http-events.ndjson",
+        "bytes": 4650,
+        "sha256": "c8b856ffbe79819ea9cbed30c2e3ca632877130938c7040691a605a8da2feeb1"
+      },
+      {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-2e-live-http-v2-2caf0613c1e74e6a970035716904f0af\\live-http.result.json",
+        "bytes": 413,
+        "sha256": "c1abfad870d722c179db4dbf1e95731664d22f97b5c866a4958497144a03af9f"
+      },
+      {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-2e-live-http-v2-2caf0613c1e74e6a970035716904f0af\\live-http.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-2e-live-http-v2-2caf0613c1e74e6a970035716904f0af\\live-http.stdout.log",
+        "bytes": 818,
+        "sha256": "0f11350fcf174457a9f2cba48d5fa6562e36309b3695f146bd9f526c407ee7f1"
+      },
+      {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-2e-live-http-v2-2caf0613c1e74e6a970035716904f0af\\reconcile-receipts.mjs",
+        "bytes": 5522,
+        "sha256": "24d5a54166db58e4babdf94806f97879b226e3c23aa69cedd80423a8261969f0"
+      },
+      {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-2e-live-http-v2-2caf0613c1e74e6a970035716904f0af\\run-live-http.mjs",
+        "bytes": 1405,
+        "sha256": "01e8750a1f690a865d63fdd258b275907d160e5d239623db874798ac2b380aba"
+      },
+      {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-2e-live-http-v2-2caf0613c1e74e6a970035716904f0af\\verify-live-http.mjs",
+        "bytes": 11291,
+        "sha256": "10369303d5005e718f9c0f4447ca18e44d64deae28a22c6543168fe33a46c9aa"
+      }
+    ]
+  }
+}

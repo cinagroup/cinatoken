@@ -1,0 +1,131 @@
+{
+  "schema": "product-fixture-initialization-delta-readonly-v1",
+  "at": "2026-10-06T11:00:11.245Z",
+  "baseSourceSHA": "c9fc6e7b7f8ceffc60a6068f4cb105e4ac5f633b",
+  "sourcePath": "scripts/smoke/test-workerd-product-sse-cancel.mjs",
+  "candidateSourceSHA256": "3dbd6bae43bd82c78a3965c488eacea1c1591ae226c02137191154fef7814400",
+  "exactDiff": {
+    "onlyChanges": 3,
+    "additionLines": 5,
+    "deletionLines": 3,
+    "otherSourceBytesSemanticallyAndTextuallyIdentical": true,
+    "changes": [
+      {
+        "before": "  bundle: true, format: 'esm', platform: 'browser', target: 'es2022', conditions: ['workerd', 'worker', 'browser'],",
+        "after": "  // Core's package annotations otherwise remove required endpoint initialization\n  // from this independent fixture bundle. Preserve it without changing the driver.\n  bundle: true, ignoreAnnotations: true, format: 'esm', platform: 'browser', target: 'es2022', conditions: ['workerd', 'worker', 'browser'],"
+      },
+      {
+        "before": "frames.push(sequence); event('client-sse-frame', { caseId, sequence, count: frames.length });",
+        "after": "frames.push(sequence); event('client-sse-frame', { caseId, frameSequence: sequence, count: frames.length });"
+      },
+      {
+        "before": "event('upstream-chunk', { sequence: row.chunks });",
+        "after": "event('upstream-chunk', { frameSequence: row.chunks });"
+      }
+    ]
+  },
+  "preparation": {
+    "receiptFile": "C:/Users/cina/AppData/Local/Temp/cinatoken-web-foundation-5b11fb36c4074c9da1317f28ef4c7111/fixture-initialization-prepare.result.json",
+    "actualExit": 0,
+    "platform": "win32",
+    "node": "v24.14.1",
+    "runtimeExecuted": false,
+    "nativePass": null,
+    "cases": [],
+    "bundleBytes": 906726,
+    "bundleSHA256": "a6a2c3592b3781dee00a419c796e9d1e4510f7b46bfa6c67766b9a02b6659251",
+    "matchesIndependentSyntheticCandidate": true,
+    "coreSourceSelected": true,
+    "coreDistSelected": false,
+    "providerInitializationCallOccurrences": 7,
+    "workerSourceUnchangedFromFailedC9": true
+  },
+  "protectedVerified": [
+    {
+      "path": "packages/proxy/src/services/egress/openai-driver.ts",
+      "bytes": 35536,
+      "sha256": "6f0a0cf741a43e690e11150a4639746bdaae47a00a9843f89a07099fe6179118"
+    },
+    {
+      "path": "packages/proxy/src/services/request-deadline.ts",
+      "bytes": 752,
+      "sha256": "33efe31863ce5c8d45d75faab888010e79caabef07b387a554487721fb8192ca"
+    },
+    {
+      "path": "packages/proxy/src/services/text-usage-settlement.ts",
+      "bytes": 2397,
+      "sha256": "833fdeb7161e2564f57e1dc4dafe2fe74434856137c7cf3ec5305532f4863390"
+    },
+    {
+      "path": "packages/proxy/src/services/resource-completion.ts",
+      "bytes": 1413,
+      "sha256": "0d84565d1d96ae404acfbb9dbed1f8f43a97b253fb13d390253d14c2942c4fe0"
+    },
+    {
+      "path": "packages/proxy/src/services/egress/text-sse-cancellation-wire.test.mjs",
+      "bytes": 6874,
+      "sha256": "1954151019b71d0515bb736469f45f1e2b9d6293900358476c737e3598c81766"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/chat-holder-binding-v364.test.mjs",
+      "bytes": 8577,
+      "sha256": "74c96ce1b3825744652f1679e858bf8992aef1d4763a1ba25dc5e5b8b1d80f68"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/chat-holder-binding-v364-http-cancel-successor.test.mjs",
+      "bytes": 13354,
+      "sha256": "d23d1c710b539b6c64655fbb1fa4e4de85b228bab19c757bc0e4de48528972e5"
+    },
+    {
+      "path": "scripts/diagnostics/v364-direct-socket/run-direct-socket.mjs",
+      "bytes": 52009,
+      "sha256": "8fbaaed9523ecb227bd0e47ce8092d7432c08f8b67fd8650569d69d711ef48a8"
+    },
+    {
+      "path": "package-lock.json",
+      "bytes": 831762,
+      "sha256": "4cd9c7f7ee21cf16864ef815fa9aff309ed50aae0b714c02c7b7e4e7c7ba6a12"
+    }
+  ],
+  "bundleInputCount": 655,
+  "allBundleInputPinsVerified": true,
+  "unchangedAcceptance": {
+    "ordinaryMiniflareReadyIngress": true,
+    "directSocketBypass": false,
+    "frames": [
+      1,
+      2,
+      3
+    ],
+    "actualResetAndDestroy": true,
+    "strictPhysicalUpstreamResponseAndSocketCloseBeforeCleanup": true,
+    "upstreamIntervalStoppedAndNoLaterFramesForMs": 300,
+    "requestSignalAbortedRequired": true,
+    "usageCancelledRequired": true,
+    "costUnknownRequired": true,
+    "rawUsageNullRequired": true,
+    "totalTokensZeroRequired": true,
+    "resourceCompletionConfirmedRequiredExactlyOnce": true,
+    "usageSettledRequiredExactlyOnce": true,
+    "minimalNativeSourceCancelDeadlineMs": 5000,
+    "minimalSourceCancelRequiredExactlyOnce": true,
+    "minimalEnqueueErrorCannotSubstitute": true,
+    "requestSignalCannotSubstituteMinimalCancel": true,
+    "compatibilityDate": "2026-08-28",
+    "compatibilityFlags": [
+      "nodejs_compat",
+      "enable_request_signal"
+    ],
+    "versions": {
+      "esbuild": "0.27.3",
+      "miniflare": "5.20260828.0-alpha",
+      "workerd": "1.20260828.1"
+    },
+    "workflowUnchanged": true,
+    "ownedExecutorUnchanged": true,
+    "originalStrictResultSuperseded": false,
+    "fullG7G8": false,
+    "databaseLeaseReleaseProven": false
+  },
+  "verdict": "The patch is confined to independent fixture bundle initialization and diagnostic frame payload field naming. It matches the candidate that fixes the synthetic pre-dispatch failure. No assertions, transport behavior, ordinary ingress, worker source, runtime pins/flags, production driver, sealed strict tests, or executor changed. Preparation passes only; commit and new exact-SHA Linux execution remain required, and minimal native source.cancel remains failed until a real callback meets the existing gate."
+}

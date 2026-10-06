@@ -28,7 +28,7 @@
 
 当前发布（2026-10-05）：`cinatoken.com/*` 继续由独立 `cinatoken-web` 承接，当前源码 `c13a64b9c3b2c90adcf736910ea408868d7854f1`、version `2a0a2777-d3b1-47f0-a0a7-88e701b4d2d9`、deployment `fd24618f-121e-4640-9edf-f15d243a6d75`、100%流量、29页面开关启用；资源Route保留，Workers.dev/Preview关闭。同SHA Linux CI37312669228两个job/36步骤全部success，冻结产物与2289 Git输入/18195586 B精确匹配。实际部署由已验证的3847955＋bdc1bfcf bridge与新CI产物合成，137资产/35服务端文件，三档对应源码可下载；GET23/HEAD6、认证转发GET3、4个HTML no-transform与资源组合137/137通过，首轮超时及定向重试均保留。Admin/Proxy仍为34c742d1。本SHA原v2两轮25/23页超时、新v3 31/45页及三交互后actual1，完整严格浏览器未通过；5.72的3847955严格45/45及交互结果仅保留为历史。当前资源保留修复见5.73，首轮遥测冲突/配置403见5.71。真实登录/资金/链、完整G0–G8和旧页退役仍待验收。
 
-当前推进：P1-01–06/09已完成。同2e Web Linux两job/37步骤及1600测试成功，干净安装/full Web peer树0；五可选WASM extraneous标签原样保留，AJV invalid已消失（5.90）。独立SSE两POST因观察fetch redirect:error返回500、未进入RST，夹具改manual严格204后待新Linux。原strict8/7/1失败和C++根因未知保持。独立Web已切流c13/2a0/100%，正在准备发布exact2e CI产物。生产OAuth关联具体批准待，已有测试工作区/密钥未验收，G1及完整G0–G8继续。
+当前推进：exact2e独立Web已发布，versiona898/deployment7223/tag2e/100%，三Route/29true/Admin绑定和预览关闭读回0；138资源/4源码包精确匹配，HTTP首验收器四误判及定向重验保留（5.91）。浏览器三页正常、主题交互诊断继续。P1-01–06/09完成、G1待；c9Product500定位夹具bundle初始化漏失，最小修复待新Linux，minimal真实3帧RST及signal中止但source.cancel仍未触发。原strict8/7/1保持；OAuth具体生产关联批准待，真实身份/已有测试工作区/密钥与完整G0–G8继续。
 
 上一批状态：NEXT-41四语公开署名修复与NEXT-13 B1五个活跃文件修复完成本地验收（5.54）。新P66 Web1401/1401、完整Web/Edge types及Web lint/format、三目标build/freeze/gen0；同一492产物真实Node HTTP45、Node compiled Worker77、Chrome JS32/真正NoJS36通过，68HTML实际footer英文原文/lang=en/译文/链接均通过。Admin源组件Chrome19/相关unit26/保留合同AST22、完整types与目标lint/format0；全量lint实际67E9W→58E5W，仍未全量通过。本地来源946文件tree/修复前1795观察已补，不能当上游导入ref/日期。P65原24/32缺英文、修前测试40失败与其他历史失败完整保留；workerd产品/最小例0xc0000005、WSL E_ACCESSDENIED，0原生case获验。29入口false、未部署；下一步NEXT-13 B2/B3按真实行为清理及来源/真实身份/三库/目录/链/LinuxCI/双平台/发布回滚，完整102主任务/54矩阵/G0–G8/E00–E08未提前完成。
 
@@ -2500,6 +2500,20 @@ P1-06已完成：当前浏览器使用同源URL和运行时bootstrap，自定义
 
 直接证据：[2e Linux与观察端修复索引](./evidence/2026-10-06-web-build-environment-and-product-sse/linux-2e-and-observer-fix/index.json)。完整Web日志压缩前后原字节/SHA回验，独立Product原artifact全部保存。
 
+### 5.91 exact 2e 独立 Web 正式发布与取消边界推进（2026-10-06）
+
+独立Web已发布exact2e40b921通过CI的冻结产物。2294个源码输入与Git2e原byte/SHA逐条一致；138assets/35server/4源码归档activation manifest f6dd28c8b3cc25f96e6bba33d39a82bad30ad51b59b48a9db6abdd0b18f0ff91，先复选当前c13以记录选择时间，384/bdc旧TTL保持。该时间是发布准备选择时间，不冒称原生撤流精确时刻。临时Wrangler配置由验证后的activation生成，包含29true、两公开origin、Admin service、workers_dev/preview_urlsfalse；没有使用仓库陈旧local配置。
+
+2026-10-06 10:47Z deploy实际0。10:48Z读回version a898c3fd-3df4-4e1d-bd97-da19936b3bfe/deployment7223b0c5-6044-49b6-bf8b-e261f3c1f6ae/tag2e/100%；主Route与资产Route保持Web、API Route保持Proxy，29开关、Admin绑定及预览关闭确认。源码/夹具后续提交不改变Web构建输入，线上不冒称部署仓库更新后的SHA。原Admin/Proxy/认证/数据库未发布新代码。
+
+线上138/138资产和4/4源码包均HTTP200且bytes/SHA/cache/nosniff匹配；首页/Models bare308与英语SSR正文、robots/sitemap及6HEAD契约通过。只读验收器首轮150请求actual1的四误判原样保留：两无扩展名notice没有Content-Type而被额外要求拒绝、两HTML的Object.values.some误用索引。修正临时验收器后只重验四项，4/4actual0；没有将合并观察伪造为首150实际0。首次浏览器用旧Next主题按钮、第二次错误Theme无障碍名分别actual1；第三次正确Appearance选择后暗色等待超时actual1、原因尚未证，三页身份/非空/无overlay通过，真实交互继续诊断，不能称完整浏览器验收通过。
+
+新c9fc6e7b唯一manual37452189276真实1。product HTTP500 before RST，独立合成Node对照定位bundle漏掉Core端点变量初始化：原artifact同错，单加生成初始化调用或ignoreAnnotations候选即可到达合成上游stub；route字段正确，不能为此改driver。仅夹具esbuild添加ignoreAnnotations:true，Windows prepare实际0、bundle a6a2c3592b3781dee00a419c796e9d1e4510f7b46bfa6c67766b9a02b6659251；两个帧载荷sequence改frameSequence保留全局事件编号，新Linux待验。合成probe不是真实原生验收。
+
+minimal真实三帧[1,2,3]→RST(responseComplete=false)→ECONNRESET→Request.signal aborted=true；5000ms内未观测ReadableStream.cancel，仍FAIL。原strict8/7/1、C++根因未知、driver/断言/runtime flags/普通ingress不改。executor真实1，无timeout/fallback、owned group gone，不证明native graceful、PG lease/账务或完整G7/G8。CinaAuth具体OAuth关联批准仍待，未重试被拒写入，真实身份/已有专用工作区/测试密钥验收未完成。102主任务/54矩阵/G0–G8/E00–E08/211实际task本批状态保持。
+
+直接证据：[正式发布与c9边界索引](./evidence/2026-10-06-web-build-environment-and-product-sse/production-2e-and-c9-boundary/index.json)，含完整部署/读回、HTTP原两轮、三次浏览器负面结果、原Linux artifact及初始化合成对照。浏览器新诊断与夹具新Linux结果在后续追加，不修改旧失败。
+
 ## 6. 更新记录
 
 | 日期 | 更新内容 | 对应范围 | 验证与下一步 |
@@ -2745,3 +2759,5 @@ P1-06已完成：当前浏览器使用同源URL和运行时bootstrap，自定义
 2026-10-06：5.89记录51同SHA Web Linux37步骤全成功及独立Product真实1，POST尚未RST且原HTTP字段缺失；完整依赖树真实发现两AJV冲突与五WASM orphan。最小Web peer岛/诊断候选本地1600/build0待新Linux，原失败/门槛与待批准OAuth保持，未部署。
 
 2026-10-06：5.90记录同2e Web37步骤/1600及冷安装完整peer树0，P1-02按范围完成；SSE实际500定位观察fetch不支持redirect:error，最小manual修复待新Linux；准备发布exact2e产物，原严格失败/OAuth审批边界与完整任务保持。
+
+2026-10-06：5.91正式发布exact2e冻结产物并读回100%新版本、三Route/29true；138资产及4源码包实际匹配，HTTP验收器误判原失败与四项重验均保存。c9minimal真实RST/signal但cancel未触发，product夹具bundle初始化缺失最小修复待Linux，浏览器外观交互继续诊断，原任务/授权边界保持。

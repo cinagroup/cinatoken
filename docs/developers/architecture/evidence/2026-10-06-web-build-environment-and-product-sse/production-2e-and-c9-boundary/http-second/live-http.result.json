@@ -1,0 +1,16 @@
+{
+  "startedAt": "2026-10-06T10:53:15.307Z",
+  "finishedAt": "2026-10-06T10:53:20.316Z",
+  "childTerminalClosed": true,
+  "actualExitCode": 0,
+  "signal": null,
+  "error": null,
+  "stdout": {
+    "bytes": 818,
+    "sha256": "0f11350fcf174457a9f2cba48d5fa6562e36309b3695f146bd9f526c407ee7f1"
+  },
+  "stderr": {
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+}

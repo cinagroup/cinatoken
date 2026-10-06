@@ -1,0 +1,117 @@
+{
+  "at": "2026-10-06T10:54:23.664Z",
+  "sourceCommit": "2e40b9212b246152594ea60a774c85a9a0a4ad93",
+  "productionVersion": "a898c3fd-3df4-4e1d-bd97-da19936b3bfe",
+  "browserPlugin": "absent",
+  "fallback": "Browser plugin not available; existing bundled Playwright and isolated Chrome context",
+  "flow": "Public SSR home/models and anonymous dashboard -> real Theme select dark -> Language select zh -> mobile reload preserves theme and locale",
+  "scope": "Functional SSR probe; original strict networkidle baseline and first incorrect legacy locator failure retained",
+  "realAuthentication": false,
+  "businessWrites": false,
+  "console": [
+    {
+      "type": "error",
+      "message": "Failed to load resource: the server responded with a status of 401 ()",
+      "url": "https://cinatoken.com/api/user/me"
+    }
+  ],
+  "pageErrors": [],
+  "httpErrors": [
+    {
+      "url": "https://cinatoken.com/api/user/me",
+      "method": "GET",
+      "status": 401,
+      "expected": true
+    }
+  ],
+  "expectedAnonymous401": [
+    {
+      "url": "https://cinatoken.com/api/user/me",
+      "method": "GET",
+      "status": 401,
+      "expected": true
+    }
+  ],
+  "pages": [
+    {
+      "route": "/en",
+      "url": "https://cinatoken.com/en",
+      "status": 200,
+      "title": "CinaToken — Unified AI gateway",
+      "heading": [
+        "Bring your AI resources together.",
+        "Request",
+        "Response",
+        "An AI capability gateway built for builders",
+        "Unified protocols",
+        "Intelligent routing",
+        "Budgets and keys",
+        "Logs and analytics",
+        "From provider to reliable traffic in four steps",
+        "Connect providers",
+        "Publish models and routes",
+        "Issue user keys",
+        "Observe every call",
+        "Run on your infrastructure",
+        "Cloudflare Workers + D1",
+        "Docker + Postgres / MySQL",
+        "Ready to unify your AI capabilities?"
+      ],
+      "nonblank": true,
+      "overlay": false
+    },
+    {
+      "route": "/en/models",
+      "url": "https://cinatoken.com/en/models",
+      "status": 200,
+      "title": "Model catalog — CinaToken",
+      "heading": [
+        "Model catalog",
+        "Filters"
+      ],
+      "nonblank": true,
+      "overlay": false
+    },
+    {
+      "route": "/dashboard",
+      "url": "https://cinatoken.com/dashboard",
+      "status": 200,
+      "title": "Dashboard · cinatoken Gateway · Admin",
+      "heading": [
+        "cinatoken Gateway"
+      ],
+      "nonblank": true,
+      "overlay": false
+    }
+  ],
+  "interactions": [],
+  "screenshots": [
+    {
+      "name": "home",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-foundation-5b11fb36c4074c9da1317f28ef4c7111\\web-2e-v2-home.png",
+      "bytes": 54114,
+      "sha256": "3c3002c14200c075db9cb4077fc6926e1543c1dbc907150ee4981237dd71fbe6"
+    },
+    {
+      "name": "models",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-foundation-5b11fb36c4074c9da1317f28ef4c7111\\web-2e-v2-models.png",
+      "bytes": 43247,
+      "sha256": "6f200d13d7da583bfef9d0a43f48e850d22f3487ab0bcffd3a7563b0aaf80edb"
+    },
+    {
+      "name": "dashboard",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-foundation-5b11fb36c4074c9da1317f28ef4c7111\\web-2e-v2-dashboard.png",
+      "bytes": 30364,
+      "sha256": "b59a9baf9b3bb1690477ed7fb06b241be358429b0914fd955f247135d5553839"
+    }
+  ],
+  "browserVersion": "154.0.8037.95",
+  "actualExit": 1,
+  "outcome": "FAIL",
+  "error": {
+    "name": "AssertionError",
+    "message": "Expected values to be strictly equal:\n\n0 !== 1\n"
+  },
+  "browserClosed": true,
+  "finishedAt": "2026-10-06T10:54:35.036Z"
+}

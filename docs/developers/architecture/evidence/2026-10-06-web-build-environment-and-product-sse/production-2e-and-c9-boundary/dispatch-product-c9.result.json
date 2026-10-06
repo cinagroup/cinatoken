@@ -1,0 +1,25 @@
+{
+  "at": "2026-10-06T10:48:13.110Z",
+  "finishedAt": "2026-10-06T10:48:16.620Z",
+  "executable": "C:/Program Files/GitHub CLI/gh.exe",
+  "args": [
+    "workflow",
+    "run",
+    "product-text-sse-workerd-cancellation.yml",
+    "--ref",
+    "main"
+  ],
+  "cwd": "C:/cinagroup/cinatoken",
+  "actualExit": 0,
+  "signal": null,
+  "stdout": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-foundation-5b11fb36c4074c9da1317f28ef4c7111\\dispatch-product-c9.stdout.log",
+    "bytes": 64,
+    "sha256": "7472a53d80e6845b8fc40f1029f741c2c93982b1743dcb7be02e31b79b609f65"
+  },
+  "stderr": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-foundation-5b11fb36c4074c9da1317f28ef4c7111\\dispatch-product-c9.stderr.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+}

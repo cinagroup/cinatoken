@@ -1,0 +1,227 @@
+{
+  "version": 1,
+  "at": "2026-10-06T10:44:39.328Z",
+  "readOnly": true,
+  "productionWrites": false,
+  "repositoryWrites": false,
+  "secretValuesRecorded": false,
+  "sourceCommit": "2e40b9212b246152594ea60a774c85a9a0a4ad93",
+  "ciVerificationProvidedByParent": {
+    "run": 37450271483,
+    "jobs": 2,
+    "steps": 37,
+    "allSuccess": true,
+    "independentlyFetched": false
+  },
+  "verifiedInputs": {
+    "current": {
+      "id": "2e40b9212b246152594ea60a774c85a9a0a4ad93",
+      "manifestSha256": "4a1bfe65ca1eee8978010e96292e00b0e4a2bbc5f38b2c17b3b24d854daf0363",
+      "fileCount": 135,
+      "serverCount": 35,
+      "buildContract": {
+        "version": 2,
+        "buildId": "37633e6f-3515-4678-a1e1-6e301200ef3f",
+        "sourceSha256": "510a449ba26a5b490a7a8be2b9653c4c1d103d1595ec137944481bbdfdc166ae"
+      },
+      "sourceArchive": {
+        "path": "sources/web.8ef7f4b53718e7a13166d024c7976a4079426f66f76edccccd21134fad318d62.tar.gz",
+        "bytes": 4249828,
+        "sha256": "8ef7f4b53718e7a13166d024c7976a4079426f66f76edccccd21134fad318d62",
+        "buildContract": {
+          "version": 2,
+          "buildId": "37633e6f-3515-4678-a1e1-6e301200ef3f",
+          "sourceSha256": "510a449ba26a5b490a7a8be2b9653c4c1d103d1595ec137944481bbdfdc166ae"
+        },
+        "inputPolicySha256": "c36a8b224da31f0e68326744e80f0a0ee0812722c0f2e50cbd90ece640e53f1f",
+        "fileCount": 2294,
+        "totalSourceBytes": 18226198
+      },
+      "coverageComplete": true
+    },
+    "previous": {
+      "id": "web-c13a64b9c3b2-20261005-retained",
+      "manifestSha256": "79a613c0dd26e25e6440051ffa824010ed40f18e73a5ea0364a56c09265e2b53",
+      "fileCount": 137,
+      "serverCount": 35,
+      "archives": [
+        {
+          "path": "sources/web.0cf38aa7a814fb6c5333187afe977a3236a82fceaa3f68126552e6627a0963fb.tar.gz",
+          "bytes": 4240549,
+          "sha256": "0cf38aa7a814fb6c5333187afe977a3236a82fceaa3f68126552e6627a0963fb",
+          "source": "current",
+          "lastCurrentAt": "2026-10-05T13:01:30.491Z"
+        },
+        {
+          "path": "sources/web.5cad53dd30324d851e481e583a31b23c59c35ad0327769bbc2549fcfdfa480cd.tar.gz",
+          "bytes": 4239144,
+          "sha256": "5cad53dd30324d851e481e583a31b23c59c35ad0327769bbc2549fcfdfa480cd",
+          "source": "retained",
+          "lastCurrentAt": "2026-10-05T13:01:30.491Z"
+        },
+        {
+          "path": "sources/web.a4fb45ab08bf639f695134f2c693d5292f3126944d67db96e08596640930e910.tar.gz",
+          "bytes": 4237024,
+          "sha256": "a4fb45ab08bf639f695134f2c693d5292f3126944d67db96e08596640930e910",
+          "source": "retained",
+          "lastCurrentAt": "2026-10-05T10:38:26.000Z"
+        }
+      ],
+      "coverageComplete": true
+    }
+  },
+  "gitSourceComparison": {
+    "declaredInputs": 2294,
+    "matched": 2294,
+    "differences": []
+  },
+  "workingTreeComparison": {
+    "sourceSha256": "f4691802913e8e0e96b4a27fa6a08db2a82356e879b77e58edef88876b935248",
+    "ciSourceSha256": "510a449ba26a5b490a7a8be2b9653c4c1d103d1595ec137944481bbdfdc166ae",
+    "equal": false,
+    "differentPaths": [
+      "packages/web/.node-version",
+      "packages/web/public/waffo-logo-dark.svg",
+      "packages/web/public/waffo-logo-light.svg"
+    ],
+    "interpretation": "Working-tree raw bytes differ; authoritative Linux artifact uses validated source archive and exact Git blob comparison, not newline normalization."
+  },
+  "assetComparison": {
+    "sharedHashed": 121,
+    "sharedHashCollisions": [],
+    "oldUniqueHashes": [],
+    "plannedActivationAssetCount": 138,
+    "plannedArchiveCount": 4
+  },
+  "configReview": {
+    "usesFunctionExport": true,
+    "cliGeneratorNotExecuted": true,
+    "assetsInputVerified": true,
+    "serverEntryInputVerified": true,
+    "name": "cinatoken-web",
+    "main": "C:\\cinagroup\\cinatoken\\.release\\web\\2e40b9212b246152594ea60a774c85a9a0a4ad93\\server\\worker\\index.mjs",
+    "no_bundle": true,
+    "workers_dev": false,
+    "preview_urls": false,
+    "routes": [],
+    "compatibility_date": "2026-09-27",
+    "compatibility_flags": [
+      "enable_request_signal"
+    ],
+    "assets": {
+      "directory": "C:\\cinagroup\\cinatoken\\.release\\web\\2e40b9212b246152594ea60a774c85a9a0a4ad93\\assets",
+      "binding": "ASSETS",
+      "run_worker_first": true,
+      "html_handling": "none",
+      "not_found_handling": "none"
+    },
+    "services": [
+      {
+        "binding": "CINATOKEN_ADMIN_SERVICE",
+        "service": "cinatoken-admin"
+      }
+    ],
+    "observability": {
+      "enabled": true
+    },
+    "enabledFlags": 29,
+    "allEnabledFlagsTrue": true,
+    "flagDelta": [],
+    "originDelta": []
+  },
+  "priorGuard": {
+    "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-web-foundation-5b11fb36c4074c9da1317f28ef4c7111/pre-new-publication.deployment-guard.json",
+    "at": "2026-10-06T10:33:05.966Z",
+    "finishedAt": "2026-10-06T10:33:13.344Z",
+    "routes": [
+      {
+        "id": "5738534653ef46f48a44e3f3b22e5d8e",
+        "pattern": "cinatoken.com/*",
+        "script": "cinatoken-web",
+        "request_limit_fail_open": false
+      },
+      {
+        "id": "2712df1859d340ffb6d68a7e53eb1853",
+        "pattern": "cinatoken.com/web-assets/*",
+        "script": "cinatoken-web",
+        "request_limit_fail_open": false
+      },
+      {
+        "id": "242dce09c515462e833d69bd0738bdfc",
+        "pattern": "api.cinatoken.com/*",
+        "script": "cinatoken-proxy",
+        "request_limit_fail_open": false
+      }
+    ],
+    "deployment": {
+      "id": "fd24618f-121e-4640-9edf-f15d243a6d75",
+      "versions": [
+        {
+          "version_id": "2a0a2777-d3b1-47f0-a0a7-88e701b4d2d9",
+          "percentage": 100
+        }
+      ],
+      "commitTag": "c13a64b9c3b2c90adcf736910ea408868d7854f1"
+    },
+    "access": {
+      "enabled": false,
+      "previews_enabled": false
+    }
+  },
+  "compositionPlan": {
+    "selectedAt": "2026-10-06T10:44:39.328Z",
+    "retentionDays": 14,
+    "first": {
+      "currentRelease": "web-c13a64b9c3b2-20261005-retained",
+      "previous": "web-c13a64b9c3b2-20261005-retained",
+      "id": "web-c13-retirement-20261006-2e40b921"
+    },
+    "second": {
+      "currentRelease": "2e40b9212b246152594ea60a774c85a9a0a4ad93",
+      "previous": "web-c13-retirement-20261006-2e40b921",
+      "id": "web-2e40b9212b24-20261006-retained"
+    },
+    "priorArchives": [
+      {
+        "path": "sources/web.0cf38aa7a814fb6c5333187afe977a3236a82fceaa3f68126552e6627a0963fb.tar.gz",
+        "source": "current",
+        "priorLastCurrentAt": "2026-10-05T13:01:30.491Z",
+        "selectedLastCurrentAt": "2026-10-06T10:44:39.328Z"
+      },
+      {
+        "path": "sources/web.5cad53dd30324d851e481e583a31b23c59c35ad0327769bbc2549fcfdfa480cd.tar.gz",
+        "source": "retained",
+        "priorLastCurrentAt": "2026-10-05T13:01:30.491Z",
+        "selectedLastCurrentAt": "2026-10-05T13:01:30.491Z"
+      },
+      {
+        "path": "sources/web.a4fb45ab08bf639f695134f2c693d5292f3126944d67db96e08596640930e910.tar.gz",
+        "source": "retained",
+        "priorLastCurrentAt": "2026-10-05T10:38:26.000Z",
+        "selectedLastCurrentAt": "2026-10-05T10:38:26.000Z"
+      }
+    ],
+    "sourceAndServer": "Use frozen CI current; never root stale dist or rebuild during release assembly.",
+    "retention": "Fresh c13 selection timestamp does not prove the exact production withdrawal instant; keep 384/bdc original timestamps."
+  },
+  "checks": {
+    "allGitInputsExact": true,
+    "sharedHashesUnchanged": true,
+    "flagSetPreserved": true,
+    "originsPreserved": true,
+    "generatedRoutesEmpty": true,
+    "previewExplicitlyDisabled": true
+  },
+  "postDeploymentRequired": [
+    "fresh REST read: actual version 100% and exact source tag2e",
+    "all three zone route IDs/script/false fail-open unchanged",
+    "29 enabled flags and both origins/admin service unchanged",
+    "workers.dev and preview URLs false",
+    "public HTTP/browser, runtime bootstrap, current/retained hashed assets and all 4 source archive digests"
+  ],
+  "fullInventoryReceipt": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-current-release-review-743f2d8c369d4eb58d1e1bcff7e09f67\\FINAL-current-release-readonly-review.json",
+    "bytes": 618630,
+    "sha256": "a9ca78ef1839c8597bec8e9027d1032beffc769b2916651e1bded4dca2493f91"
+  }
+}

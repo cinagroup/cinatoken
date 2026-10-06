@@ -1,0 +1,87 @@
+{
+  "schema": "product-c9-readonly-bundle-initialization-probe-v1",
+  "at": "2026-10-06T10:54:48.241Z",
+  "mode": "Node with synthetic fetch stub only; no Workerd/native acceptance/production/database/network",
+  "sourceSha": "c9fc6e7b7f8ceffc60a6068f4cb105e4ac5f633b",
+  "artifactBundleSha": "4af70bbec058fa852e68c30299b1798ffd56af46195abef22f5a935045942198",
+  "results": [
+    {
+      "label": "exact-artifact-synthetic-Node",
+      "calls": [
+        {
+          "url": "http://127.0.0.1:1/observe",
+          "method": "POST"
+        }
+      ],
+      "error": {
+        "name": "TypeError",
+        "message": "Cannot read properties of undefined (reading 'openai')",
+        "stack": "TypeError: Cannot read properties of undefined (reading 'openai')\n    at resolveUpstreamEndpoint (file:///C:/Users/cina/AppData/Local/Temp/cinatoken-web-foundation-5b11fb36c4074c9da1317f28ef4c7111/product-c9-artifact/product-sse-cancel-37452189276-1/product-sse-cancel-37452189276-1/fixture/worker-bundle.mjs:158:53)\n    at dispatchOpenAiRoute (file:///C:/Users/cina/AppData/Local/Temp/cinatoken-web-foundation-5b11fb36c4074c9da1317f28ef4c7111/product-c9-artifact/product-sse-cancel-37452189276-1/product-sse-cancel-37452189276-1/fixture/worker-bundle.mjs:2980:15)\n    at Object.fetch (file:///C:/Users/cina/AppData/Local/Temp/cinatoken-web-foundation-5b11fb36c4074c9da1317f28ef4c7111/product-c9-artifact/product-sse-cancel-37452189276-1/product-sse-cancel-37452189276-1/fixture/worker-bundle.mjs:3163:26)\n    at async probe (file:///C:/Users/cina/AppData/Local/Temp/cinatoken-product-c9-peer-63b6bc03771145cbb90df411dd4671a3/probe.mjs:19:69)\n    at async file:///C:/Users/cina/AppData/Local/Temp/cinatoken-product-c9-peer-63b6bc03771145cbb90df411dd4671a3/probe.mjs:23:16"
+      }
+    },
+    {
+      "label": "same-artifact-one-init-call-diagnostic",
+      "calls": [
+        {
+          "url": "http://127.0.0.1:1/observe",
+          "method": "POST"
+        },
+        {
+          "url": "http://127.0.0.1:1/v1/chat/completions",
+          "method": "POST"
+        }
+      ],
+      "error": {
+        "name": "Error",
+        "message": "SYNTHETIC_UPSTREAM_REACHED_NO_NETWORK",
+        "stack": "Error: SYNTHETIC_UPSTREAM_REACHED_NO_NETWORK\n    at globalThis.fetch (file:///C:/Users/cina/AppData/Local/Temp/cinatoken-product-c9-peer-63b6bc03771145cbb90df411dd4671a3/probe.mjs:18:184)\n    at file:///C:/Users/cina/AppData/Local/Temp/cinatoken-product-c9-peer-63b6bc03771145cbb90df411dd4671a3/initializer-only-diagnostic.mjs:3037:24\n    at async withOwnedJsonUpload (file:///C:/Users/cina/AppData/Local/Temp/cinatoken-product-c9-peer-63b6bc03771145cbb90df411dd4671a3/initializer-only-diagnostic.mjs:980:20)"
+      }
+    },
+    {
+      "label": "ignoreAnnotations",
+      "calls": [
+        {
+          "url": "http://127.0.0.1:1/observe",
+          "method": "POST"
+        },
+        {
+          "url": "http://127.0.0.1:1/v1/chat/completions",
+          "method": "POST"
+        }
+      ],
+      "error": {
+        "name": "Error",
+        "message": "SYNTHETIC_UPSTREAM_REACHED_NO_NETWORK",
+        "stack": "Error: SYNTHETIC_UPSTREAM_REACHED_NO_NETWORK\n    at globalThis.fetch (file:///C:/Users/cina/AppData/Local/Temp/cinatoken-product-c9-peer-63b6bc03771145cbb90df411dd4671a3/probe.mjs:18:184)\n    at file:///C:/Users/cina/AppData/Local/Temp/cinatoken-product-c9-peer-63b6bc03771145cbb90df411dd4671a3/ignoreAnnotations.mjs:25368:24\n    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n    at async withOwnedJsonUpload (file:///C:/Users/cina/AppData/Local/Temp/cinatoken-product-c9-peer-63b6bc03771145cbb90df411dd4671a3/ignoreAnnotations.mjs:17686:20)"
+      },
+      "bundleBytes": 906726,
+      "bundleSha": "a6a2c3592b3781dee00a419c796e9d1e4510f7b46bfa6c67766b9a02b6659251",
+      "providerInitOccurrences": 7,
+      "coreSourceSelected": true,
+      "coreDistSelected": false
+    },
+    {
+      "label": "treeShakingFalse",
+      "calls": [
+        {
+          "url": "http://127.0.0.1:1/observe",
+          "method": "POST"
+        },
+        {
+          "url": "http://127.0.0.1:1/v1/chat/completions",
+          "method": "POST"
+        }
+      ],
+      "error": {
+        "name": "Error",
+        "message": "SYNTHETIC_UPSTREAM_REACHED_NO_NETWORK",
+        "stack": "Error: SYNTHETIC_UPSTREAM_REACHED_NO_NETWORK\n    at globalThis.fetch (file:///C:/Users/cina/AppData/Local/Temp/cinatoken-product-c9-peer-63b6bc03771145cbb90df411dd4671a3/probe.mjs:18:184)\n    at file:///C:/Users/cina/AppData/Local/Temp/cinatoken-product-c9-peer-63b6bc03771145cbb90df411dd4671a3/treeShakingFalse.mjs:72890:24\n    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n    at async withOwnedJsonUpload (file:///C:/Users/cina/AppData/Local/Temp/cinatoken-product-c9-peer-63b6bc03771145cbb90df411dd4671a3/treeShakingFalse.mjs:44493:20)"
+      },
+      "bundleBytes": 3403905,
+      "bundleSha": "baaadfadd3b823b54836a2789f581897e2da46f6b8ebb1f115f2e4512970ebff",
+      "providerInitOccurrences": 4,
+      "coreSourceSelected": true,
+      "coreDistSelected": false
+    }
+  ]
+}

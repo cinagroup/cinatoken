@@ -1,0 +1,16 @@
+{"startedAt":"2026-10-06T10:51:28.296Z","outRoot":"C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-2e-live-http-2c2c3a7767694117827be46bc2eab5c0","assets":138,"pages":12,"total":150,"concurrency":4,"deadlineMs":25000,"redirect":"manual","retries":0}
+{"completed":1,"total":150,"id":"asset-002","status":200,"passed":false,"issues":["content-type missing"],"error":null,"timedOut":false}
+{"completed":4,"total":150,"id":"asset-001","status":200,"passed":false,"issues":["content-type missing"],"error":null,"timedOut":false}
+{"completed":16,"total":150,"id":"asset-018","status":200,"passed":true,"issues":[],"error":null,"timedOut":false}
+{"completed":32,"total":150,"id":"asset-034","status":200,"passed":true,"issues":[],"error":null,"timedOut":false}
+{"completed":48,"total":150,"id":"asset-048","status":200,"passed":true,"issues":[],"error":null,"timedOut":false}
+{"completed":64,"total":150,"id":"asset-064","status":200,"passed":true,"issues":[],"error":null,"timedOut":false}
+{"completed":80,"total":150,"id":"asset-080","status":200,"passed":true,"issues":[],"error":null,"timedOut":false}
+{"completed":96,"total":150,"id":"asset-096","status":200,"passed":true,"issues":[],"error":null,"timedOut":false}
+{"completed":112,"total":150,"id":"asset-112","status":200,"passed":true,"issues":[],"error":null,"timedOut":false}
+{"completed":128,"total":150,"id":"asset-128","status":200,"passed":true,"issues":[],"error":null,"timedOut":false}
+{"completed":141,"total":150,"id":"get-home-en","status":200,"passed":false,"issues":["html content contract"],"error":null,"timedOut":false}
+{"completed":144,"total":150,"id":"head-models-bare","status":308,"passed":true,"issues":[],"error":null,"timedOut":false}
+{"completed":146,"total":150,"id":"get-models-en","status":200,"passed":false,"issues":["html content contract"],"error":null,"timedOut":false}
+{"completed":150,"total":150,"id":"head-models-en","status":200,"passed":true,"issues":[],"error":null,"timedOut":false}
+{"finalReport":"C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-2e-live-http-2c2c3a7767694117827be46bc2eab5c0\\FINAL-live-http-assets-report.json","bytes":220066,"sha256":"56f6e02416d5942daf0b98afda9bf59e3e4baab6476404ddd64a67e0093994b9","summary":{"total":150,"passed":146,"failed":4,"assets":{"total":138,"passed":136,"failed":2},"sourceArchives":{"total":4,"passed":4,"failed":0},"pages":{"total":12,"passed":10,"failed":2}},"maxInFlightObserved":4}

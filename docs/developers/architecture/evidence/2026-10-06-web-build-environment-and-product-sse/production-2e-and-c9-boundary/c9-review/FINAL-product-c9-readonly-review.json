@@ -1,0 +1,420 @@
+{
+  "schema": "product-c9-independent-readonly-review-v1",
+  "at": "2026-10-06T10:56:00.052Z",
+  "sourceSHA": "c9fc6e7b7f8ceffc60a6068f4cb105e4ac5f633b",
+  "runId": 37452189276,
+  "jobId": 112231128567,
+  "ciConclusion": "failure",
+  "authority": {
+    "actualExit": 1,
+    "terminalClosed": true,
+    "timedOut": false,
+    "fallbackSignals": [],
+    "ownedGroupRemaining": false,
+    "gracefulWorkerdExitProven": false
+  },
+  "verifiedFiles": [
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-web-foundation-5b11fb36c4074c9da1317f28ef4c7111/product-c9-artifact/product-sse-cancel-37452189276-1/product-sse-cancel-37452189276-1/executor.json",
+      "bytes": 941,
+      "sha256": "80bd45c5dbc95aa754f957c845c3291a0fbcfd15f1f4774493d90f57eb28e7f9"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-web-foundation-5b11fb36c4074c9da1317f28ef4c7111/product-c9-artifact/product-sse-cancel-37452189276-1/product-sse-cancel-37452189276-1/fixture/events.ndjson",
+      "bytes": 6712,
+      "sha256": "77d7f7f2a1acb4addcf2d27dcbda56fee08df7c6099fa21dfe7b61e81067ac17"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-web-foundation-5b11fb36c4074c9da1317f28ef4c7111/product-c9-artifact/product-sse-cancel-37452189276-1/product-sse-cancel-37452189276-1/fixture/report.json",
+      "bytes": 125486,
+      "sha256": "d15509afbc3829ded173d2ff07aa579048ea8bb99f25272b915cfce7b0d1a6e7"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-web-foundation-5b11fb36c4074c9da1317f28ef4c7111/product-c9-artifact/product-sse-cancel-37452189276-1/product-sse-cancel-37452189276-1/stdout.log",
+      "bytes": 221,
+      "sha256": "befbfd2815b49f8a88a928f3d66c125a023a8953814d53f48380efe5e9157931"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-web-foundation-5b11fb36c4074c9da1317f28ef4c7111/product-c9-artifact/product-sse-cancel-37452189276-1/product-sse-cancel-37452189276-1/stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-web-foundation-5b11fb36c4074c9da1317f28ef4c7111/product-c9-start-meta.stdout.log",
+      "bytes": 2151,
+      "sha256": "c42b7f2dffaa7b7c1a506d8113e3d318974e6b3dbb32fd577578d220f65f2fd4"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-web-foundation-5b11fb36c4074c9da1317f28ef4c7111/product-c9-full-log.stdout.log",
+      "bytes": 35876,
+      "sha256": "82e1b26d03cfc912420d7bf0270474396966e3a0869e9c32bd2fffbfa0ecad71"
+    }
+  ],
+  "ciSteps": [
+    {
+      "number": 1,
+      "name": "Set up job",
+      "conclusion": "success"
+    },
+    {
+      "number": 2,
+      "name": "Run actions/checkout@v4",
+      "conclusion": "success"
+    },
+    {
+      "number": 3,
+      "name": "Run actions/setup-node@v4",
+      "conclusion": "success"
+    },
+    {
+      "number": 4,
+      "name": "Run npm ci --ignore-scripts",
+      "conclusion": "success"
+    },
+    {
+      "number": 5,
+      "name": "Verify real ingress RST and separate native source cancel",
+      "conclusion": "failure"
+    },
+    {
+      "number": 6,
+      "name": "Verify clean Web dependency and peer tree",
+      "conclusion": "success"
+    },
+    {
+      "number": 7,
+      "name": "Run actions/upload-artifact@v4",
+      "conclusion": "success"
+    },
+    {
+      "number": 13,
+      "name": "Post Run actions/setup-node@v4",
+      "conclusion": "skipped"
+    },
+    {
+      "number": 14,
+      "name": "Post Run actions/checkout@v4",
+      "conclusion": "success"
+    },
+    {
+      "number": 15,
+      "name": "Complete job",
+      "conclusion": "success"
+    }
+  ],
+  "caseResults": {
+    "product": {
+      "actualReportStatus": "FAIL",
+      "requestStart": {
+        "sequence": 7,
+        "kind": "request-start",
+        "wallTime": "2026-10-06T10:49:25.900Z",
+        "elapsedMs": 721.876812,
+        "caseId": "product",
+        "value": {
+          "signalInitiallyAborted": false
+        },
+        "workerWallTime": 1791283765899
+      },
+      "httpHeaders": {
+        "sequence": 8,
+        "kind": "client-response-headers",
+        "wallTime": "2026-10-06T10:49:25.903Z",
+        "elapsedMs": 724.298255,
+        "caseId": "product",
+        "path": "/fixture/product-sse",
+        "method": "POST",
+        "status": 500,
+        "statusMessage": "Internal Server Error",
+        "contentType": "text/plain;charset=UTF-8",
+        "contentLength": "207",
+        "connection": null,
+        "accepted": false
+      },
+      "nonSse": {
+        "sequence": 9,
+        "kind": "client-non-sse-response",
+        "wallTime": "2026-10-06T10:49:25.903Z",
+        "elapsedMs": 724.7348499999999,
+        "caseId": "product",
+        "status": 500,
+        "contentType": "text/plain;charset=UTF-8",
+        "body": "TypeError: Cannot read properties of undefined (reading 'openai')\n    at async Object.fetch (file:///home/runner/work/cinatoken/cinatoken/node_modules/miniflare/dist/src/workers/core/entry.worker.js:5186:22)"
+      },
+      "receivedFrames": [],
+      "rstInvocations": 0,
+      "requestSignalAborted": 0,
+      "upstreamRequests": 0,
+      "upstreamChunks": 0,
+      "usageSettled": 0,
+      "resourceCompletionSettled": 0,
+      "assessment": "The product case failed at endpoint capability initialization before any owned upstream HTTP dispatch. No product transport cancellation or usage/resource assertion ran or passed."
+    },
+    "minimal": {
+      "actualReportStatus": "FAIL",
+      "httpHeaders": {
+        "sequence": 16,
+        "kind": "client-response-headers",
+        "wallTime": "2026-10-06T10:49:25.907Z",
+        "elapsedMs": 729.175825,
+        "caseId": "minimal",
+        "path": "/fixture/minimal-readable",
+        "method": "POST",
+        "status": 200,
+        "statusMessage": "OK",
+        "contentType": "text/event-stream",
+        "contentLength": null,
+        "connection": null,
+        "accepted": true
+      },
+      "receivedFrames": [
+        {
+          "frameSequence": 1,
+          "count": 1,
+          "elapsedMs": 768.900174
+        },
+        {
+          "frameSequence": 2,
+          "count": 2,
+          "elapsedMs": 809.070714
+        },
+        {
+          "frameSequence": 3,
+          "count": 3,
+          "elapsedMs": 849.440033
+        }
+      ],
+      "rst": {
+        "sequence": 20,
+        "kind": "client-rst-invoke",
+        "wallTime": "2026-10-06T10:49:26.029Z",
+        "elapsedMs": 850.519199,
+        "caseId": "minimal",
+        "receivedSseFrames": 3,
+        "responseComplete": false
+      },
+      "socketClose": {
+        "sequence": 21,
+        "kind": "client-socket-close",
+        "wallTime": "2026-10-06T10:49:26.030Z",
+        "elapsedMs": 851.446742,
+        "caseId": "minimal",
+        "hadError": false,
+        "bytesRead": 234
+      },
+      "responseError": {
+        "sequence": 22,
+        "kind": "client-response-error",
+        "wallTime": "2026-10-06T10:49:26.030Z",
+        "elapsedMs": 851.657315,
+        "caseId": "minimal",
+        "afterRST": true,
+        "error": {
+          "name": "Error",
+          "code": "ECONNRESET",
+          "message": "aborted",
+          "stack": "Error: aborted\n    at Socket.socketCloseListener (node:_http_client:535:19)\n    at Socket.emit (node:events:531:35)\n    at TCP.<anonymous> (node:net:831:14)"
+        }
+      },
+      "requestSignalAborted": {
+        "sequence": 24,
+        "kind": "request-signal-aborted",
+        "wallTime": "2026-10-06T10:49:26.031Z",
+        "elapsedMs": 852.296499,
+        "caseId": "minimal",
+        "value": {
+          "aborted": true
+        },
+        "workerWallTime": 1791283766029
+      },
+      "nativeSourceCancelObservations": 0,
+      "minimalEnqueueErrorObservations": 0,
+      "error": {
+        "name": "Error",
+        "code": null,
+        "message": "native minimal ReadableStream.cancel callback deadline 5000ms",
+        "stack": "Error: native minimal ReadableStream.cancel callback deadline 5000ms\n    at until (file:///home/runner/work/cinatoken/cinatoken/scripts/smoke/test-workerd-product-sse-cancel.mjs:56:67)\n    at async file:///home/runner/work/cinatoken/cinatoken/scripts/smoke/test-workerd-product-sse-cancel.mjs:343:7\n    at async finishCase (file:///home/runner/work/cinatoken/cinatoken/scripts/smoke/test-workerd-product-sse-cancel.mjs:195:33)\n    at async file:///home/runner/work/cinatoken/cinatoken/scripts/smoke/test-workerd-product-sse-cancel.mjs:341:5"
+      },
+      "assessment": "A real ordinary Miniflare ingress returned HTTP 200 SSE, delivered exactly frames 1/2/3, and client socket.resetAndDestroy was invoked while responseComplete was false. The request signal aborted and observer POST was recorded. The independent ReadableStream.cancel callback was not observed within the strict 5000 ms deadline; signal abort cannot substitute. Native underlying cause is not proved."
+    }
+  },
+  "cleanup": {
+    "ownedSockets": 0,
+    "activeIntervals": 0,
+    "activeClients": 0,
+    "miniflareDisposeFulfilled": true,
+    "gracefulWorkerdExitProven": false
+  },
+  "sourceUnchangedReported": true,
+  "protectedCurrent": [
+    {
+      "path": "packages/proxy/src/services/egress/openai-driver.ts",
+      "bytes": 35536,
+      "sha256": "6f0a0cf741a43e690e11150a4639746bdaae47a00a9843f89a07099fe6179118",
+      "same": true
+    },
+    {
+      "path": "packages/proxy/src/services/request-deadline.ts",
+      "bytes": 752,
+      "sha256": "33efe31863ce5c8d45d75faab888010e79caabef07b387a554487721fb8192ca",
+      "same": true
+    },
+    {
+      "path": "packages/proxy/src/services/text-usage-settlement.ts",
+      "bytes": 2397,
+      "sha256": "833fdeb7161e2564f57e1dc4dafe2fe74434856137c7cf3ec5305532f4863390",
+      "same": true
+    },
+    {
+      "path": "packages/proxy/src/services/resource-completion.ts",
+      "bytes": 1413,
+      "sha256": "0d84565d1d96ae404acfbb9dbed1f8f43a97b253fb13d390253d14c2942c4fe0",
+      "same": true
+    },
+    {
+      "path": "packages/proxy/src/services/egress/text-sse-cancellation-wire.test.mjs",
+      "bytes": 6874,
+      "sha256": "1954151019b71d0515bb736469f45f1e2b9d6293900358476c737e3598c81766",
+      "same": true
+    },
+    {
+      "path": "packages/proxy/scripts/staging/chat-holder-binding-v364.test.mjs",
+      "bytes": 8577,
+      "sha256": "74c96ce1b3825744652f1679e858bf8992aef1d4763a1ba25dc5e5b8b1d80f68",
+      "same": true
+    },
+    {
+      "path": "packages/proxy/scripts/staging/chat-holder-binding-v364-http-cancel-successor.test.mjs",
+      "bytes": 13354,
+      "sha256": "d23d1c710b539b6c64655fbb1fa4e4de85b228bab19c757bc0e4de48528972e5",
+      "same": true
+    },
+    {
+      "path": "scripts/diagnostics/v364-direct-socket/run-direct-socket.mjs",
+      "bytes": 52009,
+      "sha256": "8fbaaed9523ecb227bd0e47ce8092d7432c08f8b67fd8650569d69d711ef48a8",
+      "same": true
+    },
+    {
+      "path": "package-lock.json",
+      "bytes": 831762,
+      "sha256": "4cd9c7f7ee21cf16864ef815fa9aff309ed50aae0b714c02c7b7e4e7c7ba6a12",
+      "same": true
+    }
+  ],
+  "bundleInputsCurrent": {
+    "count": 655,
+    "allMatch": true,
+    "mismatches": []
+  },
+  "confirmedFixtureDefects": [
+    {
+      "scope": "generated fixture bundle only",
+      "issue": "Core provider-endpoints module initialization was omitted under annotation-aware tree shaking.",
+      "evidence": "exact immutable artifact reproduced the same undefined.openai in a Node-only synthetic fetch probe at resolveUpstreamEndpoint bundle line 158 (WRITABLE_CAPABILITIES_BY_PROTOCOL[protocol]). route(upstream.href).providerEndpoints is correctly defined. Adding only the generated init_provider_endpoints() call in a Temp diagnostic copy reaches the owned URL fetch stub; changing only fixture esbuild ignoreAnnotations:true also reaches it with source Core and no Core dist.",
+      "proposedSourceDiff": "In fixture esbuild build options, add ignoreAnnotations: true. Preserve real production driver, pinned runtime, original strict scripts, ordinary ingress, all assertions, and minimal source-cancel deadline.",
+      "limits": "The synthetic Node probe proves the pre-dispatch initialization defect and candidate preparation fix. It proves no native cancellation, upstream socket close, settlement, or complete acceptance."
+    },
+    {
+      "scope": "diagnostic event numbering only",
+      "issue": "fields.sequence overwrites the event sequence property in event(kind,fields), for SSE frame and upstream chunk rows.",
+      "evidence": "28 events exist, but minimal frame rows record sequence 1/2/3 after ingress event 16 instead of 17/18/19. This does not fabricate actual frame payload count; it corrupts global event numbering.",
+      "proposedSourceDiff": "Rename payload sequence fields to frameSequence in the client-sse-frame and upstream-chunk event callers; keep the event global sequence unique."
+    }
+  ],
+  "unchangedGates": {
+    "originalStrictResultSuperseded": false,
+    "fullG7G8": false,
+    "databaseLeaseReleaseProven": false,
+    "realIdentity": false,
+    "productionRequests": 0
+  },
+  "syntheticProbe": {
+    "schema": "product-c9-readonly-bundle-initialization-probe-v1",
+    "at": "2026-10-06T10:54:48.241Z",
+    "mode": "Node with synthetic fetch stub only; no Workerd/native acceptance/production/database/network",
+    "sourceSha": "c9fc6e7b7f8ceffc60a6068f4cb105e4ac5f633b",
+    "artifactBundleSha": "4af70bbec058fa852e68c30299b1798ffd56af46195abef22f5a935045942198",
+    "results": [
+      {
+        "label": "exact-artifact-synthetic-Node",
+        "calls": [
+          {
+            "url": "http://127.0.0.1:1/observe",
+            "method": "POST"
+          }
+        ],
+        "error": {
+          "name": "TypeError",
+          "message": "Cannot read properties of undefined (reading 'openai')",
+          "stack": "TypeError: Cannot read properties of undefined (reading 'openai')\n    at resolveUpstreamEndpoint (file:///C:/Users/cina/AppData/Local/Temp/cinatoken-web-foundation-5b11fb36c4074c9da1317f28ef4c7111/product-c9-artifact/product-sse-cancel-37452189276-1/product-sse-cancel-37452189276-1/fixture/worker-bundle.mjs:158:53)\n    at dispatchOpenAiRoute (file:///C:/Users/cina/AppData/Local/Temp/cinatoken-web-foundation-5b11fb36c4074c9da1317f28ef4c7111/product-c9-artifact/product-sse-cancel-37452189276-1/product-sse-cancel-37452189276-1/fixture/worker-bundle.mjs:2980:15)\n    at Object.fetch (file:///C:/Users/cina/AppData/Local/Temp/cinatoken-web-foundation-5b11fb36c4074c9da1317f28ef4c7111/product-c9-artifact/product-sse-cancel-37452189276-1/product-sse-cancel-37452189276-1/fixture/worker-bundle.mjs:3163:26)\n    at async probe (file:///C:/Users/cina/AppData/Local/Temp/cinatoken-product-c9-peer-63b6bc03771145cbb90df411dd4671a3/probe.mjs:19:69)\n    at async file:///C:/Users/cina/AppData/Local/Temp/cinatoken-product-c9-peer-63b6bc03771145cbb90df411dd4671a3/probe.mjs:23:16"
+        }
+      },
+      {
+        "label": "same-artifact-one-init-call-diagnostic",
+        "calls": [
+          {
+            "url": "http://127.0.0.1:1/observe",
+            "method": "POST"
+          },
+          {
+            "url": "http://127.0.0.1:1/v1/chat/completions",
+            "method": "POST"
+          }
+        ],
+        "error": {
+          "name": "Error",
+          "message": "SYNTHETIC_UPSTREAM_REACHED_NO_NETWORK",
+          "stack": "Error: SYNTHETIC_UPSTREAM_REACHED_NO_NETWORK\n    at globalThis.fetch (file:///C:/Users/cina/AppData/Local/Temp/cinatoken-product-c9-peer-63b6bc03771145cbb90df411dd4671a3/probe.mjs:18:184)\n    at file:///C:/Users/cina/AppData/Local/Temp/cinatoken-product-c9-peer-63b6bc03771145cbb90df411dd4671a3/initializer-only-diagnostic.mjs:3037:24\n    at async withOwnedJsonUpload (file:///C:/Users/cina/AppData/Local/Temp/cinatoken-product-c9-peer-63b6bc03771145cbb90df411dd4671a3/initializer-only-diagnostic.mjs:980:20)"
+        }
+      },
+      {
+        "label": "ignoreAnnotations",
+        "calls": [
+          {
+            "url": "http://127.0.0.1:1/observe",
+            "method": "POST"
+          },
+          {
+            "url": "http://127.0.0.1:1/v1/chat/completions",
+            "method": "POST"
+          }
+        ],
+        "error": {
+          "name": "Error",
+          "message": "SYNTHETIC_UPSTREAM_REACHED_NO_NETWORK",
+          "stack": "Error: SYNTHETIC_UPSTREAM_REACHED_NO_NETWORK\n    at globalThis.fetch (file:///C:/Users/cina/AppData/Local/Temp/cinatoken-product-c9-peer-63b6bc03771145cbb90df411dd4671a3/probe.mjs:18:184)\n    at file:///C:/Users/cina/AppData/Local/Temp/cinatoken-product-c9-peer-63b6bc03771145cbb90df411dd4671a3/ignoreAnnotations.mjs:25368:24\n    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n    at async withOwnedJsonUpload (file:///C:/Users/cina/AppData/Local/Temp/cinatoken-product-c9-peer-63b6bc03771145cbb90df411dd4671a3/ignoreAnnotations.mjs:17686:20)"
+        },
+        "bundleBytes": 906726,
+        "bundleSha": "a6a2c3592b3781dee00a419c796e9d1e4510f7b46bfa6c67766b9a02b6659251",
+        "providerInitOccurrences": 7,
+        "coreSourceSelected": true,
+        "coreDistSelected": false
+      },
+      {
+        "label": "treeShakingFalse",
+        "calls": [
+          {
+            "url": "http://127.0.0.1:1/observe",
+            "method": "POST"
+          },
+          {
+            "url": "http://127.0.0.1:1/v1/chat/completions",
+            "method": "POST"
+          }
+        ],
+        "error": {
+          "name": "Error",
+          "message": "SYNTHETIC_UPSTREAM_REACHED_NO_NETWORK",
+          "stack": "Error: SYNTHETIC_UPSTREAM_REACHED_NO_NETWORK\n    at globalThis.fetch (file:///C:/Users/cina/AppData/Local/Temp/cinatoken-product-c9-peer-63b6bc03771145cbb90df411dd4671a3/probe.mjs:18:184)\n    at file:///C:/Users/cina/AppData/Local/Temp/cinatoken-product-c9-peer-63b6bc03771145cbb90df411dd4671a3/treeShakingFalse.mjs:72890:24\n    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n    at async withOwnedJsonUpload (file:///C:/Users/cina/AppData/Local/Temp/cinatoken-product-c9-peer-63b6bc03771145cbb90df411dd4671a3/treeShakingFalse.mjs:44493:20)"
+        },
+        "bundleBytes": 3403905,
+        "bundleSha": "baaadfadd3b823b54836a2789f581897e2da46f6b8ebb1f115f2e4512970ebff",
+        "providerInitOccurrences": 4,
+        "coreSourceSelected": true,
+        "coreDistSelected": false
+      }
+    ]
+  },
+  "verdict": "Manual run remains failed (both cases fail). A narrow fixture build bug is proven for product; the separate native minimal cancel deadline remains a real unmet strict assertion and must stay failed. No production/driver/strict code was edited or native Workerd executed by this reviewer."
+}

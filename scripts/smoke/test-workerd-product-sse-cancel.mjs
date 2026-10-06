@@ -144,7 +144,9 @@ writeFileSync(join(output, 'worker-source.mjs'), workerSource, { flag: 'wx' });
 const { build } = require('esbuild');
 const bundled = await build({
   stdin: { contents: workerSource, resolveDir: repo, sourcefile: 'product-sse-cancel-worker.mjs', loader: 'js' },
-  bundle: true, format: 'esm', platform: 'browser', target: 'es2022', conditions: ['workerd', 'worker', 'browser'],
+  // Core's package annotations otherwise remove required endpoint initialization
+  // from this independent fixture bundle. Preserve it without changing the driver.
+  bundle: true, ignoreAnnotations: true, format: 'esm', platform: 'browser', target: 'es2022', conditions: ['workerd', 'worker', 'browser'],
   external: [...builtinModules, ...builtinModules.map(name => 'node:' + name)], metafile: true, write: false,
 });
 assert.equal(bundled.outputFiles.length, 1);
@@ -241,7 +243,7 @@ if (prepare) {
           const data = JSON.parse(frame.slice(6));
           const sequence = caseId === 'product' ? Number(data.choices?.[0]?.delta?.content) : data.sequence;
           assert.ok(Number.isInteger(sequence) && sequence > 0, 'actual downstream SSE sequence');
-          frames.push(sequence); event('client-sse-frame', { caseId, sequence, count: frames.length });
+          frames.push(sequence); event('client-sse-frame', { caseId, frameSequence: sequence, count: frames.length });
           if (frames.length === 3) first.resolve();
         }
         } catch (error) { first.reject(error); request.destroy(); }
@@ -294,7 +296,7 @@ if (prepare) {
             if (++row.chunks > 400) { clearInterval(row.timer); intervals.delete(row.timer); row.ceilingReached = true; response.destroy(new Error('upstream chunk ceiling')); return; }
             const wire = 'data: ' + JSON.stringify({ id:'synthetic', model:'synthetic', object:'chat.completion.chunk', choices:[{ index:0, delta:{content:String(row.chunks)}, finish_reason:null }] }) + '\n\n';
             response.write(wire, error => { if (error) { row.writeErrors++; event('upstream-write-error', { error: errorDetails(error) }); } });
-            event('upstream-chunk', { sequence: row.chunks });
+            event('upstream-chunk', { frameSequence: row.chunks });
           }, 40); intervals.add(row.timer);
         } catch (error) { fatal.push(errorDetails(error)); event('owned-handler-error', { path, error: errorDetails(error) }); response.writeHead(500); response.end(); }
       });

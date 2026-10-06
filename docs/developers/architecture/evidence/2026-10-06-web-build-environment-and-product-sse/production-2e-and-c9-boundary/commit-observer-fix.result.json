@@ -1,0 +1,25 @@
+{
+  "at": "2026-10-06T10:47:36.830Z",
+  "finishedAt": "2026-10-06T10:47:37.002Z",
+  "executable": "C:/Program Files/Git/cmd/git.exe",
+  "args": [
+    "-c",
+    "core.longpaths=true",
+    "commit",
+    "-m",
+    "fix(smoke): use supported Workerd observation redirect mode"
+  ],
+  "cwd": "C:/cinagroup/cinatoken",
+  "actualExit": 0,
+  "signal": null,
+  "stdout": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-foundation-5b11fb36c4074c9da1317f28ef4c7111\\commit-observer-fix.stdout.log",
+    "bytes": 7533,
+    "sha256": "b81ea9abc028036756f12646dfe07ad77c304f7a9358af09e3201337a3600f6c"
+  },
+  "stderr": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-foundation-5b11fb36c4074c9da1317f28ef4c7111\\commit-observer-fix.stderr.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+}
