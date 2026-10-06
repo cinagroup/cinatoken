@@ -16,6 +16,7 @@
 |------|------|------|
 |`DATABASE_DRIVER`|否|与 `DATABASE_URL` 命名对齐。省略默认 `postgres`；MySQL 须 `mysql`（或 `mysql2`）。|
 |`DATABASE_URL`|是|Postgres 或 **`mysql://`** 连接串（与所选驱动一致）|
+|`SHARED_KEY_ENCRYPTION_SECRET`|是|至少 32 字符；Admin 与 Proxy 使用同一个已配置的值，供供应商、Shared Key 与 BYOK 密钥加密。升级既有加密数据时必须保留原值，不生成默认值或直接替换。|
 |`PORT`|否|默认 `8787`|
 |`AUTO_MIGRATE`|否|设为 `1`/`true`/`yes`/`on` 时，容器启动前自动执行幂等迁移（见 §5）。默认关闭。|
 |迁移方式（备选）|—|未设 `AUTO_MIGRATE` 时，使用 **`Dockerfile.migrate`** 镜像，通过 `docker compose --profile migrate run --rm migrate` 执行。|
@@ -26,10 +27,12 @@
 |------|------|------|
 |`DATABASE_DRIVER`|否|与代理服务一致；Node 下省略默认 `postgres`，连 **MySQL 时必须 `mysql`**。|
 |`DATABASE_URL`|是|与代理服务 **同一** Postgres 或 MySQL|
+|`SHARED_KEY_ENCRYPTION_SECRET`|是|至少 32 字符；Admin 与 Proxy 使用同一个已配置的值，供供应商、Shared Key 与 BYOK 密钥加密。升级既有加密数据时必须保留原值，不生成默认值或直接替换。|
 |`PORT`|否|默认 Dockerfile 内为 `8789`|
-|`ADMIN_USERNAME`|是|控制台登录用户名|
-|`ADMIN_PASSWORD`|是|控制台登录密码|
-|`ADMIN_COOKIE_SECURE`|否|**可选加固**：为 `admin_session` 加上 `Secure`。默认不设（明文 HTTP / quickstart 可登录）。仅在已用 HTTPS 访问管理后台、并希望进一步限制会话 Cookie 时设 `1`/`true`/`yes`/`on`（见 [§7.3](#73-生产-https-建议)）。|
+|`CINATOKEN_PUBLIC_API_ORIGIN`|否|Admin 服务端访问 Proxy 的 HTTP(S) origin（公开目录和聊天 BFF）。`gateway.compose.yml` 默认 `http://gateway-proxy:8787`；可在 env 文件中配置自己的服务 origin。它不是浏览器连接地址，也不代替 `CINATOKEN_WEB_PROXY_ORIGINS`。|
+|`ADMIN_USERNAME`|兼容字段|旧用户名配置；外置 Compose 示例仍透传该值，当前浏览器登录使用 CinaAuth。|
+|`ADMIN_PASSWORD`|示例要求|旧密码配置；本示例仍要求填写，但 `/api/auth/login` 的密码登录已返回 410，不证明 CinaAuth 登录可用。|
+|`ADMIN_COOKIE_SECURE`|否|兼容旧 `admin_session` 的可选 `Secure` 标志；当前 CinaAuth 的 `cinatoken_session` 始终为 `Secure` 并需要 HTTPS。该变量不启用密码登录（见 [§7.3](#73-生产-https-建议)）。|
 |`AUTO_MIGRATE`|否|与代理服务相同：真值时启动前自动迁移（见 §5）。默认关闭。|
 |迁移方式（备选）|—|未设 `AUTO_MIGRATE` 时：迁移由 `migrate` 服务独立执行，管理后台仅负责应用进程。|
 
@@ -73,11 +76,13 @@ docker build -f Dockerfile.migrate -t cinatoken-migrate:local .
 docker run --rm -p 8787:8787 \
   -e DATABASE_DRIVER=postgres \
   -e DATABASE_URL='postgres://user:pass@host:5432/cinatoken' \
+  -e SHARED_KEY_ENCRYPTION_SECRET \
   cinatoken-proxy:local
 
 docker run --rm -p 8789:8789 \
   -e DATABASE_DRIVER=postgres \
   -e DATABASE_URL='postgres://user:pass@host:5432/cinatoken' \
+  -e SHARED_KEY_ENCRYPTION_SECRET \
   -e ADMIN_USERNAME=admin \
   -e ADMIN_PASSWORD='replace-me' \
   cinatoken-admin:local
@@ -154,10 +159,30 @@ docker compose -f docker/compose/node-mysql.yml up -d gateway-proxy gateway-admi
 ```bash
 cd docker/examples
 cp env.compose.external.example .env.gateway
-# 编辑镜像标签、DATABASE_URL、ADMIN_PASSWORD 等
+# 编辑镜像标签、DATABASE_URL、SHARED_KEY_ENCRYPTION_SECRET 等；另配置 CinaAuth 与 TLS
 docker compose --env-file .env.gateway -f gateway.compose.yml --profile migrate run --rm migrate
 docker compose --env-file .env.gateway -f gateway.compose.yml up -d
 ```
+
+### 4.3 独立 Web 入口与公开 SSR
+
+[`docker/examples/web-frontend.compose.yml`](../../../docker/examples/web-frontend.compose.yml) 与 `gateway.compose.yml` 合并使用。`GATEWAY_WEB_IMAGE` 和 `GATEWAY_WEB_SSR_IMAGE` 须由同一个已验证的 `WEB_RELEASE_PATH` 构建并固定版本或 digest；入口向 SSR 传递 manifest 摘要，错配会返回 503。发布包须包含保留窗口内的旧资源；Web 和 SSR 镜像的相同来源不能替代回滚与旧标签页资源验收。
+
+Admin 的 `CINATOKEN_PUBLIC_API_ORIGIN` 默认指向本组合内的 `http://gateway-proxy:8787`，因此公开 SSR 经 Admin BFF 读取当前 Proxy；若 Proxy 部署在自己的其他服务 origin，可在 env 文件中覆盖为有效的 HTTP(S) origin。此默认只由 Compose 注入，应用本身的 Cloudflare 绑定及默认 origin 不变。
+
+Web 入口接收 `CINATOKEN_WEB_PUBLIC_ENABLED`、`CINATOKEN_WEB_ACCOUNT_ENABLED` 及组合文件列出的全部 27 个 `CINATOKEN_WEB_ADMIN_*_ENABLED` 路由开关，默认均为 `false`。只按已验收的路由逐项启用；账户和管理开关仅注入 Nginx 入口，公开 SSR 不读取它们。启用公开页面时还须配置 SSR 的 `CINATOKEN_WEB_PUBLIC_ORIGIN` 为实际 HTTPS 公共 origin；`CINATOKEN_WEB_PROXY_ORIGINS` 控制浏览器 CSP 中允许的 Proxy 连接 origin，与服务端的 `CINATOKEN_PUBLIC_API_ORIGIN` 分别配置。
+
+以下命令仅说明组合方式，须先完成数据库迁移、加密密钥、CinaAuth 与 TLS 部署配置，并准备两个经过验证的 Web 镜像：
+
+```bash
+# 在自己的 env 文件中设置 GATEWAY_WEB_IMAGE、GATEWAY_WEB_SSR_IMAGE 和所需 origin。
+# 各 Web 路由开关未设置时保持 false。
+docker compose --env-file docker/deploy/.env.local \
+  -f docker/examples/gateway.compose.yml \
+  -f docker/examples/web-frontend.compose.yml up -d
+```
+
+对外入口须由可信 TLS 反代规范化公共 Host 与 HTTP/HTTPS 协议，并将原始 Web、SSR 和 Admin 端口限制在可信网络。配置透传不代表同源 Cookie/Origin、真实认证写操作、SSE/WebSocket、灰度或回滚已经通过；这些仍须在实际 Docker 拓扑逐项验证。
 
 ## 5. 数据库迁移（Postgres 与 MySQL）
 
@@ -170,6 +195,7 @@ docker run --rm -p 8787:8787 \
   -e AUTO_MIGRATE=1 \
   -e DATABASE_DRIVER=postgres \
   -e DATABASE_URL='postgres://user:pass@host:5432/cinatoken' \
+  -e SHARED_KEY_ENCRYPTION_SECRET \
   cinatoken-proxy:local
 ```
 
@@ -274,11 +300,11 @@ curl -fsS http://127.0.0.1:8789/api/admin/config \
 
 ### 7.3 生产 HTTPS 建议
 
-管理后台会话 Cookie（`admin_session`）默认**不**带 `Secure`，因此无需额外配置即可用 `http://localhost:8789` 或局域网 IP 登录（quickstart 开箱可用）。
+当前浏览器登录使用 CinaAuth OIDC，密码登录 `/api/auth/login` 已返回 410；`ADMIN_USERNAME` / `ADMIN_PASSWORD` 不是登录成功保证。CinaAuth 签发的统一会话 Cookie（`cinatoken_session`）始终带 `Secure`，实际 issuer、应用 origin、回调注册与 HTTPS 均须配置并验证。
 
 **生产强烈建议**将管理后台（以及对外暴露的代理服务）置于 Nginx / Caddy / Traefik 等 **TLS 反代**之后，使用 HTTPS 访问控制台，避免把管理口明文暴露到不可信网络。
 
-若已通过 HTTPS 访问管理后台，可按需开启可选加固 **`ADMIN_COOKIE_SECURE=1`**（Compose / `.env`），让浏览器仅在 HTTPS 下保存并回传会话 Cookie。该变量不是必需项；不设不影响正常登录。
+**`ADMIN_COOKIE_SECURE=1`**（Compose / `.env`）仅为兼容旧 `admin_session` 设置 `Secure`，不改变当前 CinaAuth Cookie 的安全属性，也不启用密码登录。
 
 Nginx 示例（将上游与证书路径换成你的环境）：
 

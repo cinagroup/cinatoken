@@ -23,6 +23,8 @@ services:
       DATABASE_DRIVER: ${DATABASE_DRIVER:-postgres}
       DATABASE_URL: ${DATABASE_URL:?set DATABASE_URL in .env}
       PORT: "8787"
+      # Admin and Proxy must reuse the configured encryption secret (at least 32 characters).
+      SHARED_KEY_ENCRYPTION_SECRET: ${SHARED_KEY_ENCRYPTION_SECRET:?set SHARED_KEY_ENCRYPTION_SECRET in .env (at least 32 characters)}
     healthcheck:
       test:
         [
@@ -45,6 +47,10 @@ services:
       DATABASE_DRIVER: ${DATABASE_DRIVER:-postgres}
       DATABASE_URL: ${DATABASE_URL:?set DATABASE_URL in .env}
       PORT: "8789"
+      # Admin and Proxy must reuse the configured encryption secret (at least 32 characters).
+      SHARED_KEY_ENCRYPTION_SECRET: ${SHARED_KEY_ENCRYPTION_SECRET:?set SHARED_KEY_ENCRYPTION_SECRET in .env (at least 32 characters)}
+      # Node public catalog/chat use this service origin; Cloudflare bindings are separate.
+      CINATOKEN_PUBLIC_API_ORIGIN: ${CINATOKEN_PUBLIC_API_ORIGIN:-http://gateway-proxy:8787}
       ADMIN_USERNAME: ${ADMIN_USERNAME:-admin}
       ADMIN_PASSWORD: ${ADMIN_PASSWORD:?set ADMIN_PASSWORD in .env}
       CINATOKEN_ADMIN_CONFIG_REQUIRE_REVISION: ${CINATOKEN_ADMIN_CONFIG_REQUIRE_REVISION:-false}

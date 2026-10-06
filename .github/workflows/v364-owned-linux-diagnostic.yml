@@ -1,0 +1,47 @@
+name: v364 owned Linux cancellation diagnostic
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: v364-owned-linux-diagnostic-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  cancellation-diagnostic:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+          cache: npm
+      - name: Install the existing dependency lock
+        run: npm ci
+      - name: Run one bounded diagnostic and preserve the strict result
+        timeout-minutes: 7
+        env:
+          DIAGNOSTIC_OUT: ${{ runner.temp }}/v364-owned-once-${{ github.run_id }}-${{ github.run_attempt }}
+        run: >-
+          python3 scripts/diagnostics/v364-owned-linux/execute-owned-linux.py
+          --repo "$GITHUB_WORKSPACE"
+          --out "$DIAGNOSTIC_OUT"
+          --execute-linux
+      - name: Retain SHA-bound raw receipts even when strict cancellation fails
+        if: ${{ always() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: v364-owned-linux-${{ github.sha }}-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            ${{ runner.temp }}/v364-owned-once-${{ github.run_id }}-${{ github.run_attempt }}/
+            scripts/diagnostics/v364-owned-linux/sealed-package.json
+            scripts/diagnostics/v364-owned-linux/source-inputs.json
+            .github/workflows/v364-owned-linux-diagnostic.yml
+          if-no-files-found: error
+          retention-days: 14
