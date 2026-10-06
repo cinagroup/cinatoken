@@ -1,0 +1,13 @@
+{
+  "integrity": "sha512-Thbli+OlOj+iMPYFBVBfJ3OmCAnaSyNn4M1vz9T6Gka5Jt9ba/HIR56joy65tY6kx/FCF5VXNB819Y7/GUrBGA==",
+  "shasum": "304b3636add88ba7d936760dd50ece006dea95f9",
+  "tarball": "https://registry.npmjs.org/ajv/-/ajv-8.20.0.tgz",
+  "fileCount": 466,
+  "unpackedSize": 1033496,
+  "signatures": [
+    {
+      "keyid": "SHA256:DhQ8wR5APBvFHLF/+Tc+AYvPOdTpcIDqOhxsBHRwC7U",
+      "sig": "MEUCIBfrVdhp5WGXcUASldcdcwqMi+toiB4jnfvInba3JZgCAiEA+gqJmfPQOJlXKjVEQlsjXbBKFxga9bRsHx5m9lSgRyM="
+    }
+  ]
+}

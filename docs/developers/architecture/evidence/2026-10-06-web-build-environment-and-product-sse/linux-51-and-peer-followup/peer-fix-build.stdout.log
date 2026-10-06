@@ -1,0 +1,159 @@
+
+> cinatoken@2.8.0 build:web
+> npm run build:check -w @cinatoken/web
+
+
+> @cinatoken/web@2.8.0 build:check
+> npm run typecheck && rsbuild build --no-env
+
+
+> @cinatoken/web@2.8.0 typecheck
+> tsc -b && tsc -p edge/tsconfig.json
+
+Rsbuild v2.2.10
+
+info    build started...
+ready   built in 3.63s (node)
+ready   built in 4.66s (web)
+ready   built in 5.13s (worker)
+
+File (web)                                                             Size        Gzip   
+dist\static\js\async\iq.a388765ce0.js                                  0.42 kB     0.29 kB
+dist\static\js\async\iqr.6670b05de2.js                                 0.42 kB     0.29 kB
+dist\static\js\async\hl.dca42aa9ae.js                                  0.43 kB     0.31 kB
+dist\static\js\async\6.8c55d96048.js                                   0.44 kB     0.32 kB
+dist\static\js\async\y.1ea567ab9f.js                                   0.44 kB     0.32 kB
+dist\static\js\async\t.549b6ff41e.js                                   0.45 kB     0.30 kB
+dist\static\js\async\tv.2d7d784697.js                                  0.45 kB     0.30 kB
+dist\static\js\async\aw.27832b5152.js                                  0.53 kB     0.36 kB
+dist\static\js\async\j.21097c1f58.js                                   0.55 kB     0.35 kB
+dist\static\js\async\bj.2c7236e237.js                                  0.67 kB     0.42 kB
+dist\static\js\async\co.de074c5aa2.js                                  0.67 kB     0.43 kB
+dist\static\js\async\0.06dde32190.js                                   0.68 kB     0.42 kB
+dist\index.html                                                        0.74 kB     0.43 kB
+dist\static\js\async\ht.6a9fbbf40c.js                                  1.2 kB      0.67 kB
+dist\static\js\async\fd.7dd19fd28b.js                                  1.7 kB      0.86 kB
+dist\static\js\async\67.7dffc47743.js                                  2.9 kB      1.1 kB
+dist\static\js\async\ql.db40cd4976.js                                  3.7 kB      1.3 kB
+dist\static\js\index.89887bd39e.js                                     4.8 kB      2.7 kB
+dist\static\js\async\r4.4d0fa2a207.js                                  5.1 kB      2.2 kB
+dist\static\js\async\bs.97d2e91653.js                                  5.7 kB      2.2 kB
+dist\static\js\async\bsl.2fb1f3ab1c.js                                 5.7 kB      2.2 kB
+dist\static\js\async\f.963b5743eb.js                                   5.9 kB      2.5 kB
+dist\static\js\async\4.5452e5a6e4.js                                   6.1 kB      2.3 kB
+dist\static\js\async\4z.d4288c9748.js                                  6.1 kB      2.3 kB
+dist\static\js\async\a.5180dd3ac4.js                                   6.4 kB      2.0 kB
+dist\static\js\async\ky.76b4a4e4dd.js                                  7.4 kB      2.8 kB
+dist\static\js\async\ky2.c385a53600.js                                 7.4 kB      2.8 kB
+dist\static\font\public-sans-vietnamese-wght-normal.7b0fa8550c.woff2   7.7 kB   
+dist\static\js\async\54.41b6543429.js                                  7.9 kB      3.0 kB
+dist\static\js\async\f6.2860ba4ed0.js                                  8.4 kB      3.0 kB
+dist\static\js\async\p.a4236303c6.js                                   8.4 kB      3.1 kB
+dist\static\font\lora-vietnamese-wght-normal.19149cdf69.woff2          9.0 kB   
+dist\static\js\async\5p.18ac17c181.js                                  9.1 kB      3.3 kB
+dist\static\js\async\h8.8146f657b7.js                                  9.4 kB      3.4 kB
+dist\static\js\async\89.d47ebac4b9.js                                  9.5 kB      3.6 kB
+dist\static\js\async\9.c52e089d75.js                                   9.7 kB      4.0 kB
+dist\static\js\async\im.89f48440bc.js                                  10.1 kB     3.4 kB
+dist\static\js\async\cn.e7cc2f2c5b.js                                  10.5 kB     3.1 kB
+dist\static\js\async\w.676c10b1ee.js                                   10.7 kB     3.9 kB
+dist\static\js\async\hm.5f69221ce8.js                                  10.8 kB     3.6 kB
+dist\static\js\async\gt.534a770bcd.js                                  10.8 kB     3.4 kB
+dist\static\js\async\1j.9d4e22251c.js                                  11.4 kB     4.3 kB
+dist\static\js\async\3.744dd7185a.js                                   11.5 kB     3.7 kB
+dist\static\js\async\ta.350a9de34e.js                                  11.6 kB     4.0 kB
+dist\static\js\async\14.b59e7ccab4.js                                  11.9 kB     4.4 kB
+dist\static\js\async\x.5ccfdc8952.js                                   12.0 kB     4.0 kB
+dist\static\js\async\jr.e9cc6b542c.js                                  12.7 kB     4.6 kB
+dist\static\js\async\hw.419e09a2b0.js                                  12.7 kB     3.3 kB
+dist\static\js\async\1.c62089dce7.js                                   13.4 kB     3.9 kB
+dist\static\js\async\8.c881539ada.js                                   13.4 kB     4.3 kB
+dist\static\js\async\u.63f697a901.js                                   13.6 kB     4.6 kB
+dist\static\js\async\kh.e649984aff.js                                  14.0 kB     4.6 kB
+dist\static\js\async\26.1fdca7b54f.js                                  14.0 kB     4.6 kB
+dist\static\js\async\o.2011758f19.js                                   14.8 kB     4.3 kB
+dist\static\js\async\o7.2998e7336b.js                                  16.5 kB     5.1 kB
+dist\favicon.ico                                                       17.0 kB  
+dist\static\js\async\oz.7dfe82acee.js                                  17.2 kB     4.8 kB
+dist\static\font\lora-symbols-wght-normal.0f558387a7.woff2             17.2 kB  
+dist\static\js\async\tg.eb25241370.js                                  17.8 kB     5.1 kB
+dist\static\font\public-sans-latin-ext-wght-normal.0afa0ba4c0.woff2    18.5 kB  
+dist\static\js\async\ja.60d8f63317.js                                  19.2 kB     5.4 kB
+dist\static\js\async\jf.87902902eb.js                                  19.8 kB     6.9 kB
+dist\static\font\lora-latin-ext-wght-normal.ffcbee2da9.woff2           20.1 kB  
+dist\static\js\async\v.075a7b0bf5.js                                   20.2 kB     5.8 kB
+dist\static\js\async\d.d6ddc83a25.js                                   20.8 kB     6.3 kB
+dist\static\font\lora-cyrillic-wght-normal.e27a865958.woff2            21.2 kB  
+dist\static\js\async\i.a020e5679a.js                                   22.1 kB     6.6 kB
+dist\static\js\async\4b.f4f7b8a967.js                                  22.3 kB     7.8 kB
+dist\static\js\async\q.cba7daf190.js                                   23.3 kB     6.3 kB
+dist\static\font\lora-cyrillic-ext-wght-normal.a558ae9346.woff2        23.6 kB  
+dist\static\js\async\3t.f39e1e3229.js                                  23.8 kB     6.8 kB
+dist\static\js\async\a6.4e5eed0fc0.js                                  24.3 kB     7.0 kB
+dist\static\js\async\am.002b408f04.js                                  24.3 kB     7.9 kB
+dist\static\js\async\c.d64200f930.js                                   25.7 kB     6.7 kB
+dist\static\font\public-sans-latin-wght-normal.035c7fe496.woff2        26.8 kB  
+dist\static\js\async\30.5583d3d88f.js                                  27.7 kB     8.7 kB
+dist\static\js\async\k5.36a7e38a29.js                                  28.4 kB     8.3 kB
+dist\static\font\lora-math-wght-normal.b7769d42e6.woff2                29.2 kB  
+dist\static\js\async\2.282bd73d4f.js                                   29.8 kB     8.4 kB
+dist\static\js\async\h.25c3c9f743.js                                   30.2 kB     8.0 kB
+dist\static\js\async\b8.524fe2dd8f.js                                  31.8 kB     11.3 kB
+dist\static\js\async\61.5ea3409f4c.js                                  32.5 kB     8.1 kB
+dist\static\js\async\rg.b466c11fe6.js                                  34.7 kB     9.1 kB
+dist\static\js\async\b.2a003a189b.js                                   35.0 kB     10.0 kB
+dist\static\font\lora-latin-wght-normal.f60a385cfb.woff2               37.8 kB  
+dist\static\js\async\g.c087faaabc.js                                   39.2 kB     10.1 kB
+dist\static\js\async\ub.7f359298ae.js                                  39.6 kB     9.8 kB
+dist\static\js\async\5.17c9f87c01.js                                   46.1 kB     11.3 kB
+dist\static\js\async\r.deb2462237.js                                   50.1 kB     12.7 kB
+dist\static\js\async\4e.2ed6a1eefa.js                                  50.6 kB     17.2 kB
+dist\static\js\async\jq.063f921b65.js                                  52.2 kB     12.4 kB
+dist\static\js\async\vs.7dc3e3aadd.js                                  59.4 kB     15.2 kB
+dist\static\js\async\z.bb776bab11.js                                   59.7 kB     14.4 kB
+dist\static\js\async\bl.ef3e82126a.js                                  61.8 kB     14.2 kB
+dist\static\js\async\ba.5eb70cced0.js                                  62.5 kB     16.7 kB
+dist\static\js\async\m.a725b1a755.js                                   66.5 kB     18.4 kB
+dist\static\js\async\qi.3c0df390c8.js                                  73.3 kB     27.2 kB
+dist\static\js\async\e.7112d105fb.js                                   139.0 kB    35.7 kB
+dist\static\js\async\n.b19cd183fe.js                                   144.4 kB    43.3 kB
+dist\static\js\async\v2.c43427c606.js                                  197.0 kB    42.4 kB
+dist\static\js\async\lib-react.6356ddf42c.js                           218.9 kB    68.9 kB
+dist\static\css\index.3797954594.css                                   237.9 kB    36.7 kB
+dist\static\js\async\6u.79a8483cd5.js                                  238.4 kB    74.9 kB
+dist\static\js\async\k.1d7e437b49.js                                   348.1 kB    99.8 kB
+dist\static\js\async\5v.7f553b592b.js                                  850.2 kB    264.3 kB
+
+                                                              Total:   4169.5 kB   1362.4 kB
+
+File (worker)                  Size        Gzip   
+dist-server\worker\index.mjs   1206.0 kB   375.5 kB
+
+File (node)                  Size        
+dist-server\node\4z.mjs      0.83 kB  
+dist-server\node\w.mjs       1.0 kB   
+dist-server\node\iq.mjs      1.7 kB   
+dist-server\node\t.mjs       1.9 kB   
+dist-server\node\f.mjs       3.3 kB   
+dist-server\node\e.mjs       3.6 kB   
+dist-server\node\r4.mjs      6.2 kB   
+dist-server\node\u.mjs       6.9 kB   
+dist-server\node\r.mjs       11.3 kB  
+dist-server\node\4h.mjs      15.9 kB  
+dist-server\node\d.mjs       16.3 kB  
+dist-server\node\y.mjs       18.8 kB  
+dist-server\node\i4.mjs      20.6 kB  
+dist-server\node\9.mjs       21.1 kB  
+dist-server\node\4.mjs       21.4 kB  
+dist-server\node\a.mjs       29.4 kB  
+dist-server\node\6.mjs       32.6 kB  
+dist-server\node\j.mjs       52.6 kB  
+dist-server\node\i.mjs       100.1 kB 
+dist-server\node\3.mjs       106.9 kB 
+dist-server\node\2.mjs       142.8 kB 
+dist-server\node\5.mjs       636.6 kB 
+dist-server\node\7.mjs       714.4 kB 
+dist-server\node\index.mjs   1859.6 kB
+
+                    Total:   3825.9 kB
+

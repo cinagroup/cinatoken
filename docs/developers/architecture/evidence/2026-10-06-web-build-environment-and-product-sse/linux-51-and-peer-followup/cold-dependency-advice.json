@@ -1,0 +1,88 @@
+{
+  "schema": "web-cold-dependency-readonly-advice-v1",
+  "createdAt": "2026-10-06T10:25:07.357Z",
+  "readOnlyResearch": true,
+  "repoChanged": false,
+  "gitInvoked": false,
+  "installInvoked": false,
+  "networkInvoked": false,
+  "ciInvoked": false,
+  "testsInvoked": false,
+  "collectionActualExit": 0,
+  "ciDependencyActualExit": 1,
+  "sourceLog": {
+    "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-web-foundation-5b11fb36c4074c9da1317f28ef4c7111/product-linux-artifact/product-sse-web-dependencies-37448535797-1.log",
+    "bytes": 107659,
+    "sha256": "223da0f9de323cc3c0db72db94debdf06d078a7d4ed2146816a92774b6e73720"
+  },
+  "sourcePinsObserved": {
+    "rootPackage": {
+      "bytes": 5550,
+      "sha256": "6454126bb47e39c135d3178ce3500b0901581b5b4f9b4b0067ace88e894da3aa"
+    },
+    "webPackage": {
+      "bytes": 4251,
+      "sha256": "c134e11929ef1cedca08e53ca1fec740efd1b8ba0c9750736a0f2acd19c49009"
+    },
+    "rootLock": {
+      "bytes": 830546,
+      "sha256": "f9c65b6e373a231d52d6eda634bb5f947dda3174734cd70e2b811e09fff0b6f0"
+    }
+  },
+  "ajv": {
+    "resolver": "5.9.1",
+    "optionalPeers": {
+      "ajv": "^8.12.0",
+      "ajvFormats": "^2.1.1"
+    },
+    "observedIncompatible": {
+      "ajv": "6.14.0",
+      "ajvFormats": "3.0.1"
+    },
+    "existingCompatibleLocked": {
+      "ajv": "8.20.0",
+      "ajvFormats": "2.1.1"
+    },
+    "recommendation": "Declare compatible ajv and ajv-formats in Web workspace; preserve ESLint AJV6 and MCP SDK formats3 as separate version islands; regenerate only necessary root lock layout",
+    "candidateCommand": "npm install --package-lock-only --ignore-scripts --save-exact -w @cinatoken/web ajv@8.20.0 ajv-formats@2.1.1",
+    "activeZodResolverFiles": 23,
+    "ajvAdapterActiveImportObserved": false,
+    "actualInstallCompatibilityValidated": false
+  },
+  "wasm": {
+    "extraneous": [
+      "@emnapi/core@1.11.3",
+      "@emnapi/runtime@1.11.3",
+      "@emnapi/wasi-threads@1.2.3",
+      "@napi-rs/wasm-runtime@0.2.12",
+      "@tybys/wasm-util@0.10.4"
+    ],
+    "lockOptional": true,
+    "sourceParents": "unrs/oxc/rspack/Tailwind WASI CPUwasm32 and Sharp WASM/FreeBSD optional branches",
+    "runtime02OnlyParent": "@unrs/resolver-binding-wasm32-wasi@1.11.1 cpu wasm32",
+    "observedFailure": "Linux platform parents omitted; hoisted descendants remain physically installed without active Linux incoming edges",
+    "npmBugRootCauseProven": false,
+    "lockOnlyRegenerationGuaranteedFix": false,
+    "doNotAddUnusedDirectDependencies": true,
+    "doNotFabricateCpuOs": true,
+    "doNotOmitAllOptionalDependencies": true,
+    "doNotFilterNpmLs": true
+  },
+  "requiredValidation": [
+    "Record exact Node22/npm version from actual runner",
+    "Fresh Linux npm ci --ignore-scripts with committed candidate root lock",
+    "Unfiltered npm ls --all -w @cinatoken/web, preserve actual failure if any",
+    "Check other workspaces AJV6/SDK formats3 remain valid",
+    "Run required Web types/lint/format/unit/build for changed package and lock"
+  ],
+  "localRuntime": {
+    "node": "v24.14.1",
+    "npm": "11.11.0",
+    "notCiVersionClaim": true
+  },
+  "readCommandLimitations": [
+    "One rg missing-match produced outer code1; no test or installation was executed",
+    "One read command reported nonexistent guessed workflow/.npmrc paths before exact workflow was found; no inference relies on absent paths"
+  ],
+  "overallPeerGatePassed": false
+}

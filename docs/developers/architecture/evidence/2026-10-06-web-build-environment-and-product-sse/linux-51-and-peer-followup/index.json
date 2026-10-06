@@ -1,0 +1,476 @@
+{
+  "at": "2026-10-06T10:29:33.288Z",
+  "web": {
+    "sha": "51a72a0b927c4d7ce59da1ea6c4feb30157a7c48",
+    "run": 37448458200,
+    "jobs": 2,
+    "steps": 37,
+    "conclusion": "success",
+    "artifactDownloaded": true,
+    "artifactDeployed": false
+  },
+  "product": {
+    "run": 37448535797,
+    "conclusion": "failure",
+    "actualChildExit": 1,
+    "timedOut": false,
+    "fallbackSignals": [],
+    "ownedGroupRemaining": false,
+    "cases": [
+      "product FAIL before RST",
+      "minimal FAIL before RST"
+    ],
+    "cause": "Original response status/headers/body absent; not proven.",
+    "sourceCancelProven": false
+  },
+  "dependency": {
+    "coldLsExit": 1,
+    "peerConflicts": [
+      "AJV6 vs optional ^8.12",
+      "formats3 vs optional ^2.1.1"
+    ],
+    "wasmOrphans": 5,
+    "peerCandidate": [
+      "ajv8.20.0",
+      "ajv-formats2.1.1"
+    ],
+    "existingVersionsAndIntegritiesPreserved": true,
+    "officialIntegrityVerified": true,
+    "newColdLinuxNotExecuted": true,
+    "localFullLsExit": 1,
+    "localUncleanInstallNotAcceptance": true
+  },
+  "localAfterPeerChange": {
+    "unit": 1600,
+    "skip": 0,
+    "build": 0,
+    "format": 0
+  },
+  "files": [
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-foundation-5b11fb36c4074c9da1317f28ef4c7111\\push-foundation.stdout.log",
+      "path": "push-foundation.stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-foundation-5b11fb36c4074c9da1317f28ef4c7111\\push-foundation.stderr.log",
+      "path": "push-foundation.stderr.log",
+      "bytes": 78,
+      "sha256": "106e5f8af4582fa7d064e85468df818bd9e5c9e33b92adbb4d56a43c170fd0c3"
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-foundation-5b11fb36c4074c9da1317f28ef4c7111\\push-foundation.result.json",
+      "path": "push-foundation.result.json",
+      "bytes": 811,
+      "sha256": "521030dfc56f0c7b1b33b8b67b77e19361f2b66299fd812d0b273c317a31f97a"
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-foundation-5b11fb36c4074c9da1317f28ef4c7111\\dispatch-product-transport.stdout.log",
+      "path": "dispatch-product-transport.stdout.log",
+      "bytes": 64,
+      "sha256": "e4de8aed7af0b6c375d5c8453c868ba5539d47b9fc5b86626e9e834266ad9ab7"
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-foundation-5b11fb36c4074c9da1317f28ef4c7111\\dispatch-product-transport.stderr.log",
+      "path": "dispatch-product-transport.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-foundation-5b11fb36c4074c9da1317f28ef4c7111\\dispatch-product-transport.result.json",
+      "path": "dispatch-product-transport.result.json",
+      "bytes": 861,
+      "sha256": "ebaa263ae298a3e3d7fcba465744ca3d99f048032de103e2d71795f6adb1d094"
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-foundation-5b11fb36c4074c9da1317f28ef4c7111\\ci-51-discovery.stdout.log",
+      "path": "ci-51-discovery.stdout.log",
+      "bytes": 963,
+      "sha256": "fd9d12a0511f4d30aa87af9ec3b5d07a10f650e7e8ea6ce14d24ac4464f6b7b8"
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-foundation-5b11fb36c4074c9da1317f28ef4c7111\\ci-51-discovery.stderr.log",
+      "path": "ci-51-discovery.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-foundation-5b11fb36c4074c9da1317f28ef4c7111\\ci-51-discovery.result.json",
+      "path": "ci-51-discovery.result.json",
+      "bytes": 924,
+      "sha256": "e1e4dbc1a8b7a7deb2b2742fb19b95806cfa570b432b3b3739580a8c269f7bf6"
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-foundation-5b11fb36c4074c9da1317f28ef4c7111\\product-linux-terminal-watch.stdout.log",
+      "path": "product-linux-terminal-watch.stdout.log",
+      "bytes": 2039,
+      "sha256": "02e40cca274b2740a5e7d452046f61541f7f263cefae710b5332ae7bd269525c"
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-foundation-5b11fb36c4074c9da1317f28ef4c7111\\product-linux-terminal-watch.stderr.log",
+      "path": "product-linux-terminal-watch.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-foundation-5b11fb36c4074c9da1317f28ef4c7111\\product-linux-terminal-watch.result.json",
+      "path": "product-linux-terminal-watch.result.json",
+      "bytes": 858,
+      "sha256": "3e8bf4b554f72b42d0aaa77a3b4542f10fa06e68f86e6c260765397f14c2d984"
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-foundation-5b11fb36c4074c9da1317f28ef4c7111\\web-linux-terminal-watch.stdout.log",
+      "path": "web-linux-terminal-watch.stdout.log",
+      "bytes": 16127,
+      "sha256": "c06397fb58c73027401977d971ac9d3d6964529c4cc59f0ea8764e2f5eccfcd4"
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-foundation-5b11fb36c4074c9da1317f28ef4c7111\\web-linux-terminal-watch.stderr.log",
+      "path": "web-linux-terminal-watch.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-foundation-5b11fb36c4074c9da1317f28ef4c7111\\web-linux-terminal-watch.result.json",
+      "path": "web-linux-terminal-watch.result.json",
+      "bytes": 851,
+      "sha256": "5ed77f40b8f15fcf4dcf9853609b6969b58f5c94a0be3839f5a6b20a5021ce10"
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-foundation-5b11fb36c4074c9da1317f28ef4c7111\\product-linux-metadata.stdout.log",
+      "path": "product-linux-metadata.stdout.log",
+      "bytes": 2173,
+      "sha256": "c439a2bbf7a3e6c6bf621a2c2876e3e97e0706470ddf19530483e232fb2bce09"
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-foundation-5b11fb36c4074c9da1317f28ef4c7111\\product-linux-metadata.stderr.log",
+      "path": "product-linux-metadata.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-foundation-5b11fb36c4074c9da1317f28ef4c7111\\product-linux-metadata.result.json",
+      "path": "product-linux-metadata.result.json",
+      "bytes": 857,
+      "sha256": "e7af3dd276ba10a42929ea10dfae17975186b7cddf443bb4327a1317310b6cec"
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-foundation-5b11fb36c4074c9da1317f28ef4c7111\\product-linux-log.stdout.log",
+      "path": "product-linux-log.stdout.log",
+      "bytes": 33032,
+      "sha256": "d76f74650ca3d2a89ed7d5bf0ba980003e2c507d921bba326ffbc3ea981f39ee"
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-foundation-5b11fb36c4074c9da1317f28ef4c7111\\product-linux-log.stderr.log",
+      "path": "product-linux-log.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-foundation-5b11fb36c4074c9da1317f28ef4c7111\\product-linux-log.result.json",
+      "path": "product-linux-log.result.json",
+      "bytes": 800,
+      "sha256": "a6c7e806c02f8b9dfd1adb05ad91553a0356029a7392603f2ac12e69f2808e5b"
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-foundation-5b11fb36c4074c9da1317f28ef4c7111\\product-linux-download.stdout.log",
+      "path": "product-linux-download.stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-foundation-5b11fb36c4074c9da1317f28ef4c7111\\product-linux-download.stderr.log",
+      "path": "product-linux-download.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-foundation-5b11fb36c4074c9da1317f28ef4c7111\\product-linux-download.result.json",
+      "path": "product-linux-download.result.json",
+      "bytes": 978,
+      "sha256": "8872ca4379750df3e81590cbbf5969239abbe43ecc558ad9bb347323cfbdc6ea"
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-foundation-5b11fb36c4074c9da1317f28ef4c7111\\web-linux-metadata.stdout.log",
+      "path": "web-linux-metadata.stdout.log",
+      "bytes": 7302,
+      "sha256": "558b67dfc228810292ed418562313ac6e24e4adcc5202ff5c98aaefffff54d87"
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-foundation-5b11fb36c4074c9da1317f28ef4c7111\\web-linux-metadata.stderr.log",
+      "path": "web-linux-metadata.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-foundation-5b11fb36c4074c9da1317f28ef4c7111\\web-linux-metadata.result.json",
+      "path": "web-linux-metadata.result.json",
+      "bytes": 849,
+      "sha256": "50b24d8088928aa552e908a3cb2ca234abc46dcaa597b43c37a5499aaf12ffab"
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-foundation-5b11fb36c4074c9da1317f28ef4c7111\\web-linux-log.stdout.log",
+      "path": "web-linux-log.stdout.log.gz",
+      "bytes": 237235,
+      "sha256": "e077739610eaeb7f0fce9ae3526dcbdef8325a62a3238496ca62838f70ab305c",
+      "decodedBytes": 2201071,
+      "decodedSha256": "9094ecf1ae91cf8255b14a625b615024bb2e862aea4d137772b33ec6c5f47206"
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-foundation-5b11fb36c4074c9da1317f28ef4c7111\\web-linux-log.stderr.log",
+      "path": "web-linux-log.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-foundation-5b11fb36c4074c9da1317f28ef4c7111\\web-linux-log.result.json",
+      "path": "web-linux-log.result.json",
+      "bytes": 794,
+      "sha256": "11a53081d8191027852c233698ffdd6538daf675a6325597860855286e804234"
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-foundation-5b11fb36c4074c9da1317f28ef4c7111\\web-linux-download.stdout.log",
+      "path": "web-linux-download.stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-foundation-5b11fb36c4074c9da1317f28ef4c7111\\web-linux-download.stderr.log",
+      "path": "web-linux-download.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-foundation-5b11fb36c4074c9da1317f28ef4c7111\\web-linux-download.result.json",
+      "path": "web-linux-download.result.json",
+      "bytes": 914,
+      "sha256": "582f1102f6712f5ff4af91b21d1d8303d569522023836d29fb0ec730124e294e"
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-foundation-5b11fb36c4074c9da1317f28ef4c7111\\install-web-peer-island.stdout.log",
+      "path": "install-web-peer-island.stdout.log",
+      "bytes": 115,
+      "sha256": "785cf4c5df782ada44f96bdeb1737d181940cc4dfe5be1c91db3d35205d8eb68"
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-foundation-5b11fb36c4074c9da1317f28ef4c7111\\install-web-peer-island.stderr.log",
+      "path": "install-web-peer-island.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-foundation-5b11fb36c4074c9da1317f28ef4c7111\\install-web-peer-island.result.json",
+      "path": "install-web-peer-island.result.json",
+      "bytes": 950,
+      "sha256": "326f1dd2bc49122ad5ccb5976269f5475f182e854a944d49b9784827fa333dd9"
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-foundation-5b11fb36c4074c9da1317f28ef4c7111\\web-dependency-full-after.stdout.log",
+      "path": "web-dependency-full-after.stdout.log",
+      "bytes": 167208,
+      "sha256": "230ee535c0c2fa75dafda11e0217f06c36a61944e23790cd56cc25d1ac409d28"
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-foundation-5b11fb36c4074c9da1317f28ef4c7111\\web-dependency-full-after.stderr.log",
+      "path": "web-dependency-full-after.stderr.log",
+      "bytes": 27175,
+      "sha256": "187e19360ba7b1efc9868dc3a484668c389147b3bf3300b79ec89f11ce114ead"
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-foundation-5b11fb36c4074c9da1317f28ef4c7111\\web-dependency-full-after.result.json",
+      "path": "web-dependency-full-after.result.json",
+      "bytes": 882,
+      "sha256": "bd71d29dc86ef1d6101d6526a0f4ffa32ff40d40215a7228f8b6d9238336f266"
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-foundation-5b11fb36c4074c9da1317f28ef4c7111\\peer-ajv-official.stdout.log",
+      "path": "peer-ajv-official.stdout.log",
+      "bytes": 500,
+      "sha256": "c55b8c8184ffa9c27825559b3c981fa7775931b2f1dfb1bfc2b7b09fd556a03f"
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-foundation-5b11fb36c4074c9da1317f28ef4c7111\\peer-ajv-official.stderr.log",
+      "path": "peer-ajv-official.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-foundation-5b11fb36c4074c9da1317f28ef4c7111\\peer-ajv-official.result.json",
+      "path": "peer-ajv-official.result.json",
+      "bytes": 905,
+      "sha256": "8613bdad476a8bf256d80f9623b748acf6067dc96d2e7b759031b6bc5b73048c"
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-foundation-5b11fb36c4074c9da1317f28ef4c7111\\peer-formats-official.stdout.log",
+      "path": "peer-formats-official.stdout.log",
+      "bytes": 1429,
+      "sha256": "f7db0b1f26f6687c13f07825baf0a3b31a72746ef80f52530a9c3b71a1f2b7f0"
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-foundation-5b11fb36c4074c9da1317f28ef4c7111\\peer-formats-official.stderr.log",
+      "path": "peer-formats-official.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-foundation-5b11fb36c4074c9da1317f28ef4c7111\\peer-formats-official.result.json",
+      "path": "peer-formats-official.result.json",
+      "bytes": 921,
+      "sha256": "0d53fde3f2ac2cd0d41422b0370e7a73fc78f615e21927330a680b9f3b247cbf"
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-foundation-5b11fb36c4074c9da1317f28ef4c7111\\peer-fix-unit.stdout.log",
+      "path": "peer-fix-unit.stdout.log",
+      "bytes": 158895,
+      "sha256": "44e858d36106116fb268852550129fd7b680c4426d1d8b978562e73fe95f62b0"
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-foundation-5b11fb36c4074c9da1317f28ef4c7111\\peer-fix-unit.stderr.log",
+      "path": "peer-fix-unit.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-foundation-5b11fb36c4074c9da1317f28ef4c7111\\peer-fix-unit.result.json",
+      "path": "peer-fix-unit.result.json",
+      "bytes": 826,
+      "sha256": "47bfe9e17d052707cc597a11ce46b04a3fbe587d43b9bfc3f0f16bc530fb89b3"
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-foundation-5b11fb36c4074c9da1317f28ef4c7111\\peer-fix-build.stdout.log",
+      "path": "peer-fix-build.stdout.log",
+      "bytes": 11057,
+      "sha256": "fa083581bc666c56638d091a3d5186f6092e116ed744dd6cc8af580c30aaa846"
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-foundation-5b11fb36c4074c9da1317f28ef4c7111\\peer-fix-build.stderr.log",
+      "path": "peer-fix-build.stderr.log",
+      "bytes": 88,
+      "sha256": "450f7d9b44a0069e2dc02e9a02a23203117a5bb107a866c9b2ae7784994db796"
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-foundation-5b11fb36c4074c9da1317f28ef4c7111\\peer-fix-build.result.json",
+      "path": "peer-fix-build.result.json",
+      "bytes": 829,
+      "sha256": "f2220be9e11f75f2d76b3d8103ccfed9941d49dea6d51af865f740b83fddef97"
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-foundation-5b11fb36c4074c9da1317f28ef4c7111\\peer-fix-format.stdout.log",
+      "path": "peer-fix-format.stdout.log",
+      "bytes": 526,
+      "sha256": "2b0035c6efe61dde18467e93abfae487b1218cc9033b8e77a6e847442bf4b52c"
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-foundation-5b11fb36c4074c9da1317f28ef4c7111\\peer-fix-format.stderr.log",
+      "path": "peer-fix-format.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-foundation-5b11fb36c4074c9da1317f28ef4c7111\\peer-fix-format.result.json",
+      "path": "peer-fix-format.result.json",
+      "bytes": 863,
+      "sha256": "ebcbf8bd4c6fa1b148209b1f9e5dabd44cadd679c4c1d76b9aeafa1e259dfeb1"
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-foundation-5b11fb36c4074c9da1317f28ef4c7111\\fixture-response-diagnostic-syntax.stdout.log",
+      "path": "fixture-response-diagnostic-syntax.stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-foundation-5b11fb36c4074c9da1317f28ef4c7111\\fixture-response-diagnostic-syntax.stderr.log",
+      "path": "fixture-response-diagnostic-syntax.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-foundation-5b11fb36c4074c9da1317f28ef4c7111\\fixture-response-diagnostic-syntax.result.json",
+      "path": "fixture-response-diagnostic-syntax.result.json",
+      "bytes": 845,
+      "sha256": "697cf24d85521191abecd408de884b0e4032dbd0009edca7b38f5cdc619150e0"
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-foundation-5b11fb36c4074c9da1317f28ef4c7111\\fixture-response-diagnostic-prepare.stdout.log",
+      "path": "fixture-response-diagnostic-prepare.stdout.log",
+      "bytes": 289,
+      "sha256": "6e33a1039be97c6ea5654ef73049802ac512c66512f6f70c711bd08aacba20dc"
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-foundation-5b11fb36c4074c9da1317f28ef4c7111\\fixture-response-diagnostic-prepare.stderr.log",
+      "path": "fixture-response-diagnostic-prepare.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-foundation-5b11fb36c4074c9da1317f28ef4c7111\\fixture-response-diagnostic-prepare.result.json",
+      "path": "fixture-response-diagnostic-prepare.result.json",
+      "bytes": 1064,
+      "sha256": "b289ce23956dbf0385f47b4a7cf1f11b682993858304b8afb7b2f5f6e55b5cfd"
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-foundation-5b11fb36c4074c9da1317f28ef4c7111\\product-linux-artifact\\product-sse-cancel-37448535797-1\\executor.json",
+      "path": "product-artifact/product-sse-cancel-37448535797-1/executor.json",
+      "bytes": 940,
+      "sha256": "3c344e697356da57d0e33f5cb7fc84c0548c860fc40d8e31a780d40410587b43"
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-foundation-5b11fb36c4074c9da1317f28ef4c7111\\product-linux-artifact\\product-sse-cancel-37448535797-1\\fixture\\bundle-metafile.json",
+      "path": "product-artifact/product-sse-cancel-37448535797-1/fixture/bundle-metafile.json",
+      "bytes": 458089,
+      "sha256": "1cee8fdc08060951013e24191acbac0aa709642c82b94df4f492e980a9de46fe"
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-foundation-5b11fb36c4074c9da1317f28ef4c7111\\product-linux-artifact\\product-sse-cancel-37448535797-1\\fixture\\events.ndjson",
+      "path": "product-artifact/product-sse-cancel-37448535797-1/fixture/events.ndjson",
+      "bytes": 2606,
+      "sha256": "0296ebaa83c202b527e026acc759c53758c44c424e4e4ead0e9a328a46950ee3"
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-foundation-5b11fb36c4074c9da1317f28ef4c7111\\product-linux-artifact\\product-sse-cancel-37448535797-1\\fixture\\report.json",
+      "path": "product-artifact/product-sse-cancel-37448535797-1/fixture/report.json",
+      "bytes": 125282,
+      "sha256": "f153329c8f1f50c71699c796f5a3b4cb5d3eecc067e493184963bd058d6673a2"
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-foundation-5b11fb36c4074c9da1317f28ef4c7111\\product-linux-artifact\\product-sse-cancel-37448535797-1\\fixture\\worker-bundle.mjs",
+      "path": "product-artifact/product-sse-cancel-37448535797-1/fixture/worker-bundle.mjs",
+      "bytes": 119923,
+      "sha256": "7b69df1797c4942448ad8cc83458ce0577a8c774cebdd7ac1e03376c7433e3c0"
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-foundation-5b11fb36c4074c9da1317f28ef4c7111\\product-linux-artifact\\product-sse-cancel-37448535797-1\\fixture\\worker-source.mjs",
+      "path": "product-artifact/product-sse-cancel-37448535797-1/fixture/worker-source.mjs",
+      "bytes": 4163,
+      "sha256": "7ac158352259200f15d11d84d1a00146d2fe7eef02da671d14f686437392d364"
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-foundation-5b11fb36c4074c9da1317f28ef4c7111\\product-linux-artifact\\product-sse-cancel-37448535797-1\\stderr.log",
+      "path": "product-artifact/product-sse-cancel-37448535797-1/stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-foundation-5b11fb36c4074c9da1317f28ef4c7111\\product-linux-artifact\\product-sse-cancel-37448535797-1\\stdout.log",
+      "path": "product-artifact/product-sse-cancel-37448535797-1/stdout.log",
+      "bytes": 221,
+      "sha256": "d926f19d89640c6bf2ec39b6e856365f1df599608e1be800d74821b4fb5e747f"
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-foundation-5b11fb36c4074c9da1317f28ef4c7111\\product-linux-artifact\\product-sse-web-dependencies-37448535797-1.log",
+      "path": "product-artifact/product-sse-web-dependencies-37448535797-1.log",
+      "bytes": 107659,
+      "sha256": "223da0f9de323cc3c0db72db94debdf06d078a7d4ed2146816a92774b6e73720"
+    },
+    {
+      "source": "C:/Users/cina/AppData/Local/Temp/cinatoken-web-cold-dependency-readonly-0Ls93j/FINAL-web-cold-dependency-advice.json",
+      "path": "cold-dependency-advice.json",
+      "bytes": 3419,
+      "sha256": "580618423af82e0aa6c203b8781564e9e51d005ff69f4005dfd1cf033fb46e25"
+    }
+  ],
+  "originalStrictChanged": false,
+  "productionDeploymentChanged": false,
+  "oauthGrantRetried": false
+}

@@ -103,6 +103,7 @@ export default {
     if (url.pathname === '/fixture/warmup' && request.method === 'GET') return new Response('owned-worker-ready');
     if (request.method !== 'POST' || ![streamPath, minimalPath].includes(url.pathname)) return new Response(null, { status: 404 });
     const caseId = url.pathname === streamPath ? 'product' : 'minimal';
+    console.log(JSON.stringify({ fixture:'product-sse-cancel', kind:'worker-entry', caseId, path:url.pathname, method:request.method, signalAvailable:Boolean(request.signal), upstreamBindingPresent:typeof env.UPSTREAM_BASE==='string', observationBindingPresent:typeof env.OBSERVATION_URL==='string' }));
     request.signal.addEventListener('abort', () => { ctx.waitUntil(observe(env, caseId, 'request-signal-aborted', { aborted: request.signal.aborted })); }, { once: true });
     await observe(env, caseId, 'request-start', { signalInitiallyAborted: request.signal.aborted });
     if (caseId === 'minimal') {
@@ -217,6 +218,16 @@ if (prepare) {
     request.setTimeout(8000, () => request.destroy(new Error('client socket idle deadline')));
     request.once('response', value => {
       response = value;
+      const contentType = response.headers['content-type'] ?? '';
+      const accepted = response.statusCode === 200 && /^text\/event-stream/.test(contentType);
+      event('client-response-headers', { caseId, path:url.pathname, method:'POST', status: response.statusCode, statusMessage:response.statusMessage, contentType, contentLength:response.headers['content-length']??null, connection:response.headers.connection??null, accepted });
+      if (!accepted) {
+        let diagnosticBody = '';
+        response.on('data', chunk => { diagnosticBody += chunk.toString('utf8'); if (Buffer.byteLength(diagnosticBody) > 4096) { diagnosticBody = diagnosticBody.slice(0, 4096); first.reject(new Error('non-SSE response body ceiling')); request.destroy(); } });
+        response.on('error', error => first.reject(error));
+        response.once('end', () => { event('client-non-sse-response', { caseId, status: response.statusCode, contentType, body: diagnosticBody }); first.reject(new Error('expected HTTP 200 SSE; received ' + response.statusCode)); });
+        return;
+      }
       response.on('error', error => { event('client-response-error', { caseId, afterRST: rst, error: errorDetails(error) }); if (!rst) first.reject(error); });
       response.once('end', () => { if (!rst) first.reject(new Error('SSE ended before RST')); });
       response.on('data', chunk => {
@@ -257,6 +268,7 @@ if (prepare) {
   try {
     server = createServer((request, response) => {
       const path = new URL(request.url, 'http://127.0.0.1').pathname;
+      event('owned-http-request', { path, method:request.method });
       let body = '';
       request.on('error', error => event('owned-request-error', { path, error: errorDetails(error) }));
       response.on('error', error => event('owned-response-error', { path, error: errorDetails(error) }));

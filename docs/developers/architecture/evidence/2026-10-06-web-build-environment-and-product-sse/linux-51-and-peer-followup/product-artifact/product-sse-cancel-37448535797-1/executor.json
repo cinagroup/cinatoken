@@ -1,0 +1,33 @@
+{
+  "command": [
+    "/opt/hostedtoolcache/node/22.23.3/x64/bin/node",
+    "/home/runner/work/cinatoken/cinatoken/scripts/smoke/test-workerd-product-sse-cancel.mjs",
+    "--execute-linux",
+    "--out",
+    "/home/runner/work/_temp/product-sse-cancel-37448535797-1/fixture",
+    "--source-sha",
+    "51a72a0b927c4d7ce59da1ea6c4feb30157a7c48"
+  ],
+  "startedAtUnix": 1791281765.58357,
+  "endedAtUnix": 1791281766.2994018,
+  "childPid": 2239,
+  "ownedProcessGroup": 2239,
+  "actualExit": 1,
+  "timedOut": false,
+  "fallbackSignals": [],
+  "ownedGroupRemaining": false,
+  "terminalClosed": true,
+  "errors": [],
+  "passed": false,
+  "logs": {
+    "stdout.log": {
+      "bytes": 221,
+      "sha256": "d926f19d89640c6bf2ec39b6e856365f1df599608e1be800d74821b4fb5e747f"
+    },
+    "stderr.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  },
+  "gracefulWorkerdExitProven": false
+}

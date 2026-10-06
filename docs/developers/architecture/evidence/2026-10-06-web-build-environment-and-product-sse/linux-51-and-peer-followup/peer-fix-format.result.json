@@ -1,0 +1,25 @@
+{
+  "at": "2026-10-06T10:26:28.461Z",
+  "finishedAt": "2026-10-06T10:27:21.823Z",
+  "executable": "C:/Program Files/nodejs/node.exe",
+  "args": [
+    "C:/Program Files/nodejs/node_modules/npm/bin/npm-cli.js",
+    "run",
+    "format:check",
+    "-w",
+    "@cinatoken/web"
+  ],
+  "cwd": "C:/cinagroup/cinatoken",
+  "actualExit": 0,
+  "signal": null,
+  "stdout": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-foundation-5b11fb36c4074c9da1317f28ef4c7111\\peer-fix-format.stdout.log",
+    "bytes": 526,
+    "sha256": "2b0035c6efe61dde18467e93abfae487b1218cc9033b8e77a6e847442bf4b52c"
+  },
+  "stderr": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-foundation-5b11fb36c4074c9da1317f28ef4c7111\\peer-fix-format.stderr.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+}

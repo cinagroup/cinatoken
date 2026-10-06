@@ -1,0 +1,26 @@
+{
+  "at": "2026-10-06T10:27:42.512Z",
+  "finishedAt": "2026-10-06T10:27:43.027Z",
+  "executable": "C:/Program Files/nodejs/node.exe",
+  "args": [
+    "scripts/smoke/test-workerd-product-sse-cancel.mjs",
+    "--prepare-only",
+    "--out",
+    "C:/Users/cina/AppData/Local/Temp/cinatoken-web-foundation-5b11fb36c4074c9da1317f28ef4c7111/fixture-response-preparation",
+    "--source-sha",
+    "51a72a0b927c4d7ce59da1ea6c4feb30157a7c48"
+  ],
+  "cwd": "C:/cinagroup/cinatoken",
+  "actualExit": 0,
+  "signal": null,
+  "stdout": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-foundation-5b11fb36c4074c9da1317f28ef4c7111\\fixture-response-diagnostic-prepare.stdout.log",
+    "bytes": 289,
+    "sha256": "6e33a1039be97c6ea5654ef73049802ac512c66512f6f70c711bd08aacba20dc"
+  },
+  "stderr": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-foundation-5b11fb36c4074c9da1317f28ef4c7111\\fixture-response-diagnostic-prepare.stderr.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+}
