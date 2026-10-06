@@ -1,0 +1,940 @@
+{
+  "at": "2026-10-06T11:03:01.147Z",
+  "readOnly": true,
+  "repositoryWrites": false,
+  "gitWrites": false,
+  "logWhitespaceChanged": false,
+  "baseline": "c9fc6e7b7f8ceffc60a6068f4cb105e4ac5f633b",
+  "indexReceipt": {
+    "path": "docs/developers/architecture/evidence/2026-10-06-web-build-environment-and-product-sse/production-2e-and-c9-boundary/index.json",
+    "gitBlob": "6faf5d48191352b3365dd8d905c60a89746f1165",
+    "bytes": 32225,
+    "sha256": "5312d9c5701855b3ce7cb4575f7a83de7099d56525eabdf91acd6351e37d9fe1"
+  },
+  "payloadCount": 90,
+  "payloadChecks": [
+    {
+      "path": "docs/developers/architecture/evidence/2026-10-06-web-build-environment-and-product-sse/production-2e-and-c9-boundary/commit-observer-fix.stdout.log",
+      "gitBlob": "1e9408ee05de81726ddc678ce2eabdb6bc1c89e7",
+      "bytes": 7533,
+      "sha256": "b81ea9abc028036756f12646dfe07ad77c304f7a9358af09e3201337a3600f6c",
+      "matchesIndex": true,
+      "workingBytesEqual": true,
+      "originalBytesEqual": true
+    },
+    {
+      "path": "docs/developers/architecture/evidence/2026-10-06-web-build-environment-and-product-sse/production-2e-and-c9-boundary/commit-observer-fix.stderr.log",
+      "gitBlob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "matchesIndex": true,
+      "workingBytesEqual": true,
+      "originalBytesEqual": true
+    },
+    {
+      "path": "docs/developers/architecture/evidence/2026-10-06-web-build-environment-and-product-sse/production-2e-and-c9-boundary/commit-observer-fix.result.json",
+      "gitBlob": "ab714078e6d5d3ffb8c653aa5da82a1724b72355",
+      "bytes": 874,
+      "sha256": "ffdc06b124f92a13d141033986b7dde7c7836c581b6ef3d171db014ac522be7b",
+      "matchesIndex": true,
+      "workingBytesEqual": true,
+      "originalBytesEqual": true
+    },
+    {
+      "path": "docs/developers/architecture/evidence/2026-10-06-web-build-environment-and-product-sse/production-2e-and-c9-boundary/push-observer-fix.stdout.log",
+      "gitBlob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "matchesIndex": true,
+      "workingBytesEqual": true,
+      "originalBytesEqual": true
+    },
+    {
+      "path": "docs/developers/architecture/evidence/2026-10-06-web-build-environment-and-product-sse/production-2e-and-c9-boundary/push-observer-fix.stderr.log",
+      "gitBlob": "41c313ceb51476a8a5064ddecda191f85796410a",
+      "bytes": 78,
+      "sha256": "518be9cd0af485e262463d360e8a0ab6b4153a2b53373c5193c29478815996a4",
+      "matchesIndex": true,
+      "workingBytesEqual": true,
+      "originalBytesEqual": true
+    },
+    {
+      "path": "docs/developers/architecture/evidence/2026-10-06-web-build-environment-and-product-sse/production-2e-and-c9-boundary/push-observer-fix.result.json",
+      "gitBlob": "afc8d76c4fef1dbcc2eff533354e7181fd2cd12f",
+      "bytes": 815,
+      "sha256": "03efdb2b3f3ea444d3576bb2ef5351f862fc2ff346c159d86ef20e8f797084bd",
+      "matchesIndex": true,
+      "workingBytesEqual": true,
+      "originalBytesEqual": true
+    },
+    {
+      "path": "docs/developers/architecture/evidence/2026-10-06-web-build-environment-and-product-sse/production-2e-and-c9-boundary/pre-2e-deploy-guard.stdout.log",
+      "gitBlob": "9bc0048a636173e8ceec2f6d0950f8bd6cd28a80",
+      "bytes": 2864,
+      "sha256": "34c57ca44ac2d17781875cbd2173f7e1a741aad42340e97cce9abbb036dad0f7",
+      "matchesIndex": true,
+      "workingBytesEqual": true,
+      "originalBytesEqual": true
+    },
+    {
+      "path": "docs/developers/architecture/evidence/2026-10-06-web-build-environment-and-product-sse/production-2e-and-c9-boundary/pre-2e-deploy-guard.stderr.log",
+      "gitBlob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "matchesIndex": true,
+      "workingBytesEqual": true,
+      "originalBytesEqual": true
+    },
+    {
+      "path": "docs/developers/architecture/evidence/2026-10-06-web-build-environment-and-product-sse/production-2e-and-c9-boundary/pre-2e-deploy-guard.result.json",
+      "gitBlob": "9a7e3b4900945d2a38f5332941b7c2c8a01aaec2",
+      "bytes": 980,
+      "sha256": "8355fd47ae8dffc17f35f52581d4893344be5760bbfe3ed8ef24cbade320f915",
+      "matchesIndex": true,
+      "workingBytesEqual": true,
+      "originalBytesEqual": true
+    },
+    {
+      "path": "docs/developers/architecture/evidence/2026-10-06-web-build-environment-and-product-sse/production-2e-and-c9-boundary/prepare-production-2e.stdout.log",
+      "gitBlob": "2a1037de1e47e9c600b2d9375eb79502804af31e",
+      "bytes": 337,
+      "sha256": "eef284fec77240393ed2f692c90345052bceefb6e602bcd7306e43269f5458cc",
+      "matchesIndex": true,
+      "workingBytesEqual": true,
+      "originalBytesEqual": true
+    },
+    {
+      "path": "docs/developers/architecture/evidence/2026-10-06-web-build-environment-and-product-sse/production-2e-and-c9-boundary/prepare-production-2e.stderr.log",
+      "gitBlob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "matchesIndex": true,
+      "workingBytesEqual": true,
+      "originalBytesEqual": true
+    },
+    {
+      "path": "docs/developers/architecture/evidence/2026-10-06-web-build-environment-and-product-sse/production-2e-and-c9-boundary/prepare-production-2e.result.json",
+      "gitBlob": "db99d3e805ab4a970b0a49c351ededa0271d090d",
+      "bytes": 881,
+      "sha256": "4204e33b6d2bec07f94d96647bbaab9c87b7e918910d1650769057200cc05d52",
+      "matchesIndex": true,
+      "workingBytesEqual": true,
+      "originalBytesEqual": true
+    },
+    {
+      "path": "docs/developers/architecture/evidence/2026-10-06-web-build-environment-and-product-sse/production-2e-and-c9-boundary/deploy-production-2e.stdout.log",
+      "gitBlob": "3facb5ccfbc23b2b77230a0b9ba0f9ac4f3e362d",
+      "bytes": 5619,
+      "sha256": "861fa87d175011d42e4c6e6c21e4ee52ebd72068dfa98c3762a11c273bcbefee",
+      "matchesIndex": true,
+      "workingBytesEqual": true,
+      "originalBytesEqual": true
+    },
+    {
+      "path": "docs/developers/architecture/evidence/2026-10-06-web-build-environment-and-product-sse/production-2e-and-c9-boundary/deploy-production-2e.stderr.log",
+      "gitBlob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "matchesIndex": true,
+      "workingBytesEqual": true,
+      "originalBytesEqual": true
+    },
+    {
+      "path": "docs/developers/architecture/evidence/2026-10-06-web-build-environment-and-product-sse/production-2e-and-c9-boundary/deploy-production-2e.result.json",
+      "gitBlob": "dcea942ba1e22de57b5b3a5d3c49da8f150904c0",
+      "bytes": 1147,
+      "sha256": "ef86e94cfb43d18d40873a0c8c94bf045734d8639f74cb4a94c793e0f6ab5828",
+      "matchesIndex": true,
+      "workingBytesEqual": true,
+      "originalBytesEqual": true
+    },
+    {
+      "path": "docs/developers/architecture/evidence/2026-10-06-web-build-environment-and-product-sse/production-2e-and-c9-boundary/post-2e-deploy-guard.stdout.log",
+      "gitBlob": "ee9a3ba29978fb0864b4b3e6f012f0f85121053e",
+      "bytes": 2864,
+      "sha256": "4f6d9781ae814826701f8add564d5f18b53318c79674b1f847fd79740113a892",
+      "matchesIndex": true,
+      "workingBytesEqual": true,
+      "originalBytesEqual": true
+    },
+    {
+      "path": "docs/developers/architecture/evidence/2026-10-06-web-build-environment-and-product-sse/production-2e-and-c9-boundary/post-2e-deploy-guard.stderr.log",
+      "gitBlob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "matchesIndex": true,
+      "workingBytesEqual": true,
+      "originalBytesEqual": true
+    },
+    {
+      "path": "docs/developers/architecture/evidence/2026-10-06-web-build-environment-and-product-sse/production-2e-and-c9-boundary/post-2e-deploy-guard.result.json",
+      "gitBlob": "086b40a8da40372bdf13e346ce5763b9ce4997a7",
+      "bytes": 983,
+      "sha256": "2133e9ad7523f9c1cc3dccf45807b9008e64971c935f13ca570f1b6aef99bf54",
+      "matchesIndex": true,
+      "workingBytesEqual": true,
+      "originalBytesEqual": true
+    },
+    {
+      "path": "docs/developers/architecture/evidence/2026-10-06-web-build-environment-and-product-sse/production-2e-and-c9-boundary/dispatch-product-c9.stdout.log",
+      "gitBlob": "5ee5ef00472f006d73add7f65f5bf5f21e92742a",
+      "bytes": 64,
+      "sha256": "7472a53d80e6845b8fc40f1029f741c2c93982b1743dcb7be02e31b79b609f65",
+      "matchesIndex": true,
+      "workingBytesEqual": true,
+      "originalBytesEqual": true
+    },
+    {
+      "path": "docs/developers/architecture/evidence/2026-10-06-web-build-environment-and-product-sse/production-2e-and-c9-boundary/dispatch-product-c9.stderr.log",
+      "gitBlob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "matchesIndex": true,
+      "workingBytesEqual": true,
+      "originalBytesEqual": true
+    },
+    {
+      "path": "docs/developers/architecture/evidence/2026-10-06-web-build-environment-and-product-sse/production-2e-and-c9-boundary/dispatch-product-c9.result.json",
+      "gitBlob": "54d9aaec334e0e424f1c94f8c3bfd4f99938a645",
+      "bytes": 847,
+      "sha256": "920d668d35fb423f759974edca22ed9e7e6de95c7d833b31db290d7ff6bf6984",
+      "matchesIndex": true,
+      "workingBytesEqual": true,
+      "originalBytesEqual": true
+    },
+    {
+      "path": "docs/developers/architecture/evidence/2026-10-06-web-build-environment-and-product-sse/production-2e-and-c9-boundary/product-c9-start-meta.stdout.log",
+      "gitBlob": "aac432bbccab7da1c6e70c0ed46f828d3c259749",
+      "bytes": 2151,
+      "sha256": "c42b7f2dffaa7b7c1a506d8113e3d318974e6b3dbb32fd577578d220f65f2fd4",
+      "matchesIndex": true,
+      "workingBytesEqual": true,
+      "originalBytesEqual": true
+    },
+    {
+      "path": "docs/developers/architecture/evidence/2026-10-06-web-build-environment-and-product-sse/production-2e-and-c9-boundary/product-c9-start-meta.stderr.log",
+      "gitBlob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "matchesIndex": true,
+      "workingBytesEqual": true,
+      "originalBytesEqual": true
+    },
+    {
+      "path": "docs/developers/architecture/evidence/2026-10-06-web-build-environment-and-product-sse/production-2e-and-c9-boundary/product-c9-start-meta.result.json",
+      "gitBlob": "1ce0946988963f4aa14e8e1f45dc834fe59eb65d",
+      "bytes": 861,
+      "sha256": "5515709c5c20db1d364058c4a0200f81adec8aa33c7a9e39c04fb4c2052a5dab",
+      "matchesIndex": true,
+      "workingBytesEqual": true,
+      "originalBytesEqual": true
+    },
+    {
+      "path": "docs/developers/architecture/evidence/2026-10-06-web-build-environment-and-product-sse/production-2e-and-c9-boundary/product-c9-full-log.stdout.log",
+      "gitBlob": "84bf5907d24aa24f0f87486f950e90e54fa72aa4",
+      "bytes": 35876,
+      "sha256": "82e1b26d03cfc912420d7bf0270474396966e3a0869e9c32bd2fffbfa0ecad71",
+      "matchesIndex": true,
+      "workingBytesEqual": true,
+      "originalBytesEqual": true
+    },
+    {
+      "path": "docs/developers/architecture/evidence/2026-10-06-web-build-environment-and-product-sse/production-2e-and-c9-boundary/product-c9-full-log.stderr.log",
+      "gitBlob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "matchesIndex": true,
+      "workingBytesEqual": true,
+      "originalBytesEqual": true
+    },
+    {
+      "path": "docs/developers/architecture/evidence/2026-10-06-web-build-environment-and-product-sse/production-2e-and-c9-boundary/product-c9-full-log.result.json",
+      "gitBlob": "fb50a30294c69c096186ccec5ec3bc6a83654b13",
+      "bytes": 804,
+      "sha256": "1d8044bba06bfab6852c1d56e5d6cc29dd0dea6b646953369807482c96df3c5b",
+      "matchesIndex": true,
+      "workingBytesEqual": true,
+      "originalBytesEqual": true
+    },
+    {
+      "path": "docs/developers/architecture/evidence/2026-10-06-web-build-environment-and-product-sse/production-2e-and-c9-boundary/product-c9-download.stdout.log",
+      "gitBlob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "matchesIndex": true,
+      "workingBytesEqual": true,
+      "originalBytesEqual": true
+    },
+    {
+      "path": "docs/developers/architecture/evidence/2026-10-06-web-build-environment-and-product-sse/production-2e-and-c9-boundary/product-c9-download.stderr.log",
+      "gitBlob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "matchesIndex": true,
+      "workingBytesEqual": true,
+      "originalBytesEqual": true
+    },
+    {
+      "path": "docs/developers/architecture/evidence/2026-10-06-web-build-environment-and-product-sse/production-2e-and-c9-boundary/product-c9-download.result.json",
+      "gitBlob": "539055769f01bb8fa851df9053e026146250bfd3",
+      "bytes": 922,
+      "sha256": "ef1fc743ce12bbc07e7e3137e3cc1c416238b485abffcf66a9a286df82600295",
+      "matchesIndex": true,
+      "workingBytesEqual": true,
+      "originalBytesEqual": true
+    },
+    {
+      "path": "docs/developers/architecture/evidence/2026-10-06-web-build-environment-and-product-sse/production-2e-and-c9-boundary/fixture-initialization-prepare.stdout.log",
+      "gitBlob": "a11152b94f560df8eac5fcdd9b8cc7f5192644f6",
+      "bytes": 295,
+      "sha256": "737513b327fa9bab69b6f8e5a535f8406584d52a1b3832e902d54fefd999d964",
+      "matchesIndex": true,
+      "workingBytesEqual": true,
+      "originalBytesEqual": true
+    },
+    {
+      "path": "docs/developers/architecture/evidence/2026-10-06-web-build-environment-and-product-sse/production-2e-and-c9-boundary/fixture-initialization-prepare.stderr.log",
+      "gitBlob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "matchesIndex": true,
+      "workingBytesEqual": true,
+      "originalBytesEqual": true
+    },
+    {
+      "path": "docs/developers/architecture/evidence/2026-10-06-web-build-environment-and-product-sse/production-2e-and-c9-boundary/fixture-initialization-prepare.result.json",
+      "gitBlob": "4268d361ff961f213f0d6ddcdbf3a27cb7abc431",
+      "bytes": 1060,
+      "sha256": "481944389610896d3fe06a6ca0867c319f2caf30c5a8f5712b855f1eb3baac1d",
+      "matchesIndex": true,
+      "workingBytesEqual": true,
+      "originalBytesEqual": true
+    },
+    {
+      "path": "docs/developers/architecture/evidence/2026-10-06-web-build-environment-and-product-sse/production-2e-and-c9-boundary/web-2e-browser.stdout.log",
+      "gitBlob": "43f2ab260850851d55d63562ed75d3cb8eaced6b",
+      "bytes": 1905,
+      "sha256": "ab8e0dc410ab7bd74fe38b0b2c1d755a0686dd142aa46de49b9215928981fff4",
+      "matchesIndex": true,
+      "workingBytesEqual": true,
+      "originalBytesEqual": true
+    },
+    {
+      "path": "docs/developers/architecture/evidence/2026-10-06-web-build-environment-and-product-sse/production-2e-and-c9-boundary/web-2e-browser.stderr.log",
+      "gitBlob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "matchesIndex": true,
+      "workingBytesEqual": true,
+      "originalBytesEqual": true
+    },
+    {
+      "path": "docs/developers/architecture/evidence/2026-10-06-web-build-environment-and-product-sse/production-2e-and-c9-boundary/web-2e-browser.result.json",
+      "gitBlob": "1a4f94e52ca39eccdfe069e706e2257d6e9b69bb",
+      "bytes": 945,
+      "sha256": "d3faaed44296b4f603d557041886f2c26fea033f391eb41eb62f366f4191f960",
+      "matchesIndex": true,
+      "workingBytesEqual": true,
+      "originalBytesEqual": true
+    },
+    {
+      "path": "docs/developers/architecture/evidence/2026-10-06-web-build-environment-and-product-sse/production-2e-and-c9-boundary/web-2e-browser-v2.stdout.log",
+      "gitBlob": "c0003cc5c488022e07f78a566c783a1058552831",
+      "bytes": 2119,
+      "sha256": "ac5458b18b3f05ee09099b2b39c6285a73de006475f4b049a46a2fa0a47288e8",
+      "matchesIndex": true,
+      "workingBytesEqual": true,
+      "originalBytesEqual": true
+    },
+    {
+      "path": "docs/developers/architecture/evidence/2026-10-06-web-build-environment-and-product-sse/production-2e-and-c9-boundary/web-2e-browser-v2.stderr.log",
+      "gitBlob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "matchesIndex": true,
+      "workingBytesEqual": true,
+      "originalBytesEqual": true
+    },
+    {
+      "path": "docs/developers/architecture/evidence/2026-10-06-web-build-environment-and-product-sse/production-2e-and-c9-boundary/web-2e-browser-v2.result.json",
+      "gitBlob": "b8f11eb2e3cdc0908c9f60081928eaa19db10add",
+      "bytes": 873,
+      "sha256": "963db91863a882f87ea071836a81072d593bc12241e3cd8285d64d207405c0b9",
+      "matchesIndex": true,
+      "workingBytesEqual": true,
+      "originalBytesEqual": true
+    },
+    {
+      "path": "docs/developers/architecture/evidence/2026-10-06-web-build-environment-and-product-sse/production-2e-and-c9-boundary/web-2e-browser-v3.stdout.log",
+      "gitBlob": "3c6f1a319ec9d6608009ca95f4ffbe4d7b47f9fe",
+      "bytes": 2114,
+      "sha256": "9072dd1ec781f7fd485dd8d2e585af9fe2a52c8b821650503be3700401ec7ce2",
+      "matchesIndex": true,
+      "workingBytesEqual": true,
+      "originalBytesEqual": true
+    },
+    {
+      "path": "docs/developers/architecture/evidence/2026-10-06-web-build-environment-and-product-sse/production-2e-and-c9-boundary/web-2e-browser-v3.stderr.log",
+      "gitBlob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "matchesIndex": true,
+      "workingBytesEqual": true,
+      "originalBytesEqual": true
+    },
+    {
+      "path": "docs/developers/architecture/evidence/2026-10-06-web-build-environment-and-product-sse/production-2e-and-c9-boundary/web-2e-browser-v3.result.json",
+      "gitBlob": "43eee5136c688a7e3e1796cd41eac1fd83d7cca1",
+      "bytes": 873,
+      "sha256": "3a19e8822fabaaf29b47358a66831ef0dfd2a0e2daecfbe0be19c5d13f02b826",
+      "matchesIndex": true,
+      "workingBytesEqual": true,
+      "originalBytesEqual": true
+    },
+    {
+      "path": "docs/developers/architecture/evidence/2026-10-06-web-build-environment-and-product-sse/production-2e-and-c9-boundary/pre-2e-deploy.deployment-guard.json",
+      "gitBlob": "9dc761509744c3314998243d721689ed6e934c4d",
+      "bytes": 3925,
+      "sha256": "9eecea0833841a2be768fad43ebcae3a6a10e712cfed1ad8d0a916bf836a9a48",
+      "matchesIndex": true,
+      "workingBytesEqual": true,
+      "originalBytesEqual": true
+    },
+    {
+      "path": "docs/developers/architecture/evidence/2026-10-06-web-build-environment-and-product-sse/production-2e-and-c9-boundary/post-2e-deploy.deployment-guard.json",
+      "gitBlob": "36d31cf518c6cd73579655d2b7cd2ba35ce2174a",
+      "bytes": 3925,
+      "sha256": "5fdb399127463d74074118f392b562e952e97c7ef528a72bc7daa4314bed95de",
+      "matchesIndex": true,
+      "workingBytesEqual": true,
+      "originalBytesEqual": true
+    },
+    {
+      "path": "docs/developers/architecture/evidence/2026-10-06-web-build-environment-and-product-sse/production-2e-and-c9-boundary/production-2e-preparation.json",
+      "gitBlob": "49b0a16b9e36cb0cd11ef6c3a65abe876f92b26f",
+      "bytes": 161266,
+      "sha256": "e8fe86401c7fea4ef39712cb6a4fa8cdcba9b1ab75940bc784469188c1a84092",
+      "matchesIndex": true,
+      "workingBytesEqual": true,
+      "originalBytesEqual": true
+    },
+    {
+      "path": "docs/developers/architecture/evidence/2026-10-06-web-build-environment-and-product-sse/production-2e-and-c9-boundary/production-2e.wrangler.json",
+      "gitBlob": "b7011b01b9217f302b14a96d6f6fdca3b0bd4073",
+      "bytes": 2504,
+      "sha256": "5f1ef39f7692364f7d39504100e9e38afa20438b9fea6a825248719946bd9b8a",
+      "matchesIndex": true,
+      "workingBytesEqual": true,
+      "originalBytesEqual": true
+    },
+    {
+      "path": "docs/developers/architecture/evidence/2026-10-06-web-build-environment-and-product-sse/production-2e-and-c9-boundary/production-web-2e-browser.mjs",
+      "gitBlob": "86e1a647dc1f8fd1b1c4744e802d54fc07fc3234",
+      "bytes": 7585,
+      "sha256": "dfdcb280bfd4112b5a80540b68f87af8a88677e41c1b893af5547094598be487",
+      "matchesIndex": true,
+      "workingBytesEqual": true,
+      "originalBytesEqual": true
+    },
+    {
+      "path": "docs/developers/architecture/evidence/2026-10-06-web-build-environment-and-product-sse/production-2e-and-c9-boundary/production-web-2e-browser-v2.mjs",
+      "gitBlob": "bd8070e5af30c755620afb59604b9ee1e91b3945",
+      "bytes": 6564,
+      "sha256": "87e2531a39575433a9affe7d10895cf67f03dee53f622d8397d6e85f3dad155e",
+      "matchesIndex": true,
+      "workingBytesEqual": true,
+      "originalBytesEqual": true
+    },
+    {
+      "path": "docs/developers/architecture/evidence/2026-10-06-web-build-environment-and-product-sse/production-2e-and-c9-boundary/production-web-2e-browser-v3.mjs",
+      "gitBlob": "00111b7714aa782074dedc3f9482c39adb4d9e5d",
+      "bytes": 6569,
+      "sha256": "fe62210b8080aa11c48ae02955e418a3ed03c2448f7c2656fc485141f49bb867",
+      "matchesIndex": true,
+      "workingBytesEqual": true,
+      "originalBytesEqual": true
+    },
+    {
+      "path": "docs/developers/architecture/evidence/2026-10-06-web-build-environment-and-product-sse/production-2e-and-c9-boundary/web-2e-functional-browser.json",
+      "gitBlob": "3583096c94285098daba8338dea83ea1c3004e4c",
+      "bytes": 8278,
+      "sha256": "47e6684d8369217a6b0665d3a85ec6f0c8cfb664bc5f19a4ba8e375ffcc97d9c",
+      "matchesIndex": true,
+      "workingBytesEqual": true,
+      "originalBytesEqual": true
+    },
+    {
+      "path": "docs/developers/architecture/evidence/2026-10-06-web-build-environment-and-product-sse/production-2e-and-c9-boundary/web-2e-browser-v2.json",
+      "gitBlob": "fafa83af33bc587227eba026a0add7615d64edbd",
+      "bytes": 3685,
+      "sha256": "7aa3274c59b839fdf2803aff3f0e407c31f3bac93790f4fe2573115242cae6b4",
+      "matchesIndex": true,
+      "workingBytesEqual": true,
+      "originalBytesEqual": true
+    },
+    {
+      "path": "docs/developers/architecture/evidence/2026-10-06-web-build-environment-and-product-sse/production-2e-and-c9-boundary/web-2e-browser-v3.json",
+      "gitBlob": "8a8e8fa036a6e2c7adee76bb4af5414f120d09f0",
+      "bytes": 3680,
+      "sha256": "d4ce18e58dc9df86dd38ca948036200b33290bda1f5bd4de87a169e6066a8230",
+      "matchesIndex": true,
+      "workingBytesEqual": true,
+      "originalBytesEqual": true
+    },
+    {
+      "path": "docs/developers/architecture/evidence/2026-10-06-web-build-environment-and-product-sse/production-2e-and-c9-boundary/http-reconciliation.json",
+      "gitBlob": "9112bbbf4b1f4e8f0ff60c41fccee176db67df87",
+      "bytes": 14692,
+      "sha256": "c12c9d84ecf87e20178dda7d88237af4bba0ef43cd7969dd998c54762626f93f",
+      "matchesIndex": true,
+      "workingBytesEqual": true,
+      "originalBytesEqual": true
+    },
+    {
+      "path": "docs/developers/architecture/evidence/2026-10-06-web-build-environment-and-product-sse/production-2e-and-c9-boundary/http-first/FINAL-live-http-assets-report.json",
+      "gitBlob": "4829a48d30eac48353b3256a5fb912ec3ed5b873",
+      "bytes": 220066,
+      "sha256": "56f6e02416d5942daf0b98afda9bf59e3e4baab6476404ddd64a67e0093994b9",
+      "matchesIndex": true,
+      "workingBytesEqual": true,
+      "originalBytesEqual": true
+    },
+    {
+      "path": "docs/developers/architecture/evidence/2026-10-06-web-build-environment-and-product-sse/production-2e-and-c9-boundary/http-first/get-home-en.html",
+      "gitBlob": "84a76f580886c9383fa900277e079772ec2a701d",
+      "bytes": 23177,
+      "sha256": "ade68c164b7b518021336b9971551557e111ab935094dedf3dad8b1cc232a34a",
+      "matchesIndex": true,
+      "workingBytesEqual": true,
+      "originalBytesEqual": true
+    },
+    {
+      "path": "docs/developers/architecture/evidence/2026-10-06-web-build-environment-and-product-sse/production-2e-and-c9-boundary/http-first/get-models-en.html",
+      "gitBlob": "1ebdcdd097809815eb2e7e376491677e8b13d6d2",
+      "bytes": 14812,
+      "sha256": "bb755823820860aef27f1d05ffc8bfe76df87cf3e225c7ce9dd71bd23421ea54",
+      "matchesIndex": true,
+      "workingBytesEqual": true,
+      "originalBytesEqual": true
+    },
+    {
+      "path": "docs/developers/architecture/evidence/2026-10-06-web-build-environment-and-product-sse/production-2e-and-c9-boundary/http-first/get-robots.txt",
+      "gitBlob": "bb86df2d1de884f45129651cf58658938cd4aa54",
+      "bytes": 241,
+      "sha256": "9f00076f8abe0ab0f5c2458bb2b142995b123cbccfe3444fde4cdff6ecd8dd97",
+      "matchesIndex": true,
+      "workingBytesEqual": true,
+      "originalBytesEqual": true
+    },
+    {
+      "path": "docs/developers/architecture/evidence/2026-10-06-web-build-environment-and-product-sse/production-2e-and-c9-boundary/http-first/get-sitemap.xml",
+      "gitBlob": "ff0a7b6712ab6073935fb5a98d5d5fc2e926efe4",
+      "bytes": 11502,
+      "sha256": "673b5eb36885bed1e4adda51bb391c3571aaf201b7d62cd163bdcb92a3104f65",
+      "matchesIndex": true,
+      "workingBytesEqual": true,
+      "originalBytesEqual": true
+    },
+    {
+      "path": "docs/developers/architecture/evidence/2026-10-06-web-build-environment-and-product-sse/production-2e-and-c9-boundary/http-first/http-events.ndjson",
+      "gitBlob": "713689c4f7f118585b4d93084ee961bfb3ca13c7",
+      "bytes": 158791,
+      "sha256": "647136ffb67e19c38cf1b1285327648409ce495e4f18acd7f345c728b668bd6a",
+      "matchesIndex": true,
+      "workingBytesEqual": true,
+      "originalBytesEqual": true
+    },
+    {
+      "path": "docs/developers/architecture/evidence/2026-10-06-web-build-environment-and-product-sse/production-2e-and-c9-boundary/http-first/live-http.result.json",
+      "gitBlob": "306c6edf2336b082455b7ee59aae569eafe84abc",
+      "bytes": 414,
+      "sha256": "b1d9a96ed1cdf189ed3be5312e220426fa74649b29d9152cee86ebb990c9e331",
+      "matchesIndex": true,
+      "workingBytesEqual": true,
+      "originalBytesEqual": true
+    },
+    {
+      "path": "docs/developers/architecture/evidence/2026-10-06-web-build-environment-and-product-sse/production-2e-and-c9-boundary/http-first/live-http.stderr.log",
+      "gitBlob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "matchesIndex": true,
+      "workingBytesEqual": true,
+      "originalBytesEqual": true
+    },
+    {
+      "path": "docs/developers/architecture/evidence/2026-10-06-web-build-environment-and-product-sse/production-2e-and-c9-boundary/http-first/live-http.stdout.log",
+      "gitBlob": "de1903996606d3987122c33e6ed787f2e7b3d978",
+      "bytes": 2439,
+      "sha256": "1c598ece8e3e64230c81a9c1e88c34bf3f961c0a19b037a1a1325f420caf9ddb",
+      "matchesIndex": true,
+      "workingBytesEqual": true,
+      "originalBytesEqual": true
+    },
+    {
+      "path": "docs/developers/architecture/evidence/2026-10-06-web-build-environment-and-product-sse/production-2e-and-c9-boundary/http-first/run-live-http.mjs",
+      "gitBlob": "fe51ebae4f49a83b7dda710e2b03dabc602436ad",
+      "bytes": 1405,
+      "sha256": "01e8750a1f690a865d63fdd258b275907d160e5d239623db874798ac2b380aba",
+      "matchesIndex": true,
+      "workingBytesEqual": true,
+      "originalBytesEqual": true
+    },
+    {
+      "path": "docs/developers/architecture/evidence/2026-10-06-web-build-environment-and-product-sse/production-2e-and-c9-boundary/http-first/verify-live-http.mjs",
+      "gitBlob": "09891233f78df6895e5669965d5eb9732e666775",
+      "bytes": 10287,
+      "sha256": "c82424ace9512da6f255781182d001161296d98751328306feb00ef85c905498",
+      "matchesIndex": true,
+      "workingBytesEqual": true,
+      "originalBytesEqual": true
+    },
+    {
+      "path": "docs/developers/architecture/evidence/2026-10-06-web-build-environment-and-product-sse/production-2e-and-c9-boundary/http-second/FINAL-live-http-assets-report.json",
+      "gitBlob": "2dea320cceb784045538ba45d9b67ace77caea14",
+      "bytes": 8485,
+      "sha256": "8bb7b75c79d968bdc38b779550be2e32af92113d5004ab35d5af83d66f00f3cc",
+      "matchesIndex": true,
+      "workingBytesEqual": true,
+      "originalBytesEqual": true
+    },
+    {
+      "path": "docs/developers/architecture/evidence/2026-10-06-web-build-environment-and-product-sse/production-2e-and-c9-boundary/http-second/get-home-en.html",
+      "gitBlob": "397bfe138d8e053e33f7af52f3f7fdff67fe3150",
+      "bytes": 23177,
+      "sha256": "a2369782cd25a0fe5b9f1ab81f4801c01449333c40fe78f07b5124b86a933eee",
+      "matchesIndex": true,
+      "workingBytesEqual": true,
+      "originalBytesEqual": true
+    },
+    {
+      "path": "docs/developers/architecture/evidence/2026-10-06-web-build-environment-and-product-sse/production-2e-and-c9-boundary/http-second/get-models-en.html",
+      "gitBlob": "450bf4fc758087b50454ce9482f3253907ea2616",
+      "bytes": 14812,
+      "sha256": "94fd32b432ef884c688271037cc59d1c6d6e0c88c51833b6677a805e701907c5",
+      "matchesIndex": true,
+      "workingBytesEqual": true,
+      "originalBytesEqual": true
+    },
+    {
+      "path": "docs/developers/architecture/evidence/2026-10-06-web-build-environment-and-product-sse/production-2e-and-c9-boundary/http-second/http-events.ndjson",
+      "gitBlob": "016d3094ed9ca30ea649dffd7ac0a9280b6dac64",
+      "bytes": 4650,
+      "sha256": "c8b856ffbe79819ea9cbed30c2e3ca632877130938c7040691a605a8da2feeb1",
+      "matchesIndex": true,
+      "workingBytesEqual": true,
+      "originalBytesEqual": true
+    },
+    {
+      "path": "docs/developers/architecture/evidence/2026-10-06-web-build-environment-and-product-sse/production-2e-and-c9-boundary/http-second/live-http.result.json",
+      "gitBlob": "8a0306acbff71a68606b0e5b4899e392389f587d",
+      "bytes": 413,
+      "sha256": "c1abfad870d722c179db4dbf1e95731664d22f97b5c866a4958497144a03af9f",
+      "matchesIndex": true,
+      "workingBytesEqual": true,
+      "originalBytesEqual": true
+    },
+    {
+      "path": "docs/developers/architecture/evidence/2026-10-06-web-build-environment-and-product-sse/production-2e-and-c9-boundary/http-second/live-http.stderr.log",
+      "gitBlob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "matchesIndex": true,
+      "workingBytesEqual": true,
+      "originalBytesEqual": true
+    },
+    {
+      "path": "docs/developers/architecture/evidence/2026-10-06-web-build-environment-and-product-sse/production-2e-and-c9-boundary/http-second/live-http.stdout.log",
+      "gitBlob": "1e667131662f08420cbfc8799f50995823de42c2",
+      "bytes": 818,
+      "sha256": "0f11350fcf174457a9f2cba48d5fa6562e36309b3695f146bd9f526c407ee7f1",
+      "matchesIndex": true,
+      "workingBytesEqual": true,
+      "originalBytesEqual": true
+    },
+    {
+      "path": "docs/developers/architecture/evidence/2026-10-06-web-build-environment-and-product-sse/production-2e-and-c9-boundary/http-second/reconcile-receipts.mjs",
+      "gitBlob": "24e33862a98cf451c5b032cafc14929a0ee44a53",
+      "bytes": 5522,
+      "sha256": "24d5a54166db58e4babdf94806f97879b226e3c23aa69cedd80423a8261969f0",
+      "matchesIndex": true,
+      "workingBytesEqual": true,
+      "originalBytesEqual": true
+    },
+    {
+      "path": "docs/developers/architecture/evidence/2026-10-06-web-build-environment-and-product-sse/production-2e-and-c9-boundary/http-second/run-live-http.mjs",
+      "gitBlob": "fe51ebae4f49a83b7dda710e2b03dabc602436ad",
+      "bytes": 1405,
+      "sha256": "01e8750a1f690a865d63fdd258b275907d160e5d239623db874798ac2b380aba",
+      "matchesIndex": true,
+      "workingBytesEqual": true,
+      "originalBytesEqual": true
+    },
+    {
+      "path": "docs/developers/architecture/evidence/2026-10-06-web-build-environment-and-product-sse/production-2e-and-c9-boundary/http-second/verify-live-http.mjs",
+      "gitBlob": "f1673ee841322c8da31122bf0875c81f8cb7748b",
+      "bytes": 11291,
+      "sha256": "10369303d5005e718f9c0f4447ca18e44d64deae28a22c6543168fe33a46c9aa",
+      "matchesIndex": true,
+      "workingBytesEqual": true,
+      "originalBytesEqual": true
+    },
+    {
+      "path": "docs/developers/architecture/evidence/2026-10-06-web-build-environment-and-product-sse/production-2e-and-c9-boundary/release-review/FINAL-current-release-readonly-review.json.gz",
+      "gitBlob": "6096c970c2c3bf2b74a77fdaa38e5087aacd3068",
+      "bytes": 177828,
+      "sha256": "2e3087f851d36553453a0bbf032e8e77098e0dec7f8509787221b1deead67009",
+      "matchesIndex": true,
+      "workingBytesEqual": true,
+      "decoded": {
+        "bytes": 618630,
+        "sha256": "a9ca78ef1839c8597bec8e9027d1032beffc769b2916651e1bded4dca2493f91",
+        "matchesIndex": true,
+        "originalBytesEqual": true
+      }
+    },
+    {
+      "path": "docs/developers/architecture/evidence/2026-10-06-web-build-environment-and-product-sse/production-2e-and-c9-boundary/release-review/FINAL-current-release-readonly-summary.json",
+      "gitBlob": "fb63cecdb194367979984932bb7e4fef6afb941f",
+      "bytes": 8323,
+      "sha256": "0ffbfb52af5bb6b434103722dc625acc11ffa8063737736209e367ae9898c30a",
+      "matchesIndex": true,
+      "workingBytesEqual": true,
+      "originalBytesEqual": true
+    },
+    {
+      "path": "docs/developers/architecture/evidence/2026-10-06-web-build-environment-and-product-sse/production-2e-and-c9-boundary/release-review/FINAL-staged-evidence-and-checklist-review.json",
+      "gitBlob": "db9655c8b474ee15f26e8fe0cfa061f36ac714bb",
+      "bytes": 22213,
+      "sha256": "a175cc7444605c76778063e0e5e1ee247080c52e73a1dbe78829de8d521be767",
+      "matchesIndex": true,
+      "workingBytesEqual": true,
+      "originalBytesEqual": true
+    },
+    {
+      "path": "docs/developers/architecture/evidence/2026-10-06-web-build-environment-and-product-sse/production-2e-and-c9-boundary/c9-review/FINAL-product-c9-readonly-review.json",
+      "gitBlob": "633b170da8d88009a4690f4190d366e5a2138e5a",
+      "bytes": 18755,
+      "sha256": "b5f31499cf2541febf1cd4a5cfd0d52714491150c832679b95411437bf653096",
+      "matchesIndex": true,
+      "workingBytesEqual": true,
+      "originalBytesEqual": true
+    },
+    {
+      "path": "docs/developers/architecture/evidence/2026-10-06-web-build-environment-and-product-sse/production-2e-and-c9-boundary/c9-review/bundle-initialization-probe.json",
+      "gitBlob": "70525c14ac82811f33bfb033b6d08623c0f2637a",
+      "bytes": 5131,
+      "sha256": "438ef5e9a405c905ce88789142102a552e859f48fba0eabe09296da7bd40fa28",
+      "matchesIndex": true,
+      "workingBytesEqual": true,
+      "originalBytesEqual": true
+    },
+    {
+      "path": "docs/developers/architecture/evidence/2026-10-06-web-build-environment-and-product-sse/production-2e-and-c9-boundary/c9-review/probe.mjs",
+      "gitBlob": "f07eaf41afece0e9c6c84e6e38fa6ea84cfda692",
+      "bytes": 3408,
+      "sha256": "d182c6c3c5af84beb4059d92422feb069af54a7381df85a3958b187a92488a4a",
+      "matchesIndex": true,
+      "workingBytesEqual": true,
+      "originalBytesEqual": true
+    },
+    {
+      "path": "docs/developers/architecture/evidence/2026-10-06-web-build-environment-and-product-sse/production-2e-and-c9-boundary/product-c9-artifact/product-sse-cancel-37452189276-1/product-sse-cancel-37452189276-1/executor.json",
+      "gitBlob": "af385ea7b495948e68abba78b2ded681389277ad",
+      "bytes": 941,
+      "sha256": "80bd45c5dbc95aa754f957c845c3291a0fbcfd15f1f4774493d90f57eb28e7f9",
+      "matchesIndex": true,
+      "workingBytesEqual": true,
+      "originalBytesEqual": true
+    },
+    {
+      "path": "docs/developers/architecture/evidence/2026-10-06-web-build-environment-and-product-sse/production-2e-and-c9-boundary/product-c9-artifact/product-sse-cancel-37452189276-1/product-sse-cancel-37452189276-1/fixture/bundle-metafile.json",
+      "gitBlob": "95e98fc6243e70a9827f37fb6b5b399b2a45aec0",
+      "bytes": 458089,
+      "sha256": "e06353d48cc530b5ac399091eeb001563ab34bd5be627ee3cea5d1eb50c13e07",
+      "matchesIndex": true,
+      "workingBytesEqual": true,
+      "originalBytesEqual": true
+    },
+    {
+      "path": "docs/developers/architecture/evidence/2026-10-06-web-build-environment-and-product-sse/production-2e-and-c9-boundary/product-c9-artifact/product-sse-cancel-37452189276-1/product-sse-cancel-37452189276-1/fixture/events.ndjson",
+      "gitBlob": "357960ebdc0f74e94842696f9ae1ec55a1ab99a3",
+      "bytes": 6712,
+      "sha256": "77d7f7f2a1acb4addcf2d27dcbda56fee08df7c6099fa21dfe7b61e81067ac17",
+      "matchesIndex": true,
+      "workingBytesEqual": true,
+      "originalBytesEqual": true
+    },
+    {
+      "path": "docs/developers/architecture/evidence/2026-10-06-web-build-environment-and-product-sse/production-2e-and-c9-boundary/product-c9-artifact/product-sse-cancel-37452189276-1/product-sse-cancel-37452189276-1/fixture/report.json",
+      "gitBlob": "80a0d4db57e22d60f9b74880119ac593d19455e1",
+      "bytes": 125486,
+      "sha256": "d15509afbc3829ded173d2ff07aa579048ea8bb99f25272b915cfce7b0d1a6e7",
+      "matchesIndex": true,
+      "workingBytesEqual": true,
+      "originalBytesEqual": true
+    },
+    {
+      "path": "docs/developers/architecture/evidence/2026-10-06-web-build-environment-and-product-sse/production-2e-and-c9-boundary/product-c9-artifact/product-sse-cancel-37452189276-1/product-sse-cancel-37452189276-1/fixture/worker-bundle.mjs",
+      "gitBlob": "62bb9005eb6ed096e08ca6a619e79c89c90f1d6f",
+      "bytes": 120239,
+      "sha256": "4af70bbec058fa852e68c30299b1798ffd56af46195abef22f5a935045942198",
+      "matchesIndex": true,
+      "workingBytesEqual": true,
+      "originalBytesEqual": true
+    },
+    {
+      "path": "docs/developers/architecture/evidence/2026-10-06-web-build-environment-and-product-sse/production-2e-and-c9-boundary/product-c9-artifact/product-sse-cancel-37452189276-1/product-sse-cancel-37452189276-1/fixture/worker-source.mjs",
+      "gitBlob": "1114a91c34fd6b03a2f38df6fd5d458544143970",
+      "bytes": 4468,
+      "sha256": "d46e44832ac6ee278506daa34902d21d9cbc44ee33d4f64dfa03136b192cb343",
+      "matchesIndex": true,
+      "workingBytesEqual": true,
+      "originalBytesEqual": true
+    },
+    {
+      "path": "docs/developers/architecture/evidence/2026-10-06-web-build-environment-and-product-sse/production-2e-and-c9-boundary/product-c9-artifact/product-sse-cancel-37452189276-1/product-sse-cancel-37452189276-1/stderr.log",
+      "gitBlob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "matchesIndex": true,
+      "workingBytesEqual": true,
+      "originalBytesEqual": true
+    },
+    {
+      "path": "docs/developers/architecture/evidence/2026-10-06-web-build-environment-and-product-sse/production-2e-and-c9-boundary/product-c9-artifact/product-sse-cancel-37452189276-1/product-sse-cancel-37452189276-1/stdout.log",
+      "gitBlob": "cc8f77d573ce36d4123978cd4bfca3a64c481cda",
+      "bytes": 221,
+      "sha256": "befbfd2815b49f8a88a928f3d66c125a023a8953814d53f48380efe5e9157931",
+      "matchesIndex": true,
+      "workingBytesEqual": true,
+      "originalBytesEqual": true
+    },
+    {
+      "path": "docs/developers/architecture/evidence/2026-10-06-web-build-environment-and-product-sse/production-2e-and-c9-boundary/product-c9-artifact/product-sse-cancel-37452189276-1/product-sse-web-dependencies-37452189276-1.log",
+      "gitBlob": "3051f5254558f3d979d15a234c1bc875c1ecd775",
+      "bytes": 106723,
+      "sha256": "6029520c78a28d9faf4f1c3e33f2052e43abb66382d78fa5670de045ea271241",
+      "matchesIndex": true,
+      "workingBytesEqual": true,
+      "originalBytesEqual": true
+    },
+    {
+      "path": "docs/developers/architecture/evidence/2026-10-06-web-build-environment-and-product-sse/production-2e-and-c9-boundary/c9-review/FINAL-product-fixture-initialization-delta-review.json",
+      "gitBlob": "0edde28c606437dac68ea9c371443b84050177c1",
+      "bytes": 5631,
+      "sha256": "93187076cf209a9e4ffc60d440bd0b0db8b02d94c3894fd05fa190b4f3eb7bbc",
+      "matchesIndex": true,
+      "workingBytesEqual": true,
+      "originalBytesEqual": true
+    }
+  ],
+  "mdReceipt": {
+    "path": "docs/developers/architecture/web-frontend-migration.md",
+    "gitBlob": "71a4ccc94fff596691b14afd9e3d3f0375fb1acc",
+    "bytes": 847891,
+    "sha256": "37060b646f0228a7a92623faab8eadde2827c6f89acfdb28781ba524de4a0bdd"
+  },
+  "checklist": {
+    "oldCounts": {
+      "total": 211,
+      "done": 55,
+      "pending": 156
+    },
+    "newCounts": {
+      "total": 211,
+      "done": 55,
+      "pending": 156
+    },
+    "oldMainCounts": {
+      "total": 102,
+      "done": 8,
+      "pending": 94
+    },
+    "newMainCounts": {
+      "total": 102,
+      "done": 8,
+      "pending": 94
+    },
+    "allTaskLabelsAndOrderEqual": true,
+    "stateChanges": [],
+    "matrix": {
+      "oldRows": 54,
+      "newRows": 54,
+      "rowsBytesEquivalent": true
+    },
+    "gates": {
+      "oldCount": 9,
+      "newCount": 9,
+      "rowsUnchanged": true
+    },
+    "acceptance": {
+      "oldCount": 9,
+      "newCount": 9,
+      "rowsUnchanged": true
+    },
+    "phases": {
+      "oldCount": 9,
+      "newCount": 9,
+      "rowsUnchanged": true
+    }
+  },
+  "gitReadReceipts": [
+    {
+      "args": [
+        "ls-files",
+        "--stage",
+        "-z",
+        "--",
+        "docs/developers/architecture/evidence/2026-10-06-web-build-environment-and-product-sse/production-2e-and-c9-boundary",
+        "docs/developers/architecture/web-frontend-migration.md"
+      ],
+      "actualExit": 0,
+      "stdoutBytes": 18964,
+      "stdoutSha256": "48dcf3fce680eb9934702cd12d2fedafcd27817220459bad50db44df4fd49e33",
+      "stderrBytes": 0
+    },
+    {
+      "args": [
+        "cat-file",
+        "blob",
+        "6faf5d48191352b3365dd8d905c60a89746f1165"
+      ],
+      "actualExit": 0,
+      "stdoutBytes": 32225,
+      "stdoutSha256": "5312d9c5701855b3ce7cb4575f7a83de7099d56525eabdf91acd6351e37d9fe1",
+      "stderrBytes": 0
+    },
+    {
+      "args": [
+        "cat-file",
+        "--batch"
+      ],
+      "actualExit": 0,
+      "stdoutBytes": 2729806,
+      "stdoutSha256": "22b6b05b7e54d0ff9ee069872e9664069e6fe21cd58a1f57b2ca80d351d4ec04",
+      "stderrBytes": 0
+    },
+    {
+      "args": [
+        "show",
+        "c9fc6e7b7f8ceffc60a6068f4cb105e4ac5f633b:docs/developers/architecture/web-frontend-migration.md"
+      ],
+      "actualExit": 0,
+      "stdoutBytes": 844294,
+      "stdoutSha256": "c0d12104a72f43c2234ba48c00c60f4dc508ae2564c9261904f08c02f9f550d6",
+      "stderrBytes": 0
+    }
+  ],
+  "checks": {
+    "indexWorkingBytesEqual": true,
+    "all90PayloadExact": true,
+    "checkboxLabelsUnchanged": true,
+    "allTaskStatesUnchanged": true,
+    "main102Preserved": true,
+    "matrix54Preserved": true,
+    "gates9Preserved": true,
+    "acceptance9Preserved": true,
+    "phase9Preserved": true
+  }
+}

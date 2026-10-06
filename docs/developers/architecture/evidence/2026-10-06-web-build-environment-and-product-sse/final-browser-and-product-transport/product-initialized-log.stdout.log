@@ -1,0 +1,258 @@
+product-transport	Set up job	﻿2026-10-06T11:04:34.9151045Z Current runner version: '2.337.0'
+product-transport	Set up job	2026-10-06T11:04:34.9173233Z ##[group]Runner Image Provisioner
+product-transport	Set up job	2026-10-06T11:04:34.9174018Z Hosted Compute Agent
+product-transport	Set up job	2026-10-06T11:04:34.9174503Z Version: 20260901.588
+product-transport	Set up job	2026-10-06T11:04:34.9175026Z Commit: f88ec8081b781fac6c440065ac7ff9e710ce3d0b
+product-transport	Set up job	2026-10-06T11:04:34.9175720Z Build Date: 2026-09-01T19:56:44Z
+product-transport	Set up job	2026-10-06T11:04:34.9176587Z Worker ID: {7ba7071b-88de-46ec-9dad-0808a52de06d}
+product-transport	Set up job	2026-10-06T11:04:34.9177235Z Azure Region: northcentralus
+product-transport	Set up job	2026-10-06T11:04:34.9177747Z ##[endgroup]
+product-transport	Set up job	2026-10-06T11:04:34.9178873Z ##[group]Operating System
+product-transport	Set up job	2026-10-06T11:04:34.9179467Z Ubuntu
+product-transport	Set up job	2026-10-06T11:04:34.9179896Z 24.04.5
+product-transport	Set up job	2026-10-06T11:04:34.9180344Z LTS
+product-transport	Set up job	2026-10-06T11:04:34.9180775Z ##[endgroup]
+product-transport	Set up job	2026-10-06T11:04:34.9181261Z ##[group]Runner Image
+product-transport	Set up job	2026-10-06T11:04:34.9181824Z Image: ubuntu-24.04
+product-transport	Set up job	2026-10-06T11:04:34.9182319Z Version: 20260927.320.1
+product-transport	Set up job	2026-10-06T11:04:34.9183201Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20260927.320/images/ubuntu/Ubuntu2404-Readme.md
+product-transport	Set up job	2026-10-06T11:04:34.9185056Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20260927.320
+product-transport	Set up job	2026-10-06T11:04:34.9185896Z ##[endgroup]
+product-transport	Set up job	2026-10-06T11:04:34.9187095Z ##[group]GITHUB_TOKEN Permissions
+product-transport	Set up job	2026-10-06T11:04:34.9188858Z Contents: read
+product-transport	Set up job	2026-10-06T11:04:34.9189391Z Metadata: read
+product-transport	Set up job	2026-10-06T11:04:34.9189917Z ##[endgroup]
+product-transport	Set up job	2026-10-06T11:04:34.9191642Z Secret source: Actions
+product-transport	Set up job	2026-10-06T11:04:34.9192461Z Cache mode: write
+product-transport	Set up job	2026-10-06T11:04:34.9193240Z Prepare workflow directory
+product-transport	Set up job	2026-10-06T11:04:34.9498012Z Prepare all required actions
+product-transport	Set up job	2026-10-06T11:04:34.9552301Z Getting action download info
+product-transport	Set up job	2026-10-06T11:04:35.1909924Z Download action repository 'actions/checkout@v4' (SHA:11d5960a326750d5838078e36cf38b85af677262)
+product-transport	Set up job	2026-10-06T11:04:35.2981494Z Download action repository 'actions/setup-node@v4' (SHA:49933ea5288caeca8642d1e84afbd3f7d6820020)
+product-transport	Set up job	2026-10-06T11:04:35.5571804Z Download action repository 'actions/upload-artifact@v4' (SHA:ea165f8d65b6e75b540449e92b4886f43607fa02)
+product-transport	Set up job	2026-10-06T11:04:35.8442902Z Complete job name: product-transport
+product-transport	Run actions/checkout@v4	﻿2026-10-06T11:04:35.9181657Z ##[group]Run actions/checkout@v4
+product-transport	Run actions/checkout@v4	2026-10-06T11:04:35.9182815Z with:
+product-transport	Run actions/checkout@v4	2026-10-06T11:04:35.9183491Z   persist-credentials: false
+product-transport	Run actions/checkout@v4	2026-10-06T11:04:35.9184335Z   repository: cinagroup/cinatoken
+product-transport	Run actions/checkout@v4	2026-10-06T11:04:35.9190937Z   token: ***
+product-transport	Run actions/checkout@v4	2026-10-06T11:04:35.9191606Z   ssh-strict: true
+product-transport	Run actions/checkout@v4	2026-10-06T11:04:35.9192295Z   ssh-user: git
+product-transport	Run actions/checkout@v4	2026-10-06T11:04:35.9192957Z   clean: true
+product-transport	Run actions/checkout@v4	2026-10-06T11:04:35.9193650Z   sparse-checkout-cone-mode: true
+product-transport	Run actions/checkout@v4	2026-10-06T11:04:35.9194476Z   fetch-depth: 1
+product-transport	Run actions/checkout@v4	2026-10-06T11:04:35.9195162Z   fetch-tags: false
+product-transport	Run actions/checkout@v4	2026-10-06T11:04:35.9195856Z   show-progress: true
+product-transport	Run actions/checkout@v4	2026-10-06T11:04:35.9196836Z   lfs: false
+product-transport	Run actions/checkout@v4	2026-10-06T11:04:35.9197492Z   submodules: false
+product-transport	Run actions/checkout@v4	2026-10-06T11:04:35.9198213Z   set-safe-directory: true
+product-transport	Run actions/checkout@v4	2026-10-06T11:04:35.9199006Z   allow-unsafe-pr-checkout: false
+product-transport	Run actions/checkout@v4	2026-10-06T11:04:35.9200116Z ##[endgroup]
+product-transport	Run actions/checkout@v4	2026-10-06T11:04:36.0119991Z Syncing repository: cinagroup/cinatoken
+product-transport	Run actions/checkout@v4	2026-10-06T11:04:36.0123237Z ##[group]Getting Git version info
+product-transport	Run actions/checkout@v4	2026-10-06T11:04:36.0124856Z Working directory is '/home/runner/work/cinatoken/cinatoken'
+product-transport	Run actions/checkout@v4	2026-10-06T11:04:36.0127552Z [command]/usr/bin/git version
+product-transport	Run actions/checkout@v4	2026-10-06T11:04:36.0128744Z git version 2.55.0
+product-transport	Run actions/checkout@v4	2026-10-06T11:04:36.0145092Z ##[endgroup]
+product-transport	Run actions/checkout@v4	2026-10-06T11:04:36.0158987Z Temporarily overriding HOME='/home/runner/work/_temp/a4b5cd9f-c647-4fb8-80a2-2b6fc6b0a6e4' before making global git config changes
+product-transport	Run actions/checkout@v4	2026-10-06T11:04:36.0162278Z Adding repository directory to the temporary git global config as a safe directory
+product-transport	Run actions/checkout@v4	2026-10-06T11:04:36.0165326Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/cinatoken/cinatoken
+product-transport	Run actions/checkout@v4	2026-10-06T11:04:36.0210292Z Deleting the contents of '/home/runner/work/cinatoken/cinatoken'
+product-transport	Run actions/checkout@v4	2026-10-06T11:04:36.0218426Z ##[group]Initializing the repository
+product-transport	Run actions/checkout@v4	2026-10-06T11:04:36.0220369Z [command]/usr/bin/git init /home/runner/work/cinatoken/cinatoken
+product-transport	Run actions/checkout@v4	2026-10-06T11:04:36.0298637Z hint: Using 'master' as the name for the initial branch. This default branch name
+product-transport	Run actions/checkout@v4	2026-10-06T11:04:36.0301870Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+product-transport	Run actions/checkout@v4	2026-10-06T11:04:36.0304164Z hint: to use in all of your new repositories, which will suppress this warning,
+product-transport	Run actions/checkout@v4	2026-10-06T11:04:36.0305881Z hint: call:
+product-transport	Run actions/checkout@v4	2026-10-06T11:04:36.0307311Z hint:
+product-transport	Run actions/checkout@v4	2026-10-06T11:04:36.0308404Z hint: 	git config --global init.defaultBranch <name>
+product-transport	Run actions/checkout@v4	2026-10-06T11:04:36.0309782Z hint:
+product-transport	Run actions/checkout@v4	2026-10-06T11:04:36.0311099Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+product-transport	Run actions/checkout@v4	2026-10-06T11:04:36.0313218Z hint: 'development'. The just-created branch can be renamed via this command:
+product-transport	Run actions/checkout@v4	2026-10-06T11:04:36.0314859Z hint:
+product-transport	Run actions/checkout@v4	2026-10-06T11:04:36.0315757Z hint: 	git branch -m <name>
+product-transport	Run actions/checkout@v4	2026-10-06T11:04:36.0317257Z hint:
+product-transport	Run actions/checkout@v4	2026-10-06T11:04:36.0318704Z hint: Disable this message with "git config set advice.defaultBranchName false"
+product-transport	Run actions/checkout@v4	2026-10-06T11:04:36.0320283Z Initialized empty Git repository in /home/runner/work/cinatoken/cinatoken/.git/
+product-transport	Run actions/checkout@v4	2026-10-06T11:04:36.0323378Z [command]/usr/bin/git remote add origin https://github.com/cinagroup/cinatoken
+product-transport	Run actions/checkout@v4	2026-10-06T11:04:36.0360249Z ##[endgroup]
+product-transport	Run actions/checkout@v4	2026-10-06T11:04:36.0362075Z ##[group]Disabling automatic garbage collection
+product-transport	Run actions/checkout@v4	2026-10-06T11:04:36.0363753Z [command]/usr/bin/git config --local gc.auto 0
+product-transport	Run actions/checkout@v4	2026-10-06T11:04:36.0394492Z ##[endgroup]
+product-transport	Run actions/checkout@v4	2026-10-06T11:04:36.0396388Z ##[group]Setting up auth
+product-transport	Run actions/checkout@v4	2026-10-06T11:04:36.0400446Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+product-transport	Run actions/checkout@v4	2026-10-06T11:04:36.0432665Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+product-transport	Run actions/checkout@v4	2026-10-06T11:04:36.0742628Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+product-transport	Run actions/checkout@v4	2026-10-06T11:04:36.0783449Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+product-transport	Run actions/checkout@v4	2026-10-06T11:04:36.1013407Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+product-transport	Run actions/checkout@v4	2026-10-06T11:04:36.1045352Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+product-transport	Run actions/checkout@v4	2026-10-06T11:04:36.1243660Z [command]/usr/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+product-transport	Run actions/checkout@v4	2026-10-06T11:04:36.1279856Z ##[endgroup]
+product-transport	Run actions/checkout@v4	2026-10-06T11:04:36.1281082Z ##[group]Fetching the repository
+product-transport	Run actions/checkout@v4	2026-10-06T11:04:36.1287972Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +0d6707e2265312af1ec36482f05affc19eefd61e:refs/remotes/origin/main
+product-transport	Run actions/checkout@v4	2026-10-06T11:04:42.3732125Z From https://github.com/cinagroup/cinatoken
+product-transport	Run actions/checkout@v4	2026-10-06T11:04:42.3733573Z  * [new ref]         0d6707e2265312af1ec36482f05affc19eefd61e -> origin/main
+product-transport	Run actions/checkout@v4	2026-10-06T11:04:42.3735679Z ##[endgroup]
+product-transport	Run actions/checkout@v4	2026-10-06T11:04:42.3736501Z ##[group]Determining the checkout info
+product-transport	Run actions/checkout@v4	2026-10-06T11:04:42.3737654Z ##[endgroup]
+product-transport	Run actions/checkout@v4	2026-10-06T11:04:42.3742938Z [command]/usr/bin/git sparse-checkout disable
+product-transport	Run actions/checkout@v4	2026-10-06T11:04:42.3787863Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+product-transport	Run actions/checkout@v4	2026-10-06T11:04:42.3815849Z ##[group]Checking out the ref
+product-transport	Run actions/checkout@v4	2026-10-06T11:04:42.3819788Z [command]/usr/bin/git checkout --progress --force -B main refs/remotes/origin/main
+product-transport	Run actions/checkout@v4	2026-10-06T11:04:43.4007454Z Updating files:  64% (9625/15007)
+product-transport	Run actions/checkout@v4	2026-10-06T11:04:43.4099912Z Updating files:  65% (9755/15007)
+product-transport	Run actions/checkout@v4	2026-10-06T11:04:43.4191506Z Updating files:  66% (9905/15007)
+product-transport	Run actions/checkout@v4	2026-10-06T11:04:43.4264583Z Updating files:  67% (10055/15007)
+product-transport	Run actions/checkout@v4	2026-10-06T11:04:43.4320691Z Updating files:  68% (10205/15007)
+product-transport	Run actions/checkout@v4	2026-10-06T11:04:43.4437332Z Updating files:  69% (10355/15007)
+product-transport	Run actions/checkout@v4	2026-10-06T11:04:43.4537319Z Updating files:  70% (10505/15007)
+product-transport	Run actions/checkout@v4	2026-10-06T11:04:43.4598817Z Updating files:  71% (10655/15007)
+product-transport	Run actions/checkout@v4	2026-10-06T11:04:43.4667476Z Updating files:  72% (10806/15007)
+product-transport	Run actions/checkout@v4	2026-10-06T11:04:43.4872054Z Updating files:  73% (10956/15007)
+product-transport	Run actions/checkout@v4	2026-10-06T11:04:43.4919390Z Updating files:  74% (11106/15007)
+product-transport	Run actions/checkout@v4	2026-10-06T11:04:43.5031167Z Updating files:  75% (11256/15007)
+product-transport	Run actions/checkout@v4	2026-10-06T11:04:43.5119789Z Updating files:  76% (11406/15007)
+product-transport	Run actions/checkout@v4	2026-10-06T11:04:43.5196676Z Updating files:  77% (11556/15007)
+product-transport	Run actions/checkout@v4	2026-10-06T11:04:43.5285748Z Updating files:  78% (11706/15007)
+product-transport	Run actions/checkout@v4	2026-10-06T11:04:43.5352349Z Updating files:  79% (11856/15007)
+product-transport	Run actions/checkout@v4	2026-10-06T11:04:43.5427319Z Updating files:  80% (12006/15007)
+product-transport	Run actions/checkout@v4	2026-10-06T11:04:43.5522305Z Updating files:  81% (12156/15007)
+product-transport	Run actions/checkout@v4	2026-10-06T11:04:43.5613083Z Updating files:  82% (12306/15007)
+product-transport	Run actions/checkout@v4	2026-10-06T11:04:43.5698860Z Updating files:  83% (12456/15007)
+product-transport	Run actions/checkout@v4	2026-10-06T11:04:43.5766464Z Updating files:  84% (12606/15007)
+product-transport	Run actions/checkout@v4	2026-10-06T11:04:43.5832981Z Updating files:  85% (12756/15007)
+product-transport	Run actions/checkout@v4	2026-10-06T11:04:43.5897056Z Updating files:  86% (12907/15007)
+product-transport	Run actions/checkout@v4	2026-10-06T11:04:43.5964774Z Updating files:  87% (13057/15007)
+product-transport	Run actions/checkout@v4	2026-10-06T11:04:43.6032885Z Updating files:  88% (13207/15007)
+product-transport	Run actions/checkout@v4	2026-10-06T11:04:43.6103984Z Updating files:  89% (13357/15007)
+product-transport	Run actions/checkout@v4	2026-10-06T11:04:43.6170969Z Updating files:  90% (13507/15007)
+product-transport	Run actions/checkout@v4	2026-10-06T11:04:43.6232183Z Updating files:  91% (13657/15007)
+product-transport	Run actions/checkout@v4	2026-10-06T11:04:43.6312022Z Updating files:  92% (13807/15007)
+product-transport	Run actions/checkout@v4	2026-10-06T11:04:43.6385810Z Updating files:  93% (13957/15007)
+product-transport	Run actions/checkout@v4	2026-10-06T11:04:43.6459224Z Updating files:  94% (14107/15007)
+product-transport	Run actions/checkout@v4	2026-10-06T11:04:43.6595936Z Updating files:  95% (14257/15007)
+product-transport	Run actions/checkout@v4	2026-10-06T11:04:43.6669924Z Updating files:  96% (14407/15007)
+product-transport	Run actions/checkout@v4	2026-10-06T11:04:43.6796714Z Updating files:  97% (14557/15007)
+product-transport	Run actions/checkout@v4	2026-10-06T11:04:43.6888800Z Updating files:  98% (14707/15007)
+product-transport	Run actions/checkout@v4	2026-10-06T11:04:43.6964502Z Updating files:  99% (14857/15007)
+product-transport	Run actions/checkout@v4	2026-10-06T11:04:43.6964763Z Updating files: 100% (15007/15007)
+product-transport	Run actions/checkout@v4	2026-10-06T11:04:43.6964996Z Updating files: 100% (15007/15007), done.
+product-transport	Run actions/checkout@v4	2026-10-06T11:04:43.7102146Z Switched to a new branch 'main'
+product-transport	Run actions/checkout@v4	2026-10-06T11:04:43.7114315Z branch 'main' set up to track 'origin/main'.
+product-transport	Run actions/checkout@v4	2026-10-06T11:04:43.7170860Z ##[endgroup]
+product-transport	Run actions/checkout@v4	2026-10-06T11:04:43.7283253Z [command]/usr/bin/git log -1 --format=%H
+product-transport	Run actions/checkout@v4	2026-10-06T11:04:43.7309456Z 0d6707e2265312af1ec36482f05affc19eefd61e
+product-transport	Run actions/checkout@v4	2026-10-06T11:04:43.7319145Z ##[group]Removing auth
+product-transport	Run actions/checkout@v4	2026-10-06T11:04:43.7322905Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+product-transport	Run actions/checkout@v4	2026-10-06T11:04:43.7353161Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+product-transport	Run actions/checkout@v4	2026-10-06T11:04:43.7564303Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+product-transport	Run actions/checkout@v4	2026-10-06T11:04:43.7589332Z http.https://github.com/.extraheader
+product-transport	Run actions/checkout@v4	2026-10-06T11:04:43.7603246Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+product-transport	Run actions/checkout@v4	2026-10-06T11:04:43.7630742Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+product-transport	Run actions/checkout@v4	2026-10-06T11:04:43.7835132Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+product-transport	Run actions/checkout@v4	2026-10-06T11:04:43.7867649Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+product-transport	Run actions/checkout@v4	2026-10-06T11:04:43.8079351Z ##[endgroup]
+product-transport	Run actions/setup-node@v4	﻿2026-10-06T11:04:43.8345285Z ##[group]Run actions/setup-node@v4
+product-transport	Run actions/setup-node@v4	2026-10-06T11:04:43.8345519Z with:
+product-transport	Run actions/setup-node@v4	2026-10-06T11:04:43.8345701Z   node-version-file: .nvmrc
+product-transport	Run actions/setup-node@v4	2026-10-06T11:04:43.8345895Z   cache: npm
+product-transport	Run actions/setup-node@v4	2026-10-06T11:04:43.8346191Z   always-auth: false
+product-transport	Run actions/setup-node@v4	2026-10-06T11:04:43.8346372Z   check-latest: false
+product-transport	Run actions/setup-node@v4	2026-10-06T11:04:43.8348203Z   token: ***
+product-transport	Run actions/setup-node@v4	2026-10-06T11:04:43.8348375Z ##[endgroup]
+product-transport	Run actions/setup-node@v4	2026-10-06T11:04:43.9438109Z Resolved .nvmrc as 22
+product-transport	Run actions/setup-node@v4	2026-10-06T11:04:44.0123460Z Found in cache @ /opt/hostedtoolcache/node/22.23.3/x64
+product-transport	Run actions/setup-node@v4	2026-10-06T11:04:44.0128608Z (node:2160) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+product-transport	Run actions/setup-node@v4	2026-10-06T11:04:44.0129475Z (Use `node --trace-deprecation ...` to show where the warning was created)
+product-transport	Run actions/setup-node@v4	2026-10-06T11:04:44.0131158Z ##[group]Environment details
+product-transport	Run actions/setup-node@v4	2026-10-06T11:04:49.1554148Z node: v22.23.3
+product-transport	Run actions/setup-node@v4	2026-10-06T11:04:49.1554540Z npm: 10.9.9
+product-transport	Run actions/setup-node@v4	2026-10-06T11:04:49.1554946Z yarn: 1.22.22
+product-transport	Run actions/setup-node@v4	2026-10-06T11:04:49.1555559Z ##[endgroup]
+product-transport	Run actions/setup-node@v4	2026-10-06T11:04:49.1587870Z [command]/opt/hostedtoolcache/node/22.23.3/x64/bin/npm config get cache
+product-transport	Run actions/setup-node@v4	2026-10-06T11:04:49.6296273Z /home/runner/.npm
+product-transport	Run actions/setup-node@v4	2026-10-06T11:04:49.7836960Z Cache hit for: node-cache-Linux-x64-npm-16afdf20ca18a8558675bcdd4dd7afbb75cce632762a6df6693681150dab32a2
+product-transport	Run actions/setup-node@v4	2026-10-06T11:04:49.7923404Z (node:2160) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+product-transport	Run actions/setup-node@v4	2026-10-06T11:04:50.8846296Z Received 197132288 of 467864282 (42.1%), 188.0 MBs/sec
+product-transport	Run actions/setup-node@v4	2026-10-06T11:04:51.8002612Z Received 467864282 of 467864282 (100.0%), 232.9 MBs/sec
+product-transport	Run actions/setup-node@v4	2026-10-06T11:04:51.8003546Z Cache Size: ~446 MB (467864282 B)
+product-transport	Run actions/setup-node@v4	2026-10-06T11:04:51.8105951Z [command]/usr/bin/tar -xf /home/runner/work/_temp/046116d2-4632-4f6c-8525-35b0c20252e3/cache.tzst -P -C /home/runner/work/cinatoken/cinatoken --use-compress-program unzstd
+product-transport	Run actions/setup-node@v4	2026-10-06T11:04:52.5908244Z Cache restored successfully
+product-transport	Run actions/setup-node@v4	2026-10-06T11:04:52.6095580Z Cache restored from key: node-cache-Linux-x64-npm-16afdf20ca18a8558675bcdd4dd7afbb75cce632762a6df6693681150dab32a2
+product-transport	Run npm ci --ignore-scripts	﻿2026-10-06T11:04:52.6285395Z ##[group]Run npm ci --ignore-scripts
+product-transport	Run npm ci --ignore-scripts	2026-10-06T11:04:52.6285728Z ^[[36;1mnpm ci --ignore-scripts^[[0m
+product-transport	Run npm ci --ignore-scripts	2026-10-06T11:04:52.6552776Z shell: /usr/bin/bash -e {0}
+product-transport	Run npm ci --ignore-scripts	2026-10-06T11:04:52.6553048Z ##[endgroup]
+product-transport	Run npm ci --ignore-scripts	2026-10-06T11:05:03.7371867Z npm warn deprecated geojson-linestring-dissolve@0.0.1: Package no longer supported. Contact Support at https://www.npmjs.com/support for more info.
+product-transport	Run npm ci --ignore-scripts	2026-10-06T11:05:05.7673385Z npm warn deprecated text-encoding@0.6.4: no longer maintained
+product-transport	Run npm ci --ignore-scripts	2026-10-06T11:05:06.4688106Z npm warn deprecated node-domexception@1.0.0: Use your platform's native DOMException instead
+product-transport	Run npm ci --ignore-scripts	2026-10-06T11:05:08.2832663Z npm warn deprecated glob@9.3.5: Old versions of glob are not supported, and contain widely publicized security vulnerabilities, which have been fixed in the current version. Please update. Support for old versions may be purchased (at exorbitant rates) by contacting i@izs.me
+product-transport	Run npm ci --ignore-scripts	2026-10-06T11:05:30.1940018Z 
+product-transport	Run npm ci --ignore-scripts	2026-10-06T11:05:30.1940826Z added 1483 packages, and audited 1490 packages in 37s
+product-transport	Run npm ci --ignore-scripts	2026-10-06T11:05:30.1941272Z 
+product-transport	Run npm ci --ignore-scripts	2026-10-06T11:05:30.1941480Z 450 packages are looking for funding
+product-transport	Run npm ci --ignore-scripts	2026-10-06T11:05:30.1941846Z   run `npm fund` for details
+product-transport	Run npm ci --ignore-scripts	2026-10-06T11:05:30.4899136Z 
+product-transport	Run npm ci --ignore-scripts	2026-10-06T11:05:30.4900412Z 50 vulnerabilities (1 low, 9 moderate, 31 high, 9 critical)
+product-transport	Run npm ci --ignore-scripts	2026-10-06T11:05:30.4900750Z 
+product-transport	Run npm ci --ignore-scripts	2026-10-06T11:05:30.4901003Z To address issues that do not require attention, run:
+product-transport	Run npm ci --ignore-scripts	2026-10-06T11:05:30.4901375Z   npm audit fix
+product-transport	Run npm ci --ignore-scripts	2026-10-06T11:05:30.4901530Z 
+product-transport	Run npm ci --ignore-scripts	2026-10-06T11:05:30.4901760Z To address all issues (including breaking changes), run:
+product-transport	Run npm ci --ignore-scripts	2026-10-06T11:05:30.4902144Z   npm audit fix --force
+product-transport	Run npm ci --ignore-scripts	2026-10-06T11:05:30.4902351Z 
+product-transport	Run npm ci --ignore-scripts	2026-10-06T11:05:30.4902493Z Run `npm audit` for details.
+product-transport	Verify real ingress RST and separate native source cancel	﻿2026-10-06T11:05:30.6882077Z ##[group]Run python3 scripts/smoke/run-workerd-product-sse-cancel.py --repo "$GITHUB_WORKSPACE" --out "$FIXTURE_OUT" --source-sha "$GITHUB_SHA"
+product-transport	Verify real ingress RST and separate native source cancel	2026-10-06T11:05:30.6882904Z ^[[36;1mpython3 scripts/smoke/run-workerd-product-sse-cancel.py --repo "$GITHUB_WORKSPACE" --out "$FIXTURE_OUT" --source-sha "$GITHUB_SHA"^[[0m
+product-transport	Verify real ingress RST and separate native source cancel	2026-10-06T11:05:30.6951414Z shell: /usr/bin/bash -e {0}
+product-transport	Verify real ingress RST and separate native source cancel	2026-10-06T11:05:30.6951647Z env:
+product-transport	Verify real ingress RST and separate native source cancel	2026-10-06T11:05:30.6951912Z   FIXTURE_OUT: /home/runner/work/_temp/product-sse-cancel-37453985144-1
+product-transport	Verify real ingress RST and separate native source cancel	2026-10-06T11:05:30.6952233Z ##[endgroup]
+product-transport	Verify real ingress RST and separate native source cancel	2026-10-06T11:05:37.0613134Z {"command": ["/opt/hostedtoolcache/node/22.23.3/x64/bin/node", "/home/runner/work/cinatoken/cinatoken/scripts/smoke/test-workerd-product-sse-cancel.mjs", "--execute-linux", "--out", "/home/runner/work/_temp/product-sse-cancel-37453985144-1/fixture", "--source-sha", "0d6707e2265312af1ec36482f05affc19eefd61e"], "startedAtUnix": 1791284730.7297835, "endedAtUnix": 1791284737.0605803, "childPid": 2233, "ownedProcessGroup": 2233, "actualExit": 1, "timedOut": false, "fallbackSignals": [], "ownedGroupRemaining": false, "terminalClosed": true, "errors": [], "passed": false, "logs": {"stdout.log": {"bytes": 221, "sha256": "71f86b13f606a367da1098a02200eefdddc7a4483d8403a9f1439c40101eb40a"}, "stderr.log": {"bytes": 0, "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"}}, "gracefulWorkerdExitProven": false}
+product-transport	Verify real ingress RST and separate native source cancel	2026-10-06T11:05:37.0673129Z ##[error]Process completed with exit code 1.
+product-transport	Verify clean Web dependency and peer tree	﻿2026-10-06T11:05:37.0718211Z ##[group]Run npm ls --all -w @cinatoken/web > "$RUNNER_TEMP/product-sse-web-dependencies-37453985144-1.log" 2>&1
+product-transport	Verify clean Web dependency and peer tree	2026-10-06T11:05:37.0718822Z ^[[36;1mnpm ls --all -w @cinatoken/web > "$RUNNER_TEMP/product-sse-web-dependencies-37453985144-1.log" 2>&1^[[0m
+product-transport	Verify clean Web dependency and peer tree	2026-10-06T11:05:37.0774400Z shell: /usr/bin/bash -e {0}
+product-transport	Verify clean Web dependency and peer tree	2026-10-06T11:05:37.0774622Z ##[endgroup]
+product-transport	Run actions/upload-artifact@v4	﻿2026-10-06T11:05:37.7575121Z ##[group]Run actions/upload-artifact@v4
+product-transport	Run actions/upload-artifact@v4	2026-10-06T11:05:37.7575508Z with:
+product-transport	Run actions/upload-artifact@v4	2026-10-06T11:05:37.7575783Z   name: product-sse-cancel-37453985144-1
+product-transport	Run actions/upload-artifact@v4	2026-10-06T11:05:37.7576678Z   path: /home/runner/work/_temp/product-sse-cancel-37453985144-1
+product-transport	Run actions/upload-artifact@v4	/home/runner/work/_temp/product-sse-web-dependencies-37453985144-1.log
+product-transport	Run actions/upload-artifact@v4	
+product-transport	Run actions/upload-artifact@v4	2026-10-06T11:05:37.7577156Z   if-no-files-found: error
+product-transport	Run actions/upload-artifact@v4	2026-10-06T11:05:37.7577356Z   retention-days: 14
+product-transport	Run actions/upload-artifact@v4	2026-10-06T11:05:37.7577546Z   compression-level: 6
+product-transport	Run actions/upload-artifact@v4	2026-10-06T11:05:37.7577728Z   overwrite: false
+product-transport	Run actions/upload-artifact@v4	2026-10-06T11:05:37.7577908Z   include-hidden-files: false
+product-transport	Run actions/upload-artifact@v4	2026-10-06T11:05:37.7578109Z ##[endgroup]
+product-transport	Run actions/upload-artifact@v4	2026-10-06T11:05:37.8918586Z (node:2272) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+product-transport	Run actions/upload-artifact@v4	2026-10-06T11:05:37.8919242Z (Use `node --trace-deprecation ...` to show where the warning was created)
+product-transport	Run actions/upload-artifact@v4	2026-10-06T11:05:37.8999168Z Multiple search paths detected. Calculating the least common ancestor of all paths
+product-transport	Run actions/upload-artifact@v4	2026-10-06T11:05:37.9000361Z The least common ancestor is /home/runner/work/_temp. This will be the root directory of the artifact
+product-transport	Run actions/upload-artifact@v4	2026-10-06T11:05:37.9000957Z With the provided path, there will be 9 files uploaded
+product-transport	Run actions/upload-artifact@v4	2026-10-06T11:05:37.9001634Z Artifact name is valid!
+product-transport	Run actions/upload-artifact@v4	2026-10-06T11:05:37.9002030Z Root directory input is valid!
+product-transport	Run actions/upload-artifact@v4	2026-10-06T11:05:38.1289755Z Beginning upload of artifact content to blob storage
+product-transport	Run actions/upload-artifact@v4	2026-10-06T11:05:38.1782701Z (node:2272) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+product-transport	Run actions/upload-artifact@v4	2026-10-06T11:05:38.3619892Z Uploaded bytes 244083
+product-transport	Run actions/upload-artifact@v4	2026-10-06T11:05:38.3926239Z Finished uploading artifact content to blob storage!
+product-transport	Run actions/upload-artifact@v4	2026-10-06T11:05:38.3927157Z SHA256 digest of uploaded artifact zip is 670554d1dd30f6a37442ef691176f1b111ebee98da370f70cf551397f82d973f
+product-transport	Run actions/upload-artifact@v4	2026-10-06T11:05:38.3928205Z Finalizing artifact upload
+product-transport	Run actions/upload-artifact@v4	2026-10-06T11:05:38.6308431Z Artifact product-sse-cancel-37453985144-1.zip successfully finalized. Artifact ID 11408127403
+product-transport	Run actions/upload-artifact@v4	2026-10-06T11:05:38.6309302Z Artifact product-sse-cancel-37453985144-1 has been successfully uploaded! Final size is 244083 bytes. Artifact ID is 11408127403
+product-transport	Run actions/upload-artifact@v4	2026-10-06T11:05:38.6314691Z Artifact download URL: https://github.com/cinagroup/cinatoken/actions/runs/37453985144/artifacts/11408127403
+product-transport	Post Run actions/checkout@v4	﻿2026-10-06T11:05:38.6490299Z Post job cleanup.
+product-transport	Post Run actions/checkout@v4	2026-10-06T11:05:38.7154591Z [command]/usr/bin/git version
+product-transport	Post Run actions/checkout@v4	2026-10-06T11:05:38.7190493Z git version 2.55.0
+product-transport	Post Run actions/checkout@v4	2026-10-06T11:05:38.7219525Z Temporarily overriding HOME='/home/runner/work/_temp/719a0380-3c97-44cc-badb-56f61f5f52c7' before making global git config changes
+product-transport	Post Run actions/checkout@v4	2026-10-06T11:05:38.7220684Z Adding repository directory to the temporary git global config as a safe directory
+product-transport	Post Run actions/checkout@v4	2026-10-06T11:05:38.7223523Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/cinatoken/cinatoken
+product-transport	Post Run actions/checkout@v4	2026-10-06T11:05:38.7258382Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+product-transport	Post Run actions/checkout@v4	2026-10-06T11:05:38.7288506Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+product-transport	Post Run actions/checkout@v4	2026-10-06T11:05:38.7515061Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+product-transport	Post Run actions/checkout@v4	2026-10-06T11:05:38.7544609Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+product-transport	Post Run actions/checkout@v4	2026-10-06T11:05:38.7774292Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+product-transport	Post Run actions/checkout@v4	2026-10-06T11:05:38.7805135Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+product-transport	Complete job	﻿2026-10-06T11:05:38.8145929Z Cleaning up orphan processes
+product-transport	Complete job	2026-10-06T11:05:38.8378611Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/checkout@v4, actions/setup-node@v4, actions/upload-artifact@v4. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/

@@ -4,7 +4,7 @@
 
 目标是以 `packages/web` 的 React、Rsbuild 与现有 UI 基础作为 cinatoken 前端，覆盖公开发现、账户中心及管理后台的全部现有能力。首个交付切片是认证、工作区和网关密钥闭环；切片通过不代表整个迁移完成。
 
-**可行性结论：可行。** `packages/web` 的 React、Rsbuild 与现有 UI 已作为独立 `cinatoken-web` 部署，并于2026-10-05接管生产主入口及公开SSR。Admin继续提供认证、用户/管理API、BFF与兼容旧路由。2026-10-06当前c13版本匿名功能矩阵45/45及主题/中文/移动重载通过（5.74）；旧networkidle严格QA的31/45超时仍保留（5.73），根因未证明。真实身份/资金/链、完整双平台及旧页面退役继续按原门槛推进。
+**可行性结论：可行。** `packages/web` 的 React、Rsbuild 与现有 UI 已作为独立 `cinatoken-web` 部署，并于2026-10-05接管生产主入口及公开SSR。Admin继续提供认证、用户/管理API、BFF与兼容旧路由。当前exact2e版本已正式发布，匿名三页及主题/中文/移动重载通过（5.91–5.92）；c13历史匿名功能矩阵45/45保留5.74原范围，旧networkidle严格QA的31/45超时仍保留（5.73），根因未证明。真实身份/资金/链、完整双平台及旧页面退役继续按原门槛推进。
 
 本文同时保存方案、checklist 和进度，不另建会分叉的实施清单。按以下入口阅读：
 
@@ -26,9 +26,11 @@
 
 文档范围：按“将 checklist 整理成一个 md 文件，推进实施随时更新”的要求维护本文。完整清单为 **102 项主任务（99 项 P0–P8 任务、3 项来源任务）**，配套 G0–G8 验收门槛、页面/API/权限矩阵及批次记录；实施使用原任务 ID 持续更新，不另建主清单。
 
-当前发布（2026-10-05）：`cinatoken.com/*` 继续由独立 `cinatoken-web` 承接，当前源码 `c13a64b9c3b2c90adcf736910ea408868d7854f1`、version `2a0a2777-d3b1-47f0-a0a7-88e701b4d2d9`、deployment `fd24618f-121e-4640-9edf-f15d243a6d75`、100%流量、29页面开关启用；资源Route保留，Workers.dev/Preview关闭。同SHA Linux CI37312669228两个job/36步骤全部success，冻结产物与2289 Git输入/18195586 B精确匹配。实际部署由已验证的3847955＋bdc1bfcf bridge与新CI产物合成，137资产/35服务端文件，三档对应源码可下载；GET23/HEAD6、认证转发GET3、4个HTML no-transform与资源组合137/137通过，首轮超时及定向重试均保留。Admin/Proxy仍为34c742d1。本SHA原v2两轮25/23页超时、新v3 31/45页及三交互后actual1，完整严格浏览器未通过；5.72的3847955严格45/45及交互结果仅保留为历史。当前资源保留修复见5.73，首轮遥测冲突/配置403见5.71。真实登录/资金/链、完整G0–G8和旧页退役仍待验收。
+上次发布（2026-10-05，历史）：`cinatoken.com/*` 继续由独立 `cinatoken-web` 承接，当前源码 `c13a64b9c3b2c90adcf736910ea408868d7854f1`、version `2a0a2777-d3b1-47f0-a0a7-88e701b4d2d9`、deployment `fd24618f-121e-4640-9edf-f15d243a6d75`、100%流量、29页面开关启用；资源Route保留，Workers.dev/Preview关闭。同SHA Linux CI37312669228两个job/36步骤全部success，冻结产物与2289 Git输入/18195586 B精确匹配。实际部署由已验证的3847955＋bdc1bfcf bridge与新CI产物合成，137资产/35服务端文件，三档对应源码可下载；GET23/HEAD6、认证转发GET3、4个HTML no-transform与资源组合137/137通过，首轮超时及定向重试均保留。Admin/Proxy仍为34c742d1。本SHA原v2两轮25/23页超时、新v3 31/45页及三交互后actual1，完整严格浏览器未通过；5.72的3847955严格45/45及交互结果仅保留为历史。当前资源保留修复见5.73，首轮遥测冲突/配置403见5.71。真实登录/资金/链、完整G0–G8和旧页退役仍待验收。
 
-当前推进：exact2e独立Web已发布，versiona898/deployment7223/tag2e/100%，三Route/29true/Admin绑定和预览关闭读回0；138资源/4源码包精确匹配，HTTP首验收器四误判及定向重验保留（5.91）。浏览器三页正常、主题交互诊断继续。P1-01–06/09完成、G1待；c9Product500定位夹具bundle初始化漏失，最小修复待新Linux，minimal真实3帧RST及signal中止但source.cancel仍未触发。原strict8/7/1保持；OAuth具体生产关联批准待，真实身份/已有测试工作区/密钥与完整G0–G8继续。
+当前发布（2026-10-06）：独立 `cinatoken-web` 源码/tag `2e40b9212b246152594ea60a774c85a9a0a4ad93`，version `a898c3fd-3df4-4e1d-bd97-da19936b3bfe`、deployment `7223b0c5-6044-49b6-bf8b-e261f3c1f6ae`、100%流量；同SHA Web Linux run37450271483两job/37步骤及1600测试通过，冻结138资产/35服务端文件/4源码包，生产原字节匹配。三Route、29开关、Admin服务绑定与预览关闭最终读回0；匿名桌面/移动功能通过，实际登录及原生严格取消/完整G0–G8仍待，直接证据见5.91–5.92。
+
+当前推进：独立Web exact2e已正式发布，a898/7223/tag2e/100%，三Route/29true/预览关闭最终读回0；138资产/4源码包匹配，匿名Chrome三页及暗色/中文/mobile重载功能通过（5.92）。同0d新Linux产品SSE三帧RST后上游物理关闭、usage取消/costUnknown/resource confirmed真实PASS；minimal source.cancel仍FAIL，workflow实际1，原strict8/7/1不变。P1-01–06/09完成，初始化前SSR控件输入体验、G1及完整G0–G8待验；生产OAuth具体关联批准待，真实身份/已有专用测试工作区/密钥未验收。
 
 上一批状态：NEXT-41四语公开署名修复与NEXT-13 B1五个活跃文件修复完成本地验收（5.54）。新P66 Web1401/1401、完整Web/Edge types及Web lint/format、三目标build/freeze/gen0；同一492产物真实Node HTTP45、Node compiled Worker77、Chrome JS32/真正NoJS36通过，68HTML实际footer英文原文/lang=en/译文/链接均通过。Admin源组件Chrome19/相关unit26/保留合同AST22、完整types与目标lint/format0；全量lint实际67E9W→58E5W，仍未全量通过。本地来源946文件tree/修复前1795观察已补，不能当上游导入ref/日期。P65原24/32缺英文、修前测试40失败与其他历史失败完整保留；workerd产品/最小例0xc0000005、WSL E_ACCESSDENIED，0原生case获验。29入口false、未部署；下一步NEXT-13 B2/B3按真实行为清理及来源/真实身份/三库/目录/链/LinuxCI/双平台/发布回滚，完整102主任务/54矩阵/G0–G8/E00–E08未提前完成。
 
@@ -59,16 +61,16 @@ P48为2026-09-30历史Web候选（仅证明原冻结范围）：protocol-07 与�
 | 阶段 | 当前状态 | 已有实现或证据 | 下一验收重点 |
 | --- | --- | --- | --- |
 | P0 基线与范围 | 进行中 | 本文已列出页面/API/权限矩阵与来源要求 | 补齐可核验上游版本、基线及矩阵审查 |
-| P1 工程基础 | 本批Web工程与Linux CI通过，整体待验；持续实施 | c13a64b9本机完整Web1596/1596、types/lint/format通过，同SHA Linux Node22 WebCI两个job/36步骤全部success，冻结/三目标与Admin合同构建通过（5.73）；J6完整Admin格式651、AST497及旧新实际React/HTTP保留5.69历史范围 | G1整体仍未完成；326历史来源、上游ref/日期/归属、许可及完整原生范围继续待验。Proxy native/取消和Release权限失败独立保留，不把Web CI成功称全仓库CI通过。 |
+| P1 工程基础 | 本批Web工程与Linux CI通过，整体待验；持续实施 | exact2e本机完整Web1600/1600、types/lint/format和三target通过；同SHA Linux Node22两job/37步骤success，显式构建变量白名单/secret canary、干净npm ci/full Web peer树0，既有依赖version/integrity保持（5.88–5.92）；J6旧格式/AST保留5.69历史范围 | P1-07/08、G1仍待；SSR初始化前控件输入体验、326历史来源/上游ref/日期/归属与许可继续。Web CI不代替全仓或原strict取消，完整G0–G8逐项推进。 |
 | P2 认证与工作区 | 本地切片通过，完整验收待办 | NEXT-42 B1先Portal可信身份与expected-user校验，再读Admin/复验IdP、解析workspace和领域操作；同subject才提升Portal管理能力。新Next真实HTTP45/45含401/400/409、角色复验与两个退出语义，独立重写观测2/2通过（5.63）；5.62 P70 Chrome10历史保留 | IdP/数据库/组织成员与Queue为受控binding，角色撤销或复验暂不可用分支不等于真实发行方验收；真实CinaAuth/同源登录及原生三库仍待验。 |
 | P3 数据与请求层 | 进行中 | NEXT-42 canonical预期user/workspace组合、62账户调用绑定及未知写不重放已接入；B1新Next六exports旧A/B请求在Admin/IdP/workspace/domain之前409，401/400/403/409/500及成功响应private,no-store，统一退出另由精确配置保障（5.63） | 完整金额/日期/权限、缓存/Retry-After、原生三库并发及Queue/链/账本对账继续；独立两case构造观测不读取或修改请求体，不能替代真实领域平台验收。 |
 | P4 账户中心 | 本地证据补齐，完整验收待办 | 十组路由/十五能力已实现，P6 244 fixture及5.62 P70 Keys/NFT/Preset Chrome10保留；B1同一新Next合法NFT POST在显式受控tier105配置下实际创建SQL行/Queue1，身份拒绝无领域增量，两退出通过（5.63） | 受控Node SQLite执行77正式D1迁移不等于原生D1/PG/MySQL；正式tier200–203配置未改，真实ACC-01–15授权、预算/收益账本、钱包/链与平台继续。 |
 | P5 管理后台 | 本地证据持续补齐，整域待验 | 5.45提现/NFT完整Screen/API/四语/旧Next桥；P53历史、5.46 P54焦点48/48；5.47 NEXT-38完整四域源码及新P58三域270/270、Routes126unique、已发写切scope8/8本地证据，Root1062/类型/两构建0 | 其余域和真实身份/三库/链/账本/经济证据/Proxy/平台与G5继续；MySQL无journal模型待验 |
-| P6 公开页与 SEO | 当前匿名功能验收通过，整域待验 | 当前c13公开HTTP/HTML/137资源组合见5.73；生产functional v4匿名45/45含8公开页、预期模型404及主题/中文/390px重载通过，未知错误0（5.74） | 当前catalog为空/USD；旧networkidle31/45失败与根因未证明保留，功能就绪通过不证明真实Auth、非空目录/完整聊天、完整SEO、上游来源或G6。公开SSR由Web提供，兼容路由保留Admin。 |
-| P7 双平台部署 | Cloudflare切流及独立Docker SSR冒烟通过，完整双平台待验 | 生产c13/2a0版本100%/29true及三Route/预览双false复核通过；新测试SHA5471899c的Web CI37步骤/1596单测、Docker实际SSR87项/64匿名目录读及四容器一网络清理通过，现有Compose13步骤成功（5.74） | 新测试SHA未部署，生产/Admin/Proxy版本保持；Compose仅PG/Admin/Proxy，SSR目录为受控HTTPfixture、无TLS。完整SSR/Admin/Proxy/TLS、真实身份/资金链、SSE/WebSocket、灰度/实际回滚与G7继续；原生PG20和v364取消失败保留。 |
-| P8 发布与退役 | 切流完成，匿名功能验收通过，完整验收及退役未完成 | c13生产版本/Route/冻结137资产与原失败见5.73；5.74独立functional45/45/三交互通过且前后Cloudflare版本不变，保留旧networkidle失败、所有历史负面及资源保留约定 | 全矩阵真实业务、来源/许可、性能预算观测、完整双平台、灰度/实际回滚及旧UI退役继续；匿名功能通过不勾G8 |
+| P6 公开页与 SEO | 当前匿名功能验收通过，整域待验 | 当前exact2e正式Web公开HTTP/HTML/138资源/4源码包见5.91；Chrome V4三页/暗色/中文/390px硬重载功能0，六图目视（5.92）。c13 functional45/45保留5.74历史范围 | 当前catalog为空/USD；初始化前主题/语言输入体验、旧networkidle31/45失败与根因未证保留，真实Auth、非空目录/完整聊天、完整SEO、上游来源及G6待。公开SSR由Web提供，兼容路由保留Admin。 |
+| P7 双平台部署 | Cloudflare切流及独立Docker SSR冒烟通过，完整双平台待验 | exact2e/a898/7223/tag2e100%及三Route/29true/预览关闭读回通过；138资源/4源码包在线匹配、产品SSE真实RST→上游物理关闭/usage取消/resourceconfirmed通过（5.91–5.92）。Web CI37及此前Docker SSR87/64读取/清理证据保留 | 完整SSR/Admin/Proxy/TLS、真实身份/资金链/PG lease及账务、SSE/WebSocket、灰度/实际回滚与G7继续。原strict8/7/1及minimal source.cancel5000ms失败保持，product transport PASS不代替整体门槛。 |
+| P8 发布与退役 | 切流完成，匿名功能验收通过，完整验收及退役未完成 | exact2e正式部署100%/138资产/4源码包和前后读回通过；匿名Chrome三页/主题/中文/mobile功能0，原浏览器准备时序/HTTP验收器负面收据完整保留（5.91–5.92） | 全矩阵真实业务、来源/许可、SSR早期输入体验、性能预算观测、完整双平台、灰度/实际回滚及旧UI退役继续；匿名功能或产品transport局部通过不勾G8。 |
 
-5.7 的 `index.7ff2962b93.js` 仅是历史冻结检查点。当前生产公开页面由5.73的独立Web SSR承载，账户/管理HTML选路已开启；`/dashboard`、`/gateway/*`等兼容路由仍回到Admin，旧页面尚未退役。
+5.7 的 `index.7ff2962b93.js` 仅是历史冻结检查点。当前生产公开页面由5.91–5.92的exact2e独立Web SSR承载，账户/管理HTML选路已开启；`/dashboard`、`/gateway/*`等兼容路由仍回到Admin，旧页面尚未退役。
 
 ### 0.2 更新与完成规则
 
@@ -2514,6 +2516,22 @@ minimal真实三帧[1,2,3]→RST(responseComplete=false)→ECONNRESET→Request.
 
 直接证据：[正式发布与c9边界索引](./evidence/2026-10-06-web-build-environment-and-product-sse/production-2e-and-c9-boundary/index.json)，含完整部署/读回、HTTP原两轮、三次浏览器负面结果、原Linux artifact及初始化合成对照。浏览器新诊断与夹具新Linux结果在后续追加，不修改旧失败。
 
+### 5.92 正式 Web 浏览器复验与产品流真实取消闭环（2026-10-06）
+
+当前生产仍为exact2e/tag2e/version a898c3fd-3df4-4e1d-bd97-da19936b3bfe/deployment7223b0c5-6044-49b6-bf8b-e261f3c1f6ae/100%，11:05Z再次读回actual0，三Route/29true/Admin绑定和workers.dev/preview关闭保持。0d6707e2之后变更仅独立smoke与证据/MD，Web构建输入与2e限定差量为空，仍使用通过CI的原冻结产物。
+
+独立Chrome154/Playwright匿名新context的V4浏览器actual0，context/browser均关闭。/en、/en/models、匿名/dashboard三页HTTP200、标题/内容正确、非空无framework overlay；81条JS/CSS没有错误、requestFailures/pageErrors均0，唯一/api/user/me401经body确认是预期匿名Unauthorized。桌面1440×1000真实Appearance选择dark写cookie并html.dark，Language选择zh实际导航/zh，390×844硬刷新保留中文/暗色且无横向溢出，六截图已目视。
+
+V3等待暗色的原失败已定位：domcontentloaded时SSR控件可见而React事件尚未绑定，约5秒后才有select onChange及主题effect。V4只在临时测试里等待可证明的hydration状态，不改暗色断言、不修改产品；React内部props仅是诊断条件，不作为公共产品契约。初始化前选择输入仍可能无效，这个真实体验缺口继续归P1-07待验，不能称已修复；V1/V2/V3及旧strict networkidle失败全部保持。该功能验证没有真实登录/工作区/密钥结果。
+
+同0d6707e2265312af1ec36482f05affc19eefd61e唯一新Linux manual run37453985144确已执行，workflow仍failure、actualchild1；完整npm ci及原样full Web dependency步骤都success。初始化修复后product真实PASS：普通HTTP ingress三帧[1,2,3]→客户端RST→Request.signal aborted=true；owned上游response与socket在cleanup前物理关闭、interval停止，关闭后325ms/断言300ms观察无第四帧；实际usage.cancelled=true、total_tokens=0、raw_usage=null、costUnknown=true，真实resourceCompletion=confirmed，各观察一次。
+
+独立minimal仍真实FAIL：HTTP200、三帧→RST→Request.signal中止，但5000ms内无ReadableStream.cancel回调。严格要求保持，signal及product成功不能代替source.cancel。完整46events全局编号连续、原byte/SHA与report一致；executor无timeout/fallback、owned process group消失、MF dispose fulfilled及所有owned客户端/连接/timer为0，不证明native graceful。原strict8/7/1和C++根因未知保持。该product PASS只补transport/driver边界，不证明真实数据库capacity/PG lease释放、结算账务、Web/Admin/Proxy完整路径或G7/G8。
+
+checklist原102主任务（8完成/94待）、54矩阵、211实际task（55完成/156待）、G0–G8/E00–E08范围和状态保持；阶段表只更新P1/P6/P7/P8当前证据与下一重点，不改变门槛。固定client cinatoken-admin/resource https://cinatoken.com的生产OAuth关联写入此前因持久改变授权边界被自动审批拒绝，具体批准仍待，未重试或绕过；真实浏览器登录、已有专用测试工作区、密钥创建/撤销及跨工作区拒绝继续待验。
+
+直接证据：[浏览器与产品取消最终索引](./evidence/2026-10-06-web-build-environment-and-product-sse/final-browser-and-product-transport/index.json)，含两项真实子进程终态、完整Linux artifact/全事件/两case、六浏览器图和最终Cloudflare读回。所有历史成功/失败仍按原范围保留。
+
 ## 6. 更新记录
 
 | 日期 | 更新内容 | 对应范围 | 验证与下一步 |
@@ -2761,3 +2779,5 @@ minimal真实三帧[1,2,3]→RST(responseComplete=false)→ECONNRESET→Request.
 2026-10-06：5.90记录同2e Web37步骤/1600及冷安装完整peer树0，P1-02按范围完成；SSE实际500定位观察fetch不支持redirect:error，最小manual修复待新Linux；准备发布exact2e产物，原严格失败/OAuth审批边界与完整任务保持。
 
 2026-10-06：5.91正式发布exact2e冻结产物并读回100%新版本、三Route/29true；138资产及4源码包实际匹配，HTTP验收器误判原失败与四项重验均保存。c9minimal真实RST/signal但cancel未触发，product夹具bundle初始化缺失最小修复待Linux，浏览器外观交互继续诊断，原任务/授权边界保持。
+
+2026-10-06：5.92记录当前正式Web最终读回0及Chrome三页/真实暗色-中文-mobile硬重载功能0；0d原生product三帧RST、上游关闭/usage取消/resource confirmed PASS，minimal source.cancel依然FAIL/workflow1，完整负面与严格门槛保持。阶段表刷新证据，102/54/G/E/211任务状态不变，OAuth具体批准及真实工作区/密钥继续待。

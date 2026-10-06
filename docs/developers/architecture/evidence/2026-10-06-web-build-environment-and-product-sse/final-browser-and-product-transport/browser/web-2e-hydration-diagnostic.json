@@ -1,0 +1,1111 @@
+{
+  "startedAt": "2026-10-06T10:59:29.956Z",
+  "browserPlugin": "absent",
+  "fallback": "Browser plugin not available",
+  "realAuthentication": false,
+  "businessWrites": false,
+  "requests": [
+    {
+      "url": "https://cinatoken.com/en",
+      "method": "GET",
+      "type": "document",
+      "at": "2026-10-06T10:59:30.411Z"
+    },
+    {
+      "url": "https://cinatoken.com/web-assets/static/css/index.46bbf8297a.css",
+      "method": "GET",
+      "type": "stylesheet",
+      "at": "2026-10-06T10:59:33.303Z"
+    },
+    {
+      "url": "https://cinatoken.com/web-assets/static/js/index.89887bd39e.js",
+      "method": "GET",
+      "type": "script",
+      "at": "2026-10-06T10:59:34.056Z"
+    },
+    {
+      "url": "https://cinatoken.com/web-assets/static/js/async/lib-react.6356ddf42c.js",
+      "method": "GET",
+      "type": "script",
+      "at": "2026-10-06T10:59:35.180Z"
+    },
+    {
+      "url": "https://cinatoken.com/web-assets/static/js/async/6u.79a8483cd5.js",
+      "method": "GET",
+      "type": "script",
+      "at": "2026-10-06T10:59:35.181Z"
+    },
+    {
+      "url": "https://cinatoken.com/web-assets/static/js/async/qi.3c0df390c8.js",
+      "method": "GET",
+      "type": "script",
+      "at": "2026-10-06T10:59:35.181Z"
+    },
+    {
+      "url": "https://cinatoken.com/web-assets/static/js/async/4b.f4f7b8a967.js",
+      "method": "GET",
+      "type": "script",
+      "at": "2026-10-06T10:59:35.181Z"
+    },
+    {
+      "url": "https://cinatoken.com/web-assets/static/js/async/ta.350a9de34e.js",
+      "method": "GET",
+      "type": "script",
+      "at": "2026-10-06T10:59:38.675Z"
+    },
+    {
+      "url": "https://cinatoken.com/web-assets/static/js/async/cn.e7cc2f2c5b.js",
+      "method": "GET",
+      "type": "script",
+      "at": "2026-10-06T10:59:38.675Z"
+    },
+    {
+      "url": "https://cinatoken.com/web-assets/static/js/async/fd.7dd19fd28b.js",
+      "method": "GET",
+      "type": "script",
+      "at": "2026-10-06T10:59:38.675Z"
+    },
+    {
+      "url": "https://cinatoken.com/web-assets/static/js/async/30.5583d3d88f.js",
+      "method": "GET",
+      "type": "script",
+      "at": "2026-10-06T10:59:39.387Z"
+    },
+    {
+      "url": "https://cinatoken.com/web-assets/static/js/async/hw.419e09a2b0.js",
+      "method": "GET",
+      "type": "script",
+      "at": "2026-10-06T10:59:39.387Z"
+    },
+    {
+      "url": "https://cinatoken.com/web-assets/static/js/async/r4.4d0fa2a207.js",
+      "method": "GET",
+      "type": "script",
+      "at": "2026-10-06T10:59:39.387Z"
+    },
+    {
+      "url": "https://cinatoken.com/web-assets/logo.png",
+      "method": "GET",
+      "type": "other",
+      "at": "2026-10-06T10:59:40.127Z"
+    }
+  ],
+  "responses": [
+    {
+      "url": "https://cinatoken.com/en",
+      "status": 200,
+      "type": "document",
+      "at": "2026-10-06T10:59:33.290Z"
+    },
+    {
+      "url": "https://cinatoken.com/web-assets/static/css/index.46bbf8297a.css",
+      "status": 200,
+      "type": "stylesheet",
+      "at": "2026-10-06T10:59:34.056Z"
+    },
+    {
+      "url": "https://cinatoken.com/web-assets/static/js/index.89887bd39e.js",
+      "status": 200,
+      "type": "script",
+      "at": "2026-10-06T10:59:35.178Z"
+    },
+    {
+      "url": "https://cinatoken.com/web-assets/static/js/async/4b.f4f7b8a967.js",
+      "status": 200,
+      "type": "script",
+      "at": "2026-10-06T10:59:37.252Z"
+    },
+    {
+      "url": "https://cinatoken.com/web-assets/static/js/async/lib-react.6356ddf42c.js",
+      "status": 200,
+      "type": "script",
+      "at": "2026-10-06T10:59:37.252Z"
+    },
+    {
+      "url": "https://cinatoken.com/web-assets/static/js/async/qi.3c0df390c8.js",
+      "status": 200,
+      "type": "script",
+      "at": "2026-10-06T10:59:37.321Z"
+    },
+    {
+      "url": "https://cinatoken.com/web-assets/static/js/async/6u.79a8483cd5.js",
+      "status": 200,
+      "type": "script",
+      "at": "2026-10-06T10:59:38.632Z"
+    },
+    {
+      "url": "https://cinatoken.com/web-assets/static/js/async/fd.7dd19fd28b.js",
+      "status": 200,
+      "type": "script",
+      "at": "2026-10-06T10:59:39.051Z"
+    },
+    {
+      "url": "https://cinatoken.com/web-assets/static/js/async/cn.e7cc2f2c5b.js",
+      "status": 200,
+      "type": "script",
+      "at": "2026-10-06T10:59:39.201Z"
+    },
+    {
+      "url": "https://cinatoken.com/web-assets/static/js/async/ta.350a9de34e.js",
+      "status": 200,
+      "type": "script",
+      "at": "2026-10-06T10:59:39.373Z"
+    },
+    {
+      "url": "https://cinatoken.com/web-assets/static/js/async/hw.419e09a2b0.js",
+      "status": 200,
+      "type": "script",
+      "at": "2026-10-06T10:59:39.758Z"
+    },
+    {
+      "url": "https://cinatoken.com/web-assets/static/js/async/r4.4d0fa2a207.js",
+      "status": 200,
+      "type": "script",
+      "at": "2026-10-06T10:59:40.073Z"
+    },
+    {
+      "url": "https://cinatoken.com/web-assets/static/js/async/30.5583d3d88f.js",
+      "status": 200,
+      "type": "script",
+      "at": "2026-10-06T10:59:40.099Z"
+    }
+  ],
+  "failures": [],
+  "console": [],
+  "pageErrors": [],
+  "snapshots": [
+    {
+      "step": "domcontentloaded",
+      "at": "2026-10-06T10:59:35.191Z",
+      "readyState": "interactive",
+      "classes": [],
+      "hydration": null,
+      "rootKeys": [],
+      "selects": [
+        {
+          "value": "en",
+          "label": "Language\nEnglish\n简体中文\n日本語\n한국어",
+          "reactKeys": [],
+          "hasOnChange": false
+        },
+        {
+          "value": "system",
+          "label": "Appearance\nSystem\nLight\nDark",
+          "reactKeys": [],
+          "hasOnChange": false
+        }
+      ],
+      "scripts": [
+        {
+          "src": "/web-assets/static/js/async/lib-react.6356ddf42c.js",
+          "type": "",
+          "id": ""
+        },
+        {
+          "src": "/web-assets/static/js/async/6u.79a8483cd5.js",
+          "type": "",
+          "id": ""
+        },
+        {
+          "src": "/web-assets/static/js/async/qi.3c0df390c8.js",
+          "type": "",
+          "id": ""
+        },
+        {
+          "src": "/web-assets/static/js/async/4b.f4f7b8a967.js",
+          "type": "",
+          "id": ""
+        },
+        {
+          "src": null,
+          "type": "application/json",
+          "id": "cinatoken-public-bootstrap"
+        },
+        {
+          "src": "/web-assets/static/js/index.89887bd39e.js",
+          "type": "",
+          "id": ""
+        }
+      ],
+      "tsrPresent": true,
+      "tsrKeys": [
+        "h",
+        "e",
+        "c",
+        "p",
+        "buffer",
+        "router",
+        "streamEnded"
+      ],
+      "bodyLength": 2984,
+      "themeCookie": null,
+      "events": [
+        {
+          "name": "DOMContentLoaded",
+          "at": 4771
+        }
+      ]
+    },
+    {
+      "step": "observe-0",
+      "at": "2026-10-06T10:59:35.696Z",
+      "readyState": "interactive",
+      "classes": [],
+      "hydration": null,
+      "rootKeys": [],
+      "selects": [
+        {
+          "value": "en",
+          "label": "Language\nEnglish\n简体中文\n日本語\n한국어",
+          "reactKeys": [],
+          "hasOnChange": false
+        },
+        {
+          "value": "system",
+          "label": "Appearance\nSystem\nLight\nDark",
+          "reactKeys": [],
+          "hasOnChange": false
+        }
+      ],
+      "scripts": [
+        {
+          "src": "/web-assets/static/js/async/lib-react.6356ddf42c.js",
+          "type": "",
+          "id": ""
+        },
+        {
+          "src": "/web-assets/static/js/async/6u.79a8483cd5.js",
+          "type": "",
+          "id": ""
+        },
+        {
+          "src": "/web-assets/static/js/async/qi.3c0df390c8.js",
+          "type": "",
+          "id": ""
+        },
+        {
+          "src": "/web-assets/static/js/async/4b.f4f7b8a967.js",
+          "type": "",
+          "id": ""
+        },
+        {
+          "src": null,
+          "type": "application/json",
+          "id": "cinatoken-public-bootstrap"
+        },
+        {
+          "src": "/web-assets/static/js/index.89887bd39e.js",
+          "type": "",
+          "id": ""
+        }
+      ],
+      "tsrPresent": true,
+      "tsrKeys": [
+        "h",
+        "e",
+        "c",
+        "p",
+        "buffer",
+        "router",
+        "streamEnded"
+      ],
+      "bodyLength": 2984,
+      "themeCookie": null,
+      "events": [
+        {
+          "name": "DOMContentLoaded",
+          "at": 4771
+        }
+      ]
+    },
+    {
+      "step": "observe-1",
+      "at": "2026-10-06T10:59:36.208Z",
+      "readyState": "interactive",
+      "classes": [],
+      "hydration": null,
+      "rootKeys": [],
+      "selects": [
+        {
+          "value": "en",
+          "label": "Language\nEnglish\n简体中文\n日本語\n한국어",
+          "reactKeys": [],
+          "hasOnChange": false
+        },
+        {
+          "value": "system",
+          "label": "Appearance\nSystem\nLight\nDark",
+          "reactKeys": [],
+          "hasOnChange": false
+        }
+      ],
+      "scripts": [
+        {
+          "src": "/web-assets/static/js/async/lib-react.6356ddf42c.js",
+          "type": "",
+          "id": ""
+        },
+        {
+          "src": "/web-assets/static/js/async/6u.79a8483cd5.js",
+          "type": "",
+          "id": ""
+        },
+        {
+          "src": "/web-assets/static/js/async/qi.3c0df390c8.js",
+          "type": "",
+          "id": ""
+        },
+        {
+          "src": "/web-assets/static/js/async/4b.f4f7b8a967.js",
+          "type": "",
+          "id": ""
+        },
+        {
+          "src": null,
+          "type": "application/json",
+          "id": "cinatoken-public-bootstrap"
+        },
+        {
+          "src": "/web-assets/static/js/index.89887bd39e.js",
+          "type": "",
+          "id": ""
+        }
+      ],
+      "tsrPresent": true,
+      "tsrKeys": [
+        "h",
+        "e",
+        "c",
+        "p",
+        "buffer",
+        "router",
+        "streamEnded"
+      ],
+      "bodyLength": 2984,
+      "themeCookie": null,
+      "events": [
+        {
+          "name": "DOMContentLoaded",
+          "at": 4771
+        }
+      ]
+    },
+    {
+      "step": "observe-2",
+      "at": "2026-10-06T10:59:36.724Z",
+      "readyState": "interactive",
+      "classes": [],
+      "hydration": null,
+      "rootKeys": [],
+      "selects": [
+        {
+          "value": "en",
+          "label": "Language\nEnglish\n简体中文\n日本語\n한국어",
+          "reactKeys": [],
+          "hasOnChange": false
+        },
+        {
+          "value": "system",
+          "label": "Appearance\nSystem\nLight\nDark",
+          "reactKeys": [],
+          "hasOnChange": false
+        }
+      ],
+      "scripts": [
+        {
+          "src": "/web-assets/static/js/async/lib-react.6356ddf42c.js",
+          "type": "",
+          "id": ""
+        },
+        {
+          "src": "/web-assets/static/js/async/6u.79a8483cd5.js",
+          "type": "",
+          "id": ""
+        },
+        {
+          "src": "/web-assets/static/js/async/qi.3c0df390c8.js",
+          "type": "",
+          "id": ""
+        },
+        {
+          "src": "/web-assets/static/js/async/4b.f4f7b8a967.js",
+          "type": "",
+          "id": ""
+        },
+        {
+          "src": null,
+          "type": "application/json",
+          "id": "cinatoken-public-bootstrap"
+        },
+        {
+          "src": "/web-assets/static/js/index.89887bd39e.js",
+          "type": "",
+          "id": ""
+        }
+      ],
+      "tsrPresent": true,
+      "tsrKeys": [
+        "h",
+        "e",
+        "c",
+        "p",
+        "buffer",
+        "router",
+        "streamEnded"
+      ],
+      "bodyLength": 2984,
+      "themeCookie": null,
+      "events": [
+        {
+          "name": "DOMContentLoaded",
+          "at": 4771
+        }
+      ]
+    },
+    {
+      "step": "observe-3",
+      "at": "2026-10-06T10:59:37.240Z",
+      "readyState": "interactive",
+      "classes": [],
+      "hydration": null,
+      "rootKeys": [],
+      "selects": [
+        {
+          "value": "en",
+          "label": "Language\nEnglish\n简体中文\n日本語\n한국어",
+          "reactKeys": [],
+          "hasOnChange": false
+        },
+        {
+          "value": "system",
+          "label": "Appearance\nSystem\nLight\nDark",
+          "reactKeys": [],
+          "hasOnChange": false
+        }
+      ],
+      "scripts": [
+        {
+          "src": "/web-assets/static/js/async/lib-react.6356ddf42c.js",
+          "type": "",
+          "id": ""
+        },
+        {
+          "src": "/web-assets/static/js/async/6u.79a8483cd5.js",
+          "type": "",
+          "id": ""
+        },
+        {
+          "src": "/web-assets/static/js/async/qi.3c0df390c8.js",
+          "type": "",
+          "id": ""
+        },
+        {
+          "src": "/web-assets/static/js/async/4b.f4f7b8a967.js",
+          "type": "",
+          "id": ""
+        },
+        {
+          "src": null,
+          "type": "application/json",
+          "id": "cinatoken-public-bootstrap"
+        },
+        {
+          "src": "/web-assets/static/js/index.89887bd39e.js",
+          "type": "",
+          "id": ""
+        }
+      ],
+      "tsrPresent": true,
+      "tsrKeys": [
+        "h",
+        "e",
+        "c",
+        "p",
+        "buffer",
+        "router",
+        "streamEnded"
+      ],
+      "bodyLength": 2984,
+      "themeCookie": null,
+      "events": [
+        {
+          "name": "DOMContentLoaded",
+          "at": 4771
+        }
+      ]
+    },
+    {
+      "step": "observe-4",
+      "at": "2026-10-06T10:59:37.743Z",
+      "readyState": "interactive",
+      "classes": [],
+      "hydration": null,
+      "rootKeys": [],
+      "selects": [
+        {
+          "value": "en",
+          "label": "Language\nEnglish\n简体中文\n日本語\n한국어",
+          "reactKeys": [],
+          "hasOnChange": false
+        },
+        {
+          "value": "system",
+          "label": "Appearance\nSystem\nLight\nDark",
+          "reactKeys": [],
+          "hasOnChange": false
+        }
+      ],
+      "scripts": [
+        {
+          "src": "/web-assets/static/js/async/6u.79a8483cd5.js",
+          "type": "",
+          "id": ""
+        },
+        {
+          "src": null,
+          "type": "application/json",
+          "id": "cinatoken-public-bootstrap"
+        },
+        {
+          "src": "/web-assets/static/js/index.89887bd39e.js",
+          "type": "",
+          "id": ""
+        }
+      ],
+      "tsrPresent": true,
+      "tsrKeys": [
+        "h",
+        "e",
+        "c",
+        "p",
+        "buffer",
+        "router",
+        "streamEnded"
+      ],
+      "bodyLength": 2984,
+      "themeCookie": null,
+      "events": [
+        {
+          "name": "DOMContentLoaded",
+          "at": 4771
+        }
+      ]
+    },
+    {
+      "step": "observe-5",
+      "at": "2026-10-06T10:59:38.259Z",
+      "readyState": "interactive",
+      "classes": [],
+      "hydration": null,
+      "rootKeys": [],
+      "selects": [
+        {
+          "value": "en",
+          "label": "Language\nEnglish\n简体中文\n日本語\n한국어",
+          "reactKeys": [],
+          "hasOnChange": false
+        },
+        {
+          "value": "system",
+          "label": "Appearance\nSystem\nLight\nDark",
+          "reactKeys": [],
+          "hasOnChange": false
+        }
+      ],
+      "scripts": [
+        {
+          "src": "/web-assets/static/js/async/6u.79a8483cd5.js",
+          "type": "",
+          "id": ""
+        },
+        {
+          "src": null,
+          "type": "application/json",
+          "id": "cinatoken-public-bootstrap"
+        },
+        {
+          "src": "/web-assets/static/js/index.89887bd39e.js",
+          "type": "",
+          "id": ""
+        }
+      ],
+      "tsrPresent": true,
+      "tsrKeys": [
+        "h",
+        "e",
+        "c",
+        "p",
+        "buffer",
+        "router",
+        "streamEnded"
+      ],
+      "bodyLength": 2984,
+      "themeCookie": null,
+      "events": [
+        {
+          "name": "DOMContentLoaded",
+          "at": 4771
+        }
+      ]
+    },
+    {
+      "step": "observe-6",
+      "at": "2026-10-06T10:59:38.776Z",
+      "readyState": "interactive",
+      "classes": [],
+      "hydration": null,
+      "rootKeys": [],
+      "selects": [
+        {
+          "value": "en",
+          "label": "Language\nEnglish\n简体中文\n日本語\n한국어",
+          "reactKeys": [],
+          "hasOnChange": false
+        },
+        {
+          "value": "system",
+          "label": "Appearance\nSystem\nLight\nDark",
+          "reactKeys": [],
+          "hasOnChange": false
+        }
+      ],
+      "scripts": [
+        {
+          "src": "/web-assets/static/js/async/ta.350a9de34e.js",
+          "type": "",
+          "id": ""
+        },
+        {
+          "src": "/web-assets/static/js/async/cn.e7cc2f2c5b.js",
+          "type": "",
+          "id": ""
+        },
+        {
+          "src": "/web-assets/static/js/async/fd.7dd19fd28b.js",
+          "type": "",
+          "id": ""
+        },
+        {
+          "src": null,
+          "type": "application/json",
+          "id": "cinatoken-public-bootstrap"
+        },
+        {
+          "src": "/web-assets/static/js/index.89887bd39e.js",
+          "type": "",
+          "id": ""
+        }
+      ],
+      "tsrPresent": true,
+      "tsrKeys": [
+        "h",
+        "e",
+        "c",
+        "p",
+        "buffer",
+        "router",
+        "streamEnded"
+      ],
+      "bodyLength": 2984,
+      "themeCookie": null,
+      "events": [
+        {
+          "name": "DOMContentLoaded",
+          "at": 4771
+        }
+      ]
+    },
+    {
+      "step": "observe-7",
+      "at": "2026-10-06T10:59:39.290Z",
+      "readyState": "interactive",
+      "classes": [],
+      "hydration": null,
+      "rootKeys": [],
+      "selects": [
+        {
+          "value": "en",
+          "label": "Language\nEnglish\n简体中文\n日本語\n한국어",
+          "reactKeys": [],
+          "hasOnChange": false
+        },
+        {
+          "value": "system",
+          "label": "Appearance\nSystem\nLight\nDark",
+          "reactKeys": [],
+          "hasOnChange": false
+        }
+      ],
+      "scripts": [
+        {
+          "src": "/web-assets/static/js/async/ta.350a9de34e.js",
+          "type": "",
+          "id": ""
+        },
+        {
+          "src": null,
+          "type": "application/json",
+          "id": "cinatoken-public-bootstrap"
+        },
+        {
+          "src": "/web-assets/static/js/index.89887bd39e.js",
+          "type": "",
+          "id": ""
+        }
+      ],
+      "tsrPresent": true,
+      "tsrKeys": [
+        "h",
+        "e",
+        "c",
+        "p",
+        "buffer",
+        "router",
+        "streamEnded"
+      ],
+      "bodyLength": 2984,
+      "themeCookie": null,
+      "events": [
+        {
+          "name": "DOMContentLoaded",
+          "at": 4771
+        }
+      ]
+    },
+    {
+      "step": "observe-8",
+      "at": "2026-10-06T10:59:39.794Z",
+      "readyState": "interactive",
+      "classes": [],
+      "hydration": null,
+      "rootKeys": [],
+      "selects": [
+        {
+          "value": "en",
+          "label": "Language\nEnglish\n简体中文\n日本語\n한국어",
+          "reactKeys": [],
+          "hasOnChange": false
+        },
+        {
+          "value": "system",
+          "label": "Appearance\nSystem\nLight\nDark",
+          "reactKeys": [],
+          "hasOnChange": false
+        }
+      ],
+      "scripts": [
+        {
+          "src": "/web-assets/static/js/async/30.5583d3d88f.js",
+          "type": "",
+          "id": ""
+        },
+        {
+          "src": "/web-assets/static/js/async/r4.4d0fa2a207.js",
+          "type": "",
+          "id": ""
+        },
+        {
+          "src": null,
+          "type": "application/json",
+          "id": "cinatoken-public-bootstrap"
+        },
+        {
+          "src": "/web-assets/static/js/index.89887bd39e.js",
+          "type": "",
+          "id": ""
+        }
+      ],
+      "tsrPresent": true,
+      "tsrKeys": [
+        "h",
+        "e",
+        "c",
+        "p",
+        "buffer",
+        "router",
+        "streamEnded",
+        "initialized"
+      ],
+      "bodyLength": 2984,
+      "themeCookie": null,
+      "events": [
+        {
+          "name": "DOMContentLoaded",
+          "at": 4771
+        }
+      ]
+    },
+    {
+      "step": "observe-9",
+      "at": "2026-10-06T10:59:40.302Z",
+      "readyState": "complete",
+      "classes": [
+        "light"
+      ],
+      "hydration": null,
+      "rootKeys": [
+        "__reactContainer$ldo28mtswl"
+      ],
+      "selects": [
+        {
+          "value": "en",
+          "label": "Language\nEnglish\n简体中文\n日本語\n한국어",
+          "reactKeys": [
+            "__reactFiber$ldo28mtswl",
+            "__reactProps$ldo28mtswl",
+            "__reactEvents$ldo28mtswl"
+          ],
+          "hasOnChange": true
+        },
+        {
+          "value": "system",
+          "label": "Appearance\nSystem\nLight\nDark",
+          "reactKeys": [
+            "__reactFiber$ldo28mtswl",
+            "__reactProps$ldo28mtswl",
+            "__reactEvents$ldo28mtswl"
+          ],
+          "hasOnChange": true
+        }
+      ],
+      "scripts": [
+        {
+          "src": null,
+          "type": "application/json",
+          "id": "cinatoken-public-bootstrap"
+        },
+        {
+          "src": "/web-assets/static/js/index.89887bd39e.js",
+          "type": "",
+          "id": ""
+        }
+      ],
+      "tsrPresent": false,
+      "tsrKeys": [],
+      "bodyLength": 2984,
+      "themeCookie": null,
+      "events": [
+        {
+          "name": "DOMContentLoaded",
+          "at": 4771
+        },
+        {
+          "name": "load",
+          "at": 9705.09999999404
+        }
+      ]
+    },
+    {
+      "step": "before-theme-action",
+      "at": "2026-10-06T10:59:40.304Z",
+      "readyState": "complete",
+      "classes": [
+        "light"
+      ],
+      "hydration": null,
+      "rootKeys": [
+        "__reactContainer$ldo28mtswl"
+      ],
+      "selects": [
+        {
+          "value": "en",
+          "label": "Language\nEnglish\n简体中文\n日本語\n한국어",
+          "reactKeys": [
+            "__reactFiber$ldo28mtswl",
+            "__reactProps$ldo28mtswl",
+            "__reactEvents$ldo28mtswl"
+          ],
+          "hasOnChange": true
+        },
+        {
+          "value": "system",
+          "label": "Appearance\nSystem\nLight\nDark",
+          "reactKeys": [
+            "__reactFiber$ldo28mtswl",
+            "__reactProps$ldo28mtswl",
+            "__reactEvents$ldo28mtswl"
+          ],
+          "hasOnChange": true
+        }
+      ],
+      "scripts": [
+        {
+          "src": null,
+          "type": "application/json",
+          "id": "cinatoken-public-bootstrap"
+        },
+        {
+          "src": "/web-assets/static/js/index.89887bd39e.js",
+          "type": "",
+          "id": ""
+        }
+      ],
+      "tsrPresent": false,
+      "tsrKeys": [],
+      "bodyLength": 2984,
+      "themeCookie": null,
+      "events": [
+        {
+          "name": "DOMContentLoaded",
+          "at": 4771
+        },
+        {
+          "name": "load",
+          "at": 9705.09999999404
+        }
+      ]
+    },
+    {
+      "step": "immediate-after-select",
+      "at": "2026-10-06T10:59:40.341Z",
+      "readyState": "complete",
+      "classes": [
+        "dark"
+      ],
+      "hydration": null,
+      "rootKeys": [
+        "__reactContainer$ldo28mtswl"
+      ],
+      "selects": [
+        {
+          "value": "en",
+          "label": "Language\nEnglish\n简体中文\n日本語\n한국어",
+          "reactKeys": [
+            "__reactFiber$ldo28mtswl",
+            "__reactProps$ldo28mtswl",
+            "__reactEvents$ldo28mtswl"
+          ],
+          "hasOnChange": true
+        },
+        {
+          "value": "dark",
+          "label": "Appearance\nSystem\nLight\nDark",
+          "reactKeys": [
+            "__reactFiber$ldo28mtswl",
+            "__reactProps$ldo28mtswl",
+            "__reactEvents$ldo28mtswl"
+          ],
+          "hasOnChange": true
+        }
+      ],
+      "scripts": [
+        {
+          "src": null,
+          "type": "application/json",
+          "id": "cinatoken-public-bootstrap"
+        },
+        {
+          "src": "/web-assets/static/js/index.89887bd39e.js",
+          "type": "",
+          "id": ""
+        }
+      ],
+      "tsrPresent": false,
+      "tsrKeys": [],
+      "bodyLength": 2984,
+      "themeCookie": "cinatoken-theme=dark",
+      "events": [
+        {
+          "name": "DOMContentLoaded",
+          "at": 4771
+        },
+        {
+          "name": "load",
+          "at": 9705.09999999404
+        },
+        {
+          "name": "change",
+          "at": 9920.699999988079,
+          "target": "SELECT",
+          "value": "dark"
+        },
+        {
+          "name": "cinatoken:public-theme",
+          "at": 9920.89999999106
+        }
+      ]
+    },
+    {
+      "step": "settled-after-select",
+      "at": "2026-10-06T10:59:40.357Z",
+      "readyState": "complete",
+      "classes": [
+        "dark"
+      ],
+      "hydration": null,
+      "rootKeys": [
+        "__reactContainer$ldo28mtswl"
+      ],
+      "selects": [
+        {
+          "value": "en",
+          "label": "Language\nEnglish\n简体中文\n日本語\n한국어",
+          "reactKeys": [
+            "__reactFiber$ldo28mtswl",
+            "__reactProps$ldo28mtswl",
+            "__reactEvents$ldo28mtswl"
+          ],
+          "hasOnChange": true
+        },
+        {
+          "value": "dark",
+          "label": "Appearance\nSystem\nLight\nDark",
+          "reactKeys": [
+            "__reactFiber$ldo28mtswl",
+            "__reactProps$ldo28mtswl",
+            "__reactEvents$ldo28mtswl"
+          ],
+          "hasOnChange": true
+        }
+      ],
+      "scripts": [
+        {
+          "src": null,
+          "type": "application/json",
+          "id": "cinatoken-public-bootstrap"
+        },
+        {
+          "src": "/web-assets/static/js/index.89887bd39e.js",
+          "type": "",
+          "id": ""
+        }
+      ],
+      "tsrPresent": false,
+      "tsrKeys": [],
+      "bodyLength": 2984,
+      "themeCookie": "cinatoken-theme=dark",
+      "events": [
+        {
+          "name": "DOMContentLoaded",
+          "at": 4771
+        },
+        {
+          "name": "load",
+          "at": 9705.09999999404
+        },
+        {
+          "name": "change",
+          "at": 9920.699999988079,
+          "target": "SELECT",
+          "value": "dark"
+        },
+        {
+          "name": "cinatoken:public-theme",
+          "at": 9920.89999999106
+        }
+      ]
+    }
+  ],
+  "events": [],
+  "browserVersion": "154.0.8037.95",
+  "status": 200,
+  "title": "CinaToken — Unified AI gateway",
+  "readyAt": 9,
+  "darkClassConfirmed": true,
+  "bodyPreview": "Skip to content\nC\nCinaToken\nModels\nAccount\nLanguage\nEnglish\n简体中文\n日本語\n한국어\nAppearance\nSystem\nLight\nDark\nSign in with CinaAuth\n\nCINATOKEN GATEWAY\n\nBring your AI resources together.\n\nOne gateway for models, tools and your own providers. Manage access, budgets and usage from your workspace.\n\nOpen your account\nBrowse models\nOpen console\nView docs\nModel catalog\nModel providers\nCompare models\nModel rankings\nGateway benchmarks\nChat\nFeatures\nArchitecture\nDeployment\nChat\nResponses\nImages\nTools\n\nPOST https://api.cinatoken.com/v1/chat/completions\n\nREQUEST\n{\n  \"model\": \"your-model\",\n  \"messages\": [\n    {\n      \"role\": \"user\",\n      \"content\": \"Say hello.\"\n    }\n  ]\n}\nRESPONSE\n{\n  \"object\": \"chat.completion\",\n  \"choices\": [\n    {\n      \"message\": {\n        \"content\": \"...\"\n      }\n    }\n  ]\n}\n\nIllustrati",
+  "screenshot": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-foundation-5b11fb36c4074c9da1317f28ef4c7111\\web-2e-hydration-diagnostic.png",
+  "actualExit": 0,
+  "contextClosed": true,
+  "browserClosed": true,
+  "finishedAt": "2026-10-06T10:59:40.556Z"
+}

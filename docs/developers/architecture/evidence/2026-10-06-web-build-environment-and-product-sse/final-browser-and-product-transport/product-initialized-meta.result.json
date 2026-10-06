@@ -1,0 +1,25 @@
+{
+  "at": "2026-10-06T11:06:02.295Z",
+  "finishedAt": "2026-10-06T11:06:05.604Z",
+  "executable": "C:/Program Files/GitHub CLI/gh.exe",
+  "args": [
+    "run",
+    "view",
+    "37453985144",
+    "--json",
+    "databaseId,headSha,status,conclusion,jobs,url"
+  ],
+  "cwd": "C:/cinagroup/cinatoken",
+  "actualExit": 0,
+  "signal": null,
+  "stdout": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-foundation-5b11fb36c4074c9da1317f28ef4c7111\\product-initialized-meta.stdout.log",
+    "bytes": 2151,
+    "sha256": "0130625ab25fda6ae7a331509a0dc1194fda44b5cb9cef4c6eb202b187882324"
+  },
+  "stderr": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-foundation-5b11fb36c4074c9da1317f28ef4c7111\\product-initialized-meta.stderr.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+}

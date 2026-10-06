@@ -1,0 +1,25 @@
+{
+  "at": "2026-10-06T11:04:02.961Z",
+  "finishedAt": "2026-10-06T11:04:03.158Z",
+  "executable": "C:/Program Files/Git/cmd/git.exe",
+  "args": [
+    "-c",
+    "core.longpaths=true",
+    "commit",
+    "-m",
+    "fix(smoke): retain Core initialization in product SSE fixture"
+  ],
+  "cwd": "C:/cinagroup/cinatoken",
+  "actualExit": 0,
+  "signal": null,
+  "stdout": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-foundation-5b11fb36c4074c9da1317f28ef4c7111\\commit-initialization-fix.stdout.log",
+    "bytes": 16262,
+    "sha256": "7612243af99520820af9895c5e543aa258428310d19e35b13404cfaf5ce7e251"
+  },
+  "stderr": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-foundation-5b11fb36c4074c9da1317f28ef4c7111\\commit-initialization-fix.stderr.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+}

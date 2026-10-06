@@ -1,0 +1,820 @@
+{
+  "at": "2026-10-06T11:01:11.081Z",
+  "sourceCommit": "2e40b9212b246152594ea60a774c85a9a0a4ad93",
+  "productionVersion": "a898c3fd-3df4-4e1d-bd97-da19936b3bfe",
+  "browserPlugin": "absent",
+  "fallback": "Browser plugin not available; existing bundled Playwright and isolated Chrome context",
+  "flow": "Public SSR home/models and anonymous dashboard -> Appearance select dark -> Language select zh -> mobile reload preserves theme and locale",
+  "scope": "Functional SSR probe with observed React-bound controls and PublicThemeControl mount effect; original V1/V2/V3 and strict networkidle failures retained",
+  "realAuthentication": false,
+  "businessWrites": false,
+  "console": [
+    {
+      "type": "error",
+      "message": "Failed to load resource: the server responded with a status of 401 ()",
+      "url": "https://cinatoken.com/api/user/me"
+    }
+  ],
+  "pageErrors": [],
+  "httpErrors": [
+    {
+      "url": "https://cinatoken.com/api/user/me",
+      "method": "GET",
+      "status": 401,
+      "expected": true
+    }
+  ],
+  "requestFailures": [],
+  "clientResponses": [
+    {
+      "url": "https://cinatoken.com/web-assets/static/css/index.46bbf8297a.css",
+      "status": 200,
+      "type": "stylesheet"
+    },
+    {
+      "url": "https://cinatoken.com/web-assets/static/js/index.89887bd39e.js",
+      "status": 200,
+      "type": "script"
+    },
+    {
+      "url": "https://cinatoken.com/web-assets/static/js/async/4b.f4f7b8a967.js",
+      "status": 200,
+      "type": "script"
+    },
+    {
+      "url": "https://cinatoken.com/web-assets/static/js/async/qi.3c0df390c8.js",
+      "status": 200,
+      "type": "script"
+    },
+    {
+      "url": "https://cinatoken.com/web-assets/static/js/async/6u.79a8483cd5.js",
+      "status": 200,
+      "type": "script"
+    },
+    {
+      "url": "https://cinatoken.com/web-assets/static/js/async/lib-react.6356ddf42c.js",
+      "status": 200,
+      "type": "script"
+    },
+    {
+      "url": "https://cinatoken.com/web-assets/static/js/async/fd.7dd19fd28b.js",
+      "status": 200,
+      "type": "script"
+    },
+    {
+      "url": "https://cinatoken.com/web-assets/static/js/async/cn.e7cc2f2c5b.js",
+      "status": 200,
+      "type": "script"
+    },
+    {
+      "url": "https://cinatoken.com/web-assets/static/js/async/ta.350a9de34e.js",
+      "status": 200,
+      "type": "script"
+    },
+    {
+      "url": "https://cinatoken.com/web-assets/static/js/async/r4.4d0fa2a207.js",
+      "status": 200,
+      "type": "script"
+    },
+    {
+      "url": "https://cinatoken.com/web-assets/static/js/async/hw.419e09a2b0.js",
+      "status": 200,
+      "type": "script"
+    },
+    {
+      "url": "https://cinatoken.com/web-assets/static/js/async/30.5583d3d88f.js",
+      "status": 200,
+      "type": "script"
+    },
+    {
+      "url": "https://cinatoken.com/web-assets/static/css/index.46bbf8297a.css",
+      "status": 200,
+      "type": "stylesheet"
+    },
+    {
+      "url": "https://cinatoken.com/web-assets/static/js/index.89887bd39e.js",
+      "status": 200,
+      "type": "script"
+    },
+    {
+      "url": "https://cinatoken.com/web-assets/static/js/async/lib-react.6356ddf42c.js",
+      "status": 200,
+      "type": "script"
+    },
+    {
+      "url": "https://cinatoken.com/web-assets/static/js/async/6u.79a8483cd5.js",
+      "status": 200,
+      "type": "script"
+    },
+    {
+      "url": "https://cinatoken.com/web-assets/static/js/async/qi.3c0df390c8.js",
+      "status": 200,
+      "type": "script"
+    },
+    {
+      "url": "https://cinatoken.com/web-assets/static/js/async/4b.f4f7b8a967.js",
+      "status": 200,
+      "type": "script"
+    },
+    {
+      "url": "https://cinatoken.com/web-assets/static/js/async/ta.350a9de34e.js",
+      "status": 200,
+      "type": "script"
+    },
+    {
+      "url": "https://cinatoken.com/web-assets/static/js/async/cn.e7cc2f2c5b.js",
+      "status": 200,
+      "type": "script"
+    },
+    {
+      "url": "https://cinatoken.com/web-assets/static/js/async/fd.7dd19fd28b.js",
+      "status": 200,
+      "type": "script"
+    },
+    {
+      "url": "https://cinatoken.com/web-assets/static/js/async/30.5583d3d88f.js",
+      "status": 200,
+      "type": "script"
+    },
+    {
+      "url": "https://cinatoken.com/web-assets/static/js/async/9.c52e089d75.js",
+      "status": 200,
+      "type": "script"
+    },
+    {
+      "url": "https://cinatoken.com/web-assets/static/js/async/f.963b5743eb.js",
+      "status": 200,
+      "type": "script"
+    },
+    {
+      "url": "https://cinatoken.com/web-assets/static/js/async/p.a4236303c6.js",
+      "status": 200,
+      "type": "script"
+    },
+    {
+      "url": "https://cinatoken.com/web-assets/static/js/async/im.89f48440bc.js",
+      "status": 200,
+      "type": "script"
+    },
+    {
+      "url": "https://cinatoken.com/web-assets/static/js/async/a.5180dd3ac4.js",
+      "status": 200,
+      "type": "script"
+    },
+    {
+      "url": "https://cinatoken.com/web-assets/static/js/async/3.744dd7185a.js",
+      "status": 200,
+      "type": "script"
+    },
+    {
+      "url": "https://cinatoken.com/_next/static/chunks/webpack-2ff4a92658515126.js",
+      "status": 200,
+      "type": "script"
+    },
+    {
+      "url": "https://cinatoken.com/_next/static/css/3ed46618035b8324.css",
+      "status": 200,
+      "type": "stylesheet"
+    },
+    {
+      "url": "https://cinatoken.com/_next/static/chunks/2272-e00bf1dc873277f6.js",
+      "status": 200,
+      "type": "script"
+    },
+    {
+      "url": "https://cinatoken.com/_next/static/chunks/main-app-0c1753d77a78a9ed.js",
+      "status": 200,
+      "type": "script"
+    },
+    {
+      "url": "https://cinatoken.com/_next/static/chunks/fac263cb-c8b4005fbd8320e7.js",
+      "status": 200,
+      "type": "script"
+    },
+    {
+      "url": "https://cinatoken.com/_next/static/chunks/app/dashboard/page-4a1906f6271d5566.js",
+      "status": 200,
+      "type": "script"
+    },
+    {
+      "url": "https://cinatoken.com/_next/static/chunks/4643-17c09c7aea5a97bb.js",
+      "status": 200,
+      "type": "script"
+    },
+    {
+      "url": "https://cinatoken.com/_next/static/chunks/4197-e296552635f6fa25.js",
+      "status": 200,
+      "type": "script"
+    },
+    {
+      "url": "https://cinatoken.com/_next/static/chunks/app/layout-b01e4c5056b2d654.js",
+      "status": 200,
+      "type": "script"
+    },
+    {
+      "url": "https://cinatoken.com/_next/static/chunks/9754-3c133e6269842559.js",
+      "status": 200,
+      "type": "script"
+    },
+    {
+      "url": "https://cinatoken.com/_next/static/chunks/5350-fa9dc36e5376b12e.js",
+      "status": 200,
+      "type": "script"
+    },
+    {
+      "url": "https://cinatoken.com/_next/static/chunks/87c73c54-014124adcece3495.js",
+      "status": 200,
+      "type": "script"
+    },
+    {
+      "url": "https://cinatoken.com/_next/static/chunks/1968-c8fdeda6a618a663.js",
+      "status": 200,
+      "type": "script"
+    },
+    {
+      "url": "https://cinatoken.com/_next/static/chunks/7470-a6598be137430ef2.js",
+      "status": 200,
+      "type": "script"
+    },
+    {
+      "url": "https://cinatoken.com/_next/static/chunks/6434-6adcf759558af8c7.js",
+      "status": 200,
+      "type": "script"
+    },
+    {
+      "url": "https://cinatoken.com/_next/static/chunks/8233-69ab83be1d383205.js",
+      "status": 200,
+      "type": "script"
+    },
+    {
+      "url": "https://static.cloudflareinsights.com/beacon.min.js/v31edd6df95cf4e85bb4c19e7a9bdbcba1788362987495",
+      "status": 200,
+      "type": "script"
+    },
+    {
+      "url": "https://cinatoken.com/web-assets/static/css/index.46bbf8297a.css",
+      "status": 200,
+      "type": "stylesheet"
+    },
+    {
+      "url": "https://cinatoken.com/web-assets/static/js/index.89887bd39e.js",
+      "status": 200,
+      "type": "script"
+    },
+    {
+      "url": "https://cinatoken.com/web-assets/static/js/async/lib-react.6356ddf42c.js",
+      "status": 200,
+      "type": "script"
+    },
+    {
+      "url": "https://cinatoken.com/web-assets/static/js/async/6u.79a8483cd5.js",
+      "status": 200,
+      "type": "script"
+    },
+    {
+      "url": "https://cinatoken.com/web-assets/static/js/async/qi.3c0df390c8.js",
+      "status": 200,
+      "type": "script"
+    },
+    {
+      "url": "https://cinatoken.com/web-assets/static/js/async/4b.f4f7b8a967.js",
+      "status": 200,
+      "type": "script"
+    },
+    {
+      "url": "https://cinatoken.com/web-assets/static/js/async/ta.350a9de34e.js",
+      "status": 200,
+      "type": "script"
+    },
+    {
+      "url": "https://cinatoken.com/web-assets/static/js/async/cn.e7cc2f2c5b.js",
+      "status": 200,
+      "type": "script"
+    },
+    {
+      "url": "https://cinatoken.com/web-assets/static/js/async/fd.7dd19fd28b.js",
+      "status": 200,
+      "type": "script"
+    },
+    {
+      "url": "https://cinatoken.com/web-assets/static/js/async/30.5583d3d88f.js",
+      "status": 200,
+      "type": "script"
+    },
+    {
+      "url": "https://cinatoken.com/web-assets/static/js/async/hw.419e09a2b0.js",
+      "status": 200,
+      "type": "script"
+    },
+    {
+      "url": "https://cinatoken.com/web-assets/static/js/async/r4.4d0fa2a207.js",
+      "status": 200,
+      "type": "script"
+    },
+    {
+      "url": "https://cinatoken.com/web-assets/static/css/index.46bbf8297a.css",
+      "status": 200,
+      "type": "stylesheet"
+    },
+    {
+      "url": "https://cinatoken.com/web-assets/static/js/index.89887bd39e.js",
+      "status": 200,
+      "type": "script"
+    },
+    {
+      "url": "https://cinatoken.com/web-assets/static/js/async/lib-react.6356ddf42c.js",
+      "status": 200,
+      "type": "script"
+    },
+    {
+      "url": "https://cinatoken.com/web-assets/static/js/async/6u.79a8483cd5.js",
+      "status": 200,
+      "type": "script"
+    },
+    {
+      "url": "https://cinatoken.com/web-assets/static/js/async/qi.3c0df390c8.js",
+      "status": 200,
+      "type": "script"
+    },
+    {
+      "url": "https://cinatoken.com/web-assets/static/js/async/4b.f4f7b8a967.js",
+      "status": 200,
+      "type": "script"
+    },
+    {
+      "url": "https://cinatoken.com/web-assets/static/js/async/ta.350a9de34e.js",
+      "status": 200,
+      "type": "script"
+    },
+    {
+      "url": "https://cinatoken.com/web-assets/static/js/async/cn.e7cc2f2c5b.js",
+      "status": 200,
+      "type": "script"
+    },
+    {
+      "url": "https://cinatoken.com/web-assets/static/js/async/fd.7dd19fd28b.js",
+      "status": 200,
+      "type": "script"
+    },
+    {
+      "url": "https://cinatoken.com/web-assets/static/js/async/30.5583d3d88f.js",
+      "status": 200,
+      "type": "script"
+    },
+    {
+      "url": "https://cinatoken.com/web-assets/static/js/async/hw.419e09a2b0.js",
+      "status": 200,
+      "type": "script"
+    },
+    {
+      "url": "https://cinatoken.com/web-assets/static/js/async/r4.4d0fa2a207.js",
+      "status": 200,
+      "type": "script"
+    },
+    {
+      "url": "https://cinatoken.com/web-assets/static/css/index.46bbf8297a.css",
+      "status": 200,
+      "type": "stylesheet"
+    },
+    {
+      "url": "https://cinatoken.com/web-assets/static/js/index.89887bd39e.js",
+      "status": 200,
+      "type": "script"
+    },
+    {
+      "url": "https://cinatoken.com/web-assets/static/js/async/lib-react.6356ddf42c.js",
+      "status": 200,
+      "type": "script"
+    },
+    {
+      "url": "https://cinatoken.com/web-assets/static/js/async/6u.79a8483cd5.js",
+      "status": 200,
+      "type": "script"
+    },
+    {
+      "url": "https://cinatoken.com/web-assets/static/js/async/qi.3c0df390c8.js",
+      "status": 200,
+      "type": "script"
+    },
+    {
+      "url": "https://cinatoken.com/web-assets/static/js/async/4b.f4f7b8a967.js",
+      "status": 200,
+      "type": "script"
+    },
+    {
+      "url": "https://cinatoken.com/web-assets/static/js/async/ta.350a9de34e.js",
+      "status": 200,
+      "type": "script"
+    },
+    {
+      "url": "https://cinatoken.com/web-assets/static/js/async/cn.e7cc2f2c5b.js",
+      "status": 200,
+      "type": "script"
+    },
+    {
+      "url": "https://cinatoken.com/web-assets/static/js/async/fd.7dd19fd28b.js",
+      "status": 200,
+      "type": "script"
+    },
+    {
+      "url": "https://cinatoken.com/web-assets/static/js/async/30.5583d3d88f.js",
+      "status": 200,
+      "type": "script"
+    },
+    {
+      "url": "https://cinatoken.com/web-assets/static/js/async/hw.419e09a2b0.js",
+      "status": 200,
+      "type": "script"
+    },
+    {
+      "url": "https://cinatoken.com/web-assets/static/js/async/r4.4d0fa2a207.js",
+      "status": 200,
+      "type": "script"
+    }
+  ],
+  "expectedAnonymous401": [
+    {
+      "url": "https://cinatoken.com/api/user/me",
+      "method": "GET",
+      "status": 401,
+      "expected": true
+    }
+  ],
+  "pages": [
+    {
+      "route": "/en",
+      "url": "https://cinatoken.com/en",
+      "status": 200,
+      "title": "CinaToken — Unified AI gateway",
+      "headings": [
+        "Bring your AI resources together.",
+        "Request",
+        "Response",
+        "An AI capability gateway built for builders",
+        "Unified protocols",
+        "Intelligent routing",
+        "Budgets and keys",
+        "Logs and analytics",
+        "From provider to reliable traffic in four steps",
+        "Connect providers",
+        "Publish models and routes",
+        "Issue user keys",
+        "Observe every call",
+        "Run on your infrastructure",
+        "Cloudflare Workers + D1",
+        "Docker + Postgres / MySQL",
+        "Ready to unify your AI capabilities?"
+      ],
+      "bodyLength": 2984,
+      "nonblank": true,
+      "overlay": false
+    },
+    {
+      "route": "/en/models",
+      "url": "https://cinatoken.com/en/models",
+      "status": 200,
+      "title": "Model catalog — CinaToken",
+      "headings": [
+        "Model catalog",
+        "Filters"
+      ],
+      "bodyLength": 846,
+      "nonblank": true,
+      "overlay": false
+    },
+    {
+      "route": "/dashboard",
+      "url": "https://cinatoken.com/dashboard",
+      "status": 200,
+      "title": "Dashboard · cinatoken Gateway · Admin",
+      "headings": [
+        "cinatoken Gateway"
+      ],
+      "bodyLength": 299,
+      "nonblank": true,
+      "overlay": false
+    }
+  ],
+  "readiness": [
+    {
+      "step": "initial-/en",
+      "url": "https://cinatoken.com/en",
+      "elapsedMs": 2473,
+      "before": {
+        "classes": [],
+        "readyState": "interactive",
+        "rootKeys": [],
+        "selects": [
+          {
+            "value": "en",
+            "reactBound": false
+          },
+          {
+            "value": "system",
+            "reactBound": false
+          }
+        ]
+      },
+      "after": {
+        "classes": [
+          "light"
+        ],
+        "readyState": "complete",
+        "hydrationFailure": null,
+        "rootKeys": [
+          "__reactContainer$53ulqx80izs"
+        ],
+        "selects": [
+          {
+            "value": "en",
+            "reactBound": true
+          },
+          {
+            "value": "system",
+            "reactBound": true
+          }
+        ]
+      },
+      "criterion": "React hydrateRoot container exists; both real header selects have callable React onChange; PublicThemeControl useEffect applies light/dark html class"
+    },
+    {
+      "step": "initial-/en/models",
+      "url": "https://cinatoken.com/en/models",
+      "elapsedMs": 444,
+      "before": {
+        "classes": [],
+        "readyState": "interactive",
+        "rootKeys": [],
+        "selects": [
+          {
+            "value": "en",
+            "reactBound": false
+          },
+          {
+            "value": "system",
+            "reactBound": false
+          }
+        ]
+      },
+      "after": {
+        "classes": [
+          "light"
+        ],
+        "readyState": "complete",
+        "hydrationFailure": null,
+        "rootKeys": [
+          "__reactContainer$plsjhr9rrcm"
+        ],
+        "selects": [
+          {
+            "value": "en",
+            "reactBound": true
+          },
+          {
+            "value": "system",
+            "reactBound": true
+          }
+        ]
+      },
+      "criterion": "React hydrateRoot container exists; both real header selects have callable React onChange; PublicThemeControl useEffect applies light/dark html class"
+    },
+    {
+      "step": "home-before-theme-action",
+      "url": "https://cinatoken.com/en",
+      "elapsedMs": 31,
+      "before": {
+        "classes": [],
+        "readyState": "interactive",
+        "rootKeys": [
+          "__reactContainer$s8ic7qb7iup"
+        ],
+        "selects": [
+          {
+            "value": "en",
+            "reactBound": false
+          },
+          {
+            "value": "system",
+            "reactBound": false
+          }
+        ]
+      },
+      "after": {
+        "classes": [
+          "light"
+        ],
+        "readyState": "complete",
+        "hydrationFailure": null,
+        "rootKeys": [
+          "__reactContainer$s8ic7qb7iup"
+        ],
+        "selects": [
+          {
+            "value": "en",
+            "reactBound": true
+          },
+          {
+            "value": "system",
+            "reactBound": true
+          }
+        ]
+      },
+      "criterion": "React hydrateRoot container exists; both real header selects have callable React onChange; PublicThemeControl useEffect applies light/dark html class"
+    },
+    {
+      "step": "zh-after-language-navigation",
+      "url": "https://cinatoken.com/zh",
+      "elapsedMs": 28,
+      "before": {
+        "classes": [
+          "dark"
+        ],
+        "readyState": "complete",
+        "rootKeys": [
+          "__reactContainer$52v0xxvmgn9"
+        ],
+        "selects": [
+          {
+            "value": "zh",
+            "reactBound": true
+          },
+          {
+            "value": "dark",
+            "reactBound": true
+          }
+        ]
+      },
+      "after": {
+        "classes": [
+          "dark"
+        ],
+        "readyState": "complete",
+        "hydrationFailure": null,
+        "rootKeys": [
+          "__reactContainer$52v0xxvmgn9"
+        ],
+        "selects": [
+          {
+            "value": "zh",
+            "reactBound": true
+          },
+          {
+            "value": "dark",
+            "reactBound": true
+          }
+        ]
+      },
+      "criterion": "React hydrateRoot container exists; both real header selects have callable React onChange; PublicThemeControl useEffect applies light/dark html class"
+    },
+    {
+      "step": "mobile-after-hard-reload",
+      "url": "https://cinatoken.com/zh",
+      "elapsedMs": 70,
+      "before": {
+        "classes": [
+          "dark"
+        ],
+        "readyState": "complete",
+        "rootKeys": [
+          "__reactContainer$98fo6vp7g3n"
+        ],
+        "selects": [
+          {
+            "value": "zh",
+            "reactBound": true
+          },
+          {
+            "value": "dark",
+            "reactBound": true
+          }
+        ]
+      },
+      "after": {
+        "classes": [
+          "dark"
+        ],
+        "readyState": "complete",
+        "hydrationFailure": null,
+        "rootKeys": [
+          "__reactContainer$98fo6vp7g3n"
+        ],
+        "selects": [
+          {
+            "value": "zh",
+            "reactBound": true
+          },
+          {
+            "value": "dark",
+            "reactBound": true
+          }
+        ]
+      },
+      "criterion": "React hydrateRoot container exists; both real header selects have callable React onChange; PublicThemeControl useEffect applies light/dark html class"
+    }
+  ],
+  "interactions": [
+    {
+      "step": "desktop-theme-select",
+      "url": "https://cinatoken.com/en",
+      "locale": "en",
+      "classes": [
+        "dark"
+      ],
+      "theme": "cinatoken-theme=dark",
+      "localeCookie": null,
+      "overflow": false,
+      "viewport": {
+        "width": 1440,
+        "height": 1000
+      },
+      "bodyLength": 2984,
+      "mainLength": 2859
+    },
+    {
+      "step": "language-select",
+      "url": "https://cinatoken.com/zh",
+      "locale": "zh",
+      "classes": [
+        "dark"
+      ],
+      "theme": "cinatoken-theme=dark",
+      "localeCookie": "NEXT_LOCALE=zh",
+      "overflow": false,
+      "viewport": {
+        "width": 1440,
+        "height": 1000
+      },
+      "bodyLength": 1526,
+      "mainLength": 1447
+    },
+    {
+      "step": "mobile-hard-reload",
+      "url": "https://cinatoken.com/zh",
+      "locale": "zh",
+      "classes": [
+        "dark"
+      ],
+      "theme": "cinatoken-theme=dark",
+      "localeCookie": "NEXT_LOCALE=zh",
+      "overflow": false,
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "bodyLength": 1526,
+      "mainLength": 1447
+    }
+  ],
+  "screenshots": [
+    {
+      "name": "home",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-foundation-5b11fb36c4074c9da1317f28ef4c7111\\web-2e-ready-v4-home.png",
+      "bytes": 54114,
+      "sha256": "3c3002c14200c075db9cb4077fc6926e1543c1dbc907150ee4981237dd71fbe6"
+    },
+    {
+      "name": "models",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-foundation-5b11fb36c4074c9da1317f28ef4c7111\\web-2e-ready-v4-models.png",
+      "bytes": 43142,
+      "sha256": "a4ab408b7ee9181b71ce1a29655a2148f068d5b56a43453a8c402c6801bde780"
+    },
+    {
+      "name": "dashboard",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-foundation-5b11fb36c4074c9da1317f28ef4c7111\\web-2e-ready-v4-dashboard.png",
+      "bytes": 30364,
+      "sha256": "b59a9baf9b3bb1690477ed7fb06b241be358429b0914fd955f247135d5553839"
+    },
+    {
+      "name": "dark",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-foundation-5b11fb36c4074c9da1317f28ef4c7111\\web-2e-ready-v4-dark.png",
+      "bytes": 55028,
+      "sha256": "0ec81d2dfcfcd8b5b473ce3dc99cdc4691e4221032efe8d179803149719665f3"
+    },
+    {
+      "name": "desktop-zh-dark",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-foundation-5b11fb36c4074c9da1317f28ef4c7111\\web-2e-ready-v4-desktop-zh-dark.png",
+      "bytes": 51355,
+      "sha256": "f39e58db5ca0dd9269735e1ddca7712fa4d42206b7a139627037b9f9ca720ed5"
+    },
+    {
+      "name": "mobile-zh-dark",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-foundation-5b11fb36c4074c9da1317f28ef4c7111\\web-2e-ready-v4-mobile-zh-dark.png",
+      "bytes": 32362,
+      "sha256": "e20176215a0b22679e4447abccd31249028b76065d72f11343e3185293c2e580"
+    }
+  ],
+  "browserVersion": "154.0.8037.95",
+  "explainedConsole": [
+    {
+      "type": "error",
+      "message": "Failed to load resource: the server responded with a status of 401 ()",
+      "url": "https://cinatoken.com/api/user/me"
+    }
+  ],
+  "unexplainedConsole": [],
+  "actualExit": 0,
+  "outcome": "PASS",
+  "contextClosed": true,
+  "browserClosed": true,
+  "finishedAt": "2026-10-06T11:01:23.887Z"
+}

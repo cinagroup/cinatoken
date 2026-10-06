@@ -1,0 +1,502 @@
+{
+  "schema": "product-initialized-independent-linux-review-v1",
+  "at": "2026-10-06T11:09:08.156Z",
+  "sourceSHA": "0d6707e2265312af1ec36482f05affc19eefd61e",
+  "runId": 37453985144,
+  "jobId": 112236986233,
+  "ciConclusion": "failure",
+  "actualExit": 1,
+  "authority": {
+    "sourceMatchesCurrentAndGitCommit": true,
+    "exactChildCommand": [
+      "/opt/hostedtoolcache/node/22.23.3/x64/bin/node",
+      "/home/runner/work/cinatoken/cinatoken/scripts/smoke/test-workerd-product-sse-cancel.mjs",
+      "--execute-linux",
+      "--out",
+      "/home/runner/work/_temp/product-sse-cancel-37453985144-1/fixture",
+      "--source-sha",
+      "0d6707e2265312af1ec36482f05affc19eefd61e"
+    ],
+    "timedOut": false,
+    "fallbackSignals": [],
+    "ownedGroupRemaining": false,
+    "terminalClosed": true,
+    "gracefulWorkerdExitProven": false
+  },
+  "events": {
+    "count": 46,
+    "bytes": 9418,
+    "sha256": "405e98787733d91b3137d96efab9e3c9bd14cfb8fab9817ba2cd9aa0e9dd54eb",
+    "globalSequenceContinuous": true,
+    "elapsedMsMonotonic": true,
+    "wallTimeMonotonic": true
+  },
+  "product": {
+    "status": "PASS",
+    "frames": [
+      {
+        "eventSequence": 13,
+        "frameSequence": 1,
+        "count": 1,
+        "elapsedMs": 648.455926
+      },
+      {
+        "eventSequence": 15,
+        "frameSequence": 2,
+        "count": 2,
+        "elapsedMs": 687.696677
+      },
+      {
+        "eventSequence": 17,
+        "frameSequence": 3,
+        "count": 3,
+        "elapsedMs": 727.765257
+      }
+    ],
+    "upstreamFrames": [
+      {
+        "eventSequence": 12,
+        "frameSequence": 1,
+        "elapsedMs": 647.002077
+      },
+      {
+        "eventSequence": 14,
+        "frameSequence": 2,
+        "elapsedMs": 686.878285
+      },
+      {
+        "eventSequence": 16,
+        "frameSequence": 3,
+        "elapsedMs": 727.034737
+      }
+    ],
+    "rst": {
+      "sequence": 18,
+      "kind": "client-rst-invoke",
+      "wallTime": "2026-10-06T11:05:31.497Z",
+      "elapsedMs": 728.514715,
+      "caseId": "product",
+      "receivedSseFrames": 3,
+      "responseComplete": false
+    },
+    "clientSocketClose": {
+      "sequence": 19,
+      "kind": "client-socket-close",
+      "wallTime": "2026-10-06T11:05:31.498Z",
+      "elapsedMs": 729.663595,
+      "caseId": "product",
+      "hadError": false,
+      "bytesRead": 648
+    },
+    "upstreamResponseClose": {
+      "sequence": 21,
+      "kind": "upstream-response-close",
+      "wallTime": "2026-10-06T11:05:31.499Z",
+      "elapsedMs": 730.565823,
+      "chunks": 3,
+      "beforeCleanup": true,
+      "intervalStopped": true
+    },
+    "upstreamSocketClose": {
+      "sequence": 22,
+      "kind": "upstream-socket-close",
+      "wallTime": "2026-10-06T11:05:31.499Z",
+      "elapsedMs": 730.657291,
+      "hadError": false,
+      "beforeCleanup": true,
+      "chunks": 3
+    },
+    "requestSignal": {
+      "sequence": 25,
+      "kind": "request-signal-aborted",
+      "wallTime": "2026-10-06T11:05:31.501Z",
+      "elapsedMs": 732.101014,
+      "caseId": "product",
+      "value": {
+        "aborted": true
+      },
+      "workerWallTime": 1791284731498
+    },
+    "usage": {
+      "sequence": 27,
+      "kind": "usage-settled",
+      "wallTime": "2026-10-06T11:05:31.501Z",
+      "elapsedMs": 732.489349,
+      "caseId": "product",
+      "value": {
+        "usage": {
+          "input_tokens": 0,
+          "output_tokens": 0,
+          "cache_read_tokens": 0,
+          "cache_write_tokens": 0,
+          "reasoning_tokens": 0,
+          "total_tokens": 0,
+          "raw_usage": null,
+          "upstreamMessageId": "synthetic",
+          "service_tier": null,
+          "finish_reason": null,
+          "native_finish_reason": null,
+          "cancelled": true
+        },
+        "costUnknown": true
+      },
+      "workerWallTime": 1791284731498
+    },
+    "resourceCompletion": {
+      "sequence": 29,
+      "kind": "resource-completion-settled",
+      "wallTime": "2026-10-06T11:05:31.502Z",
+      "elapsedMs": 732.831294,
+      "caseId": "product",
+      "value": {
+        "outcome": "confirmed"
+      },
+      "workerWallTime": 1791284731500
+    },
+    "observationCounts": {
+      "requestStart": 1,
+      "requestSignal": 1,
+      "usage": 1,
+      "resource": 1
+    },
+    "physicalCloseLatencyMs": {
+      "response": 2.0511079999999993,
+      "socket": 2.1425759999999627
+    },
+    "noChunksAfterPhysicalClose": true,
+    "requiredStoppedObservationMs": 300,
+    "caseEndAfterPhysicalSocketCloseMs": 325,
+    "reportedCase": {
+      "name": "product",
+      "status": "PASS",
+      "beganAt": "2026-10-06T11:05:31.369Z",
+      "receivedSseFrames": 3,
+      "firstSequences": [
+        1,
+        2,
+        3
+      ],
+      "rstInvoked": true,
+      "clientSocketClosed": true,
+      "upstreamSocketClosed": true,
+      "upstreamChunkIntervalStopped": true,
+      "chunksAtClose": 3,
+      "stoppedObservationMs": 300,
+      "usage": {
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "reasoning_tokens": 0,
+        "total_tokens": 0,
+        "raw_usage": null,
+        "upstreamMessageId": "synthetic",
+        "service_tier": null,
+        "finish_reason": null,
+        "native_finish_reason": null,
+        "cancelled": true
+      },
+      "costUnknown": true,
+      "resourceCompletion": "confirmed",
+      "requestSignalAbortedObserved": true,
+      "databaseLeaseReleaseProven": false,
+      "endedAt": "2026-10-06T11:05:31.824Z"
+    },
+    "assessment": "Independent real ordinary Workerd ingress reached unchanged production dispatchOpenAiRoute using fixed synthetic loopback upstream, yielded three ordered SSE frames, and actual downstream RST propagated to request signal plus physical upstream response/socket close before cleanup. Actual usage/settlement helper/resourceCompletion observations meet this fixture product gate exactly once. This does not prove the distinct minimal cancel callback, database leases, durable charge writes, full G7/G8, or graceful native exit."
+  },
+  "minimal": {
+    "status": "FAIL",
+    "frames": [
+      {
+        "eventSequence": 35,
+        "frameSequence": 1,
+        "count": 1,
+        "elapsedMs": 1099.012854
+      },
+      {
+        "eventSequence": 36,
+        "frameSequence": 2,
+        "count": 2,
+        "elapsedMs": 1139.447373
+      },
+      {
+        "eventSequence": 37,
+        "frameSequence": 3,
+        "count": 3,
+        "elapsedMs": 1179.710134
+      }
+    ],
+    "rst": {
+      "sequence": 38,
+      "kind": "client-rst-invoke",
+      "wallTime": "2026-10-06T11:05:31.949Z",
+      "elapsedMs": 1179.938377,
+      "caseId": "minimal",
+      "receivedSseFrames": 3,
+      "responseComplete": false
+    },
+    "clientSocketClose": {
+      "sequence": 39,
+      "kind": "client-socket-close",
+      "wallTime": "2026-10-06T11:05:31.949Z",
+      "elapsedMs": 1180.3034670000002,
+      "caseId": "minimal",
+      "hadError": false,
+      "bytesRead": 234
+    },
+    "requestSignal": {
+      "sequence": 42,
+      "kind": "request-signal-aborted",
+      "wallTime": "2026-10-06T11:05:31.950Z",
+      "elapsedMs": 1180.9107210000002,
+      "caseId": "minimal",
+      "value": {
+        "aborted": true
+      },
+      "workerWallTime": 1791284731949
+    },
+    "sourceCancelObservations": 0,
+    "enqueueErrorObservations": 0,
+    "deadlineMs": 5000,
+    "errorAfterRstMs": 5018.061959000001,
+    "error": {
+      "name": "Error",
+      "code": null,
+      "message": "native minimal ReadableStream.cancel callback deadline 5000ms",
+      "stack": "Error: native minimal ReadableStream.cancel callback deadline 5000ms\n    at until (file:///home/runner/work/cinatoken/cinatoken/scripts/smoke/test-workerd-product-sse-cancel.mjs:56:67)\n    at async file:///home/runner/work/cinatoken/cinatoken/scripts/smoke/test-workerd-product-sse-cancel.mjs:345:7\n    at async finishCase (file:///home/runner/work/cinatoken/cinatoken/scripts/smoke/test-workerd-product-sse-cancel.mjs:197:33)\n    at async file:///home/runner/work/cinatoken/cinatoken/scripts/smoke/test-workerd-product-sse-cancel.mjs:343:5"
+    },
+    "assessment": "Three real ordered SSE frames reached client; RST and request.signal abort are observed. The independent native ReadableStream.cancel callback was not observed within unchanged 5000 ms deadline and remains failed. No inference about C++ cause or a permanently absent callback is warranted."
+  },
+  "dependencies": {
+    "npmCiOutcome": "success (exit 0 under bash -e)",
+    "fullNpmLsOutcome": "success (exit 0 under bash -e)",
+    "noFilteredPipeline": true,
+    "logBytes": 106723,
+    "logSha256": "6029520c78a28d9faf4f1c3e33f2052e43abb66382d78fa5670de045ea271241",
+    "npmErrors": 0,
+    "invalidAjvPeer": false,
+    "optionalWasmExtraneousLabels": [
+      "├─┬ @emnapi/core@1.11.3 extraneous",
+      "├─┬ @emnapi/runtime@1.11.3 extraneous",
+      "├─┬ @emnapi/wasi-threads@1.2.3 extraneous",
+      "├─┬ @napi-rs/wasm-runtime@0.2.12 extraneous",
+      "└─┬ @tybys/wasm-util@0.10.4 extraneous"
+    ],
+    "extraneousCount": 5,
+    "securityAuditRemediationProven": false
+  },
+  "cleanup": {
+    "ownedSockets": 0,
+    "activeIntervals": 0,
+    "activeClients": 0,
+    "miniflareDisposeFulfilled": true,
+    "gracefulWorkerdExitProven": false
+  },
+  "sourceUnchangedReported": true,
+  "protectedVerified": [
+    {
+      "path": "packages/proxy/src/services/egress/openai-driver.ts",
+      "bytes": 35536,
+      "sha256": "6f0a0cf741a43e690e11150a4639746bdaae47a00a9843f89a07099fe6179118",
+      "currentlyVerified": true
+    },
+    {
+      "path": "packages/proxy/src/services/request-deadline.ts",
+      "bytes": 752,
+      "sha256": "33efe31863ce5c8d45d75faab888010e79caabef07b387a554487721fb8192ca",
+      "currentlyVerified": true
+    },
+    {
+      "path": "packages/proxy/src/services/text-usage-settlement.ts",
+      "bytes": 2397,
+      "sha256": "833fdeb7161e2564f57e1dc4dafe2fe74434856137c7cf3ec5305532f4863390",
+      "currentlyVerified": true
+    },
+    {
+      "path": "packages/proxy/src/services/resource-completion.ts",
+      "bytes": 1413,
+      "sha256": "0d84565d1d96ae404acfbb9dbed1f8f43a97b253fb13d390253d14c2942c4fe0",
+      "currentlyVerified": true
+    },
+    {
+      "path": "packages/proxy/src/services/egress/text-sse-cancellation-wire.test.mjs",
+      "bytes": 6874,
+      "sha256": "1954151019b71d0515bb736469f45f1e2b9d6293900358476c737e3598c81766",
+      "currentlyVerified": true
+    },
+    {
+      "path": "packages/proxy/scripts/staging/chat-holder-binding-v364.test.mjs",
+      "bytes": 8577,
+      "sha256": "74c96ce1b3825744652f1679e858bf8992aef1d4763a1ba25dc5e5b8b1d80f68",
+      "currentlyVerified": true
+    },
+    {
+      "path": "packages/proxy/scripts/staging/chat-holder-binding-v364-http-cancel-successor.test.mjs",
+      "bytes": 13354,
+      "sha256": "d23d1c710b539b6c64655fbb1fa4e4de85b228bab19c757bc0e4de48528972e5",
+      "currentlyVerified": true
+    },
+    {
+      "path": "scripts/diagnostics/v364-direct-socket/run-direct-socket.mjs",
+      "bytes": 52009,
+      "sha256": "8fbaaed9523ecb227bd0e47ce8092d7432c08f8b67fd8650569d69d711ef48a8",
+      "currentlyVerified": true
+    },
+    {
+      "path": "package-lock.json",
+      "bytes": 831762,
+      "sha256": "4cd9c7f7ee21cf16864ef815fa9aff309ed50aae0b714c02c7b7e4e7c7ba6a12",
+      "currentlyVerified": true
+    }
+  ],
+  "bundleInputsCount": 655,
+  "allCurrentBundleInputsMatch": true,
+  "workerSource": {
+    "bytes": 4468,
+    "sha256": "d46e44832ac6ee278506daa34902d21d9cbc44ee33d4f64dfa03136b192cb343"
+  },
+  "bundle": {
+    "bytes": 906726,
+    "sha256": "a6a2c3592b3781dee00a419c796e9d1e4510f7b46bfa6c67766b9a02b6659251"
+  },
+  "artifactFileManifest": [
+    {
+      "relativePath": "product-sse-cancel-37453985144-1/executor.json",
+      "bytes": 942,
+      "sha256": "7ff9420d68d6d6f1de7d416ae49ea9efd10a0706133b6ec5c7e1b370cc3435a3"
+    },
+    {
+      "relativePath": "product-sse-cancel-37453985144-1/fixture/bundle-metafile.json",
+      "bytes": 491803,
+      "sha256": "509238c279b24a9658123fcdca9e901bffee74fb32d225f97937921997f54353"
+    },
+    {
+      "relativePath": "product-sse-cancel-37453985144-1/fixture/events.ndjson",
+      "bytes": 9418,
+      "sha256": "405e98787733d91b3137d96efab9e3c9bd14cfb8fab9817ba2cd9aa0e9dd54eb"
+    },
+    {
+      "relativePath": "product-sse-cancel-37453985144-1/fixture/report.json",
+      "bytes": 125758,
+      "sha256": "addaab1b215f26141b71188632fb58931261b5039d99e103e344e33e90d1c9cc"
+    },
+    {
+      "relativePath": "product-sse-cancel-37453985144-1/fixture/worker-bundle.mjs",
+      "bytes": 906726,
+      "sha256": "a6a2c3592b3781dee00a419c796e9d1e4510f7b46bfa6c67766b9a02b6659251"
+    },
+    {
+      "relativePath": "product-sse-cancel-37453985144-1/fixture/worker-source.mjs",
+      "bytes": 4468,
+      "sha256": "d46e44832ac6ee278506daa34902d21d9cbc44ee33d4f64dfa03136b192cb343"
+    },
+    {
+      "relativePath": "product-sse-cancel-37453985144-1/stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "relativePath": "product-sse-cancel-37453985144-1/stdout.log",
+      "bytes": 221,
+      "sha256": "71f86b13f606a367da1098a02200eefdddc7a4483d8403a9f1439c40101eb40a"
+    },
+    {
+      "relativePath": "product-sse-web-dependencies-37453985144-1.log",
+      "bytes": 106723,
+      "sha256": "6029520c78a28d9faf4f1c3e33f2052e43abb66382d78fa5670de045ea271241"
+    }
+  ],
+  "receiptChecks": [
+    {
+      "label": "product-initialized-download",
+      "actualExit": 0,
+      "stdoutBytes": 0,
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrBytes": 0
+    },
+    {
+      "label": "product-initialized-log",
+      "actualExit": 0,
+      "stdoutBytes": 32883,
+      "stdoutSha256": "a98b12b3780f164c28d26aa4bf560b758095faeaded3702c3a00f08737693888",
+      "stderrBytes": 0
+    },
+    {
+      "label": "product-initialized-meta",
+      "actualExit": 0,
+      "stdoutBytes": 2151,
+      "stdoutSha256": "0130625ab25fda6ae7a331509a0dc1194fda44b5cb9cef4c6eb202b187882324",
+      "stderrBytes": 0
+    },
+    {
+      "label": "product-initialized-terminal-watch",
+      "actualExit": 1,
+      "stdoutBytes": 2199,
+      "stdoutSha256": "1d88905d479af8db5ce7dd82a614923af9fae5077943a8375d08487bfe854d03",
+      "stderrBytes": 0
+    }
+  ],
+  "ciSteps": [
+    {
+      "number": 1,
+      "name": "Set up job",
+      "conclusion": "success"
+    },
+    {
+      "number": 2,
+      "name": "Run actions/checkout@v4",
+      "conclusion": "success"
+    },
+    {
+      "number": 3,
+      "name": "Run actions/setup-node@v4",
+      "conclusion": "success"
+    },
+    {
+      "number": 4,
+      "name": "Run npm ci --ignore-scripts",
+      "conclusion": "success"
+    },
+    {
+      "number": 5,
+      "name": "Verify real ingress RST and separate native source cancel",
+      "conclusion": "failure"
+    },
+    {
+      "number": 6,
+      "name": "Verify clean Web dependency and peer tree",
+      "conclusion": "success"
+    },
+    {
+      "number": 7,
+      "name": "Run actions/upload-artifact@v4",
+      "conclusion": "success"
+    },
+    {
+      "number": 13,
+      "name": "Post Run actions/setup-node@v4",
+      "conclusion": "skipped"
+    },
+    {
+      "number": 14,
+      "name": "Post Run actions/checkout@v4",
+      "conclusion": "success"
+    },
+    {
+      "number": 15,
+      "name": "Complete job",
+      "conclusion": "success"
+    }
+  ],
+  "unchangedLimits": {
+    "originalStrictResultSuperseded": false,
+    "fullG7G8": false,
+    "databaseLeaseReleaseProven": false,
+    "durableBillingSettlementProven": false,
+    "gracefulWorkerdExitProven": false,
+    "realIdentity": false,
+    "productionRequests": 0,
+    "databaseRequests": 0
+  },
+  "verdict": "Product case is independently supported PASS; minimal remains FAIL, so whole run/child/nativePass remain failure/1/false. No assertions were changed, no old strict run repeated, and no Workerd was executed by this reviewer."
+}

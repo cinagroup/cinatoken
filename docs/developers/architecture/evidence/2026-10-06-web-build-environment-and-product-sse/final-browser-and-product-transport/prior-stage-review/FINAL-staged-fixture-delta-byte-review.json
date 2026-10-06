@@ -1,0 +1,42 @@
+{
+  "at": "2026-10-06T11:03:42.347Z",
+  "readOnly": true,
+  "gitWrites": false,
+  "repositoryWrites": false,
+  "baseline": "c9fc6e7b7f8ceffc60a6068f4cb105e4ac5f633b",
+  "sourcePath": "scripts/smoke/test-workerd-product-sse-cancel.mjs",
+  "originalBytes": 27709,
+  "originalSha256": "bd985402fb97d6ce2a3b8976625ee2fd9a48cad4a26557358b23831b9821f052",
+  "stagedBytes": 27920,
+  "stagedSha256": "3dbd6bae43bd82c78a3965c488eacea1c1591ae226c02137191154fef7814400",
+  "exactExpectedDelta": true,
+  "semanticChanges": [
+    "esbuild ignoreAnnotations:true",
+    "client-sse-frame payload sequence renamed frameSequence",
+    "upstream-chunk payload sequence renamed frameSequence"
+  ],
+  "nonsemanticChanges": [
+    "two explanatory comments"
+  ],
+  "scope": "Exact source equality after only these3 substitutions; production driver and other fixture assertions not modified.",
+  "gitReadReceipts": [
+    {
+      "args": [
+        "show",
+        "c9fc6e7b7f8ceffc60a6068f4cb105e4ac5f633b:scripts/smoke/test-workerd-product-sse-cancel.mjs"
+      ],
+      "actualExit": 0,
+      "stdoutBytes": 27709,
+      "stdoutSha256": "bd985402fb97d6ce2a3b8976625ee2fd9a48cad4a26557358b23831b9821f052"
+    },
+    {
+      "args": [
+        "show",
+        ":scripts/smoke/test-workerd-product-sse-cancel.mjs"
+      ],
+      "actualExit": 0,
+      "stdoutBytes": 27920,
+      "stdoutSha256": "3dbd6bae43bd82c78a3965c488eacea1c1591ae226c02137191154fef7814400"
+    }
+  ]
+}

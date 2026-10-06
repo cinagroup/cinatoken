@@ -1,0 +1,679 @@
+{
+  "at": "2026-10-06T11:02:32.895Z",
+  "scope": "Read-only anonymous production browser diagnosis and interaction verification; no source/Git/production authorization/business changes",
+  "sourceCommit": "2e40b9212b246152594ea60a774c85a9a0a4ad93",
+  "productionVersion": "a898c3fd-3df4-4e1d-bd97-da19936b3bfe",
+  "browserPlugin": "absent",
+  "fallback": "Browser plugin not available; existing bundled Playwright and isolated Chrome context",
+  "browserVersion": "154.0.8037.95",
+  "originalFailure": {
+    "report": {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-foundation-5b11fb36c4074c9da1317f28ef4c7111\\web-2e-browser-v3.json",
+      "bytes": 3680,
+      "sha256": "d4ce18e58dc9df86dd38ca948036200b33290bda1f5bd4de87a169e6066a8230"
+    },
+    "actualExit": 1,
+    "error": {
+      "name": "TimeoutError",
+      "message": "page.waitForFunction: Timeout 30000ms exceeded."
+    },
+    "browserClosed": true,
+    "preserved": true
+  },
+  "diagnosis": {
+    "actualExit": 0,
+    "contextClosed": true,
+    "browserClosed": true,
+    "domContentLoadedSnapshot": {
+      "step": "domcontentloaded",
+      "at": "2026-10-06T10:59:35.191Z",
+      "readyState": "interactive",
+      "classes": [],
+      "hydration": null,
+      "rootKeys": [],
+      "selects": [
+        {
+          "value": "en",
+          "label": "Language\nEnglish\n简体中文\n日本語\n한국어",
+          "reactKeys": [],
+          "hasOnChange": false
+        },
+        {
+          "value": "system",
+          "label": "Appearance\nSystem\nLight\nDark",
+          "reactKeys": [],
+          "hasOnChange": false
+        }
+      ],
+      "scripts": [
+        {
+          "src": "/web-assets/static/js/async/lib-react.6356ddf42c.js",
+          "type": "",
+          "id": ""
+        },
+        {
+          "src": "/web-assets/static/js/async/6u.79a8483cd5.js",
+          "type": "",
+          "id": ""
+        },
+        {
+          "src": "/web-assets/static/js/async/qi.3c0df390c8.js",
+          "type": "",
+          "id": ""
+        },
+        {
+          "src": "/web-assets/static/js/async/4b.f4f7b8a967.js",
+          "type": "",
+          "id": ""
+        },
+        {
+          "src": null,
+          "type": "application/json",
+          "id": "cinatoken-public-bootstrap"
+        },
+        {
+          "src": "/web-assets/static/js/index.89887bd39e.js",
+          "type": "",
+          "id": ""
+        }
+      ],
+      "tsrPresent": true,
+      "tsrKeys": [
+        "h",
+        "e",
+        "c",
+        "p",
+        "buffer",
+        "router",
+        "streamEnded"
+      ],
+      "bodyLength": 2984,
+      "themeCookie": null,
+      "events": [
+        {
+          "name": "DOMContentLoaded",
+          "at": 4771
+        }
+      ]
+    },
+    "firstHydratedSnapshot": {
+      "step": "observe-9",
+      "at": "2026-10-06T10:59:40.302Z",
+      "readyState": "complete",
+      "classes": [
+        "light"
+      ],
+      "hydration": null,
+      "rootKeys": [
+        "__reactContainer$ldo28mtswl"
+      ],
+      "selects": [
+        {
+          "value": "en",
+          "label": "Language\nEnglish\n简体中文\n日本語\n한국어",
+          "reactKeys": [
+            "__reactFiber$ldo28mtswl",
+            "__reactProps$ldo28mtswl",
+            "__reactEvents$ldo28mtswl"
+          ],
+          "hasOnChange": true
+        },
+        {
+          "value": "system",
+          "label": "Appearance\nSystem\nLight\nDark",
+          "reactKeys": [
+            "__reactFiber$ldo28mtswl",
+            "__reactProps$ldo28mtswl",
+            "__reactEvents$ldo28mtswl"
+          ],
+          "hasOnChange": true
+        }
+      ],
+      "scripts": [
+        {
+          "src": null,
+          "type": "application/json",
+          "id": "cinatoken-public-bootstrap"
+        },
+        {
+          "src": "/web-assets/static/js/index.89887bd39e.js",
+          "type": "",
+          "id": ""
+        }
+      ],
+      "tsrPresent": false,
+      "tsrKeys": [],
+      "bodyLength": 2984,
+      "themeCookie": null,
+      "events": [
+        {
+          "name": "DOMContentLoaded",
+          "at": 4771
+        },
+        {
+          "name": "load",
+          "at": 9705.09999999404
+        }
+      ]
+    },
+    "postActionSnapshot": {
+      "step": "settled-after-select",
+      "at": "2026-10-06T10:59:40.357Z",
+      "readyState": "complete",
+      "classes": [
+        "dark"
+      ],
+      "hydration": null,
+      "rootKeys": [
+        "__reactContainer$ldo28mtswl"
+      ],
+      "selects": [
+        {
+          "value": "en",
+          "label": "Language\nEnglish\n简体中文\n日本語\n한국어",
+          "reactKeys": [
+            "__reactFiber$ldo28mtswl",
+            "__reactProps$ldo28mtswl",
+            "__reactEvents$ldo28mtswl"
+          ],
+          "hasOnChange": true
+        },
+        {
+          "value": "dark",
+          "label": "Appearance\nSystem\nLight\nDark",
+          "reactKeys": [
+            "__reactFiber$ldo28mtswl",
+            "__reactProps$ldo28mtswl",
+            "__reactEvents$ldo28mtswl"
+          ],
+          "hasOnChange": true
+        }
+      ],
+      "scripts": [
+        {
+          "src": null,
+          "type": "application/json",
+          "id": "cinatoken-public-bootstrap"
+        },
+        {
+          "src": "/web-assets/static/js/index.89887bd39e.js",
+          "type": "",
+          "id": ""
+        }
+      ],
+      "tsrPresent": false,
+      "tsrKeys": [],
+      "bodyLength": 2984,
+      "themeCookie": "cinatoken-theme=dark",
+      "events": [
+        {
+          "name": "DOMContentLoaded",
+          "at": 4771
+        },
+        {
+          "name": "load",
+          "at": 9705.09999999404
+        },
+        {
+          "name": "change",
+          "at": 9920.699999988079,
+          "target": "SELECT",
+          "value": "dark"
+        },
+        {
+          "name": "cinatoken:public-theme",
+          "at": 9920.89999999106
+        }
+      ]
+    },
+    "conclusion": "SSR native controls existed before React handlers. After asynchronous client chunks completed, both controls had callable onChange and PublicThemeControl effect set light. A subsequent real select action emitted change/theme events and synchronously produced dark cookie and html class. Original V3 selected before this readiness boundary."
+  },
+  "finalVerification": {
+    "actualExit": 0,
+    "outcome": "PASS",
+    "contextClosed": true,
+    "browserClosed": true,
+    "pages": [
+      {
+        "route": "/en",
+        "url": "https://cinatoken.com/en",
+        "status": 200,
+        "title": "CinaToken — Unified AI gateway",
+        "headings": [
+          "Bring your AI resources together.",
+          "Request",
+          "Response",
+          "An AI capability gateway built for builders",
+          "Unified protocols",
+          "Intelligent routing",
+          "Budgets and keys",
+          "Logs and analytics",
+          "From provider to reliable traffic in four steps",
+          "Connect providers",
+          "Publish models and routes",
+          "Issue user keys",
+          "Observe every call",
+          "Run on your infrastructure",
+          "Cloudflare Workers + D1",
+          "Docker + Postgres / MySQL",
+          "Ready to unify your AI capabilities?"
+        ],
+        "bodyLength": 2984,
+        "nonblank": true,
+        "overlay": false
+      },
+      {
+        "route": "/en/models",
+        "url": "https://cinatoken.com/en/models",
+        "status": 200,
+        "title": "Model catalog — CinaToken",
+        "headings": [
+          "Model catalog",
+          "Filters"
+        ],
+        "bodyLength": 846,
+        "nonblank": true,
+        "overlay": false
+      },
+      {
+        "route": "/dashboard",
+        "url": "https://cinatoken.com/dashboard",
+        "status": 200,
+        "title": "Dashboard · cinatoken Gateway · Admin",
+        "headings": [
+          "cinatoken Gateway"
+        ],
+        "bodyLength": 299,
+        "nonblank": true,
+        "overlay": false
+      }
+    ],
+    "readiness": [
+      {
+        "step": "initial-/en",
+        "url": "https://cinatoken.com/en",
+        "elapsedMs": 2473,
+        "before": {
+          "classes": [],
+          "readyState": "interactive",
+          "rootKeys": [],
+          "selects": [
+            {
+              "value": "en",
+              "reactBound": false
+            },
+            {
+              "value": "system",
+              "reactBound": false
+            }
+          ]
+        },
+        "after": {
+          "classes": [
+            "light"
+          ],
+          "readyState": "complete",
+          "hydrationFailure": null,
+          "rootKeys": [
+            "__reactContainer$53ulqx80izs"
+          ],
+          "selects": [
+            {
+              "value": "en",
+              "reactBound": true
+            },
+            {
+              "value": "system",
+              "reactBound": true
+            }
+          ]
+        },
+        "criterion": "React hydrateRoot container exists; both real header selects have callable React onChange; PublicThemeControl useEffect applies light/dark html class"
+      },
+      {
+        "step": "initial-/en/models",
+        "url": "https://cinatoken.com/en/models",
+        "elapsedMs": 444,
+        "before": {
+          "classes": [],
+          "readyState": "interactive",
+          "rootKeys": [],
+          "selects": [
+            {
+              "value": "en",
+              "reactBound": false
+            },
+            {
+              "value": "system",
+              "reactBound": false
+            }
+          ]
+        },
+        "after": {
+          "classes": [
+            "light"
+          ],
+          "readyState": "complete",
+          "hydrationFailure": null,
+          "rootKeys": [
+            "__reactContainer$plsjhr9rrcm"
+          ],
+          "selects": [
+            {
+              "value": "en",
+              "reactBound": true
+            },
+            {
+              "value": "system",
+              "reactBound": true
+            }
+          ]
+        },
+        "criterion": "React hydrateRoot container exists; both real header selects have callable React onChange; PublicThemeControl useEffect applies light/dark html class"
+      },
+      {
+        "step": "home-before-theme-action",
+        "url": "https://cinatoken.com/en",
+        "elapsedMs": 31,
+        "before": {
+          "classes": [],
+          "readyState": "interactive",
+          "rootKeys": [
+            "__reactContainer$s8ic7qb7iup"
+          ],
+          "selects": [
+            {
+              "value": "en",
+              "reactBound": false
+            },
+            {
+              "value": "system",
+              "reactBound": false
+            }
+          ]
+        },
+        "after": {
+          "classes": [
+            "light"
+          ],
+          "readyState": "complete",
+          "hydrationFailure": null,
+          "rootKeys": [
+            "__reactContainer$s8ic7qb7iup"
+          ],
+          "selects": [
+            {
+              "value": "en",
+              "reactBound": true
+            },
+            {
+              "value": "system",
+              "reactBound": true
+            }
+          ]
+        },
+        "criterion": "React hydrateRoot container exists; both real header selects have callable React onChange; PublicThemeControl useEffect applies light/dark html class"
+      },
+      {
+        "step": "zh-after-language-navigation",
+        "url": "https://cinatoken.com/zh",
+        "elapsedMs": 28,
+        "before": {
+          "classes": [
+            "dark"
+          ],
+          "readyState": "complete",
+          "rootKeys": [
+            "__reactContainer$52v0xxvmgn9"
+          ],
+          "selects": [
+            {
+              "value": "zh",
+              "reactBound": true
+            },
+            {
+              "value": "dark",
+              "reactBound": true
+            }
+          ]
+        },
+        "after": {
+          "classes": [
+            "dark"
+          ],
+          "readyState": "complete",
+          "hydrationFailure": null,
+          "rootKeys": [
+            "__reactContainer$52v0xxvmgn9"
+          ],
+          "selects": [
+            {
+              "value": "zh",
+              "reactBound": true
+            },
+            {
+              "value": "dark",
+              "reactBound": true
+            }
+          ]
+        },
+        "criterion": "React hydrateRoot container exists; both real header selects have callable React onChange; PublicThemeControl useEffect applies light/dark html class"
+      },
+      {
+        "step": "mobile-after-hard-reload",
+        "url": "https://cinatoken.com/zh",
+        "elapsedMs": 70,
+        "before": {
+          "classes": [
+            "dark"
+          ],
+          "readyState": "complete",
+          "rootKeys": [
+            "__reactContainer$98fo6vp7g3n"
+          ],
+          "selects": [
+            {
+              "value": "zh",
+              "reactBound": true
+            },
+            {
+              "value": "dark",
+              "reactBound": true
+            }
+          ]
+        },
+        "after": {
+          "classes": [
+            "dark"
+          ],
+          "readyState": "complete",
+          "hydrationFailure": null,
+          "rootKeys": [
+            "__reactContainer$98fo6vp7g3n"
+          ],
+          "selects": [
+            {
+              "value": "zh",
+              "reactBound": true
+            },
+            {
+              "value": "dark",
+              "reactBound": true
+            }
+          ]
+        },
+        "criterion": "React hydrateRoot container exists; both real header selects have callable React onChange; PublicThemeControl useEffect applies light/dark html class"
+      }
+    ],
+    "interactions": [
+      {
+        "step": "desktop-theme-select",
+        "url": "https://cinatoken.com/en",
+        "locale": "en",
+        "classes": [
+          "dark"
+        ],
+        "theme": "cinatoken-theme=dark",
+        "localeCookie": null,
+        "overflow": false,
+        "viewport": {
+          "width": 1440,
+          "height": 1000
+        },
+        "bodyLength": 2984,
+        "mainLength": 2859
+      },
+      {
+        "step": "language-select",
+        "url": "https://cinatoken.com/zh",
+        "locale": "zh",
+        "classes": [
+          "dark"
+        ],
+        "theme": "cinatoken-theme=dark",
+        "localeCookie": "NEXT_LOCALE=zh",
+        "overflow": false,
+        "viewport": {
+          "width": 1440,
+          "height": 1000
+        },
+        "bodyLength": 1526,
+        "mainLength": 1447
+      },
+      {
+        "step": "mobile-hard-reload",
+        "url": "https://cinatoken.com/zh",
+        "locale": "zh",
+        "classes": [
+          "dark"
+        ],
+        "theme": "cinatoken-theme=dark",
+        "localeCookie": "NEXT_LOCALE=zh",
+        "overflow": false,
+        "viewport": {
+          "width": 390,
+          "height": 844
+        },
+        "bodyLength": 1526,
+        "mainLength": 1447
+      }
+    ],
+    "clientResponses": 81,
+    "clientResponseErrors": [],
+    "requestFailures": [],
+    "pageErrors": [],
+    "httpErrors": [
+      {
+        "url": "https://cinatoken.com/api/user/me",
+        "method": "GET",
+        "status": 401,
+        "expected": true
+      }
+    ],
+    "console": [
+      {
+        "type": "error",
+        "message": "Failed to load resource: the server responded with a status of 401 ()",
+        "url": "https://cinatoken.com/api/user/me"
+      }
+    ],
+    "unexplainedConsole": [],
+    "screenshots": [
+      {
+        "name": "home",
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-foundation-5b11fb36c4074c9da1317f28ef4c7111\\web-2e-ready-v4-home.png",
+        "bytes": 54114,
+        "sha256": "3c3002c14200c075db9cb4077fc6926e1543c1dbc907150ee4981237dd71fbe6"
+      },
+      {
+        "name": "models",
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-foundation-5b11fb36c4074c9da1317f28ef4c7111\\web-2e-ready-v4-models.png",
+        "bytes": 43142,
+        "sha256": "a4ab408b7ee9181b71ce1a29655a2148f068d5b56a43453a8c402c6801bde780"
+      },
+      {
+        "name": "dashboard",
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-foundation-5b11fb36c4074c9da1317f28ef4c7111\\web-2e-ready-v4-dashboard.png",
+        "bytes": 30364,
+        "sha256": "b59a9baf9b3bb1690477ed7fb06b241be358429b0914fd955f247135d5553839"
+      },
+      {
+        "name": "dark",
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-foundation-5b11fb36c4074c9da1317f28ef4c7111\\web-2e-ready-v4-dark.png",
+        "bytes": 55028,
+        "sha256": "0ec81d2dfcfcd8b5b473ce3dc99cdc4691e4221032efe8d179803149719665f3"
+      },
+      {
+        "name": "desktop-zh-dark",
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-foundation-5b11fb36c4074c9da1317f28ef4c7111\\web-2e-ready-v4-desktop-zh-dark.png",
+        "bytes": 51355,
+        "sha256": "f39e58db5ca0dd9269735e1ddca7712fa4d42206b7a139627037b9f9ca720ed5"
+      },
+      {
+        "name": "mobile-zh-dark",
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-foundation-5b11fb36c4074c9da1317f28ef4c7111\\web-2e-ready-v4-mobile-zh-dark.png",
+        "bytes": 32362,
+        "sha256": "e20176215a0b22679e4447abccd31249028b76065d72f11343e3185293c2e580"
+      }
+    ]
+  },
+  "limitations": [
+    "Anonymous functional probe only; actual CinaAuth login, workspace switching and test keys not exercised.",
+    "Original strict networkidle baseline remains unchanged and unproven by this narrower probe.",
+    "The readiness condition observes version-specific React DOM diagnostic properties and the real theme mount effect; it is a temporary test criterion, not a public application readiness contract.",
+    "Visible native SSR controls can receive input before hydration; no product code change was made to prevent or replay that early input.",
+    "Hydration timings are observations from two local browser runs, not a performance benchmark."
+  ],
+  "evidence": [
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-foundation-5b11fb36c4074c9da1317f28ef4c7111\\diagnose-web-2e-hydration.mjs",
+      "bytes": 5189,
+      "sha256": "d1cb87c43049a2fc6be34a8004eed888a16276c5567b4cbebb0a31e113b1bc26"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-foundation-5b11fb36c4074c9da1317f28ef4c7111\\web-2e-hydration-diagnostic.json",
+      "bytes": 27845,
+      "sha256": "0d1dd1d45e880f732cd551b58ad1f840158fd64757411adf8f970f27109f3350"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-foundation-5b11fb36c4074c9da1317f28ef4c7111\\web-2e-hydration-diagnostic.stdout.log",
+      "bytes": 5398,
+      "sha256": "c7a9c5d0e4db75274a3d14baa347319599c9787b622210600e1838a2205cf8c7"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-foundation-5b11fb36c4074c9da1317f28ef4c7111\\web-2e-hydration-diagnostic.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-foundation-5b11fb36c4074c9da1317f28ef4c7111\\web-2e-hydration-diagnostic.result.json",
+      "bytes": 897,
+      "sha256": "62cb9c2c2871b35997b7dece28ec8f7c0aab256f82d3323e28f2ec9ba7447d9e"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-foundation-5b11fb36c4074c9da1317f28ef4c7111\\production-web-2e-browser-ready-v4.mjs",
+      "bytes": 9845,
+      "sha256": "8466ab19b5c6e2d24a65c1f2ee93474eb105095c2724de96754f2c03c4c206be"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-foundation-5b11fb36c4074c9da1317f28ef4c7111\\web-2e-browser-ready-v4.json",
+      "bytes": 22712,
+      "sha256": "5b383e972b68e8b44cc01b8ced19748901601f7a66fb0e9962307eb41fe7832f"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-foundation-5b11fb36c4074c9da1317f28ef4c7111\\web-2e-browser-ready-v4.stdout.log",
+      "bytes": 5038,
+      "sha256": "2ac24d34c5e2512d01d05b859415616c1d536729abf7fd08a6f8f47cf79a59cb"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-foundation-5b11fb36c4074c9da1317f28ef4c7111\\web-2e-browser-ready-v4.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-foundation-5b11fb36c4074c9da1317f28ef4c7111\\web-2e-browser-ready-v4.result.json",
+      "bytes": 898,
+      "sha256": "99276cb93fe8ca83cf6ef1c8f89e6322b3fcf835b35dc034a325169c61184c62"
+    }
+  ]
+}

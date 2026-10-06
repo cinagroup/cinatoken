@@ -1,0 +1,58 @@
+Refreshing run status every 20 seconds. Press Ctrl+C to quit.
+
+* main Product text SSE Workerd cancellation · 37453985144
+Triggered via workflow_dispatch less than a minute ago
+
+JOBS
+* product-transport (ID 112236986233)
+  ✓ Set up job
+  ✓ Run actions/checkout@v4
+  ✓ Run actions/setup-node@v4
+  * Run npm ci --ignore-scripts
+  * Verify real ingress RST and separate native source cancel
+  * Verify clean Web dependency and peer tree
+  * Run actions/upload-artifact@v4
+  * Post Run actions/setup-node@v4
+  * Post Run actions/checkout@v4
+Refreshing run status every 20 seconds. Press Ctrl+C to quit.
+
+* main Product text SSE Workerd cancellation · 37453985144
+Triggered via workflow_dispatch about 1 minute ago
+
+JOBS
+* product-transport (ID 112236986233)
+  ✓ Set up job
+  ✓ Run actions/checkout@v4
+  ✓ Run actions/setup-node@v4
+  * Run npm ci --ignore-scripts
+  * Verify real ingress RST and separate native source cancel
+  * Verify clean Web dependency and peer tree
+  * Run actions/upload-artifact@v4
+  * Post Run actions/setup-node@v4
+  * Post Run actions/checkout@v4
+X main Product text SSE Workerd cancellation · 37453985144
+Triggered via workflow_dispatch about 1 minute ago
+
+JOBS
+X product-transport in 1m6s (ID 112236986233)
+  ✓ Set up job
+  ✓ Run actions/checkout@v4
+  ✓ Run actions/setup-node@v4
+  ✓ Run npm ci --ignore-scripts
+  X Verify real ingress RST and separate native source cancel
+  ✓ Verify clean Web dependency and peer tree
+  ✓ Run actions/upload-artifact@v4
+  - Post Run actions/setup-node@v4
+  ✓ Post Run actions/checkout@v4
+  ✓ Complete job
+
+ANNOTATIONS
+! Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/checkout@v4, actions/setup-node@v4, actions/upload-artifact@v4. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/
+product-transport: .github#2
+
+X Process completed with exit code 1.
+product-transport: .github#8
+
+- "The ubuntu-latest label will migrate to Ubuntu 26 beginning October 19, 2026. For more information, see https://github.com/actions/runner-images/issues/14748"
+product-transport: .github#1
+
