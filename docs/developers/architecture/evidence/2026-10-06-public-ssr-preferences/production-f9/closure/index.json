@@ -1,0 +1,32 @@
+{
+  "at": "2026-10-06T12:52:12.356Z",
+  "actualArchiveChildExit": 0,
+  "actualArchiveChildSignal": null,
+  "scope": "Real archive process close, saved after the source inventory and ZIP roundtrip. Does not replace original HTTP or source download failure exits.",
+  "files": [
+    {
+      "path": "archive-process.result.json",
+      "original": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-public-preferences-6e3e9f61c91546db9fc1c9886740fed4\\archive-final-production.result.json",
+      "bytes": 971,
+      "sha256": "f77d31f8554bca3f0cb6caf35a4fde5312d7c8f7bfebb35809c3a0a3a5af2fc9"
+    },
+    {
+      "path": "archive-process.stdout.log",
+      "original": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-public-preferences-6e3e9f61c91546db9fc1c9886740fed4\\archive-final-production.stdout.log",
+      "bytes": 520,
+      "sha256": "f2b72b5b1dbd43d60a137dbac3e7d47e4aab4ad80903690b16b2004ae53aac99"
+    },
+    {
+      "path": "archive-process.stderr.log",
+      "original": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-public-preferences-6e3e9f61c91546db9fc1c9886740fed4\\archive-final-production.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "write-final-archive-closure.mjs",
+      "original": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-public-preferences-6e3e9f61c91546db9fc1c9886740fed4\\write-final-archive-closure.mjs",
+      "bytes": 1941,
+      "sha256": "c801143682fa82c1ab831a0ae413c4a117b1342f7ce2ed48a44b26fc09598de6"
+    }
+  ]
+}

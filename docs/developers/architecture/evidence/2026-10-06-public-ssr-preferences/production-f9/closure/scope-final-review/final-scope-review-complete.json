@@ -1,0 +1,146 @@
+{
+  "schemaVersion": 1,
+  "startedAt": "2026-10-06T12:55:20.342661+00:00",
+  "finishedAt": "2026-10-06T12:55:22.115677+00:00",
+  "readOnly": true,
+  "repositoryWrites": 0,
+  "networkRequestsMade": 0,
+  "scopePassed": true,
+  "md": {
+    "bytes": 865345,
+    "sha256": "683380e63867768b313758c5667b38d864c540b0dcb8cb35fc4cd7013be13b08"
+  },
+  "manualEvidenceReview": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-public-preferences-md-scope-79204d34279045ad83a65f36ab1e0bab\\final-md-manual-evidence-review.json",
+    "bytes": 139903,
+    "sha256": "0801e49a1f0b6421d986c7fe3e8c3896422375b327671604667ccc7d875f703f"
+  },
+  "links": [
+    {
+      "relative": "evidence/2026-10-06-public-ssr-preferences/production-f9/deployment-guard.json",
+      "bytes": 3925,
+      "sha256": "32b3c5edce57e41d893d0b69cd842ef4579cb2abf88923f4608b3e77678704d8",
+      "actuallyExists": true
+    },
+    {
+      "relative": "evidence/2026-10-06-public-ssr-preferences/production-f9/browser-production-report.json",
+      "bytes": 1496143,
+      "sha256": "0db884b23146875d6c27407215e8c0b84efa18db182fdaea1127f342f380eabc",
+      "actuallyExists": true
+    },
+    {
+      "relative": "evidence/2026-10-06-public-ssr-preferences/production-f9/independent-production-review.json",
+      "bytes": 357297,
+      "sha256": "3f83a0701d5b0a4348b63972ed5743ec1d8c5588c4ef61e03fb3703f88aa2bcb",
+      "actuallyExists": true
+    },
+    {
+      "relative": "evidence/2026-10-06-public-ssr-preferences/production-f9/http-matrix-report.json",
+      "bytes": 426973,
+      "sha256": "6cc7cc5090ad42eb9025778dbaea0fad86407cf2cff8d2fef81b8e4e96313ed3",
+      "actuallyExists": true
+    },
+    {
+      "relative": "evidence/2026-10-06-public-ssr-preferences/production-f9/source-download-report.json",
+      "bytes": 420897,
+      "sha256": "510a718868df820411fd4a0be4f8429613100f53523bfcd72f546ba449c88be7",
+      "actuallyExists": true
+    },
+    {
+      "relative": "evidence/2026-10-06-public-ssr-preferences/production-f9/asset-coverage-report.json",
+      "bytes": 1218024,
+      "sha256": "63733bb43821895c7ebdab38b2b282af6aa8d83387d5b612c0727537681850ef",
+      "actuallyExists": true
+    },
+    {
+      "relative": "evidence/2026-10-06-public-ssr-preferences/production-f9/index.json",
+      "bytes": 805993,
+      "sha256": "b8649463f6bb12e1083d3cb80ac8bac83a5bc2de2208bae04a5145d25f920988",
+      "actuallyExists": true
+    },
+    {
+      "relative": "evidence/2026-10-06-public-ssr-preferences/production-f9/checklist-scope-report.json",
+      "bytes": 257316,
+      "sha256": "241d12f2d96cbddcc188cf3af0d9eb5c6e528498cdef6723b2877cf37827af59",
+      "actuallyExists": true
+    }
+  ],
+  "allSection594RelativeLinksActuallyExist": true,
+  "archiveIndependentReadback": {
+    "originalMappingsVerified": 1614,
+    "uniqueMembersDecompressedHashedCrcChecked": 1195,
+    "exactZipMembership": true,
+    "everyOriginalRawSourceByteUnchanged": true,
+    "bundleBytes": 35638466,
+    "bundleSha256": "9262b469b0f1160a27d00f3e352f2a023b5804e0a29a39aba0d60cdf06b16e6f",
+    "indexBytes": 805993,
+    "indexSha256": "b8649463f6bb12e1083d3cb80ac8bac83a5bc2de2208bae04a5145d25f920988"
+  },
+  "archiveActualChildClosure": {
+    "actualExit": 0,
+    "signal": null,
+    "closedAt": "2026-10-06T12:50:42.589Z",
+    "closureFilesByteIdentical": true
+  },
+  "plainOriginalReportsByteIdentical": [
+    {
+      "path": "checklist-scope-report.json",
+      "bytes": 257316,
+      "sha256": "241d12f2d96cbddcc188cf3af0d9eb5c6e528498cdef6723b2877cf37827af59",
+      "identicalToActualOriginal": true
+    },
+    {
+      "path": "browser-production-report.json",
+      "bytes": 1496143,
+      "sha256": "0db884b23146875d6c27407215e8c0b84efa18db182fdaea1127f342f380eabc",
+      "identicalToActualOriginal": true
+    },
+    {
+      "path": "asset-coverage-report.json",
+      "bytes": 1218024,
+      "sha256": "63733bb43821895c7ebdab38b2b282af6aa8d83387d5b612c0727537681850ef",
+      "identicalToActualOriginal": true
+    },
+    {
+      "path": "http-matrix-report.json",
+      "bytes": 426973,
+      "sha256": "6cc7cc5090ad42eb9025778dbaea0fad86407cf2cff8d2fef81b8e4e96313ed3",
+      "identicalToActualOriginal": true
+    },
+    {
+      "path": "source-download-report.json",
+      "bytes": 420897,
+      "sha256": "510a718868df820411fd4a0be4f8429613100f53523bfcd72f546ba449c88be7",
+      "identicalToActualOriginal": true
+    },
+    {
+      "path": "deployment-guard.json",
+      "bytes": 3925,
+      "sha256": "32b3c5edce57e41d893d0b69cd842ef4579cb2abf88923f4608b3e77678704d8",
+      "identicalToActualOriginal": true
+    }
+  ],
+  "claimLimitsConfirmed": {
+    "linuxBrowserDescription": "Existing Windows Chrome consumes Linux CI frozen build artifacts; no Linux-host Chrome execution claim",
+    "noJsJaOverflow": {
+      "interimTrueNoJsSnapshotOverflow": true,
+      "finalSnapshotOverflow": false,
+      "claimAppliesOnlyToFinalAssetCompleteSnapshot": true,
+      "noWholeLifecycleOverflowClaim": true
+    },
+    "bfcacheExecuted": false,
+    "realAuthWorkspaceKeyAcceptance": false,
+    "productionOAuthSpecificApprovalStillPending": true,
+    "originalHttp177ActualFailureRetained": [
+      167,
+      175
+    ],
+    "separateFiveArchive60SecondActualFailureRetained": {
+      "passed": 3,
+      "failed": 2
+    },
+    "fullGatesNaturalCancelAndRetirementStillPending": true
+  },
+  "passed": true,
+  "executionAuthority": "This JSON contains local readback results. Actual Python close status is captured by its separate owned runner after exit."
+}

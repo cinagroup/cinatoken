@@ -1,0 +1,24 @@
+{
+  "executable": "C:/Users/cina/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/python.exe",
+  "args": [
+    "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-public-preferences-md-scope-79204d34279045ad83a65f36ab1e0bab\\complete-final-scope-review.py"
+  ],
+  "cwd": "C:/cinagroup/cinatoken",
+  "startedAt": "2026-10-06T12:55:20.242Z",
+  "finishedAt": "2026-10-06T12:55:22.160Z",
+  "actualExitCode": 0,
+  "signal": null,
+  "error": null,
+  "streams": {
+    "stdout": {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-public-preferences-md-scope-79204d34279045ad83a65f36ab1e0bab\\final-scope-complete.stdout.log",
+      "bytes": 360,
+      "sha256": "a690f37a74b9ea2040807ca6d213a96291617c1089459217e75659769e5eeb7f"
+    },
+    "stderr": {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-public-preferences-md-scope-79204d34279045ad83a65f36ab1e0bab\\final-scope-complete.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  }
+}

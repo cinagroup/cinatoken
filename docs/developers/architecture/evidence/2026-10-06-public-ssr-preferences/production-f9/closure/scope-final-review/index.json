@@ -1,0 +1,48 @@
+{
+  "at": "2026-10-06T12:59:43.837Z",
+  "scope": "Independent final checklist and lossless archive review, generated after the ZIP source inventory froze; includes original real close receipt.",
+  "files": [
+    {
+      "path": "final-md-manual-evidence-review.json",
+      "original": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-public-preferences-md-scope-79204d34279045ad83a65f36ab1e0bab\\final-md-manual-evidence-review.json",
+      "bytes": 139903,
+      "sha256": "0801e49a1f0b6421d986c7fe3e8c3896422375b327671604667ccc7d875f703f"
+    },
+    {
+      "path": "final-scope-complete.result.json",
+      "original": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-public-preferences-md-scope-79204d34279045ad83a65f36ab1e0bab\\final-scope-complete.result.json",
+      "bytes": 1045,
+      "sha256": "818a232d287b50d1df270942a5295a3b9707d50b2f0ded211f5244ee33184354"
+    },
+    {
+      "path": "final-scope-complete.stderr.log",
+      "original": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-public-preferences-md-scope-79204d34279045ad83a65f36ab1e0bab\\final-scope-complete.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "final-scope-complete.stdout.log",
+      "original": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-public-preferences-md-scope-79204d34279045ad83a65f36ab1e0bab\\final-scope-complete.stdout.log",
+      "bytes": 360,
+      "sha256": "a690f37a74b9ea2040807ca6d213a96291617c1089459217e75659769e5eeb7f"
+    },
+    {
+      "path": "final-scope-review-complete.json",
+      "original": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-public-preferences-md-scope-79204d34279045ad83a65f36ab1e0bab\\final-scope-review-complete.json",
+      "bytes": 5525,
+      "sha256": "b98beeb24db0c6871fd07031a920efd741dcfcce21c09e5b8f9b69bc9a8d2faa"
+    },
+    {
+      "path": "run-final-scope-complete.mjs",
+      "original": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-public-preferences-md-scope-79204d34279045ad83a65f36ab1e0bab\\run-final-scope-complete.mjs",
+      "bytes": 1550,
+      "sha256": "ad2641e798ba12841b783cdf3d9d822da3af7705e5eb1e4839729b32bda9eb88"
+    },
+    {
+      "path": "copy-scope-final-review.mjs",
+      "original": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-public-preferences-6e3e9f61c91546db9fc1c9886740fed4\\copy-scope-final-review.mjs",
+      "bytes": 1810,
+      "sha256": "a2cb43d0e1b35363c89bea694553081f56cb5c60678bdda7c8044863f7477676"
+    }
+  ]
+}

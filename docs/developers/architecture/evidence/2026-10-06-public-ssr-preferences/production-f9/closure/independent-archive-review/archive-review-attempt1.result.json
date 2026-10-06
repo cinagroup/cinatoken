@@ -1,0 +1,9 @@
+{
+  "scope": "Independent auditor first attempt only; does not alter original archive or production results",
+  "observedToolChunkId": "e0e4f4",
+  "observedActualToolExit": 1,
+  "scriptSha256": "2ff3ac2d5875175b7780033ef5be4ac375a1c8cae447a19a67b87487541b4ded",
+  "error": "AssertionError: Failed source partial retained without PASS",
+  "cause": "Auditor expected savedBodyKind partial; preserved original uses partial response bytes and absent byteContractPassed with streamReachedEOF false. No archive defect identified.",
+  "originalsModified": false
+}

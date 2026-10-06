@@ -1,0 +1,29 @@
+{
+  "schemaVersion": 1,
+  "scope": "Actual direct Python process completion returned by exec_command; not a derived intended exit. No second verifier run was made.",
+  "observedAt": "2026-10-06 13:02:09 UTC",
+  "executable": "C:/Users/cina/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/python.exe",
+  "args": [
+    "C:/Users/cina/AppData/Local/Temp/cinatoken-public-preferences-fixture-c60a7fdf3ecc40f49e04ef65e7956771/verify-final-archive-roundtrip.py"
+  ],
+  "cwd": "C:/cinagroup/cinatoken",
+  "actualExit": 0,
+  "signalReportedByTool": false,
+  "report": {
+    "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-public-preferences-fixture-c60a7fdf3ecc40f49e04ef65e7956771/archive-final-roundtrip-review.json",
+    "bytes": 321047,
+    "sha256": "5d5417bb3331f2b60ff253e70c251f879f6a542312d83fedff8fdd7a7c4c09e9"
+  },
+  "execCommandResult": {
+    "chunk_id": "eefc61",
+    "wall_time_seconds": 4.9114969,
+    "exit_code": 0,
+    "original_token_count": 96,
+    "output": "{\"reportPath\": \"C:\\\\Users\\\\cina\\\\AppData\\\\Local\\\\Temp\\\\cinatoken-public-preferences-fixture-c60a7fdf3ecc40f49e04ef65e7956771\\\\archive-final-roundtrip-review.json\", \"bytes\": 321047, \"sha256\": \"5d5417bb3331f2b60ff253e70c251f879f6a542312d83fedff8fdd7a7c4c09e9\", \"originalFiles\": 1614, \"zipMembers\": 1195, \"plainReports\": 8, \"actualArchiveChildExit\": 0, \"performanceGatePending\": true}\r\n"
+  },
+  "priorAuditAttempt": {
+    "actualExit": 1,
+    "result": "archive-review-attempt1.result.json",
+    "reason": "Auditor enum expectation corrected to exact preserved partial response bytes; original production failure remains unchanged."
+  }
+}

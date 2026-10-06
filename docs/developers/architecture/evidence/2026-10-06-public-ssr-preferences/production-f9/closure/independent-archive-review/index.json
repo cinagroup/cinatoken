@@ -1,0 +1,42 @@
+{
+  "at": "2026-10-06T13:04:02.627Z",
+  "scope": "Independent read-only archive review generated after the ZIP froze. Initial reviewer enumeration expectation failure remains actual1; corrected exact enumeration completed actual0. Neither changes source, production or original acceptance failures.",
+  "files": [
+    {
+      "path": "archive-final-roundtrip-review.json",
+      "original": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-public-preferences-fixture-c60a7fdf3ecc40f49e04ef65e7956771\\archive-final-roundtrip-review.json",
+      "bytes": 321047,
+      "sha256": "5d5417bb3331f2b60ff253e70c251f879f6a542312d83fedff8fdd7a7c4c09e9"
+    },
+    {
+      "path": "archive-review-attempt1-script.py",
+      "original": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-public-preferences-fixture-c60a7fdf3ecc40f49e04ef65e7956771\\archive-review-attempt1-script.py",
+      "bytes": 22504,
+      "sha256": "2ff3ac2d5875175b7780033ef5be4ac375a1c8cae447a19a67b87487541b4ded"
+    },
+    {
+      "path": "archive-review-attempt1.result.json",
+      "original": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-public-preferences-fixture-c60a7fdf3ecc40f49e04ef65e7956771\\archive-review-attempt1.result.json",
+      "bytes": 566,
+      "sha256": "086b695595a02f455412d5ef5510baa4b3b814daab8344cfc70c9d1299e32110"
+    },
+    {
+      "path": "archive-review-process.result.json",
+      "original": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-public-preferences-fixture-c60a7fdf3ecc40f49e04ef65e7956771\\archive-review-process.result.json",
+      "bytes": 1665,
+      "sha256": "666669f89eb8a6b27b32f0b3ed3fd62538ce08d946c494838123c9442581f85e"
+    },
+    {
+      "path": "verify-final-archive-roundtrip.py",
+      "original": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-public-preferences-fixture-c60a7fdf3ecc40f49e04ef65e7956771\\verify-final-archive-roundtrip.py",
+      "bytes": 22563,
+      "sha256": "26c2b9dbaac4ded10edca055fac015dc47ae3fdab573907a872090519bb6bff9"
+    },
+    {
+      "path": "copy-independent-archive-review.mjs",
+      "original": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-public-preferences-6e3e9f61c91546db9fc1c9886740fed4\\copy-independent-archive-review.mjs",
+      "bytes": 1895,
+      "sha256": "b585bcf4d332c98c746d6d695605f3dc75373bb142ef911b274cab14e72a9d44"
+    }
+  ]
+}
