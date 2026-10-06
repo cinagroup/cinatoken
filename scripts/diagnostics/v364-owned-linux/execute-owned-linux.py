@@ -200,7 +200,9 @@ success = (actual == 0 and not fatal and not timed_out and not interrupted and n
            and direct_child_reaped and not cleanup_errors and cooperative_close and raw.get('actualExit') == 0)
 final_exit = 0 if success else 1
 result = {'schema': 'v364-owned-linux-executor-closed-v1', 'startedEpoch': started_wall,
-          'elapsedMs': (time.monotonic() - started) * 1000, 'actualProcessExit': actual, 'actualExit': final_exit,
+          'elapsedMs': (time.monotonic() - started) * 1000,
+          'actualProcessExit': child.returncode if child is not None else None,
+          'runnerOutcomeCode': actual, 'actualExit': final_exit,
           'outcome': 'STRICT_SYNTHETIC_ONLY_PASS' if success else 'STRICT_FAILURE_OR_UNKNOWN_PRESERVED',
           'timedOut': timed_out, 'interrupted': interrupted, 'fatal': fatal,
           'packageSHA256': manifest_hash, 'run': run_metadata, 'reportedActualExit': raw.get('actualExit') if raw else None,
@@ -211,5 +213,6 @@ result = {'schema': 'v364-owned-linux-executor-closed-v1', 'startedEpoch': start
           'productionRequests': 0, 'ciInvocations': 0,
           'files': [digest(path) for path in sorted(out.iterdir()) if path.is_file()]}
 (out / 'executor.closed.json').write_text(json.dumps(result, indent=2) + '\n')
-print(json.dumps({'actualExit': final_exit, 'actualProcessExit': actual, 'timedOut': timed_out, 'output': str(out)}))
+print(json.dumps({'actualExit': final_exit, 'actualProcessExit': child.returncode if child is not None else None,
+                  'runnerOutcomeCode': actual, 'timedOut': timed_out, 'output': str(out)}))
 raise SystemExit(final_exit)
