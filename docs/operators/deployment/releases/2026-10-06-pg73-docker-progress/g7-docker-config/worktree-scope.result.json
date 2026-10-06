@@ -1,0 +1,8 @@
+{
+  "closed": true,
+  "actualExitCode": 0,
+  "command": "git status --short",
+  "stdout": "worktree-scope.stdout.log",
+  "stderr": "worktree-scope.stderr.log",
+  "completedAt": "2026-10-06T00:32:32.8028407Z"
+}

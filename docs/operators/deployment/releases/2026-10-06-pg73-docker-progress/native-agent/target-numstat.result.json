@@ -1,0 +1,18 @@
+{
+  "startedAt": "2026-10-06T00:43:03.415Z",
+  "completedAt": "2026-10-06T00:43:03.478Z",
+  "program": "git",
+  "arguments": [
+    "diff",
+    "--numstat",
+    "--",
+    "scripts/db/cutover/postgres-budget-admission-login-v350.native.test.mjs"
+  ],
+  "actualExitCode": 0,
+  "signal": null,
+  "spawnError": null,
+  "stdoutPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-budget-admission-repair-pgYfbi\\target-numstat.stdout.txt",
+  "stderrPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-budget-admission-repair-pgYfbi\\target-numstat.stderr.txt",
+  "stdoutBytes": 76,
+  "stderrBytes": 0
+}

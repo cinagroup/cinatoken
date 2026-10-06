@@ -1,0 +1,346 @@
+{
+  "schema": "v364-owned-linux-diagnostic-closed-v1",
+  "startedAt": "2026-10-06T00:54:40.053Z",
+  "endedAt": "2026-10-06T00:55:12.260Z",
+  "elapsedMs": 32207.377332999997,
+  "actualExit": 1,
+  "outcome": "STRICT_FAILURE_PRESERVED",
+  "baseline": {
+    "code": 1,
+    "signal": null,
+    "timedOut": false,
+    "stdout": {
+      "bytes": 2870,
+      "sha256": "e92e5054f09bd9d580f5d8e2edd7d8694a6c1e80f0aced769765b92a6e0095bd"
+    },
+    "stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  },
+  "results": [
+    {
+      "caseId": "node-http-calibration-destroy",
+      "mode": "destroy",
+      "actualExit": 0,
+      "closed": true
+    },
+    {
+      "caseId": "node-http-calibration-rst",
+      "mode": "rst",
+      "actualExit": 0,
+      "closed": true
+    },
+    {
+      "caseId": "node-http-calibration-reader-cancel",
+      "mode": "reader-cancel",
+      "actualExit": 0,
+      "closed": true
+    },
+    {
+      "caseId": "locked-uninstrumented-destroy",
+      "observed": false,
+      "mode": "destroy",
+      "signalPassthrough": false,
+      "baselineEligible": true,
+      "originalWindow": {
+        "pollCount": 100,
+        "sleepMs": 10,
+        "elapsedMs": 1372.6503520000006,
+        "actual": null,
+        "expected": "observed",
+        "actualExit": 1
+      },
+      "tail": {
+        "elapsedMs": 4026.8612829999993,
+        "reads": 75,
+        "actual": null,
+        "usedForPass": false
+      },
+      "actualExit": 1,
+      "closed": true,
+      "strictFailure": {
+        "name": "AssertionError",
+        "code": "ERR_ASSERTION",
+        "message": "Expected values to be strictly equal:\n\nnull !== 'observed'\n"
+      }
+    },
+    {
+      "caseId": "locked-observed-destroy",
+      "observed": true,
+      "mode": "destroy",
+      "signalPassthrough": false,
+      "baselineEligible": true,
+      "originalWindow": {
+        "pollCount": 100,
+        "sleepMs": 10,
+        "elapsedMs": 1358.7547060000015,
+        "actual": null,
+        "expected": "observed",
+        "actualExit": 1
+      },
+      "tail": {
+        "elapsedMs": 4012.0311839999995,
+        "reads": 75,
+        "actual": null,
+        "usedForPass": false
+      },
+      "actualExit": 1,
+      "closed": true,
+      "strictFailure": {
+        "name": "AssertionError",
+        "code": "ERR_ASSERTION",
+        "message": "Expected values to be strictly equal:\n\nnull !== 'observed'\n"
+      }
+    },
+    {
+      "caseId": "locked-observed-rst",
+      "observed": true,
+      "mode": "rst",
+      "signalPassthrough": false,
+      "baselineEligible": true,
+      "originalWindow": {
+        "pollCount": 100,
+        "sleepMs": 10,
+        "elapsedMs": 1343.608360000002,
+        "actual": null,
+        "expected": "observed",
+        "actualExit": 1
+      },
+      "tail": {
+        "elapsedMs": 4004.8411979999983,
+        "reads": 75,
+        "actual": null,
+        "usedForPass": false
+      },
+      "actualExit": 1,
+      "closed": true,
+      "strictFailure": {
+        "name": "AssertionError",
+        "code": "ERR_ASSERTION",
+        "message": "Expected values to be strictly equal:\n\nnull !== 'observed'\n"
+      }
+    },
+    {
+      "caseId": "locked-observed-reader-cancel",
+      "observed": true,
+      "mode": "reader-cancel",
+      "signalPassthrough": false,
+      "baselineEligible": true,
+      "originalWindow": {
+        "pollCount": 100,
+        "sleepMs": 10,
+        "elapsedMs": 1331.5457810000007,
+        "actual": null,
+        "expected": "observed",
+        "actualExit": 1
+      },
+      "tail": {
+        "elapsedMs": 4007.4767109999993,
+        "reads": 75,
+        "actual": null,
+        "usedForPass": false
+      },
+      "actualExit": 1,
+      "closed": true,
+      "strictFailure": {
+        "name": "AssertionError",
+        "code": "ERR_ASSERTION",
+        "message": "Expected values to be strictly equal:\n\nnull !== 'observed'\n"
+      }
+    },
+    {
+      "caseId": "locked-observed-destroy-passthrough-variant",
+      "observed": true,
+      "mode": "destroy",
+      "signalPassthrough": true,
+      "baselineEligible": false,
+      "originalWindow": {
+        "pollCount": 100,
+        "sleepMs": 10,
+        "elapsedMs": 1316.5571459999992,
+        "actual": null,
+        "expected": "observed",
+        "actualExit": 1
+      },
+      "tail": {
+        "elapsedMs": 4049.3720900000008,
+        "reads": 76,
+        "actual": null,
+        "usedForPass": false
+      },
+      "actualExit": 1,
+      "closed": true,
+      "strictFailure": {
+        "name": "AssertionError",
+        "code": "ERR_ASSERTION",
+        "message": "Expected values to be strictly equal:\n\nnull !== 'observed'\n"
+      }
+    }
+  ],
+  "versions": {
+    "workerd": "1.20260828.1",
+    "miniflare": "5.20260828.0-alpha",
+    "wrangler": "4.127.1"
+  },
+  "executorReceipt": {
+    "schema": "v364-owned-linux-executor-start-v1",
+    "repo": "/home/runner/work/cinatoken/cinatoken",
+    "output": "/home/runner/work/_temp/v364-owned-once-37396338452-1",
+    "startedEpoch": 1791248079.6670263,
+    "freshOutputCreated": true,
+    "packageSHA256": "392f5a44294abf70c4bc3cbb7b727103f96d5ce8f5e87bfc3fe3dc8bd1fc6bd4",
+    "checkoutSHA": "fc17551b3016d3533c17cc4ec9b0151a4eedae44",
+    "run": {
+      "GITHUB_SHA": "fc17551b3016d3533c17cc4ec9b0151a4eedae44",
+      "GITHUB_RUN_ID": "37396338452",
+      "GITHUB_RUN_ATTEMPT": "1",
+      "GITHUB_WORKFLOW": "v364 owned Linux cancellation diagnostic",
+      "GITHUB_JOB": "cancellation-diagnostic"
+    },
+    "outerTimeoutSeconds": 320
+  },
+  "closureAuthority": "executor.closed.json; bounded Promise does not cancel underlying task",
+  "runtimeCompatibilityDate": "2026-09-04",
+  "frozenConfigDate": "2026-09-25",
+  "sourceUnchanged": true,
+  "inputsBefore": [
+    {
+      "path": "packages/proxy/scripts/staging/chat-holder-binding-v364-http-cancel-successor.test.mjs",
+      "bytes": 13354,
+      "sha256": "d23d1c710b539b6c64655fbb1fa4e4de85b228bab19c757bc0e4de48528972e5"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/chat-holder-binding-v364.node.test.mjs",
+      "bytes": 5908,
+      "sha256": "bf02a63395f450b889a784dc58bc537b6cb2f4a3004de07e1833c3e747c27fcc"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/chat-holder-gateway-v364.ts",
+      "bytes": 1534,
+      "sha256": "8c85b01ba54daa9b7302c726d20693d08ccb3395350ea6a333817eed46441eaf"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/chat-holder-private-v364.ts",
+      "bytes": 5367,
+      "sha256": "44070fcbb7058b915329a150634eaa649c1b3601724495a1620e94ce2d54d1bf"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/chat-holder-synthetic-v364.ts",
+      "bytes": 1019,
+      "sha256": "d89c6964454d9368a0257b6a585c8d5d707c91d09e55f5f2ea7c3545e5f0a16d"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/wrangler.chat-holder-gateway-v364.jsonc",
+      "bytes": 598,
+      "sha256": "e1a0354ff5bf7915c6c125f3003683a56b708d8bdd6006cce6b33c4ff8a6bb77"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/wrangler.chat-holder-private-v364.jsonc",
+      "bytes": 568,
+      "sha256": "6b897d8aa7b01087b75d4b74968d4004e2b6ddb87650bad1203c7693160b2047"
+    },
+    {
+      "path": "package-lock.json",
+      "bytes": 830546,
+      "sha256": "f9c65b6e373a231d52d6eda634bb5f947dda3174734cd70e2b811e09fff0b6f0"
+    },
+    {
+      "path": ".nvmrc",
+      "bytes": 3,
+      "sha256": "f14b4987904bcb5814e4459a057ed4d20f58a633152288a761214dcd28780b56"
+    },
+    {
+      "path": ".github/workflows/proxy-dispatch-safety.yml",
+      "bytes": 45895,
+      "sha256": "8e883e7f21f77f8367d361f6bd3d060e16c241c28641b3eac85af6835841f152"
+    }
+  ],
+  "inputsAfter": [
+    {
+      "path": "packages/proxy/scripts/staging/chat-holder-binding-v364-http-cancel-successor.test.mjs",
+      "bytes": 13354,
+      "sha256": "d23d1c710b539b6c64655fbb1fa4e4de85b228bab19c757bc0e4de48528972e5"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/chat-holder-binding-v364.node.test.mjs",
+      "bytes": 5908,
+      "sha256": "bf02a63395f450b889a784dc58bc537b6cb2f4a3004de07e1833c3e747c27fcc"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/chat-holder-gateway-v364.ts",
+      "bytes": 1534,
+      "sha256": "8c85b01ba54daa9b7302c726d20693d08ccb3395350ea6a333817eed46441eaf"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/chat-holder-private-v364.ts",
+      "bytes": 5367,
+      "sha256": "44070fcbb7058b915329a150634eaa649c1b3601724495a1620e94ce2d54d1bf"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/chat-holder-synthetic-v364.ts",
+      "bytes": 1019,
+      "sha256": "d89c6964454d9368a0257b6a585c8d5d707c91d09e55f5f2ea7c3545e5f0a16d"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/wrangler.chat-holder-gateway-v364.jsonc",
+      "bytes": 598,
+      "sha256": "e1a0354ff5bf7915c6c125f3003683a56b708d8bdd6006cce6b33c4ff8a6bb77"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/wrangler.chat-holder-private-v364.jsonc",
+      "bytes": 568,
+      "sha256": "6b897d8aa7b01087b75d4b74968d4004e2b6ddb87650bad1203c7693160b2047"
+    },
+    {
+      "path": "package-lock.json",
+      "bytes": 830546,
+      "sha256": "f9c65b6e373a231d52d6eda634bb5f947dda3174734cd70e2b811e09fff0b6f0"
+    },
+    {
+      "path": ".nvmrc",
+      "bytes": 3,
+      "sha256": "f14b4987904bcb5814e4459a057ed4d20f58a633152288a761214dcd28780b56"
+    },
+    {
+      "path": ".github/workflows/proxy-dispatch-safety.yml",
+      "bytes": 45895,
+      "sha256": "8e883e7f21f77f8367d361f6bd3d060e16c241c28641b3eac85af6835841f152"
+    }
+  ],
+  "bundleHashes": [
+    {
+      "name": "gateway",
+      "bytes": 1474,
+      "sha256": "ee2b63670af2ed15320204f46ce1130b0b71b3bfbc5d901b160069c595388bd4"
+    },
+    {
+      "name": "holder",
+      "bytes": 5595,
+      "sha256": "05100170dca4896eb11b723e65df7cf437f886797c0e2d255bb238c16e55089c"
+    },
+    {
+      "name": "observedGateway",
+      "bytes": 2690,
+      "sha256": "edafc7ec0e604c51d58ffde272a83c04404d816effa734b1cff1d64b6f84b1f6"
+    },
+    {
+      "name": "observedHolder",
+      "bytes": 7979,
+      "sha256": "573d54572570e06fb83328191156fd2c6ec7fd3551369d802b3d1a3d2646eee1"
+    }
+  ],
+  "activeMiniflare": 0,
+  "events": {
+    "bytes": 459796,
+    "sha256": "45dbe3732524bd0e993026bac2d653b38f5af6c3c973eb7d68a318652a4edd39",
+    "count": 1917
+  },
+  "productionRequests": 0,
+  "realIdentity": false,
+  "defaultOffHolderChanged": false,
+  "dependencyChanged": false,
+  "causeProven": false,
+  "lateObservationUpgradesPass": false,
+  "upstreamPatchApplied": false
+}

@@ -1,0 +1,8 @@
+{
+  "closed": true,
+  "actualExitCode": 0,
+  "label": "compose-jobs-2",
+  "stdout": "compose-jobs-2.stdout.json",
+  "stderr": "compose-jobs-2.stderr.log",
+  "completedAt": "2026-10-06T00:53:17.8079264Z"
+}

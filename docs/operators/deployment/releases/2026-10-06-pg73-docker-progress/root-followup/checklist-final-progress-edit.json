@@ -1,0 +1,15 @@
+{
+  "actualExit": 0,
+  "before": {
+    "bytes": 770286,
+    "sha256": "6d857df35f0d5e9e7b2ee8ea7564efe40cdfac03037de3973e737faed4f32cf6"
+  },
+  "after": {
+    "bytes": 775373,
+    "sha256": "5aee1e53919e589ab7e734d134d643495ec3d38868143f4c18cabfaa88a41a24"
+  },
+  "platformSHA": "4d645f954ea76d8546409aaa6b684a8279c0deb9",
+  "diagnosticSHA": "fc17551b3016d3533c17cc4ec9b0151a4eedae44",
+  "completeGoal": false,
+  "productionChanged": false
+}

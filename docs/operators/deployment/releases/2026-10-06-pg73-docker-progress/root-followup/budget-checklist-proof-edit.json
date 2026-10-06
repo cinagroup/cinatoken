@@ -1,0 +1,12 @@
+{
+  "actualExit": 0,
+  "before": {
+    "bytes": 769942,
+    "sha256": "bef17bab13f0c9d6c2a59cedd2cd7dbb8d0a8baee49ddfcfbfc3de06c2685ad7"
+  },
+  "after": {
+    "bytes": 770286,
+    "sha256": "6d857df35f0d5e9e7b2ee8ea7564efe40cdfac03037de3973e737faed4f32cf6"
+  },
+  "nativeExecutionClaim": false
+}

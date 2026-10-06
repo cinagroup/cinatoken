@@ -1,0 +1,28 @@
+{
+  "at": "2026-10-06T00:47:47.735Z",
+  "finishedAt": "2026-10-06T00:47:47.845Z",
+  "executable": "C:/Program Files/Git/cmd/git.exe",
+  "args": [
+    "add",
+    "--",
+    "docker/examples/env.compose.external.example",
+    "docker/examples/gateway.compose.yml",
+    "docker/examples/web-frontend.compose.yml",
+    "docs/developers/architecture/web-frontend-migration.md",
+    "docs/operators/deployment/docker.md",
+    "scripts/db/cutover/postgres-budget-admission-login-v350.native.test.mjs",
+    "scripts/diagnostics/v364-owned-linux/README.md",
+    "scripts/diagnostics/v364-owned-linux/execute-owned-linux.py",
+    "scripts/diagnostics/v364-owned-linux/gateway-observer.mjs",
+    "scripts/diagnostics/v364-owned-linux/holder-observer.mjs",
+    "scripts/diagnostics/v364-owned-linux/run-v364-owned-diagnostic.mjs",
+    "scripts/diagnostics/v364-owned-linux/source-inputs.json",
+    "scripts/diagnostics/v364-owned-linux/sealed-package.json",
+    ".github/workflows/v364-owned-linux-diagnostic.yml"
+  ],
+  "cwd": "C:/cinagroup/cinatoken",
+  "actualExit": 0,
+  "signal": null,
+  "stdout": "C:/Users/cina/AppData/Local/Temp/cinatoken-pg73-platform-followup-20261006-lAiHQC/platform-source-stage.stdout.log",
+  "stderr": "C:/Users/cina/AppData/Local/Temp/cinatoken-pg73-platform-followup-20261006-lAiHQC/platform-source-stage.stderr.log"
+}

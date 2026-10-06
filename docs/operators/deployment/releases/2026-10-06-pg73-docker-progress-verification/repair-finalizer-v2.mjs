@@ -1,0 +1,12 @@
+import fs from 'node:fs';
+import assert from 'node:assert/strict';
+const t='C:/Users/cina/AppData/Local/Temp/cinatoken-pg73-durable-meta-e44792174d9f42358287aa571b1ba35e';
+const p=t+'/finalize-durable-evidence.mjs';let s=fs.readFileSync(p,'utf8');fs.writeFileSync(t+'/before-finalizer-v2.mjs',s,{flag:'wx'});
+const old="const write=(p,b)=>{fs.mkdirSync(path.dirname(p),{recursive:true});fs.writeFileSync(p,b,{flag:'wx'});assert.deepEqual(fs.readFileSync(p),b);};";
+assert.ok(s.includes(old));s=s.replace(old,"const write=(p,b)=>{const raw=Buffer.isBuffer(b)?b:Buffer.from(b);fs.mkdirSync(path.dirname(p),{recursive:true});fs.writeFileSync(p,raw,{flag:'wx'});assert.deepEqual(fs.readFileSync(p),raw);};");
+s=s.replace("const names=['run-command.mjs','finalize-durable-evidence.mjs'","const names=['run-command.mjs','before-finalizer-v2.mjs','repair-finalizer-v2.mjs','finalizer-repair-proof.json','finalize-durable-evidence.mjs'");
+s=s.replace("assert.equal(r.actualExit,0);assert.ok(r.finishedAt);","assert.equal(r.actualExit,name==='evidence-repository-copy.result.json'?1:0);assert.ok(r.finishedAt);");
+s=s.replace("preparationFieldsDescribeTheirOriginalPreCollectionPhase:true,","preparationFieldsDescribeTheirOriginalPreCollectionPhase:true,firstCopyWrapperActualExit:1,firstCopyWriterBufferVersusStringAssertionFailurePreserved:true,subsequentIndependentRepositoryVerificationActualExit:0,");
+fs.writeFileSync(p,s);
+const proof={at:new Date().toISOString(),closed:true,actualExitCode:0,localMetadataWriterOnly:true,firstCopyActualExit:1,filesAlreadyWrittenBeforeFailure:740,originalFailureRetained:true,repoVerificationWillIndependentlyCheckAllCopiedBytes:true,gatePassDerived:false};
+fs.writeFileSync(t+'/finalizer-repair-proof.json',JSON.stringify(proof,null,2)+'\n',{flag:'wx'});console.log(JSON.stringify(proof));

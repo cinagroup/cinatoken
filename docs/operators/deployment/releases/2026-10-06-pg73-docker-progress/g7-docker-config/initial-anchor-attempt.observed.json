@@ -1,0 +1,10 @@
+{
+  "recordKind": "observed exec_command tool receipt excerpt; original stderr was returned by tool and not redirected to file",
+  "chunkId": "d302f0",
+  "closed": true,
+  "actualExitCode": 1,
+  "error": "one exact anchor docker/examples/gateway.compose.yml; 1 !== 2",
+  "cause": "Initial edit script assumed CRLF while all three owned files are LF; exact-anchor assertion stopped before any source writes.",
+  "sourceIntegrity": "Subsequent successful edit required all three sources to equal immutable before snapshots before writing. Original newline style retained.",
+  "classification": "prewrite tooling failure, not product validation failure"
+}

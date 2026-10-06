@@ -1,0 +1,695 @@
+{
+  "schema": "cinatoken.pg73.budget-admission.fixture-repair.v1",
+  "at": "2026-10-06T00:43:06.095Z",
+  "actualExit": 0,
+  "scope": {
+    "ownedSourceFiles": [
+      "scripts/db/cutover/postgres-budget-admission-login-v350.native.test.mjs"
+    ],
+    "otherSourceWrites": 0,
+    "productionGrantChanges": false,
+    "migrationChanges": false,
+    "helperChanges": false,
+    "workflowChanges": false,
+    "mdChanges": false,
+    "gitMutation": false
+  },
+  "confirmedBeforeFailure": {
+    "runId": "37394251894",
+    "jobId": "112046320310",
+    "step": 36,
+    "line": 105,
+    "expected": 73,
+    "actual": 81,
+    "sourceLog": "C:/Users/cina/AppData/Local/Temp/cinatoken-pg73-platform-followup-20261006-lAiHQC/native-linux-job-log-raw.stdout.log",
+    "logBytes": 89277,
+    "logSha256": "cff19188367ef32576368ad80786d10eb9bd5ba37e794aaf2b480510cbbde3b6"
+  },
+  "baseCommit": "b1ec8f33cf24edc07e8855c059c1498730a43113",
+  "before": {
+    "bytes": 25866,
+    "sha256": "28288728a38a159e0249ebb0a5973441c9a9083f35125aaa3afa5f81f0295f18",
+    "gitBlob": "588e4876723e38c5199af0462a4b28c6ef7f0f6e",
+    "snapshot": {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-budget-admission-repair-pgYfbi\\before.native.test.mjs",
+      "bytes": 25866,
+      "sha256": "28288728a38a159e0249ebb0a5973441c9a9083f35125aaa3afa5f81f0295f18"
+    }
+  },
+  "after": {
+    "bytes": 26124,
+    "sha256": "3edd01255166137049abf024a1ed71b5c259084f1768328c082c50a2d7a82882",
+    "gitBlob": "06063f1c7b96de9822e0f9076ab1f0688efa21b0",
+    "snapshot": {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-budget-admission-repair-pgYfbi\\after.native.test.mjs",
+      "bytes": 26124,
+      "sha256": "3edd01255166137049abf024a1ed71b5c259084f1768328c082c50a2d7a82882"
+    }
+  },
+  "patch": {
+    "raw": {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-budget-admission-repair-pgYfbi\\target-diff.stdout.txt",
+      "bytes": 2994,
+      "sha256": "fc00faf5c377de3c6c0142cbd235d3765ed6fed984b3fa6c20961b421c34ba1e"
+    },
+    "numstat": "7\t4\tscripts/db/cutover/postgres-budget-admission-login-v350.native.test.mjs",
+    "allowedEdits": [
+      {
+        "from": "import { readFile, readdir, writeFile } from 'node:fs/promises';",
+        "to": "import { readFile, writeFile } from 'node:fs/promises';"
+      },
+      {
+        "from": "import { grantPostgresRuntime } from './grant-postgres-runtime.ts';",
+        "to": "import { grantPg73RuntimeFixture, listPg73Migrations } from './pg73-native-fixture.mjs';"
+      },
+      {
+        "from": "const names = (await readdir(migrations))\n        .filter(name => name.endsWith('.sql')).sort();",
+        "to": "const names = await listPg73Migrations();"
+      },
+      {
+        "from": "        + `@127.0.0.1:${cluster.port}/postgres`;\n      report.sourceSha256.runtimeGrant",
+        "to": "        + `@127.0.0.1:${cluster.port}/postgres`;\n      // Keep both original grant calls, including the buyer-split rejection,\n      // behind the owned PG73 bridge so the production 0074 preflight still runs.\n      const grantPostgresRuntime = ({ DATABASE_URL }) =>\n        grantPg73RuntimeFixture({ cluster, migrator, migratorUrl: DATABASE_URL });\n      report.sourceSha256.runtimeGrant"
+      }
+    ],
+    "allOtherOriginalTextByteExact": true,
+    "reverseOriginalBytesExact": true,
+    "reverseSnapshot": {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-budget-admission-repair-pgYfbi\\reverse-before.native.test.mjs",
+      "bytes": 25866,
+      "sha256": "28288728a38a159e0249ebb0a5973441c9a9083f35125aaa3afa5f81f0295f18"
+    }
+  },
+  "assertions": {
+    "parser": "Acorn",
+    "original": 34,
+    "current": 34,
+    "orderedAstExact": true,
+    "exactSource": true,
+    "expectationChanges": 0,
+    "native300000TimeoutUnchanged": true,
+    "original73AndTerminalAssertUnchanged": true,
+    "originalRolesPasswordAndLoginAcl42501RollbackCleanupUnchanged": true
+  },
+  "mechanism": {
+    "loader": "Existing listPg73Migrations checks exactly historical73 corpus/digest/ledger; original count and terminal assertions remain.",
+    "grants": "Fixture-local closure forwards the original explicit DATABASE_URL to existing grantPg73RuntimeFixture with its owned cluster and migrator; the two original grant calls and every assert remain byte-for-byte.",
+    "initialSuccessfulGrant": "Existing bridge temporarily installs audit0074 for unchanged production preflight and grant, checks INSERT-only audit ACL, then restores PG73 and original runtime LOGIN attributes.",
+    "buyerSplitNegative": "Existing bridge admits original restricted LOGIN with no membership and temporarily audit0074; the unchanged real production grant passes audit preflight, encounters buyer_split_grant_policy_v348, and throws the original Buyer settlement split error before broad ACL mutation. Its finally then removes temporary0074 ledger/table and checks PG73/role restoration.",
+    "noNewFlagOrRuntimeDefault": true
+  },
+  "validation": {
+    "syntaxActualExit": 0,
+    "corpusActualExit": 0,
+    "pinned73": {
+      "count": 73,
+      "last": "0073_recovery_api_key_workspace_lock.sql"
+    },
+    "assertAndByteAuditActualExit": 0,
+    "diffCheckActualExit": 0,
+    "pureControl": {
+      "actualExit": 0,
+      "passed": 6,
+      "failed": 0,
+      "skipped": 0,
+      "sourceExtraction": "Actual current fixture closure + original exact negative assertion + actual unchanged bridge + TypeScript-transpiled actual production grant function; SQL calls use inert stubs.",
+      "cases": [
+        "initial actual-source grant success restores PG73 and preserves original LOGIN",
+        "original exact Buyer split assert reaches production marker guard and restores PG73 after rejection",
+        "direct production grant without bridge remains rejected by0074 preflight before buyer marker",
+        "remote URL rejected before inert SQL",
+        "runtime membership rejected before audit installation and role left intact",
+        "unrelated error does not satisfy original exact Buyer split assertion and still triggers audit cleanup"
+      ],
+      "databaseSemanticsProven": false
+    },
+    "closedRuns": [
+      {
+        "label": "syntax-target",
+        "result": {
+          "startedAt": "2026-10-06T00:42:09.907Z",
+          "completedAt": "2026-10-06T00:42:09.985Z",
+          "program": "node",
+          "arguments": [
+            "--check",
+            "scripts/db/cutover/postgres-budget-admission-login-v350.native.test.mjs"
+          ],
+          "actualExitCode": 0,
+          "signal": null,
+          "spawnError": null,
+          "stdoutPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-budget-admission-repair-pgYfbi\\syntax-target.stdout.txt",
+          "stderrPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-budget-admission-repair-pgYfbi\\syntax-target.stderr.txt",
+          "stdoutBytes": 0,
+          "stderrBytes": 0
+        },
+        "files": {
+          "result": {
+            "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-budget-admission-repair-pgYfbi\\syntax-target.result.json",
+            "bytes": 590,
+            "sha256": "52fa4254b59cc551495c57108f7b95fb6deea8d30393360cdc3e703d1075c0f8"
+          },
+          "stdout": {
+            "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-budget-admission-repair-pgYfbi\\syntax-target.stdout.txt",
+            "bytes": 0,
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          "stderr": {
+            "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-budget-admission-repair-pgYfbi\\syntax-target.stderr.txt",
+            "bytes": 0,
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          }
+        }
+      },
+      {
+        "label": "audit-target",
+        "result": {
+          "startedAt": "2026-10-06T00:42:10.942Z",
+          "completedAt": "2026-10-06T00:42:11.734Z",
+          "program": "node",
+          "arguments": [
+            "--import",
+            "tsx",
+            "C:/Users/cina/AppData/Local/Temp/cinatoken-pg73-budget-admission-repair-pgYfbi/audit-budget-repair.mjs"
+          ],
+          "actualExitCode": 0,
+          "signal": null,
+          "spawnError": null,
+          "stdoutPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-budget-admission-repair-pgYfbi\\audit-target.stdout.txt",
+          "stderrPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-budget-admission-repair-pgYfbi\\audit-target.stderr.txt",
+          "stdoutBytes": 199,
+          "stderrBytes": 0
+        },
+        "files": {
+          "result": {
+            "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-budget-admission-repair-pgYfbi\\audit-target.result.json",
+            "bytes": 633,
+            "sha256": "626a2622c5053be53a2cf33d9bba32a1f276352ae0b36a5992e33970a549ba10"
+          },
+          "stdout": {
+            "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-budget-admission-repair-pgYfbi\\audit-target.stdout.txt",
+            "bytes": 199,
+            "sha256": "e93fa8ee8d9c1b1648effcd04037ca20799e905135392bae412873ba8772d333"
+          },
+          "stderr": {
+            "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-budget-admission-repair-pgYfbi\\audit-target.stderr.txt",
+            "bytes": 0,
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          }
+        }
+      },
+      {
+        "label": "pure-control",
+        "result": {
+          "startedAt": "2026-10-06T00:42:11.960Z",
+          "completedAt": "2026-10-06T00:42:12.973Z",
+          "program": "node",
+          "arguments": [
+            "--test",
+            "C:/Users/cina/AppData/Local/Temp/cinatoken-pg73-budget-admission-repair-pgYfbi/bridge-control-flow.test.mjs"
+          ],
+          "actualExitCode": 0,
+          "signal": null,
+          "spawnError": null,
+          "stdoutPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-budget-admission-repair-pgYfbi\\pure-control.stdout.txt",
+          "stderrPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-budget-admission-repair-pgYfbi\\pure-control.stderr.txt",
+          "stdoutBytes": 770,
+          "stderrBytes": 0
+        },
+        "files": {
+          "result": {
+            "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-budget-admission-repair-pgYfbi\\pure-control.result.json",
+            "bytes": 625,
+            "sha256": "fab749b110049aae85715e131b2865f29e743a82fb6627e9cd6b50f11eeea15c"
+          },
+          "stdout": {
+            "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-budget-admission-repair-pgYfbi\\pure-control.stdout.txt",
+            "bytes": 770,
+            "sha256": "e815d4a2adffb3a11a7dfd8ca65a92102b80d5253c453bdad12af0184fa48e18"
+          },
+          "stderr": {
+            "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-budget-admission-repair-pgYfbi\\pure-control.stderr.txt",
+            "bytes": 0,
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          }
+        }
+      },
+      {
+        "label": "target-diff-check",
+        "result": {
+          "startedAt": "2026-10-06T00:42:12.934Z",
+          "completedAt": "2026-10-06T00:42:13.000Z",
+          "program": "git",
+          "arguments": [
+            "diff",
+            "--check",
+            "--",
+            "scripts/db/cutover/postgres-budget-admission-login-v350.native.test.mjs"
+          ],
+          "actualExitCode": 0,
+          "signal": null,
+          "spawnError": null,
+          "stdoutPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-budget-admission-repair-pgYfbi\\target-diff-check.stdout.txt",
+          "stderrPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-budget-admission-repair-pgYfbi\\target-diff-check.stderr.txt",
+          "stdoutBytes": 0,
+          "stderrBytes": 0
+        },
+        "files": {
+          "result": {
+            "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-budget-admission-repair-pgYfbi\\target-diff-check.result.json",
+            "bytes": 619,
+            "sha256": "a3b6b8733f4d0e548ac95416c614e44f9724fd0edc508a805f574b8141e8ce4c"
+          },
+          "stdout": {
+            "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-budget-admission-repair-pgYfbi\\target-diff-check.stdout.txt",
+            "bytes": 0,
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          "stderr": {
+            "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-budget-admission-repair-pgYfbi\\target-diff-check.stderr.txt",
+            "bytes": 0,
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          }
+        }
+      },
+      {
+        "label": "target-diff",
+        "result": {
+          "startedAt": "2026-10-06T00:42:13.823Z",
+          "completedAt": "2026-10-06T00:42:13.885Z",
+          "program": "git",
+          "arguments": [
+            "diff",
+            "--",
+            "scripts/db/cutover/postgres-budget-admission-login-v350.native.test.mjs"
+          ],
+          "actualExitCode": 0,
+          "signal": null,
+          "spawnError": null,
+          "stdoutPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-budget-admission-repair-pgYfbi\\target-diff.stdout.txt",
+          "stderrPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-budget-admission-repair-pgYfbi\\target-diff.stderr.txt",
+          "stdoutBytes": 2994,
+          "stderrBytes": 0
+        },
+        "files": {
+          "result": {
+            "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-budget-admission-repair-pgYfbi\\target-diff.result.json",
+            "bytes": 595,
+            "sha256": "c7ebd9f4dac6f6372b827e087d60203899d68cecbf1ec941a27d5fc9f555bbe2"
+          },
+          "stdout": {
+            "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-budget-admission-repair-pgYfbi\\target-diff.stdout.txt",
+            "bytes": 2994,
+            "sha256": "fc00faf5c377de3c6c0142cbd235d3765ed6fed984b3fa6c20961b421c34ba1e"
+          },
+          "stderr": {
+            "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-budget-admission-repair-pgYfbi\\target-diff.stderr.txt",
+            "bytes": 0,
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          }
+        }
+      },
+      {
+        "label": "target-after-blob",
+        "result": {
+          "startedAt": "2026-10-06T00:43:01.642Z",
+          "completedAt": "2026-10-06T00:43:01.698Z",
+          "program": "git",
+          "arguments": [
+            "hash-object",
+            "scripts/db/cutover/postgres-budget-admission-login-v350.native.test.mjs"
+          ],
+          "actualExitCode": 0,
+          "signal": null,
+          "spawnError": null,
+          "stdoutPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-budget-admission-repair-pgYfbi\\target-after-blob.stdout.txt",
+          "stderrPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-budget-admission-repair-pgYfbi\\target-after-blob.stderr.txt",
+          "stdoutBytes": 41,
+          "stderrBytes": 0
+        },
+        "files": {
+          "result": {
+            "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-budget-admission-repair-pgYfbi\\target-after-blob.result.json",
+            "bytes": 602,
+            "sha256": "f8cea1242aa143dca823a99704d2e3b77d25cd56981e797dc4f71f33d4745307"
+          },
+          "stdout": {
+            "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-budget-admission-repair-pgYfbi\\target-after-blob.stdout.txt",
+            "bytes": 41,
+            "sha256": "cba4226e62a136d7f0547f0ffdfc510a0552933bd60ea9d097821ce3df1b0337"
+          },
+          "stderr": {
+            "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-budget-admission-repair-pgYfbi\\target-after-blob.stderr.txt",
+            "bytes": 0,
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          }
+        }
+      },
+      {
+        "label": "target-before-blob",
+        "result": {
+          "startedAt": "2026-10-06T00:43:02.487Z",
+          "completedAt": "2026-10-06T00:43:02.548Z",
+          "program": "git",
+          "arguments": [
+            "hash-object",
+            "C:/Users/cina/AppData/Local/Temp/cinatoken-pg73-budget-admission-repair-pgYfbi/before.native.test.mjs"
+          ],
+          "actualExitCode": 0,
+          "signal": null,
+          "spawnError": null,
+          "stdoutPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-budget-admission-repair-pgYfbi\\target-before-blob.stdout.txt",
+          "stderrPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-budget-admission-repair-pgYfbi\\target-before-blob.stderr.txt",
+          "stdoutBytes": 41,
+          "stderrBytes": 0
+        },
+        "files": {
+          "result": {
+            "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-budget-admission-repair-pgYfbi\\target-before-blob.result.json",
+            "bytes": 634,
+            "sha256": "8f483bd576f7eb97f1f3a534eb48c7426aec7bb58bc77fe683ad5e9f95d65e5b"
+          },
+          "stdout": {
+            "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-budget-admission-repair-pgYfbi\\target-before-blob.stdout.txt",
+            "bytes": 41,
+            "sha256": "60bc36f8c6c4d868d38d87cbc5acf9eb8c1309d468e8b7c99a5cbaca4a9bb851"
+          },
+          "stderr": {
+            "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-budget-admission-repair-pgYfbi\\target-before-blob.stderr.txt",
+            "bytes": 0,
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          }
+        }
+      },
+      {
+        "label": "target-numstat",
+        "result": {
+          "startedAt": "2026-10-06T00:43:03.415Z",
+          "completedAt": "2026-10-06T00:43:03.478Z",
+          "program": "git",
+          "arguments": [
+            "diff",
+            "--numstat",
+            "--",
+            "scripts/db/cutover/postgres-budget-admission-login-v350.native.test.mjs"
+          ],
+          "actualExitCode": 0,
+          "signal": null,
+          "spawnError": null,
+          "stdoutPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-budget-admission-repair-pgYfbi\\target-numstat.stdout.txt",
+          "stderrPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-budget-admission-repair-pgYfbi\\target-numstat.stderr.txt",
+          "stdoutBytes": 76,
+          "stderrBytes": 0
+        },
+        "files": {
+          "result": {
+            "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-budget-admission-repair-pgYfbi\\target-numstat.result.json",
+            "bytes": 616,
+            "sha256": "4bfe616e8228a24ab5c40eb0bee2a2ab942906ee2e5f2a8d0ae823db91159b64"
+          },
+          "stdout": {
+            "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-budget-admission-repair-pgYfbi\\target-numstat.stdout.txt",
+            "bytes": 76,
+            "sha256": "649c03dac0cdbec2ba06454e039664318d61c9b65a0fc514a0778a6a654deb95"
+          },
+          "stderr": {
+            "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-budget-admission-repair-pgYfbi\\target-numstat.stderr.txt",
+            "bytes": 0,
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          }
+        }
+      }
+    ]
+  },
+  "unchangedInputs": [
+    {
+      "file": "scripts/db/cutover/pg73-native-fixture.mjs",
+      "bytes": 6849,
+      "sha256": "124ddd43c2594d0daaac66a4e7158e5df90b00a6d73f03cbcac9e8f853a7346f",
+      "exactBaseBytes": true
+    },
+    {
+      "file": "scripts/db/cutover/grant-postgres-runtime.ts",
+      "bytes": 25946,
+      "sha256": "3f95f18f557696d8a36b93f7fe0d0d35a391e8ac9cf953376a234a6b629ea242",
+      "exactBaseBytes": true
+    },
+    {
+      "file": "scripts/db/cutover/activate-postgres-buyer-split-v348.ts",
+      "bytes": 2011,
+      "sha256": "135a3c67fd9e20e9c098717219c4f0aae749fc4f1f765bfc29729af23e6e0507",
+      "exactBaseBytes": true
+    },
+    {
+      "file": ".github/workflows/proxy-dispatch-safety.yml",
+      "bytes": 45895,
+      "sha256": "8e883e7f21f77f8367d361f6bd3d060e16c241c28641b3eac85af6835841f152",
+      "exactBaseBytes": true
+    }
+  ],
+  "followupStaticOnly": [
+    {
+      "file": "scripts/db/cutover/postgres-ordinary-budget-recovery-v354.native.test.mjs",
+      "bytes": 22491,
+      "sha256": "3a6754fe2fd1e8d5a3a101bfb79e9c15ca3fdff3eec0edcca3da0cc6c7e62c0b",
+      "readOnly": true,
+      "alreadyPinnedPg73": false,
+      "allCurrentMigrationLoader": true,
+      "directProductionGrantCalls": 1,
+      "plan": "Static candidate only: retain original73/corpus and introduce existing pinned loader; review each grant and exact negative preflight before proposing a patch.",
+      "actualLinuxFailureKnown": false
+    },
+    {
+      "file": "scripts/db/cutover/postgres-guardrail-budget-admission-login-v351.native.test.mjs",
+      "bytes": 26904,
+      "sha256": "bbcbb33aa07d33530692d64d7ab5d24844bbfd44777f9ab8170533d2af0a60af",
+      "readOnly": true,
+      "alreadyPinnedPg73": false,
+      "allCurrentMigrationLoader": true,
+      "directProductionGrantCalls": 1,
+      "plan": "Static candidate only: retain original73/corpus and introduce existing pinned loader; review each grant and exact negative preflight before proposing a patch.",
+      "actualLinuxFailureKnown": false
+    },
+    {
+      "file": "scripts/db/cutover/postgres-guardrail-budget-lifecycle-v353.native.test.mjs",
+      "bytes": 27894,
+      "sha256": "477dbeeeb07f3a4ff1eabb63503fe8c4064df51ff6d6ccab860f151e95ad75bf",
+      "readOnly": true,
+      "alreadyPinnedPg73": true,
+      "allCurrentMigrationLoader": false,
+      "directProductionGrantCalls": 0,
+      "plan": "No loader repair proposed; preserve existing bridge and wait for actual CI.",
+      "actualLinuxFailureKnown": false
+    },
+    {
+      "file": "scripts/db/cutover/postgres-guardrail-budget-dispatched-extension-v355.native.test.mjs",
+      "bytes": 32862,
+      "sha256": "a2a4bccb9546b0ee5bb5d0e514f9ad4940396e78d1e7d43aafb5fbfba9e0dfa5",
+      "readOnly": true,
+      "alreadyPinnedPg73": true,
+      "allCurrentMigrationLoader": false,
+      "directProductionGrantCalls": 0,
+      "plan": "No loader repair proposed; preserve existing bridge and wait for actual CI.",
+      "actualLinuxFailureKnown": false
+    }
+  ],
+  "audit": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-budget-admission-repair-pgYfbi\\budget-repair-audit.json",
+    "bytes": 5055,
+    "sha256": "473bdcd3dbe4d7bde629a2329259a57b327e0a613d3b3187ff5b4a7a5e7e1990"
+  },
+  "nativeLinuxRaw": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-budget-admission-repair-pgYfbi\\native-linux-job-log-raw.stdout.log",
+    "bytes": 89277,
+    "sha256": "cff19188367ef32576368ad80786d10eb9bd5ba37e794aaf2b480510cbbde3b6"
+  },
+  "limitations": {
+    "nativeFixtureExecuted": false,
+    "nativePGPassClaim": false,
+    "windowsSkipNotUsedAsPass": true,
+    "productionConnections": 0,
+    "databaseConnections": 0,
+    "ciPolling": false
+  },
+  "requiredNext": "Parent commits/pushes and verifies this exact source in real Linux PostgreSQL18.6 CI; only actual runtime success can mark native PASS.",
+  "inventory": [
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-budget-admission-repair-pgYfbi\\after.native.test.mjs",
+      "bytes": 26124,
+      "sha256": "3edd01255166137049abf024a1ed71b5c259084f1768328c082c50a2d7a82882"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-budget-admission-repair-pgYfbi\\audit-budget-repair.mjs",
+      "bytes": 6246,
+      "sha256": "d321085ce18f314a0a7c62d9bbe7286bba180e05b8463f7cf3b7ffcb93ed2f00"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-budget-admission-repair-pgYfbi\\audit-target.result.json",
+      "bytes": 633,
+      "sha256": "626a2622c5053be53a2cf33d9bba32a1f276352ae0b36a5992e33970a549ba10"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-budget-admission-repair-pgYfbi\\audit-target.stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-budget-admission-repair-pgYfbi\\audit-target.stdout.txt",
+      "bytes": 199,
+      "sha256": "e93fa8ee8d9c1b1648effcd04037ca20799e905135392bae412873ba8772d333"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-budget-admission-repair-pgYfbi\\before-evidence.json",
+      "bytes": 708,
+      "sha256": "79cedd7d781974e5e3fda0feacfc7a6877be874ee9f1055fa03b18c1a87917c6"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-budget-admission-repair-pgYfbi\\before.native.test.mjs",
+      "bytes": 25866,
+      "sha256": "28288728a38a159e0249ebb0a5973441c9a9083f35125aaa3afa5f81f0295f18"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-budget-admission-repair-pgYfbi\\bridge-control-flow.test.mjs",
+      "bytes": 8762,
+      "sha256": "59c583f99819f5d628f27c29bb2e69d258fd64631df1ca01fcba37f82c510105"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-budget-admission-repair-pgYfbi\\budget-repair-audit.json",
+      "bytes": 5055,
+      "sha256": "473bdcd3dbe4d7bde629a2329259a57b327e0a613d3b3187ff5b4a7a5e7e1990"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-budget-admission-repair-pgYfbi\\native-linux-job-log-raw.stdout.log",
+      "bytes": 89277,
+      "sha256": "cff19188367ef32576368ad80786d10eb9bd5ba37e794aaf2b480510cbbde3b6"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-budget-admission-repair-pgYfbi\\pure-control.result.json",
+      "bytes": 625,
+      "sha256": "fab749b110049aae85715e131b2865f29e743a82fb6627e9cd6b50f11eeea15c"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-budget-admission-repair-pgYfbi\\pure-control.stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-budget-admission-repair-pgYfbi\\pure-control.stdout.txt",
+      "bytes": 770,
+      "sha256": "e815d4a2adffb3a11a7dfd8ca65a92102b80d5253c453bdad12af0184fa48e18"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-budget-admission-repair-pgYfbi\\reverse-before.native.test.mjs",
+      "bytes": 25866,
+      "sha256": "28288728a38a159e0249ebb0a5973441c9a9083f35125aaa3afa5f81f0295f18"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-budget-admission-repair-pgYfbi\\run-readonly.mjs",
+      "bytes": 1733,
+      "sha256": "b8d7236bc2c97a1ad6a2dbabdd5f81beb74268e072a4dfef0afc4d1e826a924b"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-budget-admission-repair-pgYfbi\\seal-budget-repair.mjs",
+      "bytes": 5633,
+      "sha256": "60362488eee59f5f7b7cba5de124a253d660115a7c03e59c4b0b0ad207ee034f"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-budget-admission-repair-pgYfbi\\seal-budget-repair.stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-budget-admission-repair-pgYfbi\\seal-budget-repair.stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-budget-admission-repair-pgYfbi\\syntax-target.result.json",
+      "bytes": 590,
+      "sha256": "52fa4254b59cc551495c57108f7b95fb6deea8d30393360cdc3e703d1075c0f8"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-budget-admission-repair-pgYfbi\\syntax-target.stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-budget-admission-repair-pgYfbi\\syntax-target.stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-budget-admission-repair-pgYfbi\\target-after-blob.result.json",
+      "bytes": 602,
+      "sha256": "f8cea1242aa143dca823a99704d2e3b77d25cd56981e797dc4f71f33d4745307"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-budget-admission-repair-pgYfbi\\target-after-blob.stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-budget-admission-repair-pgYfbi\\target-after-blob.stdout.txt",
+      "bytes": 41,
+      "sha256": "cba4226e62a136d7f0547f0ffdfc510a0552933bd60ea9d097821ce3df1b0337"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-budget-admission-repair-pgYfbi\\target-before-blob.result.json",
+      "bytes": 634,
+      "sha256": "8f483bd576f7eb97f1f3a534eb48c7426aec7bb58bc77fe683ad5e9f95d65e5b"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-budget-admission-repair-pgYfbi\\target-before-blob.stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-budget-admission-repair-pgYfbi\\target-before-blob.stdout.txt",
+      "bytes": 41,
+      "sha256": "60bc36f8c6c4d868d38d87cbc5acf9eb8c1309d468e8b7c99a5cbaca4a9bb851"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-budget-admission-repair-pgYfbi\\target-diff-check.result.json",
+      "bytes": 619,
+      "sha256": "a3b6b8733f4d0e548ac95416c614e44f9724fd0edc508a805f574b8141e8ce4c"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-budget-admission-repair-pgYfbi\\target-diff-check.stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-budget-admission-repair-pgYfbi\\target-diff-check.stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-budget-admission-repair-pgYfbi\\target-diff.result.json",
+      "bytes": 595,
+      "sha256": "c7ebd9f4dac6f6372b827e087d60203899d68cecbf1ec941a27d5fc9f555bbe2"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-budget-admission-repair-pgYfbi\\target-diff.stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-budget-admission-repair-pgYfbi\\target-diff.stdout.txt",
+      "bytes": 2994,
+      "sha256": "fc00faf5c377de3c6c0142cbd235d3765ed6fed984b3fa6c20961b421c34ba1e"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-budget-admission-repair-pgYfbi\\target-numstat.result.json",
+      "bytes": 616,
+      "sha256": "4bfe616e8228a24ab5c40eb0bee2a2ab942906ee2e5f2a8d0ae823db91159b64"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-budget-admission-repair-pgYfbi\\target-numstat.stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-budget-admission-repair-pgYfbi\\target-numstat.stdout.txt",
+      "bytes": 76,
+      "sha256": "649c03dac0cdbec2ba06454e039664318d61c9b65a0fc514a0778a6a654deb95"
+    }
+  ]
+}

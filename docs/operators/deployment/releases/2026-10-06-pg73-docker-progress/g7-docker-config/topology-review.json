@@ -1,0 +1,347 @@
+{
+  "schemaVersion": 1,
+  "createdAt": "2026-10-06T00:21:49.232Z",
+  "readOnlyInventory": true,
+  "reviewedHead": "cecd81638e97bf919d5988e9037a10f9dbfcef3f",
+  "currentProductionSource": "c13a64b9c3b2c90adcf736910ea408868d7854f1",
+  "productionRequests": 0,
+  "secretValuesReadOrPrinted": 0,
+  "conclusion": "Full G7 remains pending; Linux integrated topology is feasible. Fix the two concrete Compose configuration omissions first; keep full migration scope and original gate status.",
+  "checkedFiles": [
+    {
+      "file": "docker/examples/gateway.compose.yml",
+      "bytes": 2615,
+      "sha256": "0c3e7c9bfcd566e7719531f735ab0a1f894660cafee472c5b29cdd6455bf00bd"
+    },
+    {
+      "file": "docker/examples/web-frontend.compose.yml",
+      "bytes": 1065,
+      "sha256": "617bdd735672f1dfc48cb8ac31d194b551dad79529691c6d92c07d620aadc4f0"
+    },
+    {
+      "file": "docker/examples/env.compose.external.example",
+      "bytes": 1669,
+      "sha256": "00a197340ed2e1b37160150d2439bcfeba996ff981228bda3eb499699447ebfd"
+    },
+    {
+      "file": "docker/compose/node-pg.yml",
+      "bytes": 3510,
+      "sha256": "6179700d2864ea4ef071e9d549c8458bc0f8011c0348e0575ed12386d98c7a19"
+    },
+    {
+      "file": "docker/web/nginx.conf.template",
+      "bytes": 12095,
+      "sha256": "f1fbc0934b340cc8cdabe4f9cd2a3e36539bea2a55b201935b7b2dcbec310c18"
+    },
+    {
+      "file": "docker/web/admin-proxy.conf",
+      "bytes": 695,
+      "sha256": "e1a638ba929379fafa099811984f434ac8defddb1ae95e2513a51b6e165b875e"
+    },
+    {
+      "file": "docker/web/entrypoint.sh",
+      "bytes": 13192,
+      "sha256": "0465d0a5a76fc500113e2b8c1eb5c164fe3ffb480a80265ce2fda5586a7270a1"
+    },
+    {
+      "file": "docker/web/public-server.mjs",
+      "bytes": 6012,
+      "sha256": "d2c627beee86ae281903eef6a39a0061ccf3fc8b594f7131281982d9790273cf"
+    },
+    {
+      "file": "docker/web/ssr-smoke.mjs",
+      "bytes": 15970,
+      "sha256": "23e132dc548c85394f58ec37f50621ae9c4f06d4b183c826a7172717e6ea7b90"
+    },
+    {
+      "file": "Dockerfile.web",
+      "bytes": 3046,
+      "sha256": "d6ef36c9fd5d3912e46ec37b5879f7a0d4769860779e11c064cf0544db7170f2"
+    },
+    {
+      "file": "Dockerfile.web-ssr",
+      "bytes": 1154,
+      "sha256": "7d2dc09a6540e1a3438c0a48d8df28dc84d139cbc577e638d532684a8786425a"
+    },
+    {
+      "file": "Dockerfile.admin",
+      "bytes": 4654,
+      "sha256": "8410d3d3f22c23d57f32b1a0a87c571fe824edfa92f99c827111625d39834fd1"
+    },
+    {
+      "file": "Dockerfile.proxy",
+      "bytes": 2937,
+      "sha256": "cd3bef116cc1eafe1912e882092e0c54c11b246c856bfba092bbb6196c438739"
+    },
+    {
+      "file": "Dockerfile.migrate",
+      "bytes": 1774,
+      "sha256": "d62b8d5e0093096eff4fd13af96f43728f86a91509b1b50092c2fd3065cc1066"
+    },
+    {
+      "file": ".github/workflows/web-frontend.yml",
+      "bytes": 8779,
+      "sha256": "56f518a0a597743e25c069e26326deb7c2316672a21e8793bc670a189e84b142"
+    },
+    {
+      "file": ".github/workflows/docker-compose-smoke.yml",
+      "bytes": 9993,
+      "sha256": "ae2f3882f298c472efe9e343288d0c888e95c426f1f0ac830235501fa0181516"
+    },
+    {
+      "file": "packages/admin/lib/public-gateway.ts",
+      "bytes": 1644,
+      "sha256": "4035d0a73595f578239685b8a37d42581ee702824035036432764ed5a52c29a7"
+    },
+    {
+      "file": "packages/admin/lib/public-request-url.ts",
+      "bytes": 1295,
+      "sha256": "2580b983fa49bd366e06300b583eed2842d17484f36f29ab3660756344be2047"
+    },
+    {
+      "file": "packages/admin/lib/public-request-url.test.ts",
+      "bytes": 2302,
+      "sha256": "1f485b11143670c9e1b84cb231f57dc2b2438f0cb35503b8766ffa5923ece2a9"
+    },
+    {
+      "file": "packages/admin/lib/browser-mutation.ts",
+      "bytes": 1702,
+      "sha256": "61e0b0368daee56099299655044538904e25bba6168208872945d43288cf938b"
+    },
+    {
+      "file": "packages/admin/lib/cinaauth/config.ts",
+      "bytes": 4225,
+      "sha256": "20c2791fe164af4eddf019a79384fd780e32edc2954ba31953c9330b52670bd9"
+    },
+    {
+      "file": "packages/admin/lib/cinaauth/oidc-client.ts",
+      "bytes": 3916,
+      "sha256": "95af3f4e15d230249348e87a9d489b2063f620a528c3ffb1b0eb60ab255de2a9"
+    },
+    {
+      "file": "packages/admin/lib/cinaauth/principal.ts",
+      "bytes": 2890,
+      "sha256": "82f74636b9c02da95513a3ab5589e0b09b422ae22daa42aa702ea499c6f72dfa"
+    },
+    {
+      "file": "packages/admin/lib/cinaauth/popup-response.ts",
+      "bytes": 2086,
+      "sha256": "3a89152389ea4945fabf2f6460247c32662c654e2560a5b7a028e5d106cec4a0"
+    },
+    {
+      "file": "packages/admin/app/api/auth/cinaauth/login/route.ts",
+      "bytes": 4811,
+      "sha256": "accd72fec2cdbdc4ab670cae3b28ffe67c79d667a49230ae70be0ab290ac2095"
+    },
+    {
+      "file": "packages/admin/app/api/auth/cinaauth/callback/route.ts",
+      "bytes": 9198,
+      "sha256": "cc6ed92c6a519a31742ed6e7de591791dec2745d8b8ac4f751caf7fff9b49e43"
+    },
+    {
+      "file": "packages/admin/app/api/auth/logout/route.ts",
+      "bytes": 1789,
+      "sha256": "3fa3400aca3d377be747f35efa5c3118d8520df16113f5d64d8b3bee5f6ae5d5"
+    },
+    {
+      "file": "packages/admin/app/api/public/chat/route.ts",
+      "bytes": 2909,
+      "sha256": "a86e212912e9a5e8aa7231123a024b0ef6d6bc2476aeeb2d33fcadd5822ba367"
+    },
+    {
+      "file": "packages/admin/lib/public-catalog-bff.ts",
+      "bytes": 16595,
+      "sha256": "9e6e7759091d05ffa304837bd32d3b86151aad79e759b0e647df98ed9b931d63"
+    },
+    {
+      "file": "packages/proxy/src/runtime/node.ts",
+      "bytes": 6386,
+      "sha256": "39b1d098e8895a2ab6689b596aac62edcf7ba8ee167a2ec44c4b30eba74d29a7"
+    },
+    {
+      "file": "node_modules/next/dist/server/next-server.js",
+      "bytes": 69322,
+      "sha256": "8939e4e709ea46afc9bd96293d327e3ea85fcc7a652ca65fbca53327e8f4abe7"
+    },
+    {
+      "file": "node_modules/next/dist/server/web/spec-extension/adapters/next-request.js",
+      "bytes": 5298,
+      "sha256": "006db434d9d859733b55761d53e2c47e7f1983cea9709bfbdee97c711d3ac3bd"
+    },
+    {
+      "file": "node_modules/next/package.json",
+      "bytes": 11243,
+      "sha256": "63cb8d0319386c6610cbfd33e008f44a3c08ce9dad4bf6276a8e9cc93b1acab3"
+    },
+    {
+      "file": "docs/operators/deployment/docker.md",
+      "bytes": 22612,
+      "sha256": "16e632e09b97fb9cb3470a1980552f4382e0609dd8f77a17e53533d17ebf38c6"
+    },
+    {
+      "file": "docs/developers/architecture/web-frontend-migration.md",
+      "bytes": 763020,
+      "sha256": "d7058e87442a430c8ef28fcc4a97efff7dd5fda6eb7f159fee461851afac50e4"
+    }
+  ],
+  "findings": [
+    {
+      "id": "DOCKER-API-ORIGIN",
+      "priority": "next-fix",
+      "evidence": "packages/admin/lib/public-gateway.ts:3,17-35 and docker/examples/gateway.compose.yml gateway-admin.environment",
+      "actual": "Unset or invalid CINATOKEN_PUBLIC_API_ORIGIN defaults to https://api.cinatoken.com. Existing Compose does not inject it.",
+      "fix": "Inject into gateway-admin ${CINATOKEN_PUBLIC_API_ORIGIN:-http://gateway-proxy:8787}; allow explicit operator-owned HTTP(S) origin. Do not change Cloudflare/product fallback.",
+      "gate": [
+        "P7-06",
+        "P7-02"
+      ]
+    },
+    {
+      "id": "DOCKER-PRIVATE-FLAGS",
+      "priority": "next-fix",
+      "evidence": "docker/web/entrypoint.sh, Dockerfile.web, docker/web/nginx.conf.template, docker/examples/web-frontend.compose.yml",
+      "actual": "Entry consumes ACCOUNT and 27 ADMIN switches, but Compose only passes PUBLIC; private switches silently remain image false despite external operator env.",
+      "fix": "Pass exact 28 private switches only to gateway-web, all ${NAME:-false}. SSR consumes only public flag, public origin, proxy origins and Admin upstream.",
+      "gate": [
+        "P7-02",
+        "P7-11"
+      ]
+    },
+    {
+      "id": "FORWARDED-PROTOCOL",
+      "priority": "integration-prerequisite",
+      "evidence": "docker/web/nginx.conf.template:169 and admin-proxy.conf:4-6; installed Next16.2.3 next-server.js:1264 and getPublicRequestUrl",
+      "actual": "Entry maps exact incoming X-Forwarded-Proto http/https; Node adapter derives initial scheme from this header. Public URL helper strictly restores Host while retaining the adapter protocol. Raw entry8080 reachable by untrusted clients can receive unnormalized forwarded metadata.",
+      "fix": "Use a trusted TLS ingress that overwrites Host/XFP/XFH and forwarded chain, validates known public hosts, and keeps raw Web/Admin ports private. Wire-test spoofed and missing headers. Do not teach URL helper to trust forwarding headers.",
+      "gate": [
+        "P7-04",
+        "P7-05"
+      ]
+    },
+    {
+      "id": "CINAAUTH-ORIGIN",
+      "priority": "integration-prerequisite",
+      "evidence": "packages/admin/lib/cinaauth/config.ts:37-51 and default origins",
+      "actual": "CinaAuth requires exact canonical HTTPS origins without nondefault port; Node fallback may contact actual issuer/accounts if omitted.",
+      "fix": "Controlled CI must set all app/issuer/accounts origins to reserved *.test HTTPS hosts on internal443, provide generated CA trust and ephemeral strong secrets explicitly, and block egress. Do not use insecure TLS bypass.",
+      "gate": [
+        "P7-04",
+        "P7-05",
+        "P8-03"
+      ]
+    },
+    {
+      "id": "EXISTING-EXAMPLES-NOT-COMPLETE",
+      "priority": "reported-out-of-owned-scope",
+      "evidence": "gateway.compose.yml and env.compose.external.example vs packages/proxy/src/runtime/node.ts",
+      "actual": "External example lacks SHARED_KEY_ENCRYPTION_SECRET consumed as required by actual Node Proxy; examples still show password credentials but password login is disabled. No CinaAuth runtime env, full TLS ingress, health dependency or image release cross-check is wired.",
+      "fix": "Followup must explicitly wire encryption/OIDC settings and TLS; current authorized origin+flags batch will not claim these fixed or deploy the examples.",
+      "gate": [
+        "P7-02",
+        "P7-05",
+        "P8-03"
+      ]
+    },
+    {
+      "id": "RESOURCE-PROVENANCE",
+      "priority": "integration-prerequisite",
+      "evidence": "Dockerfile.web, Dockerfile.web-ssr, package-release verifier, nginx manifest guard",
+      "actual": "Both images independently verify frozen artifact; matching manifest header rejects wrong SSR pair. Existing CI freezes only a current build and previous-retained behavior is not real Docker integration evidence.",
+      "fix": "Build both images from exactly one verified activation artifact including current+retained; record manifest, source archive and image IDs/digests. Rollback artifact must carry currently online resources without refreshing retained TTL.",
+      "gate": [
+        "P7-08",
+        "P7-09",
+        "P7-12"
+      ]
+    }
+  ],
+  "existingProof": {
+    "ssr": "Same5471899 CI37390678029 executed87 HTTP cases/64 controlled catalog reads with4containers+1internalnetwork verified removed. Uses catalog fixture, not real Admin/Proxy/PG/TLS/identity.",
+    "compose": "Same5471899 CI37390677930 executed13 baseline steps PG16+migrations+real Admin/Proxy HTTP health and teardown. No Web/TLS/auth/SSE/gray rollback.",
+    "browser": "Current c13 functional v4 passes45 anonymously, but historical strict networkidle v2/v3 failures remain. Functional pass is not P8-09 or real identity/full G8."
+  },
+  "minimumCompleteTopology": {
+    "realServices": [
+      "PostgreSQL16",
+      "actual migrate image current schema",
+      "actual Admin Node standalone",
+      "actual Proxy Node runtime",
+      "actual Web Nginx entry",
+      "actual frozen SSR Node sidecar",
+      "trusted TLS ingress"
+    ],
+    "controlledOnlyServices": [
+      "OIDC authorization/token/JWKS/userinfo/live-role bridge fixture",
+      "upstream provider SSE/WebSocket fixture",
+      "in-network Node/Chromium QA runner"
+    ],
+    "network": "Unique labeled project; separately declared internal-only edge/app/db/upstream networks as needed. No ports/host networking/default/external secondary attachments and no production origins. Prepull/build before attaching runtime. Actual PG volume owned by run. Node/browser trust a generated local CA; canonical app/auth/accounts/api/provider *.test aliases resolve only internally.",
+    "wiring": [
+      "app.test:443 -> Web entry -> actual Admin for API/callback/integration/backend, or SSR for exact enabled public GET/HEAD; /web-assets owned by frozen entry",
+      "api.test:443 -> actual Proxy if browser direct protocol required; do not falsely claim current Web Nginx has direct /v1 routing",
+      "Admin public-gateway origin explicitly http://gateway-proxy:8787; OIDC HTTPS internal issuer; database explicit controlled PG; per-run encryption and OIDC secrets",
+      "TLS ingress overwrites validated host/protocol; raw containers are not publicly addressable; SSE buffering disabled across BOTH ingress and Web; header/cookie transformations absent",
+      "blue/green Web+SSR consume verified activation/rollback release, share actual Admin/Proxy/PG and session; switch route/flag pointers without database rollback"
+    ],
+    "data": "Seed disposable DB through actual repositories or authorized test SQL with fixed nonsecret identities and typed encrypted key preparation. Create/update a provider/model/route and API key through actual Admin contracts where possible; seed is setup evidence, not OIDC login. Assert nonempty catalog schema/detail from actual Proxy->Admin->SSR and persisted mutation state/acknowledgement. No public empty fixture substituted for real data."
+  },
+  "ciPlan": [
+    {
+      "stage": 1,
+      "name": "Fix Compose origin and switches",
+      "files": [
+        "docker/examples/gateway.compose.yml",
+        "docker/examples/web-frontend.compose.yml",
+        "docs/operators/deployment/docker.md"
+      ],
+      "actualChecks": "Parse actual YAML and resolve interpolation with fixed test env; exact switches match entrypoint/template; defaults false; explicit overrides accepted; existing proxy/auth contracts + current Web formatter. Windows has no Docker, so no runtime claim."
+    },
+    {
+      "stage": 2,
+      "name": "Integrated real TLS topology",
+      "newFilesSuggested": [
+        "docker/web/integration-smoke.mjs",
+        "docker/web/fixtures/tls-ingress.conf",
+        "docker/compose/web-frontend-smoke.yml",
+        "dedicated current-SHA CI job in existing Docker smoke workflow"
+      ],
+      "method": "Reuse actual build/freeze verification, real PG migration and Admin/Proxy images; add paired Web/SSR frozen images; bounded owned runner on internal network; compare same SHA/artifact; actual closed command exits; upload JSON receipts and redacted logs after commands close; finally verify exact owned containers/networks/volumes absent. Keep baseline static87/Compose13 checks unchanged.",
+      "firstMeaningfulChecks": "TLS app-origin same-origin POST /api/auth/login returns410 (not403) with exactOrigin; noOrigin/crossOrigin/cross-site rejects403; two logout variants preserve multiple Set-Cookie; unknown APIs404 noHTML; real nonempty catalog/public pages fourlocales; GET/HEAD/206/304 immutable current+retained; private API no-store; paired mismatch503; wrong host/forwarded spoof fail."
+    },
+    {
+      "stage": 3,
+      "name": "Authenticated write + streaming + gray/rollback",
+      "method": "OIDC fixture must validate code one-use, state/nonce/PKCE, exact redirect/resource/client auth and real signed JWT/JWKS; exercise actual Admin callback/session persistence, portal and live-role console verification, cookie-auth mutation+stored state, stale/missing CAS, logout revocation and role rejection/outage. Label controlled identity. Real Proxy provider fixture returns SSE timed chunks; first chunk before completion, abort proves provider close and resource terminal; preserve429/503 Retry-After; existing WS handshake/end-to-end close. Gray old/new pages reuse same browser cookie and backend; switch to independently verified rollback with forward retained assets, check old lazy chunks remain and DB/user writes survive.",
+      "cannotClaim": "A route-only streaming fixture is ingress wire proof, not real Proxy pipeline. DB inserted session is not completed OIDC. TLS fixture does not prove real CinaAuth issuer or external provider."
+    }
+  ],
+  "formalGateRefs": {
+    "file": "docs/developers/architecture/web-frontend-migration.md",
+    "P7": "lines457-468 P7-01 through P7-12",
+    "G7": "line470 requires actual same-origin CF+Docker smoke/auth/write/resources/SSE/gray/rollback",
+    "P8": "lines474-486 includes fullidentity, crossworkspace, performance and supported platforms/databases"
+  },
+  "realIdentityBoundary": [
+    "Actual registered CinaAuth client/secret for operator-owned canonical app origin; allowed callback/logout URLs",
+    "At least ordinary portal user and authorized console admin, separate subject/user/workspace/organization cases; role grant/revocation and IdP outage authority",
+    "Human interactive real registration/login/popup and full-page/session/cross-tab/workspace flow if credentials or MFA are unavailable to authorized automation",
+    "Real deployment TLS/domain certificates, runtime origins, cross-origin proxy CSP, release/digest publishing and safe gray/rollback observed in target environment",
+    "Full supported database combinations remain separate; isolated PostgreSQL16 topology does not prove MySQL/D1 or financial/chain native gates"
+  ],
+  "primarySoftwareRefs": [
+    {
+      "url": "https://docs.docker.com/reference/compose-file/networks/",
+      "claim": "internal:true creates an externally isolated network; each service explicitly grants network access"
+    },
+    {
+      "url": "https://nginx.org/en/docs/http/ngx_http_proxy_module.html#proxy_buffering",
+      "claim": "buffering configuration belongs to every proxy hop; off passes data as received"
+    },
+    {
+      "local": "node_modules/next/package.json",
+      "version": "16.2.3",
+      "claim": "Review used installed exact Node request-adapter source, not a guessed upstream behavior"
+    }
+  ],
+  "scope": "No production requests/source/MD/Git writes during inventory; before snapshots preserved for newly authorized only-three-file configuration batch. Full G7/G8 and complete102/54 matrix/task statuses unchanged."
+}

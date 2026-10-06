@@ -1,0 +1,97 @@
+{
+  "schema": "v364-exit-receipt-minimal-fix-closed-v1",
+  "actualExit": 0,
+  "headPreserved": "4d645f954ea76d8546409aaa6b684a8279c0deb9",
+  "changedFiles": [
+    "scripts/diagnostics/v364-owned-linux/execute-owned-linux.py",
+    "scripts/diagnostics/v364-owned-linux/README.md",
+    "scripts/diagnostics/v364-owned-linux/sealed-package.json"
+  ],
+  "files": [
+    {
+      "path": "C:\\cinagroup\\cinatoken\\scripts\\diagnostics\\v364-owned-linux\\execute-owned-linux.py",
+      "bytes": 9535,
+      "sha256": "45c479a4602a3e79b42daa8dcca6e8b9ef876fa986136598b263a505d5320e31",
+      "LF": true,
+      "GitCleanFilterPreservesBytes": true,
+      "gitBlobSHA": "07f0f519ec0000bbcb576f9f2528641f8ac9fe43"
+    },
+    {
+      "path": "C:\\cinagroup\\cinatoken\\scripts\\diagnostics\\v364-owned-linux\\README.md",
+      "bytes": 6385,
+      "sha256": "75f8f7e5e678157349712128cc68dbb9323de2daa6686e9b4d47e6098f075263",
+      "LF": true,
+      "GitCleanFilterPreservesBytes": true,
+      "gitBlobSHA": "3a831fd7bcc1ef00c0ab66380c4832735a85eb18"
+    },
+    {
+      "path": "C:\\cinagroup\\cinatoken\\scripts\\diagnostics\\v364-owned-linux\\sealed-package.json",
+      "bytes": 1067,
+      "sha256": "392f5a44294abf70c4bc3cbb7b727103f96d5ce8f5e87bfc3fe3dc8bd1fc6bd4",
+      "LF": true,
+      "GitCleanFilterPreservesBytes": true,
+      "gitBlobSHA": "cd79d7c47378db4d6a2a2c6f1dccc62ac83223b7"
+    }
+  ],
+  "previousCommittedSeal": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-exit-receipt-fix-7037bd6432d04a1881d345020e416f6e\\before-sealed-package.json",
+    "bytes": 1067,
+    "sha256": "cc8346861d175eeb2458a1765ba3c22768d0cb8dc9eee17f702faa868e6e7d92"
+  },
+  "newPortableSeal": {
+    "path": "C:\\cinagroup\\cinatoken\\scripts\\diagnostics\\v364-owned-linux\\sealed-package.json",
+    "bytes": 1067,
+    "sha256": "392f5a44294abf70c4bc3cbb7b727103f96d5ce8f5e87bfc3fe3dc8bd1fc6bd4"
+  },
+  "checks": {
+    "actualExit": 0,
+    "method": "pure AST expression evaluation with inert child stubs",
+    "successASTUnchanged": true,
+    "cases": [
+      {
+        "case": "normal-pass",
+        "runnerOutcomeCode": 0,
+        "actualProcessExit": 0,
+        "actualExit": 0
+      },
+      {
+        "case": "normal-fail",
+        "runnerOutcomeCode": 1,
+        "actualProcessExit": 1,
+        "actualExit": 1
+      },
+      {
+        "case": "timeout",
+        "runnerOutcomeCode": 124,
+        "actualProcessExit": -15,
+        "actualExit": 1
+      },
+      {
+        "case": "interrupt",
+        "runnerOutcomeCode": 130,
+        "actualProcessExit": -9,
+        "actualExit": 1
+      },
+      {
+        "case": "preflight-no-child",
+        "runnerOutcomeCode": 1,
+        "actualProcessExit": null,
+        "actualExit": 1
+      }
+    ],
+    "NodeStarts": 0,
+    "workerdStarts": 0
+  },
+  "frozen10WorktreeAndGitUnchanged": true,
+  "mainObserversSourceInputsWorkflowGitUnchanged": true,
+  "manifestItemsVerified": 6,
+  "scopeExact3": true,
+  "actualProcessExitMeaning": "real child.returncode after wait; None before child startup",
+  "runnerOutcomeCodeMeaning": "original normal/timeout/interruption runner outcome code, including 124/130",
+  "successConditionsUnchanged": true,
+  "nativeStarts": 0,
+  "CIInvocations": 0,
+  "productionRequests": 0,
+  "commits": 0,
+  "LinuxForcedLifecycleNotExecuted": true
+}

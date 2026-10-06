@@ -1,0 +1,13 @@
+{
+  "at": "2026-10-06T01:20:10.873Z",
+  "closed": true,
+  "actualExitCode": 0,
+  "copiedFiles": 740,
+  "reportBytes": 951099,
+  "reportSha256": "a59328455ed71b0be08d8c4d22e81a0db21c94cad3dc179bad893a6fd03e0ced",
+  "storedBytes": 7107347,
+  "originalSourceEvidenceNotModified": true,
+  "gatePassDerived": false,
+  "attributesBeforeSha256": "70b64e4c49da4826b8462828527da43d2284bb4bf8abb8646f577c909a1e389d",
+  "attributesAfterSha256": "850763c10b9baa4d3ba78b849c37f94e9163410f4e269fe972e9cff3b2789257"
+}

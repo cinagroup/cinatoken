@@ -1,0 +1,8 @@
+{
+  "closed": true,
+  "actualExitCode": 0,
+  "command": "git diff --check -- three owned files",
+  "stdout": "owned-diff-check.stdout.log",
+  "stderr": "owned-diff-check.stderr.log",
+  "completedAt": "2026-10-06T00:26:28.1458788Z"
+}

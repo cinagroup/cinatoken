@@ -1,0 +1,1031 @@
+{
+  "schema": "cinatoken.pg73.shared-fixture.peer-review.v1",
+  "at": "2026-10-06T00:31:28.880Z",
+  "actualExit": 0,
+  "conclusion": "PASS: independent static/source review, no code blocker within the seven fixtures and one workflow loader line",
+  "baseCommit": "cecd81638e97bf919d5988e9037a10f9dbfcef3f",
+  "observedCurrentHead": "b1ec8f33cf24edc07e8855c059c1498730a43113",
+  "scope": [
+    "scripts/db/cutover/postgres-shared-key-quote-versions.native.test.mjs",
+    "scripts/db/cutover/postgres-shared-key-orphan-review-v348.native.test.mjs",
+    "scripts/db/cutover/postgres-shared-key-selected-event-gate-v351.native.test.mjs",
+    "scripts/db/cutover/postgres-shared-key-snapshot-earning-consumer.native.test.mjs",
+    "scripts/db/cutover/postgres-shared-key-economic-delivery.native.test.mjs",
+    "scripts/db/cutover/postgres-shared-key-credited-usage-gap.native.test.mjs",
+    "scripts/db/cutover/postgres-shared-key-credited-usage-store.native.test.mjs",
+    ".github/workflows/proxy-dispatch-safety.yml"
+  ],
+  "independentParser": {
+    "name": "Acorn",
+    "version": "8.16.0",
+    "assertions": 356,
+    "assertionAstExact": true,
+    "assertionSourceExact": true,
+    "bigIntValues": "retained as exact decimal tagged values",
+    "regexpValues": "retained as exact pattern and flags",
+    "onlyDroppedAstMetadata": [
+      "start",
+      "end",
+      "loc"
+    ]
+  },
+  "byteChecks": {
+    "sevenBeforeSnapshotsEqualFixedBase": true,
+    "sevenAfterSnapshotsEqualCurrentSource": true,
+    "allSevenFullReverseRestorationsEqualOriginalBuffers": true,
+    "allSevenForwardReplaysEqualAfterBuffers": true,
+    "workflowSingleTsxAdditionReverseEqualsFullOriginalBuffer": true
+  },
+  "files": [
+    {
+      "file": "scripts/db/cutover/postgres-shared-key-quote-versions.native.test.mjs",
+      "before": {
+        "bytes": 34815,
+        "sha256": "a68472dd3a7e4ac77e67e63a99469b6651ffc553562ada1a664964f1cdc238f8"
+      },
+      "after": {
+        "bytes": 34823,
+        "sha256": "16ef4b701728c9de46ea932851354d7cee2aa9d80c6ab543ceae6f4526380c83"
+      },
+      "orderedAssertions": 65,
+      "successfulGrantAdaptations": 2,
+      "grantNegativeCallsChanged": 0,
+      "snapshots": {
+        "before": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-shared-fixture-peer-8f9c0b77c2d2454aa570a019475861dc\\v4-postgres-shared-key-quote-versions.native.test.mjs.before",
+          "bytes": 34815,
+          "sha256": "a68472dd3a7e4ac77e67e63a99469b6651ffc553562ada1a664964f1cdc238f8"
+        },
+        "after": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-shared-fixture-peer-8f9c0b77c2d2454aa570a019475861dc\\v4-postgres-shared-key-quote-versions.native.test.mjs.after",
+          "bytes": 34823,
+          "sha256": "16ef4b701728c9de46ea932851354d7cee2aa9d80c6ab543ceae6f4526380c83"
+        },
+        "reversed": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-shared-fixture-peer-8f9c0b77c2d2454aa570a019475861dc\\v4-postgres-shared-key-quote-versions.native.test.mjs.reversed",
+          "bytes": 34815,
+          "sha256": "a68472dd3a7e4ac77e67e63a99469b6651ffc553562ada1a664964f1cdc238f8"
+        }
+      }
+    },
+    {
+      "file": "scripts/db/cutover/postgres-shared-key-orphan-review-v348.native.test.mjs",
+      "before": {
+        "bytes": 22988,
+        "sha256": "6f830e1525240c5ae853d65844eb7de9102d393aad19d11fef7099db3829fd98"
+      },
+      "after": {
+        "bytes": 22999,
+        "sha256": "86dd70cbfcf81c9721cb2508ac4748dc9faf60ed00c6479498ce11f5df3d7d6a"
+      },
+      "orderedAssertions": 39,
+      "successfulGrantAdaptations": 0,
+      "grantNegativeCallsChanged": 0,
+      "snapshots": {
+        "before": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-shared-fixture-peer-8f9c0b77c2d2454aa570a019475861dc\\v4-postgres-shared-key-orphan-review-v348.native.test.mjs.before",
+          "bytes": 22988,
+          "sha256": "6f830e1525240c5ae853d65844eb7de9102d393aad19d11fef7099db3829fd98"
+        },
+        "after": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-shared-fixture-peer-8f9c0b77c2d2454aa570a019475861dc\\v4-postgres-shared-key-orphan-review-v348.native.test.mjs.after",
+          "bytes": 22999,
+          "sha256": "86dd70cbfcf81c9721cb2508ac4748dc9faf60ed00c6479498ce11f5df3d7d6a"
+        },
+        "reversed": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-shared-fixture-peer-8f9c0b77c2d2454aa570a019475861dc\\v4-postgres-shared-key-orphan-review-v348.native.test.mjs.reversed",
+          "bytes": 22988,
+          "sha256": "6f830e1525240c5ae853d65844eb7de9102d393aad19d11fef7099db3829fd98"
+        }
+      }
+    },
+    {
+      "file": "scripts/db/cutover/postgres-shared-key-selected-event-gate-v351.native.test.mjs",
+      "before": {
+        "bytes": 19224,
+        "sha256": "2d0c320eb44ec3bafda5f8750763c40cf4619425aee31fed02213f22eda14839"
+      },
+      "after": {
+        "bytes": 19233,
+        "sha256": "09c8c77cc5b1a07416d96c5028f098c40d811362b108c607e10570bebfa51d5e"
+      },
+      "orderedAssertions": 18,
+      "successfulGrantAdaptations": 0,
+      "grantNegativeCallsChanged": 0,
+      "snapshots": {
+        "before": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-shared-fixture-peer-8f9c0b77c2d2454aa570a019475861dc\\v4-postgres-shared-key-selected-event-gate-v351.native.test.mjs.before",
+          "bytes": 19224,
+          "sha256": "2d0c320eb44ec3bafda5f8750763c40cf4619425aee31fed02213f22eda14839"
+        },
+        "after": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-shared-fixture-peer-8f9c0b77c2d2454aa570a019475861dc\\v4-postgres-shared-key-selected-event-gate-v351.native.test.mjs.after",
+          "bytes": 19233,
+          "sha256": "09c8c77cc5b1a07416d96c5028f098c40d811362b108c607e10570bebfa51d5e"
+        },
+        "reversed": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-shared-fixture-peer-8f9c0b77c2d2454aa570a019475861dc\\v4-postgres-shared-key-selected-event-gate-v351.native.test.mjs.reversed",
+          "bytes": 19224,
+          "sha256": "2d0c320eb44ec3bafda5f8750763c40cf4619425aee31fed02213f22eda14839"
+        }
+      }
+    },
+    {
+      "file": "scripts/db/cutover/postgres-shared-key-snapshot-earning-consumer.native.test.mjs",
+      "before": {
+        "bytes": 35371,
+        "sha256": "44842fb1a4aa431fc2081a9968672dea620a6b74a256c3c93a3a046745a6e66b"
+      },
+      "after": {
+        "bytes": 35384,
+        "sha256": "5a22bbe2365e727b335f3838ac5f7106f235bb9b50b02b34fcfbe58876c5be92"
+      },
+      "orderedAssertions": 64,
+      "successfulGrantAdaptations": 0,
+      "grantNegativeCallsChanged": 0,
+      "snapshots": {
+        "before": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-shared-fixture-peer-8f9c0b77c2d2454aa570a019475861dc\\v4-postgres-shared-key-snapshot-earning-consumer.native.test.mjs.before",
+          "bytes": 35371,
+          "sha256": "44842fb1a4aa431fc2081a9968672dea620a6b74a256c3c93a3a046745a6e66b"
+        },
+        "after": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-shared-fixture-peer-8f9c0b77c2d2454aa570a019475861dc\\v4-postgres-shared-key-snapshot-earning-consumer.native.test.mjs.after",
+          "bytes": 35384,
+          "sha256": "5a22bbe2365e727b335f3838ac5f7106f235bb9b50b02b34fcfbe58876c5be92"
+        },
+        "reversed": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-shared-fixture-peer-8f9c0b77c2d2454aa570a019475861dc\\v4-postgres-shared-key-snapshot-earning-consumer.native.test.mjs.reversed",
+          "bytes": 35371,
+          "sha256": "44842fb1a4aa431fc2081a9968672dea620a6b74a256c3c93a3a046745a6e66b"
+        }
+      }
+    },
+    {
+      "file": "scripts/db/cutover/postgres-shared-key-economic-delivery.native.test.mjs",
+      "before": {
+        "bytes": 31990,
+        "sha256": "06223cc457a50eba3db8203be1605cde2e158e543bb80d6c75ef762270ffbf02"
+      },
+      "after": {
+        "bytes": 32003,
+        "sha256": "8fd48757e9beafc308fb21b018fd35f105fd0bb89011dfa0f4a4e0e1bca4fd94"
+      },
+      "orderedAssertions": 73,
+      "successfulGrantAdaptations": 0,
+      "grantNegativeCallsChanged": 0,
+      "snapshots": {
+        "before": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-shared-fixture-peer-8f9c0b77c2d2454aa570a019475861dc\\v4-postgres-shared-key-economic-delivery.native.test.mjs.before",
+          "bytes": 31990,
+          "sha256": "06223cc457a50eba3db8203be1605cde2e158e543bb80d6c75ef762270ffbf02"
+        },
+        "after": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-shared-fixture-peer-8f9c0b77c2d2454aa570a019475861dc\\v4-postgres-shared-key-economic-delivery.native.test.mjs.after",
+          "bytes": 32003,
+          "sha256": "8fd48757e9beafc308fb21b018fd35f105fd0bb89011dfa0f4a4e0e1bca4fd94"
+        },
+        "reversed": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-shared-fixture-peer-8f9c0b77c2d2454aa570a019475861dc\\v4-postgres-shared-key-economic-delivery.native.test.mjs.reversed",
+          "bytes": 31990,
+          "sha256": "06223cc457a50eba3db8203be1605cde2e158e543bb80d6c75ef762270ffbf02"
+        }
+      }
+    },
+    {
+      "file": "scripts/db/cutover/postgres-shared-key-credited-usage-gap.native.test.mjs",
+      "before": {
+        "bytes": 18159,
+        "sha256": "713583fdeb5ebfebfd03c5eb920fd464002bf9f1a4a8bbb78a3928d7720bf1ea"
+      },
+      "after": {
+        "bytes": 18172,
+        "sha256": "3c1a6de9753be65c96acb67b64b9dac04868b5f9ed0718834ce4c02edaafa66e"
+      },
+      "orderedAssertions": 29,
+      "successfulGrantAdaptations": 0,
+      "grantNegativeCallsChanged": 0,
+      "snapshots": {
+        "before": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-shared-fixture-peer-8f9c0b77c2d2454aa570a019475861dc\\v4-postgres-shared-key-credited-usage-gap.native.test.mjs.before",
+          "bytes": 18159,
+          "sha256": "713583fdeb5ebfebfd03c5eb920fd464002bf9f1a4a8bbb78a3928d7720bf1ea"
+        },
+        "after": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-shared-fixture-peer-8f9c0b77c2d2454aa570a019475861dc\\v4-postgres-shared-key-credited-usage-gap.native.test.mjs.after",
+          "bytes": 18172,
+          "sha256": "3c1a6de9753be65c96acb67b64b9dac04868b5f9ed0718834ce4c02edaafa66e"
+        },
+        "reversed": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-shared-fixture-peer-8f9c0b77c2d2454aa570a019475861dc\\v4-postgres-shared-key-credited-usage-gap.native.test.mjs.reversed",
+          "bytes": 18159,
+          "sha256": "713583fdeb5ebfebfd03c5eb920fd464002bf9f1a4a8bbb78a3928d7720bf1ea"
+        }
+      }
+    },
+    {
+      "file": "scripts/db/cutover/postgres-shared-key-credited-usage-store.native.test.mjs",
+      "before": {
+        "bytes": 28538,
+        "sha256": "16a297a4d26e603e8dce2981ba40d63dc29a7e9b0315cbdb00c12f4428c99a89"
+      },
+      "after": {
+        "bytes": 28551,
+        "sha256": "4c2acfc56302b7b6fb102979a6e6ad78611cccf0a0fb397a0a2b953eb8c29868"
+      },
+      "orderedAssertions": 68,
+      "successfulGrantAdaptations": 0,
+      "grantNegativeCallsChanged": 0,
+      "snapshots": {
+        "before": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-shared-fixture-peer-8f9c0b77c2d2454aa570a019475861dc\\v4-postgres-shared-key-credited-usage-store.native.test.mjs.before",
+          "bytes": 28538,
+          "sha256": "16a297a4d26e603e8dce2981ba40d63dc29a7e9b0315cbdb00c12f4428c99a89"
+        },
+        "after": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-shared-fixture-peer-8f9c0b77c2d2454aa570a019475861dc\\v4-postgres-shared-key-credited-usage-store.native.test.mjs.after",
+          "bytes": 28551,
+          "sha256": "4c2acfc56302b7b6fb102979a6e6ad78611cccf0a0fb397a0a2b953eb8c29868"
+        },
+        "reversed": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-shared-fixture-peer-8f9c0b77c2d2454aa570a019475861dc\\v4-postgres-shared-key-credited-usage-store.native.test.mjs.reversed",
+          "bytes": 28538,
+          "sha256": "16a297a4d26e603e8dce2981ba40d63dc29a7e9b0315cbdb00c12f4428c99a89"
+        }
+      }
+    }
+  ],
+  "workflow": {
+    "file": ".github/workflows/proxy-dispatch-safety.yml",
+    "before": {
+      "bytes": 45882,
+      "sha256": "ed33fec56d1260e651b733d4b61c002c9f8ebea762e440e700c8c564797374ef"
+    },
+    "after": {
+      "bytes": 45895,
+      "sha256": "8e883e7f21f77f8367d361f6bd3d060e16c241c28641b3eac85af6835841f152"
+    },
+    "onlySingleLoaderAddition": true,
+    "reverseOriginalByteExact": true,
+    "from": "node --test scripts/db/cutover/postgres-shared-key-credited-usage-store.native.test.mjs",
+    "to": "node --import tsx --test scripts/db/cutover/postgres-shared-key-credited-usage-store.native.test.mjs",
+    "snapshots": {
+      "before": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-shared-fixture-peer-8f9c0b77c2d2454aa570a019475861dc\\v4-proxy-dispatch-safety.yml.before",
+        "bytes": 45882,
+        "sha256": "ed33fec56d1260e651b733d4b61c002c9f8ebea762e440e700c8c564797374ef"
+      },
+      "after": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-shared-fixture-peer-8f9c0b77c2d2454aa570a019475861dc\\v4-proxy-dispatch-safety.yml.after",
+        "bytes": 45895,
+        "sha256": "8e883e7f21f77f8367d361f6bd3d060e16c241c28641b3eac85af6835841f152"
+      },
+      "reverse": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-shared-fixture-peer-8f9c0b77c2d2454aa570a019475861dc\\v4-proxy-dispatch-safety.yml.reversed",
+        "bytes": 45882,
+        "sha256": "ed33fec56d1260e651b733d4b61c002c9f8ebea762e440e700c8c564797374ef"
+      }
+    }
+  },
+  "quoteSemantics": {
+    "ownedLoopbackMigratorUrl": true,
+    "migratorClientMaxOne": true,
+    "runtimeInitiallyLoginWithRandomPassword": true,
+    "originalRuntimeMembershipNegativeRoles": [
+      "cinatoken_gateway_migrator",
+      "pg_read_all_data",
+      "pg_write_all_data"
+    ],
+    "membershipNegativeLoopIncludingRevokeUnchanged": true,
+    "proxyHasMigratorMembership": true,
+    "runtimeMembershipAtSuccessfulGrant": "Static flow creates no runtime membership except the unchanged negative loop which revokes each membership before continuation; the existing bridge independently requires no memberships at each real grant call.",
+    "temporary0074": "Existing unchanged bridge checks exactly PG73/ledger/corpus, temporarily installs only audit 0074 for unchanged production grant, verifies INSERT-only audit ACL, drops it and restores ledger/role.",
+    "productionGrantUnchanged": true
+  },
+  "loader": {
+    "nodeRuntimeUsedForLocalProbe": "v24.14.1 Windows",
+    "workflowConfiguredNodeVersion": 22,
+    "sourceGraph": [
+      "scripts/db/cutover/pg73-native-fixture.mjs",
+      "scripts/db/cutover/grant-postgres-runtime.ts",
+      "scripts/db/cutover/provision-postgres-roles.ts"
+    ],
+    "withoutLoader": {
+      "actualExit": 1,
+      "error": "ERR_MODULE_NOT_FOUND for extensionless provision-postgres-roles imported by grant-postgres-runtime.ts",
+      "expectedDiagnosticFailure": true
+    },
+    "withTsx": {
+      "actualExit": 0,
+      "filesystemOnly": true,
+      "pinnedCorpusCount": 73,
+      "lastMigration": "0073_recovery_api_key_workspace_lock.sql",
+      "postgresStarted": false,
+      "postgresConnections": 0
+    },
+    "node22NativeResultClaim": false,
+    "reason": "The helper imports TypeScript at top level even for listPg73Migrations; the current extensionless TypeScript dependency graph requires the existing tsx loader convention. Six other reviewed workflow commands already have this loader."
+  },
+  "unchangedProductionAndHelperSources": [
+    {
+      "file": "scripts/db/cutover/pg73-native-fixture.mjs",
+      "bytes": 6849,
+      "sha256": "124ddd43c2594d0daaac66a4e7158e5df90b00a6d73f03cbcac9e8f853a7346f",
+      "exactHeadBytes": true,
+      "snapshot": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-shared-fixture-peer-8f9c0b77c2d2454aa570a019475861dc\\v4-pg73-native-fixture.mjs.source",
+        "bytes": 6849,
+        "sha256": "124ddd43c2594d0daaac66a4e7158e5df90b00a6d73f03cbcac9e8f853a7346f"
+      }
+    },
+    {
+      "file": "scripts/db/cutover/grant-postgres-runtime.ts",
+      "bytes": 25946,
+      "sha256": "3f95f18f557696d8a36b93f7fe0d0d35a391e8ac9cf953376a234a6b629ea242",
+      "exactHeadBytes": true,
+      "snapshot": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-shared-fixture-peer-8f9c0b77c2d2454aa570a019475861dc\\v4-grant-postgres-runtime.ts.source",
+        "bytes": 25946,
+        "sha256": "3f95f18f557696d8a36b93f7fe0d0d35a391e8ac9cf953376a234a6b629ea242"
+      }
+    },
+    {
+      "file": "scripts/db/cutover/provision-postgres-roles.ts",
+      "bytes": 7028,
+      "sha256": "afeac8b67002c610a193c9a3ee1b3d583c5e2097082ad88824e9157a71a61d64",
+      "exactHeadBytes": true,
+      "snapshot": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-shared-fixture-peer-8f9c0b77c2d2454aa570a019475861dc\\v4-provision-postgres-roles.ts.source",
+        "bytes": 7028,
+        "sha256": "afeac8b67002c610a193c9a3ee1b3d583c5e2097082ad88824e9157a71a61d64"
+      }
+    },
+    {
+      "file": ".nvmrc",
+      "bytes": 3,
+      "sha256": "f14b4987904bcb5814e4459a057ed4d20f58a633152288a761214dcd28780b56",
+      "exactHeadBytes": true,
+      "snapshot": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-shared-fixture-peer-8f9c0b77c2d2454aa570a019475861dc\\v4-.nvmrc.source",
+        "bytes": 3,
+        "sha256": "f14b4987904bcb5814e4459a057ed4d20f58a633152288a761214dcd28780b56"
+      }
+    }
+  ],
+  "rawRuns": [
+    {
+      "label": "acorn-peer-audit",
+      "proof": {
+        "startedAt": "2026-10-06T00:29:07.281Z",
+        "completedAt": "2026-10-06T00:29:07.531Z",
+        "program": "node",
+        "arguments": [
+          "C:/Users/cina/AppData/Local/Temp/cinatoken-pg73-shared-fixture-peer-8f9c0b77c2d2454aa570a019475861dc/audit-shared-fixtures.mjs"
+        ],
+        "actualExitCode": 1,
+        "signal": null,
+        "spawnError": null,
+        "stdoutPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-shared-fixture-peer-8f9c0b77c2d2454aa570a019475861dc\\acorn-peer-audit.stdout.txt",
+        "stderrPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-shared-fixture-peer-8f9c0b77c2d2454aa570a019475861dc\\acorn-peer-audit.stderr.txt",
+        "stdoutBytes": 0,
+        "stderrBytes": 1822
+      },
+      "result": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-shared-fixture-peer-8f9c0b77c2d2454aa570a019475861dc\\acorn-peer-audit.result.json",
+        "bytes": 683,
+        "sha256": "afd39042d9ef42497611bdc64a6c744a1ef1ac146f2bd8e78a7e201c990f1551"
+      },
+      "stdout": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-shared-fixture-peer-8f9c0b77c2d2454aa570a019475861dc\\acorn-peer-audit.stdout.txt",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stderr": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-shared-fixture-peer-8f9c0b77c2d2454aa570a019475861dc\\acorn-peer-audit.stderr.txt",
+        "bytes": 1822,
+        "sha256": "1d57ba536392ae086d370619766cfc1c7053ed4e4c4a22a9c798f04704845a03"
+      }
+    },
+    {
+      "label": "acorn-peer-audit-v2",
+      "proof": {
+        "startedAt": "2026-10-06T00:29:25.708Z",
+        "completedAt": "2026-10-06T00:29:25.883Z",
+        "program": "node",
+        "arguments": [
+          "C:/Users/cina/AppData/Local/Temp/cinatoken-pg73-shared-fixture-peer-8f9c0b77c2d2454aa570a019475861dc/audit-shared-fixtures-v2.mjs"
+        ],
+        "actualExitCode": 1,
+        "signal": null,
+        "spawnError": null,
+        "stdoutPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-shared-fixture-peer-8f9c0b77c2d2454aa570a019475861dc\\acorn-peer-audit-v2.stdout.txt",
+        "stderrPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-shared-fixture-peer-8f9c0b77c2d2454aa570a019475861dc\\acorn-peer-audit-v2.stderr.txt",
+        "stdoutBytes": 0,
+        "stderrBytes": 1161
+      },
+      "result": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-shared-fixture-peer-8f9c0b77c2d2454aa570a019475861dc\\acorn-peer-audit-v2.result.json",
+        "bytes": 692,
+        "sha256": "d08c9f7299c74aa9a8a9408c41cf2183505aeca9fe98c88fba4249e41c2cf099"
+      },
+      "stdout": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-shared-fixture-peer-8f9c0b77c2d2454aa570a019475861dc\\acorn-peer-audit-v2.stdout.txt",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stderr": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-shared-fixture-peer-8f9c0b77c2d2454aa570a019475861dc\\acorn-peer-audit-v2.stderr.txt",
+        "bytes": 1161,
+        "sha256": "959562c21eaa1cde1bf5e7ecaf867632692738f75ca0f058b8aec916320ca407"
+      }
+    },
+    {
+      "label": "acorn-peer-audit-v3",
+      "proof": {
+        "startedAt": "2026-10-06T00:29:42.345Z",
+        "completedAt": "2026-10-06T00:29:42.701Z",
+        "program": "node",
+        "arguments": [
+          "C:/Users/cina/AppData/Local/Temp/cinatoken-pg73-shared-fixture-peer-8f9c0b77c2d2454aa570a019475861dc/audit-shared-fixtures-v3.mjs"
+        ],
+        "actualExitCode": 1,
+        "signal": null,
+        "spawnError": null,
+        "stdoutPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-shared-fixture-peer-8f9c0b77c2d2454aa570a019475861dc\\acorn-peer-audit-v3.stdout.txt",
+        "stderrPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-shared-fixture-peer-8f9c0b77c2d2454aa570a019475861dc\\acorn-peer-audit-v3.stderr.txt",
+        "stdoutBytes": 0,
+        "stderrBytes": 707
+      },
+      "result": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-shared-fixture-peer-8f9c0b77c2d2454aa570a019475861dc\\acorn-peer-audit-v3.result.json",
+        "bytes": 691,
+        "sha256": "bef7651e2dcb86040cfc931af3e3a814f51ddd10e60511b7a29869615a405b73"
+      },
+      "stdout": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-shared-fixture-peer-8f9c0b77c2d2454aa570a019475861dc\\acorn-peer-audit-v3.stdout.txt",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stderr": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-shared-fixture-peer-8f9c0b77c2d2454aa570a019475861dc\\acorn-peer-audit-v3.stderr.txt",
+        "bytes": 707,
+        "sha256": "49b4e9bf156fb49333b3d1e847474c3566f0c6a5f9a9e23d85d8ca87666c632e"
+      }
+    },
+    {
+      "label": "acorn-peer-audit-v4",
+      "proof": {
+        "startedAt": "2026-10-06T00:30:21.886Z",
+        "completedAt": "2026-10-06T00:30:22.914Z",
+        "program": "node",
+        "arguments": [
+          "C:/Users/cina/AppData/Local/Temp/cinatoken-pg73-shared-fixture-peer-8f9c0b77c2d2454aa570a019475861dc/audit-shared-fixtures-v4.mjs"
+        ],
+        "actualExitCode": 0,
+        "signal": null,
+        "spawnError": null,
+        "stdoutPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-shared-fixture-peer-8f9c0b77c2d2454aa570a019475861dc\\acorn-peer-audit-v4.stdout.txt",
+        "stderrPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-shared-fixture-peer-8f9c0b77c2d2454aa570a019475861dc\\acorn-peer-audit-v4.stderr.txt",
+        "stdoutBytes": 357,
+        "stderrBytes": 0
+      },
+      "result": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-shared-fixture-peer-8f9c0b77c2d2454aa570a019475861dc\\acorn-peer-audit-v4.result.json",
+        "bytes": 691,
+        "sha256": "59920508930e0406c5e39fa28e16b95832140375d9f74cfc6689103a5ba49812"
+      },
+      "stdout": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-shared-fixture-peer-8f9c0b77c2d2454aa570a019475861dc\\acorn-peer-audit-v4.stdout.txt",
+        "bytes": 357,
+        "sha256": "52188bfa4f4b31377f6166ce958fa23579d866527885a31a2b2b2b47e6189da7"
+      },
+      "stderr": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-shared-fixture-peer-8f9c0b77c2d2454aa570a019475861dc\\acorn-peer-audit-v4.stderr.txt",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "label": "helper-load-without-loader",
+      "proof": {
+        "startedAt": "2026-10-06T00:29:08.055Z",
+        "completedAt": "2026-10-06T00:29:08.430Z",
+        "program": "node",
+        "arguments": [
+          "C:/Users/cina/AppData/Local/Temp/cinatoken-pg73-shared-fixture-peer-8f9c0b77c2d2454aa570a019475861dc/load-pg73-helper.mjs"
+        ],
+        "actualExitCode": 1,
+        "signal": null,
+        "spawnError": null,
+        "stdoutPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-shared-fixture-peer-8f9c0b77c2d2454aa570a019475861dc\\helper-load-without-loader.stdout.txt",
+        "stderrPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-shared-fixture-peer-8f9c0b77c2d2454aa570a019475861dc\\helper-load-without-loader.stderr.txt",
+        "stdoutBytes": 0,
+        "stderrBytes": 1154
+      },
+      "result": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-shared-fixture-peer-8f9c0b77c2d2454aa570a019475861dc\\helper-load-without-loader.result.json",
+        "bytes": 698,
+        "sha256": "481a6aa26d91d4814980943189d00a3b3f619cf5b275e1e4ac9dfa2c4ceffe19"
+      },
+      "stdout": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-shared-fixture-peer-8f9c0b77c2d2454aa570a019475861dc\\helper-load-without-loader.stdout.txt",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stderr": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-shared-fixture-peer-8f9c0b77c2d2454aa570a019475861dc\\helper-load-without-loader.stderr.txt",
+        "bytes": 1154,
+        "sha256": "316523cf594dbcf5e059396d224add1bab895e7d3071fcf63f1189d3ea4ece98"
+      }
+    },
+    {
+      "label": "helper-load-with-tsx",
+      "proof": {
+        "startedAt": "2026-10-06T00:29:08.672Z",
+        "completedAt": "2026-10-06T00:29:09.626Z",
+        "program": "node",
+        "arguments": [
+          "--import",
+          "tsx",
+          "C:/Users/cina/AppData/Local/Temp/cinatoken-pg73-shared-fixture-peer-8f9c0b77c2d2454aa570a019475861dc/load-pg73-helper.mjs"
+        ],
+        "actualExitCode": 0,
+        "signal": null,
+        "spawnError": null,
+        "stdoutPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-shared-fixture-peer-8f9c0b77c2d2454aa570a019475861dc\\helper-load-with-tsx.stdout.txt",
+        "stderrPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-shared-fixture-peer-8f9c0b77c2d2454aa570a019475861dc\\helper-load-with-tsx.stderr.txt",
+        "stdoutBytes": 181,
+        "stderrBytes": 0
+      },
+      "result": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-shared-fixture-peer-8f9c0b77c2d2454aa570a019475861dc\\helper-load-with-tsx.result.json",
+        "bytes": 712,
+        "sha256": "a7227a6292ba3c607e146710416db0b22fda378597250e58a57d9ac1a3f2cd2a"
+      },
+      "stdout": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-shared-fixture-peer-8f9c0b77c2d2454aa570a019475861dc\\helper-load-with-tsx.stdout.txt",
+        "bytes": 181,
+        "sha256": "d652922bdaa9f3768e03a22b599046f5a612de2214aa22b7df8effc6d4b6fa6c"
+      },
+      "stderr": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-shared-fixture-peer-8f9c0b77c2d2454aa570a019475861dc\\helper-load-with-tsx.stderr.txt",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    }
+  ],
+  "reviewerAttemptFailures": {
+    "initialAudit": "Actual exit1: Acorn BigInt literal values require explicit lossless JSON encoding in the reviewer normalizer; original raw preserved.",
+    "secondAudit": "Actual exit1: wx refused overwrite of a previously sealed quote snapshot; original raw preserved.",
+    "thirdAudit": "Actual exit1: branch HEAD had advanced to the repair commit, so mutable HEAD no longer represented workflow before; original raw preserved.",
+    "finalAudit": "Actual exit0 after explicit lossless BigInt/RegExp encoding, new wx snapshot namespace, and the fixed approved original commit. Source assertions and production fixtures were not changed by the reviewer."
+  },
+  "auditReport": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-shared-fixture-peer-8f9c0b77c2d2454aa570a019475861dc\\v4-acorn-shared-fixture-audit.json",
+    "bytes": 31861,
+    "sha256": "0dba2715069ffab513beb2a32cd6664d3a1ffc9fe6ecba0dea3889385be000c9"
+  },
+  "rawInventory": [
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-shared-fixture-peer-8f9c0b77c2d2454aa570a019475861dc\\acorn-peer-audit-v2.result.json",
+      "bytes": 692,
+      "sha256": "d08c9f7299c74aa9a8a9408c41cf2183505aeca9fe98c88fba4249e41c2cf099"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-shared-fixture-peer-8f9c0b77c2d2454aa570a019475861dc\\acorn-peer-audit-v2.stderr.txt",
+      "bytes": 1161,
+      "sha256": "959562c21eaa1cde1bf5e7ecaf867632692738f75ca0f058b8aec916320ca407"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-shared-fixture-peer-8f9c0b77c2d2454aa570a019475861dc\\acorn-peer-audit-v2.stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-shared-fixture-peer-8f9c0b77c2d2454aa570a019475861dc\\acorn-peer-audit-v3.result.json",
+      "bytes": 691,
+      "sha256": "bef7651e2dcb86040cfc931af3e3a814f51ddd10e60511b7a29869615a405b73"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-shared-fixture-peer-8f9c0b77c2d2454aa570a019475861dc\\acorn-peer-audit-v3.stderr.txt",
+      "bytes": 707,
+      "sha256": "49b4e9bf156fb49333b3d1e847474c3566f0c6a5f9a9e23d85d8ca87666c632e"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-shared-fixture-peer-8f9c0b77c2d2454aa570a019475861dc\\acorn-peer-audit-v3.stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-shared-fixture-peer-8f9c0b77c2d2454aa570a019475861dc\\acorn-peer-audit-v4.result.json",
+      "bytes": 691,
+      "sha256": "59920508930e0406c5e39fa28e16b95832140375d9f74cfc6689103a5ba49812"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-shared-fixture-peer-8f9c0b77c2d2454aa570a019475861dc\\acorn-peer-audit-v4.stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-shared-fixture-peer-8f9c0b77c2d2454aa570a019475861dc\\acorn-peer-audit-v4.stdout.txt",
+      "bytes": 357,
+      "sha256": "52188bfa4f4b31377f6166ce958fa23579d866527885a31a2b2b2b47e6189da7"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-shared-fixture-peer-8f9c0b77c2d2454aa570a019475861dc\\acorn-peer-audit.result.json",
+      "bytes": 683,
+      "sha256": "afd39042d9ef42497611bdc64a6c744a1ef1ac146f2bd8e78a7e201c990f1551"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-shared-fixture-peer-8f9c0b77c2d2454aa570a019475861dc\\acorn-peer-audit.stderr.txt",
+      "bytes": 1822,
+      "sha256": "1d57ba536392ae086d370619766cfc1c7053ed4e4c4a22a9c798f04704845a03"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-shared-fixture-peer-8f9c0b77c2d2454aa570a019475861dc\\acorn-peer-audit.stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-shared-fixture-peer-8f9c0b77c2d2454aa570a019475861dc\\audit-shared-fixtures-v2.mjs",
+      "bytes": 13257,
+      "sha256": "45457f8a0253ceadec9b4a07bb280ebc49e78b727eb009cbd5983c2ec6b943a2"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-shared-fixture-peer-8f9c0b77c2d2454aa570a019475861dc\\audit-shared-fixtures-v3.mjs",
+      "bytes": 13263,
+      "sha256": "0ee2af4e9362e52064939c2ab96ca1d63299b5ef160279924f08bba28928b261"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-shared-fixture-peer-8f9c0b77c2d2454aa570a019475861dc\\audit-shared-fixtures-v4.mjs",
+      "bytes": 13748,
+      "sha256": "6770e415b0944bb957e9f59c573e94c0630b2032add123ed5130af9c24dbda93"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-shared-fixture-peer-8f9c0b77c2d2454aa570a019475861dc\\audit-shared-fixtures.mjs",
+      "bytes": 13127,
+      "sha256": "94242edca2504df18ddb35374ca8f50591c55393c9f82177697f28a04ca914ee"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-shared-fixture-peer-8f9c0b77c2d2454aa570a019475861dc\\helper-load-with-tsx.result.json",
+      "bytes": 712,
+      "sha256": "a7227a6292ba3c607e146710416db0b22fda378597250e58a57d9ac1a3f2cd2a"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-shared-fixture-peer-8f9c0b77c2d2454aa570a019475861dc\\helper-load-with-tsx.stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-shared-fixture-peer-8f9c0b77c2d2454aa570a019475861dc\\helper-load-with-tsx.stdout.txt",
+      "bytes": 181,
+      "sha256": "d652922bdaa9f3768e03a22b599046f5a612de2214aa22b7df8effc6d4b6fa6c"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-shared-fixture-peer-8f9c0b77c2d2454aa570a019475861dc\\helper-load-without-loader.result.json",
+      "bytes": 698,
+      "sha256": "481a6aa26d91d4814980943189d00a3b3f619cf5b275e1e4ac9dfa2c4ceffe19"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-shared-fixture-peer-8f9c0b77c2d2454aa570a019475861dc\\helper-load-without-loader.stderr.txt",
+      "bytes": 1154,
+      "sha256": "316523cf594dbcf5e059396d224add1bab895e7d3071fcf63f1189d3ea4ece98"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-shared-fixture-peer-8f9c0b77c2d2454aa570a019475861dc\\helper-load-without-loader.stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-shared-fixture-peer-8f9c0b77c2d2454aa570a019475861dc\\load-pg73-helper.mjs",
+      "bytes": 335,
+      "sha256": "d23599720050e25474203b7fbca2446e6430e0ba92c52aee0e7ed0d5a639549f"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-shared-fixture-peer-8f9c0b77c2d2454aa570a019475861dc\\postgres-shared-key-orphan-review-v348.native.test.mjs.after",
+      "bytes": 22999,
+      "sha256": "86dd70cbfcf81c9721cb2508ac4748dc9faf60ed00c6479498ce11f5df3d7d6a"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-shared-fixture-peer-8f9c0b77c2d2454aa570a019475861dc\\postgres-shared-key-orphan-review-v348.native.test.mjs.before",
+      "bytes": 22988,
+      "sha256": "6f830e1525240c5ae853d65844eb7de9102d393aad19d11fef7099db3829fd98"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-shared-fixture-peer-8f9c0b77c2d2454aa570a019475861dc\\postgres-shared-key-orphan-review-v348.native.test.mjs.reversed",
+      "bytes": 22988,
+      "sha256": "6f830e1525240c5ae853d65844eb7de9102d393aad19d11fef7099db3829fd98"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-shared-fixture-peer-8f9c0b77c2d2454aa570a019475861dc\\postgres-shared-key-quote-versions.native.test.mjs.after",
+      "bytes": 34823,
+      "sha256": "16ef4b701728c9de46ea932851354d7cee2aa9d80c6ab543ceae6f4526380c83"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-shared-fixture-peer-8f9c0b77c2d2454aa570a019475861dc\\postgres-shared-key-quote-versions.native.test.mjs.before",
+      "bytes": 34815,
+      "sha256": "a68472dd3a7e4ac77e67e63a99469b6651ffc553562ada1a664964f1cdc238f8"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-shared-fixture-peer-8f9c0b77c2d2454aa570a019475861dc\\postgres-shared-key-quote-versions.native.test.mjs.reversed",
+      "bytes": 34815,
+      "sha256": "a68472dd3a7e4ac77e67e63a99469b6651ffc553562ada1a664964f1cdc238f8"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-shared-fixture-peer-8f9c0b77c2d2454aa570a019475861dc\\postgres-shared-key-selected-event-gate-v351.native.test.mjs.after",
+      "bytes": 19233,
+      "sha256": "09c8c77cc5b1a07416d96c5028f098c40d811362b108c607e10570bebfa51d5e"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-shared-fixture-peer-8f9c0b77c2d2454aa570a019475861dc\\postgres-shared-key-selected-event-gate-v351.native.test.mjs.before",
+      "bytes": 19224,
+      "sha256": "2d0c320eb44ec3bafda5f8750763c40cf4619425aee31fed02213f22eda14839"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-shared-fixture-peer-8f9c0b77c2d2454aa570a019475861dc\\postgres-shared-key-selected-event-gate-v351.native.test.mjs.reversed",
+      "bytes": 19224,
+      "sha256": "2d0c320eb44ec3bafda5f8750763c40cf4619425aee31fed02213f22eda14839"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-shared-fixture-peer-8f9c0b77c2d2454aa570a019475861dc\\run-readonly.mjs",
+      "bytes": 1733,
+      "sha256": "b8d7236bc2c97a1ad6a2dbabdd5f81beb74268e072a4dfef0afc4d1e826a924b"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-shared-fixture-peer-8f9c0b77c2d2454aa570a019475861dc\\seal-peer-report.mjs",
+      "bytes": 5840,
+      "sha256": "6d14f8d204357e8dcdcc1e6bdc28a3c5e1017ba748728b51ce63278e5bfb27b7"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-shared-fixture-peer-8f9c0b77c2d2454aa570a019475861dc\\seal-peer-report.stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-shared-fixture-peer-8f9c0b77c2d2454aa570a019475861dc\\seal-peer-report.stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-shared-fixture-peer-8f9c0b77c2d2454aa570a019475861dc\\v3-postgres-shared-key-credited-usage-gap.native.test.mjs.after",
+      "bytes": 18172,
+      "sha256": "3c1a6de9753be65c96acb67b64b9dac04868b5f9ed0718834ce4c02edaafa66e"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-shared-fixture-peer-8f9c0b77c2d2454aa570a019475861dc\\v3-postgres-shared-key-credited-usage-gap.native.test.mjs.before",
+      "bytes": 18159,
+      "sha256": "713583fdeb5ebfebfd03c5eb920fd464002bf9f1a4a8bbb78a3928d7720bf1ea"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-shared-fixture-peer-8f9c0b77c2d2454aa570a019475861dc\\v3-postgres-shared-key-credited-usage-gap.native.test.mjs.reversed",
+      "bytes": 18159,
+      "sha256": "713583fdeb5ebfebfd03c5eb920fd464002bf9f1a4a8bbb78a3928d7720bf1ea"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-shared-fixture-peer-8f9c0b77c2d2454aa570a019475861dc\\v3-postgres-shared-key-credited-usage-store.native.test.mjs.after",
+      "bytes": 28551,
+      "sha256": "4c2acfc56302b7b6fb102979a6e6ad78611cccf0a0fb397a0a2b953eb8c29868"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-shared-fixture-peer-8f9c0b77c2d2454aa570a019475861dc\\v3-postgres-shared-key-credited-usage-store.native.test.mjs.before",
+      "bytes": 28538,
+      "sha256": "16a297a4d26e603e8dce2981ba40d63dc29a7e9b0315cbdb00c12f4428c99a89"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-shared-fixture-peer-8f9c0b77c2d2454aa570a019475861dc\\v3-postgres-shared-key-credited-usage-store.native.test.mjs.reversed",
+      "bytes": 28538,
+      "sha256": "16a297a4d26e603e8dce2981ba40d63dc29a7e9b0315cbdb00c12f4428c99a89"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-shared-fixture-peer-8f9c0b77c2d2454aa570a019475861dc\\v3-postgres-shared-key-economic-delivery.native.test.mjs.after",
+      "bytes": 32003,
+      "sha256": "8fd48757e9beafc308fb21b018fd35f105fd0bb89011dfa0f4a4e0e1bca4fd94"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-shared-fixture-peer-8f9c0b77c2d2454aa570a019475861dc\\v3-postgres-shared-key-economic-delivery.native.test.mjs.before",
+      "bytes": 31990,
+      "sha256": "06223cc457a50eba3db8203be1605cde2e158e543bb80d6c75ef762270ffbf02"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-shared-fixture-peer-8f9c0b77c2d2454aa570a019475861dc\\v3-postgres-shared-key-economic-delivery.native.test.mjs.reversed",
+      "bytes": 31990,
+      "sha256": "06223cc457a50eba3db8203be1605cde2e158e543bb80d6c75ef762270ffbf02"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-shared-fixture-peer-8f9c0b77c2d2454aa570a019475861dc\\v3-postgres-shared-key-orphan-review-v348.native.test.mjs.after",
+      "bytes": 22999,
+      "sha256": "86dd70cbfcf81c9721cb2508ac4748dc9faf60ed00c6479498ce11f5df3d7d6a"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-shared-fixture-peer-8f9c0b77c2d2454aa570a019475861dc\\v3-postgres-shared-key-orphan-review-v348.native.test.mjs.before",
+      "bytes": 22988,
+      "sha256": "6f830e1525240c5ae853d65844eb7de9102d393aad19d11fef7099db3829fd98"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-shared-fixture-peer-8f9c0b77c2d2454aa570a019475861dc\\v3-postgres-shared-key-orphan-review-v348.native.test.mjs.reversed",
+      "bytes": 22988,
+      "sha256": "6f830e1525240c5ae853d65844eb7de9102d393aad19d11fef7099db3829fd98"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-shared-fixture-peer-8f9c0b77c2d2454aa570a019475861dc\\v3-postgres-shared-key-quote-versions.native.test.mjs.after",
+      "bytes": 34823,
+      "sha256": "16ef4b701728c9de46ea932851354d7cee2aa9d80c6ab543ceae6f4526380c83"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-shared-fixture-peer-8f9c0b77c2d2454aa570a019475861dc\\v3-postgres-shared-key-quote-versions.native.test.mjs.before",
+      "bytes": 34815,
+      "sha256": "a68472dd3a7e4ac77e67e63a99469b6651ffc553562ada1a664964f1cdc238f8"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-shared-fixture-peer-8f9c0b77c2d2454aa570a019475861dc\\v3-postgres-shared-key-quote-versions.native.test.mjs.reversed",
+      "bytes": 34815,
+      "sha256": "a68472dd3a7e4ac77e67e63a99469b6651ffc553562ada1a664964f1cdc238f8"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-shared-fixture-peer-8f9c0b77c2d2454aa570a019475861dc\\v3-postgres-shared-key-selected-event-gate-v351.native.test.mjs.after",
+      "bytes": 19233,
+      "sha256": "09c8c77cc5b1a07416d96c5028f098c40d811362b108c607e10570bebfa51d5e"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-shared-fixture-peer-8f9c0b77c2d2454aa570a019475861dc\\v3-postgres-shared-key-selected-event-gate-v351.native.test.mjs.before",
+      "bytes": 19224,
+      "sha256": "2d0c320eb44ec3bafda5f8750763c40cf4619425aee31fed02213f22eda14839"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-shared-fixture-peer-8f9c0b77c2d2454aa570a019475861dc\\v3-postgres-shared-key-selected-event-gate-v351.native.test.mjs.reversed",
+      "bytes": 19224,
+      "sha256": "2d0c320eb44ec3bafda5f8750763c40cf4619425aee31fed02213f22eda14839"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-shared-fixture-peer-8f9c0b77c2d2454aa570a019475861dc\\v3-postgres-shared-key-snapshot-earning-consumer.native.test.mjs.after",
+      "bytes": 35384,
+      "sha256": "5a22bbe2365e727b335f3838ac5f7106f235bb9b50b02b34fcfbe58876c5be92"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-shared-fixture-peer-8f9c0b77c2d2454aa570a019475861dc\\v3-postgres-shared-key-snapshot-earning-consumer.native.test.mjs.before",
+      "bytes": 35371,
+      "sha256": "44842fb1a4aa431fc2081a9968672dea620a6b74a256c3c93a3a046745a6e66b"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-shared-fixture-peer-8f9c0b77c2d2454aa570a019475861dc\\v3-postgres-shared-key-snapshot-earning-consumer.native.test.mjs.reversed",
+      "bytes": 35371,
+      "sha256": "44842fb1a4aa431fc2081a9968672dea620a6b74a256c3c93a3a046745a6e66b"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-shared-fixture-peer-8f9c0b77c2d2454aa570a019475861dc\\v4-.nvmrc.source",
+      "bytes": 3,
+      "sha256": "f14b4987904bcb5814e4459a057ed4d20f58a633152288a761214dcd28780b56"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-shared-fixture-peer-8f9c0b77c2d2454aa570a019475861dc\\v4-acorn-shared-fixture-audit.json",
+      "bytes": 31861,
+      "sha256": "0dba2715069ffab513beb2a32cd6664d3a1ffc9fe6ecba0dea3889385be000c9"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-shared-fixture-peer-8f9c0b77c2d2454aa570a019475861dc\\v4-grant-postgres-runtime.ts.source",
+      "bytes": 25946,
+      "sha256": "3f95f18f557696d8a36b93f7fe0d0d35a391e8ac9cf953376a234a6b629ea242"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-shared-fixture-peer-8f9c0b77c2d2454aa570a019475861dc\\v4-pg73-native-fixture.mjs.source",
+      "bytes": 6849,
+      "sha256": "124ddd43c2594d0daaac66a4e7158e5df90b00a6d73f03cbcac9e8f853a7346f"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-shared-fixture-peer-8f9c0b77c2d2454aa570a019475861dc\\v4-postgres-shared-key-credited-usage-gap.native.test.mjs.after",
+      "bytes": 18172,
+      "sha256": "3c1a6de9753be65c96acb67b64b9dac04868b5f9ed0718834ce4c02edaafa66e"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-shared-fixture-peer-8f9c0b77c2d2454aa570a019475861dc\\v4-postgres-shared-key-credited-usage-gap.native.test.mjs.before",
+      "bytes": 18159,
+      "sha256": "713583fdeb5ebfebfd03c5eb920fd464002bf9f1a4a8bbb78a3928d7720bf1ea"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-shared-fixture-peer-8f9c0b77c2d2454aa570a019475861dc\\v4-postgres-shared-key-credited-usage-gap.native.test.mjs.reversed",
+      "bytes": 18159,
+      "sha256": "713583fdeb5ebfebfd03c5eb920fd464002bf9f1a4a8bbb78a3928d7720bf1ea"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-shared-fixture-peer-8f9c0b77c2d2454aa570a019475861dc\\v4-postgres-shared-key-credited-usage-store.native.test.mjs.after",
+      "bytes": 28551,
+      "sha256": "4c2acfc56302b7b6fb102979a6e6ad78611cccf0a0fb397a0a2b953eb8c29868"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-shared-fixture-peer-8f9c0b77c2d2454aa570a019475861dc\\v4-postgres-shared-key-credited-usage-store.native.test.mjs.before",
+      "bytes": 28538,
+      "sha256": "16a297a4d26e603e8dce2981ba40d63dc29a7e9b0315cbdb00c12f4428c99a89"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-shared-fixture-peer-8f9c0b77c2d2454aa570a019475861dc\\v4-postgres-shared-key-credited-usage-store.native.test.mjs.reversed",
+      "bytes": 28538,
+      "sha256": "16a297a4d26e603e8dce2981ba40d63dc29a7e9b0315cbdb00c12f4428c99a89"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-shared-fixture-peer-8f9c0b77c2d2454aa570a019475861dc\\v4-postgres-shared-key-economic-delivery.native.test.mjs.after",
+      "bytes": 32003,
+      "sha256": "8fd48757e9beafc308fb21b018fd35f105fd0bb89011dfa0f4a4e0e1bca4fd94"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-shared-fixture-peer-8f9c0b77c2d2454aa570a019475861dc\\v4-postgres-shared-key-economic-delivery.native.test.mjs.before",
+      "bytes": 31990,
+      "sha256": "06223cc457a50eba3db8203be1605cde2e158e543bb80d6c75ef762270ffbf02"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-shared-fixture-peer-8f9c0b77c2d2454aa570a019475861dc\\v4-postgres-shared-key-economic-delivery.native.test.mjs.reversed",
+      "bytes": 31990,
+      "sha256": "06223cc457a50eba3db8203be1605cde2e158e543bb80d6c75ef762270ffbf02"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-shared-fixture-peer-8f9c0b77c2d2454aa570a019475861dc\\v4-postgres-shared-key-orphan-review-v348.native.test.mjs.after",
+      "bytes": 22999,
+      "sha256": "86dd70cbfcf81c9721cb2508ac4748dc9faf60ed00c6479498ce11f5df3d7d6a"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-shared-fixture-peer-8f9c0b77c2d2454aa570a019475861dc\\v4-postgres-shared-key-orphan-review-v348.native.test.mjs.before",
+      "bytes": 22988,
+      "sha256": "6f830e1525240c5ae853d65844eb7de9102d393aad19d11fef7099db3829fd98"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-shared-fixture-peer-8f9c0b77c2d2454aa570a019475861dc\\v4-postgres-shared-key-orphan-review-v348.native.test.mjs.reversed",
+      "bytes": 22988,
+      "sha256": "6f830e1525240c5ae853d65844eb7de9102d393aad19d11fef7099db3829fd98"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-shared-fixture-peer-8f9c0b77c2d2454aa570a019475861dc\\v4-postgres-shared-key-quote-versions.native.test.mjs.after",
+      "bytes": 34823,
+      "sha256": "16ef4b701728c9de46ea932851354d7cee2aa9d80c6ab543ceae6f4526380c83"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-shared-fixture-peer-8f9c0b77c2d2454aa570a019475861dc\\v4-postgres-shared-key-quote-versions.native.test.mjs.before",
+      "bytes": 34815,
+      "sha256": "a68472dd3a7e4ac77e67e63a99469b6651ffc553562ada1a664964f1cdc238f8"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-shared-fixture-peer-8f9c0b77c2d2454aa570a019475861dc\\v4-postgres-shared-key-quote-versions.native.test.mjs.reversed",
+      "bytes": 34815,
+      "sha256": "a68472dd3a7e4ac77e67e63a99469b6651ffc553562ada1a664964f1cdc238f8"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-shared-fixture-peer-8f9c0b77c2d2454aa570a019475861dc\\v4-postgres-shared-key-selected-event-gate-v351.native.test.mjs.after",
+      "bytes": 19233,
+      "sha256": "09c8c77cc5b1a07416d96c5028f098c40d811362b108c607e10570bebfa51d5e"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-shared-fixture-peer-8f9c0b77c2d2454aa570a019475861dc\\v4-postgres-shared-key-selected-event-gate-v351.native.test.mjs.before",
+      "bytes": 19224,
+      "sha256": "2d0c320eb44ec3bafda5f8750763c40cf4619425aee31fed02213f22eda14839"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-shared-fixture-peer-8f9c0b77c2d2454aa570a019475861dc\\v4-postgres-shared-key-selected-event-gate-v351.native.test.mjs.reversed",
+      "bytes": 19224,
+      "sha256": "2d0c320eb44ec3bafda5f8750763c40cf4619425aee31fed02213f22eda14839"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-shared-fixture-peer-8f9c0b77c2d2454aa570a019475861dc\\v4-postgres-shared-key-snapshot-earning-consumer.native.test.mjs.after",
+      "bytes": 35384,
+      "sha256": "5a22bbe2365e727b335f3838ac5f7106f235bb9b50b02b34fcfbe58876c5be92"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-shared-fixture-peer-8f9c0b77c2d2454aa570a019475861dc\\v4-postgres-shared-key-snapshot-earning-consumer.native.test.mjs.before",
+      "bytes": 35371,
+      "sha256": "44842fb1a4aa431fc2081a9968672dea620a6b74a256c3c93a3a046745a6e66b"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-shared-fixture-peer-8f9c0b77c2d2454aa570a019475861dc\\v4-postgres-shared-key-snapshot-earning-consumer.native.test.mjs.reversed",
+      "bytes": 35371,
+      "sha256": "44842fb1a4aa431fc2081a9968672dea620a6b74a256c3c93a3a046745a6e66b"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-shared-fixture-peer-8f9c0b77c2d2454aa570a019475861dc\\v4-provision-postgres-roles.ts.source",
+      "bytes": 7028,
+      "sha256": "afeac8b67002c610a193c9a3ee1b3d583c5e2097082ad88824e9157a71a61d64"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-shared-fixture-peer-8f9c0b77c2d2454aa570a019475861dc\\v4-proxy-dispatch-safety.yml.after",
+      "bytes": 45895,
+      "sha256": "8e883e7f21f77f8367d361f6bd3d060e16c241c28641b3eac85af6835841f152"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-shared-fixture-peer-8f9c0b77c2d2454aa570a019475861dc\\v4-proxy-dispatch-safety.yml.before",
+      "bytes": 45882,
+      "sha256": "ed33fec56d1260e651b733d4b61c002c9f8ebea762e440e700c8c564797374ef"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-shared-fixture-peer-8f9c0b77c2d2454aa570a019475861dc\\v4-proxy-dispatch-safety.yml.reversed",
+      "bytes": 45882,
+      "sha256": "ed33fec56d1260e651b733d4b61c002c9f8ebea762e440e700c8c564797374ef"
+    }
+  ],
+  "limitations": {
+    "postgresExecuted": false,
+    "nativeFixtureExecuted": false,
+    "nativePgPassClaim": false,
+    "nativeSkipUsedAsPass": false,
+    "ciPolled": false,
+    "productionRequests": 0,
+    "sourceWritesByReviewer": 0,
+    "gitMutationsByReviewer": 0
+  },
+  "requiredNext": "Parent-owned real Linux PostgreSQL 18.6 CI must establish actual runtime test results; this review does not establish native PASS."
+}

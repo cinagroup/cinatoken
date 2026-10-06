@@ -1,0 +1,4 @@
+Traceback (most recent call last):
+  File "C:\cinagroup\cinatoken\scripts\diagnostics\v364-owned-linux\execute-owned-linux.py", line 123, in <module>
+    raise RuntimeError('Requires explicit --execute-linux on an owned Linux runner')
+RuntimeError: Requires explicit --execute-linux on an owned Linux runner

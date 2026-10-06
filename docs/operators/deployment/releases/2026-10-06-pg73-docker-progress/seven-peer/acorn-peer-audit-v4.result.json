@@ -1,0 +1,15 @@
+{
+  "startedAt": "2026-10-06T00:30:21.886Z",
+  "completedAt": "2026-10-06T00:30:22.914Z",
+  "program": "node",
+  "arguments": [
+    "C:/Users/cina/AppData/Local/Temp/cinatoken-pg73-shared-fixture-peer-8f9c0b77c2d2454aa570a019475861dc/audit-shared-fixtures-v4.mjs"
+  ],
+  "actualExitCode": 0,
+  "signal": null,
+  "spawnError": null,
+  "stdoutPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-shared-fixture-peer-8f9c0b77c2d2454aa570a019475861dc\\acorn-peer-audit-v4.stdout.txt",
+  "stderrPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-shared-fixture-peer-8f9c0b77c2d2454aa570a019475861dc\\acorn-peer-audit-v4.stderr.txt",
+  "stdoutBytes": 357,
+  "stderrBytes": 0
+}

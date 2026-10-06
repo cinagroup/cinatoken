@@ -1,0 +1,15 @@
+{
+  "startedAt": "2026-10-06T00:45:43.865Z",
+  "completedAt": "2026-10-06T00:45:44.513Z",
+  "program": "node",
+  "arguments": [
+    "C:/Users/cina/AppData/Local/Temp/cinatoken-pg73-budget-admission-repair-pgYfbi/inventory-next-pg73.mjs"
+  ],
+  "actualExitCode": 0,
+  "signal": null,
+  "spawnError": null,
+  "stdoutPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-budget-admission-repair-pgYfbi\\next-eight-inventory.stdout.txt",
+  "stderrPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-budget-admission-repair-pgYfbi\\next-eight-inventory.stderr.txt",
+  "stdoutBytes": 1550,
+  "stderrBytes": 0
+}

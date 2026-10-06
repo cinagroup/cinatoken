@@ -1,0 +1,17 @@
+{
+  "startedAt": "2026-10-06T00:19:20.137Z",
+  "completedAt": "2026-10-06T00:19:20.801Z",
+  "program": "node",
+  "arguments": [
+    "--import",
+    "tsx",
+    "C:/Users/cina/AppData/Local/Temp/cinatoken-pg73-runtime-grant-repair-644c68d030714f57b09031e007b87869/audit-fix.mjs"
+  ],
+  "actualExitCode": 1,
+  "signal": null,
+  "spawnError": null,
+  "stdoutPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-runtime-grant-repair-644c68d030714f57b09031e007b87869\\change-audit.stdout.txt",
+  "stderrPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-runtime-grant-repair-644c68d030714f57b09031e007b87869\\change-audit.stderr.txt",
+  "stdoutBytes": 0,
+  "stderrBytes": 998
+}

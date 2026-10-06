@@ -1,0 +1,8 @@
+{
+  "closed": true,
+  "actualExitCode": 0,
+  "command": "git diff -- four owned files",
+  "stdout": "owned-diff-final.patch",
+  "stderr": "owned-diff-final.stderr.log",
+  "completedAt": "2026-10-06T00:32:32.6893104Z"
+}

@@ -1,0 +1,44 @@
+{
+  "proof": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-runtime-grant-repair-644c68d030714f57b09031e007b87869\\change-audit.proof.json",
+    "bytes": 1725,
+    "sha256": "468059a6cc18352d252f976b77b0ad1799f15012782a52e28ac1721800db50d3"
+  },
+  "schema": "pg73-runtime-grant-change-audit",
+  "at": "2026-10-06T00:19:30.665Z",
+  "actualExit": 0,
+  "before": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-runtime-grant-repair-644c68d030714f57b09031e007b87869\\before.native.test.mjs",
+    "bytes": 7311,
+    "sha256": "84e383a4a6b5f07f40bea8ae74d0258a2a542543862662486e9543842721a066"
+  },
+  "after": {
+    "path": "C:\\cinagroup\\cinatoken\\scripts\\db\\cutover\\postgres-shared-key-usage-repair-runtime-grant.native.test.mjs",
+    "bytes": 12691,
+    "sha256": "c9a1b7fc3d5b28bc5a703c4556883583adea8df665bad882909ce27cf271e0d0"
+  },
+  "originalAssertCount": 14,
+  "retainedOriginalAssertions": 13,
+  "currentAssertCount": 25,
+  "exactlyOneOriginalExpectationUpdated": {
+    "old": "Ordinary runtime retains shared-key usage repair privilege",
+    "new": "P0001 + exact Runtime must be a restricted direct LOGIN without role memberships",
+    "reason": "Current actual production reconciler rejects memberships before the optional repair ACL branch; the direct call bypasses the fixture bridge membership precheck."
+  },
+  "allOtherOriginalBytesPreserved": true,
+  "ordinaryBridgeCalls": 8,
+  "actualDirectGrantCalls": 1,
+  "historicalCorpus": {
+    "count": 73,
+    "last": "0073_recovery_api_key_workspace_lock.sql",
+    "corpusSha256": "23afef61a8a670e0af8c90e3a138f522e6b283b454e380a592bf85bca83108dc",
+    "ledgerMd5": "ca1ea96a1b4bcd0675642f30dcf48042",
+    "allCurrentCount": 81
+  },
+  "dbConnections": 0,
+  "dbWrites": 0,
+  "nativeFixtureExecuted": false,
+  "limits": [
+    "This checks AST/bytes and runs only the historical file-list function. The real grant, roles, catalog ACLs and teardown await Linux PostgreSQL execution."
+  ]
+}

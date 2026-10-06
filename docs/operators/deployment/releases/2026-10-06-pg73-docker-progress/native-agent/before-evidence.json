@@ -1,0 +1,20 @@
+{
+  "at": "2026-10-06T00:39:03.946Z",
+  "baseCommit": "b1ec8f33cf24edc07e8855c059c1498730a43113",
+  "file": "scripts/db/cutover/postgres-budget-admission-login-v350.native.test.mjs",
+  "before": {
+    "bytes": 25866,
+    "sha256": "28288728a38a159e0249ebb0a5973441c9a9083f35125aaa3afa5f81f0295f18"
+  },
+  "actualLinuxFailure": {
+    "runId": "37394251894",
+    "jobId": "112046320310",
+    "step": 36,
+    "line": 105,
+    "expected": 73,
+    "actual": 81,
+    "sourceLog": "C:/Users/cina/AppData/Local/Temp/cinatoken-pg73-platform-followup-20261006-lAiHQC/native-linux-job-log-raw.stdout.log",
+    "logBytes": 89277,
+    "logSha256": "cff19188367ef32576368ad80786d10eb9bd5ba37e794aaf2b480510cbbde3b6"
+  }
+}

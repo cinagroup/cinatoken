@@ -1,0 +1,16 @@
+✔ exact production rejection restores audit, NOLOGIN, ACL and membership snapshots (11.8293ms)
+✔ wrong-message fails the exact production predicate and still restores prerequisites (3.5296ms)
+✔ wrong-sqlstate fails the exact production predicate and still restores prerequisites (2.8791ms)
+✔ business ACL mutation is detected while temporary audit and LOGIN still close (3.8611ms)
+✔ audit install failure still closes its attempted scope without calling grant (29.7727ms)
+✔ LOGIN acknowledgement failure still attempts NOLOGIN restoration (2.3817ms)
+✔ audit cleanup failure remains a failure and nested finally restores NOLOGIN (2.4654ms)
+✔ unexpected membership rejects before prerequisite mutation or grant (2.9156ms)
+ℹ tests 8
+ℹ suites 0
+ℹ pass 8
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1068.2144

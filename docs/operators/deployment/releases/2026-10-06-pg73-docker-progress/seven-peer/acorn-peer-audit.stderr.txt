@@ -1,0 +1,17 @@
+file:///C:/Users/cina/AppData/Local/Temp/cinatoken-pg73-shared-fixture-peer-8f9c0b77c2d2454aa570a019475861dc/audit-shared-fixtures.mjs:14
+const normalize = node => JSON.parse(JSON.stringify(node,(key,value)=>['start','end','loc'].includes(key)?undefined:value));
+                                          ^
+
+TypeError: Do not know how to serialize a BigInt
+    at JSON.stringify (<anonymous>)
+    at normalize (file:///C:/Users/cina/AppData/Local/Temp/cinatoken-pg73-shared-fixture-peer-8f9c0b77c2d2454aa570a019475861dc/audit-shared-fixtures.mjs:14:43)
+    at file:///C:/Users/cina/AppData/Local/Temp/cinatoken-pg73-shared-fixture-peer-8f9c0b77c2d2454aa570a019475861dc/audit-shared-fixtures.mjs:29:194
+    at walk (file:///C:/Users/cina/AppData/Local/Temp/cinatoken-pg73-shared-fixture-peer-8f9c0b77c2d2454aa570a019475861dc/audit-shared-fixtures.mjs:17:38)
+    at walk (file:///C:/Users/cina/AppData/Local/Temp/cinatoken-pg73-shared-fixture-peer-8f9c0b77c2d2454aa570a019475861dc/audit-shared-fixtures.mjs:20:50)
+    at walk (file:///C:/Users/cina/AppData/Local/Temp/cinatoken-pg73-shared-fixture-peer-8f9c0b77c2d2454aa570a019475861dc/audit-shared-fixtures.mjs:19:58)
+    at walk (file:///C:/Users/cina/AppData/Local/Temp/cinatoken-pg73-shared-fixture-peer-8f9c0b77c2d2454aa570a019475861dc/audit-shared-fixtures.mjs:20:50)
+    at walk (file:///C:/Users/cina/AppData/Local/Temp/cinatoken-pg73-shared-fixture-peer-8f9c0b77c2d2454aa570a019475861dc/audit-shared-fixtures.mjs:19:58)
+    at walk (file:///C:/Users/cina/AppData/Local/Temp/cinatoken-pg73-shared-fixture-peer-8f9c0b77c2d2454aa570a019475861dc/audit-shared-fixtures.mjs:20:50)
+    at walk (file:///C:/Users/cina/AppData/Local/Temp/cinatoken-pg73-shared-fixture-peer-8f9c0b77c2d2454aa570a019475861dc/audit-shared-fixtures.mjs:19:58)
+
+Node.js v24.14.1

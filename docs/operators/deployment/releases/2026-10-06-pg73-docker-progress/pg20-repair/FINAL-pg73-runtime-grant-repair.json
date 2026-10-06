@@ -1,0 +1,290 @@
+{
+  "schema": "pg73-runtime-grant-repair-ready-for-real-linux-ci",
+  "at": "2026-10-06T00:22:36.694Z",
+  "localChecksActualExit": 0,
+  "baselineHead": "cecd81638e97bf919d5988e9037a10f9dbfcef3f",
+  "currentHead": "cecd81638e97bf919d5988e9037a10f9dbfcef3f",
+  "target": "scripts/db/cutover/postgres-shared-key-usage-repair-runtime-grant.native.test.mjs",
+  "before": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-runtime-grant-repair-644c68d030714f57b09031e007b87869\\before.native.test.mjs",
+    "bytes": 7311,
+    "sha256": "84e383a4a6b5f07f40bea8ae74d0258a2a542543862662486e9543842721a066"
+  },
+  "afterWorkingFile": {
+    "path": "C:\\cinagroup\\cinatoken\\scripts\\db\\cutover\\postgres-shared-key-usage-repair-runtime-grant.native.test.mjs",
+    "bytes": 12691,
+    "sha256": "c9a1b7fc3d5b28bc5a703c4556883583adea8df665bad882909ce27cf271e0d0"
+  },
+  "afterImmutableSnapshot": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-runtime-grant-repair-644c68d030714f57b09031e007b87869\\after.native.test.mjs",
+    "bytes": 12691,
+    "sha256": "c9a1b7fc3d5b28bc5a703c4556883583adea8df665bad882909ce27cf271e0d0"
+  },
+  "beforeGitBlob": "3db085d76eaa0b8a19759225a412627ed6fcfc28",
+  "afterWorktreeGitBlob": "81f191b36f5c80aab5fd524c8dc2ca09de7441ac",
+  "changedRepositoryFilesByThisAgent": [
+    "scripts/db/cutover/postgres-shared-key-usage-repair-runtime-grant.native.test.mjs"
+  ],
+  "originalFailure": {
+    "source": "Root-confirmed closed CI37390678189 on5471899c8fd43daf9df1f15261d75171a6dbb8b8",
+    "step20": "actual81!=73",
+    "priorSteps14And17And18And19": "success per Root confirmation",
+    "notRequeriedByThisAgent": true
+  },
+  "implementation": {
+    "migrationSelection": "listPg73Migrations freezes73,last0073,corpusSHA23afef61a8a670e0af8c90e3a138f522e6b283b454e380a592bf85bca83108dc and ledgerMD5ca1ea96a1b4bcd0675642f30dcf48042",
+    "ordinaryCalls": "Eight grantRuntime calls invoke the existing grantPg73RuntimeFixture with the original owned cluster/migrator/loopbackURL. The existing bridge calls unchanged production grant under temporary0074/directLOGIN and restores exactPG73/NOLOGIN.",
+    "membershipNegative": "The dedicated local helper admits only the intended shadow membership on an otherwise restrictedNOLOGIN role. It snapshots role attributes, member/parent/grantor names and all membership options, job/users table ACL/owner and both definer ACL/owner plus effective privileges. It temporarily installs0074 and LOGIN, directly calls unmodified grantPostgresRuntime and accepts onlyP0001 with the exact current directLOGIN/no-memberships message.",
+    "rejectionChecks": "After the actual grant rejection, role/membership state except the explicit LOGIN flag and all recorded business ACLs/effective privileges must match their pre-grant snapshots.",
+    "cleanup": "Attempt flags are set before await. Nested finally drops only the pre-verified absent temporary audit table withoutCASCADE, deletes only0074 ledger, restoresNOLOGIN even if audit cleanup throws, then checks exact73 ledger/audit absence and original role/membership/ACL state. Cleanup failures are not suppressed.",
+    "originalAssertions": "Original14 assertion calls:13 preserved (only their ordinary grant call inputs use the bridge), one obsolete later-ACL membership message updated to exact current production early-rejection policy. All other original code bytes are preserved except reviewed import/loader/wrapper/call substitutions and added local helpers.",
+    "unchangedSemantics": "Partial catalog rollback, optional repair table/definer exclusion, ordinary users SELECT, both42501 operations, function catalog drift, third-party shadow ACL rejection, inherited repair_table=true before role rejection, final owner-only checks,240000ms native test deadline and cluster cleanup remain."
+  },
+  "localEvidence": {
+    "audit": {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-runtime-grant-repair-644c68d030714f57b09031e007b87869\\change-audit.proof.json",
+      "bytes": 1725,
+      "sha256": "468059a6cc18352d252f976b77b0ad1799f15012782a52e28ac1721800db50d3"
+    },
+    "commands": [
+      {
+        "label": "syntax-check",
+        "actualExit": 0,
+        "command": [
+          "node",
+          "--check",
+          "scripts/db/cutover/postgres-shared-key-usage-repair-runtime-grant.native.test.mjs"
+        ],
+        "result": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-runtime-grant-repair-644c68d030714f57b09031e007b87869\\syntax-check.result.json",
+          "bytes": 644,
+          "sha256": "eaa763a2dd48ffe7421e63cefc0d563630fff7228c828780cbc9c8d1cc333cba"
+        },
+        "stdout": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-runtime-grant-repair-644c68d030714f57b09031e007b87869\\syntax-check.stdout.txt",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stderr": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-runtime-grant-repair-644c68d030714f57b09031e007b87869\\syntax-check.stderr.txt",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      {
+        "label": "change-audit-v2",
+        "actualExit": 0,
+        "command": [
+          "node",
+          "--import",
+          "tsx",
+          "C:/Users/cina/AppData/Local/Temp/cinatoken-pg73-runtime-grant-repair-644c68d030714f57b09031e007b87869/audit-fix.mjs"
+        ],
+        "result": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-runtime-grant-repair-644c68d030714f57b09031e007b87869\\change-audit-v2.result.json",
+          "bytes": 699,
+          "sha256": "d4c7a68c7289fa3f6a3c8a1c41e96c32c6193c6c71c10cfe83e70c5b9a69aafc"
+        },
+        "stdout": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-runtime-grant-repair-644c68d030714f57b09031e007b87869\\change-audit-v2.stdout.txt",
+          "bytes": 1991,
+          "sha256": "000ec7751511a2ad2bf6212bf65b6346e6e3ad6d58925676a96517bf19fc074f"
+        },
+        "stderr": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-runtime-grant-repair-644c68d030714f57b09031e007b87869\\change-audit-v2.stderr.txt",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      {
+        "label": "cleanup-control-flow",
+        "actualExit": 0,
+        "command": [
+          "node",
+          "--test",
+          "C:/Users/cina/AppData/Local/Temp/cinatoken-pg73-runtime-grant-repair-644c68d030714f57b09031e007b87869/cleanup-control-flow.test.mjs"
+        ],
+        "result": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-runtime-grant-repair-644c68d030714f57b09031e007b87869\\cleanup-control-flow.result.json",
+          "bytes": 711,
+          "sha256": "41e6e90fa72a320fc2427899779dbd4ab8500a446e60a21a07795419d3d5a942"
+        },
+        "stdout": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-runtime-grant-repair-644c68d030714f57b09031e007b87869\\cleanup-control-flow.stdout.txt",
+          "bytes": 850,
+          "sha256": "75acf2ea2a64c0d07f17e5d075dc9454e5efaf51d49f5374e2e590a466b7d623"
+        },
+        "stderr": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-runtime-grant-repair-644c68d030714f57b09031e007b87869\\cleanup-control-flow.stderr.txt",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      {
+        "label": "pure-repair-builders",
+        "actualExit": 0,
+        "command": [
+          "node",
+          "--test",
+          "scripts/db/cutover/build-postgres-shared-usage-repair-backfill.test.mjs",
+          "scripts/db/cutover/build-postgres-shared-usage-repair-durable-cursor.test.mjs"
+        ],
+        "result": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-runtime-grant-repair-644c68d030714f57b09031e007b87869\\pure-repair-builders.result.json",
+          "bytes": 736,
+          "sha256": "2daf66a57cd0aa18145327586663626b1c4b0f3926130b01b3f28298b9376a99"
+        },
+        "stdout": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-runtime-grant-repair-644c68d030714f57b09031e007b87869\\pure-repair-builders.stdout.txt",
+          "bytes": 451,
+          "sha256": "54c29895f084eeb7f1f69e9c2e1d8a9a5801b13ff60b6676d6ded22e881b48aa"
+        },
+        "stderr": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-runtime-grant-repair-644c68d030714f57b09031e007b87869\\pure-repair-builders.stderr.txt",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      {
+        "label": "target-diff-check",
+        "actualExit": 0,
+        "command": [
+          "git",
+          "diff",
+          "--check",
+          "--",
+          "scripts/db/cutover/postgres-shared-key-usage-repair-runtime-grant.native.test.mjs"
+        ],
+        "result": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-runtime-grant-repair-644c68d030714f57b09031e007b87869\\target-diff-check.result.json",
+          "bytes": 675,
+          "sha256": "c8132b90aba20407fa39c4e4126bb053e6c05dc57d52177e75339393aee90006"
+        },
+        "stdout": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-runtime-grant-repair-644c68d030714f57b09031e007b87869\\target-diff-check.stdout.txt",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stderr": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-runtime-grant-repair-644c68d030714f57b09031e007b87869\\target-diff-check.stderr.txt",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      {
+        "label": "target-patch",
+        "actualExit": 0,
+        "command": [
+          "git",
+          "diff",
+          "--",
+          "scripts/db/cutover/postgres-shared-key-usage-repair-runtime-grant.native.test.mjs"
+        ],
+        "result": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-runtime-grant-repair-644c68d030714f57b09031e007b87869\\target-patch.result.json",
+          "bytes": 654,
+          "sha256": "9957dcdeb173bce847672bc47bd28dce74db99dc72c9d685320c9a022f59342a"
+        },
+        "stdout": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-runtime-grant-repair-644c68d030714f57b09031e007b87869\\target-patch.stdout.txt",
+          "bytes": 11820,
+          "sha256": "bf91f64f659f342e1b16d57ed429edb2afd7d9e53302d4caf4c2bf871bd24116"
+        },
+        "stderr": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-runtime-grant-repair-644c68d030714f57b09031e007b87869\\target-patch.stderr.txt",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      }
+    ],
+    "tests": [
+      {
+        "label": "cleanup-control-flow",
+        "tests": 8,
+        "passed": 8,
+        "failed": 0,
+        "skipped": 0
+      },
+      {
+        "label": "pure-repair-builders",
+        "tests": 4,
+        "passed": 4,
+        "failed": 0,
+        "skipped": 0
+      }
+    ],
+    "controlFlowTestNature": "Eight fault tests execute the extracted unchanged candidate JavaScript helper functions against stateful inert SQL/grant stubs. They prove exact-message/SQLSTATE rejection and cleanup control flow under acknowledgement, install, ACL-drift and cleanup errors. They do not execute PostgreSQL, roles, grants, locks or the native fixture.",
+    "historicalCorpusNature": "Only the real listPg73Migrations filesystem function was executed. Production grant code was not invoked against a DB.",
+    "nativeFixtureExecuted": false,
+    "nativePGPassed": false,
+    "dbConnections": 0,
+    "dbWrites": 0,
+    "productionRequests": 0,
+    "nodeVersion": "v24.14.1"
+  },
+  "preservedToolingFailure": {
+    "initialAudit": {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-runtime-grant-repair-644c68d030714f57b09031e007b87869\\change-audit.result.json",
+      "bytes": 692,
+      "sha256": "48e5ace483984600aa6d4ad473fd83586e7d34c7e8a008fe97d964d6d9564e2c"
+    },
+    "stdout": {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-runtime-grant-repair-644c68d030714f57b09031e007b87869\\change-audit.stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "stderr": {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-runtime-grant-repair-644c68d030714f57b09031e007b87869\\change-audit.stderr.txt",
+      "bytes": 998,
+      "sha256": "c5b37e1d89a9e014e1df45a78bf8b43a1c6d782fd03a568e40a9145f48669e13"
+    },
+    "actualExit": 1,
+    "reason": "The first Temp audit imported TypeScript via a Windows C: path, rejected by Node ESM before audit execution. It was corrected tofile:/// and the fresh-label change-audit-v2 exited0; the original raw remains."
+  },
+  "reviewedPlan": {
+    "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-pg73-runtime-grant-plan-f0bc0cabd77f47cd9ff14a137cf1d6ce/FINAL-step20-runtime-grant-plan.json",
+    "bytes": 10735,
+    "sha256": "47238d21f95b50dfb549bc7b3af0620f69379961bb541cbc4aac7693ccf475a1"
+  },
+  "unchangedProductAndHelperSources": [
+    {
+      "path": "C:\\cinagroup\\cinatoken\\scripts\\db\\cutover\\grant-postgres-runtime.ts",
+      "bytes": 25946,
+      "sha256": "3f95f18f557696d8a36b93f7fe0d0d35a391e8ac9cf953376a234a6b629ea242",
+      "unchangedSinceReviewedPlan": true
+    },
+    {
+      "path": "C:\\cinagroup\\cinatoken\\scripts\\db\\cutover\\pg73-native-fixture.mjs",
+      "bytes": 6849,
+      "sha256": "124ddd43c2594d0daaac66a4e7158e5df90b00a6d73f03cbcac9e8f853a7346f",
+      "unchangedSinceReviewedPlan": true
+    },
+    {
+      "path": "C:\\cinagroup\\cinatoken\\packages\\core\\migrations-postgres\\0074_config_change_audit.sql",
+      "bytes": 844,
+      "sha256": "8c5f89f12b2de81f60265d140e4d221845ed914a4ff02fb4aeb3f8947e4f2675",
+      "unchangedSinceReviewedPlan": true
+    }
+  ],
+  "scope": {
+    "productionHelperChanges": 0,
+    "formalSQLChanges": 0,
+    "proposalSQLChanges": 0,
+    "otherTestChanges": 0,
+    "MDChanges": 0,
+    "CIChanges": 0,
+    "DockerChanges": 0,
+    "gitMutations": 0,
+    "CIInvocations": 0,
+    "CIPolls": 0,
+    "deploymentOperations": 0,
+    "productionDBOrFlagsOrBindingsChanged": false
+  },
+  "pendingValidation": {
+    "status": "NOT RUN LOCALLY; Root owns review/commit/push and the real Linux PostgreSQL fixture result",
+    "workflow": ".github/workflows/proxy-dispatch-safety.yml",
+    "job": "native-financial-consumer",
+    "command": "gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin node --import tsx --test scripts/db/cutover/postgres-shared-key-usage-repair-runtime-grant.native.test.mjs"
+  },
+  "permissionsAndConcurrency": "All new mutations are inside the opt-in native fixture against its newly owned random loopback cluster only. The negative helper verifies the owned port, migrator URL/identity/schema ownership and pinned baseline before mutations. The deliberate membership remains until the original following REVOKE; no production policy is weakened. Root coordinates CI concurrency/cancel-in-progress; Windows skip is not counted as a pass."
+}

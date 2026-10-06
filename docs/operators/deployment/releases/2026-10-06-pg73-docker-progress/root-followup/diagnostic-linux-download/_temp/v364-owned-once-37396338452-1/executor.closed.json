@@ -1,0 +1,88 @@
+{
+  "schema": "v364-owned-linux-executor-closed-v1",
+  "startedEpoch": 1791248079.6670263,
+  "elapsedMs": 32658.484963000006,
+  "actualProcessExit": 1,
+  "runnerOutcomeCode": 1,
+  "actualExit": 1,
+  "outcome": "STRICT_FAILURE_OR_UNKNOWN_PRESERVED",
+  "timedOut": false,
+  "interrupted": false,
+  "fatal": null,
+  "packageSHA256": "392f5a44294abf70c4bc3cbb7b727103f96d5ce8f5e87bfc3fe3dc8bd1fc6bd4",
+  "run": {
+    "GITHUB_SHA": "fc17551b3016d3533c17cc4ec9b0151a4eedae44",
+    "GITHUB_RUN_ID": "37396338452",
+    "GITHUB_RUN_ATTEMPT": "1",
+    "GITHUB_WORKFLOW": "v364 owned Linux cancellation diagnostic",
+    "GITHUB_JOB": "cancellation-diagnostic"
+  },
+  "reportedActualExit": 1,
+  "closedReportPresent": true,
+  "closure": {
+    "authority": "this executor",
+    "subreaperEnabled": true,
+    "directChildReaped": true,
+    "groupGone": true,
+    "leftoverGroupKilled": true,
+    "reapedDescendants": [
+      {
+        "pid": 2648,
+        "waitStatus": 0
+      },
+      {
+        "pid": 2661,
+        "waitStatus": 0
+      },
+      {
+        "pid": 2654,
+        "waitStatus": 0
+      },
+      {
+        "pid": 2609,
+        "waitStatus": 0
+      }
+    ],
+    "cooperativeNativeFinallyVerified": true,
+    "errors": []
+  },
+  "productionRequests": 0,
+  "ciInvocations": 0,
+  "files": [
+    {
+      "path": "closed-result.json",
+      "bytes": 10587,
+      "sha256": "ce4fc862e1424dfcb16c77e18346b2d5d16c35390f9dfcd0b8c7a404780d3c1f"
+    },
+    {
+      "path": "events.json",
+      "bytes": 459796,
+      "sha256": "45dbe3732524bd0e993026bac2d653b38f5af6c3c973eb7d68a318652a4edd39"
+    },
+    {
+      "path": "executor-start.json",
+      "bytes": 675,
+      "sha256": "861ac92d3a2e88ce12161d383cf879b4cd15961534142a301006006067363827"
+    },
+    {
+      "path": "executor.stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "executor.stdout.txt",
+      "bytes": 162,
+      "sha256": "e2f1da32c548d2ae6ed4bfeaabcc29ae1a66dd56152a9a423248ed2233def675"
+    },
+    {
+      "path": "original-strict.stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "original-strict.stdout.txt",
+      "bytes": 2870,
+      "sha256": "e92e5054f09bd9d580f5d8e2edd7d8694a6c1e80f0aced769765b92a6e0095bd"
+    }
+  ]
+}

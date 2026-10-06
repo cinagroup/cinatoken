@@ -1,0 +1,339 @@
+{
+  "schema": "v364-portable-ci-preparation-closed-v1",
+  "endedAt": "2026-10-06T00:46:43.934Z",
+  "actualExit": 0,
+  "outcome": "PORTABLE_PREPARED_ONLY_NOT_DISPATCHED",
+  "checks": [
+    {
+      "name": "10 frozen inputs equal worktree and Git HEAD bytes",
+      "actualExit": 0
+    },
+    {
+      "name": "JS syntax gateway-observer.mjs",
+      "actualExit": 0
+    },
+    {
+      "name": "JS syntax holder-observer.mjs",
+      "actualExit": 0
+    },
+    {
+      "name": "JS syntax run-v364-owned-diagnostic.mjs",
+      "actualExit": 0
+    },
+    {
+      "name": "Python AST syntax only",
+      "actualExit": 0
+    },
+    {
+      "name": "workflow YAML/manual-only/scope/no-secrets/timeouts/artifact bindings",
+      "actualExit": 0
+    },
+    {
+      "name": "actual prepare-only bundling, no runtime",
+      "actualExit": 0
+    },
+    {
+      "name": "existing prepare output rejected without overwrite",
+      "actualExit": 1,
+      "expectedExit": 1
+    },
+    {
+      "name": "non-Linux preflight preserves real failure/stderr/closed receipt, no child",
+      "actualExit": 1,
+      "expectedExit": 1
+    }
+  ],
+  "allowedNewFiles": [
+    "scripts/diagnostics/v364-owned-linux/gateway-observer.mjs",
+    "scripts/diagnostics/v364-owned-linux/holder-observer.mjs",
+    "scripts/diagnostics/v364-owned-linux/run-v364-owned-diagnostic.mjs",
+    "scripts/diagnostics/v364-owned-linux/execute-owned-linux.py",
+    "scripts/diagnostics/v364-owned-linux/source-inputs.json",
+    "scripts/diagnostics/v364-owned-linux/README.md",
+    "scripts/diagnostics/v364-owned-linux/sealed-package.json",
+    ".github/workflows/v364-owned-linux-diagnostic.yml"
+  ],
+  "gitPortable": [
+    {
+      "path": "C:\\cinagroup\\cinatoken\\scripts\\diagnostics\\v364-owned-linux\\gateway-observer.mjs",
+      "bytes": 1244,
+      "sha256": "3ec2e49a72697f61bd1867bcde369a7c508cdbf669cd86d7e0eebdfc41dcfe00",
+      "repositoryPath": "scripts/diagnostics/v364-owned-linux/gateway-observer.mjs",
+      "LF": true,
+      "gitCleanFilterPreservesBytes": true,
+      "gitBlobSHA": "44fdf7a9da4d99c8e9d43a4350848b31ed669677"
+    },
+    {
+      "path": "C:\\cinagroup\\cinatoken\\scripts\\diagnostics\\v364-owned-linux\\holder-observer.mjs",
+      "bytes": 2461,
+      "sha256": "740727cae646ae757fa50ef7bb6c02a9f9cb4b1b3aa64b0de539c88bbbe09a25",
+      "repositoryPath": "scripts/diagnostics/v364-owned-linux/holder-observer.mjs",
+      "LF": true,
+      "gitCleanFilterPreservesBytes": true,
+      "gitBlobSHA": "599d4e0640ca12284b8247f0938467cbe2e84a89"
+    },
+    {
+      "path": "C:\\cinagroup\\cinatoken\\scripts\\diagnostics\\v364-owned-linux\\run-v364-owned-diagnostic.mjs",
+      "bytes": 22852,
+      "sha256": "11850fbe29355f705e3bc4ec68c1b6416565b943dfb7a0f200d4090de5158666",
+      "repositoryPath": "scripts/diagnostics/v364-owned-linux/run-v364-owned-diagnostic.mjs",
+      "LF": true,
+      "gitCleanFilterPreservesBytes": true,
+      "gitBlobSHA": "34069bfa33c36c651a2de1b5e41955366feef784"
+    },
+    {
+      "path": "C:\\cinagroup\\cinatoken\\scripts\\diagnostics\\v364-owned-linux\\execute-owned-linux.py",
+      "bytes": 9357,
+      "sha256": "21383ffe54d865d9d1018a90317b831ae468dc0136b6aeac3e8a324db86a5c1f",
+      "repositoryPath": "scripts/diagnostics/v364-owned-linux/execute-owned-linux.py",
+      "LF": true,
+      "gitCleanFilterPreservesBytes": true,
+      "gitBlobSHA": "4bba35d3c8ad88d138a7a28f592c44ee3b033576"
+    },
+    {
+      "path": "C:\\cinagroup\\cinatoken\\scripts\\diagnostics\\v364-owned-linux\\source-inputs.json",
+      "bytes": 1789,
+      "sha256": "d42cda26a0f175bace59626b666cfc6e84c29929767c5344cc6680d98b96a083",
+      "repositoryPath": "scripts/diagnostics/v364-owned-linux/source-inputs.json",
+      "LF": true,
+      "gitCleanFilterPreservesBytes": true,
+      "gitBlobSHA": "ec081c593e11610384451edf4b76eb65ab43ce3a"
+    },
+    {
+      "path": "C:\\cinagroup\\cinatoken\\scripts\\diagnostics\\v364-owned-linux\\README.md",
+      "bytes": 6176,
+      "sha256": "bc3491a4c14306cbafd943f48c5088bb93e3dfdf934dcf5aed337625117ea0e0",
+      "repositoryPath": "scripts/diagnostics/v364-owned-linux/README.md",
+      "LF": true,
+      "gitCleanFilterPreservesBytes": true,
+      "gitBlobSHA": "da80004d4b4dcfbcf458a09dcdc773c0baab2eed"
+    },
+    {
+      "path": "C:\\cinagroup\\cinatoken\\scripts\\diagnostics\\v364-owned-linux\\sealed-package.json",
+      "bytes": 1067,
+      "sha256": "cc8346861d175eeb2458a1765ba3c22768d0cb8dc9eee17f702faa868e6e7d92",
+      "repositoryPath": "scripts/diagnostics/v364-owned-linux/sealed-package.json",
+      "LF": true,
+      "gitCleanFilterPreservesBytes": true,
+      "gitBlobSHA": "3fabe60b09d8846f2165fb0351fdaebbe7a0d474"
+    },
+    {
+      "path": "C:\\cinagroup\\cinatoken\\.github\\workflows\\v364-owned-linux-diagnostic.yml",
+      "bytes": 1610,
+      "sha256": "5f6c5de1d989f1331bad5a0a861accb848c8b02f5e0a196637e5f35540df241b",
+      "repositoryPath": ".github/workflows/v364-owned-linux-diagnostic.yml",
+      "LF": true,
+      "gitCleanFilterPreservesBytes": true,
+      "gitBlobSHA": "12999fcfef82576213aae518874bd7a4b481a1cd"
+    }
+  ],
+  "gitInputs": [
+    {
+      "path": "packages/proxy/scripts/staging/chat-holder-binding-v364-http-cancel-successor.test.mjs",
+      "bytes": 13354,
+      "sha256": "d23d1c710b539b6c64655fbb1fa4e4de85b228bab19c757bc0e4de48528972e5",
+      "worktreeEqualsGitBlob": true,
+      "gitBlobBytes": 13354,
+      "LF": true
+    },
+    {
+      "path": "packages/proxy/scripts/staging/chat-holder-binding-v364.node.test.mjs",
+      "bytes": 5908,
+      "sha256": "bf02a63395f450b889a784dc58bc537b6cb2f4a3004de07e1833c3e747c27fcc",
+      "worktreeEqualsGitBlob": true,
+      "gitBlobBytes": 5908,
+      "LF": true
+    },
+    {
+      "path": "packages/proxy/scripts/staging/chat-holder-gateway-v364.ts",
+      "bytes": 1534,
+      "sha256": "8c85b01ba54daa9b7302c726d20693d08ccb3395350ea6a333817eed46441eaf",
+      "worktreeEqualsGitBlob": true,
+      "gitBlobBytes": 1534,
+      "LF": true
+    },
+    {
+      "path": "packages/proxy/scripts/staging/chat-holder-private-v364.ts",
+      "bytes": 5367,
+      "sha256": "44070fcbb7058b915329a150634eaa649c1b3601724495a1620e94ce2d54d1bf",
+      "worktreeEqualsGitBlob": true,
+      "gitBlobBytes": 5367,
+      "LF": true
+    },
+    {
+      "path": "packages/proxy/scripts/staging/chat-holder-synthetic-v364.ts",
+      "bytes": 1019,
+      "sha256": "d89c6964454d9368a0257b6a585c8d5d707c91d09e55f5f2ea7c3545e5f0a16d",
+      "worktreeEqualsGitBlob": true,
+      "gitBlobBytes": 1019,
+      "LF": true
+    },
+    {
+      "path": "packages/proxy/scripts/staging/wrangler.chat-holder-gateway-v364.jsonc",
+      "bytes": 598,
+      "sha256": "e1a0354ff5bf7915c6c125f3003683a56b708d8bdd6006cce6b33c4ff8a6bb77",
+      "worktreeEqualsGitBlob": true,
+      "gitBlobBytes": 598,
+      "LF": true
+    },
+    {
+      "path": "packages/proxy/scripts/staging/wrangler.chat-holder-private-v364.jsonc",
+      "bytes": 568,
+      "sha256": "6b897d8aa7b01087b75d4b74968d4004e2b6ddb87650bad1203c7693160b2047",
+      "worktreeEqualsGitBlob": true,
+      "gitBlobBytes": 568,
+      "LF": true
+    },
+    {
+      "path": "package-lock.json",
+      "bytes": 830546,
+      "sha256": "f9c65b6e373a231d52d6eda634bb5f947dda3174734cd70e2b811e09fff0b6f0",
+      "worktreeEqualsGitBlob": true,
+      "gitBlobBytes": 830546,
+      "LF": true
+    },
+    {
+      "path": ".nvmrc",
+      "bytes": 3,
+      "sha256": "f14b4987904bcb5814e4459a057ed4d20f58a633152288a761214dcd28780b56",
+      "worktreeEqualsGitBlob": true,
+      "gitBlobBytes": 3,
+      "LF": true
+    },
+    {
+      "path": ".github/workflows/proxy-dispatch-safety.yml",
+      "bytes": 45895,
+      "sha256": "8e883e7f21f77f8367d361f6bd3d060e16c241c28641b3eac85af6835841f152",
+      "worktreeEqualsGitBlob": true,
+      "gitBlobBytes": 45895,
+      "LF": true
+    }
+  ],
+  "portableManifest": {
+    "path": "C:\\cinagroup\\cinatoken\\scripts\\diagnostics\\v364-owned-linux\\sealed-package.json",
+    "bytes": 1067,
+    "sha256": "cc8346861d175eeb2458a1765ba3c22768d0cb8dc9eee17f702faa868e6e7d92"
+  },
+  "originalTempSeal": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-owned-linux-diagnostic-prep-bf2a9d401d3b47acb92d8e1fae4c579b\\sealed-package.json",
+    "bytes": 1330,
+    "sha256": "3b6fbfa1591bfbe82653149b260424d3fd7e9ff66705ad4b2650dda5563446e7"
+  },
+  "normalization": {
+    "onlyNewPortableTextNormalizedToLF": true,
+    "sourceInputsOldTempHadCRLF": true,
+    "frozenInputsHadCRLF": false,
+    "frozenInputsGitExact": true,
+    "sourceInputsJSONValuesPreserved": true
+  },
+  "preparationReceipt": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-portable-ci-review-d6411d594da14209af87d9522488c952\\prepare-once\\prepare-only.json",
+    "bytes": 2887,
+    "sha256": "5575891ae010153efdd87312ce7b2c4c725f47f252d9d6b4ee99198bf255345b"
+  },
+  "prepared": {
+    "schema": "v364-linux-diagnostic-prepare-v1",
+    "actualExit": 0,
+    "runtimeExecuted": false,
+    "versions": {
+      "workerd": "1.20260828.1",
+      "miniflare": "5.20260828.0-alpha",
+      "wrangler": "4.127.1"
+    },
+    "runtimeCompatibilityDate": "2026-09-04",
+    "frozenConfigDate": "2026-09-25",
+    "sourceUnchanged": true,
+    "inputsBefore": [
+      {
+        "path": "packages/proxy/scripts/staging/chat-holder-binding-v364-http-cancel-successor.test.mjs",
+        "bytes": 13354,
+        "sha256": "d23d1c710b539b6c64655fbb1fa4e4de85b228bab19c757bc0e4de48528972e5"
+      },
+      {
+        "path": "packages/proxy/scripts/staging/chat-holder-binding-v364.node.test.mjs",
+        "bytes": 5908,
+        "sha256": "bf02a63395f450b889a784dc58bc537b6cb2f4a3004de07e1833c3e747c27fcc"
+      },
+      {
+        "path": "packages/proxy/scripts/staging/chat-holder-gateway-v364.ts",
+        "bytes": 1534,
+        "sha256": "8c85b01ba54daa9b7302c726d20693d08ccb3395350ea6a333817eed46441eaf"
+      },
+      {
+        "path": "packages/proxy/scripts/staging/chat-holder-private-v364.ts",
+        "bytes": 5367,
+        "sha256": "44070fcbb7058b915329a150634eaa649c1b3601724495a1620e94ce2d54d1bf"
+      },
+      {
+        "path": "packages/proxy/scripts/staging/chat-holder-synthetic-v364.ts",
+        "bytes": 1019,
+        "sha256": "d89c6964454d9368a0257b6a585c8d5d707c91d09e55f5f2ea7c3545e5f0a16d"
+      },
+      {
+        "path": "packages/proxy/scripts/staging/wrangler.chat-holder-gateway-v364.jsonc",
+        "bytes": 598,
+        "sha256": "e1a0354ff5bf7915c6c125f3003683a56b708d8bdd6006cce6b33c4ff8a6bb77"
+      },
+      {
+        "path": "packages/proxy/scripts/staging/wrangler.chat-holder-private-v364.jsonc",
+        "bytes": 568,
+        "sha256": "6b897d8aa7b01087b75d4b74968d4004e2b6ddb87650bad1203c7693160b2047"
+      },
+      {
+        "path": "package-lock.json",
+        "bytes": 830546,
+        "sha256": "f9c65b6e373a231d52d6eda634bb5f947dda3174734cd70e2b811e09fff0b6f0"
+      },
+      {
+        "path": ".nvmrc",
+        "bytes": 3,
+        "sha256": "f14b4987904bcb5814e4459a057ed4d20f58a633152288a761214dcd28780b56"
+      },
+      {
+        "path": ".github/workflows/proxy-dispatch-safety.yml",
+        "bytes": 45895,
+        "sha256": "8e883e7f21f77f8367d361f6bd3d060e16c241c28641b3eac85af6835841f152"
+      }
+    ],
+    "bundleHashes": [
+      {
+        "name": "gateway",
+        "bytes": 1474,
+        "sha256": "ee2b63670af2ed15320204f46ce1130b0b71b3bfbc5d901b160069c595388bd4"
+      },
+      {
+        "name": "holder",
+        "bytes": 5595,
+        "sha256": "05100170dca4896eb11b723e65df7cf437f886797c0e2d255bb238c16e55089c"
+      },
+      {
+        "name": "observedGateway",
+        "bytes": 2690,
+        "sha256": "edafc7ec0e604c51d58ffde272a83c04404d816effa734b1cff1d64b6f84b1f6"
+      },
+      {
+        "name": "observedHolder",
+        "bytes": 7979,
+        "sha256": "573d54572570e06fb83328191156fd2c6ec7fd3551369d802b3d1a3d2646eee1"
+      }
+    ],
+    "productionRequests": 0,
+    "ciInvocations": 0
+  },
+  "authoritativeExecutor": true,
+  "runtimeExecuted": false,
+  "linuxExecutionStillRequired": true,
+  "productionRequests": 0,
+  "ciInvocations": 0,
+  "ciPolls": 0,
+  "databaseRequests": 0,
+  "realIdentityActions": 0,
+  "commits": 0,
+  "existingSourceConfigLockWorkflowChanged": false,
+  "limitations": [
+    "Linux subreaper/kill/reap path is reviewed and syntax checked, not executed on Windows",
+    "Promise.race cannot cancel tasks; actual group closure must come from executor.closed.json",
+    "Historical original cancellation null failure remains failed; no cause or corrected runtime proved"
+  ],
+  "priorPreparationFailure": "initial multi-operation apply_patch verification rejected duplicate Python path; no patch applied, split operations then succeeded"
+}

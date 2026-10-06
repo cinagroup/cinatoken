@@ -1,0 +1,18 @@
+{
+  "startedAt": "2026-10-06T00:21:13.380Z",
+  "completedAt": "2026-10-06T00:21:13.715Z",
+  "program": "git",
+  "arguments": [
+    "diff",
+    "--check",
+    "--",
+    "scripts/db/cutover/postgres-shared-key-usage-repair-runtime-grant.native.test.mjs"
+  ],
+  "actualExitCode": 0,
+  "signal": null,
+  "spawnError": null,
+  "stdoutPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-runtime-grant-repair-644c68d030714f57b09031e007b87869\\target-diff-check.stdout.txt",
+  "stderrPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-runtime-grant-repair-644c68d030714f57b09031e007b87869\\target-diff-check.stderr.txt",
+  "stdoutBytes": 0,
+  "stderrBytes": 0
+}

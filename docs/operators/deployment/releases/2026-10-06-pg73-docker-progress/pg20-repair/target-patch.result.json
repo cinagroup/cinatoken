@@ -1,0 +1,17 @@
+{
+  "startedAt": "2026-10-06T00:21:14.327Z",
+  "completedAt": "2026-10-06T00:21:15.159Z",
+  "program": "git",
+  "arguments": [
+    "diff",
+    "--",
+    "scripts/db/cutover/postgres-shared-key-usage-repair-runtime-grant.native.test.mjs"
+  ],
+  "actualExitCode": 0,
+  "signal": null,
+  "spawnError": null,
+  "stdoutPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-runtime-grant-repair-644c68d030714f57b09031e007b87869\\target-patch.stdout.txt",
+  "stderrPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-runtime-grant-repair-644c68d030714f57b09031e007b87869\\target-patch.stderr.txt",
+  "stdoutBytes": 11820,
+  "stderrBytes": 0
+}

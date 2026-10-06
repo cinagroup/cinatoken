@@ -1,0 +1,35 @@
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
++ actual - expected
+
+  {
++   bytes: 9535,
++   sha256: '45c479a4602a3e79b42daa8dcca6e8b9ef876fa986136598b263a505d5320e31'
+-   bytes: 9357,
+-   sha256: '21383ffe54d865d9d1018a90317b831ae468dc0136b6aeac3e8a324db86a5c1f'
+  }
+
+    at file:///C:/Users/cina/AppData/Local/Temp/cinatoken-pg73-budget-admission-repair-pgYfbi/peer-v364-package-audit.mjs:18:10
+    at Array.map (<anonymous>)
+    at file:///C:/Users/cina/AppData/Local/Temp/cinatoken-pg73-budget-admission-repair-pgYfbi/peer-v364-package-audit.mjs:15:35
+    at ModuleJob.run (node:internal/modules/esm/module_job:430:25)
+    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:661:26)
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5) {
+  generatedMessage: true,
+  code: 'ERR_ASSERTION',
+  actual: {
+    bytes: 9535,
+    sha256: '45c479a4602a3e79b42daa8dcca6e8b9ef876fa986136598b263a505d5320e31'
+  },
+  expected: {
+    bytes: 9357,
+    sha256: '21383ffe54d865d9d1018a90317b831ae468dc0136b6aeac3e8a324db86a5c1f'
+  },
+  operator: 'deepStrictEqual',
+  diff: 'simple'
+}
+
+Node.js v24.14.1

@@ -1,0 +1,230 @@
+{
+  "at": "2026-10-06T00:54:51.738Z",
+  "actualExit": 0,
+  "readOnly": true,
+  "runId": 37395937842,
+  "headSha": "4d645f954ea76d8546409aaa6b684a8279c0deb9",
+  "jobId": 112051770451,
+  "jobStatus": "completed",
+  "jobConclusion": "failure",
+  "runStatusAtRead": "in_progress",
+  "runConclusionAtRead": "",
+  "fullRunTerminalClaim": false,
+  "successful36": {
+    "file": "scripts/db/cutover/postgres-budget-admission-login-v350.native.test.mjs",
+    "pass": 1,
+    "fail": 0,
+    "skip": 0
+  },
+  "failedStep": 37,
+  "expected": 73,
+  "actual": 81,
+  "failedFile": "scripts/db/cutover/postgres-ordinary-budget-recovery-v354.native.test.mjs",
+  "caseExecutions": 31,
+  "uniqueFiles": 31,
+  "cases": [
+    {
+      "file": "scripts/db/cutover/postgres-financial-consumer-login.native.test.mjs",
+      "pass": 1,
+      "fail": 0,
+      "skip": 0
+    },
+    {
+      "file": "scripts/db/cutover/build-financial-consumer-direct-login-grant-lifecycle.native.test.mjs",
+      "pass": 1,
+      "fail": 0,
+      "skip": 0
+    },
+    {
+      "file": "scripts/db/cutover/build-image-fact-job-producer-grant.native.test.mjs",
+      "pass": 3,
+      "fail": 0,
+      "skip": 0
+    },
+    {
+      "file": "scripts/db/cutover/postgres-image-http-financial-jsonb-boundary.native.test.mjs",
+      "pass": 1,
+      "fail": 0,
+      "skip": 0
+    },
+    {
+      "file": "scripts/db/cutover/postgres-image-edits-http-financial.native.test.mjs",
+      "pass": 1,
+      "fail": 0,
+      "skip": 0
+    },
+    {
+      "file": "scripts/db/cutover/postgres-recovery-server-deadline.native.test.mjs",
+      "pass": 1,
+      "fail": 0,
+      "skip": 0
+    },
+    {
+      "file": "scripts/db/cutover/postgres-legacy-handler-compat.native.test.mjs",
+      "pass": 1,
+      "fail": 0,
+      "skip": 0
+    },
+    {
+      "file": "scripts/db/cutover/postgres-replay-scale-lock.native.test.mjs",
+      "pass": 1,
+      "fail": 0,
+      "skip": 0
+    },
+    {
+      "file": "scripts/db/cutover/postgres-shared-key-earnings-history.native.test.mjs",
+      "pass": 1,
+      "fail": 0,
+      "skip": 0
+    },
+    {
+      "file": "scripts/db/cutover/postgres-shared-key-earnings-projection-index.native.test.mjs",
+      "pass": 1,
+      "fail": 0,
+      "skip": 0
+    },
+    {
+      "file": "scripts/db/cutover/postgres-shared-key-usage-repair-jobs.native.test.mjs",
+      "pass": 1,
+      "fail": 0,
+      "skip": 0
+    },
+    {
+      "file": "scripts/db/cutover/postgres-shared-usage-repair-backfill.native.test.mjs",
+      "pass": 1,
+      "fail": 0,
+      "skip": 0
+    },
+    {
+      "file": "scripts/db/cutover/postgres-shared-usage-repair-durable-cursor.native.test.mjs",
+      "pass": 1,
+      "fail": 0,
+      "skip": 0
+    },
+    {
+      "file": "scripts/db/cutover/postgres-shared-key-usage-repair-runtime-grant.native.test.mjs",
+      "pass": 1,
+      "fail": 0,
+      "skip": 0
+    },
+    {
+      "file": "scripts/db/cutover/build-shared-key-usage-repair-direct-login-grant.native.test.mjs",
+      "pass": 1,
+      "fail": 0,
+      "skip": 0
+    },
+    {
+      "file": "scripts/db/cutover/postgres-shared-key-usage-repair-failure-isolation.native.test.mjs",
+      "pass": 1,
+      "fail": 0,
+      "skip": 0
+    },
+    {
+      "file": "scripts/db/cutover/postgres-shared-key-usage-repair-durable-claim.native.test.mjs",
+      "pass": 1,
+      "fail": 0,
+      "skip": 0
+    },
+    {
+      "file": "scripts/db/cutover/postgres-shared-key-quote-versions.native.test.mjs",
+      "pass": 1,
+      "fail": 0,
+      "skip": 0
+    },
+    {
+      "file": "scripts/db/cutover/postgres-shared-key-dispatch-quote-attempts.native.test.mjs",
+      "pass": 1,
+      "fail": 0,
+      "skip": 0
+    },
+    {
+      "file": "scripts/db/cutover/postgres-shared-key-orphan-claim-v347.native.test.mjs",
+      "pass": 1,
+      "fail": 0,
+      "skip": 0
+    },
+    {
+      "file": "scripts/db/cutover/postgres-shared-key-orphan-review-v348.native.test.mjs",
+      "pass": 1,
+      "fail": 0,
+      "skip": 0
+    },
+    {
+      "file": "scripts/db/cutover/postgres-shared-key-economic-outbox.native.test.mjs",
+      "pass": 1,
+      "fail": 0,
+      "skip": 0
+    },
+    {
+      "file": "scripts/db/cutover/postgres-shared-key-selected-event-gate-v351.native.test.mjs",
+      "pass": 1,
+      "fail": 0,
+      "skip": 0
+    },
+    {
+      "file": "scripts/db/cutover/postgres-shared-key-selected-event-buyer-v351.native.test.mjs",
+      "pass": 1,
+      "fail": 0,
+      "skip": 0
+    },
+    {
+      "file": "scripts/db/cutover/postgres-shared-key-economic-outbox-producer.native.test.mjs",
+      "pass": 1,
+      "fail": 0,
+      "skip": 0
+    },
+    {
+      "file": "scripts/db/cutover/postgres-shared-key-snapshot-earning-consumer.native.test.mjs",
+      "pass": 1,
+      "fail": 0,
+      "skip": 0
+    },
+    {
+      "file": "scripts/db/cutover/postgres-shared-earning-consumer-runner.native.test.mjs",
+      "pass": 1,
+      "fail": 0,
+      "skip": 0
+    },
+    {
+      "file": "scripts/db/cutover/postgres-shared-key-buyer-debit-v2.native.test.mjs",
+      "pass": 1,
+      "fail": 0,
+      "skip": 0
+    },
+    {
+      "file": "scripts/db/cutover/postgres-shared-key-economic-producer-v2-aggregate-proof.native.test.mjs",
+      "pass": 1,
+      "fail": 0,
+      "skip": 0
+    },
+    {
+      "file": "scripts/db/cutover/postgres-budget-admission-login-v350.native.test.mjs",
+      "pass": 1,
+      "fail": 0,
+      "skip": 0
+    },
+    {
+      "file": "scripts/db/cutover/postgres-ordinary-budget-recovery-v354.native.test.mjs",
+      "pass": 0,
+      "fail": 1,
+      "skip": 0
+    }
+  ],
+  "closedCleanup": [
+    {
+      "name": "Stop containers",
+      "conclusion": "success"
+    },
+    {
+      "name": "Complete job",
+      "conclusion": "success"
+    }
+  ],
+  "raw": {
+    "file": "platform-native-job-log.stdout.log",
+    "bytes": 91182,
+    "sha256": "19e898d2f1a2099f209bb3f90caebfa3e95ad58eea7bfc1fd4ea2c8550004fb7"
+  },
+  "fullNativePassed": false,
+  "productionCodeChanged": false
+}

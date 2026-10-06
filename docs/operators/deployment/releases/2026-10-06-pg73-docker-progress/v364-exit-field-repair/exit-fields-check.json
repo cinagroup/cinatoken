@@ -1,0 +1,39 @@
+{
+  "actualExit": 0,
+  "method": "pure AST expression evaluation with inert child stubs",
+  "successASTUnchanged": true,
+  "cases": [
+    {
+      "case": "normal-pass",
+      "runnerOutcomeCode": 0,
+      "actualProcessExit": 0,
+      "actualExit": 0
+    },
+    {
+      "case": "normal-fail",
+      "runnerOutcomeCode": 1,
+      "actualProcessExit": 1,
+      "actualExit": 1
+    },
+    {
+      "case": "timeout",
+      "runnerOutcomeCode": 124,
+      "actualProcessExit": -15,
+      "actualExit": 1
+    },
+    {
+      "case": "interrupt",
+      "runnerOutcomeCode": 130,
+      "actualProcessExit": -9,
+      "actualExit": 1
+    },
+    {
+      "case": "preflight-no-child",
+      "runnerOutcomeCode": 1,
+      "actualProcessExit": null,
+      "actualExit": 1
+    }
+  ],
+  "NodeStarts": 0,
+  "workerdStarts": 0
+}

@@ -1,0 +1,119 @@
+{
+  "at": "2026-10-06T00:42:11.713Z",
+  "actualExit": 0,
+  "file": "scripts/db/cutover/postgres-budget-admission-login-v350.native.test.mjs",
+  "before": {
+    "bytes": 25866,
+    "sha256": "28288728a38a159e0249ebb0a5973441c9a9083f35125aaa3afa5f81f0295f18"
+  },
+  "after": {
+    "bytes": 26124,
+    "sha256": "3edd01255166137049abf024a1ed71b5c259084f1768328c082c50a2d7a82882"
+  },
+  "allowedEdits": [
+    {
+      "from": "import { readFile, readdir, writeFile } from 'node:fs/promises';",
+      "to": "import { readFile, writeFile } from 'node:fs/promises';"
+    },
+    {
+      "from": "import { grantPostgresRuntime } from './grant-postgres-runtime.ts';",
+      "to": "import { grantPg73RuntimeFixture, listPg73Migrations } from './pg73-native-fixture.mjs';"
+    },
+    {
+      "from": "const names = (await readdir(migrations))\n        .filter(name => name.endsWith('.sql')).sort();",
+      "to": "const names = await listPg73Migrations();"
+    },
+    {
+      "from": "        + `@127.0.0.1:${cluster.port}/postgres`;\n      report.sourceSha256.runtimeGrant",
+      "to": "        + `@127.0.0.1:${cluster.port}/postgres`;\n      // Keep both original grant calls, including the buyer-split rejection,\n      // behind the owned PG73 bridge so the production 0074 preflight still runs.\n      const grantPostgresRuntime = ({ DATABASE_URL }) =>\n        grantPg73RuntimeFixture({ cluster, migrator, migratorUrl: DATABASE_URL });\n      report.sourceSha256.runtimeGrant"
+    }
+  ],
+  "allOtherTextByteExact": true,
+  "fullReverseBeforeByteExact": true,
+  "allOriginalAssertAstAndSourceExact": true,
+  "originalAssertionCalls": 34,
+  "currentAssertionCalls": 34,
+  "originalGrantCallsUnchanged": 2,
+  "originalSuccessfulGrants": 1,
+  "originalBuyerSplitRejectGrants": 1,
+  "pinnedCorpus": {
+    "count": 73,
+    "last": "0073_recovery_api_key_workspace_lock.sql"
+  },
+  "originalNativeTimeoutAndSkipUnchanged": true,
+  "originalRolesAndAclAndCleanupCoveredByFullByteReverse": true,
+  "unchangedSources": [
+    {
+      "file": "scripts/db/cutover/pg73-native-fixture.mjs",
+      "bytes": 6849,
+      "sha256": "124ddd43c2594d0daaac66a4e7158e5df90b00a6d73f03cbcac9e8f853a7346f",
+      "exactBaseBytes": true
+    },
+    {
+      "file": "scripts/db/cutover/grant-postgres-runtime.ts",
+      "bytes": 25946,
+      "sha256": "3f95f18f557696d8a36b93f7fe0d0d35a391e8ac9cf953376a234a6b629ea242",
+      "exactBaseBytes": true
+    },
+    {
+      "file": "scripts/db/cutover/activate-postgres-buyer-split-v348.ts",
+      "bytes": 2011,
+      "sha256": "135a3c67fd9e20e9c098717219c4f0aae749fc4f1f765bfc29729af23e6e0507",
+      "exactBaseBytes": true
+    },
+    {
+      "file": ".github/workflows/proxy-dispatch-safety.yml",
+      "bytes": 45895,
+      "sha256": "8e883e7f21f77f8367d361f6bd3d060e16c241c28641b3eac85af6835841f152",
+      "exactBaseBytes": true
+    }
+  ],
+  "followupReadOnly": [
+    {
+      "file": "scripts/db/cutover/postgres-ordinary-budget-recovery-v354.native.test.mjs",
+      "bytes": 22491,
+      "sha256": "3a6754fe2fd1e8d5a3a101bfb79e9c15ca3fdff3eec0edcca3da0cc6c7e62c0b",
+      "readOnly": true,
+      "alreadyPinnedPg73": false,
+      "allCurrentMigrationLoader": true,
+      "directProductionGrantCalls": 1,
+      "plan": "Static candidate only: retain original73/corpus and introduce existing pinned loader; review each grant and exact negative preflight before proposing a patch.",
+      "actualLinuxFailureKnown": false
+    },
+    {
+      "file": "scripts/db/cutover/postgres-guardrail-budget-admission-login-v351.native.test.mjs",
+      "bytes": 26904,
+      "sha256": "bbcbb33aa07d33530692d64d7ab5d24844bbfd44777f9ab8170533d2af0a60af",
+      "readOnly": true,
+      "alreadyPinnedPg73": false,
+      "allCurrentMigrationLoader": true,
+      "directProductionGrantCalls": 1,
+      "plan": "Static candidate only: retain original73/corpus and introduce existing pinned loader; review each grant and exact negative preflight before proposing a patch.",
+      "actualLinuxFailureKnown": false
+    },
+    {
+      "file": "scripts/db/cutover/postgres-guardrail-budget-lifecycle-v353.native.test.mjs",
+      "bytes": 27894,
+      "sha256": "477dbeeeb07f3a4ff1eabb63503fe8c4064df51ff6d6ccab860f151e95ad75bf",
+      "readOnly": true,
+      "alreadyPinnedPg73": true,
+      "allCurrentMigrationLoader": false,
+      "directProductionGrantCalls": 0,
+      "plan": "No loader repair proposed; preserve existing bridge and wait for actual CI.",
+      "actualLinuxFailureKnown": false
+    },
+    {
+      "file": "scripts/db/cutover/postgres-guardrail-budget-dispatched-extension-v355.native.test.mjs",
+      "bytes": 32862,
+      "sha256": "a2a4bccb9546b0ee5bb5d0e514f9ad4940396e78d1e7d43aafb5fbfba9e0dfa5",
+      "readOnly": true,
+      "alreadyPinnedPg73": true,
+      "allCurrentMigrationLoader": false,
+      "directProductionGrantCalls": 0,
+      "plan": "No loader repair proposed; preserve existing bridge and wait for actual CI.",
+      "actualLinuxFailureKnown": false
+    }
+  ],
+  "nativeFixtureExecuted": false,
+  "productionRequests": 0
+}

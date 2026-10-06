@@ -1,0 +1,10 @@
+import fs from 'node:fs';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+const own=path.dirname(fileURLToPath(import.meta.url));
+let source=fs.readFileSync(path.join(own,'peer-v364-package-audit.mjs'),'utf8');
+source=source.replaceAll("'v364-peer-'","'v364-peer-v2-'").replaceAll('v364-peer-diagnostic-workflow.yml','v364-peer-v2-diagnostic-workflow.yml').replaceAll('v364-owned-linux-peer-review.json','v364-owned-linux-peer-review-v2.json');
+source=source.replace("assert.equal(manifest.schema,'v364-owned-linux-sealed-package-v1');", "assert.equal(info(manifestBytes).sha256,'392f5a44294abf70c4bc3cbb7b727103f96d5ce8f5e87bfc3fe3dc8bd1fc6bd4');\nassert.equal(manifest.schema,'v364-owned-linux-sealed-package-v1');");
+source=source.replace('const issues=[];', "assert.ok(py.includes(\"'actualProcessExit': child.returncode if child is not None else None\"));\nassert.ok(py.includes(\"'runnerOutcomeCode': actual\"));\nconst issues=[];");
+source=source.replace("const report={schema:", "for(const item of packageFiles)assert.deepEqual(info(fs.readFileSync(path.join(repo,item.file))),{bytes:item.bytes,sha256:item.sha256});\nassert.ok(fs.readFileSync(path.join(repo,packageRoot,'sealed-package.json')).equals(manifestBytes));\nassert.ok(fs.readFileSync(path.join(repo,workflowPath)).equals(workflowBytes));\nconst report={schema:");
+fs.writeFileSync(path.join(own,'peer-v364-package-audit-v2.mjs'),source,{flag:'wx'});

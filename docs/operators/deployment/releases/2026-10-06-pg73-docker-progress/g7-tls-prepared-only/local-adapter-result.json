@@ -1,0 +1,81 @@
+{
+  "schema": "g7-local-next-adapter-contract-v1",
+  "actualExit": 0,
+  "scope": "actual installed Next attachRequestMeta and fromNodeNextRequest with inert request metadata; no server/socket/TLS/OIDC/DB execution",
+  "versions": {
+    "next": "16.2.3",
+    "oauth4webapi": "3.8.5",
+    "jose": "6.2.12"
+  },
+  "rows": [
+    {
+      "name": "internal HTTP missing TLS metadata",
+      "injectedXFP": "http",
+      "publicOrigin": "http://app.test",
+      "allowed": false,
+      "rejection": "origin_mismatch",
+      "workspaceSecure": false,
+      "actualExit": 0
+    },
+    {
+      "name": "controlled ingress overwrites literal HTTPS",
+      "injectedXFP": "https",
+      "publicOrigin": "https://app.test",
+      "allowed": true,
+      "rejection": null,
+      "workspaceSecure": true,
+      "actualExit": 0
+    },
+    {
+      "name": "raw HTTP supplied XFP spoof also synthesizes HTTPS",
+      "injectedXFP": "https",
+      "publicOrigin": "https://app.test",
+      "allowed": true,
+      "rejection": null,
+      "workspaceSecure": true,
+      "actualExit": 0
+    },
+    {
+      "name": "raw Admin permissive includes matching substring",
+      "injectedXFP": "nothttps",
+      "publicOrigin": "https://app.test",
+      "allowed": true,
+      "rejection": null,
+      "workspaceSecure": true,
+      "actualExit": 0
+    },
+    {
+      "name": "trusted ingress preserves attacker Origin rejection",
+      "injectedXFP": "https",
+      "publicOrigin": "https://app.test",
+      "allowed": false,
+      "rejection": "origin_mismatch",
+      "workspaceSecure": true,
+      "actualExit": 0
+    },
+    {
+      "name": "trusted ingress preserves cross-site rejection",
+      "injectedXFP": "https",
+      "publicOrigin": "https://app.test",
+      "allowed": false,
+      "rejection": "cross_site",
+      "workspaceSecure": true,
+      "actualExit": 0
+    },
+    {
+      "name": "trusted ingress preserves missing-Origin rejection",
+      "injectedXFP": "https",
+      "publicOrigin": "https://app.test",
+      "allowed": false,
+      "rejection": "missing_origin",
+      "workspaceSecure": true,
+      "actualExit": 0
+    }
+  ],
+  "localHTTPRequests": 0,
+  "productionRequests": 0,
+  "TLSVerified": false,
+  "OIDCVerified": false,
+  "realIdentityVerified": false,
+  "limitation": "Does not execute full base-server or network ingress; does not prove origin metadata came from a trusted peer"
+}

@@ -1,0 +1,37 @@
+{
+  "schema": "v364-owned-linux-sealed-package-v1",
+  "lineEndings": "LF",
+  "frozenInputsVerifiedAgainstGitHEAD": true,
+  "files": [
+    {
+      "path": "gateway-observer.mjs",
+      "bytes": 1244,
+      "sha256": "3ec2e49a72697f61bd1867bcde369a7c508cdbf669cd86d7e0eebdfc41dcfe00"
+    },
+    {
+      "path": "holder-observer.mjs",
+      "bytes": 2461,
+      "sha256": "740727cae646ae757fa50ef7bb6c02a9f9cb4b1b3aa64b0de539c88bbbe09a25"
+    },
+    {
+      "path": "run-v364-owned-diagnostic.mjs",
+      "bytes": 22852,
+      "sha256": "11850fbe29355f705e3bc4ec68c1b6416565b943dfb7a0f200d4090de5158666"
+    },
+    {
+      "path": "execute-owned-linux.py",
+      "bytes": 9535,
+      "sha256": "45c479a4602a3e79b42daa8dcca6e8b9ef876fa986136598b263a505d5320e31"
+    },
+    {
+      "path": "source-inputs.json",
+      "bytes": 1789,
+      "sha256": "d42cda26a0f175bace59626b666cfc6e84c29929767c5344cc6680d98b96a083"
+    },
+    {
+      "path": "README.md",
+      "bytes": 6385,
+      "sha256": "75f8f7e5e678157349712128cc68dbb9323de2daa6686e9b4d47e6098f075263"
+    }
+  ]
+}

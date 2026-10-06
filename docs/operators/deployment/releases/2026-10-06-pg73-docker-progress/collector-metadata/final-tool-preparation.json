@@ -1,0 +1,505 @@
+{
+  "schema": "cinatoken.durable-evidence-tool-preparation.v1",
+  "closed": true,
+  "actualExitCode": 0,
+  "at": "2026-10-06T01:10:26.248Z",
+  "toolingRoot": "C:/Users/cina/AppData/Local/Temp/cinatoken-durable-evidence-tools-Di62eG",
+  "toolSources": [
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-durable-evidence-tools-Di62eG\\evidence-lib.mjs",
+      "bytes": 24559,
+      "sha256": "13303c2f28e59cc2366a7d2ee695adfd7a691dda8ade11ef09e41bfc9864d14e"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-durable-evidence-tools-Di62eG\\collect-evidence.mjs",
+      "bytes": 1002,
+      "sha256": "95d1670211f5fdceb6bbdd2ce1db38036de4fb7c31e5d522eef10af3e479bdd5"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-durable-evidence-tools-Di62eG\\verify-evidence.mjs",
+      "bytes": 617,
+      "sha256": "ac6c531cc665341fbf51dc3ceed6adbd3f629ab5c17aef51a214de1f1613422d"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-durable-evidence-tools-Di62eG\\collector-controlled-tests.mjs",
+      "bytes": 6887,
+      "sha256": "749953cc540f88e86822b33ade25daf4c59ef26864a7445bb413bb3c2f425614"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-durable-evidence-tools-Di62eG\\collector-closure-boundary-tests.mjs",
+      "bytes": 8703,
+      "sha256": "967171ef8a84ae50abb69549d85d2ed58aa3c481c27bb3ae456cad0e66f60eb6"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-durable-evidence-tools-Di62eG\\README.md",
+      "bytes": 3458,
+      "sha256": "d18a211e037ff7d0998441494c3803e421319ec4e8e577ea7857863bb7122e56"
+    }
+  ],
+  "finalSourceWritesStopped": true,
+  "latestControlledChecks": {
+    "originalBoundary": 12,
+    "extendedClosureBoundary": 10,
+    "passed": 22,
+    "failed": 0,
+    "skipped": 0,
+    "raw": [
+      {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-durable-evidence-tools-Di62eG\\collector-controlled-tests-v3.stdout.log",
+        "bytes": 1103,
+        "sha256": "92138dec3d11549399817c2e00f243a2fa10bfb1ff646ec8a2833217d1b25c11"
+      },
+      {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-durable-evidence-tools-Di62eG\\collector-controlled-tests-v3.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-durable-evidence-tools-Di62eG\\collector-controlled-tests-v3.result.json",
+        "bytes": 370,
+        "sha256": "0f70235d583eea5516d0c1799fab93c0e086621df2d848d03d8e225a4aa89610"
+      },
+      {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-durable-evidence-tools-Di62eG\\collector-closure-boundary-tests-v3.stdout.log",
+        "bytes": 876,
+        "sha256": "9911cadaaff7c485f36bc3df0bc422d797cf46de77e89cdfc7af9436b0695a2c"
+      },
+      {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-durable-evidence-tools-Di62eG\\collector-closure-boundary-tests-v3.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-durable-evidence-tools-Di62eG\\collector-closure-boundary-tests-v3.result.json",
+        "bytes": 382,
+        "sha256": "e495b9ebadf2731e35087b349fe270bdf209c3ad03d95a34c41a1a60d733f82b"
+      }
+    ]
+  },
+  "syntaxChecks": {
+    "allFiveScriptsBeforeV3": 0,
+    "lastTwoModifiedScriptsFinalV3": 0
+  },
+  "originalAndIntermediateVersionsPreserved": true,
+  "previousControlledRawPreserved": true,
+  "historicalToolAuditFailuresPreserved": [
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-durable-evidence-tools-Di62eG\\current-roots-audit.json",
+      "bytes": 398512,
+      "sha256": "bccb9ca6d29540ba8a4f5796900e5e663dcecfaa07e5482bf5ac2970067d5fee"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-durable-evidence-tools-metadata-x1QzRR\\current-roots-audit-v2.json",
+      "bytes": 635723,
+      "sha256": "031fe609bc5f441e021d50aac1d489e0e4ed1262ba6d534cb64f9034d9f5c4ec"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-durable-evidence-tools-metadata-x1QzRR\\current-roots-audit-v3.json",
+      "bytes": 649862,
+      "sha256": "48b00b3e502d43b0a58268ec92eb744a5087db02a6873555f62b88714d1e839c"
+    }
+  ],
+  "commands": [
+    {
+      "file": "collector-closure-boundary-tests-v3.result.json",
+      "meta": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-durable-evidence-tools-Di62eG\\collector-closure-boundary-tests-v3.result.json",
+        "bytes": 382,
+        "sha256": "e495b9ebadf2731e35087b349fe270bdf209c3ad03d95a34c41a1a60d733f82b"
+      },
+      "actualExit": 0
+    },
+    {
+      "file": "collector-closure-boundary-tests.result.json",
+      "meta": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-durable-evidence-tools-Di62eG\\collector-closure-boundary-tests.result.json",
+        "bytes": 376,
+        "sha256": "ffacae9380a647a269d5e6a7713141939d3a75bc2675079d52e4641a68b33e6b"
+      },
+      "actualExit": 0
+    },
+    {
+      "file": "collector-controlled-tests-v2.result.json",
+      "meta": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-durable-evidence-tools-Di62eG\\collector-controlled-tests-v2.result.json",
+        "bytes": 370,
+        "sha256": "bcae0bf11330da9af1d33cb100ca79f2c38ea3be3dbb168e1d528bafd23d1d83"
+      },
+      "actualExit": 0
+    },
+    {
+      "file": "collector-controlled-tests-v3.result.json",
+      "meta": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-durable-evidence-tools-Di62eG\\collector-controlled-tests-v3.result.json",
+        "bytes": 370,
+        "sha256": "0f70235d583eea5516d0c1799fab93c0e086621df2d848d03d8e225a4aa89610"
+      },
+      "actualExit": 0
+    },
+    {
+      "file": "collector-controlled-tests.result.json",
+      "meta": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-durable-evidence-tools-Di62eG\\collector-controlled-tests.result.json",
+        "bytes": 246,
+        "sha256": "e0b55986c84518e5c324632dcf3c41c3ecb4e61f6799fc0da8b44f078b119827"
+      },
+      "actualExit": 0
+    },
+    {
+      "file": "collector-current-roots-audit.result.json",
+      "meta": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-durable-evidence-tools-Di62eG\\collector-current-roots-audit.result.json",
+        "bytes": 255,
+        "sha256": "ac6c3b972ee9fa5455867243b7298ac0f0214b16c9bca5f5d8c84e3bcbf697d0"
+      },
+      "actualExit": 1
+    },
+    {
+      "file": "syntax-collect-evidence.result.json",
+      "meta": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-durable-evidence-tools-Di62eG\\syntax-collect-evidence.result.json",
+        "bytes": 409,
+        "sha256": "821b98d64287acada369ee4738cd69766fa5e686a69a57fce54ca8898955b9c3"
+      },
+      "actualExit": 0
+    },
+    {
+      "file": "syntax-collector-closure-boundary-tests.result.json",
+      "meta": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-durable-evidence-tools-Di62eG\\syntax-collector-closure-boundary-tests.result.json",
+        "bytes": 457,
+        "sha256": "3928d8c2ad19d0f93fb75d86fe5482c170779467269656f68977ec651ba937ba"
+      },
+      "actualExit": 0
+    },
+    {
+      "file": "syntax-collector-controlled-tests.result.json",
+      "meta": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-durable-evidence-tools-Di62eG\\syntax-collector-controlled-tests.result.json",
+        "bytes": 439,
+        "sha256": "17b766bcd65a3250f969d5218a2c4cf3aea8833057422a64c25ca000349686a6"
+      },
+      "actualExit": 0
+    },
+    {
+      "file": "syntax-evidence-lib.result.json",
+      "meta": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-durable-evidence-tools-Di62eG\\syntax-evidence-lib.result.json",
+        "bytes": 397,
+        "sha256": "7b1890606e492a4bab79842fed4a62eed636b1cdc863fd9f1b10bca92cb7b0ed"
+      },
+      "actualExit": 0
+    },
+    {
+      "file": "syntax-v3-collector-closure-boundary-tests.result.json",
+      "meta": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-durable-evidence-tools-Di62eG\\syntax-v3-collector-closure-boundary-tests.result.json",
+        "bytes": 463,
+        "sha256": "d7df0a284521d61fb5d24688023c8285f58e421cc43ee0d7c3443bcb520a6b01"
+      },
+      "actualExit": 0
+    },
+    {
+      "file": "syntax-v3-evidence-lib.result.json",
+      "meta": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-durable-evidence-tools-Di62eG\\syntax-v3-evidence-lib.result.json",
+        "bytes": 403,
+        "sha256": "e2d0961b08cad0b3c87a4621657d3217890bbeef76600f78a2c06be41da5e7cf"
+      },
+      "actualExit": 0
+    },
+    {
+      "file": "syntax-verify-evidence.result.json",
+      "meta": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-durable-evidence-tools-Di62eG\\syntax-verify-evidence.result.json",
+        "bytes": 406,
+        "sha256": "dfc1baa70ad848df46065619f980496607689e2e13fc5310f22a162060f85acc"
+      },
+      "actualExit": 0
+    }
+  ],
+  "nonzeroCommandsAreNotProductGateFailures": true,
+  "collectionOnly": true,
+  "realSourceCollectionPerformed": false,
+  "repositoryWrites": 0,
+  "productionRequests": 0,
+  "ciInvocations": 0,
+  "limitations": {
+    "currentRootAuditStillWaitingForPortableProducerReceipt": true,
+    "actualLinuxDockerChecks": "Only independent existing CI final review proves partial runtime; this tool does not",
+    "G7": "pending",
+    "G8": "pending"
+  },
+  "rawInventory": [
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-durable-evidence-tools-Di62eG\\README.md",
+      "bytes": 3458,
+      "sha256": "d18a211e037ff7d0998441494c3803e421319ec4e8e577ea7857863bb7122e56"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-durable-evidence-tools-Di62eG\\before-v2-collect-evidence.mjs",
+      "bytes": 1002,
+      "sha256": "95d1670211f5fdceb6bbdd2ce1db38036de4fb7c31e5d522eef10af3e479bdd5"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-durable-evidence-tools-Di62eG\\before-v2-collector-controlled-tests.mjs",
+      "bytes": 6887,
+      "sha256": "749953cc540f88e86822b33ade25daf4c59ef26864a7445bb413bb3c2f425614"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-durable-evidence-tools-Di62eG\\before-v2-evidence-lib.mjs",
+      "bytes": 15926,
+      "sha256": "e6058c540acb4a705a19d7b4c9e4ce49d00181abcb7aebd880dd3969aacbd073"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-durable-evidence-tools-Di62eG\\before-v2-verify-evidence.mjs",
+      "bytes": 617,
+      "sha256": "ac6c531cc665341fbf51dc3ceed6adbd3f629ab5c17aef51a214de1f1613422d"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-durable-evidence-tools-Di62eG\\before-v3-collector-closure-boundary-tests.mjs",
+      "bytes": 7347,
+      "sha256": "da476cadcdfa0b551849b32524ea2a6124c927d06f1c76e6a357e49607fff620"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-durable-evidence-tools-Di62eG\\before-v3-evidence-lib.mjs",
+      "bytes": 23354,
+      "sha256": "750766e15f95ca6bd0b5fb572695f9de22cfe115b04638a325e9d291f4832194"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-durable-evidence-tools-Di62eG\\collect-evidence.mjs",
+      "bytes": 1002,
+      "sha256": "95d1670211f5fdceb6bbdd2ce1db38036de4fb7c31e5d522eef10af3e479bdd5"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-durable-evidence-tools-Di62eG\\collector-closure-boundary-tests-v3.result.json",
+      "bytes": 382,
+      "sha256": "e495b9ebadf2731e35087b349fe270bdf209c3ad03d95a34c41a1a60d733f82b"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-durable-evidence-tools-Di62eG\\collector-closure-boundary-tests-v3.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-durable-evidence-tools-Di62eG\\collector-closure-boundary-tests-v3.stdout.log",
+      "bytes": 876,
+      "sha256": "9911cadaaff7c485f36bc3df0bc422d797cf46de77e89cdfc7af9436b0695a2c"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-durable-evidence-tools-Di62eG\\collector-closure-boundary-tests.mjs",
+      "bytes": 8703,
+      "sha256": "967171ef8a84ae50abb69549d85d2ed58aa3c481c27bb3ae456cad0e66f60eb6"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-durable-evidence-tools-Di62eG\\collector-closure-boundary-tests.result.json",
+      "bytes": 376,
+      "sha256": "ffacae9380a647a269d5e6a7713141939d3a75bc2675079d52e4641a68b33e6b"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-durable-evidence-tools-Di62eG\\collector-closure-boundary-tests.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-durable-evidence-tools-Di62eG\\collector-closure-boundary-tests.stdout.log",
+      "bytes": 794,
+      "sha256": "bb2a59091b1f5ebc5d9684b408cf4ae43b9504afc160f165fb7c8a0d82cc13b4"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-durable-evidence-tools-Di62eG\\collector-config.DRAFT.json",
+      "bytes": 2215,
+      "sha256": "872cf5716d2bec53cde7181bd1987db177425633076cdb1b7ccf8fd5833ca849"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-durable-evidence-tools-Di62eG\\collector-controlled-tests-v2.result.json",
+      "bytes": 370,
+      "sha256": "bcae0bf11330da9af1d33cb100ca79f2c38ea3be3dbb168e1d528bafd23d1d83"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-durable-evidence-tools-Di62eG\\collector-controlled-tests-v2.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-durable-evidence-tools-Di62eG\\collector-controlled-tests-v2.stdout.log",
+      "bytes": 1103,
+      "sha256": "1339d96a04bae9713d83a6113cf59cded17b158609e42e3ec907582625462183"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-durable-evidence-tools-Di62eG\\collector-controlled-tests-v3.result.json",
+      "bytes": 370,
+      "sha256": "0f70235d583eea5516d0c1799fab93c0e086621df2d848d03d8e225a4aa89610"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-durable-evidence-tools-Di62eG\\collector-controlled-tests-v3.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-durable-evidence-tools-Di62eG\\collector-controlled-tests-v3.stdout.log",
+      "bytes": 1103,
+      "sha256": "92138dec3d11549399817c2e00f243a2fa10bfb1ff646ec8a2833217d1b25c11"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-durable-evidence-tools-Di62eG\\collector-controlled-tests.mjs",
+      "bytes": 6887,
+      "sha256": "749953cc540f88e86822b33ade25daf4c59ef26864a7445bb413bb3c2f425614"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-durable-evidence-tools-Di62eG\\collector-controlled-tests.result.json",
+      "bytes": 246,
+      "sha256": "e0b55986c84518e5c324632dcf3c41c3ecb4e61f6799fc0da8b44f078b119827"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-durable-evidence-tools-Di62eG\\collector-controlled-tests.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-durable-evidence-tools-Di62eG\\collector-controlled-tests.stdout.log",
+      "bytes": 1103,
+      "sha256": "f5425f423a588246b8171a6abe1cc7ff44401e03894dff250016b6fd6c92cad4"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-durable-evidence-tools-Di62eG\\collector-current-roots-audit.result.json",
+      "bytes": 255,
+      "sha256": "ac6c3b972ee9fa5455867243b7298ac0f0214b16c9bca5f5d8c84e3bcbf697d0"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-durable-evidence-tools-Di62eG\\collector-current-roots-audit.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-durable-evidence-tools-Di62eG\\collector-current-roots-audit.stdout.log",
+      "bytes": 233,
+      "sha256": "5a232cebdab71793bf48864b4bd446c553cb35d86f6eb2593ef5640ff942bae9"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-durable-evidence-tools-Di62eG\\current-roots-audit.json",
+      "bytes": 398512,
+      "sha256": "bccb9ca6d29540ba8a4f5796900e5e663dcecfaa07e5482bf5ac2970067d5fee"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-durable-evidence-tools-Di62eG\\evidence-lib.mjs",
+      "bytes": 24559,
+      "sha256": "13303c2f28e59cc2366a7d2ee695adfd7a691dda8ade11ef09e41bfc9864d14e"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-durable-evidence-tools-Di62eG\\syntax-collect-evidence.result.json",
+      "bytes": 409,
+      "sha256": "821b98d64287acada369ee4738cd69766fa5e686a69a57fce54ca8898955b9c3"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-durable-evidence-tools-Di62eG\\syntax-collect-evidence.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-durable-evidence-tools-Di62eG\\syntax-collect-evidence.stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-durable-evidence-tools-Di62eG\\syntax-collector-closure-boundary-tests.result.json",
+      "bytes": 457,
+      "sha256": "3928d8c2ad19d0f93fb75d86fe5482c170779467269656f68977ec651ba937ba"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-durable-evidence-tools-Di62eG\\syntax-collector-closure-boundary-tests.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-durable-evidence-tools-Di62eG\\syntax-collector-closure-boundary-tests.stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-durable-evidence-tools-Di62eG\\syntax-collector-controlled-tests.result.json",
+      "bytes": 439,
+      "sha256": "17b766bcd65a3250f969d5218a2c4cf3aea8833057422a64c25ca000349686a6"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-durable-evidence-tools-Di62eG\\syntax-collector-controlled-tests.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-durable-evidence-tools-Di62eG\\syntax-collector-controlled-tests.stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-durable-evidence-tools-Di62eG\\syntax-evidence-lib.result.json",
+      "bytes": 397,
+      "sha256": "7b1890606e492a4bab79842fed4a62eed636b1cdc863fd9f1b10bca92cb7b0ed"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-durable-evidence-tools-Di62eG\\syntax-evidence-lib.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-durable-evidence-tools-Di62eG\\syntax-evidence-lib.stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-durable-evidence-tools-Di62eG\\syntax-v3-collector-closure-boundary-tests.result.json",
+      "bytes": 463,
+      "sha256": "d7df0a284521d61fb5d24688023c8285f58e421cc43ee0d7c3443bcb520a6b01"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-durable-evidence-tools-Di62eG\\syntax-v3-collector-closure-boundary-tests.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-durable-evidence-tools-Di62eG\\syntax-v3-collector-closure-boundary-tests.stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-durable-evidence-tools-Di62eG\\syntax-v3-evidence-lib.result.json",
+      "bytes": 403,
+      "sha256": "e2d0961b08cad0b3c87a4621657d3217890bbeef76600f78a2c06be41da5e7cf"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-durable-evidence-tools-Di62eG\\syntax-v3-evidence-lib.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-durable-evidence-tools-Di62eG\\syntax-v3-evidence-lib.stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-durable-evidence-tools-Di62eG\\syntax-verify-evidence.result.json",
+      "bytes": 406,
+      "sha256": "dfc1baa70ad848df46065619f980496607689e2e13fc5310f22a162060f85acc"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-durable-evidence-tools-Di62eG\\syntax-verify-evidence.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-durable-evidence-tools-Di62eG\\syntax-verify-evidence.stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-durable-evidence-tools-Di62eG\\v350-source-peer-review.json",
+      "bytes": 916,
+      "sha256": "ea2798c0ad6df4acd4aa9412bf434797189e0c10e671d9b998eef6c619c70edf"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-durable-evidence-tools-Di62eG\\verify-evidence.mjs",
+      "bytes": 617,
+      "sha256": "ac6c531cc665341fbf51dc3ceed6adbd3f629ab5c17aef51a214de1f1613422d"
+    }
+  ]
+}

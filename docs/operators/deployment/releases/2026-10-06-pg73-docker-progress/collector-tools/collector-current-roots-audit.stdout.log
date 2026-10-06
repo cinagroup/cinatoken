@@ -1,0 +1,1 @@
+{"entries":412,"exclusions":0,"blockers":[{"root":"native-agent","file":"native-linux-job-log-raw.stdout.log","reason":"Log has no verified terminal command receipt; declare an explicit reasoned exclusion if active"}],"receipts":78}

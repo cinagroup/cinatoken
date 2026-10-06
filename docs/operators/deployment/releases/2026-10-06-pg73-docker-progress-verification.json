@@ -1,0 +1,232 @@
+{
+  "at": "2026-10-06T01:21:16.088Z",
+  "closed": true,
+  "actualExitCode": 0,
+  "collectionOnly": true,
+  "gatePassDerived": false,
+  "mainReport": "docs/operators/deployment/releases/2026-10-06-pg73-docker-progress.json",
+  "mainReportBytes": 951099,
+  "mainReportSha256": "a59328455ed71b0be08d8c4d22e81a0db21c94cad3dc179bad893a6fd03e0ced",
+  "filesVerified": 739,
+  "rawBytes": 17943834,
+  "storedBytes": 7107347,
+  "sourceByteComparisonPassed": true,
+  "repositoryByteComparisonPassed": true,
+  "sourceCommit": "fc17551b3016d3533c17cc4ec9b0151a4eedae44",
+  "platformSourceCommit": "4d645f954ea76d8546409aaa6b684a8279c0deb9",
+  "diagnosticSourceCommit": "fc17551b3016d3533c17cc4ec9b0151a4eedae44",
+  "productionSourceCommit": "c13a64b9c3b2c90adcf736910ea408868d7854f1",
+  "productionVersion": "2a0a2777-d3b1-47f0-a0a7-88e701b4d2d9",
+  "checklist": {
+    "bytes": 776589,
+    "sha256": "7eec7bbefeef52ca19a5113526c8c441af681c426afc5659292bec83406ec404",
+    "recordedExactTaskCounts": {
+      "principalTasks": 102,
+      "matrix": 54,
+      "literalBoxes": 213,
+      "taskBoxes": 211,
+      "gateStatuses": 9
+    },
+    "parentClosedScopeProofStatesOriginalRowsExact": true,
+    "originalGateStatusChanged": false
+  },
+  "preparationFieldsDescribeTheirOriginalPreCollectionPhase": true,
+  "firstCopyWrapperActualExit": 1,
+  "firstCopyWriterBufferVersusStringAssertionFailurePreserved": true,
+  "subsequentIndependentRepositoryVerificationActualExit": 0,
+  "fullProductGatesRemainPending": true,
+  "metadata": [
+    {
+      "source": "C:/Users/cina/AppData/Local/Temp/cinatoken-pg73-durable-meta-e44792174d9f42358287aa571b1ba35e/evidence-finalizer-repair.stdout.log",
+      "file": "docs/operators/deployment/releases/2026-10-06-pg73-docker-progress-verification/evidence-finalizer-repair.stdout.log",
+      "bytes": 276,
+      "sha256": "d9c957de670402977325c8989696940f2ededff9380ea1ecde0619dec31592c0"
+    },
+    {
+      "source": "C:/Users/cina/AppData/Local/Temp/cinatoken-pg73-durable-meta-e44792174d9f42358287aa571b1ba35e/evidence-finalizer-repair.stderr.log",
+      "file": "docs/operators/deployment/releases/2026-10-06-pg73-docker-progress-verification/evidence-finalizer-repair.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": "C:/Users/cina/AppData/Local/Temp/cinatoken-pg73-durable-meta-e44792174d9f42358287aa571b1ba35e/evidence-finalizer-repair.result.json",
+      "file": "docs/operators/deployment/releases/2026-10-06-pg73-docker-progress-verification/evidence-finalizer-repair.result.json",
+      "bytes": 640,
+      "sha256": "776f479bba1a4e469129e1ae080cc51dc3d487970708a74d7111bbe5cecdb7a8"
+    },
+    {
+      "source": "C:/Users/cina/AppData/Local/Temp/cinatoken-pg73-durable-meta-e44792174d9f42358287aa571b1ba35e/run-command.mjs",
+      "file": "docs/operators/deployment/releases/2026-10-06-pg73-docker-progress-verification/run-command.mjs",
+      "bytes": 1813,
+      "sha256": "067b09066f2d754d2562a868c644fcd1737881d0c8d402f81d82c060c7f86ad2"
+    },
+    {
+      "source": "C:/Users/cina/AppData/Local/Temp/cinatoken-pg73-durable-meta-e44792174d9f42358287aa571b1ba35e/before-finalizer-v2.mjs",
+      "file": "docs/operators/deployment/releases/2026-10-06-pg73-docker-progress-verification/before-finalizer-v2.mjs",
+      "bytes": 7281,
+      "sha256": "9e063d3c3e0a1992443ee7858fcc6c06ab6a4d3e1a29663fa5d47864aeaf53d3"
+    },
+    {
+      "source": "C:/Users/cina/AppData/Local/Temp/cinatoken-pg73-durable-meta-e44792174d9f42358287aa571b1ba35e/repair-finalizer-v2.mjs",
+      "file": "docs/operators/deployment/releases/2026-10-06-pg73-docker-progress-verification/repair-finalizer-v2.mjs",
+      "bytes": 1823,
+      "sha256": "089d71469dd62780e3e0d63de08a4bf648fd5583f76720f4bd648db3ba8fe52e"
+    },
+    {
+      "source": "C:/Users/cina/AppData/Local/Temp/cinatoken-pg73-durable-meta-e44792174d9f42358287aa571b1ba35e/finalizer-repair-proof.json",
+      "file": "docs/operators/deployment/releases/2026-10-06-pg73-docker-progress-verification/finalizer-repair-proof.json",
+      "bytes": 313,
+      "sha256": "c4ae2fef169b4b4ca0e08881078bfa9dd8255a7045e8010338cc9fbbe499b19d"
+    },
+    {
+      "source": "C:/Users/cina/AppData/Local/Temp/cinatoken-pg73-durable-meta-e44792174d9f42358287aa571b1ba35e/finalize-durable-evidence.mjs",
+      "file": "docs/operators/deployment/releases/2026-10-06-pg73-docker-progress-verification/finalize-durable-evidence.mjs",
+      "bytes": 7728,
+      "sha256": "b8d652508d2c43dfafb9680735409aae42ac13a9eb52d68cb6fd9cdc961ab414"
+    },
+    {
+      "source": "C:/Users/cina/AppData/Local/Temp/cinatoken-pg73-durable-meta-e44792174d9f42358287aa571b1ba35e/gitattributes-before",
+      "file": "docs/operators/deployment/releases/2026-10-06-pg73-docker-progress-verification/gitattributes-before",
+      "bytes": 2815,
+      "sha256": "70b64e4c49da4826b8462828527da43d2284bb4bf8abb8646f577c909a1e389d"
+    },
+    {
+      "source": "C:/Users/cina/AppData/Local/Temp/cinatoken-pg73-durable-meta-e44792174d9f42358287aa571b1ba35e/root-final-audit.json",
+      "file": "docs/operators/deployment/releases/2026-10-06-pg73-docker-progress-verification/root-final-audit.json",
+      "bytes": 750025,
+      "sha256": "fe788446a7ef39b53304d7c164c3c58d90da85e3d57c146ecc0375919204b941"
+    },
+    {
+      "source": "C:/Users/cina/AppData/Local/Temp/cinatoken-pg73-durable-meta-e44792174d9f42358287aa571b1ba35e/source-verification.json",
+      "file": "docs/operators/deployment/releases/2026-10-06-pg73-docker-progress-verification/source-verification.json",
+      "bytes": 507,
+      "sha256": "376d930a654c172136c511ec7f9251df1e6af6be4a40a402bf85e4f06196ad59"
+    },
+    {
+      "source": "C:/Users/cina/AppData/Local/Temp/cinatoken-pg73-durable-meta-e44792174d9f42358287aa571b1ba35e/repository-verification.json",
+      "file": "docs/operators/deployment/releases/2026-10-06-pg73-docker-progress-verification/repository-verification.json",
+      "bytes": 458,
+      "sha256": "3789b3eb5d3aa78274b45822ab83cfded267823178488f8294d2e01c73664389"
+    },
+    {
+      "source": "C:/Users/cina/AppData/Local/Temp/cinatoken-pg73-durable-meta-e44792174d9f42358287aa571b1ba35e/repository-copy-proof.json",
+      "file": "docs/operators/deployment/releases/2026-10-06-pg73-docker-progress-verification/repository-copy-proof.json",
+      "bytes": 503,
+      "sha256": "ffd81ad116d7cb78a77900f40aa79b00d37d6080c0a96a7b19eca5e6ad1f4da2"
+    },
+    {
+      "source": "C:/Users/cina/AppData/Local/Temp/cinatoken-pg73-durable-meta-e44792174d9f42358287aa571b1ba35e/evidence-final-audit.stdout.log",
+      "file": "docs/operators/deployment/releases/2026-10-06-pg73-docker-progress-verification/evidence-final-audit.stdout.log",
+      "bytes": 60,
+      "sha256": "4fbdcf6688d1f9139da62c2b0617e5841feabaf367f050765fb455d4f6f0908e"
+    },
+    {
+      "source": "C:/Users/cina/AppData/Local/Temp/cinatoken-pg73-durable-meta-e44792174d9f42358287aa571b1ba35e/evidence-final-audit.stderr.log",
+      "file": "docs/operators/deployment/releases/2026-10-06-pg73-docker-progress-verification/evidence-final-audit.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": "C:/Users/cina/AppData/Local/Temp/cinatoken-pg73-durable-meta-e44792174d9f42358287aa571b1ba35e/evidence-final-audit.result.json",
+      "file": "docs/operators/deployment/releases/2026-10-06-pg73-docker-progress-verification/evidence-final-audit.result.json",
+      "bytes": 859,
+      "sha256": "4003a5999d294185f9029cd7166ee2bb6253d2c3a801df394b5c65d0bd8cd8c2"
+    },
+    {
+      "source": "C:/Users/cina/AppData/Local/Temp/cinatoken-pg73-durable-meta-e44792174d9f42358287aa571b1ba35e/evidence-collect.stdout.log",
+      "file": "docs/operators/deployment/releases/2026-10-06-pg73-docker-progress-verification/evidence-collect.stdout.log",
+      "bytes": 407,
+      "sha256": "50f6d194487dc1421b4b767449083a558e525acc9afa7563836b6cd4dfccb088"
+    },
+    {
+      "source": "C:/Users/cina/AppData/Local/Temp/cinatoken-pg73-durable-meta-e44792174d9f42358287aa571b1ba35e/evidence-collect.stderr.log",
+      "file": "docs/operators/deployment/releases/2026-10-06-pg73-docker-progress-verification/evidence-collect.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": "C:/Users/cina/AppData/Local/Temp/cinatoken-pg73-durable-meta-e44792174d9f42358287aa571b1ba35e/evidence-collect.result.json",
+      "file": "docs/operators/deployment/releases/2026-10-06-pg73-docker-progress-verification/evidence-collect.result.json",
+      "bytes": 730,
+      "sha256": "cc50340cbaf8e99fe9517830dfad5a3bb94ecc58699d175d3ab755efc13650b2"
+    },
+    {
+      "source": "C:/Users/cina/AppData/Local/Temp/cinatoken-pg73-durable-meta-e44792174d9f42358287aa571b1ba35e/evidence-source-verify.stdout.log",
+      "file": "docs/operators/deployment/releases/2026-10-06-pg73-docker-progress-verification/evidence-source-verify.stdout.log",
+      "bytes": 462,
+      "sha256": "408b2d22644fd8bae06beb2a655a1eb5b5ec23c66b3ad0e0c7c112c9713534b7"
+    },
+    {
+      "source": "C:/Users/cina/AppData/Local/Temp/cinatoken-pg73-durable-meta-e44792174d9f42358287aa571b1ba35e/evidence-source-verify.stderr.log",
+      "file": "docs/operators/deployment/releases/2026-10-06-pg73-docker-progress-verification/evidence-source-verify.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": "C:/Users/cina/AppData/Local/Temp/cinatoken-pg73-durable-meta-e44792174d9f42358287aa571b1ba35e/evidence-source-verify.result.json",
+      "file": "docs/operators/deployment/releases/2026-10-06-pg73-docker-progress-verification/evidence-source-verify.result.json",
+      "bytes": 905,
+      "sha256": "d3403298719040bd47fcbafe2924e8e738f8d0cffaf9ceb0e95d42c6c74cf76f"
+    },
+    {
+      "source": "C:/Users/cina/AppData/Local/Temp/cinatoken-pg73-durable-meta-e44792174d9f42358287aa571b1ba35e/evidence-repository-copy.stdout.log",
+      "file": "docs/operators/deployment/releases/2026-10-06-pg73-docker-progress-verification/evidence-repository-copy.stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": "C:/Users/cina/AppData/Local/Temp/cinatoken-pg73-durable-meta-e44792174d9f42358287aa571b1ba35e/evidence-repository-copy.stderr.log",
+      "file": "docs/operators/deployment/releases/2026-10-06-pg73-docker-progress-verification/evidence-repository-copy.stderr.log",
+      "bytes": 7477,
+      "sha256": "0b3ea58cba5b3cb98a8e2bfa4fd9017c86aa101fabc95e99511f3dd396620426"
+    },
+    {
+      "source": "C:/Users/cina/AppData/Local/Temp/cinatoken-pg73-durable-meta-e44792174d9f42358287aa571b1ba35e/evidence-repository-copy.result.json",
+      "file": "docs/operators/deployment/releases/2026-10-06-pg73-docker-progress-verification/evidence-repository-copy.result.json",
+      "bytes": 656,
+      "sha256": "545cb994fbf7d7b32cd7439f8d786feb2a323da91663cf960bb90e2c27e99174"
+    },
+    {
+      "source": "C:/Users/cina/AppData/Local/Temp/cinatoken-pg73-durable-meta-e44792174d9f42358287aa571b1ba35e/evidence-repository-verify.stdout.log",
+      "file": "docs/operators/deployment/releases/2026-10-06-pg73-docker-progress-verification/evidence-repository-verify.stdout.log",
+      "bytes": 413,
+      "sha256": "42da82212d27ae53d7cb3f717bdc4c28de3a661b53d7d3ec4cf062b4072ae927"
+    },
+    {
+      "source": "C:/Users/cina/AppData/Local/Temp/cinatoken-pg73-durable-meta-e44792174d9f42358287aa571b1ba35e/evidence-repository-verify.stderr.log",
+      "file": "docs/operators/deployment/releases/2026-10-06-pg73-docker-progress-verification/evidence-repository-verify.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": "C:/Users/cina/AppData/Local/Temp/cinatoken-pg73-durable-meta-e44792174d9f42358287aa571b1ba35e/evidence-repository-verify.result.json",
+      "file": "docs/operators/deployment/releases/2026-10-06-pg73-docker-progress-verification/evidence-repository-verify.result.json",
+      "bytes": 868,
+      "sha256": "915a65c3087353e2cbe52f1a99eeb374a39ea1b43df8ce0852d4d0f006b999ef"
+    },
+    {
+      "source": "C:/Users/cina/AppData/Local/Temp/cinatoken-durable-final-audit-Saph0u/final-all-roots-audit.json",
+      "file": "docs/operators/deployment/releases/2026-10-06-pg73-docker-progress-verification/producer-final-audit/final-all-roots-audit.json",
+      "bytes": 750025,
+      "sha256": "fe788446a7ef39b53304d7c164c3c58d90da85e3d57c146ecc0375919204b941"
+    },
+    {
+      "source": "C:/Users/cina/AppData/Local/Temp/cinatoken-durable-final-audit-Saph0u/final-all-roots-audit.stdout.log",
+      "file": "docs/operators/deployment/releases/2026-10-06-pg73-docker-progress-verification/producer-final-audit/final-all-roots-audit.stdout.log",
+      "bytes": 60,
+      "sha256": "4fbdcf6688d1f9139da62c2b0617e5841feabaf367f050765fb455d4f6f0908e"
+    },
+    {
+      "source": "C:/Users/cina/AppData/Local/Temp/cinatoken-durable-final-audit-Saph0u/final-all-roots-audit.stderr.log",
+      "file": "docs/operators/deployment/releases/2026-10-06-pg73-docker-progress-verification/producer-final-audit/final-all-roots-audit.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": "C:/Users/cina/AppData/Local/Temp/cinatoken-durable-final-audit-Saph0u/final-all-roots-audit.result.json",
+      "file": "docs/operators/deployment/releases/2026-10-06-pg73-docker-progress-verification/producer-final-audit/final-all-roots-audit.result.json",
+      "bytes": 348,
+      "sha256": "6e4f670985c0ec40e417470b5adbc8de5f454378ac574c3bde71a65d72f3983b"
+    }
+  ]
+}

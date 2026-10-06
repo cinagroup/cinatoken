@@ -1,0 +1,8 @@
+{
+  "closed": true,
+  "actualExitCode": 0,
+  "command": "node apply-config-encryption-followup.cjs",
+  "stdout": "config-encryption-edit.stdout.log",
+  "stderr": "config-encryption-edit.stderr.log",
+  "completedAt": "2026-10-06T00:29:06.7960219Z"
+}

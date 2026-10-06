@@ -1,0 +1,14 @@
+{
+  "createdAt": "2026-10-06T00:43:03.407Z",
+  "kind": "Read-only source peer review; no DB/CI/test execution",
+  "file": "scripts/db/cutover/postgres-budget-admission-login-v350.native.test.mjs",
+  "bytes": 26124,
+  "sha256": "3edd01255166137049abf024a1ed71b5c259084f1768328c082c50a2d7a82882",
+  "noBlockingFindings": true,
+  "conclusion": "Both original grant calls still enter the production reconciler through the existing owned PG73 bridge. Initial runtime is restricted direct LOGIN with a random password and no memberships. Production0074 preflight runs while bridge supplies temporary0074. The original Buyer settlement split marker rejection remains exact and must propagate after the bridge restores audit-free PG73; no production gate was relaxed.",
+  "primaryChecked": [
+    "scripts/db/cutover/pg73-native-fixture.mjs",
+    "scripts/db/cutover/grant-postgres-runtime.ts"
+  ],
+  "runtimeProof": false
+}

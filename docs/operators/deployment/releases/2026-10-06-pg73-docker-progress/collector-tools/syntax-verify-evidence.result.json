@@ -1,0 +1,8 @@
+{
+  "closed": true,
+  "actualExitCode": 0,
+  "stdout": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-durable-evidence-tools-Di62eG\\syntax-verify-evidence.stdout.log",
+  "stderr": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-durable-evidence-tools-Di62eG\\syntax-verify-evidence.stderr.log",
+  "completedAt": "2026-10-06T01:05:17.9685972Z",
+  "command": "node --check verify-evidence.mjs"
+}

@@ -1,0 +1,9 @@
+{
+  "closed": true,
+  "actualExitCode": 0,
+  "label": "web-artifacts-final",
+  "stdout": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-docker-config-linux-ci-4180WE\\web-artifacts-final.stdout.json",
+  "stderr": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-docker-config-linux-ci-4180WE\\web-artifacts-final.stderr.log",
+  "completedAt": "2026-10-06T00:57:19.4441894Z",
+  "expectedHeadSha": "4d645f954ea76d8546409aaa6b684a8279c0deb9"
+}

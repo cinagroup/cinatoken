@@ -1,0 +1,30 @@
+{
+  "schema": "g7-owned-linux-tls-origin-plan-v1",
+  "executablePreparedOnly": true,
+  "command": "timeout --signal=TERM --kill-after=5s 60s node /qa/future-tls-smoke.mjs --execute-owned-linux --ca /tls/qa-root-ca.crt --out /receipts/tls-origin-wire.json",
+  "firstScope": "9 real HTTPS app.test:443 wire cases only; no completed OIDC or business write is claimed by this probe",
+  "minimumPrerequisites": [
+    "One reviewed SHA and existing dependency lock; prepull/build before isolated runtime. Actual PG/migrate/Admin/Proxy plus paired frozen Web/SSR images.",
+    "New standalone owned Compose file, not an overlay that accidentally inherits examples ports. Each network internal:true; no published ports, host/default/external network attachment. QA joins edge only; Web8080/Admin8789/Proxy8787/PG5432 remain private.",
+    "app.test DNS alias on ingress only, HTTPS443 with generated local CA/SAN certificate; no -k, rejectUnauthorized:false, ignoreHTTPSErrors or TLS environment bypass. Validate nginx -t against the actual pinned image before starting.",
+    "Ingress requires app.test SNI and canonical app.test or app.test:443 Host, otherwise421; overwrites Host/XFH/XFP with fixed canonical app.test/https and clears Forwarded. Preserve browser Origin/Cookie and upstream multiple Set-Cookie/Location.",
+    "Explicit Admin CINATOKEN_APP_ORIGIN=https://app.test, CINAAUTH_ISSUER=https://auth.test, CINAAUTH_ACCOUNT_ORIGIN=https://accounts.test, test-only client ID and three fresh >=32-char OIDC secrets. Require presence/equality before runtime; never allow public default fallbacks.",
+    "Explicit internal Admin CINATOKEN_PUBLIC_API_ORIGIN=http://gateway-proxy:8787; Web public origin https://app.test; exact SSR manifest/upstream. Strong per-run key encryption and DB credentials are ephemeral and never logged.",
+    "auth.test/accounts.test/provider.test/api.test, if used, resolve only to owned internal fixtures. All real external origins/providers/issuers prohibited. Audit only allowed origin values and secret presence, not raw inspect Env or private keys."
+  ],
+  "wireChecks": [
+    "POST disabled password login with exact HTTPS Origin and no forwarded client headers returns410, proving guard passed without DB/session creation.",
+    "Client XFP=http, XFH=attacker.test and Forwarded spoof, then ambiguous XFP=http,https both still410 through overwritten ingress metadata.",
+    "Missing Origin, attacker Origin and Sec-Fetch-Site cross-site each403; forged Host with valid app SNI421.",
+    "Register redirects302 to canonical HTTPS app login and preserves allowed transaction query; invalid callback302 to HTTPS app error and emits no identity/transaction cookie.",
+    "Additional harness negatives: unknown/missing SNI/certificate mismatch must fail TLS/host validation; QA cannot reach raw Web/Admin ports; untrusted CA fails before the trusted-CA run. These are required topology checks, not yet implemented in the 9-case wire probe."
+  ],
+  "nextAuthenticatedStage": [
+    "Implement owned HTTPS OIDC discovery/authorize/token/JWKS/userinfo/session/live-role fixture based on existing session-subject-boundary RSA-signed JWT and PKCE checks; enforce one-use authorization code, exact state/nonce/resource/redirect/client auth and negative signature/issuer/audience/PKCE cases.",
+    "Use actual Admin callback and actual disposable PG repositories; obtain portal and console sessions through the signed authorization flow. DB seeded session and unsigned/mock token do not prove the OIDC path.",
+    "Actual browser with verified CA trust stores Secure/HttpOnly/SameSite cookies; follows callback, returns session cookie over HTTPS, validates exact subject and live role, then persists an authorized mutation and verifies stored acknowledgement. Preserve separate Set-Cookie fields and logout revocation.",
+    "Portal ordinary subject, authorized console subject, different subject/workspace, revoked/missing role and IdP outage boundaries must be tested. Synthetic fixture proves controlled integration only, never actual CinaAuth issuer registration/MFA/human authorization.",
+    "Real Proxy pipeline uses internal provider fixture for timed SSE/abort/WS plus429/503 Retry-After; routing fixtures alone are not Proxy pipeline proof. Current+retained paired assets, old/new session reuse, gray switch and verified rollback with DB writes retained remain later fullG7 tasks."
+  ],
+  "executionEvidence": "Unique labeled project, bounded command exits, SHA/image/manifest receipts, redacted logs. Finally down --volumes --remove-orphans, verify exact owned containers/networks/volumes absent. Unknown timeout or cleanup stays failure. No future run has occurred here."
+}

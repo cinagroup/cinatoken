@@ -1,0 +1,8 @@
+{
+  "closed": true,
+  "actualExitCode": 0,
+  "label": "collector-controlled-tests",
+  "stdout": "collector-controlled-tests.stdout.log",
+  "stderr": "collector-controlled-tests.stderr.log",
+  "completedAt": "2026-10-06T00:50:26.9287175Z"
+}

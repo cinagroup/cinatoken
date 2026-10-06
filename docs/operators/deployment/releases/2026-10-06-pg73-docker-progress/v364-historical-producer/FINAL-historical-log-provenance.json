@@ -1,0 +1,272 @@
+{
+  "schema": "v364-historical-preparation-log-terminal-provenance-v1",
+  "recordedAt": "2026-10-06T01:10:10.383Z",
+  "scope": "Historical producer-observed Windows preparation and expected negative execution statuses only",
+  "originalOuterToolReceipt": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-historical-log-provenance-80c9bb62a99d40eb8f8ababa70f3dc3b\\original-exec-command-tool-receipt.json",
+    "bytes": 1158,
+    "sha256": "06e8c3cce96ba80f98651f9480a9cdc7193ceffb0864c21a4121316f70080fef"
+  },
+  "originalProducer": {
+    "originalPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-portable-ci-review-d6411d594da14209af87d9522488c952\\audit-portable.mjs",
+    "copiedPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-historical-log-provenance-80c9bb62a99d40eb8f8ababa70f3dc3b\\raw-copies\\audit-portable.mjs",
+    "bytes": 10013,
+    "sha256": "7860c23aa6ae4d365cb338ac851115e570a2c64184a22c0213a03552d261dcd3",
+    "copiedBytesExactly": true
+  },
+  "originalFinal": {
+    "originalPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-portable-ci-review-d6411d594da14209af87d9522488c952\\FINAL-v364-portable-ci-preparation.json",
+    "copiedPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-historical-log-provenance-80c9bb62a99d40eb8f8ababa70f3dc3b\\raw-copies\\FINAL-v364-portable-ci-preparation.json",
+    "bytes": 12713,
+    "sha256": "bf61962660ffb46f10e699b2b9933e2bf33bf3f0d89a41833b14c5d45982800e",
+    "copiedBytesExactly": true
+  },
+  "originalOuterCommandActuallyClosed": true,
+  "originalOuterToolExitCode": 0,
+  "originalInnerStatusEvidence": "Exact status assertions in original immutable producer; only one outer tool receipt was emitted. No synthetic per-command tool receipts are created.",
+  "commands": [
+    {
+      "id": "python-syntax",
+      "program": "C:/Users/cina/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/python.exe",
+      "args": [
+        "-c",
+        "import ast,sys; from pathlib import Path; ast.parse(Path(sys.argv[1]).read_text()); print(\"AST OK\")",
+        "C:/cinagroup/cinatoken/scripts/diagnostics/v364-owned-linux/execute-owned-linux.py"
+      ],
+      "options": {
+        "encoding": "utf8"
+      },
+      "actualProgramExit": 0,
+      "assertion": "assert.equal(py.status, 0)",
+      "checkName": "Python AST syntax only",
+      "commandStatusSource": "Original synchronous spawnSync returned status, checked by exact original assertion; external producer completed with tool exit_code 0. Not inferred from FINAL aggregate actualExit.",
+      "originalProducerAssertionLine": 34,
+      "originalProducerWasClosed": true,
+      "separateToolReceiptForThisCommand": false,
+      "spawnedLocalPreparationProcessWasWaited": true,
+      "noNativeRuntime": true,
+      "noDiagnosticNodeChildForWindowsExecutorRejection": false,
+      "provesLinuxProcessGroupClosure": false,
+      "nativeTerminalClaim": false,
+      "outputs": [
+        {
+          "originalPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-portable-ci-review-d6411d594da14209af87d9522488c952\\python-syntax.stdout.txt",
+          "copiedPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-historical-log-provenance-80c9bb62a99d40eb8f8ababa70f3dc3b\\raw-copies\\python-syntax.stdout.txt",
+          "bytes": 8,
+          "sha256": "ff06d4d965d57ea548627e0bbdfa9fc6afc758841f07c19518346f6b69b77fd7",
+          "copiedBytesExactly": true
+        },
+        {
+          "originalPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-portable-ci-review-d6411d594da14209af87d9522488c952\\python-syntax.stderr.txt",
+          "copiedPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-historical-log-provenance-80c9bb62a99d40eb8f8ababa70f3dc3b\\raw-copies\\python-syntax.stderr.txt",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "copiedBytesExactly": true
+        }
+      ]
+    },
+    {
+      "id": "prepare",
+      "program": "original process.execPath",
+      "programPathRetained": false,
+      "observedNodeVersion": "v24.14.1",
+      "args": [
+        "C:/cinagroup/cinatoken/scripts/diagnostics/v364-owned-linux/run-v364-owned-diagnostic.mjs",
+        "--repo",
+        "C:/cinagroup/cinatoken",
+        "--out",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-portable-ci-review-d6411d594da14209af87d9522488c952/prepare-once",
+        "--prepare-only"
+      ],
+      "options": {
+        "cwd": "C:/cinagroup/cinatoken",
+        "encoding": "utf8",
+        "timeout": 60000
+      },
+      "actualProgramExit": 0,
+      "assertion": "assert.equal(prep.status, 0, prep.stderr)",
+      "checkName": "actual prepare-only bundling, no runtime",
+      "commandStatusSource": "Original synchronous spawnSync returned status, checked by exact original assertion; external producer completed with tool exit_code 0. Not inferred from FINAL aggregate actualExit.",
+      "originalProducerAssertionLine": 57,
+      "originalProducerWasClosed": true,
+      "separateToolReceiptForThisCommand": false,
+      "spawnedLocalPreparationProcessWasWaited": true,
+      "noNativeRuntime": true,
+      "noDiagnosticNodeChildForWindowsExecutorRejection": false,
+      "provesLinuxProcessGroupClosure": false,
+      "nativeTerminalClaim": false,
+      "outputs": [
+        {
+          "originalPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-portable-ci-review-d6411d594da14209af87d9522488c952\\prepare.stdout.txt",
+          "copiedPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-historical-log-provenance-80c9bb62a99d40eb8f8ababa70f3dc3b\\raw-copies\\prepare.stdout.txt",
+          "bytes": 172,
+          "sha256": "a0085add3f9ea59339174248a58bf2d9033015d05b57cfac0188673da7e25430",
+          "copiedBytesExactly": true
+        },
+        {
+          "originalPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-portable-ci-review-d6411d594da14209af87d9522488c952\\prepare.stderr.txt",
+          "copiedPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-historical-log-provenance-80c9bb62a99d40eb8f8ababa70f3dc3b\\raw-copies\\prepare.stderr.txt",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "copiedBytesExactly": true
+        }
+      ]
+    },
+    {
+      "id": "fresh-out-rejection",
+      "program": "original process.execPath",
+      "programPathRetained": false,
+      "observedNodeVersion": "v24.14.1",
+      "args": [
+        "C:/cinagroup/cinatoken/scripts/diagnostics/v364-owned-linux/run-v364-owned-diagnostic.mjs",
+        "--repo",
+        "C:/cinagroup/cinatoken",
+        "--out",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-portable-ci-review-d6411d594da14209af87d9522488c952/prepare-once",
+        "--prepare-only"
+      ],
+      "options": {
+        "cwd": "C:/cinagroup/cinatoken",
+        "encoding": "utf8",
+        "timeout": 10000
+      },
+      "actualProgramExit": 1,
+      "expectedExit": 1,
+      "assertion": "assert.equal(reused.status, 1)",
+      "checkName": "existing prepare output rejected without overwrite",
+      "commandStatusSource": "Original synchronous spawnSync returned status, checked by exact original assertion; external producer completed with tool exit_code 0. Not inferred from FINAL aggregate actualExit.",
+      "originalProducerAssertionLine": 63,
+      "originalProducerWasClosed": true,
+      "separateToolReceiptForThisCommand": false,
+      "spawnedLocalPreparationProcessWasWaited": true,
+      "noNativeRuntime": true,
+      "noDiagnosticNodeChildForWindowsExecutorRejection": false,
+      "provesLinuxProcessGroupClosure": false,
+      "nativeTerminalClaim": false,
+      "outputs": [
+        {
+          "originalPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-portable-ci-review-d6411d594da14209af87d9522488c952\\fresh-out-rejection.stdout.txt",
+          "copiedPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-historical-log-provenance-80c9bb62a99d40eb8f8ababa70f3dc3b\\raw-copies\\fresh-out-rejection.stdout.txt",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "copiedBytesExactly": true
+        },
+        {
+          "originalPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-portable-ci-review-d6411d594da14209af87d9522488c952\\fresh-out-rejection.stderr.txt",
+          "copiedPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-historical-log-provenance-80c9bb62a99d40eb8f8ababa70f3dc3b\\raw-copies\\fresh-out-rejection.stderr.txt",
+          "bytes": 674,
+          "sha256": "c3baa044b4ae925092dd8a9509db32c9410472f2762a817ce06bf30ac2e2c674",
+          "copiedBytesExactly": true
+        }
+      ]
+    },
+    {
+      "id": "executor-negative",
+      "program": "C:/Users/cina/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/python.exe",
+      "args": [
+        "C:/cinagroup/cinatoken/scripts/diagnostics/v364-owned-linux/execute-owned-linux.py",
+        "--repo",
+        "C:/cinagroup/cinatoken",
+        "--out",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-portable-ci-review-d6411d594da14209af87d9522488c952/executor-windows-rejection",
+        "--execute-linux"
+      ],
+      "options": {
+        "encoding": "utf8",
+        "timeout": 10000
+      },
+      "actualProgramExit": 1,
+      "expectedExit": 1,
+      "assertion": "assert.equal(rejection.status, 1)",
+      "checkName": "non-Linux preflight preserves real failure/stderr/closed receipt, no child",
+      "commandStatusSource": "Original synchronous spawnSync returned status, checked by exact original assertion; external producer completed with tool exit_code 0. Not inferred from FINAL aggregate actualExit.",
+      "originalProducerAssertionLine": 66,
+      "originalProducerWasClosed": true,
+      "separateToolReceiptForThisCommand": false,
+      "spawnedLocalPreparationProcessWasWaited": true,
+      "noNativeRuntime": true,
+      "noDiagnosticNodeChildForWindowsExecutorRejection": true,
+      "provesLinuxProcessGroupClosure": false,
+      "nativeTerminalClaim": false,
+      "outputs": [
+        {
+          "originalPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-portable-ci-review-d6411d594da14209af87d9522488c952\\executor-negative.stdout.txt",
+          "copiedPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-historical-log-provenance-80c9bb62a99d40eb8f8ababa70f3dc3b\\raw-copies\\executor-negative.stdout.txt",
+          "bytes": 209,
+          "sha256": "d3ef179f11d3c5db8d4ca86889588d681a23d20b0581a36ecad94f0f9e861099",
+          "copiedBytesExactly": true
+        },
+        {
+          "originalPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-portable-ci-review-d6411d594da14209af87d9522488c952\\executor-negative.stderr.txt",
+          "copiedPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-historical-log-provenance-80c9bb62a99d40eb8f8ababa70f3dc3b\\raw-copies\\executor-negative.stderr.txt",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "copiedBytesExactly": true
+        }
+      ]
+    }
+  ],
+  "windowsExecutorHistoricalArtifacts": [
+    {
+      "originalPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-portable-ci-review-d6411d594da14209af87d9522488c952\\executor-windows-rejection\\executor.stdout.txt",
+      "copiedPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-historical-log-provenance-80c9bb62a99d40eb8f8ababa70f3dc3b\\raw-copies\\executor-windows-rejection__executor.stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "copiedBytesExactly": true
+    },
+    {
+      "originalPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-portable-ci-review-d6411d594da14209af87d9522488c952\\executor-windows-rejection\\executor.stderr.txt",
+      "copiedPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-historical-log-provenance-80c9bb62a99d40eb8f8ababa70f3dc3b\\raw-copies\\executor-windows-rejection__executor.stderr.txt",
+      "bytes": 308,
+      "sha256": "82f4dc5058d6b15ff3fb6916645534b524c9aab87a311603fb02246964ff29f1",
+      "copiedBytesExactly": true
+    },
+    {
+      "originalPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-portable-ci-review-d6411d594da14209af87d9522488c952\\executor-windows-rejection\\executor.closed.json",
+      "copiedPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-historical-log-provenance-80c9bb62a99d40eb8f8ababa70f3dc3b\\raw-copies\\executor-windows-rejection__executor.closed.json",
+      "bytes": 1313,
+      "sha256": "95b34e7fb1d237ad658b52abef8e96f530d8d6a4de26d9a29795db8a4f56b9a5",
+      "copiedBytesExactly": true
+    }
+  ],
+  "windowsExecutorInterpretation": {
+    "noDiagnosticNodeChild": true,
+    "noNativeRuntime": true,
+    "noLinuxExecution": true,
+    "historicalActualProcessExitField": 1,
+    "historicalActualProcessExitMeaning": "Old ambiguous runner outcome code, preserved exactly; cannot be called the actual diagnostic child exit because no diagnostic child existed.",
+    "actualPythonProcessExit": 1,
+    "actualPythonProcessExitSource": "Original rejection.status === 1 synchronous producer assertion",
+    "diagnosticChildActualReturnCode": null,
+    "directChildReaped": false,
+    "cooperativeNativeFinallyVerified": false,
+    "nativeTerminalClaim": false,
+    "nonTerminalClaim": true,
+    "provesLinuxProcessGroupClosure": false
+  },
+  "preservation": {
+    "allEightOuterLogsRetained": true,
+    "allThreeInnerArtifactsRetained": true,
+    "originalFilesModified": false,
+    "originalFinalModified": false,
+    "exactByteCopies": true,
+    "oldFailureRemainsNegative": true
+  },
+  "currentAction": {
+    "operation": "Temp-only wx copying and provenance sealing",
+    "historicalCommandsRerun": false,
+    "runtimeExecuted": false,
+    "ciInvocations": 0,
+    "ciPolls": 0,
+    "productionRequests": 0,
+    "databaseRequests": 0,
+    "repositoryWrites": 0
+  },
+  "limitations": [
+    "No independent per-command unified tool receipts or original per-command start/end timestamps were emitted or retained.",
+    "The exact original Node binary path was not retained; program process.execPath is preserved without inventing that path.",
+    "Local Node v24.14.1 syntax/prepare results are not the required Linux Node22 runtime execution.",
+    "Windows executor preflight rejection and no-child metadata cannot prove native/Linux cleanup or baseline cancellation pass.",
+    "Original aggregate FINAL actualExit 0 is not used to invent inner successes; two expected negatives keep their actual exit 1."
+  ]
+}

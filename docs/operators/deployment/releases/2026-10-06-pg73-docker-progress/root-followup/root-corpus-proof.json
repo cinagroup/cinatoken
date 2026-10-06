@@ -1,0 +1,11 @@
+{
+  "at": "2026-10-06T00:24:20.622Z",
+  "actualExit": 0,
+  "tsLoader": "existing --import tsx",
+  "formalCurrentCount": 81,
+  "historicalCount": 73,
+  "corpusSHA256": "23afef61a8a670e0af8c90e3a138f522e6b283b454e380a592bf85bca83108dc",
+  "ledgerMD5": "ca1ea96a1b4bcd0675642f30dcf48042",
+  "databaseConnections": 0,
+  "nativePassClaim": false
+}

@@ -1,0 +1,8 @@
+{
+  "closed": true,
+  "actualExitCode": 0,
+  "label": "owned-diff-check-final",
+  "stdout": "owned-diff-check-final.stdout.log",
+  "stderr": "owned-diff-check-final.stderr.log",
+  "completedAt": "2026-10-06T00:30:41.6864572Z"
+}

@@ -1,0 +1,20 @@
+{
+  "schema": "historical-exact-tool-return-copy-v1",
+  "provenance": "Exact original nested exec_command request and return copied from retained conversation tool context; not a new execution receipt",
+  "originalRequest": {
+    "cmd": "node 'C:/Users/cina/AppData/Local/Temp/cinatoken-v364-portable-ci-review-d6411d594da14209af87d9522488c952/audit-portable.mjs'",
+    "workdir": "C:/cinagroup/cinatoken",
+    "max_output_tokens": 1800
+  },
+  "originalResult": {
+    "chunk_id": "14b93f",
+    "wall_time_seconds": 4.8866004,
+    "exit_code": 0,
+    "original_token_count": 95,
+    "output": "{\"actualExit\":0,\"report\":\"C:\\\\Users\\\\cina\\\\AppData\\\\Local\\\\Temp\\\\cinatoken-v364-portable-ci-review-d6411d594da14209af87d9522488c952\\\\FINAL-v364-portable-ci-preparation.json\",\"bytes\":12713,\"sha256\":\"bf61962660ffb46f10e699b2b9933e2bf33bf3f0d89a41833b14c5d45982800e\",\"manifestSHA\":\"cc8346861d175eeb2458a1765ba3c22768d0cb8dc9eee17f702faa868e6e7d92\",\"files\":8,\"runtimeExecuted\":false}\n"
+  },
+  "originalTimestamp": null,
+  "originalTimestampRetained": false,
+  "commandWasRerun": false,
+  "individualInnerToolReceiptsExisted": false
+}

@@ -1,0 +1,773 @@
+{
+  "at": "2026-10-06T00:30:23.130Z",
+  "actualExit": 0,
+  "fixedBeforeCommit": "cecd81638e97bf919d5988e9037a10f9dbfcef3f",
+  "review": "PASS_WITH_NO_CODE_BLOCKER",
+  "reviewType": "independent read-only Acorn and byte review, no native test execution",
+  "acorn": {
+    "version": "8.16.0",
+    "ecmaVersion": "latest",
+    "sourceType": "module",
+    "removedAstMetadata": [
+      "start",
+      "end",
+      "loc"
+    ]
+  },
+  "sourceRecords": [
+    {
+      "name": "next-shared-fixture-repair.json",
+      "bytes": 4374,
+      "sha256": "a516e5585b9491868b7eb454d4efe9193e878053083f421e69cc67ea96907cb0"
+    },
+    {
+      "name": "remaining-shared-fixture-repair.json",
+      "bytes": 5652,
+      "sha256": "47aa2930773155454f3d0ebdef86f97bef3f0088a70c5ce1c439e357c3081626"
+    }
+  ],
+  "files": [
+    {
+      "file": "scripts/db/cutover/postgres-shared-key-quote-versions.native.test.mjs",
+      "before": {
+        "bytes": 34815,
+        "sha256": "a68472dd3a7e4ac77e67e63a99469b6651ffc553562ada1a664964f1cdc238f8"
+      },
+      "after": {
+        "bytes": 34823,
+        "sha256": "16ef4b701728c9de46ea932851354d7cee2aa9d80c6ab543ceae6f4526380c83"
+      },
+      "workingSourceExact": true,
+      "allowedEdits": [
+        {
+          "from": "import { readFile, readdir, writeFile } from 'node:fs/promises';",
+          "to": "import { readFile, writeFile } from 'node:fs/promises';",
+          "count": 1
+        },
+        {
+          "from": "import { grantPostgresRuntime } from './grant-postgres-runtime.ts';",
+          "to": "import { grantPg73RuntimeFixture, listPg73Migrations } from './pg73-native-fixture.mjs';",
+          "count": 1
+        },
+        {
+          "from": "await grantPostgresRuntime({ DATABASE_URL: url });",
+          "to": "await grantPg73RuntimeFixture({ cluster, migrator, migratorUrl: url });",
+          "count": 2
+        },
+        {
+          "from": "const files = (await readdir(migrations)).filter(name => name.endsWith('.sql')).sort();",
+          "to": "const files = await listPg73Migrations();",
+          "count": 1
+        }
+      ],
+      "forwardReplayByteExact": true,
+      "reverseOriginalByteExact": true,
+      "orderedAssertions": 65,
+      "assertionAstExact": true,
+      "assertionSourceExact": true,
+      "originalGrantNegativeCalls": 0,
+      "grantNegativeCallsChanged": 0,
+      "successfulGrantAdaptations": 2,
+      "grantCallDetails": {
+        "before": [
+          {
+            "callee": "grantPostgresRuntime",
+            "ast": {
+              "type": "CallExpression",
+              "callee": {
+                "type": "Identifier",
+                "name": "grantPostgresRuntime"
+              },
+              "arguments": [
+                {
+                  "type": "ObjectExpression",
+                  "properties": [
+                    {
+                      "type": "Property",
+                      "method": false,
+                      "shorthand": false,
+                      "computed": false,
+                      "key": {
+                        "type": "Identifier",
+                        "name": "DATABASE_URL"
+                      },
+                      "value": {
+                        "type": "Identifier",
+                        "name": "url"
+                      },
+                      "kind": "init"
+                    }
+                  ]
+                }
+              ],
+              "optional": false
+            },
+            "source": "grantPostgresRuntime({ DATABASE_URL: url })",
+            "directAwait": true,
+            "assertEnclosing": false
+          },
+          {
+            "callee": "grantPostgresRuntime",
+            "ast": {
+              "type": "CallExpression",
+              "callee": {
+                "type": "Identifier",
+                "name": "grantPostgresRuntime"
+              },
+              "arguments": [
+                {
+                  "type": "ObjectExpression",
+                  "properties": [
+                    {
+                      "type": "Property",
+                      "method": false,
+                      "shorthand": false,
+                      "computed": false,
+                      "key": {
+                        "type": "Identifier",
+                        "name": "DATABASE_URL"
+                      },
+                      "value": {
+                        "type": "Identifier",
+                        "name": "url"
+                      },
+                      "kind": "init"
+                    }
+                  ]
+                }
+              ],
+              "optional": false
+            },
+            "source": "grantPostgresRuntime({ DATABASE_URL: url })",
+            "directAwait": true,
+            "assertEnclosing": false
+          }
+        ],
+        "after": [
+          {
+            "callee": "grantPg73RuntimeFixture",
+            "ast": {
+              "type": "CallExpression",
+              "callee": {
+                "type": "Identifier",
+                "name": "grantPg73RuntimeFixture"
+              },
+              "arguments": [
+                {
+                  "type": "ObjectExpression",
+                  "properties": [
+                    {
+                      "type": "Property",
+                      "method": false,
+                      "shorthand": true,
+                      "computed": false,
+                      "key": {
+                        "type": "Identifier",
+                        "name": "cluster"
+                      },
+                      "value": {
+                        "type": "Identifier",
+                        "name": "cluster"
+                      },
+                      "kind": "init"
+                    },
+                    {
+                      "type": "Property",
+                      "method": false,
+                      "shorthand": true,
+                      "computed": false,
+                      "key": {
+                        "type": "Identifier",
+                        "name": "migrator"
+                      },
+                      "value": {
+                        "type": "Identifier",
+                        "name": "migrator"
+                      },
+                      "kind": "init"
+                    },
+                    {
+                      "type": "Property",
+                      "method": false,
+                      "shorthand": false,
+                      "computed": false,
+                      "key": {
+                        "type": "Identifier",
+                        "name": "migratorUrl"
+                      },
+                      "value": {
+                        "type": "Identifier",
+                        "name": "url"
+                      },
+                      "kind": "init"
+                    }
+                  ]
+                }
+              ],
+              "optional": false
+            },
+            "source": "grantPg73RuntimeFixture({ cluster, migrator, migratorUrl: url })",
+            "directAwait": true,
+            "assertEnclosing": false
+          },
+          {
+            "callee": "grantPg73RuntimeFixture",
+            "ast": {
+              "type": "CallExpression",
+              "callee": {
+                "type": "Identifier",
+                "name": "grantPg73RuntimeFixture"
+              },
+              "arguments": [
+                {
+                  "type": "ObjectExpression",
+                  "properties": [
+                    {
+                      "type": "Property",
+                      "method": false,
+                      "shorthand": true,
+                      "computed": false,
+                      "key": {
+                        "type": "Identifier",
+                        "name": "cluster"
+                      },
+                      "value": {
+                        "type": "Identifier",
+                        "name": "cluster"
+                      },
+                      "kind": "init"
+                    },
+                    {
+                      "type": "Property",
+                      "method": false,
+                      "shorthand": true,
+                      "computed": false,
+                      "key": {
+                        "type": "Identifier",
+                        "name": "migrator"
+                      },
+                      "value": {
+                        "type": "Identifier",
+                        "name": "migrator"
+                      },
+                      "kind": "init"
+                    },
+                    {
+                      "type": "Property",
+                      "method": false,
+                      "shorthand": false,
+                      "computed": false,
+                      "key": {
+                        "type": "Identifier",
+                        "name": "migratorUrl"
+                      },
+                      "value": {
+                        "type": "Identifier",
+                        "name": "url"
+                      },
+                      "kind": "init"
+                    }
+                  ]
+                }
+              ],
+              "optional": false
+            },
+            "source": "grantPg73RuntimeFixture({ cluster, migrator, migratorUrl: url })",
+            "directAwait": true,
+            "assertEnclosing": false
+          }
+        ]
+      },
+      "snapshots": {
+        "before": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-shared-fixture-peer-8f9c0b77c2d2454aa570a019475861dc\\v4-postgres-shared-key-quote-versions.native.test.mjs.before",
+          "bytes": 34815,
+          "sha256": "a68472dd3a7e4ac77e67e63a99469b6651ffc553562ada1a664964f1cdc238f8"
+        },
+        "after": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-shared-fixture-peer-8f9c0b77c2d2454aa570a019475861dc\\v4-postgres-shared-key-quote-versions.native.test.mjs.after",
+          "bytes": 34823,
+          "sha256": "16ef4b701728c9de46ea932851354d7cee2aa9d80c6ab543ceae6f4526380c83"
+        },
+        "reversed": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-shared-fixture-peer-8f9c0b77c2d2454aa570a019475861dc\\v4-postgres-shared-key-quote-versions.native.test.mjs.reversed",
+          "bytes": 34815,
+          "sha256": "a68472dd3a7e4ac77e67e63a99469b6651ffc553562ada1a664964f1cdc238f8"
+        }
+      }
+    },
+    {
+      "file": "scripts/db/cutover/postgres-shared-key-orphan-review-v348.native.test.mjs",
+      "before": {
+        "bytes": 22988,
+        "sha256": "6f830e1525240c5ae853d65844eb7de9102d393aad19d11fef7099db3829fd98"
+      },
+      "after": {
+        "bytes": 22999,
+        "sha256": "86dd70cbfcf81c9721cb2508ac4748dc9faf60ed00c6479498ce11f5df3d7d6a"
+      },
+      "workingSourceExact": true,
+      "allowedEdits": [
+        {
+          "from": "import { readFile, readdir, writeFile } from 'node:fs/promises';",
+          "to": "import { readFile, writeFile } from 'node:fs/promises';",
+          "count": 1
+        },
+        {
+          "from": "import { startNativePostgres } from '../../../packages/core/src/test-support/postgres-native-cluster.mjs';",
+          "to": "import { startNativePostgres } from '../../../packages/core/src/test-support/postgres-native-cluster.mjs';\nimport { listPg73Migrations } from './pg73-native-fixture.mjs';",
+          "count": 1
+        },
+        {
+          "from": "const names = (await readdir(migrations)).filter(name=>name.endsWith('.sql')).sort();",
+          "to": "const names = await listPg73Migrations();",
+          "count": 1
+        }
+      ],
+      "forwardReplayByteExact": true,
+      "reverseOriginalByteExact": true,
+      "orderedAssertions": 39,
+      "assertionAstExact": true,
+      "assertionSourceExact": true,
+      "originalGrantNegativeCalls": 0,
+      "grantNegativeCallsChanged": 0,
+      "successfulGrantAdaptations": 0,
+      "grantCallDetails": {
+        "before": [],
+        "after": []
+      },
+      "snapshots": {
+        "before": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-shared-fixture-peer-8f9c0b77c2d2454aa570a019475861dc\\v4-postgres-shared-key-orphan-review-v348.native.test.mjs.before",
+          "bytes": 22988,
+          "sha256": "6f830e1525240c5ae853d65844eb7de9102d393aad19d11fef7099db3829fd98"
+        },
+        "after": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-shared-fixture-peer-8f9c0b77c2d2454aa570a019475861dc\\v4-postgres-shared-key-orphan-review-v348.native.test.mjs.after",
+          "bytes": 22999,
+          "sha256": "86dd70cbfcf81c9721cb2508ac4748dc9faf60ed00c6479498ce11f5df3d7d6a"
+        },
+        "reversed": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-shared-fixture-peer-8f9c0b77c2d2454aa570a019475861dc\\v4-postgres-shared-key-orphan-review-v348.native.test.mjs.reversed",
+          "bytes": 22988,
+          "sha256": "6f830e1525240c5ae853d65844eb7de9102d393aad19d11fef7099db3829fd98"
+        }
+      }
+    },
+    {
+      "file": "scripts/db/cutover/postgres-shared-key-selected-event-gate-v351.native.test.mjs",
+      "before": {
+        "bytes": 19224,
+        "sha256": "2d0c320eb44ec3bafda5f8750763c40cf4619425aee31fed02213f22eda14839"
+      },
+      "after": {
+        "bytes": 19233,
+        "sha256": "09c8c77cc5b1a07416d96c5028f098c40d811362b108c607e10570bebfa51d5e"
+      },
+      "workingSourceExact": true,
+      "allowedEdits": [
+        {
+          "from": "import { readFile, readdir, writeFile } from 'node:fs/promises';",
+          "to": "import { readFile, writeFile } from 'node:fs/promises';",
+          "count": 1
+        },
+        {
+          "from": "import { startNativePostgres } from '../../../packages/core/src/test-support/postgres-native-cluster.mjs';",
+          "to": "import { startNativePostgres } from '../../../packages/core/src/test-support/postgres-native-cluster.mjs';\nimport { listPg73Migrations } from './pg73-native-fixture.mjs';",
+          "count": 1
+        },
+        {
+          "from": "const names = (await readdir(migrations)).filter(name => name.endsWith('.sql')).sort();",
+          "to": "const names = await listPg73Migrations();",
+          "count": 1
+        }
+      ],
+      "forwardReplayByteExact": true,
+      "reverseOriginalByteExact": true,
+      "orderedAssertions": 18,
+      "assertionAstExact": true,
+      "assertionSourceExact": true,
+      "originalGrantNegativeCalls": 0,
+      "grantNegativeCallsChanged": 0,
+      "successfulGrantAdaptations": 0,
+      "grantCallDetails": {
+        "before": [],
+        "after": []
+      },
+      "snapshots": {
+        "before": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-shared-fixture-peer-8f9c0b77c2d2454aa570a019475861dc\\v4-postgres-shared-key-selected-event-gate-v351.native.test.mjs.before",
+          "bytes": 19224,
+          "sha256": "2d0c320eb44ec3bafda5f8750763c40cf4619425aee31fed02213f22eda14839"
+        },
+        "after": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-shared-fixture-peer-8f9c0b77c2d2454aa570a019475861dc\\v4-postgres-shared-key-selected-event-gate-v351.native.test.mjs.after",
+          "bytes": 19233,
+          "sha256": "09c8c77cc5b1a07416d96c5028f098c40d811362b108c607e10570bebfa51d5e"
+        },
+        "reversed": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-shared-fixture-peer-8f9c0b77c2d2454aa570a019475861dc\\v4-postgres-shared-key-selected-event-gate-v351.native.test.mjs.reversed",
+          "bytes": 19224,
+          "sha256": "2d0c320eb44ec3bafda5f8750763c40cf4619425aee31fed02213f22eda14839"
+        }
+      }
+    },
+    {
+      "file": "scripts/db/cutover/postgres-shared-key-snapshot-earning-consumer.native.test.mjs",
+      "before": {
+        "bytes": 35371,
+        "sha256": "44842fb1a4aa431fc2081a9968672dea620a6b74a256c3c93a3a046745a6e66b"
+      },
+      "after": {
+        "bytes": 35384,
+        "sha256": "5a22bbe2365e727b335f3838ac5f7106f235bb9b50b02b34fcfbe58876c5be92"
+      },
+      "workingSourceExact": true,
+      "allowedEdits": [
+        {
+          "from": "import { readFile, readdir, writeFile } from 'node:fs/promises';",
+          "to": "import { readFile, writeFile } from 'node:fs/promises';",
+          "count": 1
+        },
+        {
+          "from": "import { startNativePostgres } from '../../../packages/core/src/test-support/postgres-native-cluster.mjs';",
+          "to": "import { startNativePostgres } from '../../../packages/core/src/test-support/postgres-native-cluster.mjs';\nimport { listPg73Migrations } from './pg73-native-fixture.mjs';",
+          "count": 1
+        },
+        {
+          "from": "const files=(await readdir(migrations)).filter(name=>name.endsWith('.sql')).sort();",
+          "to": "const files = await listPg73Migrations();",
+          "count": 1
+        }
+      ],
+      "forwardReplayByteExact": true,
+      "reverseOriginalByteExact": true,
+      "orderedAssertions": 64,
+      "assertionAstExact": true,
+      "assertionSourceExact": true,
+      "originalGrantNegativeCalls": 0,
+      "grantNegativeCallsChanged": 0,
+      "successfulGrantAdaptations": 0,
+      "grantCallDetails": {
+        "before": [],
+        "after": []
+      },
+      "snapshots": {
+        "before": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-shared-fixture-peer-8f9c0b77c2d2454aa570a019475861dc\\v4-postgres-shared-key-snapshot-earning-consumer.native.test.mjs.before",
+          "bytes": 35371,
+          "sha256": "44842fb1a4aa431fc2081a9968672dea620a6b74a256c3c93a3a046745a6e66b"
+        },
+        "after": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-shared-fixture-peer-8f9c0b77c2d2454aa570a019475861dc\\v4-postgres-shared-key-snapshot-earning-consumer.native.test.mjs.after",
+          "bytes": 35384,
+          "sha256": "5a22bbe2365e727b335f3838ac5f7106f235bb9b50b02b34fcfbe58876c5be92"
+        },
+        "reversed": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-shared-fixture-peer-8f9c0b77c2d2454aa570a019475861dc\\v4-postgres-shared-key-snapshot-earning-consumer.native.test.mjs.reversed",
+          "bytes": 35371,
+          "sha256": "44842fb1a4aa431fc2081a9968672dea620a6b74a256c3c93a3a046745a6e66b"
+        }
+      }
+    },
+    {
+      "file": "scripts/db/cutover/postgres-shared-key-economic-delivery.native.test.mjs",
+      "before": {
+        "bytes": 31990,
+        "sha256": "06223cc457a50eba3db8203be1605cde2e158e543bb80d6c75ef762270ffbf02"
+      },
+      "after": {
+        "bytes": 32003,
+        "sha256": "8fd48757e9beafc308fb21b018fd35f105fd0bb89011dfa0f4a4e0e1bca4fd94"
+      },
+      "workingSourceExact": true,
+      "allowedEdits": [
+        {
+          "from": "import { readFile, readdir, writeFile } from 'node:fs/promises';",
+          "to": "import { readFile, writeFile } from 'node:fs/promises';",
+          "count": 1
+        },
+        {
+          "from": "import { startNativePostgres } from '../../../packages/core/src/test-support/postgres-native-cluster.mjs';",
+          "to": "import { startNativePostgres } from '../../../packages/core/src/test-support/postgres-native-cluster.mjs';\nimport { listPg73Migrations } from './pg73-native-fixture.mjs';",
+          "count": 1
+        },
+        {
+          "from": "const files=(await readdir(migrations)).filter(name=>name.endsWith('.sql')).sort();",
+          "to": "const files = await listPg73Migrations();",
+          "count": 1
+        }
+      ],
+      "forwardReplayByteExact": true,
+      "reverseOriginalByteExact": true,
+      "orderedAssertions": 73,
+      "assertionAstExact": true,
+      "assertionSourceExact": true,
+      "originalGrantNegativeCalls": 0,
+      "grantNegativeCallsChanged": 0,
+      "successfulGrantAdaptations": 0,
+      "grantCallDetails": {
+        "before": [],
+        "after": []
+      },
+      "snapshots": {
+        "before": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-shared-fixture-peer-8f9c0b77c2d2454aa570a019475861dc\\v4-postgres-shared-key-economic-delivery.native.test.mjs.before",
+          "bytes": 31990,
+          "sha256": "06223cc457a50eba3db8203be1605cde2e158e543bb80d6c75ef762270ffbf02"
+        },
+        "after": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-shared-fixture-peer-8f9c0b77c2d2454aa570a019475861dc\\v4-postgres-shared-key-economic-delivery.native.test.mjs.after",
+          "bytes": 32003,
+          "sha256": "8fd48757e9beafc308fb21b018fd35f105fd0bb89011dfa0f4a4e0e1bca4fd94"
+        },
+        "reversed": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-shared-fixture-peer-8f9c0b77c2d2454aa570a019475861dc\\v4-postgres-shared-key-economic-delivery.native.test.mjs.reversed",
+          "bytes": 31990,
+          "sha256": "06223cc457a50eba3db8203be1605cde2e158e543bb80d6c75ef762270ffbf02"
+        }
+      }
+    },
+    {
+      "file": "scripts/db/cutover/postgres-shared-key-credited-usage-gap.native.test.mjs",
+      "before": {
+        "bytes": 18159,
+        "sha256": "713583fdeb5ebfebfd03c5eb920fd464002bf9f1a4a8bbb78a3928d7720bf1ea"
+      },
+      "after": {
+        "bytes": 18172,
+        "sha256": "3c1a6de9753be65c96acb67b64b9dac04868b5f9ed0718834ce4c02edaafa66e"
+      },
+      "workingSourceExact": true,
+      "allowedEdits": [
+        {
+          "from": "import { readFile, readdir, writeFile } from 'node:fs/promises';",
+          "to": "import { readFile, writeFile } from 'node:fs/promises';",
+          "count": 1
+        },
+        {
+          "from": "import { startNativePostgres } from '../../../packages/core/src/test-support/postgres-native-cluster.mjs';",
+          "to": "import { startNativePostgres } from '../../../packages/core/src/test-support/postgres-native-cluster.mjs';\nimport { listPg73Migrations } from './pg73-native-fixture.mjs';",
+          "count": 1
+        },
+        {
+          "from": "const files=(await readdir(migrations)).filter(name=>name.endsWith('.sql')).sort();",
+          "to": "const files = await listPg73Migrations();",
+          "count": 1
+        }
+      ],
+      "forwardReplayByteExact": true,
+      "reverseOriginalByteExact": true,
+      "orderedAssertions": 29,
+      "assertionAstExact": true,
+      "assertionSourceExact": true,
+      "originalGrantNegativeCalls": 0,
+      "grantNegativeCallsChanged": 0,
+      "successfulGrantAdaptations": 0,
+      "grantCallDetails": {
+        "before": [],
+        "after": []
+      },
+      "snapshots": {
+        "before": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-shared-fixture-peer-8f9c0b77c2d2454aa570a019475861dc\\v4-postgres-shared-key-credited-usage-gap.native.test.mjs.before",
+          "bytes": 18159,
+          "sha256": "713583fdeb5ebfebfd03c5eb920fd464002bf9f1a4a8bbb78a3928d7720bf1ea"
+        },
+        "after": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-shared-fixture-peer-8f9c0b77c2d2454aa570a019475861dc\\v4-postgres-shared-key-credited-usage-gap.native.test.mjs.after",
+          "bytes": 18172,
+          "sha256": "3c1a6de9753be65c96acb67b64b9dac04868b5f9ed0718834ce4c02edaafa66e"
+        },
+        "reversed": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-shared-fixture-peer-8f9c0b77c2d2454aa570a019475861dc\\v4-postgres-shared-key-credited-usage-gap.native.test.mjs.reversed",
+          "bytes": 18159,
+          "sha256": "713583fdeb5ebfebfd03c5eb920fd464002bf9f1a4a8bbb78a3928d7720bf1ea"
+        }
+      }
+    },
+    {
+      "file": "scripts/db/cutover/postgres-shared-key-credited-usage-store.native.test.mjs",
+      "before": {
+        "bytes": 28538,
+        "sha256": "16a297a4d26e603e8dce2981ba40d63dc29a7e9b0315cbdb00c12f4428c99a89"
+      },
+      "after": {
+        "bytes": 28551,
+        "sha256": "4c2acfc56302b7b6fb102979a6e6ad78611cccf0a0fb397a0a2b953eb8c29868"
+      },
+      "workingSourceExact": true,
+      "allowedEdits": [
+        {
+          "from": "import { readFile, readdir, writeFile } from 'node:fs/promises';",
+          "to": "import { readFile, writeFile } from 'node:fs/promises';",
+          "count": 1
+        },
+        {
+          "from": "import { startNativePostgres } from '../../../packages/core/src/test-support/postgres-native-cluster.mjs';",
+          "to": "import { startNativePostgres } from '../../../packages/core/src/test-support/postgres-native-cluster.mjs';\nimport { listPg73Migrations } from './pg73-native-fixture.mjs';",
+          "count": 1
+        },
+        {
+          "from": "const files=(await readdir(migrations)).filter(name=>name.endsWith('.sql')).sort();",
+          "to": "const files = await listPg73Migrations();",
+          "count": 1
+        }
+      ],
+      "forwardReplayByteExact": true,
+      "reverseOriginalByteExact": true,
+      "orderedAssertions": 68,
+      "assertionAstExact": true,
+      "assertionSourceExact": true,
+      "originalGrantNegativeCalls": 0,
+      "grantNegativeCallsChanged": 0,
+      "successfulGrantAdaptations": 0,
+      "grantCallDetails": {
+        "before": [],
+        "after": []
+      },
+      "snapshots": {
+        "before": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-shared-fixture-peer-8f9c0b77c2d2454aa570a019475861dc\\v4-postgres-shared-key-credited-usage-store.native.test.mjs.before",
+          "bytes": 28538,
+          "sha256": "16a297a4d26e603e8dce2981ba40d63dc29a7e9b0315cbdb00c12f4428c99a89"
+        },
+        "after": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-shared-fixture-peer-8f9c0b77c2d2454aa570a019475861dc\\v4-postgres-shared-key-credited-usage-store.native.test.mjs.after",
+          "bytes": 28551,
+          "sha256": "4c2acfc56302b7b6fb102979a6e6ad78611cccf0a0fb397a0a2b953eb8c29868"
+        },
+        "reversed": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-shared-fixture-peer-8f9c0b77c2d2454aa570a019475861dc\\v4-postgres-shared-key-credited-usage-store.native.test.mjs.reversed",
+          "bytes": 28538,
+          "sha256": "16a297a4d26e603e8dce2981ba40d63dc29a7e9b0315cbdb00c12f4428c99a89"
+        }
+      }
+    }
+  ],
+  "totals": {
+    "files": 7,
+    "orderedAssertions": 356,
+    "assertionAstAndSourceUnchanged": 356,
+    "fullReverseByteRestorations": 7,
+    "grantSuccessBridges": 2,
+    "originalGrantNegativeCalls": 0,
+    "grantNegativeCallsChanged": 0
+  },
+  "workflow": {
+    "file": ".github/workflows/proxy-dispatch-safety.yml",
+    "before": {
+      "bytes": 45882,
+      "sha256": "ed33fec56d1260e651b733d4b61c002c9f8ebea762e440e700c8c564797374ef"
+    },
+    "after": {
+      "bytes": 45895,
+      "sha256": "8e883e7f21f77f8367d361f6bd3d060e16c241c28641b3eac85af6835841f152"
+    },
+    "onlySingleLoaderAddition": true,
+    "reverseOriginalByteExact": true,
+    "from": "node --test scripts/db/cutover/postgres-shared-key-credited-usage-store.native.test.mjs",
+    "to": "node --import tsx --test scripts/db/cutover/postgres-shared-key-credited-usage-store.native.test.mjs",
+    "snapshots": {
+      "before": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-shared-fixture-peer-8f9c0b77c2d2454aa570a019475861dc\\v4-proxy-dispatch-safety.yml.before",
+        "bytes": 45882,
+        "sha256": "ed33fec56d1260e651b733d4b61c002c9f8ebea762e440e700c8c564797374ef"
+      },
+      "after": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-shared-fixture-peer-8f9c0b77c2d2454aa570a019475861dc\\v4-proxy-dispatch-safety.yml.after",
+        "bytes": 45895,
+        "sha256": "8e883e7f21f77f8367d361f6bd3d060e16c241c28641b3eac85af6835841f152"
+      },
+      "reverse": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-shared-fixture-peer-8f9c0b77c2d2454aa570a019475861dc\\v4-proxy-dispatch-safety.yml.reversed",
+        "bytes": 45882,
+        "sha256": "ed33fec56d1260e651b733d4b61c002c9f8ebea762e440e700c8c564797374ef"
+      }
+    }
+  },
+  "unchangedSources": [
+    {
+      "file": "scripts/db/cutover/pg73-native-fixture.mjs",
+      "bytes": 6849,
+      "sha256": "124ddd43c2594d0daaac66a4e7158e5df90b00a6d73f03cbcac9e8f853a7346f",
+      "exactHeadBytes": true,
+      "snapshot": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-shared-fixture-peer-8f9c0b77c2d2454aa570a019475861dc\\v4-pg73-native-fixture.mjs.source",
+        "bytes": 6849,
+        "sha256": "124ddd43c2594d0daaac66a4e7158e5df90b00a6d73f03cbcac9e8f853a7346f"
+      }
+    },
+    {
+      "file": "scripts/db/cutover/grant-postgres-runtime.ts",
+      "bytes": 25946,
+      "sha256": "3f95f18f557696d8a36b93f7fe0d0d35a391e8ac9cf953376a234a6b629ea242",
+      "exactHeadBytes": true,
+      "snapshot": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-shared-fixture-peer-8f9c0b77c2d2454aa570a019475861dc\\v4-grant-postgres-runtime.ts.source",
+        "bytes": 25946,
+        "sha256": "3f95f18f557696d8a36b93f7fe0d0d35a391e8ac9cf953376a234a6b629ea242"
+      }
+    },
+    {
+      "file": "scripts/db/cutover/provision-postgres-roles.ts",
+      "bytes": 7028,
+      "sha256": "afeac8b67002c610a193c9a3ee1b3d583c5e2097082ad88824e9157a71a61d64",
+      "exactHeadBytes": true,
+      "snapshot": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-shared-fixture-peer-8f9c0b77c2d2454aa570a019475861dc\\v4-provision-postgres-roles.ts.source",
+        "bytes": 7028,
+        "sha256": "afeac8b67002c610a193c9a3ee1b3d583c5e2097082ad88824e9157a71a61d64"
+      }
+    },
+    {
+      "file": ".nvmrc",
+      "bytes": 3,
+      "sha256": "f14b4987904bcb5814e4459a057ed4d20f58a633152288a761214dcd28780b56",
+      "exactHeadBytes": true,
+      "snapshot": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-shared-fixture-peer-8f9c0b77c2d2454aa570a019475861dc\\v4-.nvmrc.source",
+        "bytes": 3,
+        "sha256": "f14b4987904bcb5814e4459a057ed4d20f58a633152288a761214dcd28780b56"
+      }
+    }
+  ],
+  "quoteSemantics": {
+    "ownedLoopbackMigratorUrl": true,
+    "migratorClientMaxOne": true,
+    "runtimeInitiallyLoginWithRandomPassword": true,
+    "originalRuntimeMembershipNegativeRoles": [
+      "cinatoken_gateway_migrator",
+      "pg_read_all_data",
+      "pg_write_all_data"
+    ],
+    "membershipNegativeLoopIncludingRevokeUnchanged": true,
+    "proxyHasMigratorMembership": true,
+    "runtimeMembershipAtSuccessfulGrant": "Static flow creates no runtime membership except the unchanged negative loop which revokes each membership before continuation; the existing bridge independently requires no memberships at each real grant call.",
+    "temporary0074": "Existing unchanged bridge checks exactly PG73/ledger/corpus, temporarily installs only audit 0074 for unchanged production grant, verifies INSERT-only audit ACL, drops it and restores ledger/role.",
+    "productionGrantUnchanged": true
+  },
+  "loaderNecessity": {
+    "workflowNodeVersion": 22,
+    "topLevelDependencyGraph": [
+      "scripts/db/cutover/pg73-native-fixture.mjs",
+      "scripts/db/cutover/grant-postgres-runtime.ts",
+      "scripts/db/cutover/provision-postgres-roles.ts"
+    ],
+    "extensionlessTypeScriptTransitiveImport": true,
+    "sixOtherReviewedFixturesAlreadyUseTsx": true,
+    "onlyFilesystemLoaderProbePlanned": true
+  },
+  "limitations": {
+    "nativeFixtureExecuted": false,
+    "nativePgPassClaim": false,
+    "postgresConnectionCount": 0,
+    "productionRequestCount": 0,
+    "ciPolling": false,
+    "sourceChangesByReviewer": false
+  },
+  "risks": [
+    "Linux PostgreSQL 18.6 runtime result is still required; static review does not establish native test passing.",
+    "These proposal fixtures intentionally retain the frozen historical 73-migration corpus; this review does not change the current 81-migration production contract."
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "closed": true,
+  "actualExitCode": 1,
+  "command": "node verify-configuration.mjs",
+  "stdout": "configuration-validation.stdout.log",
+  "stderr": "configuration-validation.stderr.log",
+  "completedAt": "2026-10-06T00:25:18.2768568Z"
+}

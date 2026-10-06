@@ -1,0 +1,96 @@
+{
+  "at": "2026-10-06T00:48:22.226Z",
+  "actualExit": 0,
+  "files": [
+    {
+      "path": ".github/workflows/v364-owned-linux-diagnostic.yml",
+      "bytes": 1610,
+      "sha256": "5f6c5de1d989f1331bad5a0a861accb848c8b02f5e0a196637e5f35540df241b",
+      "stagedByteExact": true
+    },
+    {
+      "path": "docker/examples/env.compose.external.example",
+      "bytes": 2246,
+      "sha256": "e91919807d8d451b6e634e487b87871b743e4bfae1c1ff2e54eb11902a4f1789",
+      "stagedByteExact": true
+    },
+    {
+      "path": "docker/examples/gateway.compose.yml",
+      "bytes": 3258,
+      "sha256": "a62b61f0c80f51a1d8d24e579dd2909b0df5cdcc0f3d51aad0e5cf6b21dd0a3a",
+      "stagedByteExact": true
+    },
+    {
+      "path": "docker/examples/web-frontend.compose.yml",
+      "bytes": 3808,
+      "sha256": "35bf7722b2d6b472b01c31c689b6a0ea1e4b1f9cd4ea9c45a1464f71b4bfde54",
+      "stagedByteExact": true
+    },
+    {
+      "path": "docs/developers/architecture/web-frontend-migration.md",
+      "bytes": 770286,
+      "sha256": "6d857df35f0d5e9e7b2ee8ea7564efe40cdfac03037de3973e737faed4f32cf6",
+      "stagedByteExact": true
+    },
+    {
+      "path": "docs/operators/deployment/docker.md",
+      "bytes": 25944,
+      "sha256": "69d94275c20277c6993dd5a70e4f00bf4744f8ea2f4da1915a5e7fe86d5871b3",
+      "stagedByteExact": true
+    },
+    {
+      "path": "scripts/db/cutover/postgres-budget-admission-login-v350.native.test.mjs",
+      "bytes": 26124,
+      "sha256": "3edd01255166137049abf024a1ed71b5c259084f1768328c082c50a2d7a82882",
+      "stagedByteExact": true
+    },
+    {
+      "path": "scripts/diagnostics/v364-owned-linux/README.md",
+      "bytes": 6176,
+      "sha256": "bc3491a4c14306cbafd943f48c5088bb93e3dfdf934dcf5aed337625117ea0e0",
+      "stagedByteExact": true
+    },
+    {
+      "path": "scripts/diagnostics/v364-owned-linux/execute-owned-linux.py",
+      "bytes": 9357,
+      "sha256": "21383ffe54d865d9d1018a90317b831ae468dc0136b6aeac3e8a324db86a5c1f",
+      "stagedByteExact": true
+    },
+    {
+      "path": "scripts/diagnostics/v364-owned-linux/gateway-observer.mjs",
+      "bytes": 1244,
+      "sha256": "3ec2e49a72697f61bd1867bcde369a7c508cdbf669cd86d7e0eebdfc41dcfe00",
+      "stagedByteExact": true
+    },
+    {
+      "path": "scripts/diagnostics/v364-owned-linux/holder-observer.mjs",
+      "bytes": 2461,
+      "sha256": "740727cae646ae757fa50ef7bb6c02a9f9cb4b1b3aa64b0de539c88bbbe09a25",
+      "stagedByteExact": true
+    },
+    {
+      "path": "scripts/diagnostics/v364-owned-linux/run-v364-owned-diagnostic.mjs",
+      "bytes": 22852,
+      "sha256": "11850fbe29355f705e3bc4ec68c1b6416565b943dfb7a0f200d4090de5158666",
+      "stagedByteExact": true
+    },
+    {
+      "path": "scripts/diagnostics/v364-owned-linux/sealed-package.json",
+      "bytes": 1067,
+      "sha256": "cc8346861d175eeb2458a1765ba3c22768d0cb8dc9eee17f702faa868e6e7d92",
+      "stagedByteExact": true
+    },
+    {
+      "path": "scripts/diagnostics/v364-owned-linux/source-inputs.json",
+      "bytes": 1789,
+      "sha256": "d42cda26a0f175bace59626b666cfc6e84c29929767c5344cc6680d98b96a083",
+      "stagedByteExact": true
+    }
+  ],
+  "count": 14,
+  "stagedWorkingtreeBytesExact": true,
+  "sealedInputs10MatchStagedGit": true,
+  "portableSealedFiles6MatchStagedGit": true,
+  "onlyReviewedScope": true,
+  "productionCodeChanged": false
+}

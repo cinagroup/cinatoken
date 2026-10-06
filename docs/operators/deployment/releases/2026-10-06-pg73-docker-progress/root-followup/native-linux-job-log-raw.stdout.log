@@ -1,0 +1,1103 @@
+﻿2026-10-06T00:29:15.8590304Z Current runner version: '2.337.0'
+2026-10-06T00:29:15.8639313Z ##[group]Runner Image Provisioner
+2026-10-06T00:29:15.8640201Z Hosted Compute Agent
+2026-10-06T00:29:15.8640799Z Version: 20260901.588
+2026-10-06T00:29:15.8641574Z Commit: f88ec8081b781fac6c440065ac7ff9e710ce3d0b
+2026-10-06T00:29:15.8642390Z Build Date: 2026-09-01T19:56:44Z
+2026-10-06T00:29:15.8643114Z Worker ID: {d62dd7ca-8871-453f-968f-290c6344da9f}
+2026-10-06T00:29:15.8644330Z Azure Region: westcentralus
+2026-10-06T00:29:15.8644948Z ##[endgroup]
+2026-10-06T00:29:15.8646523Z ##[group]Operating System
+2026-10-06T00:29:15.8647315Z Ubuntu
+2026-10-06T00:29:15.8647891Z 24.04.5
+2026-10-06T00:29:15.8648480Z LTS
+2026-10-06T00:29:15.8648994Z ##[endgroup]
+2026-10-06T00:29:15.8649571Z ##[group]Runner Image
+2026-10-06T00:29:15.8650209Z Image: ubuntu-24.04
+2026-10-06T00:29:15.8650807Z Version: 20260927.320.1
+2026-10-06T00:29:15.8652125Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20260927.320/images/ubuntu/Ubuntu2404-Readme.md
+2026-10-06T00:29:15.8653951Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20260927.320
+2026-10-06T00:29:15.8654964Z ##[endgroup]
+2026-10-06T00:29:15.8656131Z ##[group]GITHUB_TOKEN Permissions
+2026-10-06T00:29:15.8658048Z Contents: read
+2026-10-06T00:29:15.8658710Z Metadata: read
+2026-10-06T00:29:15.8659428Z ##[endgroup]
+2026-10-06T00:29:15.8661594Z Secret source: Actions
+2026-10-06T00:29:15.8662751Z Cache mode: write
+2026-10-06T00:29:15.8663883Z Prepare workflow directory
+2026-10-06T00:29:15.9141530Z Prepare all required actions
+2026-10-06T00:29:15.9190636Z Getting action download info
+2026-10-06T00:29:16.2248180Z Download action repository 'actions/checkout@v4' (SHA:11d5960a326750d5838078e36cf38b85af677262)
+2026-10-06T00:29:16.3459956Z Download action repository 'actions/setup-node@v4' (SHA:49933ea5288caeca8642d1e84afbd3f7d6820020)
+2026-10-06T00:29:16.5664649Z Complete job name: native-financial-consumer
+2026-10-06T00:29:16.6762134Z ##[group]Checking docker version
+2026-10-06T00:29:16.6775773Z ##[command]/usr/bin/docker version --format '{{.Server.APIVersion}}'
+2026-10-06T00:29:16.7663561Z '1.48'
+2026-10-06T00:29:16.7675171Z Docker daemon API version: '1.48'
+2026-10-06T00:29:16.7675950Z ##[command]/usr/bin/docker version --format '{{.Client.APIVersion}}'
+2026-10-06T00:29:16.7835523Z '1.48'
+2026-10-06T00:29:16.7848809Z Docker client API version: '1.48'
+2026-10-06T00:29:16.7854442Z ##[endgroup]
+2026-10-06T00:29:16.7857370Z ##[group]Clean up resources from previous jobs
+2026-10-06T00:29:16.7862816Z ##[command]/usr/bin/docker ps --all --quiet --no-trunc --filter "label=11c6d2"
+2026-10-06T00:29:16.8011946Z ##[command]/usr/bin/docker network prune --force --filter "label=11c6d2"
+2026-10-06T00:29:16.8146242Z ##[endgroup]
+2026-10-06T00:29:16.8146758Z ##[group]Create local container network
+2026-10-06T00:29:16.8156968Z ##[command]/usr/bin/docker network create --label 11c6d2 github_network_c7805bfaf8134b32b4de03e6bb8d6f4f
+2026-10-06T00:29:16.8778257Z 3feb8577148cf1d36792401d7eae809ae2eb9c6fe2106f4aebb5cd9e357336ba
+2026-10-06T00:29:16.8797812Z ##[endgroup]
+2026-10-06T00:29:16.8822662Z ##[group]Starting job container
+2026-10-06T00:29:16.8845863Z ##[command]/usr/bin/docker pull postgres:18.6-bookworm
+2026-10-06T00:29:17.6147629Z 18.6-bookworm: Pulling from library/postgres
+2026-10-06T00:29:17.8152951Z 774043ccc8cc: Pulling fs layer
+2026-10-06T00:29:17.8155087Z 211cec8da20e: Pulling fs layer
+2026-10-06T00:29:17.8156393Z c56d732b49fe: Pulling fs layer
+2026-10-06T00:29:17.8157384Z a9bacfc8d232: Pulling fs layer
+2026-10-06T00:29:17.8158347Z c043c1caa591: Pulling fs layer
+2026-10-06T00:29:17.8159290Z 6bd876b3b38f: Pulling fs layer
+2026-10-06T00:29:17.8160237Z bdbb8057313b: Pulling fs layer
+2026-10-06T00:29:17.8161191Z d1c18bcbca3a: Pulling fs layer
+2026-10-06T00:29:17.8162128Z 0e6c3beb32b1: Pulling fs layer
+2026-10-06T00:29:17.8163057Z 980abddbe295: Pulling fs layer
+2026-10-06T00:29:17.8164425Z 5178c10d12ba: Pulling fs layer
+2026-10-06T00:29:17.8165442Z 9dd6e8795674: Pulling fs layer
+2026-10-06T00:29:17.8166800Z ddda533f81f8: Pulling fs layer
+2026-10-06T00:29:17.8167794Z a9bacfc8d232: Waiting
+2026-10-06T00:29:17.8195684Z c043c1caa591: Waiting
+2026-10-06T00:29:17.8196780Z 6bd876b3b38f: Waiting
+2026-10-06T00:29:17.8197694Z bdbb8057313b: Waiting
+2026-10-06T00:29:17.8198608Z d1c18bcbca3a: Waiting
+2026-10-06T00:29:17.8199522Z 0e6c3beb32b1: Waiting
+2026-10-06T00:29:17.8200414Z 5178c10d12ba: Waiting
+2026-10-06T00:29:17.8201326Z 980abddbe295: Waiting
+2026-10-06T00:29:17.8202338Z 9dd6e8795674: Waiting
+2026-10-06T00:29:17.8203904Z ddda533f81f8: Waiting
+2026-10-06T00:29:18.0067233Z 211cec8da20e: Verifying Checksum
+2026-10-06T00:29:18.0069464Z 211cec8da20e: Download complete
+2026-10-06T00:29:18.1897410Z c56d732b49fe: Verifying Checksum
+2026-10-06T00:29:18.1898553Z c56d732b49fe: Download complete
+2026-10-06T00:29:18.2761919Z 774043ccc8cc: Verifying Checksum
+2026-10-06T00:29:18.2763136Z 774043ccc8cc: Download complete
+2026-10-06T00:29:18.3077199Z a9bacfc8d232: Verifying Checksum
+2026-10-06T00:29:18.3077835Z a9bacfc8d232: Download complete
+2026-10-06T00:29:18.5174620Z bdbb8057313b: Verifying Checksum
+2026-10-06T00:29:18.5175294Z bdbb8057313b: Download complete
+2026-10-06T00:29:18.5804837Z 6bd876b3b38f: Verifying Checksum
+2026-10-06T00:29:18.5805738Z 6bd876b3b38f: Download complete
+2026-10-06T00:29:18.5987228Z c043c1caa591: Verifying Checksum
+2026-10-06T00:29:18.5988371Z c043c1caa591: Download complete
+2026-10-06T00:29:18.7266687Z d1c18bcbca3a: Verifying Checksum
+2026-10-06T00:29:18.7270694Z d1c18bcbca3a: Download complete
+2026-10-06T00:29:18.7918163Z 980abddbe295: Download complete
+2026-10-06T00:29:18.9213141Z 5178c10d12ba: Download complete
+2026-10-06T00:29:18.9951497Z 9dd6e8795674: Download complete
+2026-10-06T00:29:19.1523432Z ddda533f81f8: Verifying Checksum
+2026-10-06T00:29:19.1524116Z ddda533f81f8: Download complete
+2026-10-06T00:29:19.3465640Z 0e6c3beb32b1: Verifying Checksum
+2026-10-06T00:29:19.5445626Z 0e6c3beb32b1: Download complete
+2026-10-06T00:29:19.5446420Z 774043ccc8cc: Pull complete
+2026-10-06T00:29:22.7398904Z 211cec8da20e: Pull complete
+2026-10-06T00:29:22.8764019Z c56d732b49fe: Pull complete
+2026-10-06T00:29:22.9169076Z a9bacfc8d232: Pull complete
+2026-10-06T00:29:23.2079440Z c043c1caa591: Pull complete
+2026-10-06T00:29:23.2881777Z 6bd876b3b38f: Pull complete
+2026-10-06T00:29:23.2966118Z bdbb8057313b: Pull complete
+2026-10-06T00:29:23.3089105Z d1c18bcbca3a: Pull complete
+2026-10-06T00:29:26.2455431Z 0e6c3beb32b1: Pull complete
+2026-10-06T00:29:26.2632876Z 980abddbe295: Pull complete
+2026-10-06T00:29:26.2907899Z 5178c10d12ba: Pull complete
+2026-10-06T00:29:26.3011753Z 9dd6e8795674: Pull complete
+2026-10-06T00:29:26.3100513Z ddda533f81f8: Pull complete
+2026-10-06T00:29:26.3138932Z Digest: sha256:3725f4e2499eef5134592b3b4ab79a543ed7f8e533b05b5b637af926630f6650
+2026-10-06T00:29:26.3151545Z Status: Downloaded newer image for postgres:18.6-bookworm
+2026-10-06T00:29:26.3166600Z docker.io/library/postgres:18.6-bookworm
+2026-10-06T00:29:26.3244643Z ##[command]/usr/bin/docker create --name 7fb8731e2836456194a9b0e59c45220a_postgres186bookworm_ecff2e --label 11c6d2 --workdir /__w/cinatoken/cinatoken --network github_network_c7805bfaf8134b32b4de03e6bb8d6f4f --user 0 -e "HOME=/github/home" -e GITHUB_ACTIONS=true -e CI=true -v "/var/run/docker.sock":"/var/run/docker.sock" -v "/home/runner/work":"/__w" -v "/home/runner/actions-runner/cached/2.337.0/externals":"/__e":ro -v "/home/runner/work/_temp":"/__w/_temp" -v "/home/runner/work/_actions":"/__w/_actions" -v "/opt/hostedtoolcache":"/__t" -v "/home/runner/work/_temp/_github_home":"/github/home" -v "/home/runner/work/_temp/_github_workflow":"/github/workflow" --entrypoint "tail" postgres:18.6-bookworm "-f" "/dev/null"
+2026-10-06T00:29:26.3506465Z 802f909f7cd6137e238340fc1be754bd7f1a4f7c78be94fa644e19f413349245
+2026-10-06T00:29:26.3528634Z ##[command]/usr/bin/docker start 802f909f7cd6137e238340fc1be754bd7f1a4f7c78be94fa644e19f413349245
+2026-10-06T00:29:26.5438355Z 802f909f7cd6137e238340fc1be754bd7f1a4f7c78be94fa644e19f413349245
+2026-10-06T00:29:26.5485677Z ##[command]/usr/bin/docker ps --all --filter id=802f909f7cd6137e238340fc1be754bd7f1a4f7c78be94fa644e19f413349245 --filter status=running --no-trunc --format "{{.ID}} {{.Status}}"
+2026-10-06T00:29:26.5609998Z 802f909f7cd6137e238340fc1be754bd7f1a4f7c78be94fa644e19f413349245 Up Less than a second
+2026-10-06T00:29:26.5627290Z ##[command]/usr/bin/docker inspect --format "{{range .Config.Env}}{{println .}}{{end}}" 802f909f7cd6137e238340fc1be754bd7f1a4f7c78be94fa644e19f413349245
+2026-10-06T00:29:26.5747057Z HOME=/github/home
+2026-10-06T00:29:26.5747364Z GITHUB_ACTIONS=true
+2026-10-06T00:29:26.5747581Z CI=true
+2026-10-06T00:29:26.5748195Z PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/lib/postgresql/18/bin
+2026-10-06T00:29:26.5748919Z GOSU_VERSION=1.19
+2026-10-06T00:29:26.5749122Z LANG=en_US.utf8
+2026-10-06T00:29:26.5749317Z PG_MAJOR=18
+2026-10-06T00:29:26.5749512Z PG_VERSION=18.6-1.pgdg12+2
+2026-10-06T00:29:26.5749777Z PGDATA=/var/lib/postgresql/18/docker
+2026-10-06T00:29:26.5768093Z ##[endgroup]
+2026-10-06T00:29:26.5776988Z ##[group]Waiting for all services to be ready
+2026-10-06T00:29:26.5778664Z ##[endgroup]
+2026-10-06T00:29:26.6069006Z ##[group]Run actions/checkout@v4
+2026-10-06T00:29:26.6069591Z with:
+2026-10-06T00:29:26.6069820Z   repository: cinagroup/cinatoken
+2026-10-06T00:29:26.6072325Z   token: ***
+2026-10-06T00:29:26.6072533Z   ssh-strict: true
+2026-10-06T00:29:26.6072736Z   ssh-user: git
+2026-10-06T00:29:26.6072949Z   persist-credentials: true
+2026-10-06T00:29:26.6073187Z   clean: true
+2026-10-06T00:29:26.6073684Z   sparse-checkout-cone-mode: true
+2026-10-06T00:29:26.6073944Z   fetch-depth: 1
+2026-10-06T00:29:26.6074145Z   fetch-tags: false
+2026-10-06T00:29:26.6074362Z   show-progress: true
+2026-10-06T00:29:26.6074573Z   lfs: false
+2026-10-06T00:29:26.6074761Z   submodules: false
+2026-10-06T00:29:26.6074964Z   set-safe-directory: true
+2026-10-06T00:29:26.6075208Z   allow-unsafe-pr-checkout: false
+2026-10-06T00:29:26.6075741Z ##[endgroup]
+2026-10-06T00:29:26.6138916Z ##[command]/usr/bin/docker exec  802f909f7cd6137e238340fc1be754bd7f1a4f7c78be94fa644e19f413349245 sh -c "cat /etc/*release | grep ^ID"
+2026-10-06T00:29:26.8147935Z Syncing repository: cinagroup/cinatoken
+2026-10-06T00:29:26.8149663Z ##[group]Getting Git version info
+2026-10-06T00:29:26.8150240Z Working directory is '/__w/cinatoken/cinatoken'
+2026-10-06T00:29:26.8151071Z ##[endgroup]
+2026-10-06T00:29:26.8151489Z Deleting the contents of '/__w/cinatoken/cinatoken'
+2026-10-06T00:29:26.8152166Z The repository will be downloaded using the GitHub REST API
+2026-10-06T00:29:26.8152983Z To create a local Git repository instead, add Git 2.18 or higher to the PATH
+2026-10-06T00:29:26.8154121Z Downloading the archive
+2026-10-06T00:29:38.3854737Z Writing archive to disk
+2026-10-06T00:29:38.4404006Z Extracting the archive
+2026-10-06T00:29:38.4557962Z [command]/usr/bin/tar xz --warning=no-unknown-keyword --overwrite -C /__w/cinatoken/cinatoken/1a91b0fe-32c3-48dd-bc05-59377d37c302 -f /__w/cinatoken/cinatoken/1a91b0fe-32c3-48dd-bc05-59377d37c302.tar.gz
+2026-10-06T00:29:40.3084955Z Resolved version cinagroup-cinatoken-b1ec8f3
+2026-10-06T00:29:40.3656337Z ##[group]Run actions/setup-node@v4
+2026-10-06T00:29:40.3656630Z with:
+2026-10-06T00:29:40.3656840Z   node-version-file: .nvmrc
+2026-10-06T00:29:40.3657082Z   always-auth: false
+2026-10-06T00:29:40.3657298Z   check-latest: false
+2026-10-06T00:29:40.3659647Z   token: ***
+2026-10-06T00:29:40.3659847Z ##[endgroup]
+2026-10-06T00:29:40.3666707Z ##[command]/usr/bin/docker exec  802f909f7cd6137e238340fc1be754bd7f1a4f7c78be94fa644e19f413349245 sh -c "cat /etc/*release | grep ^ID"
+2026-10-06T00:29:40.5916282Z Resolved .nvmrc as 22
+2026-10-06T00:29:40.5974010Z Found in cache @ /__t/node/22.23.3/x64
+2026-10-06T00:29:40.5979236Z (node:44) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-10-06T00:29:40.5979957Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-10-06T00:29:40.5982403Z ##[group]Environment details
+2026-10-06T00:29:40.9161778Z node: v22.23.3
+2026-10-06T00:29:40.9162079Z npm: 10.9.9
+2026-10-06T00:29:40.9162360Z yarn: 
+2026-10-06T00:29:40.9163182Z ##[endgroup]
+2026-10-06T00:29:40.9339237Z ##[group]Run npm ci
+2026-10-06T00:29:40.9339534Z [36;1mnpm ci[0m
+2026-10-06T00:29:40.9342996Z shell: sh -e {0}
+2026-10-06T00:29:40.9343234Z ##[endgroup]
+2026-10-06T00:29:45.3472975Z npm warn deprecated text-encoding@0.6.4: no longer maintained
+2026-10-06T00:29:47.2237300Z npm warn deprecated geojson-linestring-dissolve@0.0.1: Package no longer supported. Contact Support at https://www.npmjs.com/support for more info.
+2026-10-06T00:29:47.8433351Z npm warn deprecated node-domexception@1.0.0: Use your platform's native DOMException instead
+2026-10-06T00:29:57.0821895Z npm warn deprecated glob@9.3.5: Old versions of glob are not supported, and contain widely publicized security vulnerabilities, which have been fixed in the current version. Please update. Support for old versions may be purchased (at exorbitant rates) by contacting i@izs.me
+2026-10-06T00:30:42.3060620Z 
+2026-10-06T00:30:42.3061169Z > cinatoken@2.8.0 postinstall
+2026-10-06T00:30:42.3063439Z > npm run gen:wrangler
+2026-10-06T00:30:42.3064116Z 
+2026-10-06T00:30:42.4154928Z 
+2026-10-06T00:30:42.4155709Z > cinatoken@2.8.0 gen:wrangler
+2026-10-06T00:30:42.4156325Z > node scripts/deploy/gen-wrangler.mjs
+2026-10-06T00:30:42.4156707Z 
+2026-10-06T00:30:42.4466520Z gen-wrangler: wrote packages/proxy/wrangler.jsonc
+2026-10-06T00:30:42.4475754Z gen-wrangler: wrote packages/admin/wrangler.jsonc
+2026-10-06T00:30:42.4484407Z gen-wrangler: wrote packages/chain-worker/wrangler.jsonc
+2026-10-06T00:30:42.4490926Z gen-wrangler: wrote packages/core/wrangler.d1.jsonc
+2026-10-06T00:30:42.4493637Z gen-wrangler: proxy=cinatoken-proxy admin=cinatoken-admin chain=cinatoken-chain-worker queue=cinatoken-chain-jobs d1=cinatoken (local, no database_id) batch-infra=false
+2026-10-06T00:30:42.4777218Z 
+2026-10-06T00:30:42.4778191Z added 1480 packages, and audited 1487 packages in 1m
+2026-10-06T00:30:42.4778666Z 
+2026-10-06T00:30:42.4779034Z 450 packages are looking for funding
+2026-10-06T00:30:42.4779597Z   run `npm fund` for details
+2026-10-06T00:30:42.8187365Z 
+2026-10-06T00:30:42.8188136Z 41 vulnerabilities (2 low, 6 moderate, 30 high, 3 critical)
+2026-10-06T00:30:42.8188483Z 
+2026-10-06T00:30:42.8188752Z To address issues that do not require attention, run:
+2026-10-06T00:30:42.8189347Z   npm audit fix
+2026-10-06T00:30:42.8189546Z 
+2026-10-06T00:30:42.8189897Z To address all issues (including breaking changes), run:
+2026-10-06T00:30:42.8190497Z   npm audit fix --force
+2026-10-06T00:30:42.8190740Z 
+2026-10-06T00:30:42.8190935Z Run `npm audit` for details.
+2026-10-06T00:30:42.9671206Z ##[group]Run npm run build:node-index -w @octafuse/core
+2026-10-06T00:30:42.9671641Z [36;1mnpm run build:node-index -w @octafuse/core[0m
+2026-10-06T00:30:42.9672052Z shell: sh -e {0}
+2026-10-06T00:30:42.9672255Z ##[endgroup]
+2026-10-06T00:30:43.1332939Z 
+2026-10-06T00:30:43.1333558Z > @octafuse/core@2.8.0 build:node-index
+2026-10-06T00:30:43.1335238Z > esbuild src/index.ts --bundle --platform=node --format=esm --outfile=dist/index.js --packages=external --log-level=warning
+2026-10-06T00:30:43.1336143Z 
+2026-10-06T00:30:43.2148052Z ##[group]Run install -d -o postgres -g postgres -m 0755 .wrangler/staging .wrangler/staging/pg-native-dispatch-tests
+2026-10-06T00:30:43.2148982Z [36;1minstall -d -o postgres -g postgres -m 0755 .wrangler/staging .wrangler/staging/pg-native-dispatch-tests[0m
+2026-10-06T00:30:43.2149728Z [36;1m# Fixed machine reports are overwritten by fixtures; source directories stay checkout-owned.[0m
+2026-10-06T00:30:43.2150226Z [36;1mfor artifact in \[0m
+2026-10-06T00:30:43.2150787Z [36;1m  docs/developers/architecture/implementation-evidence/C03-postgres-native-replay-scale-lock-v333-report.json \[0m
+2026-10-06T00:30:43.2151674Z [36;1m  docs/developers/architecture/implementation-evidence/C04-authenticated-complete-text-quote-v360-report.json \[0m
+2026-10-06T00:30:43.2152545Z [36;1m  docs/developers/architecture/implementation-evidence/C04-authenticated-request-capability-v356-report.json \[0m
+2026-10-06T00:30:43.2154189Z [36;1m  docs/developers/architecture/implementation-evidence/C04-authenticated-text-route-ceiling-v357-report.json \[0m
+2026-10-06T00:30:43.2155094Z [36;1m  docs/developers/architecture/implementation-evidence/C04-authenticated-text-route-source-fence-v359-report.json \[0m
+2026-10-06T00:30:43.2155970Z [36;1m  docs/developers/architecture/implementation-evidence/C04-complete-chat-holder-dispatch-v387-report.json \[0m
+2026-10-06T00:30:43.2156797Z [36;1m  docs/developers/architecture/implementation-evidence/C04-complete-text-admission-buyer-v379-report.json \[0m
+2026-10-06T00:30:43.2157632Z [36;1m  docs/developers/architecture/implementation-evidence/C04-complete-text-all-hold-renewal-v367-report.json \[0m
+2026-10-06T00:30:43.2158447Z [36;1m  docs/developers/architecture/implementation-evidence/C04-complete-text-attempt-grant-v362-report.json \[0m
+2026-10-06T00:30:43.2159335Z [36;1m  docs/developers/architecture/implementation-evidence/C04-complete-text-auth-routing-recovery-coinstall-v400-report.json \[0m
+2026-10-06T00:30:43.2160279Z [36;1m  docs/developers/architecture/implementation-evidence/C04-complete-text-buyer-counter-cutover-v367-report.json \[0m
+2026-10-06T00:30:43.2161121Z [36;1m  docs/developers/architecture/implementation-evidence/C04-complete-text-holder-worker-v390-report.json \[0m
+2026-10-06T00:30:43.2161944Z [36;1m  docs/developers/architecture/implementation-evidence/C04-complete-text-legacy-buyer-held-v368-report.json \[0m
+2026-10-06T00:30:43.2162811Z [36;1m  docs/developers/architecture/implementation-evidence/C04-complete-text-legacy-reaper-fence-v366-report.json \[0m
+2026-10-06T00:30:43.2164014Z [36;1m  docs/developers/architecture/implementation-evidence/C04-complete-text-manifest-selection-v393-report.json \[0m
+2026-10-06T00:30:43.2164899Z [36;1m  docs/developers/architecture/implementation-evidence/C04-complete-text-no-fetch-close-blocker-v382-report.json \[0m
+2026-10-06T00:30:43.2165764Z [36;1m  docs/developers/architecture/implementation-evidence/C04-complete-text-no-fetch-fence-v370-report.json \[0m
+2026-10-06T00:30:43.2166628Z [36;1m  docs/developers/architecture/implementation-evidence/C04-complete-text-no-fetch-platform-close-v388-report.json \[0m
+2026-10-06T00:30:43.2167505Z [36;1m  docs/developers/architecture/implementation-evidence/C04-complete-text-no-fetch-recovery-v389-report.json \[0m
+2026-10-06T00:30:43.2168340Z [36;1m  docs/developers/architecture/implementation-evidence/C04-complete-text-observed-holder-v384-report.json \[0m
+2026-10-06T00:30:43.2169200Z [36;1m  docs/developers/architecture/implementation-evidence/C04-complete-text-platform-close-fence-v386-report.json \[0m
+2026-10-06T00:30:43.2170077Z [36;1m  docs/developers/architecture/implementation-evidence/C04-complete-text-private-route-reader-v366-report.json \[0m
+2026-10-06T00:30:43.2170959Z [36;1m  docs/developers/architecture/implementation-evidence/C04-complete-text-quote-budget-admission-v361-report.json \[0m
+2026-10-06T00:30:43.2172013Z [36;1m  docs/developers/architecture/implementation-evidence/C04-complete-text-read-grant-bridge-v367-report.json \[0m
+2026-10-06T00:30:43.2172927Z [36;1m  docs/developers/architecture/implementation-evidence/C04-complete-text-response-no-fetch-coinstall-v397-report.json \[0m
+2026-10-06T00:30:43.2174125Z [36;1m  docs/developers/architecture/implementation-evidence/C04-complete-text-response-observation-v392-report.json \[0m
+2026-10-06T00:30:43.2175001Z [36;1m  docs/developers/architecture/implementation-evidence/C04-complete-text-result-client-digest-v367-report.json \[0m
+2026-10-06T00:30:43.2175834Z [36;1m  docs/developers/architecture/implementation-evidence/C04-complete-text-result-facts-v366-report.json \[0m
+2026-10-06T00:30:43.2176659Z [36;1m  docs/developers/architecture/implementation-evidence/C04-complete-text-routing-projection-v396-report.json \[0m
+2026-10-06T00:30:43.2177500Z [36;1m  docs/developers/architecture/implementation-evidence/C04-complete-text-secretless-plan-v365-report.json \[0m
+2026-10-06T00:30:43.2178464Z [36;1m  docs/developers/architecture/implementation-evidence/C04-complete-text-secretless-plan-v391-report.json \[0m
+2026-10-06T00:30:43.2179261Z [36;1m  docs/developers/architecture/implementation-evidence/C04-complete-text-send-start-v365-report.json \[0m
+2026-10-06T00:30:43.2180039Z [36;1m  docs/developers/architecture/implementation-evidence/C04-legacy-buyer-commit-ack-v376-report.json \[0m
+2026-10-06T00:30:43.2180827Z [36;1m  docs/developers/architecture/implementation-evidence/C04-legacy-buyer-commit-journal-v378-report.json \[0m
+2026-10-06T00:30:43.2181630Z [36;1m  docs/developers/architecture/implementation-evidence/C04-legacy-buyer-delayed-commit-v377-report.json \[0m
+2026-10-06T00:30:43.2182457Z [36;1m  docs/developers/architecture/implementation-evidence/C04-legacy-buyer-journal-integration-v381-report.json \[0m
+2026-10-06T00:30:43.2183573Z [36;1m  docs/developers/architecture/implementation-evidence/C04-legacy-buyer-request-projection-v383-report.json \[0m
+2026-10-06T00:30:43.2184428Z [36;1m  docs/developers/architecture/implementation-evidence/C04-legacy-buyer-terminal-reader-v375-report.json \[0m
+2026-10-06T00:30:43.2185252Z [36;1m  docs/developers/architecture/implementation-evidence/C04-legacy-buyer-window-accountant-v371-report.json \[0m
+2026-10-06T00:30:43.2186158Z [36;1m  docs/developers/architecture/implementation-evidence/C04-legacy-buyer-windowed-app-privileges-renewal-v376-report.json \[0m
+2026-10-06T00:30:43.2187096Z [36;1m  docs/developers/architecture/implementation-evidence/C04-legacy-buyer-windowed-app-privileges-v374-report.json \[0m
+2026-10-06T00:30:43.2187944Z [36;1m  docs/developers/architecture/implementation-evidence/C04-legacy-buyer-windowed-app-v372-report.json \[0m
+2026-10-06T00:30:43.2188734Z [36;1m  docs/developers/architecture/implementation-evidence/C04-personal-key-auth-period-v395-report.json \[0m
+2026-10-06T00:30:43.2189526Z [36;1m  docs/developers/architecture/implementation-evidence/C04-postgres-credited-usage-gap-v342-results.json \[0m
+2026-10-06T00:30:43.2190354Z [36;1m  docs/developers/architecture/implementation-evidence/C04-postgres-credited-usage-reader-v344-results.json \[0m
+2026-10-06T00:30:43.2191204Z [36;1m  docs/developers/architecture/implementation-evidence/C04-postgres-credited-usage-store-v343-results.json \[0m
+2026-10-06T00:30:43.2192116Z [36;1m  docs/developers/architecture/implementation-evidence/C04-postgres-exclusive-credential-free-chat-ingress-v401-report.json \[0m
+2026-10-06T00:30:43.2193113Z [36;1m  docs/developers/architecture/implementation-evidence/C04-postgres-complete-text-platform-event-delivery-v402-report.json \[0m
+2026-10-06T00:30:43.2194487Z [36;1m  docs/developers/architecture/implementation-evidence/C04-postgres-shared-earning-scanner-v350-results.json \[0m
+2026-10-06T00:30:43.2195337Z [36;1m  docs/developers/architecture/implementation-evidence/C04-postgres-stats-auth-boundary-v346-results.json \[0m
+2026-10-06T00:30:43.2196212Z [36;1m  docs/developers/architecture/implementation-evidence/C04-shared-earning-backlog-observation-v353-results.json \[0m
+2026-10-06T00:30:43.2197193Z [36;1m  docs/developers/architecture/implementation-evidence/C04-stats-claim-reader-v349-results.json \[0m
+2026-10-06T00:30:43.2197966Z [36;1m  docs/developers/architecture/implementation-evidence/C04-stats-signed-claim-v348-results.json; do[0m
+2026-10-06T00:30:43.2198500Z [36;1m  if [ ! -e "$artifact" ]; then[0m
+2026-10-06T00:30:43.2198803Z [36;1m    install -m 0644 /dev/null "$artifact"[0m
+2026-10-06T00:30:43.2199113Z [36;1m  fi[0m
+2026-10-06T00:30:43.2199344Z [36;1m  chown postgres:postgres "$artifact"[0m
+2026-10-06T00:30:43.2199634Z [36;1m  chmod u+rw "$artifact"[0m
+2026-10-06T00:30:43.2199872Z [36;1mdone[0m
+2026-10-06T00:30:43.2200277Z [36;1mgosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \[0m
+2026-10-06T00:30:43.2200979Z [36;1m  node --import tsx --test scripts/db/cutover/postgres-financial-consumer-login.native.test.mjs[0m
+2026-10-06T00:30:43.2201693Z shell: sh -e {0}
+2026-10-06T00:30:43.2201896Z ##[endgroup]
+2026-10-06T00:30:43.3821383Z TAP version 13
+2026-10-06T00:30:43.7756398Z # (node:366) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+2026-10-06T00:30:43.7760651Z # (Use `node --trace-warnings ...` to show where the warning was created)
+2026-10-06T00:30:45.5266928Z # Runtime grants applied: schema=cinatoken_gateway role=cinatoken_gateway_runtime migration=0074
+2026-10-06T00:30:45.5627568Z # Runtime grants applied: schema=cinatoken_gateway role=cinatoken_gateway_runtime migration=0074
+2026-10-06T00:30:45.9032300Z # Native financial consumer LOGIN evidence: /__w/cinatoken/cinatoken/.wrangler/staging/pg-native-dispatch-tests/report-financial-consumer-login-8c9e25ce-2a65-4723-82f8-d4f5754fc42c.json
+2026-10-06T00:30:45.9051867Z # Subtest: native PG18 financial consumer direct LOGIN and least-privilege fixture
+2026-10-06T00:30:45.9060090Z ok 1 - native PG18 financial consumer direct LOGIN and least-privilege fixture
+2026-10-06T00:30:45.9062458Z   ---
+2026-10-06T00:30:45.9063462Z   duration_ms: 1494.336026
+2026-10-06T00:30:45.9064235Z   type: 'test'
+2026-10-06T00:30:45.9064882Z   ...
+2026-10-06T00:30:45.9316355Z 1..1
+2026-10-06T00:30:45.9316791Z # tests 1
+2026-10-06T00:30:45.9317259Z # suites 0
+2026-10-06T00:30:45.9318032Z # pass 1
+2026-10-06T00:30:45.9319709Z # fail 0
+2026-10-06T00:30:45.9320687Z # cancelled 0
+2026-10-06T00:30:45.9321532Z # skipped 0
+2026-10-06T00:30:45.9322627Z # todo 0
+2026-10-06T00:30:45.9323298Z # duration_ms 2561.580731
+2026-10-06T00:30:45.9428390Z ##[group]Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+2026-10-06T00:30:45.9429167Z [36;1mgosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \[0m
+2026-10-06T00:30:45.9429991Z [36;1m  node --import tsx --test scripts/db/cutover/build-financial-consumer-direct-login-grant-lifecycle.native.test.mjs[0m
+2026-10-06T00:30:45.9430714Z shell: sh -e {0}
+2026-10-06T00:30:45.9430917Z ##[endgroup]
+2026-10-06T00:30:46.0352920Z TAP version 13
+2026-10-06T00:30:47.8697142Z # Runtime grants applied: schema=cinatoken_gateway role=cinatoken_gateway_runtime migration=0074
+2026-10-06T00:30:47.9029029Z # Runtime grants applied: schema=cinatoken_gateway role=cinatoken_gateway_runtime migration=0074
+2026-10-06T00:30:47.9604073Z # Runtime grants applied: schema=cinatoken_gateway role=cinatoken_gateway_runtime migration=0074
+2026-10-06T00:30:49.5919050Z # Native financial LOGIN grant evidence: 15 stages PASS
+2026-10-06T00:30:49.8679995Z # Native financial direct grant report: /__w/cinatoken/cinatoken/.wrangler/staging/pg-native-dispatch-tests/report-financial-direct-grant-lifecycle-fd496af7-9207-4226-aa71-9e1f7dc78e44.json
+2026-10-06T00:30:49.8696372Z # Subtest: native PG18 financial LOGIN lifecycle successor preserves SCRAM, exact ACL and destructive timeout authority
+2026-10-06T00:30:49.8716876Z ok 1 - native PG18 financial LOGIN lifecycle successor preserves SCRAM, exact ACL and destructive timeout authority
+2026-10-06T00:30:49.8717889Z   ---
+2026-10-06T00:30:49.8718241Z   duration_ms: 3109.365748
+2026-10-06T00:30:49.8718530Z   type: 'test'
+2026-10-06T00:30:49.8718728Z   ...
+2026-10-06T00:30:49.8936884Z 1..1
+2026-10-06T00:30:49.8937701Z # tests 1
+2026-10-06T00:30:49.8938032Z # suites 0
+2026-10-06T00:30:49.8939044Z # pass 1
+2026-10-06T00:30:49.8942930Z # fail 0
+2026-10-06T00:30:49.8943654Z # cancelled 0
+2026-10-06T00:30:49.8944352Z # skipped 0
+2026-10-06T00:30:49.8945154Z # todo 0
+2026-10-06T00:30:49.8945544Z # duration_ms 3870.310108
+2026-10-06T00:30:49.9045308Z ##[group]Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+2026-10-06T00:30:49.9046080Z [36;1mgosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \[0m
+2026-10-06T00:30:49.9046850Z [36;1m  node --import tsx --test scripts/db/cutover/build-image-fact-job-producer-grant.native.test.mjs[0m
+2026-10-06T00:30:49.9047624Z shell: sh -e {0}
+2026-10-06T00:30:49.9047836Z ##[endgroup]
+2026-10-06T00:30:49.9973701Z TAP version 13
+2026-10-06T00:30:50.2214400Z # (node:518) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+2026-10-06T00:30:50.2264305Z # (Use `node --trace-warnings ...` to show where the warning was created)
+2026-10-06T00:30:50.7069439Z # Subtest: fact/job grant SQL requires explicit reviewed source and has no side effect
+2026-10-06T00:30:50.7079638Z ok 1 - fact/job grant SQL requires explicit reviewed source and has no side effect
+2026-10-06T00:30:50.7080988Z   ---
+2026-10-06T00:30:50.7081381Z   duration_ms: 9.28271
+2026-10-06T00:30:50.7081928Z   type: 'test'
+2026-10-06T00:30:50.7082151Z   ...
+2026-10-06T00:30:51.8274502Z # Runtime grants applied: schema=cinatoken_gateway role=cinatoken_gateway_runtime migration=0074
+2026-10-06T00:30:51.8751772Z # Runtime grants applied: schema=cinatoken_gateway role=cinatoken_gateway_runtime migration=0074
+2026-10-06T00:30:52.2228307Z # Subtest: native pinned Images fact/outbox/job producer column grant
+2026-10-06T00:30:52.2230672Z ok 2 - native pinned Images fact/outbox/job producer column grant
+2026-10-06T00:30:52.2232333Z   ---
+2026-10-06T00:30:52.2232728Z   duration_ms: 1516.141245
+2026-10-06T00:30:52.2233199Z   type: 'test'
+2026-10-06T00:30:52.2233724Z   ...
+2026-10-06T00:30:52.2235189Z # Native evidence: /__w/cinatoken/cinatoken/.wrangler/staging/pg-native-dispatch-tests/report-image-fact-job-grant-adba482d-ea4c-472c-8ff8-f729c612f17c.json
+2026-10-06T00:30:53.3240188Z # Runtime grants applied: schema=cinatoken_gateway role=cinatoken_gateway_runtime migration=0074
+2026-10-06T00:30:53.3703696Z # Runtime grants applied: schema=cinatoken_gateway role=cinatoken_gateway_runtime migration=0074
+2026-10-06T00:30:53.9306579Z # Subtest: native direct LOGIN fact producer authenticates independently and writes only pinned fact/job columns
+2026-10-06T00:30:53.9308471Z ok 3 - native direct LOGIN fact producer authenticates independently and writes only pinned fact/job columns
+2026-10-06T00:30:53.9310040Z   ---
+2026-10-06T00:30:53.9310691Z   duration_ms: 1708.432643
+2026-10-06T00:30:53.9311181Z   type: 'test'
+2026-10-06T00:30:53.9311541Z   ...
+2026-10-06T00:30:53.9313226Z # Native direct LOGIN evidence: /__w/cinatoken/cinatoken/.wrangler/staging/pg-native-dispatch-tests/report-image-fact-job-direct-login-8a322edd-a164-445d-9921-85d795caa7e4.json
+2026-10-06T00:30:53.9538577Z 1..3
+2026-10-06T00:30:53.9539520Z # tests 3
+2026-10-06T00:30:53.9540030Z # suites 0
+2026-10-06T00:30:53.9540482Z # pass 3
+2026-10-06T00:30:53.9540813Z # fail 0
+2026-10-06T00:30:53.9542331Z # cancelled 0
+2026-10-06T00:30:53.9542832Z # skipped 0
+2026-10-06T00:30:53.9543158Z # todo 0
+2026-10-06T00:30:53.9543543Z # duration_ms 3967.959389
+2026-10-06T00:30:53.9648944Z ##[group]Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+2026-10-06T00:30:53.9649726Z [36;1mgosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \[0m
+2026-10-06T00:30:53.9650521Z [36;1m  node --import tsx --test scripts/db/cutover/postgres-image-http-financial-jsonb-boundary.native.test.mjs[0m
+2026-10-06T00:30:53.9651228Z shell: sh -e {0}
+2026-10-06T00:30:53.9651438Z ##[endgroup]
+2026-10-06T00:30:54.0632455Z TAP version 13
+2026-10-06T00:30:57.3155211Z # Runtime grants applied: schema=cinatoken_gateway role=cinatoken_gateway_runtime migration=0074
+2026-10-06T00:30:57.3850187Z # Runtime grants applied: schema=cinatoken_gateway role=cinatoken_gateway_runtime migration=0074
+2026-10-06T00:30:57.8077357Z # {"message":"gateway request started","method":"POST","path":"/v1/images/generations"}
+2026-10-06T00:30:57.8170694Z # {"message":"gateway authentication succeeded","key_id":"http-key","user_id":"http-user"}
+2026-10-06T00:30:57.8384655Z # {"message":"gateway authentication succeeded","key_id":"http-key","user_id":"http-user"}
+2026-10-06T00:30:57.8845365Z # [Gateway Images] generations baseModelId=http-image-model keyId=http-key n=1
+2026-10-06T00:30:57.8894152Z # [Gateway Proxy] calling provider providerId=http-provider model=provider-image-model
+2026-10-06T00:30:57.8906045Z # {"event":"gateway.images.upstream_start","operation":"generations","upstream":"https://provider.invalid/v1/images/generations","providerId":"http-provider","routeTargetId":"http-route","providerModel":"provider-image-model"}
+2026-10-06T00:30:57.9977789Z # {"event":"gateway.images.upstream_complete","operation":"generations","upstream":"https://provider.invalid/v1/images/generations","providerId":"http-provider","routeTargetId":"http-route","status":200,"elapsedMs":106}
+2026-10-06T00:30:58.0259637Z # {"message":"gateway request completed","method":"POST","path":"/v1/images/generations","status":200,"duration_ms":218}
+2026-10-06T00:30:58.3027391Z # Native HTTP Images financial report: /__w/cinatoken/cinatoken/.wrangler/staging/pg-native-dispatch-tests/report-image-http-financial-jsonb-boundary-c5760a10-ec06-44af-9594-2288c01900b7.json
+2026-10-06T00:30:58.3040127Z # Subtest: native PG18 HTTP Images JSONB boundary successor preserves claim, fact/outbox/job and financial commit
+2026-10-06T00:30:58.3048282Z ok 1 - native PG18 HTTP Images JSONB boundary successor preserves claim, fact/outbox/job and financial commit
+2026-10-06T00:30:58.3049250Z   ---
+2026-10-06T00:30:58.3049643Z   duration_ms: 2127.988029
+2026-10-06T00:30:58.3050095Z   type: 'test'
+2026-10-06T00:30:58.3050471Z   ...
+2026-10-06T00:30:58.3571778Z 1..1
+2026-10-06T00:30:58.3572202Z # tests 1
+2026-10-06T00:30:58.3574089Z # suites 0
+2026-10-06T00:30:58.3574462Z # pass 1
+2026-10-06T00:30:58.3574813Z # fail 0
+2026-10-06T00:30:58.3575336Z # cancelled 0
+2026-10-06T00:30:58.3576193Z # skipped 0
+2026-10-06T00:30:58.3576566Z # todo 0
+2026-10-06T00:30:58.3577257Z # duration_ms 4305.584484
+2026-10-06T00:30:58.3702251Z ##[group]Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+2026-10-06T00:30:58.3703053Z [36;1mgosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \[0m
+2026-10-06T00:30:58.3704152Z [36;1m  node --import tsx --test scripts/db/cutover/postgres-image-edits-http-financial.native.test.mjs[0m
+2026-10-06T00:30:58.3704758Z shell: sh -e {0}
+2026-10-06T00:30:58.3704963Z ##[endgroup]
+2026-10-06T00:30:58.4685761Z TAP version 13
+2026-10-06T00:31:01.4127533Z # Runtime grants applied: schema=cinatoken_gateway role=cinatoken_gateway_runtime migration=0074
+2026-10-06T00:31:01.4885860Z # Runtime grants applied: schema=cinatoken_gateway role=cinatoken_gateway_runtime migration=0074
+2026-10-06T00:31:01.8946577Z # {"message":"gateway request started","method":"POST","path":"/v1/images/edits"}
+2026-10-06T00:31:01.9040448Z # {"message":"gateway authentication succeeded","key_id":"http-key","user_id":"http-user"}
+2026-10-06T00:31:01.9266410Z # {"message":"gateway authentication succeeded","key_id":"http-key","user_id":"http-user"}
+2026-10-06T00:31:01.9830664Z # [Gateway Images] edits baseModelId=http-image-model keyId=http-key refs=1
+2026-10-06T00:31:01.9885915Z # [Gateway Proxy] calling provider providerId=http-provider model=provider-image-model
+2026-10-06T00:31:01.9898335Z # {"event":"gateway.images.upstream_start","operation":"edits","upstream":"https://provider.invalid/v1/images/edits","providerId":"http-provider","routeTargetId":"http-route","providerModel":"provider-image-model"}
+2026-10-06T00:31:02.1005984Z # {"event":"gateway.images.upstream_complete","operation":"edits","upstream":"https://provider.invalid/v1/images/edits","providerId":"http-provider","routeTargetId":"http-route","status":200,"elapsedMs":109}
+2026-10-06T00:31:02.1306164Z # {"message":"gateway request completed","method":"POST","path":"/v1/images/edits","status":200,"duration_ms":235}
+2026-10-06T00:31:02.4105667Z # Native HTTP Images financial report: /__w/cinatoken/cinatoken/.wrangler/staging/pg-native-dispatch-tests/report-image-edits-http-financial-94c1e7c7-d4f6-488f-a6a5-bf8be8f79936.json
+2026-10-06T00:31:02.4118895Z # Subtest: native PG18 HTTP multipart Images edits claim, fact/outbox/job and dedicated financial commit
+2026-10-06T00:31:02.4126787Z ok 1 - native PG18 HTTP multipart Images edits claim, fact/outbox/job and dedicated financial commit
+2026-10-06T00:31:02.4127943Z   ---
+2026-10-06T00:31:02.4128338Z   duration_ms: 2152.976931
+2026-10-06T00:31:02.4128782Z   type: 'test'
+2026-10-06T00:31:02.4129126Z   ...
+2026-10-06T00:31:02.4555192Z 1..1
+2026-10-06T00:31:02.4555679Z # tests 1
+2026-10-06T00:31:02.4556401Z # suites 0
+2026-10-06T00:31:02.4557097Z # pass 1
+2026-10-06T00:31:02.4557703Z # fail 0
+2026-10-06T00:31:02.4558340Z # cancelled 0
+2026-10-06T00:31:02.4559240Z # skipped 0
+2026-10-06T00:31:02.4560126Z # todo 0
+2026-10-06T00:31:02.4560580Z # duration_ms 3998.585303
+2026-10-06T00:31:02.4672977Z ##[group]Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+2026-10-06T00:31:02.4674084Z [36;1mgosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \[0m
+2026-10-06T00:31:02.4674861Z [36;1m  node --import tsx --test scripts/db/cutover/postgres-recovery-server-deadline.native.test.mjs[0m
+2026-10-06T00:31:02.4675691Z shell: sh -e {0}
+2026-10-06T00:31:02.4675906Z ##[endgroup]
+2026-10-06T00:31:02.5642354Z TAP version 13
+2026-10-06T00:31:05.6894667Z # Native recovery server deadline evidence: /__w/cinatoken/cinatoken/.wrangler/staging/pg-native-dispatch-tests/report-recovery-server-deadline-e6eb00f8-b014-45f8-8511-f3c9023c4329.json
+2026-10-06T00:31:05.6896817Z # {
+2026-10-06T00:31:05.6905761Z #   "status": "PASS",
+2026-10-06T00:31:05.6906177Z #   "cleanup": "PASS",
+2026-10-06T00:31:05.6906899Z #   "stages": [
+2026-10-06T00:31:05.6907264Z #     {
+2026-10-06T00:31:05.6908169Z #       "name": "implicit-statement-server-termination",
+2026-10-06T00:31:05.6908802Z #       "result": "PASS",
+2026-10-06T00:31:05.6916997Z #       "error": {
+2026-10-06T00:31:05.6917408Z #         "name": "Error",
+2026-10-06T00:31:05.6917923Z #         "code": "CONNECTION_CLOSED",
+2026-10-06T00:31:05.6918418Z #         "severity": null
+2026-10-06T00:31:05.6918789Z #       },
+2026-10-06T00:31:05.6919139Z #       "backendGone": true
+2026-10-06T00:31:05.6919512Z #     },
+2026-10-06T00:31:05.6919802Z #     {
+2026-10-06T00:31:05.6923569Z #       "name": "explicit-transaction-server-termination-and-rollback",
+2026-10-06T00:31:05.6924586Z #       "result": "PASS",
+2026-10-06T00:31:05.6925405Z #       "error": {
+2026-10-06T00:31:05.6926503Z #         "name": "Error",
+2026-10-06T00:31:05.6927071Z #         "code": "CONNECTION_CLOSED",
+2026-10-06T00:31:05.6927952Z #         "severity": null
+2026-10-06T00:31:05.6930195Z #       },
+2026-10-06T00:31:05.6930890Z #       "backendGone": true,
+2026-10-06T00:31:05.6931958Z #       "persistedRows": 0
+2026-10-06T00:31:05.6932910Z #     },
+2026-10-06T00:31:05.6933759Z #     {
+2026-10-06T00:31:05.6934953Z #       "name": "server-log-timeout-attribution",
+2026-10-06T00:31:05.6935985Z #       "result": "PASS",
+2026-10-06T00:31:05.6937242Z #       "transactionTimeoutTerminations": 2
+2026-10-06T00:31:05.6938055Z #     }
+2026-10-06T00:31:05.6939266Z #   ]
+2026-10-06T00:31:05.6940200Z # }
+2026-10-06T00:31:05.6954130Z # Subtest: native LOGIN transaction deadline terminates both implicit and explicit transactions
+2026-10-06T00:31:05.6962217Z ok 1 - native LOGIN transaction deadline terminates both implicit and explicit transactions
+2026-10-06T00:31:05.6963573Z   ---
+2026-10-06T00:31:05.6964199Z   duration_ms: 2944.463974
+2026-10-06T00:31:05.6964798Z   type: 'test'
+2026-10-06T00:31:05.6965330Z   ...
+2026-10-06T00:31:05.7097622Z 1..1
+2026-10-06T00:31:05.7098005Z # tests 1
+2026-10-06T00:31:05.7099092Z # suites 0
+2026-10-06T00:31:05.7099650Z # pass 1
+2026-10-06T00:31:05.7100295Z # fail 0
+2026-10-06T00:31:05.7102349Z # cancelled 0
+2026-10-06T00:31:05.7102705Z # skipped 0
+2026-10-06T00:31:05.7103389Z # todo 0
+2026-10-06T00:31:05.7104905Z # duration_ms 3157.188088
+2026-10-06T00:31:05.7221338Z ##[group]Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+2026-10-06T00:31:05.7222263Z [36;1mgosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \[0m
+2026-10-06T00:31:05.7222963Z [36;1m  node --import tsx --test scripts/db/cutover/postgres-legacy-handler-compat.native.test.mjs[0m
+2026-10-06T00:31:05.7223837Z shell: sh -e {0}
+2026-10-06T00:31:05.7224046Z ##[endgroup]
+2026-10-06T00:31:05.8161251Z TAP version 13
+2026-10-06T00:31:07.6614687Z # Runtime grants applied: schema=cinatoken_gateway role=cinatoken_gateway_runtime migration=0074
+2026-10-06T00:31:07.8205452Z # Runtime grants applied: schema=cinatoken_gateway role=cinatoken_gateway_runtime migration=0074
+2026-10-06T00:31:08.0266489Z # Subtest: ordinary writer and legacy readers survive replay parent switch
+2026-10-06T00:31:08.0272395Z ok 1 - ordinary writer and legacy readers survive replay parent switch
+2026-10-06T00:31:08.0278495Z   ---
+2026-10-06T00:31:08.0279022Z   duration_ms: 1487.284506
+2026-10-06T00:31:08.0279436Z   type: 'test'
+2026-10-06T00:31:08.0279825Z   ...
+2026-10-06T00:31:08.0518643Z 1..1
+2026-10-06T00:31:08.0519166Z # tests 1
+2026-10-06T00:31:08.0521409Z # suites 0
+2026-10-06T00:31:08.0522654Z # pass 1
+2026-10-06T00:31:08.0524401Z # fail 0
+2026-10-06T00:31:08.0526624Z # cancelled 0
+2026-10-06T00:31:08.0527203Z # skipped 0
+2026-10-06T00:31:08.0528491Z # todo 0
+2026-10-06T00:31:08.0531131Z # duration_ms 2247.224214
+2026-10-06T00:31:08.0658951Z ##[group]Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+2026-10-06T00:31:08.0659728Z [36;1mgosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \[0m
+2026-10-06T00:31:08.0660432Z [36;1m  node --import tsx --test scripts/db/cutover/postgres-replay-scale-lock.native.test.mjs[0m
+2026-10-06T00:31:08.0660973Z shell: sh -e {0}
+2026-10-06T00:31:08.0661181Z ##[endgroup]
+2026-10-06T00:31:08.1628968Z TAP version 13
+2026-10-06T00:31:10.7382807Z # Runtime grants applied: schema=cinatoken_gateway role=cinatoken_gateway_runtime migration=0074
+2026-10-06T00:31:15.5638928Z # Subtest: native PostgreSQL replay backfill scale, bounded lock and resume
+2026-10-06T00:31:15.5645926Z ok 1 - native PostgreSQL replay backfill scale, bounded lock and resume
+2026-10-06T00:31:15.5648267Z   ---
+2026-10-06T00:31:15.5648671Z   duration_ms: 7205.588911
+2026-10-06T00:31:15.5649140Z   type: 'test'
+2026-10-06T00:31:15.5651649Z   ...
+2026-10-06T00:31:15.5809699Z 1..1
+2026-10-06T00:31:15.5810011Z # tests 1
+2026-10-06T00:31:15.5810230Z # suites 0
+2026-10-06T00:31:15.5815170Z # pass 1
+2026-10-06T00:31:15.5815794Z # fail 0
+2026-10-06T00:31:15.5816252Z # cancelled 0
+2026-10-06T00:31:15.5816730Z # skipped 0
+2026-10-06T00:31:15.5817168Z # todo 0
+2026-10-06T00:31:15.5817644Z # duration_ms 7429.939023
+2026-10-06T00:31:15.5939426Z ##[group]Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+2026-10-06T00:31:15.5940737Z [36;1mgosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \[0m
+2026-10-06T00:31:15.5942064Z [36;1m  node --import tsx --test scripts/db/cutover/postgres-shared-key-earnings-history.native.test.mjs[0m
+2026-10-06T00:31:15.5943103Z shell: sh -e {0}
+2026-10-06T00:31:15.5944215Z ##[endgroup]
+2026-10-06T00:31:15.6938852Z TAP version 13
+2026-10-06T00:31:19.2143590Z # Native shared-key earning history report: /__w/cinatoken/cinatoken/.wrangler/staging/pg-native-dispatch-tests/report-earning-history-13c640a4-2f8a-4c74-92d9-3d404cbe1249.json
+2026-10-06T00:31:19.2158584Z # Subtest: native PG18 credited shared-key earnings reject cascade and direct history mutation
+2026-10-06T00:31:19.2166770Z ok 1 - native PG18 credited shared-key earnings reject cascade and direct history mutation
+2026-10-06T00:31:19.2168540Z   ---
+2026-10-06T00:31:19.2169172Z   duration_ms: 3319.833736
+2026-10-06T00:31:19.2169639Z   type: 'test'
+2026-10-06T00:31:19.2170002Z   ...
+2026-10-06T00:31:19.2318128Z 1..1
+2026-10-06T00:31:19.2318709Z # tests 1
+2026-10-06T00:31:19.2320844Z # suites 0
+2026-10-06T00:31:19.2321914Z # pass 1
+2026-10-06T00:31:19.2324530Z # fail 0
+2026-10-06T00:31:19.2324965Z # cancelled 0
+2026-10-06T00:31:19.2326230Z # skipped 0
+2026-10-06T00:31:19.2327398Z # todo 0
+2026-10-06T00:31:19.2328483Z # duration_ms 3550.052737
+2026-10-06T00:31:19.2458631Z ##[group]Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+2026-10-06T00:31:19.2459420Z [36;1mgosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \[0m
+2026-10-06T00:31:19.2460199Z [36;1m  node --import tsx --test scripts/db/cutover/postgres-shared-key-earnings-projection-index.native.test.mjs[0m
+2026-10-06T00:31:19.2460798Z shell: sh -e {0}
+2026-10-06T00:31:19.2461001Z ##[endgroup]
+2026-10-06T00:31:19.3399801Z TAP version 13
+2026-10-06T00:31:24.2672854Z # Native shared-key projection index report: /__w/cinatoken/cinatoken/.wrangler/staging/pg-native-dispatch-tests/report-earning-projection-index-c3103ba0-3913-456b-bd38-4531e7374b1f.json
+2026-10-06T00:31:24.2686204Z # Subtest: native PG18 shared-key projection index scale, bounded lock and multi-session rebuild
+2026-10-06T00:31:24.2696782Z ok 1 - native PG18 shared-key projection index scale, bounded lock and multi-session rebuild
+2026-10-06T00:31:24.2697764Z   ---
+2026-10-06T00:31:24.2698557Z   duration_ms: 4279.73292
+2026-10-06T00:31:24.2699229Z   type: 'test'
+2026-10-06T00:31:24.2699633Z   ...
+2026-10-06T00:31:24.2901025Z 1..1
+2026-10-06T00:31:24.2904294Z # tests 1
+2026-10-06T00:31:24.2904709Z # suites 0
+2026-10-06T00:31:24.2905481Z # pass 1
+2026-10-06T00:31:24.2906028Z # fail 0
+2026-10-06T00:31:24.2906844Z # cancelled 0
+2026-10-06T00:31:24.2909162Z # skipped 0
+2026-10-06T00:31:24.2910061Z # todo 0
+2026-10-06T00:31:24.2911220Z # duration_ms 4963.13138
+2026-10-06T00:31:24.3017395Z ##[group]Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+2026-10-06T00:31:24.3018167Z [36;1mgosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \[0m
+2026-10-06T00:31:24.3018916Z [36;1m  node --import tsx --test scripts/db/cutover/postgres-shared-key-usage-repair-jobs.native.test.mjs[0m
+2026-10-06T00:31:24.3019529Z shell: sh -e {0}
+2026-10-06T00:31:24.3019733Z ##[endgroup]
+2026-10-06T00:31:24.3960577Z TAP version 13
+2026-10-06T00:31:25.7240281Z # Runtime grants applied: schema=cinatoken_gateway role=cinatoken_gateway_runtime migration=0074
+2026-10-06T00:31:25.9507282Z # Native shared-key usage job report: /__w/cinatoken/cinatoken/.wrangler/staging/pg-native-dispatch-tests/report-shared-usage-jobs-4304a12c-4ca9-4a6f-bd32-149549a2ae7c.json
+2026-10-06T00:31:25.9520960Z # Subtest: native PG18 credited earning enqueues a durable, atomic summary repair
+2026-10-06T00:31:25.9531616Z ok 1 - native PG18 credited earning enqueues a durable, atomic summary repair
+2026-10-06T00:31:25.9537082Z   ---
+2026-10-06T00:31:25.9537337Z   duration_ms: 1361.701843
+2026-10-06T00:31:25.9537593Z   type: 'test'
+2026-10-06T00:31:25.9537797Z   ...
+2026-10-06T00:31:25.9674802Z 1..1
+2026-10-06T00:31:25.9675510Z # tests 1
+2026-10-06T00:31:25.9676702Z # suites 0
+2026-10-06T00:31:25.9677675Z # pass 1
+2026-10-06T00:31:25.9678803Z # fail 0
+2026-10-06T00:31:25.9682165Z # cancelled 0
+2026-10-06T00:31:25.9682889Z # skipped 0
+2026-10-06T00:31:25.9684596Z # todo 0
+2026-10-06T00:31:25.9685375Z # duration_ms 1583.128322
+2026-10-06T00:31:25.9805255Z ##[group]Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+2026-10-06T00:31:25.9806536Z [36;1mgosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \[0m
+2026-10-06T00:31:25.9807806Z [36;1m  node --import tsx --test scripts/db/cutover/postgres-shared-usage-repair-backfill.native.test.mjs[0m
+2026-10-06T00:31:25.9808795Z shell: sh -e {0}
+2026-10-06T00:31:25.9809138Z ##[endgroup]
+2026-10-06T00:31:26.0733193Z TAP version 13
+2026-10-06T00:31:27.7476329Z # Native shared-key historical backfill report: /__w/cinatoken/cinatoken/.wrangler/staging/pg-native-dispatch-tests/report-shared-usage-backfill-3bcede4e-08a8-4424-b421-4d3060ebc8ab.json
+2026-10-06T00:31:27.7491138Z # Subtest: native PG18 bounded historical usage repair backfill survives rollback and cursor replay
+2026-10-06T00:31:27.7505288Z ok 1 - native PG18 bounded historical usage repair backfill survives rollback and cursor replay
+2026-10-06T00:31:27.7509209Z   ---
+2026-10-06T00:31:27.7509709Z   duration_ms: 1471.494725
+2026-10-06T00:31:27.7509965Z   type: 'test'
+2026-10-06T00:31:27.7510167Z   ...
+2026-10-06T00:31:27.7657786Z 1..1
+2026-10-06T00:31:27.7658312Z # tests 1
+2026-10-06T00:31:27.7659015Z # suites 0
+2026-10-06T00:31:27.7659909Z # pass 1
+2026-10-06T00:31:27.7661232Z # fail 0
+2026-10-06T00:31:27.7665001Z # cancelled 0
+2026-10-06T00:31:27.7665577Z # skipped 0
+2026-10-06T00:31:27.7665839Z # todo 0
+2026-10-06T00:31:27.7666114Z # duration_ms 1703.939202
+2026-10-06T00:31:27.7770204Z ##[group]Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+2026-10-06T00:31:27.7770986Z [36;1mgosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \[0m
+2026-10-06T00:31:27.7771786Z [36;1m  node --import tsx --test scripts/db/cutover/postgres-shared-usage-repair-durable-cursor.native.test.mjs[0m
+2026-10-06T00:31:27.7772387Z shell: sh -e {0}
+2026-10-06T00:31:27.7772593Z ##[endgroup]
+2026-10-06T00:31:27.8693443Z TAP version 13
+2026-10-06T00:31:31.5546290Z # Native shared-key durable cursor report: /__w/cinatoken/cinatoken/.wrangler/staging/pg-native-dispatch-tests/report-shared-usage-durable-5b047003-7d4c-45a0-95e5-87b75acd42dd.json
+2026-10-06T00:31:31.5561895Z # Subtest: native PG18 durable historical repair cursor serializes operators and survives unknown COMMIT
+2026-10-06T00:31:31.5573093Z ok 1 - native PG18 durable historical repair cursor serializes operators and survives unknown COMMIT
+2026-10-06T00:31:31.5577154Z   ---
+2026-10-06T00:31:31.5577834Z   duration_ms: 3495.093259
+2026-10-06T00:31:31.5578410Z   type: 'test'
+2026-10-06T00:31:31.5578751Z   ...
+2026-10-06T00:31:31.5728142Z 1..1
+2026-10-06T00:31:31.5729099Z # tests 1
+2026-10-06T00:31:31.5729460Z # suites 0
+2026-10-06T00:31:31.5731168Z # pass 1
+2026-10-06T00:31:31.5732239Z # fail 0
+2026-10-06T00:31:31.5734339Z # cancelled 0
+2026-10-06T00:31:31.5735444Z # skipped 0
+2026-10-06T00:31:31.5735853Z # todo 0
+2026-10-06T00:31:31.5736668Z # duration_ms 3715.146729
+2026-10-06T00:31:31.5844857Z ##[group]Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+2026-10-06T00:31:31.5845639Z [36;1mgosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \[0m
+2026-10-06T00:31:31.5846433Z [36;1m  node --import tsx --test scripts/db/cutover/postgres-shared-key-usage-repair-runtime-grant.native.test.mjs[0m
+2026-10-06T00:31:31.5847045Z shell: sh -e {0}
+2026-10-06T00:31:31.5847257Z ##[endgroup]
+2026-10-06T00:31:31.6754425Z TAP version 13
+2026-10-06T00:31:32.9792143Z # Runtime grants applied: schema=cinatoken_gateway role=cinatoken_gateway_runtime migration=0074
+2026-10-06T00:31:33.0555560Z # Runtime grants applied: schema=cinatoken_gateway role=cinatoken_gateway_runtime migration=0074
+2026-10-06T00:31:33.0879079Z # Runtime grants applied: schema=cinatoken_gateway role=cinatoken_gateway_runtime migration=0074
+2026-10-06T00:31:33.1588266Z # Runtime grants applied: schema=cinatoken_gateway role=cinatoken_gateway_runtime migration=0074
+2026-10-06T00:31:33.2668983Z # Runtime grants applied: schema=cinatoken_gateway role=cinatoken_gateway_runtime migration=0074
+2026-10-06T00:31:33.4566732Z # Subtest: runtime grant reruns keep optional shared-key repair table and definers owner-only
+2026-10-06T00:31:33.4584605Z ok 1 - runtime grant reruns keep optional shared-key repair table and definers owner-only
+2026-10-06T00:31:33.4585156Z   ---
+2026-10-06T00:31:33.4585385Z   duration_ms: 1593.568363
+2026-10-06T00:31:33.4585630Z   type: 'test'
+2026-10-06T00:31:33.4585833Z   ...
+2026-10-06T00:31:33.4740863Z 1..1
+2026-10-06T00:31:33.4741247Z # tests 1
+2026-10-06T00:31:33.4742209Z # suites 0
+2026-10-06T00:31:33.4742625Z # pass 1
+2026-10-06T00:31:33.4743712Z # fail 0
+2026-10-06T00:31:33.4755149Z # cancelled 0
+2026-10-06T00:31:33.4755557Z # skipped 0
+2026-10-06T00:31:33.4755905Z # todo 0
+2026-10-06T00:31:33.4756311Z # duration_ms 1810.388746
+2026-10-06T00:31:33.4851458Z ##[group]Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+2026-10-06T00:31:33.4852236Z [36;1mgosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \[0m
+2026-10-06T00:31:33.4853039Z [36;1m  node --import tsx --test scripts/db/cutover/build-shared-key-usage-repair-direct-login-grant.native.test.mjs[0m
+2026-10-06T00:31:33.4853989Z shell: sh -e {0}
+2026-10-06T00:31:33.4854217Z ##[endgroup]
+2026-10-06T00:31:33.5789512Z TAP version 13
+2026-10-06T00:31:34.9288933Z # Runtime grants applied: schema=cinatoken_gateway role=cinatoken_gateway_runtime migration=0074
+2026-10-06T00:31:34.9798140Z # Runtime grants applied: schema=cinatoken_gateway role=cinatoken_gateway_runtime migration=0074
+2026-10-06T00:31:35.0953452Z # Runtime grants applied: schema=cinatoken_gateway role=cinatoken_gateway_runtime migration=0074
+2026-10-06T00:31:35.1315080Z # Runtime grants applied: schema=cinatoken_gateway role=cinatoken_gateway_runtime migration=0074
+2026-10-06T00:31:50.3841710Z # Native shared-key usage repair direct LOGIN report: /__w/cinatoken/cinatoken/.wrangler/staging/pg-native-dispatch-tests/report-shared-usage-repair-login-589fe0ad-0b67-4d61-a093-1061ab3a365c.json
+2026-10-06T00:31:50.3858013Z # Subtest: native PG18 repair-only direct LOGIN can repair a durable job and nothing else
+2026-10-06T00:31:50.3865630Z ok 1 - native PG18 repair-only direct LOGIN can repair a durable job and nothing else
+2026-10-06T00:31:50.3869188Z   ---
+2026-10-06T00:31:50.3869741Z   duration_ms: 16589.568956
+2026-10-06T00:31:50.3870148Z   type: 'test'
+2026-10-06T00:31:50.3870484Z   ...
+2026-10-06T00:31:50.3998732Z 1..1
+2026-10-06T00:31:50.3999119Z # tests 1
+2026-10-06T00:31:50.4005662Z # suites 0
+2026-10-06T00:31:50.4006029Z # pass 1
+2026-10-06T00:31:50.4006338Z # fail 0
+2026-10-06T00:31:50.4006643Z # cancelled 0
+2026-10-06T00:31:50.4006955Z # skipped 0
+2026-10-06T00:31:50.4007172Z # todo 0
+2026-10-06T00:31:50.4007426Z # duration_ms 16832.640067
+2026-10-06T00:31:50.4116882Z ##[group]Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+2026-10-06T00:31:50.4117665Z [36;1mgosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \[0m
+2026-10-06T00:31:50.4118501Z [36;1m  node --import tsx --test scripts/db/cutover/postgres-shared-key-usage-repair-failure-isolation.native.test.mjs[0m
+2026-10-06T00:31:50.4119142Z shell: sh -e {0}
+2026-10-06T00:31:50.4119350Z ##[endgroup]
+2026-10-06T00:31:50.5051622Z TAP version 13
+2026-10-06T00:31:54.2347166Z # Native shared-key usage repair failure report: /__w/cinatoken/cinatoken/.wrangler/staging/pg-native-dispatch-tests/report-shared-usage-failure-fe90ce4d-1602-47b3-8491-6db77c47a8ff.json
+2026-10-06T00:31:54.2362395Z # Subtest: native PG18 isolates poison repair keys with bounded retry and manual dead-letter recovery
+2026-10-06T00:31:54.2372786Z ok 1 - native PG18 isolates poison repair keys with bounded retry and manual dead-letter recovery
+2026-10-06T00:31:54.2378862Z   ---
+2026-10-06T00:31:54.2379401Z   duration_ms: 3527.761623
+2026-10-06T00:31:54.2379813Z   type: 'test'
+2026-10-06T00:31:54.2380139Z   ...
+2026-10-06T00:31:54.2524899Z 1..1
+2026-10-06T00:31:54.2525520Z # tests 1
+2026-10-06T00:31:54.2526112Z # suites 0
+2026-10-06T00:31:54.2528665Z # pass 1
+2026-10-06T00:31:54.2530196Z # fail 0
+2026-10-06T00:31:54.2531249Z # cancelled 0
+2026-10-06T00:31:54.2534039Z # skipped 0
+2026-10-06T00:31:54.2534451Z # todo 0
+2026-10-06T00:31:54.2537017Z # duration_ms 3759.003698
+2026-10-06T00:31:54.2644832Z ##[group]Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+2026-10-06T00:31:54.2645580Z [36;1mgosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \[0m
+2026-10-06T00:31:54.2646529Z [36;1m  node --import tsx --test scripts/db/cutover/postgres-shared-key-usage-repair-durable-claim.native.test.mjs[0m
+2026-10-06T00:31:54.2647164Z shell: sh -e {0}
+2026-10-06T00:31:54.2647374Z ##[endgroup]
+2026-10-06T00:31:54.3574957Z TAP version 13
+2026-10-06T00:31:57.3209033Z # Native shared-key usage repair durable-claim report: /__w/cinatoken/cinatoken/.wrangler/staging/pg-native-dispatch-tests/report-shared-usage-claim-871468d4-11d2-4c00-8c1f-cf42e1c0663b.json
+2026-10-06T00:31:57.3224773Z # Subtest: native PG18 committed claim prevents repeated 57014 starvation without double credit
+2026-10-06T00:31:57.3230835Z ok 1 - native PG18 committed claim prevents repeated 57014 starvation without double credit
+2026-10-06T00:31:57.3232650Z   ---
+2026-10-06T00:31:57.3233033Z   duration_ms: 2752.907499
+2026-10-06T00:31:57.3233794Z   type: 'test'
+2026-10-06T00:31:57.3234130Z   ...
+2026-10-06T00:31:57.3380024Z 1..1
+2026-10-06T00:31:57.3382669Z # tests 1
+2026-10-06T00:31:57.3383324Z # suites 0
+2026-10-06T00:31:57.3384954Z # pass 1
+2026-10-06T00:31:57.3388688Z # fail 0
+2026-10-06T00:31:57.3389244Z # cancelled 0
+2026-10-06T00:31:57.3390618Z # skipped 0
+2026-10-06T00:31:57.3394147Z # todo 0
+2026-10-06T00:31:57.3394674Z # duration_ms 2991.867259
+2026-10-06T00:31:57.3515071Z ##[group]Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+2026-10-06T00:31:57.3516400Z [36;1mgosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \[0m
+2026-10-06T00:31:57.3517701Z [36;1m  node --import tsx --test scripts/db/cutover/postgres-shared-key-quote-versions.native.test.mjs[0m
+2026-10-06T00:31:57.3518662Z shell: sh -e {0}
+2026-10-06T00:31:57.3518949Z ##[endgroup]
+2026-10-06T00:31:57.4453757Z TAP version 13
+2026-10-06T00:32:01.1198020Z # Runtime grants applied: schema=cinatoken_gateway role=cinatoken_gateway_runtime migration=0074
+2026-10-06T00:32:01.1476553Z # Runtime grants applied: schema=cinatoken_gateway role=cinatoken_gateway_runtime migration=0074
+2026-10-06T00:32:01.3443466Z # Native shared-key quote report: /__w/cinatoken/cinatoken/.wrangler/staging/pg-native-dispatch-tests/report-shared-key-quote-v338-89be0240-b51b-4dfe-99d7-38f95c32a0f9.json
+2026-10-06T00:32:01.3461480Z # Subtest: native PG18 immutable shared-key quote supersession preserves history and serializes operators
+2026-10-06T00:32:01.3475775Z ok 1 - native PG18 immutable shared-key quote supersession preserves history and serializes operators
+2026-10-06T00:32:01.3476611Z   ---
+2026-10-06T00:32:01.3476950Z   duration_ms: 3710.05632
+2026-10-06T00:32:01.3477334Z   type: 'test'
+2026-10-06T00:32:01.3477661Z   ...
+2026-10-06T00:32:01.3699717Z 1..1
+2026-10-06T00:32:01.3700172Z # tests 1
+2026-10-06T00:32:01.3701782Z # suites 0
+2026-10-06T00:32:01.3707633Z # pass 1
+2026-10-06T00:32:01.3707989Z # fail 0
+2026-10-06T00:32:01.3708322Z # cancelled 0
+2026-10-06T00:32:01.3708937Z # skipped 0
+2026-10-06T00:32:01.3709292Z # todo 0
+2026-10-06T00:32:01.3709656Z # duration_ms 3936.397133
+2026-10-06T00:32:01.3831551Z ##[group]Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+2026-10-06T00:32:01.3832901Z [36;1mgosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \[0m
+2026-10-06T00:32:01.3834603Z [36;1m  node --import tsx --test scripts/db/cutover/postgres-shared-key-dispatch-quote-attempts.native.test.mjs[0m
+2026-10-06T00:32:01.3835646Z shell: sh -e {0}
+2026-10-06T00:32:01.3836005Z ##[endgroup]
+2026-10-06T00:32:01.4787734Z TAP version 13
+2026-10-06T00:32:04.2814148Z # Native shared-key dispatch quote attempt report: /__w/cinatoken/cinatoken/.wrangler/staging/pg-native-dispatch-tests/report-shared-key-quote-attempt-v339-6f223391-22ce-485c-bd12-f065fdf64ab3.json
+2026-10-06T00:32:04.2831349Z # Subtest: native PG18 direct quote LOGIN captures exact pre-send references and fences late claims
+2026-10-06T00:32:04.2842327Z ok 1 - native PG18 direct quote LOGIN captures exact pre-send references and fences late claims
+2026-10-06T00:32:04.2844257Z   ---
+2026-10-06T00:32:04.2844766Z   duration_ms: 1401.646515
+2026-10-06T00:32:04.2845172Z   type: 'test'
+2026-10-06T00:32:04.2845492Z   ...
+2026-10-06T00:32:04.3376438Z 1..1
+2026-10-06T00:32:04.3377028Z # tests 1
+2026-10-06T00:32:04.3377428Z # suites 0
+2026-10-06T00:32:04.3385106Z # pass 1
+2026-10-06T00:32:04.3385703Z # fail 0
+2026-10-06T00:32:04.3385983Z # cancelled 0
+2026-10-06T00:32:04.3386243Z # skipped 0
+2026-10-06T00:32:04.3386481Z # todo 0
+2026-10-06T00:32:04.3386753Z # duration_ms 2870.618631
+2026-10-06T00:32:04.3505138Z ##[group]Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+2026-10-06T00:32:04.3506454Z [36;1mgosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \[0m
+2026-10-06T00:32:04.3507810Z [36;1m  node --import tsx --test scripts/db/cutover/postgres-shared-key-orphan-claim-v347.native.test.mjs[0m
+2026-10-06T00:32:04.3508826Z shell: sh -e {0}
+2026-10-06T00:32:04.3509175Z ##[endgroup]
+2026-10-06T00:32:04.4525407Z TAP version 13
+2026-10-06T00:32:07.0638065Z # [Gateway Proxy] calling provider providerId=orphan-provider model=orphan-model
+2026-10-06T00:32:07.0950470Z # [Gateway Proxy] calling provider providerId=orphan-provider model=orphan-model
+2026-10-06T00:32:07.0986870Z # [Gateway Proxy] calling provider providerId=orphan-provider model=orphan-model
+2026-10-06T00:32:07.1022673Z # [Gateway Proxy] calling provider providerId=orphan-provider model=orphan-model
+2026-10-06T00:32:07.1058355Z # [Gateway Proxy] calling provider providerId=orphan-provider model=orphan-model
+2026-10-06T00:32:07.3118559Z # Native shared-key orphan claim report: /__w/cinatoken/cinatoken/.wrangler/staging/pg-native-dispatch-tests/report-shared-key-orphan-claim-v347-140aab6c-60bd-4f58-a646-150eff8c8490.json
+2026-10-06T00:32:07.3137387Z # Subtest: native PG18 quote claims survive pre-send errors and post-send loss without economic facts
+2026-10-06T00:32:07.3145315Z ok 1 - native PG18 quote claims survive pre-send errors and post-send loss without economic facts
+2026-10-06T00:32:07.3146755Z   ---
+2026-10-06T00:32:07.3147280Z   duration_ms: 1379.972204
+2026-10-06T00:32:07.3147838Z   type: 'test'
+2026-10-06T00:32:07.3148314Z   ...
+2026-10-06T00:32:07.3719555Z 1..1
+2026-10-06T00:32:07.3719939Z # tests 1
+2026-10-06T00:32:07.3725243Z # suites 0
+2026-10-06T00:32:07.3725829Z # pass 1
+2026-10-06T00:32:07.3726353Z # fail 0
+2026-10-06T00:32:07.3726852Z # cancelled 0
+2026-10-06T00:32:07.3727358Z # skipped 0
+2026-10-06T00:32:07.3727814Z # todo 0
+2026-10-06T00:32:07.3728359Z # duration_ms 2931.124133
+2026-10-06T00:32:07.3826981Z ##[group]Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+2026-10-06T00:32:07.3827760Z [36;1mgosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \[0m
+2026-10-06T00:32:07.3828510Z [36;1m  node --import tsx --test scripts/db/cutover/postgres-shared-key-orphan-review-v348.native.test.mjs[0m
+2026-10-06T00:32:07.3829107Z shell: sh -e {0}
+2026-10-06T00:32:07.3829314Z ##[endgroup]
+2026-10-06T00:32:07.4780579Z TAP version 13
+2026-10-06T00:32:09.3403578Z # Native shared-key orphan review report: /__w/cinatoken/cinatoken/.wrangler/staging/pg-native-dispatch-tests/report-shared-key-orphan-review-v348-be92f566-2f79-4ca2-b5b1-3b7da12128f5.json
+2026-10-06T00:32:09.3419208Z # Subtest: native PG18 orphan review enqueues every committed claim without charging
+2026-10-06T00:32:09.3430063Z ok 1 - native PG18 orphan review enqueues every committed claim without charging
+2026-10-06T00:32:09.3432792Z   ---
+2026-10-06T00:32:09.3433276Z   duration_ms: 1668.030587
+2026-10-06T00:32:09.3434000Z   type: 'test'
+2026-10-06T00:32:09.3434327Z   ...
+2026-10-06T00:32:09.3578059Z 1..1
+2026-10-06T00:32:09.3578683Z # tests 1
+2026-10-06T00:32:09.3579325Z # suites 0
+2026-10-06T00:32:09.3581406Z # pass 1
+2026-10-06T00:32:09.3583088Z # fail 0
+2026-10-06T00:32:09.3584499Z # cancelled 0
+2026-10-06T00:32:09.3594984Z # skipped 0
+2026-10-06T00:32:09.3595476Z # todo 0
+2026-10-06T00:32:09.3595824Z # duration_ms 1891.483558
+2026-10-06T00:32:09.3686827Z ##[group]Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+2026-10-06T00:32:09.3687607Z [36;1mgosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \[0m
+2026-10-06T00:32:09.3688329Z [36;1m  node --import tsx --test scripts/db/cutover/postgres-shared-key-economic-outbox.native.test.mjs[0m
+2026-10-06T00:32:09.3688884Z shell: sh -e {0}
+2026-10-06T00:32:09.3689084Z ##[endgroup]
+2026-10-06T00:32:09.4608023Z TAP version 13
+2026-10-06T00:32:11.1824708Z # Native shared-key economic outbox report: /__w/cinatoken/cinatoken/.wrangler/staging/pg-native-dispatch-tests/report-economic-outbox-v339-08a56b4f-0053-40c2-b848-418f3d049ba8.json
+2026-10-06T00:32:11.1849989Z # Subtest: native PG18 shared-key economic event is complete, atomic and blocks legacy double pay
+2026-10-06T00:32:11.1850952Z ok 1 - native PG18 shared-key economic event is complete, atomic and blocks legacy double pay
+2026-10-06T00:32:11.1851924Z   ---
+2026-10-06T00:32:11.1852587Z   duration_ms: 1521.533758
+2026-10-06T00:32:11.1853636Z   type: 'test'
+2026-10-06T00:32:11.1854219Z   ...
+2026-10-06T00:32:11.1989735Z 1..1
+2026-10-06T00:32:11.1990326Z # tests 1
+2026-10-06T00:32:11.2005546Z # suites 0
+2026-10-06T00:32:11.2005960Z # pass 1
+2026-10-06T00:32:11.2006332Z # fail 0
+2026-10-06T00:32:11.2006697Z # cancelled 0
+2026-10-06T00:32:11.2006996Z # skipped 0
+2026-10-06T00:32:11.2007240Z # todo 0
+2026-10-06T00:32:11.2007537Z # duration_ms 1750.103833
+2026-10-06T00:32:11.2098130Z ##[group]Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+2026-10-06T00:32:11.2098899Z [36;1mgosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \[0m
+2026-10-06T00:32:11.2099656Z [36;1m  node --import tsx --test scripts/db/cutover/postgres-shared-key-selected-event-gate-v351.native.test.mjs[0m
+2026-10-06T00:32:11.2100255Z shell: sh -e {0}
+2026-10-06T00:32:11.2100456Z ##[endgroup]
+2026-10-06T00:32:11.3021887Z TAP version 13
+2026-10-06T00:32:12.9059873Z # selected-event-v351-report=/__w/cinatoken/cinatoken/.wrangler/staging/pg-native-dispatch-tests/report-selected-event-v351-5de9f40c-1336-45e8-ae04-97c792280e84.json
+2026-10-06T00:32:12.9072427Z # Subtest: selected shared-key logs require a same-commit typed economic event
+2026-10-06T00:32:12.9083322Z ok 1 - selected shared-key logs require a same-commit typed economic event
+2026-10-06T00:32:12.9086061Z   ---
+2026-10-06T00:32:12.9086566Z   duration_ms: 1406.659886
+2026-10-06T00:32:12.9087417Z   type: 'test'
+2026-10-06T00:32:12.9087950Z   ...
+2026-10-06T00:32:12.9232886Z 1..1
+2026-10-06T00:32:12.9233917Z # tests 1
+2026-10-06T00:32:12.9234557Z # suites 0
+2026-10-06T00:32:12.9237919Z # pass 1
+2026-10-06T00:32:12.9238629Z # fail 0
+2026-10-06T00:32:12.9238952Z # cancelled 0
+2026-10-06T00:32:12.9240522Z # skipped 0
+2026-10-06T00:32:12.9245106Z # todo 0
+2026-10-06T00:32:12.9245494Z # duration_ms 1632.840969
+2026-10-06T00:32:12.9340997Z ##[group]Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+2026-10-06T00:32:12.9341927Z [36;1mgosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \[0m
+2026-10-06T00:32:12.9342830Z [36;1m  node --import tsx --test scripts/db/cutover/postgres-shared-key-selected-event-buyer-v351.native.test.mjs[0m
+2026-10-06T00:32:12.9344332Z shell: sh -e {0}
+2026-10-06T00:32:12.9344657Z ##[endgroup]
+2026-10-06T00:32:13.0264820Z TAP version 13
+2026-10-06T00:32:16.1088275Z # [Gateway Usage] recordUsage model_id=fixture/model request_protocol=openai status=success route_group=default input_tokens=10 output_tokens=5 reasoning_tokens=0 metered=0.000015 standard=0.000015 charged=0.000015 is_byok=0 charged_eff=1 user_charged_factor=none metered_eff=1
+2026-10-06T00:32:16.1373095Z # [Gateway Usage] recordUsage model_id=fixture/model request_protocol=openai status=error route_group=default input_tokens=0 output_tokens=0 reasoning_tokens=0 metered=0 standard=0 charged=0 is_byok=0 charged_eff=1 user_charged_factor=none metered_eff=1
+2026-10-06T00:32:16.1845382Z # [Gateway Chat] forwarding baseModelId=fixture/model clientModel=fixture/model providerIds=fixture-provider keyId=v2-api-key
+2026-10-06T00:32:16.1876101Z # [Gateway SharedKeys] expanded attempts 1 -> 2 (shared channels: openai)
+2026-10-06T00:32:16.1887037Z # [Gateway Proxy] calling provider providerId=fixture-provider model=fixture-model
+2026-10-06T00:32:16.2282793Z # {"event":"gateway.resource_cleanup_unconfirmed"}
+2026-10-06T00:32:16.2315211Z # [Gateway Usage] recordUsage model_id=fixture/model request_protocol=openai status=error route_group=default input_tokens=0 output_tokens=0 reasoning_tokens=0 metered=0 standard=0 charged=0 is_byok=0 charged_eff=1 user_charged_factor=none metered_eff=1
+2026-10-06T00:32:16.2495470Z # [Gateway Chat] forwarding baseModelId=fixture/model clientModel=fixture/model providerIds=fixture-provider keyId=v2-api-key
+2026-10-06T00:32:16.2503293Z # [Gateway SharedKeys] expanded attempts 1 -> 2 (shared channels: openai)
+2026-10-06T00:32:16.2505304Z # [Gateway Proxy] calling provider providerId=fixture-provider model=fixture-model
+2026-10-06T00:32:16.2671868Z # {"event":"gateway.resource_cleanup_unconfirmed"}
+2026-10-06T00:32:16.2706573Z # [Gateway Usage] recordUsage model_id=fixture/model request_protocol=openai status=error route_group=default input_tokens=0 output_tokens=0 reasoning_tokens=0 metered=0 standard=0 charged=0 is_byok=0 charged_eff=1 user_charged_factor=none metered_eff=1
+2026-10-06T00:32:16.2872003Z # [Gateway Chat] forwarding baseModelId=fixture/model clientModel=fixture/model providerIds=fixture-provider keyId=v2-api-key
+2026-10-06T00:32:16.2874781Z # [Gateway SharedKeys] expanded attempts 1 -> 2 (shared channels: openai)
+2026-10-06T00:32:16.2876272Z # [Gateway Proxy] calling provider providerId=fixture-provider model=fixture-model
+2026-10-06T00:32:16.3033253Z # {"event":"gateway.resource_cleanup_unconfirmed"}
+2026-10-06T00:32:16.3061393Z # [Gateway Usage] recordUsage model_id=fixture/model request_protocol=openai status=error route_group=default input_tokens=0 output_tokens=0 reasoning_tokens=0 metered=0 standard=0 charged=0 is_byok=0 charged_eff=1 user_charged_factor=none metered_eff=1
+2026-10-06T00:32:16.3241551Z # [Gateway Usage] recordUsage model_id=fixture/model request_protocol=openai status=error route_group=default input_tokens=0 output_tokens=0 reasoning_tokens=0 metered=0 standard=0 charged=0 is_byok=0 charged_eff=1 user_charged_factor=none metered_eff=1
+2026-10-06T00:32:16.3337354Z # [Gateway Usage] recordUsage model_id=fixture/model request_protocol=openai status=success route_group=default input_tokens=10 output_tokens=5 reasoning_tokens=0 metered=0.000015 standard=0.000015 charged=0.000015 is_byok=0 charged_eff=1 user_charged_factor=none metered_eff=1
+2026-10-06T00:32:16.3454970Z # [Gateway Usage] recordUsage model_id=fixture/model request_protocol=openai status=success route_group=default input_tokens=0 output_tokens=0 reasoning_tokens=0 metered=0 standard=0 charged=0 is_byok=0 charged_eff=1 user_charged_factor=none metered_eff=1
+2026-10-06T00:32:16.3694958Z # [Gateway Usage] recordUsage model_id=fixture/model request_protocol=openai status=success route_group=default input_tokens=10 output_tokens=5 reasoning_tokens=0 metered=0.000015 standard=0.000015 charged=0.000015 is_byok=0 charged_eff=1 user_charged_factor=none metered_eff=1
+2026-10-06T00:32:16.3859824Z # [Gateway Usage] recordUsage model_id=fixture/model request_protocol=openai status=success route_group=default input_tokens=10 output_tokens=5 reasoning_tokens=0 metered=0.000015 standard=0.000015 charged=0.000015 is_byok=0 charged_eff=1 user_charged_factor=none metered_eff=1
+2026-10-06T00:32:16.4492176Z # [Gateway Usage] recordUsage model_id=fixture/model request_protocol=openai status=success route_group=default input_tokens=10 output_tokens=5 reasoning_tokens=0 metered=0.000015 standard=0.000015 charged=0.000015 is_byok=0 charged_eff=1 user_charged_factor=none metered_eff=1
+2026-10-06T00:32:16.6438340Z # economic-producer-v2-report=/__w/cinatoken/cinatoken/.wrangler/staging/pg-native-dispatch-tests/report-selected-event-buyer-v351-a783976a-690a-497f-840a-9947976f3bf1.json
+2026-10-06T00:32:16.6451642Z # Subtest: v351 selected shared-key gate composes with real buyer LOGIN recordUsage producer
+2026-10-06T00:32:16.6460459Z ok 1 - v351 selected shared-key gate composes with real buyer LOGIN recordUsage producer
+2026-10-06T00:32:16.6465803Z   ---
+2026-10-06T00:32:16.6466768Z   duration_ms: 1919.521852
+2026-10-06T00:32:16.6467665Z   type: 'test'
+2026-10-06T00:32:16.6468358Z   ...
+2026-10-06T00:32:16.7069958Z 1..1
+2026-10-06T00:32:16.7070547Z # tests 1
+2026-10-06T00:32:16.7071059Z # suites 0
+2026-10-06T00:32:16.7075266Z # pass 1
+2026-10-06T00:32:16.7076029Z # fail 0
+2026-10-06T00:32:16.7076784Z # cancelled 0
+2026-10-06T00:32:16.7077378Z # skipped 0
+2026-10-06T00:32:16.7077925Z # todo 0
+2026-10-06T00:32:16.7078606Z # duration_ms 3691.952929
+2026-10-06T00:32:16.7179480Z ##[group]Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+2026-10-06T00:32:16.7180401Z [36;1mgosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \[0m
+2026-10-06T00:32:16.7181441Z [36;1m  node --import tsx --test scripts/db/cutover/postgres-shared-key-economic-outbox-producer.native.test.mjs[0m
+2026-10-06T00:32:16.7182198Z shell: sh -e {0}
+2026-10-06T00:32:16.7182491Z ##[endgroup]
+2026-10-06T00:32:16.8128128Z TAP version 13
+2026-10-06T00:32:19.5204286Z # economic-producer-report=/__w/cinatoken/cinatoken/.wrangler/staging/pg-native-dispatch-tests/report-economic-producer-v340-b9d93b03-0b33-470a-8f5f-4360f84aa88d.json
+2026-10-06T00:32:19.5218207Z # Subtest: native PG18 same-transaction shared-key economic producer and critical writer
+2026-10-06T00:32:19.5227347Z ok 1 - native PG18 same-transaction shared-key economic producer and critical writer
+2026-10-06T00:32:19.5234120Z   ---
+2026-10-06T00:32:19.5234407Z   duration_ms: 2022.811864
+2026-10-06T00:32:19.5234805Z   type: 'test'
+2026-10-06T00:32:19.5235009Z   ...
+2026-10-06T00:32:19.5448619Z 1..1
+2026-10-06T00:32:19.5449192Z # tests 1
+2026-10-06T00:32:19.5451446Z # suites 0
+2026-10-06T00:32:19.5452457Z # pass 1
+2026-10-06T00:32:19.5453619Z # fail 0
+2026-10-06T00:32:19.5455789Z # cancelled 0
+2026-10-06T00:32:19.5458298Z # skipped 0
+2026-10-06T00:32:19.5459222Z # todo 0
+2026-10-06T00:32:19.5459967Z # duration_ms 2743.857037
+2026-10-06T00:32:19.5580592Z ##[group]Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+2026-10-06T00:32:19.5581360Z [36;1mgosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \[0m
+2026-10-06T00:32:19.5582131Z [36;1m  node --import tsx --test scripts/db/cutover/postgres-shared-key-snapshot-earning-consumer.native.test.mjs[0m
+2026-10-06T00:32:19.5582735Z shell: sh -e {0}
+2026-10-06T00:32:19.5582945Z ##[endgroup]
+2026-10-06T00:32:19.6539187Z TAP version 13
+2026-10-06T00:32:21.4729299Z # Native shared-key snapshot earning consumer report: /__w/cinatoken/cinatoken/.wrangler/staging/pg-native-dispatch-tests/report-snapshot-consumer-v340-e5d731a1-b970-4a48-b8cd-1e41334ad9fa.json
+2026-10-06T00:32:21.4742354Z # Subtest: native PG18 snapshot seller consumer uses immutable per-attempt quote and atomic event idempotency
+2026-10-06T00:32:21.4753089Z ok 1 - native PG18 snapshot seller consumer uses immutable per-attempt quote and atomic event idempotency
+2026-10-06T00:32:21.4754986Z   ---
+2026-10-06T00:32:21.4755597Z   duration_ms: 1622.252115
+2026-10-06T00:32:21.4756039Z   type: 'test'
+2026-10-06T00:32:21.4756418Z   ...
+2026-10-06T00:32:21.4894482Z 1..1
+2026-10-06T00:32:21.4895043Z # tests 1
+2026-10-06T00:32:21.4896129Z # suites 0
+2026-10-06T00:32:21.4899235Z # pass 1
+2026-10-06T00:32:21.4900212Z # fail 0
+2026-10-06T00:32:21.4900746Z # cancelled 0
+2026-10-06T00:32:21.4902152Z # skipped 0
+2026-10-06T00:32:21.4902955Z # todo 0
+2026-10-06T00:32:21.4904978Z # duration_ms 1847.3585
+2026-10-06T00:32:21.5006977Z ##[group]Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+2026-10-06T00:32:21.5007747Z [36;1mgosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \[0m
+2026-10-06T00:32:21.5008483Z [36;1m  node --import tsx --test scripts/db/cutover/postgres-shared-earning-consumer-runner.native.test.mjs[0m
+2026-10-06T00:32:21.5009040Z shell: sh -e {0}
+2026-10-06T00:32:21.5009238Z ##[endgroup]
+2026-10-06T00:32:21.5924516Z TAP version 13
+2026-10-06T00:32:23.2892747Z # Native shared earning consumer runner report: /__w/cinatoken/cinatoken/.wrangler/staging/pg-native-dispatch-tests/report-shared-earning-runner-v341-b3a85777-356e-4db0-a795-32aaf062ebb3.json
+2026-10-06T00:32:23.2906269Z # Subtest: native PG18 one-shot shared earning runner uses only dedicated LOGIN and replays event ID
+2026-10-06T00:32:23.2916558Z ok 1 - native PG18 one-shot shared earning runner uses only dedicated LOGIN and replays event ID
+2026-10-06T00:32:23.2923849Z   ---
+2026-10-06T00:32:23.2924848Z   duration_ms: 1494.101286
+2026-10-06T00:32:23.2925370Z   type: 'test'
+2026-10-06T00:32:23.2925888Z   ...
+2026-10-06T00:32:23.3058726Z 1..1
+2026-10-06T00:32:23.3065139Z # tests 1
+2026-10-06T00:32:23.3065503Z # suites 0
+2026-10-06T00:32:23.3066072Z # pass 1
+2026-10-06T00:32:23.3066422Z # fail 0
+2026-10-06T00:32:23.3066747Z # cancelled 0
+2026-10-06T00:32:23.3067115Z # skipped 0
+2026-10-06T00:32:23.3067460Z # todo 0
+2026-10-06T00:32:23.3067864Z # duration_ms 1725.179438
+2026-10-06T00:32:23.3170230Z ##[group]Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+2026-10-06T00:32:23.3171020Z [36;1mgosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \[0m
+2026-10-06T00:32:23.3171740Z [36;1m  node --import tsx --test scripts/db/cutover/postgres-shared-key-buyer-debit-v2.native.test.mjs[0m
+2026-10-06T00:32:23.3172298Z shell: sh -e {0}
+2026-10-06T00:32:23.3172503Z ##[endgroup]
+2026-10-06T00:32:23.4092104Z TAP version 13
+2026-10-06T00:32:25.0711032Z # Native shared-key buyer debit v2 report: /__w/cinatoken/cinatoken/.wrangler/staging/pg-native-dispatch-tests/report-buyer-debit-v2-1d3727d2-239f-41c8-9017-d5129086fd25.json
+2026-10-06T00:32:25.0725468Z # Subtest: native PG18 v2 ordinary buyer debit is separate and v1 consumer stays gated
+2026-10-06T00:32:25.0732765Z ok 1 - native PG18 v2 ordinary buyer debit is separate and v1 consumer stays gated
+2026-10-06T00:32:25.0734967Z   ---
+2026-10-06T00:32:25.0735493Z   duration_ms: 1469.478751
+2026-10-06T00:32:25.0735945Z   type: 'test'
+2026-10-06T00:32:25.0736308Z   ...
+2026-10-06T00:32:25.0881343Z 1..1
+2026-10-06T00:32:25.0898039Z # tests 1
+2026-10-06T00:32:25.0898414Z # suites 0
+2026-10-06T00:32:25.0898768Z # pass 1
+2026-10-06T00:32:25.0899111Z # fail 0
+2026-10-06T00:32:25.0899435Z # cancelled 0
+2026-10-06T00:32:25.0899799Z # skipped 0
+2026-10-06T00:32:25.0900180Z # todo 0
+2026-10-06T00:32:25.0900552Z # duration_ms 1690.462502
+2026-10-06T00:32:25.0994954Z ##[group]Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+2026-10-06T00:32:25.0995733Z [36;1mgosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \[0m
+2026-10-06T00:32:25.0996599Z [36;1m  node --import tsx --test scripts/db/cutover/postgres-shared-key-economic-producer-v2-aggregate-proof.native.test.mjs[0m
+2026-10-06T00:32:25.0997265Z shell: sh -e {0}
+2026-10-06T00:32:25.0997469Z ##[endgroup]
+2026-10-06T00:32:25.1932315Z TAP version 13
+2026-10-06T00:32:28.2435068Z # [Gateway Usage] recordUsage model_id=fixture/model request_protocol=openai status=success route_group=default input_tokens=10 output_tokens=5 reasoning_tokens=0 metered=0.000015 standard=0.000015 charged=0.000015 is_byok=0 charged_eff=1 user_charged_factor=none metered_eff=1
+2026-10-06T00:32:28.2787998Z # [Gateway Usage] recordUsage model_id=fixture/model request_protocol=openai status=error route_group=default input_tokens=0 output_tokens=0 reasoning_tokens=0 metered=0 standard=0 charged=0 is_byok=0 charged_eff=1 user_charged_factor=none metered_eff=1
+2026-10-06T00:32:28.3244949Z # [Gateway Chat] forwarding baseModelId=fixture/model clientModel=fixture/model providerIds=fixture-provider keyId=v2-api-key
+2026-10-06T00:32:28.3275740Z # [Gateway SharedKeys] expanded attempts 1 -> 2 (shared channels: openai)
+2026-10-06T00:32:28.3288150Z # [Gateway Proxy] calling provider providerId=fixture-provider model=fixture-model
+2026-10-06T00:32:28.3616550Z # {"event":"gateway.resource_cleanup_unconfirmed"}
+2026-10-06T00:32:28.3686218Z # [Gateway Usage] recordUsage model_id=fixture/model request_protocol=openai status=error route_group=default input_tokens=0 output_tokens=0 reasoning_tokens=0 metered=0 standard=0 charged=0 is_byok=0 charged_eff=1 user_charged_factor=none metered_eff=1
+2026-10-06T00:32:28.3871460Z # [Gateway Usage] recordUsage model_id=fixture/model request_protocol=openai status=error route_group=default input_tokens=0 output_tokens=0 reasoning_tokens=0 metered=0 standard=0 charged=0 is_byok=0 charged_eff=1 user_charged_factor=none metered_eff=1
+2026-10-06T00:32:28.4276884Z # [Gateway Usage] recordUsage model_id=fixture/model request_protocol=openai status=success route_group=default input_tokens=10 output_tokens=5 reasoning_tokens=0 metered=0.000015 standard=0.000015 charged=0.000015 is_byok=0 charged_eff=1 user_charged_factor=none metered_eff=1
+2026-10-06T00:32:28.4526183Z # [Gateway Usage] recordUsage model_id=fixture/model request_protocol=openai status=success route_group=default input_tokens=10 output_tokens=5 reasoning_tokens=0 metered=0.000015 standard=0.000015 charged=0.000015 is_byok=0 charged_eff=1 user_charged_factor=none metered_eff=1
+2026-10-06T00:32:28.4738769Z # [Gateway Usage] recordUsage model_id=fixture/model request_protocol=openai status=success route_group=default input_tokens=0 output_tokens=0 reasoning_tokens=0 metered=0 standard=0 charged=0 is_byok=0 charged_eff=1 user_charged_factor=none metered_eff=1
+2026-10-06T00:32:28.4945507Z # [Gateway Usage] recordUsage model_id=fixture/model request_protocol=openai status=success route_group=default input_tokens=10 output_tokens=5 reasoning_tokens=0 metered=0.000015 standard=0.000015 charged=0.000015 is_byok=0 charged_eff=1 user_charged_factor=none metered_eff=1
+2026-10-06T00:32:28.6885141Z # economic-producer-v2-report=/__w/cinatoken/cinatoken/.wrangler/staging/pg-native-dispatch-tests/report-economic-producer-v2-aggregate-proof-7dc1c502-f640-4414-9023-c1a5a6fa60be.json
+2026-10-06T00:32:28.6905341Z # Subtest: native PG18 v2 aggregate-proof activation successor preserves economic producer contracts
+2026-10-06T00:32:28.6906871Z ok 1 - native PG18 v2 aggregate-proof activation successor preserves economic producer contracts
+2026-10-06T00:32:28.6910245Z   ---
+2026-10-06T00:32:28.6910793Z   duration_ms: 1821.89978
+2026-10-06T00:32:28.6911364Z   type: 'test'
+2026-10-06T00:32:28.6911772Z   ...
+2026-10-06T00:32:28.7517675Z 1..1
+2026-10-06T00:32:28.7518217Z # tests 1
+2026-10-06T00:32:28.7519287Z # suites 0
+2026-10-06T00:32:28.7519662Z # pass 1
+2026-10-06T00:32:28.7519990Z # fail 0
+2026-10-06T00:32:28.7535752Z # cancelled 0
+2026-10-06T00:32:28.7536109Z # skipped 0
+2026-10-06T00:32:28.7600866Z # todo 0
+2026-10-06T00:32:28.7601116Z # duration_ms 3570.017313
+2026-10-06T00:32:28.7626845Z ##[group]Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+2026-10-06T00:32:28.7627596Z [36;1mgosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \[0m
+2026-10-06T00:32:28.7628326Z [36;1m  node --import tsx --test scripts/db/cutover/postgres-budget-admission-login-v350.native.test.mjs[0m
+2026-10-06T00:32:28.7628973Z shell: sh -e {0}
+2026-10-06T00:32:28.7629183Z ##[endgroup]
+2026-10-06T00:32:28.8542061Z TAP version 13
+2026-10-06T00:32:30.5288038Z # budget-admission-v350-report=/__w/cinatoken/cinatoken/.wrangler/staging/pg-native-dispatch-tests/report-budget-admission-v350-815bd7b8-49e0-4dd6-a99e-a1bfa600f0bb.json
+2026-10-06T00:32:30.5324632Z # Subtest: dedicated admission LOGIN has only checked ordinary-budget function capability
+2026-10-06T00:32:30.5328021Z not ok 1 - dedicated admission LOGIN has only checked ordinary-budget function capability
+2026-10-06T00:32:30.5329955Z   ---
+2026-10-06T00:32:30.5330384Z   duration_ms: 930.724509
+2026-10-06T00:32:30.5330778Z   type: 'test'
+2026-10-06T00:32:30.5331613Z   location: '/__w/cinatoken/cinatoken/scripts/db/cutover/postgres-budget-admission-login-v350.native.test.mjs:48:1'
+2026-10-06T00:32:30.5332253Z   failureType: 'testCodeFailure'
+2026-10-06T00:32:30.5332536Z   error: |-
+2026-10-06T00:32:30.5332789Z     Expected values to be strictly equal:
+2026-10-06T00:32:30.5333061Z     
+2026-10-06T00:32:30.5333452Z     81 !== 73
+2026-10-06T00:32:30.5333740Z     
+2026-10-06T00:32:30.5333932Z   code: 'ERR_ASSERTION'
+2026-10-06T00:32:30.5334213Z   name: 'AssertionError'
+2026-10-06T00:32:30.5334436Z   expected: 73
+2026-10-06T00:32:30.5334653Z   actual: 81
+2026-10-06T00:32:30.5334851Z   operator: 'strictEqual'
+2026-10-06T00:32:30.5335069Z   stack: |-
+2026-10-06T00:32:30.5335748Z     TestContext.<anonymous> (file:///__w/cinatoken/cinatoken/scripts/db/cutover/postgres-budget-admission-login-v350.native.test.mjs:105:14)
+2026-10-06T00:32:30.5336497Z     async Test.run (node:internal/test_runner/test:1054:7)
+2026-10-06T00:32:30.5337011Z     async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)
+2026-10-06T00:32:30.5337418Z   ...
+2026-10-06T00:32:30.5541801Z 1..1
+2026-10-06T00:32:30.5544686Z # tests 1
+2026-10-06T00:32:30.5545062Z # suites 0
+2026-10-06T00:32:30.5545818Z # pass 0
+2026-10-06T00:32:30.5547510Z # fail 1
+2026-10-06T00:32:30.5547908Z # cancelled 0
+2026-10-06T00:32:30.5549586Z # skipped 0
+2026-10-06T00:32:30.5550300Z # todo 0
+2026-10-06T00:32:30.5551334Z # duration_ms 1711.449225
+2026-10-06T00:32:30.5641280Z ##[error]Process completed with exit code 1.
+2026-10-06T00:32:30.5995751Z Post job cleanup.
+2026-10-06T00:32:30.6002789Z ##[command]/usr/bin/docker exec  802f909f7cd6137e238340fc1be754bd7f1a4f7c78be94fa644e19f413349245 sh -c "cat /etc/*release | grep ^ID"
+2026-10-06T00:32:30.7882664Z Stop and remove container: 7fb8731e2836456194a9b0e59c45220a_postgres186bookworm_ecff2e
+2026-10-06T00:32:30.7888569Z ##[command]/usr/bin/docker rm --force 802f909f7cd6137e238340fc1be754bd7f1a4f7c78be94fa644e19f413349245
+2026-10-06T00:32:30.9513762Z 802f909f7cd6137e238340fc1be754bd7f1a4f7c78be94fa644e19f413349245
+2026-10-06T00:32:30.9546937Z Remove container network: github_network_c7805bfaf8134b32b4de03e6bb8d6f4f
+2026-10-06T00:32:30.9553094Z ##[command]/usr/bin/docker network rm github_network_c7805bfaf8134b32b4de03e6bb8d6f4f
+2026-10-06T00:32:31.0497328Z github_network_c7805bfaf8134b32b4de03e6bb8d6f4f
+2026-10-06T00:32:31.0575335Z Cleaning up orphan processes
+2026-10-06T00:32:31.0957515Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/checkout@v4, actions/setup-node@v4. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/

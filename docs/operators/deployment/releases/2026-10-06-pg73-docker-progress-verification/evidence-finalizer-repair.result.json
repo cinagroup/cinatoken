@@ -1,0 +1,13 @@
+{
+  "at": "2026-10-06T01:20:41.434Z",
+  "finishedAt": "2026-10-06T01:20:41.501Z",
+  "executable": "C:/Program Files/nodejs/node.exe",
+  "args": [
+    "C:/Users/cina/AppData/Local/Temp/cinatoken-pg73-durable-meta-e44792174d9f42358287aa571b1ba35e/repair-finalizer-v2.mjs"
+  ],
+  "cwd": "C:/cinagroup/cinatoken",
+  "actualExit": 0,
+  "signal": null,
+  "stdout": "C:/Users/cina/AppData/Local/Temp/cinatoken-pg73-durable-meta-e44792174d9f42358287aa571b1ba35e/evidence-finalizer-repair.stdout.log",
+  "stderr": "C:/Users/cina/AppData/Local/Temp/cinatoken-pg73-durable-meta-e44792174d9f42358287aa571b1ba35e/evidence-finalizer-repair.stderr.log"
+}

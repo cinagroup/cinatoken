@@ -1,0 +1,1029 @@
+{
+  "schema": "cinatoken.web-compose.linux-ci.independent.v1",
+  "at": "2026-10-06T01:00:28.233Z",
+  "closed": true,
+  "actualExitCode": 0,
+  "platformSourceCommit": "4d645f954ea76d8546409aaa6b684a8279c0deb9",
+  "diagnosticSourceCommit": "fc17551b3016d3533c17cc4ec9b0151a4eedae44",
+  "platformCiIsPinnedToPlatformCommit": true,
+  "web": {
+    "id": 37395937911,
+    "status": "completed",
+    "conclusion": "success",
+    "headSha": "4d645f954ea76d8546409aaa6b684a8279c0deb9",
+    "steps": 37,
+    "everyStepSuccess": true,
+    "jobs": [
+      {
+        "id": 112051769979,
+        "name": "Admin contracts and public SSR build",
+        "steps": [
+          {
+            "name": "Set up job",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 1,
+            "started_at": "2026-10-06T00:48:51Z",
+            "completed_at": "2026-10-06T00:48:52Z"
+          },
+          {
+            "name": "Run actions/checkout@v4",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 2,
+            "started_at": "2026-10-06T00:48:52Z",
+            "completed_at": "2026-10-06T00:48:57Z"
+          },
+          {
+            "name": "Run actions/setup-node@v4",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 3,
+            "started_at": "2026-10-06T00:48:57Z",
+            "completed_at": "2026-10-06T00:49:04Z"
+          },
+          {
+            "name": "Run npm ci --ignore-scripts",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 4,
+            "started_at": "2026-10-06T00:49:04Z",
+            "completed_at": "2026-10-06T00:49:58Z"
+          },
+          {
+            "name": "Run npm run typecheck -w @octafuse/core",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 5,
+            "started_at": "2026-10-06T00:49:58Z",
+            "completed_at": "2026-10-06T00:50:13Z"
+          },
+          {
+            "name": "Run npm run build:node-index -w @octafuse/core",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 6,
+            "started_at": "2026-10-06T00:50:13Z",
+            "completed_at": "2026-10-06T00:50:13Z"
+          },
+          {
+            "name": "Validate account repository types and database contracts",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 7,
+            "started_at": "2026-10-06T00:50:13Z",
+            "completed_at": "2026-10-06T00:50:20Z"
+          },
+          {
+            "name": "Validate integration-key atomic audits and migration contracts",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 8,
+            "started_at": "2026-10-06T00:50:20Z",
+            "completed_at": "2026-10-06T00:50:23Z"
+          },
+          {
+            "name": "Validate Tools atomic configuration, single snapshots and private clients",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 9,
+            "started_at": "2026-10-06T00:50:23Z",
+            "completed_at": "2026-10-06T00:50:27Z"
+          },
+          {
+            "name": "Validate global Gateway Key paging and atomic profile conditions",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 10,
+            "started_at": "2026-10-06T00:50:27Z",
+            "completed_at": "2026-10-06T00:50:29Z"
+          },
+          {
+            "name": "Validate Shared Keys state guards and formal earning history protection",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 11,
+            "started_at": "2026-10-06T00:50:29Z",
+            "completed_at": "2026-10-06T00:50:31Z"
+          },
+          {
+            "name": "Validate Shared Keys atomic governance and exact request log detail",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 12,
+            "started_at": "2026-10-06T00:50:31Z",
+            "completed_at": "2026-10-06T00:50:32Z"
+          },
+          {
+            "name": "Validate authority currency failures and anonymous catalog boundary",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 13,
+            "started_at": "2026-10-06T00:50:32Z",
+            "completed_at": "2026-10-06T00:50:54Z"
+          },
+          {
+            "name": "Run npm run typecheck -w @octafuse/admin",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 14,
+            "started_at": "2026-10-06T00:50:54Z",
+            "completed_at": "2026-10-06T00:51:34Z"
+          },
+          {
+            "name": "Validate auth, workspace, keys, account and public BFF contracts",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 15,
+            "started_at": "2026-10-06T00:51:34Z",
+            "completed_at": "2026-10-06T00:52:04Z"
+          },
+          {
+            "name": "Build Admin public SSR and standalone output",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 16,
+            "started_at": "2026-10-06T00:52:04Z",
+            "completed_at": "2026-10-06T00:53:51Z"
+          },
+          {
+            "name": "Post Run actions/setup-node@v4",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 31,
+            "started_at": "2026-10-06T00:53:51Z",
+            "completed_at": "2026-10-06T00:53:51Z"
+          },
+          {
+            "name": "Post Run actions/checkout@v4",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 32,
+            "started_at": "2026-10-06T00:53:51Z",
+            "completed_at": "2026-10-06T00:53:51Z"
+          },
+          {
+            "name": "Complete job",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 33,
+            "started_at": "2026-10-06T00:53:51Z",
+            "completed_at": "2026-10-06T00:53:51Z"
+          }
+        ]
+      },
+      {
+        "id": 112051770302,
+        "name": "web",
+        "steps": [
+          {
+            "name": "Set up job",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 1,
+            "started_at": "2026-10-06T00:48:52Z",
+            "completed_at": "2026-10-06T00:48:53Z"
+          },
+          {
+            "name": "Run actions/checkout@v4",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 2,
+            "started_at": "2026-10-06T00:48:53Z",
+            "completed_at": "2026-10-06T00:48:58Z"
+          },
+          {
+            "name": "Run actions/setup-node@v4",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 3,
+            "started_at": "2026-10-06T00:48:58Z",
+            "completed_at": "2026-10-06T00:49:03Z"
+          },
+          {
+            "name": "Run npm ci --ignore-scripts",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 4,
+            "started_at": "2026-10-06T00:49:03Z",
+            "completed_at": "2026-10-06T00:49:47Z"
+          },
+          {
+            "name": "Run npm run verify:package-versions",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 5,
+            "started_at": "2026-10-06T00:49:47Z",
+            "completed_at": "2026-10-06T00:49:47Z"
+          },
+          {
+            "name": "Run npm run format:check -w @cinatoken/web",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 6,
+            "started_at": "2026-10-06T00:49:47Z",
+            "completed_at": "2026-10-06T00:50:05Z"
+          },
+          {
+            "name": "Run npm run test:web",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 7,
+            "started_at": "2026-10-06T00:50:05Z",
+            "completed_at": "2026-10-06T00:50:47Z"
+          },
+          {
+            "name": "Run npm run lint -w @cinatoken/web",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 8,
+            "started_at": "2026-10-06T00:50:47Z",
+            "completed_at": "2026-10-06T00:51:16Z"
+          },
+          {
+            "name": "Run bash -n docker/web/entrypoint.sh",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 9,
+            "started_at": "2026-10-06T00:51:16Z",
+            "completed_at": "2026-10-06T00:51:16Z"
+          },
+          {
+            "name": "Run npm run build:web",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 10,
+            "started_at": "2026-10-06T00:51:16Z",
+            "completed_at": "2026-10-06T00:51:47Z"
+          },
+          {
+            "name": "Freeze and verify release artifact",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 11,
+            "started_at": "2026-10-06T00:51:47Z",
+            "completed_at": "2026-10-06T00:51:51Z"
+          },
+          {
+            "name": "Generate verified production Worker configuration",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 12,
+            "started_at": "2026-10-06T00:51:51Z",
+            "completed_at": "2026-10-06T00:51:52Z"
+          },
+          {
+            "name": "Validate release image and Nginx configuration",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 13,
+            "started_at": "2026-10-06T00:51:52Z",
+            "completed_at": "2026-10-06T00:52:01Z"
+          },
+          {
+            "name": "Validate isolated Docker public SSR runtime",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 14,
+            "started_at": "2026-10-06T00:52:01Z",
+            "completed_at": "2026-10-06T00:52:05Z"
+          },
+          {
+            "name": "Run actions/upload-artifact@v4",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 15,
+            "started_at": "2026-10-06T00:52:05Z",
+            "completed_at": "2026-10-06T00:52:06Z"
+          },
+          {
+            "name": "Post Run actions/setup-node@v4",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 29,
+            "started_at": "2026-10-06T00:52:06Z",
+            "completed_at": "2026-10-06T00:52:07Z"
+          },
+          {
+            "name": "Post Run actions/checkout@v4",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 30,
+            "started_at": "2026-10-06T00:52:07Z",
+            "completed_at": "2026-10-06T00:52:07Z"
+          },
+          {
+            "name": "Complete job",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 31,
+            "started_at": "2026-10-06T00:52:07Z",
+            "completed_at": "2026-10-06T00:52:07Z"
+          }
+        ]
+      }
+    ]
+  },
+  "compose": {
+    "id": 37395937834,
+    "status": "completed",
+    "conclusion": "success",
+    "headSha": "4d645f954ea76d8546409aaa6b684a8279c0deb9",
+    "steps": 13,
+    "everyStepSuccess": true,
+    "job": {
+      "id": 112051771947,
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1,
+          "started_at": "2026-10-06T00:48:51Z",
+          "completed_at": "2026-10-06T00:48:52Z"
+        },
+        {
+          "name": "Checkout",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2,
+          "started_at": "2026-10-06T00:48:52Z",
+          "completed_at": "2026-10-06T00:48:57Z"
+        },
+        {
+          "name": "Set up Docker Buildx",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3,
+          "started_at": "2026-10-06T00:48:57Z",
+          "completed_at": "2026-10-06T00:49:04Z"
+        },
+        {
+          "name": "Start postgres",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4,
+          "started_at": "2026-10-06T00:49:04Z",
+          "completed_at": "2026-10-06T00:49:14Z"
+        },
+        {
+          "name": "Verify legacy schema rename and migration idempotency",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5,
+          "started_at": "2026-10-06T00:49:14Z",
+          "completed_at": "2026-10-06T00:49:34Z"
+        },
+        {
+          "name": "Build and start proxy + admin",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 6,
+          "started_at": "2026-10-06T00:49:34Z",
+          "completed_at": "2026-10-06T00:52:58Z"
+        },
+        {
+          "name": "Wait for proxy health",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 7,
+          "started_at": "2026-10-06T00:52:58Z",
+          "completed_at": "2026-10-06T00:53:00Z"
+        },
+        {
+          "name": "Wait for admin health",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 8,
+          "started_at": "2026-10-06T00:53:00Z",
+          "completed_at": "2026-10-06T00:53:00Z"
+        },
+        {
+          "name": "Smoke GET endpoints",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 9,
+          "started_at": "2026-10-06T00:53:00Z",
+          "completed_at": "2026-10-06T00:53:00Z"
+        },
+        {
+          "name": "Teardown",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 10,
+          "started_at": "2026-10-06T00:53:00Z",
+          "completed_at": "2026-10-06T00:53:11Z"
+        },
+        {
+          "name": "Post Set up Docker Buildx",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 19,
+          "started_at": "2026-10-06T00:53:11Z",
+          "completed_at": "2026-10-06T00:53:30Z"
+        },
+        {
+          "name": "Post Checkout",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 20,
+          "started_at": "2026-10-06T00:53:30Z",
+          "completed_at": "2026-10-06T00:53:31Z"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 21,
+          "started_at": "2026-10-06T00:53:31Z",
+          "completed_at": "2026-10-06T00:53:31Z"
+        }
+      ]
+    },
+    "actualTopology": "PG16 + all current migrations twice and legacy schema rename/ledger assertions + real built Node Proxy/Admin HTTP health; no Web or TLS in this Compose job",
+    "boundedHealthFirstResetRetained": true,
+    "cleanupObserved": {
+      "containersRemoved": 3,
+      "networkRemoved": true,
+      "volumeRemoved": true,
+      "guard": "workflow teardown uses || true; raw removals observed, no independent docker inspect proof"
+    }
+  },
+  "validations": {
+    "webUnitTests": {
+      "total": 1596,
+      "pass": 1596,
+      "fail": 0,
+      "skip": 0
+    },
+    "webTypesInTestWeb": true,
+    "webLint": true,
+    "webFormatter": true,
+    "webBuildAndReleaseFreeze": true,
+    "originalStaticDockerSmoke": true,
+    "isolatedDockerSsr": {
+      "proof": {
+        "file": "docker-ssr-runtime.proof.json",
+        "bytes": 25363,
+        "sha256": "054443258e636563a264ad09f3b56c7ccde8cabbffa0d327c93772bf248ce8ad"
+      },
+      "cases": 87,
+      "catalogReads": 64,
+      "anonymousCredentialsStripped": true,
+      "controlledCatalogOnly": true,
+      "ownedContainersVerifiedAbsent": 4,
+      "ownedInternalNetworkVerifiedAbsent": 1
+    },
+    "adminContractSuite": {
+      "total": 462,
+      "pass": 462,
+      "fail": 0,
+      "skip": 0
+    },
+    "adminExistingOptionalMigrationSuiteSkip": 1,
+    "coreProxyAdminTypechecksAndAdminBuild": true
+  },
+  "artifact": {
+    "id": 11382483868,
+    "node_id": "MDg6QXJ0aWZhY3QxMTM4MjQ4Mzg2OA==",
+    "name": "cinatoken-web",
+    "size_in_bytes": 6976097,
+    "url": "https://api.github.com/repos/cinagroup/cinatoken/actions/artifacts/11382483868",
+    "archive_download_url": "https://api.github.com/repos/cinagroup/cinatoken/actions/artifacts/11382483868/zip",
+    "expired": false,
+    "digest": "sha256:4bcb25289d4691745b609f13fc1456e64655f29dde05478eab9302044454e5ca",
+    "created_at": "2026-10-06T00:52:06Z",
+    "updated_at": "2026-10-06T00:52:06Z",
+    "expires_at": "2027-01-04T00:48:47Z",
+    "workflow_run": {
+      "id": 37395937911,
+      "repository_id": 1340150354,
+      "head_repository_id": 1340150354,
+      "head_branch": "main",
+      "head_sha": "4d645f954ea76d8546409aaa6b684a8279c0deb9"
+    },
+    "digestAuthority": "GitHubReportedDigest; not locally downloaded/recomputed",
+    "contentsVerifiedByThisReview": false
+  },
+  "commands": [
+    {
+      "receipt": {
+        "file": "admin-job-112051769979.result.json",
+        "bytes": 460,
+        "sha256": "fb4326146a076780c504c790b7fbcb0373f04d86a7d4101037b41b79d66c61c7"
+      },
+      "actualExit": 0,
+      "stdout": {
+        "file": "admin-job-112051769979.stdout.log",
+        "bytes": 510938,
+        "sha256": "4463771fc3f51103e922cc4aa33c5bdefeb400c490e534d64a7ae144ae9d07a4"
+      },
+      "stderr": {
+        "file": "admin-job-112051769979.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "receipt": {
+        "file": "compose-job-112051771947.result.json",
+        "bytes": 466,
+        "sha256": "683ebf92faee06abd561e3a67d08a127c25c1315b309ee3c702e16a57ddb79dc"
+      },
+      "actualExit": 0,
+      "stdout": {
+        "file": "compose-job-112051771947.stdout.log",
+        "bytes": 139051,
+        "sha256": "2f26b75958cbda017a86a4cf2d0f065de24e6f12a21afe88c08861bbfc4a3fc8"
+      },
+      "stderr": {
+        "file": "compose-job-112051771947.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "receipt": {
+        "file": "compose-jobs-1.result.json",
+        "bytes": 211,
+        "sha256": "ef4cfffb960edcfe8b0a9b214cd121a26921bef28f2a1474c1f9f787cd7a8faf"
+      },
+      "actualExit": 0,
+      "stdout": {
+        "file": "compose-jobs-1.stdout.json",
+        "bytes": 2571,
+        "sha256": "d58ae2765f04ab6509aa4b44630a165fa56b5ab0a201efa95a6f0b25a231d87c"
+      },
+      "stderr": {
+        "file": "compose-jobs-1.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "receipt": {
+        "file": "compose-jobs-2.result.json",
+        "bytes": 211,
+        "sha256": "58440f29d573b08eb05c74142e2a70fe7e936c094832ca93cfea28bda3d524ed"
+      },
+      "actualExit": 0,
+      "stdout": {
+        "file": "compose-jobs-2.stdout.json",
+        "bytes": 2786,
+        "sha256": "e486cbf9696234ba2001917b5ef21cafe29b10ebb04622e6adee4ad98449331f"
+      },
+      "stderr": {
+        "file": "compose-jobs-2.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "receipt": {
+        "file": "compose-jobs-3.result.json",
+        "bytes": 371,
+        "sha256": "ab63ece08ef4589e88eeb826c3e28639bd71474389b1cee48ec81c572b9bdd82"
+      },
+      "actualExit": 0,
+      "stdout": {
+        "file": "compose-jobs-3.stdout.json",
+        "bytes": 3025,
+        "sha256": "e4da825ff9e45a59372837fb48192cd9e277a72ba6a4f5b5423cb42913a08e48"
+      },
+      "stderr": {
+        "file": "compose-jobs-3.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "receipt": {
+        "file": "compose-run-1.result.json",
+        "bytes": 208,
+        "sha256": "21856b12e9f973cf0e58c17797c69173b6a6c99016a7a2eda993f850b05e9b46"
+      },
+      "actualExit": 0,
+      "stdout": {
+        "file": "compose-run-1.stdout.json",
+        "bytes": 12412,
+        "sha256": "a92edc400da4b6c904186ba5084c241f29a3dc24adf30c8d87cc369ab685b99a"
+      },
+      "stderr": {
+        "file": "compose-run-1.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "receipt": {
+        "file": "compose-run-final.result.json",
+        "bytes": 446,
+        "sha256": "c2515a14d98076b6899e5c84930f0f28dc8da52149ec2825ab009705d1cf84f9"
+      },
+      "actualExit": 0,
+      "stdout": {
+        "file": "compose-run-final.stdout.json",
+        "bytes": 12415,
+        "sha256": "96a02ffe158bca5e10de2fcfd9cfa087c6a9560056fd9f1b896b3436f4d933f5"
+      },
+      "stderr": {
+        "file": "compose-run-final.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "receipt": {
+        "file": "web-artifacts-final.result.json",
+        "bytes": 452,
+        "sha256": "675410eb43b3cf8bca2e2915b9994a206f61b5d5bffc1eac8663dad5193808b4"
+      },
+      "actualExit": 0,
+      "stdout": {
+        "file": "web-artifacts-final.stdout.json",
+        "bytes": 712,
+        "sha256": "7f201077fda37d153e803ee59685cd2961aca28171181a25d8e8aaf0a8a4fa5e"
+      },
+      "stderr": {
+        "file": "web-artifacts-final.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "receipt": {
+        "file": "web-job-112051770302.result.json",
+        "bytes": 505,
+        "sha256": "093ca9d9bdc48209f683e318257cb52486a848a03e9ccb8cab316d04755a35fd"
+      },
+      "actualExit": 0,
+      "stdout": {
+        "file": "web-job-112051770302.stdout.log",
+        "bytes": 732616,
+        "sha256": "a52568219d6175e308c48c3785fa921c3b9ce5e2242bdb7b332c49fb8d1c2440"
+      },
+      "stderr": {
+        "file": "web-job-112051770302.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "receipt": {
+        "file": "web-jobs-1.result.json",
+        "bytes": 199,
+        "sha256": "dba277e96ad7d9943daca672e6934484e85f592146a1593db6873bf4ed1a0886"
+      },
+      "actualExit": 0,
+      "stdout": {
+        "file": "web-jobs-1.stdout.json",
+        "bytes": 7499,
+        "sha256": "af68d89c126a5d4a4aa21a26b04f98ea975b55434ec34eaa1961d7cb2a11d767"
+      },
+      "stderr": {
+        "file": "web-jobs-1.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "receipt": {
+        "file": "web-jobs-2.result.json",
+        "bytes": 199,
+        "sha256": "5f14f1e0c0305e2d72302b9e210a73c03d2bb2cc6a7eee83d3255a13d21eb1f9"
+      },
+      "actualExit": 0,
+      "stdout": {
+        "file": "web-jobs-2.stdout.json",
+        "bytes": 8168,
+        "sha256": "a26774f286beaf25448021ad6575813dc10dc9314a0a519d060273ca46d19bf9"
+      },
+      "stderr": {
+        "file": "web-jobs-2.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "receipt": {
+        "file": "web-jobs-3.result.json",
+        "bytes": 359,
+        "sha256": "0639804854c7e384b2672d0930a49839d1269a496b6874d495d5fecb9e85b21b"
+      },
+      "actualExit": 0,
+      "stdout": {
+        "file": "web-jobs-3.stdout.json",
+        "bytes": 8450,
+        "sha256": "e2c649242429d64084fafd1996fe0ed2d9fe9e472cf3b446d53870acc8aba5d6"
+      },
+      "stderr": {
+        "file": "web-jobs-3.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "receipt": {
+        "file": "web-run-1.result.json",
+        "bytes": 196,
+        "sha256": "9e367c4218bd965b71a0425fdc383af24388cbba3ca51ecb33f4c1ee25c79f90"
+      },
+      "actualExit": 0,
+      "stdout": {
+        "file": "web-run-1.stdout.json",
+        "bytes": 12386,
+        "sha256": "ea7431505eada6276e2ad157eeae1315123f617533d5d86edc536b12d7b48567"
+      },
+      "stderr": {
+        "file": "web-run-1.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "receipt": {
+        "file": "web-run-final.result.json",
+        "bytes": 434,
+        "sha256": "883dd06b71f15ff29cea5480cf825f234c29922a8892bf458ca938237e149d1d"
+      },
+      "actualExit": 0,
+      "stdout": {
+        "file": "web-run-final.stdout.json",
+        "bytes": 12389,
+        "sha256": "a34c980f09668c458298e001a49465ac654372774bd015e8ab173d3fd1b2f9d1"
+      },
+      "stderr": {
+        "file": "web-run-final.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    }
+  ],
+  "priorLocalSealingFailure": {
+    "receipt": {
+      "file": "seal-ci.result.json",
+      "bytes": 326,
+      "sha256": "67fb030ee7f72b03654591d940942b81c8a3ba0391d2a8f80d2b9fc65a10d77a"
+    },
+    "actualExit": 1,
+    "reason": "Local sealer resolved earlier relative stdout names against process cwd instead of its exact Temp directory; no CI job or raw log changed"
+  },
+  "productionRequests": 0,
+  "ciDispatches": 0,
+  "reruns": 0,
+  "sourceWrites": 0,
+  "limitations": {
+    "externalComposeExamplesActuallyStarted": false,
+    "fullCombinedTopology": false,
+    "realTls": false,
+    "realCinaAuth": false,
+    "authenticatedBrowserMutations": false,
+    "fullSseAndCancellation": false,
+    "grayAndRollback": false,
+    "G7": "pending",
+    "G8": "pending",
+    "productionRemains": "c13a64b9c3b2c90adcf736910ea408868d7854f1"
+  },
+  "inventory": [
+    {
+      "file": "admin-job-112051769979.result.json",
+      "bytes": 460,
+      "sha256": "fb4326146a076780c504c790b7fbcb0373f04d86a7d4101037b41b79d66c61c7"
+    },
+    {
+      "file": "admin-job-112051769979.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "admin-job-112051769979.stdout.log",
+      "bytes": 510938,
+      "sha256": "4463771fc3f51103e922cc4aa33c5bdefeb400c490e534d64a7ae144ae9d07a4"
+    },
+    {
+      "file": "compose-job-112051771947.result.json",
+      "bytes": 466,
+      "sha256": "683ebf92faee06abd561e3a67d08a127c25c1315b309ee3c702e16a57ddb79dc"
+    },
+    {
+      "file": "compose-job-112051771947.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "compose-job-112051771947.stdout.log",
+      "bytes": 139051,
+      "sha256": "2f26b75958cbda017a86a4cf2d0f065de24e6f12a21afe88c08861bbfc4a3fc8"
+    },
+    {
+      "file": "compose-jobs-1.result.json",
+      "bytes": 211,
+      "sha256": "ef4cfffb960edcfe8b0a9b214cd121a26921bef28f2a1474c1f9f787cd7a8faf"
+    },
+    {
+      "file": "compose-jobs-1.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "compose-jobs-1.stdout.json",
+      "bytes": 2571,
+      "sha256": "d58ae2765f04ab6509aa4b44630a165fa56b5ab0a201efa95a6f0b25a231d87c"
+    },
+    {
+      "file": "compose-jobs-2.result.json",
+      "bytes": 211,
+      "sha256": "58440f29d573b08eb05c74142e2a70fe7e936c094832ca93cfea28bda3d524ed"
+    },
+    {
+      "file": "compose-jobs-2.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "compose-jobs-2.stdout.json",
+      "bytes": 2786,
+      "sha256": "e486cbf9696234ba2001917b5ef21cafe29b10ebb04622e6adee4ad98449331f"
+    },
+    {
+      "file": "compose-jobs-3.result.json",
+      "bytes": 371,
+      "sha256": "ab63ece08ef4589e88eeb826c3e28639bd71474389b1cee48ec81c572b9bdd82"
+    },
+    {
+      "file": "compose-jobs-3.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "compose-jobs-3.stdout.json",
+      "bytes": 3025,
+      "sha256": "e4da825ff9e45a59372837fb48192cd9e277a72ba6a4f5b5423cb42913a08e48"
+    },
+    {
+      "file": "compose-run-1.result.json",
+      "bytes": 208,
+      "sha256": "21856b12e9f973cf0e58c17797c69173b6a6c99016a7a2eda993f850b05e9b46"
+    },
+    {
+      "file": "compose-run-1.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "compose-run-1.stdout.json",
+      "bytes": 12412,
+      "sha256": "a92edc400da4b6c904186ba5084c241f29a3dc24adf30c8d87cc369ab685b99a"
+    },
+    {
+      "file": "compose-run-final.result.json",
+      "bytes": 446,
+      "sha256": "c2515a14d98076b6899e5c84930f0f28dc8da52149ec2825ab009705d1cf84f9"
+    },
+    {
+      "file": "compose-run-final.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "compose-run-final.stdout.json",
+      "bytes": 12415,
+      "sha256": "96a02ffe158bca5e10de2fcfd9cfa087c6a9560056fd9f1b896b3436f4d933f5"
+    },
+    {
+      "file": "docker-ssr-runtime.proof.json",
+      "bytes": 25363,
+      "sha256": "054443258e636563a264ad09f3b56c7ccde8cabbffa0d327c93772bf248ce8ad"
+    },
+    {
+      "file": "seal-ci.result.json",
+      "bytes": 326,
+      "sha256": "67fb030ee7f72b03654591d940942b81c8a3ba0391d2a8f80d2b9fc65a10d77a"
+    },
+    {
+      "file": "seal-ci.stderr.log",
+      "bytes": 851,
+      "sha256": "806b873247fe20f4e7c975b19b650c6de5535497db905779a850b56e475b4659"
+    },
+    {
+      "file": "seal-ci.stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "seal-linux-ci-v2.mjs",
+      "bytes": 8482,
+      "sha256": "bf24697f93315e2ddab187a865309ba243df4eb80ae83ec86bcaef60a5f2243f"
+    },
+    {
+      "file": "seal-linux-ci.mjs",
+      "bytes": 8136,
+      "sha256": "5dae54bb2d40d8d6385de670fc62ddddabc67803d1102bcf82af634ffd15917a"
+    },
+    {
+      "file": "web-artifacts-final.result.json",
+      "bytes": 452,
+      "sha256": "675410eb43b3cf8bca2e2915b9994a206f61b5d5bffc1eac8663dad5193808b4"
+    },
+    {
+      "file": "web-artifacts-final.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "web-artifacts-final.stdout.json",
+      "bytes": 712,
+      "sha256": "7f201077fda37d153e803ee59685cd2961aca28171181a25d8e8aaf0a8a4fa5e"
+    },
+    {
+      "file": "web-job-112051770302.result.json",
+      "bytes": 505,
+      "sha256": "093ca9d9bdc48209f683e318257cb52486a848a03e9ccb8cab316d04755a35fd"
+    },
+    {
+      "file": "web-job-112051770302.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "web-job-112051770302.stdout.log",
+      "bytes": 732616,
+      "sha256": "a52568219d6175e308c48c3785fa921c3b9ce5e2242bdb7b332c49fb8d1c2440"
+    },
+    {
+      "file": "web-jobs-1.result.json",
+      "bytes": 199,
+      "sha256": "dba277e96ad7d9943daca672e6934484e85f592146a1593db6873bf4ed1a0886"
+    },
+    {
+      "file": "web-jobs-1.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "web-jobs-1.stdout.json",
+      "bytes": 7499,
+      "sha256": "af68d89c126a5d4a4aa21a26b04f98ea975b55434ec34eaa1961d7cb2a11d767"
+    },
+    {
+      "file": "web-jobs-2.result.json",
+      "bytes": 199,
+      "sha256": "5f14f1e0c0305e2d72302b9e210a73c03d2bb2cc6a7eee83d3255a13d21eb1f9"
+    },
+    {
+      "file": "web-jobs-2.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "web-jobs-2.stdout.json",
+      "bytes": 8168,
+      "sha256": "a26774f286beaf25448021ad6575813dc10dc9314a0a519d060273ca46d19bf9"
+    },
+    {
+      "file": "web-jobs-3.result.json",
+      "bytes": 359,
+      "sha256": "0639804854c7e384b2672d0930a49839d1269a496b6874d495d5fecb9e85b21b"
+    },
+    {
+      "file": "web-jobs-3.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "web-jobs-3.stdout.json",
+      "bytes": 8450,
+      "sha256": "e2c649242429d64084fafd1996fe0ed2d9fe9e472cf3b446d53870acc8aba5d6"
+    },
+    {
+      "file": "web-run-1.result.json",
+      "bytes": 196,
+      "sha256": "9e367c4218bd965b71a0425fdc383af24388cbba3ca51ecb33f4c1ee25c79f90"
+    },
+    {
+      "file": "web-run-1.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "web-run-1.stdout.json",
+      "bytes": 12386,
+      "sha256": "ea7431505eada6276e2ad157eeae1315123f617533d5d86edc536b12d7b48567"
+    },
+    {
+      "file": "web-run-final.result.json",
+      "bytes": 434,
+      "sha256": "883dd06b71f15ff29cea5480cf825f234c29922a8892bf458ca938237e149d1d"
+    },
+    {
+      "file": "web-run-final.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "web-run-final.stdout.json",
+      "bytes": 12389,
+      "sha256": "a34c980f09668c458298e001a49465ac654372774bd015e8ab173d3fd1b2f9d1"
+    }
+  ]
+}

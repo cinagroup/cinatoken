@@ -1,0 +1,48 @@
+{
+  "schema": "v364-owned-linux-executor-closed-v1",
+  "startedEpoch": 1791247603.5351532,
+  "elapsedMs": 16.00000000325963,
+  "actualProcessExit": 1,
+  "actualExit": 1,
+  "outcome": "STRICT_FAILURE_OR_UNKNOWN_PRESERVED",
+  "timedOut": false,
+  "interrupted": false,
+  "fatal": {
+    "name": "RuntimeError",
+    "message": "Requires explicit --execute-linux on an owned Linux runner"
+  },
+  "packageSHA256": null,
+  "run": {
+    "GITHUB_SHA": null,
+    "GITHUB_RUN_ID": null,
+    "GITHUB_RUN_ATTEMPT": null,
+    "GITHUB_WORKFLOW": null,
+    "GITHUB_JOB": null
+  },
+  "reportedActualExit": null,
+  "closedReportPresent": false,
+  "closure": {
+    "authority": "this executor",
+    "subreaperEnabled": false,
+    "directChildReaped": false,
+    "groupGone": true,
+    "leftoverGroupKilled": false,
+    "reapedDescendants": [],
+    "cooperativeNativeFinallyVerified": false,
+    "errors": []
+  },
+  "productionRequests": 0,
+  "ciInvocations": 0,
+  "files": [
+    {
+      "path": "executor.stderr.txt",
+      "bytes": 308,
+      "sha256": "82f4dc5058d6b15ff3fb6916645534b524c9aab87a311603fb02246964ff29f1"
+    },
+    {
+      "path": "executor.stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ]
+}

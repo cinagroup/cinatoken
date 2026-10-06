@@ -1,0 +1,23 @@
+import fs from 'node:fs';
+import path from 'node:path';
+import { spawn } from 'node:child_process';
+import { fileURLToPath } from 'node:url';
+const dir=path.dirname(fileURLToPath(import.meta.url));
+const [label,program,...args]=process.argv.slice(2);
+const exe={gh:'C:/Program Files/GitHub CLI/gh.exe',git:'C:/Program Files/Git/cmd/git.exe',node:'C:/Program Files/nodejs/node.exe'}[program];
+if(!exe || !/^[a-z0-9.-]+$/i.test(label)) throw new Error('Invalid arguments');
+const startedAt=new Date().toISOString();
+const stdoutPath=path.join(dir,label+'.stdout.txt'),stderrPath=path.join(dir,label+'.stderr.txt'),resultPath=path.join(dir,label+'.result.json');
+const stdout=fs.createWriteStream(stdoutPath,{flags:'wx'}),stderr=fs.createWriteStream(stderrPath,{flags:'wx'});
+const stdoutClosed=new Promise(resolve=>stdout.on('close',resolve)),stderrClosed=new Promise(resolve=>stderr.on('close',resolve));
+const child=spawn(exe,args,{cwd:'C:/cinagroup/cinatoken',stdio:['ignore','pipe','pipe'],windowsHide:true});
+child.stdout.pipe(stdout); child.stderr.pipe(stderr);
+let spawnError=null; child.on('error',error=>{spawnError=String(error)});
+const finish=new Promise(resolve=>child.on('close',(code,signal)=>resolve({code,signal})));
+const result=await finish;
+await Promise.all([stdoutClosed,stderrClosed]);
+const proof={startedAt,completedAt:new Date().toISOString(),program,arguments:args,actualExitCode:result.code,signal:result.signal,spawnError,stdoutPath,stderrPath,stdoutBytes:fs.statSync(stdoutPath).size,stderrBytes:fs.statSync(stderrPath).size};
+fs.writeFileSync(resultPath,JSON.stringify(proof,null,2)+'\n',{flag:'wx'});
+process.stdout.write(JSON.stringify({...proof,resultPath})+'\n');
+process.exitCode=result.code??1;
+

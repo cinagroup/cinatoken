@@ -1,0 +1,174 @@
+{
+  "at": "2026-10-06T01:00:44.636Z",
+  "actualExit": 0,
+  "kind": "Artifact bytes and terminal facts verified; NOT cancellation test pass",
+  "runId": 37396338452,
+  "headSha": "fc17551b3016d3533c17cc4ec9b0151a4eedae44",
+  "artifact": {
+    "id": 11382899477,
+    "name": "v364-owned-linux-fc17551b3016d3533c17cc4ec9b0151a4eedae44-37396338452-1",
+    "reportedZipBytes": 42893,
+    "reportedZipDigest": "sha256:d64432957231b27d3a12625b568333cf457a2bccddc7dd5edfdf5acaf43b6c89",
+    "archiveDigestIndependentlyDownloaded": false,
+    "actualDownloadedFiles": 10,
+    "hiddenWorkflowNotDownloaded": true,
+    "workflowSourceStillPinnedInGit": true
+  },
+  "executor": {
+    "actualProcessExit": 1,
+    "runnerOutcomeCode": 1,
+    "actualExit": 1,
+    "elapsedMs": 32658.484963000006,
+    "timedOut": false,
+    "closure": {
+      "authority": "this executor",
+      "subreaperEnabled": true,
+      "directChildReaped": true,
+      "groupGone": true,
+      "leftoverGroupKilled": true,
+      "reapedDescendants": [
+        {
+          "pid": 2648,
+          "waitStatus": 0
+        },
+        {
+          "pid": 2661,
+          "waitStatus": 0
+        },
+        {
+          "pid": 2654,
+          "waitStatus": 0
+        },
+        {
+          "pid": 2609,
+          "waitStatus": 0
+        }
+      ],
+      "cooperativeNativeFinallyVerified": true,
+      "errors": []
+    }
+  },
+  "baseline": {
+    "tests": 8,
+    "pass": 7,
+    "fail": 1,
+    "skip": 0,
+    "actualExit": 1
+  },
+  "calibrations": 3,
+  "cancellationCases": [
+    {
+      "caseId": "locked-uninstrumented-destroy",
+      "originalWindow": {
+        "pollCount": 100,
+        "sleepMs": 10,
+        "elapsedMs": 1372.6503520000006,
+        "actual": null,
+        "expected": "observed",
+        "actualExit": 1
+      },
+      "tail": {
+        "elapsedMs": 4026.8612829999993,
+        "reads": 75,
+        "actual": null,
+        "usedForPass": false
+      },
+      "actualExit": 1,
+      "closed": true,
+      "baselineEligible": true
+    },
+    {
+      "caseId": "locked-observed-destroy",
+      "originalWindow": {
+        "pollCount": 100,
+        "sleepMs": 10,
+        "elapsedMs": 1358.7547060000015,
+        "actual": null,
+        "expected": "observed",
+        "actualExit": 1
+      },
+      "tail": {
+        "elapsedMs": 4012.0311839999995,
+        "reads": 75,
+        "actual": null,
+        "usedForPass": false
+      },
+      "actualExit": 1,
+      "closed": true,
+      "baselineEligible": true
+    },
+    {
+      "caseId": "locked-observed-rst",
+      "originalWindow": {
+        "pollCount": 100,
+        "sleepMs": 10,
+        "elapsedMs": 1343.608360000002,
+        "actual": null,
+        "expected": "observed",
+        "actualExit": 1
+      },
+      "tail": {
+        "elapsedMs": 4004.8411979999983,
+        "reads": 75,
+        "actual": null,
+        "usedForPass": false
+      },
+      "actualExit": 1,
+      "closed": true,
+      "baselineEligible": true
+    },
+    {
+      "caseId": "locked-observed-reader-cancel",
+      "originalWindow": {
+        "pollCount": 100,
+        "sleepMs": 10,
+        "elapsedMs": 1331.5457810000007,
+        "actual": null,
+        "expected": "observed",
+        "actualExit": 1
+      },
+      "tail": {
+        "elapsedMs": 4007.4767109999993,
+        "reads": 75,
+        "actual": null,
+        "usedForPass": false
+      },
+      "actualExit": 1,
+      "closed": true,
+      "baselineEligible": true
+    },
+    {
+      "caseId": "locked-observed-destroy-passthrough-variant",
+      "originalWindow": {
+        "pollCount": 100,
+        "sleepMs": 10,
+        "elapsedMs": 1316.5571459999992,
+        "actual": null,
+        "expected": "observed",
+        "actualExit": 1
+      },
+      "tail": {
+        "elapsedMs": 4049.3720900000008,
+        "reads": 76,
+        "actual": null,
+        "usedForPass": false
+      },
+      "actualExit": 1,
+      "closed": true,
+      "baselineEligible": false
+    }
+  ],
+  "nodeCasesClosed": 8,
+  "nodeActiveMiniflare": 0,
+  "source10Unchanged": true,
+  "executorFileHashesVerified": 7,
+  "eventsHashVerified": true,
+  "causeProven": false,
+  "strictCancellationPassed": false,
+  "allCooperativeProcessClosureProven": false,
+  "forcedCleanupWasAttempted": true,
+  "liveProcessKilledVersusZombieReapProven": false,
+  "originalFailurePreserved": true,
+  "productionRequests": 0,
+  "realIdentity": false
+}

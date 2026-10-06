@@ -1,0 +1,284 @@
+{
+  "schemaVersion": 1,
+  "createdAt": "2026-10-06T00:33:16.931Z",
+  "reviewedInventoryHead": "cecd81638e97bf919d5988e9037a10f9dbfcef3f",
+  "parentCurrentHeadBeforeOwnCommit": "b1ec8f33cf24edc07e8855c059c1498730a43113",
+  "conclusion": "Authorized Docker example configuration fixes are complete and locally validated. Actual Docker/Compose/TLS identity/SSE/gray/rollback and full G7/G8 remain pending; Parent owns commit, Linux CI and deployment.",
+  "ownedFiles": [
+    {
+      "file": "docker/examples/gateway.compose.yml",
+      "beforeBytes": 2615,
+      "beforeSha256": "0c3e7c9bfcd566e7719531f735ab0a1f894660cafee472c5b29cdd6455bf00bd",
+      "afterBytes": 3258,
+      "afterSha256": "a62b61f0c80f51a1d8d24e579dd2909b0df5cdcc0f3d51aad0e5cf6b21dd0a3a",
+      "beforeCrlf": 0,
+      "afterCrlf": 0
+    },
+    {
+      "file": "docker/examples/web-frontend.compose.yml",
+      "beforeBytes": 1065,
+      "beforeSha256": "617bdd735672f1dfc48cb8ac31d194b551dad79529691c6d92c07d620aadc4f0",
+      "afterBytes": 3808,
+      "afterSha256": "35bf7722b2d6b472b01c31c689b6a0ea1e4b1f9cd4ea9c45a1464f71b4bfde54",
+      "beforeCrlf": 0,
+      "afterCrlf": 0
+    },
+    {
+      "file": "docs/operators/deployment/docker.md",
+      "beforeBytes": 22612,
+      "beforeSha256": "16e632e09b97fb9cb3470a1980552f4382e0609dd8f77a17e53533d17ebf38c6",
+      "afterBytes": 25944,
+      "afterSha256": "69d94275c20277c6993dd5a70e4f00bf4744f8ea2f4da1915a5e7fe86d5871b3",
+      "beforeCrlf": 0,
+      "afterCrlf": 0
+    },
+    {
+      "file": "docker/examples/env.compose.external.example",
+      "beforeBytes": 1669,
+      "beforeSha256": "00a197340ed2e1b37160150d2439bcfeba996ff981228bda3eb499699447ebfd",
+      "afterBytes": 2246,
+      "afterSha256": "e91919807d8d451b6e634e487b87871b743e4bfae1c1ff2e54eb11902a4f1789",
+      "beforeCrlf": 0,
+      "afterCrlf": 0
+    }
+  ],
+  "sourceFilesExactlyAfterV3": true,
+  "worktreeScopeExactlyFourOwnedFiles": true,
+  "configurationValidation": {
+    "file": "configuration-validation-v3.json",
+    "checks": {
+      "yamlUniqueKeys": true,
+      "gatewayOnlyExpectedSemanticChange": true,
+      "webOnly28PrivateFlagsChanged": true,
+      "all28MatchEntrypointNginxAndImage": true,
+      "adminFlags27": true,
+      "noUnusedSsrPrivateFlags": true,
+      "unrelatedOperatorProseExact": true,
+      "originalNewlineStylePreserved": true,
+      "interpolationScenarios": 32,
+      "defaultsFalse": true,
+      "explicitOriginAllowed": true,
+      "matchingRequiredSecret": true,
+      "missingAndEmptySecretRejected": true,
+      "blankOperatorSecretExample": true,
+      "noSecretDefaultOrRotation": true,
+      "password410AndSecureOidcCookieDocumented": true
+    },
+    "actualExitCode": 0,
+    "method": "Actual YAML parser with unique-key validation; documented Compose parse-before-interpolate semantics emulated for32 fixture-only env cases. Includes all28 private flags matching actual entrypoint/template/image, defaultfalse, individual true, customorigin and missing/empty secret rejection. This is not an actual Docker Compose CLI run."
+  },
+  "existingContractResults": {
+    "originUrlBinding": {
+      "tests": 22,
+      "pass": 22,
+      "fail": 0,
+      "skipped": 0,
+      "actualExitCode": 0
+    },
+    "sharedKeyEnvelope": {
+      "tests": 4,
+      "pass": 4,
+      "fail": 0,
+      "skipped": 0,
+      "actualExitCode": 0
+    }
+  },
+  "formatResults": {
+    "actualFullWebFormatter": {
+      "closed": true,
+      "actualExitCode": 0,
+      "file": "web-format.result.json"
+    },
+    "finalComposeYamlPrettier": {
+      "version": "Web workspace Prettier3.8.3",
+      "actualExitCode": 0,
+      "file": "compose-format-final.result.json"
+    },
+    "ownedDiffCheck": {
+      "actualExitCode": 0,
+      "file": "owned-diff-check-final.result.json"
+    }
+  },
+  "closedSuccessfulReceipts": [
+    {
+      "file": "authorized-config-edit.result.json",
+      "closed": true,
+      "actualExitCode": 0,
+      "command": "node --input-type=commonjs -e apply-authorized-config.mjs source",
+      "stdout": "authorized-config-edit.stdout.log",
+      "stderr": "authorized-config-edit.stderr.log",
+      "completedAt": "2026-10-06T00:23:46.8198777Z"
+    },
+    {
+      "file": "config-encryption-edit.result.json",
+      "closed": true,
+      "actualExitCode": 0,
+      "command": "node apply-config-encryption-followup.cjs",
+      "stdout": "config-encryption-edit.stdout.log",
+      "stderr": "config-encryption-edit.stderr.log",
+      "completedAt": "2026-10-06T00:29:06.7960219Z"
+    },
+    {
+      "file": "configuration-validation-v2.result.json",
+      "closed": true,
+      "actualExitCode": 0,
+      "command": "node verify-configuration-v2.mjs",
+      "stdout": "configuration-validation-v2.stdout.log",
+      "stderr": "configuration-validation-v2.stderr.log",
+      "completedAt": "2026-10-06T00:25:40.9838771Z"
+    },
+    {
+      "file": "configuration-validation-v3.result.json",
+      "closed": true,
+      "actualExitCode": 0,
+      "command": "node verify-configuration-v3.mjs",
+      "stdout": "configuration-validation-v3.stdout.log",
+      "stderr": "configuration-validation-v3.stderr.log",
+      "completedAt": "2026-10-06T00:30:16.3555191Z"
+    },
+    {
+      "file": "web-format.result.json",
+      "closed": true,
+      "actualExitCode": 0,
+      "label": "web-format",
+      "stdout": "web-format.stdout.log",
+      "stderr": "web-format.stderr.log",
+      "completedAt": "2026-10-06T00:27:51.8083472Z"
+    },
+    {
+      "file": "compose-format.result.json",
+      "closed": true,
+      "actualExitCode": 0,
+      "label": "compose-format",
+      "stdout": "compose-format.stdout.log",
+      "stderr": "compose-format.stderr.log",
+      "completedAt": "2026-10-06T00:25:54.1485512Z"
+    },
+    {
+      "file": "compose-format-final.result.json",
+      "closed": true,
+      "actualExitCode": 0,
+      "label": "compose-format-final",
+      "stdout": "compose-format-final.stdout.log",
+      "stderr": "compose-format-final.stderr.log",
+      "completedAt": "2026-10-06T00:30:38.4810165Z"
+    },
+    {
+      "file": "origin-contracts.result.json",
+      "closed": true,
+      "actualExitCode": 0,
+      "label": "origin-contracts",
+      "stdout": "origin-contracts.stdout.log",
+      "stderr": "origin-contracts.stderr.log",
+      "completedAt": "2026-10-06T00:26:02.0082657Z"
+    },
+    {
+      "file": "secret-contracts.result.json",
+      "closed": true,
+      "actualExitCode": 0,
+      "label": "secret-contracts",
+      "stdout": "secret-contracts.stdout.log",
+      "stderr": "secret-contracts.stderr.log",
+      "completedAt": "2026-10-06T00:30:40.5867039Z"
+    },
+    {
+      "file": "owned-diff-check.result.json",
+      "closed": true,
+      "actualExitCode": 0,
+      "command": "git diff --check -- three owned files",
+      "stdout": "owned-diff-check.stdout.log",
+      "stderr": "owned-diff-check.stderr.log",
+      "completedAt": "2026-10-06T00:26:28.1458788Z"
+    },
+    {
+      "file": "owned-diff-check-final.result.json",
+      "closed": true,
+      "actualExitCode": 0,
+      "label": "owned-diff-check-final",
+      "stdout": "owned-diff-check-final.stdout.log",
+      "stderr": "owned-diff-check-final.stderr.log",
+      "completedAt": "2026-10-06T00:30:41.6864572Z"
+    },
+    {
+      "file": "owned-diff.result.json",
+      "closed": true,
+      "actualExitCode": 0,
+      "command": "git diff -- three owned files",
+      "stdout": "owned-diff.patch",
+      "stderr": "owned-diff.stderr.log",
+      "completedAt": "2026-10-06T00:26:29.0683669Z"
+    },
+    {
+      "file": "owned-diff-final.result.json",
+      "closed": true,
+      "actualExitCode": 0,
+      "command": "git diff -- four owned files",
+      "stdout": "owned-diff-final.patch",
+      "stderr": "owned-diff-final.stderr.log",
+      "completedAt": "2026-10-06T00:32:32.6893104Z"
+    },
+    {
+      "file": "worktree-scope.result.json",
+      "closed": true,
+      "actualExitCode": 0,
+      "command": "git status --short",
+      "stdout": "worktree-scope.stdout.log",
+      "stderr": "worktree-scope.stderr.log",
+      "completedAt": "2026-10-06T00:32:32.8028407Z"
+    }
+  ],
+  "retainedFailures": [
+    {
+      "file": "initial-anchor-attempt.observed.json",
+      "actualExitCode": 1,
+      "reason": "Prewrite CRLF anchor assumption; no source wrote."
+    },
+    {
+      "file": "configuration-validation.result.json",
+      "actualExitCode": 1,
+      "reason": "First temporary harness interpolated YAML text before parsing, resolving false as a boolean. No product edit made to satisfy this failure; v2/v3 instead parse first then interpolate scalar values."
+    }
+  ],
+  "pg20SourcePeerReview": {
+    "file": "pg20-helper-peer-review.json",
+    "sha256": "d91e6e670be1816e9c47e229d09962b67f032566d39801c3d87a4884b5050fbf",
+    "noBlockingFindings": true,
+    "actualNativeExecutionByThisAgent": false
+  },
+  "inventoryReport": {
+    "file": "topology-review.json",
+    "sha256": "8f2729418ad778eba6a367f2d28fa9d2f66ce2ca2d3d7745a02bbeda2aa4b4c2",
+    "checkedFiles": 35,
+    "findingsResolvedInThisBatch": [
+      "DOCKER-API-ORIGIN",
+      "DOCKER-PRIVATE-FLAGS",
+      "EXISTING-EXAMPLES-NOT-COMPLETE encryption configuration and obsolete password-cookie description only"
+    ],
+    "stillPending": [
+      "Full trusted TLS topology",
+      "Actual registered CinaAuth origin/client and human identities/roles/session journeys",
+      "Actual integrated authenticated mutations and Proxy streaming/cancellation/WebSocket",
+      "Matching release/digest+current/retained and gray/rollback observed on actual Docker",
+      "Complete supported database and finance/chain gates"
+    ]
+  },
+  "rawEvidence": {
+    "index": "final-raw-index.json",
+    "bytes": 11614,
+    "sha256": "8df7ec945c2ae538c812895bbcb7b58fdbcb534fe0695ce25b3f4cc8da985f55",
+    "immutableFiles": 69,
+    "totalBytes": 220170,
+    "liveSealerOutputExcluded": true
+  },
+  "scope": {
+    "productDefaultsChanged": false,
+    "nginxTrustRulesChanged": false,
+    "existingCiOrAssertionsChanged": false,
+    "mainMigrationMarkdownChangedByThisAgent": false,
+    "productionRequests": 0,
+    "gitWrites": 0,
+    "deployment": false,
+    "dockerCliAvailable": false,
+    "allExistingMigrationTaskMatrixGateStatusesHeld": true
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "startedAt": "2026-10-06T00:21:08.532Z",
+  "completedAt": "2026-10-06T00:21:10.226Z",
+  "program": "node",
+  "arguments": [
+    "--test",
+    "C:/Users/cina/AppData/Local/Temp/cinatoken-pg73-runtime-grant-repair-644c68d030714f57b09031e007b87869/cleanup-control-flow.test.mjs"
+  ],
+  "actualExitCode": 0,
+  "signal": null,
+  "spawnError": null,
+  "stdoutPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-runtime-grant-repair-644c68d030714f57b09031e007b87869\\cleanup-control-flow.stdout.txt",
+  "stderrPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-runtime-grant-repair-644c68d030714f57b09031e007b87869\\cleanup-control-flow.stderr.txt",
+  "stdoutBytes": 850,
+  "stderrBytes": 0
+}

@@ -1,0 +1,8 @@
+{
+  "closed": true,
+  "actualExitCode": 0,
+  "stdout": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-durable-evidence-tools-Di62eG\\syntax-v4-collector-historical-producer-admission-tests.stdout.log",
+  "stderr": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-durable-evidence-tools-Di62eG\\syntax-v4-collector-historical-producer-admission-tests.stderr.log",
+  "completedAt": "2026-10-06T01:14:41.8054735Z",
+  "command": "node --check collector-historical-producer-admission-tests.mjs"
+}

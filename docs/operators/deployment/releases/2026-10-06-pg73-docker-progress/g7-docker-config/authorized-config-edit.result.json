@@ -1,0 +1,8 @@
+{
+  "closed": true,
+  "actualExitCode": 0,
+  "command": "node --input-type=commonjs -e apply-authorized-config.mjs source",
+  "stdout": "authorized-config-edit.stdout.log",
+  "stderr": "authorized-config-edit.stderr.log",
+  "completedAt": "2026-10-06T00:23:46.8198777Z"
+}

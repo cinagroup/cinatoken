@@ -1,0 +1,13 @@
+{
+  "at": "2026-10-06T00:39:45.062Z",
+  "finishedAt": "2026-10-06T00:39:45.135Z",
+  "executable": "C:/Program Files/nodejs/node.exe",
+  "args": [
+    "C:/Users/cina/AppData/Local/Temp/cinatoken-pg73-platform-followup-20261006-lAiHQC/summarize-native-terminal.mjs"
+  ],
+  "cwd": "C:/cinagroup/cinatoken",
+  "actualExit": 0,
+  "signal": null,
+  "stdout": "C:/Users/cina/AppData/Local/Temp/cinatoken-pg73-platform-followup-20261006-lAiHQC/native-terminal-summary.stdout.log",
+  "stderr": "C:/Users/cina/AppData/Local/Temp/cinatoken-pg73-platform-followup-20261006-lAiHQC/native-terminal-summary.stderr.log"
+}

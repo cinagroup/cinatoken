@@ -1,0 +1,148 @@
+{
+  "schemaVersion": 1,
+  "releaseSlug": "2026-10-06-pg73-docker-progress",
+  "sourceCommit": "fc17551b3016d3533c17cc4ec9b0151a4eedae44",
+  "outputDirectory": "C:/Users/cina/AppData/Local/Temp/cinatoken-durable-evidence-tools-metadata-x1QzRR/staging-release",
+  "gzipThresholdBytes": 100000,
+  "requiredRootIds": [
+    "final-web-compose-ci",
+    "native-agent",
+    "collector-tools"
+  ],
+  "roots": [
+    {
+      "id": "root-followup",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-pg73-platform-followup-20261006-lAiHQC",
+      "phase": "historical-and-current",
+      "exclude": []
+    },
+    {
+      "id": "pg20-repair",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-pg73-runtime-grant-repair-644c68d030714f57b09031e007b87869",
+      "phase": "local-validation",
+      "exclude": []
+    },
+    {
+      "id": "seven-peer",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-pg73-shared-fixture-peer-8f9c0b77c2d2454aa570a019475861dc",
+      "phase": "source-peer-review",
+      "exclude": []
+    },
+    {
+      "id": "g7-docker-config",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-g7-docker-topology-v77GHM",
+      "phase": "local-validation",
+      "exclude": []
+    },
+    {
+      "id": "v364-prepared-only",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-owned-linux-diagnostic-prep-bf2a9d401d3b47acb92d8e1fae4c579b",
+      "phase": "prepared-only",
+      "exclude": []
+    },
+    {
+      "id": "native-agent",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-pg73-budget-admission-repair-pgYfbi",
+      "phase": "local-validation",
+      "exclude": []
+    },
+    {
+      "id": "final-web-compose-ci",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-docker-config-linux-ci-4180WE",
+      "phase": "closed-ci-evidence",
+      "exclude": []
+    },
+    {
+      "id": "v364-portable-prepared-only",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-portable-ci-review-d6411d594da14209af87d9522488c952",
+      "phase": "prepared-only",
+      "exclude": []
+    },
+    {
+      "id": "v364-exit-field-repair",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-exit-receipt-fix-7037bd6432d04a1881d345020e416f6e",
+      "phase": "local-validation",
+      "exclude": []
+    },
+    {
+      "id": "collector-tools",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-durable-evidence-tools-Di62eG",
+      "phase": "local-validation",
+      "exclude": []
+    }
+  ],
+  "semantics": {
+    "platformSourceCommit": "4d645f954ea76d8546409aaa6b684a8279c0deb9",
+    "diagnosticSourceCommit": "fc17551b3016d3533c17cc4ec9b0151a4eedae44",
+    "currentProductionSource": "c13a64b9c3b2c90adcf736910ea408868d7854f1",
+    "productionDeploymentChanged": false,
+    "webCI": {
+      "id": 37395937911,
+      "headSha": "4d645f954ea76d8546409aaa6b684a8279c0deb9",
+      "conclusion": "success",
+      "steps": 37,
+      "isolatedDockerSSR": 87,
+      "catalogReads": 64
+    },
+    "composeCI": {
+      "id": 37395937834,
+      "headSha": "4d645f954ea76d8546409aaa6b684a8279c0deb9",
+      "conclusion": "success",
+      "steps": 13,
+      "scope": "Existing PG/migrate/Node Proxy/Admin HTTP health only"
+    },
+    "proxyCI": {
+      "id": 37395937842,
+      "headSha": "4d645f954ea76d8546409aaa6b684a8279c0deb9",
+      "conclusion": "failure",
+      "nativeFailStep": 37,
+      "v350Step36ActuallyPassed": true
+    },
+    "diagnosticCI": {
+      "id": 37396338452,
+      "headSha": "fc17551b3016d3533c17cc4ec9b0151a4eedae44",
+      "conclusion": "failure",
+      "baseline": {
+        "tests": 8,
+        "pass": 7,
+        "fail": 1
+      },
+      "executorActualExit": 1,
+      "actualProcessExit": 1,
+      "forcedCleanupFlag": true
+    },
+    "historicalFailuresPreserved": true,
+    "v364PreparationIsRuntimeProof": false,
+    "collectorChecksAreToolChecksOnly": true,
+    "G7": "pending",
+    "G8": "pending",
+    "completeGoal": false
+  },
+  "immutableCopyBindings": [
+    {
+      "provenanceRootId": "native-agent",
+      "provenanceFile": "native-linux-job-log-copy-provenance.json",
+      "terminalRootId": "root-followup",
+      "terminalFile": "native-terminal-summary.json",
+      "statusPointer": [
+        "status"
+      ],
+      "conclusionPointer": [
+        "conclusion"
+      ],
+      "jobIdPointer": [
+        "native",
+        "jobId"
+      ],
+      "runIdPointer": [
+        "runId"
+      ],
+      "headShaPointer": [
+        "headSha"
+      ],
+      "expectedJobId": 112046320310,
+      "expectedRunId": 37394251894,
+      "expectedHeadSha": "b1ec8f33cf24edc07e8855c059c1498730a43113"
+    }
+  ]
+}

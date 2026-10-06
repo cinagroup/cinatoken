@@ -1,0 +1,14 @@
+✔ actual source wrapper and bridge preserve LOGIN and restore PG73 after initial production success (6.7208ms)
+✔ original exact Buyer split assert reaches actual production marker guard and bridge finally restores PG73 (3.9788ms)
+✔ unchanged direct production grant without bridge hits real 0074 preflight before Buyer split (1.3368ms)
+✔ owned URL admission rejects remote target before any inert SQL call (1.1177ms)
+✔ runtime membership admission rejects before 0074 installation and leaves original role intact (0.6945ms)
+✔ original exact Buyer split assertion still fails on an unrelated production error while bridge cleans audit (3.3721ms)
+ℹ tests 6
+ℹ suites 0
+ℹ pass 6
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 928.6663

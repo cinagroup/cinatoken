@@ -1,0 +1,16 @@
+{
+  "startedAt": "2026-10-06T00:19:17.527Z",
+  "completedAt": "2026-10-06T00:19:17.629Z",
+  "program": "node",
+  "arguments": [
+    "--check",
+    "scripts/db/cutover/postgres-shared-key-usage-repair-runtime-grant.native.test.mjs"
+  ],
+  "actualExitCode": 0,
+  "signal": null,
+  "spawnError": null,
+  "stdoutPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-runtime-grant-repair-644c68d030714f57b09031e007b87869\\syntax-check.stdout.txt",
+  "stderrPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-runtime-grant-repair-644c68d030714f57b09031e007b87869\\syntax-check.stderr.txt",
+  "stdoutBytes": 0,
+  "stderrBytes": 0
+}

@@ -1,0 +1,14 @@
+{
+  "actualExit": 0,
+  "before": {
+    "bytes": 766776,
+    "sha256": "8da3509e64f1b66eb23e4ae8b2e3ecb04ded380dd6c6a9d15816aaa4a27bed3b"
+  },
+  "after": {
+    "bytes": 769942,
+    "sha256": "bef17bab13f0c9d6c2a59cedd2cd7dbb8d0a8baee49ddfcfbfc3de06c2685ad7"
+  },
+  "nativeRun": "37394251894",
+  "productionChanged": false,
+  "fullGoalScopeHeld": true
+}

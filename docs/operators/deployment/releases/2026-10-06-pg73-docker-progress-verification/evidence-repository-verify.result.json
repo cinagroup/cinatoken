@@ -1,0 +1,16 @@
+{
+  "at": "2026-10-06T01:20:57.242Z",
+  "finishedAt": "2026-10-06T01:20:58.873Z",
+  "executable": "C:/Program Files/nodejs/node.exe",
+  "args": [
+    "C:/Users/cina/AppData/Local/Temp/cinatoken-durable-evidence-tools-Di62eG/verify-evidence.mjs",
+    "C:/cinagroup/cinatoken/docs/operators/deployment/releases/2026-10-06-pg73-docker-progress.json",
+    "C:/Users/cina/AppData/Local/Temp/cinatoken-pg73-durable-meta-e44792174d9f42358287aa571b1ba35e/repository-verification.json",
+    "with-source"
+  ],
+  "cwd": "C:/cinagroup/cinatoken",
+  "actualExit": 0,
+  "signal": null,
+  "stdout": "C:/Users/cina/AppData/Local/Temp/cinatoken-pg73-durable-meta-e44792174d9f42358287aa571b1ba35e/evidence-repository-verify.stdout.log",
+  "stderr": "C:/Users/cina/AppData/Local/Temp/cinatoken-pg73-durable-meta-e44792174d9f42358287aa571b1ba35e/evidence-repository-verify.stderr.log"
+}

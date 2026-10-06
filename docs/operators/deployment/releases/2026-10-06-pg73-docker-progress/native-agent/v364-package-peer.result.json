@@ -1,0 +1,15 @@
+{
+  "startedAt": "2026-10-06T00:50:40.992Z",
+  "completedAt": "2026-10-06T00:50:41.232Z",
+  "program": "node",
+  "arguments": [
+    "C:/Users/cina/AppData/Local/Temp/cinatoken-pg73-budget-admission-repair-pgYfbi/peer-v364-package-audit.mjs"
+  ],
+  "actualExitCode": 1,
+  "signal": null,
+  "spawnError": null,
+  "stdoutPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-budget-admission-repair-pgYfbi\\v364-package-peer.stdout.txt",
+  "stderrPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-budget-admission-repair-pgYfbi\\v364-package-peer.stderr.txt",
+  "stdoutBytes": 0,
+  "stderrBytes": 1278
+}

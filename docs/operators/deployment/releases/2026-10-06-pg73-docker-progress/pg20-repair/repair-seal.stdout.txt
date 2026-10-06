@@ -1,0 +1,42 @@
+{
+  "report": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-runtime-grant-repair-644c68d030714f57b09031e007b87869\\FINAL-pg73-runtime-grant-repair.json",
+    "bytes": 15708,
+    "sha256": "1ac23f0630e81252069c82d70121219a07602ec91c6aef4599a7397e4894913b"
+  },
+  "before": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-runtime-grant-repair-644c68d030714f57b09031e007b87869\\before.native.test.mjs",
+    "bytes": 7311,
+    "sha256": "84e383a4a6b5f07f40bea8ae74d0258a2a542543862662486e9543842721a066"
+  },
+  "after": {
+    "path": "C:\\cinagroup\\cinatoken\\scripts\\db\\cutover\\postgres-shared-key-usage-repair-runtime-grant.native.test.mjs",
+    "bytes": 12691,
+    "sha256": "c9a1b7fc3d5b28bc5a703c4556883583adea8df665bad882909ce27cf271e0d0"
+  },
+  "afterImmutableSnapshot": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-runtime-grant-repair-644c68d030714f57b09031e007b87869\\after.native.test.mjs",
+    "bytes": 12691,
+    "sha256": "c9a1b7fc3d5b28bc5a703c4556883583adea8df665bad882909ce27cf271e0d0"
+  },
+  "beforeGitBlob": "3db085d76eaa0b8a19759225a412627ed6fcfc28",
+  "afterWorktreeGitBlob": "81f191b36f5c80aab5fd524c8dc2ca09de7441ac",
+  "localChecksActualExit": 0,
+  "tests": [
+    {
+      "label": "cleanup-control-flow",
+      "tests": 8,
+      "passed": 8,
+      "failed": 0,
+      "skipped": 0
+    },
+    {
+      "label": "pure-repair-builders",
+      "tests": 4,
+      "passed": 4,
+      "failed": 0,
+      "skipped": 0
+    }
+  ],
+  "nativePGPassed": false
+}

@@ -1,0 +1,153 @@
+{
+  "schema": "cinatoken.durable-evidence-tool-preparation.v4",
+  "closed": true,
+  "actualExitCode": 0,
+  "at": "2026-10-06T01:15:23.710Z",
+  "supersedesHistoricalPreparation": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-durable-evidence-tools-metadata-x1QzRR\\final-tool-preparation.json",
+    "bytes": 23261,
+    "sha256": "9f45703fd650c2d585591025c15b9aa48cd0fddde8ecc74e8aa32a228cc1509e"
+  },
+  "previousStopWasReopenedOnlyForExactHistoricalProducerProvenance": true,
+  "finalToolSources": [
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-durable-evidence-tools-Di62eG\\evidence-lib.mjs",
+      "bytes": 31432,
+      "sha256": "c9c46be6e8c08b1c693cec02fc2f94386394412527e46b91028a113be2af7cc4"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-durable-evidence-tools-Di62eG\\collect-evidence.mjs",
+      "bytes": 1002,
+      "sha256": "95d1670211f5fdceb6bbdd2ce1db38036de4fb7c31e5d522eef10af3e479bdd5"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-durable-evidence-tools-Di62eG\\verify-evidence.mjs",
+      "bytes": 617,
+      "sha256": "ac6c531cc665341fbf51dc3ceed6adbd3f629ab5c17aef51a214de1f1613422d"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-durable-evidence-tools-Di62eG\\collector-controlled-tests.mjs",
+      "bytes": 6887,
+      "sha256": "749953cc540f88e86822b33ade25daf4c59ef26864a7445bb413bb3c2f425614"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-durable-evidence-tools-Di62eG\\collector-closure-boundary-tests.mjs",
+      "bytes": 8703,
+      "sha256": "967171ef8a84ae50abb69549d85d2ed58aa3c481c27bb3ae456cad0e66f60eb6"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-durable-evidence-tools-Di62eG\\collector-historical-producer-admission-tests.mjs",
+      "bytes": 2280,
+      "sha256": "656d2158816b8bec3e7ceaa4d5ae49cce123c25b0be988a635975c2e2c965db6"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-durable-evidence-tools-Di62eG\\README.md",
+      "bytes": 4143,
+      "sha256": "bd486d387822fc4c89c2cfaf4b106d21e208d53d9350e97ad2bdc1ba5e5cbfd1"
+    }
+  ],
+  "sourceWritesStoppedNow": true,
+  "latestChecks": {
+    "passed": 27,
+    "failed": 0,
+    "skipped": 0,
+    "sets": [
+      {
+        "pass": 12,
+        "receipt": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-durable-evidence-tools-Di62eG\\collector-controlled-tests-v4.result.json",
+          "bytes": 370,
+          "sha256": "46525f2430f788734e95c87e735c1a73d5312dfbd902f3661e639b5dddcd1a03"
+        },
+        "stdout": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-durable-evidence-tools-Di62eG\\collector-controlled-tests-v4.stdout.log",
+          "bytes": 1103,
+          "sha256": "f576da2ab2db16c117d44c8a29e7c5929b7e428d1f0df0672cd346729488d0c2"
+        },
+        "stderr": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-durable-evidence-tools-Di62eG\\collector-controlled-tests-v4.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      {
+        "pass": 10,
+        "receipt": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-durable-evidence-tools-Di62eG\\collector-closure-boundary-tests-v4.result.json",
+          "bytes": 382,
+          "sha256": "35df202fcd154a2d9fc67ebbccd3412d8f03759d62a109578c454c94b37da323"
+        },
+        "stdout": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-durable-evidence-tools-Di62eG\\collector-closure-boundary-tests-v4.stdout.log",
+          "bytes": 876,
+          "sha256": "0b57f50f82eadc01b390f200a0373132e868a474646557bdb12303a49fec77f8"
+        },
+        "stderr": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-durable-evidence-tools-Di62eG\\collector-closure-boundary-tests-v4.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      {
+        "pass": 5,
+        "receipt": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-durable-evidence-tools-metadata-x1QzRR\\collector-historical-admission-tests.result.json",
+          "bytes": 402,
+          "sha256": "604d2fa112f0e27dcd0e6ebd420bf775c6beb9ceeca43866da1f40e29afd074b"
+        },
+        "stdout": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-durable-evidence-tools-metadata-x1QzRR\\collector-historical-admission-tests.stdout.log",
+          "bytes": 614,
+          "sha256": "562970b26eeae6978dc624643f5913ae555ad8d9ce487e7cf7fd53292db11b45"
+        },
+        "stderr": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-durable-evidence-tools-metadata-x1QzRR\\collector-historical-admission-tests.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      }
+    ]
+  },
+  "syntax": {
+    "latestChangedLibraryAndNewProducerTestsActualExit": 0,
+    "existingThreeOtherScriptsFinalSourceUnchanged": true
+  },
+  "negativeStatusesPreserved": {
+    "copiedHistoricalGHJobFailure": true,
+    "allExpectedWindowsProgramExits": [
+      0,
+      0,
+      1,
+      1
+    ],
+    "pythonPreflightActualProgramExit": 1,
+    "historicalAmbiguousProcessFieldNotChildProof": true,
+    "realLinuxDiagnosticActualExit": 1,
+    "realLinuxDiagnosticForcedCleanupFlagRetained": true
+  },
+  "currentFullRootsAudit": {
+    "report": {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-durable-evidence-tools-metadata-x1QzRR\\current-roots-audit-v4.json",
+      "bytes": 714638,
+      "sha256": "0804d2f91e390c474fb71d81d29c3eda02cf9bd89e82a1ef3fb1b6bf7ea10ecc"
+    },
+    "receipt": {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-durable-evidence-tools-metadata-x1QzRR\\collector-current-roots-audit-v4.result.json",
+      "bytes": 394,
+      "sha256": "30ea8f184f426fcfbea0c02d9f324e6f6d025f1b8cf5280f73741c41cacd8b57"
+    },
+    "actualExit": 0,
+    "roots": 12,
+    "blockers": 0,
+    "exclusions": 0,
+    "finalMetadataRootWillBeAddedInFinalConfig": true
+  },
+  "historicalSourceVersionsAndFailuresRetained": true,
+  "realSourceCollectionPerformed": false,
+  "repositoryWrites": 0,
+  "productionRequests": 0,
+  "ciInvocations": 0,
+  "G7": "pending",
+  "G8": "pending",
+  "scope": "Prepared collector/verifier only; parent executes final immutable collection and commit"
+}

@@ -1,0 +1,1885 @@
+{
+  "schema": "cinatoken.v364.linux-artifact.independent-readonly-analysis.v1",
+  "at": "2026-10-06T01:02:19.728Z",
+  "analysisActualExit": 0,
+  "diagnosticActualExit": 1,
+  "conclusion": "STRICT_FAILURE_CONFIRMED_CAUSE_UNPROVEN",
+  "causeProven": false,
+  "capturedScope": {
+    "runId": "37396338452",
+    "head": "fc17551b3016d3533c17cc4ec9b0151a4eedae44",
+    "attempt": 1,
+    "job": "cancellation-diagnostic",
+    "artifactRoot": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-platform-followup-20261006-lAiHQC\\diagnostic-linux-download\\_temp\\v364-owned-once-37396338452-1",
+    "packageSHA256": "392f5a44294abf70c4bc3cbb7b727103f96d5ce8f5e87bfc3fe3dc8bd1fc6bd4",
+    "nodeStartedAt": "2026-10-06T00:54:40.053Z",
+    "nodeEndedAt": "2026-10-06T00:55:12.260Z",
+    "eventSnapshotCount": 1917,
+    "workerLogEvents": 55,
+    "workerMetadataEvents": 51,
+    "instrumentedCases": 4,
+    "uninstrumentedCases": 1,
+    "explicitMiniflareDisposeStartEvent": false,
+    "liveVersusZombieProcessCensus": false,
+    "limits": "This is the sealed finite host/workerd log snapshot and KV read windows from one owned synthetic Linux run, not proof about every possible later callback, production request, topology, or runtime version."
+  },
+  "hashVerification": {
+    "allSevenExecutorFilesExact": true,
+    "baselineStdoutStderrExact": true,
+    "eventDigestAndCountExact": true,
+    "artifactPackageSealExact": true,
+    "artifactSourceInputsEqualRunInputs": true,
+    "inputsBeforeAfterExact": true,
+    "files": [
+      {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-platform-followup-20261006-lAiHQC\\diagnostic-linux-download\\_temp\\v364-owned-once-37396338452-1\\closed-result.json",
+        "bytes": 10587,
+        "sha256": "ce4fc862e1424dfcb16c77e18346b2d5d16c35390f9dfcd0b8c7a404780d3c1f",
+        "executorDigestExact": true
+      },
+      {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-platform-followup-20261006-lAiHQC\\diagnostic-linux-download\\_temp\\v364-owned-once-37396338452-1\\events.json",
+        "bytes": 459796,
+        "sha256": "45dbe3732524bd0e993026bac2d653b38f5af6c3c973eb7d68a318652a4edd39",
+        "executorDigestExact": true
+      },
+      {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-platform-followup-20261006-lAiHQC\\diagnostic-linux-download\\_temp\\v364-owned-once-37396338452-1\\executor-start.json",
+        "bytes": 675,
+        "sha256": "861ac92d3a2e88ce12161d383cf879b4cd15961534142a301006006067363827",
+        "executorDigestExact": true
+      },
+      {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-platform-followup-20261006-lAiHQC\\diagnostic-linux-download\\_temp\\v364-owned-once-37396338452-1\\executor.stderr.txt",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "executorDigestExact": true
+      },
+      {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-platform-followup-20261006-lAiHQC\\diagnostic-linux-download\\_temp\\v364-owned-once-37396338452-1\\executor.stdout.txt",
+        "bytes": 162,
+        "sha256": "e2f1da32c548d2ae6ed4bfeaabcc29ae1a66dd56152a9a423248ed2233def675",
+        "executorDigestExact": true
+      },
+      {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-platform-followup-20261006-lAiHQC\\diagnostic-linux-download\\_temp\\v364-owned-once-37396338452-1\\original-strict.stderr.txt",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "executorDigestExact": true
+      },
+      {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-platform-followup-20261006-lAiHQC\\diagnostic-linux-download\\_temp\\v364-owned-once-37396338452-1\\original-strict.stdout.txt",
+        "bytes": 2870,
+        "sha256": "e92e5054f09bd9d580f5d8e2edd7d8694a6c1e80f0aced769765b92a6e0095bd",
+        "executorDigestExact": true
+      }
+    ],
+    "executor": {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-platform-followup-20261006-lAiHQC\\diagnostic-linux-download\\_temp\\v364-owned-once-37396338452-1\\executor.closed.json",
+      "bytes": 2372,
+      "sha256": "fd99e106e006730699d3e8e08cc75c76efe631f117e918c4d18b62d6a5b8850c"
+    },
+    "artifactManifest": {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-platform-followup-20261006-lAiHQC\\diagnostic-linux-download\\cinatoken\\cinatoken\\scripts\\diagnostics\\v364-owned-linux\\sealed-package.json",
+      "bytes": 1067,
+      "sha256": "392f5a44294abf70c4bc3cbb7b727103f96d5ce8f5e87bfc3fe3dc8bd1fc6bd4"
+    }
+  },
+  "strictBaseline": {
+    "code": 1,
+    "signal": null,
+    "timedOut": false,
+    "stdout": {
+      "bytes": 2870,
+      "sha256": "e92e5054f09bd9d580f5d8e2edd7d8694a6c1e80f0aced769765b92a6e0095bd"
+    },
+    "stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "tapStats": {
+      "tests": 8,
+      "pass": 7,
+      "fail": 1,
+      "cancelled": 0,
+      "skipped": 0
+    },
+    "failedName": "response-body cancellation is observed inside the private holder",
+    "actualObserved": null,
+    "expected": "observed",
+    "originalLine": 278,
+    "rawStatus": "FAIL_RETAINED"
+  },
+  "diagnostic": {
+    "calibrationPassed": 3,
+    "cancellationFailed": 5,
+    "allEightReportedClosed": true,
+    "activeMiniflare": 0,
+    "originalPoll100AndSleep10Preserved": true,
+    "allFiveOriginalNull": true,
+    "allFive4sTailNull": true,
+    "tailDoesNotUpgradePass": true,
+    "isolatedPassthroughVariantAlsoFailed": true
+  },
+  "outerClosure": {
+    "authority": "this executor",
+    "subreaperEnabled": true,
+    "directChildReaped": true,
+    "groupGone": true,
+    "leftoverGroupKilled": true,
+    "reapedDescendants": [
+      {
+        "pid": 2648,
+        "waitStatus": 0
+      },
+      {
+        "pid": 2661,
+        "waitStatus": 0
+      },
+      {
+        "pid": 2654,
+        "waitStatus": 0
+      },
+      {
+        "pid": 2609,
+        "waitStatus": 0
+      }
+    ],
+    "cooperativeNativeFinallyVerified": true,
+    "errors": [],
+    "actualProcessExit": 1,
+    "runnerOutcomeCode": 1,
+    "actualExit": 1,
+    "timedOut": false,
+    "interpretation": "Node reports eight fixture finally closures and zero active Miniflare; Python still reports leftoverGroupKilled=true, attempted outer process-group cleanup, adopted and reaped four group descendants, and ultimately groupGone=true. Therefore wholly cooperative process-group closure is not established. Four waitStatus0 records prove normal recorded exits of those adopted descendants, not that SIGTERM killed a live process. killpg(group,0) may have detected zombies; the artifact contains no live/zombie census to distinguish them.",
+    "forcedFlagMustRemainTrue": true,
+    "allCooperativeGroupClosureProven": false,
+    "sigtermKilledLiveProcessProven": false
+  },
+  "capturedCounts": {
+    "workerMetadataEvents": 51,
+    "gatewayIncomingInitial": 4,
+    "gatewayForwardedInitial": 4,
+    "holderInitial": 4,
+    "gatewayAborts": 0,
+    "holderAborts": 1,
+    "cancelKVInvocations": 0,
+    "cancelKVFulfilled": 0,
+    "waitUntilRegistrations": 0,
+    "waitUntilSettlements": 0,
+    "acceptedKVInvoked": 4,
+    "acceptedKVFulfilled": 4,
+    "releaseKVInvoked": 13,
+    "releaseKVFulfilled": 13
+  },
+  "cases": [
+    {
+      "caseId": "locked-uninstrumented-destroy",
+      "result": {
+        "caseId": "locked-uninstrumented-destroy",
+        "observed": false,
+        "mode": "destroy",
+        "signalPassthrough": false,
+        "baselineEligible": true,
+        "originalWindow": {
+          "pollCount": 100,
+          "sleepMs": 10,
+          "elapsedMs": 1372.6503520000006,
+          "actual": null,
+          "expected": "observed",
+          "actualExit": 1
+        },
+        "tail": {
+          "elapsedMs": 4026.8612829999993,
+          "reads": 75,
+          "actual": null,
+          "usedForPass": false
+        },
+        "actualExit": 1,
+        "closed": true,
+        "strictFailure": {
+          "name": "AssertionError",
+          "code": "ERR_ASSERTION",
+          "message": "Expected values to be strictly equal:\n\nnull !== 'observed'\n"
+        }
+      },
+      "client": {
+        "invoke": {
+          "caseId": "locked-uninstrumented-destroy",
+          "kind": "client-cancel-invoke",
+          "hostMs": 4113.002482,
+          "wallMs": 1791248084166,
+          "mode": "destroy",
+          "eventIndex": 35
+        },
+        "settled": {
+          "caseId": "locked-uninstrumented-destroy",
+          "kind": "client-cancel-settled",
+          "hostMs": 4113.409203,
+          "wallMs": 1791248084166,
+          "requestDestroyed": true,
+          "responseDestroyed": true,
+          "responseComplete": false,
+          "eventIndex": 38
+        },
+        "transportClose": [
+          {
+            "caseId": "locked-uninstrumented-destroy",
+            "kind": "response-close",
+            "hostMs": 4113.269181,
+            "wallMs": 1791248084166,
+            "complete": false,
+            "destroyed": true,
+            "eventIndex": 37
+          },
+          {
+            "caseId": "locked-uninstrumented-destroy",
+            "kind": "request-close",
+            "hostMs": 4118.421713,
+            "wallMs": 1791248084171,
+            "destroyed": true,
+            "eventIndex": 40
+          },
+          {
+            "caseId": "locked-uninstrumented-destroy",
+            "kind": "socket-close",
+            "hostMs": 4118.460706,
+            "wallMs": 1791248084171,
+            "hadError": false,
+            "destroyed": true,
+            "bytesRead": 127,
+            "bytesWritten": 538,
+            "eventIndex": 41
+          }
+        ]
+      },
+      "originalPollEvidence": {
+        "count": 100,
+        "first": {
+          "caseId": "locked-uninstrumented-destroy",
+          "kind": "observer-kv-get-settled",
+          "hostMs": 4122.02767,
+          "wallMs": 1791248084175,
+          "category": "cancel",
+          "poll": 0,
+          "phase": "original",
+          "value": null,
+          "eventIndex": 42
+        },
+        "last": {
+          "caseId": "locked-uninstrumented-destroy",
+          "kind": "observer-kv-get-settled",
+          "hostMs": 5475.834482,
+          "wallMs": 1791248085529,
+          "category": "cancel",
+          "poll": 99,
+          "phase": "original",
+          "value": null,
+          "eventIndex": 240
+        },
+        "allNull": true
+      },
+      "tailEvidence": {
+        "count": 75,
+        "first": {
+          "caseId": "locked-uninstrumented-destroy",
+          "kind": "observer-kv-get-settled",
+          "hostMs": 5496.425752,
+          "wallMs": 1791248085549,
+          "category": "cancel",
+          "poll": 0,
+          "phase": "diagnostic-tail",
+          "value": null,
+          "eventIndex": 246
+        },
+        "last": {
+          "caseId": "locked-uninstrumented-destroy",
+          "kind": "observer-kv-get-settled",
+          "hostMs": 9469.979006,
+          "wallMs": 1791248089523,
+          "category": "cancel",
+          "poll": 74,
+          "phase": "diagnostic-tail",
+          "value": null,
+          "eventIndex": 395
+        },
+        "allNull": true,
+        "usedForPass": false
+      },
+      "acceptedReads": [
+        {
+          "caseId": "locked-uninstrumented-destroy",
+          "kind": "observer-kv-get-settled",
+          "hostMs": 4112.989067,
+          "wallMs": 1791248084166,
+          "category": "accepted",
+          "poll": 0,
+          "phase": "before",
+          "value": "one",
+          "eventIndex": 34
+        },
+        {
+          "caseId": "locked-uninstrumented-destroy",
+          "kind": "observer-kv-get-settled",
+          "hostMs": 5493.444374,
+          "wallMs": 1791248085546,
+          "category": "accepted",
+          "poll": 0,
+          "phase": "after",
+          "value": "one",
+          "eventIndex": 244
+        }
+      ],
+      "releaseRead": {
+        "caseId": "locked-uninstrumented-destroy",
+        "kind": "observer-kv-get-settled",
+        "hostMs": 5490.352338,
+        "wallMs": 1791248085543,
+        "category": "release",
+        "poll": 0,
+        "phase": "after",
+        "value": null,
+        "eventIndex": 242
+      },
+      "disposeBracket": {
+        "lowerBoundHostMs": 9469.979006,
+        "upperBoundHostMs": 9527.787089,
+        "explicitDisposeStartCaptured": false,
+        "basis": "Last captured tail read settles before tail exits; sealed finally then calls client.cleanup and mf.dispose before case-closed. This is a conservative control-flow bracket, not an exact disposal timestamp."
+      },
+      "caseClosed": {
+        "caseId": "locked-uninstrumented-destroy",
+        "kind": "case-closed",
+        "hostMs": 9527.787089,
+        "wallMs": 1791248089581,
+        "actualExit": 1,
+        "closed": true,
+        "eventIndex": 396
+      },
+      "workerSignals": [],
+      "sourceCallbackPositiveEvidence": {
+        "instrumented": false,
+        "cancelCategoryKVEvents": [],
+        "waitUntilEvents": [],
+        "sourceCallbackEntryProven": false,
+        "absenceMeaning": "This case has no Worker observers; zero Worker-event counts are unavailable evidence, not proof of callback absence."
+      },
+      "workerMetadataCounts": {},
+      "releaseProgressSamples": [],
+      "runtimeErrors": [
+        {
+          "eventIndex": 317,
+          "hostMs": 7385.4892580000005,
+          "wallMs": 1791248087438,
+          "level": "error",
+          "messageFirstLine": "Uncaught exception: workerd/jsg/_virtual_includes/iterator/workerd/jsg/value.h:1477: failed: remote.jsg.Error: synthetic stream release timed out",
+          "msAfterClientCancel": 3272.4867760000006,
+          "beforeConservativeDisposeLowerBound": true
+        }
+      ]
+    },
+    {
+      "caseId": "locked-observed-destroy",
+      "result": {
+        "caseId": "locked-observed-destroy",
+        "observed": true,
+        "mode": "destroy",
+        "signalPassthrough": false,
+        "baselineEligible": true,
+        "originalWindow": {
+          "pollCount": 100,
+          "sleepMs": 10,
+          "elapsedMs": 1358.7547060000015,
+          "actual": null,
+          "expected": "observed",
+          "actualExit": 1
+        },
+        "tail": {
+          "elapsedMs": 4012.0311839999995,
+          "reads": 75,
+          "actual": null,
+          "usedForPass": false
+        },
+        "actualExit": 1,
+        "closed": true,
+        "strictFailure": {
+          "name": "AssertionError",
+          "code": "ERR_ASSERTION",
+          "message": "Expected values to be strictly equal:\n\nnull !== 'observed'\n"
+        }
+      },
+      "client": {
+        "invoke": {
+          "caseId": "locked-observed-destroy",
+          "kind": "client-cancel-invoke",
+          "hostMs": 9820.244723,
+          "wallMs": 1791248089873,
+          "mode": "destroy",
+          "eventIndex": 411
+        },
+        "settled": {
+          "caseId": "locked-observed-destroy",
+          "kind": "client-cancel-settled",
+          "hostMs": 9820.419099,
+          "wallMs": 1791248089873,
+          "requestDestroyed": true,
+          "responseDestroyed": true,
+          "responseComplete": false,
+          "eventIndex": 414
+        },
+        "transportClose": [
+          {
+            "caseId": "locked-observed-destroy",
+            "kind": "response-close",
+            "hostMs": 9820.384805,
+            "wallMs": 1791248089873,
+            "complete": false,
+            "destroyed": true,
+            "eventIndex": 413
+          },
+          {
+            "caseId": "locked-observed-destroy",
+            "kind": "request-close",
+            "hostMs": 9821.41872,
+            "wallMs": 1791248089874,
+            "destroyed": true,
+            "eventIndex": 416
+          },
+          {
+            "caseId": "locked-observed-destroy",
+            "kind": "socket-close",
+            "hostMs": 9821.558601,
+            "wallMs": 1791248089874,
+            "hadError": false,
+            "destroyed": true,
+            "bytesRead": 127,
+            "bytesWritten": 538,
+            "eventIndex": 417
+          }
+        ]
+      },
+      "originalPollEvidence": {
+        "count": 100,
+        "first": {
+          "caseId": "locked-observed-destroy",
+          "kind": "observer-kv-get-settled",
+          "hostMs": 9823.328633000001,
+          "wallMs": 1791248089876,
+          "category": "cancel",
+          "poll": 0,
+          "phase": "original",
+          "value": null,
+          "eventIndex": 418
+        },
+        "last": {
+          "caseId": "locked-observed-destroy",
+          "kind": "observer-kv-get-settled",
+          "hostMs": 11168.948002000001,
+          "wallMs": 1791248091222,
+          "category": "cancel",
+          "poll": 99,
+          "phase": "original",
+          "value": null,
+          "eventIndex": 618
+        },
+        "allNull": true
+      },
+      "tailEvidence": {
+        "count": 75,
+        "first": {
+          "caseId": "locked-observed-destroy",
+          "kind": "observer-kv-get-settled",
+          "hostMs": 11187.353672,
+          "wallMs": 1791248091240,
+          "category": "cancel",
+          "poll": 0,
+          "phase": "diagnostic-tail",
+          "value": null,
+          "eventIndex": 624
+        },
+        "last": {
+          "caseId": "locked-observed-destroy",
+          "kind": "observer-kv-get-settled",
+          "hostMs": 15146.906049,
+          "wallMs": 1791248095200,
+          "category": "cancel",
+          "poll": 74,
+          "phase": "diagnostic-tail",
+          "value": null,
+          "eventIndex": 777
+        },
+        "allNull": true,
+        "usedForPass": false
+      },
+      "acceptedReads": [
+        {
+          "caseId": "locked-observed-destroy",
+          "kind": "observer-kv-get-settled",
+          "hostMs": 9820.229585000001,
+          "wallMs": 1791248089873,
+          "category": "accepted",
+          "poll": 0,
+          "phase": "before",
+          "value": "one",
+          "eventIndex": 410
+        },
+        {
+          "caseId": "locked-observed-destroy",
+          "kind": "observer-kv-get-settled",
+          "hostMs": 11185.232814,
+          "wallMs": 1791248091238,
+          "category": "accepted",
+          "poll": 0,
+          "phase": "after",
+          "value": "one",
+          "eventIndex": 622
+        }
+      ],
+      "releaseRead": {
+        "caseId": "locked-observed-destroy",
+        "kind": "observer-kv-get-settled",
+        "hostMs": 11182.484781000001,
+        "wallMs": 1791248091235,
+        "category": "release",
+        "poll": 0,
+        "phase": "after",
+        "value": null,
+        "eventIndex": 620
+      },
+      "disposeBracket": {
+        "lowerBoundHostMs": 15146.906049,
+        "upperBoundHostMs": 15204.758632000001,
+        "explicitDisposeStartCaptured": false,
+        "basis": "Last captured tail read settles before tail exits; sealed finally then calls client.cleanup and mf.dispose before case-closed. This is a conservative control-flow bracket, not an exact disposal timestamp."
+      },
+      "caseClosed": {
+        "caseId": "locked-observed-destroy",
+        "kind": "case-closed",
+        "hostMs": 15204.758632000001,
+        "wallMs": 1791248095258,
+        "actualExit": 1,
+        "closed": true,
+        "eventIndex": 778
+      },
+      "workerSignals": [
+        {
+          "caseId": "locked-observed-destroy",
+          "eventIndex": 399,
+          "receivedHostMs": 9797.089946,
+          "receivedWallMs": 1791248089850,
+          "workerdTimestamp": 1791248089850,
+          "payload": {
+            "boundary": "gateway",
+            "event": "signal-initial",
+            "wallMs": 1791248089849,
+            "signalBoundary": "incoming",
+            "aborted": false
+          },
+          "msAfterCancelSettledReceived": -23.329153000000588,
+          "beforeConservativeDisposeLowerBound": true
+        },
+        {
+          "caseId": "locked-observed-destroy",
+          "eventIndex": 400,
+          "receivedHostMs": 9797.235809,
+          "receivedWallMs": 1791248089850,
+          "workerdTimestamp": 1791248089850,
+          "payload": {
+            "boundary": "gateway",
+            "event": "signal-initial",
+            "wallMs": 1791248089850,
+            "signalBoundary": "forwarded-request-object",
+            "aborted": false
+          },
+          "msAfterCancelSettledReceived": -23.183290000000852,
+          "beforeConservativeDisposeLowerBound": true
+        },
+        {
+          "caseId": "locked-observed-destroy",
+          "eventIndex": 402,
+          "receivedHostMs": 9797.724824,
+          "receivedWallMs": 1791248089851,
+          "workerdTimestamp": 1791248089851,
+          "payload": {
+            "boundary": "holder",
+            "event": "signal-initial",
+            "wallMs": 1791248089850,
+            "aborted": false
+          },
+          "msAfterCancelSettledReceived": -22.694274999999834,
+          "beforeConservativeDisposeLowerBound": true
+        }
+      ],
+      "sourceCallbackPositiveEvidence": {
+        "instrumented": true,
+        "cancelCategoryKVEvents": [],
+        "waitUntilEvents": [],
+        "sourceCallbackEntryProven": false,
+        "absenceMeaning": "No cancel-category invocation/settlement or waitUntil registration/settlement was captured in this instrumented event snapshot. Missing logs are not proof that the source callback can never run."
+      },
+      "workerMetadataCounts": {
+        "gateway/signal-initial/incoming": 1,
+        "gateway/signal-initial/forwarded-request-object": 1,
+        "gateway/binding-fetch/": 1,
+        "holder/signal-initial/": 1,
+        "holder/kv-invoke/accepted": 1,
+        "holder/kv-fulfilled/accepted": 1,
+        "holder/kv-invoke/release": 4,
+        "holder/kv-fulfilled/release": 4
+      },
+      "releaseProgressSamples": [
+        {
+          "caseId": "locked-observed-destroy",
+          "eventIndex": 405,
+          "receivedHostMs": 9805.554505,
+          "receivedWallMs": 1791248089858,
+          "workerdTimestamp": 1791248089858,
+          "payload": {
+            "boundary": "holder",
+            "event": "kv-invoke",
+            "wallMs": 1791248089858,
+            "operation": 2,
+            "method": "get",
+            "category": "release",
+            "releaseReads": 1
+          }
+        },
+        {
+          "caseId": "locked-observed-destroy",
+          "eventIndex": 409,
+          "receivedHostMs": 9818.592782,
+          "receivedWallMs": 1791248089871,
+          "workerdTimestamp": 1791248089860,
+          "payload": {
+            "boundary": "holder",
+            "event": "kv-fulfilled",
+            "wallMs": 1791248089860,
+            "operation": 2,
+            "method": "get",
+            "category": "release",
+            "releaseReads": 1
+          }
+        },
+        {
+          "caseId": "locked-observed-destroy",
+          "eventIndex": 579,
+          "receivedHostMs": 10916.276016,
+          "receivedWallMs": 1791248090969,
+          "workerdTimestamp": 1791248090969,
+          "payload": {
+            "boundary": "holder",
+            "event": "kv-invoke",
+            "wallMs": 1791248090969,
+            "operation": 101,
+            "method": "get",
+            "category": "release",
+            "releaseReads": 100
+          }
+        },
+        {
+          "caseId": "locked-observed-destroy",
+          "eventIndex": 580,
+          "receivedHostMs": 10916.882501,
+          "receivedWallMs": 1791248090970,
+          "workerdTimestamp": 1791248090970,
+          "payload": {
+            "boundary": "holder",
+            "event": "kv-fulfilled",
+            "wallMs": 1791248090970,
+            "operation": 101,
+            "method": "get",
+            "category": "release",
+            "releaseReads": 100
+          }
+        },
+        {
+          "caseId": "locked-observed-destroy",
+          "eventIndex": 655,
+          "receivedHostMs": 12018.438794,
+          "receivedWallMs": 1791248092071,
+          "workerdTimestamp": 1791248092071,
+          "payload": {
+            "boundary": "holder",
+            "event": "kv-invoke",
+            "wallMs": 1791248092071,
+            "operation": 201,
+            "method": "get",
+            "category": "release",
+            "releaseReads": 200
+          }
+        },
+        {
+          "caseId": "locked-observed-destroy",
+          "eventIndex": 656,
+          "receivedHostMs": 12019.239061,
+          "receivedWallMs": 1791248092072,
+          "workerdTimestamp": 1791248092072,
+          "payload": {
+            "boundary": "holder",
+            "event": "kv-fulfilled",
+            "wallMs": 1791248092072,
+            "operation": 201,
+            "method": "get",
+            "category": "release",
+            "releaseReads": 200
+          }
+        },
+        {
+          "caseId": "locked-observed-destroy",
+          "eventIndex": 699,
+          "receivedHostMs": 13113.100429,
+          "receivedWallMs": 1791248093166,
+          "workerdTimestamp": 1791248093166,
+          "payload": {
+            "boundary": "holder",
+            "event": "kv-invoke",
+            "wallMs": 1791248093166,
+            "operation": 301,
+            "method": "get",
+            "category": "release",
+            "releaseReads": 300
+          }
+        },
+        {
+          "caseId": "locked-observed-destroy",
+          "eventIndex": 700,
+          "receivedHostMs": 13113.485009,
+          "receivedWallMs": 1791248093166,
+          "workerdTimestamp": 1791248093166,
+          "payload": {
+            "boundary": "holder",
+            "event": "kv-fulfilled",
+            "wallMs": 1791248093166,
+            "operation": 301,
+            "method": "get",
+            "category": "release",
+            "releaseReads": 300
+          }
+        }
+      ],
+      "runtimeErrors": [
+        {
+          "eventIndex": 701,
+          "hostMs": 13124.756129,
+          "wallMs": 1791248093178,
+          "level": "error",
+          "messageFirstLine": "Uncaught exception: workerd/jsg/_virtual_includes/iterator/workerd/jsg/value.h:1477: failed: remote.jsg.Error: synthetic stream release timed out",
+          "msAfterClientCancel": 3304.5114059999996,
+          "beforeConservativeDisposeLowerBound": true
+        }
+      ]
+    },
+    {
+      "caseId": "locked-observed-rst",
+      "result": {
+        "caseId": "locked-observed-rst",
+        "observed": true,
+        "mode": "rst",
+        "signalPassthrough": false,
+        "baselineEligible": true,
+        "originalWindow": {
+          "pollCount": 100,
+          "sleepMs": 10,
+          "elapsedMs": 1343.608360000002,
+          "actual": null,
+          "expected": "observed",
+          "actualExit": 1
+        },
+        "tail": {
+          "elapsedMs": 4004.8411979999983,
+          "reads": 75,
+          "actual": null,
+          "usedForPass": false
+        },
+        "actualExit": 1,
+        "closed": true,
+        "strictFailure": {
+          "name": "AssertionError",
+          "code": "ERR_ASSERTION",
+          "message": "Expected values to be strictly equal:\n\nnull !== 'observed'\n"
+        }
+      },
+      "client": {
+        "invoke": {
+          "caseId": "locked-observed-rst",
+          "kind": "client-cancel-invoke",
+          "hostMs": 15497.388393,
+          "wallMs": 1791248095550,
+          "mode": "rst",
+          "eventIndex": 793
+        },
+        "settled": {
+          "caseId": "locked-observed-rst",
+          "kind": "client-cancel-settled",
+          "hostMs": 15497.747746000001,
+          "wallMs": 1791248095551,
+          "requestDestroyed": true,
+          "responseDestroyed": true,
+          "responseComplete": false,
+          "eventIndex": 796
+        },
+        "transportClose": [
+          {
+            "caseId": "locked-observed-rst",
+            "kind": "response-close",
+            "hostMs": 15497.679468,
+            "wallMs": 1791248095551,
+            "complete": false,
+            "destroyed": true,
+            "eventIndex": 795
+          },
+          {
+            "caseId": "locked-observed-rst",
+            "kind": "request-close",
+            "hostMs": 15498.940798,
+            "wallMs": 1791248095552,
+            "destroyed": true,
+            "eventIndex": 798
+          },
+          {
+            "caseId": "locked-observed-rst",
+            "kind": "socket-close",
+            "hostMs": 15498.987185,
+            "wallMs": 1791248095552,
+            "hadError": false,
+            "destroyed": true,
+            "bytesRead": 127,
+            "bytesWritten": 538,
+            "eventIndex": 799
+          }
+        ]
+      },
+      "originalPollEvidence": {
+        "count": 100,
+        "first": {
+          "caseId": "locked-observed-rst",
+          "kind": "observer-kv-get-settled",
+          "hostMs": 15500.974514,
+          "wallMs": 1791248095554,
+          "category": "cancel",
+          "poll": 0,
+          "phase": "original",
+          "value": null,
+          "eventIndex": 801
+        },
+        "last": {
+          "caseId": "locked-observed-rst",
+          "kind": "observer-kv-get-settled",
+          "hostMs": 16831.065673999998,
+          "wallMs": 1791248096884,
+          "category": "cancel",
+          "poll": 99,
+          "phase": "original",
+          "value": null,
+          "eventIndex": 999
+        },
+        "allNull": true
+      },
+      "tailEvidence": {
+        "count": 75,
+        "first": {
+          "caseId": "locked-observed-rst",
+          "kind": "observer-kv-get-settled",
+          "hostMs": 16850.296832,
+          "wallMs": 1791248096903,
+          "category": "cancel",
+          "poll": 0,
+          "phase": "diagnostic-tail",
+          "value": null,
+          "eventIndex": 1005
+        },
+        "last": {
+          "caseId": "locked-observed-rst",
+          "kind": "observer-kv-get-settled",
+          "hostMs": 20802.186028,
+          "wallMs": 1791248100855,
+          "category": "cancel",
+          "poll": 74,
+          "phase": "diagnostic-tail",
+          "value": null,
+          "eventIndex": 1153
+        },
+        "allNull": true,
+        "usedForPass": false
+      },
+      "acceptedReads": [
+        {
+          "caseId": "locked-observed-rst",
+          "kind": "observer-kv-get-settled",
+          "hostMs": 15497.372013,
+          "wallMs": 1791248095550,
+          "category": "accepted",
+          "poll": 0,
+          "phase": "before",
+          "value": "one",
+          "eventIndex": 792
+        },
+        {
+          "caseId": "locked-observed-rst",
+          "kind": "observer-kv-get-settled",
+          "hostMs": 16847.645963,
+          "wallMs": 1791248096901,
+          "category": "accepted",
+          "poll": 0,
+          "phase": "after",
+          "value": "one",
+          "eventIndex": 1003
+        }
+      ],
+      "releaseRead": {
+        "caseId": "locked-observed-rst",
+        "kind": "observer-kv-get-settled",
+        "hostMs": 16844.982549999997,
+        "wallMs": 1791248096898,
+        "category": "release",
+        "poll": 0,
+        "phase": "after",
+        "value": null,
+        "eventIndex": 1001
+      },
+      "disposeBracket": {
+        "lowerBoundHostMs": 20802.186028,
+        "upperBoundHostMs": 20858.712278,
+        "explicitDisposeStartCaptured": false,
+        "basis": "Last captured tail read settles before tail exits; sealed finally then calls client.cleanup and mf.dispose before case-closed. This is a conservative control-flow bracket, not an exact disposal timestamp."
+      },
+      "caseClosed": {
+        "caseId": "locked-observed-rst",
+        "kind": "case-closed",
+        "hostMs": 20858.712278,
+        "wallMs": 1791248100912,
+        "actualExit": 1,
+        "closed": true,
+        "eventIndex": 1154
+      },
+      "workerSignals": [
+        {
+          "caseId": "locked-observed-rst",
+          "eventIndex": 781,
+          "receivedHostMs": 15459.179921,
+          "receivedWallMs": 1791248095512,
+          "workerdTimestamp": 1791248095512,
+          "payload": {
+            "boundary": "gateway",
+            "event": "signal-initial",
+            "wallMs": 1791248095511,
+            "signalBoundary": "incoming",
+            "aborted": false
+          },
+          "msAfterCancelSettledReceived": -38.567825000000084,
+          "beforeConservativeDisposeLowerBound": true
+        },
+        {
+          "caseId": "locked-observed-rst",
+          "eventIndex": 782,
+          "receivedHostMs": 15459.625395000001,
+          "receivedWallMs": 1791248095512,
+          "workerdTimestamp": 1791248095512,
+          "payload": {
+            "boundary": "gateway",
+            "event": "signal-initial",
+            "wallMs": 1791248095512,
+            "signalBoundary": "forwarded-request-object",
+            "aborted": false
+          },
+          "msAfterCancelSettledReceived": -38.12235099999998,
+          "beforeConservativeDisposeLowerBound": true
+        },
+        {
+          "caseId": "locked-observed-rst",
+          "eventIndex": 784,
+          "receivedHostMs": 15460.187677,
+          "receivedWallMs": 1791248095513,
+          "workerdTimestamp": 1791248095513,
+          "payload": {
+            "boundary": "holder",
+            "event": "signal-initial",
+            "wallMs": 1791248095513,
+            "aborted": false
+          },
+          "msAfterCancelSettledReceived": -37.56006900000102,
+          "beforeConservativeDisposeLowerBound": true
+        },
+        {
+          "caseId": "locked-observed-rst",
+          "eventIndex": 800,
+          "receivedHostMs": 15499.08586,
+          "receivedWallMs": 1791248095552,
+          "workerdTimestamp": 1791248095551,
+          "payload": {
+            "boundary": "holder",
+            "event": "signal-abort",
+            "wallMs": 1791248095551,
+            "aborted": true
+          },
+          "msAfterCancelSettledReceived": 1.3381139999983134,
+          "beforeConservativeDisposeLowerBound": true
+        }
+      ],
+      "sourceCallbackPositiveEvidence": {
+        "instrumented": true,
+        "cancelCategoryKVEvents": [],
+        "waitUntilEvents": [],
+        "sourceCallbackEntryProven": false,
+        "absenceMeaning": "No cancel-category invocation/settlement or waitUntil registration/settlement was captured in this instrumented event snapshot. Missing logs are not proof that the source callback can never run."
+      },
+      "workerMetadataCounts": {
+        "gateway/signal-initial/incoming": 1,
+        "gateway/signal-initial/forwarded-request-object": 1,
+        "gateway/binding-fetch/": 1,
+        "holder/signal-initial/": 1,
+        "holder/kv-invoke/accepted": 1,
+        "holder/kv-fulfilled/accepted": 1,
+        "holder/kv-invoke/release": 1,
+        "holder/kv-fulfilled/release": 1,
+        "holder/signal-abort/": 1
+      },
+      "releaseProgressSamples": [
+        {
+          "caseId": "locked-observed-rst",
+          "eventIndex": 787,
+          "receivedHostMs": 15481.254043,
+          "receivedWallMs": 1791248095534,
+          "workerdTimestamp": 1791248095530,
+          "payload": {
+            "boundary": "holder",
+            "event": "kv-invoke",
+            "wallMs": 1791248095530,
+            "operation": 2,
+            "method": "get",
+            "category": "release",
+            "releaseReads": 1
+          }
+        },
+        {
+          "caseId": "locked-observed-rst",
+          "eventIndex": 788,
+          "receivedHostMs": 15481.259834,
+          "receivedWallMs": 1791248095534,
+          "workerdTimestamp": 1791248095532,
+          "payload": {
+            "boundary": "holder",
+            "event": "kv-fulfilled",
+            "wallMs": 1791248095532,
+            "operation": 2,
+            "method": "get",
+            "category": "release",
+            "releaseReads": 1
+          }
+        }
+      ],
+      "runtimeErrors": []
+    },
+    {
+      "caseId": "locked-observed-reader-cancel",
+      "result": {
+        "caseId": "locked-observed-reader-cancel",
+        "observed": true,
+        "mode": "reader-cancel",
+        "signalPassthrough": false,
+        "baselineEligible": true,
+        "originalWindow": {
+          "pollCount": 100,
+          "sleepMs": 10,
+          "elapsedMs": 1331.5457810000007,
+          "actual": null,
+          "expected": "observed",
+          "actualExit": 1
+        },
+        "tail": {
+          "elapsedMs": 4007.4767109999993,
+          "reads": 75,
+          "actual": null,
+          "usedForPass": false
+        },
+        "actualExit": 1,
+        "closed": true,
+        "strictFailure": {
+          "name": "AssertionError",
+          "code": "ERR_ASSERTION",
+          "message": "Expected values to be strictly equal:\n\nnull !== 'observed'\n"
+        }
+      },
+      "client": {
+        "invoke": {
+          "caseId": "locked-observed-reader-cancel",
+          "kind": "client-cancel-invoke",
+          "hostMs": 21164.719352,
+          "wallMs": 1791248101218,
+          "mode": "reader-cancel",
+          "eventIndex": 1168
+        },
+        "settled": {
+          "caseId": "locked-observed-reader-cancel",
+          "kind": "client-cancel-settled",
+          "hostMs": 21165.421466,
+          "wallMs": 1791248101218,
+          "eventIndex": 1170
+        },
+        "transportClose": [
+          {
+            "caseId": "locked-observed-reader-cancel",
+            "kind": "reader-closed-fulfilled",
+            "hostMs": 21165.414041999997,
+            "wallMs": 1791248101218,
+            "eventIndex": 1169
+          }
+        ]
+      },
+      "originalPollEvidence": {
+        "count": 100,
+        "first": {
+          "caseId": "locked-observed-reader-cancel",
+          "kind": "observer-kv-get-settled",
+          "hostMs": 21169.187992,
+          "wallMs": 1791248101222,
+          "category": "cancel",
+          "poll": 0,
+          "phase": "original",
+          "value": null,
+          "eventIndex": 1172
+        },
+        "last": {
+          "caseId": "locked-observed-reader-cancel",
+          "kind": "observer-kv-get-settled",
+          "hostMs": 22486.787683,
+          "wallMs": 1791248102540,
+          "category": "cancel",
+          "poll": 99,
+          "phase": "original",
+          "value": null,
+          "eventIndex": 1372
+        },
+        "allNull": true
+      },
+      "tailEvidence": {
+        "count": 75,
+        "first": {
+          "caseId": "locked-observed-reader-cancel",
+          "kind": "observer-kv-get-settled",
+          "hostMs": 22504.389733,
+          "wallMs": 1791248102557,
+          "category": "cancel",
+          "poll": 0,
+          "phase": "diagnostic-tail",
+          "value": null,
+          "eventIndex": 1378
+        },
+        "last": {
+          "caseId": "locked-observed-reader-cancel",
+          "kind": "observer-kv-get-settled",
+          "hostMs": 26460.442557,
+          "wallMs": 1791248106513,
+          "category": "cancel",
+          "poll": 74,
+          "phase": "diagnostic-tail",
+          "value": null,
+          "eventIndex": 1531
+        },
+        "allNull": true,
+        "usedForPass": false
+      },
+      "acceptedReads": [
+        {
+          "caseId": "locked-observed-reader-cancel",
+          "kind": "observer-kv-get-settled",
+          "hostMs": 21164.706457999997,
+          "wallMs": 1791248101218,
+          "category": "accepted",
+          "poll": 0,
+          "phase": "before",
+          "value": "one",
+          "eventIndex": 1167
+        },
+        {
+          "caseId": "locked-observed-reader-cancel",
+          "kind": "observer-kv-get-settled",
+          "hostMs": 22502.290545,
+          "wallMs": 1791248102555,
+          "category": "accepted",
+          "poll": 0,
+          "phase": "after",
+          "value": "one",
+          "eventIndex": 1376
+        }
+      ],
+      "releaseRead": {
+        "caseId": "locked-observed-reader-cancel",
+        "kind": "observer-kv-get-settled",
+        "hostMs": 22499.838026999998,
+        "wallMs": 1791248102553,
+        "category": "release",
+        "poll": 0,
+        "phase": "after",
+        "value": null,
+        "eventIndex": 1374
+      },
+      "disposeBracket": {
+        "lowerBoundHostMs": 26460.442557,
+        "upperBoundHostMs": 26516.655262999997,
+        "explicitDisposeStartCaptured": false,
+        "basis": "Last captured tail read settles before tail exits; sealed finally then calls client.cleanup and mf.dispose before case-closed. This is a conservative control-flow bracket, not an exact disposal timestamp."
+      },
+      "caseClosed": {
+        "caseId": "locked-observed-reader-cancel",
+        "kind": "case-closed",
+        "hostMs": 26516.655262999997,
+        "wallMs": 1791248106570,
+        "actualExit": 1,
+        "closed": true,
+        "eventIndex": 1532
+      },
+      "workerSignals": [
+        {
+          "caseId": "locked-observed-reader-cancel",
+          "eventIndex": 1156,
+          "receivedHostMs": 21137.814409,
+          "receivedWallMs": 1791248101191,
+          "workerdTimestamp": 1791248101191,
+          "payload": {
+            "boundary": "gateway",
+            "event": "signal-initial",
+            "wallMs": 1791248101190,
+            "signalBoundary": "incoming",
+            "aborted": false
+          },
+          "msAfterCancelSettledReceived": -27.607057000001078,
+          "beforeConservativeDisposeLowerBound": true
+        },
+        {
+          "caseId": "locked-observed-reader-cancel",
+          "eventIndex": 1157,
+          "receivedHostMs": 21138.083220999997,
+          "receivedWallMs": 1791248101191,
+          "workerdTimestamp": 1791248101191,
+          "payload": {
+            "boundary": "gateway",
+            "event": "signal-initial",
+            "wallMs": 1791248101191,
+            "signalBoundary": "forwarded-request-object",
+            "aborted": false
+          },
+          "msAfterCancelSettledReceived": -27.338245000002644,
+          "beforeConservativeDisposeLowerBound": true
+        },
+        {
+          "caseId": "locked-observed-reader-cancel",
+          "eventIndex": 1159,
+          "receivedHostMs": 21138.656043,
+          "receivedWallMs": 1791248101192,
+          "workerdTimestamp": 1791248101191,
+          "payload": {
+            "boundary": "holder",
+            "event": "signal-initial",
+            "wallMs": 1791248101191,
+            "aborted": false
+          },
+          "msAfterCancelSettledReceived": -26.765423000000737,
+          "beforeConservativeDisposeLowerBound": true
+        }
+      ],
+      "sourceCallbackPositiveEvidence": {
+        "instrumented": true,
+        "cancelCategoryKVEvents": [],
+        "waitUntilEvents": [],
+        "sourceCallbackEntryProven": false,
+        "absenceMeaning": "No cancel-category invocation/settlement or waitUntil registration/settlement was captured in this instrumented event snapshot. Missing logs are not proof that the source callback can never run."
+      },
+      "workerMetadataCounts": {
+        "gateway/signal-initial/incoming": 1,
+        "gateway/signal-initial/forwarded-request-object": 1,
+        "gateway/binding-fetch/": 1,
+        "holder/signal-initial/": 1,
+        "holder/kv-invoke/accepted": 1,
+        "holder/kv-fulfilled/accepted": 1,
+        "holder/kv-invoke/release": 4,
+        "holder/kv-fulfilled/release": 4
+      },
+      "releaseProgressSamples": [
+        {
+          "caseId": "locked-observed-reader-cancel",
+          "eventIndex": 1162,
+          "receivedHostMs": 21147.177775,
+          "receivedWallMs": 1791248101200,
+          "workerdTimestamp": 1791248101200,
+          "payload": {
+            "boundary": "holder",
+            "event": "kv-invoke",
+            "wallMs": 1791248101200,
+            "operation": 2,
+            "method": "get",
+            "category": "release",
+            "releaseReads": 1
+          }
+        },
+        {
+          "caseId": "locked-observed-reader-cancel",
+          "eventIndex": 1166,
+          "receivedHostMs": 21163.232409999997,
+          "receivedWallMs": 1791248101216,
+          "workerdTimestamp": 1791248101202,
+          "payload": {
+            "boundary": "holder",
+            "event": "kv-fulfilled",
+            "wallMs": 1791248101202,
+            "operation": 2,
+            "method": "get",
+            "category": "release",
+            "releaseReads": 1
+          }
+        },
+        {
+          "caseId": "locked-observed-reader-cancel",
+          "eventIndex": 1335,
+          "receivedHostMs": 22253.426922,
+          "receivedWallMs": 1791248102306,
+          "workerdTimestamp": 1791248102306,
+          "payload": {
+            "boundary": "holder",
+            "event": "kv-invoke",
+            "wallMs": 1791248102306,
+            "operation": 101,
+            "method": "get",
+            "category": "release",
+            "releaseReads": 100
+          }
+        },
+        {
+          "caseId": "locked-observed-reader-cancel",
+          "eventIndex": 1336,
+          "receivedHostMs": 22253.997109,
+          "receivedWallMs": 1791248102307,
+          "workerdTimestamp": 1791248102307,
+          "payload": {
+            "boundary": "holder",
+            "event": "kv-fulfilled",
+            "wallMs": 1791248102307,
+            "operation": 101,
+            "method": "get",
+            "category": "release",
+            "releaseReads": 100
+          }
+        },
+        {
+          "caseId": "locked-observed-reader-cancel",
+          "eventIndex": 1409,
+          "receivedHostMs": 23346.4466,
+          "receivedWallMs": 1791248103399,
+          "workerdTimestamp": 1791248103399,
+          "payload": {
+            "boundary": "holder",
+            "event": "kv-invoke",
+            "wallMs": 1791248103399,
+            "operation": 201,
+            "method": "get",
+            "category": "release",
+            "releaseReads": 200
+          }
+        },
+        {
+          "caseId": "locked-observed-reader-cancel",
+          "eventIndex": 1410,
+          "receivedHostMs": 23347.104090999997,
+          "receivedWallMs": 1791248103400,
+          "workerdTimestamp": 1791248103400,
+          "payload": {
+            "boundary": "holder",
+            "event": "kv-fulfilled",
+            "wallMs": 1791248103400,
+            "operation": 201,
+            "method": "get",
+            "category": "release",
+            "releaseReads": 200
+          }
+        },
+        {
+          "caseId": "locked-observed-reader-cancel",
+          "eventIndex": 1453,
+          "receivedHostMs": 24437.787819999998,
+          "receivedWallMs": 1791248104491,
+          "workerdTimestamp": 1791248104490,
+          "payload": {
+            "boundary": "holder",
+            "event": "kv-invoke",
+            "wallMs": 1791248104490,
+            "operation": 301,
+            "method": "get",
+            "category": "release",
+            "releaseReads": 300
+          }
+        },
+        {
+          "caseId": "locked-observed-reader-cancel",
+          "eventIndex": 1454,
+          "receivedHostMs": 24438.246398,
+          "receivedWallMs": 1791248104491,
+          "workerdTimestamp": 1791248104491,
+          "payload": {
+            "boundary": "holder",
+            "event": "kv-fulfilled",
+            "wallMs": 1791248104491,
+            "operation": 301,
+            "method": "get",
+            "category": "release",
+            "releaseReads": 300
+          }
+        }
+      ],
+      "runtimeErrors": [
+        {
+          "eventIndex": 1455,
+          "hostMs": 24449.476487,
+          "wallMs": 1791248104502,
+          "level": "error",
+          "messageFirstLine": "Uncaught exception: workerd/jsg/_virtual_includes/iterator/workerd/jsg/value.h:1477: failed: remote.jsg.Error: synthetic stream release timed out",
+          "msAfterClientCancel": 3284.757135,
+          "beforeConservativeDisposeLowerBound": true
+        }
+      ]
+    },
+    {
+      "caseId": "locked-observed-destroy-passthrough-variant",
+      "result": {
+        "caseId": "locked-observed-destroy-passthrough-variant",
+        "observed": true,
+        "mode": "destroy",
+        "signalPassthrough": true,
+        "baselineEligible": false,
+        "originalWindow": {
+          "pollCount": 100,
+          "sleepMs": 10,
+          "elapsedMs": 1316.5571459999992,
+          "actual": null,
+          "expected": "observed",
+          "actualExit": 1
+        },
+        "tail": {
+          "elapsedMs": 4049.3720900000008,
+          "reads": 76,
+          "actual": null,
+          "usedForPass": false
+        },
+        "actualExit": 1,
+        "closed": true,
+        "strictFailure": {
+          "name": "AssertionError",
+          "code": "ERR_ASSERTION",
+          "message": "Expected values to be strictly equal:\n\nnull !== 'observed'\n"
+        }
+      },
+      "client": {
+        "invoke": {
+          "caseId": "locked-observed-destroy-passthrough-variant",
+          "kind": "client-cancel-invoke",
+          "hostMs": 26824.26863,
+          "wallMs": 1791248106877,
+          "mode": "destroy",
+          "eventIndex": 1547
+        },
+        "settled": {
+          "caseId": "locked-observed-destroy-passthrough-variant",
+          "kind": "client-cancel-settled",
+          "hostMs": 26824.549195,
+          "wallMs": 1791248106877,
+          "requestDestroyed": true,
+          "responseDestroyed": true,
+          "responseComplete": false,
+          "eventIndex": 1550
+        },
+        "transportClose": [
+          {
+            "caseId": "locked-observed-destroy-passthrough-variant",
+            "kind": "response-close",
+            "hostMs": 26824.459927999997,
+            "wallMs": 1791248106877,
+            "complete": false,
+            "destroyed": true,
+            "eventIndex": 1549
+          },
+          {
+            "caseId": "locked-observed-destroy-passthrough-variant",
+            "kind": "request-close",
+            "hostMs": 26825.598669,
+            "wallMs": 1791248106878,
+            "destroyed": true,
+            "eventIndex": 1552
+          },
+          {
+            "caseId": "locked-observed-destroy-passthrough-variant",
+            "kind": "socket-close",
+            "hostMs": 26825.643954,
+            "wallMs": 1791248106879,
+            "hadError": false,
+            "destroyed": true,
+            "bytesRead": 127,
+            "bytesWritten": 538,
+            "eventIndex": 1553
+          }
+        ]
+      },
+      "originalPollEvidence": {
+        "count": 100,
+        "first": {
+          "caseId": "locked-observed-destroy-passthrough-variant",
+          "kind": "observer-kv-get-settled",
+          "hostMs": 26827.785390999998,
+          "wallMs": 1791248106881,
+          "category": "cancel",
+          "poll": 0,
+          "phase": "original",
+          "value": null,
+          "eventIndex": 1554
+        },
+        "last": {
+          "caseId": "locked-observed-destroy-passthrough-variant",
+          "kind": "observer-kv-get-settled",
+          "hostMs": 28131.378226999997,
+          "wallMs": 1791248108184,
+          "category": "cancel",
+          "poll": 99,
+          "phase": "original",
+          "value": null,
+          "eventIndex": 1754
+        },
+        "allNull": true
+      },
+      "tailEvidence": {
+        "count": 76,
+        "first": {
+          "caseId": "locked-observed-destroy-passthrough-variant",
+          "kind": "observer-kv-get-settled",
+          "hostMs": 28148.739184,
+          "wallMs": 1791248108202,
+          "category": "cancel",
+          "poll": 0,
+          "phase": "diagnostic-tail",
+          "value": null,
+          "eventIndex": 1760
+        },
+        "last": {
+          "caseId": "locked-observed-destroy-passthrough-variant",
+          "kind": "observer-kv-get-settled",
+          "hostMs": 32145.619959,
+          "wallMs": 1791248112198,
+          "category": "cancel",
+          "poll": 75,
+          "phase": "diagnostic-tail",
+          "value": null,
+          "eventIndex": 1915
+        },
+        "allNull": true,
+        "usedForPass": false
+      },
+      "acceptedReads": [
+        {
+          "caseId": "locked-observed-destroy-passthrough-variant",
+          "kind": "observer-kv-get-settled",
+          "hostMs": 26824.251487999998,
+          "wallMs": 1791248106877,
+          "category": "accepted",
+          "poll": 0,
+          "phase": "before",
+          "value": "one",
+          "eventIndex": 1546
+        },
+        {
+          "caseId": "locked-observed-destroy-passthrough-variant",
+          "kind": "observer-kv-get-settled",
+          "hostMs": 28146.482311,
+          "wallMs": 1791248108199,
+          "category": "accepted",
+          "poll": 0,
+          "phase": "after",
+          "value": "one",
+          "eventIndex": 1758
+        }
+      ],
+      "releaseRead": {
+        "caseId": "locked-observed-destroy-passthrough-variant",
+        "kind": "observer-kv-get-settled",
+        "hostMs": 28144.112365999998,
+        "wallMs": 1791248108197,
+        "category": "release",
+        "poll": 0,
+        "phase": "after",
+        "value": null,
+        "eventIndex": 1756
+      },
+      "disposeBracket": {
+        "lowerBoundHostMs": 32145.619959,
+        "upperBoundHostMs": 32203.219533,
+        "explicitDisposeStartCaptured": false,
+        "basis": "Last captured tail read settles before tail exits; sealed finally then calls client.cleanup and mf.dispose before case-closed. This is a conservative control-flow bracket, not an exact disposal timestamp."
+      },
+      "caseClosed": {
+        "caseId": "locked-observed-destroy-passthrough-variant",
+        "kind": "case-closed",
+        "hostMs": 32203.219533,
+        "wallMs": 1791248112256,
+        "actualExit": 1,
+        "closed": true,
+        "eventIndex": 1916
+      },
+      "workerSignals": [
+        {
+          "caseId": "locked-observed-destroy-passthrough-variant",
+          "eventIndex": 1535,
+          "receivedHostMs": 26799.004997999997,
+          "receivedWallMs": 1791248106852,
+          "workerdTimestamp": 1791248106852,
+          "payload": {
+            "boundary": "gateway",
+            "event": "signal-initial",
+            "wallMs": 1791248106851,
+            "signalBoundary": "incoming",
+            "aborted": false
+          },
+          "msAfterCancelSettledReceived": -25.544197000002896,
+          "beforeConservativeDisposeLowerBound": true
+        },
+        {
+          "caseId": "locked-observed-destroy-passthrough-variant",
+          "eventIndex": 1536,
+          "receivedHostMs": 26799.389544999998,
+          "receivedWallMs": 1791248106852,
+          "workerdTimestamp": 1791248106852,
+          "payload": {
+            "boundary": "gateway",
+            "event": "signal-initial",
+            "wallMs": 1791248106852,
+            "signalBoundary": "forwarded-request-object",
+            "aborted": false
+          },
+          "msAfterCancelSettledReceived": -25.15965000000142,
+          "beforeConservativeDisposeLowerBound": true
+        },
+        {
+          "caseId": "locked-observed-destroy-passthrough-variant",
+          "eventIndex": 1538,
+          "receivedHostMs": 26799.997872999997,
+          "receivedWallMs": 1791248106853,
+          "workerdTimestamp": 1791248106853,
+          "payload": {
+            "boundary": "holder",
+            "event": "signal-initial",
+            "wallMs": 1791248106853,
+            "aborted": false
+          },
+          "msAfterCancelSettledReceived": -24.551322000002983,
+          "beforeConservativeDisposeLowerBound": true
+        }
+      ],
+      "sourceCallbackPositiveEvidence": {
+        "instrumented": true,
+        "cancelCategoryKVEvents": [],
+        "waitUntilEvents": [],
+        "sourceCallbackEntryProven": false,
+        "absenceMeaning": "No cancel-category invocation/settlement or waitUntil registration/settlement was captured in this instrumented event snapshot. Missing logs are not proof that the source callback can never run."
+      },
+      "workerMetadataCounts": {
+        "gateway/signal-initial/incoming": 1,
+        "gateway/signal-initial/forwarded-request-object": 1,
+        "gateway/binding-fetch/": 1,
+        "holder/signal-initial/": 1,
+        "holder/kv-invoke/accepted": 1,
+        "holder/kv-fulfilled/accepted": 1,
+        "holder/kv-invoke/release": 4,
+        "holder/kv-fulfilled/release": 4
+      },
+      "releaseProgressSamples": [
+        {
+          "caseId": "locked-observed-destroy-passthrough-variant",
+          "eventIndex": 1541,
+          "receivedHostMs": 26808.007300999998,
+          "receivedWallMs": 1791248106861,
+          "workerdTimestamp": 1791248106861,
+          "payload": {
+            "boundary": "holder",
+            "event": "kv-invoke",
+            "wallMs": 1791248106861,
+            "operation": 2,
+            "method": "get",
+            "category": "release",
+            "releaseReads": 1
+          }
+        },
+        {
+          "caseId": "locked-observed-destroy-passthrough-variant",
+          "eventIndex": 1544,
+          "receivedHostMs": 26821.742191999998,
+          "receivedWallMs": 1791248106875,
+          "workerdTimestamp": 1791248106863,
+          "payload": {
+            "boundary": "holder",
+            "event": "kv-fulfilled",
+            "wallMs": 1791248106863,
+            "operation": 2,
+            "method": "get",
+            "category": "release",
+            "releaseReads": 1
+          }
+        },
+        {
+          "caseId": "locked-observed-destroy-passthrough-variant",
+          "eventIndex": 1719,
+          "receivedHostMs": 27915.208351999998,
+          "receivedWallMs": 1791248107968,
+          "workerdTimestamp": 1791248107968,
+          "payload": {
+            "boundary": "holder",
+            "event": "kv-invoke",
+            "wallMs": 1791248107968,
+            "operation": 101,
+            "method": "get",
+            "category": "release",
+            "releaseReads": 100
+          }
+        },
+        {
+          "caseId": "locked-observed-destroy-passthrough-variant",
+          "eventIndex": 1720,
+          "receivedHostMs": 27915.858008,
+          "receivedWallMs": 1791248107969,
+          "workerdTimestamp": 1791248107969,
+          "payload": {
+            "boundary": "holder",
+            "event": "kv-fulfilled",
+            "wallMs": 1791248107969,
+            "operation": 101,
+            "method": "get",
+            "category": "release",
+            "releaseReads": 100
+          }
+        },
+        {
+          "caseId": "locked-observed-destroy-passthrough-variant",
+          "eventIndex": 1793,
+          "receivedHostMs": 29010.159929999998,
+          "receivedWallMs": 1791248109063,
+          "workerdTimestamp": 1791248109063,
+          "payload": {
+            "boundary": "holder",
+            "event": "kv-invoke",
+            "wallMs": 1791248109063,
+            "operation": 201,
+            "method": "get",
+            "category": "release",
+            "releaseReads": 200
+          }
+        },
+        {
+          "caseId": "locked-observed-destroy-passthrough-variant",
+          "eventIndex": 1794,
+          "receivedHostMs": 29012.263595999997,
+          "receivedWallMs": 1791248109065,
+          "workerdTimestamp": 1791248109065,
+          "payload": {
+            "boundary": "holder",
+            "event": "kv-fulfilled",
+            "wallMs": 1791248109065,
+            "operation": 201,
+            "method": "get",
+            "category": "release",
+            "releaseReads": 200
+          }
+        },
+        {
+          "caseId": "locked-observed-destroy-passthrough-variant",
+          "eventIndex": 1835,
+          "receivedHostMs": 30103.316871,
+          "receivedWallMs": 1791248110156,
+          "workerdTimestamp": 1791248110156,
+          "payload": {
+            "boundary": "holder",
+            "event": "kv-invoke",
+            "wallMs": 1791248110156,
+            "operation": 301,
+            "method": "get",
+            "category": "release",
+            "releaseReads": 300
+          }
+        },
+        {
+          "caseId": "locked-observed-destroy-passthrough-variant",
+          "eventIndex": 1836,
+          "receivedHostMs": 30103.912164999998,
+          "receivedWallMs": 1791248110157,
+          "workerdTimestamp": 1791248110157,
+          "payload": {
+            "boundary": "holder",
+            "event": "kv-fulfilled",
+            "wallMs": 1791248110157,
+            "operation": 301,
+            "method": "get",
+            "category": "release",
+            "releaseReads": 300
+          }
+        }
+      ],
+      "runtimeErrors": [
+        {
+          "eventIndex": 1837,
+          "hostMs": 30115.048624,
+          "wallMs": 1791248110168,
+          "level": "error",
+          "messageFirstLine": "Uncaught exception: workerd/jsg/_virtual_includes/iterator/workerd/jsg/value.h:1477: failed: remote.jsg.Error: synthetic stream release timed out",
+          "msAfterClientCancel": 3290.7799940000004,
+          "beforeConservativeDisposeLowerBound": true
+        }
+      ]
+    }
+  ],
+  "inferences": {
+    "supported": [
+      "Three native Node transport calibrations closed the incomplete SSE response and server peer as expected.",
+      "The frozen two-file baseline failed exactly the source cancellation null assertion; changing reader transport, explicit RST, or the isolated signal passthrough variant did not produce the source cancel KV observation in the original or tail windows.",
+      "RST has one holder request.signal abort logged about1.338ms after client cancel settled by host receive time, seconds before the conservative dispose bracket. This particular abort belongs to the captured client-cancel period, not a dispose-only interpretation.",
+      "The four observed cases captured accepted KV put invocation and fulfillment. They captured zero cancel-category KV invocation/fulfillment and zero waitUntil registration/settlement. Therefore this artifact provides no positive proof of source cancel callback entry; it does not establish a later or unlogged callback is impossible.",
+      "Destroy, reader-cancel and passthrough-destroy continued sampled release reads through300 and then logged synthetic stream release timeout before dispose. RST captured only initial release read and holder abort; missing later samples are not a proof of exact termination."
+    ],
+    "notEstablished": [
+      "An upstream runtime defect or specific workerd frame teardown path is not causally proven.",
+      "A Service Binding-only defect is not proven without a matched no-binding/direct-holder runtime comparison.",
+      "Signal abort cannot satisfy or substitute for the original source cancel KV assertion.",
+      "Zero waitUntil logs cannot diagnose lost waitUntil persistence when its invocation itself has no positive captured evidence.",
+      "Outer killed flag cannot be omitted, interpreted as proven live-process termination, or upgraded to wholly cooperative native closure."
+    ]
+  },
+  "nextDiagnosticPlan": {
+    "scope": "New owned diagnostic only, same locked workerd1.20260828.1/Miniflare5.20260828.0-alpha/compatibility date2026-09-04 and original configured flags. Freeze original sources/expectations and keep their baseline once, preserving actual1.",
+    "arms": [
+      {
+        "name": "locked-no-binding-async-source",
+        "difference": "A single local Worker has no Service Binding. Match the existing synthetic SSE first frame, async pull KV/timer pattern, highWaterMark0, source cancel KV put and original waitUntil registration semantics; use destroy and RST as two labeled comparisons.",
+        "purpose": "Test whether the same locked runtime can lose source cancel at a direct HTTP async-source boundary without any binding."
+      },
+      {
+        "name": "locked-direct-original-holder-with-gateway-envelope",
+        "difference": "In a new local single-worker diagnostic wrapper, construct the private URL Request with the same six-field body, Content-Type, body stream and explicit incoming signal as the frozen gateway, then invoke frozen original holder.fetch directly with the owned KV/env/context. Retain the same Response(body) rewrap as the original gateway; remove only Service Binding transport. Private holder source remains frozen. This diagnostic bundle contains synthetic holder literals and is baselineEligible=false, with no production exposure.",
+        "purpose": "Compare gateway-shaped forwarding and frozen holder semantics without a Service Binding; this is a diagnostic topology variant, not a replacement production gateway or original test."
+      }
+    ],
+    "preserve": [
+      "Original baseline raw TAP and exit; all original assertions remain unchanged.",
+      "HTTP200, exact text/event-stream and first frame; accepted one/release null; source cancel observed within original100 polls/10ms; four-second tail stays separate and cannot pass.",
+      "No abort handler may write cancel KV, cancel the stream, or provide alternate success. No runtime/flag/dependency upgrade.",
+      "Add explicit host dispose-start/dispose-settled events and phase to worker log receipts; obtain final pre-dispose KV snapshot before shutdown. Attribute shutdown-only aborts separately.",
+      "Outer executor remains authoritative; record a bounded owned-process-group /proc state census before any kill and actual adopted wait statuses to distinguish live from zombie candidates without changing this first run forced flag.",
+      "All direct variants labeled separately; a passing direct arm cannot upgrade original Service Binding baseline."
+    ],
+    "decisionRules": [
+      "If bare no-binding and direct-holder both fail at the same source-cancel boundary, the binding-only explanation weakens but an upstream regression still needs a pinned corrected-runtime or direct locked-source trace comparison.",
+      "If direct-holder passes and binding arm still fails, isolate response-body forwarding and binding serialization with a further matched intermediate arm; do not claim global binding failure from this one workload.",
+      "If logs capture cancel KV invoke but not settlement, investigate KV lifetime/persistence; if no positive invocation capture, focus on source callback/stream pump entry and instrumentation coverage."
+    ],
+    "runAuthorized": false,
+    "implementationPrepared": false
+  },
+  "reviewerActions": {
+    "repoWrites": 0,
+    "ciRequests": 0,
+    "runtimeReruns": 0,
+    "productionRequests": 0,
+    "onlyLocalArtifactReadsAndTempReport": true
+  }
+}

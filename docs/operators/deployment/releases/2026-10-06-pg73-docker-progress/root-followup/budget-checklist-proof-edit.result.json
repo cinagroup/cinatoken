@@ -1,0 +1,13 @@
+{
+  "at": "2026-10-06T00:45:14.329Z",
+  "finishedAt": "2026-10-06T00:45:14.403Z",
+  "executable": "C:/Program Files/nodejs/node.exe",
+  "args": [
+    "C:/Users/cina/AppData/Local/Temp/cinatoken-pg73-platform-followup-20261006-lAiHQC/record-budget-local-proof.mjs"
+  ],
+  "cwd": "C:/cinagroup/cinatoken",
+  "actualExit": 0,
+  "signal": null,
+  "stdout": "C:/Users/cina/AppData/Local/Temp/cinatoken-pg73-platform-followup-20261006-lAiHQC/budget-checklist-proof-edit.stdout.log",
+  "stderr": "C:/Users/cina/AppData/Local/Temp/cinatoken-pg73-platform-followup-20261006-lAiHQC/budget-checklist-proof-edit.stderr.log"
+}

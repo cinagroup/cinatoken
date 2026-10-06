@@ -1,0 +1,71 @@
+{
+  "schemaVersion": 1,
+  "releaseSlug": "2026-10-06-web-docker-pg73-followup",
+  "sourceCommit": null,
+  "outputDirectory": "C:/Users/cina/AppData/Local/Temp/cinatoken-durable-evidence-tools-Di62eG/staging-final",
+  "gzipThresholdBytes": 100000,
+  "requiredRootIds": [
+    "final-web-compose-ci",
+    "v364-owned-diagnostic",
+    "native-agent"
+  ],
+  "roots": [
+    {
+      "id": "root-followup",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-pg73-platform-followup-20261006-lAiHQC",
+      "phase": "historical-and-current",
+      "exclude": []
+    },
+    {
+      "id": "pg20-repair",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-pg73-runtime-grant-repair-644c68d030714f57b09031e007b87869",
+      "phase": "local-validation",
+      "exclude": []
+    },
+    {
+      "id": "seven-peer",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-pg73-shared-fixture-peer-8f9c0b77c2d2454aa570a019475861dc",
+      "phase": "source-peer-review",
+      "exclude": []
+    },
+    {
+      "id": "g7-docker-config",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-g7-docker-topology-v77GHM",
+      "phase": "local-validation",
+      "exclude": []
+    },
+    {
+      "id": "v364-prepared-only",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-owned-linux-diagnostic-prep-bf2a9d401d3b47acb92d8e1fae4c579b",
+      "phase": "prepared-only",
+      "exclude": []
+    },
+    {
+      "id": "native-agent",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-pg73-budget-admission-repair-pgYfbi",
+      "phase": "local-validation",
+      "exclude": []
+    }
+  ],
+  "pendingRootDescriptors": [
+    {
+      "id": "final-web-compose-ci",
+      "path": null,
+      "phase": "closed-ci-evidence"
+    },
+    {
+      "id": "v364-owned-diagnostic",
+      "path": null,
+      "phase": "closed-ci-evidence"
+    }
+  ],
+  "semantics": {
+    "currentProductionSource": "c13a64b9c3b2c90adcf736910ea408868d7854f1",
+    "sourceCommitPending": true,
+    "productionDeploymentChanged": false,
+    "v364PreparationIsRuntimeProof": false,
+    "G7": "pending",
+    "G8": "pending",
+    "ciAndNativeSuccess": "Must be populated from final closed run receipts; never inferred from collection."
+  }
+}

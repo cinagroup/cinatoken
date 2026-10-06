@@ -1,0 +1,22 @@
+{
+  "at": "2026-10-06T00:59:46.364Z",
+  "finishedAt": "2026-10-06T00:59:48.645Z",
+  "executable": "C:/Program Files/GitHub CLI/gh.exe",
+  "args": [
+    "run",
+    "list",
+    "--repo",
+    "cinagroup/cinatoken",
+    "--commit",
+    "fc17551b3016d3533c17cc4ec9b0151a4eedae44",
+    "--limit",
+    "10",
+    "--json",
+    "databaseId,workflowName,headSha,status,conclusion,url"
+  ],
+  "cwd": "C:/cinagroup/cinatoken",
+  "actualExit": 0,
+  "signal": null,
+  "stdout": "C:/Users/cina/AppData/Local/Temp/cinatoken-pg73-platform-followup-20261006-lAiHQC/diagnostic-sha-ci-list.stdout.log",
+  "stderr": "C:/Users/cina/AppData/Local/Temp/cinatoken-pg73-platform-followup-20261006-lAiHQC/diagnostic-sha-ci-list.stderr.log"
+}

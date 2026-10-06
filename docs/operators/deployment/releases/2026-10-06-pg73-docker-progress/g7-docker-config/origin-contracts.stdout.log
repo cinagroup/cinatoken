@@ -1,0 +1,32 @@
+✔ allows safe methods without an Origin header (33.3011ms)
+✔ allows an exact same-origin mutation (1.3931ms)
+✔ accepts the public Host origin rather than the Next listening origin (2.1732ms)
+✔ rejects a listening origin that differs from the public authority (0.671ms)
+✔ does not accept a forged forwarding Host as browser origin (0.4326ms)
+✔ fails closed for malformed Host even when the listening Origin matches (0.4027ms)
+✔ preserves exact public scheme and port checks (0.6699ms)
+✔ rejects a mutation with no Origin header (0.3541ms)
+✔ rejects a cross-origin mutation (0.4822ms)
+✔ rejects an explicitly cross-site request even when Origin is forged in a test client (0.3381ms)
+✔ preserves cross-origin mutations authenticated by a named admin API key (0.4427ms)
+✔ blocks the same attacker request when authentication came from a console cookie (3.5264ms)
+✔ registration keeps the public origin and popup transaction query (6.0094ms)
+✔ an invalid callback returns to the public origin without identity or transaction cookies (2.1656ms)
+▶ public gateway transport
+  ✔ uses the Cloudflare service binding and preserves request details (101.7697ms)
+  ✔ rejects scheme-relative paths and credentials in public origins (1.0549ms)
+✔ public gateway transport (104.1205ms)
+✔ restores public Host while retaining protocol, path and query (56.2009ms)
+✔ keeps authoritative URL when Fetch has no Host header (1.8583ms)
+✔ normalizes uppercase, default ports and IPv6 authorities (2.5976ms)
+✔ never uses Origin or forwarding headers to choose the public authority or protocol (28.1577ms)
+✔ rejects malformed, ambiguous or credential-bearing Host authorities (6.1721ms)
+✔ rejects protocols outside browser HTTP transport (0.3842ms)
+ℹ tests 22
+ℹ suites 1
+ℹ pass 22
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 10698.4712

@@ -1,0 +1,17 @@
+{
+  "startedAt": "2026-10-06T00:29:08.672Z",
+  "completedAt": "2026-10-06T00:29:09.626Z",
+  "program": "node",
+  "arguments": [
+    "--import",
+    "tsx",
+    "C:/Users/cina/AppData/Local/Temp/cinatoken-pg73-shared-fixture-peer-8f9c0b77c2d2454aa570a019475861dc/load-pg73-helper.mjs"
+  ],
+  "actualExitCode": 0,
+  "signal": null,
+  "spawnError": null,
+  "stdoutPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-shared-fixture-peer-8f9c0b77c2d2454aa570a019475861dc\\helper-load-with-tsx.stdout.txt",
+  "stderrPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-shared-fixture-peer-8f9c0b77c2d2454aa570a019475861dc\\helper-load-with-tsx.stderr.txt",
+  "stdoutBytes": 181,
+  "stderrBytes": 0
+}

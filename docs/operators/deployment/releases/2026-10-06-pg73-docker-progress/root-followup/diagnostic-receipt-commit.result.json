@@ -1,0 +1,15 @@
+{
+  "at": "2026-10-06T00:52:04.421Z",
+  "finishedAt": "2026-10-06T00:52:04.547Z",
+  "executable": "C:/Program Files/Git/cmd/git.exe",
+  "args": [
+    "commit",
+    "-m",
+    "fix(ci): distinguish diagnostic timeout from actual child exit"
+  ],
+  "cwd": "C:/cinagroup/cinatoken",
+  "actualExit": 0,
+  "signal": null,
+  "stdout": "C:/Users/cina/AppData/Local/Temp/cinatoken-pg73-platform-followup-20261006-lAiHQC/diagnostic-receipt-commit.stdout.log",
+  "stderr": "C:/Users/cina/AppData/Local/Temp/cinatoken-pg73-platform-followup-20261006-lAiHQC/diagnostic-receipt-commit.stderr.log"
+}

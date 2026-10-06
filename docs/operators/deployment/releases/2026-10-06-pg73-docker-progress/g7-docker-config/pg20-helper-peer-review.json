@@ -1,0 +1,46 @@
+{
+  "reviewKind": "read-only source peer review",
+  "reviewedHead": "b1ec8f33cf24edc07e8855c059c1498730a43113",
+  "createdAt": "2026-10-06T00:32:10.178Z",
+  "checkedFiles": [
+    {
+      "file": "scripts/db/cutover/postgres-shared-key-usage-repair-runtime-grant.native.test.mjs",
+      "bytes": 12691,
+      "sha256": "c9a1b7fc3d5b28bc5a703c4556883583adea8df665bad882909ce27cf271e0d0"
+    },
+    {
+      "file": "scripts/db/cutover/pg73-native-fixture.mjs",
+      "bytes": 6849,
+      "sha256": "124ddd43c2594d0daaac66a4e7158e5df90b00a6d73f03cbcac9e8f853a7346f"
+    },
+    {
+      "file": "scripts/db/cutover/grant-postgres-runtime.ts",
+      "bytes": 25946,
+      "sha256": "3f95f18f557696d8a36b93f7fe0d0d35a391e8ac9cf953376a234a6b629ea242"
+    },
+    {
+      "file": "packages/core/src/test-support/postgres-native-cluster.mjs",
+      "bytes": 6300,
+      "sha256": "6b5923be8d3bdcd061033eed1af2f67f3b87fa2fca1f2cf0a0b2eb0eb2cb8d2a"
+    }
+  ],
+  "noBlockingFindings": true,
+  "conclusion": "The test-only membership rejection helper reaches the actual production reconciler without weakening production grant rules or disguising its historical PG73 fixture. Requires actual owned native PostgreSQL execution for runtime proof.",
+  "reviewedAssertions": [
+    "Owned native cluster + exact loopback port/database/migrator identity restriction",
+    "Pinned historical PG73 corpus and exact73 ledger+MD5+schema owner before and after",
+    "Original restricted NOLOGIN runtime role attributes and the single controlled shadow membership proven",
+    "Temporary0074 audit table+ledger exists only for the real reconciler call; membership is preserved",
+    "TemporaryLOGIN eliminates unrelated NOLOGIN rejection; exact P0001 and exact directLOGIN/membership error matches actual grant source before ACL mutation",
+    "Role and complete membership metadata + effective repair privileges and raw table/function ACLs preserved immediately after actual rejection",
+    "Nested finally restores original NOLOGIN, removes temporary0074 table/ledger, rechecks exactPG73, role/memberships/ACL; outer test closes owned clients and cluster",
+    "Existing incomplete install/catalog/ACL rejection and normal post-revoke success still exercised"
+  ],
+  "runtimeExecutionByThisAgent": false,
+  "productionRequests": 0,
+  "sourceEditsByThisAgent": 0,
+  "limitations": [
+    "Read-only source review does not establish Linux PG20 suite pass; Parent holds actual native job proof.",
+    "The helper is test-only and historical PG73, not current migration or production activation."
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "schema": "v364-owned-linux-executor-start-v1",
+  "repo": "/home/runner/work/cinatoken/cinatoken",
+  "output": "/home/runner/work/_temp/v364-owned-once-37396338452-1",
+  "startedEpoch": 1791248079.6670263,
+  "freshOutputCreated": true,
+  "packageSHA256": "392f5a44294abf70c4bc3cbb7b727103f96d5ce8f5e87bfc3fe3dc8bd1fc6bd4",
+  "checkoutSHA": "fc17551b3016d3533c17cc4ec9b0151a4eedae44",
+  "run": {
+    "GITHUB_SHA": "fc17551b3016d3533c17cc4ec9b0151a4eedae44",
+    "GITHUB_RUN_ID": "37396338452",
+    "GITHUB_RUN_ATTEMPT": "1",
+    "GITHUB_WORKFLOW": "v364 owned Linux cancellation diagnostic",
+    "GITHUB_JOB": "cancellation-diagnostic"
+  },
+  "outerTimeoutSeconds": 320
+}

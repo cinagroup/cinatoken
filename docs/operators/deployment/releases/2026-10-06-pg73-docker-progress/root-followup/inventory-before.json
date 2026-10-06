@@ -1,0 +1,43 @@
+{
+  "zone": {
+    "id": "bd42026e3facf3317ae32d55de5e2044"
+  },
+  "routes": [
+    {
+      "id": "242dce09c515462e833d69bd0738bdfc",
+      "pattern": "api.cinatoken.com/*",
+      "script": "cinatoken-proxy",
+      "request_limit_fail_open": false
+    },
+    {
+      "id": "5738534653ef46f48a44e3f3b22e5d8e",
+      "pattern": "cinatoken.com/*",
+      "script": "cinatoken-admin",
+      "request_limit_fail_open": false
+    }
+  ],
+  "workers": [
+    {
+      "name": "cinatoken-admin",
+      "deployment": {
+        "versions": [
+          {
+            "id": "a5ce22c4-edae-42e9-8c2b-7b0df63e5b66"
+          }
+        ]
+      }
+    },
+    {
+      "name": "cinatoken-proxy",
+      "deployment": {
+        "versions": [
+          {
+            "id": "6e235009-78db-443e-9387-6ec9d963d9d1"
+          }
+        ]
+      }
+    }
+  ],
+  "originalInventorySha256": "a3eb459d17763d0d492f43efaa8a650be33524c58ce57683e0184707bc396d2c",
+  "baselineScope": "Route ownership and backend deployment IDs only; configuration values deliberately omitted"
+}

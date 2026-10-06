@@ -1,0 +1,11 @@
+{
+  "actualExit": 0,
+  "currentMD": {
+    "bytes": 776589,
+    "sha256": "7eec7bbefeef52ca19a5113526c8c441af681c426afc5659292bec83406ec404"
+  },
+  "productionGuardAt": "2026-10-06T01:05:32.161Z",
+  "productionBindingsAt": "2026-10-06T01:05:31.904Z",
+  "completeGoal": false,
+  "fullG7Proven": false
+}

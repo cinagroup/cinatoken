@@ -1,0 +1,1 @@
+{"actualExit":0,"report":{"path":"C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-shared-fixture-peer-8f9c0b77c2d2454aa570a019475861dc\\v4-acorn-shared-fixture-audit.json","bytes":31861,"sha256":"0dba2715069ffab513beb2a32cd6664d3a1ffc9fe6ecba0dea3889385be000c9"},"assertions":356,"files":7,"reverseByteExact":true,"workflowSingleLoaderAddition":true}

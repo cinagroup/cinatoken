@@ -1,0 +1,689 @@
+{
+  "schema": "cinatoken.pg73.downstream.readonly-plan.v1",
+  "at": "2026-10-06T00:45:44.623Z",
+  "actualExit": 0,
+  "baseCommit": "b1ec8f33cf24edc07e8855c059c1498730a43113",
+  "actualFailureScope": "Only step36 v350 failure is established by sealed Linux log. Steps37+ are not executed due to fail-fast and are static candidates, never reported failed or passed.",
+  "stepMapping": "Workflow source step34 corresponds to actual CI step36 from parent verified run/job; +2 represents Set up job and Initialize containers. The first8 same-mechanism candidates are ordered by workflow.",
+  "workflow": {
+    "bytes": 45895,
+    "sha256": "8e883e7f21f77f8367d361f6bd3d060e16c241c28641b3eac85af6835841f152"
+  },
+  "nextEight": [
+    {
+      "file": "scripts/db/cutover/postgres-ordinary-budget-recovery-v354.native.test.mjs",
+      "sourceStep": 35,
+      "ciStep": 37,
+      "bytes": 22491,
+      "sha256": "3a6754fe2fd1e8d5a3a101bfb79e9c15ca3fdff3eec0edcca3da0cc6c7e62c0b",
+      "pinnedPg73": false,
+      "historical73Assertions": [
+        {
+          "line": 88,
+          "source": "assert.equal(names.length,73)"
+        }
+      ],
+      "loaders": [
+        {
+          "line": 87,
+          "source": "readdir(migrations)",
+          "callee": "readdir"
+        }
+      ],
+      "grants": [
+        {
+          "line": 105,
+          "source": "grantPostgresRuntime({DATABASE_URL:migratorUrl})",
+          "callee": "grantPostgresRuntime",
+          "assertRejectsEnclosing": null
+        }
+      ],
+      "actualLinuxFailureKnown": false,
+      "sourceExactFixedBase": true,
+      "snapshot": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-budget-admission-repair-pgYfbi\\downstream-postgres-ordinary-budget-recovery-v354.native.test.mjs.before",
+        "bytes": 22491,
+        "sha256": "3a6754fe2fd1e8d5a3a101bfb79e9c15ca3fdff3eec0edcca3da0cc6c7e62c0b"
+      },
+      "runtimeRole": {
+        "login": true,
+        "password": "randomBytes(24) hex in owned fixture only",
+        "memberships": "No membership at initial grant; v359 tests runtime membership contamination later and revokes in finally before final negative grant.",
+        "evidence": [
+          {
+            "line": 64,
+            "text": "      await cluster.admin.unsafe(`CREATE ROLE cinatoken_gateway_migrator LOGIN PASSWORD '${passwords.migrator}';"
+          },
+          {
+            "line": 65,
+            "text": "        CREATE ROLE cinatoken_gateway_runtime LOGIN PASSWORD '${passwords.runtime}';"
+          },
+          {
+            "line": 66,
+            "text": "        CREATE ROLE cinatoken_gateway_buyer_settlement LOGIN NOINHERIT PASSWORD '${passwords.buyer_settlement}';"
+          },
+          {
+            "line": 67,
+            "text": "        CREATE ROLE cinatoken_gateway_budget_admission LOGIN NOINHERIT PASSWORD '${passwords.budget_admission}';"
+          },
+          {
+            "line": 68,
+            "text": "        CREATE ROLE cinatoken_gateway_budget_recovery LOGIN NOINHERIT PASSWORD '${passwords.budget_recovery}';"
+          },
+          {
+            "line": 69,
+            "text": "        CREATE ROLE cinatoken_gateway_shared_quote_attempt_producer LOGIN PASSWORD '${passwords.shared_quote_attempt_producer}';"
+          },
+          {
+            "line": 70,
+            "text": "        CREATE ROLE cinatoken_gateway_shared_earning_consumer LOGIN PASSWORD '${passwords.shared_earning_consumer}';"
+          },
+          {
+            "line": 101,
+            "text": "      const runtimeUrl=`postgres://cinatoken_gateway_runtime:${passwords.runtime}`"
+          }
+        ]
+      },
+      "grantNegativeCount": 0,
+      "grantSuccessOrConcurrentCount": 1,
+      "plan": {
+        "existingBridge": "Compatible with restricted owned LOGIN and no memberships at the original sequential grant points.",
+        "sharedMigratorBridgeSafe": true,
+        "minimalFixtureOnlyAdaptation": "Pin listPg73Migrations and adapt the sole original successful grant to existing owned bridge, preserving original73/corpus and role/ACL/rollback assertions.",
+        "productionNegative": "No direct grant-negative case in this fixture; proposal default-off/contamination/42501 cases must remain byte-exact.",
+        "nativeConcurrencyValidationRequired": false
+      },
+      "concurrencyEvidence": null
+    },
+    {
+      "file": "scripts/db/cutover/postgres-guardrail-budget-admission-login-v351.native.test.mjs",
+      "sourceStep": 36,
+      "ciStep": 38,
+      "bytes": 26904,
+      "sha256": "bbcbb33aa07d33530692d64d7ab5d24844bbfd44777f9ab8170533d2af0a60af",
+      "pinnedPg73": false,
+      "historical73Assertions": [
+        {
+          "line": 97,
+          "source": "assert.equal(migrationNames.length,73)"
+        }
+      ],
+      "loaders": [
+        {
+          "line": 95,
+          "source": "readdir(migrations)",
+          "callee": "readdir"
+        }
+      ],
+      "grants": [
+        {
+          "line": 111,
+          "source": "grantPostgresRuntime({ DATABASE_URL:migratorUrl })",
+          "callee": "grantPostgresRuntime",
+          "assertRejectsEnclosing": null
+        }
+      ],
+      "actualLinuxFailureKnown": false,
+      "sourceExactFixedBase": true,
+      "snapshot": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-budget-admission-repair-pgYfbi\\downstream-postgres-guardrail-budget-admission-login-v351.native.test.mjs.before",
+        "bytes": 26904,
+        "sha256": "bbcbb33aa07d33530692d64d7ab5d24844bbfd44777f9ab8170533d2af0a60af"
+      },
+      "runtimeRole": {
+        "login": true,
+        "password": "randomBytes(24) hex in owned fixture only",
+        "memberships": "No membership at initial grant; v359 tests runtime membership contamination later and revokes in finally before final negative grant.",
+        "evidence": [
+          {
+            "line": 73,
+            "text": "      await cluster.admin.unsafe(`CREATE ROLE cinatoken_gateway_migrator LOGIN PASSWORD '${passwords.migrator}';"
+          },
+          {
+            "line": 74,
+            "text": "        CREATE ROLE cinatoken_gateway_runtime LOGIN PASSWORD '${passwords.runtime}';"
+          },
+          {
+            "line": 75,
+            "text": "        CREATE ROLE cinatoken_gateway_buyer_settlement LOGIN NOINHERIT PASSWORD '${passwords.buyer_settlement}';"
+          },
+          {
+            "line": 76,
+            "text": "        CREATE ROLE cinatoken_gateway_budget_admission LOGIN NOINHERIT PASSWORD '${passwords.budget_admission}';"
+          },
+          {
+            "line": 77,
+            "text": "        CREATE ROLE cinatoken_gateway_shared_quote_attempt_producer LOGIN PASSWORD '${passwords.shared_quote_attempt_producer}';"
+          },
+          {
+            "line": 78,
+            "text": "        CREATE ROLE cinatoken_gateway_shared_earning_consumer LOGIN PASSWORD '${passwords.shared_earning_consumer}';"
+          }
+        ]
+      },
+      "grantNegativeCount": 0,
+      "grantSuccessOrConcurrentCount": 1,
+      "plan": {
+        "existingBridge": "Compatible with restricted owned LOGIN and no memberships at the original sequential grant points.",
+        "sharedMigratorBridgeSafe": true,
+        "minimalFixtureOnlyAdaptation": "Pin listPg73Migrations and adapt the sole original successful grant to existing owned bridge, preserving original73/corpus and role/ACL/rollback assertions.",
+        "productionNegative": "No direct grant-negative case in this fixture; proposal default-off/contamination/42501 cases must remain byte-exact.",
+        "nativeConcurrencyValidationRequired": false
+      },
+      "concurrencyEvidence": null
+    },
+    {
+      "file": "scripts/db/cutover/postgres-authenticated-request-capability-login-v356.native.test.mjs",
+      "sourceStep": 39,
+      "ciStep": 41,
+      "bytes": 23606,
+      "sha256": "c4c11dff6781b771c7dbbcba2ed32ab6a46053741e9af56844d1e641539711cd",
+      "pinnedPg73": false,
+      "historical73Assertions": [
+        {
+          "line": 75,
+          "source": "assert.equal(names.length,73)"
+        }
+      ],
+      "loaders": [
+        {
+          "line": 74,
+          "source": "readdir(migrations)",
+          "callee": "readdir"
+        }
+      ],
+      "grants": [
+        {
+          "line": 91,
+          "source": "grantPostgresRuntime({ DATABASE_URL: migratorUrl })",
+          "callee": "grantPostgresRuntime",
+          "assertRejectsEnclosing": null
+        },
+        {
+          "line": 116,
+          "source": "grantPostgresRuntime({ DATABASE_URL: migratorUrl })",
+          "callee": "grantPostgresRuntime",
+          "assertRejectsEnclosing": null
+        },
+        {
+          "line": 135,
+          "source": "grantPostgresRuntime({ DATABASE_URL: migratorUrl })",
+          "callee": "grantPostgresRuntime",
+          "assertRejectsEnclosing": "assert.rejects(grantPostgresRuntime({ DATABASE_URL: migratorUrl }),\n        /Request capability v356 is installed/u)"
+        }
+      ],
+      "actualLinuxFailureKnown": false,
+      "sourceExactFixedBase": true,
+      "snapshot": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-budget-admission-repair-pgYfbi\\downstream-postgres-authenticated-request-capability-login-v356.native.test.mjs.before",
+        "bytes": 23606,
+        "sha256": "c4c11dff6781b771c7dbbcba2ed32ab6a46053741e9af56844d1e641539711cd"
+      },
+      "runtimeRole": {
+        "login": true,
+        "password": "randomBytes(24) hex in owned fixture only",
+        "memberships": "No membership at initial grant; v359 tests runtime membership contamination later and revokes in finally before final negative grant.",
+        "evidence": [
+          {
+            "line": 57,
+            "text": "      await cluster.admin.unsafe(`CREATE ROLE cinatoken_gateway_migrator LOGIN PASSWORD '${passwords.migrator}';"
+          },
+          {
+            "line": 58,
+            "text": "        CREATE ROLE cinatoken_gateway_runtime LOGIN PASSWORD '${passwords.runtime}';"
+          },
+          {
+            "line": 59,
+            "text": "        CREATE ROLE ${issuerRole} LOGIN NOINHERIT PASSWORD '${passwords.request_capability_issuer}';"
+          },
+          {
+            "line": 60,
+            "text": "        CREATE ROLE ${claimRole} LOGIN NOINHERIT PASSWORD '${passwords.request_capability_claim}';"
+          }
+        ]
+      },
+      "grantNegativeCount": 1,
+      "grantSuccessOrConcurrentCount": 2,
+      "plan": {
+        "existingBridge": "Allowed for sequential initial and final grants; concurrent grant requires an independent owned migrator client.",
+        "sharedMigratorBridgeSafe": false,
+        "why": "Original concurrentGrant is launched inside migrator.begin; connection max1 is occupied by that transaction. The existing bridge starts with pg73State(migrator), so using the same client queues its first query until commit while the fixture waits for the production grant advisory lock. This cannot establish the original lock wait.",
+        "minimalFixtureOnlyAdaptation": "Create a separate client authenticated directly as the same owned migrator LOGIN, max1, loopback cluster.port. Add it to clients for existing finally cleanup; use this peer for the bridge around the concurrent production grant. Preserve original blocked=true polling60×25ms, Request capability v356 exact rejection, original assertions, and rollback/ACL checks. Do not alter helper or production locking. Validate temporary0074 install/drop does not interfere with proposal transaction or ledger assertions in actual Linux.",
+        "productionNegative": "Unchanged production preflight0074, then request-capability marker guard before broad grants.",
+        "nativeConcurrencyValidationRequired": true
+      },
+      "concurrencyEvidence": "      let concurrentGrant;\n      await migrator.begin(async tx => {\n        await tx.unsafe(\"SET LOCAL cinatoken.request_capability_login_activation = 'reviewed-v1'\");\n        await tx.unsafe(body).simple();\n        concurrentGrant=grantPostgresRuntime({ DATABASE_URL: migratorUrl }).then(\n          () => ({status:'unexpected-success'}),\n          error => ({status:'rejected',message:String(error)}));\n        let blocked=false;\n        for (let attempt=0;attempt<60;attempt++) {\n          const [activity] = await cluster.admin.unsafe(`SELECT count(*)::int AS blocked\n            FROM pg_catalog.pg_stat_activity\n            WHERE datname=pg_catalog.current_database()\n              AND wait_event_type='Lock'\n              AND query LIKE '%pg_advisory_xact_lock%'`);\n          if (activity.blocked>0) {blocked=true;break;}\n          await delay(25);\n        }\n        assert.equal(blocked,true,'legacy grant rerun must wait for the v356 install lock');\n      });\n      const concurrentResult=await concurrentGrant;\n      assert.equal(concurrentResult.status,'rejected');\n      assert.match(concurrentResult.message,/Request capability v356 is installed/u);\n      stage('default-off-contaminated-role-rejection-and-concurrent-grant-interlock');"
+    },
+    {
+      "file": "scripts/db/cutover/postgres-authenticated-text-route-ceiling-v357.native.test.mjs",
+      "sourceStep": 40,
+      "ciStep": 42,
+      "bytes": 21479,
+      "sha256": "25186e7b24c310b1b45fdf490356539593aeb7ab0bbe89596fd835920cc661bb",
+      "pinnedPg73": false,
+      "historical73Assertions": [
+        {
+          "line": 79,
+          "source": "assert.equal(names.length,73)"
+        }
+      ],
+      "loaders": [
+        {
+          "line": 78,
+          "source": "readdir(migrations)",
+          "callee": "readdir"
+        }
+      ],
+      "grants": [
+        {
+          "line": 95,
+          "source": "grantPostgresRuntime({DATABASE_URL:migratorUrl})",
+          "callee": "grantPostgresRuntime",
+          "assertRejectsEnclosing": null
+        },
+        {
+          "line": 309,
+          "source": "grantPostgresRuntime({DATABASE_URL:migratorUrl})",
+          "callee": "grantPostgresRuntime",
+          "assertRejectsEnclosing": "assert.rejects(grantPostgresRuntime({DATABASE_URL:migratorUrl}),\n        /Request capability v356 is installed/u)"
+        }
+      ],
+      "actualLinuxFailureKnown": false,
+      "sourceExactFixedBase": true,
+      "snapshot": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-budget-admission-repair-pgYfbi\\downstream-postgres-authenticated-text-route-ceiling-v357.native.test.mjs.before",
+        "bytes": 21479,
+        "sha256": "25186e7b24c310b1b45fdf490356539593aeb7ab0bbe89596fd835920cc661bb"
+      },
+      "runtimeRole": {
+        "login": true,
+        "password": "randomBytes(24) hex in owned fixture only",
+        "memberships": "No membership at initial grant; v359 tests runtime membership contamination later and revokes in finally before final negative grant.",
+        "evidence": [
+          {
+            "line": 60,
+            "text": "      await cluster.admin.unsafe(`CREATE ROLE cinatoken_gateway_migrator LOGIN PASSWORD '${passwords.migrator}';"
+          },
+          {
+            "line": 61,
+            "text": "        CREATE ROLE cinatoken_gateway_runtime LOGIN PASSWORD '${passwords.runtime}';"
+          },
+          {
+            "line": 62,
+            "text": "        CREATE ROLE ${capIssuerRole} LOGIN NOINHERIT PASSWORD '${passwords.request_capability_issuer}';"
+          },
+          {
+            "line": 63,
+            "text": "        CREATE ROLE ${capClaimRole} LOGIN NOINHERIT PASSWORD '${passwords.request_capability_claim}';"
+          },
+          {
+            "line": 64,
+            "text": "        CREATE ROLE ${quoteRole} LOGIN NOINHERIT PASSWORD '${passwords.request_route_ceiling_issuer}';"
+          }
+        ]
+      },
+      "grantNegativeCount": 1,
+      "grantSuccessOrConcurrentCount": 1,
+      "plan": {
+        "existingBridge": "Compatible with restricted owned LOGIN and no memberships at the original sequential grant points.",
+        "sharedMigratorBridgeSafe": true,
+        "minimalFixtureOnlyAdaptation": "Pin listPg73Migrations and use fixture-local closure forwarding the original explicit DATABASE_URL to existing bridge, retaining every original grant call and exact assert AST/source.",
+        "productionNegative": "Unchanged production0074 preflight is satisfied only temporarily; original exact Request capability v356 installed guard still must reject before ACL mutation.",
+        "nativeConcurrencyValidationRequired": false
+      },
+      "concurrencyEvidence": null
+    },
+    {
+      "file": "scripts/db/cutover/postgres-authenticated-text-route-source-fence-v359.native.test.mjs",
+      "sourceStep": 41,
+      "ciStep": 43,
+      "bytes": 23398,
+      "sha256": "c735503883dd25e1ab20c2fd43a1f9d60821d385942e473449097f985757dc46",
+      "pinnedPg73": false,
+      "historical73Assertions": [
+        {
+          "line": 87,
+          "source": "assert.equal(names.length,73)"
+        }
+      ],
+      "loaders": [
+        {
+          "line": 86,
+          "source": "readdir(migrations)",
+          "callee": "readdir"
+        }
+      ],
+      "grants": [
+        {
+          "line": 103,
+          "source": "grantPostgresRuntime({DATABASE_URL:migratorUrl})",
+          "callee": "grantPostgresRuntime",
+          "assertRejectsEnclosing": null
+        },
+        {
+          "line": 326,
+          "source": "grantPostgresRuntime({DATABASE_URL:migratorUrl})",
+          "callee": "grantPostgresRuntime",
+          "assertRejectsEnclosing": "assert.rejects(grantPostgresRuntime({DATABASE_URL:migratorUrl}),\n        /Request capability v356 is installed/u)"
+        }
+      ],
+      "actualLinuxFailureKnown": false,
+      "sourceExactFixedBase": true,
+      "snapshot": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-budget-admission-repair-pgYfbi\\downstream-postgres-authenticated-text-route-source-fence-v359.native.test.mjs.before",
+        "bytes": 23398,
+        "sha256": "c735503883dd25e1ab20c2fd43a1f9d60821d385942e473449097f985757dc46"
+      },
+      "runtimeRole": {
+        "login": true,
+        "password": "randomBytes(24) hex in owned fixture only",
+        "memberships": "No membership at initial grant; v359 tests runtime membership contamination later and revokes in finally before final negative grant.",
+        "evidence": [
+          {
+            "line": 67,
+            "text": "      await cluster.admin.unsafe(`CREATE ROLE cinatoken_gateway_migrator LOGIN PASSWORD '${passwords.migrator}';"
+          },
+          {
+            "line": 68,
+            "text": "        CREATE ROLE cinatoken_gateway_runtime LOGIN PASSWORD '${passwords.runtime}';"
+          },
+          {
+            "line": 69,
+            "text": "        CREATE ROLE ${capRole} LOGIN NOINHERIT PASSWORD '${passwords.cap}';"
+          },
+          {
+            "line": 70,
+            "text": "        CREATE ROLE ${claimRole} LOGIN NOINHERIT PASSWORD '${passwords.claim}';"
+          },
+          {
+            "line": 71,
+            "text": "        CREATE ROLE ${quoteRole} LOGIN NOINHERIT PASSWORD '${passwords.quote}';"
+          },
+          {
+            "line": 72,
+            "text": "        CREATE ROLE ${verifierRole} LOGIN NOINHERIT PASSWORD '${passwords.verifier}';"
+          },
+          {
+            "line": 175,
+            "text": "        'GRANT cinatoken_gateway_migrator TO cinatoken_gateway_runtime');"
+          },
+          {
+            "line": 183,
+            "text": "          'REVOKE cinatoken_gateway_migrator FROM cinatoken_gateway_runtime');"
+          }
+        ]
+      },
+      "grantNegativeCount": 1,
+      "grantSuccessOrConcurrentCount": 1,
+      "plan": {
+        "existingBridge": "Compatible with restricted owned LOGIN and no memberships at the original sequential grant points.",
+        "sharedMigratorBridgeSafe": true,
+        "minimalFixtureOnlyAdaptation": "Pin listPg73Migrations and use fixture-local closure forwarding the original explicit DATABASE_URL to existing bridge, retaining every original grant call and exact assert AST/source.",
+        "productionNegative": "Unchanged production0074 preflight is satisfied only temporarily; original exact Request capability v356 installed guard still must reject before ACL mutation.",
+        "nativeConcurrencyValidationRequired": false
+      },
+      "concurrencyEvidence": null
+    },
+    {
+      "file": "scripts/db/cutover/postgres-authenticated-complete-text-quote-v360.native.test.mjs",
+      "sourceStep": 42,
+      "ciStep": 44,
+      "bytes": 20448,
+      "sha256": "bf43350602f779a9f6bd626e136490d7bcbdac36d1bbd75fc0e8a432570a8390",
+      "pinnedPg73": false,
+      "historical73Assertions": [
+        {
+          "line": 78,
+          "source": "assert.equal(names.length,73)"
+        }
+      ],
+      "loaders": [
+        {
+          "line": 77,
+          "source": "readdir(migrations)",
+          "callee": "readdir"
+        }
+      ],
+      "grants": [
+        {
+          "line": 93,
+          "source": "grantPostgresRuntime({DATABASE_URL:migratorUrl})",
+          "callee": "grantPostgresRuntime",
+          "assertRejectsEnclosing": null
+        }
+      ],
+      "actualLinuxFailureKnown": false,
+      "sourceExactFixedBase": true,
+      "snapshot": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-budget-admission-repair-pgYfbi\\downstream-postgres-authenticated-complete-text-quote-v360.native.test.mjs.before",
+        "bytes": 20448,
+        "sha256": "bf43350602f779a9f6bd626e136490d7bcbdac36d1bbd75fc0e8a432570a8390"
+      },
+      "runtimeRole": {
+        "login": true,
+        "password": "randomBytes(24) hex in owned fixture only",
+        "memberships": "No membership at initial grant; v359 tests runtime membership contamination later and revokes in finally before final negative grant.",
+        "evidence": [
+          {
+            "line": 21,
+            "text": "const roles={cap:'cinatoken_gateway_request_capability_issuer',"
+          },
+          {
+            "line": 60,
+            "text": "      await cluster.admin.unsafe(`CREATE ROLE cinatoken_gateway_migrator LOGIN PASSWORD '${passwords.migrator}';"
+          },
+          {
+            "line": 61,
+            "text": "        CREATE ROLE cinatoken_gateway_runtime LOGIN PASSWORD '${passwords.runtime}';"
+          },
+          {
+            "line": 63,
+            "text": "          `CREATE ROLE ${name} LOGIN NOINHERIT PASSWORD '${passwords[label]}';`).join('\\n')}"
+          }
+        ]
+      },
+      "grantNegativeCount": 0,
+      "grantSuccessOrConcurrentCount": 1,
+      "plan": {
+        "existingBridge": "Compatible with restricted owned LOGIN and no memberships at the original sequential grant points.",
+        "sharedMigratorBridgeSafe": true,
+        "minimalFixtureOnlyAdaptation": "Pin listPg73Migrations and adapt the sole original successful grant to existing owned bridge, preserving original73/corpus and role/ACL/rollback assertions.",
+        "productionNegative": "No direct grant-negative case in this fixture; proposal default-off/contamination/42501 cases must remain byte-exact.",
+        "nativeConcurrencyValidationRequired": false
+      },
+      "concurrencyEvidence": null
+    },
+    {
+      "file": "scripts/db/cutover/postgres-complete-text-quote-budget-admission-v361.native.test.mjs",
+      "sourceStep": 43,
+      "ciStep": 45,
+      "bytes": 23357,
+      "sha256": "b48077d2035d04ce981614ecf2eb317496f04f98440c79dadb68047e71e5b92a",
+      "pinnedPg73": false,
+      "historical73Assertions": [
+        {
+          "line": 103,
+          "source": "assert.equal(migrationNames.length,73)"
+        }
+      ],
+      "loaders": [
+        {
+          "line": 102,
+          "source": "readdir(migrationDir)",
+          "callee": "readdir"
+        }
+      ],
+      "grants": [
+        {
+          "line": 116,
+          "source": "grantPostgresRuntime({DATABASE_URL:migratorUrl})",
+          "callee": "grantPostgresRuntime",
+          "assertRejectsEnclosing": null
+        }
+      ],
+      "actualLinuxFailureKnown": false,
+      "sourceExactFixedBase": true,
+      "snapshot": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-budget-admission-repair-pgYfbi\\downstream-postgres-complete-text-quote-budget-admission-v361.native.test.mjs.before",
+        "bytes": 23357,
+        "sha256": "b48077d2035d04ce981614ecf2eb317496f04f98440c79dadb68047e71e5b92a"
+      },
+      "runtimeRole": {
+        "login": true,
+        "password": "randomBytes(24) hex in owned fixture only",
+        "memberships": "No membership at initial grant; v359 tests runtime membership contamination later and revokes in finally before final negative grant.",
+        "evidence": [
+          {
+            "line": 44,
+            "text": "const roles={migrator:'cinatoken_gateway_migrator',runtime:'cinatoken_gateway_runtime',"
+          },
+          {
+            "line": 87,
+            "text": "        `CREATE ROLE ${name} LOGIN ${label==='migrator'||label==='runtime'||"
+          }
+        ]
+      },
+      "grantNegativeCount": 0,
+      "grantSuccessOrConcurrentCount": 1,
+      "plan": {
+        "existingBridge": "Compatible with restricted owned LOGIN and no memberships at the original sequential grant points.",
+        "sharedMigratorBridgeSafe": true,
+        "minimalFixtureOnlyAdaptation": "Pin listPg73Migrations and adapt the sole original successful grant to existing owned bridge, preserving original73/corpus and role/ACL/rollback assertions.",
+        "productionNegative": "No direct grant-negative case in this fixture; proposal default-off/contamination/42501 cases must remain byte-exact.",
+        "nativeConcurrencyValidationRequired": false
+      },
+      "concurrencyEvidence": null
+    },
+    {
+      "file": "scripts/db/cutover/postgres-complete-text-attempt-grant-v362.native.test.mjs",
+      "sourceStep": 44,
+      "ciStep": 46,
+      "bytes": 37867,
+      "sha256": "a57330725f2393d09f145429f280f2cfb7a28b3a72f5146b6205f0e0d40d7784",
+      "pinnedPg73": false,
+      "historical73Assertions": [
+        {
+          "line": 109,
+          "source": "assert.equal(migrationNames.length,73)"
+        }
+      ],
+      "loaders": [
+        {
+          "line": 108,
+          "source": "readdir(migrationDir)",
+          "callee": "readdir"
+        }
+      ],
+      "grants": [
+        {
+          "line": 122,
+          "source": "grantPostgresRuntime({DATABASE_URL:migratorUrl})",
+          "callee": "grantPostgresRuntime",
+          "assertRejectsEnclosing": null
+        }
+      ],
+      "actualLinuxFailureKnown": false,
+      "sourceExactFixedBase": true,
+      "snapshot": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-budget-admission-repair-pgYfbi\\downstream-postgres-complete-text-attempt-grant-v362.native.test.mjs.before",
+        "bytes": 37867,
+        "sha256": "a57330725f2393d09f145429f280f2cfb7a28b3a72f5146b6205f0e0d40d7784"
+      },
+      "runtimeRole": {
+        "login": true,
+        "password": "randomBytes(24) hex in owned fixture only",
+        "memberships": "No membership at initial grant; v359 tests runtime membership contamination later and revokes in finally before final negative grant.",
+        "evidence": [
+          {
+            "line": 44,
+            "text": "const roles={migrator:'cinatoken_gateway_migrator',runtime:'cinatoken_gateway_runtime',"
+          },
+          {
+            "line": 90,
+            "text": "        `CREATE ROLE ${name} LOGIN ${label==='migrator'||label==='runtime'||"
+          }
+        ]
+      },
+      "grantNegativeCount": 0,
+      "grantSuccessOrConcurrentCount": 1,
+      "plan": {
+        "existingBridge": "Compatible with restricted owned LOGIN and no memberships at the original sequential grant points.",
+        "sharedMigratorBridgeSafe": true,
+        "minimalFixtureOnlyAdaptation": "Pin listPg73Migrations and adapt the sole original successful grant to existing owned bridge, preserving original73/corpus and role/ACL/rollback assertions.",
+        "productionNegative": "No direct grant-negative case in this fixture; proposal default-off/contamination/42501 cases must remain byte-exact.",
+        "nativeConcurrencyValidationRequired": false
+      },
+      "concurrencyEvidence": null
+    }
+  ],
+  "interveningPinnedFixtures": [
+    {
+      "file": "scripts/db/cutover/postgres-guardrail-budget-lifecycle-v353.native.test.mjs",
+      "sourceStep": 37,
+      "ciStep": 39,
+      "bytes": 27894,
+      "sha256": "477dbeeeb07f3a4ff1eabb63503fe8c4064df51ff6d6ccab860f151e95ad75bf",
+      "pinnedPg73": true,
+      "historical73Assertions": [
+        {
+          "line": 94,
+          "source": "assert.equal(migrationNames.length, 73)"
+        }
+      ],
+      "loaders": [
+        {
+          "line": 93,
+          "source": "listPg73Migrations()",
+          "callee": "listPg73Migrations"
+        }
+      ],
+      "grants": [
+        {
+          "line": 111,
+          "source": "grantPg73RuntimeFixture({ cluster, migrator, migratorUrl })",
+          "callee": "grantPg73RuntimeFixture",
+          "assertRejectsEnclosing": null
+        }
+      ],
+      "actualLinuxFailureKnown": false
+    },
+    {
+      "file": "scripts/db/cutover/postgres-guardrail-budget-dispatched-extension-v355.native.test.mjs",
+      "sourceStep": 38,
+      "ciStep": 40,
+      "bytes": 32862,
+      "sha256": "a2a4bccb9546b0ee5bb5d0e514f9ad4940396e78d1e7d43aafb5fbfba9e0dfa5",
+      "pinnedPg73": true,
+      "historical73Assertions": [
+        {
+          "line": 92,
+          "source": "assert.equal(migrationNames.length, 73)"
+        }
+      ],
+      "loaders": [
+        {
+          "line": 91,
+          "source": "listPg73Migrations()",
+          "callee": "listPg73Migrations"
+        }
+      ],
+      "grants": [
+        {
+          "line": 109,
+          "source": "grantPg73RuntimeFixture({ cluster, migrator, migratorUrl })",
+          "callee": "grantPg73RuntimeFixture",
+          "assertRejectsEnclosing": null
+        }
+      ],
+      "actualLinuxFailureKnown": false
+    }
+  ],
+  "scope": {
+    "sourceWrites": 0,
+    "databaseConnections": 0,
+    "productionRequests": 0,
+    "ciPolling": false,
+    "onlyTempEvidenceWrites": true
+  },
+  "recommendation": "Batch only the seven simple sequential fixtures after exact source/role/negative review; isolate v356 concurrency adaptation for real lock validation rather than blindly wrapping the active migrator transaction."
+}

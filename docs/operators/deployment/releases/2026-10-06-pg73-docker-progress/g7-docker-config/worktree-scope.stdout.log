@@ -1,0 +1,4 @@
+ M docker/examples/env.compose.external.example
+ M docker/examples/gateway.compose.yml
+ M docker/examples/web-frontend.compose.yml
+ M docs/operators/deployment/docker.md

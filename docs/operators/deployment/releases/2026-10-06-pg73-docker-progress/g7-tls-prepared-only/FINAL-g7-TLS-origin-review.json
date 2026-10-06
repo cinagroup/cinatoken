@@ -1,0 +1,334 @@
+{
+  "schema": "g7-TLS-origin-trust-readonly-review-closed-v1",
+  "endedAt": "2026-10-06T01:03:21.530Z",
+  "actualExit": 0,
+  "repositoryHead": "fc17551b3016d3533c17cc4ec9b0151a4eedae44",
+  "conclusion": "Feasible with controlled ingress normalization and raw-port isolation. Current four-file configuration is not URL trust proof; no full topology or real identity verified.",
+  "principalRisk": "A helper ignoring forwarding headers can still inherit an already-tainted HTTPS scheme from the Node adapter. Public raw HTTP exposure permits forged scheme metadata. Conversely missing trusted HTTPS metadata rejects legitimate HTTPS mutations and mislabels conditional cookie/redirect paths.",
+  "causeProven": {
+    "staticPipelineContract": true,
+    "realTLSWire": false,
+    "productionExploit": false,
+    "allOIDCBlocked": false
+  },
+  "conditionalBehavior": "A properly trusted ingress overwrites canonical Host and literal HTTPS; Next synthesizes HTTPS and helper restores app host, so exact Origin and Secure cookie conditions can work. OIDC transaction/session cookies are already Secure=true and fixed appOrigin redirects may work even if adapter scheme is wrong; do not assert every OIDC path fails.",
+  "recommendedMinimalPath": "Test-only static app.test TLS443 ingress and private internal HTTP chain; no helper relaxation, no public forwarding trust, preserve Origin. Require real9case wire evidence before claiming URL trust solved.",
+  "alternateOwnedImplementation": [
+    "If raw adapter exposure cannot be eliminated, a new Node adapter/bootstrap must default to socket.encrypted and strip incoming Forwarded/XFP/XFH; only explicit trusted peer remoteAddress plus validated canonical Host and controlled public-origin config may override. A Fetch Request helper alone cannot recover trustworthy Node peer metadata.",
+    "A new end-to-end HTTPS Next bootstrap is an alternative, with certificate verification on upstream hops and untrusted forwarding stripped before Next. Existing standalone image is HTTP; merely selecting HTTPS upstream or setting XFP is not this implementation. TLS alone does not neutralize already supplied XFP in the current Next branch."
+  ],
+  "exactSourceRefs": [
+    {
+      "path": "node_modules/next/dist/server/base-server.js",
+      "line": 571,
+      "claim": "Existing XFP is preserved with ??=; socket.encrypted used only when forwarded value is absent. No peer allowlist here."
+    },
+    {
+      "path": "node_modules/next/dist/server/next-server.js",
+      "line": 1264,
+      "claim": "includes(https) chooses scheme for initURL/initProtocol; incoming Host is not the synthetic listen authority."
+    },
+    {
+      "path": "node_modules/next/dist/server/web/spec-extension/adapters/next-request.js",
+      "line": 89,
+      "claim": "Node adapter creates NextRequest from initURL metadata and incoming headers."
+    },
+    {
+      "path": "packages/admin/lib/public-request-url.ts",
+      "line": 6,
+      "claim": "Retains already-generated URL protocol and restores validated Host; does not add peer/proxy trust."
+    },
+    {
+      "path": "packages/admin/lib/browser-mutation.ts",
+      "line": 29,
+      "claim": "Default mutation origin compares exact Origin against restored public URL origin; wrong scheme rejects."
+    },
+    {
+      "path": "packages/admin/lib/workspace-cookie.ts",
+      "line": 33,
+      "claim": "Workspace Secure flag depends on request.url scheme; wrong scheme can omit Secure."
+    },
+    {
+      "path": "packages/admin/lib/cinaauth/config.ts",
+      "line": 37,
+      "claim": "Canonical HTTPS origin required, with no nondefault port and exact normalized origin string. Defaults are real external issuer/account/app origins."
+    },
+    {
+      "path": "packages/admin/app/api/auth/cinaauth/login/route.ts",
+      "line": 122,
+      "claim": "OIDC transaction cookie is always Secure; configured app origin controls redirect/resource, not incoming scheme repair."
+    },
+    {
+      "path": "packages/admin/app/api/auth/cinaauth/callback/route.ts",
+      "line": 189,
+      "claim": "Restored callback URL is passed to oauth processing; fixed secure session cookie at156/278 and configured completion origin are distinct."
+    },
+    {
+      "path": "docker/web/nginx.conf.template",
+      "line": 169,
+      "claim": "Web accepts exact inbound XFP=http/https into outbound scheme; server8080 defaultHost_ does not establish trusted peer."
+    },
+    {
+      "path": "docker/web/admin-proxy.conf",
+      "line": 4,
+      "claim": "Web forwards raw Host and mapped XFP to HTTP Admin; preserves Origin/cookie and no buffering."
+    },
+    {
+      "path": "Dockerfile.admin",
+      "line": 105,
+      "claim": "Runs generated Next standalone node server.js; existing image is HTTP and has no reviewed end-to-end TLS bootstrap."
+    },
+    {
+      "path": "docker/examples/web-frontend.compose.yml",
+      "line": 6,
+      "claim": "Example publishes raw Web8080. Gateway example also publishes Admin/Proxy. Four-file config batch did not isolate protocol trust."
+    },
+    {
+      "path": "docs/operators/deployment/docker.md",
+      "line": 320,
+      "claim": "7.3 TLS reverse-proxy example is illustrative and does not prove complete Host/SNI/peer/header normalization or raw-port isolation."
+    }
+  ],
+  "checkedSources": [
+    {
+      "path": "C:\\cinagroup\\cinatoken\\Dockerfile.admin",
+      "bytes": 4654,
+      "sha256": "8410d3d3f22c23d57f32b1a0a87c571fe824edfa92f99c827111625d39834fd1",
+      "repositoryPath": "Dockerfile.admin"
+    },
+    {
+      "path": "C:\\cinagroup\\cinatoken\\packages\\admin\\package.json",
+      "bytes": 4163,
+      "sha256": "fef666db8d2ed6876f90b48a51b6a636d7b342dab1cae1e0dc82e72657df8188",
+      "repositoryPath": "packages/admin/package.json"
+    },
+    {
+      "path": "C:\\cinagroup\\cinatoken\\package-lock.json",
+      "bytes": 830546,
+      "sha256": "f9c65b6e373a231d52d6eda634bb5f947dda3174734cd70e2b811e09fff0b6f0",
+      "repositoryPath": "package-lock.json"
+    },
+    {
+      "path": "C:\\cinagroup\\cinatoken\\node_modules\\next\\dist\\server\\base-server.js",
+      "bytes": 105917,
+      "sha256": "4882aae1580a2b7876ccd0d107b11b8b46e3c980d956c37e9bfc6fdf4e6c8d8f",
+      "repositoryPath": "node_modules/next/dist/server/base-server.js"
+    },
+    {
+      "path": "C:\\cinagroup\\cinatoken\\node_modules\\next\\dist\\server\\next-server.js",
+      "bytes": 69322,
+      "sha256": "8939e4e709ea46afc9bd96293d327e3ea85fcc7a652ca65fbca53327e8f4abe7",
+      "repositoryPath": "node_modules/next/dist/server/next-server.js"
+    },
+    {
+      "path": "C:\\cinagroup\\cinatoken\\node_modules\\next\\dist\\server\\web\\spec-extension\\adapters\\next-request.js",
+      "bytes": 5298,
+      "sha256": "006db434d9d859733b55761d53e2c47e7f1983cea9709bfbdee97c711d3ac3bd",
+      "repositoryPath": "node_modules/next/dist/server/web/spec-extension/adapters/next-request.js"
+    },
+    {
+      "path": "C:\\cinagroup\\cinatoken\\packages\\admin\\lib\\public-request-url.ts",
+      "bytes": 1295,
+      "sha256": "2580b983fa49bd366e06300b583eed2842d17484f36f29ab3660756344be2047",
+      "repositoryPath": "packages/admin/lib/public-request-url.ts"
+    },
+    {
+      "path": "C:\\cinagroup\\cinatoken\\packages\\admin\\lib\\public-request-url.test.ts",
+      "bytes": 2302,
+      "sha256": "1f485b11143670c9e1b84cb231f57dc2b2438f0cb35503b8766ffa5923ece2a9",
+      "repositoryPath": "packages/admin/lib/public-request-url.test.ts"
+    },
+    {
+      "path": "C:\\cinagroup\\cinatoken\\packages\\admin\\lib\\browser-mutation.ts",
+      "bytes": 1702,
+      "sha256": "61e0b0368daee56099299655044538904e25bba6168208872945d43288cf938b",
+      "repositoryPath": "packages/admin/lib/browser-mutation.ts"
+    },
+    {
+      "path": "C:\\cinagroup\\cinatoken\\packages\\admin\\lib\\browser-mutation.test.ts",
+      "bytes": 4325,
+      "sha256": "648f9903cd89f7f6fd07696915b4c899fc546f333047a8e2b7d5091ae331d405",
+      "repositoryPath": "packages/admin/lib/browser-mutation.test.ts"
+    },
+    {
+      "path": "C:\\cinagroup\\cinatoken\\packages\\admin\\lib\\workspace-cookie.ts",
+      "bytes": 1546,
+      "sha256": "9783f99f3bf786dc6b3d997606d41405fe7c2c48456871e4712abc498f14302e",
+      "repositoryPath": "packages/admin/lib/workspace-cookie.ts"
+    },
+    {
+      "path": "C:\\cinagroup\\cinatoken\\packages\\admin\\lib\\workspace-cookie.test.ts",
+      "bytes": 1376,
+      "sha256": "36801f8cf3f80f756c47fe245e4cdee39e98efb463df8f6463f2c9e44df0ecd8",
+      "repositoryPath": "packages/admin/lib/workspace-cookie.test.ts"
+    },
+    {
+      "path": "C:\\cinagroup\\cinatoken\\packages\\admin\\lib\\cinaauth\\config.ts",
+      "bytes": 4225,
+      "sha256": "20c2791fe164af4eddf019a79384fd780e32edc2954ba31953c9330b52670bd9",
+      "repositoryPath": "packages/admin/lib/cinaauth/config.ts"
+    },
+    {
+      "path": "C:\\cinagroup\\cinatoken\\packages\\admin\\lib\\cinaauth\\oidc-client.ts",
+      "bytes": 3916,
+      "sha256": "95af3f4e15d230249348e87a9d489b2063f620a528c3ffb1b0eb60ab255de2a9",
+      "repositoryPath": "packages/admin/lib/cinaauth/oidc-client.ts"
+    },
+    {
+      "path": "C:\\cinagroup\\cinatoken\\packages\\admin\\lib\\cinaauth\\public-url.test.ts",
+      "bytes": 2493,
+      "sha256": "5dab6cbdd257c4f6e4c474b0b9d35f19bb6963293476d9cdd00594cac997617d",
+      "repositoryPath": "packages/admin/lib/cinaauth/public-url.test.ts"
+    },
+    {
+      "path": "C:\\cinagroup\\cinatoken\\packages\\admin\\lib\\cinaauth\\session-subject-boundary.test.ts",
+      "bytes": 23921,
+      "sha256": "a253ab01103750e919b9b7c45b2efc1f11b0f401c0cd5a4f7dab65b6cfbae9cd",
+      "repositoryPath": "packages/admin/lib/cinaauth/session-subject-boundary.test.ts"
+    },
+    {
+      "path": "C:\\cinagroup\\cinatoken\\packages\\admin\\app\\api\\auth\\cinaauth\\login\\route.ts",
+      "bytes": 4811,
+      "sha256": "accd72fec2cdbdc4ab670cae3b28ffe67c79d667a49230ae70be0ab290ac2095",
+      "repositoryPath": "packages/admin/app/api/auth/cinaauth/login/route.ts"
+    },
+    {
+      "path": "C:\\cinagroup\\cinatoken\\packages\\admin\\app\\api\\auth\\cinaauth\\callback\\route.ts",
+      "bytes": 9198,
+      "sha256": "cc6ed92c6a519a31742ed6e7de591791dec2745d8b8ac4f751caf7fff9b49e43",
+      "repositoryPath": "packages/admin/app/api/auth/cinaauth/callback/route.ts"
+    },
+    {
+      "path": "C:\\cinagroup\\cinatoken\\packages\\admin\\app\\api\\auth\\login\\route.ts",
+      "bytes": 1992,
+      "sha256": "6feba7831507c817bc1d257a7ece9c2a9ca1a35f60cf6686fe5836fb87b5d82c",
+      "repositoryPath": "packages/admin/app/api/auth/login/route.ts"
+    },
+    {
+      "path": "C:\\cinagroup\\cinatoken\\packages\\admin\\app\\api\\auth\\logout\\route.ts",
+      "bytes": 1789,
+      "sha256": "3fa3400aca3d377be747f35efa5c3118d8520df16113f5d64d8b3bee5f6ae5d5",
+      "repositoryPath": "packages/admin/app/api/auth/logout/route.ts"
+    },
+    {
+      "path": "C:\\cinagroup\\cinatoken\\docker\\web\\nginx.conf.template",
+      "bytes": 12095,
+      "sha256": "f1fbc0934b340cc8cdabe4f9cd2a3e36539bea2a55b201935b7b2dcbec310c18",
+      "repositoryPath": "docker/web/nginx.conf.template"
+    },
+    {
+      "path": "C:\\cinagroup\\cinatoken\\docker\\web\\admin-proxy.conf",
+      "bytes": 695,
+      "sha256": "e1a638ba929379fafa099811984f434ac8defddb1ae95e2513a51b6e165b875e",
+      "repositoryPath": "docker/web/admin-proxy.conf"
+    },
+    {
+      "path": "C:\\cinagroup\\cinatoken\\docker\\examples\\gateway.compose.yml",
+      "bytes": 3258,
+      "sha256": "a62b61f0c80f51a1d8d24e579dd2909b0df5cdcc0f3d51aad0e5cf6b21dd0a3a",
+      "repositoryPath": "docker/examples/gateway.compose.yml"
+    },
+    {
+      "path": "C:\\cinagroup\\cinatoken\\docker\\examples\\web-frontend.compose.yml",
+      "bytes": 3808,
+      "sha256": "35bf7722b2d6b472b01c31c689b6a0ea1e4b1f9cd4ea9c45a1464f71b4bfde54",
+      "repositoryPath": "docker/examples/web-frontend.compose.yml"
+    },
+    {
+      "path": "C:\\cinagroup\\cinatoken\\docs\\operators\\deployment\\docker.md",
+      "bytes": 25944,
+      "sha256": "69d94275c20277c6993dd5a70e4f00bf4744f8ea2f4da1915a5e7fe86d5871b3",
+      "repositoryPath": "docs/operators/deployment/docker.md"
+    }
+  ],
+  "oldTopologyReview": {
+    "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-g7-docker-topology-v77GHM/topology-review.json",
+    "bytes": 18268,
+    "sha256": "8f2729418ad778eba6a367f2d28fa9d2f66ce2ca2d3d7745a02bbeda2aa4b4c2"
+  },
+  "localAdapterEvidence": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-tls-origin-review-05f0d38f8b16432581a7cbb91ff3007d\\local-adapter-result.json",
+    "bytes": 2392,
+    "sha256": "056632801cd9455f560b9a3556f0e025e3a2550c7a59a580e406def5575ad36c",
+    "actualExit": 0,
+    "cases": 7,
+    "realSocketOrTLS": false,
+    "versions": {
+      "next": "16.2.3",
+      "oauth4webapi": "3.8.5",
+      "jose": "6.2.12"
+    }
+  },
+  "existingContracts": {
+    "publicRequestURL": "6 direct-Fetch cases, includes forged forwarding ignored locally and malformed Host rejection",
+    "browserMutation": "12 cases cover exact Host/scheme/port Origin, cross-site/no-Origin and bearer/console distinction",
+    "workspaceCookie": "2 cases preserve HTTPS Secure versus HTTP development behavior",
+    "cinaAuthPublicURL": "2 request-level redirect/error cases; does not invoke native socket adapter or TLS ingress",
+    "existing22NotRerunHere": true,
+    "signedOIDC": "session-subject-boundary fixture uses RSA signed ID token/JWKS, S256 verifier/resource/redirect/Basic auth and negative state/PKCE/nonce/signature/bridge/issuer/code/role. DB/session repositories are fakes; it is not native PG or real issuer login."
+  },
+  "futurePlan": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-tls-origin-review-05f0d38f8b16432581a7cbb91ff3007d\\future-linux-plan.json",
+    "bytes": 4708,
+    "sha256": "272b2c57066b3e24a71e1eb5e0ef51be8db1e56a0bf3fb57511f8cc913c6c2ee"
+  },
+  "sealedTempFiles": [
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-tls-origin-review-05f0d38f8b16432581a7cbb91ff3007d\\local-adapter-contract.mjs",
+      "bytes": 4031,
+      "sha256": "b3a2ff676bb9c19d686844ace0e7a1d3193ab021c0b7a0193a0940b84f437ac2"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-tls-origin-review-05f0d38f8b16432581a7cbb91ff3007d\\local-adapter-result.json",
+      "bytes": 2392,
+      "sha256": "056632801cd9455f560b9a3556f0e025e3a2550c7a59a580e406def5575ad36c"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-tls-origin-review-05f0d38f8b16432581a7cbb91ff3007d\\trusted-ingress.example.conf",
+      "bytes": 1337,
+      "sha256": "eb105cc5da1d55d284b28e251fdcdf2ced1e6495df4893087041f8d088259e0b"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-tls-origin-review-05f0d38f8b16432581a7cbb91ff3007d\\future-tls-smoke.mjs",
+      "bytes": 4363,
+      "sha256": "05c4f5ae5bb0dccdaa75ccf94bffb27a6a37d618266d14476285b51d74259388"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-tls-origin-review-05f0d38f8b16432581a7cbb91ff3007d\\future-linux-plan.json",
+      "bytes": 4708,
+      "sha256": "272b2c57066b3e24a71e1eb5e0ef51be8db1e56a0bf3fb57511f8cc913c6c2ee"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-tls-origin-review-05f0d38f8b16432581a7cbb91ff3007d\\seal-review.mjs",
+      "bytes": 14592,
+      "sha256": "9f30414ff46f00592331a7bd932bd3a39c85d1aceb5c8d1b8c235cf7da9bffe8"
+    }
+  ],
+  "meaningfulChecks": {
+    "localAdapterActualExit": 0,
+    "localAdapterCases": 7,
+    "futureWireScriptSyntaxActualExit": 0,
+    "nginxRuntimeValidation": "pending owned Linux nginx -t",
+    "runtimeTopology": "not executed"
+  },
+  "boundaries": {
+    "syntheticOIDCIdentity": "Controlled signed fixture would prove configured integration and real disposable PG business session only after completed actual callback; never real authorized CinaAuth identity",
+    "realIdentity": "Actual client registration, allowed URLs, real issuer role/subject/workspace, MFA/human authorization and outages remain pending",
+    "fullG7": false,
+    "fullG8": false
+  },
+  "primarySources": [
+    "https://nginx.org/en/docs/http/ngx_http_proxy_module.html#proxy_set_header",
+    "https://nginx.org/en/docs/http/ngx_http_ssl_module.html#ssl_server_name",
+    "https://docs.docker.com/reference/compose-file/networks/#internal"
+  ],
+  "repositoryWrites": 0,
+  "checklistMDCreated": false,
+  "CIReads": 0,
+  "CIInvocations": 0,
+  "productionRequests": 0,
+  "DBRequests": 0,
+  "actualTLSRequests": 0,
+  "realIdentityActions": 0,
+  "deployments": 0
+}

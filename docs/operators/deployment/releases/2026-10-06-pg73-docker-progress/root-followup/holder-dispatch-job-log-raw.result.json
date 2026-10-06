@@ -1,0 +1,15 @@
+{
+  "at": "2026-10-06T00:37:30.482Z",
+  "finishedAt": "2026-10-06T00:37:37.015Z",
+  "executable": "C:/Program Files/GitHub CLI/gh.exe",
+  "args": [
+    "api",
+    "--allow-escape-sequences",
+    "repos/cinagroup/cinatoken/actions/jobs/112046320270/logs"
+  ],
+  "cwd": "C:/cinagroup/cinatoken",
+  "actualExit": 0,
+  "signal": null,
+  "stdout": "C:/Users/cina/AppData/Local/Temp/cinatoken-pg73-platform-followup-20261006-lAiHQC/holder-dispatch-job-log-raw.stdout.log",
+  "stderr": "C:/Users/cina/AppData/Local/Temp/cinatoken-pg73-platform-followup-20261006-lAiHQC/holder-dispatch-job-log-raw.stderr.log"
+}

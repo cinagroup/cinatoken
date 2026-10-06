@@ -1,0 +1,8 @@
+{
+  "closed": true,
+  "actualExitCode": 0,
+  "label": "compose-format",
+  "stdout": "compose-format.stdout.log",
+  "stderr": "compose-format.stderr.log",
+  "completedAt": "2026-10-06T00:25:54.1485512Z"
+}

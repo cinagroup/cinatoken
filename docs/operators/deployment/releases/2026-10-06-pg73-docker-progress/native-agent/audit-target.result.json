@@ -1,0 +1,17 @@
+{
+  "startedAt": "2026-10-06T00:42:10.942Z",
+  "completedAt": "2026-10-06T00:42:11.734Z",
+  "program": "node",
+  "arguments": [
+    "--import",
+    "tsx",
+    "C:/Users/cina/AppData/Local/Temp/cinatoken-pg73-budget-admission-repair-pgYfbi/audit-budget-repair.mjs"
+  ],
+  "actualExitCode": 0,
+  "signal": null,
+  "spawnError": null,
+  "stdoutPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-budget-admission-repair-pgYfbi\\audit-target.stdout.txt",
+  "stderrPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-budget-admission-repair-pgYfbi\\audit-target.stderr.txt",
+  "stdoutBytes": 199,
+  "stderrBytes": 0
+}

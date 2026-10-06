@@ -1,0 +1,8 @@
+{
+  "closed": true,
+  "actualExitCode": 0,
+  "command": "node seal-final-configuration.cjs",
+  "stdout": "final-config-seal.stdout.log",
+  "stderr": "final-config-seal.stderr.log",
+  "completedAt": "2026-10-06T00:33:16.9458763Z"
+}

@@ -1,0 +1,1069 @@
+{
+  "rawSource": {
+    "file": "web-job-112051770302.stdout.log",
+    "bytes": 732616,
+    "sha256": "a52568219d6175e308c48c3785fa921c3b9ce5e2242bdb7b332c49fb8d1c2440"
+  },
+  "rawLineTimestamp": "2026-10-06T00:52:05.2825425Z",
+  "releaseId": "4d645f954ea76d8546409aaa6b684a8279c0deb9",
+  "manifestSha256": "baa690e76bb602e22b4697ff1f57e351d68a23b26dca67febb394706474fea3c",
+  "cases": [
+    {
+      "method": "GET",
+      "path": "/en",
+      "status": 200
+    },
+    {
+      "method": "HEAD",
+      "path": "/en",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/en/models?q=HTTP",
+      "status": 200
+    },
+    {
+      "method": "HEAD",
+      "path": "/en/models?q=HTTP",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/en/models/Vendor/http-fixture",
+      "status": 200
+    },
+    {
+      "method": "HEAD",
+      "path": "/en/models/Vendor/http-fixture",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/en/providers",
+      "status": 200
+    },
+    {
+      "method": "HEAD",
+      "path": "/en/providers",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/en/compare?models=vendor%2Fhttp-fixture",
+      "status": 200
+    },
+    {
+      "method": "HEAD",
+      "path": "/en/compare?models=vendor%2Fhttp-fixture",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/en/chat?model=vendor%2Fhttp-fixture",
+      "status": 200
+    },
+    {
+      "method": "HEAD",
+      "path": "/en/chat?model=vendor%2Fhttp-fixture",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/en/rankings?range=30d",
+      "status": 200
+    },
+    {
+      "method": "HEAD",
+      "path": "/en/rankings?range=30d",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/en/benchmarks?range=90d",
+      "status": 200
+    },
+    {
+      "method": "HEAD",
+      "path": "/en/benchmarks?range=90d",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/zh",
+      "status": 200
+    },
+    {
+      "method": "HEAD",
+      "path": "/zh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/zh/models?q=HTTP",
+      "status": 200
+    },
+    {
+      "method": "HEAD",
+      "path": "/zh/models?q=HTTP",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/zh/models/Vendor/http-fixture",
+      "status": 200
+    },
+    {
+      "method": "HEAD",
+      "path": "/zh/models/Vendor/http-fixture",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/zh/providers",
+      "status": 200
+    },
+    {
+      "method": "HEAD",
+      "path": "/zh/providers",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/zh/compare?models=vendor%2Fhttp-fixture",
+      "status": 200
+    },
+    {
+      "method": "HEAD",
+      "path": "/zh/compare?models=vendor%2Fhttp-fixture",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/zh/chat?model=vendor%2Fhttp-fixture",
+      "status": 200
+    },
+    {
+      "method": "HEAD",
+      "path": "/zh/chat?model=vendor%2Fhttp-fixture",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/zh/rankings?range=30d",
+      "status": 200
+    },
+    {
+      "method": "HEAD",
+      "path": "/zh/rankings?range=30d",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/zh/benchmarks?range=90d",
+      "status": 200
+    },
+    {
+      "method": "HEAD",
+      "path": "/zh/benchmarks?range=90d",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/ja",
+      "status": 200
+    },
+    {
+      "method": "HEAD",
+      "path": "/ja",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/ja/models?q=HTTP",
+      "status": 200
+    },
+    {
+      "method": "HEAD",
+      "path": "/ja/models?q=HTTP",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/ja/models/Vendor/http-fixture",
+      "status": 200
+    },
+    {
+      "method": "HEAD",
+      "path": "/ja/models/Vendor/http-fixture",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/ja/providers",
+      "status": 200
+    },
+    {
+      "method": "HEAD",
+      "path": "/ja/providers",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/ja/compare?models=vendor%2Fhttp-fixture",
+      "status": 200
+    },
+    {
+      "method": "HEAD",
+      "path": "/ja/compare?models=vendor%2Fhttp-fixture",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/ja/chat?model=vendor%2Fhttp-fixture",
+      "status": 200
+    },
+    {
+      "method": "HEAD",
+      "path": "/ja/chat?model=vendor%2Fhttp-fixture",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/ja/rankings?range=30d",
+      "status": 200
+    },
+    {
+      "method": "HEAD",
+      "path": "/ja/rankings?range=30d",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/ja/benchmarks?range=90d",
+      "status": 200
+    },
+    {
+      "method": "HEAD",
+      "path": "/ja/benchmarks?range=90d",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/ko",
+      "status": 200
+    },
+    {
+      "method": "HEAD",
+      "path": "/ko",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/ko/models?q=HTTP",
+      "status": 200
+    },
+    {
+      "method": "HEAD",
+      "path": "/ko/models?q=HTTP",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/ko/models/Vendor/http-fixture",
+      "status": 200
+    },
+    {
+      "method": "HEAD",
+      "path": "/ko/models/Vendor/http-fixture",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/ko/providers",
+      "status": 200
+    },
+    {
+      "method": "HEAD",
+      "path": "/ko/providers",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/ko/compare?models=vendor%2Fhttp-fixture",
+      "status": 200
+    },
+    {
+      "method": "HEAD",
+      "path": "/ko/compare?models=vendor%2Fhttp-fixture",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/ko/chat?model=vendor%2Fhttp-fixture",
+      "status": 200
+    },
+    {
+      "method": "HEAD",
+      "path": "/ko/chat?model=vendor%2Fhttp-fixture",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/ko/rankings?range=30d",
+      "status": 200
+    },
+    {
+      "method": "HEAD",
+      "path": "/ko/rankings?range=30d",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/ko/benchmarks?range=90d",
+      "status": 200
+    },
+    {
+      "method": "HEAD",
+      "path": "/ko/benchmarks?range=90d",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/robots.txt",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/sitemap.xml",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/en/not-a-page",
+      "status": 404
+    },
+    {
+      "method": "GET",
+      "path": "/fr/models",
+      "status": 404
+    },
+    {
+      "method": "GET",
+      "path": "/en/models/Vendor/missing",
+      "status": 404
+    },
+    {
+      "method": "GET",
+      "path": "/en/models/Vendor/unavailable",
+      "status": 503
+    },
+    {
+      "method": "GET",
+      "path": "/en/models",
+      "contract": "missing-manifest",
+      "status": 503
+    },
+    {
+      "method": "GET",
+      "path": "/en/models",
+      "contract": "wrong-manifest",
+      "status": 503
+    },
+    {
+      "method": "GET",
+      "path": "/en/models",
+      "contract": "disabled",
+      "status": 503
+    },
+    {
+      "method": "GET",
+      "path": "/en/models",
+      "contract": "direct-anonymous",
+      "status": 200
+    },
+    {
+      "method": "HEAD",
+      "path": "/robots.txt",
+      "status": 200
+    },
+    {
+      "method": "HEAD",
+      "path": "/sitemap.xml",
+      "status": 200
+    },
+    {
+      "method": "HEAD",
+      "path": "/en/not-a-page",
+      "status": 404
+    },
+    {
+      "method": "HEAD",
+      "path": "/fr/models",
+      "status": 404
+    },
+    {
+      "method": "HEAD",
+      "path": "/en/models/Vendor/missing",
+      "status": 404
+    },
+    {
+      "method": "HEAD",
+      "path": "/en/models/Vendor/unavailable",
+      "status": 503
+    },
+    {
+      "method": "HEAD",
+      "path": "/en/models",
+      "contract": "missing-manifest",
+      "status": 503
+    },
+    {
+      "method": "HEAD",
+      "path": "/en/models",
+      "contract": "wrong-manifest",
+      "status": 503
+    },
+    {
+      "method": "HEAD",
+      "path": "/en/models",
+      "contract": "disabled",
+      "status": 503
+    },
+    {
+      "method": "HEAD",
+      "path": "/en/models",
+      "contract": "direct-anonymous",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/",
+      "status": 308
+    },
+    {
+      "method": "GET",
+      "path": "/models?q=HTTP",
+      "status": 308
+    },
+    {
+      "method": "GET",
+      "path": "/en/models/",
+      "status": 308
+    }
+  ],
+  "catalogReads": 64,
+  "observations": {
+    "requests": [
+      {
+        "method": "GET",
+        "path": "/api/public/catalog/models",
+        "acceptIsJson": true,
+        "hadCookie": false,
+        "hadAuthorization": false,
+        "hadWorkspace": false,
+        "hadBody": false
+      },
+      {
+        "method": "GET",
+        "path": "/api/public/catalog/models",
+        "acceptIsJson": true,
+        "hadCookie": false,
+        "hadAuthorization": false,
+        "hadWorkspace": false,
+        "hadBody": false
+      },
+      {
+        "method": "GET",
+        "path": "/api/public/catalog/model/Vendor/http-fixture",
+        "acceptIsJson": true,
+        "hadCookie": false,
+        "hadAuthorization": false,
+        "hadWorkspace": false,
+        "hadBody": false
+      },
+      {
+        "method": "GET",
+        "path": "/api/public/catalog/model/Vendor/http-fixture",
+        "acceptIsJson": true,
+        "hadCookie": false,
+        "hadAuthorization": false,
+        "hadWorkspace": false,
+        "hadBody": false
+      },
+      {
+        "method": "GET",
+        "path": "/api/public/catalog/providers",
+        "acceptIsJson": true,
+        "hadCookie": false,
+        "hadAuthorization": false,
+        "hadWorkspace": false,
+        "hadBody": false
+      },
+      {
+        "method": "GET",
+        "path": "/api/public/catalog/providers",
+        "acceptIsJson": true,
+        "hadCookie": false,
+        "hadAuthorization": false,
+        "hadWorkspace": false,
+        "hadBody": false
+      },
+      {
+        "method": "GET",
+        "path": "/api/public/catalog/models",
+        "acceptIsJson": true,
+        "hadCookie": false,
+        "hadAuthorization": false,
+        "hadWorkspace": false,
+        "hadBody": false
+      },
+      {
+        "method": "GET",
+        "path": "/api/public/catalog/models",
+        "acceptIsJson": true,
+        "hadCookie": false,
+        "hadAuthorization": false,
+        "hadWorkspace": false,
+        "hadBody": false
+      },
+      {
+        "method": "GET",
+        "path": "/api/public/catalog/models",
+        "acceptIsJson": true,
+        "hadCookie": false,
+        "hadAuthorization": false,
+        "hadWorkspace": false,
+        "hadBody": false
+      },
+      {
+        "method": "GET",
+        "path": "/api/public/catalog/models",
+        "acceptIsJson": true,
+        "hadCookie": false,
+        "hadAuthorization": false,
+        "hadWorkspace": false,
+        "hadBody": false
+      },
+      {
+        "method": "GET",
+        "path": "/api/public/catalog/stats/models",
+        "acceptIsJson": true,
+        "hadCookie": false,
+        "hadAuthorization": false,
+        "hadWorkspace": false,
+        "hadBody": false
+      },
+      {
+        "method": "GET",
+        "path": "/api/public/catalog/stats/models",
+        "acceptIsJson": true,
+        "hadCookie": false,
+        "hadAuthorization": false,
+        "hadWorkspace": false,
+        "hadBody": false
+      },
+      {
+        "method": "GET",
+        "path": "/api/public/catalog/stats/models",
+        "acceptIsJson": true,
+        "hadCookie": false,
+        "hadAuthorization": false,
+        "hadWorkspace": false,
+        "hadBody": false
+      },
+      {
+        "method": "GET",
+        "path": "/api/public/catalog/stats/models",
+        "acceptIsJson": true,
+        "hadCookie": false,
+        "hadAuthorization": false,
+        "hadWorkspace": false,
+        "hadBody": false
+      },
+      {
+        "method": "GET",
+        "path": "/api/public/catalog/models",
+        "acceptIsJson": true,
+        "hadCookie": false,
+        "hadAuthorization": false,
+        "hadWorkspace": false,
+        "hadBody": false
+      },
+      {
+        "method": "GET",
+        "path": "/api/public/catalog/models",
+        "acceptIsJson": true,
+        "hadCookie": false,
+        "hadAuthorization": false,
+        "hadWorkspace": false,
+        "hadBody": false
+      },
+      {
+        "method": "GET",
+        "path": "/api/public/catalog/model/Vendor/http-fixture",
+        "acceptIsJson": true,
+        "hadCookie": false,
+        "hadAuthorization": false,
+        "hadWorkspace": false,
+        "hadBody": false
+      },
+      {
+        "method": "GET",
+        "path": "/api/public/catalog/model/Vendor/http-fixture",
+        "acceptIsJson": true,
+        "hadCookie": false,
+        "hadAuthorization": false,
+        "hadWorkspace": false,
+        "hadBody": false
+      },
+      {
+        "method": "GET",
+        "path": "/api/public/catalog/providers",
+        "acceptIsJson": true,
+        "hadCookie": false,
+        "hadAuthorization": false,
+        "hadWorkspace": false,
+        "hadBody": false
+      },
+      {
+        "method": "GET",
+        "path": "/api/public/catalog/providers",
+        "acceptIsJson": true,
+        "hadCookie": false,
+        "hadAuthorization": false,
+        "hadWorkspace": false,
+        "hadBody": false
+      },
+      {
+        "method": "GET",
+        "path": "/api/public/catalog/models",
+        "acceptIsJson": true,
+        "hadCookie": false,
+        "hadAuthorization": false,
+        "hadWorkspace": false,
+        "hadBody": false
+      },
+      {
+        "method": "GET",
+        "path": "/api/public/catalog/models",
+        "acceptIsJson": true,
+        "hadCookie": false,
+        "hadAuthorization": false,
+        "hadWorkspace": false,
+        "hadBody": false
+      },
+      {
+        "method": "GET",
+        "path": "/api/public/catalog/models",
+        "acceptIsJson": true,
+        "hadCookie": false,
+        "hadAuthorization": false,
+        "hadWorkspace": false,
+        "hadBody": false
+      },
+      {
+        "method": "GET",
+        "path": "/api/public/catalog/models",
+        "acceptIsJson": true,
+        "hadCookie": false,
+        "hadAuthorization": false,
+        "hadWorkspace": false,
+        "hadBody": false
+      },
+      {
+        "method": "GET",
+        "path": "/api/public/catalog/stats/models",
+        "acceptIsJson": true,
+        "hadCookie": false,
+        "hadAuthorization": false,
+        "hadWorkspace": false,
+        "hadBody": false
+      },
+      {
+        "method": "GET",
+        "path": "/api/public/catalog/stats/models",
+        "acceptIsJson": true,
+        "hadCookie": false,
+        "hadAuthorization": false,
+        "hadWorkspace": false,
+        "hadBody": false
+      },
+      {
+        "method": "GET",
+        "path": "/api/public/catalog/stats/models",
+        "acceptIsJson": true,
+        "hadCookie": false,
+        "hadAuthorization": false,
+        "hadWorkspace": false,
+        "hadBody": false
+      },
+      {
+        "method": "GET",
+        "path": "/api/public/catalog/stats/models",
+        "acceptIsJson": true,
+        "hadCookie": false,
+        "hadAuthorization": false,
+        "hadWorkspace": false,
+        "hadBody": false
+      },
+      {
+        "method": "GET",
+        "path": "/api/public/catalog/models",
+        "acceptIsJson": true,
+        "hadCookie": false,
+        "hadAuthorization": false,
+        "hadWorkspace": false,
+        "hadBody": false
+      },
+      {
+        "method": "GET",
+        "path": "/api/public/catalog/models",
+        "acceptIsJson": true,
+        "hadCookie": false,
+        "hadAuthorization": false,
+        "hadWorkspace": false,
+        "hadBody": false
+      },
+      {
+        "method": "GET",
+        "path": "/api/public/catalog/model/Vendor/http-fixture",
+        "acceptIsJson": true,
+        "hadCookie": false,
+        "hadAuthorization": false,
+        "hadWorkspace": false,
+        "hadBody": false
+      },
+      {
+        "method": "GET",
+        "path": "/api/public/catalog/model/Vendor/http-fixture",
+        "acceptIsJson": true,
+        "hadCookie": false,
+        "hadAuthorization": false,
+        "hadWorkspace": false,
+        "hadBody": false
+      },
+      {
+        "method": "GET",
+        "path": "/api/public/catalog/providers",
+        "acceptIsJson": true,
+        "hadCookie": false,
+        "hadAuthorization": false,
+        "hadWorkspace": false,
+        "hadBody": false
+      },
+      {
+        "method": "GET",
+        "path": "/api/public/catalog/providers",
+        "acceptIsJson": true,
+        "hadCookie": false,
+        "hadAuthorization": false,
+        "hadWorkspace": false,
+        "hadBody": false
+      },
+      {
+        "method": "GET",
+        "path": "/api/public/catalog/models",
+        "acceptIsJson": true,
+        "hadCookie": false,
+        "hadAuthorization": false,
+        "hadWorkspace": false,
+        "hadBody": false
+      },
+      {
+        "method": "GET",
+        "path": "/api/public/catalog/models",
+        "acceptIsJson": true,
+        "hadCookie": false,
+        "hadAuthorization": false,
+        "hadWorkspace": false,
+        "hadBody": false
+      },
+      {
+        "method": "GET",
+        "path": "/api/public/catalog/models",
+        "acceptIsJson": true,
+        "hadCookie": false,
+        "hadAuthorization": false,
+        "hadWorkspace": false,
+        "hadBody": false
+      },
+      {
+        "method": "GET",
+        "path": "/api/public/catalog/models",
+        "acceptIsJson": true,
+        "hadCookie": false,
+        "hadAuthorization": false,
+        "hadWorkspace": false,
+        "hadBody": false
+      },
+      {
+        "method": "GET",
+        "path": "/api/public/catalog/stats/models",
+        "acceptIsJson": true,
+        "hadCookie": false,
+        "hadAuthorization": false,
+        "hadWorkspace": false,
+        "hadBody": false
+      },
+      {
+        "method": "GET",
+        "path": "/api/public/catalog/stats/models",
+        "acceptIsJson": true,
+        "hadCookie": false,
+        "hadAuthorization": false,
+        "hadWorkspace": false,
+        "hadBody": false
+      },
+      {
+        "method": "GET",
+        "path": "/api/public/catalog/stats/models",
+        "acceptIsJson": true,
+        "hadCookie": false,
+        "hadAuthorization": false,
+        "hadWorkspace": false,
+        "hadBody": false
+      },
+      {
+        "method": "GET",
+        "path": "/api/public/catalog/stats/models",
+        "acceptIsJson": true,
+        "hadCookie": false,
+        "hadAuthorization": false,
+        "hadWorkspace": false,
+        "hadBody": false
+      },
+      {
+        "method": "GET",
+        "path": "/api/public/catalog/models",
+        "acceptIsJson": true,
+        "hadCookie": false,
+        "hadAuthorization": false,
+        "hadWorkspace": false,
+        "hadBody": false
+      },
+      {
+        "method": "GET",
+        "path": "/api/public/catalog/models",
+        "acceptIsJson": true,
+        "hadCookie": false,
+        "hadAuthorization": false,
+        "hadWorkspace": false,
+        "hadBody": false
+      },
+      {
+        "method": "GET",
+        "path": "/api/public/catalog/model/Vendor/http-fixture",
+        "acceptIsJson": true,
+        "hadCookie": false,
+        "hadAuthorization": false,
+        "hadWorkspace": false,
+        "hadBody": false
+      },
+      {
+        "method": "GET",
+        "path": "/api/public/catalog/model/Vendor/http-fixture",
+        "acceptIsJson": true,
+        "hadCookie": false,
+        "hadAuthorization": false,
+        "hadWorkspace": false,
+        "hadBody": false
+      },
+      {
+        "method": "GET",
+        "path": "/api/public/catalog/providers",
+        "acceptIsJson": true,
+        "hadCookie": false,
+        "hadAuthorization": false,
+        "hadWorkspace": false,
+        "hadBody": false
+      },
+      {
+        "method": "GET",
+        "path": "/api/public/catalog/providers",
+        "acceptIsJson": true,
+        "hadCookie": false,
+        "hadAuthorization": false,
+        "hadWorkspace": false,
+        "hadBody": false
+      },
+      {
+        "method": "GET",
+        "path": "/api/public/catalog/models",
+        "acceptIsJson": true,
+        "hadCookie": false,
+        "hadAuthorization": false,
+        "hadWorkspace": false,
+        "hadBody": false
+      },
+      {
+        "method": "GET",
+        "path": "/api/public/catalog/models",
+        "acceptIsJson": true,
+        "hadCookie": false,
+        "hadAuthorization": false,
+        "hadWorkspace": false,
+        "hadBody": false
+      },
+      {
+        "method": "GET",
+        "path": "/api/public/catalog/models",
+        "acceptIsJson": true,
+        "hadCookie": false,
+        "hadAuthorization": false,
+        "hadWorkspace": false,
+        "hadBody": false
+      },
+      {
+        "method": "GET",
+        "path": "/api/public/catalog/models",
+        "acceptIsJson": true,
+        "hadCookie": false,
+        "hadAuthorization": false,
+        "hadWorkspace": false,
+        "hadBody": false
+      },
+      {
+        "method": "GET",
+        "path": "/api/public/catalog/stats/models",
+        "acceptIsJson": true,
+        "hadCookie": false,
+        "hadAuthorization": false,
+        "hadWorkspace": false,
+        "hadBody": false
+      },
+      {
+        "method": "GET",
+        "path": "/api/public/catalog/stats/models",
+        "acceptIsJson": true,
+        "hadCookie": false,
+        "hadAuthorization": false,
+        "hadWorkspace": false,
+        "hadBody": false
+      },
+      {
+        "method": "GET",
+        "path": "/api/public/catalog/stats/models",
+        "acceptIsJson": true,
+        "hadCookie": false,
+        "hadAuthorization": false,
+        "hadWorkspace": false,
+        "hadBody": false
+      },
+      {
+        "method": "GET",
+        "path": "/api/public/catalog/stats/models",
+        "acceptIsJson": true,
+        "hadCookie": false,
+        "hadAuthorization": false,
+        "hadWorkspace": false,
+        "hadBody": false
+      },
+      {
+        "method": "GET",
+        "path": "/api/public/catalog/models",
+        "acceptIsJson": true,
+        "hadCookie": false,
+        "hadAuthorization": false,
+        "hadWorkspace": false,
+        "hadBody": false
+      },
+      {
+        "method": "GET",
+        "path": "/api/public/catalog/model/Vendor/missing",
+        "acceptIsJson": true,
+        "hadCookie": false,
+        "hadAuthorization": false,
+        "hadWorkspace": false,
+        "hadBody": false
+      },
+      {
+        "method": "GET",
+        "path": "/api/public/catalog/model/Vendor/unavailable",
+        "acceptIsJson": true,
+        "hadCookie": false,
+        "hadAuthorization": false,
+        "hadWorkspace": false,
+        "hadBody": false
+      },
+      {
+        "method": "GET",
+        "path": "/api/public/catalog/models",
+        "acceptIsJson": true,
+        "hadCookie": false,
+        "hadAuthorization": false,
+        "hadWorkspace": false,
+        "hadBody": false
+      },
+      {
+        "method": "GET",
+        "path": "/api/public/catalog/models",
+        "acceptIsJson": true,
+        "hadCookie": false,
+        "hadAuthorization": false,
+        "hadWorkspace": false,
+        "hadBody": false
+      },
+      {
+        "method": "GET",
+        "path": "/api/public/catalog/model/Vendor/missing",
+        "acceptIsJson": true,
+        "hadCookie": false,
+        "hadAuthorization": false,
+        "hadWorkspace": false,
+        "hadBody": false
+      },
+      {
+        "method": "GET",
+        "path": "/api/public/catalog/model/Vendor/unavailable",
+        "acceptIsJson": true,
+        "hadCookie": false,
+        "hadAuthorization": false,
+        "hadWorkspace": false,
+        "hadBody": false
+      },
+      {
+        "method": "GET",
+        "path": "/api/public/catalog/models",
+        "acceptIsJson": true,
+        "hadCookie": false,
+        "hadAuthorization": false,
+        "hadWorkspace": false,
+        "hadBody": false
+      }
+    ],
+    "violations": []
+  },
+  "isolation": {
+    "internalNetwork": true,
+    "hostPorts": false,
+    "controlledCatalogOnly": true
+  },
+  "budgets": {
+    "runtimeMs": 180000,
+    "cleanupMs": 90000,
+    "ciStepMinutes": 5
+  },
+  "cleanup": [
+    {
+      "container": "549257c7ead291ca77e54a5cb1d3c13f684b57cec7c0cc62905dae58dbba4c86",
+      "absent": true
+    },
+    {
+      "container": "09337cb732666c4bac0e754fa6f8ac150ce60a0315a9742dc39f60560ac4774c",
+      "absent": true
+    },
+    {
+      "container": "de402e54331953b6fad9e108a556ee3e33b860519bd7ee0fbcbb67a6d590bf0d",
+      "absent": true
+    },
+    {
+      "container": "881a8ebc49dca8b7fab741825fe5418241f0e0b3081fb8a4f507c0d06180e625",
+      "absent": true
+    },
+    {
+      "network": "d7efd1960e7d35505fc0d66501d9619f584efcab3b96eecebf077a16526c52f5",
+      "absent": true
+    }
+  ]
+}

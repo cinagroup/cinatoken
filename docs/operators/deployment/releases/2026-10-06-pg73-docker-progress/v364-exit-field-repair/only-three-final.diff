@@ -1,0 +1,62 @@
+diff --git a/scripts/diagnostics/v364-owned-linux/README.md b/scripts/diagnostics/v364-owned-linux/README.md
+index da80004d..3a831fd7 100644
+--- a/scripts/diagnostics/v364-owned-linux/README.md
++++ b/scripts/diagnostics/v364-owned-linux/README.md
+@@ -38,6 +38,8 @@ Node `Promise.race` bounds **do not cancel** underlying tasks. Python is the clo
+ 
+ Always retain executor start/close, stdout/stderr, original TAP, events, Node closed result, seals and workflow. Receipts bind checkout SHA and workflow SHA/run/attempt. A strict failure naturally fails the step/job; no `continue-on-error` or gate bypass is used. Package/preparation errors are captured in executor stderr and closure receipts once fresh output has been safely created.
+ 
++`runnerOutcomeCode` records executor timeout/interruption codes such as 124/130; `actualProcessExit` records the child's actual return code (negative for a terminating signal), or null when no child started.
++
+ An original cancel-category KV call proves the source callback reached its first operation. Original waitUntil and KV settlements then separate invocation, lifetime and persistence. Improving observability can localize or falsify hypotheses, but proving an upstream defect requires a reviewed locked-versus-corrected-runtime comparison with the unchanged strict suite, or direct traces establishing that runtime path. This tool neither applies an upstream patch nor enables production holders.
+ 
+ Primary contracts: [Cloudflare signal flags](https://developers.cloudflare.com/workers/configuration/compatibility-flags/#enable-request-signal), [locked workerd signal branch](https://github.com/cloudflare/workerd/blob/8ea63498c7aa107995f9b2ffee7789631707e09f/src/workerd/io/worker-entrypoint.c%2B%2B), [Node22 RST](https://nodejs.org/docs/latest-v22.x/api/net.html#socketresetanddestroy), [Node22 HTTP completeness](https://nodejs.org/download/release/v22.15.0/docs/api/http.html#messagecomplete), [WHATWG reader cancel](https://streams.spec.whatwg.org/#generic-reader-cancel), [Linux subreaper](https://man7.org/linux/man-pages/man2/PR_SET_CHILD_SUBREAPER.2const.html). [Issue6832](https://github.com/cloudflare/workerd/issues/6832), [PR6833](https://github.com/cloudflare/workerd/pull/6833) and historically sealed [PR7600](https://github.com/cloudflare/workerd/pull/7600) remain candidates, not project cause proof.
+diff --git a/scripts/diagnostics/v364-owned-linux/execute-owned-linux.py b/scripts/diagnostics/v364-owned-linux/execute-owned-linux.py
+index 4bba35d3..07f0f519 100644
+--- a/scripts/diagnostics/v364-owned-linux/execute-owned-linux.py
++++ b/scripts/diagnostics/v364-owned-linux/execute-owned-linux.py
+@@ -200,7 +200,9 @@ success = (actual == 0 and not fatal and not timed_out and not interrupted and n
+            and direct_child_reaped and not cleanup_errors and cooperative_close and raw.get('actualExit') == 0)
+ final_exit = 0 if success else 1
+ result = {'schema': 'v364-owned-linux-executor-closed-v1', 'startedEpoch': started_wall,
+-          'elapsedMs': (time.monotonic() - started) * 1000, 'actualProcessExit': actual, 'actualExit': final_exit,
++          'elapsedMs': (time.monotonic() - started) * 1000,
++          'actualProcessExit': child.returncode if child is not None else None,
++          'runnerOutcomeCode': actual, 'actualExit': final_exit,
+           'outcome': 'STRICT_SYNTHETIC_ONLY_PASS' if success else 'STRICT_FAILURE_OR_UNKNOWN_PRESERVED',
+           'timedOut': timed_out, 'interrupted': interrupted, 'fatal': fatal,
+           'packageSHA256': manifest_hash, 'run': run_metadata, 'reportedActualExit': raw.get('actualExit') if raw else None,
+@@ -211,5 +213,6 @@ result = {'schema': 'v364-owned-linux-executor-closed-v1', 'startedEpoch': start
+           'productionRequests': 0, 'ciInvocations': 0,
+           'files': [digest(path) for path in sorted(out.iterdir()) if path.is_file()]}
+ (out / 'executor.closed.json').write_text(json.dumps(result, indent=2) + '\n')
+-print(json.dumps({'actualExit': final_exit, 'actualProcessExit': actual, 'timedOut': timed_out, 'output': str(out)}))
++print(json.dumps({'actualExit': final_exit, 'actualProcessExit': child.returncode if child is not None else None,
++                  'runnerOutcomeCode': actual, 'timedOut': timed_out, 'output': str(out)}))
+ raise SystemExit(final_exit)
+diff --git a/scripts/diagnostics/v364-owned-linux/sealed-package.json b/scripts/diagnostics/v364-owned-linux/sealed-package.json
+index 3fabe60b..cd79d7c4 100644
+--- a/scripts/diagnostics/v364-owned-linux/sealed-package.json
++++ b/scripts/diagnostics/v364-owned-linux/sealed-package.json
+@@ -20,8 +20,8 @@
+     },
+     {
+       "path": "execute-owned-linux.py",
+-      "bytes": 9357,
+-      "sha256": "21383ffe54d865d9d1018a90317b831ae468dc0136b6aeac3e8a324db86a5c1f"
++      "bytes": 9535,
++      "sha256": "45c479a4602a3e79b42daa8dcca6e8b9ef876fa986136598b263a505d5320e31"
+     },
+     {
+       "path": "source-inputs.json",
+@@ -30,8 +30,8 @@
+     },
+     {
+       "path": "README.md",
+-      "bytes": 6176,
+-      "sha256": "bc3491a4c14306cbafd943f48c5088bb93e3dfdf934dcf5aed337625117ea0e0"
++      "bytes": 6385,
++      "sha256": "75f8f7e5e678157349712128cc68dbb9323de2daa6686e9b4d47e6098f075263"
+     }
+   ]
+ }

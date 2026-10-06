@@ -1,0 +1,15 @@
+{
+  "at": "2026-10-06T00:48:29.780Z",
+  "finishedAt": "2026-10-06T00:48:29.971Z",
+  "executable": "C:/Program Files/Git/cmd/git.exe",
+  "args": [
+    "commit",
+    "-m",
+    "fix(ci): align PG73 admission fixture and Docker web configuration"
+  ],
+  "cwd": "C:/cinagroup/cinatoken",
+  "actualExit": 0,
+  "signal": null,
+  "stdout": "C:/Users/cina/AppData/Local/Temp/cinatoken-pg73-platform-followup-20261006-lAiHQC/platform-source-commit.stdout.log",
+  "stderr": "C:/Users/cina/AppData/Local/Temp/cinatoken-pg73-platform-followup-20261006-lAiHQC/platform-source-commit.stderr.log"
+}

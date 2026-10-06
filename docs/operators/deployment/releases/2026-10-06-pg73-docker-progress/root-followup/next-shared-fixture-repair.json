@@ -1,0 +1,113 @@
+{
+  "at": "2026-10-06T00:18:56.469Z",
+  "actualExit": 0,
+  "scope": "historical PG73 test fixtures only",
+  "nativePassClaim": false,
+  "productionChanges": false,
+  "records": [
+    {
+      "file": "scripts/db/cutover/postgres-shared-key-quote-versions.native.test.mjs",
+      "before": {
+        "bytes": 34815,
+        "sha256": "a68472dd3a7e4ac77e67e63a99469b6651ffc553562ada1a664964f1cdc238f8"
+      },
+      "after": {
+        "bytes": 34823,
+        "sha256": "16ef4b701728c9de46ea932851354d7cee2aa9d80c6ab543ceae6f4526380c83"
+      },
+      "orderedOriginalAssertionCalls": 65,
+      "assertionAstExact": true,
+      "allOtherOriginalTextExact": true,
+      "edits": [
+        {
+          "from": "import { readFile, readdir, writeFile } from 'node:fs/promises';",
+          "to": "import { readFile, writeFile } from 'node:fs/promises';",
+          "count": 1
+        },
+        {
+          "from": "import { grantPostgresRuntime } from './grant-postgres-runtime.ts';",
+          "to": "import { grantPg73RuntimeFixture, listPg73Migrations } from './pg73-native-fixture.mjs';",
+          "count": 1
+        },
+        {
+          "from": "await grantPostgresRuntime({ DATABASE_URL: url });",
+          "to": "await grantPg73RuntimeFixture({ cluster, migrator, migratorUrl: url });",
+          "count": 2
+        },
+        {
+          "from": "const files = (await readdir(migrations)).filter(name => name.endsWith('.sql')).sort();",
+          "to": "const files = await listPg73Migrations();",
+          "count": 1
+        }
+      ],
+      "successfulGrantAdaptations": 2,
+      "grantNegativeCallsChanged": 0
+    },
+    {
+      "file": "scripts/db/cutover/postgres-shared-key-orphan-review-v348.native.test.mjs",
+      "before": {
+        "bytes": 22988,
+        "sha256": "6f830e1525240c5ae853d65844eb7de9102d393aad19d11fef7099db3829fd98"
+      },
+      "after": {
+        "bytes": 22999,
+        "sha256": "86dd70cbfcf81c9721cb2508ac4748dc9faf60ed00c6479498ce11f5df3d7d6a"
+      },
+      "orderedOriginalAssertionCalls": 39,
+      "assertionAstExact": true,
+      "allOtherOriginalTextExact": true,
+      "edits": [
+        {
+          "from": "import { readFile, readdir, writeFile } from 'node:fs/promises';",
+          "to": "import { readFile, writeFile } from 'node:fs/promises';",
+          "count": 1
+        },
+        {
+          "from": "import { startNativePostgres } from '../../../packages/core/src/test-support/postgres-native-cluster.mjs';",
+          "to": "import { startNativePostgres } from '../../../packages/core/src/test-support/postgres-native-cluster.mjs';\nimport { listPg73Migrations } from './pg73-native-fixture.mjs';",
+          "count": 1
+        },
+        {
+          "from": "const names = (await readdir(migrations)).filter(name=>name.endsWith('.sql')).sort();",
+          "to": "const names = await listPg73Migrations();",
+          "count": 1
+        }
+      ],
+      "successfulGrantAdaptations": 0,
+      "grantNegativeCallsChanged": 0
+    },
+    {
+      "file": "scripts/db/cutover/postgres-shared-key-selected-event-gate-v351.native.test.mjs",
+      "before": {
+        "bytes": 19224,
+        "sha256": "2d0c320eb44ec3bafda5f8750763c40cf4619425aee31fed02213f22eda14839"
+      },
+      "after": {
+        "bytes": 19233,
+        "sha256": "09c8c77cc5b1a07416d96c5028f098c40d811362b108c607e10570bebfa51d5e"
+      },
+      "orderedOriginalAssertionCalls": 18,
+      "assertionAstExact": true,
+      "allOtherOriginalTextExact": true,
+      "edits": [
+        {
+          "from": "import { readFile, readdir, writeFile } from 'node:fs/promises';",
+          "to": "import { readFile, writeFile } from 'node:fs/promises';",
+          "count": 1
+        },
+        {
+          "from": "import { startNativePostgres } from '../../../packages/core/src/test-support/postgres-native-cluster.mjs';",
+          "to": "import { startNativePostgres } from '../../../packages/core/src/test-support/postgres-native-cluster.mjs';\nimport { listPg73Migrations } from './pg73-native-fixture.mjs';",
+          "count": 1
+        },
+        {
+          "from": "const names = (await readdir(migrations)).filter(name => name.endsWith('.sql')).sort();",
+          "to": "const names = await listPg73Migrations();",
+          "count": 1
+        }
+      ],
+      "successfulGrantAdaptations": 0,
+      "grantNegativeCallsChanged": 0
+    }
+  ]
+}
